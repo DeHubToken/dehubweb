@@ -6173,6 +6173,20 @@
       "spaceHorizontal": "水平均匀分布",
       "spaceVertical": "垂直均匀分布",
       "hint": "拖动其中任意一个即可一起移动。按住 Shift 点击，或在画布空白处拖出选框来更改选区。"
+    },
+    "brand": {
+      "heading": "品牌套件",
+      "colors": "品牌颜色",
+      "addColor": "添加品牌颜色",
+      "removeColor": "移除 {{color}}",
+      "headingFont": "标题字体",
+      "bodyFont": "正文字体",
+      "logo": "标志",
+      "noLogo": "无标志",
+      "logoHint": "先在媒体中上传标志，再在此处选择。",
+      "apply": "应用品牌",
+      "addLogo": "添加标志",
+      "applied": "已将品牌应用到 {{count}} 个图层。"
     }
   }
 }

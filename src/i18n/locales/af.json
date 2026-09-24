@@ -5991,6 +5991,20 @@
       "spaceHorizontal": "Versprei eweredig oor",
       "spaceVertical": "Versprei eweredig af",
       "hint": "Sleep enige van hulle om hulle saam te skuif. Shift-klik of sleep 'n blok op leë doek om die seleksie te verander."
+    },
+    "brand": {
+      "heading": "Handelsmerkstel",
+      "colors": "Handelsmerkkleure",
+      "addColor": "Voeg 'n handelsmerkkleur by",
+      "removeColor": "Verwyder {{color}}",
+      "headingFont": "Opskriflettertipe",
+      "bodyFont": "Hoofteks-lettertipe",
+      "logo": "Logo",
+      "noLogo": "Geen logo",
+      "logoHint": "Laai jou logo op in Media en kies dit dan hier.",
+      "apply": "Pas handelsmerk toe",
+      "addLogo": "Voeg logo by",
+      "applied": "Handelsmerk op {{count}} lae toegepas."
     }
   },
   "footer": {

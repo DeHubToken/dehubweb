@@ -3877,6 +3877,20 @@
       "spaceHorizontal": "Sabalalisa ngokulinganayo ngokuvundlile",
       "spaceVertical": "Sabalalisa ngokulinganayo ngokuqondile",
       "hint": "Hudula noma yisiphi ukuze uzihambise ndawonye. Chofoza nge-Shift noma uhudule ibhokisi kukhanvasi engenalutho ukuze ushintshe ukukhetha."
+    },
+    "brand": {
+      "heading": "Ikhithi yomkhiqizo",
+      "colors": "Imibala yomkhiqizo",
+      "addColor": "Engeza umbala womkhiqizo",
+      "removeColor": "Susa {{color}}",
+      "headingFont": "Ifonti yezihloko",
+      "bodyFont": "Ifonti yombhalo",
+      "logo": "Ilogo",
+      "noLogo": "Ayikho ilogo",
+      "logoHint": "Layisha ilogo yakho ku-Imidiya, bese uyikhetha lapha.",
+      "apply": "Sebenzisa umkhiqizo",
+      "addLogo": "Engeza ilogo",
+      "applied": "Umkhiqizo usetshenziswe ezendlalelweni ezingu-{{count}}."
     }
   },
   "fractions": {

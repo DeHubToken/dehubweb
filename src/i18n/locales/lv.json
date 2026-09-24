@@ -6145,6 +6145,20 @@
       "spaceHorizontal": "Izkārtot vienmērīgi horizontāli",
       "spaceVertical": "Izkārtot vienmērīgi vertikāli",
       "hint": "Velc jebkuru no tiem, lai pārvietotu tos kopā. Shift+klikšķis vai velc rāmi tukšā audekla vietā, lai mainītu atlasi."
+    },
+    "brand": {
+      "heading": "Zīmola komplekts",
+      "colors": "Zīmola krāsas",
+      "addColor": "Pievienot zīmola krāsu",
+      "removeColor": "Noņemt {{color}}",
+      "headingFont": "Virsrakstu fonts",
+      "bodyFont": "Pamatteksta fonts",
+      "logo": "Logotips",
+      "noLogo": "Nav logotipa",
+      "logoHint": "Augšupielādējiet logotipu sadaļā Mediji un pēc tam izvēlieties to šeit.",
+      "apply": "Lietot zīmolu",
+      "addLogo": "Pievienot logotipu",
+      "applied": "Zīmols lietots {{count}} slāņiem."
     }
   }
 }

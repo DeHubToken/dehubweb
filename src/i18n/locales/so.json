@@ -3837,6 +3837,20 @@
       "spaceHorizontal": "U kala fidi si siman dhinac",
       "spaceVertical": "U kala fidi si siman hoos",
       "hint": "Jiid mid kasta si aad dhammaan u wada dhaqaajiso. Shift-guji ama sanduuq ku jiid canvas-ka madhan si aad u beddesho xulashada."
+    },
+    "brand": {
+      "heading": "Xirmada summadda",
+      "colors": "Midabada summadda",
+      "addColor": "Ku dar midab summadeed",
+      "removeColor": "Ka saar {{color}}",
+      "headingFont": "Farta cinwaanka",
+      "bodyFont": "Farta qoraalka",
+      "logo": "Astaanta",
+      "noLogo": "Astaan ma jirto",
+      "logoHint": "Ku soo rar astaantaada Warbaahinta, kadibna halkan ka dooro.",
+      "apply": "Dabaq summadda",
+      "addLogo": "Ku dar astaan",
+      "applied": "Summadda waxaa lagu dabaqay {{count}} lakab."
     }
   },
   "fractions": {

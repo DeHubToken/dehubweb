@@ -6173,6 +6173,20 @@
       "spaceHorizontal": "Ratakan jarak mendatar",
       "spaceVertical": "Ratakan jarak menurun",
       "hint": "Seret salah satunya untuk memindahkan semuanya bersama. Shift-klik atau seret kotak di kanvas kosong untuk mengubah pilihan."
+    },
+    "brand": {
+      "heading": "Kit merek",
+      "colors": "Warna merek",
+      "addColor": "Tambah warna merek",
+      "removeColor": "Hapus {{color}}",
+      "headingFont": "Font judul",
+      "bodyFont": "Font isi",
+      "logo": "Logo",
+      "noLogo": "Tidak ada logo",
+      "logoHint": "Unggah logo Anda di Media, lalu pilih di sini.",
+      "apply": "Terapkan merek",
+      "addLogo": "Tambah logo",
+      "applied": "Merek diterapkan ke {{count}} lapisan."
     }
   }
 }

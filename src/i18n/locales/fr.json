@@ -6168,6 +6168,20 @@
       "spaceHorizontal": "Répartir horizontalement",
       "spaceVertical": "Répartir verticalement",
       "hint": "Faites glisser l'un d'eux pour les déplacer ensemble. Maj+clic ou tracez un cadre sur une zone vide du canevas pour modifier la sélection."
+    },
+    "brand": {
+      "heading": "Kit de marque",
+      "colors": "Couleurs de marque",
+      "addColor": "Ajouter une couleur de marque",
+      "removeColor": "Retirer {{color}}",
+      "headingFont": "Police des titres",
+      "bodyFont": "Police du texte",
+      "logo": "Logo",
+      "noLogo": "Aucun logo",
+      "logoHint": "Importez votre logo dans Médias, puis sélectionnez-le ici.",
+      "apply": "Appliquer la marque",
+      "addLogo": "Ajouter un logo",
+      "applied": "Marque appliquée à {{count}} calques."
     }
   }
 }

@@ -6174,6 +6174,20 @@
       "spaceHorizontal": "Distribuir na horizontal",
       "spaceVertical": "Distribuir na vertical",
       "hint": "Arraste qualquer uma para mover todas juntas. Use Shift+clique ou arraste uma caixa na tela vazia para mudar a seleção."
+    },
+    "brand": {
+      "heading": "Kit de marca",
+      "colors": "Cores da marca",
+      "addColor": "Adicionar cor da marca",
+      "removeColor": "Remover {{color}}",
+      "headingFont": "Fonte dos títulos",
+      "bodyFont": "Fonte do corpo",
+      "logo": "Logotipo",
+      "noLogo": "Sem logotipo",
+      "logoHint": "Envie seu logotipo em Mídia e depois escolha-o aqui.",
+      "apply": "Aplicar marca",
+      "addLogo": "Adicionar logotipo",
+      "applied": "Marca aplicada a {{count}} camadas."
     }
   }
 }

@@ -19,6 +19,8 @@ import { GOOGLE_FONTS, fontFamilyCss, loadGoogleFont } from "./googleFonts";
 import { downloadFreeAsset, provenanceForAsset, searchFreeAssets, type FreeAssetOrientation } from "./freeAssets";
 import { importOneFile } from "./importFiles";
 import { getPages, pageAt } from "./pages";
+import { useBrandStore, hasBrand } from "@/store/editorBrandStore";
+import { applyBrand, addBrandLogo } from "./brand";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
 
@@ -56,7 +58,17 @@ export function describeScene() {
     .map((c) => describeClip(c, s.media, hidden.has(c.trackId)));
   const duration = s.clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
   const pages = getPages(s.settings, s.clips);
+  const kit = useBrandStore.getState().kit;
+  const brand = hasBrand(kit)
+    ? {
+        colors: kit.colors,
+        headingFont: kit.headingFont?.split(",")[0].replace(/'/g, ""),
+        bodyFont: kit.bodyFont?.split(",")[0].replace(/'/g, ""),
+        hasLogo: !!kit.logoMediaId,
+      }
+    : undefined;
   return {
+    brand,
     pages: pages.length > 1 ? pages.map((p) => ({ index: p.index, start: round(p.start, 2), end: round(p.end, 2) })) : undefined,
     currentPage: pages.length > 1 ? pageAt(pages, s.currentTime).index : undefined,
     page: {
@@ -539,6 +551,13 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         const clip = store().clips.find((c) => c.id === id);
         if (clip && kind !== "audio") place(clip, op);
         return true;
+      }
+      case "apply_brand": {
+        if (!hasBrand(useBrandStore.getState().kit)) return false;
+        return (await applyBrand()) > 0;
+      }
+      case "add_logo": {
+        return !!addBrandLogo();
       }
       case "add_page": {
         s.addPage({ duplicate: bool(op.duplicate) === true });

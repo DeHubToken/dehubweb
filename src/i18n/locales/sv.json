@@ -6056,6 +6056,20 @@
       "spaceHorizontal": "Fördela jämnt horisontellt",
       "spaceVertical": "Fördela jämnt vertikalt",
       "hint": "Dra i vilket som helst för att flytta dem tillsammans. Skift-klicka eller dra en ruta på tom arbetsyta för att ändra markeringen."
+    },
+    "brand": {
+      "heading": "Varumärkeskit",
+      "colors": "Varumärkesfärger",
+      "addColor": "Lägg till varumärkesfärg",
+      "removeColor": "Ta bort {{color}}",
+      "headingFont": "Rubriktypsnitt",
+      "bodyFont": "Brödtexttypsnitt",
+      "logo": "Logotyp",
+      "noLogo": "Ingen logotyp",
+      "logoHint": "Ladda upp din logotyp i Media och välj den sedan här.",
+      "apply": "Använd varumärke",
+      "addLogo": "Lägg till logotyp",
+      "applied": "Varumärket tillämpades på {{count}} lager."
     }
   }
 }

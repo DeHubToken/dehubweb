@@ -3835,6 +3835,20 @@
       "spaceHorizontal": "Pín wọn dọ́gba ní ìbú",
       "spaceVertical": "Pín wọn dọ́gba ní òòró",
       "hint": "Fa èyíkéyìí nínú wọn láti gbé gbogbo wọn papọ̀. Tẹ Shift-kílíìkì tàbí fa àpótí sórí kánfásì òfìfo láti yí àṣàyàn padà."
+    },
+    "brand": {
+      "heading": "Ohun èlò àmì-ìdámọ̀",
+      "colors": "Àwọ̀ àmì-ìdámọ̀",
+      "addColor": "Ṣàfikún àwọ̀ àmì-ìdámọ̀",
+      "removeColor": "Yọ {{color}} kúrò",
+      "headingFont": "Fọ́ǹtì àkọlé",
+      "bodyFont": "Fọ́ǹtì ọ̀rọ̀",
+      "logo": "Àmì",
+      "noLogo": "Kò sí àmì",
+      "logoHint": "Gbé àmì rẹ sókè ní Mídíà, lẹ́yìn náà yàn án níbí.",
+      "apply": "Lo àmì-ìdámọ̀",
+      "addLogo": "Ṣàfikún àmì",
+      "applied": "A ti lo àmì-ìdámọ̀ sí ìpele {{count}}."
     }
   },
   "fractions": {

@@ -6110,6 +6110,20 @@
       "spaceHorizontal": "Sambaza sawa kwa mlalo",
       "spaceVertical": "Sambaza sawa kwa wima",
       "hint": "Buruta yoyote kati yake ili kuzisogeza pamoja. Bofya ukishikilia Shift au buruta kisanduku kwenye turubai tupu ili kubadilisha uteuzi."
+    },
+    "brand": {
+      "heading": "Kifurushi cha chapa",
+      "colors": "Rangi za chapa",
+      "addColor": "Ongeza rangi ya chapa",
+      "removeColor": "Ondoa {{color}}",
+      "headingFont": "Fonti ya kichwa",
+      "bodyFont": "Fonti ya maandishi",
+      "logo": "Nembo",
+      "noLogo": "Hakuna nembo",
+      "logoHint": "Pakia nembo yako kwenye Midia, kisha uichague hapa.",
+      "apply": "Tumia chapa",
+      "addLogo": "Ongeza nembo",
+      "applied": "Chapa imetumika kwenye tabaka {{count}}."
     }
   }
 }

@@ -3861,6 +3861,20 @@
       "spaceHorizontal": "Shpërndaj horizontalisht",
       "spaceVertical": "Shpërndaj vertikalisht",
       "hint": "Tërhiq cilëndo prej tyre për t'i lëvizur së bashku. Shift+klik ose tërhiq një kuti në kanavacën bosh për të ndryshuar përzgjedhjen."
+    },
+    "brand": {
+      "heading": "Kompleti i markës",
+      "colors": "Ngjyrat e markës",
+      "addColor": "Shto një ngjyrë marke",
+      "removeColor": "Hiq {{color}}",
+      "headingFont": "Fonti i titujve",
+      "bodyFont": "Fonti i tekstit",
+      "logo": "Logoja",
+      "noLogo": "Pa logo",
+      "logoHint": "Ngarko logon te Media, pastaj zgjidhe këtu.",
+      "apply": "Apliko markën",
+      "addLogo": "Shto logo",
+      "applied": "Marka u aplikua në {{count}} shtresa."
     }
   },
   "fractions": {

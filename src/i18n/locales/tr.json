@@ -6173,6 +6173,20 @@
       "spaceHorizontal": "Yatayda eşit dağıt",
       "spaceVertical": "Dikeyde eşit dağıt",
       "hint": "Hepsini birlikte taşımak için herhangi birini sürükle. Seçimi değiştirmek için Shift+tıkla veya boş tuvalde bir kutu sürükle."
+    },
+    "brand": {
+      "heading": "Marka kiti",
+      "colors": "Marka renkleri",
+      "addColor": "Marka rengi ekle",
+      "removeColor": "{{color}} kaldır",
+      "headingFont": "Başlık yazı tipi",
+      "bodyFont": "Gövde yazı tipi",
+      "logo": "Logo",
+      "noLogo": "Logo yok",
+      "logoHint": "Logonuzu Medya'ya yükleyin, sonra buradan seçin.",
+      "apply": "Markayı uygula",
+      "addLogo": "Logo ekle",
+      "applied": "Marka {{count}} katmana uygulandı."
     }
   }
 }

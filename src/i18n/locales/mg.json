@@ -5822,6 +5822,20 @@
       "spaceHorizontal": "Zarao mitovy mitsivalana",
       "spaceVertical": "Zarao mitovy mitsangana",
       "hint": "Sintony ny iray amin'izy ireo mba hamindrana azy rehetra miaraka. Shift-kilikio na sintony boaty eo amin'ny sary foana mba hanova ny safidy."
+    },
+    "brand": {
+      "heading": "Kitapo marika",
+      "colors": "Loko marika",
+      "addColor": "Hanampy loko marika",
+      "removeColor": "Esory {{color}}",
+      "headingFont": "Endritsoratra lohateny",
+      "bodyFont": "Endritsoratra votoaty",
+      "logo": "Logo",
+      "noLogo": "Tsy misy logo",
+      "logoHint": "Ampidiro ao amin'ny Media ny logonao, dia safidio eto.",
+      "apply": "Ampiharo ny marika",
+      "addLogo": "Hanampy logo",
+      "applied": "Nampiharina tamin'ny sosona {{count}} ny marika."
     }
   },
   "createPost": {

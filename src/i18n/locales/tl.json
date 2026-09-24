@@ -5926,6 +5926,20 @@
       "spaceHorizontal": "Pantayin ang pagitan pahalang",
       "spaceVertical": "Pantayin ang pagitan pababa",
       "hint": "I-drag ang alinman sa mga ito para sabay silang igalaw. Mag-Shift-click o mag-drag ng kahon sa bakanteng canvas para baguhin ang pinili."
+    },
+    "brand": {
+      "heading": "Brand kit",
+      "colors": "Mga kulay ng brand",
+      "addColor": "Magdagdag ng kulay ng brand",
+      "removeColor": "Alisin ang {{color}}",
+      "headingFont": "Font ng heading",
+      "bodyFont": "Font ng body",
+      "logo": "Logo",
+      "noLogo": "Walang logo",
+      "logoHint": "I-upload ang logo mo sa Media, saka piliin ito rito.",
+      "apply": "Ilapat ang brand",
+      "addLogo": "Magdagdag ng logo",
+      "applied": "Nailapat ang brand sa {{count}} layer."
     }
   },
   "walletSelector": {

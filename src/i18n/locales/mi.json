@@ -3840,6 +3840,20 @@
       "spaceHorizontal": "Whakamokowā ōrite whakapae",
       "spaceVertical": "Whakamokowā ōrite whakatū",
       "hint": "Tōia tētahi hei neke tahi i a rātou. Pāwhiri-Shift, tōia rānei he pouaka ki te kānawehi wātea hei huri i te tīpakonga."
+    },
+    "brand": {
+      "heading": "Kete waitohu",
+      "colors": "Ngā tae waitohu",
+      "addColor": "Tāpiri tae waitohu",
+      "removeColor": "Tangohia {{color}}",
+      "headingFont": "Momotuhi upoko",
+      "bodyFont": "Momotuhi tinana",
+      "logo": "Moko",
+      "noLogo": "Kāore he moko",
+      "logoHint": "Tukuatu tō moko ki Pāpāho, kātahi ka kōwhiri i konei.",
+      "apply": "Whakamahia te waitohu",
+      "addLogo": "Tāpiri moko",
+      "applied": "Kua whakamahia te waitohu ki ngā paparanga {{count}}."
     }
   },
   "fractions": {

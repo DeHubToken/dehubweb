@@ -3768,6 +3768,20 @@
       "spaceHorizontal": "水平均匀分布",
       "spaceVertical": "垂直均匀分布",
       "hint": "拖动其中任意一个即可一起移动。按住 Shift 点击或在空白画布上拖出选框以更改选择。"
+    },
+    "brand": {
+      "heading": "品牌套件",
+      "colors": "品牌颜色",
+      "addColor": "添加品牌颜色",
+      "removeColor": "移除 {{color}}",
+      "headingFont": "标题字体",
+      "bodyFont": "正文字体",
+      "logo": "标志",
+      "noLogo": "无标志",
+      "logoHint": "先在媒体中上传标志，然后在这里选择。",
+      "apply": "应用品牌",
+      "addLogo": "添加标志",
+      "applied": "已将品牌应用到 {{count}} 个图层。"
     }
   },
   "fractions": {

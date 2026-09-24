@@ -11,6 +11,7 @@ import { Film, Instagram, Loader2, Monitor, Smartphone, Square } from 'lucide-re
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { TEMPLATES, applyTemplate, type EditorTemplate } from '@/lib/editor/templates';
 import { loadGoogleFont } from '@/lib/editor/googleFonts';
+import { BrandSection } from './BrandSection';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -130,6 +131,8 @@ export function DesignPanel() {
         ))}
       </div>
       <p className="mt-2 px-0.5 text-[10px] leading-relaxed text-white/40">{t('editor.templates.hint')}</p>
+
+      <BrandSection />
 
       <AlertDialog open={!!pending} onOpenChange={(open) => { if (!open) setPending(null); }}>
         <AlertDialogContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">

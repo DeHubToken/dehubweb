@@ -3814,6 +3814,20 @@
       "spaceHorizontal": "Waagrächt verteile",
       "spaceVertical": "Senkrächt verteile",
       "hint": "Zieh eini devo, zum alli zäme verschiebe. Mit Shift-Klick oder emne Rahme ufem leere Bereich änderisch d Uswahl."
+    },
+    "brand": {
+      "heading": "Markekit",
+      "colors": "Markefarbe",
+      "addColor": "Markefarb derzuefüege",
+      "removeColor": "{{color}} entferne",
+      "headingFont": "Titelschrift",
+      "bodyFont": "Textschrift",
+      "logo": "Logo",
+      "noLogo": "Kei Logo",
+      "logoHint": "Lad dis Logo under Medie ufe und wähl s denn do us.",
+      "apply": "Marke aawände",
+      "addLogo": "Logo derzuefüege",
+      "applied": "Marke uf {{count}} Ebene aagwändet."
     }
   },
   "fractions": {

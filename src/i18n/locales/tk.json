@@ -3799,6 +3799,20 @@
       "spaceHorizontal": "Keseligine deň ýerleşdir",
       "spaceVertical": "Dikligine deň ýerleşdir",
       "hint": "Hemmesini bilelikde süýşürmek üçin islendik birini çekiň. Saýlawy üýtgetmek üçin Shift bilen basyň ýa-da boş kanwada çarçuwa çekiň."
+    },
+    "brand": {
+      "heading": "Brend toplumy",
+      "colors": "Brend reňkleri",
+      "addColor": "Brend reňkini goş",
+      "removeColor": "{{color}} aýyr",
+      "headingFont": "Sözbaşy şrifti",
+      "bodyFont": "Tekst şrifti",
+      "logo": "Logotip",
+      "noLogo": "Logotip ýok",
+      "logoHint": "Logotipiňizi Media bölüminde ýükläň, soňra şu ýerde saýlaň.",
+      "apply": "Brendi ulan",
+      "addLogo": "Logotip goş",
+      "applied": "Brend {{count}} gata ulanyldy."
     }
   },
   "fractions": {

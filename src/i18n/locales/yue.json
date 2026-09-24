@@ -3844,6 +3844,20 @@
       "spaceHorizontal": "橫向平均分佈",
       "spaceVertical": "直向平均分佈",
       "hint": "拖曳任何一個即可一齊移動。按住 Shift 點擊，或喺空白畫布上拖出方框，即可更改選取範圍。"
+    },
+    "brand": {
+      "heading": "品牌套件",
+      "colors": "品牌顏色",
+      "addColor": "加品牌顏色",
+      "removeColor": "移除 {{color}}",
+      "headingFont": "標題字型",
+      "bodyFont": "內文字型",
+      "logo": "標誌",
+      "noLogo": "冇標誌",
+      "logoHint": "喺媒體度上載你嘅標誌，然後喺呢度揀。",
+      "apply": "套用品牌",
+      "addLogo": "加標誌",
+      "applied": "已經將品牌套用到 {{count}} 個圖層。"
     }
   },
   "fractions": {

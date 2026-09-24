@@ -3876,6 +3876,20 @@
       "spaceHorizontal": "Kaqllata chiqan siqipi rakiy",
       "spaceVertical": "Kaqllata sayaq siqipi rakiy",
       "hint": "Mayqintapas aysay tukuyninta kuska kuyuchinaykipaq. Akllasqata tikranaykipaq Shift-clic ruway utaq ch'usaq lienzopi huk cajata aysay."
+    },
+    "brand": {
+      "heading": "Marcapa kit",
+      "colors": "Marcapa llimp'inkuna",
+      "addColor": "Marcapa llimp'inta yapay",
+      "removeColor": "{{color}} qichuy",
+      "headingFont": "Umalliq qillqa laya",
+      "bodyFont": "Qillqa laya",
+      "logo": "Logo",
+      "noLogo": "Mana logo kanchu",
+      "logoHint": "Logoykita Media nisqapi churay, chaymanta kaypi akllay.",
+      "apply": "Marcata churay",
+      "addLogo": "Logota yapay",
+      "applied": "Marcaqa {{count}} capakunapi churasqa."
     }
   },
   "fractions": {
