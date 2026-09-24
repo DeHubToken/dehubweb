@@ -3820,6 +3820,15 @@
       "allZip": "Ngā whārangi {{count}} katoa (ZIP)",
       "thisPage": "Tēnei whārangi anake",
       "exporting": "E whakaputa ana i te whārangi {{current}} o {{total}}…"
+    },
+    "captions": {
+      "action": "Tapanga aunoa",
+      "working": "E whakarongo ana… {{percent}}%",
+      "downloading": "E whakareri ana i te tauira kōrero… {{percent}}%",
+      "hint": "Ka huri i te kōrero hei tapanga whai wā ka taea e koe te panoni te āhua. Ka rere ki tō pūrere: utu kore, tūmataiti hoki. Ka tikiake te tauira i te whakamahinga tuatahi.",
+      "done": "Kua tāpiritia ngā tapanga {{count}}.",
+      "noSpeech": "Kāore he kōrero i kitea i tēnei topenga.",
+      "failed": "Kāore i taea te hanga tapanga mō tēnei topenga."
     }
   },
   "fractions": {

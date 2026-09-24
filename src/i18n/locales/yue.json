@@ -3824,6 +3824,15 @@
       "allZip": "全部 {{count}} 頁（ZIP）",
       "thisPage": "淨係呢頁",
       "exporting": "處理緊第 {{current}} 頁，共 {{total}} 頁…"
+    },
+    "captions": {
+      "action": "自動字幕",
+      "working": "聽緊… {{percent}}%",
+      "downloading": "準備緊語音模型… {{percent}}%",
+      "hint": "將講嘢轉做有時間嘅字幕，樣式隨你改。喺你部機度運行：免費又私隱。第一次用會下載模型。",
+      "done": "加咗 {{count}} 條字幕。",
+      "noSpeech": "呢段片冇搵到講嘢聲。",
+      "failed": "呢段片整唔到字幕。"
     }
   },
   "fractions": {

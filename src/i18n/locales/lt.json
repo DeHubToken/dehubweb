@@ -6125,6 +6125,15 @@
       "allZip": "Visi puslapiai ({{count}}) (ZIP)",
       "thisPage": "Tik šis puslapis",
       "exporting": "Generuojamas puslapis {{current}} iš {{total}}…"
+    },
+    "captions": {
+      "action": "Automatiniai subtitrai",
+      "working": "Klausomasi… {{percent}} %",
+      "downloading": "Ruošiamas kalbos modelis… {{percent}} %",
+      "hint": "Paverčia kalbą laiku susietais subtitrais, kurių stilių galite keisti. Veikia jūsų įrenginyje: nemokamai ir privačiai. Pirmą kartą atsisiunčiamas modelis.",
+      "done": "Pridėta subtitrų: {{count}}.",
+      "noSpeech": "Šiame klipe kalbos nerasta.",
+      "failed": "Nepavyko sukurti subtitrų šiam klipui."
     }
   }
 }

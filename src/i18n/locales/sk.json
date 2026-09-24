@@ -3965,6 +3965,15 @@
       "allZip": "Všetky strany ({{count}}) (ZIP)",
       "thisPage": "Iba táto strana",
       "exporting": "Vykresľuje sa strana {{current}} z {{total}}…"
+    },
+    "captions": {
+      "action": "Automatické titulky",
+      "working": "Počúvam… {{percent}} %",
+      "downloading": "Pripravujem model reči… {{percent}} %",
+      "hint": "Premení reč na časované titulky, ktorým môžeš zmeniť štýl. Beží na tvojom zariadení: zadarmo a súkromne. Pri prvom použití sa stiahne model.",
+      "done": "Pridané titulky: {{count}}.",
+      "noSpeech": "V tomto klipe sa nenašla žiadna reč.",
+      "failed": "Pre tento klip sa nepodarilo vytvoriť titulky."
     }
   },
   "post": {
