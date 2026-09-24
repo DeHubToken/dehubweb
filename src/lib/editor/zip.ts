@@ -21,8 +21,9 @@ function crc32(data: Uint8Array): number {
 
 export async function zipFiles(files: { name: string; blob: Blob }[]): Promise<Blob> {
   const enc = new TextEncoder();
-  const parts: BlobPart[] = [];
-  const central: Uint8Array[] = [];
+  // Plain ArrayBuffers only: newer TypeScript rejects Uint8Array<ArrayBufferLike> as a BlobPart.
+  const parts: ArrayBuffer[] = [];
+  const central: ArrayBuffer[] = [];
   let offset = 0;
   for (const f of files) {
     const data = new Uint8Array(await f.blob.arrayBuffer());
@@ -37,7 +38,7 @@ export async function zipFiles(files: { name: string; blob: Blob }[]): Promise<B
     local.setUint32(18, data.length, true);
     local.setUint32(22, data.length, true);
     local.setUint16(26, name.length, true);
-    parts.push(local.buffer, name, data);
+    parts.push(local.buffer, name.slice().buffer as ArrayBuffer, data.slice().buffer as ArrayBuffer);
 
     const cen = new DataView(new ArrayBuffer(46));
     cen.setUint32(0, 0x02014b50, true);
@@ -53,10 +54,10 @@ export async function zipFiles(files: { name: string; blob: Blob }[]): Promise<B
     const entry = new Uint8Array(46 + name.length);
     entry.set(new Uint8Array(cen.buffer), 0);
     entry.set(name, 46);
-    central.push(entry);
+    central.push(entry.buffer as ArrayBuffer);
     offset += 30 + name.length + data.length;
   }
-  const centralSize = central.reduce((n, e) => n + e.length, 0);
+  const centralSize = central.reduce((n, e) => n + e.byteLength, 0);
   const end = new DataView(new ArrayBuffer(22));
   end.setUint32(0, 0x06054b50, true);
   end.setUint16(8, files.length, true);
