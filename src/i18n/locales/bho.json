@@ -3697,6 +3697,13 @@
       "importMedia": "मीडिया इम्पोर्ट करीं",
       "generateClip": "क्लिप बनाईं",
       "addHeadline": "हेडलाइन जोड़ीं"
+    },
+    "adjust": {
+      "warmth": "गरमाहट {{value}}",
+      "tint": "टिंट {{value}}",
+      "vignette": "विनेट {{value}}%",
+      "auto": "ऑटो सुधार",
+      "autoFailed": "ई फोटो के विश्लेषण ना हो पावल।"
     }
   },
   "fractions": {

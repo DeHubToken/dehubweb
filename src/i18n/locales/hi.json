@@ -6139,6 +6139,13 @@
       "importMedia": "मीडिया इम्पोर्ट करें",
       "generateClip": "क्लिप बनाएँ",
       "addHeadline": "हेडलाइन जोड़ें"
+    },
+    "adjust": {
+      "warmth": "गर्माहट {{value}}",
+      "tint": "टिंट {{value}}",
+      "vignette": "विनेट {{value}}%",
+      "auto": "ऑटो एन्हांस",
+      "autoFailed": "इस तस्वीर का विश्लेषण नहीं हो सका।"
     }
   }
 }

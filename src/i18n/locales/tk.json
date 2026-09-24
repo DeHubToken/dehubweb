@@ -3761,6 +3761,13 @@
       "importMedia": "Media import et",
       "generateClip": "Klip döret",
       "addHeadline": "Sözbaşy goş"
+    },
+    "adjust": {
+      "warmth": "Ýylylyk {{value}}",
+      "tint": "Öwüşgin {{value}}",
+      "vignette": "Winýetka {{value}}%",
+      "auto": "Awtomatik gowulandyrmak",
+      "autoFailed": "Bu suraty seljerip bolmady."
     }
   },
   "fractions": {

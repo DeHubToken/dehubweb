@@ -39,7 +39,7 @@ Operations (only use fields you need):
 - update: id plus any of the add_text fields (text layers), add_shape fields (shapes) or media fields; also for any layer: blend, locked, hidden.
 - blend (on update/add_*): "normal" | "multiply" | "screen" | "overlay" | "darken" | "lighten" | "color-dodge" | "color-burn" | "hard-light" | "soft-light" | "difference" | "exclusion" | "hue" | "saturation" | "color" | "luminosity".
 - place: id, x, y, scale (1 = fitted size), rotation (deg), opacity (0..1), flipH, flipV, fit ("contain" | "cover" = fill the page).
-- effects: id, preset (one of: none, cinematic, warm, cool, vintage, bw, sepia, dreamy, punchy, faded, noir, sunny, moody, vibrant, cyber, invert) and/or brightness, contrast, saturation (0..2, 1 = normal), blur (0..20), grayscale, sepia, invert (0..1), hueRotate (0..360).
+- effects: id, preset (one of: none, cinematic, warm, cool, vintage, bw, sepia, dreamy, punchy, faded, noir, sunny, moody, vibrant, cyber, invert) and/or brightness, contrast, saturation (0..2, 1 = normal), blur (0..20), grayscale, sepia, invert (0..1), hueRotate (0..360), warmth (-1 cool .. 1 warm), tint (-1 green .. 1 magenta), vignette (0..1). Prefer warmth over hueRotate for "warmer"/"cooler".
 - crop: id, left, top, right, bottom (fractions 0..0.9).
 - style: id, radius (corner rounding px), shadow (true/false).
 - animate: id, in and/or out (one of: none, fade, slide-up, slide-down, slide-left, slide-right, zoom-in, zoom-out, pop, rise, blur).

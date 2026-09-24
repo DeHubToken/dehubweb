@@ -3795,6 +3795,13 @@
       "importMedia": "Impor media",
       "generateClip": "Gawe klip",
       "addHeadline": "Tambah judhul"
+    },
+    "adjust": {
+      "warmth": "Kehangatan {{value}}",
+      "tint": "Tint {{value}}",
+      "vignette": "Vignette {{value}}%",
+      "auto": "Paningkatan otomatis",
+      "autoFailed": "Foto iki ora bisa dianalisis."
     }
   },
   "fractions": {

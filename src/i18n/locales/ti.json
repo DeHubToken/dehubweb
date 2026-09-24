@@ -3708,6 +3708,13 @@
       "importMedia": "ሚድያ ኣእቱ",
       "generateClip": "ክሊፕ ፍጠር",
       "addHeadline": "ኣርእስቲ ወስኽ"
+    },
+    "adjust": {
+      "warmth": "ሙቐት {{value}}",
+      "tint": "ሕብሪ {{value}}",
+      "vignette": "ቪኘት {{value}}%",
+      "auto": "ብኣውቶማቲክ ኣመሓይሽ",
+      "autoFailed": "ነዚ ስእሊ ክንትንትኖ ኣይከኣልናን።"
     }
   },
   "fractions": {

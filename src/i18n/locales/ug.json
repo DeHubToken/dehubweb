@@ -3778,6 +3778,13 @@
       "importMedia": "مېدىيا ئەكىرىش",
       "generateClip": "كلىپ ھاسىل قىلىش",
       "addHeadline": "ماۋزۇ قوشۇش"
+    },
+    "adjust": {
+      "warmth": "ئىسسىقلىق {{value}}",
+      "tint": "رەڭ تۈسى {{value}}",
+      "vignette": "گىرۋەك قاراڭغۇلىقى {{value}}%",
+      "auto": "ئاپتوماتىك ياخشىلاش",
+      "autoFailed": "بۇ رەسىمنى تەھلىل قىلغىلى بولمىدى."
     }
   },
   "fractions": {

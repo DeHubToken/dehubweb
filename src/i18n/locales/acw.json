@@ -3737,6 +3737,13 @@
       "importMedia": "استيراد وسائط",
       "generateClip": "سوّي مقطع",
       "addHeadline": "أضف عنوان"
+    },
+    "adjust": {
+      "warmth": "الدفء {{value}}",
+      "tint": "الصبغة {{value}}",
+      "vignette": "التظليل {{value}}%",
+      "auto": "تحسين تلقائي",
+      "autoFailed": "ما قدرنا نحلل هذي الصورة."
     }
   },
   "fractions": {

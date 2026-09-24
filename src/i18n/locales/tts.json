@@ -3744,6 +3744,13 @@
       "importMedia": "นำเข้าสื่อ",
       "generateClip": "สร้างคลิป",
       "addHeadline": "เพิ่มหัวข้อ"
+    },
+    "adjust": {
+      "warmth": "ความอุ่น {{value}}",
+      "tint": "โทนสี {{value}}",
+      "vignette": "ขอบมืด {{value}}%",
+      "auto": "ปรับปรุงอัตโนมัติ",
+      "autoFailed": "บ่สามารถวิเคราะห์ฮูบนี้ได้"
     }
   },
   "fractions": {

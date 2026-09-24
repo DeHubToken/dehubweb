@@ -16,6 +16,8 @@ import { ANIMATION_PRESETS, newAnimation } from "@/lib/editor/animationPresets";
 import { FontPicker } from "@/components/editor/FontPicker";
 import { findFontByCss, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
 import { LayerSection } from "@/components/editor/inspector/LayerSection";
+import { autoEnhanceEffects } from "@/lib/editor/autoEnhance";
+import { toast } from "sonner";
 
 
 const ASPECTS: { value: AspectPreset; label: string }[] = [
@@ -163,6 +165,30 @@ export function Inspector() {
             <EffectSlider label={`Sepia ${Math.round((visualMedia.effects?.sepia ?? 0) * 100)}%`}
               value={visualMedia.effects?.sepia ?? 0} min={0} max={1} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, sepia: v } })} />
+            <EffectSlider label={t("editor.adjust.warmth", { value: Math.round((visualMedia.effects?.warmth ?? 0) * 100) })}
+              value={visualMedia.effects?.warmth ?? 0} min={-1} max={1} step={0.01}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, warmth: v } })} />
+            <EffectSlider label={t("editor.adjust.tint", { value: Math.round((visualMedia.effects?.tint ?? 0) * 100) })}
+              value={visualMedia.effects?.tint ?? 0} min={-1} max={1} step={0.01}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, tint: v } })} />
+            <EffectSlider label={t("editor.adjust.vignette", { value: Math.round((visualMedia.effects?.vignette ?? 0) * 100) })}
+              value={visualMedia.effects?.vignette ?? 0} min={0} max={1} step={0.01}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, vignette: v } })} />
+            {visualMedia.kind === "image" && (
+              <Button size="sm" variant="ghost"
+                onClick={async () => {
+                  const m = useEditorStore.getState().media.find((x) => x.id === visualMedia.mediaId);
+                  if (!m) return;
+                  try {
+                    updateMediaClip(visualMedia.id, { effects: await autoEnhanceEffects(m.url, visualMedia.effects) });
+                  } catch {
+                    toast.error(t("editor.adjust.autoFailed"));
+                  }
+                }}
+                className="h-7 w-full rounded-md bg-white text-[11px] font-semibold text-black hover:bg-white/90">
+                {t("editor.adjust.auto")}
+              </Button>
+            )}
             <Button size="sm" variant="ghost"
               onClick={() => updateMediaClip(visualMedia.id, { effects: undefined })}
               className="h-7 w-full rounded-md border border-white/10 text-[11px] text-white/70 hover:bg-white/5 hover:text-white">

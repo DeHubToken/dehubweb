@@ -6018,6 +6018,13 @@
       "importMedia": "Importera media",
       "generateClip": "Generera ett klipp",
       "addHeadline": "Lägg till en rubrik"
+    },
+    "adjust": {
+      "warmth": "Värme {{value}}",
+      "tint": "Färgton {{value}}",
+      "vignette": "Vinjett {{value}} %",
+      "auto": "Autoförbättra",
+      "autoFailed": "Kunde inte analysera den här bilden."
     }
   }
 }

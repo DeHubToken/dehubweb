@@ -5991,6 +5991,13 @@
       "importMedia": "मिडिया आयात",
       "generateClip": "क्लिप बनाउनुहोस्",
       "addHeadline": "शीर्षक थप्नुहोस्"
+    },
+    "adjust": {
+      "warmth": "न्यानोपन {{value}}",
+      "tint": "टिन्ट {{value}}",
+      "vignette": "भिग्नेट {{value}}%",
+      "auto": "स्वतः सुधार",
+      "autoFailed": "यो तस्बिर विश्लेषण गर्न सकिएन।"
     }
   },
   "spaces": {

@@ -6046,6 +6046,13 @@
       "importMedia": "Importér medier",
       "generateClip": "Generér et klip",
       "addHeadline": "Tilføj en overskrift"
+    },
+    "adjust": {
+      "warmth": "Varme {{value}}",
+      "tint": "Farvetone {{value}}",
+      "vignette": "Vignet {{value}} %",
+      "auto": "Autoforbedring",
+      "autoFailed": "Kunne ikke analysere dette billede."
     }
   }
 }

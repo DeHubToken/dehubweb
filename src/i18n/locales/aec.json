@@ -3740,6 +3740,13 @@
       "importMedia": "استورد ميديا",
       "generateClip": "اعمل كليب",
       "addHeadline": "ضيف عنوان"
+    },
+    "adjust": {
+      "warmth": "الدفء {{value}}",
+      "tint": "درجة اللون {{value}}",
+      "vignette": "التظليل {{value}}%",
+      "auto": "تحسين تلقائي",
+      "autoFailed": "مش قادر أحلل الصورة دي."
     }
   },
   "post": {

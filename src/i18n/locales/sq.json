@@ -3823,6 +3823,13 @@
       "importMedia": "Importo media",
       "generateClip": "Gjenero një klip",
       "addHeadline": "Shto një titull"
+    },
+    "adjust": {
+      "warmth": "Ngrohtësia {{value}}",
+      "tint": "Nuanca {{value}}",
+      "vignette": "Vinjeta {{value}}%",
+      "auto": "Përmirësim automatik",
+      "autoFailed": "Nuk mund ta analizonim këtë foto."
     }
   },
   "fractions": {

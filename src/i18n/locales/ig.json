@@ -3768,6 +3768,13 @@
       "importMedia": "Bubata mgbasa ozi",
       "generateClip": "Mepụta klip",
       "addHeadline": "Tinye isiokwu"
+    },
+    "adjust": {
+      "warmth": "Okpomọkụ agba {{value}}",
+      "tint": "Ntụpọ agba {{value}}",
+      "vignette": "Ọchịchịrị nsọtụ {{value}}%",
+      "auto": "Mma akpaaka",
+      "autoFailed": "Anyị enweghị ike inyocha foto a."
     }
   },
   "fractions": {

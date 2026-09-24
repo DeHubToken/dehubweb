@@ -2949,6 +2949,13 @@
       "importMedia": "মিডিয়া আনো",
       "generateClip": "ক্লিপ বানাও",
       "addHeadline": "হেডলাইন যোগ করো"
+    },
+    "adjust": {
+      "warmth": "গরম ভাব {{value}}",
+      "tint": "টিন্ট {{value}}",
+      "vignette": "ভিনিয়েট {{value}}%",
+      "auto": "অটো সুন্দর করো",
+      "autoFailed": "এই ছবিটা বিশ্লেষণ করা গেইল না।"
     }
   },
   "post": {

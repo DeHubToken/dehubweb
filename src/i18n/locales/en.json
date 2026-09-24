@@ -6134,6 +6134,13 @@
       "importMedia": "Import media",
       "generateClip": "Generate a clip",
       "addHeadline": "Add a headline"
+    },
+    "adjust": {
+      "warmth": "Warmth {{value}}",
+      "tint": "Tint {{value}}",
+      "vignette": "Vignette {{value}}%",
+      "auto": "Auto enhance",
+      "autoFailed": "Couldn't analyse this picture."
     }
   }
 }

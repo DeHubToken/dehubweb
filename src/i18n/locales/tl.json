@@ -5888,6 +5888,13 @@
       "importMedia": "Mag-import ng media",
       "generateClip": "Gumawa ng clip",
       "addHeadline": "Magdagdag ng headline"
+    },
+    "adjust": {
+      "warmth": "Warmth {{value}}",
+      "tint": "Tint {{value}}",
+      "vignette": "Vignette {{value}}%",
+      "auto": "Auto enhance",
+      "autoFailed": "Hindi ma-analyze ang larawang ito."
     }
   },
   "walletSelector": {

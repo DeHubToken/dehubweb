@@ -3805,6 +3805,13 @@
       "importMedia": "Shigo da midiya",
       "generateClip": "Samar da gajeren bidiyo",
       "addHeadline": "Ƙara babban take"
+    },
+    "adjust": {
+      "warmth": "Ɗumi {{value}}",
+      "tint": "Launi {{value}}",
+      "vignette": "Duhun gefe {{value}}%",
+      "auto": "Inganta kai tsaye",
+      "autoFailed": "Ba a iya nazarin wannan hoton ba."
     }
   },
   "fractions": {

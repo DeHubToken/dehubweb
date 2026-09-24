@@ -3947,6 +3947,13 @@
       "importMedia": "Importovať médiá",
       "generateClip": "Vygenerovať klip",
       "addHeadline": "Pridať nadpis"
+    },
+    "adjust": {
+      "warmth": "Teplota {{value}}",
+      "tint": "Odtieň {{value}}",
+      "vignette": "Vineta {{value}}%",
+      "auto": "Automatické vylepšenie",
+      "autoFailed": "Tento obrázok sa nepodarilo analyzovať."
     }
   },
   "post": {
