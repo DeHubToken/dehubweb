@@ -16,7 +16,8 @@
  * exists to close.
  */
 
-import { guardPaidEndpoint, jsonResponse, serviceClient, type RateLimit } from './auth.ts';
+import { guardPaidEndpoint, jsonResponse, rateLimitByIp, serviceClient, type RateLimit } from './auth.ts';
+import { claimFree, freeEligible, releaseFree } from './ai-free.ts';
 import { quotePriceDhb, type JobKind, type QuoteOptions } from './ai-pricing.ts';
 import { claimDhbPayment } from './dhb-transfer.ts';
 
@@ -94,8 +95,30 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
   // already parsed it hands it over; otherwise cloning leaves the original
   // readable, so nothing downstream had to learn about payment.
   const body = (opts.body
-    ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown; clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown };
+    ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown; clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; useFree?: unknown };
   const txHash = typeof body.txHash === 'string' ? body.txHash.toLowerCase() : '';
+
+  // A free starter image: no transfer, one row in ai_free_generations. The
+  // per-IP cap keeps a farm of fresh wallets from draining it.
+  if (!txHash && body.useFree === true && freeEligible(opts.kind, opts.modelId, opts.quantity)) {
+    const ipLimited = await rateLimitByIp(req, 'ai-free', { limit: 15, windowMs: 24 * 60 * 60 * 1000 });
+    if (ipLimited) return { ok: false, response: ipLimited };
+    const freeJobId = crypto.randomUUID();
+    let claimed = false;
+    try {
+      claimed = await claimFree(guard.wallet, freeJobId, opts.modelId);
+    } catch (error) {
+      console.error('[ai-payment] free claim failed:', error);
+      return { ok: false, response: jsonResponse({ error: 'Could not start a free generation. Please retry.' }, 503) };
+    }
+    if (!claimed) {
+      return {
+        ok: false,
+        response: jsonResponse({ error: 'Your free images are used up. Pay for this one to run it.', code: 'FREE_EXHAUSTED', priceDhb }, 402),
+      };
+    }
+    return { ok: true, wallet: guard.wallet, priceDhb: 0, jobId: freeJobId, refund: () => releaseFree(freeJobId) };
+  }
 
   if (!/^0x[a-f0-9]{64}$/.test(txHash)) {
     return {

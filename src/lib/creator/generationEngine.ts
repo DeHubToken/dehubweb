@@ -27,6 +27,8 @@ export interface ImageRequest {
   aspectRatio?: string;
   /** Hash of the DHB transfer that paid for this job. */
   txHash?: string;
+  /** Run on one of the wallet's free starter images instead of a transfer. */
+  useFree?: boolean;
 }
 
 export interface VideoRequest {
@@ -389,6 +391,7 @@ export async function generateImage(
       ...(sourceImage ? { sourceImage } : {}),
       ...(req.aspectRatio ? { aspectRatio: req.aspectRatio } : {}),
       ...(req.txHash ? { txHash: req.txHash } : {}),
+      ...(req.useFree && !req.txHash ? { useFree: true } : {}),
     },
   });
 

@@ -3359,5 +3359,16 @@
     "desc": "Bright day or blue evening for inside bush",
     "day": "Day",
     "evening": "Evening"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Free · {{count}} free image left",
+    "freeImagesLeft_other": "Free · {{count}} free images left",
+    "priceFreeRateLimited": "Free · rate limits apply",
+    "priceChecking": "Checking price…",
+    "priceUnavailable": "Price unavailable — retry before paying",
+    "priceStandardTexture": "standard texture",
+    "priceUsually": "Usually {{time}}; queues may take longer",
+    "useFreeModel_one": "Change go {{model}} for use ya {{count}} free picture",
+    "useFreeModel_other": "Change go {{model}} for use ya {{count}} free pictures"
   }
 }

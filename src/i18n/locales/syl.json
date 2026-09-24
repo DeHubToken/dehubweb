@@ -3893,5 +3893,16 @@
     "desc": "জঙ্গলো উজ্জ্বল দিন বা নীলা হাঁঝ",
     "day": "দিন",
     "evening": "হাঁঝ"
+  },
+  "creator": {
+    "freeImagesLeft_one": "ফ্রি · {{count}} ফ্রি ছবি বাকি",
+    "freeImagesLeft_other": "ফ্রি · {{count}} ফ্রি ছবি বাকি",
+    "priceFreeRateLimited": "ফ্রি · রেট লিমিট প্রযোজ্য",
+    "priceChecking": "দাম চেক হচ্ছে…",
+    "priceUnavailable": "দাম পাওয়া যায়নি — পেমেন্টের আগে আবার চেষ্টা করুন",
+    "priceStandardTexture": "স্ট্যান্ডার্ড টেক্সচার",
+    "priceUsually": "সাধারণত {{time}}; কিউতে বেশি সময় লাগতে পারে",
+    "useFreeModel_one": "{{model}} লগে চলো {{count}} ফ্রী ছবি ব্যবহার করর।",
+    "useFreeModel_other": "{{model}} লগে চলো {{count}} ফ্রী ছবি ব্যবহার করর।"
   }
 }

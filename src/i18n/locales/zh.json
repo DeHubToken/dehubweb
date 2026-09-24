@@ -3841,7 +3841,16 @@
     "aiGenerationCommunityAlt": "来自 DeHub 社区的 AI 生成作品",
     "close": "关闭",
     "toolFlow": "创作者流程",
-    "toolFlowDesc": "在画布上显示连锁文本、参考文献、图像和视频模型，在一次付款中运行，并通过链接共享。"
+    "toolFlowDesc": "在画布上显示连锁文本、参考文献、图像和视频模型，在一次付款中运行，并通过链接共享。",
+    "freeImagesLeft_one": "空闲·剩余{{count}}张空闲图片",
+    "freeImagesLeft_other": "免费·剩余{{count}}张免费图片",
+    "priceFreeRateLimited": "免费·适用速率限制",
+    "priceChecking": "正在检查价格……",
+    "priceUnavailable": "价格不可用—请在付款前重试",
+    "priceStandardTexture": "标准纹理",
+    "priceUsually": "通常为{{time}} ；排队可能需要更长时间",
+    "useFreeModel_one": "切换到{{model}}以使用您的{{count}}免费图片",
+    "useFreeModel_other": "切换到{{model}}以使用您的{{count}}免费图片"
   },
   "pricing": {
     "plansForEveryWorkflow": "适配每种工作流的方案",

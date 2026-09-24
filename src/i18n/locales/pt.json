@@ -3843,7 +3843,16 @@
     "aiGenerationCommunityAlt": "Geração de IA da comunidade DeHub",
     "close": "Fechar",
     "toolFlow": "Fluxo do criador",
-    "toolFlowDesc": "Cadeia de texto, referências, modelos de imagem e vídeo em uma tela, executá-lo em um pagamento, compartilhá-lo com um link."
+    "toolFlowDesc": "Cadeia de texto, referências, modelos de imagem e vídeo em uma tela, executá-lo em um pagamento, compartilhá-lo com um link.",
+    "freeImagesLeft_one": "Grátis · {{count}} imagem gratuita restante",
+    "freeImagesLeft_other": "Grátis · {{count}} imagens gratuitas restantes",
+    "priceFreeRateLimited": "Grátis · aplicam-se limites de tarifa",
+    "priceChecking": "A verificar preço...",
+    "priceUnavailable": "Preço indisponível — tente novamente antes de pagar",
+    "priceStandardTexture": "textura padrão",
+    "priceUsually": "Normalmente {{time}}; as filas podem demorar mais",
+    "useFreeModel_one": "Mude para {{model}} para usar a sua {{count}} imagem gratuita",
+    "useFreeModel_other": "Mude para {{model}} para usar as suas {{count}} imagens gratuitas"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planos para cada fluxo de trabalho",

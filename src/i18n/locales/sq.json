@@ -3908,5 +3908,16 @@
     "desc": "Një ditë e ndritshme ose një mbrëmje blu e muzgët në xhungël",
     "day": "Ditë",
     "evening": "Mbrëmje"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Falas · {{count}} imazh falas i mbetur",
+    "freeImagesLeft_other": "Falas · {{count}} imazhe falas të mbetura",
+    "priceFreeRateLimited": "Zbatohen kufijtë e tarifave falas ·",
+    "priceChecking": "Duke kontrolluar çmimin...",
+    "priceUnavailable": "Çmimi i padisponueshëm — riprovo para se të paguash",
+    "priceStandardTexture": "cilësi standarde",
+    "priceUsually": "Zakonisht {{time}}; radhët mund të zgjasin më shumë",
+    "useFreeModel_one": "Kalo te {{model}} për të përdorur imazhin tënd {{count}} falas",
+    "useFreeModel_other": "Kalo te {{model}} për të përdorur imazhet e tua {{count}} falas"
   }
 }

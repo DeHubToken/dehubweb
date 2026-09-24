@@ -3840,7 +3840,16 @@
     "aiGenerationCommunityAlt": "DeHub topluluğundan bir yapay zekâ üretimi",
     "close": "Kapat",
     "toolFlow": "Yaratıcı akışı",
-    "toolFlowDesc": "Metin, referanslar, resim ve video modellerini bir tuval üzerinde zincirleyin, tek bir ödemede çalıştırın, bir bağlantıyla paylaşın."
+    "toolFlowDesc": "Metin, referanslar, resim ve video modellerini bir tuval üzerinde zincirleyin, tek bir ödemede çalıştırın, bir bağlantıyla paylaşın.",
+    "freeImagesLeft_one": "Ücretsiz ·{{count}} ücretsiz görsel kaldı",
+    "freeImagesLeft_other": "Ücretsiz ·{{count}} ücretsiz görsel kaldı",
+    "priceFreeRateLimited": "Ücretsiz · ücret limitleri uygulanır",
+    "priceChecking": "Fiyat kontrol ediliyor…",
+    "priceUnavailable": "Fiyat mevcut değil — ödemeden önce yeniden deneyin",
+    "priceStandardTexture": "standart doku",
+    "priceUsually": "Genellikle {{time}}; kuyruklar daha uzun sürebilir",
+    "useFreeModel_one": "{{count}} ücretsiz görselinizi kullanmak için {{model}}konumuna geçin",
+    "useFreeModel_other": "{{count}} ücretsiz görsellerinizi kullanmak için {{model}}konumuna geçin"
   },
   "pricing": {
     "plansForEveryWorkflow": "Her iş akışına uygun planlar",

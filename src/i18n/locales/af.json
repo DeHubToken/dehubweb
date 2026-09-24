@@ -3695,7 +3695,16 @@
     "aiGenerationCommunityAlt": "AI-generering van die DeHub-gemeenskap",
     "close": "Sluit",
     "toolFlow": "Skepperstroom",
-    "toolFlowDesc": "Ketting teks, verwysings, beeld en video modelle op 'n doek, hardloop dit in een betaling, deel dit met 'n skakel."
+    "toolFlowDesc": "Ketting teks, verwysings, beeld en video modelle op 'n doek, hardloop dit in een betaling, deel dit met 'n skakel.",
+    "freeImagesLeft_one": "Gratis · {{count}} gratis beeld links",
+    "freeImagesLeft_other": "Gratis · {{count}} gratis beelde oor",
+    "priceFreeRateLimited": "Gratis · tarief perke van toepassing",
+    "priceChecking": "Kontroleer prys...",
+    "priceUnavailable": "Prys nie beskikbaar nie — probeer weer voordat jy betaal",
+    "priceStandardTexture": "standaard tekstuur",
+    "priceUsually": "Gewoonlik {{time}}; toue kan langer neem",
+    "useFreeModel_one": "Skakel na {{model}} om jou {{count}} gratis beeld te gebruik",
+    "useFreeModel_other": "Skakel na {{model}} om jou {{count}} gratis beelde te gebruik"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planne vir elke werkstroom",

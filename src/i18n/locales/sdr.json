@@ -3802,5 +3802,16 @@
     "desc": "جنگل میں اجلا دن یا نیلی سانجھ",
     "day": "دن",
     "evening": "سانجھ"
+  },
+  "creator": {
+    "freeImagesLeft_one": "फ्री · {{count}} फ्री इमेज बाकी",
+    "freeImagesLeft_other": "फ्री · {{count}} फ्री इमेज बाकी",
+    "priceFreeRateLimited": "Free · rate limits apply",
+    "priceChecking": "Checking price…",
+    "priceUnavailable": "Price unavailable — retry before paying",
+    "priceStandardTexture": "standard texture",
+    "priceUsually": "Usually {{time}}; queues may take longer",
+    "useFreeModel_one": "आपन {{count}} गो फिरी फोटो काम में लेवे ले {{model}} में जाऊ",
+    "useFreeModel_other": "आपन {{count}} गो फिरी फोटो काम में लेवे ले {{model}} में जाऊ"
   }
 }

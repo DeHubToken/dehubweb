@@ -3851,5 +3851,16 @@
     "desc": "Ширэнгэн ой дахь гэгээн өдөр эсвэл бүрэнхий цэнхэр орой",
     "day": "Өдөр",
     "evening": "Орой"
+  },
+  "creator": {
+    "freeImagesLeft_one": "ҮНЭГҮЙ · {{count}} үнэгүй зураг зүүн",
+    "freeImagesLeft_other": "Үнэгүй · {{count}} үнэгүй зургууд үлдсэн",
+    "priceFreeRateLimited": "ҮНЭГҮЙ · Ханшийн хязгаар тогтоох",
+    "priceChecking": "Үнийг шалгах…",
+    "priceUnavailable": "Үнэ ашиглах боломжгүй — Төлөхөөс өмнө дахин оролдоно уу",
+    "priceStandardTexture": "стандарт бүтэцтэй",
+    "priceUsually": "Ихэвчлэн {{time}}; дараалал илүү удаан үргэлжилж болно",
+    "useFreeModel_one": "{{count}} үнэгүй зургаа ашиглахын тулд {{model}} руу шилжинэ үү",
+    "useFreeModel_other": "{{count}} үнэгүй зургуудыг ашиглахын тулд {{model}} 0 руу шилжүүлнэ үү"
   }
 }

@@ -3754,5 +3754,16 @@
     "desc": "Tile yeelen walima wula bulaman kungo kɔnɔ",
     "day": "Tile",
     "evening": "Wula"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Fu · ja fu {{count}} tolen bɛ",
+    "freeImagesLeft_other": "Fu · ja fu {{count}} tolen bɛ",
+    "priceFreeRateLimited": "O kama, a ka ɲi ka to ka kuma ni mɔgɔ wɛrɛw ye.",
+    "priceChecking": "O ye kuun ye ka wari sɔrɔ.",
+    "priceUnavailable": "Ka segi ka na, o kɔrɔ ko ka segi ka na.",
+    "priceStandardTexture": "fɛɛn minw be sɔrɔ Bibulu kɔnɔ",
+    "priceUsually": "A ka ca {{time}}; dɔnni bɛ se ka mɛn",
+    "useFreeModel_one": "Taga {{model}} kan ka i ka ja fu {{count}} baara",
+    "useFreeModel_other": "Taga {{model}} kan ka i ka ja fu {{count}} baara"
   }
 }

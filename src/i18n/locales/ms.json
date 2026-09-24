@@ -4105,7 +4105,16 @@
     "aiGenerationCommunityAlt": "Penjanaan AI daripada komuniti DeHub",
     "close": "Tutup",
     "toolFlow": "Aliran Pengkarya",
-    "toolFlowDesc": "Teks rantaian, rujukan, model imej dan video pada kanvas, jalankannya dalam satu bayaran, kongsi dengan pautan."
+    "toolFlowDesc": "Teks rantaian, rujukan, model imej dan video pada kanvas, jalankannya dalam satu bayaran, kongsi dengan pautan.",
+    "freeImagesLeft_one": "Percuma · {{count}} imej percuma yang tinggal",
+    "freeImagesLeft_other": "Percuma · {{count}} imej percuma yang tinggal",
+    "priceFreeRateLimited": "Percuma · had kadar dikenakan",
+    "priceChecking": "Menyemak harga...",
+    "priceUnavailable": "Harga tidak tersedia — cuba lagi sebelum membayar",
+    "priceStandardTexture": "tekstur standard",
+    "priceUsually": "Biasanya {{time}}; baris gilir mungkin mengambil masa lebih lama",
+    "useFreeModel_one": "Tukar ke {{model}} untuk menggunakan imej percuma {{count}} anda",
+    "useFreeModel_other": "Tukar kepada {{model}} untuk menggunakan imej percuma {{count}} anda"
   },
   "pricing": {
     "plansForEveryWorkflow": "Rancangan untuk setiap aliran kerja",

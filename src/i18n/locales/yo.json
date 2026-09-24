@@ -3882,5 +3882,16 @@
     "desc": "Ọjọ́ tó mọ́lẹ̀ tàbí ìrọ̀lẹ́ aláwọ̀ búlúù nínú igbó",
     "day": "Ọ̀sán",
     "evening": "Ìrọ̀lẹ́"
+  },
+  "creator": {
+    "freeImagesLeft_one": "Ọfẹ · {{count}} aworan ọfẹ sílẹ̀",
+    "freeImagesLeft_other": "Ọfẹ · {{count}} àwọn àwòrán ọfẹ́ sílẹ̀",
+    "priceFreeRateLimited": "Òfin owó ọ̀fẹ́ · máa ń bá a lọ",
+    "priceChecking": "Ṣayẹwo iye owo...",
+    "priceUnavailable": "Iye owo ti ko si — tun ṣe ṣaaju ki o to sanwo",
+    "priceStandardTexture": "àdàkọ tí ó ṣe déédéé",
+    "priceUsually": "Nigbagbogbo {{time}}; awọn okun le gba to gun",
+    "useFreeModel_one": "Yípadà sí {{model}} láti lo àwòrán rẹ {{count}} FREE",
+    "useFreeModel_other": "Yipada si {{model}} lati lo {{count}} awọn aworan ọfẹ"
   }
 }

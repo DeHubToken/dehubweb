@@ -3831,7 +3831,16 @@
     "aiGenerationCommunityAlt": "AI-generering fra DeHub-fællesskabet",
     "close": "Luk",
     "toolFlow": "Kreatørflow",
-    "toolFlowDesc": "Kædetekst, referencer, billed- og videomodeller på et lærred, kør det i én betaling, del det med et link."
+    "toolFlowDesc": "Kædetekst, referencer, billed- og videomodeller på et lærred, kør det i én betaling, del det med et link.",
+    "freeImagesLeft_one": "Gratis ·{{count}} gratis billede tilbage",
+    "freeImagesLeft_other": "Gratis ·{{count}} gratis billeder tilbage",
+    "priceFreeRateLimited": "Gratis · takstgrænser gælder",
+    "priceChecking": "Tjekker pris...",
+    "priceUnavailable": "Prisen er ikke tilgængelig — prøv igen, før du betaler",
+    "priceStandardTexture": "standardtekstur",
+    "priceUsually": "Normalt {{time}}; køerne kan tage længere tid",
+    "useFreeModel_one": "Skift til {{model}} for at bruge dit {{count}} gratis billede",
+    "useFreeModel_other": "Skift til {{model}} for at bruge dine {{count}} gratis billeder"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planer for hvert arbejdsflow",

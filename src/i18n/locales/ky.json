@@ -3811,7 +3811,16 @@
     "aiGenerationCommunityAlt": "DeHub коомчулугунан AI генерациясы",
     "close": "Жабуу",
     "toolFlow": "Жаратуучунун агымы",
-    "toolFlowDesc": "Текстти, шилтемелерди, сүрөт жана видео моделдерин холстто бириктирип, бир төлөм менен иштетип, шилтеме аркылуу бөлүшүңүз."
+    "toolFlowDesc": "Текстти, шилтемелерди, сүрөт жана видео моделдерин холстто бириктирип, бир төлөм менен иштетип, шилтеме аркылуу бөлүшүңүз.",
+    "freeImagesLeft_one": "FREE · {{count}} FREE сүрөт калды",
+    "freeImagesLeft_other": "FREE · {{count}} FREE сүрөттөр калды",
+    "priceFreeRateLimited": "Free · чен чектери колдонулат",
+    "priceChecking": "Бааны текшерүү…",
+    "priceUnavailable": "Баасы жеткиликтүү эмес — төлөөдөн мурун кайра текшерүү",
+    "priceStandardTexture": "стандарттык текстура",
+    "priceUsually": "Адатта {{time}}; кезектер узагыраак созулушу мүмкүн",
+    "useFreeModel_one": "Сиздин {{count}} акысыз сүрөтүңүздү колдонуу үчүн {{model}} өтүү",
+    "useFreeModel_other": "Сиздин {{count}} акысыз сүрөттөрдү колдонуу үчүн {{model}} өтүү"
   },
   "pricing": {
     "plansForEveryWorkflow": "Ар бир жумуш агымы үчүн пландар",

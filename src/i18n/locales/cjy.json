@@ -3867,5 +3867,16 @@
     "desc": "丛林里的明媚白天或幽蓝黄昏",
     "day": "白天",
     "evening": "傍晚"
+  },
+  "creator": {
+    "freeImagesLeft_one": "免费 · 剩余 {{count}} 张免费图片",
+    "freeImagesLeft_other": "免费 · 剩余 {{count}} 张免费图片",
+    "priceFreeRateLimited": "免费 · 速率限制适用",
+    "priceChecking": "正在检查价格…",
+    "priceUnavailable": "价格不可用 — 付款前重试",
+    "priceStandardTexture": "标准纹理",
+    "priceUsually": "通常为 {{time}}；队列可能需要更长时间",
+    "useFreeModel_one": "切换到 {{model}} 以使用您的 {{count}} 张免费图片",
+    "useFreeModel_other": "切换到 {{model}} 以使用您的 {{count}} 张免费图片"
   }
 }
