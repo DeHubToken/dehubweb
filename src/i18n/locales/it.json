@@ -6191,5 +6191,11 @@
       "width": "Dimensione penna {{value}}",
       "hint": "Trascina sulla tela per disegnare. Ogni tratto è un livello a sé che puoi spostare, ridimensionare o eliminare. Premi Esc per terminare."
     }
+  },
+  "jungleMood": {
+    "title": "Momento della giornata",
+    "desc": "Una giornata luminosa o una sera blu al crepuscolo nella giungla",
+    "day": "Giorno",
+    "evening": "Sera"
   }
 }

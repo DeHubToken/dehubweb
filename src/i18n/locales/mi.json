@@ -3876,5 +3876,11 @@
   },
   "accounts": {
     "title": "Ngā Pūkete"
+  },
+  "jungleMood": {
+    "title": "Wā o te rā",
+    "desc": "He rā mārama, he ahiahi kikorangi rānei i te ngahere",
+    "day": "Awatea",
+    "evening": "Ahiahi"
   }
 }

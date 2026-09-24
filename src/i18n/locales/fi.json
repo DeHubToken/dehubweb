@@ -6079,5 +6079,11 @@
       "width": "Kynän koko {{value}}",
       "hint": "Piirrä vetämällä kankaalla. Jokainen veto on oma tasonsa, jota voit siirtää, muuttaa kokoa tai poistaa. Lopeta painamalla Esc."
     }
+  },
+  "jungleMood": {
+    "title": "Vuorokaudenaika",
+    "desc": "Kirkas päivä tai hämärän sininen ilta viidakossa",
+    "day": "Päivä",
+    "evening": "Ilta"
   }
 }

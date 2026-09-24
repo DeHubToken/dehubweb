@@ -3804,5 +3804,11 @@
   },
   "accounts": {
     "title": "账号"
+  },
+  "jungleMood": {
+    "title": "辰光",
+    "desc": "丛林里个明媚日里或者幽蓝黄昏",
+    "day": "日里",
+    "evening": "夜快"
   }
 }

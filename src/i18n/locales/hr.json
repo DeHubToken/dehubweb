@@ -6078,5 +6078,11 @@
       "width": "Veličina olovke {{value}}",
       "hint": "Povlačite po platnu za crtanje. Svaki potez je zaseban sloj koji možete pomaknuti, promijeniti mu veličinu ili izbrisati. Pritisnite Esc za prekid."
     }
+  },
+  "jungleMood": {
+    "title": "Doba dana",
+    "desc": "Vedar dan ili sumračna plava večer u džungli",
+    "day": "Dan",
+    "evening": "Večer"
   }
 }

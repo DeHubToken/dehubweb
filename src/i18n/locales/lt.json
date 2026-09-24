@@ -6170,5 +6170,11 @@
       "width": "Rašiklio dydis {{value}}",
       "hint": "Vilkite per drobę, kad pieštumėte. Kiekvienas brūkšnys yra atskiras sluoksnis, kurį galite perkelti, keisti jo dydį arba ištrinti. Paspauskite Esc, kad sustabdytumėte."
     }
+  },
+  "jungleMood": {
+    "title": "Paros metas",
+    "desc": "Šviesi diena arba prieblandos mėlynas vakaras džiunglėse",
+    "day": "Diena",
+    "evening": "Vakaras"
   }
 }

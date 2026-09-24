@@ -3912,5 +3912,11 @@
   },
   "accounts": {
     "title": "Kuentakuna"
+  },
+  "jungleMood": {
+    "title": "Punchaw pacha",
+    "desc": "Sach’a ukhupi k’anchay punchaw utaq anqas sukhayay",
+    "day": "Punchaw",
+    "evening": "Sukhayay"
   }
 }

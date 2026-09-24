@@ -6198,5 +6198,11 @@
       "width": "Kalem boyutu {{value}}",
       "hint": "Çizmek için tuvalde sürükleyin. Her çizgi taşıyabileceğiniz, yeniden boyutlandırabileceğiniz veya silebileceğiniz ayrı bir katmandır. Durdurmak için Esc'ye basın."
     }
+  },
+  "jungleMood": {
+    "title": "Günün saati",
+    "desc": "Ormanda parlak bir gün ya da loş mavi bir akşam",
+    "day": "Gündüz",
+    "evening": "Akşam"
   }
 }

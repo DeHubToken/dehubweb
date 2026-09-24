@@ -6197,5 +6197,11 @@
       "width": "Pen size {{value}}",
       "hint": "Drag on the canvas to draw. Each stroke is its own layer you can move, resize or delete. Press Esc to stop."
     }
+  },
+  "jungleMood": {
+    "title": "Time of day",
+    "desc": "A bright day or a dusky blue evening in the jungle",
+    "day": "Day",
+    "evening": "Evening"
   }
 }
