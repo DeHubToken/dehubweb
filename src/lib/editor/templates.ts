@@ -30,7 +30,7 @@ export const TEMPLATES: EditorTemplate[] = [
     titleKey: "editor.templates.sale.title",
     ops: (t) => [
       { op: "set_canvas", aspect: "1:1", background: "#0e7490" },
-      { op: "add_stock", query: "tropical beach summer", kind: "photo", orientation: "square", fit: "cover" },
+      { op: "add_stock", query: "palm trees tropical beach", kind: "photo", orientation: "square", fit: "cover" },
       { op: "effects", id: "new:0", preset: "sunny" },
       { op: "add_shape", shape: "rect", x: 0.5, y: 0.5, w: 0.84, h: 0.34, fill: "#000000", opacity: 0.5, radius: 32 },
       { op: "add_text", text: t("editor.templates.sale.title"), x: 0.5, y: 0.45, fontSize: 170, fontWeight: 400, fontFamily: "Anton", color: W, uppercase: true },
@@ -71,7 +71,7 @@ export const TEMPLATES: EditorTemplate[] = [
     titleKey: "editor.templates.story.title",
     ops: (t) => [
       { op: "set_canvas", aspect: "9:16", background: "#6d28d9" },
-      { op: "add_stock", query: "fashion portrait neon", kind: "photo", orientation: "portrait", x: 0.5, y: 0.45, scale: 0.9 },
+      { op: "add_stock", query: "neon city lights", kind: "photo", orientation: "portrait", x: 0.5, y: 0.45, scale: 0.9 },
       { op: "style", id: "new:0", radius: 48, shadow: true },
       { op: "add_text", text: t("editor.templates.story.title"), x: 0.5, y: 0.1, fontSize: 190, fontWeight: 400, fontFamily: "Bebas Neue", color: W, uppercase: true, letterSpacing: 4 },
       { op: "add_text", text: t("editor.templates.story.cta"), x: 0.5, y: 0.88, fontSize: 56, fontWeight: 800, fontFamily: "Poppins", color: "#6d28d9", bgColor: W, bgOpacity: 1 },
@@ -154,7 +154,7 @@ export const TEMPLATES: EditorTemplate[] = [
     titleKey: "editor.templates.meme.title",
     ops: (t) => [
       { op: "set_canvas", aspect: "1:1", background: "#000000" },
-      { op: "add_stock", query: "funny cat", kind: "photo", orientation: "square", fit: "cover" },
+      { op: "add_stock", query: "cat", kind: "photo", orientation: "square", fit: "cover" },
       { op: "add_text", text: t("editor.templates.meme.top"), x: 0.5, y: 0.1, fontSize: 110, fontWeight: 400, fontFamily: "Anton", color: W, uppercase: true, strokeColor: "#000000", strokeWidth: 10 },
       { op: "add_text", text: t("editor.templates.meme.bottom"), x: 0.5, y: 0.9, fontSize: 110, fontWeight: 400, fontFamily: "Anton", color: W, uppercase: true, strokeColor: "#000000", strokeWidth: 10 },
     ],
