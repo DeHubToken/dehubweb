@@ -18,15 +18,16 @@
  *   up with cannot be allowed to end the flow — the server makes the call
  *   idempotent precisely so this loop is safe.
  *
- * A completed purchase changes the signed-in user's own handle, so it has to
- * pull `refreshUser` and drop every profile-shaped cache with it. Skipping that
- * leaves the header, the sidebar and every rendered @mention of yourself
- * showing a name you no longer own.
+ * A completed purchase puts the name in the buyer's vault and leaves them
+ * wearing the handle they had — unless they had none, in which case it becomes
+ * their handle. It still pulls `refreshUser` and drops the profile-shaped
+ * caches, because for that one case the header would otherwise go stale.
  */
 
 import { useCallback, useState } from 'react';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import i18n from 'i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { createLogger } from '@/lib/logger';
 import {
@@ -136,7 +137,7 @@ export function useActivateUsernameHolding() {
   return useMutation({
     mutationFn: activateUsernameHolding,
     onSuccess: async result => {
-      toast.success(`You are now @${result.username}`);
+      toast.success(i18n.t('usernames.youAreNow', { handle: result.username }));
       // The released case is worth saying out loud: it is the one irreversible
       // thing about an otherwise reversible action, and it only happens to the
       // free signup handle.
@@ -299,12 +300,20 @@ export function useBuyUsername() {
       setStage('done');
       if (result.pending) return;
 
-      toast.success(`You are now @${result.username}`);
+      // A buyer who already had a handle keeps it; the new one is in the vault.
+      const wearing = result.activeUsername ?? result.username;
+      toast.success(
+        wearing === result.username
+          ? i18n.t('usernames.youAreNow', { handle: result.username })
+          : i18n.t('usernames.boughtToVaultToast', { handle: result.username }),
+      );
 
-      // The signed-in user's own handle just changed. Everything that renders
-      // it off a cache has to be told, or the header and sidebar keep showing
-      // a name this account no longer owns.
+      // The handle may have changed (a buyer who had none), and the vault and
+      // the offer that was just paid for certainly did. A stale offers list is
+      // what left "Pay and claim" on screen after paying.
       await refreshUser().catch(() => {});
+      qc.invalidateQueries({ queryKey: ['username-holdings'] });
+      qc.invalidateQueries({ queryKey: ['username-offers-mine'] });
       qc.invalidateQueries({ queryKey: ['username-market-browse'] });
       qc.invalidateQueries({ queryKey: ['username-market-mine'] });
       qc.invalidateQueries({ queryKey: ['user'] });

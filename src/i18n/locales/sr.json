@@ -2072,7 +2072,11 @@
     "vaultSell": "Продај",
     "vaultEditListing": "Уреди оглас",
     "vaultRelease": "Ослободи",
-    "title": "Корисничка имена"
+    "title": "Корисничка имена",
+    "addedToYourUsernames": "Додаје се вашим корисничким именима",
+    "boughtNameGoesToVault": "Остајете @{{current}}. @{{handle}} иде међу ваша корисничка имена и можете да пређете на њега кад год желите.",
+    "youAreNow": "Сада сте @{{handle}}",
+    "boughtToVaultToast": "@{{handle}} је сада међу вашим корисничким именима"
   },
   "live": {
     "chatJoined": "се придружио/ла",

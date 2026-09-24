@@ -2270,7 +2270,11 @@
       "expired": "সময় শেষ"
     },
     "makeOfferAction": "অফার দেন",
-    "title": "ব্যবহারকারীর নাম"
+    "title": "ব্যবহারকারীর নাম",
+    "addedToYourUsernames": "আপনার ইউজারনেমোত যোগ হইবে",
+    "boughtNameGoesToVault": "আপনি @{{current}} থাকমেন। @{{handle}} আপনার ইউজারনেমোত যাইবে, আর যখন মন চায় ওইটাত বদলাবার পারমেন।",
+    "youAreNow": "আপনি এলা @{{handle}}",
+    "boughtToVaultToast": "@{{handle}} এলা আপনার ইউজারনেমোত আছে"
   },
   "stories": {
     "addStory": "গল্প দাও",

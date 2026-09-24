@@ -15,7 +15,7 @@
  * Paying for an accepted offer reuses the ordinary buy drawer. An accepted
  * offer is a listing reserved for one address, so there is nothing to build: a
  * row is shaped into the listing it already is and handed over, which also
- * means the buyer gets the same "you are giving up @you" warning a shop-window
+ * means the buyer gets the same "where this name goes" note a shop-window
  * purchase gives them.
  */
 
@@ -193,7 +193,7 @@ function IncomingRow({ offer }: { offer: UsernameOffer }) {
           {/* The single most misreadable state on the page: the owner has said
               yes, still holds the handle, and is owed nothing until the buyer
               pays. Said plainly rather than as a status chip. */}
-          <p className="text-[11px] text-amber-100 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2">
+          <p className="text-[11px] text-zinc-200 rounded-lg border border-white/10 bg-black/40 p-2">
             {t('usernames.acceptedAwaitingPayment', { handle: offer.replacementUsername || '' })}
           </p>
           <Button
@@ -287,7 +287,7 @@ function OutgoingRow({ offer, onPay }: { offer: UsernameOffer; onPay: () => void
       </div>
 
       {offer.status === 'accepted' && (
-        <p className="text-[11px] text-emerald-100 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-2">
+        <p className="text-[11px] text-zinc-200 rounded-lg border border-white/10 bg-black/40 p-2">
           {t('usernames.offerAcceptedPayNow')}
         </p>
       )}

@@ -2441,7 +2441,11 @@
     "vaultReleaseBody": "Wuxuu ku noqonayaa barkadda oo qof kasta waan qaadan karaa. Ma jirto wax dib loogu noqdo, iibsashadiisuna waxay ku kici doontaa wax kasta oo milkiilaha cusub uu weydiiyo.",
     "oldHandleKept": "Waxaad haysataa @{{handle}} — waxay u dhaqaaqdaa magacyada isticmaale ee aad leedahay, waxaadna mar kale xiran kartaa ama iibin kartaa mustaqbalka. Qoraallada, kuwa raacaya iyo jeebkaaga waxba ma saameynayaan.",
     "postsStayWithYou": "Qoraallada, kuwa raacaya iyo jeebkaaga waxba ma saameynayaan.",
-    "title": "Magacyada Isticmaalaha"
+    "title": "Magacyada Isticmaalaha",
+    "addedToYourUsernames": "Waxaa lagu darayaa magacyadaada isticmaale",
+    "boughtNameGoesToVault": "Waxaad ahaan doontaa @{{current}}. @{{handle}} wuxuu galayaa magacyadaada isticmaale, waadna u beddeli kartaa wakhti kasta oo aad rabto.",
+    "youAreNow": "Hadda waxaad tahay @{{handle}}",
+    "boughtToVaultToast": "@{{handle}} hadda wuxuu ku jiraa magacyadaada isticmaale"
   },
   "live": {
     "chatJoined": "ayaa ku biiray",
