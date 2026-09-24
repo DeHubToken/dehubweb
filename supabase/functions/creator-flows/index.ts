@@ -81,6 +81,18 @@ function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
 }
 
+/** A folder can only nest under a folder the same wallet owns. */
+async function ownsFolder(db: Db, wallet: string, id: string | null | undefined): Promise<boolean> {
+  if (id === null || id === undefined) return true;
+  const { data } = await db
+    .from("creator_folders")
+    .select("id")
+    .eq("id", String(id))
+    .eq("wallet", wallet)
+    .maybeSingle();
+  return Boolean(data);
+}
+
 Deno.serve(async (req) => {
   const preflight = handleCorsPreflight(req);
   if (preflight) return preflight;
@@ -174,20 +186,33 @@ Deno.serve(async (req) => {
           });
         }
         if (rows.length > 0) {
-          // is_public is deliberately not in the upsert: it is set by `publish`
-          // and the row is the authority for it, so a stale client cannot
-          // un-share a flow by saving.
-          const { error } = await db.from("creator_flows").upsert(rows, { onConflict: "id" });
-          if (error) throw new Error(error.message);
-          // A row that belongs to someone else with the same client id is not
-          // ours to overwrite; the upsert above cannot express that, so check.
-          const { data: owned } = await db
+          // Ownership is checked before anything is written. An upsert would
+          // rewrite `wallet` on conflict, so a check afterwards sees the
+          // hijacked row as ours.
+          const { data: existing, error: exErr } = await db
             .from("creator_flows")
             .select("id, wallet")
             .in("id", rows.map((r) => r.id));
-          const foreign = (owned ?? []).filter((r) => r.wallet !== wallet);
-          if (foreign.length > 0) {
+          if (exErr) throw new Error(exErr.message);
+          if ((existing ?? []).some((r) => r.wallet !== wallet)) {
             return jsonResponse({ error: "A flow id collided with another creator's flow." }, 409);
+          }
+          // New ids are inserted (a race with another creator hits the primary
+          // key); known ids are updated only where the wallet matches.
+          // is_public is deliberately never written here: it is set by
+          // `publish`, so a stale client cannot un-share a flow by saving.
+          const known = new Set((existing ?? []).map((r) => r.id));
+          const inserts = rows.filter((r) => !known.has(r.id));
+          if (inserts.length > 0) {
+            const { error } = await db.from("creator_flows").insert(inserts);
+            if (error?.code === "23505") {
+              return jsonResponse({ error: "A flow id collided with another creator's flow." }, 409);
+            }
+            if (error) throw new Error(error.message);
+          }
+          for (const { id, wallet: _owner, ...patch } of rows.filter((r) => known.has(r.id))) {
+            const { error } = await db.from("creator_flows").update(patch).eq("id", id).eq("wallet", wallet);
+            if (error) throw new Error(error.message);
           }
         }
         if (body.deleteMissing) {
@@ -244,6 +269,7 @@ Deno.serve(async (req) => {
       case "folders.create": {
         const name = String(body.name ?? "").trim().slice(0, 80);
         if (!name) return jsonResponse({ error: "Folder name required" }, 400);
+        if (!(await ownsFolder(db, wallet, body.parentId))) return jsonResponse({ error: "Folder not found" }, 404);
         const { data, error } = await db
           .from("creator_folders")
           .insert({
@@ -261,6 +287,9 @@ Deno.serve(async (req) => {
       case "folders.update": {
         const id = String(body.id ?? "");
         if (!id) return jsonResponse({ error: "id required" }, 400);
+        if (body.parentId !== undefined && (body.parentId === id || !(await ownsFolder(db, wallet, body.parentId)))) {
+          return jsonResponse({ error: "Folder not found" }, 404);
+        }
         const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
         if (body.name !== undefined) updates.name = String(body.name).trim().slice(0, 80);
         if (body.parentId !== undefined) updates.parent_id = body.parentId;
