@@ -231,8 +231,12 @@ export function useMarkNotificationAsRead() {
       }
     },
     onSettled: () => {
-      // Caches already patched optimistically — mark stale without refetching
+      // Lists are already patched optimistically — mark them stale without
+      // refetching. The unread count is refetched: the optimistic decrement only
+      // covers the one row, and a server-aggregated row stands for several
+      // notifications, so without this the nav badge kept its old number.
       queryClient.invalidateQueries({ queryKey: notificationKeys.all, refetchType: 'none' });
+      queryClient.invalidateQueries({ queryKey: notificationKeys.unreadCount() });
     },
   });
 }
