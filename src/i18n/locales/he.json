@@ -4794,7 +4794,8 @@
     "foldersInFolder_one": "בתיקיית {{count}}",
     "foldersInFolder_other": "בתיקיות {{count}}",
     "foldersNoItems": "אין עדיין כלום בתיקיה זו",
-    "foldersNoItemsHint": "פתח תוצאה ובחר \"הוסף לתיקיה\" כדי לשמור אותה כאן."
+    "foldersNoItemsHint": "פתח תוצאה ובחר \"הוסף לתיקיה\" כדי לשמור אותה כאן.",
+    "skippedUpstreamFailed": "דילגנו כי שלב קודם נכשל. העלות שלו נשארת במאזן שלך."
   },
   "videoPlayer": {
     "volume": "עוצמת קול",

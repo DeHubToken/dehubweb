@@ -2759,7 +2759,8 @@
     "foldersInFolder_one": "Ing folder {{count}}",
     "foldersInFolder_other": "Ing folder {{count}}",
     "foldersNoItems": "Durung ana apa-apa ing folder iki",
-    "foldersNoItemsHint": "Bukak asil lan pilih \"Tambahake menyang folder\" kanggo nyimpen ing kene."
+    "foldersNoItemsHint": "Bukak asil lan pilih \"Tambahake menyang folder\" kanggo nyimpen ing kene.",
+    "skippedUpstreamFailed": "Dilangkahi amarga langkah sadurunge gagal. Biayane tetep ana ing imbangan sampeyan."
   },
   "videoPlayer": {
     "volume": "Volume",

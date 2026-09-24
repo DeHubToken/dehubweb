@@ -22,6 +22,7 @@ import { useCreatorFlowStore } from '@/store/creatorFlowStore';
 import { buildPipelineWaves, resolveInputs, resolveMentions } from './executor';
 import { streamAssistant, type AssistantModelId } from './assistant';
 import type { FlowNode, GenEntry } from './types';
+import i18n from '@/i18n';
 
 export const DEFAULT_IMAGE_MODEL = 'nano-banana-2';
 export const DEFAULT_VIDEO_MODEL = 'seedance-2.0';
@@ -327,6 +328,18 @@ export async function executeRun(plan: RunPlan, txHash: string | undefined, prog
   for (let i = 1; i < plan.waves.length; i += 1) for (const id of plan.waves[i]) updateNodeData(id, { pipelineQueued: true });
 
   let failures = 0;
+  // A node downstream of a failed one is skipped rather than run without its
+  // input. Its share of the payment stays on the receipt for the next run.
+  const failed = new Set<string>();
+  const dependsOnFailed = (id: string, seen = new Set<string>()): boolean => {
+    for (const e of store().edges) {
+      if (e.target !== id || seen.has(e.source)) continue;
+      if (failed.has(e.source)) return true;
+      seen.add(e.source);
+      if (dependsOnFailed(e.source, seen)) return true;
+    }
+    return false;
+  };
   try {
     for (const wave of plan.waves) {
       await Promise.all(
@@ -334,12 +347,21 @@ export async function executeRun(plan: RunPlan, txHash: string | undefined, prog
           const node = store().nodes.find((n) => n.id === id);
           if (!node) return;
           updateNodeData(id, { pipelineQueued: false });
+          if (dependsOnFailed(id)) {
+            failed.add(id);
+            failures += 1;
+            const message = i18n.t('creatorFlow.skippedUpstreamFailed');
+            updateNodeData(id, { status: 'error', errorMsg: message });
+            log(`[${node.data.label}] ${message}`, false);
+            return;
+          }
           try {
             if (node.type === 'imageGenNode') await runImageNode(node, txHash);
             else if (node.type === 'videoGenNode') await runVideoNode(node, txHash);
             else if (node.type === 'assistantNode') await runAssistantNode(node);
             log(`[${node.data.label}] done`);
           } catch (e) {
+            failed.add(id);
             failures += 1;
             log(`[${node.data.label}] ${e instanceof Error ? e.message : String(e)}`, false);
           }

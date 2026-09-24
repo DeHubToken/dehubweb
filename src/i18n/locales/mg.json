@@ -4708,7 +4708,8 @@
     "foldersAddTo": "Hanampy anatin'ny laha-tahiry",
     "foldersEmpty": "Tsy mbola misy lahatahiry.",
     "foldersNoItems": "Tsy misy na inona na inona ato amin'ity laha-tahiry ity hatreto",
-    "foldersNoItemsHint": "Sokafy ny vokatra ary safidio ny \"Add to folder\" raha hametraka izany eto."
+    "foldersNoItemsHint": "Sokafy ny vokatra ary safidio ny \"Add to folder\" raha hametraka izany eto.",
+    "skippedUpstreamFailed": "Ny antony dia satria efa tsy nahomby ny dingana voalohany. Ny vidiny dia hivadika."
   },
   "videoPlayer": {
     "volume": "Hamafin'ny feo",

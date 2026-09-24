@@ -2688,7 +2688,8 @@
     "foldersInFolder_one": "ኣብ ፎልደር {{count}}",
     "foldersInFolder_other": "ኣብ ፎልደርታት {{count}}",
     "foldersNoItems": "ኣብዚ ፎልደር ገለ የለን።",
-    "foldersNoItemsHint": "ውጽኢት ክፈትሕን \"ናብ ፎልደር ኣወፍር\" ክመርጽን ብምግባር ኣብዚ ጽረፎ።"
+    "foldersNoItemsHint": "ውጽኢት ክፈትሕን \"ናብ ፎልደር ኣወፍር\" ክመርጽን ብምግባር ኣብዚ ጽረፎ።",
+    "skippedUpstreamFailed": "ሓደ ኣቐዲሙ ዝነበረ ስጉምቲ ስለ ዝወደቐ ፡ ተሃዊኹ እዩ ። እቲ ወጻኢታት ኣብ ሚዛንካ ይጸንሕ ።"
   },
   "videoPlayer": {
     "volume": "ድምጺ",

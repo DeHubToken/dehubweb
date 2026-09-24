@@ -4978,7 +4978,8 @@
     "foldersInFolder_one": "Kansiossa {{count}}",
     "foldersInFolder_other": "Kansioissa {{count}}",
     "foldersNoItems": "Tässä kansiossa ei ole vielä mitään",
-    "foldersNoItemsHint": "Avaa tulos ja valitse \"Lisää kansioon\" tallentaaksesi sen tänne."
+    "foldersNoItemsHint": "Avaa tulos ja valitse \"Lisää kansioon\" tallentaaksesi sen tänne.",
+    "skippedUpstreamFailed": "Ohitettiin, koska aiempi vaihe epäonnistui. Sen hinta pysyy saldossasi."
   },
   "videoPlayer": {
     "volume": "Äänenvoimakkuus",

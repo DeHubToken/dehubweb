@@ -2911,7 +2911,8 @@
     "foldersInFolder_one": "V priečinku {{count}}",
     "foldersInFolder_other": "V priečinkoch {{count}}",
     "foldersNoItems": "V tomto priečinku zatiaľ nič nie je",
-    "foldersNoItemsHint": "Otvorte výsledok a vyberte „Pridať do priečinka“, aby ste ho sem zaradili."
+    "foldersNoItemsHint": "Otvorte výsledok a vyberte „Pridať do priečinka“, aby ste ho sem zaradili.",
+    "skippedUpstreamFailed": "Preskočené, pretože skorší krok zlyhal. Jeho cena zostane vo vašom zostatku."
   },
   "videoPlayer": {
     "volume": "Hlasitosť",

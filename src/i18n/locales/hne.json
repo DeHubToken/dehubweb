@@ -2705,7 +2705,8 @@
     "foldersInFolder_one": "{{count}} फोल्डर म",
     "foldersInFolder_other": "{{count}} फोल्डर म",
     "foldersNoItems": "ए फोल्डर म कोनो नइ हे",
-    "foldersNoItemsHint": "एक परिणाम खोलो अउ ओला एमा फाइल करे बर \"फोल्डर म जोड़ो\" चुनो।"
+    "foldersNoItemsHint": "एक परिणाम खोलो अउ ओला एमा फाइल करे बर \"फोल्डर म जोड़ो\" चुनो।",
+    "skippedUpstreamFailed": "पिछला कदम फेल होए के कारन छोड़ दे गिस. लागत आपके संतुलन म रहिथे ।"
   },
   "videoPlayer": {
     "volume": "आवाज",

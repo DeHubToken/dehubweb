@@ -5045,7 +5045,8 @@
     "foldersInFolder_one": "{{count}} klasöründe",
     "foldersInFolder_other": "{{count}} klasörlerinde",
     "foldersNoItems": "Bu klasörde henüz bir şey yok",
-    "foldersNoItemsHint": "Bir sonucu açın ve buraya kaydetmek için \"Klasöre ekle\" seçeneğini belirleyin."
+    "foldersNoItemsHint": "Bir sonucu açın ve buraya kaydetmek için \"Klasöre ekle\" seçeneğini belirleyin.",
+    "skippedUpstreamFailed": "Önceki bir adım başarısız olduğu için atlandı. Maliyeti bakiyenizde kalır."
   },
   "videoPlayer": {
     "volume": "Ses düzeyi",

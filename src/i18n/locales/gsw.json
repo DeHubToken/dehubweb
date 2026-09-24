@@ -2740,7 +2740,8 @@
     "foldersInFolder_one": "Im Ordner {{count}}",
     "foldersInFolder_other": "I {{count}} Ordner",
     "foldersNoItems": "Nüt i dim Ordner",
-    "foldersNoItemsHint": "Öffne e Resultat und wähle \"Ordner zuefüge\", zum es do ablaage."
+    "foldersNoItemsHint": "Öffne e Resultat und wähle \"Ordner zuefüge\", zum es do ablaage.",
+    "skippedUpstreamFailed": "Übersprunge, will en früehner Schritt fehlgschlage isch. Dini Kost blibt uf dim Kontostand."
   },
   "videoPlayer": {
     "volume": "Lutstärchi",

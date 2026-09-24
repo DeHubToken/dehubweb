@@ -2706,7 +2706,8 @@
     "foldersInFolder_one": "في {{count}} فولدر",
     "foldersInFolder_other": "في {{count}} مجلدات",
     "foldersNoItems": "ما في حاجة في الفولدر ده لسه",
-    "foldersNoItemsHint": "افتح النتيجة واختار \"إضافة إلى مجلد\" عشان تحطها هنا."
+    "foldersNoItemsHint": "افتح النتيجة واختار \"إضافة إلى مجلد\" عشان تحطها هنا.",
+    "skippedUpstreamFailed": "اتلغى عشان خطوة قبلها فشلت. فلوسه بتفضل في رصيدك."
   },
   "videoPlayer": {
     "volume": "مستوى الصوت",

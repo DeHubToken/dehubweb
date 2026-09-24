@@ -2697,7 +2697,8 @@
     "foldersInFolder_one": "په {{count}} فولډر کې",
     "foldersInFolder_other": "په {{count}} فولډرونو کې",
     "foldersNoItems": "اوس مهال په دې فولډر کې هیڅ نشته",
-    "foldersNoItemsHint": "یو پایله پرانیزئ او د \"فولډر ته اضافه کړئ\" غوره کړئ ترڅو دا دلته وساتئ."
+    "foldersNoItemsHint": "یو پایله پرانیزئ او د \"فولډر ته اضافه کړئ\" غوره کړئ ترڅو دا دلته وساتئ.",
+    "skippedUpstreamFailed": "دا ځکه چې یو ګام مخکې ناکام شوی و. ستاسو لګښتونه ستاسو په توازن کې دي."
   },
   "videoPlayer": {
     "volume": "غږ",

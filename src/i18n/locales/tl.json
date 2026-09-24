@@ -4854,7 +4854,8 @@
     "foldersInFolder_one": "Sa folder na {{count}}",
     "foldersInFolder_other": "Sa mga folder na {{count}}",
     "foldersNoItems": "Wala pa sa folder na ito",
-    "foldersNoItemsHint": "Magbukas ng resulta at piliin ang \"Idagdag sa folder\" upang ilagay ito dito."
+    "foldersNoItemsHint": "Magbukas ng resulta at piliin ang \"Idagdag sa folder\" upang ilagay ito dito.",
+    "skippedUpstreamFailed": "Lumaktaw dahil nabigo ang isang naunang hakbang. Ang gastos nito ay mananatili sa iyong balanse."
   },
   "videoPlayer": {
     "volume": "Lakas ng tunog",

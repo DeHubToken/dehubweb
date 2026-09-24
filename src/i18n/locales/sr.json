@@ -2294,7 +2294,8 @@
     "foldersInFolder_one": "У фолдеру {{count}}",
     "foldersInFolder_other": "У фолдерима {{count}}",
     "foldersNoItems": "Ништа у овом фолдеру још увек",
-    "foldersNoItemsHint": "Отворите резултат и изаберите „Додај у фолдер” да бисте га овде сачували."
+    "foldersNoItemsHint": "Отворите резултат и изаберите „Додај у фолдер” да бисте га овде сачували.",
+    "skippedUpstreamFailed": "Прескочено јер претходни корак није успео. Трошак остаје на вашем салду."
   },
   "videoPlayer": {
     "volume": "Јачина звука"

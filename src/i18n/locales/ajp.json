@@ -2683,7 +2683,8 @@
     "foldersInFolder_one": "في {{count}} مجلد",
     "foldersInFolder_other": "في {{count}} مجلدات",
     "foldersNoItems": "ما في حاجة بالمجلد هيدا لسع",
-    "foldersNoItemsHint": "افتح النتيجة واختر \"إضافة إلى مجلد\" لحفظها هون."
+    "foldersNoItemsHint": "افتح النتيجة واختر \"إضافة إلى مجلد\" لحفظها هون.",
+    "skippedUpstreamFailed": "تم تخطيها بسبب فشل خطوة سابقة. تكلفتها تبقى في رصيدك."
   },
   "videoPlayer": {
     "volume": "مستوى الصوت",

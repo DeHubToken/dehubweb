@@ -5045,7 +5045,8 @@
     "foldersInFolder_one": "Di folder {{count}}",
     "foldersInFolder_other": "Di folder {{count}}",
     "foldersNoItems": "Belum ada apa pun di folder ini",
-    "foldersNoItemsHint": "Buka hasil dan pilih \"Tambahkan ke folder\" untuk menyimpannya di sini."
+    "foldersNoItemsHint": "Buka hasil dan pilih \"Tambahkan ke folder\" untuk menyimpannya di sini.",
+    "skippedUpstreamFailed": "Dilewati karena langkah sebelumnya gagal. Biayanya tetap ada di saldo Anda."
   },
   "videoPlayer": {
     "volume": "Volume",

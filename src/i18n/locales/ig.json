@@ -2738,7 +2738,8 @@
     "foldersInFolder_one": "Na nchekwa {{count}}",
     "foldersInFolder_other": "Na nchekwa {{count}}",
     "foldersNoItems": "Enweghị ihe ọ bụla na nchekwa a ugbu a",
-    "foldersNoItemsHint": "Meghee nsonaazụ ma họrọ \"Tinye na nchekwa\" iji debanye aha ya ebe a."
+    "foldersNoItemsHint": "Meghee nsonaazụ ma họrọ \"Tinye na nchekwa\" iji debanye aha ya ebe a.",
+    "skippedUpstreamFailed": "A kwụsịrị n 'ihi na otu nzọụkwụ gara aga dara ada. Ọnụ ego ya na-anọgide na nguzo gị."
   },
   "videoPlayer": {
     "volume": "Olu ụda",

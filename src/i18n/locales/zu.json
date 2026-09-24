@@ -2803,7 +2803,8 @@
     "foldersInFolder_one": "Ku-{{count}} folda",
     "foldersInFolder_other": "Ku-{{count}} ifolda",
     "foldersNoItems": "Akukho lutho kufolda eli okwamanje",
-    "foldersNoItemsHint": "Vula umphumela futhi khetha \"Engeza kufolda\" ukuze ulungisele lapha."
+    "foldersNoItemsHint": "Vula umphumela futhi khetha \"Engeza kufolda\" ukuze ulungisele lapha.",
+    "skippedUpstreamFailed": "Yeqiwe ngoba isinyathelo sangaphambilini sehlulekile. Izindleko zayo zihlala kubhalansi yakho."
   },
   "videoPlayer": {
     "volume": "Umsindo",

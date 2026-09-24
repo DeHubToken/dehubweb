@@ -2771,7 +2771,8 @@
     "foldersInFolder_one": "在 {{count}} 資料夾中",
     "foldersInFolder_other": "在 {{count}} 個資料夾中",
     "foldersNoItems": "此資料夾中沒有任何內容",
-    "foldersNoItemsHint": "開啟結果並選擇「新增至資料夾」以將其歸檔於此。"
+    "foldersNoItemsHint": "開啟結果並選擇「新增至資料夾」以將其歸檔於此。",
+    "skippedUpstreamFailed": "因為之前嘅步驟失敗而跳過。佢嘅成本會喺你嘅餘額入面。"
   },
   "videoPlayer": {
     "volume": "音量",

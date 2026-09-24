@@ -5041,7 +5041,8 @@
     "foldersInFolder_one": "W folderze {{count}}",
     "foldersInFolder_other": "W folderach {{count}}",
     "foldersNoItems": "Nic w tym folderze",
-    "foldersNoItemsHint": "Otwórz wynik i wybierz „Dodaj do folderu”, aby go tutaj umieścić."
+    "foldersNoItemsHint": "Otwórz wynik i wybierz „Dodaj do folderu”, aby go tutaj umieścić.",
+    "skippedUpstreamFailed": "Pominięto, ponieważ wcześniejszy krok nie powiódł się. Jego koszt pozostaje na Twoim saldzie."
   },
   "videoPlayer": {
     "volume": "Głośność",

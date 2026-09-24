@@ -5031,7 +5031,8 @@
     "foldersInFolder_one": "{{count}}フォルダ内",
     "foldersInFolder_other": "{{count}}フォルダ内",
     "foldersNoItems": "このフォルダにはまだ何もありません",
-    "foldersNoItemsHint": "結果を開き、「フォルダに追加」を選択してここに保存してください。"
+    "foldersNoItemsHint": "結果を開き、「フォルダに追加」を選択してここに保存してください。",
+    "skippedUpstreamFailed": "前のステップが失敗したためスキップされました。費用は残高に残ります。"
   },
   "videoPlayer": {
     "volume": "音量",
