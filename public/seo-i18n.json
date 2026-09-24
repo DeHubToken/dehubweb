@@ -1365,6 +1365,336 @@
       "description": "DeHub DePin 让每个人都能贡献存储、带宽与算力，通过一张有韧性的网络来托管、转码并分发媒体内容。"
     }
   },
+  "/dex": {
+    "af": {
+      "title": "DEX — Verhandel DHB teen jou prys",
+      "description": "Stel jou DHB koop- of verkoop prys met 'n Uniswap v4 limiet order op Base of BNB Chain. Regstreekse orderboek, markdiepte en een gedeelde USD prys."
+    },
+    "am": {
+      "title": "DEX — DHB ን በዋጋዎ ይገበያዩ",
+      "description": "በBase ወይም BNB Chain ላይ በUniswap v4 limit order የDHBዎን የመግዣ ወይም የመሸጫ ዋጋ ያዘጋጁ። የቀጥታ የትዕዛዝ ደብተር፣ የገበያ ጥልቀት እና አንድ የተጋራ የአሜሪካን ዶላር ዋጋ።"
+    },
+    "ar": {
+      "title": "DEX — تداول DHB بسعرك",
+      "description": "حدد سعر شراء أو بيع DHB الخاص بك باستخدام أمر حد Uniswap v4 على Base أو BNB Chain. دفتر أوامر مباشر، عمق السوق وسعر أمريكي مشترك واحد."
+    },
+    "az": {
+      "title": "DEX — DHB-ni öz qiymətinizlə ticarət edin",
+      "description": "Base və ya BNB Chain-də Uniswap v4 limit sifarişi ilə DHB alış və ya satış qiymətinizi təyin edin. Canlı sifariş kitabı, bazar dərinliyi və vahid ortaq USD qiyməti."
+    },
+    "be": {
+      "title": "DEX — Трымайце DHB па сваёй цане",
+      "description": "Усталюйце сваю цану пакупкі або продажу DHB з лімітным ордэрам Uniswap v4 на Base або BNB Chain. Жывы кніга заказаў, рынкавая глыбіня і адзіная агульная цана ў USD."
+    },
+    "bg": {
+      "title": "DEX — Търгувайте DHB на вашата цена",
+      "description": "Задайте вашата цена за покупка или продажба на DHB с Uniswap v4 лимитна поръчка в Base или BNB Chain. Книга на поръчките в реално време, пазарна дълбочина и една обща цена в USD."
+    },
+    "bn": {
+      "title": "DEX — আপনার দামে DHB ট্রেড করুন",
+      "description": "Base বা BNB চেইনে Uniswap v4 লিমিট অর্ডার দিয়ে আপনার DHB কেনা বা বেচার দাম সেট করুন। লাইভ অর্ডার বুক, মার্কেট ডেপথ এবং একটি শেয়ার করা USD মূল্য।"
+    },
+    "ca": {
+      "title": "DEX — Intercanvia DHB al teu preu",
+      "description": "Estableix el teu preu de compra o venda de DHB amb una ordre límit de Uniswap v4 a Base o BNB Chain. Llibre d'ordres en directe, profunditat de mercat i un preu compartit en USD."
+    },
+    "cs": {
+      "title": "DEX — Obchodujte DHB za vaši cenu",
+      "description": "Nastavte si nákupní nebo prodejní cenu DHB pomocí limitní objednávky Uniswap v4 na Base nebo BNB Chain. Živý kniha objednávek, hloubka trhu a jedna sdílená cena v USD."
+    },
+    "da": {
+      "title": "DEX — Handl DHB til din pris",
+      "description": "Indstil din DHB købs- eller salgspris med en Uniswap v4 limit ordre på Base eller BNB Chain. Live ordrebog, markedsdybde og én delt USD-pris."
+    },
+    "de": {
+      "title": "DEX — DHB zu Ihrem Preis handeln",
+      "description": "Legen Sie Ihren DHB-Kauf- oder Verkaufspreis mit einer Uniswap v4 Limit Order auf Base oder BNB Chain fest. Live Orderbuch, Markttiefe und ein gemeinsamer USD-Preis."
+    },
+    "el": {
+      "title": "DEX — Συναλλαγές DHB στην τιμή σου",
+      "description": "Ορίστε την τιμή αγοράς ή πώλησης DHB με μια εντολή ορίου Uniswap v4 στο Base ή στο BNB Chain. Ζωντανό βιβλίο εντολών, βάθος αγοράς και μία κοινή τιμή σε USD."
+    },
+    "en": {
+      "title": "DEX — Trade DHB at your price",
+      "description": "Set your DHB buy or sell price with a Uniswap v4 limit order on Base or BNB Chain. Live order book, market depth and one shared USD price."
+    },
+    "es": {
+      "title": "DEX — Comerciar DHB a tu precio",
+      "description": "Establece tu precio de compra o venta de DHB con una orden limitada de Uniswap v4 en Base o BNB Chain. Libro de órdenes en vivo, profundidad de mercado y un precio compartido en USD."
+    },
+    "et": {
+      "title": "DEX — Kaubelge DHB-ga oma hinnaga",
+      "description": "Määrake oma DHB ostu- või müügihind Uniswap v4 limiitkorraldusega Base'is või BNB Chainis. Reaalajas tellimuste raamat, turu sügavus ja üks ühine USD hind."
+    },
+    "fa": {
+      "title": "DEX — DHB را با قیمت دلخواه خود معامله کنید",
+      "description": "با یک سفارش محدود Uniswap v4 در Base یا BNB Chain، قیمت خرید یا فروش DHB خود را تعیین کنید. دفتر سفارش زنده، عمق بازار و یک قیمت مشترک دلاری."
+    },
+    "fi": {
+      "title": "DEX — Käy kauppaa DHB:llä omalla hinnallasi",
+      "description": "Aseta DHB:n osto- tai myyntihinta Uniswap v4 -rajatoimeksiannolla Base- tai BNB-ketjussa. Reaaliaikainen tilauskirja, markkinasyvyys ja yksi jaettu USD-hinta."
+    },
+    "fr": {
+      "title": "DEX — Échangez du DHB à votre prix",
+      "description": "Définissez votre prix d'achat ou de vente de DHB avec un ordre limite Uniswap v4 sur Base ou BNB Chain. Carnet d'ordres en direct, profondeur du marché et un prix USD partagé."
+    },
+    "gu": {
+      "title": "DEX — તમારા ભાવે DHB નો વેપાર કરો",
+      "description": "Base અથવા BNB Chain પર Uniswap v4 લિમિટ ઓર્ડર સાથે તમારા DHB ખરીદી અથવા વેચાણ ભાવ સેટ કરો. લાઇવ ઓર્ડર બુક, માર્કેટ ડેપ્થ અને એક શેર કરેલ USD ભાવ."
+    },
+    "ha": {
+      "title": "DEX — Sanya DHB a farashin da kake so",
+      "description": "Sanya farashin siyan ko siyar da DHB tare da odar iyaka ta Uniswap v4 akan Base ko BNB Chain. Littafin oda na kai tsaye, zurfin kasuwa da kuma farashin USD ɗaya da aka raba."
+    },
+    "he": {
+      "title": "DEX — סחר ב-DHB במחיר שלך",
+      "description": "הגדר את מחיר הקנייה או המכירה של DHB שלך עם הזמנת מגבלה של Uniswap v4 ב-Base או BNB Chain. ספר הזמנות חי, עומק שוק ומחיר USD משותף אחד."
+    },
+    "hi": {
+      "title": "DEX — अपनी कीमत पर DHB ट्रेड करें",
+      "description": "Base या BNB Chain पर Uniswap v4 लिमिट ऑर्डर के साथ अपनी DHB खरीदने या बेचने की कीमत सेट करें। लाइव ऑर्डर बुक, मार्केट डेप्थ और एक साझा USD कीमत।"
+    },
+    "hr": {
+      "title": "DEX — Trgujte DHB po svojoj cijeni",
+      "description": "Postavite svoju DHB cijenu za kupnju ili prodaju s Uniswap v4 limit narudžbom na Base ili BNB Chainu. Knjiga narudžbi uživo, dubina tržišta i jedna zajednička USD cijena."
+    },
+    "hu": {
+      "title": "DEX — Kereskedj DHB-vel a saját áradon",
+      "description": "Állítsd be a DHB vételi vagy eladási árat egy Uniswap v4 limit megbízással Base vagy BNB Chain hálózaton. Élő megbízási könyv, piaci mélység és egy megosztott USD ár."
+    },
+    "hy": {
+      "title": "DEX — Առևտուր արեք DHB ձեր գնով",
+      "description": "Սահմանեք ձեր DHB գնման կամ վաճառքի գինը Uniswap v4 սահմանային պատվերով Base կամ BNB Chain-ում։ Կենդանի պատվերների գիրք, շուկայի խորություն և մեկ ընդհանուր USD գին։"
+    },
+    "id": {
+      "title": "DEX — Perdagangkan DHB dengan harga Anda",
+      "description": "Tetapkan harga beli atau jual DHB Anda dengan pesanan batas Uniswap v4 di Base atau BNB Chain. Buku pesanan langsung, kedalaman pasar, dan satu harga USD bersama."
+    },
+    "ig": {
+      "title": "DEX — Zụọ ma ree DHB n'ọnụ ahịa gị",
+      "description": "Tọọ ọnụ ahịa ị ga-eji zụta ma ọ bụ ree DHB site n'iji usoro iwu nwere oke nke Uniswap v4 na Base ma ọ bụ BNB Chain. Akwụkwọ iwu dị ndụ, omimi ahịa na otu ọnụ ahịa USD a na-ekerịta."
+    },
+    "it": {
+      "title": "DEX — Scambia DHB al tuo prezzo",
+      "description": "Imposta il tuo prezzo di acquisto o vendita di DHB con un ordine limite Uniswap v4 su Base o BNB Chain. Order book live, profondità di mercato e un unico prezzo condiviso in USD."
+    },
+    "ja": {
+      "title": "DEX — あなたの価格でDHBを取引",
+      "description": "BaseまたはBNBチェーン上のUniswap v4リミットオーダーで、DHBの売買価格を設定しましょう。ライブオーダーブック、マーケットデプス、そして共有のUSD価格。"
+    },
+    "jv": {
+      "title": "DEX — Ngalih DHB ing rega sampeyan",
+      "description": "Setel rega tuku utawa adol DHB nganggo pesen wates Uniswap v4 ing Base utawa BNB Chain. Buku pesen langsung, jerone pasar lan siji rega USD sing padha."
+    },
+    "ka": {
+      "title": "DEX — გაცვალეთ DHB თქვენს ფასად",
+      "description": "დააყენეთ თქვენი DHB-ის ყიდვის ან გაყიდვის ფასი Uniswap v4 ლიმიტის ორდერით Base-ზე ან BNB Chain-ზე. ცოცხალი შეკვეთების წიგნი, ბაზრის სიღრმე და ერთიანი საერთო USD ფასი."
+    },
+    "kk": {
+      "title": "DEX — DHB саудасын өз бағаңызбен жасаңыз",
+      "description": "Base немесе BNB Chain желісіндегі Uniswap v4 лимиттік тапсырысымен DHB сатып алу немесе сату бағасын белгілеңіз. Тірі тапсырыстар кітабы, нарықтық тереңдік және бірыңғай USD бағасы."
+    },
+    "km": {
+      "title": "DEX — ជួញដូរ DHB តាមតម្លៃរបស់អ្នក",
+      "description": "កំណត់តម្លៃទិញ ឬលក់ DHB របស់អ្នកជាមួយនឹងលំដាប់កំណត់តម្លៃ Uniswap v4 នៅលើ Base ឬ BNB Chain។ បញ្ជីលំដាប់ផ្ទាល់ ជម្រៅទីផ្សារ និងតម្លៃ USD រួមមួយ។"
+    },
+    "kn": {
+      "title": "DEX — ನಿಮ್ಮ ಬೆಲೆಗೆ DHB ವ್ಯಾಪಾರ ಮಾಡಿ",
+      "description": "Base ಅಥವಾ BNB Chain ನಲ್ಲಿ Uniswap v4 ಮಿತಿಯ ಆರ್ಡರ್‌ನೊಂದಿಗೆ ನಿಮ್ಮ DHB ಖರೀದಿ ಅಥವಾ ಮಾರಾಟ ಬೆಲೆಯನ್ನು ನಿಗದಿಪಡಿಸಿ. ಲೈವ್ ಆರ್ಡರ್ ಬುಕ್, ಮಾರುಕಟ್ಟೆ ಆಳ ಮತ್ತು ಒಂದು ಹಂಚಿಕೆಯ USD ಬೆಲೆ."
+    },
+    "ko": {
+      "title": "DEX — DHB를 원하는 가격에 거래하세요",
+      "description": "Base 또는 BNB Chain에서 Uniswap v4 지정가 주문으로 DHB 매수 또는 매도 가격을 설정하세요. 실시간 주문 장부, 시장 깊이, 하나의 통합 USD 가격을 제공합니다."
+    },
+    "ku": {
+      "title": "DEX — بازرگانی DHB بە نرخی خۆت بکە",
+      "description": "نرخی کڕین یان فرۆشتنی DHB خۆت دابنێ بە فەرمانی سنووردارکردنی Uniswap v4 لەسەر Base یان BNB Chain. کتێبی فەرمانی زیندوو، قووڵایی بازاڕ و یەک نرخی هاوبەشی دۆلاری."
+    },
+    "ky": {
+      "title": "DEX — DHB соодасын өз бааңызда жүргүзүңүз",
+      "description": "Base же BNB Chain'де Uniswap v4 лимиттик буйрутмасы менен DHB сатып алуу же сатуу баасын коюңуз. Түз эфирдеги буйрутмалар китеби, рыноктун тереңдиги жана бирдиктүү АКШ доллары баасы."
+    },
+    "lo": {
+      "title": "DEX — ຊື້ຂາຍ DHB ໃນລາຄາຂອງທ່ານ",
+      "description": "ຕັ້ງລາຄາຊື້ ຫຼືຂາຍ DHB ຂອງທ່ານດ້ວຍຄຳສັ່ງຈຳກັດຂອງ Uniswap v4 ໃນ Base ຫຼື BNB Chain. ປຶ້ມຄຳສັ່ງສົດ, ຄວາມເລິກຂອງຕະຫຼາດ ແລະລາຄາ USD ລວມໜຶ່ງດຽວ."
+    },
+    "lt": {
+      "title": "DEX — prekiaukite DHB savo kaina",
+      "description": "Nustatykite savo DHB pirkimo ar pardavimo kainą su „Uniswap v4“ limitiniu pavedimu „Base“ arba „BNB Chain“. Tiesioginė pavedimų knyga, rinkos gylis ir viena bendra USD kaina."
+    },
+    "lv": {
+      "title": "DEX — Tirdziniet DHB par savu cenu",
+      "description": "Nosakiet savu DHB pirkšanas vai pārdošanas cenu ar Uniswap v4 limituzdevumu uz Base vai BNB Chain. Tiešsaistes uzdevumu grāmata, tirgus dziļums un viena kopēja USD cena."
+    },
+    "mg": {
+      "title": "DEX — Varotra DHB amin'ny vidiny tianao",
+      "description": "Mametraha ny vidin'ny fividianana na fivarotana DHB miaraka amin'ny famandrihana fetra Uniswap v4 ao amin'ny Base na BNB Chain. Boky famandrihana mivantana, halaliny ny tsoka ary vidiny USD iray iombonana."
+    },
+    "mi": {
+      "title": "DEX — Hokohoko DHB i tō utu",
+      "description": "Whakaritea tō utu hoko, hoko rānei i te DHB mā te ota rohe Uniswap v4 i runga i te Base, i te BNB Chain rānei. Pukapuka ota ora, hōhonutanga o te mākete, me tētahi utu USD kotahi."
+    },
+    "ml": {
+      "title": "DEX — നിങ്ങളുടെ വിലയ്ക്ക് DHB ട്രേഡ് ചെയ്യുക",
+      "description": "Base അല്ലെങ്കിൽ BNB Chain-ൽ Uniswap v4 ലിമിറ്റ് ഓർഡർ ഉപയോഗിച്ച് നിങ്ങളുടെ DHB വാങ്ങൽ അല്ലെങ്കിൽ വിൽപ്പന വില സജ്ജമാക്കുക. ലൈവ് ഓർഡർ ബുക്ക്, മാർക്കറ്റ് ഡെപ്ത്, ഒരു പങ്കിട്ട USD വില."
+    },
+    "mn": {
+      "title": "DEX — DHB-г өөрийн үнээр арилжаалах",
+      "description": "Base эсвэл BNB сүлжээнд Uniswap v4 лимит захиалгаар DHB худалдах эсвэл худалдан авах үнээ тохируулаарай. Шууд захиалгын ном, зах зээлийн гүн, нэгдсэн нэг ам.долларын үнэ."
+    },
+    "mr": {
+      "title": "DEX — तुमच्या किमतीत DHB ट्रेड करा",
+      "description": "Base किंवा BNB Chain वर Uniswap v4 लिमिट ऑर्डरसह तुमची DHB खरेदी किंवा विक्री किंमत सेट करा. लाईव्ह ऑर्डर बुक, मार्केट डेप्थ आणि एक सामायिक USD किंमत."
+    },
+    "ms": {
+      "title": "DEX — Dagangkan DHB pada harga anda",
+      "description": "Tetapkan harga beli atau jual DHB anda dengan pesanan had Uniswap v4 pada Base atau BNB Chain. Buku pesanan langsung, kedalaman pasaran dan satu harga USD perkongsian."
+    },
+    "my": {
+      "title": "DEX — သင့်စျေးနှုန်းဖြင့် DHB ကို ကုန်သွယ်ပါ။",
+      "description": "Base သို့မဟုတ် BNB Chain တွင် Uniswap v4 ကန့်သတ်အမှာစာဖြင့် သင့် DHB ဝယ်ယူမှု သို့မဟုတ် ရောင်းချမှုစျေးနှုန်းကို သတ်မှတ်ပါ။ တိုက်ရိုက်အမှာစာစာအုပ်၊ စျေးကွက်အနက်နှင့် မျှဝေထားသော USD စျေးနှုန်းတစ်ခု။"
+    },
+    "ne": {
+      "title": "DEX — आफ्नो मूल्यमा DHB को व्यापार गर्नुहोस्",
+      "description": "Base वा BNB Chain मा Uniswap v4 लिमिट अर्डरको साथ आफ्नो DHB किन्न वा बेच्ने मूल्य सेट गर्नुहोस्। लाइभ अर्डर बुक, बजारको गहिराई र एक साझा USD मूल्य।"
+    },
+    "nl": {
+      "title": "DEX — Verhandel DHB tegen jouw prijs",
+      "description": "Stel je DHB koop- of verkoopprijs in met een Uniswap v4 limietorder op Base of BNB Chain. Live orderboek, marktliquiditeit en één gedeelde USD-prijs."
+    },
+    "no": {
+      "title": "DEX — Handle DHB til din pris",
+      "description": "Sett din DHB kjøps- eller salgspris med en Uniswap v4 limitordre på Base eller BNB Chain. Live ordrebok, markedsdybde og én felles USD-pris."
+    },
+    "om": {
+      "title": "DEX — DHB ati gatii keetiin gurguraa",
+      "description": "DHB bitachuu ykn gurguruu gatii kee Uniswap v4 limit order irratti Base ykn BNB Chain irratti godhi. Order book, market depth fi gatii tokko qofa USD."
+    },
+    "or": {
+      "title": "DEX — ତୁମର ଦାମରେ DHB ବାଣିଜ୍ୟ କର",
+      "description": "Base କିମ୍ବା BNB Chain ରେ Uniswap v4 ଲିମିଟ୍ ଅର୍ଡର ସହିତ ତୁମର DHB କିଣା ବା ବିକ୍ରି ଦାମ ସେଟ୍ କର । ଲାଇଭ ଅର୍ଡର ବୁକ୍, ମାର୍କେଟ୍ ଡେପ୍ଥ ଏବଂ ଗୋଟିଏ ସେୟାର୍ USD ଦାମ ।"
+    },
+    "pa": {
+      "title": "DEX — ਆਪਣੀ ਕੀਮਤ 'ਤੇ DHB ਦਾ ਵਪਾਰ ਕਰੋ",
+      "description": "Base ਜਾਂ BNB ਚੇਨ 'ਤੇ Uniswap v4 ਲਿਮਟ ਆਰਡਰ ਨਾਲ ਆਪਣੀ DHB ਖਰੀਦ ਜਾਂ ਵੇਚ ਕੀਮਤ ਸੈੱਟ ਕਰੋ। ਲਾਈਵ ਆਰਡਰ ਬੁੱਕ, ਮਾਰਕੀਟ ਡੂੰਘਾਈ ਅਤੇ ਇੱਕ ਸਾਂਝੀ USD ਕੀਮਤ।"
+    },
+    "pl": {
+      "title": "DEX — Handel DHB po Twojej cenie",
+      "description": "Ustaw swoją cenę kupna lub sprzedaży DHB za pomocą zlecenia z limitem Uniswap v4 na Base lub BNB Chain. Księga zleceń na żywo, głębokość rynku i jedna wspólna cena w USD."
+    },
+    "pt": {
+      "title": "DEX — Negocie DHB pelo seu preço",
+      "description": "Defina seu preço de compra ou venda de DHB com uma ordem limite do Uniswap v4 na Base ou BNB Chain. Livro de ofertas ao vivo, profundidade de mercado e um preço compartilhado em USD."
+    },
+    "qu": {
+      "title": "DEX — DHBta munashkayki k'anchanpi ruway",
+      "description": "Base ichaqa BNB Chainpi Uniswap v4 limit orderwan DHB rantiy/rantiyta munashkayki k'anchanpi churay. Kawsay order book, merkado kachkaynin, hukllachasqa USD k'anchan."
+    },
+    "ro": {
+      "title": "DEX — Tranzacționează DHB la prețul tău",
+      "description": "Setează prețul de cumpărare sau vânzare al DHB cu o comandă limită Uniswap v4 pe Base sau BNB Chain. Cartea de ordine live, profunzimea pieței și un preț USD comun."
+    },
+    "ru": {
+      "title": "DEX — Торгуйте DHB по вашей цене",
+      "description": "Установите цену покупки или продажи DHB с помощью лимитного ордера Uniswap v4 на Base или BNB Chain. Книга ордеров в реальном времени, глубина рынка и единая цена в USD."
+    },
+    "sa": {
+      "title": "DEX — तुमच्या किमतीवर DHB चा व्यापार करा",
+      "description": "Base किंवा BNB Chain वर Uniswap v4 लिमिट ऑर्डरसह तुमची DHB खरेदी किंवा विक्री किंमत सेट करा. लाईव्ह ऑर्डर बुक, मार्केट डेप्थ आणि एक सामायिक USD किंमत."
+    },
+    "sd": {
+      "title": "DEX — پنهنجي قيمت تي DHB واپار ڪريو",
+      "description": "Base يا BNB چين تي Uniswap v4 لمٽ آرڊر سان پنهنجي DHB خريداري يا وڪري جي قيمت مقرر ڪريو. لائيو آرڊر بڪ، مارڪيٽ ڊيپٿ ۽ هڪ شيئر ٿيل USD قيمت."
+    },
+    "si": {
+      "title": "DEX — ඔබේ මිලට DHB වෙළඳාම් කරන්න",
+      "description": "Base හෝ BNB Chain හි Uniswap v4 සීමා ඇණවුමක් සමඟින් ඔබේ DHB මිලදී ගැනීමේ හෝ විකිණීමේ මිල සකසන්න. සජීවී ඇණවුම් පොත, වෙළඳපල ගැඹුර සහ එක් පොදු USD මිලක්."
+    },
+    "sk": {
+      "title": "DEX — Obchodujte DHB za vašu cenu",
+      "description": "Nastavte si cenu nákupu alebo predaja DHB pomocou limitnej objednávky Uniswap v4 na Base alebo BNB Chain. Živý kniha objednávok, hĺbka trhu a jedna zdieľaná cena v USD."
+    },
+    "so": {
+      "title": "DEX — Ku ganacsada DHB qiimahaaga",
+      "description": "U deji qiimahaaga iibka ama iibinta DHB adoo isticmaalaya Uniswap v4 limit order oo ku taal Base ama BNB Chain. Live order book, market depth iyo hal qiimo oo USD ah."
+    },
+    "sq": {
+      "title": "DEX — Tregtoh DHB me çmimin tuaj",
+      "description": "Vendosni çmimin tuaj të blerjes ose shitjes së DHB me një urdhër kufitar Uniswap v4 në Base ose BNB Chain. Libër urdhrash i drejtpërdrejtë, thellësi tregu dhe një çmim i përbashkët USD."
+    },
+    "sv": {
+      "title": "DEX — Handla DHB till ditt pris",
+      "description": "Ställ in ditt DHB-köp- eller säljpris med en Uniswap v4-limitorder på Base eller BNB Chain. Live orderbok, marknadsdjup och ett gemensamt USD-pris."
+    },
+    "sw": {
+      "title": "DEX — Biashara DHB kwa bei yako",
+      "description": "Weka bei yako ya kununua au kuuza DHB ukitumia agizo la kikomo la Uniswap v4 kwenye Base au BNB Chain. Kitabu cha maagizo kinachoishi, kina cha soko na bei moja ya pamoja ya USD."
+    },
+    "ta": {
+      "title": "DEX — உங்கள் விலையில் DHB வர்த்தகம் செய்யுங்கள்",
+      "description": "Base அல்லது BNB Chain-ல் Uniswap v4 லிமிட் ஆர்டர் மூலம் உங்கள் DHB வாங்கும் அல்லது விற்கும் விலையை நிர்ணயிக்கவும். லைவ் ஆர்டர் புக், மார்க்கெட் டெப்த் மற்றும் ஒரு பகிரப்பட்ட USD விலை."
+    },
+    "te": {
+      "title": "DEX — మీ ధర వద్ద DHBని ట్రేడ్ చేయండి",
+      "description": "Base లేదా BNB చైన్‌లో Uniswap v4 లిమిట్ ఆర్డర్‌తో మీ DHB కొనుగోలు లేదా అమ్మకం ధరను సెట్ చేయండి. లైవ్ ఆర్డర్ బుక్, మార్కెట్ డెప్త్ మరియు ఒక షేర్డ్ USD ధర."
+    },
+    "tg": {
+      "title": "DEX — DHB-ро бо нархи худ савдо кунед",
+      "description": "Бо фармоиши маҳдуди Uniswap v4 дар Base ё BNB Chain нархи харид ё фурӯши DHB-и худро муқаррар кунед. Китоби фармоишии зинда, умқи бозор ва як нархи муштараки долларӣ."
+    },
+    "th": {
+      "title": "DEX — ซื้อขาย DHB ในราคาของคุณ",
+      "description": "ตั้งราคาซื้อหรือขาย DHB ของคุณด้วยคำสั่งจำกัดของ Uniswap v4 บน Base หรือ BNB Chain สมุดคำสั่งซื้อแบบเรียลไทม์ ความลึกของตลาด และราคา USD ที่ใช้ร่วมกัน"
+    },
+    "ti": {
+      "title": "DEX — ኣብ ዋጋኻ DHB ንግዲ",
+      "description": "ዋጋ DHBኻ ብ Uniswap v4 ገደብ ትእዛዝ ኣብ Base ወይ BnB Chain ኣዳሉ ወይ ሸይጥ ። ህያው መጽሓፍ ቅደም ተከተል ፡ ጥልቀት ዕዳጋን ሓደ ናይ ሓባር USD ዋጋን ።"
+    },
+    "tk": {
+      "title": "DEX — DHB söwdasy öz bahasyňyzda",
+      "description": "Base ýa-da BNB Chain-däki Uniswap v4 çäklendirilen buýrugy bilen DHB satyn almak ýa-da satmak bahasyňyzy belläň. Hakyky buýurmalar kitaby, bazaryň çuňlugy we bir umumy ABŞ dollary bahasy."
+    },
+    "tl": {
+      "title": "DEX — I — trade ang DHB sa iyong presyo",
+      "description": "Itakda ang iyong DHB bumili o magbenta ng presyo na may isang Uniswap v4 limit order sa Base o BNB Chain. Live na aklat ng order, lalim ng merkado at isang ibinahaging presyo ng USD."
+    },
+    "tr": {
+      "title": "DEX — DHB'yi kendi fiyatınızla takas edin",
+      "description": "Base veya BNB Chain'de Uniswap v4 limit emriyle DHB alım veya satım fiyatınızı belirleyin. Canlı emir defteri, piyasa derinliği ve tek bir paylaşılan USD fiyatı."
+    },
+    "ug": {
+      "title": "DEX — باھاسىدا DHB تىجارىتى",
+      "description": "Base ياكى BnB زەنجىرىدە Uniswap v4 چەكلىمە بۇيرۇقى ئارقىلىق DHB سېتىۋېلىش ياكى سېتىش باھاسىنى تەڭشەش. ھاياتلىق بۇيرۇق كىتابى، بازارنىڭ چوڭقۇرلىقى ۋە بىر ئورتاق دوللار قىممىتى."
+    },
+    "uk": {
+      "title": "DEX — Торгуйте DHB за вашою ціною",
+      "description": "Встановіть свою ціну купівлі чи продажу DHB за допомогою лімітного ордера Uniswap v4 на Base або BNB Chain. Актуальний стакан ордерів, глибина ринку та єдина спільна ціна в USD."
+    },
+    "ur": {
+      "title": "DEX — اپنی قیمت پر DHB ٹریڈ کریں",
+      "description": "بیس یا BNB چین پر Uniswap v4 لیمٹ آرڈر کے ساتھ اپنی DHB خرید یا فروخت کی قیمت مقرر کریں۔ لائیو آرڈر بک، مارکیٹ کی گہرائی اور ایک مشترکہ USD قیمت۔"
+    },
+    "uz": {
+      "title": "DEX — DHB ni oʻzingiz belgilagan narxda savdo qiling",
+      "description": "Base yoki BNB Chain’da Uniswap v4 limit buyurtmasi bilan DHB sotib olish yoki sotish narxini belgilang. Jonli buyurtmalar kitobi, bozor chuqurligi va bitta umumiy AQSh dollari narxi."
+    },
+    "vi": {
+      "title": "DEX — Giao dịch DHB theo giá của bạn",
+      "description": "Đặt giá mua hoặc bán DHB của bạn với lệnh giới hạn Uniswap v4 trên Base hoặc BNB Chain. Sổ lệnh trực tiếp, độ sâu thị trường và một mức giá USD chung."
+    },
+    "yo": {
+      "title": "DEX — Ṣowo DHB ni idiyele rẹ",
+      "description": "Ṣeto idiyele rira tabi tita DHB rẹ pẹlu aṣẹ opin Uniswap v4 lori Base tabi BNB Chain. Iwe aṣẹ ti nṣiṣe lọwọ, ijinle ọja ati idiyele USD ti o pin pin."
+    },
+    "zh": {
+      "title": "DEX — 以您的价格交易 DHB",
+      "description": "在 Base 或 BNB Chain 上使用 Uniswap v4 限价单设置您的 DHB 买入或卖出价格。实时订单簿、市场深度和统一的美元价格。"
+    },
+    "zu": {
+      "title": "DEX — Shintsha i-DHB ngentengo yakho",
+      "description": "Setha intengo yakho yokuthenga noma yokudayisa i-DHB nge-Uniswap v4 limit order ku-Base noma ku-BNB Chain. I-oda encwadini ebukhoma, ukujula kwemakethe nenye intengo eyabiwe ye-USD."
+    }
+  },
   "/docs": {
     "af": {
       "title": "DeHub-dokumentasie — Gidse, token, dApps en vrae",

@@ -218,6 +218,27 @@ describe('arcade assets', () => {
       expect(ogRoutes, `OG_CARD_ROUTES is missing '${key}'`).toContain(`'${key}'`);
     }
   });
+
+  it('gives every game a crawler page and a sitemap entry', () => {
+    // A game missing from the worker's page table is served to crawlers as the
+    // SPA shell: the homepage's title and card, under a noindex. God's Eye
+    // shipped that way and never ranked. The grid's crawler copy has to link
+    // each game too, or the page is an orphan to everything but the sitemap.
+    const worker = readFileSync(repo('CLOUDFLARE_WORKER_SEO.js'), 'utf8');
+    const start = worker.indexOf('const MARKETING_PAGES = {');
+    const pages = worker.slice(start, worker.indexOf('\n};', start));
+    const gridStart = pages.indexOf("  'arcade': {");
+    const grid = pages.slice(gridStart, pages.indexOf('</ul>', gridStart));
+    const sitemap = readFileSync(repo('public', 'sitemap-static.xml'), 'utf8');
+
+    for (const game of ARCADE_GAMES) {
+      expect(pages, `MARKETING_PAGES is missing 'arcade/${game.slug}'`).toContain(`  'arcade/${game.slug}': {`);
+      expect(grid, `the arcade grid's crawler copy does not link ${game.slug}`).toContain(`/arcade/${game.slug}"`);
+      expect(sitemap, `sitemap-static.xml is missing /arcade/${game.slug}`).toContain(
+        `<loc>https://dehub.io/arcade/${game.slug}</loc>`,
+      );
+    }
+  });
 });
 
 describe('arcade exit bridge', () => {

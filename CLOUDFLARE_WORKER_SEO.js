@@ -120,6 +120,9 @@ const OG_CARD_ROUTES = new Set([
   'superpowers', 'converter', 'launchpad', 'stats',
   'accounts', 'fractions', 'stores', 'events',
   'migrate-youtube',
+  // Public app pages that unfurled as the homepage: the SPA had SEO for them,
+  // the edge did not, so crawlers got the shell under a noindex.
+  'dex', 'ads', 'buy',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
@@ -795,6 +798,22 @@ ${primaryNavHtml(`/${key}`)}
 </html>`;
 }
 
+/** The VideoGame JSON-LD ArcadeGamePage writes for the same URL, so the two
+ *  UA variants describe one entity. `image` is the capture, as in the SPA. */
+function arcadeGameLd(art) {
+  return {
+    jsonLdType: 'VideoGame',
+    jsonLdExtra: {
+      image: `${APP_URL}${art}`,
+      applicationCategory: 'Game',
+      gamePlatform: 'Web browser',
+      operatingSystem: 'Any',
+      playMode: 'SinglePlayer',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+  };
+}
+
 // Newer public marketing routes, rendered entirely at the edge. The deployed
 // Supabase fn's STATIC_ROUTES predates them, so proxying answered 404 — and the
 // worker passed that through, hard-404ing real pages (/connect, /pricing,
@@ -802,6 +821,31 @@ ${primaryNavHtml(`/${key}`)}
 // page. Titles and descriptions mirror each page's SPA SEOHead strings exactly
 // so the two UA variants never diverge.
 const MARKETING_PAGES = {
+  'dex': {
+    title: 'DEX — Trade DHB at your price',
+    description: 'Set your DHB buy or sell price with a Uniswap v4 limit order on Base or BNB Chain. Live order book, market depth and one shared USD price.',
+    heading: 'DeHub DEX',
+    jsonLdType: 'WebApplication',
+    jsonLdExtra: { applicationCategory: 'FinanceApplication', operatingSystem: 'Web' },
+    bodyHtml: `<p>Trade DHB at the price you choose. Place a buy or sell as a Uniswap v4 limit order on Base or BNB Chain and it fills when the market reaches it — no watching the chart, no slippage past your number.</p>
+<p>The terminal shows the live order book, market depth and one shared USD price.</p>
+<p><a href="${APP_URL}/dex">Open the DEX</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get DHB</a>.</p>`,
+  },
+  'ads': {
+    title: 'Ads Manager | DeHub',
+    description: 'Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in DHB.',
+    heading: 'DeHub Ads Manager',
+    bodyHtml: `<p>Run ad campaigns on DeHub with POVR — proof-of-view-and-rank. Campaigns target verified badge holders rather than anonymous impressions, and are paid in DHB.</p>
+<p>Create a campaign, choose who it reaches and follow its results from one dashboard.</p>
+<p><a href="${APP_URL}/ads">Open Ads Manager</a> or <a href="${APP_URL}/docs/advertising">read how POVR works</a>.</p>`,
+  },
+  'buy': {
+    title: 'Buy — Purchase Crypto on DeHub',
+    description: 'Buy DHB and other cryptocurrencies directly on DeHub with your credit card. Fast checkout, multiple chains supported.',
+    heading: 'Buy Crypto on DeHub',
+    bodyHtml: `<p>Buy DHB and other cryptocurrencies directly on DeHub with a credit card, delivered straight to your wallet. Checkout supports multiple chains, so you can buy on the network you already use.</p>
+<p><a href="${APP_URL}/buy">Buy crypto</a>, <a href="${APP_URL}/dex">trade DHB at your price</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get DHB</a>.</p>`,
+  },
   'builder': {
     title: 'Builder — Build Apps with AI on DeHub',
     description: 'Describe an app and DeHub Builder creates it live: AI-written, DeHub-hosted mini apps you can share with anyone.',
@@ -905,14 +949,25 @@ const MARKETING_PAGES = {
     title: 'Arcade | DeHub',
     description: 'Play games in your browser on DeHub — cinematic 3D chess, a procedurally generated shooter, a rainforest walk, a neon-street brawler and a walkable trading floor. No install, no download.',
     heading: 'DeHub Arcade',
-    bodyHtml: `<p>Games that run in the browser tab. Nothing to install, nothing to buy — three of them open source, two made for DeHub, and all five served from DeHub itself.</p>
+    bodyHtml: `<p>A collection of DeHub built and open sourced games, worlds or experiences. They run in the browser tab — nothing to install, nothing to buy, all served from DeHub itself.</p>
 <ul>
+<li><a href="${APP_URL}/arcade/gods-eye">God's Eye</a> — a live spatial-intelligence globe where you can find the DeHub community across a 3D Earth.</li>
 <li><a href="${APP_URL}/arcade/kings-gambit">King's Gambit</a> — cinematic 3D chess with three rigged civilisations, four battlegrounds and three engine strengths.</li>
 <li><a href="${APP_URL}/arcade/claude-of-duty">Claude of Duty</a> — a first-person shooter that generates every mesh, texture and sound on your machine as it loads.</li>
 <li><a href="${APP_URL}/arcade/jungle-trail">Jungle Trail</a> — a walk through a procedurally generated rainforest, with no score and no timer.</li>
 <li><a href="${APP_URL}/arcade/street-slayer">Street Slayer</a> — a side-scrolling beat 'em up down a neon-lit street, built for DeHub rather than found.</li>
 <li><a href="${APP_URL}/arcade/trenchstar">Chartopia</a> — a trading floor you can walk, built out of forty live market screens.</li>
 </ul>`,
+  },
+  'arcade/gods-eye': {
+    title: "God's Eye | DeHub Arcade",
+    description: 'Explore a live spatial-intelligence globe and, if you choose, place a deliberately approximate version of yourself among the DeHub community.',
+    heading: "God's Eye — Find The DeHub Community On A Living 3D Earth",
+    ...arcadeGameLd('/arcade/gods-eye.gif'),
+    bodyHtml: `<p>A live spatial-intelligence globe in the browser tab: flights, satellites, earthquakes and street traffic drawn over a 3D Earth you can spin, zoom and fly down into.</p>
+<p>It is also the DeHub community on a map. Opting in places a deliberately approximate version of you on the globe — never your exact location — so you can see who else is out there. Nothing is placed until you choose to.</p>
+<p>Built on the open-source <a href="https://github.com/bilawalsidhu/gods-eye-view" rel="nofollow">God's Eye View</a> (MIT). Needs a browser with WebGL 2 and hardware acceleration switched on.</p>
+<p><a href="${APP_URL}/arcade/gods-eye">Open the globe</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/kings-gambit': {
     title: "King's Gambit | DeHub Arcade",
@@ -2851,6 +2906,7 @@ const SSR_STATIC_ROUTES = new Set([
   // bare path as well, so they canonicalize the same way as everything above
   // and their `path` overrides are gone.
   'stores', 'fractions', 'superpowers', 'glossary',
+  'ads', 'buy',
   // /guides/* is handled entirely at the edge (GUIDE_PAGES + blog manifest),
   // never proxied to the Supabase fn — its STATIC_ROUTES allowlist is stale.
   //
