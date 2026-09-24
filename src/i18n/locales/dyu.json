@@ -3589,6 +3589,14 @@
       "saturation": "Kulɛri barika",
       "color": "Kulɛri",
       "luminosity": "Yeelen hakɛ"
+    },
+    "bgRemove": {
+      "action": "Kɔfɛla bɔ",
+      "working": "Kɔfɛla bɛ ka bɔ…",
+      "downloading": "AI modɛli bɛ ka labɛn… {{percent}}%",
+      "hint": "A bɛ baara kɛ i ka minɛn kan: a ye fu ye, a ye gundo ye, foyi tɛ ci. Siɲɛ fɔlɔ, AI modɛli bɛ jigi, o kɔfɛ a bɛ segɔni dama dɔrɔn ta.",
+      "done": "Kɔfɛla bɔra.",
+      "failed": "Kɔfɛla ma se ka bɔ. Ja wɛrɛ lajɛ, walima navigatɛri i n'a fɔ Chrome walima Edge."
     }
   },
   "fractions": {

@@ -5935,6 +5935,14 @@
       "saturation": "Zasićenje",
       "color": "Boja",
       "luminosity": "Svjetlina"
+    },
+    "bgRemove": {
+      "action": "Ukloni pozadinu",
+      "working": "Uklanjanje pozadine…",
+      "downloading": "Priprema AI modela… {{percent}} %",
+      "hint": "Radi na vašem uređaju: besplatno, privatno, ništa se ne prenosi. Pri prvoj upotrebi preuzima se AI model, a zatim traje nekoliko sekundi.",
+      "done": "Pozadina je uklonjena.",
+      "failed": "Uklanjanje pozadine nije uspjelo. Pokušajte s drugom slikom ili preglednikom poput Chromea ili Edgea."
     }
   }
 }

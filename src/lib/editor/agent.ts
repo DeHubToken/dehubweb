@@ -18,6 +18,7 @@ import { applyFilterPreset } from "./filterPresets";
 import { GOOGLE_FONTS, fontFamilyCss, loadGoogleFont } from "./googleFonts";
 import { downloadFreeAsset, provenanceForAsset, searchFreeAssets, type FreeAssetOrientation } from "./freeAssets";
 import { importOneFile } from "./importFiles";
+import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || "https://aigxuutjaqsywioxjefr.supabase.co"}/functions/v1/editor-agent`;
 const ANON_KEY =
@@ -475,6 +476,11 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         const clip = store().clips.find((c) => c.id === id);
         if (clip && kind !== "audio") place(clip, op);
         return true;
+      }
+      case "remove_background": {
+        const clip = find(op.id);
+        if (!clip || clip.kind !== "image") return false;
+        return await useBgRemovalStore.getState().run(clip.id, ctx.wallet);
       }
       case "generate": {
         const prompt = str(op.prompt);

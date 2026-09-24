@@ -5936,6 +5936,14 @@
       "saturation": "Kylläisyys",
       "color": "Väri",
       "luminosity": "Kirkkaus"
+    },
+    "bgRemove": {
+      "action": "Poista tausta",
+      "working": "Poistetaan taustaa…",
+      "downloading": "Valmistellaan tekoälymallia… {{percent}} %",
+      "hint": "Toimii laitteellasi: ilmainen, yksityinen, mitään ei lähetetä. Ensimmäisellä kerralla tekoälymalli ladataan, sen jälkeen poisto kestää muutaman sekunnin.",
+      "done": "Tausta poistettu.",
+      "failed": "Taustan poistaminen epäonnistui. Kokeile toista kuvaa tai selainta, kuten Chromea tai Edgeä."
     }
   }
 }

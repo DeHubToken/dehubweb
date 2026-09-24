@@ -3688,6 +3688,14 @@
       "saturation": "Njupụta agba",
       "color": "Agba",
       "luminosity": "Nchapụta"
+    },
+    "bgRemove": {
+      "action": "Wepụ azụ foto",
+      "working": "Na-ewepụ azụ foto…",
+      "downloading": "Na-akwado ụdị AI… {{percent}}%",
+      "hint": "Ọ na-arụ ọrụ na ngwaọrụ gị: n'efu, nzuzo, ọ dịghị ihe a na-ebugo. Ojiji mbụ na-ebudata ụdị AI, mgbe ahụ ọ na-ewe sekọnd ole na ole.",
+      "done": "E wepụla azụ foto.",
+      "failed": "Enweghị ike iwepụ azụ foto. Nwaa foto ọzọ, ma ọ bụ ihe nchọgharị dị ka Chrome ma ọ bụ Edge."
     }
   },
   "fractions": {

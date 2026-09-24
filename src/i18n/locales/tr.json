@@ -6055,6 +6055,14 @@
       "saturation": "Doygunluk",
       "color": "Renk",
       "luminosity": "Parlaklık"
+    },
+    "bgRemove": {
+      "action": "Arka planı kaldır",
+      "working": "Arka plan kaldırılıyor…",
+      "downloading": "Yapay zekâ modeli hazırlanıyor… %{{percent}}",
+      "hint": "Cihazınızda çalışır: ücretsiz, gizli, hiçbir şey yüklenmez. İlk kullanımda yapay zekâ modeli indirilir, sonra birkaç saniye sürer.",
+      "done": "Arka plan kaldırıldı.",
+      "failed": "Arka plan kaldırılamadı. Başka bir görsel ya da Chrome veya Edge gibi bir tarayıcı deneyin."
     }
   }
 }

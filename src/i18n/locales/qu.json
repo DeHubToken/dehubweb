@@ -3758,6 +3758,14 @@
       "saturation": "Llimp'i sinchi kay",
       "color": "Llimp'i",
       "luminosity": "K'anchariy"
+    },
+    "bgRemove": {
+      "action": "Qhipa pampata qichuy",
+      "working": "Qhipa pampata qichuchkan…",
+      "downloading": "AI modelota wakichichkan… {{percent}}%",
+      "hint": "Qampa equipoykipi llamk’an: mana qullqiyuq, pakasqa, manam imapas wicharichikunchu. Ñawpaq kutipi AI modelota uraykachin, chaymanta pisi segundollapi.",
+      "done": "Qhipa pampa qichusqa.",
+      "failed": "Manam qhipa pampata qichuyta atikunchu. Huk rikchayta, utaq Chrome utaq Edge hina browserta llamk’achiy."
     }
   },
   "fractions": {

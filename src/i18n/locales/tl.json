@@ -5808,6 +5808,14 @@
       "saturation": "Saturation",
       "color": "Kulay",
       "luminosity": "Luminosity"
+    },
+    "bgRemove": {
+      "action": "Alisin ang background",
+      "working": "Inaalis ang background…",
+      "downloading": "Inihahanda ang AI model… {{percent}}%",
+      "hint": "Tumatakbo sa iyong device: libre, pribado, walang ina-upload. Sa unang gamit, ida-download ang AI model, pagkatapos ay ilang segundo lang.",
+      "done": "Naalis na ang background.",
+      "failed": "Hindi maalis ang background. Subukan ang ibang larawan, o browser tulad ng Chrome o Edge."
     }
   },
   "walletSelector": {

@@ -49,6 +49,7 @@ Operations (only use fields you need):
 - duplicate: id. delete: id.
 - add_media: mediaId (from the library list), x, y, scale.
 - add_stock: query (short English search), kind ("photo" | "video" | "audio"), orientation ("landscape" | "portrait" | "square"), x, y, scale, fit. Free stock library; use it whenever the user wants a picture, background, clip or music you do not have.
+- remove_background: id (an image layer). Cuts the subject out, free and on-device. Use for "remove the background", "cut out", "isolate", product shots, stickers.
 - generate: kind ("image" | "video"), prompt (a rich, detailed generation prompt). This does NOT run anything; it opens the paid AI generator pre-filled for the user to confirm. Use only when the user explicitly asks to generate/create with AI or stock clearly will not do.
 - select: id. Selects a layer so the user sees it.
 
@@ -68,7 +69,7 @@ Example answer:
 
 const OP_NAMES = [
   "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "timing",
-  "audio", "order", "duplicate", "delete", "add_media", "add_stock", "generate", "select",
+  "audio", "order", "duplicate", "delete", "add_media", "add_stock", "remove_background", "generate", "select",
 ];
 
 interface Message {

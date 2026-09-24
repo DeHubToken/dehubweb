@@ -3059,6 +3059,14 @@
       "saturation": "Saturation",
       "color": "Color",
       "luminosity": "Luminosity"
+    },
+    "bgRemove": {
+      "action": "Remove background",
+      "working": "Dey remove background…",
+      "downloading": "Dey ready di AI model… {{percent}}%",
+      "hint": "E dey run for your device: free, private, nothing go upload. Di first time go download di AI model, after dat e go take only few seconds.",
+      "done": "Background don comot.",
+      "failed": "We no fit remove di background. Try another picture, or browser like Chrome or Edge."
     }
   },
   "fractions": {

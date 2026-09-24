@@ -5873,6 +5873,14 @@
       "saturation": "Versadiging",
       "color": "Kleur",
       "luminosity": "Helderheid"
+    },
+    "bgRemove": {
+      "action": "Verwyder agtergrond",
+      "working": "Verwyder agtergrond…",
+      "downloading": "Maak die KI-model gereed… {{percent}}%",
+      "hint": "Loop op jou toestel: gratis, privaat, niks word opgelaai nie. Die eerste keer word die KI-model afgelaai, daarna neem dit net 'n paar sekondes.",
+      "done": "Agtergrond verwyder.",
+      "failed": "Kon nie die agtergrond verwyder nie. Probeer 'n ander prent, of 'n blaaier soos Chrome of Edge."
     }
   },
   "footer": {

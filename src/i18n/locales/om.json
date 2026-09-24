@@ -3744,6 +3744,14 @@
       "saturation": "Guutummaa halluu",
       "color": "Halluu",
       "luminosity": "Ifaa"
+    },
+    "bgRemove": {
+      "action": "Duubaa haqi",
+      "working": "Duubaa haqaa jira…",
+      "downloading": "Moodeela AI qopheessaa jira… {{percent}}%",
+      "hint": "Meeshaa kee irratti hojjeta: bilisa, dhuunfaa, homtuu hin olfe'amu. Yeroo jalqabaaf moodeela AI buufata, sana booda sekondii muraasa qofa fudhata.",
+      "done": "Duubaan haqameera.",
+      "failed": "Duubaa haquu hin dandeenye. Suuraa biraa ykn biraawzarii akka Chrome ykn Edge yaali."
     }
   },
   "spaces": {

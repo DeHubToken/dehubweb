@@ -6027,6 +6027,14 @@
       "saturation": "Sodrumas",
       "color": "Spalva",
       "luminosity": "Šviesis"
+    },
+    "bgRemove": {
+      "action": "Pašalinti foną",
+      "working": "Šalinamas fonas…",
+      "downloading": "Ruošiamas DI modelis… {{percent}} %",
+      "hint": "Veikia jūsų įrenginyje: nemokamai, privačiai, niekas neįkeliama. Pirmą kartą atsisiunčiamas DI modelis, vėliau tai užtrunka kelias sekundes.",
+      "done": "Fonas pašalintas.",
+      "failed": "Nepavyko pašalinti fono. Išbandykite kitą vaizdą arba naršyklę, pvz., Chrome ar Edge."
     }
   }
 }

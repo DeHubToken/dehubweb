@@ -3742,6 +3742,14 @@
       "saturation": "To'yinganlik",
       "color": "Rang",
       "luminosity": "Yorqinlik"
+    },
+    "bgRemove": {
+      "action": "Fonni olib tashlash",
+      "working": "Fon olib tashlanmoqda…",
+      "downloading": "AI modeli tayyorlanmoqda… {{percent}}%",
+      "hint": "Qurilmangizda ishlaydi: bepul, shaxsiy, hech narsa yuklanmaydi. Birinchi marta AI modeli yuklab olinadi, keyin bir necha soniya oladi.",
+      "done": "Fon olib tashlandi.",
+      "failed": "Fonni olib tashlab bo‘lmadi. Boshqa rasm yoki Chrome yoki Edge kabi brauzerni sinab ko‘ring."
     }
   },
   "spaces": {

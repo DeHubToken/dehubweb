@@ -3681,6 +3681,14 @@
       "saturation": "Doýgunlyk",
       "color": "Reňk",
       "luminosity": "Ýagtylyk"
+    },
+    "bgRemove": {
+      "action": "Fony aýyr",
+      "working": "Fon aýrylýar…",
+      "downloading": "AI modeli taýýarlanýar… {{percent}}%",
+      "hint": "Enjamyňyzda işleýär: mugt, gizlin, hiç zat ýüklenmeýär. Ilkinji gezek AI modeli ýüklenip alynýar, soňra bary-ýogy birnäçe sekunt gerek.",
+      "done": "Fon aýryldy.",
+      "failed": "Fony aýryp bolmady. Başga surat ýa-da Chrome, Edge ýaly brauzer synap görüň."
     }
   },
   "fractions": {

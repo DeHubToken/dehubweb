@@ -5704,6 +5704,14 @@
       "saturation": "Hamafin'ny loko",
       "color": "Loko",
       "luminosity": "Famirapiratana"
+    },
+    "bgRemove": {
+      "action": "Esory ny ambadika",
+      "working": "Manala ny ambadika…",
+      "downloading": "Manomana ny modely AI… {{percent}}%",
+      "hint": "Mandeha ao amin'ny fitaovanao: maimaim-poana, tsiambaratelo, tsy misy alefa any ivelany. Amin'ny fampiasana voalohany dia misintona ny modely AI, avy eo segondra vitsy monja.",
+      "done": "Voaesotra ny ambadika.",
+      "failed": "Tsy voaesotra ny ambadika. Andramo sary hafa, na mpitety tahaka ny Chrome na Edge."
     }
   },
   "createPost": {

@@ -5938,6 +5938,14 @@
       "saturation": "Mättnad",
       "color": "Färg",
       "luminosity": "Luminiscens"
+    },
+    "bgRemove": {
+      "action": "Ta bort bakgrund",
+      "working": "Tar bort bakgrunden…",
+      "downloading": "Förbereder AI-modellen… {{percent}} %",
+      "hint": "Körs på din enhet: gratis, privat, inget laddas upp. Första gången laddas AI-modellen ner, sedan tar det bara några sekunder.",
+      "done": "Bakgrunden har tagits bort.",
+      "failed": "Det gick inte att ta bort bakgrunden. Prova en annan bild eller en webbläsare som Chrome eller Edge."
     }
   }
 }

@@ -3759,6 +3759,14 @@
       "saturation": "Ukugcwala",
       "color": "Umbala",
       "luminosity": "Ukukhanya"
+    },
+    "bgRemove": {
+      "action": "Susa ingemuva",
+      "working": "Isusa ingemuva…",
+      "downloading": "Ilungisa imodeli ye-AI… {{percent}}%",
+      "hint": "Isebenza kudivayisi yakho: mahhala, iyimfihlo, akukho okulayishwayo. Ukusetshenziswa kokuqala kudawuniloda imodeli ye-AI, bese kuthatha imizuzwana embalwa.",
+      "done": "Ingemuva lisusiwe.",
+      "failed": "Akukwazekanga ukususa ingemuva. Zama esinye isithombe, noma isiphequluli esifana ne-Chrome noma i-Edge."
     }
   },
   "fractions": {

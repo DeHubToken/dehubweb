@@ -3715,6 +3715,14 @@
       "saturation": "Kajenuhan",
       "color": "Werna",
       "luminosity": "Luminositas"
+    },
+    "bgRemove": {
+      "action": "Busak latar mburi",
+      "working": "Mbusak latar mburi…",
+      "downloading": "Nyiapake model AI… {{percent}}%",
+      "hint": "Mlaku ing piranthimu: gratis, pribadi, ora ana sing diunggah. Nalika pisanan nganggo, model AI diundhuh dhisik, sabanjure mung butuh sawetara detik.",
+      "done": "Latar mburi wis dibusak.",
+      "failed": "Ora bisa mbusak latar mburi. Coba gambar liya, utawa peramban kaya Chrome utawa Edge."
     }
   },
   "fractions": {

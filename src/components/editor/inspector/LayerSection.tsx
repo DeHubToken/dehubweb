@@ -7,10 +7,12 @@
  * drag (or key press) starts, so one adjustment is one undo.
  */
 import { useTranslation } from "react-i18next";
+import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
+import { useEditorQuota } from "@/hooks/use-editor-quota";
 import {
   AlignCenterHorizontal, AlignCenterVertical, AlignEndHorizontal, AlignEndVertical,
   AlignStartHorizontal, AlignStartVertical, Bold, FlipHorizontal2, FlipVertical2, Italic,
-  Maximize, Minimize, RotateCcw, Underline, CaseUpper, Frame, Eye, EyeOff, Lock, Unlock,
+  Maximize, Minimize, RotateCcw, Scissors, Loader2, Underline, CaseUpper, Frame, Eye, EyeOff, Lock, Unlock,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -29,6 +31,10 @@ export function LayerSection({ clip }: { clip: Clip }) {
   const settings = useEditorStore((s) => s.settings);
   const updateSettings = useEditorStore((s) => s.updateSettings);
   const media = useEditorStore((s) => s.media);
+  const bgClipId = useBgRemovalStore((s) => s.clipId);
+  const bgProgress = useBgRemovalStore((s) => s.progress);
+  const runBgRemoval = useBgRemovalStore((s) => s.run);
+  const quota = useEditorQuota();
 
   if (clip.kind === "audio") return null;
   const tr = getTransform(clip);
@@ -188,6 +194,25 @@ export function LayerSection({ clip }: { clip: Clip }) {
           {shape.shape === "rect" && live(t("editor.layer.cornerRounding", { value: Math.round(shape.radius ?? 0) }), shape.radius ?? 0, 0, 540, 1,
             (v) => patchClipLive(clip.id, { radius: v }))}
         </>
+      )}
+
+      {mediaClip?.kind === "image" && (
+        <button
+          type="button"
+          disabled={!!bgClipId}
+          onClick={() => void runBgRemoval(clip.id, quota.walletAddress)}
+          className="flex h-8 w-full items-center justify-center gap-1.5 rounded-md bg-white text-[11px] font-semibold text-black transition hover:bg-white/90 disabled:opacity-60"
+        >
+          {bgClipId === clip.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Scissors className="h-3.5 w-3.5" />}
+          {bgClipId === clip.id
+            ? bgProgress?.stage === "download"
+              ? t("editor.bgRemove.downloading", { percent: Math.round((bgProgress.loaded / Math.max(1, bgProgress.total)) * 100) })
+              : t("editor.bgRemove.working")
+            : t("editor.bgRemove.action")}
+        </button>
+      )}
+      {mediaClip?.kind === "image" && !bgClipId && (
+        <p className="-mt-2 text-[10px] leading-snug text-white/40">{t("editor.bgRemove.hint")}</p>
       )}
 
       {mediaClip && (

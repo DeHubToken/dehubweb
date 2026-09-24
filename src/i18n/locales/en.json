@@ -6054,6 +6054,14 @@
       "saturation": "Saturation",
       "color": "Color",
       "luminosity": "Luminosity"
+    },
+    "bgRemove": {
+      "action": "Remove background",
+      "working": "Removing background…",
+      "downloading": "Getting the AI model ready… {{percent}}%",
+      "hint": "Runs on your device: free, private, nothing is uploaded. The first use downloads the AI model, then it takes a few seconds.",
+      "done": "Background removed.",
+      "failed": "Couldn't remove the background. Try another image, or a browser like Chrome or Edge."
     }
   }
 }

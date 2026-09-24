@@ -6007,6 +6007,14 @@
       "saturation": "Nasycenie",
       "color": "Kolor",
       "luminosity": "Jasność"
+    },
+    "bgRemove": {
+      "action": "Usuń tło",
+      "working": "Usuwanie tła…",
+      "downloading": "Przygotowywanie modelu AI… {{percent}}%",
+      "hint": "Działa na Twoim urządzeniu: za darmo, prywatnie, nic nie jest wysyłane. Przy pierwszym użyciu pobierany jest model AI, potem trwa to kilka sekund.",
+      "done": "Tło usunięte.",
+      "failed": "Nie udało się usunąć tła. Spróbuj innego obrazu lub przeglądarki, np. Chrome albo Edge."
     }
   },
   "glossary": {

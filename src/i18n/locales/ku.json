@@ -4981,6 +4981,14 @@
       "saturation": "تێری",
       "color": "ڕەنگ",
       "luminosity": "درەوشاوەیی"
+    },
+    "bgRemove": {
+      "action": "Paşxaneyê rake",
+      "working": "Paşxane tê rakirin…",
+      "downloading": "Modela AI tê amadekirin… {{percent}}%",
+      "hint": "Li ser cîhaza te dixebite: belaş, taybet, tiştek nayê barkirin. Cara yekem modela AI dadixe, paşê çend çirkeyan digire.",
+      "done": "Paşxane hat rakirin.",
+      "failed": "Paşxane nehat rakirin. Wêneyekî din biceribîne, an gerokeke wek Chrome an Edge."
     }
   }
 }

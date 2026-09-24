@@ -5935,6 +5935,14 @@
       "saturation": "Saturació",
       "color": "Color",
       "luminosity": "Lluminositat"
+    },
+    "bgRemove": {
+      "action": "Elimina el fons",
+      "working": "S'està eliminant el fons…",
+      "downloading": "S'està preparant el model d'IA… {{percent}}%",
+      "hint": "Funciona al teu dispositiu: gratuït, privat i no es puja res. El primer ús baixa el model d'IA; després només triga uns segons.",
+      "done": "S'ha eliminat el fons.",
+      "failed": "No s'ha pogut eliminar el fons. Prova una altra imatge o un navegador com Chrome o Edge."
     }
   }
 }

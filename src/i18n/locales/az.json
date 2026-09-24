@@ -5893,6 +5893,14 @@
       "saturation": "Doyğunluq",
       "color": "Rəng",
       "luminosity": "Parlaqlıq"
+    },
+    "bgRemove": {
+      "action": "Fonu sil",
+      "working": "Fon silinir…",
+      "downloading": "Süni intellekt modeli hazırlanır… {{percent}}%",
+      "hint": "Cihazınızda işləyir: pulsuz, məxfi, heç nə yüklənmir. İlk istifadədə süni intellekt modeli endirilir, sonra bir neçə saniyə çəkir.",
+      "done": "Fon silindi.",
+      "failed": "Fonu silmək alınmadı. Başqa şəkil və ya Chrome, Edge kimi brauzer yoxlayın."
     }
   }
 }

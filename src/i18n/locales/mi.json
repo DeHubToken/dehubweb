@@ -3722,6 +3722,14 @@
       "saturation": "Kukū",
       "color": "Tae",
       "luminosity": "Pīataata"
+    },
+    "bgRemove": {
+      "action": "Tangohia te papamuri",
+      "working": "E tango ana i te papamuri…",
+      "downloading": "E whakareri ana i te tauira AI… {{percent}}%",
+      "hint": "Ka rere ki tō pūrere: he kore utu, he tūmataiti, kāore he mea e tukuatu. I te whakamahinga tuatahi ka tikiake te tauira AI, kātahi ka roa ētahi hēkona noa.",
+      "done": "Kua tangohia te papamuri.",
+      "failed": "Kāore i taea te tango i te papamuri. Whakamātauria tētahi atu atahanga, tētahi pūtirotiro rānei pērā i a Chrome, Edge rānei."
     }
   },
   "fractions": {
