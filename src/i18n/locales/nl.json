@@ -2767,6 +2767,16 @@
     "resolve": "Oplossen"
   },
   "stores": {
+    "podToggle": "Print-on-demand-artikel",
+    "podHint": "Koppel een product uit je print-on-demand-winkel. De aanbieder drukt en verzendt elke bestelling, dus je hebt geen voorraad nodig.",
+    "podUrlLabel": "Productlink",
+    "podProviderLabel": "Aanbieder",
+    "podOther": "Overig",
+    "podInvalidUrl": "Voer een geldige https://-productlink in",
+    "podBadge": "Print on demand",
+    "podBuyOn": "Kopen bij {{provider}}",
+    "podNote": "Op bestelling gedrukt en verzonden door {{provider}}. Afrekenen gebeurt op hun site.",
+    "podUrlPlaceholder": "https://…",
     "title": "Winkels",
     "browse": "Bladeren",
     "myStore": "Mijn winkel",

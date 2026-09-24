@@ -2520,6 +2520,16 @@
     "resolve": "Vyřešit"
   },
   "stores": {
+    "podToggle": "Položka tisku na vyžádání",
+    "podHint": "Propojte produkt ze svého obchodu s tiskem na vyžádání. Dodavatel každou objednávku vytiskne a odešle, takže nedržíte zásoby.",
+    "podUrlLabel": "Odkaz na produkt",
+    "podProviderLabel": "Dodavatel",
+    "podOther": "Jiné",
+    "podInvalidUrl": "Zadejte platný odkaz https://",
+    "podBadge": "Tisk na vyžádání",
+    "podBuyOn": "Koupit na {{provider}}",
+    "podNote": "Tiskne a odesílá na vyžádání {{provider}}. Platba probíhá na jejich webu.",
+    "podUrlPlaceholder": "https://…",
     "title": "Obchody",
     "browse": "Procházet",
     "myStore": "Můj obchod",

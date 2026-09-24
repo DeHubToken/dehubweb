@@ -2574,6 +2574,16 @@
     "resolve": "Schlichten"
   },
   "stores": {
+    "podToggle": "Print-on-Demand-Artikel",
+    "podHint": "Verlinke ein Produkt aus deinem Print-on-Demand-Shop. Der Anbieter druckt und versendet jede Bestellung, du brauchst kein Lager.",
+    "podUrlLabel": "Produktlink",
+    "podProviderLabel": "Anbieter",
+    "podOther": "Andere",
+    "podInvalidUrl": "Gib einen gültigen https://-Produktlink ein",
+    "podBadge": "Print on Demand",
+    "podBuyOn": "Bei {{provider}} kaufen",
+    "podNote": "Auf Bestellung gedruckt und versendet von {{provider}}. Bezahlt wird auf deren Website.",
+    "podUrlPlaceholder": "https://…",
     "title": "Geschäfte",
     "browse": "Durchsuchen",
     "myStore": "Mein Shop",

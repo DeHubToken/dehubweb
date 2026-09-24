@@ -17,6 +17,7 @@ import { Loader2, ImagePlus, X, Video } from 'lucide-react';
 import { useCreateListing } from '@/hooks/use-stores';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { POD_PROVIDERS, detectPodProvider, parsePodUrl, type PodProvider } from '@/lib/pod-providers';
 
 const CATEGORIES = [
   { value: 'digital', labelKey: 'stores.catDigital' },
@@ -45,6 +46,9 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
   const [images, setImages] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [isPod, setIsPod] = useState(false);
+  const [podUrl, setPodUrl] = useState('');
+  const [podProvider, setPodProvider] = useState<PodProvider>('other');
   const [uploadingVideo, setUploadingVideo] = useState(false);
 
   const createListing = useCreateListing();
@@ -98,6 +102,10 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
       toast.error(t('stores.titlePriceRequired'));
       return;
     }
+    if (isPod && !parsePodUrl(podUrl)) {
+      toast.error(t('stores.podInvalidUrl'));
+      return;
+    }
     createListing.mutate({
       store_id: storeId,
       title: title.trim(),
@@ -108,7 +116,9 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
       stock_quantity: stockQty ? Number(stockQty) : null,
       is_digital: isDigital,
       condition,
-      shipping_info: shippingInfo.trim() || undefined,
+      shipping_info: isPod ? undefined : shippingInfo.trim() || undefined,
+      external_url: isPod ? podUrl.trim() : null,
+      pod_provider: isPod ? podProvider : null,
       status: 'active',
     }, {
       onSuccess: () => {
@@ -116,6 +126,7 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
         setTitle(''); setDescription(''); setPrice(''); setImages([]); setVideos([]);
         setCategory('other'); setCondition('new'); setIsDigital(false);
         setShippingInfo(''); setStockQty('');
+        setIsPod(false); setPodUrl(''); setPodProvider('other');
       },
     });
   };
@@ -168,10 +179,46 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
             </div>
           </div>
           <label className="flex items-center gap-3 cursor-pointer">
-            <Switch checked={isDigital} onCheckedChange={setIsDigital} />
-            <Label className="text-zinc-300 cursor-pointer">{t('stores.digitalItem')}</Label>
+            <Switch
+              checked={isPod}
+              onCheckedChange={v => { setIsPod(v); if (v) { setIsDigital(false); setCategory('merch'); } }}
+            />
+            <Label className="text-zinc-300 cursor-pointer">{t('stores.podToggle')}</Label>
           </label>
-          {!isDigital && (
+          {isPod && (
+            <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-3">
+              <p className="text-xs text-zinc-400">{t('stores.podHint')}</p>
+              <div>
+                <Label className="text-zinc-300">{t('stores.podUrlLabel')}</Label>
+                <Input
+                  type="url"
+                  inputMode="url"
+                  value={podUrl}
+                  onChange={e => { setPodUrl(e.target.value); setPodProvider(detectPodProvider(e.target.value)); }}
+                  placeholder={t('stores.podUrlPlaceholder')}
+                  className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500"
+                />
+              </div>
+              <div>
+                <Label className="text-zinc-300">{t('stores.podProviderLabel')}</Label>
+                <Select value={podProvider} onValueChange={v => setPodProvider(v as PodProvider)}>
+                  <SelectTrigger className="bg-white/5 border-white/10 text-white"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {POD_PROVIDERS.map(p => (
+                      <SelectItem key={p.value} value={p.value}>{p.value === 'other' ? t('stores.podOther') : p.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          {!isPod && (
+            <label className="flex items-center gap-3 cursor-pointer">
+              <Switch checked={isDigital} onCheckedChange={setIsDigital} />
+              <Label className="text-zinc-300 cursor-pointer">{t('stores.digitalItem')}</Label>
+            </label>
+          )}
+          {!isDigital && !isPod && (
             <div>
               <Label className="text-zinc-300">{t('stores.shippingInfo')}</Label>
               <Input value={shippingInfo} onChange={e => setShippingInfo(e.target.value)} placeholder={t('stores.shippingInfoPlaceholder')} className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
