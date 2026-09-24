@@ -3707,6 +3707,20 @@
       "spaceHorizontal": "A tilan bɛnnen ka kɛɲɛ",
       "spaceVertical": "A tilan bɛnnen ka jiginni",
       "hint": "U dɔ sama walasa ka u bɛɛ lamaga ɲɔgɔn fɛ. Shift digi ka digi walima ka bwati dɔ sama kanvasi lankolon kan walasa ka sugandili yɛlɛma."
+    },
+    "brand": {
+      "heading": "Taamasiyɛn minɛnw",
+      "colors": "Taamasiyɛn ɲɛw",
+      "addColor": "Taamasiyɛn ɲɛ fara a kan",
+      "removeColor": "{{color}} bɔ",
+      "headingFont": "Kunkanko sɛbɛnsen",
+      "bodyFont": "Sɛbɛn sɛbɛnsen",
+      "logo": "Logo",
+      "noLogo": "Logo tɛ",
+      "logoHint": "I ka logo bila Mediya la, o kɔ i k'a sugandi yan.",
+      "apply": "Taamasiyɛn waleya",
+      "addLogo": "Logo fara a kan",
+      "applied": "Taamasiyɛn waleyara kɔrɔ {{count}} kan."
     }
   },
   "fractions": {

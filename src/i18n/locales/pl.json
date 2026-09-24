@@ -6125,6 +6125,20 @@
       "spaceHorizontal": "Rozłóż równo w poziomie",
       "spaceVertical": "Rozłóż równo w pionie",
       "hint": "Przeciągnij dowolną z nich, aby przesunąć wszystkie razem. Kliknij z Shiftem lub zaznacz ramką na pustym płótnie, aby zmienić zaznaczenie."
+    },
+    "brand": {
+      "heading": "Zestaw marki",
+      "colors": "Kolory marki",
+      "addColor": "Dodaj kolor marki",
+      "removeColor": "Usuń {{color}}",
+      "headingFont": "Czcionka nagłówków",
+      "bodyFont": "Czcionka tekstu",
+      "logo": "Logo",
+      "noLogo": "Brak logo",
+      "logoHint": "Prześlij logo w Multimediach, a potem wybierz je tutaj.",
+      "apply": "Zastosuj markę",
+      "addLogo": "Dodaj logo",
+      "applied": "Zastosowano markę do warstw: {{count}}."
     }
   },
   "glossary": {

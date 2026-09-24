@@ -3806,6 +3806,20 @@
       "spaceHorizontal": "Kesaa ha nhata n'obosara",
       "spaceVertical": "Kesaa ha nhata n'ogologo",
       "hint": "Dọrọ nke ọ bụla n'ime ha ka ha niile kwaga ọnụ. Pịa Shift ma ọ bụ dọrọ igbe n'ebe tọgbọrọ chakoo iji gbanwee nhọrọ."
+    },
+    "brand": {
+      "heading": "Ngwugwu akara",
+      "colors": "Agba akara",
+      "addColor": "Tinye agba akara",
+      "removeColor": "Wepụ {{color}}",
+      "headingFont": "Mkpụrụ edemede isiokwu",
+      "bodyFont": "Mkpụrụ edemede ederede",
+      "logo": "Akara ngosi",
+      "noLogo": "Enweghị akara ngosi",
+      "logoHint": "Bulite akara ngosi gị na Mgbasa ozi, wee họrọ ya ebe a.",
+      "apply": "Tinye akara",
+      "addLogo": "Tinye akara ngosi",
+      "applied": "Etinyere akara na ọkwa {{count}}."
     }
   },
   "fractions": {

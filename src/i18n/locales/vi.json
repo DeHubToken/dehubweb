@@ -5874,6 +5874,20 @@
       "spaceHorizontal": "Giãn đều theo chiều ngang",
       "spaceVertical": "Giãn đều theo chiều dọc",
       "hint": "Kéo bất kỳ lớp nào để di chuyển tất cả cùng lúc. Shift-click hoặc kéo khung trên vùng trống để thay đổi vùng chọn."
+    },
+    "brand": {
+      "heading": "Bộ thương hiệu",
+      "colors": "Màu thương hiệu",
+      "addColor": "Thêm màu thương hiệu",
+      "removeColor": "Xóa {{color}}",
+      "headingFont": "Phông tiêu đề",
+      "bodyFont": "Phông nội dung",
+      "logo": "Logo",
+      "noLogo": "Chưa có logo",
+      "logoHint": "Tải logo lên trong Phương tiện, rồi chọn ở đây.",
+      "apply": "Áp dụng thương hiệu",
+      "addLogo": "Thêm logo",
+      "applied": "Đã áp dụng thương hiệu cho {{count}} lớp."
     }
   },
   "glossary": {

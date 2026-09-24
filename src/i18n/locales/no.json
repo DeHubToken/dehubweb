@@ -3829,6 +3829,20 @@
       "spaceHorizontal": "Fordel jevnt vannrett",
       "spaceVertical": "Fordel jevnt loddrett",
       "hint": "Dra hvilken som helst av dem for å flytte dem sammen. Shift-klikk eller dra en ramme på tomt lerret for å endre utvalget."
+    },
+    "brand": {
+      "heading": "Merkevaresett",
+      "colors": "Merkevarefarger",
+      "addColor": "Legg til en merkevarefarge",
+      "removeColor": "Fjern {{color}}",
+      "headingFont": "Skrift for overskrifter",
+      "bodyFont": "Skrift for brødtekst",
+      "logo": "Logo",
+      "noLogo": "Ingen logo",
+      "logoHint": "Last opp logoen din i Medier, og velg den her.",
+      "apply": "Bruk merkevare",
+      "addLogo": "Legg til logo",
+      "applied": "Merkevaren er brukt på {{count}} lag."
     }
   },
   "fractions": {

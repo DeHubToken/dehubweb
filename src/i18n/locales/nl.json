@@ -6321,6 +6321,20 @@
       "spaceHorizontal": "Horizontaal verdelen",
       "spaceVertical": "Verticaal verdelen",
       "hint": "Sleep een van hen om ze samen te verplaatsen. Shift-klik of sleep een kader op leeg canvas om de selectie te wijzigen."
+    },
+    "brand": {
+      "heading": "Merkkit",
+      "colors": "Merkkleuren",
+      "addColor": "Merkkleur toevoegen",
+      "removeColor": "{{color}} verwijderen",
+      "headingFont": "Lettertype koppen",
+      "bodyFont": "Lettertype hoofdtekst",
+      "logo": "Logo",
+      "noLogo": "Geen logo",
+      "logoHint": "Upload je logo in Media en kies het dan hier.",
+      "apply": "Merk toepassen",
+      "addLogo": "Logo toevoegen",
+      "applied": "Merk toegepast op {{count}} lagen."
     }
   },
   "glossary": {

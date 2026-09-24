@@ -6054,6 +6054,20 @@
       "spaceHorizontal": "Jaa tasaisesti vaakasuunnassa",
       "spaceVertical": "Jaa tasaisesti pystysuunnassa",
       "hint": "Vedä mitä tahansa niistä siirtääksesi ne yhdessä. Vaihda valintaa Shift-klikkauksella tai vetämällä laatikko tyhjälle kankaalle."
+    },
+    "brand": {
+      "heading": "Brändipaketti",
+      "colors": "Brändivärit",
+      "addColor": "Lisää brändiväri",
+      "removeColor": "Poista {{color}}",
+      "headingFont": "Otsikkofontti",
+      "bodyFont": "Leipätekstin fontti",
+      "logo": "Logo",
+      "noLogo": "Ei logoa",
+      "logoHint": "Lataa logosi Mediaan ja valitse se sitten täältä.",
+      "apply": "Käytä brändiä",
+      "addLogo": "Lisää logo",
+      "applied": "Brändi käytetty {{count}} tasoon."
     }
   }
 }

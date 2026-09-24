@@ -6161,6 +6161,20 @@
       "spaceHorizontal": "가로로 균등 배치",
       "spaceVertical": "세로로 균등 배치",
       "hint": "아무거나 드래그하면 함께 이동해요. Shift-클릭하거나 빈 캔버스에서 상자를 드래그해 선택을 바꾸세요."
+    },
+    "brand": {
+      "heading": "브랜드 키트",
+      "colors": "브랜드 색상",
+      "addColor": "브랜드 색상 추가",
+      "removeColor": "{{color}} 삭제",
+      "headingFont": "제목 글꼴",
+      "bodyFont": "본문 글꼴",
+      "logo": "로고",
+      "noLogo": "로고 없음",
+      "logoHint": "미디어에 로고를 업로드한 다음 여기에서 선택하세요.",
+      "apply": "브랜드 적용",
+      "addLogo": "로고 추가",
+      "applied": "레이어 {{count}}개에 브랜드를 적용했습니다."
     }
   }
 }

@@ -3833,6 +3833,20 @@
       "spaceHorizontal": "Ratakake jarak mendatar",
       "spaceVertical": "Ratakake jarak mudhun",
       "hint": "Seret salah sijine kanggo mindhah kabeh bebarengan. Shift-klik utawa seret kothak ing kanvas kosong kanggo ngowahi pilihan."
+    },
+    "brand": {
+      "heading": "Kit merek",
+      "colors": "Werna merek",
+      "addColor": "Tambah werna merek",
+      "removeColor": "Busak {{color}}",
+      "headingFont": "Font judhul",
+      "bodyFont": "Font isi",
+      "logo": "Logo",
+      "noLogo": "Ora ana logo",
+      "logoHint": "Unggah logo sampeyan ing Media, banjur pilih ing kene.",
+      "apply": "Trapake merek",
+      "addLogo": "Tambah logo",
+      "applied": "Merek wis ditrapake ing {{count}} lapisan."
     }
   },
   "fractions": {

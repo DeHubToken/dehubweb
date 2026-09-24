@@ -6084,6 +6084,20 @@
       "spaceHorizontal": "Fordel vandret",
       "spaceVertical": "Fordel lodret",
       "hint": "Træk i et af dem for at flytte dem samlet. Skift-klik eller træk en boks på tomt lærred for at ændre markeringen."
+    },
+    "brand": {
+      "heading": "Brandkit",
+      "colors": "Brandfarver",
+      "addColor": "Tilføj en brandfarve",
+      "removeColor": "Fjern {{color}}",
+      "headingFont": "Skrifttype til overskrifter",
+      "bodyFont": "Skrifttype til brødtekst",
+      "logo": "Logo",
+      "noLogo": "Intet logo",
+      "logoHint": "Upload dit logo i Medier, og vælg det så her.",
+      "apply": "Anvend brand",
+      "addLogo": "Tilføj logo",
+      "applied": "Brand anvendt på {{count}} lag."
     }
   }
 }

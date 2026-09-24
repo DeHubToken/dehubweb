@@ -6057,6 +6057,20 @@
       "spaceHorizontal": "Rozmístit vodorovně",
       "spaceVertical": "Rozmístit svisle",
       "hint": "Přetažením kterékoli z nich posunete všechny najednou. Výběr změníte kliknutím se Shiftem nebo tažením rámečku na prázdném plátně."
+    },
+    "brand": {
+      "heading": "Značka",
+      "colors": "Barvy značky",
+      "addColor": "Přidat barvu značky",
+      "removeColor": "Odebrat {{color}}",
+      "headingFont": "Písmo nadpisů",
+      "bodyFont": "Písmo textu",
+      "logo": "Logo",
+      "noLogo": "Žádné logo",
+      "logoHint": "Nahrajte logo v Média a pak ho vyberte tady.",
+      "apply": "Použít značku",
+      "addLogo": "Přidat logo",
+      "applied": "Značka použita na vrstvy: {{count}}."
     }
   }
 }

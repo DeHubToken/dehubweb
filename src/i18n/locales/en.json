@@ -6172,6 +6172,20 @@
       "spaceHorizontal": "Space evenly across",
       "spaceVertical": "Space evenly down",
       "hint": "Drag any of them to move them together. Shift-click or drag a box on empty canvas to change the selection."
+    },
+    "brand": {
+      "heading": "Brand kit",
+      "colors": "Brand colours",
+      "addColor": "Add a brand colour",
+      "removeColor": "Remove {{color}}",
+      "headingFont": "Heading font",
+      "bodyFont": "Body font",
+      "logo": "Logo",
+      "noLogo": "No logo",
+      "logoHint": "Upload your logo in Media, then pick it here.",
+      "apply": "Apply brand",
+      "addLogo": "Add logo",
+      "applied": "Brand applied to {{count}} layers."
     }
   }
 }

@@ -6157,6 +6157,20 @@
       "spaceHorizontal": "左右に等間隔で配置",
       "spaceVertical": "上下に等間隔で配置",
       "hint": "どれかをドラッグするとまとめて移動できます。Shift+クリック、または空いたキャンバス上で範囲をドラッグして選択を変更します。"
+    },
+    "brand": {
+      "heading": "ブランドキット",
+      "colors": "ブランドカラー",
+      "addColor": "ブランドカラーを追加",
+      "removeColor": "{{color}} を削除",
+      "headingFont": "見出しフォント",
+      "bodyFont": "本文フォント",
+      "logo": "ロゴ",
+      "noLogo": "ロゴなし",
+      "logoHint": "メディアでロゴをアップロードしてから、ここで選択してください。",
+      "apply": "ブランドを適用",
+      "addLogo": "ロゴを追加",
+      "applied": "{{count}} 個のレイヤーにブランドを適用しました。"
     }
   }
 }

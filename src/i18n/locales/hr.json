@@ -6053,6 +6053,20 @@
       "spaceHorizontal": "Rasporedi vodoravno",
       "spaceVertical": "Rasporedi okomito",
       "hint": "Povucite bilo koji da ih pomaknete zajedno. Shift+klik ili povucite okvir na praznom platnu za promjenu odabira."
+    },
+    "brand": {
+      "heading": "Paket brenda",
+      "colors": "Boje brenda",
+      "addColor": "Dodaj boju brenda",
+      "removeColor": "Ukloni {{color}}",
+      "headingFont": "Font naslova",
+      "bodyFont": "Font teksta",
+      "logo": "Logotip",
+      "noLogo": "Nema logotipa",
+      "logoHint": "Učitaj logotip u Mediji, a zatim ga odaberi ovdje.",
+      "apply": "Primijeni brend",
+      "addLogo": "Dodaj logotip",
+      "applied": "Brend primijenjen na slojeve: {{count}}."
     }
   }
 }
