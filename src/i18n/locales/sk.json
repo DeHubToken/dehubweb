@@ -4073,6 +4073,16 @@
     "title": "Podiely"
   },
   "stores": {
+    "podToggle": "Položka tlače na požiadanie",
+    "podHint": "Prepojte produkt zo svojho obchodu s tlačou na požiadanie. Dodávateľ každú objednávku vytlačí a odošle, zásoby nepotrebujete.",
+    "podUrlLabel": "Odkaz na produkt",
+    "podProviderLabel": "Dodávateľ",
+    "podOther": "Iné",
+    "podInvalidUrl": "Zadajte platný odkaz https://",
+    "podBadge": "Tlač na požiadanie",
+    "podBuyOn": "Kúpiť na {{provider}}",
+    "podNote": "Tlačí a odosiela na požiadanie {{provider}}. Platba prebieha na ich stránke.",
+    "podUrlPlaceholder": "https://…",
     "title": "Obchody"
   },
   "accounts": {

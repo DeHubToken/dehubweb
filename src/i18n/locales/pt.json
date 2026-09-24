@@ -2578,6 +2578,16 @@
     "resolve": "Resolver"
   },
   "stores": {
+    "podToggle": "Item de impressão sob demanda",
+    "podHint": "Vincule um produto da sua loja de impressão sob demanda. O fornecedor imprime e envia cada pedido, então você não precisa de estoque.",
+    "podUrlLabel": "Link do produto",
+    "podProviderLabel": "Fornecedor",
+    "podOther": "Outro",
+    "podInvalidUrl": "Insira um link https:// válido",
+    "podBadge": "Impressão sob demanda",
+    "podBuyOn": "Comprar na {{provider}}",
+    "podNote": "Impresso e enviado sob demanda pela {{provider}}. O pagamento é feito no site deles.",
+    "podUrlPlaceholder": "https://…",
     "title": "Lojas",
     "browse": "Procurar",
     "myStore": "Minha Loja",

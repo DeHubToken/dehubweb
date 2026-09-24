@@ -2578,6 +2578,16 @@
     "resolve": "Løs"
   },
   "stores": {
+    "podToggle": "Print-on-demand-vare",
+    "podHint": "Link et produkt fra din print-on-demand-butik. Udbyderen printer og sender hver ordre, så du har intet lager.",
+    "podUrlLabel": "Produktlink",
+    "podProviderLabel": "Udbyder",
+    "podOther": "Andet",
+    "podInvalidUrl": "Indtast et gyldigt https://-produktlink",
+    "podBadge": "Print on demand",
+    "podBuyOn": "Køb hos {{provider}}",
+    "podNote": "Printes og sendes on demand af {{provider}}. Betaling sker på deres side.",
+    "podUrlPlaceholder": "https://…",
     "title": "Butikker",
     "browse": "Gennemse",
     "myStore": "Min butik",
