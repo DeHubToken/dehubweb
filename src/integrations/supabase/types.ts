@@ -7068,6 +7068,18 @@ export type Database = {
         Returns: boolean
       }
       is_stage_host: { Args: { p_space_id: string }; Returns: boolean }
+      issue_wallet_session: {
+        Args: {
+          p_app_version?: string
+          p_client?: string
+          p_ttl_seconds?: number
+          p_wallet: string
+        }
+        Returns: {
+          expires_at: string
+          token: string
+        }[]
+      }
       leaderboard_rank: {
         Args: { p_address: string; p_sort?: string }
         Returns: {
