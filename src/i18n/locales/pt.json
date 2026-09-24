@@ -5046,7 +5046,8 @@
     "foldersInFolder_one": "Na pasta {{count}}",
     "foldersInFolder_other": "Em pastas {{count}}",
     "foldersNoItems": "Nada nesta pasta ainda",
-    "foldersNoItemsHint": "Abra um resultado e escolha \"Adicionar à pasta\" para arquivá-lo aqui."
+    "foldersNoItemsHint": "Abra um resultado e escolha \"Adicionar à pasta\" para arquivá-lo aqui.",
+    "skippedUpstreamFailed": "Ignorado porque uma etapa anterior falhou. O seu custo permanece no seu saldo."
   },
   "videoPlayer": {
     "volume": "Volume",

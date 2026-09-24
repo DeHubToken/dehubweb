@@ -4799,7 +4799,8 @@
     "foldersInFolder_one": "Trong thư mục {{count}}",
     "foldersInFolder_other": "Trong {{count}} thư mục",
     "foldersNoItems": "Chưa có nội dung nào trong thư mục này",
-    "foldersNoItemsHint": "Mở kết quả và chọn \"Thêm vào thư mục\" để gửi kết quả tại đây."
+    "foldersNoItemsHint": "Mở kết quả và chọn \"Thêm vào thư mục\" để gửi kết quả tại đây.",
+    "skippedUpstreamFailed": "Đã bỏ qua vì bước trước đó không thành công. Chi phí vẫn nằm trong số dư của bạn."
   },
   "videoPlayer": {
     "volume": "Âm lượng",

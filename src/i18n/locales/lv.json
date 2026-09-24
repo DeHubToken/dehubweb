@@ -5018,7 +5018,8 @@
     "foldersInFolder_one": "Mapē {{count}}",
     "foldersInFolder_other": "Mapēs {{count}}",
     "foldersNoItems": "Šajā mapē vēl nav nekā",
-    "foldersNoItemsHint": "Atveriet rezultātu un izvēlieties \"Pievienot mapei\", lai to šeit saglabātu."
+    "foldersNoItemsHint": "Atveriet rezultātu un izvēlieties \"Pievienot mapei\", lai to šeit saglabātu.",
+    "skippedUpstreamFailed": "Izlaists, jo iepriekšējā darbība neizdevās. Tās izmaksas paliek jūsu bilancē."
   },
   "videoPlayer": {
     "volume": "Skaļums",

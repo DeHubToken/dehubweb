@@ -4766,7 +4766,8 @@
     "foldersInFolder_one": "{{count}} फोल्डरमध्ये",
     "foldersInFolder_other": "{{count}} फोल्डर्समध्ये",
     "foldersNoItems": "या फोल्डरमध्ये अद्याप काहीही नाही",
-    "foldersNoItemsHint": "निकाल उघडा आणि येथे फाइल करण्यासाठी \"फोल्डरमध्ये जोडा\" निवडा."
+    "foldersNoItemsHint": "निकाल उघडा आणि येथे फाइल करण्यासाठी \"फोल्डरमध्ये जोडा\" निवडा.",
+    "skippedUpstreamFailed": "आधीची पायरी अयशस्वी झाल्यामुळे ते वगळले गेले. त्याची किंमत तुमच्या संतुलनात राहते."
   },
   "videoPlayer": {
     "volume": "आवाज",

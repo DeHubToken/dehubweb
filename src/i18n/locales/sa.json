@@ -2693,7 +2693,8 @@
     "foldersAddTo": "सञ्चिकायां योज्यताम्",
     "foldersEmpty": "अद्यापि न शोभते ।",
     "foldersNoItems": "इदानीमपि कोऽपि न योजनीयः",
-    "foldersNoItemsHint": "\"फलकम्ःAdd to folder\" सम्बद्धानि पृष्ठानि"
+    "foldersNoItemsHint": "\"फलकम्ःAdd to folder\" सम्बद्धानि पृष्ठानि",
+    "skippedUpstreamFailed": "प्राक्कल्पसम्प्लव विनष्टमिहात्मतत्त्वं सम्यग् जगाद मुन व्यय इत्युक्ते भवतः सन्तुलनम् ।"
   },
   "videoPlayer": {
     "volume": "ध्वनिमानम्",

@@ -2463,7 +2463,8 @@
     "foldersInFolder_one": "In {{count}} folder",
     "foldersInFolder_other": "In {{count}} folders",
     "foldersNoItems": "No tin for inside dis folder yet",
-    "foldersNoItemsHint": "Open one result and choose \"Add to folder\" for file am for here."
+    "foldersNoItemsHint": "Open one result and choose \"Add to folder\" for file am for here.",
+    "skippedUpstreamFailed": "Skip because one step before fail. E cost remain for your balance."
   },
   "videoPlayer": {
     "volume": "Volume",

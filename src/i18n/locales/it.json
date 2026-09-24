@@ -5038,7 +5038,8 @@
     "foldersInFolder_one": "Nella cartella {{count}}",
     "foldersInFolder_other": "Nelle cartelle {{count}}",
     "foldersNoItems": "Ancora niente in questa cartella",
-    "foldersNoItemsHint": "Apri un risultato e scegli \"Aggiungi alla cartella\" per archiviarlo qui."
+    "foldersNoItemsHint": "Apri un risultato e scegli \"Aggiungi alla cartella\" per archiviarlo qui.",
+    "skippedUpstreamFailed": "Saltato perché un passaggio precedente non è riuscito. Il suo costo rimane nel tuo saldo."
   },
   "videoPlayer": {
     "volume": "Volume",

@@ -2764,7 +2764,8 @@
     "foldersInFolder_one": "Ni {{count}} folda",
     "foldersInFolder_other": "Ni {{count}} awọn folda",
     "foldersNoItems": "Ko si nkankan ninu folda yii sibẹsibẹ",
-    "foldersNoItemsHint": "Ṣí àbájáde kan kí o sì yan \"Ṣafikun sí àkájọ ìwé\" láti fi sílẹ̀ níbí."
+    "foldersNoItemsHint": "Ṣí àbájáde kan kí o sì yan \"Ṣafikun sí àkájọ ìwé\" láti fi sílẹ̀ níbí.",
+    "skippedUpstreamFailed": "Skipped nítorí pé ìgbésẹ̀ tí ó ṣáájú kùnà. Owó rẹ̀ dúró nínú ìdúróṣánṣán rẹ."
   },
   "videoPlayer": {
     "volume": "Ìwọ̀n ohùn",

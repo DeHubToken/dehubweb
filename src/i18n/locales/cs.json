@@ -4981,7 +4981,8 @@
     "foldersInFolder_one": "Ve složce {{count}}",
     "foldersInFolder_other": "Ve složkách {{count}}",
     "foldersNoItems": "V této složce zatím nic není",
-    "foldersNoItemsHint": "Otevřete výsledek a zvolte \"Přidat do složky\" pro jeho uložení zde."
+    "foldersNoItemsHint": "Otevřete výsledek a zvolte \"Přidat do složky\" pro jeho uložení zde.",
+    "skippedUpstreamFailed": "Přeskočeno, protože předchozí krok se nezdařil. Jeho cena zůstane na tvém zůstatku."
   },
   "videoPlayer": {
     "volume": "Hlasitost",

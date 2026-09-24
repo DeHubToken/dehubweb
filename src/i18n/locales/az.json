@@ -4938,7 +4938,8 @@
     "foldersInFolder_one": "{{count}} qovluğunda",
     "foldersInFolder_other": "{{count}} qovluqlarda",
     "foldersNoItems": "Bu qovluqda heç nə yoxdur",
-    "foldersNoItemsHint": "Nəticəni açın və \"Qovluğa əlavə et\" seçin, bunu burada saxlamaq üçün."
+    "foldersNoItemsHint": "Nəticəni açın və \"Qovluğa əlavə et\" seçin, bunu burada saxlamaq üçün.",
+    "skippedUpstreamFailed": "Əvvəlki addım uğursuz olduğu üçün ötürüldü. Onun xərci balansınızda qalır."
   },
   "videoPlayer": {
     "volume": "Səs səviyyəsi",

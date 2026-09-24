@@ -4839,7 +4839,8 @@
     "foldersInFolder_one": "В папка {{count}}",
     "foldersInFolder_other": "В папки {{count}}",
     "foldersNoItems": "Тук все още няма нищо",
-    "foldersNoItemsHint": "Отвори резултат и избери \"Добави към папка\", за да го запазиш тук."
+    "foldersNoItemsHint": "Отвори резултат и избери \"Добави към папка\", за да го запазиш тук.",
+    "skippedUpstreamFailed": "Пропуснато, защото по - ранна стъпка е неуспешна. Цената му остава в баланса ви."
   },
   "videoPlayer": {
     "volume": "Сила на звука",

@@ -5236,7 +5236,8 @@
     "foldersInFolder_one": "In map {{count}}",
     "foldersInFolder_other": "In {{count}} mappen",
     "foldersNoItems": "Nog niets in deze map",
-    "foldersNoItemsHint": "Open een resultaat en kies \"Toevoegen aan map\" om het hier op te slaan."
+    "foldersNoItemsHint": "Open een resultaat en kies \"Toevoegen aan map\" om het hier op te slaan.",
+    "skippedUpstreamFailed": "Overgeslagen omdat een eerdere stap is mislukt. De kosten blijven in uw saldo."
   },
   "videoPlayer": {
     "volume": "Volume",

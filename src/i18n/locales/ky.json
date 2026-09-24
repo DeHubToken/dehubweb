@@ -5009,7 +5009,8 @@
     "foldersInFolder_one": "{{count}} папкасында",
     "foldersInFolder_other": "{{count}} папкаларында",
     "foldersNoItems": "Бул папкада азырынча эч нерсе жок",
-    "foldersNoItemsHint": "Натыйжаны ачып, \"Папкага кошуу\" дегенди тандап, бул жерге сактаңыз."
+    "foldersNoItemsHint": "Натыйжаны ачып, \"Папкага кошуу\" дегенди тандап, бул жерге сактаңыз.",
+    "skippedUpstreamFailed": "Мурунку кадам ийгиликсиз аяктады. Анын баасы балансыңызда калат."
   },
   "videoPlayer": {
     "volume": "Үн деңгээли",

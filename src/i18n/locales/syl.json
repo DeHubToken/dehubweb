@@ -2852,7 +2852,8 @@
     "foldersInFolder_one": "{{count}} ফোল্ডারে",
     "foldersInFolder_other": "{{count}} ফোল্ডারগুলিতে",
     "foldersNoItems": "এই ফোল্ডারে এখনো কিছু নেই",
-    "foldersNoItemsHint": "একটি ফলাফল খুলুন এবং এখানে ফাইল করতে \"ফোল্ডারে যোগ করুন\" নির্বাচন করুন।"
+    "foldersNoItemsHint": "একটি ফলাফল খুলুন এবং এখানে ফাইল করতে \"ফোল্ডারে যোগ করুন\" নির্বাচন করুন।",
+    "skippedUpstreamFailed": "আগের ধাপ ফেইল হওয়ার কারণে এটা বাদ দেওয়া হইসে। এটার খরচ আপনার ব্যালেন্সে থাকবে।"
   },
   "videoPlayer": {
     "volume": "ভলিউম",

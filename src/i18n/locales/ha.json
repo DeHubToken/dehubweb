@@ -2772,7 +2772,8 @@
     "foldersInFolder_one": "A cikin babban fayil ɗin {{count}}",
     "foldersInFolder_other": "A cikin babban fayil ɗin {{count}}",
     "foldersNoItems": "Babu komai a cikin wannan babban fayil tukuna",
-    "foldersNoItemsHint": "Bude sakamako kuma zaɓi \"Ƙara zuwa babban fayil\" don adana shi anan."
+    "foldersNoItemsHint": "Bude sakamako kuma zaɓi \"Ƙara zuwa babban fayil\" don adana shi anan.",
+    "skippedUpstreamFailed": "Skipped saboda wani mataki na baya ya kasa. Kudinsa ya kasance a cikin ma'auni naka."
   },
   "videoPlayer": {
     "volume": "Ƙarar sauti",

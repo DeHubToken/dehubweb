@@ -5297,7 +5297,8 @@
     "foldersInFolder_one": "Dalam folder {{count}}",
     "foldersInFolder_other": "Dalam folder {{count}}",
     "foldersNoItems": "Tiada apa-apa dalam folder ini lagi",
-    "foldersNoItemsHint": "Buka hasil dan pilih \"Tambah ke folder\" untuk menyimpannya di sini."
+    "foldersNoItemsHint": "Buka hasil dan pilih \"Tambah ke folder\" untuk menyimpannya di sini.",
+    "skippedUpstreamFailed": "Dilangkau kerana langkah yang lebih awal gagal. Kosnya kekal dalam baki anda."
   },
   "videoPlayer": {
     "volume": "Kelantangan",

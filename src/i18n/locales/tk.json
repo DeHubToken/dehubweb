@@ -2738,7 +2738,8 @@
     "foldersInFolder_one": "{{count}} gutapçasynyň içinde",
     "foldersInFolder_other": "{{count}} gutapçasynyň içinde",
     "foldersNoItems": "Bu gutapçada heniz hiç zat ýok",
-    "foldersNoItemsHint": "Netijäni açyň we ony şu ýere ýerleşdirmek üçin \"Gutapçany goş\" saýlaň."
+    "foldersNoItemsHint": "Netijäni açyň we ony şu ýere ýerleşdirmek üçin \"Gutapçany goş\" saýlaň.",
+    "skippedUpstreamFailed": "Öňki ädim başarnyksyz bolany üçin, ol ýykyldy. Onuň bahasy siziň balansyňyzda galýar."
   },
   "videoPlayer": {
     "volume": "Ses",

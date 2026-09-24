@@ -5008,7 +5008,8 @@
     "foldersInFolder_one": "I mappen {{count}}",
     "foldersInFolder_other": "I {{count}} mapper",
     "foldersNoItems": "Intet i denne mappe endnu",
-    "foldersNoItemsHint": "Åbn et resultat, og vælg \"Tilføj til mappe\" for at arkivere det her."
+    "foldersNoItemsHint": "Åbn et resultat, og vælg \"Tilføj til mappe\" for at arkivere det her.",
+    "skippedUpstreamFailed": "Sprunget over, fordi et tidligere trin mislykkedes. Dens omkostninger forbliver i din saldo."
   },
   "videoPlayer": {
     "volume": "Lydstyrke",

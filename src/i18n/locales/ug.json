@@ -2748,7 +2748,8 @@
     "foldersInFolder_one": "In {{count}}@ folder",
     "foldersInFolder_other": "In {{count}}@ folders",
     "foldersNoItems": "بۇ قىسقۇچتا تېخى ھېچنېمە يوق",
-    "foldersNoItemsHint": "نەتىجىسىنى ئېچىپ، بۇ يەرگە يوللاش ئۈچۈن «قىسقۇچقا قوشۇش» نى تاللاڭ."
+    "foldersNoItemsHint": "نەتىجىسىنى ئېچىپ، بۇ يەرگە يوللاش ئۈچۈن «قىسقۇچقا قوشۇش» نى تاللاڭ.",
+    "skippedUpstreamFailed": "ئىلگىرىكى بىر قەدەم مەغلۇپ بولغانلىقتىن، ئۇ ئۆتۈپ كەتتى. ئۇنىڭ (يەنى جىبرىئىلنىڭ) كۆرۈنۈشى چىرايلىق بولۇپ، يۇقىرى ئۇپۇقتا (ئۆز شەكلىدە) تۇردى"
   },
   "videoPlayer": {
     "volume": "ئاۋاز",

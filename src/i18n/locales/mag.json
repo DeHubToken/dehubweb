@@ -2725,7 +2725,8 @@
     "foldersInFolder_one": "{{count}} फोल्डर में",
     "foldersInFolder_other": "{{count}} फोल्डर में",
     "foldersNoItems": "अभी ई फोल्डर में कवनो चीज नइखे",
-    "foldersNoItemsHint": "एगो रिजल्ट खोलि आ ओकरा के \"फोल्डर में जोड़ीं\" चुनीं ताकि ईहां फाइल कs सकs।"
+    "foldersNoItemsHint": "एगो रिजल्ट खोलि आ ओकरा के \"फोल्डर में जोड़ीं\" चुनीं ताकि ईहां फाइल कs सकs।",
+    "skippedUpstreamFailed": "पिछला लेखसड़क पर केकरो ध्यान न हई, ई असफलता के कारन हई तोहर खर्चा अभी बाकी हइ ।"
   },
   "videoPlayer": {
     "volume": "आवाज",

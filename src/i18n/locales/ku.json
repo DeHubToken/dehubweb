@@ -4221,7 +4221,8 @@
     "foldersInFolder_one": "لە فۆڵدەرى {{count}}",
     "foldersInFolder_other": "لە فۆڵدەرەکانى {{count}}",
     "foldersNoItems": "هێشتا هیچ شتێک لەم فۆڵدەرەدا نییە",
-    "foldersNoItemsHint": "ئەنجامێک بکەرەوە و \"زیادکردن بۆ فۆڵدەر\" هەڵبژێرە بۆ ئەوەی لێرە دایبنێیت."
+    "foldersNoItemsHint": "ئەنجامێک بکەرەوە و \"زیادکردن بۆ فۆڵدەر\" هەڵبژێرە بۆ ئەوەی لێرە دایبنێیت.",
+    "skippedUpstreamFailed": "بازدرا چونکە هەنگاوێکی پێشوو سەرکەوتوو نەبوو. تێچووەکەی لە باڵانسەکەتدا دەمێنێتەوە."
   },
   "videoPlayer": {
     "volume": "Bilindahiya deng",
