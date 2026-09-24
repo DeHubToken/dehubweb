@@ -5731,6 +5731,40 @@
       "sendToBack": "Trimite în fundal",
       "duplicate": "Duplicat",
       "delete": "Șterge"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Design",
+      "assets": "Resurse",
+      "media": "Media",
+      "text": "Text",
+      "generate": "Generează",
+      "generations": "Generări",
+      "edit": "Editare",
+      "collapse": "Restrânge panoul",
+      "home": "Acasă"
+    },
+    "agent": {
+      "introTitle": "Spune-i AI-ului ce vrei",
+      "introBody": "Descrie designul sau modificarea în cuvintele tale. Redimensionează pagina, scrie și stilizează text, găsește fotografii, videoclipuri și muzică gratuite, aplică filtre, aranjează straturile și le animă. Fiecare cerere se anulează dintr-o singură Anulare.",
+      "suggestPoster": "Fă o postare pătrată de Instagram pentru o reducere de vară, cu o fotografie de plajă și un titlu îngroșat",
+      "suggestTitle": "Adaugă un titlu mare și îngroșat sus și un subtitlu mai mic sub el",
+      "suggestFilter": "Fă fotografia mai caldă și puțin mai luminoasă",
+      "suggestStory": "Transformă asta într-un story 9:16 și umple pagina cu fotografia",
+      "suggestBackground": "Adaugă muzică de fundal liniștită și fă textul să apară treptat",
+      "placeholder": "Descrie ce vrei…",
+      "send": "Trimite",
+      "hint": "Enter pentru a trimite · Ctrl+K pentru a veni aici",
+      "clear": "Șterge conversația",
+      "working": "Lucrez la asta…",
+      "done": "Gata.",
+      "nothingToDo": "N-am găsit nimic de schimbat pentru asta. Încearcă să descrii editarea pe care o vrei.",
+      "noStock": "Niciun conținut gratuit nu se potrivește cu „{{query}}”.",
+      "rateLimited": "Ai trimis multe cereri. Încearcă din nou peste câteva minute.",
+      "failed": "AI-ul nu a putut face asta acum. Încearcă din nou în câteva momente.",
+      "changes": "Editări făcute: {{count}}",
+      "undo": "Anulare",
+      "openGenerator": "Verifică și generează"
     }
   },
   "footer": {

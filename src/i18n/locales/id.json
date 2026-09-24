@@ -5969,6 +5969,40 @@
       "sendToBack": "Kirim ke paling belakang",
       "duplicate": "Duplikat",
       "delete": "Hapus"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Desain",
+      "assets": "Aset",
+      "media": "Media",
+      "text": "Teks",
+      "generate": "Buat",
+      "generations": "Hasil buatan",
+      "edit": "Edit",
+      "collapse": "Ciutkan panel",
+      "home": "Beranda"
+    },
+    "agent": {
+      "introTitle": "Beri tahu AI apa yang Anda inginkan",
+      "introBody": "Jelaskan desain atau perubahannya dengan kata-kata Anda sendiri. AI mengubah ukuran halaman, menulis dan menata teks, mencari foto, video, dan musik gratis, menerapkan filter, menyusun lapisan, dan menganimasikannya. Setiap permintaan bisa dibatalkan dengan satu kali urungkan.",
+      "suggestPoster": "Buat postingan Instagram persegi untuk diskon musim panas dengan foto pantai dan judul tebal",
+      "suggestTitle": "Tambahkan judul besar dan tebal di atas dan subjudul lebih kecil di bawahnya",
+      "suggestFilter": "Buat fotonya lebih hangat dan sedikit lebih terang",
+      "suggestStory": "Ubah ini menjadi story 9:16 dan penuhi halaman dengan foto",
+      "suggestBackground": "Tambahkan musik latar yang tenang dan munculkan teks perlahan",
+      "placeholder": "Jelaskan yang Anda inginkan…",
+      "send": "Kirim",
+      "hint": "Enter untuk kirim · Ctrl+K untuk ke sini",
+      "clear": "Hapus obrolan",
+      "working": "Sedang dikerjakan…",
+      "done": "Selesai.",
+      "nothingToDo": "Saya tidak menemukan apa pun untuk diubah. Coba jelaskan edit yang Anda inginkan.",
+      "noStock": "Tidak ada stok gratis yang cocok dengan “{{query}}”.",
+      "rateLimited": "Anda telah mengirim banyak permintaan. Coba lagi dalam beberapa menit.",
+      "failed": "AI tidak bisa melakukannya sekarang. Coba lagi sebentar lagi.",
+      "changes": "Edit dilakukan: {{count}}",
+      "undo": "Urungkan",
+      "openGenerator": "Tinjau dan buat"
     }
   }
 }

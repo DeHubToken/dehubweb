@@ -5852,6 +5852,40 @@
       "sendToBack": "Vii kõige taha",
       "duplicate": "Dubleeri",
       "delete": "Kustuta"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Kujundus",
+      "assets": "Elemendid",
+      "media": "Meedia",
+      "text": "Tekst",
+      "generate": "Genereeri",
+      "generations": "Genereeritud",
+      "edit": "Muuda",
+      "collapse": "Ahenda paneel",
+      "home": "Avaleht"
+    },
+    "agent": {
+      "introTitle": "Ütle AI-le, mida soovid",
+      "introBody": "Kirjelda kujundust või muudatust oma sõnadega. See muudab lehe suurust, kirjutab ja vormindab teksti, leiab tasuta fotosid, videoid ja muusikat, lisab filtreid, korraldab kihte ja animeerib neid. Iga päringu saab ühe sammuga tagasi võtta.",
+      "suggestPoster": "Tee suvise allahindluse jaoks ruudukujuline Instagrami postitus rannapildi ja jämeda pealkirjaga",
+      "suggestTitle": "Lisa üles suur jäme pealkiri ja selle alla väiksem alapealkiri",
+      "suggestFilter": "Tee foto soojemaks ja veidi heledamaks",
+      "suggestStory": "Tee sellest 9:16 story ja täida leht fotoga",
+      "suggestBackground": "Lisa rahulik taustamuusika ja lase tekstil sisse hajuda",
+      "placeholder": "Kirjelda, mida soovid…",
+      "send": "Saada",
+      "hint": "Enter saadab · Ctrl+K toob siia",
+      "clear": "Tühjenda vestlus",
+      "working": "Töötan selle kallal…",
+      "done": "Valmis.",
+      "nothingToDo": "Ma ei leidnud selle põhjal midagi muuta. Proovi kirjeldada muudatust, mida soovid.",
+      "noStock": "Päringule „{{query}}“ ei leitud tasuta materjali.",
+      "rateLimited": "Oled saatnud palju päringuid. Proovi mõne minuti pärast uuesti.",
+      "failed": "AI ei saanud seda praegu teha. Proovi hetke pärast uuesti.",
+      "changes": "Tehtud muudatusi: {{count}}",
+      "undo": "Võta tagasi",
+      "openGenerator": "Vaata üle ja genereeri"
     }
   }
 }

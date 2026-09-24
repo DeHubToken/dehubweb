@@ -3657,6 +3657,40 @@
       "sendToBack": "Dërgoje te pjesa e pasme",
       "duplicate": "Dupliko",
       "delete": "Fshi"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Dizajni",
+      "assets": "Elementet",
+      "media": "Media",
+      "text": "Teksti",
+      "generate": "Gjenero",
+      "generations": "Gjenerimet",
+      "edit": "Redakto",
+      "collapse": "Palos panelin",
+      "home": "Kreu"
+    },
+    "agent": {
+      "introTitle": "Tregoji AI-së çfarë dëshiron",
+      "introBody": "Përshkruaj dizajnin ose ndryshimin me fjalët e tua. Ndryshon madhësinë e faqes, shkruan dhe stilon tekstin, gjen foto, video dhe muzikë falas, aplikon filtra, rregullon shtresat dhe i animon ato. Çdo kërkesë zhbëhet me një hap.",
+      "suggestPoster": "Bëj një postim katror për Instagram për uljet e verës me një foto plazhi dhe një titull të theksuar",
+      "suggestTitle": "Shto një titull të madh e të trashë lart dhe një nëntitull më të vogël poshtë tij",
+      "suggestFilter": "Bëje foton më të ngrohtë dhe pak më të ndritshme",
+      "suggestStory": "Ktheje këtë në një story 9:16 dhe mbushe faqen me foton",
+      "suggestBackground": "Shto muzikë të qetë në sfond dhe bëj që teksti të shfaqet gradualisht",
+      "placeholder": "Përshkruaj çfarë dëshiron…",
+      "send": "Dërgo",
+      "hint": "Enter për të dërguar · Ctrl+K për të ardhur këtu",
+      "clear": "Pastro bisedën",
+      "working": "Po punoj…",
+      "done": "U krye.",
+      "nothingToDo": "Nuk gjeta asgjë për të ndryshuar. Provo të përshkruash ndryshimin që dëshiron.",
+      "noStock": "Asnjë material falas nuk përputhet me „{{query}}“.",
+      "rateLimited": "Ke dërguar shumë kërkesa. Provo përsëri pas disa minutash.",
+      "failed": "AI nuk mundi ta bëjë këtë tani. Provo përsëri pas pak.",
+      "changes": "Ndryshime të bëra: {{count}}",
+      "undo": "Zhbëj",
+      "openGenerator": "Rishiko dhe gjenero"
     }
   }
 }

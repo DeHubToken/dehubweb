@@ -5906,6 +5906,40 @@
       "sendToBack": "Peleka nyuma kabisa",
       "duplicate": "Nakili",
       "delete": "Futa"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Muundo",
+      "assets": "Rasilimali",
+      "media": "Midia",
+      "text": "Maandishi",
+      "generate": "Tengeneza",
+      "generations": "Vilivyotengenezwa",
+      "edit": "Hariri",
+      "collapse": "Kunja paneli",
+      "home": "Nyumbani"
+    },
+    "agent": {
+      "introTitle": "Iambie AI unachotaka",
+      "introBody": "Eleza muundo au mabadiliko kwa maneno yako mwenyewe. Hubadilisha ukubwa wa ukurasa, huandika na kupamba maandishi, hutafuta picha, video na muziki wa bure, huweka vichujio, hupanga tabaka na kuzihuisha. Kila ombi hurudishwa kwa kutendua mara moja.",
+      "suggestPoster": "Tengeneza chapisho la mraba la Instagram kwa ofa ya kiangazi lenye picha ya ufukweni na kichwa kikubwa",
+      "suggestTitle": "Ongeza kichwa kikubwa kilichokolezwa juu na kichwa kidogo chini yake",
+      "suggestFilter": "Fanya picha iwe na joto zaidi na angavu kidogo",
+      "suggestStory": "Geuza hii iwe story ya 9:16 na ujaze ukurasa kwa picha",
+      "suggestBackground": "Ongeza muziki tulivu wa usuli na ufanye maandishi yaonekane taratibu",
+      "placeholder": "Eleza unachotaka…",
+      "send": "Tuma",
+      "hint": "Enter kutuma · Ctrl+K kuja hapa",
+      "clear": "Futa gumzo",
+      "working": "Ninashughulikia…",
+      "done": "Imekamilika.",
+      "nothingToDo": "Sikupata chochote cha kubadilisha kwa hilo. Jaribu kueleza uhariri unaotaka.",
+      "noStock": "Hakuna maudhui ya bure yaliyolingana na “{{query}}”.",
+      "rateLimited": "Umetuma maombi mengi. Jaribu tena baada ya dakika chache.",
+      "failed": "AI haikuweza kufanya hivyo sasa hivi. Jaribu tena baada ya muda mfupi.",
+      "changes": "Mabadiliko yaliyofanywa: {{count}}",
+      "undo": "Tendua",
+      "openGenerator": "Kagua na utengeneze"
     }
   }
 }

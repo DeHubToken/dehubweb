@@ -3639,6 +3639,40 @@
       "sendToBack": "Mayar baya gaba ɗaya",
       "duplicate": "Kwafi",
       "delete": "Share"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Zane",
+      "assets": "Kadarori",
+      "media": "Kafofin watsa labarai",
+      "text": "Rubutu",
+      "generate": "Ƙirƙira",
+      "generations": "Abubuwan da aka ƙirƙira",
+      "edit": "Gyara",
+      "collapse": "Rufe allo",
+      "home": "Gida"
+    },
+    "agent": {
+      "introTitle": "Faɗa wa AI abin da kake so",
+      "introBody": "Bayyana zanen ko canjin da kalmominka. Yana canza girman shafi, yana rubuta rubutu da tsara shi, yana nemo hotuna, bidiyo da kiɗa kyauta, yana saka matattara, yana tsara lefuna kuma yana motsa su. Kowace buƙata ana iya soke ta a mataki ɗaya.",
+      "suggestPoster": "Yi min rubutun Instagram mai murabba'i don rangwamen bazara tare da hoton bakin teku da babban take",
+      "suggestTitle": "Ƙara babban take mai kauri a sama da ƙaramin take a ƙarƙashinsa",
+      "suggestFilter": "Sa hoton ya ƙara ɗumi kuma ya ɗan ƙara haske",
+      "suggestStory": "Mayar da wannan labari na 9:16 kuma ka cika shafin da hoton",
+      "suggestBackground": "Ƙara kiɗan bango mai natsuwa kuma ka sa rubutun ya bayyana a hankali",
+      "placeholder": "Bayyana abin da kake so…",
+      "send": "Aika",
+      "hint": "Enter don aikawa · Ctrl+K don zuwa nan",
+      "clear": "Share hira",
+      "working": "Ana aiki a kai…",
+      "done": "An gama.",
+      "nothingToDo": "Ban sami wani abu da zan canza ba don wannan. Gwada bayyana gyaran da kake so.",
+      "noStock": "Babu hoto kyauta da ya dace da “{{query}}”.",
+      "rateLimited": "Ka aika buƙatu da yawa. Sake gwadawa bayan 'yan mintuna.",
+      "failed": "AI ba zai iya yin wannan yanzu ba. Sake gwadawa nan ba da jimawa ba.",
+      "changes": "Gyare-gyaren da aka yi: {{count}}",
+      "undo": "Soke",
+      "openGenerator": "Duba kuma ƙirƙira"
     }
   }
 }

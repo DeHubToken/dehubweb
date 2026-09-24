@@ -5853,6 +5853,40 @@
       "sendToBack": "Přesunout do pozadí",
       "duplicate": "Duplikovat",
       "delete": "Odstranit"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Design",
+      "assets": "Prvky",
+      "media": "Média",
+      "text": "Text",
+      "generate": "Generovat",
+      "generations": "Vygenerované",
+      "edit": "Upravit",
+      "collapse": "Sbalit panel",
+      "home": "Domů"
+    },
+    "agent": {
+      "introTitle": "Řekněte AI, co chcete",
+      "introBody": "Popište návrh nebo změnu vlastními slovy. Změní velikost stránky, napíše a naformátuje text, najde volné fotky, videa a hudbu, použije filtry, uspořádá vrstvy a animuje je. Každý požadavek jde vrátit jedním krokem zpět.",
+      "suggestPoster": "Udělej čtvercový příspěvek na Instagram pro letní výprodej s fotkou pláže a výrazným nadpisem",
+      "suggestTitle": "Přidej nahoru velký tučný nadpis a pod něj menší podnadpis",
+      "suggestFilter": "Udělej fotku teplejší a trochu světlejší",
+      "suggestStory": "Předělej to na příběh 9:16 a vyplň stránku fotkou",
+      "suggestBackground": "Přidej klidnou hudbu na pozadí a nech text plynule naskočit",
+      "placeholder": "Popište, co chcete…",
+      "send": "Odeslat",
+      "hint": "Enter pro odeslání · Ctrl+K pro skok sem",
+      "clear": "Vymazat chat",
+      "working": "Pracuji na tom…",
+      "done": "Hotovo.",
+      "nothingToDo": "Nenašel jsem nic, co by se dalo změnit. Zkuste popsat úpravu, kterou chcete.",
+      "noStock": "Pro „{{query}}“ nebyly nalezeny žádné volné materiály.",
+      "rateLimited": "Odeslali jste hodně požadavků. Zkuste to znovu za pár minut.",
+      "failed": "AI to teď nedokázala udělat. Zkuste to za chvíli znovu.",
+      "changes": "Provedené úpravy: {{count}}",
+      "undo": "Zpět",
+      "openGenerator": "Zkontrolovat a vygenerovat"
     }
   }
 }

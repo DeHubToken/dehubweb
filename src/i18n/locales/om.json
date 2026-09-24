@@ -3658,6 +3658,40 @@
       "sendToBack": "Hunda caalaa duubatti ergi",
       "duplicate": "Dachaasi",
       "delete": "Haquu"
+    },
+    "rail": {
+      "agent": "AI",
+      "design": "Dizaayinii",
+      "assets": "Qabeenyota",
+      "media": "Miidiyaa",
+      "text": "Barreeffama",
+      "generate": "Uumi",
+      "generations": "Kan uumaman",
+      "edit": "Gulaali",
+      "collapse": "Paanaalii cufi",
+      "home": "Mana"
+    },
+    "agent": {
+      "introTitle": "Waan barbaaddu AI'tti himi",
+      "introBody": "Dizaayinii ykn jijjiirama jechoota keetiin ibsi. Hamma fuulaa jijjiira, barreeffama barreessee miidhagsa, suuraa, viidiyoo fi muuziqaa bilisaa barbaada, filtara fayyadama, sadarkaalee qindeessee sochoosa. Gaaffiin hundi tarkaanfii deebii tokkoon deebi'a.",
+      "suggestPoster": "Gurgurtaa gannaatiif suuraa qarqara galaanaa fi mata duree cimaa qabu, maxxansa Instagram golboo afurii hojjedhu",
+      "suggestTitle": "Gubbaatti mata duree guddaa cimaa, jalatti immoo mata duree xiqqaa dabali",
+      "suggestFilter": "Suuraa sana ho'aa fi xiqqoo ifaa taasisi",
+      "suggestStory": "Kana gara storii 9:16 jijjiiriitii fuula suuraan guuti",
+      "suggestBackground": "Muuziqaa duubaa tasgabbaa'aa dabaliitii barreeffamni suuta akka mul'atu godhi",
+      "placeholder": "Waan barbaaddu ibsi…",
+      "send": "Ergi",
+      "hint": "Erguuf Enter · Asitti dhufuuf Ctrl+K",
+      "clear": "Haasaa haqi",
+      "working": "Irratti hojjechaa jira…",
+      "done": "Xumurame.",
+      "nothingToDo": "Kanaaf wanti jijjiiramu hin argamne. Gulaallii barbaaddu ibsuu yaali.",
+      "noStock": "Meeshaan bilisaa “{{query}}” wajjin walsimu hin jiru.",
+      "rateLimited": "Gaaffii baay'ee ergiteetta. Daqiiqaa muraasa booda irra deebi'ii yaali.",
+      "failed": "AI'n amma kana gochuu hin dandeenye. Yeroo muraasa booda irra deebi'ii yaali.",
+      "changes": "Gulaallii hojjetaman: {{count}}",
+      "undo": "Deebisi",
+      "openGenerator": "Ilaaliitii uumi"
     }
   },
   "spaces": {
