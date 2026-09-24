@@ -91,7 +91,9 @@ export function ensureWalletSession(wallet: string): Promise<Session | null> {
 }
 
 function timeout<T>(p: Promise<T>, ms: number): Promise<T | null> {
-  return Promise.race([p, new Promise<null>((r) => setTimeout(() => r(null), ms))]);
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const late = new Promise<null>((r) => { timer = setTimeout(() => r(null), ms); });
+  return Promise.race([p, late]).finally(() => clearTimeout(timer));
 }
 
 function isRestOrStorage(url: string) {
