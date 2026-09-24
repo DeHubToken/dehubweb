@@ -37,6 +37,9 @@ import {
   PieChart,
   Zap,
   ArrowDownToLine,
+  FolderInput,
+  Megaphone,
+  Tv,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -74,8 +77,12 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: PieChart, label: 'Fractions', path: '/app/fractions' },
   { icon: AtSign, label: 'Usernames', path: '/usernames' },
   { icon: Users, label: 'Accounts', path: '/accounts' },
+  { icon: Megaphone, label: 'Advertising', path: '/app/ads' },
+  { icon: Tv, label: 'Live TV', path: '/tv' },
   { icon: Wand2, label: 'Prompt', path: '/prompt' },
   { icon: ArrowDownToLine, label: 'Converter', path: '/converter' },
+  // The converter's batch twin: one link there, a whole channel here.
+  { icon: FolderInput, label: 'Migrate', path: '/migrate-youtube' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
   { icon: Map, label: 'Guide', path: '/guide' },
   { icon: BarChart3, label: 'Stats', path: '/stats' },

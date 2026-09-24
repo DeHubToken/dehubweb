@@ -3647,5 +3647,8 @@
     "followers": "المتابعين",
     "subscribers": "المشتركين",
     "mentioned": "اللي اتذكروا"
+  },
+  "fractions": {
+    "title": "الأجزاء"
   }
 }

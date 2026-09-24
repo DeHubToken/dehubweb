@@ -3015,7 +3015,7 @@
     "statusImported": "Воридшуда",
     "statusImporting": "Воридот",
     "subtitle": "Ilagay ang isang channel o profile, i-edit kung anong gusto, magbigay sa isang beses.",
-    "title": "Ҳамаро ҳиҷрат кунед",
+    "title": "Ҳамаро кӯчонед",
     "videoCountMany": "{{n}} видео",
     "videoCountOne": "{{n}} видео",
     "videosCount": "{{videos}} видео",
@@ -3655,5 +3655,8 @@
       "undo": "Бекор кардан",
       "openGenerator": "Баррасӣ ва эҷод"
     }
+  },
+  "fractions": {
+    "title": "Ҳиссаҳо"
   }
 }

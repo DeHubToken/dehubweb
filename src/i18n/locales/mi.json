@@ -3028,7 +3028,7 @@
     "statusImported": "Te kawemai",
     "statusImporting": "Te kawemai",
     "subtitle": "Tangohia he hongere, he pūkete ranei, whakatika i te mea e hiahia ana koe, utu kotahi.",
-    "title": "Haere ki te katoa",
+    "title": "Hūnuku katoa",
     "videoCountMany": "{{n}} ataata",
     "videoCountOne": "{{n}} ataata",
     "videosCount": "{{videos}} ataata",
@@ -3671,5 +3671,8 @@
       "undo": "Wetekia",
       "openGenerator": "Arotake ka waihanga"
     }
+  },
+  "fractions": {
+    "title": "Wāhanga"
   }
 }

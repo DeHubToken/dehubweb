@@ -3143,6 +3143,7 @@
     "fieldChain": "साखळी"
   },
   "fractions": {
+    "title": "हिस्से",
     "statusSettled": "सेटल झाले",
     "statusAwaitingFractions": "अपूर्णांकांची प्रतीक्षा",
     "statusAwaitingPayment": "पेमेंटची प्रतीक्षा",

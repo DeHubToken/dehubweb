@@ -3602,5 +3602,8 @@
       "undo": "تراجع",
       "openGenerator": "راجع وولّد"
     }
+  },
+  "fractions": {
+    "title": "الأجزاء"
   }
 }
