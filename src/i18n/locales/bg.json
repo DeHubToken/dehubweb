@@ -46,7 +46,8 @@
     "creators": "Създатели",
     "getTheApp": "Изтеглете приложението",
     "connectAi": "Свързване на ИИ",
-    "converter": "Конвертор"
+    "converter": "Конвертор",
+    "affiliate": "Партньори"
   },
   "feed": {
     "viewProfile": "Преглед на профила на {{name}}",

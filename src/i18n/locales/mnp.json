@@ -45,7 +45,8 @@
     "pricing": "价钱",
     "creators": "创作者",
     "getTheApp": "下载应用",
-    "connectAi": "连 AI"
+    "connectAi": "连 AI",
+    "affiliate": "推广联盟"
   },
   "feed": {
     "viewProfile": "看 {{name}} 的个人资料",
@@ -2259,7 +2260,8 @@
     "goldenHourStarted": "Golden Hour 运行 {{minutes}} 分钟 — 您现在发布的任何内容都算双倍"
   },
   "work": {
-    "budgetExhausted": "今場賞金其預算已經用完了。"
+    "budgetExhausted": "今場賞金其預算已經用完了。",
+    "title": "悬赏"
   },
   "stages": {
     "title": "階段"
@@ -2335,7 +2337,8 @@
     "vaultReleaseTitle": "释放 @{{handle}}？",
     "vaultReleaseBody": "它将返回到池中，任何人都可以获取它。无法撤销，并且重新购买它将花费新所有者要求的任何价格。",
     "oldHandleKept": "您保留 @{{handle}} — 它会移入您的用户名，您可以再次佩戴它或稍后出售。帖子、关注者和您的钱包均未受影响。",
-    "postsStayWithYou": "帖子、关注者和您的钱包均未受影响。"
+    "postsStayWithYou": "帖子、关注者和您的钱包均未受影响。",
+    "title": "用户名"
   },
   "stories": {
     "addStory": "加故事",
@@ -3777,5 +3780,11 @@
   },
   "fractions": {
     "title": "碎片"
+  },
+  "stores": {
+    "title": "商店"
+  },
+  "accounts": {
+    "title": "账号"
   }
 }

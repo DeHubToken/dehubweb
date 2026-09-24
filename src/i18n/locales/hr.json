@@ -46,7 +46,8 @@
     "creators": "Kreatori",
     "getTheApp": "Preuzmi aplikaciju",
     "connectAi": "Poveži AI",
-    "converter": "Konverter"
+    "converter": "Konverter",
+    "affiliate": "Partneri"
   },
   "feed": {
     "viewProfile": "Pogledaj profil korisnika {{name}}",

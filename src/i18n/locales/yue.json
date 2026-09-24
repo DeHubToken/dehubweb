@@ -46,7 +46,8 @@
     "creators": "創作者",
     "getTheApp": "下載應用程式",
     "connectAi": "連接 AI",
-    "converter": "轉換器"
+    "converter": "轉換器",
+    "affiliate": "推廣聯盟"
   },
   "feed": {
     "viewProfile": "睇下 {{name}} 嘅個人檔案",
@@ -2360,7 +2361,8 @@
     "goldenHourStarted": "Golden Hour 進行緊 {{minutes}} 分鐘 — 你而家發佈嘅所有內容都會計雙倍"
   },
   "work": {
-    "budgetExhausted": "呢個賞金嘅預算已經全部分配咗。"
+    "budgetExhausted": "呢個賞金嘅預算已經全部分配咗。",
+    "title": "懸賞"
   },
   "stages": {
     "title": "階段"
@@ -2436,7 +2438,8 @@
     "vaultReleaseTitle": "釋放 @{{handle}}?",
     "vaultReleaseBody": "它將回到池中，任何人都可以取走它。無法撤銷，並且買回它將花費新主人要求的任何價格。",
     "oldHandleKept": "你保留 @{{handle}} — 佢會移到你嘅用戶名入面，你可以再次使用或者之後再賣。帖子、追隨者同埋你嘅錢包都唔會受影響。",
-    "postsStayWithYou": "帖子、追隨者同埋你嘅錢包都唔會受影響。"
+    "postsStayWithYou": "帖子、追隨者同埋你嘅錢包都唔會受影響。",
+    "title": "用戶名"
   },
   "live": {
     "chatJoined": "加入咗",
@@ -3871,5 +3874,11 @@
   },
   "fractions": {
     "title": "碎片"
+  },
+  "stores": {
+    "title": "商店"
+  },
+  "accounts": {
+    "title": "帳戶"
   }
 }

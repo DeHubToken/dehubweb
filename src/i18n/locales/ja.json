@@ -45,7 +45,8 @@
     "pricing": "料金",
     "creators": "クリエイター",
     "getTheApp": "アプリを入手",
-    "connectAi": "AI を接続"
+    "connectAi": "AI を接続",
+    "affiliate": "アフィリエイト"
   },
   "feed": {
     "viewProfile": "{{name}}のプロフィールを表示",

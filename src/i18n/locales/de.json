@@ -46,7 +46,8 @@
     "creators": "Creator",
     "getTheApp": "App holen",
     "connectAi": "KI verbinden",
-    "converter": "Wandler"
+    "converter": "Wandler",
+    "affiliate": "Partnerprogramm"
   },
   "feed": {
     "viewProfile": "Profil von {{name}} anzeigen",

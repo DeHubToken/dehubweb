@@ -46,7 +46,8 @@
     "creators": "නිර්මාණකරුවන්",
     "getTheApp": "යෙදුම ලබා ගන්න",
     "connectAi": "AI සම්බන්ධ කරන්න",
-    "converter": "පරිවර්තක"
+    "converter": "පරිවර්තක",
+    "affiliate": "අනුබද්ධ"
   },
   "feed": {
     "viewProfile": "{{name}} හි පැතිකඩ බලන්න",
@@ -2416,7 +2417,8 @@
     "fromYourWalletNow": "— ඔබේ wallet එකෙන්, දැන්, නිරවුද්ධ කිරීමේ කොටසක් ලෙස.",
     "disputeTotal": "සම්පූර්ණ: {{total}} / {{remaining}} {{currency}}",
     "resolveAndPay": "නිරවුද්ධ කරන්න සහ ගෙවන්න",
-    "resolve": "නිරවුද්ධ කරන්න"
+    "resolve": "නිරවුද්ධ කරන්න",
+    "title": "ත්‍යාග"
   },
   "stores": {
     "title": "ගබඩා",

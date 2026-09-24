@@ -45,7 +45,8 @@
     "pricing": "قیمتیں",
     "creators": "بنانے والے",
     "getTheApp": "ایپ لو",
-    "connectAi": "AI جوڑو"
+    "connectAi": "AI جوڑو",
+    "affiliate": "ایفیلی ایٹ"
   },
   "feed": {
     "viewProfile": "{{name}} ಚೆ ಪ್ರೊಫೈಲ್ ನೋಡಿ",
@@ -1966,7 +1967,8 @@
     }
   },
   "work": {
-    "budgetExhausted": "اس انعام کا سارا بجٹ لگ چکا ہے۔"
+    "budgetExhausted": "اس انعام کا سارا بجٹ لگ چکا ہے۔",
+    "title": "باؤنٹیز"
   },
   "videoLooks": {
     "button": "کیمرہ لُکس",
@@ -2018,7 +2020,8 @@
       "expired": "میعاد ختم"
     },
     "makeOfferAction": "آفر دو",
-    "tabMine": "میرا"
+    "tabMine": "میرا",
+    "title": "صارف نام"
   },
   "live": {
     "chatJoined": "शामिल हुए",
@@ -2671,5 +2674,11 @@
   },
   "fractions": {
     "title": "फ़्रैक्शन"
+  },
+  "stores": {
+    "title": "اسٹورز"
+  },
+  "accounts": {
+    "title": "اکاؤنٹس"
   }
 }

@@ -46,7 +46,8 @@
     "creators": "Kreatörer",
     "getTheApp": "Hämta appen",
     "connectAi": "Anslut AI",
-    "converter": "Omvandlare"
+    "converter": "Omvandlare",
+    "affiliate": "Partner"
   },
   "feed": {
     "viewProfile": "Visa profilen för {{name}}",

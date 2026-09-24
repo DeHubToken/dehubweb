@@ -46,7 +46,8 @@
     "creators": "Kreator",
     "getTheApp": "Njupuk aplikasi",
     "connectAi": "Nyambungake AI",
-    "converter": "Converter"
+    "converter": "Converter",
+    "affiliate": "Afiliasi"
   },
   "feed": {
     "viewProfile": "Deleng profil {{name}}",
@@ -2348,7 +2349,8 @@
     "goldenHourStarted": "Golden Hour mlaku {{minutes}} menit — kabeh sing kok-post saiki dianggep tikel"
   },
   "work": {
-    "budgetExhausted": "Anggaran bounty iki wis kepakai kabeh."
+    "budgetExhausted": "Anggaran bounty iki wis kepakai kabeh.",
+    "title": "Hadiah"
   },
   "stages": {
     "title": "Tahapan"
@@ -2424,7 +2426,8 @@
     "vaultReleaseTitle": "Lepas @{{handle}}?",
     "vaultReleaseBody": "Iki bakal bali menyang kumpulan lan sapa wae bisa njupuk. Ora bisa dibalekake, lan tuku maneh bakal regane kaya sing dijaluk dening pemilik anyar.",
     "oldHandleKept": "Sampeyan tetep @{{handle}} — iki pindhah menyang jeneng pangguna, lan sampeyan bisa nganggo maneh utawa ngedol mengko. Kiriman, pengikut, lan dompetmu ora keganggu.",
-    "postsStayWithYou": "Kiriman, pengikut, lan dompetmu ora keganggu."
+    "postsStayWithYou": "Kiriman, pengikut, lan dompetmu ora keganggu.",
+    "title": "Jeneng Panganggo"
   },
   "live": {
     "chatJoined": "gabung",
@@ -3860,5 +3863,11 @@
   },
   "fractions": {
     "title": "Bagean"
+  },
+  "stores": {
+    "title": "Toko"
+  },
+  "accounts": {
+    "title": "Akun"
   }
 }

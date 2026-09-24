@@ -46,7 +46,8 @@
     "creators": "Ijodkorlar",
     "getTheApp": "Ilovani yuklab olish",
     "connectAi": "SI ulash",
-    "converter": "Konverter"
+    "converter": "Konverter",
+    "affiliate": "Hamkorlik"
   },
   "feed": {
     "viewProfile": "{{name}} profilini ko&#39;rish",
@@ -2375,7 +2376,8 @@
     "goldenHourStarted": "Golden Hour {{minutes}} daqiqa davom etmoqda — hozirgi har bir postingiz ikki hisoblanadi"
   },
   "work": {
-    "budgetExhausted": "Bu mukofotning byudjeti to'liq taqsimlangan."
+    "budgetExhausted": "Bu mukofotning byudjeti to'liq taqsimlangan.",
+    "title": "Mukofotlar"
   },
   "videoLooks": {
     "button": "Kamera koʻrinishlari",
@@ -2447,7 +2449,8 @@
     "vaultListedCannotWear": "Ushbu nomdan foydalanishdan oldin ro&#39;yxatni olib tashlang.",
     "vaultReleaseBody": "U yana hovuzga qaytariladi va uni istalgan kishi olib ketishi mumkin. Uni qaytarib olishning iloji yo&#39;q va uni qaytarib sotib olish yangi egasi so&#39;ragan narxga tushadi.",
     "oldHandleKept": "Siz @{{handle}} ni saqlab qolasiz — u sizning foydalanuvchi nomlaringizga o'tadi va siz uni yana ishlatishingiz yoki keyinroq sotishingiz mumkin. Postlar, obunachilar va hamyoningiz tegilmagan qoladi.",
-    "postsStayWithYou": "Postlar, obunachilar va hamyoningiz tegilmagan qoladi."
+    "postsStayWithYou": "Postlar, obunachilar va hamyoningiz tegilmagan qoladi.",
+    "title": "Foydalanuvchi nomlari"
   },
   "stories": {
     "addStory": "Hikoya qoʻshish",
@@ -3913,5 +3916,11 @@
   },
   "fractions": {
     "title": "Ulushlar"
+  },
+  "stores": {
+    "title": "Do'konlar"
+  },
+  "accounts": {
+    "title": "Hisoblar"
   }
 }

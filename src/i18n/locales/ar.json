@@ -46,7 +46,8 @@
     "creators": "المبدعون",
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط الذكاء الاصطناعي",
-    "converter": "المحول"
+    "converter": "المحول",
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "عرض ملف {{name}} الشخصي",

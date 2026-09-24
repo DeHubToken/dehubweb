@@ -46,7 +46,8 @@
     "creators": "Автори",
     "getTheApp": "Завантажити застосунок",
     "connectAi": "Підключити ШІ",
-    "converter": "Конвертер"
+    "converter": "Конвертер",
+    "affiliate": "Партнерка"
   },
   "feed": {
     "viewProfile": "Переглянути профіль {{name}}",

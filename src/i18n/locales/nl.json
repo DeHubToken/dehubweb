@@ -46,7 +46,8 @@
     "creators": "Creators",
     "getTheApp": "Download de app",
     "connectAi": "AI verbinden",
-    "converter": "Omvormer"
+    "converter": "Omvormer",
+    "affiliate": "Affiliate"
   },
   "feed": {
     "viewProfile": "Bekijk het profiel van {{name}}",
