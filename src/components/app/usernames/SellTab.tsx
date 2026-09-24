@@ -161,7 +161,7 @@ export function SellTab({ username: selectedUsername, onUsernameChange }: Props 
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">$</span>
             <Input
               value={priceUsd}
-              onChange={e => setPriceUsd(e.target.value.replace(/[^0-9.]/g, ''))}
+              onChange={e => setPriceUsd(e.target.value.replace(/,/g, '.').replace(/[^0-9.]/g, ''))}
               inputMode="decimal"
               placeholder={String(config?.minPriceUsd ?? 1)}
               className="pl-9 bg-black/60 border-white/10 rounded-xl text-white"
