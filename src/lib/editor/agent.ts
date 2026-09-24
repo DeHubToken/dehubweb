@@ -461,8 +461,19 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         const query = str(op.query) ?? "";
         const orientation = (["landscape", "portrait", "square"].includes(op.orientation as string)
           ? op.orientation : "all") as FreeAssetOrientation;
-        const result = await searchFreeAssets({ kind, query, page: 1, orientation });
-        const asset = result.items[0];
+        // Loosen the search step by step rather than give up: shape filter off,
+        // then just the first two words of the query.
+        const short = query.split(/s+/).slice(0, 2).join(" ");
+        const attempts: [string, FreeAssetOrientation][] = [[query, orientation], [query, "all"], [short, "all"]];
+        let asset: Awaited<ReturnType<typeof searchFreeAssets>>["items"][number] | undefined;
+        for (const [q, o] of attempts) {
+          try {
+            asset = (await searchFreeAssets({ kind, query: q, page: 1, orientation: o })).items[0];
+          } catch {
+            asset = undefined;
+          }
+          if (asset) break;
+        }
         if (!asset) {
           report.missingStock.push(query);
           return false;
