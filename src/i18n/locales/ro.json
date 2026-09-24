@@ -5817,6 +5817,14 @@
       "saturation": "Saturație",
       "color": "Culoare",
       "luminosity": "Luminozitate"
+    },
+    "bgRemove": {
+      "action": "Elimină fundalul",
+      "working": "Se elimină fundalul…",
+      "downloading": "Se pregătește modelul AI… {{percent}}%",
+      "hint": "Rulează pe dispozitivul tău: gratuit, privat, nu se încarcă nimic. La prima utilizare se descarcă modelul AI, apoi durează doar câteva secunde.",
+      "done": "Fundal eliminat.",
+      "failed": "Fundalul nu a putut fi eliminat. Încearcă altă imagine sau un browser precum Chrome ori Edge."
     }
   },
   "footer": {

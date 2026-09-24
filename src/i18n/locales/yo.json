@@ -3717,6 +3717,14 @@
       "saturation": "Ìkún àwọ̀",
       "color": "Àwọ̀",
       "luminosity": "Ìmọ́lẹ̀"
+    },
+    "bgRemove": {
+      "action": "Yọ ẹ̀yìn àwòrán kúrò",
+      "working": "Ń yọ ẹ̀yìn àwòrán kúrò…",
+      "downloading": "Ń ṣètò àwòṣe AI… {{percent}}%",
+      "hint": "Ó ń ṣiṣẹ́ lórí ẹ̀rọ rẹ: ọ̀fẹ́, àṣírí, kò sí ohun tí a gbé sókè. Ìlò àkọ́kọ́ máa ṣe ìgbàsílẹ̀ àwòṣe AI, lẹ́yìn náà ó máa gba ìṣẹ́jú-àáyá díẹ̀.",
+      "done": "A ti yọ ẹ̀yìn àwòrán kúrò.",
+      "failed": "A kò lè yọ ẹ̀yìn àwòrán kúrò. Gbìyànjú àwòrán míràn, tàbí aṣàwákiri bíi Chrome tàbí Edge."
     }
   },
   "fractions": {

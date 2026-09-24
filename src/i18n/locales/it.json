@@ -6048,6 +6048,14 @@
       "saturation": "Saturazione",
       "color": "Colore",
       "luminosity": "Luminosità"
+    },
+    "bgRemove": {
+      "action": "Rimuovi sfondo",
+      "working": "Rimozione dello sfondo…",
+      "downloading": "Preparazione del modello IA… {{percent}}%",
+      "hint": "Funziona sul tuo dispositivo: gratis, privato, nessun caricamento. Al primo utilizzo scarica il modello IA, poi bastano pochi secondi.",
+      "done": "Sfondo rimosso.",
+      "failed": "Impossibile rimuovere lo sfondo. Prova un’altra immagine o un browser come Chrome o Edge."
     }
   }
 }

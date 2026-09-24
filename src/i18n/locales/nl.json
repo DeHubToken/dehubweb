@@ -6203,6 +6203,14 @@
       "saturation": "Verzadiging",
       "color": "Kleur",
       "luminosity": "Lichtsterkte"
+    },
+    "bgRemove": {
+      "action": "Achtergrond verwijderen",
+      "working": "Achtergrond verwijderen…",
+      "downloading": "AI-model klaarmaken… {{percent}}%",
+      "hint": "Draait op je apparaat: gratis, privé, er wordt niets geüpload. Bij het eerste gebruik wordt het AI-model gedownload, daarna duurt het een paar seconden.",
+      "done": "Achtergrond verwijderd.",
+      "failed": "Kan de achtergrond niet verwijderen. Probeer een andere afbeelding of een browser zoals Chrome of Edge."
     }
   },
   "glossary": {

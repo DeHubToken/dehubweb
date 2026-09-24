@@ -6027,6 +6027,14 @@
       "saturation": "Piesātinājums",
       "color": "Krāsa",
       "luminosity": "Spilgtums"
+    },
+    "bgRemove": {
+      "action": "Noņemt fonu",
+      "working": "Noņem fonu…",
+      "downloading": "Sagatavo AI modeli… {{percent}}%",
+      "hint": "Darbojas tavā ierīcē: bez maksas, privāti, nekas netiek augšupielādēts. Pirmajā reizē tiek lejupielādēts AI modelis, pēc tam tas aizņem dažas sekundes.",
+      "done": "Fons noņemts.",
+      "failed": "Neizdevās noņemt fonu. Izmēģini citu attēlu vai pārlūku, piemēram, Chrome vai Edge."
     }
   }
 }

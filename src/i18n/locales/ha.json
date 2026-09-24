@@ -3725,6 +3725,14 @@
       "saturation": "Zurfin launi",
       "color": "Launi",
       "luminosity": "Haske"
+    },
+    "bgRemove": {
+      "action": "Cire bango",
+      "working": "Ana cire bango…",
+      "downloading": "Ana shirya samfurin AI… {{percent}}%",
+      "hint": "Yana aiki a na'urarka: kyauta, sirri, babu abin da ake lodawa. Amfani na farko yana sauke samfurin AI, sannan yana ɗaukar 'yan daƙiƙoƙi.",
+      "done": "An cire bango.",
+      "failed": "Ba a iya cire bango ba. Gwada wani hoto, ko burauza kamar Chrome ko Edge."
     }
   },
   "fractions": {

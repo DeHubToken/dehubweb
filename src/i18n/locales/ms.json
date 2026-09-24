@@ -6255,6 +6255,14 @@
       "saturation": "Ketepuan",
       "color": "Warna",
       "luminosity": "Kilauan"
+    },
+    "bgRemove": {
+      "action": "Buang latar belakang",
+      "working": "Membuang latar belakang…",
+      "downloading": "Menyediakan model AI… {{percent}}%",
+      "hint": "Berjalan pada peranti anda: percuma, peribadi, tiada apa-apa dimuat naik. Penggunaan pertama memuat turun model AI, kemudian hanya mengambil beberapa saat.",
+      "done": "Latar belakang dibuang.",
+      "failed": "Tidak dapat membuang latar belakang. Cuba imej lain, atau pelayar seperti Chrome atau Edge."
     }
   }
 }

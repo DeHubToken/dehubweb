@@ -3594,6 +3594,14 @@
       "saturation": "饱和度",
       "color": "颜色",
       "luminosity": "明度"
+    },
+    "bgRemove": {
+      "action": "移除背景",
+      "working": "正在移除背景…",
+      "downloading": "正在准备 AI 模型… {{percent}}%",
+      "hint": "在你的设备上运行：免费、私密，不上传任何内容。首次使用会下载 AI 模型，之后只需几秒钟。",
+      "done": "背景已移除。",
+      "failed": "无法移除背景。请换一张图片，或使用 Chrome、Edge 等浏览器。"
     }
   },
   "post": {

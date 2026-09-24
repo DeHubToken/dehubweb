@@ -5938,6 +5938,14 @@
       "saturation": "Küllastus",
       "color": "Värv",
       "luminosity": "Heledus"
+    },
+    "bgRemove": {
+      "action": "Eemalda taust",
+      "working": "Tausta eemaldamine…",
+      "downloading": "AI-mudeli ettevalmistamine… {{percent}}%",
+      "hint": "Töötab sinu seadmes: tasuta, privaatne, midagi ei laadita üles. Esimesel kasutamisel laaditakse alla AI-mudel, seejärel võtab see vaid mõne sekundi.",
+      "done": "Taust eemaldatud.",
+      "failed": "Tausta ei õnnestunud eemaldada. Proovi teist pilti või brauserit nagu Chrome või Edge."
     }
   }
 }

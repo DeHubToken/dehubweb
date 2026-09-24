@@ -5938,6 +5938,14 @@
       "saturation": "Telítettség",
       "color": "Szín",
       "luminosity": "Fényerő"
+    },
+    "bgRemove": {
+      "action": "Háttér eltávolítása",
+      "working": "Háttér eltávolítása…",
+      "downloading": "Az AI-modell előkészítése… {{percent}}%",
+      "hint": "Az eszközödön fut: ingyenes, privát, semmi sem kerül feltöltésre. Első használatkor letölti az AI-modellt, utána csak néhány másodperc.",
+      "done": "Háttér eltávolítva.",
+      "failed": "Nem sikerült eltávolítani a hátteret. Próbálj másik képet, vagy egy böngészőt, például Chrome-ot vagy Edge-et."
     }
   }
 }

@@ -6050,6 +6050,14 @@
       "saturation": "Saturation",
       "color": "Couleur",
       "luminosity": "Luminosité"
+    },
+    "bgRemove": {
+      "action": "Supprimer l’arrière-plan",
+      "working": "Suppression de l’arrière-plan…",
+      "downloading": "Préparation du modèle d’IA… {{percent}} %",
+      "hint": "S’exécute sur votre appareil : gratuit, privé, rien n’est envoyé. La première utilisation télécharge le modèle d’IA, ensuite cela prend quelques secondes.",
+      "done": "Arrière-plan supprimé.",
+      "failed": "Impossible de supprimer l’arrière-plan. Essayez une autre image ou un navigateur comme Chrome ou Edge."
     }
   }
 }

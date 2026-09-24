@@ -3650,6 +3650,14 @@
       "saturation": "饱和度",
       "color": "颜色",
       "luminosity": "明度"
+    },
+    "bgRemove": {
+      "action": "去除背景",
+      "working": "正在去除背景…",
+      "downloading": "AI 模型准备中… {{percent}}%",
+      "hint": "勒侬个设备浪运行：免费、私密，啥也勿上传。头一趟用要下载 AI 模型，后首只要几秒钟。",
+      "done": "背景去除好了。",
+      "failed": "背景去勿脱。换张图片试试看，或者用 Chrome、Edge 搿种浏览器。"
     }
   },
   "fractions": {
