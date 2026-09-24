@@ -45,7 +45,8 @@
     "pricing": "Biha",
     "creators": "Afirîner",
     "getTheApp": "Sepanê Bistîne",
-    "connectAi": "AI Girêde"
+    "connectAi": "AI Girêde",
+    "affiliate": "هاوبەشی"
   },
   "feed": {
     "viewProfile": "Profîla {{name}} bibîne",
@@ -2304,7 +2305,7 @@
     "addressPlaceholder": "0x…"
   },
   "stores": {
-    "title": "ئەمبارکراو، کۆگەکراو، خراوە کۆگە، ئازووقە، دابینکاری",
+    "title": "فرۆشگاکان",
     "price10to50": "10 dolar heta 50 dolar",
     "price50to100": "50 dolar heta 100 dolar",
     "price100to500": "100 dolar heta 500 dolar",
@@ -3416,7 +3417,8 @@
     "vaultReleaseTitle": "ئازادکردن @{{handle}}?",
     "vaultReleaseBody": "دەگەڕێتەوە بۆ کۆمەڵەکە و هەر کەسێک دەتوانێت بیگرێت. هیچ گەڕانەوەی نییە، و کڕینەوەی بەو نرخە دەبێت کە خاوەنی نوێ داوای دەکات.",
     "oldHandleKept": "تۆ @{{handle}} دەهێڵیتەوە — دەچێتە ناو ناوەکانی بەکارهێنەری، و دەتوانیت دووبارەی بکەیتەوە یان دواتر بیفرۆشیت. پۆستەکان، شوێنکەوتووان و پارەدانیت بێ ھیچ گۆڕانکارییەک.",
-    "postsStayWithYou": "پۆستەکان، شوێنکەوتووان و پارەدانیت بێ ھیچ گۆڕانکارییەک."
+    "postsStayWithYou": "پۆستەکان، شوێنکەوتووان و پارەدانیت بێ ھیچ گۆڕانکارییەک.",
+    "title": "ناوی بەکارهێنەران"
   },
   "accounts": {
     "seoTitle": "بازاڕی هەژمار - DeHub",

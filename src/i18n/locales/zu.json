@@ -46,7 +46,8 @@
     "creators": "Abadali",
     "getTheApp": "Thola uhlelo",
     "connectAi": "Xhuma i-AI",
-    "converter": "Isiguquli"
+    "converter": "Isiguquli",
+    "affiliate": "Umlingani"
   },
   "feed": {
     "viewProfile": "Buka iphrofayili ka- {{name}}",
@@ -2392,7 +2393,8 @@
     "goldenHourStarted": "I-Golden Hour isebenza imizuzu engu-{{minutes}} — konke okuthunyelayo manje kubalwa kabili"
   },
   "work": {
-    "budgetExhausted": "Isabelomali salo mklomelo sisetshenziswe sonke."
+    "budgetExhausted": "Isabelomali salo mklomelo sisetshenziswe sonke.",
+    "title": "Imivuzo"
   },
   "stages": {
     "title": "Izigaba"
@@ -2468,7 +2470,8 @@
     "vaultReleaseTitle": "Khipha @{{handle}}?",
     "vaultReleaseBody": "Ibuyela echibini futhi noma ubani angayithatha. Akukho ukubuyisa emuva, futhi ukuyithenga futhi kungabiza noma yini umnikazi omusha ayicelayo.",
     "oldHandleKept": "Uhlala uyi-@{{handle}} — ingena kumagama akho omsebenzisi, futhi ungayigqoka futhi noma uyithengise kamuva. Okuthunyelwe, abalandeli, kanye ne-wallet yakho akuthintwa.",
-    "postsStayWithYou": "Okuthunyelwe, abalandeli, kanye ne-wallet yakho akuthintwa."
+    "postsStayWithYou": "Okuthunyelwe, abalandeli, kanye ne-wallet yakho akuthintwa.",
+    "title": "Amagama Omsebenzisi"
   },
   "live": {
     "chatJoined": "ujoyinile",
@@ -3904,5 +3907,11 @@
   },
   "fractions": {
     "title": "Izabelo"
+  },
+  "stores": {
+    "title": "Izitolo"
+  },
+  "accounts": {
+    "title": "Ama-akhawunti"
   }
 }

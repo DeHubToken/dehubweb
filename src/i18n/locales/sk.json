@@ -46,7 +46,8 @@
     "creators": "Tvorcovia",
     "getTheApp": "Stiahnuť aplikáciu",
     "connectAi": "Pripojiť AI",
-    "converter": "Konvertor"
+    "converter": "Konvertor",
+    "affiliate": "Partnerský program"
   },
   "feed": {
     "viewProfile": "Zobraziť profil používateľa {{name}}",
@@ -2494,7 +2495,8 @@
     "goldenHourStarted": "Golden Hour beží {{minutes}} minút — všetko, čo teraz zverejníte, sa počíta dvojnásobne"
   },
   "work": {
-    "budgetExhausted": "Rozpočet tejto odmeny je úplne vyčerpaný."
+    "budgetExhausted": "Rozpočet tejto odmeny je úplne vyčerpaný.",
+    "title": "Odmeny"
   },
   "stages": {
     "title": "Etapy"
@@ -2570,7 +2572,8 @@
     "vaultReleaseTitle": "Uvoľniť @{{handle}}?",
     "vaultReleaseBody": "Vráti sa do fondu a môže si ho vziať ktokoľvek. Nedá sa to vziať späť a jeho spätný odkúpenie by stálo toľko, koľko si vypýta nový majiteľ.",
     "oldHandleKept": "Zostávate @{{handle}} — presunie sa do vašich používateľských mien a môžete ju nosiť znova alebo ju neskôr predať. Príspevky, sledujúci a vaša peňaženka zostávajú nedotknuté.",
-    "postsStayWithYou": "Príspevky, sledujúci a vaša peňaženka zostávajú nedotknuté."
+    "postsStayWithYou": "Príspevky, sledujúci a vaša peňaženka zostávajú nedotknuté.",
+    "title": "Používateľské mená"
   },
   "stories": {
     "addStory": "Pridať príbeh",
@@ -4063,5 +4066,11 @@
   },
   "fractions": {
     "title": "Podiely"
+  },
+  "stores": {
+    "title": "Obchody"
+  },
+  "accounts": {
+    "title": "Účty"
   }
 }

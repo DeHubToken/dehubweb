@@ -46,7 +46,8 @@
     "creators": "Döredijiler",
     "getTheApp": "Programmany al",
     "connectAi": "AI birikdir",
-    "converter": "Konverter"
+    "converter": "Konverter",
+    "affiliate": "Hyzmatdaş"
   },
   "feed": {
     "viewProfile": "Açylýan profily: {{name}}",
@@ -2327,7 +2328,8 @@
     "goldenHourStarted": "Altyn sagat {{minutes}} minut dowam edýär — indi goýýan her zadyňyz iki esse artar"
   },
   "work": {
-    "budgetExhausted": "Bu sylagyň býujeti doly paýlanyldy."
+    "budgetExhausted": "Bu sylagyň býujeti doly paýlanyldy.",
+    "title": "Sylaglar"
   },
   "stages": {
     "title": "Sahypalar"
@@ -2403,7 +2405,8 @@
     "vaultReleaseTitle": "{{handle}}-y boşatmakmy?",
     "vaultReleaseBody": "Ol ýene-de köpçülige dolanýar we islendik adam alyp biler. Ony yzyna alyp bolmaýar, ony yzyna almak bolsa täze eýesiniň isleýän bahasy bolar.",
     "oldHandleKept": "Siz @ {{handle}} saklaýarsyňyz — bu siziň ulanýan adlaryňyza geçýär we siz ony ýene-de geýip ýa-da satyp bilersiňiz. Siziň postlaryňyz, yzyna eýerenleriňiz we çuwallaryňyz hiç hili täsir etmeýär.",
-    "postsStayWithYou": "Siziň postlaryňyz, yzyna eýerenleriňiz we çuwallaryňyz hiç hili täsir etmeýär."
+    "postsStayWithYou": "Siziň postlaryňyz, yzyna eýerenleriňiz we çuwallaryňyz hiç hili täsir etmeýär.",
+    "title": "Ulanyjy atlary"
   },
   "live": {
     "chatJoined": "goşuldy",
@@ -3826,5 +3829,11 @@
   },
   "fractions": {
     "title": "Paýlar"
+  },
+  "stores": {
+    "title": "Dükanlar"
+  },
+  "accounts": {
+    "title": "Hasaplar"
   }
 }

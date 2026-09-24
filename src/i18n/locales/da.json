@@ -46,7 +46,8 @@
     "creators": "Skabere",
     "getTheApp": "Hent appen",
     "connectAi": "Forbind AI",
-    "converter": "Omformer"
+    "converter": "Omformer",
+    "affiliate": "Partner"
   },
   "feed": {
     "viewProfile": "Se profilen for {{name}}",

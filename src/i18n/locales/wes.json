@@ -46,7 +46,8 @@
     "creators": "Creator dem",
     "getTheApp": "Get di App",
     "connectAi": "Connect AI",
-    "converter": "Converter"
+    "converter": "Converter",
+    "affiliate": "Affiliate"
   },
   "feed": {
     "viewProfile": "Luk {{name}} profil",
@@ -2110,7 +2111,8 @@
     }
   },
   "work": {
-    "budgetExhausted": "Dis bounty money don finish."
+    "budgetExhausted": "Dis bounty money don finish.",
+    "title": "Bounty dem"
   },
   "stages": {
     "title": "Stages"
@@ -2172,7 +2174,8 @@
     "vaultSell": "Sell",
     "vaultEditListing": "Edit listing",
     "vaultRelease": "Release",
-    "vaultReleaseTitle": "Release @{{handle}}?"
+    "vaultReleaseTitle": "Release @{{handle}}?",
+    "title": "Username dem"
   },
   "live": {
     "chatJoined": "don join",
@@ -3339,5 +3342,11 @@
   },
   "fractions": {
     "title": "Fraction dem"
+  },
+  "stores": {
+    "title": "Stores"
+  },
+  "accounts": {
+    "title": "Account dem"
   }
 }

@@ -46,7 +46,8 @@
     "creators": "创作者",
     "getTheApp": "下载应用",
     "connectAi": "连接 AI",
-    "converter": "转换器"
+    "converter": "转换器",
+    "affiliate": "推广联盟"
   },
   "feed": {
     "viewProfile": "查看{{name}}的个人资料",

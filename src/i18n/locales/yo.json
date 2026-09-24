@@ -46,7 +46,8 @@
     "creators": "Àwọn olùdásílẹ̀",
     "getTheApp": "Gba app náà",
     "connectAi": "So AI pọ̀",
-    "converter": "Oluyipada"
+    "converter": "Oluyipada",
+    "affiliate": "Alábàáṣiṣẹ́"
   },
   "feed": {
     "viewProfile": "Wo fáìlì {{name}}",
@@ -2361,7 +2362,8 @@
     "goldenHourStarted": "Golden Hour ń ṣiṣẹ́ fún ìṣẹ́jú {{minutes}} — ohun gbogbo tí o bá kọ̀wé báyì yóò wá ní ẹ̀ẹ́ méjì"
   },
   "work": {
-    "budgetExhausted": "Ìsúná ẹ̀bùn yìí ti pin tán."
+    "budgetExhausted": "Ìsúná ẹ̀bùn yìí ti pin tán.",
+    "title": "Àwọn Èrè"
   },
   "stages": {
     "title": "Àwọn ìpele"
@@ -2436,7 +2438,8 @@
     "vaultListedCannotWear": "Yọ àtòjọ náà kúrò kí o tó lo orúkọ yìí.",
     "vaultReleaseBody": "Ó padà sínú adágún omi àti pé ẹnikẹ́ni lè mú un. Kò sí ohun tí a kò lè ṣe, àti wíwá rà á padà yóò ná ohunkóhun tí onílé tuntun bá béèrè.",
     "oldHandleKept": "O dúró pẹ̀lú @{{handle}} — ó wọ inú àwọn orúkọ olumúlùmọ̀ rẹ, o sì lè wọ̀ ọ́ tàbí tà á lẹ́yìn náà. Àwọn ìwé ìròyìn, àwọn tó ń tẹ̀lé ọ, àti àpò rẹ kò yí padà.",
-    "postsStayWithYou": "Àwọn ìwé ìròyìn, àwọn tó ń tẹ̀lé ọ, àti àpò rẹ kò yí padà."
+    "postsStayWithYou": "Àwọn ìwé ìròyìn, àwọn tó ń tẹ̀lé ọ, àti àpò rẹ kò yí padà.",
+    "title": "Àwọn Orúkọ Olùmúlò"
   },
   "live": {
     "chatJoined": "darapọ̀",
@@ -3862,5 +3865,11 @@
   },
   "fractions": {
     "title": "Ìpín"
+  },
+  "stores": {
+    "title": "Àwọn Ilé Ìtàjà"
+  },
+  "accounts": {
+    "title": "Àwọn Àkọọ́lẹ̀"
   }
 }

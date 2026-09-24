@@ -46,7 +46,8 @@
     "creators": "អ្នកបង្កើត",
     "getTheApp": "ទាញយកកម្មវិធី",
     "connectAi": "ភ្ជាប់ AI",
-    "converter": "កម្មវិធី​បម្លែង"
+    "converter": "កម្មវិធី​បម្លែង",
+    "affiliate": "ដៃគូ"
   },
   "feed": {
     "viewProfile": "មើលប្រវត្តិរូបរបស់ {{name}}",
@@ -2525,7 +2526,8 @@
     "fromYourWalletNow": "— ពីកាបូបរបស់អ្នកឥឡូវនេះ ជាផ្នែកមួយនៃការដោះស្រាយ។",
     "disputeTotal": "សរុប៖ {{total}} / {{remaining}} {{currency}}",
     "resolveAndPay": "ដោះស្រាយ និងបង់ប្រាក់",
-    "resolve": "ដោះស្រាយ"
+    "resolve": "ដោះស្រាយ",
+    "title": "រង្វាន់"
   },
   "stores": {
     "title": "ហាង​",

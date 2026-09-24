@@ -46,7 +46,8 @@
     "creators": "Skapere",
     "getTheApp": "Last ned appen",
     "connectAi": "Koble til KI",
-    "converter": "Omformer"
+    "converter": "Omformer",
+    "affiliate": "Partner"
   },
   "feed": {
     "viewProfile": "Vis profilen til {{name}}",
@@ -2356,7 +2357,8 @@
     "goldenHourStarted": "Golden Hour kjører i {{minutes}} minutter — alt du poster teller nå dobbelt"
   },
   "work": {
-    "budgetExhausted": "Budsjettet for denne dusøren er brukt opp."
+    "budgetExhausted": "Budsjettet for denne dusøren er brukt opp.",
+    "title": "Dusører"
   },
   "stages": {
     "title": "Faser"
@@ -2432,7 +2434,8 @@
     "vaultReleaseTitle": "Frigjør @{{handle}}?",
     "vaultReleaseBody": "Det går tilbake i puljen, og hvem som helst kan ta det. Det er ingen angre, og å kjøpe det tilbake ville koste det den nye eieren ber om.",
     "oldHandleKept": "Du beholder @{{handle}} — det flyttes inn i brukernavnene dine, og du kan bruke det igjen eller selge det senere. Innlegg, følgere og lommeboken din er urørt.",
-    "postsStayWithYou": "Innlegg, følgere og lommeboken din er urørt."
+    "postsStayWithYou": "Innlegg, følgere og lommeboken din er urørt.",
+    "title": "Brukernavn"
   },
   "live": {
     "chatJoined": "ble med",
@@ -3856,5 +3859,11 @@
   },
   "fractions": {
     "title": "Andeler"
+  },
+  "stores": {
+    "title": "Butikker"
+  },
+  "accounts": {
+    "title": "Kontoer"
   }
 }

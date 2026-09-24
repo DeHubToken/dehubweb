@@ -46,7 +46,8 @@
     "creators": "Ndị Okike",
     "getTheApp": "Nweta Ngwa Ahụ",
     "connectAi": "Jikọọ AI",
-    "converter": "Ntụgharị"
+    "converter": "Ntụgharị",
+    "affiliate": "Mmekọrịta"
   },
   "feed": {
     "viewProfile": "Gosi profaịlụ {{name}}",
@@ -2332,7 +2333,8 @@
     "goldenHourStarted": "Golden Hour na-agba maka {{minutes}} nkeji — ihe niile ị bipụtara ugbu a na-agụ okpukpu abụọ"
   },
   "work": {
-    "budgetExhausted": "Ego a kwadoro maka onyinye a ejizuola."
+    "budgetExhausted": "Ego a kwadoro maka onyinye a ejizuola.",
+    "title": "Ihe nrite"
   },
   "stages": {
     "title": "Ogbo"
@@ -2408,7 +2410,8 @@
     "vaultReleaseTitle": "Release @{{handle}}?",
     "vaultReleaseBody": "Ọ laghachiri na ọdọ mmiri ahụ ma onye ọ bụla nwere ike iburu ya. Enweghị ihe ọzọ a ga-eme, ịzụta ya azụ ga-efu ihe ọ bụla onye nwe ya ọhụrụ chọrọ.",
     "oldHandleKept": "Ị ga-ejigide @{{handle}} — ọ ga-abanye na aha njirimara gị, ma ị nwere ike iyi ya ọzọ ma ọ bụ ree ya ma emechaa. Akwụkwọ, ndị na-eso ụzọ na akpa ego gị agaghị emetụ aka.",
-    "postsStayWithYou": "Akwụkwọ, ndị na-eso ụzọ na akpa ego gị agaghị emetụ aka."
+    "postsStayWithYou": "Akwụkwọ, ndị na-eso ụzọ na akpa ego gị agaghị emetụ aka.",
+    "title": "Aha Njirimara"
   },
   "live": {
     "chatJoined": "sonyere",
@@ -3833,5 +3836,11 @@
   },
   "fractions": {
     "title": "Òkè"
+  },
+  "stores": {
+    "title": "Ụlọ Ahịa"
+  },
+  "accounts": {
+    "title": "Akaụntụ"
   }
 }

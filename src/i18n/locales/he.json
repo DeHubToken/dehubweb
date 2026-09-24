@@ -46,7 +46,8 @@
     "creators": "יוצרים",
     "getTheApp": "הורדת האפליקציה",
     "connectAi": "חיבור AI",
-    "converter": "ממיר"
+    "converter": "ממיר",
+    "affiliate": "שותפים"
   },
   "feed": {
     "viewProfile": "הצגת הפרופיל של {{name}}",
@@ -2365,7 +2366,7 @@
   },
   "work": {
     "budgetExhausted": "התקציב של הפרס הזה נוצל במלואו.",
-    "title": "פרסומים",
+    "title": "פרסים",
     "subtitle": "פרסם פרסום או חפש אחד. תשלום ב-DHB או USDC.",
     "myBounties": "הפרסומים שלי",
     "postBounty": "פרסם פרסום",

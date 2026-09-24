@@ -45,7 +45,8 @@
     "pricing": "Цене",
     "creators": "Креатори",
     "getTheApp": "Преузми апликацију",
-    "connectAi": "Повежи AI"
+    "connectAi": "Повежи AI",
+    "affiliate": "Партнери"
   },
   "feed": {
     "viewProfile": "Pogledajte profil korisnika {{name}}",
@@ -2002,7 +2003,8 @@
     }
   },
   "work": {
-    "budgetExhausted": "Буџет ове награде је у потпуности распоређен."
+    "budgetExhausted": "Буџет ове награде је у потпуности распоређен.",
+    "title": "Награде"
   },
   "videoLooks": {
     "button": "Изгледи камере",
@@ -2069,7 +2071,8 @@
     "vaultUseThis": "Користи ово",
     "vaultSell": "Продај",
     "vaultEditListing": "Уреди оглас",
-    "vaultRelease": "Ослободи"
+    "vaultRelease": "Ослободи",
+    "title": "Корисничка имена"
   },
   "live": {
     "chatJoined": "се придружио/ла",
@@ -3059,5 +3062,11 @@
   },
   "fractions": {
     "title": "Удели"
+  },
+  "stores": {
+    "title": "Продавнице"
+  },
+  "accounts": {
+    "title": "Налози"
   }
 }

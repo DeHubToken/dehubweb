@@ -46,7 +46,8 @@
     "creators": "Tekijät",
     "getTheApp": "Hanki sovellus",
     "connectAi": "Yhdistä tekoäly",
-    "converter": "Muunnin"
+    "converter": "Muunnin",
+    "affiliate": "Kumppanuus"
   },
   "feed": {
     "viewProfile": "Näytä henkilön {{name}} profiili",

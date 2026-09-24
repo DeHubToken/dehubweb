@@ -46,7 +46,8 @@
     "creators": "Skeppers",
     "getTheApp": "Kry die app",
     "connectAi": "Koppel KI",
-    "converter": "Converter"
+    "converter": "Converter",
+    "affiliate": "Vennoot"
   },
   "feed": {
     "viewProfile": "Bekyk {{name}} se profiel",
@@ -2275,7 +2276,7 @@
   },
   "work": {
     "budgetExhausted": "Hierdie kopgeld se begroting is heeltemal toegewys.",
-    "title": "Bounties",
+    "title": "Belonings",
     "subtitle": "Plaas 'n bounty of jag een af. Betaal in DHB of USDC.",
     "myBounties": "My Bounties",
     "postBounty": "Plaas 'n Bounty",

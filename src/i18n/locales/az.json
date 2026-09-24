@@ -46,7 +46,8 @@
     "creators": "Yaradıcılar",
     "getTheApp": "Tətbiqi yüklə",
     "connectAi": "Süni intellekti qoş",
-    "converter": "Konvertor"
+    "converter": "Konvertor",
+    "affiliate": "Tərəfdaş"
   },
   "feed": {
     "viewProfile": "{{name}} adlı şəxsin profilinə baxın",
@@ -3920,7 +3921,7 @@
   "usernames": {
     "seoTitle": "İstifadəçi adı bazarı | DeHub",
     "seoDescription": "DHB ilə DeHub istifadəçi adlarını alın və satın. Satış üçün qısa, rəqəmli və orijinal tutacaqlar axtarın və ya öz elanınızı yerləşdirin — ödəniş təmizləndiyi an köçürmə aktiv olur.",
-    "title": "Usernames",
+    "title": "İstifadəçi adları",
     "subtitle": "Satışa çıxarılan tutaçlar, USD-də qiymətləndirilir",
     "tabBrowse": "Baxış",
     "tabSell": "Satış",

@@ -46,7 +46,8 @@
     "creators": "Masu ƙirƙira",
     "getTheApp": "Sauke manhajar",
     "connectAi": "Haɗa AI",
-    "converter": "Canja wurin"
+    "converter": "Canja wurin",
+    "affiliate": "Abokin Haɗi"
   },
   "feed": {
     "viewProfile": "Duba bayanan {{name}}",
@@ -2361,7 +2362,8 @@
     "goldenHourStarted": "Golden Hour yana gudana na tsawon mintuna {{minutes}} — duk abin da ka aika yanzu yana ƙididdigewa sau biyu"
   },
   "work": {
-    "budgetExhausted": "Kasafin kuɗin wannan lada ya ƙare gaba ɗaya."
+    "budgetExhausted": "Kasafin kuɗin wannan lada ya ƙare gaba ɗaya.",
+    "title": "Tukwici"
   },
   "stages": {
     "title": "Matakan"
@@ -2437,7 +2439,8 @@
     "vaultReleaseTitle": "Sakin @{{handle}}?",
     "vaultReleaseBody": "Yana komawa cikin wurin kuma kowa na iya ɗauka. Babu juyawa, kuma siyan shi sake zai kashe kuɗin da sabon mai shi ya buƙata.",
     "oldHandleKept": "Kuna riƙe da @{{handle}} — yana shiga cikin sunayen masu amfani da ku, kuma zaku iya sake sawa ko siyarwa daga baya. Posts, masu biyan kuɗi da walat ɗinku ba su taɓa ba.",
-    "postsStayWithYou": "Posts, masu biyan kuɗi da walat ɗinku ba su taɓa ba."
+    "postsStayWithYou": "Posts, masu biyan kuɗi da walat ɗinku ba su taɓa ba.",
+    "title": "Sunayen Mai Amfani"
   },
   "live": {
     "chatJoined": "ya shiga",
@@ -3870,5 +3873,11 @@
   },
   "fractions": {
     "title": "Rabe-rabe"
+  },
+  "stores": {
+    "title": "Shaguna"
+  },
+  "accounts": {
+    "title": "Asusu"
   }
 }
