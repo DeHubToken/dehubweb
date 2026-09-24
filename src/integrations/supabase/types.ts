@@ -4497,9 +4497,11 @@ export type Database = {
           currency: string
           description: string | null
           digital_file_url: string | null
+          external_url: string | null
           id: string
           images: Json | null
           is_digital: boolean
+          pod_provider: string | null
           price: number
           shipping_info: string | null
           status: string
@@ -4516,9 +4518,11 @@ export type Database = {
           currency?: string
           description?: string | null
           digital_file_url?: string | null
+          external_url?: string | null
           id?: string
           images?: Json | null
           is_digital?: boolean
+          pod_provider?: string | null
           price: number
           shipping_info?: string | null
           status?: string
@@ -4535,9 +4539,11 @@ export type Database = {
           currency?: string
           description?: string | null
           digital_file_url?: string | null
+          external_url?: string | null
           id?: string
           images?: Json | null
           is_digital?: boolean
+          pod_provider?: string | null
           price?: number
           shipping_info?: string | null
           status?: string
