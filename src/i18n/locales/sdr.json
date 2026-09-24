@@ -46,7 +46,8 @@
     "creators": "بنانے والا",
     "getTheApp": "ایپ لو",
     "connectAi": "AI جوڑو",
-    "converter": "Converter"
+    "converter": "Converter",
+    "affiliate": "هاوبەشی"
   },
   "feed": {
     "viewProfile": "{{name}} के प्रोफाइल को देखें",
@@ -2286,7 +2287,8 @@
     "goldenHourStarted": "د سرو زرو ساعت د {{minutes}} دقیقو لپاره روان دی — هر څه چې تاسو اوس پوسټ کوئ دوه چنده حساب کیږي"
   },
   "work": {
-    "budgetExhausted": "بودجەی ئەم خەڵاتە بە تەواوی دابەش کراوە."
+    "budgetExhausted": "بودجەی ئەم خەڵاتە بە تەواوی دابەش کراوە.",
+    "title": "خەڵاتەکان"
   },
   "stages": {
     "title": "Stages"
@@ -2362,7 +2364,8 @@
     "vaultReleaseTitle": "{{handle}} सोडून देऊ?",
     "vaultReleaseBody": "ते पूलमध्ये परत जाईल आणि कोणीही ते घेऊ शकेल. याला कोणताही उपाय नाही आणि ते परत विकत घेण्यासाठी नवीन मालकाने विचारलेली किंमत द्यावी लागेल.",
     "oldHandleKept": "Tum @{{handle}} ko rakhte ho — yeh tumhare usernames mein chala jayega, aur tum ise dobara pehen sakte ho ya baad mein bech sakte ho. Posts, followers aur tumhara wallet untouched rahenge.",
-    "postsStayWithYou": "Posts, followers aur tumhara wallet untouched rahenge."
+    "postsStayWithYou": "Posts, followers aur tumhara wallet untouched rahenge.",
+    "title": "ناوی بەکارھێنەران"
   },
   "stories": {
     "addStory": "کہانی ڈالو",
@@ -3782,5 +3785,11 @@
   },
   "fractions": {
     "title": "फ़्रैक्शन"
+  },
+  "stores": {
+    "title": "فرۆشگاکان"
+  },
+  "accounts": {
+    "title": "ھەژمارەکان"
   }
 }

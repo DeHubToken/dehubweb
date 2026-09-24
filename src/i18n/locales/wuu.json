@@ -45,7 +45,8 @@
     "pricing": "定价",
     "creators": "创作者",
     "getTheApp": "下载应用",
-    "connectAi": "连接 AI"
+    "connectAi": "连接 AI",
+    "affiliate": "推广联盟"
   },
   "feed": {
     "viewProfile": "看 {{name}} 的资料",
@@ -2288,7 +2289,8 @@
     "goldenHourStarted": "Golden Hour 跑动 {{minutes}} 分钟——你现在发个帖都算双倍"
   },
   "work": {
-    "budgetExhausted": "箇个赏金个预算已经全用光哉。"
+    "budgetExhausted": "箇个赏金个预算已经全用光哉。",
+    "title": "悬赏"
   },
   "stages": {
     "title": "阶段"
@@ -2364,7 +2366,8 @@
     "vaultReleaseTitle": "释放 @{{handle}}?",
     "vaultReleaseBody": "迭个名字会回到池子里向，任何人侪可以拿脱。迭个是勿可撤销个，想再买回来，就要付新主人开个价。",
     "oldHandleKept": "侬保留 @{{handle}}——伊会得进到侬个用户名里向，侬之后可以再用或者再卖。帖子、粉丝搭侬个钱包侪勿动。",
-    "postsStayWithYou": "帖子、粉丝搭侬个钱包侪勿动。"
+    "postsStayWithYou": "帖子、粉丝搭侬个钱包侪勿动。",
+    "title": "用户名"
   },
   "live": {
     "chatJoined": "加入了",
@@ -3795,5 +3798,11 @@
   },
   "fractions": {
     "title": "碎片"
+  },
+  "stores": {
+    "title": "商店"
+  },
+  "accounts": {
+    "title": "账号"
   }
 }

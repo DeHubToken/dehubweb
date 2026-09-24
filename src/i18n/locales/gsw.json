@@ -46,7 +46,8 @@
     "creators": "Creators",
     "getTheApp": "App lade",
     "connectAi": "KI verbinde",
-    "converter": "Converter"
+    "converter": "Converter",
+    "affiliate": "Partnerprogramm"
   },
   "feed": {
     "viewProfile": "Lueg {{name}}'s Profil aa",
@@ -2329,7 +2330,8 @@
     "goldenHourStarted": "Golden Hour lauft für {{minutes}} Minute — alles, wo du jetzt postisch, zählt dopplet"
   },
   "work": {
-    "budgetExhausted": "S Budget vo dere Prämie isch ganz vergäh."
+    "budgetExhausted": "S Budget vo dere Prämie isch ganz vergäh.",
+    "title": "Belohnige"
   },
   "stages": {
     "title": "Stufe"
@@ -2405,7 +2407,8 @@
     "vaultReleaseTitle": "Loslasse @{{handle}}?",
     "vaultReleaseBody": "Er gaht zrugg i Pool und jeder chan ihn näh. Es git kei Rückgängig, und wenn du ihn zrugg chaufsch, chostet er, was de neue Besitzer verlangt.",
     "oldHandleKept": "Du behaltsch @{{handle}} – er gaht i din Username, und du chasch ihn wieder trage oder spöter verkaufe. Posts, Follower und din Wallet bliibe unberührt.",
-    "postsStayWithYou": "Posts, Follower und din Wallet bliibe unberührt."
+    "postsStayWithYou": "Posts, Follower und din Wallet bliibe unberührt.",
+    "title": "Benutzernäme"
   },
   "live": {
     "chatJoined": "isch bitrete",
@@ -3841,5 +3844,11 @@
   },
   "fractions": {
     "title": "Aateil"
+  },
+  "stores": {
+    "title": "Shops"
+  },
+  "accounts": {
+    "title": "Konte"
   }
 }

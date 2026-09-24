@@ -45,7 +45,8 @@
     "pricing": "ዋጋ አሰጣጥ",
     "creators": "ፈጣሪዎች",
     "getTheApp": "መተግበሪያውን አግኝ",
-    "connectAi": "AI አገናኝ"
+    "connectAi": "AI አገናኝ",
+    "affiliate": "አጋር"
   },
   "feed": {
     "viewProfile": "የ {{name}} መገለጫ ይመልከቱ",
@@ -2348,7 +2349,8 @@
     "goldenHourStarted": "Golden Hour ለ {{minutes}} ደቂቃዎች እየሮጠ ነው — የምትለጥፈው ሁሉ አሁን በእጥፍ ይቆጠራል"
   },
   "work": {
-    "budgetExhausted": "የዚህ ሽልማት በጀት ሙሉ በሙሉ ተይዟል።"
+    "budgetExhausted": "የዚህ ሽልማት በጀት ሙሉ በሙሉ ተይዟል።",
+    "title": "ሽልማቶች"
   },
   "stages": {
     "title": "ደረጃዎች"
@@ -2424,7 +2426,8 @@
     "vaultReleaseTitle": "መልቀቅ @{{handle}}?",
     "vaultReleaseBody": "ወደ ገንዳው ይመለሳል እና ማንም ሊወስደው ይችላል ። ምንም ተቀማጭ ገንዘብ የለም ፣ እና እንደገና መግዛት አዲሱ ባለቤት የሚጠይቀውን ሁሉ ያስከፍላል ።",
     "oldHandleKept": "{{handle}}ን ይዘው ይቆያሉ — ወደ ተጠቃሚ ስሞችዎ ይገባል፣ እና በኋላ ላይ መልበስ ወይም መሸጥ ይችላሉ። ልጥፎች፣ ተከታዮች እና የኪስ ቦርሳዎ ሳይነኩ ይቀራሉ።",
-    "postsStayWithYou": "ልጥፎች፣ ተከታዮች እና የኪስ ቦርሳዎ ሳይነኩ ይቀራሉ።"
+    "postsStayWithYou": "ልጥፎች፣ ተከታዮች እና የኪስ ቦርሳዎ ሳይነኩ ይቀራሉ።",
+    "title": "የተጠቃሚ ስሞች"
   },
   "live": {
     "chatJoined": "ተቀላቀለ",
@@ -3723,5 +3726,11 @@
   },
   "fractions": {
     "title": "ክፍልፋዮች"
+  },
+  "stores": {
+    "title": "መደብሮች"
+  },
+  "accounts": {
+    "title": "መለያዎች"
   }
 }

@@ -46,7 +46,8 @@
     "creators": "Mpamorona",
     "getTheApp": "Alaivo ny fampiharana",
     "connectAi": "Ampifandraiso ny AI",
-    "converter": "Converter"
+    "converter": "Converter",
+    "affiliate": "Mpiara-miasa"
   },
   "feed": {
     "viewProfile": "Hijery ny mombamomba an'i {{name}}",
@@ -3880,7 +3881,8 @@
     "vaultReleaseTitle": "Avoaka @{{handle}}?",
     "vaultReleaseBody": "Miverina ao anaty dobo izy ary azon'iza na iza raisina. Tsy misy fanafoanana, ary ny fividianana azy indray dia hitentina izay angatahin'ny tompony vaovao.",
     "oldHandleKept": "Mitahiry an'i @{{handle}} ianao — mifindra any amin'ny anaran'mpampiasanao izy io, ary azonao ampiasaina indray na amidy any aoriana. Tsy voakitika ny lahatsoratrao, ny mpanaraka ary ny poketrafidiram-bolanao.",
-    "postsStayWithYou": "Tsy voakitika ny lahatsoratrao, ny mpanaraka ary ny poketrafidiram-bolanao."
+    "postsStayWithYou": "Tsy voakitika ny lahatsoratrao, ny mpanaraka ary ny poketrafidiram-bolanao.",
+    "title": "Anaram-pampiasa"
   },
   "accounts": {
     "seoTitle": "Momba ny kaonty ¢ Wondershare",

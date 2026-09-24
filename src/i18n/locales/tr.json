@@ -46,7 +46,8 @@
     "creators": "Üreticiler",
     "getTheApp": "Uygulamayı İndir",
     "connectAi": "Yapay Zekâyı Bağla",
-    "converter": "Dönüştürücü"
+    "converter": "Dönüştürücü",
+    "affiliate": "Satış Ortaklığı"
   },
   "feed": {
     "viewProfile": "{{name}} adlı kişinin profilini görüntüleyin",

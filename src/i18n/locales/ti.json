@@ -46,7 +46,8 @@
     "creators": "ፈጠርቲ",
     "getTheApp": "ኣፕ ውሰድ",
     "connectAi": "AI ኣራኽብ",
-    "converter": "ለዋጢ"
+    "converter": "ለዋጢ",
+    "affiliate": "ሽርክና"
   },
   "feed": {
     "viewProfile": "መገለጺ {{name}} ርአ",
@@ -2314,7 +2315,8 @@
     "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ"
   },
   "work": {
-    "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።"
+    "budgetExhausted": "ናይዚ ሽልማት ባጀት ብምሉኡ ተመዲቡ እዩ።",
+    "title": "ሽልማታት"
   },
   "stages": {
     "title": "ደረጃታት"
@@ -2389,7 +2391,8 @@
     "vaultListedCannotWear": "ነዚ ስም እዚ ቅድሚ ምጥቃምካ ነቲ ዝርዝር ኣወጽእ ።",
     "vaultReleaseBody": "ናብ ገንዳ ተመሊሱ ፡ ዝኾነ ሰብ ክወስዶ ይኽእል እዩ ። እቲ ሓድሽ ገዛኢ ዚሓትት ዘበለ ኺዕድግ እዩ ዚኸፍል ።",
     "oldHandleKept": "{{handle}} — ናብ ስም ተጠቃሚኻ ይንቀሳቐስ ፣ እንደገና ክትለብስ ወይ ጸኒሕካ ክትሸጦ ትኽእል ኢኻ ። ልኡኻት ፡ ሰዓብትን ቦርሳኻን ኣይጠፍኡን እዮም ።",
-    "postsStayWithYou": "ጽሑፋትኩም፡ ተከታተልቲኩምን ኪስኩምን ኣይነ kun ኔሩ።"
+    "postsStayWithYou": "ጽሑፋትኩም፡ ተከታተልቲኩምን ኪስኩምን ኣይነ kun ኔሩ።",
+    "title": "ስማት ተጠቃሚ"
   },
   "live": {
     "chatJoined": "ተጸንበረ",
@@ -3773,5 +3776,11 @@
   },
   "fractions": {
     "title": "ክፍልታት"
+  },
+  "stores": {
+    "title": "ድኳናት"
+  },
+  "accounts": {
+    "title": "ሕሳባት"
   }
 }

@@ -46,7 +46,8 @@
     "creators": "Creatori",
     "getTheApp": "Descarcă aplicația",
     "connectAi": "Conectează AI",
-    "converter": "Convertor"
+    "converter": "Convertor",
+    "affiliate": "Afiliere"
   },
   "feed": {
     "viewProfile": "Afișează profilul lui {{name}}",

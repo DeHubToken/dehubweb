@@ -46,7 +46,8 @@
     "creators": "Hal-abuurayaal",
     "getTheApp": "Soo deji abka",
     "connectAi": "Ku xir AI",
-    "converter": "Converter"
+    "converter": "Converter",
+    "affiliate": "Iskaashi"
   },
   "feed": {
     "viewProfile": "Eeg astaanta {{name}}",
@@ -2362,7 +2363,8 @@
     "goldenHourStarted": "Saacadda Dahabka ah oo socota {{minutes}} daqiiqo — wax kasta oo aad hadda qorto labanlaab bay u dhigantaa"
   },
   "work": {
-    "budgetExhausted": "Miisaaniyadda abaalmarintan gebi ahaanba waa la qoondeeyay."
+    "budgetExhausted": "Miisaaniyadda abaalmarintan gebi ahaanba waa la qoondeeyay.",
+    "title": "Abaalmarinno"
   },
   "stages": {
     "title": "Marxaladaha"
@@ -2438,7 +2440,8 @@
     "vaultReleaseTitle": "Siideynta @{{handle}}?",
     "vaultReleaseBody": "Wuxuu ku noqonayaa barkadda oo qof kasta waan qaadan karaa. Ma jirto wax dib loogu noqdo, iibsashadiisuna waxay ku kici doontaa wax kasta oo milkiilaha cusub uu weydiiyo.",
     "oldHandleKept": "Waxaad haysataa @{{handle}} — waxay u dhaqaaqdaa magacyada isticmaale ee aad leedahay, waxaadna mar kale xiran kartaa ama iibin kartaa mustaqbalka. Qoraallada, kuwa raacaya iyo jeebkaaga waxba ma saameynayaan.",
-    "postsStayWithYou": "Qoraallada, kuwa raacaya iyo jeebkaaga waxba ma saameynayaan."
+    "postsStayWithYou": "Qoraallada, kuwa raacaya iyo jeebkaaga waxba ma saameynayaan.",
+    "title": "Magacyada Isticmaalaha"
   },
   "live": {
     "chatJoined": "ayaa ku biiray",
@@ -3864,5 +3867,11 @@
   },
   "fractions": {
     "title": "Saamiyo"
+  },
+  "stores": {
+    "title": "Dukaamada"
+  },
+  "accounts": {
+    "title": "Xisaabaadka"
   }
 }

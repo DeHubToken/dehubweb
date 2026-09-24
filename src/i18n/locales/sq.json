@@ -46,7 +46,8 @@
     "creators": "Krijues",
     "getTheApp": "Merr aplikacionin",
     "connectAi": "Lidh IA-në",
-    "converter": "KONVERTER"
+    "converter": "KONVERTER",
+    "affiliate": "Bashkëpunëtor"
   },
   "feed": {
     "viewProfile": "Shfaq profilin e {{name}}",
@@ -2378,7 +2379,8 @@
     "goldenHourStarted": "Golden Hour po zgjat {{minutes}} minuta — çdo gjë që postoni tani numërohet dyfish"
   },
   "work": {
-    "budgetExhausted": "Buxheti i kësaj shpërblimi është angazhuar plotësisht."
+    "budgetExhausted": "Buxheti i kësaj shpërblimi është angazhuar plotësisht.",
+    "title": "Shpërblime"
   },
   "stages": {
     "title": "Faza"
@@ -2454,7 +2456,8 @@
     "vaultReleaseTitle": "Lësho @{{handle}}?",
     "vaultReleaseBody": "Ai kthehet në pishinë dhe kushdo mund ta marrë. Nuk ka kthim pas, dhe blerja e tij përsëri do të kushtojë aq sa kërkon pronari i ri.",
     "oldHandleKept": "Ju mbani @{{handle}} — ai lëviz në emrat tuaj të përdoruesve, dhe mund ta vishni përsëri ose ta shisni më vonë. Postimet, ndjekësit dhe kuletën tuaj nuk preken.",
-    "postsStayWithYou": "Postimet, ndjekësit dhe kuletën tuaj nuk preken."
+    "postsStayWithYou": "Postimet, ndjekësit dhe kuletën tuaj nuk preken.",
+    "title": "Emrat e përdoruesve"
   },
   "live": {
     "chatJoined": "u bashkua",
@@ -3888,5 +3891,11 @@
   },
   "fractions": {
     "title": "Pjesë"
+  },
+  "stores": {
+    "title": "Dyqanet"
+  },
+  "accounts": {
+    "title": "Llogaritë"
   }
 }
