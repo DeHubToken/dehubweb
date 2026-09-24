@@ -5919,7 +5919,8 @@
     },
     "inspector": {
       "selectHint": "Select a layer on the canvas or a clip on the timeline.",
-      "textHint": "Drag on the canvas to move, use the corners to resize. Double-click to edit the words."
+      "textHint": "Drag on the canvas to move, use the corners to resize. Double-click to edit the words.",
+      "selection": "Selection"
     },
     "layer": {
       "alignToPage": "Align to page",
@@ -6110,7 +6111,9 @@
         "title": "Meme",
         "top": "When the code works",
         "bottom": "On the first try"
-      }
+      },
+      "replaceTitle": "Replace your design?",
+      "replace": "Replace"
     },
     "design": {
       "format": "Format",
@@ -6161,6 +6164,14 @@
       "done": "Added {{count}} captions.",
       "noSpeech": "No speech found in this clip.",
       "failed": "Couldn't create captions for this clip."
+    },
+    "multi": {
+      "selected": "{{count}} layers selected",
+      "alignTogether": "Align to each other",
+      "spacing": "Even spacing",
+      "spaceHorizontal": "Space evenly across",
+      "spaceVertical": "Space evenly down",
+      "hint": "Drag any of them to move them together. Shift-click or drag a box on empty canvas to change the selection."
     }
   }
 }

@@ -11,6 +11,16 @@ import { Film, Instagram, Loader2, Monitor, Smartphone, Square } from 'lucide-re
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { TEMPLATES, applyTemplate, type EditorTemplate } from '@/lib/editor/templates';
 import { loadGoogleFont } from '@/lib/editor/googleFonts';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
 import { useEditorStore } from '@/store/editorStore';
 import { useEditorUiStore } from '@/store/editorUiStore';
@@ -81,6 +91,7 @@ export function DesignPanel() {
   const { t } = useTranslation();
   const quota = useEditorQuota();
   const [applyingId, setApplyingId] = useState<string | null>(null);
+  const [pending, setPending] = useState<EditorTemplate | null>(null);
   const settings = useEditorStore((s) => s.settings);
   const updateSettings = useEditorStore((s) => s.updateSettings);
   const clips = useEditorStore((s) => s.clips);
@@ -94,10 +105,14 @@ export function DesignPanel() {
     [updateSettings],
   );
 
-  const pickTemplate = async (template: EditorTemplate) => {
+  const pickTemplate = (template: EditorTemplate) => {
     if (applyingId) return;
-    const hasWork = useEditorStore.getState().clips.length > 0;
-    if (hasWork && !window.confirm(t('editor.templates.replaceConfirm'))) return;
+    if (useEditorStore.getState().clips.length > 0) setPending(template);
+    else void runTemplate(template);
+  };
+
+  const runTemplate = async (template: EditorTemplate) => {
+    setPending(null);
     setApplyingId(template.id);
     try {
       await applyTemplate(template, t, { wallet: quota.walletAddress });
@@ -111,10 +126,25 @@ export function DesignPanel() {
       <PanelHeading>{t('editor.templates.heading')}</PanelHeading>
       <div className="grid grid-cols-2 items-end gap-2">
         {TEMPLATES.map((tpl) => (
-          <TemplateTile key={tpl.id} template={tpl} busy={applyingId === tpl.id} onPick={() => void pickTemplate(tpl)} />
+          <TemplateTile key={tpl.id} template={tpl} busy={applyingId === tpl.id} onPick={() => pickTemplate(tpl)} />
         ))}
       </div>
       <p className="mt-2 px-0.5 text-[10px] leading-relaxed text-white/40">{t('editor.templates.hint')}</p>
+
+      <AlertDialog open={!!pending} onOpenChange={(open) => { if (!open) setPending(null); }}>
+        <AlertDialogContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('editor.templates.replaceTitle')}</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/60">{t('editor.templates.replaceConfirm')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-white/15 bg-transparent text-white hover:bg-white/10">{t('editor.export.cancel')}</AlertDialogCancel>
+            <AlertDialogAction className="bg-white text-black hover:bg-white/90" onClick={() => pending && void runTemplate(pending)}>
+              {t('editor.templates.replace')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <PanelHeading className="mt-5">{t('editor.design.format')}</PanelHeading>
       <div className="grid grid-cols-2 gap-2">

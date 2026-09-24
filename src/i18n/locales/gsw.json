@@ -3561,7 +3561,8 @@
     },
     "inspector": {
       "selectHint": "Wähle e Schicht uf em Canvas oder e Clip uf de Timeline us.",
-      "textHint": "Zieh uf em Canvas zum Verschiiebe, bruuch d Ecker zum Vergrössere/Verchlinere. Doppelklick zum Text bearbeite."
+      "textHint": "Zieh uf em Canvas zum Verschiiebe, bruuch d Ecker zum Vergrössere/Verchlinere. Doppelklick zum Text bearbeite.",
+      "selection": "Uswahl"
     },
     "layer": {
       "alignToPage": "Uf d Syte usrichte",
@@ -3752,7 +3753,9 @@
         "title": "Meme",
         "top": "Wenn de Code lauft",
         "bottom": "Scho bim erschte Mol"
-      }
+      },
+      "replaceTitle": "Dis Design ersetze?",
+      "replace": "Ersetze"
     },
     "design": {
       "format": "Format",
@@ -3803,6 +3806,14 @@
       "done": "{{count}} Untertitel dezue tue.",
       "noSpeech": "I dem Clip isch kei Sprooch gfunde worde.",
       "failed": "Für dä Clip hät mer kei Untertitel chöne mache."
+    },
+    "multi": {
+      "selected": "{{count}} Ebene usgwählt",
+      "alignTogether": "Anenand usrichte",
+      "spacing": "Glichmässige Abstand",
+      "spaceHorizontal": "Waagrächt verteile",
+      "spaceVertical": "Senkrächt verteile",
+      "hint": "Zieh eini devo, zum alli zäme verschiebe. Mit Shift-Klick oder emne Rahme ufem leere Bereich änderisch d Uswahl."
     }
   },
   "fractions": {

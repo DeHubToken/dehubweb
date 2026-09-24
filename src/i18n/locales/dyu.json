@@ -3454,7 +3454,8 @@
     },
     "inspector": {
       "selectHint": "Layɛri dɔ sugandi kanvasi kan walima klipu dɔ waati sira kan.",
-      "textHint": "A sama kanvasi kan ka a lamaga, a nɔnɔw ta ka a bonya walima ka a dɔgɔya. Digi siɲɛ fila ka kumaw yɛlɛma."
+      "textHint": "A sama kanvasi kan ka a lamaga, a nɔnɔw ta ka a bonya walima ka a dɔgɔya. Digi siɲɛ fila ka kumaw yɛlɛma.",
+      "selection": "Sugandili"
     },
     "layer": {
       "alignToPage": "A tilen ɲɛ ma",
@@ -3645,7 +3646,9 @@
         "title": "Mɛmu",
         "top": "Ni kode ye baara kɛ",
         "bottom": "Fɔlɔ fɔlɔ la"
-      }
+      },
+      "replaceTitle": "I ka dizayini falen wa?",
+      "replace": "A falen"
     },
     "design": {
       "format": "Cogoya",
@@ -3696,6 +3699,14 @@
       "done": "Sɛbɛnni {{count}} farala a kan.",
       "noSpeech": "Kuma si ma sɔrɔ nin klipu in kɔnɔ.",
       "failed": "Sɛbɛnni ma se ka dilan nin klipu in kama."
+    },
+    "multi": {
+      "selected": "Layɛri {{count}} sugandira",
+      "alignTogether": "A tilen ɲɔgɔn ma",
+      "spacing": "Yɔrɔ bɛnnen",
+      "spaceHorizontal": "A tilan bɛnnen ka kɛɲɛ",
+      "spaceVertical": "A tilan bɛnnen ka jiginni",
+      "hint": "U dɔ sama walasa ka u bɛɛ lamaga ɲɔgɔn fɛ. Shift digi ka digi walima ka bwati dɔ sama kanvasi lankolon kan walasa ka sugandili yɛlɛma."
     }
   },
   "fractions": {

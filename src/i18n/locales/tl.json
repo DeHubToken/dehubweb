@@ -5673,7 +5673,8 @@
     },
     "inspector": {
       "selectHint": "Pumili ng isang layer sa canvas o isang clip sa timeline.",
-      "textHint": "I-drag sa canvas para igalaw, gamitin ang mga kanto para baguhin ang laki. I-double-click para i-edit ang mga salita."
+      "textHint": "I-drag sa canvas para igalaw, gamitin ang mga kanto para baguhin ang laki. I-double-click para i-edit ang mga salita.",
+      "selection": "Pinili"
     },
     "layer": {
       "alignToPage": "I-align sa pahina",
@@ -5864,7 +5865,9 @@
         "title": "Meme",
         "top": "Kapag gumana ang code",
         "bottom": "Sa unang subok"
-      }
+      },
+      "replaceTitle": "Palitan ang iyong disenyo?",
+      "replace": "Palitan"
     },
     "design": {
       "format": "Format",
@@ -5915,6 +5918,14 @@
       "done": "Nagdagdag ng {{count}} caption.",
       "noSpeech": "Walang nakitang pananalita sa clip na ito.",
       "failed": "Hindi makagawa ng caption para sa clip na ito."
+    },
+    "multi": {
+      "selected": "{{count}} layer ang napili",
+      "alignTogether": "I-align sa isa't isa",
+      "spacing": "Pantay na pagitan",
+      "spaceHorizontal": "Pantayin ang pagitan pahalang",
+      "spaceVertical": "Pantayin ang pagitan pababa",
+      "hint": "I-drag ang alinman sa mga ito para sabay silang igalaw. Mag-Shift-click o mag-drag ng kahon sa bakanteng canvas para baguhin ang pinili."
     }
   },
   "walletSelector": {

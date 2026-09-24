@@ -5738,7 +5738,8 @@
     },
     "inspector": {
       "selectHint": "Kies 'n laag op die doek of 'n snit op die tydlyn.",
-      "textHint": "Sleep op die doek om te skuif, gebruik die hoeke om te verander. Dubbelklik om die woorde te wysig."
+      "textHint": "Sleep op die doek om te skuif, gebruik die hoeke om te verander. Dubbelklik om die woorde te wysig.",
+      "selection": "Seleksie"
     },
     "layer": {
       "alignToPage": "Belyn met bladsy",
@@ -5929,7 +5930,9 @@
         "title": "Meme",
         "top": "Wanneer die kode werk",
         "bottom": "Met die eerste probeerslag"
-      }
+      },
+      "replaceTitle": "Vervang jou ontwerp?",
+      "replace": "Vervang"
     },
     "design": {
       "format": "Formaat",
@@ -5980,6 +5983,14 @@
       "done": "{{count}} onderskrifte bygevoeg.",
       "noSpeech": "Geen spraak in hierdie snit gevind nie.",
       "failed": "Kon nie onderskrifte vir hierdie snit skep nie."
+    },
+    "multi": {
+      "selected": "{{count}} lae gekies",
+      "alignTogether": "Belyn met mekaar",
+      "spacing": "Eweredige spasiëring",
+      "spaceHorizontal": "Versprei eweredig oor",
+      "spaceVertical": "Versprei eweredig af",
+      "hint": "Sleep enige van hulle om hulle saam te skuif. Shift-klik of sleep 'n blok op leë doek om die seleksie te verander."
     }
   },
   "footer": {

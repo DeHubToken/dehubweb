@@ -3623,7 +3623,8 @@
     },
     "inspector": {
       "selectHint": "Lienzopi huk capata utaq pacha siqipi huk clipta akllay.",
-      "textHint": "Lienzopi aysay kuyuchinapaq, k'uchukunata llamk'achiy sayayninta tikranapaq. Iskay kutita ñit'iy simikunata allichanapaq."
+      "textHint": "Lienzopi aysay kuyuchinapaq, k'uchukunata llamk'achiy sayayninta tikranapaq. Iskay kutita ñit'iy simikunata allichanapaq.",
+      "selection": "Akllasqa"
     },
     "layer": {
       "alignToPage": "P'anqaman churay",
@@ -3814,7 +3815,9 @@
         "title": "Meme",
         "top": "Codigo llamk'aqtin",
         "bottom": "Ñawpaq kaqpi"
-      }
+      },
+      "replaceTitle": "¿Diseñoykita tikranki?",
+      "replace": "Tikray"
     },
     "design": {
       "format": "Formato",
@@ -3865,6 +3868,14 @@
       "done": "{{count}} subtítulos yapasqa.",
       "noSpeech": "Kay clippi mana rimay tarikunchu.",
       "failed": "Mana atikurqanchu kay clippaq subtítulosta ruwayta."
+    },
+    "multi": {
+      "selected": "{{count}} capakuna akllasqa",
+      "alignTogether": "Paykunapura siqichay",
+      "spacing": "Kaqlla karuyay",
+      "spaceHorizontal": "Kaqllata chiqan siqipi rakiy",
+      "spaceVertical": "Kaqllata sayaq siqipi rakiy",
+      "hint": "Mayqintapas aysay tukuyninta kuska kuyuchinaykipaq. Akllasqata tikranaykipaq Shift-clic ruway utaq ch'usaq lienzopi huk cajata aysay."
     }
   },
   "fractions": {

@@ -5800,7 +5800,8 @@
     },
     "inspector": {
       "selectHint": "Odaberite sloj na platnu ili isječak na vremenskoj crti.",
-      "textHint": "Povucite na platnu za pomicanje, koristite kutove za promjenu veličine. Dvaput kliknite za uređivanje teksta."
+      "textHint": "Povucite na platnu za pomicanje, koristite kutove za promjenu veličine. Dvaput kliknite za uređivanje teksta.",
+      "selection": "Odabir"
     },
     "layer": {
       "alignToPage": "Poravnaj na stranicu",
@@ -5991,7 +5992,9 @@
         "title": "Mem",
         "top": "Kad kod radi",
         "bottom": "Iz prve"
-      }
+      },
+      "replaceTitle": "Zamijeniti vaš dizajn?",
+      "replace": "Zamijeni"
     },
     "design": {
       "format": "Format",
@@ -6042,6 +6045,14 @@
       "done": "Dodano titlova: {{count}}.",
       "noSpeech": "U ovom isječku nije pronađen govor.",
       "failed": "Nije moguće izraditi titlove za ovaj isječak."
+    },
+    "multi": {
+      "selected": "Odabrano slojeva: {{count}}",
+      "alignTogether": "Poravnaj međusobno",
+      "spacing": "Jednak razmak",
+      "spaceHorizontal": "Rasporedi vodoravno",
+      "spaceVertical": "Rasporedi okomito",
+      "hint": "Povucite bilo koji da ih pomaknete zajedno. Shift+klik ili povucite okvir na praznom platnu za promjenu odabira."
     }
   }
 }

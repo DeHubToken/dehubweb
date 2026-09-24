@@ -3607,7 +3607,8 @@
     },
     "inspector": {
       "selectHint": "Kanvasdagi qatlamni yoki vaqt shkalasidagi klipni tanlang.",
-      "textHint": "Ko'chirish uchun kanvasda sudrab boring, o'lchamini o'zgartirish uchun burchaklardan foydalaning. Matnlarni tahrirlash uchun ikki marta bosing."
+      "textHint": "Ko'chirish uchun kanvasda sudrab boring, o'lchamini o'zgartirish uchun burchaklardan foydalaning. Matnlarni tahrirlash uchun ikki marta bosing.",
+      "selection": "Tanlov"
     },
     "layer": {
       "alignToPage": "Sahifaga tekislash",
@@ -3798,7 +3799,9 @@
         "title": "Mem",
         "top": "Kod ishlaganda",
         "bottom": "Birinchi urinishdayoq"
-      }
+      },
+      "replaceTitle": "Dizayningiz almashtirilsinmi?",
+      "replace": "Almashtirish"
     },
     "design": {
       "format": "Format",
@@ -3849,6 +3852,14 @@
       "done": "{{count}} ta subtitr qo‘shildi.",
       "noSpeech": "Bu klipda nutq topilmadi.",
       "failed": "Bu klip uchun subtitr yaratib bo‘lmadi."
+    },
+    "multi": {
+      "selected": "{{count}} ta qatlam tanlandi",
+      "alignTogether": "Bir-biriga tekislash",
+      "spacing": "Teng oraliq",
+      "spaceHorizontal": "Gorizontal teng taqsimlash",
+      "spaceVertical": "Vertikal teng taqsimlash",
+      "hint": "Hammasini birga siljitish uchun istalgan birini torting. Tanlovni o'zgartirish uchun Shift bilan bosing yoki bo'sh kanvasda ramka torting."
     }
   },
   "spaces": {

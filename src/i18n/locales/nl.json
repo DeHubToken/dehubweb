@@ -6068,7 +6068,8 @@
     },
     "inspector": {
       "selectHint": "Selecteer een laag op het canvas of een clip op de tijdlijn.",
-      "textHint": "Sleep op het canvas om te verplaatsen, gebruik de hoeken om te vergroten/verkleinen. Dubbelklik om de tekst te bewerken."
+      "textHint": "Sleep op het canvas om te verplaatsen, gebruik de hoeken om te vergroten/verkleinen. Dubbelklik om de tekst te bewerken.",
+      "selection": "Selectie"
     },
     "layer": {
       "alignToPage": "Uitlijnen op pagina",
@@ -6259,7 +6260,9 @@
         "title": "Meme",
         "top": "Als de code werkt",
         "bottom": "In één keer"
-      }
+      },
+      "replaceTitle": "Je ontwerp vervangen?",
+      "replace": "Vervangen"
     },
     "design": {
       "format": "Formaat",
@@ -6310,6 +6313,14 @@
       "done": "{{count}} ondertitels toegevoegd.",
       "noSpeech": "Geen spraak gevonden in deze clip.",
       "failed": "Kon geen ondertitels maken voor deze clip."
+    },
+    "multi": {
+      "selected": "{{count}} lagen geselecteerd",
+      "alignTogether": "Ten opzichte van elkaar uitlijnen",
+      "spacing": "Gelijke afstand",
+      "spaceHorizontal": "Horizontaal verdelen",
+      "spaceVertical": "Verticaal verdelen",
+      "hint": "Sleep een van hen om ze samen te verplaatsen. Shift-klik of sleep een kader op leeg canvas om de selectie te wijzigen."
     }
   },
   "glossary": {

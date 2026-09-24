@@ -5913,7 +5913,8 @@
     },
     "inspector": {
       "selectHint": "Wähle eine Ebene auf der Leinwand oder einen Clip in der Zeitleiste aus.",
-      "textHint": "Ziehe auf der Leinwand, um zu verschieben, verwende die Ecken zum Ändern der Größe. Doppelklicke, um den Text zu bearbeiten."
+      "textHint": "Ziehe auf der Leinwand, um zu verschieben, verwende die Ecken zum Ändern der Größe. Doppelklicke, um den Text zu bearbeiten.",
+      "selection": "Auswahl"
     },
     "layer": {
       "alignToPage": "An Seite ausrichten",
@@ -6104,7 +6105,9 @@
         "title": "Meme",
         "top": "Wenn der Code läuft",
         "bottom": "Beim ersten Versuch"
-      }
+      },
+      "replaceTitle": "Dein Design ersetzen?",
+      "replace": "Ersetzen"
     },
     "design": {
       "format": "Format",
@@ -6155,6 +6158,14 @@
       "done": "{{count}} Untertitel hinzugefügt.",
       "noSpeech": "In diesem Clip wurde keine Sprache erkannt.",
       "failed": "Für diesen Clip konnten keine Untertitel erstellt werden."
+    },
+    "multi": {
+      "selected": "{{count}} Ebenen ausgewählt",
+      "alignTogether": "Aneinander ausrichten",
+      "spacing": "Gleichmäßiger Abstand",
+      "spaceHorizontal": "Horizontal verteilen",
+      "spaceVertical": "Vertikal verteilen",
+      "hint": "Zieh eine davon, um alle gemeinsam zu verschieben. Mit Umschalt-Klick oder einem Rahmen auf der leeren Fläche änderst du die Auswahl."
     }
   }
 }
