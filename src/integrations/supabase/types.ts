@@ -617,6 +617,27 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_free_generations: {
+        Row: {
+          created_at: string
+          job_id: string
+          model: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          job_id: string
+          model: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          job_id?: string
+          model?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       ai_generation_jobs: {
         Row: {
           created_at: string
@@ -6687,6 +6708,15 @@ export type Database = {
           p_viewer_wallet: string
         }
         Returns: Json
+      }
+      ai_free_claim: {
+        Args: {
+          p_job_id: string
+          p_limit: number
+          p_model: string
+          p_wallet: string
+        }
+        Returns: boolean
       }
       ai_job_spend: {
         Args: {
