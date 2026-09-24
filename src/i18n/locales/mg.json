@@ -3882,7 +3882,11 @@
     "vaultReleaseBody": "Miverina ao anaty dobo izy ary azon'iza na iza raisina. Tsy misy fanafoanana, ary ny fividianana azy indray dia hitentina izay angatahin'ny tompony vaovao.",
     "oldHandleKept": "Mitahiry an'i @{{handle}} ianao — mifindra any amin'ny anaran'mpampiasanao izy io, ary azonao ampiasaina indray na amidy any aoriana. Tsy voakitika ny lahatsoratrao, ny mpanaraka ary ny poketrafidiram-bolanao.",
     "postsStayWithYou": "Tsy voakitika ny lahatsoratrao, ny mpanaraka ary ny poketrafidiram-bolanao.",
-    "title": "Anaram-pampiasa"
+    "title": "Anaram-pampiasa",
+    "addedToYourUsernames": "Ampiana amin'ny anaranao mpampiasa",
+    "boughtNameGoesToVault": "Mijanona ho @{{current}} ianao. Miditra ao amin'ny anaranao mpampiasa i @{{handle}}, ary afaka mifindra aminy ianao amin'izay tianao.",
+    "youAreNow": "Ianao izao dia @{{handle}}",
+    "boughtToVaultToast": "Ao amin'ny anaranao mpampiasa izao i @{{handle}}"
   },
   "accounts": {
     "seoTitle": "Momba ny kaonty ¢ Wondershare",

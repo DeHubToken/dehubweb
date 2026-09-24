@@ -2427,7 +2427,11 @@
     "vaultReleaseBody": "Iki bakal bali menyang kumpulan lan sapa wae bisa njupuk. Ora bisa dibalekake, lan tuku maneh bakal regane kaya sing dijaluk dening pemilik anyar.",
     "oldHandleKept": "Sampeyan tetep @{{handle}} — iki pindhah menyang jeneng pangguna, lan sampeyan bisa nganggo maneh utawa ngedol mengko. Kiriman, pengikut, lan dompetmu ora keganggu.",
     "postsStayWithYou": "Kiriman, pengikut, lan dompetmu ora keganggu.",
-    "title": "Jeneng Panganggo"
+    "title": "Jeneng Panganggo",
+    "addedToYourUsernames": "Ditambahake menyang jeneng panganggo sampeyan",
+    "boughtNameGoesToVault": "Sampeyan tetep @{{current}}. @{{handle}} mlebu ing jeneng panganggo sampeyan, lan sampeyan bisa ngalih kapan wae.",
+    "youAreNow": "Saiki sampeyan @{{handle}}",
+    "boughtToVaultToast": "@{{handle}} saiki ana ing jeneng panganggo sampeyan"
   },
   "live": {
     "chatJoined": "gabung",

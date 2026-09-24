@@ -2408,7 +2408,11 @@
     "vaultReleaseBody": "Er gaht zrugg i Pool und jeder chan ihn näh. Es git kei Rückgängig, und wenn du ihn zrugg chaufsch, chostet er, was de neue Besitzer verlangt.",
     "oldHandleKept": "Du behaltsch @{{handle}} – er gaht i din Username, und du chasch ihn wieder trage oder spöter verkaufe. Posts, Follower und din Wallet bliibe unberührt.",
     "postsStayWithYou": "Posts, Follower und din Wallet bliibe unberührt.",
-    "title": "Benutzernäme"
+    "title": "Benutzernäme",
+    "addedToYourUsernames": "Wird zu dine Benutzernäme hinzuegfüegt",
+    "boughtNameGoesToVault": "Du bliibsch @{{current}}. @{{handle}} chunnt zu dine Benutzernäme, und du chasch jederziit druf wächsle.",
+    "youAreNow": "Du bisch jetzt @{{handle}}",
+    "boughtToVaultToast": "@{{handle}} isch jetzt bi dine Benutzernäme"
   },
   "live": {
     "chatJoined": "isch bitrete",

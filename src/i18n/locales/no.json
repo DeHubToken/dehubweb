@@ -2435,7 +2435,11 @@
     "vaultReleaseBody": "Det går tilbake i puljen, og hvem som helst kan ta det. Det er ingen angre, og å kjøpe det tilbake ville koste det den nye eieren ber om.",
     "oldHandleKept": "Du beholder @{{handle}} — det flyttes inn i brukernavnene dine, og du kan bruke det igjen eller selge det senere. Innlegg, følgere og lommeboken din er urørt.",
     "postsStayWithYou": "Innlegg, følgere og lommeboken din er urørt.",
-    "title": "Brukernavn"
+    "title": "Brukernavn",
+    "addedToYourUsernames": "Legges til brukernavnene dine",
+    "boughtNameGoesToVault": "Du forblir @{{current}}. @{{handle}} havner blant brukernavnene dine, og du kan bytte til det når du vil.",
+    "youAreNow": "Du er nå @{{handle}}",
+    "boughtToVaultToast": "@{{handle}} er nå blant brukernavnene dine"
   },
   "live": {
     "chatJoined": "ble med",

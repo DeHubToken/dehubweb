@@ -2175,7 +2175,11 @@
     "vaultEditListing": "Edit listing",
     "vaultRelease": "Release",
     "vaultReleaseTitle": "Release @{{handle}}?",
-    "title": "Username dem"
+    "title": "Username dem",
+    "addedToYourUsernames": "E go join your usernames",
+    "boughtNameGoesToVault": "You go still be @{{current}}. @{{handle}} go join your usernames, and you fit change to am any time you want.",
+    "youAreNow": "You done be @{{handle}} now",
+    "boughtToVaultToast": "@{{handle}} dey inside your usernames now"
   },
   "live": {
     "chatJoined": "don join",

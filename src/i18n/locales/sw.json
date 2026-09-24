@@ -4118,7 +4118,11 @@
     "vaultReleaseTitle": "Achilia @{{handle}}?",
     "vaultReleaseBody": "Inarudi kwenye mfumo na mtu yeyote anaweza kulichukua. Hakuna kurudi nyuma, na kulirudisha kungegharimu chochote ambacho mmiliki mpya anaomba.",
     "oldHandleKept": "Unahifadhi @{{handle}} — linaingia kwenye majina yako ya watumiaji, na unaweza kulitumia tena au kuliuza baadaye. Machapisho, wafuasi na pochi yako haviguswi.",
-    "postsStayWithYou": "Machapisho, wafuasi na pochi yako haviguswi."
+    "postsStayWithYou": "Machapisho, wafuasi na pochi yako haviguswi.",
+    "addedToYourUsernames": "Linaongezwa kwenye majina yako ya mtumiaji",
+    "boughtNameGoesToVault": "Unabaki kuwa @{{current}}. @{{handle}} linaingia kwenye majina yako ya mtumiaji, na unaweza kubadilisha kwenda kwake wakati wowote.",
+    "youAreNow": "Sasa wewe ni @{{handle}}",
+    "boughtToVaultToast": "@{{handle}} sasa liko kwenye majina yako ya mtumiaji"
   },
   "accounts": {
     "seoTitle": "Soko la Akaunti — DeHub",
