@@ -3419,7 +3419,11 @@
     "vaultReleaseBody": "دەگەڕێتەوە بۆ کۆمەڵەکە و هەر کەسێک دەتوانێت بیگرێت. هیچ گەڕانەوەی نییە، و کڕینەوەی بەو نرخە دەبێت کە خاوەنی نوێ داوای دەکات.",
     "oldHandleKept": "تۆ @{{handle}} دەهێڵیتەوە — دەچێتە ناو ناوەکانی بەکارهێنەری، و دەتوانیت دووبارەی بکەیتەوە یان دواتر بیفرۆشیت. پۆستەکان، شوێنکەوتووان و پارەدانیت بێ ھیچ گۆڕانکارییەک.",
     "postsStayWithYou": "پۆستەکان، شوێنکەوتووان و پارەدانیت بێ ھیچ گۆڕانکارییەک.",
-    "title": "ناوی بەکارهێنەران"
+    "title": "ناوی بەکارهێنەران",
+    "addedToYourUsernames": "Li navên bikarhêner ên te tê zêdekirin",
+    "boughtNameGoesToVault": "Tu @{{current}} dimînî. @{{handle}} dikeve nav navên bikarhêner ên te, û tu dikarî kengî bixwazî derbasî wê bibî.",
+    "youAreNow": "Tu niha @{{handle}} î",
+    "boughtToVaultToast": "@{{handle}} niha di navên bikarhêner ên te de ye"
   },
   "accounts": {
     "seoTitle": "بازاڕی هەژمار - DeHub",

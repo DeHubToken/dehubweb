@@ -2471,7 +2471,11 @@
     "vaultReleaseBody": "Ibuyela echibini futhi noma ubani angayithatha. Akukho ukubuyisa emuva, futhi ukuyithenga futhi kungabiza noma yini umnikazi omusha ayicelayo.",
     "oldHandleKept": "Uhlala uyi-@{{handle}} — ingena kumagama akho omsebenzisi, futhi ungayigqoka futhi noma uyithengise kamuva. Okuthunyelwe, abalandeli, kanye ne-wallet yakho akuthintwa.",
     "postsStayWithYou": "Okuthunyelwe, abalandeli, kanye ne-wallet yakho akuthintwa.",
-    "title": "Amagama Omsebenzisi"
+    "title": "Amagama Omsebenzisi",
+    "addedToYourUsernames": "Kwengezwa kumagama akho omsebenzisi",
+    "boughtNameGoesToVault": "Uhlala ungu-@{{current}}. U-@{{handle}} ungena kumagama akho omsebenzisi, futhi ungashintshela kuye noma nini lapho ufuna.",
+    "youAreNow": "Manje ungu-@{{handle}}",
+    "boughtToVaultToast": "U-@{{handle}} manje usemagameni akho omsebenzisi"
   },
   "live": {
     "chatJoined": "ujoyinile",

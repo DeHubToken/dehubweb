@@ -2392,7 +2392,11 @@
     "vaultReleaseBody": "ናብ ገንዳ ተመሊሱ ፡ ዝኾነ ሰብ ክወስዶ ይኽእል እዩ ። እቲ ሓድሽ ገዛኢ ዚሓትት ዘበለ ኺዕድግ እዩ ዚኸፍል ።",
     "oldHandleKept": "{{handle}} — ናብ ስም ተጠቃሚኻ ይንቀሳቐስ ፣ እንደገና ክትለብስ ወይ ጸኒሕካ ክትሸጦ ትኽእል ኢኻ ። ልኡኻት ፡ ሰዓብትን ቦርሳኻን ኣይጠፍኡን እዮም ።",
     "postsStayWithYou": "ጽሑፋትኩም፡ ተከታተልቲኩምን ኪስኩምን ኣይነ kun ኔሩ።",
-    "title": "ስማት ተጠቃሚ"
+    "title": "ስማት ተጠቃሚ",
+    "addedToYourUsernames": "ናብ ናይ ተጠቃሚ ስማትካ ይውሰኽ",
+    "boughtNameGoesToVault": "@{{current}} ኮይንካ ትቕጽል። @{{handle}} ናብ ናይ ተጠቃሚ ስማትካ ይኣቱ፣ ኣብ ዝደለኻዮ እዋን ናብኡ ክትቕይር ትኽእል።",
+    "youAreNow": "ሕጂ @{{handle}} ኢኻ",
+    "boughtToVaultToast": "@{{handle}} ሕጂ ኣብ ናይ ተጠቃሚ ስማትካ ኣሎ"
   },
   "live": {
     "chatJoined": "ተጸንበረ",
