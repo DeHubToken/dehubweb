@@ -46,7 +46,8 @@
     "creators": "შემქმნელები",
     "getTheApp": "აპლიკაციის ჩამოტვირთვა",
     "connectAi": "AI-ის დაკავშირება",
-    "converter": "გადამყვანი"
+    "converter": "გადამყვანი",
+    "affiliate": "პარტნიორი"
   },
   "feed": {
     "viewProfile": "{{name}}-ის პროფილის ნახვა",

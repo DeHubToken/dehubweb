@@ -46,7 +46,8 @@
     "creators": "Loojad",
     "getTheApp": "Hangi rakendus",
     "connectAi": "Ühenda AI",
-    "converter": "Konverter"
+    "converter": "Konverter",
+    "affiliate": "Partnerid"
   },
   "feed": {
     "viewProfile": "Vaata kasutaja {{name}} profiili",

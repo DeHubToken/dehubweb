@@ -46,7 +46,8 @@
     "creators": "Mga creator",
     "getTheApp": "Kunin ang app",
     "connectAi": "Ikonekta ang AI",
-    "converter": "wala"
+    "converter": "wala",
+    "affiliate": "Affiliate"
   },
   "feed": {
     "viewProfile": "Tingnan ang profile ni {{name}}",
@@ -3849,7 +3850,7 @@
   "usernames": {
     "seoTitle": "Username Marketplace | DeHub",
     "seoDescription": "Bumili at magbenta ng mga username ng DeHub sa DHB. Maghanap ng maikli, numeric at orihinal na mga hawakan para sa pagbebenta, o ilista ang iyong sarili — ang paglipat ay nangyayari on - chain sa sandali ng pagbabayad clears.",
-    "title": "- Mga Username",
+    "title": "Mga Username",
     "subtitle": "Mga hawakan para sa pagbebenta, presyo sa USD",
     "tabBrowse": "Mag-browse",
     "tabSell": "Magbenta",

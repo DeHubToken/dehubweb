@@ -45,6 +45,7 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   Staking: 'nav.staking',
   SuperPowers: 'superpowers.title',
   Governance: 'nav.governance',
+  DAO: 'nav.dao',
   Leaderboard: 'nav.leaderboard',
   Bookmarks: 'nav.bookmarks',
   Settings: 'nav.settings',

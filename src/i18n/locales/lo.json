@@ -46,7 +46,8 @@
     "creators": "ຜູ້ສ້າງ",
     "getTheApp": "ດາວໂຫຼດແອັບ",
     "connectAi": "ເຊື່ອມຕໍ່ AI",
-    "converter": "ລະຫັດ QR"
+    "converter": "ລະຫັດ QR",
+    "affiliate": "ພັນທະມິດ"
   },
   "feed": {
     "viewProfile": "ເບິ່ງໂປຣໄຟລ໌ຂອງ {{name}}",
@@ -2438,7 +2439,8 @@
     "fromYourWalletNow": "— ຈາກກະເປົາເງິນຂອງທ່ານ, ດຽວນີ້, ເປັນສ່ວນໜຶ່ງຂອງການແກ້ໄຂ.",
     "disputeTotal": "ລວມ: {{total}} / {{remaining}} {{currency}}",
     "resolveAndPay": "ແກ້ໄຂ & ຈ່າຍ",
-    "resolve": "ແກ້ໄຂ"
+    "resolve": "ແກ້ໄຂ",
+    "title": "ລາງວັນ"
   },
   "stores": {
     "title": "ຮ້ານຄ້າ",

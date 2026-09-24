@@ -46,7 +46,8 @@
     "creators": "Criadores",
     "getTheApp": "Baixar o app",
     "connectAi": "Conectar IA",
-    "converter": "Conversor"
+    "converter": "Conversor",
+    "affiliate": "Afiliados"
   },
   "feed": {
     "viewProfile": "Ver o perfil de {{name}}",

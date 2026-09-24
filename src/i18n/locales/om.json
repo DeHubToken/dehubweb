@@ -46,7 +46,8 @@
     "creators": "Uumtota",
     "getTheApp": "Aappilikeeshinii argadhu",
     "connectAi": "AI walqunnamsiisi",
-    "converter": "Jijjiirraa"
+    "converter": "Jijjiirraa",
+    "affiliate": "Michuu"
   },
   "feed": {
     "viewProfile": "{{name}}'s profile ilaali",
@@ -2377,7 +2378,8 @@
     "goldenHourStarted": "Sa'aatii Warqee {{minutes}} daqiiqaa fiigachaa jira — amma wanti hundumaa maxxansituu lama siif ta'a"
   },
   "work": {
-    "budgetExhausted": "Baajata badhaasa kanaa guutummaatti ramadameera."
+    "budgetExhausted": "Baajata badhaasa kanaa guutummaatti ramadameera.",
+    "title": "Badhaasa"
   },
   "stages": {
     "title": "Sadarkaalee"
@@ -2453,7 +2455,8 @@
     "vaultReleaseTitle": "{{handle}} gad lakkisuu?",
     "vaultReleaseBody": "Bishaanitti deebi'ee namni kamiyyuu fudhachuu danda'a. Deebi'uu hin qabu, fi isaa deebifachuun gatii isa bilchinaan bitatuu barbaaduu siif jira.",
     "oldHandleKept": "Ati @{{handle}} qabachaa jiraachuu dandeessa — mata duree kee keessa galuu fi yoo fedde deebistee itti fayyadamuu ykn gurguruu dandeessa. Barreessitoonni, hordoftoonni fi saanduqni kee hin tuqaman.",
-    "postsStayWithYou": "Barreessitoonni, hordoftoonni fi saanduqni kee hin tuqaman."
+    "postsStayWithYou": "Barreessitoonni, hordoftoonni fi saanduqni kee hin tuqaman.",
+    "title": "Maqaalee Fayyadamaa"
   },
   "stories": {
     "addStory": "Odeeffannoo Ida'i",
@@ -3915,5 +3918,11 @@
   },
   "fractions": {
     "title": "Qooda"
+  },
+  "stores": {
+    "title": "Suuqota"
+  },
+  "accounts": {
+    "title": "Herregawwan"
   }
 }

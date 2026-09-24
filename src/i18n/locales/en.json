@@ -46,7 +46,8 @@
     "creators": "Creators",
     "getTheApp": "Get the App",
     "connectAi": "Connect AI",
-    "converter": "Converter"
+    "converter": "Converter",
+    "affiliate": "Affiliate"
   },
   "feed": {
     "viewProfile": "View {{name}}'s profile",

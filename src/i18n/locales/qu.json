@@ -46,7 +46,8 @@
     "creators": "Ruraqkuna",
     "getTheApp": "App-ta hap'iy",
     "connectAi": "IA-wan t'inkiy",
-    "converter": "Tikraq"
+    "converter": "Tikraq",
+    "affiliate": "Yanapaq"
   },
   "feed": {
     "viewProfile": "{{name}} pa perfilninta qhaway",
@@ -2395,7 +2396,8 @@
     "goldenHourStarted": "Golden Hourqa {{minutes}} minutokama purichkan — imaymana kaqniyki kunan iskaychayta atikun"
   },
   "work": {
-    "budgetExhausted": "Kay t'inkap qullqin tukuyta rakisqaña."
+    "budgetExhausted": "Kay t'inkap qullqin tukuyta rakisqaña.",
+    "title": "Premiokuna"
   },
   "stages": {
     "title": "Etapas"
@@ -2471,7 +2473,8 @@
     "vaultReleaseTitle": "{{handle}} saqeruyta?",
     "vaultReleaseBody": "Chayqa hunt'ayman kutimunqa, mayqanpas hap'iyta atinqa. Mana kutiyta atinchu, chaytañataq rantiykuyqa chay musuq kamachiq munayninmanmi.",
     "oldHandleKept": "Qanqa {{handle}} hap'inki — payqa sutiynikikunaman haykun, chayta atiknkiñataq kutimuyta llamk'achiyta utaq qhipaman rantikuyta. Qillqasqayki, qatiqniyki, qanpa qolqiykiqa mana imapas t'ikrakunñachu.",
-    "postsStayWithYou": "Qillqasqayki, qatiqniyki, qanpa qolqiykiqa mana imapas t'ikrakunñachu."
+    "postsStayWithYou": "Qillqasqayki, qatiqniyki, qanpa qolqiykiqa mana imapas t'ikrakunñachu.",
+    "title": "Ruraqpa sutinkuna"
   },
   "live": {
     "chatJoined": "yaykurqan",
@@ -3903,5 +3906,11 @@
   },
   "fractions": {
     "title": "Rakikuna"
+  },
+  "stores": {
+    "title": "Qhatukuna"
+  },
+  "accounts": {
+    "title": "Kuentakuna"
   }
 }

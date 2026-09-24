@@ -46,7 +46,8 @@
     "creators": "ಕ್ರಿಯೇಟರ್‌ಗಳು",
     "getTheApp": "ಆ್ಯಪ್ ಪಡೆಯಿರಿ",
     "connectAi": "AI ಸಂಪರ್ಕಿಸಿ",
-    "converter": "ಪರಿವರ್ತಕ"
+    "converter": "ಪರಿವರ್ತಕ",
+    "affiliate": "ಅಫಿಲಿಯೇಟ್"
   },
   "feed": {
     "viewProfile": "{{name}} ರ ಪ್ರೊಫೈಲ್ ಅನ್ನು ವೀಕ್ಷಿಸಿ",
@@ -2521,7 +2522,8 @@
     "fromYourWalletNow": "— ನಿಮ್ಮ ವಾಲೆಟ್‌ನಿಂದ, ಈಗ, ಪರಿಹರಿಸುವ ಭಾಗವಾಗಿ.",
     "disputeTotal": "ಒಟ್ಟು: {{total}} / {{remaining}} {{currency}}",
     "resolveAndPay": "ಪರಿಹರಿಸಿ ಮತ್ತು ಪಾವತಿಸಿ",
-    "resolve": "ಪರಿಹರಿಸಿ"
+    "resolve": "ಪರಿಹರಿಸಿ",
+    "title": "ಬಹುಮಾನಗಳು"
   },
   "stores": {
     "title": "ಸ್ಟೋರ್‌ಗಳು",

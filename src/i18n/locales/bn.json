@@ -46,7 +46,8 @@
     "creators": "নির্মাতা",
     "getTheApp": "অ্যাপ নিন",
     "connectAi": "AI সংযোগ করুন",
-    "converter": "কনভার্টার"
+    "converter": "কনভার্টার",
+    "affiliate": "অ্যাফিলিয়েট"
   },
   "feed": {
     "viewProfile": "{{name}} এর প্রোফাইল দেখুন",

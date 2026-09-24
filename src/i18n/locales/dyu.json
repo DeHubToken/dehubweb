@@ -46,7 +46,8 @@
     "creators": "Dilanbagaw",
     "getTheApp": "Porogaramu sɔrɔ",
     "connectAi": "AI jɛnsɛn",
-    "converter": "Ka yɛlɛma"
+    "converter": "Ka yɛlɛma",
+    "affiliate": "Jɛɲɔgɔnya"
   },
   "feed": {
     "viewProfile": "{{name}} ka profil kɔrɔbɔ",
@@ -2314,7 +2315,8 @@
     "goldenHourStarted": "Golden Hour 跑 {{minutes}} 分钟 — 你现在发布的每一条内容都将获得双倍计数"
   },
   "work": {
-    "budgetExhausted": "Nafolo nin ka wari bɛɛ dilala ka ban."
+    "budgetExhausted": "Nafolo nin ka wari bɛɛ dilala ka ban.",
+    "title": "Saraw"
   },
   "stages": {
     "title": "Fangaw"
@@ -2390,7 +2392,8 @@
     "vaultReleaseTitle": "Release @{{handle}}?",
     "vaultReleaseBody": "A be taga kɔlɔn kɔnɔ ani mɔgɔ o mɔgɔ be se k'a ta. O kama, a tun man nɔgɔ ka wari caaman sɔrɔ.",
     "oldHandleKept": "I be {{handle}} — a be don i tɔgɔ la, i be se k'a don tugun wala k'a feere kɔfɛ. I ka lɛtɛrɛw, i ka kalandenw ani i ka warifaniw ma maga mɔgɔ si la.",
-    "postsStayWithYou": "I ka lɛtɛrɛw, i ka kalandenw ani i ka warifaniw ma maga mɔgɔ si la."
+    "postsStayWithYou": "I ka lɛtɛrɛw, i ka kalandenw ani i ka warifaniw ma maga mɔgɔ si la.",
+    "title": "Tɔgɔw"
   },
   "live": {
     "chatJoined": "donna",
@@ -3734,5 +3737,11 @@
   },
   "fractions": {
     "title": "Tilaw"
+  },
+  "stores": {
+    "title": "Butikiw"
+  },
+  "accounts": {
+    "title": "Jatebolow"
   }
 }

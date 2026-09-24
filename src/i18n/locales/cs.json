@@ -46,7 +46,8 @@
     "creators": "Tvůrci",
     "getTheApp": "Stáhnout aplikaci",
     "connectAi": "Připojit AI",
-    "converter": "Konvertor"
+    "converter": "Konvertor",
+    "affiliate": "Partnerský program"
   },
   "feed": {
     "viewProfile": "Zobrazit profil uživatele {{name}}",

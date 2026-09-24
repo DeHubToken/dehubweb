@@ -46,7 +46,8 @@
     "creators": "निर्माते",
     "getTheApp": "अ‍ॅप मिळवा",
     "connectAi": "AI जोडा",
-    "converter": "कन्व्हर्टर"
+    "converter": "कन्व्हर्टर",
+    "affiliate": "अ‍ॅफिलिएट"
   },
   "feed": {
     "viewProfile": "{{name}} चे प्रोफाइल पहा",
@@ -2521,7 +2522,8 @@
     "fromYourWalletNow": "— तुमच्या वॉलेटमधून, आता, सोडवण्याचा भाग म्हणून.",
     "disputeTotal": "एकूण: {{total}} / {{remaining}} {{currency}}",
     "resolveAndPay": "सोडवा आणि पेमेंट करा",
-    "resolve": "सोडवा"
+    "resolve": "सोडवा",
+    "title": "बक्षिसे"
   },
   "stores": {
     "title": "स्टोर्स",

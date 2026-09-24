@@ -46,7 +46,8 @@
     "creators": "Авторы",
     "getTheApp": "Скачать приложение",
     "connectAi": "Подключить ИИ",
-    "converter": "Преобразователь"
+    "converter": "Преобразователь",
+    "affiliate": "Партнёрка"
   },
   "feed": {
     "viewProfile": "Посмотреть профиль {{name}}",

@@ -46,7 +46,8 @@
     "creators": "Twórcy",
     "getTheApp": "Pobierz aplikację",
     "connectAi": "Podłącz AI",
-    "converter": "Przetwornik"
+    "converter": "Przetwornik",
+    "affiliate": "Program partnerski"
   },
   "feed": {
     "viewProfile": "Wyświetl profil użytkownika {{name}}",

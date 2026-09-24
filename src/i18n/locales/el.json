@@ -42,7 +42,8 @@
     "creators": "Δημιουργοί",
     "getTheApp": "Κατεβάστε την εφαρμογή",
     "connectAi": "Σύνδεση AI",
-    "converter": "Μετατροπέας"
+    "converter": "Μετατροπέας",
+    "affiliate": "Συνεργάτες"
   },
   "feed": {
     "viewProfile": "Προβολή προφίλ του/της {{name}}",

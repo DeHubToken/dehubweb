@@ -51,7 +51,8 @@
     "creators": "ครีเอเตอร์",
     "getTheApp": "ดาวน์โหลดแอป",
     "connectAi": "เชื่อมต่อ AI",
-    "converter": "ตัวแปลงกระแสไฟฟ้า"
+    "converter": "ตัวแปลงกระแสไฟฟ้า",
+    "affiliate": "พันธมิตร"
   },
   "feed": {
     "viewProfile": "ดูโปรไฟล์ของ {{name}}",
