@@ -4101,7 +4101,11 @@
     "vaultReleaseTitle": "Atbrīvot @{{handle}}?",
     "vaultReleaseBody": "Tas atgriežas kopējā pieejamībā, un ikviens to var paņemt. Atcelšanas nav, un, lai to atpirktu, jums būs jāmaksā tik, cik prasīs jaunais īpašnieks.",
     "oldHandleKept": "Jūs paturat @{{handle}} — tas tiek pievienots jūsu lietotājvārdiem, un jūs varat to izmantot atkal vai pārdot vēlāk. Ieraksti, sekotāji un jūsu maciņš netiek aizskarti.",
-    "postsStayWithYou": "Ieraksti, sekotāji un jūsu maciņš netiek aizskarti."
+    "postsStayWithYou": "Ieraksti, sekotāji un jūsu maciņš netiek aizskarti.",
+    "addedToYourUsernames": "Tiek pievienots jūsu lietotājvārdiem",
+    "boughtNameGoesToVault": "Jūs paliekat @{{current}}. @{{handle}} nonāk jūsu lietotājvārdos, un jūs varat pārslēgties uz to jebkurā laikā.",
+    "youAreNow": "Tagad jūs esat @{{handle}}",
+    "boughtToVaultToast": "@{{handle}} tagad ir jūsu lietotājvārdos"
   },
   "accounts": {
     "seoTitle": "Konta tirgus – DeHub",

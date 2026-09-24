@@ -2474,7 +2474,11 @@
     "vaultReleaseBody": "Chayqa hunt'ayman kutimunqa, mayqanpas hap'iyta atinqa. Mana kutiyta atinchu, chaytañataq rantiykuyqa chay musuq kamachiq munayninmanmi.",
     "oldHandleKept": "Qanqa {{handle}} hap'inki — payqa sutiynikikunaman haykun, chayta atiknkiñataq kutimuyta llamk'achiyta utaq qhipaman rantikuyta. Qillqasqayki, qatiqniyki, qanpa qolqiykiqa mana imapas t'ikrakunñachu.",
     "postsStayWithYou": "Qillqasqayki, qatiqniyki, qanpa qolqiykiqa mana imapas t'ikrakunñachu.",
-    "title": "Ruraqpa sutinkuna"
+    "title": "Ruraqpa sutinkuna",
+    "addedToYourUsernames": "Ruraqpa sutiykiman yapakun",
+    "boughtNameGoesToVault": "@{{current}} kasqallaykim. @{{handle}} ruraqpa sutiykiman yaykun, munasqaykipi paymanmi tikrakuyta atinki.",
+    "youAreNow": "Kunanqa @{{handle}} kanki",
+    "boughtToVaultToast": "@{{handle}} kunanqa ruraqpa sutiykikunapim kachkan"
   },
   "live": {
     "chatJoined": "yaykurqan",
