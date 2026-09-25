@@ -2300,8 +2300,7 @@
       "empty": "Pre toto obdobie zatiaľ nie sú údaje",
       "visitors": "Hostia",
       "pageViews": "Zobrazenia stránky",
-      "visitorsEstimated": "návštevníci (odhad)",
-      "estimatedHint": "Prerušované od {{date}}: odhad na základe zobrazení stránky, kým návštevnosť prechádza štafetou. Pozri si nižšie časť Odhadované dni."
+      "visitorsEstimated": "návštevníci (odhad)"
     },
     "countries": {
       "title": "Najčastejšie krajiny",
@@ -2356,7 +2355,7 @@
       "startTerm": "História",
       "start": "— „celé obdobie“ znamená každý deň, ktorý si Cloudflare ešte drží, dnes {{days}} dní od {{date}}, dňa, keď dehub.io prešiel na Cloudflare. Staršie údaje z okraja siete neexistujú a staré dni vypadávajú, ako im Cloudflare vyprší platnosť.",
       "estimatedTerm": "Odhadované dni",
-      "estimated": "— od {{date}} bola služba dehub.io poskytovaná prostredníctvom prenosového servera, takže siete, ktoré sa nemôžu dostať priamo do Cloudflare, stále načítavajú stránku. Cloudflare potom vidí väčšinu návštevníkov ako jednu adresu štafety a jej jedinečný počet sa zrúti. V týchto dňoch graf zobrazuje namerané zobrazenia stránky vynásobené typickým pomerom návštevníkov na stránku a zobrazenia {{days}} dní pred ({{ratio}}%), nakreslené prerušovane. Zobrazenia stránky a požiadavky sa stále merajú priamo a nedotknutý počet Cloudflare je v nespracovanej odpovedi prepojenej vyššie."
+      "estimated": "— od {{date}} bola služba dehub.io poskytovaná prostredníctvom prenosového servera, takže siete, ktoré sa nemôžu dostať priamo do Cloudflare, stále načítavajú stránku. Cloudflare potom vidí väčšinu návštevníkov ako jednu adresu štafety a jej jedinečný počet sa zrúti. V týchto dňoch graf zobrazuje namerané zobrazenia stránky vynásobené typickým pomerom návštevníkov na stránku a zobrazenia {{days}} dní pred ({{ratio}}%). Zobrazenia stránky a požiadavky sa stále merajú priamo a nedotknutý počet Cloudflare je v nespracovanej odpovedi prepojenej vyššie."
     },
     "feedback": {
       "title": "Spätná väzba",

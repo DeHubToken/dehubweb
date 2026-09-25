@@ -2198,8 +2198,7 @@
       "empty": "Ayikho idatha yale nkathi okwamanje",
       "visitors": "izivakashi",
       "pageViews": "ukubukwa kwekhasi",
-      "visitorsEstimated": "izivakashi (kulinganiselwa)",
-      "estimatedHint": "Kuthathwe ku- {{date}}: kulinganiselwa ekubukweni kwamakhasi ngenkathi ithrafikhi idlula endaweni yokudlulisela. Bheka “Izinsuku ezilinganisiwe” ngezansi."
+      "visitorsEstimated": "izivakashi (kulinganiselwa)"
     },
     "countries": {
       "title": "Amazwe aphezulu",
@@ -2254,7 +2253,7 @@
       "startTerm": "Umlando",
       "start": "— \"isikhathi sonke\" kusho usuku ngalunye i-Cloudflare esalugcinile, namuhla izinsuku ezingu-{{days}} kusukela ngo-{{date}}, usuku i-dehub.io eyathuthela ngalo ku-Cloudflare. Ayikho idatha yasemaphethelweni yangaphambili engaboniswa, futhi izinsuku ezindala ziyawa njengoba i-Cloudflare izenza zibe ndala.",
       "estimatedTerm": "Izinsuku ezilinganiselwe",
-      "estimated": "— kusukela {{date}}, i-dehub.io isetshenziswe nge-server ye-relay ukuze amanethiwekhi angakwazi ukufinyelela ku-Cloudflare ngokuqondile asalayisha isayithi. I-Cloudflare bese ibheka izivakashi eziningi njengekheli elilodwa le-RELAY, futhi isibalo sayo esiyingqayizivele siyawohloka. Ngalezo zinsuku ishadi libonisa ukubukwa kwekhasi okulinganisiwe okuphindaphindwe ngesilinganiso esivamile sezivakashi ngekhasi ngalinye se- {{days}} ezinsukwini ezandulele ({{ratio}}%), esidwetshiwe. Ukubukwa kwamakhasi nezicelo kusalinganiswa ngokuqondile, futhi isibalo esingathintwanga se-Cloudflare sisempendulweni eluhlaza exhunywe ngenhla."
+      "estimated": "— kusukela {{date}}, i-dehub.io isetshenziswe nge-server ye-relay ukuze amanethiwekhi angakwazi ukufinyelela ku-Cloudflare ngokuqondile asalayisha isayithi. I-Cloudflare bese ibheka izivakashi eziningi njengekheli elilodwa le-RELAY, futhi isibalo sayo esiyingqayizivele siyawohloka. Ngalezo zinsuku ishadi libonisa ukubukwa kwekhasi okulinganisiwe okuphindaphindwe ngesilinganiso esivamile sezivakashi ngekhasi ngalinye se- {{days}} ezinsukwini ezandulele ({{ratio}}%). Ukubukwa kwamakhasi nezicelo kusalinganiswa ngokuqondile, futhi isibalo esingathintwanga se-Cloudflare sisempendulweni eluhlaza exhunywe ngenhla."
     },
     "feedback": {
       "title": "Umuntu Onethembeka",

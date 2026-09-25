@@ -2210,8 +2210,7 @@
       "empty": "Aucune donnée pour cette période",
       "visitors": "visiteurs",
       "pageViews": "pages vues",
-      "visitorsEstimated": "visiteurs (estimation)",
-      "estimatedHint": "Tiré de {{date}} : estimé à partir des pages vues pendant que le trafic passe par un relais. Voir « Jours estimés » ci-dessous."
+      "visitorsEstimated": "visiteurs (estimation)"
     },
     "countries": {
       "title": "Principaux pays",
@@ -2266,7 +2265,7 @@
       "startTerm": "Historique",
       "start": "— « toute la période » signifie chaque jour encore conservé par Cloudflare, soit aujourd'hui {{days}} jours à partir du {{date}}, le jour où dehub.io est passé sur Cloudflare. Il n'y a pas de données edge antérieures à montrer, et les jours anciens disparaissent au fil de leur expiration chez Cloudflare.",
       "estimatedTerm": "Jours estimés",
-      "estimated": "— depuis {{date}}, dehub.io est desservi via un serveur relais afin que les réseaux qui ne peuvent pas atteindre directement Cloudflare chargent toujours le site. Cloudflare voit alors la plupart des visiteurs comme l'adresse unique du relais, et son compte unique s'effondre. Pour ces jours, le graphique affiche les pages vues mesurées multipliées par le ratio de visiteurs par page typique des {{days}} jours précédents ({{ratio}}%), en pointillés. Les pages vues et les demandes sont toujours mesurées directement, et le nombre intact de Cloudflare se trouve dans la réponse brute liée ci-dessus."
+      "estimated": "— depuis {{date}}, dehub.io est desservi via un serveur relais afin que les réseaux qui ne peuvent pas atteindre directement Cloudflare chargent toujours le site. Cloudflare voit alors la plupart des visiteurs comme l'adresse unique du relais, et son compte unique s'effondre. Pour ces jours, le graphique affiche les pages vues mesurées multipliées par le ratio de visiteurs par page typique des {{days}} jours précédents ({{ratio}}%). Les pages vues et les demandes sont toujours mesurées directement, et le nombre intact de Cloudflare se trouve dans la réponse brute liée ci-dessus."
     },
     "feedback": {
       "title": "Retours d'expérience",

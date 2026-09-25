@@ -2153,8 +2153,7 @@
       "empty": "Tälle jaksolle ei ole vielä tietoja",
       "visitors": "kävijät",
       "pageViews": "sivun katsomiskerrat",
-      "visitorsEstimated": "kävijää (arvio)",
-      "estimatedHint": "Katkoviiva alkaen {{date}}: arvioidut sivun katselukertojen perusteella, kun liikenne kulkee releen läpi. Katso alta arvioiduista päivistä."
+      "visitorsEstimated": "kävijää (arvio)"
     },
     "countries": {
       "title": "Kärkimaat",
@@ -2209,7 +2208,7 @@
       "startTerm": "Historia",
       "start": "— ”koko aika” tarkoittaa jokaista päivää, jonka Cloudflare vielä säilyttää, tänään {{days}} päivää alkaen {{date}}, jolloin dehub.io siirtyi Cloudflareen. Aiempaa reunadataa ei ole näytettäväksi, ja vanhat päivät putoavat pois Cloudflaren vanhentaessa niitä.",
       "estimatedTerm": "Arvioidut päivät",
-      "estimated": "— koska {{date}}, dehub.io on palvellut relepalvelimen kautta, jotta verkot, jotka eivät pääse suoraan Cloudflareen, lataavat edelleen sivuston. Cloudflare näkee sitten useimmat kävijät viestin ainoana osoitteena, ja sen yksilöllinen määrä pienenee. Näinä päivinä kaaviossa näkyvät mitatut sivun katselukerrat kerrottuna tyypillisellä kävijöiden ja sivun katselukertojen suhteella {{days}} päivää ennen ({{ratio}}%) piirrettyä katkoviivaa. Sivun katselukerrat ja pyynnöt mitataan edelleen suoraan, ja Cloudflaren koskematon määrä on yllä linkitetyssä raakavastauksessa."
+      "estimated": "— koska {{date}}, dehub.io on palvellut relepalvelimen kautta, jotta verkot, jotka eivät pääse suoraan Cloudflareen, lataavat edelleen sivuston. Cloudflare näkee sitten useimmat kävijät viestin ainoana osoitteena, ja sen yksilöllinen määrä pienenee. Näinä päivinä kaaviossa näkyvät mitatut sivun katselukerrat kerrottuna tyypillisellä kävijöiden ja sivun katselukertojen suhteella {{days}} päivää ennen ({{ratio}}%). Sivun katselukerrat ja pyynnöt mitataan edelleen suoraan, ja Cloudflaren koskematon määrä on yllä linkitetyssä raakavastauksessa."
     },
     "feedback": {
       "title": "Palaute",
