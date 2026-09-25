@@ -2195,14 +2195,19 @@
       "overDays": "über {{count}} Tage",
       "requestsLabel": "Anfragen",
       "served": "Ausgeliefert",
-      "requests": "{{requests}} Anfragen"
+      "requests": "{{requests}} Anfragen",
+      "estimatedToday": "geschätzt, bisher heute UTC"
     },
     "chart": {
       "hourly": "Besucher pro Stunde",
       "daily": "Besucher pro Tag",
       "hourlyHint": "{{count}} Stundenintervalle, UTC",
       "dailyHint": "eindeutige Besucher pro Tag",
-      "empty": "Noch keine Daten für diesen Zeitraum"
+      "empty": "Noch keine Daten für diesen Zeitraum",
+      "visitors": "Gäste",
+      "pageViews": "Seitenaufrufe",
+      "visitorsEstimated": "besucher (geschätzt)",
+      "estimatedHint": "Gestrichelt von {{date}}: geschätzt aus Seitenaufrufen, während der Datenverkehr durch ein Relais läuft. Siehe „Voraussichtliche Tage“ unten."
     },
     "countries": {
       "title": "Top-Länder",
@@ -2255,7 +2260,9 @@
       "breakdownTerm": "Länder und Browser",
       "breakdown": "– sie folgen dem gewählten Zeitraum, aber nur {{max}} Tage zurück, so weit wird die Tagesaufschlüsselung aufbewahrt. Bei längeren Zeiträumen deckt das Diagramm mehr Zeit ab als die Länderliste.",
       "startTerm": "Verlauf",
-      "start": "– „gesamte Zeit\" heißt jeder Tag, den Cloudflare noch vorhält, heute {{days}} Tage ab {{date}}, dem Tag, an dem dehub.io auf Cloudflare umgezogen ist. Frühere Edge-Daten gibt es nicht, und ältere Tage fallen weg, sobald Cloudflare sie verfallen lässt."
+      "start": "– „gesamte Zeit\" heißt jeder Tag, den Cloudflare noch vorhält, heute {{days}} Tage ab {{date}}, dem Tag, an dem dehub.io auf Cloudflare umgezogen ist. Frühere Edge-Daten gibt es nicht, und ältere Tage fallen weg, sobald Cloudflare sie verfallen lässt.",
+      "estimatedTerm": "Geschätzte Tage",
+      "estimated": "— Seit {{date}} wird dehub.io über einen Relay-Server bedient, so dass Netzwerke, die Cloudflare nicht direkt erreichen können, die Site weiterhin laden. Cloudflare sieht dann die meisten Besucher als die einzige Adresse des Relays, und seine eindeutige Anzahl bricht zusammen. Für diese Tage zeigt das Diagramm gemessene Seitenaufrufe multipliziert mit dem typischen Besucher-pro-Seite-Verhältnis der {{days}} Tage zuvor ({{ratio}}%), gestrichelt gezeichnet. Seitenaufrufe und Anfragen werden immer noch direkt gemessen, und die unberührte Anzahl von Cloudflare befindet sich in der oben verlinkten Rohantwort."
     },
     "feedback": {
       "title": "Feedback",

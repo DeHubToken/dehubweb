@@ -1976,14 +1976,19 @@
       "overDays": "trong {{count}} ngày",
       "requestsLabel": "Yêu cầu",
       "served": "Đã phục vụ",
-      "requests": "{{requests}} yêu cầu"
+      "requests": "{{requests}} yêu cầu",
+      "estimatedToday": "ước tính, cho đến nay hôm nay UTC"
     },
     "chart": {
       "hourly": "Khách truy cập mỗi giờ",
       "daily": "Khách truy cập mỗi ngày",
       "hourlyHint": "{{count}} khung giờ, giờ UTC",
       "dailyHint": "khách truy cập duy nhất mỗi ngày",
-      "empty": "Chưa có dữ liệu cho khoảng thời gian này"
+      "empty": "Chưa có dữ liệu cho khoảng thời gian này",
+      "visitors": "khách truy cập",
+      "pageViews": "Lượt xem",
+      "visitorsEstimated": "khách truy cập (ước tính)",
+      "estimatedHint": "Được gạch ngang từ {{date}}: ước tính từ số lượt xem trang trong khi lưu lượng truy cập chạy qua một rơle. Xem “Số ngày ước tính” bên dưới."
     },
     "countries": {
       "title": "Quốc gia hàng đầu",
@@ -2036,7 +2041,9 @@
       "breakdownTerm": "Quốc gia và trình duyệt",
       "breakdown": "— chúng theo khoảng thời gian bạn chọn, nhưng chỉ lùi tối đa {{max}} ngày, vì phân tích theo ngày chỉ được lưu đến đó. Với khoảng dài hơn, biểu đồ bao phủ nhiều thời gian hơn danh sách quốc gia.",
       "startTerm": "Lịch sử",
-      "start": "— \"toàn bộ thời gian\" nghĩa là mọi ngày Cloudflare còn lưu, hiện là {{days}} ngày tính từ {{date}}, ngày dehub.io chuyển sang Cloudflare. Không có dữ liệu biên nào sớm hơn để hiển thị, và những ngày cũ rơi dần khi Cloudflare hết hạn lưu."
+      "start": "— \"toàn bộ thời gian\" nghĩa là mọi ngày Cloudflare còn lưu, hiện là {{days}} ngày tính từ {{date}}, ngày dehub.io chuyển sang Cloudflare. Không có dữ liệu biên nào sớm hơn để hiển thị, và những ngày cũ rơi dần khi Cloudflare hết hạn lưu.",
+      "estimatedTerm": "Số ngày ước tính",
+      "estimated": "— kể từ {{date}}, dehub.io đã được phục vụ thông qua một máy chủ chuyển tiếp để các mạng không thể tiếp cận Cloudflare trực tiếp vẫn tải trang web. Cloudflare sau đó coi hầu hết khách truy cập là một địa chỉ của rơle và số lượng duy nhất của nó sụp đổ. Trong những ngày đó, biểu đồ hiển thị số lần xem trang đã đo được nhân với tỷ lệ khách truy cập trên mỗi lần xem trang điển hình của {{days}} ngày trước ({{ratio}}%), được vẽ nét đứt. Số lượt xem trang và yêu cầu vẫn được đo trực tiếp và số lượng chưa được chạm vào của Cloudflare nằm trong phản hồi thô được liên kết ở trên."
     },
     "feedback": {
       "title": "Phản hồi",

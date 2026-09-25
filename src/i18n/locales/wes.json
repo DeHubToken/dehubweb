@@ -1965,14 +1965,19 @@
       "overDays": "ova {{count}} dei dem",
       "requestsLabel": "Request dem",
       "served": "Dem serv-am",
-      "requests": "{{requests}} request dem"
+      "requests": "{{requests}} request dem",
+      "estimatedToday": "na estimate, reach naw tudei, UTC"
     },
     "chart": {
       "hourly": "Visitor dem per awa",
       "daily": "Visitor dem per dei",
       "hourlyHint": "{{count}} hourly bucket dem, UTC",
       "dailyHint": "unique visitor dem per dei",
-      "empty": "No data dei for dis window yet"
+      "empty": "No data dei for dis window yet",
+      "visitors": "visitor dem",
+      "pageViews": "page view dem",
+      "visitorsEstimated": "visitor dem (na estimate)",
+      "estimatedHint": "Broken line from {{date}}: we estimate am from page view dem as traffic dei pass for relay. Look “Dei dem weh we estimate” fo dong."
     },
     "countries": {
       "title": "Top country dem",
@@ -2025,7 +2030,9 @@
       "breakdownTerm": "Country dem an browser dem",
       "breakdown": "— dis dem di follow di range weh yu pick, bot na only bak {{max}} dei dem, weh na so far di per-dei breakdown dei kept. Fo longa range dem, di chart di kova moa taim pas wetin di country list di kova.",
       "startTerm": "History",
-      "start": "— “all time” min sei eni dei weh Cloudflare stil di keep-am, weh tudei na {{days}} dei weh start {{date}}, di dei weh dehub.io muv go Cloudflare. No earlier edge data dei for sho, an oda dei dem weh olda dem di komot wen Cloudflare don age dem out."
+      "start": "— “all time” min sei eni dei weh Cloudflare stil di keep-am, weh tudei na {{days}} dei weh start {{date}}, di dei weh dehub.io muv go Cloudflare. No earlier edge data dei for sho, an oda dei dem weh olda dem di komot wen Cloudflare don age dem out.",
+      "estimatedTerm": "Dei dem weh we estimate",
+      "estimated": "— since {{date}}, dehub.io dei pass for wan relay server so dat network dem weh no fit reach Cloudflare direct fit still load di site. So Cloudflare dei si most visitor dem as di relay i wan address, an i unique count fall plenty. Fo dat dei dem, di chart dei sho di page view dem weh we measure, multiply by di normal visitor-per-page-view ratio fo di {{days}} dei dem befo ({{ratio}}%), draw fo broken line. Page view dem an request dem still dei measure direct, an Cloudflare i count weh nobody touch dei fo di raw response weh we link fo up."
     },
     "feedback": {
       "title": "Feedback",

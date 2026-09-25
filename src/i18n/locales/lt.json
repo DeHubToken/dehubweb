@@ -2178,14 +2178,19 @@
       "overDays": "per {{count}} dienų",
       "requestsLabel": "Užklausos",
       "served": "Pateikta",
-      "requests": "{{requests}} užklausų"
+      "requests": "{{requests}} užklausų",
+      "estimatedToday": "apskaičiuota, kol kas šiandien UTC"
     },
     "chart": {
       "hourly": "Lankytojų per valandą",
       "daily": "Lankytojų per dieną",
       "hourlyHint": "{{count}} valandų intervalų, UTC",
       "dailyHint": "unikalių lankytojų per dieną",
-      "empty": "Šiam laikotarpiui duomenų dar nėra"
+      "empty": "Šiam laikotarpiui duomenų dar nėra",
+      "visitors": "Lankytojai",
+      "pageViews": "Puslapio Peržiūros",
+      "visitorsEstimated": "lankytojai (apytiksliai)",
+      "estimatedHint": "Brūkšnys nuo {{date}}: apskaičiuotas pagal puslapio peržiūras, kai srautas eina per relę. Žr. toliau pateiktą skiltį „Numatomos dienos“."
     },
     "countries": {
       "title": "Populiariausios šalys",
@@ -2238,7 +2243,9 @@
       "breakdownTerm": "Šalys ir naršyklės",
       "breakdown": "— jie seka pasirinktą intervalą, bet tik iki {{max}} dienų atgal, tiek saugoma dienos suvestinė. Ilgesniuose intervaluose diagrama apima daugiau laiko nei šalių sąrašas.",
       "startTerm": "Istorija",
-      "start": "— „visas laikas“ reiškia kiekvieną dieną, kurią Cloudflare vis dar saugo, šiandien {{days}} dienų nuo {{date}}, kai dehub.io persikėlė į Cloudflare. Ankstesnių pakraščio duomenų nėra, o senesnės dienos dingsta, kai Cloudflare jas pašalina."
+      "start": "— „visas laikas“ reiškia kiekvieną dieną, kurią Cloudflare vis dar saugo, šiandien {{days}} dienų nuo {{date}}, kai dehub.io persikėlė į Cloudflare. Ankstesnių pakraščio duomenų nėra, o senesnės dienos dingsta, kai Cloudflare jas pašalina.",
+      "estimatedTerm": "Numatomos dienos",
+      "estimated": "— nuo {{date}}, dehub.io buvo aptarnaujamas per perdavimo serverį, kad tinklai, kurie negali tiesiogiai pasiekti Cloudflare, vis dar įkeltų svetainę. Tada „Cloudflare“ mato daugumą lankytojų kaip vienintelį relės adresą, o jo unikalus skaičius mažėja. Tomis dienomis diagramoje rodomi išmatuoti puslapio rodiniai, padauginti iš įprasto {{days}} dienų prieš ({{ratio}}%) lankytojų ir puslapio rodinio santykio, nubrėžto punktyriniu brūkšniu. Puslapio peržiūros ir užklausos vis dar matuojamos tiesiogiai, o „Cloudflare“ nepaliestų puslapių skaičius yra aukščiau pateiktame neapdorotame atsakyme."
     },
     "feedback": {
       "title": "Atsiliepimai",

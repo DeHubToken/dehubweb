@@ -2158,14 +2158,19 @@
       "overDays": "{{count}} maalmood gudahood",
       "requestsLabel": "Codsiyo",
       "served": "La bixiyay",
-      "requests": "{{requests}} codsi"
+      "requests": "{{requests}} codsi",
+      "estimatedToday": "qiyaasta, ilaa maanta UTC"
     },
     "chart": {
       "hourly": "Booqdayaal saacaddii",
       "daily": "Booqdayaal maalintii",
       "hourlyHint": "{{count}} qeybood saacadeed, UTC",
       "dailyHint": "booqdayaal gaar ah maalintii",
-      "empty": "Weli xog ma jirto muddadan"
+      "empty": "Weli xog ma jirto muddadan",
+      "visitors": "Martida",
+      "pageViews": "aragtida bogga",
+      "visitorsEstimated": "booqdayaasha (lagu qiyaasay)",
+      "estimatedHint": "Hoos ka {{date}}: lagu qiyaasay aragtida bogga halka taraafikada ay marayso dib-u-celin. Hoos ka eeg \"Maalmaha la qiyaasay\"."
     },
     "countries": {
       "title": "Wadamada ugu sarreeya",
@@ -2218,7 +2223,9 @@
       "breakdownTerm": "Wadamada iyo browserada",
       "breakdown": "— waxay raacaan xilliga aad dooratay, laakiin kaliya ilaa {{max}} maalmood dib, intaas ayaa la kaydiyaa qeybinta maalinlaha ah. Xilliyada dhaadheer shaxdu waxay daboolaysaa waqti ka badan liiska wadamada.",
       "startTerm": "Taariikh",
-      "start": "— \"waqtiga oo dhan\" waxaa loola jeedaa maalin kasta oo Cloudflare weli hayo, maanta waa {{days}} maalmood laga bilaabo {{date}}, maalintii dehub.io u guuray Cloudflare. Ma jiraan xog cidhif ah oo hore oo la tuso, maalmaha duugoobayna way baaba'aan marka Cloudflare uu duugeeyo."
+      "start": "— \"waqtiga oo dhan\" waxaa loola jeedaa maalin kasta oo Cloudflare weli hayo, maanta waa {{days}} maalmood laga bilaabo {{date}}, maalintii dehub.io u guuray Cloudflare. Ma jiraan xog cidhif ah oo hore oo la tuso, maalmaha duugoobayna way baaba'aan marka Cloudflare uu duugeeyo.",
+      "estimatedTerm": "Maalmaha la qiyaasay",
+      "estimated": "— tan iyo {{date}}, dehub.io waxaa loo adeegsaday server reay si shabakadaha aan si toos ah u gaari karin Cloudflare ay weli u raraan goobta. Cloudflare markaa waxay u aragtaa booqdayaasha intooda badan inay yihiin cinwaanka kaliya ee Relay, tirinteeda gaarka ahna way burburaysaa. Maalmahaas shaxanku wuxuu muujinayaa aragtida bogga la cabbiray ee lagu tarmay saamiga booqdayaasha caadiga ah ee {{days}} maalmood ka hor ({{ratio}}%), oo la jiiday. Aragtida bogga iyo codsiyada ayaa weli si toos ah loo cabbiraa, iyo tirinta aan la shaacin ee Cloudflare waxay ku jirtaa jawaabta ceeriin ee kor ku xusan."
     },
     "feedback": {
       "title": "Feedback",

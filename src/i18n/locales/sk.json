@@ -2289,14 +2289,19 @@
       "overDays": "za {{count}} dní",
       "requestsLabel": "Požiadavky",
       "served": "Doručené",
-      "requests": "{{requests}} požiadaviek"
+      "requests": "{{requests}} požiadaviek",
+      "estimatedToday": "odhad, zatiaľ dnes UTC"
     },
     "chart": {
       "hourly": "Návštevníci za hodinu",
       "daily": "Návštevníci za deň",
       "hourlyHint": "{{count}} hodinových intervalov, UTC",
       "dailyHint": "jedineční návštevníci za deň",
-      "empty": "Pre toto obdobie zatiaľ nie sú údaje"
+      "empty": "Pre toto obdobie zatiaľ nie sú údaje",
+      "visitors": "Hostia",
+      "pageViews": "Zobrazenia stránky",
+      "visitorsEstimated": "návštevníci (odhad)",
+      "estimatedHint": "Prerušované od {{date}}: odhad na základe zobrazení stránky, kým návštevnosť prechádza štafetou. Pozri si nižšie časť Odhadované dni."
     },
     "countries": {
       "title": "Najčastejšie krajiny",
@@ -2349,7 +2354,9 @@
       "breakdownTerm": "Krajiny a prehliadače",
       "breakdown": "— riadia sa zvoleným rozsahom, ale len {{max}} dní dozadu, dovtedy sa uchováva denné rozdelenie. Pri dlhších rozsahoch graf pokrýva viac času než zoznam krajín.",
       "startTerm": "História",
-      "start": "— „celé obdobie“ znamená každý deň, ktorý si Cloudflare ešte drží, dnes {{days}} dní od {{date}}, dňa, keď dehub.io prešiel na Cloudflare. Staršie údaje z okraja siete neexistujú a staré dni vypadávajú, ako im Cloudflare vyprší platnosť."
+      "start": "— „celé obdobie“ znamená každý deň, ktorý si Cloudflare ešte drží, dnes {{days}} dní od {{date}}, dňa, keď dehub.io prešiel na Cloudflare. Staršie údaje z okraja siete neexistujú a staré dni vypadávajú, ako im Cloudflare vyprší platnosť.",
+      "estimatedTerm": "Odhadované dni",
+      "estimated": "— od {{date}} bola služba dehub.io poskytovaná prostredníctvom prenosového servera, takže siete, ktoré sa nemôžu dostať priamo do Cloudflare, stále načítavajú stránku. Cloudflare potom vidí väčšinu návštevníkov ako jednu adresu štafety a jej jedinečný počet sa zrúti. V týchto dňoch graf zobrazuje namerané zobrazenia stránky vynásobené typickým pomerom návštevníkov na stránku a zobrazenia {{days}} dní pred ({{ratio}}%), nakreslené prerušovane. Zobrazenia stránky a požiadavky sa stále merajú priamo a nedotknutý počet Cloudflare je v nespracovanej odpovedi prepojenej vyššie."
     },
     "feedback": {
       "title": "Spätná väzba",

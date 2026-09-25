@@ -2388,14 +2388,19 @@
       "overDays": "over {{count}} dagen",
       "requestsLabel": "Verzoeken",
       "served": "Geleverd",
-      "requests": "{{requests}} verzoeken"
+      "requests": "{{requests}} verzoeken",
+      "estimatedToday": "geschat, tot nu toe vandaag UTC"
     },
     "chart": {
       "hourly": "Bezoekers per uur",
       "daily": "Bezoekers per dag",
       "hourlyHint": "{{count}} uurintervallen, UTC",
       "dailyHint": "unieke bezoekers per dag",
-      "empty": "Nog geen gegevens voor dit venster"
+      "empty": "Nog geen gegevens voor dit venster",
+      "visitors": "bezoekers",
+      "pageViews": "opgevraagde pagina's",
+      "visitorsEstimated": "bezoekers (geschat)",
+      "estimatedHint": "Gestippeld vanaf {{date}}: geschat op basis van paginaweergaven terwijl het verkeer door een relais loopt. Zie 'Geschatte dagen' hieronder."
     },
     "countries": {
       "title": "Belangrijkste landen",
@@ -2448,7 +2453,9 @@
       "breakdownTerm": "Landen en browsers",
       "breakdown": "— deze volgen het bereik dat je kiest, maar slechts tot {{max}} dagen terug, zo ver wordt de dagelijkse uitsplitsing bewaard. Bij langere bereiken beslaat de grafiek meer tijd dan de landenlijst.",
       "startTerm": "Geschiedenis",
-      "start": "— \"alle tijd\" betekent elke dag die Cloudflare nog bewaart, vandaag {{days}} dagen vanaf {{date}}, de dag dat dehub.io naar Cloudflare verhuisde. Er zijn geen eerdere edge-gegevens om te tonen, en oudere dagen vallen af naarmate Cloudflare ze laat verlopen."
+      "start": "— \"alle tijd\" betekent elke dag die Cloudflare nog bewaart, vandaag {{days}} dagen vanaf {{date}}, de dag dat dehub.io naar Cloudflare verhuisde. Er zijn geen eerdere edge-gegevens om te tonen, en oudere dagen vallen af naarmate Cloudflare ze laat verlopen.",
+      "estimatedTerm": "Geschatte dagen",
+      "estimated": "— sinds {{date}} wordt dehub.io bediend via een relay-server, zodat netwerken die Cloudflare niet rechtstreeks kunnen bereiken, de site nog steeds laden. Cloudflare ziet de meeste bezoekers dan als het enige adres van het relais en de unieke telling stort in. Voor die dagen toont het diagram gemeten paginaweergaven vermenigvuldigd met de typische bezoekers-per-pagina-weergaveverhouding van de {{days}} dagen ervoor ({{ratio}}%), gestippeld. Paginaweergaven en verzoeken worden nog steeds rechtstreeks gemeten en het onaangetaste aantal van Cloudflare staat in het ruwe antwoord dat hierboven is gekoppeld."
     },
     "feedback": {
       "title": "Feedback",

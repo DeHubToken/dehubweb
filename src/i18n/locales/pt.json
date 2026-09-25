@@ -2199,14 +2199,19 @@
       "overDays": "em {{count}} dias",
       "requestsLabel": "Pedidos",
       "served": "Servidos",
-      "requests": "{{requests}} pedidos"
+      "requests": "{{requests}} pedidos",
+      "estimatedToday": "estimado, até agora hoje UTC"
     },
     "chart": {
       "hourly": "Visitantes por hora",
       "daily": "Visitantes por dia",
       "hourlyHint": "{{count}} intervalos horários, UTC",
       "dailyHint": "visitantes únicos por dia",
-      "empty": "Ainda não há dados para este período"
+      "empty": "Ainda não há dados para este período",
+      "visitors": "visitantes",
+      "pageViews": "páginas visualizadas",
+      "visitorsEstimated": "visitantes (estimado)",
+      "estimatedHint": "Tracejado de {{date}}: estimado a partir de visualizações de página enquanto o tráfego passa por um retransmissor. Consulte \"Dias estimados\" abaixo."
     },
     "countries": {
       "title": "Principais países",
@@ -2259,7 +2264,9 @@
       "breakdownTerm": "Países e navegadores",
       "breakdown": "— seguem o intervalo que escolher, mas apenas até {{max}} dias atrás, que é até onde a divisão diária é guardada. Em intervalos maiores o gráfico cobre mais tempo do que a lista de países.",
       "startTerm": "Histórico",
-      "start": "— «todo o histórico» significa cada dia que a Cloudflare ainda guarda, hoje {{days}} dias a começar em {{date}}, o dia em que dehub.io passou para a Cloudflare. Não há dados de edge anteriores para mostrar, e os dias antigos caem à medida que a Cloudflare os expira."
+      "start": "— «todo o histórico» significa cada dia que a Cloudflare ainda guarda, hoje {{days}} dias a começar em {{date}}, o dia em que dehub.io passou para a Cloudflare. Não há dados de edge anteriores para mostrar, e os dias antigos caem à medida que a Cloudflare os expira.",
+      "estimatedTerm": "Dias estimados",
+      "estimated": "— desde {{date}}, o dehub.io foi servido através de um servidor de retransmissão para que as redes que não podem alcançar diretamente a Cloudflare ainda carreguem o site. A Cloudflare então vê a maioria dos visitantes como o único endereço do revezamento, e sua contagem única entra em colapso. Para esses dias, o gráfico mostra as visualizações de página medidas multiplicadas pela proporção típica de visitantes por página dos {{days}} dias anteriores ({{ratio}}%), desenhados a tracejado. As visualizações de página e as solicitações ainda são medidas diretamente, e a contagem intocada do Cloudflare está na resposta bruta vinculada acima."
     },
     "feedback": {
       "title": "Feedback",

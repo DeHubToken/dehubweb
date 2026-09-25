@@ -2106,14 +2106,19 @@
       "overDays": "{{count}} 天内",
       "requestsLabel": "请求",
       "served": "已提供",
-      "requests": "{{requests}} 次请求"
+      "requests": "{{requests}} 次请求",
+      "estimatedToday": "估算，今日至今 UTC"
     },
     "chart": {
       "hourly": "每小时访客",
       "daily": "每日访客",
       "hourlyHint": "{{count}} 只小时区间，UTC",
       "dailyHint": "每日独立访客",
-      "empty": "搿段辰光还呒没数据"
+      "empty": "搿段辰光还呒没数据",
+      "visitors": "访客",
+      "pageViews": "页面浏览量",
+      "visitorsEstimated": "访客（估算）",
+      "estimatedHint": "来自 {{date}} 的虚线：根据页面浏览量估算，同时流量通过中继。详见下方“估算天数”。"
     },
     "countries": {
       "title": "主要国家/地区",
@@ -2166,7 +2171,9 @@
       "breakdownTerm": "国家搭浏览器",
       "breakdown": "——伊拉跟牢侬拣个范围，不过最多只好回溯 {{max}} 天，因为每日分布只保留搿能长。范围长点个辰光，图表覆盖个辰光会比国家列表长。",
       "startTerm": "历史",
-      "start": "——「全部时间」是指 Cloudflare 还留牢个每一日，今朝就是从 dehub.io 搬到 Cloudflare 搿日 {{date}} 起算 {{days}} 天。前头呒没边缘数据好显示，老个日脚也会跟牢 Cloudflare 过期而消失。"
+      "start": "——「全部时间」是指 Cloudflare 还留牢个每一日，今朝就是从 dehub.io 搬到 Cloudflare 搿日 {{date}} 起算 {{days}} 天。前头呒没边缘数据好显示，老个日脚也会跟牢 Cloudflare 过期而消失。",
+      "estimatedTerm": "估算天数",
+      "estimated": "— 自 {{date}} 起，dehub.io 一直通过中继服务器提供服务，以便无法直接访问 Cloudflare 的网络也能加载网站。Cloudflare 随后将大部分访客视为中继的单一地址，其唯一计数会折叠。对于这些天，图表显示的是测量的页面浏览量乘以 {{days}} 天之前的典型访客-页面浏览量比例（{{ratio}}%），以虚线绘制。页面浏览量和请求仍直接测量，而 Cloudflare 未受影响的计数在上方链接的原始响应中。"
     },
     "feedback": {
       "title": "反馈",

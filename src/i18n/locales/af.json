@@ -2069,14 +2069,19 @@
       "overDays": "oor {{count}} dae",
       "requestsLabel": "Versoeke",
       "served": "Bedien",
-      "requests": "{{requests}} versoeke"
+      "requests": "{{requests}} versoeke",
+      "estimatedToday": "geskat, so ver vandag UTC"
     },
     "chart": {
       "hourly": "Besoekers per uur",
       "daily": "Besoekers per dag",
       "hourlyHint": "{{count}} uurblokke, UTC",
       "dailyHint": "unieke besoekers per dag",
-      "empty": "Nog geen data vir hierdie tydperk nie"
+      "empty": "Nog geen data vir hierdie tydperk nie",
+      "visitors": "besoekers",
+      "pageViews": "bladsy aansigte",
+      "visitorsEstimated": "visitors (Visitors)",
+      "estimatedHint": "Gestamp van {{date}}: geskat vanaf bladsy aansigte terwyl verkeer loop deur 'n aflos. Sien “Geskatte dae” hieronder."
     },
     "countries": {
       "title": "Topslande",
@@ -2129,7 +2134,9 @@
       "breakdownTerm": "Lande en blaaiers",
       "breakdown": "— dit volg die reeks wat jy kies, maar net {{max}} dae terug, want so lank word die daaglikse uiteensetting bewaar. By langer reekse dek die grafiek meer tyd as die landelys.",
       "startTerm": "Geskiedenis",
-      "start": "— “die hele tyd” beteken elke dag wat Cloudflare nog bewaar, vandag {{days}} dae vanaf {{date}}, die dag toe dehub.io na Cloudflare geskuif het. Daar is geen vroeër randdata om te wys nie, en ouer dae val weg soos Cloudflare hulle laat verval."
+      "start": "— “die hele tyd” beteken elke dag wat Cloudflare nog bewaar, vandag {{days}} dae vanaf {{date}}, die dag toe dehub.io na Cloudflare geskuif het. Daar is geen vroeër randdata om te wys nie, en ouer dae val weg soos Cloudflare hulle laat verval.",
+      "estimatedTerm": "Geskatte dae",
+      "estimated": "— sedert {{date}}, dehub.io is deur 'n aflosbediener bedien sodat netwerke wat Cloudflare nie direk kan bereik nie, steeds die webwerf laai. Cloudflare sien dan die meeste besoekers as die aflos se een adres, en sy unieke telling val in duie. Vir daardie dae toon die grafiek gemete bladsy aansigte vermenigvuldig met die tipiese besoekers-per-bladsy-aansig verhouding van die {{days}} dae voor ({{ratio}}%), getrek stippel. Bladsybeskouings en versoeke word steeds direk gemeet, en Cloudflare se onaangeraakte telling is in die rou reaksie hierbo gekoppel."
     },
     "feedback": {
       "title": "Terugvoer",

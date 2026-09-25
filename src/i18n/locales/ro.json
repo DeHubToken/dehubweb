@@ -2034,14 +2034,19 @@
       "overDays": "în {{count}} zile",
       "requestsLabel": "Cereri",
       "served": "Servite",
-      "requests": "{{requests}} cereri"
+      "requests": "{{requests}} cereri",
+      "estimatedToday": "estimat, până în prezent astăzi UTC"
     },
     "chart": {
       "hourly": "Vizitatori pe oră",
       "daily": "Vizitatori pe zi",
       "hourlyHint": "{{count}} intervale orare, UTC",
       "dailyHint": "vizitatori unici pe zi",
-      "empty": "Încă nu există date pentru acest interval"
+      "empty": "Încă nu există date pentru acest interval",
+      "visitors": "vizitatori",
+      "pageViews": "Vizualizări ale paginii",
+      "visitorsEstimated": "vizitatori (estimat)",
+      "estimatedHint": "Punctat de la {{date}}: estimat din vizualizările paginii în timp ce traficul trece printr-un releu. Consultă secțiunea „Zile estimate” de mai jos."
     },
     "countries": {
       "title": "Țări de top",
@@ -2094,7 +2099,9 @@
       "breakdownTerm": "Țări și browsere",
       "breakdown": "— urmează intervalul ales, dar doar până la {{max}} zile în urmă, atât se păstrează defalcarea zilnică. La intervale mai lungi, graficul acoperă mai mult timp decât lista de țări.",
       "startTerm": "Istoric",
-      "start": "— „toată perioada” înseamnă fiecare zi pe care Cloudflare o mai păstrează, azi {{days}} zile începând cu {{date}}, ziua în care dehub.io a trecut pe Cloudflare. Nu există date de margine mai vechi, iar zilele vechi dispar pe măsură ce Cloudflare le expiră."
+      "start": "— „toată perioada” înseamnă fiecare zi pe care Cloudflare o mai păstrează, azi {{days}} zile începând cu {{date}}, ziua în care dehub.io a trecut pe Cloudflare. Nu există date de margine mai vechi, iar zilele vechi dispar pe măsură ce Cloudflare le expiră.",
+      "estimatedTerm": "Zile estimate",
+      "estimated": "— de la {{date}}, dehub.io a fost servit printr-un server de releu, astfel încât rețelele care nu pot ajunge direct la Cloudflare să încarce în continuare site-ul. Cloudflare vede apoi majoritatea vizitatorilor ca singura adresă a releului, iar numărul său unic se prăbușește. Pentru acele zile, graficul arată vizualizările de pagină măsurate înmulțite cu raportul tipic vizitatori-pe-pagină-vizualizare al {{days}} zile înainte ({{ratio}}%), trasat punctat. Vizualizările de pagină și solicitările sunt în continuare măsurate direct, iar numărul de vizualizări și solicitări neatinse ale Cloudflare se află în răspunsul brut conectat mai sus."
     },
     "feedback": {
       "title": "Feedback",
