@@ -5610,6 +5610,7 @@
     "seoDescription": "DeHubin virallinen dokumentaatio: alustan yleiskatsaus, dApps, DHB-tokenin talous, staking, pelit, tiekartta, UKK ja muuta."
   },
   "dex": {
+    "launchNotice": "Tämä räätälöity pörssi on rakennettu Uniswapin päälle ja sen suojaama. Se on jo käytössä ja täysin toimiva, ja viralliset listaukset julkistetaan pian. Sinut kutsutaan lisäämään likviditeettiä jo nyt — farmit ja kannustimet paljastetaan aivan pian.",
     "seoTitle": "DEX — Käy kauppaa DHB:llä omalla hinnallasi",
     "seoDescription": "Aseta DHB:n osto- tai myyntihinta Uniswap v4 -rajatoimeksiannolla Base- tai BNB-ketjussa. Reaaliaikainen tilauskirja, markkinasyvyys ja yksi jaettu USD-hinta.",
     "venue": "Verkko",

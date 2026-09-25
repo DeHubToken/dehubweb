@@ -5729,6 +5729,7 @@
     "seoDescription": "Resmî DeHub dokümantasyonu: platforma genel bakış, dApp’ler, DHB token ekonomisi, staking, oyunlar, yol haritası, SSS ve daha fazlası."
   },
   "dex": {
+    "launchNotice": "Bu özel borsa Uniswap üzerine kurulmuştur ve onun tarafından güvence altına alınır. Şu anda yayında ve tamamen işlevseldir; resmi listelemeler yakında duyurulacak. Şimdiden likidite eklemeye davetlisiniz — farmlar ve teşvikler çok yakında açıklanacak.",
     "seoTitle": "DEX — DHB'yi kendi fiyatınızla takas edin",
     "seoDescription": "Base veya BNB Chain'de Uniswap v4 limit emriyle DHB alım veya satım fiyatınızı belirleyin. Canlı emir defteri, piyasa derinliği ve tek bir paylaşılan USD fiyatı.",
     "venue": "Ağ",

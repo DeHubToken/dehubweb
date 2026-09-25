@@ -5609,6 +5609,7 @@
     "seoDescription": "Documentació oficial de DeHub: visió general de la plataforma, dApps, economia del token DHB, staking, jocs, full de ruta, preguntes freqüents i més."
   },
   "dex": {
+    "launchNotice": "Aquest exchange personalitzat està construït sobre Uniswap i protegit per aquest. Ja està en funcionament i és plenament operatiu, i els llistats oficials s'anunciaran aviat. Et convidem a afegir liquiditat ara — les granges i els incentius es revelaran de manera imminent.",
     "seoTitle": "DEX — Intercanvia DHB al teu preu",
     "seoDescription": "Estableix el teu preu de compra o venda de DHB amb una ordre límit de Uniswap v4 a Base o BNB Chain. Llibre d'ordres en directe, profunditat de mercat i un preu compartit en USD.",
     "venue": "Xarxa",

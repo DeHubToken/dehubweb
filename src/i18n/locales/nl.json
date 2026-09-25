@@ -5877,6 +5877,7 @@
     "seoDescription": "Officiële DeHub-documentatie: overzicht van het platform, dApps, DHB-tokeneconomie, staking, games, roadmap, FAQ en meer."
   },
   "dex": {
+    "launchNotice": "Deze aangepaste exchange is gebouwd op en beveiligd door Uniswap. Hij is live en volledig functioneel, en officiële listings worden binnenkort aangekondigd. Je bent uitgenodigd om nu al liquiditeit toe te voegen — farms en incentives worden zeer binnenkort onthuld.",
     "seoTitle": "DEX — Verhandel DHB tegen jouw prijs",
     "seoDescription": "Stel je DHB koop- of verkoopprijs in met een Uniswap v4 limietorder op Base of BNB Chain. Live orderboek, marktliquiditeit en één gedeelde USD-prijs.",
     "venue": "Netwerk",

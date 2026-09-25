@@ -3340,6 +3340,7 @@
     "seoDescription": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token DHB, staking, game, peta dalan, FAQ lan liya-liyane."
   },
   "dex": {
+    "launchNotice": "Bursa khusus iki dibangun ing Uniswap lan diamanké déning Uniswap. Saiki wis aktif lan mlaku kanthi lengkap, lan listing resmi bakal diumumaké enggal. Sampéyan diundang nambah likuiditas saiki — farm lan insentif bakal dibukak sedhela manèh.",
     "seoTitle": "DEX — Ngalih DHB ing rega sampeyan",
     "seoDescription": "Setel rega tuku utawa adol DHB nganggo pesen wates Uniswap v4 ing Base utawa BNB Chain. Buku pesen langsung, jerone pasar lan siji rega USD sing padha.",
     "venue": "Jaringan",

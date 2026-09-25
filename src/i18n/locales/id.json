@@ -5729,6 +5729,7 @@
     "seoDescription": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token DHB, staking, gim, peta jalan, FAQ, dan lainnya."
   },
   "dex": {
+    "launchNotice": "Bursa khusus ini dibangun di atas Uniswap dan diamankan olehnya. Bursa ini sudah aktif dan berfungsi penuh, dan listing resmi akan segera diumumkan. Anda diundang untuk menambahkan likuiditas sekarang — farm dan insentif akan segera diungkap.",
     "seoTitle": "DEX — Perdagangkan DHB dengan harga Anda",
     "seoDescription": "Tetapkan harga beli atau jual DHB Anda dengan pesanan batas Uniswap v4 di Base atau BNB Chain. Buku pesanan langsung, kedalaman pasar, dan satu harga USD bersama.",
     "venue": "Jaringan",

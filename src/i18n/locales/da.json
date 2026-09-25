@@ -5640,6 +5640,7 @@
     "seoDescription": "Officiel DeHub-dokumentation: platformsoverblik, dApps, DHB-tokenøkonomi, staking, spil, roadmap, FAQ og mere."
   },
   "dex": {
+    "launchNotice": "Denne skræddersyede børs er bygget på og sikret af Uniswap. Den er live og fuldt funktionel, og officielle noteringer bliver annonceret snart. Du inviteres til at tilføje likviditet nu — farme og incitamenter afsløres meget snart.",
     "seoTitle": "DEX — Handl DHB til din pris",
     "seoDescription": "Indstil din DHB købs- eller salgspris med en Uniswap v4 limit ordre på Base eller BNB Chain. Live ordrebog, markedsdybde og én delt USD-pris.",
     "venue": "Netværk",

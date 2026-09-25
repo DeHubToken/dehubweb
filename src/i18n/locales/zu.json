@@ -3384,6 +3384,7 @@
     "seoDescription": "Amadokhumenti asemthethweni e-DeHub: ukubuka konke kwesizinda, ama-dApps, umnotho wethokheni ye-DHB, i-staking, imidlalo, uhlelo lwekusasa, imibuzo evamile nokunye."
   },
   "dex": {
+    "launchNotice": "Lolu shintshiselwano olukhethekile lwakhelwe ku-Uniswap futhi luvikelwe yilo. Selusebenza ngokugcwele manje, futhi uhlu olusemthethweni luzomenyezelwa maduze. Uyamenywa ukuthi wengeze uketshezi manje — amapulazi nezikhuthazo kuzovezwa maduze nje.",
     "seoTitle": "DEX — Shintsha i-DHB ngentengo yakho",
     "seoDescription": "Setha intengo yakho yokuthenga noma yokudayisa i-DHB nge-Uniswap v4 limit order ku-Base noma ku-BNB Chain. I-oda encwadini ebukhoma, ukujula kwemakethe nenye intengo eyabiwe ye-USD.",
     "venue": "Inethiwekhi",
