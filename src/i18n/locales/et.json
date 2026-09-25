@@ -5612,6 +5612,7 @@
     "seoDescription": "DeHubi ametlik dokumentatsioon: platvormi ülevaade, dAppid, DHB tokeni majandus, staking, mängud, teekaart, KKK ja muu."
   },
   "dex": {
+    "launchNotice": "See kohandatud börs on ehitatud Uniswapile ja on selle poolt turvatud. See töötab juba täies mahus ning ametlikud noteeringud kuulutatakse peagi välja. Oled oodatud juba praegu likviidsust lisama — farmid ja stiimulid avalikustatakse õige pea.",
     "seoTitle": "DEX — Kaubelge DHB-ga oma hinnaga",
     "seoDescription": "Määrake oma DHB ostu- või müügihind Uniswap v4 limiitkorraldusega Base'is või BNB Chainis. Reaalajas tellimuste raamat, turu sügavus ja üks ühine USD hind.",
     "venue": "Võrk",

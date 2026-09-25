@@ -3321,6 +3321,7 @@
     "seoDescription": "Offizielle DeHub-Dokumentation: Plattformüberblick, dApps, DHB-Tokenökonomie, Staking, Spiele, Roadmap, FAQ und mehr."
   },
   "dex": {
+    "launchNotice": "Die eigeti Börse isch uf Uniswap bout und wird dur das gsicheret. Si lauft scho und funktioniert volläschtändig, offizielli Listings wärde bald bekannt gäh. Du bisch iiglade, jetzt scho Liquidität drzuezgäh — Farms und Aareiz wärde gly enthüllt.",
     "seoTitle": "DEX — DHB zu dim Preis handle",
     "seoDescription": "Setz dim DHB Kauf- oder Verchaufspreis mit ere Uniswap v4 Limit Order uf Base oder BNB Chain. Live Orderbook, Markt-Tiefe und eini gmeinsami USD-Preis.",
     "venue": "Netzwerk",

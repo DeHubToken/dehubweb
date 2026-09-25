@@ -5613,6 +5613,7 @@
     "seoDescription": "Oficiální dokumentace DeHub: přehled platformy, dApps, ekonomika tokenu DHB, staking, hry, plán vývoje, FAQ a další."
   },
   "dex": {
+    "launchNotice": "Tato vlastní burza je postavena na Uniswapu a jím zabezpečena. Je spuštěná a plně funkční, oficiální listingy budou brzy oznámeny. Zveme vás, abyste přidali likviditu už nyní — farmy a pobídky budou odhaleny již velmi brzy.",
     "seoTitle": "DEX — Obchodujte DHB za vaši cenu",
     "seoDescription": "Nastavte si nákupní nebo prodejní cenu DHB pomocí limitní objednávky Uniswap v4 na Base nebo BNB Chain. Živý kniha objednávek, hloubka trhu a jedna sdílená cena v USD.",
     "venue": "Síť",

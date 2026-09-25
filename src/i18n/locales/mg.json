@@ -5380,6 +5380,7 @@
     "seoDescription": "Antontan-taratasy ofisialin’ny DeHub: topi-maso ny sehatra, dApps, toekarena token DHB, staking, lalao, drafitra, FAQ sy ny maro hafa."
   },
   "dex": {
+    "launchNotice": "Ity fifanakalozana manokana ity dia naorina teo ambonin'ny Uniswap ary arovan'izy io. Efa mandeha sy miasa tanteraka izy izao, ary hambara tsy ho ela ny lisitra ofisialy. Asaina ianao hanampy likidité ankehitriny — haseho tsy ho ela ny toeram-pambolena sy ny fandrisihana.",
     "seoTitle": "DEX — Varotra DHB amin'ny vidiny tianao",
     "seoDescription": "Mametraha ny vidin'ny fividianana na fivarotana DHB miaraka amin'ny famandrihana fetra Uniswap v4 ao amin'ny Base na BNB Chain. Boky famandrihana mivantana, halaliny ny tsoka ary vidiny USD iray iombonana.",
     "venue": "Tambajotra",
