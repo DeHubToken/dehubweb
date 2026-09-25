@@ -482,14 +482,16 @@ export async function getDPaySessionStatus(sessionId: string): Promise<DPaySessi
   const data = await response.json();
   console.log('[DPay API] Raw session status response:', JSON.stringify(data));
   
-  // The API may return the transaction directly, in a result wrapper, or as an array
-  let result = data?.result ?? data;
+  // The API answers `{ tnxs: [...] }`; older builds used a result wrapper or a
+  // bare array. Missing the `tnxs` wrapper left every purchase "confirming"
+  // forever, because no status field was ever found on the wrapper object.
+  let result = data?.tnxs ?? data?.result ?? data;
   if (Array.isArray(result)) {
-    // If array, take the first (most recent) entry — empty array means no record yet
+    // Empty array means no record yet. Prefer the row for this exact session.
     if (result.length === 0) {
       return { status_stripe: 'pending' as const, tokenSendStatus: 'pending' as const, _empty: true };
     }
-    result = result[0];
+    result = result.find((r: { sessionId?: string }) => r?.sessionId === sessionId) ?? result[0];
   }
 
   // If result is empty/null object, return explicit pending
