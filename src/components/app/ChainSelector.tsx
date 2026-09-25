@@ -20,9 +20,10 @@ import {
   ROBINHOOD_EXPLORER_URL,
   ROBINHOOD_ENABLED,
 } from '@/lib/chains/robinhood';
+import type { ARC_CHAIN_ID } from '@/lib/chains/arc';
 
 /** EVM chains used for tips, wallet, etc. */
-export type ChainId = 8453 | 56 | 1 | typeof ROBINHOOD_CHAIN_ID;
+export type ChainId = 8453 | 56 | 1 | typeof ROBINHOOD_CHAIN_ID | typeof ARC_CHAIN_ID;
 
 /** Includes Solana for post minting */
 export type PostChainId = ChainId | typeof SOLANA_MAINNET_CHAIN_ID;

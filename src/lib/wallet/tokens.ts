@@ -9,6 +9,7 @@ import { readContract } from '@/lib/contracts/aa-utils';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, initChainRpcUrls } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { SOLANA_MAINNET_CHAIN_ID } from '@/lib/chains/solana';
+import { ARC_CHAIN_ID } from '@/lib/chains/arc';
 
 /**
  * A chain a balance can be held on. Wider than `ChainId` because Solana is
@@ -57,6 +58,8 @@ const NATIVE_TOKEN: Record<number, { symbol: string; name: string; decimals: num
   [BASE_CHAIN_ID]: { symbol: 'ETH', name: 'Ethereum', decimals: 18 },
   [BNB_CHAIN_ID]: { symbol: 'BNB', name: 'BNB', decimals: 18 },
   1: { symbol: 'ETH', name: 'Ethereum', decimals: 18 },
+  // Arc pays gas in USDC, and its native balance is USDC at 18 decimals.
+  [ARC_CHAIN_ID]: { symbol: 'USDC', name: 'USD Coin', decimals: 18 },
 };
 
 const CUSTOM_TOKENS_KEY = 'dehub_custom_tokens';
