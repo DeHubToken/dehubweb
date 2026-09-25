@@ -13,12 +13,13 @@ import {
   ROBINHOOD_PUBLIC_RPC,
   DHB_ROBINHOOD_PENDING_BRIDGE_ADDRESS,
 } from '@/lib/chains/robinhood';
+import { ARC_CHAIN_ID, ARC_EXPLORER_URL, ARC_PUBLIC_RPC } from '@/lib/chains/arc';
 
 // Chain IDs
 export const BASE_CHAIN_ID = 8453;
 export const BNB_CHAIN_ID = 56;
 export const ETH_CHAIN_ID = 1;
-export { ROBINHOOD_CHAIN_ID };
+export { ROBINHOOD_CHAIN_ID, ARC_CHAIN_ID };
 
 // Chain-specific configurations
 export interface ChainConfig {
@@ -75,6 +76,17 @@ export const CHAIN_CONFIGS: Record<ChainId, ChainConfig> = {
     dhbToken: DHB_ROBINHOOD_PENDING_BRIDGE_ADDRESS,
     streamCollection: import.meta.env.VITE_STREAM_COLLECTION_ROBINHOOD || '',
     streamController: import.meta.env.VITE_STREAM_CONTROLLER_ROBINHOOD || '',
+  },
+  // Wallet-only: hold, send and receive. No DHB or stream contracts here, and
+  // Arc is not in SUPPORTED_CHAINS, so no picker offers it for minting or tips.
+  [ARC_CHAIN_ID]: {
+    chainId: ARC_CHAIN_ID,
+    name: 'Arc',
+    rpcUrl: ARC_PUBLIC_RPC,
+    explorerUrl: ARC_EXPLORER_URL,
+    dhbToken: '',
+    streamCollection: '',
+    streamController: '',
   },
 };
 

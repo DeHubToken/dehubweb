@@ -32,6 +32,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getWalletUnlockIntervalMs } from "@/hooks/use-wallet-unlock-interval";
 import { saveVaultSession, readVaultSession, clearVaultSession } from "@/lib/wallet-core/key-vault";
 import { ROBINHOOD_CHAIN_ID, ROBINHOOD_PUBLIC_RPC, ROBINHOOD_EXPLORER_URL } from "@/lib/chains/robinhood";
+import { ARC_CHAIN_ID, ARC_PUBLIC_RPC, ARC_EXPLORER_URL } from "@/lib/chains/arc";
 import { waitForWalletUnlock } from '@/lib/wallet-unlock-flow';
 import { pimlicoUserOperationFees } from '@/lib/pimlico-fees';
 
@@ -57,6 +58,8 @@ const AA_CHAIN_CONFIGS: Record<number, {
   blockExplorerUrl: string;
   ticker: string;
   tickerName: string;
+  /** Gas comes out of the Safe's own balance; no paymaster is asked. */
+  selfFunded?: boolean;
 }> = {
   8453: {
     chainIdHex: "0x2105",
@@ -94,6 +97,19 @@ const AA_CHAIN_CONFIGS: Record<number, {
     blockExplorerUrl: ROBINHOOD_EXPLORER_URL,
     ticker: "ETH",
     tickerName: "Ethereum",
+  },
+  // Arc. Safe 1.4.1, its 4337 module, proxy factory and EntryPoint 0.7 are
+  // all at the canonical addresses, so a Safe predicted on Base is the same
+  // account here. Gas is USDC, so the Safe pays its own fees out of the USDC
+  // it holds rather than depending on a paymaster policy covering Arc.
+  [ARC_CHAIN_ID]: {
+    chainIdHex: "0x13b2",
+    rpcTarget: ARC_PUBLIC_RPC,
+    displayName: "Arc",
+    blockExplorerUrl: ARC_EXPLORER_URL,
+    ticker: "USDC",
+    tickerName: "USD Coin",
+    selfFunded: true,
   },
 };
 
@@ -551,16 +567,16 @@ export async function setupAAProviderForChain(
   targetChainId: number,
   options?: { sponsored?: boolean },
 ): Promise<AccountAbstractionProvider | null> {
-  const sponsored = options?.sponsored !== false;
-  const providerCache = sponsored ? storedChainAAProviders : storedSelfFundedChainAAProviders;
-  const cached = providerCache.get(targetChainId);
-  if (cached) return cached;
-
   const chainInfo = AA_CHAIN_CONFIGS[targetChainId];
   if (!chainInfo) {
     console.warn("[SmartWallet] No AA chain config for chainId:", targetChainId);
     return null;
   }
+
+  const sponsored = options?.sponsored !== false && !chainInfo.selfFunded;
+  const providerCache = sponsored ? storedChainAAProviders : storedSelfFundedChainAAProviders;
+  const cached = providerCache.get(targetChainId);
+  if (cached) return cached;
 
   let privKey = sessionPrivKey;
   if (!privKey) {

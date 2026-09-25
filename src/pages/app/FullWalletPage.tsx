@@ -28,6 +28,7 @@ import { getERC20Metadata, saveCustomToken, type WalletChainId, type WalletToken
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { SOLANA_MAINNET_CHAIN_ID, isSolanaChainId } from '@/lib/chains/solana';
 import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
+import { ARC_CHAIN_ID } from '@/lib/chains/arc';
 import { switchChain, isWalletLockedError } from '@/lib/contracts/aa-utils';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { toast } from 'sonner';
@@ -43,6 +44,7 @@ import btcLogo from '@/assets/btc-logo.png';
 import baseLogo from '@/assets/icons/base-logo.png';
 import solLogo from '@/assets/icons/solana-logo.png';
 import robinhoodLogo from '@/assets/icons/robinhood-chain-logo.svg';
+import arcLogo from '@/assets/icons/arc-logo.png';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -53,6 +55,7 @@ const CHAIN_OPTIONS: { id: WalletChainId; name: string; icon: string }[] = [
   { id: BNB_CHAIN_ID, name: 'BNB Chain', icon: bnbLogo },
   { id: ETH_CHAIN_ID, name: 'Ethereum', icon: ethLogo },
   { id: ROBINHOOD_CHAIN_ID, name: 'Robinhood', icon: robinhoodLogo },
+  { id: ARC_CHAIN_ID, name: 'Arc', icon: arcLogo },
   { id: SOLANA_MAINNET_CHAIN_ID, name: 'Solana', icon: solLogo },
 ];
 
