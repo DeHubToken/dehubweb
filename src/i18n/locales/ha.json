@@ -2156,14 +2156,19 @@
       "overDays": "cikin kwanaki {{count}}",
       "requestsLabel": "Buƙatu",
       "served": "An bayar",
-      "requests": "buƙatu {{requests}}"
+      "requests": "buƙatu {{requests}}",
+      "estimatedToday": "kimantawa, ya zuwa yanzu UTC"
     },
     "chart": {
       "hourly": "Baƙi kowace awa",
       "daily": "Baƙi kowace rana",
       "hourlyHint": "Tazarar awa {{count}}, UTC",
       "dailyHint": "baƙi na musamman kowace rana",
-      "empty": "Har yanzu babu bayanai don wannan lokacin"
+      "empty": "Har yanzu babu bayanai don wannan lokacin",
+      "visitors": "Baƙi",
+      "pageViews": "shafi ra'ayoyi",
+      "visitorsEstimated": "baƙi (kiyasin)",
+      "estimatedHint": "Layin ɗigo-ɗigo daga {{date}}: an kiyasta shi daga kallon shafuka yayin da zirga-zirgar yanar gizo ke wucewa ta sabar tsaka-tsaki. Duba “Kwanaki da aka kiyasta” a ƙasa."
     },
     "countries": {
       "title": "Manyan ƙasashe",
@@ -2216,7 +2221,9 @@
       "breakdownTerm": "Ƙasashe da burauza",
       "breakdown": "— suna bin kewayon da ka zaɓa, amma har kwanaki {{max}} baya kawai, domin haka ake ajiye rarrabuwar yau da kullum. A kewayo mafi tsayi, jadawalin yana rufe lokaci fiye da jerin ƙasashe.",
       "startTerm": "Tarihi",
-      "start": "— \"dukan lokacin\" na nufin kowace rana da Cloudflare ke ajiyewa har yanzu, yau kwanaki {{days}} tun {{date}}, ranar da dehub.io ya koma Cloudflare. Babu bayanan gefe na baya da za a nuna, kuma tsofaffin kwanaki suna faɗuwa yayin da Cloudflare ke ƙare musu lokaci."
+      "start": "— \"dukan lokacin\" na nufin kowace rana da Cloudflare ke ajiyewa har yanzu, yau kwanaki {{days}} tun {{date}}, ranar da dehub.io ya koma Cloudflare. Babu bayanan gefe na baya da za a nuna, kuma tsofaffin kwanaki suna faɗuwa yayin da Cloudflare ke ƙare musu lokaci.",
+      "estimatedTerm": "Kwanaki da aka kiyasta",
+      "estimated": "— tun {{date}}, dehub.io an yi amfani da shi ta hanyar uwar garken sake dawowa don haka hanyoyin sadarwar da ba za su iya isa Cloudflare kai tsaye har yanzu suna ɗora shafin ba. Cloudflare to yana ganin yawancin baƙi a matsayin adireshin relay ɗaya, kuma ƙididdigarsa ta musamman ta rushe. Ga waɗancan kwanakin ginshiƙi yana nuna ra'ayoyin shafi da aka auna da aka ninka ta hanyar yawan baƙi-per-page-view rabo na {{days}} kwanaki kafin ({{ratio}}%), jawo dashed. Ra'ayoyin shafi da buƙatun har yanzu ana auna su kai tsaye, kuma ƙididdigar Cloudflare wanda ba a taɓa ba yana cikin amsar da aka haɗa a sama."
     },
     "feedback": {
       "title": "Bayani",

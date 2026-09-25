@@ -15,6 +15,10 @@ export interface SiteStatsDay {
   pageViews: number;
   requests: number;
   bytes: number;
+  /** True when `visitors` is rebuilt from page views — see estimateRelayedVisitors. */
+  estimated?: boolean;
+  /** Cloudflare's own unique count for an estimated bucket, kept for the record. */
+  measuredVisitors?: number;
 }
 
 export interface SiteStatsHour {
@@ -22,6 +26,8 @@ export interface SiteStatsHour {
   visitors: number;
   pageViews: number;
   requests: number;
+  estimated?: boolean;
+  measuredVisitors?: number;
 }
 
 export interface SiteStatsProvenance {
@@ -70,6 +76,8 @@ export interface SiteStats {
   hourly: SiteStatsHour[];
   breakdown: SiteStatsBreakdownDay[];
   provenance: SiteStatsProvenance;
+  /** Set when any day was estimated: the first such day and the ratio used. */
+  estimate?: { since: string; ratio: number; baselineDays: number } | null;
 }
 
 export interface SiteStatsUnavailable {
@@ -113,10 +121,70 @@ async function fetchSiteStats(): Promise<SiteStatsResponse> {
   return payload;
 }
 
+/**
+ * Below this visitors-per-page-view ratio a day was served through the direct
+ * relay (ops/DIRECT-RECOVERY.md): every visitor reaches Cloudflare from the
+ * relay's one address, so its unique count collapses to ~100 while page views
+ * carry on. Edge-direct days sit between 0.11 and 0.37, relayed days between
+ * 0.006 and 0.036, so the gap is wide enough for a fixed cut.
+ */
+const RELAYED_RATIO = 0.06;
+const BASELINE_DAYS = 28;
+
+/**
+ * Rebuilds visitor counts for relayed buckets as page views times the median
+ * visitors-per-page-view ratio of the last clean days. Page views are still
+ * measured at the edge, so the shape is real; only the unique count is
+ * inferred, and every such bucket is flagged so the page can say so. Detection
+ * is by ratio rather than a date, so it stops by itself once the apex is back
+ * behind Cloudflare.
+ */
+export function estimateRelayedVisitors(stats: SiteStats): SiteStats {
+  const ratioOf = (d: SiteStatsDay) => (d.pageViews > 0 ? d.visitors / d.pageViews : null);
+  const relayed = (d: SiteStatsDay) => {
+    const r = ratioOf(d);
+    return r != null && r < RELAYED_RATIO;
+  };
+
+  const clean = stats.daily.filter((d) => ratioOf(d) != null && !relayed(d)).slice(-BASELINE_DAYS);
+  if (!clean.length || !stats.daily.some(relayed)) return { ...stats, estimate: null };
+
+  const ratios = clean.map((d) => ratioOf(d) as number).sort((a, b) => a - b);
+  const mid = Math.floor(ratios.length / 2);
+  const ratio = ratios.length % 2 ? ratios[mid] : (ratios[mid - 1] + ratios[mid]) / 2;
+
+  const relayedDates = new Set<string>();
+  const daily = stats.daily.map((d) => {
+    if (!relayed(d)) return d;
+    relayedDates.add(d.date);
+    return { ...d, visitors: Math.round(d.pageViews * ratio), measuredVisitors: d.visitors, estimated: true };
+  });
+  // Hourly uniques can't be classified by ratio on their own, so an hour
+  // follows the day it falls in.
+  const hourly = stats.hourly.map((h) =>
+    relayedDates.has(h.hour.slice(0, 10))
+      ? { ...h, visitors: Math.round(h.pageViews * ratio), measuredVisitors: h.visitors, estimated: true }
+      : h,
+  );
+
+  const since = daily.find((d) => d.estimated)?.date ?? null;
+  return {
+    ...stats,
+    daily,
+    hourly,
+    estimate: since ? { since, ratio, baselineDays: clean.length } : null,
+  };
+}
+
+function withEstimates(res: SiteStatsResponse): SiteStatsResponse {
+  return res.ok ? estimateRelayedVisitors(res) : res;
+}
+
 export function useSiteStats() {
   return useQuery({
     queryKey: ['site-stats'],
     queryFn: fetchSiteStats,
+    select: withEstimates,
     // Matches the endpoint's own 60s edge cache — polling faster only re-reads
     // the same cached response.
     refetchInterval: STATS_REFRESH_MS,

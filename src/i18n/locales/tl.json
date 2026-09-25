@@ -2078,14 +2078,19 @@
       "overDays": "sa loob ng {{count}} araw",
       "requestsLabel": "Mga kahilingan",
       "served": "Naihatid",
-      "requests": "{{requests}} kahilingan"
+      "requests": "{{requests}} kahilingan",
+      "estimatedToday": "tinatayang, hanggang ngayon UTC"
     },
     "chart": {
       "hourly": "Mga bisita kada oras",
       "daily": "Mga bisita kada araw",
       "hourlyHint": "{{count}} oras-oras na bahagi, UTC",
       "dailyHint": "mga natatanging bisita kada araw",
-      "empty": "Wala pang datos para sa panahong ito"
+      "empty": "Wala pang datos para sa panahong ito",
+      "visitors": "Mga Bisita",
+      "pageViews": "mga pagtingin sa pahina",
+      "visitorsEstimated": "mga bisita (tinatayang)",
+      "estimatedHint": "Putol-putol na linya mula {{date}}: tinantya mula sa mga pagtingin sa pahina habang dumadaan ang trapiko sa isang intermediate na server. Tingnan ang “Mga tinatayang araw” sa ibaba."
     },
     "countries": {
       "title": "Nangungunang bansa",
@@ -2138,7 +2143,9 @@
       "breakdownTerm": "Mga bansa at browser",
       "breakdown": "— sumusunod ito sa saklaw na pipiliin mo, pero hanggang {{max}} araw lang pabalik, dahil hanggang doon lang itinatago ang pang-araw-araw na breakdown. Sa mas mahabang saklaw, mas malawak ang panahong sakop ng chart kaysa sa listahan ng bansa.",
       "startTerm": "Kasaysayan",
-      "start": "— ang \"buong panahon\" ay nangangahulugang bawat araw na itinatago pa ng Cloudflare, ngayon ay {{days}} araw mula {{date}}, ang araw na lumipat ang dehub.io sa Cloudflare. Walang mas naunang datos sa edge na maipapakita, at nawawala ang mas lumang araw habang pinapaso ito ng Cloudflare."
+      "start": "— ang \"buong panahon\" ay nangangahulugang bawat araw na itinatago pa ng Cloudflare, ngayon ay {{days}} araw mula {{date}}, ang araw na lumipat ang dehub.io sa Cloudflare. Walang mas naunang datos sa edge na maipapakita, at nawawala ang mas lumang araw habang pinapaso ito ng Cloudflare.",
+      "estimatedTerm": "Mga tinatayang araw",
+      "estimated": "— mula noong {{date}}, ang dehub.io ay inihatid sa pamamagitan ng isang relay server upang ang mga network na hindi maaaring maabot ang Cloudflare ay direktang naglo - load pa rin ng site. Pagkatapos ay nakikita ng Cloudflare ang karamihan sa mga bisita bilang isang address ng relay, at ang natatanging bilang nito ay bumagsak. Para sa mga araw na iyon, ipinapakita ng tsart ang mga sinusukat na pagtingin sa pahina na pinarami ng karaniwang ratio ng mga bisita kada page - view na {{days}} mga araw bago ang ({{ratio}}%). Direktang sinusukat pa rin ang mga page view at kahilingan, at ang hindi naantig na bilang ng Cloudflare ay nasa raw na tugon na naka - link sa itaas."
     },
     "feedback": {
       "title": "Feedback",

@@ -2195,14 +2195,19 @@
       "overDays": "przez {{count}} dni",
       "requestsLabel": "Żądania",
       "served": "Obsłużone",
-      "requests": "{{requests}} żądań"
+      "requests": "{{requests}} żądań",
+      "estimatedToday": "szacunkowo, do tej pory UTC"
     },
     "chart": {
       "hourly": "Odwiedzający na godzinę",
       "daily": "Odwiedzający dziennie",
       "hourlyHint": "{{count}} przedziałów godzinowych, UTC",
       "dailyHint": "unikalni odwiedzający dziennie",
-      "empty": "Brak danych dla tego okresu"
+      "empty": "Brak danych dla tego okresu",
+      "visitors": "odwiedzający",
+      "pageViews": "Wyświetlenia",
+      "visitorsEstimated": "zwiedzających (szacunkowo)",
+      "estimatedHint": "Przerywany od {{date}}: szacowany na podstawie wyświetleń strony, podczas gdy ruch przechodzi przez przekaźnik. Patrz „Szacowana liczba dni” poniżej."
     },
     "countries": {
       "title": "Najczęstsze kraje",
@@ -2255,7 +2260,9 @@
       "breakdownTerm": "Kraje i przeglądarki",
       "breakdown": "— podążają za wybranym zakresem, ale tylko do {{max}} dni wstecz, bo tyle przechowywane jest rozbicie dzienne. Przy dłuższych zakresach wykres obejmuje więcej czasu niż lista krajów.",
       "startTerm": "Historia",
-      "start": "— „cały okres\" oznacza każdy dzień, który Cloudflare wciąż przechowuje, dziś {{days}} dni od {{date}}, dnia przeniesienia dehub.io na Cloudflare. Wcześniejszych danych z edge nie ma, a starsze dni znikają, gdy Cloudflare je wygasza."
+      "start": "— „cały okres\" oznacza każdy dzień, który Cloudflare wciąż przechowuje, dziś {{days}} dni od {{date}}, dnia przeniesienia dehub.io na Cloudflare. Wcześniejszych danych z edge nie ma, a starsze dni znikają, gdy Cloudflare je wygasza.",
+      "estimatedTerm": "Szacowana liczba dni",
+      "estimated": "— od {{date}}, dehub.io jest obsługiwany przez serwer przekaźnikowy, dzięki czemu sieci, które nie mogą dotrzeć bezpośrednio do Cloudflare, nadal ładują witrynę. Cloudflare widzi wtedy większość odwiedzających jako jeden adres przekaźnika, a jego unikalna liczba zanika. Dla tych dni wykres pokazuje zmierzone wyświetlenia strony pomnożone przez typowy stosunek liczby odwiedzających do liczby wyświetleń {{days}} dni przed ({{ratio}}%), narysowane kreskowo. Wyświetlenia stron i żądania są nadal mierzone bezpośrednio, a nienaruszona liczba Cloudflare znajduje się w surowej odpowiedzi, do której link znajduje się powyżej."
     },
     "feedback": {
       "title": "Opinia",

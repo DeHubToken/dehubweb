@@ -2122,14 +2122,19 @@
       "overDays": "{{count}} günüň dowamynda",
       "requestsLabel": "Haýyşlar",
       "served": "Hyzmat edildi",
-      "requests": "{{requests}} haýyş"
+      "requests": "{{requests}} haýyş",
+      "estimatedToday": "şu güne çenli UTC"
     },
     "chart": {
       "hourly": "Sagat başyna myhmanlar",
       "daily": "Gün başyna myhmanlar",
       "hourlyHint": "{{count}} sagatlyk bölek, UTC",
       "dailyHint": "gün başyna täkrarsyz myhmanlar",
-      "empty": "Bu wagt aralygy üçin heniz maglumat ýok"
+      "empty": "Bu wagt aralygy üçin heniz maglumat ýok",
+      "visitors": "gozgalaňçylar",
+      "pageViews": "sahypa görseler",
+      "visitorsEstimated": "myhmansöýer (myhmansöýer",
+      "estimatedHint": "{{date}}: trafik relay arkaly ýöräp barýarka, sahypa seretmelerinden alnyp barylýar. Bu ýerde \"Hazyr günler\" diýen jümle bar."
     },
     "countries": {
       "title": "Iň ýokary ýurtlar",
@@ -2182,7 +2187,9 @@
       "breakdownTerm": "Ýurtlar we brauzerler",
       "breakdown": "— bular saýlan aralygyňyza görä üýtgeýär, ýöne diňe soňky {{max}} güne çenli, sebäbi gün-günlük bölünişik şonça wagt saklanýar. Uzyn aralyklarda diagramma ýurt sanawyndan has köp wagty öz içine alýar.",
       "startTerm": "Taryh",
-      "start": "— “ähli döwür” Cloudflare-yň heniz saklaýan her bir gününi aňladýar, bu bolsa şu gün {{date}} güninden başlap {{days}} gün, ýagny dehub.io Cloudflare-a geçen gün. Ondan öňki ýerli maglumat ýok, we köne günler Cloudflare olary könelişdiren badyna aýrylýar."
+      "start": "— “ähli döwür” Cloudflare-yň heniz saklaýan her bir gününi aňladýar, bu bolsa şu gün {{date}} güninden başlap {{days}} gün, ýagny dehub.io Cloudflare-a geçen gün. Ondan öňki ýerli maglumat ýok, we köne günler Cloudflare olary könelişdiren badyna aýrylýar.",
+      "estimatedTerm": "Öňki günler",
+      "estimated": "— {{date}}, dehub.io bir serwer arkaly hyzmat edilýär, şonuň üçin Cloudflare-a ýetip bilmeýän şertler henizem saýtda bar. Cloudflare köp myhmanlary bir adres hökmünde görýär we onuň aýratyn sany ýykylýar. Şol günler grafik ölçegli sahypa görnüşlerini {{days}} gün öň ({{ratio}}%) seredýänleriň sany bilen köpeldip görkezýär. Sahypa pikirleri we talaplary henizem birkemsiz ölçenilýär we Cloudflare-iň täsirsiz sany ýokarda agzalan çäksiz jogapda bar."
     },
     "feedback": {
       "title": "Jikme-jik",

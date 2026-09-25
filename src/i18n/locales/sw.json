@@ -2195,14 +2195,19 @@
       "overDays": "kwa siku {{count}}",
       "requestsLabel": "Maombi",
       "served": "Yametolewa",
-      "requests": "maombi {{requests}}"
+      "requests": "maombi {{requests}}",
+      "estimatedToday": "inakadiriwa, hadi sasa leo UTC"
     },
     "chart": {
       "hourly": "Wageni kwa saa",
       "daily": "Wageni kwa siku",
       "hourlyHint": "Vipindi {{count}} vya saa, UTC",
       "dailyHint": "wageni wa kipekee kwa siku",
-      "empty": "Bado hakuna data kwa kipindi hiki"
+      "empty": "Bado hakuna data kwa kipindi hiki",
+      "visitors": "wageni",
+      "pageViews": "mwonekano wa ukurasa",
+      "visitorsEstimated": "wageni (inakadiriwa)",
+      "estimatedHint": "Mstari wa vistari tangu {{date}}: imekadiriwa kutoka mionekano ya kurasa wakati trafiki ya mtandao inapitia seva ya kati. Tazama “Siku zilizokadiriwa” hapa chini."
     },
     "countries": {
       "title": "Nchi zinazoongoza",
@@ -2255,7 +2260,9 @@
       "breakdownTerm": "Nchi na vivinjari",
       "breakdown": "— hizi hufuata kipindi unachochagua, lakini tu hadi siku {{max}} nyuma, ndipo mchanganuo wa kila siku unapohifadhiwa. Katika vipindi virefu chati hufunika muda mrefu kuliko orodha ya nchi.",
       "startTerm": "Historia",
-      "start": "— \"muda wote\" maana yake ni kila siku ambayo Cloudflare bado inahifadhi, leo ni siku {{days}} kuanzia {{date}}, siku ambayo dehub.io ilihamia Cloudflare. Hakuna data ya awali ya ukingoni ya kuonyesha, na siku za zamani hupotea Cloudflare inapozizeesha."
+      "start": "— \"muda wote\" maana yake ni kila siku ambayo Cloudflare bado inahifadhi, leo ni siku {{days}} kuanzia {{date}}, siku ambayo dehub.io ilihamia Cloudflare. Hakuna data ya awali ya ukingoni ya kuonyesha, na siku za zamani hupotea Cloudflare inapozizeesha.",
+      "estimatedTerm": "Siku zilizokadiriwa",
+      "estimated": "— tangu {{date}}, dehub.io imekuwa ikihudumiwa kupitia seva ya kati ili mitandao isiyoweza kufikia Cloudflare moja kwa moja bado ipakie tovuti. Kwa hiyo Cloudflare huona wageni wengi kama anwani moja ya seva hiyo, na hesabu yake ya wageni wa kipekee hushuka sana. Kwa siku hizo chati inaonyesha, kwa mstari wa vistari, mionekano ya kurasa iliyopimwa ikizidishwa kwa uwiano wa kawaida wa wageni kwa kila mwonekano wa ukurasa wa siku {{days}} zilizotangulia ({{ratio}}%). Mionekano ya kurasa na maombi bado hupimwa moja kwa moja, na hesabu asili ya Cloudflare iko kwenye jibu ghafi lililounganishwa hapo juu."
     },
     "feedback": {
       "title": "Maoni",

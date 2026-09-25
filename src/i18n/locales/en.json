@@ -2195,14 +2195,19 @@
       "overDays": "over {{count}} days",
       "requestsLabel": "Requests",
       "served": "Served",
-      "requests": "{{requests}} requests"
+      "requests": "{{requests}} requests",
+      "estimatedToday": "estimated, so far today UTC"
     },
     "chart": {
       "hourly": "Visitors per hour",
       "daily": "Visitors per day",
       "hourlyHint": "{{count}} hourly buckets, UTC",
       "dailyHint": "unique visitors per day",
-      "empty": "No data for this window yet"
+      "empty": "No data for this window yet",
+      "visitors": "visitors",
+      "pageViews": "page views",
+      "visitorsEstimated": "visitors (estimated)",
+      "estimatedHint": "Dashed from {{date}}: estimated from page views while traffic runs through a relay. See “Estimated days” below."
     },
     "countries": {
       "title": "Top countries",
@@ -2255,7 +2260,9 @@
       "breakdownTerm": "Countries and browsers",
       "breakdown": "— these follow the range you pick, but only back {{max}} days, which is as far as the per-day breakdown is kept. On longer ranges the chart covers more time than the country list does.",
       "startTerm": "History",
-      "start": "— \"all time\" means every day Cloudflare still retains, which today is {{days}} days starting {{date}}, the day dehub.io moved onto Cloudflare. There is no earlier edge data to show, and older days drop off as Cloudflare ages them out."
+      "start": "— \"all time\" means every day Cloudflare still retains, which today is {{days}} days starting {{date}}, the day dehub.io moved onto Cloudflare. There is no earlier edge data to show, and older days drop off as Cloudflare ages them out.",
+      "estimatedTerm": "Estimated days",
+      "estimated": "— since {{date}}, dehub.io has been served through a relay server so that networks which cannot reach Cloudflare directly still load the site. Cloudflare then sees most visitors as the relay’s one address, and its unique count collapses. For those days the chart shows measured page views multiplied by the typical visitors-per-page-view ratio of the {{days}} days before ({{ratio}}%), drawn dashed. Page views and requests are still measured directly, and Cloudflare’s untouched count is in the raw response linked above."
     },
     "feedback": {
       "title": "Feedback",
