@@ -1726,7 +1726,18 @@
     "unlisted": "Ulistet",
     "unlistedDesc": "Kun personer med linket kan se",
     "private": "Privat",
-    "privateDesc": "Kun du kan se dette opslag"
+    "privateDesc": "Kun du kan se dette opslag",
+    "notMinted": "Ikke præget",
+    "mintToGenerate": "Mint dette opslag for at generere dette afsnit",
+    "mintDetailsLater": "Transaktions-, ejerskabs- og brøkdetaljer vises, når opslaget er på kæden.",
+    "mintPost": "Mint opslag",
+    "categories": "Kategorier",
+    "tipsOnPost": "Tips til dette opslag",
+    "notFound": "Opslag ikke fundet",
+    "copied": "Kopieret",
+    "visibilityUpdated": "Synlighed opdateret",
+    "visibilityFailed": "Kunne ikke opdatere synlighed",
+    "copyFailed": "Kunne ikke kopiere"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopiér profil-URL",

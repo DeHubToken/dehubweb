@@ -1714,7 +1714,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Okwangasese",
-    "privateDesc": "Wena kuphela ongabona"
+    "privateDesc": "Wena kuphela ongabona",
+    "notMinted": "Ayikho eyenziwe",
+    "mintToGenerate": "Yenza i-mint yalokhu okuthunyelwe ukuze kwakhiwe lesi sigaba",
+    "mintDetailsLater": "Imininingwane yokuthengiselana, ubunikazi, nezingxenye izovela uma okuthunyelwe sekuse-chain.",
+    "mintPost": "Khanda okuthunyelwe",
+    "categories": "Izigaba",
+    "tipsOnPost": "Amathiphu kokuthunyelwe lokhu",
+    "notFound": "Okuthunyelwe akutholakalanga",
+    "copied": "Ikhutshiwe",
+    "visibilityUpdated": "Ukubonakala kubuyekezwe",
+    "visibilityFailed": "Akuphumelelanga ukubuyekeza ukubonakala",
+    "copyFailed": "Ayikwazanga ukukopisha"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopisha i-URL yephrofayela",

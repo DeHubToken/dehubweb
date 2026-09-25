@@ -1802,7 +1802,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "প্রাইভেট",
-    "privateDesc": "শুধু তুমি দেখতে পারবা"
+    "privateDesc": "শুধু তুমি দেখতে পারবা",
+    "notMinted": "মিন্ট করা অইছে না",
+    "mintToGenerate": "ইতা অংশ বানাইতে ইতা পোস্ট মিন্ট করউ",
+    "mintDetailsLater": "পোস্ট অন-চেইন অইলে লেনদেন, মালিকানা আর ফ্র্যাকশনর বিবরণ দেখা যাইব।",
+    "mintPost": "পোস্ট মিন্ট করউক্কা",
+    "categories": "ক্যাটাগরি",
+    "tipsOnPost": "এই পোস্টো টিপস",
+    "notFound": "পোস্ট পাওয়া যায়না",
+    "copied": "কপি করা হয়েছে",
+    "visibilityUpdated": "দেখা আপডেট অইছে",
+    "visibilityFailed": "দেখা আপডেট করা গেলো না",
+    "copyFailed": "কপি করা যায়নি"
   },
   "profileOptions": {
     "copyProfileUrl": "প্রোফাইল URL কপি করো",

@@ -1648,7 +1648,18 @@
     "unlisted": "सूचीबद्ध नइ हे",
     "unlistedDesc": "सिरिफ लिंक वाला देख सकत हे",
     "private": "निजी",
-    "privateDesc": "सिरिफ तुमन ये पोस्ट देख सकत हव"
+    "privateDesc": "सिरिफ तुमन ये पोस्ट देख सकत हव",
+    "notMinted": "मिंट नहीं हुआ",
+    "mintToGenerate": "ये सेक्सन बनाय बर ये पोस्ट ल मिंट करव",
+    "mintDetailsLater": "लेन-देन, स्वामित्व और अंश का विवरण पोस्ट ऑन-चेन होने पर दिखाई देगा।",
+    "mintPost": "पोस्ट ला मिंट करव",
+    "categories": "श्रेणियाँ",
+    "tipsOnPost": "इस पोस्ट पर टिप",
+    "notFound": "पोस्ट नहीं मिला",
+    "copied": "कॉपी किया गया",
+    "visibilityUpdated": "दृश्यता अपडेट हुई",
+    "visibilityFailed": "दृश्यता अपडेट नहीं हो सकी",
+    "copyFailed": "कॉपी नहीं हो सका"
   },
   "profileOptions": {
     "copyProfileUrl": "प्रोफाइल URL कॉपी करव",

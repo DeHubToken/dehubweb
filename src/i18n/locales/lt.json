@@ -1705,7 +1705,18 @@
     "unlisted": "Neįtrauktas",
     "unlistedDesc": "Tik asmenys su nuoroda gali matyti",
     "private": "Privatus",
-    "privateDesc": "Tik jūs galite matyti šį įrašą"
+    "privateDesc": "Tik jūs galite matyti šį įrašą",
+    "notMinted": "Neprabaigta",
+    "mintToGenerate": "Nukalkite šį įrašą, kad būtų sukurtas šis skyrius",
+    "mintDetailsLater": "Sandorio, nuosavybės ir dalies detalės bus matomos, kai įrašas bus įtrauktas į blokų grandinę.",
+    "mintPost": "Nukaldinti įrašą",
+    "categories": "Kategorijos",
+    "tipsOnPost": "Patarimai šiam įrašui",
+    "notFound": "Įrašas nerastas",
+    "copied": "Nukopijuota",
+    "visibilityUpdated": "Matomumas atnaujintas",
+    "visibilityFailed": "Nepavyko atnaujinti matomumo",
+    "copyFailed": "Nepavyko nukopijuoti"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopijuoti profilio URL",

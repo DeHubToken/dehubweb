@@ -1680,7 +1680,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Tūmataiti",
-    "privateDesc": "Ko koe anake ka kite"
+    "privateDesc": "Ko koe anake ka kite",
+    "notMinted": "Ehara i te mea kua oti te tuhi",
+    "mintToGenerate": "Whakaputaina tēnei pou kia hangaia tēnei wāhanga",
+    "mintDetailsLater": "Ko te whakawhitinga, te rangatira me nga taipitopito waahanga ka puta mai i te wa e pa ana te pou ki runga.",
+    "mintPost": "Whakaputa i te pānui",
+    "categories": "Ngā Kāwai",
+    "tipsOnPost": "Nga tohutohu i runga i tenei pou",
+    "notFound": "Kaore i kitea te pou",
+    "copied": "Kua kapea",
+    "visibilityUpdated": "Whakahoutia te tirohanga",
+    "visibilityFailed": "Kaore e taea te whakahou i te tirohanga",
+    "copyFailed": "Kāore i taea te kōpi"
   },
   "profileOptions": {
     "copyProfileUrl": "Tārua URL kōnae",

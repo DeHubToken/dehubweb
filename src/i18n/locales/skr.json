@@ -1628,7 +1628,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "نجی",
-    "privateDesc": "صرف تسیں ویکھ سگدے او"
+    "privateDesc": "صرف تسیں ویکھ سگدے او",
+    "notMinted": "Minted نہ تھی",
+    "mintToGenerate": "ایہہ سیکشن بݨاوݨ کیتے ایہہ پوسٹ منٹ کرو",
+    "mintDetailsLater": "ٹرانزیکشن، ملکیت اور فریکشن دِتھل پوسٹ دے آن-چین تھیونڑ تے ظاہر تھیسن۔",
+    "mintPost": "پوسٹ منٹ کرو",
+    "categories": "زمرے",
+    "tipsOnPost": "اِیہناں پوسٹ تے ٹِپس",
+    "notFound": "پوسٹ نہ مِل سَکّی",
+    "copied": "کاپی ہو گیا",
+    "visibilityUpdated": "وِزِبلِٹی اَپ ڈیٹ تھی ڳئی",
+    "visibilityFailed": "وِزِبلِٹی اَپ ڈیٹ نہ تھی سَکّی",
+    "copyFailed": "Copy نئیں ہو سکیا"
   },
   "profileOptions": {
     "copyProfileUrl": "پروفائل URL کاپی کرو",

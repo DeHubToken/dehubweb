@@ -1677,7 +1677,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Хувийн",
-    "privateDesc": "Зөвхөн та үзэх боломжтой"
+    "privateDesc": "Зөвхөн та үзэх боломжтой",
+    "notMinted": "Одоо хийгдээгүй",
+    "mintToGenerate": "Энэ хэсгийг үүсгэхийн тулд энэ нийтлэлийг mint хийнэ үү",
+    "mintDetailsLater": "Гүйлгээ, өмчлөл, хуваалцлын дэлгэрэнгүй мэдээлэл нь пост блокчэйн дээр байршсаны дараа гарч ирнэ.",
+    "mintPost": "Нийтлэлийг минт хийх",
+    "categories": "Ангилал",
+    "tipsOnPost": "Энэхүү пост дээрх зөвлөмжүүд",
+    "notFound": "Пост олдсонгүй",
+    "copied": "Хуулсан",
+    "visibilityUpdated": "Үзэгдэх байдал шинэчлэгдлээ",
+    "visibilityFailed": "Үзэгдэх байдлыг шинэчлэх боломжгүй байлаа",
+    "copyFailed": "Хуулах боломжгүй"
   },
   "profileOptions": {
     "copyProfileUrl": "Профайл URL хуулах",

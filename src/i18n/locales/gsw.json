@@ -1668,7 +1668,18 @@
     "unlisted": "Nöd glisted",
     "unlistedDesc": "Nur Lüt mit em Link chönd gseh",
     "private": "Privat",
-    "privateDesc": "Nur du chasch de Biitrag gseh"
+    "privateDesc": "Nur du chasch de Biitrag gseh",
+    "notMinted": "Nöd prägt",
+    "mintToGenerate": "Mint dä Biitrag, damit de Abschnitt gmacht wird",
+    "mintDetailsLater": "Transaktion, Besitz und Bruchteil-Details erschiined, wänn de Post uf em Blockchain isch.",
+    "mintPost": "Biitrag minte",
+    "categories": "Kategorie",
+    "tipsOnPost": "Tipps zu dem Post",
+    "notFound": "Post nöd gfunde",
+    "copied": "Kopiert",
+    "visibilityUpdated": "Sichtbarkeit aktualisiert",
+    "visibilityFailed": "Sichtbarkeit konnt nöd aktualisiert werde",
+    "copyFailed": "Konnt nöd kopiere"
   },
   "profileOptions": {
     "copyProfileUrl": "Profil-URL kopiere",

@@ -1684,7 +1684,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "ສ່ວນຕົວ",
-    "privateDesc": "ເຈົ້າເທົ່ານັ້ນທີ່ເບິ່ງໄດ້"
+    "privateDesc": "ເຈົ້າເທົ່ານັ້ນທີ່ເບິ່ງໄດ້",
+    "notMinted": "ບໍ່ໄດ້ອອກ",
+    "mintToGenerate": "Mint ໂພສນີ້ເພື່ອສ້າງພາກນີ້",
+    "mintDetailsLater": "ລາຍລະອຽດການເຮັດທຸລະກຳ, ການເປັນເຈົ້າຂອງ ແລະ ສ່ວນຮຸ້ນຈະປາກົດຂຶ້ນເມື່ອໂພສຢູ່ເທິງ blockchain.",
+    "mintPost": "Mint ໂພສ",
+    "categories": "ໝວດໝູ່",
+    "tipsOnPost": "ຄຳແນະນຳກ່ຽວກັບໂພສນີ້",
+    "notFound": "ບໍ່​ພົບ​ໂພສ",
+    "copied": "ສຳເນົາແລ້ວ",
+    "visibilityUpdated": "ໄດ້​ອັບ​ເດດ​ການ​ເບິ່ງ​ເຫັນ",
+    "visibilityFailed": "ບໍ່​ສາ​ມາດ​ອັບ​ເດດ​ການ​ເບິ່ງ​ເຫັນ",
+    "copyFailed": "ບໍ່ສາມາດສຳເນົາໄດ້"
   },
   "profileOptions": {
     "copyProfileUrl": "ຄັດລອກ URL ໂປຣໄຟລ໌",

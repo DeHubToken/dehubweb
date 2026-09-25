@@ -1722,7 +1722,18 @@
     "unlisted": "Niewidoczny",
     "unlistedDesc": "Tylko osoby z linkiem",
     "private": "Prywatny",
-    "privateDesc": "Tylko Ty możesz zobaczyć ten post"
+    "privateDesc": "Tylko Ty możesz zobaczyć ten post",
+    "notMinted": "Nie wybito",
+    "mintToGenerate": "Zmintuj ten post, aby wygenerować tę sekcję",
+    "mintDetailsLater": "Szczegóły transakcji, własności i ułamków pojawią się, gdy post znajdzie się na łańcuchu.",
+    "mintPost": "Zmintuj post",
+    "categories": "Kategorie",
+    "tipsOnPost": "Napiwki na tym poście",
+    "notFound": "Nie znaleziono posta",
+    "copied": "Skopiowano",
+    "visibilityUpdated": "Widoczność zaktualizowana",
+    "visibilityFailed": "Nie można zaktualizować widoczności",
+    "copyFailed": "Nie udało się skopiować"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopiuj URL profilu",

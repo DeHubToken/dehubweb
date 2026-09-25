@@ -1718,7 +1718,18 @@
     "unlisted": "Listaamaton",
     "unlistedDesc": "Vain linkin tuntevat voivat nähdä",
     "private": "Yksityinen",
-    "privateDesc": "Vain sinä voit nähdä tämän julkaisun"
+    "privateDesc": "Vain sinä voit nähdä tämän julkaisun",
+    "notMinted": "Ei mintattu",
+    "mintToGenerate": "Mintaa tämä julkaisu, niin tämä osio luodaan",
+    "mintDetailsLater": "Tapahtuma-, omistus- ja murto-osatiedot ilmestyvät, kun julkaisu on lohkoketjussa.",
+    "mintPost": "Lyö julkaisu",
+    "categories": "Luokat",
+    "tipsOnPost": "Vinkkejä tähän julkaisuun",
+    "notFound": "Julkaisua ei löydy",
+    "copied": "Kopioitu",
+    "visibilityUpdated": "Näkyvyys päivitetty",
+    "visibilityFailed": "Näkyvyyttä ei voitu päivittää",
+    "copyFailed": "Kopiointi epäonnistui"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopioi profiilin URL",

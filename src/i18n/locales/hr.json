@@ -1713,7 +1713,18 @@
     "unlisted": "Neizlistano",
     "unlistedDesc": "Samo osobe s poveznicom mogu vidjeti",
     "private": "Privatno",
-    "privateDesc": "Samo vi možete vidjeti ovu objavu"
+    "privateDesc": "Samo vi možete vidjeti ovu objavu",
+    "notMinted": "Nije iskovano",
+    "mintToGenerate": "Mintajte ovu objavu da se ovaj odjeljak generira",
+    "mintDetailsLater": "Pojedinosti o transakciji, vlasništvu i udjelima pojavit će se nakon što objava bude na blockchainu.",
+    "mintPost": "Kuj objavu",
+    "categories": "Kategorije",
+    "tipsOnPost": "Napojnice na ovoj objavi",
+    "notFound": "Objava nije pronađena",
+    "copied": "Kopirano",
+    "visibilityUpdated": "Vidljivost ažurirana",
+    "visibilityFailed": "Nije moguće ažurirati vidljivost",
+    "copyFailed": "Nije moguće kopirati"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopiraj URL profila",

@@ -1722,7 +1722,18 @@
     "unlisted": "Liste Dışı",
     "unlistedDesc": "Sadece bağlantıya sahip kişiler görebilir",
     "private": "Özel",
-    "privateDesc": "Sadece siz görebilirsiniz"
+    "privateDesc": "Sadece siz görebilirsiniz",
+    "notMinted": "Basılmamış",
+    "mintToGenerate": "Bu bölümün oluşması için gönderiyi mint edin",
+    "mintDetailsLater": "İşlem, sahiplik ve kesir ayrıntıları gönderi zincire yüklendiğinde görünür.",
+    "mintPost": "Gönderiyi mint et",
+    "categories": "Kategoriler",
+    "tipsOnPost": "Bu gönderiye bahşişler",
+    "notFound": "Gönderi bulunamadı",
+    "copied": "Kopyalandı",
+    "visibilityUpdated": "Görünürlük güncellendi",
+    "visibilityFailed": "Görünürlük güncellenemedi",
+    "copyFailed": "Kopyalanamadı"
   },
   "profileOptions": {
     "copyProfileUrl": "Profil URL'sini kopyala",

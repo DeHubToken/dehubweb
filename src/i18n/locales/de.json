@@ -1722,7 +1722,18 @@
     "unlisted": "Nicht gelistet",
     "unlistedDesc": "Nur Personen mit dem Link können sehen",
     "private": "Privat",
-    "privateDesc": "Nur du kannst diesen Beitrag sehen"
+    "privateDesc": "Nur du kannst diesen Beitrag sehen",
+    "notMinted": "Nicht geprägt",
+    "mintToGenerate": "Minte diesen Beitrag, um diesen Abschnitt zu erzeugen",
+    "mintDetailsLater": "Transaktions-, Eigentums- und Bruchteilsdetails werden angezeigt, sobald der Beitrag auf der Blockchain ist.",
+    "mintPost": "Beitrag minten",
+    "categories": "Kategorien",
+    "tipsOnPost": "Trinkgelder für diesen Beitrag",
+    "notFound": "Beitrag nicht gefunden",
+    "copied": "Kopiert",
+    "visibilityUpdated": "Sichtbarkeit aktualisiert",
+    "visibilityFailed": "Sichtbarkeit konnte nicht aktualisiert werden",
+    "copyFailed": "Konnte nicht kopiert werden"
   },
   "profileOptions": {
     "copyProfileUrl": "Profil-URL kopieren",

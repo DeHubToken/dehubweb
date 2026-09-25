@@ -1718,7 +1718,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Жеке",
-    "privateDesc": "Тек сіз көре аласыз"
+    "privateDesc": "Тек сіз көре аласыз",
+    "notMinted": "Мұраланбаған",
+    "mintToGenerate": "Осы бөлімді жасау үшін жазбаны mint жасаңыз",
+    "mintDetailsLater": "Транзакция, меншік және бөлшектер туралы мәліметтер пост тізбекте болғаннан кейін пайда болады.",
+    "mintPost": "Жазбаны минттеу",
+    "categories": "Санаттар",
+    "tipsOnPost": "Бұл постқа кеңестер",
+    "notFound": "Пост табылмады",
+    "copied": "Көшірілді",
+    "visibilityUpdated": "Көріну жаңартылды",
+    "visibilityFailed": "Көрінуді жаңарту мүмкін болмады",
+    "copyFailed": "Көшіру мүмкін емес"
   },
   "profileOptions": {
     "copyProfileUrl": "Профиль URL көшіру",

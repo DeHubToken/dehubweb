@@ -1698,7 +1698,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Shaxsiy",
-    "privateDesc": "Faqat siz ko'ra olasiz"
+    "privateDesc": "Faqat siz ko'ra olasiz",
+    "notMinted": "Minta qilinmagan",
+    "mintToGenerate": "Bu bo'limni yaratish uchun ushbu postni mint qiling",
+    "mintDetailsLater": "Tranzaksiya, egalik va ulush tafsilotlari post blokcheynda paydo bo'lgach ko'rinadi.",
+    "mintPost": "Postni mint qilish",
+    "categories": "Kategoriyalar",
+    "tipsOnPost": "Ushbu postga maslahatlar",
+    "notFound": "Post topilmadi",
+    "copied": "Nusxalandi",
+    "visibilityUpdated": "Ko'rinish yangilandi",
+    "visibilityFailed": "Ko'rinishni yangilab bo'lmadi",
+    "copyFailed": "Nusxalash mumkin emas"
   },
   "profileOptions": {
     "copyProfileUrl": "Profil URL nusxalash",

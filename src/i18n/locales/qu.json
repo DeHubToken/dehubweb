@@ -1717,7 +1717,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Sapaq",
-    "privateDesc": "Qanlla rikuyta atinki"
+    "privateDesc": "Qanlla rikuyta atinki",
+    "notMinted": "Mana ruwasqachu",
+    "mintToGenerate": "Kay rakita ruwanapaq kay willayta mint ruway",
+    "mintDetailsLater": "Kamachiy, kamachiq, chaymanta pakakunaqa rikhurimunqa p'anqa on-chainpi kachkaptin.",
+    "mintPost": "Willakuyta mintiy",
+    "categories": "Kategoriyakuna",
+    "tipsOnPost": "Kay p'anqapi yanapakuykuna",
+    "notFound": "P'anqaqa mana tarisqachu",
+    "copied": "Copiado",
+    "visibilityUpdated": "Riqch'iyqa allinneqta kachkan",
+    "visibilityFailed": "Riqch'iytaqa mana allinneqta kachkanchu",
+    "copyFailed": "Mana kopiayta atirqachu"
   },
   "profileOptions": {
     "copyProfileUrl": "Profilpa URL nisqanta copiay",

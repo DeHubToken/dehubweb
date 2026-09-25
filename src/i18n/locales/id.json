@@ -1722,7 +1722,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Pribadi",
-    "privateDesc": "Hanya Anda yang bisa melihat"
+    "privateDesc": "Hanya Anda yang bisa melihat",
+    "notMinted": "Belum dicetak",
+    "mintToGenerate": "Mint postingan ini untuk membuat bagian ini",
+    "mintDetailsLater": "Detail transaksi, kepemilikan, dan pecahan akan muncul setelah postingan ada di blockchain.",
+    "mintPost": "Mint postingan",
+    "categories": "Kategori",
+    "tipsOnPost": "Tips untuk postingan ini",
+    "notFound": "Postingan tidak ditemukan",
+    "copied": "Disalin",
+    "visibilityUpdated": "Visibilitas diperbarui",
+    "visibilityFailed": "Tidak dapat memperbarui visibilitas",
+    "copyFailed": "Tidak dapat disalin"
   },
   "profileOptions": {
     "copyProfileUrl": "Salin URL profil",

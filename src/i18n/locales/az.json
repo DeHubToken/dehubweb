@@ -1715,7 +1715,18 @@
     "unlisted": "Siyahıda yox",
     "unlistedDesc": "Yalnız linkə sahib olanlar görə bilər",
     "private": "Şəxsi",
-    "privateDesc": "Yalnız siz bu paylaşımı görə bilərsiniz"
+    "privateDesc": "Yalnız siz bu paylaşımı görə bilərsiniz",
+    "notMinted": "Zərb olunmayıb",
+    "mintToGenerate": "Bu bölmənin yaradılması üçün paylaşımı mint edin",
+    "mintDetailsLater": "Əməliyyat, sahiblik və fraksiya detalları yazı on-chain-ə düşdükdən sonra görünəcək.",
+    "mintPost": "Paylaşımı zərb et",
+    "categories": "Kateqoriyalar",
+    "tipsOnPost": "Bu yazıya üçün tövsiyələr",
+    "notFound": "Yazı tapılmadı",
+    "copied": "Kopyalandı",
+    "visibilityUpdated": "Görünürlük yeniləndi",
+    "visibilityFailed": "Görünürlük yenilənə bilmədi",
+    "copyFailed": "Kopyalana bilmədi"
   },
   "profileOptions": {
     "copyProfileUrl": "Profil URL-ni kopyala",

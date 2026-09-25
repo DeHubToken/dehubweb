@@ -1659,7 +1659,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "ብሕቲ",
-    "privateDesc": "ንስኻ ጥራይ ክትርእዮ ትኽእል"
+    "privateDesc": "ንስኻ ጥራይ ክትርእዮ ትኽእል",
+    "notMinted": "ኣይተሓተመ",
+    "mintToGenerate": "ነዚ ክፍሊ ንምፍጣር ነዚ ጽሑፍ mint ግበሮ",
+    "mintDetailsLater": "ዝርዝርታት ግብይቲ፣ ናይ ሓደ ወይ ሓደ ሰብ ናይ ምዃን፣ ከምኡ'ውን ናይ ክፋል ይግለጹ እቲ ፖስቲ ኣብ ጸረ-ሓልዮት (on-chain) ምስ ኣተወ።",
+    "mintPost": "ልጥፊ ሚንት ግበር",
+    "categories": "መደባት",
+    "tipsOnPost": "ምኽርታት ኣብዚ ፖስቲ",
+    "notFound": "ፖስቲ ኣይተረኽበን",
+    "copied": "ተቐዲሑ",
+    "visibilityUpdated": "ዝርኣይነት ተሓድሳ",
+    "visibilityFailed": "ዝርኣይነት ከተሓድስ ኣይከኣለን",
+    "copyFailed": "ክቅዳሕ ኣይከኣለን"
   },
   "profileOptions": {
     "copyProfileUrl": "ናይ ፕሮፋይል URL ቅዳሕ",

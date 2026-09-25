@@ -1684,7 +1684,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "شەخسىي",
-    "privateDesc": "پەقەت سىز كۆرەلەيسىز"
+    "privateDesc": "پەقەت سىز كۆرەلەيسىز",
+    "notMinted": "ئېلان قىلىنمىغان",
+    "mintToGenerate": "بۇ بۆلەكنى ھاسىل قىلىش ئۈچۈن بۇ يازمىنى mint قىلىڭ",
+    "mintDetailsLater": "تىزگىنلەش، ئىگىدارلىق ھوقۇقى ۋە تارقاق پارچە تەپسىلاتلىرى ئېلانغا كىرگەندىن كېيىن پەيدا بولىدۇ.",
+    "mintPost": "يازمىنى mint قىلىش",
+    "categories": "كاتېگورىيە",
+    "tipsOnPost": "بۇ ئېلانغا تىپ",
+    "notFound": "ئېلان تېپىلمىدى",
+    "copied": "كۆچۈرۈلدى",
+    "visibilityUpdated": "كۆرۈنۈش يېڭىلاندى",
+    "visibilityFailed": "كۆرۈنۈشنى يېڭىلىيەلمىدى",
+    "copyFailed": "نۇسخىسىنى ئېلىش مۇمكىن بولمىدى"
   },
   "profileOptions": {
     "copyProfileUrl": "ئارخىپ URL نى كۆچۈرۈش",

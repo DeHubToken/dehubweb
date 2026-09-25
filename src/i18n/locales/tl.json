@@ -1654,7 +1654,18 @@
     "totalViews": "{{count}} total views",
     "public": "Public",
     "unlisted": "Unlisted",
-    "private": "Private"
+    "private": "Private",
+    "notMinted": "Hindi pa na-mint",
+    "mintToGenerate": "I-mint ang post na ito para mabuo ang seksyong ito",
+    "mintDetailsLater": "Ang mga detalye ng transaksyon, pagmamay-ari, at bahagi ay lilitaw kapag ang post ay nasa on-chain na.",
+    "mintPost": "I-mint ang post",
+    "categories": "Mga Kategorya",
+    "tipsOnPost": "Mga Tip sa Post na Ito",
+    "notFound": "Hindi mahanap ang post",
+    "copied": "Nakopya",
+    "visibilityUpdated": "Na-update ang visibility",
+    "visibilityFailed": "Hindi ma-update ang visibility",
+    "copyFailed": "Hindi makopya"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopyahin ang URL ng profile",

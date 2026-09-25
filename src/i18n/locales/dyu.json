@@ -1663,7 +1663,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Link tigiw dɔrɔn",
     "private": "Gundo",
-    "privateDesc": "I dɔrɔn bɛ se ka post nin ye"
+    "privateDesc": "I dɔrɔn bɛ se ka post nin ye",
+    "notMinted": "Nti yafunika",
+    "mintToGenerate": "Nin sɛbɛn mint walisa nin yɔrɔ ka dilan",
+    "mintDetailsLater": "Ebikwata ku nsimbi, obwannanyini, nate nga n'ebitundu biragawo nga post y'egenda okuba ku sseruganda.",
+    "mintPost": "Post minti",
+    "categories": "Suguyaw",
+    "tipsOnPost": "Ebikolwa ku post eno",
+    "notFound": "Post teg Found",
+    "copied": "A kopira",
+    "visibilityUpdated": "Obulamusi bwa visibility bwalungisibwa",
+    "visibilityFailed": "Tewali kulungisa visibility",
+    "copyFailed": "A tun tɛ se ka kopi kɛ"
   },
   "profileOptions": {
     "copyProfileUrl": "Profil URL kopi",
