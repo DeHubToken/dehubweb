@@ -1665,7 +1665,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "ବ୍ୟକ୍ତିଗତ",
-    "privateDesc": "କେବଳ ଆପଣ ଦେଖିପାରିବେ"
+    "privateDesc": "କେବଳ ଆପଣ ଦେଖିପାରିବେ",
+    "notMinted": "ମିଣ୍ଟ୍ କରାଯାଇ ନାହିଁ",
+    "mintToGenerate": "ଏହି ବିଭାଗ ତିଆରି କରିବାକୁ ଏହି ପୋଷ୍ଟ ମିଣ୍ଟ କରନ୍ତୁ",
+    "mintDetailsLater": "ପୋଷ୍ଟ୍ ଅନ୍-ଚେନ୍ ହେବା ପରେ ଟ୍ରାଞ୍ଜାକ୍ସନ୍, ମାଲିକାନା ଏବଂ ଭଗ୍ନାଂଶ ବିବରଣୀ ଦେଖାଯିବ।",
+    "mintPost": "ପୋଷ୍ଟ ମିଣ୍ଟ କରନ୍ତୁ",
+    "categories": "ବର୍ଗୀକରଣ",
+    "tipsOnPost": "ଏହି ପୋଷ୍ଟ୍ ରେ ଟିପ୍ସ",
+    "notFound": "ପୋଷ୍ଟ୍ ମିଳିଲା ନାହିଁ",
+    "copied": "କପି କରାଗଲା",
+    "visibilityUpdated": "ଦୃଶ୍ୟମାନତା ଅପଡେଟ୍ ହୋଇଛି",
+    "visibilityFailed": "ଦୃଶ୍ୟମାନତା ଅପଡେଟ୍ କରାଯାଇପାରିଲା ନାହିଁ",
+    "copyFailed": "କପି ହୋଇପାରିଲାନି"
   },
   "profileOptions": {
     "copyProfileUrl": "ପ୍ରୋଫାଇଲ୍ URL କପି କରନ୍ତୁ",

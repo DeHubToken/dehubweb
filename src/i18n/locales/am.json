@@ -1692,7 +1692,18 @@
     "unlisted": "ያልተዘረዘረ",
     "unlistedDesc": "ማገናኛ ያላቸው ሰዎች ብቻ ማየት ይችላሉ",
     "private": "የግል",
-    "privateDesc": "እርስዎ ብቻ ይህን ልጥፍ ማየት ይችላሉ"
+    "privateDesc": "እርስዎ ብቻ ይህን ልጥፍ ማየት ይችላሉ",
+    "notMinted": "አልተመጠነም",
+    "mintToGenerate": "ይህ ክፍል እንዲፈጠር ይህን ልጥፍ ያሳትሙ",
+    "mintDetailsLater": "ግልባጭ፣ ባለቤትነት እና ክፍልፋይ ዝርዝሮች ልጥፉ በሰንሰለት ላይ ከታየ በኋላ ይታያሉ።",
+    "mintPost": "ልጥፉን መንዝር",
+    "categories": "ምድቦች",
+    "tipsOnPost": "በዚህ ልጥፍ ላይ ጠቃሚ ምክሮች",
+    "notFound": "ልጥፉ አልተገኘም።",
+    "copied": "ተገለበጠ",
+    "visibilityUpdated": "የሚታይነት ተዘምኗል",
+    "visibilityFailed": "የሚታይነት ማዘመን አልተቻለም",
+    "copyFailed": "መቅዳት አልተቻለም"
   },
   "profileOptions": {
     "copyProfileUrl": "የመገለጫ URL ቅዳ",

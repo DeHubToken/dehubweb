@@ -1722,7 +1722,18 @@
     "unlisted": "No listado",
     "unlistedDesc": "Solo personas con el enlace",
     "private": "Privado",
-    "privateDesc": "Solo tú puedes ver este post"
+    "privateDesc": "Solo tú puedes ver este post",
+    "notMinted": "No acuñado",
+    "mintToGenerate": "Acuña esta publicación para generar esta sección",
+    "mintDetailsLater": "Los detalles de la transacción, propiedad y fracciones aparecerán una vez que la publicación esté en la cadena.",
+    "mintPost": "Acuñar publicación",
+    "categories": "Categorías",
+    "tipsOnPost": "Propinas en esta publicación",
+    "notFound": "Publicación no encontrada",
+    "copied": "Copiado",
+    "visibilityUpdated": "Visibilidad actualizada",
+    "visibilityFailed": "No se pudo actualizar la visibilidad",
+    "copyFailed": "No se pudo copiar"
   },
   "profileOptions": {
     "copyProfileUrl": "Copiar URL del perfil",

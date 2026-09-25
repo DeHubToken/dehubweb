@@ -1700,7 +1700,18 @@
     "unlisted": "I palistuar",
     "unlistedDesc": "Vetëm personat me lidhjen mund ta shohin",
     "private": "Privat",
-    "privateDesc": "Vetëm ju mund ta shihni këtë postim"
+    "privateDesc": "Vetëm ju mund ta shihni këtë postim",
+    "notMinted": "Nuk është nxjerrë",
+    "mintToGenerate": "Minto këtë postim për të gjeneruar këtë seksion",
+    "mintDetailsLater": "Detajet e transaksionit, pronësisë dhe fraksionit shfaqen pasi postimi të jetë në zinxhir.",
+    "mintPost": "Minto postimin",
+    "categories": "Kategori",
+    "tipsOnPost": "Këshilla për këtë postim",
+    "notFound": "Postimi nuk u gjet",
+    "copied": "Kopjuar",
+    "visibilityUpdated": "Të drejtat e publikimit u përditësuan",
+    "visibilityFailed": "Nuk u arrit të përditësoheshin të drejtat e publikimit",
+    "copyFailed": "Nuk u kopjua dot"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopjo URL-në e profilit",

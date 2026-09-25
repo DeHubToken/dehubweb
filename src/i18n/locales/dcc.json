@@ -1391,7 +1391,18 @@
     "unlisted": "غیر فہرست",
     "unlistedDesc": "صرف لنک والے دیکھ سکدے",
     "private": "نجی",
-    "privateDesc": "صرف تسیں ایہ پوسٹ دیکھ سکدے"
+    "privateDesc": "صرف تسیں ایہ پوسٹ دیکھ سکدے",
+    "notMinted": "منٹ نئیں ہوا",
+    "mintToGenerate": "یہ سیکشن بنانے کے لیے یہ پوسٹ منٹ کریں",
+    "mintDetailsLater": "پوسٹ آن چین ہونے کے بعد ٹرانزیکشن، ملکیت اور فریکشن کی تفصیلات دکھتئیں۔",
+    "mintPost": "پوسٹ منٹ کریں",
+    "categories": "زمرے",
+    "tipsOnPost": "اس پوسٹ پو ٹپس",
+    "notFound": "پوسٹ نئیں ملی",
+    "copied": "کاپی کیا گیا۔",
+    "visibilityUpdated": "نظر آنا اپڈیٹ ہوا",
+    "visibilityFailed": "نظر آنا اپڈیٹ نئیں ہو سکا",
+    "copyFailed": "کاپی نئیں ہو سکا"
   },
   "profileOptions": {
     "copyProfileUrl": "پروفائل لنک کاپی کرو",

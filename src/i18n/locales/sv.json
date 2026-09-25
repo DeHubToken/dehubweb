@@ -1722,7 +1722,18 @@
     "publicDesc": "Alla kan se detta inlägg",
     "unlisted": "Unlisted",
     "private": "Privat",
-    "privateDesc": "Bara du kan se detta"
+    "privateDesc": "Bara du kan se detta",
+    "notMinted": "Inte präglad",
+    "mintToGenerate": "Minta det här inlägget för att generera det här avsnittet",
+    "mintDetailsLater": "Transaktion, ägande- och fraktionsdetaljer visas när inlägget är on-chain.",
+    "mintPost": "Minta inlägg",
+    "categories": "Kategorier",
+    "tipsOnPost": "Dricks på detta inlägg",
+    "notFound": "Inlägg hittades inte",
+    "copied": "Kopierat",
+    "visibilityUpdated": "Synlighet uppdaterad",
+    "visibilityFailed": "Kunde inte uppdatera synlighet",
+    "copyFailed": "Kunde inte kopiera"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopiera profil-URL",

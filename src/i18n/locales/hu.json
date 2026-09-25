@@ -1718,7 +1718,18 @@
     "unlisted": "Nem listázott",
     "unlistedDesc": "Csak a linkkel rendelkezők láthatják",
     "private": "Privát",
-    "privateDesc": "Csak te láthatod ezt a bejegyzést"
+    "privateDesc": "Csak te láthatod ezt a bejegyzést",
+    "notMinted": "Nem lett verve",
+    "mintToGenerate": "Mintold ezt a bejegyzést, hogy létrejöjjön ez a szakasz",
+    "mintDetailsLater": "A tranzakció, tulajdonjog és törtrészletek akkor jelennek meg, ha a bejegyzés a blokkláncon van.",
+    "mintPost": "Bejegyzés mintelése",
+    "categories": "Kategóriák",
+    "tipsOnPost": "Borravalók ehhez a bejegyzéshez",
+    "notFound": "A bejegyzés nem található",
+    "copied": "Másolva",
+    "visibilityUpdated": "Láthatóság frissítve",
+    "visibilityFailed": "Nem sikerült frissíteni a láthatóságot",
+    "copyFailed": "Nem sikerült másolni"
   },
   "profileOptions": {
     "copyProfileUrl": "Profil URL másolása",

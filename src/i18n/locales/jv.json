@@ -1670,7 +1670,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Pribadi",
-    "privateDesc": "Mung sampeyan sing bisa ndeleng"
+    "privateDesc": "Mung sampeyan sing bisa ndeleng",
+    "notMinted": "Durung dicithak",
+    "mintToGenerate": "Mint kiriman iki supaya bagean iki digawe",
+    "mintDetailsLater": "Rincian transaksi, kepemilikan, lan pecahan bakal katon sawise kiriman ana ing rantai.",
+    "mintPost": "Mint postingan",
+    "categories": "Kategori",
+    "tipsOnPost": "Tips ing kiriman iki",
+    "notFound": "Kiriman ora ditemokake",
+    "copied": "Disalin",
+    "visibilityUpdated": "Visibilitas dianyari",
+    "visibilityFailed": "Ora bisa nganyari visibilitas",
+    "copyFailed": "Ora bisa disalin"
   },
   "profileOptions": {
     "copyProfileUrl": "Salin URL profil",

@@ -1720,7 +1720,18 @@
     "unlisted": "限定公開",
     "unlistedDesc": "リンクを持つ人のみ閲覧可能",
     "private": "非公開",
-    "privateDesc": "あなただけが見られます"
+    "privateDesc": "あなただけが見られます",
+    "notMinted": "鋳造されていません",
+    "mintToGenerate": "この投稿をミントするとこのセクションが生成されます",
+    "mintDetailsLater": "投稿がオンチェーンになると、トランザクション、所有権、端数の詳細が表示されます。",
+    "mintPost": "投稿をミント",
+    "categories": "カテゴリ",
+    "tipsOnPost": "この投稿への投げ銭",
+    "notFound": "投稿が見つかりません",
+    "copied": "コピーしました",
+    "visibilityUpdated": "公開設定が更新されました",
+    "visibilityFailed": "可視性を更新できませんでした",
+    "copyFailed": "コピーできませんでした"
   },
   "profileOptions": {
     "copyProfileUrl": "プロフィールURLをコピー",

@@ -1714,7 +1714,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Manokana",
-    "privateDesc": "Ianao ihany no mahita"
+    "privateDesc": "Ianao ihany no mahita",
+    "notMinted": "Tsy voavatsy",
+    "mintToGenerate": "Mint-o ity lahatsoratra ity mba hamoronana ity fizarana ity",
+    "mintDetailsLater": "Ny antsipirian'ny fifanarahana, ny fananana ary ny ampahany dia hiseho rehefa ao anaty blockchain ny lahatsoratra.",
+    "mintPost": "Mint ny lahatsoratra",
+    "categories": "Sokajy",
+    "tipsOnPost": "Torohevitra momba ity lahatsoratra ity",
+    "notFound": "Tsy hita ny lahatsoratra",
+    "copied": "Nopetahana",
+    "visibilityUpdated": "Nohavaozina ny fahitana",
+    "visibilityFailed": "Tsy nahavita nanavao ny fahitana",
+    "copyFailed": "Tsy nahafaka naka"
   },
   "profileOptions": {
     "copyProfileUrl": "Adikao ny URL profil",

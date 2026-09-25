@@ -1683,7 +1683,18 @@
     "unlisted": "Ba a jera ba",
     "unlistedDesc": "Waɗanda suke da hanyar haɗi kawai za su iya gani",
     "private": "Na sirri",
-    "privateDesc": "Kai kaɗai za ka iya ganin wannan bugu"
+    "privateDesc": "Kai kaɗai za ka iya ganin wannan bugu",
+    "notMinted": "Babu mint",
+    "mintToGenerate": "Ka yi mint ɗin wannan saƙon don samar da wannan sashe",
+    "mintDetailsLater": "Cikakkun bayanan ciniki, mallaka da kuma rabo suna bayyana ne bayan an sanya sakon a kan blockchain.",
+    "mintPost": "Yi minting na sakon",
+    "categories": "Rukuni",
+    "tipsOnPost": "Bayarwa a wannan sakon",
+    "notFound": "An rasa sakon",
+    "copied": "An kwafa",
+    "visibilityUpdated": "An sabunta ganuwa",
+    "visibilityFailed": "An kasa sabunta ganuwa",
+    "copyFailed": "An kasa kwafa"
   },
   "profileOptions": {
     "copyProfileUrl": "Kwafi URL ɗin bayanai",

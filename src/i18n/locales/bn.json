@@ -1673,7 +1673,18 @@
     "public": "সর্বজনীন",
     "publicDesc": "যে কেউ এই পোস্টটি দেখতে পারে",
     "private": "ব্যক্তিগত",
-    "privateDesc": "শুধু আপনি দেখতে পারেন"
+    "privateDesc": "শুধু আপনি দেখতে পারেন",
+    "notMinted": "মিন্ট করা হয়নি",
+    "mintToGenerate": "এই অংশ তৈরি করতে পোস্টটি মিন্ট করুন",
+    "mintDetailsLater": "পোস্টটি অন-চেইনে আসার পর লেনদেন, মালিকানা এবং ভগ্নাংশের বিবরণ দেখা যাবে।",
+    "mintPost": "পোস্ট মিন্ট করুন",
+    "categories": "বিভাগ",
+    "tipsOnPost": "এই পোস্টে টিপস",
+    "notFound": "পোস্টটি খুঁজে পাওয়া যায়নি",
+    "copied": "কপি করা হয়েছে",
+    "visibilityUpdated": "দৃশ্যমানতা আপডেট করা হয়েছে",
+    "visibilityFailed": "দৃশ্যমানতা আপডেট করা যায়নি",
+    "copyFailed": "কপি করা যায়নি"
   },
   "profileOptions": {
     "copyProfileUrl": "প্রোফাইল URL কপি করুন",

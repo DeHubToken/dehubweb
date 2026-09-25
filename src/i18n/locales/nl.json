@@ -1915,7 +1915,18 @@
     "unlisted": "Niet-vermeld",
     "unlistedDesc": "Alleen mensen met de link",
     "private": "Privé",
-    "privateDesc": "Alleen jij kunt dit bericht zien"
+    "privateDesc": "Alleen jij kunt dit bericht zien",
+    "notMinted": "Niet gemint",
+    "mintToGenerate": "Mint dit bericht om deze sectie te genereren",
+    "mintDetailsLater": "Transactie-, eigendoms- en fractiegegevens verschijnen zodra de post on-chain is.",
+    "mintPost": "Bericht minten",
+    "categories": "Categorieën",
+    "tipsOnPost": "Tips op deze post",
+    "notFound": "Post niet gevonden",
+    "copied": "Gekopieerd",
+    "visibilityUpdated": "Zichtbaarheid bijgewerkt",
+    "visibilityFailed": "Zichtbaarheid kon niet worden bijgewerkt",
+    "copyFailed": "Kon niet kopiëren"
   },
   "profileOptions": {
     "copyProfileUrl": "Profiel-URL kopiëren",

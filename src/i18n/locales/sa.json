@@ -1654,7 +1654,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "व्यक्तिगतम्",
-    "privateDesc": "भवान् एव द्रष्टुं शक्नोति"
+    "privateDesc": "भवान् एव द्रष्टुं शक्नोति",
+    "notMinted": "मिन्टेड नाही",
+    "mintToGenerate": "एतद् विभागं जनयितुं इदं प्रकाशनं mint कुरुत",
+    "mintDetailsLater": "पोस्ट ऑन-चेन झाल्यावर व्यवहार, मालकी आणि अंशांचे तपशील दिसतील.",
+    "mintPost": "प्रकाशनं मिण्ट् करोतु",
+    "categories": "श्रेणी",
+    "tipsOnPost": "या पोस्टवर टिप्स",
+    "notFound": "पोस्ट सापडली नाही",
+    "copied": "प्रतिलिखितम्",
+    "visibilityUpdated": "दृश्यमानता अद्यतनित केली",
+    "visibilityFailed": "दृश्यमानता अद्यतनित करू शकलो नाही",
+    "copyFailed": "कॉपी नहीं हो सका"
   },
   "profileOptions": {
     "copyProfileUrl": "प्रोफाइल URL प्रतिलिपिं कुर्वन्तु",

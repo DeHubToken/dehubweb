@@ -40,10 +40,10 @@ import { SEOHead } from '@/components/SEOHead';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 // Visibility options configuration
-const VISIBILITY_OPTIONS: { value: TokenVisibility; label: string; icon: React.ReactNode; description: string }[] = [
-  { value: 'public', label: 'Public', icon: <Globe className="w-4 h-4" />, description: 'Anyone can see this post' },
-  { value: 'unlisted', label: 'Unlisted', icon: <EyeOff className="w-4 h-4" />, description: 'Only people with the link can see' },
-  { value: 'private', label: 'Private', icon: <Lock className="w-4 h-4" />, description: 'Only you can see this post' },
+const VISIBILITY_OPTIONS: { value: TokenVisibility; icon: React.ReactNode }[] = [
+  { value: 'public', icon: <Globe className="w-4 h-4" /> },
+  { value: 'unlisted', icon: <EyeOff className="w-4 h-4" /> },
+  { value: 'private', icon: <Lock className="w-4 h-4" /> },
 ];
 
 // The fraction market on this page is the same components the marketplace at
@@ -185,13 +185,13 @@ export default function PostInfoPage() {
   const visibilityMutation = useMutation({
     mutationFn: (newVisibility: TokenVisibility) => 
       updateTokenVisibility(nftInfo!.tokenId, newVisibility),
-    onSuccess: (_, newVisibility) => {
-      toast.success(`Visibility updated to ${newVisibility}`);
+    onSuccess: () => {
+      toast.success(t('postInfo.visibilityUpdated'));
       // Invalidate the NFT info query to refetch
       queryClient.invalidateQueries({ queryKey: ['nft-info', postId] });
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update visibility');
+      toast.error(error.message || t('postInfo.visibilityFailed'));
     },
   });
   
@@ -199,10 +199,10 @@ export default function PostInfoPage() {
     if (!nftInfo?.tokenId) return;
     visibilityMutation.mutate(newVisibility);
   };
-  const copyToClipboard = (text: string, label: string) => {
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
-      .then(() => toast.success(`${label} copied to clipboard`))
-      .catch(() => toast.error('Could not copy to clipboard'));
+      .then(() => toast.success(t('postInfo.copied')))
+      .catch(() => toast.error(t('postInfo.copyFailed')));
   };
   
   const formatDate = (dateString: string) => {
@@ -313,7 +313,7 @@ export default function PostInfoPage() {
         </div>
         <div className="flex flex-col items-center justify-center p-8 text-center">
           <ThemedIcon icon="posts" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
-          <p className="text-white/60 mb-4">{error?.message || 'Post not found'}</p>
+          <p className="text-white/60 mb-4">{error?.message || t('postInfo.notFound')}</p>
           <button
             onClick={() => navigate(-1)}
             className="text-white hover:underline"
@@ -383,7 +383,7 @@ export default function PostInfoPage() {
                   <p className="text-xl font-bold text-white">#{nftInfo.tokenId}</p>
                 </div>
                 <span className="px-2.5 py-1 text-xs font-medium rounded-lg bg-white/10 text-white/60">
-                  not minted
+                  {t('postInfo.notMinted')}
                 </span>
               </div>
               <div className="border-t border-white/10 mt-4 pt-4 flex flex-col items-center text-center py-6">
@@ -391,10 +391,10 @@ export default function PostInfoPage() {
                   <Coins className="w-6 h-6 text-white/40" />
                 </div>
                 <p className="text-white/60 text-sm leading-relaxed max-w-xs">
-                  Mint this post to generate this section
+                  {t('postInfo.mintToGenerate')}
                 </p>
                 <p className="text-white/40 text-xs mt-1.5 max-w-xs">
-                  Transaction, ownership and fraction details appear once the post is on-chain.
+                  {t('postInfo.mintDetailsLater')}
                 </p>
                 {isOwner && (
                   <button
@@ -403,7 +403,7 @@ export default function PostInfoPage() {
                     className="mt-5 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-medium transition-colors disabled:opacity-50 inline-flex items-center gap-2"
                   >
                     {isMinting && <Loader2 className="w-4 h-4 animate-spin" />}
-                    Mint post
+                    {t('postInfo.mintPost')}
                   </button>
                 )}
               </div>
@@ -442,7 +442,7 @@ export default function PostInfoPage() {
                     {nftInfo.mintTxHash}
                   </code>
                   <button
-                    onClick={() => copyToClipboard(nftInfo.mintTxHash!, 'Transaction hash')}
+                    onClick={() => copyToClipboard(nftInfo.mintTxHash!)}
                     className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
                     aria-label="Copy transaction hash"
                   >
@@ -511,7 +511,7 @@ export default function PostInfoPage() {
                 </p>
               </div>
               <button
-                onClick={() => copyToClipboard(nftInfo.minter, 'Creator wallet')}
+                onClick={() => copyToClipboard(nftInfo.minter)}
                 className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
                 aria-label="Copy creator wallet"
               >
@@ -546,7 +546,7 @@ export default function PostInfoPage() {
                   <SelectValue>
                     <div className="flex items-center gap-2">
                       {VISIBILITY_OPTIONS.find(opt => opt.value === currentVisibility)?.icon}
-                      <span>{VISIBILITY_OPTIONS.find(opt => opt.value === currentVisibility)?.label}</span>
+                      <span>{t(`postInfo.${currentVisibility}`)}</span>
                       {visibilityMutation.isPending && <Loader2 className="w-4 h-4 animate-spin ml-auto" />}
                     </div>
                   </SelectValue>
@@ -561,8 +561,8 @@ export default function PostInfoPage() {
                       <div className="flex items-center gap-3">
                         {option.icon}
                         <div>
-                          <p className="font-medium">{option.label}</p>
-                          <p className="text-xs text-white/60">{option.description}</p>
+                          <p className="font-medium">{t(`postInfo.${option.value}`)}</p>
+                          <p className="text-xs text-white/60">{t(`postInfo.${option.value}Desc`)}</p>
                         </div>
                       </div>
                     </SelectItem>
@@ -664,7 +664,7 @@ export default function PostInfoPage() {
                         </p>
                       </div>
                       <button
-                        onClick={() => copyToClipboard(holder.address, 'Wallet address')}
+                        onClick={() => copyToClipboard(holder.address)}
                         className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
                         aria-label="Copy wallet address"
                       >
@@ -688,7 +688,7 @@ export default function PostInfoPage() {
                     </p>
                   </div>
                   <button
-                    onClick={() => copyToClipboard(nftInfo.minter, 'Owner wallet')}
+                    onClick={() => copyToClipboard(nftInfo.minter)}
                     className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
                     aria-label="Copy owner wallet"
                   >
@@ -760,7 +760,7 @@ export default function PostInfoPage() {
                 <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
                 <div>
                   <p className="text-lg font-bold text-white">{postTipTotal.toLocaleString()}</p>
-                  <p className="text-xs text-white/60">{t('postInfo.tipsOnPost', 'Tips on this Post')}</p>
+                  <p className="text-xs text-white/60">{t('postInfo.tipsOnPost')}</p>
                 </div>
               </div>
 
@@ -833,7 +833,7 @@ export default function PostInfoPage() {
               <section className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <h2 className="text-sm font-medium text-white/60 mb-3 flex items-center gap-2">
                   <Hash className="w-4 h-4" />
-                  Categories
+                  {t('postInfo.categories')}
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => (

@@ -1989,7 +1989,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Hanya orang dengan tautan yang dapat melihat",
     "private": "Private",
-    "privateDesc": "Hanya Anda yang dapat melihat postingan ini"
+    "privateDesc": "Hanya Anda yang dapat melihat postingan ini",
+    "notMinted": "Belum dicipta",
+    "mintToGenerate": "Mint siaran ini untuk menjana bahagian ini",
+    "mintDetailsLater": "Butiran transaksi, pemilikan dan pecahan akan muncul setelah siaran berada di rantaian.",
+    "mintPost": "Mint siaran",
+    "categories": "Kategori",
+    "tipsOnPost": "Petua untuk siaran ini",
+    "notFound": "Siaran tidak ditemui",
+    "copied": "Disalin",
+    "visibilityUpdated": "Keterlihatan dikemas kini",
+    "visibilityFailed": "Gagal mengemas kini keterlihatan",
+    "copyFailed": "Tidak dapat disalin"
   },
   "profileOptions": {
     "copyProfileUrl": "Salin URL profil",

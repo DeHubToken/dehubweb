@@ -1702,7 +1702,18 @@
     "unlisted": "ما مدرجش",
     "unlistedDesc": "غير اللي عندهم الرابط يقدرو يشوفو",
     "private": "خاص",
-    "privateDesc": "غير نتا تقدر تشوف المنشور"
+    "privateDesc": "غير نتا تقدر تشوف المنشور",
+    "notMinted": "ما تمش سكّه",
+    "mintToGenerate": "دير mint لهاد البوسط باش يتولد هاد القسم",
+    "mintDetailsLater": "تفاصيل المعاملة والملكية والكسور تظهر بمجرد أن يصبح المنشور على السلسلة.",
+    "mintPost": "سك البوست",
+    "categories": "فئات",
+    "tipsOnPost": "إكراميات على هذا المنشور",
+    "notFound": "المنشور غير موجود",
+    "copied": "تم النسخ",
+    "visibilityUpdated": "تم تحديث الرؤية",
+    "visibilityFailed": "تعذر تحديث الرؤية",
+    "copyFailed": "تعذر النسخ"
   },
   "profileOptions": {
     "copyProfileUrl": "نسخ رابط الملف الشخصي",

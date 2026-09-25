@@ -1645,7 +1645,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "निजी",
-    "privateDesc": "सिर्फ तोहरा ई पोस्ट देख सकत बा"
+    "privateDesc": "सिर्फ तोहरा ई पोस्ट देख सकत बा",
+    "notMinted": "नाहीं मिंट भईल बा",
+    "mintToGenerate": "ई सेक्शन बनावे लेल ई पोस्ट के मिंट करऽ",
+    "mintDetailsLater": "पोस्ट ऑन-चेन पs आवे पs ट्रांजेक्शन, ओनरशिप अउरी फ्रैक्शन के डिटेल दीखेला।",
+    "mintPost": "पोस्ट के मिंट करू",
+    "categories": "श्रेणी",
+    "tipsOnPost": "ई पोस्ट पs टिप",
+    "notFound": "पोस्ट नाहीं मिलल",
+    "copied": "कॉपी हो गेलइ",
+    "visibilityUpdated": "विजिबिलिटी अपडेट भईल",
+    "visibilityFailed": "विजिबिलिटी अपडेट नाहीं हो पsवल",
+    "copyFailed": "कॉपी नहीं हो सका"
   },
   "profileOptions": {
     "copyProfileUrl": "प्रोफाइल URL कॉपी करीं",

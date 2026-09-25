@@ -1611,7 +1611,18 @@
     "totalViews": "{{count}} total views",
     "public": "Public",
     "unlisted": "Unlisted",
-    "private": "Private"
+    "private": "Private",
+    "notMinted": "Neemintat",
+    "mintToGenerate": "Mintează această postare pentru a genera această secțiune",
+    "mintDetailsLater": "Detalii despre tranzacție, proprietate și fracțiuni apar odată ce postarea este pe blockchain.",
+    "mintPost": "Mintează postarea",
+    "categories": "Categorii",
+    "tipsOnPost": "Bacșișuri la această postare",
+    "notFound": "Postare negăsită",
+    "copied": "Copiat",
+    "visibilityUpdated": "Vizibilitate actualizată",
+    "visibilityFailed": "Nu s-a putut actualiza vizibilitatea",
+    "copyFailed": "Nu s-a putut copia"
   },
   "profileOptions": {
     "copyProfileUrl": "Copiază URL-ul profilului",

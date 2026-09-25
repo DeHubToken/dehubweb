@@ -1675,7 +1675,18 @@
     "public": "عوامی",
     "publicDesc": "کوئی بھی یہ پوسٹ دیکھ سکتا ہے",
     "private": "نجی",
-    "privateDesc": "صرف آپ یہ پوسٹ دیکھ سکتے ہیں"
+    "privateDesc": "صرف آپ یہ پوسٹ دیکھ سکتے ہیں",
+    "notMinted": "ناٹ منٹڈ",
+    "mintToGenerate": "یہ سیکشن بنانے کے لیے یہ پوسٹ منٹ کریں",
+    "mintDetailsLater": "ٹرانزیکشن، ملکیت اور فریکشن کی تفصیلات پوسٹ کے آن-چین ہونے پر ظاہر ہوں گی۔",
+    "mintPost": "پوسٹ منٹ کریں",
+    "categories": "زمرے",
+    "tipsOnPost": "اس پوسٹ پر ٹپس",
+    "notFound": "پوسٹ نہیں ملی",
+    "copied": "کاپی کیا گیا۔",
+    "visibilityUpdated": "مرئیت اپ ڈیٹ ہو گئی",
+    "visibilityFailed": "مرئیت اپ ڈیٹ نہیں ہو سکی",
+    "copyFailed": "کاپی نہیں ہو سکا"
   },
   "profileOptions": {
     "copyProfileUrl": "پروفائل URL کاپی کریں",

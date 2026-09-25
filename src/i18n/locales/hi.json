@@ -1728,7 +1728,18 @@
     "unlisted": "असूचीबद्ध",
     "unlistedDesc": "केवल लिंक वाले लोग देख सकते हैं",
     "private": "निजी",
-    "privateDesc": "केवल आप देख सकते हैं"
+    "privateDesc": "केवल आप देख सकते हैं",
+    "notMinted": "मिन्ट नहीं हुआ",
+    "mintToGenerate": "यह सेक्शन बनाने के लिए इस पोस्ट को मिंट करें",
+    "mintDetailsLater": "लेन-देन, स्वामित्व और अंश का विवरण पोस्ट के ऑन-चेन होने पर दिखाई देगा।",
+    "mintPost": "पोस्ट मिंट करें",
+    "categories": "श्रेणियाँ",
+    "tipsOnPost": "इस पोस्ट पर टिप",
+    "notFound": "पोस्ट नहीं मिला",
+    "copied": "कॉपी किया गया",
+    "visibilityUpdated": "दृश्यता अपडेट की गई",
+    "visibilityFailed": "दृश्यता अपडेट नहीं हो सकी",
+    "copyFailed": "कॉपी नहीं हो सका"
   },
   "profileOptions": {
     "copyProfileUrl": "प्रोफ़ाइल URL कॉपी करें",

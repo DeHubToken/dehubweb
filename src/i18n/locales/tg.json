@@ -1674,7 +1674,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Хусусӣ",
-    "privateDesc": "Танҳо шумо дида метавонед"
+    "privateDesc": "Танҳо шумо дида метавонед",
+    "notMinted": "Ба кор андохта нашудааст",
+    "mintToGenerate": "Барои эҷоди ин қисм ин паёмро mint кунед",
+    "mintDetailsLater": "Тафсилоти транзаксия, моликият ва қисмҳо пас аз ба блокчейн ворид шудани пост пайдо мешаванд.",
+    "mintPost": "Пост минт кардан",
+    "categories": "Категорияҳо",
+    "tipsOnPost": "Маслиҳатҳо дар ин пост",
+    "notFound": "Пост ёфт нашуд",
+    "copied": "Нусхабардорӣ шуд",
+    "visibilityUpdated": "Намоёнӣ навсозӣ шуд",
+    "visibilityFailed": "Намоёнӣ навсозӣ карда нашуд",
+    "copyFailed": "Нусхабардорӣ карда нашуд"
   },
   "profileOptions": {
     "copyProfileUrl": "Нусхабардории URL профил",

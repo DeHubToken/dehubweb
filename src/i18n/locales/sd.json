@@ -1679,7 +1679,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "خانگي",
-    "privateDesc": "رڳو توهان ڏسي سگهو ٿا"
+    "privateDesc": "رڳو توهان ڏسي سگهو ٿا",
+    "notMinted": "اُ نه ڇاپيو ويو",
+    "mintToGenerate": "هي سيڪشن ٺاهڻ لاءِ هي پوسٽ منٽ ڪريو",
+    "mintDetailsLater": "ٽرانزيڪشن، ملڪيت ۽ حصي جا تفصيل پوسٽ چين تي اچڻ کان پوءِ ظاهر ٿيندا.",
+    "mintPost": "پوسٽ منٽ ڪريو",
+    "categories": "زمرا",
+    "tipsOnPost": "هن پوسٽ تي ٽوٽ",
+    "notFound": "پوسٽ نه ملي",
+    "copied": "ڪاپي ڪيو ويو",
+    "visibilityUpdated": "ظاهريت اپڊيٽ ڪئي وئي",
+    "visibilityFailed": "ظاهريت اپڊيٽ نه ٿي سگهي",
+    "copyFailed": "ڪاپي نه ٿي سگهيو"
   },
   "profileOptions": {
     "copyProfileUrl": "پروفائل URL ڪاپي ڪريو",

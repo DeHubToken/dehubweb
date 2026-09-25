@@ -1644,7 +1644,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "شخصي",
-    "privateDesc": "یوازې تاسو لیدلی شئ"
+    "privateDesc": "یوازې تاسو لیدلی شئ",
+    "notMinted": "نه خپرېدونکی",
+    "mintToGenerate": "د دې برخې جوړولو لپاره دا پوسټ mint کړئ",
+    "mintDetailsLater": "د معاملو، ملکیت او برخو جزئیات به وروسته له دې چې پوسټ په بلاکچین کې خپور شي ښکاره شي.",
+    "mintPost": "پوسټ mint کړئ",
+    "categories": "وېشنيزې",
+    "tipsOnPost": "په دې پوسټ کې ټیپس",
+    "notFound": "پوسټ ونه موندل شو",
+    "copied": "کاپي شو",
+    "visibilityUpdated": "د لیدلو وړتیا تازه شوه",
+    "visibilityFailed": "د لیدلو وړتیا تازه نه شوه",
+    "copyFailed": "کاپي نشو شو"
   },
   "profileOptions": {
     "copyProfileUrl": "د پروفایل URL کاپي کړئ",

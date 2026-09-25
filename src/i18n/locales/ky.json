@@ -1704,7 +1704,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Жеке",
-    "privateDesc": "Сиз гана көрө аласыз"
+    "privateDesc": "Сиз гана көрө аласыз",
+    "notMinted": "Минттелген эмес",
+    "mintToGenerate": "Бул бөлүмдү түзүү үчүн бул постту mint кылыңыз",
+    "mintDetailsLater": "Транзакция, менчик жана фракциялар жөнүндөгү маалыматтар пост блокчейнге жайгаштырылгандан кийин пайда болот.",
+    "mintPost": "Жазууну минттөө",
+    "categories": "Категориялар",
+    "tipsOnPost": "Бул постко кеңештер",
+    "notFound": "Пост табылган жок",
+    "copied": "Көчүрүлдү",
+    "visibilityUpdated": "Көрүнүү жаңыртылды",
+    "visibilityFailed": "Көрүнүүнү жаңыртуу мүмкүн болгон жок",
+    "copyFailed": "Көчүрүү мүмкүн болгон жок"
   },
   "profileOptions": {
     "copyProfileUrl": "Профиль URL көчүрүү",

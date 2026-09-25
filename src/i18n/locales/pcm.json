@@ -1506,7 +1506,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Private",
-    "privateDesc": "Only you fit see"
+    "privateDesc": "Only you fit see",
+    "notMinted": "Not minted",
+    "mintToGenerate": "Mint dis post make dis section show",
+    "mintDetailsLater": "Transaction, ownership and fraction details go show once di post don enter chain.",
+    "mintPost": "Mint di post",
+    "categories": "Categories",
+    "tipsOnPost": "Tips for dis post",
+    "notFound": "We no see di post",
+    "copied": "E don copy",
+    "visibilityUpdated": "Visibility updated",
+    "visibilityFailed": "E no fit change who fit see",
+    "copyFailed": "E no fit copy"
   },
   "profileOptions": {
     "copyProfileUrl": "Copy profile URL",

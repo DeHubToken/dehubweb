@@ -1687,7 +1687,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "ਨਿੱਜੀ",
-    "privateDesc": "ਸਿਰਫ਼ ਤੁਸੀਂ ਇਹ ਪੋਸਟ ਦੇਖ ਸਕਦੇ ਹੋ"
+    "privateDesc": "ਸਿਰਫ਼ ਤੁਸੀਂ ਇਹ ਪੋਸਟ ਦੇਖ ਸਕਦੇ ਹੋ",
+    "notMinted": "ਮਿਨਟ ਨਹੀਂ ਕੀਤਾ ਗਿਆ",
+    "mintToGenerate": "ਇਹ ਭਾਗ ਬਣਾਉਣ ਲਈ ਇਹ ਪੋਸਟ ਮਿੰਟ ਕਰੋ",
+    "mintDetailsLater": "ਇਕ ਵਾਰ ਪੋਸਟ ਆਨ-ਚੇਨ ਹੋਣ ਤੋਂ ਬਾਅਦ ਟ੍ਰਾਂਜੈਕਸ਼ਨ, ਮਾਲਕੀ ਅਤੇ ਅੰਸ਼ ਦੇ ਵੇਰਵੇ ਦਿਖਾਈ ਦਿੰਦੇ ਹਨ.",
+    "mintPost": "ਪੋਸਟ ਮਿੰਟ ਕਰੋ",
+    "categories": "ਸ਼੍ਰੇਣੀਆਂ",
+    "tipsOnPost": "ਇਸ ਪੋਸਟ 'ਤੇ ਸੁਝਾਅ",
+    "notFound": "ਪੋਸਟ ਨਹੀਂ ਲੱਭੀ",
+    "copied": "ਕਾਪੀ ਕੀਤਾ ਗਿਆ",
+    "visibilityUpdated": "ਦਿਖਣਯੋਗਤਾ ਅੱਪਡੇਟ ਕੀਤੀ ਗਈ",
+    "visibilityFailed": "ਦਿਖਣਯੋਗਤਾ ਅੱਪਡੇਟ ਨਹੀਂ ਕੀਤੀ ਜਾ ਸਕੀ",
+    "copyFailed": "ਕਾਪੀ ਨਹੀਂ ਹੋ ਸਕਿਆ"
   },
   "profileOptions": {
     "copyProfileUrl": "ਪ੍ਰੋਫਾਈਲ URL ਕਾਪੀ ਕਰੋ",

@@ -1686,7 +1686,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Gaar ah",
-    "privateDesc": "Adiga kaliya ayaad arki kartaa"
+    "privateDesc": "Adiga kaliya ayaad arki kartaa",
+    "notMinted": "Ma la'aan la'aan",
+    "mintToGenerate": "Mint qoraalkan si qaybtan loo abuuro",
+    "mintDetailsLater": "Faahfaahinta macaamilka, haysashada iyo qaybaha waxay soo muuqan doonaan mar haddii boostada ay ku jirto silsiladda.",
+    "mintPost": "Mint qoraalka",
+    "categories": "Qaybaha",
+    "tipsOnPost": "Talooyin ku saabsan boostada",
+    "notFound": "Boostada lama helin",
+    "copied": "La koobiyay",
+    "visibilityUpdated": "Muuqashada waa la cusbooneysiiyay",
+    "visibilityFailed": "Ma awoodin in la cusbooneysiiyo muuqaalka",
+    "copyFailed": "Waan ku guuldareystay inaan nuqul ka sameeyo"
   },
   "profileOptions": {
     "copyProfileUrl": "Koobi URL-ka profile-ka",

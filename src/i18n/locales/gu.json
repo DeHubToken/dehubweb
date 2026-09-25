@@ -1681,7 +1681,18 @@
     "unlisted": "અસૂચિબદ્ધ",
     "unlistedDesc": "ફક્ત લિંક ધરાવનારા જોઈ શકે",
     "private": "ખાનગી",
-    "privateDesc": "ફક્ત તમે આ પોસ્ટ જોઈ શકો"
+    "privateDesc": "ફક્ત તમે આ પોસ્ટ જોઈ શકો",
+    "notMinted": "મિન્ટ થયેલ નથી",
+    "mintToGenerate": "આ વિભાગ બનાવવા માટે આ પોસ્ટ મિન્ટ કરો",
+    "mintDetailsLater": "ટ્રાન્ઝેક્શન, માલિકી અને ફ્રેક્શનની વિગતો પોસ્ટ ઓન-ચેઇન થયા પછી દેખાશે.",
+    "mintPost": "પોસ્ટ મિન્ટ કરો",
+    "categories": "શ્રેણીઓ",
+    "tipsOnPost": "આ પોસ્ટ પર ટિપ્સ",
+    "notFound": "પોસ્ટ મળી નથી",
+    "copied": "કોપી કર્યું",
+    "visibilityUpdated": "દૃશ્યતા અપડેટ થઈ",
+    "visibilityFailed": "દૃશ્યતા અપડેટ કરી શકાઈ નથી",
+    "copyFailed": "કોપી કરી શકાયું નથી"
   },
   "profileOptions": {
     "copyProfileUrl": "પ્રોફાઈલ URL કૉપિ કરો",

@@ -1638,7 +1638,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "ส่วนตัว",
-    "privateDesc": "เฉพาะเจ้าเท่านั้นดูได้"
+    "privateDesc": "เฉพาะเจ้าเท่านั้นดูได้",
+    "notMinted": "ยังไม่ได้สร้าง",
+    "mintToGenerate": "มินต์โพสต์นี้เปื้อสร้างส่วนนี้",
+    "mintDetailsLater": "รายละเอียดธุรกรรม ความเป็นเจ้าของ และส่วนแบ่งจะปรากฏขึ้นเมื่อโพสต์อยู่บนบล็อกเชนแล้ว",
+    "mintPost": "มินต์โพสต์",
+    "categories": "หมวดหมู่",
+    "tipsOnPost": "ทิปสำหรับโพสต์นี้",
+    "notFound": "ไม่พบโพสต์",
+    "copied": "คัดลอกแล้ว",
+    "visibilityUpdated": "อัปเดตการมองเห็นแล้ว",
+    "visibilityFailed": "ไม่สามารถอัปเดตการมองเห็นได้",
+    "copyFailed": "คัดลอกไม่ได้"
   },
   "profileOptions": {
     "copyProfileUrl": "คัดลอก URL โปรไฟล์",

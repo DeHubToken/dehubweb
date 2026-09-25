@@ -1676,7 +1676,18 @@
     "unlisted": "Edepụtaghị",
     "unlistedDesc": "Naanị ndị nwere njikọ",
     "private": "Nkeonwe",
-    "privateDesc": "Naanị gị nwere ike ịhụ"
+    "privateDesc": "Naanị gị nwere ike ịhụ",
+    "notMinted": "E meghị ya",
+    "mintToGenerate": "Mint post a iji mepụta ngalaba a",
+    "mintDetailsLater": "Azụmahịa, nwe na nta nkọwa na-egosi ozugbo post bụ na yinye.",
+    "mintPost": "Mint post a",
+    "categories": "Udi",
+    "tipsOnPost": "Atụmatụ na a post",
+    "notFound": "Achọpụtaghị ozi",
+    "copied": "E depụtaghachila",
+    "visibilityUpdated": "Ngosi emelitere",
+    "visibilityFailed": "Agaghị emelitenwu ngosi",
+    "copyFailed": "E nweghị ike idetuo ya"
   },
   "profileOptions": {
     "copyProfileUrl": "Detụọ URL profaịlụ",

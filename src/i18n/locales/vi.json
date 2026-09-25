@@ -1552,7 +1552,18 @@
     "totalViews": "{{count}} total views",
     "public": "Public",
     "unlisted": "Unlisted",
-    "private": "Private"
+    "private": "Private",
+    "notMinted": "Chưa đúc",
+    "mintToGenerate": "Hãy mint bài đăng này để tạo phần này",
+    "mintDetailsLater": "Chi tiết giao dịch, quyền sở hữu và phân số xuất hiện sau khi bài đăng được đưa vào chuỗi.",
+    "mintPost": "Mint bài đăng",
+    "categories": "Danh mục",
+    "tipsOnPost": "Tiền thưởng cho bài đăng này",
+    "notFound": "Không tìm thấy bài đăng",
+    "copied": "Đã sao chép",
+    "visibilityUpdated": "Đã cập nhật chế độ hiển thị",
+    "visibilityFailed": "Không thể cập nhật chế độ hiển thị",
+    "copyFailed": "Không thể sao chép"
   },
   "profileOptions": {
     "copyProfileUrl": "Sao chép URL hồ sơ",

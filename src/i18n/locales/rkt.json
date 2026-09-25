@@ -1662,7 +1662,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "প্রাইভেট",
-    "privateDesc": "শুধু তুমি দেখতে পারবে"
+    "privateDesc": "শুধু তুমি দেখতে পারবে",
+    "notMinted": "মিন্ট করা হয় নাই",
+    "mintToGenerate": "এই অংশ বানাইবার লাগি এই পোস্ট মিন্ট করেন",
+    "mintDetailsLater": "পোস্ট অন-চেইন হইলে লেনদেন, মালিকানা আর ফ্র্যাকশনের বিবরণ দেখা যাইবে।",
+    "mintPost": "পোস্ট মিন্ট করেন",
+    "categories": "বিভাগ",
+    "tipsOnPost": "এই পোস্টত টিপস",
+    "notFound": "পোস্ট পাওয়া যায় নাই",
+    "copied": "কপি করা হয়েছে",
+    "visibilityUpdated": "দেখা আপডেট হইছে",
+    "visibilityFailed": "দেখা আপডেট করা গেইল না",
+    "copyFailed": "কপি করা গেইল না"
   },
   "profileOptions": {
     "copyProfileUrl": "প্রোফাইল URL কপি করো",
