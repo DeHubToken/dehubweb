@@ -2473,8 +2473,7 @@
       "empty": "Belum ada data untuk tempoh ini",
       "visitors": "pelawat",
       "pageViews": "paparan halaman",
-      "visitorsEstimated": "pelawat (anggaran)",
-      "estimatedHint": "Garis putus-putus sejak {{date}}: dianggarkan daripada paparan halaman semasa trafik melalui pelayan perantara. Lihat “Anggaran hari” di bawah."
+      "visitorsEstimated": "pelawat (anggaran)"
     },
     "countries": {
       "title": "Negara teratas",
@@ -2529,7 +2528,7 @@
       "startTerm": "Sejarah",
       "start": "— \"sepanjang masa\" bermaksud setiap hari yang Cloudflare masih simpan, hari ini {{days}} hari bermula {{date}}, hari dehub.io berpindah ke Cloudflare. Tiada data pinggir lebih awal untuk ditunjukkan, dan hari lama gugur apabila Cloudflare meluputkannya.",
       "estimatedTerm": "Anggaran hari",
-      "estimated": "— sejak {{date}}, dehub.io telah dihidangkan melalui pelayan geganti supaya rangkaian yang tidak dapat mencapai Cloudflare secara langsung masih memuatkan tapak. Cloudflare kemudian melihat kebanyakan pelawat sebagai satu alamat geganti, dan kiraan uniknya runtuh. Untuk hari-hari tersebut, carta menunjukkan paparan halaman yang diukur didarab dengan nisbah pelawat-per-halaman tontonan biasa {{days}} hari sebelum ({{ratio}}%), dilukis bersimpang siur. Paparan halaman dan permintaan masih diukur secara langsung, dan kiraan Cloudflare yang tidak disentuh adalah dalam jawapan mentah yang dipautkan di atas."
+      "estimated": "— sejak {{date}}, dehub.io telah dihidangkan melalui pelayan geganti supaya rangkaian yang tidak dapat mencapai Cloudflare secara langsung masih memuatkan tapak. Cloudflare kemudian melihat kebanyakan pelawat sebagai satu alamat geganti, dan kiraan uniknya runtuh. Untuk hari-hari tersebut, carta menunjukkan paparan halaman yang diukur didarab dengan nisbah pelawat-per-halaman tontonan biasa {{days}} hari sebelum ({{ratio}}%). Paparan halaman dan permintaan masih diukur secara langsung, dan kiraan Cloudflare yang tidak disentuh adalah dalam jawapan mentah yang dipautkan di atas."
     },
     "feedback": {
       "title": "Maklum Balas",

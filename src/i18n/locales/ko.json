@@ -2204,8 +2204,7 @@
       "empty": "이 기간의 데이터가 아직 없습니다",
       "visitors": "방문객들",
       "pageViews": "페이지 조회수",
-      "visitorsEstimated": "방문자 (예상)",
-      "estimatedHint": "{{date}} 에서 파선: 트래픽이 릴레이를 통과하는 동안 페이지 뷰에서 추정됩니다. 아래의 '예상 일수' 를 참조하세요."
+      "visitorsEstimated": "방문자 (예상)"
     },
     "countries": {
       "title": "상위 국가",

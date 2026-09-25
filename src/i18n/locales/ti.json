@@ -2124,8 +2124,7 @@
       "empty": "ንዚ እዋን እዚ ገና ዳታ የለን",
       "visitors": "ኣጋይሽ፡",
       "pageViews": "ናይ ገጽ ርእይቶታት",
-      "visitorsEstimated": "ጎብኝታት (ግምታዊ)",
-      "estimatedHint": "ካብ {{date}}: ካብ ገጽ ርእይቶታት ዝተገመተ ፡ ትራፊክ ድማ ብሽክለታ ይጐዓዝ ። ኣብ ታሕቲ ዘሎ \"ዝተገመተ መዓልታት\" ርአ ።"
+      "visitorsEstimated": "ጎብኝታት (ግምታዊ)"
     },
     "countries": {
       "title": "ላዕለዎት ሃገራት",

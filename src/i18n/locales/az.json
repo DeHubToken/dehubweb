@@ -2150,8 +2150,7 @@
       "empty": "Bu dövr üçün hələ məlumat yoxdur",
       "visitors": "ziyarətçilər",
       "pageViews": "səhifəyə baxışlar",
-      "visitorsEstimated": "ziyarətçilər (təxmini)",
-      "estimatedHint": "{{date}} tarixindən qırıq xətt: trafik ötürücü server üzərindən keçdiyi müddətdə səhifə baxışlarına əsasən təxmin edilir. Aşağıda “Təxmini günlər” bölməsinə baxın."
+      "visitorsEstimated": "ziyarətçilər (təxmini)"
     },
     "countries": {
       "title": "Aparıcı ölkələr",
@@ -2206,7 +2205,7 @@
       "startTerm": "Tarixçə",
       "start": "— «bütün dövr» Cloudflare-in hələ saxladığı hər günü bildirir, bu gün dehub.io-nun Cloudflare-ə keçdiyi {{date}} tarixindən {{days}} gün. Daha əvvəlki kənar məlumat yoxdur və köhnə günlər Cloudflare onların müddətini bitirdikcə düşür.",
       "estimatedTerm": "Təxmini günlər",
-      "estimated": "— {{date}} olduğundan, dehub.io birbaşa Cloudflare-a çata bilməyən şəbəkələrin hələ də saytı yükləməsi üçün rele serveri vasitəsilə xidmət göstərir. Cloudflare daha sonra əksər ziyarətçiləri relenin bir ünvanı kimi görür və onun unikal sayı dağılır. Diaqramda həmin günlər üçün ölçülmüş səhifə görünüşləri tərtib edilmiş {{days}} gün əvvəl ({{ratio}}%) tipik ziyarətçilərə -per-səhifə baxış nisbətinə vurulur. Səhifəyə baxışlar və sorğular hələ də birbaşa ölçülür və Cloudflare-nin toxunulmaz sayı yuxarıda əlaqələndirilmiş xam cavabdadır."
+      "estimated": "— {{date}} olduğundan, dehub.io birbaşa Cloudflare-a çata bilməyən şəbəkələrin hələ də saytı yükləməsi üçün rele serveri vasitəsilə xidmət göstərir. Cloudflare daha sonra əksər ziyarətçiləri relenin bir ünvanı kimi görür və onun unikal sayı dağılır. Diaqramda həmin günlər üçün ölçülmüş səhifə görünüşləri {{days}} gün əvvəl ({{ratio}}%) tipik ziyarətçilərə -per-səhifə baxış nisbətinə vurulur. Səhifəyə baxışlar və sorğular hələ də birbaşa ölçülür və Cloudflare-nin toxunulmaz sayı yuxarıda əlaqələndirilmiş xam cavabdadır."
     },
     "feedback": {
       "title": "Rəy-Təklif",
