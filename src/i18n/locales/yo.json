@@ -2156,14 +2156,19 @@
       "overDays": "ní ọjọ́ {{count}}",
       "requestsLabel": "Àwọn ìbéèrè",
       "served": "A pèsè",
-      "requests": "ìbéèrè {{requests}}"
+      "requests": "ìbéèrè {{requests}}",
+      "estimatedToday": "ìwòye, títí di òní UTC"
     },
     "chart": {
       "hourly": "Àwọn àlejò lọ́nà wákàtí",
       "daily": "Àwọn àlejò lójúmọ́",
       "hourlyHint": "Àwọn àárín wákàtí {{count}}, UTC",
       "dailyHint": "àwọn àlejò aláìlẹ́gbẹ́ lójúmọ́",
-      "empty": "Kò sí data fún àkókò yìí síbẹ̀"
+      "empty": "Kò sí data fún àkókò yìí síbẹ̀",
+      "visitors": "àwọn àlejò",
+      "pageViews": "ìwò ojú-ìwé",
+      "visitorsEstimated": "àwọn àlejò (tí a fojú bù ú)",
+      "estimatedHint": "Ìlà onídánsí láti {{date}}: a fojú bù ú láti inú ìwò ojú-ìwé nígbà tí ìrìnnà ń kọjá láàárín sẹ́fà alágbàtà. Wo “Àwọn ọjọ́ tí a fojú bù” nísàlẹ̀."
     },
     "countries": {
       "title": "Àwọn orílẹ̀-èdè gíga",
@@ -2216,7 +2221,9 @@
       "breakdownTerm": "Àwọn orílẹ̀-èdè àti aṣàwákiri",
       "breakdown": "— wọ́n ń tẹ̀lé àkókò tí o yàn, ṣùgbọ́n ọjọ́ {{max}} sẹ́yìn nìkan, níwọ̀n bí a ti ń pa ìpínyà ojoojúmọ́ mọ́. Ní àkókò gígùn, chart náà ń bo àkókò tí ó pọ̀ ju àkójọ orílẹ̀-èdè lọ.",
       "startTerm": "Ìtàn",
-      "start": "— \"gbogbo àkókò\" túmọ̀ sí gbogbo ọjọ́ tí Cloudflare ṣì ń pa mọ́, lónìí ọjọ́ {{days}} láti {{date}}, ọjọ́ tí dehub.io kó lọ sí Cloudflare. Kò sí data etí ìsopọ̀ tí ó ti kọjá láti fihàn, àwọn ọjọ́ àtijọ́ sì ń ṣubú bí Cloudflare ṣe ń mú wọn dàgbà."
+      "start": "— \"gbogbo àkókò\" túmọ̀ sí gbogbo ọjọ́ tí Cloudflare ṣì ń pa mọ́, lónìí ọjọ́ {{days}} láti {{date}}, ọjọ́ tí dehub.io kó lọ sí Cloudflare. Kò sí data etí ìsopọ̀ tí ó ti kọjá láti fihàn, àwọn ọjọ́ àtijọ́ sì ń ṣubú bí Cloudflare ṣe ń mú wọn dàgbà.",
+      "estimatedTerm": "Àwọn ọjọ́ tí a fojú bù",
+      "estimated": "— láti {{date}}, a ti fi dehub.io ranṣẹ nípasẹ̀ sérvérà àtúntò kí àwọn nẹ́tìwọ̀n tí kò lè dé Cloudflare ní tààrà. Cloudflare wá rí èyí tó pọ̀ jù lára àwọn àlejò gẹ́gẹ́ bí àdírẹ̀sì kan ti àtẹ̀jíṣẹ́ náà, àkáǹtì rẹ̀ tí ó ṣàrà ọ̀tọ̀ sì ṣubú. Fún àwọn ọjọ́ wọ̀nyẹn àwòrán náà ṣe àfihàn wíwo ojú-ìwé tí ó ní ìlọ́po àwọn àlejò tí ó wọ́pọ̀ lójú-ìwé ti {{days}} àwọn ọjọ́ tó ṣáájú ({{ratio}}%), tí a yà. Àwọn àkíyèsí ojú-ìwé àti àwọn ìbéèrè ṣì ń dáná wò ní tààrà, àkójọ tí Cloudflare kò fọwọ́ kàn sì wà nínú èsì tí ó wà lókè yìí."
     },
     "feedback": {
       "title": "Ibalopẹ",

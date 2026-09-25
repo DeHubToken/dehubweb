@@ -2127,14 +2127,19 @@
       "overDays": "n'ime ụbọchị {{count}}",
       "requestsLabel": "Arịrịọ",
       "served": "Ewepụtara",
-      "requests": "Arịrịọ {{requests}}"
+      "requests": "Arịrịọ {{requests}}",
+      "estimatedToday": "atụmatụ, otú anya taa UTC"
     },
     "chart": {
       "hourly": "Ndị Ọbịa Kwa Awa",
       "daily": "Ndị Ọbịa Kwa Ụbọchị",
       "hourlyHint": "{{count}} ngalaba kwa awa, UTC",
       "dailyHint": "ndị ọbịa nke ọ bụla kwa ụbọchị",
-      "empty": "Enweghị data maka oge a ma"
+      "empty": "Enweghị data maka oge a ma",
+      "visitors": "ndị ọbịa",
+      "pageViews": "ngosi ihuakwụkwọ",
+      "visitorsEstimated": "ndị ọbịa (atụmatụ)",
+      "estimatedHint": "Ahịrị kpụkọrọ akpụkọ site na {{date}}: e mere atụmatụ ya site na ngosi ihuakwụkwọ ka njem ntanetị na-agafe na sava etiti. Lee “Atụmatụ ụbọchị” n'okpuru."
     },
     "countries": {
       "title": "Mba Kacha Elu",
@@ -2187,7 +2192,9 @@
       "breakdownTerm": "Mba na Browsers",
       "breakdown": "— ndị a na-eso oge ị họrọrọ, mana naanị ruo {{max}} ụbọchị gara aga, bụ ogologo oge nkewa kwa ụbọchị na-echekwa. Na oge ndị dị ogologo, chaatị ahụ na-ekpuchi oge karịa ka ndepụta obodo si eme.",
       "startTerm": "Akụkọ Ihe Mere Eme",
-      "start": "— \"oge niile\" pụtara ụbọchị ọ bụla Cloudflare ka na-echekwa, nke bụ ugbu a ụbọchị {{days}} malite {{date}}, bụ́ ụbọchị dehub.io bidoro iji Cloudflare. Ọ dịghị data edge gara aga izugbe ị ga-ahụ, ụbọchị ndị ochie na-apụkwa mgbe Cloudflare mere ka ha kaa."
+      "start": "— \"oge niile\" pụtara ụbọchị ọ bụla Cloudflare ka na-echekwa, nke bụ ugbu a ụbọchị {{days}} malite {{date}}, bụ́ ụbọchị dehub.io bidoro iji Cloudflare. Ọ dịghị data edge gara aga izugbe ị ga-ahụ, ụbọchị ndị ochie na-apụkwa mgbe Cloudflare mere ka ha kaa.",
+      "estimatedTerm": "Atụmatụ ụbọchị",
+      "estimated": "— ebe ọ bụ na {{date}}, dehub.io e jere ozi site na a relay nkesa nke mere na netwọk nke na-apụghị iru Cloudflare ozugbo ka ibu saịtị. Cloudflare wee hụ ọtụtụ ndị ọbịa dị ka otu adreesị nke relay, ọnụ ọgụgụ ya pụrụ iche wee daa. N 'ihi na ụbọchị ndị ahụ na chaatị na-egosi tụrụ atụ page echiche ba uba site ahụkarị ọbịa-kwa-page-view ruru nke {{days}} ụbọchị tupu ({{ratio}}%), sere dashed. Echiche na arịrịọ ka na-atụle kpọmkwem, na Cloudflare si emetụtaghị ọnụ ọgụgụ bụ na raw nzaghachi jikọtara n 'elu."
     },
     "feedback": {
       "title": "Mmekorita",

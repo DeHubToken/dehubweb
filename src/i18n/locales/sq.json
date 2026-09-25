@@ -2173,14 +2173,19 @@
       "overDays": "gjatë {{count}} ditëve",
       "requestsLabel": "Kërkesa",
       "served": "Shërbyer",
-      "requests": "{{requests}} kërkesa"
+      "requests": "{{requests}} kërkesa",
+      "estimatedToday": "vlerësuar, deri më sot UTC"
     },
     "chart": {
       "hourly": "Vizitorë në orë",
       "daily": "Vizitorë në ditë",
       "hourlyHint": "{{count}} intervale orare, UTC",
       "dailyHint": "vizitorë unikë në ditë",
-      "empty": "Ende nuk ka të dhëna për këtë periudhë"
+      "empty": "Ende nuk ka të dhëna për këtë periudhë",
+      "visitors": "Vizitorë",
+      "pageViews": "Shikimet e Faqes",
+      "visitorsEstimated": "vizitorët (vlerësohet)",
+      "estimatedHint": "Të dhëna nga {{date}}: të vlerësuara nga shikimet e faqeve ndërsa trafiku kalon nëpër një stafetë. Shih \"Ditët e përllogaritura\" më poshtë."
     },
     "countries": {
       "title": "Vendet kryesore",
@@ -2233,7 +2238,9 @@
       "breakdownTerm": "Vendet dhe shfletuesit",
       "breakdown": "— ndjekin intervalin që zgjedh, por vetëm deri {{max}} ditë prapa, aq mbahet ndarja ditore. Në intervale më të gjata grafiku mbulon më shumë kohë se lista e vendeve.",
       "startTerm": "Historiku",
-      "start": "— „gjithë koha” do të thotë çdo ditë që Cloudflare ende ruan, sot {{days}} ditë duke nisur nga {{date}}, dita kur dehub.io kaloi te Cloudflare. Nuk ka të dhëna më të hershme skaji për t'u shfaqur, dhe ditët e vjetra bien ndërsa Cloudflare i skadon."
+      "start": "— „gjithë koha” do të thotë çdo ditë që Cloudflare ende ruan, sot {{days}} ditë duke nisur nga {{date}}, dita kur dehub.io kaloi te Cloudflare. Nuk ka të dhëna më të hershme skaji për t'u shfaqur, dhe ditët e vjetra bien ndërsa Cloudflare i skadon.",
+      "estimatedTerm": "Ditët e llogaritura",
+      "estimated": "— që nga {{date}}, dehub.io shërbehet përmes një serveri ndërmjetës, që rrjetet që nuk arrijnë dot Cloudflare drejtpërdrejt ta hapin sërish faqen. Kështu Cloudflare e sheh shumicën e vizitorëve si adresën e vetme të ndërmjetësit dhe numri i tij i vizitorëve unikë bie ndjeshëm. Për ato ditë grafiku tregon me vijë të ndërprerë shikimet e matura të faqeve, të shumëzuara me raportin e zakonshëm vizitorë për shikim faqeje të {{days}} ditëve të mëparshme ({{ratio}}%). Shikimet e faqeve dhe kërkesat maten ende drejtpërdrejt, dhe numri i paprekur i Cloudflare gjendet në përgjigjen e papërpunuar të lidhur më lart."
     },
     "feedback": {
       "title": "Përshtypje",

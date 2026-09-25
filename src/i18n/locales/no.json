@@ -2151,14 +2151,19 @@
       "overDays": "over {{count}} dager",
       "requestsLabel": "Forespørsler",
       "served": "Levert",
-      "requests": "{{requests}} forespørsler"
+      "requests": "{{requests}} forespørsler",
+      "estimatedToday": "anslått, så langt i dag UTC"
     },
     "chart": {
       "hourly": "Besøkende per time",
       "daily": "Besøkende per dag",
       "hourlyHint": "{{count}} timeintervaller, UTC",
       "dailyHint": "unike besøkende per dag",
-      "empty": "Ingen data for denne perioden ennå"
+      "empty": "Ingen data for denne perioden ennå",
+      "visitors": "Besøkende",
+      "pageViews": "sidevisninger",
+      "visitorsEstimated": "besøkende (estimert)",
+      "estimatedHint": "Stiplet fra {{date}}: estimert fra sidevisninger mens trafikken går gjennom et relé. Se «Estimerte dager» nedenfor."
     },
     "countries": {
       "title": "Toppland",
@@ -2211,7 +2216,9 @@
       "breakdownTerm": "Land og nettlesere",
       "breakdown": "— de følger området du velger, men bare {{max}} dager bakover, så lenge lagres dagsfordelingen. Ved lengre områder dekker grafen mer tid enn landlisten.",
       "startTerm": "Historikk",
-      "start": "— «hele perioden» betyr hver dag Cloudflare fortsatt beholder, i dag {{days}} dager fra {{date}}, dagen dehub.io flyttet til Cloudflare. Det finnes ingen eldre kantdata å vise, og gamle dager faller bort etter hvert som Cloudflare lar dem utløpe."
+      "start": "— «hele perioden» betyr hver dag Cloudflare fortsatt beholder, i dag {{days}} dager fra {{date}}, dagen dehub.io flyttet til Cloudflare. Det finnes ingen eldre kantdata å vise, og gamle dager faller bort etter hvert som Cloudflare lar dem utløpe.",
+      "estimatedTerm": "Estimerte dager",
+      "estimated": "— siden {{date}} har dehub.io blitt betjent gjennom en reléserver, slik at nettverk som ikke kan nå Cloudflare direkte fortsatt laster inn nettstedet. Cloudflare ser da flest besøkende som reléets ene adresse, og det unike antallet kollapser. For disse dagene viser diagrammet målte sidevisninger multiplisert med det typiske forholdet mellom besøkende per sidevisning for {{days}} dagene før ({{ratio}}%), tegnet stiplet. Sidevisninger og forespørsler måles fortsatt direkte, og Cloudflares urørte antall er i det rå svaret som er lenket ovenfor."
     },
     "feedback": {
       "title": "Tilbakemelding",

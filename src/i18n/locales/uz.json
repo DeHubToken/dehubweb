@@ -2170,14 +2170,19 @@
       "overDays": "{{count}} kunda",
       "requestsLabel": "So'rovlar",
       "served": "Berildi",
-      "requests": "{{requests}} ta so'rov"
+      "requests": "{{requests}} ta so'rov",
+      "estimatedToday": "taxminiy, bugun hozirgacha, UTC"
     },
     "chart": {
       "hourly": "Soatlik tashrif buyuruvchilar",
       "daily": "Kunlik tashrif buyuruvchilar",
       "hourlyHint": "{{count}} ta soatlik oraliq, UTC",
       "dailyHint": "kunlik noyob tashrif buyuruvchilar",
-      "empty": "Bu davr uchun hali ma'lumot yo'q"
+      "empty": "Bu davr uchun hali ma'lumot yo'q",
+      "visitors": "tashrif buyuruvchilar",
+      "pageViews": "sahifa ko'rishlari",
+      "visitorsEstimated": "tashrif buyuruvchilar (taxminiy)",
+      "estimatedHint": "{{date}} dan uzuq chiziq: trafik oraliq server orqali o'tayotganda sahifa ko'rishlaridan taxminiy hisoblanadi. Quyidagi “Taxminiy kunlar”ga qarang."
     },
     "countries": {
       "title": "Yetakchi davlatlar",
@@ -2230,7 +2235,9 @@
       "breakdownTerm": "Davlatlar va brauzerlar",
       "breakdown": "— ular siz tanlagan oraliqqa ergashadi, lekin faqat {{max}} kun orqaga: kunlik taqsimot shuncha saqlanadi. Uzunroq oraliqlarda diagramma davlatlar ro'yxatidan ko'proq vaqtni qamrab oladi.",
       "startTerm": "Tarix",
-      "start": "— «butun davr» Cloudflare hali saqlab turgan har bir kunni bildiradi, bugun dehub.io Cloudflare'ga o'tgan {{date}} dan boshlab {{days}} kun. Undan oldingi chekka ma'lumot yo'q va eski kunlar Cloudflare ularni eskirtirgani sari yo'qoladi."
+      "start": "— «butun davr» Cloudflare hali saqlab turgan har bir kunni bildiradi, bugun dehub.io Cloudflare'ga o'tgan {{date}} dan boshlab {{days}} kun. Undan oldingi chekka ma'lumot yo'q va eski kunlar Cloudflare ularni eskirtirgani sari yo'qoladi.",
+      "estimatedTerm": "Taxminiy kunlar",
+      "estimated": "— {{date}} dan beri dehub.io oraliq server orqali taqdim etilmoqda, shunda Cloudflare'ga to'g'ridan-to'g'ri ulana olmaydigan tarmoqlarda ham sayt ochiladi. Shu sababli Cloudflare ko'pchilik tashrif buyuruvchilarni oraliq serverning yagona manzili sifatida ko'radi va noyob tashrif buyuruvchilar soni keskin kamayadi. O'sha kunlar uchun grafik o'lchangan sahifa ko'rishlarini oldingi {{days}} kundagi odatiy tashrif buyuruvchi/sahifa ko'rishi nisbatiga ({{ratio}}%) ko'paytirib, uzuq chiziq bilan ko'rsatadi. Sahifa ko'rishlari va so'rovlar hali ham to'g'ridan-to'g'ri o'lchanadi, Cloudflare'ning o'zgartirilmagan soni esa yuqorida havola berilgan xom javobda."
     },
     "feedback": {
       "title": "Fikr-mulohaza",

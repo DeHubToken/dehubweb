@@ -2195,14 +2195,19 @@
       "overDays": "{{count}} günde",
       "requestsLabel": "İstekler",
       "served": "Sunuldu",
-      "requests": "{{requests}} istek"
+      "requests": "{{requests}} istek",
+      "estimatedToday": "tahmini, bugüne kadar bugün UTC"
     },
     "chart": {
       "hourly": "Saatlik ziyaretçi",
       "daily": "Günlük ziyaretçi",
       "hourlyHint": "{{count}} saatlik dilim, UTC",
       "dailyHint": "günlük benzersiz ziyaretçi",
-      "empty": "Bu aralık için henüz veri yok"
+      "empty": "Bu aralık için henüz veri yok",
+      "visitors": "ziyaretçiler,",
+      "pageViews": "sayfa gösterimleri",
+      "visitorsEstimated": "ziyaretçi (tahmini)",
+      "estimatedHint": "{{date}}' dan kesikli: trafik bir röle üzerinden geçerken sayfa görüntülemelerinden tahmin edilir. Aşağıdaki “Tahmini günler” bölümüne bakın."
     },
     "countries": {
       "title": "En çok ülke",
@@ -2255,7 +2260,9 @@
       "breakdownTerm": "Ülkeler ve tarayıcılar",
       "breakdown": "— seçtiğiniz aralığı izler, ancak yalnızca {{max}} gün geriye kadar; günlük dağılım bu kadar saklanır. Daha uzun aralıklarda grafik, ülke listesinden daha fazla zamanı kapsar.",
       "startTerm": "Geçmiş",
-      "start": "— \"tüm zamanlar\", Cloudflare'in hâlâ sakladığı her gün demektir; bugün dehub.io'nun Cloudflare'e geçtiği {{date}} tarihinden itibaren {{days}} gün. Daha eski uç verisi yoktur ve Cloudflare eskittikçe eski günler düşer."
+      "start": "— \"tüm zamanlar\", Cloudflare'in hâlâ sakladığı her gün demektir; bugün dehub.io'nun Cloudflare'e geçtiği {{date}} tarihinden itibaren {{days}} gün. Daha eski uç verisi yoktur ve Cloudflare eskittikçe eski günler düşer.",
+      "estimatedTerm": "Tahmini Gün:",
+      "estimated": "— {{date}} tarihinden itibaren, dehub.io'ya bir geçiş sunucusu üzerinden hizmet verilmiştir, böylece Cloudflare'a doğrudan erişemeyen ağlar hala siteyi yüklemektedir. Cloudflare daha sonra çoğu ziyaretçiyi rölenin tek adresi olarak görür ve benzersiz sayısı çöker. O günler için grafik, kesikli olarak çizilen {{days}} gün öncesinin ({{ratio}}%) sayfa görüntüleme başına tipik ziyaretçi oranı ile çarpılmış ölçülen sayfa görüntülemelerini gösterir. Sayfa görüntülemeleri ve istekler hala doğrudan ölçülmektedir ve Cloudflare'ın el değmemiş sayısı yukarıda bağlantısı verilen ham yanıttadır."
     },
     "feedback": {
       "title": "Geri Bildirim",

@@ -2146,14 +2146,19 @@
       "overDays": "дар {{count}} рӯз",
       "requestsLabel": "Дархостҳо",
       "served": "Пешниҳодшуда",
-      "requests": "{{requests}} дархост"
+      "requests": "{{requests}} дархост",
+      "estimatedToday": "ҳисоб, то имрӯз имрӯз UTC"
     },
     "chart": {
       "hourly": "Боздидкунандагон дар як соат",
       "daily": "Боздидкунандагон дар як рӯз",
       "hourlyHint": "{{count}} фосилаи соатӣ, UTC",
       "dailyHint": "боздидкунандагони беназир дар як рӯз",
-      "empty": "Барои ин фосила ҳанӯз маълумот нест"
+      "empty": "Барои ин фосила ҳанӯз маълумот нест",
+      "visitors": "mga bisita",
+      "pageViews": "mga view ng pahina",
+      "visitorsEstimated": "mga bisita (tinatakda)",
+      "estimatedHint": "{{date}}: tinatakda mula sa mga view ng pahina habang nagpapasok ng trapiko sa pamamagitan ng isang relay. Tingnan ang “Рӯзҳои ҳисобшуда” sa ibaba."
     },
     "countries": {
       "title": "Кишварҳои беҳтарин",
@@ -2206,7 +2211,9 @@
       "breakdownTerm": "Кишварҳо ва браузерҳо",
       "breakdown": "— инҳо фосилаеро, ки шумо интихоб мекунед, пайгирӣ мекунанд, аммо танҳо то {{max}} рӯзи қафо, зеро тақсимоти рӯзона то ҳамин андоза нигоҳ дошта мешавад. Дар фосилаҳои дарозтар, диаграмма замони бештареро дар бар мегирад, назар ба рӯйхати кишварҳо.",
       "startTerm": "Таърих",
-      "start": "— «тамоми давра» маънои ҳар рӯзеро дорад, ки Cloudflare то ҳол нигоҳ медорад, ки имрӯз {{days}} рӯз аст, аз {{date}} сар карда — рӯзе, ки dehub.io ба Cloudflare гузашт. Маълумоти edge аз пеш аз он вуҷуд надорад, ва рӯзҳои кӯҳна ҳангоме ки Cloudflare онҳоро фаромӯш мекунад, аз байн мераванд."
+      "start": "— «тамоми давра» маънои ҳар рӯзеро дорад, ки Cloudflare то ҳол нигоҳ медорад, ки имрӯз {{days}} рӯз аст, аз {{date}} сар карда — рӯзе, ки dehub.io ба Cloudflare гузашт. Маълумоти edge аз пеш аз он вуҷуд надорад, ва рӯзҳои кӯҳна ҳангоме ки Cloudflare онҳоро фаромӯш мекунад, аз байн мераванд.",
+      "estimatedTerm": "Рӯзҳои ҳисобшуда",
+      "estimated": "— mula sa {{date}}, dehub.io ay nagbibigay sa pamamagitan ng server ng relay upang maaaring makakuha ng mga network na hindi maaaring mag-access ng Cloudflare direkta ng site. Ang Cloudflare pagkatapos ay nakikita ng maraming mga bisita bilang isang address ng relay, at ang natatanging bilang ito. {{days}} рӯз пеш ({{ratio}}%), кашида шудааст. Ang mga view ng pahina at mga kahilingan ay mayroon nang direktang sukat, at ang hindi mababagong bilang ng Cloudflare ay sa raw na answer na naka-link sa"
     },
     "feedback": {
       "title": "Ба назари шумо",

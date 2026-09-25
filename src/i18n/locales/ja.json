@@ -2193,14 +2193,19 @@
       "overDays": "{{count}} 日あたり",
       "requestsLabel": "リクエスト",
       "served": "配信済み",
-      "requests": "{{requests}} リクエスト"
+      "requests": "{{requests}} リクエスト",
+      "estimatedToday": "今日のこれまでの推定UTC"
     },
     "chart": {
       "hourly": "1 時間あたりの訪問者",
       "daily": "1 日あたりの訪問者",
       "hourlyHint": "{{count}} 時間分のバケット、UTC",
       "dailyHint": "1 日あたりのユニーク訪問者",
-      "empty": "この期間のデータはまだありません"
+      "empty": "この期間のデータはまだありません",
+      "visitors": "来場者",
+      "pageViews": "閲覧数",
+      "visitorsEstimated": "訪問者（推定）",
+      "estimatedHint": "{{date}}からのダッシュ：トラフィックがリレーを通過している間のページビューから推定されます。下の「推定日数」をご覧ください。"
     },
     "countries": {
       "title": "上位の国",
@@ -2253,7 +2258,9 @@
       "breakdownTerm": "国とブラウザ",
       "breakdown": "— 選択した期間に従いますが、さかのぼれるのは {{max}} 日までです。日別内訳が保持される限界がそこだからです。長い期間ではグラフのほうが国別リストより広い時間を表します。",
       "startTerm": "履歴",
-      "start": "— 「全期間」とは Cloudflare がまだ保持しているすべての日を指し、現時点では dehub.io が Cloudflare へ移行した {{date}} から {{days}} 日間です。それ以前のエッジデータはなく、古い日は Cloudflare の保持期間切れとともに消えていきます。"
+      "start": "— 「全期間」とは Cloudflare がまだ保持しているすべての日を指し、現時点では dehub.io が Cloudflare へ移行した {{date}} から {{days}} 日間です。それ以前のエッジデータはなく、古い日は Cloudflare の保持期間切れとともに消えていきます。",
+      "estimatedTerm": "推定日数",
+      "estimated": "— {{date}}以降、dehub.ioはリレーサーバーを介して提供されているため、Cloudflareに直接到達できないネットワークは引き続きサイトをロードします。その後、Cloudflareはほとんどの訪問者をリレーの1つのアドレスと見なし、そのユニークな数は崩壊します。これらの日のグラフは、測定されたページビューに、描画された{{days}}日前の典型的な1ページあたりの訪問者数の比率（{{ratio}}%）を掛けたものを示しています。 ページビューとリクエストは引き続き直接測定され、Cloudflareの未変更の数は上にリンクされている生の応答に含まれています。"
     },
     "feedback": {
       "title": "フィードバック",

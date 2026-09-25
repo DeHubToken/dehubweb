@@ -2195,14 +2195,19 @@
       "overDays": "en {{count}} días",
       "requestsLabel": "Peticiones",
       "served": "Servidas",
-      "requests": "{{requests}} peticiones"
+      "requests": "{{requests}} peticiones",
+      "estimatedToday": "estimado, hasta ahora hoy UTC"
     },
     "chart": {
       "hourly": "Visitantes por hora",
       "daily": "Visitantes por día",
       "hourlyHint": "{{count}} intervalos por hora, UTC",
       "dailyHint": "visitantes únicos por día",
-      "empty": "Aún no hay datos para este periodo"
+      "empty": "Aún no hay datos para este periodo",
+      "visitors": "visitantes",
+      "pageViews": "Páginas vistas",
+      "visitorsEstimated": "visitantes (estimado)",
+      "estimatedHint": "Línea discontinua desde el {{date}}: estimado a partir de las páginas vistas mientras el tráfico pasa por un servidor intermedio. Consulta «Días Estimados» más abajo."
     },
     "countries": {
       "title": "Países principales",
@@ -2255,7 +2260,9 @@
       "breakdownTerm": "Países y navegadores",
       "breakdown": "— siguen el rango que elijas, pero solo hasta {{max}} días atrás, que es hasta donde se guarda el desglose diario. En rangos más largos el gráfico cubre más tiempo que la lista de países.",
       "startTerm": "Historial",
-      "start": "— «histórico» significa cada día que Cloudflare aún conserva, hoy {{days}} días desde el {{date}}, el día en que dehub.io pasó a Cloudflare. No hay datos de edge anteriores que mostrar, y los días antiguos van desapareciendo según Cloudflare los caduca."
+      "start": "— «histórico» significa cada día que Cloudflare aún conserva, hoy {{days}} días desde el {{date}}, el día en que dehub.io pasó a Cloudflare. No hay datos de edge anteriores que mostrar, y los días antiguos van desapareciendo según Cloudflare los caduca.",
+      "estimatedTerm": "Días Estimados",
+      "estimated": "— desde {{date}}, dehub.io se ha servido a través de un servidor de retransmisión para que las redes que no pueden llegar directamente a Cloudflare sigan cargando el sitio. Cloudflare ve a la mayoría de los visitantes como la única dirección del relé, y su recuento único se derrumba. Para esos días, el gráfico muestra las visitas a la página medidas multiplicadas por la proporción típica de visitantes por página del {{days}} días antes ({{ratio}}%), dibujado con guiones. Las visitas a la página y las solicitudes todavía se miden directamente, y el recuento intacto de Cloudflare se encuentra en la respuesta sin procesar vinculada anteriormente."
     },
     "feedback": {
       "title": "Comentarios",

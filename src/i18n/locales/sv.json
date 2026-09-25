@@ -2146,14 +2146,19 @@
       "overDays": "över {{count}} dagar",
       "requestsLabel": "Förfrågningar",
       "served": "Levererade",
-      "requests": "{{requests}} förfrågningar"
+      "requests": "{{requests}} förfrågningar",
+      "estimatedToday": "uppskattat, än så länge idag UTC"
     },
     "chart": {
       "hourly": "Besökare per timme",
       "daily": "Besökare per dag",
       "hourlyHint": "{{count}} timintervall, UTC",
       "dailyHint": "unika besökare per dag",
-      "empty": "Ingen data för den här perioden ännu"
+      "empty": "Ingen data för den här perioden ännu",
+      "visitors": "besökare",
+      "pageViews": "Sidvisningar",
+      "visitorsEstimated": "besökare (uppskattad)",
+      "estimatedHint": "Streckat från {{date}}: uppskattat från sidvisningar medan trafiken går genom ett relä. Se \"Beräknade dagar\" nedan."
     },
     "countries": {
       "title": "Toppländer",
@@ -2206,7 +2211,9 @@
       "breakdownTerm": "Länder och webbläsare",
       "breakdown": "— de följer intervallet du väljer, men bara {{max}} dagar bakåt, så länge sparas dagsfördelningen. Vid längre intervall täcker diagrammet mer tid än landslistan.",
       "startTerm": "Historik",
-      "start": "— ”hela tiden” betyder varje dag Cloudflare fortfarande sparar, i dag {{days}} dagar från {{date}}, dagen då dehub.io flyttade till Cloudflare. Det finns ingen tidigare kantdata att visa, och äldre dagar faller bort när Cloudflare låter dem gå ut."
+      "start": "— ”hela tiden” betyder varje dag Cloudflare fortfarande sparar, i dag {{days}} dagar från {{date}}, dagen då dehub.io flyttade till Cloudflare. Det finns ingen tidigare kantdata att visa, och äldre dagar faller bort när Cloudflare låter dem gå ut.",
+      "estimatedTerm": "Beräknade dagar",
+      "estimated": "— sedan {{date}} har dehub.io betjänats via en reläserver så att nätverk som inte kan nå Cloudflare direkt fortfarande laddar webbplatsen. Cloudflare ser sedan de flesta besökare som reläets enda adress, och dess unika antal kollapsar. För dessa dagar visar diagrammet uppmätta sidvisningar multiplicerat med det typiska visningsförhållandet för besökare per sida för {{days}} dagar före ({{ratio}}%), streckat. Sidvisningar och förfrågningar mäts fortfarande direkt, och Cloudflares orörda antal finns i det råa svaret länkat ovan."
     },
     "feedback": {
       "title": "Feedback",

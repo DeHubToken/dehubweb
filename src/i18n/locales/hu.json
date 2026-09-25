@@ -2142,14 +2142,19 @@
       "overDays": "{{count}} nap alatt",
       "requestsLabel": "Kérések",
       "served": "Kiszolgálva",
-      "requests": "{{requests}} kérés"
+      "requests": "{{requests}} kérés",
+      "estimatedToday": "becsült, eddig ma UTC"
     },
     "chart": {
       "hourly": "Látogatók óránként",
       "daily": "Látogatók naponta",
       "hourlyHint": "{{count}} órás sáv, UTC szerint",
       "dailyHint": "egyedi látogatók naponta",
-      "empty": "Ehhez az időszakhoz még nincs adat"
+      "empty": "Ehhez az időszakhoz még nincs adat",
+      "visitors": "Látogatók",
+      "pageViews": "Oldal nézetek",
+      "visitorsEstimated": "látogató (becsült)",
+      "estimatedHint": "Szaggatott {{date}} -tól: az oldalmegtekintések alapján becsült érték, miközben a forgalom egy relén halad át. Lásd alább a „Becsült napok” részt."
     },
     "countries": {
       "title": "Vezető országok",
@@ -2202,7 +2207,9 @@
       "breakdownTerm": "Országok és böngészők",
       "breakdown": "— ezek a választott tartományt követik, de csak {{max}} napra visszamenőleg, mert a napi bontás eddig őrződik meg. Hosszabb tartományoknál a diagram több időt fog át, mint az országlista.",
       "startTerm": "Előzmények",
-      "start": "— a „teljes időszak” minden olyan napot jelent, amit a Cloudflare még őriz, ma {{days}} nap {{date}} óta, amikor a dehub.io átkerült a Cloudflare-re. Korábbi edge-adat nincs, a régebbi napok pedig eltűnnek, ahogy a Cloudflare kiöregíti őket."
+      "start": "— a „teljes időszak” minden olyan napot jelent, amit a Cloudflare még őriz, ma {{days}} nap {{date}} óta, amikor a dehub.io átkerült a Cloudflare-re. Korábbi edge-adat nincs, a régebbi napok pedig eltűnnek, ahogy a Cloudflare kiöregíti őket.",
+      "estimatedTerm": "Becsült napok",
+      "estimated": "— {{date}} óta a dehub.io egy relé szerveren keresztül érhető el, így azok a hálózatok, amelyek nem érik el a Cloudflare-t, közvetlenül betöltik a webhelyet. A Cloudflare ezután a legtöbb látogatót a közvetítő egyetlen címének tekinti, és egyedi száma összeomlik. Azokban a napokban a diagram a mért oldalmegtekintéseket mutatja, megszorozva a {{days}} nappal korábbi ({{ratio}}%), szaggatottan rajzolt, tipikus látogató/oldal megtekintési aránnyal. Az oldalmegtekintések és a kérések mérése továbbra is közvetlenül történik, és a Cloudflare érintetlen számlálása a fent hivatkozott nyers válaszban található."
     },
     "feedback": {
       "title": "Visszajelzés",

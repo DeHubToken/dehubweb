@@ -2187,14 +2187,19 @@
       "overDays": "ngezinsuku ezingu-{{count}}",
       "requestsLabel": "Izicelo",
       "served": "Zilethiwe",
-      "requests": "izicelo ezingu-{{requests}}"
+      "requests": "izicelo ezingu-{{requests}}",
+      "estimatedToday": "kulinganiselwa, kuze kube manje i-UTC"
     },
     "chart": {
       "hourly": "Izivakashi ngehora",
       "daily": "Izivakashi ngosuku",
       "hourlyHint": "{{count}} izikhathi zamahora, i-UTC",
       "dailyHint": "izivakashi ezihlukile ngosuku",
-      "empty": "Ayikho idatha yale nkathi okwamanje"
+      "empty": "Ayikho idatha yale nkathi okwamanje",
+      "visitors": "izivakashi",
+      "pageViews": "ukubukwa kwekhasi",
+      "visitorsEstimated": "izivakashi (kulinganiselwa)",
+      "estimatedHint": "Kuthathwe ku- {{date}}: kulinganiselwa ekubukweni kwamakhasi ngenkathi ithrafikhi idlula endaweni yokudlulisela. Bheka “Izinsuku ezilinganisiwe” ngezansi."
     },
     "countries": {
       "title": "Amazwe aphezulu",
@@ -2247,7 +2252,9 @@
       "breakdownTerm": "Amazwe neziphequluli",
       "breakdown": "— alandela ibanga olikhethayo, kodwa kuphela izinsuku ezingu-{{max}} emuva, ngoba yilapho ukuhlukaniswa kwansuku zonke kugcinwa khona. Emabangeni amade ishadi limboza isikhathi esingaphezu kohlu lwamazwe.",
       "startTerm": "Umlando",
-      "start": "— \"isikhathi sonke\" kusho usuku ngalunye i-Cloudflare esalugcinile, namuhla izinsuku ezingu-{{days}} kusukela ngo-{{date}}, usuku i-dehub.io eyathuthela ngalo ku-Cloudflare. Ayikho idatha yasemaphethelweni yangaphambili engaboniswa, futhi izinsuku ezindala ziyawa njengoba i-Cloudflare izenza zibe ndala."
+      "start": "— \"isikhathi sonke\" kusho usuku ngalunye i-Cloudflare esalugcinile, namuhla izinsuku ezingu-{{days}} kusukela ngo-{{date}}, usuku i-dehub.io eyathuthela ngalo ku-Cloudflare. Ayikho idatha yasemaphethelweni yangaphambili engaboniswa, futhi izinsuku ezindala ziyawa njengoba i-Cloudflare izenza zibe ndala.",
+      "estimatedTerm": "Izinsuku ezilinganiselwe",
+      "estimated": "— kusukela {{date}}, i-dehub.io isetshenziswe nge-server ye-relay ukuze amanethiwekhi angakwazi ukufinyelela ku-Cloudflare ngokuqondile asalayisha isayithi. I-Cloudflare bese ibheka izivakashi eziningi njengekheli elilodwa le-RELAY, futhi isibalo sayo esiyingqayizivele siyawohloka. Ngalezo zinsuku ishadi libonisa ukubukwa kwekhasi okulinganisiwe okuphindaphindwe ngesilinganiso esivamile sezivakashi ngekhasi ngalinye se- {{days}} ezinsukwini ezandulele ({{ratio}}%), esidwetshiwe. Ukubukwa kwamakhasi nezicelo kusalinganiswa ngokuqondile, futhi isibalo esingathintwanga se-Cloudflare sisempendulweni eluhlaza exhunywe ngenhla."
     },
     "feedback": {
       "title": "Umuntu Onethembeka",
