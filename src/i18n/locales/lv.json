@@ -2178,14 +2178,19 @@
       "overDays": "{{count}} dienās",
       "requestsLabel": "Pieprasījumi",
       "served": "Apkalpoti",
-      "requests": "{{requests}} pieprasījumi"
+      "requests": "{{requests}} pieprasījumi",
+      "estimatedToday": "aprēķināts, līdz šim šodien UTC"
     },
     "chart": {
       "hourly": "Apmeklētāji stundā",
       "daily": "Apmeklētāji dienā",
       "hourlyHint": "{{count}} stundu intervāli, UTC",
       "dailyHint": "unikālie apmeklētāji dienā",
-      "empty": "Šim periodam vēl nav datu"
+      "empty": "Šim periodam vēl nav datu",
+      "visitors": "Apmeklētāji",
+      "pageViews": "Lapu skatījumi",
+      "visitorsEstimated": "apmeklētāji (paredzamie)",
+      "estimatedHint": "Pārtraukts no {{date}}: aprēķināts no lapas skatījumiem, kamēr trafiks iet caur releju. Skatīt tālāk \"Paredzamās dienas\"."
     },
     "countries": {
       "title": "Populārākās valstis",
@@ -2238,7 +2243,9 @@
       "breakdownTerm": "Valstis un pārlūki",
       "breakdown": "— tie seko izvēlētajam diapazonam, bet tikai {{max}} dienas atpakaļ, tik ilgi tiek glabāts dienas sadalījums. Garākos diapazonos diagramma aptver vairāk laika nekā valstu saraksts.",
       "startTerm": "Vēsture",
-      "start": "— “viss laiks” nozīmē katru dienu, ko Cloudflare vēl saglabā, šodien {{days}} dienas kopš {{date}}, dienas, kad dehub.io pārgāja uz Cloudflare. Agrāku malas datu nav, un vecākas dienas izkrīt, kad Cloudflare tām beidzas glabāšanas termiņš."
+      "start": "— “viss laiks” nozīmē katru dienu, ko Cloudflare vēl saglabā, šodien {{days}} dienas kopš {{date}}, dienas, kad dehub.io pārgāja uz Cloudflare. Agrāku malas datu nav, un vecākas dienas izkrīt, kad Cloudflare tām beidzas glabāšanas termiņš.",
+      "estimatedTerm": "Paredzamās dienas",
+      "estimated": "— kopš {{date}} dehub.io ir apkalpots, izmantojot releju serveri, lai tīkli, kas nevar tieši sasniegt Cloudflare, joprojām ielādētu vietni. Pēc tam Cloudflare lielāko daļu apmeklētāju uzskata par releja vienīgo adresi, un tā unikālais skaits samazinās. Šajās dienās diagrammā tiek rādīti izmērītie lapu skatījumi, kas reizināti ar {{days}} dienu pirms ({{ratio}}%) standarta apmeklētāju un lapu skatījumu attiecību, kas uzzīmēta pārtraukta. Lapu skatījumi un pieprasījumi joprojām tiek mērīti tieši, un Cloudflare neskartais skaits ir iepriekš norādītajā neapstrādātajā atbildē."
     },
     "feedback": {
       "title": "Atsauksmes",

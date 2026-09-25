@@ -229,26 +229,57 @@ function ChartTooltip({
   label,
 }: {
   active?: boolean;
-  payload?: { value: number; dataKey: string }[];
+  payload?: { value: number | null; dataKey: string; payload?: { estimated?: boolean } }[];
   label?: string;
 }) {
-  if (!active || !payload?.length) return null;
+  const { t } = useTranslation();
+  // At the seam a point carries both series with the same value — show it once.
+  const entries = (payload ?? []).filter((entry, i, all) => {
+    if (entry.value == null) return false;
+    return entry.dataKey !== 'visitorsEst' || !all.some((e) => e.dataKey === 'visitors' && e.value != null);
+  });
+  if (!active || !entries.length) return null;
   return (
     <div
       data-keep-dark
       className="rounded-xl bg-zinc-900 border border-zinc-700 px-3 py-2 shadow-lg"
     >
       <div className="text-[11px] text-zinc-400 mb-1">{label}</div>
-      {payload.map((entry) => (
+      {entries.map((entry) => (
         <div key={entry.dataKey} className="text-xs text-white tabular-nums">
           {formatCount(entry.value)}{' '}
           <span className="text-zinc-400">
-            {entry.dataKey === 'visitors' ? 'visitors' : 'page views'}
+            {entry.dataKey === 'pageViews'
+              ? t('stats.chart.pageViews', 'page views')
+              : entry.payload?.estimated
+                ? t('stats.chart.visitorsEstimated', 'visitors (estimated)')
+                : t('stats.chart.visitors', 'visitors')}
           </span>
         </div>
       ))}
     </div>
   );
+}
+
+/**
+ * Measured and estimated visitors as two series, so estimated buckets can be
+ * drawn dashed. A measured point next to an estimated one sits in both, which
+ * joins the lines instead of leaving a gap at the seam.
+ */
+function visitorSeries<T extends { visitors: number; pageViews: number; estimated?: boolean }>(
+  rows: T[],
+  label: (row: T) => string,
+) {
+  return rows.map((row, i) => {
+    const seam = !row.estimated && (rows[i - 1]?.estimated || rows[i + 1]?.estimated);
+    return {
+      label: label(row),
+      visitors: row.estimated ? null : row.visitors,
+      visitorsEst: row.estimated || seam ? row.visitors : null,
+      estimated: !!row.estimated,
+      pageViews: row.pageViews,
+    };
+  });
 }
 
 /**
@@ -860,7 +891,8 @@ export default function StatsPage() {
       return {
         hourly: true,
         buckets: buckets.length,
-        chart: buckets.map((h) => ({ label: formatHourLabel(h.hour), visitors: h.visitors, pageViews: h.pageViews })),
+        chart: visitorSeries(buckets, (h) => formatHourLabel(h.hour)),
+        hasEstimates: buckets.some((h) => h.estimated),
         pageViews: sum(buckets, (h) => h.pageViews),
         requests: sum(buckets, (h) => h.requests),
         bytes: null as number | null,
@@ -877,7 +909,8 @@ export default function StatsPage() {
     return {
       hourly: false,
       buckets: days.length,
-      chart: days.map((d) => ({ label: formatDayLabel(d.date), visitors: d.visitors, pageViews: d.pageViews })),
+      chart: visitorSeries(days, (d) => formatDayLabel(d.date)),
+      hasEstimates: days.some((d) => d.estimated),
       pageViews: sum(days, (d) => d.pageViews),
       requests: sum(days, (d) => d.requests),
       bytes: sum(days, (d) => d.bytes) as number | null,
@@ -989,7 +1022,11 @@ export default function StatsPage() {
               <StatTile
                 label={t('stats.tile.visitorsToday', 'Visitors today')}
                 value={formatCount(today?.visitors)}
-                hint={t('stats.tile.soFarToday', 'so far today, UTC')}
+                hint={
+                  today?.estimated
+                    ? t('stats.tile.estimatedToday', 'estimated, so far today UTC')
+                    : t('stats.tile.soFarToday', 'so far today, UTC')
+                }
               />
               {/* The busiest single bucket, never a summed "visitors in range"
                   figure: adding overlapping unique counts would count one person
@@ -1089,9 +1126,29 @@ export default function StatsPage() {
                         fill="url(#statsVisitorsFill)"
                         dot={false}
                       />
+                      <Area
+                        type="monotone"
+                        dataKey="visitorsEst"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeDasharray="4 4"
+                        strokeOpacity={0.7}
+                        fill="url(#statsVisitorsFill)"
+                        fillOpacity={0.5}
+                        dot={false}
+                      />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
+              )}
+              {view.hasEstimates && stats.estimate && (
+                <p className="text-[11px] text-zinc-500 mt-2 leading-relaxed">
+                  {t(
+                    'stats.chart.estimatedHint',
+                    'Dashed from {{date}}: estimated from page views while traffic runs through a relay. See “Estimated days” below.',
+                    { date: formatDayLabel(stats.estimate.since) },
+                  )}
+                </p>
               )}
             </div>
           </>
@@ -1257,6 +1314,20 @@ export default function StatsPage() {
                     { max: stats.window.breakdownMaxDays },
                   )}
                 </li>
+                {stats.estimate && (
+                  <li>
+                    <span className="text-zinc-300">{t('stats.definitions.estimatedTerm', 'Estimated days')}</span>{' '}
+                    {t(
+                      'stats.definitions.estimated',
+                      '— since {{date}}, dehub.io has been served through a relay server so that networks which cannot reach Cloudflare directly still load the site. Cloudflare then sees most visitors as the relay’s one address, and its unique count collapses. For those days the chart shows measured page views multiplied by the typical visitors-per-page-view ratio of the {{days}} days before ({{ratio}}%), drawn dashed. Page views and requests are still measured directly, and Cloudflare’s untouched count is in the raw response linked above.',
+                      {
+                        date: stats.estimate.since,
+                        days: stats.estimate.baselineDays,
+                        ratio: (stats.estimate.ratio * 100).toFixed(1),
+                      },
+                    )}
+                  </li>
+                )}
                 {stats.window.firstDay && (
                   <li>
                     <span className="text-zinc-300">{t('stats.definitions.startTerm', 'History')}</span>{' '}

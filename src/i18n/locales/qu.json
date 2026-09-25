@@ -2190,14 +2190,19 @@
       "overDays": "{{count}} punchawpi",
       "requestsLabel": "Mañakuykuna",
       "served": "Qusqa",
-      "requests": "{{requests}} mañakuykuna"
+      "requests": "{{requests}} mañakuykuna",
+      "estimatedToday": "yupasqa, kunankama kunan UTC"
     },
     "chart": {
       "hourly": "Watukuqkuna sapa ura",
       "daily": "Watukuqkuna sapa punchaw",
       "hourlyHint": "{{count}} ura huntachiykuna, UTC",
       "dailyHint": "sapa punchaw huk kaq watukuqkuna",
-      "empty": "Kay pachapaq manaraq willay kanchu"
+      "empty": "Kay pachapaq manaraq willay kanchu",
+      "visitors": "watukuq runakuna",
+      "pageViews": "p’anqa qhawaykunata",
+      "visitorsEstimated": "watukuqkuna (yupasqa) .",
+      "estimatedHint": "{{date}} p'unchawmanta p'itiy p'itiy siq'i: p'anqa qhawaykunamanta yupasqa, watukuykuna chawpi sirwidurnintakama purichkaptin. Uraypi “Yupasqa punchawkuna” nisqata qhaway."
     },
     "countries": {
       "title": "Hanaq llaqtakuna",
@@ -2250,7 +2255,9 @@
       "breakdownTerm": "Llaqtakuna, browserkunapas",
       "breakdown": "— kaykunaqa akllasqayki pachata qatinku, ichaqa {{max}} punchawllatam qhipaman rin, chaykamallam sapa punchawmanta t'aqasqa waqaychakun. Aswan unay pachakunapiqa, gráficoqa llaqtakuna listamanta aswan aswan pachata rikuchin.",
       "startTerm": "Ñawpa pacha",
-      "start": "— \"llapan pacha\" nisqaqa Cloudflare-pa waqaychasqan sapa punchawtam nin, kunanqa {{days}} punchawmi, {{date}} punchawmanta qallariq, dehub.io Cloudflare-man rispan punchaw. Manam ñawpaq 'edge' willay rikuchinapaq kanchu, unay punchawkunataq Cloudflare wischusqanwan chinkanku."
+      "start": "— \"llapan pacha\" nisqaqa Cloudflare-pa waqaychasqan sapa punchawtam nin, kunanqa {{days}} punchawmi, {{date}} punchawmanta qallariq, dehub.io Cloudflare-man rispan punchaw. Manam ñawpaq 'edge' willay rikuchinapaq kanchu, unay punchawkunataq Cloudflare wischusqanwan chinkanku.",
+      "estimatedTerm": "Yupasqa punchawkuna",
+      "estimated": "— {{date}} kaqmanta, dehub.io huk relé servidor kaqnintakama servisqa chaymanta llikakuna mayqinkunachus mana Cloudflare chiqamanta chayayta atinkuchu chaymanta sitiota cargankuraq. Chaymanta Cloudflare aswan watukuqkunata relé kaqpa huk direccionnin hina qhawan, chaymanta sapalla yupaynin thuñikun. Chay p'unchawkunapaq tabla tupusqa p'anqa qhawaykunata rikuchin mirachisqa típico watukuqkuna-sapa-p'anqa qhaway ratio kaqwan kay {{days}} p'unchawkuna ñawpaq ({{ratio}}%), siq'isqa ch'ikuyuq. P'anqa qhawaykuna chaymanta mañakuykuna chiqalla tupusqaraq kanku, chaymanta Cloudflare mana llamisqa yupayqa patamanta t'inkisqa raw kutichiypi kachkan."
     },
     "feedback": {
       "title": "Rimaykuna",

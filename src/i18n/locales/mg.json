@@ -2187,14 +2187,19 @@
       "overDays": "mandritra ny {{count}} andro",
       "requestsLabel": "Fangatahana",
       "served": "Nomena",
-      "requests": "fangatahana {{requests}}"
+      "requests": "fangatahana {{requests}}",
+      "estimatedToday": "vinavinaina, hatramin'izao UTC"
     },
     "chart": {
       "hourly": "Mpitsidika isan'ora",
       "daily": "Mpitsidika isan'andro",
       "hourlyHint": "Fizarana ora {{count}}, UTC",
       "dailyHint": "mpitsidika tsy mitovy isan'andro",
-      "empty": "Mbola tsy misy angona ho an'ity vanim-potoana ity"
+      "empty": "Mbola tsy misy angona ho an'ity vanim-potoana ity",
+      "visitors": "mpitsidika",
+      "pageViews": "pejy Hizaha hevitra",
+      "visitorsEstimated": "mpitsidika (tombanana)",
+      "estimatedHint": "Rava tao amin'ny {{date}}: tombanana avy amin'ny pejy nojerena raha toa ka mandeha amin'ny fampitàna kosa ny fifamoivoizana. Ny orkide dia manana fepetra ambany dia ambany."
     },
     "countries": {
       "title": "Firenena voalohany",
@@ -2247,7 +2252,9 @@
       "breakdownTerm": "Firenena sy mpitety",
       "breakdown": "— manaraka ny elanelana nofidianao izy ireo, saingy {{max}} andro any aoriana ihany, satria hatreo no itehirizana ny fizarana isan'andro. Amin'ny elanelana lava kokoa dia mandrakotra fotoana bebe kokoa noho ny lisitry ny firenena ny sary.",
       "startTerm": "Tantara",
-      "start": "— ny \"fotoana rehetra\" dia midika hoe ny andro rehetra mbola tehirizin'ny Cloudflare, androany {{days}} andro nanomboka ny {{date}}, ny andro nifindran'ny dehub.io tany Cloudflare. Tsy misy angona sisiny taloha hasehoina, ary milatsaka ireo andro taloha rehefa esorin'ny Cloudflare."
+      "start": "— ny \"fotoana rehetra\" dia midika hoe ny andro rehetra mbola tehirizin'ny Cloudflare, androany {{days}} andro nanomboka ny {{date}}, ny andro nifindran'ny dehub.io tany Cloudflare. Tsy misy angona sisiny taloha hasehoina, ary milatsaka ireo andro taloha rehefa esorin'ny Cloudflare.",
+      "estimatedTerm": "Ireo andro tombanana",
+      "estimated": "Nanompo tamin'ny alalan'ny lohamilina fifandimbiasana i {{date}} dehub.io mba mbola hampidiran'ny tambajotra izay tsy mahatratra ny Cloudflare mivantana. Cloudflare dia mahita ny ankamaroan'ny mpitsidika ho toy ny iray ny fifandimbiasana adiresy, ary ny manam-paharoa sy ny isa nirodana. Tamin'izany andro izany, ilay tabilao dia mampiseho ny fandrefesana fijery ny pejy ampitomboin'ny isan'ny mpitsidika-pejy isaky ny pejy fijerena ny {{days}} andro teo aloha ({{ratio}}%), simba ny sary. Mbola refesina mivantana ny fomba fijerin'ny pejy sy ny fangatahana, ary ao anatin'ny valinteny manta mifandray etsy ambony ny fanisana tsy voakasiky ny Cloudflare."
     },
     "feedback": {
       "title": "Fampahalalana",

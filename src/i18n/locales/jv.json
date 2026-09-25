@@ -2143,14 +2143,19 @@
       "overDays": "sajrone {{count}} dina",
       "requestsLabel": "Panjaluk",
       "served": "Diladeni",
-      "requests": "{{requests}} panjaluk"
+      "requests": "{{requests}} panjaluk",
+      "estimatedToday": "perkiraan, sejauh ini hari ini UTC"
     },
     "chart": {
       "hourly": "Tamu saben jam",
       "daily": "Tamu saben dina",
       "hourlyHint": "{{count}} interval jam, UTC",
       "dailyHint": "tamu unik saben dina",
-      "empty": "Durung ana data kanggo periode iki"
+      "empty": "Durung ana data kanggo periode iki",
+      "visitors": "pengunjung",
+      "pageViews": "tayangan halaman",
+      "visitorsEstimated": "pengunjung (perkiraan)",
+      "estimatedHint": "Garis putus-putus dari {{date}}: perkiraan dari tayangan halaman saat lalu lintas melewati relay. Lihat \"Hari perkiraan\" di bawah."
     },
     "countries": {
       "title": "Negara ndhuwur",
@@ -2203,7 +2208,9 @@
       "breakdownTerm": "Negara lan panjelajah",
       "breakdown": "— iki ngetutake rentang sing sampeyan pilih, nanging mung nganti {{max}} dina mburi, semono suwene rincian saben dina disimpen. Ing rentang sing luwih dawa, grafike nyakup wektu luwih akeh tinimbang dhaptar negara.",
       "startTerm": "Riwayat",
-      "start": "— \"kabeh wektu\" tegese saben dina sing isih disimpen Cloudflare, saiki {{days}} dina wiwit {{date}}, dina nalika dehub.io pindhah menyang Cloudflare. Ora ana data pinggir sing luwih lawas kanggo ditampilake, lan dina lawas ilang nalika Cloudflare nggawe kadaluwarsa."
+      "start": "— \"kabeh wektu\" tegese saben dina sing isih disimpen Cloudflare, saiki {{days}} dina wiwit {{date}}, dina nalika dehub.io pindhah menyang Cloudflare. Ora ana data pinggir sing luwih lawas kanggo ditampilake, lan dina lawas ilang nalika Cloudflare nggawe kadaluwarsa.",
+      "estimatedTerm": "Hari perkiraan",
+      "estimated": "— sejak {{date}}, dehub.io telah disajikan melalui server relay sehingga jaringan yang tidak dapat menjangkau Cloudflare secara langsung masih memuat situs. Cloudflare kemudian melihat sebagian besar pengunjung sebagai satu alamat relay, dan jumlah uniknya runtuh. Untuk hari-hari tersebut, bagan menunjukkan tayangan halaman yang diukur dikalikan dengan rasio pengunjung-per-tayangan-halaman yang khas dari {{days}} hari sebelumnya ({{ratio}}%), digambar dengan garis putus-putus. Tayangan halaman dan permintaan masih diukur secara langsung, dan jumlah Cloudflare yang tidak tersentuh ada di respons mentah yang ditautkan di atas."
     },
     "feedback": {
       "title": "Umpan Balik",

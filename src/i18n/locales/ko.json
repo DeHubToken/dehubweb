@@ -2193,14 +2193,19 @@
       "overDays": "{{count}}일 동안",
       "requestsLabel": "요청",
       "served": "제공됨",
-      "requests": "요청 {{requests}}건"
+      "requests": "요청 {{requests}}건",
+      "estimatedToday": "예상 시간: 현재까지 UTC"
     },
     "chart": {
       "hourly": "시간별 방문자",
       "daily": "일별 방문자",
       "hourlyHint": "{{count}}개 시간 구간, UTC",
       "dailyHint": "일별 순 방문자",
-      "empty": "이 기간의 데이터가 아직 없습니다"
+      "empty": "이 기간의 데이터가 아직 없습니다",
+      "visitors": "방문객들",
+      "pageViews": "페이지 조회수",
+      "visitorsEstimated": "방문자 (예상)",
+      "estimatedHint": "{{date}} 에서 파선: 트래픽이 릴레이를 통과하는 동안 페이지 뷰에서 추정됩니다. 아래의 '예상 일수' 를 참조하세요."
     },
     "countries": {
       "title": "상위 국가",
@@ -2253,7 +2258,9 @@
       "breakdownTerm": "국가와 브라우저",
       "breakdown": "— 선택한 기간을 따르지만 최대 {{max}}일 전까지만 가능합니다. 일별 분포가 그만큼만 보관되기 때문입니다. 더 긴 기간에서는 차트가 국가 목록보다 넓은 기간을 다룹니다.",
       "startTerm": "기록",
-      "start": "— \"전체 기간\"은 Cloudflare가 아직 보관 중인 모든 날을 뜻하며, 오늘 기준으로 dehub.io가 Cloudflare로 옮긴 {{date}}부터 {{days}}일입니다. 그 이전의 엣지 데이터는 없고, 오래된 날짜는 Cloudflare가 만료시키면서 사라집니다."
+      "start": "— \"전체 기간\"은 Cloudflare가 아직 보관 중인 모든 날을 뜻하며, 오늘 기준으로 dehub.io가 Cloudflare로 옮긴 {{date}}부터 {{days}}일입니다. 그 이전의 엣지 데이터는 없고, 오래된 날짜는 Cloudflare가 만료시키면서 사라집니다.",
+      "estimatedTerm": "예상 일수",
+      "estimated": "— {{date}} 이후로 dehub.io는 릴레이 서버를 통해 제공되어 Cloudflare에 직접 도달할 수 없는 네트워크가 여전히 사이트를 로드합니다. 그런 다음 Cloudflare는 대부분의 방문자를 릴레이의 하나의 주소로 보고 고유 카운트가 붕괴됩니다. 이 기간 동안 차트는 측정된 페이지 조회수에 {{days}} 일 전 ({{ratio}} %) 의 일반적인 페이지당 방문자 수를 곱한 값을 표시합니다. 페이지 뷰와 요청은 여전히 직접 측정되며 Cloudflare의 손길이 닿지 않은 수는 위에 링크된 원시 응답에 있습니다."
     },
     "feedback": {
       "title": "피드백",

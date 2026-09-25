@@ -1941,14 +1941,19 @@
       "overDays": "over {{count}} days",
       "requestsLabel": "Requests",
       "served": "Served",
-      "requests": "{{requests}} requests"
+      "requests": "{{requests}} requests",
+      "estimatedToday": "na estimate, reach now today, UTC"
     },
     "chart": {
       "hourly": "Visitors per hour",
       "daily": "Visitors per day",
       "hourlyHint": "{{count}} hourly buckets, UTC",
       "dailyHint": "unique visitors per day",
-      "empty": "No data for dis period yet"
+      "empty": "No data for dis period yet",
+      "visitors": "people wey visit",
+      "pageViews": "page wey dem look",
+      "visitorsEstimated": "people wey visit (na estimate)",
+      "estimatedHint": "Di broken line from {{date}}: we estimate am from di page wey dem look while traffic dey pass through relay. Check “Days wey we estimate” for down."
     },
     "countries": {
       "title": "Top countries",
@@ -2001,7 +2006,9 @@
       "breakdownTerm": "Countries and browsers",
       "breakdown": "— dis one dey follow di range wey you pick, but e only dey go back {{max}} days, na so far di per-day breakdown dey keep am. For longer range, di chart cover more time pass di country list.",
       "startTerm": "History",
-      "start": "— \"all time\" mean every day wey Cloudflare still keep, wey today na {{days}} days starting {{date}}, di day wey dehub.io move go Cloudflare. No earlier edge data dey to show, and old days dey drop off as Cloudflare dey age dem out."
+      "start": "— \"all time\" mean every day wey Cloudflare still keep, wey today na {{days}} days starting {{date}}, di day wey dehub.io move go Cloudflare. No earlier edge data dey to show, and old days dey drop off as Cloudflare dey age dem out.",
+      "estimatedTerm": "Days wey we estimate",
+      "estimated": "— since {{date}}, dehub.io dey pass through one relay server so dat network wey no fit reach Cloudflare direct fit still load di site. So Cloudflare dey see most visitors as di relay one address, and im unique count go fall well-well. For dose days, di chart dey show di page views wey we measure, multiply by di normal visitors-per-page-view ratio of di {{days}} days before ({{ratio}}%), wey we draw with broken line. Page views and requests still dey measured direct, and Cloudflare own count wey nobody touch dey inside di raw response wey we link for up."
     },
     "feedback": {
       "title": "Feedback",

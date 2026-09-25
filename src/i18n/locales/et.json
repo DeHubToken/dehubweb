@@ -2141,14 +2141,19 @@
       "overDays": "{{count}} päeva jooksul",
       "requestsLabel": "Päringud",
       "served": "Serveeritud",
-      "requests": "{{requests}} päringut"
+      "requests": "{{requests}} päringut",
+      "estimatedToday": "hinnanguline, siiani täna UTC"
     },
     "chart": {
       "hourly": "Külastajaid tunnis",
       "daily": "Külastajaid päevas",
       "hourlyHint": "{{count}} tunnist vahemikku, UTC",
       "dailyHint": "unikaalseid külastajaid päevas",
-      "empty": "Selle perioodi kohta pole veel andmeid"
+      "empty": "Selle perioodi kohta pole veel andmeid",
+      "visitors": "külastajad",
+      "pageViews": "Leheküljed",
+      "visitorsEstimated": "külastajat (hinnanguline)",
+      "estimatedHint": "Katkend alates {{date}}: hinnanguline lehe vaatamiste põhjal, samal ajal kui liiklus kulgeb läbi relee. Vaata allpool jaotist „Eeldatavad päevad“."
     },
     "countries": {
       "title": "Peamised riigid",
@@ -2201,7 +2206,9 @@
       "breakdownTerm": "Riigid ja brauserid",
       "breakdown": "— need järgivad valitud vahemikku, kuid ainult {{max}} päeva tagasi, nii kaua päevast jaotust hoitakse. Pikemate vahemike puhul katab graafik rohkem aega kui riikide nimekiri.",
       "startTerm": "Ajalugu",
-      "start": "— „kogu aeg“ tähendab iga päeva, mida Cloudflare veel säilitab, täna {{days}} päeva alates {{date}}, päevast, mil dehub.io kolis Cloudflare'i. Varasemaid servaandmeid pole näidata ja vanad päevad kaovad, kui Cloudflare need aegunuks loeb."
+      "start": "— „kogu aeg“ tähendab iga päeva, mida Cloudflare veel säilitab, täna {{days}} päeva alates {{date}}, päevast, mil dehub.io kolis Cloudflare'i. Varasemaid servaandmeid pole näidata ja vanad päevad kaovad, kui Cloudflare need aegunuks loeb.",
+      "estimatedTerm": "Eeldatavad päevad",
+      "estimated": "— alates {{date}} on dehub.io 't teenindatud releeserveri kaudu, nii et võrgud, mis ei jõua Cloudflare' i otse, laadivad saiti endiselt. Seejärel näeb Cloudflare enamikku külastajaid relee ühe aadressina ja selle unikaalne arv väheneb. Nendel päevadel näitab diagramm mõõdetud lehevaatamisi korrutatuna tüüpilise külastajate/lehevaatamiste suhtega {{days}} päeva enne ({{ratio}}%), joonistatud katkendjoontega. Lehe vaatamisi ja taotlusi mõõdetakse endiselt otse ja Cloudflare 'i puutumata arv on ülal lingitud töötlemata vastuses."
     },
     "feedback": {
       "title": "Tagasiside",
