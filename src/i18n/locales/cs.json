@@ -2152,8 +2152,7 @@
       "empty": "Pro toto období zatím nejsou data",
       "visitors": "Návštěvníci",
       "pageViews": "Shlédnutí stránky",
-      "visitorsEstimated": "návštěvníků (odhad)",
-      "estimatedHint": "Přerušováno od {{date}}: odhadnuto ze zobrazení stránky, zatímco provoz prochází relé. Podívej se dole na „Odhadované dny“."
+      "visitorsEstimated": "návštěvníků (odhad)"
     },
     "countries": {
       "title": "Nejčastější země",
@@ -2208,7 +2207,7 @@
       "startTerm": "Historie",
       "start": "— „celé období“ znamená každý den, který si Cloudflare ještě drží, dnes {{days}} dní od {{date}}, dne, kdy dehub.io přešel na Cloudflare. Starší data z okraje sítě neexistují a staré dny vypadávají, jak jim Cloudflare vyprší platnost.",
       "estimatedTerm": "Odhadované dny",
-      "estimated": "— od {{date}} bylo dehub.io podáváno prostřednictvím přenosového serveru, takže sítě, které nemohou přímo dosáhnout Cloudflare, stále načítají web. Cloudflare pak vidí většinu návštěvníků jako jednu adresu štafety a její jedinečný počet se zhroutí. Pro tyto dny graf zobrazuje naměřená zobrazení stránek vynásobená typickým poměrem návštěvníků na stránku a zobrazení {{days}} dnů před ({{ratio}}%), nakresleno přerušovaně. Zobrazení stránky a požadavky se stále měří přímo a nedotčený počet Cloudflare je v nezpracované odpovědi uvedené výše."
+      "estimated": "— od {{date}} bylo dehub.io podáváno prostřednictvím přenosového serveru, takže sítě, které nemohou přímo dosáhnout Cloudflare, stále načítají web. Cloudflare pak vidí většinu návštěvníků jako jednu adresu štafety a její jedinečný počet se zhroutí. Pro tyto dny graf zobrazuje naměřená zobrazení stránek vynásobená typickým poměrem návštěvníků na stránku a zobrazení {{days}} dnů před ({{ratio}}%). Zobrazení stránky a požadavky se stále měří přímo a nedotčený počet Cloudflare je v nezpracované odpovědi uvedené výše."
     },
     "feedback": {
       "title": "Zpětná vazba",

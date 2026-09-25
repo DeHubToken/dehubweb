@@ -2133,8 +2133,7 @@
       "empty": "Bu wagt aralygy üçin heniz maglumat ýok",
       "visitors": "gozgalaňçylar",
       "pageViews": "sahypa görseler",
-      "visitorsEstimated": "myhmansöýer (myhmansöýer",
-      "estimatedHint": "{{date}}: trafik relay arkaly ýöräp barýarka, sahypa seretmelerinden alnyp barylýar. Bu ýerde \"Hazyr günler\" diýen jümle bar."
+      "visitorsEstimated": "myhmansöýer (myhmansöýer"
     },
     "countries": {
       "title": "Iň ýokary ýurtlar",

@@ -2208,8 +2208,7 @@
       "empty": "此时间范围暂无数据",
       "visitors": "未注册用户",
       "pageViews": "页面视图",
-      "visitorsEstimated": "访客（估计）",
-      "estimatedHint": "来自{{date}}的虚线：根据流量通过中继时的页面浏览量估算。请参阅下方的“预估天数”。"
+      "visitorsEstimated": "访客（估计）"
     },
     "countries": {
       "title": "主要国家/地区",
@@ -2264,7 +2263,7 @@
       "startTerm": "历史",
       "start": "——\"全部时间\"指 Cloudflare 仍然保留的每一天，目前为自 {{date}}（dehub.io 迁到 Cloudflare 的那天）起的 {{days}} 天。此前没有边缘数据可展示，较早的日期也会随着 Cloudflare 过期而消失。",
       "estimatedTerm": "预计天数",
-      "estimated": "—自{{date}}以来， dehub.io已通过中继服务器提供服务，因此无法直接到达Cloudflare的网络仍会加载站点。然后， Cloudflare将大多数访问者视为中继的一个地址，其唯一计数会崩溃。对于那些日子，图表显示测量的页面浏览量乘以{{days}}天前（ {{ratio}} % ）的典型每页浏览量比率（虚线）。 页面浏览量和请求仍可直接测量， Cloudflare的原始计数位于上面链接的原始响应中。"
+      "estimated": "—自{{date}}以来， dehub.io已通过中继服务器提供服务，因此无法直接到达Cloudflare的网络仍会加载站点。然后， Cloudflare将大多数访问者视为中继的一个地址，其唯一计数会崩溃。对于那些日子，图表显示测量的页面浏览量乘以{{days}}天前（ {{ratio}} % ）的典型每页浏览量比率。 页面浏览量和请求仍可直接测量， Cloudflare的原始计数位于上面链接的原始响应中。"
     },
     "feedback": {
       "title": "反馈",

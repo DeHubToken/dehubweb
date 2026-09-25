@@ -2163,8 +2163,7 @@
       "empty": "Kāore anō he raraunga mō tēnei wā",
       "visitors": "kei runga nga ngeru i te turu",
       "pageViews": "tirohanga whārangi",
-      "visitorsEstimated": "ngā manuhiri (tātai)",
-      "estimatedHint": "Whakakorea mai i {{date}}: kua whakaarohia mai i nga tirohanga whaarangi i te wa e rere ana te waka i roto i te rerenga. Tirohia nga ra kua whakaritea i raro nei."
+      "visitorsEstimated": "ngā manuhiri (tātai)"
     },
     "countries": {
       "title": "Ngā whenua matua",
@@ -2219,7 +2218,7 @@
       "startTerm": "Hītori",
       "start": "— ko te \"wā katoa\" te tikanga ko ia rā e puritia tonutia ana e Cloudflare, i tēnei rā ko ngā rā {{days}} mai i te {{date}}, te rā i neke ai a dehub.io ki Cloudflare. Kāore he raraunga tapa o mua hei whakaatu, ā, ka taka ngā rā tawhito i te wā e whakakoroheketia ana e Cloudflare.",
       "estimatedTerm": "Ngā rā kua whakaritea",
-      "estimated": "— mai i te {{date}}, dehub.io kua tukuna ma te tūmau tuku kia taea ai e nga whatunga e kore e taea te tae tika ki Cloudflare te uta i te pae. Ka kite a Cloudflare i te nuinga o nga manuhiri hei wahitau kotahi o te relay, a ka hinga tona tatau motuhake. Mo aua ra, ko te mahere e whakaatu ana i nga tirohanga whaarangi kua oti te ine i te ōwehenga o nga manuhiri i ia whārangi o te {{days}} ra i mua ({{ratio}}%), i hangaia. Ko nga tirohanga me nga tono o nga whaarangi kei te whanganga tika tonu, a ko te tatau kore a Cloudflare kei roto i te whakautu raw e pa ana ki runga ake nei."
+      "estimated": "— mai i te {{date}}, dehub.io kua tukuna ma te tūmau tuku kia taea ai e nga whatunga e kore e taea te tae tika ki Cloudflare te uta i te pae. Ka kite a Cloudflare i te nuinga o nga manuhiri hei wahitau kotahi o te relay, a ka hinga tona tatau motuhake. Mo aua ra, ko te mahere e whakaatu ana i nga tirohanga whaarangi kua oti te ine i te ōwehenga o nga manuhiri i ia whārangi o te {{days}} ra i mua ({{ratio}}%). Ko nga tirohanga me nga tono o nga whaarangi kei te whanganga tika tonu, a ko te tatau kore a Cloudflare kei roto i te whakautu raw e pa ana ki runga ake nei."
     },
     "feedback": {
       "title": "Urupare",

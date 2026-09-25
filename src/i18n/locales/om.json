@@ -2183,8 +2183,7 @@
       "empty": "Yeroo kanaaf deetaan ammatti hin jiru",
       "visitors": "daawwattoota",
       "pageViews": "ilaalcha fuula",
-      "visitorsEstimated": "daawwattoota (tilmaama) .",
-      "estimatedHint": "Sarara citaa {{date}} irraa: yeroo daawwannaan saayitii sarvarii giddu-galeessaa keessa darbu, ilaalcha fuulaa irraa tilmaamame. “Guyyoota tilmaamaman” armaan gaditti ilaali."
+      "visitorsEstimated": "daawwattoota (tilmaama) ."
     },
     "countries": {
       "title": "Biyyoota ol'aanoo",
@@ -2239,7 +2238,7 @@
       "startTerm": "Seenaa",
       "start": "— \"yeroo guutuu\" jechuun guyyaa Cloudflare ammayyuu qabatee jiru hunda, har'a guyyoota {{days}} {{date}} irraa jalqabee, guyyaa dehub.io gara Cloudflare deeme. Deetaan qarqaraa isa duraa agarsiisuuf hin jiru, guyyoonni durii immoo yeroo Cloudflare isaan dulloomsu ni bad'u.",
       "estimatedTerm": "Guyyoota tilmaamaman",
-      "estimated": "— erga {{date}}, dehub.io karaa relay server tajaajilamee jira akka networkiin kallattiin Cloudflare bira gahuu hin dandeenye ammallee marsariiticha fe'u. Cloudflare sana booda daawwattoota baay'ee akka teessoo tokkootti rileeyicha ilaala, lakkoofsi isaa adda ta'es ni kufa. Guyyoota sanaaf chaartiin ilaalcha fuula safarame kan reeshiyoo daawwattoota-fuula tokkoof-ilaalcha idilee guyyoota {{days}} duraan ({{ratio}}%) baay'ifamee agarsiisa, kan qaxxaamuree kaafame. Ilaalchi fuulaafi gaaffiiwwan ammallee kallattiin kan safaraman yoo ta'u, lakkoofsi hin tuqamne Cloudflare deebii raw armaan olitti walqabatee jiru keessa jira."
+      "estimated": "— erga {{date}}, dehub.io karaa relay server tajaajilamee jira akka networkiin kallattiin Cloudflare bira gahuu hin dandeenye ammallee marsariiticha fe'u. Cloudflare sana booda daawwattoota baay'ee akka teessoo tokkootti rileeyicha ilaala, lakkoofsi isaa adda ta'es ni kufa. Guyyoota sanaaf chaartiin ilaalcha fuula safarame kan reeshiyoo daawwattoota-fuula tokkoof-ilaalcha idilee guyyoota {{days}} duraan ({{ratio}}%) baay'ifamee agarsiisa. Ilaalchi fuulaafi gaaffiiwwan ammallee kallattiin kan safaraman yoo ta'u, lakkoofsi hin tuqamne Cloudflare deebii raw armaan olitti walqabatee jiru keessa jira."
     },
     "feedback": {
       "title": "Feeddhaakii",
