@@ -2153,8 +2153,7 @@
       "empty": "Encara no hi ha dades per a aquest període",
       "visitors": "Visitants",
       "pageViews": "Vistes de pàgina",
-      "visitorsEstimated": "visitants (estimat)",
-      "estimatedHint": "Traçat des de {{date}}: estimat a partir de les visites a la pàgina mentre el trànsit passa per un relé. Consulta \"Dies estimats\" a continuació."
+      "visitorsEstimated": "visitants (estimat)"
     },
     "countries": {
       "title": "Països principals",
@@ -2209,7 +2208,7 @@
       "startTerm": "Historial",
       "start": "— «tot el període» vol dir cada dia que Cloudflare encara conserva, avui {{days}} dies a partir del {{date}}, el dia que dehub.io va passar a Cloudflare. No hi ha dades de vora anteriors per mostrar, i els dies antics van caient a mesura que Cloudflare els caduca.",
       "estimatedTerm": "Dies estimats",
-      "estimated": "— des de {{date}}, dehub.io s'ha servit a través d'un servidor de retransmissió perquè les xarxes que no poden arribar directament a Cloudflare segueixin carregant el lloc. Cloudflare veu la majoria dels visitants com l'única adreça del relleu, i el seu recompte únic es col·lapsa. Per a aquests dies, el gràfic mostra les pàgines vistes mesurades multiplicades per la ràtio típica de visitants per pàgina del {{days}} dies abans ({{ratio}}%), dibuixat amb guions. Les pàgines vistes i les sol·licituds encara es mesuren directament, i el recompte de Cloudflare intacte es troba a la resposta bruta enllaçada anteriorment."
+      "estimated": "— des de {{date}}, dehub.io s'ha servit a través d'un servidor de retransmissió perquè les xarxes que no poden arribar directament a Cloudflare segueixin carregant el lloc. Cloudflare veu la majoria dels visitants com l'única adreça del relleu, i el seu recompte únic es col·lapsa. Per a aquests dies, el gràfic mostra les pàgines vistes mesurades multiplicades per la ràtio típica de visitants per pàgina del {{days}} dies abans ({{ratio}}%). Les pàgines vistes i les sol·licituds encara es mesuren directament, i el recompte de Cloudflare intacte es troba a la resposta bruta enllaçada anteriorment."
     },
     "feedback": {
       "title": "Comentaris",

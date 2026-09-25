@@ -2168,8 +2168,7 @@
       "empty": "呢段時間仲未有數據",
       "visitors": "訪客",
       "pageViews": "頁面瀏覽量",
-      "visitorsEstimated": "訪客（估計）",
-      "estimatedHint": "由 {{date}} 虛線：喺流量經過繼電器嘅時候，根據頁面瀏覽量估計。請睇下面嘅「預計日子」。"
+      "visitorsEstimated": "訪客（估計）"
     },
     "countries": {
       "title": "主要國家/地區",
@@ -2224,7 +2223,7 @@
       "startTerm": "歷史",
       "start": "——「全部時間」係指 Cloudflare 仲保留緊嘅每一日，今日即係由 dehub.io 搬去 Cloudflare 嗰日 {{date}} 起計 {{days}} 日。之前冇邊緣數據可以顯示，舊嘅日子亦會隨住 Cloudflare 過期而消失。",
       "estimatedTerm": "估計日子",
-      "estimated": "— 自從 {{date}} 開始， dehub . io 已經透過中繼伺服器提供服務，所以直接去唔到 Cloudflare 嘅網絡仍然會載入網站。然後 Cloudflare 會將大部分訪客視為中繼嘅一個地址，而佢嘅獨特計數就會崩潰。對於嗰啲日子，圖表會顯示測量到嘅頁面瀏覽量乘以前 {{days}} 日嘅典型訪客每頁瀏覽量比率（ {{ratio}} % ），並以虛線繪製。 頁面瀏覽量同請求仍然會直接測量，而 Cloudflare 嘅未被觸及嘅計數就喺上面連結嘅原始回應入面。"
+      "estimated": "— 自從 {{date}} 開始， dehub . io 已經透過中繼伺服器提供服務，所以直接去唔到 Cloudflare 嘅網絡仍然會載入網站。然後 Cloudflare 會將大部分訪客視為中繼嘅一個地址，而佢嘅獨特計數就會崩潰。對於嗰啲日子，圖表會顯示測量到嘅頁面瀏覽量乘以前 {{days}} 日嘅典型訪客每頁瀏覽量比率（ {{ratio}} % ）。 頁面瀏覽量同請求仍然會直接測量，而 Cloudflare 嘅未被觸及嘅計數就喺上面連結嘅原始回應入面。"
     },
     "feedback": {
       "title": "反應",

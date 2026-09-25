@@ -2206,8 +2206,7 @@
       "empty": "Belum ada data untuk rentang ini",
       "visitors": "pengunjung",
       "pageViews": "tampilan halaman",
-      "visitorsEstimated": "pengunjung (perkiraan)",
-      "estimatedHint": "Garis putus-putus sejak {{date}}: diperkirakan dari tampilan halaman selama lalu lintas melewati server perantara. Lihat “Estimasi hari” di bawah."
+      "visitorsEstimated": "pengunjung (perkiraan)"
     },
     "countries": {
       "title": "Negara teratas",
@@ -2262,7 +2261,7 @@
       "startTerm": "Riwayat",
       "start": "— \"seluruh waktu\" berarti setiap hari yang masih disimpan Cloudflare, hari ini {{days}} hari mulai {{date}}, hari dehub.io pindah ke Cloudflare. Tidak ada data edge yang lebih lama untuk ditampilkan, dan hari-hari lama hilang seiring Cloudflare mengedaluwarsakannya.",
       "estimatedTerm": "Estimasi hari",
-      "estimated": "— sejak {{date}},dehub.io telah dilayani melalui server relay sehingga jaringan yang tidak dapat menjangkau Cloudflare secara langsung masih memuat situs. Cloudflare kemudian melihat sebagian besar pengunjung sebagai satu - satunya alamat relai, dan jumlah uniknya runtuh. Untuk hari - hari itu, bagan menunjukkan tampilan halaman yang diukur dikalikan dengan rasio pengunjung - per - halaman - tampilan khas dari {{days}} hari sebelumnya ({{ratio}}%), digambar putus - putus. Tampilan halaman dan permintaan masih diukur secara langsung, dan jumlah Cloudflare yang belum tersentuh ada dalam respons mentah yang ditautkan di atas."
+      "estimated": "— sejak {{date}},dehub.io telah dilayani melalui server relay sehingga jaringan yang tidak dapat menjangkau Cloudflare secara langsung masih memuat situs. Cloudflare kemudian melihat sebagian besar pengunjung sebagai satu - satunya alamat relai, dan jumlah uniknya runtuh. Untuk hari - hari itu, bagan menunjukkan tampilan halaman yang diukur dikalikan dengan rasio pengunjung - per - halaman - tampilan khas dari {{days}} hari sebelumnya ({{ratio}}%). Tampilan halaman dan permintaan masih diukur secara langsung, dan jumlah Cloudflare yang belum tersentuh ada dalam respons mentah yang ditautkan di atas."
     },
     "feedback": {
       "title": "Umpan Balik",
