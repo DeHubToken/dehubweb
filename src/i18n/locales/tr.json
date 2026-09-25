@@ -2206,8 +2206,7 @@
       "empty": "Bu aralık için henüz veri yok",
       "visitors": "ziyaretçiler,",
       "pageViews": "sayfa gösterimleri",
-      "visitorsEstimated": "ziyaretçi (tahmini)",
-      "estimatedHint": "{{date}}' dan kesikli: trafik bir röle üzerinden geçerken sayfa görüntülemelerinden tahmin edilir. Aşağıdaki “Tahmini günler” bölümüne bakın."
+      "visitorsEstimated": "ziyaretçi (tahmini)"
     },
     "countries": {
       "title": "En çok ülke",
@@ -2262,7 +2261,7 @@
       "startTerm": "Geçmiş",
       "start": "— \"tüm zamanlar\", Cloudflare'in hâlâ sakladığı her gün demektir; bugün dehub.io'nun Cloudflare'e geçtiği {{date}} tarihinden itibaren {{days}} gün. Daha eski uç verisi yoktur ve Cloudflare eskittikçe eski günler düşer.",
       "estimatedTerm": "Tahmini Gün:",
-      "estimated": "— {{date}} tarihinden itibaren, dehub.io'ya bir geçiş sunucusu üzerinden hizmet verilmiştir, böylece Cloudflare'a doğrudan erişemeyen ağlar hala siteyi yüklemektedir. Cloudflare daha sonra çoğu ziyaretçiyi rölenin tek adresi olarak görür ve benzersiz sayısı çöker. O günler için grafik, kesikli olarak çizilen {{days}} gün öncesinin ({{ratio}}%) sayfa görüntüleme başına tipik ziyaretçi oranı ile çarpılmış ölçülen sayfa görüntülemelerini gösterir. Sayfa görüntülemeleri ve istekler hala doğrudan ölçülmektedir ve Cloudflare'ın el değmemiş sayısı yukarıda bağlantısı verilen ham yanıttadır."
+      "estimated": "— {{date}} tarihinden itibaren, dehub.io'ya bir geçiş sunucusu üzerinden hizmet verilmiştir, böylece Cloudflare'a doğrudan erişemeyen ağlar hala siteyi yüklemektedir. Cloudflare daha sonra çoğu ziyaretçiyi rölenin tek adresi olarak görür ve benzersiz sayısı çöker. O günler için grafik, {{days}} gün öncesinin ({{ratio}}%) sayfa görüntüleme başına tipik ziyaretçi oranı ile çarpılmış ölçülen sayfa görüntülemelerini gösterir. Sayfa görüntülemeleri ve istekler hala doğrudan ölçülmektedir ve Cloudflare'ın el değmemiş sayısı yukarıda bağlantısı verilen ham yanıttadır."
     },
     "feedback": {
       "title": "Geri Bildirim",

@@ -2153,8 +2153,7 @@
       "empty": "Ehhez az időszakhoz még nincs adat",
       "visitors": "Látogatók",
       "pageViews": "Oldal nézetek",
-      "visitorsEstimated": "látogató (becsült)",
-      "estimatedHint": "Szaggatott {{date}} -tól: az oldalmegtekintések alapján becsült érték, miközben a forgalom egy relén halad át. Lásd alább a „Becsült napok” részt."
+      "visitorsEstimated": "látogató (becsült)"
     },
     "countries": {
       "title": "Vezető országok",
@@ -2209,7 +2208,7 @@
       "startTerm": "Előzmények",
       "start": "— a „teljes időszak” minden olyan napot jelent, amit a Cloudflare még őriz, ma {{days}} nap {{date}} óta, amikor a dehub.io átkerült a Cloudflare-re. Korábbi edge-adat nincs, a régebbi napok pedig eltűnnek, ahogy a Cloudflare kiöregíti őket.",
       "estimatedTerm": "Becsült napok",
-      "estimated": "— {{date}} óta a dehub.io egy relé szerveren keresztül érhető el, így azok a hálózatok, amelyek nem érik el a Cloudflare-t, közvetlenül betöltik a webhelyet. A Cloudflare ezután a legtöbb látogatót a közvetítő egyetlen címének tekinti, és egyedi száma összeomlik. Azokban a napokban a diagram a mért oldalmegtekintéseket mutatja, megszorozva a {{days}} nappal korábbi ({{ratio}}%), szaggatottan rajzolt, tipikus látogató/oldal megtekintési aránnyal. Az oldalmegtekintések és a kérések mérése továbbra is közvetlenül történik, és a Cloudflare érintetlen számlálása a fent hivatkozott nyers válaszban található."
+      "estimated": "— {{date}} óta a dehub.io egy relé szerveren keresztül érhető el, így azok a hálózatok, amelyek nem érik el a Cloudflare-t, közvetlenül betöltik a webhelyet. A Cloudflare ezután a legtöbb látogatót a közvetítő egyetlen címének tekinti, és egyedi száma összeomlik. Azokban a napokban a diagram a mért oldalmegtekintéseket mutatja, megszorozva a {{days}} nappal korábbi ({{ratio}}%) tipikus látogató/oldal megtekintési aránnyal. Az oldalmegtekintések és a kérések mérése továbbra is közvetlenül történik, és a Cloudflare érintetlen számlálása a fent hivatkozott nyers válaszban található."
     },
     "feedback": {
       "title": "Visszajelzés",

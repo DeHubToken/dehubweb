@@ -2121,8 +2121,7 @@
       "empty": "Kunnafoni si tɛ yen nin waati in kama fɔlɔ",
       "visitors": "taalabagaw",
       "pageViews": "pasi filɛliw",
-      "visitorsEstimated": "taalabagaw (jateminɛ)",
-      "estimatedHint": "Ɲɔrɔ tigɛtigɛlen kabini {{date}}: a jateminɛna ka bɔ pasi filɛliw la, k'a sɔrɔ taamaw bɛ tɛmɛ tɛmɛnan sɛrɛwɛri fɛ. “Tile jateminɛlenw” lajɛ duguma."
+      "visitorsEstimated": "taalabagaw (jateminɛ)"
     },
     "countries": {
       "title": "Jamana banbaw",
@@ -2177,7 +2176,7 @@
       "startTerm": "Tariku",
       "start": "— \"waati bɛɛ\" kɔrɔ ye tile bɛɛ Cloudflare mara hali bi, o ye bi {{days}} tile ye ka daminɛ {{date}} la, tile min na dehub.io taara Cloudflare kan. Kunnafoni kɔrɔ si tɛ yen ka jira nin ɲɛ, tile kɔrɔw fana bɛ bɔ tuma min na Cloudflare b'u kɔrɔya.",
       "estimatedTerm": "Tile jateminɛlenw",
-      "estimated": "— kabini {{date}}, dehub.io bɛ tɛmɛ tɛmɛnan sɛrɛwɛri dɔ fɛ, walisa rezo minnu tɛ se ka se Cloudflare yɛrɛ ma, olu fana ka site in yɛlɛ. O kosɔn Cloudflare bɛ taalabaga caman ye i n'a fɔ tɛmɛnan in ka adɛrɛsi kelen, ani a ka taalabaga kelenw jate bɛ jigin kosɛbɛ. O tilew kama, jateja bɛ pasi filɛli sumanenw jaabi ni taalabaga-ni-pasi-filɛli hakɛ ye min tun bɛ yen tile {{days}} tɛmɛnenw na ({{ratio}}%), a bɛ ci ni ɲɔrɔ tigɛtigɛlen ye. Pasi filɛliw ni ɲininiliw bɛ suman yɛrɛ ka taa a fɛ, ani Cloudflare ka jate ma yɛlɛma, o bɛ jaabi fɔlɔ la min siri bɛ san fɛ."
+      "estimated": "— kabini {{date}}, dehub.io bɛ tɛmɛ tɛmɛnan sɛrɛwɛri dɔ fɛ, walisa rezo minnu tɛ se ka se Cloudflare yɛrɛ ma, olu fana ka site in yɛlɛ. O kosɔn Cloudflare bɛ taalabaga caman ye i n'a fɔ tɛmɛnan in ka adɛrɛsi kelen, ani a ka taalabaga kelenw jate bɛ jigin kosɛbɛ. O tilew kama, jateja bɛ pasi filɛli sumanenw jaabi ni taalabaga-ni-pasi-filɛli hakɛ ye min tun bɛ yen tile {{days}} tɛmɛnenw na ({{ratio}}%). Pasi filɛliw ni ɲininiliw bɛ suman yɛrɛ ka taa a fɛ, ani Cloudflare ka jate ma yɛlɛma, o bɛ jaabi fɔlɔ la min siri bɛ san fɛ."
     },
     "feedback": {
       "title": "Feedback",

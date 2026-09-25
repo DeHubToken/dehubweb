@@ -2157,8 +2157,7 @@
       "empty": "Барои ин фосила ҳанӯз маълумот нест",
       "visitors": "mga bisita",
       "pageViews": "mga view ng pahina",
-      "visitorsEstimated": "mga bisita (tinatakda)",
-      "estimatedHint": "{{date}}: tinatakda mula sa mga view ng pahina habang nagpapasok ng trapiko sa pamamagitan ng isang relay. Tingnan ang “Рӯзҳои ҳисобшуда” sa ibaba."
+      "visitorsEstimated": "mga bisita (tinatakda)"
     },
     "countries": {
       "title": "Кишварҳои беҳтарин",
@@ -2213,7 +2212,7 @@
       "startTerm": "Таърих",
       "start": "— «тамоми давра» маънои ҳар рӯзеро дорад, ки Cloudflare то ҳол нигоҳ медорад, ки имрӯз {{days}} рӯз аст, аз {{date}} сар карда — рӯзе, ки dehub.io ба Cloudflare гузашт. Маълумоти edge аз пеш аз он вуҷуд надорад, ва рӯзҳои кӯҳна ҳангоме ки Cloudflare онҳоро фаромӯш мекунад, аз байн мераванд.",
       "estimatedTerm": "Рӯзҳои ҳисобшуда",
-      "estimated": "— mula sa {{date}}, dehub.io ay nagbibigay sa pamamagitan ng server ng relay upang maaaring makakuha ng mga network na hindi maaaring mag-access ng Cloudflare direkta ng site. Ang Cloudflare pagkatapos ay nakikita ng maraming mga bisita bilang isang address ng relay, at ang natatanging bilang ito. {{days}} рӯз пеш ({{ratio}}%), кашида шудааст. Ang mga view ng pahina at mga kahilingan ay mayroon nang direktang sukat, at ang hindi mababagong bilang ng Cloudflare ay sa raw na answer na naka-link sa"
+      "estimated": "— mula sa {{date}}, dehub.io ay nagbibigay sa pamamagitan ng server ng relay upang maaaring makakuha ng mga network na hindi maaaring mag-access ng Cloudflare direkta ng site. Ang Cloudflare pagkatapos ay nakikita ng maraming mga bisita bilang isang address ng relay, at ang natatanging bilang ito. {{days}} рӯз пеш ({{ratio}}%). Ang mga view ng pahina at mga kahilingan ay mayroon nang direktang sukat, at ang hindi mababagong bilang ng Cloudflare ay sa raw na answer na naka-link sa"
     },
     "feedback": {
       "title": "Ба назари шумо",

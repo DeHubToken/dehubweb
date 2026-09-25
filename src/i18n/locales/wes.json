@@ -1976,8 +1976,7 @@
       "empty": "No data dei for dis window yet",
       "visitors": "visitor dem",
       "pageViews": "page view dem",
-      "visitorsEstimated": "visitor dem (na estimate)",
-      "estimatedHint": "Broken line from {{date}}: we estimate am from page view dem as traffic dei pass for relay. Look “Dei dem weh we estimate” fo dong."
+      "visitorsEstimated": "visitor dem (na estimate)"
     },
     "countries": {
       "title": "Top country dem",
@@ -2032,7 +2031,7 @@
       "startTerm": "History",
       "start": "— “all time” min sei eni dei weh Cloudflare stil di keep-am, weh tudei na {{days}} dei weh start {{date}}, di dei weh dehub.io muv go Cloudflare. No earlier edge data dei for sho, an oda dei dem weh olda dem di komot wen Cloudflare don age dem out.",
       "estimatedTerm": "Dei dem weh we estimate",
-      "estimated": "— since {{date}}, dehub.io dei pass for wan relay server so dat network dem weh no fit reach Cloudflare direct fit still load di site. So Cloudflare dei si most visitor dem as di relay i wan address, an i unique count fall plenty. Fo dat dei dem, di chart dei sho di page view dem weh we measure, multiply by di normal visitor-per-page-view ratio fo di {{days}} dei dem befo ({{ratio}}%), draw fo broken line. Page view dem an request dem still dei measure direct, an Cloudflare i count weh nobody touch dei fo di raw response weh we link fo up."
+      "estimated": "— since {{date}}, dehub.io dei pass for wan relay server so dat network dem weh no fit reach Cloudflare direct fit still load di site. So Cloudflare dei si most visitor dem as di relay i wan address, an i unique count fall plenty. Fo dat dei dem, di chart dei sho di page view dem weh we measure, multiply by di normal visitor-per-page-view ratio fo di {{days}} dei dem befo ({{ratio}}%). Page view dem an request dem still dei measure direct, an Cloudflare i count weh nobody touch dei fo di raw response weh we link fo up."
     },
     "feedback": {
       "title": "Feedback",

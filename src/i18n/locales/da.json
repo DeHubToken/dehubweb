@@ -2210,8 +2210,7 @@
       "empty": "Endnu ingen data for denne periode",
       "visitors": "de besøgende",
       "pageViews": "sidevisninger",
-      "visitorsEstimated": "besøgende (anslået)",
-      "estimatedHint": "Stiplet fra {{date}}: estimeret ud fra sidevisninger, mens trafikken løber gennem et relæ. Se \"Estimerede dage\" nedenfor."
+      "visitorsEstimated": "besøgende (anslået)"
     },
     "countries": {
       "title": "Toplande",
@@ -2266,7 +2265,7 @@
       "startTerm": "Historik",
       "start": "— “hele perioden” betyder hver dag, Cloudflare stadig gemmer, i dag {{days}} dage fra {{date}}, dagen hvor dehub.io flyttede til Cloudflare. Der findes ingen ældre kantdata at vise, og gamle dage falder fra, efterhånden som Cloudflare lader dem udløbe.",
       "estimatedTerm": "Estimerede dage",
-      "estimated": "— Siden {{date}} er dehub.io blevet betjent via en relæserver, så netværk, der ikke kan nå Cloudflare direkte, stadig indlæser webstedet. Cloudflare ser derefter de fleste besøgende som relæets ene adresse, og dets unikke optælling kollapser. For disse dage viser diagrammet målte sidevisninger ganget med det typiske besøg pr. side-visningsforhold for {{days}} dage før ({{ratio}} %), tegnet stiplet. Sidevisninger og anmodninger måles stadig direkte, og Cloudflares uberørte antal er i det rå svar, der er linket ovenfor."
+      "estimated": "— Siden {{date}} er dehub.io blevet betjent via en relæserver, så netværk, der ikke kan nå Cloudflare direkte, stadig indlæser webstedet. Cloudflare ser derefter de fleste besøgende som relæets ene adresse, og dets unikke optælling kollapser. For disse dage viser diagrammet målte sidevisninger ganget med det typiske besøg pr. side-visningsforhold for {{days}} dage før ({{ratio}} %). Sidevisninger og anmodninger måles stadig direkte, og Cloudflares uberørte antal er i det rå svar, der er linket ovenfor."
     },
     "feedback": {
       "title": "Feedback",
