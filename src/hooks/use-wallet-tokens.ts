@@ -12,8 +12,9 @@ import { getSolanaTokenBalances } from '@/lib/wallet/solana-tokens';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
+import { ARC_CHAIN_ID } from '@/lib/chains/arc';
 
-const ALL_CHAINS: ChainId[] = [BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, ROBINHOOD_CHAIN_ID];
+const ALL_CHAINS: ChainId[] = [BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, ROBINHOOD_CHAIN_ID, ARC_CHAIN_ID];
 
 export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
   const { walletAddress, isAuthenticated } = useAuth();
@@ -100,6 +101,14 @@ export function useAllChainsTokens() {
     refetchOnWindowFocus: false,
   });
 
+  const arcQuery = useQuery<WalletToken[]>({
+    queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), ARC_CHAIN_ID],
+    queryFn: () => getAllTokenBalances(walletAddress!, ARC_CHAIN_ID),
+    enabled: !!walletAddress && isAuthenticated,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
+
   /**
    * Solana holdings, read from the account's LINKED Solana address rather than
    * from a connected wallet — someone signed in with Google has no Phantom
@@ -124,8 +133,9 @@ export function useAllChainsTokens() {
     ...(bnbQuery.data ?? []),
     ...(ethQuery.data ?? []),
     ...(robinhoodQuery.data ?? []),
+    ...(arcQuery.data ?? []),
     ...(solanaQuery.data ?? []),
-  ], [baseQuery.data, bnbQuery.data, ethQuery.data, robinhoodQuery.data, solanaQuery.data]);
+  ], [baseQuery.data, bnbQuery.data, ethQuery.data, robinhoodQuery.data, arcQuery.data, solanaQuery.data]);
 
   // Solana is excluded on purpose: it is optional (most accounts have no
   // linked address) and slower, and gating the whole wallet's skeleton on it
