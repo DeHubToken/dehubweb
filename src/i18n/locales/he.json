@@ -1719,7 +1719,18 @@
     "unlisted": "לא רשום",
     "unlistedDesc": "רק אנשים עם הקישור יכולים לראות",
     "private": "פרטי",
-    "privateDesc": "רק אתה יכול לראות את הפוסט הזה"
+    "privateDesc": "רק אתה יכול לראות את הפוסט הזה",
+    "notMinted": "לא הוטבע",
+    "mintToGenerate": "בצעו mint לפוסט כדי ליצור את הקטע הזה",
+    "mintDetailsLater": "פרטי עסקה, בעלות וחלקים יופיעו לאחר שהפוסט יהיה על הבלוקצ'יין.",
+    "mintPost": "הטבעת הפוסט",
+    "categories": "קטגוריות",
+    "tipsOnPost": "טיפים על הפוסט הזה",
+    "notFound": "הפוסט לא נמצא",
+    "copied": "הועתק",
+    "visibilityUpdated": "הנראות עודכנה",
+    "visibilityFailed": "לא ניתן לעדכן את הנראות",
+    "copyFailed": "לא ניתן היה להעתיק"
   },
   "profileOptions": {
     "copyProfileUrl": "העתק קישור לפרופיל",

@@ -1719,7 +1719,18 @@
     "unlisted": "Che tsankum",
     "unlistedDesc": "Miain hghum unecoghdelays karogh en tesnel",
     "private": "Andznakan",
-    "privateDesc": "Miain duk karogh ek tesnel ays grdelays"
+    "privateDesc": "Miain duk karogh ek tesnel ays grdelays",
+    "notMinted": "Չմետնված",
+    "mintToGenerate": "Մինթ արեք այս գրառումը այս բաժինը ստեղծելու համար",
+    "mintDetailsLater": "Գործարքի, սեփականության և մասնաբաժնի մանրամասները կհայտնվեն, երբ գրառումը գտնվի բլոկչեյնում։",
+    "mintPost": "Մինթել գրառումը",
+    "categories": "Կատեգորիաներ",
+    "tipsOnPost": "Խորհուրդներ այս գրառման վերաբերյալ",
+    "notFound": "Գրառումը չի գտնվել",
+    "copied": "Պատճենված",
+    "visibilityUpdated": "Տեսանելիությունը թարմացվել է",
+    "visibilityFailed": "Չհաջողվեց թարմացնել տեսանելիությունը",
+    "copyFailed": "Չհաջողվեց պատճենել"
   },
   "profileOptions": {
     "copyProfileUrl": "Պատdelays profili URL-ə",

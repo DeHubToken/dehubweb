@@ -1722,7 +1722,18 @@
     "unlisted": "Non elencato",
     "unlistedDesc": "Solo chi ha il link può vedere",
     "private": "Privato",
-    "privateDesc": "Solo tu puoi vedere questo post"
+    "privateDesc": "Solo tu puoi vedere questo post",
+    "notMinted": "Non coniato",
+    "mintToGenerate": "Fai il mint di questo post per generare questa sezione",
+    "mintDetailsLater": "I dettagli della transazione, della proprietà e delle frazioni appariranno una volta che il post sarà sulla blockchain.",
+    "mintPost": "Minta il post",
+    "categories": "Categorie",
+    "tipsOnPost": "Mance su questo post",
+    "notFound": "Post non trovato",
+    "copied": "Copiato",
+    "visibilityUpdated": "Visibilità aggiornata",
+    "visibilityFailed": "Impossibile aggiornare la visibilità",
+    "copyFailed": "Impossibile copiare"
   },
   "profileOptions": {
     "copyProfileUrl": "Copia URL profilo",

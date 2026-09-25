@@ -1717,7 +1717,18 @@
     "unlisted": "Loendamata",
     "unlistedDesc": "Ainult lingiga inimesed saavad näha",
     "private": "Privaatne",
-    "privateDesc": "Ainult sina saad seda postitust näha"
+    "privateDesc": "Ainult sina saad seda postitust näha",
+    "notMinted": "Pole vermitud",
+    "mintToGenerate": "Mindi see postitus, et see osa luua",
+    "mintDetailsLater": "Tehingu-, omandi- ja murdosade üksikasjad ilmuvad pärast postituse plokiahelasse kandmist.",
+    "mintPost": "Vermi postitus",
+    "categories": "Kategooriad",
+    "tipsOnPost": "Näpunäited selle postituse kohta",
+    "notFound": "Postitust ei leitud",
+    "copied": "Kopeeritud",
+    "visibilityUpdated": "Nähtavust värskendati",
+    "visibilityFailed": "Nähtavust ei õnnestunud värskendada",
+    "copyFailed": "Ei õnnestunud kopeerida"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopeeri profiili URL",

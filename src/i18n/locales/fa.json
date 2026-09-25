@@ -1748,7 +1748,18 @@
     "unlisted": "فهرست نشده",
     "unlistedDesc": "تنها افرادی که پیوند را دارند می‌توانند ببینند",
     "private": "خصوصی",
-    "privateDesc": "فقط شما می‌توانید ببینید"
+    "privateDesc": "فقط شما می‌توانید ببینید",
+    "notMinted": "هنوز ضرب نشده",
+    "mintToGenerate": "برای ساخت این بخش، این پست را mint کنید",
+    "mintDetailsLater": "جزئیات تراکنش، مالکیت و کسری پس از قرار گرفتن پست در بلاکچین نمایش داده می‌شود.",
+    "mintPost": "ضرب پست",
+    "categories": "دسته‌بندی‌ها",
+    "tipsOnPost": "انعام به این پست",
+    "notFound": "پست یافت نشد",
+    "copied": "کپی شد",
+    "visibilityUpdated": "قابلیت مشاهده به‌روز شد",
+    "visibilityFailed": "قابلیت مشاهده به‌روز نشد",
+    "copyFailed": "کپی نشد"
   },
   "profileOptions": {
     "copyProfileUrl": "کپی لینک پروفایل",

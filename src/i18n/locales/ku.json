@@ -1489,7 +1489,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Taybet",
-    "privateDesc": "Tenê tu dikarî bibînî"
+    "privateDesc": "Tenê tu dikarî bibînî",
+    "notMinted": "Nehatiye mint kirin",
+    "mintToGenerate": "Ji bo çêkirina vê beşê vê postê mint bike",
+    "mintDetailsLater": "Hûrguliyên danûstandinê, xwedîtiyê û parçeyan dema şandî li ser zincîrê be xuya dibin.",
+    "mintPost": "Şandiyê mint bike",
+    "categories": "Kategorî",
+    "tipsOnPost": "Serişteyên li ser vî şandiyî",
+    "notFound": "Şandî nehat dîtin",
+    "copied": "Kopî kirin",
+    "visibilityUpdated": "Dîtbarî hate nûkirin",
+    "visibilityFailed": "Dîtbarî nehate nûkirin",
+    "copyFailed": "نەکرا کۆپی بکرێت"
   },
   "profileOptions": {
     "copyProfileUrl": "لینکی پرۆفایل کۆپی بکە",

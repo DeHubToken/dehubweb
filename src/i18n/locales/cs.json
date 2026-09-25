@@ -1718,7 +1718,18 @@
     "unlisted": "Neuvedený",
     "unlistedDesc": "Pouze lidé s odkazem mohou vidět",
     "private": "Soukromý",
-    "privateDesc": "Pouze vy můžete tento příspěvek vidět"
+    "privateDesc": "Pouze vy můžete tento příspěvek vidět",
+    "notMinted": "Neraženo",
+    "mintToGenerate": "Zmintujte tento příspěvek, aby se tato sekce vygenerovala",
+    "mintDetailsLater": "Podrobnosti o transakci, vlastnictví a zlomcích se objeví, jakmile bude příspěvek na blockchainu.",
+    "mintPost": "Razit příspěvek",
+    "categories": "Kategorie",
+    "tipsOnPost": "Tipy k tomuto příspěvku",
+    "notFound": "Příspěvek nenalezen",
+    "copied": "Zkopírováno",
+    "visibilityUpdated": "Viditelnost aktualizována",
+    "visibilityFailed": "Nepodařilo se aktualizovat viditelnost",
+    "copyFailed": "Nelze zkopírovat"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopírovat URL profilu",

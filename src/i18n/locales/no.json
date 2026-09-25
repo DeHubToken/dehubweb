@@ -1680,7 +1680,18 @@
     "unlisted": "Ikke listet",
     "unlistedDesc": "Bare personer med lenken kan se",
     "private": "Privat",
-    "privateDesc": "Bare du kan se dette innlegget"
+    "privateDesc": "Bare du kan se dette innlegget",
+    "notMinted": "Ikke preget",
+    "mintToGenerate": "Mint dette innlegget for å generere denne delen",
+    "mintDetailsLater": "Transaksjons-, eierskaps- og brøkdetaljer vises når innlegget er på blokkjeden.",
+    "mintPost": "Mint innlegg",
+    "categories": "Kategorier",
+    "tipsOnPost": "Tips på dette innlegget",
+    "notFound": "Innlegg ikke funnet",
+    "copied": "Kopiert",
+    "visibilityUpdated": "Synlighet oppdatert",
+    "visibilityFailed": "Kunne ikke oppdatere synlighet",
+    "copyFailed": "Kunne ikke kopiere"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopier profil-URL",

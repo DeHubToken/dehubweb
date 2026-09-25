@@ -1699,7 +1699,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Dhuunfaa",
-    "privateDesc": "Ati qofatu ilaaluu danda'a"
+    "privateDesc": "Ati qofatu ilaaluu danda'a",
+    "notMinted": "Hin minted",
+    "mintToGenerate": "Kutaa kana uumuuf barreeffama kana mint godhi",
+    "mintDetailsLater": "Bal’inni daldalaa, abbummaa fi firaakshinii erga maxxansi sun on-chain ta’ee booda ni mul’ata.",
+    "mintPost": "Barreeffama mint godhi",
+    "categories": "Sadarkaa",
+    "tipsOnPost": "Gorsa barreeffama kana irratti",
+    "notFound": "Post hin argamne",
+    "copied": "Koppii godhame",
+    "visibilityUpdated": "Mul'achuu haaromfame",
+    "visibilityFailed": "Mul'achuu haaromsuu hin dandeenye",
+    "copyFailed": "Kopi godhamuu hin dandeenye"
   },
   "profileOptions": {
     "copyProfileUrl": "URL piroofaayilii waraabi",

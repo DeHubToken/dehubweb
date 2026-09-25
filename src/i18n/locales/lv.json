@@ -1705,7 +1705,18 @@
     "unlisted": "Nav sarakstā",
     "unlistedDesc": "Tikai personas ar saiti var redzēt",
     "private": "Privāts",
-    "privateDesc": "Tikai jūs varat redzēt šo ierakstu"
+    "privateDesc": "Tikai jūs varat redzēt šo ierakstu",
+    "notMinted": "Nav iegravēts",
+    "mintToGenerate": "Mintējiet šo ierakstu, lai izveidotu šo sadaļu",
+    "mintDetailsLater": "Darījuma, īpašumtiesību un daļu informācija parādīsies, kad ziņa būs blokķēdē.",
+    "mintPost": "Izkalt ierakstu",
+    "categories": "Kategorijas",
+    "tipsOnPost": "Padomi par šo ziņu",
+    "notFound": "Ziņa nav atrasta",
+    "copied": "Nokopēts",
+    "visibilityUpdated": "Redzamība atjaunināta",
+    "visibilityFailed": "Nevarēja atjaunināt redzamību",
+    "copyFailed": "Neizdevās kopēt"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopēt profila URL",

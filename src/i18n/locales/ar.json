@@ -1722,7 +1722,18 @@
     "unlisted": "غير مدرج",
     "unlistedDesc": "فقط من لديه الرابط يمكنه الرؤية",
     "private": "خاص",
-    "privateDesc": "أنت فقط يمكنك رؤية هذا المنشور"
+    "privateDesc": "أنت فقط يمكنك رؤية هذا المنشور",
+    "notMinted": "لم يتم سكها",
+    "mintToGenerate": "‏اسكك هذا المنشور لتوليد هذا القسم",
+    "mintDetailsLater": "تظهر تفاصيل المعاملة والملكية والكسور بمجرد أن يصبح المنشور على السلسلة.",
+    "mintPost": "سكّ المنشور",
+    "categories": "فئات",
+    "tipsOnPost": "إكراميات على هذا المنشور",
+    "notFound": "لم يتم العثور على المنشور",
+    "copied": "تم النسخ",
+    "visibilityUpdated": "تم تحديث الرؤية",
+    "visibilityFailed": "تعذر تحديث الرؤية",
+    "copyFailed": "تعذر النسخ"
   },
   "profileOptions": {
     "copyProfileUrl": "نسخ رابط الملف الشخصي",

@@ -1683,7 +1683,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Ìkọ̀kọ̀",
-    "privateDesc": "Ìwọ nìkan lè rí"
+    "privateDesc": "Ìwọ nìkan lè rí",
+    "notMinted": "Ko si mint",
+    "mintToGenerate": "Mint ìfìwéránṣẹ́ yìí láti ṣẹ̀dá apá yìí",
+    "mintDetailsLater": "Alaye lori iṣowo, ohun-ini, ati awọn ipin yoo farahan lẹhin ti ifiweranṣẹ ba wa lori pq.",
+    "mintPost": "Mint ìfìwéránṣẹ́",
+    "categories": "Àwọn ìṣọ̀rí",
+    "tipsOnPost": "Awọn imọran lori ifiweranṣẹ yii",
+    "notFound": "A ko ri ifiweranṣẹ naa",
+    "copied": "A daakọ rẹ",
+    "visibilityUpdated": "A ti mu hihan pọ si",
+    "visibilityFailed": "Ko le mu hihan pọ si",
+    "copyFailed": "Ko le daakọ"
   },
   "profileOptions": {
     "copyProfileUrl": "Daakọ URL profaili",

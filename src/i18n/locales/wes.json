@@ -1528,7 +1528,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Private",
-    "privateDesc": "Only you fit see dis post"
+    "privateDesc": "Only you fit see dis post",
+    "notMinted": "Not minted",
+    "mintToGenerate": "Mint dis post mek dis section show",
+    "mintDetailsLater": "Transaction, ownership an fraction details go show wen di post don dey for chain.",
+    "mintPost": "Mint di post",
+    "categories": "Category dem",
+    "tipsOnPost": "Tip dem for dis post",
+    "notFound": "We no see di post",
+    "copied": "E don copy",
+    "visibilityUpdated": "Visibility updated",
+    "visibilityFailed": "E no fit change who fit see",
+    "copyFailed": "E no fit copy"
   },
   "profileOptions": {
     "copyProfileUrl": "Copy profile URL",

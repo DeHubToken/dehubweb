@@ -1636,7 +1636,18 @@
     "unlisted": "مو مدرج",
     "unlistedDesc": "بس اللي عندهم الرابط يقدرون يشوفون",
     "private": "خاص",
-    "privateDesc": "بس انت تقدر تشوف المنشور"
+    "privateDesc": "بس انت تقدر تشوف المنشور",
+    "notMinted": "مش مسبوك",
+    "mintToGenerate": "سكّ هذا المنشور حتى يتولد هذا القسم",
+    "mintDetailsLater": "تفاصيل المعاملة والملكية والكسور تظهر بمجرد أن يكون المنشور على السلسلة.",
+    "mintPost": "سك المنشور",
+    "categories": "فئات",
+    "tipsOnPost": "إكراميات على هذا المنشور",
+    "notFound": "لم يتم العثور على المنشور",
+    "copied": "تم النسخ",
+    "visibilityUpdated": "تم تحديث الرؤية",
+    "visibilityFailed": "تعذر تحديث الرؤية",
+    "copyFailed": "تعذر النسخ"
   },
   "profileOptions": {
     "copyProfileUrl": "نسخ رابط الملف الشخصي",

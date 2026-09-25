@@ -1645,7 +1645,18 @@
     "totalViews": "{{count}} total views",
     "public": "Public",
     "unlisted": "Unlisted",
-    "private": "Private"
+    "private": "Private",
+    "notMinted": "Nie gemunt nie",
+    "mintToGenerate": "Slaan hierdie plasing om hierdie afdeling te genereer",
+    "mintDetailsLater": "Transaksie-, eienaarskap- en breukdeeltjiedetalje verskyn sodra die plasing op die ketting is.",
+    "mintPost": "Munt plasing",
+    "categories": "Kategorieë",
+    "tipsOnPost": "Wenke op hierdie plasing",
+    "notFound": "Plasing nie gevind nie",
+    "copied": "Gekopieer",
+    "visibilityUpdated": "Sigbaarheid opgedateer",
+    "visibilityFailed": "Kon sigbaarheid nie opdateer nie",
+    "copyFailed": "Kon nie kopieer nie"
   },
   "profileOptions": {
     "copyProfileUrl": "Kopieer profiel-URL",

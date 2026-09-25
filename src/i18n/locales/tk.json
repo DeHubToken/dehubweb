@@ -1671,7 +1671,18 @@
     "unlisted": "Unlisted",
     "unlistedDesc": "Only people with the link can see",
     "private": "Hususy",
-    "privateDesc": "Diňe siz görüp bilersiňiz"
+    "privateDesc": "Diňe siz görüp bilersiňiz",
+    "notMinted": "Ýok, döwrebap däl",
+    "mintToGenerate": "Bu bölümi döretmek üçin bu ýazgyny mint ediň",
+    "mintDetailsLater": "Ýazgy blok-zere düşenden soň, söwdanyň, eýeçiligiň we paýnamanyň jikme-jiklikleri peýda bolar.",
+    "mintPost": "Ýazgyny mint et",
+    "categories": "Kategoriýalar",
+    "tipsOnPost": "Bu ýazgy üçin sowgatlar",
+    "notFound": "Ýazgy tapylmady",
+    "copied": "Göçürildi",
+    "visibilityUpdated": "Görünme täzelendi",
+    "visibilityFailed": "Görünme täzelenip bilinmedi",
+    "copyFailed": "Göçirip bolmady"
   },
   "profileOptions": {
     "copyProfileUrl": "Profil URL-ni göçür",

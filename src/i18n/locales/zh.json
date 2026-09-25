@@ -1724,7 +1724,18 @@
     "unlisted": "不公开",
     "unlistedDesc": "只有拥有链接的人才能看到",
     "private": "私密",
-    "privateDesc": "只有你能看到这个帖子"
+    "privateDesc": "只有你能看到这个帖子",
+    "notMinted": "未铸造",
+    "mintToGenerate": "铸造该帖子以生成此板块",
+    "mintDetailsLater": "交易、所有权和份额详情将在帖子上线后显示。",
+    "mintPost": "铸造帖子",
+    "categories": "类别",
+    "tipsOnPost": "此帖子的打赏",
+    "notFound": "未找到帖子",
+    "copied": "已复制",
+    "visibilityUpdated": "可见性已更新",
+    "visibilityFailed": "无法更新可见性",
+    "copyFailed": "无法复制"
   },
   "profileOptions": {
     "copyProfileUrl": "复制个人资料链接",
