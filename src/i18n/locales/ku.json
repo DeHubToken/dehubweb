@@ -1954,8 +1954,7 @@
       "empty": "Ji bo vê demê hîn dane tune",
       "visitors": "serdanker",
       "pageViews": "dîtinên rûpelan",
-      "visitorsEstimated": "serdanker (texmînî)",
-      "estimatedHint": "Ji {{date}} ve bi xêza xalxalî: dema ku trafîk di ser releyekê re derbas dibe, ji dîtinên rûpelan tê texmînkirin. Li jêr li “Rojên texmînî” binêre."
+      "visitorsEstimated": "serdanker (texmînî)"
     },
     "countries": {
       "title": "Welatên Jorîn",
@@ -2010,7 +2009,7 @@
       "startTerm": "Dîrok",
       "start": "— \"hemû dem\" tê wateya her rojê ku Cloudflare hê jî diparêze, ku îro {{days}} roj e, ji {{date}} dest pê dike, roja ku dehub.io çû ser Cloudflare. Tu daneyên kêlekê yên berê tune ku werin nîşandan, û rojên kevintir wek Cloudflare temenê wan mezin dike, dadikevin.",
       "estimatedTerm": "Rojên texmînî",
-      "estimated": "— ji {{date}} ve dehub.io bi riya serverekî relayê tê pêşkêşkirin, da ku torên ku nikarin rasterast bigihîjin Cloudflare jî malperê vekin. Ji ber vê yekê Cloudflare piraniya serdankeran wekî navnîşana yekane ya relayê dibîne, û hejmara wê ya serdankerên yekta pir dadikeve. Ji bo wan rojan grafîk dîtinên rûpelan ên pîvandî, bi rêjeya asayî ya serdanker li ser dîtina rûpelê ya {{days}} rojên berê ({{ratio}}%) re carkirî, bi xêza xalxalî nîşan dide. Dîtinên rûpelan û daxwaz hîn jî rasterast têne pîvandin, û hejmara Cloudflare ya destnedayî di bersiva xav a li jor girêdayî de ye."
+      "estimated": "— ji {{date}} ve dehub.io bi riya serverekî relayê tê pêşkêşkirin, da ku torên ku nikarin rasterast bigihîjin Cloudflare jî malperê vekin. Ji ber vê yekê Cloudflare piraniya serdankeran wekî navnîşana yekane ya relayê dibîne, û hejmara wê ya serdankerên yekta pir dadikeve. Ji bo wan rojan grafîk dîtinên rûpelan ên pîvandî, bi rêjeya asayî ya serdanker li ser dîtina rûpelê ya {{days}} rojên berê ({{ratio}}%) re carkirî nîşan dide. Dîtinên rûpelan û daxwaz hîn jî rasterast têne pîvandin, û hejmara Cloudflare ya destnedayî di bersiva xav a li jor girêdayî de ye."
     },
     "feedback": {
       "title": "بۆچوون",

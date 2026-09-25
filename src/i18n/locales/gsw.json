@@ -2135,8 +2135,7 @@
       "empty": "No kei Date für die Periode",
       "visitors": "Besuecher",
       "pageViews": "Siite-Aazale",
-      "visitorsEstimated": "Besuecher (gschätzt)",
-      "estimatedHint": "Gstriift vo {{date}}: gschätzt us Siite-Aazale, währed de Verchehr dur en Relais lauft. Lueg \"Gschätzti Täg\" ume."
+      "visitorsEstimated": "Besuecher (gschätzt)"
     },
     "countries": {
       "title": "Top-Länder",
@@ -2191,7 +2190,7 @@
       "startTerm": "Verlauf",
       "start": "— \"all time\" heisst jede Tag wo Cloudflare no ufbhalt, das sind hüt {{days}} Täg ab {{date}}, de Tag wo dehub.io zu Cloudflare gwächslet isch. Es git kei früeneri Edge-Date zum Zeige, und ältere Täg falle raus, sobald Cloudflare si veralte loht.",
       "estimatedTerm": "Gschätzti Täg",
-      "estimated": "— sit {{date}} wird dehub.io dur en Relais-Server aglauft, damit Netz, wo Cloudflare nöd direkt chönd erreiche, d Siite trozdem lade. Cloudflare gseht denn die meischt Besuecher als die eini Adrässe vom Relais, und ihri einzigartigi Zahl bricht zäme. Für die Täg zeigt d Chart d gmessne Siite-Aazale, multipliziert mit em typische Verhältnis vo Besuecher pro Siite-Aazal vo de {{days}} Täg druvör ({{ratio}}%), als Gstriift zeichnet. Siite-Aazale und Uuforderige werde immer no direkt gmesse, und Cloudflare ihri unberüerti Zahl isch i de rohe Antwort, wo obe verlinkt isch."
+      "estimated": "— sit {{date}} wird dehub.io dur en Relais-Server aglauft, damit Netz, wo Cloudflare nöd direkt chönd erreiche, d Siite trozdem lade. Cloudflare gseht denn die meischt Besuecher als die eini Adrässe vom Relais, und ihri einzigartigi Zahl bricht zäme. Für die Täg zeigt d Chart d gmessne Siite-Aazale, multipliziert mit em typische Verhältnis vo Besuecher pro Siite-Aazal vo de {{days}} Täg druvör ({{ratio}}%). Siite-Aazale und Uuforderige werde immer no direkt gmesse, und Cloudflare ihri unberüerti Zahl isch i de rohe Antwort, wo obe verlinkt isch."
     },
     "feedback": {
       "title": "Feedback",

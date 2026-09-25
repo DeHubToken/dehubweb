@@ -2148,8 +2148,7 @@
       "empty": "Za ovo razdoblje još nema podataka",
       "visitors": "posjetiteljima",
       "pageViews": "posje�enost stranica",
-      "visitorsEstimated": "posjetitelja (procijenjeno)",
-      "estimatedHint": "Crtica od {{date}}: procjenjuje se na temelju prikaza stranice dok promet prolazi kroz relej. Pogledaj „Procijenjeni dani” u nastavku."
+      "visitorsEstimated": "posjetitelja (procijenjeno)"
     },
     "countries": {
       "title": "Vodeće zemlje",
@@ -2204,7 +2203,7 @@
       "startTerm": "Povijest",
       "start": "— „cijelo razdoblje” znači svaki dan koji Cloudflare još čuva, danas {{days}} dana od {{date}}, dana kada je dehub.io prešao na Cloudflare. Starijih rubnih podataka nema, a stari dani otpadaju kako im Cloudflare istječe rok.",
       "estimatedTerm": "Procijenjeni dani",
-      "estimated": "— od {{date}}, dehub.io se poslužuje putem relejnog poslužitelja tako da mreže koje ne mogu izravno pristupiti Cloudflareu i dalje učitavaju web-lokaciju. Cloudflare tada vidi većinu posjetitelja kao jednu adresu releja, a njegov jedinstveni broj se urušava. Za te dane grafikon prikazuje izmjerene prikaze stranice pomnožene s tipičnim omjerom posjetitelja po prikazu stranice od {{days}} dana prije ({{ratio}}%), iscrtano isprekidano. Prikazi stranica i zahtjevi i dalje se izravno mjere, a nedirnuti broj Cloudflarea nalazi se u gore navedenom RAW odgovoru."
+      "estimated": "— od {{date}}, dehub.io se poslužuje putem relejnog poslužitelja tako da mreže koje ne mogu izravno pristupiti Cloudflareu i dalje učitavaju web-lokaciju. Cloudflare tada vidi većinu posjetitelja kao jednu adresu releja, a njegov jedinstveni broj se urušava. Za te dane grafikon prikazuje izmjerene prikaze stranice pomnožene s tipičnim omjerom posjetitelja po prikazu stranice od {{days}} dana prije ({{ratio}}%). Prikazi stranica i zahtjevi i dalje se izravno mjere, a nedirnuti broj Cloudflarea nalazi se u gore navedenom RAW odgovoru."
     },
     "feedback": {
       "title": "Povratne informacije",

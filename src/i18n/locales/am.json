@@ -2154,8 +2154,7 @@
       "empty": "ለዚህ ጊዜ መስኮት እስካሁን መረጃ የለም",
       "visitors": "ጎብitorsዎች",
       "pageViews": "የገጽ እይታዎች",
-      "visitorsEstimated": "ጎብኚዎች (ይገመታል)",
-      "estimatedHint": "ከ {{date}}: ትራፊክ በተዘዋዋሪ ሲያልፍ ከገጽ እይታዎች ይገመታል ። ከዚህ በታች “የተገመቱ ቀናት” ን ይመልከቱ ።"
+      "visitorsEstimated": "ጎብኚዎች (ይገመታል)"
     },
     "countries": {
       "title": "ከፍተኛ ሀገራት",

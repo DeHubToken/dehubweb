@@ -2206,8 +2206,7 @@
       "empty": "Noch keine Daten für diesen Zeitraum",
       "visitors": "Gäste",
       "pageViews": "Seitenaufrufe",
-      "visitorsEstimated": "besucher (geschätzt)",
-      "estimatedHint": "Gestrichelt von {{date}}: geschätzt aus Seitenaufrufen, während der Datenverkehr durch ein Relais läuft. Siehe „Voraussichtliche Tage“ unten."
+      "visitorsEstimated": "besucher (geschätzt)"
     },
     "countries": {
       "title": "Top-Länder",
@@ -2262,7 +2261,7 @@
       "startTerm": "Verlauf",
       "start": "– „gesamte Zeit\" heißt jeder Tag, den Cloudflare noch vorhält, heute {{days}} Tage ab {{date}}, dem Tag, an dem dehub.io auf Cloudflare umgezogen ist. Frühere Edge-Daten gibt es nicht, und ältere Tage fallen weg, sobald Cloudflare sie verfallen lässt.",
       "estimatedTerm": "Geschätzte Tage",
-      "estimated": "— Seit {{date}} wird dehub.io über einen Relay-Server bedient, so dass Netzwerke, die Cloudflare nicht direkt erreichen können, die Site weiterhin laden. Cloudflare sieht dann die meisten Besucher als die einzige Adresse des Relays, und seine eindeutige Anzahl bricht zusammen. Für diese Tage zeigt das Diagramm gemessene Seitenaufrufe multipliziert mit dem typischen Besucher-pro-Seite-Verhältnis der {{days}} Tage zuvor ({{ratio}}%), gestrichelt gezeichnet. Seitenaufrufe und Anfragen werden immer noch direkt gemessen, und die unberührte Anzahl von Cloudflare befindet sich in der oben verlinkten Rohantwort."
+      "estimated": "— Seit {{date}} wird dehub.io über einen Relay-Server bedient, so dass Netzwerke, die Cloudflare nicht direkt erreichen können, die Site weiterhin laden. Cloudflare sieht dann die meisten Besucher als die einzige Adresse des Relays, und seine eindeutige Anzahl bricht zusammen. Für diese Tage zeigt das Diagramm gemessene Seitenaufrufe multipliziert mit dem typischen Besucher-pro-Seite-Verhältnis der {{days}} Tage zuvor ({{ratio}}%). Seitenaufrufe und Anfragen werden immer noch direkt gemessen, und die unberührte Anzahl von Cloudflare befindet sich in der oben verlinkten Rohantwort."
     },
     "feedback": {
       "title": "Feedback",
