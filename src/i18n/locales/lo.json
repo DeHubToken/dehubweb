@@ -514,7 +514,12 @@
     "stageBridge": "ກຳລັງສົ່ງ {{symbol}} ຈາກ {{chain}}…",
     "stageArriving": "ກຳລັງມາຮອດ Base, ປົກກະຕິພຽງບໍ່ເທົ່າໃດວິນາທີ…",
     "stageSwap": "ກຳລັງຊື້ DHB ເທິງ Uniswap…",
-    "payFailed": "ບໍ່ສາມາດແປງ {{symbol}} ເປັນ DHB ໄດ້"
+    "payFailed": "ບໍ່ສາມາດແປງ {{symbol}} ເປັນ DHB ໄດ້",
+    "stagePay": "ກຳລັງຈ່າຍໃຫ້ DeHub Pay ດ້ວຍ {{symbol}}…",
+    "stageDelivering": "DeHub Pay ກຳລັງສົ່ງ DHB ຂອງທ່ານ…",
+    "payViaDpay": "ຈ່າຍໃຫ້ DeHub Pay ແລ້ວ, DHB ມາຮອດໃນປະມານ 30 ວິນາທີ",
+    "payViaBridgeDpay": "ຍ້າຍໄປ Base ແລະ ຈ່າຍໃຫ້ DeHub Pay ແລ້ວ, DHB ມາຮອດໃນປະມານໜຶ່ງນາທີ",
+    "dmSent": "ສົ່ງ {{amount}} DHB ໃຫ້ {{name}} ແລ້ວ!"
   },
   "postOptions": {
     "options": "ຕົວເລືອກ",
@@ -5979,5 +5984,21 @@
     "openExchange": "ເປີດການແລກປ່ຽນ",
     "done": "ສຳເລັດແລ້ວ",
     "back": "ກັບຄືນ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "ຍອດເງິນຂອງທ່ານ",
+    "youNeed": "ທ່ານຕ້ອງການ",
+    "checking": "ກຳລັງກວດສອບກະເປົາເງິນຂອງທ່ານ…",
+    "payHint": "ຈ່າຍດ້ວຍອັນໃດກໍໄດ້ໃນກະເປົາເງິນຂອງທ່ານ. ມັນຈະກາຍເປັນ DHB ແລະ ປົດລັອກທັນທີ.",
+    "toppingUp": "ກຳລັງເຕີມເງິນ…",
+    "topUpUnlock": "ເຕີມເງິນ ແລະ ປົດລັອກ",
+    "orFund": "ຫຼື ເພີ່ມເງິນດ້ວຍວິທີອື່ນ",
+    "paused": "ການໂອນ DHB ຖືກຢຸດຊົ່ວຄາວເທິງ on-chain ໃນຕອນນີ້, ດັ່ງນັ້ນການປົດລັອກນີ້ຍັງບໍ່ສາມາດດຳເນີນໄດ້. ກະລຸນາລອງໃໝ່ໃນອີກບໍ່ດົນ.",
+    "otherChain": "ໂພສນີ້ຊຳລະເທິງ chain ອື່ນ, ດັ່ງນັ້ນຕ້ອງມີ DHB ໃນກະເປົາເງິນຂອງທ່ານຢູ່ທີ່ນັ້ນ.",
+    "buyCard": "ຊື້ DHB ດ້ວຍບັດ",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "ໂອນເງິນເຂົ້າ",
+    "moveFundsHint": "Swap ຫຼື ຝາກຈາກ chain ອື່ນ",
+    "notNow": "ຍັງກ່ອນ"
   }
 }

@@ -477,7 +477,12 @@
     "stageBridge": "{{symbol}} wird vo {{chain}} gschickt…",
     "stageArriving": "Chunnt uf Base aa, meischt i paar Sekunde…",
     "stageSwap": "DHB wird uf Uniswap kauft…",
-    "payFailed": "{{symbol}} het nöd chöne in DHB umgwandlet wärde"
+    "payFailed": "{{symbol}} het nöd chöne in DHB umgwandlet wärde",
+    "stagePay": "DeHub Pay wird mit {{symbol}} zahlt…",
+    "stageDelivering": "DeHub Pay schickt dini DHB…",
+    "payViaDpay": "A DeHub Pay zahlt, DHB chömed in öppe 30 s aa",
+    "payViaBridgeDpay": "Uf Base verschobe und a DeHub Pay zahlt, DHB chömed in öppe ere Minute aa",
+    "dmSent": "{{amount}} DHB a {{name}} gschickt!"
   },
   "postOptions": {
     "options": "Optione",
@@ -4012,5 +4017,21 @@
     "openExchange": "Exchange öppne",
     "done": "Fertig",
     "back": "Zrugg"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Dis Guethabe",
+    "youNeed": "Du bruuchsch",
+    "checking": "Dis Wallet wird prüeft…",
+    "payHint": "Zahl mit allem, wo i dim Wallet isch. Es wird zu DHB und schaltet grad frei.",
+    "toppingUp": "Wird ufglade…",
+    "topUpUnlock": "Uflade & freischalte",
+    "orFund": "Oder uf en anderi Art Guethabe dezuetue",
+    "paused": "DHB-Transfers sind grad uf de Chain pausiert, drum chan die Freischaltig no nöd dureggah. Probier's gli nomal.",
+    "otherChain": "De Biitrag wird uf ere andere Chain abgrächnet, drum bruucht's DHB i dim Wallet det.",
+    "buyCard": "DHB mit Charte chaufe",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Guethabe übertrage",
+    "moveFundsHint": "Vo ere andere Chain tuusche oder iizahle",
+    "notNow": "Jetz nöd"
   }
 }

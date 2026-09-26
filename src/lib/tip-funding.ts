@@ -1,27 +1,28 @@
 /**
- * Paying a DHB tip with whatever the tipper holds, on whichever chain it is.
+ * Paying for anything in DHB with whatever the payer holds, on whichever
+ * chain it is. Used by tips, live gifts, pay-per-view and subscriptions.
  *
- * Tips settle in DHB on Base, through StreamController, so the creator is
- * credited exactly as before. What changes is where the DHB comes from:
+ * Every payment still settles in DHB on Base through the usual contracts, so
+ * crediting is unchanged. What changes is where the DHB comes from, in this
+ * order:
  *
- *   1. Token on another chain (USDC on Arc, ETH on Ethereum, USDT on BNB…) →
- *      a deBridge order that delivers an EXACT amount of USDC to the tipper's
- *      own address on Base. Solvers fill from their own inventory, so the USDC
- *      lands in seconds; nobody bridges anything themselves.
- *   2. USDC (or any token already on Base) → DHB through the Uniswap v4
- *      DHB/USDC pool, via the same Kyber router the DEX page's instant buy
- *      uses, pinned to Uniswap sources.
- *   3. The caller then sends the tip exactly as a DHB holder would.
+ *   1. DeHub Pay. If DPay accepts the token directly (ETH/USDC/USDT on Base,
+ *      Ethereum, BNB, Polygon, Robinhood…), it is paid to the DPay treasury
+ *      and DPay sends the DHB from its own stock. The money stays with DeHub.
+ *   2. deBridge → DeHub Pay. Anything DPay does not take (USDC on Arc, other
+ *      tokens) is turned into an exact amount of USDC on Base by a deBridge
+ *      order paid to the payer's own address, and that USDC pays DPay.
+ *   3. Uniswap, as the fallback. When DPay is out of DHB, cannot deliver, or
+ *      the payer is not signed in to it, the Base USDC (or the Base token)
+ *      buys DHB from the Uniswap v4 DHB/USDC pool instead.
  *
- * Only the shortfall is bought: DHB already on Base is spent first. The swap
- * overbuys by a hair so slippage never leaves the tip one wei short; the rest
- * stays in the tipper's wallet.
+ * Only the shortfall is bought: DHB already on Base is spent first.
  *
- * Nothing here is custodial. Every hop pays the tipper's own address, so an
- * interrupted flow leaves USDC or DHB in their wallet, never in limbo — and
- * the next attempt picks it up as Base balance.
+ * Every hop pays the payer's own address, so an interrupted flow leaves USDC
+ * or DHB in their wallet, never in limbo — and the next attempt spends it as
+ * Base balance.
  */
-import { Interface, formatUnits } from 'ethers';
+import { Interface, formatUnits, parseUnits } from 'ethers';
 import { sendTransaction, waitForTransactionReceipt } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import {
@@ -32,7 +33,6 @@ import {
   switchChain,
   waitForERC20Balance,
   writeBatchAA,
-  writeContractAA,
   type AABatchCall,
 } from '@/lib/contracts/aa-utils';
 import { isSmartWalletSession } from '@/lib/connection-source';
@@ -41,26 +41,32 @@ import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
 import { ARC_CHAIN_ID } from '@/lib/chains/arc';
 import { quoteSwap, runSwap, type SwapCall } from '@/lib/dex/evm-swap';
 import { readWithTimeout } from '@/lib/dex/read-timeout';
+import { cryptoPurchaseApi } from '@/lib/api/crypto-purchase';
+import type { Purchase } from '@/lib/crypto-purchase';
 import type { ChainId } from '@/components/app/ChainSelector';
 
 const DLN_API = 'https://dln.debridge.finance/v1.0';
+const DPAY_API = 'https://api.dehub.io/api/dpay';
 const USDC_BASE = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 const DHB_BASE = CHAIN_CONFIGS[BASE_CHAIN_ID].dhbToken;
 const ZERO = '0x0000000000000000000000000000000000000000';
 /** Kyber source ids for the Uniswap pools, v4 first — that is where the DHB/USDC LP lives. */
 const UNISWAP_SOURCES = 'uniswap-v4,uniswapv3,uniswap';
 
-/** Chains a tip can be paid from: every EVM chain the wallet shows that deBridge also serves. */
+/** Chains a payment can be funded from: every EVM chain the wallet shows that deBridge also serves. */
 export const TIP_FUNDING_CHAINS: number[] = [BASE_CHAIN_ID, ARC_CHAIN_ID, ETH_CHAIN_ID, BNB_CHAIN_ID, ROBINHOOD_CHAIN_ID];
 
-/** DHB bought over the shortfall so slippage never leaves the tip short. 1%. */
+/** DHB bought over the shortfall so slippage never leaves the payment short. 1%. */
 const DHB_BUFFER_BPS = 100n;
-/** USDC bridged over the swap quote, for the price moving while the order fills. 1.5%. */
+/** USDC bridged over the quote, for the price moving while the order fills. 1.5%. */
 const USDC_BUFFER_BPS = 150n;
+/** DPay holds back 0.5% of a sale and sends it as gas, so ask for a touch more DHB. */
+const DPAY_DELIVERED_SHARE = 0.995;
 /** Native kept back where the Safe pays its own gas in the native coin (Arc: USDC). */
 const NATIVE_GAS_RESERVE: Record<number, bigint> = { [ARC_CHAIN_ID]: 10n ** 17n };
 const FILL_TIMEOUT_MS = 15 * 60_000;
-const FILL_POLL_MS = 2_000;
+const DPAY_DELIVERY_TIMEOUT_MS = 5 * 60_000;
+const POLL_MS = 2_000;
 
 export interface TipFundingSource {
   chainId: number;
@@ -72,7 +78,7 @@ export interface TipFundingSource {
   isNative?: boolean;
 }
 
-export type TipFundingStage = 'quote' | 'approve' | 'bridge' | 'arriving' | 'swap';
+export type TipFundingStage = 'quote' | 'approve' | 'bridge' | 'arriving' | 'pay' | 'delivering' | 'swap';
 
 interface DlnOrder {
   orderId: string;
@@ -80,38 +86,46 @@ interface DlnOrder {
   data: `0x${string}`;
   value: bigint;
   allowanceTarget?: string;
-  /** Source token the order spends, before `value`'s native fee. */
   amountIn: bigint;
   usdcOut: bigint;
   fillSeconds: number;
 }
 
+interface DpayQuote {
+  originAsset: string;
+  tokensToReceive: number;
+  amountIn: bigint;
+  paymentDecimals: number;
+}
+
 export type TipFundingPlan =
   | { kind: 'none' }
+  | { kind: 'dpay'; source: TipFundingSource; dpay: DpayQuote; payAmount: bigint }
   | { kind: 'swap'; source: TipFundingSource; swap: SwapCall; payAmount: bigint }
-  | { kind: 'bridge'; source: TipFundingSource; order: DlnOrder; payAmount: bigint; fillSeconds: number };
+  | { kind: 'bridge'; source: TipFundingSource; order: DlnOrder; payAmount: bigint; fillSeconds: number; via: 'dpay' | 'uniswap' };
 
-const erc20 = new Interface(['function approve(address spender,uint256 amount) returns (bool)']);
-const isNativeSource = (s: TipFundingSource) => s.isNative || s.address === '0x0' || s.address.toLowerCase() === ZERO;
+const erc20 = new Interface([
+  'function approve(address spender,uint256 amount) returns (bool)',
+  'function transfer(address to,uint256 amount) returns (bool)',
+  'function deposit() payable',
+]);
+const isNativeSource = (s: { address: string; isNative?: boolean }) => s.isNative || s.address === '0x0' || s.address.toLowerCase() === ZERO;
 const withBps = (x: bigint, bps: bigint) => x + (x * bps) / 10000n + 1n;
 const toDhbWei = (dhb: number) => BigInt(Math.ceil(dhb * 1e6)) * 10n ** 12n;
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+/* ── Uniswap (fallback) ─────────────────────────────────────────────── */
 
 async function quoteUniswap(tokenIn: string, amountIn: bigint, recipient: string): Promise<SwapCall> {
   const input = { chainId: BASE_CHAIN_ID, tokenIn, tokenOut: DHB_BASE, amountIn, recipient };
   try {
     return await quoteSwap({ ...input, sources: UNISWAP_SOURCES });
   } catch {
-    // A token with no Uniswap leg (rare on Base) still routes through Kyber's
-    // other pools into the same DHB/USDC pool.
     return quoteSwap(input);
   }
 }
 
-/**
- * The Base swap that delivers at least `dhbOut` after slippage. Kyber only
- * quotes exact input, so this probes the rate, sizes the input, and corrects
- * for price impact until the guaranteed output clears the target.
- */
+/** Kyber quotes exact input only: probe the rate, size the input, correct for price impact. */
 async function sizeDhbBuy(tokenIn: string, probeIn: bigint, dhbOut: bigint, recipient: string): Promise<SwapCall> {
   const probe = await quoteUniswap(tokenIn, probeIn, recipient);
   if (probe.minAmountOut <= 0n) throw new Error('No Uniswap route to DHB for this token right now');
@@ -122,8 +136,104 @@ async function sizeDhbBuy(tokenIn: string, probeIn: bigint, dhbOut: bigint, reci
     if (swap.minAmountOut <= 0n) break;
     amountIn = withBps((amountIn * dhbOut) / swap.minAmountOut, 30n);
   }
-  throw new Error('There is not enough Uniswap liquidity for a tip this size right now');
+  throw new Error('There is not enough Uniswap liquidity for a payment this size right now');
 }
+
+/* ── DeHub Pay ──────────────────────────────────────────────────────── */
+
+/** DPay's asset id for a token it accepts straight into its treasury, or null. */
+function dpayAssetId(source: { chainId: number; address: string; isNative?: boolean }): string | null {
+  const accepted: Record<number, string[]> = {
+    [BASE_CHAIN_ID]: ['native', USDC_BASE, '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2'],
+    [ETH_CHAIN_ID]: ['native', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'],
+    [BNB_CHAIN_ID]: ['native', '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', '0x55d398326f99059fF775485246999027B3197955'],
+    [ROBINHOOD_CHAIN_ID]: ['native', '0x80E0e24718DBFcaD49eCaa6f1e6C89A190586cA8', '0xe246bc49b0598d7cd9f0ead48b885034f1254380'],
+  };
+  const list = accepted[source.chainId];
+  if (!list) return null;
+  if (isNativeSource(source)) return list.includes('native') ? `direct:${source.chainId}:native` : null;
+  const hit = list.find(a => a.toLowerCase() === source.address.toLowerCase());
+  return hit ? `direct:${source.chainId}:${hit.toLowerCase()}` : null;
+}
+
+/** Whole DHB to ask DPay for so that, after its gas hold-back, at least `shortfall` arrives. */
+const dpayTokensFor = (shortfallWei: bigint) =>
+  Math.ceil(Number(formatUnits(shortfallWei, 18)) / DPAY_DELIVERED_SHARE) + 1;
+
+async function dpayStock(): Promise<number> {
+  const res = await readWithTimeout(fetch(`${DPAY_API}/available/tokens`), 'DeHub Pay stock', 10000);
+  const json = await res.json().catch(() => null) as { balance?: Record<string, { DHB?: number }> } | null;
+  return Number(json?.balance?.[BASE_CHAIN_ID]?.DHB ?? 0);
+}
+
+/** Price `tokensToReceive` DHB from DPay, paid in `originAsset`. Null when DPay cannot sell it right now. */
+async function quoteDpay(originAsset: string, tokensToReceive: number, decimals: number, wallet: string): Promise<DpayQuote | null> {
+  try {
+    const [stock, quote] = await Promise.all([
+      dpayStock(),
+      cryptoPurchaseApi.quote({ originAsset, tokensToReceive, address: wallet }) as Promise<{ amountIn?: string; paymentDecimals?: number; estimatedTokensToReceive?: number }>,
+    ]);
+    if (stock < tokensToReceive || !quote.amountIn) return null;
+    // A DPay asset whose decimals disagree with the chain's would price the
+    // payment off by orders of magnitude. Skip it rather than trust it.
+    if (quote.paymentDecimals != null && quote.paymentDecimals !== decimals) return null;
+    return { originAsset, tokensToReceive, amountIn: BigInt(quote.amountIn), paymentDecimals: decimals };
+  } catch {
+    return null;
+  }
+}
+
+/** The calls that pay a DPay purchase from the payer's wallet, exactly as DPay asked. */
+function dpayPaymentCalls(p: Purchase): AABatchCall[] {
+  if (p.paymentDecimals == null) throw new Error('DeHub Pay did not return a payment amount');
+  const amount = parseUnits(p.amountInFormatted, p.paymentDecimals);
+  if (p.wrapNativePayment && p.paymentTokenAddress) {
+    return [
+      { to: p.paymentTokenAddress, data: erc20.encodeFunctionData('deposit') as `0x${string}`, value: amount },
+      { to: p.paymentTokenAddress, data: erc20.encodeFunctionData('transfer', [p.depositAddress, amount]) as `0x${string}` },
+    ];
+  }
+  return p.paymentTokenAddress
+    ? [{ to: p.paymentTokenAddress, data: erc20.encodeFunctionData('transfer', [p.depositAddress, amount]) as `0x${string}` }]
+    : [{ to: p.depositAddress, data: '0x', value: amount }];
+}
+
+/**
+ * Buy DHB from DPay with `source`: open the purchase, pay the treasury, hand
+ * DPay the hash, and wait until the DHB is in the wallet. Throws DPAY_UNAVAILABLE
+ * before any money moves when DPay cannot take the order, so the caller can
+ * fall back to Uniswap.
+ */
+async function buyFromDpay(originAsset: string, tokensToReceive: number, chainId: number, wallet: string, needed: bigint, stage: (s: TipFundingStage) => void): Promise<void> {
+  let purchase: Purchase;
+  try {
+    purchase = await cryptoPurchaseApi.create({
+      originAsset, tokensToReceive, refundTo: wallet, receiverAddress: wallet,
+      termsAndServicesAccepted: true, requestId: `pay_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+    });
+  } catch {
+    throw new Error('DPAY_UNAVAILABLE');
+  }
+  if (purchase.paymentChainId !== chainId || purchase.refundTo?.toLowerCase() !== wallet.toLowerCase()) throw new Error('DPAY_UNAVAILABLE');
+
+  stage('pay');
+  const txHash = await sendOnChain(chainId, dpayPaymentCalls(purchase), 'DeHub Pay payment', stage, 'pay');
+
+  // From here the treasury has the money; failures are delays, never refunds to chase.
+  stage('delivering');
+  const started = Date.now();
+  let status: Purchase | null = await cryptoPurchaseApi.confirm(purchase.id, txHash).catch(() => null);
+  while (status?.tokenSendStatus !== 'sent' && Date.now() - started < DPAY_DELIVERY_TIMEOUT_MS) {
+    await sleep(POLL_MS * 2);
+    status = await cryptoPurchaseApi.status(purchase.id).catch(() => status);
+  }
+  const dhb = await waitForERC20Balance(DHB_BASE, wallet, needed, BASE_CHAIN_ID, 10, 1500);
+  if (dhb < needed) {
+    throw new Error('DeHub Pay has your payment and is sending the DHB. It will arrive in your wallet shortly; send again once it does.');
+  }
+}
+
+/* ── deBridge ───────────────────────────────────────────────────────── */
 
 async function dln<T>(path: string): Promise<T> {
   const res = await readWithTimeout(fetch(`${DLN_API}${path}`), 'Cross-chain quote', 20000);
@@ -165,12 +275,49 @@ async function createDlnOrder(source: TipFundingSource, usdcOut: bigint, wallet:
   };
 }
 
+async function waitForFill(orderId: string): Promise<void> {
+  const started = Date.now();
+  while (Date.now() - started < FILL_TIMEOUT_MS) {
+    const status = await dln<{ status?: string }>(`/dln/order/${orderId}/status`).then(r => r.status).catch(() => undefined);
+    if (status === 'Fulfilled' || status === 'SentUnlock' || status === 'ClaimedUnlock') return;
+    if (status && /cancel/i.test(status)) throw new Error('The cross-chain order was cancelled and refunded to your wallet');
+    await sleep(POLL_MS);
+  }
+  throw new Error('The cross-chain transfer is taking longer than usual. It will arrive in your wallet on Base; send again once it does.');
+}
+
+/* ── Wallet plumbing ────────────────────────────────────────────────── */
+
 async function nativeBalance(wallet: string, chainId: number): Promise<bigint> {
   return BigInt(await rpcRequest<string>('eth_getBalance', [wallet, 'latest'], chainId as ChainId));
 }
 
+/** Calls on one chain, through whichever wallet is signed in. Returns the last hash. */
+async function sendOnChain(chainId: number, calls: AABatchCall[], context: string, stage: (s: TipFundingStage) => void, sendStage: TipFundingStage): Promise<string> {
+  if (isSmartWalletSession()) {
+    stage(sendStage);
+    try {
+      return (await writeBatchAA(calls, { chainId, context, sponsored: false })).hash;
+    } catch (error) {
+      if (!isSelfFundedGasInsufficientError(error)) throw error;
+      return (await writeBatchAA(calls, { chainId, context })).hash;
+    }
+  }
+  await switchChain(chainId as ChainId);
+  let hash = '';
+  for (const [i, call] of calls.entries()) {
+    stage(i < calls.length - 1 && calls.length > 1 ? 'approve' : sendStage);
+    hash = await sendTransaction(wagmiConfig, { to: call.to as `0x${string}`, data: call.data, value: call.value ?? 0n, chainId: chainId as never });
+    const receipt = await waitForTransactionReceipt(wagmiConfig, { hash: hash as `0x${string}`, chainId: chainId as never });
+    if (receipt.status !== 'success') throw new Error(`${context} did not confirm. Nothing was spent.`);
+  }
+  return hash;
+}
+
+/* ── Planning ───────────────────────────────────────────────────────── */
+
 /**
- * Price a tip of `amountDhb` paid from `source`. `dhbOnBase` is what the
+ * Price a payment of `amountDhb` from `source`. `dhbOnBase` is what the
  * wallet already holds on Base; only the gap is bought.
  */
 export async function planTipFunding(input: {
@@ -182,72 +329,70 @@ export async function planTipFunding(input: {
   const { source, walletAddress } = input;
   const needed = toDhbWei(input.amountDhb);
   if (input.dhbOnBase >= needed) return { kind: 'none' };
-  const dhbOut = withBps(needed - input.dhbOnBase, DHB_BUFFER_BPS);
+  const shortfall = needed - input.dhbOnBase;
+  const reserve = NATIVE_GAS_RESERVE[source.chainId] ?? 0n;
 
+  // 1. Straight to DeHub Pay.
+  const assetId = dpayAssetId(source);
+  if (assetId) {
+    const dpay = await quoteDpay(assetId, dpayTokensFor(shortfall), source.decimals, walletAddress);
+    if (dpay && dpay.amountIn + (isNativeSource(source) ? reserve : 0n) <= source.balance) {
+      return { kind: 'dpay', source, dpay, payAmount: dpay.amountIn };
+    }
+  }
+
+  // 3a. A Base token DPay does not take goes through Uniswap directly.
+  const dhbOut = withBps(shortfall, DHB_BUFFER_BPS);
   if (source.chainId === BASE_CHAIN_ID) {
     if (source.balance <= 0n) throw new Error(`No ${source.symbol} on Base`);
     const swap = await sizeDhbBuy(source.address, source.balance / 20n || 1n, dhbOut, walletAddress);
-    if (swap.amountIn > source.balance) throw new Error(`Not enough ${source.symbol} on Base for this tip`);
+    if (swap.amountIn > source.balance) throw new Error(`Not enough ${source.symbol} on Base for this payment`);
     return { kind: 'swap', source, swap, payAmount: swap.amountIn };
   }
 
-  // Size the USDC first, then ask deBridge for exactly that much on Base.
-  const usdcSwap = await sizeDhbBuy(USDC_BASE, 10_000_000n, dhbOut, walletAddress);
-  const order = await createDlnOrder(source, withBps(usdcSwap.amountIn, USDC_BUFFER_BPS), walletAddress);
-  const reserve = NATIVE_GAS_RESERVE[source.chainId] ?? 0n;
-  const symbol = source.symbol;
+  // 2 / 3b. Bridge exactly the USDC that DPay (or failing that, Uniswap) needs.
+  const dpayUsdc = await quoteDpay(`direct:${BASE_CHAIN_ID}:${USDC_BASE.toLowerCase()}`, dpayTokensFor(shortfall), 6, walletAddress);
+  const usdcNeeded = dpayUsdc ? dpayUsdc.amountIn : (await sizeDhbBuy(USDC_BASE, 10_000_000n, dhbOut, walletAddress)).amountIn;
+  const order = await createDlnOrder(source, withBps(usdcNeeded, USDC_BUFFER_BPS), walletAddress);
   if (isNativeSource(source)) {
-    if (order.value + reserve > source.balance) throw new Error(`Not enough ${symbol} for this tip, including network fees`);
+    if (order.value + reserve > source.balance) throw new Error(`Not enough ${source.symbol} for this payment, including network fees`);
   } else {
-    if (order.amountIn > source.balance) throw new Error(`Not enough ${symbol} for this tip`);
+    if (order.amountIn > source.balance) throw new Error(`Not enough ${source.symbol} for this payment`);
     if (order.value + reserve > await nativeBalance(walletAddress, source.chainId)) {
       throw new Error('Not enough of the network coin to cover the cross-chain fee');
     }
   }
-  return { kind: 'bridge', source, order, payAmount: isNativeSource(source) ? order.value : order.amountIn, fillSeconds: order.fillSeconds };
+  return {
+    kind: 'bridge', source, order, fillSeconds: order.fillSeconds, via: dpayUsdc ? 'dpay' : 'uniswap',
+    payAmount: isNativeSource(source) ? order.value : order.amountIn,
+  };
 }
 
-/** One transaction on the source chain, through whichever wallet is signed in. */
-async function sendOnSource(chainId: number, calls: AABatchCall[], stage: (s: TipFundingStage) => void): Promise<string> {
-  if (isSmartWalletSession()) {
-    stage('bridge');
+/* ── Running ────────────────────────────────────────────────────────── */
+
+/** USDC already on Base → DHB: DPay first, Uniswap if DPay cannot take it. */
+async function spendBaseUsdc(usdc: bigint, wallet: string, needed: bigint, dhbOnBase: bigint, stage: (s: TipFundingStage) => void): Promise<void> {
+  const tokens = dpayTokensFor(needed - dhbOnBase);
+  const dpay = await quoteDpay(`direct:${BASE_CHAIN_ID}:${USDC_BASE.toLowerCase()}`, tokens, 6, wallet);
+  if (dpay && dpay.amountIn <= usdc) {
     try {
-      return (await writeBatchAA(calls, { chainId, context: 'cross-chain tip', sponsored: false })).hash;
+      return await buyFromDpay(dpay.originAsset, tokens, BASE_CHAIN_ID, wallet, needed, stage);
     } catch (error) {
-      if (!isSelfFundedGasInsufficientError(error)) throw error;
-      return (await writeBatchAA(calls, { chainId, context: 'cross-chain tip' })).hash;
+      if ((error as Error).message !== 'DPAY_UNAVAILABLE') throw error;
     }
   }
-  await switchChain(chainId as ChainId);
-  const order = calls[calls.length - 1];
-  if (calls.length > 1) {
-    stage('approve');
-    const [spender, amount] = erc20.decodeFunctionData('approve', calls[0].data);
-    const tx = await writeContractAA(calls[0].to, erc20, 'approve', [spender, amount], { chainId, context: 'approve cross-chain tip' });
-    if ((await tx.wait(1)).status !== 1) throw new Error('The approval did not confirm');
+  const swap = await quoteUniswap(USDC_BASE, usdc, wallet);
+  if (dhbOnBase + swap.minAmountOut < needed) {
+    throw new Error('DHB moved while your USDC was arriving. The USDC is in your wallet on Base; send again to finish.');
   }
-  stage('bridge');
-  const hash = await sendTransaction(wagmiConfig, { to: order.to as `0x${string}`, data: order.data, value: order.value ?? 0n, chainId: chainId as never });
-  const receipt = await waitForTransactionReceipt(wagmiConfig, { hash, chainId: chainId as never });
-  if (receipt.status !== 'success') throw new Error('The cross-chain transfer did not confirm. Nothing was spent.');
-  return hash;
-}
-
-async function waitForFill(orderId: string): Promise<void> {
-  const started = Date.now();
-  while (Date.now() - started < FILL_TIMEOUT_MS) {
-    const status = await dln<{ status?: string }>(`/dln/order/${orderId}/status`).then(r => r.status).catch(() => undefined);
-    if (status === 'Fulfilled' || status === 'SentUnlock' || status === 'ClaimedUnlock') return;
-    if (status && /cancel/i.test(status)) throw new Error('The cross-chain order was cancelled and refunded to your wallet');
-    await new Promise(r => setTimeout(r, FILL_POLL_MS));
-  }
-  throw new Error('The cross-chain transfer is taking longer than usual. It will arrive in your wallet on Base; send the tip again once it does.');
+  stage('swap');
+  await runSwap(swap, wallet);
 }
 
 /**
  * Run a plan from `planTipFunding`, re-quoted fresh so a price shown a minute
- * ago is never the one executed. Resolves once the wallet holds the DHB on
- * Base; the caller sends the tip.
+ * ago is never the one executed. Resolves once the wallet holds `amountDhb`
+ * DHB on Base; the caller then makes the payment as usual.
  */
 export async function fundTip(input: {
   source: TipFundingSource;
@@ -260,12 +405,35 @@ export async function fundTip(input: {
   stage('quote');
   const needed = toDhbWei(input.amountDhb);
   const dhbOnBase = await getERC20Balance(DHB_BASE, wallet, BASE_CHAIN_ID);
-  const plan = await planTipFunding({ source, amountDhb: input.amountDhb, dhbOnBase, walletAddress: wallet });
+  let plan = await planTipFunding({ source, amountDhb: input.amountDhb, dhbOnBase, walletAddress: wallet });
   if (plan.kind === 'none') return;
 
-  let swap: SwapCall;
+  if (plan.kind === 'dpay') {
+    try {
+      await buyFromDpay(plan.dpay.originAsset, plan.dpay.tokensToReceive, source.chainId, wallet, needed, stage);
+      return;
+    } catch (error) {
+      if ((error as Error).message !== 'DPAY_UNAVAILABLE') throw error;
+      // DPay turned the order down before any money moved. Base tokens can
+      // still buy on Uniswap; anything else re-plans through the bridge.
+      if (source.chainId === BASE_CHAIN_ID) {
+        const swap = await sizeDhbBuy(source.address, source.balance / 20n || 1n, withBps(needed - dhbOnBase, DHB_BUFFER_BPS), wallet);
+        stage('swap');
+        await runSwap(swap, wallet);
+        return;
+      }
+      const usdcSwap = await sizeDhbBuy(USDC_BASE, 10_000_000n, withBps(needed - dhbOnBase, DHB_BUFFER_BPS), wallet);
+      const order = await createDlnOrder(source, withBps(usdcSwap.amountIn, USDC_BUFFER_BPS), wallet);
+      plan = {
+        kind: 'bridge', source, order, fillSeconds: order.fillSeconds, via: 'uniswap',
+        payAmount: isNativeSource(source) ? order.value : order.amountIn,
+      };
+    }
+  }
+
   if (plan.kind === 'swap') {
-    swap = plan.swap;
+    stage('swap');
+    await runSwap(plan.swap, wallet);
   } else {
     const { order } = plan;
     const calls: AABatchCall[] = [];
@@ -277,25 +445,19 @@ export async function fundTip(input: {
     }
     calls.push({ to: order.to, data: order.data, value: order.value });
     const usdcBefore = await getERC20Balance(USDC_BASE, wallet, BASE_CHAIN_ID);
-    await sendOnSource(source.chainId, calls, stage);
+    await sendOnChain(source.chainId, calls, 'Cross-chain transfer', stage, 'bridge');
 
     stage('arriving');
     await waitForFill(order.orderId);
     const usdc = await waitForERC20Balance(USDC_BASE, wallet, usdcBefore + order.usdcOut, BASE_CHAIN_ID, 20, 1500);
     if (usdc < usdcBefore + order.usdcOut) {
-      throw new Error('Your USDC arrived on Base but is not visible yet. Send the tip again in a moment.');
+      throw new Error('Your USDC arrived on Base but is not visible yet. Send again in a moment.');
     }
-    // Everything the order delivered goes into DHB; any surplus DHB stays in the wallet.
-    swap = await quoteUniswap(USDC_BASE, order.usdcOut, wallet);
-    if (dhbOnBase + swap.minAmountOut < needed) {
-      throw new Error('DHB moved while your USDC was arriving. The USDC is in your wallet on Base; send the tip again to finish.');
-    }
+    await spendBaseUsdc(order.usdcOut, wallet, needed, dhbOnBase, stage);
   }
 
-  stage('swap');
-  await runSwap(swap, wallet);
   const dhb = await waitForERC20Balance(DHB_BASE, wallet, needed, BASE_CHAIN_ID, 10, 1500);
-  if (dhb < needed) throw new Error('The DHB purchase confirmed but has not shown up yet. Send the tip again in a moment.');
+  if (dhb < needed) throw new Error('The DHB purchase confirmed but has not shown up yet. Send again in a moment.');
 }
 
 /** Human amount for a plan's input, trimmed for a one-line summary. */
@@ -303,4 +465,9 @@ export function formatPayAmount(plan: TipFundingPlan): string | null {
   if (plan.kind === 'none') return null;
   const n = Number(formatUnits(plan.payAmount, plan.source.decimals));
   return n.toLocaleString(undefined, { maximumFractionDigits: n < 1 ? 6 : n < 100 ? 4 : 2 });
+}
+
+/** Whether a plan buys from DeHub Pay (true) or the Uniswap pool (false). */
+export function planUsesDpay(plan: TipFundingPlan): boolean {
+  return plan.kind === 'dpay' || (plan.kind === 'bridge' && plan.via === 'dpay');
 }

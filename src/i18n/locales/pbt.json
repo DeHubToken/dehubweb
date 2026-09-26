@@ -501,7 +501,12 @@
     "stageBridge": "{{symbol}} له {{chain}} څخه لېږل کېږي…",
     "stageArriving": "Base ته رسېږي، معمولاً څو ثانیې…",
     "stageSwap": "په Uniswap کې DHB اخیستل کېږي…",
-    "payFailed": "{{symbol}} په DHB بدل نه شو"
+    "payFailed": "{{symbol}} په DHB بدل نه شو",
+    "stagePay": "DeHub Pay ته په {{symbol}} پیسې ورکول کېږي…",
+    "stageDelivering": "DeHub Pay ستاسو DHB لېږي…",
+    "payViaDpay": "DeHub Pay ته ورکړل شو، DHB شاوخوا په 30 ثانیو کې رسېږي",
+    "payViaBridgeDpay": "Base ته ولېږدول شو او DeHub Pay ته ورکړل شو، DHB شاوخوا په یوه دقیقه کې رسېږي",
+    "dmSent": "{{name}} ته {{amount}} DHB ولېږل شول!"
   },
   "postOptions": {
     "options": "اختیارونه",
@@ -3907,5 +3912,21 @@
     "openExchange": "د پرانیستې تبادله",
     "done": "ترسره شوی",
     "back": "بېرته په شا تګ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "ستاسو بیلنس",
+    "youNeed": "تاسو ته اړتیا ده",
+    "checking": "ستاسو والټ کتل کېږي…",
+    "payHint": "په خپل والټ کې په هر څه پیسې ورکړئ. دا په DHB بدلېږي او سمدستي خلاصېږي.",
+    "toppingUp": "ډکول کېږي…",
+    "topUpUnlock": "ډک کړئ او خلاص کړئ",
+    "orFund": "یا په بله لاره پیسې زیاتې کړئ",
+    "paused": "د DHB لېږدونه اوس مهال په چین کې ودرول شوي، نو دا خلاصون لا نشي ترسره کېدای. لږ وروسته بیا هڅه وکړئ.",
+    "otherChain": "دا پوسټ په بل چین کې تصفیه کېږي، نو هلته ستاسو په والټ کې DHB ته اړتیا ده.",
+    "buyCard": "په کارت DHB واخلئ",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "پیسې دننه راوړئ",
+    "moveFundsHint": "له بل چین څخه تبادله یا زېرمه کړئ",
+    "notNow": "اوس نه"
   }
 }

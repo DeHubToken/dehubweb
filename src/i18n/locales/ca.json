@@ -531,7 +531,12 @@
     "stageBridge": "Enviant {{symbol}} des de {{chain}}…",
     "stageArriving": "Arribant a Base, normalment uns segons…",
     "stageSwap": "Comprant DHB a Uniswap…",
-    "payFailed": "No s'ha pogut convertir {{symbol}} a DHB"
+    "payFailed": "No s'ha pogut convertir {{symbol}} a DHB",
+    "stagePay": "Pagant DeHub Pay amb {{symbol}}…",
+    "stageDelivering": "DeHub Pay t'està enviant els DHB…",
+    "payViaDpay": "Pagat a DeHub Pay, els DHB arriben en uns 30 s",
+    "payViaBridgeDpay": "Mogut a Base i pagat a DeHub Pay, els DHB arriben en un minut aproximadament",
+    "dmSent": "S'han enviat {{amount}} DHB a {{name}}!"
   },
   "postOptions": {
     "options": "Opcions",
@@ -6238,5 +6243,21 @@
     "openExchange": "Intercanvi obert",
     "done": "Fet",
     "back": "Enrere"
+  },
+  "ppvTopUp": {
+    "yourBalance": "El teu saldo",
+    "youNeed": "Necessites",
+    "checking": "Comprovant la teva cartera…",
+    "payHint": "Paga amb qualsevol cosa de la teva cartera. Es converteix en DHB i es desbloqueja a l'instant.",
+    "toppingUp": "Recarregant…",
+    "topUpUnlock": "Recarrega i desbloqueja",
+    "orFund": "O afegeix fons d'una altra manera",
+    "paused": "Les transferències DHB estan pausades en la cadena en aquest moment, així que aquest desbloqueig no pot processar-se encara. Torna-ho a intentar en breu.",
+    "otherChain": "Aquesta publicació es liquida en una altra cadena, així que necessita DHB a la teva cartera d'allà.",
+    "buyCard": "Compra DHB amb targeta",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Transfereix fons",
+    "moveFundsHint": "Intercanvia o diposita des d'una altra cadena",
+    "notNow": "Ara no"
   }
 }

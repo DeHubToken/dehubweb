@@ -509,7 +509,12 @@
     "stageBridge": "{{chain}} तः {{symbol}} प्रेष्यते…",
     "stageArriving": "Base इत्यत्र आगच्छति, प्रायः कतिपयक्षणेषु…",
     "stageSwap": "Uniswap इत्यत्र DHB क्रीयते…",
-    "payFailed": "{{symbol}} DHB रूपेण परिवर्तयितुं न शक्यते"
+    "payFailed": "{{symbol}} DHB रूपेण परिवर्तयितुं न शक्यते",
+    "stagePay": "{{symbol}} द्वारा DeHub Pay इत्यस्मै भुक्तिः क्रियते…",
+    "stageDelivering": "DeHub Pay भवतः DHB प्रेषयति…",
+    "payViaDpay": "DeHub Pay इत्यस्मै दत्तम्, DHB प्रायः ३० क्षणेषु आगमिष्यति",
+    "payViaBridgeDpay": "Base प्रति नीतं DeHub Pay इत्यस्मै दत्तं च, DHB प्रायः एकस्मिन् निमेषे आगमिष्यति",
+    "dmSent": "{{name}} इत्यस्मै {{amount}} DHB प्रेषितम्!"
   },
   "postOptions": {
     "options": "विकल्पाः",
@@ -3938,5 +3943,21 @@
     "openExchange": "उद्घाट्यताम्",
     "done": "पूर्णम्",
     "back": "पुनरागमनम्"
+  },
+  "ppvTopUp": {
+    "yourBalance": "भवतः शेषः",
+    "youNeed": "आवश्यकम्",
+    "checking": "भवतः कोषः परीक्ष्यते…",
+    "payHint": "कोषे विद्यमानेन केनापि भुक्तिं करोतु। तत् DHB भवति, विषयः च सद्यः उद्घाट्यते।",
+    "toppingUp": "पूर्यते…",
+    "topUpUnlock": "पूरयतु उद्घाटयतु च",
+    "orFund": "अथवा अन्येन प्रकारेण धनं योजयतु",
+    "paused": "DHB स्थानान्तरणानि अधुना शृङ्खलायां स्थगितानि, अतः इदम् उद्घाटनं न सिध्यति। किञ्चित्कालानन्तरं पुनः प्रयतताम्।",
+    "otherChain": "अयं लेखः अन्यस्यां शृङ्खलायां निर्णीयते, अतः तत्र भवतः कोषे DHB आवश्यकम्।",
+    "buyCard": "कार्डेन DHB क्रीणातु",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "धनम् आनयतु",
+    "moveFundsHint": "अन्यस्याः शृङ्खलायाः विनिमयं निक्षेपं वा करोतु",
+    "notNow": "इदानीं न"
   }
 }

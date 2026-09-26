@@ -531,7 +531,12 @@
     "stageBridge": "Sending {{symbol}} from {{chain}}…",
     "stageArriving": "Arriving on Base, usually a few seconds…",
     "stageSwap": "Buying DHB on Uniswap…",
-    "payFailed": "Could not convert {{symbol}} to DHB"
+    "payFailed": "Could not convert {{symbol}} to DHB",
+    "stagePay": "Paying DeHub Pay with {{symbol}}…",
+    "stageDelivering": "DeHub Pay is sending your DHB…",
+    "payViaDpay": "Paid to DeHub Pay, DHB arrives in about 30s",
+    "payViaBridgeDpay": "Moved to Base and paid to DeHub Pay, DHB arrives in about a minute",
+    "dmSent": "Sent {{amount}} DHB to {{name}}!"
   },
   "postOptions": {
     "options": "Options",
@@ -6357,5 +6362,21 @@
     "openExchange": "Open Exchange",
     "done": "Done",
     "back": "Back"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Your balance",
+    "youNeed": "You need",
+    "checking": "Checking your wallet…",
+    "payHint": "Pay with anything in your wallet. It becomes DHB and unlocks straight away.",
+    "toppingUp": "Topping up…",
+    "topUpUnlock": "Top up & unlock",
+    "orFund": "Or add funds another way",
+    "paused": "DHB transfers are paused on-chain right now, so this unlock can't go through yet. Try again shortly.",
+    "otherChain": "This post settles on another chain, so it needs DHB in your wallet there.",
+    "buyCard": "Buy DHB with card",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Move funds in",
+    "moveFundsHint": "Swap or deposit from another chain",
+    "notNow": "Not now"
   }
 }

@@ -516,7 +516,12 @@
     "stageBridge": "Ana aika {{symbol}} daga {{chain}}…",
     "stageArriving": "Yana isowa kan Base, yawanci 'yan daƙiƙoƙi…",
     "stageSwap": "Ana sayen DHB a Uniswap…",
-    "payFailed": "Ba a iya canza {{symbol}} zuwa DHB ba"
+    "payFailed": "Ba a iya canza {{symbol}} zuwa DHB ba",
+    "stagePay": "Ana biyan DeHub Pay da {{symbol}}…",
+    "stageDelivering": "DeHub Pay yana aika DHB ɗinka…",
+    "payViaDpay": "An biya DeHub Pay, DHB zai iso cikin kusan daƙiƙa 30",
+    "payViaBridgeDpay": "An matsar zuwa Base kuma an biya DeHub Pay, DHB zai iso cikin kusan minti ɗaya",
+    "dmSent": "An aika {{amount}} DHB ga {{name}}!"
   },
   "postOptions": {
     "options": "Zaɓuɓɓuka",
@@ -4041,5 +4046,21 @@
     "openExchange": "Buɗe Kasuwar Musaya",
     "done": "An yi",
     "back": "Komawa"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Ma'aunin kuɗinka",
+    "youNeed": "Kana buƙatar",
+    "checking": "Ana duba walat ɗinka…",
+    "payHint": "Biya da komai da ke cikin walat ɗinka. Zai zama DHB kuma ya buɗe nan take.",
+    "toppingUp": "Ana cika kuɗi…",
+    "topUpUnlock": "Cika kuɗi & buɗe",
+    "orFund": "Ko ƙara kuɗi ta wata hanya",
+    "paused": "An dakatar da canja wurin DHB a kan sarkar yanzu, don haka wannan buɗewa ba zai yiwu ba tukuna. Sake gwadawa nan ba da jimawa ba.",
+    "otherChain": "Wannan rubutu yana daidaita a wata sarkar, don haka yana buƙatar DHB a walat ɗinka a can.",
+    "buyCard": "Sayi DHB da kati",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Shigo da kuɗi",
+    "moveFundsHint": "Musanya ko saka daga wata sarkar",
+    "notNow": "Ba yanzu ba"
   }
 }

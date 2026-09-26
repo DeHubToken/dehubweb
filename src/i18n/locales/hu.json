@@ -531,7 +531,12 @@
     "stageBridge": "{{symbol}} küldése innen: {{chain}}…",
     "stageArriving": "Érkezés a Base-re, általában pár másodperc…",
     "stageSwap": "DHB vásárlása a Uniswapon…",
-    "payFailed": "Nem sikerült a(z) {{symbol}} DHB-re váltása"
+    "payFailed": "Nem sikerült a(z) {{symbol}} DHB-re váltása",
+    "stagePay": "Fizetés a DeHub Pay felé ezzel: {{symbol}}…",
+    "stageDelivering": "A DeHub Pay küldi a DHB-jét…",
+    "payViaDpay": "Kifizetve a DeHub Pay felé, a DHB kb. 30 mp múlva érkezik",
+    "payViaBridgeDpay": "Áthelyezve a Base-re és kifizetve a DeHub Pay felé, a DHB kb. egy perc múlva érkezik",
+    "dmSent": "{{amount}} DHB elküldve neki: {{name}}!"
   },
   "postOptions": {
     "options": "Lehetőségek",
@@ -6241,5 +6246,21 @@
     "openExchange": "Tőzsde megnyitása",
     "done": "Kész",
     "back": "Vissza"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Aktuális egyenleg",
+    "youNeed": "Szükséges",
+    "checking": "Pénztárca ellenőrzése…",
+    "payHint": "Fizessen bármivel a pénztárcájából. DHB lesz belőle, és azonnal feloldja a tartalmat.",
+    "toppingUp": "Feltöltés…",
+    "topUpUnlock": "Feltöltés és feloldás",
+    "orFund": "Vagy adjon hozzá pénzt más módon",
+    "paused": "A DHB átutalások jelenleg szünetelnek a láncon, így ez a feloldás még nem mehet keresztül. Próbálja újra rövid időn belül.",
+    "otherChain": "Ez a bejegyzés egy másik láncon számol el, ezért ott DHB kell a pénztárcájában.",
+    "buyCard": "DHB vásárlása kártyával",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Pénz áthozása",
+    "moveFundsHint": "Csere vagy befizetés másik láncról",
+    "notNow": "Most nem"
   }
 }

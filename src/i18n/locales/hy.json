@@ -531,7 +531,12 @@
     "stageBridge": "{{symbol}}-ի ուղարկում {{chain}}-ից…",
     "stageArriving": "Հասնում է Base, սովորաբար մի քանի վայրկյան…",
     "stageSwap": "DHB-ի գնում Uniswap-ում…",
-    "payFailed": "Չհաջողվեց {{symbol}}-ը փոխարկել DHB-ի"
+    "payFailed": "Չհաջողվեց {{symbol}}-ը փոխարկել DHB-ի",
+    "stagePay": "Վճարում DeHub Pay-ին {{symbol}}-ով…",
+    "stageDelivering": "DeHub Pay-ը ուղարկում է ձեր DHB-ն…",
+    "payViaDpay": "Վճարվեց DeHub Pay-ին, DHB-ն կհասնի մոտ 30 վրկ-ում",
+    "payViaBridgeDpay": "Տեղափոխվեց Base և վճարվեց DeHub Pay-ին, DHB-ն կհասնի մոտ մեկ րոպեում",
+    "dmSent": "{{amount}} DHB ուղարկվեց {{name}}-ին!"
   },
   "postOptions": {
     "options": "Entrankhner",
@@ -6230,5 +6235,21 @@
     "openExchange": "Բացել փոխանակումը",
     "done": "Պատրաստ է",
     "back": "Հետ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Ձեր հաշվեկշիռը",
+    "youNeed": "Ձեզ անհրաժեշտ է",
+    "checking": "Ստուգում ենք ձեր դրամապանակը…",
+    "payHint": "Վճարեք ձեր դրամապանակում եղած ցանկացած միջոցով։ Այն դառնում է DHB և անմիջապես բացվում է։",
+    "toppingUp": "Լրացում…",
+    "topUpUnlock": "Լրացնել և բացել",
+    "orFund": "Կամ ավելացրեք միջոցներ այլ կերպ",
+    "paused": "DHB փոխանցումները այս պահին շղթայի վրա դադարեցված են, ուստի այս բացումը դեռ չի կարող անցնել։ Կրկին փորձեք շուտով։",
+    "otherChain": "Այս գրառումը հաշվարկվում է այլ շղթայում, ուստի այնտեղ ձեր դրամապանակում DHB է պետք։",
+    "buyCard": "Գնել DHB քարտով",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Փոխանցել միջոցներ",
+    "moveFundsHint": "Փոխանակել կամ ավանդադրել այլ շղթայից",
+    "notNow": "Ոչ հիմա"
   }
 }

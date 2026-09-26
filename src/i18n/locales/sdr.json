@@ -467,7 +467,12 @@
     "stageBridge": "{{chain}} سے {{symbol}} بھیجت ہئی…",
     "stageArriving": "Base میں پہنچت ہے، اکثر کچھ سیکنڈ لاگیلا…",
     "stageSwap": "Uniswap میں DHB خریدت ہئی…",
-    "payFailed": "{{symbol}} کے DHB میں نی بدل پارلی"
+    "payFailed": "{{symbol}} کے DHB میں نی بدل پارلی",
+    "stagePay": "{{symbol}} سے DeHub Pay کو ادائیگی ہوت ہے…",
+    "stageDelivering": "DeHub Pay توہر DHB بھیجت ہے…",
+    "payViaDpay": "DeHub Pay کو ادا ہوئی گیل، DHB لگ بھگ 30 سیکنڈ میں آئی",
+    "payViaBridgeDpay": "Base پر لے جائے کے DeHub Pay کو ادا ہوئی گیل، DHB لگ بھگ ایک منٹ میں آئی",
+    "dmSent": "{{name}} کو {{amount}} DHB بھیج دیل!"
   },
   "postOptions": {
     "options": "آپشن",
@@ -3953,5 +3958,21 @@
     "openExchange": "एक्सचेंज खोलो",
     "done": "हो गईल",
     "back": "वापस"
+  },
+  "ppvTopUp": {
+    "yourBalance": "توہر بیلنس",
+    "youNeed": "تورے چاہی",
+    "checking": "توہر والیٹ جانچ رہا ہے…",
+    "payHint": "اپن والیٹ میں کونو بھی چیز سے ادا کرو۔ او DHB بن جائی اور تورنتے ان لاک ہوئی جائی۔",
+    "toppingUp": "ٹاپ اپ ہوت ہے…",
+    "topUpUnlock": "ٹاپ اپ کرو اور ان لاک کرو",
+    "orFund": "یا دوسر طریقہ سے پیسہ ڈالو",
+    "paused": "DHB ٹرانسفر ابھی آن چین روکل ہے، اِ لیے اِ ان لاک ابھی نہیں ہوئی سکت۔ تھوڑا دیر بعد پھر کوشش کرو۔",
+    "otherChain": "اِ پوسٹ دوسر چین پر سیٹل ہوت ہے، اِ لیے اوہاں توہر والیٹ میں DHB چاہی۔",
+    "buyCard": "کارڈ سے DHB خریدو",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "پیسہ اندر لاؤ",
+    "moveFundsHint": "دوسر چین سے سواپ یا جمع کرو",
+    "notNow": "ابھی نہیں"
   }
 }

@@ -513,7 +513,12 @@
     "stageBridge": "{{symbol}} {{chain}} желісінен жіберілуде…",
     "stageArriving": "Base желісіне келуде, әдетте бірнеше секунд…",
     "stageSwap": "Uniswap-та DHB сатып алынуда…",
-    "payFailed": "{{symbol}} DHB-ге айырбасталмады"
+    "payFailed": "{{symbol}} DHB-ге айырбасталмады",
+    "stagePay": "{{symbol}} арқылы DeHub Pay-ге төленуде…",
+    "stageDelivering": "DeHub Pay сіздің DHB-ңізді жіберуде…",
+    "payViaDpay": "DeHub Pay-ге төленді, DHB шамамен 30 секундта келеді",
+    "payViaBridgeDpay": "Base-ке ауыстырылып, DeHub Pay-ге төленді, DHB шамамен бір минутта келеді",
+    "dmSent": "{{name}} пайдаланушысына {{amount}} DHB жіберілді!"
   },
   "postOptions": {
     "options": "Параметрлер",
@@ -6319,5 +6324,21 @@
     "openExchange": "Exchange ашу",
     "done": "Орындалды",
     "back": "Артқа"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Сіздің балансыңыз",
+    "youNeed": "Сізге қажет",
+    "checking": "Әмияныңыз тексерілуде…",
+    "payHint": "Әмияныңыздағы кез келген активпен төлеңіз. Ол DHB-ге айналып, бірден ашылады.",
+    "toppingUp": "Толтырылуда…",
+    "topUpUnlock": "Толтыру және ашу",
+    "orFund": "Немесе басқа жолмен қаражат қосыңыз",
+    "paused": "DHB аударымдары қазір блокчейнде тоқтатылған, сондықтан бұл ашу әзірге өтпейді. Сәлден кейін қайталап көріңіз.",
+    "otherChain": "Бұл жазба басқа желіде есептеледі, сондықтан сол желідегі әмияныңызда DHB қажет.",
+    "buyCard": "DHB-ні картамен сатып алу",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Қаражат енгізу",
+    "moveFundsHint": "Басқа желіден айырбастау немесе салу",
+    "notNow": "Қазір емес"
   }
 }

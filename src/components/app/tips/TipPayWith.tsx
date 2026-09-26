@@ -1,13 +1,13 @@
 /**
- * "Pay with" for a DHB tip or gift.
+ * "Pay with" for anything paid in DHB: tips, gifts, pay-per-view, subscriptions.
  *
  * DHB stays the default and behaves exactly as before. When the wallet does
  * not hold enough DHB, the richest other EVM balance is picked instead — USDC
  * on Arc, ETH on Ethereum, anything on Base — and the tip is funded from it
- * on send (deBridge to Base, then Uniswap into DHB; see lib/tip-funding).
+ * on send — DeHub Pay first, Uniswap as the fallback (see lib/tip-funding).
  *
  * Loaded lazily: it reads wallet balances, which reach the wallet stack, and
- * both tip surfaces are imported by eager feed cards.
+ * the surfaces that use it are imported by eager feed cards.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +24,7 @@ import {
   TIP_FUNDING_CHAINS,
   formatPayAmount,
   planTipFunding,
+  planUsesDpay,
   type TipFundingPlan,
   type TipFundingSource,
 } from '@/lib/tip-funding';
@@ -77,9 +78,11 @@ interface TipPayWithProps {
   amountDhb: number;
   value: TipFundingSource | null;
   onChange: (source: TipFundingSource | null) => void;
+  /** Only other tokens: for a surface that already knows the DHB is short. */
+  requireSource?: boolean;
 }
 
-export default function TipPayWith({ amountDhb, value, onChange }: TipPayWithProps) {
+export default function TipPayWith({ amountDhb, value, onChange, requireSource = false }: TipPayWithProps) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { allTokens } = useAllChainsTokens();
@@ -114,7 +117,7 @@ export default function TipPayWith({ amountDhb, value, onChange }: TipPayWithPro
 
   // Short of DHB → switch to the richest balance, once, unless the tipper chose.
   // Back to DHB when the amount drops within what they hold.
-  const short = amountDhb > 0 && amountDhb > dhbHeld;
+  const short = requireSource || (amountDhb > 0 && amountDhb > dhbHeld);
   useEffect(() => {
     if (userPicked.current) return;
     if (short && !value && rows.length) onChange(rows[0]);
@@ -184,9 +187,13 @@ export default function TipPayWith({ amountDhb, value, onChange }: TipPayWithPro
               })}
               {' · '}
               <span className="text-white/45">
-                {plan.kind === 'bridge'
-                  ? t('tip.payViaBridge', 'Swapped to DHB on Uniswap, arrives in ~{{seconds}}s', { seconds: Math.max(2, plan.fillSeconds) })
-                  : t('tip.payViaSwap', 'Swapped to DHB on Uniswap')}
+                {planUsesDpay(plan)
+                  ? plan.kind === 'bridge'
+                    ? t('tip.payViaBridgeDpay', 'Moved to Base and paid to DeHub Pay, DHB arrives in about a minute')
+                    : t('tip.payViaDpay', 'Paid to DeHub Pay, DHB arrives in about 30s')
+                  : plan.kind === 'bridge'
+                    ? t('tip.payViaBridge', 'Swapped to DHB on Uniswap, arrives in ~{{seconds}}s', { seconds: Math.max(2, plan.fillSeconds) })
+                    : t('tip.payViaSwap', 'Swapped to DHB on Uniswap')}
               </span>
             </span>
           ) : null}
@@ -195,7 +202,7 @@ export default function TipPayWith({ amountDhb, value, onChange }: TipPayWithPro
 
       {open && (
         <div className="max-h-56 overflow-y-auto overscroll-contain border-t border-white/10 py-1" data-vaul-no-drag>
-          <button
+          {!requireSource && <button
             type="button"
             onClick={() => pick(null)}
             className={`flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-white/5 ${!value ? 'bg-white/[0.07]' : ''}`}
@@ -203,7 +210,7 @@ export default function TipPayWith({ amountDhb, value, onChange }: TipPayWithPro
             <img src={dehubCoin} alt="" className="h-6 w-6" />
             <span className="flex-1 text-sm text-white">DHB</span>
             <span className="text-xs tabular-nums text-white/50">{dhbHeld.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-          </button>
+          </button>}
           {rows.map(r => (
             <button
               key={`${r.chainId}:${r.address}`}

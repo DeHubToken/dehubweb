@@ -515,7 +515,12 @@
     "stageBridge": "Kuthunyelwa i-{{symbol}} isuka ku-{{chain}}…",
     "stageArriving": "Kufika ku-Base, imizuzwana embalwa ngokuvamile…",
     "stageSwap": "Kuthengwa i-DHB ku-Uniswap…",
-    "payFailed": "Akukwazanga ukuguqula i-{{symbol}} ibe yi-DHB"
+    "payFailed": "Akukwazanga ukuguqula i-{{symbol}} ibe yi-DHB",
+    "stagePay": "Kukhokhelwa i-DeHub Pay nge-{{symbol}}…",
+    "stageDelivering": "I-DeHub Pay ithumela i-DHB yakho…",
+    "payViaDpay": "Kukhokhelwe i-DeHub Pay, i-DHB izofika cishe emizuzwaneni engu-30",
+    "payViaBridgeDpay": "Kudluliselwe ku-Base futhi kwakhokhelwa i-DeHub Pay, i-DHB izofika cishe emzuzwini owodwa",
+    "dmSent": "Kuthunyelwe u-{{amount}} DHB ku-{{name}}!"
   },
   "postOptions": {
     "options": "Izinketho",
@@ -4075,5 +4080,21 @@
     "openExchange": "Vula Ukuhwebelana",
     "done": "Iqedile",
     "back": "Emuva"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Imali yakho esele",
+    "youNeed": "Udinga",
+    "checking": "Kuhlolwa i-wallet yakho…",
+    "payHint": "Khokha nganoma yini ekwi-wallet yakho. Iba yi-DHB futhi ivuleke ngokushesha.",
+    "toppingUp": "Kuyafakwa imali…",
+    "topUpUnlock": "Faka imali & vula",
+    "orFund": "Noma engeza imali ngenye indlela",
+    "paused": "Ukudluliswa kwe-DHB kumisiwe ku-chain njengamanje, ngakho lokhu kuvula akukwazi ukwenzeka okwamanje. Zama futhi maduze.",
+    "otherChain": "Lokhu okuthunyelwe kukhokhwa kwenye i-chain, ngakho kudinga i-DHB ekwi-wallet yakho lapho.",
+    "buyCard": "Thenga i-DHB ngekhadi",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Letha imali",
+    "moveFundsHint": "Shintshanisa noma faka kusuka kwenye i-chain",
+    "notNow": "Hhayi manje"
   }
 }

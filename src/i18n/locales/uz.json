@@ -514,7 +514,12 @@
     "stageBridge": "{{symbol}} {{chain}} tarmog‘idan yuborilmoqda…",
     "stageArriving": "Base’ga yetib kelmoqda, odatda bir necha soniya…",
     "stageSwap": "Uniswap’da DHB sotib olinmoqda…",
-    "payFailed": "{{symbol}} DHB’ga aylantirilmadi"
+    "payFailed": "{{symbol}} DHB’ga aylantirilmadi",
+    "stagePay": "DeHub Pay'ga {{symbol}} bilan to'lanmoqda…",
+    "stageDelivering": "DeHub Pay DHB'ingizni yubormoqda…",
+    "payViaDpay": "DeHub Pay'ga to'landi, DHB taxminan 30 soniyada keladi",
+    "payViaBridgeDpay": "Base'ga o'tkazildi va DeHub Pay'ga to'landi, DHB taxminan bir daqiqada keladi",
+    "dmSent": "{{name}} ga {{amount}} DHB yuborildi!"
   },
   "postOptions": {
     "options": "Parametrlar",
@@ -4087,5 +4092,21 @@
     "openExchange": "Ochiq birja",
     "done": "Bajarildi",
     "back": "Orqaga"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Balansingiz",
+    "youNeed": "Sizga kerak",
+    "checking": "Hamyoningiz tekshirilmoqda…",
+    "payHint": "Hamyoningizdagi istalgan narsa bilan to'lang. U DHB'ga aylanadi va darhol ochiladi.",
+    "toppingUp": "To'ldirilmoqda…",
+    "topUpUnlock": "To'ldirish va ochish",
+    "orFund": "Yoki boshqa usulda mablag' qo'shing",
+    "paused": "DHB o'tkazmalari hozir zanjirda to'xtatilgan, shuning uchun bu ochish hali amalga oshmaydi. Birozdan keyin qayta urinib ko'ring.",
+    "otherChain": "Bu post boshqa zanjirda hisoblanadi, shuning uchun u yerdagi hamyoningizda DHB kerak.",
+    "buyCard": "Karta bilan DHB sotib olish",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Mablag' o'tkazish",
+    "moveFundsHint": "Boshqa zanjirdan almashtirish yoki kiritish",
+    "notNow": "Hozir emas"
   }
 }

@@ -516,7 +516,12 @@
     "stageBridge": "由 {{chain}} 傳送緊 {{symbol}}…",
     "stageArriving": "就快到 Base，通常幾秒…",
     "stageSwap": "喺 Uniswap 買緊 DHB…",
-    "payFailed": "冇辦法將 {{symbol}} 換成 DHB"
+    "payFailed": "冇辦法將 {{symbol}} 換成 DHB",
+    "stagePay": "用 {{symbol}} 俾錢畀 DeHub Pay…",
+    "stageDelivering": "DeHub Pay 傳送緊你嘅 DHB…",
+    "payViaDpay": "已經俾咗 DeHub Pay，DHB 大約 30 秒到",
+    "payViaBridgeDpay": "已經轉去 Base 再俾咗 DeHub Pay，DHB 大約一分鐘到",
+    "dmSent": "已經傳送 {{amount}} DHB 畀 {{name}}！"
   },
   "postOptions": {
     "options": "選項",
@@ -4042,5 +4047,21 @@
     "openExchange": "開放交易所",
     "done": "搞掂",
     "back": "返回"
+  },
+  "ppvTopUp": {
+    "yourBalance": "你嘅餘額",
+    "youNeed": "你需要",
+    "checking": "檢查緊你嘅錢包…",
+    "payHint": "用錢包入面任何資產俾錢。會變成 DHB，即刻解鎖。",
+    "toppingUp": "增值緊…",
+    "topUpUnlock": "增值並解鎖",
+    "orFund": "或者用其他方法增值",
+    "paused": "DHB 轉帳而家喺鏈上暫停咗，所以今次解鎖暫時做唔到。遲啲再試下。",
+    "otherChain": "呢個帖喺另一條鏈結算，所以你喺嗰度嘅錢包要有 DHB。",
+    "buyCard": "用卡買 DHB",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "轉入資金",
+    "moveFundsHint": "由其他鏈兌換或者存入",
+    "notNow": "遲啲先"
   }
 }

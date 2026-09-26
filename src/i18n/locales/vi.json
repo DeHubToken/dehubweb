@@ -501,7 +501,12 @@
     "stageBridge": "Đang gửi {{symbol}} từ {{chain}}…",
     "stageArriving": "Đang về Base, thường chỉ vài giây…",
     "stageSwap": "Đang mua DHB trên Uniswap…",
-    "payFailed": "Không thể chuyển đổi {{symbol}} sang DHB"
+    "payFailed": "Không thể chuyển đổi {{symbol}} sang DHB",
+    "stagePay": "Đang thanh toán DeHub Pay bằng {{symbol}}…",
+    "stageDelivering": "DeHub Pay đang gửi DHB của bạn…",
+    "payViaDpay": "Đã thanh toán cho DeHub Pay, DHB sẽ đến sau khoảng 30 giây",
+    "payViaBridgeDpay": "Đã chuyển sang Base và thanh toán cho DeHub Pay, DHB sẽ đến sau khoảng một phút",
+    "dmSent": "Đã gửi {{amount}} DHB cho {{name}}!"
   },
   "postOptions": {
     "options": "Options",
@@ -6134,5 +6139,21 @@
     "openExchange": "Mở Sàn giao dịch",
     "done": "Hoàn tất",
     "back": "Quay lại"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Số dư của bạn",
+    "youNeed": "Bạn cần",
+    "checking": "Đang kiểm tra ví của bạn…",
+    "payHint": "Thanh toán bằng bất cứ thứ gì trong ví. Nó sẽ thành DHB và mở khóa ngay.",
+    "toppingUp": "Đang nạp…",
+    "topUpUnlock": "Nạp & mở khóa",
+    "orFund": "Hoặc nạp tiền theo cách khác",
+    "paused": "Chuyển DHB hiện đang bị tạm dừng trên chuỗi, nên chưa thể mở khóa lúc này. Hãy thử lại sau ít phút.",
+    "otherChain": "Bài đăng này thanh toán trên một chuỗi khác, nên bạn cần có DHB trong ví ở chuỗi đó.",
+    "buyCard": "Mua DHB bằng thẻ",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Chuyển tiền vào",
+    "moveFundsHint": "Hoán đổi hoặc nạp từ chuỗi khác",
+    "notNow": "Để sau"
   }
 }

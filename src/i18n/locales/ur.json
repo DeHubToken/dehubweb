@@ -530,7 +530,12 @@
     "stageBridge": "{{chain}} سے {{symbol}} بھیجا جا رہا ہے…",
     "stageArriving": "Base پر پہنچ رہا ہے، عموماً چند سیکنڈ…",
     "stageSwap": "Uniswap پر DHB خریدا جا رہا ہے…",
-    "payFailed": "{{symbol}} کو DHB میں تبدیل نہیں کیا جا سکا"
+    "payFailed": "{{symbol}} کو DHB میں تبدیل نہیں کیا جا سکا",
+    "stagePay": "{{symbol}} سے DeHub Pay کو ادائیگی ہو رہی ہے…",
+    "stageDelivering": "DeHub Pay آپ کے DHB بھیج رہا ہے…",
+    "payViaDpay": "DeHub Pay کو ادا کر دیا گیا، DHB تقریباً 30 سیکنڈ میں پہنچ جائیں گے",
+    "payViaBridgeDpay": "Base پر منتقل کر کے DeHub Pay کو ادا کر دیا گیا، DHB تقریباً ایک منٹ میں پہنچ جائیں گے",
+    "dmSent": "{{name}} کو {{amount}} DHB بھیج دیے گئے!"
   },
   "postOptions": {
     "options": "اختیارات",
@@ -6068,5 +6073,21 @@
     "openExchange": "اوپن ایکسچینج",
     "done": "ہو گیا",
     "back": "واپس جائیں"
+  },
+  "ppvTopUp": {
+    "yourBalance": "آپ کا بیلنس",
+    "youNeed": "آپ کو درکار ہے",
+    "checking": "آپ کا والیٹ چیک ہو رہا ہے…",
+    "payHint": "اپنے والیٹ میں موجود کسی بھی چیز سے ادائیگی کریں۔ یہ DHB بن جاتا ہے اور فوراً کھل جاتا ہے۔",
+    "toppingUp": "ٹاپ اپ ہو رہا ہے…",
+    "topUpUnlock": "ٹاپ اپ کریں اور کھولیں",
+    "orFund": "یا کسی اور طریقے سے فنڈز شامل کریں",
+    "paused": "DHB کی منتقلی اس وقت آن چین روکی گئی ہے، اس لیے یہ ان لاک ابھی نہیں ہو سکتا۔ تھوڑی دیر بعد دوبارہ کوشش کریں۔",
+    "otherChain": "یہ پوسٹ کسی اور چین پر سیٹل ہوتی ہے، اس لیے وہاں آپ کے والیٹ میں DHB درکار ہیں۔",
+    "buyCard": "کارڈ سے DHB خریدیں",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "فنڈز منتقل کریں",
+    "moveFundsHint": "کسی اور چین سے سواپ یا جمع کریں",
+    "notNow": "ابھی نہیں"
   }
 }

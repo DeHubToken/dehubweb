@@ -528,7 +528,12 @@
     "stageBridge": "جارٍ إرسال {{symbol}} من {{chain}}…",
     "stageArriving": "جارٍ الوصول إلى Base، عادةً خلال ثوانٍ…",
     "stageSwap": "جارٍ شراء DHB عبر Uniswap…",
-    "payFailed": "تعذّر تحويل {{symbol}} إلى DHB"
+    "payFailed": "تعذّر تحويل {{symbol}} إلى DHB",
+    "stagePay": "جارٍ الدفع إلى DeHub Pay بـ {{symbol}}…",
+    "stageDelivering": "DeHub Pay يرسل DHB إليك…",
+    "payViaDpay": "تم الدفع إلى DeHub Pay، يصل DHB خلال 30 ثانية تقريبًا",
+    "payViaBridgeDpay": "تم النقل إلى Base والدفع إلى DeHub Pay، يصل DHB خلال دقيقة تقريبًا",
+    "dmSent": "تم إرسال {{amount}} DHB إلى {{name}}!"
   },
   "postOptions": {
     "options": "خيارات",
@@ -6356,5 +6361,21 @@
     "openExchange": "فتح البورصة",
     "done": "تم",
     "back": "رجوع"
+  },
+  "ppvTopUp": {
+    "yourBalance": "رصيدك",
+    "youNeed": "تحتاج إلى",
+    "checking": "جارٍ فحص محفظتك…",
+    "payHint": "ادفع بأي شيء في محفظتك. يتحول إلى DHB ويُفتح المحتوى فورًا.",
+    "toppingUp": "جارٍ الشحن…",
+    "topUpUnlock": "اشحن وافتح",
+    "orFund": "أو أضف رصيدًا بطريقة أخرى",
+    "paused": "تحويلات DHB متوقفة على السلسلة الآن، لذا لا يمكن إتمام فتح المحتوى بعد. أعد المحاولة بعد قليل.",
+    "otherChain": "تتم تسوية هذا المنشور على سلسلة أخرى، لذا يحتاج إلى DHB في محفظتك هناك.",
+    "buyCard": "شراء DHB بالبطاقة",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "انقل الأموال",
+    "moveFundsHint": "بدّل أو أودِع من سلسلة أخرى",
+    "notNow": "ليس الآن"
   }
 }

@@ -391,7 +391,12 @@
     "stageBridge": "Слање {{symbol}} са {{chain}}…",
     "stageArriving": "Стиже на Base, обично за неколико секунди…",
     "stageSwap": "Куповина DHB на Uniswap-у…",
-    "payFailed": "Није могуће претворити {{symbol}} у DHB"
+    "payFailed": "Није могуће претворити {{symbol}} у DHB",
+    "stagePay": "Плаћање DeHub Pay помоћу {{symbol}}…",
+    "stageDelivering": "DeHub Pay шаље ваше DHB…",
+    "payViaDpay": "Плаћено преко DeHub Pay, DHB стиже за око 30 с",
+    "payViaBridgeDpay": "Пребачено на Base и плаћено преко DeHub Pay, DHB стиже за око минут",
+    "dmSent": "Послато {{amount}} DHB кориснику {{name}}!"
   },
   "postOptions": {
     "options": "Опције",
@@ -3235,5 +3240,21 @@
     "openExchange": "Отвори Берзу",
     "done": "Готово",
     "back": "Назад"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Ваше стање",
+    "youNeed": "Потребно вам је",
+    "checking": "Проверавамо новчаник…",
+    "payHint": "Платите било чиме из новчаника. Претвара се у DHB и одмах откључава.",
+    "toppingUp": "Допуна…",
+    "topUpUnlock": "Допуни и откључај",
+    "orFund": "Или додајте средства на други начин",
+    "paused": "DHB трансфери су тренутно паузирани на ланцу, па ово откључавање још не може да прође. Покушајте поново ускоро.",
+    "otherChain": "Ова објава се измирује на другом ланцу, па вам тамо треба DHB у новчанику.",
+    "buyCard": "Купи DHB картицом",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Пребаци средства",
+    "moveFundsHint": "Замена или депозит са другог ланца",
+    "notNow": "Не сада"
   }
 }

@@ -5,7 +5,8 @@
  * Matches the liquid glass aesthetic of TipModal.
  */
 
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Gem, Loader2 } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,11 @@ import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { apiCall } from '@/lib/api/dehub/core';
 import { getAccountInfo } from '@/lib/api/dehub';
+import { useAuth } from '@/contexts/AuthContext';
+import { fundTipFromSource } from '@/lib/tip-funding-run';
+import type { TipFundingSource } from '@/lib/tip-funding';
+
+const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
 
 const QUICK_AMOUNTS = [500, 1_000, 5_000, 10_000, 25_000, 50_000, 100_000, 1_000_000];
 
@@ -47,8 +53,12 @@ export function DmTipDialog({
   recipientName,
   conversationId,
 }: DmTipDialogProps) {
+  const { t } = useTranslation();
+  const { walletAddress } = useAuth();
   const [amount, setAmount] = useState('');
   const [isSending, setIsSending] = useState(false);
+  // Another token to pay with; it becomes DHB on Base before the tip.
+  const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const [recipientPrivate, setRecipientPrivate] = useState(false);
   const [privacyChecking, setPrivacyChecking] = useState(false);
 
@@ -76,11 +86,11 @@ export function DmTipDialog({
       const profile = await getAccountInfo(recipientAddress);
       if (profile?.hideBadgeAndBalance) {
         setRecipientPrivate(true);
-        toast.error('This account has disabled tips while private balance mode is on.');
+        toast.error(t('tip.privateBalanceError'));
         return;
       }
     } catch {
-      toast.error('Could not verify the recipient privacy setting. No tip was sent.');
+      toast.error(t('tip.privacyCheckFailed'));
       return;
     }
 
@@ -88,10 +98,15 @@ export function DmTipDialog({
     try {
       const chainId = BASE_CHAIN_ID;
 
+      if (payWith && walletAddress) {
+        const ready = await fundTipFromSource(payWith, parsedAmount, walletAddress, t, 'dm-tip');
+        if (!ready) return;
+      }
+
       await switchChain(chainId);
       const signerAddress = await getWalletAddress();
 
-      toast.loading('Sending tip...', { id: 'dm-tip' });
+      toast.loading(t('tip.sending'), { id: 'dm-tip' });
 
       const tipResult = await sendTip({
         tokenId: 0,
@@ -102,7 +117,7 @@ export function DmTipDialog({
       });
 
       // Show success immediately on tx submission
-      toast.success(dhbText(`Sent ${parsedAmount.toLocaleString()} DHB to ${recipientName}! 🎉`), { id: 'dm-tip' });
+      toast.success(dhbText(t('tip.dmSent', 'Sent {{amount}} DHB to {{name}}!', { amount: parsedAmount.toLocaleString(), name: recipientName })), { id: 'dm-tip' });
       setAmount('');
       onOpenChange(false);
 
@@ -199,6 +214,12 @@ export function DmTipDialog({
             </div>
           </div>
 
+          {open && walletAddress && !recipientPrivate ? (
+            <Suspense fallback={null}>
+              <TipPayWith amountDhb={isValidAmount ? parsedAmount : 0} value={payWith} onChange={setPayWith} />
+            </Suspense>
+          ) : null}
+
           <div className="flex gap-3 mt-2">
             <LiquidGlassBubble
               shimmer={false}
@@ -206,7 +227,7 @@ export function DmTipDialog({
               onClick={isSending ? undefined : () => onOpenChange(false)}
             >
               <span className="block text-center text-white text-sm font-medium">
-                Close
+                {t('common.close')}
               </span>
             </LiquidGlassBubble>
             <Button
@@ -218,10 +239,10 @@ export function DmTipDialog({
               {isSending ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Sending...
+                  {t('tip.sending')}
                 </>
               ) : (
-                <>Send</>
+                <>{t('tip.send')}</>
               )}
             </Button>
           </div>

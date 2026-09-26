@@ -515,7 +515,12 @@
     "stageBridge": "{{chain}} مان {{symbol}} موڪلي رهيا آهيون…",
     "stageArriving": "Base تي پهچي رهيو آهي، عام طور تي ڪجهه سيڪنڊ…",
     "stageSwap": "Uniswap تي DHB خريد ڪري رهيا آهيون…",
-    "payFailed": "{{symbol}} کي DHB ۾ تبديل نه ڪري سگهياسين"
+    "payFailed": "{{symbol}} کي DHB ۾ تبديل نه ڪري سگهياسين",
+    "stagePay": "{{symbol}} سان DeHub Pay کي ادا ڪري رهيا آهيون…",
+    "stageDelivering": "DeHub Pay توهان جا DHB موڪلي رهيو آهي…",
+    "payViaDpay": "DeHub Pay کي ادا ڪيو ويو، DHB لڳ ڀڳ 30 سيڪنڊن ۾ پهچندا",
+    "payViaBridgeDpay": "Base تي منتقل ڪري DeHub Pay کي ادا ڪيو ويو، DHB لڳ ڀڳ هڪ منٽ ۾ پهچندا",
+    "dmSent": "{{name}} کي {{amount}} DHB موڪليا ويا!"
   },
   "postOptions": {
     "options": "اختيار",
@@ -3995,5 +4000,21 @@
     "openExchange": "اوپن ايڪسچينج",
     "done": "مڪمل",
     "back": "پوئتي"
+  },
+  "ppvTopUp": {
+    "yourBalance": "توهان جو بيلنس",
+    "youNeed": "توهان کي گهرجن",
+    "checking": "توهان جو والٽ چيڪ ڪري رهيا آهيون…",
+    "payHint": "پنهنجي والٽ ۾ موجود ڪنهن به شيءِ سان ادا ڪريو. اهو DHB بڻجي ويندو ۽ فوري طور انلاڪ ٿي ويندو.",
+    "toppingUp": "ٽاپ اپ ٿي رهيو آهي…",
+    "topUpUnlock": "ٽاپ اپ ۽ انلاڪ ڪريو",
+    "orFund": "يا ٻئي طريقي سان فنڊ شامل ڪريو",
+    "paused": "DHB منتقليون هن وقت آن چين روڪيل آهن، تنهن ڪري هي انلاڪ اڃا ٿي نٿو سگهي. ٿوري دير بعد ٻيهر ڪوشش ڪريو.",
+    "otherChain": "هي پوسٽ ٻي چين تي سيٽل ٿئي ٿي، تنهن ڪري اتي توهان جي والٽ ۾ DHB گهرجن.",
+    "buyCard": "ڪارڊ سان DHB خريد ڪريو",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "فنڊ اندر آڻيو",
+    "moveFundsHint": "ٻي چين مان سواپ يا جمع ڪريو",
+    "notNow": "هاڻي نه"
   }
 }
