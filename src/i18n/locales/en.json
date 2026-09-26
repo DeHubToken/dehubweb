@@ -58,7 +58,14 @@
     "music": "Music",
     "live": "Live",
     "newPosts_one": "{{count}} new post",
-    "newPosts_other": "{{count}} new posts"
+    "newPosts_other": "{{count}} new posts",
+    "radioStations": "Radio Stations",
+    "emptyTitle": "No Content Yet",
+    "emptyDescription": "Be the first to share something amazing!",
+    "loadFailed": "Unable to load feed. Please try again.",
+    "followingEmptyTitle": "No Posts Yet",
+    "followingEmptyDescription": "Follow some creators to see their posts here!",
+    "seeAll": "See all"
   },
   "explore": {
     "all": "All",

@@ -58,7 +58,14 @@
     "music": "موسیقی",
     "live": "لائیو",
     "newPosts_one": "{{count}} نئی پوسٹ",
-    "newPosts_other": "{{count}} نئی پوسٹس"
+    "newPosts_other": "{{count}} نئی پوسٹس",
+    "radioStations": "ریڈیو اسٹیشنز",
+    "emptyTitle": "ابھی تک کوئی مواد نہیں",
+    "emptyDescription": "کچھ شاندار شیئر کرنے والے پہلے فرد بنیں!",
+    "loadFailed": "فیڈ لوڈ نہیں ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔",
+    "followingEmptyTitle": "ابھی تک کوئی پوسٹ نہیں",
+    "followingEmptyDescription": "یہاں ان کی پوسٹس دیکھنے کے لیے کچھ کریئیٹرز کو فالو کریں!",
+    "seeAll": "سب دیکھیں"
   },
   "explore": {
     "all": "سب",

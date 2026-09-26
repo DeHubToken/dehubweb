@@ -701,7 +701,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     handleShowOriginal,
     sourceLang,
     isTooShort: nothingToTranslate,
-  } = useTranslation(descriptionText);
+  } = useTranslation(descriptionText, true, viewRef);
   const { isLoading: isTranslating, error: translationError, result: translationResult, translateImage, clearResult } = useImageTranslation();
 
   // Get images array - use imageUrls if available, otherwise fall back to single image

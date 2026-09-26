@@ -58,7 +58,14 @@
     "music": "Musika",
     "live": "Live",
     "newPosts_one": "{{count}} bagong post",
-    "newPosts_other": "{{count}} bagong post"
+    "newPosts_other": "{{count}} bagong post",
+    "radioStations": "Mga Istasyon ng Radyo",
+    "emptyTitle": "Wala pang content",
+    "emptyDescription": "Maging una sa pagbabahagi ng isang bagay na kahanga-hanga!",
+    "loadFailed": "Hindi ma-load ang feed. Pakisubukang muli.",
+    "followingEmptyTitle": "Wala pang mga post",
+    "followingEmptyDescription": "I-follow ang ilang creator para makita ang kanilang mga post dito!",
+    "seeAll": "Tingnan lahat"
   },
   "explore": {
     "all": "All",

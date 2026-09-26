@@ -58,7 +58,14 @@
     "music": "Musik",
     "live": "Live",
     "newPosts_one": "{{count}} nytt inlägg",
-    "newPosts_other": "{{count}} nya inlägg"
+    "newPosts_other": "{{count}} nya inlägg",
+    "radioStations": "Radiostationer",
+    "emptyTitle": "Inget innehåll än",
+    "emptyDescription": "Bli först med att dela något fantastiskt!",
+    "loadFailed": "Det gick inte att läsa in flödet. Försök igen.",
+    "followingEmptyTitle": "Inga inlägg än",
+    "followingEmptyDescription": "Följ några kreatörer för att se deras inlägg här!",
+    "seeAll": "Visa alla"
   },
   "explore": {
     "all": "Alla",

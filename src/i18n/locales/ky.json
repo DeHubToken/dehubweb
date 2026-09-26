@@ -58,7 +58,14 @@
     "music": "Музыка",
     "live": "Түз эфир",
     "newPosts_one": "{{count}} жаңы жазуу",
-    "newPosts_other": "{{count}} жаңы жазуу"
+    "newPosts_other": "{{count}} жаңы жазуу",
+    "radioStations": "Радиостанциялар",
+    "emptyTitle": "Азырынча мазмун жок",
+    "emptyDescription": "Укмуштуудай бир нерсе менен биринчи бөлүшүңүз!",
+    "loadFailed": "Тасманы жүктөө мүмкүн болбоду. Кайра аракет кылыңыз.",
+    "followingEmptyTitle": "Азырынча жазуулар жок",
+    "followingEmptyDescription": "Алардын жазууларын бул жерден көрүү үчүн бир нече авторго жазылыңыз!",
+    "seeAll": "Баарын көрүү"
   },
   "explore": {
     "all": "Баары",

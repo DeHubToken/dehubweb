@@ -58,7 +58,14 @@
     "music": "संगीत",
     "live": "प्रत्यक्ष",
     "newPosts_one": "{{count}} नयाँ पोस्ट",
-    "newPosts_other": "{{count}} नयाँ पोस्ट"
+    "newPosts_other": "{{count}} नयाँ पोस्ट",
+    "radioStations": "रेडियो स्टेसनहरू",
+    "emptyTitle": "अहिलेसम्म कुनै सामग्री छैन",
+    "emptyDescription": "केही अद्भुत कुरा सेयर गर्ने पहिलो व्यक्ति बन्नुहोस्!",
+    "loadFailed": "फिड लोड गर्न सकिएन। कृपया फेरि प्रयास गर्नुहोस्।",
+    "followingEmptyTitle": "अहिलेसम्म कुनै पोस्ट छैन",
+    "followingEmptyDescription": "उनीहरूका पोस्टहरू यहाँ हेर्न केही क्रिएटरहरूलाई फलो गर्नुहोस्!",
+    "seeAll": "सबै हेर्नुहोस्"
   },
   "explore": {
     "all": "सबै",

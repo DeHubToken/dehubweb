@@ -58,7 +58,14 @@
     "music": "Хөгжим",
     "live": "Шууд",
     "newPosts_one": "{{count}} шинэ нийтлэл",
-    "newPosts_other": "{{count}} шинэ нийтлэл"
+    "newPosts_other": "{{count}} шинэ нийтлэл",
+    "radioStations": "Радио станцууд",
+    "emptyTitle": "Одоогоор агуулга алга",
+    "emptyDescription": "Гайхалтай зүйл хуваалцах анхны хүн болоорой!",
+    "loadFailed": "Мэдээллийн урсгалыг ачаалж чадсангүй. Дахин оролдоно уу.",
+    "followingEmptyTitle": "Одоогоор нийтлэл алга",
+    "followingEmptyDescription": "Нийтлэлүүдийг нь энд харахын тулд хэдэн бүтээгчийг дагаарай!",
+    "seeAll": "Бүгдийг харах"
   },
   "explore": {
     "all": "Бүгд",

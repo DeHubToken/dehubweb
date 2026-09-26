@@ -57,7 +57,14 @@
     "music": "موسيقى",
     "live": "بث مباشر",
     "newPosts_one": "{{count}} منشور جديد",
-    "newPosts_other": "{{count}} منشورات جديدة"
+    "newPosts_other": "{{count}} منشورات جديدة",
+    "radioStations": "محطات الراديو",
+    "emptyTitle": "ما فيش محتوى للحين",
+    "emptyDescription": "كن أول واحد يشارك شي حالي!",
+    "loadFailed": "ما قدرناش نحمّل الموجز. جرّب مرة ثانية.",
+    "followingEmptyTitle": "ما فيش منشورات للحين",
+    "followingEmptyDescription": "تابع كم مبدع عشان تشوف منشوراتهم هانا!",
+    "seeAll": "شوف الكل"
   },
   "explore": {
     "all": "الكل",

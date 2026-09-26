@@ -58,7 +58,14 @@
     "music": "موسيقى",
     "live": "لايف",
     "newPosts_one": "{{count}} منشور جديد",
-    "newPosts_other": "{{count}} منشور جديد"
+    "newPosts_other": "{{count}} منشور جديد",
+    "radioStations": "محطات الراديو",
+    "emptyTitle": "ماكاين حتى محتوى دابا",
+    "emptyDescription": "كون أول واحد يشارك شي حاجة زوينة!",
+    "loadFailed": "ماقدرناش نحمّلو الموجز. عاود جرّب.",
+    "followingEmptyTitle": "ماكاين حتى منشور دابا",
+    "followingEmptyDescription": "تابع شي مبدعين باش تشوف المنشورات ديالهم هنا!",
+    "seeAll": "شوف كلشي"
   },
   "explore": {
     "all": "كلشي",

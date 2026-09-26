@@ -769,7 +769,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     handleShowOriginal: handleVideoShowOriginal,
     sourceLang: videoSourceLang,
     isTooShort: nothingToTranslate,
-  } = useTranslation(videoText);
+  } = useTranslation(videoText, true, containerRef);
 
   // Repost handler
   const handleRepost = useCallback(async () => {

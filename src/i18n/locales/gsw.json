@@ -58,7 +58,14 @@
     "music": "Musig",
     "live": "Live",
     "newPosts_one": "{{count}} neue Byytrag",
-    "newPosts_other": "{{count}} neui Byyträg"
+    "newPosts_other": "{{count}} neui Byyträg",
+    "radioStations": "Radiosänder",
+    "emptyTitle": "No kei Inhält",
+    "emptyDescription": "Teil als Erschts öppis Grossartigs!",
+    "loadFailed": "Dr Feed het nöd chönne glade wärde. Probier's nomal.",
+    "followingEmptyTitle": "No kei Biiträg",
+    "followingEmptyDescription": "Folg es paar Creators, zum iri Biiträg da z gseh!",
+    "seeAll": "Alli aaluege"
   },
   "explore": {
     "all": "Alli",

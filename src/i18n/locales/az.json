@@ -58,7 +58,14 @@
     "music": "Musiqi",
     "live": "Canlı",
     "newPosts_one": "{{count}} yeni paylaşım",
-    "newPosts_other": "{{count}} yeni paylaşım"
+    "newPosts_other": "{{count}} yeni paylaşım",
+    "radioStations": "Radio stansiyaları",
+    "emptyTitle": "Hələ məzmun yoxdur",
+    "emptyDescription": "Möhtəşəm bir şey paylaşan ilk siz olun!",
+    "loadFailed": "Lent yüklənmədi. Zəhmət olmasa yenidən cəhd edin.",
+    "followingEmptyTitle": "Hələ paylaşım yoxdur",
+    "followingEmptyDescription": "Paylaşımlarını burada görmək üçün bir neçə yaradıcını izləyin!",
+    "seeAll": "Hamısına bax"
   },
   "explore": {
     "all": "Hamısı",

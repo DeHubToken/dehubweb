@@ -58,7 +58,14 @@
     "music": "Muziek",
     "live": "Live",
     "newPosts_one": "{{count}} nieuw bericht",
-    "newPosts_other": "{{count}} nieuwe berichten"
+    "newPosts_other": "{{count}} nieuwe berichten",
+    "radioStations": "Radiozenders",
+    "emptyTitle": "Nog geen content",
+    "emptyDescription": "Wees de eerste die iets geweldigs deelt!",
+    "loadFailed": "Kan de feed niet laden. Probeer het opnieuw.",
+    "followingEmptyTitle": "Nog geen berichten",
+    "followingEmptyDescription": "Volg een paar makers om hun berichten hier te zien!",
+    "seeAll": "Alles bekijken"
   },
   "explore": {
     "all": "Alles",

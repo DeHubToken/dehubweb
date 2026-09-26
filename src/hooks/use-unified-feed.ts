@@ -7,7 +7,7 @@
  * @module hooks/use-unified-feed
  */
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useInfiniteQuery, useQuery, useQueryClient, keepPreviousData, type QueryClient } from '@tanstack/react-query';
 import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, getMediaUrl, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
@@ -893,11 +893,21 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
   const queryClient = useQueryClient();
   const viewer = walletAddress?.toLowerCase() || null;
 
+  // The feed enables this the moment its own first page lands, so a head
+  // request then would only fetch that page again. Hold the first poll back
+  // one interval; after that it runs on the normal schedule.
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    if (!enabled || armed) return;
+    const timer = setTimeout(() => setArmed(true), LIVE_ENGAGEMENT_POLL_MS);
+    return () => clearTimeout(timer);
+  }, [enabled, armed]);
+
   const { data } = useQuery({
     queryKey: ['unified-feed-head', params, viewer],
     queryFn: () =>
       fetchUnifiedFeedFromAPI({ ...params, page: 1, limit: NEW_POSTS_HEAD_SIZE }, viewer),
-    enabled,
+    enabled: enabled && armed,
     refetchInterval: LIVE_ENGAGEMENT_POLL_MS,
     // A backgrounded tab shouldn't keep hitting the API to update a pill
     // nobody can see.

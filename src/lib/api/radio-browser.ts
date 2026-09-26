@@ -413,41 +413,30 @@ export function getCountryFlag(countryCode: string): string {
 // CURATED CAROUSEL STATIONS
 // ============================================================================
 
-const CURATED_STATION_NAMES = [
-  'Lofi 24/7',
-  'christmas vinyl',
-  'miami beach radio',
-  'NBC News',
-  'Nightwave Plaza',
-  'ilovemusic - ilovechillpop',
-  'isekoi radio chillzone',
-  'pax lofi',
-  'Rocking 247 Radio',
-  '247 mixing',
+// Pinned by station UUID so the carousel is one request. It used to run a name
+// search per station, which put ten requests on every home feed load. The
+// names are the searches each UUID was resolved from; "ilovemusic -
+// ilovechillpop", "isekoi radio chillzone", "pax lofi" and "Rocking 247 Radio"
+// were also on the list but no longer match any station.
+const CURATED_STATION_UUIDS = [
+  '4260f1f5-d5b3-44d5-9666-355da4da0b21', // Lofi 24/7
+  '6eff3484-4ab4-4d36-bf27-9172c5aac15c', // christmas vinyl
+  'cd477c35-d625-11e8-a54a-52543be04c81', // miami beach radio
+  '8f6646dc-222a-4cbf-9f48-4bd60fea4493', // NBC News
+  '9af1536b-1acd-11ea-a620-52543be04c81', // Nightwave Plaza
+  'cbd67003-0039-421f-9b59-9dd6de2b9e80', // 247 mixing
 ];
 
 /**
- * Fetch curated stations for carousels by searching each name.
- * Returns stations in the order defined above.
+ * Fetch the curated carousel stations in one request.
+ * Returns stations in the order defined above, minus any that are down.
  */
 export async function getCuratedCarouselStations(): Promise<RadioStation[]> {
-  const results = await Promise.allSettled(
-    CURATED_STATION_NAMES.map(name => searchStations(name, 3))
+  const stations = await fetchWithFallback<(RadioStation & { lastcheckok?: number })[]>(
+    `/stations/byuuid?uuids=${CURATED_STATION_UUIDS.join(',')}`
   );
-
-  const stations: RadioStation[] = [];
-  const seen = new Set<string>();
-
-  results.forEach((result, i) => {
-    if (result.status === 'fulfilled' && result.value.length > 0) {
-      // Pick the best match (first result, highest votes)
-      const match = result.value[0];
-      if (!seen.has(match.stationuuid)) {
-        seen.add(match.stationuuid);
-        stations.push(match);
-      }
-    }
-  });
-
-  return stations;
+  const order = new Map(CURATED_STATION_UUIDS.map((uuid, i) => [uuid, i]));
+  return stations
+    .filter(s => order.has(s.stationuuid) && s.lastcheckok !== 0)
+    .sort((a, b) => order.get(a.stationuuid)! - order.get(b.stationuuid)!);
 }

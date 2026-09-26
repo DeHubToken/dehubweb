@@ -58,7 +58,14 @@
     "music": "Musikk",
     "live": "Direkte",
     "newPosts_one": "{{count}} nytt innlegg",
-    "newPosts_other": "{{count}} nye innlegg"
+    "newPosts_other": "{{count}} nye innlegg",
+    "radioStations": "Radiostasjoner",
+    "emptyTitle": "Ikke noe innhold ennå",
+    "emptyDescription": "Bli den første til å dele noe fantastisk!",
+    "loadFailed": "Kunne ikke laste inn feeden. Prøv igjen.",
+    "followingEmptyTitle": "Ingen innlegg ennå",
+    "followingEmptyDescription": "Følg noen skapere for å se innleggene deres her!",
+    "seeAll": "Se alle"
   },
   "explore": {
     "all": "Alle",

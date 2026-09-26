@@ -58,7 +58,14 @@
     "music": "Musikɛ",
     "live": "Kɛnɛ",
     "newPosts_one": "Sɛbɛn kura {{count}}",
-    "newPosts_other": "Sɛbɛn kura {{count}}"
+    "newPosts_other": "Sɛbɛn kura {{count}}",
+    "radioStations": "Radiyo stasiyɔnw",
+    "emptyTitle": "Foyi tɛ yan fɔlɔ",
+    "emptyDescription": "I ka kɛ fɔlɔ ye ka fɛn ɲuman dɔ tila!",
+    "loadFailed": "A ma se ka feed labɔ. I ka segin a kan.",
+    "followingEmptyTitle": "Pɔsiti si tɛ yan fɔlɔ",
+    "followingEmptyDescription": "I ka dabɔbaga dɔw nɔfɛ walisa k'u ka pɔsitiw ye yan!",
+    "seeAll": "A bɛɛ lajɛ"
   },
   "explore": {
     "all": "Kɔrɔbɔ",

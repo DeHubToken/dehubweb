@@ -58,7 +58,14 @@
     "music": "Muzika",
     "live": "Tiesiogiai",
     "newPosts_one": "{{count}} naujas įrašas",
-    "newPosts_other": "{{count}} nauji įrašai"
+    "newPosts_other": "{{count}} nauji įrašai",
+    "radioStations": "Radijo stotys",
+    "emptyTitle": "Turinio dar nėra",
+    "emptyDescription": "Būk pirmas, pasidalijęs kuo nors nuostabiu!",
+    "loadFailed": "Nepavyko įkelti srauto. Bandykite dar kartą.",
+    "followingEmptyTitle": "Įrašų dar nėra",
+    "followingEmptyDescription": "Sek kelis kūrėjus, kad čia matytum jų įrašus!",
+    "seeAll": "Žiūrėti viską"
   },
   "explore": {
     "all": "Visi",

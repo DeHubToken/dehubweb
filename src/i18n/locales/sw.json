@@ -58,7 +58,14 @@
     "music": "Muziki",
     "live": "Moja kwa Moja",
     "newPosts_one": "Chapisho {{count}} jipya",
-    "newPosts_other": "Machapisho {{count}} mapya"
+    "newPosts_other": "Machapisho {{count}} mapya",
+    "radioStations": "Vituo vya redio",
+    "emptyTitle": "Bado hakuna maudhui",
+    "emptyDescription": "Kuwa wa kwanza kushiriki kitu cha kushangaza!",
+    "loadFailed": "Imeshindwa kupakia mlisho. Tafadhali jaribu tena.",
+    "followingEmptyTitle": "Bado hakuna machapisho",
+    "followingEmptyDescription": "Fuata baadhi ya waundaji ili kuona machapisho yao hapa!",
+    "seeAll": "Tazama yote"
   },
   "explore": {
     "all": "Zote",

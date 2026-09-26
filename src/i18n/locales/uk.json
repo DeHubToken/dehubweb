@@ -58,7 +58,14 @@
     "music": "Музика",
     "live": "Наживо",
     "newPosts_one": "{{count}} новий допис",
-    "newPosts_other": "{{count}} нових дописів"
+    "newPosts_other": "{{count}} нових дописів",
+    "radioStations": "Радіостанції",
+    "emptyTitle": "Поки немає контенту",
+    "emptyDescription": "Станьте першим, хто поділиться чимось чудовим!",
+    "loadFailed": "Не вдалося завантажити стрічку. Спробуйте ще раз.",
+    "followingEmptyTitle": "Поки немає дописів",
+    "followingEmptyDescription": "Підпишіться на авторів, щоб бачити тут їхні дописи!",
+    "seeAll": "Переглянути все"
   },
   "explore": {
     "all": "Все",

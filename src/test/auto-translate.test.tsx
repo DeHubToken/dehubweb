@@ -47,7 +47,8 @@ const POSTS = {
   optedOut: 'The creator fund pays out on the first of the month, in DHB.',
   poisonedResponse: 'The badge ladder is recalculated nightly from the previous day.',
   sharedByThree: 'The stage recording is ready to watch about a minute after it ends.',
-  heldUntilLoaded: 'The referral bonus lands once the invited account posts for the first time.',
+  plainlyEnglish: 'The livestream schedule for this week is up and you can set a reminder.',
+  heldUntilLoaded:'The referral bonus lands once the invited account posts for the first time.',
 };
 const TRANSLATED = 'El programa de staking abre el lunes y las recompensas se pagan semanalmente.';
 
@@ -90,6 +91,15 @@ describe('auto-translate', () => {
 
     await waitFor(() => expect(invoke).toHaveBeenCalled());
     expect(screen.getByText(post)).toBeInTheDocument();
+  });
+
+  it('sends nothing when the post is plainly in the reader language already', async () => {
+    localStorage.setItem('user-preferred-language', 'en');
+    await renderTranslatable(POSTS.plainlyEnglish);
+
+    await new Promise((r) => setTimeout(r, 50));
+    expect(invoke).not.toHaveBeenCalled();
+    expect(screen.getByText(POSTS.plainlyEnglish)).toBeInTheDocument();
   });
 
   it('does not translate when the call site opts out', async () => {

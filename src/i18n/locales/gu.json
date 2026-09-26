@@ -58,7 +58,14 @@
     "music": "સંગીત",
     "live": "લાઇવ",
     "newPosts_one": "{{count}} નવી પોસ્ટ",
-    "newPosts_other": "{{count}} નવી પોસ્ટ"
+    "newPosts_other": "{{count}} નવી પોસ્ટ",
+    "radioStations": "રેડિયો સ્ટેશન",
+    "emptyTitle": "હજી કોઈ સામગ્રી નથી",
+    "emptyDescription": "કંઈક અદ્ભુત શેર કરનાર પ્રથમ બનો!",
+    "loadFailed": "ફીડ લોડ થઈ શક્યું નહીં. કૃપા કરીને ફરી પ્રયાસ કરો.",
+    "followingEmptyTitle": "હજી કોઈ પોસ્ટ નથી",
+    "followingEmptyDescription": "અહીં તેમની પોસ્ટ જોવા માટે કેટલાક ક્રિએટર્સને ફોલો કરો!",
+    "seeAll": "બધું જુઓ"
   },
   "explore": {
     "all": "બધું",

@@ -253,7 +253,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
     handleShowOriginal,
     sourceLang,
     isTooShort: nothingToTranslate,
-  } = useTranslation(post.content);
+  } = useTranslation(post.content, true, viewRef);
 
   // DeHub links in the body become cards, and the URLs that became cards come
   // out of the text. Run on the text actually being displayed so the strip
