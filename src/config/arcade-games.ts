@@ -96,6 +96,13 @@ export interface ArcadeGame {
   action: string;
   /** Card art: a real capture from the game, not marketing material. */
   art: string;
+  /**
+   * Optional looping clip for the card, with `art` as its poster. A video
+   * rather than a GIF: the God's Eye capture was a 6.2 MB GIF, the same loop
+   * as H.264 is ~0.5 MB. The GIF itself stays in public/arcade because the
+   * mobile app still loads it by URL.
+   */
+  artVideo?: string;
   /** Alt text for the art. */
   artAlt: string;
   /** Optional logo and wordmark, fitted without cropping on the arcade card. */
@@ -331,7 +338,8 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     description:
       'Explore a live spatial-intelligence globe and, if you choose, place a deliberately approximate version of yourself among the DeHub community.',
     action: 'Open the globe',
-    art: '/arcade/gods-eye.gif',
+    art: '/arcade/gods-eye.jpg',
+    artVideo: '/arcade/gods-eye.mp4',
     artAlt: "God's Eye View orbiting a live 3D globe through its spatial-intelligence displays",
     credit: {
       name: "God's Eye View",

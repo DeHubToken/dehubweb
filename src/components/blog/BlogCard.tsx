@@ -4,6 +4,7 @@ import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import { BlogPost } from '@/types/blog';
 import { formatDate } from '@/utils/blogUtils';
 import { getDocumentScrollTop } from '@/lib/document-scroll';
+import { mediaImage, mediaImageSrcSet } from '@/lib/media-url';
 
 interface BlogCardProps {
   post: BlogPost;
@@ -87,8 +88,13 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
       <Link to={`/guides/${post.slug}`} className="block" onClick={handleLinkClick}>
         <div className="relative">
           <img
-            src={getBannerImage()}
+            src={mediaImage(getBannerImage(), { width: 736 })}
+            srcSet={mediaImageSrcSet(getBannerImage(), [360, 480, 736, 1100])}
+            // One column below lg, two above it.
+            sizes="(min-width: 1024px) 560px, 100vw"
             alt={post.bannerImageAlt}
+            width={1200}
+            height={630}
             loading="lazy"
             decoding="async"
             className={`w-full object-cover object-bottom transition-transform duration-200 group-hover:scale-105 ${featured ? 'h-48' : 'h-40'}`}
