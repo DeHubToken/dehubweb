@@ -6160,5 +6160,40 @@
     "notifications": {
       "tippedYou": "உங்களுக்கு வெகுமானம் {{amount}} டோக்கன்கள்"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "எமோஜி",
+    "tabGif": "GIF",
+    "searchEmoji": "எமோஜியைத் தேடு",
+    "searchGifs": "GIFகளைத் தேடு...",
+    "noEmoji": "எமோஜி எதுவும் இல்லை",
+    "noGifs": "GIFகள் எதுவும் இல்லை",
+    "trending": "டிரெண்டிங்",
+    "searchResults": "தேடல் முடிவுகள்",
+    "poweredByGiphy": "GIPHY மூலம் இயக்கப்படுகிறது",
+    "skinTone": "தோல் நிறம்",
+    "moreReactions": "மேலும் எதிர்வினைகள்",
+    "multiPickHint": "பலவற்றைத் தேர்ந்தெடுக்க Shift-கிளிக் செய்யவும்",
+    "group": {
+      "recent": "சமீபத்தில் பயன்படுத்தியவை",
+      "dehub": "DeHub தேர்வுகள்",
+      "smileys": "ஸ்மைலிகள் & உணர்ச்சிகள்",
+      "people": "மக்கள் & உடல்",
+      "animals": "விலங்குகள் & இயற்கை",
+      "food": "உணவு & பானம்",
+      "travel": "பயணம் & இடங்கள்",
+      "activities": "செயல்பாடுகள்",
+      "objects": "பொருட்கள்",
+      "symbols": "குறியீடுகள்",
+      "flags": "கொடிகள்"
+    },
+    "tone": {
+      "default": "இயல்புநிலை",
+      "light": "வெளிர் தோல் நிறம்",
+      "mediumLight": "நடுத்தர-வெளிர் தோல் நிறம்",
+      "medium": "நடுத்தர தோல் நிறம்",
+      "mediumDark": "நடுத்தர-அடர் தோல் நிறம்",
+      "dark": "அடர் தோல் நிறம்"
+    }
   }
 }

@@ -5507,5 +5507,40 @@
     "paying": "پارەدان {{amount}} توکن...",
     "notEnoughInWallet": "توکنی پێویست لە واڵێتەکەتدا نییە. ئەمە {{amount}} توکن تێدەچێت و تۆ {{held}} هەڵدەگریت.",
     "sentUnconfirmed": "گواستنەوەی توکنی تۆ نێردراوە بەڵام نەمانتوانی پشتڕاستی بکەینەوە. پارێزراوە و بۆ هەوڵی داهاتووت بەکاردێت — دووبارە مەنێرە."
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emojî",
+    "tabGif": "GIF",
+    "searchEmoji": "Emojiyan bigerin",
+    "searchGifs": "GIFan bigerin...",
+    "noEmoji": "Tu emojî nehat dîtin",
+    "noGifs": "Tu GIF nehat dîtin",
+    "trending": "Trend",
+    "searchResults": "Encamên lêgerînê",
+    "poweredByGiphy": "Bi hêza GIPHY",
+    "skinTone": "Rengê çerm",
+    "moreReactions": "Bertekên zêdetir",
+    "multiPickHint": "Ji bo çend hilbijartinê Shift-klîk bikin",
+    "group": {
+      "recent": "Dawî hatine bikaranîn",
+      "dehub": "Bijartinên DeHub",
+      "smileys": "Smaylî û hest",
+      "people": "Mirov û beden",
+      "animals": "Heywan û xweza",
+      "food": "Xwarin û vexwarin",
+      "travel": "Rêwîtî û cih",
+      "activities": "Çalakî",
+      "objects": "Tişt",
+      "symbols": "Sembol",
+      "flags": "Ala"
+    },
+    "tone": {
+      "default": "Standard",
+      "light": "Rengê çermê vekirî",
+      "mediumLight": "Rengê çermê nîvvekirî",
+      "medium": "Rengê çermê navîn",
+      "mediumDark": "Rengê çermê nîvtarî",
+      "dark": "Rengê çermê tarî"
+    }
   }
 }

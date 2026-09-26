@@ -6606,5 +6606,40 @@
     "notifications": {
       "tippedYou": "ti ha dato una mancia di {{amount}} token"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Cerca emoji",
+    "searchGifs": "Cerca GIF...",
+    "noEmoji": "Nessuna emoji trovata",
+    "noGifs": "Nessuna GIF trovata",
+    "trending": "Di tendenza",
+    "searchResults": "Risultati della ricerca",
+    "poweredByGiphy": "Powered by GIPHY",
+    "skinTone": "Tonalità della pelle",
+    "moreReactions": "Altre reazioni",
+    "multiPickHint": "Maiusc+clic per sceglierne più di una",
+    "group": {
+      "recent": "Usate di recente",
+      "dehub": "Scelte da DeHub",
+      "smileys": "Faccine ed emozioni",
+      "people": "Persone e corpo",
+      "animals": "Animali e natura",
+      "food": "Cibo e bevande",
+      "travel": "Viaggi e luoghi",
+      "activities": "Attività",
+      "objects": "Oggetti",
+      "symbols": "Simboli",
+      "flags": "Bandiere"
+    },
+    "tone": {
+      "default": "Predefinita",
+      "light": "Carnagione chiara",
+      "mediumLight": "Carnagione medio-chiara",
+      "medium": "Carnagione media",
+      "mediumDark": "Carnagione medio-scura",
+      "dark": "Carnagione scura"
+    }
   }
 }

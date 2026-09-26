@@ -6353,5 +6353,40 @@
     "notifications": {
       "tippedYou": "ви даде бакшиш от {{amount}} жетона"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Емоджи",
+    "tabGif": "GIF",
+    "searchEmoji": "Търсене на емоджи",
+    "searchGifs": "Търсене на GIF...",
+    "noEmoji": "Няма намерени емоджи",
+    "noGifs": "Няма намерени GIF",
+    "trending": "Популярни",
+    "searchResults": "Резултати от търсенето",
+    "poweredByGiphy": "С технологията на GIPHY",
+    "skinTone": "Цвят на кожата",
+    "moreReactions": "Още реакции",
+    "multiPickHint": "Shift+клик за избор на няколко",
+    "group": {
+      "recent": "Последно използвани",
+      "dehub": "Избрани от DeHub",
+      "smileys": "Усмивки и емоции",
+      "people": "Хора и тяло",
+      "animals": "Животни и природа",
+      "food": "Храна и напитки",
+      "travel": "Пътуване и места",
+      "activities": "Дейности",
+      "objects": "Предмети",
+      "symbols": "Символи",
+      "flags": "Знамена"
+    },
+    "tone": {
+      "default": "По подразбиране",
+      "light": "Светъл цвят на кожата",
+      "mediumLight": "Средно светъл цвят на кожата",
+      "medium": "Среден цвят на кожата",
+      "mediumDark": "Средно тъмен цвят на кожата",
+      "dark": "Тъмен цвят на кожата"
+    }
   }
 }

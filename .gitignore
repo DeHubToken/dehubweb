@@ -94,3 +94,4 @@ scripts/*
 !scripts/edge-imports-check.mjs
 !scripts/mojibake-check.mjs
 !scripts/build-badge-plates.mjs
+!scripts/build-emoji-data.mjs

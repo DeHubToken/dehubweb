@@ -6326,5 +6326,40 @@
     "notifications": {
       "tippedYou": "আপনাকে বকশিস {{amount}} টোকেন"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ইমোজি",
+    "tabGif": "GIF",
+    "searchEmoji": "ইমোজি খুঁজুন",
+    "searchGifs": "GIF খুঁজুন...",
+    "noEmoji": "কোনো ইমোজি পাওয়া যায়নি",
+    "noGifs": "কোনো GIF পাওয়া যায়নি",
+    "trending": "ট্রেন্ডিং",
+    "searchResults": "অনুসন্ধানের ফলাফল",
+    "poweredByGiphy": "GIPHY দ্বারা চালিত",
+    "skinTone": "ত্বকের রং",
+    "moreReactions": "আরও প্রতিক্রিয়া",
+    "multiPickHint": "একাধিক বাছতে Shift চেপে ক্লিক করুন",
+    "group": {
+      "recent": "সম্প্রতি ব্যবহৃত",
+      "dehub": "DeHub-এর বাছাই",
+      "smileys": "স্মাইলি ও আবেগ",
+      "people": "মানুষ ও শরীর",
+      "animals": "প্রাণী ও প্রকৃতি",
+      "food": "খাদ্য ও পানীয়",
+      "travel": "ভ্রমণ ও স্থান",
+      "activities": "কার্যকলাপ",
+      "objects": "বস্তু",
+      "symbols": "প্রতীক",
+      "flags": "পতাকা"
+    },
+    "tone": {
+      "default": "ডিফল্ট",
+      "light": "হালকা ত্বকের রং",
+      "mediumLight": "মাঝারি-হালকা ত্বকের রং",
+      "medium": "মাঝারি ত্বকের রং",
+      "mediumDark": "মাঝারি-গাঢ় ত্বকের রং",
+      "dark": "গাঢ় ত্বকের রং"
+    }
   }
 }

@@ -35,6 +35,7 @@ import { cn } from '@/lib/utils';
 import { TranslatableText, SharedTranslationProvider } from '../TranslatableText';
 
 import { QUICK_CHAT_REACTIONS } from './reaction-options';
+import { MoreReactionsButton } from './MoreReactionsButton';
 
 /**
  * One row of any of the chat tables. The columns are the same across all of
@@ -477,6 +478,11 @@ export function RealtimeChatPanel({
                                     </button>
                                   );
                                 })}
+                                <MoreReactionsButton
+                                  onPick={(emoji) => handleReact(msg.id, emoji)}
+                                  reactions={msg.reactions}
+                                  viewerAddress={walletAddress}
+                                />
                               </div>
                             </PopoverContent>
                           </Popover>

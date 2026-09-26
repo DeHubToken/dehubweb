@@ -6404,5 +6404,40 @@
     "notifications": {
       "tippedYou": "మీకు {{amount}} టోకెన్ ‌ లు టిప్ ఇచ్చారు"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ఎమోజీ",
+    "tabGif": "GIF",
+    "searchEmoji": "ఎమోజీని వెతుకు",
+    "searchGifs": "GIFలను వెతుకు...",
+    "noEmoji": "ఎమోజీలు ఏవీ కనబడలేదు",
+    "noGifs": "GIFలు ఏవీ కనబడలేదు",
+    "trending": "ట్రెండింగ్",
+    "searchResults": "శోధన ఫలితాలు",
+    "poweredByGiphy": "GIPHY ఆధారితం",
+    "skinTone": "చర్మపు రంగు",
+    "moreReactions": "మరిన్ని ప్రతిస్పందనలు",
+    "multiPickHint": "చాలా ఎంచుకోవడానికి Shift-క్లిక్ చేయండి",
+    "group": {
+      "recent": "ఇటీవల ఉపయోగించినవి",
+      "dehub": "DeHub ఎంపికలు",
+      "smileys": "స్మైలీలు & భావోద్వేగాలు",
+      "people": "వ్యక్తులు & శరీరం",
+      "animals": "జంతువులు & ప్రకృతి",
+      "food": "ఆహారం & పానీయాలు",
+      "travel": "ప్రయాణం & ప్రదేశాలు",
+      "activities": "కార్యకలాపాలు",
+      "objects": "వస్తువులు",
+      "symbols": "చిహ్నాలు",
+      "flags": "జెండాలు"
+    },
+    "tone": {
+      "default": "డిఫాల్ట్",
+      "light": "లేత చర్మపు రంగు",
+      "mediumLight": "మధ్యస్థ-లేత చర్మపు రంగు",
+      "medium": "మధ్యస్థ చర్మపు రంగు",
+      "mediumDark": "మధ్యస్థ-ముదురు చర్మపు రంగు",
+      "dark": "ముదురు చర్మపు రంగు"
+    }
   }
 }

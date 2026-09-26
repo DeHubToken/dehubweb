@@ -6313,5 +6313,40 @@
     "notifications": {
       "tippedYou": "נתתי לכם טיפ בסך {{amount}} אסימונים"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "אימוג'י",
+    "tabGif": "GIF",
+    "searchEmoji": "חיפוש אימוג'י",
+    "searchGifs": "חיפוש GIFs...",
+    "noEmoji": "לא נמצאו אימוג'י",
+    "noGifs": "לא נמצאו GIFs",
+    "trending": "פופולרי",
+    "searchResults": "תוצאות חיפוש",
+    "poweredByGiphy": "מופעל על ידי GIPHY",
+    "skinTone": "גוון עור",
+    "moreReactions": "תגובות נוספות",
+    "multiPickHint": "Shift+לחיצה לבחירת כמה",
+    "group": {
+      "recent": "בשימוש לאחרונה",
+      "dehub": "הבחירות של DeHub",
+      "smileys": "סמיילים ורגשות",
+      "people": "אנשים וגוף",
+      "animals": "חיות וטבע",
+      "food": "אוכל ושתייה",
+      "travel": "טיולים ומקומות",
+      "activities": "פעילויות",
+      "objects": "חפצים",
+      "symbols": "סמלים",
+      "flags": "דגלים"
+    },
+    "tone": {
+      "default": "ברירת מחדל",
+      "light": "גוון עור בהיר",
+      "mediumLight": "גוון עור בהיר-בינוני",
+      "medium": "גוון עור בינוני",
+      "mediumDark": "גוון עור כהה-בינוני",
+      "dark": "גוון עור כהה"
+    }
   }
 }

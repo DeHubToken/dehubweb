@@ -55,6 +55,7 @@ import { Sparkles } from 'lucide-react';
 
 
 import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';
+import { MoreReactionsButton } from '@/components/app/chat/MoreReactionsButton';
 
 /** "Forever" mutes are stored as a date far in the future rather than as null. */
 const FOREVER_YEAR = 9000;
@@ -973,6 +974,11 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                                     </button>
                                   );
                                 })}
+                                <MoreReactionsButton
+                                  onPick={(emoji) => handleReact(msg.id, emoji)}
+                                  reactions={msg.reactions}
+                                  viewerAddress={walletAddress}
+                                />
                               </div>
                             </PopoverContent>
                           </Popover>

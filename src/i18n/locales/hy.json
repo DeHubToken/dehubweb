@@ -6421,5 +6421,40 @@
     "notifications": {
       "tippedYou": "{{amount}} tokens - ը շրջանցեց ձեզ"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Էմոջի",
+    "tabGif": "GIF",
+    "searchEmoji": "Որոնել էմոջի",
+    "searchGifs": "Որոնել GIF-եր...",
+    "noEmoji": "Էմոջի չի գտնվել",
+    "noGifs": "GIF-եր չեն գտնվել",
+    "trending": "Թրենդային",
+    "searchResults": "Որոնման արդյունքներ",
+    "poweredByGiphy": "Սնուցվում է GIPHY-ի կողմից",
+    "skinTone": "Մաշկի երանգ",
+    "moreReactions": "Ավելի շատ ռեակցիաներ",
+    "multiPickHint": "Shift-սեղմեք՝ մի քանիսը ընտրելու համար",
+    "group": {
+      "recent": "Վերջերս օգտագործված",
+      "dehub": "DeHub-ի ընտրանի",
+      "smileys": "Սմայլիներ և զգացմունքներ",
+      "people": "Մարդիկ և մարմին",
+      "animals": "Կենդանիներ և բնություն",
+      "food": "Սնունդ և խմիչք",
+      "travel": "Ճանապարհորդություն և վայրեր",
+      "activities": "Գործողություններ",
+      "objects": "Առարկաներ",
+      "symbols": "Նշաններ",
+      "flags": "Դրոշներ"
+    },
+    "tone": {
+      "default": "Լռելյայն",
+      "light": "Բաց մաշկի երանգ",
+      "mediumLight": "Միջին-բաց մաշկի երանգ",
+      "medium": "Միջին մաշկի երանգ",
+      "mediumDark": "Միջին-մուգ մաշկի երանգ",
+      "dark": "Մուգ մաշկի երանգ"
+    }
   }
 }

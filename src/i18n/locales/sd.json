@@ -4318,5 +4318,40 @@
     "notifications": {
       "tippedYou": "اوھان کي ٽپايو {{amount}} ٽوڪن"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ايموجي",
+    "tabGif": "GIF",
+    "searchEmoji": "ايموجي ڳوليو",
+    "searchGifs": "GIF ڳوليو...",
+    "noEmoji": "ڪو ايموجي نه مليو",
+    "noGifs": "ڪو GIF نه مليو",
+    "trending": "ٽرينڊنگ",
+    "searchResults": "ڳولا جا نتيجا",
+    "poweredByGiphy": "GIPHY جي مدد سان",
+    "skinTone": "چمڙي جو رنگ",
+    "moreReactions": "وڌيڪ ردعمل",
+    "multiPickHint": "ڪيترائي چونڊڻ لاءِ Shift دٻائي ڪلڪ ڪريو",
+    "group": {
+      "recent": "تازو استعمال ٿيل",
+      "dehub": "DeHub جون چونڊون",
+      "smileys": "مسڪراهٽون ۽ جذبا",
+      "people": "ماڻهو ۽ جسم",
+      "animals": "جانور ۽ فطرت",
+      "food": "کاڌو ۽ پيئڻ",
+      "travel": "سفر ۽ هنڌ",
+      "activities": "سرگرميون",
+      "objects": "شيون",
+      "symbols": "نشان",
+      "flags": "جھنڊا"
+    },
+    "tone": {
+      "default": "ڊيفالٽ",
+      "light": "هلڪو چمڙي جو رنگ",
+      "mediumLight": "وچولو-هلڪو چمڙي جو رنگ",
+      "medium": "وچولو چمڙي جو رنگ",
+      "mediumDark": "وچولو-گهرو چمڙي جو رنگ",
+      "dark": "گهرو چمڙي جو رنگ"
+    }
   }
 }

@@ -6574,5 +6574,40 @@
     "notifications": {
       "tippedYou": "сизге {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Эмодзи",
+    "tabGif": "GIF",
+    "searchEmoji": "Эмодзи издөө",
+    "searchGifs": "GIF издөө...",
+    "noEmoji": "Эмодзи табылган жок",
+    "noGifs": "GIF табылган жок",
+    "trending": "Популярдуу",
+    "searchResults": "Издөө жыйынтыктары",
+    "poweredByGiphy": "GIPHY колдоосу менен",
+    "skinTone": "Теринин түсү",
+    "moreReactions": "Дагы реакциялар",
+    "multiPickHint": "Бир нечесин тандоо үчүн Shift басып чыкылдатыңыз",
+    "group": {
+      "recent": "Жакында колдонулган",
+      "dehub": "DeHub тандоосу",
+      "smileys": "Смайликтер жана сезимдер",
+      "people": "Адамдар жана дене",
+      "animals": "Жаныбарлар жана жаратылыш",
+      "food": "Тамак жана суусундук",
+      "travel": "Саякат жана жерлер",
+      "activities": "Иш-чаралар",
+      "objects": "Буюмдар",
+      "symbols": "Белгилер",
+      "flags": "Желектер"
+    },
+    "tone": {
+      "default": "Демейки",
+      "light": "Ачык тери түсү",
+      "mediumLight": "Орточо ачык тери түсү",
+      "medium": "Орточо тери түсү",
+      "mediumDark": "Орточо кара тору тери түсү",
+      "dark": "Кара тору тери түсү"
+    }
   }
 }

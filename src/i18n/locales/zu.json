@@ -4400,5 +4400,40 @@
     "notifications": {
       "tippedYou": "ikunikeze icebiso {{amount}} amathokheni"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Ama-emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Sesha ama-emoji",
+    "searchGifs": "Sesha ama-GIFs...",
+    "noEmoji": "Awekho ama-emoji atholakele",
+    "noGifs": "Awekho ama-GIFs atholakele",
+    "trending": "Okudumile",
+    "searchResults": "Imiphumela yosesho",
+    "poweredByGiphy": "Kunikwe amandla yi-GIPHY",
+    "skinTone": "Ibala lesikhumba",
+    "moreReactions": "Okunye ukusabela",
+    "multiPickHint": "Chofoza nge-Shift ukuze ukhethe ambalwa",
+    "group": {
+      "recent": "Okusetshenziswe muva",
+      "dehub": "Okukhethwe yi-DeHub",
+      "smileys": "Ukumamatheka nemizwa",
+      "people": "Abantu nomzimba",
+      "animals": "Izilwane nemvelo",
+      "food": "Ukudla neziphuzo",
+      "travel": "Ukuhamba nezindawo",
+      "activities": "Imisebenzi",
+      "objects": "Izinto",
+      "symbols": "Izimpawu",
+      "flags": "Amafulegi"
+    },
+    "tone": {
+      "default": "Okuzenzakalelayo",
+      "light": "Ibala lesikhumba elikhanyayo",
+      "mediumLight": "Ibala lesikhumba elikhanya kancane",
+      "medium": "Ibala lesikhumba eliphakathi",
+      "mediumDark": "Ibala lesikhumba elimnyama kancane",
+      "dark": "Ibala lesikhumba elimnyama"
+    }
   }
 }

@@ -3225,5 +3225,40 @@
     "inProgress": "চলতাছে",
     "completed": "শেষ হইছে",
     "underReview": "পর্যালোচনায়"
+  },
+  "emojiPicker": {
+    "tabEmoji": "ইমোজি",
+    "tabGif": "GIF",
+    "searchEmoji": "ইমোজি খোঁজো",
+    "searchGifs": "GIF খোঁজো...",
+    "noEmoji": "কোন ইমোজি পাওয়া যায় নাই",
+    "noGifs": "কোন GIF পাওয়া যায় নাই",
+    "trending": "ট্রেন্ডিং",
+    "searchResults": "খোঁজের ফলাফল",
+    "poweredByGiphy": "GIPHY দিয়া চলে",
+    "skinTone": "চামড়ার রং",
+    "moreReactions": "আরো রিয়্যাকশন",
+    "multiPickHint": "কয়টা বাছাই করির জইন্যে Shift চাপি ক্লিক করো",
+    "group": {
+      "recent": "হালত ব্যবহার করা",
+      "dehub": "DeHub-এর বাছাই",
+      "smileys": "হাসি আর মনের ভাব",
+      "people": "মানুষ আর শরীল",
+      "animals": "জীবজন্তু আর প্রকৃতি",
+      "food": "খাবার আর পানীয়",
+      "travel": "ঘুরা আর জাগা",
+      "activities": "কামকাজ",
+      "objects": "জিনিসপাতি",
+      "symbols": "চিহ্ন",
+      "flags": "পতাকা"
+    },
+    "tone": {
+      "default": "ডিফল্ট",
+      "light": "হালকা চামড়ার রং",
+      "mediumLight": "মাঝারি-হালকা চামড়ার রং",
+      "medium": "মাঝারি চামড়ার রং",
+      "mediumDark": "মাঝারি-গাঢ় চামড়ার রং",
+      "dark": "গাঢ় চামড়ার রং"
+    }
   }
 }

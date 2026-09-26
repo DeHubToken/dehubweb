@@ -4300,5 +4300,40 @@
     "notifications": {
       "tippedYou": "付了侬 {{amount}} 个代币"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "表情",
+    "tabGif": "GIF",
+    "searchEmoji": "搜索表情",
+    "searchGifs": "搜索 GIFs...",
+    "noEmoji": "呒没寻着表情",
+    "noGifs": "呒没寻着 GIFs",
+    "trending": "热门",
+    "searchResults": "搜索结果",
+    "poweredByGiphy": "由 GIPHY 提供",
+    "skinTone": "肤色",
+    "moreReactions": "更多回应",
+    "multiPickHint": "Shift+点击可以多选",
+    "group": {
+      "recent": "最近用过个",
+      "dehub": "DeHub 精选",
+      "smileys": "笑脸搭情绪",
+      "people": "人搭身体",
+      "animals": "动物搭自然",
+      "food": "吃个搭喝个",
+      "travel": "旅行搭地方",
+      "activities": "活动",
+      "objects": "物品",
+      "symbols": "符号",
+      "flags": "旗帜"
+    },
+    "tone": {
+      "default": "默认",
+      "light": "浅肤色",
+      "mediumLight": "中浅肤色",
+      "medium": "中等肤色",
+      "mediumDark": "中深肤色",
+      "dark": "深肤色"
+    }
   }
 }

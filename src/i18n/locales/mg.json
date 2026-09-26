@@ -6355,5 +6355,40 @@
     "txPpvSale": "Fivarotana PPV — {{amount}} DHB",
     "txTipSent": "Fanomezana ho an'i {{name}} — {{amount}} DHB",
     "txTipReceived": "{{name}} nanome fanomezana anao — {{amount}} DHB"
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Hikaroka emoji",
+    "searchGifs": "Hikaroka GIF...",
+    "noEmoji": "Tsy nahitana emoji",
+    "noGifs": "Tsy nahitana GIF",
+    "trending": "Malaza ankehitriny",
+    "searchResults": "Valin'ny fikarohana",
+    "poweredByGiphy": "Nampandehanin'ny GIPHY",
+    "skinTone": "Lokon'ny hoditra",
+    "moreReactions": "Fanehoan-kevitra hafa",
+    "multiPickHint": "Tsindrio miaraka amin'ny Shift raha hifidy maromaro",
+    "group": {
+      "recent": "Vao nampiasaina",
+      "dehub": "Safidin'ny DeHub",
+      "smileys": "Tarehy mitsiky sy fihetseham-po",
+      "people": "Olona sy vatana",
+      "animals": "Biby sy natiora",
+      "food": "Sakafo sy zava-pisotro",
+      "travel": "Dia sy toerana",
+      "activities": "Hetsika",
+      "objects": "Zavatra",
+      "symbols": "Marika",
+      "flags": "Saina firenena"
+    },
+    "tone": {
+      "default": "Mahazatra",
+      "light": "Hoditra mazava",
+      "mediumLight": "Hoditra antonony mazava",
+      "medium": "Hoditra antonony",
+      "mediumDark": "Hoditra antonony maizina",
+      "dark": "Hoditra maizina"
+    }
   }
 }

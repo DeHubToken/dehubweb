@@ -6819,5 +6819,40 @@
     "notifications": {
       "tippedYou": "fooi gegeven {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Emoji zoeken",
+    "searchGifs": "GIF's zoeken...",
+    "noEmoji": "Geen emoji gevonden",
+    "noGifs": "Geen GIF's gevonden",
+    "trending": "Trending",
+    "searchResults": "Zoekresultaten",
+    "poweredByGiphy": "Mogelijk gemaakt door GIPHY",
+    "skinTone": "Huidskleur",
+    "moreReactions": "Meer reacties",
+    "multiPickHint": "Shift-klik om er meerdere te kiezen",
+    "group": {
+      "recent": "Recent gebruikt",
+      "dehub": "DeHub-favorieten",
+      "smileys": "Smileys & emotie",
+      "people": "Mensen & lichaam",
+      "animals": "Dieren & natuur",
+      "food": "Eten & drinken",
+      "travel": "Reizen & plaatsen",
+      "activities": "Activiteiten",
+      "objects": "Objecten",
+      "symbols": "Symbolen",
+      "flags": "Vlaggen"
+    },
+    "tone": {
+      "default": "Standaard",
+      "light": "Lichte huidskleur",
+      "mediumLight": "Middellichte huidskleur",
+      "medium": "Medium huidskleur",
+      "mediumDark": "Middeldonkere huidskleur",
+      "dark": "Donkere huidskleur"
+    }
   }
 }

@@ -4307,5 +4307,40 @@
     "notifications": {
       "tippedYou": "عطيتك {{amount}} توكنز"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "إيموجي",
+    "tabGif": "GIF",
+    "searchEmoji": "دوّر على إيموجي",
+    "searchGifs": "دوّر على GIFs...",
+    "noEmoji": "مافي إيموجي",
+    "noGifs": "مافي GIFs",
+    "trending": "الرائج",
+    "searchResults": "نتائج البحث",
+    "poweredByGiphy": "مدعوم من GIPHY",
+    "skinTone": "لون البشرة",
+    "moreReactions": "تفاعلات زيادة",
+    "multiPickHint": "اضغط مع Shift عشان تختار أكثر من واحد",
+    "group": {
+      "recent": "المستخدمة قريب",
+      "dehub": "اختيارات DeHub",
+      "smileys": "الوجوه والمشاعر",
+      "people": "الناس والجسم",
+      "animals": "الحيوانات والطبيعة",
+      "food": "الأكل والشرب",
+      "travel": "السفر والأماكن",
+      "activities": "الأنشطة",
+      "objects": "الأغراض",
+      "symbols": "الرموز",
+      "flags": "الأعلام"
+    },
+    "tone": {
+      "default": "الافتراضي",
+      "light": "بشرة فاتحة",
+      "mediumLight": "بشرة فاتحة شوية",
+      "medium": "بشرة متوسطة",
+      "mediumDark": "بشرة غامقة شوية",
+      "dark": "بشرة غامقة"
+    }
   }
 }

@@ -4323,5 +4323,40 @@
     "home": {
       "stakedPost": "Staked 50k DeHub токен. APY нь 12.4% -д хатуу харагдана. Урт хугацаанд эзэмшсэн сэтгэлгээ. 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Эможи",
+    "tabGif": "GIF",
+    "searchEmoji": "Эможи хайх",
+    "searchGifs": "GIF хайх...",
+    "noEmoji": "Эможи олдсонгүй",
+    "noGifs": "GIF олдсонгүй",
+    "trending": "Трэнд",
+    "searchResults": "Хайлтын үр дүн",
+    "poweredByGiphy": "GIPHY-ийн дэмжлэгтэй",
+    "skinTone": "Арьсны өнгө",
+    "moreReactions": "Бусад хариу үйлдэл",
+    "multiPickHint": "Олныг сонгохын тулд Shift дарж товшино уу",
+    "group": {
+      "recent": "Саяхан ашигласан",
+      "dehub": "DeHub-ын сонголт",
+      "smileys": "Инээмсэглэл ба сэтгэл хөдлөл",
+      "people": "Хүмүүс ба бие",
+      "animals": "Амьтан ба байгаль",
+      "food": "Хоол ба ундаа",
+      "travel": "Аялал ба газар",
+      "activities": "Үйл ажиллагаа",
+      "objects": "Эд зүйлс",
+      "symbols": "Тэмдэгт",
+      "flags": "Туг"
+    },
+    "tone": {
+      "default": "Үндсэн",
+      "light": "Цайвар арьсны өнгө",
+      "mediumLight": "Дунд зэргийн цайвар арьсны өнгө",
+      "medium": "Дунд зэргийн арьсны өнгө",
+      "mediumDark": "Дунд зэргийн бараан арьсны өнгө",
+      "dark": "Бараан арьсны өнгө"
+    }
   }
 }

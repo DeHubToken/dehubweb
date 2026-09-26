@@ -4256,5 +4256,40 @@
     "home": {
       "stakedPost": "50k Dehub टोकन समायोजित करें । खाद्यान्न महंगाई दर 12.4 फीसदी के पार पहुंच गइल. दीर्घकालीन निकास लिएर आऊ । 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "इमोजी",
+    "tabGif": "GIF",
+    "searchEmoji": "इमोजी खोजीं",
+    "searchGifs": "GIFs खोजीं...",
+    "noEmoji": "कवनो इमोजी ना मिलल",
+    "noGifs": "कवनो GIFs ना मिलल",
+    "trending": "ट्रेंडिंग",
+    "searchResults": "खोज के नतीजा",
+    "poweredByGiphy": "GIPHY द्वारा संचालित",
+    "skinTone": "त्वचा के रंग",
+    "moreReactions": "अउर रिएक्शन",
+    "multiPickHint": "कई गो चुने खातिर Shift दबा के क्लिक करीं",
+    "group": {
+      "recent": "हाल में इस्तेमाल भइल",
+      "dehub": "DeHub के पसंद",
+      "smileys": "स्माइली आ भावना",
+      "people": "लोग आ देह",
+      "animals": "जानवर आ प्रकृति",
+      "food": "खाना आ पियल",
+      "travel": "यात्रा आ जगह",
+      "activities": "गतिविधि",
+      "objects": "चीज-बतुस",
+      "symbols": "प्रतीक",
+      "flags": "झंडा"
+    },
+    "tone": {
+      "default": "डिफ़ॉल्ट",
+      "light": "गोर रंग",
+      "mediumLight": "हल्का गोर रंग",
+      "medium": "गेहुँआ रंग",
+      "mediumDark": "हल्का साँवर रंग",
+      "dark": "साँवर रंग"
+    }
   }
 }
