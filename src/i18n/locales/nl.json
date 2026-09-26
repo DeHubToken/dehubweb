@@ -6502,6 +6502,7 @@
       }
     },
     "fractionsDesc": "Een bericht dat op DeHub wordt gemint, wordt een NFT verdeeld in 1.000 fracties, en de maker begint met alle 1.000 — 100% eigendom van de content. Minten is optioneel en kan bij het publiceren of later gebeuren.",
+    "ownershipBarDesc": "Een voortgangsbalk op de pagina Berichtinfo die laat zien hoeveel van de 1.000 fracties de maker nog bezit en hoeveel er zijn verdeeld of verkocht.",
     "tokenIdDesc": "Een unieke on-chain identificatie die een bericht krijgt wanneer het als NFT op de blockchain wordt gemint. Minten is optioneel, dus een bericht dat niet is gemint heeft nog geen Token ID.",
     "tokenIdInfoDesc": "De unieke on-chain identificatie die een bericht krijgt zodra het als NFT is gemint. Wordt bovenaan de pagina Berichtinfo getoond voor geminte berichten."
   },

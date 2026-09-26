@@ -6277,6 +6277,7 @@
   },
   "glossary": {
     "fractionsDesc": "DeHubissa lyöty julkaisu muuttuu NFT:ksi, joka on jaettu 1 000 fraktioon, ja tekijä aloittaa kaikilla 1 000:lla — 100 % omistus sisältöön. Lyöminen on valinnaista, ja sen voi tehdä julkaisun yhteydessä tai myöhemmin.",
+    "ownershipBarDesc": "Julkaisun tietosivun edistymispalkki, joka näyttää, montako 1 000 fraktiosta tekijällä on yhä ja montako on jaettu tai myyty.",
     "tokenIdDesc": "Yksilöllinen ketjussa oleva tunniste, jonka julkaisu saa, kun se lyödään NFT:ksi lohkoketjuun. Lyöminen on valinnaista, joten julkaisulla, jota ei ole lyöty, ei vielä ole Token ID:tä.",
     "tokenIdInfoDesc": "Yksilöllinen ketjussa oleva tunniste, jonka julkaisu saa, kun se on lyöty NFT:ksi. Näytetään lyötyjen julkaisujen Julkaisun tiedot -sivun yläosassa."
   },

@@ -6389,6 +6389,7 @@
   },
   "glossary": {
     "fractionsDesc": "Un post coniato su DeHub diventa un NFT diviso in 1.000 frazioni e il creatore parte con tutte le 1.000 — il 100% della proprietà del contenuto. Il conio è facoltativo e può avvenire alla pubblicazione o in seguito.",
+    "ownershipBarDesc": "Una barra di avanzamento nella pagina Info post che mostra quante delle 1.000 frazioni il creatore detiene ancora e quante sono state distribuite o vendute.",
     "tokenIdDesc": "Un identificatore on-chain univoco che un post riceve quando viene coniato come NFT sulla blockchain. Il conio è facoltativo, quindi un post non ancora coniato non ha ancora un Token ID.",
     "tokenIdInfoDesc": "L'identificatore on-chain univoco che un post riceve una volta coniato come NFT. Per i post coniati viene mostrato in cima alla pagina Info post."
   },

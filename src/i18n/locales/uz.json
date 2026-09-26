@@ -4130,6 +4130,7 @@
   },
   "glossary": {
     "fractionsDesc": "DeHub'da mint qilingan post 1,000 ta fraksiyaga bo'lingan NFT'ga aylanadi va ijodkor barcha 1,000 tasi bilan boshlaydi — kontentga 100% egalik. Mint qilish ixtiyoriy bo'lib, uni nashr qilishda yoki keyinroq amalga oshirish mumkin.",
+    "ownershipBarDesc": "Post ma'lumotlari sahifasidagi jarayon chizig'i: 1,000 ta fraksiyadan qanchasi hali ijodkorda ekani va qanchasi tarqatilgani yoki sotilganini ko'rsatadi.",
     "tokenIdDesc": "Post blokcheynda NFT sifatida mint qilinganda oladigan noyob on-chain identifikator. Mint qilish ixtiyoriy, shuning uchun hali mint qilinmagan postda Token ID yo'q.",
     "tokenIdInfoDesc": "Post NFT sifatida mint qilingandan keyin oladigan noyob on-chain identifikator. Mint qilingan postlar uchun Post ma'lumotlari sahifasining yuqori qismida ko'rsatiladi."
   },

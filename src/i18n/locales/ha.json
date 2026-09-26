@@ -4084,6 +4084,7 @@
   },
   "glossary": {
     "fractionsDesc": "Sakon da aka yi wa minti a DeHub yana zama NFT da aka raba zuwa rabe-rabe 1,000, kuma mai ƙirƙira yana farawa da dukkan 1,000 — mallakar abun ciki 100%. Yin minti na zaɓi ne kuma zai iya faruwa lokacin da kake wallafawa ko daga baya.",
+    "ownershipBarDesc": "Sandar ci gaba a shafin Bayanan Saƙo da ke nuna guda nawa daga cikin rabe-rabe 1,000 mai ƙirƙira ke riƙe da su har yanzu da nawa aka rarraba ko aka sayar.",
     "tokenIdDesc": "Keɓaɓɓen mai ganowa a kan blockchain da sako ke samu idan aka yi masa minti a matsayin NFT a kan blockchain. Yin minti na zaɓi ne, don haka sakon da ba a yi wa minti ba tukuna ba shi da Token ID.",
     "tokenIdInfoDesc": "Keɓaɓɓen mai ganowa a kan blockchain da sako ke samu da zarar an yi masa minti a matsayin NFT. Ana nuna shi a saman shafin Bayanin Sako ga sakonnin da aka yi wa minti."
   },

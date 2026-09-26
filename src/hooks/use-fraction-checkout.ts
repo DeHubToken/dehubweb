@@ -131,7 +131,7 @@ async function confirmWithRetry<T>(
  * Goes through the server rather than straight to Supabase so the seller's
  * on-chain balance is checked first — including against what they have already
  * listed and what they already owe on an unsettled sale. Without that, the same
- * 100 fractions can back ten listings and nine buyers pay for nothing.
+ * 1000 fractions can back ten listings and nine buyers pay for nothing.
  */
 export function useCreateListing() {
   const queryClient = useQueryClient();

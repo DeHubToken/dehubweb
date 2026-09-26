@@ -4078,6 +4078,7 @@
   },
   "glossary": {
     "fractionsDesc": "Qoraal lagu mint-gareeyo DeHub wuxuu noqdaa NFT loo qaybiyay 1,000 qaybood, abuurahana wuxuu ku bilaabaa dhammaan 1,000 — 100% lahaanshaha nuxurka. Mint-garaynta waa ikhtiyaari waxaana la samayn karaa marka aad daabacayso ama hadhow.",
+    "ownershipBarDesc": "Bar horumar oo ku yaal bogga Macluumaadka Qoraalka kaas oo muujinaya inta ka mid ah 1,000 qaybood ee abuuruhu weli haysto iyo inta la qaybiyay ama la iibiyay.",
     "tokenIdDesc": "Aqoonsi gaar ah oo on-chain ah oo qoraal helo marka loo mint-gareeyo NFT ahaan blockchain-ka. Mint-garaynta waa ikhtiyaari, sidaa darteed qoraal aan weli la mint-gareyn ma laha Token ID.",
     "tokenIdInfoDesc": "Aqoonsiga gaarka ah ee on-chain ah ee qoraal helo marka loo mint-gareeyo NFT ahaan. Wuxuu ka muuqdaa xagga sare ee bogga Macluumaadka Qoraalka ee qoraallada la mint-gareeyay."
   },
