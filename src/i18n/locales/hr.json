@@ -6498,5 +6498,40 @@
     "notifications": {
       "tippedYou": "ti je dao/la napojnicu od {{amount}} tokena"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Pretraži emoji",
+    "searchGifs": "Pretraži GIF-ove...",
+    "noEmoji": "Nema pronađenih emojija",
+    "noGifs": "Nema pronađenih GIF-ova",
+    "trending": "U trendu",
+    "searchResults": "Rezultati pretraživanja",
+    "poweredByGiphy": "Pokreće GIPHY",
+    "skinTone": "Boja kože",
+    "moreReactions": "Više reakcija",
+    "multiPickHint": "Shift-klik za odabir više njih",
+    "group": {
+      "recent": "Nedavno korišteno",
+      "dehub": "DeHub odabir",
+      "smileys": "Smajlići i emocije",
+      "people": "Ljudi i tijelo",
+      "animals": "Životinje i priroda",
+      "food": "Hrana i piće",
+      "travel": "Putovanja i mjesta",
+      "activities": "Aktivnosti",
+      "objects": "Predmeti",
+      "symbols": "Simboli",
+      "flags": "Zastave"
+    },
+    "tone": {
+      "default": "Zadano",
+      "light": "Svijetla boja kože",
+      "mediumLight": "Srednje svijetla boja kože",
+      "medium": "Srednja boja kože",
+      "mediumDark": "Srednje tamna boja kože",
+      "dark": "Tamna boja kože"
+    }
   }
 }

@@ -4331,5 +4331,40 @@
     "notifications": {
       "tippedYou": "دزيتلك {{amount}} توكن"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "إيموجي",
+    "tabGif": "GIF",
+    "searchEmoji": "دوّر على إيموجي",
+    "searchGifs": "دوّر على GIFs...",
+    "noEmoji": "ماكو إيموجي",
+    "noGifs": "ماكو GIFs",
+    "trending": "الرائج",
+    "searchResults": "نتائج البحث",
+    "poweredByGiphy": "مدعوم من GIPHY",
+    "skinTone": "لون البشرة",
+    "moreReactions": "تفاعلات أكثر",
+    "multiPickHint": "دوس Shift واضغط حتى تختار أكثر من واحد",
+    "group": {
+      "recent": "اللي استخدمتها مؤخرًا",
+      "dehub": "اختيارات DeHub",
+      "smileys": "الوجوه والمشاعر",
+      "people": "الناس والجسم",
+      "animals": "الحيوانات والطبيعة",
+      "food": "الأكل والشرب",
+      "travel": "السفر والأماكن",
+      "activities": "الأنشطة",
+      "objects": "الأغراض",
+      "symbols": "الرموز",
+      "flags": "الأعلام"
+    },
+    "tone": {
+      "default": "الافتراضي",
+      "light": "بشرة فاتحة",
+      "mediumLight": "بشرة فاتحة شوية",
+      "medium": "بشرة متوسطة",
+      "mediumDark": "بشرة غامقة شوية",
+      "dark": "بشرة غامقة"
+    }
   }
 }

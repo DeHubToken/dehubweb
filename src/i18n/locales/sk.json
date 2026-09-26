@@ -4557,5 +4557,40 @@
     "inProgress": "V realizácii",
     "completed": "Dokončené",
     "underReview": "V recenzii"
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Hľadať emoji",
+    "searchGifs": "Hľadať GIFy...",
+    "noEmoji": "Nenašli sa žiadne emoji",
+    "noGifs": "Nenašli sa žiadne GIFy",
+    "trending": "Trendy",
+    "searchResults": "Výsledky vyhľadávania",
+    "poweredByGiphy": "Poháňané službou GIPHY",
+    "skinTone": "Odtieň pleti",
+    "moreReactions": "Ďalšie reakcie",
+    "multiPickHint": "Kliknutím so Shift vyberiete viac",
+    "group": {
+      "recent": "Nedávno použité",
+      "dehub": "Výber DeHub",
+      "smileys": "Smajlíky a emócie",
+      "people": "Ľudia a telo",
+      "animals": "Zvieratá a príroda",
+      "food": "Jedlo a nápoje",
+      "travel": "Cestovanie a miesta",
+      "activities": "Aktivity",
+      "objects": "Predmety",
+      "symbols": "Symboly",
+      "flags": "Vlajky"
+    },
+    "tone": {
+      "default": "Predvolený",
+      "light": "Svetlý odtieň pleti",
+      "mediumLight": "Stredne svetlý odtieň pleti",
+      "medium": "Stredný odtieň pleti",
+      "mediumDark": "Stredne tmavý odtieň pleti",
+      "dark": "Tmavý odtieň pleti"
+    }
   }
 }

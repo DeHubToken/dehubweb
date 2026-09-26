@@ -6614,5 +6614,40 @@
     "notifications": {
       "tippedYou": "deu-lhe uma gratificação de {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Buscar emoji",
+    "searchGifs": "Buscar GIFs...",
+    "noEmoji": "Nenhum emoji encontrado",
+    "noGifs": "Nenhum GIF encontrado",
+    "trending": "Em alta",
+    "searchResults": "Resultados da busca",
+    "poweredByGiphy": "Com tecnologia GIPHY",
+    "skinTone": "Tom de pele",
+    "moreReactions": "Mais reações",
+    "multiPickHint": "Shift+clique para escolher vários",
+    "group": {
+      "recent": "Usados recentemente",
+      "dehub": "Escolhas da DeHub",
+      "smileys": "Carinhas e emoções",
+      "people": "Pessoas e corpo",
+      "animals": "Animais e natureza",
+      "food": "Comida e bebida",
+      "travel": "Viagens e lugares",
+      "activities": "Atividades",
+      "objects": "Objetos",
+      "symbols": "Símbolos",
+      "flags": "Bandeiras"
+    },
+    "tone": {
+      "default": "Padrão",
+      "light": "Tom de pele claro",
+      "mediumLight": "Tom de pele médio-claro",
+      "medium": "Tom de pele médio",
+      "mediumDark": "Tom de pele médio-escuro",
+      "dark": "Tom de pele escuro"
+    }
   }
 }

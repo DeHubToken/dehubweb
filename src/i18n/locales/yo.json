@@ -4351,5 +4351,40 @@
     "home": {
       "stakedPost": "Àmì 50k DeHub tí a tẹ. APY wò ó pé ó lágbára ní 12.4%. Ìrònú alákòókò pípẹ́. 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Wá emoji",
+    "searchGifs": "Wá GIFs...",
+    "noEmoji": "Kò rí emoji kankan",
+    "noGifs": "Kò rí GIFs kankan",
+    "trending": "Tó Ń Trendì",
+    "searchResults": "Àbájáde ìwádìí",
+    "poweredByGiphy": "Agbára láti ọwọ́ GIPHY",
+    "skinTone": "Àwọ̀ ara",
+    "moreReactions": "Ìdáhùn míì",
+    "multiPickHint": "Tẹ Shift kí o sì tẹ̀ láti yan púpọ̀",
+    "group": {
+      "recent": "Tí a lò láìpẹ́",
+      "dehub": "Àṣàyàn DeHub",
+      "smileys": "Ẹ̀rín & ìmọ̀lára",
+      "people": "Ènìyàn & ara",
+      "animals": "Ẹranko & ìṣẹ̀dá",
+      "food": "Oúnjẹ & ohun mímu",
+      "travel": "Ìrìnàjò & ibi",
+      "activities": "Ìgbòkègbodò",
+      "objects": "Àwọn nǹkan",
+      "symbols": "Àwọn àmì",
+      "flags": "Àwọn àsíá"
+    },
+    "tone": {
+      "default": "Àkọ́kọ́",
+      "light": "Àwọ̀ ara fúyẹ́",
+      "mediumLight": "Àwọ̀ ara fúyẹ́ díẹ̀",
+      "medium": "Àwọ̀ ara àárín",
+      "mediumDark": "Àwọ̀ ara dúdú díẹ̀",
+      "dark": "Àwọ̀ ara dúdú"
+    }
   }
 }

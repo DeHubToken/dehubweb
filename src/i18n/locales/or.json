@@ -4302,5 +4302,40 @@
     "notifications": {
       "tippedYou": "{{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ଇମୋଜି",
+    "tabGif": "GIF",
+    "searchEmoji": "ଇମୋଜି ଖୋଜନ୍ତୁ",
+    "searchGifs": "GIF ଖୋଜନ୍ତୁ...",
+    "noEmoji": "କୌଣସି ଇମୋଜି ମିଳିଲା ନାହିଁ",
+    "noGifs": "କୌଣସି GIF ମିଳିଲା ନାହିଁ",
+    "trending": "ଟ୍ରେଣ୍ଡିଂ",
+    "searchResults": "ସନ୍ଧାନ ଫଳାଫଳ",
+    "poweredByGiphy": "GIPHY ଦ୍ୱାରା ଚାଳିତ",
+    "skinTone": "ଚର୍ମ ରଙ୍ଗ",
+    "moreReactions": "ଅଧିକ ପ୍ରତିକ୍ରିୟା",
+    "multiPickHint": "ଏକାଧିକ ବାଛିବାକୁ Shift ଦବାଇ କ୍ଲିକ୍ କରନ୍ତୁ",
+    "group": {
+      "recent": "ସମ୍ପ୍ରତି ବ୍ୟବହୃତ",
+      "dehub": "DeHub ବଛା",
+      "smileys": "ସ୍ମାଇଲି ଓ ଭାବନା",
+      "people": "ଲୋକ ଓ ଶରୀର",
+      "animals": "ପଶୁ ଓ ପ୍ରକୃତି",
+      "food": "ଖାଦ୍ୟ ଓ ପାନୀୟ",
+      "travel": "ଯାତ୍ରା ଓ ସ୍ଥାନ",
+      "activities": "କାର୍ଯ୍ୟକଳାପ",
+      "objects": "ବସ୍ତୁ",
+      "symbols": "ପ୍ରତୀକ",
+      "flags": "ପତାକା"
+    },
+    "tone": {
+      "default": "ଡିଫଲ୍ଟ",
+      "light": "ହାଲୁକା ଚର୍ମ ରଙ୍ଗ",
+      "mediumLight": "ମଧ୍ୟମ-ହାଲୁକା ଚର୍ମ ରଙ୍ଗ",
+      "medium": "ମଧ୍ୟମ ଚର୍ମ ରଙ୍ଗ",
+      "mediumDark": "ମଧ୍ୟମ-ଗାଢ଼ ଚର୍ମ ରଙ୍ଗ",
+      "dark": "ଗାଢ଼ ଚର୍ମ ରଙ୍ଗ"
+    }
   }
 }

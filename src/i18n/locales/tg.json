@@ -4343,5 +4343,40 @@
     "notifications": {
       "tippedYou": "{{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Эмоҷи",
+    "tabGif": "GIF",
+    "searchEmoji": "Ҷустуҷӯи эмоҷи",
+    "searchGifs": "Ҷустуҷӯи GIFs...",
+    "noEmoji": "Эмоҷи ёфт нашуд",
+    "noGifs": "GIFs ёфт нашуд",
+    "trending": "Маъмул",
+    "searchResults": "Натиҷаҳои ҷустуҷӯ",
+    "poweredByGiphy": "Бо дастгирии GIPHY",
+    "skinTone": "Ранги пӯст",
+    "moreReactions": "Вокунишҳои бештар",
+    "multiPickHint": "Барои интихоби якчанд Shift-клик кунед",
+    "group": {
+      "recent": "Охирин истифодашуда",
+      "dehub": "Интихоби DeHub",
+      "smileys": "Табассумҳо ва ҳиссиёт",
+      "people": "Одамон ва бадан",
+      "animals": "Ҳайвонот ва табиат",
+      "food": "Хӯрок ва нӯшокӣ",
+      "travel": "Сафар ва ҷойҳо",
+      "activities": "Фаъолиятҳо",
+      "objects": "Ашё",
+      "symbols": "Рамзҳо",
+      "flags": "Парчамҳо"
+    },
+    "tone": {
+      "default": "Пешфарз",
+      "light": "Ранги равшани пӯст",
+      "mediumLight": "Ранги нимравшани пӯст",
+      "medium": "Ранги миёнаи пӯст",
+      "mediumDark": "Ранги нимторики пӯст",
+      "dark": "Ранги торики пӯст"
+    }
   }
 }

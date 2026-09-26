@@ -6493,5 +6493,40 @@
     "notifications": {
       "tippedYou": "t'ha donat {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Cerca emojis",
+    "searchGifs": "Cerca GIFs...",
+    "noEmoji": "No s'han trobat emojis",
+    "noGifs": "No s'han trobat GIFs",
+    "trending": "Tendències",
+    "searchResults": "Resultats de la cerca",
+    "poweredByGiphy": "Amb la tecnologia de GIPHY",
+    "skinTone": "To de pell",
+    "moreReactions": "Més reaccions",
+    "multiPickHint": "Maj+clic per triar-ne diversos",
+    "group": {
+      "recent": "Utilitzats recentment",
+      "dehub": "Seleccions de DeHub",
+      "smileys": "Cares i emocions",
+      "people": "Persones i cos",
+      "animals": "Animals i natura",
+      "food": "Menjar i beure",
+      "travel": "Viatges i llocs",
+      "activities": "Activitats",
+      "objects": "Objectes",
+      "symbols": "Símbols",
+      "flags": "Banderes"
+    },
+    "tone": {
+      "default": "Predeterminat",
+      "light": "To de pell clar",
+      "mediumLight": "To de pell mitjà-clar",
+      "medium": "To de pell mitjà",
+      "mediumDark": "To de pell mitjà-fosc",
+      "dark": "To de pell fosc"
+    }
   }
 }

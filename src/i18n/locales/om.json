@@ -4410,5 +4410,40 @@
     "backToBlog": "Biloogiitti deebi'i",
     "sharePost": "Barreeffama qoodi",
     "relatedPosts": "Barreeffamoota Walqabatan"
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoojii",
+    "tabGif": "GIF",
+    "searchEmoji": "Emoojii barbaadi",
+    "searchGifs": "GIF barbaadi...",
+    "noEmoji": "Emoojiin hin argamne",
+    "noGifs": "GIF hin argamne",
+    "trending": "Beekamaa",
+    "searchResults": "Bu'aa barbaachaa",
+    "poweredByGiphy": "GIPHY'n kan hojjetu",
+    "skinTone": "Halluu gogaa",
+    "moreReactions": "Deebii dabalataa",
+    "multiPickHint": "Hedduu filachuuf Shift qabadhuu cuqaasi",
+    "group": {
+      "recent": "Dhiyeenya kana kan fayyadame",
+      "dehub": "Filannoo DeHub",
+      "smileys": "Seequu fi miira",
+      "people": "Namoota fi qaama",
+      "animals": "Bineensota fi uumama",
+      "food": "Nyaata fi dhugaatii",
+      "travel": "Imala fi bakkeewwan",
+      "activities": "Sochiiwwan",
+      "objects": "Meeshaalee",
+      "symbols": "Mallattoolee",
+      "flags": "Alaabaalee"
+    },
+    "tone": {
+      "default": "Durtii",
+      "light": "Halluu gogaa ifaa",
+      "mediumLight": "Halluu gogaa giddugaleessa ifaa",
+      "medium": "Halluu gogaa giddugaleessa",
+      "mediumDark": "Halluu gogaa giddugaleessa dukkanaa'aa",
+      "dark": "Halluu gogaa dukkanaa'aa"
+    }
   }
 }

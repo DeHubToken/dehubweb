@@ -6586,5 +6586,40 @@
     "notifications": {
       "tippedYou": "skyrė jums arbatpinigių {{amount}} žetonų"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Jaustukai",
+    "tabGif": "GIF",
+    "searchEmoji": "Ieškoti jaustukų",
+    "searchGifs": "Ieškoti GIF...",
+    "noEmoji": "Jaustukų nerasta",
+    "noGifs": "GIF nerasta",
+    "trending": "Populiaru",
+    "searchResults": "Paieškos rezultatai",
+    "poweredByGiphy": "Veikia su GIPHY",
+    "skinTone": "Odos atspalvis",
+    "moreReactions": "Daugiau reakcijų",
+    "multiPickHint": "Shift+spustelėkite, kad pasirinktumėte kelis",
+    "group": {
+      "recent": "Neseniai naudoti",
+      "dehub": "DeHub pasirinkimai",
+      "smileys": "Šypsenėlės ir emocijos",
+      "people": "Žmonės ir kūnas",
+      "animals": "Gyvūnai ir gamta",
+      "food": "Maistas ir gėrimai",
+      "travel": "Kelionės ir vietos",
+      "activities": "Veikla",
+      "objects": "Daiktai",
+      "symbols": "Simboliai",
+      "flags": "Vėliavos"
+    },
+    "tone": {
+      "default": "Numatytasis",
+      "light": "Šviesus odos atspalvis",
+      "mediumLight": "Vidutiniškai šviesus odos atspalvis",
+      "medium": "Vidutinis odos atspalvis",
+      "mediumDark": "Vidutiniškai tamsus odos atspalvis",
+      "dark": "Tamsus odos atspalvis"
+    }
   }
 }

@@ -4325,5 +4325,40 @@
     "home": {
       "stakedPost": "Ọ bụ 50k DeHub tokens. Ọnụ ọgụgụ kasị elu bụ 12.4%. Ogologo oge njide echiche. 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Chọọ emoji",
+    "searchGifs": "Chọọ GIFs...",
+    "noEmoji": "Ahụghị emoji ọ bụla",
+    "noGifs": "Ahụghị GIFs ọ bụla",
+    "trending": "Na-ewu ewu",
+    "searchResults": "Nsonaazụ nchọcha",
+    "poweredByGiphy": "GIPHY na-akwado ya",
+    "skinTone": "Agba akpụkpọ",
+    "moreReactions": "Mmeghachi omume ndị ọzọ",
+    "multiPickHint": "Pịa Shift-click iji họrọ ọtụtụ",
+    "group": {
+      "recent": "Ejiri n'oge na-adịbeghị anya",
+      "dehub": "Nhọrọ DeHub",
+      "smileys": "Ihu ọchị & mmetụta",
+      "people": "Ndị mmadụ & ahụ",
+      "animals": "Anụmanụ & okike",
+      "food": "Nri & ihe ọṅụṅụ",
+      "travel": "Njem & ebe",
+      "activities": "Ihe omume",
+      "objects": "Ihe",
+      "symbols": "Akara",
+      "flags": "Ọkọlọtọ"
+    },
+    "tone": {
+      "default": "Ndabara",
+      "light": "Agba akpụkpọ na-acha ọcha",
+      "mediumLight": "Agba akpụkpọ na-acha ọcha nke ọma",
+      "medium": "Agba akpụkpọ etiti",
+      "mediumDark": "Agba akpụkpọ gbara ọchịchịrị nke ọma",
+      "dark": "Agba akpụkpọ gbara ọchịchịrị"
+    }
   }
 }

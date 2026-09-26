@@ -6384,5 +6384,40 @@
     "backToBlog": "ბლოგზე დაბრუნება",
     "sharePost": "პოსტის გაზიარება",
     "relatedPosts": "დაკავშირებული პოსტები"
+  },
+  "emojiPicker": {
+    "tabEmoji": "ემოჯი",
+    "tabGif": "GIF",
+    "searchEmoji": "ემოჯის ძებნა",
+    "searchGifs": "GIF-ების ძებნა...",
+    "noEmoji": "ემოჯი ვერ მოიძებნა",
+    "noGifs": "GIF-ები ვერ მოიძებნა",
+    "trending": "ტრენდული",
+    "searchResults": "ძიების შედეგები",
+    "poweredByGiphy": "მხარდაჭერილია GIPHY-ის მიერ",
+    "skinTone": "კანის ფერი",
+    "moreReactions": "მეტი რეაქცია",
+    "multiPickHint": "Shift+დაწკაპება რამდენიმის ასარჩევად",
+    "group": {
+      "recent": "ბოლოს გამოყენებული",
+      "dehub": "DeHub-ის რჩეული",
+      "smileys": "სმაილები და ემოციები",
+      "people": "ადამიანები და სხეული",
+      "animals": "ცხოველები და ბუნება",
+      "food": "საჭმელი და სასმელი",
+      "travel": "მოგზაურობა და ადგილები",
+      "activities": "აქტივობები",
+      "objects": "ნივთები",
+      "symbols": "სიმბოლოები",
+      "flags": "დროშები"
+    },
+    "tone": {
+      "default": "ნაგულისხმევი",
+      "light": "ღია კანის ფერი",
+      "mediumLight": "საშუალოდ ღია კანის ფერი",
+      "medium": "საშუალო კანის ფერი",
+      "mediumDark": "საშუალოდ მუქი კანის ფერი",
+      "dark": "მუქი კანის ფერი"
+    }
   }
 }

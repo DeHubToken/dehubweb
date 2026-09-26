@@ -4227,5 +4227,40 @@
     "home": {
       "stakedPost": "د 50K DeHub ټوکنونه بند کړئ. دا په داسې حال کې ده چې ایپل د 12.4 ٪ په اندازه ښه ښکاري. د اوږدې مودې ذهني فشار. 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ایموجي",
+    "tabGif": "GIF",
+    "searchEmoji": "ایموجي ولټوئ",
+    "searchGifs": "GIF ولټوئ...",
+    "noEmoji": "هیڅ ایموجي ونه موندل شو",
+    "noGifs": "هیڅ GIF ونه موندل شو",
+    "trending": "مشهور",
+    "searchResults": "د لټون پایلې",
+    "poweredByGiphy": "د GIPHY په مرسته",
+    "skinTone": "د پوستکي رنګ",
+    "moreReactions": "نور غبرګونونه",
+    "multiPickHint": "د څو غوره کولو لپاره Shift ونیسئ او کلیک وکړئ",
+    "group": {
+      "recent": "وروستي کارول شوي",
+      "dehub": "د DeHub غوره شوي",
+      "smileys": "موسکا او احساسات",
+      "people": "خلک او بدن",
+      "animals": "حیوانات او طبیعت",
+      "food": "خواړه او څښاک",
+      "travel": "سفر او ځایونه",
+      "activities": "فعالیتونه",
+      "objects": "شیان",
+      "symbols": "سمبولونه",
+      "flags": "بیرغونه"
+    },
+    "tone": {
+      "default": "ډیفالټ",
+      "light": "د پوستکي روښانه رنګ",
+      "mediumLight": "د پوستکي منځنی روښانه رنګ",
+      "medium": "د پوستکي منځنی رنګ",
+      "mediumDark": "د پوستکي منځنی تیاره رنګ",
+      "dark": "د پوستکي تیاره رنګ"
+    }
   }
 }

@@ -6617,5 +6617,40 @@
     "notifications": {
       "tippedYou": "आपको बख्शीश दी {{amount}} टोकन"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "इमोजी",
+    "tabGif": "GIF",
+    "searchEmoji": "इमोजी खोजें",
+    "searchGifs": "GIFs खोजें...",
+    "noEmoji": "कोई इमोजी नहीं मिला",
+    "noGifs": "कोई GIFs नहीं मिले",
+    "trending": "ट्रेंडिंग",
+    "searchResults": "खोज परिणाम",
+    "poweredByGiphy": "GIPHY द्वारा संचालित",
+    "skinTone": "त्वचा का रंग",
+    "moreReactions": "और प्रतिक्रियाएँ",
+    "multiPickHint": "कई चुनने के लिए Shift-क्लिक करें",
+    "group": {
+      "recent": "हाल ही में उपयोग किए गए",
+      "dehub": "DeHub की पसंद",
+      "smileys": "स्माइली और भावनाएँ",
+      "people": "लोग और शरीर",
+      "animals": "जानवर और प्रकृति",
+      "food": "खाना और पेय",
+      "travel": "यात्रा और स्थान",
+      "activities": "गतिविधियाँ",
+      "objects": "वस्तुएँ",
+      "symbols": "प्रतीक",
+      "flags": "झंडे"
+    },
+    "tone": {
+      "default": "डिफ़ॉल्ट",
+      "light": "हल्का त्वचा रंग",
+      "mediumLight": "मध्यम-हल्का त्वचा रंग",
+      "medium": "मध्यम त्वचा रंग",
+      "mediumDark": "मध्यम-गहरा त्वचा रंग",
+      "dark": "गहरा त्वचा रंग"
+    }
   }
 }

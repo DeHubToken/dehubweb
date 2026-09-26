@@ -6608,5 +6608,40 @@
     "notifications": {
       "tippedYou": "vous a donné un pourboire {{amount}} jetons"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Rechercher un emoji",
+    "searchGifs": "Rechercher des GIFs...",
+    "noEmoji": "Aucun emoji trouvé",
+    "noGifs": "Aucun GIF trouvé",
+    "trending": "Tendances",
+    "searchResults": "Résultats de recherche",
+    "poweredByGiphy": "Propulsé par GIPHY",
+    "skinTone": "Teint",
+    "moreReactions": "Plus de réactions",
+    "multiPickHint": "Maj+clic pour en choisir plusieurs",
+    "group": {
+      "recent": "Utilisés récemment",
+      "dehub": "Sélection DeHub",
+      "smileys": "Smileys et émotions",
+      "people": "Personnes et corps",
+      "animals": "Animaux et nature",
+      "food": "Nourriture et boissons",
+      "travel": "Voyages et lieux",
+      "activities": "Activités",
+      "objects": "Objets",
+      "symbols": "Symboles",
+      "flags": "Drapeaux"
+    },
+    "tone": {
+      "default": "Par défaut",
+      "light": "Peau claire",
+      "mediumLight": "Peau moyennement claire",
+      "medium": "Peau mate",
+      "mediumDark": "Peau moyennement foncée",
+      "dark": "Peau foncée"
+    }
   }
 }

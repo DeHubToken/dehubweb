@@ -29,6 +29,7 @@ import { getAuthToken } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
 import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';
+import { MoreReactionsButton } from '@/components/app/chat/MoreReactionsButton';
 
 function ChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
   const [failed, setFailed] = useState(false);
@@ -307,6 +308,11 @@ export function EventChat({ eventId }: EventChatProps) {
                                     </button>
                                   );
                                 })}
+                                <MoreReactionsButton
+                                  onPick={(emoji) => handleReact(msg.id, emoji)}
+                                  reactions={msg.reactions}
+                                  viewerAddress={walletAddress}
+                                />
                               </div>
                             </PopoverContent>
                           </Popover>

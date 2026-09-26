@@ -4064,5 +4064,40 @@
     "notifications": {
       "tippedYou": "تِپّی تِینُوں {{amount}} ٹوکن"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ایموجی",
+    "tabGif": "GIF",
+    "searchEmoji": "ایموجی ڳولو",
+    "searchGifs": "GIFs ڳولو...",
+    "noEmoji": "کوئی ایموجی نئیں لبھا",
+    "noGifs": "کوئی GIFs نئیں لبھے",
+    "trending": "ٹرینڈنگ",
+    "searchResults": "ڳول دے نتیجے",
+    "poweredByGiphy": "GIPHY دی مدد نال",
+    "skinTone": "چمڑی دا رنگ",
+    "moreReactions": "ٻئے ردعمل",
+    "multiPickHint": "کئی چݨن کیتے Shift دبا تے کلک کرو",
+    "group": {
+      "recent": "حالیہ ورتے ہوئے",
+      "dehub": "DeHub دی چݨ",
+      "smileys": "مسکراہٹاں تے جذبات",
+      "people": "لوک تے جسم",
+      "animals": "جانور تے قدرت",
+      "food": "کھاݨا پیݨا",
+      "travel": "سفر تے جائیں",
+      "activities": "سرگرمیاں",
+      "objects": "شئیں",
+      "symbols": "علامتاں",
+      "flags": "جھنڈے"
+    },
+    "tone": {
+      "default": "ڈیفالٹ",
+      "light": "ہلکا چمڑی دا رنگ",
+      "mediumLight": "درمیانہ ہلکا چمڑی دا رنگ",
+      "medium": "درمیانہ چمڑی دا رنگ",
+      "mediumDark": "درمیانہ گہرا چمڑی دا رنگ",
+      "dark": "گہرا چمڑی دا رنگ"
+    }
   }
 }

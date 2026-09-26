@@ -6613,5 +6613,40 @@
     "notifications": {
       "tippedYou": "memberi tahu Anda token {{amount}}"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Cari emoji",
+    "searchGifs": "Cari GIF...",
+    "noEmoji": "Emoji tidak ditemukan",
+    "noGifs": "GIF tidak ditemukan",
+    "trending": "Trending",
+    "searchResults": "Hasil pencarian",
+    "poweredByGiphy": "Didukung oleh GIPHY",
+    "skinTone": "Warna kulit",
+    "moreReactions": "Reaksi lainnya",
+    "multiPickHint": "Shift-klik untuk memilih beberapa",
+    "group": {
+      "recent": "Baru digunakan",
+      "dehub": "Pilihan DeHub",
+      "smileys": "Smiley & emosi",
+      "people": "Orang & tubuh",
+      "animals": "Hewan & alam",
+      "food": "Makanan & minuman",
+      "travel": "Perjalanan & tempat",
+      "activities": "Aktivitas",
+      "objects": "Objek",
+      "symbols": "Simbol",
+      "flags": "Bendera"
+    },
+    "tone": {
+      "default": "Bawaan",
+      "light": "Warna kulit terang",
+      "mediumLight": "Warna kulit agak terang",
+      "medium": "Warna kulit sedang",
+      "mediumDark": "Warna kulit agak gelap",
+      "dark": "Warna kulit gelap"
+    }
   }
 }

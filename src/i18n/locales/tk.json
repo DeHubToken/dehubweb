@@ -4280,5 +4280,40 @@
     "notifications": {
       "tippedYou": "{{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Emoji gözle",
+    "searchGifs": "GIFs gözle...",
+    "noEmoji": "Emoji tapylmady",
+    "noGifs": "GIFs tapylmady",
+    "trending": "Meşhur",
+    "searchResults": "Gözleg netijeleri",
+    "poweredByGiphy": "GIPHY tarapyndan üpjün edilýär",
+    "skinTone": "Deri reňki",
+    "moreReactions": "Has köp reaksiýa",
+    "multiPickHint": "Birnäçesini saýlamak üçin Shift-klik ediň",
+    "group": {
+      "recent": "Soňky ulanylanlar",
+      "dehub": "DeHub saýlawy",
+      "smileys": "Ýylgyryşlar we duýgular",
+      "people": "Adamlar we beden",
+      "animals": "Haýwanlar we tebigat",
+      "food": "Iýmit we içgi",
+      "travel": "Syýahat we ýerler",
+      "activities": "Işjeňlikler",
+      "objects": "Zatlar",
+      "symbols": "Nyşanlar",
+      "flags": "Baýdaklar"
+    },
+    "tone": {
+      "default": "Adaty",
+      "light": "Açyk deri reňki",
+      "mediumLight": "Orta-açyk deri reňki",
+      "medium": "Orta deri reňki",
+      "mediumDark": "Orta-goýy deri reňki",
+      "dark": "Goýy deri reňki"
+    }
   }
 }

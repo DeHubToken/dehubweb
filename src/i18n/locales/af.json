@@ -6491,5 +6491,40 @@
     "description": "Skep iets nuuts.",
     "newProject": "Nuwe projek",
     "newPost": "Nuwe plasing"
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Soek emoji",
+    "searchGifs": "Soek GIFs...",
+    "noEmoji": "Geen emoji gevind nie",
+    "noGifs": "Geen GIFs gevind nie",
+    "trending": "Gewild",
+    "searchResults": "Soekresultate",
+    "poweredByGiphy": "Aangedryf deur GIPHY",
+    "skinTone": "Veltoon",
+    "moreReactions": "Meer reaksies",
+    "multiPickHint": "Shift-klik om verskeie te kies",
+    "group": {
+      "recent": "Onlangs gebruik",
+      "dehub": "DeHub-keuses",
+      "smileys": "Glimlagte en emosie",
+      "people": "Mense en liggaam",
+      "animals": "Diere en natuur",
+      "food": "Kos en drank",
+      "travel": "Reis en plekke",
+      "activities": "Aktiwiteite",
+      "objects": "Voorwerpe",
+      "symbols": "Simbole",
+      "flags": "Vlae"
+    },
+    "tone": {
+      "default": "Verstek",
+      "light": "Ligte veltoon",
+      "mediumLight": "Medium-ligte veltoon",
+      "medium": "Medium veltoon",
+      "mediumDark": "Medium-donker veltoon",
+      "dark": "Donker veltoon"
+    }
   }
 }
