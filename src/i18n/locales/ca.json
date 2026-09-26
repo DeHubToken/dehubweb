@@ -6493,5 +6493,60 @@
     "notifications": {
       "tippedYou": "t'ha donat {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "search": "Emoji de cerca",
+    "skinTone": "Tonalitat de la pell",
+    "recent": "Utilitzat recentment",
+    "custom": "Personalitzat",
+    "emoji": "Emoji",
+    "noResults": "No s'ha trobat cap emoji",
+    "noRecent": "Els emoji que utilitzis apareixeran aquí",
+    "loadFailed": "No s'ha pogut carregar l'emoji. Comprova la connexió i torna-ho a provar.",
+    "addCustom": "Afegeix un emoji personalitzat",
+    "customEmpty": "Encara no hi ha cap emoji personalitzat. Afegeix-ne un d'un fitxer, un enllaç, Discord, Slack, 7TV o un servidor Mastodon.",
+    "moreReactions": "Més reaccions",
+    "back": "Enrere",
+    "groups": {
+      "smileys": "Somriures i emoció",
+      "people": "Persones i cos",
+      "nature": "Animals i natura",
+      "food": "Menjar i beure",
+      "travel": "Viatges i allotjaments",
+      "activities": "Activitats",
+      "objects": "Objectes",
+      "symbols": "Símbols",
+      "flags": "Banderes"
+    },
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchGifs": "Cerca GIFs...",
+    "gifResults": "Resultats de la cerca",
+    "gifTrending": "Tendències",
+    "noGifs": "No s'ha trobat cap GIF",
+    "poweredByGiphy": "Desenvolupat per GIPHY",
+    "modeSingle": "Un emoji",
+    "modePack": "Importa un paquet",
+    "upload": "Pujar una imatge",
+    "linkPlaceholder": "...o enganxa un enllaç o un codi emoji de Discord",
+    "namePlaceholder": "nom",
+    "singleHint": "PNG, GIF, WebP o JPEG fins a 2 MB. Els enllaços de Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg o qualsevol imatge també funcionen.",
+    "add": "Afegeix un emoji",
+    "packPlaceholder": "mastodon.social, misskey.io o un enllaç JSON",
+    "packHint": "Importa tots els emojis d'un servidor Mastodon, Pleroma, Akkoma o Misskey, o de qualsevol llista JSON d'emojis. S'ometen els noms que ja estan en ús.",
+    "importPack": "Importa",
+    "packAdded": "S'ha afegit {{count}} emoji ({{skipped}} ometut)",
+    "errors": {
+      "signIn": "Inicia sessió per afegir emoji",
+      "fileType": "Utilitza una imatge PNG, GIF, WebP o JPEG",
+      "fileSize": "Les imatges han de tenir 2 MB o menys",
+      "invalid": "Els noms utilitzen de 2 a 64 lletres, números, _, + o -",
+      "badImage": "Aquest enllaç no s'ha carregat com a imatge",
+      "addFailed": "No s'ha pogut afegir aquest emoji. Torna-ho a provar.",
+      "packEmpty": "No s'ha trobat cap emoji a aquesta adreça",
+      "shortcodeTaken": "{{name}} ja està en curs",
+      "shortcodeStandard": "{{name}} ja és un emoji estàndard"
+    },
+    "addedName": "S'ha afegit {{name}}"
   }
 }

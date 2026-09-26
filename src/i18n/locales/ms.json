@@ -6813,5 +6813,60 @@
     "notifications": {
       "tippedYou": "memberi tip kepada anda {{amount}} token"
     }
+  },
+  "emojiPicker": {
+    "search": "Cari emoji",
+    "skinTone": "Tona kulit",
+    "recent": "Digunakan baru-baru ini",
+    "custom": "Tersuai",
+    "emoji": "Emoji",
+    "noResults": "Tiada emoji ditemui",
+    "noRecent": "Emoji yang anda gunakan akan muncul di sini",
+    "loadFailed": "Tidak dapat memuatkan emoji. Semak sambungan anda dan cuba lagi.",
+    "addCustom": "Tambah emoji tersuai",
+    "customEmpty": "Belum ada emoji tersuai. Tambah satu daripada fail, pautan, Discord, Slack, 7TV atau pelayan Mastodon.",
+    "moreReactions": "Lebih banyak reaksi",
+    "back": "Kembali",
+    "groups": {
+      "smileys": "Senyuman & emosi",
+      "people": "Orang & badan",
+      "nature": "Haiwan & alam semula jadi",
+      "food": "Makanan & minuman",
+      "travel": "Perjalanan & tempat",
+      "activities": "Aktiviti",
+      "objects": "Objek",
+      "symbols": "Simbol",
+      "flags": "Bendera"
+    },
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchGifs": "Cari GIF...",
+    "gifResults": "Hasil carian",
+    "gifTrending": "Trend",
+    "noGifs": "Tiada GIF ditemui",
+    "poweredByGiphy": "Dikuasakan oleh GIPHY",
+    "modeSingle": "Satu emoji",
+    "modePack": "Import pek",
+    "upload": "Muat naik imej",
+    "linkPlaceholder": "…atau tampal pautan atau kod emoji Discord",
+    "namePlaceholder": "nama",
+    "singleHint": "PNG, GIF, WebP atau JPEG sehingga 2 MB. Pautan dari Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg atau mana-mana imej juga berfungsi.",
+    "add": "Tambah emoji",
+    "packPlaceholder": "mastodon.social, misskey.io atau pautan JSON",
+    "packHint": "Mengimport setiap emoji dari pelayan Mastodon, Pleroma, Akkoma atau Misskey, atau dari mana-mana senarai JSON emoji. Nama yang sudah digunakan akan dilangkau.",
+    "importPack": "Import",
+    "packAdded": "Ditambah {{count}} emoji ({{skipped}} dilangkau)",
+    "errors": {
+      "signIn": "Log masuk untuk menambah emoji",
+      "fileType": "Gunakan imej PNG, GIF, WebP atau JPEG",
+      "fileSize": "Imej mestilah 2 MB atau kurang",
+      "invalid": "Nama menggunakan 2 hingga 64 huruf, nombor, _, + atau -",
+      "badImage": "Pautan itu tidak dimuatkan sebagai imej",
+      "addFailed": "Tidak dapat menambah emoji itu. Cuba lagi.",
+      "packEmpty": "Tiada emoji ditemui di alamat itu",
+      "shortcodeTaken": "{{name}} sudah diambil",
+      "shortcodeStandard": "{{name}} sudah menjadi emoji standard"
+    },
+    "addedName": "Ditambah {{name}}"
   }
 }

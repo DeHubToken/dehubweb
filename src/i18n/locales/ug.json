@@ -4308,5 +4308,60 @@
     "notifications": {
       "tippedYou": "سىزنى يوقلىدى {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "search": "Emoji ئىزدەش",
+    "skinTone": "تېرە رەڭگى",
+    "recent": "يېقىندا ئىشلىتىلگەن",
+    "custom": "Custom",
+    "emoji": "Emoji",
+    "noResults": "Emoji تېپىلمىدى",
+    "noRecent": "سىز ئىشلەتكەن ئېموجى بۇ يەردە كۆرسىتىلىدۇ",
+    "loadFailed": "ئېموجىينى يۈكلىيەلمىدى. ئۇلىنىشنى تەكشۈرۈپ قايتا سىناپ بېقىڭ.",
+    "addCustom": "ئادەتتىكى ئېموجىينى قوشۇش",
+    "customEmpty": "ئادەتتىكى ئېموجى تېخى يوق. ھۆججەتتىن بىرنى قوشۇڭ، ئۇلىنىشنى قوشۇڭ، Discord، Slack، 7TV ياكى Mastodon مۇلازىمىتىر.",
+    "moreReactions": "تېخىمۇ كۆپ ئىنكاس",
+    "back": "Back",
+    "groups": {
+      "smileys": "كۈلۈمسىرەش ۋە ھېسسىيات",
+      "people": "ئادەم ۋە بەدەن",
+      "nature": "ھايۋاناتلار ۋە تەبىئەت",
+      "food": "يېمەكلىك ۋە ئىچىملىك",
+      "travel": "ساياھەت ۋە جايلار",
+      "activities": "پائالىيەتلەر",
+      "objects": "ئوبيېكتلار",
+      "symbols": "سىمۋوللار",
+      "flags": "Flags"
+    },
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchGifs": "GIF ئىزدەش...",
+    "gifResults": "ئىزدەش نەتىجىلىرى",
+    "gifTrending": "Trending",
+    "noGifs": "GIF تېپىلمىدى",
+    "poweredByGiphy": "Giphy تەرىپىدىن ئىجرا قىلىنىدۇ",
+    "modeSingle": "بىر ئېموجىي",
+    "modePack": "بىر ساندۇقنى يۆتكەش",
+    "upload": "سۈرەتنى يۆتكەش پروگراممىسى",
+    "linkPlaceholder": "…ياكى ئۇلىنىشنى ياكى ئىختىلاپلىق ئېموجى كودىنى چاپلاڭ",
+    "namePlaceholder": "ئىسمى:",
+    "singleHint": "PNG، GIF، WebP ياكى JPEG 2 MB غىچە. Discord، Slack، 7TV، BetterTTV، FrankerFaceZ، emoji.gg ۋە باشقا سۈرەتلەرنىڭ ئۇلىنىشلىرىمۇ بار.",
+    "add": "Emoji قوشۇش",
+    "packPlaceholder": "mastodon.social، misskey.io ياكى JSON ئۇلىنىشى",
+    "packHint": "Mastodon، Pleroma، Akkoma ياكى Misskey مۇلازىمىتىرىدىن ياكى JSON تىزىملىكىدىكى ھەرقانداق ئېموجىينى ئىمپورت قىلىدۇ. ئاللىقاچان ئىشلىتىلىۋاتقان ئىسىملار ئۆتۈپ كەتكەن.",
+    "importPack": "ئىمپورت",
+    "packAdded": "قوشۇلدى {{count}} emoji ({{skipped}} skipped)",
+    "errors": {
+      "signIn": "Emoji قوشۇش ئۈچۈن تىزىملىتىڭ",
+      "fileType": "PNG، GIF، WebP ياكى JPEG سۈرەتنى ئىشلىتىش",
+      "fileSize": "سۈرەتلەر 2 MB ياكى ئۇنىڭدىن كىچىك بولۇشى كېرەك",
+      "invalid": "ئىسىملار 2 دىن 64 غىچە ھەرپ، سان، _، + ياكى -",
+      "badImage": "ئۇ ئۇلانما سۈرەت سۈپىتىدە يۈكلەنمىدى",
+      "addFailed": "ئۇ ئېموجىينى قوشالمىدىم. قايتا سىناپ بېقىڭ.",
+      "packEmpty": "بۇ ئادرېستىن ئېموجىي تېپىلمىدى",
+      "shortcodeTaken": "{{name}} ئاللىبۇرۇن ئېلىنغان",
+      "shortcodeStandard": "{{name}} ئاللىقاچان ئۆلچەملىك ئېموجىي"
+    },
+    "addedName": "{{name}} قوشۇلدى"
   }
 }

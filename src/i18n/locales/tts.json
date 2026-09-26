@@ -4315,5 +4315,60 @@
     "notifications": {
       "tippedYou": "ให้ทิปเจ้า {{amount}} โทเคนแล้ว"
     }
+  },
+  "emojiPicker": {
+    "search": "ค้นหาอิโมจิ",
+    "skinTone": "โทนสีผิว",
+    "recent": "ใช้ล่าสุด",
+    "custom": "กำหนดเอง",
+    "emoji": "อิโมจิ",
+    "noResults": "ไม่พบอิโมจิ",
+    "noRecent": "อิโมจิที่คุณใช้จะแสดงที่นี่",
+    "loadFailed": "ไม่สามารถโหลดอิโมจิได้ ตรวจสอบการเชื่อมต่อของคุณแล้วลองอีกครั้ง",
+    "addCustom": "เพิ่มอิโมจิที่กำหนดเอง",
+    "customEmpty": "ยังไม่มีอิโมจิที่กำหนดเอง เพิ่มจากไฟล์ ลิงก์ Discord Slack 7TV หรือเซิร์ฟเวอร์ Mastodon",
+    "moreReactions": "ปฏิกิริยาเพิ่มเติม",
+    "back": "กลับ",
+    "groups": {
+      "smileys": "หน้ายิ้ม & อารมณ์",
+      "people": "ผู้คน & ร่างกาย",
+      "nature": "สัตว์ & ธรรมชาติ",
+      "food": "อาหาร & เครื่องดื่ม",
+      "travel": "การเดินทาง & สถานที่",
+      "activities": "กิจกรรม",
+      "objects": "วัตถุ",
+      "symbols": "สัญลักษณ์",
+      "flags": "ธง"
+    },
+    "tabEmoji": "อิโมจิ",
+    "tabGif": "GIF",
+    "searchGifs": "ค้นหา GIF...",
+    "gifResults": "ผลการค้นหา",
+    "gifTrending": "กำลังมาแรง",
+    "noGifs": "ไม่พบ GIF",
+    "poweredByGiphy": "ขับเคลื่อนโดย GIPHY",
+    "modeSingle": "อิโมจิหนึ่งอัน",
+    "modePack": "นำเข้าแพ็ก",
+    "upload": "อัปโหลดรูปภาพ",
+    "linkPlaceholder": "…หรือวางลิงก์ หรือโค้ดอิโมจิ Discord",
+    "namePlaceholder": "ชื่อ",
+    "singleHint": "PNG, GIF, WebP หรือ JPEG ขนาดไม่เกิน 2 MB ลิงก์จาก Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg หรือรูปภาพใดๆ ก็ใช้ได้เช่นกัน",
+    "add": "เพิ่มอิโมจิ",
+    "packPlaceholder": "mastodon.social, misskey.io หรือลิงก์ JSON",
+    "packHint": "นำเข้าอิโมจิทุกตัวจากเซิร์ฟเวอร์ Mastodon, Pleroma, Akkoma หรือ Misskey หรือจากรายการ JSON อิโมจิใดๆ ชื่อที่ใช้อยู่แล้วจะถูกข้ามไป",
+    "importPack": "นำเข้า",
+    "packAdded": "เพิ่มอิโมจิ {{count}} ตัว (ข้าม {{skipped}} ตัว)",
+    "errors": {
+      "signIn": "ลงชื่อเข้าใช้เพื่อเพิ่มอิโมจิ",
+      "fileType": "ใช้รูปภาพ PNG, GIF, WebP หรือ JPEG",
+      "fileSize": "รูปภาพต้องมีขนาดไม่เกิน 2 MB",
+      "invalid": "ชื่อใช้ตัวอักษร ตัวเลข _, + หรือ - ความยาว 2 ถึง 64 ตัว",
+      "badImage": "ลิงก์นั้นไม่สามารถโหลดเป็นรูปภาพได้",
+      "addFailed": "ไม่สามารถเพิ่มอิโมจินั้นได้ ลองอีกครั้ง",
+      "packEmpty": "ไม่พบอิโมจิที่ที่อยู่นั้น",
+      "shortcodeTaken": "{{name}} มีคนใช้แล้ว",
+      "shortcodeStandard": "{{name}} เป็นอิโมจิมาตรฐานอยู่แล้ว"
+    },
+    "addedName": "เพิ่ม {{name}} แล้ว"
   }
 }

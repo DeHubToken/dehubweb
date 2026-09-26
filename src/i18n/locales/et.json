@@ -6496,5 +6496,60 @@
     "notifications": {
       "tippedYou": "andis sulle jootraha {{amount}} märki"
     }
+  },
+  "emojiPicker": {
+    "search": "Otsi emotikone",
+    "skinTone": "Nahatoon",
+    "recent": "Viimati kasutatud",
+    "custom": "Kohandatud",
+    "emoji": "Emoji",
+    "noResults": "Emotikone ei leitud",
+    "noRecent": "Sinu kasutatav emotikon ilmub siia",
+    "loadFailed": "Emojit ei saanud laadida. Kontrolli ühendust ja proovi uuesti.",
+    "addCustom": "Lisa kohandatud emotikone",
+    "customEmpty": "Kohandatud emotikone veel pole. Lisa üks failist, lingilt, Discordist, Slackist, 7TV-st või Mastodoni serverist.",
+    "moreReactions": "Veel reaktsioone",
+    "back": "Tagasi",
+    "groups": {
+      "smileys": "Naeratused ja emotsioonid",
+      "people": "Inimesed ja keha",
+      "nature": "Loomad ja loodus",
+      "food": "Toit ja jook",
+      "travel": "Reisimine ja kohad",
+      "activities": "Tegevused",
+      "objects": "Objektid",
+      "symbols": "Sümbolid",
+      "flags": "Lipud"
+    },
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchGifs": "Otsi GIF-e...",
+    "gifResults": "Otsingutulemused",
+    "gifTrending": "Suundumus",
+    "noGifs": "GIF-e ei leitud",
+    "poweredByGiphy": "Toetab GIPHY",
+    "modeSingle": "Üks emotikon",
+    "modePack": "Impordi pakk",
+    "upload": "Lae pilt üles",
+    "linkPlaceholder": "…või kleebi link või Discordi emotikonikood",
+    "namePlaceholder": "Nimi",
+    "singleHint": "PNG, GIF, WebP või JPEG kuni 2 MB. Lingid Discordist, Slackist, 7TV-st, BetterTTV-st, FrankerFaceZ-ist, emoji.gg-st või mis tahes pilditööst.",
+    "add": "Lisa emotikon",
+    "packPlaceholder": "mastodon.social, miskey.io või JSON link",
+    "packHint": "Impordib kõik emotikonid Mastodoni, Pleroma, Akkoma või Misskey serverist või mis tahes emotikonide JSON-loendist. Juba kasutusel olevad nimed jäetakse vahele.",
+    "importPack": "Impordi",
+    "packAdded": "Lisatud {{count}} emoji ({{skipped}} vahele jäetud)",
+    "errors": {
+      "signIn": "Emotikonide lisamiseks logi sisse",
+      "fileType": "Kasuta PNG-, GIF-, WebP- või JPEG-pilti",
+      "fileSize": "Pildid peavad olema 2 MB või väiksemad",
+      "invalid": "Nimed kasutavad 2 kuni 64 tähte, numbrit, _, + või -",
+      "badImage": "Seda linki ei laaditud pildina",
+      "addFailed": "Seda emotikoni ei saanud lisada. Proovi uuesti.",
+      "packEmpty": "Sellel aadressil emotikone ei leitud",
+      "shortcodeTaken": "{{name}} on juba võetud",
+      "shortcodeStandard": "{{name}} on juba standardne emotikon"
+    },
+    "addedName": "Lisatud {{name}}"
   }
 }

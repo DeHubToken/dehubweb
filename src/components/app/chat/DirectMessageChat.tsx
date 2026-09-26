@@ -83,7 +83,8 @@ import { formatUnreadCount } from '@/lib/unread-count';
 import { isDmCallNotice } from '@/lib/dm-call-notice';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
-import { QUICK_CHAT_REACTIONS } from './reaction-options';
+import { QuickReactionTray } from './QuickReactionTray';
+import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 
 interface DirectMessageChatProps {
   conversation: DeHubConversation;
@@ -347,20 +348,15 @@ const MessageBubble = memo(function MessageBubble({
                 </button>
               </PopoverTrigger>
               <PopoverContent side="top" align={isOwnMessage ? 'start' : 'end'} className="w-auto p-1.5 bg-zinc-800 border-zinc-700 rounded-xl">
-                <div className="flex gap-0.5">
-                  {QUICK_CHAT_REACTIONS.map((emoji) => {
+                <QuickReactionTray
+                  isMine={(emoji) => !!currentUserAddress && !!message.reactions?.[emoji]?.some(address => address.toLowerCase() === currentUserAddress.toLowerCase())}
+                  onPick={(emoji) => {
                     const mine = currentUserAddress && message.reactions?.[emoji]?.some(address => address.toLowerCase() === currentUserAddress.toLowerCase());
-                    return (
-                      <button type="button" key={emoji} onClick={() => {
-                        if (mine) onRemoveReaction?.(message._id, emoji);
-                        else onReact(message._id, emoji);
-                        setReactionPickerOpen(false);
-                      }} className={`w-8 h-8 flex items-center justify-center text-lg rounded-lg transition-colors ${mine ? 'bg-white/15 ring-1 ring-white/30' : 'hover:bg-zinc-700'}`}>
-                        {emoji}
-                      </button>
-                    );
-                  })}
-                </div>
+                    if (mine) onRemoveReaction?.(message._id, emoji);
+                    else onReact(message._id, emoji);
+                    setReactionPickerOpen(false);
+                  }}
+                />
               </PopoverContent>
             </Popover>
           )}
@@ -653,7 +649,7 @@ const MessageBubble = memo(function MessageBubble({
                   onClick={() => mine ? onRemoveReaction?.(message._id, emoji) : onReact?.(message._id, emoji)}
                   className={`group/reaction inline-flex items-center gap-1 px-1 py-0.5 text-xs ${mine ? 'text-white' : 'text-zinc-400 hover:text-white'}`}
                 >
-                  <span>{emoji}</span>
+                  <span className="inline-flex items-center"><InlineEmoji value={emoji} className="h-4 m-0" /></span>
                   {mine ? (
                     <><span className="text-[10px] group-hover/reaction:hidden">{addresses.length}</span><X className="hidden w-3 h-3 group-hover/reaction:block" /></>
                   ) : <span className="text-[10px]">{addresses.length}</span>}

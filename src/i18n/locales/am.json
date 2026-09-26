@@ -4213,5 +4213,60 @@
     "home": {
       "stakedPost": "50k DeHub ምልክቶች. ኤፒአይ በ 12,4% ጠንካራ ይመስላል ። የረጅም ጊዜ የባለቤትነት አስተሳሰብ ። 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "search": "ኢሞጂ ይፈልጉ",
+    "skinTone": "የቆዳ ድምጽ",
+    "recent": "በቅርብ ጊዜ ጥቅም ላይ የዋለ",
+    "custom": "ብጁ",
+    "emoji": "ኢሞጂ",
+    "noResults": "ምንም emoji አልተገኘም",
+    "noRecent": "እርስዎ የሚጠቀሙት ኢሞጂ እዚህ ይታያል",
+    "loadFailed": "ኢሞጂ መጫን አልተቻለም ። የእርስዎን ግንኙነት ያረጋግጡ እና እንደገና ይሞክሩ.",
+    "addCustom": "ብጁ emoji ያክሉ",
+    "customEmpty": "ምንም ብጁ ኢሞጂ ገና. አንድ ፋይል, አገናኝ, Discord, Slack, 7TV ወይም Mastodon አገልጋይ አንድ ያክሉ.",
+    "moreReactions": "ተጨማሪ ምላሾች",
+    "back": "ወደ ኋላ",
+    "groups": {
+      "smileys": "ፈገግታዎች እና ስሜቶች",
+      "people": "ሰዎች & አካል",
+      "nature": "እንስሳት እና ተፈጥሮ",
+      "food": "ምግብ እና መጠጥ",
+      "travel": "ጉዞ & ቦታዎች",
+      "activities": "እንቅስቃሴዎች",
+      "objects": "ንጥሎች",
+      "symbols": "ምልክቶች",
+      "flags": "ባንዲራዎች"
+    },
+    "tabEmoji": "ኢሞጂ",
+    "tabGif": "GIF",
+    "searchGifs": "GIFs ን ይፈልጉ...",
+    "gifResults": "የፍለጋ ውጤቶች",
+    "gifTrending": "አዝማሚያ",
+    "noGifs": "ምንም ጂአይኤፍ አልተገኘም",
+    "poweredByGiphy": "በጂፊ የተጎላበተው",
+    "modeSingle": "አንድ ኢሞጂ",
+    "modePack": "ጥቅል ያስመጡ",
+    "upload": "ምስልን ይስቀሉ",
+    "linkPlaceholder": "...ወይም አገናኝ ወይም የዲስኮርድ ኢሞጂ ኮድ ይለጥፉ",
+    "namePlaceholder": "ስም",
+    "singleHint": "PNG, GIF, WebP ወይም JPEG እስከ 2 ሜባ ድረስ. ከ Discord ፣ Slack ፣ 7TV ፣ BetterTTV ፣ FrankerFaceZ ፣ emoji.gg ወይም ከማንኛውም የምስል ሥራ አገናኞች ።",
+    "add": "Emoji ያክሉ",
+    "packPlaceholder": "mastodon.social, misskey.io ወይም JSON አገናኝ",
+    "packHint": "እያንዳንዱን ኢሞጂ ከማስቶዶን ፣ ከፕሌሮማ ፣ ከአኮማ ወይም ከሚስኪ አገልጋይ ወይም ከማንኛውም ኢሞጂ JSON ዝርዝር ያስገባሉ ። ቀደም ሲል ጥቅም ላይ የዋሉ ስሞች ተዘግተዋል ።",
+    "importPack": "ከውጭ ያስገቡ",
+    "packAdded": "ታክሏል {{count}} emoji ({{skipped}} skipped)",
+    "errors": {
+      "signIn": "Emoji ለማከል ይግቡ",
+      "fileType": "PNG, GIF, WebP ወይም JPEG ምስል ይጠቀሙ",
+      "fileSize": "ምስሎች 2 ሜባ ወይም ያነሰ መሆን አለባቸው",
+      "invalid": "ስሞች ከ 2 እስከ 64 ፊደላት ፣ ቁጥሮች ፣ _፣ + ወይም - ይጠቀማሉ",
+      "badImage": "ያ አገናኝ እንደ ምስል አልጫነም",
+      "addFailed": "ያንን ኢሞጂ ማከል አልቻልኩም. እንደገና ሞክር.",
+      "packEmpty": "በዚያ አድራሻ ምንም emoji አልተገኘም",
+      "shortcodeTaken": "{{name}} ቀድሞውኑ ተወስዷል",
+      "shortcodeStandard": "{{name}} መደበኛ ስሜት ገላጭ ምስል ነው"
+    },
+    "addedName": "{{name}} ታክሏል"
   }
 }

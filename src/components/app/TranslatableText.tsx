@@ -21,6 +21,7 @@ import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { clientNavigate } from '@/lib/client-navigate';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { parseDehubLink } from '@/lib/dehub-links';
+import { expandEmojiTokens } from '@/components/app/emoji/EmojiText';
 
 export { LANGUAGE_NAMES };
 import { cn } from '@/lib/utils';
@@ -299,7 +300,9 @@ export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }):
     parts.push(text.slice(lastIndex));
   }
   
-  return parts.length > 0 ? parts : [text];
+  // Custom and shortcode emoji (`:fire:`, `<:pepe:123>`) inside the plain-text
+  // runs — see components/app/emoji/EmojiText.
+  return expandEmojiTokens(parts.length > 0 ? parts : [text]);
 }
 
 /**
@@ -380,7 +383,9 @@ export function renderChatTextWithLinks(text: string): ReactNode[] {
     parts.push(text.slice(lastIndex));
   }
 
-  return parts.length > 0 ? parts : [text];
+  // Custom and shortcode emoji (`:fire:`, `<:pepe:123>`) inside the plain-text
+  // runs — see components/app/emoji/EmojiText.
+  return expandEmojiTokens(parts.length > 0 ? parts : [text]);
 }
 
 // Translation cache to avoid repeat API calls. Capped: entries hold full

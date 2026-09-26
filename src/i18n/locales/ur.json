@@ -6329,5 +6329,60 @@
     "notifications": {
       "tippedYou": "آپ کو ٹپ دی گئی {{amount}} ٹوکنز"
     }
+  },
+  "emojiPicker": {
+    "search": "ایموجی تلاش کریں",
+    "skinTone": "جلد کی رنگت",
+    "recent": "حال ہی میں استعمال کیا گیا",
+    "custom": "حسب ضرورت",
+    "emoji": "ایموجی",
+    "noResults": "کوئی ایموجی نہیں ملی",
+    "noRecent": "آپ جو ایموجی استعمال کرتے ہیں وہ یہاں آئے گی",
+    "loadFailed": "ایموجی لوڈ نہیں ہو سکی ۔ اپنا کنکشن چیک کریں اور دوبارہ کوشش کریں ۔",
+    "addCustom": "حسب ضرورت ایموجی شامل کریں",
+    "customEmpty": "ابھی تک کوئی حسب ضرورت ایموجی نہیں ہے ۔ ایک فائل، ایک لنک، Discord، Slack، 7TV یا Mastodon سرور میں سے ایک شامل کریں ۔",
+    "moreReactions": "مزید رد عمل",
+    "back": "واپس جائیں",
+    "groups": {
+      "smileys": "مسکراہٹیں اور جذبات",
+      "people": "لوگ اور باڈی",
+      "nature": "جانور اور فطرت",
+      "food": "خوراک اور مشروبات",
+      "travel": "سفر اور مقامات",
+      "activities": "سرگرمیاں",
+      "objects": "اشیاء",
+      "symbols": "علامات",
+      "flags": "جھنڈے"
+    },
+    "tabEmoji": "ایموجی",
+    "tabGif": "GIF",
+    "searchGifs": "GIFs تلاش کریں...",
+    "gifResults": "تلاش کے نتائج",
+    "gifTrending": "رجحان سازی",
+    "noGifs": "کوئی GIF نہیں ملا",
+    "poweredByGiphy": "Giphy کے ذریعہ تقویت یافتہ",
+    "modeSingle": "ایک ایموجی",
+    "modePack": "پیک درآمد کریں",
+    "upload": "تصویر اپ لوڈ کریں",
+    "linkPlaceholder": "…یا کوئی لنک یا ڈسکارڈ ایموجی کوڈ پیسٹ کریں",
+    "namePlaceholder": "نام",
+    "singleHint": "PNG، GIF، WebP یا JPEG 2 MB تک ۔ Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg یا کسی بھی تصویری کام کے لنکس بھی ۔",
+    "add": "ایموجی شامل کریں",
+    "packPlaceholder": "mastodon.social, misskey.io یا ایک JSON لنک",
+    "packHint": "Mastodon، Pleroma، Akkoma یا Misskey سرور سے، یا کسی بھی emoji JSON فہرست سے ہر ایموجی درآمد کرتا ہے ۔ پہلے سے استعمال شدہ ناموں کو نظر انداز کر دیا گیا ہے ۔",
+    "importPack": "درآمد",
+    "packAdded": "{{count}} emoji شامل کیا گیا ({{skipped}} چھوڑ دیا گیا)",
+    "errors": {
+      "signIn": "ایموجی شامل کرنے کے لیے سائن ان کریں",
+      "fileType": "PNG، GIF، WebP یا JPEG تصویر استعمال کریں",
+      "fileSize": "تصاویر 2 MB یا اس سے چھوٹی ہونی چاہئیں",
+      "invalid": "نام 2 سے 64 حروف، اعداد،_، + یا - استعمال کرتے ہیں",
+      "badImage": "وہ لنک تصویر کے بطور لوڈ نہیں ہوا",
+      "addFailed": "وہ ایموجی شامل نہیں ہو سکی ۔ دوبارہ کوشش کریں ۔",
+      "packEmpty": "اس پتے پر کوئی ایموجی نہیں ملی",
+      "shortcodeTaken": "{{name}} پہلے ہی لے لیا گیا ہے",
+      "shortcodeStandard": "{{name}} پہلے سے ہی ایک معیاری ایموجی ہے"
+    },
+    "addedName": "شامل کر دیا گیا {{name}}"
   }
 }

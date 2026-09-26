@@ -4325,5 +4325,60 @@
     "home": {
       "stakedPost": "Ọ bụ 50k DeHub tokens. Ọnụ ọgụgụ kasị elu bụ 12.4%. Ogologo oge njide echiche. 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "search": "Nchọgharị emoji",
+    "skinTone": "Skin ụda",
+    "recent": "Ejiri ya na nso nso a",
+    "custom": "Omenala",
+    "emoji": "Emoji",
+    "noResults": "Enweghị emoji achọtara",
+    "noRecent": "Emoji ị na-eji ga-egosi ebe a",
+    "loadFailed": "Agaghị ebubata emoji. Lelee njikọ gị ma nwaa ọzọ.",
+    "addCustom": "Tinye omenala emoji",
+    "customEmpty": "E nweghị ndị na emoticons. Tinye otu site na faịlụ, njikọ, Discord, Slack, 7TV ma ọ bụ sava Mastodon.",
+    "moreReactions": "More mmeghachi omume",
+    "back": "Azụ",
+    "groups": {
+      "smileys": "Smileys & mmetụta uche",
+      "people": "Ndị mmadụ & ahu",
+      "nature": "Anụmanụ & ọdịdị",
+      "food": "Nri & ihe ọṅụṅụ",
+      "travel": "Njem & ebe",
+      "activities": "Omume",
+      "objects": "Objektị",
+      "symbols": "Akara",
+      "flags": "Ọkọlọtọ"
+    },
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchGifs": "Chọ́ọ̀ọ̀ọ̀sụ̀ GIFs",
+    "gifResults": "Nsonaazụ ọchụchọ",
+    "gifTrending": "Trending",
+    "noGifs": "Achọpụtaghị GIF ọ bụla",
+    "poweredByGiphy": "Kwadoro site na GIPHY",
+    "modeSingle": "Otu emoji",
+    "modePack": "Bubata mkpọ",
+    "upload": "Bubata inyogo",
+    "linkPlaceholder": "...ma ọ bụ mado a njikọ ma ọ bụ a Discord emoji koodu",
+    "namePlaceholder": "aha",
+    "singleHint": "PNG, GIF, WebP ma ọ bụ JPEG ruo 2 MB. Njikọ si Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg ma ọ bụ ihe ọ bụla image ọrụ kwa.",
+    "add": "Tinye emoji",
+    "packPlaceholder": "mastodon.social, misskey.io ma ọ bụ njikọ JSON",
+    "packHint": "Mbubata ọ bụla emoji si a Mastodon, Pleroma, Akkoma ma ọ bụ Misskey nkesa, ma ọ bụ ọ bụla emoji JSON ndepụta. A kwụsịrị aha ndị e ji eme ihe.",
+    "importPack": "Bubata",
+    "packAdded": "Agbakwunyere {{count}} emoji ({{skipped}} jipped)",
+    "errors": {
+      "signIn": "Banye ka ịgbakwunye emoji",
+      "fileType": "Jiri PNG, GIF, WebP ma ọ bụ JPEG image",
+      "fileSize": "Inyogo ga-abụrịrị 2 MB ma ọ bụ obere",
+      "invalid": "Aha na-eji mkpụrụedemede 2 ruo 64, nọmba,_, + ma ọ bụ -",
+      "badImage": "Ụzọ njikọ ahụ ebudataghị dịka inyogo",
+      "addFailed": "Enweghị m ike ịgbakwunye emoji ahụ. Gbalịa ọzọ.",
+      "packEmpty": "Enweghị emoji achọtara n 'ebe ahụ",
+      "shortcodeTaken": "{{name}} ejirila ya",
+      "shortcodeStandard": "{{name}} bụrịrịrị emoji"
+    },
+    "addedName": "Agbakwunyere {{name}}"
   }
 }

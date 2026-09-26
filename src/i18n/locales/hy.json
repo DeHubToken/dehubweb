@@ -6421,5 +6421,60 @@
     "notifications": {
       "tippedYou": "{{amount}} tokens - ը շրջանցեց ձեզ"
     }
+  },
+  "emojiPicker": {
+    "search": "Որոնել էմոջիներ",
+    "skinTone": "Մաշկի երանգ",
+    "recent": "Վերջերս օգտագործված",
+    "custom": "Անհատականացված",
+    "emoji": "Էմոջի",
+    "noResults": "Էմոջի չի գտնվել",
+    "noRecent": "Ձեր օգտագործած էմոջիները կցուցադրվեն այստեղ",
+    "loadFailed": "Չհաջողվեց բեռնել էմոջին: Ստուգեք կապը և նորից փորձեք ։",
+    "addCustom": "Ավելացնել անհատականացված էմոջի",
+    "customEmpty": "Անհատականացված էմոջի դեռ չկա ։ Ավելացրեք մեկը ֆայլից, հղումից, Discord, Slack, 7TV կամ Mastodon սերվերից:",
+    "moreReactions": "Այլ արձագանքներ",
+    "back": "Հետ",
+    "groups": {
+      "smileys": "Ժպիտներ և զգացմունքներ",
+      "people": "Մարդիկ և մարմին",
+      "nature": "Կենդանիներ և բնություն",
+      "food": "Սնունդ և խմիչք",
+      "travel": "Ճամփորդություններ և վայրեր",
+      "activities": "Գործողություններ",
+      "objects": "Առարկաներ",
+      "symbols": "Նշաններ",
+      "flags": "Դրոշներ"
+    },
+    "tabEmoji": "Էմոջի",
+    "tabGif": "GIF",
+    "searchGifs": "Որոնել gif - եր...",
+    "gifResults": "Որոնման արդյունքներ",
+    "gifTrending": "Թրենդային",
+    "noGifs": "Gif - եր չեն գտնվել",
+    "poweredByGiphy": "Սնուցվում է Giphy - ի ԿՈՂՄԻՑ",
+    "modeSingle": "Մեկ էմոջի",
+    "modePack": "Ներմուծել փաթեթ",
+    "upload": "Բեռնել նկար",
+    "linkPlaceholder": "…կամ տեղադրեք հղում կամ Discord էմոջիի կոդ",
+    "namePlaceholder": "Պայմանանիշ",
+    "singleHint": "PNG, gif, WebP կամ JPEG մինչև 2 ՄԲ: Հղումներ Discord - ից, Slack - ից, 7TV - ից, BetterTTV - ից, FrankerFaceZ - ից, emoji.gg - ից կամ ցանկացած պատկերից ։",
+    "add": "Ավելացնել էմոջի",
+    "packPlaceholder": "mastodon.social, misskey.io կամ JSON հղում",
+    "packHint": "Ներմուծում է յուրաքանչյուր էմոջի Mastodon, Pleroma, Akkoma կամ Misskey սերվերից կամ JSON էմոջիների ցանկացած ցանկից: Արդեն օգտագործված անունները բաց են թողնված:",
+    "importPack": "Ներմուծել",
+    "packAdded": "Ավելացվել է {{count}} էմոջի ({{skipped}} բաց թողնված)",
+    "errors": {
+      "signIn": "Մուտք գործեք էմոջի ավելացնելու համար",
+      "fileType": "Օգտագործեք PNG, gif, WebP կամ JPEG պատկեր",
+      "fileSize": "Պատկերները պետք է լինեն 2 ՄԲ կամ ավելի փոքր",
+      "invalid": "Անուններն օգտագործում են 2 - ից 64 տառ, թվեր, _, + կամ -",
+      "badImage": "Այդ հղումը չի բեռնել որպես պատկեր",
+      "addFailed": "Չհաջողվեց ավելացնել այդ էմոջին: Կրկին փորձեք:",
+      "packEmpty": "Այդ հասցեում էմոջի չի գտնվել",
+      "shortcodeTaken": "{{name}}- ն արդեն վերցված է",
+      "shortcodeStandard": "{{name}}-ն արդեն ստանդարտ էմոջի է"
+    },
+    "addedName": "Ավելացվել է {{name}}"
   }
 }

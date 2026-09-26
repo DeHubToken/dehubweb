@@ -6398,5 +6398,60 @@
     "notifications": {
       "tippedYou": "đã trả tiền boa cho bạn mã thông báo {{amount}}"
     }
+  },
+  "emojiPicker": {
+    "search": "Tìm kiếm biểu tượng cảm xúc",
+    "skinTone": "Tông màu da",
+    "recent": "Được sử dụng gần đây",
+    "custom": "Tùy chỉnh",
+    "emoji": "Biểu tượng cảm xúc",
+    "noResults": "Không tìm thấy biểu tượng cảm xúc",
+    "noRecent": "Biểu tượng cảm xúc bạn sử dụng sẽ hiển thị ở đây",
+    "loadFailed": "Không thể tải biểu tượng cảm xúc. Kiểm tra kết nối của bạn và thử lại.",
+    "addCustom": "Thêm biểu tượng cảm xúc tùy chỉnh",
+    "customEmpty": "Chưa có biểu tượng cảm xúc tùy chỉnh nào. Thêm một từ tệp, liên kết, Discord, Slack, 7TV hoặc máy chủ Mastodon.",
+    "moreReactions": "Phản ứng khác",
+    "back": "Quay lại",
+    "groups": {
+      "smileys": "Nụ cười & cảm xúc",
+      "people": "Con người & cơ thể",
+      "nature": "Động vật & thiên nhiên",
+      "food": "Đồ ăn & đồ uống",
+      "travel": "Du lịch & địa điểm",
+      "activities": "Hoạt động",
+      "objects": "Đối tượng",
+      "symbols": "Ký hiệu",
+      "flags": "Cờ"
+    },
+    "tabEmoji": "Biểu tượng cảm xúc",
+    "tabGif": "GIF",
+    "searchGifs": "Tìm kiếm ảnh GIF...",
+    "gifResults": "Kết quả tìm kiếm",
+    "gifTrending": "Xu hướng",
+    "noGifs": "Không tìm thấy GIF",
+    "poweredByGiphy": "Được cung cấp bởi GIPHY",
+    "modeSingle": "Một biểu tượng cảm xúc",
+    "modePack": "Nhập gói",
+    "upload": "Tải ảnh lên",
+    "linkPlaceholder": "…hoặc dán một liên kết hoặc mã emoji Discord",
+    "namePlaceholder": "Tên",
+    "singleHint": "PNG, GIF, WebP hoặc JPEG tối đa 2 MB. Liên kết từ Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg hoặc bất kỳ hình ảnh nào cũng hoạt động.",
+    "add": "Thêm emoji",
+    "packPlaceholder": "mastodon.social, misskey.io hoặc liên kết JSON",
+    "packHint": "Nhập mọi emoji từ máy chủ Mastodon, Pleroma, Akkoma hoặc Misskey, hoặc từ bất kỳ danh sách JSON emoji nào. Tên đã tồn tại sẽ bị bỏ qua.",
+    "importPack": "Nhập",
+    "packAdded": "Đã thêm {{count}} emoji ({{skipped}} bị bỏ qua)",
+    "errors": {
+      "signIn": "Đăng nhập để thêm emoji",
+      "fileType": "Sử dụng hình ảnh PNG, GIF, WebP hoặc JPEG",
+      "fileSize": "Hình ảnh phải có kích thước 2 MB trở xuống",
+      "invalid": "Tên sử dụng từ 2 đến 64 chữ cái, số, _, + hoặc -",
+      "badImage": "Liên kết đó không tải được dưới dạng hình ảnh",
+      "addFailed": "Không thể thêm emoji đó. Thử lại.",
+      "packEmpty": "Không tìm thấy emoji nào tại địa chỉ đó",
+      "shortcodeTaken": "{{name}} đã được sử dụng",
+      "shortcodeStandard": "{{name}} đã là một emoji tiêu chuẩn"
+    },
+    "addedName": "Đã thêm {{name}}"
   }
 }

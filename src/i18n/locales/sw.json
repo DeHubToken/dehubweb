@@ -6551,5 +6551,60 @@
     "notifications": {
       "tippedYou": "amekupa kiinua mgongo {{amount}} tokeni"
     }
+  },
+  "emojiPicker": {
+    "search": "Tafuta emoji",
+    "skinTone": "Mwonekano wa ngozi",
+    "recent": "Imetumika hivi karibuni",
+    "custom": "Maalum",
+    "emoji": "Emoji",
+    "noResults": "Hakuna emoji iliyopatikana",
+    "noRecent": "Emoji unayotumia itaonekana hapa",
+    "loadFailed": "Haikuweza kupakia emoji. Angalia muunganisho wako na ujaribu tena.",
+    "addCustom": "Ongeza emoji mahususi",
+    "customEmpty": "Hakuna emoji mahususi bado. Ongeza moja kutoka kwenye faili, kiunganishi, Discord, Slack, 7TV au seva ya Mastodon.",
+    "moreReactions": "Miitikio zaidi",
+    "back": "Nyuma",
+    "groups": {
+      "smileys": "Tabasamu na hisia",
+      "people": "Watu na mwili",
+      "nature": "Wanyama na asili",
+      "food": "Chakula na kinywaji",
+      "travel": "Safari na maeneo",
+      "activities": "Shughuli",
+      "objects": "Vitu",
+      "symbols": "Alama",
+      "flags": "Bendera"
+    },
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchGifs": "Tafuta GIF...",
+    "gifResults": "Matokeo ya utafutaji",
+    "gifTrending": "Inayovuma",
+    "noGifs": "Hakuna GIF zilizopatikana",
+    "poweredByGiphy": "Inaendeshwa na GIPHY",
+    "modeSingle": "Emoji moja",
+    "modePack": "Ingiza pakiti",
+    "upload": "Pakia picha",
+    "linkPlaceholder": "…au ubandike kiunganishi au msimbo wa emoji wa Discord",
+    "namePlaceholder": "Jina.......................................",
+    "singleHint": "PNG, GIF, WebP au JPEG hadi MB 2. Viunganishi kutoka Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg au kazi yoyote ya picha pia.",
+    "add": "Ongeza emoji",
+    "packPlaceholder": "mastodon.jamii, misskey.io au kiunganishi cha JSON",
+    "packHint": "Hamisha kila emoji kutoka kwenye seva ya Mastodon, Pleroma, Akkoma au Misskey au kutoka kwenye orodha yoyote ya emoji ya JSON. Majina ambayo tayari yanatumika yamerukwa.",
+    "importPack": "Umenisusa",
+    "packAdded": "Imeongezwa {{count}} emoji ({{skipped}} imeruka)",
+    "errors": {
+      "signIn": "Ingia ili uweke emoji",
+      "fileType": "Tumia picha ya PNG, GIF, WebP au JPEG",
+      "fileSize": "Picha lazima ziwe MB 2 au ndogo",
+      "invalid": "Majina hutumia herufi 2 hadi 64, nambari, _, + au -",
+      "badImage": "Kiunganishi hicho hakikufungua kama picha",
+      "addFailed": "Imeshindwa kuongeza emoji hiyo. Jaribu tena.",
+      "packEmpty": "Hakuna emoji iliyopatikana kwenye anwani hiyo",
+      "shortcodeTaken": "{{name}} tayari imechukuliwa",
+      "shortcodeStandard": "{{name}} tayari ni emoji ya kawaida"
+    },
+    "addedName": "Imeongezwa {{name}}"
   }
 }

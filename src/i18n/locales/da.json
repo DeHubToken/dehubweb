@@ -6525,5 +6525,60 @@
     "notifications": {
       "tippedYou": "gav dig {{amount}}-tokens"
     }
+  },
+  "emojiPicker": {
+    "search": "Søg efter emoji",
+    "skinTone": "Hudtone",
+    "recent": "Senest brugt",
+    "custom": "Tilpasset",
+    "emoji": "Emoji",
+    "noResults": "Ingen emoji fundet",
+    "noRecent": "Emoji, du bruger, vises her",
+    "loadFailed": "Kunne ikke indlæse emoji. Kontroller din forbindelse, og prøv igen.",
+    "addCustom": "Tilføj brugerdefineret emoji",
+    "customEmpty": "Ingen brugerdefineret emoji endnu. Tilføj en fra en fil, et link, Discord, Slack, 7TV eller en Mastodon-server.",
+    "moreReactions": "Flere reaktioner",
+    "back": "Tilbage",
+    "groups": {
+      "smileys": "Smileys og følelser",
+      "people": "Mennesker og krop",
+      "nature": "Dyr og natur",
+      "food": "Mad og drikke",
+      "travel": "Rejser og steder",
+      "activities": "Aktiviteter",
+      "objects": "Objekter",
+      "symbols": "Symboler",
+      "flags": "Flag"
+    },
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchGifs": "Søg i GIF'er...",
+    "gifResults": "Søgeresultater",
+    "gifTrending": "Populære",
+    "noGifs": "Ingen GIF'er fundet",
+    "poweredByGiphy": "Drevet af GIPHY",
+    "modeSingle": "En emoji",
+    "modePack": "Importer en pakke",
+    "upload": "Upload billede",
+    "linkPlaceholder": "…eller indsæt et link eller en Discord emoji-kode",
+    "namePlaceholder": "Navn",
+    "singleHint": "PNG, GIF, WebP eller JPEG op til 2 MB. Links fra Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg eller ethvert billede virker også.",
+    "add": "Tilføj emoji",
+    "packPlaceholder": "mastodon.social, misskey.io eller et JSON-link",
+    "packHint": "Importerer hver emoji fra en Mastodon, Pleroma, Akkoma eller Misskey server, eller fra enhver emoji JSON-liste. Navne, der allerede er i brug, springes over.",
+    "importPack": "Importér",
+    "packAdded": "Tilføjet {{count}} emoji ({{skipped}} sprang over)",
+    "errors": {
+      "signIn": "Log ind for at tilføje emoji",
+      "fileType": "Brug et PNG, GIF, WebP eller JPEG billede",
+      "fileSize": "Billeder skal være 2 MB eller mindre",
+      "invalid": "Navne bruger 2 til 64 bogstaver, tal, _, + eller -",
+      "badImage": "Dette link blev ikke indlæst som et billede",
+      "addFailed": "Kunne ikke tilføje denne emoji. Prøv igen.",
+      "packEmpty": "Ingen emoji fundet på denne adresse",
+      "shortcodeTaken": "{{name}} er allerede taget",
+      "shortcodeStandard": "{{name}} er allerede en standardemoji"
+    },
+    "addedName": "Tilføjet {{name}}"
   }
 }
