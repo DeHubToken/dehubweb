@@ -29,7 +29,7 @@ export const NAV_LABEL_KEYS: Record<string, string> = {
   // Search-only destinations (nav-search.ts). The three feed surfaces reuse the
   // keys the feed tabs already ship, so they arrive translated for free.
   Videos: 'feed.videos', Shorts: 'feed.shorts', Music: 'feed.music',
-  'Live TV': 'nav.liveTv', 'Buy DHB': 'nav.buyDhb', Bridge: 'nav.bridge', 'Top 100': 'nav.top100',
+  'Live TV': 'nav.liveTv', 'Buy Tokens': 'nav.buyDhb', Bridge: 'nav.bridge', 'Top 100': 'nav.top100',
   'AI Agents': 'nav.agents', Advertising: 'nav.advertising', Premium: 'nav.premium',
   Pricing: 'nav.pricing', Creators: 'nav.creators', 'Get the App': 'nav.getTheApp',
   'Connect AI': 'nav.connectAi',
