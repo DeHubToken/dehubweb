@@ -58,7 +58,13 @@
     "music": "गाना",
     "live": "लाइव",
     "newPosts_one": "{{count}} नवा पोस्ट",
-    "newPosts_other": "{{count}} नवा पोस्ट"
+    "newPosts_other": "{{count}} नवा पोस्ट",
+    "radioStations": "रेडियो स्टेसन",
+    "emptyTitle": "अभी तक कोनो सामग्री नइ हे",
+    "emptyDescription": "कुछु बढ़िया साझा करइया पहिली बनव!",
+    "loadFailed": "फीड लोड नइ हो सकिस। फेर कोसिस करव।",
+    "followingEmptyTitle": "अभी तक कोनो पोस्ट नइ हे",
+    "followingEmptyDescription": "इहाँ ओकर मन के पोस्ट देखे बर कुछ क्रिएटर मन ल फॉलो करव!"
   },
   "explore": {
     "all": "सब",

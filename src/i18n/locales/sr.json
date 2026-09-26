@@ -57,7 +57,13 @@
     "music": "Музика",
     "live": "Уживо",
     "newPosts_one": "{{count}} нова објава",
-    "newPosts_other": "{{count}} нових објава"
+    "newPosts_other": "{{count}} нових објава",
+    "radioStations": "Радио станице",
+    "emptyTitle": "Још нема садржаја",
+    "emptyDescription": "Буди први који ће поделити нешто сјајно!",
+    "loadFailed": "Фид није могао да се учита. Покушај поново.",
+    "followingEmptyTitle": "Још нема објава",
+    "followingEmptyDescription": "Прати неке ауторе да би овде видео њихове објаве!"
   },
   "explore": {
     "all": "Све",

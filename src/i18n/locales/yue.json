@@ -58,7 +58,13 @@
     "music": "音樂",
     "live": "直播",
     "newPosts_one": "{{count}} 個新帖",
-    "newPosts_other": "{{count}} 個新帖"
+    "newPosts_other": "{{count}} 個新帖",
+    "radioStations": "電台",
+    "emptyTitle": "暫時未有內容",
+    "emptyDescription": "做第一個分享精彩嘢嘅人啦！",
+    "loadFailed": "載入唔到動態。請再試一次。",
+    "followingEmptyTitle": "暫時未有帖子",
+    "followingEmptyDescription": "追蹤幾個創作者，就可以喺呢度睇到佢哋嘅帖子！"
   },
   "explore": {
     "all": "全部",

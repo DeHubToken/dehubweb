@@ -58,7 +58,13 @@
     "music": "Музыка",
     "live": "Тікелей",
     "newPosts_one": "{{count}} жаңа жазба",
-    "newPosts_other": "{{count}} жаңа жазба"
+    "newPosts_other": "{{count}} жаңа жазба",
+    "radioStations": "Радиостанциялар",
+    "emptyTitle": "Әзірге мазмұн жоқ",
+    "emptyDescription": "Керемет нәрсемен бірінші болып бөлісіңіз!",
+    "loadFailed": "Лентаны жүктеу мүмкін болмады. Қайталап көріңіз.",
+    "followingEmptyTitle": "Әзірге жазбалар жоқ",
+    "followingEmptyDescription": "Жазбаларын осында көру үшін бірнеше авторға жазылыңыз!"
   },
   "explore": {
     "all": "Барлығы",

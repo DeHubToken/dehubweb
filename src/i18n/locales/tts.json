@@ -58,7 +58,13 @@
     "music": "เพลง",
     "live": "ถ่ายทอดสด",
     "newPosts_one": "{{count}} โพสต์ใหม่",
-    "newPosts_other": "{{count}} โพสต์ใหม่"
+    "newPosts_other": "{{count}} โพสต์ใหม่",
+    "radioStations": "สถานีวิทยุ",
+    "emptyTitle": "ยังบ่มีเนื้อหา",
+    "emptyDescription": "มาเป็นคนแรกที่แบ่งปันสิ่งที่ม่วนๆ!",
+    "loadFailed": "โหลดฟีดบ่ได้ ลองใหม่อีกเทื่อ",
+    "followingEmptyTitle": "ยังบ่มีโพสต์",
+    "followingEmptyDescription": "ติดตามครีเอเตอร์จักคนเพื่อเบิ่งโพสต์ของเขาอยู่นี่!"
   },
   "explore": {
     "all": "ทั้งหมด",

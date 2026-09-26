@@ -58,7 +58,13 @@
     "music": "Muzică",
     "live": "Live",
     "newPosts_one": "{{count}} postare nouă",
-    "newPosts_other": "{{count}} postări noi"
+    "newPosts_other": "{{count}} postări noi",
+    "radioStations": "Posturi de radio",
+    "emptyTitle": "Încă nu există conținut",
+    "emptyDescription": "Fii primul care distribuie ceva uimitor!",
+    "loadFailed": "Fluxul nu a putut fi încărcat. Încearcă din nou.",
+    "followingEmptyTitle": "Încă nu există postări",
+    "followingEmptyDescription": "Urmărește câțiva creatori ca să le vezi postările aici!"
   },
   "explore": {
     "all": "All",

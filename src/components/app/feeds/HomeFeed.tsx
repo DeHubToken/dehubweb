@@ -339,6 +339,7 @@ function SortFilterSection({
 // remount the carousel (and everything inside it) on every update.
 function RadioCarouselSection({ stations }: { stations: RadioStation[] }) {
   const navigate = useNavigate();
+  const { t } = useI18n();
   if (stations.length === 0) return null;
 
   return (
@@ -346,14 +347,14 @@ function RadioCarouselSection({ stations }: { stations: RadioStation[] }) {
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-white flex items-center gap-2">
           <Radio className="w-5 h-5" />
-          Radio Stations
+          {t('feed.radioStations')}
           <span className="text-zinc-500 font-normal text-sm">(50K)</span>
         </h3>
         <button
           onClick={() => navigate('/app/music?tab=radio')}
           className="text-zinc-400 text-sm hover:text-white flex items-center gap-1"
         >
-          See all <ChevronRight className="w-4 h-4" />
+          {t('stages.seeAll')} <ChevronRight className="w-4 h-4" />
         </button>
       </div>
       <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
@@ -368,15 +369,14 @@ function RadioCarouselSection({ stations }: { stations: RadioStation[] }) {
 }
 
 function EmptyState({ isFollowing, failed, onRetry }: { isFollowing: boolean; failed: boolean; onRetry: () => void }) {
-  let title = 'No Content Yet';
-  let description = failed
-    ? 'Unable to load feed. Please try again.'
-    : 'Be the first to share something amazing!';
+  const { t } = useI18n();
+  let title = t('feed.emptyTitle');
+  let description = failed ? t('feed.loadFailed') : t('feed.emptyDescription');
 
   // Custom message for Following feed
   if (isFollowing) {
-    title = 'No Posts Yet';
-    description = 'Follow some creators to see their posts here!';
+    title = t('feed.followingEmptyTitle');
+    description = t('feed.followingEmptyDescription');
   }
 
   return (
@@ -386,7 +386,7 @@ function EmptyState({ isFollowing, failed, onRetry }: { isFollowing: boolean; fa
       description={description}
       kind={failed ? 'error' : 'empty'}
       size="page"
-      primaryAction={failed ? { label: 'Try again', onClick: onRetry } : undefined}
+      primaryAction={failed ? { label: t('common.tryAgain'), onClick: onRetry } : undefined}
     />
   );
 }

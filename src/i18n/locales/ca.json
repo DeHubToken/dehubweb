@@ -58,7 +58,13 @@
     "music": "Música",
     "live": "En directe",
     "newPosts_one": "{{count}} publicació nova",
-    "newPosts_other": "{{count}} publicacions noves"
+    "newPosts_other": "{{count}} publicacions noves",
+    "radioStations": "Emissores de ràdio",
+    "emptyTitle": "Encara no hi ha contingut",
+    "emptyDescription": "Sigues el primer a compartir alguna cosa increïble!",
+    "loadFailed": "No s'ha pogut carregar el feed. Torna-ho a provar.",
+    "followingEmptyTitle": "Encara no hi ha publicacions",
+    "followingEmptyDescription": "Segueix alguns creadors per veure aquí les seves publicacions!"
   },
   "explore": {
     "all": "Tot",

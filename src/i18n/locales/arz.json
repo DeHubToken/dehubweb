@@ -58,7 +58,13 @@
     "music": "موسيقى",
     "live": "لايف",
     "newPosts_one": "{{count}} بوست جديد",
-    "newPosts_other": "{{count}} بوست جديد"
+    "newPosts_other": "{{count}} بوست جديد",
+    "radioStations": "محطات الراديو",
+    "emptyTitle": "مفيش محتوى لسه",
+    "emptyDescription": "خليك أول واحد يشارك حاجة جامدة!",
+    "loadFailed": "مقدرناش نحمّل الموجز. جرّب تاني.",
+    "followingEmptyTitle": "مفيش منشورات لسه",
+    "followingEmptyDescription": "تابع شوية مبدعين علشان تشوف منشوراتهم هنا!"
   },
   "explore": {
     "all": "الكل",

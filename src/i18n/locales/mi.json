@@ -58,7 +58,13 @@
     "music": "Waiata",
     "live": "Ora",
     "newPosts_one": "{{count}} pānui hou",
-    "newPosts_other": "{{count}} pānui hou"
+    "newPosts_other": "{{count}} pānui hou",
+    "radioStations": "Ngā teihana reo irirangi",
+    "emptyTitle": "Kāore anō he ihirangi",
+    "emptyDescription": "Ko koe te tuatahi ki te tiri i tētahi mea whakamīharo!",
+    "loadFailed": "Kāore i taea te uta i te whāngai. Tēnā, whakamātauria anō.",
+    "followingEmptyTitle": "Kāore anō he pou",
+    "followingEmptyDescription": "Whaia ētahi kaihanga kia kite ai koe i ā rātou pou ki konei!"
   },
   "explore": {
     "all": "Katoa",

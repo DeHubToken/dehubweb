@@ -58,7 +58,13 @@
     "music": "Music",
     "live": "Live",
     "newPosts_one": "{{count}} bài đăng mới",
-    "newPosts_other": "{{count}} bài đăng mới"
+    "newPosts_other": "{{count}} bài đăng mới",
+    "radioStations": "Đài phát thanh",
+    "emptyTitle": "Chưa có nội dung",
+    "emptyDescription": "Hãy là người đầu tiên chia sẻ điều gì đó tuyệt vời!",
+    "loadFailed": "Không thể tải bảng tin. Vui lòng thử lại.",
+    "followingEmptyTitle": "Chưa có bài đăng",
+    "followingEmptyDescription": "Theo dõi một vài nhà sáng tạo để xem bài đăng của họ tại đây!"
   },
   "explore": {
     "all": "All",

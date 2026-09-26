@@ -58,7 +58,13 @@
     "music": "Musica",
     "live": "In diretta",
     "newPosts_one": "{{count}} nuovo post",
-    "newPosts_other": "{{count}} nuovi post"
+    "newPosts_other": "{{count}} nuovi post",
+    "radioStations": "Stazioni radio",
+    "emptyTitle": "Ancora nessun contenuto",
+    "emptyDescription": "Sii il primo a condividere qualcosa di fantastico!",
+    "loadFailed": "Impossibile caricare il feed. Riprova.",
+    "followingEmptyTitle": "Ancora nessun post",
+    "followingEmptyDescription": "Segui alcuni creator per vedere qui i loro post!"
   },
   "explore": {
     "all": "Tutto",

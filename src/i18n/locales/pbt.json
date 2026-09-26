@@ -58,7 +58,13 @@
     "music": "موسیقي",
     "live": "ژوندی",
     "newPosts_one": "{{count}} نوې لیکنه",
-    "newPosts_other": "{{count}} نوې لیکنې"
+    "newPosts_other": "{{count}} نوې لیکنې",
+    "radioStations": "راډیو سټیشنونه",
+    "emptyTitle": "لا تر اوسه منځپانګه نشته",
+    "emptyDescription": "لومړی کس اوسئ چې یو په زړه پورې شی شریکوي!",
+    "loadFailed": "فیډ بار نه شو. مهرباني وکړئ بیا هڅه وکړئ.",
+    "followingEmptyTitle": "لا تر اوسه پوسټونه نشته",
+    "followingEmptyDescription": "یو شمیر جوړونکي تعقیب کړئ ترڅو دلته د هغوی پوسټونه ووینئ!"
   },
   "explore": {
     "all": "ټول",

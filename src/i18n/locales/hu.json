@@ -58,7 +58,13 @@
     "music": "Zene",
     "live": "Élő",
     "newPosts_one": "{{count}} új bejegyzés",
-    "newPosts_other": "{{count}} új bejegyzés"
+    "newPosts_other": "{{count}} új bejegyzés",
+    "radioStations": "Rádióállomások",
+    "emptyTitle": "Még nincs tartalom",
+    "emptyDescription": "Légy az első, aki valami fantasztikusat oszt meg!",
+    "loadFailed": "Nem sikerült betölteni a hírfolyamot. Kérjük, próbáld újra.",
+    "followingEmptyTitle": "Még nincsenek bejegyzések",
+    "followingEmptyDescription": "Kövess néhány alkotót, hogy itt lásd a bejegyzéseiket!"
   },
   "explore": {
     "all": "Összes",

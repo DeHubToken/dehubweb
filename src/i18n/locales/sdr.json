@@ -58,7 +58,13 @@
     "music": "گانا",
     "live": "لائیو",
     "newPosts_one": "{{count}} نیا پوسٹ",
-    "newPosts_other": "{{count}} نیا پوسٹ"
+    "newPosts_other": "{{count}} نیا پوسٹ",
+    "radioStations": "रेडियो स्टेसन",
+    "emptyTitle": "अभी तक कोनो सामग्री नखे",
+    "emptyDescription": "कुछ बढ़िया बाँटेक वाला पहिल बना!",
+    "loadFailed": "फीड लोड नी होलक। फिर से कोसिस करा।",
+    "followingEmptyTitle": "अभी तक कोनो पोस्ट नखे",
+    "followingEmptyDescription": "इहाँ उकर मन कर पोस्ट देखेक ले कुछ क्रिएटर के फॉलो करा!"
   },
   "explore": {
     "all": "سب",

@@ -57,7 +57,13 @@
     "music": "音楽",
     "live": "ライブ",
     "newPosts_one": "新着投稿 {{count}} 件",
-    "newPosts_other": "新着投稿 {{count}} 件"
+    "newPosts_other": "新着投稿 {{count}} 件",
+    "radioStations": "ラジオ局",
+    "emptyTitle": "まだコンテンツがありません",
+    "emptyDescription": "最初に素敵なものをシェアしよう！",
+    "loadFailed": "フィードを読み込めませんでした。もう一度お試しください。",
+    "followingEmptyTitle": "まだ投稿がありません",
+    "followingEmptyDescription": "クリエイターをフォローすると、ここに投稿が表示されます！"
   },
   "explore": {
     "all": "すべて",

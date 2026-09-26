@@ -58,7 +58,13 @@
     "music": "Takiy",
     "live": "Kawsaq",
     "newPosts_one": "{{count}} musuq willakuy",
-    "newPosts_other": "{{count}} musuq willakuykuna"
+    "newPosts_other": "{{count}} musuq willakuykuna",
+    "radioStations": "Radio estacionkuna",
+    "emptyTitle": "Manaraq imapas kanchu",
+    "emptyDescription": "Punta kaq kay, imatapas sumaqta rakinakunaykipaq!",
+    "loadFailed": "Feed mana cargakuyta atinchu. Ama hina kaspa, huktawan kallpachakuy.",
+    "followingEmptyTitle": "Manaraq qillqakuna kanchu",
+    "followingEmptyDescription": "Wakin kamaqkunata qatiy, kaypi qillqankuna rikunaykipaq!"
   },
   "explore": {
     "all": "Llapan",

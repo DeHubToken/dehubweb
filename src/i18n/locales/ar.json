@@ -58,7 +58,13 @@
     "music": "موسيقى",
     "live": "بث مباشر",
     "newPosts_one": "{{count}} منشور جديد",
-    "newPosts_other": "{{count}} منشور جديد"
+    "newPosts_other": "{{count}} منشور جديد",
+    "radioStations": "محطات الراديو",
+    "emptyTitle": "لا يوجد محتوى بعد",
+    "emptyDescription": "كن أول من يشارك شيئًا رائعًا!",
+    "loadFailed": "تعذر تحميل الموجز. يرجى المحاولة مرة أخرى.",
+    "followingEmptyTitle": "لا توجد منشورات بعد",
+    "followingEmptyDescription": "تابع بعض المبدعين لترى منشوراتهم هنا!"
   },
   "explore": {
     "all": "الكل",

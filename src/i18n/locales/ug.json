@@ -58,7 +58,13 @@
     "music": "مۇزىكا",
     "live": "جانلىق",
     "newPosts_one": "{{count}} يېڭى يازما",
-    "newPosts_other": "{{count}} يېڭى يازما"
+    "newPosts_other": "{{count}} يېڭى يازما",
+    "radioStations": "رادىئو ئىستانسىلىرى",
+    "emptyTitle": "ھازىرچە مەزمۇن يوق",
+    "emptyDescription": "ئاجايىپ بىر نەرسىنى تۇنجى بولۇپ ھەمبەھىرلەڭ!",
+    "loadFailed": "ئۇچۇر ئېقىمىنى يۈكلىگىلى بولمىدى. قايتا سىناڭ.",
+    "followingEmptyTitle": "ھازىرچە يوللانما يوق",
+    "followingEmptyDescription": "يوللانمىلىرىنى بۇ يەردە كۆرۈش ئۈچۈن بىر قانچە ئىجادكارغا ئەگىشىڭ!"
   },
   "explore": {
     "all": "ھەممە",

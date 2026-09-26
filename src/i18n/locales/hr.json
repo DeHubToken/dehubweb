@@ -58,7 +58,13 @@
     "music": "Glazba",
     "live": "Uživo",
     "newPosts_one": "{{count}} nova objava",
-    "newPosts_other": "{{count}} novih objava"
+    "newPosts_other": "{{count}} novih objava",
+    "radioStations": "Radijske postaje",
+    "emptyTitle": "Još nema sadržaja",
+    "emptyDescription": "Budi prvi koji će podijeliti nešto sjajno!",
+    "loadFailed": "Feed se nije mogao učitati. Pokušaj ponovno.",
+    "followingEmptyTitle": "Još nema objava",
+    "followingEmptyDescription": "Prati neke autore da bi ovdje vidio njihove objave!"
   },
   "explore": {
     "all": "Sve",

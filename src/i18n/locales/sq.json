@@ -58,7 +58,13 @@
     "music": "Muzikë",
     "live": "Live",
     "newPosts_one": "{{count}} postim i ri",
-    "newPosts_other": "{{count}} postime të reja"
+    "newPosts_other": "{{count}} postime të reja",
+    "radioStations": "Stacione radio",
+    "emptyTitle": "Ende nuk ka përmbajtje",
+    "emptyDescription": "Bëhu i pari që ndan diçka të mrekullueshme!",
+    "loadFailed": "Rrjedha nuk u ngarkua dot. Të lutem provo përsëri.",
+    "followingEmptyTitle": "Ende nuk ka postime",
+    "followingEmptyDescription": "Ndiq disa krijues për të parë postimet e tyre këtu!"
   },
   "explore": {
     "all": "Të gjitha",

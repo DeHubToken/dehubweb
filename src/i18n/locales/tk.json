@@ -58,7 +58,13 @@
     "music": "Aýdym-saz",
     "live": "Göni",
     "newPosts_one": "{{count}} täze ýazgy",
-    "newPosts_other": "{{count}} täze ýazgy"
+    "newPosts_other": "{{count}} täze ýazgy",
+    "radioStations": "Radiostansiýalar",
+    "emptyTitle": "Häzirlikçe mazmun ýok",
+    "emptyDescription": "Ajaýyp bir zady ilkinji bolup paýlaş!",
+    "loadFailed": "Lentany ýükläp bolmady. Gaýtadan synanyşyň.",
+    "followingEmptyTitle": "Häzirlikçe ýazgy ýok",
+    "followingEmptyDescription": "Ýazgylaryny şu ýerde görmek üçin birnäçe dörediji yzarla!"
   },
   "explore": {
     "all": "Ählisi",

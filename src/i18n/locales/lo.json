@@ -58,7 +58,13 @@
     "music": "ເພງ",
     "live": "ສົດ",
     "newPosts_one": "{{count}} ໂພສໃໝ່",
-    "newPosts_other": "{{count}} ໂພສໃໝ່"
+    "newPosts_other": "{{count}} ໂພສໃໝ່",
+    "radioStations": "ສະຖານີວິທະຍຸ",
+    "emptyTitle": "ຍັງບໍ່ມີເນື້ອຫາ",
+    "emptyDescription": "ເປັນຄົນທຳອິດທີ່ແບ່ງປັນສິ່ງທີ່ຍອດຢ້ຽມ!",
+    "loadFailed": "ບໍ່ສາມາດໂຫຼດຟີດໄດ້. ກະລຸນາລອງໃໝ່.",
+    "followingEmptyTitle": "ຍັງບໍ່ມີໂພສ",
+    "followingEmptyDescription": "ຕິດຕາມຜູ້ສ້າງບາງຄົນເພື່ອເບິ່ງໂພສຂອງເຂົາເຈົ້າຢູ່ນີ້!"
   },
   "explore": {
     "all": "ທັງໝົດ",

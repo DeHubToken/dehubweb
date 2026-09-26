@@ -58,7 +58,13 @@
     "music": "Музыка",
     "live": "Прямой эфир",
     "newPosts_one": "{{count}} новый пост",
-    "newPosts_other": "{{count}} новых постов"
+    "newPosts_other": "{{count}} новых постов",
+    "radioStations": "Радиостанции",
+    "emptyTitle": "Пока нет контента",
+    "emptyDescription": "Станьте первым, кто поделится чем-то потрясающим!",
+    "loadFailed": "Не удалось загрузить ленту. Попробуйте ещё раз.",
+    "followingEmptyTitle": "Пока нет публикаций",
+    "followingEmptyDescription": "Подпишитесь на авторов, чтобы видеть здесь их публикации!"
   },
   "explore": {
     "all": "Всё",

@@ -58,7 +58,13 @@
     "music": "Музыка",
     "live": "Прамая трансляцыя",
     "newPosts_one": "{{count}} новы допіс",
-    "newPosts_other": "{{count}} новых допісаў"
+    "newPosts_other": "{{count}} новых допісаў",
+    "radioStations": "Радыёстанцыі",
+    "emptyTitle": "Пакуль няма кантэнту",
+    "emptyDescription": "Будзьце першым, хто падзеліцца чымсьці цудоўным!",
+    "loadFailed": "Не ўдалося загрузіць стужку. Паспрабуйце яшчэ раз.",
+    "followingEmptyTitle": "Пакуль няма допісаў",
+    "followingEmptyDescription": "Падпішыцеся на аўтараў, каб бачыць тут іх допісы!"
   },
   "explore": {
     "all": "Усе",

@@ -58,7 +58,13 @@
     "music": "Muzik",
     "live": "Langsung",
     "newPosts_one": "{{count}} siaran baharu",
-    "newPosts_other": "{{count}} siaran baharu"
+    "newPosts_other": "{{count}} siaran baharu",
+    "radioStations": "Stesen Radio",
+    "emptyTitle": "Belum Ada Kandungan",
+    "emptyDescription": "Jadilah yang pertama berkongsi sesuatu yang hebat!",
+    "loadFailed": "Tidak dapat memuatkan suapan. Sila cuba lagi.",
+    "followingEmptyTitle": "Belum Ada Hantaran",
+    "followingEmptyDescription": "Ikuti beberapa pencipta untuk melihat hantaran mereka di sini!"
   },
   "explore": {
     "all": "All",

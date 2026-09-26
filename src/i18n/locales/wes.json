@@ -58,7 +58,13 @@
     "music": "Music",
     "live": "Live",
     "newPosts_one": "{{count}} nyu post",
-    "newPosts_other": "{{count}} nyu post dem"
+    "newPosts_other": "{{count}} nyu post dem",
+    "radioStations": "Radio Stations",
+    "emptyTitle": "No content dey yet",
+    "emptyDescription": "Be di first for share sometin wey fine!",
+    "loadFailed": "Feed no fit load. Abeg try again.",
+    "followingEmptyTitle": "No post dey yet",
+    "followingEmptyDescription": "Follow some creators for see dia post dem for here!"
   },
   "explore": {
     "all": "All",

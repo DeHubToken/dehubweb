@@ -57,7 +57,13 @@
     "music": "Музика",
     "live": "На живо",
     "newPosts_one": "{{count}} нова публикация",
-    "newPosts_other": "{{count}} нови публикации"
+    "newPosts_other": "{{count}} нови публикации",
+    "radioStations": "Радиостанции",
+    "emptyTitle": "Все още няма съдържание",
+    "emptyDescription": "Бъдете първият, който сподели нещо невероятно!",
+    "loadFailed": "Лентата не можа да се зареди. Моля, опитайте отново.",
+    "followingEmptyTitle": "Все още няма публикации",
+    "followingEmptyDescription": "Последвайте създатели, за да виждате публикациите им тук!"
   },
   "explore": {
     "all": "Всички",

@@ -58,7 +58,13 @@
     "music": "موسيقي",
     "live": "لائيو",
     "newPosts_one": "{{count}} نئين پوسٽ",
-    "newPosts_other": "{{count}} نيون پوسٽون"
+    "newPosts_other": "{{count}} نيون پوسٽون",
+    "radioStations": "ريڊيو اسٽيشن",
+    "emptyTitle": "اڃا ڪو مواد ناهي",
+    "emptyDescription": "ڪجهه شاندار شيئر ڪرڻ وارا پهريان بڻجو!",
+    "loadFailed": "فيڊ لوڊ نه ٿي سگهي. مهرباني ڪري ٻيهر ڪوشش ڪريو.",
+    "followingEmptyTitle": "اڃا ڪا پوسٽ ناهي",
+    "followingEmptyDescription": "هتي سندن پوسٽون ڏسڻ لاءِ ڪجهه ڪريئيٽرز کي فالو ڪريو!"
   },
   "explore": {
     "all": "سڀ",

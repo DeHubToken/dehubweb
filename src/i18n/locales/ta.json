@@ -58,7 +58,13 @@
     "music": "இசை",
     "live": "நேரலை",
     "newPosts_one": "{{count}} புதிய இடுகை",
-    "newPosts_other": "{{count}} புதிய இடுகைகள்"
+    "newPosts_other": "{{count}} புதிய இடுகைகள்",
+    "radioStations": "வானொலி நிலையங்கள்",
+    "emptyTitle": "இன்னும் உள்ளடக்கம் இல்லை",
+    "emptyDescription": "அற்புதமான ஒன்றை முதலில் பகிர்பவராக இருங்கள்!",
+    "loadFailed": "ஊட்டத்தை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+    "followingEmptyTitle": "இன்னும் இடுகைகள் இல்லை",
+    "followingEmptyDescription": "அவர்களின் இடுகைகளை இங்கே பார்க்க சில படைப்பாளர்களைப் பின்தொடருங்கள்!"
   },
   "explore": {
     "all": "அனைத்தும்",

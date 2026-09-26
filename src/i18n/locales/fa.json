@@ -58,7 +58,13 @@
     "music": "موسیقی",
     "live": "زنده",
     "newPosts_one": "{{count}} پست جدید",
-    "newPosts_other": "{{count}} پست جدید"
+    "newPosts_other": "{{count}} پست جدید",
+    "radioStations": "ایستگاه‌های رادیو",
+    "emptyTitle": "هنوز محتوایی وجود ندارد",
+    "emptyDescription": "اولین نفری باشید که چیزی شگفت‌انگیز به اشتراک می‌گذارد!",
+    "loadFailed": "بارگیری فید ممکن نشد. لطفاً دوباره تلاش کنید.",
+    "followingEmptyTitle": "هنوز پستی وجود ندارد",
+    "followingEmptyDescription": "چند سازنده را دنبال کنید تا پست‌هایشان را اینجا ببینید!"
   },
   "explore": {
     "all": "همه",

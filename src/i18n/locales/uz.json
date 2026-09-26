@@ -58,7 +58,13 @@
     "music": "Musiqa",
     "live": "Jonli",
     "newPosts_one": "{{count}} ta yangi post",
-    "newPosts_other": "{{count}} ta yangi post"
+    "newPosts_other": "{{count}} ta yangi post",
+    "radioStations": "Radiostansiyalar",
+    "emptyTitle": "Hozircha kontent yoʻq",
+    "emptyDescription": "Ajoyib narsani birinchi boʻlib ulashing!",
+    "loadFailed": "Lentani yuklab boʻlmadi. Iltimos, qayta urinib koʻring.",
+    "followingEmptyTitle": "Hozircha postlar yoʻq",
+    "followingEmptyDescription": "Ularning postlarini shu yerda koʻrish uchun bir nechta ijodkorni kuzating!"
   },
   "explore": {
     "all": "Hammasi",

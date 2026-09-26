@@ -58,7 +58,13 @@
     "music": "Müzik",
     "live": "Canlı",
     "newPosts_one": "{{count}} yeni gönderi",
-    "newPosts_other": "{{count}} yeni gönderi"
+    "newPosts_other": "{{count}} yeni gönderi",
+    "radioStations": "Radyo İstasyonları",
+    "emptyTitle": "Henüz İçerik Yok",
+    "emptyDescription": "Harika bir şey paylaşan ilk kişi sen ol!",
+    "loadFailed": "Akış yüklenemedi. Lütfen tekrar deneyin.",
+    "followingEmptyTitle": "Henüz Gönderi Yok",
+    "followingEmptyDescription": "Gönderilerini burada görmek için birkaç içerik üreticisini takip et!"
   },
   "explore": {
     "all": "Tümü",

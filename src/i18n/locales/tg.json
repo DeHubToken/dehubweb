@@ -58,7 +58,13 @@
     "music": "Мусиқӣ",
     "live": "Зинда",
     "newPosts_one": "{{count}} нашри нав",
-    "newPosts_other": "{{count}} нашри нав"
+    "newPosts_other": "{{count}} нашри нав",
+    "radioStations": "Радиостансияҳо",
+    "emptyTitle": "Ҳоло мундариҷа нест",
+    "emptyDescription": "Аввалин шуда чизи аҷоиберо мубодила кунед!",
+    "loadFailed": "Лента бор нашуд. Лутфан бори дигар кӯшиш кунед.",
+    "followingEmptyTitle": "Ҳоло нашрияҳо нестанд",
+    "followingEmptyDescription": "Барои дидани нашрияҳояшон дар ин ҷо чанд эҷодкорро пайгирӣ кунед!"
   },
   "explore": {
     "all": "Ҳама",

@@ -58,7 +58,13 @@
     "music": "ಸಂಗೀತ",
     "live": "ಲೈವ್",
     "newPosts_one": "{{count}} ಹೊಸ ಪೋಸ್ಟ್",
-    "newPosts_other": "{{count}} ಹೊಸ ಪೋಸ್ಟ್‌ಗಳು"
+    "newPosts_other": "{{count}} ಹೊಸ ಪೋಸ್ಟ್‌ಗಳು",
+    "radioStations": "ರೇಡಿಯೋ ಕೇಂದ್ರಗಳು",
+    "emptyTitle": "ಇನ್ನೂ ಯಾವುದೇ ವಿಷಯವಿಲ್ಲ",
+    "emptyDescription": "ಅದ್ಭುತವಾದುದನ್ನು ಹಂಚಿಕೊಳ್ಳುವ ಮೊದಲಿಗರಾಗಿ!",
+    "loadFailed": "ಫೀಡ್ ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    "followingEmptyTitle": "ಇನ್ನೂ ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳಿಲ್ಲ",
+    "followingEmptyDescription": "ಅವರ ಪೋಸ್ಟ್‌ಗಳನ್ನು ಇಲ್ಲಿ ನೋಡಲು ಕೆಲವು ಕ್ರಿಯೇಟರ್‌ಗಳನ್ನು ಫಾಲೋ ಮಾಡಿ!"
   },
   "explore": {
     "all": "ಎಲ್ಲಾ",

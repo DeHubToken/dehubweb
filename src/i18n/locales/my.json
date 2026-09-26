@@ -57,7 +57,13 @@
     "music": "ဂီတ",
     "live": "တိုက်ရိုက်",
     "newPosts_one": "ပို့စ်အသစ် {{count}} ခု",
-    "newPosts_other": "ပို့စ်အသစ် {{count}} ခု"
+    "newPosts_other": "ပို့စ်အသစ် {{count}} ခု",
+    "radioStations": "ရေဒီယိုဌာနများ",
+    "emptyTitle": "အကြောင်းအရာ မရှိသေးပါ",
+    "emptyDescription": "အံ့ဩစရာတစ်ခုခုကို ပထမဆုံး မျှဝေသူ ဖြစ်လိုက်ပါ!",
+    "loadFailed": "ဖိဒ်ကို ဖွင့်၍မရပါ။ ထပ်စမ်းကြည့်ပါ။",
+    "followingEmptyTitle": "ပို့စ်များ မရှိသေးပါ",
+    "followingEmptyDescription": "သူတို့၏ ပို့စ်များကို ဤနေရာတွင် ကြည့်ရန် ဖန်တီးသူအချို့ကို လိုက်ကြည့်ပါ!"
   },
   "explore": {
     "all": "အားလုံး",

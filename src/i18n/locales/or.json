@@ -58,7 +58,13 @@
     "music": "ସଙ୍ଗୀତ",
     "live": "ଲାଇଭ",
     "newPosts_one": "{{count}} ନୂଆ ପୋଷ୍ଟ",
-    "newPosts_other": "{{count}} ନୂଆ ପୋଷ୍ଟ"
+    "newPosts_other": "{{count}} ନୂଆ ପୋଷ୍ଟ",
+    "radioStations": "ରେଡିଓ ଷ୍ଟେସନ୍",
+    "emptyTitle": "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ବିଷୟବସ୍ତୁ ନାହିଁ",
+    "emptyDescription": "କିଛି ଚମତ୍କାର ସେୟାର କରିବାରେ ପ୍ରଥମ ହୁଅନ୍ତୁ!",
+    "loadFailed": "ଫିଡ୍ ଲୋଡ୍ ହୋଇପାରିଲା ନାହିଁ। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
+    "followingEmptyTitle": "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ପୋଷ୍ଟ ନାହିଁ",
+    "followingEmptyDescription": "ଏଠାରେ ସେମାନଙ୍କ ପୋଷ୍ଟ ଦେଖିବାକୁ କିଛି କ୍ରିଏଟରଙ୍କୁ ଫଲୋ କରନ୍ତୁ!"
   },
   "explore": {
     "all": "ସବୁ",

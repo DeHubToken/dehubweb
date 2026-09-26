@@ -58,7 +58,13 @@
     "music": "ሙዚቃ",
     "live": "ቀጥታ",
     "newPosts_one": "{{count}} ሓድሽ ጽሑፍ",
-    "newPosts_other": "{{count}} ሓደስቲ ጽሑፋት"
+    "newPosts_other": "{{count}} ሓደስቲ ጽሑፋት",
+    "radioStations": "ጣብያታት ሬድዮ",
+    "emptyTitle": "ክሳብ ሕጂ ትሕዝቶ የለን",
+    "emptyDescription": "ዘገርም ነገር ንምክፋል ቀዳማይ ኩን!",
+    "loadFailed": "ፊድ ክጽዓን ኣይከኣለን። በጃኻ እንደገና ፈትን።",
+    "followingEmptyTitle": "ክሳብ ሕጂ ልጥፋት የለዉን",
+    "followingEmptyDescription": "ልጥፋቶም ኣብዚ ንምርኣይ ገለ ፈጠርቲ ተኸተል!"
   },
   "explore": {
     "all": "ኩሉ",

@@ -58,7 +58,13 @@
     "music": "সঙ্গীত",
     "live": "লাইভ",
     "newPosts_one": "{{count}} নতুন পোস্ট",
-    "newPosts_other": "{{count}} নতুন পোস্ট"
+    "newPosts_other": "{{count}} নতুন পোস্ট",
+    "radioStations": "রেডিও স্টেশন",
+    "emptyTitle": "এখনও কোনো কনটেন্ট নেই",
+    "emptyDescription": "দারুণ কিছু শেয়ার করা প্রথম ব্যক্তি হোন!",
+    "loadFailed": "ফিড লোড করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    "followingEmptyTitle": "এখনও কোনো পোস্ট নেই",
+    "followingEmptyDescription": "এখানে তাদের পোস্ট দেখতে কিছু ক্রিয়েটরকে ফলো করুন!"
   },
   "explore": {
     "all": "সব",

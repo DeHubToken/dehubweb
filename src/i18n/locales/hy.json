@@ -58,7 +58,13 @@
     "music": "Erazhshtoutyun",
     "live": "Ouvaghits",
     "newPosts_one": "{{count}} նոր գրառում",
-    "newPosts_other": "{{count}} նոր գրառում"
+    "newPosts_other": "{{count}} նոր գրառում",
+    "radioStations": "Ռադիոկայաններ",
+    "emptyTitle": "Բովանդակություն դեռ չկա",
+    "emptyDescription": "Եղեք առաջինը, ով կկիսվի ինչ-որ հիանալի բանով:",
+    "loadFailed": "Չհաջողվեց բեռնել լրահոսը: Խնդրում ենք կրկին փորձել:",
+    "followingEmptyTitle": "Գրառումներ դեռ չկան",
+    "followingEmptyDescription": "Հետևեք որոշ ստեղծողների՝ նրանց գրառումներն այստեղ տեսնելու համար:"
   },
   "explore": {
     "all": "Bolaor",

@@ -57,7 +57,13 @@
     "music": "গান",
     "live": "লাইভ",
     "newPosts_one": "{{count}} নয়া পোস্ট",
-    "newPosts_other": "{{count}} নয়া পোস্ট"
+    "newPosts_other": "{{count}} নয়া পোস্ট",
+    "radioStations": "রেডিও স্টেশন",
+    "emptyTitle": "এলাও কোনো কনটেন্ট নাই",
+    "emptyDescription": "জবর কিছু শেয়ার করা পরথম মানুষ হন!",
+    "loadFailed": "ফিড লোড হইল না। ফির চেষ্টা করেন।",
+    "followingEmptyTitle": "এলাও কোনো পোস্ট নাই",
+    "followingEmptyDescription": "এটে উমার পোস্ট দেখির বাদে কয়টা ক্রিয়েটরোক ফলো করেন!"
   },
   "explore": {
     "all": "সব",

@@ -58,7 +58,13 @@
     "music": "ਸੰਗੀਤ",
     "live": "ਲਾਈਵ",
     "newPosts_one": "{{count}} ਨਵੀਂ ਪੋਸਟ",
-    "newPosts_other": "{{count}} ਨਵੀਆਂ ਪੋਸਟਾਂ"
+    "newPosts_other": "{{count}} ਨਵੀਆਂ ਪੋਸਟਾਂ",
+    "radioStations": "ਰੇਡੀਓ ਸਟੇਸ਼ਨ",
+    "emptyTitle": "ਅਜੇ ਕੋਈ ਸਮੱਗਰੀ ਨਹੀਂ",
+    "emptyDescription": "ਕੁਝ ਸ਼ਾਨਦਾਰ ਸਾਂਝਾ ਕਰਨ ਵਾਲੇ ਪਹਿਲੇ ਬਣੋ!",
+    "loadFailed": "ਫੀਡ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "followingEmptyTitle": "ਅਜੇ ਕੋਈ ਪੋਸਟ ਨਹੀਂ",
+    "followingEmptyDescription": "ਇੱਥੇ ਉਨ੍ਹਾਂ ਦੀਆਂ ਪੋਸਟਾਂ ਦੇਖਣ ਲਈ ਕੁਝ ਕ੍ਰਿਏਟਰਾਂ ਨੂੰ ਫਾਲੋ ਕਰੋ!"
   },
   "explore": {
     "all": "ਸਭ",

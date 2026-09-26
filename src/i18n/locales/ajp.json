@@ -57,7 +57,13 @@
     "music": "موسيقى",
     "live": "بث مباشر",
     "newPosts_one": "{{count}} منشور جديد",
-    "newPosts_other": "{{count}} منشورات جديدة"
+    "newPosts_other": "{{count}} منشورات جديدة",
+    "radioStations": "محطات الراديو",
+    "emptyTitle": "ما في محتوى لسا",
+    "emptyDescription": "كون أول واحد بشارك إشي حلو!",
+    "loadFailed": "ما قدرنا نحمّل الموجز. جرّب كمان مرة.",
+    "followingEmptyTitle": "ما في منشورات لسا",
+    "followingEmptyDescription": "تابع كم مبدع عشان تشوف منشوراتهم هون!"
   },
   "explore": {
     "all": "الكل",
