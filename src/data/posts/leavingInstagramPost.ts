@@ -39,7 +39,7 @@ Reels exist because TikTok did. The product direction is set by whatever competi
 
 ## What owning it instead looks like
 
-On [DeHub, the decentralised social network](/guides/what-is-dehub), an upload is minted on-chain to your wallet at the moment you post. That record exists whether or not the platform does. The feed is chronological and transparent, so reach is not a lever someone can sell back to you, and the code is open-source, so the rules cannot change under you in private.
+On [DeHub, the decentralised social network](/guides/what-is-dehub), you can mint an upload on-chain to your wallet, when you post it or later. That record exists whether or not the platform does. The feed is chronological and transparent, so reach is not a lever someone can sell back to you, and the code is open-source, so the rules cannot change under you in private.
 
 ### A revenue share, at all
 
@@ -91,7 +91,7 @@ Posts pointing at an external link tend to under-perform, which is a reason to b
 
 ### What happens to my content if the platform goes away?
 
-Uploads are minted on-chain to your wallet, so the ownership record does not depend on the platform continuing to exist. That is the difference between owning your work and renting somewhere to keep it.`,
+Uploads can be minted on-chain to your wallet, so the ownership record does not depend on the platform continuing to exist. That is the difference between owning your work and renting somewhere to keep it.`,
   bannerImage: '/media/creators-guide-leaving-instagram-banner.png',
   bannerImageAlt: 'A creator moving from Instagram to a Web3 platform they own on DeHub',
   author: { name: 'DeHub Team' },

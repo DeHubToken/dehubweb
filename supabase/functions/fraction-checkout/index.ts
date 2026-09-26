@@ -1,7 +1,7 @@
 /**
  * Fraction Checkout
  * =================
- * List, buy, and settle fractions of a post. Every upload mints 1000 ERC-1155
+ * List, buy, and settle fractions of a post. A minted post is 1000 ERC-1155
  * units of one token id; this is the function that moves them between wallets
  * without either side having to trust the other's client.
  *

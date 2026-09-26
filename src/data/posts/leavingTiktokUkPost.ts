@@ -7,7 +7,7 @@ export const leavingTiktokUkPost: BlogPostType = {
   seoTitle: 'Best TikTok Alternative UK for Creators 2026 | DeHub',
   seoDescription: 'Looking for a TikTok alternative UK creators actually own? See how a 90% revenue-share, crypto-paying Web3 platform beats TikTok Creator Rewards in 2026.',
   excerpt: 'A practical guide for British creators leaving TikTok in 2026: why you do not own your audience, what the numbers really are, and where to go instead.',
-  content: `If you are searching for a TikTok alternative UK creators can genuinely build on, the honest answer is that most alternatives simply swap one landlord for another. The real change is moving to a platform where your uploads are minted to your wallet the moment you post, where you take up to 90% of ad revenue, and where subscriptions and views actually pay you in crypto. That is the shift this guide covers, from someone's perspective who has watched thousands of British creators grow, and then get squeezed, on TikTok.
+  content: `If you are searching for a TikTok alternative UK creators can genuinely build on, the honest answer is that most alternatives simply swap one landlord for another. The real change is moving to a platform where your uploads can be minted to your wallet, when you post or later, where you take up to 90% of ad revenue, and where subscriptions and views actually pay you in crypto. That is the shift this guide covers, from someone's perspective who has watched thousands of British creators grow, and then get squeezed, on TikTok.
 
 DeHub is an independent DAO, co-founded by Mike Hales and Indi Jay Cammish, who also built First Class Agency, the UK number-one official TikTok LIVE partner agency with more than 1,200 live streamers on its books. In other words, the people behind this platform have spent years inside TikTok's monetisation machine. They know exactly where the money goes, and where it does not.
 
@@ -29,7 +29,7 @@ None of this makes TikTok useless. It makes TikTok a top of funnel, not a home. 
 
 "Ownership" gets thrown around loosely, so let us be concrete. On [DeHub, the decentralised social network](/guides/what-is-dehub), ownership is not a marketing word. It is enforced by how the product is built.
 
-When you upload, the content is minted on-chain to your wallet at the moment of posting. That record is yours. The feed is chronological and transparent, so there is no opaque algorithm silently deciding whether your work gets seen. And because the platform is open-source and censorship-resistant, no single company can quietly rewrite the rules under you.
+When you upload, you can mint the content on-chain to your wallet straight away, or do it later. That record is yours. The feed is chronological and transparent, so there is no opaque algorithm silently deciding whether your work gets seen. And because the platform is open-source and censorship-resistant, no single company can quietly rewrite the rules under you.
 
 If the idea of moving from a corporate feed to a user-owned one is new to you, our explainer on [decentralised social media for UK audiences](/guides/decentralised-social-media-explained-uk) walks through the mechanics without the jargon.
 
@@ -71,7 +71,7 @@ Do not delete anything. TikTok remains an unmatched top-of-funnel for finding ne
 
 ### 2. Set up your owned home base
 
-Create your account on [the DeHub app](https://dehub.io/app) or via [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Set up your wallet, claim your profile, and post a few pieces so the space is not empty when your audience arrives. Because uploads mint to you on the spot, you are building equity from your very first post.
+Create your account on [the DeHub app](https://dehub.io/app) or via [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Set up your wallet, claim your profile, and post a few pieces so the space is not empty when your audience arrives. Because you can mint uploads to your wallet on the spot, you can be building equity from your very first post.
 
 ### 3. Repurpose, do not just cross-post
 

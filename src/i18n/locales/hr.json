@@ -3283,7 +3283,7 @@
   },
   "fractions": {
     "seoTitle": "Frakcije | DeHub",
-    "seoDescription": "Kupuj i prodavaj frakcije DeHub postova. Svaki upload je 1000 frakcija na blockchainu — posjeduj dio videa, pjesme ili slike i trguj ga u DHB.",
+    "seoDescription": "Kupuj i prodavaj frakcije DeHub objava. Iskovana objava je 1000 frakcija na blockchainu — posjeduj dio videa, pjesme ili slike i trguj njime u DHB-u.",
     "title": "Frakcije",
     "perUpload": "1000 po uploadu",
     "tabBrowse": "Pregledaj",
@@ -3319,7 +3319,7 @@
     "perFraction": "po dijelu",
     "noSearchMatch": "Ništa se ne podudara s tom pretragom",
     "noneForSale": "Nema dijelova na prodaji upravo sada",
-    "startTheMarketHint": "Svaki upload je 1000 dijelova — navedite neke od svojih da započnete tržište.",
+    "startTheMarketHint": "Iskovana objava je 1000 frakcija — ponudi neke od svojih da pokreneš tržište.",
     "yours": "Vaši",
     "perFractionShort": "/ dio",
     "forShareOfPost": "za {{pct}}% objave",
@@ -3373,7 +3373,7 @@
     "acrossPosts_one": "preko {{count}} objave",
     "acrossPosts_other": "preko {{count}} objava",
     "noneHeldYet": "Još nemaš nikakve razlomke",
-    "noneHeldHint": "Učitaj objavu da bude mintana 1000, ili kupi dio nečije objave.",
+    "noneHeldHint": "Iskuj objavu da držiš svih njezinih 1000 frakcija ili kupi udio u tuđoj.",
     "listedForSale": "Navedeno na prodaju",
     "priceEach": "{{price}} svaki",
     "listingCancelled": "Popis otkazan",
@@ -3386,8 +3386,8 @@
     "offersForYourFractions": "Ponude za tvoje razlomke",
     "review": "Pregledaj",
     "noFractionsYet": "Nema razlomaka još",
-    "profileEmptyOwn": "Svaki upload je mintana kao 1000 razlomaka. Objavi nešto, ili kupi dio objave u koju vjeruješ.",
-    "profileEmptyOther": "Svaki upload je mintana kao 1000 razlomaka. Ovaj profil nema nikakve razlomke niti jedne objave upravo sada.",
+    "profileEmptyOwn": "Iskovana objava je 1000 frakcija. Iskuj jednu od svojih objava ili kupi udio u objavi u koju vjeruješ.",
+    "profileEmptyOther": "Iskovana objava je 1000 frakcija. Ovaj profil trenutačno ne drži frakcije nijedne objave.",
     "browseTheMarket": "Pregledaj tržište",
     "sellFractions": "Prodaj razlomke",
     "balanceReadFailed": "Nije moguće pročitati tvoj saldo razlomaka upravo sada. Zatvori ovo i pokušaj ponovno — popis bez toga rizikuje prodaju razlomaka koje više ne držiš.",
@@ -6267,5 +6267,10 @@
     "moveFunds": "Prebaci sredstva",
     "moveFundsHint": "Zamijenite ili uplatite s drugog lanca",
     "notNow": "Ne sada"
+  },
+  "glossary": {
+    "fractionsDesc": "Objava iskovana na DeHubu postaje NFT podijeljen na 1.000 frakcija, a kreator počinje sa svih 1.000 — 100 % vlasništva nad sadržajem. Kovanje nije obavezno i može se obaviti pri objavljivanju ili kasnije.",
+    "tokenIdDesc": "Jedinstveni identifikator na blockchainu koji objava dobiva kad se iskuje kao NFT. Kovanje nije obavezno, pa objava koja nije iskovana još nema Token ID.",
+    "tokenIdInfoDesc": "Jedinstveni identifikator na blockchainu koji objava dobiva nakon što se iskuje kao NFT. Za iskovane objave prikazuje se na vrhu stranice Informacije o objavi."
   }
 }

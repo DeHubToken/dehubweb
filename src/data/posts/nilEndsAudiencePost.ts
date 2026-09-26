@@ -49,7 +49,7 @@ We build one of the options, so read this as an argument rather than neutral adv
 
 [DeHub](/guides/what-is-dehub) is an open-source, decentralised social network. Three things about it are relevant to an athlete specifically:
 
-**Your posts are minted on-chain to your wallet when you publish.** The ownership record is yours and does not depend on us continuing to exist. That is the difference between a deed and a tenancy.
+**You can mint your posts on-chain to your wallet, when you publish or later.** The ownership record is yours and does not depend on us continuing to exist. That is the difference between a deed and a tenancy.
 
 **The revenue share is published, up to 90%,** rather than set by an undisclosed formula, with no follower threshold to unlock it. You can also attach [watch-to-earn](/guides/what-is-watch-to-earn) bounties that pay viewers in crypto for genuinely watching — useful when your content is long-form and your audience is small but intense.
 

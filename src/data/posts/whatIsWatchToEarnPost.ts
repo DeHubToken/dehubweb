@@ -75,7 +75,7 @@ Some of the best-known watch-to-earn projects require you to buy something befor
 
 ### Part of a real ecosystem
 
-Watch-to-earn on DeHub sits alongside the rest of the platform: content minted on-chain the moment you upload, a chronological and transparent feed with no opaque algorithm, tokenised uploads that can be free, pay-per-view or token-gated, on-chain tradable subscriptions with resale royalties for creators, live streaming on Livepeer that has scaled to 50,000+ concurrent viewers, open-source end-to-end encrypted messaging, and a play-to-earn arcade including the flagship MMA battle royale, Last Chad Standing. The watch-to-earn reward is one thread in that fabric, which is exactly why it does not need to overpromise.
+Watch-to-earn on DeHub sits alongside the rest of the platform: content you can mint on-chain when you upload or later, a chronological and transparent feed with no opaque algorithm, tokenised uploads that can be free, pay-per-view or token-gated, on-chain tradable subscriptions with resale royalties for creators, live streaming on Livepeer that has scaled to 50,000+ concurrent viewers, open-source end-to-end encrypted messaging, and a play-to-earn arcade including the flagship MMA battle royale, Last Chad Standing. The watch-to-earn reward is one thread in that fabric, which is exactly why it does not need to overpromise.
 
 ## Honest contrast with the gimmick models
 
