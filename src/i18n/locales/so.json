@@ -3344,6 +3344,7 @@
     "seoDescription": "Dukumentiga rasmiga ah ee DeHub: guud ahaan barxadda, dApps, dhaqaalaha token-ka DHB, staking, ciyaaro, qorshaha mustaqbalka, su’aalaha badanaa la weydiiyo iyo wax kale."
   },
   "dex": {
+    "launchNotice": "Is-weydaarsigan gaarka ah waxa lagu dhisay Uniswap waxaana sugaya isaga. Hadda wuu shaqaynayaa si buuxda, liisaska rasmiga ahna dhawaan ayaa la shaacin doonaa. Waxaa laguu martiqaaday inaad hadda ku darto dareere — beeraha iyo dhiirigelinnada dhawaan ayaa la soo bandhigi doonaa.",
     "seoTitle": "DEX — Ku ganacsada DHB qiimahaaga",
     "seoDescription": "U deji qiimahaaga iibka ama iibinta DHB adoo isticmaalaya Uniswap v4 limit order oo ku taal Base ama BNB Chain. Live order book, market depth iyo hal qiimo oo USD ah.",
     "venue": "Network",

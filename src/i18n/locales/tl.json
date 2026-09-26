@@ -5483,6 +5483,7 @@
     "seoDescription": "Opisyal na dokumentasyon ng DeHub: pangkalahatang-ideya ng platform, dApps, ekonomiya ng DHB token, staking, mga laro, roadmap, FAQ at higit pa."
   },
   "dex": {
+    "launchNotice": "Ang custom na exchange na ito ay binuo sa Uniswap at pinoprotektahan nito. Live na ito at ganap na gumagana, at iaanunsyo sa lalong madaling panahon ang mga opisyal na listing. Iniimbitahan kang magdagdag ng liquidity ngayon — ilalantad na sa lalong madaling panahon ang mga farm at insentibo.",
     "seoTitle": "DEX — I — trade ang DHB sa iyong presyo",
     "seoDescription": "Itakda ang iyong DHB bumili o magbenta ng presyo na may isang Uniswap v4 limit order sa Base o BNB Chain. Live na aklat ng order, lalim ng merkado at isang ibinahaging presyo ng USD.",
     "venue": "Network",

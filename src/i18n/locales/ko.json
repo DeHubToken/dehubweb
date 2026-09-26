@@ -5716,6 +5716,7 @@
     "seoDescription": "DeHub 공식 문서: 플랫폼 개요, dApp, DHB 토큰 이코노미, 스테이킹, 게임, 로드맵, FAQ 등."
   },
   "dex": {
+    "launchNotice": "이 맞춤형 거래소는 Uniswap 기반으로 구축되었으며 Uniswap으로 보호됩니다. 현재 운영 중이며 모든 기능을 이용할 수 있고, 공식 상장은 곧 발표될 예정입니다. 지금 바로 유동성을 추가해 보세요 — 파밍과 인센티브가 곧 공개됩니다.",
     "seoTitle": "DEX — DHB를 원하는 가격에 거래하세요",
     "seoDescription": "Base 또는 BNB Chain에서 Uniswap v4 지정가 주문으로 DHB 매수 또는 매도 가격을 설정하세요. 실시간 주문 장부, 시장 깊이, 하나의 통합 USD 가격을 제공합니다.",
     "venue": "네트워크",

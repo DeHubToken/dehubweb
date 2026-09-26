@@ -5546,6 +5546,7 @@
     "faq": "Gereelde vrae"
   },
   "dex": {
+    "launchNotice": "Hierdie pasgemaakte beurs is op Uniswap gebou en word daardeur beveilig. Dit is lewendig en ten volle funksioneel, en amptelike noterings word binnekort aangekondig. Jy word genooi om nou likiditeit by te voeg — plase en aansporings word binnekort onthul.",
     "seoTitle": "DEX — Verhandel DHB teen jou prys",
     "seoDescription": "Stel jou DHB koop- of verkoop prys met 'n Uniswap v4 limiet order op Base of BNB Chain. Regstreekse orderboek, markdiepte en een gedeelde USD prys.",
     "venue": "Netwerk",

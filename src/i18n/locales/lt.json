@@ -5701,6 +5701,7 @@
     "seoDescription": "Oficiali DeHub dokumentacija: platformos apžvalga, dApps, DHB tokeno ekonomika, staking, žaidimai, planas, DUK ir daugiau."
   },
   "dex": {
+    "launchNotice": "Ši speciali birža sukurta Uniswap pagrindu ir jo apsaugota. Ji jau veikia visu pajėgumu, o oficialūs listingai bus netrukus paskelbti. Kviečiame pridėti likvidumo jau dabar — ūkiai ir paskatos bus atskleisti visai netrukus.",
     "seoTitle": "DEX — prekiaukite DHB savo kaina",
     "seoDescription": "Nustatykite savo DHB pirkimo ar pardavimo kainą su „Uniswap v4“ limitiniu pavedimu „Base“ arba „BNB Chain“. Tiesioginė pavedimų knyga, rinkos gylis ir viena bendra USD kaina.",
     "venue": "Tinklas",
