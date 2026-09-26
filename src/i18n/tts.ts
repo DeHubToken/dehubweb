@@ -27,7 +27,7 @@ export const tts = {
     keyLinks: 'ลิงก์สำคัญ',
     docsChatTitle: 'AI ซ่อย',
     keyInfo: 'ข้อมูลสำคัญ',
-    docsChatGreeting: 'สวัสดี! ข่อยเป็นผู้ช่วยด้านเอกสารของ DeHub ถามข่อยได้ทุกเรื่องเกี่ยวกับ DeHub, โทเคน $DHB, DePIN, การปกครอง หรือฟีเจอร์อื่นๆ ของแพลตฟอร์ม!',
+    docsChatGreeting: 'สวัสดี! ข่อยเป็นผู้ช่วยด้านเอกสารของ DeHub ถามข่อยได้ทุกเรื่องเกี่ยวกับ DeHub, โทเคน DeHub, DePIN, การกำกับดูแล หรือฟีเจอร์อื่นๆ ของแพลตฟอร์ม!',
     docsChatPlaceholder: 'ถามเกี่ยวกับ DeHub...',
     docsChatOpen: 'เปิดแชท',
     docsChatClose: 'ปิดแชท',

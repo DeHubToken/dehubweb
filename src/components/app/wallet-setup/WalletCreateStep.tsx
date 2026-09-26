@@ -14,7 +14,7 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DhbCoin } from '@/components/app/DhbAmount';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { Loader2, AlertTriangle, CheckCircle2, ArrowDownToLine, Fingerprint, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -895,9 +895,9 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
                       {matched.signupMethod && OLD_LOGIN_LABELS[matched.signupMethod]
                         ? `Original sign-in: ${OLD_LOGIN_LABELS[matched.signupMethod]}`
                         : 'Original sign-in was not recorded'}
-                      {typeof matched.badgeBalance === 'number'
-                        ? `, ${matched.badgeBalance.toLocaleString()} DHB`
-                        : ''}
+                      {typeof matched.badgeBalance === 'number' && (
+                        <>, <DhbAmount amount={matched.badgeBalance.toLocaleString()} iconClassName="h-3 w-3" /></>
+                      )}
                     </p>
                   </div>
                 </div>

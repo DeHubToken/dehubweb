@@ -1575,9 +1575,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
             duration: 10000,
           });
         } else if (isPausedErr || (isSTF && await checkDHBPaused().catch(() => false))) {
-          toast.error('DHB transactions paused', {
+          toast.error(tr('tokens.transactionsPaused'), {
             id: 'dm-fee-send',
-            description: 'DHB token transactions are temporarily paused on-chain. Please try again later.',
+            description: tr('tokens.transactionsPausedDesc'),
             duration: 8000,
           });
         } else {
@@ -2083,7 +2083,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
             : initError && isVirtualConv
             ? 'Connection failed — tap Retry above'
             : feeSendDisabled
-            ? `Insufficient DHB (need ${activeFee.toLocaleString()})`
+            ? tr('messages.feeNotEnough', { amount: activeFee.toLocaleString() })
             : undefined
         }
         isSendingFee={isSendingFee}
@@ -2115,7 +2115,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       <AlertDialog open={showFeeWarning} onOpenChange={handleFeeWarningOpenChange}>
         <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">Messages cost DHB</AlertDialogTitle>
+            <AlertDialogTitle className="text-white">{tr('messages.feeWarningTitle')}</AlertDialogTitle>
             <AlertDialogDescription className="text-zinc-400">
               The messages you send to {displayName} are paid and will cost{' '}
               <span className="text-white font-semibold">{activeFee.toLocaleString()} <DhbCoin /></span> each.

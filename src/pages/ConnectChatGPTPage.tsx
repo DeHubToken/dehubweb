@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import ogImage from "@/assets/og-chatgpt.jpg";
 import dehubLogo from "@/assets/dehub-wordmark-white.png";
@@ -35,7 +36,7 @@ const examples = [
   "Draft a reply to the top post on DeHub in my voice.",
 ];
 
-const faqs = [
+const faqs: { q: string; a: string; aKey?: string }[] = [
   {
     q: "Is DeHub free to use inside ChatGPT?",
     a: "Yes. The DeHub ChatGPT app is free. You only need an active ChatGPT account that supports connectors (available on ChatGPT Plus, Pro, Team and Enterprise).",
@@ -47,6 +48,7 @@ const faqs = [
   {
     q: "Do I need a DeHub account?",
     a: "No account is required to read public content through the connector. A DeHub account is only needed if you want to post, tip or hold DHB.",
+    aKey: "connect.chatgptFaqAccount",
   },
   {
     q: "Which ChatGPT models support this?",
@@ -55,6 +57,7 @@ const faqs = [
 ];
 
 export default function ConnectChatGPTPage() {
+  const { t } = useTranslation();
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -189,7 +192,7 @@ export default function ConnectChatGPTPage() {
                 className="rounded-2xl border border-white/10 bg-black/60 p-5 backdrop-blur-[24px]"
               >
                 <h3 className="text-base font-semibold">{f.q}</h3>
-                <p className="mt-2 text-sm text-white/60">{f.a}</p>
+                <p className="mt-2 text-sm text-white/60">{f.aKey ? t(f.aKey) : f.a}</p>
               </div>
             ))}
           </div>

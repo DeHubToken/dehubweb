@@ -24,6 +24,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { SuperPowerIcon } from '@/components/app/SuperPowerIcon';
+import { DhbAmount } from '@/components/app/DhbAmount';
 
 const compactNumber = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
 // Mirrors the server's caps so the counter and the refusal never disagree.
@@ -324,7 +325,7 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
                         {owner && <span className="text-zinc-500">{t('superpowers.teamUp.owner')}</span>}
                       </p>
                       <p className="text-[11px] text-zinc-500 tabular-nums">
-                        {compactNumber.format(member.ownBadgeBalance)} DHB
+                        <DhbAmount amount={compactNumber.format(member.ownBadgeBalance)} iconClassName="h-3 w-3" />
                       </p>
                     </div>
                     {canRemove && (

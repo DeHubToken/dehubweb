@@ -95,8 +95,7 @@ function TradeRow({
             <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
             {(trade.quantity * trade.price_per_fraction).toLocaleString(undefined, {
               maximumFractionDigits: 2,
-            })}{' '}
-            DHB
+            })}
           </p>
         </div>
         {action ? (

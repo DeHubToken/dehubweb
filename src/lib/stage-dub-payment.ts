@@ -17,6 +17,7 @@
  */
 
 import { payDhb, readDhbBalance } from '@/lib/dhb-payment';
+import i18n from '@/i18n';
 
 export { readDhbBalance };
 
@@ -30,7 +31,7 @@ export async function payForDubbing(amountDhb: number, treasury: string): Promis
   const { txHash, chain } = await payDhb(amountDhb, treasury, {
     context: 'Stage dubbing',
     shortfallMessage: (amount, held) =>
-      `Not enough DHB. This session costs ${amount.toLocaleString()} DHB and you hold ${held.toLocaleString()}.`,
+      i18n.t('tokenPayments.notEnoughForSession', { amount: amount.toLocaleString(), held: held.toLocaleString() }),
   });
   return { txHash, chain };
 }

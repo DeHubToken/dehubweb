@@ -1,19 +1,22 @@
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { ChevronLeft, Send, Paperclip, Smile, Phone, MoreVertical } from 'lucide-react';
 
-const MOCK_MESSAGES = [
+const mockMessages = (t: TFunction) => [
   { id: '1', sender: 'bob_dev', content: 'Hey! Did you see the new governance proposal?', time: '10:23 AM', isMine: false },
   { id: '2', sender: 'me', content: 'Yeah, I was just reading through it. The treasury allocation looks solid.', time: '10:25 AM', isMine: true },
   { id: '3', sender: 'bob_dev', content: 'Right? I think we should vote yes. The dev grants will really help the ecosystem grow.', time: '10:26 AM', isMine: false },
-  { id: '4', sender: 'me', content: 'Agreed. I\'ll cast my vote after lunch. How many DHB tokens do you have staked for voting power?', time: '10:28 AM', isMine: true },
+  { id: '4', sender: 'me', content: t('mobilePreview.chat.stakedForVoting'), time: '10:28 AM', isMine: true },
   { id: '5', sender: 'bob_dev', content: '25k staked. Should give me decent weight on the vote 💪', time: '10:29 AM', isMine: false },
   { id: '6', sender: 'bob_dev', content: 'Also, check out the new proposal!', time: '10:30 AM', isMine: false },
 ];
 
 export function ChatScreen() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
@@ -32,7 +35,7 @@ export function ChatScreen() {
 
       {/* Messages */}
       <div className="flex-1 px-3 py-3 space-y-3 overflow-y-auto">
-        {MOCK_MESSAGES.map((msg) => (
+        {mockMessages(t).map((msg) => (
           <div key={msg.id} className={`flex ${msg.isMine ? 'justify-end' : 'justify-start'}`}>
             <div
               className={`max-w-[75%] px-3 py-2 rounded-2xl ${

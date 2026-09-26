@@ -98,7 +98,10 @@ export function localizedNotificationContent(
       : t('notifications.badgeTakenBack', { name: actor, tier });
   }
   if (item.type === 'tip') {
-    const amount = item.amount ? ` ${item.amount} ${item.currency || 'DHB'}` : '';
+    const currency = item.currency && item.currency.toUpperCase() !== 'DHB' ? item.currency : null;
+    const amount = item.amount
+      ? ` ${currency ? `${item.amount} ${currency}` : t('notifications.tokenAmount', { amount: item.amount })}`
+      : '';
     return t('notifications.tippedYou', { name: actor }) + amount;
   }
   const key = keys[item.type];

@@ -24,6 +24,7 @@
  */
 
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2, Info } from 'lucide-react';
@@ -91,6 +92,7 @@ const compact = (n: number) => {
 };
 
 export function EarningsComparison() {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [rpms, setRpms] = useState<Record<string, number>>(() =>
     Object.fromEntries(PLATFORMS.map((p) => [p.key, p.defaultRpm]))
@@ -279,11 +281,7 @@ export function EarningsComparison() {
           <div className="flex items-start gap-2 mt-4 text-zinc-600">
             <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
             <p className="text-[10px] leading-relaxed">
-              Competitor figures are estimates from published industry ranges, not measured
-              payouts — real RPM varies widely by niche, audience country and watch time, so
-              edit each rate to match what you actually earn. The DeHub figure is your real
-              tip income converted at the live DHB price, and excludes subscriptions, PPV and
-              store sales. Views are summed from your most recent 100 posts.
+              {t('commandCentre.earningsComparisonNote')}
             </p>
           </div>
         </>

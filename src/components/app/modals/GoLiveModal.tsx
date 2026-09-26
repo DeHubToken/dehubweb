@@ -826,7 +826,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
           const balanceNum = Number(balance) / 1e18;
           if (balanceNum < totalBounty) {
             throw new Error(
-              `Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`,
+              t('goLive.notEnoughTokensForBounty', { need: totalBounty, have: balanceNum.toFixed(2) }),
             );
           }
           if (wasDismissed()) return;

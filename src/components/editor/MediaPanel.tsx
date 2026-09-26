@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Upload, Trash2, Film, Music, Image as ImageIcon, Plus, HardDrive, Lock, ExternalLink, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -25,6 +26,7 @@ function kindIcon(k: MediaItem["kind"]) {
 }
 
 export function MediaPanel() {
+  const { t } = useTranslation();
   const media = useEditorStore((s) => s.media);
   const removeMediaFromStore = useEditorStore((s) => s.removeMedia);
   const addClipFromMedia = useEditorStore((s) => s.addClipFromMedia);
@@ -150,7 +152,7 @@ export function MediaPanel() {
             />
           </div>
           {quota.overQuota ? (
-            <p className="mt-1 text-[10px] text-white/60">Storage full — stake more DHB for a bigger tier, or remove unused assets.</p>
+            <p className="mt-1 text-[10px] text-white/60">{t('editor.storageFullStake')}</p>
           ) : (
             <p className="mt-1 text-[10px] text-white/40">Assets unused for 12 months auto-delete unless posted.</p>
           )}

@@ -374,7 +374,7 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
     return 'Transaction was rejected by user.';
   }
   if (lowerError.includes('paused') || lowerError.includes('erc20pausable')) {
-    return 'DHB token transactions are currently paused on-chain.';
+    return i18n.t('tokenErrors.transactionsPaused');
   }
   if (lowerError.includes('insufficient funds')) {
     return 'Insufficient funds for gas. Please add ETH to your wallet.';
@@ -385,7 +385,7 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   // (ABI-encoded Error("STF") contains "535446" — hex of "STF").
   if (lowerError.includes('stf') || lowerError.includes('535446') ||
     lowerError.includes('safetransfer') || lowerError.includes('token transfer failed')) {
-    return 'Token transfer failed. Please check your DHB balance and wallet approval.';
+    return i18n.t('tokenErrors.transferFailedCheckBalance');
   }
   // DeHub's own sponsorship account, not the reader's wallet.
   //

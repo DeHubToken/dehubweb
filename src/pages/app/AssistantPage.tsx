@@ -3242,7 +3242,7 @@ export default function AssistantPage() {
             let txHash = '';
             if (bannerRenderer === 'scene') {
               const { priceDhb } = await fetchJobQuote({ kind: 'image', modelId: DEHUB_BRAND_IMAGE_MODEL });
-              toast.loading(`Paying ${formatDhb(priceDhb)} DHB...`, { id: 'poster-payment' });
+              toast.loading(t('assistant.payingTokens', { amount: formatDhb(priceDhb) }), { id: 'poster-payment' });
               txHash = await payForJob(priceDhb);
               toast.dismiss('poster-payment');
             }

@@ -2147,8 +2147,7 @@ export function usePostForm(
 
       if (mintResponse.homeFeedRestricted) {
         toast.warning('Home feed limit reached', {
-          description:
-            'This post is live on your profile and in Following, but it will not appear on the Home feed. Hold more DHB to unlock higher badges and more daily Home-feed reach.',
+          description: t('postComposer.homeFeedRestrictedDescription'),
           duration: 12000,
         });
       }
@@ -2180,7 +2179,7 @@ export function usePostForm(
               context: 'Post allowance',
               expectedSigner: user?.address,
               shortfallMessage: (amount, has) =>
-                `This post costs ${amount.toLocaleString()} DHB and you hold ${has.toLocaleString()}.`,
+                t('postComposer.postCostShortfall', { amount: amount.toLocaleString(), held: has.toLocaleString() }),
             });
             const settled = await settleWithRetry(payment.txHash, payment.chainId);
             if (settled) {
@@ -2194,7 +2193,7 @@ export function usePostForm(
               // hash is stashed and re-sent on its own.
               toast.info('Payment sent — still confirming', {
                 id: 'post-quota-pay',
-                description: 'Your DHB has been transferred. We will finish confirming it shortly.',
+                description: t('postComposer.paymentConfirmingDescription'),
                 duration: 10000,
               });
             }
@@ -2204,7 +2203,7 @@ export function usePostForm(
               description:
                 err instanceof Error
                   ? err.message
-                  : 'The DHB transfer did not complete. You will be asked again before your next paid post.',
+                  : t('postComposer.transferIncomplete'),
               duration: 12000,
             });
           } finally {
@@ -2222,7 +2221,7 @@ export function usePostForm(
       if (shortfall) {
         toast.info('Posted — but not minted', {
           description: `Minting costs ${formatFeeAmount(shortfall.amount)} ${shortfall.symbol} and your balance is short. Top up and you can mint it from the post's menu any time.`,
-          action: { label: 'Get DHB', onClick: () => navigate('/app/buy') },
+          action: { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
           duration: 12000,
         });
       }
@@ -2431,7 +2430,7 @@ export function usePostForm(
         // step is DHB, not "try again".
         toast.error(dhbText("You've used today's free posting allowance"), {
           description: dhbText(error.message),
-          action: { label: 'Get DHB', onClick: () => navigate('/app/buy') },
+          action: { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
           duration: 12000,
         });
         refreshPostQuota();

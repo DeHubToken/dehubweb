@@ -1,19 +1,22 @@
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { Heart, MessageSquare, Repeat2, Share, MoreHorizontal, Image } from 'lucide-react';
 
-const MOCK_POSTS = [
+const mockPosts = (t: TFunction) => [
   { id: '1', user: 'alice.eth', content: 'Just minted my first NFT collection on Base 🎨 The creative freedom in web3 is unmatched.', likes: 42, comments: 8, reposts: 3, time: '2m' },
   { id: '2', user: 'bob_dev', content: 'New governance proposal is live — vote on treasury allocation for Q2 developer grants. Let\'s build together! 🏗️', likes: 128, comments: 24, reposts: 15, time: '15m', hasImage: true },
   { id: '3', user: 'crypto_sarah', content: 'The leaderboard competition is heating up 🔥 Currently sitting at #3 — who\'s coming for the top spot?', likes: 67, comments: 12, reposts: 5, time: '1h' },
-  { id: '4', user: 'defi_whale', content: 'Staked 50k $DHB tokens. APY looking solid at 12.4%. Long-term holder mentality. 💎🙌', likes: 203, comments: 31, reposts: 22, time: '3h', hasImage: true },
+  { id: '4', user: 'defi_whale', content: t('mobilePreview.home.stakedPost'), likes: 203, comments: 31, reposts: 22, time: '3h', hasImage: true },
 ];
 
 const TABS = ['For You', 'Following', 'Videos', 'Images'];
 
 export function HomeScreen() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
@@ -37,7 +40,7 @@ export function HomeScreen() {
 
       {/* Posts */}
       <div className="flex-1 divide-y divide-white/[0.06]">
-        {MOCK_POSTS.map((post) => (
+        {mockPosts(t).map((post) => (
           <div key={post.id} className="px-4 py-3">
             <div className="flex gap-3">
               <MockAvatar name={post.user} size="sm" />

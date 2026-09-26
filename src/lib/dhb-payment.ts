@@ -14,6 +14,7 @@
  */
 
 import { Interface } from 'ethers';
+import i18n from '@/i18n';
 import {
   writeContractAA,
   getERC20Balance,
@@ -133,7 +134,7 @@ export async function payDhb(
     const held = Math.floor(Number(baseBalance > bnbBalance ? baseBalance : bnbBalance) / 1e18);
     throw new Error(
       options.shortfallMessage?.(amount, held) ??
-        `Not enough DHB. This costs ${amount.toLocaleString()} DHB and you hold ${held.toLocaleString()}.`,
+        i18n.t('tokenPayments.notEnough', { amount: amount.toLocaleString(), held: held.toLocaleString() }),
     );
   }
 
@@ -164,7 +165,7 @@ export async function payDhb(
     }
     const receipt = await result.wait(1);
     if (receipt?.status !== 1) {
-      throw new Error('The DHB transfer did not go through. Nothing has been charged.');
+      throw new Error(i18n.t('tokenPayments.transferFailedNoCharge'));
     }
     return {
       txHash: receipt.hash ?? result.hash,

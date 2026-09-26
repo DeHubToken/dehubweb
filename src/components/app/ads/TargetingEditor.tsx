@@ -144,7 +144,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
       <div>
         <Label className="text-foreground">{t('ads.povrBadgeTiers')}</Label>
         <p className="text-xs text-muted-foreground mb-3">
-          Target by verified DHB holdings. You pay each tier's CPM only when that tier sees your ad. Leave empty to reach everyone.
+          {t('ads.targetByTokenHoldings')}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {allTiers.map((tier) => {

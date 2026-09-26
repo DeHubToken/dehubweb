@@ -126,7 +126,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
       <DrawerContent column glass hideHandle={false}>
         <div className="p-5 pb-8 space-y-4">
           <h3 className="text-white font-semibold text-base">Buy with Crypto</h3>
-          <p className="text-xs text-white/40">Swap ETH → DHB on Base via Uniswap V3</p>
+          <p className="text-xs text-white/40">{t('commandCentre.swapEthForTokensVia')}</p>
           <div className="flex justify-end mt-1">
             <SlippageSettings slippageBps={slippageBps} onSlippageChange={setSlippageBps} />
           </div>
@@ -141,7 +141,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
 
               {/* DHB Amount Input */}
               <div className="space-y-1.5">
-                <label className="text-sm text-white/50">DHB Amount</label>
+                <label className="text-sm text-white/50">{t('commandCentre.tokenAmountLabel')}</label>
                 <Input
                   type="number"
                   min="0"
@@ -191,7 +191,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
                 onClick={handleSwap}
               >
                 <ArrowDownUp className="w-4 h-4 mr-2" />
-                Swap ETH → DHB
+                {t('commandCentre.swapEthForTokens')}
               </Button>
             </>
           )}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { useTranslation } from 'react-i18next';
 import { badgeImage } from '@/lib/staking-badges';
+import { DhbAmount } from '@/components/app/DhbAmount';
 
 /**
  * The Badge of Honour ladder, for the docs dApp page.
@@ -17,6 +19,7 @@ import { badgeImage } from '@/lib/staking-badges';
  * that tier counts for, one above the badgeless account's single count.
  */
 const BadgeFlowchart = () => {
+  const { t } = useTranslation();
   const badges = [
     { threshold: "10,000", usd: "$10", badge: "Crab Badge", color: "bg-muted", image: badgeImage('Crab') },
     { threshold: "25k", usd: "$25", badge: "Lobster Badge", color: "bg-muted", image: badgeImage('Lobster') },
@@ -38,10 +41,7 @@ const BadgeFlowchart = () => {
       <CardHeader>
         <CardTitle className="text-center">Badge of Honour System</CardTitle>
         <p className="text-center text-sm text-muted-foreground">
-          Each tier costs a fixed amount in dollars. The DHB beside it is what that
-          costs at the $0.001 reference price — the app asks for that figure scaled
-          to the live price, and never for more than it, so a falling price cannot
-          raise the bar or take back a tier you have already earned.
+          {t('badgeLadder.intro')}
         </p>
       </CardHeader>
       <CardContent>
@@ -59,7 +59,7 @@ const BadgeFlowchart = () => {
               <div className="text-right shrink-0">
                 <span className="text-sm font-mono text-foreground">{badge.usd}</span>
                 <span className="block text-xs font-mono text-muted-foreground">
-                  {badge.threshold} $DHB · ×{index + 2} weight
+                  <DhbAmount amount={badge.threshold} iconClassName="w-3 h-3" /> · ×{index + 2} weight
                 </span>
               </div>
             </div>
@@ -72,7 +72,7 @@ const BadgeFlowchart = () => {
             <div className="text-right shrink-0">
               <span className="text-sm font-mono text-muted-foreground">under $10</span>
               <span className="block text-xs font-mono text-muted-foreground">
-                &lt; 10,000 $DHB · ×1 weight
+                <DhbAmount amount="< 10,000" iconClassName="w-3 h-3" /> · ×1 weight
               </span>
             </div>
           </div>

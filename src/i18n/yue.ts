@@ -32,7 +32,7 @@ export const yue = {
     docsChatClose: '閂即時通訊',
     docsChatOpen: '打開即時通訊',
     docsChatPlaceholder: '問下 DeHub …',
-    docsChatGreeting: '你好！我係 DeHub 嘅文件助理。問我有關 DeHub 、$DHB 代幣、 DePIN 、治理或者任何其他平台功能嘅任何嘢！',
+    docsChatGreeting: '你好！我係 DeHub 嘅文件助理。問我任何有關 DeHub 、 DeHub 代幣、 DePIN 、治理或者任何其他平台功能嘅問題！',
     docsChatTitle: '人工智能助理',
     keyInfo: '關鍵資訊',
     blog: '博客',

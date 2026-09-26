@@ -99,7 +99,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'token-overview',
       title: 'Currency Overview',
-      content: 'How the DHB currency works in-app, tipping creators, purchasing pay-per-view content, rewards currency, AI generation credits, stores and marketplace, fees and staking, profit share from protocol revenue, utility token pegged at $0.001, DEX listing and freely tradable, no guaranteed APY',
+      content: 'How DeHub tokens work in-app, tipping creators, purchasing pay-per-view content, rewards currency, AI generation credits, stores and marketplace, fees and staking, profit share from protocol revenue, utility token pegged at $0.001, DEX listing and freely tradable, no guaranteed APY',
       path: '/docs/token/overview',
       category: 'Token',
       type: 'page',
@@ -108,7 +108,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'token-economics',
       title: 'Token Economics & Emissions',
-      content: 'DHB token economics, emission schedule, tokenomics model, distribution, supply mechanics, burn, deflation',
+      content: 'DeHub token economics, emission schedule, tokenomics model, distribution, supply mechanics, burn, deflation',
       path: '/docs/token/economics',
       category: 'Token',
       type: 'page',
@@ -117,11 +117,11 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'token-utility',
       title: 'Token Utility & Holder Benefits',
-      content: 'DHB token utility, holder benefits, staking rewards, governance rights, ecosystem benefits, badges, tipping, content creation, moderation',
+      content: 'DeHub token utility, holder benefits, staking rewards, governance rights, ecosystem benefits, badges, tipping, content creation, moderation',
       path: '/docs/token/utility',
       category: 'Token',
       type: 'page',
-      keywords: ['utility', 'benefits', 'staking', 'governance', 'rewards', 'badges', 'tipping', 'holder']
+      keywords: ['utility', 'benefits', 'staking', 'governance', 'rewards', 'badges', 'tipping', 'holder', 'dhb', 'tokens']
     },
     {
       id: 'badges',
@@ -135,11 +135,11 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'tipping',
       title: 'Tipping System',
-      content: 'Tipping system for content creators, send tips, receive tips, DHB tipping, reward creators, community support',
+      content: 'Tipping system for content creators, send tips, receive tips, tipping with tokens, reward creators, community support',
       path: '/docs/token/utility',
       category: 'Token',
       type: 'section',
-      keywords: ['tipping', 'tips', 'tip', 'reward', 'creators', 'send', 'receive', 'support']
+      keywords: ['tipping', 'tips', 'tip', 'reward', 'creators', 'send', 'receive', 'support', 'dhb', 'tokens']
     },
     {
       id: 'moderation',
@@ -153,11 +153,11 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'where-to-buy',
       title: 'Where to Buy',
-      content: 'Buy DHB token on exchanges, trading pairs, liquidity pools, DEX, CEX listings, Uniswap, PancakeSwap',
+      content: 'Buy DeHub tokens on exchanges, trading pairs, liquidity pools, DEX, CEX listings, Uniswap, PancakeSwap',
       path: '/docs/token/where-to-buy',
       category: 'Token',
       type: 'page',
-      keywords: ['buy', 'exchange', 'trading', 'dex', 'cex', 'liquidity', 'uniswap', 'pancakeswap', 'purchase']
+      keywords: ['buy', 'exchange', 'trading', 'dex', 'cex', 'liquidity', 'uniswap', 'pancakeswap', 'purchase', 'dhb', 'tokens']
     },
     {
       id: 'governance',
@@ -171,20 +171,20 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'stake',
       title: 'Stake',
-      content: 'Staking DHB tokens, staking rewards, validation, network security, staking pools, APY, yield',
+      content: 'Staking DeHub tokens, staking rewards, validation, network security, staking pools, APY, yield',
       path: '/docs/token/stake',
       category: 'Token',
       type: 'page',
-      keywords: ['stake', 'staking', 'rewards', 'validation', 'security', 'apy', 'yield', 'pool']
+      keywords: ['stake', 'staking', 'rewards', 'validation', 'security', 'apy', 'yield', 'pool', 'dhb', 'tokens']
     },
     {
       id: 'bridge',
       title: 'Bridge',
-      content: 'Cross-chain token bridge for DHB tokens between BASE and BNB networks, token transfer, cross-chain swap',
+      content: 'Cross-chain token bridge for DeHub tokens between BASE and BNB networks, token transfer, cross-chain swap',
       path: '/docs/token/bridge',
       category: 'Token',
       type: 'page',
-      keywords: ['bridge', 'cross-chain', 'base', 'bnb', 'token', 'transfer', 'swap', 'network']
+      keywords: ['bridge', 'cross-chain', 'base', 'bnb', 'token', 'transfer', 'swap', 'network', 'dhb']
     },
     {
       id: 'depin',
@@ -388,11 +388,11 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'wallet',
       title: 'Wallet & Holdings',
-      content: 'DHB wallet, token holdings, balance, portfolio, wallet connect, MetaMask, crypto wallet',
+      content: 'DeHub token wallet, token holdings, balance, portfolio, wallet connect, MetaMask, crypto wallet',
       path: '/docs/token/utility',
       category: 'Token',
       type: 'section',
-      keywords: ['wallet', 'holdings', 'balance', 'portfolio', 'metamask', 'connect']
+      keywords: ['wallet', 'holdings', 'balance', 'portfolio', 'metamask', 'connect', 'dhb', 'tokens']
     },
     {
       id: 'rewards',
@@ -424,7 +424,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'posting-allowance',
       title: 'Daily posting allowance',
-      content: 'How many posts you get per day for free, daily upload limit, posting limits, how much it costs to post more, paying for posts in DHB, badge tier allowance, upload data cap',
+      content: 'How many posts you get per day for free, daily upload limit, posting limits, how much it costs to post more, paying for posts in tokens, badge tier allowance, upload data cap',
       path: '/docs/dapps#posting-allowance',
       category: 'Main',
       type: 'section',

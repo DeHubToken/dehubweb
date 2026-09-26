@@ -6,6 +6,7 @@
  * edge copy in supabase/functions/_shared/povr.ts. CPMs are the published
  * linear POVR rates. Keep the three in sync.
  */
+import i18n from '@/i18n';
 
 export interface PovrTierInfo {
   name: string;
@@ -194,7 +195,7 @@ export const CAMPAIGN_STATUS_LABELS: Record<CampaignStatus, string> = {
 export const AD_BEHAVIOR_OPTIONS: Array<{ value: AdBehavior; label: string; hint: string }> = [
   { value: 'tippers', label: 'Tippers', hint: 'Users who have sent tips on DeHub' },
   { value: 'ppv_buyers', label: 'PPV buyers', hint: 'Users who have purchased paid content' },
-  { value: 'stakers', label: 'Stakers', hint: 'Users with DHB staking history' },
+  { value: 'stakers', label: 'Stakers', get hint() { return i18n.t('ads.stakersHint'); } },
   { value: 'streamers', label: 'Streamers', hint: 'Users who have gone live' },
 ];
 

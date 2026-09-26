@@ -1493,7 +1493,7 @@ function NotificationSettings() {
             icon={Coins}
             anchor="notify-tips"
             title="Tips Received"
-            description="When someone sends you a DHB tip"
+            description={t('settings.notifyTipsDesc')}
             defaultChecked={getInAppPref(notifPrefs, 'tips')}
             onCheckedChange={handleToggle('tips')}
             disabled={isDisabled}
@@ -1948,7 +1948,7 @@ function PrivacySettings() {
           <SettingsRow
             icon={<img src={dehubCoin} alt="" />}
             title={t('settings.messageFee', 'Message fee')}
-            description={t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}
+            description={t('settings.messageFeeDesc')}
             action={<MessageFeeControl />}
           />
 
@@ -3507,7 +3507,7 @@ function MessagesSettings() {
             icon={<img src={dehubCoin} alt="" />}
             anchor="message-fee"
             title={t('settings.messageFee', 'Message fee')}
-            description={t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}
+            description={t('settings.messageFeeDesc')}
             action={<MessageFeeControl />}
           />
 

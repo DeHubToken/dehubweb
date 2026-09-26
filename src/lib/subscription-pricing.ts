@@ -1,3 +1,5 @@
+import i18n from '@/i18n';
+
 export interface SubscriptionPaymentToken {
   address: string;
   decimals: number;
@@ -41,11 +43,11 @@ export function dhbForUsd(usd: number, dhbUsd: number): number | null {
 }
 
 export function formatDhbEstimate(value: number | null): string {
-  if (value === null || !Number.isFinite(value)) return 'Live DHB quote unavailable';
-  return `≈ ${value.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB`;
+  if (value === null || !Number.isFinite(value)) return i18n.t('subscriptions.tokenQuoteUnavailable');
+  return i18n.t('subscriptions.tokenEstimate', { amount: value.toLocaleString(undefined, { maximumFractionDigits: 2 }) });
 }
 
 export function formatDhbPayment(value: number | null): string {
-  if (value === null || !Number.isFinite(value)) return 'DHB amount unavailable';
-  return `${value.toLocaleString(undefined, { maximumFractionDigits: 3 })} DHB`;
+  if (value === null || !Number.isFinite(value)) return i18n.t('subscriptions.tokenAmountUnavailable');
+  return i18n.t('subscriptions.tokenAmount', { amount: value.toLocaleString(undefined, { maximumFractionDigits: 3 }) });
 }

@@ -1,15 +1,18 @@
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { Lock, TrendingUp, Clock, Coins } from 'lucide-react';
 
-const STAKING_OPTIONS = [
-  { period: '7 Days', apy: '8.2%', minStake: '100 DHB', locked: '2.4M DHB' },
-  { period: '30 Days', apy: '12.4%', minStake: '500 DHB', locked: '8.1M DHB' },
-  { period: '90 Days', apy: '18.7%', minStake: '1,000 DHB', locked: '15.3M DHB' },
+const stakingOptions = (t: TFunction) => [
+  { period: '7 Days', apy: '8.2%', minStake: t('mobilePreview.tokenAmount', { amount: '100' }), locked: t('mobilePreview.tokenAmount', { amount: '2.4M' }) },
+  { period: '30 Days', apy: '12.4%', minStake: t('mobilePreview.tokenAmount', { amount: '500' }), locked: t('mobilePreview.tokenAmount', { amount: '8.1M' }) },
+  { period: '90 Days', apy: '18.7%', minStake: t('mobilePreview.tokenAmount', { amount: '1,000' }), locked: t('mobilePreview.tokenAmount', { amount: '15.3M' }) },
 ];
 
 export function StakingScreen() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
@@ -18,9 +21,9 @@ export function StakingScreen() {
       {/* Stats overview */}
       <div className="grid grid-cols-2 gap-2 mx-4 my-3">
         {[
-          { icon: Coins, label: 'Total Staked', value: '25.8M DHB' },
+          { icon: Coins, label: 'Total Staked', value: t('mobilePreview.tokenAmount', { amount: '25.8M' }) },
           { icon: TrendingUp, label: 'Avg APY', value: '12.4%' },
-          { icon: Lock, label: 'Your Staked', value: '10,000 DHB' },
+          { icon: Lock, label: 'Your Staked', value: t('mobilePreview.tokenAmount', { amount: '10,000' }) },
           { icon: Clock, label: 'Lock Remaining', value: '23 days' },
         ].map((stat) => (
           <div key={stat.label} className="p-3 rounded-xl border border-white/[0.08] bg-white/[0.02]">
@@ -36,9 +39,9 @@ export function StakingScreen() {
         <h3 className="text-white text-sm font-semibold mb-3">Your Position</h3>
         <div className="space-y-2">
           {[
-            ['Staked Amount', '10,000 DHB'],
+            ['Staked Amount', t('mobilePreview.tokenAmount', { amount: '10,000' })],
             ['Lock Period', '90 Days'],
-            ['Earned Rewards', '+461 DHB'],
+            ['Earned Rewards', t('mobilePreview.tokenAmount', { amount: '+461' })],
             ['Current APY', '18.7%'],
           ].map(([label, value]) => (
             <div key={label} className="flex justify-between">
@@ -56,7 +59,7 @@ export function StakingScreen() {
       <div className="px-4 flex-1">
         <h3 className="text-white text-sm font-semibold mb-3">Staking Options</h3>
         <div className="space-y-2">
-          {STAKING_OPTIONS.map((opt) => (
+          {stakingOptions(t).map((opt) => (
             <div key={opt.period} className="p-3 rounded-xl border border-white/[0.08] bg-white/[0.02] flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-white/[0.06] flex items-center justify-center">
                 <Lock className="w-4 h-4 text-white" />

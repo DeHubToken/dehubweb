@@ -113,7 +113,7 @@ const sections: GuideSection[] = [
     steps: [
       "Upvote or downvote a post using the arrow icons on the left side of any post.",
       "Click the comment icon to open the comment section and leave a reply.",
-      "Click the gem/tip icon to send a DHB tip to the post creator.",
+      "Click the gem/tip icon to send a tip in DeHub tokens to the post creator.",
       "Click the bookmark icon to save a post for later.",
       "Click the share icon to copy the post link or share externally.",
       "Click the translate button (globe icon) on any post to translate text to your language.",
@@ -121,7 +121,7 @@ const sections: GuideSection[] = [
       "Click on any post to open it in full-screen single-post view."
     ],
     tips: [
-      "Tips go directly to the creator's wallet in DHB tokens.",
+      "Tips go directly to the creator's wallet in DeHub tokens.",
       "You can set a tip amount via quick-select buttons or enter a custom amount.",
       "Bookmarked posts are accessible from the Bookmarks page in the sidebar."
     ]
@@ -219,7 +219,7 @@ const sections: GuideSection[] = [
     ],
     tips: [
       "The notification badge shows the count of unread notifications.",
-      "Tip notifications show the amount of DHB you received."
+      "Tip notifications show how many tokens you received."
     ]
   },
   {
@@ -227,10 +227,10 @@ const sections: GuideSection[] = [
     screenshot: screenshotCommandCentre,
     title: "Wallet",
     icon: Wallet,
-    intro: "View your DHB balances across multiple chains, check staking deposits, and manage your assets.",
+    intro: "View your DeHub token balances across multiple chains, check staking deposits, and manage your assets.",
     steps: [
       "Click 'Wallet' in the sidebar to open the wallet page.",
-      "View your total DHB balance aggregated across all supported chains.",
+      "View your total token balance aggregated across all supported chains.",
       "See per-chain breakdowns: Ethereum, Base, BNB Chain, and more.",
       "Check your staking deposits and rewards.",
       "Click 'Refresh Scan' to update your balances from on-chain data.",
@@ -246,10 +246,10 @@ const sections: GuideSection[] = [
     screenshot: screenshotCommandCentre,
     title: "Staking",
     icon: Landmark,
-    intro: "Stake your DHB tokens to earn rewards and increase your governance voting power.",
+    intro: "Stake your DeHub tokens to earn rewards and increase your governance voting power.",
     steps: [
       "Navigate to the 'Staking' page from the sidebar.",
-      "Enter the amount of DHB you want to stake.",
+      "Enter the number of tokens you want to stake.",
       "Select the chain you want to stake on.",
       "Confirm the transaction in your wallet (external wallets) or it auto-executes (social login).",
       "View your staked amounts and any pending rewards.",
@@ -270,7 +270,7 @@ const sections: GuideSection[] = [
     steps: [
       "Navigate to the 'Leaderboard' page from the sidebar.",
       "Switch between tabs: Balance, Daily Spent, and Talk of the Town.",
-      "Balance tab ranks users by their total DHB holdings.",
+      "Balance tab ranks users by their total token holdings.",
       "Daily Spent tab shows who's been most active tipping in the last 24 hours.",
       "Talk of the Town shows the most-discussed topics/categories.",
       "Click on any user to visit their profile.",
@@ -307,12 +307,12 @@ const sections: GuideSection[] = [
       "Navigate to 'Governance' from the sidebar.",
       "Browse active proposals submitted by the community.",
       "Click on a proposal to read its full description and discussion.",
-      "Vote on proposals using the thumbs up/down buttons — your vote weight depends on your DHB stake.",
+      "Vote on proposals using the thumbs up/down buttons — your vote weight depends on how many DeHub tokens you have staked.",
       "Leave comments on proposals to discuss with the community.",
       "Submit your own proposal by clicking the 'Create Proposal' button."
     ],
     tips: [
-      "Your voting power is determined by your staked DHB amount.",
+      "Your voting power is determined by the number of tokens you have staked.",
       "Badge holders may get additional vote weight.",
       "Proposals go through stages: Active → Passed/Rejected."
     ]
@@ -356,13 +356,13 @@ const sections: GuideSection[] = [
     id: "posting-allowance",
     title: "Your Daily Posting Allowance",
     icon: PenSquare,
-    intro: "Posting is free every day up to an allowance that scales with your staking badge. Everybody starts with ten text posts and one gigabyte of video, images and audio per day. Go past either one and the rest of that day is paid for in DHB — only on the part that runs over.",
+    intro: "Posting is free every day up to an allowance that scales with your staking badge. Everybody starts with ten text posts and one gigabyte of video, images and audio per day. Go past either one and the rest of that day is paid for in DeHub tokens — only on the part that runs over.",
     steps: [
       "Post as normal. Inside the allowance nothing is charged and nothing is asked of you.",
       "Text posts and media are separate pools, so a day spent uploading video still leaves all ten text posts free.",
       "When a post would run over, the app prices it first and checks your wallet can cover it before anything uploads.",
       "The post publishes exactly as it would inside the allowance — publishing never waits on a payment.",
-      "Then you approve one transfer for that post only, settled on whichever of Base or BNB Chain holds enough DHB.",
+      "Then you approve one transfer for that post only, settled on whichever of Base or BNB Chain holds enough DeHub tokens.",
       "Both pools reset at midnight UTC."
     ],
     tips: [
@@ -406,7 +406,7 @@ const sections: GuideSection[] = [
     ],
     tips: [
       "Live subtitles caption each speaker and translate into whatever language you are reading in.",
-      "Live dubbing can speak the room aloud in the host's own cloned voice, billed by the minute in DHB.",
+      "Live dubbing can speak the room aloud in the host's own cloned voice, billed by the minute in DeHub tokens.",
       "Hosts can put a radio station on air or play their own music clips between conversations.",
       "A mini-player keeps the room going in the corner while you browse the rest of the app."
     ]
@@ -452,9 +452,9 @@ const sections: GuideSection[] = [
     steps: [
       "Open 'Bounties' to browse open work, filtered by category or currency.",
       "Claim one, do the work, and submit it to collect the reward — anyone can be a hunter, no application needed.",
-      "Post your own bounty with a brief and a reward in DHB or USDC. It goes into escrow the moment you post it.",
+      "Post your own bounty with a brief and a reward in DeHub tokens or USDC. It goes into escrow the moment you post it.",
       "Open 'Stores' to set up a storefront with its own page, branding and listings.",
-      "Products are priced and settled in DHB through the built-in wallet, with no external checkout."
+      "Products are priced and settled in DeHub tokens through the built-in wallet, with no external checkout."
     ],
     tips: [
       "Bounties are organised into Social Media, Clipping and Contracts.",
@@ -476,24 +476,24 @@ const sections: GuideSection[] = [
     ],
     tips: [
       "A free stock asset library sits alongside the Studio for anything you would rather not generate.",
-      "Generation is paid for in DHB from your wallet — you sign one transfer per job, and the price is quoted before you pay.",
-      "Heavier users can take an Ultra, Team or Scale plan, which sends a monthly DHB allowance straight to their wallet."
+      "Generation is paid for in DeHub tokens from your wallet — you sign one transfer per job, and the price is quoted before you pay.",
+      "Heavier users can take an Ultra, Team or Scale plan, which sends a monthly token allowance straight to their wallet."
     ]
   },
   {
     id: "buying-dhb",
     screenshot: screenshotCommandCentre,
-    title: "Buying DHB",
+    title: "Buying Tokens",
     icon: ShoppingCart,
-    intro: "Buy DHB tokens directly within the app using the built-in swap interface.",
+    intro: "Buy DeHub tokens directly within the app using the built-in swap interface.",
     steps: [
       "Navigate to the 'Buy' page from the sidebar.",
       "Select the token you want to swap from (e.g., ETH, USDC).",
-      "Enter the amount you want to spend or the amount of DHB you want to receive.",
+      "Enter the amount you want to spend or the number of tokens you want to receive.",
       "Review the exchange rate and estimated output.",
       "Click the settings gear icon to adjust slippage tolerance (default is 1%).",
       "Confirm the swap transaction.",
-      "DHB tokens will appear in your wallet once the transaction completes."
+      "DeHub tokens will appear in your wallet once the transaction completes."
     ],
     tips: [
       "Higher slippage tolerance = more likely to execute, but potential for worse pricing.",
@@ -506,12 +506,12 @@ const sections: GuideSection[] = [
     screenshot: screenshotCommandCentre,
     title: "Bridge",
     icon: ArrowLeftRight,
-    intro: "Move your DHB tokens between supported blockchains using the cross-chain bridge.",
+    intro: "Move your DeHub tokens between supported blockchains using the cross-chain bridge.",
     steps: [
       "Navigate to the 'Bridge' page from the sidebar.",
-      "Select the source chain (where your DHB currently is).",
-      "Select the destination chain (where you want to send DHB).",
-      "Enter the amount of DHB to bridge.",
+      "Select the source chain (where your tokens currently are).",
+      "Select the destination chain (where you want to send them).",
+      "Enter the number of tokens to bridge.",
       "Review the bridge fee and estimated arrival time.",
       "Confirm the bridge transaction.",
       "Wait for the transaction to complete — bridging may take a few minutes."
@@ -570,11 +570,11 @@ const sections: GuideSection[] = [
     steps: [
       "Open the Post Info page for the post you're interested in (tap the 'ⓘ' icon).",
       "Switch to the 'Marketplace' tab to see available listings and offers.",
-      "Browse listed fractions — each listing shows the seller, quantity, price per fraction, and total cost in DHB.",
+      "Browse listed fractions — each listing shows the seller, quantity, price per fraction, and total cost in DeHub tokens.",
       "Click 'Make Offer' to submit a buy offer at a price you choose.",
-      "Enter the number of fractions you want and the price per fraction in DHB.",
+      "Enter the number of fractions you want and the price per fraction in DeHub tokens.",
       "Confirm your offer — the fraction holder can then accept or reject it.",
-      "Once accepted, the fractions transfer to your wallet and the DHB is sent to the seller."
+      "Once accepted, the fractions transfer to your wallet and the tokens are sent to the seller."
     ],
     tips: [
       "Check the holders list to see the current ownership distribution before buying.",
@@ -593,7 +593,7 @@ const sections: GuideSection[] = [
       "Switch to the 'Marketplace' tab.",
       "Click the 'List Fractions' button (only visible if you hold fractions).",
       "Enter the number of fractions you want to sell.",
-      "Set your asking price per fraction in DHB.",
+      "Set your asking price per fraction in DeHub tokens.",
       "Review the total listing value and confirm.",
       "Your fractions are now listed — other users can purchase them or make counter-offers."
     ],

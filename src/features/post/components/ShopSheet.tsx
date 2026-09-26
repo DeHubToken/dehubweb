@@ -26,6 +26,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus, Trash2, Check, Info, ImageIcon, Store, Loader2 } from 'lucide-react';
 import {
   Drawer,
@@ -80,6 +81,7 @@ export function looksLikeUrl(value: string): boolean {
 }
 
 export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier }: ShopSheetProps) {
+  const { t } = useTranslation();
   const [rows, setRows] = useState<ShopLink[]>(value.links);
   const [listingIds, setListingIds] = useState<string[]>(value.listingIds);
 
@@ -261,7 +263,7 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier }
               </button>
             ) : (
               <p className="text-xs text-white/40 text-center py-1">
-                {allowance} of {allowance} used. Stake more DHB for a higher badge and another slot.
+                {t('stores.shopAllowanceUsed', { allowance })}
               </p>
             )}
           </div>

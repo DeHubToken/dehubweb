@@ -18,6 +18,7 @@
 
 import { Interface } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
+import i18n from '@/i18n';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAuthToken } from '@/lib/api/dehub';
 import { apiCall } from '@/lib/api/dehub/core';
@@ -299,7 +300,10 @@ export async function payForJob(
   } else {
     const held = Math.max(Number(baseBalance), Number(bnbBalance)) / 1e18;
     throw new Error(
-      `Not enough DHB in your wallet. This costs ${amount.toLocaleString()} DHB and you hold ${Math.floor(held).toLocaleString()}.`
+      i18n.t('tokenPayments.notEnoughInWallet', {
+        amount: amount.toLocaleString(),
+        held: Math.floor(held).toLocaleString(),
+      })
     );
   }
 
@@ -356,9 +360,7 @@ export async function payForJob(
     if (submittedHash) {
       const recorded = await recordPayment(submittedHash, remember ? 'job' : 'voice');
       if (recorded) return submittedHash;
-      throw new Error(
-        'Your DHB transfer was sent but we could not confirm it. It is saved and will pay for your next attempt — do not send it again.',
-      );
+      throw new Error(i18n.t('tokenPayments.sentUnconfirmed'));
     }
     throw new Error(parseTxError(err) || 'Payment failed.');
   }
@@ -367,7 +369,7 @@ export async function payForJob(
     // No DHB moved, so drop the hash rather than leaving a phantom payment for
     // the next job to offer.
     if (submittedHash) forgetPayment(submittedHash, true);
-    throw new Error('The DHB transfer did not go through. Nothing has been charged.');
+    throw new Error(i18n.t('tokenPayments.transferFailedNoCharge'));
   }
 
   // A provider can hand back a different hash than it first reported — a

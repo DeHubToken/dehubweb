@@ -27,7 +27,7 @@ export const kn = {
     keyLinks: 'ಪ್ರಮುಖ ಲಿಂಕ್‌ಗಳು',
     keyInfo: 'ಪ್ರಮುಖ ಮಾಹಿತಿ',
     docsChatTitle: 'AI ಅಸಿಸ್ಟೆಂಟ್',
-    docsChatGreeting: 'ನಮಸ್ಕಾರ! ನಾನು DeHub ದಸ್ತಾವೇಜಿನ ಸಹಾಯಕ. DeHub, $DHB ಟೋಕನ್, DePIN, ಆಡಳಿತ ಅಥವಾ ಯಾವುದೇ ಇತರ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ವೈಶಿಷ್ಟ್ಯಗಳ ಬಗ್ಗೆ ನನ್ನನ್ನು ಏನನ್ನಾದರೂ ಕೇಳಿ!',
+    docsChatGreeting: 'ನಮಸ್ಕಾರ! ನಾನು DeHub ದಸ್ತಾವೇಜಿನ ಸಹಾಯಕ. DeHub, DeHub ಟೋಕನ್‌ಗಳು, DePIN, ಆಡಳಿತ ಅಥವಾ ಯಾವುದೇ ಇತರ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ವೈಶಿಷ್ಟ್ಯಗಳ ಬಗ್ಗೆ ನನ್ನನ್ನು ಏನನ್ನಾದರೂ ಕೇಳಿ!',
     docsChatPlaceholder: 'DeHub ಬಗ್ಗೆ ಕೇಳಿ...',
     docsChatOpen: 'ಚಾಟ್ ತೆರೆಯಿರಿ',
     docsChatClose: 'ಚಾಟ್ ಮುಚ್ಚಿ',

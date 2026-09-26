@@ -27,7 +27,7 @@ export const kk = {
     keyLinks: 'Маңызды сілтемелер',
     keyInfo: 'Маңызды ақпарат',
     docsChatTitle: 'AI көмекшісі',
-    docsChatGreeting: 'Сәлеметсіз бе! Мен DeHub-тің құжаттамалық көмекшісімін. DeHub, $DHB белгісі, DePIN, басқару немесе басқа платформа мүмкіндіктері туралы сұраңыз!',
+    docsChatGreeting: 'Сәлеметсіз бе! Мен DeHub-тің құжаттамалық көмекшісімін. DeHub, DeHub токендері, DePIN, басқару немесе басқа платформа мүмкіндіктері туралы сұраңыз!',
     docsChatPlaceholder: 'DeHub туралы сұраңыз...',
     docsChatOpen: 'Чатты ашу',
     docsChatClose: 'Чатты жабу',

@@ -129,7 +129,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
 
   // Assets
   { tab: 'assets', anchor: 'wallet-address', label: 'Wallet Address', keywords: 'address copy 0x' },
-  { tab: 'assets', anchor: 'dhb-balance', label: 'DHB Balance', keywords: 'tokens coins balance' },
+  { tab: 'assets', anchor: 'dhb-balance', label: 'Token Balance', labelKey: 'settings.tokenBalance', keywords: 'dhb tokens coins balance' },
   { tab: 'assets', anchor: 'wallet', label: 'Wallet', keywords: 'wallet send receive' },
   { tab: 'assets', anchor: 'gas-fees', label: 'Gas Fees', keywords: 'gas sponsored transaction fees' },
   { tab: 'assets', anchor: 'tip-network', label: 'Tip network', keywords: 'tipping chain base bnb network' },

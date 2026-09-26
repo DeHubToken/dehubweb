@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { MobileTopBar } from '../MobileTopBar';
@@ -5,15 +7,16 @@ import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { Send, ArrowUpRight, ArrowDownLeft, Copy, QrCode } from 'lucide-react';
 
-const MOCK_TRANSACTIONS = [
-  { id: '1', type: 'received', user: 'bob_dev', amount: '+50 DHB', time: '2h ago' },
-  { id: '2', type: 'sent', user: 'crypto_sarah', amount: '-25 DHB', time: '5h ago' },
-  { id: '3', type: 'received', user: 'defi_whale', amount: '+100 DHB', time: '1d ago' },
-  { id: '4', type: 'staking', user: 'Staking Reward', amount: '+12.4 DHB', time: '1d ago' },
-  { id: '5', type: 'sent', user: 'nft_artist', amount: '-200 DHB', time: '3d ago' },
+const mockTransactions = (t: TFunction) => [
+  { id: '1', type: 'received', user: 'bob_dev', amount: t('mobilePreview.tokenAmount', { amount: '+50' }), time: '2h ago' },
+  { id: '2', type: 'sent', user: 'crypto_sarah', amount: t('mobilePreview.tokenAmount', { amount: '-25' }), time: '5h ago' },
+  { id: '3', type: 'received', user: 'defi_whale', amount: t('mobilePreview.tokenAmount', { amount: '+100' }), time: '1d ago' },
+  { id: '4', type: 'staking', user: 'Staking Reward', amount: t('mobilePreview.tokenAmount', { amount: '+12.4' }), time: '1d ago' },
+  { id: '5', type: 'sent', user: 'nft_artist', amount: t('mobilePreview.tokenAmount', { amount: '-200' }), time: '3d ago' },
 ];
 
 export function WalletScreen() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
@@ -69,7 +72,7 @@ export function WalletScreen() {
       <div className="px-4 flex-1">
         <h3 className="text-white text-sm font-semibold mb-3">Recent Activity</h3>
         <div className="space-y-2">
-          {MOCK_TRANSACTIONS.map((tx) => (
+          {mockTransactions(t).map((tx) => (
             <div key={tx.id} className="flex items-center gap-3 py-2">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                 tx.type === 'received' || tx.type === 'staking' ? 'bg-white/[0.08]' : 'bg-white/[0.04]'

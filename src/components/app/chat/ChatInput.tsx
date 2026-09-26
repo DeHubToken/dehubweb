@@ -735,7 +735,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             onMouseDown={(e) => e.preventDefault()}
             onClick={handleSend}
             disabled={sendDisabled || isSendingFee || (!message.trim() && !imageFile && !docFile && !audioPreview)}
-            title={sendDisabled ? sendDisabledReason : feeAmount ? `${feeAmount.toLocaleString()} DHB per message` : undefined}
+            title={sendDisabled ? sendDisabledReason : feeAmount ? t('messages.feePerMessage', { amount: feeAmount.toLocaleString() }) : undefined}
           >
             {isSendingFee ? (
               <Loader2 className="w-5 h-5 animate-spin" />

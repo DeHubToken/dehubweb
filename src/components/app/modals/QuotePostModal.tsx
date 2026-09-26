@@ -8,6 +8,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { quotePost } from '@/lib/api/dehub';
 // NOTE: stream-collection reaches wallet/contract code (wagmi + web3auth) and
@@ -28,6 +29,7 @@ interface QuotePostModalProps {
 }
 
 export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModalProps) {
+  const { t } = useTranslation();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusText, setStatusText] = useState('');
@@ -144,7 +146,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
       if (mintSig.homeFeedRestricted) {
         toast.warning('Home feed limit reached', {
           description:
-            'This quote is live on your profile and in Following, but it will not appear on the Home feed. Hold more DHB to unlock higher badges and more daily Home-feed reach.',
+            t('quote.homeFeedLimitDesc'),
           duration: 12000,
         });
       }

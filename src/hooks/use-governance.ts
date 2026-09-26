@@ -15,6 +15,7 @@
  */
 
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import i18n from 'i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -350,7 +351,10 @@ export function useSubmitGovernanceProposal() {
       if (balance < amountWei) {
         const balanceHuman = Number(balance) / 1e18;
         throw new Error(
-          `Insufficient unstaked DHB on Base. Need ${GOVERNANCE_PROPOSAL_FEE.toLocaleString()} liquid (unstaked) DHB on Base but have ${balanceHuman.toFixed(2)} DHB. Staked DHB cannot be used for fees.`
+          i18n.t('governance.notEnoughUnstakedTokens', {
+            needed: GOVERNANCE_PROPOSAL_FEE.toLocaleString(),
+            held: balanceHuman.toFixed(2),
+          })
         );
       }
 
@@ -505,7 +509,7 @@ export function useVoteGovernanceProposal() {
       if (context?.previousDetail && context?.proposalId) {
         queryClient.setQueryData(['governance-proposal', context.proposalId], context.previousDetail);
       }
-      toastTxError(err, err?.message || 'Vote failed. You must hold DHB tokens to vote.');
+      toastTxError(err, err?.message || i18n.t('governance.voteFailedHoldTokens'));
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['governance-proposals'] });

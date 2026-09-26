@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import ogImage from "@/assets/og-claude.jpg";
 import dehubLogo from "@/assets/dehub-wordmark-white.png";
@@ -35,7 +36,7 @@ const examples = [
   "Draft three reply options to the top DeHub post about AI, in a concise tone.",
 ];
 
-const faqs = [
+const faqs: { q: string; a: string; aKey?: string }[] = [
   {
     q: "Is the DeHub Claude connector free?",
     a: "Yes. The connector itself is free to add. You need a Claude account on a plan that supports custom connectors (Claude Pro, Team or Enterprise).",
@@ -47,6 +48,7 @@ const faqs = [
   {
     q: "Do I need a DeHub account to use it?",
     a: "No. Reading public content works without an account. You only need a DeHub account to post, tip or hold DHB.",
+    aKey: "connect.claudeFaqAccount",
   },
   {
     q: "Which Claude models work with the connector?",
@@ -55,6 +57,7 @@ const faqs = [
 ];
 
 export default function ConnectClaudePage() {
+  const { t } = useTranslation();
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -189,7 +192,7 @@ export default function ConnectClaudePage() {
                 className="rounded-2xl border border-white/10 bg-black/60 p-5 backdrop-blur-[24px]"
               >
                 <h3 className="text-base font-semibold">{f.q}</h3>
-                <p className="mt-2 text-sm text-white/60">{f.a}</p>
+                <p className="mt-2 text-sm text-white/60">{f.aKey ? t(f.aKey) : f.a}</p>
               </div>
             ))}
           </div>

@@ -12,6 +12,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { badgeTiers } from './utils/badgeTiers';
 import { fill } from './utils/fill';
 import { badgeImage } from '@/lib/staking-badges';
+import { DhbAmount } from '@/components/app/DhbAmount';
 
 /** Campaign-type values are what the ads manager expects — only the label moves. */
 const CAMPAIGN_TYPES = ['awareness', 'traffic', 'conversion', 'engagement'];
@@ -232,7 +233,7 @@ const CampaignCreator = () => {
                     <div className="space-y-1 text-xs text-muted-foreground">
                       <div className="flex justify-between">
                         <span>{t('adTools.holdingsRow')}</span>
-                        <span>{tier.holdings} $DHB</span>
+                        <DhbAmount amount={tier.holdings} />
                       </div>
                       <div className="flex justify-between">
                         <span>{t('adTools.cpmRow')}</span>

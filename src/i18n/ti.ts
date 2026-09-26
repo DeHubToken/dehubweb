@@ -27,7 +27,7 @@ export const ti = {
     keyLinks: 'ቀንዲ ሊንክታት',
     keyInfo: 'ቀንዲ ሓበሬታ',
     docsChatTitle: 'ሓጋዚ AI',
-    docsChatGreeting: 'ሰላም! ኣነ ናይ DeHub ሰነዳት ሓጋዚ እየ ። ብዛዕባ DeHub ፡ $DHB ምልክት ፡ DePIN ፡ ምምሕዳር ፡ ወይ ካልእ ባህርያት መድረኽ ዝኾነ ነገር ሕተተኒ!',
+    docsChatGreeting: 'ሰላም! ኣነ ናይ DeHub ሰነዳት ሓጋዚ እየ ። ብዛዕባ DeHub ፡ DeHub ቶከንስ ፡ DePIN ፡ ምሕደራ ፡ ወይ ካልእ ባህርያት መድረኽ ዝኾነ ነገር ሕተተኒ!',
     docsChatPlaceholder: 'ብዛዕባ ደሆብ ሕተቶ...',
     docsChatOpen: 'ክፉት ቻት',
     docsChatClose: 'ዕጹው ቻት',

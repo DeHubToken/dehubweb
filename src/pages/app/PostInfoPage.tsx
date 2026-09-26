@@ -15,6 +15,7 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageSquare, User, Loader2, Users, Tag, Hash, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
 import { findCachedFeedPost } from '@/hooks/use-unified-feed';
@@ -791,7 +792,7 @@ export default function PostInfoPage() {
                   <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
                     <Lock className="w-5 h-5 text-white" />
                     <div>
-                      <p className="text-lg font-bold text-white">{ppvPrice} {ppvCurrency}</p>
+                      <p className="text-lg font-bold text-white"><DhbAmount amount={ppvPrice} currency={ppvCurrency} /></p>
                       <p className="text-xs text-white/60">{t('postInfo.price')}</p>
                     </div>
                   </div>
@@ -801,7 +802,7 @@ export default function PostInfoPage() {
                     <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
                     <div>
                       <p className="text-lg font-bold text-white">
-                        {((ppvPurchaseCount ?? 0) * Number(ppvPrice)).toLocaleString()} {ppvCurrency}
+                        <DhbAmount amount={((ppvPurchaseCount ?? 0) * Number(ppvPrice)).toLocaleString()} currency={ppvCurrency} />
                       </p>
                       <p className="text-xs text-white/60">{t('postInfo.totalRevenue')}</p>
                     </div>

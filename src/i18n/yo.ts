@@ -27,7 +27,7 @@ export const yo = {
     keyLinks: 'Àjọṣe Pàtàkì',
     keyInfo: 'Àlàyé Pàtàkì',
     docsChatTitle: 'Olùrànlọ́wọ́ AI',
-    docsChatGreeting: 'Kaabo! Èmi ni olùrànlọ́wọ́ ìwé DeHub. Bi mí ní ohunkóhun nípa DeHub, àmì $DHB, DePIN, ìṣàkóso, tàbí àwọn ànímọ́ pẹpẹ mìíràn!',
+    docsChatGreeting: 'Kaabo! Èmi ni olùrànlọ́wọ́ ìwé DeHub. Bi mí ní ohunkóhun nípa DeHub, àwọn àmì DeHub, DePIN, ìṣàkóso, tàbí àwọn ànímọ́ pẹpẹ mìíràn!',
     docsChatPlaceholder: 'Béèrè nípa DeHub...',
     docsChatOpen: 'Ṣii iwiregbe',
     docsChatClose: 'Ìjíròrò tí ó súnmọ́',

@@ -27,7 +27,7 @@ export const mnp = {
     keyLinks: '重要链接',
     keyInfo: '重要信息',
     docsChatTitle: 'AI 助手',
-    docsChatGreeting: '你好！我是 DeHub 的文档助手。关于 DeHub、$DHB 代币、DePIN、治理或任何其他平台功能，都可以问我！',
+    docsChatGreeting: '你好！我是 DeHub 的文档助手。关于 DeHub、DeHub 代币、DePIN、治理或任何其他平台功能，都可以问我！',
     docsChatPlaceholder: '问关于 DeHub...',
     docsChatOpen: '打开聊天',
     docsChatClose: '关闭聊天',

@@ -1066,7 +1066,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     : mode === 'audio' && !activeAudioTask.paid ? t('creator.priceFreeRateLimited')
     : generationQuote.isLoading ? t('creator.priceChecking')
     : generationQuote.error ? t('creator.priceUnavailable')
-    : `${formatDhb(generationQuote.priceDhb)} DHB · USD ${usd < 0.1 ? usd.toFixed(3) : usd.toFixed(2)}${mode === '3d' ? ` · ${t('creator.priceStandardTexture')}` : ''}`;
+    : `${t('creator.priceTokensUsd', { amount: formatDhb(generationQuote.priceDhb), usd: usd < 0.1 ? usd.toFixed(3) : usd.toFixed(2) })}${mode === '3d' ? ` · ${t('creator.priceStandardTexture')}` : ''}`;
 
   const audioQuantityLabel = useMemo(() => {
     if (audioTask === 'music') return `${musicSeconds}s track`;

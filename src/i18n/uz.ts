@@ -31,7 +31,7 @@ export const uz = {
     docsChatError: 'Xato',
     docsChatClose: 'Chatni yopish',
     docsChatOpen: 'Chatni ochish',
-    docsChatGreeting: 'Salom! Men DeHubning hujjatlar bo&#39;yicha yordamchisiman. Mendan DeHub, $DHB token, DePIN, boshqaruv yoki boshqa platforma xususiyatlari haqida so&#39;rang!',
+    docsChatGreeting: 'Salom! Men DeHubning hujjatlar bo&#39;yicha yordamchisiman. Mendan DeHub, DeHub tokenlari, DePIN, boshqaruv yoki boshqa platforma xususiyatlari haqida so&#39;rang!',
     docsChatPlaceholder: 'DeHub haqida so&#39;rang...',
     docsChatTitle: 'Sun&#39;iy intellekt yordamchisi',
     keyInfo: "Muhim ma'lumotlar",

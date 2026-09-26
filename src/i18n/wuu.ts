@@ -27,7 +27,7 @@ export const wuu = {
     keyLinks: '关键链接',
     keyInfo: '关键信息',
     docsChatTitle: 'AI 助手',
-    docsChatGreeting: '侬好！吾是 DeHub 嘅文档助手。有啥关于 DeHub、$DHB 代币、DePIN、治理或者其他平台功能嘅问题，都可以问吾！',
+    docsChatGreeting: '嗨！吾是DeHub个文档助手。有啥关于DeHub、DeHub代币、DePIN、治理或者其他平台功能个问题，尽管问！',
     docsChatPlaceholder: '问关于 DeHub...',
     docsChatOpen: '开启聊天',
     docsChatClose: '关闭聊天',

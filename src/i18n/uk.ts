@@ -27,7 +27,7 @@ export const uk = {
     keyLinks: 'Важливі Посилання',
     keyInfo: 'Важлива Інформація',
     docsChatTitle: 'Асистент ШІ',
-    docsChatGreeting: 'Добрий день! Я асистент з документації DeHub. Запитайте мене про DeHub, токен $DHB, DePIN, управління або будь-які інші функції платформи!',
+    docsChatGreeting: 'Добрий день! Я асистент з документації DeHub. Запитайте мене про DeHub, токени DeHub, DePIN, управління або будь-які інші функції платформи!',
     docsChatPlaceholder: 'Запитати про DeHub...',
     docsChatOpen: 'Відкрити чат',
     docsChatClose: 'Закрити чат',

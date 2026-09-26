@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -39,6 +40,7 @@ export function ImagePaywallModal({
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const count = Math.max(1, Math.floor(quantity));
   const unitCostUsd = getImageCostUsd(model);
@@ -73,7 +75,7 @@ export function ImagePaywallModal({
 
     setIsPaying(true);
     try {
-      toast.loading(`Paying ${formatDhb(costDhb)} DHB...`, { id: 'image-gen-payment' });
+      toast.loading(t('tokenPaywall.paying', { amount: formatDhb(costDhb) }), { id: 'image-gen-payment' });
       const txHash = await payForJob(costDhb);
       toast.success('Payment confirmed. Generating...', { id: 'image-gen-payment' });
       onConfirm(txHash);
@@ -192,7 +194,7 @@ export function ImagePaywallModal({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <img src={dhbCoinImage} alt="DHB" className="w-6 h-6" />
-                    <span className="text-white font-medium">Pay with DHB</span>
+                    <span className="text-white font-medium">{t('tokenPaywall.payWithTokens')}</span>
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold text-white">{formatDhb(costDhb)} <DhbCoin /></p>
@@ -212,7 +214,7 @@ export function ImagePaywallModal({
 
           {/* Wallet balance */}
           <div className="flex items-center justify-between text-sm bg-zinc-800/30 rounded-lg p-3">
-            <span className="text-zinc-400">Your DHB</span>
+            <span className="text-zinc-400">{t('tokenPaywall.yourTokens')}</span>
             <div className="flex items-center gap-2">
               <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
               {isWalletLoading ? (
@@ -268,9 +270,9 @@ export function ImagePaywallModal({
                 Generating...
               </>
             ) : needsTokens ? (
-              'Buy DHB'
+              t('nav.buyDhb')
             ) : (
-              `Pay ${formatDhb(costDhb)} DHB & Generate`
+              t('tokenPaywall.payAndGenerate', { amount: formatDhb(costDhb) })
             )}
           </Button>
         </div>

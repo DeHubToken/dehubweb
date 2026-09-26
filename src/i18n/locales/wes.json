@@ -363,6 +363,9 @@
     "emailNotificationsDescLinked": "Send to {{email}}",
     "emailNotificationsNoAddress": "Add one email for your account first — dat na where dem go go.",
     "emailNotificationsAddAddress": "Add one email",
+    "smsPricePerMessage": "{{dhb}} tokens (${{usd}})",
+    "smsDepositAction": "Send {{dhb}} tokens",
+    "smsBalance": "{{dhb}} tokens left (${{usd}})",
     "badgeDelegation": "Badge delegation",
     "badgeDelegationLoading": "Loading delegations…",
     "badgeDelegationAccept": "Let others lend me their badge",
@@ -389,7 +392,8 @@
     "usernamesCount_one": "{{count}} username",
     "usernamesCount_other": "{{count}} usernames",
     "leftHanded": "Left-hand mode",
-    "leftHandedDesc": "Move di like button go for left side for di reactions bar"
+    "leftHandedDesc": "Move di like button go for left side for di reactions bar",
+    "tokenBalance": "Token Balance"
   },
   "common": {
     "save": "Save am",
@@ -413,42 +417,34 @@
     "quickAmounts": "Quick amount dem",
     "customAmount": "Or put amount",
     "sending": "E dey send...",
-    "sendAmount": "Send {{amount}} DHB",
+    "sendAmount": "Send {{amount}} tokens",
     "toContent": "Tip content",
     "solanaFailed": "Solana tip failed",
     "missingWeb3": "Missing web3 context",
     "amountRequested": "Amount requested",
     "amountIn": "Amount ({{currency}})",
     "enterAmount": "Enter amount",
-    "balance": "Balance: {{amount}} DHB",
+    "balance": "Balance: {{amount}} tokens",
     "balanceAmount": "Balance: {{amount}}",
     "max": "Max: {{amount}}",
     "insufficientBalance": "Insufficient balance",
     "insufficientShort": "Insufficient",
-    "insufficientDhb": "Insufficient DHB",
     "approving": "Approving...",
     "send": "Send",
     "sent": "Tip Sent!",
     "toRecipient": "to {{name}}",
     "sendAgain": "Send Again",
     "addTip": "Add a Tip",
-    "minAmount": "Min {{amount}} DHB.",
-    "attachAmount": "Attach {{amount}} DHB",
+    "minAmount": "Min {{amount}} tokens.",
+    "attachAmount": "Attach {{amount}} tokens",
     "removeTip": "Remove Tip",
     "payWith": "Pay wit",
     "payQuoting": "We di find best price…",
     "payQuote": "≈ {{amount}} {{symbol}} for {{chain}}",
-    "payViaBridge": "We don change am to DHB for Uniswap, e go reach for ~{{seconds}}s",
-    "payViaSwap": "We don change am to DHB for Uniswap",
     "stageApprove": "We di approve {{symbol}}…",
     "stageBridge": "We di send {{symbol}} from {{chain}}…",
     "stageArriving": "E di reach Base, normally na small seconds…",
-    "stageSwap": "We di buy DHB for Uniswap…",
-    "payFailed": "We no fit change {{symbol}} to DHB",
     "stagePay": "E dey pay DeHub Pay with {{symbol}}…",
-    "stageDelivering": "DeHub Pay dey send your DHB…",
-    "payViaDpay": "Pay don reach DeHub Pay, DHB go land for like 30s",
-    "payViaBridgeDpay": "E don move go Base and pay DeHub Pay, DHB go land for like one minute",
     "dmSent": "You don send {{amount}} DHB give {{name}}!"
   },
   "postOptions": {
@@ -527,19 +523,16 @@
     "setPpvPrice": "Set di PPV Price",
     "currency": "Currency",
     "price": "Price",
-    "ppvDhbInfo": "Payments dey for DHB on Base chain",
     "ppvUsdInfo": "Payments dey for USD",
     "setupBounty": "Set Up Bounty",
     "viewersToReward": "Viewers for reward",
     "numberOfViewers": "How many viewer dem",
     "commentersToReward": "Commenters for reward",
     "numberOfCommenters": "How many people go comment",
-    "rewardPerPerson": "Reward for each person (DHB)",
+    "rewardPerPerson": "Reward per person (tokens)",
     "amountPerPerson": "Amount for each person",
-    "totalLocked": "Total: {{amount}} DHB go lock for rewards",
     "tokenGateSettings": "Token Gate Settings",
-    "requiresDhb": "E need DHB tokens on Base chain",
-    "minimumDhb": "Minimum DHB weh dem need",
+    "minimumDhb": "Minimum tokens required",
     "minimumAmount": "Minimum amount",
     "cancel": "Cancel",
     "confirm": "Confirm am",
@@ -617,7 +610,8 @@
     "generateImageOf": "Generate image of ",
     "generateVideoOf": "Generate video of ",
     "whatsHappeningNews": "Wetin dey happen for news today?",
-    "loginRequired": "Log in for access di Assistant and unlock powerful features like image and video generation."
+    "loginRequired": "Log in for access di Assistant and unlock powerful features like image and video generation.",
+    "payingTokens": "Paying {{amount}} tokens..."
   },
   "publicChat": {
     "title": "Public Chat",
@@ -672,7 +666,7 @@
     "subscriptions": "Subscription dem",
     "transactions": "Transaction dem",
     "totalBalance": "Total wallet value",
-    "totalDhbBalance": "Total DHB Balance",
+    "totalDhbBalance": "Total token balance",
     "otherAssets": "Other asset dem",
     "fullWallet": "Wallet",
     "signInBalance": "Sign in for see your balance",
@@ -684,13 +678,8 @@
     "recentTransactions": "Recent transaction dem",
     "viewAll": "See all",
     "noTransactionsYet": "No transaction dey yet",
-    "txPurchased": "You buy {{amount}} DHB",
-    "txSold": "You sell {{amount}} DHB",
-    "txTransfer": "Transfer of {{amount}} DHB",
-    "txPpvUnlock": "PPV unlock — {{amount}} DHB",
-    "txPpvSale": "PPV sale — {{amount}} DHB",
-    "txTipSent": "You tip {{name}} {{amount}} DHB",
-    "txTipReceived": "{{name}} tip you {{amount}} DHB",
+    "txPpvUnlock": "PPV unlock — {{amount}} tokens",
+    "txPpvSale": "PPV sale — {{amount}} tokens",
     "subscriptionsSummary": "Subscription dem",
     "viewDetails": "See Details",
     "active": "Active",
@@ -705,7 +694,7 @@
     "transfer": "Transfer",
     "bankCard": "Bank Card",
     "soon": "SOON",
-    "transferDhb": "Transfer DHB",
+    "transferDhb": "Transfer tokens",
     "walletAddressOrUsername": "Wallet address or username",
     "send": "Send am",
     "purchaseWithCard": "Buy with card",
@@ -774,7 +763,9 @@
     "crossChainCompleted": "Cross-chain deposit don finish! {{symbol}} don enta fo Base.",
     "tryAgain": "Try Again",
     "sendFromWallet": "Send {{amount}} {{symbol}} from ma wallet",
-    "walletSendSubmitted": "E don go. Ya ETH go reach Base for some few minutes."
+    "walletSendSubmitted": "E don go. Ya ETH go reach Base for some few minutes.",
+    "txGeneric": "{{type}} — {{amount}} tokens",
+    "tokenAmountLabel": "Token amount"
   },
   "wallet": {
     "title": "Wallet",
@@ -962,7 +953,9 @@
       "hereNamed": "{{name}} send message to everybody for “{{community}}”"
     },
     "byEmail": "By email",
-    "byText": "By text"
+    "byText": "By text",
+    "tipTokens": "{{amount}} tokens",
+    "tokenAmount": "{{amount}} tokens"
   },
   "leaderboard": {
     "title": "Leaderboards",
@@ -993,8 +986,7 @@
     "noUsersFound": "No users dey",
     "highestFirst": "Showing highest first",
     "lowestFirst": "Showing lowest first",
-    "addedToLeaderboard": "You don enter! Balance: {{balance}} DHB",
-    "balanceTooLow": "Balance too low ({{balance}} DHB)",
+    "balanceTooLow": "Balance too low ({{balance}} tokens)",
     "refreshFailed": "Something go wrong",
     "noWalletAddress": "No wallet address dey",
     "hidden": "E hide",
@@ -1004,7 +996,8 @@
     "rankN": "Rank {{rank}}",
     "you": "(you)",
     "provisional": "e never sure",
-    "loadingBoard": "Leaderboard di load…"
+    "loadingBoard": "Leaderboard di load…",
+    "amountTokens": "{{amount}} tokens"
   },
   "explorePage": {
     "searchPlaceholder": "Search for people, posts, or content...",
@@ -1130,7 +1123,10 @@
     "title": "Messages",
     "searchConversations": "Search conversations...",
     "failedToLoad": "E no fit load conversations",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "feePerMessage": "{{amount}} tokens per message",
+    "feeWarningTitle": "Messages cost tokens",
+    "customTipMin": "Custom tip (min {{amount}} tokens)"
   },
   "music": {
     "all": "All",
@@ -1158,7 +1154,6 @@
     "enterOfferAmount": "Rait di amaunt fo US dollar wei yu wan offa fo dis yusaneim.",
     "submitOffer": "Submit Offer",
     "validOfferAmount": "Abeg put valid offer amount",
-    "offerSubmitted": "Offer of {{amount}} DHB don submit for {{handle}}",
     "followers": "Followers",
     "following": "Following",
     "joined": "Joined",
@@ -1174,9 +1169,7 @@
     "tabs": {
       "playlists": "Playlists"
     },
-    "offerWorthNow": "Sɔntin lɛk {{amount}} DHB fo di reit nau",
     "offerNotePlaceholder": "Add smɔl not (if yu want)",
-    "offerCommitsNothing": "Fo mek offa no kost notin an i no go hol eni DHB. Na ɔnli if di ona aksept yu go pei.",
     "offerNeedsHandle": "Dis akaunt no get yusaneim wei yu fit offa fo am."
   },
   "tv": {
@@ -1221,7 +1214,8 @@
     "swapSuccess": {
       "title": "Swap Successful!",
       "received": "{{amount}} <coin></coin> received"
-    }
+    },
+    "tokensUnit": "tokens"
   },
   "agents": {
     "title": "AI Agents",
@@ -1393,14 +1387,11 @@
     "title": "DAO Treasury",
     "subtitle": "One wallet, community di fund am, na vote di spend am",
     "contribute": "Contribute",
-    "contributeIntro": "Send DHB from ya wallet go for treasury. Every token weh you add go raise ya share for the pool, and na ya share be the weight weh ya vote carry when DAO decide how for spend am.",
-    "amountLabel": "Amount (DHB)",
-    "youHold": "You get {{amount}} DHB",
+    "amountLabel": "Amount (tokens)",
     "irreversible": "Contribution na transfer on-chain. E no fit reverse or withdraw.",
     "switchChain": "Switch ya wallet go for {{chains}} make you fit contribute.",
-    "sendAmount": "Send {{amount}} DHB",
+    "sendAmount": "Send {{amount}} tokens",
     "sentTitle": "Contribution sent",
-    "sentDesc": "{{amount}} DHB don go for treasury on {{chain}}. Ya share go update once the block don index.",
     "viewTx": "View transaction",
     "sendFailed": "Contribution failed",
     "treasuryBalance": "Treasury balance",
@@ -1408,22 +1399,23 @@
     "treasuryAddress": "Treasury address",
     "copyAddress": "Copy address",
     "addressCopied": "Address copied",
-    "sendAnyWallet": "Any person fit send DHB here from any wallet or exchange. Transfer on Base and BNB di count for ya share.",
     "loadFailed": "We no fit read the treasury now. Try again small time.",
     "yourPower": "Your power",
-    "yourContribution": "{{amount}} DHB contributed",
+    "yourContribution": "{{amount}} tokens contributed",
     "addMore": "Add more",
     "noContributionYet": "You never contribute. Ya share for the pool go start with ya first transfer.",
     "howItWorksTitle": "How power di work",
     "howItWorksBody": "Ya power na ya contribution divide by everything weh people don ever send for treasury. E di read straight from the chain, e no di expire, and na yi decide how much weight ya voice carry when DAO vote on spending.",
     "contributors": "Contributors",
-    "pooledTotal": "{{amount}} DHB pooled",
+    "pooledTotal": "{{amount}} tokens pooled",
     "noContributors": "No person don contribute yet. Be the first.",
     "recent": "Recent contributions",
     "you": "You",
     "transferCount_one": "{{count}} transfer",
     "transferCount_other": "{{count}} transfers",
-    "power": "power"
+    "power": "power",
+    "tokenAmount": "Token amount",
+    "pricePerTokenUsd": "Price per token (USD)"
   },
   "governance": {
     "title": "Govnas",
@@ -1458,8 +1450,6 @@
     "noRejectedYet": "No rejected proposals yet",
     "rejectedAppearHere": "Rejected proposals go appear here",
     "yourVoteWeight": "Your vote weight:",
-    "holdTokensToVote": "Hold DHB tokens for vote",
-    "mustHoldTokens": "You must hold DHB tokens for vote on governance proposals.",
     "justNow": "just now",
     "minutesAgo": "{{count}}m ago",
     "hoursAgo": "{{count}}h ago",
@@ -1748,15 +1738,12 @@
     "please_enter_valid_amount_stake": "Enta wan valid amount for put abeg.",
     "not_connected": "No dei connected",
     "please_connect_wallet_first": "Connect yua wallet fes abeg.",
-    "no_dhb_balance": "No DHB balance dei",
-    "no_dhb_tokens_either_chain": "Yu no get DHB token fo eni fo di chain dem.",
-    "dhb_found_on_both_chains": "Dem faind DHB fo bot chain dem",
-    "staking_dhb": "I di put DHB...",
+    "no_dhb_balance": "No token balance",
+    "staking_dhb": "Staking tokens...",
     "confirming_transaction": "I di confam transaction...",
     "staked_successfully": "Dem don put-am successfully! ✅",
     "stake_failed": "Put no work",
     "transaction_reverted": "Dem don revers di transaction.",
-    "dhb_token_not_configured": "DHB token no dei configure fo {{chain}}.",
     "please_enter_valid_amount_unstake": "Enta wan valid amount for withdraw abeg.",
     "insufficient_staked_balance": "Staked balance no reach",
     "only_have_dhb_staked": "Yu get {{amount}} nomo weh yu don put.",
@@ -1764,11 +1751,8 @@
     "dhb_added_to_unstake_queue": "{{amount}} {{tokenWord}} don enta di withdrawal queue.",
     "not_enough_gas_token": "Yu nid {{token}} fo dis wallet fo pay di netwok fee.",
     "unstake_failed": "Withdraw no work",
-    "only_have_dhb_withdrawable": "Fo nau, na only {{amount}} DHB yu fit komot.",
     "early_withdrawal_fee": "Fee fo komot moni bifo taim",
-    "early_withdrawal_fee_detail": "E lok sotee {{date}}. If yu komot nau, e go kost {{percent}}% — sote {{amount}} DHB. Pres Komot agen fo konfam.",
     "unstaked_successfully": "Dem don komot am fain! ✅",
-    "dhb_unstaked_on_chain": "Dem komot {{amount}} DHB fo {{chain}}.",
     "unstake_cancelled": "Dem don cancel di withdraw",
     "unstake_request_removed": "Dem don remove yua withdraw request.",
     "failed_to_cancel": "I no fit cancel-am",
@@ -1778,7 +1762,6 @@
     "rewards_sent_to_wallet": "Yua staking reward dem don enta yua wallet.",
     "claim_failed": "Kolect no work",
     "staking_on_chain_first": "I di put fo {{chain}} fes. Kam bak afta mek yu put di oda wan.",
-    "dhb_staked_on_chain": "{{amount}} DHB don put fo {{chain}}.",
     "waiting_for_confirmation": "I di wait fo confirmation...",
     "error": "Error",
     "new_version_available": "Versi anyar tersedia",
@@ -1850,7 +1833,7 @@
     "daysAgo": "{{count}} dei dem bifo",
     "cancelUnstake": "Cancel di withdrawal",
     "withdrawableNow": "Yu fit komot am nau",
-    "poolNotWithdrawable": "{{amount}} DHB dey inside di deposit pool wallet, weh e neva get komot kontrakt — tok wit support mek dem muv am."
+    "pricePerToken": "@ ${{price}}/token"
   },
   "communities": {
     "create": "Creat",
@@ -2073,9 +2056,7 @@
     "boostExplainer": "I di put dis post fo di slot fo di top fo di home feed for yua taim.",
     "secondWindExplainer": "Dis post pas wan week old. Second Wind di send-am bak go di top fo di feed.",
     "shareOfVoice": "Di boost slot di rotate. Wen plenti boost dem di run, dem di deal viewer dem wan wan weh dem weight-am bai badge tier — hai tier dem di sho moa taim, an evribodi di get di window weh dem grant dem.",
-    "needBadge": "SuperPowers nid wan staking badge. Put DHB mek yu unlock dem.",
-    "noBadgeYet": "Yu no get badge yet, so no boost dei. Putting DHB di unlock di ladder weh dei anda.",
-    "stakeDhb": "Put DHB",
+    "stakeDhb": "Stake Tokens",
     "minutes": "minit dem",
     "left": "lef",
     "queued": "fo queue",
@@ -2117,7 +2098,7 @@
       "title": "Team up",
       "signIn": "Sign in",
       "membersCount": "{{count}}/{{max}} members",
-      "pooled": "{{amount}} DHB pooled",
+      "pooled": "{{amount}} tokens pooled",
       "noBadgeYet": "No badge yet",
       "privateBadge": "Private",
       "members": "Members",
@@ -2134,7 +2115,7 @@
       "join": "Join a team",
       "searchPlaceholder": "Search teams",
       "none": "No teams found.",
-      "teamMeta": "{{count}}/{{max}} members, {{tier}}, {{amount}} DHB",
+      "teamMeta": "{{count}}/{{max}} members, {{tier}}, {{amount}} tokens",
       "joinAction": "Join",
       "full": "Full",
       "joined": "Joined {{name}}",
@@ -2155,8 +2136,85 @@
     "budgetExhausted": "Dis bounty money don finish.",
     "title": "Bounty dem"
   },
+  "stores": {
+    "podToggle": "Print-on-demand item",
+    "podHint": "Link one product from your print-on-demand shop. Di provider go print and ship every order, so you no need keep stock.",
+    "podUrlLabel": "Product link",
+    "podProviderLabel": "Provider",
+    "podOther": "Oda",
+    "podInvalidUrl": "Put correct https:// product link",
+    "podBadge": "Print on demand",
+    "podBuyOn": "Buy for {{provider}}",
+    "podNote": "{{provider}} dey print and ship am when person order. Payment dey happen for their site.",
+    "podUrlPlaceholder": "https://…",
+    "title": "Stores"
+  },
   "stages": {
     "title": "Audio room dem"
+  },
+  "ads": {
+    "priceUnavailable": "Token price unavailable — try again shortly.",
+    "sendingDhb": "Sending tokens…",
+    "buyingDhb": "Buying tokens…",
+    "rateToCredit": "@ ${{price}}/token → ${{usd}} credit"
+  },
+  "launchpad": {
+    "feeBurn": "Burn tokens"
+  },
+  "fractions": {
+    "seoDescription": "Buy and sell fraction dem for DeHub post dem. Post weh dem don mint na 1000 on-chain fraction — get your own piece for video, track or picture and trade am for DHB.",
+    "title": "Fraction dem",
+    "startTheMarketHint": "Post weh dem don mint na 1000 fraction — put some of your own for market make the market start.",
+    "noneHeldHint": "Mint one post make you hold all im 1000 fraction dem, or buy inside another person own.",
+    "profileEmptyOwn": "Post weh dem don mint na 1000 fraction. Mint one of your post dem, or buy inside post weh you believe for.",
+    "profileEmptyOther": "Post weh dem don mint na 1000 fraction. This profile no hold any fraction for any post now so."
+  },
+  "creator": {
+    "freeImagesLeft_one": "Free · {{count}} free image left",
+    "freeImagesLeft_other": "Free · {{count}} free images left",
+    "priceFreeRateLimited": "Free · rate limits apply",
+    "priceChecking": "Checking price…",
+    "priceUnavailable": "Price unavailable — retry before paying",
+    "priceStandardTexture": "standard texture",
+    "priceUsually": "Usually {{time}}; queues may take longer",
+    "useFreeModel_one": "Change go {{model}} for use ya {{count}} free picture",
+    "useFreeModel_other": "Change go {{model}} for use ya {{count}} free pictures",
+    "presetLifestyleSceneName": "Lifestyle Scene",
+    "presetLifestyleSceneHint": "Your product for real life",
+    "presetHandCloseupName": "Hand Close-up",
+    "presetHandCloseupHint": "Dem hold am for hand, label show camera",
+    "presetMoodboardPinName": "Moodboard Pin",
+    "presetMoodboardPinHint": "Picture wey look like Pinterest, stand well well",
+    "presetHeroBannerName": "Hero Banner",
+    "presetHeroBannerHint": "Big picture for top, get space for word",
+    "presetConceptualProductName": "Conceptual Product",
+    "presetConceptualProductHint": "Product dey fly, water dey splash, CGI wey no dey real",
+    "presetModelWearingName": "On a Model",
+    "presetModelWearingHint": "Person wear the cloth or accessory",
+    "presetSeasonalRestyleName": "Seasonal Restyle",
+    "presetSeasonalRestyleHint": "Same product, new place and feeling. Need picture wey come with am",
+    "presetFlatVectorName": "Flat Vector",
+    "presetFlatVectorHint": "Strong lines and plain colour",
+    "presetInkMarkerName": "Ink Marker",
+    "presetInkMarkerHint": "Drawing with black pen, no colour",
+    "presetMonoSilhouetteName": "Mono Silhouette",
+    "presetMonoSilhouetteHint": "Black shape for white, like poster",
+    "presetStorybookGouacheName": "Storybook Gouache",
+    "presetStorybookGouacheHint": "Picture wey look like book wey dem paint am well well",
+    "presetUgcSelfieName": "UGC Selfie",
+    "presetUgcSelfieHint": "Creator film demself for phone, talk to camera",
+    "presetUgcUnboxingName": "UGC Unboxing",
+    "presetUgcUnboxingHint": "Dem open the box for camera, show wetin dey inside",
+    "presetUgcTutorialName": "UGC Tutorial",
+    "presetUgcTutorialHint": "How to use am, step by step, film for phone",
+    "presetProductReviewName": "Product Review",
+    "presetProductReviewHint": "Person talk wetin dem think about the product",
+    "presetTvSpotName": "TV Spot",
+    "presetTvSpotHint": "Polished broadcast-style commercial",
+    "priceTokensUsd": "{{amount}} DeHub tokens · USD {{usd}}"
+  },
+  "pricing": {
+    "sharedDhbPool": "Shared token pool"
   },
   "videoLooks": {
     "button": "Camera looks",
@@ -2179,6 +2237,13 @@
     "pixelate": "Pixelate"
   },
   "usernames": {
+    "title": "Username dem",
+    "priceDhb": "Price (tokens)",
+    "askingPriceDhb": "Asking price for token",
+    "priceRange": "Between {{min}} and {{max}} token.",
+    "payingWithDhbOn": "Pay wit DeHub token for {{chain}}",
+    "shortOfDhbPaidOn": "You no get enough token — dis go pay for {{chain}}",
+    "transferGuarantee": "Di handle go move only afta DeHub read your token transfer back from di chain. If e no fit, di payment dey record for di sale so di seller fit refund you.",
     "tabOffers": "Offa dem",
     "signInForOffers": "Sign in fo si di offa dem fo yu yusaneim.",
     "offersForYou": "Offa dem fo yu yusaneim",
@@ -2216,15 +2281,37 @@
     "vaultEditListing": "Edit listing",
     "vaultRelease": "Release",
     "vaultReleaseTitle": "Release @{{handle}}?",
-    "title": "Username dem",
     "addedToYourUsernames": "E go join your usernames",
     "boughtNameGoesToVault": "You go still be @{{current}}. @{{handle}} go join your usernames, and you fit change to am any time you want.",
     "youAreNow": "You done be @{{handle}} now",
     "boughtToVaultToast": "@{{handle}} dey inside your usernames now"
   },
+  "accounts": {
+    "title": "Account dem",
+    "subtitle": "Whole account for sale, price for DeHub token",
+    "priceDhb": "Price (tokens)",
+    "askingPriceDhb": "Asking price for token",
+    "priceRange": "Between {{min}} and {{max}} token.",
+    "saleFinalWarning": "Sale na final and e move everytin — handle, post, follower, tip history and badge entitlement. Your wallet and wetin dey inside (token, staked badge, minted collectible) remain your own; afta dat dis wallet go sign into brand new blank account. Payment go straight to you — DeHub no take any cut.",
+    "payingWithDhbOn": "Pay wit DeHub token for {{chain}}",
+    "shortOfDhbPaidOn": "You no get enough token — dis go pay for {{chain}}",
+    "transferGuarantee": "You go get di whole account — handle, post, follower, tip history and badge entitlement. Di seller keep dem own wallet and everytin wey dey inside. Transfer go run only afta DeHub read your token payment back from di chain; if e break, try am again to continue am."
+  },
+  "subscriptions": {
+    "buyersPayTokenAmount": "Buyer dem pay di DeHub token amount wey dem show for di pre-listing rate. You go receive di USD value as USDT balance.",
+    "legacyPlanMigrates": "Saving go change dis old token-price plan to dollar price for di pre-listing rate.",
+    "tokenAmount": "{{amount}} token",
+    "preListingTokenAmount": "Pre-listing token amount",
+    "tokensStayInTreasury": "Your DeHub token remain for DeHub treasury custody and dem no sell am. Di creator go receive USDT subscription balance.",
+    "tokenCheckoutNotReady": "Di token subscription checkout no ready — please try again soon",
+    "tokenQuoteUnavailable": "Live token quote no dey",
+    "tokenEstimate": "≈ {{amount}} token",
+    "tokenAmountUnavailable": "Token amount no dey"
+  },
   "live": {
     "chatJoined": "don join",
     "chatSentGift": "don send",
+    "transfersPaused": "Token transfer dey pause",
     "progress": {
       "title": "Streamer level",
       "level": "Level {{level}}",
@@ -2293,7 +2380,8 @@
     "obsStep4": "Click \"Start Streaming\"",
     "endStream": "End Stream",
     "viewStream": "View Stream",
-    "keepStreaming": "Keep streaming"
+    "keepStreaming": "Keep streaming",
+    "notEnoughTokensForBounty": "No get enough token. Need {{need}} token but get {{have}}."
   },
   "referral": {
     "stats": {
@@ -2304,6 +2392,16 @@
       "noVisits": "No visits yet"
     },
     "moreDestinations": "More place to start"
+  },
+  "premium": {
+    "cashback": "100% token cashback — get $50 for DeHub token back every month wey you subscribe.",
+    "stakeGetPremium": "Stake tokens. Get Premium.",
+    "faqPayInDhbQ": "I fit pay wit DeHub token?",
+    "faqPayInDhbA": "Card payment for launch. Paying wit DeHub token go come soon and e go get discount."
+  },
+  "depin": {
+    "dhbEarnedThisPeriod": "Token wey you earn dis period",
+    "noFixedRate": "No get fixed rate, minimum return, APY or forward estimate. Contribution record na only for accounting, no be promise of payment. Any future token settlement go happen for Base and remain subject to eligibility, network rule and applicable law."
   },
   "creatorFlow": {
     "title": "Creator Flow",
@@ -2452,16 +2550,14 @@
     "planFailed": "No fit price dis run.",
     "runTitle_one": "Run {{count}} node",
     "runTitle_other": "Run {{count}} nodes",
-    "runDescriptionPaid": "Each generator get price from di server. One DHB transfer cover di whole run; a node wey fail release im share.",
-    "runDescriptionFree": "Nothing for dis run cost DHB.",
+    "runDescriptionPaid": "Each generator get price from di server. One token transfer cover di whole run; a node wey fail go release im share.",
+    "runDescriptionFree": "Ntin for dis run cost token.",
     "freeNodes_one": "+ {{count}} assistant node, free",
     "freeNodes_other": "+ {{count}} assistant nodes, free",
     "total": "Total",
-    "walletHolds": "Your wallet get {{amount}} DHB.",
-    "notEnoughDhb": "Your wallet get {{have}} DHB; dis run need {{need}}.",
     "buyDhb": "Buy tokens",
     "run": "Run",
-    "paying": "Paying {{amount}} DHB…",
+    "paying": "Paying {{amount}} tokens…",
     "paymentConfirmed": "Payment confirm. Running…",
     "paymentFailed": "Payment fail.",
     "logRunning": "Running flow…",
@@ -2670,7 +2766,7 @@
     "paste": "Paste",
     "pay": "Pay",
     "payContext": "Profile migration",
-    "paying": "Paying {{amount}} DHB…",
+    "paying": "Paying {{amount}} tokens…",
     "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
     "progressDone": "{{imported}} imported.",
     "progressDoneWithFailures": "{{imported}} imported, {{failed}} couldn't import.",
@@ -2754,13 +2850,15 @@
     },
     "ttsLabel": "Talk someting loud",
     "ttsPlaceholder": "Read am out to di stream…",
-    "ttsHint": "Read am aloud to everybody wey dey watch when your gift land."
+    "ttsHint": "Read am aloud to everybody wey dey watch when your gift land.",
+    "buy": {
+      "amountToBuy": "Tokens to buy"
+    }
   },
   "nearBuy": {
     "otherCurrencies": "Other currencies",
     "title": "Pay with crypto",
-    "description": "Choose a token to pay. Receive DHB in your wallet.",
-    "dhbAmount": "DHB amount",
+    "dhbAmount": "DeHub token amount",
     "search": "Search token, network or contract",
     "noMatches": "No matching tokens.",
     "loading": "Loading…",
@@ -2772,11 +2870,9 @@
     "refundPlaceholder": "Address on the payment network",
     "refundHint": "Check this is a wallet you control on the payment network. Avoid exchange addresses that require a memo or tag. Any provider refund returns here.",
     "quoteSummary": "Estimated payment: {{amount}} {{symbol}} on {{chain}}",
-    "receiveNet": "You receive: {{amount}} DHB",
     "gasReserve": "Includes ${{amount}} for network gas.",
     "swapEstimate": "About {{minutes}} min after your payment confirms.",
     "estimateUnknown": "Timing depends on the payment network.",
-    "confirmationTime": "Network confirmations and DHB delivery add time. This is an estimate, not a countdown.",
     "finalQuote": "Review the final amount before paying.",
     "getQuote": "Continue",
     "paymentAction": "Continue",
@@ -2796,23 +2892,17 @@
     "history": "Your purchases",
     "startAnother": "Back to payment options",
     "refundReceipt": "Refund destination: {{address}}",
-    "destination": "DHB destination on Base: {{address}}",
-    "viewDelivery": "View DHB transfer",
+    "viewDelivery": "View token transfer",
     "purchaseId": "Copy purchase ID: {{id}}",
     "phase_awaiting": "Waiting for your payment",
     "detail_awaiting": "Send once, on the selected network, before the deadline. If you have already sent it, wait for network confirmation.",
     "phase_confirming": "Payment detected",
     "detail_confirming": "Waiting for the network to confirm your payment. You do not need to pay again.",
     "phase_swapping": "Converting your payment",
-    "detail_swapping": "Your payment is processing. We will update this receipt when your DHB arrives.",
-    "phase_delivering": "Payment settled · sending DHB",
-    "detail_delivering": "Payment received. Your DHB is on its way.",
-    "phase_deliveryDelayed": "DHB delivery delayed",
-    "detail_deliveryDelayed": "Your payment has settled, but DHB delivery needs a retry. Keep this purchase ID and contact DeHub support if it remains delayed. Do not pay again.",
-    "phase_gasPending": "DHB delivered · gas pending",
-    "detail_gasPending": "Your DHB transfer is confirmed. The separate ETH gas transfer is still pending or retrying.",
+    "phase_delivering": "Payment settled · sending tokens",
+    "phase_deliveryDelayed": "Token delivery delayed",
+    "phase_gasPending": "Tokens delivered · gas pending",
     "phase_delivered": "Purchase complete",
-    "detail_delivered": "Your DHB has been delivered to your Base wallet.",
     "phase_refunded": "Payment refunded",
     "detail_refunded": "The provider reports the payment refunded to the refund address below. Check that wallet; network fees may apply.",
     "phase_failed": "Payment needs attention",
@@ -2824,7 +2914,6 @@
     "phase_checking": "Checking payment progress",
     "detail_checking": "The provider has not returned a final outcome. Your purchase is saved. Do not send another payment.",
     "pay": "Pay",
-    "directTiming": "DHB is delivered once your payment confirms.",
     "wrongNetwork": "Switch to the selected payment network and try again.",
     "wrongWallet": "Connect the wallet shown on this purchase and try again.",
     "reviewPay": "Review the amount, then confirm the payment in your wallet.",
@@ -3029,7 +3118,7 @@
       "contract": "Token contract address",
       "mintPlaceholder": "Token mint address",
       "openExisting": "Open it",
-      "feeDhb": "≈ {{amount}} DHB",
+      "feeDhb": "≈ {{amount}} DeHub tokens",
       "uploading": "Uploading image…"
     },
     "pool": {
@@ -3387,78 +3476,11 @@
       "hint": "Drag for canvas for draw. Each line na yi own layer weh you fit move, resize or delete. Press Esc for stop."
     }
   },
-  "fractions": {
-    "seoDescription": "Buy and sell fraction dem for DeHub post dem. Post weh dem don mint na 1000 on-chain fraction — get your own piece for video, track or picture and trade am for DHB.",
-    "title": "Fraction dem",
-    "startTheMarketHint": "Post weh dem don mint na 1000 fraction — put some of your own for market make the market start.",
-    "noneHeldHint": "Mint one post make you hold all im 1000 fraction dem, or buy inside another person own.",
-    "profileEmptyOwn": "Post weh dem don mint na 1000 fraction. Mint one of your post dem, or buy inside post weh you believe for.",
-    "profileEmptyOther": "Post weh dem don mint na 1000 fraction. This profile no hold any fraction for any post now so."
-  },
-  "stores": {
-    "podToggle": "Print-on-demand item",
-    "podHint": "Link one product from your print-on-demand shop. Di provider go print and ship every order, so you no need keep stock.",
-    "podUrlLabel": "Product link",
-    "podProviderLabel": "Provider",
-    "podOther": "Oda",
-    "podInvalidUrl": "Put correct https:// product link",
-    "podBadge": "Print on demand",
-    "podBuyOn": "Buy for {{provider}}",
-    "podNote": "{{provider}} dey print and ship am when person order. Payment dey happen for their site.",
-    "podUrlPlaceholder": "https://…",
-    "title": "Stores"
-  },
-  "accounts": {
-    "title": "Account dem"
-  },
   "jungleMood": {
     "title": "Time for day",
     "desc": "Bright day or blue evening for inside bush",
     "day": "Day",
     "evening": "Evening"
-  },
-  "creator": {
-    "freeImagesLeft_one": "Free · {{count}} free image left",
-    "freeImagesLeft_other": "Free · {{count}} free images left",
-    "priceFreeRateLimited": "Free · rate limits apply",
-    "priceChecking": "Checking price…",
-    "priceUnavailable": "Price unavailable — retry before paying",
-    "priceStandardTexture": "standard texture",
-    "priceUsually": "Usually {{time}}; queues may take longer",
-    "useFreeModel_one": "Change go {{model}} for use ya {{count}} free picture",
-    "useFreeModel_other": "Change go {{model}} for use ya {{count}} free pictures",
-    "presetLifestyleSceneName": "Lifestyle Scene",
-    "presetLifestyleSceneHint": "Your product for real life",
-    "presetHandCloseupName": "Hand Close-up",
-    "presetHandCloseupHint": "Dem hold am for hand, label show camera",
-    "presetMoodboardPinName": "Moodboard Pin",
-    "presetMoodboardPinHint": "Picture wey look like Pinterest, stand well well",
-    "presetHeroBannerName": "Hero Banner",
-    "presetHeroBannerHint": "Big picture for top, get space for word",
-    "presetConceptualProductName": "Conceptual Product",
-    "presetConceptualProductHint": "Product dey fly, water dey splash, CGI wey no dey real",
-    "presetModelWearingName": "On a Model",
-    "presetModelWearingHint": "Person wear the cloth or accessory",
-    "presetSeasonalRestyleName": "Seasonal Restyle",
-    "presetSeasonalRestyleHint": "Same product, new place and feeling. Need picture wey come with am",
-    "presetFlatVectorName": "Flat Vector",
-    "presetFlatVectorHint": "Strong lines and plain colour",
-    "presetInkMarkerName": "Ink Marker",
-    "presetInkMarkerHint": "Drawing with black pen, no colour",
-    "presetMonoSilhouetteName": "Mono Silhouette",
-    "presetMonoSilhouetteHint": "Black shape for white, like poster",
-    "presetStorybookGouacheName": "Storybook Gouache",
-    "presetStorybookGouacheHint": "Picture wey look like book wey dem paint am well well",
-    "presetUgcSelfieName": "UGC Selfie",
-    "presetUgcSelfieHint": "Creator film demself for phone, talk to camera",
-    "presetUgcUnboxingName": "UGC Unboxing",
-    "presetUgcUnboxingHint": "Dem open the box for camera, show wetin dey inside",
-    "presetUgcTutorialName": "UGC Tutorial",
-    "presetUgcTutorialHint": "How to use am, step by step, film for phone",
-    "presetProductReviewName": "Product Review",
-    "presetProductReviewHint": "Person talk wetin dem think about the product",
-    "presetTvSpotName": "TV Spot",
-    "presetTvSpotHint": "Polished broadcast-style commercial"
   },
   "affiliateLanding": {
     "title": "Arrange your invite page",
@@ -3492,23 +3514,16 @@
   "easyTrade": {
     "chooseTitle": "How you want trade?",
     "easyTitle": "Easy trade",
-    "easyHint": "Sell DHB with small small tap. We go find the best way.",
     "exchangeTitle": "Exchange",
     "exchangeHint": "Full order book, chart and limit order them.",
     "stepOf": "Step {{step}} for {{total}}",
-    "sellTitle": "How much DHB you want sell?",
-    "available": "You get {{amount}} DHB for Base",
     "max": "Max",
-    "noDhb": "You no get DHB for Base weh you fit sell.",
     "next": "Next",
     "quoteFailed": "We no fit get market rate. Try again.",
     "priceTitle": "What price?",
     "marketRate": "Market rate",
-    "marketRateHint": "Sell now for like ${{price}} for one DHB, around {{usdc}} USDC total.",
     "myPrice": "Set my price",
-    "myPriceHint": "Your own price for one DHB for USD",
     "enterPrice": "Enter a price.",
-    "routeList": "E pass market: we go put your DHB for exchange, e go sell hisself when price reach ${{price}}.",
     "routeInstant": "E reach or e dey under market: you go sell quick quick for the better market rate.",
     "reviewTitle": "Review",
     "youSell": "You sell",
@@ -3517,24 +3532,19 @@
     "methodList": "Listed at ${{price}}",
     "youGet": "You go get like",
     "ifFilled": "You go get when e sell",
-    "listNote": "Your DHB still be your own until e sell. You fit comot am anytime for Exchange. Network gas dey.",
     "marketMoved": "Market don already pay your price, so e go sell quick quick instead.",
     "confirm": "Confirm",
     "working": "Working…",
     "doneTitle": "All done",
-    "doneInstant": "Sold {{amount}} DHB",
+    "doneInstant": "Sold {{amount}} tokens",
     "doneInstantHint": "Like {{usdc}} USDC di come for your wallet.",
-    "doneList": "Don put {{amount}} DHB for ${{price}}",
     "doneListHint": "E go sell hisself when market reach your price. Manage am for Exchange.",
     "openExchange": "Open Exchange",
     "done": "Done",
     "back": "Back",
     "aiLabel": "Ask AI make e set your trade",
-    "aiPlaceholder": "Try \"sell half my DHB for 6 cents\"",
     "aiSend": "Send to AI",
     "aiHint": "Talk weti you want for simple word. AI go fill all thing, you go just press Confirm.",
-    "aiBuyOnly": "Easy trade na for sell DHB. For buy DHB, open Exchange.",
-    "aiNeedAmount": "How much DHB you want sell?",
     "aiFailed": "AI no fit set am. Try talk am another way, or fill am for down.",
     "cancelled": "You don cancel am. Nothing sell."
   },
@@ -3542,13 +3552,9 @@
     "yourBalance": "Your balance",
     "youNeed": "You need",
     "checking": "E dey check your wallet…",
-    "payHint": "Pay with anything wey dey your wallet. E go turn DHB and open am one time.",
     "toppingUp": "E dey top up…",
     "topUpUnlock": "Top up & open am",
     "orFund": "Or put money another way",
-    "paused": "DHB transfer dem don pause for on-chain now, so dis unlock no fit go yet. Try again small time.",
-    "otherChain": "Dis post dey settle for another chain, so e need DHB for your wallet for dat side.",
-    "buyCard": "Buy DHB with card",
     "buyCardHint": "Visa, Mastercard, Apple Pay",
     "moveFunds": "Bring money enter",
     "moveFundsHint": "Swap or deposit from another chain",
@@ -3558,13 +3564,13 @@
     "fractionsDesc": "Post weh dem mint for DeHub go turn NFT weh dem divide for 1,000 fraction, and the creator go start with all 1,000 — 100% ownership for the content. Minting na your choice, and e fit happen when you di publish or later.",
     "ownershipBarDesc": "Progress bar for Post Info page weh di show how many of the 1,000 fraction the creator still hold and how many done share or sell.",
     "tokenIdDesc": "One special on-chain ID weh post di get when dem mint am as NFT for blockchain. Minting na your choice, so post weh dem never mint no get Token ID yet.",
-    "tokenIdInfoDesc": "The special on-chain ID weh post di get once dem don mint am as NFT. E di show for top of Post Info page for post dem weh dem don mint."
+    "tokenIdInfoDesc": "The special on-chain ID weh post di get once dem don mint am as NFT. E di show for top of Post Info page for post dem weh dem don mint.",
+    "dhbToken": "DeHub Tokens",
+    "badgeRequires": "Requires {{amount}} tokens · {{fee}}% platform fee"
   },
   "tipFunding": {
-    "noRoute": "No Uniswap road to DHB for dis token right now",
     "lowLiquidity": "Uniswap no get enough liquidity for payment wey big like dis right now",
     "dpayNoAmount": "DeHub Pay no give back the payment amount",
-    "dpayDelayed": "DeHub Pay don get your payment and e di send the DHB. E go land for your wallet soon; send again when e don land.",
     "noBridgeRoute": "No cross-chain road dey right now",
     "bridgeCancelled": "Dem don cancel the cross-chain order and return the money for your wallet",
     "bridgeSlow": "The cross-chain transfer di take long pass normal. E go land for your wallet for Base; send again when e don land.",
@@ -3574,13 +3580,10 @@
     "notEnoughWithFees": "{{symbol}} no reach for dis payment, plus network fees",
     "notEnough": "{{symbol}} no reach for dis payment",
     "noGasForFee": "Network coin no reach to pay the cross-chain fee",
-    "priceMoved": "DHB price don move as your USDC di come. The USDC dey for your wallet for Base; send again to finish.",
-    "usdcPending": "Your USDC don land for Base but e never show. Send again small time.",
-    "dhbPending": "The DHB buy don confirm but e never show. Send again small time."
+    "usdcPending": "Your USDC don land for Base but e never show. Send again small time."
   },
   "docsChat": {
     "title": "AI Helper",
-    "greeting": "Hello! Na me be DeHub documentation helper. Ask me anything for DeHub, di $DHB token, DePIN, governance, or any other platform feature!",
     "placeholder": "Ask about DeHub...",
     "open": "Open chat",
     "close": "Close chat",
@@ -3588,5 +3591,52 @@
     "rateLimited": "Too much message. Wait small, then try again.",
     "unavailable": "Di assistant dey for outside for now. Try am again later.",
     "failed": "Message no go send. Try again."
+  },
+  "tokenPaywall": {
+    "paying": "Paying {{amount}} tokens...",
+    "pricePerToken": "@ ${{price}}/token",
+    "yourTokens": "Your tokens",
+    "payAndGenerate": "Pay {{amount}} tokens & Generate"
+  },
+  "tokens": {
+    "transactionsPaused": "Token transactions paused"
+  },
+  "bridge": {
+    "subtitle": "Move DeHub tokens between chains",
+    "tokensOnBase": "Tokens on Base"
+  },
+  "raffle": {
+    "stakeTitle": "Stake Tokens",
+    "faqPurchaseAnswer": "No. Every draw get at least one free way to enter, wey you fit get by taking part on DeHub. Some draws dey sell ticket wey you go pay with DeHub tokens, but ticket no be the only way to enter.",
+    "noPurchase": "No money dey need. Every draw get one free way to enter, and if dem give ticket, dat one no be di only way to enter.",
+    "readAboutTokens": "Read about DeHub tokens"
+  },
+  "badgeLadder": {
+    "intro": "Each tier cost one fixed amount for dollars. The token figure wey dey beside am na wetin dat one cost for $0.001 reference price — di app dey ask for dat figure scaled to di live price, and never for more than am, so one falling price no fit raise di bar or take back one tier wey you don already earn."
+  },
+  "postingAllowance": {
+    "footnote": "Badge tier na your DeHub tokens wey you hold plus wey you stake for BNB Chain and Base — e be the same balance wey your badge dey come from. The ladder get price for dollars, so the token figures wey dey above na wetin each tier cost for the $0.001 sale price and the requirement dey fall as the token price dey rise; a tier wey you don already earn, dem no go ever take am back because of the price. A badge wey your patron lend you dey show for your profile but e no dey increase your posting allowance — that one dey come from wetin you hold yourself. Allowances reset at 00:00 UTC, and a gigabyte here na 1,024 MB."
+  },
+  "postComposer": {
+    "postCostShortfall": "Dis post dey cost {{amount}} tokens and you get {{held}}.",
+    "paymentConfirmingDescription": "Your tokens don transfer. We go finish confirm payment soon.",
+    "transferIncomplete": "Di token transfer no finish. Dem go ask you again before your next paid post.",
+    "getTokens": "Get Tokens"
+  },
+  "tokenErrors": {
+    "unsupportedNetwork": "DeHub tokens no fit go for dat network.",
+    "transfersPausedPurchase": "DeHub token transfer dem don stop for now, so dis purchase go fail. Try again when dem start trading.",
+    "transactionsPaused": "DeHub token transactions dey pause for on-chain now."
+  },
+  "tokenPayments": {
+    "paying": "Paying {{amount}} tokens...",
+    "notEnoughInWallet": "No get enough token for your wallet. This one cost {{amount}} token and you get {{held}}.",
+    "sentUnconfirmed": "Your token transfer don go but we no fit confirm am. E dey save and e go pay for your next try — no send am again.",
+    "transferFailedNoCharge": "Di token transfer no go through. Nothing don chop.",
+    "notEnough": "No get enough tokens. Dis one cost {{amount}} tokens and you hold {{held}}.",
+    "notEnoughForSession": "No get enough tokens. Dis session go cost {{amount}} tokens and you get {{held}}."
+  },
+  "mobilePreview": {
+    "tokenAmount": "{{amount}} tokens"
   }
 }

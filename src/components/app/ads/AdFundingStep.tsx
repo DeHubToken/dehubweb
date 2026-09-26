@@ -314,7 +314,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
       : card?.reason === 'low_gas'
         ? t('ads.cardCheckoutOffline')
         : card?.reason === 'no_supply'
-          ? `Card checkout can only deliver ${formatCompact(card.supply)} DHB right now, less than this top-up needs.`
+          ? t('ads.cardSupplyShort', { amount: formatCompact(card.supply) })
           : null;
 
   return (
@@ -359,7 +359,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
             {cardStatus}
           </div>
           <p className="text-center text-[11px] text-zinc-500 px-2">
-            Leave this open — the moment your DHB lands, the top-up finishes on its own.
+            {t('ads.leaveOpenTokensLand')}
           </p>
           <Button variant="glass" className="w-full" onClick={() => { stopPolling(); setPhase('ready'); }}>
             Stop waiting

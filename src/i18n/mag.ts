@@ -27,7 +27,7 @@ export const mag = {
     keyLinks: 'मुख्य लिंक',
     keyInfo: 'मुख्य जानकारी',
     docsChatTitle: 'कार्यलय सहयोगी',
-    docsChatGreeting: 'नमस्ते! हम DeHub के दस्तावेज सहायक ही। DeHub, $DHB टोकन, DePIN, गवर्नेंस, या प्लेटफॉर्म के कउनो दोसर सुविधा के बारे में हमरा से कुछो पूछऽ!',
+    docsChatGreeting: 'नमस्ते! हम DeHub के दस्तावेज सहायक ही। DeHub, DeHub टोकन, DePIN, गवर्नेंस, या प्लेटफॉर्म के कउनो दोसर सुविधा के बारे में हमरा से कुछो पूछऽ!',
     docsChatPlaceholder: 'हल्दीघाटी के बारे में बताये -',
     docsChatOpen: 'कलई खोलना',
     docsChatClose: 'चुदाई वाला चुदाई वाला',

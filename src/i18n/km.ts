@@ -27,7 +27,7 @@ export const km = {
     keyLinks: 'តំណភ្ជាប់សំខាន់ៗ',
     keyInfo: 'ព័ត៌មានសំខាន់ៗ',
     docsChatTitle: 'ជំនួយការ AI',
-    docsChatGreeting: 'សួស្តី! ខ្ញុំគឺជាជំនួយការឯកសាររបស់ DeHub ។ សួរខ្ញុំអំពី DeHub, ថូខឹន $DHB, DePIN, អភិបាលកិច្ច, ឬលក្ខណៈពិសេសនៃវេទិកាផ្សេងទៀត!',
+    docsChatGreeting: 'សួស្តី! ខ្ញុំគឺជាជំនួយការឯកសាររបស់ DeHub ។ សួរខ្ញុំអំពី DeHub, DeHub ថូខឹន, DePIN, អភិបាលកិច្ច, ឬលក្ខណៈពិសេសវេទិកាផ្សេងទៀត!',
     docsChatPlaceholder: 'សួរ អំពី DeHub...',
     docsChatOpen: 'បើកការជជែកកំសាន្ត',
     docsChatClose: 'បិទការជជែកកំសាន្ត',

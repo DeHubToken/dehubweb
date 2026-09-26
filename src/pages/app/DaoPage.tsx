@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Copy, Check, Loader2, HeartHandshake, ExternalLink, RefreshCw, Info, FilePenLine } from 'lucide-react';
 import { toast } from 'sonner';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -80,7 +81,7 @@ function ContributorRow({ row, rank, isSelf }: { row: DaoContributor; rank: numb
         </div>
       </div>
       <div className="text-right shrink-0">
-        <div className="text-sm font-semibold text-white tabular-nums">{formatDhb(row.amount)} DHB</div>
+        <div className="text-sm font-semibold text-white tabular-nums"><DhbAmount amount={formatDhb(row.amount)} /></div>
         <div className="text-xs text-zinc-400 tabular-nums">{formatShare(row.share)} {t('dao.power')}</div>
       </div>
     </div>
@@ -357,7 +358,7 @@ export default function DaoPage() {
             <div>
               <div className="text-xs uppercase tracking-wide text-zinc-500">{t('dao.treasuryBalance')}</div>
               <div className="text-3xl sm:text-4xl font-bold text-white tabular-nums mt-1">
-                {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-zinc-500" /> : `${formatDhb(data?.totalBalance ?? 0)} DHB`}
+                {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-zinc-500" /> : <DhbAmount amount={formatDhb(data?.totalBalance ?? 0)} iconClassName="h-7 w-7 sm:h-8 sm:w-8" className="gap-2" />}
               </div>
             </div>
             <button

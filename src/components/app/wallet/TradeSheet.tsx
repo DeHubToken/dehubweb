@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
 import { formatUnits, parseUnits } from 'ethers';
 import { toast } from 'sonner';
@@ -272,7 +273,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
             <input inputMode="decimal" placeholder="0" aria-label={t('easyTrade.sellTitle')} value={amount}
               onChange={(e) => { setAmount(decimal(e.target.value)); setQuote(null); setAiReply(''); }}
               className="flex-1 min-w-0 bg-transparent px-4 py-4 text-3xl font-semibold text-white outline-none" />
-            <span className="pr-4 text-sm text-zinc-400">DHB</span>
+            <span className="pr-4 text-sm text-zinc-400"><DhbCoin className="h-5 w-5" /></span>
           </div>
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>{t('easyTrade.available', { amount: formatSize(Number(formatUnits(balance, 18))) })}</span>
@@ -320,7 +321,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
 
         {step === 'review' && <div className="space-y-3">
           <dl className="rounded-xl border border-white/10 bg-white/[0.04] p-4 grid grid-cols-[1fr_auto] gap-y-2.5 text-sm">
-            <dt className="text-zinc-400">{t('easyTrade.youSell')}</dt><dd className="text-white text-right">{formatSize(Number(amount))} DHB</dd>
+            <dt className="text-zinc-400">{t('easyTrade.youSell')}</dt><dd className="text-white text-right"><DhbAmount amount={formatSize(Number(amount))} /></dd>
             <dt className="text-zinc-400">{t('easyTrade.method')}</dt><dd className="text-white text-right">{route === 'list' ? t('easyTrade.methodList', { price: formatPrice(myPrice) }) : t('easyTrade.methodInstant')}</dd>
             <dt className="text-zinc-400">{route === 'list' ? t('easyTrade.ifFilled') : t('easyTrade.youGet')}</dt>
             <dd className="text-white text-right font-semibold">{formatSize(route === 'list' ? Number(amount) * myPrice : quote ? Number(formatUnits(quote.amountOut, 6)) : 0)} USDC</dd>

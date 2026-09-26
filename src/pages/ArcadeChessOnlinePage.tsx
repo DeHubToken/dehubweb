@@ -34,6 +34,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Crown, Loader2, Plus, Swords, X } from 'lucide-react';
 import { toast } from 'sonner';
@@ -264,6 +265,7 @@ function ChallengeRow({
 // ----------------------------------------------------------------- the page
 
 export default function ArcadeChessOnlinePage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
@@ -684,7 +686,7 @@ export default function ArcadeChessOnlinePage() {
             <h1 className="flex items-center gap-2 text-xl font-bold text-white">
               <Crown className="h-5 w-5" /> King&apos;s Gambit online
             </h1>
-            <p className="mt-1 text-xs text-zinc-500">Live duels against other players. Wagers in DHB are coming.</p>
+            <p className="mt-1 text-xs text-zinc-500">{t('arcade.chessOnlineIntro')}</p>
           </div>
           <Link to="/arcade/kings-gambit" className="text-xs text-zinc-400 underline-offset-2 hover:text-white hover:underline">
             Play the computer instead

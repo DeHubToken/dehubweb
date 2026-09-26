@@ -27,7 +27,7 @@ export const mi = {
     keyLinks: 'Hononga matua',
     keyInfo: 'Mōhiohio matua',
     docsChatTitle: 'Kaiawhina AI',
-    docsChatGreeting: 'Kia ora! Ko ahau te kaiawhina tuhinga a DeHub. Pātai mai ki ahau tetahi mea e pā ana ki DeHub, te $DHB token, DePIN, whakahaere, ranei tetahi atu āhuatanga papaaho!',
+    docsChatGreeting: 'Kia ora! Ko ahau te kaiawhina tuhinga a DeHub. Pātai mai ki ahau tetahi mea e pā ana ki DeHub, DeHub tokens, DePIN, whakahaere, ranei tetahi atu āhuatanga papaaho!',
     docsChatPlaceholder: 'Pātai e pā ana ki DeHub...',
     docsChatOpen: 'Kōrerorero tuwhera',
     docsChatClose: 'Kōrerorero tata',

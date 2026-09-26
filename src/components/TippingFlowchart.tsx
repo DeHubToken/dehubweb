@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { DhbAmount } from '@/components/app/DhbAmount';
 
 const TippingFlowchart = () => {
   const tippingTiers = [
@@ -91,9 +92,7 @@ const TippingFlowchart = () => {
                 </div>
               </div>
               <div className="text-right">
-                <span className="text-sm font-mono font-semibold">
-                  {tier.threshold} $DHB
-                </span>
+                <DhbAmount amount={tier.threshold} className="text-sm font-mono font-semibold" />
               </div>
             </div>
           ))}

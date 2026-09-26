@@ -27,7 +27,7 @@ export const tl = {
     keyLinks: 'Mahahalagang Link',
     docsChatError: 'Kamalian',
     keyInfo: 'Mahahalagang Impormasyon',
-    docsChatGreeting: 'Hi! Ako ang assistant ng dokumentasyon ni DeHub. Magtanong sa akin ng anumang bagay tungkol sa DeHub, ang $DHB token, DePIN, pamamahala, o anumang iba pang mga tampok ng platform!',
+    docsChatGreeting: 'Hi! Ako ang assistant ng dokumentasyon ni DeHub. Magtanong sa akin ng anumang bagay tungkol sa DeHub, DeHub token, DePIN, pamamahala, o anumang iba pang mga tampok ng platform!',
     docsChatPlaceholder: 'Magtanong tungkol sa DeHub...',
     docsChatOpen: 'Buksan ang chat',
     docsChatClose: 'Isara ang chat',
