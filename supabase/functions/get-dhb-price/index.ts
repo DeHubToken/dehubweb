@@ -90,6 +90,102 @@ async function getCoinGeckoPrices(ids: string[]): Promise<Record<string, number>
   }
 }
 
+/**
+ * Prices held for a minute per distinct token list, with concurrent requests
+ * for the same list sharing one build. Every wallet, store and paywall render
+ * asked for prices, and each ask fanned out to DexScreener once per token, the
+ * DEX snapshot RPC and CoinGecko. The snapshot itself only moves once a
+ * minute, so a minute's hold changes nothing a user can see. Module scope, so
+ * it lives as long as the warm instance.
+ */
+type PriceResult = { prices: Record<string, number>; timestamp: string };
+const PRICE_TTL_MS = 60 * 1000;
+const PRICE_CACHE_MAX = 50;
+const priceCache = new Map<string, { at: number; value: PriceResult }>();
+const priceInFlight = new Map<string, Promise<PriceResult>>();
+
+async function cachedPrices(extraTokens: { address: string; symbol: string }[]): Promise<PriceResult> {
+  const key = extraTokens
+    .map((t) => `${t.address.toLowerCase()}:${t.symbol}`)
+    .sort()
+    .join(',');
+  const hit = priceCache.get(key);
+  if (hit && Date.now() - hit.at < PRICE_TTL_MS) return hit.value;
+  const pending = priceInFlight.get(key);
+  if (pending) return pending;
+
+  const build = buildPrices(extraTokens)
+    .then((value) => {
+      if (priceCache.size >= PRICE_CACHE_MAX) {
+        const oldest = priceCache.keys().next().value;
+        if (oldest !== undefined) priceCache.delete(oldest);
+      }
+      priceCache.delete(key);
+      priceCache.set(key, { at: Date.now(), value });
+      return value;
+    })
+    .finally(() => priceInFlight.delete(key));
+  priceInFlight.set(key, build);
+  return build;
+}
+
+async function buildPrices(extraTokens: { address: string; symbol: string }[]): Promise<PriceResult> {
+  const allTokens = [...CORE_TOKENS, ...extraTokens];
+  const uniqueAddresses = [...new Set(allTokens.map(t => t.address.toLowerCase()))];
+
+  // DexScreener lookups in parallel
+  const dexResults = await Promise.all(uniqueAddresses.map(addr => getDexScreenerPrice(addr)));
+  const dexMap: Record<string, number> = {};
+  uniqueAddresses.forEach((addr, i) => {
+    if (dexResults[i] !== null) dexMap[addr] = dexResults[i]!;
+  });
+
+  // Build prices (first match per symbol)
+  const prices: Record<string, number> = {};
+  for (const token of allTokens) {
+    const addr = token.address.toLowerCase();
+    if (prices[token.symbol] === undefined && dexMap[addr] !== undefined) {
+      prices[token.symbol] = dexMap[addr];
+    }
+  }
+
+  // The DEX snapshot is the one DHB price the whole app agrees on. DexScreener is the
+  // fallback, and the old pause-era pin is the floor of last resort so nothing divides by zero.
+  const snapshotDhb = await getSnapshotDhbPrice();
+  if (snapshotDhb) prices.DHB = snapshotDhb;
+  else if (!prices.DHB || prices.DHB <= 0) prices.DHB = 0.001;
+
+  // CoinGecko fallback for missing core symbols (skip DHB — pinned)
+  const coreSymbols = ['ETH', 'BNB', 'USDT', 'USDC', 'BTC'];
+  const missingSymbols = coreSymbols.filter(s => prices[s] === undefined || prices[s] === 0);
+  if (missingSymbols.length > 0) {
+    const geckoIds = missingSymbols.map(s => COINGECKO_IDS[s]).filter(Boolean);
+    const geckoMap = await getCoinGeckoPrices(geckoIds);
+    for (const symbol of missingSymbols) {
+      const geckoId = COINGECKO_IDS[symbol];
+      if (geckoId && geckoMap[geckoId]) prices[symbol] = geckoMap[geckoId];
+    }
+  }
+
+  // Native token aliases
+  if (!prices.ETH || prices.ETH === 0) {
+    const m = await getCoinGeckoPrices(['ethereum']);
+    if (m.ethereum) prices.ETH = m.ethereum;
+  }
+  if (!prices.BNB || prices.BNB === 0) {
+    const m = await getCoinGeckoPrices(['binancecoin']);
+    if (m.binancecoin) prices.BNB = m.binancecoin;
+  }
+  prices.WETH = prices.ETH ?? 0;
+  prices.WBNB = prices.BNB ?? 0;
+  if (!prices.USDT || prices.USDT === 0) prices.USDT = 1;
+  if (!prices.USDC || prices.USDC === 0) prices.USDC = 1;
+
+  console.log('Token prices (DEX snapshot → DexScreener → CoinGecko fallback):', prices);
+
+  return { prices, timestamp: new Date().toISOString() };
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -108,62 +204,12 @@ Deno.serve(async (req) => {
       }
     }
 
-    const allTokens = [...CORE_TOKENS, ...extraTokens];
-    const uniqueAddresses = [...new Set(allTokens.map(t => t.address.toLowerCase()))];
+    const result = await cachedPrices(extraTokens);
 
-    // DexScreener lookups in parallel
-    const dexResults = await Promise.all(uniqueAddresses.map(addr => getDexScreenerPrice(addr)));
-    const dexMap: Record<string, number> = {};
-    uniqueAddresses.forEach((addr, i) => {
-      if (dexResults[i] !== null) dexMap[addr] = dexResults[i]!;
-    });
-
-    // Build prices (first match per symbol)
-    const prices: Record<string, number> = {};
-    for (const token of allTokens) {
-      const addr = token.address.toLowerCase();
-      if (prices[token.symbol] === undefined && dexMap[addr] !== undefined) {
-        prices[token.symbol] = dexMap[addr];
-      }
-    }
-
-    // The DEX snapshot is the one DHB price the whole app agrees on. DexScreener is the
-    // fallback, and the old pause-era pin is the floor of last resort so nothing divides by zero.
-    const snapshotDhb = await getSnapshotDhbPrice();
-    if (snapshotDhb) prices.DHB = snapshotDhb;
-    else if (!prices.DHB || prices.DHB <= 0) prices.DHB = 0.001;
-
-    // CoinGecko fallback for missing core symbols (skip DHB — pinned)
-    const coreSymbols = ['ETH', 'BNB', 'USDT', 'USDC', 'BTC'];
-    const missingSymbols = coreSymbols.filter(s => prices[s] === undefined || prices[s] === 0);
-    if (missingSymbols.length > 0) {
-      const geckoIds = missingSymbols.map(s => COINGECKO_IDS[s]).filter(Boolean);
-      const geckoMap = await getCoinGeckoPrices(geckoIds);
-      for (const symbol of missingSymbols) {
-        const geckoId = COINGECKO_IDS[symbol];
-        if (geckoId && geckoMap[geckoId]) prices[symbol] = geckoMap[geckoId];
-      }
-    }
-
-    // Native token aliases
-    if (!prices.ETH || prices.ETH === 0) {
-      const m = await getCoinGeckoPrices(['ethereum']);
-      if (m.ethereum) prices.ETH = m.ethereum;
-    }
-    if (!prices.BNB || prices.BNB === 0) {
-      const m = await getCoinGeckoPrices(['binancecoin']);
-      if (m.binancecoin) prices.BNB = m.binancecoin;
-    }
-    prices.WETH = prices.ETH ?? 0;
-    prices.WBNB = prices.BNB ?? 0;
-    if (!prices.USDT || prices.USDT === 0) prices.USDT = 1;
-    if (!prices.USDC || prices.USDC === 0) prices.USDC = 1;
-
-    console.log('Token prices (DEX snapshot → DexScreener → CoinGecko fallback):', prices);
-
+    // Same answer for every caller, so shared caches may hold it too.
     return new Response(
-      JSON.stringify({ prices, timestamp: new Date().toISOString() }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify(result),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=60' } }
     );
   } catch (error) {
     console.error('Error fetching token prices:', error);
