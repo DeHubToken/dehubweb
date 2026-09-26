@@ -24,7 +24,9 @@
 
       Concretely: NO RULE IN THIS FILE MAY WRITE `backdrop-filter: none` OR
       PIN A FILL ABOVE ~0.9. The only exceptions are portalled surfaces that
-      sit over arbitrary content (section 5), where legibility wins.
+      sit over arbitrary content (section 5), where legibility wins, and
+      phones, where the blur is dropped for scroll performance and the bridge
+      alphas rise to compensate (jungle-frame.css section 4).
 
    3. LIGHT COMES FROM THE GAP. Lit edges are --jungle-glint (warm grey), never
       white; shadows are green-black, never neutral. Raised surfaces catch the

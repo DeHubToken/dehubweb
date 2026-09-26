@@ -1462,6 +1462,19 @@ html[data-theme='war'] .docs-root :is(button, a):focus-visible {
   outline-offset: 2px;
 }
 
+/* Phones and touch devices: the nav plates and the scrolled header lose their
+   blur (index.css touch block), so their fills rise to match the panels.
+   Declared before section 17 so the degradation fills still win. */
+@media (max-width: 767px), (pointer: coarse) {
+  html[data-theme='war'] [data-feed-nav]::before,
+  html[data-theme='war'] [data-bottom-nav] > nav::before {
+    background: rgb(var(--war-gunmetal) / 0.9);
+  }
+  html[data-theme='war'] [data-mobile-header][data-scrolled='true'] {
+    background: rgb(var(--war-gunmetal) / 0.9) !important;
+  }
+}
+
 /* ==========================================================================
    17. DEGRADATION
    ==========================================================================

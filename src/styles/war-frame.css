@@ -985,6 +985,18 @@ html[data-theme='war']::before {
   }
 }
 
+/* Phones and touch devices: no blur (see the touch block in index.css), so
+   the gunmetal gets denser in its place. Declared before reduced transparency
+   so that block's near-solid values still win. */
+@media (max-width: 767px), (pointer: coarse) {
+  html[data-theme='war'] {
+    --glass-blur: none;
+    --glass-thin: 0.86;
+    --glass-regular: 0.9;
+    --glass-raised: 0.94;
+  }
+}
+
 /* Reduced transparency means the user has asked for less visual complexity,
    not just for opaque panels: the film goes entirely, the glow budget drops
    to zero, and the surfaces go solid.

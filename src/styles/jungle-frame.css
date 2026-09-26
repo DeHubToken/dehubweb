@@ -455,6 +455,21 @@ html[data-theme='jungle'] [data-jungle-readout] {
    4. DEGRADATION
    ========================================================================== */
 
+/* Phones and touch devices: no blur (see the touch block in index.css). The
+   scene still moves at the plank edges, but with nothing defocusing it the
+   timber has to be denser to keep copy off the canopy — the one place house
+   rule 2 in jungle-theme.css gives way. Declared before reduced transparency
+   so that block's values still win. */
+@media (max-width: 767px), (pointer: coarse) {
+  html[data-theme='jungle'] {
+    --glass-thin: 0.86;
+    --glass-regular: 0.9;
+    --glass-raised: 0.92;
+    --glass-blur: none;
+    --jungle-blur: none;
+  }
+}
+
 /* Reduced transparency: some users switch this on for legibility rather than
    performance. Trade the blur and the openness for opacity — the palette and
    the material survive, the cost and the see-through do not. */

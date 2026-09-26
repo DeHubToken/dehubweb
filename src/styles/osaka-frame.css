@@ -179,7 +179,10 @@ html[data-theme='osaka'] {
   --glass-thin: 0.62;
   --glass-regular: 0.72;
   --glass-raised: 0.8;
-  --glass-blur: var(--osaka-blur);
+  /* Feed cards and bentos repeat down the whole column, so they take the
+     shared light blur; --osaka-blur's wide, saturated window stays on the
+     chrome and sheets, where there is one of each on screen. */
+  --glass-blur: blur(12px);
 
   --glass-highlight: var(--osaka-bleed);
   --glass-edge: var(--osaka-edge-lift);
@@ -318,6 +321,21 @@ html[data-theme='osaka'] [data-osaka-bead]::before {
    Three environments get a reduced build. Each removes a specific cost and
    keeps the theme legible rather than falling back to a different look.
    ========================================================================== */
+
+/* Phones and touch devices: no blur (see the touch block in index.css), so
+   the slate gets denser to keep copy off the lit alley behind it. Declared
+   before reduced transparency so that block's near-solid values still win. */
+@media (max-width: 767px), (pointer: coarse) {
+  html[data-theme='osaka'] {
+    --glass-thin: 0.84;
+    --glass-regular: 0.88;
+    --glass-raised: 0.92;
+    --glass-blur: none;
+    --osaka-blur: none;
+    /* The #app-root slab net in osaka-theme.css section 11. */
+    --osaka-slab: 0.84;
+  }
+}
 
 /* Reduced transparency: backdrop-filter is the single most expensive thing
    this theme asks for, and some users switch it off for legibility rather than

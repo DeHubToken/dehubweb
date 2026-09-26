@@ -1341,7 +1341,10 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   --glass-thin: 0.50;     /* post bentos — content-first, canvas clearly visible */
   --glass-regular: 0.60;  /* side panels / page bentos — denser copy, more smoke */
   --glass-raised: 0.68;   /* hover state on interactive bentos */
-  --glass-blur: blur(24px) saturate(150%);
+  /* 12px and no saturate(): every card on screen re-samples the animated canvas
+     each frame, and the radius is what that costs. Phones drop it entirely —
+     see the touch block just before the reduced-transparency one below. */
+  --glass-blur: blur(12px);
   /* Faint top-left sheen so the surface reads as lit glass, not a grey wash. */
   --glass-highlight: linear-gradient(
     160deg,
@@ -1537,8 +1540,8 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    (no box around the pill). */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-feed-nav] {
   background: rgb(var(--glass-tint) / 0.40) !important;
-  backdrop-filter: blur(20px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   /* Same ambient drop shadow the desktop glass panels cast below the logo,
      so the pill reads as the one lifted surface on mobile too. */
   box-shadow:
@@ -1613,12 +1616,12 @@ html[data-theme="system"] [data-feed-nav] {
     0 8px 32px rgb(0 0 0 / 0.30) !important;
 }
 
-/* The pill's blur is NOT stripped on mobile. It was, briefly, as a render-cost
-   saving — but osaka and jungle re-declare `backdrop-filter` in their own
-   sheets, which load after this file at equal specificity, so those two kept
-   frosting while cosmic, hazy, swarms, lavalamp, winter and system flattened
-   to a tinted strip. One surface, two materials depending on the theme. The
-   pill matches desktop on every theme; keep it that way. */
+/* On phones the canvas-theme pill loses its blur along with every other glass
+   surface (touch block further down). An earlier attempt stripped it here at
+   (0,2,1) and lost to osaka and jungle, which re-declare `backdrop-filter` in
+   sheets loaded after this file — one surface, two materials. The touch block
+   goes through the tokens plus an #app-root-scoped rule those sheets cannot
+   outrank, so every canvas theme flattens the same way. System keeps its blur. */
 
 /* Mobile top bar — same transparent-at-top / frost-on-scroll treatment as the
    canvas themes. Without this the opaque black header lets a post's top edge
@@ -1922,6 +1925,56 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    `[data-feed-item] *` exclusion above — exactly like the same post read on the
    home feed. Re-adding the halo would give the post page a text shadow the home
    feed does not have, which is the difference this was meant to remove.) */
+
+/* Phones and touch devices: no backdrop blur on the canvas themes.
+   Every feed card, bento and nav surface re-blurred the animated canvas on
+   every frame, which is what made scrolling judder on phones. The blur goes and
+   the smoke gets denser in its place — without the defocus the canvas behind a
+   surface is sharp and busy, so the tint alone has to carry legibility. Sheen,
+   ring and shadow stay, so each theme still reads as its material.
+
+   Osaka, jungle and war set their own --glass-* values in sheets that load
+   after this file, so each repeats the token half of this block for itself.
+   The #app-root rule is the other half: it carries an id, so no theme sheet's
+   id-less backdrop-filter can put blur back on anything in the app shell,
+   pseudo-elements included (war paints its nav plates on ::before). Portalled
+   dialogs, sheets and toasts sit outside #app-root and keep theirs.
+
+   Declared BEFORE the @supports and reduced-transparency blocks on purpose:
+   the header rule here ties theirs at (0,3,1), and theirs must win. */
+@media (max-width: 767px), (pointer: coarse) {
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) {
+    --glass-thin: 0.82;
+    --glass-regular: 0.86;
+    --glass-raised: 0.90;
+    --glass-blur: none;
+  }
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) #app-root *,
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) #app-root *::before,
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) #app-root *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  /* Chrome that ships its own thin tint instead of reading the tokens. The
+     pill changes material, not shape, so the swallow clip is untouched: the
+     feed is still cut at the pill's top edge, it just shows less behind it. */
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-feed-nav] {
+    background: rgb(var(--glass-tint) / 0.82) !important;
+  }
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-mobile-header][data-scrolled="true"] {
+    background: rgb(var(--glass-tint) / 0.86) !important;
+  }
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-bottom-nav] > nav {
+    background: rgb(var(--glass-tint) / 0.86) !important;
+  }
+  /* Tailwind `backdrop-blur-*` chips and scrims inside the shell (media
+     badges, gate tiles, carousel arrows) pair the blur with a 10-60% black.
+     Unblurred, that is a see-through wash over a photo or the canvas; lift the
+     low steps to one readable smoke. Denser steps are left as they are. */
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) #app-root [class*="backdrop-blur"]:is([class*="bg-black/1"], [class*="bg-black/2"], [class*="bg-black/3"], [class*="bg-black/4"], [class*="bg-black/5"], [class*="bg-black/6"]) {
+    background-color: rgb(0 0 0 / 0.72) !important;
+  }
+}
 
 /* Frosting unavailable → nearly-solid smoke so text stays readable over the
    moving canvas. */
