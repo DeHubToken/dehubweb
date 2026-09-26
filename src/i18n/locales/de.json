@@ -6389,6 +6389,7 @@
   },
   "glossary": {
     "fractionsDesc": "Ein auf DeHub geprägter Beitrag wird zu einem NFT, das in 1.000 Bruchteile aufgeteilt ist, und der Creator beginnt mit allen 1.000 — 100 % Eigentum am Inhalt. Das Prägen ist optional und kann beim Veröffentlichen oder später erfolgen.",
+    "ownershipBarDesc": "Ein Fortschrittsbalken auf der Beitragsinfo-Seite, der zeigt, wie viele der 1.000 Bruchteile der Creator noch hält und wie viele verteilt oder verkauft wurden.",
     "tokenIdDesc": "Eine eindeutige On-Chain-Kennung, die ein Beitrag erhält, wenn er als NFT auf der Blockchain geprägt wird. Das Prägen ist optional, daher hat ein nicht geprägter Beitrag noch keine Token-ID.",
     "tokenIdInfoDesc": "Die eindeutige On-Chain-Kennung, die ein Beitrag erhält, sobald er als NFT geprägt ist. Wird bei geprägten Beiträgen oben auf der Seite „Beitragsinfo“ angezeigt."
   },

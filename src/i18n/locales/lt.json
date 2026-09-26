@@ -6368,6 +6368,7 @@
   },
   "glossary": {
     "fractionsDesc": "DeHub nukaldintas įrašas tampa NFT, padalintu į 1 000 dalių, o kūrėjas pradeda turėdamas visas 1 000 – 100 % turinio nuosavybės. Kalimas neprivalomas ir gali būti atliktas skelbiant arba vėliau.",
+    "ownershipBarDesc": "Eigos juosta įrašo informacijos puslapyje, rodanti, kiek iš 1 000 dalių kūrėjas dar turi ir kiek buvo išdalinta ar parduota.",
     "tokenIdDesc": "Unikalus grandinės identifikatorius, kurį įrašas gauna, kai yra nukaldinamas kaip NFT blokų grandinėje. Kalimas neprivalomas, todėl nenukaldintas įrašas dar neturi Token ID.",
     "tokenIdInfoDesc": "Unikalus grandinės identifikatorius, kurį įrašas gauna, kai yra nukaldintas kaip NFT. Nukaldintų įrašų atveju rodomas įrašo informacijos puslapio viršuje."
   },

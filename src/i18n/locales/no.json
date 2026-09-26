@@ -4070,6 +4070,7 @@
   },
   "glossary": {
     "fractionsDesc": "Et innlegg som preges på DeHub blir en NFT delt i 1000 fraksjoner, og skaperen starter med alle 1000 — 100 % eierskap til innholdet. Preging er valgfritt og kan skje når du publiserer eller senere.",
+    "ownershipBarDesc": "En fremdriftslinje på siden for innleggsinfo som viser hvor mange av de 1000 fraksjonene skaperen fortsatt har, og hvor mange som er fordelt eller solgt.",
     "tokenIdDesc": "En unik on-chain-identifikator et innlegg får når det preges som en NFT på blokkjeden. Preging er valgfritt, så et innlegg som ikke er preget har ingen Token ID ennå.",
     "tokenIdInfoDesc": "Den unike on-chain-identifikatoren et innlegg får når det er preget som en NFT. Vises øverst på Innleggsinfo-siden for pregede innlegg."
   },

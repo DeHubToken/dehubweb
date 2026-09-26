@@ -6276,6 +6276,7 @@
   },
   "glossary": {
     "fractionsDesc": "Una publicació encunyada a DeHub es converteix en un NFT dividit en 1.000 fraccions, i el creador comença amb totes les 1.000 — el 100% de la propietat del contingut. L'encunyació és opcional i es pot fer en publicar o més tard.",
+    "ownershipBarDesc": "Una barra de progrés a la pàgina d'informació de la publicació que mostra quantes de les 1.000 fraccions encara té el creador i quantes s'han distribuït o venut.",
     "tokenIdDesc": "Un identificador únic en cadena que rep una publicació quan s'encunya com a NFT a la blockchain. L'encunyació és opcional, així que una publicació que no s'ha encunyat encara no té Token ID.",
     "tokenIdInfoDesc": "L'identificador únic en cadena que rep una publicació un cop s'encunya com a NFT. Es mostra a la part superior de la pàgina d'informació de la publicació per a les publicacions encunyades."
   },

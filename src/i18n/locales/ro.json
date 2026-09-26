@@ -6070,6 +6070,7 @@
       "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
     },
     "fractionsDesc": "O postare mintată pe DeHub devine un NFT împărțit în 1.000 de fracțiuni, iar creatorul începe cu toate cele 1.000 — 100% proprietate asupra conținutului. Mintarea este opțională și poate avea loc la publicare sau mai târziu.",
+    "ownershipBarDesc": "O bară de progres pe pagina Info postare care arată câte dintre cele 1.000 de fracțiuni mai deține creatorul și câte au fost distribuite sau vândute.",
     "tokenIdDesc": "Un identificator on-chain unic pe care îl primește o postare atunci când este mintată ca NFT pe blockchain. Mintarea este opțională, așa că o postare care nu a fost mintată nu are încă un Token ID.",
     "tokenIdInfoDesc": "Identificatorul on-chain unic pe care îl primește o postare după ce este mintată ca NFT. Afișat în partea de sus a paginii Informații postare pentru postările mintate."
   },

@@ -6234,6 +6234,7 @@
   },
   "glossary": {
     "fractionsDesc": "DeHub-da zərb edilmiş post 1 000 fraksiyaya bölünmüş NFT-yə çevrilir və yaradıcı bütün 1 000 fraksiya ilə başlayır — məzmuna 100% sahiblik. Zərb etmək isteğə bağlıdır və dərc edərkən və ya sonra edilə bilər.",
+    "ownershipBarDesc": "Post məlumatı səhifəsində yaradıcının 1 000 fraksiyadan neçəsini hələ saxladığını və neçəsinin paylandığını və ya satıldığını göstərən irəliləyiş zolağı.",
     "tokenIdDesc": "Post blokçeyndə NFT kimi zərb edildikdə aldığı unikal zəncir üzərində identifikator. Zərb etmək isteğə bağlı olduğundan, zərb edilməmiş postun hələ Token ID-si yoxdur.",
     "tokenIdInfoDesc": "Postun NFT kimi zərb edildikdən sonra aldığı unikal zəncir üzərində identifikator. Zərb edilmiş postlar üçün Post Məlumatı səhifəsinin yuxarısında göstərilir."
   },

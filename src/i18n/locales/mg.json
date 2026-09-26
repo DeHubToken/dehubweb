@@ -6122,6 +6122,7 @@
   },
   "glossary": {
     "fractionsDesc": "Ny lahatsoratra voa-mint ao amin'ny DeHub dia lasa NFT mizara ho ampahany 1,000, ary ny mpamorona no manomboka manana ireo 1,000 rehetra — fananana 100% ny votoaty. Tsy voatery ny fanaovana mint ary azo atao rehefa mamoaka ianao na any aoriana.",
+    "ownershipBarDesc": "Tsipika fandrosoana ao amin'ny pejin'ny Mombamomba ny Lahatsoratra izay mampiseho hoe firy amin'ireo ampahany 1,000 no mbola ananan'ny mpamorona ary firy no efa nozaraina na namidy.",
     "tokenIdDesc": "Famantarana on-chain tokana azon'ny lahatsoratra rehefa voa-mint ho NFT ao amin'ny blockchain. Tsy voatery ny fanaovana mint, ka ny lahatsoratra mbola tsy voa-mint dia mbola tsy manana Token ID.",
     "tokenIdInfoDesc": "Ilay famantarana on-chain tokana azon'ny lahatsoratra rehefa voa-mint ho NFT. Aseho eo an-tampon'ny pejy Mombamomba ny Lahatsoratra ho an'ny lahatsoratra voa-mint."
   },

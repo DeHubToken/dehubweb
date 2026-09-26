@@ -6396,6 +6396,7 @@
   },
   "glossary": {
     "fractionsDesc": "Kiriman yang dicetak di DeHub menjadi NFT yang dibagi menjadi 1.000 fraksi, dan kreator memulai dengan seluruh 1.000 fraksi — kepemilikan 100% atas konten. Pencetakan bersifat opsional dan dapat dilakukan saat Anda memublikasikan atau nanti.",
+    "ownershipBarDesc": "Bilah progres di halaman Info Kiriman yang menunjukkan berapa dari 1.000 fraksi yang masih dipegang kreator dan berapa yang sudah dibagikan atau dijual.",
     "tokenIdDesc": "Pengenal on-chain unik yang didapat sebuah kiriman saat dicetak sebagai NFT di blockchain. Pencetakan bersifat opsional, jadi kiriman yang belum dicetak belum memiliki Token ID.",
     "tokenIdInfoDesc": "Pengenal on-chain unik yang didapat sebuah kiriman setelah dicetak sebagai NFT. Ditampilkan di bagian atas halaman Info Kiriman untuk kiriman yang sudah dicetak."
   },

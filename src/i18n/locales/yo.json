@@ -4076,6 +4076,7 @@
   },
   "glossary": {
     "fractionsDesc": "Ìfìwéránṣẹ́ tí a mint lórí DeHub di NFT tí a pín sí ìpín 1,000, ẹlẹ́dàá sì bẹ̀rẹ̀ pẹ̀lú gbogbo 1,000 — níní àkóónú náà ní 100%. Mint ṣíṣe jẹ́ àṣàyàn, ó sì lè ṣẹlẹ̀ nígbà tí o bá tẹ̀ jáde tàbí lẹ́yìn náà.",
+    "ownershipBarDesc": "Ọ̀pá ìlọsíwájú lórí ojú-ìwé Àlàyé Ìfìwéránṣẹ́ tó ń fi hàn iye nínú ìpín 1,000 tí ẹlẹ́dàá ṣì ní àti iye tí a ti pín tàbí tà.",
     "tokenIdDesc": "Ìdánimọ̀ aláìlẹ́gbẹ́ lórí chain tí ìfìwéránṣẹ́ kan ń gbà nígbà tí a bá mint rẹ̀ gẹ́gẹ́ bí NFT lórí blockchain. Mint ṣíṣe jẹ́ àṣàyàn, nítorí náà ìfìwéránṣẹ́ tí a kò tíì mint kò tíì ní Token ID.",
     "tokenIdInfoDesc": "Ìdánimọ̀ aláìlẹ́gbẹ́ lórí chain tí ìfìwéránṣẹ́ kan ń gbà lẹ́yìn tí a bá ti mint rẹ̀ gẹ́gẹ́ bí NFT. A máa ń fi hàn ní òkè ojú-ìwé Post Info fún àwọn ìfìwéránṣẹ́ tí a ti mint."
   },

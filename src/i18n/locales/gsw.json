@@ -4055,6 +4055,7 @@
   },
   "glossary": {
     "fractionsDesc": "En Biitrag, wo uf DeHub prägt wird, wird zumne NFT, wo in 1'000 Fraktione ufteilt isch, und de Creator fangt mit allne 1'000 aa — 100 % Bsitz vom Inhalt. S Präge isch freiwillig und cha bim Veröffentliche oder spöter passiere.",
+    "ownershipBarDesc": "E Fortschrittsbalke uf de Biitragsinfo-Siite, wo zeigt, wie vill vo de 1'000 Fraktione de Creator no hät und wie vill verteilt oder verchauft worde sind.",
     "tokenIdDesc": "En eidütige On-Chain-Kennig, wo en Biitrag überchunnt, wänn er als NFT uf de Blockchain prägt wird. S Präge isch freiwillig, drum hät en Biitrag, wo nonig prägt worde isch, no kei Token ID.",
     "tokenIdInfoDesc": "D eidütig On-Chain-Kennig, wo en Biitrag überchunnt, sobald er als NFT prägt isch. Wird bi prägte Biiträg zoberscht uf de Siite Biitrags-Info aazeigt."
   },
