@@ -477,7 +477,9 @@
     "usernames": "Mga username",
     "usernamesDesc": "Ang mga pangalan na pagmamay - ari mo",
     "usernamesCount_one": "{{count}}username",
-    "usernamesCount_other": "{{count}}usernames"
+    "usernamesCount_other": "{{count}}usernames",
+    "leftHanded": "Mode na kaliwete",
+    "leftHandedDesc": "Ilipat ang like button sa kaliwang bahagi ng reactions bar"
   },
   "common": {
     "save": "I-save",

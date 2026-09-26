@@ -463,7 +463,9 @@
     "usernames": "Ruraqpa sutinkuna",
     "usernamesDesc": "Sutikuna qampa kapuqniki",
     "usernamesCount_one": "{{count}} sutiyuq runap sutin",
-    "usernamesCount_other": "{{count}} sutiyuq runap sutinkuna"
+    "usernamesCount_other": "{{count}} sutiyuq runap sutinkuna",
+    "leftHanded": "Lluq'i makiyuq modo",
+    "leftHandedDesc": "Munay botónta kutichiykuna barrap lluq'i ladonman astay"
   },
   "common": {
     "save": "Waqaychay",

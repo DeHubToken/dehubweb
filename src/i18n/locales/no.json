@@ -459,7 +459,9 @@
     },
     "usernames": "Brukernavn",
     "usernamesDesc": "Navnene du eier",
-    "usernamesCount_other": "{{count}} brukernavn"
+    "usernamesCount_other": "{{count}} brukernavn",
+    "leftHanded": "Venstrehåndsmodus",
+    "leftHandedDesc": "Flytt liker-knappen til venstre side av reaksjonslinjen"
   },
   "common": {
     "save": "Lagre",

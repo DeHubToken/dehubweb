@@ -419,7 +419,9 @@
       "unavailable": "你的帳戶目前無法從編碼器進行直播。",
       "serverCopied": "伺服器複製",
       "keyCopied": "直播金鑰複製"
-    }
+    },
+    "leftHanded": "左手模式",
+    "leftHandedDesc": "共點讚按鈕徙到反應欄左爿"
   },
   "common": {
     "save": "保存",

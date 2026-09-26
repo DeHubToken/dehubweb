@@ -477,7 +477,9 @@
     "usernames": "Käyttäjänimet",
     "usernamesDesc": "Omistamasi nimet",
     "usernamesCount_one": "{{count}} käyttäjänimi",
-    "usernamesCount_other": "{{count}} käyttäjänimeä"
+    "usernamesCount_other": "{{count}} käyttäjänimeä",
+    "leftHanded": "Vasenkätinen tila",
+    "leftHandedDesc": "Siirrä tykkäyspainike reaktiopalkin vasempaan reunaan"
   },
   "common": {
     "save": "Tallenna",

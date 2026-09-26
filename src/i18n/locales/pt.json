@@ -477,7 +477,9 @@
     "usernames": "Nomes de utilizador",
     "usernamesDesc": "Os nomes que possui",
     "usernamesCount_one": "{{count}} username",
-    "usernamesCount_other": "{{count}} nomes de utilizador"
+    "usernamesCount_other": "{{count}} nomes de utilizador",
+    "leftHanded": "Modo canhoto",
+    "leftHandedDesc": "Move o botão de curtir para o lado esquerdo da barra de reações"
   },
   "common": {
     "save": "Salvar",

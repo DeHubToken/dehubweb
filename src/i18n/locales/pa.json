@@ -462,7 +462,9 @@
     "usernames": "ਉਪਭੋਗਤਾ ਨਾਂ",
     "usernamesDesc": "ਉਹ ਨਾਮ ਜਿਨ੍ਹਾਂ ਦੇ ਤੁਸੀਂ ਮਾਲਕ ਹੋ",
     "usernamesCount_one": "{{count}} ਉਪਭੋਗਤਾ ਨਾਮ",
-    "usernamesCount_other": "{{count}} ਉਪਭੋਗਤਾ ਨਾਮ"
+    "usernamesCount_other": "{{count}} ਉਪਭੋਗਤਾ ਨਾਮ",
+    "leftHanded": "ਖੱਬੇ ਹੱਥ ਵਾਲਾ ਮੋਡ",
+    "leftHandedDesc": "ਲਾਈਕ ਬਟਨ ਨੂੰ ਪ੍ਰਤੀਕਿਰਿਆ ਬਾਰ ਦੇ ਖੱਬੇ ਪਾਸੇ ਲੈ ਜਾਓ"
   },
   "common": {
     "save": "ਸੇਵ ਕਰੋ",

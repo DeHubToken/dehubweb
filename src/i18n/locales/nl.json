@@ -477,7 +477,9 @@
     "usernames": "Gebruikersnamen",
     "usernamesDesc": "De namen waarvan je de eigenaar bent",
     "usernamesCount_one": "{{count}} gebruikersnaam",
-    "usernamesCount_other": "{{count}} gebruikersnamen"
+    "usernamesCount_other": "{{count}} gebruikersnamen",
+    "leftHanded": "Linkshandige modus",
+    "leftHandedDesc": "Zet de vind-ik-leuk-knop aan de linkerkant van de reactiebalk"
   },
   "common": {
     "save": "Opslaan",

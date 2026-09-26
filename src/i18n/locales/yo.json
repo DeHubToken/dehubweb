@@ -461,7 +461,9 @@
     "usernames": "Orúkọ oníṣe",
     "usernamesDesc": "Àwọn orúkọ tí o ní",
     "usernamesCount_one": "{{count}} orukọ olumulo",
-    "usernamesCount_other": "{{count}} usernames"
+    "usernamesCount_other": "{{count}} usernames",
+    "leftHanded": "Ipò ọwọ́ òsì",
+    "leftHandedDesc": "Gbé bọ́tìnnì ìfẹ́ lọ sí ẹ̀gbẹ́ òsì ti ọ̀pá ìdáhùn"
   },
   "common": {
     "save": "Fipamọ́",

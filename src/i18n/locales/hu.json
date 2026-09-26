@@ -477,7 +477,9 @@
     "usernames": "Felhasználónév",
     "usernamesDesc": "A tulajdonodban lévő nevek",
     "usernamesCount_one": "{{count}} felhasználónév",
-    "usernamesCount_other": "{{count}} felhasználónév"
+    "usernamesCount_other": "{{count}} felhasználónév",
+    "leftHanded": "Balkezes mód",
+    "leftHandedDesc": "A tetszik gomb a reakciósáv bal oldalára kerül"
   },
   "common": {
     "save": "Mentés",

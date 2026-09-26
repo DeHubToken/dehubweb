@@ -369,7 +369,9 @@
       "rotated": "کلیل پەخشێکی نوێ دەرکرا",
       "rotateFailed": "نەکرا کلیلێکی نوێ دەربکرێت",
       "unavailable": "پەخشکردن لە کۆدەرێکەوە لە ئێستادا لەسەر هەژمارەکەت بەردەست نییە."
-    }
+    },
+    "leftHanded": "Moda çepgir",
+    "leftHandedDesc": "Bişkoka hezkirinê bibe aliyê çepê yê barika reaksiyonan"
   },
   "common": {
     "save": "Tomar bike",

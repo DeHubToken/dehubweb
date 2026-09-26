@@ -477,7 +477,9 @@
     "usernames": "Nazwy użytkowników",
     "usernamesDesc": "Nazwy, które posiadasz",
     "usernamesCount_one": "Nazwa użytkownika {{count}}",
-    "usernamesCount_other": "{{count}} nazwy użytkownika"
+    "usernamesCount_other": "{{count}} nazwy użytkownika",
+    "leftHanded": "Tryb dla leworęcznych",
+    "leftHandedDesc": "Przenosi przycisk polubienia na lewą stronę paska reakcji"
   },
   "common": {
     "save": "Zapisz",

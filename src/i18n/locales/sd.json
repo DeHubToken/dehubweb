@@ -462,7 +462,9 @@
     "usernames": "استعمال ڪندڙ جا نالا",
     "usernamesDesc": "جن نالن جي تون مالڪ آهين",
     "usernamesCount_one": "{{count}} يوزر نامي",
-    "usernamesCount_other": "{{count}} يوزر نامي"
+    "usernamesCount_other": "{{count}} يوزر نامي",
+    "leftHanded": "کاٻي هٿ وارو موڊ",
+    "leftHandedDesc": "لائيڪ بٽڻ کي رد عمل بار جي کاٻي پاسي ڏانهن منتقل ڪريو"
   },
   "common": {
     "save": "محفوظ ڪريو",

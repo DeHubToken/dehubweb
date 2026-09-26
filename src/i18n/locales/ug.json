@@ -463,7 +463,9 @@
     "usernames": "ئىشلەتكۈچى ئىسىملىرى",
     "usernamesDesc": "سىزدە بار بولغان ئىسىملار",
     "usernamesCount_one": "{{count}} username",
-    "usernamesCount_other": "{{count}} usernames"
+    "usernamesCount_other": "{{count}} usernames",
+    "leftHanded": "سولخاي ھالىتى",
+    "leftHandedDesc": "ياقتۇرۇش كۇنۇپكىسىنى ئىنكاس بالدىقىنىڭ سول تەرىپىگە يۆتكەڭ"
   },
   "common": {
     "save": "ساقلاش",

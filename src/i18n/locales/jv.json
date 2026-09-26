@@ -455,7 +455,9 @@
     "usernames": "Jeneng panganggo",
     "usernamesDesc": "Jeneng sing kok duweni",
     "usernamesCount_one": "{{count}} jeneng panganggo",
-    "usernamesCount_other": "{{count}} jeneng panganggo"
+    "usernamesCount_other": "{{count}} jeneng panganggo",
+    "leftHanded": "Mode kidal",
+    "leftHandedDesc": "Pindhahake tombol seneng menyang sisih kiwa bar reaksi"
   },
   "common": {
     "save": "Simpen",

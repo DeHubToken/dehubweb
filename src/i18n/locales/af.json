@@ -479,7 +479,9 @@
     "usernamesCount_one": "{{count}} gebruikersnaam",
     "usernamesCount_other": "{{count}} gebruikersname",
     "security": "Sekuriteit",
-    "about": "Oor"
+    "about": "Oor",
+    "leftHanded": "Linkshandige modus",
+    "leftHandedDesc": "Skuif die hou-van-knoppie na die linkerkant van die reaksiebalk"
   },
   "common": {
     "save": "Stoor",

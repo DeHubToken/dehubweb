@@ -458,7 +458,9 @@
     "usernames": "Usernames",
     "usernamesDesc": "Ny vadinareo.",
     "usernamesCount_one": "{{count}} solon'anarana",
-    "usernamesCount_other": "{{count}} usernames"
+    "usernamesCount_other": "{{count}} usernames",
+    "leftHanded": "Fomba ho an'ny havia",
+    "leftHandedDesc": "Afindrao eo amin'ny ilany havian'ny tsipika fihetsika ny bokotra tia"
   },
   "common": {
     "save": "Tehirizo",

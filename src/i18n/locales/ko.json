@@ -475,7 +475,9 @@
     "usernames": "사용자 이름",
     "usernamesDesc": "소유한 이름",
     "usernamesCount_one": "{{count}} 사용자 이름",
-    "usernamesCount_other": "{{count}} 사용자 이름"
+    "usernamesCount_other": "{{count}} 사용자 이름",
+    "leftHanded": "왼손잡이 모드",
+    "leftHandedDesc": "좋아요 버튼을 반응 바의 왼쪽으로 옮깁니다"
   },
   "common": {
     "save": "저장",

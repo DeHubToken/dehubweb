@@ -423,7 +423,9 @@
     "usernames": "ชื่อผู้ใช้",
     "usernamesDesc": "ชื่อที่เจ้าของเป็นเจ้าของ",
     "usernamesCount_one": "{{count}} ชื่อผู้ใช้",
-    "usernamesCount_other": "{{count}} ชื่อผู้ใช้"
+    "usernamesCount_other": "{{count}} ชื่อผู้ใช้",
+    "leftHanded": "โหมดคนถนัดซ้าย",
+    "leftHandedDesc": "ย้ายปุ่มมักไปทางซ้ายของแถบรีแอคชัน"
   },
   "common": {
     "save": "บันทึก",

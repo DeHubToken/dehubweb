@@ -459,7 +459,9 @@
     "usernames": "Ονόματα χρηστών",
     "usernamesDesc": "Τα ονόματα που σας ανήκουν",
     "usernamesCount_one": "Όνομα χρήστη {{count}}",
-    "usernamesCount_other": "{{count}} ονόματα χρήστη"
+    "usernamesCount_other": "{{count}} ονόματα χρήστη",
+    "leftHanded": "Λειτουργία αριστερόχειρα",
+    "leftHandedDesc": "Μετακινεί το κουμπί «μου αρέσει» στην αριστερή πλευρά της γραμμής αντιδράσεων"
   },
   "common": {
     "save": "Αποθήκευση",

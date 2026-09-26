@@ -477,7 +477,9 @@
     "usernames": "Noms d'utilisateur",
     "usernamesDesc": "Les noms que vous possédez",
     "usernamesCount_one": "{{count}} nom d'utilisateur",
-    "usernamesCount_other": "{{count}} noms d'utilisateur"
+    "usernamesCount_other": "{{count}} noms d'utilisateur",
+    "leftHanded": "Mode gaucher",
+    "leftHandedDesc": "Place le bouton j'aime à gauche de la barre de réactions"
   },
   "common": {
     "save": "Enregistrer",

@@ -475,7 +475,9 @@
     },
     "usernames": "Имена пользователей",
     "usernamesDesc": "Имена, которыми вы владеете",
-    "usernamesCount_one": "{{count}} имя пользователя"
+    "usernamesCount_one": "{{count}} имя пользователя",
+    "leftHanded": "Режим для левшей",
+    "leftHandedDesc": "Переносит кнопку «нравится» в левую часть панели реакций"
   },
   "common": {
     "save": "Сохранить",

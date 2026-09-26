@@ -463,7 +463,9 @@
     "usernames": "Maqaa fayyadamtootaa",
     "usernamesDesc": "Maqaawwan ati qabdu",
     "usernamesCount_one": "{{count}} maqaa fayyadamaa",
-    "usernamesCount_other": "{{count}} maqaa fayyadamtootaa"
+    "usernamesCount_other": "{{count}} maqaa fayyadamtootaa",
+    "leftHanded": "Haala harka bitaa",
+    "leftHandedDesc": "Qabduu jaallachuu gara bitaa sararaa deebii tti siksi"
   },
   "common": {
     "save": "Olchi",

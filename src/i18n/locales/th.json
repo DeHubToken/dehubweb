@@ -480,7 +480,9 @@
     "usernames": "ชื่อผู้ใช้",
     "usernamesDesc": "ชื่อที่คุณเป็นเจ้าของ",
     "usernamesCount_one": "ชื่อผู้ใช้ {{count}}",
-    "usernamesCount_other": "{{count}} ชื่อผู้ใช้"
+    "usernamesCount_other": "{{count}} ชื่อผู้ใช้",
+    "leftHanded": "โหมดคนถนัดซ้าย",
+    "leftHandedDesc": "ย้ายปุ่มถูกใจไปทางซ้ายของแถบรีแอคชัน"
   },
   "common": {
     "save": "บันทึก",

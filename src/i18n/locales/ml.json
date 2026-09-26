@@ -475,7 +475,9 @@
     },
     "usernames": "ഉപയോക്തൃനാമങ്ങൾ",
     "usernamesDesc": "നിങ്ങളുടെ ഉടമസ്ഥതയിലുള്ള പേരുകൾ",
-    "usernamesCount_other": "{{count}}ഉപയോക്തൃനാമങ്ങൾ"
+    "usernamesCount_other": "{{count}}ഉപയോക്തൃനാമങ്ങൾ",
+    "leftHanded": "ഇടംകൈയ്യൻ മോഡ്",
+    "leftHandedDesc": "ലൈക്ക് ബട്ടൺ പ്രതികരണ ബാറിന്റെ ഇടതുവശത്തേക്ക് മാറ്റുക"
   },
   "common": {
     "save": "സേവ് ചെയ്യുക",
