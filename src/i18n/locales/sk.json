@@ -1873,6 +1873,7 @@
     "notificationsEnabled": "Upozornenia zapnuté pre tento profil"
   },
   "toasts": {
+    "reactionTip": "Pre ďalšie reakcie prejdite myšou nad tlačidlo Páči sa mi to alebo ho podržte",
     "saved_to_bookmarks": "Uložené do záložiek",
     "new_member_notice_title": "Zobrazujete sa v Noví členovia",
     "new_member_notice_body": "Ostatní členovia vidia, kedy ste sa pripojili, takže vás môžu pozdraviť. Kedykoľvek ho vypnite.",

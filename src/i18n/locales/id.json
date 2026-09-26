@@ -1779,6 +1779,7 @@
     "notificationsEnabled": "Notifikasi diaktifkan untuk profil ini"
   },
   "toasts": {
+    "reactionTip": "Arahkan kursor atau tekan lama tombol suka untuk reaksi lainnya",
     "saved_to_bookmarks": "Disimpan ke bookmark",
     "new_member_notice_title": "Anda tampil di Anggota baru",
     "new_member_notice_body": "Anggota lain dapat melihat kapan Anda bergabung, sehingga mereka dapat menyapa. Matikan kapan saja.",

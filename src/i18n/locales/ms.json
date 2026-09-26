@@ -2046,6 +2046,7 @@
     "notificationsEnabled": "Pemberitahuan diaktifkan untuk profil ini"
   },
   "toasts": {
+    "reactionTip": "Halakan kursor atau tekan lama butang suka untuk lebih banyak reaksi",
     "saved_to_bookmarks": "Disimpan ke penanda buku",
     "new_member_notice_title": "Anda menunjukkan dalam Ahli baharu",
     "new_member_notice_body": "Ahli lain boleh melihat apabila anda menyertai, supaya mereka boleh bertanya khabar. Matikan bila-bila masa.",

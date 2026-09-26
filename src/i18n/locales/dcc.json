@@ -1448,6 +1448,7 @@
     "notificationsEnabled": "ایس پروفائل لئی اطلاعات چالو ہو گئیاں"
   },
   "toasts": {
+    "reactionTip": "اور ری ایکشنز کے واسطے لائک بٹن پو ماؤس لے جاؤ یا دبا کو رکھو",
     "saved_to_bookmarks": "بکمارک میں محفوظ",
     "removed_from_bookmarks": "بکمارک سے ہٹایا",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",

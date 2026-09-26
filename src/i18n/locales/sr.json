@@ -1479,6 +1479,7 @@
     "notificationsEnabled": "Обавештења укључена за овај профил"
   },
   "toasts": {
+    "reactionTip": "За више реакција задржите показивач изнад дугмета Свиђа ми се или га притисните и држите",
     "saved_to_bookmarks": "Сачувано у обележивачима",
     "removed_from_bookmarks": "Уклоњено из обележивача",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",

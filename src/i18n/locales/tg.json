@@ -1731,6 +1731,7 @@
     "notificationsEnabled": "Огоҳиҳо барои ин профил фаъол шуданд"
   },
   "toasts": {
+    "reactionTip": "Барои аксуламалҳои бештар курсорро ба тугмаи писанд баред ё онро пахш карда нигоҳ доред",
     "saved_to_bookmarks": "Дар хатчӯбҳо нигоҳ дошта шуд",
     "new_member_notice_title": "Ipinapakita mo sa mga bagong member",
     "new_member_notice_body": "Ang iba pang mga pangkat ay maaaring makita kapag iyong pumunta, kung sa Онро ҳар вақт хомӯш кунед.",

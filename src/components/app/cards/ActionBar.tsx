@@ -35,6 +35,7 @@ import {
 } from '@/lib/reactions';
 import { reactionGlowProps } from '@/lib/reaction-glow';
 import { ReactionPicker } from './ReactionPicker';
+import { maybeShowReactionTip, markReactionTipSeen } from '@/lib/reaction-tip';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEngagementWeight } from '@/hooks/use-engagement-weight';
 import { useLeftHanded } from '@/hooks/use-left-handed';
@@ -413,6 +414,8 @@ export function ActionBar({
   // declared above the trays and every cast — thumb, tray or double-tap —
   // should put them away.
   const closeTrays = useRef<() => void>(() => {});
+  // Same reason: whether this bar has a tray at all is worked out below.
+  const reactionsEnabledRef = useRef(false);
   const [reactionInfoOpen, setReactionInfoOpen] = useState(false);
   const [isSharingImage, setIsSharingImage] = useState(false);
   // Track when user voted locally so we don't let stale API refetches overwrite optimistic state
@@ -663,8 +666,11 @@ export function ActionBar({
    * same way it clears a 👍, instead of downgrading it to a plain like.
    */
   const handleVote = useCallback((vote: boolean) => {
+    // A first plain like is when the viewer has found the button but not the
+    // tray behind it — point them at it, once.
+    if (vote && !isLiked && isAuthenticated && reactionsEnabledRef.current) maybeShowReactionTip();
     return handleReaction(reactionForTap(vote, myReaction, localReactionCounts));
-  }, [handleReaction, myReaction, localReactionCounts]);
+  }, [handleReaction, myReaction, localReactionCounts, isLiked, isAuthenticated]);
 
   // Listen for double-tap-to-like events dispatched by photo thumbnails / fullscreen viewer.
   // Instagram-style: double-tap always likes (never unlikes) and only for this post's ID.
@@ -716,6 +722,9 @@ export function ActionBar({
   // opens today — 👎 is alone on its side — see HAS_NEGATIVE_TRAY.
   const likeTray = useReactionTray(reactionsEnabled);
   const dislikeTray = useReactionTray(reactionsEnabled && HAS_NEGATIVE_TRAY);
+  reactionsEnabledRef.current = reactionsEnabled;
+  // Opening the tray means they already know it is there.
+  useEffect(() => { if (likeTray.open) markReactionTipSeen(); }, [likeTray.open]);
 
   // Only ever one open. They sit inches apart on the same row, and two trays
   // stacked over each other is unreadable however they are anchored.

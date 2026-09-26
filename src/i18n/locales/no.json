@@ -1737,6 +1737,7 @@
     "notificationsEnabled": "Varsler aktivert for denne profilen"
   },
   "toasts": {
+    "reactionTip": "Hold musepekeren over eller hold inne liker-knappen for flere reaksjoner",
     "saved_to_bookmarks": "Lagret i bokmerker",
     "new_member_notice_title": "Du vises i Nye medlemmer",
     "new_member_notice_body": "Andre medlemmer kan se når du ble med, slik at de kan si hei. Slå den av når som helst.",

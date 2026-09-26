@@ -1702,6 +1702,7 @@
     "notificationsEnabled": "Kennisgewings geaktiveer vir hierdie profiel"
   },
   "toasts": {
+    "reactionTip": "Beweeg oor of hou die hou-van-knoppie in vir meer reaksies",
     "saved_to_bookmarks": "By boekmerke gestoor",
     "new_member_notice_title": "Jy wys in nuwe lede",
     "new_member_notice_body": "Ander lede kan sien wanneer jy aansluit, sodat hulle hallo kan sê. Draai het elke keer om.",

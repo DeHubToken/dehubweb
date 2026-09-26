@@ -1778,6 +1778,7 @@
     "notificationsEnabled": "이 프로필에 대한 알림이 활성화되었습니다"
   },
   "toasts": {
+    "reactionTip": "좋아요 버튼에 마우스를 올리거나 길게 누르면 더 많은 반응을 남길 수 있어요",
     "saved_to_bookmarks": "북마크에 저장됨",
     "new_member_notice_title": "신규 회원에 표시되고 있습니다",
     "new_member_notice_body": "다른 회원은 내가 가입했을 때 볼 수 있으므로 인사할 수 있습니다. 언제든지 끌 수 있습니다.",

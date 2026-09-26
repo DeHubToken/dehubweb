@@ -1779,6 +1779,7 @@
     "notificationsEnabled": "Notifiche attivate per questo profilo"
   },
   "toasts": {
+    "reactionTip": "Passa il mouse o tieni premuto il pulsante Mi piace per altre reazioni",
     "saved_to_bookmarks": "Salvato nei segnalibri",
     "new_member_notice_title": "Stai visualizzando in Nuovi membri",
     "new_member_notice_body": "Gli altri membri possono vedere quando ti sei iscritto, in modo che possano salutarti. Spegnilo in qualsiasi momento.",

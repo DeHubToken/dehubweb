@@ -1691,6 +1691,7 @@
     "notificationsEnabled": "已为此资料开启通知"
   },
   "toasts": {
+    "reactionTip": "拿鼠标摆到点赞按钮浪向或者长按，好选更多表情",
     "saved_to_bookmarks": "保存到书签了",
     "new_member_notice_title": "搿个是“新成员”里向显示个",
     "new_member_notice_body": "别个成员会晓得搿个辰光加入，方便讲声“你好”。随时可以关脱。",

@@ -1972,6 +1972,7 @@
     "notificationsEnabled": "Meldingen ingeschakeld voor dit profiel"
   },
   "toasts": {
+    "reactionTip": "Beweeg over de vind-ik-leuk-knop of houd hem ingedrukt voor meer reacties",
     "saved_to_bookmarks": "Opgeslagen in bladwijzers",
     "new_member_notice_title": "U wordt weergegeven in Nieuwe leden",
     "new_member_notice_body": "Andere leden kunnen zien wanneer je lid bent geworden, zodat ze hallo kunnen zeggen. Zet het op elk gewenst moment uit.",

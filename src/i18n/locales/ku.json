@@ -1546,6 +1546,7 @@
     "notificationsEnabled": "ئاگاداریەکان چالاک کران بۆ ئەم پرۆفایلە"
   },
   "toasts": {
+    "reactionTip": "Ji bo bêtir bertekan mişkê bibe ser bişkoka hezkirinê an jî pê bigire",
     "saved_to_bookmarks": "پاشەکەوت کرا",
     "removed_from_bookmarks": "لە پاشەکەوتەکان لابرا",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",

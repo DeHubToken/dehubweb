@@ -1728,6 +1728,7 @@
     "notificationsEnabled": "Bu profil üçin habarnamalar açyldy"
   },
   "toasts": {
+    "reactionTip": "Has köp reaksiýa üçin halamak düwmesiniň üstüne getiriň ýa-da basyp saklaň",
     "saved_to_bookmarks": "Belgilere ýatda saklandy",
     "new_member_notice_title": "Sen täze agzalar bilen tanyşdyň",
     "new_member_notice_body": "Başga agzalar siz goşulanyňyzda görerler, şonuň üçin olar salam aýdyp bilerler. Ony her wagt aýyr.",

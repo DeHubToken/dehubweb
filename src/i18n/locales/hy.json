@@ -1776,6 +1776,7 @@
     "notificationsEnabled": "Tsdelays profilei hamar miatsdelays e"
   },
   "toasts": {
+    "reactionTip": "Ավելի շատ ռեակցիաների համար սավառնեք կամ սեղմած պահեք հավանել կոճակը",
     "saved_to_bookmarks": "Պահված է էջdelays",
     "new_member_notice_title": "Դուք ցույց եք տալիս նոր անդամներ",
     "new_member_notice_body": "Մյուս անդամները կարող են տեսնել, թե երբ եք միացել, որպեսզի կարողանան բարևել: Անջատեք այն ցանկացած պահի ։",
