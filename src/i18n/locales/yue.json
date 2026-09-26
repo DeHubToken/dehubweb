@@ -1741,6 +1741,7 @@
     "notificationsEnabled": "已為呢個資料開啟通知"
   },
   "toasts": {
+    "reactionTip": "將滑鼠移到讚好掣上面或者㩒住唔放，就可以揀更多反應",
     "saved_to_bookmarks": "已儲存到書籤",
     "new_member_notice_title": "你喺新成員入面顯示緊",
     "new_member_notice_body": "其他成員可以睇到你幾時加入，噉佢哋就可以打招呼。隨時閂佢。",

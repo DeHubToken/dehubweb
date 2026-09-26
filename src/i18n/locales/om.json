@@ -1756,6 +1756,7 @@
     "notificationsEnabled": "Beeksisni piroofaayilii kanaaf hojjetame"
   },
   "toasts": {
+    "reactionTip": "Deebii dabalataaf qabduu jaalachuu irratti maawusii fidi ykn qabadhu",
     "saved_to_bookmarks": "Mallattoo keessa kuufame",
     "new_member_notice_title": "Miseensota Haaraa keessatti agarsiisaa jirtu",
     "new_member_notice_body": "Miseensonni biroo yeroo ati itti makamte arguu danda&#39;u, kanaaf nagaa si gaafachuu danda&#39;u. Yeroo barbaaddanitti dhaamsaa.",

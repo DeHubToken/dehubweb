@@ -1781,6 +1781,7 @@
     "notificationsEnabled": "已为此资料开启通知"
   },
   "toasts": {
+    "reactionTip": "将鼠标悬停在点赞按钮上或长按，即可选择更多表情",
     "saved_to_bookmarks": "已保存到书签",
     "new_member_notice_title": "您正在新成员中显示",
     "new_member_notice_body": "其他成员可以看到您加入的时间，这样他们就可以打招呼了。 您可以随时将其关闭。",

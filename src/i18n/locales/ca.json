@@ -1775,6 +1775,7 @@
     "notificationsEnabled": "Notificacions activades per a aquest perfil"
   },
   "toasts": {
+    "reactionTip": "Passa el cursor o mantén premut el botó de m'agrada per a més reaccions",
     "saved_to_bookmarks": "Desat als marcadors",
     "new_member_notice_title": "T'estàs mostrant a Membres nous",
     "new_member_notice_body": "Altres membres poden veure quan t'has unit, així que poden saludar-te. Desactiva-la quan vulguis.",

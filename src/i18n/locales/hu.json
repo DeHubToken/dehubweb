@@ -1775,6 +1775,7 @@
     "notificationsEnabled": "Értesítések engedélyezve ehhez a profilhoz"
   },
   "toasts": {
+    "reactionTip": "További reakciókért vidd az egeret a Tetszik gomb fölé, vagy tartsd lenyomva",
     "saved_to_bookmarks": "Könyvjelzőkhöz mentve",
     "new_member_notice_title": "Új tagokban jelenik meg",
     "new_member_notice_body": "A többi tag láthatja, hogy mikor csatlakoztál, így üdvözölhetnek. Bármikor kikapcsolhatod.",

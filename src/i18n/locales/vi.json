@@ -1609,6 +1609,7 @@
     "notificationsEnabled": "Đã bật thông báo cho hồ sơ này"
   },
   "toasts": {
+    "reactionTip": "Di chuột hoặc nhấn giữ nút thích để có thêm cảm xúc",
     "saved_to_bookmarks": "Đã lưu vào dấu trang",
     "new_member_notice_title": "Bạn đang hiển thị trong Thành viên mới",
     "new_member_notice_body": "Các thành viên khác có thể nhìn thấy khi bạn tham gia, vì vậy họ có thể nói xin chào. Tắt nó bất cứ lúc nào.",

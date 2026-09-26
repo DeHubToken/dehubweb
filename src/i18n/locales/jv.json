@@ -1727,6 +1727,7 @@
     "notificationsEnabled": "Kabar diaktifke kanggo profil iki"
   },
   "toasts": {
+    "reactionTip": "Arahna kursor utawa pencet suwe tombol seneng kanggo reaksi liyane",
     "saved_to_bookmarks": "Disimpen ing bookmark",
     "new_member_notice_title": "Sampeyan katon ing Anggota anyar",
     "new_member_notice_body": "Anggota liyane bisa ndeleng kapan sampeyan gabung, supaya bisa ngucapake salam. Pateni kapan wae.",

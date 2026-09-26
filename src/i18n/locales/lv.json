@@ -1762,6 +1762,7 @@
     "notificationsEnabled": "Paziņojumi ieslēgti šim profilam"
   },
   "toasts": {
+    "reactionTip": "Lai redzētu vairāk reakciju, novietojiet kursoru uz pogas “Patīk” vai turiet to nospiestu",
     "saved_to_bookmarks": "Saglabāts grāmatzīmēs",
     "new_member_notice_title": "Jūs rādāt Jaunus dalībniekus",
     "new_member_notice_body": "Citi dalībnieki var redzēt, kad pievienojāties, lai viņi varētu sasveicināties. Izslēdziet to jebkurā laikā.",

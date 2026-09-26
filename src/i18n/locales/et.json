@@ -1774,6 +1774,7 @@
     "notificationsEnabled": "Teavitused lubatud selle profiili jaoks"
   },
   "toasts": {
+    "reactionTip": "Rohkemate reaktsioonide jaoks hõljuta kursorit meeldib-nupu kohal või hoia seda all",
     "saved_to_bookmarks": "Salvestatud järjehoidjatesse",
     "new_member_notice_title": "Kuvatakse uutes liikmetes",
     "new_member_notice_body": "Teised liikmed näevad, millal sa liitusid, et nad saaksid sind tervitada. Lülita see igal ajal välja.",

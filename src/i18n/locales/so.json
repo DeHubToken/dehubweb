@@ -1743,6 +1743,7 @@
     "notificationsEnabled": "Ogeysiisyada waa la hawlgeliyay profile-kan"
   },
   "toasts": {
+    "reactionTip": "Falcelin dheeraad ah, jiirka saar ama ku hay badhanka jeclaysiga",
     "saved_to_bookmarks": "Ku keydiyay calaamadaha",
     "new_member_notice_title": "Waxaad ku muujineysaa xubnaha cusub",
     "new_member_notice_body": "Xubnaha kale way arki karaan goorta aad ku biirtay, si ay kuu salaamaan. Weli waad damin kartaa.",

@@ -1772,6 +1772,7 @@
     "notificationsEnabled": "Bu profil üçün bildirişlər aktivdir"
   },
   "toasts": {
+    "reactionTip": "Daha çox reaksiya üçün bəyən düyməsinin üzərinə gəlin və ya basıb saxlayın",
     "saved_to_bookmarks": "Əlfəcinlərə saxlanıldı",
     "new_member_notice_title": "Siz Yeni üzvlərdə görünürsünüz",
     "new_member_notice_body": "Digər üzvlər nə vaxt qoşulduğunuzu görə bilər və salamlaşa bilərlər. İstənilən vaxt söndürün.",

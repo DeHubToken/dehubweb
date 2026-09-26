@@ -1719,6 +1719,7 @@
     "notificationsEnabled": "এই প্রোফাইলের জন্য নোটিফিকেশন চালু হইছে"
   },
   "toasts": {
+    "reactionTip": "আরো রিঅ্যাকশনের জন্যে লাইক বোতামের উপরত মাউস নিয়া যান বা চাপি ধরি থোন",
     "saved_to_bookmarks": "বুকমার্কত সেভ হইছে",
     "removed_from_bookmarks": "বুকমার্ক থাকি বাদ দেওয়া হইছে",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",

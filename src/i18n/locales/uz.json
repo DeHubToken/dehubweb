@@ -1755,6 +1755,7 @@
     "notificationsEnabled": "Bu profil uchun bildirishnomalar yoqildi"
   },
   "toasts": {
+    "reactionTip": "Ko‘proq reaksiyalar uchun yoqdi tugmasi ustiga olib boring yoki bosib turing",
     "saved_to_bookmarks": "Xatchoʻplarga saqlandi",
     "new_member_notice_title": "Siz &quot;Yangi a&#39;zolar&quot; bo&#39;limida ko&#39;rsatilmoqdasiz",
     "new_member_notice_body": "Boshqa a&#39;zolar sizning qachon qo&#39;shilganingizni ko&#39;rishlari mumkin, shunda ular salomlashishlari mumkin. Buni istalgan vaqtda o&#39;chirib qo&#39;yishingiz mumkin.",

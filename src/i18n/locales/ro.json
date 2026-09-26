@@ -1668,6 +1668,7 @@
     "notificationsEnabled": "Notificările au fost activate pentru acest profil"
   },
   "toasts": {
+    "reactionTip": "Treceți cu mouse-ul sau țineți apăsat butonul Îmi place pentru mai multe reacții",
     "saved_to_bookmarks": "Salvat în marcaje",
     "new_member_notice_title": "Afișați în Membri noi",
     "new_member_notice_body": "Alți membri pot vedea când te-ai alăturat, astfel încât să te poată saluta. Oprește-l oricând.",

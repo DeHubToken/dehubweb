@@ -1775,6 +1775,7 @@
     "notificationsEnabled": "Ilmoitukset käytössä tälle profiilille"
   },
   "toasts": {
+    "reactionTip": "Vie osoitin tykkää-painikkeen päälle tai pidä sitä painettuna nähdäksesi lisää reaktioita",
     "saved_to_bookmarks": "Tallennettu kirjanmerkkeihin",
     "new_member_notice_title": "Näytät uudet jäsenet",
     "new_member_notice_body": "Muut jäsenet näkevät, milloin liityit, jotta he voivat tervehtiä. Sammuta se milloin tahansa.",

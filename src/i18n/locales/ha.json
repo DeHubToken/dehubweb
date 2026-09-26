@@ -1740,6 +1740,7 @@
     "notificationsEnabled": "An kunna sanarwa don wannan bayanai"
   },
   "toasts": {
+    "reactionTip": "Ka ɗora linzami ko ka riƙe maɓallin so don ƙarin martani",
     "saved_to_bookmarks": "An ajiye a cikin alamomin shafi",
     "new_member_notice_title": "Kuna nunawa a cikin Sabon mambobi",
     "new_member_notice_body": "Sauran mambobi za su iya ganin lokacin da kuka shiga, don haka za su iya gaisuwa. Kashe shi a kowane lokaci.",
