@@ -660,7 +660,12 @@
     "cancel": "Annulla",
     "confirm": "Conferma",
     "paying": "Pagamento...",
-    "payAmount": "Paga {{amount}} {{currency}}"
+    "payAmount": "Paga {{amount}} {{currency}}",
+    "coverTitle": "Copertina",
+    "coverHint": "Scegli un fotogramma o carica un'immagine. Si salva subito.",
+    "coverUpload": "Carica un'immagine di copertina",
+    "coverSaved": "Copertina aggiornata",
+    "coverFailed": "Impossibile cambiare la copertina"
   },
   "assistant": {
     "title": "Assistente",

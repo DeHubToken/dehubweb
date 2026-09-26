@@ -644,7 +644,12 @@
     "cancel": "Atcelt",
     "confirm": "Apstiprināt",
     "paying": "Maksāšana...",
-    "payAmount": "Maksāt {{amount}} {{currency}}"
+    "payAmount": "Maksāt {{amount}} {{currency}}",
+    "coverTitle": "Vāks",
+    "coverHint": "Izvēlieties kadru vai augšupielādējiet attēlu. Saglabājas uzreiz.",
+    "coverUpload": "Augšupielādēt vāka attēlu",
+    "coverSaved": "Vāks atjaunināts",
+    "coverFailed": "Neizdevās nomainīt vāku"
   },
   "assistant": {
     "title": "Asistents",

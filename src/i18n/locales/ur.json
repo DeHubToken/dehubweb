@@ -657,7 +657,12 @@
     "cancel": "منسوخ",
     "confirm": "تصدیق",
     "paying": "ادائیگی ہو رہی ہے...",
-    "payAmount": "{{amount}} {{currency}} ادا کریں"
+    "payAmount": "{{amount}} {{currency}} ادا کریں",
+    "coverTitle": "کور",
+    "coverHint": "کوئی فریم چنیں یا تصویر اپ لوڈ کریں۔ فوراً محفوظ ہو جاتا ہے۔",
+    "coverUpload": "کور تصویر اپ لوڈ کریں",
+    "coverSaved": "کور اپ ڈیٹ ہو گیا",
+    "coverFailed": "کور تبدیل نہیں ہو سکا"
   },
   "assistant": {
     "title": "معاون",

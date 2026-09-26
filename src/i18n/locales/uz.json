@@ -643,7 +643,12 @@
     "cancel": "Bekor qilish",
     "confirm": "Tasdiqlash",
     "paying": "Toʻlanmoqda...",
-    "payAmount": "{{amount}} {{currency}} toʻlash"
+    "payAmount": "{{amount}} {{currency}} toʻlash",
+    "coverTitle": "Muqova",
+    "coverHint": "Kadr tanlang yoki rasm yuklang. Darhol saqlanadi.",
+    "coverUpload": "Muqova rasmini yuklash",
+    "coverSaved": "Muqova yangilandi",
+    "coverFailed": "Muqovani oʻzgartirib boʻlmadi"
   },
   "assistant": {
     "title": "Yordamchi",

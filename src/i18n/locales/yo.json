@@ -642,7 +642,12 @@
     "cancel": "Fagilee",
     "confirm": "Jẹ́rìísí",
     "paying": "Ó ń sanwó...",
-    "payAmount": "San {{amount}} {{currency}}"
+    "payAmount": "San {{amount}} {{currency}}",
+    "coverTitle": "Èèpo",
+    "coverHint": "Yan fírémù kan tàbí gbé àwòrán sókè. Ó máa fipamọ́ lẹ́sẹ̀kẹsẹ̀.",
+    "coverUpload": "Gbé àwòrán èèpo sókè",
+    "coverSaved": "A ti ṣe àtúnṣe èèpo",
+    "coverFailed": "A kò lè yí èèpo padà"
   },
   "assistant": {
     "title": "Olùrànlọ́wọ́",

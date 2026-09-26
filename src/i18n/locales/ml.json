@@ -656,7 +656,12 @@
     "cancel": "റദ്ദാക്കുക",
     "confirm": "സ്ഥിരീകരിക്കുക",
     "paying": "പണം നൽകുന്നു...",
-    "payAmount": "{{amount}} {{currency}} നൽകുക"
+    "payAmount": "{{amount}} {{currency}} നൽകുക",
+    "coverTitle": "കവർ",
+    "coverHint": "ഒരു ഫ്രെയിം തിരഞ്ഞെടുക്കുക അല്ലെങ്കിൽ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക. ഉടൻ സേവ് ആകും.",
+    "coverUpload": "കവർ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക",
+    "coverSaved": "കവർ അപ്‌ഡേറ്റ് ചെയ്തു",
+    "coverFailed": "കവർ മാറ്റാനായില്ല"
   },
   "assistant": {
     "title": "സഹായി",

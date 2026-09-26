@@ -660,7 +660,12 @@
     "cancel": "Ghairi",
     "confirm": "Thibitisha",
     "paying": "Inalipa...",
-    "payAmount": "Lipa {{amount}} {{currency}}"
+    "payAmount": "Lipa {{amount}} {{currency}}",
+    "coverTitle": "Jalada",
+    "coverHint": "Chagua fremu au pakia picha. Huhifadhiwa papo hapo.",
+    "coverUpload": "Pakia picha ya jalada",
+    "coverSaved": "Jalada limesasishwa",
+    "coverFailed": "Imeshindikana kubadilisha jalada"
   },
   "assistant": {
     "title": "Msaidizi",

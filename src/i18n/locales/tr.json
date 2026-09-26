@@ -660,7 +660,12 @@
     "cancel": "İptal",
     "confirm": "Onayla",
     "paying": "Ödeniyor...",
-    "payAmount": "{{amount}} {{currency}} öde"
+    "payAmount": "{{amount}} {{currency}} öde",
+    "coverTitle": "Kapak",
+    "coverHint": "Bir kare seçin veya görsel yükleyin. Hemen kaydedilir.",
+    "coverUpload": "Kapak görseli yükle",
+    "coverSaved": "Kapak güncellendi",
+    "coverFailed": "Kapak değiştirilemedi"
   },
   "assistant": {
     "title": "Asistan",

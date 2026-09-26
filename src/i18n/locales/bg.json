@@ -655,7 +655,12 @@
     "cancel": "Отмени",
     "confirm": "Потвърди",
     "paying": "Плащане...",
-    "payAmount": "Плати {{amount}} {{currency}}"
+    "payAmount": "Плати {{amount}} {{currency}}",
+    "coverTitle": "Корица",
+    "coverHint": "Изберете кадър или качете изображение. Запазва се веднага.",
+    "coverUpload": "Качете изображение за корица",
+    "coverSaved": "Корицата е обновена",
+    "coverFailed": "Корицата не можа да бъде сменена"
   },
   "assistant": {
     "title": "Асистент",

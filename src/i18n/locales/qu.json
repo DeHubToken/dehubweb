@@ -644,7 +644,12 @@
     "cancel": "Hina kachun",
     "confirm": "Chiqaqchay",
     "paying": "Qullqichkan...",
-    "payAmount": "{{amount}} {{currency}} qullqiy"
+    "payAmount": "{{amount}} {{currency}} qullqiy",
+    "coverTitle": "Qatana",
+    "coverHint": "Huk rikchayta akllay utaq huk siq'ita churay. Chaylla waqaychakun.",
+    "coverUpload": "Qatana siq'ita churay",
+    "coverSaved": "Qatana musuqyachisqa",
+    "coverFailed": "Manam qatanata tikrayta atikurqanchu"
   },
   "assistant": {
     "title": "Yanapaq",

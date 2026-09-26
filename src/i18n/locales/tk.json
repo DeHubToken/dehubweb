@@ -644,7 +644,12 @@
     "cancel": "Ýatyr",
     "confirm": "Tassykla",
     "paying": "Tölenýär...",
-    "payAmount": "{{amount}} {{currency}} tölemek"
+    "payAmount": "{{amount}} {{currency}} tölemek",
+    "coverTitle": "Örtük",
+    "coverHint": "Kadr saýlaň ýa-da surat ýükläň. Derrew ýatda saklanýar.",
+    "coverUpload": "Örtük suratyny ýükläň",
+    "coverSaved": "Örtük täzelendi",
+    "coverFailed": "Örtügi üýtgedip bolmady"
   },
   "assistant": {
     "title": "Emeli aň kömekçisi",

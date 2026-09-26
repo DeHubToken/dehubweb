@@ -644,7 +644,12 @@
     "cancel": "Atšaukti",
     "confirm": "Patvirtinti",
     "paying": "Mokama...",
-    "payAmount": "Mokėti {{amount}} {{currency}}"
+    "payAmount": "Mokėti {{amount}} {{currency}}",
+    "coverTitle": "Viršelis",
+    "coverHint": "Pasirinkite kadrą arba įkelkite paveikslėlį. Išsaugoma iš karto.",
+    "coverUpload": "Įkelti viršelio paveikslėlį",
+    "coverSaved": "Viršelis atnaujintas",
+    "coverFailed": "Nepavyko pakeisti viršelio"
   },
   "assistant": {
     "title": "Asistentas",

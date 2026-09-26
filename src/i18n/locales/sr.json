@@ -485,7 +485,12 @@
     "cancel": "Откажи",
     "confirm": "Потврди",
     "paying": "Плаћање...",
-    "payAmount": "Плати {{amount}} {{currency}}"
+    "payAmount": "Плати {{amount}} {{currency}}",
+    "coverTitle": "Насловна слика",
+    "coverHint": "Изаберите кадар или отпремите слику. Чува се одмах.",
+    "coverUpload": "Отпреми насловну слику",
+    "coverSaved": "Насловна слика је ажурирана",
+    "coverFailed": "Није могуће променити насловну слику"
   },
   "assistant": {
     "title": "Асистент",

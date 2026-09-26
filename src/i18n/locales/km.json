@@ -615,7 +615,12 @@
     "cancel": "បោះបង់",
     "confirm": "បញ្ជាក់",
     "paying": "កំពុងបង់ប្រាក់...",
-    "payAmount": "បង់ {{amount}} {{currency}}"
+    "payAmount": "បង់ {{amount}} {{currency}}",
+    "coverTitle": "គម្រប",
+    "coverHint": "ជ្រើសរើសស៊ុមមួយ ឬផ្ទុករូបភាពឡើង។ រក្សាទុកភ្លាមៗ។",
+    "coverUpload": "ផ្ទុករូបភាពគម្របឡើង",
+    "coverSaved": "បានធ្វើបច្ចុប្បន្នភាពគម្រប",
+    "coverFailed": "មិនអាចប្ដូរគម្របបានទេ"
   },
   "assistant": {
     "title": "ជំនួយការ",

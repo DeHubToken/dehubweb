@@ -537,7 +537,12 @@
     "cancel": "Cancel",
     "confirm": "Confirm am",
     "paying": "E dey pay...",
-    "payAmount": "Pay {{amount}} {{currency}}"
+    "payAmount": "Pay {{amount}} {{currency}}",
+    "coverTitle": "Cover",
+    "coverHint": "Pick one frame or upload picture. E go save sharp sharp.",
+    "coverUpload": "Upload cover picture",
+    "coverSaved": "Cover don change",
+    "coverFailed": "Cover no fit change"
   },
   "assistant": {
     "title": "Assistant",

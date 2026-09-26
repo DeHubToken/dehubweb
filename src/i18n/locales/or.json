@@ -641,7 +641,12 @@
     "cancel": "ବାତିଲ",
     "confirm": "ନିଶ୍ଚିତ କରନ୍ତୁ",
     "paying": "ଦେୟ ହେଉଛି...",
-    "payAmount": "{{amount}} {{currency}} ଦେୟ ଦିଅନ୍ତୁ"
+    "payAmount": "{{amount}} {{currency}} ଦେୟ ଦିଅନ୍ତୁ",
+    "coverTitle": "କଭର",
+    "coverHint": "ଏକ ଫ୍ରେମ ବାଛନ୍ତୁ କିମ୍ବା ଛବି ଅପଲୋଡ କରନ୍ତୁ। ତୁରନ୍ତ ସେଭ ହୁଏ।",
+    "coverUpload": "କଭର ଛବି ଅପଲୋଡ କରନ୍ତୁ",
+    "coverSaved": "କଭର ଅପଡେଟ ହେଲା",
+    "coverFailed": "କଭର ବଦଳାଇ ହେଲା ନାହିଁ"
   },
   "assistant": {
     "title": "ସହାୟକ",

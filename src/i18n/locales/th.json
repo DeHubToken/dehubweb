@@ -688,7 +688,12 @@
     "cancel": "ยกเลิก",
     "confirm": "ยืนยัน",
     "paying": "กำลังชำระเงิน...",
-    "payAmount": "จ่าย {{amount}} {{currency}}"
+    "payAmount": "จ่าย {{amount}} {{currency}}",
+    "coverTitle": "ภาพปก",
+    "coverHint": "เลือกเฟรมหรืออัปโหลดรูปภาพ บันทึกทันที",
+    "coverUpload": "อัปโหลดภาพปก",
+    "coverSaved": "อัปเดตภาพปกแล้ว",
+    "coverFailed": "ไม่สามารถเปลี่ยนภาพปกได้"
   },
   "assistant": {
     "title": "ผู้ช่วย",

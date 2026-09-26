@@ -660,7 +660,12 @@
     "cancel": "Mégse",
     "confirm": "Megerősítés",
     "paying": "Fizetés...",
-    "payAmount": "Fizetés: {{amount}} {{currency}}"
+    "payAmount": "Fizetés: {{amount}} {{currency}}",
+    "coverTitle": "Borítókép",
+    "coverHint": "Válassz egy képkockát vagy tölts fel egy képet. Azonnal mentődik.",
+    "coverUpload": "Borítókép feltöltése",
+    "coverSaved": "Borítókép frissítve",
+    "coverFailed": "Nem sikerült módosítani a borítóképet"
   },
   "assistant": {
     "title": "Asszisztens",

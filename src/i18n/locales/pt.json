@@ -660,7 +660,12 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "paying": "Pagando...",
-    "payAmount": "Pagar {{amount}} {{currency}}"
+    "payAmount": "Pagar {{amount}} {{currency}}",
+    "coverTitle": "Capa",
+    "coverHint": "Escolha um quadro ou envie uma imagem. Salva na hora.",
+    "coverUpload": "Enviar imagem de capa",
+    "coverSaved": "Capa atualizada",
+    "coverFailed": "Não foi possível alterar a capa"
   },
   "assistant": {
     "title": "Assistente",
