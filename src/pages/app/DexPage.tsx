@@ -343,7 +343,7 @@ export default function DexPage() {
       }
       // parseUnits throws its own wording for too many decimals; keep one message for every bad amount.
       const toUnits = (value: string) => { try { return parseUnits(value, decimals); } catch { return null; } };
-      const amountUnits = /^d+(.d+)?$/.test(amount) ? toUnits(amount) : null;
+      const amountUnits = /^\d+(\.\d+)?$/.test(amount) ? toUnits(amount) : null;
       if (amountUnits == null || amountUnits <= 0n || amountUnits > (toUnits(balance) ?? 0n)) throw new Error(t('dex.checkAmount', { token: funded ? 'USD' : fundingToken }));
       const input: SellInput = { walletAddress, chainId: chainId!, side, amount, minPrice, maxPrice };
       if (funded && fundingAsset) {
