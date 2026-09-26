@@ -6,13 +6,21 @@ interface OptimizedImageProps {
   alt: string;
   className?: string;
   loading?: 'lazy' | 'eager';
+  srcSet?: string;
+  sizes?: string;
+  width?: number;
+  height?: number;
 }
 
 export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   src,
   alt,
   className = '',
-  loading = 'lazy'
+  loading = 'lazy',
+  srcSet,
+  sizes,
+  width,
+  height,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(loading === 'eager');
@@ -67,6 +75,10 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         <img
           ref={imgRef}
           src={isInView ? src : undefined}
+          srcSet={isInView ? srcSet : undefined}
+          sizes={sizes}
+          width={width}
+          height={height}
           alt={alt}
           loading={loading}
           onLoad={handleLoad}

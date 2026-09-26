@@ -17,6 +17,7 @@ import { useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Play, Swords } from 'lucide-react';
+import { useReducedMotion } from 'framer-motion';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { SEOHead } from '@/components/SEOHead';
 import { ArcadeLeaderboard } from '@/components/app/arcade/ArcadeLeaderboard';
@@ -29,6 +30,8 @@ import { ARCADE_GAMES, type ArcadeGame } from '@/config/arcade-games';
 const RANKED_GAMES = ARCADE_GAMES.filter((game) => game.leaderboard);
 
 function GameCard({ game }: { game: ArcadeGame }) {
+  // Reduced motion gets the clip's poster as a plain image, never the loop.
+  const reduceMotion = useReducedMotion();
   return (
     <div
       data-feed-item
@@ -36,17 +39,33 @@ function GameCard({ game }: { game: ArcadeGame }) {
     >
       <Link to={`/arcade/${game.slug}`} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
         <div className="relative aspect-video overflow-hidden bg-black">
-          <img
-            src={game.brand ?? game.art}
-            alt={game.brand ? game.title : game.artAlt}
-            width={1280}
-            height={720}
-            // Every card is above the fold on a desktop grid of three, so
-            // lazy-loading them only delays the one thing the page is for.
-            loading="eager"
-            decoding="async"
-            className={`h-full w-full ${game.brand ? 'object-contain' : 'object-cover'} transition-transform duration-500 group-hover:scale-[1.03]`}
-          />
+          {!game.brand && game.artVideo && !reduceMotion ? (
+            <video
+              src={game.artVideo}
+              poster={game.art}
+              aria-label={game.artAlt}
+              width={1280}
+              height={720}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+          ) : (
+            <img
+              src={game.brand ?? game.art}
+              alt={game.brand ? game.title : game.artAlt}
+              width={1280}
+              height={720}
+              // Every card is above the fold on a desktop grid of three, so
+              // lazy-loading them only delays the one thing the page is for.
+              loading="eager"
+              decoding="async"
+              className={`h-full w-full ${game.brand ? 'object-contain' : 'object-cover'} transition-transform duration-500 group-hover:scale-[1.03]`}
+            />
+          )}
           {/* Keeps the title legible over whatever the capture happens to be. */}
           {!game.brand && <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />}
           <div className={game.brand ? 'sr-only' : 'pointer-events-none absolute inset-x-0 bottom-0 p-4'}>

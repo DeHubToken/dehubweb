@@ -173,6 +173,42 @@ export function cdnImageSrcSet(url: string | undefined, widths: number[]): strin
   return widths.map((width) => `${cdnImage(source, { width, quality, fit })} ${width}w`).join(', ');
 }
 
+// ── Site-bundled /media images ──────────────────────────────────────────
+//
+// Blog banners live in public/media as 1-2.6 MB PNGs and were served as-is
+// into h-40 card tiles. The same zone can resize them, but only when the
+// source is named by its ABSOLUTE production URL: a relative `/media/...`
+// source is refused (error 9401, origin not in the allowed list).
+//
+// That makes production the only host where this rewrite is safe. A post added
+// on staging or localhost has no copy on dehub.io yet, so those hosts get the
+// original path. No window means the worker's bot prerender, which renders for
+// production.
+function isProductionHost(): boolean {
+  if (typeof window === 'undefined') return true;
+  const host = window.location.hostname;
+  return host === 'dehub.io' || host === 'www.dehub.io';
+}
+
+/**
+ * Resize a site-bundled `/media/...` image through the same Cloudflare
+ * transform `cdnImage()` uses. Anything that is not a `/media/` path, and every
+ * path on a non-production host, is returned untouched.
+ */
+export function mediaImage(path: string, opts: CdnImageOptions = {}): string {
+  if (!path.startsWith('/media/') || NON_TRANSFORMABLE.test(path) || !isProductionHost()) return path;
+  const params = [`format=auto`, `quality=${opts.quality ?? 80}`];
+  if (opts.width) params.push(`width=${opts.width}`);
+  if (opts.fit) params.push(`fit=${opts.fit}`);
+  return `${IMAGE_TRANSFORM_ORIGIN}/cdn-cgi/image/${params.join(',')}/${IMAGE_TRANSFORM_ORIGIN}${path}`;
+}
+
+/** `srcset` for a `/media/` image, or undefined wherever `mediaImage()` would not resize. */
+export function mediaImageSrcSet(path: string | undefined, widths: number[]): string | undefined {
+  if (!path || mediaImage(path) === path) return undefined;
+  return widths.map((width) => `${mediaImage(path, { width })} ${width}w`).join(', ');
+}
+
 // ── Sizing by what the element actually renders at ──────────────────────
 //
 // The first pass at this shipped one fixed width per media kind, each sized for

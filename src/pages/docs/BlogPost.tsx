@@ -12,6 +12,7 @@ import { BlogPostFooter } from '@/components/blog/BlogPostFooter';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { BreadcrumbNavigation } from '@/components/blog/BreadcrumbNavigation';
 import { OptimizedImage } from '@/components/OptimizedImage';
+import { mediaImage, mediaImageSrcSet } from '@/lib/media-url';
 import { useBlogData } from '@/hooks/useBlogData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getBlogShareImageUrl } from '@/lib/blogShareImage';
@@ -153,7 +154,9 @@ const BlogPost = () => {
               {/* Banner still renders instantly from bundled metadata */}
               <div className="mb-8 rounded-2xl overflow-hidden w-full">
                 <OptimizedImage
-                  src={bannerImage}
+                  src={mediaImage(bannerImage, { width: 1100 })}
+                  srcSet={mediaImageSrcSet(bannerImage, [480, 736, 1100, 1440])}
+                  sizes="(min-width: 896px) 896px, 100vw"
                   alt={post.bannerImageAlt}
                   className="w-full h-auto object-cover"
                   loading="eager"
