@@ -4071,5 +4071,23 @@
     "fractionsDesc": "Ìfìwéránṣẹ́ tí a mint lórí DeHub di NFT tí a pín sí ìpín 1,000, ẹlẹ́dàá sì bẹ̀rẹ̀ pẹ̀lú gbogbo 1,000 — níní àkóónú náà ní 100%. Mint ṣíṣe jẹ́ àṣàyàn, ó sì lè ṣẹlẹ̀ nígbà tí o bá tẹ̀ jáde tàbí lẹ́yìn náà.",
     "tokenIdDesc": "Ìdánimọ̀ aláìlẹ́gbẹ́ lórí chain tí ìfìwéránṣẹ́ kan ń gbà nígbà tí a bá mint rẹ̀ gẹ́gẹ́ bí NFT lórí blockchain. Mint ṣíṣe jẹ́ àṣàyàn, nítorí náà ìfìwéránṣẹ́ tí a kò tíì mint kò tíì ní Token ID.",
     "tokenIdInfoDesc": "Ìdánimọ̀ aláìlẹ́gbẹ́ lórí chain tí ìfìwéránṣẹ́ kan ń gbà lẹ́yìn tí a bá ti mint rẹ̀ gẹ́gẹ́ bí NFT. A máa ń fi hàn ní òkè ojú-ìwé Post Info fún àwọn ìfìwéránṣẹ́ tí a ti mint."
+  },
+  "tipFunding": {
+    "noRoute": "Kò sí ọ̀nà Uniswap sí DHB fún token yìí báyìí",
+    "lowLiquidity": "Uniswap kò ní liquidity tó tó fún ìsanwó tó tóbi báyìí lọ́wọ́lọ́wọ́",
+    "dpayNoAmount": "DeHub Pay kò dá iye owó ìsanwó padà",
+    "dpayDelayed": "DeHub Pay ti gba ìsanwó rẹ, ó sì ń fi DHB ránṣẹ́. Yóò dé inú àpamọ́wọ́ rẹ láìpẹ́; tún fi ránṣẹ́ nígbà tó bá dé.",
+    "noBridgeRoute": "Kò sí ọ̀nà cross-chain kankan báyìí",
+    "bridgeCancelled": "A ti fagilé àṣẹ cross-chain náà, a sì dá owó padà sínú àpamọ́wọ́ rẹ",
+    "bridgeSlow": "Ìgbésẹ̀ cross-chain náà ń pẹ́ ju bó ṣe máa ń rí lọ. Yóò dé inú àpamọ́wọ́ rẹ lórí Base; tún fi ránṣẹ́ nígbà tó bá dé.",
+    "txFailed": "Ìdúnàádúrà náà kò jẹ́rìí. Kò sí ohun tí a ná.",
+    "noToken": "Kò sí {{symbol}} lórí Base",
+    "notEnoughOnBase": "{{symbol}} lórí Base kò tó fún ìsanwó yìí",
+    "notEnoughWithFees": "{{symbol}} kò tó fún ìsanwó yìí, pẹ̀lú owó network",
+    "notEnough": "{{symbol}} kò tó fún ìsanwó yìí",
+    "noGasForFee": "Coin network kò tó láti san owó cross-chain náà",
+    "priceMoved": "Iye DHB yí padà nígbà tí USDC rẹ ń bọ̀. USDC náà wà nínú àpamọ́wọ́ rẹ lórí Base; tún fi ránṣẹ́ láti parí.",
+    "usdcPending": "USDC rẹ ti dé Base ṣùgbọ́n kò tíì hàn. Tún fi ránṣẹ́ ní ìṣẹ́jú díẹ̀.",
+    "dhbPending": "Ìrà DHB ti jẹ́rìí ṣùgbọ́n kò tíì hàn. Tún fi ránṣẹ́ ní ìṣẹ́jú díẹ̀."
   }
 }

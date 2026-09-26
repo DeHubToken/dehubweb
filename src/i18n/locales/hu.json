@@ -6274,5 +6274,23 @@
     "fractionsDesc": "A DeHubon vert bejegyzés 1000 frakcióra osztott NFT-vé válik, és az alkotó mind az 1000-rel kezd — a tartalom 100%-os tulajdonjogával. A verés opcionális, és történhet közzétételkor vagy később.",
     "tokenIdDesc": "Egyedi láncon belüli azonosító, amelyet egy bejegyzés akkor kap, amikor NFT-ként verik a blokkláncon. A verés opcionális, így a még nem vert bejegyzésnek még nincs Token ID-je.",
     "tokenIdInfoDesc": "Az egyedi láncon belüli azonosító, amelyet egy bejegyzés akkor kap, amikor NFT-ként verték. A vert bejegyzéseknél a Bejegyzés információi oldal tetején jelenik meg."
+  },
+  "tipFunding": {
+    "noRoute": "Jelenleg nincs Uniswap-útvonal DHB-re ehhez a tokenhez",
+    "lowLiquidity": "Jelenleg nincs elég likviditás a Uniswapon egy ekkora fizetéshez",
+    "dpayNoAmount": "A DeHub Pay nem adott vissza fizetési összeget",
+    "dpayDelayed": "A DeHub Pay megkapta a fizetését, és küldi a DHB-t. Hamarosan megérkezik a tárcájába; ha megérkezett, küldje újra.",
+    "noBridgeRoute": "Jelenleg nem érhető el láncok közötti útvonal",
+    "bridgeCancelled": "A láncok közötti megbízást törölték, és az összeget visszatérítették a tárcájába",
+    "bridgeSlow": "A láncok közötti átutalás a szokásosnál tovább tart. A Base-en lévő tárcájába fog megérkezni; ha megérkezett, küldje újra.",
+    "txFailed": "A tranzakció nem lett megerősítve. Nem történt terhelés.",
+    "noToken": "Nincs {{symbol}} a Base-en",
+    "notEnoughOnBase": "Nincs elég {{symbol}} a Base-en ehhez a fizetéshez",
+    "notEnoughWithFees": "Nincs elég {{symbol}} ehhez a fizetéshez a hálózati díjakkal együtt",
+    "notEnough": "Nincs elég {{symbol}} ehhez a fizetéshez",
+    "noGasForFee": "Nincs elég hálózati coin a láncok közötti díj fedezésére",
+    "priceMoved": "A DHB ára elmozdult, miközben a USDC-je érkezett. A USDC a Base-en lévő tárcájában van; a befejezéshez küldje újra.",
+    "usdcPending": "A USDC-je megérkezett a Base-re, de még nem látható. Küldje újra egy pillanat múlva.",
+    "dhbPending": "A DHB-vásárlás megerősítve, de még nem jelent meg. Küldje újra egy pillanat múlva."
   }
 }

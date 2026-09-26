@@ -4124,5 +4124,23 @@
     "fractionsDesc": "Maxxansaan DeHub irratti mint godhame NFT qooda 1,000tti qoodame ta'a, uumaan immoo 1,000 hunda qabatee jalqaba — abbummaa qabiyyee 100%. Mint gochuun filannoo dha, yeroo maxxansitu ykn booda raawwatamuu danda'a.",
     "tokenIdDesc": "Eenyummeessaa on-chain addaa maxxansaan yeroo blockchain irratti akka NFTtti mint godhamu argatu. Mint gochuun filannoo waan ta'eef, maxxansaan hin mint godhamin ammallee Token ID hin qabu.",
     "tokenIdInfoDesc": "Eenyummeessaa on-chain addaa maxxansaan erga akka NFTtti mint godhamee booda argatu. Maxxansaalee mint godhamaniif fuula Odeeffannoo Maxxansaa irratti gubbaatti mul'ata."
+  },
+  "tipFunding": {
+    "noRoute": "Amma tokenii kanaaf karaan Uniswap gara DHB hin jiru",
+    "lowLiquidity": "Amma kaffaltii hamma kanaatiif liquidity Uniswap gahaan hin jiru",
+    "dpayNoAmount": "DeHub Pay hanga kaffaltii hin deebisne",
+    "dpayDelayed": "DeHub Pay kaffaltii kee argateera, DHB ergaa jira. Yeroo gabaabaa keessatti waleetii kee keessa ga'a; erga ga'ee booda irra deebi'ii ergi.",
+    "noBridgeRoute": "Amma karaan cross-chain hin jiru",
+    "bridgeCancelled": "Ajajni cross-chain haqamee maallaqni waleetii keetti deebi'eera",
+    "bridgeSlow": "Dabarsi cross-chain yeroo baramaa caalaa fudhachaa jira. Waleetii kee Base irra jirutti ga'a; erga ga'ee booda irra deebi'ii ergi.",
+    "txFailed": "Daldalli hin mirkanoofne. Homtuu hin baasamne.",
+    "noToken": "Base irratti {{symbol}} hin jiru",
+    "notEnoughOnBase": "Kaffaltii kanaaf Base irratti {{symbol}} gahaan hin jiru",
+    "notEnoughWithFees": "Kaffaltii networkii dabalatee, kaffaltii kanaaf {{symbol}} gahaan hin jiru",
+    "notEnough": "Kaffaltii kanaaf {{symbol}} gahaan hin jiru",
+    "noGasForFee": "Kaffaltii cross-chain kaffaluuf coin networkii gahaan hin jiru",
+    "priceMoved": "Utuu USDC kee ga'aa jiruu gatiin DHB jijjiirame. USDC waleetii kee Base irra jiru keessa jira; xumuruuf irra deebi'ii ergi.",
+    "usdcPending": "USDC kee Base irra ga'eera garuu ammallee hin mul'atu. Yeroo muraasa booda irra deebi'ii ergi.",
+    "dhbPending": "Bittaan DHB mirkanaa'eera garuu ammallee hin mul'anne. Yeroo muraasa booda irra deebi'ii ergi."
   }
 }

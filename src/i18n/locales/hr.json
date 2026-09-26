@@ -6271,5 +6271,23 @@
     "fractionsDesc": "Objava iskovana na DeHubu postaje NFT podijeljen na 1.000 frakcija, a kreator počinje sa svih 1.000 — 100 % vlasništva nad sadržajem. Kovanje nije obavezno i može se obaviti pri objavljivanju ili kasnije.",
     "tokenIdDesc": "Jedinstveni identifikator na blockchainu koji objava dobiva kad se iskuje kao NFT. Kovanje nije obavezno, pa objava koja nije iskovana još nema Token ID.",
     "tokenIdInfoDesc": "Jedinstveni identifikator na blockchainu koji objava dobiva nakon što se iskuje kao NFT. Za iskovane objave prikazuje se na vrhu stranice Informacije o objavi."
+  },
+  "tipFunding": {
+    "noRoute": "Trenutačno nema Uniswap rute do DHB-a za ovaj token",
+    "lowLiquidity": "Na Uniswapu trenutačno nema dovoljno likvidnosti za plaćanje ove veličine",
+    "dpayNoAmount": "DeHub Pay nije vratio iznos plaćanja",
+    "dpayDelayed": "DeHub Pay je primio vašu uplatu i šalje DHB. Uskoro će stići u vaš novčanik; pošaljite ponovno kad stigne.",
+    "noBridgeRoute": "Trenutačno nije dostupna nijedna ruta između lanaca",
+    "bridgeCancelled": "Nalog između lanaca je otkazan, a sredstva su vraćena u vaš novčanik",
+    "bridgeSlow": "Prijenos između lanaca traje dulje nego obično. Stići će u vaš novčanik na Base; pošaljite ponovno kad stigne.",
+    "txFailed": "Transakcija nije potvrđena. Ništa nije potrošeno.",
+    "noToken": "Nema {{symbol}} na Base",
+    "notEnoughOnBase": "Nedovoljno {{symbol}} na Base za ovo plaćanje",
+    "notEnoughWithFees": "Nedovoljno {{symbol}} za ovo plaćanje, uključujući mrežne naknade",
+    "notEnough": "Nedovoljno {{symbol}} za ovo plaćanje",
+    "noGasForFee": "Nedovoljno mrežnog coina za pokrivanje naknade između lanaca",
+    "priceMoved": "Cijena DHB-a promijenila se dok su vaši USDC stizali. USDC su u vašem novčaniku na Base; pošaljite ponovno za dovršetak.",
+    "usdcPending": "Vaši USDC stigli su na Base, ali još nisu vidljivi. Pošaljite ponovno za trenutak.",
+    "dhbPending": "Kupnja DHB-a je potvrđena, ali se još nije pojavila. Pošaljite ponovno za trenutak."
   }
 }

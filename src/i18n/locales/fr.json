@@ -6386,5 +6386,23 @@
     "fractionsDesc": "Une publication frappée sur DeHub devient un NFT divisé en 1 000 fractions, et le créateur commence avec les 1 000 — 100 % de la propriété du contenu. La frappe est facultative et peut se faire à la publication ou plus tard.",
     "tokenIdDesc": "Un identifiant on-chain unique qu'une publication reçoit lorsqu'elle est frappée en tant que NFT sur la blockchain. La frappe étant facultative, une publication qui n'a pas été frappée n'a pas encore de Token ID.",
     "tokenIdInfoDesc": "L'identifiant on-chain unique qu'une publication reçoit une fois frappée en tant que NFT. Affiché en haut de la page Infos de la publication pour les publications frappées."
+  },
+  "tipFunding": {
+    "noRoute": "Aucune route Uniswap vers DHB pour ce token pour le moment",
+    "lowLiquidity": "La liquidité sur Uniswap est insuffisante pour un paiement de ce montant pour le moment",
+    "dpayNoAmount": "DeHub Pay n'a renvoyé aucun montant de paiement",
+    "dpayDelayed": "DeHub Pay a reçu votre paiement et envoie les DHB. Ils arriveront bientôt dans votre portefeuille ; renvoyez une fois qu'ils sont arrivés.",
+    "noBridgeRoute": "Aucune route cross-chain n'est disponible pour le moment",
+    "bridgeCancelled": "L'ordre cross-chain a été annulé et remboursé sur votre portefeuille",
+    "bridgeSlow": "Le transfert cross-chain prend plus de temps que d'habitude. Il arrivera dans votre portefeuille sur Base ; renvoyez une fois qu'il est arrivé.",
+    "txFailed": "La transaction n'a pas été confirmée. Rien n'a été dépensé.",
+    "noToken": "Aucun {{symbol}} sur Base",
+    "notEnoughOnBase": "Pas assez de {{symbol}} sur Base pour ce paiement",
+    "notEnoughWithFees": "Pas assez de {{symbol}} pour ce paiement, frais de réseau compris",
+    "notEnough": "Pas assez de {{symbol}} pour ce paiement",
+    "noGasForFee": "Pas assez de jeton natif du réseau pour couvrir les frais cross-chain",
+    "priceMoved": "Le prix du DHB a bougé pendant l'arrivée de vos USDC. Les USDC sont dans votre portefeuille sur Base ; renvoyez pour terminer.",
+    "usdcPending": "Vos USDC sont arrivés sur Base mais ne sont pas encore visibles. Renvoyez dans un instant.",
+    "dhbPending": "L'achat de DHB est confirmé mais n'apparaît pas encore. Renvoyez dans un instant."
   }
 }

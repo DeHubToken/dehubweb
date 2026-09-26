@@ -6117,5 +6117,23 @@
     "fractionsDesc": "Ny lahatsoratra voa-mint ao amin'ny DeHub dia lasa NFT mizara ho ampahany 1,000, ary ny mpamorona no manomboka manana ireo 1,000 rehetra — fananana 100% ny votoaty. Tsy voatery ny fanaovana mint ary azo atao rehefa mamoaka ianao na any aoriana.",
     "tokenIdDesc": "Famantarana on-chain tokana azon'ny lahatsoratra rehefa voa-mint ho NFT ao amin'ny blockchain. Tsy voatery ny fanaovana mint, ka ny lahatsoratra mbola tsy voa-mint dia mbola tsy manana Token ID.",
     "tokenIdInfoDesc": "Ilay famantarana on-chain tokana azon'ny lahatsoratra rehefa voa-mint ho NFT. Aseho eo an-tampon'ny pejy Mombamomba ny Lahatsoratra ho an'ny lahatsoratra voa-mint."
+  },
+  "tipFunding": {
+    "noRoute": "Tsy misy lalana Uniswap mankany amin'ny DHB ho an'ity token ity amin'izao fotoana izao",
+    "lowLiquidity": "Tsy ampy ny liquidity ao amin'ny Uniswap ho an'ny fandoavana lehibe toy izao amin'izao fotoana izao",
+    "dpayNoAmount": "Tsy namerina ny sandan'ny fandoavana ny DeHub Pay",
+    "dpayDelayed": "Efa voarain'ny DeHub Pay ny fandoavanao ary mandefa ny DHB izy. Ho tonga ao amin'ny kitaponao tsy ho ela izany; mandefasa indray rehefa tonga.",
+    "noBridgeRoute": "Tsy misy lalana cross-chain azo ampiasaina amin'izao fotoana izao",
+    "bridgeCancelled": "Nofoanana ny baiko cross-chain ary naverina tao amin'ny kitaponao ny vola",
+    "bridgeSlow": "Maharitra kokoa noho ny mahazatra ny famindrana cross-chain. Ho tonga ao amin'ny kitaponao ao amin'ny Base izany; mandefasa indray rehefa tonga.",
+    "txFailed": "Tsy voamarina ny fifanakalozana. Tsy nisy lany.",
+    "noToken": "Tsy misy {{symbol}} ao amin'ny Base",
+    "notEnoughOnBase": "Tsy ampy ny {{symbol}} ao amin'ny Base ho an'ity fandoavana ity",
+    "notEnoughWithFees": "Tsy ampy ny {{symbol}} ho an'ity fandoavana ity, ao anatin'izany ny saran'ny tambajotra",
+    "notEnough": "Tsy ampy ny {{symbol}} ho an'ity fandoavana ity",
+    "noGasForFee": "Tsy ampy ny coin an'ny tambajotra handoavana ny sarany cross-chain",
+    "priceMoved": "Niova ny vidin'ny DHB raha mbola ho tonga ny USDC-nao. Ao amin'ny kitaponao ao amin'ny Base ny USDC; mandefasa indray mba hamitana.",
+    "usdcPending": "Tonga tao amin'ny Base ny USDC-nao saingy mbola tsy hita. Mandefasa indray afaka kelikely.",
+    "dhbPending": "Voamarina ny fividianana DHB saingy mbola tsy niseho. Mandefasa indray afaka kelikely."
   }
 }

@@ -4056,5 +4056,23 @@
     "fractionsDesc": "在 DeHub 上铸造嘞帖子会变成一个分成 1,000 份碎片嘞 NFT，创作者一开始持有全部 1,000 份 — 对内容 100% 嘞所有权。铸造是可选嘞，可以在发布时进行，也可以以后再铸。",
     "tokenIdDesc": "帖子在区块链上铸造成 NFT 时获得嘞唯一链上标识符。铸造是可选嘞，所以还没铸造嘞帖子暂时没有 Token ID。",
     "tokenIdInfoDesc": "帖子铸造成 NFT 之后获得嘞唯一链上标识符。已铸造嘞帖子会在帖子信息页顶部显示。"
+  },
+  "tipFunding": {
+    "noRoute": "眼下这个代币在 Uniswap 上没路子换成 DHB",
+    "lowLiquidity": "眼下 Uniswap 上的流动性不够付这么大一笔",
+    "dpayNoAmount": "DeHub Pay 没给回付款金额",
+    "dpayDelayed": "DeHub Pay 收到你的付款咾，正给你发 DHB 嘞。一阵阵就到你钱包里头；到咾再发一回。",
+    "noBridgeRoute": "眼下没有能用的跨链路子",
+    "bridgeCancelled": "跨链订单取消咾，钱退回你钱包里头了",
+    "bridgeSlow": "跨链转账比平常慢些。会到你 Base 上的钱包里头；到咾再发一回。",
+    "txFailed": "交易没确认。一分钱也没花。",
+    "noToken": "Base 上没有 {{symbol}}",
+    "notEnoughOnBase": "Base 上的 {{symbol}} 不够付这一笔",
+    "notEnoughWithFees": "{{symbol}} 不够付这一笔，连网络手续费算上",
+    "notEnough": "{{symbol}} 不够付这一笔",
+    "noGasForFee": "网络币不够付跨链手续费",
+    "priceMoved": "你的 USDC 往来到的时候 DHB 价钱变咾。USDC 在你 Base 上的钱包里头；再发一回就弄完咾。",
+    "usdcPending": "你的 USDC 到 Base 咾，可还看不见。等一下下再发一回。",
+    "dhbPending": "DHB 买成咾，可还没显出来。等一下下再发一回。"
   }
 }

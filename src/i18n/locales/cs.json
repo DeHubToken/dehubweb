@@ -6275,5 +6275,23 @@
     "fractionsDesc": "Příspěvek vyražený na DeHub se stane NFT rozděleným na 1 000 frakcí a tvůrce začíná se všemi 1 000 — 100% vlastnictví obsahu. Ražení je volitelné a může proběhnout při publikování nebo později.",
     "tokenIdDesc": "Jedinečný identifikátor na blockchainu, který příspěvek získá, když je vyražen jako NFT. Ražení je volitelné, takže příspěvek, který dosud nebyl vyražen, zatím nemá Token ID.",
     "tokenIdInfoDesc": "Jedinečný identifikátor na blockchainu, který příspěvek získá, jakmile je vyražen jako NFT. U ražených příspěvků se zobrazuje v horní části stránky Informace o příspěvku."
+  },
+  "tipFunding": {
+    "noRoute": "Pro tento token teď neexistuje žádná trasa přes Uniswap na DHB",
+    "lowLiquidity": "Na Uniswapu teď není dost likvidity pro platbu takové velikosti",
+    "dpayNoAmount": "DeHub Pay nevrátil částku platby",
+    "dpayDelayed": "DeHub Pay má tvou platbu a posílá DHB. Brzy dorazí do tvé peněženky; až dorazí, pošli znovu.",
+    "noBridgeRoute": "Teď není k dispozici žádná cross-chain trasa",
+    "bridgeCancelled": "Cross-chain objednávka byla zrušena a peníze se vrátily do tvé peněženky",
+    "bridgeSlow": "Cross-chain převod trvá déle než obvykle. Dorazí do tvé peněženky na Base; až dorazí, pošli znovu.",
+    "txFailed": "Transakce nebyla potvrzena. Nic se neutratilo.",
+    "noToken": "Žádné {{symbol}} na Base",
+    "notEnoughOnBase": "Nedostatek {{symbol}} na Base pro tuto platbu",
+    "notEnoughWithFees": "Nedostatek {{symbol}} pro tuto platbu včetně síťových poplatků",
+    "notEnough": "Nedostatek {{symbol}} pro tuto platbu",
+    "noGasForFee": "Nedostatek síťové mince na pokrytí cross-chain poplatku",
+    "priceMoved": "Cena DHB se změnila, zatímco tvé USDC přicházely. USDC jsou v tvé peněžence na Base; pro dokončení pošli znovu.",
+    "usdcPending": "Tvé USDC dorazily na Base, ale zatím nejsou vidět. Za chvíli pošli znovu.",
+    "dhbPending": "Nákup DHB byl potvrzen, ale zatím se neobjevil. Za chvíli pošli znovu."
   }
 }
