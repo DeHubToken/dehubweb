@@ -1,15 +1,13 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { formatUnits, parseUnits } from 'ethers';
 import { toast } from 'sonner';
-import { ArrowLeft, CandlestickChart, Check, ChevronRight, Loader2, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowUp, CandlestickChart, Check, ChevronRight, Loader2, Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
@@ -20,6 +18,8 @@ import { formatPrice, formatSize } from '@/lib/dex/orderbook';
 import { quoteSwap, runSwap, type SwapCall } from '@/lib/dex/evm-swap';
 import { POOL_CHAIN_INFO } from '@/lib/dex/pools';
 import { mintSellPosition, quoteSellPosition, type SellInput } from '@/lib/dex/sell';
+import { parseSharedMarket } from '@/lib/dex/live-market';
+import { readTradeIntent } from '@/lib/dex/trade-intent';
 import type { OrderStage } from '@/lib/dex/read-timeout';
 
 const DHB = CHAIN_CONFIGS[BASE_CHAIN_ID].dhbToken;
@@ -30,27 +30,31 @@ const pendingKey = (wallet: string) => `dex-pending:${wallet.toLowerCase()}`;
 
 type Step = 'choose' | 'amount' | 'price' | 'review' | 'done';
 type Route = 'instant' | 'list';
+type Mode = 'market' | 'custom';
 
 const decimal = (value: string) => value.replace(',', '.').replace(/[^\d.]/g, '');
 const toUnits = (value: string) => {
   const [whole = '0', fraction = ''] = value.split('.');
   try { return parseUnits(`${whole || '0'}.${fraction.slice(0, 18) || '0'}`, 18); } catch { return null; }
 };
+const rateOf = (quote: SwapCall, units: bigint) => Number(formatUnits(quote.amountOut, 6)) / Number(formatUnits(units, 18));
+/** Only a price above what the market pays right now needs to wait on the book. */
+const routeFor = (mode: Mode, price: number, rate: number | null): Route => mode === 'custom' && rate != null && price > rate ? 'list' : 'instant';
 
-/** Wallet "Trade": pick Easy trade or the full Exchange. Easy trade sells DHB on Base in three
- *  steps. A market or at/below-market price sells instantly; a price above market is listed as a
- *  single-sided position on the exchange's own book. */
+/** Wallet "Trade": pick Easy trade or the full Exchange, or just tell the AI what to do.
+ *  Easy trade sells DHB on Base in three steps. A market or at/below-market price sells
+ *  instantly; a price above market is listed as a single-sided position on the exchange's own
+ *  book. On desktop the sheet rises inside the middle column, like the app's other drawers. */
 export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOpenChange: (open: boolean) => void; tokens: WalletToken[] }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
   const queryClient = useQueryClient();
   const { walletAddress, connect, requestWalletUnlock } = useAuth();
   const walletLocked = useWalletLocked();
 
   const [step, setStep] = useState<Step>('choose');
   const [amount, setAmount] = useState('');
-  const [mode, setMode] = useState<'market' | 'custom'>('market');
+  const [mode, setMode] = useState<Mode>('market');
   const [price, setPrice] = useState('');
   const [quote, setQuote] = useState<SwapCall | null>(null);
   const [quotedAt, setQuotedAt] = useState(0);
@@ -59,12 +63,15 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
   const [busy, setBusy] = useState(false);
   const [stage, setStage] = useState('');
   const [error, setError] = useState('');
+  const [ask, setAsk] = useState('');
+  const [asking, setAsking] = useState(false);
+  const [aiReply, setAiReply] = useState('');
   const [result, setResult] = useState<{ route: Route; amount: string; usdc: number; price: number } | null>(null);
 
   useEffect(() => {
     if (open) return;
     const timer = setTimeout(() => {
-      setStep('choose'); setAmount(''); setMode('market'); setPrice(''); setQuote(null);
+      setStep('choose'); setAmount(''); setMode('market'); setPrice(''); setQuote(null); setAsk(''); setAiReply('');
       setNotice(''); setError(''); setStage(''); setResult(null);
     }, 250);
     return () => clearTimeout(timer);
@@ -74,7 +81,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
   const balance = dhb?.balance ?? 0n;
   const amountUnits = amount ? toUnits(amount) : null;
   const amountOk = amountUnits != null && amountUnits > 0n && amountUnits <= balance;
-  const marketRate = quote && Number(amount) > 0 ? Number(formatUnits(quote.amountOut, 6)) / Number(amount) : null;
+  const marketRate = quote && amountUnits ? rateOf(quote, amountUnits) : null;
   const myPrice = Number(price);
 
   async function requireWallet() {
@@ -82,8 +89,8 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
     if (walletLocked) { requestWalletUnlock(); return false; }
     return true;
   }
-  async function fetchQuote() {
-    const next = await quoteSwap({ chainId: BASE_CHAIN_ID, tokenIn: DHB, tokenOut: USDC, amountIn: amountUnits!, recipient: walletAddress! });
+  async function fetchQuote(units = amountUnits!) {
+    const next = await quoteSwap({ chainId: BASE_CHAIN_ID, tokenIn: DHB, tokenOut: USDC, amountIn: units, recipient: walletAddress! });
     setQuote(next); setQuotedAt(Date.now());
     return next;
   }
@@ -99,9 +106,52 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
   function toReview() {
     setError(''); setNotice('');
     if (mode === 'custom' && !(myPrice > 0)) { setError(t('easyTrade.enterPrice')); return; }
-    // Only a price above what the market pays right now needs to wait on the book.
-    setRoute(mode === 'custom' && marketRate != null && myPrice > marketRate ? 'list' : 'instant');
+    setRoute(routeFor(mode, myPrice, marketRate));
     setStep('review');
+  }
+
+  /** Read the request and fill in as much of the sheet as it covers; a complete one lands on
+   *  the review, so the only thing left is Confirm. */
+  async function askAi() {
+    const text = ask.trim();
+    if (!text || asking || busy) return;
+    if (!(await requireWallet())) return;
+    setAsking(true); setError(''); setNotice(''); setAiReply('');
+    try {
+      const intent = await readTradeIntent(text);
+      if (intent.side === 'buy') { setAiReply(t('easyTrade.aiBuyOnly')); return; }
+      const amountValue = Number(intent.amount);
+      let units: bigint | null = null;
+      if (intent.amountUnit === 'dhb' && amountValue > 0) units = toUnits(intent.amount);
+      else if (intent.amountUnit === 'percent' && amountValue > 0) units = balance * BigInt(Math.round(Math.min(amountValue, 100) * 100)) / 10000n;
+      else if (intent.amountUnit === 'usd' && amountValue > 0) {
+        let per = intent.priceType === 'fixed' ? Number(intent.price) : 0;
+        if (!(per > 0)) {
+          const { data } = await supabase.rpc('get_dex_market');
+          per = parseSharedMarket(data).usdPrice ?? 0;
+        }
+        if (per > 0) units = toUnits((amountValue / per).toFixed(6));
+      }
+      setAiReply(intent.reply);
+      if (!units || units <= 0n) { setStep('amount'); if (!intent.reply) setAiReply(t('easyTrade.aiNeedAmount')); return; }
+      const nextAmount = formatUnits(units, 18);
+      setAmount(nextAmount);
+      if (units > balance) { setStep('amount'); return; }
+
+      const live = await fetchQuote(units);
+      const rate = rateOf(live, units);
+      if (intent.priceType === 'none') { setMode('market'); setStep('price'); return; }
+      const nextMode: Mode = intent.priceType === 'market' ? 'market' : 'custom';
+      const nextPrice = intent.priceType === 'fixed' ? Number(intent.price)
+        : intent.priceType === 'relative' ? rate * (1 + Number(intent.relativePercent || 0) / 100) : 0;
+      if (nextMode === 'custom' && !(nextPrice > 0)) { setMode('custom'); setStep('price'); return; }
+      setMode(nextMode);
+      setPrice(nextMode === 'custom' ? String(Number(nextPrice.toPrecision(6))) : '');
+      setRoute(routeFor(nextMode, nextPrice, rate));
+      setStep('review');
+    } catch (e) {
+      setError(dexActionError(e, t('easyTrade.aiFailed')));
+    } finally { setAsking(false); }
   }
 
   async function confirm() {
@@ -168,118 +218,128 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
 
   const optionRow = 'w-full flex items-center gap-3 p-4 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors text-left';
   const primary = 'w-full h-12 rounded-xl bg-white text-black font-semibold disabled:opacity-40 flex items-center justify-center gap-2';
-
-  const body: ReactNode = <div className="px-4 pb-6 pt-1 space-y-4">
-    <div className="flex items-center gap-2 min-h-8">
-      {step !== 'choose' && step !== 'done' && <button type="button" onClick={back} disabled={busy} aria-label={t('easyTrade.back')} className="p-1.5 -ml-1.5 rounded-lg hover:bg-white/10 text-zinc-300"><ArrowLeft className="w-5 h-5" /></button>}
-      <span className="text-lg font-semibold text-white flex-1">{title}</span>
-      {stepIndex && <span className="text-xs text-zinc-500">{t('easyTrade.stepOf', { step: stepIndex, total: 3 })}</span>}
-    </div>
-
-    {step === 'choose' && <div className="space-y-2">
-      <button type="button" className={optionRow} onClick={() => setStep('amount')}>
-        <Sparkles className="w-6 h-6 text-white shrink-0" />
-        <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-white">{t('easyTrade.easyTitle')}</p><p className="text-xs text-zinc-400">{t('easyTrade.easyHint')}</p></div>
-        <ChevronRight className="w-4 h-4 text-zinc-500" />
-      </button>
-      <button type="button" className={optionRow} onClick={openExchange}>
-        <CandlestickChart className="w-6 h-6 text-white shrink-0" />
-        <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-white">{t('easyTrade.exchangeTitle')}</p><p className="text-xs text-zinc-400">{t('easyTrade.exchangeHint')}</p></div>
-        <ChevronRight className="w-4 h-4 text-zinc-500" />
-      </button>
-    </div>}
-
-    {step === 'amount' && <div className="space-y-3">
-      <div className="flex items-center rounded-xl border border-white/10 bg-white/[0.04] focus-within:border-white/30">
-        <input autoFocus inputMode="decimal" placeholder="0" aria-label={t('easyTrade.sellTitle')} value={amount}
-          onChange={(e) => { setAmount(decimal(e.target.value)); setQuote(null); }}
-          className="flex-1 min-w-0 bg-transparent px-4 py-4 text-3xl font-semibold text-white outline-none" />
-        <span className="pr-4 text-sm text-zinc-400">DHB</span>
-      </div>
-      <div className="flex items-center justify-between text-xs text-zinc-400">
-        <span>{t('easyTrade.available', { amount: formatSize(Number(formatUnits(balance, 18))) })}</span>
-        <div className="flex gap-1.5">
-          {[25, 50, 100].map((pct) => <button key={pct} type="button" disabled={balance === 0n}
-            onClick={() => { setAmount(formatUnits(balance * BigInt(pct) / 100n, 18)); setQuote(null); }}
-            className="px-2.5 py-1 rounded-lg border border-white/10 hover:bg-white/10 text-zinc-200 disabled:opacity-40">{pct === 100 ? t('easyTrade.max') : `${pct}%`}</button>)}
-        </div>
-      </div>
-      {balance === 0n && <p className="text-xs text-zinc-400">{t('easyTrade.noDhb')}</p>}
-      {amount && !amountOk && balance > 0n && <p className="text-xs text-red-300">{t('dex.checkAmount', { token: 'DHB' })}</p>}
-      <button type="button" className={primary} disabled={!amountOk || busy} onClick={() => void toPrice()}>
-        {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : t('easyTrade.next')}
-      </button>
-    </div>}
-
-    {step === 'price' && <div className="space-y-2">
-      <button type="button" aria-pressed={mode === 'market'} onClick={() => setMode('market')} className={cn(optionRow, mode === 'market' && 'border-white/60 bg-white/[0.12]')}>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-white">{t('easyTrade.marketRate')}</p>
-          <p className="text-xs text-zinc-400">{t('easyTrade.marketRateHint', { price: formatPrice(marketRate), usdc: formatSize(quote ? Number(formatUnits(quote.amountOut, 6)) : 0) })}</p>
-        </div>
-        {mode === 'market' && <Check className="w-4 h-4 text-white" />}
-      </button>
-      <div role="button" tabIndex={0} aria-pressed={mode === 'custom'} onClick={() => setMode('custom')} onKeyDown={(e) => { if (e.key === 'Enter') setMode('custom'); }}
-        className={cn(optionRow, 'flex-col items-stretch cursor-pointer', mode === 'custom' && 'border-white/60 bg-white/[0.12]')}>
-        <div className="flex items-center gap-3">
-          <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-white">{t('easyTrade.myPrice')}</p><p className="text-xs text-zinc-400">{t('easyTrade.myPriceHint')}</p></div>
-          {mode === 'custom' && <Check className="w-4 h-4 text-white" />}
-        </div>
-        {mode === 'custom' && <>
-          <div className="flex items-center rounded-lg border border-white/10 bg-black/30 mt-1">
-            <span className="pl-3 text-zinc-400">$</span>
-            <input autoFocus inputMode="decimal" placeholder={marketRate ? marketRate.toFixed(6) : '0.00'} aria-label={t('easyTrade.myPriceHint')} value={price}
-              onClick={(e) => e.stopPropagation()} onChange={(e) => setPrice(decimal(e.target.value))}
-              className="flex-1 min-w-0 bg-transparent px-2 py-3 text-lg text-white outline-none" />
-          </div>
-          {myPrice > 0 && marketRate != null && <p className="text-xs text-zinc-300 leading-relaxed">
-            {myPrice > marketRate ? t('easyTrade.routeList', { price: formatPrice(myPrice) }) : t('easyTrade.routeInstant')}
-          </p>}
-        </>}
-      </div>
-      <button type="button" className={cn(primary, 'mt-2')} onClick={toReview}>{t('easyTrade.next')}</button>
-    </div>}
-
-    {step === 'review' && <div className="space-y-3">
-      <dl className="rounded-xl border border-white/10 bg-white/[0.04] p-4 grid grid-cols-[1fr_auto] gap-y-2.5 text-sm">
-        <dt className="text-zinc-400">{t('easyTrade.youSell')}</dt><dd className="text-white text-right">{formatSize(Number(amount))} DHB</dd>
-        <dt className="text-zinc-400">{t('easyTrade.method')}</dt><dd className="text-white text-right">{route === 'list' ? t('easyTrade.methodList', { price: formatPrice(myPrice) }) : t('easyTrade.methodInstant')}</dd>
-        <dt className="text-zinc-400">{route === 'list' ? t('easyTrade.ifFilled') : t('easyTrade.youGet')}</dt>
-        <dd className="text-white text-right font-semibold">{formatSize(route === 'list' ? Number(amount) * myPrice : quote ? Number(formatUnits(quote.amountOut, 6)) : 0)} USDC</dd>
-      </dl>
-      <p className="text-xs text-zinc-400 leading-relaxed">{route === 'list' ? t('easyTrade.listNote') : t('dex.pool.instantNote')}</p>
-      {notice && <p className="text-xs text-amber-200">{notice}</p>}
-      <button type="button" className={primary} disabled={busy} onClick={() => void confirm()}>
-        {busy ? <><Loader2 className="w-4 h-4 animate-spin" />{stage || t('easyTrade.working')}</> : t('easyTrade.confirm')}
-      </button>
-    </div>}
-
-    {step === 'done' && result && <div className="space-y-4 text-center py-2">
-      <div className="mx-auto w-12 h-12 rounded-full bg-white/10 flex items-center justify-center"><Check className="w-6 h-6 text-white" /></div>
-      <p className="text-white font-semibold">{result.route === 'list'
-        ? t('easyTrade.doneList', { amount: formatSize(Number(result.amount)), price: formatPrice(result.price) })
-        : t('easyTrade.doneInstant', { amount: formatSize(Number(result.amount)) })}</p>
-      <p className="text-sm text-zinc-400">{result.route === 'list' ? t('easyTrade.doneListHint') : t('easyTrade.doneInstantHint', { usdc: formatSize(result.usdc) })}</p>
-      <div className="flex gap-2">
-        {result.route === 'list' && <button type="button" onClick={openExchange} className="flex-1 h-12 rounded-xl border border-white/15 text-white">{t('easyTrade.openExchange')}</button>}
-        <button type="button" onClick={() => onOpenChange(false)} className={cn(primary, 'flex-1')}>{t('easyTrade.done')}</button>
-      </div>
-    </div>}
-
-    {error && <div role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2.5 text-xs text-red-200">{error}</div>}
-  </div>;
+  const showAsk = step === 'choose' || step === 'amount' || step === 'price';
 
   const guard = (next: boolean) => { if (!busy) onOpenChange(next); };
-  if (isMobile) return <Drawer open={open} onOpenChange={guard}>
-    <DrawerContent column glass data-wallet-page className="max-h-[92vh]">
+  return <Drawer open={open} onOpenChange={guard}>
+    <DrawerContent column glass scrollable hideHandle={false} data-wallet-page className="max-h-[92dvh] md:max-h-[min(88dvh,760px)]">
       <DrawerTitle className="sr-only">{title}</DrawerTitle>
-      {body}
+      <div className="w-full max-w-xl mx-auto px-4 pb-6 pt-2 space-y-4">
+        <div className="flex items-center gap-2 min-h-8">
+          {step !== 'choose' && step !== 'done' && <button type="button" onClick={back} disabled={busy} aria-label={t('easyTrade.back')} className="p-1.5 -ml-1.5 rounded-lg hover:bg-white/10 text-zinc-300"><ArrowLeft className="w-5 h-5" /></button>}
+          <span className="text-lg font-semibold text-white flex-1">{title}</span>
+          {stepIndex && <span className="text-xs text-zinc-500">{t('easyTrade.stepOf', { step: stepIndex, total: 3 })}</span>}
+        </div>
+
+        {showAsk && <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); void askAi(); }}>
+          <div className="flex items-center gap-2 rounded-2xl border border-white/15 bg-white/[0.05] focus-within:border-white/40 pl-3 pr-1.5 py-1.5">
+            <Sparkles className="w-4 h-4 text-zinc-300 shrink-0" />
+            <input value={ask} onChange={(e) => setAsk(e.target.value)} disabled={asking} maxLength={300}
+              placeholder={t('easyTrade.aiPlaceholder')} aria-label={t('easyTrade.aiLabel')}
+              className="flex-1 min-w-0 bg-transparent py-2 text-sm text-white placeholder:text-zinc-500 outline-none" />
+            <button type="submit" disabled={!ask.trim() || asking} aria-label={t('easyTrade.aiSend')}
+              className="w-9 h-9 shrink-0 rounded-xl bg-white text-black flex items-center justify-center disabled:opacity-30">
+              {asking ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
+            </button>
+          </div>
+          {!aiReply && step === 'choose' && <p className="text-xs text-zinc-500 px-1">{t('easyTrade.aiHint')}</p>}
+        </form>}
+        {aiReply && step !== 'done' && <div className="flex gap-2 rounded-xl bg-white/[0.06] border border-white/10 px-3 py-2.5 text-sm text-zinc-200">
+          <Sparkles className="w-4 h-4 mt-0.5 shrink-0 text-zinc-300" /><p className="leading-relaxed">{aiReply}</p>
+        </div>}
+
+        {step === 'choose' && <div className="space-y-2">
+          <button type="button" className={optionRow} onClick={() => setStep('amount')}>
+            <Sparkles className="w-6 h-6 text-white shrink-0" />
+            <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-white">{t('easyTrade.easyTitle')}</p><p className="text-xs text-zinc-400">{t('easyTrade.easyHint')}</p></div>
+            <ChevronRight className="w-4 h-4 text-zinc-500" />
+          </button>
+          <button type="button" className={optionRow} onClick={openExchange}>
+            <CandlestickChart className="w-6 h-6 text-white shrink-0" />
+            <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-white">{t('easyTrade.exchangeTitle')}</p><p className="text-xs text-zinc-400">{t('easyTrade.exchangeHint')}</p></div>
+            <ChevronRight className="w-4 h-4 text-zinc-500" />
+          </button>
+        </div>}
+
+        {step === 'amount' && <div className="space-y-3">
+          <div className="flex items-center rounded-xl border border-white/10 bg-white/[0.04] focus-within:border-white/30">
+            <input inputMode="decimal" placeholder="0" aria-label={t('easyTrade.sellTitle')} value={amount}
+              onChange={(e) => { setAmount(decimal(e.target.value)); setQuote(null); }}
+              className="flex-1 min-w-0 bg-transparent px-4 py-4 text-3xl font-semibold text-white outline-none" />
+            <span className="pr-4 text-sm text-zinc-400">DHB</span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-zinc-400">
+            <span>{t('easyTrade.available', { amount: formatSize(Number(formatUnits(balance, 18))) })}</span>
+            <div className="flex gap-1.5">
+              {[25, 50, 100].map((pct) => <button key={pct} type="button" disabled={balance === 0n}
+                onClick={() => { setAmount(formatUnits(balance * BigInt(pct) / 100n, 18)); setQuote(null); }}
+                className="px-2.5 py-1 rounded-lg border border-white/10 hover:bg-white/10 text-zinc-200 disabled:opacity-40">{pct === 100 ? t('easyTrade.max') : `${pct}%`}</button>)}
+            </div>
+          </div>
+          {balance === 0n && <p className="text-xs text-zinc-400">{t('easyTrade.noDhb')}</p>}
+          {amount && !amountOk && balance > 0n && <p className="text-xs text-red-300">{t('dex.checkAmount', { token: 'DHB' })}</p>}
+          <button type="button" className={primary} disabled={!amountOk || busy} onClick={() => void toPrice()}>
+            {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : t('easyTrade.next')}
+          </button>
+        </div>}
+
+        {step === 'price' && <div className="space-y-2">
+          <button type="button" aria-pressed={mode === 'market'} onClick={() => setMode('market')} className={cn(optionRow, mode === 'market' && 'border-white/60 bg-white/[0.12]')}>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-white">{t('easyTrade.marketRate')}</p>
+              <p className="text-xs text-zinc-400">{t('easyTrade.marketRateHint', { price: formatPrice(marketRate), usdc: formatSize(quote ? Number(formatUnits(quote.amountOut, 6)) : 0) })}</p>
+            </div>
+            {mode === 'market' && <Check className="w-4 h-4 text-white" />}
+          </button>
+          <div role="button" tabIndex={0} aria-pressed={mode === 'custom'} onClick={() => setMode('custom')} onKeyDown={(e) => { if (e.key === 'Enter') setMode('custom'); }}
+            className={cn(optionRow, 'flex-col items-stretch cursor-pointer', mode === 'custom' && 'border-white/60 bg-white/[0.12]')}>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-white">{t('easyTrade.myPrice')}</p><p className="text-xs text-zinc-400">{t('easyTrade.myPriceHint')}</p></div>
+              {mode === 'custom' && <Check className="w-4 h-4 text-white" />}
+            </div>
+            {mode === 'custom' && <>
+              <div className="flex items-center rounded-lg border border-white/10 bg-black/30 mt-1">
+                <span className="pl-3 text-zinc-400">$</span>
+                <input inputMode="decimal" placeholder={marketRate ? marketRate.toFixed(6) : '0.00'} aria-label={t('easyTrade.myPriceHint')} value={price}
+                  onClick={(e) => e.stopPropagation()} onChange={(e) => setPrice(decimal(e.target.value))}
+                  className="flex-1 min-w-0 bg-transparent px-2 py-3 text-lg text-white outline-none" />
+              </div>
+              {myPrice > 0 && marketRate != null && <p className="text-xs text-zinc-300 leading-relaxed">
+                {myPrice > marketRate ? t('easyTrade.routeList', { price: formatPrice(myPrice) }) : t('easyTrade.routeInstant')}
+              </p>}
+            </>}
+          </div>
+          <button type="button" className={cn(primary, 'mt-2')} onClick={toReview}>{t('easyTrade.next')}</button>
+        </div>}
+
+        {step === 'review' && <div className="space-y-3">
+          <dl className="rounded-xl border border-white/10 bg-white/[0.04] p-4 grid grid-cols-[1fr_auto] gap-y-2.5 text-sm">
+            <dt className="text-zinc-400">{t('easyTrade.youSell')}</dt><dd className="text-white text-right">{formatSize(Number(amount))} DHB</dd>
+            <dt className="text-zinc-400">{t('easyTrade.method')}</dt><dd className="text-white text-right">{route === 'list' ? t('easyTrade.methodList', { price: formatPrice(myPrice) }) : t('easyTrade.methodInstant')}</dd>
+            <dt className="text-zinc-400">{route === 'list' ? t('easyTrade.ifFilled') : t('easyTrade.youGet')}</dt>
+            <dd className="text-white text-right font-semibold">{formatSize(route === 'list' ? Number(amount) * myPrice : quote ? Number(formatUnits(quote.amountOut, 6)) : 0)} USDC</dd>
+          </dl>
+          <p className="text-xs text-zinc-400 leading-relaxed">{route === 'list' ? t('easyTrade.listNote') : t('dex.pool.instantNote')}</p>
+          {notice && <p className="text-xs text-amber-200">{notice}</p>}
+          <button type="button" className={primary} disabled={busy} onClick={() => void confirm()}>
+            {busy ? <><Loader2 className="w-4 h-4 animate-spin" />{stage || t('easyTrade.working')}</> : t('easyTrade.confirm')}
+          </button>
+        </div>}
+
+        {step === 'done' && result && <div className="space-y-4 text-center py-2">
+          <div className="mx-auto w-12 h-12 rounded-full bg-white/10 flex items-center justify-center"><Check className="w-6 h-6 text-white" /></div>
+          <p className="text-white font-semibold">{result.route === 'list'
+            ? t('easyTrade.doneList', { amount: formatSize(Number(result.amount)), price: formatPrice(result.price) })
+            : t('easyTrade.doneInstant', { amount: formatSize(Number(result.amount)) })}</p>
+          <p className="text-sm text-zinc-400">{result.route === 'list' ? t('easyTrade.doneListHint') : t('easyTrade.doneInstantHint', { usdc: formatSize(result.usdc) })}</p>
+          <div className="flex gap-2">
+            {result.route === 'list' && <button type="button" onClick={openExchange} className="flex-1 h-12 rounded-xl border border-white/15 text-white">{t('easyTrade.openExchange')}</button>}
+            <button type="button" onClick={() => onOpenChange(false)} className={cn(primary, 'flex-1')}>{t('easyTrade.done')}</button>
+          </div>
+        </div>}
+
+        {error && <div role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2.5 text-xs text-red-200">{error}</div>}
+      </div>
     </DrawerContent>
   </Drawer>;
-  return <Dialog open={open} onOpenChange={guard}>
-    <DialogContent data-wallet-page className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl sm:max-w-md p-0 pt-5">
-      <DialogTitle className="sr-only">{title}</DialogTitle>
-      {body}
-    </DialogContent>
-  </Dialog>;
 }
