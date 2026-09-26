@@ -6392,5 +6392,23 @@
     "fractionsDesc": "Um post cunhado no DeHub se torna um NFT dividido em 1.000 frações, e o criador começa com todas as 1.000 — 100% de propriedade do conteúdo. A cunhagem é opcional e pode acontecer ao publicar ou depois.",
     "tokenIdDesc": "Um identificador on-chain único que um post recebe quando é cunhado como NFT na blockchain. A cunhagem é opcional, então um post que não foi cunhado ainda não tem Token ID.",
     "tokenIdInfoDesc": "O identificador on-chain único que um post recebe depois de ser cunhado como NFT. Exibido no topo da página de Informações do Post para posts cunhados."
+  },
+  "tipFunding": {
+    "noRoute": "Nenhuma rota na Uniswap para DHB com este token no momento",
+    "lowLiquidity": "Não há liquidez suficiente na Uniswap para um pagamento deste valor no momento",
+    "dpayNoAmount": "A DeHub Pay não retornou um valor de pagamento",
+    "dpayDelayed": "A DeHub Pay recebeu seu pagamento e está enviando os DHB. Eles chegarão à sua carteira em breve; envie novamente quando chegarem.",
+    "noBridgeRoute": "Nenhuma rota cross-chain disponível no momento",
+    "bridgeCancelled": "A ordem cross-chain foi cancelada e reembolsada na sua carteira",
+    "bridgeSlow": "A transferência cross-chain está demorando mais que o normal. Ela chegará à sua carteira na Base; envie novamente quando chegar.",
+    "txFailed": "A transação não foi confirmada. Nada foi gasto.",
+    "noToken": "Sem {{symbol}} na Base",
+    "notEnoughOnBase": "{{symbol}} insuficiente na Base para este pagamento",
+    "notEnoughWithFees": "{{symbol}} insuficiente para este pagamento, incluindo as taxas de rede",
+    "notEnough": "{{symbol}} insuficiente para este pagamento",
+    "noGasForFee": "Moeda da rede insuficiente para cobrir a taxa cross-chain",
+    "priceMoved": "O preço do DHB mudou enquanto seu USDC chegava. O USDC está na sua carteira na Base; envie novamente para concluir.",
+    "usdcPending": "Seu USDC chegou na Base, mas ainda não está visível. Envie novamente em instantes.",
+    "dhbPending": "A compra de DHB foi confirmada, mas ainda não apareceu. Envie novamente em instantes."
   }
 }

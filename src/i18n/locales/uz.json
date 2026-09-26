@@ -4125,5 +4125,23 @@
     "fractionsDesc": "DeHub'da mint qilingan post 1,000 ta fraksiyaga bo'lingan NFT'ga aylanadi va ijodkor barcha 1,000 tasi bilan boshlaydi — kontentga 100% egalik. Mint qilish ixtiyoriy bo'lib, uni nashr qilishda yoki keyinroq amalga oshirish mumkin.",
     "tokenIdDesc": "Post blokcheynda NFT sifatida mint qilinganda oladigan noyob on-chain identifikator. Mint qilish ixtiyoriy, shuning uchun hali mint qilinmagan postda Token ID yo'q.",
     "tokenIdInfoDesc": "Post NFT sifatida mint qilingandan keyin oladigan noyob on-chain identifikator. Mint qilingan postlar uchun Post ma'lumotlari sahifasining yuqori qismida ko'rsatiladi."
+  },
+  "tipFunding": {
+    "noRoute": "Hozircha bu token uchun DHB’ga Uniswap yo‘nalishi yo‘q",
+    "lowLiquidity": "Hozircha bu hajmdagi to‘lov uchun Uniswap’da yetarli likvidlik yo‘q",
+    "dpayNoAmount": "DeHub Pay to‘lov summasini qaytarmadi",
+    "dpayDelayed": "DeHub Pay to‘lovingizni oldi va DHB yubormoqda. Tez orada hamyoningizga keladi; kelgach, qayta yuboring.",
+    "noBridgeRoute": "Hozircha zanjirlararo yo‘nalish mavjud emas",
+    "bridgeCancelled": "Zanjirlararo buyurtma bekor qilindi va mablag‘ hamyoningizga qaytarildi",
+    "bridgeSlow": "Zanjirlararo o‘tkazma odatdagidan uzoqroq davom etmoqda. U Base’dagi hamyoningizga keladi; kelgach, qayta yuboring.",
+    "txFailed": "Tranzaksiya tasdiqlanmadi. Hech narsa sarflanmadi.",
+    "noToken": "Base’da {{symbol}} yo‘q",
+    "notEnoughOnBase": "Bu to‘lov uchun Base’da {{symbol}} yetarli emas",
+    "notEnoughWithFees": "Tarmoq to‘lovlarini qo‘shganda bu to‘lov uchun {{symbol}} yetarli emas",
+    "notEnough": "Bu to‘lov uchun {{symbol}} yetarli emas",
+    "noGasForFee": "Zanjirlararo to‘lovni qoplash uchun tarmoq tangasi yetarli emas",
+    "priceMoved": "USDC’ingiz kelayotganda DHB narxi o‘zgardi. USDC Base’dagi hamyoningizda; yakunlash uchun qayta yuboring.",
+    "usdcPending": "USDC’ingiz Base’ga keldi, lekin hali ko‘rinmayapti. Birozdan so‘ng qayta yuboring.",
+    "dhbPending": "DHB xaridi tasdiqlandi, lekin hali ko‘rinmadi. Birozdan so‘ng qayta yuboring."
   }
 }

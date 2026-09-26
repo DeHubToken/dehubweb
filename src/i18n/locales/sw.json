@@ -6329,5 +6329,23 @@
     "fractionsDesc": "Chapisho lililofuliwa kwenye DeHub linakuwa NFT iliyogawanywa katika sehemu 1,000, na mtayarishi anaanza akiwa na zote 1,000 — umiliki wa 100% wa maudhui. Kufua ni hiari na kunaweza kufanyika unapochapisha au baadaye.",
     "tokenIdDesc": "Kitambulisho cha kipekee kwenye mnyororo ambacho chapisho hupata linapofuliwa kama NFT kwenye blockchain. Kufua ni hiari, kwa hivyo chapisho ambalo halijafuliwa bado halina Token ID.",
     "tokenIdInfoDesc": "Kitambulisho cha kipekee kwenye mnyororo ambacho chapisho hupata mara linapofuliwa kama NFT. Huonyeshwa juu ya ukurasa wa Maelezo ya Chapisho kwa machapisho yaliyofuliwa."
+  },
+  "tipFunding": {
+    "noRoute": "Hakuna njia ya Uniswap kwenda DHB kwa tokeni hii kwa sasa",
+    "lowLiquidity": "Hakuna ukwasi wa kutosha kwenye Uniswap kwa malipo ya kiasi hiki kwa sasa",
+    "dpayNoAmount": "DeHub Pay haikurudisha kiasi cha malipo",
+    "dpayDelayed": "DeHub Pay imepokea malipo yako na inatuma DHB. Itafika kwenye pochi yako hivi karibuni; tuma tena ikishafika.",
+    "noBridgeRoute": "Hakuna njia ya kati ya minyororo inayopatikana kwa sasa",
+    "bridgeCancelled": "Agizo la kati ya minyororo limeghairiwa na pesa zimerudishwa kwenye pochi yako",
+    "bridgeSlow": "Uhamisho wa kati ya minyororo unachukua muda mrefu kuliko kawaida. Utafika kwenye pochi yako kwenye Base; tuma tena ukishafika.",
+    "txFailed": "Muamala haukuthibitishwa. Hakuna kilichotumika.",
+    "noToken": "Hakuna {{symbol}} kwenye Base",
+    "notEnoughOnBase": "{{symbol}} haitoshi kwenye Base kwa malipo haya",
+    "notEnoughWithFees": "{{symbol}} haitoshi kwa malipo haya, pamoja na ada za mtandao",
+    "notEnough": "{{symbol}} haitoshi kwa malipo haya",
+    "noGasForFee": "Sarafu ya mtandao haitoshi kulipia ada ya kati ya minyororo",
+    "priceMoved": "Bei ya DHB ilibadilika wakati USDC yako ikifika. USDC iko kwenye pochi yako kwenye Base; tuma tena ili kukamilisha.",
+    "usdcPending": "USDC yako imefika kwenye Base lakini bado haionekani. Tuma tena baada ya muda mfupi.",
+    "dhbPending": "Ununuzi wa DHB umethibitishwa lakini bado haujaonekana. Tuma tena baada ya muda mfupi."
   }
 }

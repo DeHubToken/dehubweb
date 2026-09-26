@@ -6271,5 +6271,23 @@
     "fractionsDesc": "Una publicació encunyada a DeHub es converteix en un NFT dividit en 1.000 fraccions, i el creador comença amb totes les 1.000 — el 100% de la propietat del contingut. L'encunyació és opcional i es pot fer en publicar o més tard.",
     "tokenIdDesc": "Un identificador únic en cadena que rep una publicació quan s'encunya com a NFT a la blockchain. L'encunyació és opcional, així que una publicació que no s'ha encunyat encara no té Token ID.",
     "tokenIdInfoDesc": "L'identificador únic en cadena que rep una publicació un cop s'encunya com a NFT. Es mostra a la part superior de la pàgina d'informació de la publicació per a les publicacions encunyades."
+  },
+  "tipFunding": {
+    "noRoute": "Ara mateix no hi ha cap ruta d'Uniswap cap a DHB per a aquest token",
+    "lowLiquidity": "Ara mateix no hi ha prou liquiditat a Uniswap per a un pagament d'aquesta mida",
+    "dpayNoAmount": "DeHub Pay no ha retornat cap import de pagament",
+    "dpayDelayed": "DeHub Pay té el teu pagament i està enviant els DHB. Arribaran aviat a la teva cartera; torna a enviar quan hi siguin.",
+    "noBridgeRoute": "Ara mateix no hi ha cap ruta entre cadenes disponible",
+    "bridgeCancelled": "La comanda entre cadenes s'ha cancel·lat i s'ha reemborsat a la teva cartera",
+    "bridgeSlow": "La transferència entre cadenes està trigant més del normal. Arribarà a la teva cartera a Base; torna a enviar quan hi sigui.",
+    "txFailed": "La transacció no s'ha confirmat. No s'ha gastat res.",
+    "noToken": "No hi ha {{symbol}} a Base",
+    "notEnoughOnBase": "No hi ha prou {{symbol}} a Base per a aquest pagament",
+    "notEnoughWithFees": "No hi ha prou {{symbol}} per a aquest pagament, incloses les comissions de xarxa",
+    "notEnough": "No hi ha prou {{symbol}} per a aquest pagament",
+    "noGasForFee": "No hi ha prou moneda de la xarxa per cobrir la comissió entre cadenes",
+    "priceMoved": "El preu de DHB ha canviat mentre arribaven els teus USDC. Els USDC són a la teva cartera a Base; torna a enviar per acabar.",
+    "usdcPending": "Els teus USDC han arribat a Base però encara no es veuen. Torna a enviar d'aquí a un moment.",
+    "dhbPending": "La compra de DHB s'ha confirmat però encara no apareix. Torna a enviar d'aquí a un moment."
   }
 }

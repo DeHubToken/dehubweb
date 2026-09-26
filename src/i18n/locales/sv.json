@@ -6274,5 +6274,23 @@
     "fractionsDesc": "Ett inlägg som mintas på DeHub blir en NFT uppdelad i 1 000 fraktioner, och skaparen börjar med alla 1 000 — 100 % ägande av innehållet. Mintning är valfritt och kan göras när du publicerar eller senare.",
     "tokenIdDesc": "En unik on-chain-identifierare som ett inlägg får när det mintas som en NFT på blockkedjan. Mintning är valfritt, så ett inlägg som inte har mintats har inget Token ID ännu.",
     "tokenIdInfoDesc": "Den unika on-chain-identifierare som ett inlägg får när det har mintats som en NFT. Visas högst upp på sidan Inläggsinfo för mintade inlägg."
+  },
+  "tipFunding": {
+    "noRoute": "Ingen Uniswap-rutt till DHB för den här token just nu",
+    "lowLiquidity": "Det finns inte tillräckligt med likviditet på Uniswap för en betalning av den här storleken just nu",
+    "dpayNoAmount": "DeHub Pay returnerade inget betalningsbelopp",
+    "dpayDelayed": "DeHub Pay har tagit emot din betalning och skickar DHB. Den kommer till din plånbok inom kort; skicka igen när den har kommit.",
+    "noBridgeRoute": "Ingen kedjeöverskridande rutt är tillgänglig just nu",
+    "bridgeCancelled": "Den kedjeöverskridande ordern avbröts och återbetalades till din plånbok",
+    "bridgeSlow": "Den kedjeöverskridande överföringen tar längre tid än vanligt. Den kommer till din plånbok på Base; skicka igen när den har kommit.",
+    "txFailed": "Transaktionen bekräftades inte. Inget drogs.",
+    "noToken": "Ingen {{symbol}} på Base",
+    "notEnoughOnBase": "Inte tillräckligt med {{symbol}} på Base för den här betalningen",
+    "notEnoughWithFees": "Inte tillräckligt med {{symbol}} för den här betalningen, inklusive nätverksavgifter",
+    "notEnough": "Inte tillräckligt med {{symbol}} för den här betalningen",
+    "noGasForFee": "Inte tillräckligt med nätverkets mynt för att täcka den kedjeöverskridande avgiften",
+    "priceMoved": "DHB-priset rörde sig medan dina USDC var på väg. Dina USDC finns i din plånbok på Base; skicka igen för att slutföra.",
+    "usdcPending": "Dina USDC har kommit fram på Base men syns inte än. Skicka igen om en stund.",
+    "dhbPending": "DHB-köpet bekräftades men har inte dykt upp än. Skicka igen om en stund."
   }
 }

@@ -3943,5 +3943,23 @@
     "fractionsDesc": "Post min mintira DeHub kan, o bɛ kɛ NFT ye min tilalen don yɔrɔ 1,000 la, ani kreatɛri bɛ daminɛ ni 1,000 bɛɛ ye — konteni ta 100%. Minti ye sugandili ye, a bɛ se ka kɛ weleweleda tuma na walima kɔfɛ.",
     "tokenIdDesc": "Taamasiyɛn kelenpe blockchain kan min bɛ di post ma n'a mintira ka kɛ NFT ye blockchain kan. Minti ye sugandili ye, o la post min ma minti fɔlɔ, Token ID t'o fɛ fɔlɔ.",
     "tokenIdInfoDesc": "Taamasiyɛn kelenpe blockchain kan min bɛ di post ma n'a mintira ka kɛ NFT ye. A bɛ yira Post Info ɲɛ sanfɛ post mintilenw na."
+  },
+  "tipFunding": {
+    "noRoute": "Sisan, Uniswap sira si tɛ nin token in ma ka taa DHB la",
+    "lowLiquidity": "Sisan, wari ma ca Uniswap kan ka sarali bonba nin ɲɔgɔn kɛ",
+    "dpayNoAmount": "DeHub Pay ma sarali hakɛ di",
+    "dpayDelayed": "DeHub Pay ye i ka sarali sɔrɔ, a bɛ DHB ci. A bɛna se i ka wari foroko kɔnɔ sɔɔni; ni a sera, i ka ci tugun.",
+    "noBridgeRoute": "Sisan, cross-chain sira si tɛ yen",
+    "bridgeCancelled": "Cross-chain ci in bɔra yen, wari seginna i ka wari foroko kɔnɔ",
+    "bridgeSlow": "Cross-chain ci in bɛ mɛn ka tɛmɛ a cogo kɔrɔ kan. A bɛna se i ka wari foroko kɔnɔ Base kan; ni a sera, i ka ci tugun.",
+    "txFailed": "Jago in ma dafa. Foyi ma ban.",
+    "noToken": "{{symbol}} si tɛ Base kan",
+    "notEnoughOnBase": "{{symbol}} ma ca Base kan nin sarali in kama",
+    "notEnoughWithFees": "{{symbol}} ma ca nin sarali in kama, rezo sara fana b'a la",
+    "notEnough": "{{symbol}} ma ca nin sarali in kama",
+    "noGasForFee": "Rezo wari ma ca ka cross-chain sara sara",
+    "priceMoved": "DHB sɔngɔ yɛlɛmana i ka USDC tun bɛ na tuma min. USDC bɛ i ka wari foroko kɔnɔ Base kan; i ka ci tugun walisa ka a ban.",
+    "usdcPending": "I ka USDC sera Base kan nka a ma ye fɔlɔ. I ka ci tugun sɔɔni.",
+    "dhbPending": "DHB sanni dafara nka a ma ye fɔlɔ. I ka ci tugun sɔɔni."
   }
 }

@@ -4069,5 +4069,23 @@
     "fractionsDesc": "Postingan sing di-mint ing DeHub dadi NFT sing dipérang dadi 1,000 bagean, lan kreator miwiti kanthi nduwèni kabèh 1,000 — 100% kepemilikan konten. Minting iku opsional lan bisa ditindakaké nalika kowé nerbitaké utawa mengko.",
     "tokenIdDesc": "Pengenal on-chain unik sing ditampa postingan nalika di-mint dadi NFT ing blockchain. Minting iku opsional, mula postingan sing durung di-mint durung duwé Token ID.",
     "tokenIdInfoDesc": "Pengenal on-chain unik sing ditampa postingan sawisé di-mint dadi NFT. Ditampilaké ing sisih ndhuwur kaca Info Postingan kanggo postingan sing wis di-mint."
+  },
+  "tipFunding": {
+    "noRoute": "Saiki ora ana rute Uniswap menyang DHB kanggo token iki",
+    "lowLiquidity": "Saiki likuiditas Uniswap ora cukup kanggo pambayaran sagedhe iki",
+    "dpayNoAmount": "DeHub Pay ora ngasilake jumlah pambayaran",
+    "dpayDelayed": "DeHub Pay wis nampa pambayaranmu lan lagi ngirim DHB. Sedhela maneh bakal tekan ing dompetmu; kirim maneh yen wis tekan.",
+    "noBridgeRoute": "Saiki ora ana rute cross-chain sing kasedhiya",
+    "bridgeCancelled": "Pesenan cross-chain dibatalake lan dhuwité dibalèkaké menyang dompetmu",
+    "bridgeSlow": "Transfer cross-chain luwih suwe tinimbang biasane. Bakal tekan ing dompetmu ing Base; kirim maneh yen wis tekan.",
+    "txFailed": "Transaksi ora dikonfirmasi. Ora ana sing kepakai.",
+    "noToken": "Ora ana {{symbol}} ing Base",
+    "notEnoughOnBase": "{{symbol}} ing Base ora cukup kanggo pambayaran iki",
+    "notEnoughWithFees": "{{symbol}} ora cukup kanggo pambayaran iki, kalebu biaya jaringan",
+    "notEnough": "{{symbol}} ora cukup kanggo pambayaran iki",
+    "noGasForFee": "Koin jaringan ora cukup kanggo mbayar biaya cross-chain",
+    "priceMoved": "Rega DHB owah nalika USDC-mu lagi tekan. USDC wis ana ing dompetmu ing Base; kirim maneh kanggo ngrampungake.",
+    "usdcPending": "USDC-mu wis tekan ing Base nanging durung katon. Kirim maneh sedhela engkas.",
+    "dhbPending": "Tuku DHB wis dikonfirmasi nanging durung katon. Kirim maneh sedhela engkas."
   }
 }

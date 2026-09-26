@@ -7,6 +7,7 @@
 import { toast } from 'sonner';
 import type { TFunction } from 'i18next';
 import type { TipFundingSource, TipFundingStage } from '@/lib/tip-funding';
+import { fundingErrorText } from '@/lib/tip-funding-error';
 
 const CHAIN_NAMES: Record<number, string> = { 8453: 'Base', 5042: 'Arc', 1: 'Ethereum', 56: 'BNB Chain', 4663: 'Robinhood Chain' };
 
@@ -48,7 +49,7 @@ export async function fundTipFromSource(
       toast.dismiss(toastId);
       return false;
     }
-    const message = error instanceof Error ? error.message : '';
+    const message = fundingErrorText(t, error);
     toast.error(message || t('tip.payFailed', 'Could not convert {{symbol}} to DHB', vars), { id: toastId, duration: 8000 });
     return false;
   }

@@ -4113,5 +4113,23 @@
     "fractionsDesc": "Okuthunyelwe okukhandwe ku-DeHub kuba yi-NFT ehlukaniswe yaba izabelo eziyi-1,000, futhi umdali uqala enazo zonke eziyi-1,000 — ubunikazi obuyi-100% bokuqukethwe. Ukukhanda kuyakhethwa futhi kungenzeka lapho ushicilela noma kamuva.",
     "tokenIdDesc": "Isihlonzi esiyingqayizivele ku-on-chain okuthunyelwe okusithola lapho kukhandwa njenge-NFT ku-blockchain. Ukukhanda kuyakhethwa, ngakho okuthunyelwe okungakakhandwa akukabi naso i-Token ID.",
     "tokenIdInfoDesc": "Isihlonzi esiyingqayizivele ku-on-chain okuthunyelwe okusithola uma sekukhandwe njenge-NFT. Siboniswa phezulu ekhasini Lolwazi Lokuthunyelwe kokuthunyelwe okukhandiwe."
+  },
+  "tipFunding": {
+    "noRoute": "Ayikho indlela ye-Uniswap eya ku-DHB yale thokheni okwamanje",
+    "lowLiquidity": "Awukho u-liquidity owanele ku-Uniswap wenkokhelo engaka okwamanje",
+    "dpayNoAmount": "I-DeHub Pay ayibuyisanga inani lenkokhelo",
+    "dpayDelayed": "I-DeHub Pay inenkokhelo yakho futhi ithumela i-DHB. Izofika ku-wallet yakho maduze; thumela futhi uma isifikile.",
+    "noBridgeRoute": "Ayikho indlela ye-cross-chain etholakalayo okwamanje",
+    "bridgeCancelled": "I-oda le-cross-chain likhanseliwe futhi imali ibuyiselwe ku-wallet yakho",
+    "bridgeSlow": "Ukudluliselwa kwe-cross-chain kuthatha isikhathi eside kunokujwayelekile. Kuzofika ku-wallet yakho ku-Base; thumela futhi uma sekufikile.",
+    "txFailed": "Ukuthengiselana akuqinisekisiwe. Akukho okusetshenzisiwe.",
+    "noToken": "Ayikho i-{{symbol}} ku-Base",
+    "notEnoughOnBase": "I-{{symbol}} ku-Base ayanele kule nkokhelo",
+    "notEnoughWithFees": "I-{{symbol}} ayanele kule nkokhelo, kuhlanganise nezimali zenethiwekhi",
+    "notEnough": "I-{{symbol}} ayanele kule nkokhelo",
+    "noGasForFee": "Uhlamvu lwemali lwenethiwekhi alwanele ukukhokhela imali ye-cross-chain",
+    "priceMoved": "I-DHB ishintshile ngenkathi i-USDC yakho isafika. I-USDC iku-wallet yakho ku-Base; thumela futhi ukuze uqedele.",
+    "usdcPending": "I-USDC yakho ifikile ku-Base kodwa ayikabonakali. Thumela futhi emzuzwini.",
+    "dhbPending": "Ukuthenga i-DHB kuqinisekisiwe kodwa akukaveli. Thumela futhi emzuzwini."
   }
 }

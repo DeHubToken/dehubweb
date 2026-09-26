@@ -4042,5 +4042,23 @@
     "fractionsDesc": "Post a mintịrị na DeHub na-aghọ NFT ekewara n'òkè 1,000, onye okike na-amalite na 1,000 niile — nwe ọdịnaya ahụ 100%. Imint bụ nhọrọ, ọ nwere ike ime mgbe ị na-ebipụta ma ọ bụ emesịa.",
     "tokenIdDesc": "Njirimara pụrụ iche na on-chain nke post na-enweta mgbe a mintịrị ya dị ka NFT na blockchain. Imint bụ nhọrọ, ya mere post a na-amintịghị enwebeghị Token ID.",
     "tokenIdInfoDesc": "Njirimara pụrụ iche na on-chain nke post na-enweta ozugbo a mintịrị ya dị ka NFT. A na-egosi ya n'elu ibe Post Info maka post ndị a mintịrị."
+  },
+  "tipFunding": {
+    "noRoute": "Ugbu a, enweghị ụzọ Uniswap gaa DHB maka token a",
+    "lowLiquidity": "Ugbu a, enweghị liquidity zuru ezu na Uniswap maka ịkwụ ụgwọ nke nha a",
+    "dpayNoAmount": "DeHub Pay eweghachighị ego a ga-akwụ",
+    "dpayDelayed": "DeHub Pay nwetara ụgwọ gị ma na-ezipu DHB. Ọ ga-abịa n'obere akpa ego gị n'oge na-adịghị anya; zipu ọzọ ozugbo ọ bịara.",
+    "noBridgeRoute": "Ugbu a, enweghị ụzọ cross-chain dị",
+    "bridgeCancelled": "Akagburu iwu cross-chain ahụ ma weghachite ego ahụ n'obere akpa ego gị",
+    "bridgeSlow": "Mbufe cross-chain ahụ na-ewe ogologo oge karịa ka ọ na-adị. Ọ ga-abịa n'obere akpa ego gị na Base; zipu ọzọ ozugbo ọ bịara.",
+    "txFailed": "Akwadoghị azụmahịa ahụ. Ọ dịghị ihe e mefuru.",
+    "noToken": "Enweghị {{symbol}} na Base",
+    "notEnoughOnBase": "{{symbol}} dị na Base ezughị maka ịkwụ ụgwọ a",
+    "notEnoughWithFees": "{{symbol}} ezughị maka ịkwụ ụgwọ a, gụnyere ụgwọ netwọk",
+    "notEnough": "{{symbol}} ezughị maka ịkwụ ụgwọ a",
+    "noGasForFee": "Mkpụrụ ego netwọk ezughị iji kwụọ ụgwọ cross-chain",
+    "priceMoved": "Ọnụahịa DHB gbanwere mgbe USDC gị na-abịa. USDC dị n'obere akpa ego gị na Base; zipu ọzọ iji mechaa.",
+    "usdcPending": "USDC gị abịala na Base mana a hụbeghị ya. Zipu ọzọ n'otu ntabi anya.",
+    "dhbPending": "Ịzụta DHB ahụ akwadola mana ọ pụtabeghị. Zipu ọzọ n'otu ntabi anya."
   }
 }
