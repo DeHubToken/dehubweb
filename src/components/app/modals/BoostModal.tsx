@@ -194,7 +194,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
             <ThemedIcon icon="lock" alt="" className="w-12 h-12 mx-auto object-contain opacity-70" />
             <p className="text-white text-sm">Any badge holder gets SuperPowers. Buy DHB to unlock a badge — staking is not required.</p>
             <Button variant="outline" onClick={() => setBuyOpen(true)}>
-              Buy DHB
+              {t('nav.buyDhb')}
             </Button>
           </div>
         ) : (
