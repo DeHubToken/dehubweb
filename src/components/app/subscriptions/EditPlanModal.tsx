@@ -208,12 +208,12 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-xs text-zinc-400 pointer-events-none">
                 <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                <span>{price ? formatDhbPayment(dhbEstimate) : 'DHB'}</span>
+                <span>{price ? formatDhbPayment(dhbEstimate) : null}</span>
               </div>
             </div>
             {!isUsdPriced && (
               <p className="text-xs text-zinc-500 mt-1.5">
-                Saving migrates this legacy DHB plan to dollar pricing at the pre-listing rate.
+                {t('subscriptions.legacyPlanMigrates')}
               </p>
             )}
           </div>

@@ -173,7 +173,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                             {(available * listing.price_per_fraction).toLocaleString(undefined, {
                               maximumFractionDigits: 2,
                             })}{' '}
-                            DHB
+                            <DhbCoin />
                           </p>
                           {isMine ? (
                             <Button

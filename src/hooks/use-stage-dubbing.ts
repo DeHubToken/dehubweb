@@ -23,6 +23,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import i18n from 'i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { useStage } from '@/contexts/StageContext';
@@ -262,8 +263,11 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
         const { readDhbBalance } = await import('@/lib/stage-dub-payment');
         const held = await readDhbBalance();
         if (quote && held < quote.minimumDhb) {
-          toast.error('Not enough DHB for dubbing.', {
-            description: `You need about ${quote.minimumDhb.toLocaleString()} DHB and hold ${Math.floor(held).toLocaleString()}.`,
+          toast.error(i18n.t('dub.notEnoughTokens'), {
+            description: i18n.t('dub.notEnoughTokensDescription', {
+              needed: quote.minimumDhb.toLocaleString(),
+              held: Math.floor(held).toLocaleString(),
+            }),
           });
           return;
         }
@@ -341,7 +345,7 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
         // again, or they will pay twice for one session. The hash is kept, so
         // pressing Pay again retries confirmation with it rather than paying.
         toast.error(error ?? 'Payment sent but not confirmed yet.', {
-          description: 'Your DHB has left your wallet. Press Pay again to retry confirming it.',
+          description: i18n.t('dub.paymentLeftWallet'),
         });
         return;
       }
@@ -349,7 +353,7 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
       forgetSentHash(bill.spaceId);
       toast.success(
         data.paidDhb > 0
-          ? `Paid ${data.paidDhb} DHB for ${data.minutes} minutes of dubbing.`
+          ? i18n.t('dub.paidForMinutes', { amount: data.paidDhb, minutes: data.minutes })
           : 'Dubbing session closed.',
       );
       setBill(null);

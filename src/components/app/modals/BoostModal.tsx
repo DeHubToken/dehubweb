@@ -192,7 +192,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
         ) : !status?.tier ? (
           <div className="flex flex-col gap-4 py-4 text-center">
             <ThemedIcon icon="lock" alt="" className="w-12 h-12 mx-auto object-contain opacity-70" />
-            <p className="text-white text-sm">Any badge holder gets SuperPowers. Buy DHB to unlock a badge — staking is not required.</p>
+            <p className="text-white text-sm">{t('superpowers.buyTokensToUnlockBadge')}</p>
             <Button variant="outline" onClick={() => setBuyOpen(true)}>
               {t('nav.buyDhb')}
             </Button>

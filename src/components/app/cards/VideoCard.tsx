@@ -338,7 +338,7 @@ function MobileCreatorInfo({
                   <Gift className="w-3 h-3 text-white" />
                   <span className="text-white text-xs font-medium">
                     {bountyAmount && bountyAmount > 0 
-                      ? `${formatCompact(bountyAmount)} ${bountyCurrency || 'DHB'}` 
+                      ? <DhbAmount amount={formatCompact(bountyAmount)} currency={bountyCurrency} />
                       : 'Bounty'}
                   </span>
                 </button>
@@ -1873,7 +1873,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <p className="text-white font-semibold text-sm mb-1">{t('drawers.bountyTitle')}</p>
               <p className="text-white/70 text-xs">
                 {video.bountyAmount && video.bountyAmount > 0 
-                  ? `${formatCompact(video.bountyAmount)} ${video.bountyCurrency || 'DHB'}`
+                  ? <DhbAmount amount={formatCompact(video.bountyAmount)} currency={video.bountyCurrency} />
                   : t('drawers.bountyDescription')}
               </p>
             </div>
@@ -2041,7 +2041,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             <Gift className="w-3 h-3 text-white" />
             <span className="text-white text-xs font-medium">
               {video.bountyAmount && video.bountyAmount > 0
-                ? `${formatCompact(video.bountyAmount)} ${video.bountyCurrency || 'DHB'}`
+                ? <DhbAmount amount={formatCompact(video.bountyAmount)} currency={video.bountyCurrency} />
                 : t('drawers.bountyTitle')}
             </span>
           </button>

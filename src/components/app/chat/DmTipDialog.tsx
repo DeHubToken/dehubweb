@@ -143,9 +143,9 @@ export function DmTipDialog({
       const isPausedErr = errStr.includes('paused') || errStr.includes('erc20pausable');
       const isSTF = errStr.includes('stf') || errStr.includes('535446') || errStr.includes('safetransfer') || errStr.includes('token transfer failed');
       if (isPausedErr || (isSTF && await checkDHBPaused().catch(() => false))) {
-        toast.error('DHB transactions paused', {
+        toast.error(t('tokens.transactionsPaused'), {
           id: 'dm-tip',
-          description: 'DHB token transactions are temporarily paused on-chain. Please try again later.',
+          description: t('tokens.transactionsPausedDesc'),
           duration: 8000,
         });
       } else {

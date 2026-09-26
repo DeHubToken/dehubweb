@@ -13,6 +13,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { AppState } from '@/components/app/AppState';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -264,6 +265,7 @@ function Composer({
 // ---------------------------------------------------------------------------
 
 export default function BuilderPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { isAuthenticated, user } = useAuth() as {
@@ -496,7 +498,7 @@ export default function BuilderPage() {
             'bg-[rgba(10,10,12,0.55)] hover:bg-[rgba(30,30,34,0.65)] backdrop-blur-md',
             STROKE,
           )}
-          title="Stake DHB to raise your daily build allowance"
+          title={t('builder.stakeForAllowance')}
         >
           <Sparkles className="w-4 h-4 text-[#f0b3ff]" />
           <span className="text-[15px] font-semibold text-[#fff]">

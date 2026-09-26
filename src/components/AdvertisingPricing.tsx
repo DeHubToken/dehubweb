@@ -1,12 +1,15 @@
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Badge } from './ui/badge';
 import { DollarSign, TrendingUp, Users } from 'lucide-react';
 import { badgeImage } from '@/lib/staking-badges';
+import { DhbAmount } from '@/components/app/DhbAmount';
 
 const AdvertisingPricing = () => {
+  const { t } = useTranslation();
   // CPMs mirror the live POVR rates in src/lib/ads/povr.ts — value-scaled to
   // verified holdings, anchored at Crab $100 and Megalodon $25,000.
   const pricingTiers = [
@@ -35,7 +38,7 @@ const AdvertisingPricing = () => {
             <span>POVR Advertising Pricing System</span>
           </CardTitle>
           <p className="text-gray-700">
-            Our linear tier-based pricing system ensures fair and scalable advertising costs based on audience value. The value is priced in USD for ease of management however payments will be prompted in $DHB at the time of execution.
+            {t('ads.povrPricingIntro')}
           </p>
         </CardHeader>
         <CardContent>
@@ -66,7 +69,7 @@ const AdvertisingPricing = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <span className="font-mono text-sm">{tier.threshold} $DHB</span>
+                      <DhbAmount amount={tier.threshold} className="font-mono text-sm" />
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline" className="font-mono">

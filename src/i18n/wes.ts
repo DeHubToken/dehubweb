@@ -26,7 +26,7 @@ export const wes = {
     contact: 'Contact We',
     keyLinks: 'Important Links',
     docsChatTitle: 'AI Helper',
-    docsChatGreeting: 'Hello! Na me be DeHub documentation helper. Ask me anything for DeHub, di $DHB token, DePIN, governance, or any other platform feature!',
+    docsChatGreeting: 'Hello! Na me be DeHub documentation helper. Ask me anything for DeHub, DeHub tokens, DePIN, governance, or any other platform feature!',
     docsChatPlaceholder: 'Ask about DeHub...',
     docsChatOpen: 'Open chat',
     docsChatClose: 'Close chat',

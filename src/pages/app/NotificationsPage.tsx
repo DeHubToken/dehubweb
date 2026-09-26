@@ -2,6 +2,7 @@ import { localizedNotificationContent } from "@/lib/notification-content";
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
+import { isDhb } from '@/components/app/DhbAmount';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -740,7 +741,9 @@ function getNotificationContent(
     case 'mention':
       return `${actorName} mentioned you in a comment`;
     case 'tip':
-      const tipAmount = notification.amount ? ` ${notification.amount} ${notification.currency || 'DHB'}` : '';
+      const tipAmount = notification.amount
+        ? ` ${isDhb(notification.currency) ? tr('notifications.tipTokens', { amount: notification.amount }) : `${notification.amount} ${notification.currency}`}`
+        : '';
       return tr('notifications.tippedYou', { name: actorName }) + tipAmount;
     case 'subscription':
       return tr('notifications.subscribedPlan', { name: actorName });

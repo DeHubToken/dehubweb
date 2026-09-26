@@ -27,7 +27,7 @@ export const af = {
     keyLinks: 'Sleutelskakels',
     keyInfo: 'Sleutelinligting',
     docsChatTitle: 'AI Assistent',
-    docsChatGreeting: 'Hi! Ek is DeHub se dokumentasie-assistent. Vra my enige iets oor DeHub, die $DHB-token, DePIN, bestuur, of enige ander platformkenmerke!',
+    docsChatGreeting: 'Hallo! Ek is DeHub se dokumentasie-assistent. Vra my iets oor DeHub, DeHub-tokens, DePIN, bestuur of enige ander platformfunksies!',
     docsChatPlaceholder: 'Vra oor DeHub...',
     docsChatOpen: 'Maak klets oop',
     docsChatClose: 'Maak klets toe',

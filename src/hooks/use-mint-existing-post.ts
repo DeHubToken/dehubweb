@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { mintExistingPost, getMintFee, type MintFeeQuoteResponse } from '@/lib/api/dehub';
 import { confirmEvmMint } from '@/lib/api/dehub/solana';
@@ -22,6 +23,7 @@ import type { ChainId } from '@/components/app/ChainSelector';
 export function useMintExistingPost() {
   const [isMinting, setIsMinting] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const mint = useCallback(async (tokenId: number | string, chainId?: number) => {
     if (isMinting) return false;
@@ -64,9 +66,9 @@ export function useMintExistingPost() {
             (BigInt(Math.ceil(fee.amount * 1e6)) * BigInt(10) ** BigInt(fee.decimals ?? 18)) /
             BigInt(1e6);
           if (balance < needed) {
-            toast.error('Not enough DHB to mint', {
+            toast.error(t('postComposer.notEnoughTokensToMint'), {
               description: `Minting this post costs ${fee.amount} ${fee.symbol}.`,
-              action: { label: 'Get DHB', onClick: () => navigate('/app/buy') },
+              action: { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
               duration: 10000,
             });
             return false;
@@ -112,7 +114,7 @@ export function useMintExistingPost() {
     } finally {
       setIsMinting(false);
     }
-  }, [isMinting, navigate]);
+  }, [isMinting, navigate, t]);
 
   return { mint, isMinting };
 }

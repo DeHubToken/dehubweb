@@ -17,6 +17,7 @@
 import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import i18n from 'i18next';
 // NOTE: aa-utils / uniswap-swap / stream-controller reach
 // wagmi + web3auth. This hook is used by eager feed cards (VideoCard /
 // ImageCard PPV drawers), so those modules are dynamically imported inside
@@ -131,7 +132,7 @@ export function usePPVPayment({
     }
 
     if (currency !== 'DHB') {
-      toast.error('Only DHB PPV payments are supported on-chain');
+      toast.error(i18n.t('tokenErrors.ppvTokensOnly'));
       return;
     }
 

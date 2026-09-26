@@ -25,7 +25,7 @@ import { toast } from 'sonner';
 import { toastTxError } from '@/lib/tx-error-toast';
 import { fundTipFromSource } from '@/lib/tip-funding-run';
 import type { TipFundingSource } from '@/lib/tip-funding';
-import type { TFunction } from 'i18next';
+import i18n, { type TFunction } from 'i18next';
 
 /** Funding already showed its own error; the buy stops without a second toast. */
 const FUNDING_ABORTED = 'FUNDING_ABORTED';
@@ -362,7 +362,7 @@ export function useBuyPlan() {
         !intent.treasuryAddress ||
         !intent.dhbAmount
       ) {
-        throw new Error('The DHB subscription checkout is not ready — please try again shortly');
+        throw new Error(i18n.t('subscriptions.tokenCheckoutNotReady'));
       }
 
       // Paying with another token: DeHub Pay (or Uniswap as the fallback)

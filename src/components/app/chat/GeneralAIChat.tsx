@@ -203,7 +203,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         // model id matches generate-image's own default, or the quote would
         // price a job the server is not about to run.
         const { priceDhb } = await fetchJobQuote({ kind: 'image', modelId: 'gemini-2.5-flash' });
-        toast.loading(`Paying ${formatDhb(priceDhb)} DHB...`, { id: 'chat-image-payment' });
+        toast.loading(t('tokenPaywall.paying', { amount: formatDhb(priceDhb) }), { id: 'chat-image-payment' });
         const txHash = await payForJob(priceDhb);
         toast.dismiss('chat-image-payment');
 

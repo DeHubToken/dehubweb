@@ -8,6 +8,7 @@
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
 import { Input } from '@/components/ui/input';
@@ -31,6 +32,7 @@ export function DmFeeInfoBanner({
   balanceBnb,
   balanceLoading,
 }: DmFeeInfoBannerProps) {
+  const { t } = useTranslation();
   const totalBalance = (balanceBase ?? 0) + (balanceBnb ?? 0);
   const totalAvailable = balanceBase !== null || balanceBnb !== null ? totalBalance : null;
   const tipAmount = customTipAmount ? parseFloat(customTipAmount) : fee;
@@ -98,7 +100,7 @@ export function DmFeeInfoBanner({
             type="number"
             min={fee}
             step={1}
-            placeholder={`Custom tip (min ${fee.toLocaleString()} DHB)`}
+            placeholder={t('messages.customTipMin', { amount: fee.toLocaleString() })}
             value={customTipAmount}
             onChange={(e) => onCustomTipChange(e.target.value)}
             className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/30 h-10 text-sm rounded-xl"

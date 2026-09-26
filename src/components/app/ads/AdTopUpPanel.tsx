@@ -186,7 +186,7 @@ export function AdTopUpPanel({
       }
       toast.dismiss('ads-topup');
       if (credited === null) {
-        toast.error(lastError?.message || 'Verification timed out — your DHB is sent; retry crediting from Billing with the same transaction.');
+        toast.error(lastError?.message || t('ads.verifyTimedOutTokensSent'));
       } else {
         onCredited?.(credited);
       }
@@ -270,16 +270,14 @@ export function AdTopUpPanel({
               </div>
               <div className="text-right">
                 <p className="text-xl font-bold text-white">{formatCompact(costDhb)} <DhbCoin /></p>
-                <p className="text-xs text-zinc-500">@ ${dhbPrice.toFixed(7)}/DHB → ${effectiveUsd.toFixed(2)} credit</p>
+                <p className="text-xs text-zinc-500">{t('ads.rateToCredit', { price: dhbPrice.toFixed(7), usd: effectiveUsd.toFixed(2) })}</p>
               </div>
             </div>
           )}
         </div>
 
         <p className="text-[11px] text-zinc-500 leading-relaxed">
-          DHB goes on-chain to the DeHub ads treasury and your balance is credited after independent
-          verification, at the DHB price at that moment — the amount above carries a 2% buffer so a
-          price tick can't leave you short. Campaign spend comes off this balance per verified impression.
+          {t('ads.topUpTreasuryNote')}
         </p>
       </div>
 

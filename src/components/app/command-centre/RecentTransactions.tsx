@@ -14,6 +14,7 @@ import { useState, useMemo } from 'react';
 import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
 import { getGiveawayPrizeFor, formatPrizeAmount } from '@/lib/worldCupGiveaway';
 import { cn } from '@/lib/utils';
+import { isDhb } from '@/components/app/DhbAmount';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 const cardClass = "rounded-2xl p-5 max-h-[420px] overflow-y-auto bg-zinc-900 border border-zinc-800";
@@ -58,7 +59,7 @@ function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => strin
       description = t('commandCentre.txTransfer', { amount });
       break;
     default:
-      description = `${tx.type} — ${amount} DHB`;
+      description = t('commandCentre.txGeneric', { type: tx.type, amount });
   }
   return { id: tx.id, type: tx.type, amount: tx.amount, createdAt: tx.createdAt, isCredit, description, txHash: tx.txHash, chainId: tx.chainId };
 }
@@ -250,13 +251,13 @@ export function RecentTransactions() {
       const amountStr = transfer.formattedAmount;
       let description: string;
       if (transfer.isAiPayment) {
-        description = `Spent ${amountStr} DHB on AI prompt`;
+        description = t('commandCentre.txAiPromptSpent', { amount: amountStr });
       } else if (transfer.isIncoming) {
         const fromShort = `${transfer.from.slice(0, 6)}...${transfer.from.slice(-4)}`;
-        description = `Received ${amountStr} DHB from ${fromShort}`;
+        description = t('commandCentre.txReceivedFrom', { amount: amountStr, from: fromShort });
       } else {
         const toShort = `${transfer.to.slice(0, 6)}...${transfer.to.slice(-4)}`;
-        description = `Sent ${amountStr} DHB to ${toShort}`;
+        description = t('commandCentre.txSentTo', { amount: amountStr, to: toShort });
       }
 
       unified.push({
@@ -294,7 +295,9 @@ export function RecentTransactions() {
         createdAt: noti.createdAt,
         isCredit: true,
         description: amountStr
-          ? `@${actorName} tipped you ${amountStr} ${noti.currency || 'DHB'}`
+          ? isDhb(noti.currency)
+            ? t('commandCentre.txTipReceived', { name: `@${actorName}`, amount: amountStr })
+            : `@${actorName} tipped you ${amountStr} ${noti.currency}`
           : `@${actorName} tipped you`,
         counterpartyAddress: noti.actorAddress,
         counterpartyUsername: actorName,

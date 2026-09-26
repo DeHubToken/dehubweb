@@ -30,6 +30,7 @@
 import { memo, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import type { GiftTier } from '@/lib/live/gift-tiers';
 
 export interface GiftCelebration {
@@ -822,7 +823,7 @@ const Celebration = memo(({ item }: { item: GiftCelebration }) => {
           </p>
           <p className="truncate text-[11px] text-white/75">
             {item.username ? `${item.username} · ` : ''}
-            {item.amount.toLocaleString()} DHB
+            {item.amount.toLocaleString()} <DhbCoin />
           </p>
           {item.message && <p className="mt-0.5 line-clamp-2 text-[11px] text-white/85">{item.message}</p>}
         </div>
@@ -843,7 +844,7 @@ const ReducedCelebration = memo(({ item }: { item: GiftCelebration }) => {
       </p>
       <p className="truncate text-[11px] text-white/75">
         {item.username ? `${item.username} · ` : ''}
-        {item.amount.toLocaleString()} DHB
+        {item.amount.toLocaleString()} <DhbCoin />
       </p>
     </div>
   );

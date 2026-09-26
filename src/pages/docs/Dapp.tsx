@@ -13,6 +13,7 @@ import AIToolkits from './AIToolkits';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Video, Coins, Shield, Users, Settings, Eye, Zap, Crown, MessageCircle, Lock, Banknote, TrendingUp, Infinity, Percent, Vote, Scale, CheckCircle2, AlertTriangle, Layers, Network, ExternalLink, CreditCard, Gauge, Rocket, History, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { DhbAmount } from '@/components/app/DhbAmount';
 
 /**
  * Product screenshot with a caption. Lazy so a page this long stays cheap.
@@ -200,37 +201,37 @@ const Dapp = () => {
    * the live requirement is pegged in dollars (see the badges section above).
    */
   const superPowerLadder = [
-    { tierKey: 'spTierNone', hold: '< 10,000 $DHB', boosts: 0, minutes: 0, image: null, unlockKey: null },
-    { tierKey: 'spTierCrab', hold: '10,000+ $DHB', boosts: 1, minutes: 15, image: badgeImage('Crab'), unlockKey: 'spNameBoost' },
-    { tierKey: 'spTierLobster', hold: '25k+ $DHB', boosts: 1, minutes: 20, image: badgeImage('Lobster'), unlockKey: 'spNameSecondWind' },
-    { tierKey: 'spTierPiranha', hold: '50k+ $DHB', boosts: 1, minutes: 25, image: badgeImage('Piranha'), unlockKey: 'spNameCommentAnchor' },
-    { tierKey: 'spTierTortoise', hold: '100k+ $DHB', boosts: 1, minutes: 30, image: badgeImage('Tortoise'), unlockKey: 'spNameTrendJacker' },
-    { tierKey: 'spTierCobra', hold: '250k+ $DHB', boosts: 2, minutes: 35, image: badgeImage('Cobra'), unlockKey: 'spNameTimelineBomber' },
-    { tierKey: 'spTierOctopus', hold: '500k+ $DHB', boosts: 2, minutes: 40, image: badgeImage('Octopus'), unlockKey: 'spNameSignalFlare' },
-    { tierKey: 'spTierCrocodile', hold: '1m+ $DHB', boosts: 2, minutes: 45, image: badgeImage('Crocodile'), unlockKey: 'spNameFlakJacket' },
-    { tierKey: 'spTierDolphin', hold: '2m+ $DHB', boosts: 3, minutes: 50, image: badgeImage('Dolphin'), unlockKey: 'spNamePrecisionStrike' },
-    { tierKey: 'spTierTigerShark', hold: '3m+ $DHB', boosts: 3, minutes: 60, image: badgeImage('Tiger Shark'), unlockKey: 'spNameHarpoon' },
-    { tierKey: 'spTierGreatWhiteShark', hold: '5m+ $DHB', boosts: 4, minutes: 60, image: badgeImage('Great White Shark'), unlockKey: null },
-    { tierKey: 'spTierKillerWhale', hold: '10m+ $DHB', boosts: 5, minutes: 70, image: badgeImage('Killer Whale'), unlockKey: null },
-    { tierKey: 'spTierBlueWhale', hold: '25m+ $DHB', boosts: 8, minutes: 90, image: badgeImage('Blue Whale'), unlockKey: 'spNameFrontRow' },
-    { tierKey: 'spTierMegalodon', hold: '50m+ $DHB', boosts: 12, minutes: 120, image: badgeImage('Megalodon'), unlockKey: 'spNameDeepCurrent' },
+    { tierKey: 'spTierNone', hold: '< 10,000', boosts: 0, minutes: 0, image: null, unlockKey: null },
+    { tierKey: 'spTierCrab', hold: '10,000+', boosts: 1, minutes: 15, image: badgeImage('Crab'), unlockKey: 'spNameBoost' },
+    { tierKey: 'spTierLobster', hold: '25k+', boosts: 1, minutes: 20, image: badgeImage('Lobster'), unlockKey: 'spNameSecondWind' },
+    { tierKey: 'spTierPiranha', hold: '50k+', boosts: 1, minutes: 25, image: badgeImage('Piranha'), unlockKey: 'spNameCommentAnchor' },
+    { tierKey: 'spTierTortoise', hold: '100k+', boosts: 1, minutes: 30, image: badgeImage('Tortoise'), unlockKey: 'spNameTrendJacker' },
+    { tierKey: 'spTierCobra', hold: '250k+', boosts: 2, minutes: 35, image: badgeImage('Cobra'), unlockKey: 'spNameTimelineBomber' },
+    { tierKey: 'spTierOctopus', hold: '500k+', boosts: 2, minutes: 40, image: badgeImage('Octopus'), unlockKey: 'spNameSignalFlare' },
+    { tierKey: 'spTierCrocodile', hold: '1m+', boosts: 2, minutes: 45, image: badgeImage('Crocodile'), unlockKey: 'spNameFlakJacket' },
+    { tierKey: 'spTierDolphin', hold: '2m+', boosts: 3, minutes: 50, image: badgeImage('Dolphin'), unlockKey: 'spNamePrecisionStrike' },
+    { tierKey: 'spTierTigerShark', hold: '3m+', boosts: 3, minutes: 60, image: badgeImage('Tiger Shark'), unlockKey: 'spNameHarpoon' },
+    { tierKey: 'spTierGreatWhiteShark', hold: '5m+', boosts: 4, minutes: 60, image: badgeImage('Great White Shark'), unlockKey: null },
+    { tierKey: 'spTierKillerWhale', hold: '10m+', boosts: 5, minutes: 70, image: badgeImage('Killer Whale'), unlockKey: null },
+    { tierKey: 'spTierBlueWhale', hold: '25m+', boosts: 8, minutes: 90, image: badgeImage('Blue Whale'), unlockKey: 'spNameFrontRow' },
+    { tierKey: 'spTierMegalodon', hold: '50m+', boosts: 12, minutes: 120, image: badgeImage('Megalodon'), unlockKey: 'spNameDeepCurrent' },
   ];
 
   const feeReductions = [
-    { badgeKey: 'badgeNone', threshold: "< 10,000 $DHB", fee: "10.00%", color: "bg-muted", image: null },
-    { badgeKey: 'badgeCrab', threshold: "10,000+ $DHB", fee: "9.31%", color: "bg-muted", image: badgeImage('Crab') },
-    { badgeKey: 'badgeLobster', threshold: "25k+ $DHB", fee: "8.62%", color: "bg-muted", image: badgeImage('Lobster') },
-    { badgeKey: 'badgePiranha', threshold: "50k+ $DHB", fee: "7.93%", color: "bg-muted", image: badgeImage('Piranha') },
-    { badgeKey: 'badgeTortoise', threshold: "100k+ $DHB", fee: "7.24%", color: "bg-muted", image: badgeImage('Tortoise') },
-    { badgeKey: 'badgeCobra', threshold: "250k+ $DHB", fee: "6.55%", color: "bg-muted", image: badgeImage('Cobra') },
-    { badgeKey: 'badgeOctopus', threshold: "500k+ $DHB", fee: "5.86%", color: "bg-muted", image: badgeImage('Octopus') },
-    { badgeKey: 'badgeCrocodile', threshold: "1m+ $DHB", fee: "5.17%", color: "bg-muted", image: badgeImage('Crocodile') },
-    { badgeKey: 'badgeDolphin', threshold: "2m+ $DHB", fee: "4.48%", color: "bg-muted", image: badgeImage('Dolphin') },
-    { badgeKey: 'badgeTigerShark', threshold: "3m+ $DHB", fee: "3.79%", color: "bg-muted", image: badgeImage('Tiger Shark') },
-    { badgeKey: 'badgeGreatWhiteShark', threshold: "5m+ $DHB", fee: "3.10%", color: "bg-muted", image: badgeImage('Great White Shark') },
-    { badgeKey: 'badgeKillerWhale', threshold: "10m+ $DHB", fee: "2.41%", color: "bg-muted", image: badgeImage('Killer Whale') },
-    { badgeKey: 'badgeBlueWhale', threshold: "25m+ $DHB", fee: "1.72%", color: "bg-muted", image: badgeImage('Blue Whale') },
-    { badgeKey: 'badgeMegalodon', threshold: "50m+ $DHB", fee: "1.00%", color: "bg-muted", image: badgeImage('Megalodon') },
+    { badgeKey: 'badgeNone', threshold: "< 10,000", fee: "10.00%", color: "bg-muted", image: null },
+    { badgeKey: 'badgeCrab', threshold: "10,000+", fee: "9.31%", color: "bg-muted", image: badgeImage('Crab') },
+    { badgeKey: 'badgeLobster', threshold: "25k+", fee: "8.62%", color: "bg-muted", image: badgeImage('Lobster') },
+    { badgeKey: 'badgePiranha', threshold: "50k+", fee: "7.93%", color: "bg-muted", image: badgeImage('Piranha') },
+    { badgeKey: 'badgeTortoise', threshold: "100k+", fee: "7.24%", color: "bg-muted", image: badgeImage('Tortoise') },
+    { badgeKey: 'badgeCobra', threshold: "250k+", fee: "6.55%", color: "bg-muted", image: badgeImage('Cobra') },
+    { badgeKey: 'badgeOctopus', threshold: "500k+", fee: "5.86%", color: "bg-muted", image: badgeImage('Octopus') },
+    { badgeKey: 'badgeCrocodile', threshold: "1m+", fee: "5.17%", color: "bg-muted", image: badgeImage('Crocodile') },
+    { badgeKey: 'badgeDolphin', threshold: "2m+", fee: "4.48%", color: "bg-muted", image: badgeImage('Dolphin') },
+    { badgeKey: 'badgeTigerShark', threshold: "3m+", fee: "3.79%", color: "bg-muted", image: badgeImage('Tiger Shark') },
+    { badgeKey: 'badgeGreatWhiteShark', threshold: "5m+", fee: "3.10%", color: "bg-muted", image: badgeImage('Great White Shark') },
+    { badgeKey: 'badgeKillerWhale', threshold: "10m+", fee: "2.41%", color: "bg-muted", image: badgeImage('Killer Whale') },
+    { badgeKey: 'badgeBlueWhale', threshold: "25m+", fee: "1.72%", color: "bg-muted", image: badgeImage('Blue Whale') },
+    { badgeKey: 'badgeMegalodon', threshold: "50m+", fee: "1.00%", color: "bg-muted", image: badgeImage('Megalodon') },
   ];
 
   return <div className="space-y-8">
@@ -693,7 +694,7 @@ const Dapp = () => {
 
         <section id="top-up" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.topUpTitle')}</h2>
-          <Shot src="/media/docs-buy.png" alt="Buying DHB directly inside the app." />
+          <Shot src="/media/docs-buy.png" alt={t('dapp.topUpShotAlt')} />
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.topUpDesc')}</p>
           
           <Card>
@@ -1560,7 +1561,7 @@ const Dapp = () => {
                             : <div className="w-8 h-8 shrink-0 rounded-full bg-muted border border-border" />}
                           <div className="flex flex-col min-w-0">
                             <span className="font-medium font-exo">{t(`dapp.${rung.tierKey}`)}</span>
-                            <span className="text-sm text-muted-foreground font-exo">{rung.hold}</span>
+                            <span className="text-sm text-muted-foreground font-exo"><DhbAmount amount={rung.hold} /></span>
                           </div>
                         </div>
                         <div className="text-right shrink-0">
@@ -1637,7 +1638,7 @@ const Dapp = () => {
                         {tier.image ? <img src={tier.image} alt={t(`dapp.${tier.badgeKey}`)} className="w-8 h-8 object-contain" /> : <div className="w-8 h-8 rounded-full bg-muted border border-border"></div>}
                         <div className="flex flex-col">
                           <span className="font-medium">{t(`dapp.${tier.badgeKey}`)}</span>
-                          <span className="text-sm text-muted-foreground">{tier.threshold}</span>
+                          <span className="text-sm text-muted-foreground"><DhbAmount amount={tier.threshold} /></span>
                         </div>
                       </div>
                       <div className="text-right">

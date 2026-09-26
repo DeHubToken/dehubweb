@@ -27,7 +27,7 @@ export const jv = {
     keyLinks: 'Tautan Utama',
     docsChatTitle: 'Asisten AI',
     keyInfo: 'Info Utama',
-    docsChatGreeting: 'Halo! Aku asisten dokumentasi DeHub. Takon apa wae babagan DeHub, token $DHB, DePIN, tata kelola, utawa fitur platform liyane!',
+    docsChatGreeting: 'Halo! Aku asisten dokumentasi DeHub. Takon apa wae babagan DeHub, token DeHub, DePIN, tata kelola, utawa fitur platform liyane!',
     docsChatPlaceholder: 'Takon babagan DeHub...',
     docsChatOpen: 'Buka obrolan',
     docsChatClose: 'Tutup obrolan',

@@ -33,7 +33,7 @@ const DePIN = () => {
      ⬇                ⬇                ⬇                              
 ----------        -----------       -----------
 | Mobile |        | PC/GC   |       | Server  |   - That provide computing power
-| Miners |        | Miners  |       | Miners  |   - in exchange for DHB tokens
+| Miners |        | Miners  |       | Miners  |   - in exchange for DeHub tokens
 ----------        -----------       -----------
     ⬇        ↙        ⬇       ↙↙ ↘     ⬇
 -----------       -------------     ------------

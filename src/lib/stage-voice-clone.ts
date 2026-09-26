@@ -34,6 +34,7 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
+import i18n from '@/i18n';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 
 const FUNCTION = 'stage-voice-clone';
@@ -182,7 +183,7 @@ export async function purchaseStageVoice(
     context: 'Stage voice',
     expectedSigner: wallet,
     shortfallMessage: (amount, held) =>
-      `Not enough DHB. Cloning your voice costs ${amount.toLocaleString()} DHB and you hold ${held.toLocaleString()}.`,
+      i18n.t('tokenPayments.notEnoughForVoiceClone', { amount: amount.toLocaleString(), held: held.toLocaleString() }),
   });
 
   return submit(wallet, file, name, txHash);

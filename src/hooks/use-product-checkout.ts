@@ -24,6 +24,7 @@
  */
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import i18n from 'i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAuthToken } from '@/lib/api/dehub/core';
@@ -99,7 +100,7 @@ export function useProductCheckout(tokenId: string | null) {
       const { quote, shippingAddress, notes } = params;
 
       if (quote.paymentsFrozen) {
-        throw new Error('DHB transfers are paused right now, so this purchase would fail. Try again once trading resumes.');
+        throw new Error(i18n.t('tokenErrors.transfersPausedPurchase'));
       }
 
       const { sendERC20Token } = await import('@/lib/wallet/send');

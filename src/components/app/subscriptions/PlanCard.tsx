@@ -77,7 +77,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   const dhbEstimate = isUsdPriced ? dhbForUsd(numericPrice, dhbUsd) : numericPrice;
   const formattedPrice = isUsdPriced
     ? `${formatAmount(price, 2)} ${settlementCurrency}`
-    : `${formatAmount(price)} DHB`;
+    : t('subscriptions.tokenAmount', { amount: formatAmount(price) });
   const published = isPlanPublished(plan);
   // 999 is what lifetime plans were stored as before the contract's 0–12 range
   // was respected. Buying one reverts, so it is surfaced rather than hidden.
@@ -269,7 +269,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               </div>
               {isUsdPriced && (
                 <div className="flex justify-between gap-4 text-zinc-400 mt-1.5">
-                  <span>Pre-listing DHB amount</span>
+                  <span>{t('subscriptions.preListingTokenAmount')}</span>
                   <span className="text-white text-right">{formatDhbPayment(dhbEstimate)}</span>
                 </div>
               )}
@@ -286,7 +286,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               </div>
               {isUsdPriced && (
                 <p className="mt-2 pt-2 border-t border-white/10 text-[11px] leading-relaxed text-zinc-500">
-                  Your DHB stays in DeHub treasury custody and is not sold. The creator receives a USDT-denominated subscription balance.
+                  {t('subscriptions.tokensStayInTreasury')}
                 </p>
               )}
             </div>

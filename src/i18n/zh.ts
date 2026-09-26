@@ -27,7 +27,7 @@ export const zh = {
     keyLinks: '重要链接',
     keyInfo: '重要信息',
     docsChatTitle: 'AI助手',
-    docsChatGreeting: '您好！我是DeHub的文件助理。 向我询问有关DeHub、$DHB令牌、DePIN、治理或任何其他平台功能的任何信息！',
+    docsChatGreeting: '您好！我是DeHub的文件助理。询问有关DeHub、DeHub代币、DePIN、治理或任何其他平台功能的任何问题！',
     docsChatPlaceholder: '询问有关DeHub的信息……',
     docsChatOpen: '打开聊天',
     docsChatClose: '关闭聊天',

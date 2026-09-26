@@ -27,7 +27,7 @@ export const ur = {
     keyLinks: 'اہم لنکس',
     keyInfo: 'اہم معلومات',
     docsChatTitle: 'AI اسسٹنٹ',
-    docsChatGreeting: 'ہیلو! میں DeHub کا دستاویزات کا اسسٹنٹ ہوں ۔ مجھ سے DeHub، $DHB ٹوکن، DePIN، گورننس، یا کسی اور پلیٹ فارم کی خصوصیات کے بارے میں کچھ بھی پوچھیں!',
+    docsChatGreeting: 'ہیلو! میں DeHub کا دستاویزات کا اسسٹنٹ ہوں ۔ مجھ سے DeHub، DeHub ٹوکنز، DePIN، گورننس، یا کسی اور پلیٹ فارم کی خصوصیات کے بارے میں کچھ بھی پوچھیں!',
     docsChatPlaceholder: 'DeHub کے بارے میں پوچھیں...',
     docsChatOpen: 'چیٹ کھولیں',
     docsChatClose: 'چیٹ بند کریں',

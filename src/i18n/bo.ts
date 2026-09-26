@@ -27,7 +27,7 @@ export const bo = {
     keyLinks: 'གཙོ་བོའི་སྦྲེལ་མཐུད',
     keyInfo: 'གཙོ་བོའི་གནས་ཚུལ',
     docsChatTitle: 'རོགས་རམ །',
-    docsChatGreeting: 'ང་DeHub ཡིག་ཆ་རོགས་ཡིན ། ང་ལ་DeHub, $DHB token, DePIN, governance, or any other platform features སྐོར་གང་ཞིག་དྲིས་ཤིག',
+    docsChatGreeting: 'ང་DeHub ཡིག་ཆ་རོགས་ཡིན ། ང་ལ་DeHub, DeHub, DePIN, Governance, or any other platform features སྐོར་གང་ཞིག་དྲིས་ཤིག',
     docsChatPlaceholder: 'Dehub སྐོར་ལ་དྲིས་པ །',
     docsChatOpen: 'གླེང་མོལ་ཁ་ཕྱེ་བ',
     docsChatClose: 'གླེང་མོལ་ཁ་ཕྱེ',

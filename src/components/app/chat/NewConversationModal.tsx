@@ -24,6 +24,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Search, Loader2, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
@@ -151,6 +152,7 @@ function FeePaymentStep({
   onPaid: (firstMessage?: string, feeTxHash?: string) => void;
   onBack: () => void;
 }) {
+  const { t } = useTranslation();
   const [messageText, setMessageText] = useState('');
   const [customAmount, setCustomAmount] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -286,7 +288,7 @@ function FeePaymentStep({
       {isCheckingBalance ? (
         <div className="flex items-center gap-2 text-sm text-zinc-400 justify-center py-2">
           <Loader2 className="w-4 h-4 animate-spin" />
-          Checking your DHB balance...
+          {t('messages.checkingTokenBalance')}
         </div>
       ) : balanceInfo.checked && !balanceInfo.sufficient ? (
         <div className="flex items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
