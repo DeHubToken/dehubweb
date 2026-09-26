@@ -1585,6 +1585,7 @@
     "notificationsEnabled": "Notifications don turn on for dis profile"
   },
   "toasts": {
+    "reactionTip": "Put ya mouse for top or press and hold the like button for see more reactions",
     "saved_to_bookmarks": "Saved to bookmarks",
     "removed_from_bookmarks": "Removed from bookmarks",
     "profile_url_copied_to_clipboard": "Profile URL copied to clipboard",

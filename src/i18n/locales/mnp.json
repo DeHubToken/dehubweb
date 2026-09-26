@@ -1684,6 +1684,7 @@
     "notificationsEnabled": "已为此资料开启通知"
   },
   "toasts": {
+    "reactionTip": "鼠标放到点赞按钮上或者长按，就会选更多表情",
     "saved_to_bookmarks": "已保存到书签",
     "new_member_notice_title": "汝会显示拉新成员里",
     "new_member_notice_body": "其他成员会看到汝啥时加入，所以他们会同汝打招呼。随时可以关掉。",

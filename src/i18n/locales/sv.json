@@ -1779,6 +1779,7 @@
     "notificationsEnabled": "Aviseringar aktiverade för denna profil"
   },
   "toasts": {
+    "reactionTip": "Hovra över eller håll in gilla-knappen för fler reaktioner",
     "saved_to_bookmarks": "Sparad i bokmärken",
     "new_member_notice_title": "Du visas i Nya medlemmar",
     "new_member_notice_body": "Andra medlemmar kan se när du gick med, så att de kan säga hej. Stäng av den när som helst.",

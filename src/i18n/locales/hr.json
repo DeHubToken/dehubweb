@@ -1770,6 +1770,7 @@
     "notificationsEnabled": "Obavijesti aktivirane za ovaj profil"
   },
   "toasts": {
+    "reactionTip": "Za više reakcija zadržite pokazivač iznad gumba Sviđa mi se ili ga pritisnite i držite",
     "saved_to_bookmarks": "Spremljeno u oznake",
     "new_member_notice_title": "Prikazuje se u Novim članovima",
     "new_member_notice_body": "Ostali članovi mogu vidjeti kada si se pridružio/la, pa te mogu pozdraviti. Isključite ga u bilo kojem trenutku.",

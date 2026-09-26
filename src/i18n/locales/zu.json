@@ -1771,6 +1771,7 @@
     "notificationsEnabled": "Izaziso zivuliwe kuleli phrofayela"
   },
   "toasts": {
+    "reactionTip": "Beka igundane noma ubambe inkinobho yokuthanda ukuze uthole okunye ukusabela",
     "saved_to_bookmarks": "Igcinwe kubhukumaki",
     "new_member_notice_title": "Uyavela kumalungu Amasha",
     "new_member_notice_body": "Amanye amalungu angabona ukuthi ujoyine nini, ukuze abingelele. Yicime nganoma yisiphi isikhathi.",

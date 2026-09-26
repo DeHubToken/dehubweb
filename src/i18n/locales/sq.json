@@ -1757,6 +1757,7 @@
     "notificationsEnabled": "Njoftimet u aktivizuan për këtë profil"
   },
   "toasts": {
+    "reactionTip": "Kaloni kursorin ose mbani shtypur butonin Pëlqej për më shumë reagime",
     "saved_to_bookmarks": "U ruajt te faqeshënuesit",
     "new_member_notice_title": "Po shfaqet te Anëtarët e rinj",
     "new_member_notice_body": "Anëtarët e tjerë mund ta shohin kur u bashkove, në mënyrë që ata të përshëndesin. Fikeni në çdo kohë.",

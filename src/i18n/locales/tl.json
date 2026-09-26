@@ -1711,6 +1711,7 @@
     "notificationsEnabled": "Na-enable ang mga abiso para sa profile na ito"
   },
   "toasts": {
+    "reactionTip": "I-hover o pindutin nang matagal ang like button para sa iba pang reaksyon",
     "saved_to_bookmarks": "Na-save sa mga bookmark",
     "new_member_notice_title": "Nagpapakita ka sa mga Bagong miyembro",
     "new_member_notice_body": "Makikita ng ibang members kapag sumali ka, para makapagbati sila. Patayin ito anumang oras.",
