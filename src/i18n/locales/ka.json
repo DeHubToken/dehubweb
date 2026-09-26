@@ -641,7 +641,12 @@
     "cancel": "გაუქმება",
     "confirm": "დადასტურება",
     "paying": "მიმდინარეობს გადახდა...",
-    "payAmount": "გადაიხადეთ {{amount}} {{currency}}"
+    "payAmount": "გადაიხადეთ {{amount}} {{currency}}",
+    "coverTitle": "გარეკანი",
+    "coverHint": "აირჩიეთ კადრი ან ატვირთეთ სურათი. მაშინვე ინახება.",
+    "coverUpload": "გარეკანის სურათის ატვირთვა",
+    "coverSaved": "გარეკანი განახლდა",
+    "coverFailed": "გარეკანის შეცვლა ვერ მოხერხდა"
   },
   "assistant": {
     "title": "ასისტენტი",

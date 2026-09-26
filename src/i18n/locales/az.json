@@ -660,7 +660,12 @@
     "cancel": "Ləğv et",
     "confirm": "Təsdiq et",
     "paying": "Ödənilir...",
-    "payAmount": "{{amount}} {{currency}} ödə"
+    "payAmount": "{{amount}} {{currency}} ödə",
+    "coverTitle": "Üz qabığı",
+    "coverHint": "Kadr seçin və ya şəkil yükləyin. Dərhal yadda saxlanılır.",
+    "coverUpload": "Üz qabığı şəkli yükləyin",
+    "coverSaved": "Üz qabığı yeniləndi",
+    "coverFailed": "Üz qabığını dəyişmək mümkün olmadı"
   },
   "assistant": {
     "title": "Köməkçi",

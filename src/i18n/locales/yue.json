@@ -644,7 +644,12 @@
     "cancel": "取消",
     "confirm": "確認",
     "paying": "付款緊...",
-    "payAmount": "付 {{amount}} {{currency}}"
+    "payAmount": "付 {{amount}} {{currency}}",
+    "coverTitle": "封面",
+    "coverHint": "選擇一幀畫面或上載圖片，即時儲存。",
+    "coverUpload": "上載封面圖片",
+    "coverSaved": "封面已更新",
+    "coverFailed": "無法更換封面"
   },
   "assistant": {
     "title": "助手",

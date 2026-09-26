@@ -660,7 +660,12 @@
     "cancel": "Batal",
     "confirm": "Konfirmasi",
     "paying": "Membayar...",
-    "payAmount": "Bayar {{amount}} {{currency}}"
+    "payAmount": "Bayar {{amount}} {{currency}}",
+    "coverTitle": "Sampul",
+    "coverHint": "Pilih bingkai atau unggah gambar. Langsung tersimpan.",
+    "coverUpload": "Unggah gambar sampul",
+    "coverSaved": "Sampul diperbarui",
+    "coverFailed": "Tidak dapat mengubah sampul"
   },
   "assistant": {
     "title": "Asisten",

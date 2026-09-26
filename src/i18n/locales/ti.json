@@ -634,7 +634,12 @@
     "cancel": "ሰርዝ",
     "confirm": "ኣረጋግጽ",
     "paying": "ይኽፈል ኣሎ...",
-    "payAmount": "{{amount}} {{currency}} ክፈል"
+    "payAmount": "{{amount}} {{currency}} ክፈል",
+    "coverTitle": "ሽፋን",
+    "coverHint": "ፍሬም ምረጽ ወይ ስእሊ ጸዓን። ብቕልጡፍ ይዕቀብ።",
+    "coverUpload": "ናይ ሽፋን ስእሊ ጸዓን",
+    "coverSaved": "ሽፋን ተሓዲሱ",
+    "coverFailed": "ሽፋን ክቕየር ኣይተኻእለን"
   },
   "assistant": {
     "title": "ተሓጋጋዚ",

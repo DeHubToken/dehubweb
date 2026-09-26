@@ -532,7 +532,12 @@
     "cancel": "Betal bike",
     "confirm": "Piştrast bike",
     "paying": "Tê dayîn...",
-    "payAmount": "{{amount}} {{currency}} bide"
+    "payAmount": "{{amount}} {{currency}} bide",
+    "coverTitle": "Berg",
+    "coverHint": "Çarçoveyekê hilbijêre an wêneyek bar bike. Yekser tê tomarkirin.",
+    "coverUpload": "Wêneyê bergê bar bike",
+    "coverSaved": "Berg hate nûkirin",
+    "coverFailed": "Berg nehat guhertin"
   },
   "assistant": {
     "title": "Arîkar",

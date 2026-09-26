@@ -643,7 +643,12 @@
     "cancel": "Soke",
     "confirm": "Tabbatar",
     "paying": "Ana biya...",
-    "payAmount": "Biya {{amount}} {{currency}}"
+    "payAmount": "Biya {{amount}} {{currency}}",
+    "coverTitle": "Murfi",
+    "coverHint": "Zaɓi hoto daga bidiyon ko ɗora hoto. Ana ajiyewa nan take.",
+    "coverUpload": "Ɗora hoton murfi",
+    "coverSaved": "An sabunta murfi",
+    "coverFailed": "An kasa canza murfi"
   },
   "assistant": {
     "title": "Mai Taimako",

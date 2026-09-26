@@ -639,7 +639,12 @@
     "cancel": "निरस्तं कुर्वन्तु",
     "confirm": "पुष्टं कुर्वन्तु",
     "paying": "भुज्यते...",
-    "payAmount": "{{amount}} {{currency}} भुज्यताम्"
+    "payAmount": "{{amount}} {{currency}} भुज्यताम्",
+    "coverTitle": "आवरणम्",
+    "coverHint": "एकं चित्रखण्डं चिनोतु अथवा चित्रम् उपारोपयतु। सद्यः रक्ष्यते।",
+    "coverUpload": "आवरणचित्रम् उपारोपयतु",
+    "coverSaved": "आवरणं नवीकृतम्",
+    "coverFailed": "आवरणं परिवर्तयितुं न शक्तम्"
   },
   "assistant": {
     "title": "सहायकः",

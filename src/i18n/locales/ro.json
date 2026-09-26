@@ -660,7 +660,12 @@
     "cancel": "Anulează",
     "confirm": "Confirmă",
     "paying": "Se plătește...",
-    "payAmount": "Plătește {{amount}} {{currency}}"
+    "payAmount": "Plătește {{amount}} {{currency}}",
+    "coverTitle": "Copertă",
+    "coverHint": "Alege un cadru sau încarcă o imagine. Se salvează imediat.",
+    "coverUpload": "Încarcă o imagine de copertă",
+    "coverSaved": "Copertă actualizată",
+    "coverFailed": "Coperta nu a putut fi schimbată"
   },
   "assistant": {
     "title": "Asistent",

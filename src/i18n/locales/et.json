@@ -660,7 +660,12 @@
     "cancel": "Tühista",
     "confirm": "Kinnita",
     "paying": "Maksmine...",
-    "payAmount": "Maksa {{amount}} {{currency}}"
+    "payAmount": "Maksa {{amount}} {{currency}}",
+    "coverTitle": "Kaanepilt",
+    "coverHint": "Vali kaader või laadi üles pilt. Salvestub kohe.",
+    "coverUpload": "Laadi üles kaanepilt",
+    "coverSaved": "Kaanepilt uuendatud",
+    "coverFailed": "Kaanepilti ei õnnestunud muuta"
   },
   "assistant": {
     "title": "Assistent",

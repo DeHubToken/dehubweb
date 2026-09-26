@@ -28,6 +28,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { EditPostImages } from './EditPostImages';
+import { EditPostCover } from './EditPostCover';
 import { useTranslation } from 'react-i18next';
 import { normalizeCategoryName } from '@/lib/category-names';
 
@@ -276,6 +277,7 @@ export function EditPostModal({
           data-vaul-no-drag
         >
           {open && <EditPostImages tokenId={tokenId} disabled={isSubmitting || isReplacing} onBusyChange={setIsReplacing} />}
+          {open && canReplaceVideo && <EditPostCover tokenId={tokenId} disabled={isSubmitting || isReplacing} onBusyChange={setIsReplacing} />}
           {/* Title */}
           <div className="space-y-2">
             <Label htmlFor="edit-title" className="text-sm font-medium text-zinc-300">

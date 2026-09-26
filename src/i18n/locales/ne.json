@@ -659,7 +659,12 @@
     "cancel": "रद्द गर्नुहोस्",
     "confirm": "पुष्टि गर्नुहोस्",
     "paying": "भुक्तानी गर्दैछ...",
-    "payAmount": "{{amount}} {{currency}} तिर्नुहोस्"
+    "payAmount": "{{amount}} {{currency}} तिर्नुहोस्",
+    "coverTitle": "कभर",
+    "coverHint": "एउटा फ्रेम छान्नुहोस् वा तस्बिर अपलोड गर्नुहोस्। तुरुन्तै सेभ हुन्छ।",
+    "coverUpload": "कभर तस्बिर अपलोड गर्नुहोस्",
+    "coverSaved": "कभर अद्यावधिक भयो",
+    "coverFailed": "कभर परिवर्तन गर्न सकिएन"
   },
   "assistant": {
     "title": "सहायक",

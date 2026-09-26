@@ -644,7 +644,12 @@
     "cancel": "Dhiisi",
     "confirm": "Mirkaneessi",
     "paying": "Kaffalaa jira...",
-    "payAmount": "{{amount}} {{currency}} kaffali"
+    "payAmount": "{{amount}} {{currency}} kaffali",
+    "coverTitle": "Haguuggii",
+    "coverHint": "Fireemii tokko filadhu ykn suuraa ol fe'i. Battaluma kuufama.",
+    "coverUpload": "Suuraa haguuggii ol fe'i",
+    "coverSaved": "Haguuggiin haaromfameera",
+    "coverFailed": "Haguuggii jijjiiruun hin danda'amne"
   },
   "assistant": {
     "title": "Gargaaraa",

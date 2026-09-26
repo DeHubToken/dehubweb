@@ -660,7 +660,12 @@
     "cancel": "रद्द करें",
     "confirm": "पुष्टि करें",
     "paying": "भुगतान हो रहा है...",
-    "payAmount": "{{amount}} {{currency}} भुगतान करें"
+    "payAmount": "{{amount}} {{currency}} भुगतान करें",
+    "coverTitle": "कवर",
+    "coverHint": "कोई फ़्रेम चुनें या इमेज अपलोड करें। तुरंत सेव हो जाता है।",
+    "coverUpload": "कवर इमेज अपलोड करें",
+    "coverSaved": "कवर अपडेट हो गया",
+    "coverFailed": "कवर नहीं बदला जा सका"
   },
   "assistant": {
     "title": "Assistant",

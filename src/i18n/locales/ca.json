@@ -660,7 +660,12 @@
     "cancel": "Cancel·lar",
     "confirm": "Confirmar",
     "paying": "Pagant...",
-    "payAmount": "Pagar {{amount}} {{currency}}"
+    "payAmount": "Pagar {{amount}} {{currency}}",
+    "coverTitle": "Portada",
+    "coverHint": "Tria un fotograma o puja una imatge. Es desa a l'instant.",
+    "coverUpload": "Puja una imatge de portada",
+    "coverSaved": "Portada actualitzada",
+    "coverFailed": "No s'ha pogut canviar la portada"
   },
   "assistant": {
     "title": "Assistent",

@@ -7,7 +7,7 @@
 
 import type { QueryClient, InfiniteData } from '@tanstack/react-query';
 import type { EditPostResult } from '@/components/app/modals/EditPostModal';
-import { buildFeedImageUrls } from '@/lib/media-url';
+import { buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
 
 export function applyImageReplacement(queryClient: QueryClient, tokenId: string | number, imageUrls: string[]) {
   const id = String(tokenId);
@@ -19,6 +19,20 @@ export function applyImageReplacement(queryClient: QueryClient, tokenId: string 
   }
   for (const queryKey of [['single-post', id], ['nft-info', id]]) {
     queryClient.setQueriesData<any>({ queryKey }, old => old ? { ...old, imageUrls } : old);
+    void queryClient.invalidateQueries({ queryKey });
+  }
+}
+
+/** A video's new cover, onto every card and post view already holding it. */
+export function applyCoverReplacement(queryClient: QueryClient, tokenId: string | number, imageUrl: string) {
+  const id = String(tokenId);
+  const url = buildImageUrl(id, imageUrl);
+  for (const queryKey of [['unified-feed'], ['dehub-feed'], ['dehub-user-content']]) {
+    patchInfiniteQuery(queryClient, queryKey, id, { thumbnail: url, image: url });
+    void queryClient.invalidateQueries({ queryKey });
+  }
+  for (const queryKey of [['single-post', id], ['nft-info', id]]) {
+    queryClient.setQueriesData<any>({ queryKey }, old => old ? { ...old, imageUrl } : old);
     void queryClient.invalidateQueries({ queryKey });
   }
 }

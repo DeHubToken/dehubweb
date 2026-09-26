@@ -660,7 +660,12 @@
     "cancel": "Peruuta",
     "confirm": "Vahvista",
     "paying": "Maksetaan...",
-    "payAmount": "Maksa {{amount}} {{currency}}"
+    "payAmount": "Maksa {{amount}} {{currency}}",
+    "coverTitle": "Kansikuva",
+    "coverHint": "Valitse ruutu tai lataa kuva. Tallentuu heti.",
+    "coverUpload": "Lataa kansikuva",
+    "coverSaved": "Kansikuva päivitetty",
+    "coverFailed": "Kansikuvaa ei voitu vaihtaa"
   },
   "assistant": {
     "title": "Tekoälyavustaja",

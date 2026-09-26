@@ -662,7 +662,12 @@
     "cancel": "Kanselleer",
     "confirm": "Bevestig",
     "paying": "Betaal tans...",
-    "payAmount": "Betaal {{amount}} {{currency}}"
+    "payAmount": "Betaal {{amount}} {{currency}}",
+    "coverTitle": "Voorblad",
+    "coverHint": "Kies 'n raam of laai 'n prent op. Word dadelik gestoor.",
+    "coverUpload": "Laai 'n voorbladprent op",
+    "coverSaved": "Voorblad opgedateer",
+    "coverFailed": "Kon nie die voorblad verander nie"
   },
   "assistant": {
     "title": "Assistent",

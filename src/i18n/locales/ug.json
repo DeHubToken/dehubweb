@@ -644,7 +644,12 @@
     "cancel": "بىكار قىلىش",
     "confirm": "جەزملەشتۈرۈش",
     "paying": "تۆلەۋاتىدۇ...",
-    "payAmount": "{{amount}} {{currency}} تۆلەش"
+    "payAmount": "{{amount}} {{currency}} تۆلەش",
+    "coverTitle": "مۇقاۋا",
+    "coverHint": "بىر كادىر تاللاڭ ياكى رەسىم يۈكلەڭ. دەرھال ساقلىنىدۇ.",
+    "coverUpload": "مۇقاۋا رەسىمى يۈكلەش",
+    "coverSaved": "مۇقاۋا يېڭىلاندى",
+    "coverFailed": "مۇقاۋىنى ئۆزگەرتكىلى بولمىدى"
   },
   "assistant": {
     "title": "سۈنئىي ئەقىل ياردەمچىسى",
