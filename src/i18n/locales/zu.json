@@ -3944,7 +3944,12 @@
     }
   },
   "fractions": {
-    "title": "Izabelo"
+    "seoDescription": "Thenga futhi uthengise izabelo zokuthunyelwe kwe-DeHub. Okuthunyelwe okukhandiwe kuyizabelo eziyi-1000 ku-on-chain — yiba ngumnikazi wengxenye yevidiyo, ingoma, noma isithombe bese uyihweba nge-DHB.",
+    "title": "Izabelo",
+    "startTheMarketHint": "Okuthunyelwe okukhandiwe kuyizabelo eziyi-1000 — faka ohlwini ezinye zezakho ukuze uqale imakethe.",
+    "noneHeldHint": "Khanda okuthunyelwe ukuze ube nazo zonke izabelo zakhona eziyi-1000, noma uthenge kokuthunyelwe komunye umuntu.",
+    "profileEmptyOwn": "Okuthunyelwe okukhandiwe kuyizabelo eziyi-1000. Khanda okukodwa kokuthunyelwe kwakho, noma uthenge kokuthunyelwe okukholwa yikho.",
+    "profileEmptyOther": "Okuthunyelwe okukhandiwe kuyizabelo eziyi-1000. Le phrofayela ayinazo izabelo zanoma yikuphi okuthunyelwe okwamanje."
   },
   "stores": {
     "podToggle": "Into ephrintwa uma icelwa",
@@ -4104,5 +4109,10 @@
     "moveFunds": "Letha imali",
     "moveFundsHint": "Shintshanisa noma faka kusuka kwenye i-chain",
     "notNow": "Hhayi manje"
+  },
+  "glossary": {
+    "fractionsDesc": "Okuthunyelwe okukhandwe ku-DeHub kuba yi-NFT ehlukaniswe yaba izabelo eziyi-1,000, futhi umdali uqala enazo zonke eziyi-1,000 — ubunikazi obuyi-100% bokuqukethwe. Ukukhanda kuyakhethwa futhi kungenzeka lapho ushicilela noma kamuva.",
+    "tokenIdDesc": "Isihlonzi esiyingqayizivele ku-on-chain okuthunyelwe okusithola lapho kukhandwa njenge-NFT ku-blockchain. Ukukhanda kuyakhethwa, ngakho okuthunyelwe okungakakhandwa akukabi naso i-Token ID.",
+    "tokenIdInfoDesc": "Isihlonzi esiyingqayizivele ku-on-chain okuthunyelwe okusithola uma sekukhandwe njenge-NFT. Siboniswa phezulu ekhasini Lolwazi Lokuthunyelwe kokuthunyelwe okukhandiwe."
   }
 }

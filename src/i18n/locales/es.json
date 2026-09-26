@@ -3341,7 +3341,7 @@
   },
   "fractions": {
     "seoTitle": "Fracciones | DeHub",
-    "seoDescription": "Compra y vende fracciones de publicaciones de DeHub. Cada subida son 1000 fracciones on-chain: posee una parte de un vídeo, un tema o una imagen y negóciala en DHB.",
+    "seoDescription": "Compra y vende fracciones de publicaciones de DeHub. Una publicación acuñada son 1000 fracciones on-chain: posee una parte de un vídeo, un tema o una imagen y negóciala en DHB.",
     "title": "Fracciones",
     "perUpload": "1000 por subida",
     "tabBrowse": "Explorar",
@@ -3377,7 +3377,7 @@
     "perFraction": "por fracción",
     "noSearchMatch": "Nada coincide con esa búsqueda",
     "noneForSale": "Ahora mismo no hay fracciones en venta",
-    "startTheMarketHint": "Cada subida son 1000 fracciones: pon algunas de las tuyas a la venta para arrancar el mercado.",
+    "startTheMarketHint": "Una publicación acuñada son 1000 fracciones: pon algunas de las tuyas a la venta para arrancar el mercado.",
     "yours": "Tuyas",
     "perFractionShort": "/ fracción",
     "forShareOfPost": "por el {{pct}} % de la publicación",
@@ -3431,7 +3431,7 @@
     "acrossPosts_one": "en {{count}} publicación",
     "acrossPosts_other": "en {{count}} publicaciones",
     "noneHeldYet": "Todavía no tienes ninguna fracción",
-    "noneHeldHint": "Sube una publicación para que te acuñen 1000, o compra parte de la de otra persona.",
+    "noneHeldHint": "Acuña una publicación para quedarte con sus 1000 fracciones, o compra parte de la de otra persona.",
     "listedForSale": "En venta",
     "priceEach": "{{price}} cada una",
     "listingCancelled": "Anuncio cancelado",
@@ -3444,8 +3444,8 @@
     "offersForYourFractions": "Ofertas por tus fracciones",
     "review": "Revisar",
     "noFractionsYet": "Aún no hay fracciones",
-    "profileEmptyOwn": "Cada subida se acuña como 1000 fracciones. Publica algo, o compra parte de una publicación en la que creas.",
-    "profileEmptyOther": "Cada subida se acuña como 1000 fracciones. Este perfil no tiene ninguna de ninguna publicación ahora mismo.",
+    "profileEmptyOwn": "Una publicación acuñada son 1000 fracciones. Acuña una de tus publicaciones o compra parte de una publicación en la que creas.",
+    "profileEmptyOther": "Una publicación acuñada son 1000 fracciones. Este perfil no tiene ahora mismo fracciones de ninguna publicación.",
     "browseTheMarket": "Explorar el mercado",
     "sellFractions": "Vender fracciones",
     "balanceReadFailed": "No se pudo leer tu saldo de fracciones ahora mismo. Cierra esto e inténtalo de nuevo: publicar sin ese dato arriesga vender fracciones que ya no tienes.",
@@ -6387,5 +6387,10 @@
     "moveFunds": "Transferir fondos",
     "moveFundsHint": "Intercambia o deposita desde otra cadena",
     "notNow": "Ahora no"
+  },
+  "glossary": {
+    "fractionsDesc": "Una publicación acuñada en DeHub se convierte en un NFT dividido en 1.000 fracciones, y el creador empieza con las 1.000: el 100 % de la propiedad del contenido. Acuñar es opcional y puede hacerse al publicar o más adelante.",
+    "tokenIdDesc": "Un identificador on-chain único que recibe una publicación cuando se acuña como NFT en la blockchain. Acuñar es opcional, así que una publicación que no se ha acuñado todavía no tiene Token ID.",
+    "tokenIdInfoDesc": "El identificador on-chain único que recibe una publicación una vez acuñada como NFT. Se muestra en la parte superior de la página de Información de la publicación en las publicaciones acuñadas."
   }
 }

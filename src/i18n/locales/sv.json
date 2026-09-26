@@ -3285,7 +3285,7 @@
   },
   "fractions": {
     "seoTitle": "Fraktioner | DeHub",
-    "seoDescription": "Köp och sälj fraktioner av DeHub-inlägg. Varje uppladdning är 1000 on-chain-fraktioner — äg en del av en video, spår eller bild och handla den i DHB.",
+    "seoDescription": "Köp och sälj fraktioner av DeHub-inlägg. Ett mintat inlägg är 1000 on-chain-fraktioner — äg en del av en video, ett spår eller en bild och handla med den i DHB.",
     "title": "Fraktioner",
     "perUpload": "1000 per uppladdning",
     "tabBrowse": "Bläddra",
@@ -3321,7 +3321,7 @@
     "perFraction": "per andel",
     "noSearchMatch": "Ingenting matchar den sökningen",
     "noneForSale": "Inga andelar är till salu just nu",
-    "startTheMarketHint": "Varje uppladdning är 1000 andelar — lista några av dina för att starta marknaden.",
+    "startTheMarketHint": "Ett mintat inlägg är 1000 fraktioner — lista några av dina för att starta marknaden.",
     "yours": "Dina",
     "perFractionShort": "/ andel",
     "forShareOfPost": "för {{pct}}% av inlägget",
@@ -3375,7 +3375,7 @@
     "acrossPosts_one": "över {{count}} inlägg",
     "acrossPosts_other": "över {{count}} inlägg",
     "noneHeldYet": "Du äger inga fraktioner än",
-    "noneHeldHint": "Ladda upp ett inlägg för att mynta 1000, eller köp in dig i någon annans.",
+    "noneHeldHint": "Minta ett inlägg för att äga alla dess 1000 fraktioner, eller köp in dig i någon annans.",
     "listedForSale": "Listad till försäljning",
     "priceEach": "{{price}} vardera",
     "listingCancelled": "Listning avbruten",
@@ -3388,8 +3388,8 @@
     "offersForYourFractions": "Erbjudanden för dina fraktioner",
     "review": "Granska",
     "noFractionsYet": "Inga fraktioner än",
-    "profileEmptyOwn": "Varje uppladdning myntas som 1000 fraktioner. Publicera något, eller köp in dig i ett inlägg du tror på.",
-    "profileEmptyOther": "Varje uppladdning myntas som 1000 fraktioner. Den här profilen äger ingen av något inlägg just nu.",
+    "profileEmptyOwn": "Ett mintat inlägg är 1000 fraktioner. Minta ett av dina inlägg, eller köp in dig i ett inlägg du tror på.",
+    "profileEmptyOther": "Ett mintat inlägg är 1000 fraktioner. Den här profilen äger just nu inga fraktioner av något inlägg.",
     "browseTheMarket": "Bläddra på marknaden",
     "sellFractions": "Sälj fraktioner",
     "balanceReadFailed": "Kunde inte läsa ditt fraktionssaldo just nu. Stäng detta och försök igen — listning utan det riskerar att sälja fraktioner du inte längre äger.",
@@ -6270,5 +6270,10 @@
     "moveFunds": "För över pengar",
     "moveFundsHint": "Växla eller sätt in från en annan kedja",
     "notNow": "Inte nu"
+  },
+  "glossary": {
+    "fractionsDesc": "Ett inlägg som mintas på DeHub blir en NFT uppdelad i 1 000 fraktioner, och skaparen börjar med alla 1 000 — 100 % ägande av innehållet. Mintning är valfritt och kan göras när du publicerar eller senare.",
+    "tokenIdDesc": "En unik on-chain-identifierare som ett inlägg får när det mintas som en NFT på blockkedjan. Mintning är valfritt, så ett inlägg som inte har mintats har inget Token ID ännu.",
+    "tokenIdInfoDesc": "Den unika on-chain-identifierare som ett inlägg får när det har mintats som en NFT. Visas högst upp på sidan Inläggsinfo för mintade inlägg."
   }
 }

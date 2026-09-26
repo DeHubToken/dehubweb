@@ -3902,7 +3902,12 @@
     }
   },
   "fractions": {
-    "title": "Ìpín"
+    "seoDescription": "Ra kí o sì ta àwọn ìpín ìfìwéránṣẹ́ DeHub. Ìfìwéránṣẹ́ tí a ti mint jẹ́ ìpín 1000 lórí chain — ní apá kan fídíò, orin, tàbí àwòrán kí o sì ṣòwò rẹ̀ ní DHB.",
+    "title": "Ìpín",
+    "startTheMarketHint": "Ìfìwéránṣẹ́ tí a ti mint jẹ́ ìpín 1000 — ṣe àkójọ díẹ̀ nínú tìrẹ láti bẹ̀rẹ̀ ọjà.",
+    "noneHeldHint": "Mint ìfìwéránṣẹ́ kan láti ní gbogbo ìpín 1000 rẹ̀, tàbí ra ìpín nínú ìfìwéránṣẹ́ ẹlòmíràn.",
+    "profileEmptyOwn": "Ìfìwéránṣẹ́ tí a ti mint jẹ́ ìpín 1000. Mint ọ̀kan nínú àwọn ìfìwéránṣẹ́ rẹ, tàbí ra ìpín nínú ìfìwéránṣẹ́ tí o gbàgbọ́.",
+    "profileEmptyOther": "Ìfìwéránṣẹ́ tí a ti mint jẹ́ ìpín 1000. Pròfáìlì yìí kò ní ìpín kankan nínú ìfìwéránṣẹ́ kankan báyìí."
   },
   "stores": {
     "podToggle": "Ọjà títẹ̀ lórí ìbéèrè",
@@ -4062,5 +4067,10 @@
     "moveFunds": "Mú owó wọlé",
     "moveFundsHint": "Pààrọ̀ tàbí fi owó sí láti chain mìíràn",
     "notNow": "Kì í ṣe báyìí"
+  },
+  "glossary": {
+    "fractionsDesc": "Ìfìwéránṣẹ́ tí a mint lórí DeHub di NFT tí a pín sí ìpín 1,000, ẹlẹ́dàá sì bẹ̀rẹ̀ pẹ̀lú gbogbo 1,000 — níní àkóónú náà ní 100%. Mint ṣíṣe jẹ́ àṣàyàn, ó sì lè ṣẹlẹ̀ nígbà tí o bá tẹ̀ jáde tàbí lẹ́yìn náà.",
+    "tokenIdDesc": "Ìdánimọ̀ aláìlẹ́gbẹ́ lórí chain tí ìfìwéránṣẹ́ kan ń gbà nígbà tí a bá mint rẹ̀ gẹ́gẹ́ bí NFT lórí blockchain. Mint ṣíṣe jẹ́ àṣàyàn, nítorí náà ìfìwéránṣẹ́ tí a kò tíì mint kò tíì ní Token ID.",
+    "tokenIdInfoDesc": "Ìdánimọ̀ aláìlẹ́gbẹ́ lórí chain tí ìfìwéránṣẹ́ kan ń gbà lẹ́yìn tí a bá ti mint rẹ̀ gẹ́gẹ́ bí NFT. A máa ń fi hàn ní òkè ojú-ìwé Post Info fún àwọn ìfìwéránṣẹ́ tí a ti mint."
   }
 }

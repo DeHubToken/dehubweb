@@ -3910,7 +3910,12 @@
     }
   },
   "fractions": {
-    "title": "Rabe-rabe"
+    "seoDescription": "Saya da sayar da rabe-rabe na sakonnin DeHub. Sakon da aka yi wa minti rabe-rabe 1000 ne a kan blockchain (on-chain) — mallaki yanki na bidiyo, waƙa, ko hoto kuma ka yi ciniki da shi a DHB.",
+    "title": "Rabe-rabe",
+    "startTheMarketHint": "Sakon da aka yi wa minti rabe-rabe 1000 ne — sanya wasu daga cikin naka a kasuwa don fara kasuwar.",
+    "noneHeldHint": "Yi wa sako minti don ka mallaki dukkan rabe-rabensa 1000, ko ka saya a cikin sakon wani.",
+    "profileEmptyOwn": "Sakon da aka yi wa minti rabe-rabe 1000 ne. Yi wa ɗaya daga cikin sakonninka minti, ko ka saya a cikin sakon da ka yarda da shi.",
+    "profileEmptyOther": "Sakon da aka yi wa minti rabe-rabe 1000 ne. Wannan bayanin martaba ba shi da rabon kowane sako a yanzu."
   },
   "stores": {
     "podToggle": "Kayan bugawa bisa buƙata",
@@ -4070,5 +4075,10 @@
     "moveFunds": "Shigo da kuɗi",
     "moveFundsHint": "Musanya ko saka daga wata sarkar",
     "notNow": "Ba yanzu ba"
+  },
+  "glossary": {
+    "fractionsDesc": "Sakon da aka yi wa minti a DeHub yana zama NFT da aka raba zuwa rabe-rabe 1,000, kuma mai ƙirƙira yana farawa da dukkan 1,000 — mallakar abun ciki 100%. Yin minti na zaɓi ne kuma zai iya faruwa lokacin da kake wallafawa ko daga baya.",
+    "tokenIdDesc": "Keɓaɓɓen mai ganowa a kan blockchain da sako ke samu idan aka yi masa minti a matsayin NFT a kan blockchain. Yin minti na zaɓi ne, don haka sakon da ba a yi wa minti ba tukuna ba shi da Token ID.",
+    "tokenIdInfoDesc": "Keɓaɓɓen mai ganowa a kan blockchain da sako ke samu da zarar an yi masa minti a matsayin NFT. Ana nuna shi a saman shafin Bayanin Sako ga sakonnin da aka yi wa minti."
   }
 }

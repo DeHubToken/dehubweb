@@ -3866,7 +3866,12 @@
     }
   },
   "fractions": {
-    "title": "Paýlar"
+    "seoDescription": "DeHub ýazgylarynyň paýlaryny satyn alyň we satyň. Mint edilen ýazgy blokçeýndäki 1000 paýdyr — wideonyň, trekiň ýa-da suratyň bir bölegine eýe boluň we ony DHB bilen söwda ediň.",
+    "title": "Paýlar",
+    "startTheMarketHint": "Mint edilen ýazgy 1000 paýdyr — bazary başlatmak üçin öz paýlaryňyzyň käbirini satuwa çykaryň.",
+    "noneHeldHint": "Ýazgyny mint edip, onuň ähli 1000 paýyna eýe boluň ýa-da başga biriniň ýazgysyndan paý satyn alyň.",
+    "profileEmptyOwn": "Mint edilen ýazgy 1000 paýdyr. Ýazgylaryňyzyň birini mint ediň ýa-da ynanýan ýazgyňyzdan paý satyn alyň.",
+    "profileEmptyOther": "Mint edilen ýazgy 1000 paýdyr. Bu profil häzirki wagtda hiç bir ýazgynyň paýyna eýe däl."
   },
   "stores": {
     "podToggle": "Sargyt boýunça çap edilýän haryt",
@@ -4026,5 +4031,10 @@
     "moveFunds": "Serişde geçir",
     "moveFundsHint": "Başga zynjyrdan çalyş ýa-da goý",
     "notNow": "Häzir däl"
+  },
+  "glossary": {
+    "fractionsDesc": "DeHub-da mint edilen ýazgy 1,000 paýa bölünen NFT-e öwrülýär we döredijä başda ähli 1,000 paý degişli bolýar — mazmunyň 100% eýeçiligi. Mint etmek hökmany däl we çap edilende ýa-da soňra amala aşyrylyp bilner.",
+    "tokenIdDesc": "Ýazgy blokçeýnde NFT hökmünde mint edilende alýan özboluşly blokçeýn identifikatory. Mint etmek hökmany däl, şonuň üçin mint edilmedik ýazgynyň entek Token ID-si ýok.",
+    "tokenIdInfoDesc": "Ýazgynyň NFT hökmünde mint edilenden soň alýan özboluşly blokçeýn identifikatory. Mint edilen ýazgylar üçin Ýazgy maglumatlary sahypasynyň ýokarsynda görkezilýär."
   }
 }

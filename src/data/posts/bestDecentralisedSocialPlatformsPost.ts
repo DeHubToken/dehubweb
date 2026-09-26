@@ -98,7 +98,7 @@ All three prove that "decentralised" and "pays something" can coexist. None of t
 
 This is the intersection almost no one else occupies: a full-featured, media-first social network that is decentralised **and** designed from the first line of code so that every interaction can carry value. That is the entire design premise of [DeHub, the decentralised social network](/guides/what-is-dehub) — and it is why the feature list below reads like a business rather than an app.
 
-Content is minted on-chain, so ownership is provable and yours from second one rather than licensed away in a terms-of-service you never read. Minting is optional: a post publishes instantly off-chain with no wallet, no signature and no gas, and can be minted later from the post itself. The feed is chronological and transparent. And there is no bank card at the door — sign up with socials, email or SMS and gas is sponsored for you, which is the exact opposite of charging US$5 through an app store for the privilege of joining a permissionless network.
+Content can be minted on-chain, so ownership is provable and yours from the moment you mint rather than licensed away in a terms-of-service you never read. Minting is optional: a post publishes instantly off-chain with no wallet, no signature and no gas, and can be minted later from the post itself. The feed is chronological and transparent. And there is no bank card at the door — sign up with socials, email or SMS and gas is sponsored for you, which is the exact opposite of charging US$5 through an app store for the privilege of joining a permissionless network.
 
 ### Sixteen ways to get paid
 

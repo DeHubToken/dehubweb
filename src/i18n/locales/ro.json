@@ -3176,7 +3176,7 @@
   },
   "fractions": {
     "seoTitle": "Fracții | DeHub",
-    "seoDescription": "Cumpărați și vânzați fracții din postările DeHub. Fiecare încărcare este 1000 fracții on-chain — dețineți o parte dintr-un videoclip, cântec sau imagine și tranzacționați-o în DHB.",
+    "seoDescription": "Cumpărați și vindeți fracțiuni din postările DeHub. O postare mintată înseamnă 1000 de fracțiuni on-chain — dețineți o parte dintr-un videoclip, o piesă sau o imagine și tranzacționați-o în DHB.",
     "title": "Fracții",
     "perUpload": "1000 per încărcare",
     "tabBrowse": "Răsfoi",
@@ -3212,7 +3212,7 @@
     "perFraction": "per fracție",
     "noSearchMatch": "Nimic nu se potrivește cu acea căutare",
     "noneForSale": "Nicio fracție nu este de vânzare în acest moment",
-    "startTheMarketHint": "Fiecare încărcare este 1000 fracții — listează unele din ale tale pentru a începe piața.",
+    "startTheMarketHint": "O postare mintată înseamnă 1000 de fracțiuni — listează câteva dintre ale tale pentru a porni piața.",
     "yours": "Ale tale",
     "perFractionShort": "/ fracție",
     "forShareOfPost": "pentru {{pct}}% din postare",
@@ -3266,7 +3266,7 @@
     "acrossPosts_one": "pe {{count}} postare",
     "acrossPosts_other": "pe {{count}} postări",
     "noneHeldYet": "Nu deții încă nicio fracțiune",
-    "noneHeldHint": "Încarcă o postare pentru a fi mintată în 1000, sau cumpără din postarea altcuiva.",
+    "noneHeldHint": "Mintează o postare pentru a deține toate cele 1000 de fracțiuni ale ei sau cumpără din postarea altcuiva.",
     "listedForSale": "Listate pentru vânzare",
     "priceEach": "{{price}} fiecare",
     "listingCancelled": "Listare anulată",
@@ -3279,8 +3279,8 @@
     "offersForYourFractions": "Oferte pentru fracțiunile tale",
     "review": "Revizuiește",
     "noFractionsYet": "Nicio fracțiune încă",
-    "profileEmptyOwn": "Fiecare încărcare este mintată ca 1000 fracțiuni. Postează ceva, sau cumpără dintr-o postare în care crezi.",
-    "profileEmptyOther": "Fiecare încărcare este mintată ca 1000 fracțiuni. Acest profil nu deține nicio fracțiune din nicio postare în acest moment.",
+    "profileEmptyOwn": "O postare mintată înseamnă 1000 de fracțiuni. Mintează una dintre postările tale sau cumpără dintr-o postare în care crezi.",
+    "profileEmptyOther": "O postare mintată înseamnă 1000 de fracțiuni. Acest profil nu deține momentan fracțiuni din nicio postare.",
     "browseTheMarket": "Răsfoiește piața",
     "sellFractions": "Vinde fracțiuni",
     "balanceReadFailed": "Nu am putut citi soldul tău de fracțiuni chiar acum. Închide aceasta și încearcă din nou — listarea fără aceasta riscă să vinzi fracțiuni pe care nu le mai deții.",
@@ -6062,7 +6062,10 @@
     "badge": {
       "white": "Alb",
       "description": "Acest badge este afișat în alb pentru o vizibilitate mai bună."
-    }
+    },
+    "fractionsDesc": "O postare mintată pe DeHub devine un NFT împărțit în 1.000 de fracțiuni, iar creatorul începe cu toate cele 1.000 — 100% proprietate asupra conținutului. Mintarea este opțională și poate avea loc la publicare sau mai târziu.",
+    "tokenIdDesc": "Un identificator on-chain unic pe care îl primește o postare atunci când este mintată ca NFT pe blockchain. Mintarea este opțională, așa că o postare care nu a fost mintată nu are încă un Token ID.",
+    "tokenIdInfoDesc": "Identificatorul on-chain unic pe care îl primește o postare după ce este mintată ca NFT. Afișat în partea de sus a paginii Informații postare pentru postările mintate."
   },
   "jungleMood": {
     "title": "Momentul zilei",

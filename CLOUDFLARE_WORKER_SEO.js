@@ -216,7 +216,7 @@ const HOME_INTRO_PRESS = ['US Weekly', 'Yahoo Finance', 'Entrepreneur', 'Investi
 const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left">
 <h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
-<p>DeHub is a decentralised social network and mobile app, in development since 2021, where every post is minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
+<p>DeHub is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
 <p><a href="${APP_URL}/docs">Read the docs</a></p>
 <p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in">DeHub press coverage</a></p>
 <nav aria-label="Learn more about DeHub"><ul style="list-style:none;padding:0;margin:0">${
@@ -243,7 +243,7 @@ const GUIDE_PAGES = {
 <li><strong>Bluesky</strong> — the AT Protocol successor to Twitter's decentralization effort. Familiar feel and portable identity, but content isn't on-chain and monetization is early.</li>
 <li><strong>Farcaster</strong> — on-chain identity with off-chain content ("hubs"). Great crypto-native community; primarily text, and most activity flows through one client.</li>
 <li><strong>Lens Protocol</strong> — social graph as on-chain primitives on Lens Chain. Powerful for developers building social apps; less a destination app for creators.</li>
-<li><strong>DeHub</strong> — a full media platform (video, live streaming, posts, messaging) where uploads are minted on-chain and creators monetize natively via tips, pay-per-view, token-gated content, staking rewards and a 20% affiliate program, with an integrated AI creator studio.</li>
+<li><strong>DeHub</strong> — a full media platform (video, live streaming, posts, messaging) where uploads can be minted on-chain and creators monetize natively via tips, pay-per-view, token-gated content, staking rewards and a 20% affiliate program, with an integrated AI creator studio.</li>
 </ul>
 <h2>How to choose</h2>
 <p>If you want a federated Twitter alternative, Mastodon or Bluesky fit. If you're building on a social graph, look at Lens or Farcaster. If you're a <strong>creator who wants YouTube/Twitch-style features with on-chain ownership and built-in monetization</strong>, that's the gap DeHub is built to fill.</p>
@@ -255,7 +255,7 @@ const GUIDE_PAGES = {
     bodyHtml: `<p>Web3 social dApps put content, identity and payments on-chain so creators — not platforms — own the upside. This guide ranks the leading Web3 social media dApps of 2026 by creator monetization, content ownership, user experience and momentum.</p>
 <h2>What separates the leaders</h2>
 <ul>
-<li><strong>Real on-chain ownership</strong> — content minted to the creator's wallet, not just an on-chain username.</li>
+<li><strong>Real on-chain ownership</strong> — content that can be minted to the creator's wallet, not just an on-chain username.</li>
 <li><strong>Native monetization</strong> — pay-per-view, token-gated posts, subscriptions and tips that settle on-chain without a payment processor.</li>
 <li><strong>Web2-grade UX</strong> — social/email sign-in, sponsored gas, no seed-phrase wall in front of the first post.</li>
 <li><strong>Media depth</strong> — long-form video, live streaming and audio, not just microblogging.</li>
@@ -724,7 +724,7 @@ const SECTION_PAGES = {
     title: 'Explore DeHub — Trending Creators, Videos & Communities',
     heading: 'Explore DeHub',
     description: 'Discover what’s trending on DeHub: top creators, videos, music, live streams and communities on the open-source, user-owned social platform.',
-    intro: 'Find trending creators, videos, shorts, music and communities across DeHub — the open source, user-owned social platform where every post is minted on-chain and creators earn natively.',
+    intro: 'Find trending creators, videos, shorts, music and communities across DeHub — the open source, user-owned social platform where posts can be minted on-chain and creators earn natively.',
     bodyHtml: `<ul>
 <li><a href="${APP_URL}/videos">Video Feed</a> — the latest on-chain videos from creators.</li>
 <li><a href="${APP_URL}/shorts">Shorts</a> — a vertical, swipeable short-form feed.</li>
@@ -742,7 +742,7 @@ const SECTION_PAGES = {
     title: 'Video Feed — Watch On-Chain Videos on DeHub',
     heading: 'DeHub Video Feed',
     description: 'Watch the latest on-chain videos from creators on DeHub: long-form uploads with pay-per-view, token-gated content and ad-revenue sharing on the user-owned video platform.',
-    intro: 'Watch the newest videos from DeHub creators — long-form uploads minted on-chain, with pay-per-view, token-gated posts and ad-revenue sharing built in. No platform owns your reach; you do.',
+    intro: 'Watch the newest videos from DeHub creators — long-form uploads that can be minted on-chain, with pay-per-view, token-gated posts and ad-revenue sharing built in. No platform owns your reach; you do.',
     bodyHtml: `<p>DeHub’s video feed is chronological and creator-owned. Sign in with email or a social account, get a sponsored-gas wallet automatically, and start watching or uploading in minutes.</p>
 <h2>What you can do with a video here</h2>
 <p>Upload once and choose how it earns. A video can be free to everyone, pay-per-view in DHB, or unlocked only for the holders of a badge or a subscription plan — and the same upload can be tipped by anyone who watches it. Views, reactions and comments are counted on the post itself, and the creator keeps the record whatever happens to the platform.</p>
@@ -752,7 +752,7 @@ const SECTION_PAGES = {
     title: 'Shorts — Short-Form Videos on DeHub',
     heading: 'DeHub Shorts',
     description: 'Scroll the latest short-form videos on DeHub: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content.',
-    intro: 'Scroll a vertical feed of short-form videos from DeHub creators — quick, swipeable clips on the user-owned social platform. Every short is minted on-chain, so creators keep ownership and earn natively.',
+    intro: 'Scroll a vertical feed of short-form videos from DeHub creators — quick, swipeable clips on the user-owned social platform. Shorts can be minted on-chain, so creators keep ownership and earn natively.',
     bodyHtml: `<p>Shorts sit alongside the full <a href="${APP_URL}/videos">video feed</a> and <a href="${APP_URL}/music">music</a> on DeHub — one open, censorship-resistant home for every format.</p>
 <h2>What counts as a short</h2>
 <p>A short is any video under a minute. There is no separate upload path and no separate account: a clip posted to the video feed that runs under sixty seconds is a short, and it appears in both places. That keeps a creator's catalogue in one profile whatever the length of the work.</p>
@@ -1352,7 +1352,7 @@ const MARKETING_PAGES = {
   },
   'fractions': {
     title: 'Fractions | DeHub',
-    description: 'Buy and sell fractions of DeHub posts. Every upload is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB.',
+    description: 'Buy and sell fractions of DeHub posts. A minted post is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB.',
     heading: 'DeHub Fractions',
     bodyHtml: `<p>Every DeHub upload is divisible into 1000 on-chain fractions. A creator can sell part of a post and keep the rest, and anyone else can buy a slice of a video, track or image and hold it like any other asset.</p>
 <h2>An open order book</h2>

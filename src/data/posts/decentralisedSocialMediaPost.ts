@@ -39,7 +39,7 @@ The practical difference is money and permanence. Federation decentralises *host
 
 ### User-owned identity and content
 
-In both models, the crucial mechanic is that your identity is portable and your content is not trapped. On a Web3 network like DeHub, content is minted on-chain the moment you upload it, so there is a public, tamper-evident record that you made it and when. Your profile is a key you hold, not a row a company can delete on a whim.
+In both models, the crucial mechanic is that your identity is portable and your content is not trapped. On a Web3 network like DeHub, you can mint content on-chain to your wallet when you upload it or later, creating a public, tamper-evident record that you made it and when. Your profile is a key you hold, not a row a company can delete on a whim.
 
 Because there is no single owner, moderation and curation work differently too. Feeds are typically **chronological and transparent** rather than driven by an opaque engagement algorithm, and moderation is handled at the edges (by the instance you choose, or by client apps and community tools) rather than dictated from one head office. That is the mechanism behind the headline promise of censorship resistance: there is no central kill switch.
 
@@ -101,7 +101,7 @@ Concretely, DeHub gives creators several native ways to earn:
 - **Up to 90% ad-revenue share** flowing back to the ecosystem, rather than the platform keeping the majority.
 - **A play-to-earn arcade** including the flagship MMA battle royale **Last Chad Standing**, plus live streaming on Livepeer that has scaled to more than 50,000 concurrent viewers, complete with on-chain animated tips.
 
-Underneath, the fundamentals match the rest of the category: content minted on-chain at upload, a chronological and transparent feed with no opaque algorithm, open-source end-to-end encrypted messaging, and that DePIN-backed custom CDN for speed. The ecosystem token is **$DHB**, primarily on Base (an Ethereum Layer 2) with contracts also on BNB Chain and Polygon. DeHub is an independent DAO governed by its token holders, and its co-founders Mike Hales and Indi Jay Cammish also founded First Class Agency, the UK's number-one official TikTok LIVE partner agency, so the team understands the creator economy from the inside.
+Underneath, the fundamentals match the rest of the category: optional on-chain minting of content, at upload or later, a chronological and transparent feed with no opaque algorithm, open-source end-to-end encrypted messaging, and that DePIN-backed custom CDN for speed. The ecosystem token is **$DHB**, primarily on Base (an Ethereum Layer 2) with contracts also on BNB Chain and Polygon. DeHub is an independent DAO governed by its token holders, and its co-founders Mike Hales and Indi Jay Cammish also founded First Class Agency, the UK's number-one official TikTok LIVE partner agency, so the team understands the creator economy from the inside.
 
 For British creators specifically, the pull is straightforward: keep ownership of your audience and get paid natively for the attention you already command. If you are weighing up a move from a mainstream short-video app, our [UK creator's guide to leaving TikTok](/guides/uk-creators-guide-leaving-tiktok) covers the practical steps.
 

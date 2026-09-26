@@ -43,7 +43,7 @@ These three questions do more work than a semester of platform-specific techniqu
 
 We build one of the alternatives, so treat the following as an argument rather than an observation.
 
-[DeHub](/guides/what-is-dehub) is an open-source, decentralised social network where a post is minted on-chain to the creator's wallet at the moment of publication, the ad revenue share is published — up to 90% — rather than inferred from a dashboard, the feed is chronological rather than ranked in private, and subscriptions are minted as tradable assets that pay the original creator a royalty on resale.
+[DeHub](/guides/what-is-dehub) is an open-source, decentralised social network where a post can be minted on-chain to the creator's wallet, at publication or any time after, the ad revenue share is published — up to 90% — rather than inferred from a dashboard, the feed is chronological rather than ranked in private, and subscriptions are minted as tradable assets that pay the original creator a royalty on resale.
 
 We are not suggesting a course should teach DeHub. We are suggesting that a course which never examines *any* structural alternative has, by omission, taught students that the current arrangement is the only possible one. That is a claim about the world, and it is not obviously true.
 

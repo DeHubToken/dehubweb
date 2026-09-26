@@ -27,7 +27,7 @@ DeHub is an independent DAO, co-founded by Mike Hales and Indi Jay Cammish, who 
 
 Most TikTok alternatives swap one landlord for another. The feed is different, the terms are the same: they host, they rank, they set the rate, and your audience is still a number in their database rather than a contact in yours.
 
-The change worth making is structural. On [DeHub, the decentralised social network](/guides/what-is-dehub), an upload is minted on-chain to your wallet at the moment you post it. That record is yours, independently of the platform. The feed is chronological and transparent rather than algorithmically opaque. The code is open-source, so no single company can quietly rewrite the rules underneath you.
+The change worth making is structural. On [DeHub, the decentralised social network](/guides/what-is-dehub), you can mint an upload on-chain to your wallet, when you post it or later. That record is yours, independently of the platform. The feed is chronological and transparent rather than algorithmically opaque. The code is open-source, so no single company can quietly rewrite the rules underneath you.
 
 If the whole category is new to you, our explainer on [decentralised social media](/guides/decentralised-social-media-explained-uk) covers the mechanics without the jargon, and our roundup of [the best decentralised social platforms in 2026](/guides/best-decentralised-social-media-platforms-2026) puts DeHub next to its peers.
 
@@ -73,7 +73,7 @@ Treat TikTok as the top of the funnel and DeHub as the home base. That is the ar
 
 ### What is the best TikTok alternative for creators in 2026?
 
-It depends what you are optimising for. If you want the closest clone of the TikTok experience, several exist and all of them keep the same landlord-and-tenant arrangement. If you want to own your audience, your content and your rate, you want a platform where uploads are minted to your wallet and the revenue share is published, which is the category DeHub sits in.
+It depends what you are optimising for. If you want the closest clone of the TikTok experience, several exist and all of them keep the same landlord-and-tenant arrangement. If you want to own your audience, your content and your rate, you want a platform where uploads can be minted to your wallet and the revenue share is published, which is the category DeHub sits in.
 
 ### How much does TikTok actually pay per 1,000 views?
 
@@ -85,7 +85,7 @@ No, and you should not. Keep TikTok as your discovery engine and build your owne
 
 ### What happens to my content if DeHub disappears?
 
-Your uploads are minted on-chain to your wallet, so the ownership record does not depend on the platform continuing to exist. That is the practical difference between owning and renting, and it is why the minting happens at post time rather than as an afterthought.
+Your uploads can be minted on-chain to your wallet, so the ownership record does not depend on the platform continuing to exist. That is the practical difference between owning and renting, and it is why minting is a switch in the composer rather than an afterthought, with the option to mint later if you prefer.
 
 ### Is DeHub only for crypto creators?
 

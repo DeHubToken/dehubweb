@@ -3244,7 +3244,12 @@
     }
   },
   "fractions": {
-    "title": "Fraction dem"
+    "seoDescription": "Buy and sell fraction dem for DeHub post. Post wey dem don mint na 1000 on-chain fraction — own small part for video, track, or picture and trade am for DHB.",
+    "title": "Fraction dem",
+    "startTheMarketHint": "Post wey dem don mint na 1000 fraction — list some of your own make market start.",
+    "noneHeldHint": "Mint one post make you hold all im 1000 fraction, or buy enter another person own.",
+    "profileEmptyOwn": "Post wey dem don mint na 1000 fraction. Mint one of your post, or buy enter post wey you believe for.",
+    "profileEmptyOther": "Post wey dem don mint na 1000 fraction. Dis profile no hold any fraction of any post right now."
   },
   "stores": {
     "podToggle": "Print-on-demand item",
@@ -3404,5 +3409,10 @@
     "moveFunds": "Bring money enter",
     "moveFundsHint": "Swap or deposit from another chain",
     "notNow": "No be now"
+  },
+  "glossary": {
+    "fractionsDesc": "Post wey dem mint for DeHub go turn NFT wey dem divide into 1,000 fraction, and di creator go start with all 1,000 — 100% ownership of di content. Minting no be by force, e fit happen when you publish or later.",
+    "tokenIdDesc": "Special on-chain ID wey post dey get when dem mint am as NFT for blockchain. Minting no be by force, so post wey dem never mint no get Token ID yet.",
+    "tokenIdInfoDesc": "Di special on-chain ID wey post dey get once dem mint am as NFT. E dey show for top of di Post Info page for post wey dem don mint."
   }
 }

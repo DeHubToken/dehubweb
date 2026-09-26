@@ -3344,7 +3344,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "Achetez et vendez des fractions de publications DeHub. Chaque téléchargement représente 1000 fractions on-chain — possédez une part d'une vidéo, d'une piste ou d'une image et échangez-la en DHB.",
+    "seoDescription": "Achetez et vendez des fractions de publications DeHub. Une publication frappée représente 1000 fractions on-chain — possédez une part d'une vidéo, d'une piste ou d'une image et échangez-la en DHB.",
     "title": "Fractions",
     "perUpload": "1000 par téléchargement",
     "tabBrowse": "Parcourir",
@@ -3380,7 +3380,7 @@
     "perFraction": "par fraction",
     "noSearchMatch": "Aucun résultat ne correspond à cette recherche",
     "noneForSale": "Aucune fraction n'est à vendre pour le moment",
-    "startTheMarketHint": "Chaque téléchargement représente 1000 fractions — mettez-en en vente pour lancer le marché.",
+    "startTheMarketHint": "Une publication frappée représente 1000 fractions — mettez-en quelques-unes en vente pour lancer le marché.",
     "yours": "Les vôtres",
     "perFractionShort": "/ fraction",
     "forShareOfPost": "pour {{pct}}% de la publication",
@@ -3434,7 +3434,7 @@
     "acrossPosts_one": "sur {{count}} publication",
     "acrossPosts_other": "sur {{count}} publications",
     "noneHeldYet": "Vous ne détenez encore aucune fraction",
-    "noneHeldHint": "Téléchargez une publication pour être frappée de 1000, ou achetez celle de quelqu'un d'autre.",
+    "noneHeldHint": "Frappez une publication pour détenir ses 1000 fractions, ou investissez dans celle de quelqu'un d'autre.",
     "listedForSale": "Mise en vente",
     "priceEach": "{{price}} chacun",
     "listingCancelled": "Annonce de la liste annulée",
@@ -3447,8 +3447,8 @@
     "offersForYourFractions": "Offres pour vos fractions",
     "review": "Examiner",
     "noFractionsYet": "Pas de fractions encore",
-    "profileEmptyOwn": "Chaque upload est fractionné en 1000 fractions. Publiez quelque chose, ou investissez dans une publication en laquelle vous croyez.",
-    "profileEmptyOther": "Chaque upload est fractionné en 1000 fractions. Ce profil ne détient actuellement aucune fraction d'aucune publication.",
+    "profileEmptyOwn": "Une publication frappée représente 1000 fractions. Frappez l'une de vos publications, ou investissez dans une publication en laquelle vous croyez.",
+    "profileEmptyOther": "Une publication frappée représente 1000 fractions. Ce profil ne détient actuellement aucune fraction d'aucune publication.",
     "browseTheMarket": "Parcourir le marché",
     "sellFractions": "Vendre des fractions",
     "balanceReadFailed": "Impossible de lire votre solde de fractions pour le moment. Fermez ceci et réessayez — lister sans cela risque de vendre des fractions que vous ne détenez plus.",
@@ -6382,5 +6382,10 @@
     "moveFunds": "Transférer des fonds",
     "moveFundsHint": "Échanger ou déposer depuis une autre chaîne",
     "notNow": "Pas maintenant"
+  },
+  "glossary": {
+    "fractionsDesc": "Une publication frappée sur DeHub devient un NFT divisé en 1 000 fractions, et le créateur commence avec les 1 000 — 100 % de la propriété du contenu. La frappe est facultative et peut se faire à la publication ou plus tard.",
+    "tokenIdDesc": "Un identifiant on-chain unique qu'une publication reçoit lorsqu'elle est frappée en tant que NFT sur la blockchain. La frappe étant facultative, une publication qui n'a pas été frappée n'a pas encore de Token ID.",
+    "tokenIdInfoDesc": "L'identifiant on-chain unique qu'une publication reçoit une fois frappée en tant que NFT. Affiché en haut de la page Infos de la publication pour les publications frappées."
   }
 }

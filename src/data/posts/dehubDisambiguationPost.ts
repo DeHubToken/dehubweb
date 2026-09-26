@@ -27,7 +27,7 @@ DeHub is an open-source, censorship-resistant social network where creators own 
 
 What makes it a genuine alternative rather than another feed:
 
-- **On-chain ownership.** Your content is minted on-chain the moment you upload, so you hold it, not a platform.
+- **On-chain ownership.** You can mint your content on-chain to your wallet, when you upload or later, so you hold it, not a platform.
 - **A transparent, chronological feed.** No opaque ranking algorithm deciding who sees you.
 - **Real creator monetisation.** Tokenised uploads that can be free, pay-per-view or token-gated; on-chain tradable subscriptions that carry resale royalties back to the creator; watch-to-earn bounties; and up to 90% ad-revenue share to the ecosystem.
 - **Live and play.** Livepeer-powered live streaming that has scaled past 50,000 concurrent viewers, on-chain live streams with animated tips, a play-to-earn arcade, and the flagship MMA battle-royale game Last Chad Standing.

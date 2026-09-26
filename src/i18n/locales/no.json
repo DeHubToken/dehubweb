@@ -3896,7 +3896,12 @@
     }
   },
   "fractions": {
-    "title": "Andeler"
+    "seoDescription": "Kjøp og selg fraksjoner av DeHub-innlegg. Et preget innlegg er 1000 on-chain-fraksjoner — eie en bit av en video, et spor eller et bilde og handle den i DHB.",
+    "title": "Andeler",
+    "startTheMarketHint": "Et preget innlegg er 1000 fraksjoner — legg ut noen av dine for å starte markedet.",
+    "noneHeldHint": "Preg et innlegg for å eie alle de 1000 fraksjonene, eller kjøp deg inn i noen andres.",
+    "profileEmptyOwn": "Et preget innlegg er 1000 fraksjoner. Preg et av innleggene dine, eller kjøp deg inn i et innlegg du har tro på.",
+    "profileEmptyOther": "Et preget innlegg er 1000 fraksjoner. Denne profilen eier ingen fraksjoner av noe innlegg akkurat nå."
   },
   "stores": {
     "podToggle": "Print-on-demand-vare",
@@ -4056,5 +4061,10 @@
     "moveFunds": "Flytt inn midler",
     "moveFundsHint": "Bytt eller sett inn fra en annen kjede",
     "notNow": "Ikke nå"
+  },
+  "glossary": {
+    "fractionsDesc": "Et innlegg som preges på DeHub blir en NFT delt i 1000 fraksjoner, og skaperen starter med alle 1000 — 100 % eierskap til innholdet. Preging er valgfritt og kan skje når du publiserer eller senere.",
+    "tokenIdDesc": "En unik on-chain-identifikator et innlegg får når det preges som en NFT på blokkjeden. Preging er valgfritt, så et innlegg som ikke er preget har ingen Token ID ennå.",
+    "tokenIdInfoDesc": "Den unike on-chain-identifikatoren et innlegg får når det er preget som en NFT. Vises øverst på Innleggsinfo-siden for pregede innlegg."
   }
 }
