@@ -513,7 +513,17 @@
     "addTip": "Tip එකතු කරන්න",
     "attachDescription": "ඔබේ বার্তාවට DHB ටෝකන් ඉඟි ලෙස සংযුක්ත කරන්න",
     "attachAmount": "{{amount}} DHB සংයුක්ත කරන්න",
-    "removeTip": "Tip ඉවත් කරන්න"
+    "removeTip": "Tip ඉවත් කරන්න",
+    "payWith": "ගෙවන්න",
+    "payQuoting": "හොඳම මිල සොයමින්…",
+    "payQuote": "≈ {{chain}} මත {{amount}} {{symbol}}",
+    "payViaBridge": "Uniswap හි DHB බවට හුවමාරු කළා, තත්පර ~{{seconds}} කින් ලැබේ",
+    "payViaSwap": "Uniswap හි DHB බවට හුවමාරු කළා",
+    "stageApprove": "{{symbol}} අනුමත කරමින්…",
+    "stageBridge": "{{chain}} සිට {{symbol}} යවමින්…",
+    "stageArriving": "Base වෙත ලැබෙමින්, සාමාන්‍යයෙන් තත්පර කිහිපයක්…",
+    "stageSwap": "Uniswap හි DHB මිලදී ගනිමින්…",
+    "payFailed": "{{symbol}} DHB බවට පරිවර්තනය කළ නොහැකි විය"
   },
   "postOptions": {
     "options": "විකල්ප",
