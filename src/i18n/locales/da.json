@@ -1783,6 +1783,7 @@
     "notificationsEnabled": "Notifikationer aktiveret for denne profil"
   },
   "toasts": {
+    "reactionTip": "Hold musen over eller hold liker-knappen nede for flere reaktioner",
     "saved_to_bookmarks": "Gemt i bogmærker",
     "new_member_notice_title": "Du vises i Nye medlemmer",
     "new_member_notice_body": "Andre medlemmer kan se, hvornår du tilmeldte dig, så de kan sige hej. Sluk den når som helst.",

@@ -1749,6 +1749,7 @@
     "notificationsEnabled": "ለዚህ መገለጫ ማሳወቂያዎች ነቅተዋል"
   },
   "toasts": {
+    "reactionTip": "ለተጨማሪ ምላሾች የመውደድ ቁልፉ ላይ ያንዣብቡ ወይም ተጭነው ይያዙ",
     "saved_to_bookmarks": "ወደ ዕልባቶች ተቀምጧል",
     "new_member_notice_title": "በአዳዲስ አባላት እያሳያችሁ ነው",
     "new_member_notice_body": "ሌሎች አባላት እርስዎ ሲቀላቀሉ ማየት ይችላሉ, ስለዚህ ሰላም ማለት ይችላሉ. በማንኛውም ጊዜ ያጥፉት.",

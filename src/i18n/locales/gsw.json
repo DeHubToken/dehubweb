@@ -1725,6 +1725,7 @@
     "notificationsEnabled": "Benachrichtigunge für das Profil aktiviert"
   },
   "toasts": {
+    "reactionTip": "Fahr mit dr Muus drüber oder heb dr Gfallt-mr-Chnopf druckt für meh Reaktione",
     "saved_to_bookmarks": "Bi de Läsezeiche gspeicheret",
     "new_member_notice_title": "Du bisch im \"Neui Mitgliider\" zeiglet.",
     "new_member_notice_body": "Anderi Mitgliider chönd gseh, wann du dich agmäldet hesch, damit sie dich chönd begrüsse. Du chasch das jederzeit usschalte.",

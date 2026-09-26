@@ -1779,6 +1779,7 @@
     "notificationsEnabled": "Benachrichtigungen für dieses Profil aktiviert"
   },
   "toasts": {
+    "reactionTip": "Fahre über den Gefällt-mir-Button oder halte ihn gedrückt für weitere Reaktionen",
     "saved_to_bookmarks": "Zu Lesezeichen gespeichert",
     "new_member_notice_title": "Sie werden in neuen Mitgliedern angezeigt",
     "new_member_notice_body": "Andere Mitglieder können sehen, wann du beigetreten bist, damit sie Hallo sagen können. Schalten Sie es jederzeit aus.",

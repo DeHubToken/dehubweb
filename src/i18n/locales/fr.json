@@ -1783,6 +1783,7 @@
     "notificationsEnabled": "Notifications activées pour ce profil"
   },
   "toasts": {
+    "reactionTip": "Survolez ou maintenez le bouton J'aime pour plus de réactions",
     "saved_to_bookmarks": "Ajouté aux favoris",
     "new_member_notice_title": "Vous affichez dans Nouveaux membres",
     "new_member_notice_body": "Les autres membres peuvent voir quand vous vous êtes inscrit, afin qu'ils puissent vous dire bonjour. Éteignez-le à tout moment.",

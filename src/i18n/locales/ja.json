@@ -1777,6 +1777,7 @@
     "notificationsEnabled": "このプロフィールの通知が有効になりました"
   },
   "toasts": {
+    "reactionTip": "いいねボタンにカーソルを合わせるか長押しすると、ほかのリアクションを選べます",
     "saved_to_bookmarks": "ブックマークに保存しました",
     "new_member_notice_title": "新規メンバーに表示されています",
     "new_member_notice_body": "他のメンバーは、あなたがいつ参加したかを見ることができるので、彼らは挨拶することができます。 いつでもオフにできます。",

@@ -1740,6 +1740,7 @@
     "notificationsEnabled": "Awọn ifitonileti ti ṣiṣẹ fun profaili yii"
   },
   "toasts": {
+    "reactionTip": "Gbé kọ́sọ̀ sórí tàbí di bọ́tìnnì ìfẹ́ mú fún àwọn ìdáhùn míràn",
     "saved_to_bookmarks": "Ti fi pamọ́ sí àmì ìwé",
     "new_member_notice_title": "O ń ṣe àfihàn nínú àwọn ọmọ ẹgbẹ́ tuntun",
     "new_member_notice_body": "Àwọn ọmọ ẹgbẹ́ mìíràn lè rí ìgbà tí o bá darapọ̀ mọ́ wọn, kí wọ́n lè kí ẹ. Pa á nígbàkigbà.",

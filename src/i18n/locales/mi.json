@@ -1737,6 +1737,7 @@
     "notificationsEnabled": "Kua whakahohea ngā whakamōhiotanga mō tēnei kōnae"
   },
   "toasts": {
+    "reactionTip": "Whakatauhia te pehu, pēhi roa rānei i te pātene pai ki ahau mō ētahi atu tauhohenga",
     "saved_to_bookmarks": "Kua tiakina ki ngā tohuwāhi",
     "new_member_notice_title": "E whakaatu ana koe i roto i ngā mema hou",
     "new_member_notice_body": "Ka taea e ētahi atu mema te kite i te wā i uru atu ai koe, kia taea ai e rātou te kī atu, \"Kia ora\". Whakamutua i nga wa katoa.",

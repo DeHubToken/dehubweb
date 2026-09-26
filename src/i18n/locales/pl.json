@@ -1779,6 +1779,7 @@
     "notificationsEnabled": "Powiadomienia włączone dla tego profilu"
   },
   "toasts": {
+    "reactionTip": "Najedź kursorem lub przytrzymaj przycisk Lubię to, aby zobaczyć więcej reakcji",
     "saved_to_bookmarks": "Zapisano w zakładkach",
     "new_member_notice_title": "Wyświetlasz w nowych członkach",
     "new_member_notice_body": "Inni członkowie mogą zobaczyć, kiedy dołączysz, dzięki czemu mogą się przywitać. Wyłącz ją w dowolnym momencie.",

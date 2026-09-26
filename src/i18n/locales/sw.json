@@ -1779,6 +1779,7 @@
     "notificationsEnabled": "Arifa zimewashwa kwa wasifu huu"
   },
   "toasts": {
+    "reactionTip": "Elekeza kipanya au bonyeza na ushikilie kitufe cha kupenda kwa maoni zaidi",
     "saved_to_bookmarks": "Imehifadhiwa kwenye alamisho",
     "new_member_notice_title": "Unaonekana katika washiriki wapya",
     "new_member_notice_body": "Washiriki wengine wanaweza kuona ulipojiunga, ili waweze kusalimia. Zima wakati wowote.",

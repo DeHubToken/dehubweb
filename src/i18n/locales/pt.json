@@ -1783,6 +1783,7 @@
     "notificationsEnabled": "Notificações ativadas para este perfil"
   },
   "toasts": {
+    "reactionTip": "Passe o cursor ou mantenha pressionado o botão de curtir para mais reações",
     "saved_to_bookmarks": "Salvo nos favoritos",
     "new_member_notice_title": "Está a mostrar em Novos membros",
     "new_member_notice_body": "Outros membros podem ver quando aderiu, para que possam dizer olá. Desligue-o a qualquer momento.",

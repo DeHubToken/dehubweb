@@ -1702,6 +1702,7 @@
     "notificationsEnabled": "ई प्रोफाइल खातिर सूचना चालू हो गेल"
   },
   "toasts": {
+    "reactionTip": "आउ रिएक्शन लगी लाइक बटन पर माउस ले जा या दबा के रखा",
     "saved_to_bookmarks": "बुकमार्क में सेव हो गेल",
     "new_member_notice_title": "नए articlequality model के निर्माण के लिए मदद मांगना",
     "new_member_notice_body": "हेल्लो दोस्तों अक्सर जब हमे सर्जरी करे हटाओ ई छौंड़ा को कभी भी,",

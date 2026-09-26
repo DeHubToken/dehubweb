@@ -1762,6 +1762,7 @@
     "notificationsEnabled": "Pranešimai įjungti šiam profiliui"
   },
   "toasts": {
+    "reactionTip": "Daugiau reakcijų – užveskite pelę arba palaikykite paspaudę mygtuką „Patinka“",
     "saved_to_bookmarks": "Išsaugota žymėse",
     "new_member_notice_title": "Jūs rodote Naujus narius",
     "new_member_notice_body": "Kiti nariai gali matyti, kada prisijungėte, kad galėtų pasisveikinti. Išjunkite bet kuriuo metu.",

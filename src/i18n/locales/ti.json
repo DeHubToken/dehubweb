@@ -1716,6 +1716,7 @@
     "notificationsEnabled": "ንዚ ፕሮፋይል ሓበሬታታት ተበጊሱ"
   },
   "toasts": {
+    "reactionTip": "ንዝያዳ ግብረ-መልሲ ኣብ ልዕሊ መጠወቒ ፍቶ ማውስ ኣቐምጡ ወይ ጠዊቕኩም ሓዙ",
     "saved_to_bookmarks": "ኣብ መዕቆቢ ተዓቂቡ",
     "new_member_notice_title": "ኣብ ሓደስቲ ኣባላት ትርከብ",
     "new_member_notice_body": "ካልኦት ኣባላት ምስ ተጸምበሩ ክርእዩ ይኽእሉ እዮም ፣ ስለዚ ሰላም ክብሉ ይኽእሉ እዮም ። ኣብ ዝኾነ እዋን ኣወግድዎ ።",
