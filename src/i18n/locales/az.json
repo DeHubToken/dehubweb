@@ -5580,7 +5580,6 @@
     "seoDescription": "Rəsmi DeHub sənədləri: platformaya baxış, dApps, DHB token iqtisadiyyatı, steykinq, oyunlar, yol xəritəsi, FAQ və daha çoxu."
   },
   "dex": {
-    "launchNotice": "Bu xüsusi birja Uniswap üzərində qurulub və onun tərəfindən qorunur. Hazırda aktivdir və tam işləkdir, rəsmi listinqlər tezliklə elan olunacaq. İndi likvidlik əlavə etməyə dəvətlisiniz — fermalar və təşviqlər çox yaxında açıqlanacaq.",
     "seoTitle": "DEX — DHB-ni öz qiymətinizlə ticarət edin",
     "seoDescription": "Base və ya BNB Chain-də Uniswap v4 limit sifarişi ilə DHB alış və ya satış qiymətinizi təyin edin. Canlı sifariş kitabı, bazar dərinliyi və vahid ortaq USD qiyməti.",
     "venue": "Şəbəkə",
