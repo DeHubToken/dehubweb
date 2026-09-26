@@ -3986,5 +3986,23 @@
     "fractionsDesc": "在 DeHub 上铸造其帖子会变成一个分成 1,000 份碎片其 NFT，创作者一开始就持有全部 1,000 份——即内容 100% 其所有权。铸造是可选其，可以在发布时进行，也可以以后再铸造。",
     "tokenIdDesc": "帖子作为 NFT 铸造上区块链时得到其唯一链上标识。铸造是可选其，所以还没铸造其帖子暂时没有 Token ID。",
     "tokenIdInfoDesc": "帖子一旦作为 NFT 铸造后得到其唯一链上标识。已铸造其帖子会在帖子信息页顶部显示。"
+  },
+  "tipFunding": {
+    "noRoute": "现在这个代币没有换 DHB 的 Uniswap 路径",
+    "lowLiquidity": "现在 Uniswap 流动性不够，付不了这么大一笔",
+    "dpayNoAmount": "DeHub Pay 没有返回付款金额",
+    "dpayDelayed": "DeHub Pay 已收到你的付款，正在送 DHB。很快就到你的钱包；到了以后再送一次。",
+    "noBridgeRoute": "现在没有可用的跨链路径",
+    "bridgeCancelled": "跨链订单已取消，钱已退回你的钱包",
+    "bridgeSlow": "跨链转账比平时慢。会到你在 Base 的钱包；到了以后再送一次。",
+    "txFailed": "交易没有确认。什么都没花掉。",
+    "noToken": "Base 上没有 {{symbol}}",
+    "notEnoughOnBase": "Base 上的 {{symbol}} 不够付这笔钱",
+    "notEnoughWithFees": "{{symbol}} 不够付这笔钱（包括网络手续费）",
+    "notEnough": "{{symbol}} 不够付这笔钱",
+    "noGasForFee": "网络币不够付跨链手续费",
+    "priceMoved": "你的 USDC 在路上的时候 DHB 价钱变了。USDC 在你 Base 的钱包里；再送一次就完成。",
+    "usdcPending": "你的 USDC 已到 Base，但还看不到。等一下再送一次。",
+    "dhbPending": "DHB 已买到并确认，但还没显示。等一下再送一次。"
   }
 }

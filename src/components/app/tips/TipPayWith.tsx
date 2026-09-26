@@ -17,6 +17,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import { fundingErrorText } from '@/lib/tip-funding-error';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS, ETH_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
 import { ARC_CHAIN_ID } from '@/lib/chains/arc';
@@ -83,10 +84,11 @@ interface TipPayWithProps {
 }
 
 export default function TipPayWith({ amountDhb, value, onChange, requireSource = false }: TipPayWithProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { walletAddress } = useAuth();
-  const { allTokens } = useAllChainsTokens();
-  const { data: prices = {} } = useTokenPrices();
+  const { allTokens, isLoading: tokensLoading } = useAllChainsTokens();
+  // Until the real prices land, ETH and BNB read as $0 and drop out of the list.
+  const { data: prices = {}, isFetched: pricesReady } = useTokenPrices();
   const [open, setOpen] = useState(false);
   const userPicked = useRef(false);
 
@@ -116,27 +118,30 @@ export default function TipPayWith({ amountDhb, value, onChange, requireSource =
     .sort((a, b) => b.usd - a.usd), [allTokens, prices, dhbAddresses]);
 
   // Short of DHB → switch to the richest balance, once, unless the tipper chose.
-  // Back to DHB when the amount drops within what they hold.
+  // Back to DHB when the amount drops within what they hold. The pick waits for
+  // every chain's balances and for real prices: choosing off a half-loaded list
+  // pre-selects $1 of USDC while $50 of ETH is still arriving.
   const short = requireSource || (amountDhb > 0 && amountDhb > dhbHeld);
+  const listReady = !tokensLoading && pricesReady;
   useEffect(() => {
     if (userPicked.current) return;
-    if (short && !value && rows.length) onChange(rows[0]);
+    if (short && !value && rows.length && listReady) onChange(rows[0]);
     if (!short && value) onChange(null);
-  }, [short, rows, value, onChange]);
+  }, [short, rows, value, onChange, listReady]);
 
   const debouncedAmount = useDebouncedValue(amountDhb, 600);
   const [plan, setPlan] = useState<TipFundingPlan | null>(null);
-  const [planError, setPlanError] = useState('');
+  const [planError, setPlanError] = useState<unknown>(null);
   const [quoting, setQuoting] = useState(false);
   useEffect(() => {
     setPlan(null);
-    setPlanError('');
+    setPlanError(null);
     if (!value || !walletAddress || !(debouncedAmount > 0)) return;
     let cancelled = false;
     setQuoting(true);
     planTipFunding({ source: value, amountDhb: debouncedAmount, dhbOnBase, walletAddress })
       .then(p => { if (!cancelled) setPlan(p); })
-      .catch(e => { if (!cancelled) setPlanError(e instanceof Error ? e.message : String(e)); })
+      .catch(e => { if (!cancelled) setPlanError(e ?? new Error('')); })
       .finally(() => { if (!cancelled) setQuoting(false); });
     return () => { cancelled = true; };
   }, [value?.chainId, value?.address, debouncedAmount, walletAddress, dhbOnBase]);
@@ -150,6 +155,10 @@ export default function TipPayWith({ amountDhb, value, onChange, requireSource =
   };
   const selectedRow = value ? rows.find(r => sameSource(r, value)) ?? (value as Row) : null;
   const payAmount = plan ? formatPayAmount(plan) : null;
+  // A dollar figure beside the coin amount, so 0.0018 ETH reads as roughly $5.
+  const payUsd = plan && plan.kind !== 'none' && plan.payUsd
+    ? new Intl.NumberFormat(i18n.language, { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(plan.payUsd)
+    : null;
 
   return (
     <div className="rounded-xl border border-white/10 bg-white/5">
@@ -179,12 +188,13 @@ export default function TipPayWith({ amountDhb, value, onChange, requireSource =
               {t('tip.payQuoting', 'Getting the best price…')}
             </span>
           ) : planError ? (
-            <span className="text-amber-300/90">{planError}</span>
+            <span className="text-amber-300/90">{fundingErrorText(t, planError)}</span>
           ) : payAmount && plan && plan.kind !== 'none' ? (
             <span className="text-white/70">
               {t('tip.payQuote', '≈ {{amount}} {{symbol}} on {{chain}}', {
                 amount: payAmount, symbol: plan.source.symbol, chain: TIP_CHAIN_NAMES[plan.source.chainId] ?? '',
               })}
+              {payUsd && <span className="text-white/90 tabular-nums"> (~{payUsd})</span>}
               {' · '}
               <span className="text-white/45">
                 {planUsesDpay(plan)

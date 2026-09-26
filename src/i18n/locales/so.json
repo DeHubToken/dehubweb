@@ -4073,5 +4073,23 @@
     "fractionsDesc": "Qoraal lagu mint-gareeyo DeHub wuxuu noqdaa NFT loo qaybiyay 1,000 qaybood, abuurahana wuxuu ku bilaabaa dhammaan 1,000 — 100% lahaanshaha nuxurka. Mint-garaynta waa ikhtiyaari waxaana la samayn karaa marka aad daabacayso ama hadhow.",
     "tokenIdDesc": "Aqoonsi gaar ah oo on-chain ah oo qoraal helo marka loo mint-gareeyo NFT ahaan blockchain-ka. Mint-garaynta waa ikhtiyaari, sidaa darteed qoraal aan weli la mint-gareyn ma laha Token ID.",
     "tokenIdInfoDesc": "Aqoonsiga gaarka ah ee on-chain ah ee qoraal helo marka loo mint-gareeyo NFT ahaan. Wuxuu ka muuqdaa xagga sare ee bogga Macluumaadka Qoraalka ee qoraallada la mint-gareeyay."
+  },
+  "tipFunding": {
+    "noRoute": "Hadda ma jiro waddo Uniswap oo tokenkan DHB loogu beddelo",
+    "lowLiquidity": "Hadda ma jiro liquidity Uniswap oo ku filan lacag-bixin cabbirkan leh",
+    "dpayNoAmount": "DeHub Pay ma soo celin qadarka lacag-bixinta",
+    "dpayDelayed": "DeHub Pay wuu helay lacag-bixintaada wuxuuna dirayaa DHB. Dhowaan ayuu jeebkaaga soo gaari doonaa; markuu yimaado mar kale dir.",
+    "noBridgeRoute": "Hadda ma jiro waddo cross-chain ah oo la heli karo",
+    "bridgeCancelled": "Dalabkii cross-chain waa la joojiyay, lacagtiina waxaa lagu celiyay jeebkaaga",
+    "bridgeSlow": "Wareejinta cross-chain waxay qaadanaysaa waqti ka badan sidii caadiga ahayd. Waxay jeebkaaga ku soo gaari doontaa Base; markay timaado mar kale dir.",
+    "txFailed": "Macaamilka lama xaqiijin. Waxba lagama kharash garayn.",
+    "noToken": "{{symbol}} kuma jiro Base",
+    "notEnoughOnBase": "{{symbol}} kugu filan kuma jiro Base lacag-bixintan",
+    "notEnoughWithFees": "{{symbol}} kuguma filna lacag-bixintan, oo ay ku jiraan khidmadaha shabakadda",
+    "notEnough": "{{symbol}} kuguma filna lacag-bixintan",
+    "noGasForFee": "Coin-ka shabakadda kuguma filna khidmadda cross-chain",
+    "priceMoved": "Qiimaha DHB wuu is beddelay intii USDC-gaagu soo socday. USDC-gu wuxuu ku jiraa jeebkaaga Base; mar kale dir si aad u dhammaystirto.",
+    "usdcPending": "USDC-gaagu wuu soo gaaray Base laakiin weli lama arko. Mar kale dir wax yar kadib.",
+    "dhbPending": "Iibsiga DHB waa la xaqiijiyay laakiin weli ma muuqdo. Mar kale dir wax yar kadib."
   }
 }

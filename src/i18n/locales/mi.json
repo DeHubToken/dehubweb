@@ -4076,5 +4076,23 @@
     "fractionsDesc": "Ko te pou ka whakaputaina ki DeHub ka huri hei NFT kua wehea ki ngā wāhanga 1,000, ā, ka tīmata te kaihanga me ngā wāhanga 1,000 katoa — 100% te mana whai i te ihirangi. Kāore he here kia whakaputaina, ā, ka taea i te wā e tuku ana koe, ā muri ake rānei.",
     "tokenIdDesc": "He tautuhi ahurei i runga i te mekameka ka riro i tētahi pou ina whakaputaina hei NFT ki te poraka mekameka. Kāore he here kia whakaputaina, nō reira kāore anō he Token ID o te pou kāore anō kia whakaputaina.",
     "tokenIdInfoDesc": "Te tautuhi ahurei i runga i te mekameka ka riro i tētahi pou ina whakaputaina hei NFT. Ka whakaaturia ki runga rawa o te whārangi Mōhiohio Pou mō ngā pou kua whakaputaina."
+  },
+  "tipFunding": {
+    "noRoute": "Kāore he ara Uniswap ki DHB mō tēnei token i tēnei wā",
+    "lowLiquidity": "Kāore i te nui te moniwai i Uniswap mō tētahi utu pēnei te rahi i tēnei wā",
+    "dpayNoAmount": "Kāore a DeHub Pay i whakahoki mai i te rahi o te utu",
+    "dpayDelayed": "Kua riro i a DeHub Pay tō utu, ā, kei te tuku ia i ngā DHB. Ka tae mai ki tō pūkoro ākuanei; tukuna anō ina tae mai.",
+    "noBridgeRoute": "Kāore he ara whakawhiti-mekameka e wātea ana i tēnei wā",
+    "bridgeCancelled": "I whakakorea te tono whakawhiti-mekameka, ā, kua whakahokia ki tō pūkoro",
+    "bridgeSlow": "He roa ake te whakawhitinga whakawhiti-mekameka i te tikanga. Ka tae ki tō pūkoro i Base; tukuna anō ina tae mai.",
+    "txFailed": "Kāore i whakaūngia te tauwhitinga. Kāore he mea i whakapaua.",
+    "noToken": "Kāore he {{symbol}} i Base",
+    "notEnoughOnBase": "Kāore i te nui ngā {{symbol}} i Base mō tēnei utu",
+    "notEnoughWithFees": "Kāore i te nui ngā {{symbol}} mō tēnei utu, tae atu ki ngā utu whatunga",
+    "notEnough": "Kāore i te nui ngā {{symbol}} mō tēnei utu",
+    "noGasForFee": "Kāore i te nui te moni whatunga hei utu i te utu whakawhiti-mekameka",
+    "priceMoved": "I neke te utu o DHB i te wā e tae mai ana ō USDC. Kei tō pūkoro i Base ngā USDC; tukuna anō kia oti.",
+    "usdcPending": "Kua tae ō USDC ki Base engari kāore anō kia kitea. Tukuna anō ākuanei.",
+    "dhbPending": "Kua whakaūngia te hoko DHB engari kāore anō kia puta. Tukuna anō ākuanei."
   }
 }

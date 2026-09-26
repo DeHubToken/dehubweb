@@ -4004,5 +4004,23 @@
     "fractionsDesc": "辣 DeHub 浪向铸造个帖子会变成一只拆成 1,000 个碎片个 NFT，创作者一开始就拿牢全部 1,000 个 — 对内容 100% 个所有权。铸造是可选个，可以辣发布个辰光做，也可以晏歇再做。",
     "tokenIdDesc": "帖子辣区块链浪向铸造成 NFT 个辰光拿到个唯一链上标识。铸造是可选个，所以还呒没铸造个帖子暂时呒没 Token ID。",
     "tokenIdInfoDesc": "帖子一旦铸造成 NFT 就会拿到个唯一链上标识。铸造过个帖子会辣帖子信息页个顶浪显示。"
+  },
+  "tipFunding": {
+    "noRoute": "眼下搿个代币呒没通到 DHB 个 Uniswap 路径",
+    "lowLiquidity": "眼下 Uniswap 浪个流动性勿够付搿能大个款",
+    "dpayNoAmount": "DeHub Pay 呒没返回付款金额",
+    "dpayDelayed": "DeHub Pay 已经收到侬个付款，正勒发 DHB。马上就到侬个钱包；到了以后再发一趟。",
+    "noBridgeRoute": "眼下呒没可用个跨链路径",
+    "bridgeCancelled": "跨链订单已经取消，钞票退回到侬个钱包了",
+    "bridgeSlow": "跨链转账比平常慢。会到侬辣 Base 浪个钱包；到了以后再发一趟。",
+    "txFailed": "交易呒没确认。一分钞票也呒没用脱。",
+    "noToken": "Base 浪呒没 {{symbol}}",
+    "notEnoughOnBase": "Base 浪个 {{symbol}} 勿够付搿笔款",
+    "notEnoughWithFees": "算上网络手续费，{{symbol}} 勿够付搿笔款",
+    "notEnough": "{{symbol}} 勿够付搿笔款",
+    "noGasForFee": "网络币勿够付跨链手续费",
+    "priceMoved": "侬个 USDC 勒到账个辰光 DHB 价钿变了。USDC 辣侬 Base 浪个钱包里；再发一趟就好完成。",
+    "usdcPending": "侬个 USDC 已经到 Base 了，不过还看勿到。等一歇再发一趟。",
+    "dhbPending": "DHB 买好已经确认，不过还呒没显示出来。等一歇再发一趟。"
   }
 }

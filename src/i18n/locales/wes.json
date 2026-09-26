@@ -3548,5 +3548,23 @@
     "fractionsDesc": "Post weh dem mint for DeHub go turn NFT weh dem divide for 1,000 fraction, and the creator go start with all 1,000 — 100% ownership for the content. Minting na your choice, and e fit happen when you di publish or later.",
     "tokenIdDesc": "One special on-chain ID weh post di get when dem mint am as NFT for blockchain. Minting na your choice, so post weh dem never mint no get Token ID yet.",
     "tokenIdInfoDesc": "The special on-chain ID weh post di get once dem don mint am as NFT. E di show for top of Post Info page for post dem weh dem don mint."
+  },
+  "tipFunding": {
+    "noRoute": "No Uniswap road to DHB for dis token right now",
+    "lowLiquidity": "Uniswap no get enough liquidity for payment wey big like dis right now",
+    "dpayNoAmount": "DeHub Pay no give back the payment amount",
+    "dpayDelayed": "DeHub Pay don get your payment and e di send the DHB. E go land for your wallet soon; send again when e don land.",
+    "noBridgeRoute": "No cross-chain road dey right now",
+    "bridgeCancelled": "Dem don cancel the cross-chain order and return the money for your wallet",
+    "bridgeSlow": "The cross-chain transfer di take long pass normal. E go land for your wallet for Base; send again when e don land.",
+    "txFailed": "The transaction no confirm. Nothing no comot.",
+    "noToken": "No {{symbol}} for Base",
+    "notEnoughOnBase": "{{symbol}} for Base no reach for dis payment",
+    "notEnoughWithFees": "{{symbol}} no reach for dis payment, plus network fees",
+    "notEnough": "{{symbol}} no reach for dis payment",
+    "noGasForFee": "Network coin no reach to pay the cross-chain fee",
+    "priceMoved": "DHB price don move as your USDC di come. The USDC dey for your wallet for Base; send again to finish.",
+    "usdcPending": "Your USDC don land for Base but e never show. Send again small time.",
+    "dhbPending": "The DHB buy don confirm but e never show. Send again small time."
   }
 }

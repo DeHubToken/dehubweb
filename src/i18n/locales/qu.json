@@ -4112,5 +4112,23 @@
     "fractionsDesc": "DeHub-pi mintisqa willakuyqa 1,000 rakikunaman rakisqa NFT-man tukun, kamariqtaq llapan 1,000-wan qallarin — contenidop 100% kapuynin. Mintiyqa munasqallam, hinaspa uyarichispa utaq qhipaman ruwakunman.",
     "tokenIdDesc": "Huk sapallan on-chain riqsichiq, willakuy blockchain-pi NFT hina mintisqa kaptin chaskisqan. Mintiyqa munasqallam, chaymi mana mintisqa willakuyqa manaraq Token ID-yuqchu.",
     "tokenIdInfoDesc": "Sapallan on-chain riqsichiq, willakuy NFT hina mintisqaña kaptin chaskisqan. Mintisqa willakuykunapaq Willakuy Willay p'anqap patanpi rikuchikun."
+  },
+  "tipFunding": {
+    "noRoute": "Kunanqa manam kay token-paq DHB-man Uniswap ñan kanchu",
+    "lowLiquidity": "Kunanqa manam Uniswap-pi aypanchu liquidity kay hina hatun pagopaq",
+    "dpayNoAmount": "DeHub Pay manam pago qullqi yupayta kutichirqanchu",
+    "dpayDelayed": "DeHub Pay-qa pagoykita chaskirqanña, DHB-tataq kachachkan. Utqaylla billeteraykiman chayamunqa; chayamuptin hukmanta kachay.",
+    "noBridgeRoute": "Kunanqa manam cross-chain ñan kanchu",
+    "bridgeCancelled": "Cross-chain mañakuyqa chinkachisqa, qullqitaq billeteraykiman kutichisqa",
+    "bridgeSlow": "Cross-chain apachiyqa sapa kutimanta aswan unaychakun. Base-pi billeteraykiman chayamunqa; chayamuptin hukmanta kachay.",
+    "txFailed": "Transaccionqa manam takyachisqachu. Manam imapas tukusqachu.",
+    "noToken": "Manam {{symbol}} Base-pi kanchu",
+    "notEnoughOnBase": "Manam aypanchu {{symbol}} Base-pi kay pagopaq",
+    "notEnoughWithFees": "Manam aypanchu {{symbol}} kay pagopaq, red pagokunapiwan",
+    "notEnough": "Manam aypanchu {{symbol}} kay pagopaq",
+    "noGasForFee": "Manam aypanchu red qullqi cross-chain pagota pagapunapaq",
+    "priceMoved": "USDC-ykiq chayamuchkaptin DHB-q chanin tikrakurqan. USDC-qa Base-pi billeteraykipim; tukunaykipaq hukmanta kachay.",
+    "usdcPending": "USDC-yki Base-man chayamunña ichaqa manaraq rikukunchu. Huk ratullamanta hukmanta kachay.",
+    "dhbPending": "DHB rantiyqa takyachisqaña ichaqa manaraq rikhurinchu. Huk ratullamanta hukmanta kachay."
   }
 }

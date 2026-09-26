@@ -6391,5 +6391,23 @@
     "fractionsDesc": "Kiriman yang dicetak di DeHub menjadi NFT yang dibagi menjadi 1.000 fraksi, dan kreator memulai dengan seluruh 1.000 fraksi — kepemilikan 100% atas konten. Pencetakan bersifat opsional dan dapat dilakukan saat Anda memublikasikan atau nanti.",
     "tokenIdDesc": "Pengenal on-chain unik yang didapat sebuah kiriman saat dicetak sebagai NFT di blockchain. Pencetakan bersifat opsional, jadi kiriman yang belum dicetak belum memiliki Token ID.",
     "tokenIdInfoDesc": "Pengenal on-chain unik yang didapat sebuah kiriman setelah dicetak sebagai NFT. Ditampilkan di bagian atas halaman Info Kiriman untuk kiriman yang sudah dicetak."
+  },
+  "tipFunding": {
+    "noRoute": "Saat ini tidak ada rute Uniswap ke DHB untuk token ini",
+    "lowLiquidity": "Saat ini likuiditas Uniswap tidak cukup untuk pembayaran sebesar ini",
+    "dpayNoAmount": "DeHub Pay tidak mengembalikan jumlah pembayaran",
+    "dpayDelayed": "DeHub Pay sudah menerima pembayaran Anda dan sedang mengirim DHB. DHB akan segera masuk ke dompet Anda; kirim lagi setelah masuk.",
+    "noBridgeRoute": "Saat ini tidak ada rute lintas rantai yang tersedia",
+    "bridgeCancelled": "Pesanan lintas rantai dibatalkan dan dananya dikembalikan ke dompet Anda",
+    "bridgeSlow": "Transfer lintas rantai memakan waktu lebih lama dari biasanya. Dana akan masuk ke dompet Anda di Base; kirim lagi setelah masuk.",
+    "txFailed": "Transaksi tidak terkonfirmasi. Tidak ada yang terpakai.",
+    "noToken": "Tidak ada {{symbol}} di Base",
+    "notEnoughOnBase": "{{symbol}} di Base tidak cukup untuk pembayaran ini",
+    "notEnoughWithFees": "{{symbol}} tidak cukup untuk pembayaran ini, termasuk biaya jaringan",
+    "notEnough": "{{symbol}} tidak cukup untuk pembayaran ini",
+    "noGasForFee": "Koin jaringan tidak cukup untuk menutup biaya lintas rantai",
+    "priceMoved": "Harga DHB berubah saat USDC Anda sedang tiba. USDC ada di dompet Anda di Base; kirim lagi untuk menyelesaikan.",
+    "usdcPending": "USDC Anda sudah tiba di Base tetapi belum terlihat. Kirim lagi sebentar lagi.",
+    "dhbPending": "Pembelian DHB sudah terkonfirmasi tetapi belum muncul. Kirim lagi sebentar lagi."
   }
 }

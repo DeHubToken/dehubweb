@@ -4079,5 +4079,23 @@
     "fractionsDesc": "Sakon da aka yi wa minti a DeHub yana zama NFT da aka raba zuwa rabe-rabe 1,000, kuma mai ƙirƙira yana farawa da dukkan 1,000 — mallakar abun ciki 100%. Yin minti na zaɓi ne kuma zai iya faruwa lokacin da kake wallafawa ko daga baya.",
     "tokenIdDesc": "Keɓaɓɓen mai ganowa a kan blockchain da sako ke samu idan aka yi masa minti a matsayin NFT a kan blockchain. Yin minti na zaɓi ne, don haka sakon da ba a yi wa minti ba tukuna ba shi da Token ID.",
     "tokenIdInfoDesc": "Keɓaɓɓen mai ganowa a kan blockchain da sako ke samu da zarar an yi masa minti a matsayin NFT. Ana nuna shi a saman shafin Bayanin Sako ga sakonnin da aka yi wa minti."
+  },
+  "tipFunding": {
+    "noRoute": "Babu hanyar Uniswap zuwa DHB don wannan token a yanzu",
+    "lowLiquidity": "Babu isasshen liquidity a Uniswap don biyan wannan girman a yanzu",
+    "dpayNoAmount": "DeHub Pay bai dawo da adadin biyan kuɗi ba",
+    "dpayDelayed": "DeHub Pay ya karɓi biyan kuɗinka kuma yana aika DHB. Zai iso walat ɗinka nan ba da jimawa ba; sake aika idan ya iso.",
+    "noBridgeRoute": "Babu hanyar cross-chain da ake da ita a yanzu",
+    "bridgeCancelled": "An soke odar cross-chain kuma an mayar da kuɗin zuwa walat ɗinka",
+    "bridgeSlow": "Canja wurin cross-chain yana ɗaukar lokaci fiye da yadda aka saba. Zai iso walat ɗinka a kan Base; sake aika idan ya iso.",
+    "txFailed": "Ba a tabbatar da ma'amalar ba. Ba a kashe komai ba.",
+    "noToken": "Babu {{symbol}} a kan Base",
+    "notEnoughOnBase": "{{symbol}} a kan Base bai isa don wannan biyan kuɗi ba",
+    "notEnoughWithFees": "{{symbol}} bai isa don wannan biyan kuɗi ba, har da kuɗin hanyar sadarwa",
+    "notEnough": "{{symbol}} bai isa don wannan biyan kuɗi ba",
+    "noGasForFee": "Kuɗin hanyar sadarwa bai isa don biyan kuɗin cross-chain ba",
+    "priceMoved": "Farashin DHB ya canza yayin da USDC ɗinka ke isowa. USDC yana cikin walat ɗinka a kan Base; sake aika don kammalawa.",
+    "usdcPending": "USDC ɗinka ya iso kan Base amma ba a gani ba tukuna. Sake aika nan da ɗan lokaci.",
+    "dhbPending": "An tabbatar da sayen DHB amma bai bayyana ba tukuna. Sake aika nan da ɗan lokaci."
   }
 }

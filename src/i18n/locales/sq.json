@@ -4097,5 +4097,23 @@
     "fractionsDesc": "Një postim i mintuar në DeHub bëhet NFT i ndarë në 1.000 pjesë, dhe krijuesi fillon me të 1.000 — 100% pronësi mbi përmbajtjen. Mintimi është opsional dhe mund të bëhet kur publikon ose më vonë.",
     "tokenIdDesc": "Një identifikues unik on-chain që merr një postim kur mintohet si NFT në blockchain. Mintimi është opsional, kështu që një postim që nuk është mintuar ende nuk ka Token ID.",
     "tokenIdInfoDesc": "Identifikuesi unik on-chain që merr një postim sapo mintohet si NFT. Shfaqet në krye të faqes Informacione për postimin për postimet e mintuara."
+  },
+  "tipFunding": {
+    "noRoute": "Për momentin nuk ka rrugë Uniswap drejt DHB për këtë token",
+    "lowLiquidity": "Për momentin nuk ka likuiditet të mjaftueshëm në Uniswap për një pagesë të kësaj madhësie",
+    "dpayNoAmount": "DeHub Pay nuk ktheu shumën e pagesës",
+    "dpayDelayed": "DeHub Pay e ka marrë pagesën tënde dhe po dërgon DHB. Do të mbërrijë së shpejti në portofolin tënd; dërgo sërish pasi të mbërrijë.",
+    "noBridgeRoute": "Për momentin nuk ka rrugë ndërzinxhirore të disponueshme",
+    "bridgeCancelled": "Porosia ndërzinxhirore u anulua dhe u rimbursua në portofolin tënd",
+    "bridgeSlow": "Transferimi ndërzinxhiror po zgjat më shumë se zakonisht. Do të mbërrijë në portofolin tënd në Base; dërgo sërish pasi të mbërrijë.",
+    "txFailed": "Transaksioni nuk u konfirmua. Nuk u shpenzua asgjë.",
+    "noToken": "Nuk ka {{symbol}} në Base",
+    "notEnoughOnBase": "Nuk ka mjaftueshëm {{symbol}} në Base për këtë pagesë",
+    "notEnoughWithFees": "Nuk ka mjaftueshëm {{symbol}} për këtë pagesë, përfshirë tarifat e rrjetit",
+    "notEnough": "Nuk ka mjaftueshëm {{symbol}} për këtë pagesë",
+    "noGasForFee": "Nuk ka mjaftueshëm monedhë rrjeti për të mbuluar tarifën ndërzinxhirore",
+    "priceMoved": "Çmimi i DHB ndryshoi ndërsa po mbërrinin USDC-të e tua. USDC-të janë në portofolin tënd në Base; dërgo sërish për ta përfunduar.",
+    "usdcPending": "USDC-të e tua mbërritën në Base, por ende nuk duken. Dërgo sërish pas pak.",
+    "dhbPending": "Blerja e DHB u konfirmua, por ende nuk është shfaqur. Dërgo sërish pas pak."
   }
 }

@@ -6591,5 +6591,23 @@
     "fractionsDesc": "Siaran yang dicetak di DeHub menjadi NFT yang dibahagikan kepada 1,000 pecahan, dan pencipta bermula dengan kesemua 1,000 — 100% pemilikan kandungan. Pencetakan adalah pilihan dan boleh dilakukan semasa anda menerbitkan atau kemudian.",
     "tokenIdDesc": "Pengecam unik dalam rantai yang diperoleh siaran apabila ia dicetak sebagai NFT di blockchain. Pencetakan adalah pilihan, jadi siaran yang belum dicetak belum mempunyai Token ID.",
     "tokenIdInfoDesc": "Pengecam unik dalam rantai yang diperoleh siaran sebaik sahaja ia dicetak sebagai NFT. Dipaparkan di bahagian atas halaman Maklumat Siaran untuk siaran yang telah dicetak."
+  },
+  "tipFunding": {
+    "noRoute": "Tiada laluan Uniswap ke DHB untuk token ini buat masa ini",
+    "lowLiquidity": "Kecairan Uniswap tidak mencukupi untuk pembayaran sebesar ini buat masa ini",
+    "dpayNoAmount": "DeHub Pay tidak memulangkan jumlah pembayaran",
+    "dpayDelayed": "DeHub Pay telah menerima pembayaran anda dan sedang menghantar DHB. Ia akan tiba dalam dompet anda sebentar lagi; hantar semula setelah ia tiba.",
+    "noBridgeRoute": "Tiada laluan rentas rantaian tersedia buat masa ini",
+    "bridgeCancelled": "Pesanan rentas rantaian telah dibatalkan dan dipulangkan ke dompet anda",
+    "bridgeSlow": "Pemindahan rentas rantaian mengambil masa lebih lama daripada biasa. Ia akan tiba dalam dompet anda di Base; hantar semula setelah ia tiba.",
+    "txFailed": "Transaksi tidak disahkan. Tiada apa-apa dibelanjakan.",
+    "noToken": "Tiada {{symbol}} di Base",
+    "notEnoughOnBase": "{{symbol}} di Base tidak mencukupi untuk pembayaran ini",
+    "notEnoughWithFees": "{{symbol}} tidak mencukupi untuk pembayaran ini, termasuk yuran rangkaian",
+    "notEnough": "{{symbol}} tidak mencukupi untuk pembayaran ini",
+    "noGasForFee": "Syiling rangkaian tidak mencukupi untuk menampung yuran rentas rantaian",
+    "priceMoved": "Harga DHB berubah semasa USDC anda sedang tiba. USDC berada dalam dompet anda di Base; hantar semula untuk selesaikan.",
+    "usdcPending": "USDC anda telah tiba di Base tetapi belum kelihatan. Hantar semula sebentar lagi.",
+    "dhbPending": "Pembelian DHB telah disahkan tetapi belum muncul. Hantar semula sebentar lagi."
   }
 }

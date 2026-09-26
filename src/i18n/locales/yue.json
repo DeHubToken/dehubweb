@@ -4080,5 +4080,23 @@
     "fractionsDesc": "喺 DeHub 鑄造嘅帖子會變成一個分成 1,000 份碎片嘅 NFT，創作者一開始持有全部 1,000 份 — 對內容 100% 擁有權。鑄造係可選嘅，可以喺發佈嗰陣做，亦可以之後先做。",
     "tokenIdDesc": "帖子喺區塊鏈上鑄造成 NFT 嗰陣獲得嘅獨一無二鏈上識別碼。鑄造係可選嘅，所以未鑄造嘅帖子暫時冇 Token ID。",
     "tokenIdInfoDesc": "帖子鑄造成 NFT 之後獲得嘅獨一無二鏈上識別碼。已鑄造嘅帖子會喺帖子資料頁頂部顯示。"
+  },
+  "tipFunding": {
+    "noRoute": "而家呢隻代幣冇 Uniswap 路徑換到 DHB",
+    "lowLiquidity": "而家 Uniswap 嘅流動性唔夠應付咁大筆付款",
+    "dpayNoAmount": "DeHub Pay 冇回傳付款金額",
+    "dpayDelayed": "DeHub Pay 已經收到你嘅付款，而家傳送緊 DHB。好快就會到你嘅錢包；到咗之後再傳多次。",
+    "noBridgeRoute": "而家冇可用嘅跨鏈路徑",
+    "bridgeCancelled": "跨鏈訂單已經取消，並已退款到你嘅錢包",
+    "bridgeSlow": "跨鏈轉賬用嘅時間比平時長。會到你喺 Base 嘅錢包；到咗之後再傳多次。",
+    "txFailed": "交易冇確認，冇扣到任何錢。",
+    "noToken": "Base 上面冇 {{symbol}}",
+    "notEnoughOnBase": "Base 上面嘅 {{symbol}} 唔夠付呢筆款",
+    "notEnoughWithFees": "計埋網絡手續費，{{symbol}} 唔夠付呢筆款",
+    "notEnough": "{{symbol}} 唔夠付呢筆款",
+    "noGasForFee": "網絡幣唔夠俾跨鏈手續費",
+    "priceMoved": "你嘅 USDC 到緊嗰陣 DHB 價格變咗。USDC 喺你 Base 嘅錢包入面；再傳多次就完成。",
+    "usdcPending": "你嘅 USDC 已經到咗 Base，但暫時未見到。等陣再傳多次。",
+    "dhbPending": "DHB 購買已經確認，但暫時未顯示。等陣再傳多次。"
   }
 }
