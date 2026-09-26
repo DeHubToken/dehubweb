@@ -476,7 +476,9 @@
     "usernames": "ব্যবহারকারীর নাম",
     "usernamesDesc": "আপনার মালিকানাধীন নামগুলি",
     "usernamesCount_one": "{{count}} ব্যবহারকারীর নাম",
-    "usernamesCount_other": "{{count}} ব্যবহারকারীর নাম"
+    "usernamesCount_other": "{{count}} ব্যবহারকারীর নাম",
+    "leftHanded": "বাঁহাতি মোড",
+    "leftHandedDesc": "লাইক বোতামটি রিঅ্যাকশন বারের বাঁ দিকে সরান"
   },
   "common": {
     "save": "সংরক্ষণ",

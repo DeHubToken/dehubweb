@@ -392,7 +392,9 @@
     "showFollowers": "ফলোয়ার/ফলোইং দেখাও",
     "hideFollowerCounts": "ফলোয়ার সংখ্যা লুকাও",
     "followersOnly": "শুধু ফলোয়ার",
-    "subscribersOnly": "শুধু সাবস্ক্রাইবার"
+    "subscribersOnly": "শুধু সাবস্ক্রাইবার",
+    "leftHanded": "বাঁওহাতি মোড",
+    "leftHandedDesc": "লাইক বোতামটা রিঅ্যাকশন বারের বাঁও পাখে সরান"
   },
   "common": {
     "save": "সেভ করো",

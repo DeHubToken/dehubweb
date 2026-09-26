@@ -477,7 +477,9 @@
     "usernames": "Nombres de usuario",
     "usernamesDesc": "Los nombres que posees",
     "usernamesCount_one": "{{count}} nombre de usuario",
-    "usernamesCount_other": "{{count}} nombres de usuario"
+    "usernamesCount_other": "{{count}} nombres de usuario",
+    "leftHanded": "Modo zurdo",
+    "leftHandedDesc": "Mueve el botón de me gusta al lado izquierdo de la barra de reacciones"
   },
   "common": {
     "save": "Guardar",

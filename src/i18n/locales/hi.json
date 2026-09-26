@@ -476,7 +476,9 @@
     "usernames": "यूज़रनेम",
     "usernamesDesc": "वे नाम जो आपके हैं",
     "usernamesCount_one": "{{count}} उपयोगकर्ता नाम",
-    "usernamesCount_other": "{{count}} उपयोगकर्ता नाम"
+    "usernamesCount_other": "{{count}} उपयोगकर्ता नाम",
+    "leftHanded": "बाएँ हाथ वाला मोड",
+    "leftHandedDesc": "लाइक बटन को रिएक्शन बार के बाईं ओर ले जाएँ"
   },
   "common": {
     "save": "सेव करें",

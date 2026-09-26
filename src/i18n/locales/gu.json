@@ -462,7 +462,9 @@
     "usernames": "વપરાશકર્તાનામો",
     "usernamesDesc": "તમે ધરાવો છો તે નામો",
     "usernamesCount_one": "{{count}} વપરાશકર્તાનામ",
-    "usernamesCount_other": "{{count}} વપરાશકર્તાનામો"
+    "usernamesCount_other": "{{count}} વપરાશકર્તાનામો",
+    "leftHanded": "ડાબોડી મોડ",
+    "leftHandedDesc": "લાઇક બટનને પ્રતિક્રિયા બારની ડાબી બાજુએ ખસેડો"
   },
   "common": {
     "save": "સાચવો",

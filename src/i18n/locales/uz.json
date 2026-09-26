@@ -460,7 +460,9 @@
     },
     "usernames": "Foydalanuvchi nomlari",
     "usernamesDesc": "Sizga tegishli ismlar",
-    "usernamesCount_other": "{{count}} foydalanuvchi nomlari"
+    "usernamesCount_other": "{{count}} foydalanuvchi nomlari",
+    "leftHanded": "Chapaqay rejimi",
+    "leftHandedDesc": "Yoqtirish tugmasini reaksiyalar panelining chap tomoniga ko‘chiring"
   },
   "common": {
     "save": "Saqlash",

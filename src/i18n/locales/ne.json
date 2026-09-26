@@ -476,7 +476,9 @@
     "usernames": "प्रयोगकर्ता नामहरू",
     "usernamesDesc": "तपाईंको स्वामित्वमा रहेका नामहरू",
     "usernamesCount_one": "{{count}} प्रयोगकर्ता नाम",
-    "usernamesCount_other": "{{count}} प्रयोगकर्ता नामहरू"
+    "usernamesCount_other": "{{count}} प्रयोगकर्ता नामहरू",
+    "leftHanded": "देब्रे हाते मोड",
+    "leftHandedDesc": "लाइक बटनलाई प्रतिक्रिया बारको बायाँ छेउमा सार्नुहोस्"
   },
   "common": {
     "save": "सुरक्षित गर्नुहोस्",

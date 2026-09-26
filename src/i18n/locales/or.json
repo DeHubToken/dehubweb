@@ -458,7 +458,9 @@
     "usernames": "ଚାଳକ ନାମ",
     "usernamesDesc": "ଆପଣ ରଖିଥିବା ନାମ",
     "usernamesCount_one": "{{count}} username",
-    "usernamesCount_other": "{{count}} username"
+    "usernamesCount_other": "{{count}} username",
+    "leftHanded": "ବାମହାତୀ ମୋଡ୍",
+    "leftHandedDesc": "ଲାଇକ୍ ବଟନ୍‌କୁ ପ୍ରତିକ୍ରିୟା ବାରର ବାମ ପଟକୁ ଘୁଞ୍ଚାନ୍ତୁ"
   },
   "common": {
     "save": "ସଞ୍ଚୟ କରନ୍ତୁ",

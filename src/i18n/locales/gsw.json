@@ -423,7 +423,9 @@
     "usernames": "Benutzername",
     "usernamesDesc": "Dini Name",
     "usernamesCount_one": "{{count}} Benutzername",
-    "usernamesCount_other": "{{count}} Benutze."
+    "usernamesCount_other": "{{count}} Benutze.",
+    "leftHanded": "Linkshänder-Modus",
+    "leftHandedDesc": "Tuet dr Gfallt-mr-Chnopf uf di linggi Siite vo dr Reaktionsleischte"
   },
   "common": {
     "save": "Speichere",

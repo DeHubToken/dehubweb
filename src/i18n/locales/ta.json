@@ -473,7 +473,9 @@
     },
     "usernames": "பயனர்பெயர்கள்",
     "usernamesDesc": "உங்களிடம் உள்ள பெயர்கள்",
-    "usernamesCount_other": "{{count}} பயனர்பெயர்கள்"
+    "usernamesCount_other": "{{count}} பயனர்பெயர்கள்",
+    "leftHanded": "இடக்கை பயன்முறை",
+    "leftHandedDesc": "லைக் பொத்தானை எதிர்வினை பட்டையின் இடது பக்கத்திற்கு நகர்த்தவும்"
   },
   "common": {
     "save": "சேமி",

@@ -440,7 +440,9 @@
     "showFollowers": "ফলোয়ার/ফলোইং দেখাও",
     "hideFollowerCounts": "ফলোয়ার সংখ্যা লুকাও",
     "followersOnly": "শুধু ফলোয়ার",
-    "subscribersOnly": "শুধু সাবস্ক্রাইবার"
+    "subscribersOnly": "শুধু সাবস্ক্রাইবার",
+    "leftHanded": "বাউহাতি মোড",
+    "leftHandedDesc": "লাইক বাটনটা রিঅ্যাকশন বারর বাউ দিকে সরাইন"
   },
   "common": {
     "save": "সেভ করো",

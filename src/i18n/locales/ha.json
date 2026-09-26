@@ -462,7 +462,9 @@
     "usernames": "Sunan mai amfani",
     "usernamesDesc": "Sunayen da ka mallaka",
     "usernamesCount_one": "{{count}} sunan mai amfani",
-    "usernamesCount_other": "{{count}} sunan mai amfani"
+    "usernamesCount_other": "{{count}} sunan mai amfani",
+    "leftHanded": "Yanayin mai hannun hagu",
+    "leftHandedDesc": "Matsar da maɓallin so zuwa gefen hagu na sandar martani"
   },
   "common": {
     "save": "Ajiye",
