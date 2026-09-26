@@ -5504,7 +5504,6 @@
     "seoDescription": "Documentația oficială DeHub: prezentare generală a platformei, dApps, economia tokenului DHB, staking, jocuri, foaie de parcurs, întrebări frecvente și altele."
   },
   "dex": {
-    "launchNotice": "Acest exchange personalizat este construit pe Uniswap și securizat de acesta. Este deja activ și complet funcțional, iar listările oficiale vor fi anunțate în curând. Te invităm să adaugi lichiditate chiar acum — fermele și stimulentele vor fi dezvăluite foarte curând.",
     "seoTitle": "DEX — Tranzacționează DHB la prețul tău",
     "seoDescription": "Setează prețul de cumpărare sau vânzare al DHB cu o comandă limită Uniswap v4 pe Base sau BNB Chain. Cartea de ordine live, profunzimea pieței și un preț USD comun.",
     "venue": "Rețea",

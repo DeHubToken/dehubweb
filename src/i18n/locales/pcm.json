@@ -2775,7 +2775,6 @@
     "seoDescription": "Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more."
   },
   "dex": {
-    "launchNotice": "Dis special exchange na Uniswap dem take build am, and na Uniswap dey secure am. E don dey live and e dey work well well, and dem go announce official listing soon. Dem dey invite you make you add liquidity now — farm and incentive go show face very soon.",
     "venue": "Network",
     "marketPrice": "Market price · USD",
     "bookPrice": "{{chain}} book price · USD",
