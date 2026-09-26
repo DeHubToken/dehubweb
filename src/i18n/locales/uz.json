@@ -4091,7 +4091,14 @@
     "doneListHint": "Bozor sizning narxingizga yetganda, u avtomatik ravishda sotiladi. Uni birjada boshqaring.",
     "openExchange": "Ochiq birja",
     "done": "Bajarildi",
-    "back": "Orqaga"
+    "back": "Orqaga",
+    "aiLabel": "AI dan savdo-sotiqni tashkil etishni so'rang",
+    "aiPlaceholder": "\"DHB ning yarmini 3 sentdan sotish\" deb urinib ko'ring",
+    "aiSend": "AI ga yuboring",
+    "aiHint": "Xohlagan narsangizni oddiy so&#39;zlar bilan ayting. Sun&#39;iy intellekt hamma narsani to&#39;ldiradi, shunchaki Tasdiqlash tugmasini bosasiz.",
+    "aiBuyOnly": "Easy trade DHB sotadi. DHB sotib olish uchun Exchange oching.",
+    "aiNeedAmount": "Qancha DHB sotmoqchisiz?",
+    "aiFailed": "Sun&#39;iy intellekt buni sozlay olmadi. Boshqacha ayting yoki quyida to&#39;ldiring."
   },
   "ppvTopUp": {
     "yourBalance": "Balansingiz",

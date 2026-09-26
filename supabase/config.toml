@@ -161,6 +161,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.enhance-text]
     verify_jwt = false
+  # Public, IP rate-limited: reads a trade sentence into form fields, never trades.
+  [functions.trade-intent]
+    verify_jwt = false
   [functions.fal-ai-tools]
     verify_jwt = false
   # Auth is the caller's DeHub token in x-dehub-token, verified by
