@@ -3345,7 +3345,7 @@
   },
   "fractions": {
     "seoTitle": "Fraktioner | DeHub",
-    "seoDescription": "Køb og sælg fraktioner af DeHub-indlæg. Hver upload er 1000 on-chain-fraktioner — ej en del af en video, spor eller billede og handel det i DHB.",
+    "seoDescription": "Køb og sælg fraktioner af DeHub-opslag. Et præget opslag er 1000 on-chain-fraktioner — ej en bid af en video, et nummer eller et billede, og handl det i DHB.",
     "title": "Fraktioner",
     "perUpload": "1000 pr. upload",
     "tabBrowse": "Gennemse",
@@ -3381,7 +3381,7 @@
     "perFraction": "pr. brøkdel",
     "noSearchMatch": "Intet matcher søgningen",
     "noneForSale": "Ingen brøkdele er til salg lige nu",
-    "startTheMarketHint": "Hver upload er 1000 brøkdele — oplist nogle af dine for at starte markedet.",
+    "startTheMarketHint": "Et præget opslag er 1000 brøkdele — sæt nogle af dine til salg for at starte markedet.",
     "yours": "Dine",
     "perFractionShort": "/ brøkdel",
     "forShareOfPost": "for {{pct}}% af indlægget",
@@ -3435,7 +3435,7 @@
     "acrossPosts_one": "på tværs af {{count}} indlæg",
     "acrossPosts_other": "på tværs af {{count}} indlæg",
     "noneHeldYet": "Du ejer endnu ingen brøkdele",
-    "noneHeldHint": "Upload et indlæg for at blive præget 1000, eller køb ind i andres.",
+    "noneHeldHint": "Præg et opslag for at eje alle dets 1000 brøkdele, eller køb dig ind i en andens.",
     "listedForSale": "Sat til salg",
     "priceEach": "{{price}} hver",
     "listingCancelled": "Notering annulleret",
@@ -3448,8 +3448,8 @@
     "offersForYourFractions": "Tilbud for dine brøkdele",
     "review": "Gennemse",
     "noFractionsYet": "Ingen brøkdele endnu",
-    "profileEmptyOwn": "Hver upload præges som 1000 brøkdele. Indlæg noget, eller køb ind i et indlæg, du tror på.",
-    "profileEmptyOther": "Hver upload præges som 1000 brøkdele. Denne profil ejer ingen af noget indlæg lige nu.",
+    "profileEmptyOwn": "Et præget opslag er 1000 brøkdele. Præg et af dine opslag, eller køb dig ind i et opslag, du tror på.",
+    "profileEmptyOther": "Et præget opslag er 1000 brøkdele. Denne profil ejer i øjeblikket ingen brøkdele af noget opslag.",
     "browseTheMarket": "Gennemse markedet",
     "sellFractions": "Sælg brøkdele",
     "balanceReadFailed": "Kunne ikke læse din brøkdelsaldo lige nu. Luk dette og prøv igen — notering uden det risikerer at sælge brøkdele, du ikke længere ejer.",
@@ -6298,5 +6298,10 @@
     "moveFunds": "Flyt midler ind",
     "moveFundsHint": "Swap eller indbetal fra en anden chain",
     "notNow": "Ikke nu"
+  },
+  "glossary": {
+    "fractionsDesc": "Et opslag, der præges på DeHub, bliver en NFT opdelt i 1.000 fraktioner, og skaberen starter med alle 1.000 — 100 % ejerskab af indholdet. Prægning er valgfri og kan ske, når du udgiver, eller senere.",
+    "tokenIdDesc": "En unik on-chain-identifikator, som et opslag får, når det præges som en NFT på blockchainen. Prægning er valgfri, så et opslag, der ikke er præget, har endnu intet Token-ID.",
+    "tokenIdInfoDesc": "Den unikke on-chain-identifikator, et opslag får, når det er præget som en NFT. Vises øverst på siden Opslagsinfo for prægede opslag."
   }
 }

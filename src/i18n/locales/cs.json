@@ -3287,7 +3287,7 @@
   },
   "fractions": {
     "seoTitle": "Frakce | DeHub",
-    "seoDescription": "Kupujte a prodávejte frakce příspěvků DeHub. Každé nahrání je 1000 frakcí v řetězci — vlastněte část videa, skladby nebo obrázku a obchodujte ji v DHB.",
+    "seoDescription": "Kupujte a prodávejte frakce příspěvků DeHub. Ražený příspěvek je 1000 frakcí na blockchainu — vlastněte část videa, skladby nebo obrázku a obchodujte s ní v DHB.",
     "title": "Frakce",
     "perUpload": "1000 za nahrání",
     "tabBrowse": "Procházet",
@@ -3323,7 +3323,7 @@
     "perFraction": "za zlomek",
     "noSearchMatch": "Nic se neshoduje s tímto vyhledáváním",
     "noneForSale": "Žádné frakce nejsou nyní na prodej",
-    "startTheMarketHint": "Každý upload je 1000 frakcí — vypište některé své, abyste zahájili trh.",
+    "startTheMarketHint": "Ražený příspěvek je 1000 frakcí — vystavte některé ze svých a zahajte trh.",
     "yours": "Vaše",
     "perFractionShort": "/ frakce",
     "forShareOfPost": "za {{pct}}% příspěvku",
@@ -3377,7 +3377,7 @@
     "acrossPosts_one": "v {{count}} příspěvku",
     "acrossPosts_other": "v {{count}} příspěvcích",
     "noneHeldYet": "Zatím nevlastníte žádné podíly",
-    "noneHeldHint": "Nahrajte příspěvek, který bude vytvořen 1000, nebo se podílte na něčím jiném.",
+    "noneHeldHint": "Vyražte příspěvek a držte všech jeho 1000 frakcí, nebo se zapojte do příspěvku někoho jiného.",
     "listedForSale": "Vystaveno na prodej",
     "priceEach": "{{price}} za kus",
     "listingCancelled": "Inzerát zrušen",
@@ -3390,8 +3390,8 @@
     "offersForYourFractions": "Nabídky pro vaše zlomky",
     "review": "Hodnocení",
     "noFractionsYet": "Zatím žádné zlomky",
-    "profileEmptyOwn": "Každé nahrání je raženo jako 1000 zlomků. Zveřejni něco nebo si kup příspěvek, kterému věříš.",
-    "profileEmptyOther": "Každé nahrání je raženo jako 1000 zlomků. Tento profil momentálně neobsahuje žádný příspěvek.",
+    "profileEmptyOwn": "Ražený příspěvek je 1000 frakcí. Vyražte jeden ze svých příspěvků, nebo se zapojte do příspěvku, kterému věříte.",
+    "profileEmptyOther": "Ražený příspěvek je 1000 frakcí. Tento profil momentálně nedrží frakce žádného příspěvku.",
     "browseTheMarket": "Procházet trh",
     "sellFractions": "Prodat zlomky",
     "balanceReadFailed": "Zůstatek zlomků se právě nepodařilo přečíst. Zavři to a zkus to znovu — nabídka bez rizika prodeje zlomků, které už nemáš.",
@@ -6271,5 +6271,10 @@
     "moveFunds": "Převést prostředky",
     "moveFundsHint": "Směna nebo vklad z jiného řetězce",
     "notNow": "Teď ne"
+  },
+  "glossary": {
+    "fractionsDesc": "Příspěvek vyražený na DeHub se stane NFT rozděleným na 1 000 frakcí a tvůrce začíná se všemi 1 000 — 100% vlastnictví obsahu. Ražení je volitelné a může proběhnout při publikování nebo později.",
+    "tokenIdDesc": "Jedinečný identifikátor na blockchainu, který příspěvek získá, když je vyražen jako NFT. Ražení je volitelné, takže příspěvek, který dosud nebyl vyražen, zatím nemá Token ID.",
+    "tokenIdInfoDesc": "Jedinečný identifikátor na blockchainu, který příspěvek získá, jakmile je vyražen jako NFT. U ražených příspěvků se zobrazuje v horní části stránky Informace o příspěvku."
   }
 }

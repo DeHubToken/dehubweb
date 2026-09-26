@@ -3907,7 +3907,12 @@
     }
   },
   "fractions": {
-    "title": "Wāhanga"
+    "seoDescription": "Hokona mai, hokona atu ngā wāhanga o ngā pou DeHub. Ko te pou kua whakaputaina hei NFT he 1000 wāhanga i runga i te mekameka — whai wāhi ki tētahi wāhanga o tētahi ataata, riu, whakaahua rānei, ā, hokohokohia i roto i te DHB.",
+    "title": "Wāhanga",
+    "startTheMarketHint": "Ko te pou kua whakaputaina he 1000 wāhanga — whakarārangihia ētahi o ōu kia tīmata ai te mākete.",
+    "noneHeldHint": "Whakaputaina tētahi pou kia mau i a koe ōna wāhanga 1000 katoa, hokona mai rānei he wāhanga o te pou a tētahi atu.",
+    "profileEmptyOwn": "Ko te pou kua whakaputaina he 1000 wāhanga. Whakaputaina tētahi o ōu pou, hokona mai rānei he wāhanga o tētahi pou e whakapono ana koe.",
+    "profileEmptyOther": "Ko te pou kua whakaputaina he 1000 wāhanga. Kāore he wāhanga o tētahi pou i tēnei kōtaha i tēnei wā."
   },
   "stores": {
     "podToggle": "Tūemi tā-ā-tono",
@@ -4067,5 +4072,10 @@
     "moveFunds": "Nekehia mai he pūtea",
     "moveFundsHint": "Whakawhiti, tāpui rānei mai i tētahi atu mekameka",
     "notNow": "Kaua i tēnei wā"
+  },
+  "glossary": {
+    "fractionsDesc": "Ko te pou ka whakaputaina ki DeHub ka huri hei NFT kua wehea ki ngā wāhanga 1,000, ā, ka tīmata te kaihanga me ngā wāhanga 1,000 katoa — 100% te mana whai i te ihirangi. Kāore he here kia whakaputaina, ā, ka taea i te wā e tuku ana koe, ā muri ake rānei.",
+    "tokenIdDesc": "He tautuhi ahurei i runga i te mekameka ka riro i tētahi pou ina whakaputaina hei NFT ki te poraka mekameka. Kāore he here kia whakaputaina, nō reira kāore anō he Token ID o te pou kāore anō kia whakaputaina.",
+    "tokenIdInfoDesc": "Te tautuhi ahurei i runga i te mekameka ka riro i tētahi pou ina whakaputaina hei NFT. Ka whakaaturia ki runga rawa o te whārangi Mōhiohio Pou mō ngā pou kua whakaputaina."
   }
 }

@@ -61,7 +61,7 @@ Plenty of projects can stream video on-chain. What makes a platform worth buildi
 
 **On-chain live streams with animated tips.** When a viewer tips during a DeHub stream, it is an on-chain action with an animated on-screen reaction, so the support is both instant income and part of the show. There is no waiting period and no platform sitting between the viewer's intent and your wallet.
 
-**A social feed, not just a channel.** A stream on its own is ephemeral. DeHub attaches live streaming to a full social platform with a chronological, transparent feed rather than an opaque algorithm, so the audience you build while live keeps seeing you afterwards. Content you upload is minted on-chain the moment you post it, and uploads can be free, pay-per-view or token-gated.
+**A social feed, not just a channel.** A stream on its own is ephemeral. DeHub attaches live streaming to a full social platform with a chronological, transparent feed rather than an opaque algorithm, so the audience you build while live keeps seeing you afterwards. Content you upload can be minted on-chain when you post it or later, and uploads can be free, pay-per-view or token-gated.
 
 **Tokenised subscriptions that you actually own.** Instead of a subscription that only exists inside a platform's billing system, DeHub offers on-chain tradable subscriptions, complete with resale royalties that flow back to the creator. If you want the full mechanics, read our explainer on [how tokenised subscriptions work](/guides/tokenized-subscriptions-explained). For a streamer it means recurring revenue that behaves like an asset rather than a monthly favour from a platform.
 

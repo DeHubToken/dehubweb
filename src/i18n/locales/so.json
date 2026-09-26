@@ -3904,7 +3904,12 @@
     }
   },
   "fractions": {
-    "title": "Saamiyo"
+    "seoDescription": "Iibso oo iibi qaybaha qoraallada DeHub. Qoraal la mint-gareeyay waa 1000 qaybood oo on-chain ah — lahaanso qayb ka mid ah muuqaal, hees ama sawir oo ku ganacsado DHB.",
+    "title": "Saamiyo",
+    "startTheMarketHint": "Qoraal la mint-gareeyay waa 1000 qaybood — liis geli qaar ka mid ah kuwaaga si aad suuqa u bilowdo.",
+    "noneHeldHint": "Mint-garee qoraal si aad u haysato dhammaan 1000-kiisa qaybood, ama iibso qayb ka mid ah qoraal qof kale.",
+    "profileEmptyOwn": "Qoraal la mint-gareeyay waa 1000 qaybood. Mint-garee mid ka mid ah qoraalladaada, ama iibso qayb ka mid ah qoraal aad rumaysan tahay.",
+    "profileEmptyOther": "Qoraal la mint-gareeyay waa 1000 qaybood. Profile-kan hadda ma haysto wax qaybo ah oo qoraal kasta ah."
   },
   "stores": {
     "podToggle": "Shay la daabaco marka la dalbado",
@@ -4064,5 +4069,10 @@
     "moveFunds": "Soo wareeji lacag",
     "moveFundsHint": "Ka beddel ama ka dhig chain kale",
     "notNow": "Hadda maaha"
+  },
+  "glossary": {
+    "fractionsDesc": "Qoraal lagu mint-gareeyo DeHub wuxuu noqdaa NFT loo qaybiyay 1,000 qaybood, abuurahana wuxuu ku bilaabaa dhammaan 1,000 — 100% lahaanshaha nuxurka. Mint-garaynta waa ikhtiyaari waxaana la samayn karaa marka aad daabacayso ama hadhow.",
+    "tokenIdDesc": "Aqoonsi gaar ah oo on-chain ah oo qoraal helo marka loo mint-gareeyo NFT ahaan blockchain-ka. Mint-garaynta waa ikhtiyaari, sidaa darteed qoraal aan weli la mint-gareyn ma laha Token ID.",
+    "tokenIdInfoDesc": "Aqoonsiga gaarka ah ee on-chain ah ee qoraal helo marka loo mint-gareeyo NFT ahaan. Wuxuu ka muuqdaa xagga sare ee bogga Macluumaadka Qoraalka ee qoraallada la mint-gareeyay."
   }
 }

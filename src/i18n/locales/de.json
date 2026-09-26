@@ -3341,7 +3341,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "Kaufen und verkaufen Sie Bruchteile von DeHub-Posts. Jeder Upload besteht aus 1000 On-Chain-Bruchteilen — besitzen Sie einen Anteil an einem Video, Track oder Bild und handeln Sie damit in DHB.",
+    "seoDescription": "Kaufen und verkaufen Sie Bruchteile von DeHub-Beiträgen. Ein geprägter Beitrag besteht aus 1000 On-Chain-Bruchteilen — besitzen Sie einen Anteil an einem Video, Track oder Bild und handeln Sie damit in DHB.",
     "title": "Anteile",
     "perUpload": "1000 per upload",
     "tabBrowse": "Browse",
@@ -3377,7 +3377,7 @@
     "perFraction": "pro Bruchteil",
     "noSearchMatch": "Keine Übereinstimmungen für diese Suche",
     "noneForSale": "Keine Bruchteile zum Verkauf verfügbar",
-    "startTheMarketHint": "Jeder Upload sind 1000 Bruchteile — liste einige von deinen auf, um den Markt zu starten.",
+    "startTheMarketHint": "Ein geprägter Beitrag sind 1000 Bruchteile — liste einige von deinen auf, um den Markt zu starten.",
     "yours": "Deine",
     "perFractionShort": "/ Bruchteil",
     "forShareOfPost": "für {{pct}}% des Beitrags",
@@ -3431,7 +3431,7 @@
     "acrossPosts_one": "über {{count}} Beitrag",
     "acrossPosts_other": "über {{count}} Beiträge",
     "noneHeldYet": "Sie halten noch keine Anteile",
-    "noneHeldHint": "Laden Sie einen Beitrag hoch, um 1000 zu prägen, oder kaufen Sie sich in einen anderen ein.",
+    "noneHeldHint": "Präge einen Beitrag, um alle seine 1000 Bruchteile zu halten, oder kauf dich in den Beitrag eines anderen ein.",
     "listedForSale": "Zum Verkauf angeboten",
     "priceEach": "{{price}} je",
     "listingCancelled": "Angebot storniert",
@@ -3444,8 +3444,8 @@
     "offersForYourFractions": "Angebote für Ihre Anteile",
     "review": "Überprüfen",
     "noFractionsYet": "Noch keine Bruchteile",
-    "profileEmptyOwn": "Jeder Upload wird als 1000 Bruchteile geprägt. Poste etwas oder investiere in einen Beitrag, an den du glaubst.",
-    "profileEmptyOther": "Jeder Upload wird als 1000 Bruchteile geprägt. Dieses Profil hält derzeit keine Bruchteile eines Beitrags.",
+    "profileEmptyOwn": "Ein geprägter Beitrag sind 1000 Bruchteile. Präge einen deiner Beiträge oder investiere in einen Beitrag, an den du glaubst.",
+    "profileEmptyOther": "Ein geprägter Beitrag sind 1000 Bruchteile. Dieses Profil hält derzeit keine Bruchteile irgendeines Beitrags.",
     "browseTheMarket": "Markt durchsuchen",
     "sellFractions": "Bruchteile verkaufen",
     "balanceReadFailed": "Konnte dein Bruchteile-Guthaben gerade nicht lesen. Schließe dies und versuche es erneut — das Auflisten ohne es riskiert, Bruchteile zu verkaufen, die du nicht mehr hältst.",
@@ -6380,5 +6380,10 @@
     "moveFunds": "Guthaben übertragen",
     "moveFundsHint": "Von einer anderen Chain tauschen oder einzahlen",
     "notNow": "Jetzt nicht"
+  },
+  "glossary": {
+    "fractionsDesc": "Ein auf DeHub geprägter Beitrag wird zu einem NFT, das in 1.000 Bruchteile aufgeteilt ist, und der Creator beginnt mit allen 1.000 — 100 % Eigentum am Inhalt. Das Prägen ist optional und kann beim Veröffentlichen oder später erfolgen.",
+    "tokenIdDesc": "Eine eindeutige On-Chain-Kennung, die ein Beitrag erhält, wenn er als NFT auf der Blockchain geprägt wird. Das Prägen ist optional, daher hat ein nicht geprägter Beitrag noch keine Token-ID.",
+    "tokenIdInfoDesc": "Die eindeutige On-Chain-Kennung, die ein Beitrag erhält, sobald er als NFT geprägt ist. Wird bei geprägten Beiträgen oben auf der Seite „Beitragsinfo“ angezeigt."
   }
 }

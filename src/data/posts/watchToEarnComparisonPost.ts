@@ -45,7 +45,7 @@ You do not buy glasses, a headset or any entry NFT to begin. You can join [the D
 
 ### On-chain-verifiable payouts
 
-Because DeHub is built on-chain, rewards and the actions behind them are recorded on a public ledger you can inspect, rather than sitting in an opaque in-app balance you have to trust. Content is minted on-chain the moment you upload, the feed is chronological and transparent with no hidden ranking algorithm, and the primary chain is Base, an Ethereum Layer 2, with contracts also on BNB Chain and Polygon. $DHB is tradable on decentralised exchanges and on Coinbase, and is listed on CoinGecko and CoinMarketCap. Verifiability does not guarantee you will earn a fortune, and nobody honest can promise that, but it does mean the payout logic is auditable rather than a black box.
+Because DeHub is built on-chain, rewards and the actions behind them are recorded on a public ledger you can inspect, rather than sitting in an opaque in-app balance you have to trust. Content can be minted on-chain when you upload or later, the feed is chronological and transparent with no hidden ranking algorithm, and the primary chain is Base, an Ethereum Layer 2, with contracts also on BNB Chain and Polygon. $DHB is tradable on decentralised exchanges and on Coinbase, and is listed on CoinGecko and CoinMarketCap. Verifiability does not guarantee you will earn a fortune, and nobody honest can promise that, but it does mean the payout logic is auditable rather than a black box.
 
 ### Watch-to-earn inside a full social network
 

@@ -3345,7 +3345,7 @@
   },
   "fractions": {
     "seoTitle": "Frações | DeHub",
-    "seoDescription": "Compre e venda frações de posts do DeHub. Cada upload é 1000 frações on-chain — possua uma parte de um vídeo, faixa ou imagem e negocie em DHB.",
+    "seoDescription": "Compre e venda frações de posts do DeHub. Um post cunhado é 1000 frações on-chain — possua uma parte de um vídeo, faixa ou imagem e negocie em DHB.",
     "title": "Frações",
     "perUpload": "1000 por upload",
     "tabBrowse": "Procurar",
@@ -3381,7 +3381,7 @@
     "perFraction": "por fração",
     "noSearchMatch": "Nada corresponde a essa pesquisa",
     "noneForSale": "Nenhuma fração está à venda agora",
-    "startTheMarketHint": "Cada upload é 1000 frações — liste algumas das suas para iniciar o mercado.",
+    "startTheMarketHint": "Um post cunhado é 1000 frações — liste algumas das suas para iniciar o mercado.",
     "yours": "Suas",
     "perFractionShort": "/ fração",
     "forShareOfPost": "por {{pct}}% do post",
@@ -3435,7 +3435,7 @@
     "acrossPosts_one": "em {{count}} post",
     "acrossPosts_other": "em {{count}} posts",
     "noneHeldYet": "Você ainda não possui nenhuma fração",
-    "noneHeldHint": "Faça upload de um post para ser cunhado 1000, ou compre de outro.",
+    "noneHeldHint": "Cunhe um post para ter todas as suas 1000 frações, ou compre parte do post de outra pessoa.",
     "listedForSale": "Listado à venda",
     "priceEach": "{{price}} cada",
     "listingCancelled": "Listagem cancelada",
@@ -3448,8 +3448,8 @@
     "offersForYourFractions": "Ofertas pelas suas frações",
     "review": "Revisar",
     "noFractionsYet": "Sem frações ainda",
-    "profileEmptyOwn": "Cada upload é cunhado como 1000 frações. Poste algo, ou invista em um post em que você acredita.",
-    "profileEmptyOther": "Cada upload é cunhado como 1000 frações. Este perfil não possui nenhuma fração de nenhum post no momento.",
+    "profileEmptyOwn": "Um post cunhado é 1000 frações. Cunhe um dos seus posts, ou compre parte de um post em que você acredita.",
+    "profileEmptyOther": "Um post cunhado é 1000 frações. Este perfil não possui frações de nenhum post no momento.",
     "browseTheMarket": "Procurar no mercado",
     "sellFractions": "Vender frações",
     "balanceReadFailed": "Não foi possível ler seu saldo de frações agora. Feche isto e tente novamente — listar sem isso corre o risco de vender frações que você não possui mais.",
@@ -6388,5 +6388,10 @@
     "moveFunds": "Transferir fundos",
     "moveFundsHint": "Troque ou deposite de outra chain",
     "notNow": "Agora não"
+  },
+  "glossary": {
+    "fractionsDesc": "Um post cunhado no DeHub se torna um NFT dividido em 1.000 frações, e o criador começa com todas as 1.000 — 100% de propriedade do conteúdo. A cunhagem é opcional e pode acontecer ao publicar ou depois.",
+    "tokenIdDesc": "Um identificador on-chain único que um post recebe quando é cunhado como NFT na blockchain. A cunhagem é opcional, então um post que não foi cunhado ainda não tem Token ID.",
+    "tokenIdInfoDesc": "O identificador on-chain único que um post recebe depois de ser cunhado como NFT. Exibido no topo da página de Informações do Post para posts cunhados."
   }
 }

@@ -3943,7 +3943,12 @@
     }
   },
   "fractions": {
-    "title": "Rakikuna"
+    "seoDescription": "DeHub willakuykunap rakinkunata rantiy hinaspa rantikuy. Mintisqa willakuyqa 1000 on-chain rakikunam — huk video, taki utaq siq'ip huk t'aqanta kapuchikuy hinaspa DHB-pi rantinakuy.",
+    "title": "Rakikuna",
+    "startTheMarketHint": "Mintisqa willakuyqa 1000 rakikunam — qhatu qallarinanpaq wakin rakiykikunata qhatuman churay.",
+    "noneHeldHint": "Huk willakuyta mintiy llapan 1000 rakinkunata hap'inaykipaq, utaq huk runap willakuyninpi rantiy.",
+    "profileEmptyOwn": "Mintisqa willakuyqa 1000 rakikunam. Huk willakuyniykita mintiy, utaq iñisqayki willakuypi rantiy.",
+    "profileEmptyOther": "Mintisqa willakuyqa 1000 rakikunam. Kay perfilqa kunan mana ima willakuymantapas rakikunata hap'inchu."
   },
   "stores": {
     "podToggle": "Mañakuyman hina ñit'isqa ima",
@@ -4103,5 +4108,10 @@
     "moveFunds": "Qullqita haykuchiy",
     "moveFundsHint": "Huk chain-manta tikray otaq churay",
     "notNow": "Manaraq"
+  },
+  "glossary": {
+    "fractionsDesc": "DeHub-pi mintisqa willakuyqa 1,000 rakikunaman rakisqa NFT-man tukun, kamariqtaq llapan 1,000-wan qallarin — contenidop 100% kapuynin. Mintiyqa munasqallam, hinaspa uyarichispa utaq qhipaman ruwakunman.",
+    "tokenIdDesc": "Huk sapallan on-chain riqsichiq, willakuy blockchain-pi NFT hina mintisqa kaptin chaskisqan. Mintiyqa munasqallam, chaymi mana mintisqa willakuyqa manaraq Token ID-yuqchu.",
+    "tokenIdInfoDesc": "Sapallan on-chain riqsichiq, willakuy NFT hina mintisqaña kaptin chaskisqan. Mintisqa willakuykunapaq Willakuy Willay p'anqap patanpi rikuchikun."
   }
 }
