@@ -111,9 +111,10 @@ export function useAIConversation() {
     if (!walletAddress || !currentConversationId) return;
 
     try {
-      const [imageUrl, videoUrl] = await Promise.all([
+      const [imageUrl, videoUrl, attachedImage] = await Promise.all([
         persistMediaUrl(message.imageUrl, 'image'),
         persistMediaUrl(message.videoUrl, 'video'),
+        persistMediaUrl(message.attachedImage, 'image'),
       ]);
 
       const { error } = await withWalletHeader(
@@ -125,7 +126,7 @@ export function useAIConversation() {
             content: message.content || '(image)',
             image_url: imageUrl,
             video_url: videoUrl,
-            attached_image: message.attachedImage || null,
+            attached_image: attachedImage,
             audio_url: (message as any).audioUrl || null,
           }),
         walletAddress

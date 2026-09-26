@@ -70,13 +70,65 @@ Deno.serve(async (req) => {
     }
   }
 
+  let migratedAttached = 0;
+
+  const { data: attachedRows, error: attachedError } = await supabase
+    .from('ai_messages')
+    .select('id, attached_image')
+    .like('attached_image', 'data:%')
+    .limit(batch);
+
+  if (attachedError) {
+    return new Response(JSON.stringify({ error: attachedError.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  for (const row of attachedRows ?? []) {
+    try {
+      const dataUrl: string = row.attached_image;
+      const match = /^data:(image\/[a-zA-Z0-9+.-]+);base64,(.*)$/.exec(dataUrl);
+      if (!match) throw new Error('not a data url');
+      const mime = match[1];
+      const b64 = match[2];
+      const bytes = b64ToBytes(b64);
+      const ext = mime.split('/')[1]?.split('+')[0] ?? 'png';
+      const path = `user/${row.id}.${ext}`;
+
+      const up = await supabase.storage.from(BUCKET).upload(path, bytes, {
+        contentType: mime,
+        upsert: true,
+      });
+      if (up.error) throw up.error;
+
+      const { data: pub } = supabase.storage.from(BUCKET).getPublicUrl(path);
+      const publicUrl = pub.publicUrl;
+
+      const upd = await supabase
+        .from('ai_messages')
+        .update({ attached_image: publicUrl })
+        .eq('id', row.id);
+      if (upd.error) throw upd.error;
+
+      migratedAttached++;
+    } catch (e) {
+      errors.push({ id: row.id, error: (e as Error).message });
+    }
+  }
+
   const { count: remaining } = await supabase
     .from('ai_messages')
     .select('id', { count: 'exact', head: true })
     .like('image_url', 'data:%');
 
+  const { count: remainingAttached } = await supabase
+    .from('ai_messages')
+    .select('id', { count: 'exact', head: true })
+    .like('attached_image', 'data:%');
+
   return new Response(
-    JSON.stringify({ migrated, errors, remaining }),
+    JSON.stringify({ migrated, migratedAttached, errors, remaining, remainingAttached }),
     { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   );
 });
