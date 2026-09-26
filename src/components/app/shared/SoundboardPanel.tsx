@@ -55,10 +55,10 @@ const BUILT_IN_EFFECTS: BuiltInEffect[] = [
 const AUDIO_FILE_EFFECTS: Record<string, string> = {
   airhorn: '/sounds/airhorn.wav',
   applause: '/sounds/applause.wav',
-  cricket: '/sounds/crickets.wav',
+  cricket: '/sounds/crickets.mp3',
   drumroll: '/sounds/drumroll.wav',
-  lol: '/sounds/lol.wav',
-  'ooh-ahh': '/sounds/ooh-ahh.wav',
+  lol: '/sounds/lol.mp3',
+  'ooh-ahh': '/sounds/ooh-ahh.mp3',
   'ooh-man': '/sounds/ooh-man.wav',
   'ohh-girl': '/sounds/ohh-girl.ogg',
   'ba-dum-tish': '/sounds/ba-dum-tish.wav',

@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export type LaunchpadToken = {
@@ -21,6 +21,8 @@ export type LaunchpadToken = {
   updated_at: string;
 };
 
+const LIST_REFRESH_THROTTLE_MS = 3_000;
+
 export type LaunchpadFilter = 'new' | 'graduating' | 'trending' | 'graduated' | 'mine';
 
 export function useLaunchpadTokens(filter: LaunchpadFilter, mineAddress?: string) {
@@ -40,19 +42,66 @@ export function useLaunchpadTokens(filter: LaunchpadFilter, mineAddress?: string
     staleTime: 15_000,
   });
 
+  // Trades update rows constantly. Refetching the whole list per event meant
+  // one 100-row read per trade per open tab, so bursts are coalesced into at
+  // most one refetch every few seconds. A hidden tab skips them and catches up
+  // once when it is shown again.
+  const refetchRef = useRef(query.refetch);
+  refetchRef.current = query.refetch;
+  const mine = filter === 'mine' ? mineAddress?.toLowerCase() : undefined;
   useEffect(() => {
-    const ch = supabase.channel('launchpad-tokens-live')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'launchpad_tokens' }, () => {
-        query.refetch();
-      }).subscribe();
-    return () => { supabase.removeChannel(ch); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (filter === 'mine' && !mine) return;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let missed = false;
+    const schedule = () => {
+      if (document.visibilityState === 'hidden') { missed = true; return; }
+      if (timer) return;
+      timer = setTimeout(() => {
+        timer = null;
+        void refetchRef.current();
+      }, LIST_REFRESH_THROTTLE_MS);
+    };
+    const ch = supabase.channel(`launchpad-tokens-live:${filter}:${mine ?? ''}`)
+      .on(
+        'postgres_changes',
+        mine
+          ? { event: '*', schema: 'public', table: 'launchpad_tokens', filter: `creator_address=eq.${mine}` }
+          : { event: '*', schema: 'public', table: 'launchpad_tokens' },
+        schedule,
+      ).subscribe();
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible' || !missed) return;
+      missed = false;
+      schedule();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      if (timer) clearTimeout(timer);
+      supabase.removeChannel(ch);
+    };
+  }, [filter, mine]);
 
   return query;
 }
 
 export function useLaunchpadToken(id?: string) {
+  const queryClient = useQueryClient();
+
+  // The row is pushed over realtime; the interval is only a fallback for a
+  // dropped socket.
+  useEffect(() => {
+    if (!id) return;
+    const ch = supabase.channel(`launchpad-token:${id}`)
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'launchpad_tokens', filter: `id=eq.${id}` }, (payload) => {
+        const row = payload.new as Partial<LaunchpadToken> | undefined;
+        if (!row?.id) return;
+        queryClient.setQueryData<LaunchpadToken>(['launchpad-token', id], (prev) =>
+          prev ? { ...prev, ...row } : (row as LaunchpadToken));
+      }).subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [id, queryClient]);
+
   return useQuery({
     queryKey: ['launchpad-token', id],
     enabled: !!id,
@@ -62,6 +111,7 @@ export function useLaunchpadToken(id?: string) {
       return data as unknown as LaunchpadToken;
     },
     staleTime: 5_000,
-    refetchInterval: 5_000,
+    refetchInterval: 60_000,
+    refetchIntervalInBackground: false,
   });
 }

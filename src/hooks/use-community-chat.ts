@@ -92,7 +92,8 @@ export function useCommunityChat(
     // Realtime replication evaluates the same SELECT policy but has no way to
     // carry a request header, so a private community receives no live events at
     // all. Poll there; public communities keep the socket and no polling.
-    refetchInterval: isPrivate ? 5_000 : false,
+    refetchInterval: isPrivate ? 15_000 : false,
+    refetchIntervalInBackground: false,
   });
 
   // Collect unique sender wallet addresses (excluding the current user — we

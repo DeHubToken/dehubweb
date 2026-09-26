@@ -349,16 +349,33 @@ export default function ArcadeChessOnlinePage() {
   // Keep the lobby honest while it is on screen.
   useEffect(() => {
     if (inMatch) return;
-    const channel = supabase
-      .channel('chess-lobby')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'chess_matches' }, () => {
-        void queryClient.invalidateQueries({ queryKey: [OPEN_QUERY_KEY] });
-        void queryClient.invalidateQueries({ queryKey: [MINE_QUERY_KEY] });
+    // Every move in every running game is an UPDATE on this table, and none of
+    // them changes the lobby. Accepting a challenge leaves ply at 0, so a row
+    // that is active with ply > 0 is a move and is skipped. The rest are
+    // coalesced so a burst of lobby events costs one refetch.
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let recordsDirty = false;
+    const flush = () => {
+      timer = null;
+      void queryClient.invalidateQueries({ queryKey: [OPEN_QUERY_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [MINE_QUERY_KEY] });
+      if (recordsDirty) {
+        recordsDirty = false;
         // Records move when a match finishes; prefix match catches every set.
         void queryClient.invalidateQueries({ queryKey: ['chess-records'] });
+      }
+    };
+    const channel = supabase
+      .channel('chess-lobby')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'chess_matches' }, (payload) => {
+        const row = payload.new as Partial<ChessMatch> | undefined;
+        if (payload.eventType === 'UPDATE' && row?.status === 'active' && (row.ply ?? 0) > 0) return;
+        if (payload.eventType === 'UPDATE' && row?.status === 'finished') recordsDirty = true;
+        if (!timer) timer = setTimeout(flush, 1000);
       })
       .subscribe();
     return () => {
+      if (timer) clearTimeout(timer);
       void supabase.removeChannel(channel);
     };
   }, [inMatch, queryClient]);

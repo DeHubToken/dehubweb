@@ -185,10 +185,12 @@ export function captureVideoThumbnail(
   });
 }
 
-/** Capture an image thumbnail. */
+/** Capture an image thumbnail. Also used to downscale uploads (see prepareStoreImage). */
 export function captureImageThumbnail(
   file: File,
   maxWidth = 320,
+  type = "image/jpeg",
+  quality = 0.85,
 ): Promise<{ thumbnail: Blob; width: number; height: number }> {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
@@ -210,8 +212,8 @@ export function captureImageThumbnail(
             if (!blob) return reject(new Error("Failed to encode thumbnail"));
             resolve({ thumbnail: blob, width: w, height: h });
           },
-          "image/jpeg",
-          0.85,
+          type,
+          quality,
         );
       } catch (e) {
         URL.revokeObjectURL(url);

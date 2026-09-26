@@ -180,18 +180,38 @@ export function useDaoProposals() {
   });
 
   useEffect(() => {
+    // A busy vote produces a burst of rows; each one used to refetch the whole
+    // proposal list on every open tab. Coalesce into one refetch, and only
+    // refetch the viewer's own votes when one of the rows is theirs.
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let votesDirty = false;
+    const schedule = () => {
+      if (timer) return;
+      timer = setTimeout(() => {
+        timer = null;
+        queryClient.invalidateQueries({ queryKey: DAO_PROPOSALS_KEY });
+        if (votesDirty) {
+          votesDirty = false;
+          queryClient.invalidateQueries({ queryKey: ['dao-proposal-votes'] });
+        }
+      }, 2000);
+    };
+    const mine = wallet?.toLowerCase();
     const channel = supabase
       .channel('dao-proposals-page')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'dao_proposals' }, () => {
-        queryClient.invalidateQueries({ queryKey: DAO_PROPOSALS_KEY });
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'dao_proposal_votes' }, () => {
-        queryClient.invalidateQueries({ queryKey: DAO_PROPOSALS_KEY });
-        queryClient.invalidateQueries({ queryKey: ['dao-proposal-votes'] });
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'dao_proposals' }, schedule)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'dao_proposal_votes' }, (payload) => {
+        const row = (payload.eventType === 'DELETE' ? payload.old : payload.new) as { wallet_address?: string } | undefined;
+        // DELETE payloads may carry only the key; treat an unknown owner as ours.
+        if (!row?.wallet_address || row.wallet_address.toLowerCase() === mine) votesDirty = true;
+        schedule();
       })
       .subscribe();
-    return () => { void supabase.removeChannel(channel); };
-  }, [queryClient]);
+    return () => {
+      if (timer) clearTimeout(timer);
+      void supabase.removeChannel(channel);
+    };
+  }, [queryClient, wallet]);
 
   return {
     ...proposals,

@@ -129,7 +129,8 @@ export function useDeleteSkill() {
 export async function uploadSkillAsset(file: File, slug: string): Promise<string> {
   const path = `skills/${slug}/${Date.now()}-${file.name.replace(/[^a-z0-9.\-_]/gi, '_')}`;
   const { error } = await supabase.storage.from('ai-media-uploads').upload(path, file, {
-    cacheControl: '3600',
+    // Timestamped path, never overwritten (upsert: false): safe to cache for a year.
+    cacheControl: '31536000',
     upsert: false,
   });
   if (error) throw error;
