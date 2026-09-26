@@ -460,7 +460,9 @@
     "usernames": "የተጠቃሚ ስሞች",
     "usernamesDesc": "የየራሳችሁ ስም",
     "usernamesCount_one": "{{count}} የተጠቃሚ ስም",
-    "usernamesCount_other": "{{count}} የተጠቃሚ ስሞች"
+    "usernamesCount_other": "{{count}} የተጠቃሚ ስሞች",
+    "leftHanded": "የግራ እጅ ሁነታ",
+    "leftHandedDesc": "የመውደድ አዝራሩን ወደ ምላሾች አሞሌው ግራ ጎን ያንቀሳቅሱ"
   },
   "common": {
     "save": "አስቀምጥ",

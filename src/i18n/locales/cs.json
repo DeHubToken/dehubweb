@@ -477,7 +477,9 @@
     "usernames": "Uživatelská jména",
     "usernamesDesc": "Jména, která vlastníte",
     "usernamesCount_one": "Uživatelské jméno {{count}}",
-    "usernamesCount_other": "Uživatelská jména: {{count}}"
+    "usernamesCount_other": "Uživatelská jména: {{count}}",
+    "leftHanded": "Režim pro leváky",
+    "leftHandedDesc": "Přesune tlačítko To se mi líbí na levou stranu lišty reakcí"
   },
   "common": {
     "save": "Uložit",

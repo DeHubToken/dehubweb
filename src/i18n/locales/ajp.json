@@ -422,7 +422,9 @@
     "usernames": "أسماء المستخدمين",
     "usernamesDesc": "الأسماء اللي بتملكها",
     "usernamesCount_one": "{{count}} اسم مستخدم",
-    "usernamesCount_other": "{{count}} أسماء مستخدمين"
+    "usernamesCount_other": "{{count}} أسماء مستخدمين",
+    "leftHanded": "وضع الإيد اليسار",
+    "leftHandedDesc": "انقل زر الإعجاب عالجهة اليسار من شريط التفاعلات"
   },
   "common": {
     "save": "حفظ",

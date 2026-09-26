@@ -448,7 +448,9 @@
       "keyCopied": "کپي هاي کليدي کپي شده"
     },
     "usernames": "د نومونو سره Username",
-    "usernamesDesc": "هغه نومونه چې تاسو یې لرئ"
+    "usernamesDesc": "هغه نومونه چې تاسو یې لرئ",
+    "leftHanded": "د چپ لاس حالت",
+    "leftHandedDesc": "د خوښې تڼۍ د غبرګونونو پټې کيڼ اړخ ته ولېږدوئ"
   },
   "common": {
     "save": "خوندي",

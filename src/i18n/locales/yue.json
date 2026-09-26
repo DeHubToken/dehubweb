@@ -462,7 +462,9 @@
     "usernames": "用戶名",
     "usernamesDesc": "你擁有嘅名",
     "usernamesCount_one": "{{count}} 用戶名",
-    "usernamesCount_other": "{{count}} 用戶名"
+    "usernamesCount_other": "{{count}} 用戶名",
+    "leftHanded": "左撇模式",
+    "leftHandedDesc": "將讚好掣搬去反應欄左邊"
   },
   "common": {
     "save": "儲存",

@@ -477,7 +477,9 @@
     "usernames": "Nume de utilizator",
     "usernamesDesc": "Numele pe care le deții",
     "usernamesCount_one": "Nume de utilizator {{count}}",
-    "usernamesCount_other": "Nume de utilizator {{count}}"
+    "usernamesCount_other": "Nume de utilizator {{count}}",
+    "leftHanded": "Mod stângaci",
+    "leftHandedDesc": "Mută butonul de apreciere în partea stângă a barei de reacții"
   },
   "common": {
     "save": "Salvează",

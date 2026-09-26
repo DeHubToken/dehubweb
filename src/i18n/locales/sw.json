@@ -477,7 +477,9 @@
     "usernames": "Majina ya watumiaji",
     "usernamesDesc": "Majina unayomiliki",
     "usernamesCount_one": "{{count}} USERNAME",
-    "usernamesCount_other": "{{count}} majina ya watumiaji"
+    "usernamesCount_other": "{{count}} majina ya watumiaji",
+    "leftHanded": "Hali ya mkono wa kushoto",
+    "leftHandedDesc": "Hamisha kitufe cha kupenda upande wa kushoto wa upau wa maoni"
   },
   "common": {
     "save": "Hifadhi",

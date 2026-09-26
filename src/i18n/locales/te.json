@@ -476,7 +476,9 @@
     "usernames": "వినియోగదారు పేర్లు",
     "usernamesDesc": "మీ స్వంత పేర్లు",
     "usernamesCount_one": "{{count}} యూజర్ ‌ నేమ్",
-    "usernamesCount_other": "{{count}} యూజర్ పేర్లు"
+    "usernamesCount_other": "{{count}} యూజర్ పేర్లు",
+    "leftHanded": "ఎడమచేతి మోడ్",
+    "leftHandedDesc": "లైక్ బటన్‌ను ప్రతిస్పందనల బార్ ఎడమ వైపుకు తరలించండి"
   },
   "common": {
     "save": "సేవ్",

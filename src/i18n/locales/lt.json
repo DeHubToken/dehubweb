@@ -462,7 +462,9 @@
     "usernames": "Naudotojų vardai",
     "usernamesDesc": "Jūsų turimi vardai ir pavardės",
     "usernamesCount_one": "{{count}} vartotojo vardas",
-    "usernamesCount_other": "{{count}} naudotojo vardai"
+    "usernamesCount_other": "{{count}} naudotojo vardai",
+    "leftHanded": "Kairiarankio režimas",
+    "leftHandedDesc": "Perkelia patinka mygtuką į kairę reakcijų juostos pusę"
   },
   "common": {
     "save": "Saugoti",

@@ -476,7 +476,9 @@
     "usernames": "صارف نام",
     "usernamesDesc": "وہ نام جو آپ کے مالک ہیں",
     "usernamesCount_one": "{{count}} صارف نام",
-    "usernamesCount_other": "{{count}} صارف نام"
+    "usernamesCount_other": "{{count}} صارف نام",
+    "leftHanded": "بائیں ہاتھ والا موڈ",
+    "leftHandedDesc": "لائیک بٹن کو ری ایکشن بار کی بائیں جانب منتقل کریں"
   },
   "common": {
     "save": "محفوظ کریں",

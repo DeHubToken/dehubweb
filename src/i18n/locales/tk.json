@@ -462,7 +462,9 @@
     "usernames": "Ulyjalar",
     "usernamesDesc": "Seniň adyň",
     "usernamesCount_one": "{{count}} username",
-    "usernamesCount_other": "{{count}} usernames"
+    "usernamesCount_other": "{{count}} usernames",
+    "leftHanded": "Çepbeçer tertibi",
+    "leftHandedDesc": "Halamak düwmesini reaksiýalar setiriniň çep tarapyna geçiriň"
   },
   "common": {
     "save": "Ýatda sakla",

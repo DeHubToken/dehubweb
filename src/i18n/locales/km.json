@@ -461,7 +461,9 @@
     },
     "usernames": "ឈ្មោះអ្នកប្រើ",
     "usernamesDesc": "ឈ្មោះដែលអ្នកមាន",
-    "usernamesCount_one": "{{count}} ឈ្មោះអ្នកប្រើ"
+    "usernamesCount_one": "{{count}} ឈ្មោះអ្នកប្រើ",
+    "leftHanded": "របៀបដៃឆ្វេង",
+    "leftHandedDesc": "ផ្លាស់ប្ដូរប៊ូតុងចូលចិត្តទៅខាងឆ្វេងនៃរបារប្រតិកម្ម"
   },
   "common": {
     "save": "រក្សាទុក",

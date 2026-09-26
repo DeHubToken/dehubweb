@@ -477,7 +477,9 @@
     "usernames": "Emrat e përdoruesve",
     "usernamesDesc": "Emrat që zotëron",
     "usernamesCount_one": "{{count}} username",
-    "usernamesCount_other": "{{count}} usernames"
+    "usernamesCount_other": "{{count}} usernames",
+    "leftHanded": "Modaliteti për mëngjarashë",
+    "leftHandedDesc": "Zhvendos butonin e pëlqimit në anën e majtë të shiritit të reagimeve"
   },
   "common": {
     "save": "Ruaj",

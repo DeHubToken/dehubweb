@@ -460,7 +460,9 @@
     "usernames": "Номҳои корбарон",
     "usernamesDesc": "Номҳое, ки шумо доред",
     "usernamesCount_one": "{{count}} username",
-    "usernamesCount_other": "{{count}} usernames"
+    "usernamesCount_other": "{{count}} usernames",
+    "leftHanded": "Реҷаи чапдастон",
+    "leftHandedDesc": "Тугмаи писандиданро ба тарафи чапи сатри вокунишҳо интиқол диҳед"
   },
   "common": {
     "save": "Сабт",

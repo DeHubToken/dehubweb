@@ -68,6 +68,7 @@ import {
   Ban,
   Bot,
   Film,
+  Hand,
   Paintbrush,
   Gauge,
   Megaphone,
@@ -159,6 +160,7 @@ import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useConnectionQuality, setLiteModePref } from '@/hooks/use-connection-quality';
 import { useAnimations } from '@/contexts/AnimationsContext';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
+import { useLeftHanded } from '@/hooks/use-left-handed';
 import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
 import { PublicChatAlertsSetting } from '@/components/app/settings/PublicChatAlertsSetting';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
@@ -2266,6 +2268,22 @@ function ShowAnimationsToggle() {
   );
 }
 
+function LeftHandedToggle() {
+  const { t } = useTranslation();
+  const { leftHanded, setLeftHanded } = useLeftHanded();
+  return (
+    <SettingsRow
+      as="label"
+      className="cursor-pointer"
+      icon={<Hand />}
+      anchor="left-handed"
+      title={t('settings.leftHanded')}
+      description={t('settings.leftHandedDesc')}
+      action={<Switch checked={leftHanded} onCheckedChange={setLeftHanded} />}
+    />
+  );
+}
+
 function ShortsEnabledToggle() {
   const { t } = useTranslation();
   const { shortsEnabled, setShortsEnabled } = useShortsEnabled();
@@ -2657,6 +2675,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
           <DataSaverToggle />
           <ShowAnimationsToggle />
           <ShortsEnabledToggle />
+          <LeftHandedToggle />
         </div>
       </div>
 

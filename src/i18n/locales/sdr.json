@@ -413,7 +413,9 @@
     },
     "usernames": "Usernames",
     "usernamesCount_one": "{{count}} username",
-    "usernamesCount_other": "{{count}} usernames"
+    "usernamesCount_other": "{{count}} usernames",
+    "leftHanded": "बाँया हाथ वाला मोड",
+    "leftHandedDesc": "लाइक बटन के रिएक्शन बार कर बाँया बगल ले जाव"
   },
   "common": {
     "save": "محفوظ کرو",

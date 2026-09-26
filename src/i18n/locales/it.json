@@ -477,7 +477,9 @@
     "usernames": "Nomi utente",
     "usernamesDesc": "I nomi che possiedi",
     "usernamesCount_one": "{{count}} username",
-    "usernamesCount_other": "{{count}} nomiutenti"
+    "usernamesCount_other": "{{count}} nomiutenti",
+    "leftHanded": "Modalità mancina",
+    "leftHandedDesc": "Sposta il pulsante mi piace sul lato sinistro della barra delle reazioni"
   },
   "common": {
     "save": "Salva",

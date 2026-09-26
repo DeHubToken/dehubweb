@@ -456,7 +456,9 @@
       "keyCopied": "ቁልፍ ቅዳሕ"
     },
     "usernames": "ስም ተጠቃሚ",
-    "usernamesDesc": "ስምካ"
+    "usernamesDesc": "ስምካ",
+    "leftHanded": "ናይ ጸጋም ኢድ ኣገባብ",
+    "leftHandedDesc": "ቁልፊ ምፍታው ናብ ጸጋማይ ጎድኒ መስመር ግብረ-መልሲ ኣግዕዝ"
   },
   "common": {
     "save": "ዓቅብ",

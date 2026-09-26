@@ -477,7 +477,9 @@
     "usernames": "Nom d'usuari",
     "usernamesDesc": "Els noms que tens",
     "usernamesCount_one": "{{count}} nom d'usuari",
-    "usernamesCount_other": "{{count}} noms d'usuari"
+    "usernamesCount_other": "{{count}} noms d'usuari",
+    "leftHanded": "Mode esquerrà",
+    "leftHandedDesc": "Mou el botó de m'agrada a l'esquerra de la barra de reaccions"
   },
   "common": {
     "save": "Desar",

@@ -461,7 +461,9 @@
     "usernames": "Amagama abasebenzisi",
     "usernamesDesc": "Amagama onawo",
     "usernamesCount_one": "{{count}} igama lomsebenzisi",
-    "usernamesCount_other": "{{count}} amagama abasebenzisi"
+    "usernamesCount_other": "{{count}} amagama abasebenzisi",
+    "leftHanded": "Imodi yesandla sobunxele",
+    "leftHandedDesc": "Hambisa inkinobho yokuthanda iye ohlangothini lwesobunxele lwebha yokusabela"
   },
   "common": {
     "save": "Gcina",

@@ -477,7 +477,9 @@
     "usernames": "Användarnamn",
     "usernamesDesc": "Namnen du äger",
     "usernamesCount_one": "{{count}} användarnamn",
-    "usernamesCount_other": "{{count}} användarnamn"
+    "usernamesCount_other": "{{count}} användarnamn",
+    "leftHanded": "Vänsterhänt läge",
+    "leftHandedDesc": "Flytta gilla-knappen till vänster sida av reaktionsfältet"
   },
   "common": {
     "save": "Spara",

@@ -477,7 +477,9 @@
     "usernames": "Nama pengguna",
     "usernamesDesc": "Nama yang anda miliki",
     "usernamesCount_one": "{{count}} nama pengguna",
-    "usernamesCount_other": "Nama pengguna {{count}}"
+    "usernamesCount_other": "Nama pengguna {{count}}",
+    "leftHanded": "Mod kidal",
+    "leftHandedDesc": "Alihkan butang suka ke sebelah kiri bar reaksi"
   },
   "common": {
     "save": "Simpan",

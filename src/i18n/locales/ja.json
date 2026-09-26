@@ -475,7 +475,9 @@
     "usernames": "ユーザー名",
     "usernamesDesc": "所有している名前",
     "usernamesCount_one": "{{count}}ユーザー名",
-    "usernamesCount_other": "{{count}}ユーザー名"
+    "usernamesCount_other": "{{count}}ユーザー名",
+    "leftHanded": "左利きモード",
+    "leftHandedDesc": "いいねボタンをリアクションバーの左側に移動します"
   },
   "common": {
     "save": "保存",

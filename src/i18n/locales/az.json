@@ -477,7 +477,9 @@
     "usernames": "İstifadəçi adları",
     "usernamesDesc": "Sahib olduğunuz adlar",
     "usernamesCount_one": "{{count}} istifadəçi adı",
-    "usernamesCount_other": "{{count}} istifadəçi adları"
+    "usernamesCount_other": "{{count}} istifadəçi adları",
+    "leftHanded": "Solaxay rejimi",
+    "leftHandedDesc": "Bəyən düyməsini reaksiyalar panelinin sol tərəfinə keçirin"
   },
   "common": {
     "save": "Saxla",

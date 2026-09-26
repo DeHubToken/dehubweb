@@ -67,6 +67,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'appearance', anchor: 'data-saver', label: 'Data Saver', labelKey: 'settings.dataSaver', keywords: 'bandwidth quality mobile data' },
   { tab: 'appearance', anchor: 'show-animations', label: 'Show Animations', labelKey: 'settings.showAnimations', keywords: 'motion reduce effects' },
   { tab: 'appearance', anchor: 'shorts', label: 'Shorts', labelKey: 'settings.shortsEnabled', keywords: 'shorts tab hide short videos' },
+  { tab: 'appearance', anchor: 'left-handed', label: 'Left-handed mode', labelKey: 'settings.leftHanded', keywords: 'left hand lefty reactions like thumb mirror' },
 
   // Notifications
   { tab: 'notifications', anchor: 'email-notifications', label: 'Email Notifications', labelKey: 'settings.emailNotifications', keywords: 'email inbox' },

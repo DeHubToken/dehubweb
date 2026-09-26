@@ -460,7 +460,9 @@
       "keyCopied": "ສຳເນົາປຸ່ມສະຕີມ"
     },
     "usernames": "ຊື່ຜູ້ໃຊ້",
-    "usernamesDesc": "ຊື່ທີ່ເຈົ້າມີ"
+    "usernamesDesc": "ຊື່ທີ່ເຈົ້າມີ",
+    "leftHanded": "ໂໝດຄົນຖະນັດຊ້າຍ",
+    "leftHandedDesc": "ຍ້າຍປຸ່ມຖືກໃຈໄປທາງຊ້າຍຂອງແຖບປະຕິກິລິຍາ"
   },
   "common": {
     "save": "ບັນທຶກ",

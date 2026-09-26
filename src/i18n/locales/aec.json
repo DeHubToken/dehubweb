@@ -422,7 +422,9 @@
     "usernames": "أسامي",
     "usernamesDesc": "الأسامي اللي معاك",
     "usernamesCount_one": "{{count}} اسم",
-    "usernamesCount_other": "{{count}} أسامي"
+    "usernamesCount_other": "{{count}} أسامي",
+    "leftHanded": "وضع الإيد الشمال",
+    "leftHandedDesc": "انقل زرار الإعجاب للناحية الشمال من شريط التفاعلات"
   },
   "common": {
     "save": "احفظ",

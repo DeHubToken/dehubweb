@@ -476,7 +476,9 @@
     "usernames": "用户名",
     "usernamesDesc": "您拥有的名称",
     "usernamesCount_one": "{{count}}用户名",
-    "usernamesCount_other": "{{count}}个用户名"
+    "usernamesCount_other": "{{count}}个用户名",
+    "leftHanded": "左手模式",
+    "leftHandedDesc": "将点赞按钮移到反应栏左侧"
   },
   "common": {
     "save": "保存",

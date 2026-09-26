@@ -422,7 +422,9 @@
     "usernames": "用户名",
     "usernamesDesc": "侬个名",
     "usernamesCount_one": "{{count}} 用户名",
-    "usernamesCount_other": "{{count}} 用户名"
+    "usernamesCount_other": "{{count}} 用户名",
+    "leftHanded": "左撇子模式",
+    "leftHandedDesc": "拿点赞按钮移到反应栏左面"
   },
   "common": {
     "save": "保存",

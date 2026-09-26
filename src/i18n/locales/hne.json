@@ -456,7 +456,9 @@
       "keyCopied": "स्ट्रीम कुंजी नकल"
     },
     "usernames": "कमइया नाम",
-    "usernamesDesc": "ओ नाम जऊन ल ओहर बनाय रहिस"
+    "usernamesDesc": "ओ नाम जऊन ल ओहर बनाय रहिस",
+    "leftHanded": "डेरी हाथ वाला मोड",
+    "leftHandedDesc": "लाइक बटन ल रिएक्शन बार के डेरी कोती ले जावव"
   },
   "common": {
     "save": "बचाव",

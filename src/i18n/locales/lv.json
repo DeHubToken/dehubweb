@@ -462,7 +462,9 @@
     "usernames": "Lietotājvārdi",
     "usernamesDesc": "Nosaukumi, kas jums pieder",
     "usernamesCount_one": "{{count}} lietotājvārds",
-    "usernamesCount_other": "{{count}} lietotājvārdi"
+    "usernamesCount_other": "{{count}} lietotājvārdi",
+    "leftHanded": "Kreiļu režīms",
+    "leftHandedDesc": "Pārvieto patīk pogu uz reakciju joslas kreiso pusi"
   },
   "common": {
     "save": "Saglabāt",

@@ -476,7 +476,9 @@
     "usernames": "Імена користувачів",
     "usernamesDesc": "Імена, якими ви володієте",
     "usernamesCount_one": "{{count}} ім 'я користувача",
-    "usernamesCount_other": "{{count}} імена користувачів"
+    "usernamesCount_other": "{{count}} імена користувачів",
+    "leftHanded": "Режим для шульги",
+    "leftHandedDesc": "Переносить кнопку «подобається» в ліву частину панелі реакцій"
   },
   "common": {
     "save": "Зберегти",

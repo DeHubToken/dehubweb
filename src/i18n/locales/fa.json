@@ -475,7 +475,9 @@
       "keyCopied": "کلید جریان کپی شد"
     },
     "usernames": "نام کاربری",
-    "usernamesDesc": "نام‌هایی که مال توست"
+    "usernamesDesc": "نام‌هایی که مال توست",
+    "leftHanded": "حالت چپ‌دست",
+    "leftHandedDesc": "دکمهٔ پسندیدن را به سمت چپ نوار واکنش‌ها ببرید"
   },
   "common": {
     "save": "ذخیره",

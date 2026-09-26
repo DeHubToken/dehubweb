@@ -421,7 +421,9 @@
     "usernames": "یوزرز نیم",
     "usernamesDesc": "اوہ ناں جہڑے تساں کول ہن",
     "usernamesCount_one": "{{count}} یوزرز نیم",
-    "usernamesCount_other": "{{count}} یوزرز نیم"
+    "usernamesCount_other": "{{count}} یوزرز نیم",
+    "leftHanded": "کھبے ہتھ آلا موڈ",
+    "leftHandedDesc": "لائیک بٹن کوں ری ایکشن بار دے کھبے پاسے گھن ونڄو"
   },
   "common": {
     "save": "محفوظ کرو",

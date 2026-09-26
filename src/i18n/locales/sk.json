@@ -481,7 +481,9 @@
     "usernames": "Používateľské mená",
     "usernamesDesc": "Mená, ktoré vlastníte",
     "usernamesCount_one": "Používateľské meno {{count}}",
-    "usernamesCount_other": "Používateľské mená: {{count}}"
+    "usernamesCount_other": "Používateľské mená: {{count}}",
+    "leftHanded": "Režim pre ľavákov",
+    "leftHandedDesc": "Presunie tlačidlo Páči sa mi na ľavú stranu lišty reakcií"
   },
   "common": {
     "save": "Uložiť",

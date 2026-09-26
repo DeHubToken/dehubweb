@@ -461,7 +461,9 @@
     "usernames": "Aha njirimara",
     "usernamesDesc": "Aha ndị i nwere",
     "usernamesCount_one": "{{count}} aha njirimara",
-    "usernamesCount_other": "{{count}} aha njirimara"
+    "usernamesCount_other": "{{count}} aha njirimara",
+    "leftHanded": "Ọnọdụ onye aka ekpe",
+    "leftHandedDesc": "Bugharịa bọtịnụ amasịrị m gaa n'akụkụ aka ekpe nke ogwe mmeghachi omume"
   },
   "common": {
     "save": "Chekwaa",

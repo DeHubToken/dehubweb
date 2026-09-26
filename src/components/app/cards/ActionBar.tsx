@@ -37,6 +37,7 @@ import { reactionGlowProps } from '@/lib/reaction-glow';
 import { ReactionPicker } from './ReactionPicker';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEngagementWeight } from '@/hooks/use-engagement-weight';
+import { useLeftHanded } from '@/hooks/use-left-handed';
 import { PostUtilityButtons } from './PostUtilityButtons';
 import { dehubLinkFor } from '@/lib/dehub-links';
 // Lazy so the DM/socket graph doesn't ride in the feed chunk — only loads when a user shares.
@@ -435,6 +436,8 @@ export function ActionBar({
   };
 
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
+  // Left-handed mode mirrors the whole row so the thumb lands on the left.
+  const { leftHanded } = useLeftHanded();
   const queryClient = useQueryClient();
   // When external handlers are provided (governance), always sync from props
   const hasExternalHandlers = !!(onLike || onDislike);
@@ -941,7 +944,7 @@ export function ActionBar({
             counts={localReactionCounts}
             onSelect={(reaction) => { dislikeTray.close(); handleReaction(reaction); }}
             onClose={dislikeTray.close}
-            align="left"
+            align={leftHanded ? "right" : "left"}
           />
           <motion.button
             onClick={() => {
@@ -1034,7 +1037,7 @@ export function ActionBar({
           counts={localReactionCounts}
           onSelect={(reaction) => { likeTray.close(); handleReaction(reaction); }}
           onClose={likeTray.close}
-          align="right"
+          align={leftHanded ? "left" : "right"}
           onShowInfo={
             canViewReactionInfo
               ? () => {
@@ -1136,7 +1139,7 @@ export function ActionBar({
       /* One row, sharing the composer's line: gift, share, thumb. The thumb
          is last — furthest right, where a right-handed thumb already is, and
          its tray is right-aligned so it opens back across the frame. */
-      <div className={cn('flex items-center gap-2', className)}>
+      <div className={cn('flex items-center gap-2', leftHanded && 'flex-row-reverse', className)}>
         {engagementButtons}
         {overlays}
       </div>
@@ -1150,7 +1153,7 @@ export function ActionBar({
       className
     )}>
       {utilityDesktopAnchor ? (
-        <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-3">
+        <div className={cn("flex flex-wrap items-center justify-between gap-y-2 gap-x-3", leftHanded && "flex-row-reverse")}>
           {/* Utility cluster — a real flex item of this justify-between row
               (not a separately-margined sibling), so the gap to the
               neighbouring engagement button matches the gaps between every
@@ -1177,6 +1180,7 @@ export function ActionBar({
       ) : (
         <div className={cn(
           "flex flex-wrap items-center gap-y-2 gap-x-2 justify-between",
+          leftHanded && "flex-row-reverse",
           centered && "lg:justify-center lg:gap-x-4"
         )}>
           {/* Utility actions (bookmark, pin, info) — display:contents so every

@@ -477,7 +477,9 @@
     "usernames": "Kullanıcı adları",
     "usernamesDesc": "Sahip olduğunuz isimler",
     "usernamesCount_one": "{{count}} kullanıcı adı",
-    "usernamesCount_other": "{{count}} kullanıcı adı"
+    "usernamesCount_other": "{{count}} kullanıcı adı",
+    "leftHanded": "Solak modu",
+    "leftHandedDesc": "Beğen düğmesini tepkiler çubuğunun sol tarafına taşır"
   },
   "common": {
     "save": "Kaydet",

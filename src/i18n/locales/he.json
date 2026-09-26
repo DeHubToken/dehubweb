@@ -475,7 +475,9 @@
     "usernames": "שמות משתמש",
     "usernamesDesc": "השמות שבבעלותכם",
     "usernamesCount_one": "{{count}} שם משתמש",
-    "usernamesCount_other": "{{count}} שמות משתמשים"
+    "usernamesCount_other": "{{count}} שמות משתמשים",
+    "leftHanded": "מצב שמאלי",
+    "leftHandedDesc": "העברת כפתור הלייק לצד השמאלי של סרגל התגובות"
   },
   "common": {
     "save": "שמור",

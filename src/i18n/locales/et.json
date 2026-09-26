@@ -477,7 +477,9 @@
     "usernames": "Kasutajanimed",
     "usernamesDesc": "Sulle kuuluvad nimed",
     "usernamesCount_one": "{{count}} kasutajanimi",
-    "usernamesCount_other": "{{count}} kasutajanime"
+    "usernamesCount_other": "{{count}} kasutajanime",
+    "leftHanded": "Vasakukäelise režiim",
+    "leftHandedDesc": "Liiguta meeldimise nupp reaktsiooniriba vasakule poole"
   },
   "common": {
     "save": "Salvesta",

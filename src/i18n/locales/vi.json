@@ -433,7 +433,9 @@
     "usernames": "Tên người dùng",
     "usernamesDesc": "Tên bạn sở hữu",
     "usernamesCount_one": "Tên người dùng {{count}}",
-    "usernamesCount_other": "Tên người dùng {{count}}"
+    "usernamesCount_other": "Tên người dùng {{count}}",
+    "leftHanded": "Chế độ tay trái",
+    "leftHandedDesc": "Chuyển nút thích sang bên trái thanh cảm xúc"
   },
   "common": {
     "save": "Lưu",

@@ -453,7 +453,9 @@
     "usernames": "Mɔgɔ tɔgɔw",
     "usernamesDesc": "Tɔgɔ minw be sɔrɔ o la",
     "usernamesCount_one": "{{count}} username",
-    "usernamesCount_other": "{{count}} usernames"
+    "usernamesCount_other": "{{count}} usernames",
+    "leftHanded": "Numanboloden cogoya",
+    "leftHandedDesc": "Ka diyanye butɔni bila reaksiyɔnw barra numanyanfan fɛ"
   },
   "common": {
     "save": "Bɔ",

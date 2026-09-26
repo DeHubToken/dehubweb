@@ -477,7 +477,9 @@
     "usernames": "Brugernavne",
     "usernamesDesc": "De navne, du ejer",
     "usernamesCount_one": "{{count}}brugernavn",
-    "usernamesCount_other": "{{count}} brugernavne"
+    "usernamesCount_other": "{{count}} brugernavne",
+    "leftHanded": "Venstrehåndstilstand",
+    "leftHandedDesc": "Flyt synes godt om-knappen til venstre side af reaktionslinjen"
   },
   "common": {
     "save": "Gem",

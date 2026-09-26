@@ -477,7 +477,9 @@
     "usernames": "Korisnička imena",
     "usernamesDesc": "Imena koja posjedujete",
     "usernamesCount_one": "{{count}} korisničko ime",
-    "usernamesCount_other": "{{count}} korisnička imena"
+    "usernamesCount_other": "{{count}} korisnička imena",
+    "leftHanded": "Način za ljevake",
+    "leftHandedDesc": "Premjesti gumb za sviđanje na lijevu stranu trake reakcija"
   },
   "common": {
     "save": "Spremi",
