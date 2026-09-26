@@ -67,7 +67,7 @@ import {
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
-import { reactionGlowProps } from '@/lib/reaction-glow';
+import { ReactionEmoji } from './ReactionEmoji';
 import { ReactionPicker } from './ReactionPicker';
 import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { dehubLinkFor } from '@/lib/dehub-links';
@@ -595,7 +595,6 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                   onLike(comment.id);
                 }}
                 {...likeTray.buttonProps}
-                {...reactionGlowProps(isOwnComment ? null : myPositiveReaction)}
                 className={cn(
                   COMMENT_ACTION_HIT,
                   "flex items-center gap-1 transition-colors select-none touch-none",
@@ -607,7 +606,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
               >
                 {leadReaction ? (
                   <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
-                    {reactionMeta(leadReaction).emoji}
+                    <ReactionEmoji reaction={leadReaction} animate={leadReaction === (isOwnComment ? null : myPositiveReaction)} />
                   </span>
                 ) : (
                   <ThumbsUp className={cn("w-4 h-4", !isOwnComment && comment.isLiked && "fill-current")} />
@@ -635,7 +634,6 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                   onDislike(comment.id);
                 }}
                 {...dislikeTray.buttonProps}
-                {...reactionGlowProps(myNegativeReaction)}
                 className={cn(
                   COMMENT_ACTION_HIT,
                   "flex items-center gap-1 transition-colors select-none touch-none",
@@ -647,7 +645,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
               >
                 {negativeLeadReaction ? (
                   <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
-                    {reactionMeta(negativeLeadReaction).emoji}
+                    <ReactionEmoji reaction={negativeLeadReaction} animate />
                   </span>
                 ) : (
                   <ThumbsDown className={cn("w-4 h-4", comment.isDisliked && "fill-current")} />
