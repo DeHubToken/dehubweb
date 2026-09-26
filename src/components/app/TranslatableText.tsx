@@ -9,7 +9,7 @@
  * 2. TranslatableGroup - wraps multiple elements, shows single control at end
  */
 
-import { useState, useMemo, useEffect, useCallback, useRef, createContext, useContext, ReactNode } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef, createContext, useContext, ReactNode, RefObject } from 'react';
 import { Mail, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -551,6 +551,33 @@ function queueAutoTranslate(run: () => Promise<unknown>): () => void {
   return () => { job.cancelled = true; };
 }
 
+// One observer for every auto-translating element. The margin starts the
+// request a screen or so ahead, so the translation is usually in place by the
+// time the post scrolls into view.
+const nearScreenCallbacks = new WeakMap<Element, () => void>();
+let nearScreenObserver: IntersectionObserver | null = null;
+
+function observeNearScreen(el: Element, onNear: () => void): () => void {
+  if (typeof IntersectionObserver === 'undefined') {
+    onNear();
+    return () => {};
+  }
+  nearScreenObserver ??= new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      nearScreenObserver?.unobserve(entry.target);
+      nearScreenCallbacks.get(entry.target)?.();
+      nearScreenCallbacks.delete(entry.target);
+    }
+  }, { rootMargin: '600px 0px' });
+  nearScreenCallbacks.set(el, onNear);
+  nearScreenObserver.observe(el);
+  return () => {
+    nearScreenCallbacks.delete(el);
+    nearScreenObserver?.unobserve(el);
+  };
+}
+
 // The same (text, language) pair is routinely asked for by more than one
 // component at once — a card owns the translate control while the component
 // rendering its body asks for the same text, and a repost shows the same body
@@ -628,6 +655,45 @@ function isLatinText(text: string): boolean {
   return totalChars > 0 && latinChars / totalChars > 0.7;
 }
 
+// Whether a post is plainly already in the reader's language, judged on the
+// client so the common case never costs a request.
+//
+// Most of a feed is in the language of the person reading it, and each of those
+// posts used to go to translate-text only to be told the text back. Scripts that
+// identify themselves settle it on sight; Latin text is judged by function words,
+// which are the most frequent and most language-specific tokens in any sentence.
+// This only says yes when the evidence is lopsided: a wrong "no" costs one
+// request, which is what every post cost before, while a wrong "yes" would leave
+// a post untranslated.
+const FUNCTION_WORDS: Record<string, Set<string>> = {
+  en: new Set('the and is are was were of to it that this with for you your on be have has not but what will my we they just from at so if can do about there their been would'.split(' ')),
+  es: new Set('el la los las que y es por una para con no se del al lo como más pero su muy está hay ser yo mi tu esto esta'.split(' ')),
+  pt: new Set('o os as que e do da dos das em um uma para com não é se na no mais mas seu sua muito está isso eu você'.split(' ')),
+  fr: new Set('le la les des et est une du que pour dans pas qui sur avec ce il je vous nous sont mais très cette au aux'.split(' ')),
+  de: new Set('der die das und ist nicht ich du zu mit den ein eine es auf für von sich auch dem wir sie sind aber noch'.split(' ')),
+  it: new Set('il lo gli le di che è una per con non sono del della mi ma anche questo come più io tu ci'.split(' ')),
+};
+
+export function looksLikeReaderLanguage(text: string, readerLang: string): boolean {
+  const reader = readerLang.toLowerCase().split(/[-_]/)[0];
+  const script = detectNonLatinScript(text);
+  if (script) return !isLatinText(text) && script === reader;
+
+  const own = FUNCTION_WORDS[reader];
+  if (!own || !isLatinText(text)) return false;
+
+  const tokens: string[] = text.toLowerCase().match(/\p{L}+/gu) ?? [];
+  if (tokens.length < 4) return false;
+
+  const hitsFor = (set: Set<string>) => tokens.filter((t) => set.has(t)).length;
+  const ownHits = hitsFor(own);
+  let otherHits = 0;
+  for (const [lang, set] of Object.entries(FUNCTION_WORDS)) {
+    if (lang !== reader) otherHits = Math.max(otherHits, hitsFor(set));
+  }
+  return ownHits >= 2 && ownHits / tokens.length >= 0.15 && ownHits >= otherHits * 2;
+}
+
 // ============================================================================
 // Shared Translation Context
 // Allows multiple TranslatableText components to sync: when one triggers
@@ -703,7 +769,12 @@ export function hasTranslatableText(text: string | null | undefined): boolean {
  * @param auto  Translate without being asked. Public content should; private
  *              content must not — see the auto-translate effect below.
  */
-export function useTranslation(text: string, auto: boolean = true) {
+export function useTranslation(
+  text: string,
+  auto: boolean = true,
+  /** Element the text renders in. When given, auto-translate waits until it nears the viewport. */
+  nearRef?: RefObject<Element>,
+) {
   const { language: userLang } = useUserLanguage();
   const [isTranslated, setIsTranslated] = useState(false);
   const [translatedText, setTranslatedText] = useState('');
@@ -845,6 +916,7 @@ export function useTranslation(text: string, auto: boolean = true) {
   // message accepts that; doing it silently to every message they receive does
   // not, and a direct message is not ours to upload on their behalf.
   const autoDoneRef = useRef<string | null>(null);
+  const [nearScreen, setNearScreen] = useState(false);
   const translateRef = useRef(handleTranslate);
   useEffect(() => { translateRef.current = handleTranslate; }, [handleTranslate]);
 
@@ -860,18 +932,30 @@ export function useTranslation(text: string, auto: boolean = true) {
 
     const key = `${text}-${userLang}`;
     if (autoDoneRef.current === key) return;
-    autoDoneRef.current = key;
+
+    // Already in the reader's language: nothing to ask the server.
+    if (looksLikeReaderLanguage(text, userLang)) {
+      autoDoneRef.current = key;
+      return;
+    }
 
     // Already known — the cache survives a reload, so this is the common case on
     // a refresh. No request to schedule, and waiting for idle would only show
     // the reader a paragraph they cannot read before swapping it out.
     if (translationCache.has(key)) {
+      autoDoneRef.current = key;
       void translateRef.current();
       return;
     }
 
+    // A feed mounts cards well below the fold. Those wait until they are about
+    // to be seen, and most never are.
+    const el = nearRef?.current;
+    if (el && !nearScreen) return observeNearScreen(el, () => setNearScreen(true));
+
+    autoDoneRef.current = key;
     return queueAutoTranslate(() => translateRef.current());
-  }, [text, userLang, isTooShort, auto]);
+  }, [text, userLang, isTooShort, auto, nearScreen, nearRef]);
 
   return {
     userLang,
@@ -898,6 +982,7 @@ export function TranslatableText({
   flagged = false,
 }: TranslatableTextProps) {
   const sharedCtx = useContext(SharedTranslationContext);
+  const elementRef = useRef<HTMLElement>(null);
   const {
     userLang,
     isTranslated,
@@ -908,7 +993,7 @@ export function TranslatableText({
     isTooShort,
     handleTranslate,
     handleShowOriginal,
-  } = useTranslation(text, auto);
+  } = useTranslation(text, auto, elementRef);
 
   // Listen to shared context signals — auto-translate/show-original when a sibling triggers
   const [lastTranslateSignal, setLastTranslateSignal] = useState(0);
@@ -953,6 +1038,7 @@ export function TranslatableText({
   // toggle; the fade is now a CSS animation on the element itself.
   return (
     <Component
+      ref={elementRef as React.Ref<never>}
       key={isTranslated ? 'translated' : 'original'}
       className={cn("whitespace-pre-wrap animate-in fade-in duration-150", className)}
     >

@@ -335,6 +335,62 @@ function SortFilterSection({
   );
 }
 
+// Module-level so a feed re-render does not hand React a new component type and
+// remount the carousel (and everything inside it) on every update.
+function RadioCarouselSection({ stations }: { stations: RadioStation[] }) {
+  const navigate = useNavigate();
+  if (stations.length === 0) return null;
+
+  return (
+    <div className="bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/[0.12] rounded-xl p-3">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-bold text-white flex items-center gap-2">
+          <Radio className="w-5 h-5" />
+          Radio Stations
+          <span className="text-zinc-500 font-normal text-sm">(50K)</span>
+        </h3>
+        <button
+          onClick={() => navigate('/app/music?tab=radio')}
+          className="text-zinc-400 text-sm hover:text-white flex items-center gap-1"
+        >
+          See all <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+      <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
+        {stations.slice(0, 10).map((station) => (
+          <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
+            <RadioStationCard station={station} />
+          </div>
+        ))}
+      </SwipeableCarousel>
+    </div>
+  );
+}
+
+function EmptyState({ isFollowing, failed, onRetry }: { isFollowing: boolean; failed: boolean; onRetry: () => void }) {
+  let title = 'No Content Yet';
+  let description = failed
+    ? 'Unable to load feed. Please try again.'
+    : 'Be the first to share something amazing!';
+
+  // Custom message for Following feed
+  if (isFollowing) {
+    title = 'No Posts Yet';
+    description = 'Follow some creators to see their posts here!';
+  }
+
+  return (
+    <AppState
+      icon={failed ? 'notifications' : 'home'}
+      title={title}
+      description={description}
+      kind={failed ? 'error' : 'empty'}
+      size="page"
+      primaryAction={failed ? { label: 'Try again', onClick: onRetry } : undefined}
+    />
+  );
+}
+
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
@@ -865,7 +921,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const { data: radioStations = [] } = useQuery({
     queryKey: ['radio-stations-curated'],
     queryFn: () => getCuratedCarouselStations(),
-    staleTime: 10 * 60 * 1000,
+    // A fixed list of stations; there is nothing to refresh within a visit.
+    staleTime: 60 * 60 * 1000,
   });
 
   // The boost slot. A badge holder spends an allowance to put one of their
@@ -1368,36 +1425,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     );
   };
 
-  // Radio carousel component for home feed
-  const RadioCarouselSection = () => {
-    if (radioStations.length === 0) return null;
-    
-    return (
-      <div className="bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/[0.12] rounded-xl p-3">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-bold text-white flex items-center gap-2">
-            <Radio className="w-5 h-5" />
-            Radio Stations
-            <span className="text-zinc-500 font-normal text-sm">(50K)</span>
-          </h3>
-          <button
-            onClick={() => navigate('/app/music?tab=radio')}
-            className="text-zinc-400 text-sm hover:text-white flex items-center gap-1"
-          >
-            See all <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-        <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
-          {radioStations.slice(0, 10).map((station) => (
-            <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
-              <RadioStationCard station={station} />
-            </div>
-          ))}
-        </SwipeableCarousel>
-      </div>
-    );
-  };
-
   // Live carousel insert position: 4 posts after the radio carousel
   const LIVE_INSERT_AFTER = RADIO_INSERT_AFTER + 4;
   // New members: halfway between the live carousel and the leaderboard, which
@@ -1588,7 +1615,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         // nothing still splits the masonry run around it, and a logged-out feed
         // should not be chopped in two for a row it will never show.
         isAuthenticated ? <div key="who-to-follow" className="my-3"><MobileWhoToFollowCarousel /></div> : null,
-        radioStations.length > 0 ? <div key="radio-carousel" className="my-3"><RadioCarouselSection /></div> : null,
+        radioStations.length > 0 ? <div key="radio-carousel" className="my-3"><RadioCarouselSection stations={radioStations} /></div> : null,
         liveNowStreams.length > 0 ? (
           <div key="live-now" className="my-3 space-y-2">
             <div className="flex items-center gap-2 px-1">
@@ -1709,7 +1736,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
 
       if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
-        addFullWidth(<div key={`radio-carousel-${index}`}><RadioCarouselSection /></div>);
+        addFullWidth(<div key={`radio-carousel-${index}`}><RadioCarouselSection stations={radioStations} /></div>);
         radioInserted = true;
       }
 
@@ -1784,33 +1811,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     isError,
     refetch,
   });
-
-  const EmptyState = () => {
-    // Custom message for Following feed
-    const isFollowingEmpty = selectedSort.value === 'following';
-    
-    let title = 'No Content Yet';
-    let description = (isError || retriesExhausted)
-      ? 'Unable to load feed. Please try again.'
-      : 'Be the first to share something amazing!';
-    
-    if (isFollowingEmpty) {
-      title = 'No Posts Yet';
-      description = 'Follow some creators to see their posts here!';
-    }
-    
-    const failed = isError || retriesExhausted;
-    return (
-      <AppState
-        icon={failed ? 'notifications' : 'home'}
-        title={title}
-        description={description}
-        kind={failed ? 'error' : 'empty'}
-        size="page"
-        primaryAction={failed ? { label: 'Try again', onClick: refetch } : undefined}
-      />
-    );
-  };
 
   // Show a non-blocking top progress bar whenever something is loading in the background
   // (filter switches, pagination, refetch). Filters stay clickable; existing items remain visible.
@@ -2087,7 +2087,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             just an advert, with no sign anything went wrong and no retry.
           */}
           {items.length === 0 && !(pinnedItem && !isBoosted) && optimisticPosts.length === 0 && !hasQueryData ? (
-            <EmptyState />
+            <EmptyState isFollowing={selectedSort.value === 'following'} failed={isError || retriesExhausted} onRetry={refetch} />
           ) : (
             <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`}>
               {/* Render optimistic posts */}
