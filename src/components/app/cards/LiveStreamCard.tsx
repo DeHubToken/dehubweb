@@ -75,6 +75,7 @@ import type { PostReaction } from '@/lib/reactions';
 import { GIFT_TIERS, tierFromAmount } from '@/lib/live/gift-tiers';
 
 const LiveGiftBuyDrawer = lazy(() => import('@/components/app/live/LiveGiftBuyDrawer').then(m => ({ default: m.LiveGiftBuyDrawer })));
+const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
 import { speakTipMessage, warmTipTts, setTipTtsEnabled, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
@@ -85,6 +86,8 @@ import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useTipPayment, MIN_TIP_DHB } from '@/hooks/use-tip-payment';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { fundTipFromSource } from '@/lib/tip-funding-run';
+import type { TipFundingSource } from '@/lib/tip-funding';
 import { formatDistanceToNow } from 'date-fns';
 // NOTE: stream-controller reaches wallet/contract code (aa-utils → wagmi) and
 // this card is eager via HomeFeed — getDHBBalance is dynamically imported at
@@ -198,6 +201,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [error, setError] = useState<string | null>(null);
   const [giftAmount, setGiftAmount] = useState('');
   const [giftMessage, setGiftMessage] = useState('');
+  // Another token to pay the gift with; it becomes DHB on Base before the tip.
+  const [giftPayWith, setGiftPayWith] = useState<TipFundingSource | null>(null);
+  const [fundingGift, setFundingGift] = useState(false);
   const [dhbBalance, setDhbBalance] = useState<string | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -881,8 +887,15 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     // amount and message stay in state until it succeeds, so a failed send
     // reopens with everything still filled in.
     setShowGiftDrawer(false);
-    void sendGiftTip(amount);
-  }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip]);
+    if (!giftPayWith || !walletAddress) {
+      void sendGiftTip(amount);
+      return;
+    }
+    setFundingGift(true);
+    void fundTipFromSource(giftPayWith, amount, walletAddress, t)
+      .then(ready => { if (ready) return sendGiftTip(amount); })
+      .finally(() => setFundingGift(false));
+  }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip, giftPayWith, walletAddress, t]);
 
   const handleEndStream = useCallback(async () => {
     if (!isAuthenticated) return;
@@ -1552,13 +1565,23 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               </p>
             </div>
 
+            {showGiftDrawer && walletAddress ? (
+              <Suspense fallback={null}>
+                <TipPayWith
+                  amountDhb={Number(giftAmount) >= MIN_TIP_DHB ? Number(giftAmount) : 0}
+                  value={giftPayWith}
+                  onChange={setGiftPayWith}
+                />
+              </Suspense>
+            ) : null}
+
             <div className="space-y-2">
               <Button
                 onClick={handleSendGift}
-                disabled={isSendingGift || !giftAmount}
+                disabled={isSendingGift || fundingGift || !giftAmount}
                 className="w-full bg-white hover:bg-zinc-200 text-black py-5 font-semibold rounded-xl"
               >
-                {isSendingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}
+                {isSendingGift || fundingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}
                 Send Gift
               </Button>
               <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowBuyDrawer(true)}>

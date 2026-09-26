@@ -714,7 +714,17 @@
     "attachDescription": "Voeg DHB-tokens toe als tip aan je bericht",
     "minAmount": "Min {{amount}} DHB.",
     "attachAmount": "Voeg {{amount}} DHB toe",
-    "removeTip": "Tip verwijderen"
+    "removeTip": "Tip verwijderen",
+    "payWith": "Betalen met",
+    "payQuoting": "Beste prijs ophalen…",
+    "payQuote": "≈ {{amount}} {{symbol}} op {{chain}}",
+    "payViaBridge": "Omgewisseld naar DHB op Uniswap, komt aan in ~{{seconds}}s",
+    "payViaSwap": "Omgewisseld naar DHB op Uniswap",
+    "stageApprove": "{{symbol}} goedkeuren…",
+    "stageBridge": "{{symbol}} verzenden vanaf {{chain}}…",
+    "stageArriving": "Onderweg naar Base, meestal een paar seconden…",
+    "stageSwap": "DHB kopen op Uniswap…",
+    "payFailed": "Kan {{symbol}} niet omzetten naar DHB"
   },
   "postOptions": {
     "options": "Opties",
