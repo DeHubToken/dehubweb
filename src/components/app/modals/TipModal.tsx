@@ -18,7 +18,7 @@
  * "All" button can actually send.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
@@ -46,6 +46,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { getAccountInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
+import { fundTipFromSource } from '@/lib/tip-funding-run';
+import type { TipFundingSource } from '@/lib/tip-funding';
+
+// Reads wallet balances (wallet stack), so it loads with the open drawer.
+const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
 
 const QUICK_AMOUNTS = [500, 1000, 5000, 10000, 25000, 50000, 100000, 1000000];
 
@@ -83,6 +88,10 @@ export function TipModal({
   const [privacyChecking, setPrivacyChecking] = useState(false);
   const resolvedTokenId = tokenId || context;
   const { pinnedChainId } = useTipNetwork();
+  // Set when the tip is paid from another token: it is turned into DHB on
+  // Base first, so the tip itself always leaves from Base.
+  const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
+  const [funding, setFunding] = useState(false);
 
   const parsedAmount = parseAbbreviatedAmount(amount);
   const isValidAmount = !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB;
@@ -91,7 +100,7 @@ export function TipModal({
   // chain the tipper can actually top up in-app. A pinned setting wins outright:
   // somebody who went to Settings to say "always BNB" meant it.
   const autoChainId = AUTO_TIP_CHAINS.find(id => (balances?.[id] ?? 0) >= parsedAmount);
-  const tipChainId = pinnedChainId ?? autoChainId ?? (BASE_CHAIN_ID as ChainId);
+  const tipChainId = payWith ? (BASE_CHAIN_ID as ChainId) : pinnedChainId ?? autoChainId ?? (BASE_CHAIN_ID as ChainId);
 
   const { tip, isTipping } = useTipPayment({
     creatorAddress,
@@ -186,6 +195,12 @@ export function TipModal({
     } catch {
       toast.error('Could not verify the recipient privacy setting. No tip was sent.');
       return;
+    }
+    if (payWith) {
+      if (!walletAddress) return;
+      setFunding(true);
+      const ready = await fundTipFromSource(payWith, parsedAmount, walletAddress, t).finally(() => setFunding(false));
+      if (!ready) return;
     }
     setLastTipAmount(parsedAmount);
     tip(parsedAmount);
@@ -288,12 +303,18 @@ export function TipModal({
             </div>
           </div>
 
+          {open && walletAddress && !recipientPrivate ? (
+            <Suspense fallback={null}>
+              <TipPayWith amountDhb={isValidAmount ? parsedAmount : 0} value={payWith} onChange={setPayWith} />
+            </Suspense>
+          ) : null}
+
           <div className="flex gap-3 mt-2">
             <Button
               variant="glass"
               className="flex-1"
-              onClick={isTipping ? undefined : () => onOpenChange(false)}
-              disabled={isTipping}
+              onClick={isTipping || funding ? undefined : () => onOpenChange(false)}
+              disabled={isTipping || funding}
             >
               {t('common.close', 'Close')}
             </Button>
@@ -301,9 +322,9 @@ export function TipModal({
               variant="glass"
               className="flex-1"
               onClick={handleSendTip}
-              disabled={isTipping || privacyChecking || recipientPrivate || !isValidAmount}
+              disabled={isTipping || funding || privacyChecking || recipientPrivate || !isValidAmount}
             >
-              {isTipping ? (
+              {isTipping || funding ? (
                 <>
                   <ButtonLoader className="mr-2" />
                   {t('tip.sending', 'Sending...')}

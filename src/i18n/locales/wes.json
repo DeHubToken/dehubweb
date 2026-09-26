@@ -425,7 +425,17 @@
     "addTip": "Add a Tip",
     "minAmount": "Min {{amount}} DHB.",
     "attachAmount": "Attach {{amount}} DHB",
-    "removeTip": "Remove Tip"
+    "removeTip": "Remove Tip",
+    "payWith": "Pay wit",
+    "payQuoting": "We di find best price…",
+    "payQuote": "≈ {{amount}} {{symbol}} for {{chain}}",
+    "payViaBridge": "We don change am to DHB for Uniswap, e go reach for ~{{seconds}}s",
+    "payViaSwap": "We don change am to DHB for Uniswap",
+    "stageApprove": "We di approve {{symbol}}…",
+    "stageBridge": "We di send {{symbol}} from {{chain}}…",
+    "stageArriving": "E di reach Base, normally na small seconds…",
+    "stageSwap": "We di buy DHB for Uniswap…",
+    "payFailed": "We no fit change {{symbol}} to DHB"
   },
   "postOptions": {
     "options": "Option dem",

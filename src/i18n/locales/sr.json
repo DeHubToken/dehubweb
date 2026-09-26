@@ -381,7 +381,17 @@
     "quickAmounts": "Брзи износи",
     "customAmount": "Или унесите износ",
     "sending": "Слање...",
-    "sendAmount": "Пошаљи {{amount}} DHB"
+    "sendAmount": "Пошаљи {{amount}} DHB",
+    "payWith": "Плати помоћу",
+    "payQuoting": "Тражимо најбољу цену…",
+    "payQuote": "≈ {{amount}} {{symbol}} на {{chain}}",
+    "payViaBridge": "Замењено за DHB на Uniswap-у, стиже за ~{{seconds}} с",
+    "payViaSwap": "Замењено за DHB на Uniswap-у",
+    "stageApprove": "Одобравање {{symbol}}…",
+    "stageBridge": "Слање {{symbol}} са {{chain}}…",
+    "stageArriving": "Стиже на Base, обично за неколико секунди…",
+    "stageSwap": "Куповина DHB на Uniswap-у…",
+    "payFailed": "Није могуће претворити {{symbol}} у DHB"
   },
   "postOptions": {
     "options": "Опције",
