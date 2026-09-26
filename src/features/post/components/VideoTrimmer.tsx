@@ -65,7 +65,7 @@ export function VideoTrimmer({
     
     video.onloadedmetadata = async () => {
       canvas.width = 80;
-      canvas.height = 45;
+      canvas.height = video.videoWidth ? Math.round(80 * video.videoHeight / video.videoWidth) : 45;
       
       for (let i = 0; i < thumbCount; i++) {
         const time = (i / thumbCount) * video.duration;
