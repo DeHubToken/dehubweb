@@ -518,7 +518,17 @@
     "addTip": "ടിപ് ചേർക്കുക",
     "attachDescription": "നിങ്ങളുടെ സന്ദേശത്തിലേക്ക് DHB ടോക്കണുകൾ ടിപ് ആയി ചേർക്കുക",
     "attachAmount": "{{amount}} DHB ചേർക്കുക",
-    "removeTip": "ടിപ് നീക്കം ചെയ്യുക"
+    "removeTip": "ടിപ് നീക്കം ചെയ്യുക",
+    "payWith": "ഇതുപയോഗിച്ച് പണമടയ്ക്കുക",
+    "payQuoting": "മികച്ച വില കണ്ടെത്തുന്നു…",
+    "payQuote": "≈ {{amount}} {{symbol}} {{chain}}-ൽ",
+    "payViaBridge": "Uniswap-ൽ DHB ആയി മാറ്റി, ~{{seconds}} സെക്കൻഡിൽ എത്തും",
+    "payViaSwap": "Uniswap-ൽ DHB ആയി മാറ്റി",
+    "stageApprove": "{{symbol}} അംഗീകരിക്കുന്നു…",
+    "stageBridge": "{{chain}}-ൽ നിന്ന് {{symbol}} അയയ്ക്കുന്നു…",
+    "stageArriving": "Base-ൽ എത്തുന്നു, സാധാരണ കുറച്ച് സെക്കൻഡുകൾ മാത്രം…",
+    "stageSwap": "Uniswap-ൽ DHB വാങ്ങുന്നു…",
+    "payFailed": "{{symbol}} DHB ആയി മാറ്റാനായില്ല"
   },
   "postOptions": {
     "options": "ഓപ്ഷനുകൾ",
