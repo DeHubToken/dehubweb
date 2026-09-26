@@ -1,6 +1,7 @@
 import { apiCall, getAuthToken } from './core';
 import type { DeHubUser, DeHubNFT } from './types';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
+import { normalizeCategoryList } from '@/lib/category-names';
 
 export interface VoteResponse {
   success: boolean;
@@ -706,7 +707,7 @@ export async function quotePost(params: {
   const extractedTags = Array.from(params.content.matchAll(hashtagRegex)).map(m => m[1]);
   const hashtagCategories = extractedTags.map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
   const baseCategory = params.category || 'general';
-  const mergedCategories = [...new Set([baseCategory, ...hashtagCategories])];
+  const mergedCategories = normalizeCategoryList([baseCategory, ...hashtagCategories]);
 
   const formData = new FormData();
   formData.append('quotedTokenId', String(params.quotedTokenId));
