@@ -41,7 +41,7 @@ import {
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
-import { reactionGlowProps } from '@/lib/reaction-glow';
+import { ReactionEmoji } from './ReactionEmoji';
 import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { resolveMyReaction } from '@/lib/engagement';
 import { ReactionPicker } from './ReactionPicker';
@@ -875,7 +875,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
   /** …and that button would wear it, though 👎 is its own glyph already. */
   const negativeLeadReaction = resolveNegativeLeadReaction(myReaction);
-  /** …which is where the other two land, and where their glow goes. */
+  /** …which is where the other two land, and where their animated glyph goes. */
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
 
   // Lock body scroll when viewer is open, and flag the fullscreen state so the
@@ -1646,7 +1646,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       }}
                       {...dislikeTray.buttonProps}
                       disabled={isVoting}
-                      {...reactionGlowProps(myNegativeReaction)}
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -1656,7 +1655,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     >
                       {negativeLeadReaction ? (
                         <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
-                          {reactionMeta(negativeLeadReaction).emoji}
+                          <ReactionEmoji reaction={negativeLeadReaction} animate />
                         </span>
                       ) : (
                         <ThumbsDown className={cn(
@@ -1711,7 +1710,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       {...likeTray.buttonProps}
                       disabled={isVoting}
                       /* Same halo the tray puts on your pick — see ActionBar. */
-                      {...reactionGlowProps(myPositiveReaction)}
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -1721,7 +1719,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     >
                       {leadReaction ? (
                         <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
-                          {reactionMeta(leadReaction).emoji}
+                          <ReactionEmoji reaction={leadReaction} animate={leadReaction === myPositiveReaction} />
                         </span>
                       ) : (
                         <ThumbsUp className={cn(
@@ -1922,7 +1920,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       }}
                       {...dislikeTray.buttonProps}
                       disabled={isVoting}
-                      {...reactionGlowProps(myNegativeReaction)}
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -1932,7 +1929,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     >
                       {negativeLeadReaction ? (
                         <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
-                          {reactionMeta(negativeLeadReaction).emoji}
+                          <ReactionEmoji reaction={negativeLeadReaction} animate />
                         </span>
                       ) : (
                         <ThumbsDown className={cn(
@@ -1984,7 +1981,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       {...likeTray.buttonProps}
                       disabled={isVoting}
                       /* Same halo the tray puts on your pick — see ActionBar. */
-                      {...reactionGlowProps(myPositiveReaction)}
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -1994,7 +1990,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     >
                       {leadReaction ? (
                         <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
-                          {reactionMeta(leadReaction).emoji}
+                          <ReactionEmoji reaction={leadReaction} animate={leadReaction === myPositiveReaction} />
                         </span>
                       ) : (
                         <ThumbsUp className={cn(
