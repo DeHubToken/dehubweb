@@ -6396,6 +6396,7 @@
   },
   "glossary": {
     "fractionsDesc": "Una publicación acuñada en DeHub se convierte en un NFT dividido en 1.000 fracciones, y el creador empieza con las 1.000: el 100 % de la propiedad del contenido. Acuñar es opcional y puede hacerse al publicar o más adelante.",
+    "ownershipBarDesc": "Una barra de progreso en la página de información de la publicación que muestra cuántas de las 1.000 fracciones conserva el creador y cuántas se han distribuido o vendido.",
     "tokenIdDesc": "Un identificador on-chain único que recibe una publicación cuando se acuña como NFT en la blockchain. Acuñar es opcional, así que una publicación que no se ha acuñado todavía no tiene Token ID.",
     "tokenIdInfoDesc": "El identificador on-chain único que recibe una publicación una vez acuñada como NFT. Se muestra en la parte superior de la página de Información de la publicación en las publicaciones acuñadas."
   },

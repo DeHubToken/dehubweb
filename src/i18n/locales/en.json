@@ -6395,6 +6395,7 @@
   },
   "glossary": {
     "fractionsDesc": "A post minted on DeHub becomes an NFT split into 1,000 fractions, and the creator starts with all 1,000 — 100% ownership of the content. Minting is optional and can happen when you publish or later.",
+    "ownershipBarDesc": "A progress bar on the Post Info page showing how many of the 1,000 fractions the creator still holds vs. how many have been distributed or sold.",
     "tokenIdDesc": "A unique on-chain identifier a post gets when it's minted as an NFT on the blockchain. Minting is optional, so a post that hasn't been minted has no Token ID yet.",
     "tokenIdInfoDesc": "The unique on-chain identifier a post gets once it is minted as an NFT. Shown at the top of the Post Info page for minted posts."
   },

@@ -6391,6 +6391,7 @@
   },
   "glossary": {
     "fractionsDesc": "Une publication frappée sur DeHub devient un NFT divisé en 1 000 fractions, et le créateur commence avec les 1 000 — 100 % de la propriété du contenu. La frappe est facultative et peut se faire à la publication ou plus tard.",
+    "ownershipBarDesc": "Une barre de progression sur la page d'infos de la publication qui indique combien des 1 000 fractions le créateur détient encore et combien ont été distribuées ou vendues.",
     "tokenIdDesc": "Un identifiant on-chain unique qu'une publication reçoit lorsqu'elle est frappée en tant que NFT sur la blockchain. La frappe étant facultative, une publication qui n'a pas été frappée n'a pas encore de Token ID.",
     "tokenIdInfoDesc": "L'identifiant on-chain unique qu'une publication reçoit une fois frappée en tant que NFT. Affiché en haut de la page Infos de la publication pour les publications frappées."
   },

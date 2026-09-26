@@ -6152,6 +6152,7 @@
       "megalodon": "Megalodon"
     },
     "fractionsDesc": "'n Plasing wat op DeHub gemunt word, word 'n NFT wat in 1,000 fraksies verdeel is, en die skepper begin met al 1,000 — 100% eienaarskap van die inhoud. Munt is opsioneel en kan gebeur wanneer jy publiseer of later.",
+    "ownershipBarDesc": "'n Vorderingsbalk op die Plasing-inligting-bladsy wat wys hoeveel van die 1,000 fraksies die skepper nog hou teenoor hoeveel versprei of verkoop is.",
     "tokenIdDesc": "'n Unieke on-chain identifiseerder wat 'n plasing kry wanneer dit as 'n NFT op die blokketting gemunt word. Munt is opsioneel, so 'n plasing wat nog nie gemunt is nie, het nog geen Token-ID nie.",
     "tokenIdInfoDesc": "Die unieke on-chain identifiseerder wat 'n plasing kry sodra dit as 'n NFT gemunt is. Word bo-aan die Plasinginligting-bladsy vir gemunte plasings gewys."
   },

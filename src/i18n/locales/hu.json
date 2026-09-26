@@ -6279,6 +6279,7 @@
   },
   "glossary": {
     "fractionsDesc": "A DeHubon vert bejegyzés 1000 frakcióra osztott NFT-vé válik, és az alkotó mind az 1000-rel kezd — a tartalom 100%-os tulajdonjogával. A verés opcionális, és történhet közzétételkor vagy később.",
+    "ownershipBarDesc": "Egy folyamatjelző sáv a bejegyzés-információs oldalon, amely megmutatja, hány frakció van még az alkotónál az 1000-ből, és mennyit osztottak szét vagy adtak el.",
     "tokenIdDesc": "Egyedi láncon belüli azonosító, amelyet egy bejegyzés akkor kap, amikor NFT-ként verik a blokkláncon. A verés opcionális, így a még nem vert bejegyzésnek még nincs Token ID-je.",
     "tokenIdInfoDesc": "Az egyedi láncon belüli azonosító, amelyet egy bejegyzés akkor kap, amikor NFT-ként verték. A vert bejegyzéseknél a Bejegyzés információi oldal tetején jelenik meg."
   },

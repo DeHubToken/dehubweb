@@ -4102,6 +4102,7 @@
   },
   "glossary": {
     "fractionsDesc": "Një postim i mintuar në DeHub bëhet NFT i ndarë në 1.000 pjesë, dhe krijuesi fillon me të 1.000 — 100% pronësi mbi përmbajtjen. Mintimi është opsional dhe mund të bëhet kur publikon ose më vonë.",
+    "ownershipBarDesc": "Një shirit progresi në faqen e informacionit të postimit që tregon sa nga 1.000 pjesët i mban ende krijuesi dhe sa janë shpërndarë ose shitur.",
     "tokenIdDesc": "Një identifikues unik on-chain që merr një postim kur mintohet si NFT në blockchain. Mintimi është opsional, kështu që një postim që nuk është mintuar ende nuk ka Token ID.",
     "tokenIdInfoDesc": "Identifikuesi unik on-chain që merr një postim sapo mintohet si NFT. Shfaqet në krye të faqes Informacione për postimin për postimet e mintuara."
   },

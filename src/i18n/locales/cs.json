@@ -6280,6 +6280,7 @@
   },
   "glossary": {
     "fractionsDesc": "Příspěvek vyražený na DeHub se stane NFT rozděleným na 1 000 frakcí a tvůrce začíná se všemi 1 000 — 100% vlastnictví obsahu. Ražení je volitelné a může proběhnout při publikování nebo později.",
+    "ownershipBarDesc": "Ukazatel průběhu na stránce s informacemi o příspěvku, který ukazuje, kolik z 1 000 frakcí tvůrce stále drží a kolik jich bylo rozdáno nebo prodáno.",
     "tokenIdDesc": "Jedinečný identifikátor na blockchainu, který příspěvek získá, když je vyražen jako NFT. Ražení je volitelné, takže příspěvek, který dosud nebyl vyražen, zatím nemá Token ID.",
     "tokenIdInfoDesc": "Jedinečný identifikátor na blockchainu, který příspěvek získá, jakmile je vyražen jako NFT. U ražených příspěvků se zobrazuje v horní části stránky Informace o příspěvku."
   },

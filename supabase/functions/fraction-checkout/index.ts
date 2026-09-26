@@ -461,7 +461,7 @@ Deno.serve(async (req) => {
         return jsonResponse({ error: "You don't hold any fractions of this post" }, 400);
       }
 
-      // Already-listed fractions count against the balance, or the same 100
+      // Already-listed fractions count against the balance, or the same 1000
       // fractions could back ten listings and nine buyers would go unfilled.
       const { data: openListings } = await supabase
         .from("fraction_listings")

@@ -4277,6 +4277,7 @@
   },
   "glossary": {
     "fractionsDesc": "Príspevok vyrazený na DeHub sa stane NFT rozdeleným na 1 000 podielov a tvorca začína so všetkými 1 000 — 100 % vlastníctvo obsahu. Razenie je voliteľné a môže prebehnúť pri zverejnení alebo neskôr.",
+    "ownershipBarDesc": "Ukazovateľ priebehu na stránke s informáciami o príspevku, ktorý ukazuje, koľko z 1 000 podielov tvorca ešte drží a koľko bolo rozdaných alebo predaných.",
     "tokenIdDesc": "Jedinečný on-chain identifikátor, ktorý príspevok získa, keď je vyrazený ako NFT na blockchaine. Razenie je voliteľné, takže príspevok, ktorý ešte nebol vyrazený, zatiaľ nemá Token ID.",
     "tokenIdInfoDesc": "Jedinečný on-chain identifikátor, ktorý príspevok získa, keď je vyrazený ako NFT. Pri vyrazených príspevkoch sa zobrazuje v hornej časti stránky Informácie o príspevku."
   },

@@ -6307,6 +6307,7 @@
   },
   "glossary": {
     "fractionsDesc": "Et opslag, der præges på DeHub, bliver en NFT opdelt i 1.000 fraktioner, og skaberen starter med alle 1.000 — 100 % ejerskab af indholdet. Prægning er valgfri og kan ske, når du udgiver, eller senere.",
+    "ownershipBarDesc": "En statuslinje på siden med opslagsinfo, der viser, hvor mange af de 1.000 fraktioner skaberen stadig har, og hvor mange der er fordelt eller solgt.",
     "tokenIdDesc": "En unik on-chain-identifikator, som et opslag får, når det præges som en NFT på blockchainen. Prægning er valgfri, så et opslag, der ikke er præget, har endnu intet Token-ID.",
     "tokenIdInfoDesc": "Den unikke on-chain-identifikator, et opslag får, når det er præget som en NFT. Vises øverst på siden Opslagsinfo for prægede opslag."
   },

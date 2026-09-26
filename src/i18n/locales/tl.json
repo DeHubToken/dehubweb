@@ -6154,6 +6154,7 @@
       "description": "Ang mga badge ay mga digital na gantimpala na iginagawad sa mga user para sa pagkamit ng mga partikular na milestone o paglahok sa isang komunidad. Ang mga ito ay kumakatawan sa mga tagumpay at maaaring ipakita sa mga profile upang ipakita ang mga nagawa."
     },
     "fractionsDesc": "Ang post na na-mint sa DeHub ay nagiging NFT na hinati sa 1,000 fractions, at hawak ng creator ang lahat ng 1,000 sa simula — 100% pagmamay-ari ng content. Opsyonal ang pag-mint at puwedeng gawin sa pag-publish o sa ibang pagkakataon.",
+    "ownershipBarDesc": "Isang progress bar sa pahina ng Post Info na nagpapakita kung ilan sa 1,000 fractions ang hawak pa ng creator at ilan na ang naipamahagi o naibenta.",
     "tokenIdDesc": "Isang natatanging on-chain identifier na nakukuha ng post kapag na-mint ito bilang NFT sa blockchain. Opsyonal ang pag-mint, kaya ang post na hindi pa na-mint ay wala pang Token ID.",
     "tokenIdInfoDesc": "Ang natatanging on-chain identifier na nakukuha ng post kapag na-mint na ito bilang NFT. Ipinapakita sa itaas ng Post Info page para sa mga na-mint na post."
   },

@@ -4074,6 +4074,7 @@
   },
   "glossary": {
     "fractionsDesc": "Postingan sing di-mint ing DeHub dadi NFT sing dipérang dadi 1,000 bagean, lan kreator miwiti kanthi nduwèni kabèh 1,000 — 100% kepemilikan konten. Minting iku opsional lan bisa ditindakaké nalika kowé nerbitaké utawa mengko.",
+    "ownershipBarDesc": "Bar kemajuan ing kaca Info Postingan sing nuduhake pira saka 1,000 bagean sing isih dicekel kreator lan pira sing wis dibagi utawa didol.",
     "tokenIdDesc": "Pengenal on-chain unik sing ditampa postingan nalika di-mint dadi NFT ing blockchain. Minting iku opsional, mula postingan sing durung di-mint durung duwé Token ID.",
     "tokenIdInfoDesc": "Pengenal on-chain unik sing ditampa postingan sawisé di-mint dadi NFT. Ditampilaké ing sisih ndhuwur kaca Info Postingan kanggo postingan sing wis di-mint."
   },
