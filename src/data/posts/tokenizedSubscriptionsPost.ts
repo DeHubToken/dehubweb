@@ -54,7 +54,7 @@ For creators, the model realigns incentives in three concrete ways.
 
 **Aligned early supporters.** Because an early-supporter pass can appreciate if the creator grows, fans are financially motivated to champion the creator, recruit others and stay loyal. Your biggest fans stop being passive subscribers and become genuine stakeholders in your success. This is a far stronger flywheel than a follower count that means nothing the day you switch platforms, a problem we cover in the [UK creator's guide to leaving TikTok](/guides/uk-creators-guide-leaving-tiktok).
 
-On DeHub this sits alongside the wider creator economy: content is minted on-chain the moment you upload, uploads can be free, pay-per-view or token-gated, and the ecosystem shares up to 90% of ad revenue back to creators and the community.
+On DeHub this sits alongside the wider creator economy: content can be minted on-chain when you upload it or later, uploads can be free, pay-per-view or token-gated, and the ecosystem shares up to 90% of ad revenue back to creators and the community.
 
 ## The fan upside: memberships that can appreciate
 

@@ -3286,7 +3286,7 @@
   },
   "fractions": {
     "seoTitle": "Frakciók | DeHub",
-    "seoDescription": "Vásároljon és adjon el DeHub bejegyzések frakcióit. Minden feltöltés 1000 láncon belüli frakció — birtokoljon egy videó, szám vagy kép egy részét, és kereskedjék vele DHB-ben.",
+    "seoDescription": "Vásároljon és adjon el DeHub bejegyzések frakcióit. Egy vert bejegyzés 1000 láncon belüli frakció — birtokoljon egy videó, szám vagy kép egy részét, és kereskedjen vele DHB-ben.",
     "title": "Frakciók",
     "perUpload": "1000 feltöltésenként",
     "tabBrowse": "Böngészés",
@@ -3322,7 +3322,7 @@
     "perFraction": "részesedésenként",
     "noSearchMatch": "Nincs találat a kereséshez",
     "noneForSale": "Jelenleg nincsenek részesedések eladásra",
-    "startTheMarketHint": "Minden feltöltés 1000 részesedés — listázz néhányat az első lépéshez.",
+    "startTheMarketHint": "Egy vert poszt 1000 részesedés — listázz néhányat a sajátjaidból, hogy elindítsd a piacot.",
     "yours": "Tiéd",
     "perFractionShort": "/ részesedés",
     "forShareOfPost": "a bejegyzés {{pct}}%-áért",
@@ -3376,7 +3376,7 @@
     "acrossPosts_one": "{{count}} poszt között",
     "acrossPosts_other": "{{count}} posztok között",
     "noneHeldYet": "Még nem rendelkezel törtekkel",
-    "noneHeldHint": "Tölts fel egy posztot 1000 törtként való kibocsátáshoz, vagy vásárolj be valaki másnak a posztjába.",
+    "noneHeldHint": "Verj NFT-vé egy posztot, hogy mind az 1000 részesedését birtokold, vagy vásárolj be valaki más posztjába.",
     "listedForSale": "Eladásra kijelölt",
     "priceEach": "{{price}} darabonként",
     "listingCancelled": "Listázás visszavonva",
@@ -3389,8 +3389,8 @@
     "offersForYourFractions": "Ajánlatok az Ön törtjeihez",
     "review": "Felülvizsgálat",
     "noFractionsYet": "Még nincsenek törtek",
-    "profileEmptyOwn": "Minden feltöltés 1000 törtként kerül kibocsátásra. Posztolj valamit, vagy vásárolj be egy olyan posztba, amelyben hiszel.",
-    "profileEmptyOther": "Minden feltöltés 1000 törtként kerül kibocsátásra. Ez a profil jelenleg egyetlen poszt törtjét sem tartalmazza.",
+    "profileEmptyOwn": "Egy vert poszt 1000 részesedés. Verd NFT-vé az egyik posztodat, vagy vásárolj be egy olyan posztba, amelyben hiszel.",
+    "profileEmptyOther": "Egy vert poszt 1000 részesedés. Ez a profil jelenleg egyetlen poszt részesedését sem birtokolja.",
     "browseTheMarket": "Böngészd a piacot",
     "sellFractions": "Törtek eladása",
     "balanceReadFailed": "Nem sikerült beolvasni a törtegyenlegedet. Zárd be ezt és próbálkozz újra — a listázás nélküle kockáztatja, hogy olyan törteket adsz el, amelyeket már nem tartasz.",
@@ -6270,5 +6270,10 @@
     "moveFunds": "Pénz áthozása",
     "moveFundsHint": "Csere vagy befizetés másik láncról",
     "notNow": "Most nem"
+  },
+  "glossary": {
+    "fractionsDesc": "A DeHubon vert bejegyzés 1000 frakcióra osztott NFT-vé válik, és az alkotó mind az 1000-rel kezd — a tartalom 100%-os tulajdonjogával. A verés opcionális, és történhet közzétételkor vagy később.",
+    "tokenIdDesc": "Egyedi láncon belüli azonosító, amelyet egy bejegyzés akkor kap, amikor NFT-ként verik a blokkláncon. A verés opcionális, így a még nem vert bejegyzésnek még nincs Token ID-je.",
+    "tokenIdInfoDesc": "Az egyedi láncon belüli azonosító, amelyet egy bejegyzés akkor kap, amikor NFT-ként verték. A vert bejegyzéseknél a Bejegyzés információi oldal tetején jelenik meg."
   }
 }

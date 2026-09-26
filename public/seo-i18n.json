@@ -2246,179 +2246,187 @@
   "/fractions": {
     "af": {
       "title": "Fraksies | DeHub",
-      "description": "Koop en verkoop fraksies van DeHub-plasings. Elke oplaai is 1000 on-chain fraksies — eie 'n sny van 'n video, spoor of beeld en verhandel dit in DHB."
+      "description": "Koop en verkoop fraksies van DeHub-plasings. 'n Gemunte plasing is 1000 on-chain fraksies — besit 'n sny van 'n video, snit of beeld en verhandel dit in DHB."
     },
     "ar": {
       "title": "الأجزاء | DeHub",
-      "description": "اشترِ وبِع أجزاءً من منشورات DeHub. كل رفع هو 1000 جزء على السلسلة — امتلك حصة من فيديو أو مقطع صوتي أو صورة وتداولها بـ DHB."
+      "description": "اشترِ وبِع أجزاءً من منشورات DeHub. المنشور المسكوك هو 1000 جزء على السلسلة — امتلك حصة من فيديو أو مقطع صوتي أو صورة وتداولها بـ DHB."
     },
     "az": {
       "title": "Fraksiyalar | DeHub",
-      "description": "DeHub yazılarının fraksiyalarını alıb satın. Hər yükləmə 1000 zəncir üzərində fraksiya — videonu, treki və ya şəkili bir hissəsinə sahib olun və DHB-də ticarət edin."
+      "description": "DeHub postlarının fraksiyalarını alıb satın. Zərb edilmiş post 1000 zəncir üzərində fraksiyadır — videonun, trekin və ya şəklin bir hissəsinə sahib olun və onu DHB ilə ticarət edin."
     },
     "be": {
       "title": "Фракцыі | DeHub",
-      "description": "Купляйце і прадавайце фракцыі пастаў DeHub. Кожная загрузка — 1000 фракцый у блокчэйне — валодайце часткай відэа, трэка або выявы і торгуйце ёю ў DHB."
+      "description": "Купляйце і прадавайце фракцыі пастоў DeHub. Замінчаны пост — гэта 1000 фракцый у блокчэйне — валодайце часткай відэа, трэка або выявы і гандлюйце ёю ў DHB."
     },
     "bg": {
       "title": "Дроби | DeHub",
-      "description": "Купувайте и продавайте фракции от публикации в DeHub. Всяко качване е 1000 on — chain фракции — притежавайте парче от видеоклип, песен или изображение и го търгувайте в DHB."
+      "description": "Купувайте и продавайте фракции от публикации в DeHub. Една изсечена публикация е 1000 on-chain фракции — притежавайте парче от видеоклип, песен или изображение и го търгувайте в DHB."
     },
     "bn": {
       "title": "ফ্র্যাকশন | DeHub",
-      "description": "DeHub পোস্টের ফ্র্যাকশন কিনুন এবং বিক্রয় করুন। প্রতিটি আপলোড 1000 অন-চেইন ফ্র্যাকশন — একটি ভিডিও, ট্র্যাক বা ইমেজের একটি অংশ মালিক হন এবং DHB-তে এটি ট্রেড করুন।"
+      "description": "DeHub পোস্টের ফ্র্যাকশন কিনুন এবং বিক্রয় করুন। একটি মিন্ট করা পোস্ট 1000 অন-চেইন ফ্র্যাকশন — একটি ভিডিও, ট্র্যাক বা ইমেজের একটি অংশের মালিক হন এবং DHB-তে এটি ট্রেড করুন।"
     },
     "ca": {
       "title": "Fraccions | DeHub",
-      "description": "Compra i venda de fraccions de publicacions de DeHub. Cada pujada és 1000 fraccions en cadena — posseeix una part d'un vídeo, pista o imatge i comercia-la en DHB."
+      "description": "Compra i ven fraccions de publicacions de DeHub. Una publicació encunyada són 1000 fraccions en cadena — posseeix una part d'un vídeo, una pista o una imatge i comercia-la en DHB."
     },
     "cs": {
       "title": "Frakce | DeHub",
-      "description": "Kupujte a prodávejte frakce příspěvků DeHub. Každé nahrání je 1000 frakcí v řetězci — vlastněte část videa, skladby nebo obrázku a obchodujte ji v DHB."
+      "description": "Kupujte a prodávejte frakce příspěvků DeHub. Ražený příspěvek je 1000 frakcí na blockchainu — vlastněte část videa, skladby nebo obrázku a obchodujte s ní v DHB."
     },
     "da": {
       "title": "Fraktioner | DeHub",
-      "description": "Køb og sælg fraktioner af DeHub-indlæg. Hver upload er 1000 on-chain-fraktioner — ej en del af en video, spor eller billede og handel det i DHB."
+      "description": "Køb og sælg fraktioner af DeHub-opslag. Et præget opslag er 1000 on-chain-fraktioner — ej en bid af en video, et nummer eller et billede, og handl det i DHB."
     },
     "de": {
       "title": "Fractions | DeHub",
-      "description": "Kaufen und verkaufen Sie Bruchteile von DeHub-Posts. Jeder Upload besteht aus 1000 On-Chain-Bruchteilen — besitzen Sie einen Anteil an einem Video, Track oder Bild und handeln Sie damit in DHB."
+      "description": "Kaufen und verkaufen Sie Bruchteile von DeHub-Beiträgen. Ein geprägter Beitrag besteht aus 1000 On-Chain-Bruchteilen — besitzen Sie einen Anteil an einem Video, Track oder Bild und handeln Sie damit in DHB."
     },
     "en": {
       "title": "Fractions | DeHub",
-      "description": "Buy and sell fractions of DeHub posts. Every upload is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB."
+      "description": "Buy and sell fractions of DeHub posts. A minted post is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB."
     },
     "es": {
       "title": "Fracciones | DeHub",
-      "description": "Compra y vende fracciones de publicaciones de DeHub. Cada subida son 1000 fracciones on-chain: posee una parte de un vídeo, un tema o una imagen y negóciala en DHB."
+      "description": "Compra y vende fracciones de publicaciones de DeHub. Una publicación acuñada son 1000 fracciones on-chain: posee una parte de un vídeo, un tema o una imagen y negóciala en DHB."
     },
     "et": {
       "title": "Fraktsioonid | DeHub",
-      "description": "Ostke ja müüge DeHub postituste fraktsioone. Iga üleslaadimine on 1000 ketjusse fraktsiooni — omage video, loo või pildi osa ja tehke sellega kauplemist DHB-s."
+      "description": "Ostke ja müüge DeHubi postituste fraktsioone. Vermitud postitus on 1000 plokiahelas olevat fraktsiooni — omage osa videost, loost või pildist ja kaubelge sellega DHB-s."
     },
     "fa": {
       "title": "کسری‌ها | DeHub",
-      "description": "خرید و فروش کسری‌های پست‌های DeHub. هر آپلود 1000 کسری زنجیری است — یک بخش از ویدیو، آهنگ یا تصویر را مالک شوید و آن را در DHB معامله کنید."
+      "description": "خرید و فروش کسری‌های پست‌های DeHub. یک پست ضرب‌شده 1000 کسری زنجیری است — بخشی از یک ویدیو، آهنگ یا تصویر را مالک شوید و آن را با DHB معامله کنید."
     },
     "fi": {
       "title": "Fraktiot | DeHub",
-      "description": "Osta ja myy DeHub-julkaisujen fraktioita. Jokainen lataus on 1000 ketjussa olevaa fraktiota — omista osa videosta, kappaleesta tai kuvasta ja käy kauppaa DHB:llä."
+      "description": "Osta ja myy DeHub-julkaisujen fraktioita. Lyöty julkaisu on 1000 ketjussa olevaa fraktiota — omista osa videosta, kappaleesta tai kuvasta ja käy sillä kauppaa DHB:llä."
     },
     "fr": {
       "title": "Fractions | DeHub",
-      "description": "Achetez et vendez des fractions de publications DeHub. Chaque téléchargement représente 1000 fractions on-chain — possédez une part d'une vidéo, d'une piste ou d'une image et échangez-la en DHB."
+      "description": "Achetez et vendez des fractions de publications DeHub. Une publication frappée représente 1000 fractions on-chain — possédez une part d'une vidéo, d'une piste ou d'une image et échangez-la en DHB."
     },
     "hi": {
       "title": "फ़्रैक्शन | DeHub",
-      "description": "DeHub पोस्ट के फ़्रैक्शन खरीदें और बेचें। हर अपलोड 1000 ऑन-चेन फ़्रैक्शन है — किसी वीडियो, ट्रैक या इमेज का हिस्सा रखें और DHB में ट्रेड करें।"
+      "description": "DeHub पोस्ट के फ़्रैक्शन खरीदें और बेचें। एक मिंट की गई पोस्ट 1000 ऑन-चेन फ़्रैक्शन होती है — किसी वीडियो, ट्रैक या इमेज का हिस्सा रखें और DHB में ट्रेड करें।"
     },
     "hr": {
       "title": "Frakcije | DeHub",
-      "description": "Kupuj i prodavaj frakcije DeHub postova. Svaki upload je 1000 frakcija na blockchainu — posjeduj dio videa, pjesme ili slike i trguj ga u DHB."
+      "description": "Kupuj i prodavaj frakcije DeHub objava. Iskovana objava je 1000 frakcija na blockchainu — posjeduj dio videa, pjesme ili slike i trguj njime u DHB-u."
     },
     "hu": {
       "title": "Frakciók | DeHub",
-      "description": "Vásároljon és adjon el DeHub bejegyzések frakcióit. Minden feltöltés 1000 láncon belüli frakció — birtokoljon egy videó, szám vagy kép egy részét, és kereskedjék vele DHB-ben."
+      "description": "Vásároljon és adjon el DeHub bejegyzések frakcióit. Egy vert bejegyzés 1000 láncon belüli frakció — birtokoljon egy videó, szám vagy kép egy részét, és kereskedjen vele DHB-ben."
     },
     "hy": {
       "title": "Կոտորակներ | DeHub",
-      "description": "Գնեք և վաճառեք DeHub գրառումների կոտորակներ: Յուրաքանչյուր վերբեռնում 1000 ցանցային կոտորակ է — տեսանյութի, հետքի կամ պատկերի մի մասի տեր լինեք և այն առևտուր կատարեք DHB-ում:"
+      "description": "Գնեք և վաճառեք DeHub գրառումների կոտորակներ: Մինտված գրառումը 1000 ցանցային կոտորակ է — դարձեք տեսանյութի, թրեքի կամ պատկերի մի մասի տեր և առևտուր արեք այն DHB-ով:"
     },
     "id": {
       "title": "Fraksi | DeHub",
-      "description": "Beli dan jual fraksi dari kiriman DeHub. Setiap unggahan adalah 1000 fraksi on-chain — miliki sebagian video, lagu, atau gambar dan perdagangkan dengan DHB."
+      "description": "Beli dan jual fraksi dari kiriman DeHub. Kiriman yang dicetak terdiri dari 1000 fraksi on-chain — miliki sebagian video, lagu, atau gambar dan perdagangkan dengan DHB."
     },
     "it": {
       "title": "Fractions | DeHub",
-      "description": "Compra e vendi frazioni di post DeHub. Ogni caricamento è di 1000 frazioni on-chain: possiedi una fetta di video, traccia o immagine e scambiala in DHB."
+      "description": "Compra e vendi frazioni di post DeHub. Un post coniato è 1000 frazioni on-chain: possiedi una fetta di un video, di una traccia o di un'immagine e scambiala in DHB."
     },
     "ja": {
       "title": "Fractions | DeHub",
-      "description": "DeHubの投稿のフラクションを売買します。すべてのアップロードは1000のオンチェーンフラクション — ビデオ、トラック、または画像のスライスを所有し、DHBで取引します。"
+      "description": "DeHubの投稿のフラクションを売買できます。ミントされた投稿は1000のオンチェーンフラクション — ビデオ、トラック、または画像の一部を所有し、DHBで取引しましょう。"
     },
     "ka": {
       "title": "წილები | DeHub",
-      "description": "იყიდეთ და გაყიდეთ DeHub პოსტების წილები. ყოველი ატვირთვა არის 1000 წილი ბლოკჩეინზე — გქონდეთ ვიდეოს, ტრეკის ან სურათის ნაწილი და გაყიდეთ იგი DHB-ში."
+      "description": "იყიდეთ და გაყიდეთ DeHub პოსტების წილები. მოჭრილი პოსტი არის 1000 წილი ბლოკჩეინზე — გქონდეთ ვიდეოს, ტრეკის ან სურათის ნაწილი და ივაჭრეთ მით DHB-ში."
     },
     "kk": {
       "title": "Бөлшектер | DeHub",
-      "description": "DeHub жазбаларының бөлшектерін сатып алыңыз және сатыңыз. Әр жүктеу 1000 тізбекті бөлшектерді құрайды — бейненің, тректің немесе суреттің бір бөлігіне ие болыңыз және оны DHB-да сатыңыз."
+      "description": "DeHub жазбаларының бөлшектерін сатып алыңыз және сатыңыз. Минтталған жазба — 1000 тізбектегі бөлшек: бейненің, тректің немесе суреттің бір бөлігіне ие болыңыз және оны DHB-мен саудалаңыз."
     },
     "km": {
       "title": "ប្រភាគ | DeHub",
-      "description": "ទិញ និងលក់ភាគហ៊ុននៃប្រកាស DeHub។ រាល់ការផ្ទុកឡើងមានភាគហ៊ុន on-chain ចំនួន ១០០០ — ជាកម្មសិទ្ធិរបស់អ្នកលើវីដេអូ បទចម្រៀង ឬរូបភាព ហើយជួញដូរវានៅក្នុង DHB។"
+      "description": "ទិញ និងលក់ភាគហ៊ុននៃប្រកាស DeHub។ ប្រកាសដែលបាន mint មានភាគហ៊ុន on-chain ចំនួន ១០០០ — ជាម្ចាស់ចំណែកមួយនៃវីដេអូ បទចម្រៀង ឬរូបភាព ហើយជួញដូរវាជា DHB។"
     },
     "kn": {
       "title": "ಭಿನ್ನರಾಶಿಗಳು | DeHub",
-      "description": "DeHub ಪೋಸ್ಟ್‌ಗಳ ಭಾಗಗಳನ್ನು ಖರೀದಿಸಿ ಮತ್ತು ಮಾರಾಟ ಮಾಡಿ. ಪ್ರತಿ ಅಪ್‌ಲೋಡ್ 1000 ಆನ್-ಚೈನ್ ಭಿನ್ನರಾಶಿಗಳನ್ನು ಹೊಂದಿದೆ - ¢ Â Â ವೀಡಿಯೊ, ಟ್ರ್ಯಾಕ್ ಅಥವಾ ಚಿತ್ರದ ಸ್ಲೈಸ್ ಅನ್ನು ಹೊಂದಿದ್ದು, ಅದನ್ನು DHB ನಲ್ಲಿ ವ್ಯಾಪಾರ ಮಾಡಿ."
+      "description": "DeHub ಪೋಸ್ಟ್‌ಗಳ ಭಾಗಗಳನ್ನು ಖರೀದಿಸಿ ಮತ್ತು ಮಾರಾಟ ಮಾಡಿ. ಮಿಂಟ್ ಮಾಡಿದ ಪೋಸ್ಟ್ 1000 ಆನ್-ಚೈನ್ ಭಿನ್ನರಾಶಿಗಳು — ವೀಡಿಯೊ, ಟ್ರ್ಯಾಕ್ ಅಥವಾ ಚಿತ್ರದ ಒಂದು ಭಾಗವನ್ನು ಹೊಂದಿ ಮತ್ತು ಅದನ್ನು DHB ನಲ್ಲಿ ವ್ಯಾಪಾರ ಮಾಡಿ."
     },
     "ko": {
       "title": "Fractions | DeHub",
-      "description": "DeHub 게시물의 분수를 사고 팔 수 있습니다. 모든 업로드는 1000개의 온체인 분수입니다 — 비디오, 트랙 또는 이미지의 일부를 소유하고 DHB에서 거래하세요."
+      "description": "DeHub 게시물의 분할 지분을 사고팔 수 있습니다. 민팅된 게시물은 1000개의 온체인 분할입니다 — 비디오, 트랙 또는 이미지의 일부를 소유하고 DHB로 거래하세요."
     },
     "ku": {
       "title": "پارچەکان | DeHub",
-      "description": "پارچەکانی پۆستەکانی DeHub بکڕە و بفرۆشە. هەموو بارکردنێک ١٠٠٠ پارچەی on-chainە - خاوەنی پارچەیەک ڤیدیۆ، تراک، یان وێنە بیت و لە DHB بازرگانی پێوە بکە."
+      "description": "پارچەکانی پۆستەکانی DeHub بکڕە و بفرۆشە. پۆستێکی مینتکراو ١٠٠٠ پارچەی on-chainە - خاوەنی پارچەیەک لە ڤیدیۆ، تراک، یان وێنەیەک بە و لە DHB بازرگانی پێوە بکە."
     },
     "ky": {
       "title": "Бөлүктөр | DeHub",
-      "description": "DeHub постторунун бөлүктөрүн сатып алыңыз жана сатыңыз. Ар бир жүктөө 1000 блокчейнден турган бөлүктөрдү түзөт — видеонун, тректин же сүрөттүн бир бөлүгүнө ээ болуңуз жана аны DHBде сатыңыз."
+      "description": "DeHub постторунун бөлүктөрүн сатып алыңыз жана сатыңыз. Минттелген пост блокчейндеги 1000 бөлүктөн турат — видеонун, тректин же сүрөттүн бир бөлүгүнө ээ болуңуз жана аны DHBде соода кылыңыз."
     },
     "lo": {
       "title": "ສ່ວນ | DeHub",
-      "description": "ຊື້ ແລະ ຂາຍ ສ່ວນ ຂອງໂພສ DeHub. ທຸກໆການອັບໂຫຼດແມ່ນ 1000 ສ່ວນ on-chain — ເປັນເຈົ້າຂອງສ່ວນໜຶ່ງຂອງວິດີໂອ, ເພງ, ຫຼືຮູບພາບ ແລະ ຊື້ຂາຍມັນໃນ DHB."
+      "description": "ຊື້ ແລະ ຂາຍ ສ່ວນ ຂອງໂພສ DeHub. ໂພສທີ່ mint ແລ້ວແມ່ນ 1000 ສ່ວນ on-chain — ເປັນເຈົ້າຂອງສ່ວນໜຶ່ງຂອງວິດີໂອ, ເພງ, ຫຼືຮູບພາບ ແລະ ຊື້ຂາຍມັນໃນ DHB."
     },
     "lt": {
       "title": "Sakiniai | DeHub",
-      "description": "Pirkite ir parduokite \"DeHub\" įrašų dalis. Kiekvienas įkėlimas yra 1000 grandininės dalies – valdykite vaizdo įrašo, takelio ar vaizdo įrašo dalį ir prekiaukite ja DHB."
+      "description": "Pirkite ir parduokite DeHub įrašų dalis. Nukaldintas įrašas yra 1000 grandinėje esančių dalių – valdykite vaizdo įrašo, takelio ar paveikslėlio dalį ir prekiaukite ja už DHB."
     },
     "lv": {
       "title": "Frakcijas | DeHub",
-      "description": "Pērciet un pārdodiet DeHub ierakstu daļas. Katra augšupielāde ir 1000 ķēdes frakciju — īpašumā iegūstiet video, dziesmas vai attēla daļu un tirgojiet to DHB."
+      "description": "Pērciet un pārdodiet DeHub ierakstu daļas. Izkalts ieraksts ir 1000 ķēdes daļu — iegūstiet īpašumā daļu no video, dziesmas vai attēla un tirgojiet to par DHB."
     },
     "ms": {
       "title": "Pecahan | DeHub",
-      "description": "Beli dan jual pecahan siaran DeHub. Setiap muat naik adalah 1000 pecahan dalam rantai — miliki sebahagian daripada video, trek, atau imej dan dagangkannya dalam DHB."
+      "description": "Beli dan jual pecahan siaran DeHub. Siaran yang telah dicetak ialah 1000 pecahan dalam rantai — miliki sebahagian daripada video, trek, atau imej dan dagangkannya dalam DHB."
     },
     "nl": {
       "title": "Fracties | DeHub",
-      "description": "Koop en verkoop fracties van DeHub-berichten. Elke upload is 1000 on-chain fracties — bezit een deel van een video, nummer of afbeelding en handel het in DHB."
+      "description": "Koop en verkoop fracties van DeHub-berichten. Een gemint bericht is 1000 on-chain fracties — bezit een deel van een video, nummer of afbeelding en handel het in DHB."
     },
     "pl": {
       "title": "Frakcje | DeHub",
-      "description": "Kupuj i sprzedawaj frakcje postów DeHub. Każde przesłanie to 1000 frakcji on-chain — posiadaj część wideo, utworu lub obrazu i handluj nim w DHB."
+      "description": "Kupuj i sprzedawaj frakcje postów DeHub. Wybity post to 1000 frakcji on-chain — posiadaj część wideo, utworu lub obrazu i handluj nią w DHB."
     },
     "pt": {
       "title": "Frações | DeHub",
-      "description": "Compre e venda frações de posts do DeHub. Cada upload é 1000 frações on-chain — possua uma parte de um vídeo, faixa ou imagem e negocie em DHB."
+      "description": "Compre e venda frações de posts do DeHub. Um post cunhado é 1000 frações on-chain — possua uma parte de um vídeo, faixa ou imagem e negocie em DHB."
     },
     "ro": {
       "title": "Fracții | DeHub",
-      "description": "Cumpărați și vânzați fracții din postările DeHub. Fiecare încărcare este 1000 fracții on-chain — dețineți o parte dintr-un videoclip, cântec sau imagine și tranzacționați-o în DHB."
+      "description": "Cumpărați și vindeți fracțiuni din postările DeHub. O postare mintată înseamnă 1000 de fracțiuni on-chain — dețineți o parte dintr-un videoclip, o piesă sau o imagine și tranzacționați-o în DHB."
     },
     "ru": {
       "title": "Fractions | DeHub",
-      "description": "Покупайте и продавайте доли постов DeHub. Каждая загрузка — это 1000 фракций в блокчейне — владейте частью видео, трека или изображения и торгуйте им в DHB."
+      "description": "Покупайте и продавайте доли постов DeHub. Заминченный пост — это 1000 долей в блокчейне — владейте частью видео, трека или изображения и торгуйте ею за DHB."
     },
     "sv": {
       "title": "Fraktioner | DeHub",
-      "description": "Köp och sälj fraktioner av DeHub-inlägg. Varje uppladdning är 1000 on-chain-fraktioner — äg en del av en video, spår eller bild och handla den i DHB."
+      "description": "Köp och sälj fraktioner av DeHub-inlägg. Ett mintat inlägg är 1000 on-chain-fraktioner — äg en del av en video, ett spår eller en bild och handla med den i DHB."
+    },
+    "sw": {
+      "title": "Fractions | DeHub",
+      "description": "Nunua na uuze sehemu za machapisho ya DeHub. Chapisho lililofuliwa ni sehemu 1000 zilizo kwenye mnyororo — miliki kipande cha video, wimbo au picha na ukifanyie biashara kwa DHB."
     },
     "te": {
       "title": "ఫ్రాక్షన్‌లు | DeHub",
-      "description": "DeHub పోస్ట్‌ల భిన్నాలను కొనండి మరియు విక్రయించండి. ప్రతి అప్‌లోడ్ 1000 ఆన్-చెయిన్ భిన్నాలు — వీడియో, ట్రాక్ లేదా ఇమేజ్ యొక్క స్లైస్‌ను సొంతం చేసుకోండి మరియు DHBలో దానిని ట్రేడ్ చేయండి."
+      "description": "DeHub పోస్ట్‌ల భిన్నాలను కొనండి మరియు విక్రయించండి. మింట్ చేసిన పోస్ట్ 1000 ఆన్-చెయిన్ భిన్నాలు — వీడియో, ట్రాక్ లేదా ఇమేజ్‌లో ఒక భాగాన్ని సొంతం చేసుకోండి మరియు దానిని DHBలో ట్రేడ్ చేయండి."
     },
     "tl": {
       "title": "Fractions | DeHub",
-      "description": "Bumili at magbenta ng mga fraction ng DeHub posts. Bawat upload ay 1000 on-chain fractions — magkaroon ng bahagi ng isang video, track, o larawan at i-trade ito sa DHB."
+      "description": "Bumili at magbenta ng mga fraction ng DeHub posts. Ang isang na-mint na post ay 1000 on-chain fractions — magkaroon ng bahagi ng isang video, track, o larawan at i-trade ito sa DHB."
     },
     "tr": {
       "title": "Paylar | DeHub",
-      "description": "DeHub gönderilerinin paylarını alıp satın. Her yükleme 1000 zincir üstü paydır — bir videonun, parçanın ya da görselin bir dilimine sahip olun ve DHB ile takas edin."
+      "description": "DeHub gönderilerinin paylarını alıp satın. Basılmış bir gönderi 1000 zincir üstü paydır — bir videonun, parçanın ya da görselin bir dilimine sahip olun ve DHB ile takas edin."
+    },
+    "vi": {
+      "title": "Fractions | DeHub",
+      "description": "Mua và bán phân số của các bài viết trên DeHub. Một bài viết đã đúc là 1000 phân số on-chain — sở hữu một phần của video, bản nhạc hoặc hình ảnh và giao dịch nó bằng DHB."
     },
     "zh": {
       "title": "碎片 | DeHub",
-      "description": "买卖 DeHub 帖子的碎片。每次上传都是 1000 份链上碎片——拥有一段视频、音乐或图片的一部分，并用 DHB 交易。"
+      "description": "买卖 DeHub 帖子的碎片。一个已铸造的帖子就是 1000 份链上碎片——拥有一段视频、音乐或图片的一部分，并用 DHB 交易。"
     }
   },
   "/jobs": {

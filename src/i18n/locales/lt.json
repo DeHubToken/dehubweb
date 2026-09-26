@@ -3324,7 +3324,7 @@
   },
   "fractions": {
     "seoTitle": "Sakiniai | DeHub",
-    "seoDescription": "Pirkite ir parduokite \"DeHub\" įrašų dalis. Kiekvienas įkėlimas yra 1000 grandininės dalies – valdykite vaizdo įrašo, takelio ar vaizdo įrašo dalį ir prekiaukite ja DHB.",
+    "seoDescription": "Pirkite ir parduokite DeHub įrašų dalis. Nukaldintas įrašas yra 1000 grandinėje esančių dalių – valdykite vaizdo įrašo, takelio ar paveikslėlio dalį ir prekiaukite ja už DHB.",
     "title": "Dalys",
     "perUpload": "1000 už įkėlimą",
     "tabBrowse": "Naršyti",
@@ -3360,7 +3360,7 @@
     "perFraction": "už dalį",
     "noSearchMatch": "Nieko nerasta pagal jūsų paiešką",
     "noneForSale": "Šiuo metu nėra parduodamų dalių",
-    "startTheMarketHint": "Kiekvienas įkėlimas yra 1000 dalių – parduokite savo, kad pradėtumėte rinką.",
+    "startTheMarketHint": "Nukaldintas įrašas yra 1000 dalių – parduokite dalį savųjų, kad pradėtumėte rinką.",
     "yours": "Jūsų",
     "perFractionShort": "/ dalis",
     "forShareOfPost": "už {{pct}}% įrašo",
@@ -3414,7 +3414,7 @@
     "acrossPosts_one": "iš {{count}} įrašo",
     "acrossPosts_other": "iš {{count}} įrašų",
     "noneHeldYet": "Dar neturite jokių dalinių",
-    "noneHeldHint": "Įkelkite įrašą, kad būtų išleista 1000 dalių, arba nusipirkite kito asmens dalį.",
+    "noneHeldHint": "Nukaldinkite įrašą, kad turėtumėte visas 1000 jo dalių, arba įsigykite kito asmens įrašo dalį.",
     "listedForSale": "Parduodama",
     "priceEach": "{{price}} už",
     "listingCancelled": "Pardavimas atšauktas",
@@ -3427,8 +3427,8 @@
     "offersForYourFractions": "Pasiūlymai dėl jūsų dalių",
     "review": "Peržiūrėti",
     "noFractionsYet": "Dar neturite dalių",
-    "profileEmptyOwn": "Kiekvienas įkeltas įrašas išleidžiamas kaip 1000 dalių. Paskelbkite ką nors arba nusipirkite įrašo, kuriuo tikite.",
-    "profileEmptyOther": "Kiekvienas įkeltas įrašas išleidžiamas kaip 1000 dalių. Šis profilis šiuo metu neturi jokių įrašų.",
+    "profileEmptyOwn": "Nukaldintas įrašas yra 1000 dalių. Nukaldinkite vieną savo įrašų arba įsigykite dalį įrašo, kuriuo tikite.",
+    "profileEmptyOther": "Nukaldintas įrašas yra 1000 dalių. Šis profilis šiuo metu neturi jokio įrašo dalių.",
     "browseTheMarket": "Naršyti rinką",
     "sellFractions": "Parduoti dalis",
     "balanceReadFailed": "Nepavyko nuskaityti jūsų dalių likučio. Uždarykite šį langą ir bandykite dar kartą – parduodant be jo rizikuojate parduoti dalis, kurių nebeturite.",
@@ -6359,5 +6359,10 @@
     "moveFunds": "Perkelti lėšas",
     "moveFundsHint": "Keiskite arba įneškite iš kitos grandinės",
     "notNow": "Ne dabar"
+  },
+  "glossary": {
+    "fractionsDesc": "DeHub nukaldintas įrašas tampa NFT, padalintu į 1 000 dalių, o kūrėjas pradeda turėdamas visas 1 000 – 100 % turinio nuosavybės. Kalimas neprivalomas ir gali būti atliktas skelbiant arba vėliau.",
+    "tokenIdDesc": "Unikalus grandinės identifikatorius, kurį įrašas gauna, kai yra nukaldinamas kaip NFT blokų grandinėje. Kalimas neprivalomas, todėl nenukaldintas įrašas dar neturi Token ID.",
+    "tokenIdInfoDesc": "Unikalus grandinės identifikatorius, kurį įrašas gauna, kai yra nukaldintas kaip NFT. Nukaldintų įrašų atveju rodomas įrašo informacijos puslapio viršuje."
   }
 }

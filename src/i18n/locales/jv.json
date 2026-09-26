@@ -3900,7 +3900,12 @@
     }
   },
   "fractions": {
-    "title": "Bagean"
+    "seoDescription": "Tuku lan adol bagean saka postingan DeHub. Postingan sing wis di-mint iku 1000 bagean on-chain — duwènana sapérangan saka video, lagu, utawa gambar lan dagangna nganggo DHB.",
+    "title": "Bagean",
+    "startTheMarketHint": "Postingan sing wis di-mint iku 1000 bagean — dhaptarna sawetara bagean duwèkmu kanggo miwiti pasar.",
+    "noneHeldHint": "Mint postingan supaya kowé nyekel kabèh 1000 bageané, utawa tuku bagean saka postingané wong liya.",
+    "profileEmptyOwn": "Postingan sing wis di-mint iku 1000 bagean. Mint salah siji postinganmu, utawa tuku bagean saka postingan sing kokpercaya.",
+    "profileEmptyOther": "Postingan sing wis di-mint iku 1000 bagean. Profil iki saiki ora nyekel bagean saka postingan apa waé."
   },
   "stores": {
     "podToggle": "Barang cetak miturut pesenan",
@@ -4060,5 +4065,10 @@
     "moveFunds": "Lebokake dana",
     "moveFundsHint": "Swap utawa setor saka chain liya",
     "notNow": "Ora saiki"
+  },
+  "glossary": {
+    "fractionsDesc": "Postingan sing di-mint ing DeHub dadi NFT sing dipérang dadi 1,000 bagean, lan kreator miwiti kanthi nduwèni kabèh 1,000 — 100% kepemilikan konten. Minting iku opsional lan bisa ditindakaké nalika kowé nerbitaké utawa mengko.",
+    "tokenIdDesc": "Pengenal on-chain unik sing ditampa postingan nalika di-mint dadi NFT ing blockchain. Minting iku opsional, mula postingan sing durung di-mint durung duwé Token ID.",
+    "tokenIdInfoDesc": "Pengenal on-chain unik sing ditampa postingan sawisé di-mint dadi NFT. Ditampilaké ing sisih ndhuwur kaca Info Postingan kanggo postingan sing wis di-mint."
   }
 }

@@ -236,7 +236,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
   /**
    * The creator's PERMANENT encoder credentials, if they have any.
    *
-   * Every stream key this sheet used to hand out was minted with the post, so
+   * Every stream key this sheet used to hand out was issued with the post, so
    * an OBS or console user had to re-key their encoder before every session —
    * and had to create a post first purely to get a key out of it. These never
    * change, so they are what the encoder screens show, and the per-stream pair

@@ -3607,7 +3607,7 @@
   },
   "fractions": {
     "seoTitle": "Pecahan | DeHub",
-    "seoDescription": "Beli dan jual pecahan siaran DeHub. Setiap muat naik adalah 1000 pecahan dalam rantai — miliki sebahagian daripada video, trek, atau imej dan dagangkannya dalam DHB.",
+    "seoDescription": "Beli dan jual pecahan siaran DeHub. Siaran yang telah dicetak ialah 1000 pecahan dalam rantai — miliki sebahagian daripada video, trek, atau imej dan dagangkannya dalam DHB.",
     "title": "Pecahan",
     "perUpload": "1000 setiap muat naik",
     "tabBrowse": "Semak imbas",
@@ -3643,7 +3643,7 @@
     "perFraction": "setiap pecahan",
     "noSearchMatch": "Tiada yang sepadan dengan carian itu",
     "noneForSale": "Tiada pecahan yang dijual sekarang",
-    "startTheMarketHint": "Setiap muat naik ialah 1000 pecahan — senaraikan beberapa milik anda untuk memulakan pasaran.",
+    "startTheMarketHint": "Siaran yang telah dicetak ialah 1000 pecahan — senaraikan beberapa milik anda untuk memulakan pasaran.",
     "yours": "Milik anda",
     "perFractionShort": "/ pecahan",
     "forShareOfPost": "untuk {{pct}}% daripada siaran",
@@ -3697,7 +3697,7 @@
     "acrossPosts_one": "merentasi {{count}} siaran",
     "acrossPosts_other": "merentasi {{count}} siaran",
     "noneHeldYet": "Anda belum memegang sebarang pecahan",
-    "noneHeldHint": "Muat naik siaran untuk dicetak 1000, atau beli ke dalam siaran orang lain.",
+    "noneHeldHint": "Mint siaran untuk memegang kesemua 1000 pecahannya, atau beli ke dalam siaran orang lain.",
     "listedForSale": "Disenaraikan untuk dijual",
     "priceEach": "{{price}} setiap satu",
     "listingCancelled": "Penyenaraian dibatalkan",
@@ -3710,8 +3710,8 @@
     "offersForYourFractions": "Tawaran untuk pecahan anda",
     "review": "Semak imbas",
     "noFractionsYet": "Tiada pecahan lagi",
-    "profileEmptyOwn": "Setiap muat naik dicetak sebagai 1000 pecahan. Siarkan sesuatu, atau beli ke dalam siaran yang anda percayai.",
-    "profileEmptyOther": "Setiap muat naik dicetak sebagai 1000 pecahan. Profil ini tidak memegang sebarang pecahan daripada siaran mana pun pada masa ini.",
+    "profileEmptyOwn": "Siaran yang telah dicetak ialah 1000 pecahan. Mint salah satu siaran anda, atau beli ke dalam siaran yang anda percayai.",
+    "profileEmptyOther": "Siaran yang telah dicetak ialah 1000 pecahan. Profil ini tidak memegang sebarang pecahan mana-mana siaran buat masa ini.",
     "browseTheMarket": "Layari pasaran",
     "sellFractions": "Jual pecahan",
     "balanceReadFailed": "Tidak dapat membaca baki pecahan anda sekarang. Tutup ini dan cuba lagi — penyenaraian tanpanya berisiko menjual pecahan yang anda tidak lagi pegang.",
@@ -6587,5 +6587,10 @@
     "moveFunds": "Pindahkan dana masuk",
     "moveFundsHint": "Tukar atau deposit dari rantaian lain",
     "notNow": "Bukan sekarang"
+  },
+  "glossary": {
+    "fractionsDesc": "Siaran yang dicetak di DeHub menjadi NFT yang dibahagikan kepada 1,000 pecahan, dan pencipta bermula dengan kesemua 1,000 — 100% pemilikan kandungan. Pencetakan adalah pilihan dan boleh dilakukan semasa anda menerbitkan atau kemudian.",
+    "tokenIdDesc": "Pengecam unik dalam rantai yang diperoleh siaran apabila ia dicetak sebagai NFT di blockchain. Pencetakan adalah pilihan, jadi siaran yang belum dicetak belum mempunyai Token ID.",
+    "tokenIdInfoDesc": "Pengecam unik dalam rantai yang diperoleh siaran sebaik sahaja ia dicetak sebagai NFT. Dipaparkan di bahagian atas halaman Maklumat Siaran untuk siaran yang telah dicetak."
   }
 }

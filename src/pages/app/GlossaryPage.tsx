@@ -154,7 +154,7 @@ export default function GlossaryPage() {
       title: t('glossary.sections.postInfo', 'Post Info Page'),
       entries: [
         { icon: <Info size={iconSize} />, title: t('glossary.postInfoPage', 'Post Info'), description: t('glossary.postInfoPageDesc', 'A detailed view of any post showing its on-chain data, engagement stats, ownership fractions, and creator info. Access it by tapping the "ⓘ" icon on any post.') },
-        { icon: <Hash size={iconSize} />, title: t('glossary.tokenIdInfo', 'Token ID'), description: t('glossary.tokenIdInfoDesc', 'The unique on-chain identifier assigned when a post is minted as an NFT. Shown at the top of the Post Info page.') },
+        { icon: <Hash size={iconSize} />, title: t('glossary.tokenIdInfo', 'Token ID'), description: t('glossary.tokenIdInfoDesc', 'The unique on-chain identifier a post gets once it is minted as an NFT. Shown at the top of the Post Info page for minted posts.') },
         { icon: <ExternalLink size={iconSize} />, title: t('glossary.txHash', 'Transaction Hash'), description: t('glossary.txHashInfoDesc', 'The blockchain transaction hash from when the post was minted. Click it to open the block explorer (BaseScan or BscScan) and verify the on-chain record.') },
         { icon: <Eye size={iconSize} />, title: t('glossary.engagementStats', 'Engagement Stats'), description: t('glossary.engagementStatsDesc', 'The Post Info page shows total likes, dislikes, views, comments, and tips received — giving a complete snapshot of how the post is performing.') },
         { icon: <Globe size={iconSize} />, title: t('glossary.visibilityControl', 'Visibility Control'), description: t('glossary.visibilityControlDesc', 'Post owners can change their post\'s visibility between Public (anyone can see), Unlisted (only via direct link), and Private (only you). Accessible from the Post Info page.') },
@@ -168,7 +168,7 @@ export default function GlossaryPage() {
       id: 'fractions',
       title: t('glossary.sections.fractions', 'Fractions & Ownership'),
       entries: [
-        { icon: <PieChart size={iconSize} />, title: t('glossary.fractions', 'Fractions'), description: t('glossary.fractionsDesc', 'Every post on DeHub is minted as an NFT split into 100 fractions. The creator starts with all 100 fractions, representing 100% ownership of the content.') },
+        { icon: <PieChart size={iconSize} />, title: t('glossary.fractions', 'Fractions'), description: t('glossary.fractionsDesc', 'A post minted on DeHub becomes an NFT split into 1,000 fractions, and the creator starts with all 1,000 — 100% ownership of the content. Minting is optional and can happen when you publish or later.') },
         { icon: <Users size={iconSize} />, title: t('glossary.holders', 'Holders'), description: t('glossary.holdersDesc', 'The list of wallet addresses that own fractions of a post. Shown on the Post Info page with each holder\'s balance and ownership percentage.') },
         { icon: <BarChart3 size={iconSize} />, title: t('glossary.ownershipBar', 'Ownership Bar'), description: t('glossary.ownershipBarDesc', 'A progress bar on the Post Info page showing how many of the 100 fractions the creator still holds vs. how many have been distributed or sold.') },
         { icon: <Tag size={iconSize} />, title: t('glossary.listFractions', 'List Fractions'), description: t('glossary.listFractionsDesc', 'If you own fractions of a post, you can list them for sale at a price you set (in DHB per fraction). Other users can then purchase your listed fractions.') },
@@ -241,7 +241,7 @@ export default function GlossaryPage() {
           title: `#${i + 1} Trophy`,
           description: `Awarded to the #${i + 1} ranked user on the leaderboard. Displayed next to their avatar.`,
         })),
-        { icon: <Zap size={iconSize} />, title: t('glossary.tokenId', 'Token ID'), description: t('glossary.tokenIdDesc', 'A unique on-chain identifier assigned to each post when it\'s minted as an NFT on the blockchain.') },
+        { icon: <Zap size={iconSize} />, title: t('glossary.tokenId', 'Token ID'), description: t('glossary.tokenIdDesc', 'A unique on-chain identifier a post gets when it\'s minted as an NFT on the blockchain. Minting is optional, so a post that hasn\'t been minted has no Token ID yet.') },
       ],
     },
     {

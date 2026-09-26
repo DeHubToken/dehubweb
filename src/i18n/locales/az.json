@@ -3260,7 +3260,7 @@
   },
   "fractions": {
     "seoTitle": "Fraksiyalar | DeHub",
-    "seoDescription": "DeHub yazılarının fraksiyalarını alıb satın. Hər yükləmə 1000 zəncir üzərində fraksiya — videonu, treki və ya şəkili bir hissəsinə sahib olun və DHB-də ticarət edin.",
+    "seoDescription": "DeHub postlarının fraksiyalarını alıb satın. Zərb edilmiş post 1000 zəncir üzərində fraksiyadır — videonun, trekin və ya şəklin bir hissəsinə sahib olun və onu DHB ilə ticarət edin.",
     "title": "Fraksiyalar",
     "perUpload": "Hər yükləmə üçün 1000",
     "tabBrowse": "Baxış",
@@ -3296,7 +3296,7 @@
     "perFraction": "fraksiya üçün",
     "noSearchMatch": "Heç bir şey axtarışla uyğun gəlmir",
     "noneForSale": "Hazırda satışda fraksiya yoxdur",
-    "startTheMarketHint": "Hər yükləmə 1000 fraksiya təşkil edir — sizinkinin bir hissəsini siyahıya almağa başlayın.",
+    "startTheMarketHint": "Zərb edilmiş post 1000 fraksiyadır — bazarı başlatmaq üçün özünüzünkülərdən bir neçəsini siyahıya salın.",
     "yours": "Sizin",
     "perFractionShort": "/ fraksiya",
     "forShareOfPost": "{{pct}}% üçün yazı",
@@ -3350,7 +3350,7 @@
     "acrossPosts_one": "{{count}} post-da",
     "acrossPosts_other": "{{count}} post-larda",
     "noneHeldYet": "Hələ heç bir fraksiyaya sahib deyilsiniz",
-    "noneHeldHint": "Mintləşdirilmək üçün post yükləyin 1000, və ya başqasının postuna qatılın.",
+    "noneHeldHint": "Bütün 1000 fraksiyasına sahib olmaq üçün bir post zərb edin və ya başqasının postundan pay alın.",
     "listedForSale": "Satış üçün siyahıya alınmış",
     "priceEach": "{{price}} hər biri",
     "listingCancelled": "Siyahıya alma ləğv edildi",
@@ -3363,8 +3363,8 @@
     "offersForYourFractions": "Sizin fraksiyalarınız üçün təkliflər",
     "review": "Nəzərdən keçir",
     "noFractionsYet": "Hələ fraksiya yoxdur",
-    "profileEmptyOwn": "Hər yüklənmə 1000 fraksiya kimi mintləşdirilir. Bir şey paylaşın, və ya inandığınız bir postun içinə qatılın.",
-    "profileEmptyOther": "Hər yüklənmə 1000 fraksiya kimi mintləşdirilir. Bu profil hazırda heç bir postun heç birini saxlamır.",
+    "profileEmptyOwn": "Zərb edilmiş post 1000 fraksiyadır. Postlarınızdan birini zərb edin və ya inandığınız bir postdan pay alın.",
+    "profileEmptyOther": "Zərb edilmiş post 1000 fraksiyadır. Bu profilin hazırda heç bir postdan fraksiyası yoxdur.",
     "browseTheMarket": "Bazarı bölüşün",
     "sellFractions": "Fraksiyaları satın",
     "balanceReadFailed": "Fraksiya balansınızı indi oxuya bilmədim. Bunu bağlayın və yenidən cəhd edin — onsuz siyahıya almaq artıq saxlamadığınız fraksiyaları satma riskini daşıyır.",
@@ -6225,5 +6225,10 @@
     "moveFunds": "Vəsait köçür",
     "moveFundsHint": "Başqa zəncirdən dəyişdir və ya depozit et",
     "notNow": "İndi yox"
+  },
+  "glossary": {
+    "fractionsDesc": "DeHub-da zərb edilmiş post 1 000 fraksiyaya bölünmüş NFT-yə çevrilir və yaradıcı bütün 1 000 fraksiya ilə başlayır — məzmuna 100% sahiblik. Zərb etmək isteğə bağlıdır və dərc edərkən və ya sonra edilə bilər.",
+    "tokenIdDesc": "Post blokçeyndə NFT kimi zərb edildikdə aldığı unikal zəncir üzərində identifikator. Zərb etmək isteğə bağlı olduğundan, zərb edilməmiş postun hələ Token ID-si yoxdur.",
+    "tokenIdInfoDesc": "Postun NFT kimi zərb edildikdən sonra aldığı unikal zəncir üzərində identifikator. Zərb edilmiş postlar üçün Post Məlumatı səhifəsinin yuxarısında göstərilir."
   }
 }

@@ -53,7 +53,7 @@ The argument is for not having *exactly one* home.
 
 **Build one direct line.** An email list, a Discord, a mailing address — anything where the audience can be reached without asking a platform for permission. Ten thousand followers you cannot contact is a smaller asset than a thousand people you can.
 
-**Publish somewhere the work is provably yours.** This is the part we build. On [DeHub](/guides/what-is-dehub), a post is minted on-chain to the creator's wallet the moment it is published, so the ownership record exists independently of the platform. Uploads can be free, pay-per-view or subscriber-gated per piece, and the ad revenue share is published — up to 90% — rather than set by an undisclosed formula. Subscriptions are tradable and pay the original creator a royalty when resold.
+**Publish somewhere the work is provably yours.** This is the part we build. On [DeHub](/guides/what-is-dehub), a post can be minted on-chain to the creator's wallet, the moment it is published or later, so the ownership record exists independently of the platform. Uploads can be free, pay-per-view or subscriber-gated per piece, and the ad revenue share is published — up to 90% — rather than set by an undisclosed formula. Subscriptions are tradable and pay the original creator a royalty when resold.
 
 **Keep the money legible.** Whatever platform is involved, keep clean records of what the child earned and from what. The new trust laws set a floor, not a ceiling, and the parent or manager who can produce a clear ledger at eighteen is in a very different position from one who cannot.
 

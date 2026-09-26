@@ -3171,7 +3171,7 @@ export const newPostsMetadata: BlogPost[] = [
     "id": "tokenised-uploads-are-here",
     "slug": "tokenised-uploads-are-here",
     "title": "Tokenised uploads are here!",
-    "excerpt": "Discover how we've integrated a unique fan token experience into our app. Every upload is now a fractionalised NFT, sharing ad revenue with its owners!",
+    "excerpt": "Discover how we've integrated a unique fan token experience into our app. Every upload can now be minted as a fractionalised NFT, sharing ad revenue with its owners!",
     "content": "",
     "bannerImage": "/media/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png",
     "bannerImageAlt": "A glowing DeHub token representing tokenized uploads.",
@@ -3190,7 +3190,7 @@ export const newPostsMetadata: BlogPost[] = [
     "featured": false,
     "status": "published",
     "seoTitle": "Tokenised Uploads Are Here! | DeHub Feature Update",
-    "seoDescription": "Learn about DeHub's new Tokenised Uploads feature. Every upload is a fractionalised NFT that shares ad revenue, creating a new economy for creators and fans."
+    "seoDescription": "Learn about DeHub's new Tokenised Uploads feature. Any upload can be minted as a fractionalised NFT that shares ad revenue, creating a new economy for creators and fans."
   },
   {
     "id": "award-winning-innovation-dehub-recognised",

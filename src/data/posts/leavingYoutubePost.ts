@@ -37,7 +37,7 @@ A million subscribers is a number in Google's database. There is no export, no d
 
 ## What owning it instead looks like
 
-On [DeHub, the decentralised social network](/guides/what-is-dehub), an upload is minted on-chain to your wallet the moment you post. The ownership record exists independently of the platform, which is the practical difference between holding a deed and holding a tenancy. The feed is chronological and transparent, so nothing decides in private whether your work gets seen, and the code is open-source, so the rules cannot be quietly rewritten underneath you.
+On [DeHub, the decentralised social network](/guides/what-is-dehub), you can mint an upload on-chain to your wallet, the moment you post or any time after. The ownership record exists independently of the platform, which is the practical difference between holding a deed and holding a tenancy. The feed is chronological and transparent, so nothing decides in private whether your work gets seen, and the code is open-source, so the rules cannot be quietly rewritten underneath you.
 
 ### Up to 90%, published
 

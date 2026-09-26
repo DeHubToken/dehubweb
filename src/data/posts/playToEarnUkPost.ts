@@ -64,7 +64,7 @@ Whichever branch you pick, the tax logic above is identical: value the reward in
 
 A clean, above-board setup takes about an evening. Here is the practical sequence.
 
-- **Set up a wallet.** A self-custody wallet on Base (an Ethereum Layer 2) gives you control of your keys and low fees. Write your recovery phrase down offline and never share it. On DeHub, your content and rewards are minted on-chain the moment you act, so the wallet is your hub.
+- **Set up a wallet.** A self-custody wallet on Base (an Ethereum Layer 2) gives you control of your keys and low fees. Write your recovery phrase down offline and never share it. On DeHub, your rewards are paid on-chain and your content can be minted to your wallet, so the wallet is your hub.
 - **Start with no-spend games first.** Prove the mechanics pay out before you commit a penny. The arcade and watch-to-earn bounties let you test the full earn-and-withdraw loop with zero risk.
 - **Understand the token before you hold it.** If you decide to acquire $DHB rather than only earn it, read up first. $DHB trades on DEXs and on Coinbase and is listed on CoinGecko and CoinMarketCap. Never treat a game token as a savings account.
 - **Log every reward as you earn it.** Date, token, quantity, and the sterling value that day. This one habit turns January's Self Assessment from a nightmare into a copy-and-paste job.

@@ -3534,7 +3534,7 @@
   },
   "fractions": {
     "seoTitle": "Fracties | DeHub",
-    "seoDescription": "Koop en verkoop fracties van DeHub-berichten. Elke upload is 1000 on-chain fracties — bezit een deel van een video, nummer of afbeelding en handel het in DHB.",
+    "seoDescription": "Koop en verkoop fracties van DeHub-berichten. Een gemint bericht is 1000 on-chain fracties — bezit een deel van een video, nummer of afbeelding en handel het in DHB.",
     "title": "Fracties",
     "perUpload": "1000 per upload",
     "tabBrowse": "Bladeren",
@@ -3570,7 +3570,7 @@
     "perFraction": "per fractie",
     "noSearchMatch": "Niets komt overeen met die zoekopdracht",
     "noneForSale": "Er zijn momenteel geen fracties te koop",
-    "startTheMarketHint": "Elke upload is 1000 fracties — bied er enkele van jezelf aan om de markt te starten.",
+    "startTheMarketHint": "Een gemint bericht is 1000 fracties — bied er enkele van jezelf aan om de markt te starten.",
     "yours": "Van jou",
     "perFractionShort": "/ fractie",
     "forShareOfPost": "voor {{pct}}% van het bericht",
@@ -3624,7 +3624,7 @@
     "acrossPosts_one": "over {{count}} bericht",
     "acrossPosts_other": "over {{count}} berichten",
     "noneHeldYet": "Je bezit nog geen fracties",
-    "noneHeldHint": "Upload een bericht om 1000 fracties te minen, of koop fracties van iemand anders.",
+    "noneHeldHint": "Mint een bericht om alle 1000 fracties ervan te bezitten, of koop fracties van iemand anders.",
     "listedForSale": "Te koop aangeboden",
     "priceEach": "{{price}} elk",
     "listingCancelled": "Aanbieding geannuleerd",
@@ -3637,8 +3637,8 @@
     "offersForYourFractions": "Aanbiedingen voor jouw fracties",
     "review": "Beoordelen",
     "noFractionsYet": "Nog geen fracties",
-    "profileEmptyOwn": "Elke upload wordt gemunt als 1000 fracties. Post iets, of koop fracties van een bericht waarin je gelooft.",
-    "profileEmptyOther": "Elke upload wordt gemunt als 1000 fracties. Dit profiel bezit momenteel geen fracties van enig bericht.",
+    "profileEmptyOwn": "Een gemint bericht is 1000 fracties. Mint een van je berichten, of koop fracties van een bericht waarin je gelooft.",
+    "profileEmptyOther": "Een gemint bericht is 1000 fracties. Dit profiel bezit momenteel geen fracties van enig bericht.",
     "browseTheMarket": "Blader door de markt",
     "sellFractions": "Fracties verkopen",
     "balanceReadFailed": "Kon je fractiesaldo zojuist niet lezen. Sluit dit en probeer het opnieuw — aanbieden zonder dit riskeert fracties te verkopen die je niet meer bezit.",
@@ -6494,7 +6494,10 @@
         "term": "Metaverse",
         "definition": "Een collectieve virtuele gedeelde ruimte, gecreëerd door de convergentie van virtueel verbeterde fysieke realiteit en fysiek persistente virtuele ruimte, inclusief de som van alle virtuele werelden, augmented reality en het internet."
       }
-    }
+    },
+    "fractionsDesc": "Een bericht dat op DeHub wordt gemint, wordt een NFT verdeeld in 1.000 fracties, en de maker begint met alle 1.000 — 100% eigendom van de content. Minten is optioneel en kan bij het publiceren of later gebeuren.",
+    "tokenIdDesc": "Een unieke on-chain identificatie die een bericht krijgt wanneer het als NFT op de blockchain wordt gemint. Minten is optioneel, dus een bericht dat niet is gemint heeft nog geen Token ID.",
+    "tokenIdInfoDesc": "De unieke on-chain identificatie die een bericht krijgt zodra het als NFT is gemint. Wordt bovenaan de pagina Berichtinfo getoond voor geminte berichten."
   },
   "jungleMood": {
     "title": "Tijd van de dag",

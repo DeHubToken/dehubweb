@@ -4,7 +4,7 @@
  * The fraction marketplace: browse every listing, manage what you hold, and
  * read the tape.
  *
- * Every upload is minted as 1000 ERC-1155 units of one token id, so every post
+ * A minted post is 1000 ERC-1155 units of one token id, so every minted post
  * on DeHub is already divisible — but until this page the only way to trade
  * them was a panel on `/app/post/:id/info`, which meant you had to know which
  * post you wanted before you could discover it was for sale. This is the front

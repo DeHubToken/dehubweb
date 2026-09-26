@@ -41,7 +41,7 @@ That is not a media-rights problem. It is closer to a customer-data problem, and
 
 ## What the creator economy actually offers a league
 
-Here is where our own position is obvious, so we will state it plainly rather than pretend to neutrality. [DeHub](/guides/what-is-dehub) is a decentralised, open-source social network where a post is minted on-chain to the poster's wallet at the moment of publication, the ad revenue share is published rather than inferred, and subscriptions are tradable assets that pay the original creator a royalty when resold.
+Here is where our own position is obvious, so we will state it plainly rather than pretend to neutrality. [DeHub](/guides/what-is-dehub) is a decentralised, open-source social network where a post can be minted on-chain to the poster's wallet, at publication or any time after, the ad revenue share is published rather than inferred, and subscriptions are tradable assets that pay the original creator a royalty when resold.
 
 Applied to sport, three things follow that are not available on a conventional platform.
 
