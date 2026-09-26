@@ -58,7 +58,14 @@
     "music": "गाना",
     "live": "लाइव",
     "newPosts_one": "{{count}} नया पोस्ट",
-    "newPosts_other": "{{count}} नया पोस्ट"
+    "newPosts_other": "{{count}} नया पोस्ट",
+    "radioStations": "रेडियो स्टेशन",
+    "emptyTitle": "अबहीं ले कवनो सामग्री नइखे",
+    "emptyDescription": "कुछ शानदार साझा करे वाला पहिला बनीं!",
+    "loadFailed": "फीड लोड ना हो पाइल। फेर से कोशिश करीं।",
+    "followingEmptyTitle": "अबहीं ले कवनो पोस्ट नइखे",
+    "followingEmptyDescription": "इहाँ उनकर पोस्ट देखे खातिर कुछ क्रिएटर के फॉलो करीं!",
+    "seeAll": "सब देखीं"
   },
   "explore": {
     "all": "सभे",

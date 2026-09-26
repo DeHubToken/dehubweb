@@ -57,7 +57,14 @@
     "music": "ሙዚቃ",
     "live": "ቀጥታ",
     "newPosts_one": "{{count}} አዲስ ልጥፍ",
-    "newPosts_other": "{{count}} አዲስ ልጥፎች"
+    "newPosts_other": "{{count}} አዲስ ልጥፎች",
+    "radioStations": "የሬዲዮ ጣቢያዎች",
+    "emptyTitle": "እስካሁን ምንም ይዘት የለም",
+    "emptyDescription": "አስደናቂ ነገር ለማጋራት የመጀመሪያው ይሁኑ!",
+    "loadFailed": "ምግቡን መጫን አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
+    "followingEmptyTitle": "እስካሁን ምንም ልጥፎች የሉም",
+    "followingEmptyDescription": "ልጥፎቻቸውን እዚህ ለማየት አንዳንድ ፈጣሪዎችን ይከተሉ!",
+    "seeAll": "ሁሉንም ይመልከቱ"
   },
   "explore": {
     "all": "ሁሉም",

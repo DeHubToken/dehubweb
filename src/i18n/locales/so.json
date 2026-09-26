@@ -58,7 +58,14 @@
     "music": "Muusig",
     "live": "Toos",
     "newPosts_one": "{{count}} qoraal cusub",
-    "newPosts_other": "{{count}} qoraal cusub"
+    "newPosts_other": "{{count}} qoraal cusub",
+    "radioStations": "Idaacadaha raadiyaha",
+    "emptyTitle": "Weli wax nuxur ah ma jiraan",
+    "emptyDescription": "Noqo qofka ugu horreeya ee wadaaga wax cajiib ah!",
+    "loadFailed": "Feed-ka lama soo gelin karo. Fadlan isku day mar kale.",
+    "followingEmptyTitle": "Weli wax qoraallo ah ma jiraan",
+    "followingEmptyDescription": "Raac qaar ka mid ah hal-abuurayaasha si aad halkan ugu aragto qoraalladooda!",
+    "seeAll": "Dhammaan eeg"
   },
   "explore": {
     "all": "Dhammaan",

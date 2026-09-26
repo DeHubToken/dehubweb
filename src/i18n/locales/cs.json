@@ -58,7 +58,14 @@
     "music": "Hudba",
     "live": "Živě",
     "newPosts_one": "{{count}} nový příspěvek",
-    "newPosts_other": "{{count}} nových příspěvků"
+    "newPosts_other": "{{count}} nových příspěvků",
+    "radioStations": "Rádiové stanice",
+    "emptyTitle": "Zatím žádný obsah",
+    "emptyDescription": "Buďte první, kdo sdílí něco úžasného!",
+    "loadFailed": "Kanál se nepodařilo načíst. Zkuste to prosím znovu.",
+    "followingEmptyTitle": "Zatím žádné příspěvky",
+    "followingEmptyDescription": "Sledujte tvůrce a jejich příspěvky uvidíte tady!",
+    "seeAll": "Zobrazit vše"
   },
   "explore": {
     "all": "Vše",

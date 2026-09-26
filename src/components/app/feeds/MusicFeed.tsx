@@ -729,7 +729,8 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   const { data: radioStations = [] } = useQuery({
     queryKey: ['radio-stations-curated'],
     queryFn: () => getCuratedCarouselStations(),
-    staleTime: 10 * 60 * 1000,
+    // A fixed list of stations; there is nothing to refresh within a visit.
+    staleTime: 60 * 60 * 1000,
   });
 
   // Fetch music-categorized videos for carousel - randomized

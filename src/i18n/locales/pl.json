@@ -58,7 +58,14 @@
     "music": "Muzyka",
     "live": "Na żywo",
     "newPosts_one": "{{count}} nowy post",
-    "newPosts_other": "{{count}} nowych postów"
+    "newPosts_other": "{{count}} nowych postów",
+    "radioStations": "Stacje radiowe",
+    "emptyTitle": "Brak treści",
+    "emptyDescription": "Bądź pierwszą osobą, która udostępni coś niesamowitego!",
+    "loadFailed": "Nie udało się załadować kanału. Spróbuj ponownie.",
+    "followingEmptyTitle": "Brak postów",
+    "followingEmptyDescription": "Obserwuj twórców, aby widzieć tutaj ich posty!",
+    "seeAll": "Zobacz wszystkie"
   },
   "explore": {
     "all": "Wszystko",

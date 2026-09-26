@@ -57,7 +57,14 @@
     "music": "موسيقى",
     "live": "بث مباشر",
     "newPosts_one": "{{count}} منشور جديد",
-    "newPosts_other": "{{count}} منشورات جديدة"
+    "newPosts_other": "{{count}} منشورات جديدة",
+    "radioStations": "محطات الراديو",
+    "emptyTitle": "ماكو محتوى بعد",
+    "emptyDescription": "كون أول واحد يشارك شي حلو!",
+    "loadFailed": "ما گدرنا نحمّل الموجز. جرّب مرة لخ.",
+    "followingEmptyTitle": "ماكو منشورات بعد",
+    "followingEmptyDescription": "تابع كم مبدع حتى تشوف منشوراتهم هنا!",
+    "seeAll": "شوف الكل"
   },
   "explore": {
     "all": "الكل",

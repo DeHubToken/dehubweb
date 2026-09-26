@@ -58,7 +58,14 @@
     "music": "Música",
     "live": "Ao vivo",
     "newPosts_one": "{{count}} nova publicação",
-    "newPosts_other": "{{count}} novas publicações"
+    "newPosts_other": "{{count}} novas publicações",
+    "radioStations": "Estações de rádio",
+    "emptyTitle": "Ainda não há conteúdo",
+    "emptyDescription": "Seja o primeiro a compartilhar algo incrível!",
+    "loadFailed": "Não foi possível carregar o feed. Tente novamente.",
+    "followingEmptyTitle": "Ainda não há publicações",
+    "followingEmptyDescription": "Siga alguns criadores para ver as publicações deles aqui!",
+    "seeAll": "Ver tudo"
   },
   "explore": {
     "all": "Tudo",

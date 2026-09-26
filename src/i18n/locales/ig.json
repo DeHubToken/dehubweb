@@ -58,7 +58,14 @@
     "music": "Egwu",
     "live": "Na ndụ",
     "newPosts_one": "Post {{count}} ọhụrụ",
-    "newPosts_other": "Post {{count}} ọhụrụ"
+    "newPosts_other": "Post {{count}} ọhụrụ",
+    "radioStations": "Ọdụ redio",
+    "emptyTitle": "Enweghị ọdịnaya ugbu a",
+    "emptyDescription": "Bụrụ onye mbụ ga-ekerịta ihe magburu onwe ya!",
+    "loadFailed": "Enweghị ike ibunye feed. Biko nwaa ọzọ.",
+    "followingEmptyTitle": "Enweghị post ugbu a",
+    "followingEmptyDescription": "Soro ụfọdụ ndị okike ka ị hụ post ha ebe a!",
+    "seeAll": "Hụ ha niile"
   },
   "explore": {
     "all": "Niile",

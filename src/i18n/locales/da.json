@@ -58,7 +58,14 @@
     "music": "Musik",
     "live": "Live",
     "newPosts_one": "{{count}} nyt opslag",
-    "newPosts_other": "{{count}} nye opslag"
+    "newPosts_other": "{{count}} nye opslag",
+    "radioStations": "Radiostationer",
+    "emptyTitle": "Intet indhold endnu",
+    "emptyDescription": "Vær den første til at dele noget fantastisk!",
+    "loadFailed": "Feedet kunne ikke indlæses. Prøv igen.",
+    "followingEmptyTitle": "Ingen opslag endnu",
+    "followingEmptyDescription": "Følg nogle skabere for at se deres opslag her!",
+    "seeAll": "Se alle"
   },
   "explore": {
     "all": "Alle",

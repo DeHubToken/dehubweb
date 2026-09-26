@@ -58,7 +58,14 @@
     "music": "Musiikki",
     "live": "Suora",
     "newPosts_one": "{{count}} uusi julkaisu",
-    "newPosts_other": "{{count}} uutta julkaisua"
+    "newPosts_other": "{{count}} uutta julkaisua",
+    "radioStations": "Radioasemat",
+    "emptyTitle": "Ei vielä sisältöä",
+    "emptyDescription": "Ole ensimmäinen, joka jakaa jotain mahtavaa!",
+    "loadFailed": "Syötteen lataaminen epäonnistui. Yritä uudelleen.",
+    "followingEmptyTitle": "Ei vielä julkaisuja",
+    "followingEmptyDescription": "Seuraa joitakin sisällöntuottajia nähdäksesi heidän julkaisunsa täällä!",
+    "seeAll": "Näytä kaikki"
   },
   "explore": {
     "all": "Kaikki",

@@ -58,7 +58,14 @@
     "music": "Musiek",
     "live": "Regstreeks",
     "newPosts_one": "{{count}} nuwe plasing",
-    "newPosts_other": "{{count}} nuwe plasings"
+    "newPosts_other": "{{count}} nuwe plasings",
+    "radioStations": "Radiostasies",
+    "emptyTitle": "Nog geen inhoud nie",
+    "emptyDescription": "Wees die eerste om iets wonderliks te deel!",
+    "loadFailed": "Kon nie die voer laai nie. Probeer asseblief weer.",
+    "followingEmptyTitle": "Nog geen plasings nie",
+    "followingEmptyDescription": "Volg 'n paar skeppers om hul plasings hier te sien!",
+    "seeAll": "Sien alles"
   },
   "explore": {
     "all": "All",

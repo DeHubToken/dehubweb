@@ -58,7 +58,14 @@
     "music": "Music",
     "live": "Live",
     "newPosts_one": "{{count}} new post",
-    "newPosts_other": "{{count}} new posts"
+    "newPosts_other": "{{count}} new posts",
+    "radioStations": "Radio Stations",
+    "emptyTitle": "No content dey yet",
+    "emptyDescription": "Be di first person wey go share something wey sweet!",
+    "loadFailed": "Feed no gree load. Abeg try again.",
+    "followingEmptyTitle": "No post dey yet",
+    "followingEmptyDescription": "Follow some creators make you see dia posts here!",
+    "seeAll": "See all"
   },
   "explore": {
     "all": "All",

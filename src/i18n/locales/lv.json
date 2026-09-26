@@ -58,7 +58,14 @@
     "music": "Mūzika",
     "live": "Tiešraide",
     "newPosts_one": "{{count}} jauns ieraksts",
-    "newPosts_other": "{{count}} jauni ieraksti"
+    "newPosts_other": "{{count}} jauni ieraksti",
+    "radioStations": "Radiostacijas",
+    "emptyTitle": "Vēl nav satura",
+    "emptyDescription": "Esi pirmais, kas dalās ar kaut ko lielisku!",
+    "loadFailed": "Neizdevās ielādēt plūsmu. Lūdzu, mēģini vēlreiz.",
+    "followingEmptyTitle": "Vēl nav ierakstu",
+    "followingEmptyDescription": "Seko dažiem autoriem, lai šeit redzētu viņu ierakstus!",
+    "seeAll": "Skatīt visu"
   },
   "explore": {
     "all": "Visi",

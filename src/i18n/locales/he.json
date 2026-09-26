@@ -58,7 +58,14 @@
     "music": "מוזיקה",
     "live": "שידור חי",
     "newPosts_one": "פוסט חדש {{count}}",
-    "newPosts_other": "{{count}} פוסטים חדשים"
+    "newPosts_other": "{{count}} פוסטים חדשים",
+    "radioStations": "תחנות רדיו",
+    "emptyTitle": "אין עדיין תוכן",
+    "emptyDescription": "היו הראשונים לשתף משהו מדהים!",
+    "loadFailed": "לא ניתן לטעון את הפיד. נסו שוב.",
+    "followingEmptyTitle": "אין עדיין פוסטים",
+    "followingEmptyDescription": "עקבו אחרי כמה יוצרים כדי לראות כאן את הפוסטים שלהם!",
+    "seeAll": "הצג הכול"
   },
   "explore": {
     "all": "הכל",

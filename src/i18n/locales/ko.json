@@ -58,7 +58,14 @@
     "music": "음악",
     "live": "라이브",
     "newPosts_one": "새 게시물 {{count}}개",
-    "newPosts_other": "새 게시물 {{count}}개"
+    "newPosts_other": "새 게시물 {{count}}개",
+    "radioStations": "라디오 방송국",
+    "emptyTitle": "아직 콘텐츠가 없습니다",
+    "emptyDescription": "가장 먼저 멋진 것을 공유해 보세요!",
+    "loadFailed": "피드를 불러올 수 없습니다. 다시 시도해 주세요.",
+    "followingEmptyTitle": "아직 게시물이 없습니다",
+    "followingEmptyDescription": "크리에이터를 팔로우하면 여기에서 게시물을 볼 수 있어요!",
+    "seeAll": "모두 보기"
   },
   "explore": {
     "all": "전체",

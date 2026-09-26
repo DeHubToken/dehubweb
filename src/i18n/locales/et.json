@@ -58,7 +58,14 @@
     "music": "Muusika",
     "live": "Otse",
     "newPosts_one": "{{count}} uus postitus",
-    "newPosts_other": "{{count}} uut postitust"
+    "newPosts_other": "{{count}} uut postitust",
+    "radioStations": "Raadiojaamad",
+    "emptyTitle": "Sisu veel pole",
+    "emptyDescription": "Ole esimene, kes jagab midagi vinget!",
+    "loadFailed": "Voogu ei õnnestunud laadida. Proovi uuesti.",
+    "followingEmptyTitle": "Postitusi veel pole",
+    "followingEmptyDescription": "Jälgi mõnda loojat, et nende postitusi siin näha!",
+    "seeAll": "Näita kõiki"
   },
   "explore": {
     "all": "Kõik",

@@ -58,7 +58,14 @@
     "music": "Muuziqaa",
     "live": "Kallattii",
     "newPosts_one": "Maxxansa haaraa {{count}}",
-    "newPosts_other": "Maxxansa haaraa {{count}}"
+    "newPosts_other": "Maxxansa haaraa {{count}}",
+    "radioStations": "Buufatawwan raadiyoo",
+    "emptyTitle": "Ammaaf qabiyyeen hin jiru",
+    "emptyDescription": "Waan dinqisiisaa qooduuf nama jalqabaa ta'i!",
+    "loadFailed": "Feed fe'uun hin danda'amne. Maaloo irra deebi'ii yaali.",
+    "followingEmptyTitle": "Ammaaf maxxansi hin jiru",
+    "followingEmptyDescription": "Maxxansa isaanii asitti arguuf uumtoota muraasa hordofi!",
+    "seeAll": "Hunda ilaali"
   },
   "explore": {
     "all": "Hundaa",

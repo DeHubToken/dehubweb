@@ -57,7 +57,14 @@
     "music": "音乐",
     "live": "直播",
     "newPosts_one": "{{count}} 条新帖",
-    "newPosts_other": "{{count}} 条新帖"
+    "newPosts_other": "{{count}} 条新帖",
+    "radioStations": "电台",
+    "emptyTitle": "还没有内容",
+    "emptyDescription": "来当第一个分享精彩内容的人吧！",
+    "loadFailed": "动态加载不出来。再试一下。",
+    "followingEmptyTitle": "还没有帖子",
+    "followingEmptyDescription": "关注几个创作者，就能在这儿看到他们的帖子！",
+    "seeAll": "看全部"
   },
   "explore": {
     "all": "全部",

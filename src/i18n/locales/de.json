@@ -58,7 +58,14 @@
     "music": "Musik",
     "live": "Live",
     "newPosts_one": "{{count}} neuer Beitrag",
-    "newPosts_other": "{{count}} neue Beiträge"
+    "newPosts_other": "{{count}} neue Beiträge",
+    "radioStations": "Radiosender",
+    "emptyTitle": "Noch keine Inhalte",
+    "emptyDescription": "Teile als Erste:r etwas Großartiges!",
+    "loadFailed": "Feed konnte nicht geladen werden. Bitte versuche es erneut.",
+    "followingEmptyTitle": "Noch keine Beiträge",
+    "followingEmptyDescription": "Folge ein paar Creator:innen, um ihre Beiträge hier zu sehen!",
+    "seeAll": "Alle ansehen"
   },
   "explore": {
     "all": "Alles",

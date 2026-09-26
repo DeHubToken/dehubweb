@@ -58,7 +58,14 @@
     "music": "Musik",
     "live": "Langsung",
     "newPosts_one": "{{count}} kiriman anyar",
-    "newPosts_other": "{{count}} kiriman anyar"
+    "newPosts_other": "{{count}} kiriman anyar",
+    "radioStations": "Stasiun Radio",
+    "emptyTitle": "Durung ana konten",
+    "emptyDescription": "Dadia sing pisanan mbagekake barang sing apik tenan!",
+    "loadFailed": "Feed ora bisa dimuat. Coba maneh.",
+    "followingEmptyTitle": "Durung ana postingan",
+    "followingEmptyDescription": "Tututi sawetara kreator supaya bisa ndeleng postingane ing kene!",
+    "seeAll": "Deleng kabeh"
   },
   "explore": {
     "all": "Kabeh",
