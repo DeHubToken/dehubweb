@@ -6497,5 +6497,60 @@
     "notifications": {
       "tippedYou": "spropitné: {{amount}} žetonů"
     }
+  },
+  "emojiPicker": {
+    "search": "Vyhledat emoji",
+    "skinTone": "Odstín pleti",
+    "recent": "Nedávno použité",
+    "custom": "Vlastní",
+    "emoji": "Emoji",
+    "noResults": "Nebyly nalezeny žádné emoji",
+    "noRecent": "Emoji, která používáte, se zobrazí zde",
+    "loadFailed": "Nepodařilo se načíst emoji. Zkontrolujte připojení a zkuste to znovu.",
+    "addCustom": "Přidat vlastní emoji",
+    "customEmpty": "Žádné vlastní emoji. Přidejte soubor, odkaz, Discord, Slack, 7TV nebo server Mastodon.",
+    "moreReactions": "Další reakce",
+    "back": "Zpět",
+    "groups": {
+      "smileys": "Úsměvy a emoce",
+      "people": "Lidé a tělo",
+      "nature": "Zvířata a příroda",
+      "food": "Jídlo a pití",
+      "travel": "Cestování a místa",
+      "activities": "Aktivity",
+      "objects": "Objekty",
+      "symbols": "Symboly",
+      "flags": "Vlajky"
+    },
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchGifs": "Hledat GIF...",
+    "gifResults": "Výsledky hledání",
+    "gifTrending": "Populární",
+    "noGifs": "Nebyly nalezeny žádné GIFy",
+    "poweredByGiphy": "Powered by GIPHY",
+    "modeSingle": "Jedno emoji",
+    "modePack": "Importovat balíček",
+    "upload": "Nahrát obrázek",
+    "linkPlaceholder": "…nebo vložte odkaz nebo kód emoji pro Discord",
+    "namePlaceholder": "Název",
+    "singleHint": "PNG, GIF, WebP nebo JPEG do 2 MB. Odkazy z Discordu, Slacku, 7TV, BetterTTV, FrankerFaceZ, emoji.gg nebo jakýkoli obrázek fungují také.",
+    "add": "Přidat emoji",
+    "packPlaceholder": "mastodon.social, misskey.io nebo JSON odkaz",
+    "packHint": "Importuje každé emoji ze serveru Mastodon, Pleroma, Akkoma nebo Misskey, nebo z jakéhokoli seznamu emoji v JSON formátu. Názvy, které již existují, jsou přeskočeny.",
+    "importPack": "Import",
+    "packAdded": "Přidáno {{count}} emoji ({{skipped}} přeskočeno)",
+    "errors": {
+      "signIn": "Přihlaste se pro přidání emoji",
+      "fileType": "Použijte obrázek PNG, GIF, WebP nebo JPEG",
+      "fileSize": "Obrázky musí mít velikost 2 MB nebo méně",
+      "invalid": "Názvy používají 2 až 64 písmen, číslic, _, + nebo -",
+      "badImage": "Tento odkaz se nenačetl jako obrázek",
+      "addFailed": "Nepodařilo se přidat toto emoji. Zkuste to znovu.",
+      "packEmpty": "Na této adrese nebylo nalezeno žádné emoji",
+      "shortcodeTaken": "{{name}} je již obsazeno",
+      "shortcodeStandard": "{{name}} je již standardní emoji"
+    },
+    "addedName": "Přidáno {{name}}"
   }
 }

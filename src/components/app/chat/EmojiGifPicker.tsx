@@ -5,13 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Smile, Search, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AppState } from '@/components/app/AppState';
-
-const EMOJI_CATEGORIES = {
-  'Smileys': ['😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊', '😇', '🙂', '😉', '😍', '🥰', '😘', '😋', '😛', '🤪', '😎', '🤩', '🥳'],
-  'Gestures': ['👍', '👎', '👌', '✌️', '🤞', '🤟', '🤘', '👏', '🙌', '👐', '🤲', '🙏', '💪', '🦾', '🖐️', '✋', '👋', '🤚', '🖖', '👊'],
-  'Hearts': ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❤️‍🔥', '❤️‍🩹', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟'],
-  'Objects': ['🔥', '⭐', '✨', '💫', '🌟', '💥', '💯', '🎉', '🎊', '🎁', '🏆', '🥇', '🎮', '🎯', '🎨', '🎬', '📸', '💰', '💎', '🚀'],
-};
+import { useTranslation } from 'react-i18next';
+import { FullEmojiPicker } from '@/components/app/emoji/FullEmojiPicker';
 
 // GIPHY public beta key (intended for client-side use)
 const GIPHY_API_KEY = 'GlVGYHkr3WSBnllca54iNt0yFbjz7L65';
@@ -58,9 +53,9 @@ interface EmojiGifPickerProps {
 }
 
 export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, iconClassName }: EmojiGifPickerProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'emoji' | 'gif'>('emoji');
-  const [activeCategory, setActiveCategory] = useState('Smileys');
   const [gifSearchQuery, setGifSearchQuery] = useState('');
   const [gifs, setGifs] = useState<string[]>([]);
   const [loadingGifs, setLoadingGifs] = useState(false);
@@ -135,7 +130,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-80 p-0" 
+        className="w-[21rem] max-w-[calc(100vw-1rem)] p-0" 
         align="start"
         side="top"
       >
@@ -149,7 +144,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
-            Emoji
+            {t('emojiPicker.tabEmoji')}
           </button>
           <button
             onClick={() => setActiveTab('gif')}
@@ -159,43 +154,12 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
-            GIF
+            {t('emojiPicker.tabGif')}
           </button>
         </div>
 
         {activeTab === 'emoji' ? (
-          <>
-            {/* Category tabs */}
-            <div className="flex border-b border-white/10 overflow-x-auto">
-              {Object.keys(EMOJI_CATEGORIES).map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
-                  className={`px-3 py-2 text-xs font-medium whitespace-nowrap transition-colors ${
-                    activeCategory === category 
-                      ? 'text-white border-b-2 border-white' 
-                      : 'text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-            {/* Emoji grid */}
-            <div className="p-2 max-h-48 overflow-y-auto">
-              <div className="grid grid-cols-8 gap-1">
-                {EMOJI_CATEGORIES[activeCategory as keyof typeof EMOJI_CATEGORIES].map((emoji, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleEmojiClick(emoji)}
-                    className="w-8 h-8 flex items-center justify-center text-lg hover:bg-white/10 rounded transition-colors"
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </>
+          <FullEmojiPicker onSelect={handleEmojiClick} />
         ) : (
           <>
             {/* GIF Search */}
@@ -203,7 +167,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
               <div className="relative">
                 <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                 <Input
-                  placeholder="Search GIFs..."
+                  placeholder={t('emojiPicker.searchGifs')}
                   value={gifSearchQuery}
                   onChange={handleSearchChange}
                   className="pl-8 h-8 bg-white/5 border-white/10 text-white text-sm placeholder:text-zinc-500"
@@ -212,7 +176,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
             </div>
             
             <div className="p-2 text-xs text-zinc-500 font-medium">
-              {gifSearchQuery ? 'Search Results' : 'Trending'}
+              {gifSearchQuery ? t('emojiPicker.gifResults') : t('emojiPicker.gifTrending')}
             </div>
             
             {/* GIF grid */}
@@ -222,7 +186,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
                   <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
                 </div>
               ) : gifs.length === 0 ? (
-                <AppState icon="search" title="No GIFs found" kind="search-empty" size="compact" />
+                <AppState icon="search" title={t('emojiPicker.noGifs')} kind="search-empty" size="compact" />
               ) : (
                 <div className="grid grid-cols-2 gap-2">
                   {gifs.map((gif, index) => (
@@ -244,7 +208,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
             </div>
             
             <div className="p-2 border-t border-white/10 text-center">
-              <span className="text-[10px] text-zinc-500">Powered by GIPHY</span>
+              <span className="text-[10px] text-zinc-500">{t('emojiPicker.poweredByGiphy')}</span>
             </div>
           </>
         )}

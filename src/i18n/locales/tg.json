@@ -4343,5 +4343,60 @@
     "notifications": {
       "tippedYou": "{{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "search": "Ҷустуҷӯи эмодзи",
+    "skinTone": "Ранги пӯст",
+    "recent": "Ба наздикӣ истифодашуда",
+    "custom": "Одатӣ",
+    "emoji": "Эмодзи",
+    "noResults": "Эмодзи ёфт нашуд",
+    "noRecent": "Эмодзиҳое, ки шумо истифода мебаред, дар ин ҷо пайдо мешаванд",
+    "loadFailed": "Эмодзи боркунӣ нашуд. Пайвасти худро тафтиш кунед ва дубора кӯшиш кунед.",
+    "addCustom": "Эмодзиро илова кунед",
+    "customEmpty": "Эмодзиҳои одатӣ ҳанӯз вуҷуд надоранд. Якеро аз файл, истинод, Discord, Slack, 7TV ё сервери Mastodon илова кунед.",
+    "moreReactions": "Реаксияҳои бештар",
+    "back": "Бозгашт",
+    "groups": {
+      "smileys": "Табассумҳо ва эмотсияҳо",
+      "people": "Одамон ва бадан",
+      "nature": "Ҳайвонот ва табиат",
+      "food": "Хӯрок ва нӯшокӣ",
+      "travel": "Саёҳат ва ҷойҳо",
+      "activities": "Фаъолиятҳо",
+      "objects": "Ашё",
+      "symbols": "Рамзҳо",
+      "flags": "Парчамҳо"
+    },
+    "tabEmoji": "Эмодзи",
+    "tabGif": "GIF",
+    "searchGifs": "GIF-ҳоро ҷустуҷӯ кунед...",
+    "gifResults": "Натиҷаҳои ҷустуҷӯ",
+    "gifTrending": "Тенденсияҳо",
+    "noGifs": "GIF ёфт нашуд",
+    "poweredByGiphy": "Бо қудрати GIPHY",
+    "modeSingle": "Як эмодзи",
+    "modePack": "Пакетро ворид кунед",
+    "upload": "Mag-upload ng imahe",
+    "linkPlaceholder": "...ё пайванд ё рамзи emoji Discord часпонед",
+    "namePlaceholder": "< number >",
+    "singleHint": "PNG, GIF, WebP ё JPEG то 2 MB. Пайвандҳо аз Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg ё ягон кори тасвир низ.",
+    "add": "Илова кардани emoji",
+    "packPlaceholder": "mastodon.social, misskey.io ё пайванди JSON",
+    "packHint": "Pag-import ng bawat emoji mula sa isang Mastodon, Pleroma, Akkoma o Misskey server, o mula sa anumang listahan ng emoji JSON. Номҳое, ки аллакай истифода мешаванд, партофта мешаванд.",
+    "importPack": "Воридот",
+    "packAdded": "{{count}} emoji ({{skipped}} skipped)",
+    "errors": {
+      "signIn": "Mag-sign in upang magdagdag ng emoji",
+      "fileType": "Истифодаи тасвири PNG, GIF, WebP ё JPEG",
+      "fileSize": "Тасвирҳо бояд 2 Mб ё хурдтар бошанд",
+      "invalid": "Ang mga pangalan ay gumagamit ng 2 hanggang 64 tîp, mga numero,_, + o -",
+      "badImage": "Ang link na ito ay hindi mai-load bilang isang imahe",
+      "addFailed": "Hindi maidagdag ang emoji na ito. Subukan muli.",
+      "packEmpty": "Ягон emoji дар ин суроға ёфт нашуд",
+      "shortcodeTaken": "{{name}}info: whatsthis",
+      "shortcodeStandard": "{{name}}info: whatsthis"
+    },
+    "addedName": "Добавить {{name}}"
   }
 }

@@ -6353,5 +6353,60 @@
     "notifications": {
       "tippedYou": "ви даде бакшиш от {{amount}} жетона"
     }
+  },
+  "emojiPicker": {
+    "search": "Търсене на емотикони",
+    "skinTone": "Тонус на кожата",
+    "recent": "Наскоро използвани",
+    "custom": "Персонализирано",
+    "emoji": "Емоджи",
+    "noResults": "Не са намерени емотикони",
+    "noRecent": "Емоджито, което използвате, ще се покаже тук",
+    "loadFailed": "Неуспешно зареждане на емотикони. Проверете връзката си и опитайте отново.",
+    "addCustom": "Добавяне на персонализирани емотикони",
+    "customEmpty": "Все още няма персонализирани емотикони. Добавете такъв от файл, връзка, Discord, Slack, 7TV или сървър на Mastodon.",
+    "moreReactions": "Още реакции",
+    "back": "Назад",
+    "groups": {
+      "smileys": "Усмивки и емоции",
+      "people": "Хора и тяло",
+      "nature": "Животни и природа",
+      "food": "Храна и напитки",
+      "travel": "Пътувания и места",
+      "activities": "Дейности",
+      "objects": "Предмети",
+      "symbols": "Символи",
+      "flags": "Флагове"
+    },
+    "tabEmoji": "Емоджи",
+    "tabGif": "GIF",
+    "searchGifs": "Търсене на GIF файлове...",
+    "gifResults": "Резултати от търсенето",
+    "gifTrending": "Популярни",
+    "noGifs": "Не са намерени GIF файлове",
+    "poweredByGiphy": "Осъществено от GIPHY",
+    "modeSingle": "Един емотикон",
+    "modePack": "Импортиране на пакет",
+    "upload": "Качване на изображение",
+    "linkPlaceholder": "…или поставете връзка или код за емотикони в Discord",
+    "namePlaceholder": "име",
+    "singleHint": "PNG, GIF, WebP или JPEG до 2 MB. Връзки от Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg или каквато и да е работа с изображения.",
+    "add": "Добавяне на емотикони",
+    "packPlaceholder": "mastodon.social, misskey.io или JSON връзка",
+    "packHint": "Импортира всеки емотикон от сървър на Mastodon, Pleroma, Akkoma или Misskey или от който и да е списък с емотикони JSON. Имената, които вече се използват, се пропускат.",
+    "importPack": "Внос",
+    "packAdded": "Добавено {{count}} emoji (пропуснато {{skipped}})",
+    "errors": {
+      "signIn": "Влезте, за да добавите емотикони",
+      "fileType": "Използване на PNG, GIF, WebP или JPEG изображение",
+      "fileSize": "Изображенията трябва да са 2 MB или по - малки",
+      "invalid": "Имената използват от 2 до 64 букви, цифри, _, + или -",
+      "badImage": "Тази връзка не се зареди като изображение",
+      "addFailed": "Неуспешно добавяне на емотикона. Опитайте отново.",
+      "packEmpty": "Не са намерени емотикони на този адрес",
+      "shortcodeTaken": "{{name}} вече е заето",
+      "shortcodeStandard": "{{name}} вече е стандартен емотикон"
+    },
+    "addedName": "Добавено на {{name}}"
   }
 }

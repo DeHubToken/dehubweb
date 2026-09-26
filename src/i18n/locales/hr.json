@@ -6498,5 +6498,60 @@
     "notifications": {
       "tippedYou": "ti je dao/la napojnicu od {{amount}} tokena"
     }
+  },
+  "emojiPicker": {
+    "search": "Pretraži emoji",
+    "skinTone": "Ton kože",
+    "recent": "Nedavno korišteno",
+    "custom": "Prilagođeno",
+    "emoji": "Emoji",
+    "noResults": "Nije pronađen nijedan emoji",
+    "noRecent": "Emotikoni koje upotrebljavaš pojavit će se ovdje",
+    "loadFailed": "Emoji se ne mogu učitati. Provjeri vezu i pokušaj ponovno.",
+    "addCustom": "Dodaj prilagođeni emoji",
+    "customEmpty": "Još nema prilagođenih emojija. Dodajte ga iz datoteke, poveznice, Discorda, Slacka, 7TV-a ili Mastodon poslužitelja.",
+    "moreReactions": "Više reakcija",
+    "back": "Natrag",
+    "groups": {
+      "smileys": "Smajlići i emocije",
+      "people": "Ljudi i tijelo",
+      "nature": "Životinje i priroda",
+      "food": "Hrana i piće",
+      "travel": "Putovanja i mjesta",
+      "activities": "Aktivnosti",
+      "objects": "Objekti",
+      "symbols": "Simboli",
+      "flags": "Zastavice"
+    },
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchGifs": "Pretraži GIF-ove...",
+    "gifResults": "Rezultati pretraživanja",
+    "gifTrending": "Popularno",
+    "noGifs": "Nije pronađen nijedan GIF",
+    "poweredByGiphy": "Omogućuje GIPHY",
+    "modeSingle": "Jedan emoji",
+    "modePack": "Uvezite paket",
+    "upload": "Učitaj sliku",
+    "linkPlaceholder": "…ili zalijepite poveznicu ili kôd emojija Discorda",
+    "namePlaceholder": "Ime",
+    "singleHint": "PNG, GIF, WebP ili JPEG do 2 MB. Poveznice s Discordom, Slackom, 7TV-om, BetterTTV-om, FrankerFaceZ-om, emoji.gg-om ili bilo kojom slikom.",
+    "add": "Dodaj novi emoji",
+    "packPlaceholder": "mastodon.social, misskey.io ili JSON link",
+    "packHint": "Uvozi svaki emoji s Mastodon, Pleroma, Akkoma ili Misskey poslužitelja ili s bilo kojeg JSON popisa emojija. Imena koja su već u upotrebi preskaču se.",
+    "importPack": "Unos",
+    "packAdded": "Dodano {{count}} emoji ({{skipped}} preskočeno)",
+    "errors": {
+      "signIn": "Prijavi se i dodaj emoji",
+      "fileType": "Upotrijebite PNG, GIF, WebP ili JPEG sliku",
+      "fileSize": "Slike moraju biti veličine 2 MB ili manje",
+      "invalid": "Imena koriste 2 do 64 slova, brojeve, _, + ili -",
+      "badImage": "Ta poveznica nije učitana kao slika",
+      "addFailed": "Dodavanje tog emojija nije uspjelo. Pokušajte ponovno.",
+      "packEmpty": "Na toj adresi nije pronađen nijedan emoji",
+      "shortcodeTaken": "{{name}} je već zauzeto",
+      "shortcodeStandard": "{{name}} već je standardni emoji"
+    },
+    "addedName": "Dodano {{name}}"
   }
 }

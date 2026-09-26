@@ -22,7 +22,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { VoiceWaveformPlayer } from './VoiceWaveformPlayer';
-import { QUICK_CHAT_REACTIONS } from './reaction-options';
+import { QuickReactionTray } from './QuickReactionTray';
+import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function ChatAvatar({ src, address, name, className }: { src?: string; address?: string; name: string; className?: string }) {
@@ -153,7 +154,7 @@ function ReactionBar({
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
-            <span>{emoji}</span>
+            <span className="inline-flex items-center"><InlineEmoji value={emoji} className="h-4 m-0" /></span>
             {myReaction ? (
               <>
                 <span className="text-[10px] group-hover/reaction:hidden">{addresses.length}</span>
@@ -339,24 +340,12 @@ export const ChatMessage = memo(function ChatMessage({
                   align="end"
                   className="w-auto p-1.5 bg-zinc-800 border-zinc-700 rounded-xl"
                 >
-                  <div className="flex gap-0.5">
-                    {QUICK_CHAT_REACTIONS.map((emoji) => {
-                      const isActive = currentUserAddress && message.reactions?.[emoji]?.some(
-                        (a) => a.toLowerCase() === currentUserAddress.toLowerCase()
-                      );
-                      return (
-                        <button
-                          key={emoji}
-                          onClick={() => handleQuickReact(emoji)}
-                          className={`w-8 h-8 flex items-center justify-center text-lg rounded-lg transition-colors ${
-                            isActive ? 'bg-white/15 ring-1 ring-white/30' : 'hover:bg-zinc-700'
-                          }`}
-                        >
-                          {emoji}
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <QuickReactionTray
+                    isMine={(emoji) => !!currentUserAddress && !!message.reactions?.[emoji]?.some(
+                      (a) => a.toLowerCase() === currentUserAddress.toLowerCase()
+                    )}
+                    onPick={handleQuickReact}
+                  />
                 </PopoverContent>
               </Popover>
             )}

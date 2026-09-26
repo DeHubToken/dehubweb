@@ -4400,5 +4400,60 @@
     "notifications": {
       "tippedYou": "ikunikeze icebiso {{amount}} amathokheni"
     }
+  },
+  "emojiPicker": {
+    "search": "Sesha i-emoji",
+    "skinTone": "Umbala wesikhumba",
+    "recent": "Kusetshenziswe kamuva",
+    "custom": "Ngokwezifiso",
+    "emoji": "I-emoji",
+    "noResults": "Ayikho i-emoji etholakele",
+    "noRecent": "Ama-emoji owasebenzisayo azovela lapha",
+    "loadFailed": "Ayikwazanga ukulayisha i-emoji. Hlola ukuxhumana kwakho bese uzama futhi.",
+    "addCustom": "Engeza i-emoji yangokwezifiso",
+    "customEmpty": "Ayikho i-emoji yangokwezifiso okwamanje. Engeza eyodwa kusuka kufayela, isixhumanisi, i-Discord, i-Slack, i-7TV noma iseva ye-Mastodon.",
+    "moreReactions": "Okunye ukusabela",
+    "back": "Emuva",
+    "groups": {
+      "smileys": "Ama-smileys & umuzwa",
+      "people": "Abantu & umzimba",
+      "nature": "Izilwane & imvelo",
+      "food": "Ukudla & isiphuzo",
+      "travel": "Izindawo & izindawo",
+      "activities": "Imisebenzi",
+      "objects": "Izinto",
+      "symbols": "Izimpawu",
+      "flags": "Amafulegi"
+    },
+    "tabEmoji": "I-emoji",
+    "tabGif": "I-GIF",
+    "searchGifs": "Sesha ama-GIF...",
+    "gifResults": "Imiphumela yokusesha",
+    "gifTrending": "Kudume kakhulu",
+    "noGifs": "Ayikho i-GIF etholakele",
+    "poweredByGiphy": "Inikwe amandla yi-GIPHY",
+    "modeSingle": "I-emoji eyodwa",
+    "modePack": "Ngenisa iphakethe",
+    "upload": "Faka isithombe",
+    "linkPlaceholder": "...noma unamathisele ilinki noma ikhodi ye-emoji ye-Discord",
+    "namePlaceholder": "Ibizo-lokusetshenziswa",
+    "singleHint": "I-PNG, i-GIF, i-WebP noma i-JPEG kuze kufike ku-2 MB. Amalinki avela ku-Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg noma yimuphi umsebenzi wesithombe nawo.",
+    "add": "Faka i-emoji",
+    "packPlaceholder": "mastodon.social, misskey.io noma ilinki ye-JSON",
+    "packHint": "Ngenisa yonke i-emoji kusuka kuseva ye-Mastodon, i-Pleroma, i-Akkoma noma i-Misskey, noma kusuka kunoma yiluphi uhlu lwe-emoji JSON. Amagama asevele esetshenziswa ayeqiwa.",
+    "importPack": "Ngenisa",
+    "packAdded": "Kufakiwe {{count}} emoji ({{skipped}} kweqiwe)",
+    "errors": {
+      "signIn": "Ngena ngemvume ukuze ufake i-emoji",
+      "fileType": "Sebenzisa isithombe se-PNG, se-GIF, se-WebP noma se-JPEG",
+      "fileSize": "Izithombe kufanele zibe ngu-2 MB noma zibe zincane",
+      "invalid": "Amagama asebenzisa izinhlamvu ezingu-2 kuya kwezingu-64, izinombolo, _, + noma -",
+      "badImage": "Leyo linki ayifakwanga njengesithombe",
+      "addFailed": "Ayikwazanga ukufaka leyo emoji. Zama futhi.",
+      "packEmpty": "Ayikho i-emoji etholakele kulelo kheli",
+      "shortcodeTaken": "{{name}} isivele ithathiwe",
+      "shortcodeStandard": "{{name}} isivele iyi-emoji evamile"
+    },
+    "addedName": "Kufakiwe {{name}}"
   }
 }

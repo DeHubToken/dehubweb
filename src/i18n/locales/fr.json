@@ -6608,5 +6608,60 @@
     "notifications": {
       "tippedYou": "vous a donné un pourboire {{amount}} jetons"
     }
+  },
+  "emojiPicker": {
+    "search": "Rechercher un emoji",
+    "skinTone": "Teint de la peau",
+    "recent": "Récemment utilisé",
+    "custom": "Personnalisé",
+    "emoji": "Emoji",
+    "noResults": "Aucun emoji trouvé",
+    "noRecent": "Les emojis que vous utilisez apparaîtront ici",
+    "loadFailed": "Impossible de charger les emoji. Vérifiez votre connexion et réessayez.",
+    "addCustom": "Ajouter un emoji personnalisé",
+    "customEmpty": "Pas encore d'emoji personnalisé. Ajoutez-en un à partir d'un fichier, d'un lien, de Discord, de Slack, de 7TV ou d'un serveur Mastodon.",
+    "moreReactions": "Plus de réactions",
+    "back": "Retour",
+    "groups": {
+      "smileys": "Sourires et émotion",
+      "people": "Personnes et corps",
+      "nature": "Animaux & nature",
+      "food": "Nourriture et boissons",
+      "travel": "Voyages et lieux",
+      "activities": "Activités",
+      "objects": "Objets",
+      "symbols": "Symboles",
+      "flags": "Drapeaux"
+    },
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchGifs": "Rechercher des GIF...",
+    "gifResults": "Résultats de la recherche",
+    "gifTrending": "Tendance",
+    "noGifs": "Aucun GIF trouvé",
+    "poweredByGiphy": "Propulsé par GIPHY",
+    "modeSingle": "Un emoji",
+    "modePack": "Importer un pack",
+    "upload": "Télécharger une image",
+    "linkPlaceholder": "…ou collez un lien ou un code d'emoji Discord",
+    "namePlaceholder": "Nom",
+    "singleHint": "PNG, GIF, WebP ou JPEG jusqu'à 2 Mo. Les liens de Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg ou toute image fonctionnent aussi.",
+    "add": "Ajouter un emoji",
+    "packPlaceholder": "mastodon.social, misskey.io ou un lien JSON",
+    "packHint": "Importe tous les emojis d'un serveur Mastodon, Pleroma, Akkoma ou Misskey, ou d'une liste JSON d'emojis. Les noms déjà utilisés sont ignorés.",
+    "importPack": "Importer",
+    "packAdded": "Ajouté {{count}} emoji ({{skipped}} ignoré)",
+    "errors": {
+      "signIn": "Connectez-vous pour ajouter un emoji",
+      "fileType": "Utilisez une image PNG, GIF, WebP ou JPEG",
+      "fileSize": "Les images doivent faire 2 Mo ou moins",
+      "invalid": "Les noms utilisent 2 à 64 lettres, chiffres, _, + ou -",
+      "badImage": "Ce lien n'a pas chargé d'image",
+      "addFailed": "Impossible d'ajouter cet emoji. Réessayez.",
+      "packEmpty": "Aucun emoji trouvé à cette adresse",
+      "shortcodeTaken": "{{name}} est déjà pris",
+      "shortcodeStandard": "{{name}} est déjà un emoji standard"
+    },
+    "addedName": "Ajouté {{name}}"
   }
 }

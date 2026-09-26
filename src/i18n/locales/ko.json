@@ -6602,5 +6602,60 @@
     "notifications": {
       "tippedYou": "{{amount}} 개의 토큰에 팁을 주셨습니다"
     }
+  },
+  "emojiPicker": {
+    "search": "이모티콘 검색",
+    "skinTone": "피부색",
+    "recent": "최근에 사용됨",
+    "custom": "사용자 지정",
+    "emoji": "이모티콘",
+    "noResults": "이모티콘을 찾을 수 없습니다",
+    "noRecent": "사용하는 이모티콘이 여기에 표시됩니다.",
+    "loadFailed": "이모티콘을 로드할 수 없습니다. 연결을 확인하고 다시 시도하세요.",
+    "addCustom": "맞춤 이모티콘 추가",
+    "customEmpty": "사용자 정의 이모티콘이 아직 없습니다. 파일, 링크, Discord, Slack, 7TV 또는 Mastodon 서버에서 하나를 추가합니다.",
+    "moreReactions": "더 많은 반응",
+    "back": "뒤로",
+    "groups": {
+      "smileys": "미소와 감동",
+      "people": "사람과 신체",
+      "nature": "동물과 자연",
+      "food": "식음료",
+      "travel": "여행 및 장소",
+      "activities": "활동",
+      "objects": "개체",
+      "symbols": "기호",
+      "flags": "플래그"
+    },
+    "tabEmoji": "이모티콘",
+    "tabGif": "GIF",
+    "searchGifs": "GIF 검색...",
+    "gifResults": "검색 결과",
+    "gifTrending": "인기 급상승",
+    "noGifs": "GIF를 찾을 수 없습니다",
+    "poweredByGiphy": "Giphy 제공",
+    "modeSingle": "하나의 이모티콘",
+    "modePack": "팩 가져오기",
+    "upload": "이미지 업로드",
+    "linkPlaceholder": "… 또는 링크나 Discord 이모티콘 코드 붙여넣기",
+    "namePlaceholder": "명칭",
+    "singleHint": "최대 2MB의 PNG, GIF, WEBP 또는 JPEG. Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg 또는 모든 이미지의 링크도 작동합니다.",
+    "add": "새로운 이모티콘 추가",
+    "packPlaceholder": "mastodon.social, misskey.io 또는 JSON 링크",
+    "packHint": "Mastodon, Pleroma, Akkoma 또는 Misskey 서버 또는 이모티콘 JSON 목록에서 모든 이모티콘을 가져옵니다. 이미 사용 중인 이름은 건너뜁니다.",
+    "importPack": "가져오기",
+    "packAdded": "{{count}} 이모티콘 추가됨 ({{skipped}} 건너뜀)",
+    "errors": {
+      "signIn": "이모티콘을 추가하려면 로그인하세요",
+      "fileType": "PNG, GIF, WebP 또는 JPEG 이미지 사용",
+      "fileSize": "이미지는 2MB 이하여야 합니다",
+      "invalid": "이름은 2 ~ 64개의 문자, 숫자,_, + 또는 -를 사용합니다.",
+      "badImage": "해당 링크가 이미지로 로드되지 않았습니다",
+      "addFailed": "이모티콘을 추가할 수 없습니다. 다시 시도하세요.",
+      "packEmpty": "해당 주소에서 이모티콘을 찾을 수 없습니다",
+      "shortcodeTaken": "{{name}} 은 (는) 이미 사용 중입니다",
+      "shortcodeStandard": "{{name}} 은 (는) 이미 표준 이모티콘입니다"
+    },
+    "addedName": "{{name}} 추가됨"
   }
 }

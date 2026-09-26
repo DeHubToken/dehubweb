@@ -6559,5 +6559,60 @@
     "notifications": {
       "tippedYou": "оставил (-а) вам чаевые в размере {{amount}} токенов"
     }
+  },
+  "emojiPicker": {
+    "search": "Поиск эмодзи",
+    "skinTone": "Тон кожи",
+    "recent": "Недавно использованные",
+    "custom": "Пользовательские",
+    "emoji": "Эмодзи",
+    "noResults": "Эмодзи не найдены",
+    "noRecent": "Эмодзи, которые вы используете, появятся здесь",
+    "loadFailed": "Не удалось загрузить эмодзи. Проверьте подключение и попробуйте снова.",
+    "addCustom": "Добавить пользовательский эмодзи",
+    "customEmpty": "Пользовательских эмодзи пока нет. Добавьте один из файла, по ссылке, из Discord, Slack, 7TV или сервера Mastodon.",
+    "moreReactions": "Другие реакции",
+    "back": "Назад",
+    "groups": {
+      "smileys": "Улыбки и эмоции",
+      "people": "Люди и тело",
+      "nature": "Животные и природа",
+      "food": "Еда и напитки",
+      "travel": "Путешествия и места",
+      "activities": "Активности",
+      "objects": "Объекты",
+      "symbols": "Символы",
+      "flags": "Флаги"
+    },
+    "tabEmoji": "Эмодзи",
+    "tabGif": "GIF",
+    "searchGifs": "Поиск GIF...",
+    "gifResults": "Результаты поиска",
+    "gifTrending": "Популярное",
+    "noGifs": "GIF не найдены",
+    "poweredByGiphy": "Работает на GIPHY",
+    "modeSingle": "Один эмодзи",
+    "modePack": "Импортировать набор",
+    "upload": "Загрузить изображение",
+    "linkPlaceholder": "…или вставьте ссылку или код эмодзи Discord",
+    "namePlaceholder": "имя",
+    "singleHint": "PNG, GIF, WebP или JPEG размером до 2 МБ. Ссылки с Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg или любые изображения также работают.",
+    "add": "Добавить эмодзи",
+    "packPlaceholder": "mastodon.social, misskey.io или ссылка JSON",
+    "packHint": "Импортирует все эмодзи с сервера Mastodon, Pleroma, Akkoma или Misskey, или из любого списка эмодзи JSON. Имена, которые уже используются, пропускаются.",
+    "importPack": "Импорт",
+    "packAdded": "Добавлено {{count}} эмодзи ({{skipped}} пропущено)",
+    "errors": {
+      "signIn": "Войдите, чтобы добавить эмодзи",
+      "fileType": "Используйте изображение PNG, GIF, WebP или JPEG",
+      "fileSize": "Изображения должны быть размером 2 МБ или меньше",
+      "invalid": "Имена содержат от 2 до 64 букв, цифр, _, + или -",
+      "badImage": "Эта ссылка не загрузила изображение",
+      "addFailed": "Не удалось добавить этот эмодзи. Попробуйте еще раз.",
+      "packEmpty": "Эмодзи по этому адресу не найдены",
+      "shortcodeTaken": "{{name}} уже занято",
+      "shortcodeStandard": "{{name}} уже является стандартным смайликом"
+    },
+    "addedName": "Добавлено {{name}}"
   }
 }

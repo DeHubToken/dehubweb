@@ -4323,5 +4323,60 @@
     "home": {
       "stakedPost": "Staked 50k DeHub токен. APY нь 12.4% -д хатуу харагдана. Урт хугацаанд эзэмшсэн сэтгэлгээ. 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "search": "Эможи хайх",
+    "skinTone": "Арьсны өнгө",
+    "recent": "Саяхан ашигласан",
+    "custom": "Тохируулсан",
+    "emoji": "Эможи",
+    "noResults": "Ямар ч emoji олдсонгүй",
+    "noRecent": "Таны ашиглаж байгаа эможи энд гарч ирэх болно",
+    "loadFailed": "Emoji ачаалж чадсангүй. Холболтоо шалгаад дахин оролдоно уу.",
+    "addCustom": "Гаалийн эможи нэмэх",
+    "customEmpty": "Одоогоор тусгайлсан emoji байхгүй. Файл, холбоос, Discord, Slack, 7TV эсвэл Mastodon серверээс нэгийг нэмнэ үү.",
+    "moreReactions": "Илүү хариу урвал",
+    "back": "БУЦАХ",
+    "groups": {
+      "smileys": "Инээмсэглэл ба сэтгэл хөдлөл",
+      "people": "Хүмүүс & Бие",
+      "nature": "Амьтан ба байгаль",
+      "food": "Хоол, ундаа",
+      "travel": "Аялал & Байршил",
+      "activities": "Үйл ажиллагаа",
+      "objects": "Объект",
+      "symbols": "ТЭМДЭГЛЭГЭЭ",
+      "flags": "Далбаа"
+    },
+    "tabEmoji": "Эможи",
+    "tabGif": "GIF",
+    "searchGifs": "GIF-ийг хайх...",
+    "gifResults": "Хайлтын үр дүн",
+    "gifTrending": "ХӨТӨЛБӨР",
+    "noGifs": "GIF олдсонгүй",
+    "poweredByGiphy": "Giphy-ийн дэмжлэг",
+    "modeSingle": "Нэг эможи",
+    "modePack": "Багцыг импортлох",
+    "upload": "Зураг хуулах",
+    "linkPlaceholder": "...эсвэл холбоос эсвэл Discord emoji кодыг оо",
+    "namePlaceholder": "нэр",
+    "singleHint": "PNG, GIF, WebP эсвэл JPEG-аас 2 MB хүртэл. Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg эсвэл ямар ч зурагны холбоосууд koa.",
+    "add": "Эможи нэмэх",
+    "packPlaceholder": "mastodon.social, misskey.io эсвэл JSON холбоос",
+    "packHint": "Мастодон, Плерома, Аккома эсвэл Мисси серверээс эсвэл ямар ч emoji JSON жагсаалтаас emoji бүрийг импортлох. Ашиглагдаж буй нэрсийг алгассан байна.",
+    "importPack": "Импорт",
+    "packAdded": "Нэмэгдсэн {{count}} emoji ({{skipped}} skipped)",
+    "errors": {
+      "signIn": "Эможи нэмэхийн тулд нэвтэрнэ үү",
+      "fileType": "PNG, GIF, WebP эсвэл JPEG дүрсийг ашигла",
+      "fileSize": "Зургууд 2 MB ба түүнээс бага байх ёстой",
+      "invalid": "Нэрс 2-с 64 үсэг, тоо,_, + эсвэл ашигладаг -",
+      "badImage": "Энэ холбоосыг зураг хэлбэрээр ачаалаагүй байна",
+      "addFailed": "Энэ emoji-г нэмж чадсангүй. Дахин оролдоно уу.",
+      "packEmpty": "Тухайн хаягаар emoji олдсонгүй",
+      "shortcodeTaken": "{{name}} нь аль хэдийн авсан",
+      "shortcodeStandard": "{{name}} нь эможи байна"
+    },
+    "addedName": "Нэмэгдсэн {{name}}"
   }
 }

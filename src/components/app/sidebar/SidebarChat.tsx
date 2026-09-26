@@ -33,7 +33,8 @@ import { Sparkles } from 'lucide-react';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { ChatLinkPreviews } from '../chat/ChatLinkPreviews';
 
-import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';
+import { QuickReactionTray } from '@/components/app/chat/QuickReactionTray';
+import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 
 /**
  * A text message in the side panel, with the same cards every other chat
@@ -119,7 +120,7 @@ function SidebarReactions({
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
-            <span className="text-xs">{emoji}</span>
+            <span className="text-xs inline-flex items-center"><InlineEmoji value={emoji} className="h-4 m-0" /></span>
             {mine ? (
               <>
                 <span className="group-hover/reaction:hidden">{addresses.length}</span>
@@ -585,24 +586,10 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                             align="end"
                             className="w-auto p-1 bg-zinc-800 border-zinc-700 rounded-xl"
                           >
-                            <div className="flex gap-0.5">
-                              {QUICK_CHAT_REACTIONS.map((emoji) => {
-                                const isActive = walletAddress && msg.reactions?.[emoji]?.some(
-                                  (a) => a.toLowerCase() === walletAddress.toLowerCase()
-                                );
-                                return (
-                                  <button
-                                    key={emoji}
-                                    onClick={() => handleReact(msg.id, emoji)}
-                                    className={`w-7 h-7 flex items-center justify-center text-sm rounded-lg transition-colors ${
-                                      isActive ? 'bg-white/15 ring-1 ring-white/30' : 'hover:bg-zinc-700'
-                                    }`}
-                                  >
-                                    {emoji}
-                                  </button>
-                                );
-                              })}
-                            </div>
+                            <QuickReactionTray
+                              isMine={(emoji) => !!walletAddress && !!msg.reactions?.[emoji]?.some((a) => a.toLowerCase() === walletAddress.toLowerCase())}
+                              onPick={(emoji) => handleReact(msg.id, emoji)}
+                            />
                           </PopoverContent>
                         </Popover>
                       </div>

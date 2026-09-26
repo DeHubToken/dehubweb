@@ -4302,5 +4302,60 @@
     "notifications": {
       "tippedYou": "{{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "search": "Emoji ସନ୍ଧାନ କରନ୍ତୁ",
+    "skinTone": "ସ୍କିନ ଟୋନ",
+    "recent": "ନିକଟରେ ବ୍ୟବହୃତ",
+    "custom": "ଇଚ୍ଛାରୂପଣ",
+    "emoji": "Smruti",
+    "noResults": "କୌଣସି ଇମୋଜି ମିଳିଲା ନାହିଁ",
+    "noRecent": "ଆପଣ ବ୍ୟବହାର କରୁଥିବା Emoji ଏଠାରେ ପ୍ରଦର୍ଶିତ ହେବ",
+    "loadFailed": "Emoji ଧାରଣ କରିପାରିଲା ନାହିଁ । ଆପଣଙ୍କର ସଂଯୋଗକୁ ଯାଞ୍ଚ କରନ୍ତୁ ଏବଂ ପୁଣିଥରେ ଚେଷ୍ଟା କରନ୍ତୁ ।",
+    "addCustom": "ଇମୋଜୀ ଯୋଗ କରନ୍ତୁ",
+    "customEmpty": "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ଇମୋଜୀ ନାହିଁ । ଗୋଟିଏ ଫାଇଲ, ଗୋଟିଏ ଲିଙ୍କ, Discord, Slack, 7TV କିମ୍ବା ଏକ Mastodon ସର୍ଭରରୁ ଗୋଟିଏ ଯୋଗ କରନ୍ତୁ ।",
+    "moreReactions": "ଅଧିକ ପ୍ରତିକ୍ରିୟା",
+    "back": "ପଛକୁ",
+    "groups": {
+      "smileys": "ହସ ଏବଂ ଭାବପ୍ରବଣତା",
+      "people": "ଲୋକ ଏବଂ ଶରୀର",
+      "nature": "ପ୍ରାଣୀ ଓ ପ୍ରକୃତି",
+      "food": "ଖାଦ୍ୟ ଓ ପାନୀୟ",
+      "travel": "ଭ୍ରମଣ ଏବଂ ସ୍ଥାନ",
+      "activities": "ଗତିବିଧି",
+      "objects": "ବସ୍ତୁଗୁଡ଼ିକ",
+      "symbols": "ପ୍ରତୀକଗୁଡ଼ିକ",
+      "flags": "ପତାକାଗୁଡ଼ିକ"
+    },
+    "tabEmoji": "Smruti",
+    "tabGif": "GIF",
+    "searchGifs": "GIFଗୁଡ଼ିକୁ ଖୋଜନ୍ତୁ...",
+    "gifResults": "ସନ୍ଧାନ ଫଳାଫଳ",
+    "gifTrending": "Trending",
+    "noGifs": "କୌଣସି GIF ମିଳିଲା ନାହିଁ",
+    "poweredByGiphy": "Giphy ଦ୍ୱାରା ଚାଳିତ",
+    "modeSingle": "ଗୋଟିଏ ଇମୋଜି",
+    "modePack": "ଗୋଟିଏ ପ୍ୟାକ ଆମଦାନୀ କରନ୍ତୁ",
+    "upload": "ପ୍ରତିଛବି ଅପଲୋଡ କରନ୍ତୁ",
+    "linkPlaceholder": "...କିମ୍ବା ଗୋଟିଏ ଲିଙ୍କ ଅଥବା ଏକ ଡିସକର୍ଡ ଇମୋଜି କୋଡକୁ ଲଗାନ୍ତୁ",
+    "namePlaceholder": "ନାମ",
+    "singleHint": "2 MB ପର୍ଯ୍ୟନ୍ତ PNG, GIF, WebP କିମ୍ବା JPEG । Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg କିମ୍ବା ଯେକୌଣସି ପ୍ରତିଛବି କାର୍ଯ୍ୟରୁ ଲିଙ୍କଗୁଡିକ ।",
+    "add": "Emoji ଯୋଗ କରନ୍ତୁ",
+    "packPlaceholder": "mastodon.social, misskey.io କିମ୍ବା ଗୋଟିଏ JSON ସଂଯୋଗ",
+    "packHint": "Mastodon, Pleroma, Akkoma କିମ୍ବା Misskey ସର୍ଭରରୁ କିମ୍ବା ଯେକୌଣସି emoji JSON ତାଲିକାରୁ ପ୍ରତ୍ୟେକ ଇମୋଜୀ ଆମଦାନୀ କରନ୍ତୁ । ପୂର୍ବରୁ ବ୍ୟବହୃତ ନାମଗୁଡ଼ିକୁ ଏଡ଼ାଇ ଦିଆଯାଇଛି ।",
+    "importPack": "ଆମଦାନୀ କରନ୍ତୁ",
+    "errors": {
+      "signIn": "Emoji ଯୋଗ କରିବା ପାଇଁ ସାଇନଇନ କରନ୍ତୁ",
+      "fileType": "ଗୋଟିଏ PNG, GIF, WebP କିମ୍ବା JPEG ପ୍ରତିଛବି ବ୍ୟବହାର କରନ୍ତୁ",
+      "fileSize": "ପ୍ରତିଛବିଗୁଡ଼ିକ 2 MB କିମ୍ବା ତତୋଧିକ ହେବା ଉଚିତ",
+      "invalid": "ନାମଗୁଡ଼ିକ 2ରୁ 64 ଅକ୍ଷର, ସଂଖ୍ୟା, _, + କିମ୍ବା -",
+      "badImage": "ସେହି ସଂଯୋଗଟି ଗୋଟିଏ ପ୍ରତିଛବି ଭାବରେ ଧାରଣ କରିନଥିଲା",
+      "addFailed": "ସେହି ଇମୋଜିକୁ ଯୋଗ କରିପାରିଲା ନାହିଁ । ପୁଣିଥରେ ଚେଷ୍ଟା କରନ୍ତୁ ।",
+      "packEmpty": "ସେହି ଠିକଣାରେ କୌଣସି ଇମୋଜି ମିଳିଲା ନାହିଁ",
+      "shortcodeTaken": "{{name}} ପୂର୍ବରୁ ନିଆଯାଇଛି",
+      "shortcodeStandard": "{{name}} ପୂର୍ବରୁ ଏକ ମାନକ ଇମୋଜି"
+    },
+    "addedName": "{{name}} ଯୋଗ କରାଯାଇଛି",
+    "packAdded": "{{count}}ଟି ଇମୋଜି ଯୋଡ଼ାଗଲା ({{skipped}}ଟି ବାଦ୍ ପଡ଼ିଲା)"
   }
 }

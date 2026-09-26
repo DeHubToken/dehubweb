@@ -6574,5 +6574,60 @@
     "notifications": {
       "tippedYou": "сизге {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "search": "Издөө эмодзи",
+    "skinTone": "Тери Tone",
+    "recent": "Жакында колдонулган",
+    "custom": "Көнүмүш",
+    "emoji": "Эмодзи",
+    "noResults": "Эмодзи табылган жок",
+    "noRecent": "Сиз колдонгон эмодзилер бул жерде көрсөтүлөт",
+    "loadFailed": "Эмодзи жүктөлгөн жок. Байланышыңызды текшерип, кайра аракет кылып көрүңүз.",
+    "addCustom": "Өзгөчө эмодзилерди кошуу",
+    "customEmpty": "Өзгөчө эмодзилери азырынча жок. Бир билэ бирин кошуу, шилтеме, Discord, Slack, 7TV же бир Mastodon Server.",
+    "moreReactions": "Көбүрөөк реакциялар",
+    "back": "Артка",
+    "groups": {
+      "smileys": "Smileys & сезим",
+      "people": "Эл & орган",
+      "nature": "Жаныбарлар жана жаратылыш",
+      "food": "Тамак-аш & суусундук",
+      "travel": "Саякат & жерлер",
+      "activities": "Иш-аракеттер",
+      "objects": "Объектилер",
+      "symbols": "Символдор",
+      "flags": "Желектер"
+    },
+    "tabEmoji": "Эмодзи",
+    "tabGif": "GIF",
+    "searchGifs": "GIF 'дерди издөө...",
+    "gifResults": "Издөө натыйжалары",
+    "gifTrending": "Тренддер",
+    "noGifs": "GIF 'дер табылган жок",
+    "poweredByGiphy": "Giphy менен иштейт",
+    "modeSingle": "Бир эмодзи",
+    "modePack": "Пакетти импорттоо",
+    "upload": "Сүрөттү жүктөө",
+    "linkPlaceholder": "…же шилтемени же Discord эмодзи кодун чаптаңыз",
+    "namePlaceholder": "аты",
+    "singleHint": "PNG, GIF, WebP же JPEG 2 MB чейин. Discord шилтемелер, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg же ар кандай сүрөт иш да.",
+    "add": "Эмодзи кошуу",
+    "packPlaceholder": "mastodon.social, misskey.io же JSON шилтемеси",
+    "packHint": "Бир Mastodon ар бир эмодзи импорттойт, Pleroma, Akkoma же Misskey Server, же кандайдыр бир эмодзи JSON тизмесинен. Колдонулуп жаткан аталыштар өткөрүлүп берилди.",
+    "importPack": "Импорттоо",
+    "packAdded": "Кошулду {{count}} emoji ({{skipped}} өтүп кетти)",
+    "errors": {
+      "signIn": "Эмодзи кошуу үчүн кирүү",
+      "fileType": "PNG, GIF, WebP же JPEG сүрөтүн колдонуу",
+      "fileSize": "Сүрөттөр 2 МБ же андан аз болушу керек",
+      "invalid": "Ысымдар 2ден 64кө чейинки тамгаларды, сандарды, _, + же -",
+      "badImage": "Бул шилтеме сүрөт катары жүктөлгөн жок",
+      "addFailed": "Бул эмодзини кошууга болбоду. Кайра аракет кылып көрүңүз.",
+      "packEmpty": "Бул даректе эмодзи табылган жок",
+      "shortcodeTaken": "{{name}} кабыл алынган",
+      "shortcodeStandard": "{{name}} буга чейин стандарттуу эмодзи болуп саналат"
+    },
+    "addedName": "Кошулган {{name}}"
   }
 }

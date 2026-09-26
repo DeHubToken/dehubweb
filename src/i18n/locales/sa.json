@@ -4258,5 +4258,60 @@
     "home": {
       "stakedPost": "५५० ॐ देवायै नमः । ओडिशायां १२.४ प्रतिशतं मतं प्राप्तम् । दीर्घकालिनं मनः । 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "search": "खोजः खोजषब्द इमोजी",
+    "skinTone": "त्वचेन्द्रियाणि टोनानि",
+    "recent": "भर्खरं प्रयुक्तम्",
+    "custom": "Custom",
+    "emoji": "इमोजी",
+    "noResults": "कोई इमोजी नहीं मिला",
+    "noRecent": "ॐ यं यं यं यं यं यं यं यं यं यं यं यज्ञ",
+    "loadFailed": "न शक्नोषि यमुनाभिमुखम् । भवतः सम्पर्कं दृष्ट्वा पुनः प्रयच्छतु ।",
+    "addCustom": "Emojiguru - कस्टम इमोजी",
+    "customEmpty": "इदानीमपि न स्यादिति भावः । एकम् फाइलम्, एकम् लिङ्कम्, द्वन्द्वम्, Slack, 7TV अथवा Mastodon सर्वरम् योजयतु ।",
+    "moreReactions": "अधिक प्रतिक्रिया",
+    "back": "पुनरागमनम्",
+    "groups": {
+      "smileys": "मुस्कुराहट और संवेदना",
+      "people": "शरीर एवं मनुष्य",
+      "nature": "प्राणिनां च प्रकृति",
+      "food": "खाद्य एवं पेय पदार्थ",
+      "travel": "यात्रा & स्थान",
+      "activities": "क्रियाः",
+      "objects": "वस्तूनि",
+      "symbols": "प्रतीकाः",
+      "flags": "ध्वजानि"
+    },
+    "tabEmoji": "इमोजी",
+    "tabGif": "GIF",
+    "searchGifs": "खोजः खोजषब्द GIFs",
+    "gifResults": "खोजपरिणामः",
+    "gifTrending": "प्रवृत्तिः",
+    "noGifs": "कोई GIFs नहीं मिला",
+    "poweredByGiphy": "Giphy द्वारा टिप्पणियां",
+    "modeSingle": "१ इमोजी",
+    "modePack": "एकं संकुलम् आयात्यताम्",
+    "upload": "चित्र अपलोड करा",
+    "linkPlaceholder": "…किंवा लिंक किंवा डिस्कॉर्ड इमोजी कोड पेस्ट करा",
+    "namePlaceholder": "नाव",
+    "singleHint": "PNG, GIF, WebP किंवा JPEG 2 MB पर्यंत. Discord, Slack, 7TV, BetterTTV, FrankerFaceZ, emoji.gg किंवा कोणत्याही प्रतिमेवरून लिंक्स देखील कार्य करतात.",
+    "add": "इमोजी जोडा",
+    "packPlaceholder": "mastodon.social, misskey.io किंवा JSON लिंक",
+    "packHint": "Mastodon, Pleroma, Akkoma किंवा Misskey सर्व्हरवरून, किंवा कोणत्याही इमोजी JSON सूचीमधून प्रत्येक इमोजी आयात करते. आधीपासून वापरात असलेली नावे वगळली जातात.",
+    "importPack": "आयात करा",
+    "packAdded": "{{count}} इमोजी जोडले ({{skipped}} वगळले)",
+    "errors": {
+      "signIn": "इमोजी जोडण्यासाठी साइन इन करा",
+      "fileType": "PNG, GIF, WebP किंवा JPEG प्रतिमा वापरा",
+      "fileSize": "प्रतिमा 2 MB किंवा त्याहून लहान असाव्यात",
+      "invalid": "नावांमध्ये 2 ते 64 अक्षरे, संख्या, _, + किंवा - वापरले जातात",
+      "badImage": "ती लिंक प्रतिमा म्हणून लोड झाली नाही",
+      "addFailed": "तो इमोजी जोडता आला नाही. पुन्हा प्रयत्न करा.",
+      "packEmpty": "त्या पत्त्यावर कोणताही इमोजी सापडला नाही",
+      "shortcodeStandard": "{{name}} पूर्वमेव मानकम् इमोजि अस्ति",
+      "shortcodeTaken": "{{name}} पूर्वमेव गृहीतम्"
+    },
+    "addedName": "{{name}} योजितम्"
   }
 }

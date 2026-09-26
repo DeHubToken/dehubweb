@@ -4331,5 +4331,60 @@
     "notifications": {
       "tippedYou": "دزيتلك {{amount}} توكن"
     }
+  },
+  "emojiPicker": {
+    "search": "بحث إيموجي",
+    "skinTone": "لون البشرة",
+    "recent": "مستخدمة مؤخراً",
+    "custom": "مخصص",
+    "emoji": "إيموجي",
+    "noResults": "لم يتم العثور على إيموجي",
+    "noRecent": "الإيموجيات التي تستخدمها ستظهر هنا",
+    "loadFailed": "تعذر تحميل الإيموجي. تحقق من اتصالك وحاول مرة أخرى.",
+    "addCustom": "إضافة إيموجي مخصص",
+    "customEmpty": "لا يوجد إيموجي مخصص حتى الآن. أضف واحداً من ملف، رابط، ديسكورد، سلاك، 7TV أو سيرفر ماستودون.",
+    "moreReactions": "المزيد من ردود الفعل",
+    "back": "رجوع",
+    "groups": {
+      "smileys": "وجوه تعبيرية وعواطف",
+      "people": "أشخاص وجسم",
+      "nature": "حيوانات وطبيعة",
+      "food": "طعام وشراب",
+      "travel": "سفر وأماكن",
+      "activities": "أنشطة",
+      "objects": "أشياء",
+      "symbols": "رموز",
+      "flags": "أعلام"
+    },
+    "tabEmoji": "إيموجي",
+    "tabGif": "GIF",
+    "searchGifs": "ابحث عن GIFs...",
+    "gifResults": "نتائج البحث",
+    "gifTrending": "رائج",
+    "noGifs": "لم يتم العثور على GIFs",
+    "poweredByGiphy": "مدعوم بواسطة GIPHY",
+    "modeSingle": "إيموجي واحد",
+    "modePack": "استيراد حزمة",
+    "upload": "حمل صورة",
+    "linkPlaceholder": "... أو ألصق رابط أو كود إيموجي ديسكورد",
+    "namePlaceholder": "اسم",
+    "singleHint": "PNG، GIF، WebP أو JPEG لحد 2 ميجا. روابط من ديسكورد، سلاك، 7TV، BetterTTV، FrankerFaceZ، emoji.gg أو أي صورة شغالة هم.",
+    "add": "أضف إيموجي",
+    "packPlaceholder": "mastodon.social، misskey.io أو رابط JSON",
+    "packHint": "يستورد كل إيموجي من سيرفر ماستودون، بليروما، أكوما أو مسكي، أو من أي قائمة إيموجي JSON. الأسماء الموجودة أصلاً يتم تخطيها.",
+    "importPack": "استيراد",
+    "packAdded": "تم إضافة {{count}} إيموجي ({{skipped}} تم تخطيها)",
+    "errors": {
+      "signIn": "سجل الدخول لإضافة إيموجي",
+      "fileType": "استخدم صورة PNG، GIF، WebP أو JPEG",
+      "fileSize": "الصور لازم تكون 2 ميجا أو أصغر",
+      "invalid": "الأسماء تستخدم من 2 إلى 64 حرف، أرقام، _، + أو -",
+      "badImage": "هذا الرابط لم يحمل كصورة",
+      "addFailed": "لم نستطع إضافة هذا الإيموجي. حاول مرة أخرى.",
+      "packEmpty": "لم يتم العثور على إيموجي في هذا العنوان",
+      "shortcodeTaken": "{{name}} محجوز بالفعل",
+      "shortcodeStandard": "{{name}} هو إيموجي قياسي بالفعل"
+    },
+    "addedName": "تمت إضافة {{name}}"
   }
 }
