@@ -2163,8 +2163,7 @@
       "overDays": "за {{count}} дн.",
       "requestsLabel": "Запросы",
       "served": "Обслужено",
-      "requests": "{{requests}} запросов",
-      "estimatedToday": "по оценкам, на сегодняшний день UTC"
+      "requests": "{{requests}} запросов"
     },
     "chart": {
       "hourly": "Посетители за час",
@@ -2173,8 +2172,7 @@
       "dailyHint": "уникальные посетители за день",
       "empty": "Пока нет данных за этот период",
       "visitors": "посетители",
-      "pageViews": "просмотры страниц",
-      "visitorsEstimated": "посетителей (ориентировочно)"
+      "pageViews": "просмотры страниц"
     },
     "countries": {
       "title": "Основные страны",

@@ -2201,8 +2201,7 @@
       "overDays": "{{count}} დღეში",
       "requestsLabel": "მოთხოვნები",
       "served": "მოწოდებულია",
-      "requests": "{{requests}} მოთხოვნა",
-      "estimatedToday": "სავარაუდოა, დღესდღეობით UTC"
+      "requests": "{{requests}} მოთხოვნა"
     },
     "chart": {
       "hourly": "ვიზიტორები საათში",
@@ -2211,8 +2210,7 @@
       "dailyHint": "უნიკალური ვიზიტორები დღეში",
       "empty": "ამ პერიოდისთვის ჯერ არ არის მონაცემები",
       "visitors": "ვიზიტორები",
-      "pageViews": "გვერდი ნახვა",
-      "visitorsEstimated": "ვიზიტორები (სავარაუდო)"
+      "pageViews": "გვერდი ნახვა"
     },
     "countries": {
       "title": "წამყვანი ქვეყნები",

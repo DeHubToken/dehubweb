@@ -2181,8 +2181,7 @@
       "overDays": "{{count}} kunda",
       "requestsLabel": "So'rovlar",
       "served": "Berildi",
-      "requests": "{{requests}} ta so'rov",
-      "estimatedToday": "taxminiy, bugun hozirgacha, UTC"
+      "requests": "{{requests}} ta so'rov"
     },
     "chart": {
       "hourly": "Soatlik tashrif buyuruvchilar",
@@ -2191,8 +2190,7 @@
       "dailyHint": "kunlik noyob tashrif buyuruvchilar",
       "empty": "Bu davr uchun hali ma'lumot yo'q",
       "visitors": "tashrif buyuruvchilar",
-      "pageViews": "sahifa ko'rishlari",
-      "visitorsEstimated": "tashrif buyuruvchilar (taxminiy)"
+      "pageViews": "sahifa ko'rishlari"
     },
     "countries": {
       "title": "Yetakchi davlatlar",

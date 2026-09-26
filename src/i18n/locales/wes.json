@@ -1976,8 +1976,7 @@
       "overDays": "ova {{count}} dei dem",
       "requestsLabel": "Request dem",
       "served": "Dem serv-am",
-      "requests": "{{requests}} request dem",
-      "estimatedToday": "na estimate, reach naw tudei, UTC"
+      "requests": "{{requests}} request dem"
     },
     "chart": {
       "hourly": "Visitor dem per awa",
@@ -1986,8 +1985,7 @@
       "dailyHint": "unique visitor dem per dei",
       "empty": "No data dei for dis window yet",
       "visitors": "visitor dem",
-      "pageViews": "page view dem",
-      "visitorsEstimated": "visitor dem (na estimate)"
+      "pageViews": "page view dem"
     },
     "countries": {
       "title": "Top country dem",

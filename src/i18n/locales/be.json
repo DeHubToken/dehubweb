@@ -2129,8 +2129,7 @@
       "overDays": "за {{count}} дзён",
       "requestsLabel": "Запыты",
       "served": "Абслужана",
-      "requests": "{{requests}} запытаў",
-      "estimatedToday": "паводле ацэнкі, сёння да гэтага часу, UTC"
+      "requests": "{{requests}} запытаў"
     },
     "chart": {
       "hourly": "Наведвальнікаў за гадзіну",
@@ -2139,8 +2138,7 @@
       "dailyHint": "унікальных наведвальнікаў за дзень",
       "empty": "За гэты перыяд яшчэ няма даных",
       "visitors": "наведвальнікі",
-      "pageViews": "прагляды старонак",
-      "visitorsEstimated": "наведвальнікі (паводле ацэнак)"
+      "pageViews": "прагляды старонак"
     },
     "countries": {
       "title": "Асноўныя краіны",

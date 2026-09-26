@@ -2198,8 +2198,7 @@
       "overDays": "mandritra ny {{count}} andro",
       "requestsLabel": "Fangatahana",
       "served": "Nomena",
-      "requests": "fangatahana {{requests}}",
-      "estimatedToday": "vinavinaina, hatramin'izao UTC"
+      "requests": "fangatahana {{requests}}"
     },
     "chart": {
       "hourly": "Mpitsidika isan'ora",
@@ -2208,8 +2207,7 @@
       "dailyHint": "mpitsidika tsy mitovy isan'andro",
       "empty": "Mbola tsy misy angona ho an'ity vanim-potoana ity",
       "visitors": "mpitsidika",
-      "pageViews": "pejy Hizaha hevitra",
-      "visitorsEstimated": "mpitsidika (tombanana)"
+      "pageViews": "pejy Hizaha hevitra"
     },
     "countries": {
       "title": "Firenena voalohany",

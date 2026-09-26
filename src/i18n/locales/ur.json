@@ -2053,8 +2053,7 @@
       "overDays": "{{count}} دنوں میں",
       "requestsLabel": "درخواستیں",
       "served": "فراہم کی گئیں",
-      "requests": "{{requests}} درخواستیں",
-      "estimatedToday": "تخمینہ لگایا گیا ہے، اب تک آج UTC"
+      "requests": "{{requests}} درخواستیں"
     },
     "chart": {
       "hourly": "فی گھنٹہ زائرین",
@@ -2063,8 +2062,7 @@
       "dailyHint": "یومیہ منفرد زائرین",
       "empty": "اس مدت کے لیے ابھی کوئی ڈیٹا نہیں",
       "visitors": "زائرین",
-      "pageViews": "صفحہ آراء",
-      "visitorsEstimated": "زائرین (تخمینہ)"
+      "pageViews": "صفحہ آراء"
     },
     "countries": {
       "title": "سرِفہرست ممالک",

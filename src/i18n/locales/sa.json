@@ -2119,8 +2119,7 @@
       "overDays": "{{count}} दिनानि यावत्",
       "requestsLabel": "विनन्तयः",
       "served": "सेवितम्",
-      "requests": "{{requests}} विनन्तयः",
-      "estimatedToday": "अनुमितम्, अद्य यावत्, UTC"
+      "requests": "{{requests}} विनन्तयः"
     },
     "chart": {
       "hourly": "प्रतिघण्टं दर्शकाः",
@@ -2129,8 +2128,7 @@
       "dailyHint": "प्रतिदिनं अद्वितीयदर्शकाः",
       "empty": "अस्मै कालावधये अद्यापि दत्तांशाः न सन्ति",
       "visitors": "दर्शकाः",
-      "pageViews": "पृष्ठदर्शनानि",
-      "visitorsEstimated": "दर्शकाः (अनुमिताः)"
+      "pageViews": "पृष्ठदर्शनानि"
     },
     "countries": {
       "title": "शीर्षदेशाः",

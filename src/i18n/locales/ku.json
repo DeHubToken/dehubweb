@@ -1954,8 +1954,7 @@
       "overDays": "di {{count}} rojan de",
       "requestsLabel": "Daxwaz",
       "served": "Hate Pêşkêşkirin",
-      "requests": "{{requests}} daxwaz",
-      "estimatedToday": "texmînî, heta niha îro UTC"
+      "requests": "{{requests}} daxwaz"
     },
     "chart": {
       "hourly": "Serdankerên saetê",
@@ -1964,8 +1963,7 @@
       "dailyHint": "serdankerên yekta yên rojane",
       "empty": "Ji bo vê demê hîn dane tune",
       "visitors": "serdanker",
-      "pageViews": "dîtinên rûpelan",
-      "visitorsEstimated": "serdanker (texmînî)"
+      "pageViews": "dîtinên rûpelan"
     },
     "countries": {
       "title": "Welatên Jorîn",

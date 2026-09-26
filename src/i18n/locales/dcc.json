@@ -1832,8 +1832,7 @@
       "overDays": "{{count}} دن میں",
       "requestsLabel": "درخواستیں",
       "served": "دیا گیا",
-      "requests": "{{requests}} درخواستیں",
-      "estimatedToday": "اندازہ، آج تک UTC"
+      "requests": "{{requests}} درخواستیں"
     },
     "chart": {
       "hourly": "گھنٹے کے آنے والے",
@@ -1842,8 +1841,7 @@
       "dailyHint": "روزانہ الگ الگ آنے والے",
       "empty": "اس ونڈو کو ابھی تک ڈیٹا نکو",
       "visitors": "آنے والے",
-      "pageViews": "پیج ویوز",
-      "visitorsEstimated": "آنے والے (اندازہ)"
+      "pageViews": "پیج ویوز"
     },
     "countries": {
       "title": "اوپر کے ملک",

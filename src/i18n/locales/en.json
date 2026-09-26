@@ -2206,8 +2206,7 @@
       "overDays": "over {{count}} days",
       "requestsLabel": "Requests",
       "served": "Served",
-      "requests": "{{requests}} requests",
-      "estimatedToday": "estimated, so far today UTC"
+      "requests": "{{requests}} requests"
     },
     "chart": {
       "hourly": "Visitors per hour",
@@ -2216,8 +2215,7 @@
       "dailyHint": "unique visitors per day",
       "empty": "No data for this window yet",
       "visitors": "visitors",
-      "pageViews": "page views",
-      "visitorsEstimated": "visitors (estimated)"
+      "pageViews": "page views"
     },
     "countries": {
       "title": "Top countries",

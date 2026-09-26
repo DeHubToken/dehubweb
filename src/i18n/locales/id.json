@@ -2206,8 +2206,7 @@
       "overDays": "selama {{count}} hari",
       "requestsLabel": "Permintaan",
       "served": "Disajikan",
-      "requests": "{{requests}} permintaan",
-      "estimatedToday": "diperkirakan, sejauh ini hari ini UTC"
+      "requests": "{{requests}} permintaan"
     },
     "chart": {
       "hourly": "Pengunjung per jam",
@@ -2216,8 +2215,7 @@
       "dailyHint": "pengunjung unik per hari",
       "empty": "Belum ada data untuk rentang ini",
       "visitors": "pengunjung",
-      "pageViews": "tampilan halaman",
-      "visitorsEstimated": "pengunjung (perkiraan)"
+      "pageViews": "tampilan halaman"
     },
     "countries": {
       "title": "Negara teratas",

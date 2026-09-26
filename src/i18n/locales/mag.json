@@ -2124,8 +2124,7 @@
       "overDays": "{{count}} दिन में",
       "requestsLabel": "रिक्वेस्ट",
       "served": "परोसल गेल",
-      "requests": "{{requests}} रिक्वेस्ट",
-      "estimatedToday": "अनुमानित, आइ अखनी तक, UTC"
+      "requests": "{{requests}} रिक्वेस्ट"
     },
     "chart": {
       "hourly": "घंटा के विजिटर",
@@ -2134,8 +2133,7 @@
       "dailyHint": "रोज के यूनीक विजिटर",
       "empty": "ई अवधि लेल अखनी तक कोनो डेटा नै हे",
       "visitors": "विजिटर",
-      "pageViews": "पेज व्यू",
-      "visitorsEstimated": "विजिटर (अनुमानित)"
+      "pageViews": "पेज व्यू"
     },
     "countries": {
       "title": "टॉप देश",

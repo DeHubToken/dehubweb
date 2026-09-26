@@ -2201,8 +2201,7 @@
       "overDays": "{{count}} күнде",
       "requestsLabel": "Сұраулар",
       "served": "Қызмет көрсетілді",
-      "requests": "{{requests}} сұрау",
-      "estimatedToday": "бағаланған, бүгінгі күнге дейін UTC"
+      "requests": "{{requests}} сұрау"
     },
     "chart": {
       "hourly": "Сағатына келушілер",
@@ -2211,8 +2210,7 @@
       "dailyHint": "күніне бірегей келушілер",
       "empty": "Бұл кезең үшін әзірге деректер жоқ",
       "visitors": "келуші",
-      "pageViews": "бет көріністері",
-      "visitorsEstimated": "келушілер (бағаланған)"
+      "pageViews": "бет көріністері"
     },
     "countries": {
       "title": "Үздік елдер",

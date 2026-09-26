@@ -2138,8 +2138,7 @@
       "overDays": "n'ime ụbọchị {{count}}",
       "requestsLabel": "Arịrịọ",
       "served": "Ewepụtara",
-      "requests": "Arịrịọ {{requests}}",
-      "estimatedToday": "atụmatụ, otú anya taa UTC"
+      "requests": "Arịrịọ {{requests}}"
     },
     "chart": {
       "hourly": "Ndị Ọbịa Kwa Awa",
@@ -2148,8 +2147,7 @@
       "dailyHint": "ndị ọbịa nke ọ bụla kwa ụbọchị",
       "empty": "Enweghị data maka oge a ma",
       "visitors": "ndị ọbịa",
-      "pageViews": "ngosi ihuakwụkwọ",
-      "visitorsEstimated": "ndị ọbịa (atụmatụ)"
+      "pageViews": "ngosi ihuakwụkwọ"
     },
     "countries": {
       "title": "Mba Kacha Elu",

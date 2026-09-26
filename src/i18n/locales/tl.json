@@ -2089,8 +2089,7 @@
       "overDays": "sa loob ng {{count}} araw",
       "requestsLabel": "Mga kahilingan",
       "served": "Naihatid",
-      "requests": "{{requests}} kahilingan",
-      "estimatedToday": "tinatayang, hanggang ngayon UTC"
+      "requests": "{{requests}} kahilingan"
     },
     "chart": {
       "hourly": "Mga bisita kada oras",
@@ -2099,8 +2098,7 @@
       "dailyHint": "mga natatanging bisita kada araw",
       "empty": "Wala pang datos para sa panahong ito",
       "visitors": "Mga Bisita",
-      "pageViews": "mga pagtingin sa pahina",
-      "visitorsEstimated": "mga bisita (tinatayang)"
+      "pageViews": "mga pagtingin sa pahina"
     },
     "countries": {
       "title": "Nangungunang bansa",

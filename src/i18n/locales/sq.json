@@ -2184,8 +2184,7 @@
       "overDays": "gjatë {{count}} ditëve",
       "requestsLabel": "Kërkesa",
       "served": "Shërbyer",
-      "requests": "{{requests}} kërkesa",
-      "estimatedToday": "vlerësuar, deri më sot UTC"
+      "requests": "{{requests}} kërkesa"
     },
     "chart": {
       "hourly": "Vizitorë në orë",
@@ -2194,8 +2193,7 @@
       "dailyHint": "vizitorë unikë në ditë",
       "empty": "Ende nuk ka të dhëna për këtë periudhë",
       "visitors": "Vizitorë",
-      "pageViews": "Shikimet e Faqes",
-      "visitorsEstimated": "vizitorët (vlerësohet)"
+      "pageViews": "Shikimet e Faqes"
     },
     "countries": {
       "title": "Vendet kryesore",

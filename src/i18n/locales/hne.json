@@ -2130,8 +2130,7 @@
       "overDays": "{{count}} दिन म",
       "requestsLabel": "अनुरोध",
       "served": "सर्व होइस",
-      "requests": "{{requests}} अनुरोध",
-      "estimatedToday": "uTC: UTC वर्तमान आवृत्ति जानकारी"
+      "requests": "{{requests}} अनुरोध"
     },
     "chart": {
       "hourly": "घंटा के आगंतुक",
@@ -2140,8 +2139,7 @@
       "dailyHint": "रोज के अनोखा आगंतुक",
       "empty": "ये अवधि बर अभी तक डेटा नइ हे",
       "visitors": "आगंतुक",
-      "pageViews": "पेज दृस्य",
-      "visitorsEstimated": "आगंतुक (अनुमानित)"
+      "pageViews": "पेज दृस्य"
     },
     "countries": {
       "title": "टॉप देश",
