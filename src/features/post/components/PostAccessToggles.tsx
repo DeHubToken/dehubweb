@@ -25,6 +25,7 @@ import { getChainById } from '@/components/app/ChainSelector';
 import { useNavigate } from 'react-router-dom';
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
 import { Star } from 'lucide-react';
+import { normalizeCategoryName } from '@/lib/category-names';
 
 interface PostAccessTogglesProps {
   /** Gate this post behind the creator's own subscription plans. */
@@ -232,8 +233,8 @@ export function PostAccessToggles({
   const MAX_CATEGORIES = 5;
 
   const filteredCategories = useMemo(() => {
-    if (!categorySearch.trim()) return categories;
-    const q = categorySearch.toLowerCase();
+    const q = normalizeCategoryName(categorySearch).toLowerCase();
+    if (!q) return categories;
     return categories
       .filter(c => c.name.toLowerCase().includes(q))
       .sort((a, b) => {
@@ -255,7 +256,9 @@ export function PostAccessToggles({
     }
   };
 
-  const toggleCategory = (name: string) => {
+  const toggleCategory = (raw: string) => {
+    const name = normalizeCategoryName(raw);
+    if (!name) return;
     const current = selectedCategoriesArray;
     if (current.includes(name)) {
       const next = current.filter(c => c !== name);
@@ -773,7 +776,7 @@ export function PostAccessToggles({
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && categorySearch.trim().length >= 3 && selectedCategoriesArray.length < MAX_CATEGORIES) {
                     e.preventDefault();
-                    const exact = filteredCategories.find(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase());
+                    const exact = filteredCategories.find(c => c.name.toLowerCase() === normalizeCategoryName(categorySearch).toLowerCase());
                     if (exact) {
                       toggleCategory(exact.name);
                     } else {
@@ -806,14 +809,14 @@ export function PostAccessToggles({
               ) : (
                 <>
                 {/* Custom category option when search doesn't exactly match */}
-                {categorySearch.trim().length >= 3 && !categories.some(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase()) && selectedCategoriesArray.length < MAX_CATEGORIES && (
+                {categorySearch.trim().length >= 3 && !categories.some(c => c.name.toLowerCase() === normalizeCategoryName(categorySearch).toLowerCase()) && selectedCategoriesArray.length < MAX_CATEGORIES && (
                   <button
                     type="button"
                     onClick={() => { toggleCategory(categorySearch.trim()); setCategorySearch(''); }}
                     className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-colors text-white bg-white/10 hover:bg-white/15 border border-dashed border-white/20 mb-1"
                   >
                     <Plus className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Create "<span className="font-medium">{categorySearch.trim()}</span>"</span>
+                    <span>Create "<span className="font-medium">{normalizeCategoryName(categorySearch)}</span>"</span>
                   </button>
                 )}
                 {filteredCategories.length === 0 && !categorySearch.trim() ? (
