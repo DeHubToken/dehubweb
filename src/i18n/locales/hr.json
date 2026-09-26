@@ -2148,8 +2148,7 @@
       "overDays": "kroz {{count}} dana",
       "requestsLabel": "Zahtjevi",
       "served": "Posluženo",
-      "requests": "{{requests}} zahtjeva",
-      "estimatedToday": "procjenjuje se, do sada danas UTC"
+      "requests": "{{requests}} zahtjeva"
     },
     "chart": {
       "hourly": "Posjetitelja na sat",
@@ -2158,8 +2157,7 @@
       "dailyHint": "jedinstvenih posjetitelja dnevno",
       "empty": "Za ovo razdoblje još nema podataka",
       "visitors": "posjetiteljima",
-      "pageViews": "posje�enost stranica",
-      "visitorsEstimated": "posjetitelja (procijenjeno)"
+      "pageViews": "posje�enost stranica"
     },
     "countries": {
       "title": "Vodeće zemlje",

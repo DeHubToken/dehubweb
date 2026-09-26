@@ -2204,8 +2204,7 @@
       "overDays": "{{count}}일 동안",
       "requestsLabel": "요청",
       "served": "제공됨",
-      "requests": "요청 {{requests}}건",
-      "estimatedToday": "예상 시간: 현재까지 UTC"
+      "requests": "요청 {{requests}}건"
     },
     "chart": {
       "hourly": "시간별 방문자",
@@ -2214,8 +2213,7 @@
       "dailyHint": "일별 순 방문자",
       "empty": "이 기간의 데이터가 아직 없습니다",
       "visitors": "방문객들",
-      "pageViews": "페이지 조회수",
-      "visitorsEstimated": "방문자 (예상)"
+      "pageViews": "페이지 조회수"
     },
     "countries": {
       "title": "상위 국가",

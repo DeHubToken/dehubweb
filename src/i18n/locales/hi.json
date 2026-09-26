@@ -2212,8 +2212,7 @@
       "overDays": "{{count}} दिनों में",
       "requestsLabel": "अनुरोध",
       "served": "दिए गए",
-      "requests": "{{requests}} अनुरोध",
-      "estimatedToday": "अनुमानित, अब तक आज UTC"
+      "requests": "{{requests}} अनुरोध"
     },
     "chart": {
       "hourly": "प्रति घंटा आगंतुक",
@@ -2222,8 +2221,7 @@
       "dailyHint": "प्रतिदिन अद्वितीय आगंतुक",
       "empty": "इस अवधि के लिए अभी कोई डेटा नहीं",
       "visitors": "आगंतुकों",
-      "pageViews": "पेज व्यू",
-      "visitorsEstimated": "विज़िटर (अनुमानित)"
+      "pageViews": "पेज व्यू"
     },
     "countries": {
       "title": "शीर्ष देश",

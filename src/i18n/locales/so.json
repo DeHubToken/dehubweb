@@ -2169,8 +2169,7 @@
       "overDays": "{{count}} maalmood gudahood",
       "requestsLabel": "Codsiyo",
       "served": "La bixiyay",
-      "requests": "{{requests}} codsi",
-      "estimatedToday": "qiyaasta, ilaa maanta UTC"
+      "requests": "{{requests}} codsi"
     },
     "chart": {
       "hourly": "Booqdayaal saacaddii",
@@ -2179,8 +2178,7 @@
       "dailyHint": "booqdayaal gaar ah maalintii",
       "empty": "Weli xog ma jirto muddadan",
       "visitors": "Martida",
-      "pageViews": "aragtida bogga",
-      "visitorsEstimated": "booqdayaasha (lagu qiyaasay)"
+      "pageViews": "aragtida bogga"
     },
     "countries": {
       "title": "Wadamada ugu sarreeya",

@@ -2154,8 +2154,7 @@
       "overDays": "{{count}} օրում",
       "requestsLabel": "Հարցումներ",
       "served": "Մատուցվել է",
-      "requests": "{{requests}} հարցում",
-      "estimatedToday": "հաշվարկված, մինչ օրս UTC"
+      "requests": "{{requests}} հարցում"
     },
     "chart": {
       "hourly": "Այցելուներ ժամում",
@@ -2164,8 +2163,7 @@
       "dailyHint": "եզակի այցելուներ օրական",
       "empty": "Այս ժամանակահատվածի համար դեռ տվյալներ չկան",
       "visitors": "Այցելուները",
-      "pageViews": "Էջի դիտումներ",
-      "visitorsEstimated": "այցելուներ (գնահատված)"
+      "pageViews": "Էջի դիտումներ"
     },
     "countries": {
       "title": "Առաջատար երկրներ",

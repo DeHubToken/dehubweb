@@ -2049,8 +2049,7 @@
       "overDays": "{{count}} দিনে",
       "requestsLabel": "অনুরোধ",
       "served": "দেওয়া হয়েছে",
-      "requests": "{{requests}} অনুরোধ",
-      "estimatedToday": "আনুমানিক, আজ পর্যন্ত ইউটিসি"
+      "requests": "{{requests}} অনুরোধ"
     },
     "chart": {
       "hourly": "ঘণ্টাপ্রতি দর্শক",
@@ -2059,8 +2058,7 @@
       "dailyHint": "দৈনিক অনন্য দর্শক",
       "empty": "এই সময়ের জন্য এখনও কোনো তথ্য নেই",
       "visitors": "দর্শক",
-      "pageViews": "পেজ ভিউ",
-      "visitorsEstimated": "দর্শক (আনুমানিক)"
+      "pageViews": "পেজ ভিউ"
     },
     "countries": {
       "title": "শীর্ষ দেশ",

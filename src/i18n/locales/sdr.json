@@ -2092,8 +2092,7 @@
       "overDays": "{{count}} دن میں",
       "requestsLabel": "درخواست",
       "served": "دیئل",
-      "requests": "{{requests}} درخواست",
-      "estimatedToday": "تخمینی، تا کنون امروز UTC"
+      "requests": "{{requests}} درخواست"
     },
     "chart": {
       "hourly": "ہر گھنٹا آوے والا",
@@ -2102,8 +2101,7 @@
       "dailyHint": "ہر دن الگ الگ آوے والا",
       "empty": "ای وقت کے واسطے اڃا ڈیٹا نہیں ہے",
       "visitors": "بازدیدکنندگان",
-      "pageViews": "مشاهدات صفحه",
-      "visitorsEstimated": "بازدیدکنندگان (تخمینی)"
+      "pageViews": "مشاهدات صفحه"
     },
     "countries": {
       "title": "اوپر کے ملک",

@@ -2206,8 +2206,7 @@
       "overDays": "über {{count}} Tage",
       "requestsLabel": "Anfragen",
       "served": "Ausgeliefert",
-      "requests": "{{requests}} Anfragen",
-      "estimatedToday": "geschätzt, bisher heute UTC"
+      "requests": "{{requests}} Anfragen"
     },
     "chart": {
       "hourly": "Besucher pro Stunde",
@@ -2216,8 +2215,7 @@
       "dailyHint": "eindeutige Besucher pro Tag",
       "empty": "Noch keine Daten für diesen Zeitraum",
       "visitors": "Gäste",
-      "pageViews": "Seitenaufrufe",
-      "visitorsEstimated": "besucher (geschätzt)"
+      "pageViews": "Seitenaufrufe"
     },
     "countries": {
       "title": "Top-Länder",

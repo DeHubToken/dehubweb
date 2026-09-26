@@ -2080,8 +2080,7 @@
       "overDays": "oor {{count}} dae",
       "requestsLabel": "Versoeke",
       "served": "Bedien",
-      "requests": "{{requests}} versoeke",
-      "estimatedToday": "geskat, so ver vandag UTC"
+      "requests": "{{requests}} versoeke"
     },
     "chart": {
       "hourly": "Besoekers per uur",
@@ -2090,8 +2089,7 @@
       "dailyHint": "unieke besoekers per dag",
       "empty": "Nog geen data vir hierdie tydperk nie",
       "visitors": "besoekers",
-      "pageViews": "bladsy aansigte",
-      "visitorsEstimated": "visitors (Visitors)"
+      "pageViews": "bladsy aansigte"
     },
     "countries": {
       "title": "Topslande",

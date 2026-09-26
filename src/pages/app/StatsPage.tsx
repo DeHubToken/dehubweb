@@ -229,7 +229,7 @@ function ChartTooltip({
   label,
 }: {
   active?: boolean;
-  payload?: { value: number | null; dataKey: string; payload?: { estimated?: boolean } }[];
+  payload?: { value: number | null; dataKey: string }[];
   label?: string;
 }) {
   const { t } = useTranslation();
@@ -247,9 +247,7 @@ function ChartTooltip({
           <span className="text-zinc-400">
             {entry.dataKey === 'pageViews'
               ? t('stats.chart.pageViews', 'page views')
-              : entry.payload?.estimated
-                ? t('stats.chart.visitorsEstimated', 'visitors (estimated)')
-                : t('stats.chart.visitors', 'visitors')}
+              : t('stats.chart.visitors', 'visitors')}
           </span>
         </div>
       ))}
@@ -262,7 +260,7 @@ function ChartTooltip({
  * hour so far — so plotted raw it falls off a cliff every midnight. Instead it
  * is topped up with the previous bucket's pace for the share of the bucket not
  * yet elapsed: equal to yesterday at 00:00, today's real count by 23:59. The
- * row is flagged `estimated` so the tooltip says so; the tiles keep raw counts.
+ * tiles keep raw counts.
  */
 function smoothLiveTail<T extends Record<string, unknown>>(
   rows: T[],
@@ -293,7 +291,7 @@ function dayStart(date: string | undefined): number {
   return date ? Date.parse(`${date}T00:00:00Z`) : NaN;
 }
 
-/** Chart rows; `estimated` rides along so the tooltip can say so. */
+/** Chart rows. */
 function visitorSeries<T extends { visitors: number; pageViews: number; estimated?: boolean }>(
   rows: T[],
   label: (row: T) => string,
@@ -1062,11 +1060,7 @@ export default function StatsPage() {
               <StatTile
                 label={t('stats.tile.visitorsToday', 'Visitors today')}
                 value={formatCount(today?.visitors)}
-                hint={
-                  today?.estimated
-                    ? t('stats.tile.estimatedToday', 'estimated, so far today UTC')
-                    : t('stats.tile.soFarToday', 'so far today, UTC')
-                }
+                hint={t('stats.tile.soFarToday', 'so far today, UTC')}
               />
               {/* The busiest single bucket, never a summed "visitors in range"
                   figure: adding overlapping unique counts would count one person

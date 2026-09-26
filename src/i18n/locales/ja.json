@@ -2204,8 +2204,7 @@
       "overDays": "{{count}} 日あたり",
       "requestsLabel": "リクエスト",
       "served": "配信済み",
-      "requests": "{{requests}} リクエスト",
-      "estimatedToday": "今日のこれまでの推定UTC"
+      "requests": "{{requests}} リクエスト"
     },
     "chart": {
       "hourly": "1 時間あたりの訪問者",
@@ -2214,8 +2213,7 @@
       "dailyHint": "1 日あたりのユニーク訪問者",
       "empty": "この期間のデータはまだありません",
       "visitors": "来場者",
-      "pageViews": "閲覧数",
-      "visitorsEstimated": "訪問者（推定）"
+      "pageViews": "閲覧数"
     },
     "countries": {
       "title": "上位の国",

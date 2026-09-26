@@ -2124,8 +2124,7 @@
       "overDays": "ኣብ ውሽጢ {{count}} መዓልታት",
       "requestsLabel": "ጠለባት",
       "served": "ተዋሂቡ",
-      "requests": "{{requests}} ጠለባት",
-      "estimatedToday": "ክሳብ ሎሚ UTC"
+      "requests": "{{requests}} ጠለባት"
     },
     "chart": {
       "hourly": "በጻሕቲ ኣብ ሰዓት",
@@ -2134,8 +2133,7 @@
       "dailyHint": "ፍሉያት በጻሕቲ ኣብ መዓልቲ",
       "empty": "ንዚ እዋን እዚ ገና ዳታ የለን",
       "visitors": "ኣጋይሽ፡",
-      "pageViews": "ናይ ገጽ ርእይቶታት",
-      "visitorsEstimated": "ጎብኝታት (ግምታዊ)"
+      "pageViews": "ናይ ገጽ ርእይቶታት"
     },
     "countries": {
       "title": "ላዕለዎት ሃገራት",

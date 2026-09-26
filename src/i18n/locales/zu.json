@@ -2198,8 +2198,7 @@
       "overDays": "ngezinsuku ezingu-{{count}}",
       "requestsLabel": "Izicelo",
       "served": "Zilethiwe",
-      "requests": "izicelo ezingu-{{requests}}",
-      "estimatedToday": "kulinganiselwa, kuze kube manje i-UTC"
+      "requests": "izicelo ezingu-{{requests}}"
     },
     "chart": {
       "hourly": "Izivakashi ngehora",
@@ -2208,8 +2207,7 @@
       "dailyHint": "izivakashi ezihlukile ngosuku",
       "empty": "Ayikho idatha yale nkathi okwamanje",
       "visitors": "izivakashi",
-      "pageViews": "ukubukwa kwekhasi",
-      "visitorsEstimated": "izivakashi (kulinganiselwa)"
+      "pageViews": "ukubukwa kwekhasi"
     },
     "countries": {
       "title": "Amazwe aphezulu",

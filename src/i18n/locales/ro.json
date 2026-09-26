@@ -2045,8 +2045,7 @@
       "overDays": "în {{count}} zile",
       "requestsLabel": "Cereri",
       "served": "Servite",
-      "requests": "{{requests}} cereri",
-      "estimatedToday": "estimat, până în prezent astăzi UTC"
+      "requests": "{{requests}} cereri"
     },
     "chart": {
       "hourly": "Vizitatori pe oră",
@@ -2055,8 +2054,7 @@
       "dailyHint": "vizitatori unici pe zi",
       "empty": "Încă nu există date pentru acest interval",
       "visitors": "vizitatori",
-      "pageViews": "Vizualizări ale paginii",
-      "visitorsEstimated": "vizitatori (estimat)"
+      "pageViews": "Vizualizări ale paginii"
     },
     "countries": {
       "title": "Țări de top",

@@ -2183,8 +2183,7 @@
       "overDays": "guyyoota {{count}} keessatti",
       "requestsLabel": "Gaaffiiwwan",
       "served": "Dhiyaatan",
-      "requests": "gaaffii {{requests}}",
-      "estimatedToday": "tilmaamame, hanga ammaatti har'a UTC"
+      "requests": "gaaffii {{requests}}"
     },
     "chart": {
       "hourly": "Sa'aatiitti daawwattoota",
@@ -2193,8 +2192,7 @@
       "dailyHint": "guyyaatti daawwattoota adda ta'an",
       "empty": "Yeroo kanaaf deetaan ammatti hin jiru",
       "visitors": "daawwattoota",
-      "pageViews": "ilaalcha fuula",
-      "visitorsEstimated": "daawwattoota (tilmaama) ."
+      "pageViews": "ilaalcha fuula"
     },
     "countries": {
       "title": "Biyyoota ol'aanoo",

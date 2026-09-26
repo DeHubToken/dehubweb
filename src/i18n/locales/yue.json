@@ -2168,8 +2168,7 @@
       "overDays": "{{count}} 日內",
       "requestsLabel": "請求",
       "served": "已提供",
-      "requests": "{{requests}} 次請求",
-      "estimatedToday": "估計，到目前為止今日 UTC"
+      "requests": "{{requests}} 次請求"
     },
     "chart": {
       "hourly": "每小時訪客",
@@ -2178,8 +2177,7 @@
       "dailyHint": "每日獨立訪客",
       "empty": "呢段時間仲未有數據",
       "visitors": "訪客",
-      "pageViews": "頁面瀏覽量",
-      "visitorsEstimated": "訪客（估計）"
+      "pageViews": "頁面瀏覽量"
     },
     "countries": {
       "title": "主要國家/地區",

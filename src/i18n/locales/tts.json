@@ -2105,8 +2105,7 @@
       "overDays": "ตลอด {{count}} มื้อ",
       "requestsLabel": "คำขอ",
       "served": "ให้บริการแล้ว",
-      "requests": "{{requests}} คำขอ",
-      "estimatedToday": "ประมาณการ, วันนี้จนถึงตอนนี้ UTC"
+      "requests": "{{requests}} คำขอ"
     },
     "chart": {
       "hourly": "ผู้เยี่ยมซมต่อซั่วโมง",
@@ -2115,8 +2114,7 @@
       "dailyHint": "ผู้เยี่ยมซมไม่ซ้ำต่อมื้อ",
       "empty": "ยังบ่มีข้อมูลสำหรับซ่วงนี้เทื่อ",
       "visitors": "ผู้เข้าชม",
-      "pageViews": "การดูหน้าเว็บ",
-      "visitorsEstimated": "ผู้เข้าชม (ประมาณการ)"
+      "pageViews": "การดูหน้าเว็บ"
     },
     "countries": {
       "title": "ประเทศเทิงสุด",

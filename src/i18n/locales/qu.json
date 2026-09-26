@@ -2201,8 +2201,7 @@
       "overDays": "{{count}} punchawpi",
       "requestsLabel": "Mañakuykuna",
       "served": "Qusqa",
-      "requests": "{{requests}} mañakuykuna",
-      "estimatedToday": "yupasqa, kunankama kunan UTC"
+      "requests": "{{requests}} mañakuykuna"
     },
     "chart": {
       "hourly": "Watukuqkuna sapa ura",
@@ -2211,8 +2210,7 @@
       "dailyHint": "sapa punchaw huk kaq watukuqkuna",
       "empty": "Kay pachapaq manaraq willay kanchu",
       "visitors": "watukuq runakuna",
-      "pageViews": "p’anqa qhawaykunata",
-      "visitorsEstimated": "watukuqkuna (yupasqa) ."
+      "pageViews": "p’anqa qhawaykunata"
     },
     "countries": {
       "title": "Hanaq llaqtakuna",
