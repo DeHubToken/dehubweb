@@ -10,7 +10,7 @@ export const whatIsDehubPost: BlogPostType = {
   excerpt:
     'DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities. Here is who we are, what that actually means, how it works, and why it exists.',
   content: `
-DeHub is an **open source, user-owned and censorship-resistant social platform** for creators and communities — a decentralized alternative to legacy apps like X, YouTube, Facebook and Rumble. Post, stream, message and go live like on any modern social app, except your content is minted on-chain the moment you upload it, your audience relationship belongs to you rather than an algorithm, and the platform's economics are shared with the people who actually create and consume the content.
+DeHub is an **open source, user-owned and censorship-resistant social platform** for creators and communities — a decentralized alternative to legacy apps like X, YouTube, Facebook and Rumble. Post, stream, message and go live like on any modern social app, except your content can be minted on-chain to your wallet, when you upload it or later, your audience relationship belongs to you rather than an algorithm, and the platform's economics are shared with the people who actually create and consume the content.
 
 Our mission is simple: **give creators and their communities ownership of the platforms they build value on.** Not a promise on a roadmap — a working product you can use right now at [dehub.io](https://dehub.io) on the web or with the [DeHub app on Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). No wallet knowledge required to start; a wallet is created for you behind the scenes and gas is sponsored when you sign up with a social account, email or SMS.
 
@@ -38,7 +38,7 @@ Legacy social media has a structural problem: the platform owns everything. Your
 DeHub is built to invert that:
 
 - **Chronological, transparent feeds** — no shady algorithm deciding who sees your work.
-- **On-chain content ownership** — every upload is minted to your wallet. Nobody can silently delete your library or hold your audience hostage.
+- **On-chain content ownership** — any upload can be minted to your wallet. Nobody can silently delete your library or hold your audience hostage.
 - **Creator-first economics** — tokenized uploads, pay-per-view, token-gated content, on-chain tradable subscriptions, and ad revenue sharing that pays up to 90% out to the ecosystem instead of the house.
 - **Open source** — the code is public on [GitHub](https://github.com/DeHubToken), and the platform is designed so the community can fork, audit and build on it.
 - **Privacy** — end-to-end encrypted messaging, open sourced so the encryption claims can actually be verified.
@@ -48,7 +48,7 @@ DeHub is built to invert that:
 DeHub feels like a familiar social app on the surface. Underneath, it runs on Web3 rails:
 
 ### Content
-Every video, stream or post is minted as an on-chain asset when you upload. Creators choose free, pay-per-view, or token-gated access per upload. Once created, content can earn ad revenue for life — passive, permissionless, censorship-resistant income that doesn't depend on you posting again tomorrow. Live streaming runs on decentralized video infrastructure that has scaled to 50,000+ concurrent viewers.
+Any video, stream or post can be minted as an on-chain asset, when you upload or later. Creators choose free, pay-per-view, or token-gated access per upload. Once created, content can earn ad revenue for life — passive, permissionless, censorship-resistant income that doesn't depend on you posting again tomorrow. Live streaming runs on decentralized video infrastructure that has scaled to 50,000+ concurrent viewers.
 
 ### Subscriptions you actually own
 Creator subscriptions on DeHub are on-chain and tradable. If a creator you backed early gets big, your early-supporter pass has real market value — you can sell it on. Creators earn a royalty on every resale. Contracts are live on Base, BNB Chain and Polygon.

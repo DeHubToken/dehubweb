@@ -3286,7 +3286,7 @@
   },
   "fractions": {
     "seoTitle": "Fraccions | DeHub",
-    "seoDescription": "Compra i venda de fraccions de publicacions de DeHub. Cada pujada és 1000 fraccions en cadena — posseeix una part d'un vídeo, pista o imatge i comercia-la en DHB.",
+    "seoDescription": "Compra i ven fraccions de publicacions de DeHub. Una publicació encunyada són 1000 fraccions en cadena — posseeix una part d'un vídeo, una pista o una imatge i comercia-la en DHB.",
     "title": "Fraccions",
     "perUpload": "1000 per pujada",
     "tabBrowse": "Explorar",
@@ -3322,7 +3322,7 @@
     "perFraction": "per fracció",
     "noSearchMatch": "Res no coincideix amb aquesta cerca",
     "noneForSale": "Cap fracció està a la venda ara mateix",
-    "startTheMarketHint": "Cada pujada és de 1000 fraccions — anunciar-ne algunes de les teves per iniciar el mercat.",
+    "startTheMarketHint": "Una publicació encunyada són 1000 fraccions — posa'n a la venda algunes de les teves per iniciar el mercat.",
     "yours": "Els teus",
     "perFractionShort": "/ fracció",
     "forShareOfPost": "per al {{pct}}% de la publicació",
@@ -3376,7 +3376,7 @@
     "acrossPosts_one": "a través de {{count}} publicació",
     "acrossPosts_other": "a través de {{count}} publicacions",
     "noneHeldYet": "Encara no tens cap fracció",
-    "noneHeldHint": "Puja una publicació per ser encunyada en 1000, o compra una d'algú altre.",
+    "noneHeldHint": "Encunya una publicació per tenir-ne totes les 1000 fraccions, o compra'n part de la d'algú altre.",
     "listedForSale": "Anunciada a la venda",
     "priceEach": "{{price}} cadascuna",
     "listingCancelled": "Anunci cancel·lat",
@@ -3389,8 +3389,8 @@
     "offersForYourFractions": "Ofertes per a les teves fraccions",
     "review": "Revisar",
     "noFractionsYet": "Cap fracció encara",
-    "profileEmptyOwn": "Cada pujada s'encunya com a 1000 fraccions. Publica alguna cosa, o compra una publicació en la qual creguis.",
-    "profileEmptyOther": "Cada pujada s'encunya com a 1000 fraccions. Aquest perfil no en té cap de cap publicació en aquest moment.",
+    "profileEmptyOwn": "Una publicació encunyada són 1000 fraccions. Encunya una de les teves publicacions, o inverteix en una publicació en què creguis.",
+    "profileEmptyOther": "Una publicació encunyada són 1000 fraccions. Ara mateix aquest perfil no té fraccions de cap publicació.",
     "browseTheMarket": "Explora el mercat",
     "sellFractions": "Vendre fraccions",
     "balanceReadFailed": "No s'ha pogut llegir el teu saldo de fraccions ara mateix. Tanca això i torna-ho a intentar — anunciar sense fer-ho comporta el risc de vendre fraccions que ja no tens.",
@@ -6244,12 +6244,13 @@
     "done": "Fet",
     "back": "Enrere",
     "aiLabel": "Demana a la IA que configuri la teva operació",
-    "aiPlaceholder": "Prova \"vendre la meitat del meu DHB a 3 cèntims\"",
+    "aiPlaceholder": "Prova \"vendre la meitat del meu DHB a 6 cèntims\"",
     "aiSend": "Envia a la IA",
     "aiHint": "Digues el que vulguis en paraules clares. La IA ho omple tot, només has de prémer Confirmar.",
     "aiBuyOnly": "Easy trade ven DHB. Per comprar DHB, obre Exchange.",
     "aiNeedAmount": "Quant DHB vols vendre?",
-    "aiFailed": "La IA no ha pogut configurar-ho. Prova de dir-ho d'una altra manera, o omple-ho a continuació."
+    "aiFailed": "La IA no ha pogut configurar-ho. Prova de dir-ho d'una altra manera, o omple-ho a continuació.",
+    "cancelled": "S'ha cancel·lat. No s'ha venut res."
   },
   "ppvTopUp": {
     "yourBalance": "El teu saldo",
@@ -6266,5 +6267,10 @@
     "moveFunds": "Transfereix fons",
     "moveFundsHint": "Intercanvia o diposita des d'una altra cadena",
     "notNow": "Ara no"
+  },
+  "glossary": {
+    "fractionsDesc": "Una publicació encunyada a DeHub es converteix en un NFT dividit en 1.000 fraccions, i el creador comença amb totes les 1.000 — el 100% de la propietat del contingut. L'encunyació és opcional i es pot fer en publicar o més tard.",
+    "tokenIdDesc": "Un identificador únic en cadena que rep una publicació quan s'encunya com a NFT a la blockchain. L'encunyació és opcional, així que una publicació que no s'ha encunyat encara no té Token ID.",
+    "tokenIdInfoDesc": "L'identificador únic en cadena que rep una publicació un cop s'encunya com a NFT. Es mostra a la part superior de la pàgina d'informació de la publicació per a les publicacions encunyades."
   }
 }

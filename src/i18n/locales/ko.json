@@ -3339,7 +3339,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "DeHub 게시물의 분수를 사고 팔 수 있습니다. 모든 업로드는 1000개의 온체인 분수입니다 — 비디오, 트랙 또는 이미지의 일부를 소유하고 DHB에서 거래하세요.",
+    "seoDescription": "DeHub 게시물의 분할 지분을 사고팔 수 있습니다. 민팅된 게시물은 1000개의 온체인 분할입니다 — 비디오, 트랙 또는 이미지의 일부를 소유하고 DHB로 거래하세요.",
     "title": "프랙션",
     "perUpload": "1000 per upload",
     "tabBrowse": "Browse",
@@ -3375,7 +3375,7 @@
     "perFraction": "분할당",
     "noSearchMatch": "검색과 일치하는 것이 없습니다",
     "noneForSale": "현재 판매 중인 분할이 없습니다",
-    "startTheMarketHint": "모든 업로드는 1000개의 분할입니다 — 시장을 시작하려면 일부를 나열하세요.",
+    "startTheMarketHint": "민팅된 게시물은 1000개의 분할입니다 — 시장을 시작하려면 보유한 분할 일부를 등록하세요.",
     "yours": "귀사의",
     "perFractionShort": "/ 분할",
     "forShareOfPost": "게시물의 {{pct}}%에 대해",
@@ -3429,7 +3429,7 @@
     "acrossPosts_one": "{{count}} 게시물 전체",
     "acrossPosts_other": "{{count}} 게시물 전체",
     "noneHeldYet": "아직 보유한 분할이 없습니다",
-    "noneHeldHint": "게시물을 업로드하여 1000을 발행하거나 다른 사람의 분할을 구매하세요.",
+    "noneHeldHint": "게시물을 민팅해 1000개의 분할을 모두 보유하거나, 다른 사람의 게시물 분할을 구매하세요.",
     "listedForSale": "판매 목록",
     "priceEach": "{{price}} 각각",
     "listingCancelled": "목록 취소됨",
@@ -3442,8 +3442,8 @@
     "offersForYourFractions": "귀사의 분할에 대한 오퍼",
     "review": "검토",
     "noFractionsYet": "아직 프랙션이 없습니다",
-    "profileEmptyOwn": "모든 업로드는 1000개의 프랙션으로 발행됩니다. 뭔가를 게시하거나 당신이 믿는 게시물에 투자하세요.",
-    "profileEmptyOther": "모든 업로드는 1000개의 프랙션으로 발행됩니다. 이 프로필은 현재 어떤 게시물도 보유하지 않습니다.",
+    "profileEmptyOwn": "민팅된 게시물은 1000개의 분할입니다. 내 게시물 중 하나를 민팅하거나, 믿는 게시물의 분할을 구매하세요.",
+    "profileEmptyOther": "민팅된 게시물은 1000개의 분할입니다. 이 프로필은 현재 어떤 게시물의 분할도 보유하고 있지 않습니다.",
     "browseTheMarket": "마켓 둘러보기",
     "sellFractions": "프랙션 판매",
     "balanceReadFailed": "지금 프랙션 잔액을 읽을 수 없습니다. 이를 닫고 다시 시도하세요 — 잔액 없이 목록을 작성하면 더 이상 보유하지 않은 프랙션을 판매할 위험이 있습니다.",
@@ -6352,12 +6352,13 @@
     "done": "완료",
     "back": "뒤로",
     "aiLabel": "AI에 거래 설정 요청",
-    "aiPlaceholder": "\"DHB의 절반을 3센트에 판매\" 를 시도해보세요",
+    "aiPlaceholder": "\"DHB의 절반을 6센트에 판매\" 를 시도해보세요",
     "aiSend": "AI로 보내기",
     "aiHint": "원하는 것을 간단명료하게 말하세요. AI가 모든 것을 채우면 확인을 누르기만 하면 됩니다.",
     "aiBuyOnly": "간편한 거래는 DHB를 판매합니다. DHB를 구매하려면 Exchange를 엽니다.",
     "aiNeedAmount": "얼마나 많은 DHB를 판매하시겠습니까?",
-    "aiFailed": "AI가 이를 설정할 수 없습니다. 다른 방법으로 입력하거나 아래에 입력하세요."
+    "aiFailed": "AI가 이를 설정할 수 없습니다. 다른 방법으로 입력하거나 아래에 입력하세요.",
+    "cancelled": "취소되었습니다. 아무것도 판매되지 않았습니다."
   },
   "ppvTopUp": {
     "yourBalance": "내 잔액",
@@ -6374,5 +6375,10 @@
     "moveFunds": "자금 가져오기",
     "moveFundsHint": "다른 체인에서 스왑 또는 입금",
     "notNow": "나중에"
+  },
+  "glossary": {
+    "fractionsDesc": "DeHub에서 민팅된 게시물은 1,000개의 분할로 나뉜 NFT가 되며, 크리에이터는 1,000개 전부를 가진 상태로 시작합니다 — 콘텐츠에 대한 100% 소유권입니다. 민팅은 선택 사항이며 게시할 때 또는 나중에 할 수 있습니다.",
+    "tokenIdDesc": "게시물이 블록체인에서 NFT로 민팅될 때 부여되는 고유한 온체인 식별자입니다. 민팅은 선택 사항이므로, 아직 민팅되지 않은 게시물에는 Token ID가 없습니다.",
+    "tokenIdInfoDesc": "게시물이 NFT로 민팅되면 부여되는 고유한 온체인 식별자입니다. 민팅된 게시물의 게시물 정보 페이지 상단에 표시됩니다."
   }
 }

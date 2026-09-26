@@ -369,6 +369,25 @@ html[data-theme='osaka'] [data-bottom-nav] > nav {
     0 10px 34px rgb(4 2 10 / 0.5) !important;
 }
 
+/* Phones and touch devices: the chrome loses its blur (index.css touch block),
+   so the pill, the scrolled header and the bottom pill take denser slate. Same
+   selectors as above, declared later, so only the fill changes. */
+@media (max-width: 767px), (pointer: coarse) {
+  html[data-theme='osaka'] [data-feed-nav] {
+    background:
+      var(--osaka-bleed),
+      rgb(var(--osaka-slate) / 0.84) !important;
+  }
+  html[data-theme='osaka'] [data-mobile-header][data-scrolled='true'] {
+    background: rgb(var(--osaka-void) / 0.88) !important;
+  }
+  html[data-theme='osaka'] [data-bottom-nav] > nav {
+    background:
+      var(--osaka-bleed),
+      rgb(var(--osaka-slate) / 0.88) !important;
+  }
+}
+
 /* The active tab. This used to key off [data-active='true'], which the bottom
    nav never publishes — it was dead CSS, and the current page was marked only
    by a hard-coded WHITE drop-shadow, the one pure-white object left in the
@@ -1469,7 +1488,8 @@ html[data-theme='osaka'] #app-root
       [data-bottom-nav], [data-bottom-nav] *
     )
   ) {
-  background-color: rgb(var(--osaka-slate) / 0.6) !important;
+  /* --osaka-slab is only set on phones, where the blur is off (osaka-frame.css). */
+  background-color: rgb(var(--osaka-slate) / var(--osaka-slab, 0.6)) !important;
   backdrop-filter: var(--osaka-blur);
   -webkit-backdrop-filter: var(--osaka-blur);
 }

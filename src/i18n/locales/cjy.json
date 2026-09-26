@@ -3887,7 +3887,12 @@
     "mentioned": "被提到的"
   },
   "fractions": {
-    "title": "碎片"
+    "seoDescription": "买卖 DeHub 帖子嘞碎片。一个铸造过嘞帖子就是 1000 份链上碎片 — 拥有一段视频、音轨或图片嘞一部分，用 DHB 交易。",
+    "title": "碎片",
+    "startTheMarketHint": "一个铸造过嘞帖子就是 1000 份碎片 — 挂出你嘞一些碎片来开启市场。",
+    "noneHeldHint": "铸造一个帖子就能持有它全部 1000 份碎片，或者买入别人嘞帖子。",
+    "profileEmptyOwn": "一个铸造过嘞帖子就是 1000 份碎片。铸造你嘞一个帖子，或者买入你看好嘞帖子。",
+    "profileEmptyOther": "一个铸造过嘞帖子就是 1000 份碎片。这个主页眼下不持有任何帖子嘞碎片。"
   },
   "stores": {
     "podToggle": "按需印刷商品",
@@ -4024,12 +4029,13 @@
     "done": "完成",
     "back": "回来",
     "aiLabel": "让 AI 设置你的交易",
-    "aiPlaceholder": "试试“以 3 美分卖出我的 DHB 的一半”",
+    "aiPlaceholder": "试试“以 6 美分卖出我的 DHB 的一半”",
     "aiSend": "发送给 AI",
     "aiHint": "用通俗的语言说出你想要什么。AI 会填写所有内容，你只需按“确认”。",
     "aiBuyOnly": "Easy trade 卖出 DHB。要购买 DHB，请打开 Exchange。",
     "aiNeedAmount": "你想卖多少 DHB？",
-    "aiFailed": "AI 无法设置。试试换一种说法，或在下方填写。"
+    "aiFailed": "AI 无法设置。试试换一种说法，或在下方填写。",
+    "cancelled": "取消。没有卖出任何东西。"
   },
   "ppvTopUp": {
     "yourBalance": "你的余额",
@@ -4046,5 +4052,10 @@
     "moveFunds": "转钱进来",
     "moveFundsHint": "从另一条链兑换或存入",
     "notNow": "先不了"
+  },
+  "glossary": {
+    "fractionsDesc": "在 DeHub 上铸造嘞帖子会变成一个分成 1,000 份碎片嘞 NFT，创作者一开始持有全部 1,000 份 — 对内容 100% 嘞所有权。铸造是可选嘞，可以在发布时进行，也可以以后再铸。",
+    "tokenIdDesc": "帖子在区块链上铸造成 NFT 时获得嘞唯一链上标识符。铸造是可选嘞，所以还没铸造嘞帖子暂时没有 Token ID。",
+    "tokenIdInfoDesc": "帖子铸造成 NFT 之后获得嘞唯一链上标识符。已铸造嘞帖子会在帖子信息页顶部显示。"
   }
 }

@@ -3928,7 +3928,12 @@
     }
   },
   "fractions": {
-    "title": "Pjesë"
+    "seoDescription": "Bli dhe shit pjesë të postimeve në DeHub. Një postim i mintuar është 1000 pjesë on-chain — zotëro një copë të një videoje, kënge ose imazhi dhe tregtoje në DHB.",
+    "title": "Pjesë",
+    "startTheMarketHint": "Një postim i mintuar është 1000 pjesë — listo disa nga tuajat për të nisur tregun.",
+    "noneHeldHint": "Minto një postim për të mbajtur të 1000 pjesët e tij, ose bli pjesë në postimin e dikujt tjetër.",
+    "profileEmptyOwn": "Një postim i mintuar është 1000 pjesë. Minto një nga postimet e tua, ose bli pjesë në një postim ku beson.",
+    "profileEmptyOther": "Një postim i mintuar është 1000 pjesë. Ky profil nuk mban asnjë pjesë të asnjë postimi për momentin."
   },
   "stores": {
     "podToggle": "Artikull me shtypje sipas kërkesës",
@@ -4065,12 +4070,13 @@
     "done": "Përfundoi",
     "back": "Prapa",
     "aiLabel": "Kërkoji AI të organizojë tregtinë tënde",
-    "aiPlaceholder": "Provo \"të shesësh gjysmën e DHB-së time me 3 cent\"",
+    "aiPlaceholder": "Provo \"të shesësh gjysmën e DHB-së time me 6 cent\"",
     "aiSend": "Dërgoja UA-së",
     "aiHint": "Thuaj çfarë të duash me fjalë të thjeshta. AI plotëson gjithçka, thjesht shtyp Konfirmo.",
     "aiBuyOnly": "Tregtia e lehtë shet DHB. Për të blerë DHB, hapni Exchange.",
     "aiNeedAmount": "Sa DHB doni të shisni?",
-    "aiFailed": "IA nuk mund ta kurdiste këtë. Provo ta thuash në një mënyrë tjetër ose plotësoje më poshtë."
+    "aiFailed": "IA nuk mund ta kurdiste këtë. Provo ta thuash në një mënyrë tjetër ose plotësoje më poshtë.",
+    "cancelled": "Anuluar. Asgjë nuk u shit."
   },
   "ppvTopUp": {
     "yourBalance": "Bilanci yt",
@@ -4087,5 +4093,10 @@
     "moveFunds": "Sill fonde",
     "moveFundsHint": "Shkëmbe ose depozito nga një zinxhir tjetër",
     "notNow": "Jo tani"
+  },
+  "glossary": {
+    "fractionsDesc": "Një postim i mintuar në DeHub bëhet NFT i ndarë në 1.000 pjesë, dhe krijuesi fillon me të 1.000 — 100% pronësi mbi përmbajtjen. Mintimi është opsional dhe mund të bëhet kur publikon ose më vonë.",
+    "tokenIdDesc": "Një identifikues unik on-chain që merr një postim kur mintohet si NFT në blockchain. Mintimi është opsional, kështu që një postim që nuk është mintuar ende nuk ka Token ID.",
+    "tokenIdInfoDesc": "Identifikuesi unik on-chain që merr një postim sapo mintohet si NFT. Shfaqet në krye të faqes Informacione për postimin për postimet e mintuara."
   }
 }

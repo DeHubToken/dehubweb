@@ -3239,7 +3239,7 @@
     "createFailed": "Tsy nahaforona"
   },
   "fractions": {
-    "seoDescription": "Mividiana sy mivarotra ampahany amin'ny lahatsoratra DeHub. Ny fampakarana tsirairay dia 1000 on-chain fizarana - ¢ Â manana slice ny lahatsary, lalana, na ny sary sy ny varotra izany amin'ny DHB.",
+    "seoDescription": "Mividiana sy mivarotra ampahany amin'ny lahatsoratra DeHub. Ny lahatsoratra efa voa-mint dia ampahany on-chain 1000 — manàna ampahany amin'ny horonan-tsary, hira, na sary ary varotra amin'ny DHB izany.",
     "title": "Amboaram-peon-kira",
     "perUpload": "1000 isaky ny fampidirana",
     "tabBrowse": "Zahavo",
@@ -3261,7 +3261,7 @@
     "perFraction": "isaky ny ampahany",
     "noSearchMatch": "Tsy misy mifanaraka amin'io fikarohana io",
     "noneForSale": "Tsy mbola misy boky amidy amin'io fotoana io.",
-    "startTheMarketHint": "Ny fampakarana tsirairay dia 1000 fractions¢ary mitanisa ny sasany aminareo mba hanomboka ny tsena.",
+    "startTheMarketHint": "Ny lahatsoratra efa voa-mint dia ampahany 1000 — atolory eny an-tsena ny sasany amin'ireo anao mba hanombohana ny tsena.",
     "yours": "Anareo.\"",
     "perFractionShort": "/ ampahany",
     "newSellerTitle": "Ity mpivarotra ity dia mbola tsy nahavita ny ampahany amin'ny varotra mbola",
@@ -3293,7 +3293,7 @@
     "signInToSee": "Midira raha te hahita ny sombiny no mihazona",
     "yourFractions": "Ireo tapaka anao",
     "noneHeldYet": "Ary tsy mbola misy ny fibebahana azonao atao",
-    "noneHeldHint": "Ampidiro ny lahatsoratra ho solonanarana 1000, na mividy ho olon-kafa ny.",
+    "noneHeldHint": "Mint-eo ny lahatsoratra iray mba hananana ireo ampahany 1000 rehetra ao aminy, na mividiana ampahany amin'ny an'olon-kafa.",
     "listedForSale": "Varotra amidy",
     "listingCancelled": "Nofoanana ny lisitra",
     "cancelFailed": "Tsy najanona",
@@ -3305,8 +3305,8 @@
     "offersForYourFractions": "Fanolorana ho an'ny fizarana anao",
     "review": "Topy maso",
     "noFractionsYet": "Mbola tsy misy ny fizarazarana",
-    "profileEmptyOwn": "Ny isan'omby dia 1000. Mandefasa hafatra, na mividy zavatra ao amin'ny lahatsoratra izay inoanao.",
-    "profileEmptyOther": "Ny isan'omby dia 1000. Amin'izao fotoana izao dia tsy manana ny asan'nyo ny rehetra.",
+    "profileEmptyOwn": "Ny lahatsoratra efa voa-mint dia ampahany 1000. Mint-eo ny iray amin'ireo lahatsoratrao, na mividiana ampahany amin'ny lahatsoratra inoanao.",
+    "profileEmptyOther": "Ny lahatsoratra efa voa-mint dia ampahany 1000. Tsy manana ampahany amin'ny lahatsoratra na inona na inona ity mombamomba ity amin'izao fotoana izao.",
     "browseTheMarket": "Mijery ny tsena",
     "sellFractions": "Amidio ny fizarana",
     "balanceReadFailed": "Azonao atao tsara ny tsy mamaky ireo lahatsoratra eo ambanin'ny sarinao amin'izao fotoana izao. Akatony izany ary andramo indray ilay lisitra raha tsy misy azy ireo mety hivarotra fractions izay tsy anananao intsony.",
@@ -6090,12 +6090,13 @@
     "done": "DONE",
     "back": "_Mihemotra",
     "aiLabel": "Angataho ny AI hanangana ny varotrao",
-    "aiPlaceholder": "Miezaha \"mivarotra ny antsasaky ny DHB amin'ny 3 cents\"",
+    "aiPlaceholder": "Miezaha \"mivarotra ny antsasaky ny DHB amin'ny 6 cents\"",
     "aiSend": "Alefaso any amin'ny AI",
     "aiHint": "Teneno izay tianao amin'ny teny tsotra. Fenoy ny zavatra rehetra ao amin'ny AI, tsindrio fotsiny ny Confirm.",
     "aiBuyOnly": "Mora ny varotra mivarotra DHB. Mba hividianana ny DHB, OPEN Exchange.",
-    "aiNeedAmount": "Ohatrinona ny mety ataharanao amin'ny varotra?",
-    "aiFailed": "Tsy afaka mandamina azy ireo ihany koa izy. Miezaha hilaza izany amin'ny fomba hafa, na fenoy eto ambany."
+    "aiNeedAmount": "Firy ny DHB tianao hamidy?",
+    "aiFailed": "Tsy afaka mandamina azy ireo ihany koa izy. Miezaha hilaza izany amin'ny fomba hafa, na fenoy eto ambany.",
+    "cancelled": "Nofoanana. Tsy nisy nivarotra."
   },
   "ppvTopUp": {
     "yourBalance": "Ny balance-nao",
@@ -6112,5 +6113,10 @@
     "moveFunds": "Ampidiro ny vola",
     "moveFundsHint": "Swap na apetraho avy amin'ny chain hafa",
     "notNow": "Tsy izao"
+  },
+  "glossary": {
+    "fractionsDesc": "Ny lahatsoratra voa-mint ao amin'ny DeHub dia lasa NFT mizara ho ampahany 1,000, ary ny mpamorona no manomboka manana ireo 1,000 rehetra — fananana 100% ny votoaty. Tsy voatery ny fanaovana mint ary azo atao rehefa mamoaka ianao na any aoriana.",
+    "tokenIdDesc": "Famantarana on-chain tokana azon'ny lahatsoratra rehefa voa-mint ho NFT ao amin'ny blockchain. Tsy voatery ny fanaovana mint, ka ny lahatsoratra mbola tsy voa-mint dia mbola tsy manana Token ID.",
+    "tokenIdInfoDesc": "Ilay famantarana on-chain tokana azon'ny lahatsoratra rehefa voa-mint ho NFT. Aseho eo an-tampon'ny pejy Mombamomba ny Lahatsoratra ho an'ny lahatsoratra voa-mint."
   }
 }

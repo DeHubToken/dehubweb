@@ -3881,7 +3881,12 @@
     }
   },
   "fractions": {
-    "title": "Aateil"
+    "seoDescription": "Chauf und verchauf Fraktione vo DeHub-Biiträg. En prägte Biitrag isch 1000 On-Chain-Fraktione — bsitz es Stuck vomne Video, Track oder Bild und handle das in DHB.",
+    "title": "Aateil",
+    "startTheMarketHint": "En prägte Biitrag isch 1000 Fraktione — biet es paar vo dine aa, zum de Markt starte.",
+    "noneHeldHint": "Präg en Biitrag, dänn ghöred dir alli 1000 Fraktione dervo, oder chauf dich bi öpperem andersch ii.",
+    "profileEmptyOwn": "En prägte Biitrag isch 1000 Fraktione. Präg eine vo dine Biiträg, oder chauf dich bimne Biitrag ii, wo du dra glaubsch.",
+    "profileEmptyOther": "En prägte Biitrag isch 1000 Fraktione. Das Profil hät grad vo keim Biitrag Fraktione."
   },
   "stores": {
     "podToggle": "Print-on-Demand-Artikel",
@@ -4018,12 +4023,13 @@
     "done": "Fertig",
     "back": "Zrugg",
     "aiLabel": "Frag d'AI, din Trade ufzsetze",
-    "aiPlaceholder": "Probier \"verchauf die Helfti vo minere DHB für 3 Rappe\"",
+    "aiPlaceholder": "Probier \"verchauf die Helfti vo minere DHB für 6 Rappe\"",
     "aiSend": "Schick's an d'AI",
     "aiHint": "Sag, was du wotsch, mit einfache Wort. D'AI füllt alles us, du drucksch nume no \"Bestätige\".",
     "aiBuyOnly": "Eifachi Trades verchaufed DHB. Zum DHB choufe, öffne Exchange.",
     "aiNeedAmount": "Wie viel DHB wotsch verchoufe?",
-    "aiFailed": "D'AI hät's nöd chönne ufsetze. Probier's anders z'sage, oder füll's hie uus."
+    "aiFailed": "D'AI hät's nöd chönne ufsetze. Probier's anders z'sage, oder füll's hie uus.",
+    "cancelled": "Abgsagt. Nüt isch verchouft worde."
   },
   "ppvTopUp": {
     "yourBalance": "Dis Guethabe",
@@ -4040,5 +4046,10 @@
     "moveFunds": "Guethabe übertrage",
     "moveFundsHint": "Vo ere andere Chain tuusche oder iizahle",
     "notNow": "Jetz nöd"
+  },
+  "glossary": {
+    "fractionsDesc": "En Biitrag, wo uf DeHub prägt wird, wird zumne NFT, wo in 1'000 Fraktione ufteilt isch, und de Creator fangt mit allne 1'000 aa — 100 % Bsitz vom Inhalt. S Präge isch freiwillig und cha bim Veröffentliche oder spöter passiere.",
+    "tokenIdDesc": "En eidütige On-Chain-Kennig, wo en Biitrag überchunnt, wänn er als NFT uf de Blockchain prägt wird. S Präge isch freiwillig, drum hät en Biitrag, wo nonig prägt worde isch, no kei Token ID.",
+    "tokenIdInfoDesc": "D eidütig On-Chain-Kennig, wo en Biitrag überchunnt, sobald er als NFT prägt isch. Wird bi prägte Biiträg zoberscht uf de Siite Biitrags-Info aazeigt."
   }
 }

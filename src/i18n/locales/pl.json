@@ -3341,7 +3341,7 @@
   },
   "fractions": {
     "seoTitle": "Frakcje | DeHub",
-    "seoDescription": "Kupuj i sprzedawaj frakcje postów DeHub. Każde przesłanie to 1000 frakcji on-chain — posiadaj część wideo, utworu lub obrazu i handluj nim w DHB.",
+    "seoDescription": "Kupuj i sprzedawaj frakcje postów DeHub. Wybity post to 1000 frakcji on-chain — posiadaj część wideo, utworu lub obrazu i handluj nią w DHB.",
     "title": "Frakcje",
     "perUpload": "1000 na przesłanie",
     "tabBrowse": "Przeglądaj",
@@ -3377,7 +3377,7 @@
     "perFraction": "za ułamek",
     "noSearchMatch": "Nic nie pasuje do tego wyszukiwania",
     "noneForSale": "Żadne ułamki nie są teraz na sprzedaż",
-    "startTheMarketHint": "Każde przesłanie to 1000 ułamków — wylistuj kilka swoich, aby rozpocząć rynek.",
+    "startTheMarketHint": "Wybity post to 1000 frakcji — wystaw kilka swoich, aby uruchomić rynek.",
     "yours": "Twoje",
     "perFractionShort": "/ ułamek",
     "forShareOfPost": "za {{pct}}% postu",
@@ -3431,7 +3431,7 @@
     "acrossPosts_one": "w {{count}} poście",
     "acrossPosts_other": "w {{count}} postach",
     "noneHeldYet": "Nie posiadasz jeszcze żadnych ułamków",
-    "noneHeldHint": "Prześlij post, aby wyemitować 1000, lub kup udziały w poście kogoś innego.",
+    "noneHeldHint": "Wybij post, aby posiadać wszystkie jego 1000 frakcji, albo kup udział w cudzym.",
     "listedForSale": "Wystawione na sprzedaż",
     "priceEach": "{{price}} każdy",
     "listingCancelled": "Aukcja anulowana",
@@ -3444,8 +3444,8 @@
     "offersForYourFractions": "Oferty na Twoje ułamki",
     "review": "Przejrzyj",
     "noFractionsYet": "Brak ułamków",
-    "profileEmptyOwn": "Każdy przesłany plik jest emitowany jako 1000 ułamków. Opublikuj coś lub kup udziały w poście, w który wierzysz.",
-    "profileEmptyOther": "Każdy przesłany plik jest emitowany jako 1000 ułamków. Ten profil nie posiada żadnych ułamków żadnego postu w tej chwili.",
+    "profileEmptyOwn": "Wybity post to 1000 frakcji. Wybij jeden ze swoich postów albo kup udział w poście, w który wierzysz.",
+    "profileEmptyOther": "Wybity post to 1000 frakcji. Ten profil nie posiada obecnie frakcji żadnego postu.",
     "browseTheMarket": "Przeglądaj rynek",
     "sellFractions": "Sprzedaj ułamki",
     "balanceReadFailed": "Nie mogliśmy odczytać Twojego salda ułamków. Zamknij to i spróbuj ponownie — wystawienie bez niego grozi sprzedażą ułamków, których już nie posiadasz.",
@@ -6306,7 +6306,10 @@
           "min": 50000000
         }
       ]
-    }
+    },
+    "fractionsDesc": "Post wybity na DeHub staje się NFT podzielonym na 1000 frakcji, a twórca zaczyna ze wszystkimi 1000 — 100% własności treści. Wybicie jest opcjonalne i może nastąpić przy publikacji lub później.",
+    "tokenIdDesc": "Unikalny identyfikator on-chain, który post otrzymuje, gdy zostaje wybity jako NFT na blockchainie. Wybicie jest opcjonalne, więc post, który nie został wybity, nie ma jeszcze Token ID.",
+    "tokenIdInfoDesc": "Unikalny identyfikator on-chain, który post otrzymuje po wybiciu jako NFT. W przypadku wybitych postów jest wyświetlany u góry strony Informacje o poście."
   },
   "jungleMood": {
     "title": "Pora dnia",
@@ -6384,12 +6387,13 @@
     "done": "Gotowe",
     "back": "Wstecz",
     "aiLabel": "Poproś sztuczną inteligencję o skonfigurowanie transakcji",
-    "aiPlaceholder": "Spróbuj \"sprzedaj połowę mojego DHB za 3 centy\"",
+    "aiPlaceholder": "Spróbuj \"sprzedaj połowę mojego DHB za 6 centy\"",
     "aiSend": "Wyślij do sztucznej inteligencji",
     "aiHint": "Mów, co chcesz, prostymi słowami. AI wypełnia wszystko, wystarczy nacisnąć Potwierdź.",
     "aiBuyOnly": "Easy Trade sprzedaje DHB. Aby kupić DHB, otwórz Exchange.",
     "aiNeedAmount": "Ile DHB chcesz sprzedać?",
-    "aiFailed": "Sztuczna inteligencja nie mogła tego skonfigurować. Spróbuj powiedzieć to w inny sposób lub wypełnij poniższy formularz."
+    "aiFailed": "Sztuczna inteligencja nie mogła tego skonfigurować. Spróbuj powiedzieć to w inny sposób lub wypełnij poniższy formularz.",
+    "cancelled": "Anulowano. Nic nie zostało sprzedane."
   },
   "ppvTopUp": {
     "yourBalance": "Twoje saldo",

@@ -3341,7 +3341,7 @@
   },
   "fractions": {
     "seoTitle": "Fraksi | DeHub",
-    "seoDescription": "Beli dan jual fraksi dari kiriman DeHub. Setiap unggahan adalah 1000 fraksi on-chain — miliki sebagian video, lagu, atau gambar dan perdagangkan dengan DHB.",
+    "seoDescription": "Beli dan jual fraksi dari kiriman DeHub. Kiriman yang dicetak terdiri dari 1000 fraksi on-chain — miliki sebagian video, lagu, atau gambar dan perdagangkan dengan DHB.",
     "title": "Fraksi",
     "perUpload": "1000 per unggahan",
     "tabBrowse": "Jelajahi",
@@ -3377,7 +3377,7 @@
     "perFraction": "per fraksi",
     "noSearchMatch": "Tidak ada yang cocok dengan pencarian itu",
     "noneForSale": "Belum ada fraksi yang dijual saat ini",
-    "startTheMarketHint": "Setiap unggahan adalah 1000 fraksi — jual sebagian milik Anda untuk memulai pasarnya.",
+    "startTheMarketHint": "Kiriman yang dicetak terdiri dari 1000 fraksi — jual sebagian milik Anda untuk memulai pasarnya.",
     "yours": "Milik Anda",
     "perFractionShort": "/ fraksi",
     "forShareOfPost": "untuk {{pct}}% dari kiriman",
@@ -3431,7 +3431,7 @@
     "acrossPosts_one": "di {{count}} kiriman",
     "acrossPosts_other": "di {{count}} kiriman",
     "noneHeldYet": "Anda belum memiliki fraksi apa pun",
-    "noneHeldHint": "Unggah kiriman untuk dicetakkan 1000, atau beli sebagian milik orang lain.",
+    "noneHeldHint": "Cetak sebuah kiriman untuk memegang seluruh 1000 fraksinya, atau beli sebagian kiriman orang lain.",
     "listedForSale": "Dijual",
     "priceEach": "{{price}} per fraksi",
     "listingCancelled": "Listing dibatalkan",
@@ -3444,8 +3444,8 @@
     "offersForYourFractions": "Penawaran untuk fraksi Anda",
     "review": "Tinjau",
     "noFractionsYet": "Belum ada fraksi",
-    "profileEmptyOwn": "Setiap unggahan dicetak sebagai 1000 fraksi. Unggah sesuatu, atau beli sebagian kiriman yang Anda yakini.",
-    "profileEmptyOther": "Setiap unggahan dicetak sebagai 1000 fraksi. Profil ini belum memegang fraksi kiriman mana pun.",
+    "profileEmptyOwn": "Kiriman yang dicetak terdiri dari 1000 fraksi. Cetak salah satu kiriman Anda, atau beli sebagian kiriman yang Anda yakini.",
+    "profileEmptyOther": "Kiriman yang dicetak terdiri dari 1000 fraksi. Profil ini saat ini tidak memegang fraksi kiriman apa pun.",
     "browseTheMarket": "Jelajahi pasar",
     "sellFractions": "Jual fraksi",
     "balanceReadFailed": "Saldo fraksi Anda tidak dapat dibaca saat ini. Tutup dan coba lagi — memasang listing tanpa itu berisiko menjual fraksi yang tidak lagi Anda miliki.",
@@ -6364,12 +6364,13 @@
     "done": "Selesai",
     "back": "Kembali",
     "aiLabel": "Minta AI untuk menyiapkan perdagangan Anda",
-    "aiPlaceholder": "Coba \"jual setengah DHB saya seharga 3 sen\"",
+    "aiPlaceholder": "Coba \"jual setengah DHB saya seharga 6 sen\"",
     "aiSend": "Kirim ke AI",
     "aiHint": "Katakan apa yang Anda inginkan dengan kata-kata biasa. AI mengisi semuanya, Anda tinggal tekan Konfirmasi.",
     "aiBuyOnly": "Perdagangan mudah menjual DHB. Untuk membeli DHB, buka Bursa.",
     "aiNeedAmount": "Berapa banyak DHB yang ingin Anda jual?",
-    "aiFailed": "AI tidak dapat menyiapkan itu. Coba katakan dengan cara lain, atau isi di bawah ini."
+    "aiFailed": "AI tidak dapat menyiapkan itu. Coba katakan dengan cara lain, atau isi di bawah ini.",
+    "cancelled": "Dibatalkan. Tidak ada yang terjual."
   },
   "ppvTopUp": {
     "yourBalance": "Saldo Anda",
@@ -6386,5 +6387,10 @@
     "moveFunds": "Pindahkan dana",
     "moveFundsHint": "Tukar atau setor dari rantai lain",
     "notNow": "Nanti saja"
+  },
+  "glossary": {
+    "fractionsDesc": "Kiriman yang dicetak di DeHub menjadi NFT yang dibagi menjadi 1.000 fraksi, dan kreator memulai dengan seluruh 1.000 fraksi — kepemilikan 100% atas konten. Pencetakan bersifat opsional dan dapat dilakukan saat Anda memublikasikan atau nanti.",
+    "tokenIdDesc": "Pengenal on-chain unik yang didapat sebuah kiriman saat dicetak sebagai NFT di blockchain. Pencetakan bersifat opsional, jadi kiriman yang belum dicetak belum memiliki Token ID.",
+    "tokenIdInfoDesc": "Pengenal on-chain unik yang didapat sebuah kiriman setelah dicetak sebagai NFT. Ditampilkan di bagian atas halaman Info Kiriman untuk kiriman yang sudah dicetak."
   }
 }

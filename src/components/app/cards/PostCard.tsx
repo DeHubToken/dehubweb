@@ -10,7 +10,9 @@
  */
 
 import { useState, memo, useEffect, useCallback, useRef, lazy, Suspense, type ReactNode } from 'react';
-import ReactMarkdown from 'react-markdown';
+// Lazy: only article posts on their own page render markdown, so the parser
+// stays out of the feed's startup bundle.
+const ReactMarkdown = lazy(() => import('react-markdown'));
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
@@ -686,7 +688,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
           <TranslatableText text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
         ) : null}
         {post.articleBody && (/\/app\/post\/|\/newpost\//.test(window.location.pathname) ? (
-          <div className="prose prose-invert mt-5 max-w-none text-white/90 prose-headings:text-white prose-a:text-white"><ReactMarkdown>{post.articleBody}</ReactMarkdown></div>
+          <div className="prose prose-invert mt-5 max-w-none text-white/90 prose-headings:text-white prose-a:text-white"><Suspense fallback={<p className="whitespace-pre-wrap">{post.articleBody}</p>}><ReactMarkdown>{post.articleBody}</ReactMarkdown></Suspense></div>
         ) : (
           <button type="button" onClick={(e) => { e.stopPropagation(); window.location.assign(post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`); }} className="mt-3 text-sm font-semibold text-white underline underline-offset-4">Read article</button>
         ))}

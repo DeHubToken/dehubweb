@@ -3284,7 +3284,7 @@
   },
   "fractions": {
     "seoTitle": "Fraktiot | DeHub",
-    "seoDescription": "Osta ja myy DeHub-julkaisujen fraktioita. Jokainen lataus on 1000 ketjussa olevaa fraktiota — omista osa videosta, kappaleesta tai kuvasta ja käy kauppaa DHB:llä.",
+    "seoDescription": "Osta ja myy DeHub-julkaisujen fraktioita. Lyöty julkaisu on 1000 ketjussa olevaa fraktiota — omista osa videosta, kappaleesta tai kuvasta ja käy sillä kauppaa DHB:llä.",
     "title": "Fraktiot",
     "perUpload": "1000 per lataus",
     "tabBrowse": "Selaa",
@@ -3320,7 +3320,7 @@
     "perFraction": "per osuus",
     "noSearchMatch": "Mikään ei vastaa hakua",
     "noneForSale": "Yhtään osuutta ei ole nyt myynnissä",
-    "startTheMarketHint": "Jokainen lataus on 1000 osuutta — listaa joitakin omistasi markkinoiden aloittamiseksi.",
+    "startTheMarketHint": "Lyöty julkaisu on 1000 osuutta — listaa joitakin omistasi markkinoiden aloittamiseksi.",
     "yours": "Sinun",
     "perFractionShort": "/ osuus",
     "forShareOfPost": "{{pct}}% viestistä",
@@ -3374,7 +3374,7 @@
     "acrossPosts_one": "{{count}} posteissa",
     "acrossPosts_other": "{{count}} postissa",
     "noneHeldYet": "Sinulla ei ole vielä yhtään osuutta",
-    "noneHeldHint": "Lataa postaus, joka muutetaan 1000 osuudeksi, tai osta osuus jonkun toisen postauksesta.",
+    "noneHeldHint": "Lyö julkaisu omistaaksesi kaikki sen 1000 osuutta, tai osta osuus jonkun toisen julkaisusta.",
     "listedForSale": "Myynnissä",
     "priceEach": "{{price}} kappale",
     "listingCancelled": "Listaus peruutettu",
@@ -3387,8 +3387,8 @@
     "offersForYourFractions": "Osuuksillesi tehdyt tarjoukset",
     "review": "Tarkista",
     "noFractionsYet": "Ei vielä osuuksia",
-    "profileEmptyOwn": "Jokainen lataus muutetaan 1000 osuudeksi. Jaa jotain, tai osta osuus postauksesta, johon uskot.",
-    "profileEmptyOther": "Jokainen lataus muutetaan 1000 osuudeksi. Tämä profiili ei omista yhtään osuutta mistään postauksesta juuri nyt.",
+    "profileEmptyOwn": "Lyöty julkaisu on 1000 osuutta. Lyö yksi julkaisuistasi tai osta osuus julkaisusta, johon uskot.",
+    "profileEmptyOther": "Lyöty julkaisu on 1000 osuutta. Tällä profiililla ei ole tällä hetkellä osuuksia yhdestäkään julkaisusta.",
     "browseTheMarket": "Selaa markkinapaikkaa",
     "sellFractions": "Myy osuuksia",
     "balanceReadFailed": "Osuuksien saldoa ei voitu lukea juuri nyt. Sulje tämä ja yritä uudelleen — listaaminen ilman sitä vaarantaa osuuksien myynnin, joita et enää omista.",
@@ -6245,12 +6245,13 @@
     "done": "Valmis",
     "back": "Takaisin",
     "aiLabel": "Pyydä tekoälyä määrittämään kauppasi",
-    "aiPlaceholder": "Kokeile \"myy puolet DHB: stäni 3 sentillä\"",
+    "aiPlaceholder": "Kokeile \"myy puolet DHB: stäni 6 sentillä\"",
     "aiSend": "Lähetä tekoälylle",
     "aiHint": "Sano mitä haluat selkokielellä. Tekoäly täyttää kaiken, paina vain Vahvista.",
     "aiBuyOnly": "Helppo kauppa myy DHB: tä. Jos haluat ostaa DHB: n, avaa Exchange.",
     "aiNeedAmount": "Kuinka paljon DHB: tä haluat myydä?",
-    "aiFailed": "Tekoäly ei voinut määrittää sitä. Yritä sanoa se toisella tavalla tai täytä se alla."
+    "aiFailed": "Tekoäly ei voinut määrittää sitä. Yritä sanoa se toisella tavalla tai täytä se alla.",
+    "cancelled": "Peruttu. Mitään ei myyty."
   },
   "ppvTopUp": {
     "yourBalance": "Saldosi",
@@ -6267,5 +6268,10 @@
     "moveFunds": "Siirrä varoja",
     "moveFundsHint": "Vaihda tai talleta toisesta ketjusta",
     "notNow": "Ei nyt"
+  },
+  "glossary": {
+    "fractionsDesc": "DeHubissa lyöty julkaisu muuttuu NFT:ksi, joka on jaettu 1 000 fraktioon, ja tekijä aloittaa kaikilla 1 000:lla — 100 % omistus sisältöön. Lyöminen on valinnaista, ja sen voi tehdä julkaisun yhteydessä tai myöhemmin.",
+    "tokenIdDesc": "Yksilöllinen ketjussa oleva tunniste, jonka julkaisu saa, kun se lyödään NFT:ksi lohkoketjuun. Lyöminen on valinnaista, joten julkaisulla, jota ei ole lyöty, ei vielä ole Token ID:tä.",
+    "tokenIdInfoDesc": "Yksilöllinen ketjussa oleva tunniste, jonka julkaisu saa, kun se on lyöty NFT:ksi. Näytetään lyötyjen julkaisujen Julkaisun tiedot -sivun yläosassa."
   }
 }

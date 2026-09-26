@@ -3379,7 +3379,12 @@
     }
   },
   "fractions": {
-    "title": "Fraction dem"
+    "seoDescription": "Buy and sell fraction dem for DeHub post dem. Post weh dem don mint na 1000 on-chain fraction — get your own piece for video, track or picture and trade am for DHB.",
+    "title": "Fraction dem",
+    "startTheMarketHint": "Post weh dem don mint na 1000 fraction — put some of your own for market make the market start.",
+    "noneHeldHint": "Mint one post make you hold all im 1000 fraction dem, or buy inside another person own.",
+    "profileEmptyOwn": "Post weh dem don mint na 1000 fraction. Mint one of your post dem, or buy inside post weh you believe for.",
+    "profileEmptyOther": "Post weh dem don mint na 1000 fraction. This profile no hold any fraction for any post now so."
   },
   "stores": {
     "podToggle": "Print-on-demand item",
@@ -3516,12 +3521,13 @@
     "done": "Done",
     "back": "Back",
     "aiLabel": "Ask AI make e set your trade",
-    "aiPlaceholder": "Try \"sell half my DHB for 3 cents\"",
+    "aiPlaceholder": "Try \"sell half my DHB for 6 cents\"",
     "aiSend": "Send to AI",
     "aiHint": "Talk weti you want for simple word. AI go fill all thing, you go just press Confirm.",
     "aiBuyOnly": "Easy trade na for sell DHB. For buy DHB, open Exchange.",
     "aiNeedAmount": "How much DHB you want sell?",
-    "aiFailed": "AI no fit set am. Try talk am another way, or fill am for down."
+    "aiFailed": "AI no fit set am. Try talk am another way, or fill am for down.",
+    "cancelled": "You don cancel am. Nothing sell."
   },
   "ppvTopUp": {
     "yourBalance": "Your balance",
@@ -3538,5 +3544,10 @@
     "moveFunds": "Bring money enter",
     "moveFundsHint": "Swap or deposit from another chain",
     "notNow": "No be now"
+  },
+  "glossary": {
+    "fractionsDesc": "Post weh dem mint for DeHub go turn NFT weh dem divide for 1,000 fraction, and the creator go start with all 1,000 — 100% ownership for the content. Minting na your choice, and e fit happen when you di publish or later.",
+    "tokenIdDesc": "One special on-chain ID weh post di get when dem mint am as NFT for blockchain. Minting na your choice, so post weh dem never mint no get Token ID yet.",
+    "tokenIdInfoDesc": "The special on-chain ID weh post di get once dem don mint am as NFT. E di show for top of Post Info page for post dem weh dem don mint."
   }
 }

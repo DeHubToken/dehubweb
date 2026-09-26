@@ -3953,7 +3953,12 @@
     "relatedPosts": "Bogʻliq postlar"
   },
   "fractions": {
-    "title": "Ulushlar"
+    "seoDescription": "DeHub postlarining fraksiyalarini sotib oling va soting. Mint qilingan post 1000 ta on-chain fraksiyadan iborat — video, trek yoki rasmning bir qismiga egalik qiling va uni DHB'da savdo qiling.",
+    "title": "Ulushlar",
+    "startTheMarketHint": "Mint qilingan post 1000 ta fraksiyadan iborat — bozorni boshlash uchun o'zingiznikidan bir nechtasini sotuvga qo'ying.",
+    "noneHeldHint": "Postning barcha 1000 ta fraksiyasiga egalik qilish uchun uni mint qiling yoki boshqa birovning postidan ulush sotib oling.",
+    "profileEmptyOwn": "Mint qilingan post 1000 ta fraksiyadan iborat. Postlaringizdan birini mint qiling yoki o'zingiz ishongan postdan ulush sotib oling.",
+    "profileEmptyOther": "Mint qilingan post 1000 ta fraksiyadan iborat. Bu profil hozirda hech bir postning fraksiyalariga ega emas."
   },
   "stores": {
     "podToggle": "Buyurtma asosida chop etiladigan mahsulot",
@@ -4086,19 +4091,20 @@
     "working": "Ishlamoqda…",
     "doneTitle": "Hammasi bajarildi",
     "doneInstant": "Sotilgan {{amount}} DHB",
-    "doneInstantHint": "Taxminan {{usdc}} USDC sizning hamyoningizga yo&#39;l olmoqda.",
-    "doneList": "DHB da {{amount}} ro&#39;yxatiga kiritilgan, ${{price}}",
+    "doneInstantHint": "Taxminan {{usdc}} USDC sizning hamyoningizga yo'l olmoqda.",
+    "doneList": "DHB da {{amount}} ro'yxatiga kiritilgan, ${{price}}",
     "doneListHint": "Bozor sizning narxingizga yetganda, u avtomatik ravishda sotiladi. Uni birjada boshqaring.",
     "openExchange": "Ochiq birja",
     "done": "Bajarildi",
     "back": "Orqaga",
     "aiLabel": "AI dan savdo-sotiqni tashkil etishni so'rang",
-    "aiPlaceholder": "\"DHB ning yarmini 3 sentdan sotish\" deb urinib ko'ring",
+    "aiPlaceholder": "\"DHB ning yarmini 6 sentdan sotish\" deb urinib ko'ring",
     "aiSend": "AI ga yuboring",
-    "aiHint": "Xohlagan narsangizni oddiy so&#39;zlar bilan ayting. Sun&#39;iy intellekt hamma narsani to&#39;ldiradi, shunchaki Tasdiqlash tugmasini bosasiz.",
+    "aiHint": "Xohlagan narsangizni oddiy so'zlar bilan ayting. Sun'iy intellekt hamma narsani to'ldiradi, shunchaki Tasdiqlash tugmasini bosasiz.",
     "aiBuyOnly": "Easy trade DHB sotadi. DHB sotib olish uchun Exchange oching.",
     "aiNeedAmount": "Qancha DHB sotmoqchisiz?",
-    "aiFailed": "Sun&#39;iy intellekt buni sozlay olmadi. Boshqacha ayting yoki quyida to&#39;ldiring."
+    "aiFailed": "Sun'iy intellekt buni sozlay olmadi. Boshqacha ayting yoki quyida to'ldiring.",
+    "cancelled": "Bekor qilindi. Hech narsa sotilmadi."
   },
   "ppvTopUp": {
     "yourBalance": "Balansingiz",
@@ -4115,5 +4121,10 @@
     "moveFunds": "Mablag' o'tkazish",
     "moveFundsHint": "Boshqa zanjirdan almashtirish yoki kiritish",
     "notNow": "Hozir emas"
+  },
+  "glossary": {
+    "fractionsDesc": "DeHub'da mint qilingan post 1,000 ta fraksiyaga bo'lingan NFT'ga aylanadi va ijodkor barcha 1,000 tasi bilan boshlaydi — kontentga 100% egalik. Mint qilish ixtiyoriy bo'lib, uni nashr qilishda yoki keyinroq amalga oshirish mumkin.",
+    "tokenIdDesc": "Post blokcheynda NFT sifatida mint qilinganda oladigan noyob on-chain identifikator. Mint qilish ixtiyoriy, shuning uchun hali mint qilinmagan postda Token ID yo'q.",
+    "tokenIdInfoDesc": "Post NFT sifatida mint qilingandan keyin oladigan noyob on-chain identifikator. Mint qilingan postlar uchun Post ma'lumotlari sahifasining yuqori qismida ko'rsatiladi."
   }
 }

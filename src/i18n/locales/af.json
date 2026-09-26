@@ -3201,7 +3201,7 @@
   },
   "fractions": {
     "seoTitle": "Fraksies | DeHub",
-    "seoDescription": "Koop en verkoop fraksies van DeHub-plasings. Elke oplaai is 1000 on-chain fraksies — eie 'n sny van 'n video, spoor of beeld en verhandel dit in DHB.",
+    "seoDescription": "Koop en verkoop fraksies van DeHub-plasings. 'n Gemunte plasing is 1000 on-chain fraksies — besit 'n sny van 'n video, snit of beeld en verhandel dit in DHB.",
     "title": "Fraksies",
     "perUpload": "1000 per oplaai",
     "tabBrowse": "Blaai",
@@ -3237,7 +3237,7 @@
     "perFraction": "per fraksie",
     "noSearchMatch": "Niks pas by daardie soektog nie",
     "noneForSale": "Geen fraksies is tans te koop nie",
-    "startTheMarketHint": "Elke oplaai is 1000 fraksies — noem sommige van joue om die mark te begin.",
+    "startTheMarketHint": "'n Gemunte plasing is 1000 fraksies — lys sommige van joune om die mark te begin.",
     "yours": "Joue",
     "perFractionShort": "/ fraksie",
     "forShareOfPost": "vir {{pct}}% van die plasing",
@@ -3291,7 +3291,7 @@
     "acrossPosts_one": "oor {{count}} pos",
     "acrossPosts_other": "oor {{count}} poste",
     "noneHeldYet": "Jy hou nog geen breuke nie",
-    "noneHeldHint": "Laai 'n pos op om 1000 te munt, of koop in iemand anders s'n.",
+    "noneHeldHint": "Munt 'n plasing om al 1000 van sy fraksies te hou, of koop in by iemand anders s'n.",
     "listedForSale": "Te koop gelys",
     "priceEach": "{{price}} elk",
     "listingCancelled": "Lysing gekanselleer",
@@ -3304,8 +3304,8 @@
     "offersForYourFractions": "Aanbiedinge vir jou breuke",
     "review": "Hersien",
     "noFractionsYet": "Nog geen breuke nie",
-    "profileEmptyOwn": "Elke oplaai word as 1000 breuke gemunt. Pos iets, of koop in 'n pos wat jy glo in.",
-    "profileEmptyOther": "Elke oplaai word as 1000 breuke gemunt. Hierdie profiel hou tans geen van enige pos nie.",
+    "profileEmptyOwn": "'n Gemunte plasing is 1000 fraksies. Munt een van jou plasings, of koop in by 'n plasing waarin jy glo.",
+    "profileEmptyOther": "'n Gemunte plasing is 1000 fraksies. Hierdie profiel hou tans geen fraksies van enige plasing nie.",
     "browseTheMarket": "Blaai deur die mark",
     "sellFractions": "Verkoop breuke",
     "balanceReadFailed": "Kon nie jou breukbalans nou lees nie. Sluit dit en probeer weer — lysing sonder dit risiko's dat jy breuke verkoop wat jy nie meer hou nie.",
@@ -6144,7 +6144,10 @@
       "greatWhiteShark": "Grootwithaai",
       "blueWhale": "Blouwalvis",
       "megalodon": "Megalodon"
-    }
+    },
+    "fractionsDesc": "'n Plasing wat op DeHub gemunt word, word 'n NFT wat in 1,000 fraksies verdeel is, en die skepper begin met al 1,000 — 100% eienaarskap van die inhoud. Munt is opsioneel en kan gebeur wanneer jy publiseer of later.",
+    "tokenIdDesc": "'n Unieke on-chain identifiseerder wat 'n plasing kry wanneer dit as 'n NFT op die blokketting gemunt word. Munt is opsioneel, so 'n plasing wat nog nie gemunt is nie, het nog geen Token-ID nie.",
+    "tokenIdInfoDesc": "Die unieke on-chain identifiseerder wat 'n plasing kry sodra dit as 'n NFT gemunt is. Word bo-aan die Plasinginligting-bladsy vir gemunte plasings gewys."
   },
   "roadmap": {
     "title": "Padkaart",
@@ -6241,12 +6244,13 @@
     "done": "Klaar",
     "back": "Terug",
     "aiLabel": "Vra AI om jou handel op te stel",
-    "aiPlaceholder": "Probeer \"verkoop die helfte van my DHB teen 3 sent\"",
+    "aiPlaceholder": "Probeer \"verkoop die helfte van my DHB teen 6 sent\"",
     "aiSend": "Stuur na AI",
     "aiHint": "Sê wat jy wil in eenvoudige woorde. AI vul alles in, jy druk net Bevestig.",
     "aiBuyOnly": "Maklik handel verkoop DHB. Om DHB te koop, oop ruil.",
-    "aiNeedAmount": "Hoeveel DStv wil jy verkoop?",
-    "aiFailed": "Ai kon dit nie regkry nie. Probeer dit op 'n ander manier sê, of vul dit hieronder in."
+    "aiNeedAmount": "Hoeveel DHB wil jy verkoop?",
+    "aiFailed": "Ai kon dit nie regkry nie. Probeer dit op 'n ander manier sê, of vul dit hieronder in.",
+    "cancelled": "Gekanselleer. Niks is verkoop nie."
   },
   "ppvTopUp": {
     "yourBalance": "Jou balans",

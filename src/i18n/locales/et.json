@@ -3286,7 +3286,7 @@
   },
   "fractions": {
     "seoTitle": "Fraktsioonid | DeHub",
-    "seoDescription": "Ostke ja müüge DeHub postituste fraktsioone. Iga üleslaadimine on 1000 ketjusse fraktsiooni — omage video, loo või pildi osa ja tehke sellega kauplemist DHB-s.",
+    "seoDescription": "Ostke ja müüge DeHubi postituste fraktsioone. Vermitud postitus on 1000 plokiahelas olevat fraktsiooni — omage osa videost, loost või pildist ja kaubelge sellega DHB-s.",
     "title": "Fraktsioonid",
     "perUpload": "1000 üleslaadimise kohta",
     "tabBrowse": "Sirvi",
@@ -3322,7 +3322,7 @@
     "perFraction": "osa kohta",
     "noSearchMatch": "Midagi ei vasta otsingule",
     "noneForSale": "Hetkel pole ühtegi osa müügil",
-    "startTheMarketHint": "Iga üleslaadimine on 1000 osa — alusta turgu, loetledes oma omasi.",
+    "startTheMarketHint": "Vermitud postitus on 1000 osa — pane mõned oma osad müüki, et turg käivitada.",
     "yours": "Sinu omad",
     "perFractionShort": "/ osa",
     "forShareOfPost": "{{pct}}% postitusest",
@@ -3376,7 +3376,7 @@
     "acrossPosts_one": "üle {{count}} postituse",
     "acrossPosts_other": "üle {{count}} postituse",
     "noneHeldYet": "Sul pole veel ühtegi murdu",
-    "noneHeldHint": "Laadi üles postitus, et saada 1000 murdu, või osta kellegi teise omast.",
+    "noneHeldHint": "Vermi postitus, et omada kõiki selle 1000 osa, või osta osa kellegi teise postitusest.",
     "listedForSale": "Müügiks loetletud",
     "priceEach": "{{price}} igaüks",
     "listingCancelled": "Loetelu tühistatud",
@@ -3389,8 +3389,8 @@
     "offersForYourFractions": "Pakkumised sinu murdude kohta",
     "review": "Vaata üle",
     "noFractionsYet": "Veel murdusid pole",
-    "profileEmptyOwn": "Iga üleslaadimine luuakse 1000 murduna. Postita midagi või osta postitust, millesse sa usud.",
-    "profileEmptyOther": "Iga üleslaadimine luuakse 1000 murduna. See profiil ei oma praegu ühtegi postituse murdu.",
+    "profileEmptyOwn": "Vermitud postitus on 1000 osa. Vermi üks oma postitustest või osta osa postitusest, millesse sa usud.",
+    "profileEmptyOther": "Vermitud postitus on 1000 osa. Sellel profiilil pole praegu ühegi postituse osi.",
     "browseTheMarket": "Sirvi turgu",
     "sellFractions": "Müü murdosi",
     "balanceReadFailed": "Ei saanud just nüüd sinu murdude jääki lugeda. Sulge see ja proovi uuesti — loetelu ilma selleta riskib müüa murdusi, mida sa enam ei oma.",
@@ -6247,12 +6247,13 @@
     "done": "Valmis",
     "back": "Tagasi",
     "aiLabel": "Palu tehisintellektil oma äri seadistada",
-    "aiPlaceholder": "Proovi \"müü pool oma DHB-d 3 sendiga\"",
+    "aiPlaceholder": "Proovi \"müü pool oma DHB-d 6 sendiga\"",
     "aiSend": "Saada tehisintellekti",
     "aiHint": "Öelge, mida tahate, lihtsate sõnadega. Tehisintellekt täidab kõik, vajuta lihtsalt nuppu Kinnita.",
     "aiBuyOnly": "Easy Trade müüb DHB-d. DHB ostmiseks avage Exchange.",
     "aiNeedAmount": "Kui palju DHB-d soovite müüa?",
-    "aiFailed": "AI ei saanud seda seadistada. Proovi seda teisiti öelda või täida see allpool."
+    "aiFailed": "AI ei saanud seda seadistada. Proovi seda teisiti öelda või täida see allpool.",
+    "cancelled": "Tühistatud. Midagi ei müüdud."
   },
   "ppvTopUp": {
     "yourBalance": "Sinu saldo",
@@ -6269,5 +6270,10 @@
     "moveFunds": "Too raha sisse",
     "moveFundsHint": "Vaheta või hoiusta teisest ahelast",
     "notNow": "Mitte praegu"
+  },
+  "glossary": {
+    "fractionsDesc": "DeHubis vermitud postitusest saab NFT, mis on jagatud 1000 fraktsiooniks, ja looja alustab kõigi 1000-ga — 100% sisu omandiõigusest. Vermimine on valikuline ja võib toimuda avaldamisel või hiljem.",
+    "tokenIdDesc": "Unikaalne plokiahela identifikaator, mille postitus saab, kui see vermitakse plokiahelas NFT-na. Vermimine on valikuline, seega vermimata postitusel pole veel Token ID-d.",
+    "tokenIdInfoDesc": "Unikaalne plokiahela identifikaator, mille postitus saab, kui see on NFT-na vermitud. Kuvatakse vermitud postituste puhul postituse teabe lehe ülaosas."
   }
 }

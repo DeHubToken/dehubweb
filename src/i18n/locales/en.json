@@ -3340,7 +3340,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "Buy and sell fractions of DeHub posts. Every upload is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB.",
+    "seoDescription": "Buy and sell fractions of DeHub posts. A minted post is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB.",
     "title": "Fractions",
     "perUpload": "1000 per upload",
     "tabBrowse": "Browse",
@@ -3376,7 +3376,7 @@
     "perFraction": "per fraction",
     "noSearchMatch": "Nothing matches that search",
     "noneForSale": "No fractions are for sale right now",
-    "startTheMarketHint": "Every upload is 1000 fractions — list some of yours to start the market.",
+    "startTheMarketHint": "A minted post is 1000 fractions — list some of yours to start the market.",
     "yours": "Yours",
     "perFractionShort": "/ fraction",
     "forShareOfPost": "for {{pct}}% of the post",
@@ -3430,7 +3430,7 @@
     "acrossPosts_one": "across {{count}} post",
     "acrossPosts_other": "across {{count}} posts",
     "noneHeldYet": "You don't hold any fractions yet",
-    "noneHeldHint": "Upload a post to be minted 1000, or buy into someone else's.",
+    "noneHeldHint": "Mint a post to hold all 1000 of its fractions, or buy into someone else's.",
     "listedForSale": "Listed for sale",
     "priceEach": "{{price}} each",
     "listingCancelled": "Listing cancelled",
@@ -3443,8 +3443,8 @@
     "offersForYourFractions": "Offers for your fractions",
     "review": "Review",
     "noFractionsYet": "No fractions yet",
-    "profileEmptyOwn": "Every upload is minted as 1000 fractions. Post something, or buy into a post you believe in.",
-    "profileEmptyOther": "Every upload is minted as 1000 fractions. This profile holds none of any post right now.",
+    "profileEmptyOwn": "A minted post is 1000 fractions. Mint one of your posts, or buy into a post you believe in.",
+    "profileEmptyOther": "A minted post is 1000 fractions. This profile holds none of any post right now.",
     "browseTheMarket": "Browse the market",
     "sellFractions": "Sell fractions",
     "balanceReadFailed": "Couldn't read your fraction balance just now. Close this and try again — listing without it risks selling fractions you no longer hold.",
@@ -6363,12 +6363,13 @@
     "done": "Done",
     "back": "Back",
     "aiLabel": "Ask AI to set up your trade",
-    "aiPlaceholder": "Try \"sell half my DHB at 3 cents\"",
+    "aiPlaceholder": "Try \"sell half my DHB at 6 cents\"",
     "aiSend": "Send to AI",
     "aiHint": "Say what you want in plain words. AI fills everything in, you just press Confirm.",
     "aiBuyOnly": "Easy trade sells DHB. To buy DHB, open Exchange.",
     "aiNeedAmount": "How much DHB do you want to sell?",
-    "aiFailed": "AI could not set that up. Try saying it another way, or fill it in below."
+    "aiFailed": "AI could not set that up. Try saying it another way, or fill it in below.",
+    "cancelled": "Cancelled. Nothing was sold."
   },
   "ppvTopUp": {
     "yourBalance": "Your balance",
@@ -6385,5 +6386,10 @@
     "moveFunds": "Move funds in",
     "moveFundsHint": "Swap or deposit from another chain",
     "notNow": "Not now"
+  },
+  "glossary": {
+    "fractionsDesc": "A post minted on DeHub becomes an NFT split into 1,000 fractions, and the creator starts with all 1,000 — 100% ownership of the content. Minting is optional and can happen when you publish or later.",
+    "tokenIdDesc": "A unique on-chain identifier a post gets when it's minted as an NFT on the blockchain. Minting is optional, so a post that hasn't been minted has no Token ID yet.",
+    "tokenIdInfoDesc": "The unique on-chain identifier a post gets once it is minted as an NFT. Shown at the top of the Post Info page for minted posts."
   }
 }

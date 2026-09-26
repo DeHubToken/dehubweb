@@ -4103,7 +4103,12 @@
     "underReview": "V recenzii"
   },
   "fractions": {
-    "title": "Podiely"
+    "seoDescription": "Kupujte a predávajte podiely príspevkov DeHub. Vyrazený príspevok tvorí 1000 on-chain podielov — vlastnite časť videa, skladby alebo obrázka a obchodujte s ňou v DHB.",
+    "title": "Podiely",
+    "startTheMarketHint": "Vyrazený príspevok tvorí 1000 podielov — ponúknite niektoré zo svojich a spustite trh.",
+    "noneHeldHint": "Vyrazte príspevok a držte všetkých jeho 1000 podielov, alebo si kúpte podiel v príspevku niekoho iného.",
+    "profileEmptyOwn": "Vyrazený príspevok tvorí 1000 podielov. Vyrazte jeden zo svojich príspevkov alebo si kúpte podiel v príspevku, ktorému veríte.",
+    "profileEmptyOther": "Vyrazený príspevok tvorí 1000 podielov. Tento profil momentálne nedrží podiely žiadneho príspevku."
   },
   "stores": {
     "podToggle": "Položka tlače na požiadanie",
@@ -4240,12 +4245,13 @@
     "done": "Hotovo",
     "back": "Späť",
     "aiLabel": "Požiadajte umelú inteligenciu, aby nastavila váš obchod",
-    "aiPlaceholder": "Skúste „predať polovicu môjho DHB za 3 centy“",
+    "aiPlaceholder": "Skúste „predať polovicu môjho DHB za 6 centy“",
     "aiSend": "Odoslať do umelej inteligencie",
     "aiHint": "Jednoducho povedzte, čo chcete. AI vyplní všetko, stačí stlačiť tlačidlo Potvrdiť.",
     "aiBuyOnly": "Easy trade predáva DHB. Ak chcete kúpiť DHB, otvorte Exchange.",
     "aiNeedAmount": "Koľko DHB chcete predať?",
-    "aiFailed": "AI to nemohla nastaviť. Skúste to povedať inak alebo vyplňte nižšie."
+    "aiFailed": "AI to nemohla nastaviť. Skúste to povedať inak alebo vyplňte nižšie.",
+    "cancelled": "Zrušené. Nič nebolo predané."
   },
   "ppvTopUp": {
     "yourBalance": "Váš zostatok",
@@ -4262,5 +4268,10 @@
     "moveFunds": "Presunúť prostriedky",
     "moveFundsHint": "Swap alebo vklad z iného reťazca",
     "notNow": "Teraz nie"
+  },
+  "glossary": {
+    "fractionsDesc": "Príspevok vyrazený na DeHub sa stane NFT rozdeleným na 1 000 podielov a tvorca začína so všetkými 1 000 — 100 % vlastníctvo obsahu. Razenie je voliteľné a môže prebehnúť pri zverejnení alebo neskôr.",
+    "tokenIdDesc": "Jedinečný on-chain identifikátor, ktorý príspevok získa, keď je vyrazený ako NFT na blockchaine. Razenie je voliteľné, takže príspevok, ktorý ešte nebol vyrazený, zatiaľ nemá Token ID.",
+    "tokenIdInfoDesc": "Jedinečný on-chain identifikátor, ktorý príspevok získa, keď je vyrazený ako NFT. Pri vyrazených príspevkoch sa zobrazuje v hornej časti stránky Informácie o príspevku."
   }
 }

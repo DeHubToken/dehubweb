@@ -3223,7 +3223,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "Bumili at magbenta ng mga fraction ng DeHub posts. Bawat upload ay 1000 on-chain fractions — magkaroon ng bahagi ng isang video, track, o larawan at i-trade ito sa DHB.",
+    "seoDescription": "Bumili at magbenta ng mga fraction ng DeHub posts. Ang isang na-mint na post ay 1000 on-chain fractions — magkaroon ng bahagi ng isang video, track, o larawan at i-trade ito sa DHB.",
     "title": "Mga bahagi",
     "perUpload": "1000 bawat upload",
     "tabBrowse": "Tuklasin",
@@ -3259,7 +3259,7 @@
     "perFraction": "bawat fraction",
     "noSearchMatch": "Walang tumutugma sa search na iyon",
     "noneForSale": "Walang fractions na binebenta ngayon",
-    "startTheMarketHint": "Bawat upload ay 1000 fractions — ilista ang ilan sa iyo upang magsimula ang market.",
+    "startTheMarketHint": "Ang isang na-mint na post ay 1000 fractions — ilista ang ilan sa iyo para simulan ang market.",
     "yours": "Sa iyo",
     "perFractionShort": "/ fraction",
     "forShareOfPost": "para sa {{pct}}% ng post",
@@ -3313,7 +3313,7 @@
     "acrossPosts_one": "sa buong {{count}} post",
     "acrossPosts_other": "sa buong {{count}} posts",
     "noneHeldYet": "Wala ka pang hawak na mga fraction",
-    "noneHeldHint": "Mag-upload ng post upang ma-mint ang 1000, o bumili sa post ng iba.",
+    "noneHeldHint": "Mag-mint ng post para hawakan ang lahat ng 1000 fractions nito, o bumili ng bahagi sa post ng iba.",
     "listedForSale": "Inilista para sa benta",
     "priceEach": "{{price}} bawat isa",
     "listingCancelled": "Kinansela ang listing",
@@ -3326,8 +3326,8 @@
     "offersForYourFractions": "Mga alok para sa iyong mga fraction",
     "review": "Suriin",
     "noFractionsYet": "Walang fraction pa",
-    "profileEmptyOwn": "Bawat upload ay nami-mint bilang 1000 fractions. Magpost ng isang bagay, o bumili sa isang post na naniniwala ka.",
-    "profileEmptyOther": "Bawat upload ay nami-mint bilang 1000 fractions. Ang profile na ito ay walang hawak na anuman mula sa anumang post ngayon.",
+    "profileEmptyOwn": "Ang isang na-mint na post ay 1000 fractions. I-mint ang isa sa mga post mo, o bumili ng bahagi sa post na pinaniniwalaan mo.",
+    "profileEmptyOther": "Ang isang na-mint na post ay 1000 fractions. Walang hawak na fractions ng anumang post ang profile na ito ngayon.",
     "browseTheMarket": "Tuklasin ang merkado",
     "sellFractions": "Ibenta ang mga fraction",
     "balanceReadFailed": "Hindi mabasa ang iyong fraction balance ngayon. Isara ito at subukan muli — ang pag-list nang wala ito ay may panganib na ibenta ang mga fraction na hindi mo na hawak.",
@@ -6146,7 +6146,10 @@
     "Badges": {
       "title": "Badges",
       "description": "Ang mga badge ay mga digital na gantimpala na iginagawad sa mga user para sa pagkamit ng mga partikular na milestone o paglahok sa isang komunidad. Ang mga ito ay kumakatawan sa mga tagumpay at maaaring ipakita sa mga profile upang ipakita ang mga nagawa."
-    }
+    },
+    "fractionsDesc": "Ang post na na-mint sa DeHub ay nagiging NFT na hinati sa 1,000 fractions, at hawak ng creator ang lahat ng 1,000 sa simula — 100% pagmamay-ari ng content. Opsyonal ang pag-mint at puwedeng gawin sa pag-publish o sa ibang pagkakataon.",
+    "tokenIdDesc": "Isang natatanging on-chain identifier na nakukuha ng post kapag na-mint ito bilang NFT sa blockchain. Opsyonal ang pag-mint, kaya ang post na hindi pa na-mint ay wala pang Token ID.",
+    "tokenIdInfoDesc": "Ang natatanging on-chain identifier na nakukuha ng post kapag na-mint na ito bilang NFT. Ipinapakita sa itaas ng Post Info page para sa mga na-mint na post."
   },
   "pageTitles": {
     "home": "Home",
@@ -6251,12 +6254,13 @@
     "done": "Tapos na",
     "back": "Bumalik",
     "aiLabel": "Hilingin sa AI na i - set up ang iyong kalakalan",
-    "aiPlaceholder": "Subukan ang \"ibenta ang kalahati ng aking DHB sa 3 cents\"",
+    "aiPlaceholder": "Subukan ang \"ibenta ang kalahati ng aking DHB sa 6 cents\"",
     "aiSend": "Ipadala sa AI",
     "aiHint": "Sabihin mo kung ano ang gusto mo sa plain words. Pinupuno ng AI ang lahat, pindutin mo lang ang Kumpirmahin.",
     "aiBuyOnly": "Madaling kalakalan nagbebenta ng DHB. Para bumili ng DHB, open Exchange.",
     "aiNeedAmount": "Magkano ang DHB na gusto mong ibenta?",
-    "aiFailed": "Hindi iyon maitakda ni AI. Subukang sabihin ito sa ibang paraan, o punan ito sa ibaba."
+    "aiFailed": "Hindi iyon maitakda ni AI. Subukang sabihin ito sa ibang paraan, o punan ito sa ibaba.",
+    "cancelled": "Kinansela. Walang naibenta."
   },
   "ppvTopUp": {
     "yourBalance": "Iyong balance",

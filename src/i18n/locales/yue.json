@@ -3911,7 +3911,12 @@
     }
   },
   "fractions": {
-    "title": "碎片"
+    "seoDescription": "買賣 DeHub 帖子嘅碎片。一個鑄造咗嘅帖子就係 1000 份鏈上碎片 — 擁有一段影片、音軌或者圖片嘅一部分，用 DHB 交易。",
+    "title": "碎片",
+    "startTheMarketHint": "一個鑄造咗嘅帖子就係 1000 份碎片 — 放上你嘅一啲碎片嚟開市。",
+    "noneHeldHint": "鑄造一個帖子就可以持有佢全部 1000 份碎片，或者買入其他人嘅帖子。",
+    "profileEmptyOwn": "一個鑄造咗嘅帖子就係 1000 份碎片。鑄造你其中一個帖子，或者買入你睇好嘅帖子。",
+    "profileEmptyOther": "一個鑄造咗嘅帖子就係 1000 份碎片。呢個個人檔案而家冇持有任何帖子嘅碎片。"
   },
   "stores": {
     "podToggle": "按需印刷商品",
@@ -4048,12 +4053,13 @@
     "done": "搞掂",
     "back": "返回",
     "aiLabel": "叫 AI 設定你嘅交易",
-    "aiPlaceholder": "試下「以三蚊賣我一半嘅 DHB 」",
+    "aiPlaceholder": "試下「以六仙賣我一半嘅 DHB」",
     "aiSend": "傳送去 AI",
     "aiHint": "用簡單嘅語言講你想講嘅嘢。人工智能會填晒所有嘢，你只需要撳確認。",
     "aiBuyOnly": "易交易賣 DHB 。要買 DHB ，打開交易所。",
     "aiNeedAmount": "你想賣幾多 DHB?",
-    "aiFailed": "AI 設定唔到嗰個。試下用其他方法講，或者喺下面填寫。"
+    "aiFailed": "AI 設定唔到嗰個。試下用其他方法講，或者喺下面填寫。",
+    "cancelled": "取消咗。冇嘢賣咗。"
   },
   "ppvTopUp": {
     "yourBalance": "你嘅餘額",
@@ -4070,5 +4076,10 @@
     "moveFunds": "轉入資金",
     "moveFundsHint": "由其他鏈兌換或者存入",
     "notNow": "遲啲先"
+  },
+  "glossary": {
+    "fractionsDesc": "喺 DeHub 鑄造嘅帖子會變成一個分成 1,000 份碎片嘅 NFT，創作者一開始持有全部 1,000 份 — 對內容 100% 擁有權。鑄造係可選嘅，可以喺發佈嗰陣做，亦可以之後先做。",
+    "tokenIdDesc": "帖子喺區塊鏈上鑄造成 NFT 嗰陣獲得嘅獨一無二鏈上識別碼。鑄造係可選嘅，所以未鑄造嘅帖子暫時冇 Token ID。",
+    "tokenIdInfoDesc": "帖子鑄造成 NFT 之後獲得嘅獨一無二鏈上識別碼。已鑄造嘅帖子會喺帖子資料頁頂部顯示。"
   }
 }

@@ -3955,7 +3955,12 @@
     "relatedPosts": "Barreeffamoota Walqabatan"
   },
   "fractions": {
-    "title": "Qooda"
+    "seoDescription": "Qooda maxxansaalee DeHub bitaa gurguraa. Maxxansaan mint godhame qooda on-chain 1000 dha — kutaa viidiyoo, sirbaa ykn suuraa tokkoo qabaadhu, DHB'n daldali.",
+    "title": "Qooda",
+    "startTheMarketHint": "Maxxansaan mint godhame qooda 1000 dha — gabaa jalqabuuf qooda kee keessaa muraasa tarreessi.",
+    "noneHeldHint": "Qooda isaa 1000 hunda qabaachuuf maxxansaa tokko mint godhi, ykn maxxansaa nama biraa keessaa bitadhu.",
+    "profileEmptyOwn": "Maxxansaan mint godhame qooda 1000 dha. Maxxansaalee kee keessaa tokko mint godhi, ykn maxxansaa ati amantu keessaa bitadhu.",
+    "profileEmptyOther": "Maxxansaan mint godhame qooda 1000 dha. Piroofaayiliin kun amma qooda maxxansaa kamiyyuu hin qabu."
   },
   "stores": {
     "podToggle": "Meeshaa gaafii irratti maxxanfamu",
@@ -4085,19 +4090,20 @@
     "working": "Hojjechuu…",
     "doneTitle": "Hundi isaanii hojjetameera",
     "doneInstant": "Gurgurame {{amount}} DHB",
-    "doneInstantHint": "Waa&#39;ee {{usdc}} USDC gara boorsaa keessaniitti karaa irra jira.",
+    "doneInstantHint": "Waa'ee {{usdc}} USDC gara boorsaa keessaniitti karaa irra jira.",
     "doneList": "{{amount}} DHB irratti ${{price}} irratti tarreeffame.",
     "doneListHint": "Yeroo gabaan gatii keessan gahu ofumaan gurgurama. Jijjiirraa irratti bulchi.",
     "openExchange": "Jijjiirraa banaa",
     "done": "Xumureera",
     "back": "Dugda",
     "aiLabel": "AI daldala kee akka diriirsu gaafadhu",
-    "aiPlaceholder": "\"DHB koo keessaa walakkaa fiixee 3 sentitti gurguruuf yaali\"",
+    "aiPlaceholder": "\"DHB koo keessaa walakkaa fiixee 6 sentitti gurguruuf yaali\"",
     "aiSend": "Gara AItti ergaa",
-    "aiHint": "Waan barbaadde jechoota ifa ta&#39;een dubbadhu. AI waan hunda guuta, ati Confirm qofa dhiibdee.",
+    "aiHint": "Waan barbaadde jechoota ifa ta'een dubbadhu. AI waan hunda guuta, ati Confirm qofa dhiibdee.",
     "aiBuyOnly": "Daldalli salphaan DHB gurgura. DHB bitachuuf Exchange banaa.",
     "aiNeedAmount": "DHB meeqa gurguruu barbaadda?",
-    "aiFailed": "AI sana dhaabuu hin dandeenye. Karaa biraatiin jechuu yaali, ykn armaan gaditti guuti."
+    "aiFailed": "AI sana dhaabuu hin dandeenye. Karaa biraatiin jechuu yaali, ykn armaan gaditti guuti.",
+    "cancelled": "Haqameera. Wanti gurgurame hin jiru."
   },
   "ppvTopUp": {
     "yourBalance": "Balansii kee",
@@ -4114,5 +4120,10 @@
     "moveFunds": "Maallaqa galchi",
     "moveFundsHint": "Chain biraa irraa jijjiiri ykn kuusi",
     "notNow": "Amma miti"
+  },
+  "glossary": {
+    "fractionsDesc": "Maxxansaan DeHub irratti mint godhame NFT qooda 1,000tti qoodame ta'a, uumaan immoo 1,000 hunda qabatee jalqaba — abbummaa qabiyyee 100%. Mint gochuun filannoo dha, yeroo maxxansitu ykn booda raawwatamuu danda'a.",
+    "tokenIdDesc": "Eenyummeessaa on-chain addaa maxxansaan yeroo blockchain irratti akka NFTtti mint godhamu argatu. Mint gochuun filannoo waan ta'eef, maxxansaan hin mint godhamin ammallee Token ID hin qabu.",
+    "tokenIdInfoDesc": "Eenyummeessaa on-chain addaa maxxansaan erga akka NFTtti mint godhamee booda argatu. Maxxansaalee mint godhamaniif fuula Odeeffannoo Maxxansaa irratti gubbaatti mul'ata."
   }
 }

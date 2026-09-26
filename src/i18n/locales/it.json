@@ -3341,7 +3341,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "Compra e vendi frazioni di post DeHub. Ogni caricamento è di 1000 frazioni on-chain: possiedi una fetta di video, traccia o immagine e scambiala in DHB.",
+    "seoDescription": "Compra e vendi frazioni di post DeHub. Un post coniato è 1000 frazioni on-chain: possiedi una fetta di un video, di una traccia o di un'immagine e scambiala in DHB.",
     "title": "Frazioni",
     "perUpload": "1000 per upload",
     "tabBrowse": "Browse",
@@ -3377,7 +3377,7 @@
     "perFraction": "per frazione",
     "noSearchMatch": "Nessun risultato corrisponde a questa ricerca",
     "noneForSale": "Nessuna frazione è in vendita al momento",
-    "startTheMarketHint": "Ogni caricamento è 1000 frazioni — metti in vendita alcune delle tue per avviare il mercato.",
+    "startTheMarketHint": "Un post coniato è 1000 frazioni — metti in vendita alcune delle tue per avviare il mercato.",
     "yours": "Tuoi",
     "perFractionShort": "/ frazione",
     "forShareOfPost": "per {{pct}}% del post",
@@ -3431,7 +3431,7 @@
     "acrossPosts_one": "su {{count}} post",
     "acrossPosts_other": "su {{count}} post",
     "noneHeldYet": "Non possiedi ancora alcuna frazione",
-    "noneHeldHint": "Carica un post per coniare 1000, oppure acquista una quota di quello di qualcun altro.",
+    "noneHeldHint": "Conia un post per detenerne tutte le 1000 frazioni, oppure investi in quello di qualcun altro.",
     "listedForSale": "In vendita",
     "priceEach": "{{price}} ciascuno",
     "listingCancelled": "Inserzione annullata",
@@ -3444,8 +3444,8 @@
     "offersForYourFractions": "Offerte per le tue frazioni",
     "review": "Rivedi",
     "noFractionsYet": "Nessuna frazione ancora",
-    "profileEmptyOwn": "Ogni caricamento viene coniato come 1000 frazioni. Pubblica qualcosa, oppure acquista una quota di un post in cui credi.",
-    "profileEmptyOther": "Ogni caricamento viene coniato come 1000 frazioni. Questo profilo non possiede nessun post in questo momento.",
+    "profileEmptyOwn": "Un post coniato è 1000 frazioni. Conia uno dei tuoi post, oppure investi in un post in cui credi.",
+    "profileEmptyOther": "Un post coniato è 1000 frazioni. Questo profilo al momento non detiene frazioni di alcun post.",
     "browseTheMarket": "Sfoglia il mercato",
     "sellFractions": "Vendi frazioni",
     "balanceReadFailed": "Non riesco a leggere il tuo saldo di frazioni in questo momento. Chiudi questo e riprova — inserire un annuncio senza di esso rischia di vendere frazioni che non possiedi più.",
@@ -6357,12 +6357,13 @@
     "done": "Fatto",
     "back": "Indietro",
     "aiLabel": "Chiedi all'IA di impostare il tuo trade",
-    "aiPlaceholder": "Prova a \"vendere metà del mio DHB a 3 centesimi\"",
+    "aiPlaceholder": "Prova a \"vendere metà del mio DHB a 6 centesimi\"",
     "aiSend": "Invia all'IA",
     "aiHint": "Dite quello che volete con parole semplici. L'intelligenza artificiale riempie tutto, basta premere Conferma.",
     "aiBuyOnly": "Easy Trade vende DHB. Per acquistare DHB, apri Exchange.",
     "aiNeedAmount": "Quanto DHB vuoi vendere?",
-    "aiFailed": "L'intelligenza artificiale non è riuscita a configurarlo. Prova a dirlo in un altro modo o riempilo qui sotto."
+    "aiFailed": "L'intelligenza artificiale non è riuscita a configurarlo. Prova a dirlo in un altro modo o riempilo qui sotto.",
+    "cancelled": "Annullato. Non è stato venduto nulla."
   },
   "ppvTopUp": {
     "yourBalance": "Il tuo saldo",
@@ -6379,5 +6380,10 @@
     "moveFunds": "Trasferisci fondi",
     "moveFundsHint": "Scambia o deposita da un'altra chain",
     "notNow": "Non ora"
+  },
+  "glossary": {
+    "fractionsDesc": "Un post coniato su DeHub diventa un NFT diviso in 1.000 frazioni e il creatore parte con tutte le 1.000 — il 100% della proprietà del contenuto. Il conio è facoltativo e può avvenire alla pubblicazione o in seguito.",
+    "tokenIdDesc": "Un identificatore on-chain univoco che un post riceve quando viene coniato come NFT sulla blockchain. Il conio è facoltativo, quindi un post non ancora coniato non ha ancora un Token ID.",
+    "tokenIdInfoDesc": "L'identificatore on-chain univoco che un post riceve una volta coniato come NFT. Per i post coniati viene mostrato in cima alla pagina Info post."
   }
 }

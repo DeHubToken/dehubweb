@@ -3121,6 +3121,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
+    "seoDescription": "Mua và bán phân số của các bài viết trên DeHub. Một bài viết đã đúc là 1000 phân số on-chain — sở hữu một phần của video, bản nhạc hoặc hình ảnh và giao dịch nó bằng DHB.",
     "title": "Phần sở hữu",
     "perUpload": "1000 per upload",
     "tabBrowse": "Browse",
@@ -3156,7 +3157,7 @@
     "perFraction": "trên mỗi phân chia",
     "noSearchMatch": "Không có kết quả phù hợp với tìm kiếm",
     "noneForSale": "Không có phân chia nào được bán lúc này",
-    "startTheMarketHint": "Mỗi lần tải lên là 1000 phân chia — hãy liệt kê một số của bạn để bắt đầu thị trường.",
+    "startTheMarketHint": "Một bài viết đã đúc là 1000 phân số — hãy niêm yết một số phân số của bạn để bắt đầu thị trường.",
     "yours": "Của bạn",
     "perFractionShort": "/ phân chia",
     "forShareOfPost": "cho {{pct}}% của bài viết",
@@ -3210,7 +3211,7 @@
     "acrossPosts_one": "trên {{count}} bài viết",
     "acrossPosts_other": "trên {{count}} bài viết",
     "noneHeldYet": "Bạn chưa nắm giữ bất kỳ phân số nào",
-    "noneHeldHint": "Tải lên một bài viết để được đúc 1000, hoặc mua vào của người khác.",
+    "noneHeldHint": "Đúc một bài viết để nắm giữ toàn bộ 1000 phân số của nó, hoặc mua vào bài viết của người khác.",
     "listedForSale": "Được liệt kê để bán",
     "priceEach": "{{price}} mỗi cái",
     "listingCancelled": "Danh sách đã bị hủy",
@@ -3223,8 +3224,8 @@
     "offersForYourFractions": "Các lời đề nghị cho các phân số của bạn",
     "review": "Xem Xét",
     "noFractionsYet": "Chưa có phân số nào",
-    "profileEmptyOwn": "Mỗi lần tải lên được tạo thành 1000 phân số. Đăng bài gì đó, hoặc mua vào một bài viết mà bạn tin tưởng.",
-    "profileEmptyOther": "Mỗi lần tải lên được tạo thành 1000 phân số. Hồ sơ này hiện không nắm giữ bất kỳ bài viết nào.",
+    "profileEmptyOwn": "Một bài viết đã đúc là 1000 phân số. Hãy đúc một bài viết của bạn, hoặc mua vào một bài viết mà bạn tin tưởng.",
+    "profileEmptyOther": "Một bài viết đã đúc là 1000 phân số. Hồ sơ này hiện không nắm giữ phân số nào của bất kỳ bài viết nào.",
     "browseTheMarket": "Duyệt thị trường",
     "sellFractions": "Bán phân số",
     "balanceReadFailed": "Không thể đọc số dư phân số của bạn ngay bây giờ. Đóng cửa sổ này và thử lại — liệt kê mà không có nó có nguy cơ bán các phân số bạn không còn nắm giữ.",
@@ -6062,7 +6063,10 @@
           "color": "white"
         }
       ]
-    }
+    },
+    "fractionsDesc": "Một bài viết được đúc trên DeHub sẽ trở thành một NFT chia thành 1.000 phân số, và người sáng tạo bắt đầu với toàn bộ 1.000 — sở hữu 100% nội dung. Việc đúc là tùy chọn và có thể thực hiện khi bạn đăng hoặc sau này.",
+    "tokenIdDesc": "Một mã định danh on-chain duy nhất mà bài viết nhận được khi được đúc thành NFT trên blockchain. Việc đúc là tùy chọn, nên bài viết chưa được đúc sẽ chưa có Token ID.",
+    "tokenIdInfoDesc": "Mã định danh on-chain duy nhất mà bài viết nhận được khi đã được đúc thành NFT. Hiển thị ở đầu trang Thông tin bài viết đối với các bài viết đã đúc."
   },
   "jungleMood": {
     "title": "Thời điểm trong ngày",
@@ -6140,12 +6144,13 @@
     "done": "Hoàn tất",
     "back": "Quay lại",
     "aiLabel": "Yêu cầu AI thiết lập giao dịch của bạn",
-    "aiPlaceholder": "Hãy thử \"bán một nửa DHB của tôi với giá 3 xu\"",
+    "aiPlaceholder": "Hãy thử \"bán một nửa DHB của tôi với giá 6 xu\"",
     "aiSend": "Gửi đến AI",
     "aiHint": "Nói những gì bạn muốn bằng những từ đơn giản. AI điền mọi thứ vào, bạn chỉ cần nhấn Xác nhận.",
     "aiBuyOnly": "Giao dịch dễ dàng bán DHB. Để mua DHB, hãy mở Exchange.",
     "aiNeedAmount": "Bạn muốn bán bao nhiêu DHB?",
-    "aiFailed": "AI không thể thiết lập điều đó. Hãy thử nói theo cách khác hoặc điền vào bên dưới."
+    "aiFailed": "AI không thể thiết lập điều đó. Hãy thử nói theo cách khác hoặc điền vào bên dưới.",
+    "cancelled": "Đã hủy. Không có gì được bán."
   },
   "ppvTopUp": {
     "yourBalance": "Số dư của bạn",

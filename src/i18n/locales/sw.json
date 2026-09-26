@@ -3341,6 +3341,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
+    "seoDescription": "Nunua na uuze sehemu za machapisho ya DeHub. Chapisho lililofuliwa ni sehemu 1000 zilizo kwenye mnyororo — miliki kipande cha video, wimbo au picha na ukifanyie biashara kwa DHB.",
     "title": "Hisa",
     "perUpload": "1000 per upload",
     "tabBrowse": "Browse",
@@ -3376,7 +3377,7 @@
     "perFraction": "kwa kila sehemu",
     "noSearchMatch": "Hakuna kinachofanana na utafutaji huo",
     "noneForSale": "Hakuna sehemu zinazouzwa sasa",
-    "startTheMarketHint": "Kila upakiaji ni sehemu 1000 — orodhesha baadhi yako kuanza soko.",
+    "startTheMarketHint": "Chapisho lililofuliwa ni sehemu 1000 — orodhesha baadhi ya zako ili kuanzisha soko.",
     "yours": "Yako",
     "perFractionShort": "/ sehemu",
     "forShareOfPost": "kwa {{pct}}% ya chapisho",
@@ -3430,7 +3431,7 @@
     "acrossPosts_one": "katika {{count}} chapisho",
     "acrossPosts_other": "katika {{count}} machapisho",
     "noneHeldYet": "Hauna sehemu yoyote bado",
-    "noneHeldHint": "Pakia chapisho ili kutengenezwa 1000, au nunua katika cha mtu mwingine.",
+    "noneHeldHint": "Fua chapisho ili umiliki sehemu zake zote 1000, au nunua sehemu katika chapisho la mtu mwingine.",
     "listedForSale": "Iliyoandikwa kwa kuuza",
     "priceEach": "{{price}} kila moja",
     "listingCancelled": "Kuandikwa kumesitishwa",
@@ -3443,8 +3444,8 @@
     "offersForYourFractions": "Matoleo ya sehemu zako",
     "review": "Tathmini",
     "noFractionsYet": "Hakuna sehemu bado",
-    "profileEmptyOwn": "Kila upakiaji utengenezwa kama sehemu 1000. Chapisho kitu, au nunua katika chapisho unaloamini.",
-    "profileEmptyOther": "Kila upakiaji utengenezwa kama sehemu 1000. Wasifu huu hauna yoyote ya chapisho lolote sasa.",
+    "profileEmptyOwn": "Chapisho lililofuliwa ni sehemu 1000. Fua moja ya machapisho yako, au nunua sehemu katika chapisho unaloliamini.",
+    "profileEmptyOther": "Chapisho lililofuliwa ni sehemu 1000. Wasifu huu haumiliki sehemu za chapisho lolote kwa sasa.",
     "browseTheMarket": "Vinjari soko",
     "sellFractions": "Uza sehemu",
     "balanceReadFailed": "Sikuweza kusoma salio lako la sehemu sasa. Funga hii na jaribu tena — kuorodhesha bila hiyo kunaweza kuwa na hatari ya kuuza sehemu ambazo huwezi tena kumiliki.",
@@ -6301,12 +6302,13 @@
     "done": "Imekamilika",
     "back": "Nyuma",
     "aiLabel": "Omba AI ianzishe biashara yako",
-    "aiPlaceholder": "Jaribu \"kuuza nusu ya DHB yangu kwa senti 3\"",
+    "aiPlaceholder": "Jaribu \"kuuza nusu ya DHB yangu kwa senti 6\"",
     "aiSend": "Tuma kwa AI",
     "aiHint": "Sema unachotaka kwa maneno wazi. AI inajaza kila kitu, unabonyeza tu Thibitisha.",
     "aiBuyOnly": "Biashara rahisi inauza DHB. Ili kununua DHB, fungua Exchange.",
     "aiNeedAmount": "Unataka kuuza DHB kiasi gani?",
-    "aiFailed": "AI haikuweza kusanidi hiyo. Jaribu kuisema kwa njia nyingine, au ijaze hapa chini."
+    "aiFailed": "AI haikuweza kusanidi hiyo. Jaribu kuisema kwa njia nyingine, au ijaze hapa chini.",
+    "cancelled": "Imeghairiwa. Hakuna kilichouzwa."
   },
   "ppvTopUp": {
     "yourBalance": "Salio lako",
@@ -6323,5 +6325,10 @@
     "moveFunds": "Hamisha pesa ndani",
     "moveFundsHint": "Badilisha au weka kutoka mnyororo mwingine",
     "notNow": "Si sasa"
+  },
+  "glossary": {
+    "fractionsDesc": "Chapisho lililofuliwa kwenye DeHub linakuwa NFT iliyogawanywa katika sehemu 1,000, na mtayarishi anaanza akiwa na zote 1,000 — umiliki wa 100% wa maudhui. Kufua ni hiari na kunaweza kufanyika unapochapisha au baadaye.",
+    "tokenIdDesc": "Kitambulisho cha kipekee kwenye mnyororo ambacho chapisho hupata linapofuliwa kama NFT kwenye blockchain. Kufua ni hiari, kwa hivyo chapisho ambalo halijafuliwa bado halina Token ID.",
+    "tokenIdInfoDesc": "Kitambulisho cha kipekee kwenye mnyororo ambacho chapisho hupata mara linapofuliwa kama NFT. Huonyeshwa juu ya ukurasa wa Maelezo ya Chapisho kwa machapisho yaliyofuliwa."
   }
 }
