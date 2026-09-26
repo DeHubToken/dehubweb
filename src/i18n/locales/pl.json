@@ -5680,6 +5680,7 @@
     "seoDescription": "Oficjalna dokumentacja DeHub: przegląd platformy, dApps, ekonomia tokena DHB, staking, gry, plan rozwoju, FAQ i więcej."
   },
   "dex": {
+    "launchNotice": "Ta dedykowana giełda jest zbudowana na Uniswap i przez niego zabezpieczona. Działa już w pełni, a oficjalne listingi zostaną wkrótce ogłoszone. Zapraszamy do dodawania płynności już teraz — farmy i zachęty zostaną ujawnione lada chwila.",
     "seoTitle": "DEX — Handel DHB po Twojej cenie",
     "seoDescription": "Ustaw swoją cenę kupna lub sprzedaży DHB za pomocą zlecenia z limitem Uniswap v4 na Base lub BNB Chain. Księga zleceń na żywo, głębokość rynku i jedna wspólna cena w USD.",
     "venue": "Sieć",

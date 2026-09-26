@@ -5723,6 +5723,7 @@
     "seoDescription": "Documentation officielle de DeHub : présentation de la plateforme, dApps, économie du token DHB, staking, jeux, feuille de route, FAQ et plus encore."
   },
   "dex": {
+    "launchNotice": "Cette plateforme d'échange sur mesure est construite sur Uniswap et sécurisée par celui-ci. Elle est en ligne et pleinement fonctionnelle, et les listings officiels seront annoncés prochainement. Vous êtes invité à ajouter de la liquidité dès maintenant — les farms et les incitations seront dévoilées très bientôt.",
     "seoTitle": "DEX — Échangez du DHB à votre prix",
     "seoDescription": "Définissez votre prix d'achat ou de vente de DHB avec un ordre limite Uniswap v4 sur Base ou BNB Chain. Carnet d'ordres en direct, profondeur du marché et un prix USD partagé.",
     "venue": "Réseau",

@@ -5608,6 +5608,7 @@
     "seoDescription": "Službena DeHub dokumentacija: pregled platforme, dApps, ekonomija DHB tokena, staking, igre, plan razvoja, česta pitanja i više."
   },
   "dex": {
+    "launchNotice": "Ova prilagođena mjenjačnica izgrađena je na Uniswapu i njime zaštićena. Već radi i potpuno je funkcionalna, a službena uvrštenja bit će uskoro objavljena. Pozivamo vas da već sada dodate likvidnost — farme i poticaji bit će otkriveni vrlo brzo.",
     "seoTitle": "DEX — Trgujte DHB po svojoj cijeni",
     "seoDescription": "Postavite svoju DHB cijenu za kupnju ili prodaju s Uniswap v4 limit narudžbom na Base ili BNB Chainu. Knjiga narudžbi uživo, dubina tržišta i jedna zajednička USD cijena.",
     "venue": "Mreža",

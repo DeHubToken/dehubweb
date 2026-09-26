@@ -5721,6 +5721,7 @@
     "seoDescription": "Documentazione ufficiale di DeHub: panoramica della piattaforma, dApp, economia del token DHB, staking, giochi, roadmap, FAQ e altro."
   },
   "dex": {
+    "launchNotice": "Questo exchange personalizzato è costruito su Uniswap ed è protetto da esso. È già attivo e pienamente funzionante, e i listing ufficiali saranno annunciati a breve. Ti invitiamo ad aggiungere liquidità fin da ora: farm e incentivi saranno svelati a brevissimo.",
     "seoTitle": "DEX — Scambia DHB al tuo prezzo",
     "seoDescription": "Imposta il tuo prezzo di acquisto o vendita di DHB con un ordine limite Uniswap v4 su Base o BNB Chain. Order book live, profondità di mercato e un unico prezzo condiviso in USD.",
     "venue": "Rete",

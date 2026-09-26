@@ -3366,6 +3366,7 @@
     "seoDescription": "DeHub rasmiy hujjatlari: platforma sharhi, dApps, DHB token iqtisodiyoti, staking, oʻyinlar, yoʻl xaritasi, koʻp beriladigan savollar va boshqalar."
   },
   "dex": {
+    "launchNotice": "Ushbu maxsus birja Uniswap asosida qurilgan va u orqali himoyalangan. U hozir to'liq ishlamoqda, rasmiy listinglar esa tez orada e'lon qilinadi. Sizni hoziroq likvidlik qo'shishga taklif qilamiz — fermalar va rag'batlar juda tez orada ochiladi.",
     "seoTitle": "DEX — DHB ni oʻzingiz belgilagan narxda savdo qiling",
     "seoDescription": "Base yoki BNB Chain’da Uniswap v4 limit buyurtmasi bilan DHB sotib olish yoki sotish narxini belgilang. Jonli buyurtmalar kitobi, bozor chuqurligi va bitta umumiy AQSh dollari narxi.",
     "venue": "Tarmoq",

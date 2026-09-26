@@ -5611,6 +5611,7 @@
     "seoDescription": "Hivatalos DeHub dokumentáció: platform áttekintés, dApp-ok, a DHB token gazdaságtana, staking, játékok, ütemterv, GYIK és több."
   },
   "dex": {
+    "launchNotice": "Ez az egyedi tőzsde a Uniswapra épül, és az biztosítja a védelmét. Már élesben, teljes funkcionalitással működik, a hivatalos listázásokat hamarosan bejelentjük. Meghívunk, hogy már most adj hozzá likviditást — a farmokat és ösztönzőket nagyon hamar bemutatjuk.",
     "seoTitle": "DEX — Kereskedj DHB-vel a saját áradon",
     "seoDescription": "Állítsd be a DHB vételi vagy eladási árat egy Uniswap v4 limit megbízással Base vagy BNB Chain hálózaton. Élő megbízási könyv, piaci mélység és egy megosztott USD ár.",
     "venue": "Hálózat",

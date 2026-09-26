@@ -3288,6 +3288,7 @@
     "seoDescription": "DeHub 官方文档：平台概览、dApp、DHB 代币经济、质押、游戏、路线图、常见问题等。"
   },
   "dex": {
+    "launchNotice": "这个定制交易所建在 Uniswap 上，由它保障安全。眼下已经上线，功能齐全，正式上币很快就公布。欢迎现在就来添加流动性——流动性挖矿和奖励马上就揭晓。",
     "seoTitle": "DEX — 以您的价格交易 DHB",
     "seoDescription": "在 Base 或 BNB Chain 上使用 Uniswap v4 限价单设置您的 DHB 买入或卖出价格。实时订单簿、市场深度和统一的美元价格。",
     "venue": "网络",
