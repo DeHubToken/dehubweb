@@ -140,7 +140,13 @@ Deno.serve(async (req) => {
     if (!target && body?.ref) target = normalizeTarget({ kind: 'video', ref: String(body.ref) });
     if (!target) return json({ error: 'a valid { kind, ref } is required' }, 400);
 
-    const force = body?.force === true;
+    // `force` regenerates a stored summary, which spends AI credits. The
+    // function answers the publishable key shipped in the browser bundle, so
+    // only a service-key caller may skip the stored copy (same guard as
+    // transcribe's `force`).
+    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+    const bearer = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '').trim();
+    const force = body?.force === true && !!serviceKey && bearer === serviceKey;
     const db = admin();
 
     const { data: row, error } = await db

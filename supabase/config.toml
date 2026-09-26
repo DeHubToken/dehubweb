@@ -42,8 +42,6 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.affiliate-share-image]
     verify_jwt = false
-  [functions.agent-bulk-like]
-    verify_jwt = false
   [functions.agora-token]
     verify_jwt = false
   # Auth is the DeHub token in x-dehub-token, not a Supabase JWT, so the
@@ -105,8 +103,6 @@ project_id = "aigxuutjaqsywioxjefr"
   [functions.editor-agent]
     verify_jwt = false
   [functions.dehub-mcp]
-    verify_jwt = false
-  [functions.dhb-buy-bot]
     verify_jwt = false
   [functions.dm-upload-media]
     verify_jwt = false
@@ -289,8 +285,6 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.stock-quote]
     verify_jwt = false
-  [functions.stories-api]
-    verify_jwt = false
   # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
   [functions.stream-products]
     verify_jwt = false
@@ -306,8 +300,6 @@ project_id = "aigxuutjaqsywioxjefr"
   [functions.translate-image]
     verify_jwt = false
   [functions.translate-text]
-    verify_jwt = false
-  [functions.validate-tv-channels]
     verify_jwt = false
   [functions.verify-phone-otp]
     verify_jwt = false

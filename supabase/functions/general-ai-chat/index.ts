@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
-import { rateLimitByIp } from "../_shared/auth.ts";
+import { rateLimitByIp, resolveDeHubAddress } from "../_shared/auth.ts";
 import { agentConfigured, runAgentLoop, type AgentSurface } from "../_shared/assistant-agent.ts";
 import { streamAgentLoop, teeStreamText } from "../_shared/assistant-agent-stream.ts";
 import { DEHUB_PLATFORM_KNOWLEDGE } from "../_shared/dehub-platform-knowledge.ts";
@@ -349,18 +349,6 @@ const DEHUB_KEYWORDS = [
   'your token', 'your platform', 'this app', 'this platform'
 ];
 
-// Keywords that indicate complex reasoning (requires Pro tier)
-const COMPLEX_REASONING_KEYWORDS = [
-  'explain', 'analyze', 'analyse', 'compare', 'contrast',
-  'why', 'how does', 'how do', 'what if', 'evaluate',
-  'pros and cons', 'advantages', 'disadvantages',
-  'step by step', 'detailed', 'in depth', 'comprehensive',
-  'calculate', 'solve', 'prove', 'derive',
-  'summarize this article', 'summarize this document',
-  'write an essay', 'write a report', 'write code',
-  'debug', 'fix this', 'refactor', 'optimize'
-];
-
 // Keywords that indicate token transfer or purchase requests
 const TOKEN_TRANSFER_KEYWORDS = [
   'send', 'transfer', 'pay', 'tip', 'give',
@@ -639,86 +627,31 @@ function requiresWebSearch(message: string): boolean {
   return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
-function requiresComplexReasoning(message: string): boolean {
-  const lowerMessage = message.toLowerCase();
-  return COMPLEX_REASONING_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
-}
-
-// Smart model selection based on query complexity
+// Model selection. Flash answers by default; Pro is reserved for a verified
+// user asking about their own data or their own posts — the two paths that
+// read a wallet, an earnings history or a post list and then have to reason
+// over it. Everything else (DeHub questions, "complex" keywords, looking up
+// somebody else) used to escalate to Pro on a keyword match, which put most
+// traffic, anonymous included, on the expensive model.
 // Returns: { model: string, tier: 'free' | 'standard' | 'premium', reason: string }
-function selectOptimalModel(message: string, hasPerplexityKey: boolean): { model: string; tier: string; reason: string } {
-  const isPersonal = isPersonalQuestion(message);
+function selectOptimalModel(message: string, hasPerplexityKey: boolean, allowPro: boolean): { model: string; tier: string; reason: string } {
   const needsSearch = requiresWebSearch(message);
-  const isDeHub = isDeHubRelated(message);
-  const isComplex = requiresComplexReasoning(message);
-  
-  // Other user lookup = use Pro for deep profile analysis
-  if (requiresOtherUserLookup(message)) {
-    return { 
-      model: 'gemini-2.5-pro', 
-      tier: 'standard', 
-      reason: 'Other user profile analysis' 
-    };
-  }
-  
-  // Post analysis = use Pro for deeper analysis
-  if (requiresPostAnalysis(message)) {
-    return { 
-      model: 'gemini-2.5-pro', 
-      tier: 'standard', 
-      reason: 'Post content analysis' 
-    };
-  }
-  
-  // Personal questions about the user's own data. These read a wallet, an
-  // earnings history or a settings blob and then have to reason over it —
-  // "why is my balance lower than last week" is a multi-step question wearing
-  // a one-line question's clothes. Never web search.
-  if (isPersonal) {
-    return {
-      model: 'gemini-2.5-pro',
-      tier: 'standard',
-      reason: 'Personal user data query'
-    };
+
+  if (allowPro && requiresPostAnalysis(message)) {
+    return { model: 'gemini-2.5-pro', tier: 'standard', reason: 'Post content analysis' };
   }
 
-  // DeHub questions used to be routed to the cheapest model on the grounds
-  // that the platform knowledge is in the prompt. That was backwards: these
-  // are exactly the questions that need the tools called, the product map
-  // read and a real answer assembled, and the cheap model is the one that
-  // answers "check the rewards section of the app" instead.
-  if (isDeHub && !needsSearch) {
-    return {
-      model: 'gemini-2.5-pro',
-      tier: 'standard',
-      reason: 'DeHub knowledge'
-    };
+  // Never web search for these.
+  if (allowPro && isPersonalQuestion(message)) {
+    return { model: 'gemini-2.5-pro', tier: 'standard', reason: 'Personal user data query' };
   }
-  
+
   // Live search required = PREMIUM tier (Perplexity)
   if (needsSearch && hasPerplexityKey) {
-    return { 
-      model: 'perplexity', 
-      tier: 'premium', 
-      reason: 'Live web search' 
-    };
+    return { model: 'perplexity', tier: 'premium', reason: 'Live web search' };
   }
-  
-  // Complex reasoning = PRO tier (Gemini Pro)
-  if (isComplex) {
-    return { 
-      model: 'gemini-2.5-pro', 
-      tier: 'standard', 
-      reason: 'Complex reasoning' 
-    };
-  }
-  
-  // Default = FREE tier (Gemini Flash)
-  return { 
-    model: 'gemini-2.5-flash', 
-    tier: 'free', 
-    reason: 'Standard query' 
-  };
+
+  return { model: 'gemini-2.5-flash', tier: 'free', reason: 'Standard query' };
 }
 
 async function searchWithPerplexity(query: string, perplexityKey: string): Promise<string> {
@@ -1009,11 +942,6 @@ serve(async (req) => {
   const serviceSecret = Deno.env.get('ASSISTANT_SERVICE_SECRET');
   const isServiceCall = !!serviceSecret && req.headers.get('x-assistant-secret') === serviceSecret;
 
-  if (!isServiceCall) {
-    const limited = await rateLimitByIp(req, 'general-ai-chat', { limit: 80, windowMs: 60 * 60 * 1000 });
-    if (limited) return limited;
-  }
-
   try {
     const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken, stream: streamRequested = false, surface: requestedSurface = 'assistant', callerAddress, maxReplyChars, adminToken, adminContext, threadContext } = await req.json() as {
       messages: Message[];
@@ -1071,6 +999,25 @@ serve(async (req) => {
       adminContext?: { displayName?: string; role?: string; capabilities?: string[] };
       stream?: boolean;
     };
+
+    // Who is asking. A service-role key or the assistant service secret is
+    // trusted outright; a browser counts as a user only when its DeHub token
+    // verifies. The body's `isAuthenticated` flag is the client's say-so and
+    // decides nothing about cost.
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    const bearer = (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '');
+    const isPrivileged = isServiceCall || (!!serviceRoleKey && bearer === serviceRoleKey);
+    const presentedToken = dehubToken || req.headers.get('x-dehub-token') || '';
+    const verifiedWallet = !isPrivileged && presentedToken ? await resolveDeHubAddress(presentedToken) : null;
+    const isVerifiedUser = isPrivileged || !!verifiedWallet;
+
+    if (!isPrivileged) {
+      const limited = await rateLimitByIp(req, 'general-ai-chat', {
+        limit: verifiedWallet ? 80 : 20,
+        windowMs: 60 * 60 * 1000,
+      });
+      if (limited) return limited;
+    }
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     const perplexityKey = Deno.env.get('PERPLEXITY_API_KEY');
@@ -1213,8 +1160,10 @@ serve(async (req) => {
     }
 
     // Smart auto-model selection based on query complexity
-    const isAutoMode = model === 'auto' || model === 'gemini-2.5-flash'; // Default to auto
-    const autoSelection = selectOptimalModel(userQuery, !!perplexityKey);
+    // A requested model is honoured only for a verified user or a service
+    // call; anyone else gets auto selection.
+    const isAutoMode = !isVerifiedUser || model === 'auto' || model === 'gemini-2.5-flash';
+    const autoSelection = selectOptimalModel(userQuery, !!perplexityKey, isVerifiedUser);
     
     // Use auto-selected model unless user explicitly chose a different one
     const effectiveModel = isAutoMode ? autoSelection.model : model;
@@ -1477,7 +1426,9 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
           : surface === 'admin'
           ? 'google/gemini-2.5-pro'
           : isAutoMode
-            ? 'google/gemini-2.5-pro'
+            ? autoSelection.model === 'gemini-2.5-pro'
+              ? 'google/gemini-2.5-pro'
+              : 'google/gemini-2.5-flash'
             : effectiveModel === 'gpt-5-mini'
               ? 'openai/gpt-5-mini'
               : effectiveModel === 'gemini-2.5-pro'

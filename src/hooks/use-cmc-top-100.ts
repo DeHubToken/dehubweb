@@ -24,7 +24,9 @@ export function useCmcTop100() {
   return useQuery({
     queryKey: ['cmc-top-100'],
     queryFn: fetchTop100,
-    staleTime: 300_000,
-    gcTime: 600_000,
+    // The edge function refreshes from CMC once an hour; asking sooner only
+    // re-reads the same copy.
+    staleTime: 60 * 60 * 1000,
+    gcTime: 2 * 60 * 60 * 1000,
   });
 }
