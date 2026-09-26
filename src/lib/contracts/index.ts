@@ -68,25 +68,10 @@ export {
   normaliseDuration,
   formatDuration,
   readOnChainPlan,
-  readOnChainSubscription,
-  quoteSubscriptionFee,
-  getSubscriptionCost,
   publishPlanOnChain,
-  buySubscriptionOnChain,
   type OnChainPlan,
-  type OnChainSubscription,
-  type SubscriptionCost,
   type PublishPlanParams,
-  type BuySubscriptionParams,
 } from './subscription';
-
-export {
-  ensureSubscriptionFunding,
-  findSubscriptionFundingRoute,
-  isSubscriptionSmartFundingChain,
-  type SubscriptionFundingRoute,
-  type SubscriptionFundingResult,
-} from './subscription-funding';
 
 // Uniswap V3 Auto-Swap (Base)
 export {

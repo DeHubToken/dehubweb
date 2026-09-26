@@ -2,8 +2,8 @@
  * PPV Payment Hook
  * ================
  * Pay-Per-View unlock via StreamController.sendFundsForPPV (#44).
- * Auto-swaps ETH → DHB on Base when balance is low.
- * Optional atomic swap + PPV + tip via DeHubPaymentRouter when deployed (#45).
+ * A wallet short of DHB hands off to the top-up step, which funds the gap
+ * from any token — DeHub Pay first, Uniswap as the fallback.
  *
  * Running out of DHB is a step, not an error. Every shortfall used to end in a
  * toast: the sheet stayed on "Pay 5,000 DHB", the viewer had no way to act on
@@ -17,14 +17,13 @@
 import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { dhbText } from '@/lib/dhb-toast';
-// NOTE: aa-utils / uniswap-swap / stream-controller / payment-router reach
+// NOTE: aa-utils / uniswap-swap / stream-controller reach
 // wagmi + web3auth. This hook is used by eager feed cards (VideoCard /
 // ImageCard PPV drawers), so those modules are dynamically imported inside
 // pay() to keep the wallet stack out of the entry bundle
 // (scripts/check-entry-bundle.mjs fails the build if it leaks in).
 import { DHB_TOKEN, toWei, fromWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { confirmPPVPurchase, getPaymentConfig } from '@/lib/api/dehub/payments';
+import { confirmPPVPurchase } from '@/lib/api/dehub/payments';
 import { markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { isSolanaChain } from '@/lib/chains/constants';
 import { useAuth } from '@/contexts/AuthContext';
@@ -40,8 +39,6 @@ interface UsePPVPaymentOptions {
    * ChainId union — callers pass `post.chainId` straight through.
    */
   chainId?: ChainId | number;
-  /** Optional tip in DHB — uses payment router for atomic tx when deployed (#45) */
-  tipAmount?: number;
   onSuccess?: () => void;
 }
 
@@ -74,7 +71,6 @@ export function usePPVPayment({
   price,
   currency = 'DHB',
   chainId: postChainId = BASE_CHAIN_ID,
-  tipAmount = 0,
   onSuccess,
 }: UsePPVPaymentOptions) {
   // Everything below the Solana branch in pay() is EVM-only and has already
@@ -146,12 +142,10 @@ export function usePPVPayment({
         { getWalletAddress, getERC20Balance, switchChain },
         { isAutoSwapSupported },
         { sendFundsForPPV },
-        { isPaymentRouterAvailable, unlockPPVAndTipViaRouter },
       ] = await Promise.all([
         import('@/lib/contracts/aa-utils'),
         import('@/lib/contracts/uniswap-swap'),
         import('@/lib/contracts/stream-controller'),
-        import('@/lib/contracts/payment-router'),
       ]);
 
       const chainConfig = getChainConfig(chainId);
@@ -164,74 +158,49 @@ export function usePPVPayment({
         return;
       }
 
-      let paymentConfig;
-      try {
-        paymentConfig = await getPaymentConfig();
-      } catch {
-        paymentConfig = null;
-      }
-
-      const chainPayment = paymentConfig?.chains?.find((c) => c.chainId === chainId);
-      const routerAddress = chainPayment?.paymentRouter;
-      const useRouter =
-        tipAmount > 0 && isPaymentRouterAvailable(chainId, routerAddress);
-
       let txHash: string;
 
-      if (useRouter && routerAddress) {
-        toast.loading(dhbText('Processing payment...'), { id: 'ppv-payment' });
-        const result = await unlockPPVAndTipViaRouter({
-          routerAddress,
-          tokenId,
-          ppvAmount: price,
-          tipAmount,
-          creator: creatorAddress,
-          chainId,
-        });
-        txHash = result.hash;
-      } else {
-        const amountWei = toWei(price, DHB_TOKEN.decimals);
-        const dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+      const amountWei = toWei(price, DHB_TOKEN.decimals);
+      const dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
 
-        if (dhbBalance < amountWei) {
-          const balanceHuman = Number(fromWei(dhbBalance));
-          // Round up, and never to nothing: asking for the exact fractional
-          // gap can still leave the wallet a wei short of the price, and a
-          // balance that floats to exactly the price would ask to buy zero.
-          const needDhb = Math.max(1, Math.ceil(price - balanceHuman));
+      if (dhbBalance < amountWei) {
+        const balanceHuman = Number(fromWei(dhbBalance));
+        // Round up, and never to nothing: asking for the exact fractional
+        // gap can still leave the wallet a wei short of the price, and a
+        // balance that floats to exactly the price would ask to buy zero.
+        const needDhb = Math.max(1, Math.ceil(price - balanceHuman));
 
-          // Every branch from here down that cannot pay hands the gap to the
-          // sheet instead of a toast. `canTopUpInApp` is what separates "you
-          // can fix this in one tap" from "you have to bring DHB with you".
-          const raiseShortfall = (canTopUpInApp: boolean) => {
-            toast.dismiss('ppv-payment');
-            setShortfall({
-              needDhb,
-              balanceDhb: balanceHuman,
-              priceDhb: price,
-              chainId,
-              canTopUpInApp,
-            });
-            setIsPaying(false);
-          };
+        // Every branch from here down that cannot pay hands the gap to the
+        // sheet instead of a toast. `canTopUpInApp` is what separates "you
+        // can fix this in one tap" from "you have to bring DHB with you".
+        const raiseShortfall = (canTopUpInApp: boolean) => {
+          toast.dismiss('ppv-payment');
+          setShortfall({
+            needDhb,
+            balanceDhb: balanceHuman,
+            priceDhb: price,
+            chainId,
+            canTopUpInApp,
+          });
+          setIsPaying(false);
+        };
 
-          // The top-up step funds the gap from any token, DeHub Pay first and
-          // Uniswap only as its fallback. A silent ETH swap here would skip
-          // DeHub Pay entirely, so every Base shortfall goes to the step.
-          raiseShortfall(isAutoSwapSupported(chainId));
-          return;
-        }
-
-        toast.loading('Unlocking content...', { id: 'ppv-payment' });
-        const ppvResult = await sendFundsForPPV({
-          tokenId,
-          amount: price,
-          to: creatorAddress,
-          chainId,
-        });
-        txHash = ppvResult.hash;
-        await ppvResult.confirmed;
+        // The top-up step funds the gap from any token, DeHub Pay first and
+        // Uniswap only as its fallback. A silent ETH swap here would skip
+        // DeHub Pay entirely, so every Base shortfall goes to the step.
+        raiseShortfall(isAutoSwapSupported(chainId));
+        return;
       }
+
+      toast.loading('Unlocking content...', { id: 'ppv-payment' });
+      const ppvResult = await sendFundsForPPV({
+        tokenId,
+        amount: price,
+        to: creatorAddress,
+        chainId,
+      });
+      txHash = ppvResult.hash;
+      await ppvResult.confirmed;
 
       try {
         await confirmPPVPurchase({ tokenId, txHash, chainId });
@@ -271,7 +240,6 @@ export function usePPVPayment({
     chainId,
     postChainId,
     tokenId,
-    tipAmount,
     openLoginModal,
     onSuccess,
     queryClient,
