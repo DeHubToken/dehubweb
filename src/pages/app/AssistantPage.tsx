@@ -811,7 +811,8 @@ export default function AssistantPage() {
           style: selectedStyle,
           model: selectedChatModel,
           userLanguage,
-          userContext
+          userContext,
+          dehubToken: localStorage.getItem('dehub_token') || undefined,
         }
       });
 
