@@ -529,7 +529,12 @@
     "stageBridge": "{{chain}}から{{symbol}}を送信中…",
     "stageArriving": "Baseに到着中、通常は数秒です…",
     "stageSwap": "UniswapでDHBを購入中…",
-    "payFailed": "{{symbol}}をDHBに変換できませんでした"
+    "payFailed": "{{symbol}}をDHBに変換できませんでした",
+    "stagePay": "{{symbol}}でDeHub Payに支払い中…",
+    "stageDelivering": "DeHub PayがDHBを送信中…",
+    "payViaDpay": "DeHub Payに支払い済み、DHBは約30秒で到着",
+    "payViaBridgeDpay": "Baseに移動してDeHub Payに支払い済み、DHBは約1分で到着",
+    "dmSent": "{{name}}に{{amount}} DHBを送りました！"
   },
   "postOptions": {
     "options": "オプション",
@@ -6342,5 +6347,21 @@
     "openExchange": "エクスチェンジを開く",
     "done": "閉じる",
     "back": "戻る"
+  },
+  "ppvTopUp": {
+    "yourBalance": "残高",
+    "youNeed": "必要額",
+    "checking": "ウォレットを確認中…",
+    "payHint": "ウォレット内のどのトークンでも支払えます。DHBに交換され、すぐにアンロックされます。",
+    "toppingUp": "チャージ中…",
+    "topUpUnlock": "チャージしてアンロック",
+    "orFund": "または別の方法で入金",
+    "paused": "現在DHBの送金がオンチェーンで一時停止されているため、このアンロックはまだ完了できません。しばらくしてからもう一度お試しください。",
+    "otherChain": "この投稿は別のチェーンで決済されるため、そのチェーンのウォレットにDHBが必要です。",
+    "buyCard": "カードでDHBを購入",
+    "buyCardHint": "Visa、Mastercard、Apple Pay",
+    "moveFunds": "資金を移す",
+    "moveFundsHint": "別のチェーンからスワップまたは入金",
+    "notNow": "今はしない"
   }
 }

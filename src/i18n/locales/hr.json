@@ -531,7 +531,12 @@
     "stageBridge": "Slanje {{symbol}} s {{chain}}…",
     "stageArriving": "Stiže na Base, obično za nekoliko sekundi…",
     "stageSwap": "Kupnja DHB-a na Uniswapu…",
-    "payFailed": "Nije moguće pretvoriti {{symbol}} u DHB"
+    "payFailed": "Nije moguće pretvoriti {{symbol}} u DHB",
+    "stagePay": "Plaćanje DeHub Payu s {{symbol}}…",
+    "stageDelivering": "DeHub Pay šalje vaše DHB…",
+    "payViaDpay": "Plaćeno DeHub Payu, DHB stiže za oko 30 s",
+    "payViaBridgeDpay": "Prebačeno na Base i plaćeno DeHub Payu, DHB stiže za otprilike minutu",
+    "dmSent": "Poslano {{amount}} DHB korisniku {{name}}!"
   },
   "postOptions": {
     "options": "Mogućnosti",
@@ -6238,5 +6243,21 @@
     "openExchange": "Otvori Exchange",
     "done": "Gotovo",
     "back": "Natrag"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Stanje računa",
+    "youNeed": "Trebate",
+    "checking": "Provjera vašeg novčanika…",
+    "payHint": "Platite bilo čime iz novčanika. Pretvara se u DHB i odmah otključava.",
+    "toppingUp": "Dopunjavanje…",
+    "topUpUnlock": "Dopuni i otključaj",
+    "orFund": "Ili dodajte sredstva na drugi način",
+    "paused": "DHB transferi su trenutno pauzirani na lancu, pa ovo otključavanje još ne može proći. Pokušajte ponovno uskoro.",
+    "otherChain": "Ova objava se namiruje na drugom lancu, pa treba DHB u vašem novčaniku tamo.",
+    "buyCard": "Kupi DHB karticom",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Prebaci sredstva",
+    "moveFundsHint": "Zamijenite ili uplatite s drugog lanca",
+    "notNow": "Ne sada"
   }
 }

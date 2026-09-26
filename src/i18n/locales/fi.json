@@ -531,7 +531,12 @@
     "stageBridge": "Lähetetään {{symbol}} verkosta {{chain}}…",
     "stageArriving": "Saapuu Baseen, yleensä muutamassa sekunnissa…",
     "stageSwap": "Ostetaan DHB:tä Uniswapissa…",
-    "payFailed": "{{symbol}}-muunto DHB:ksi epäonnistui"
+    "payFailed": "{{symbol}}-muunto DHB:ksi epäonnistui",
+    "stagePay": "Maksetaan DeHub Paylle käyttäen {{symbol}}…",
+    "stageDelivering": "DeHub Pay lähettää DHB:si…",
+    "payViaDpay": "Maksettu DeHub Paylle, DHB saapuu noin 30 sekunnissa",
+    "payViaBridgeDpay": "Siirretty Baseen ja maksettu DeHub Paylle, DHB saapuu noin minuutissa",
+    "dmSent": "Lähetettiin {{amount}} DHB vastaanottajalle {{name}}!"
   },
   "postOptions": {
     "options": "Vaihtoehdot",
@@ -6239,5 +6244,21 @@
     "openExchange": "Avoin vaihto",
     "done": "Valmis",
     "back": "Takaisin"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Saldosi",
+    "youNeed": "Tarvitset",
+    "checking": "Tarkistetaan lompakkoasi…",
+    "payHint": "Maksa millä tahansa lompakkosi varoilla. Se muuttuu DHB:ksi ja avautuu heti.",
+    "toppingUp": "Täydennetään…",
+    "topUpUnlock": "Täydennä & avaa",
+    "orFund": "Tai lisää varoja muulla tavalla",
+    "paused": "DHB-siirrot on tällä hetkellä pysäytetty ketjussa, joten tätä avausta ei voi vielä suorittaa. Yritä pian uudelleen.",
+    "otherChain": "Tämä julkaisu selvitetään toisessa ketjussa, joten se vaatii DHB:tä lompakossasi siellä.",
+    "buyCard": "Osta DHB:tä kortilla",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Siirrä varoja",
+    "moveFundsHint": "Vaihda tai talleta toisesta ketjusta",
+    "notNow": "Ei nyt"
   }
 }

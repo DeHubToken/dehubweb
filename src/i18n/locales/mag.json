@@ -502,7 +502,12 @@
     "stageBridge": "{{chain}} से {{symbol}} भेज रहल ही…",
     "stageArriving": "Base पर पहुँच रहल हे, अक्सर कुछे सेकंड लगऽ हे…",
     "stageSwap": "Uniswap पर DHB खरीद रहल ही…",
-    "payFailed": "{{symbol}} के DHB में न बदल सकली"
+    "payFailed": "{{symbol}} के DHB में न बदल सकली",
+    "stagePay": "{{symbol}} से DeHub Pay के भुगतान कर रहल ही…",
+    "stageDelivering": "DeHub Pay तोहर DHB भेज रहल हे…",
+    "payViaDpay": "DeHub Pay के भुगतान हो गेल, DHB करीब 30 सेकंड में पहुँचत",
+    "payViaBridgeDpay": "Base पर ले जाके DeHub Pay के भुगतान हो गेल, DHB करीब एक मिनट में पहुँचत",
+    "dmSent": "{{name}} के {{amount}} DHB भेजल गेल!"
   },
   "postOptions": {
     "options": "विकल्प",
@@ -3967,5 +3972,21 @@
     "openExchange": "एक्सचेंजों को ओपन करे",
     "done": "क 'देल गेल",
     "back": "चल गिर के उठ जा"
+  },
+  "ppvTopUp": {
+    "yourBalance": "तोहर बैलेंस",
+    "youNeed": "तोहरा चाही",
+    "checking": "तोहर वॉलेट जाँच रहल ही…",
+    "payHint": "अपन वॉलेट में जे कुछ हे ओकरा से भुगतान करऽ। ऊ DHB बन जाहे आउ तुरते अनलॉक हो जाहे।",
+    "toppingUp": "टॉप अप हो रहल हे…",
+    "topUpUnlock": "टॉप अप करऽ आउ अनलॉक करऽ",
+    "orFund": "या दोसर तरीका से पइसा जोड़ऽ",
+    "paused": "DHB ट्रांसफर अभी ऑन-चेन रुकल हे, एही से ई अनलॉक अभी न हो सकऽ हे। थोड़े देर में फिर कोसिस करऽ।",
+    "otherChain": "ई पोस्ट दोसर चेन पर सेटल होवऽ हे, एही से ओजा तोहर वॉलेट में DHB चाही।",
+    "buyCard": "कार्ड से DHB खरीदऽ",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "पइसा अंदर लावऽ",
+    "moveFundsHint": "दोसर चेन से स्वैप या जमा करऽ",
+    "notNow": "अभी ना"
   }
 }

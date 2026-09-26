@@ -577,7 +577,12 @@
     "stageBridge": "Ipinapadala ang {{symbol}} mula sa {{chain}}…",
     "stageArriving": "Darating sa Base, karaniwang ilang segundo lang…",
     "stageSwap": "Bumibili ng DHB sa Uniswap…",
-    "payFailed": "Hindi ma-convert ang {{symbol}} sa DHB"
+    "payFailed": "Hindi ma-convert ang {{symbol}} sa DHB",
+    "stagePay": "Nagbabayad sa DeHub Pay gamit ang {{symbol}}…",
+    "stageDelivering": "Ipinapadala ng DeHub Pay ang iyong DHB…",
+    "payViaDpay": "Nabayaran sa DeHub Pay, darating ang DHB sa loob ng mga 30s",
+    "payViaBridgeDpay": "Inilipat sa Base at binayaran sa DeHub Pay, darating ang DHB sa loob ng mga isang minuto",
+    "dmSent": "Naipadala ang {{amount}} DHB kay {{name}}!"
   },
   "postOptions": {
     "options": "Mga Opsyon",
@@ -6245,5 +6250,21 @@
     "openExchange": "Buksan ang Exchange",
     "done": "Tapos na",
     "back": "Bumalik"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Iyong balance",
+    "youNeed": "Kailangan mo",
+    "checking": "Tinitingnan ang iyong wallet…",
+    "payHint": "Magbayad gamit ang kahit ano sa iyong wallet. Magiging DHB ito at maa-unlock agad.",
+    "toppingUp": "Nagto-top up…",
+    "topUpUnlock": "Mag-top up at i-unlock",
+    "orFund": "O magdagdag ng pondo sa ibang paraan",
+    "paused": "Naka-pause ngayon on-chain ang mga DHB transfer, kaya hindi pa matutuloy ang unlock na ito. Subukang muli maya-maya.",
+    "otherChain": "Sa ibang chain nagse-settle ang post na ito, kaya kailangan ng DHB sa iyong wallet doon.",
+    "buyCard": "Bumili ng DHB gamit ang card",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Maglipat ng pondo",
+    "moveFundsHint": "Mag-swap o mag-deposit mula sa ibang chain",
+    "notNow": "Hindi ngayon"
   }
 }

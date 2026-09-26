@@ -509,7 +509,12 @@
     "stageBridge": "{{symbol}} ካብ {{chain}} ይለኣኽ ኣሎ…",
     "stageArriving": "ናብ Base ይበጽሕ ኣሎ፡ ብልሙድ ቅሩብ ካልኢታት…",
     "stageSwap": "ኣብ Uniswap DHB ይዕደግ ኣሎ…",
-    "payFailed": "{{symbol}} ናብ DHB ክቕየር ኣይከኣለን"
+    "payFailed": "{{symbol}} ናብ DHB ክቕየር ኣይከኣለን",
+    "stagePay": "ብ{{symbol}} ን DeHub Pay ይኽፈል ኣሎ…",
+    "stageDelivering": "DeHub Pay ናትካ DHB ይሰድድ ኣሎ…",
+    "payViaDpay": "ን DeHub Pay ተኸፊሉ፣ DHB ኣብ ዳርጋ 30 ካልኢት ክበጽሕ እዩ",
+    "payViaBridgeDpay": "ናብ Base ተሰጋጊሩ ን DeHub Pay ተኸፊሉ፣ DHB ኣብ ዳርጋ ሓንቲ ደቒቕ ክበጽሕ እዩ",
+    "dmSent": "{{amount}} DHB ን{{name}} ተሰዲዱ!"
   },
   "postOptions": {
     "options": "ምርጫታት",
@@ -3944,5 +3949,21 @@
     "openExchange": "ክፉት ልውውጥ",
     "done": "ተፈጺሙ",
     "back": "ንድሕሪት ተመለስ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "ሚዛንካ",
+    "youNeed": "ዘድልየካ",
+    "checking": "ቦርሳኻ ይፍተሽ ኣሎ…",
+    "payHint": "ኣብ ቦርሳኻ ብዘሎ ዝኾነ ክፈል። ናብ DHB ተቐይሩ ብቕጽበት ይኽፈት።",
+    "toppingUp": "ይመልእ ኣሎ…",
+    "topUpUnlock": "ምላእ & ክፈት",
+    "orFund": "ወይ ብካልእ መንገዲ ገንዘብ ወስኽ",
+    "paused": "ምስግጋር DHB ሕጂ ኣብ ሰንሰለት ተቋሪጹ ስለ ዘሎ፣ እዚ ምኽፋት ገና ክሰርሕ ኣይክእልን። ድሕሪ ቁሩብ እንደገና ፈትን።",
+    "otherChain": "እዚ ጽሑፍ ኣብ ካልእ ሰንሰለት ይፍጸም፣ ስለዚ ኣብኡ ኣብ ቦርሳኻ DHB የድሊ።",
+    "buyCard": "ብካርድ DHB ግዛእ",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "ገንዘብ ኣእቱ",
+    "moveFundsHint": "ካብ ካልእ ሰንሰለት ቀይር ወይ ኣቐምጥ",
+    "notNow": "ሕጂ ኣይኮነን"
   }
 }

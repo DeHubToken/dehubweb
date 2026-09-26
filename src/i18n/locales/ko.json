@@ -529,7 +529,12 @@
     "stageBridge": "{{chain}}에서 {{symbol}} 전송 중…",
     "stageArriving": "Base로 도착 중, 보통 몇 초 걸려요…",
     "stageSwap": "Uniswap에서 DHB 구매 중…",
-    "payFailed": "{{symbol}}을(를) DHB로 변환할 수 없습니다"
+    "payFailed": "{{symbol}}을(를) DHB로 변환할 수 없습니다",
+    "stagePay": "{{symbol}}(으)로 DeHub Pay에 결제 중…",
+    "stageDelivering": "DeHub Pay가 DHB를 보내는 중…",
+    "payViaDpay": "DeHub Pay에 결제 완료, DHB는 약 30초 후 도착",
+    "payViaBridgeDpay": "Base로 옮겨 DeHub Pay에 결제 완료, DHB는 약 1분 후 도착",
+    "dmSent": "{{name}}님에게 {{amount}} DHB를 보냈어요!"
   },
   "postOptions": {
     "options": "옵션",
@@ -6346,5 +6351,21 @@
     "openExchange": "거래소 열기",
     "done": "완료",
     "back": "뒤로"
+  },
+  "ppvTopUp": {
+    "yourBalance": "내 잔액",
+    "youNeed": "필요 금액",
+    "checking": "지갑 확인 중…",
+    "payHint": "지갑에 있는 어떤 자산으로도 결제할 수 있어요. DHB로 바뀌어 바로 잠금 해제돼요.",
+    "toppingUp": "충전 중…",
+    "topUpUnlock": "충전하고 잠금 해제",
+    "orFund": "또는 다른 방법으로 자금 추가",
+    "paused": "지금은 온체인에서 DHB 전송이 일시 중지되어 이 잠금 해제를 진행할 수 없어요. 잠시 후 다시 시도해 주세요.",
+    "otherChain": "이 게시물은 다른 체인에서 정산되므로 해당 체인의 지갑에 DHB가 필요해요.",
+    "buyCard": "카드로 DHB 구매",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "자금 가져오기",
+    "moveFundsHint": "다른 체인에서 스왑 또는 입금",
+    "notNow": "나중에"
   }
 }

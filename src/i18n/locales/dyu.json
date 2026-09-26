@@ -507,7 +507,12 @@
     "stageBridge": "{{symbol}} bɛ ci ka bɔ {{chain}} kan…",
     "stageArriving": "A bɛ sera Base kan, a ka teli ka kɛ segɔni dama ye…",
     "stageSwap": "DHB bɛ san Uniswap kan…",
-    "payFailed": "{{symbol}} ma se ka falen ka kɛ DHB ye"
+    "payFailed": "{{symbol}} ma se ka falen ka kɛ DHB ye",
+    "stagePay": "DeHub Pay bɛ sara ni {{symbol}} ye…",
+    "stageDelivering": "DeHub Pay bɛ i ka DHB ci…",
+    "payViaDpay": "A sarala DeHub Pay ma, DHB bɛ se segɔni 30 ɲɔgɔn kɔnɔ",
+    "payViaBridgeDpay": "A taara Base kan ani a sarala DeHub Pay ma, DHB bɛ se miniti kelen ɲɔgɔn kɔnɔ",
+    "dmSent": "{{amount}} DHB cira {{name}} ma!"
   },
   "postOptions": {
     "options": "Kɔrɔbɔ",
@@ -3905,5 +3910,21 @@
     "openExchange": "Fanga min be sɔrɔ o la",
     "done": "Mun lo kɛra?",
     "back": "Ka segi ka na"
+  },
+  "ppvTopUp": {
+    "yourBalance": "I ka wari",
+    "youNeed": "I mago bɛ",
+    "checking": "I ka waribon bɛ lajɛ…",
+    "payHint": "Sara ni fɛn o fɛn ye min bɛ i ka waribon kɔnɔ. A bɛ kɛ DHB ye ani a bɛ dayɛlɛ o yɔrɔnin bɛɛ.",
+    "toppingUp": "Wari bɛ fara a kan…",
+    "topUpUnlock": "Wari fara a kan ani a dayɛlɛ",
+    "orFund": "Walima wari fara a kan ni sira wɛrɛ ye",
+    "paused": "DHB cili jɔlen don chaîne kan sisan, o de kosɔn nin dayɛlɛli tɛ se ka kɛ fɔlɔ. Segin a kan sɔɔni.",
+    "otherChain": "Nin post in bɛ sara chaîne wɛrɛ kan, o de kosɔn DHB ka kan ka kɛ i ka waribon kɔnɔ yen.",
+    "buyCard": "DHB san ni kariti ye",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Wari don",
+    "moveFundsHint": "A falen walima a bila ka bɔ chaîne wɛrɛ kan",
+    "notNow": "Sisan tɛ"
   }
 }

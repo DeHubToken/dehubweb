@@ -511,7 +511,12 @@
     "stageBridge": "{{chain}} မှ {{symbol}} ပို့နေသည်…",
     "stageArriving": "Base သို့ ရောက်လာနေသည်၊ ပုံမှန်အားဖြင့် စက္ကန့်အနည်းငယ်…",
     "stageSwap": "Uniswap တွင် DHB ဝယ်နေသည်…",
-    "payFailed": "{{symbol}} ကို DHB သို့ ပြောင်း၍ မရပါ"
+    "payFailed": "{{symbol}} ကို DHB သို့ ပြောင်း၍ မရပါ",
+    "stagePay": "{{symbol}} ဖြင့် DeHub Pay သို့ ပေးချေနေသည်…",
+    "stageDelivering": "DeHub Pay က သင့် DHB ကို ပို့နေသည်…",
+    "payViaDpay": "DeHub Pay သို့ ပေးချေပြီး၊ DHB သည် စက္ကန့် 30 ခန့်အတွင်း ရောက်မည်",
+    "payViaBridgeDpay": "Base သို့ ရွှေ့ပြီး DeHub Pay သို့ ပေးချေပြီး၊ DHB သည် တစ်မိနစ်ခန့်အတွင်း ရောက်မည်",
+    "dmSent": "{{name}} ထံ {{amount}} DHB ပို့ပြီးပါပြီ!"
   },
   "postOptions": {
     "options": "ရွေးချယ်စရာများ",
@@ -4027,5 +4032,21 @@
     "openExchange": "Exchange ကိုဖွင့်ပါ",
     "done": "ပြီးပါပြီ",
     "back": "နောက်သို့"
+  },
+  "ppvTopUp": {
+    "yourBalance": "သင့်လက်ကျန်",
+    "youNeed": "သင်လိုအပ်သည်",
+    "checking": "သင့်ပိုက်ဆံအိတ်ကို စစ်ဆေးနေသည်…",
+    "payHint": "သင့်ပိုက်ဆံအိတ်ထဲရှိ မည်သည့်အရာဖြင့်မဆို ပေးချေပါ။ ၎င်းသည် DHB ဖြစ်လာပြီး ချက်ချင်း ဖွင့်ပေးမည်။",
+    "toppingUp": "ငွေဖြည့်နေသည်…",
+    "topUpUnlock": "ငွေဖြည့်ပြီး ဖွင့်မည်",
+    "orFund": "သို့မဟုတ် အခြားနည်းဖြင့် ငွေထည့်ပါ",
+    "paused": "DHB လွှဲပြောင်းမှုများကို ယခု on-chain တွင် ခေတ္တရပ်ထားသဖြင့် ဤဖွင့်ခြင်းကို မလုပ်ဆောင်နိုင်သေးပါ။ ခဏနေ ထပ်စမ်းကြည့်ပါ။",
+    "otherChain": "ဤပို့စ်သည် အခြား chain တွင် ငွေရှင်းသဖြင့် ထို chain ရှိ သင့်ပိုက်ဆံအိတ်တွင် DHB လိုအပ်သည်။",
+    "buyCard": "ကတ်ဖြင့် DHB ဝယ်မည်",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "ငွေလွှဲသွင်းမည်",
+    "moveFundsHint": "အခြား chain မှ လဲလှယ် သို့မဟုတ် အပ်နှံပါ",
+    "notNow": "ယခုမဟုတ်ပါ"
   }
 }

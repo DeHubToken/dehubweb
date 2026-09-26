@@ -512,7 +512,12 @@
     "stageBridge": "{{chain}} ରୁ {{symbol}} ପଠାଉଛି…",
     "stageArriving": "Base ରେ ପହଞ୍ଚୁଛି, ସାଧାରଣତଃ କିଛି ସେକେଣ୍ଡ…",
     "stageSwap": "Uniswap ରେ DHB କିଣୁଛି…",
-    "payFailed": "{{symbol}} କୁ DHB ରେ ବଦଳାଇ ପାରିଲା ନାହିଁ"
+    "payFailed": "{{symbol}} କୁ DHB ରେ ବଦଳାଇ ପାରିଲା ନାହିଁ",
+    "stagePay": "{{symbol}} ରେ DeHub Pay କୁ ପେମେଣ୍ଟ କରୁଛି…",
+    "stageDelivering": "DeHub Pay ଆପଣଙ୍କ DHB ପଠାଉଛି…",
+    "payViaDpay": "DeHub Pay କୁ ପେମେଣ୍ଟ ହେଲା, DHB ପ୍ରାୟ 30 ସେକେଣ୍ଡରେ ପହଞ୍ଚିବ",
+    "payViaBridgeDpay": "Base କୁ ନେଇ DeHub Pay କୁ ପେମେଣ୍ଟ ହେଲା, DHB ପ୍ରାୟ ଏକ ମିନିଟରେ ପହଞ୍ଚିବ",
+    "dmSent": "{{name}} ଙ୍କୁ {{amount}} DHB ପଠାଗଲା!"
   },
   "postOptions": {
     "options": "ବିକଳ୍ପ",
@@ -3981,5 +3986,21 @@
     "openExchange": "ଏକ୍ସଚେଞ୍ଜକୁ ଖୋଲନ୍ତୁ",
     "done": "ସମାପ୍ତ",
     "back": "ପଛକୁ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "ଆପଣଙ୍କ ବାଲାନ୍ସ",
+    "youNeed": "ଆପଣଙ୍କୁ ଦରକାର",
+    "checking": "ଆପଣଙ୍କ ୱାଲେଟ ଯାଞ୍ଚ କରୁଛି…",
+    "payHint": "ଆପଣଙ୍କ ୱାଲେଟରେ ଥିବା ଯେକୌଣସି ଜିନିଷରେ ପେମେଣ୍ଟ କରନ୍ତୁ। ଏହା DHB ହୋଇଯାଏ ଏବଂ ତୁରନ୍ତ ଅନଲକ ହୁଏ।",
+    "toppingUp": "ଟପ୍ ଅପ୍ କରୁଛି…",
+    "topUpUnlock": "ଟପ୍ ଅପ୍ କରନ୍ତୁ ଓ ଅନଲକ କରନ୍ତୁ",
+    "orFund": "କିମ୍ବା ଅନ୍ୟ ଉପାୟରେ ପାଣ୍ଠି ଯୋଡନ୍ତୁ",
+    "paused": "DHB ଟ୍ରାନ୍ସଫର ବର୍ତ୍ତମାନ ଅନ-ଚେନରେ ବିରତ ଅଛି, ତେଣୁ ଏହି ଅନଲକ ଏବେ ହୋଇପାରିବ ନାହିଁ। କିଛି ସମୟ ପରେ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
+    "otherChain": "ଏହି ପୋଷ୍ଟ ଅନ୍ୟ ଏକ ଚେନରେ ସେଟଲ ହୁଏ, ତେଣୁ ସେଠାରେ ଆପଣଙ୍କ ୱାଲେଟରେ DHB ଦରକାର।",
+    "buyCard": "କାର୍ଡରେ DHB କିଣନ୍ତୁ",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "ପାଣ୍ଠି ଭିତରକୁ ଆଣନ୍ତୁ",
+    "moveFundsHint": "ଅନ୍ୟ ଚେନରୁ ସ୍ୱାପ୍ କିମ୍ବା ଜମା କରନ୍ତୁ",
+    "notNow": "ବର୍ତ୍ତମାନ ନୁହେଁ"
   }
 }

@@ -558,7 +558,12 @@
     "stageBridge": "Odosiela sa {{symbol}} z {{chain}}…",
     "stageArriving": "Prichádza na Base, zvyčajne pár sekúnd…",
     "stageSwap": "Nakupuje sa DHB na Uniswap…",
-    "payFailed": "{{symbol}} sa nepodarilo previesť na DHB"
+    "payFailed": "{{symbol}} sa nepodarilo previesť na DHB",
+    "stagePay": "Platba DeHub Pay cez {{symbol}}…",
+    "stageDelivering": "DeHub Pay posiela vaše DHB…",
+    "payViaDpay": "Zaplatené cez DeHub Pay, DHB dorazí asi o 30 s",
+    "payViaBridgeDpay": "Presunuté na Base a zaplatené cez DeHub Pay, DHB dorazí asi o minútu",
+    "dmSent": "Odoslané {{amount}} DHB používateľovi {{name}}!"
   },
   "postOptions": {
     "options": "Možnosti",
@@ -4234,5 +4239,21 @@
     "openExchange": "Otvoriť burzu",
     "done": "Hotovo",
     "back": "Späť"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Váš zostatok",
+    "youNeed": "Potrebujete",
+    "checking": "Kontrolujeme peňaženku…",
+    "payHint": "Zaplaťte čímkoľvek z peňaženky. Zmení sa na DHB a obsah sa hneď odomkne.",
+    "toppingUp": "Dobíja sa…",
+    "topUpUnlock": "Dobiť a odomknúť",
+    "orFund": "Alebo pridajte prostriedky inak",
+    "paused": "Prevody DHB sú momentálne na blockchaine pozastavené, takže toto odomknutie zatiaľ neprejde. Skúste to o chvíľu znova.",
+    "otherChain": "Tento príspevok sa vyrovnáva na inom reťazci, takže tam potrebujete DHB v peňaženke.",
+    "buyCard": "Kúpiť DHB kartou",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Presunúť prostriedky",
+    "moveFundsHint": "Swap alebo vklad z iného reťazca",
+    "notNow": "Teraz nie"
   }
 }

@@ -515,7 +515,12 @@
     "stageBridge": "Na-ezipu {{symbol}} site na {{chain}}…",
     "stageArriving": "Na-abịa na Base, ọ na-abụkarị sekọnd ole na ole…",
     "stageSwap": "Na-azụ DHB na Uniswap…",
-    "payFailed": "Enweghị ike ịgbanwe {{symbol}} ka ọ bụrụ DHB"
+    "payFailed": "Enweghị ike ịgbanwe {{symbol}} ka ọ bụrụ DHB",
+    "stagePay": "Na-akwụ DeHub Pay site na {{symbol}}…",
+    "stageDelivering": "DeHub Pay na-ezipu DHB gị…",
+    "payViaDpay": "A kwụrụ DeHub Pay, DHB ga-abịa n'ihe dị ka sekọnd 30",
+    "payViaBridgeDpay": "E bugara ya na Base ma kwụọ DeHub Pay, DHB ga-abịa n'ihe dị ka otu nkeji",
+    "dmSent": "E zigara {{name}} {{amount}} DHB!"
   },
   "postOptions": {
     "options": "Nhọrọ",
@@ -4004,5 +4009,21 @@
     "openExchange": "Open Exchange",
     "done": "Emere",
     "back": "Azụ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Ego fọdụrụ gị",
+    "youNeed": "Ị chọrọ",
+    "checking": "Na-enyocha obere akpa gị…",
+    "payHint": "Kwụọ ụgwọ site na ihe ọ bụla dị n'obere akpa gị. Ọ ga-aghọ DHB ma meghee ozugbo.",
+    "toppingUp": "Na-etinye ego…",
+    "topUpUnlock": "Tinye ego & meghee",
+    "orFund": "Ma ọ bụ tinye ego n'ụzọ ọzọ",
+    "paused": "Akwụsịtụla mbufe DHB na chain ugbu a, ya mere mmeghe a enweghị ike ịga n'ihu ugbu a. Nwaa ọzọ n'oge na-adịghị anya.",
+    "otherChain": "Post a na-akwụ ụgwọ na chain ọzọ, ya mere ọ chọrọ DHB n'obere akpa gị ebe ahụ.",
+    "buyCard": "Zụta DHB site na kaadị",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Bubata ego",
+    "moveFundsHint": "Gbanwee ma ọ bụ tinye site na chain ọzọ",
+    "notNow": "Ọ bụghị ugbu a"
   }
 }

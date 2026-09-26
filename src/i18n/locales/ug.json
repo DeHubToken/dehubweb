@@ -517,7 +517,12 @@
     "stageBridge": "{{chain}} دىن {{symbol}} يوللىنىۋاتىدۇ…",
     "stageArriving": "Base قا يېتىپ كېلىۋاتىدۇ، ئادەتتە بىر نەچچە سېكۇنت…",
     "stageSwap": "Uniswap دا DHB سېتىۋېلىنىۋاتىدۇ…",
-    "payFailed": "{{symbol}} نى DHB غا ئايلاندۇرغىلى بولمىدى"
+    "payFailed": "{{symbol}} نى DHB غا ئايلاندۇرغىلى بولمىدى",
+    "stagePay": "{{symbol}} ئارقىلىق DeHub Pay غا تۆلەۋاتىدۇ…",
+    "stageDelivering": "DeHub Pay سىزنىڭ DHB نى ئەۋەتىۋاتىدۇ…",
+    "payViaDpay": "DeHub Pay غا تۆلەندى، DHB تەخمىنەن 30 سېكۇنتتا يېتىپ كېلىدۇ",
+    "payViaBridgeDpay": "Base غا يۆتكىلىپ DeHub Pay غا تۆلەندى، DHB تەخمىنەن بىر مىنۇتتا يېتىپ كېلىدۇ",
+    "dmSent": "{{name}} گە {{amount}} DHB ئەۋەتىلدى!"
   },
   "postOptions": {
     "options": "تاللانمىلار",
@@ -4014,5 +4019,21 @@
     "openExchange": "ئالماشتۇرۇشنى ئېچىش",
     "done": "تاماملاندى",
     "back": "Back"
+  },
+  "ppvTopUp": {
+    "yourBalance": "توڭىڭىز",
+    "youNeed": "سىزگە كېرەك",
+    "checking": "ھەميانىڭىز تەكشۈرۈلۈۋاتىدۇ…",
+    "payHint": "ھەميانىڭىزدىكى خالىغان نەرسە بىلەن تۆلەڭ. ئۇ DHB غا ئايلىنىپ دەرھال ئېچىلىدۇ.",
+    "toppingUp": "تولۇقلىنىۋاتىدۇ…",
+    "topUpUnlock": "تولۇقلاپ ئېچىش",
+    "orFund": "ياكى باشقا يول بىلەن مەبلەغ قوشۇڭ",
+    "paused": "DHB يۆتكەش ھازىر زەنجىردە توختىتىلدى، شۇڭا بۇ ئېچىش تېخى ئەمەلگە ئاشمايدۇ. بىردەمدىن كېيىن قايتا سىناڭ.",
+    "otherChain": "بۇ يازما باشقا زەنجىردە ھېسابلىنىدۇ، شۇڭا ئۇ يەردىكى ھەميانىڭىزدا DHB بولۇشى كېرەك.",
+    "buyCard": "كارتا بىلەن DHB سېتىۋېلىش",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "مەبلەغ يۆتكەش",
+    "moveFundsHint": "باشقا زەنجىردىن ئالماشتۇرۇش ياكى قويۇش",
+    "notNow": "ھازىر ئەمەس"
   }
 }

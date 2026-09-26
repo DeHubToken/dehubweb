@@ -475,7 +475,12 @@
     "stageBridge": "{{chain}} توں {{symbol}} گھلیندے پئے ہیں…",
     "stageArriving": "Base تے پہنچدا پئے، عام طور تے کجھ سیکنڈ…",
     "stageSwap": "Uniswap تے DHB خریدیندے پئے ہیں…",
-    "payFailed": "{{symbol}} کوں DHB وچ نئیں بدل سڳے"
+    "payFailed": "{{symbol}} کوں DHB وچ نئیں بدل سڳے",
+    "stagePay": "{{symbol}} نال DeHub Pay کوں ادائیگی تھیندی پئی اے…",
+    "stageDelivering": "DeHub Pay تہاݙے DHB گھلدا پئے…",
+    "payViaDpay": "DeHub Pay کوں ادا تھی ڳیا، DHB لڳ بھڳ 30 سیکنڈ وچ آسن",
+    "payViaBridgeDpay": "Base تے گھن ونڄ تے DeHub Pay کوں ادا تھی ڳیا، DHB لڳ بھڳ ہک منٹ وچ آسن",
+    "dmSent": "{{name}} کوں {{amount}} DHB گھل ݙتے!"
   },
   "postOptions": {
     "options": "اختیارات",
@@ -3796,5 +3801,21 @@
     "openExchange": "ایکسچینج کھولو",
     "done": "تھی گئیا",
     "back": "واپس"
+  },
+  "ppvTopUp": {
+    "yourBalance": "تہاݙا بیلنس",
+    "youNeed": "تہاکوں چاہیدے",
+    "checking": "تہاݙا والٹ چیک تھیندا پئے…",
+    "payHint": "اپݨے والٹ وچ کہیں وی شئے نال ادا کرو۔ او DHB بݨ ویسی تے فوراً کھل ویسی۔",
+    "toppingUp": "ٹاپ اپ تھیندا پئے…",
+    "topUpUnlock": "ٹاپ اپ کرو تے کھولو",
+    "orFund": "یا ٻئے طریقے نال پیسے پاؤ",
+    "paused": "DHB ٹرانسفر ہݨ آن چین رُکے ہوئے ہن، ایں کیتے ایہ کھولݨ ہݨے نی تھی سڳدا۔ تھوڑی دیر بعد ولا کوشش کرو۔",
+    "otherChain": "ایہ پوسٹ ٻئی چین تے سیٹل تھیندی اے، ایں کیتے اتھاں تہاݙے والٹ وچ DHB چاہیدے ہن۔",
+    "buyCard": "کارڈ نال DHB خریدو",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "پیسے اندر گھن آؤ",
+    "moveFundsHint": "ٻئی چین توں سواپ یا جمع کرو",
+    "notNow": "ہݨ نہیں"
   }
 }

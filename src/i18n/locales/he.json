@@ -529,7 +529,12 @@
     "stageBridge": "שולחים {{symbol}} מ-{{chain}}…",
     "stageArriving": "מגיע ל-Base, בדרך כלל תוך כמה שניות…",
     "stageSwap": "קונים DHB ב-Uniswap…",
-    "payFailed": "לא ניתן היה להמיר {{symbol}} ל-DHB"
+    "payFailed": "לא ניתן היה להמיר {{symbol}} ל-DHB",
+    "stagePay": "משלמים ל-DeHub Pay עם {{symbol}}…",
+    "stageDelivering": "DeHub Pay שולח לך את ה-DHB…",
+    "payViaDpay": "שולם ל-DeHub Pay, ה-DHB יגיע תוך כ-30 שנ׳",
+    "payViaBridgeDpay": "הועבר ל-Base ושולם ל-DeHub Pay, ה-DHB יגיע תוך כדקה",
+    "dmSent": "נשלחו {{amount}} DHB ל-{{name}}!"
   },
   "postOptions": {
     "options": "אפשרויות",
@@ -6053,5 +6058,21 @@
     "openExchange": "פתח את הבורסה",
     "done": "סיום",
     "back": "הקודם"
+  },
+  "ppvTopUp": {
+    "yourBalance": "היתרה שלך",
+    "youNeed": "צריך",
+    "checking": "בודקים את הארנק שלך…",
+    "payHint": "שלם עם כל מה שיש בארנק שלך. זה הופך ל-DHB ונפתח מיד.",
+    "toppingUp": "טוענים…",
+    "topUpUnlock": "טען ופתח",
+    "orFund": "או הוסף כספים בדרך אחרת",
+    "paused": "העברות DHB מושהות כרגע בשרשרת, כך שלא ניתן לבצע את הפתיחה הזו כרגע. נסה שוב בעוד מעט.",
+    "otherChain": "הפוסט הזה מסולק בשרשרת אחרת, ולכן נדרש DHB בארנק שלך שם.",
+    "buyCard": "קניית DHB בכרטיס",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "העברת כספים",
+    "moveFundsHint": "החלפה או הפקדה משרשרת אחרת",
+    "notNow": "לא עכשיו"
   }
 }

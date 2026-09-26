@@ -523,7 +523,12 @@
     "stageBridge": "{{chain}} থাকি {{symbol}} পাঠানি অইরার…",
     "stageArriving": "Base-এ আইরার, সাধারণত কয়েক সেকেন্ড লাগে…",
     "stageSwap": "Uniswap-এ DHB কিনা অইরার…",
-    "payFailed": "{{symbol}} DHB-তে বদলানি গেলো না"
+    "payFailed": "{{symbol}} DHB-তে বদলানি গেলো না",
+    "stagePay": "{{symbol}} দিয়া DeHub Pay-রে পেমেন্ট অইতাসে…",
+    "stageDelivering": "DeHub Pay তোমার DHB পাঠাইতাসে…",
+    "payViaDpay": "DeHub Pay-রে পেমেন্ট অইসে, DHB মোটামুটি ৩০ সেকেন্ডে আইবো",
+    "payViaBridgeDpay": "Base-এ নিয়া DeHub Pay-রে পেমেন্ট অইসে, DHB মোটামুটি এক মিনিটে আইবো",
+    "dmSent": "{{name}}-রে {{amount}} DHB পাঠানো অইসে!"
   },
   "postOptions": {
     "options": "অপশন",
@@ -4044,5 +4049,21 @@
     "openExchange": "Exchange খুলুন",
     "done": "শেষ",
     "back": "পিছে"
+  },
+  "ppvTopUp": {
+    "yourBalance": "তোমার ব্যালেন্স",
+    "youNeed": "তোমার লাগবো",
+    "checking": "তোমার ওয়ালেট দেখা অইতাসে…",
+    "payHint": "ওয়ালেটর যেকুনু জিনিস দিয়া পেমেন্ট করো। ইটা DHB অই যাইবো আর লগে লগে খুলি যাইবো।",
+    "toppingUp": "টপ আপ অইতাসে…",
+    "topUpUnlock": "টপ আপ করো আর খোলো",
+    "orFund": "নাইলে অন্য উপায়ে টাকা যোগ করো",
+    "paused": "DHB ট্রান্সফার অখন অন-চেইনে বন্ধ আছে, তাই ই আনলক অখনো অইতো নায়। একটু পরে আবার চেষ্টা করো।",
+    "otherChain": "ই পোস্ট অন্য চেইনে সেটল অয়, তাই হনো তোমার ওয়ালেটে DHB লাগবো।",
+    "buyCard": "কার্ড দিয়া DHB কিনো",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "টাকা আনো",
+    "moveFundsHint": "অন্য চেইন থাকি সোয়াপ বা জমা করো",
+    "notNow": "অখন নায়"
   }
 }
