@@ -235,6 +235,14 @@ export function useStageVolumeLevel(): number {
   return useSyncExternalStore(subscribeStageVolume, () => stageVolumeLevel);
 }
 
+/**
+ * Columns the live / upcoming lists actually render. ended_at and
+ * recording_url are always null on a live or scheduled row, so they are left
+ * out rather than shipped on every refresh.
+ */
+const SPACE_LIST_COLUMNS =
+  'id, short_id, channel_name, title, description, host_wallet_address, host_username, host_avatar, status, listener_count, speaker_count, started_at, created_at, total_listens, scheduled_at, cover_image_url';
+
 // ─── Live spaces store ──────────────────────────────────────────────────────
 // StageProvider already keeps the live-spaces list fresh (one fetch at boot +
 // one debounced realtime channel). Sidebar/carousel widgets used to run their
@@ -881,7 +889,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
     try {
       const { data, error } = await supabase
         .from('audio_spaces')
-        .select('*')
+        .select(SPACE_LIST_COLUMNS)
         .eq('status', 'live')
         .order('started_at', { ascending: false });
       if (error) throw error;
@@ -906,7 +914,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       const cutoff = new Date(Date.now() - SCHEDULED_GRACE_MS).toISOString();
       const { data, error } = await supabase
         .from('audio_spaces')
-        .select('*')
+        .select(SPACE_LIST_COLUMNS)
         .eq('status', 'scheduled')
         .gte('scheduled_at', cutoff)
         .order('scheduled_at', { ascending: true });
@@ -2480,11 +2488,54 @@ export function StageProvider({ children }: { children: ReactNode }) {
         liveSpacesRefreshDebounceRef.current = null;
         void refreshSpaces();
         void refreshScheduledSpaces();
-      }, 750);
+      }, 2000);
+    };
+    // Most audio_spaces writes are listener_count / speaker_count churn on a
+    // stage that is already listed. Patch those rows in place from the payload
+    // instead of making every connected client re-read both lists. Only a
+    // change in which list a row belongs to (a new stage, a status flip, a
+    // delete) needs the server's ordering and cutoff, so only that refetches.
+    const patchRow = (store: AudioSpace[], row: AudioSpace) => {
+      const index = store.findIndex(space => space.id === row.id);
+      if (index < 0) return null;
+      const next = store.slice();
+      next[index] = { ...store[index], ...row };
+      return next;
+    };
+    const onSpaceChange = (payload: { eventType: string; new: Partial<AudioSpace>; old: Partial<AudioSpace> }) => {
+      if (payload.eventType === 'INSERT') {
+        const status = payload.new?.status;
+        if (status === 'live' || status === 'scheduled') scheduleLiveSpacesRefresh();
+        return;
+      }
+      if (payload.eventType === 'DELETE') {
+        const id = payload.old?.id;
+        if (id && (liveSpacesStore.some(s => s.id === id) || scheduledSpacesStore.some(s => s.id === id))) {
+          scheduleLiveSpacesRefresh();
+        }
+        return;
+      }
+      const row = payload.new as AudioSpace | undefined;
+      if (!row?.id) return;
+      const inLive = liveSpacesStore.find(s => s.id === row.id);
+      const inScheduled = scheduledSpacesStore.find(s => s.id === row.id);
+      const listedStatus = inLive ? 'live' : inScheduled ? 'scheduled' : null;
+      if (listedStatus !== (row.status === 'live' || row.status === 'scheduled' ? row.status : null)) {
+        // Joined, left or moved between lists.
+        scheduleLiveSpacesRefresh();
+        return;
+      }
+      if (inLive) {
+        const next = patchRow(liveSpacesStore, row);
+        if (next) { setLiveSpaces(next); publishLiveSpaces(next); }
+      } else if (inScheduled) {
+        const next = patchRow(scheduledSpacesStore, row);
+        if (next) { setScheduledSpaces(next); publishScheduledSpaces(next); }
+      }
     };
     const channel = supabase
       .channel('live_spaces_global')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'audio_spaces' }, scheduleLiveSpacesRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'audio_spaces' }, onSpaceChange)
       .subscribe();
     return () => {
       if (liveSpacesRefreshDebounceRef.current) clearTimeout(liveSpacesRefreshDebounceRef.current);

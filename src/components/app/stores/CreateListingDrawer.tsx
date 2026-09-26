@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Loader2, ImagePlus, X, Video } from 'lucide-react';
-import { useCreateListing } from '@/hooks/use-stores';
+import { useCreateListing, prepareStoreImage, STORE_MEDIA_CACHE_CONTROL } from '@/hooks/use-stores';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { POD_PROVIDERS, detectPodProvider, parsePodUrl, type PodProvider } from '@/lib/pod-providers';
@@ -58,10 +58,13 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
     if (!files || images.length >= 5) return;
     setUploading(true);
     try {
-      for (const file of Array.from(files).slice(0, 5 - images.length)) {
+      for (const rawFile of Array.from(files).slice(0, 5 - images.length)) {
+        const file = await prepareStoreImage(rawFile);
         const ext = file.name.split('.').pop();
         const path = `listings/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-        const { error } = await supabase.storage.from('store-media').upload(path, file);
+        const { error } = await supabase.storage
+          .from('store-media')
+          .upload(path, file, { cacheControl: STORE_MEDIA_CACHE_CONTROL });
         if (error) throw error;
         const { data: urlData } = supabase.storage.from('store-media').getPublicUrl(path);
         setImages(prev => [...prev, urlData.publicUrl]);
@@ -85,7 +88,7 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
         }
         const ext = file.name.split('.').pop();
         const path = `listings/videos/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-        const { error } = await supabase.storage.from('store-media').upload(path, file);
+        const { error } = await supabase.storage.from('store-media').upload(path, file, { cacheControl: STORE_MEDIA_CACHE_CONTROL });
         if (error) throw error;
         const { data: urlData } = supabase.storage.from('store-media').getPublicUrl(path);
         setVideos(prev => [...prev, urlData.publicUrl]);
