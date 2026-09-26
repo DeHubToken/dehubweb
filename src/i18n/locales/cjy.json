@@ -2100,8 +2100,7 @@
       "overDays": "{{count}} 天里头",
       "requestsLabel": "请求",
       "served": "服务咾嘞",
-      "requests": "{{requests}} 回请求",
-      "estimatedToday": "估计，今日至今 UTC"
+      "requests": "{{requests}} 回请求"
     },
     "chart": {
       "hourly": "每钟头访客",
@@ -2110,8 +2109,7 @@
       "dailyHint": "每日独立访客",
       "empty": "这段时间还没数据",
       "visitors": "访客",
-      "pageViews": "页面浏览量",
-      "visitorsEstimated": "访客（估计）"
+      "pageViews": "页面浏览量"
     },
     "countries": {
       "title": "国家排行",

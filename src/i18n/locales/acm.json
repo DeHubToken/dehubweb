@@ -2123,8 +2123,7 @@
       "overDays": "على مدى {{count}} أيام",
       "requestsLabel": "الطلبات",
       "served": "انقدم",
-      "requests": "{{requests}} طلب",
-      "estimatedToday": "تقديري، حتى الآن اليوم بالتوقيت العالمي المنسق"
+      "requests": "{{requests}} طلب"
     },
     "chart": {
       "hourly": "الزوار بالساعة",
@@ -2133,8 +2132,7 @@
       "dailyHint": "زوار فريدين باليوم",
       "empty": "بعد ماكو بيانات لهذي الفترة",
       "visitors": "زوار",
-      "pageViews": "مشاهدات الصفحة",
-      "visitorsEstimated": "زوار (تقديري)"
+      "pageViews": "مشاهدات الصفحة"
     },
     "countries": {
       "title": "أفضل الدول",

@@ -1750,8 +1750,7 @@
       "overDays": "ใน {{count}} วัน",
       "requestsLabel": "คำขอ",
       "served": "ให้บริการแล้ว",
-      "requests": "{{requests}} คำขอ",
-      "estimatedToday": "ประมาณการ, จนถึงวันนี้ UTC"
+      "requests": "{{requests}} คำขอ"
     },
     "chart": {
       "hourly": "ผู้เข้าชมต่อชั่วโมง",
@@ -1760,8 +1759,7 @@
       "dailyHint": "ผู้เข้าชมไม่ซ้ำต่อวัน",
       "empty": "ยังไม่มีข้อมูลสำหรับช่วงนี้",
       "visitors": "ผู้เข้าชม",
-      "pageViews": "การดูหน้าเว็บ",
-      "visitorsEstimated": "ผู้เข้าชม (ประมาณการ)"
+      "pageViews": "การดูหน้าเว็บ"
     },
     "countries": {
       "title": "ประเทศอันดับต้น",

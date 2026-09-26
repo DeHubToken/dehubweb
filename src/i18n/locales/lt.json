@@ -2189,8 +2189,7 @@
       "overDays": "per {{count}} dienų",
       "requestsLabel": "Užklausos",
       "served": "Pateikta",
-      "requests": "{{requests}} užklausų",
-      "estimatedToday": "apskaičiuota, kol kas šiandien UTC"
+      "requests": "{{requests}} užklausų"
     },
     "chart": {
       "hourly": "Lankytojų per valandą",
@@ -2199,8 +2198,7 @@
       "dailyHint": "unikalių lankytojų per dieną",
       "empty": "Šiam laikotarpiui duomenų dar nėra",
       "visitors": "Lankytojai",
-      "pageViews": "Puslapio Peržiūros",
-      "visitorsEstimated": "lankytojai (apytiksliai)"
+      "pageViews": "Puslapio Peržiūros"
     },
     "countries": {
       "title": "Populiariausios šalys",

@@ -2071,8 +2071,7 @@
       "overDays": "за {{count}} дни",
       "requestsLabel": "Заявки",
       "served": "Обслужени",
-      "requests": "{{requests}} заявки",
-      "estimatedToday": "очаквано, досега днес UTC"
+      "requests": "{{requests}} заявки"
     },
     "chart": {
       "hourly": "Посетители на час",
@@ -2081,8 +2080,7 @@
       "dailyHint": "уникални посетители на ден",
       "empty": "Все още няма данни за този период",
       "visitors": "Посетители",
-      "pageViews": "Прегледи",
-      "visitorsEstimated": "посетители (очаквано)"
+      "pageViews": "Прегледи"
     },
     "countries": {
       "title": "Водещи държави",

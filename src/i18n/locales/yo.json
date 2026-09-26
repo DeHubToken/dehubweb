@@ -2167,8 +2167,7 @@
       "overDays": "ní ọjọ́ {{count}}",
       "requestsLabel": "Àwọn ìbéèrè",
       "served": "A pèsè",
-      "requests": "ìbéèrè {{requests}}",
-      "estimatedToday": "ìwòye, títí di òní UTC"
+      "requests": "ìbéèrè {{requests}}"
     },
     "chart": {
       "hourly": "Àwọn àlejò lọ́nà wákàtí",
@@ -2177,8 +2176,7 @@
       "dailyHint": "àwọn àlejò aláìlẹ́gbẹ́ lójúmọ́",
       "empty": "Kò sí data fún àkókò yìí síbẹ̀",
       "visitors": "àwọn àlejò",
-      "pageViews": "ìwò ojú-ìwé",
-      "visitorsEstimated": "àwọn àlejò (tí a fojú bù ú)"
+      "pageViews": "ìwò ojú-ìwé"
     },
     "countries": {
       "title": "Àwọn orílẹ̀-èdè gíga",

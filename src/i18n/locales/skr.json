@@ -2112,8 +2112,7 @@
       "overDays": "{{count}} ݙین٘ہ وچ",
       "requestsLabel": "درخواستاں",
       "served": "ڈتا ڳیا",
-      "requests": "{{requests}} درخواستاں",
-      "estimatedToday": "اندازہ، آج اب تک UTC"
+      "requests": "{{requests}} درخواستاں"
     },
     "chart": {
       "hourly": "ہر گھنٹے آوݨ آلے",
@@ -2122,8 +2121,7 @@
       "dailyHint": "ہر ݙین٘ہ الگ الگ آوݨ آلے",
       "empty": "ایں ویلے کیتے اڄݨ تائیں ڈیٹا کائنی",
       "visitors": "زائرین",
-      "pageViews": "صفحہ آراء",
-      "visitorsEstimated": "زائرین (اندازہ)"
+      "pageViews": "صفحہ آراء"
     },
     "countries": {
       "title": "اُتلے ملک",

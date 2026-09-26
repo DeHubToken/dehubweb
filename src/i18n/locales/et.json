@@ -2152,8 +2152,7 @@
       "overDays": "{{count}} päeva jooksul",
       "requestsLabel": "Päringud",
       "served": "Serveeritud",
-      "requests": "{{requests}} päringut",
-      "estimatedToday": "hinnanguline, siiani täna UTC"
+      "requests": "{{requests}} päringut"
     },
     "chart": {
       "hourly": "Külastajaid tunnis",
@@ -2162,8 +2161,7 @@
       "dailyHint": "unikaalseid külastajaid päevas",
       "empty": "Selle perioodi kohta pole veel andmeid",
       "visitors": "külastajad",
-      "pageViews": "Leheküljed",
-      "visitorsEstimated": "külastajat (hinnanguline)"
+      "pageViews": "Leheküljed"
     },
     "countries": {
       "title": "Peamised riigid",

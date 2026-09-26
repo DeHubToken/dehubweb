@@ -2153,8 +2153,7 @@
       "overDays": "{{count}} nap alatt",
       "requestsLabel": "Kérések",
       "served": "Kiszolgálva",
-      "requests": "{{requests}} kérés",
-      "estimatedToday": "becsült, eddig ma UTC"
+      "requests": "{{requests}} kérés"
     },
     "chart": {
       "hourly": "Látogatók óránként",
@@ -2163,8 +2162,7 @@
       "dailyHint": "egyedi látogatók naponta",
       "empty": "Ehhez az időszakhoz még nincs adat",
       "visitors": "Látogatók",
-      "pageViews": "Oldal nézetek",
-      "visitorsEstimated": "látogató (becsült)"
+      "pageViews": "Oldal nézetek"
     },
     "countries": {
       "title": "Vezető országok",

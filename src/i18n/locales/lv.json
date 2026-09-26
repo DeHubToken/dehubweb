@@ -2189,8 +2189,7 @@
       "overDays": "{{count}} dienās",
       "requestsLabel": "Pieprasījumi",
       "served": "Apkalpoti",
-      "requests": "{{requests}} pieprasījumi",
-      "estimatedToday": "aprēķināts, līdz šim šodien UTC"
+      "requests": "{{requests}} pieprasījumi"
     },
     "chart": {
       "hourly": "Apmeklētāji stundā",
@@ -2199,8 +2198,7 @@
       "dailyHint": "unikālie apmeklētāji dienā",
       "empty": "Šim periodam vēl nav datu",
       "visitors": "Apmeklētāji",
-      "pageViews": "Lapu skatījumi",
-      "visitorsEstimated": "apmeklētāji (paredzamie)"
+      "pageViews": "Lapu skatījumi"
     },
     "countries": {
       "title": "Populārākās valstis",

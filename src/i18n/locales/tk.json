@@ -2133,8 +2133,7 @@
       "overDays": "{{count}} günüň dowamynda",
       "requestsLabel": "Haýyşlar",
       "served": "Hyzmat edildi",
-      "requests": "{{requests}} haýyş",
-      "estimatedToday": "şu güne çenli UTC"
+      "requests": "{{requests}} haýyş"
     },
     "chart": {
       "hourly": "Sagat başyna myhmanlar",
@@ -2143,8 +2142,7 @@
       "dailyHint": "gün başyna täkrarsyz myhmanlar",
       "empty": "Bu wagt aralygy üçin heniz maglumat ýok",
       "visitors": "gozgalaňçylar",
-      "pageViews": "sahypa görseler",
-      "visitorsEstimated": "myhmansöýer (myhmansöýer"
+      "pageViews": "sahypa görseler"
     },
     "countries": {
       "title": "Iň ýokary ýurtlar",

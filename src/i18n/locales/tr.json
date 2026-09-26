@@ -2206,8 +2206,7 @@
       "overDays": "{{count}} günde",
       "requestsLabel": "İstekler",
       "served": "Sunuldu",
-      "requests": "{{requests}} istek",
-      "estimatedToday": "tahmini, bugüne kadar bugün UTC"
+      "requests": "{{requests}} istek"
     },
     "chart": {
       "hourly": "Saatlik ziyaretçi",
@@ -2216,8 +2215,7 @@
       "dailyHint": "günlük benzersiz ziyaretçi",
       "empty": "Bu aralık için henüz veri yok",
       "visitors": "ziyaretçiler,",
-      "pageViews": "sayfa gösterimleri",
-      "visitorsEstimated": "ziyaretçi (tahmini)"
+      "pageViews": "sayfa gösterimleri"
     },
     "countries": {
       "title": "En çok ülke",

@@ -1952,8 +1952,7 @@
       "overDays": "over {{count}} days",
       "requestsLabel": "Requests",
       "served": "Served",
-      "requests": "{{requests}} requests",
-      "estimatedToday": "na estimate, reach now today, UTC"
+      "requests": "{{requests}} requests"
     },
     "chart": {
       "hourly": "Visitors per hour",
@@ -1962,8 +1961,7 @@
       "dailyHint": "unique visitors per day",
       "empty": "No data for dis period yet",
       "visitors": "people wey visit",
-      "pageViews": "page wey dem look",
-      "visitorsEstimated": "people wey visit (na estimate)"
+      "pageViews": "page wey dem look"
     },
     "countries": {
       "title": "Top countries",

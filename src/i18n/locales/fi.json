@@ -2153,8 +2153,7 @@
       "overDays": "{{count}} päivän aikana",
       "requestsLabel": "Pyynnöt",
       "served": "Toimitettu",
-      "requests": "{{requests}} pyyntöä",
-      "estimatedToday": "arvioitu, tähän mennessä tänään UTC"
+      "requests": "{{requests}} pyyntöä"
     },
     "chart": {
       "hourly": "Kävijöitä tunnissa",
@@ -2163,8 +2162,7 @@
       "dailyHint": "yksilöllisiä kävijöitä päivässä",
       "empty": "Tälle jaksolle ei ole vielä tietoja",
       "visitors": "kävijät",
-      "pageViews": "sivun katsomiskerrat",
-      "visitorsEstimated": "kävijää (arvio)"
+      "pageViews": "sivun katsomiskerrat"
     },
     "countries": {
       "title": "Kärkimaat",

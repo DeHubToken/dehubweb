@@ -2100,8 +2100,7 @@
       "overDays": "په {{count}} ورځو کې",
       "requestsLabel": "غوښتنې",
       "served": "وړاندې شوی",
-      "requests": "{{requests}} غوښتنې",
-      "estimatedToday": "اټکل شوی، نن تر اوسه، UTC"
+      "requests": "{{requests}} غوښتنې"
     },
     "chart": {
       "hourly": "هر ساعت لیدونکي",
@@ -2110,8 +2109,7 @@
       "dailyHint": "ورځنی ځانګړي لیدونکي",
       "empty": "د دې مودې لپاره معلومات نشته",
       "visitors": "لیدونکي",
-      "pageViews": "د پاڼې لیدنې",
-      "visitorsEstimated": "لیدونکي (اټکل شوي)"
+      "pageViews": "د پاڼې لیدنې"
     },
     "countries": {
       "title": "غوره هیوادونه",

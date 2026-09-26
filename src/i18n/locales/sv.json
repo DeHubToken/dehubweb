@@ -2157,8 +2157,7 @@
       "overDays": "över {{count}} dagar",
       "requestsLabel": "Förfrågningar",
       "served": "Levererade",
-      "requests": "{{requests}} förfrågningar",
-      "estimatedToday": "uppskattat, än så länge idag UTC"
+      "requests": "{{requests}} förfrågningar"
     },
     "chart": {
       "hourly": "Besökare per timme",
@@ -2167,8 +2166,7 @@
       "dailyHint": "unika besökare per dag",
       "empty": "Ingen data för den här perioden ännu",
       "visitors": "besökare",
-      "pageViews": "Sidvisningar",
-      "visitorsEstimated": "besökare (uppskattad)"
+      "pageViews": "Sidvisningar"
     },
     "countries": {
       "title": "Toppländer",

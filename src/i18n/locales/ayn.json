@@ -2098,8 +2098,7 @@
       "overDays": "خلال {{count}} يوم",
       "requestsLabel": "الطلبات",
       "served": "متقدم",
-      "requests": "{{requests}} طلب",
-      "estimatedToday": "تقديري، حتى الآن اليوم بالتوقيت العالمي المنسق"
+      "requests": "{{requests}} طلب"
     },
     "chart": {
       "hourly": "الزوار كل ساعة",
@@ -2108,8 +2107,7 @@
       "dailyHint": "زوار فريدين يومياً",
       "empty": "لسع ما في بيانات لذي الفترة",
       "visitors": "زوار",
-      "pageViews": "مشاهدات الصفحة",
-      "visitorsEstimated": "زوار (تقديري)"
+      "pageViews": "مشاهدات الصفحة"
     },
     "countries": {
       "title": "أعلى الدول",

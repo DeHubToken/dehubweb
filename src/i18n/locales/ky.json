@@ -2188,8 +2188,7 @@
       "overDays": "{{count}} күндө",
       "requestsLabel": "Сурамдар",
       "served": "Берилди",
-      "requests": "{{requests}} сурам",
-      "estimatedToday": "бааланган, бүгүнкү күнгө чейин UTC"
+      "requests": "{{requests}} сурам"
     },
     "chart": {
       "hourly": "Саатына конок",
@@ -2198,8 +2197,7 @@
       "dailyHint": "күнүнө уникалдуу конок",
       "empty": "Бул мезгил үчүн азырынча маалымат жок",
       "visitors": "коноктор",
-      "pageViews": "баракты көрүү",
-      "visitorsEstimated": "коноктор (бааланган)"
+      "pageViews": "баракты көрүү"
     },
     "countries": {
       "title": "Негизги өлкөлөр",

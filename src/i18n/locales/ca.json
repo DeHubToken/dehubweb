@@ -2153,8 +2153,7 @@
       "overDays": "en {{count}} dies",
       "requestsLabel": "Sol·licituds",
       "served": "Servides",
-      "requests": "{{requests}} sol·licituds",
-      "estimatedToday": "estimat, fins ara avui UTC"
+      "requests": "{{requests}} sol·licituds"
     },
     "chart": {
       "hourly": "Visitants per hora",
@@ -2163,8 +2162,7 @@
       "dailyHint": "visitants únics per dia",
       "empty": "Encara no hi ha dades per a aquest període",
       "visitors": "Visitants",
-      "pageViews": "Vistes de pàgina",
-      "visitorsEstimated": "visitants (estimat)"
+      "pageViews": "Vistes de pàgina"
     },
     "countries": {
       "title": "Països principals",

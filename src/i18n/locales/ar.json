@@ -2206,8 +2206,7 @@
       "overDays": "خلال {{count}} يومًا",
       "requestsLabel": "الطلبات",
       "served": "تم تقديمها",
-      "requests": "{{requests}} طلب",
-      "estimatedToday": "مقدر، حتى الآن اليوم بالتوقيت العالمي المنسق"
+      "requests": "{{requests}} طلب"
     },
     "chart": {
       "hourly": "الزوار كل ساعة",
@@ -2216,8 +2215,7 @@
       "dailyHint": "زوار فريدون يوميًا",
       "empty": "لا توجد بيانات لهذه الفترة بعد",
       "visitors": "زائر",
-      "pageViews": "مشاهدات الصفحة",
-      "visitorsEstimated": "الزوار (تقديري)"
+      "pageViews": "مشاهدات الصفحة"
     },
     "countries": {
       "title": "أهم الدول",

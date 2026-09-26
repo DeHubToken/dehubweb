@@ -2172,8 +2172,7 @@
       "overDays": "לאורך {{count}} ימים",
       "requestsLabel": "בקשות",
       "served": "הוגשו",
-      "requests": "{{requests}} בקשות",
-      "estimatedToday": "אומדן, עד כה היום UTC"
+      "requests": "{{requests}} בקשות"
     },
     "chart": {
       "hourly": "מבקרים לשעה",
@@ -2182,8 +2181,7 @@
       "dailyHint": "מבקרים ייחודיים ליום",
       "empty": "אין עדיין נתונים לטווח הזה",
       "visitors": "מבקרים",
-      "pageViews": "תצוגת עמוד",
-      "visitorsEstimated": "מבקרים (הערכה)"
+      "pageViews": "תצוגת עמוד"
     },
     "countries": {
       "title": "המדינות המובילות",

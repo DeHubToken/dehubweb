@@ -2141,8 +2141,7 @@
       "overDays": "{{count}} ڏينهن ۾",
       "requestsLabel": "درخواستون",
       "served": "پيش ڪيل",
-      "requests": "{{requests}} درخواستون",
-      "estimatedToday": "اندازي مطابق، هينئر تائين يو ٽي سي"
+      "requests": "{{requests}} درخواستون"
     },
     "chart": {
       "hourly": "ڪلاڪ وار ايندڙ ماڻهو",
@@ -2151,8 +2150,7 @@
       "dailyHint": "روزانو منفرد ايندڙ ماڻهو",
       "empty": "هن عرصي لاءِ اڃا ڊيٽا ناهي",
       "visitors": "گهمڻ وارا",
-      "pageViews": "صفحي جا ڏيک",
-      "visitorsEstimated": "سياح (اندازي مطابق)"
+      "pageViews": "صفحي جا ڏيک"
     },
     "countries": {
       "title": "مٿيان ملڪ",

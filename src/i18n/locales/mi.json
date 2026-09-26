@@ -2163,8 +2163,7 @@
       "overDays": "i ngā rā {{count}}",
       "requestsLabel": "Ngā tono",
       "served": "Kua tukuna",
-      "requests": "{{requests}} ngā tono",
-      "estimatedToday": "e kiia ana, tae noa ki tenei ra UTC"
+      "requests": "{{requests}} ngā tono"
     },
     "chart": {
       "hourly": "Manuhiri ia haora",
@@ -2173,8 +2172,7 @@
       "dailyHint": "manuhiri motuhake ia rā",
       "empty": "Kāore anō he raraunga mō tēnei wā",
       "visitors": "kei runga nga ngeru i te turu",
-      "pageViews": "tirohanga whārangi",
-      "visitorsEstimated": "ngā manuhiri (tātai)"
+      "pageViews": "tirohanga whārangi"
     },
     "countries": {
       "title": "Ngā whenua matua",

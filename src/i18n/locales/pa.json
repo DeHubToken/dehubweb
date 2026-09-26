@@ -2149,8 +2149,7 @@
       "overDays": "{{count}} ਦਿਨਾਂ ਵਿੱਚ",
       "requestsLabel": "ਬੇਨਤੀਆਂ",
       "served": "ਪਰੋਸਿਆ ਗਿਆ",
-      "requests": "{{requests}} ਬੇਨਤੀਆਂ",
-      "estimatedToday": "ਅੰਦਾਜ਼ਨ, ਹੁਣ ਤੱਕ ਅੱਜ ਤੱਕ UTC"
+      "requests": "{{requests}} ਬੇਨਤੀਆਂ"
     },
     "chart": {
       "hourly": "ਪ੍ਰਤੀ ਘੰਟਾ ਵਿਜ਼ਿਟਰ",
@@ -2159,8 +2158,7 @@
       "dailyHint": "ਰੋਜ਼ਾਨਾ ਵਿਲੱਖਣ ਵਿਜ਼ਿਟਰ",
       "empty": "ਇਸ ਸਮੇਂ ਲਈ ਕੋਈ ਡਾਟਾ ਨਹੀਂ",
       "visitors": "ਸੈਲਾਨੀ",
-      "pageViews": "ਪੇਜ਼ ਵਿਯੂਜ਼",
-      "visitorsEstimated": "ਸੈਲਾਨੀ (ਅੰਦਾਜ਼ਨ)"
+      "pageViews": "ਪੇਜ਼ ਵਿਯੂਜ਼"
     },
     "countries": {
       "title": "ਸਿਖਰਲੇ ਦੇਸ਼",

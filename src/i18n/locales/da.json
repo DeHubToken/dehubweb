@@ -2210,8 +2210,7 @@
       "overDays": "over {{count}} dage",
       "requestsLabel": "Forespørgsler",
       "served": "Leveret",
-      "requests": "{{requests}} forespørgsler",
-      "estimatedToday": "estimeret, indtil videre i dag UTC"
+      "requests": "{{requests}} forespørgsler"
     },
     "chart": {
       "hourly": "Besøgende pr. time",
@@ -2220,8 +2219,7 @@
       "dailyHint": "unikke besøgende pr. dag",
       "empty": "Endnu ingen data for denne periode",
       "visitors": "de besøgende",
-      "pageViews": "sidevisninger",
-      "visitorsEstimated": "besøgende (anslået)"
+      "pageViews": "sidevisninger"
     },
     "countries": {
       "title": "Toplande",

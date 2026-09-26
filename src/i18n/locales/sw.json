@@ -2206,8 +2206,7 @@
       "overDays": "kwa siku {{count}}",
       "requestsLabel": "Maombi",
       "served": "Yametolewa",
-      "requests": "maombi {{requests}}",
-      "estimatedToday": "inakadiriwa, hadi sasa leo UTC"
+      "requests": "maombi {{requests}}"
     },
     "chart": {
       "hourly": "Wageni kwa saa",
@@ -2216,8 +2215,7 @@
       "dailyHint": "wageni wa kipekee kwa siku",
       "empty": "Bado hakuna data kwa kipindi hiki",
       "visitors": "wageni",
-      "pageViews": "mwonekano wa ukurasa",
-      "visitorsEstimated": "wageni (inakadiriwa)"
+      "pageViews": "mwonekano wa ukurasa"
     },
     "countries": {
       "title": "Nchi zinazoongoza",

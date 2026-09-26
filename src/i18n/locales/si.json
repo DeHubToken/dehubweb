@@ -2111,8 +2111,7 @@
       "overDays": "දින {{count}}ක් තුළ",
       "requestsLabel": "ඉල්ලීම්",
       "served": "සපයන ලදී",
-      "requests": "ඉල්ලීම් {{requests}}",
-      "estimatedToday": "මෙතෙක් ඇස්තමේන්තු කර ඇති පරිදි, අද වන විට UTC"
+      "requests": "ඉල්ලීම් {{requests}}"
     },
     "chart": {
       "hourly": "පැයකට අමුත්තන්",
@@ -2121,8 +2120,7 @@
       "dailyHint": "දිනකට අනන්‍ය අමුත්තන්",
       "empty": "මෙම කාලය සඳහා තවම දත්ත නැත",
       "visitors": "අමුත්තන්",
-      "pageViews": "පිටු දර්ශන",
-      "visitorsEstimated": "අමුත්තන් (ඇස්තමේන්තුගත)"
+      "pageViews": "පිටු දර්ශන"
     },
     "countries": {
       "title": "ප්‍රමුඛ රටවල්",
