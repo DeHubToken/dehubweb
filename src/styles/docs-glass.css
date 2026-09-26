@@ -77,6 +77,14 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   border-bottom-color: rgb(255 255 255 / 0.12) !important;
 }
 
+/* Phones and touch devices: --glass-blur is none there (index.css touch
+   block), so the thin header/sidebar glass rises to the regular panel smoke. */
+@media (max-width: 767px), (pointer: coarse) {
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root :is([data-docs-header], [data-docs-sidebar], [data-docs-subnav]) {
+    background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
+  }
+}
+
 /* 4. The blog reading panel — one big glass sheet for the raw-prose article
    body (which has no card wrapper), so the article is always legible over the
    canvas. `padding`/`radius` make it read as a page bento. */
