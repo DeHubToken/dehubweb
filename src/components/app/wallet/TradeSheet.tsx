@@ -38,6 +38,11 @@ const toUnits = (value: string) => {
   try { return parseUnits(`${whole || '0'}.${fraction.slice(0, 18) || '0'}`, 18); } catch { return null; }
 };
 const rateOf = (quote: SwapCall, units: bigint) => Number(formatUnits(quote.amountOut, 6)) / Number(formatUnits(units, 18));
+/** A wallet prompt the user closed or declined, as opposed to a trade that failed. */
+const isCancel = (e: unknown) => {
+  const err = e as { code?: unknown; message?: unknown } | null;
+  return err?.code === 4001 || err?.code === 'ACTION_REJECTED' || /user (rejected|denied|cancel)|rejected the request|request rejected|cancell?ed/i.test(String(err?.message ?? ''));
+};
 /** Only a price above what the market pays right now needs to wait on the book. */
 const routeFor = (mode: Mode, price: number, rate: number | null): Route => mode === 'custom' && rate != null && price > rate ? 'list' : 'instant';
 
@@ -188,7 +193,8 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
       }
       await sellInstantly();
     } catch (e) {
-      setError(dexActionError(e, t('dex.prepareFailed')));
+      setAiReply('');
+      setError(isCancel(e) ? t('easyTrade.cancelled') : dexActionError(e, t('dex.prepareFailed')));
     } finally { setBusy(false); setStage(''); }
   }
 
@@ -210,7 +216,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
   }
 
   function openExchange() { onOpenChange(false); navigate('/dex'); }
-  const back = () => { setError(''); setNotice(''); setStep(step === 'review' ? 'price' : step === 'price' ? 'amount' : 'choose'); };
+  const back = () => { setError(''); setNotice(''); setAiReply(''); setStep(step === 'review' ? 'price' : step === 'price' ? 'amount' : 'choose'); };
 
   const title = step === 'choose' ? t('easyTrade.chooseTitle') : step === 'amount' ? t('easyTrade.sellTitle')
     : step === 'price' ? t('easyTrade.priceTitle') : step === 'review' ? t('easyTrade.reviewTitle') : t('easyTrade.doneTitle');
@@ -218,7 +224,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
 
   const optionRow = 'w-full flex items-center gap-3 p-4 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] backdrop-blur-sm border border-white/10 transition-colors text-left';
   const primary = 'w-full h-12 rounded-xl bg-white text-black font-semibold disabled:opacity-40 flex items-center justify-center gap-2';
-  const showAsk = step === 'choose' || step === 'amount' || step === 'price';
+  const showAsk = step === 'amount' || step === 'price';
 
   const guard = (next: boolean) => { if (!busy) onOpenChange(next); };
   return <Drawer open={open} onOpenChange={guard}>
@@ -242,7 +248,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
               {asking ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
             </button>
           </div>
-          {!aiReply && step === 'choose' && <p className="text-xs text-zinc-500 px-1">{t('easyTrade.aiHint')}</p>}
+          {!aiReply && step === 'amount' && <p className="text-xs text-zinc-500 px-1">{t('easyTrade.aiHint')}</p>}
         </form>}
         {aiReply && step !== 'done' && <div className="flex gap-2 rounded-xl bg-white/[0.06] border border-white/10 px-3 py-2.5 text-sm text-zinc-200">
           <Sparkles className="w-4 h-4 mt-0.5 shrink-0 text-zinc-300" /><p className="leading-relaxed">{aiReply}</p>
@@ -264,7 +270,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
         {step === 'amount' && <div className="space-y-3">
           <div className="flex items-center rounded-xl border border-white/10 bg-white/[0.04] focus-within:border-white/30">
             <input inputMode="decimal" placeholder="0" aria-label={t('easyTrade.sellTitle')} value={amount}
-              onChange={(e) => { setAmount(decimal(e.target.value)); setQuote(null); }}
+              onChange={(e) => { setAmount(decimal(e.target.value)); setQuote(null); setAiReply(''); }}
               className="flex-1 min-w-0 bg-transparent px-4 py-4 text-3xl font-semibold text-white outline-none" />
             <span className="pr-4 text-sm text-zinc-400">DHB</span>
           </div>
@@ -272,7 +278,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
             <span>{t('easyTrade.available', { amount: formatSize(Number(formatUnits(balance, 18))) })}</span>
             <div className="flex gap-1.5">
               {[25, 50, 100].map((pct) => <button key={pct} type="button" disabled={balance === 0n}
-                onClick={() => { setAmount(formatUnits(balance * BigInt(pct) / 100n, 18)); setQuote(null); }}
+                onClick={() => { setAmount(formatUnits(balance * BigInt(pct) / 100n, 18)); setQuote(null); setAiReply(''); }}
                 className="px-2.5 py-1 rounded-lg border border-white/10 hover:bg-white/10 text-zinc-200 disabled:opacity-40">{pct === 100 ? t('easyTrade.max') : `${pct}%`}</button>)}
             </div>
           </div>
@@ -284,14 +290,14 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
         </div>}
 
         {step === 'price' && <div className="space-y-2">
-          <button type="button" aria-pressed={mode === 'market'} onClick={() => setMode('market')} className={cn(optionRow, mode === 'market' && 'border-white/60 bg-white/[0.12]')}>
+          <button type="button" aria-pressed={mode === 'market'} onClick={() => { setMode('market'); setAiReply(''); }} className={cn(optionRow, mode === 'market' && 'border-white/60 bg-white/[0.12]')}>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-white">{t('easyTrade.marketRate')}</p>
               <p className="text-xs text-zinc-400">{t('easyTrade.marketRateHint', { price: formatPrice(marketRate), usdc: formatSize(quote ? Number(formatUnits(quote.amountOut, 6)) : 0) })}</p>
             </div>
             {mode === 'market' && <Check className="w-4 h-4 text-white" />}
           </button>
-          <div role="button" tabIndex={0} aria-pressed={mode === 'custom'} onClick={() => setMode('custom')} onKeyDown={(e) => { if (e.key === 'Enter') setMode('custom'); }}
+          <div role="button" tabIndex={0} aria-pressed={mode === 'custom'} onClick={() => { if (mode !== 'custom') setAiReply(''); setMode('custom'); }} onKeyDown={(e) => { if (e.key === 'Enter') setMode('custom'); }}
             className={cn(optionRow, 'flex-col items-stretch cursor-pointer', mode === 'custom' && 'border-white/60 bg-white/[0.12]')}>
             <div className="flex items-center gap-3">
               <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-white">{t('easyTrade.myPrice')}</p><p className="text-xs text-zinc-400">{t('easyTrade.myPriceHint')}</p></div>
@@ -301,7 +307,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
               <div className="flex items-center rounded-lg border border-white/10 bg-black/30 mt-1">
                 <span className="pl-3 text-zinc-400">$</span>
                 <input inputMode="decimal" placeholder={marketRate ? marketRate.toFixed(6) : '0.00'} aria-label={t('easyTrade.myPriceHint')} value={price}
-                  onClick={(e) => e.stopPropagation()} onChange={(e) => setPrice(decimal(e.target.value))}
+                  onClick={(e) => e.stopPropagation()} onChange={(e) => { setPrice(decimal(e.target.value)); setAiReply(''); }}
                   className="flex-1 min-w-0 bg-transparent px-2 py-3 text-lg text-white outline-none" />
               </div>
               {myPrice > 0 && marketRate != null && <p className="text-xs text-zinc-300 leading-relaxed">

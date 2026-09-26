@@ -6365,12 +6365,13 @@
     "done": "Concluído",
     "back": "Voltar",
     "aiLabel": "Peça à IA para configurar a sua negociação",
-    "aiPlaceholder": "Experimente \"vender metade do meu DHB a 3 cêntimos\"",
+    "aiPlaceholder": "Experimente \"vender metade do meu DHB a 6 cêntimos\"",
     "aiSend": "Enviar para IA",
     "aiHint": "Diga o que quiser em palavras simples. A IA preenche tudo, basta pressionar Confirmar.",
     "aiBuyOnly": "A negociação fácil vende DHB. Para comprar DHB, abra o Exchange.",
     "aiNeedAmount": "Quanto DHB deseja vender?",
-    "aiFailed": "A IA não conseguiu configurar isso. Tente dizê-lo de outra forma ou preencha-o abaixo."
+    "aiFailed": "A IA não conseguiu configurar isso. Tente dizê-lo de outra forma ou preencha-o abaixo.",
+    "cancelled": "Cancelado. Nada foi vendido."
   },
   "ppvTopUp": {
     "yourBalance": "Seu saldo",

@@ -3954,12 +3954,13 @@
     "done": "完成",
     "back": "後",
     "aiLabel": "叫AI帮你设置交易",
-    "aiPlaceholder": "试下“卖掉我一半的DHB，价格3分”",
+    "aiPlaceholder": "试下“卖掉我一半的DHB，价格6分”",
     "aiSend": "发给AI",
     "aiHint": "用简单的话说出你的需求。AI会帮你填好所有信息，你只需按“确认”。",
     "aiBuyOnly": "Easy trade 卖出DHB。要买DHB，请打开交易所。",
     "aiNeedAmount": "你想卖多少DHB？",
-    "aiFailed": "AI无法设置。请换种说法，或在下方填写。"
+    "aiFailed": "AI无法设置。请换种说法，或在下方填写。",
+    "cancelled": "取消。無賣出。"
   },
   "ppvTopUp": {
     "yourBalance": "你的余额",
