@@ -2143,8 +2143,7 @@
       "overDays": "{{count}} દિવસમાં",
       "requestsLabel": "વિનંતીઓ",
       "served": "અપાયું",
-      "requests": "{{requests}} વિનંતીઓ",
-      "estimatedToday": "અંદાજિત, અત્યાર સુધી આજે UTC"
+      "requests": "{{requests}} વિનંતીઓ"
     },
     "chart": {
       "hourly": "કલાકદીઠ મુલાકાતીઓ",
@@ -2153,8 +2152,7 @@
       "dailyHint": "દરરોજ અનન્ય મુલાકાતીઓ",
       "empty": "આ સમયગાળા માટે હજી ડેટા નથી",
       "visitors": "મુલાકાતીઓ",
-      "pageViews": "પૃષ્ઠ દૃશ્યો",
-      "visitorsEstimated": "મુલાકાતીઓ (અંદાજિત)"
+      "pageViews": "પૃષ્ઠ દૃશ્યો"
     },
     "countries": {
       "title": "ટોચના દેશો",

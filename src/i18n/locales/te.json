@@ -2203,8 +2203,7 @@
       "overDays": "{{count}} రోజుల్లో",
       "requestsLabel": "అభ్యర్థనలు",
       "served": "అందించారు",
-      "requests": "{{requests}} అభ్యర్థనలు",
-      "estimatedToday": "అంచనా, ఇప్పటివరకు ఈ రోజు UTC"
+      "requests": "{{requests}} అభ్యర్థనలు"
     },
     "chart": {
       "hourly": "గంటకు సందర్శకులు",
@@ -2213,8 +2212,7 @@
       "dailyHint": "రోజుకు ప్రత్యేక సందర్శకులు",
       "empty": "ఈ కాలానికి ఇంకా డేటా లేదు",
       "visitors": "సందర్శకులు",
-      "pageViews": "పేజీ వీక్షణలు",
-      "visitorsEstimated": "సందర్శకులు (అంచనా)"
+      "pageViews": "పేజీ వీక్షణలు"
     },
     "countries": {
       "title": "ప్రధాన దేశాలు",

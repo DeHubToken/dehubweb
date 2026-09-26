@@ -2206,8 +2206,7 @@
       "overDays": "przez {{count}} dni",
       "requestsLabel": "Żądania",
       "served": "Obsłużone",
-      "requests": "{{requests}} żądań",
-      "estimatedToday": "szacunkowo, do tej pory UTC"
+      "requests": "{{requests}} żądań"
     },
     "chart": {
       "hourly": "Odwiedzający na godzinę",
@@ -2216,8 +2215,7 @@
       "dailyHint": "unikalni odwiedzający dziennie",
       "empty": "Brak danych dla tego okresu",
       "visitors": "odwiedzający",
-      "pageViews": "Wyświetlenia",
-      "visitorsEstimated": "zwiedzających (szacunkowo)"
+      "pageViews": "Wyświetlenia"
     },
     "countries": {
       "title": "Najczęstsze kraje",

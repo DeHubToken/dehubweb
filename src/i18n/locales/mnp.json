@@ -2088,8 +2088,7 @@
       "overDays": "{{count}} 日内底",
       "requestsLabel": "请求",
       "served": "已回应",
-      "requests": "{{requests}} 摆请求",
-      "estimatedToday": "估计，今日至今 UTC"
+      "requests": "{{requests}} 摆请求"
     },
     "chart": {
       "hourly": "逐点钟访客",
@@ -2098,8 +2097,7 @@
       "dailyHint": "逐日不重复访客",
       "empty": "只段时间还无数据",
       "visitors": "访客",
-      "pageViews": "页面浏览量",
-      "visitorsEstimated": "访客（估计）"
+      "pageViews": "页面浏览量"
     },
     "countries": {
       "title": "头前国家",

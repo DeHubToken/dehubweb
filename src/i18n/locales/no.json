@@ -2162,8 +2162,7 @@
       "overDays": "over {{count}} dager",
       "requestsLabel": "Forespørsler",
       "served": "Levert",
-      "requests": "{{requests}} forespørsler",
-      "estimatedToday": "anslått, så langt i dag UTC"
+      "requests": "{{requests}} forespørsler"
     },
     "chart": {
       "hourly": "Besøkende per time",
@@ -2172,8 +2171,7 @@
       "dailyHint": "unike besøkende per dag",
       "empty": "Ingen data for denne perioden ennå",
       "visitors": "Besøkende",
-      "pageViews": "sidevisninger",
-      "visitorsEstimated": "besøkende (estimert)"
+      "pageViews": "sidevisninger"
     },
     "countries": {
       "title": "Toppland",

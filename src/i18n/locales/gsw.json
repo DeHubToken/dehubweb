@@ -2135,8 +2135,7 @@
       "overDays": "über {{count}} Täg",
       "requestsLabel": "Aafroge",
       "served": "Uslieferet",
-      "requests": "{{requests}} Aafroge",
-      "estimatedToday": "gschätzt, bis jetz hüt UTC"
+      "requests": "{{requests}} Aafroge"
     },
     "chart": {
       "hourly": "Bsucher pro Stund",
@@ -2145,8 +2144,7 @@
       "dailyHint": "eindütigi Bsucher pro Tag",
       "empty": "No kei Date für die Periode",
       "visitors": "Besuecher",
-      "pageViews": "Siite-Aazale",
-      "visitorsEstimated": "Besuecher (gschätzt)"
+      "pageViews": "Siite-Aazale"
     },
     "countries": {
       "title": "Top-Länder",

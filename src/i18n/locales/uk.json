@@ -2081,8 +2081,7 @@
       "overDays": "за {{count}} дн.",
       "requestsLabel": "Запити",
       "served": "Обслужено",
-      "requests": "{{requests}} запитів",
-      "estimatedToday": "оцінено, на сьогодні UTC"
+      "requests": "{{requests}} запитів"
     },
     "chart": {
       "hourly": "Відвідувачі за годину",
@@ -2091,8 +2090,7 @@
       "dailyHint": "унікальні відвідувачі за день",
       "empty": "Поки немає даних за цей період",
       "visitors": "відвідувачі",
-      "pageViews": "перегляди сторінок",
-      "visitorsEstimated": "відвідувачі (оціночно)"
+      "pageViews": "перегляди сторінок"
     },
     "countries": {
       "title": "Основні країни",

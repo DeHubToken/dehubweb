@@ -2300,8 +2300,7 @@
       "overDays": "za {{count}} dní",
       "requestsLabel": "Požiadavky",
       "served": "Doručené",
-      "requests": "{{requests}} požiadaviek",
-      "estimatedToday": "odhad, zatiaľ dnes UTC"
+      "requests": "{{requests}} požiadaviek"
     },
     "chart": {
       "hourly": "Návštevníci za hodinu",
@@ -2310,8 +2309,7 @@
       "dailyHint": "jedineční návštevníci za deň",
       "empty": "Pre toto obdobie zatiaľ nie sú údaje",
       "visitors": "Hostia",
-      "pageViews": "Zobrazenia stránky",
-      "visitorsEstimated": "návštevníci (odhad)"
+      "pageViews": "Zobrazenia stránky"
     },
     "countries": {
       "title": "Najčastejšie krajiny",

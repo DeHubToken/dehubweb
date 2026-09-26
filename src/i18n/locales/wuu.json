@@ -2117,8 +2117,7 @@
       "overDays": "{{count}} 天内",
       "requestsLabel": "请求",
       "served": "已提供",
-      "requests": "{{requests}} 次请求",
-      "estimatedToday": "估算，今日至今 UTC"
+      "requests": "{{requests}} 次请求"
     },
     "chart": {
       "hourly": "每小时访客",
@@ -2127,8 +2126,7 @@
       "dailyHint": "每日独立访客",
       "empty": "搿段辰光还呒没数据",
       "visitors": "访客",
-      "pageViews": "页面浏览量",
-      "visitorsEstimated": "访客（估算）"
+      "pageViews": "页面浏览量"
     },
     "countries": {
       "title": "主要国家/地区",

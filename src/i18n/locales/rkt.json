@@ -2110,8 +2110,7 @@
       "overDays": "{{count}} দিনত",
       "requestsLabel": "অনুরোধ",
       "served": "দেওয়া হইল",
-      "requests": "{{requests}} অনুরোধ",
-      "estimatedToday": "আন্দাজি, আইজ পর্যন্ত UTC"
+      "requests": "{{requests}} অনুরোধ"
     },
     "chart": {
       "hourly": "ঘণ্টাকার দর্শক",
@@ -2120,8 +2119,7 @@
       "dailyHint": "দিনকার অনন্য দর্শক",
       "empty": "এই সময়ের জইন্যে কোনো তথ্য নাই",
       "visitors": "দর্শক",
-      "pageViews": "পাতা দেখা",
-      "visitorsEstimated": "দর্শক (আন্দাজি)"
+      "pageViews": "পাতা দেখা"
     },
     "countries": {
       "title": "শীর্ষ দেশ",

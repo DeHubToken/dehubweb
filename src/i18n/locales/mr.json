@@ -2168,8 +2168,7 @@
       "overDays": "{{count}} दिवसांत",
       "requestsLabel": "विनंत्या",
       "served": "दिल्या",
-      "requests": "{{requests}} विनंत्या",
-      "estimatedToday": "यूपीएससीच्या निकालाचा आजपर्यंत अंदाज"
+      "requests": "{{requests}} विनंत्या"
     },
     "chart": {
       "hourly": "दर तासाला अभ्यागत",
@@ -2178,8 +2177,7 @@
       "dailyHint": "दररोज अद्वितीय अभ्यागत",
       "empty": "या कालावधीसाठी अजून डेटा नाही",
       "visitors": "अभ्यागतांना:",
-      "pageViews": "पृष्ठ दृश्ये",
-      "visitorsEstimated": "पाहुणे (अंदाजे)"
+      "pageViews": "पृष्ठ दृश्ये"
     },
     "countries": {
       "title": "आघाडीचे देश",

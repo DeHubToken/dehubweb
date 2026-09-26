@@ -2138,8 +2138,7 @@
       "overDays": "{{count}} хоногийн турш",
       "requestsLabel": "Хүсэлтүүд",
       "served": "Үйлчилсэн",
-      "requests": "{{requests}} хүсэлт",
-      "estimatedToday": "тооцоолсон, одоог хүртэл UTC"
+      "requests": "{{requests}} хүсэлт"
     },
     "chart": {
       "hourly": "Цагийн зочид",
@@ -2148,8 +2147,7 @@
       "dailyHint": "өдөрт ноогдох давтагдашгүй зочид",
       "empty": "Энэ хугацаанд одоогоор өгөгдөл алга",
       "visitors": "зочин",
-      "pageViews": "хуудасны үзсэн",
-      "visitorsEstimated": "зочин (тооцоолсон)"
+      "pageViews": "хуудасны үзсэн"
     },
     "countries": {
       "title": "Тэргүүлэх улсууд",

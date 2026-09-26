@@ -2177,8 +2177,7 @@
       "overDays": "{{count}} ದಿನಗಳಲ್ಲಿ",
       "requestsLabel": "ವಿನಂತಿಗಳು",
       "served": "ಸೇವೆ ಸಲ್ಲಿಸಲಾಗಿದೆ",
-      "requests": "{{requests}} ವಿನಂತಿಗಳು",
-      "estimatedToday": "ಅಂದಾಜು, ಇಲ್ಲಿಯವರೆಗೆ ಇಂದು UTC"
+      "requests": "{{requests}} ವಿನಂತಿಗಳು"
     },
     "chart": {
       "hourly": "ಗಂಟೆಗೆ ಸಂದರ್ಶಕರು",
@@ -2187,8 +2186,7 @@
       "dailyHint": "ದಿನಕ್ಕೆ ವಿಶಿಷ್ಟ ಸಂದರ್ಶಕರು",
       "empty": "ಈ ಅವಧಿಗೆ ಇನ್ನೂ ಡೇಟಾ ಇಲ್ಲ",
       "visitors": "ಸಂದರ್ಶಕರು",
-      "pageViews": "ಪುಟ ವೀಕ್ಷಣೆಗಳು",
-      "visitorsEstimated": "ಸಂದರ್ಶಕರು (ಅಂದಾಜು)"
+      "pageViews": "ಪುಟ ವೀಕ್ಷಣೆಗಳು"
     },
     "countries": {
       "title": "ಅಗ್ರ ದೇಶಗಳು",

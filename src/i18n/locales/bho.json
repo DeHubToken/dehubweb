@@ -2098,8 +2098,7 @@
       "overDays": "{{count}} दिन में",
       "requestsLabel": "अनुरोध",
       "served": "परोसल गइल",
-      "requests": "{{requests}} अनुरोध",
-      "estimatedToday": "अनुमानित, आज ले, UTC"
+      "requests": "{{requests}} अनुरोध"
     },
     "chart": {
       "hourly": "हर घंटा के आगंतुक",
@@ -2108,8 +2107,7 @@
       "dailyHint": "रोज के अनोखा आगंतुक",
       "empty": "एह अवधि खातिर अबहीं ले कवनो डेटा नइखे",
       "visitors": "आगंतुक",
-      "pageViews": "पन्ना-व्यू",
-      "visitorsEstimated": "आगंतुक (अनुमानित)"
+      "pageViews": "पन्ना-व्यू"
     },
     "countries": {
       "title": "शीर्ष देश",

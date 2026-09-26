@@ -2157,8 +2157,7 @@
       "overDays": "дар {{count}} рӯз",
       "requestsLabel": "Дархостҳо",
       "served": "Пешниҳодшуда",
-      "requests": "{{requests}} дархост",
-      "estimatedToday": "ҳисоб, то имрӯз имрӯз UTC"
+      "requests": "{{requests}} дархост"
     },
     "chart": {
       "hourly": "Боздидкунандагон дар як соат",
@@ -2167,8 +2166,7 @@
       "dailyHint": "боздидкунандагони беназир дар як рӯз",
       "empty": "Барои ин фосила ҳанӯз маълумот нест",
       "visitors": "mga bisita",
-      "pageViews": "mga view ng pahina",
-      "visitorsEstimated": "mga bisita (tinatakda)"
+      "pageViews": "mga view ng pahina"
     },
     "countries": {
       "title": "Кишварҳои беҳтарин",

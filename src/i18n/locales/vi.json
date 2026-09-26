@@ -1987,8 +1987,7 @@
       "overDays": "trong {{count}} ngày",
       "requestsLabel": "Yêu cầu",
       "served": "Đã phục vụ",
-      "requests": "{{requests}} yêu cầu",
-      "estimatedToday": "ước tính, cho đến nay hôm nay UTC"
+      "requests": "{{requests}} yêu cầu"
     },
     "chart": {
       "hourly": "Khách truy cập mỗi giờ",
@@ -1997,8 +1996,7 @@
       "dailyHint": "khách truy cập duy nhất mỗi ngày",
       "empty": "Chưa có dữ liệu cho khoảng thời gian này",
       "visitors": "khách truy cập",
-      "pageViews": "Lượt xem",
-      "visitorsEstimated": "khách truy cập (ước tính)"
+      "pageViews": "Lượt xem"
     },
     "countries": {
       "title": "Quốc gia hàng đầu",

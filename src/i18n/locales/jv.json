@@ -2154,8 +2154,7 @@
       "overDays": "sajrone {{count}} dina",
       "requestsLabel": "Panjaluk",
       "served": "Diladeni",
-      "requests": "{{requests}} panjaluk",
-      "estimatedToday": "perkiraan, sejauh ini hari ini UTC"
+      "requests": "{{requests}} panjaluk"
     },
     "chart": {
       "hourly": "Tamu saben jam",
@@ -2164,8 +2163,7 @@
       "dailyHint": "tamu unik saben dina",
       "empty": "Durung ana data kanggo periode iki",
       "visitors": "pengunjung",
-      "pageViews": "tayangan halaman",
-      "visitorsEstimated": "pengunjung (perkiraan)"
+      "pageViews": "tayangan halaman"
     },
     "countries": {
       "title": "Negara ndhuwur",

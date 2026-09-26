@@ -2154,8 +2154,7 @@
       "overDays": "በ{{count}} ቀናት ውስጥ",
       "requestsLabel": "ጥያቄዎች",
       "served": "ቀርቧል",
-      "requests": "{{requests}} ጥያቄዎች",
-      "estimatedToday": "የተገመተው, እስከዛሬ ድረስ UTC"
+      "requests": "{{requests}} ጥያቄዎች"
     },
     "chart": {
       "hourly": "በሰዓት ጎብኚዎች",
@@ -2164,8 +2163,7 @@
       "dailyHint": "በቀን ልዩ ጎብኚዎች",
       "empty": "ለዚህ ጊዜ መስኮት እስካሁን መረጃ የለም",
       "visitors": "ጎብitorsዎች",
-      "pageViews": "የገጽ እይታዎች",
-      "visitorsEstimated": "ጎብኚዎች (ይገመታል)"
+      "pageViews": "የገጽ እይታዎች"
     },
     "countries": {
       "title": "ከፍተኛ ሀገራት",

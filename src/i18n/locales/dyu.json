@@ -2121,8 +2121,7 @@
       "overDays": "tile {{count}} kɔnɔ",
       "requestsLabel": "Ɲininiw",
       "served": "A bɔra",
-      "requests": "ɲinini {{requests}}",
-      "estimatedToday": "jateminɛ, bi ma se yɔrɔ min, UTC"
+      "requests": "ɲinini {{requests}}"
     },
     "chart": {
       "hourly": "Taalabagaw lɛrɛ kelen-kelen na",
@@ -2131,8 +2130,7 @@
       "dailyHint": "taalabaga kelenw tile kelen-kelen na",
       "empty": "Kunnafoni si tɛ yen nin waati in kama fɔlɔ",
       "visitors": "taalabagaw",
-      "pageViews": "pasi filɛliw",
-      "visitorsEstimated": "taalabagaw (jateminɛ)"
+      "pageViews": "pasi filɛliw"
     },
     "countries": {
       "title": "Jamana banbaw",

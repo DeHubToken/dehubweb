@@ -2195,8 +2195,7 @@
       "overDays": "ក្នុងរយៈពេល {{count}} ថ្ងៃ",
       "requestsLabel": "សំណើ",
       "served": "បានបម្រើ",
-      "requests": "សំណើ {{requests}}",
-      "estimatedToday": "ការប៉ាន់ស្មាន, រហូតមកដល់ពេលនេះ UTC"
+      "requests": "សំណើ {{requests}}"
     },
     "chart": {
       "hourly": "អ្នកទស្សនាក្នុងមួយម៉ោង",
@@ -2205,8 +2204,7 @@
       "dailyHint": "អ្នកទស្សនាតែមួយក្នុងមួយថ្ងៃ",
       "empty": "មិនទាន់មានទិន្នន័យសម្រាប់ចន្លោះពេលនេះទេ",
       "visitors": "អ្នកទស្សនា",
-      "pageViews": "ទិដ្ឋភាពទំព័រ",
-      "visitorsEstimated": "អ្នកទស្សនា (ការប៉ាន់ស្មាន)"
+      "pageViews": "ទិដ្ឋភាពទំព័រ"
     },
     "countries": {
       "title": "ប្រទេសកំពូល",

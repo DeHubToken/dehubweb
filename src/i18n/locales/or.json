@@ -2126,8 +2126,7 @@
       "overDays": "{{count}} ଦିନ ମଧ୍ୟରେ",
       "requestsLabel": "ଅନୁରୋଧ",
       "served": "ପରିବେଷଣ ହେଲା",
-      "requests": "{{requests}} ଅନୁରୋଧ",
-      "estimatedToday": "ଆନୁମାନିକ, ଆଜି ପର୍ଯ୍ୟନ୍ତ UTC"
+      "requests": "{{requests}} ଅନୁରୋଧ"
     },
     "chart": {
       "hourly": "ପ୍ରତି ଘଣ୍ଟାରେ ଦର୍ଶକ",
@@ -2136,8 +2135,7 @@
       "dailyHint": "ପ୍ରତିଦିନ ୟୁନିକ ଦର୍ଶକ",
       "empty": "ଏହି ସମୟ ପାଇଁ ତଥ୍ୟ ନାହିଁ",
       "visitors": "ପରିଦର୍ଶକ",
-      "pageViews": "ପୃଷ୍ଠା ଦୃଶ୍ୟ",
-      "visitorsEstimated": "ପରିଦର୍ଶକ (ଅନୁମାନିତ)"
+      "pageViews": "ପୃଷ୍ଠା ଦୃଶ୍ୟ"
     },
     "countries": {
       "title": "ଶୀର୍ଷ ଦେଶ",

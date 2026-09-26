@@ -2168,8 +2168,7 @@
       "overDays": "ໃນ {{count}} ມື້",
       "requestsLabel": "ຄຳຂໍ",
       "served": "ສົ່ງແລ້ວ",
-      "requests": "{{requests}} ຄຳຂໍ",
-      "estimatedToday": "ການຄາດຄະເນ, ຈົນເຖິງມື້ນີ້ UTC"
+      "requests": "{{requests}} ຄຳຂໍ"
     },
     "chart": {
       "hourly": "ຜູ້ເຂົ້າຊົມຕໍ່ຊົ່ວໂມງ",
@@ -2178,8 +2177,7 @@
       "dailyHint": "ຜູ້ເຂົ້າຊົມທີ່ບໍ່ຊ້ຳຕໍ່ມື້",
       "empty": "ຍັງບໍ່ມີຂໍ້ມູນສຳລັບຊ່ວງນີ້",
       "visitors": "ຜູ້ມາຢ້ຽມຢາມ",
-      "pageViews": "ການເບິ່ງໜ້າ",
-      "visitorsEstimated": "ການຢ້ຽມຢາມ (ລິ້ງຄ໌_ແກ້ໄຂ)"
+      "pageViews": "ການເບິ່ງໜ້າ"
     },
     "countries": {
       "title": "ປະເທດອັນດັບຕົ້ນ",

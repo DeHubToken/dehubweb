@@ -2206,8 +2206,7 @@
       "overDays": "en {{count}} días",
       "requestsLabel": "Peticiones",
       "served": "Servidas",
-      "requests": "{{requests}} peticiones",
-      "estimatedToday": "estimado, hasta ahora hoy UTC"
+      "requests": "{{requests}} peticiones"
     },
     "chart": {
       "hourly": "Visitantes por hora",
@@ -2216,8 +2215,7 @@
       "dailyHint": "visitantes únicos por día",
       "empty": "Aún no hay datos para este periodo",
       "visitors": "visitantes",
-      "pageViews": "Páginas vistas",
-      "visitorsEstimated": "visitantes (estimado)"
+      "pageViews": "Páginas vistas"
     },
     "countries": {
       "title": "Países principales",
