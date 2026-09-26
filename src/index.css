@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 🔫 as an actual pistol. Apple, Google, Microsoft and Twitter all redrew
+   U+1F52B as a water gun in 2016-2018, so every platform font now shows a toy.
+   This 832-byte COLR font carries that one glyph (Twemoji 2.2 artwork, CC-BY 4.0,
+   twitter/twemoji) and unicode-range keeps it from touching any other character.
+   It sits right after Exo in the font stack below, ahead of every platform emoji font. */
+@font-face {
+  font-family: 'DeHub Pistol';
+  src: url(data:font/woff2;base64,d09GMgABAAAAAANAAAwAAAAABfwAAALwAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIjAjHgZgAGwKhDCDOQE2AiQDFgsWAAQgBYIYByAbmgRRlAzKCoCfhzGRqY9VhjLEpCkm7nLxWxfR93CWMsTwfTzUj/3v7N59oul7Em2/M0QqlMh0rVqaWCkQmlhlfkUrSfwaJFfO3j0oVUJLonKSohQqAl7lBoWjFS3olPqy1b2a/5uBfo16vjXkRIoWLZBwULgHRhhQWP6purX8nh+ebjUk1A56rJm7/MS/r0dgiRX0EiNNKGkgDIURxpqJhhIKS65fjf8/P9r63ytx6//zu/P/qv6QZrQq72Qc4DwfExehHdoANJLsn44nsQ2J3tuTTsd1sF8gIOVbsA0oNOzX0rmUI2mopkCgsQ1KCWz3fhzU3yNgDo4BJLYDC/FNGYGMMgUrVfI+4Blg/KZ4IqTA1b1X5X6WmY+PS4DNl3G1x9qnF/jUOoybTMbNhA3mddIfHpjj6UnavUWqLndD9Agzffy3/f6+uLClY+KEue04m+pqIyes29NF4mKbbVNrzNzYZNK9TQMb2eju5vkDS2vCzvkVODjfX8zdSybTcDdQgQygZ4R5xNVefowRjnYV4Oln9s/p1mlr4rR0nHTgelvHxXocepc104XjRI5F8oQlReJEJIeE44TdKi1MExPNLE2itS0DE6Ukl2CSnTM50jKxVZKwZLDWpHW10tdwdtSEwc0wVyg9XRJStFKgi0qQfM4YqJrR5MQLnHn8abODzl26UEaE88tlEaCiZy/gIb3eg84dkjf/32zFjhx/keJkvb12Su9SoozJnsyx1Ka1JA1jmUx2rDeljmX2TLBVw6bNelPZBl1ktdcjR8b0YlhA/KTQ5od0AEHwdd3rZzi7yddGLfDl+eULh+Ppwzpti2AoQfD5KfVHAUgPFUCK7rw2WCHXqls8JZM8xQ/8HwRTJyiWQgBYITB0AVXURNgANZGWNojmLDmiHIsiBrbUSkMVsx82YjnI3S7BQ6JsOdKl8BIrXq4UkbJoUqOBvxhz486NLeP92ehRtXJT+iTS8hMrSwESgTTC3Dpm6VTA1uegDQAAAA==) format('woff2');
+  unicode-range: U+1F52B;
+  font-display: block;
+}
+
 /* Shorts have their own controls. Keep Android/WebKit's video chrome from
    painting fullscreen/rotate controls across the comments split boundary. */
 .shorts-inline-video::-webkit-media-controls {
@@ -70,7 +82,7 @@ All colors MUST be HSL.
      installed and macOS/iOS match Apple Color Emoji first, so neither downloads
      anything — only Windows/Linux pull the (unicode-range subset) webfont. */
   * {
-    font-family: 'Exo', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', sans-serif;
+    font-family: 'Exo', 'DeHub Pistol', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', sans-serif;
   }
 
   /* Touch chrome we never styled, so every engine drew its own. iOS Safari
