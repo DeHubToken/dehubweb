@@ -62,6 +62,9 @@ const DHB_BUFFER_BPS = 100n;
 const USDC_BUFFER_BPS = 150n;
 /** DPay holds back 0.5% of a sale and sends it as gas, so ask for a touch more DHB. */
 const DPAY_DELIVERED_SHARE = 0.995;
+/** DPay's smallest sale is $0.50 (500 DHB at the peg). A smaller gap is rounded
+ *  up to it — the spare DHB stays in the wallet — rather than skipping DPay. */
+const DPAY_MIN_TOKENS = 501;
 /** Native kept back where the Safe pays its own gas in the native coin (Arc: USDC). */
 const NATIVE_GAS_RESERVE: Record<number, bigint> = { [ARC_CHAIN_ID]: 10n ** 17n };
 const FILL_TIMEOUT_MS = 15 * 60_000;
@@ -151,14 +154,16 @@ function dpayAssetId(source: { chainId: number; address: string; isNative?: bool
   };
   const list = accepted[source.chainId];
   if (!list) return null;
-  if (isNativeSource(source)) return list.includes('native') ? `direct:${source.chainId}:native` : null;
+  // DPay ids the gas coin as `native` on Base/Ethereum/BNB, but as the zero
+  // address on Robinhood, where it comes from the token list instead.
+  if (isNativeSource(source)) return source.chainId === ROBINHOOD_CHAIN_ID ? `direct:${source.chainId}:${ZERO}` : `direct:${source.chainId}:native`;
   const hit = list.find(a => a.toLowerCase() === source.address.toLowerCase());
   return hit ? `direct:${source.chainId}:${hit.toLowerCase()}` : null;
 }
 
 /** Whole DHB to ask DPay for so that, after its gas hold-back, at least `shortfall` arrives. */
 const dpayTokensFor = (shortfallWei: bigint) =>
-  Math.ceil(Number(formatUnits(shortfallWei, 18)) / DPAY_DELIVERED_SHARE) + 1;
+  Math.max(DPAY_MIN_TOKENS, Math.ceil(Number(formatUnits(shortfallWei, 18)) / DPAY_DELIVERED_SHARE) + 1);
 
 async function dpayStock(): Promise<number> {
   const res = await readWithTimeout(fetch(`${DPAY_API}/available/tokens`), 'DeHub Pay stock', 10000);
