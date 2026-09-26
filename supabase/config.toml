@@ -195,6 +195,10 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.get-stream-ingest]
     verify_jwt = false
+  # Public, IP rate-limited: read-only Livepeer stream status for the mobile
+  # producer poll, so the Livepeer key stays server-side.
+  [functions.livepeer-stream-status]
+    verify_jwt = false
   [functions.get-web3auth-config]
     verify_jwt = false
   # Governance writes authenticate on the DeHub token in x-dehub-token
