@@ -4108,5 +4108,16 @@
     "priceMoved": "Farashin DHB ya canza yayin da USDC ɗinka ke isowa. USDC yana cikin walat ɗinka a kan Base; sake aika don kammalawa.",
     "usdcPending": "USDC ɗinka ya iso kan Base amma ba a gani ba tukuna. Sake aika nan da ɗan lokaci.",
     "dhbPending": "An tabbatar da sayen DHB amma bai bayyana ba tukuna. Sake aika nan da ɗan lokaci."
+  },
+  "docsChat": {
+    "title": "Ввввввввввввввввввввввввввввввввв",
+    "greeting": "Barka dai! Ni mataimakin takaddun DeHub ne. Tambaye ni komai game da DeHub, alamar $DHB, DePIN, gwamnati, ko duk wani fasali na dandamali!",
+    "placeholder": "Tambayi game da DeHub...",
+    "open": "Bude hira",
+    "close": "Kusa chat",
+    "error": "Kuskure",
+    "rateLimited": "Saƙonni da yawa. Da fatan za a jira dan lokaci kuma sake gwadawa.",
+    "unavailable": "Mataimakin ba shi da samuwa a yanzu. Don Allah sake gwadawa daga baya.",
+    "failed": "An kasa aika saƙo. Don Allah a sake gwadawa."
   }
 }

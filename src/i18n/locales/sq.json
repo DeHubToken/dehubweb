@@ -4126,5 +4126,16 @@
     "priceMoved": "Çmimi i DHB ndryshoi ndërsa po mbërrinin USDC-të e tua. USDC-të janë në portofolin tënd në Base; dërgo sërish për ta përfunduar.",
     "usdcPending": "USDC-të e tua mbërritën në Base, por ende nuk duken. Dërgo sërish pas pak.",
     "dhbPending": "Blerja e DHB u konfirmua, por ende nuk është shfaqur. Dërgo sërish pas pak."
+  },
+  "docsChat": {
+    "title": "Asistenti AI",
+    "greeting": "Përshëndetje! Jam asistentja e dokumentacionit të DeHub. Më pyet për DeHub, tokenin $DHB, DePIN, qeverisjen ose çdo veçori tjetër të platformës!",
+    "placeholder": "Pyet për DeHub...",
+    "open": "Hap bisedën",
+    "close": "Mbyll bisedën",
+    "error": "Gabim",
+    "rateLimited": "Shumë mesazhe. Të lutem, prit një moment dhe provo përsëri.",
+    "unavailable": "Asistenti është i padisponueshëm për momentin. Provo përsëri më vonë.",
+    "failed": "Dërgimi i mesazhit dështoi. Provo përsëri."
   }
 }

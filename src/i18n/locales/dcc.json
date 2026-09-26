@@ -2914,5 +2914,16 @@
     "priceMoved": "آپ کا USDC آتے وقت DHB کا دام بدل گیا۔ USDC Base پو آپ کے والیٹ میں ہے؛ پورا کرنے کے واسطے پھر سے بھیجو۔",
     "usdcPending": "آپ کا USDC Base پو پہنچ گیا پن ابھی دِکھ نئیں ریا۔ تھوڑی دیر میں پھر سے بھیجو۔",
     "dhbPending": "DHB کی خریدی کنفرم ہو گئی پن ابھی دِکھ نئیں ریئی۔ تھوڑی دیر میں پھر سے بھیجو۔"
+  },
+  "docsChat": {
+    "title": "AI సహాయకుడు",
+    "greeting": "Hi! Nenu DeHub yokka documentation assistant ni. DeHub, $DHB token, DePIN, governance, leda inkoka platform features gurinchi emaina adagandi!",
+    "placeholder": "DeHub gurinchi adagandi...",
+    "open": "Chat open chey",
+    "close": "Chat close chey",
+    "error": "తప్పు",
+    "rateLimited": "Chala messages unnayi. Konchem sepu aagi malli try cheyandi.",
+    "unavailable": "Assistant ippudu available ga ledu. Konchem sepu aagi malli try cheyandi.",
+    "failed": "Message pampadam fail ayyindi. Malli try cheyandi."
   }
 }

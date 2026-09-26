@@ -6419,5 +6419,16 @@
     "priceMoved": "DHB moved while your USDC was arriving. The USDC is in your wallet on Base; send again to finish.",
     "usdcPending": "Your USDC arrived on Base but is not visible yet. Send again in a moment.",
     "dhbPending": "The DHB purchase confirmed but has not shown up yet. Send again in a moment."
+  },
+  "docsChat": {
+    "title": "AI Assistant",
+    "greeting": "Hi! I'm DeHub's documentation assistant. Ask me anything about DeHub, the $DHB token, DePIN, governance, or any other platform features!",
+    "placeholder": "Ask about DeHub...",
+    "open": "Open chat",
+    "close": "Close chat",
+    "error": "Error",
+    "rateLimited": "Too many messages. Please wait a moment and try again.",
+    "unavailable": "The assistant is unavailable right now. Please try again later.",
+    "failed": "Failed to send message. Please try again."
   }
 }

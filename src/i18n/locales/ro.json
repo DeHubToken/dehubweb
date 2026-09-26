@@ -6194,5 +6194,16 @@
     "priceMoved": "Prețul DHB s-a schimbat cât timp sosea USDC-ul dvs. USDC-ul este în portofelul dvs. pe Base; trimiteți din nou pentru a finaliza.",
     "usdcPending": "USDC-ul dvs. a ajuns pe Base, dar nu este încă vizibil. Trimiteți din nou peste câteva momente.",
     "dhbPending": "Achiziția de DHB a fost confirmată, dar nu a apărut încă. Trimiteți din nou peste câteva momente."
+  },
+  "docsChat": {
+    "title": "Asistent AI",
+    "greeting": "Bună! Sunt asistentul de documentare al DeHub. Întreabă-mă ceva despre DeHub, tokenul $DHB, DePIN, guvernanță sau orice alte caracteristici ale platformei!",
+    "placeholder": "Întreabă despre DeHub...",
+    "open": "Deschide chatul",
+    "close": "Închide chatul",
+    "error": "Eroare",
+    "rateLimited": "Prea multe mesaje. Vă rugăm să așteptați un moment și să încercați din nou.",
+    "unavailable": "Asistentul nu este disponibil momentan. Te rugăm să încerci din nou mai târziu.",
+    "failed": "Trimiterea mesajului a eșuat. Te rugăm să încerci din nou."
   }
 }

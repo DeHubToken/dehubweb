@@ -4079,5 +4079,16 @@
     "priceMoved": "Dr DHB-Kurs het sich bewegt, während dini USDC unterwegs gsi sind. D USDC sind i dinere Wallet uf Base; schick nomal zum Abschlüsse.",
     "usdcPending": "Dini USDC sind uf Base aacho, sind aber no nöd sichtbar. Schick grad nomal.",
     "dhbPending": "Dr DHB-Chauf isch bestätigt, isch aber no nöd sichtbar. Schick grad nomal."
+  },
+  "docsChat": {
+    "title": "AI Assistent",
+    "greeting": "Hoi! Ich bin DeHubs Dokumentationsassistent. Frag mich alles über DeHub, de $DHB Token, DePIN, Governance oder anderi Plattform-Features!",
+    "placeholder": "Frag über DeHub...",
+    "open": "Chat öppne",
+    "close": "Chat schliesse",
+    "error": "Fehler",
+    "rateLimited": "Z'viel Nöri. Warte chli und probiers no einisch.",
+    "unavailable": "De Assistent isch grad nöd da. Probier's spöter no einisch.",
+    "failed": "Nachricht konnt nöd gschickt werde. Probier's no einisch."
   }
 }

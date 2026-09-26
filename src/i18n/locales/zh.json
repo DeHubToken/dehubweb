@@ -6420,5 +6420,16 @@
     "priceMoved": "你的 USDC 到账期间 DHB 价格发生了变动。USDC 已在你 Base 上的钱包中；请再次发送以完成。",
     "usdcPending": "你的 USDC 已到达 Base，但暂未显示。请稍后再次发送。",
     "dhbPending": "DHB 购买已确认，但暂未显示。请稍后再次发送。"
+  },
+  "docsChat": {
+    "title": "AI助手",
+    "greeting": "您好！我是DeHub的文件助理。 向我询问有关DeHub、$DHB令牌、DePIN、治理或任何其他平台功能的任何信息！",
+    "placeholder": "询问有关DeHub的信息……",
+    "open": "打开聊天",
+    "close": "关闭聊天",
+    "error": "错误",
+    "rateLimited": "消息太多。请稍等片刻，然后重试。",
+    "unavailable": "助理当前不可用。 请稍后重试。",
+    "failed": "发送消息失败。请重试。"
   }
 }

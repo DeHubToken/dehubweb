@@ -3972,5 +3972,16 @@
     "priceMoved": "DHB sɔngɔ yɛlɛmana i ka USDC tun bɛ na tuma min. USDC bɛ i ka wari foroko kɔnɔ Base kan; i ka ci tugun walisa ka a ban.",
     "usdcPending": "I ka USDC sera Base kan nka a ma ye fɔlɔ. I ka ci tugun sɔɔni.",
     "dhbPending": "DHB sanni dafara nka a ma ye fɔlɔ. I ka ci tugun sɔɔni."
+  },
+  "docsChat": {
+    "title": "Dɛmɛbaga",
+    "greeting": "Ne ye DeHub ka dɛmɛbaga ye. I be se ka ne ɲininga DeHub, $DHB dogo, DePIN, gofɛrɛnɛman, wala fɛɛn wɛrɛ koo la!",
+    "placeholder": "I yɛrɛ ɲininga ko: \"Yala ne be se ka mun lo kɛ?\"",
+    "open": "Ka baro kɛ ni mɔgɔ dɔ ye",
+    "close": "Ka to ka baro kɛ ni mɔgɔ wɛrɛw ye",
+    "error": "Nka, o ye fili ye",
+    "rateLimited": "N'i b'a fɛ ka dɔ fara i ka kumaw kan, i ka muɲu dɔɔni ani i ka segi k'a ɲini.",
+    "unavailable": "O kama, a tun man nɔgɔ ka mɔgɔ dɛmɛ. N'i b'a fɛ ka dɔ fara a kan, a ɲini k'a filɛ.",
+    "failed": "O loon na, mɔgɔ si ma deli ka taga n'a ye. N'i b'a fɛ ka dɔ fara a kan, i ka segi k'a ɲini."
   }
 }

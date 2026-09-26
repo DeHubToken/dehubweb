@@ -4142,5 +4142,16 @@
     "priceMoved": "I-DHB ishintshile ngenkathi i-USDC yakho isafika. I-USDC iku-wallet yakho ku-Base; thumela futhi ukuze uqedele.",
     "usdcPending": "I-USDC yakho ifikile ku-Base kodwa ayikabonakali. Thumela futhi emzuzwini.",
     "dhbPending": "Ukuthenga i-DHB kuqinisekisiwe kodwa akukaveli. Thumela futhi emzuzwini."
+  },
+  "docsChat": {
+    "title": "Umsizi we-AI",
+    "greeting": "Sawubona! Ngingumsizi wamadokhumenti we-DeHub. Ngibuze noma yini mayelana ne-DeHub, ithokheni ye- $DHB, i-DePIN, ukubusa, nanoma yiziphi ezinye izici zepulatifomu!",
+    "placeholder": "Buza nge-DeHub...",
+    "open": "Vula ingxoxo",
+    "close": "Vala ingxoxo",
+    "error": "Iphutha",
+    "rateLimited": "Imiyalezo eminingi kakhulu. Sicela ulinde isikhashana bese uzama futhi.",
+    "unavailable": "Umsizi akatholakali okwamanje. Sicela uphinde uzame kamuva.",
+    "failed": "Yehlulekile ukuthumela umyalezo. Sicela uzame futhi."
   }
 }

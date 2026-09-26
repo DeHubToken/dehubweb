@@ -6331,5 +6331,16 @@
     "priceMoved": "DHB-prisen ændrede sig, mens dine USDC var på vej. Dine USDC ligger i din wallet på Base; send igen for at gøre det færdigt.",
     "usdcPending": "Dine USDC er ankommet på Base, men er ikke synlige endnu. Send igen om et øjeblik.",
     "dhbPending": "DHB-købet er bekræftet, men er ikke dukket op endnu. Send igen om et øjeblik."
+  },
+  "docsChat": {
+    "title": "AI-assistent",
+    "greeting": "Hej! Jeg er DeHubs dokumentationsassistent. Spørg mig om alt om DeHub, $DHB-token, DePIN, styring eller andre platformfunktioner.",
+    "placeholder": "Spørg om DeHub...",
+    "open": "Åbn chat",
+    "close": "Luk chat",
+    "error": "Fejl",
+    "rateLimited": "For mange beskeder. Vent et øjeblik, og prøv igen.",
+    "unavailable": "Assistenten er ikke tilgængelig lige nu. Prøv igen senere.",
+    "failed": "Kunne ikke sende besked. Prøv igen."
   }
 }

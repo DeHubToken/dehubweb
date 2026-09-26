@@ -6146,5 +6146,16 @@
     "priceMoved": "Niova ny vidin'ny DHB raha mbola ho tonga ny USDC-nao. Ao amin'ny kitaponao ao amin'ny Base ny USDC; mandefasa indray mba hamitana.",
     "usdcPending": "Tonga tao amin'ny Base ny USDC-nao saingy mbola tsy hita. Mandefasa indray afaka kelikely.",
     "dhbPending": "Voamarina ny fividianana DHB saingy mbola tsy niseho. Mandefasa indray afaka kelikely."
+  },
+  "docsChat": {
+    "title": "AI Assistant",
+    "greeting": "Salama! Mpanolotsaina momba ny antontan-taratasin'i DeHub aho. Anontanio ahy ny zavatra rehetra momba ny DeHub, ny mari-pamantarana $DHB, DePIN, fitantanana, na sehatra hafa!",
+    "placeholder": "DeHub dia mila manontany tena momba ny...",
+    "open": "Sokafy ny chat",
+    "close": "Tamy_ts's chat",
+    "error": "Tsy fetezana",
+    "rateLimited": "Be loatra ireo hafatra. Mandrasa kely dia andramo indray.",
+    "unavailable": "Tsy mbola misy mpanampy azo ampiasaina amin'izao fotoana izao. Andramo indray rehefa avy eo azafady.",
+    "failed": "Tsy nahavita nandefa ny hafatra. Avereno andramana azafady."
   }
 }
