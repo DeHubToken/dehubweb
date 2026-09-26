@@ -4024,12 +4024,13 @@
     "done": "完成",
     "back": "回来",
     "aiLabel": "让 AI 设置你的交易",
-    "aiPlaceholder": "试试“以 3 美分卖出我的 DHB 的一半”",
+    "aiPlaceholder": "试试“以 6 美分卖出我的 DHB 的一半”",
     "aiSend": "发送给 AI",
     "aiHint": "用通俗的语言说出你想要什么。AI 会填写所有内容，你只需按“确认”。",
     "aiBuyOnly": "Easy trade 卖出 DHB。要购买 DHB，请打开 Exchange。",
     "aiNeedAmount": "你想卖多少 DHB？",
-    "aiFailed": "AI 无法设置。试试换一种说法，或在下方填写。"
+    "aiFailed": "AI 无法设置。试试换一种说法，或在下方填写。",
+    "cancelled": "取消。没有卖出任何东西。"
   },
   "ppvTopUp": {
     "yourBalance": "你的余额",

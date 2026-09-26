@@ -4065,12 +4065,13 @@
     "done": "Përfundoi",
     "back": "Prapa",
     "aiLabel": "Kërkoji AI të organizojë tregtinë tënde",
-    "aiPlaceholder": "Provo \"të shesësh gjysmën e DHB-së time me 3 cent\"",
+    "aiPlaceholder": "Provo \"të shesësh gjysmën e DHB-së time me 6 cent\"",
     "aiSend": "Dërgoja UA-së",
     "aiHint": "Thuaj çfarë të duash me fjalë të thjeshta. AI plotëson gjithçka, thjesht shtyp Konfirmo.",
     "aiBuyOnly": "Tregtia e lehtë shet DHB. Për të blerë DHB, hapni Exchange.",
     "aiNeedAmount": "Sa DHB doni të shisni?",
-    "aiFailed": "IA nuk mund ta kurdiste këtë. Provo ta thuash në një mënyrë tjetër ose plotësoje më poshtë."
+    "aiFailed": "IA nuk mund ta kurdiste këtë. Provo ta thuash në një mënyrë tjetër ose plotësoje më poshtë.",
+    "cancelled": "Anuluar. Asgjë nuk u shit."
   },
   "ppvTopUp": {
     "yourBalance": "Bilanci yt",

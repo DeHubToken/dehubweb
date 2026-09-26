@@ -6247,12 +6247,13 @@
     "done": "Valmis",
     "back": "Tagasi",
     "aiLabel": "Palu tehisintellektil oma äri seadistada",
-    "aiPlaceholder": "Proovi \"müü pool oma DHB-d 3 sendiga\"",
+    "aiPlaceholder": "Proovi \"müü pool oma DHB-d 6 sendiga\"",
     "aiSend": "Saada tehisintellekti",
     "aiHint": "Öelge, mida tahate, lihtsate sõnadega. Tehisintellekt täidab kõik, vajuta lihtsalt nuppu Kinnita.",
     "aiBuyOnly": "Easy Trade müüb DHB-d. DHB ostmiseks avage Exchange.",
     "aiNeedAmount": "Kui palju DHB-d soovite müüa?",
-    "aiFailed": "AI ei saanud seda seadistada. Proovi seda teisiti öelda või täida see allpool."
+    "aiFailed": "AI ei saanud seda seadistada. Proovi seda teisiti öelda või täida see allpool.",
+    "cancelled": "Tühistatud. Midagi ei müüdud."
   },
   "ppvTopUp": {
     "yourBalance": "Sinu saldo",
