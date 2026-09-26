@@ -233,7 +233,7 @@ function ChartTooltip({
   label?: string;
 }) {
   const { t } = useTranslation();
-  const entries = (payload ?? []).filter((entry) => entry.value != null);
+  const entries = dropLiveDuplicates(payload ?? []);
   if (!active || !entries.length) return null;
   return (
     <div
@@ -255,6 +255,38 @@ function ChartTooltip({
       ))}
     </div>
   );
+}
+
+/**
+ * The newest bucket on every chart is still filling up — today so far, or this
+ * hour so far — so drawn like the finished ones it reads as a crash every
+ * midnight. When it is live, its value moves off `key` onto `${key}Live`, which
+ * also carries the previous point so the dashed tail joins the solid line.
+ */
+function withLiveTail<T extends Record<string, unknown>>(rows: T[], keys: string[], isLive: (row: T) => boolean) {
+  const last = rows.length - 1;
+  if (last < 0 || !isLive(rows[last])) return rows;
+  return rows.map((row, i) => {
+    const next: Record<string, unknown> = { ...row };
+    for (const key of keys) {
+      next[`${key}Live`] = i >= last - 1 ? row[key] : null;
+      if (i === last) next[key] = null;
+    }
+    return next as T;
+  });
+}
+
+function utcToday(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/** Tooltips show one number per series, even where solid and dashed meet. */
+function dropLiveDuplicates<E extends { dataKey?: unknown; value: number | null }>(entries: E[]): E[] {
+  const solid = new Set(entries.filter((e) => e.value != null).map((e) => String(e.dataKey)));
+  return entries.filter((e) => {
+    const key = String(e.dataKey);
+    return e.value != null && !(key.endsWith('Live') && solid.has(key.slice(0, -4)));
+  });
 }
 
 /** Chart rows; `estimated` rides along so the tooltip can say so. */
@@ -447,15 +479,16 @@ function CommunityTooltip({
   newLabel,
 }: {
   active?: boolean;
-  payload?: { value: number | null; name?: string; payload: { date: string; newUsers?: number } }[];
+  payload?: { value: number | null; name?: string; dataKey?: string; payload: { date: string; newUsers?: number } }[];
   newLabel?: string;
 }) {
   if (!active || !payload?.length) return null;
   const row = payload[0].payload;
+  const entries = dropLiveDuplicates(payload);
   return (
     <div data-keep-dark className="rounded-xl bg-zinc-900 border border-zinc-700 px-3 py-2 shadow-lg">
       <div className="text-[11px] text-zinc-400 mb-1">{row.date}</div>
-      {payload.map((entry) => (
+      {entries.map((entry) => (
         <div key={entry.name} className="text-xs text-white tabular-nums">
           {formatCount(entry.value)} <span className="text-zinc-400">{entry.name}</span>
         </div>
@@ -558,6 +591,7 @@ function CommunitySection({ range }: { range: Range }) {
     const all = stats.history.days;
     const days = windowDays == null ? all : all.slice(-windowDays);
     const span = days.length;
+    const today = utcToday();
 
     return {
       span,
@@ -570,15 +604,19 @@ function CommunitySection({ range }: { range: Range }) {
       // Days before the recorder first ran carry no active figures, and are
       // dropped rather than drawn as zero — nobody being here and nobody
       // having counted are not the same thing.
-      active: days
-        .filter((d) => d.activeDaily != null)
-        .map((d) => ({
-          date: d.date,
-          label: formatSpanLabel(d.date, span),
-          daily: d.activeDaily,
-          weekly: d.activeWeekly,
-          monthly: d.activeMonthly,
-        })),
+      active: withLiveTail(
+        days
+          .filter((d) => d.activeDaily != null)
+          .map((d) => ({
+            date: d.date,
+            label: formatSpanLabel(d.date, span),
+            daily: d.activeDaily,
+            weekly: d.activeWeekly,
+            monthly: d.activeMonthly,
+          })),
+        ['daily', 'weekly', 'monthly'],
+        (d) => d.date === today,
+      ),
     };
   }, [stats, windowDays]);
 
@@ -823,6 +861,27 @@ function CommunitySection({ range }: { range: Range }) {
                   strokeWidth={2}
                   dot={view.active.length < 3}
                 />
+                {/* Today is still counting, so its segment is dashed rather
+                    than drawn as a finished day that fell off a cliff. */}
+                {(['monthly', 'weekly', 'daily'] as const).map((key) => (
+                  <Line
+                    key={key}
+                    type="monotone"
+                    dataKey={`${key}Live`}
+                    name={
+                      key === 'monthly'
+                        ? t('stats.community.thisMonth', 'This month')
+                        : key === 'weekly'
+                          ? t('stats.community.thisWeek', 'This week')
+                          : t('stats.community.today', 'Today')
+                    }
+                    stroke="currentColor"
+                    strokeOpacity={key === 'monthly' ? 0.3 : key === 'weekly' ? 0.6 : 1}
+                    strokeWidth={2}
+                    strokeDasharray="4 4"
+                    dot={false}
+                  />
+                ))}
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -879,7 +938,14 @@ export default function StatsPage() {
       return {
         hourly: true,
         buckets: buckets.length,
-        chart: visitorSeries(buckets, (h) => formatHourLabel(h.hour)),
+        chart: withLiveTail(
+          visitorSeries(buckets, (h) => formatHourLabel(h.hour)),
+          ['visitors'],
+          () => {
+            const lastHour = buckets[buckets.length - 1]?.hour;
+            return !!lastHour && Date.parse(lastHour) + 3_600_000 > Date.now();
+          },
+        ),
         pageViews: sum(buckets, (h) => h.pageViews),
         requests: sum(buckets, (h) => h.requests),
         bytes: null as number | null,
@@ -896,7 +962,11 @@ export default function StatsPage() {
     return {
       hourly: false,
       buckets: days.length,
-      chart: visitorSeries(days, (d) => formatDayLabel(d.date)),
+      chart: withLiveTail(
+        visitorSeries(days, (d) => formatDayLabel(d.date)),
+        ['visitors'],
+        () => days[days.length - 1]?.date === utcToday(),
+      ),
       pageViews: sum(days, (d) => d.pageViews),
       requests: sum(days, (d) => d.requests),
       bytes: sum(days, (d) => d.bytes) as number | null,
@@ -1111,6 +1181,19 @@ export default function StatsPage() {
                         strokeWidth={2}
                         fill="url(#statsVisitorsFill)"
                         dot={false}
+                      />
+                      {/* The bucket still counting: dashed, fainter, ends on a dot. */}
+                      <Area
+                        type="monotone"
+                        dataKey="visitorsLive"
+                        stroke="currentColor"
+                        strokeOpacity={0.6}
+                        strokeWidth={2}
+                        strokeDasharray="4 4"
+                        fill="url(#statsVisitorsFill)"
+                        fillOpacity={0.4}
+                        dot={false}
+                        activeDot={{ r: 3 }}
                       />
                     </AreaChart>
                   </ResponsiveContainer>
