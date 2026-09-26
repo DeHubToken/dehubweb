@@ -6301,12 +6301,13 @@
     "done": "Imekamilika",
     "back": "Nyuma",
     "aiLabel": "Omba AI ianzishe biashara yako",
-    "aiPlaceholder": "Jaribu \"kuuza nusu ya DHB yangu kwa senti 3\"",
+    "aiPlaceholder": "Jaribu \"kuuza nusu ya DHB yangu kwa senti 6\"",
     "aiSend": "Tuma kwa AI",
     "aiHint": "Sema unachotaka kwa maneno wazi. AI inajaza kila kitu, unabonyeza tu Thibitisha.",
     "aiBuyOnly": "Biashara rahisi inauza DHB. Ili kununua DHB, fungua Exchange.",
     "aiNeedAmount": "Unataka kuuza DHB kiasi gani?",
-    "aiFailed": "AI haikuweza kusanidi hiyo. Jaribu kuisema kwa njia nyingine, au ijaze hapa chini."
+    "aiFailed": "AI haikuweza kusanidi hiyo. Jaribu kuisema kwa njia nyingine, au ijaze hapa chini.",
+    "cancelled": "Imeghairiwa. Hakuna kilichouzwa."
   },
   "ppvTopUp": {
     "yourBalance": "Salio lako",

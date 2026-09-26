@@ -4018,12 +4018,13 @@
     "done": "Fertig",
     "back": "Zrugg",
     "aiLabel": "Frag d'AI, din Trade ufzsetze",
-    "aiPlaceholder": "Probier \"verchauf die Helfti vo minere DHB für 3 Rappe\"",
+    "aiPlaceholder": "Probier \"verchauf die Helfti vo minere DHB für 6 Rappe\"",
     "aiSend": "Schick's an d'AI",
     "aiHint": "Sag, was du wotsch, mit einfache Wort. D'AI füllt alles us, du drucksch nume no \"Bestätige\".",
     "aiBuyOnly": "Eifachi Trades verchaufed DHB. Zum DHB choufe, öffne Exchange.",
     "aiNeedAmount": "Wie viel DHB wotsch verchoufe?",
-    "aiFailed": "D'AI hät's nöd chönne ufsetze. Probier's anders z'sage, oder füll's hie uus."
+    "aiFailed": "D'AI hät's nöd chönne ufsetze. Probier's anders z'sage, oder füll's hie uus.",
+    "cancelled": "Abgsagt. Nüt isch verchouft worde."
   },
   "ppvTopUp": {
     "yourBalance": "Dis Guethabe",
