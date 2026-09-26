@@ -998,7 +998,7 @@ export function AudioVisualizer({
       <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-1.5 px-2 pb-2 pointer-events-none">
         {/* Scrubber */}
         <div className="flex items-center gap-2 pointer-events-auto" onClick={stopBubble}>
-          <span className="text-[10px] font-medium text-white/70 tabular-nums drop-shadow shrink-0">
+          <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center shrink-0">
             {formatTime(displayTime)}
           </span>
           <div
@@ -1027,7 +1027,7 @@ export function AudioVisualizer({
               style={{ left: `${displayRatio * 100}%`, transform: 'translateX(-50%)' }}
             />
           </div>
-          <span className="text-[10px] font-medium text-white/50 tabular-nums drop-shadow shrink-0">
+          <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center shrink-0">
             {formatTime(duration)}
           </span>
         </div>
