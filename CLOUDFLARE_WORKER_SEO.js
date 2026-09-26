@@ -963,7 +963,7 @@ const MARKETING_PAGES = {
     title: "God's Eye | DeHub Arcade",
     description: 'Explore a live spatial-intelligence globe and, if you choose, place a deliberately approximate version of yourself among the DeHub community.',
     heading: "God's Eye — Find The DeHub Community On A Living 3D Earth",
-    ...arcadeGameLd('/arcade/gods-eye.gif'),
+    ...arcadeGameLd('/arcade/gods-eye.jpg'),
     bodyHtml: `<p>A live spatial-intelligence globe in the browser tab: flights, satellites, earthquakes and street traffic drawn over a 3D Earth you can spin, zoom and fly down into.</p>
 <p>It is also the DeHub community on a map. Opting in places a deliberately approximate version of you on the globe — never your exact location — so you can see who else is out there. Nothing is placed until you choose to.</p>
 <p>Built on the open-source <a href="https://github.com/bilawalsidhu/gods-eye-view" rel="nofollow">God's Eye View</a> (MIT). Needs a browser with WebGL 2 and hardware acceleration switched on.</p>

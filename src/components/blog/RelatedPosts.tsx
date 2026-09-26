@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { BlogPost } from '@/types/blog';
 import { OptimizedImage } from '@/components/OptimizedImage';
+import { mediaImage, mediaImageSrcSet } from '@/lib/media-url';
 import { formatDate } from '@/utils/blogUtils';
 
 interface RelatedPostsProps {
@@ -33,7 +34,9 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPost, allPost
           >
             <div className="h-20 overflow-hidden">
               <OptimizedImage
-                src={post.bannerImage}
+                src={mediaImage(post.bannerImage, { width: 480 })}
+                srcSet={mediaImageSrcSet(post.bannerImage, [360, 480, 736])}
+                sizes="(min-width: 768px) 300px, 100vw"
                 alt={post.bannerImageAlt}
                 className="w-full h-full object-cover object-bottom group-hover:scale-105 transition-transform duration-200"
               />
