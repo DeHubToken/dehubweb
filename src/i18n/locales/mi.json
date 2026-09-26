@@ -4105,5 +4105,16 @@
     "priceMoved": "I neke te utu o DHB i te wā e tae mai ana ō USDC. Kei tō pūkoro i Base ngā USDC; tukuna anō kia oti.",
     "usdcPending": "Kua tae ō USDC ki Base engari kāore anō kia kitea. Tukuna anō ākuanei.",
     "dhbPending": "Kua whakaūngia te hoko DHB engari kāore anō kia puta. Tukuna anō ākuanei."
+  },
+  "docsChat": {
+    "title": "Kaiawhina AI",
+    "greeting": "Kia ora! Ko ahau te kaiawhina tuhinga a DeHub. Pātai mai ki ahau tetahi mea e pā ana ki DeHub, te $DHB token, DePIN, whakahaere, ranei tetahi atu āhuatanga papaaho!",
+    "placeholder": "Pātai e pā ana ki DeHub...",
+    "open": "Kōrerorero tuwhera",
+    "close": "Kōrerorero tata",
+    "error": "Hapa",
+    "rateLimited": "He maha rawa ngā karere. tēnā tatari i te wa, me te tamata ano.",
+    "unavailable": "Kaore i te waatea te kaitautoko i tenei wa. Whakamātauria ano i muri mai.",
+    "failed": "Kaore i taea te tuku karere. Tena koa tamata ano."
   }
 }

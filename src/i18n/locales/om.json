@@ -4153,5 +4153,16 @@
     "priceMoved": "Utuu USDC kee ga'aa jiruu gatiin DHB jijjiirame. USDC waleetii kee Base irra jiru keessa jira; xumuruuf irra deebi'ii ergi.",
     "usdcPending": "USDC kee Base irra ga'eera garuu ammallee hin mul'atu. Yeroo muraasa booda irra deebi'ii ergi.",
     "dhbPending": "Bittaan DHB mirkanaa'eera garuu ammallee hin mul'anne. Yeroo muraasa booda irra deebi'ii ergi."
+  },
+  "docsChat": {
+    "title": "Gargaaraa AI",
+    "greeting": "Akkam! Ani gargaaraa sanada DeHub ti. Waa&#39;ee DeHub, mallattoo $DHB, DePIN, bulchiinsa, ykn amaloota waltajjii biroo kamiyyuu waan tokko na gaafadhaa!",
+    "placeholder": "Waa&#39;ee DeHub gaafadhaa...",
+    "open": "Chat banaa",
+    "close": "Chat cufi",
+    "error": "Dogoggora",
+    "rateLimited": "Ergaa baay&#39;ee. Mee yeroo muraasa eegaa irra deebi&#39;aa yaalaa.",
+    "unavailable": "Gargaaraan yeroo ammaa kana hin jiru. Mee booda irra deebi&#39;ii yaalaa.",
+    "failed": "Ergaa erguu hin dandeenye. Mee irra deebi&#39;ii yaalaa."
   }
 }

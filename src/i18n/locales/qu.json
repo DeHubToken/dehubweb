@@ -4141,5 +4141,16 @@
     "priceMoved": "USDC-ykiq chayamuchkaptin DHB-q chanin tikrakurqan. USDC-qa Base-pi billeteraykipim; tukunaykipaq hukmanta kachay.",
     "usdcPending": "USDC-yki Base-man chayamunña ichaqa manaraq rikukunchu. Huk ratullamanta hukmanta kachay.",
     "dhbPending": "DHB rantiyqa takyachisqaña ichaqa manaraq rikhurinchu. Huk ratullamanta hukmanta kachay."
+  },
+  "docsChat": {
+    "title": "AI Yanapakuq",
+    "greeting": "Allinllachu! Ñuqaqa DeHubpa qillqakuna yanapaqninmi kani. ¡Imatapas tapuway DeHubmanta, $DHB tokenmanta, DePINmanta, kamachiymanta, utaq ima plataforma ruwanakunamanta!",
+    "placeholder": "DeHubmanta tapukuy...",
+    "open": "Kichasqa rimanakuy",
+    "close": "Wichqay rimanakuy",
+    "error": "Pantay",
+    "rateLimited": "Nishu achka willakuykunata. Ama hina kaspa, huk ratuta suyay hinaspa hukmanta kallpanchakuy.",
+    "unavailable": "Yanapaqqa manam kunanpachaqa kanchu. Ama hina kaspa, qhipaman hukmanta kallpachakuy.",
+    "failed": "Mana willayta apachiyta atisqachu. Ama hina kaspa, hukmanta kallpachakuy."
   }
 }

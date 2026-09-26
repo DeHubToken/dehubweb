@@ -6420,5 +6420,16 @@
     "priceMoved": "USDC'n ulaşırken DHB fiyatı değişti. USDC, Base'teki cüzdanında; tamamlamak için tekrar gönder.",
     "usdcPending": "USDC'n Base'e ulaştı ama henüz görünmüyor. Birazdan tekrar gönder.",
     "dhbPending": "DHB alımı onaylandı ama henüz görünmüyor. Birazdan tekrar gönder."
+  },
+  "docsChat": {
+    "title": "Yapay Zeka Asist",
+    "greeting": "Merhaba! Ben DeHub'ın dokümantasyon asistanıyım. DeHub, $DHB tokeni, DePIN, yönetim veya diğer platform özellikleri hakkında bana bir şey sor!",
+    "placeholder": "DeHub'ı sor...",
+    "open": "Sohbeti aç",
+    "close": "Sohbeti kapat",
+    "error": "Hata",
+    "rateLimited": "Çok fazla mesaj var. Lütfen biraz bekleyin ve tekrar deneyin.",
+    "unavailable": "Asistan şu anda müsait değil. Lütfen daha sonra tekrar deneyin.",
+    "failed": "Mesaj gönderilemedi. Lütfen tekrar deneyin."
   }
 }

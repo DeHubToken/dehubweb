@@ -4100,5 +4100,16 @@
     "priceMoved": "Iye DHB yí padà nígbà tí USDC rẹ ń bọ̀. USDC náà wà nínú àpamọ́wọ́ rẹ lórí Base; tún fi ránṣẹ́ láti parí.",
     "usdcPending": "USDC rẹ ti dé Base ṣùgbọ́n kò tíì hàn. Tún fi ránṣẹ́ ní ìṣẹ́jú díẹ̀.",
     "dhbPending": "Ìrà DHB ti jẹ́rìí ṣùgbọ́n kò tíì hàn. Tún fi ránṣẹ́ ní ìṣẹ́jú díẹ̀."
+  },
+  "docsChat": {
+    "title": "Olùrànlọ́wọ́ AI",
+    "greeting": "Kaabo! Èmi ni olùrànlọ́wọ́ ìwé DeHub. Bi mí ní ohunkóhun nípa DeHub, àmì $DHB, DePIN, ìṣàkóso, tàbí àwọn ànímọ́ pẹpẹ mìíràn!",
+    "placeholder": "Béèrè nípa DeHub...",
+    "open": "Ṣii iwiregbe",
+    "close": "Ìjíròrò tí ó súnmọ́",
+    "error": "Àṣìṣe",
+    "rateLimited": "Àwọn àtẹ̀jíṣẹ́ tó pọ̀ jù. Jọ̀wọ́ dúró díẹ̀ kí o sì gbìyànjú lẹ́ẹ̀kan síi.",
+    "unavailable": "Olùrànlọ́wọ́ náà kò sí ní ìsinsin yìí. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan síi lẹ́yìn náà.",
+    "failed": "Ó kùnà láti fi àtẹ̀jíṣẹ́ ránṣẹ́. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan síi."
   }
 }

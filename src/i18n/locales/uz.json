@@ -4154,5 +4154,16 @@
     "priceMoved": "USDC’ingiz kelayotganda DHB narxi o‘zgardi. USDC Base’dagi hamyoningizda; yakunlash uchun qayta yuboring.",
     "usdcPending": "USDC’ingiz Base’ga keldi, lekin hali ko‘rinmayapti. Birozdan so‘ng qayta yuboring.",
     "dhbPending": "DHB xaridi tasdiqlandi, lekin hali ko‘rinmadi. Birozdan so‘ng qayta yuboring."
+  },
+  "docsChat": {
+    "title": "Sun&#39;iy intellekt yordamchisi",
+    "greeting": "Salom! Men DeHubning hujjatlar bo&#39;yicha yordamchisiman. Mendan DeHub, $DHB token, DePIN, boshqaruv yoki boshqa platforma xususiyatlari haqida so&#39;rang!",
+    "placeholder": "DeHub haqida so&#39;rang...",
+    "open": "Chatni ochish",
+    "close": "Chatni yopish",
+    "error": "Xato",
+    "rateLimited": "Juda ko&#39;p xabarlar. Iltimos, bir oz kutib turing va qayta urinib ko&#39;ring.",
+    "unavailable": "Yordamchi hozirda mavjud emas. Iltimos, keyinroq qayta urinib ko&#39;ring.",
+    "failed": "Xabarni yuborib bo&#39;lmadi. Qaytadan urinib ko&#39;ring."
   }
 }

@@ -4109,5 +4109,16 @@
     "priceMoved": "你嘅 USDC 到緊嗰陣 DHB 價格變咗。USDC 喺你 Base 嘅錢包入面；再傳多次就完成。",
     "usdcPending": "你嘅 USDC 已經到咗 Base，但暫時未見到。等陣再傳多次。",
     "dhbPending": "DHB 購買已經確認，但暫時未顯示。等陣再傳多次。"
+  },
+  "docsChat": {
+    "title": "人工智能助理",
+    "greeting": "你好！我係 DeHub 嘅文件助理。問我有關 DeHub 、$DHB 代幣、 DePIN 、治理或者任何其他平台功能嘅任何嘢！",
+    "placeholder": "問下 DeHub …",
+    "open": "打開即時通訊",
+    "close": "閂即時通訊",
+    "error": "錯誤",
+    "rateLimited": "太多訊息。請等一陣，再試多次。",
+    "unavailable": "個助理宜家用唔到。請遲啲再試一次。",
+    "failed": "發送唔到訊息。唔該再試多次。"
   }
 }

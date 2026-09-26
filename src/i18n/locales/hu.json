@@ -6303,5 +6303,16 @@
     "priceMoved": "A DHB ára elmozdult, miközben a USDC-je érkezett. A USDC a Base-en lévő tárcájában van; a befejezéshez küldje újra.",
     "usdcPending": "A USDC-je megérkezett a Base-re, de még nem látható. Küldje újra egy pillanat múlva.",
     "dhbPending": "A DHB-vásárlás megerősítve, de még nem jelent meg. Küldje újra egy pillanat múlva."
+  },
+  "docsChat": {
+    "title": "AI-asszisztens",
+    "greeting": "Szia! A DeHub dokumentációs asszisztense vagyok. Kérdezzen bármit a DeHubról, a $DHB tokenről, a DePIN-ről, az irányításról vagy bármely más platformfunkcióról!",
+    "placeholder": "Kérdezzen a DeHubról...",
+    "open": "Csevegés megnyitása",
+    "close": "Csevegés bezárása",
+    "error": "Hiba",
+    "rateLimited": "Túl sok üzenet. Kérjük, várjon egy percet, és próbálja újra.",
+    "unavailable": "Az asszisztens jelenleg nem érhető el. Próbálkozz újra később.",
+    "failed": "Nem sikerült elküldeni az üzenetet. Próbálkozz újra."
   }
 }

@@ -4015,5 +4015,16 @@
     "priceMoved": "你的 USDC 在路上的时候 DHB 价钱变了。USDC 在你 Base 的钱包里；再送一次就完成。",
     "usdcPending": "你的 USDC 已到 Base，但还看不到。等一下再送一次。",
     "dhbPending": "DHB 已买到并确认，但还没显示。等一下再送一次。"
+  },
+  "docsChat": {
+    "title": "AI 助手",
+    "greeting": "你好！我是 DeHub 的文档助手。关于 DeHub、$DHB 代币、DePIN、治理或任何其他平台功能，都可以问我！",
+    "placeholder": "问关于 DeHub...",
+    "open": "打开聊天",
+    "close": "关闭聊天",
+    "error": "错误",
+    "rateLimited": "消息太多。请稍等片刻再试。",
+    "unavailable": "助手目前无法使用。请稍后再试。",
+    "failed": "发送消息失败。请再试一次。"
   }
 }

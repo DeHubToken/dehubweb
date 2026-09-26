@@ -4102,5 +4102,16 @@
     "priceMoved": "Qiimaha DHB wuu is beddelay intii USDC-gaagu soo socday. USDC-gu wuxuu ku jiraa jeebkaaga Base; mar kale dir si aad u dhammaystirto.",
     "usdcPending": "USDC-gaagu wuu soo gaaray Base laakiin weli lama arko. Mar kale dir wax yar kadib.",
     "dhbPending": "Iibsiga DHB waa la xaqiijiyay laakiin weli ma muuqdo. Mar kale dir wax yar kadib."
+  },
+  "docsChat": {
+    "title": "Kaaliyaha AI",
+    "greeting": "Hi! waxaan ahay kaaliyaha dukumiintiyada DeHub. Weydii wax kasta oo ku saabsan DeHub, calaamadda $DHB, DePIN, maamul, ama astaamo kale oo madal ah!",
+    "placeholder": "Weydii DeHub...",
+    "open": "Wadahadal furan",
+    "close": "Wadahadal dhow",
+    "error": "Khalad",
+    "rateLimited": "Farriimo aad u tiro badan. fadlan sug daqiiqad oo isku day mar kale.",
+    "unavailable": "Caawiyaha hadda lama heli karo. Fadlan isku day mar kale ka dib.",
+    "failed": "Ku guuldareystay in ay soo diraan fariin. Fadlan isku day mar kale."
   }
 }

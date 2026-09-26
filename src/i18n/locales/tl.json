@@ -6305,5 +6305,16 @@
     "priceMoved": "Gumalaw ang presyo ng DHB habang dumarating ang USDC mo. Nasa iyong wallet sa Base ang USDC; magpadala ulit para matapos.",
     "usdcPending": "Dumating na sa Base ang USDC mo pero hindi pa nakikita. Magpadala ulit maya-maya.",
     "dhbPending": "Nakumpirma ang pagbili ng DHB pero hindi pa lumalabas. Magpadala ulit maya-maya."
+  },
+  "docsChat": {
+    "title": "AI Assistant",
+    "greeting": "Hi! Ako ang assistant ng dokumentasyon ni DeHub. Magtanong sa akin ng anumang bagay tungkol sa DeHub, ang $DHB token, DePIN, pamamahala, o anumang iba pang mga tampok ng platform!",
+    "placeholder": "Magtanong tungkol sa DeHub...",
+    "open": "Buksan ang chat",
+    "close": "Isara ang chat",
+    "error": "Kamalian",
+    "rateLimited": "Masyadong maraming mensahe. Maghintay nang ilang sandali at subukang muli.",
+    "unavailable": "Hindi available ang assistant ngayon. Pakisubukan muli mamaya.",
+    "failed": "Nabigong magpadala ng mensahe. Pakisubukan muli."
   }
 }

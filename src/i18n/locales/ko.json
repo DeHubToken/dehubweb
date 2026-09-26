@@ -6408,5 +6408,16 @@
     "priceMoved": "USDC가 도착하는 동안 DHB 가격이 변동됐어요. USDC는 Base의 지갑에 있으니, 다시 보내서 완료해 주세요.",
     "usdcPending": "USDC가 Base에 도착했지만 아직 표시되지 않아요. 잠시 후 다시 보내 주세요.",
     "dhbPending": "DHB 구매가 확정됐지만 아직 표시되지 않아요. 잠시 후 다시 보내 주세요."
+  },
+  "docsChat": {
+    "title": "AI 어시스턴트",
+    "greeting": "안녕하세요! 저는 DeHub의 문서 도우미입니다. DeHub, $DHB 토큰, DePIN, 거버넌스 또는 기타 플랫폼 기능에 대해 무엇이든 물어보세요!",
+    "placeholder": "DeHub에 대해 질문하기...",
+    "open": "채팅창 열기",
+    "close": "채팅 닫기",
+    "error": "오류",
+    "rateLimited": "메시지가 너무 많습니다. 잠시 후 다시 시도해주세요.",
+    "unavailable": "현재 해당 어시스턴트를 이용할 수 없습니다. 나중에 다시 시도해주세요.",
+    "failed": "메시지를 보내지 못했습니다. 다시 시도해주세요."
   }
 }

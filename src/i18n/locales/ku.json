@@ -5348,5 +5348,16 @@
     "priceMoved": "Dema USDC-ya te digihîşt, bihayê DHB guherî. USDC li ser Base di berîka te de ye; ji bo qedandinê dîsa bişîne.",
     "usdcPending": "USDC-ya te gihîşt Base lê hîn nayê dîtin. Piştî kêliyekê dîsa bişîne.",
     "dhbPending": "Kirîna DHB hat piştrastkirin lê hîn xuya nebûye. Piştî kêliyekê dîsa bişîne."
+  },
+  "docsChat": {
+    "title": "Alîkarê AI",
+    "greeting": "Silav! Ez alîkarê belgekirinê yê DeHub im. Li ser DeHub, nîşana $DHB, DePIN, rêveberiyê, an jî taybetmendiyên din ên platformê ji min bipirsin!",
+    "placeholder": "Li ser DeHub bipirse...",
+    "open": "Sohbetê veke",
+    "close": "Sohbetê bigire",
+    "error": "Şaşî",
+    "rateLimited": "Peyam pir zêde ne. Ji kerema xwe demekê bisekinin û dîsa biceribînin.",
+    "unavailable": "Alîkar niha ne berdest e. Ji kerema xwe paşê dîsa biceribînin.",
+    "failed": "Şandina peyamê neserket. Ji kerema xwe dîsa biceribînin."
   }
 }

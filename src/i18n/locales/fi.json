@@ -6301,5 +6301,16 @@
     "priceMoved": "DHB:n hinta muuttui, kun USDC:si oli matkalla. USDC on lompakossasi Basessa; lähetä uudelleen viimeistelläksesi.",
     "usdcPending": "USDC:si saapui Baseen, mutta se ei näy vielä. Lähetä uudelleen hetken kuluttua.",
     "dhbPending": "DHB-osto vahvistettiin, mutta se ei näy vielä. Lähetä uudelleen hetken kuluttua."
+  },
+  "docsChat": {
+    "title": "Tekoälyavustaja",
+    "greeting": "Hei! Olen DeHubin dokumentaatioavustaja. Kysy minulta mitä tahansa DeHubista, $DHB -tunnuksesta, DePIN-koodista, hallinnosta tai muista alustan ominaisuuksista!",
+    "placeholder": "Kysy DeHubista...",
+    "open": "Avaa chat",
+    "close": "Sulje chat",
+    "error": "Virhe",
+    "rateLimited": "Liian monta viestiä. Odota hetki ja yritä uudelleen.",
+    "unavailable": "Avustaja ei ole juuri nyt käytettävissä. Yritä myöhemmin uudelleen.",
+    "failed": "Viestin lähettäminen epäonnistui. Yritä uudelleen."
   }
 }

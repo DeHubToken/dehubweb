@@ -6392,5 +6392,16 @@
     "priceMoved": "Kamēr ceļā bija jūsu USDC, DHB cena mainījās. USDC ir jūsu makā Base tīklā; sūtiet vēlreiz, lai pabeigtu.",
     "usdcPending": "Jūsu USDC ir pienākuši Base tīklā, bet vēl nav redzami. Pēc brīža sūtiet vēlreiz.",
     "dhbPending": "DHB pirkums ir apstiprināts, bet vēl nav parādījies. Pēc brīža sūtiet vēlreiz."
+  },
+  "docsChat": {
+    "title": "AI palīgs",
+    "greeting": "Sveiki! Esmu DeHub dokumentācijas asistents. Pajautājiet man kaut ko par DeHub, $DHB marķieri, DePIN, pārvaldību vai citām platformas funkcijām!",
+    "placeholder": "Jautāt par DeHub...",
+    "open": "Atvērt tērzēšanu",
+    "close": "Aizvērt tērzēšanu",
+    "error": "Kļūda",
+    "rateLimited": "Pārāk daudz ziņojumu. Lūdzu, nedaudz uzgaidiet un mēģiniet vēlreiz.",
+    "unavailable": "Asistents pašlaik nav pieejams. Lūdzu, vēlāk mēģiniet vēlreiz.",
+    "failed": "Neizdevās nosūtīt ziņojumu. Lūdzu, mēģiniet vēlreiz."
   }
 }

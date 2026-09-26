@@ -6295,5 +6295,16 @@
     "priceMoved": "Die DHB-prys het geskuif terwyl jou USDC op pad was. Die USDC is in jou beursie op Base; stuur weer om klaar te maak.",
     "usdcPending": "Jou USDC het op Base aangekom maar is nog nie sigbaar nie. Stuur oor 'n oomblik weer.",
     "dhbPending": "Die DHB-aankoop is bevestig maar wys nog nie. Stuur oor 'n oomblik weer."
+  },
+  "docsChat": {
+    "title": "AI Assistent",
+    "greeting": "Hi! Ek is DeHub se dokumentasie-assistent. Vra my enige iets oor DeHub, die $DHB-token, DePIN, bestuur, of enige ander platformkenmerke!",
+    "placeholder": "Vra oor DeHub...",
+    "open": "Maak klets oop",
+    "close": "Maak klets toe",
+    "error": "Fout",
+    "rateLimited": "Te veel boodskappe. Wag asseblief 'n oomblik en probeer weer.",
+    "unavailable": "Die assistent is tans nie beskikbaar nie. Probeer asseblief later weer.",
+    "failed": "Kon nie boodskap stuur nie. Probeer asseblief weer."
   }
 }

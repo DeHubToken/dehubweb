@@ -4033,5 +4033,16 @@
     "priceMoved": "侬个 USDC 勒到账个辰光 DHB 价钿变了。USDC 辣侬 Base 浪个钱包里；再发一趟就好完成。",
     "usdcPending": "侬个 USDC 已经到 Base 了，不过还看勿到。等一歇再发一趟。",
     "dhbPending": "DHB 买好已经确认，不过还呒没显示出来。等一歇再发一趟。"
+  },
+  "docsChat": {
+    "title": "AI 助手",
+    "greeting": "侬好！吾是 DeHub 嘅文档助手。有啥关于 DeHub、$DHB 代币、DePIN、治理或者其他平台功能嘅问题，都可以问吾！",
+    "placeholder": "问关于 DeHub...",
+    "open": "开启聊天",
+    "close": "关闭聊天",
+    "error": "错误",
+    "rateLimited": "消息太多了。请稍等片刻再试。",
+    "unavailable": "助手目前无法使用。请稍后再试。",
+    "failed": "发送消息失败。请再试一次。"
   }
 }

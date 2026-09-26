@@ -3302,5 +3302,16 @@
     "priceMoved": "Цена DHB се променила док су ваши USDC стизали. USDC су у вашем новчанику на Base; пошаљите поново да завршите.",
     "usdcPending": "Ваши USDC су стигли на Base, али још нису видљиви. Пошаљите поново за тренутак.",
     "dhbPending": "Куповина DHB је потврђена, али се још није појавила. Пошаљите поново за тренутак."
+  },
+  "docsChat": {
+    "title": "Asistent za veštačku inteligenciju",
+    "greeting": "Zdravo! Ja sam DeHub-ov asistent za dokumentaciju. Pitaj me bilo šta o DeHub-u, $DHB tokenu, DePIN-u, upravljanju ili bilo kojim drugim funkcijama platforme!",
+    "placeholder": "Pitajte za DeHub...",
+    "open": "Otvori ćaskanje",
+    "close": "Zatvori ćaskanje",
+    "error": "Greška",
+    "rateLimited": "Previše poruka. Sačekajte trenutak i pokušajte ponovo.",
+    "unavailable": "Asistent trenutno nije dostupan. Probajte ponovo kasnije.",
+    "failed": "Slanje poruke nije uspelo. Probajte ponovo."
   }
 }
