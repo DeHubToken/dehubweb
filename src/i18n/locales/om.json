@@ -3382,7 +3382,6 @@
     "seoDescription": "Galmee ifaa DeHub: ilaalcha waliigalaa pilaatifoormii, dApps, diinagdee tookenii DHB, staking, taphoota, karoora, gaaffiiwwan yeroo baay’ee gaafataman fi kan biroo."
   },
   "dex": {
-    "launchNotice": "Jijjiirraan addaa kun Uniswap irratti ijaarame, isaan immoo eegama. Amma hojii irra jira guutummaatti hojjeta, tarreeffamni seeraa dhiheenyatti ni beeksifama. Amma dhangala'aa maallaqaa akka dabaltan isin afeerra — qonnaa fi kakaasaaleen yeroo dhihootti ni ifa ta'u.",
     "seoTitle": "DEX — DHB ati gatii keetiin gurguraa",
     "seoDescription": "DHB bitachuu ykn gurguruu gatii kee Uniswap v4 limit order irratti Base ykn BNB Chain irratti godhi. Order book, market depth fi gatii tokko qofa USD.",
     "venue": "Network",

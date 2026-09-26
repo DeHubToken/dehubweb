@@ -5445,7 +5445,6 @@
     "seoDescription": "Tài liệu chính thức của DeHub: tổng quan nền tảng, dApp, kinh tế token DHB, staking, trò chơi, lộ trình, FAQ và hơn thế nữa."
   },
   "dex": {
-    "launchNotice": "Sàn giao dịch tùy chỉnh này được xây dựng trên Uniswap và được Uniswap bảo mật. Sàn đã hoạt động và đầy đủ chức năng, các niêm yết chính thức sẽ sớm được công bố. Mời bạn thêm thanh khoản ngay bây giờ — các farm và ưu đãi sắp được hé lộ.",
     "seoTitle": "DEX — Giao dịch DHB theo giá của bạn",
     "seoDescription": "Đặt giá mua hoặc bán DHB của bạn với lệnh giới hạn Uniswap v4 trên Base hoặc BNB Chain. Sổ lệnh trực tiếp, độ sâu thị trường và một mức giá USD chung.",
     "venue": "Mạng",

@@ -3,7 +3,7 @@ import { minuteCache, parseSharedMarket, CANDLE_INTERVALS, type SharedMarket, ty
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
-import { ArrowDownUp, ExternalLink, Info, RefreshCw } from 'lucide-react';
+import { ArrowDownUp, ExternalLink, RefreshCw } from 'lucide-react';
 import { formatUnits, parseUnits } from 'ethers';
 import { toast } from 'sonner';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
@@ -405,7 +405,6 @@ export default function DexPage() {
       <div className="dex-stat"><small>{t('dex.listedUsd', { chain: venueName })}</small><strong>{formatSize(totalUsdc)}</strong></div>
       <button className="dex-refresh" type="button" onClick={refresh} disabled={loading || busy} aria-label={t('dex.refreshMarket')}><RefreshCw size={14} />{loading ? t('dex.updating') : t('dex.refresh')}</button>
     </header>
-    <div role="note" className="dex-notice"><Info size={16} aria-hidden="true" /><p>{t('dex.launchNotice')}</p></div>
     {listError && <div role="alert" className="dex-alert">{listError}<button onClick={() => void loadPositions()}>{t('dex.retry')}</button></div>}
     <div className="dex-mobile-tabs" role="tablist" aria-label={t('dex.tradingPanels')}>{(['chart', 'book', 'trade'] as const).map((view) => <button key={view} role="tab" aria-selected={mobileView === view} onClick={() => setMobileView(view)}>{t(`dex.tab.${view}`)}</button>)}</div>
     <div className="dex-workspace">
