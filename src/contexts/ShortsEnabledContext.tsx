@@ -15,7 +15,7 @@
  * clicked and only rolls back if the server save actually fails.
  */
 
-import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
@@ -133,8 +133,13 @@ export function ShortsEnabledProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('storage', onStorage);
   }, []);
 
+  const value = useMemo(
+    () => ({ shortsEnabled, setShortsEnabled, isUpdating }),
+    [shortsEnabled, setShortsEnabled, isUpdating],
+  );
+
   return (
-    <ShortsEnabledContext.Provider value={{ shortsEnabled, setShortsEnabled, isUpdating }}>
+    <ShortsEnabledContext.Provider value={value}>
       {children}
     </ShortsEnabledContext.Provider>
   );

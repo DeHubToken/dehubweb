@@ -5,7 +5,7 @@
  * Persists to localStorage.
  */
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react';
 import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 
 const STORAGE_KEY = 'autoplay-videos';
@@ -45,8 +45,13 @@ export function AutoplayProvider({ children }: { children: ReactNode }) {
     pushAutoplay(value);
   }, [pushAutoplay]);
 
+  const value = useMemo(
+    () => ({ autoplayEnabled, setAutoplayEnabled }),
+    [autoplayEnabled, setAutoplayEnabled],
+  );
+
   return (
-    <AutoplayContext.Provider value={{ autoplayEnabled, setAutoplayEnabled }}>
+    <AutoplayContext.Provider value={value}>
       {children}
     </AutoplayContext.Provider>
   );

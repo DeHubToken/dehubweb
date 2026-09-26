@@ -19,8 +19,8 @@
  *     other ephemeral or must-be-fresh data are never shown stale.
  *   - Hard 2MB budget with a trim-to-feed-only fallback so we never blow the
  *     ~5MB localStorage quota shared with auth/prefs/optimistic-post keys.
- *   - Writes happen on idle + on tab-hide, never synchronously on the scroll
- *     path, so the JSON.stringify cost stays off the critical rendering work.
+ *   - Writes are throttled to one per 45s (on idle) plus a flush on tab-hide,
+ *     so the JSON.stringify cost stays off the scroll path.
  *
  * @module lib/query-persist
  */
@@ -30,6 +30,7 @@ import { QueryClient, dehydrate, hydrate } from '@tanstack/react-query';
 const PERSIST_KEY = 'dehub_rq_cache_v1';
 const MAX_AGE = 24 * 60 * 60 * 1000; // 24h — older than this is dropped, not shown
 const MAX_BYTES = 2_000_000; // ~2MB localStorage budget (chars ≈ bytes for ASCII JSON)
+const PERSIST_INTERVAL = 45_000; // at most one background write per 45s
 
 /**
  * Query-key roots worth persisting for instant-reload paint. Everything else is
@@ -166,7 +167,7 @@ export function restoreQueryCache(queryClient: QueryClient): void {
 }
 
 /**
- * Begin persisting the whitelisted cache slice. Writes are debounced onto idle
+ * Begin persisting the whitelisted cache slice. Writes are throttled onto idle
  * time and flushed on tab-hide / pagehide, so the serialization cost never lands
  * on the scroll path.
  */
@@ -197,25 +198,40 @@ export function startQueryPersist(queryClient: QueryClient): void {
     }
   };
 
-  // Idle-debounced write: coalesce bursts of cache updates into one serialize.
+  // Throttled write: at most one serialize per PERSIST_INTERVAL. The cache
+  // changes on nearly every scroll-triggered fetch, and an idle callback with a
+  // timeout still fires mid-scroll, so the 2MB stringify showed up as hitches.
+  // The tab-hide / pagehide flush below keeps the stored copy current anyway.
   const ric: (cb: () => void) => void =
     typeof (window as any).requestIdleCallback === 'function'
       ? (cb) => (window as any).requestIdleCallback(cb, { timeout: 3000 })
       : (cb) => window.setTimeout(cb, 1500);
 
-  let scheduled = false;
+  let lastWrite = 0;
+  let dirty = false;
+  let timer: number | undefined;
+
+  const flush = () => {
+    if (timer !== undefined) { window.clearTimeout(timer); timer = undefined; }
+    if (!dirty) return;
+    dirty = false;
+    lastWrite = Date.now();
+    write();
+  };
+
   const schedule = () => {
-    if (scheduled) return;
-    scheduled = true;
-    ric(() => { scheduled = false; write(); });
+    dirty = true;
+    if (timer !== undefined) return;
+    const wait = Math.max(0, lastWrite + PERSIST_INTERVAL - Date.now());
+    timer = window.setTimeout(() => { timer = undefined; ric(flush); }, wait);
   };
 
   queryClient.getQueryCache().subscribe(schedule);
 
   // Flush the freshest state when the tab is backgrounded / closed, since the
-  // idle write may not have fired yet.
+  // throttled write may not have fired yet.
   window.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') write();
+    if (document.visibilityState === 'hidden') flush();
   });
-  window.addEventListener('pagehide', write);
+  window.addEventListener('pagehide', flush);
 }

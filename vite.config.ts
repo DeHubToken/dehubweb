@@ -390,6 +390,12 @@ export default defineConfig(({ mode }) => ({
   define: {
     global: 'globalThis',
   },
+  // Emit JSON modules as JSON.parse("...") rather than object literals. The
+  // eager en.json is ~316KB and a string parses far faster than the same
+  // object as JS. Only default imports of JSON work under this setting.
+  json: {
+    stringify: true,
+  },
   // Strip console.log/debug from production output (289 call sites, several in
   // per-message/per-scroll hot paths like dm-socket + AuthProvider). `pure`
   // drops only the listed calls — console.warn/error survive for diagnostics.
@@ -420,10 +426,9 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('framer-motion')) {
             return 'vendor-animation';
           }
-          // Radix UI primitives — UI components
-          if (id.includes('@radix-ui/')) {
-            return 'vendor-radix';
-          }
+          // Radix UI is deliberately NOT grouped: one named chunk made every
+          // primitive (menus, dialogs, sliders used by one lazy page) an eager
+          // boot download. Left alone, Rollup keeps each with its importers.
           // React core. Anchored on /node_modules/<pkg>/ on purpose: a bare
           // '/react/' also matched @xyflow/react, zustand/react, valtio/react
           // and @lit/react, so the whole React Flow canvas (plus its d3-zoom,

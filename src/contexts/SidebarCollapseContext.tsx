@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 
 interface SidebarCollapseContextType {
@@ -61,8 +61,15 @@ export function SidebarCollapseProvider({ children }: { children: ReactNode }) {
     pushCollapsed(value);
   }, [pushCollapsed]);
 
+  // Memoised so a route change re-rendering AppLayout does not re-render
+  // every consumer (feed cards included) through a fresh value object.
+  const value = useMemo(
+    () => ({ isCollapsed, toggleCollapse, setCollapsed }),
+    [isCollapsed, toggleCollapse, setCollapsed],
+  );
+
   return (
-    <SidebarCollapseContext.Provider value={{ isCollapsed, toggleCollapse, setCollapsed }}>
+    <SidebarCollapseContext.Provider value={value}>
       {children}
     </SidebarCollapseContext.Provider>
   );

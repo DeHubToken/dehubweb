@@ -6,7 +6,7 @@
  * Persists to localStorage.
  */
 
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { MotionConfig } from 'framer-motion';
 import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 
@@ -56,8 +56,13 @@ export function AnimationsProvider({ children }: { children: ReactNode }) {
     }
   }, [animationsEnabled]);
 
+  const value = useMemo(
+    () => ({ animationsEnabled, setAnimationsEnabled }),
+    [animationsEnabled, setAnimationsEnabled],
+  );
+
   return (
-    <AnimationsContext.Provider value={{ animationsEnabled, setAnimationsEnabled }}>
+    <AnimationsContext.Provider value={value}>
       <MotionConfig reducedMotion={animationsEnabled ? 'never' : 'always'}>
         {children}
       </MotionConfig>
