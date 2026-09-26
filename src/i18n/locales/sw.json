@@ -6358,5 +6358,16 @@
     "priceMoved": "Bei ya DHB ilibadilika wakati USDC yako ikifika. USDC iko kwenye pochi yako kwenye Base; tuma tena ili kukamilisha.",
     "usdcPending": "USDC yako imefika kwenye Base lakini bado haionekani. Tuma tena baada ya muda mfupi.",
     "dhbPending": "Ununuzi wa DHB umethibitishwa lakini bado haujaonekana. Tuma tena baada ya muda mfupi."
+  },
+  "docsChat": {
+    "title": "Msaidizi wa AI",
+    "greeting": "Habari! Mimi ni msaidizi wa nyaraka za DeHub. Niulize chochote kuhusu DeHub, tokeni ya $DHB, DePIN, utawala au vipengele vingine vyovyote vya tovuti!",
+    "placeholder": "Uliza kuhusu DeHub...",
+    "open": "Fungua gumzo",
+    "close": "Funga gumzo",
+    "error": "Hitilafu",
+    "rateLimited": "Ujumbe mwingi sana. Tafadhali subiri kidogo kisha ujaribu tena.",
+    "unavailable": "Msaidizi hapatikani kwa sasa. Tafadhali jaribu tena baadaye.",
+    "failed": "Imeshindwa kutuma ujumbe. Tafadhali jaribu tena."
   }
 }

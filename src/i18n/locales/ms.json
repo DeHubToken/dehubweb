@@ -6620,5 +6620,16 @@
     "priceMoved": "Harga DHB berubah semasa USDC anda sedang tiba. USDC berada dalam dompet anda di Base; hantar semula untuk selesaikan.",
     "usdcPending": "USDC anda telah tiba di Base tetapi belum kelihatan. Hantar semula sebentar lagi.",
     "dhbPending": "Pembelian DHB telah disahkan tetapi belum muncul. Hantar semula sebentar lagi."
+  },
+  "docsChat": {
+    "title": "Pembantu AI",
+    "greeting": "Hai! Saya pembantu dokumentasi DeHub. Tanya saya tentang DeHub, token $DHB, DePIN, tadbir urus, atau sebarang ciri platform lain!",
+    "placeholder": "Tanya tentang DeHub...",
+    "open": "Buka sembang",
+    "close": "Tutup sembang",
+    "error": "Ralat",
+    "rateLimited": "Terlalu banyak mesej. Sila tunggu sebentar dan cuba lagi.",
+    "unavailable": "Pembantu tidak tersedia sekarang. Sila cuba lagi kemudian.",
+    "failed": "Gagal menghantar mesej. Sila cuba lagi."
   }
 }

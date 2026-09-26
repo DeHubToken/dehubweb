@@ -4098,5 +4098,16 @@
     "priceMoved": "Rega DHB owah nalika USDC-mu lagi tekan. USDC wis ana ing dompetmu ing Base; kirim maneh kanggo ngrampungake.",
     "usdcPending": "USDC-mu wis tekan ing Base nanging durung katon. Kirim maneh sedhela engkas.",
     "dhbPending": "Tuku DHB wis dikonfirmasi nanging durung katon. Kirim maneh sedhela engkas."
+  },
+  "docsChat": {
+    "title": "Asisten AI",
+    "greeting": "Halo! Aku asisten dokumentasi DeHub. Takon apa wae babagan DeHub, token $DHB, DePIN, tata kelola, utawa fitur platform liyane!",
+    "placeholder": "Takon babagan DeHub...",
+    "open": "Buka obrolan",
+    "close": "Tutup obrolan",
+    "error": "Error",
+    "rateLimited": "Kakehan pesen. Mangga ngenteni sedhela banjur coba maneh.",
+    "unavailable": "Asisten saiki ora kasedhiya. Mangga coba maneh mengko.",
+    "failed": "Gagal ngirim pesen. Mangga coba maneh."
   }
 }

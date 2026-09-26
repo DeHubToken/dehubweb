@@ -3577,5 +3577,16 @@
     "priceMoved": "DHB price don move as your USDC di come. The USDC dey for your wallet for Base; send again to finish.",
     "usdcPending": "Your USDC don land for Base but e never show. Send again small time.",
     "dhbPending": "The DHB buy don confirm but e never show. Send again small time."
+  },
+  "docsChat": {
+    "title": "AI Helper",
+    "greeting": "Hello! Na me be DeHub documentation helper. Ask me anything for DeHub, di $DHB token, DePIN, governance, or any other platform feature!",
+    "placeholder": "Ask about DeHub...",
+    "open": "Open chat",
+    "close": "Close chat",
+    "error": "Problem",
+    "rateLimited": "Too much message. Wait small, then try again.",
+    "unavailable": "Di assistant dey for outside for now. Try am again later.",
+    "failed": "Message no go send. Try again."
   }
 }

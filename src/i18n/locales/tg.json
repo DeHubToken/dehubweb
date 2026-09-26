@@ -4089,5 +4089,16 @@
     "priceMoved": "Ҳангоми расидани USDC-и шумо нархи DHB тағйир ёфт. USDC дар ҳамёнатон дар Base аст; барои анҷом додан боз фиристед.",
     "usdcPending": "USDC-и шумо ба Base расид, вале ҳоло намоён нест. Пас аз лаҳзае боз фиристед.",
     "dhbPending": "Хариди DHB тасдиқ шуд, вале ҳоло намоён нашудааст. Пас аз лаҳзае боз фиристед."
+  },
+  "docsChat": {
+    "title": "Ёрирасони AI",
+    "greeting": "Салом! Ман ёвари ҳуҷҷати DeHub ҳастам. Аз ман чизе дар бораи DeHub, нишони $DHB, DePIN, идоракунӣ ё дигар хусусиятҳои платформа пурсед!",
+    "placeholder": "Дар бораи DeHub пурсед...",
+    "open": "Кушодани чат",
+    "close": "Пӯшидани чат",
+    "error": "Хато",
+    "rateLimited": "Masyadong maraming mga mensahe. Pakisubaybay sa isang minuto at subu",
+    "unavailable": "Ёрирасон ҳоло дастнорас аст. Mangyaring subukan muli mamaya.",
+    "failed": "Иттилоот фиристода нашуд. Mangyaring subukan muli."
   }
 }

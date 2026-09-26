@@ -5,6 +5,8 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import robotAvatar from '@/assets/robot-avatar.png';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { streamChat as streamAssistantChat } from '@/lib/stream-chat';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -101,12 +103,11 @@ const parseInlineMarkdown = (text: string): React.ReactNode[] => {
   return parts;
 };
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/docs-chat`;
-
 export const DocsChatBot = () => {
+  const { t, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Hi! I\'m DeHub\'s documentation assistant. Ask me anything about DeHub, the $DHB token, DePIN, governance, or any other platform features!' }
+    { role: 'assistant', content: t('nav.docsChatGreeting') }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -140,72 +141,35 @@ export const DocsChatBot = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
-  const streamChat = async (userMessages: Message[]) => {
-    const resp = await fetch(CHAT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      },
-      body: JSON.stringify({ messages: userMessages }),
+  // The docs bot shares the main assistant's edge function. A signed-in
+  // reader's DeHub token rides along so they get the verified-user limits.
+  const streamChat = (userMessages: Message[]) =>
+    new Promise<void>((resolve, reject) => {
+      let assistantContent = '';
+      streamAssistantChat({
+        body: {
+          messages: userMessages,
+          userLanguage: language,
+          dehubToken: localStorage.getItem('dehub_token') || undefined,
+        },
+        onDelta: (delta) => {
+          assistantContent += delta;
+          setMessages(prev => {
+            const last = prev[prev.length - 1];
+            if (last?.role === "assistant" && prev.length > 1) {
+              return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantContent } : m));
+            }
+            return [...prev, { role: "assistant", content: assistantContent }];
+          });
+        },
+        onDone: resolve,
+        onError: (err) => {
+          if (err.statusCode === 429) reject(new Error(t('nav.docsChatRateLimited')));
+          else if (err.statusCode === 402 || err.statusCode === 503) reject(new Error(t('nav.docsChatUnavailable')));
+          else reject(new Error(t('nav.docsChatFailed')));
+        },
+      });
     });
-
-    if (resp.status === 429) {
-      throw new Error("Rate limited. Please wait a moment and try again.");
-    }
-    if (resp.status === 402) {
-      throw new Error("Service temporarily unavailable. Please try again later.");
-    }
-    if (!resp.ok || !resp.body) {
-      throw new Error("Failed to get response");
-    }
-
-    const reader = resp.body.getReader();
-    const decoder = new TextDecoder();
-    let textBuffer = "";
-    let assistantContent = "";
-    let streamDone = false;
-
-    while (!streamDone) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      textBuffer += decoder.decode(value, { stream: true });
-
-      let newlineIndex: number;
-      while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
-        let line = textBuffer.slice(0, newlineIndex);
-        textBuffer = textBuffer.slice(newlineIndex + 1);
-
-        if (line.endsWith("\r")) line = line.slice(0, -1);
-        if (line.startsWith(":") || line.trim() === "") continue;
-        if (!line.startsWith("data: ")) continue;
-
-        const jsonStr = line.slice(6).trim();
-        if (jsonStr === "[DONE]") {
-          streamDone = true;
-          break;
-        }
-
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-          if (content) {
-            assistantContent += content;
-            setMessages(prev => {
-              const last = prev[prev.length - 1];
-              if (last?.role === "assistant" && prev.length > 1) {
-                return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantContent } : m));
-              }
-              return [...prev, { role: "assistant", content: assistantContent }];
-            });
-          }
-        } catch {
-          textBuffer = line + "\n" + textBuffer;
-          break;
-        }
-      }
-    }
-  };
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -220,8 +184,8 @@ export const DocsChatBot = () => {
       await streamChat(newMessages.slice(1)); // Skip the initial greeting
     } catch (error) {
       console.error('Chat error:', error);
-      toast.error("Error", {
-        description: error instanceof Error ? error.message : "Failed to send message. Please try again.",
+      toast.error(t('nav.docsChatError'), {
+        description: error instanceof Error ? error.message : t('nav.docsChatFailed'),
       });
     } finally {
       setIsLoading(false);
@@ -240,7 +204,7 @@ export const DocsChatBot = () => {
       {/* Chat Toggle Button */}
       <div
         role="button"
-        aria-label="Open chat"
+        aria-label={t('nav.docsChatOpen')}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "fixed bottom-6 right-6 z-50 transition-all duration-300 hover:scale-110",
@@ -268,11 +232,11 @@ export const DocsChatBot = () => {
       >
         {/* Header */}
         <div className="p-3 flex items-center justify-between border-b border-border">
-          <span className="text-sm font-semibold text-foreground">AI Assistant</span>
+          <span className="text-sm font-semibold text-foreground">{t('nav.docsChatTitle')}</span>
           <button
             onClick={() => setIsOpen(false)}
             className="w-8 h-8 rounded-xl bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
-            aria-label="Close chat"
+            aria-label={t('nav.docsChatClose')}
           >
             <X className="w-4 h-4 text-foreground" />
           </button>
@@ -307,7 +271,7 @@ export const DocsChatBot = () => {
                     : "bg-muted text-foreground rounded-bl-md"
                 )}
               >
-                {message.role === 'assistant' ? parseMarkdown(message.content) : message.content}
+                {message.role === 'assistant' ? parseMarkdown(index === 0 ? t('nav.docsChatGreeting') : message.content) : message.content}
               </div>
             </div>
           ))}
@@ -333,7 +297,7 @@ export const DocsChatBot = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about DeHub..."
+              placeholder={t('nav.docsChatPlaceholder')}
               className="flex-1 px-4 py-2.5 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
               disabled={isLoading}
             />

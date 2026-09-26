@@ -6392,5 +6392,16 @@
     "priceMoved": "Kol keliavo jūsų USDC, DHB kaina pasikeitė. USDC yra jūsų piniginėje Base tinkle; siųskite dar kartą, kad užbaigtumėte.",
     "usdcPending": "Jūsų USDC pasiekė Base, bet dar nematomi. Po akimirkos siųskite dar kartą.",
     "dhbPending": "DHB pirkimas patvirtintas, bet dar nepasirodė. Po akimirkos siųskite dar kartą."
+  },
+  "docsChat": {
+    "title": "Dirbtinio intelekto asistentas",
+    "greeting": "Labas! Esu „DeHub“ dokumentacijos asistentė. Paklauskite manęs nieko apie „DeHub“, $DHB žetoną, „DePIN“, valdymą ar kitas platformos funkcijas!",
+    "placeholder": "Paklauskite apie DeHub...",
+    "open": "Atidaryti pokalbį",
+    "close": "Uždaryti pokalbį",
+    "error": "Klaida",
+    "rateLimited": "Per daug žinučių. Šiek tiek palaukite ir bandykite dar kartą.",
+    "unavailable": "Šiuo metu asistentas nepasiekiamas. Bandykite dar kartą vėliau.",
+    "failed": "Nepavyko išsiųsti žinutės. Bandykite dar kartą."
   }
 }

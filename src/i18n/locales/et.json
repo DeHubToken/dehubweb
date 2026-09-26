@@ -6303,5 +6303,16 @@
     "priceMoved": "DHB hind muutus, kui sinu USDC teel oli. USDC on sinu rahakotis Base'is; lõpetamiseks saada uuesti.",
     "usdcPending": "Sinu USDC jõudis Base'i, kuid pole veel nähtav. Saada hetke pärast uuesti.",
     "dhbPending": "DHB ost kinnitati, kuid pole veel nähtav. Saada hetke pärast uuesti."
+  },
+  "docsChat": {
+    "title": "Tehisintellekti assistent",
+    "greeting": "Tere! Olen DeHubi dokumentatsiooniassistent. Küsi minult midagi DeHubi, $DHB märgi, DePIN-i, juhtimise või muude platvormi funktsioonide kohta!",
+    "placeholder": "Küsi DeHubi kohta...",
+    "open": "Ava vestlus",
+    "close": "Sulge vestlus",
+    "error": "Viga",
+    "rateLimited": "Liiga palju sõnumeid. Oodake hetk ja proovige uuesti.",
+    "unavailable": "Assistent pole praegu saadaval. Proovi hiljem uuesti.",
+    "failed": "Sõnumi saatmine ebaõnnestus. Proovi uuesti."
   }
 }

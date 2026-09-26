@@ -6300,5 +6300,16 @@
     "priceMoved": "El preu de DHB ha canviat mentre arribaven els teus USDC. Els USDC són a la teva cartera a Base; torna a enviar per acabar.",
     "usdcPending": "Els teus USDC han arribat a Base però encara no es veuen. Torna a enviar d'aquí a un moment.",
     "dhbPending": "La compra de DHB s'ha confirmat però encara no apareix. Torna a enviar d'aquí a un moment."
+  },
+  "docsChat": {
+    "title": "Assistent d'IA",
+    "greeting": "Hola! Soc l'assistent de documentació de DeHub. Demana'm qualsevol cosa sobre DeHub, el token $DHB, DePIN, governança o qualsevol altra funció de la plataforma!",
+    "placeholder": "Pregunta per DeHub...",
+    "open": "Obre el xat",
+    "close": "Tanca el xat",
+    "error": "Error",
+    "rateLimited": "Massa missatges. Espera un moment i torna-ho a provar.",
+    "unavailable": "L'assistent no està disponible ara mateix. Torna-ho a provar més tard.",
+    "failed": "No s'ha pogut enviar el missatge. Torna-ho a provar."
   }
 }

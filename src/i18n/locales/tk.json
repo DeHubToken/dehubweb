@@ -4064,5 +4064,16 @@
     "priceMoved": "USDC-ňiz gelýärkä DHB-nyň bahasy üýtgedi. USDC Base-däki gapjygyňyzda; tamamlamak üçin gaýtadan iberiň.",
     "usdcPending": "USDC-ňiz Base-e geldi, ýöne entek görünmeýär. Birazdan gaýtadan iberiň.",
     "dhbPending": "DHB satyn alşy tassyklandy, ýöne entek görünmedi. Birazdan gaýtadan iberiň."
+  },
+  "docsChat": {
+    "title": "Kömekçi",
+    "greeting": "Salam! Men DeHub-yň resminamalar kömekçisi. DeHub, $DHB tokeni, DePIN, dolandyryş ýa-da platformanyň beýleki aýratynlyklary barada islendik zady soraň!",
+    "placeholder": "DeHub barada sorap görüň...",
+    "open": "Çata Aç",
+    "close": "Çat ýap",
+    "error": "Hata",
+    "rateLimited": "Köp habarlar. Bir minut garaşyp, ýene synanyň.",
+    "unavailable": "Häzir kömekçi ýok. Lütfen, soňra ýene synanyň.",
+    "failed": "Alymady Gaýtalaň"
   }
 }
