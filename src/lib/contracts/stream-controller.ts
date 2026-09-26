@@ -6,6 +6,7 @@
  */
 
 import { Interface } from 'ethers';
+import i18n from 'i18next';
 import { 
   writeContractAA, 
   getWalletAddress, 
@@ -206,7 +207,6 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
       : getERC20Balance(tokenAddress, signerAddress, chainId),
     getERC20Allowance(tokenAddress, signerAddress, chainConfig.streamController, chainId),
   ]);
-  const tokenLabel = params.tokenAddress ? 'token' : 'DHB';
 
   console.log('[StreamController] sendTip check:', {
     signerAddress,
@@ -221,7 +221,9 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
     const decimals = params.decimals ?? DHB_TOKEN.decimals;
     const held = Number(balance) / 10 ** decimals;
     throw new Error(
-      `Insufficient ${tokenLabel} balance. Need ${params.amount} but have ${held}`
+      params.tokenAddress
+        ? `Insufficient token balance. Need ${params.amount} but have ${held}`
+        : i18n.t('tokenPayments.insufficientBalance', { needed: params.amount, held })
     );
   }
 
@@ -302,7 +304,7 @@ export async function sendFundsForPPV(
 
   if (!params.skipBalanceCheck && balance < amountWei) {
     throw new Error(
-      `Insufficient DHB balance. Need ${params.amount} DHB but have ${Number(balance) / 1e18} DHB`,
+      i18n.t('tokenPayments.insufficientBalance', { needed: params.amount, held: Number(balance) / 1e18 }),
     );
   }
 
@@ -372,7 +374,7 @@ export async function mintWithBounty(params: MintWithBountyParams): Promise<stri
   console.log('[StreamController] DHB balance:', balance.toString());
   
   if (balance < totalBountyWei) {
-    throw new Error(`Insufficient DHB balance. Need ${totalBounty} DHB but have ${Number(balance) / 1e18} DHB`);
+    throw new Error(i18n.t('tokenPayments.insufficientBalance', { needed: totalBounty, held: Number(balance) / 1e18 }));
   }
   
   // Check allowance and approve if needed

@@ -27,7 +27,7 @@ export const my = {
     keyLinks: 'အရေးကြီးလင့်ခ်များ',
     keyInfo: 'အရေးကြီးအချက်အလက်',
     docsChatTitle: 'AI လက်ထောက်',
-    docsChatGreeting: 'ဟိုင်း! ငါ DeHub ရဲ့စာရွက်စာတမ်းလက်ထောက်ဖြစ်ပါတယ် ။ ငါ့ကို DeHub, $DHB တိုကင်, DePIN, အုပ်ချုပ်ရေး, သို့မဟုတ်မည်သည့်အခြားပလက်ဖောင်း features တွေအကြောင်းကိုဘာမှမေးပါ!',
+    docsChatGreeting: 'ဟိုင်း! ငါ DeHub ရဲ့စာရွက်စာတမ်းလက်ထောက်ဖြစ်ပါတယ် ။ DeHub, DeHub တိုကင်များ, DePIN, အုပ်ချုပ်ရေး, သို့မဟုတ်အခြားပလက်ဖောင်း features တွေအကြောင်းကိုဘာမှမေးပါ!',
     docsChatPlaceholder: 'Dehub အကြောင်းကိုမေးပါ...',
     docsChatOpen: 'စကားဝိုင်းကို ဖွင့်ပါ',
     docsChatClose: 'စကားပြောဆိုမှု ပိတ်မည်',

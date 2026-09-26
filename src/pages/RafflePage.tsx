@@ -30,6 +30,7 @@ import {
   Trophy,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
@@ -96,10 +97,10 @@ const steps = [
 
 const entryRoutes = [
   { icon: PenLine, title: 'Post and engage', body: 'Original posts, videos and comments count towards draws that name them.' },
-  { icon: Coins, title: 'Stake DHB', body: 'An open staking position earns entries for the draws that weight it.', to: '/stake' },
+  { icon: Coins, title: 'Stake DHB', titleKey: 'raffle.stakeTitle', body: 'An open staking position earns entries for the draws that weight it.', to: '/stake' },
   { icon: Gamepad2, title: 'Play the arcade', body: 'Arcade sessions and leaderboard placings feed draws built around games.', to: '/arcade' },
   { icon: Mic, title: 'Join a stage', body: 'Turning up to live audio stages counts, whether you speak or listen.', to: '/stages' },
-  { icon: Ticket, title: 'Buy a ticket', body: 'Some draws also sell a DHB ticket. Where they do, the price and the per-wallet cap are published up front.' },
+  { icon: Ticket, title: 'Buy a ticket', body: 'Some draws also sell a DHB ticket. Where they do, the price and the per-wallet cap are published up front.', bodyKey: 'raffle.ticketBody' },
   { icon: Boxes, title: 'Hold a collectible', body: 'Selected NFT collections carry standing entries into draws that name them.' },
 ];
 
@@ -126,6 +127,7 @@ const faqItems = [
     question: 'Do I have to buy anything to enter a DeHub prize draw?',
     answer:
       'No. Every draw carries at least one free entry route, earned by taking part on DeHub. Some draws additionally sell a DHB ticket, but a ticket is never the only way in.',
+    answerKey: 'raffle.faqPurchaseAnswer',
   },
   {
     question: 'How do I know the draw was not fixed?',
@@ -155,6 +157,7 @@ const faqItems = [
 ];
 
 export default function RafflePage() {
+  const { t } = useTranslation();
   const reduceMotion = useReducedMotion();
 
   return (
@@ -244,9 +247,7 @@ export default function RafflePage() {
                   Every draw, settled on-chain.
                 </h1>
                 <p className="mt-6 max-w-xl text-base leading-7 text-zinc-300 sm:text-lg">
-                  DeHub prize draws hand out DHB, hardware and collectibles to the people already
-                  using the platform. Entries are earned by taking part, the entry list is published
-                  before the draw runs, and the winner is picked by a transaction anyone can read.
+                  {t('raffle.heroBody')}
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <a
@@ -265,8 +266,7 @@ export default function RafflePage() {
                   </Link>
                 </div>
                 <p className="mt-6 max-w-xl text-sm leading-6 text-zinc-500">
-                  No purchase is necessary. Every draw carries a free entry route, and where a DHB
-                  ticket is offered it is never the only way in.
+                  {t('raffle.noPurchase')}
                 </p>
               </motion.div>
 
@@ -338,9 +338,9 @@ export default function RafflePage() {
                     <div className="h-full rounded-2xl border border-white/10 bg-white/[0.03] p-6">
                       <route.icon aria-hidden="true" className="h-6 w-6 text-white" strokeWidth={1.6} />
                       <h3 className="mt-5 text-lg font-semibold tracking-[-0.02em] text-white">
-                        {route.title}
+                        {route.titleKey ? t(route.titleKey) : route.title}
                       </h3>
-                      <p className="mt-3 text-sm leading-6 text-zinc-400">{route.body}</p>
+                      <p className="mt-3 text-sm leading-6 text-zinc-400">{route.bodyKey ? t(route.bodyKey) : route.body}</p>
                       {route.to && (
                         <Link
                           to={route.to}
@@ -408,7 +408,7 @@ export default function RafflePage() {
                       <h3 className="text-base font-semibold tracking-[-0.02em] text-white">
                         {item.question}
                       </h3>
-                      <p className="mt-3 text-sm leading-6 text-zinc-400">{item.answer}</p>
+                      <p className="mt-3 text-sm leading-6 text-zinc-400">{item.answerKey ? t(item.answerKey) : item.answer}</p>
                     </div>
                   </Reveal>
                 ))}
@@ -437,7 +437,7 @@ export default function RafflePage() {
                     to="/docs/token/overview"
                     className="inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
                   >
-                    Read about DHB
+                    {t('raffle.readAboutTokens')}
                   </Link>
                 </div>
               </Reveal>

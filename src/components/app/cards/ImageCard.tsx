@@ -1160,7 +1160,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 <Gift className="w-3 h-3 text-white" />
                 <span className="text-white text-xs font-medium">
                   {post.bountyAmount && post.bountyAmount > 0 
-                    ? `${formatCompact(post.bountyAmount)} ${post.bountyCurrency || 'DHB'}` 
+                    ? <DhbAmount amount={formatCompact(post.bountyAmount)} currency={post.bountyCurrency} />
                     : 'Bounty'}
                 </span>
               </button>

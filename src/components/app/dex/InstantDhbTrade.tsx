@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { formatUnits, parseUnits } from 'ethers';
 import { toast } from 'sonner';
 import { Zap } from 'lucide-react';
+import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { BASE_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
@@ -69,7 +70,7 @@ export function InstantDhbTrade({ tokens, onDone }: { tokens: WalletToken[]; onD
       </select></div></label>}
       <label className="dex-field">{t(side === 'buy' ? 'dex.spend' : 'dex.sellAmount')}<div className="dex-input"><input inputMode="decimal" placeholder="0.00" aria-label={t('dex.amountToken', { token: spend.symbol })} value={amount} onChange={(e) => setAmount(e.target.value.replace(',', '.').trim())} /><span>{spend.symbol}</span></div></label>
       <div className="dex-available"><span>{t('dex.available')}</span><span>{formatSize(balance)} {spend.symbol}</span></div>
-      <dl><dt>{t('dex.pool.youReceive')}</dt><dd>{out != null ? `${formatSize(out)} ${side === 'buy' ? 'DHB' : 'USDC'}` : '—'}</dd></dl>
+      <dl><dt>{t('dex.pool.youReceive')}</dt><dd>{out != null ? <DhbAmount amount={formatSize(out)} currency={side === 'buy' ? 'DHB' : 'USDC'} /> : '—'}</dd></dl>
       {error && <div role="alert" className="dex-alert dex-error">{error}</div>}
       <button type="button" className={`dex-submit ${side === 'sell' ? 'sell' : ''}`} disabled={busy || !(Number(amount) > 0)} onClick={() => void submit()}>
         {busy ? quote ? t('dex.stage.swap') : t('dex.stage.quote') : quote ? t(side === 'buy' ? 'dex.pool.confirmInstantBuy' : 'dex.pool.confirmInstantSell') : t(side === 'buy' ? 'dex.pool.instantBuy' : 'dex.pool.instantSell')}

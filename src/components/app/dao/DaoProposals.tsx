@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Check, Clock3, Loader2, Send, ShoppingCart, ThumbsDown, ThumbsUp, WalletCards } from 'lucide-react';
 import { toast } from 'sonner';
+import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -112,9 +114,9 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
         <div className="shrink-0 text-right">
           {proposal.kind === 'buy' ? (
             <>
-              <div className="font-semibold text-white">{number.format(proposal.dhb_amount ?? 0)} DHB</div>
+              <div className="font-semibold text-white"><DhbAmount amount={number.format(proposal.dhb_amount ?? 0)} /></div>
               <div className="text-xs text-zinc-400">
-                {money.format(proposal.total_usd ?? 0)} · ${number.format(proposal.price_usd ?? 0)}/DHB
+                {money.format(proposal.total_usd ?? 0)} · ${number.format(proposal.price_usd ?? 0)}/<DhbCoin />
               </div>
             </>
           ) : (
@@ -133,8 +135,8 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
           <div className="h-full bg-emerald-400 transition-[width]" style={{ width: `${acceptPct}%` }} />
         </div>
         <div className="mt-2 flex items-center justify-between text-xs">
-          <span className="text-emerald-300">Accept {number.format(proposal.accept_dhb)} DHB</span>
-          <span className="text-rose-300">Reject {number.format(proposal.reject_dhb)} DHB</span>
+          <span className="text-emerald-300">Accept <DhbAmount amount={number.format(proposal.accept_dhb)} /></span>
+          <span className="text-rose-300">Reject <DhbAmount amount={number.format(proposal.reject_dhb)} /></span>
         </div>
         <p className="mt-1 text-[11px] text-zinc-500">
           {number.format(quorumPct)}% participation · 10% quorum · contribution-weighted snapshot
@@ -162,7 +164,7 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
             <ThumbsDown className="w-4 h-4" /> Reject
           </Button>
           {isAuthenticated && ownWeight > 0 && (
-            <span className="ml-auto text-xs text-zinc-500">Your weight: {number.format(ownWeight)} DHB</span>
+            <span className="ml-auto text-xs text-zinc-500">Your weight: <DhbAmount amount={number.format(ownWeight)} /></span>
           )}
         </div>
       )}
@@ -192,6 +194,7 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
 }
 
 function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+  const { t } = useTranslation();
   const [kind, setKind] = useState<DaoProposalKind>('buy');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -241,7 +244,7 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
           <div className="grid grid-cols-2 gap-2 mb-5">
             <button type="button" onClick={() => setKind('buy')} className={`rounded-xl border p-3 text-left ${kind === 'buy' ? 'border-white/30 bg-white/10' : 'border-white/10 bg-white/[0.03]'}`}>
               <ShoppingCart className="w-4 h-4 mb-2 text-zinc-300" />
-              <div className="text-sm font-medium text-white">Offer to buy DHB</div>
+              <div className="text-sm font-medium text-white">{t('dao.offerToBuyTokens')}</div>
               <div className="text-xs text-zinc-500">Name your quantity and price</div>
             </button>
             <button type="button" onClick={() => setKind('spend')} className={`rounded-xl border p-3 text-left ${kind === 'spend' ? 'border-white/30 bg-white/10' : 'border-white/10 bg-white/[0.03]'}`}>
@@ -265,11 +268,11 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
               <>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="mb-1.5 block text-xs text-zinc-400">DHB amount</label>
+                    <label className="mb-1.5 block text-xs text-zinc-400">{t('dao.tokenAmount')}</label>
                     <Input type="number" min="0" step="any" value={dhbAmount} onChange={(event) => setDhbAmount(event.target.value)} placeholder="1,000,000" className="bg-white/5 border-white/10 text-white" />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-xs text-zinc-400">Price per DHB (USD)</label>
+                    <label className="mb-1.5 block text-xs text-zinc-400">{t('dao.pricePerTokenUsd')}</label>
                     <Input type="number" min="0" step="any" value={priceUsd} onChange={(event) => setPriceUsd(event.target.value)} placeholder="0.001" className="bg-white/5 border-white/10 text-white" />
                   </div>
                 </div>
@@ -300,7 +303,7 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
             )}
 
             <div className="rounded-xl border border-white/10 p-3 text-xs text-zinc-400">
-              Voting lasts 7 days. Voting power is each contributor’s cumulative DHB contribution when this proposal opens. At least 10% must participate and Accept must beat Reject.
+              {t('dao.votingPowerNote')}
             </div>
 
             <Button className="w-full rounded-xl" disabled={!valid || create.isPending} onClick={submit}>
@@ -406,7 +409,7 @@ function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | nul
             <div className="rounded-xl bg-white/[0.05] p-4">
               <div className="text-xs text-zinc-500">Agreed value</div>
               <div className="text-2xl font-semibold text-white">{money.format(totalUsd)}</div>
-              <div className="text-xs text-zinc-400">for {number.format(proposal?.dhb_amount ?? 0)} DHB</div>
+              <div className="text-xs text-zinc-400">for <DhbAmount amount={number.format(proposal?.dhb_amount ?? 0)} /></div>
             </div>
 
             <div>

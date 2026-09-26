@@ -17,6 +17,7 @@
  */
 
 import { useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -69,6 +70,7 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
   // Read the context directly rather than through useAuth: badges render on
   // surfaces above AuthProvider, where the hook throws.
   const auth = useContext(AuthContext);
+  const { t } = useTranslation();
   const self = useSelfBadge();
   const scale = useBadgeScale();
   const price = useBadgeLadderPrice();
@@ -171,8 +173,7 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
       )}
 
       <p className="mt-3 text-[10px] leading-relaxed text-white/45">
-        Once a badge is unlocked, it is yours for as long as you hold your DHB. The number of tokens
-        needed to unlock a new badge can change with the token price.
+        {t('badgeAscension.keepWhileHolding')}
       </p>
     </div>
   );

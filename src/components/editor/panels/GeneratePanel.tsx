@@ -12,6 +12,7 @@
  * why it generates directly.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Film, ImageIcon, Loader2, Mic, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -53,6 +54,7 @@ const KINDS: { id: GenKind; label: string; icon: React.ComponentType<{ className
 const MAX_VOICE_CHARS = 500;
 
 export function GeneratePanel() {
+  const { t } = useTranslation();
   const quota = useEditorQuota();
   const { isAuthenticated } = useAuth() as { isAuthenticated: boolean };
   const startImage = useGenerationStore((s) => s.startImage);
@@ -112,7 +114,7 @@ export function GeneratePanel() {
 
   const blockingIssue = useMemo(() => {
     if (!prompt.trim()) return null;
-    if (quota.overQuota) return 'Storage is full. Remove assets or stake more DHB.';
+    if (quota.overQuota) return t('editor.storageFullRemoveOrStake');
     // Voice is not charged in DHB; it is metered by the storage quota instead.
     // That quota only exists for a signed-in wallet, so anonymous voiceover
     // would be an unmetered, unlimited call straight through to ElevenLabs.
@@ -124,7 +126,7 @@ export function GeneratePanel() {
       return `${activeVideoModel.name} needs a starting image. Generate from the Creator studio instead.`;
     }
     return null;
-  }, [prompt, quota.overQuota, kind, isAuthenticated, activeVideoModel]);
+  }, [prompt, quota.overQuota, kind, isAuthenticated, activeVideoModel, t]);
 
   const canRun = !!prompt.trim() && !blockingIssue && !voiceBusy;
 

@@ -25,7 +25,7 @@ const Advertising = () => {
           <div>
             <h3 className="font-semibold text-foreground">POVR Ads Manager is live</h3>
             <p className="text-sm text-muted-foreground">
-              Create campaigns, target badge tiers, fund with DHB and track results in real time.
+              {t('advertising.adsManagerLiveDesc')}
             </p>
           </div>
           <Link

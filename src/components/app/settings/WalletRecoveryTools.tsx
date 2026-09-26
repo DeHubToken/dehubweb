@@ -29,6 +29,7 @@ import { predictSafeAddress } from '@/lib/smart-account-address';
 import { getWalletProtection } from '@/lib/wallet-core/protection';
 import { PasskeyCancelledError } from '@/lib/wallet-core/biometric-unlock';
 import { SettingsRow } from '@/components/app/settings/SettingsRow';
+import { DhbAmount } from '@/components/app/DhbAmount';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
@@ -322,7 +323,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                         </span>
                       </span>
                       {typeof account.badgeBalance === 'number' && (
-                        <span className="shrink-0 text-white/50">{account.badgeBalance.toLocaleString()} DHB</span>
+                        <DhbAmount amount={account.badgeBalance.toLocaleString()} className="shrink-0 text-white/50" />
                       )}
                     </div>
                   ))}

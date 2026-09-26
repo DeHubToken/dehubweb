@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
@@ -5,12 +7,12 @@ import { MockAvatar } from '../MockAvatar';
 import { Heart, MessageSquare, Repeat2, UserPlus, Coins, AtSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const MOCK_NOTIFICATIONS = [
+const mockNotifications = (t: TFunction) => [
   { id: '1', type: 'like', user: 'bob_dev', content: 'liked your post', time: '2m', read: false, icon: Heart },
   { id: '2', type: 'follow', user: 'crypto_sarah', content: 'started following you', time: '10m', read: false, icon: UserPlus },
   { id: '3', type: 'comment', user: 'defi_whale', content: 'replied to your post: "Great analysis!"', time: '30m', read: false, icon: MessageSquare },
   { id: '4', type: 'repost', user: 'nft_artist', content: 'reposted your video', time: '1h', read: true, icon: Repeat2 },
-  { id: '5', type: 'tip', user: 'dao_voter', content: 'tipped you 50 $DHB', time: '2h', read: true, icon: Coins },
+  { id: '5', type: 'tip', user: 'dao_voter', content: t('mobilePreview.notifications.tippedYou', { amount: '50' }), time: '2h', read: true, icon: Coins },
   { id: '6', type: 'mention', user: 'web3_dev', content: 'mentioned you in a post', time: '5h', read: true, icon: AtSign },
   { id: '7', type: 'like', user: 'music_prod', content: 'liked your comment', time: '1d', read: true, icon: Heart },
   { id: '8', type: 'follow', user: 'alpha_trader', content: 'started following you', time: '1d', read: true, icon: UserPlus },
@@ -19,6 +21,7 @@ const MOCK_NOTIFICATIONS = [
 const FILTER_TABS = ['All', 'Mentions', 'Likes', 'Follows'];
 
 export function NotificationsScreen() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
@@ -42,7 +45,7 @@ export function NotificationsScreen() {
 
       {/* Notifications list */}
       <div className="flex-1 divide-y divide-white/[0.04]">
-        {MOCK_NOTIFICATIONS.map((notif) => (
+        {mockNotifications(t).map((notif) => (
           <div
             key={notif.id}
             className={cn(

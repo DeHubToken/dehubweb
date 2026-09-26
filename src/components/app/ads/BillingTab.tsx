@@ -44,7 +44,7 @@ export function BillingTab() {
             </p>
           </div>
           <Button variant="glass" onClick={() => setTopUpOpen(true)}>
-            <Plus className="w-4 h-4 mr-1.5" /> Top up with DHB
+            <Plus className="w-4 h-4 mr-1.5" /> {t('ads.topUpWithTokens')}
           </Button>
         </div>
       </div>
@@ -53,7 +53,7 @@ export function BillingTab() {
       <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
         <p className="text-sm font-semibold text-foreground mb-1">{t('ads.creditATransaction')}</p>
         <p className="text-xs text-muted-foreground mb-3">
-          Sent DHB to the ads treasury but it didn't credit? Paste the transaction hash — we verify it on-chain.
+          {t('ads.sentTokensNotCredited')}
         </p>
         <div className="flex gap-2">
           <Input

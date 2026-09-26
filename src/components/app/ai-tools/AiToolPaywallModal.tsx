@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -47,6 +48,7 @@ export function AiToolPaywallModal({
   // here and verified on chain by fal-ai-tools.
   const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const categoryInfo = CATEGORY_LABELS[category];
   const categoryModels = getToolsByCategory(category);
@@ -66,7 +68,7 @@ export function AiToolPaywallModal({
       else throw new Error('Failed to get DHB price');
     } catch (err) {
       console.error('Error fetching DHB price:', err);
-      setError('Failed to fetch DHB price. Using fallback.');
+      setError(t('tokenPaywall.priceFetchFailed'));
       setDhbPrice(0.001);
     } finally {
       setLoading(false);
@@ -103,7 +105,7 @@ export function AiToolPaywallModal({
         return;
       }
 
-      toast.loading(`Paying ${formatDhb(costDhb)} DHB...`, { id: 'ai-tool-payment' });
+      toast.loading(t('tokenPaywall.paying', { amount: formatDhb(costDhb) }), { id: 'ai-tool-payment' });
       const txHash = await payForJob(costDhb);
 
       toast.dismiss('ai-tool-payment');
@@ -240,11 +242,11 @@ export function AiToolPaywallModal({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <img src={dhbCoinImage} alt="DHB" className="w-6 h-6" />
-                    <span className="text-white font-medium">Pay with DHB</span>
+                    <span className="text-white font-medium">{t('tokenPaywall.payWithTokens')}</span>
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold text-white">{formatDhb(costDhb)} <DhbCoin /></p>
-                    <p className="text-xs text-zinc-500">@ ${dhbPrice?.toFixed(6)}/DHB</p>
+                    <p className="text-xs text-zinc-500">{t('tokenPaywall.pricePerToken', { price: dhbPrice?.toFixed(6) })}</p>
                   </div>
                 </div>
                 {(error || quoteError) && (
@@ -259,7 +261,7 @@ export function AiToolPaywallModal({
 
           {/* Wallet balance */}
           <div className="flex items-center justify-between text-sm bg-zinc-800/30 rounded-lg p-3">
-            <span className="text-zinc-400">Your DHB</span>
+            <span className="text-zinc-400">{t('tokenPaywall.yourTokens')}</span>
             <div className="flex items-center gap-2">
               <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
               {isWalletLoading ? (
@@ -275,7 +277,7 @@ export function AiToolPaywallModal({
           {needsTokens && !loading && (
             <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3 flex flex-col items-center gap-2">
               <p className="text-red-400 text-sm text-center">
-                Insufficient DHB balance. You need {formatDhb(costDhb - walletDhb)} more DHB.
+                {t('tokenPaywall.notEnoughNeedMore', { amount: formatDhb(costDhb - walletDhb) })}
               </p>
               <Button
                 variant="outline"
@@ -283,7 +285,7 @@ export function AiToolPaywallModal({
                 className="bg-emerald-600/20 border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 text-xs"
                 onClick={() => { onOpenChange(false); window.history.pushState({}, '', '/app/buy'); window.dispatchEvent(new PopStateEvent('popstate')); }}
               >
-                Buy DHB
+                {t('nav.buyDhb')}
               </Button>
             </div>
           )}

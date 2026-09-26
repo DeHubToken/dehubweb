@@ -25,6 +25,7 @@
  */
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import i18n from 'i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAuthToken } from '@/lib/api/dehub/core';
@@ -177,7 +178,7 @@ export function useFractionPurchase() {
   const buy = useMutation({
     mutationFn: async (quote: FractionQuote) => {
       if (quote.paymentsFrozen) {
-        throw new Error('DHB transfers are paused right now, so this purchase would fail. Try again once trading resumes.');
+        throw new Error(i18n.t('tokenErrors.transfersPausedPurchase'));
       }
 
       // Imported at call time: the fraction panel is reachable from the post

@@ -203,7 +203,7 @@ export function SellFractionsDrawer({
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-16 text-white placeholder:text-white/30 outline-none focus:border-white/30 transition-colors [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 text-sm">
-                    DHB
+                    <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
                   </span>
                 </div>
               </div>

@@ -10,6 +10,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Wallet } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AdTopUpPanel } from '@/components/app/ads/AdTopUpPanel';
 
 interface AdTopUpModalProps {
@@ -22,6 +23,7 @@ interface AdTopUpModalProps {
 }
 
 export function AdTopUpModal({ open, onOpenChange, suggestedUsd, onCredited }: AdTopUpModalProps) {
+  const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
 
   return (
@@ -33,7 +35,7 @@ export function AdTopUpModal({ open, onOpenChange, suggestedUsd, onCredited }: A
             Top up ads balance
           </DialogTitle>
           <DialogDescription className="text-zinc-400">
-            Pay in DHB — credited in USD at the live price
+            {t('ads.payInTokensCreditedUsd')}
           </DialogDescription>
         </DialogHeader>
 

@@ -27,7 +27,7 @@ export const nl = {
     keyLinks: 'Belangrijke Links',
     keyInfo: 'Belangrijke Info',
     docsChatTitle: 'AI-assistent',
-    docsChatGreeting: 'Hoi! Ik ben de documentatieassistent van DeHub. Vraag me iets over DeHub, het $DHB-token, DePIN, governance of andere platformfuncties!',
+    docsChatGreeting: 'Hoi! Ik ben de documentatieassistent van DeHub. Vraag me iets over DeHub, DeHub-tokens, DePIN, governance of andere platformfuncties!',
     docsChatPlaceholder: 'Vraag naar DeHub...',
     docsChatOpen: 'Chat openen',
     docsChatClose: 'Chat sluiten',

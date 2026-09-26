@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { badgeImage } from '@/lib/staking-badges';
@@ -61,6 +62,11 @@ const usd = (dhb: number) => {
 };
 
 const gbLabel = (gb: number) => (Number.isInteger(gb) ? `${gb} GB` : `${gb.toFixed(1)} GB`);
+
+const AllowanceFootnote = () => {
+  const { t } = useTranslation();
+  return <p className="text-xs text-muted-foreground mt-4 font-exo">{t('postingAllowance.footnote')}</p>;
+};
 
 const PostingAllowanceChart = () => (
   <Card className="w-full">
@@ -129,14 +135,7 @@ const PostingAllowanceChart = () => (
         ))}
       </div>
 
-      <p className="text-xs text-muted-foreground mt-4 font-exo">
-        Badge tier is your DHB held plus staked on BNB Chain and Base — the same balance your badge
-        is drawn from. The ladder is priced in dollars, so the DHB figures above are what each tier
-        costs at the $0.001 sale price and the requirement falls as DHB appreciates; a tier you have
-        already earned is never taken back by the price. A badge lent to you by a patron shows on
-        your profile but does not raise your posting allowance — that comes from what you hold
-        yourself. Allowances reset at 00:00 UTC, and a gigabyte here is 1,024 MB.
-      </p>
+      <AllowanceFootnote />
     </CardContent>
   </Card>
 );

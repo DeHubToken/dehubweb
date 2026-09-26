@@ -17,7 +17,7 @@ describe('subscription pricing', () => {
 
   it('shows the exact fixed-peg DHB payment without an approximation mark', () => {
     expect(dhbForUsd(10, DHB_PRELISTING_USD)).toBe(10_000);
-    expect(formatDhbPayment(10_000)).toBe('10,000 DHB');
+    expect(formatDhbPayment(10_000)).toBe('10,000 tokens');
   });
 
   it('uses the correct USDT precision per EVM chain', () => {

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -108,6 +109,7 @@ export function VideoPaywallModal({
   // signed here and verified on chain by generate-video.
   const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Reset options when model changes. Duration and resolution fall back to the
   // caller's seed first, so a value the creator already chose upstream survives.
@@ -173,7 +175,7 @@ export function VideoPaywallModal({
       }
     } catch (err) {
       console.error('Error fetching DHB price:', err);
-      setError('Failed to fetch DHB price. Using fallback.');
+      setError(t('tokenPaywall.priceFetchFailed'));
       setDhbPrice(0.001);
     } finally {
       setLoading(false);
@@ -303,7 +305,7 @@ export function VideoPaywallModal({
         return;
       }
 
-      toast.loading(`Paying ${formatDhb(costDhb)} DHB...`, { id: 'video-gen-payment' });
+      toast.loading(t('tokenPaywall.paying', { amount: formatDhb(costDhb) }), { id: 'video-gen-payment' });
       const txHash = await payForJob(costDhb);
 
       toast.dismiss('video-gen-payment');
@@ -777,11 +779,11 @@ export function VideoPaywallModal({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <img src={dhbCoinImage} alt="DHB" className="w-5 h-5" />
-                      <span className="text-white font-medium text-sm">Pay with DHB</span>
+                      <span className="text-white font-medium text-sm">{t('tokenPaywall.payWithTokens')}</span>
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-white">{formatDhb(costDhb)} <DhbCoin /></p>
-                      <p className="text-[10px] text-zinc-500">@ ${dhbPrice?.toFixed(6)}/DHB</p>
+                      <p className="text-[10px] text-zinc-500">{t('tokenPaywall.pricePerToken', { price: dhbPrice?.toFixed(6) })}</p>
                     </div>
                   </div>
                   {(error || quoteError) && (
@@ -796,7 +798,7 @@ export function VideoPaywallModal({
 
             {/* Wallet balance */}
             <div className="flex items-center justify-between text-sm bg-zinc-800/30 rounded-lg p-2.5">
-              <span className="text-zinc-400">Your DHB</span>
+              <span className="text-zinc-400">{t('tokenPaywall.yourTokens')}</span>
               <div className="flex items-center gap-2">
                 <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
                 {isWalletLoading ? (
@@ -812,7 +814,7 @@ export function VideoPaywallModal({
             {needsTokens && !loading && (
               <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-2.5 flex flex-col items-center gap-1.5">
                 <p className="text-red-400 text-xs text-center">
-                  Insufficient DHB. Need {formatDhb(costDhb - walletDhb)} more DHB.
+                  {t('tokenPaywall.notEnoughNeedMore', { amount: formatDhb(costDhb - walletDhb) })}
                 </p>
                 <Button
                   variant="outline"
@@ -820,7 +822,7 @@ export function VideoPaywallModal({
                   className="bg-emerald-600/20 border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 text-xs h-7"
                   onClick={() => { onOpenChange(false); window.history.pushState({}, '', '/app/buy'); window.dispatchEvent(new PopStateEvent('popstate')); }}
                 >
-                  Buy DHB
+                  {t('nav.buyDhb')}
                 </Button>
               </div>
             )}

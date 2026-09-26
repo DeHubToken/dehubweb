@@ -27,7 +27,7 @@ export const aec = {
     keyLinks: 'روابط مهمة',
     keyInfo: 'معلومات مهمة',
     docsChatTitle: 'مساعد الذكاء الاصطناعي',
-    docsChatGreeting: 'أهلاً! أنا مساعد توثيق ديهاب. اسألني أي حاجة عن ديهاب، توكن $DHB، ديبين، الحوكمة، أو أي ميزات تانية للمنصة!',
+    docsChatGreeting: 'أهلاً بيك! أنا مساعد توثيق DeHub. اسألني أي حاجة عن DeHub، أو توكنات DeHub، أو ديبين، أو الحوكمة، أو أي خاصية تانية في المنصة!',
     docsChatPlaceholder: 'اسأل عن ديهاب...',
     docsChatOpen: 'افتح الشات',
     docsChatClose: 'اقفل الشات',

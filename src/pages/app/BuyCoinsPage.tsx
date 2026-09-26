@@ -506,7 +506,7 @@ export default function BuyCoinsPage() {
             </div>
             {tokenPrice > 0 && (
               <p className="text-xs text-zinc-500 mt-1 text-right">
-                1 {selectedToken?.symbol || 'DHB'} ≈ ${tokenPrice.toFixed(5)}
+                1 {selectedToken?.symbol && selectedToken.symbol !== 'DHB' ? selectedToken.symbol : <DhbCoin />} ≈ ${tokenPrice.toFixed(5)}
                 {priceData?.change24h != null && (
                   <span className={priceData.change24h >= 0 ? 'text-emerald-400 ml-2' : 'text-red-400 ml-2'}>
                     {priceData.change24h >= 0 ? '+' : ''}{priceData.change24h.toFixed(2)}%
@@ -789,7 +789,7 @@ export default function BuyCoinsPage() {
                     <div className="min-w-0 flex-1">
                       <div className="text-sm text-zinc-300">
                         {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : tx.status === 'expired' ? '⌛' : '⏳'}{' '}
-                        ${tx.amount} — {tx.approxTokensToReceive ? `~${Number(tx.approxTokensToReceive).toLocaleString()} DHB` : `${tx.tokenSymbol}`}
+                        ${tx.amount} — {tx.approxTokensToReceive ? <>~{Number(tx.approxTokensToReceive).toLocaleString()} <DhbCoin /></> : `${tx.tokenSymbol}`}
                         {tx.status === 'failed' && (tx as any).failureReason && (
                           <span className="text-xs text-red-400/70 ml-1 capitalize whitespace-nowrap">({(tx as any).failureReason})</span>
                         )}

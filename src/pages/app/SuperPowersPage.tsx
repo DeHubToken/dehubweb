@@ -139,7 +139,7 @@ export default function SuperPowersPage() {
         ) : (
           // No badge — the page's real audience. Say what it costs and where.
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
-            <p className="text-white text-sm">Buy DHB to unlock a badge and its SuperPowers. Any badge holder gets them — staking is not required.</p>
+            <p className="text-white text-sm">{t('superpowers.buyTokensToUnlock')}</p>
             <p className="text-[12px] text-zinc-400">{t('superpowers.teamUp.openToEveryone')}</p>
             <BadgeProgress variant="rail" />
             <Button variant="outline" className="self-start" onClick={() => setBuyOpen(true)}>{t('nav.buyDhb')}</Button>

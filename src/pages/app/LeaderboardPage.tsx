@@ -336,7 +336,7 @@ export default function LeaderboardPage() {
     const value = getEntryValue(entry, category, timePeriod);
     const prefix = isTimeDelta && value > 0 ? '+' : '';
     const formatted = `${prefix}${formatLeaderboardNumber(value)}`;
-    return isDhbCategory ? `${formatted} DHB` : formatted;
+    return isDhbCategory ? t('leaderboard.amountTokens', { amount: formatted }) : formatted;
   };
 
   const valueTone = (entry: LeaderboardEntry): string => {

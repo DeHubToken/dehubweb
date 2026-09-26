@@ -27,7 +27,7 @@ export const zu = {
     keyLinks: 'Izixhumanisi Ezibalulekile',
     keyInfo: 'Ulwazi Olubalulekile',
     docsChatTitle: 'Umsizi we-AI',
-    docsChatGreeting: 'Sawubona! Ngingumsizi wamadokhumenti we-DeHub. Ngibuze noma yini mayelana ne-DeHub, ithokheni ye- $DHB, i-DePIN, ukubusa, nanoma yiziphi ezinye izici zepulatifomu!',
+    docsChatGreeting: 'Sawubona! Ngingumsizi wamadokhumenti we-DeHub. Ngibuze noma yini mayelana ne-DeHub, amathokheni e-DeHub, i-DePIN, ukubusa, nanoma yiziphi ezinye izici zepulatifomu!',
     docsChatPlaceholder: 'Buza nge-DeHub...',
     docsChatOpen: 'Vula ingxoxo',
     docsChatClose: 'Vala ingxoxo',

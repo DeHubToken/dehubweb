@@ -314,7 +314,7 @@ export default function StakingPage() {
           attempt = { ...attempt, confirmed: true };
           setPendingStake(previous => previous?.hash === attempt.hash ? attempt : previous);
           try { localStorage.setItem(pendingStakeKey(attempt.wallet), JSON.stringify(attempt)); } catch {}
-          toast.success(t('toasts.staked_successfully'), { description: `${attempt.amount} DHB confirmed on ${attempt.chainId === 56 ? 'BNB Chain' : 'Base'}.` });
+          toast.success(t('toasts.staked_successfully'), { description: t('staking.stakeConfirmedOn', { amount: attempt.amount, chain: attempt.chainId === 56 ? 'BNB Chain' : 'Base' }) });
         }
         try {
           const { error } = await supabase.functions.invoke('sync-staking-deposits', { body: { wallet: attempt.wallet } });
@@ -402,7 +402,7 @@ export default function StakingPage() {
         const maxBal = Math.max(bnbBal, baseBal);
         const maxChain = baseBal >= bnbBal ? 'Base' : 'BNB Chain';
         toast.error(t('toasts.insufficient_balance', 'Insufficient balance'), {
-          description: t('toasts.max_available_on_chain', 'Max available: {{amount}} DHB on {{chain}}', { amount: maxBal.toFixed(2), chain: maxChain }),
+          description: t('toasts.max_available_on_chain', { amount: maxBal.toFixed(2), chain: maxChain }),
         });
         return;
       }
@@ -664,7 +664,7 @@ export default function StakingPage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
         <StatCard icon={Lock} label={t('staking.totalStaked')} value={statsLoading || (statsError && !stats) ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle={statsLoading || (statsError && !stats) ? '' : `${((Number(stats?.totalStaked ?? 0) / DHB_TOTAL_SUPPLY) * 100).toFixed(2)}% ${t('staking.ofSupply')}`} accent="bg-white/20" delay={0} />
-        <StatCard icon={DollarSign} label={t('staking.totalValueLocked')} value={statsLoading || (statsError && !stats) ? '—' : formatUSD(tvl)} subtitle={`@ $${dhbPrice.toFixed(6)}/DHB`} accent="bg-white/20" delay={0.05} />
+        <StatCard icon={DollarSign} label={t('staking.totalValueLocked')} value={statsLoading || (statsError && !stats) ? '—' : formatUSD(tvl)} subtitle={t('staking.pricePerToken', { price: dhbPrice.toFixed(6) })} accent="bg-white/20" delay={0.05} />
         <StatCard icon={TrendingUp} label={t('staking.estApy')} value={`${ESTIMATED_APY}%`} subtitle={t('staking.variableRate')} accent="bg-white/20" delay={0.1} />
       </div>
 
@@ -704,7 +704,7 @@ export default function StakingPage() {
           </p>
           {pendingStake && pendingStake.wallet.toLowerCase() === currentWallet?.toLowerCase() && (
             <div role="status" className="mb-4 rounded-xl border border-white/15 p-3 text-sm text-white/80">
-              <p>{pendingStake.amount} DHB {pendingStake.confirmed ? 'confirmed. Updating your deposit history.' : 'submitted. Confirmation is still being checked.'} Do not send it again.</p>
+              <p>{pendingStake.confirmed ? t('staking.pendingConfirmed', { amount: pendingStake.amount }) : t('staking.pendingSubmitted', { amount: pendingStake.amount })}</p>
               <a className="underline" href={getExplorerUrl(pendingStake.hash, pendingStake.chainId === 56 ? 'BNB' : 'Base')} target="_blank" rel="noopener noreferrer">View transaction</a>
               <button className="ml-4 underline" onClick={() => { void checkPendingStake(pendingStake); }}>Check again</button>
             </div>
@@ -820,7 +820,7 @@ export default function StakingPage() {
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-white/40">{t('staking.withdrawableNow')}</span>
                 <span className="text-white/70 font-medium">
-                  {formatNumber(userWithdrawable, 2)} DHB <span className="text-white/40">· BNB</span>
+                  {formatNumber(userWithdrawable, 2)} <DhbCoin /> <span className="text-white/40">· BNB</span>
                 </span>
               </div>
               {poolOnlyStake > 0 && (

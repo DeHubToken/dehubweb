@@ -1,4 +1,5 @@
 /**
+import { useTranslation } from 'react-i18next';
  * 3D generation paywall.
  * ======================
  * Mirrors VideoPaywallModal: pick the model, confirm the DHB cost, settle on
@@ -88,6 +89,7 @@ export function Model3dPaywallModal({
   // here and verified on chain by generate-3d.
   const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Reset the options whenever the model changes; they are not all portable
   // between families and a stale face limit on a model that ignores it is just
@@ -115,7 +117,7 @@ export function Model3dPaywallModal({
       setDhbPrice(price);
     } catch (err) {
       console.error('Error fetching DHB price:', err);
-      setError('Failed to fetch DHB price. Using fallback.');
+      setError(t('tokenPaywall.priceFetchFailed'));
       setDhbPrice(0.001);
     } finally {
       setLoading(false);
@@ -171,7 +173,7 @@ export function Model3dPaywallModal({
         return;
       }
 
-      toast.loading(`Paying ${formatDhb(costDhb)} DHB...`, { id: 'model3d-gen-payment' });
+      toast.loading(t('tokenPaywall.paying', { amount: formatDhb(costDhb) }), { id: 'model3d-gen-payment' });
       const txHash = await payForJob(costDhb);
 
       toast.dismiss('model3d-gen-payment');
@@ -454,11 +456,11 @@ export function Model3dPaywallModal({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <img src={dhbCoinImage} alt="DHB" className="w-5 h-5" />
-                      <span className="text-white font-medium text-sm">Pay with DHB</span>
+                      <span className="text-white font-medium text-sm">{t('tokenPaywall.payWithTokens')}</span>
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-white">{formatDhb(costDhb)} <DhbCoin /></p>
-                      <p className="text-[10px] text-zinc-500">@ ${dhbPrice?.toFixed(6)}/DHB</p>
+                      <p className="text-[10px] text-zinc-500">{t('tokenPaywall.pricePerToken', { price: dhbPrice?.toFixed(6) })}</p>
                     </div>
                   </div>
                   {(error || quoteError) && (
@@ -473,7 +475,7 @@ export function Model3dPaywallModal({
 
             {/* Wallet balance */}
             <div className="flex items-center justify-between text-sm bg-zinc-800/30 rounded-lg p-2.5">
-              <span className="text-zinc-400">Your DHB</span>
+              <span className="text-zinc-400">{t('tokenPaywall.yourTokens')}</span>
               <div className="flex items-center gap-2">
                 <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
                 {isWalletLoading ? (
@@ -489,7 +491,7 @@ export function Model3dPaywallModal({
             {needsTokens && !loading && (
               <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-2.5 flex flex-col items-center gap-1.5">
                 <p className="text-red-400 text-xs text-center">
-                  Insufficient DHB. Need {formatDhb(costDhb - walletDhb)} more DHB.
+                  {t('tokenPaywall.notEnoughNeedMore', { amount: formatDhb(costDhb - walletDhb) })}
                 </p>
                 <Button
                   variant="outline"
@@ -501,7 +503,7 @@ export function Model3dPaywallModal({
                     window.dispatchEvent(new PopStateEvent('popstate'));
                   }}
                 >
-                  Buy DHB
+                  {t('nav.buyDhb')}
                 </Button>
               </div>
             )}

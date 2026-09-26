@@ -117,7 +117,7 @@ export default function GlossaryPage() {
         { icon: <MessageSquare size={iconSize} />, title: t('glossary.comment', 'Comment'), description: t('glossary.commentDesc', 'Opens the comment section where you can reply to a post, join discussions, and interact with other users.') },
         { icon: <Share2 size={iconSize} />, title: t('glossary.share', 'Share'), description: t('glossary.shareDesc', 'Share a post externally via a link, or copy the post URL to your clipboard to send to others.') },
         { icon: <Bookmark size={iconSize} />, title: t('glossary.bookmark', 'Bookmark'), description: t('glossary.bookmarkDesc', 'Save a post to your bookmarks for later. Access all saved posts from the Bookmarks page in the sidebar.') },
-        { icon: <Gem size={iconSize} />, title: t('glossary.tip', 'Tip'), description: t('glossary.tipDesc', 'Send DHB tokens directly to a content creator as a reward for their content. Tips are recorded on-chain.') },
+        { icon: <Gem size={iconSize} />, title: t('glossary.tip', 'Tip'), description: t('glossary.tipDesc') },
         { icon: <Flag size={iconSize} />, title: t('glossary.report', 'Report'), description: t('glossary.reportDesc', 'Flag inappropriate or harmful content for review. Reports help keep the community safe.') },
         { icon: <MoreHorizontal size={iconSize} />, title: t('glossary.moreOptions', 'More Options (⋯)'), description: t('glossary.moreOptionsDesc', 'Opens additional actions like editing, deleting, or reporting a post.') },
       ],
@@ -145,7 +145,7 @@ export default function GlossaryPage() {
       entries: [
         { icon: <Unlock size={iconSize} />, title: t('glossary.public', 'Public'), description: t('glossary.publicDesc', 'Content visible to everyone. Anyone can view, like, and comment on public posts.') },
         { icon: <Lock size={iconSize} />, title: t('glossary.private', 'Private'), description: t('glossary.privateDesc', 'Content only visible to you. Private posts are hidden from other users and the public feed.') },
-        { icon: <Ticket size={iconSize} />, title: t('glossary.ppv', 'Pay-Per-View (PPV)'), description: t('glossary.ppvDesc', 'Premium content that requires a DHB token payment to unlock. Creators set the price and earn revenue from each view.') },
+        { icon: <Ticket size={iconSize} />, title: t('glossary.ppv', 'Pay-Per-View (PPV)'), description: t('glossary.ppvDesc') },
         { icon: <Crown size={iconSize} />, title: t('glossary.subscriberOnly', 'Subscriber Only'), description: t('glossary.subscriberOnlyDesc', 'Content restricted to users who have subscribed to the creator\'s channel.') },
       ],
     },
@@ -160,7 +160,7 @@ export default function GlossaryPage() {
         { icon: <Globe size={iconSize} />, title: t('glossary.visibilityControl', 'Visibility Control'), description: t('glossary.visibilityControlDesc', 'Post owners can change their post\'s visibility between Public (anyone can see), Unlisted (only via direct link), and Private (only you). Accessible from the Post Info page.') },
         { icon: <EyeOff size={iconSize} />, title: t('glossary.unlisted', 'Unlisted'), description: t('glossary.unlistedDesc', 'A visibility setting where the post won\'t appear in feeds or search, but anyone with the direct link can still view it.') },
         { icon: <Pencil size={iconSize} />, title: t('glossary.editFromInfo', 'Edit Post (from Info)'), description: t('glossary.editFromInfoDesc', 'Post owners can edit the title and description of their post directly from the Post Info page by tapping the edit button.') },
-        { icon: <HandCoins size={iconSize} />, title: t('glossary.totalTips', 'Total Tips Received'), description: t('glossary.totalTipsDesc', 'Shows the total amount of DHB tips the post has earned from viewers, displayed on the Post Info page.') },
+        { icon: <HandCoins size={iconSize} />, title: t('glossary.totalTips', 'Total Tips Received'), description: t('glossary.totalTipsDesc') },
         { icon: <Ticket size={iconSize} />, title: t('glossary.ppvPurchases', 'PPV Purchases'), description: t('glossary.ppvPurchasesDesc', 'For pay-per-view posts, shows the number of users who have purchased access and the total revenue earned by the creator.') },
       ],
     },
@@ -171,7 +171,7 @@ export default function GlossaryPage() {
         { icon: <PieChart size={iconSize} />, title: t('glossary.fractions', 'Fractions'), description: t('glossary.fractionsDesc', 'A post minted on DeHub becomes an NFT split into 1,000 fractions, and the creator starts with all 1,000 — 100% ownership of the content. Minting is optional and can happen when you publish or later.') },
         { icon: <Users size={iconSize} />, title: t('glossary.holders', 'Holders'), description: t('glossary.holdersDesc', 'The list of wallet addresses that own fractions of a post. Shown on the Post Info page with each holder\'s balance and ownership percentage.') },
         { icon: <BarChart3 size={iconSize} />, title: t('glossary.ownershipBar', 'Ownership Bar'), description: t('glossary.ownershipBarDesc', 'A progress bar on the Post Info page showing how many of the 1,000 fractions the creator still holds vs. how many have been distributed or sold.') },
-        { icon: <Tag size={iconSize} />, title: t('glossary.listFractions', 'List Fractions'), description: t('glossary.listFractionsDesc', 'If you own fractions of a post, you can list them for sale at a price you set (in DHB per fraction). Other users can then purchase your listed fractions.') },
+        { icon: <Tag size={iconSize} />, title: t('glossary.listFractions', 'List Fractions'), description: t('glossary.listFractionsDesc') },
         { icon: <Coins size={iconSize} />, title: t('glossary.fractionMarketplace', 'Fraction Marketplace'), description: t('glossary.fractionMarketplaceDesc', 'The marketplace tab on the Post Info page where fraction holders can list their fractions for sale and buyers can make offers. Enables trading of content ownership.') },
         { icon: <Plus size={iconSize} />, title: t('glossary.makeOffer', 'Make Offer'), description: t('glossary.makeOfferDesc', 'Submit a buy offer for fractions of a post at a price you choose. The fraction holder can accept or reject your offer.') },
       ],
@@ -179,10 +179,10 @@ export default function GlossaryPage() {
     {
       title: t('glossary.sections.wallet', 'Wallet & Tokens'),
       entries: [
-        { icon: <img src={dhbCoinIcon} alt="DHB" className="w-6 h-6" />, title: t('glossary.dhbToken', 'DHB Token'), description: t('glossary.dhbTokenDesc', 'The native utility token of DeHub. Used for tipping, pay-per-view content, governance voting, and staking.') },
-        { icon: <Wallet size={iconSize} />, title: t('glossary.wallet', 'Wallet'), description: t('glossary.walletDesc', 'Your on-chain wallet that holds your DHB tokens and other crypto assets. Connected via Web3Auth for easy access.') },
+        { icon: <img src={dhbCoinIcon} alt="DHB" className="w-6 h-6" />, title: t('glossary.dhbToken'), description: t('glossary.dhbTokenDesc') },
+        { icon: <Wallet size={iconSize} />, title: t('glossary.wallet', 'Wallet'), description: t('glossary.walletDesc') },
         { icon: <ArrowUpDown size={iconSize} />, title: t('glossary.swap', 'Swap'), description: t('glossary.swapDesc', 'Exchange one token for another directly within the app. Swaps happen on-chain using decentralized exchanges.') },
-        { icon: <TrendingUp size={iconSize} />, title: t('glossary.staking', 'Staking'), description: t('glossary.stakingDesc', 'Lock your DHB tokens to earn rewards over time. Staked tokens also give you increased voting power in governance.') },
+        { icon: <TrendingUp size={iconSize} />, title: t('glossary.staking', 'Staking'), description: t('glossary.stakingDesc') },
         { icon: <Copy size={iconSize} />, title: t('glossary.txHash', 'Transaction Hash'), description: t('glossary.txHashDesc', 'A unique identifier for any on-chain transaction. Click it to view the full transaction details on a blockchain explorer.') },
       ],
     },
@@ -208,7 +208,7 @@ export default function GlossaryPage() {
     {
       title: t('glossary.sections.governance', 'Governance & Community'),
       entries: [
-        { icon: <ShieldCheck size={iconSize} />, title: t('glossary.governance', 'Governance'), description: t('glossary.governanceDesc', 'Submit and vote on proposals that shape the platform. Your voting power is weighted by your DHB holdings.') },
+        { icon: <ShieldCheck size={iconSize} />, title: t('glossary.governance', 'Governance'), description: t('glossary.governanceDesc') },
         { icon: <Lightbulb size={iconSize} />, title: t('glossary.featureRequests', 'Feature Requests'), description: t('glossary.featureRequestsDesc', 'Suggest new features and vote on community ideas. Popular requests get prioritized for development.') },
         { icon: <ChevronUp size={iconSize} />, title: t('glossary.upvote', 'Upvote'), description: t('glossary.upvoteDesc', 'Vote in favor of a governance proposal or feature request. Helps signal community support.') },
         { icon: <ChevronDown size={iconSize} />, title: t('glossary.downvote', 'Downvote'), description: t('glossary.downvoteDesc', 'Vote against a governance proposal or feature request. Helps signal community opposition.') },
@@ -218,16 +218,16 @@ export default function GlossaryPage() {
       id: 'badges',
       title: t('glossary.sections.badges', 'Badges & Ranking'),
       entries: [
-        { icon: <CheckCircle2 size={iconSize} />, title: t('glossary.stakingBadge', 'Staking Badges'), description: t('glossary.stakingBadgeDesc', 'Badges displayed next to your username based on your total DHB holdings (wallet + staked). There are 13 tiers — the more DHB you hold, the higher your badge rank. Higher tiers grant more governance voting power and lower platform fees. Tiers are priced in dollars, so the DHB each one costs falls as DHB rises — and once you have earned a tier you keep it for as long as you hold what it cost you, whatever the price does afterwards.') },
+        { icon: <CheckCircle2 size={iconSize} />, title: t('glossary.stakingBadge', 'Staking Badges'), description: t('glossary.stakingBadgeDesc') },
         ...badgeLadder.map((b, i) => {
           const fee = i === badgeLadder.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
           return {
             icon: <img src={badgeImage(b.name) || ''} alt={b.name} className="w-6 h-6 object-contain art-rim" />,
             title: b.name,
-            description: `Requires ${b.min.toLocaleString()} DHB · ${fee}% platform fee`,
+            description: t('glossary.badgeRequires', { amount: b.min.toLocaleString(), fee }),
           };
         }),
-        { icon: <Trophy size={iconSize} />, title: t('glossary.leaderboardRanking', 'Leaderboard Ranking'), description: t('glossary.leaderboardRankingDesc', 'Users are ranked by total DHB balance (wallet + staked across all chains). Rankings update periodically and track 1-day and 1-week changes. You can also sort by tips sent, tips received, followers, likes, or subscribers.') },
+        { icon: <Trophy size={iconSize} />, title: t('glossary.leaderboardRanking', 'Leaderboard Ranking'), description: t('glossary.leaderboardRankingDesc') },
         { icon: <TrendingUp size={iconSize} />, title: t('glossary.delta', 'Ranking Delta (▲▼)'), description: t('glossary.deltaDesc', 'The green or red arrow next to a leaderboard entry shows how much a user\'s balance changed over the selected time period (1 day, 1 week, etc.).') },
         ...MEDALS.map((medal, i) => ({
           icon: (

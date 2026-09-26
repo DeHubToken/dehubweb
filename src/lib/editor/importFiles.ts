@@ -4,6 +4,7 @@
  * so the library survives across devices, subject to badge-tier quotas.
  */
 import { toast } from "sonner";
+import i18n from "@/i18n";
 import {
   captureImageThumbnail,
   captureVideoThumbnail,
@@ -50,7 +51,11 @@ export async function importOneFile(file: File, ctx: ImportContext = {}): Promis
       const usage = await getEditorStorageUsage(ctx.wallet);
       if (usage.used_bytes + file.size > quota.bytes) {
         toast.error(
-          `Storage full — ${formatBytes(usage.used_bytes)} / ${formatBytes(quota.bytes)} used on your ${quota.tierName} tier. Stake more DHB to unlock a bigger tier, or remove unused assets.`,
+          i18n.t("editor.storageFullImport", {
+            used: formatBytes(usage.used_bytes),
+            total: formatBytes(quota.bytes),
+            tier: quota.tierName,
+          }),
         );
         return null;
       }

@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { invokeAi, isPaymentRequired } from '@/lib/ai-invoke';
 import { payForVoiceSession, VOICE_EXCHANGE_DHB, VOICE_SESSION_EXCHANGES } from '@/lib/ai-payment';
 import { toast } from 'sonner';
+import i18n from 'i18next';
 
 interface UseVoiceAssistantOptions {
   /** Called when Whisper returns a transcript */
@@ -404,7 +405,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
     }
 
     try {
-      toast.loading(`Paying ${sessionDhb.toLocaleString()} DHB...`, { id: 'voice-session' });
+      toast.loading(i18n.t('tokenPayments.paying', { amount: sessionDhb.toLocaleString() }), { id: 'voice-session' });
       sessionTxRef.current = await payForVoiceSession();
       setExchangesLeft(VOICE_SESSION_EXCHANGES);
       toast.success(

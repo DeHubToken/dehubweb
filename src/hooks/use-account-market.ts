@@ -28,6 +28,7 @@
 import { useCallback, useState } from 'react';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import i18n from 'i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { createLogger } from '@/lib/logger';
 import {
@@ -232,7 +233,7 @@ export function useBuyAccount() {
         quote.chains.map(c => c.chainId),
       );
       const chain = quote.chains.find(c => c.chainId === chainId);
-      if (!chain?.tokenAddress) throw new Error('DHB cannot be sent on that network.');
+      if (!chain?.tokenAddress) throw new Error(i18n.t('tokenErrors.unsupportedNetwork'));
 
       setStage('paying');
       const sent = await sendERC20Token(

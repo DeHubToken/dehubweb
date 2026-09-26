@@ -9,6 +9,7 @@ import { createCheckoutSession, getDPayPrice, getDPaySessionStatus } from '@/lib
 import { getStripe } from '@/lib/stripe';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   open: boolean;
@@ -21,6 +22,7 @@ type Props = {
 export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, returnTo = 'gift' }: Props) {
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const [method, setMethod] = useState<'card' | 'crypto'>('card');
   const [amountUsd, setAmountUsd] = useState('10');
   const [tokenPrice, setTokenPrice] = useState(0);
@@ -38,10 +40,10 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
     getDPayPrice().then(({ price }) => {
       if (!cancelled) setTokenPrice(price);
     }).catch(() => {
-      if (!cancelled) setError('Could not load the current DHB price.');
+      if (!cancelled) setError(t('liveGift.buy.priceFailed'));
     });
     return () => { cancelled = true; };
-  }, [open]);
+  }, [open, t]);
 
   const delivered = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
@@ -102,7 +104,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
           <DrawerTitle className="text-white">Buy tokens</DrawerTitle>
         </DrawerHeader>
         <div className="overflow-y-auto space-y-4 pb-3">
-          <p className="text-sm text-zinc-400">Buy DHB here, then return to your {returnTo}. Your place will stay ready.</p>
+          <p className="text-sm text-zinc-400">{t('liveGift.buy.intro', { returnTo })}</p>
           {!clientSecret && (
             <div className="grid grid-cols-2 gap-2">
               <Button variant="glass" className="w-full" onClick={() => setMethod('card')} aria-pressed={method === 'card'}><CreditCard className="w-4 h-4 mr-2" />Card</Button>
@@ -111,7 +113,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
           )}
           {method === 'crypto' && !clientSecret ? (
             <div className="space-y-3">
-              <label className="text-sm text-zinc-400 block">DHB to buy</label>
+              <label className="text-sm text-zinc-400 block">{t('liveGift.buy.amountToBuy')}</label>
               <Input type="number" min="1" step="1" value={cryptoAmount} onChange={(e) => setCryptoAmount(e.target.value)} className="bg-zinc-800 border-zinc-700 text-white" />
               <NearIntentBuy tokensToReceive={Math.max(1, Math.floor(Number(cryptoAmount) || 0))} active onDelivered={delivered} />
             </div>
@@ -122,15 +124,15 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
                   <EmbeddedCheckout />
                 </EmbeddedCheckoutProvider>
               </div>
-              <p className="text-xs text-zinc-400 text-center">{paymentComplete ? 'Payment complete. Waiting for DHB to reach your wallet…' : `Complete payment here. Your ${returnTo} stays open behind this drawer.`}</p>
+              <p className="text-xs text-zinc-400 text-center">{paymentComplete ? t('liveGift.buy.waitingDelivery') : `Complete payment here. Your ${returnTo} stays open behind this drawer.`}</p>
             </div>
           ) : (
             <div className="space-y-3">
               <label className="text-sm text-zinc-400 block">Amount (USD)</label>
               <Input type="number" min="0.5" step="0.01" value={amountUsd} onChange={(e) => setAmountUsd(e.target.value)} className="bg-zinc-800 border-zinc-700 text-white" />
-              {tokenPrice > 0 && <p className="text-xs text-zinc-400">Approximately {estimatedDhb.toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB after the card fee</p>}
+              {tokenPrice > 0 && <p className="text-xs text-zinc-400">{t('liveGift.buy.estimate', { amount: estimatedDhb.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}</p>}
               <Button className="w-full" onClick={buyWithCard} disabled={busy || Number(amountUsd) < 0.5 || tokenPrice <= 0}>
-                {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Buy DHB with card
+                {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}{t('ppvTopUp.buyCard')}
               </Button>
             </div>
           )}

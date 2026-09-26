@@ -101,7 +101,7 @@ export default function BridgePage() {
     }
 
     if (parsedAmount > sourceBalance) {
-      toast.error('Insufficient balance', { description: `You only have ${formatNumber(sourceBalance, 2)} DHB on ${sourceChainLabel}.` });
+      toast.error('Insufficient balance', { description: t('bridge.onlyHave', { amount: formatNumber(sourceBalance, 2), chain: sourceChainLabel }) });
       return;
     }
 
@@ -127,7 +127,7 @@ export default function BridgePage() {
       const dhbTokenAddress = CHAIN_CONFIGS[sourceChainId]?.dhbToken;
       if (!dhbTokenAddress) {
         toast.dismiss(loadingToastId);
-        toast.error('Error', { description: `DHB token not configured on ${sourceChainLabel}.` });
+        toast.error('Error', { description: t('bridge.tokenNotConfigured', { chain: sourceChainLabel }) });
         return;
       }
 
@@ -141,8 +141,8 @@ export default function BridgePage() {
         const msg = String(sendErr?.message || sendErr || '').toLowerCase();
         
         if (msg.includes('transfer amount exceeds balance') || msg.includes('exceeds balance')) {
-          toast.error('Insufficient DHB balance', {
-            description: `Your on-chain DHB balance on ${sourceChainLabel} is too low. The displayed balance may not have synced yet.`,
+          toast.error(t('bridge.notEnoughTokens'), {
+            description: t('bridge.onChainBalanceTooLow', { chain: sourceChainLabel }),
           });
         } else if (msg.includes('user rejected') || msg.includes('user denied') || msg.includes('cancelled')) {
           toast.error('Transaction cancelled', { description: 'You rejected the transaction in your wallet.' });
@@ -173,7 +173,7 @@ export default function BridgePage() {
 
       if (receipt.status === 1) {
         toast.success('Bridge initiated!', {
-          description: `${amount} DHB sent from ${sourceChainLabel} to ${destChainLabel}. Tokens will arrive shortly.`,
+          description: t('bridge.sentDesc', { amount, from: sourceChainLabel, to: destChainLabel }),
         });
         setAmount('');
         queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
@@ -209,7 +209,7 @@ export default function BridgePage() {
           <ThemedIcon icon="bridge" alt="" className="w-10 h-10 flex-shrink-0 object-contain" />
           <div>
             <h1 className="text-xl font-bold text-white">Bridge</h1>
-            <p className="text-xs text-white/40">Transfer DHB between chains</p>
+            <p className="text-xs text-white/40">{t('bridge.subtitle')}</p>
           </div>
         </div>
         <button
@@ -222,8 +222,8 @@ export default function BridgePage() {
 
       {/* Balance Stats */}
       <div className="grid grid-cols-2 gap-3 mb-6">
-        <StatCard label="Base Balance" value={formatNumber(parseFloat(baseDHB?.formattedBalance ?? '0'), 2)} subtitle="DHB on Base" delay={0} loading={balancesLoading} />
-        <StatCard label="BNB Chain Balance" value={formatNumber(parseFloat(bnbDHB?.formattedBalance ?? '0'), 2)} subtitle="DHB on BNB Chain" delay={0.05} loading={balancesLoading} />
+        <StatCard label="Base Balance" value={formatNumber(parseFloat(baseDHB?.formattedBalance ?? '0'), 2)} subtitle={t('bridge.tokensOnBase')} delay={0} loading={balancesLoading} />
+        <StatCard label="BNB Chain Balance" value={formatNumber(parseFloat(bnbDHB?.formattedBalance ?? '0'), 2)} subtitle={t('bridge.tokensOnBnb')} delay={0.05} loading={balancesLoading} />
       </div>
 
       {/* Bridge Card */}
@@ -321,7 +321,7 @@ export default function BridgePage() {
           {[
             { step: '1', text: 'Select the chain you want to bridge from and enter the amount.' },
             { step: '2', text: 'Confirm the transaction in your wallet.' },
-            { step: '3', text: 'Your DHB tokens will be delivered on the destination chain shortly.' },
+            { step: '3', text: t('bridge.step3') },
           ].map((item) => (
             <div key={item.step} className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">

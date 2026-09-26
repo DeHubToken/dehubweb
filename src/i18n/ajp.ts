@@ -27,7 +27,7 @@ export const ajp = {
     keyLinks: 'روابط مهمة',
     keyInfo: 'معلومات مهمة',
     docsChatTitle: 'مساعد الذكاء الاصطناعي',
-    docsChatGreeting: 'مرحباً! أنا مساعد توثيق DeHub. اسألني أي شيء عن DeHub، أو توكن $DHB، أو DePIN، أو الحوكمة، أو أي ميزات أخرى للمنصة!',
+    docsChatGreeting: 'مرحباً! أنا مساعد توثيق DeHub. اسألني أي شيء عن DeHub، أو توكنات DeHub، أو DePIN، أو الحوكمة، أو أي ميزات أخرى للمنصة!',
     docsChatPlaceholder: 'اسأل عن DeHub...',
     docsChatOpen: 'افتح الدردشة',
     docsChatClose: 'أغلق الدردشة',
