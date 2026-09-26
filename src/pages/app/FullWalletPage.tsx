@@ -47,6 +47,7 @@ import robinhoodLogo from '@/assets/icons/robinhood-chain-logo.svg';
 import arcLogo from '@/assets/icons/arc-logo.png';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
+import { TradeSheet } from '@/components/app/wallet/TradeSheet';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useSubscriptionEarnings, useWithdrawSubscriptionEarnings } from '@/hooks/use-subscriptions';
 
@@ -107,6 +108,7 @@ export default function FullWalletPage() {
   const [actionGrouped, setActionGrouped] = useState<GroupedToken | null>(null);
   const [sendChainPickerGrouped, setSendChainPickerGrouped] = useState<GroupedToken | null>(null);
   const [showBalanceBreakdown, setShowBalanceBreakdown] = useState(false);
+  const [tradeOpen, setTradeOpen] = useState(false);
 
   const { allTokens, isLoading } = useAllChainsTokens();
   const { earnings: subscriptionEarnings, isLoading: subscriptionEarningsLoading } = useSubscriptionEarnings();
@@ -453,9 +455,9 @@ export default function FullWalletPage() {
           <ArrowDownUp className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">Bridge</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => navigate('/dex')}>
+        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setTradeOpen(true)}>
           <ChartNoAxesColumn className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap hidden lg:inline">Trade</span>
+          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.trade')}</span>
         </Button>
       </div>
 
@@ -511,6 +513,8 @@ export default function FullWalletPage() {
         }}
         walletAddress={walletAddress}
       />
+
+      <TradeSheet open={tradeOpen} onOpenChange={setTradeOpen} tokens={allTokens} />
 
       {/* Send Chain Picker - only shown when sending and multiple chains have balance */}
       <Drawer open={!!sendChainPickerGrouped} onOpenChange={v => { if (!v) setSendChainPickerGrouped(null); }}>
