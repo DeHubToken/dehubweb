@@ -429,9 +429,12 @@ export function PostMediaPreview({
         throw new Error('Failed to get canvas context');
       }
       
-      canvas.width = 640;
-      canvas.height = 360;
-      
+      // Keep the source shape. A fixed 640x360 stretched every portrait or
+      // 4:3 clip into 16:9, and the picked frame became a squashed cover.
+      const scale = 640 / Math.max(video.videoWidth || 640, video.videoHeight || 360);
+      canvas.width = Math.round((video.videoWidth || 640) * scale);
+      canvas.height = Math.round((video.videoHeight || 360) * scale);
+
       for (let i = 0; i < frameCount; i++) {
         // Include first frame (time 0) and distribute remaining frames evenly
         const time = i === 0 ? 0.01 : (duration / (frameCount - 1)) * i; // Use 0.01 instead of 0 for better compatibility
@@ -1052,8 +1055,8 @@ export function PostMediaPreview({
                         <>
                           <img 
                             src={m.thumbnail} 
-                            alt="Thumbnail" 
-                            className="w-full h-full object-cover"
+                            alt="Thumbnail"
+                            className="w-full h-full object-contain bg-black"
                           />
                           {/* Overlay on hover */}
                           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -1110,7 +1113,7 @@ export function PostMediaPreview({
                               : 'border-transparent hover:border-white/50'
                           }`}
                         >
-                          <img src={frameUrl} alt={`Frame ${frameIndex + 1}`} className="w-full h-full object-cover" />
+                          <img src={frameUrl} alt={`Frame ${frameIndex + 1}`} className="w-full h-full object-contain bg-black" />
                         </button>
                       ))}
                     </div>
