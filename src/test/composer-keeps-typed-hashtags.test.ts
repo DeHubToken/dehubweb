@@ -36,7 +36,7 @@ describe('the composer keeps hashtags the author typed', () => {
   });
 
   it('still files the tags as categories, so tapping one filters the feed', () => {
-    expect(POST_FORM).toContain('const mergedCategories = [...new Set([...baseCategories, ...hashtagCategories])];');
-    expect(SOCIAL).toContain('const mergedCategories = [...new Set([baseCategory, ...hashtagCategories])];');
+    expect(POST_FORM).toContain('const mergedCategories = normalizeCategoryList([...baseCategories, ...hashtagCategories]);');
+    expect(SOCIAL).toContain('const mergedCategories = normalizeCategoryList([baseCategory, ...hashtagCategories]);');
   });
 });
