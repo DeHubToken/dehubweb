@@ -704,7 +704,12 @@
     "cancel": "Kanselahin",
     "confirm": "Kumpirmahin",
     "paying": "Nagbabayad...",
-    "payAmount": "Magbayad ng {{amount}} {{currency}}"
+    "payAmount": "Magbayad ng {{amount}} {{currency}}",
+    "coverTitle": "Cover",
+    "coverHint": "Pumili ng frame o mag-upload ng larawan. Agad itong nase-save.",
+    "coverUpload": "Mag-upload ng cover na larawan",
+    "coverSaved": "Na-update ang cover",
+    "coverFailed": "Hindi mapalitan ang cover"
   },
   "assistant": {
     "title": "Katulong",

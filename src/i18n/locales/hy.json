@@ -660,7 +660,12 @@
     "cancel": "Chegharakel",
     "confirm": "Hasdaedel",
     "paying": "Vcharvoum e...",
-    "payAmount": "Vcharel {{amount}} {{currency}}"
+    "payAmount": "Vcharel {{amount}} {{currency}}",
+    "coverTitle": "Շապիկ",
+    "coverHint": "Ընտրեք կադր կամ վերբեռնեք պատկեր։ Պահպանվում է անմիջապես։",
+    "coverUpload": "Վերբեռնել շապիկի պատկեր",
+    "coverSaved": "Շապիկը թարմացվեց",
+    "coverFailed": "Չհաջողվեց փոխել շապիկը"
   },
   "assistant": {
     "title": "AI Oghnakinets",

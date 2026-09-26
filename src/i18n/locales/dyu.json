@@ -616,7 +616,12 @@
     "cancel": "Kɔrɔbɔ",
     "confirm": "Kɔrɔbɔ",
     "paying": "Kɔrɔbɔ...",
-    "payAmount": "Kɔrɔbɔ {{amount}} {{currency}}"
+    "payAmount": "Kɔrɔbɔ {{amount}} {{currency}}",
+    "coverTitle": "Kuru",
+    "coverHint": "Jaa kelen sugandi walima ja dɔ bila. A bɛ mara o yɔrɔnin bɛɛ.",
+    "coverUpload": "Kuru ja bila",
+    "coverSaved": "Kuru yɛlɛmana",
+    "coverFailed": "Kuru ma se ka yɛlɛma"
   },
   "assistant": {
     "title": "Fɔlɔw",

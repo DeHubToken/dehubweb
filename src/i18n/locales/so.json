@@ -644,7 +644,12 @@
     "cancel": "Jooji",
     "confirm": "Xaqiiji",
     "paying": "Waa la bixinayaa...",
-    "payAmount": "Bixi {{amount}} {{currency}}"
+    "payAmount": "Bixi {{amount}} {{currency}}",
+    "coverTitle": "Dabool",
+    "coverHint": "Dooro fareem ama soo geli sawir. Isla markiiba waa la keydiyaa.",
+    "coverUpload": "Soo geli sawirka daboolka",
+    "coverSaved": "Daboolka waa la cusboonaysiiyay",
+    "coverFailed": "Lama beddeli karin daboolka"
   },
   "assistant": {
     "title": "Kaaliye",

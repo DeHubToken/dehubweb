@@ -615,7 +615,12 @@
     "cancel": "Abbräche",
     "confirm": "Bestätige",
     "paying": "Am Zahle...",
-    "payAmount": "{{amount}} {{currency}} zahle"
+    "payAmount": "{{amount}} {{currency}} zahle",
+    "coverTitle": "Cover",
+    "coverHint": "Wähle ein Standbild oder lade ein Bild hoch. Wird sofort gespeichert.",
+    "coverUpload": "Coverbild hochladen",
+    "coverSaved": "Cover aktualisiert",
+    "coverFailed": "Cover konnte nicht geändert werden"
   },
   "assistant": {
     "title": "Assischtänt",

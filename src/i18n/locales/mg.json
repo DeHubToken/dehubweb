@@ -639,7 +639,12 @@
     "cancel": "Hanafoana",
     "confirm": "Hamafy",
     "paying": "Mandoa...",
-    "payAmount": "Mandoa {{amount}} {{currency}}"
+    "payAmount": "Mandoa {{amount}} {{currency}}",
+    "coverTitle": "Fonony",
+    "coverHint": "Misafidiana sary iray avy amin'ny horonantsary na mampidira sary. Voatahiry avy hatrany.",
+    "coverUpload": "Hampiditra sary fonony",
+    "coverSaved": "Voavao ny fonony",
+    "coverFailed": "Tsy nety novana ny fonony"
   },
   "assistant": {
     "title": "Mpanampy AI",

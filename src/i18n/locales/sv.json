@@ -660,7 +660,12 @@
     "cancel": "Avbryt",
     "confirm": "Bekräfta",
     "paying": "Betalar...",
-    "payAmount": "Betala {{amount}} {{currency}}"
+    "payAmount": "Betala {{amount}} {{currency}}",
+    "coverTitle": "Omslag",
+    "coverHint": "Välj en bildruta eller ladda upp en bild. Sparas direkt.",
+    "coverUpload": "Ladda upp omslagsbild",
+    "coverSaved": "Omslaget uppdaterades",
+    "coverFailed": "Det gick inte att ändra omslaget"
   },
   "assistant": {
     "title": "Assistent",

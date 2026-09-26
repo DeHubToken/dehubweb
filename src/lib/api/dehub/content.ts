@@ -531,6 +531,17 @@ export async function replacePostImage(tokenId: number | string, index: number, 
   return response.data.imageUrls;
 }
 
+/** Swap the cover on a video or short. Saves immediately; returns the stored path. */
+export async function replaceVideoCover(tokenId: number | string, image: Blob) {
+  const formData = new FormData();
+  formData.append('thumbnail', image, 'cover.jpg');
+  const response = await authedUpload<{ result: boolean; data?: { imageUrl: string }; error?: string }>(
+    `/api/nft/${tokenId}/thumbnail`, formData,
+  );
+  if (!response.result || !response.data?.imageUrl) throw new Error(response.error || 'Could not change the cover');
+  return response.data.imageUrl;
+}
+
 export async function deletePost(tokenId: number | string): Promise<{ result: boolean }> {
   return apiCall<{ result: boolean }>(`/api/nft/${tokenId}`, {
     method: "DELETE",

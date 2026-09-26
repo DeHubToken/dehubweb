@@ -660,7 +660,12 @@
     "cancel": "취소",
     "confirm": "확인",
     "paying": "결제 중...",
-    "payAmount": "{{amount}} {{currency}} 결제"
+    "payAmount": "{{amount}} {{currency}} 결제",
+    "coverTitle": "커버",
+    "coverHint": "프레임을 고르거나 이미지를 업로드하세요. 바로 저장됩니다.",
+    "coverUpload": "커버 이미지 업로드",
+    "coverSaved": "커버가 업데이트되었습니다",
+    "coverFailed": "커버를 변경할 수 없습니다"
   },
   "assistant": {
     "title": "어시스턴트",

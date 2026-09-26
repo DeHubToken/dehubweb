@@ -660,7 +660,12 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "paying": "Pagando...",
-    "payAmount": "Pagar {{amount}} {{currency}}"
+    "payAmount": "Pagar {{amount}} {{currency}}",
+    "coverTitle": "Portada",
+    "coverHint": "Elige un fotograma o sube una imagen. Se guarda al instante.",
+    "coverUpload": "Subir imagen de portada",
+    "coverSaved": "Portada actualizada",
+    "coverFailed": "No se pudo cambiar la portada"
   },
   "assistant": {
     "title": "Asistente IA",

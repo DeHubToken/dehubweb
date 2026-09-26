@@ -864,6 +864,7 @@ export default function PostInfoPage() {
           open={showEditModal}
           onOpenChange={setShowEditModal}
           tokenId={nftInfo.tokenId}
+          canReplaceVideo={nftInfo.postType === 'video' || nftInfo.postType === 'short'}
           currentTitle={nftInfo.title || nftInfo.name || ''}
           currentDescription={nftInfo.description || ''}
           currentCategories={Array.isArray(nftInfo.category) ? nftInfo.category : nftInfo.category ? [nftInfo.category] : []}

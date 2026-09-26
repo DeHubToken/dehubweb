@@ -655,7 +655,12 @@
     "cancel": "रद्द करा",
     "confirm": "पुष्टी करा",
     "paying": "देत आहे...",
-    "payAmount": "{{amount}} {{currency}} द्या"
+    "payAmount": "{{amount}} {{currency}} द्या",
+    "coverTitle": "कव्हर",
+    "coverHint": "एखादी फ्रेम निवडा किंवा प्रतिमा अपलोड करा. लगेच सेव्ह होते.",
+    "coverUpload": "कव्हर प्रतिमा अपलोड करा",
+    "coverSaved": "कव्हर अपडेट झाले",
+    "coverFailed": "कव्हर बदलता आले नाही"
   },
   "assistant": {
     "title": "सहाय्यक",

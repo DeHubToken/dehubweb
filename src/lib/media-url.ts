@@ -417,6 +417,9 @@ export function buildImageUrl(
   // Shorts thumbnails live in their own CDN folder — keep the path as-is.
   // Rewriting them to images/{tokenId} 403s (the file was never uploaded there).
   if (apiImagePath.startsWith('shorts/')) return cdnImage(`${DEHUB_CDN_BASE}${apiImagePath}`, { width });
+  // A changed cover lands on a fresh key (images/{tokenId}-{uuid}.jpg) so no
+  // cache in front of the bucket can keep serving the old one. Read it as-is.
+  if (apiImagePath.startsWith('images/')) return cdnImage(`${DEHUB_CDN_BASE}${apiImagePath}`, { width });
   const ext = getExtension(apiImagePath);
   return cdnImage(`${DEHUB_CDN_BASE}images/${tokenId}.${ext}`, { width });
 }

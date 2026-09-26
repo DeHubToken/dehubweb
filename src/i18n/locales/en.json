@@ -660,7 +660,12 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "paying": "Paying...",
-    "payAmount": "Pay {{amount}} {{currency}}"
+    "payAmount": "Pay {{amount}} {{currency}}",
+    "coverTitle": "Cover",
+    "coverHint": "Pick a frame or upload an image. Saves right away.",
+    "coverUpload": "Upload a cover image",
+    "coverSaved": "Cover updated",
+    "coverFailed": "Could not change the cover"
   },
   "assistant": {
     "title": "Assistant",

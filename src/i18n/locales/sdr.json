@@ -604,7 +604,12 @@
     "cancel": "منسوخ",
     "confirm": "تصدیق",
     "paying": "ادائیگی ہو رہی ہے...",
-    "payAmount": "{{amount}} {{currency}} ادا کرو"
+    "payAmount": "{{amount}} {{currency}} ادا کرو",
+    "coverTitle": "कवर",
+    "coverHint": "कोई फ़्रेम चुनें या इमेज अपलोड करें। तुरंत सेव हो जाता है।",
+    "coverUpload": "कवर इमेज अपलोड करें",
+    "coverSaved": "कवर अपडेट हो गया",
+    "coverFailed": "कवर नहीं बदला जा सका"
   },
   "assistant": {
     "title": "مددگار",

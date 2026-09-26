@@ -659,7 +659,12 @@
     "cancel": "Отмена",
     "confirm": "Подтвердить",
     "paying": "Оплата...",
-    "payAmount": "Оплатить {{amount}} {{currency}}"
+    "payAmount": "Оплатить {{amount}} {{currency}}",
+    "coverTitle": "Обложка",
+    "coverHint": "Выберите кадр или загрузите изображение. Сохраняется сразу.",
+    "coverUpload": "Загрузить изображение обложки",
+    "coverSaved": "Обложка обновлена",
+    "coverFailed": "Не удалось изменить обложку"
   },
   "assistant": {
     "title": "Ассистент",

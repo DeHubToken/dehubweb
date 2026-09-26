@@ -660,7 +660,12 @@
     "cancel": "Annuler",
     "confirm": "Confirmer",
     "paying": "Paiement...",
-    "payAmount": "Payer {{amount}} {{currency}}"
+    "payAmount": "Payer {{amount}} {{currency}}",
+    "coverTitle": "Couverture",
+    "coverHint": "Choisissez une image de la vidéo ou importez une image. Enregistré immédiatement.",
+    "coverUpload": "Importer une image de couverture",
+    "coverSaved": "Couverture mise à jour",
+    "coverFailed": "Impossible de changer la couverture"
   },
   "assistant": {
     "title": "Assistant",

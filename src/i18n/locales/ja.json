@@ -659,7 +659,12 @@
     "cancel": "キャンセル",
     "confirm": "確認",
     "paying": "支払い中...",
-    "payAmount": "{{amount}} {{currency}}を支払う"
+    "payAmount": "{{amount}} {{currency}}を支払う",
+    "coverTitle": "カバー",
+    "coverHint": "フレームを選ぶか画像をアップロードしてください。すぐに保存されます。",
+    "coverUpload": "カバー画像をアップロード",
+    "coverSaved": "カバーを更新しました",
+    "coverFailed": "カバーを変更できませんでした"
   },
   "assistant": {
     "title": "アシスタント",

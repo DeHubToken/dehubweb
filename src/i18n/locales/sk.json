@@ -685,7 +685,12 @@
     "cancel": "Zrušiť",
     "confirm": "Potvrdiť",
     "paying": "Platí sa...",
-    "payAmount": "Zaplatiť {{amount}} {{currency}}"
+    "payAmount": "Zaplatiť {{amount}} {{currency}}",
+    "coverTitle": "Obálka",
+    "coverHint": "Vyberte snímku alebo nahrajte obrázok. Uloží sa hneď.",
+    "coverUpload": "Nahrať obrázok obálky",
+    "coverSaved": "Obálka aktualizovaná",
+    "coverFailed": "Obálku sa nepodarilo zmeniť"
   },
   "assistant": {
     "title": "AI Asistent",

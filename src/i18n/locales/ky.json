@@ -643,7 +643,12 @@
     "cancel": "Жокко чыгаруу",
     "confirm": "Ырастоо",
     "paying": "Төлөнүүдө...",
-    "payAmount": "{{amount}} {{currency}} төлөө"
+    "payAmount": "{{amount}} {{currency}} төлөө",
+    "coverTitle": "Мукаба",
+    "coverHint": "Кадр тандаңыз же сүрөт жүктөңүз. Дароо сакталат.",
+    "coverUpload": "Мукаба сүрөтүн жүктөө",
+    "coverSaved": "Мукаба жаңыртылды",
+    "coverFailed": "Мукабаны өзгөртүү мүмкүн болбоду"
   },
   "assistant": {
     "title": "AI Жардамчы",

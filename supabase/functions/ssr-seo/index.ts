@@ -199,6 +199,7 @@ function buildPostImageUrl(nft: DeHubNFT): string | null {
     const apiPath = nft.imageUrl || nft.thumbnail_url;
     if (!apiPath) return null; // No image — caller should fall back to minter avatar
     if (apiPath.startsWith("http")) return apiPath;
+    if (apiPath.startsWith("images/")) return `${DEHUB_CDN_BASE}${apiPath}`;
     const ext = getExtension(apiPath);
     return `${DEHUB_CDN_BASE}images/${nft.tokenId}.${ext}`;
 }

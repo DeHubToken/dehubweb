@@ -660,7 +660,12 @@
     "cancel": "Abbrechen",
     "confirm": "Bestätigen",
     "paying": "Zahlung...",
-    "payAmount": "Zahlen {{amount}} {{currency}}"
+    "payAmount": "Zahlen {{amount}} {{currency}}",
+    "coverTitle": "Cover",
+    "coverHint": "Wähle ein Standbild oder lade ein Bild hoch. Wird sofort gespeichert.",
+    "coverUpload": "Coverbild hochladen",
+    "coverSaved": "Cover aktualisiert",
+    "coverFailed": "Cover konnte nicht geändert werden"
   },
   "assistant": {
     "title": "KI-Assistent",

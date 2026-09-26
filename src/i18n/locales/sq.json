@@ -658,7 +658,12 @@
     "cancel": "Anulo",
     "confirm": "Konfirmo",
     "paying": "Po paguhet...",
-    "payAmount": "Paguaj {{amount}} {{currency}}"
+    "payAmount": "Paguaj {{amount}} {{currency}}",
+    "coverTitle": "Kopertina",
+    "coverHint": "Zgjidh një kuadër ose ngarko një imazh. Ruhet menjëherë.",
+    "coverUpload": "Ngarko imazhin e kopertinës",
+    "coverSaved": "Kopertina u përditësua",
+    "coverFailed": "Kopertina nuk mund të ndryshohej"
   },
   "assistant": {
     "title": "Asistenti",

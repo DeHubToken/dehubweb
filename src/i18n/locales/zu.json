@@ -644,7 +644,12 @@
     "cancel": "Khansela",
     "confirm": "Qinisekisa",
     "paying": "Iyakhokha...",
-    "payAmount": "Khokha {{amount}} {{currency}}"
+    "payAmount": "Khokha {{amount}} {{currency}}",
+    "coverTitle": "Ikhava",
+    "coverHint": "Khetha ifreyimu noma layisha isithombe. Kulondolozwa ngokushesha.",
+    "coverUpload": "Layisha isithombe sekhava",
+    "coverSaved": "Ikhava ibuyekeziwe",
+    "coverFailed": "Ayikwazanga ukushintsha ikhava"
   },
   "assistant": {
     "title": "Umsizi",

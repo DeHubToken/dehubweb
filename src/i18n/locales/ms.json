@@ -927,7 +927,12 @@
     "cancel": "Batal",
     "confirm": "Sahkan",
     "paying": "Membayar...",
-    "payAmount": "Bayar {{amount}} {{currency}}"
+    "payAmount": "Bayar {{amount}} {{currency}}",
+    "coverTitle": "Kulit",
+    "coverHint": "Pilih bingkai atau muat naik imej. Disimpan serta-merta.",
+    "coverUpload": "Muat naik imej kulit",
+    "coverSaved": "Kulit dikemas kini",
+    "coverFailed": "Tidak dapat menukar kulit"
   },
   "assistant": {
     "title": "Pembantu",

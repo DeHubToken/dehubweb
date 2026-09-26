@@ -651,7 +651,12 @@
     "cancel": "বাতিল",
     "confirm": "নিশ্চিত",
     "paying": "পে অইতেছে...",
-    "payAmount": "{{amount}} {{currency}} দেও"
+    "payAmount": "{{amount}} {{currency}} দেও",
+    "coverTitle": "কভার",
+    "coverHint": "একটি ফ্রেম বেছে নিন বা ছবি আপলোড করুন। সঙ্গে সঙ্গে সেভ হয়।",
+    "coverUpload": "কভার ছবি আপলোড করুন",
+    "coverSaved": "কভার আপডেট হয়েছে",
+    "coverFailed": "কভার বদলানো যায়নি"
   },
   "assistant": {
     "title": "AI সাহায্যকারী",
