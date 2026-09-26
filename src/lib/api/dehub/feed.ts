@@ -1,4 +1,5 @@
 import { apiCall, getAuthToken } from './core';
+import { normalizeCategoryList } from '@/lib/category-names';
 import type {
   DeHubNFT,
   DeHubUser,
@@ -289,12 +290,14 @@ export async function getCategories(): Promise<DeHubCategory[]> {
   let cats: DeHubCategory[] = [];
   if (Array.isArray(response) && response.length > 0) {
     if (typeof response[0] === 'object' && 'name' in response[0]) {
-      cats = (response as DeHubCategory[]).map(c => ({ ...c, name: c.name.toLowerCase() }));
+      cats = (response as DeHubCategory[]).flatMap(c =>
+        normalizeCategoryList([c.name]).map(name => ({ ...c, name: name.toLowerCase() })),
+      );
     } else {
-      cats = (response as string[]).map((name) => ({
-        id: name.trim().toLowerCase(),
-        name: name.trim().toLowerCase(),
-        slug: name.toLowerCase().trim().replace(/\s+/g, '-'),
+      cats = normalizeCategoryList(response as string[]).map((name) => ({
+        id: name.toLowerCase(),
+        name: name.toLowerCase(),
+        slug: name.toLowerCase().replace(/\s+/g, '-'),
       }));
     }
   }
