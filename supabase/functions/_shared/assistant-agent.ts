@@ -16,9 +16,36 @@
  * so a new capability ships with the backend and is live everywhere at once.
  */
 
+import { aiChat } from './ai-chat.ts';
+
 const DEHUB_API_BASE = (Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io').replace(/\/$/, '');
 const SERVICE_SECRET = Deno.env.get('ASSISTANT_SERVICE_SECRET') || '';
 export const GATEWAY_URL = 'https://ai.gateway.lovable.dev/v1/chat/completions';
+
+/** The default tier — nearly all assistant traffic. */
+export const DEFAULT_MODEL = 'google/gemini-2.5-flash';
+
+/**
+ * One model round. The default tier goes Google-direct through aiChat like
+ * every other text feature, so the bulk of assistant traffic stops paying the
+ * gateway's markup out of the deploy credit pool; aiChat still falls back to
+ * the gateway if Google refuses. Pro and GPT stay on the gateway: the direct
+ * key does not serve them, and aiChat's ladder would quietly answer a Pro
+ * question — godmode, a requests-board reply — with Flash-Lite.
+ */
+export function postCompletion(
+  body: Record<string, unknown>,
+  lovableApiKey: string,
+  signal: AbortSignal,
+): Promise<Response> {
+  if (body.model === DEFAULT_MODEL) return aiChat(body, { signal, label: 'assistant' });
+  return fetch(GATEWAY_URL, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${lovableApiKey}`, 'Content-Type': 'application/json' },
+    signal,
+    body: JSON.stringify(body),
+  });
+}
 
 /**
  * `admin` is godmode's assistant. It is authenticated as an admin rather than
@@ -276,17 +303,16 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
 
     let data: any;
     try {
-      const res = await fetch(GATEWAY_URL, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${lovableApiKey}`, 'Content-Type': 'application/json' },
-        signal: controller.signal,
-        body: JSON.stringify({
+      const res = await postCompletion(
+        {
           model,
           messages: convo,
           ...(isFinalRound ? {} : { tools: toolSchemas }),
           max_completion_tokens: maxTokens,
-        }),
-      });
+        },
+        lovableApiKey,
+        controller.signal,
+      );
       if (!res.ok) throw new Error(`Gateway ${res.status}: ${(await res.text()).slice(0, 300)}`);
       data = await res.json();
     } finally {
@@ -353,11 +379,8 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
   const salvage = new AbortController();
   const salvageTimer = setTimeout(() => salvage.abort(), 15_000);
   try {
-    const finalRes = await fetch(GATEWAY_URL, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${lovableApiKey}`, 'Content-Type': 'application/json' },
-      signal: salvage.signal,
-      body: JSON.stringify({
+    const finalRes = await postCompletion(
+      {
         model,
         messages: [
           ...convo,
@@ -367,8 +390,10 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
           },
         ],
         max_completion_tokens: maxTokens,
-      }),
-    });
+      },
+      lovableApiKey,
+      salvage.signal,
+    );
     if (!finalRes.ok) throw new Error(`Gateway ${finalRes.status} on final turn`);
     const finalData = await finalRes.json();
 

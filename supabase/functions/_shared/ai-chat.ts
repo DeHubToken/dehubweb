@@ -65,6 +65,8 @@ export interface AiChatOptions {
   expectToolCall?: string;
   /** Prefixes log lines so a slow or failing tier is attributable. */
   label?: string;
+  /** Aborts whichever tier is in flight — the caller's timeout, not ours. */
+  signal?: AbortSignal;
 }
 
 /** Rebuilds a JSON response after the body has been read for inspection. */
@@ -108,6 +110,7 @@ async function tryDirect(
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ ...body, model }),
+        signal: opts.signal,
       });
 
       // Only a 404 is about the model id, and it will stay true for this
@@ -139,6 +142,8 @@ async function tryDirect(
       console.log(`${tag} answered by gemini direct (${model})`);
       return jsonResponse(text, res.status);
     } catch (e) {
+      // The caller gave up; asking the gateway now would answer nobody.
+      if (opts.signal?.aborted) throw e;
       console.log(`${tag} gemini direct threw: ${e instanceof Error ? e.message : 'unknown'}`);
       return null;
     }
@@ -176,5 +181,6 @@ export async function aiChat(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
+    signal: opts.signal,
   });
 }
