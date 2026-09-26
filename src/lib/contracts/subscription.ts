@@ -1,43 +1,24 @@
 /**
  * DeHub Subscription Contract
  * ===========================
- * Creator subscription plans, on chain. Two writes and three reads:
- *
- * - `createPlan`     — the creator lists a plan. Until this lands, the plan
- *                      exists only in our database and `buySubscription`
- *                      reverts for everyone.
- * - `buySubscription`— the subscriber pays. Pulls the plan price *plus* the
- *                      platform fee out of their wallet in one call.
- *
- * Two things about this contract shape the code below, and both were
- * established by simulating it rather than read off any documentation:
+ * Creator subscription plans, on chain. Creators list a plan with
+ * `createPlan`; subscribers no longer buy through this contract — checkout is
+ * a DHB transfer into DeHub custody (see useBuyPlan in hooks/use-subscriptions).
  *
  * **Duration is whole months, 0–12, and 0 means lifetime.** Anything else
  * reverts with "Duration should be between 0 to 12 (0 for lifetime)". n months
  * is n × 30 days, except 12, which is 365 days.
- *
- * **The fee is charged on top of the price, not taken out of it.** A 10 USDT
- * plan debits the buyer 11 and pays the creator the full 10. So the
- * balance check, the approval and the number shown on the confirm button all
- * have to be price + fee, or the transaction reverts on a balance the buyer
- * was told was enough. `quoteSubscriptionFee` asks the contract for that
- * buyer's actual fee — it varies with the badges they hold.
  */
 
 import type { TFunction } from 'i18next';
 import { Interface } from 'ethers';
 import {
   writeContractAA,
-  readContract,
   readContractAll,
-  approveERC20,
-  getERC20Balance,
-  getWalletAddress,
   switchChain,
 } from './aa-utils';
 import { toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
-import { ensureSubscriptionFunding } from './subscription-funding';
 
 /** Chains where the subscription contract is deployed and initialised. */
 export const SUBSCRIPTION_CONTRACTS: Partial<Record<number, string>> = {
@@ -136,86 +117,6 @@ export async function readOnChainPlan(
   }
 }
 
-/**
- * The platform fee this specific buyer would pay on top of the price.
- *
- * Badge holders pay less, so this cannot be a constant — it has to be asked
- * per buyer, per plan. Returns null when the read fails, which callers treat
- * as "do not claim a total you cannot stand behind".
- */
-export async function quoteSubscriptionFee(
-  creator: string,
-  subscriber: string,
-  duration: number,
-  chainId: ChainId,
-): Promise<bigint | null> {
-  const months = normaliseDuration(duration);
-  if (months === null || !isSubscriptionChain(chainId)) return null;
-
-  try {
-    return await readContract<bigint>(
-      getSubscriptionContract(chainId),
-      subscriptionInterface,
-      '_checkFeeByBadges',
-      [creator, subscriber, months],
-      chainId,
-    );
-  } catch (err) {
-    console.warn('[Subscription] fee quote failed:', err);
-    return null;
-  }
-}
-
-export interface OnChainSubscription {
-  startDate: Date;
-  endDate: Date;
-  isLifetime: boolean;
-}
-
-/** Lifetime subscriptions carry `type(uint256).max` as their end time. */
-const MAX_SANE_END_TIME = 253402300799n; // 9999-12-31
-
-export async function readOnChainSubscription(
-  creator: string,
-  subscriber: string,
-  duration: number,
-  chainId: ChainId,
-): Promise<OnChainSubscription | null> {
-  const months = normaliseDuration(duration);
-  if (months === null || !isSubscriptionChain(chainId)) return null;
-
-  try {
-    const rows = await readContract<
-      Array<{ creator: string; duration: bigint; startTime: bigint; endTime: bigint }>
-    >(
-      getSubscriptionContract(chainId),
-      subscriptionInterface,
-      'getSubscriptionData',
-      [creator, subscriber],
-      chainId,
-    );
-
-    let best: { startTime: bigint; endTime: bigint } | null = null;
-    for (const row of rows || []) {
-      if (BigInt(row.duration) !== BigInt(months)) continue;
-      if (!best || BigInt(row.endTime) > best.endTime) {
-        best = { startTime: BigInt(row.startTime), endTime: BigInt(row.endTime) };
-      }
-    }
-    if (!best) return null;
-
-    const lifetime = best.endTime > MAX_SANE_END_TIME;
-    return {
-      startDate: new Date(Number(best.startTime) * 1000),
-      endDate: lifetime ? new Date('9999-12-31T23:59:59Z') : new Date(Number(best.endTime) * 1000),
-      isLifetime: lifetime,
-    };
-  } catch (err) {
-    console.warn('[Subscription] getSubscriptionData read failed:', err);
-    return null;
-  }
-}
-
 // ── Writes ──
 
 export interface PublishPlanParams {
@@ -266,164 +167,4 @@ export async function publishPlanOnChain(
   );
 
   return { hash: result.hash, confirmed: result.wait(1).then((r) => r.hash) };
-}
-
-export interface BuySubscriptionParams {
-  creator: string;
-  planId: string | number;
-  duration: number;
-  /** Human-readable payment-token list price. The fee is added on top. */
-  price: number;
-  chainId: ChainId;
-  token: string;
-  decimals: number;
-  currency?: string;
-  /** Keeps checkout copy in step with an automatic shortfall swap. */
-  onFundingStage?: (message: string) => void;
-}
-
-export interface SubscriptionCost {
-  price: bigint;
-  fee: bigint;
-  total: bigint;
-  /**
-   * True when the contract actually answered the fee question, false when
-   * `total` rests on the assumed default below.
-   *
-   * The approval reads this. An unlimited allowance used to cover any fee the
-   * contract turned out to want; approving the exact total instead means an
-   * assumed fee that is too low reverts the purchase on allowance, which is a
-   * worse failure than the standing exposure that change removed. So a total
-   * built on a guess is approved with headroom and a quoted one is approved
-   * exactly.
-   */
-  feeQuoted: boolean;
-}
-
-/** What the buyer will actually be debited, fee included. */
-export async function getSubscriptionCost(
-  params: Omit<BuySubscriptionParams, 'price'> & { price: number; subscriber: string },
-): Promise<SubscriptionCost> {
-  const price = toWei(params.price, params.decimals);
-  const fee = await quoteSubscriptionFee(
-    params.creator,
-    params.subscriber,
-    params.duration,
-    params.chainId,
-  );
-  // A failed quote must not understate the total. The contract's default is
-  // 10%, so assume that rather than telling someone the price is the price and
-  // then reverting on their balance.
-  const resolvedFee = fee ?? price / 10n;
-  return { price, fee: resolvedFee, total: price + resolvedFee, feeQuoted: fee !== null };
-}
-
-/**
- * Buy a subscription. Approves the plan's token for the total (price + fee), then
- * calls the contract.
- */
-export async function buySubscriptionOnChain(
-  params: BuySubscriptionParams & { skipBalanceCheck?: boolean },
-): Promise<{ hash: string; confirmed: Promise<string>; cost: SubscriptionCost }> {
-  const months = normaliseDuration(params.duration);
-  if (months === null) {
-    throw new Error(
-      'This plan has a duration the contract will not accept — ask the creator to recreate it',
-    );
-  }
-
-  const contract = getSubscriptionContract(params.chainId);
-  await switchChain(params.chainId);
-
-  const subscriber = await getWalletAddress();
-  if (subscriber.toLowerCase() === params.creator.toLowerCase()) {
-    throw new Error('You cannot subscribe to yourself');
-  }
-
-  const cost = await getSubscriptionCost({ ...params, subscriber });
-
-  // Confirm the plan is actually live on this chain before spending anything.
-  // Without this the buyer pays gas to hit a revert whose message says nothing
-  // about the creator never having published.
-  const onChainPlan = await readOnChainPlan(params.creator, months, params.chainId);
-  if (!onChainPlan || !onChainPlan.status) {
-    throw new Error('This plan is not published on chain yet — the creator needs to publish it first');
-  }
-
-  let balance = params.skipBalanceCheck
-    ? cost.total
-    : await getERC20Balance(params.token, subscriber, params.chainId);
-
-  // Plans stay denominated and settled in their configured token. For the new
-  // fixed-dollar plans that token is USDT; if the buyer is short, fill only the
-  // gap from another liquid asset on the same chain before approving the plan.
-  // Legacy DHB plans retain their original direct-token behaviour.
-  const currency = (params.currency || '').toUpperCase();
-  if (
-    !params.skipBalanceCheck &&
-    balance < cost.total &&
-    (currency === 'USDT' || currency === 'USDC' || currency === 'USD')
-  ) {
-    await ensureSubscriptionFunding({
-      chainId: params.chainId,
-      owner: subscriber,
-      outputToken: params.token,
-      outputSymbol: currency === 'USD' ? 'USDT' : currency,
-      total: cost.total,
-      onStage: params.onFundingStage,
-    });
-    balance = await getERC20Balance(params.token, subscriber, params.chainId);
-  }
-
-  const allowance = await readContract<bigint>(
-    params.token,
-    new Interface(['function allowance(address owner, address spender) view returns (uint256)']),
-    'allowance',
-    [subscriber, contract],
-    params.chainId,
-  );
-
-  if (!params.skipBalanceCheck && balance < cost.total) {
-    const held = Number(balance) / 10 ** params.decimals;
-    const needed = Number(cost.total) / 10 ** params.decimals;
-    const displayCurrency = params.currency || 'tokens';
-    throw new Error(
-      `Not enough ${displayCurrency}. This subscription costs ${needed.toLocaleString()} ${displayCurrency} including fees, and you hold ${held.toLocaleString()}.`,
-    );
-  }
-
-  if (allowance < cost.total) {
-    // What this purchase costs, not everything the wallet will ever hold.
-    //
-    // An unlimited approval is a standing claim on the whole balance for as
-    // long as it is left in place, and this contract does not need one: a
-    // subscription is bought or renewed occasionally, so the saved approval is
-    // worth far less here than it is for tips, where the same wallet spends
-    // several times in a session and stream-controller caches the approval for
-    // exactly that reason. The swap and work paths already approve the amount.
-    //
-    // cost.total is the price including fees — the same figure the balance
-    // check above rejects against — so this cannot come up short when the
-    // contract answered the fee question.
-    //
-    // When it did not, `total` rests on the assumed 10% default, and approving
-    // that exactly turns a guess that is too low into a revert on allowance.
-    // The unlimited approval this replaced could never fail that way, so a
-    // guessed total gets a second helping of the assumed fee — enough for a
-    // real fee up to twice the default, and still nothing like a claim on the
-    // whole balance.
-    const approvalAmount = cost.feeQuoted ? cost.total : cost.total + cost.fee;
-    const approval = await approveERC20(params.token, contract, approvalAmount, params.chainId);
-    await approval.wait(1);
-  }
-
-  const result = await writeContractAA(
-    contract,
-    subscriptionInterface,
-    'buySubscription',
-    [params.creator, BigInt(params.planId), BigInt(months)],
-    { context: 'subscribe', chainId: params.chainId },
-  );
-
-  return { hash: result.hash, confirmed: result.wait(1).then((r) => r.hash), cost };
 }
