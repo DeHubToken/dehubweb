@@ -6368,6 +6368,7 @@
   },
   "glossary": {
     "fractionsDesc": "DeHub izkalts ieraksts kļūst par NFT, kas sadalīts 1 000 daļās, un autors sāk ar visām 1 000 — 100 % satura īpašumtiesību. Kalšana nav obligāta, un to var veikt publicējot vai vēlāk.",
+    "ownershipBarDesc": "Progresa josla ieraksta informācijas lapā, kas rāda, cik no 1 000 daļām autoram vēl pieder un cik ir izdalītas vai pārdotas.",
     "tokenIdDesc": "Unikāls ķēdes identifikators, ko ieraksts saņem, kad tas tiek izkalts kā NFT blokķēdē. Kalšana nav obligāta, tāpēc ierakstam, kas nav izkalts, vēl nav Token ID.",
     "tokenIdInfoDesc": "Unikālais ķēdes identifikators, ko ieraksts saņem pēc tam, kad tas izkalts kā NFT. Izkaltiem ierakstiem tas redzams lapas Ieraksta informācija augšdaļā."
   },

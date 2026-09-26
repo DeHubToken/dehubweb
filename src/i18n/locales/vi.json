@@ -6071,6 +6071,7 @@
       ]
     },
     "fractionsDesc": "Một bài viết được đúc trên DeHub sẽ trở thành một NFT chia thành 1.000 phân số, và người sáng tạo bắt đầu với toàn bộ 1.000 — sở hữu 100% nội dung. Việc đúc là tùy chọn và có thể thực hiện khi bạn đăng hoặc sau này.",
+    "ownershipBarDesc": "Thanh tiến trình trên trang Thông tin bài viết cho biết người sáng tạo còn giữ bao nhiêu trong số 1.000 phân số và bao nhiêu đã được phân phối hoặc bán.",
     "tokenIdDesc": "Một mã định danh on-chain duy nhất mà bài viết nhận được khi được đúc thành NFT trên blockchain. Việc đúc là tùy chọn, nên bài viết chưa được đúc sẽ chưa có Token ID.",
     "tokenIdInfoDesc": "Mã định danh on-chain duy nhất mà bài viết nhận được khi đã được đúc thành NFT. Hiển thị ở đầu trang Thông tin bài viết đối với các bài viết đã đúc."
   },

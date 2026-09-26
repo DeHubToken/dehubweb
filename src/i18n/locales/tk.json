@@ -4040,6 +4040,7 @@
   },
   "glossary": {
     "fractionsDesc": "DeHub-da mint edilen ýazgy 1,000 paýa bölünen NFT-e öwrülýär we döredijä başda ähli 1,000 paý degişli bolýar — mazmunyň 100% eýeçiligi. Mint etmek hökmany däl we çap edilende ýa-da soňra amala aşyrylyp bilner.",
+    "ownershipBarDesc": "Ýazgy maglumatlary sahypasyndaky ösüş zolagy: 1,000 paýdan näçesiniň entek döredijide durandygyny we näçesiniň paýlanandygyny ýa-da satylandygyny görkezýär.",
     "tokenIdDesc": "Ýazgy blokçeýnde NFT hökmünde mint edilende alýan özboluşly blokçeýn identifikatory. Mint etmek hökmany däl, şonuň üçin mint edilmedik ýazgynyň entek Token ID-si ýok.",
     "tokenIdInfoDesc": "Ýazgynyň NFT hökmünde mint edilenden soň alýan özboluşly blokçeýn identifikatory. Mint edilen ýazgylar üçin Ýazgy maglumatlary sahypasynyň ýokarsynda görkezilýär."
   },

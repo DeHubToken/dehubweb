@@ -6314,6 +6314,7 @@
       ]
     },
     "fractionsDesc": "Post wybity na DeHub staje się NFT podzielonym na 1000 frakcji, a twórca zaczyna ze wszystkimi 1000 — 100% własności treści. Wybicie jest opcjonalne i może nastąpić przy publikacji lub później.",
+    "ownershipBarDesc": "Pasek postępu na stronie informacji o poście, który pokazuje, ile z 1000 frakcji twórca wciąż posiada, a ile zostało rozdanych lub sprzedanych.",
     "tokenIdDesc": "Unikalny identyfikator on-chain, który post otrzymuje, gdy zostaje wybity jako NFT na blockchainie. Wybicie jest opcjonalne, więc post, który nie został wybity, nie ma jeszcze Token ID.",
     "tokenIdInfoDesc": "Unikalny identyfikator on-chain, który post otrzymuje po wybiciu jako NFT. W przypadku wybitych postów jest wyświetlany u góry strony Informacje o poście."
   },

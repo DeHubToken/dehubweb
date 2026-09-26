@@ -6279,6 +6279,7 @@
   },
   "glossary": {
     "fractionsDesc": "Ett inlägg som mintas på DeHub blir en NFT uppdelad i 1 000 fraktioner, och skaparen börjar med alla 1 000 — 100 % ägande av innehållet. Mintning är valfritt och kan göras när du publicerar eller senare.",
+    "ownershipBarDesc": "En förloppsindikator på sidan Inläggsinfo som visar hur många av de 1 000 fraktionerna skaparen fortfarande har och hur många som har delats ut eller sålts.",
     "tokenIdDesc": "En unik on-chain-identifierare som ett inlägg får när det mintas som en NFT på blockkedjan. Mintning är valfritt, så ett inlägg som inte har mintats har inget Token ID ännu.",
     "tokenIdInfoDesc": "Den unika on-chain-identifierare som ett inlägg får när det har mintats som en NFT. Visas högst upp på sidan Inläggsinfo för mintade inlägg."
   },

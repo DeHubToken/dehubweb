@@ -6334,6 +6334,7 @@
   },
   "glossary": {
     "fractionsDesc": "Chapisho lililofuliwa kwenye DeHub linakuwa NFT iliyogawanywa katika sehemu 1,000, na mtayarishi anaanza akiwa na zote 1,000 — umiliki wa 100% wa maudhui. Kufua ni hiari na kunaweza kufanyika unapochapisha au baadaye.",
+    "ownershipBarDesc": "Upau wa maendeleo kwenye ukurasa wa Maelezo ya Chapisho unaoonyesha ni sehemu ngapi kati ya 1,000 ambazo mtayarishi bado anazo na ngapi zimegawanywa au kuuzwa.",
     "tokenIdDesc": "Kitambulisho cha kipekee kwenye mnyororo ambacho chapisho hupata linapofuliwa kama NFT kwenye blockchain. Kufua ni hiari, kwa hivyo chapisho ambalo halijafuliwa bado halina Token ID.",
     "tokenIdInfoDesc": "Kitambulisho cha kipekee kwenye mnyororo ambacho chapisho hupata mara linapofuliwa kama NFT. Huonyeshwa juu ya ukurasa wa Maelezo ya Chapisho kwa machapisho yaliyofuliwa."
   },

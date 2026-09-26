@@ -6396,6 +6396,7 @@
   },
   "glossary": {
     "fractionsDesc": "DeHub'da basılan bir gönderi 1.000 paya bölünmüş bir NFT olur ve içerik üreticisi 1.000 payın tamamıyla başlar — içeriğin %100 sahipliği. Mint etmek isteğe bağlıdır; yayınlarken ya da daha sonra yapılabilir.",
+    "ownershipBarDesc": "Gönderi Bilgisi sayfasında, 1.000 payın kaçının hâlâ içerik üreticisinde olduğunu ve kaçının dağıtıldığını ya da satıldığını gösteren ilerleme çubuğu.",
     "tokenIdDesc": "Bir gönderinin blokzincirde NFT olarak basıldığında aldığı benzersiz zincir üstü kimlik. Mint etmek isteğe bağlı olduğundan, henüz basılmamış bir gönderinin Token ID'si yoktur.",
     "tokenIdInfoDesc": "Bir gönderinin NFT olarak basıldığında aldığı benzersiz zincir üstü kimlik. Basılmış gönderiler için Gönderi Bilgisi sayfasının üst kısmında gösterilir."
   },

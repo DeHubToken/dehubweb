@@ -6276,6 +6276,7 @@
   },
   "glossary": {
     "fractionsDesc": "Objava iskovana na DeHubu postaje NFT podijeljen na 1.000 frakcija, a kreator počinje sa svih 1.000 — 100 % vlasništva nad sadržajem. Kovanje nije obavezno i može se obaviti pri objavljivanju ili kasnije.",
+    "ownershipBarDesc": "Traka napretka na stranici s informacijama o objavi koja pokazuje koliko od 1.000 frakcija kreator još drži, a koliko ih je podijeljeno ili prodano.",
     "tokenIdDesc": "Jedinstveni identifikator na blockchainu koji objava dobiva kad se iskuje kao NFT. Kovanje nije obavezno, pa objava koja nije iskovana još nema Token ID.",
     "tokenIdInfoDesc": "Jedinstveni identifikator na blockchainu koji objava dobiva nakon što se iskuje kao NFT. Za iskovane objave prikazuje se na vrhu stranice Informacije o objavi."
   },

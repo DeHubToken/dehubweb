@@ -6279,6 +6279,7 @@
   },
   "glossary": {
     "fractionsDesc": "DeHubis vermitud postitusest saab NFT, mis on jagatud 1000 fraktsiooniks, ja looja alustab kõigi 1000-ga — 100% sisu omandiõigusest. Vermimine on valikuline ja võib toimuda avaldamisel või hiljem.",
+    "ownershipBarDesc": "Postituse info lehel olev edenemisriba, mis näitab, mitu 1000 fraktsioonist on loojal veel alles ja mitu on jagatud või müüdud.",
     "tokenIdDesc": "Unikaalne plokiahela identifikaator, mille postitus saab, kui see vermitakse plokiahelas NFT-na. Vermimine on valikuline, seega vermimata postitusel pole veel Token ID-d.",
     "tokenIdInfoDesc": "Unikaalne plokiahela identifikaator, mille postitus saab, kui see on NFT-na vermitud. Kuvatakse vermitud postituste puhul postituse teabe lehe ülaosas."
   },

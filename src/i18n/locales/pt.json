@@ -6397,6 +6397,7 @@
   },
   "glossary": {
     "fractionsDesc": "Um post cunhado no DeHub se torna um NFT dividido em 1.000 frações, e o criador começa com todas as 1.000 — 100% de propriedade do conteúdo. A cunhagem é opcional e pode acontecer ao publicar ou depois.",
+    "ownershipBarDesc": "Uma barra de progresso na página de informações do post que mostra quantas das 1.000 frações o criador ainda detém e quantas foram distribuídas ou vendidas.",
     "tokenIdDesc": "Um identificador on-chain único que um post recebe quando é cunhado como NFT na blockchain. A cunhagem é opcional, então um post que não foi cunhado ainda não tem Token ID.",
     "tokenIdInfoDesc": "O identificador on-chain único que um post recebe depois de ser cunhado como NFT. Exibido no topo da página de Informações do Post para posts cunhados."
   },

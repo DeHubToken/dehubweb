@@ -3418,6 +3418,7 @@
   },
   "glossary": {
     "fractionsDesc": "Post wey dem mint for DeHub go turn NFT wey dem divide into 1,000 fraction, and di creator go start with all 1,000 — 100% ownership of di content. Minting no be by force, e fit happen when you publish or later.",
+    "ownershipBarDesc": "Progress bar for Post Info page wey dey show how many of di 1,000 fraction di creator still hold and how many don share comot or sell.",
     "tokenIdDesc": "Special on-chain ID wey post dey get when dem mint am as NFT for blockchain. Minting no be by force, so post wey dem never mint no get Token ID yet.",
     "tokenIdInfoDesc": "Di special on-chain ID wey post dey get once dem mint am as NFT. E dey show for top of di Post Info page for post wey dem don mint."
   },

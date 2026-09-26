@@ -6596,6 +6596,7 @@
   },
   "glossary": {
     "fractionsDesc": "Siaran yang dicetak di DeHub menjadi NFT yang dibahagikan kepada 1,000 pecahan, dan pencipta bermula dengan kesemua 1,000 — 100% pemilikan kandungan. Pencetakan adalah pilihan dan boleh dilakukan semasa anda menerbitkan atau kemudian.",
+    "ownershipBarDesc": "Bar kemajuan pada halaman Maklumat Siaran yang menunjukkan berapa daripada 1,000 pecahan masih dipegang oleh pencipta berbanding berapa yang telah diedarkan atau dijual.",
     "tokenIdDesc": "Pengecam unik dalam rantai yang diperoleh siaran apabila ia dicetak sebagai NFT di blockchain. Pencetakan adalah pilihan, jadi siaran yang belum dicetak belum mempunyai Token ID.",
     "tokenIdInfoDesc": "Pengecam unik dalam rantai yang diperoleh siaran sebaik sahaja ia dicetak sebagai NFT. Dipaparkan di bahagian atas halaman Maklumat Siaran untuk siaran yang telah dicetak."
   },
