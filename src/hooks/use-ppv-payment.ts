@@ -143,8 +143,8 @@ export function usePPVPayment({
 
     try {
       const [
-        { getWalletAddress, getERC20Balance, switchChain, waitForERC20Balance },
-        { isAutoSwapSupported, getSwapQuote, applySlippage, swapETHForDHB, getNativeBalance },
+        { getWalletAddress, getERC20Balance, switchChain },
+        { isAutoSwapSupported },
         { sendFundsForPPV },
         { isPaymentRouterAvailable, unlockPPVAndTipViaRouter },
       ] = await Promise.all([
@@ -191,10 +191,9 @@ export function usePPVPayment({
         txHash = result.hash;
       } else {
         const amountWei = toWei(price, DHB_TOKEN.decimals);
-        let dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+        const dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
 
         if (dhbBalance < amountWei) {
-          const shortfallWei = amountWei - dhbBalance;
           const balanceHuman = Number(fromWei(dhbBalance));
           // Round up, and never to nothing: asking for the exact fractional
           // gap can still leave the wallet a wei short of the price, and a
@@ -216,49 +215,11 @@ export function usePPVPayment({
             setIsPaying(false);
           };
 
-          if (!isAutoSwapSupported(chainId)) {
-            raiseShortfall(false);
-            return;
-          }
-
-          toast.loading('Getting swap quote...', { id: 'ppv-payment' });
-          const ethQuoteResult = await getSwapQuote(shortfallWei);
-
-          // No quote means no DHB liquidity for this size — a top-up step
-          // offering a swap would only fail the same way a second time.
-          if (!ethQuoteResult) {
-            raiseShortfall(false);
-            return;
-          }
-
-          const ethNeeded = applySlippage(ethQuoteResult.amountIn);
-          const ethBalance = await getNativeBalance(signerAddress, chainId);
-
-          // Too little ETH to cover the gap silently. The step can still get
-          // there from any other Base token in the wallet, so it opens with
-          // the swap route offered rather than closed.
-          if (ethBalance < ethNeeded) {
-            raiseShortfall(true);
-            return;
-          }
-
-          toast.loading(dhbText('Swapping ETH → DHB...'), { id: 'ppv-payment' });
-          await swapETHForDHB(shortfallWei, ethNeeded, signerAddress);
-          // Read back with patience: a mined swap can still be invisible to
-          // whichever public RPC node answers next, and treating that as a
-          // failed swap sends someone who has already paid back to the start.
-          dhbBalance = await waitForERC20Balance(
-            chainConfig.dhbToken,
-            signerAddress,
-            amountWei,
-            chainId,
-          );
-
-          if (dhbBalance < amountWei) {
-            toast.error(dhbText('Swap completed but DHB balance still insufficient. Try again.'), { id: 'ppv-payment' });
-            setIsPaying(false);
-            return;
-          }
+          // The top-up step funds the gap from any token, DeHub Pay first and
+          // Uniswap only as its fallback. A silent ETH swap here would skip
+          // DeHub Pay entirely, so every Base shortfall goes to the step.
+          raiseShortfall(isAutoSwapSupported(chainId));
+          return;
         }
 
         toast.loading('Unlocking content...', { id: 'ppv-payment' });
