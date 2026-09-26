@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { aiChat } from "../_shared/ai-chat.ts";
+import { rateLimitByIp } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,6 +12,10 @@ serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
+
+  // Publicly callable with the anon key and every call is a paid model run.
+  const limited = await rateLimitByIp(req, 'generate-lyrics', { limit: 30, windowMs: 60 * 60 * 1000 });
+  if (limited) return limited;
 
   try {
     const { title, style, voiceGender, existingLyrics, userPrompt } = await req.json();

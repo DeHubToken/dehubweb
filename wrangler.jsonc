@@ -23,6 +23,35 @@
     "binding": "ASSETS",
     "directory": "./dist",
     "not_found_handling": "single-page-application",
-    "run_worker_first": true
+    // The Worker runs first for everything EXCEPT the folders below. Those are
+    // plain files with no Worker logic behind them (no SSR, no redirects, no
+    // per-route headers beyond public/_headers), so they are served straight
+    // from assets and never bill an invocation. Negative patterns win over
+    // "/*", and order does not matter.
+    //
+    // Deliberately still Worker-first:
+    //   /assets/*          stale-deploy chunks must 404, not get the SPA shell
+    //                      at 200 cached immutable for a year (see the
+    //                      /assets/ branch in CLOUDFLARE_WORKER_SEO.js).
+    //   /gods-eye-game/*   index.html gets its Cache-Control pinned in code.
+    //   /arcade, /docs, /guides, /radio, /editor, /manual
+    //                      share their prefix with SPA / SSR routes.
+    // Trade-off on the excluded paths: mirror hosts (staging, www, dehub.net)
+    // serve them as-is, without the apex 301 or the noindex stamp.
+    "run_worker_first": [
+      "/*",
+      "!/media/*",
+      "!/og/*",
+      "!/sounds/*",
+      "!/brand/*",
+      "!/brand-kit/*",
+      "!/osaka/*",
+      "!/theme-icons/*",
+      "!/war-game/*",
+      "!/chess-game/*",
+      "!/jungle-game/*",
+      "!/street-slayer-game/*",
+      "!/trenchstar-game/*"
+    ]
   }
 }

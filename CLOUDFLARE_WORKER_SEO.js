@@ -3787,6 +3787,51 @@ export async function cachedSitemap(request, ctx, build) {
   return fresh || hit || null;
 }
 
+/**
+ * Crawler renders proxied through the ssr-seo function, held for five minutes.
+ *
+ * Every bot hit on a post, profile or community page paid a round trip to the
+ * function plus the enrichment reads below it (post record, author feed), and
+ * nothing kept the result: `s-maxage` on a Worker's own generated response
+ * does nothing unless the Worker puts it in the cache itself (see
+ * cachedSitemap). Social unfurlers and search bots re-fetch the same URLs in
+ * bursts, so a short hold removes most of that load without letting a card
+ * go stale for long.
+ *
+ * The key is the full request URL (host, path and query, so ?hl= variants and
+ * mirror hosts stay separate) plus a marker param, so a bot render can never
+ * be confused with anything cached for browsers under the bare URL. Only the
+ * finished 200 is stored; 404s and fallbacks are not.
+ */
+const SSR_CACHE_SECONDS = 300;
+
+function ssrCacheKey(requestUrl) {
+  const u = new URL(requestUrl);
+  u.searchParams.set('__dh_ssr', '1');
+  return new Request(u.toString(), { method: 'GET' });
+}
+
+async function ssrCacheGet(key) {
+  try {
+    if (typeof caches === 'undefined' || !caches.default) return null;
+    return (await caches.default.match(key)) || null;
+  } catch {
+    return null;
+  }
+}
+
+function ssrCachePut(ctx, key, resp) {
+  try {
+    if (typeof caches === 'undefined' || !caches.default) return;
+    const copy = new Response(resp.clone().body, resp);
+    copy.headers.set('Cache-Control', `public, s-maxage=${SSR_CACHE_SECONDS}`);
+    const put = caches.default.put(key, copy).catch((e) => console.error('[Edge] SSR cache put failed:', e));
+    if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(put);
+  } catch (e) {
+    console.error('[Edge] SSR cache put failed:', e);
+  }
+}
+
 async function handleRequest(request, env, ctx) {
   request = canonicalOriginRequest(request);
   const url = new URL(request.url);
@@ -4843,6 +4888,10 @@ async function handleRequest(request, env, ctx) {
   // being handed to crawlers as a dead end. /posts/<n> and /newpost/<n> it has
   // never heard of at all. The fn emits its own canonical at the /app twin, so
   // the alternate shapes consolidate there instead of competing.
+  const ssrKey = ssrCacheKey(request.url);
+  const ssrHit = await ssrCacheGet(ssrKey);
+  if (ssrHit) return ssrHit;
+
   let ssrPath = pathname;
   const newPostSlug = pathname.match(/^\/(?:app\/)?newpost\/(\d+)\/?$/);
   const shortPostPath = pathname.match(/^\/posts\/(\d+)(?:\/b(?:\/[^/]+)?)?\/?$/);
@@ -5168,7 +5217,7 @@ async function handleRequest(request, env, ctx) {
       html = localizePage(html, '/', requestedLocale(url), await seoI18nTable(env, request.url));
     }
 
-    return guard(new Response(html, {
+    const rendered = await guard(new Response(html, {
       status: 200,
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
@@ -5180,6 +5229,8 @@ async function handleRequest(request, env, ctx) {
         ...(isReferral ? { 'X-Robots-Tag': 'noindex' } : {}),
       },
     }));
+    if (isBot && rendered.status === 200) ssrCachePut(ctx, ssrKey, rendered);
+    return rendered;
   } catch (e) {
     if (e.name === 'AbortError') {
       console.error(`[Edge] SSR timeout for ${pathname}`);
