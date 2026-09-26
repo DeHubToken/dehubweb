@@ -531,7 +531,12 @@
     "stageBridge": "Se trimite {{symbol}} de pe {{chain}}…",
     "stageArriving": "Ajunge pe Base, de obicei câteva secunde…",
     "stageSwap": "Se cumpără DHB pe Uniswap…",
-    "payFailed": "Nu s-a putut converti {{symbol}} în DHB"
+    "payFailed": "Nu s-a putut converti {{symbol}} în DHB",
+    "stagePay": "Se plătește DeHub Pay cu {{symbol}}…",
+    "stageDelivering": "DeHub Pay trimite DHB-ul dumneavoastră…",
+    "payViaDpay": "Plătit către DeHub Pay, DHB ajunge în aproximativ 30s",
+    "payViaBridgeDpay": "Mutat pe Base și plătit către DeHub Pay, DHB ajunge în aproximativ un minut",
+    "dmSent": "Ați trimis {{amount}} DHB către {{name}}!"
   },
   "postOptions": {
     "options": "Opțiuni",
@@ -6134,5 +6139,21 @@
     "openExchange": "Open Exchange",
     "done": "Gata",
     "back": "Înapoi"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Soldul dumneavoastră",
+    "youNeed": "Aveți nevoie de",
+    "checking": "Se verifică portofelul…",
+    "payHint": "Plătiți cu orice aveți în portofel. Se transformă în DHB și deblochează imediat.",
+    "toppingUp": "Se reîncarcă…",
+    "topUpUnlock": "Reîncărcați și deblocați",
+    "orFund": "Sau adăugați fonduri în alt mod",
+    "paused": "Transferurile DHB sunt momentan suspendate on-chain, așa că această deblocare nu poate fi finalizată încă. Încercați din nou în curând.",
+    "otherChain": "Această postare se decontează pe alt lanț, deci aveți nevoie de DHB în portofelul de acolo.",
+    "buyCard": "Cumpărați DHB cu cardul",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Transferați fonduri",
+    "moveFundsHint": "Schimbați sau depuneți din alt lanț",
+    "notNow": "Nu acum"
   }
 }

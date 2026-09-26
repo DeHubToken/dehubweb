@@ -529,7 +529,12 @@
     "stageBridge": "Отправляем {{symbol}} из {{chain}}…",
     "stageArriving": "Зачисление в Base, обычно за несколько секунд…",
     "stageSwap": "Покупаем DHB на Uniswap…",
-    "payFailed": "Не удалось конвертировать {{symbol}} в DHB"
+    "payFailed": "Не удалось конвертировать {{symbol}} в DHB",
+    "stagePay": "Оплата DeHub Pay в {{symbol}}…",
+    "stageDelivering": "DeHub Pay отправляет ваши DHB…",
+    "payViaDpay": "Оплачено через DeHub Pay, DHB поступят примерно через 30 с",
+    "payViaBridgeDpay": "Перенесено в Base и оплачено через DeHub Pay, DHB поступят примерно через минуту",
+    "dmSent": "Отправлено {{amount}} DHB пользователю {{name}}!"
   },
   "postOptions": {
     "options": "Опции",
@@ -6303,5 +6308,21 @@
     "openExchange": "Открытая биржа",
     "done": "Готово",
     "back": "Назад"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Ваш баланс",
+    "youNeed": "Нужно",
+    "checking": "Проверяем кошелёк…",
+    "payHint": "Платите любым активом из кошелька. Он превратится в DHB, и контент откроется сразу.",
+    "toppingUp": "Пополнение…",
+    "topUpUnlock": "Пополнить и разблокировать",
+    "orFund": "Или пополните другим способом",
+    "paused": "Переводы DHB сейчас приостановлены в блокчейне, поэтому разблокировка пока невозможна. Попробуйте чуть позже.",
+    "otherChain": "Этот пост оплачивается в другой сети, поэтому там в кошельке нужны DHB.",
+    "buyCard": "Купить DHB картой",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Перевести средства",
+    "moveFundsHint": "Обмен или депозит из другой сети",
+    "notNow": "Не сейчас"
   }
 }

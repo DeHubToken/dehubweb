@@ -798,7 +798,12 @@
     "stageBridge": "Menghantar {{symbol}} dari {{chain}}…",
     "stageArriving": "Tiba di Base, biasanya beberapa saat…",
     "stageSwap": "Membeli DHB di Uniswap…",
-    "payFailed": "Tidak dapat menukar {{symbol}} kepada DHB"
+    "payFailed": "Tidak dapat menukar {{symbol}} kepada DHB",
+    "stagePay": "Membayar DeHub Pay dengan {{symbol}}…",
+    "stageDelivering": "DeHub Pay sedang menghantar DHB anda…",
+    "payViaDpay": "Dibayar kepada DeHub Pay, DHB tiba dalam kira-kira 30s",
+    "payViaBridgeDpay": "Dipindahkan ke Base dan dibayar kepada DeHub Pay, DHB tiba dalam kira-kira seminit",
+    "dmSent": "{{amount}} DHB dihantar kepada {{name}}!"
   },
   "postOptions": {
     "options": "Pilihan",
@@ -6558,5 +6563,21 @@
     "openExchange": "Pertukaran Terbuka",
     "done": "Selesai",
     "back": "Kembali"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Baki anda",
+    "youNeed": "Anda perlukan",
+    "checking": "Menyemak dompet anda…",
+    "payHint": "Bayar dengan apa sahaja dalam dompet anda. Ia ditukar kepada DHB dan dibuka serta-merta.",
+    "toppingUp": "Menambah nilai…",
+    "topUpUnlock": "Tambah nilai & buka",
+    "orFund": "Atau tambah dana dengan cara lain",
+    "paused": "Pemindahan DHB dijeda secara on-chain buat masa ini, jadi buka kunci ini belum boleh diteruskan. Cuba lagi sebentar lagi.",
+    "otherChain": "Siaran ini diselesaikan di rantaian lain, jadi ia memerlukan DHB dalam dompet anda di sana.",
+    "buyCard": "Beli DHB dengan kad",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Pindahkan dana masuk",
+    "moveFundsHint": "Tukar atau deposit dari rantaian lain",
+    "notNow": "Bukan sekarang"
   }
 }

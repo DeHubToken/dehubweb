@@ -528,7 +528,12 @@
     "stageBridge": "Адпраўка {{symbol}} з {{chain}}…",
     "stageArriving": "Паступленне ў Base, звычайна некалькі секунд…",
     "stageSwap": "Купля DHB у Uniswap…",
-    "payFailed": "Не ўдалося канвертаваць {{symbol}} у DHB"
+    "payFailed": "Не ўдалося канвертаваць {{symbol}} у DHB",
+    "stagePay": "Аплата ў DeHub Pay праз {{symbol}}…",
+    "stageDelivering": "DeHub Pay адпраўляе вашы DHB…",
+    "payViaDpay": "Аплачана ў DeHub Pay, DHB паступяць прыкладна праз 30 с",
+    "payViaBridgeDpay": "Перанесена ў Base і аплачана ў DeHub Pay, DHB паступяць прыкладна праз хвіліну",
+    "dmSent": "Адпраўлена {{amount}} DHB карыстальніку {{name}}!"
   },
   "postOptions": {
     "options": "Параметры",
@@ -6150,5 +6155,21 @@
     "openExchange": "Адкрыць абмен",
     "done": "Гатова",
     "back": "Назад"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Ваш баланс",
+    "youNeed": "Вам трэба",
+    "checking": "Правяраем ваш кашалёк…",
+    "payHint": "Плаціце любымі сродкамі з кашалька. Яны ператворацца ў DHB, і кантэнт адкрыецца адразу.",
+    "toppingUp": "Папаўненне…",
+    "topUpUnlock": "Папоўніць і адкрыць",
+    "orFund": "Або дадайце сродкі іншым спосабам",
+    "paused": "Пераводы DHB зараз прыпынены ў сетцы, таму адкрыць пакуль не атрымаецца. Паспрабуйце крыху пазней.",
+    "otherChain": "Гэты пост разлічваецца ў іншай сетцы, таму патрэбныя DHB у вашым кашальку там.",
+    "buyCard": "Купіць DHB картай",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Перавесці сродкі",
+    "moveFundsHint": "Абмен або дэпазіт з іншай сеткі",
+    "notNow": "Не зараз"
   }
 }

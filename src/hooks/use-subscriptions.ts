@@ -23,6 +23,12 @@ import type { ChainId } from '@/components/app/ChainSelector';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { toastTxError } from '@/lib/tx-error-toast';
+import { fundTipFromSource } from '@/lib/tip-funding-run';
+import type { TipFundingSource } from '@/lib/tip-funding';
+import type { TFunction } from 'i18next';
+
+/** Funding already showed its own error; the buy stops without a second toast. */
+const FUNDING_ABORTED = 'FUNDING_ABORTED';
 
 /**
  * A subscription is two things happening in order: a row in our database and a
@@ -334,7 +340,12 @@ export function useBuyPlan() {
   const [stage, setStage] = useState<ChainStage>('idle');
 
   const mutation = useMutation({
-    mutationFn: async ({ plan, chainId }: { plan: SubscriptionPlan; chainId?: ChainId }) => {
+    mutationFn: async ({ plan, chainId, fundFrom }: {
+      plan: SubscriptionPlan;
+      chainId?: ChainId;
+      /** Another token to turn into the plan's DHB first (Base plans only). */
+      fundFrom?: { source: TipFundingSource; walletAddress: string; t: TFunction } | null;
+    }) => {
       const planId = plan.id || plan._id;
       if (!planId) throw new Error('Plan is missing an id');
 
@@ -352,6 +363,14 @@ export function useBuyPlan() {
         !intent.dhbAmount
       ) {
         throw new Error('The DHB subscription checkout is not ready — please try again shortly');
+      }
+
+      // Paying with another token: DeHub Pay (or Uniswap as the fallback)
+      // turns it into exactly this plan's DHB on Base before the transfer.
+      if (fundFrom && targetChain === BASE_CHAIN_ID) {
+        setStage('funding');
+        const ready = await fundTipFromSource(fundFrom.source, Number(intent.dhbAmount), fundFrom.walletAddress, fundFrom.t, 'subscribe-fund');
+        if (!ready) throw new Error(FUNDING_ABORTED);
       }
 
       // DHB stays in DeHub custody. Nothing is sold or swapped at checkout;
@@ -388,6 +407,7 @@ export function useBuyPlan() {
     onError: (error: Error) => {
       setStage('idle');
       invalidate();
+      if (error.message === FUNDING_ABORTED) return;
       toastTxError(error, 'Could not subscribe', { context: 'subscribe' });
     },
     onSettled: () => setStage('idle'),

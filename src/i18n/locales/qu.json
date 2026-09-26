@@ -517,7 +517,12 @@
     "stageBridge": "{{symbol}}-ta {{chain}}-manta kachachkan…",
     "stageArriving": "Base-man chayamuchkan, sapa kuti pisi sikundukunallapi…",
     "stageSwap": "Uniswap-pi DHB rantichkan…",
-    "payFailed": "Manam {{symbol}}-ta DHB-man tikrayta atikurqanchu"
+    "payFailed": "Manam {{symbol}}-ta DHB-man tikrayta atikurqanchu",
+    "stagePay": "DeHub Pay-man {{symbol}}-wan pagachkan…",
+    "stageDelivering": "DeHub Pay DHB-ykita apachichkan…",
+    "payViaDpay": "DeHub Pay-man pagasqa, DHB yaqa 30 sikundupi chayamunqa",
+    "payViaBridgeDpay": "Base-man astasqa, DeHub Pay-man pagasqa, DHB yaqa huk minutupi chayamunqa",
+    "dmSent": "{{amount}} DHB {{name}}-man apachisqa!"
   },
   "postOptions": {
     "options": "Akllakuna",
@@ -4074,5 +4079,21 @@
     "openExchange": "Kichasqa Intercambio",
     "done": "Ñam",
     "back": "Qipaman"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Balance-niyki",
+    "youNeed": "Kaytam munanki",
+    "checking": "Billeteraykita qhawachkan…",
+    "payHint": "Billeteraykipi ima kaqwanpas pagay. DHB-man tukun, chaylla kichakun.",
+    "toppingUp": "Huntachkan…",
+    "topUpUnlock": "Huntay & kichay",
+    "orFund": "Otaq huk ñanwan qullqita yapay",
+    "paused": "DHB apachiykuna kunan on-chain sayachisqa kachkan, chayrayku kay kichayqa manaraq atikunchu. Aswan qhipaman yapamanta kallpachakuy.",
+    "otherChain": "Kay qillqaqa huk chain-pi paganakun, chayrayku chaypi billeteraykipi DHB kananmi.",
+    "buyCard": "Tarjetawan DHB rantiy",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Qullqita haykuchiy",
+    "moveFundsHint": "Huk chain-manta tikray otaq churay",
+    "notNow": "Manaraq"
   }
 }

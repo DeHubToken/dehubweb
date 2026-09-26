@@ -514,7 +514,12 @@
     "stageBridge": "كنصيفطو {{symbol}} من {{chain}}…",
     "stageArriving": "كيوصل ل Base، عادةً شي ثواني…",
     "stageSwap": "كنشريو DHB ف Uniswap…",
-    "payFailed": "ماقدرناش نبدّلو {{symbol}} لـ DHB"
+    "payFailed": "ماقدرناش نبدّلو {{symbol}} لـ DHB",
+    "stagePay": "كنخلّصو DeHub Pay بـ {{symbol}}…",
+    "stageDelivering": "DeHub Pay كيصيفط ليك DHB…",
+    "payViaDpay": "تخلّص DeHub Pay، DHB غادي يوصل ف شي 30 ثانية",
+    "payViaBridgeDpay": "تنقل ل Base وتخلّص DeHub Pay، DHB غادي يوصل ف شي دقيقة",
+    "dmSent": "تصيفطو {{amount}} DHB ل {{name}}!"
   },
   "postOptions": {
     "options": "خيارات",
@@ -4003,5 +4008,21 @@
     "openExchange": "فتح البورصة",
     "done": "تم",
     "back": "رجوع"
+  },
+  "ppvTopUp": {
+    "yourBalance": "الرصيد ديالك",
+    "youNeed": "خاصك",
+    "checking": "كنشوفو المحفظة ديالك…",
+    "payHint": "خلّص بأي حاجة ف المحفظة ديالك. كتولّي DHB وكتحلّ دغيا.",
+    "toppingUp": "كنشارجيو…",
+    "topUpUnlock": "شارجي وحلّ",
+    "orFund": "ولا زيد الفلوس بطريقة أخرى",
+    "paused": "التحويلات ديال DHB واقفين ف السلسلة دابا، إذن هاد الفتح ما يمكنش يدوز دابا. عاود جرب من بعد شوية.",
+    "otherChain": "هاد البوست كيتسوّى ف سلسلة أخرى، إذن خاصو DHB ف المحفظة ديالك تما.",
+    "buyCard": "شري DHB بالكارطة",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "دخّل الفلوس",
+    "moveFundsHint": "بدّل ولا حط من سلسلة أخرى",
+    "notNow": "ماشي دابا"
   }
 }

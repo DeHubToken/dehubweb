@@ -531,7 +531,12 @@
     "stageBridge": "{{symbol}} saatmine võrgust {{chain}}…",
     "stageArriving": "Jõuab Base'i, tavaliselt mõne sekundiga…",
     "stageSwap": "DHB ostmine Uniswapis…",
-    "payFailed": "{{symbol}} ei õnnestunud DHB-ks teisendada"
+    "payFailed": "{{symbol}} ei õnnestunud DHB-ks teisendada",
+    "stagePay": "Makse DeHub Payle vahendiga {{symbol}}…",
+    "stageDelivering": "DeHub Pay saadab sinu DHB-d…",
+    "payViaDpay": "Makstud DeHub Payle, DHB jõuab kohale umbes 30 s pärast",
+    "payViaBridgeDpay": "Viidud Base'i ja makstud DeHub Payle, DHB jõuab kohale umbes minuti pärast",
+    "dmSent": "{{amount}} DHB saadetud saajale {{name}}!"
   },
   "postOptions": {
     "options": "Valikud",
@@ -6241,5 +6246,21 @@
     "openExchange": "Ava börs",
     "done": "Valmis",
     "back": "Tagasi"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Sinu saldo",
+    "youNeed": "Sul on vaja",
+    "checking": "Rahakoti kontrollimine…",
+    "payHint": "Maksa ükskõik millega oma rahakotis. See muutub DHB-ks ja avab kohe.",
+    "toppingUp": "Täiendamine…",
+    "topUpUnlock": "Täienda ja ava",
+    "orFund": "Või lisa raha muul viisil",
+    "paused": "DHB ülekanded on praegu ahelas peatatud, seega see avamine ei saa veel läbi minna. Proovi varsti uuesti.",
+    "otherChain": "See postitus arveldatakse teises ahelas, seega on vaja DHB-d sinu sealses rahakotis.",
+    "buyCard": "Osta DHB-d kaardiga",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Too raha sisse",
+    "moveFundsHint": "Vaheta või hoiusta teisest ahelast",
+    "notNow": "Mitte praegu"
   }
 }

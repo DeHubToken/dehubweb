@@ -512,7 +512,12 @@
     "stageBridge": "Mandefa {{symbol}} avy amin'ny {{chain}}…",
     "stageArriving": "Ho tonga ao amin'ny Base, matetika segondra vitsy…",
     "stageSwap": "Mividy DHB ao amin'ny Uniswap…",
-    "payFailed": "Tsy afaka nanova {{symbol}} ho DHB"
+    "payFailed": "Tsy afaka nanova {{symbol}} ho DHB",
+    "stagePay": "Mandoa amin'ny DeHub Pay amin'ny {{symbol}}…",
+    "stageDelivering": "Mandefa ny DHB-nao ny DeHub Pay…",
+    "payViaDpay": "Voaloa tamin'ny DeHub Pay, tonga ao anatin'ny 30 segondra eo ho eo ny DHB",
+    "payViaBridgeDpay": "Nafindra tany Base ary voaloa tamin'ny DeHub Pay, tonga ao anatin'ny iray minitra eo ho eo ny DHB",
+    "dmSent": "Nandefa {{amount}} DHB ho an'i {{name}}!"
   },
   "postOptions": {
     "options": "Safidy",
@@ -6084,5 +6089,21 @@
     "openExchange": "Open Exchange",
     "done": "DONE",
     "back": "_Mihemotra"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Ny balance-nao",
+    "youNeed": "Mila ianao",
+    "checking": "Manamarina ny kitaponao…",
+    "payHint": "Mandoava amin'izay rehetra ao amin'ny kitaponao. Lasa DHB izany ary misokatra avy hatrany.",
+    "toppingUp": "Mameno…",
+    "topUpUnlock": "Fenoy & sokafy",
+    "orFund": "Na ampio vola amin'ny fomba hafa",
+    "paused": "Mijanona vonjimaika on-chain ny famindrana DHB amin'izao fotoana izao, ka tsy mbola afaka vita ity fanokafana ity. Andramo indray afaka kelikely.",
+    "otherChain": "Amin'ny chain hafa no andoavana ity lahatsoratra ity, ka mila DHB ao amin'ny kitaponao any ianao.",
+    "buyCard": "Mividiana DHB amin'ny karatra",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Ampidiro ny vola",
+    "moveFundsHint": "Swap na apetraho avy amin'ny chain hafa",
+    "notNow": "Tsy izao"
   }
 }

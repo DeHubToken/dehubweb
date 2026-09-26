@@ -516,7 +516,12 @@
     "stageBridge": "Siunčiama {{symbol}} iš {{chain}}…",
     "stageArriving": "Keliauja į Base, paprastai per kelias sekundes…",
     "stageSwap": "Perkama DHB per Uniswap…",
-    "payFailed": "Nepavyko konvertuoti {{symbol}} į DHB"
+    "payFailed": "Nepavyko konvertuoti {{symbol}} į DHB",
+    "stagePay": "Mokama DeHub Pay su {{symbol}}…",
+    "stageDelivering": "DeHub Pay siunčia jūsų DHB…",
+    "payViaDpay": "Sumokėta DeHub Pay, DHB pasieks maždaug per 30 s",
+    "payViaBridgeDpay": "Perkelta į Base ir sumokėta DeHub Pay, DHB pasieks maždaug per minutę",
+    "dmSent": "{{name}} išsiųsta {{amount}} DHB!"
   },
   "postOptions": {
     "options": "Parinktys",
@@ -6330,5 +6335,21 @@
     "openExchange": "Atidaryti „Exchange“",
     "done": "Atlikta",
     "back": "Atgal"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Jūsų balansas",
+    "youNeed": "Jums reikia",
+    "checking": "Tikrinama jūsų piniginė…",
+    "payHint": "Mokėkite bet kuo, kas yra jūsų piniginėje. Tai virsta DHB ir iškart atrakina.",
+    "toppingUp": "Papildoma…",
+    "topUpUnlock": "Papildyti ir atrakinti",
+    "orFund": "Arba pridėkite lėšų kitu būdu",
+    "paused": "DHB pervedimai šiuo metu grandinėje sustabdyti, todėl šis atrakinimas dar negali būti atliktas. Netrukus bandykite dar kartą.",
+    "otherChain": "Šis įrašas atsiskaitomas kitoje grandinėje, todėl jūsų piniginėje ten reikia DHB.",
+    "buyCard": "Pirkti DHB kortele",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Perkelti lėšas",
+    "moveFundsHint": "Keiskite arba įneškite iš kitos grandinės",
+    "notNow": "Ne dabar"
   }
 }

@@ -513,7 +513,12 @@
     "stageBridge": "{{symbol}}-ის გაგზავნა {{chain}}-დან…",
     "stageArriving": "Base-ზე ჩამოდის, ჩვეულებრივ რამდენიმე წამში…",
     "stageSwap": "DHB-ის ყიდვა Uniswap-ზე…",
-    "payFailed": "{{symbol}}-ის DHB-ში კონვერტაცია ვერ მოხერხდა"
+    "payFailed": "{{symbol}}-ის DHB-ში კონვერტაცია ვერ მოხერხდა",
+    "stagePay": "DeHub Pay-ში გადახდა {{symbol}}-ით…",
+    "stageDelivering": "DeHub Pay აგზავნის თქვენს DHB-ს…",
+    "payViaDpay": "გადახდილია DeHub Pay-ში, DHB მოვა დაახლოებით 30 წამში",
+    "payViaBridgeDpay": "გადატანილია Base-ზე და გადახდილია DeHub Pay-ში, DHB მოვა დაახლოებით ერთ წუთში",
+    "dmSent": "{{amount}} DHB გაეგზავნა {{name}}-ს!"
   },
   "postOptions": {
     "options": "პარამეტრები",
@@ -6173,5 +6178,21 @@
     "openExchange": "Ღია გაცვლა",
     "done": "Მზადაა",
     "back": "Უკან"
+  },
+  "ppvTopUp": {
+    "yourBalance": "თქვენი ბალანსი",
+    "youNeed": "გჭირდებათ",
+    "checking": "საფულის შემოწმება…",
+    "payHint": "გადაიხადეთ თქვენს საფულეში არსებული ნებისმიერი აქტივით. ის DHB-ად გადაიქცევა და მაშინვე გაიხსნება.",
+    "toppingUp": "შევსება…",
+    "topUpUnlock": "შევსება და გახსნა",
+    "orFund": "ან დაამატეთ თანხა სხვა გზით",
+    "paused": "DHB-ის გადარიცხვები ახლა on-chain შეჩერებულია, ამიტომ ამ გახსნას ჯერ ვერ დავასრულებთ. სცადეთ ცოტა ხანში.",
+    "otherChain": "ეს პოსტი სხვა ჩეინზე სრულდება, ამიტომ იქ თქვენს საფულეში DHB გჭირდებათ.",
+    "buyCard": "DHB-ის ყიდვა ბარათით",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "თანხის შემოტანა",
+    "moveFundsHint": "გაცვალეთ ან შეიტანეთ სხვა ჩეინიდან",
+    "notNow": "ახლა არა"
   }
 }

@@ -395,7 +395,12 @@
     "stageBridge": "{{symbol}} ji {{chain}} tê şandin…",
     "stageArriving": "Digihîje Base, bi gelemperî çend çirke…",
     "stageSwap": "DHB li Uniswap tê kirîn…",
-    "payFailed": "{{symbol}} nehat guhertin bo DHB"
+    "payFailed": "{{symbol}} nehat guhertin bo DHB",
+    "stagePay": "Bi {{symbol}} ji DeHub Pay re tê dayîn…",
+    "stageDelivering": "DeHub Pay DHB-ya te dişîne…",
+    "payViaDpay": "Ji DeHub Pay re hat dayîn, DHB di nêzîkî 30 çirkeyan de digihîje",
+    "payViaBridgeDpay": "Hat veguhestin bo Base û ji DeHub Pay re hat dayîn, DHB di nêzîkî deqeyekê de digihîje",
+    "dmSent": "{{amount}} DHB ji {{name}} re hat şandin!"
   },
   "postOptions": {
     "options": "Vebijêrk",
@@ -5286,5 +5291,21 @@
     "openExchange": "Danûstandina Vekirî",
     "done": "Qediya",
     "back": "Paş"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Balansa te",
+    "youNeed": "Tu hewce yî",
+    "checking": "Berîka te tê kontrolkirin…",
+    "payHint": "Bi her tiştê di berîka xwe de bide. Dibe DHB û yekser vedibe.",
+    "toppingUp": "Tê barkirin…",
+    "topUpUnlock": "Bar bike & veke",
+    "orFund": "An jî bi rêyeke din pere zêde bike",
+    "paused": "Veguhestinên DHB niha li ser zincîrê hatine rawestandin, ji ber vê yekê ev vekirin hîn nabe. Piştî demekê dîsa biceribîne.",
+    "otherChain": "Ev şandî li ser zincîreke din tê çareserkirin, ji ber vê yekê li wir di berîka te de DHB pêwîst e.",
+    "buyCard": "Bi kartê DHB bikire",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Pere bîne hundir",
+    "moveFundsHint": "Ji zincîreke din biguherîne an depo bike",
+    "notNow": "Niha na"
   }
 }

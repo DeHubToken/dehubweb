@@ -509,7 +509,12 @@
     "stageBridge": "{{chain}} ले {{symbol}} भेजत हन…",
     "stageArriving": "Base म पहुँचत हे, अक्सर कुछ सेकंड…",
     "stageSwap": "Uniswap म DHB बिसावत हन…",
-    "payFailed": "{{symbol}} ल DHB म नइ बदल सकेन"
+    "payFailed": "{{symbol}} ल DHB म नइ बदल सकेन",
+    "stagePay": "{{symbol}} ले DeHub Pay ला भुगतान करत हन…",
+    "stageDelivering": "DeHub Pay तोर DHB भेजत हे…",
+    "payViaDpay": "DeHub Pay ला भुगतान हो गे, DHB करीब 30 सेकंड म पहुँचही",
+    "payViaBridgeDpay": "Base म ले जाके DeHub Pay ला भुगतान हो गे, DHB करीब एक मिनट म पहुँचही",
+    "dmSent": "{{name}} ला {{amount}} DHB भेज दे गे!"
   },
   "postOptions": {
     "options": "विकल्प",
@@ -3961,5 +3966,21 @@
     "openExchange": "एक्सचेंज खोलव",
     "done": "पूरा",
     "back": "पीछू"
+  },
+  "ppvTopUp": {
+    "yourBalance": "तोर बैलेंस",
+    "youNeed": "तोला चाही",
+    "checking": "तोर बटुआ जाँचत हन…",
+    "payHint": "अपन बटुआ म जउन घलो हे ओकर ले भुगतान करव। ए DHB बन जाथे अउ तुरते अनलॉक हो जाथे।",
+    "toppingUp": "टॉप अप करत हन…",
+    "topUpUnlock": "टॉप अप करव अउ अनलॉक करव",
+    "orFund": "या कोनो दूसर तरीका ले पइसा जोड़व",
+    "paused": "DHB ट्रांसफर अभी ऑन-चेन म रुके हे, एकर सेती ए अनलॉक अभी नइ हो सकय। थोरकुन बाद फेर कोसिस करव।",
+    "otherChain": "ए पोस्ट दूसर चेन म सेटल होथे, एकर सेती उहाँ तोर बटुआ म DHB चाही।",
+    "buyCard": "कार्ड ले DHB बिसावव",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "पइसा लानव",
+    "moveFundsHint": "दूसर चेन ले स्वैप या जमा करव",
+    "notNow": "अभी नइ"
   }
 }

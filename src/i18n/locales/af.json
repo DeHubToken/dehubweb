@@ -533,7 +533,12 @@
     "stageBridge": "Stuur {{symbol}} vanaf {{chain}}…",
     "stageArriving": "Kom aan op Base, gewoonlik 'n paar sekondes…",
     "stageSwap": "Koop DHB op Uniswap…",
-    "payFailed": "Kon nie {{symbol}} na DHB omskakel nie"
+    "payFailed": "Kon nie {{symbol}} na DHB omskakel nie",
+    "stagePay": "Betaal DeHub Pay met {{symbol}}…",
+    "stageDelivering": "DeHub Pay stuur jou DHB…",
+    "payViaDpay": "Aan DeHub Pay betaal, DHB kom binne sowat 30s aan",
+    "payViaBridgeDpay": "Na Base geskuif en aan DeHub Pay betaal, DHB kom binne sowat 'n minuut aan",
+    "dmSent": "{{amount}} DHB aan {{name}} gestuur!"
   },
   "postOptions": {
     "options": "Opsies",
@@ -6235,5 +6240,21 @@
     "openExchange": "Open Exchange",
     "done": "Klaar",
     "back": "Terug"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Jou balans",
+    "youNeed": "Jy benodig",
+    "checking": "Kontroleer jou beursie…",
+    "payHint": "Betaal met enigiets in jou beursie. Dit word DHB en ontsluit dadelik.",
+    "toppingUp": "Vul aan…",
+    "topUpUnlock": "Vul aan & ontsluit",
+    "orFund": "Of voeg fondse op 'n ander manier by",
+    "paused": "DHB-oordragte is tans op-ketting onderbreek, dus kan hierdie ontsluiting nog nie deurgaan nie. Probeer gou weer.",
+    "otherChain": "Hierdie plasing word op 'n ander ketting vereffen, dus het dit DHB in jou beursie daar nodig.",
+    "buyCard": "Koop DHB met kaart",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Skuif fondse in",
+    "moveFundsHint": "Ruil of deponeer vanaf 'n ander ketting",
+    "notNow": "Nie nou nie"
   }
 }

@@ -516,7 +516,12 @@
     "stageBridge": "Sūta {{symbol}} no {{chain}}…",
     "stageArriving": "Ceļā uz Base, parasti dažas sekundes…",
     "stageSwap": "Pērk DHB Uniswap…",
-    "payFailed": "Neizdevās konvertēt {{symbol}} uz DHB"
+    "payFailed": "Neizdevās konvertēt {{symbol}} uz DHB",
+    "stagePay": "Maksā DeHub Pay ar {{symbol}}…",
+    "stageDelivering": "DeHub Pay sūta jūsu DHB…",
+    "payViaDpay": "Samaksāts DeHub Pay, DHB pienāks aptuveni 30 s laikā",
+    "payViaBridgeDpay": "Pārvietots uz Base un samaksāts DeHub Pay, DHB pienāks aptuveni minūtes laikā",
+    "dmSent": "{{name}} nosūtīti {{amount}} DHB!"
   },
   "postOptions": {
     "options": "Opcijas",
@@ -6330,5 +6335,21 @@
     "openExchange": "Atvērt Exchange",
     "done": "Gatavs",
     "back": "Atpakaļ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Jūsu bilance",
+    "youNeed": "Jums vajag",
+    "checking": "Pārbauda jūsu maku…",
+    "payHint": "Maksājiet ar jebko, kas ir jūsu makā. Tas kļūst par DHB un uzreiz atbloķē.",
+    "toppingUp": "Papildina…",
+    "topUpUnlock": "Papildināt un atbloķēt",
+    "orFund": "Vai pievienojiet līdzekļus citādi",
+    "paused": "DHB pārskaitījumi šobrīd ir apturēti ķēdē, tāpēc šo atbloķēšanu vēl nevar veikt. Drīz mēģiniet vēlreiz.",
+    "otherChain": "Šī ieraksta norēķini notiek citā ķēdē, tāpēc tur jūsu makā ir vajadzīgi DHB.",
+    "buyCard": "Pirkt DHB ar karti",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Ieskaitīt līdzekļus",
+    "moveFundsHint": "Apmainiet vai iemaksājiet no citas ķēdes",
+    "notNow": "Ne tagad"
   }
 }

@@ -531,7 +531,12 @@
     "stageBridge": "Skickar {{symbol}} från {{chain}}…",
     "stageArriving": "Anländer till Base, brukar ta några sekunder…",
     "stageSwap": "Köper DHB på Uniswap…",
-    "payFailed": "Kunde inte konvertera {{symbol}} till DHB"
+    "payFailed": "Kunde inte konvertera {{symbol}} till DHB",
+    "stagePay": "Betalar DeHub Pay med {{symbol}}…",
+    "stageDelivering": "DeHub Pay skickar dina DHB…",
+    "payViaDpay": "Betalt till DeHub Pay, DHB kommer om cirka 30 s",
+    "payViaBridgeDpay": "Flyttat till Base och betalt till DeHub Pay, DHB kommer om ungefär en minut",
+    "dmSent": "Skickade {{amount}} DHB till {{name}}!"
   },
   "postOptions": {
     "options": "Alternativ",
@@ -6241,5 +6246,21 @@
     "openExchange": "Öppna Exchange",
     "done": "Klar",
     "back": "Tillbaka"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Ditt saldo",
+    "youNeed": "Du behöver",
+    "checking": "Kontrollerar din plånbok…",
+    "payHint": "Betala med vad som helst i din plånbok. Det blir DHB och låses upp direkt.",
+    "toppingUp": "Fyller på…",
+    "topUpUnlock": "Fyll på & lås upp",
+    "orFund": "Eller lägg till pengar på annat sätt",
+    "paused": "DHB-överföringar är pausade on-chain just nu, så upplåsningen kan inte genomföras än. Försök igen om en stund.",
+    "otherChain": "Det här inlägget avräknas på en annan kedja, så du behöver DHB i din plånbok där.",
+    "buyCard": "Köp DHB med kort",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "För över pengar",
+    "moveFundsHint": "Växla eller sätt in från en annan kedja",
+    "notNow": "Inte nu"
   }
 }

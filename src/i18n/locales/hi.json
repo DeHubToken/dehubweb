@@ -530,7 +530,12 @@
     "stageBridge": "{{chain}} से {{symbol}} भेजा जा रहा है…",
     "stageArriving": "Base पर पहुँच रहा है, आमतौर पर कुछ सेकंड…",
     "stageSwap": "Uniswap पर DHB खरीदा जा रहा है…",
-    "payFailed": "{{symbol}} को DHB में नहीं बदला जा सका"
+    "payFailed": "{{symbol}} को DHB में नहीं बदला जा सका",
+    "stagePay": "{{symbol}} से DeHub Pay को भुगतान हो रहा है…",
+    "stageDelivering": "DeHub Pay आपके DHB भेज रहा है…",
+    "payViaDpay": "DeHub Pay को भुगतान हुआ, DHB लगभग 30 सेकंड में पहुँचेगा",
+    "payViaBridgeDpay": "Base पर ले जाकर DeHub Pay को भुगतान हुआ, DHB लगभग एक मिनट में पहुँचेगा",
+    "dmSent": "{{name}} को {{amount}} DHB भेजे गए!"
   },
   "postOptions": {
     "options": "Options",
@@ -6362,5 +6367,21 @@
     "openExchange": "एक्सचेंज खोलें",
     "done": "हो गया",
     "back": "पीछे जाएँ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "आपका बैलेंस",
+    "youNeed": "आपको चाहिए",
+    "checking": "आपका वॉलेट जाँचा जा रहा है…",
+    "payHint": "अपने वॉलेट में किसी भी चीज़ से भुगतान करें। यह DHB बन जाता है और तुरंत अनलॉक हो जाता है।",
+    "toppingUp": "टॉप अप हो रहा है…",
+    "topUpUnlock": "टॉप अप करें और अनलॉक करें",
+    "orFund": "या किसी और तरीके से फंड जोड़ें",
+    "paused": "DHB ट्रांसफ़र अभी ऑन-चेन रुके हुए हैं, इसलिए यह अनलॉक अभी पूरा नहीं हो सकता। थोड़ी देर में फिर कोशिश करें।",
+    "otherChain": "यह पोस्ट दूसरी चेन पर सेटल होती है, इसलिए वहाँ आपके वॉलेट में DHB चाहिए।",
+    "buyCard": "कार्ड से DHB खरीदें",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "फंड लाएँ",
+    "moveFundsHint": "दूसरी चेन से स्वैप या जमा करें",
+    "notNow": "अभी नहीं"
   }
 }

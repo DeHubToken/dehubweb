@@ -516,7 +516,12 @@
     "stageBridge": "{{symbol}} {{chain}}-dan iberilýär…",
     "stageArriving": "Base-e gelýär, adatça birnäçe sekunt…",
     "stageSwap": "Uniswap-da DHB satyn alynýar…",
-    "payFailed": "{{symbol}} DHB-a öwrülip bilinmedi"
+    "payFailed": "{{symbol}} DHB-a öwrülip bilinmedi",
+    "stagePay": "{{symbol}} bilen DeHub Pay-e tölenýär…",
+    "stageDelivering": "DeHub Pay DHB-ňizi iberýär…",
+    "payViaDpay": "DeHub Pay-e tölendi, DHB takmynan 30 sekuntda geler",
+    "payViaBridgeDpay": "Base-e geçirildi we DeHub Pay-e tölendi, DHB takmynan bir minutda geler",
+    "dmSent": "{{name}}-a {{amount}} DHB iberildi!"
   },
   "postOptions": {
     "options": "Saýlawlar",
@@ -3997,5 +4002,21 @@
     "openExchange": "Çapyrma Aç",
     "done": "Ýapyldy",
     "back": "Geri"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Balansyňyz",
+    "youNeed": "Size gerek",
+    "checking": "Gapjygyňyz barlanýar…",
+    "payHint": "Gapjygyňyzdaky islendik zat bilen töläň. Ol DHB-e öwrülýär we derrew açylýar.",
+    "toppingUp": "Doldurylýar…",
+    "topUpUnlock": "Doldur we aç",
+    "orFund": "Ýa-da başga ýol bilen serişde goşuň",
+    "paused": "DHB geçirimleri häzir zynjyrda togtadyldy, şonuň üçin bu açmak entek amala aşyp bilmeýär. Birazdan täzeden synanyşyň.",
+    "otherChain": "Bu ýazgy başga zynjyrda hasaplaşylýar, şonuň üçin ol ýerde gapjygyňyzda DHB gerek.",
+    "buyCard": "Kart bilen DHB satyn al",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Serişde geçir",
+    "moveFundsHint": "Başga zynjyrdan çalyş ýa-da goý",
+    "notNow": "Häzir däl"
   }
 }

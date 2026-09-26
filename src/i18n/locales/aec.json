@@ -476,7 +476,12 @@
     "stageBridge": "بنبعت {{symbol}} من {{chain}}…",
     "stageArriving": "بيوصل على Base، عادةً كام ثانية…",
     "stageSwap": "بنشتري DHB على Uniswap…",
-    "payFailed": "معرفناش نحوّل {{symbol}} لـ DHB"
+    "payFailed": "معرفناش نحوّل {{symbol}} لـ DHB",
+    "stagePay": "بندفع لـ DeHub Pay بـ {{symbol}}…",
+    "stageDelivering": "DeHub Pay بيبعتلك الـ DHB…",
+    "payViaDpay": "اتدفع لـ DeHub Pay، الـ DHB هيوصل في حوالي 30 ثانية",
+    "payViaBridgeDpay": "اتنقل لـ Base واتدفع لـ DeHub Pay، الـ DHB هيوصل في حوالي دقيقة",
+    "dmSent": "اتبعت {{amount}} DHB لـ {{name}}!"
   },
   "postOptions": {
     "options": "خيارات",
@@ -4014,5 +4019,21 @@
     "openExchange": "افتح البورصة",
     "done": "تمام",
     "back": "رجوع"
+  },
+  "ppvTopUp": {
+    "yourBalance": "رصيدك",
+    "youNeed": "محتاج",
+    "checking": "بنشوف محفظتك…",
+    "payHint": "ادفع بأي حاجة في محفظتك. هتتحول لـ DHB وتفتح على طول.",
+    "toppingUp": "بنشحن…",
+    "topUpUnlock": "اشحن وافتح",
+    "orFund": "أو ضيف فلوس بطريقة تانية",
+    "paused": "تحويلات DHB واقفة على السلسلة دلوقتي، فالفتح ده مش هيعدي لسه. جرب تاني كمان شوية.",
+    "otherChain": "البوست ده بيتسوّى على سلسلة تانية، فمحتاج DHB في محفظتك هناك.",
+    "buyCard": "اشتري DHB بالكارت",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "دخّل فلوس",
+    "moveFundsHint": "بدّل أو حط فلوس من سلسلة تانية",
+    "notNow": "مش دلوقتي"
   }
 }

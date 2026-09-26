@@ -561,7 +561,12 @@
     "stageBridge": "กำลังส่ง {{symbol}} จาก {{chain}}…",
     "stageArriving": "กำลังเข้าสู่ Base โดยปกติใช้เวลาไม่กี่วินาที…",
     "stageSwap": "กำลังซื้อ DHB บน Uniswap…",
-    "payFailed": "ไม่สามารถแปลง {{symbol}} เป็น DHB ได้"
+    "payFailed": "ไม่สามารถแปลง {{symbol}} เป็น DHB ได้",
+    "stagePay": "กำลังชำระ DeHub Pay ด้วย {{symbol}}…",
+    "stageDelivering": "DeHub Pay กำลังส่ง DHB ของคุณ…",
+    "payViaDpay": "ชำระให้ DeHub Pay แล้ว DHB จะมาถึงในประมาณ 30 วินาที",
+    "payViaBridgeDpay": "ย้ายไปยัง Base และชำระให้ DeHub Pay แล้ว DHB จะมาถึงในประมาณหนึ่งนาที",
+    "dmSent": "ส่ง {{amount}} DHB ให้ {{name}} แล้ว!"
   },
   "postOptions": {
     "options": "ตัวเลือก",
@@ -5574,5 +5579,21 @@
     "openExchange": "เปิด Exchange",
     "done": "เรียบร้อย",
     "back": "ย้อนกลับ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "ยอดคงเหลือของคุณ",
+    "youNeed": "คุณต้องการ",
+    "checking": "กำลังตรวจสอบกระเป๋าเงินของคุณ…",
+    "payHint": "ชำระด้วยอะไรก็ได้ในกระเป๋าเงินของคุณ ระบบจะแปลงเป็น DHB และปลดล็อกทันที",
+    "toppingUp": "กำลังเติมเงิน…",
+    "topUpUnlock": "เติมเงินและปลดล็อก",
+    "orFund": "หรือเติมเงินด้วยวิธีอื่น",
+    "paused": "ขณะนี้การโอน DHB ถูกระงับชั่วคราวบนเชน จึงยังปลดล็อกไม่ได้ ลองใหม่อีกครั้งในอีกสักครู่",
+    "otherChain": "โพสต์นี้ชำระบนเชนอื่น จึงต้องมี DHB ในกระเป๋าเงินของคุณบนเชนนั้น",
+    "buyCard": "ซื้อ DHB ด้วยบัตร",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "โอนเงินเข้า",
+    "moveFundsHint": "สลับหรือฝากจากเชนอื่น",
+    "notNow": "ไว้ทีหลัง"
   }
 }

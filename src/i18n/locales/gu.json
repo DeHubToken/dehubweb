@@ -514,7 +514,12 @@
     "stageBridge": "{{chain}} થી {{symbol}} મોકલી રહ્યા છીએ…",
     "stageArriving": "Base પર પહોંચી રહ્યું છે, સામાન્ય રીતે થોડી સેકન્ડ…",
     "stageSwap": "Uniswap પર DHB ખરીદી રહ્યા છીએ…",
-    "payFailed": "{{symbol}} ને DHB માં બદલી શકાયું નહીં"
+    "payFailed": "{{symbol}} ને DHB માં બદલી શકાયું નહીં",
+    "stagePay": "{{symbol}} વડે DeHub Pay ને ચૂકવણી થઈ રહી છે…",
+    "stageDelivering": "DeHub Pay તમારા DHB મોકલી રહ્યું છે…",
+    "payViaDpay": "DeHub Pay ને ચૂકવણી થઈ, DHB લગભગ 30 સેકન્ડમાં પહોંચશે",
+    "payViaBridgeDpay": "Base પર ખસેડીને DeHub Pay ને ચૂકવણી થઈ, DHB લગભગ એક મિનિટમાં પહોંચશે",
+    "dmSent": "{{name}}ને {{amount}} DHB મોકલ્યા!"
   },
   "postOptions": {
     "options": "વિકલ્પો",
@@ -4006,5 +4011,21 @@
     "openExchange": "ઓપન એક્સચેન્જ",
     "done": "થઈ ગયું",
     "back": "પાછળ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "તમારું બેલેન્સ",
+    "youNeed": "તમને જોઈએ",
+    "checking": "તમારું વૉલેટ તપાસી રહ્યા છીએ…",
+    "payHint": "તમારા વૉલેટમાં જે કંઈ હોય તેનાથી ચૂકવો. તે DHB બની જાય છે અને તરત અનલૉક થાય છે.",
+    "toppingUp": "ટોપ અપ થઈ રહ્યું છે…",
+    "topUpUnlock": "ટોપ અપ કરો અને અનલૉક કરો",
+    "orFund": "અથવા બીજી રીતે ફંડ ઉમેરો",
+    "paused": "DHB ટ્રાન્સફર હાલ ઓન-ચેઇન અટકાવાયા છે, તેથી આ અનલૉક હજુ થઈ શકતું નથી. થોડી વારમાં ફરી પ્રયાસ કરો.",
+    "otherChain": "આ પોસ્ટ બીજી ચેઇન પર સેટલ થાય છે, તેથી ત્યાં તમારા વૉલેટમાં DHB જોઈએ.",
+    "buyCard": "કાર્ડથી DHB ખરીદો",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "ફંડ લાવો",
+    "moveFundsHint": "બીજી ચેઇનથી સ્વેપ કે ડિપોઝિટ કરો",
+    "notNow": "હમણાં નહીં"
   }
 }

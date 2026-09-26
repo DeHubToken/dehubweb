@@ -513,7 +513,12 @@
     "stageBridge": "Αποστολή {{symbol}} από {{chain}}…",
     "stageArriving": "Άφιξη στο Base, συνήθως σε λίγα δευτερόλεπτα…",
     "stageSwap": "Αγορά DHB στο Uniswap…",
-    "payFailed": "Δεν ήταν δυνατή η μετατροπή {{symbol}} σε DHB"
+    "payFailed": "Δεν ήταν δυνατή η μετατροπή {{symbol}} σε DHB",
+    "stagePay": "Πληρωμή στο DeHub Pay με {{symbol}}…",
+    "stageDelivering": "Το DeHub Pay στέλνει τα DHB σας…",
+    "payViaDpay": "Πληρώθηκε στο DeHub Pay, τα DHB φτάνουν σε περίπου 30 δλ",
+    "payViaBridgeDpay": "Μεταφέρθηκε στο Base και πληρώθηκε στο DeHub Pay, τα DHB φτάνουν σε περίπου ένα λεπτό",
+    "dmSent": "Στάλθηκαν {{amount}} DHB στον/στην {{name}}!"
   },
   "postOptions": {
     "options": "Επιλογές",
@@ -5974,5 +5979,21 @@
     "openExchange": "Ανοιχτή Ανταλλαγή",
     "done": "Τέλος",
     "back": "Πίσω"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Το υπόλοιπό σας",
+    "youNeed": "Χρειάζεστε",
+    "checking": "Έλεγχος του πορτοφολιού σας…",
+    "payHint": "Πληρώστε με οτιδήποτε έχετε στο πορτοφόλι σας. Γίνεται DHB και ξεκλειδώνει αμέσως.",
+    "toppingUp": "Επαναφόρτιση…",
+    "topUpUnlock": "Φόρτωση & ξεκλείδωμα",
+    "orFund": "Ή προσθέστε κεφάλαια με άλλο τρόπο",
+    "paused": "Οι μεταφορές DHB είναι σε παύση στο blockchain αυτή τη στιγμή, επομένως αυτό το ξεκλείδωμα δεν μπορεί να πραγματοποιηθεί ακόμα. Δοκιμάστε ξανά σύντομα.",
+    "otherChain": "Αυτή η ανάρτηση διακανονίζεται σε άλλο δίκτυο, οπότε χρειάζεται DHB στο πορτοφόλι σας εκεί.",
+    "buyCard": "Αγορά DHB με κάρτα",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Μεταφορά κεφαλαίων",
+    "moveFundsHint": "Ανταλλαγή ή κατάθεση από άλλο δίκτυο",
+    "notNow": "Όχι τώρα"
   }
 }

@@ -476,7 +476,12 @@
     "stageBridge": "正从 {{chain}} 发 {{symbol}} 嘞…",
     "stageArriving": "正往 Base 上到，一般几秒就好…",
     "stageSwap": "正在 Uniswap 上买 DHB 嘞…",
-    "payFailed": "{{symbol}} 换不成 DHB"
+    "payFailed": "{{symbol}} 换不成 DHB",
+    "stagePay": "正用 {{symbol}} 付给 DeHub Pay 嘞…",
+    "stageDelivering": "DeHub Pay 正给你发 DHB 嘞…",
+    "payViaDpay": "已付给 DeHub Pay，DHB 约莫 30 秒到",
+    "payViaBridgeDpay": "转到 Base 并付给 DeHub Pay 了，DHB 约莫一分钟到",
+    "dmSent": "给 {{name}} 发了 {{amount}} DHB！"
   },
   "postOptions": {
     "options": "选项",
@@ -4018,5 +4023,21 @@
     "openExchange": "打开交易所",
     "done": "完成",
     "back": "回来"
+  },
+  "ppvTopUp": {
+    "yourBalance": "你的余额",
+    "youNeed": "你还要",
+    "checking": "正看你的钱包嘞…",
+    "payHint": "用钱包里啥都能付。会换成 DHB，马上就解锁。",
+    "toppingUp": "正充值嘞…",
+    "topUpUnlock": "充值并解锁",
+    "orFund": "或者换个法子加钱",
+    "paused": "DHB 转账眼下在链上暂停了，这回解锁还过不去。等一阵阵再试。",
+    "otherChain": "这个帖子在另一条链上结算，所以要你在那条链的钱包里有 DHB。",
+    "buyCard": "用卡买 DHB",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "转钱进来",
+    "moveFundsHint": "从另一条链兑换或存入",
+    "notNow": "先不了"
   }
 }
