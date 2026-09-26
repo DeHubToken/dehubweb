@@ -4302,5 +4302,40 @@
     "notifications": {
       "tippedYou": "ਤੁਹਾਨੂੰ ਟਿਪ ਕੀਤਾ {{amount}} ਟੋਕਨ"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ਇਮੋਜੀ",
+    "tabGif": "GIF",
+    "searchEmoji": "ਇਮੋਜੀ ਖੋਜੋ",
+    "searchGifs": "GIF ਖੋਜੋ...",
+    "noEmoji": "ਕੋਈ ਇਮੋਜੀ ਨਹੀਂ ਮਿਲਿਆ",
+    "noGifs": "ਕੋਈ GIF ਨਹੀਂ ਮਿਲਿਆ",
+    "trending": "ਟ੍ਰੈਂਡਿੰਗ",
+    "searchResults": "ਖੋਜ ਨਤੀਜੇ",
+    "poweredByGiphy": "GIPHY ਦੁਆਰਾ ਸੰਚਾਲਿਤ",
+    "skinTone": "ਚਮੜੀ ਦਾ ਰੰਗ",
+    "moreReactions": "ਹੋਰ ਪ੍ਰਤੀਕਿਰਿਆਵਾਂ",
+    "multiPickHint": "ਕਈ ਚੁਣਨ ਲਈ Shift ਦਬਾ ਕੇ ਕਲਿੱਕ ਕਰੋ",
+    "group": {
+      "recent": "ਹਾਲ ਹੀ ਵਿੱਚ ਵਰਤੇ",
+      "dehub": "DeHub ਦੀਆਂ ਚੋਣਾਂ",
+      "smileys": "ਸਮਾਈਲੀ ਅਤੇ ਭਾਵਨਾਵਾਂ",
+      "people": "ਲੋਕ ਅਤੇ ਸਰੀਰ",
+      "animals": "ਜਾਨਵਰ ਅਤੇ ਕੁਦਰਤ",
+      "food": "ਖਾਣਾ ਅਤੇ ਪੀਣਾ",
+      "travel": "ਯਾਤਰਾ ਅਤੇ ਥਾਵਾਂ",
+      "activities": "ਗਤੀਵਿਧੀਆਂ",
+      "objects": "ਵਸਤੂਆਂ",
+      "symbols": "ਚਿੰਨ੍ਹ",
+      "flags": "ਝੰਡੇ"
+    },
+    "tone": {
+      "default": "ਡਿਫੌਲਟ",
+      "light": "ਹਲਕਾ ਚਮੜੀ ਰੰਗ",
+      "mediumLight": "ਦਰਮਿਆਨਾ-ਹਲਕਾ ਚਮੜੀ ਰੰਗ",
+      "medium": "ਦਰਮਿਆਨਾ ਚਮੜੀ ਰੰਗ",
+      "mediumDark": "ਦਰਮਿਆਨਾ-ਗੂੜ੍ਹਾ ਚਮੜੀ ਰੰਗ",
+      "dark": "ਗੂੜ੍ਹਾ ਚਮੜੀ ਰੰਗ"
+    }
   }
 }

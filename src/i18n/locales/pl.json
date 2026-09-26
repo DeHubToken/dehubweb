@@ -6631,5 +6631,40 @@
     "notifications": {
       "tippedYou": "dał Ci {{amount}} tokenów napiwku"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Szukaj emoji",
+    "searchGifs": "Szukaj GIF-ów...",
+    "noEmoji": "Nie znaleziono emoji",
+    "noGifs": "Nie znaleziono GIF-ów",
+    "trending": "Popularne",
+    "searchResults": "Wyniki wyszukiwania",
+    "poweredByGiphy": "Obsługiwane przez GIPHY",
+    "skinTone": "Odcień skóry",
+    "moreReactions": "Więcej reakcji",
+    "multiPickHint": "Kliknij z Shift, aby wybrać kilka",
+    "group": {
+      "recent": "Ostatnio używane",
+      "dehub": "Wybrane przez DeHub",
+      "smileys": "Buźki i emocje",
+      "people": "Ludzie i ciało",
+      "animals": "Zwierzęta i przyroda",
+      "food": "Jedzenie i napoje",
+      "travel": "Podróże i miejsca",
+      "activities": "Aktywności",
+      "objects": "Przedmioty",
+      "symbols": "Symbole",
+      "flags": "Flagi"
+    },
+    "tone": {
+      "default": "Domyślny",
+      "light": "Jasny odcień skóry",
+      "mediumLight": "Średnio jasny odcień skóry",
+      "medium": "Średni odcień skóry",
+      "mediumDark": "Średnio ciemny odcień skóry",
+      "dark": "Ciemny odcień skóry"
+    }
   }
 }

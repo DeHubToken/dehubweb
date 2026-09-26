@@ -6496,5 +6496,40 @@
     "notifications": {
       "tippedYou": "{{amount}} tokent adott neked"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Emoji keresése",
+    "searchGifs": "GIF-ek keresése...",
+    "noEmoji": "Nincs találat emojira",
+    "noGifs": "Nincs találat GIF-re",
+    "trending": "Népszerű",
+    "searchResults": "Keresési találatok",
+    "poweredByGiphy": "A GIPHY támogatásával",
+    "skinTone": "Bőrszín",
+    "moreReactions": "További reakciók",
+    "multiPickHint": "Shift+kattintás több kiválasztásához",
+    "group": {
+      "recent": "Legutóbb használt",
+      "dehub": "DeHub válogatás",
+      "smileys": "Hangulatjelek és érzelmek",
+      "people": "Emberek és test",
+      "animals": "Állatok és természet",
+      "food": "Étel és ital",
+      "travel": "Utazás és helyek",
+      "activities": "Tevékenységek",
+      "objects": "Tárgyak",
+      "symbols": "Szimbólumok",
+      "flags": "Zászlók"
+    },
+    "tone": {
+      "default": "Alapértelmezett",
+      "light": "Világos bőrszín",
+      "mediumLight": "Közepesen világos bőrszín",
+      "medium": "Közepes bőrszín",
+      "mediumDark": "Közepesen sötét bőrszín",
+      "dark": "Sötét bőrszín"
+    }
   }
 }

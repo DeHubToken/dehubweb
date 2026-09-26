@@ -5838,5 +5838,40 @@
   },
   "footer": {
     "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
+  },
+  "emojiPicker": {
+    "tabEmoji": "อีโมจิ",
+    "tabGif": "GIF",
+    "searchEmoji": "ค้นหาอีโมจิ",
+    "searchGifs": "ค้นหา GIFs...",
+    "noEmoji": "ไม่พบอีโมจิ",
+    "noGifs": "ไม่พบ GIFs",
+    "trending": "กำลังมาแรง",
+    "searchResults": "ผลการค้นหา",
+    "poweredByGiphy": "ขับเคลื่อนโดย GIPHY",
+    "skinTone": "สีผิว",
+    "moreReactions": "รีแอคชันเพิ่มเติม",
+    "multiPickHint": "Shift-คลิกเพื่อเลือกหลายรายการ",
+    "group": {
+      "recent": "ใช้ล่าสุด",
+      "dehub": "DeHub แนะนำ",
+      "smileys": "หน้ายิ้มและอารมณ์",
+      "people": "ผู้คนและร่างกาย",
+      "animals": "สัตว์และธรรมชาติ",
+      "food": "อาหารและเครื่องดื่ม",
+      "travel": "การเดินทางและสถานที่",
+      "activities": "กิจกรรม",
+      "objects": "สิ่งของ",
+      "symbols": "สัญลักษณ์",
+      "flags": "ธง"
+    },
+    "tone": {
+      "default": "ค่าเริ่มต้น",
+      "light": "สีผิวอ่อน",
+      "mediumLight": "สีผิวอ่อนปานกลาง",
+      "medium": "สีผิวปานกลาง",
+      "mediumDark": "สีผิวเข้มปานกลาง",
+      "dark": "สีผิวเข้ม"
+    }
   }
 }

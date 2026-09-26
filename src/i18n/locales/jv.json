@@ -4356,5 +4356,40 @@
     "notifications": {
       "tippedYou": "wis tak-tulung {{amount}} token"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Goleki emoji",
+    "searchGifs": "Goleki GIF...",
+    "noEmoji": "Emoji ora ketemu",
+    "noGifs": "GIF ora ketemu",
+    "trending": "Trending",
+    "searchResults": "Asil telusuran",
+    "poweredByGiphy": "Didhukung GIPHY",
+    "skinTone": "Warna kulit",
+    "moreReactions": "Reaksi liyane",
+    "multiPickHint": "Shift-klik kanggo milih sawetara",
+    "group": {
+      "recent": "Anyar dienggo",
+      "dehub": "Pilihan DeHub",
+      "smileys": "Smiley & emosi",
+      "people": "Wong & awak",
+      "animals": "Kewan & alam",
+      "food": "Panganan & ombèn",
+      "travel": "Lelungan & panggonan",
+      "activities": "Kagiyatan",
+      "objects": "Barang",
+      "symbols": "Simbol",
+      "flags": "Gendéra"
+    },
+    "tone": {
+      "default": "Gawan",
+      "light": "Warna kulit padhang",
+      "mediumLight": "Warna kulit rada padhang",
+      "medium": "Warna kulit sedheng",
+      "mediumDark": "Warna kulit rada peteng",
+      "dark": "Warna kulit peteng"
+    }
   }
 }

@@ -6496,5 +6496,40 @@
     "notifications": {
       "tippedYou": "tippade dig {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Sök emoji",
+    "searchGifs": "Sök GIFs...",
+    "noEmoji": "Inga emoji hittades",
+    "noGifs": "Inga GIFs hittades",
+    "trending": "Populärt",
+    "searchResults": "Sökresultat",
+    "poweredByGiphy": "Drivs av GIPHY",
+    "skinTone": "Hudton",
+    "moreReactions": "Fler reaktioner",
+    "multiPickHint": "Shift-klicka för att välja flera",
+    "group": {
+      "recent": "Senast använda",
+      "dehub": "DeHubs val",
+      "smileys": "Smileys & känslor",
+      "people": "Människor & kropp",
+      "animals": "Djur & natur",
+      "food": "Mat & dryck",
+      "travel": "Resor & platser",
+      "activities": "Aktiviteter",
+      "objects": "Föremål",
+      "symbols": "Symboler",
+      "flags": "Flaggor"
+    },
+    "tone": {
+      "default": "Standard",
+      "light": "Ljus hudton",
+      "mediumLight": "Mellanljus hudton",
+      "medium": "Mellan hudton",
+      "mediumDark": "Mellanmörk hudton",
+      "dark": "Mörk hudton"
+    }
   }
 }

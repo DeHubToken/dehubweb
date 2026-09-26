@@ -4412,5 +4412,40 @@
     "backToBlog": "Blogga qaytish",
     "sharePost": "Postni ulashish",
     "relatedPosts": "Bogʻliq postlar"
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Emoji qidirish",
+    "searchGifs": "GIFs qidirish...",
+    "noEmoji": "Emoji topilmadi",
+    "noGifs": "GIFs topilmadi",
+    "trending": "Trendda",
+    "searchResults": "Qidiruv natijalari",
+    "poweredByGiphy": "GIPHY tomonidan taqdim etilgan",
+    "skinTone": "Teri rangi",
+    "moreReactions": "Koʻproq reaksiyalar",
+    "multiPickHint": "Bir nechtasini tanlash uchun Shift-bosing",
+    "group": {
+      "recent": "Yaqinda ishlatilgan",
+      "dehub": "DeHub tanlovi",
+      "smileys": "Smayllar va hissiyotlar",
+      "people": "Odamlar va tana",
+      "animals": "Hayvonlar va tabiat",
+      "food": "Taom va ichimlik",
+      "travel": "Sayohat va joylar",
+      "activities": "Faoliyatlar",
+      "objects": "Buyumlar",
+      "symbols": "Belgilar",
+      "flags": "Bayroqlar"
+    },
+    "tone": {
+      "default": "Standart",
+      "light": "Och teri rangi",
+      "mediumLight": "Oʻrtacha och teri rangi",
+      "medium": "Oʻrtacha teri rangi",
+      "mediumDark": "Oʻrtacha toʻq teri rangi",
+      "dark": "Toʻq teri rangi"
+    }
   }
 }

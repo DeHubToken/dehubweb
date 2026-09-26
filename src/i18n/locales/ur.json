@@ -6329,5 +6329,40 @@
     "notifications": {
       "tippedYou": "آپ کو ٹپ دی گئی {{amount}} ٹوکنز"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ایموجی",
+    "tabGif": "GIF",
+    "searchEmoji": "ایموجی تلاش کریں",
+    "searchGifs": "GIFs تلاش کریں...",
+    "noEmoji": "کوئی ایموجی نہیں ملا",
+    "noGifs": "کوئی GIFs نہیں ملے",
+    "trending": "رجحان ساز",
+    "searchResults": "تلاش کے نتائج",
+    "poweredByGiphy": "GIPHY کے تعاون سے",
+    "skinTone": "جلد کی رنگت",
+    "moreReactions": "مزید ردعمل",
+    "multiPickHint": "کئی منتخب کرنے کے لیے Shift دبا کر کلک کریں",
+    "group": {
+      "recent": "حال ہی میں استعمال شدہ",
+      "dehub": "DeHub کا انتخاب",
+      "smileys": "مسکراہٹیں اور جذبات",
+      "people": "لوگ اور جسم",
+      "animals": "جانور اور فطرت",
+      "food": "کھانا اور مشروبات",
+      "travel": "سفر اور مقامات",
+      "activities": "سرگرمیاں",
+      "objects": "اشیاء",
+      "symbols": "علامات",
+      "flags": "جھنڈے"
+    },
+    "tone": {
+      "default": "ڈیفالٹ",
+      "light": "ہلکی جلد کی رنگت",
+      "mediumLight": "درمیانی ہلکی جلد کی رنگت",
+      "medium": "درمیانی جلد کی رنگت",
+      "mediumDark": "درمیانی گہری جلد کی رنگت",
+      "dark": "گہری جلد کی رنگت"
+    }
   }
 }

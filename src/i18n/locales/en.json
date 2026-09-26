@@ -6614,5 +6614,40 @@
     "notifications": {
       "tippedYou": "tipped you {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Search emoji",
+    "searchGifs": "Search GIFs...",
+    "noEmoji": "No emoji found",
+    "noGifs": "No GIFs found",
+    "trending": "Trending",
+    "searchResults": "Search results",
+    "poweredByGiphy": "Powered by GIPHY",
+    "skinTone": "Skin tone",
+    "moreReactions": "More reactions",
+    "multiPickHint": "Shift-click to pick several",
+    "group": {
+      "recent": "Recently used",
+      "dehub": "DeHub picks",
+      "smileys": "Smileys & emotion",
+      "people": "People & body",
+      "animals": "Animals & nature",
+      "food": "Food & drink",
+      "travel": "Travel & places",
+      "activities": "Activities",
+      "objects": "Objects",
+      "symbols": "Symbols",
+      "flags": "Flags"
+    },
+    "tone": {
+      "default": "Default",
+      "light": "Light skin tone",
+      "mediumLight": "Medium-light skin tone",
+      "medium": "Medium skin tone",
+      "mediumDark": "Medium-dark skin tone",
+      "dark": "Dark skin tone"
+    }
   }
 }

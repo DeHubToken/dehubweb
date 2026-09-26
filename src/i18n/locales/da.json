@@ -6525,5 +6525,40 @@
     "notifications": {
       "tippedYou": "gav dig {{amount}}-tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Søg efter emoji",
+    "searchGifs": "Søg efter GIFs...",
+    "noEmoji": "Ingen emoji fundet",
+    "noGifs": "Ingen GIFs fundet",
+    "trending": "Trending",
+    "searchResults": "Søgeresultater",
+    "poweredByGiphy": "Leveret af GIPHY",
+    "skinTone": "Hudfarve",
+    "moreReactions": "Flere reaktioner",
+    "multiPickHint": "Shift-klik for at vælge flere",
+    "group": {
+      "recent": "Senest brugt",
+      "dehub": "DeHub-favoritter",
+      "smileys": "Smileys og følelser",
+      "people": "Mennesker og krop",
+      "animals": "Dyr og natur",
+      "food": "Mad og drikke",
+      "travel": "Rejser og steder",
+      "activities": "Aktiviteter",
+      "objects": "Genstande",
+      "symbols": "Symboler",
+      "flags": "Flag"
+    },
+    "tone": {
+      "default": "Standard",
+      "light": "Lys hudfarve",
+      "mediumLight": "Mellemlys hudfarve",
+      "medium": "Mellem hudfarve",
+      "mediumDark": "Mellemmørk hudfarve",
+      "dark": "Mørk hudfarve"
+    }
   }
 }

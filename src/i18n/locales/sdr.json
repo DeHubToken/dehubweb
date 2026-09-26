@@ -4286,5 +4286,40 @@
     "inProgress": "جاری ہے",
     "completed": "مکمل",
     "underReview": "جائزے میں"
+  },
+  "emojiPicker": {
+    "tabEmoji": "ایموجی",
+    "tabGif": "GIF",
+    "searchEmoji": "ایموجی کھوجو",
+    "searchGifs": "GIF کھوجو...",
+    "noEmoji": "کوئی ایموجی نہیں ملا",
+    "noGifs": "کوئی GIF نہیں ملا",
+    "trending": "ٹرینڈنگ",
+    "searchResults": "کھوج کے نتیجے",
+    "poweredByGiphy": "GIPHY کے ساتھ",
+    "skinTone": "چمڑی کا رنگ",
+    "moreReactions": "اور ری ایکشن",
+    "multiPickHint": "کئی چننے کے لیے Shift دبا کے کلک کرو",
+    "group": {
+      "recent": "حال میں استعمال",
+      "dehub": "DeHub کی پسند",
+      "smileys": "اسمائلی اور جذبات",
+      "people": "لوگ اور جسم",
+      "animals": "جانور اور قدرت",
+      "food": "کھانا اور پینا",
+      "travel": "سفر اور جگہیں",
+      "activities": "سرگرمیاں",
+      "objects": "چیزیں",
+      "symbols": "نشان",
+      "flags": "جھنڈے"
+    },
+    "tone": {
+      "default": "ڈیفالٹ",
+      "light": "ہلکا چمڑی کا رنگ",
+      "mediumLight": "درمیانہ ہلکا چمڑی کا رنگ",
+      "medium": "درمیانہ چمڑی کا رنگ",
+      "mediumDark": "درمیانہ گہرا چمڑی کا رنگ",
+      "dark": "گہرا چمڑی کا رنگ"
+    }
   }
 }

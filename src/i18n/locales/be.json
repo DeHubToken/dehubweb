@@ -6406,5 +6406,40 @@
     "backToBlog": "Вярнуцца да блога",
     "sharePost": "Падзяліцца публікацыяй",
     "relatedPosts": "Звязаныя публікацыі"
+  },
+  "emojiPicker": {
+    "tabEmoji": "Эмодзі",
+    "tabGif": "GIF",
+    "searchEmoji": "Пошук эмодзі",
+    "searchGifs": "Пошук GIF...",
+    "noEmoji": "Эмодзі не знойдзены",
+    "noGifs": "GIF не знойдзены",
+    "trending": "Папулярнае",
+    "searchResults": "Вынікі пошуку",
+    "poweredByGiphy": "Працуе на GIPHY",
+    "skinTone": "Колер скуры",
+    "moreReactions": "Больш рэакцый",
+    "multiPickHint": "Shift+клік, каб выбраць некалькі",
+    "group": {
+      "recent": "Нядаўнія",
+      "dehub": "Выбар DeHub",
+      "smileys": "Смайлы і эмоцыі",
+      "people": "Людзі і цела",
+      "animals": "Жывёлы і прырода",
+      "food": "Ежа і напоі",
+      "travel": "Падарожжы і месцы",
+      "activities": "Заняткі",
+      "objects": "Прадметы",
+      "symbols": "Сімвалы",
+      "flags": "Сцягі"
+    },
+    "tone": {
+      "default": "Па змаўчанні",
+      "light": "Светлы колер скуры",
+      "mediumLight": "Умерана светлы колер скуры",
+      "medium": "Сярэдні колер скуры",
+      "mediumDark": "Умерана цёмны колер скуры",
+      "dark": "Цёмны колер скуры"
+    }
   }
 }

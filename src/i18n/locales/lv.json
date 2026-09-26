@@ -6586,5 +6586,40 @@
     "notifications": {
       "tippedYou": "pievienoja jums dzeramnaudu {{amount}} žetonus"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emocijzīmes",
+    "tabGif": "GIF",
+    "searchEmoji": "Meklēt emocijzīmes",
+    "searchGifs": "Meklēt GIF...",
+    "noEmoji": "Emocijzīmes nav atrastas",
+    "noGifs": "GIF nav atrasti",
+    "trending": "Populārs",
+    "searchResults": "Meklēšanas rezultāti",
+    "poweredByGiphy": "Nodrošina GIPHY",
+    "skinTone": "Ādas tonis",
+    "moreReactions": "Vairāk reakciju",
+    "multiPickHint": "Shift+klikšķis, lai izvēlētos vairākas",
+    "group": {
+      "recent": "Nesen izmantotās",
+      "dehub": "DeHub izlase",
+      "smileys": "Smaidiņi un emocijas",
+      "people": "Cilvēki un ķermenis",
+      "animals": "Dzīvnieki un daba",
+      "food": "Ēdieni un dzērieni",
+      "travel": "Ceļojumi un vietas",
+      "activities": "Aktivitātes",
+      "objects": "Priekšmeti",
+      "symbols": "Simboli",
+      "flags": "Karogi"
+    },
+    "tone": {
+      "default": "Noklusējums",
+      "light": "Gaišs ādas tonis",
+      "mediumLight": "Vidēji gaišs ādas tonis",
+      "medium": "Vidējs ādas tonis",
+      "mediumDark": "Vidēji tumšs ādas tonis",
+      "dark": "Tumšs ādas tonis"
+    }
   }
 }

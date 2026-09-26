@@ -6551,5 +6551,40 @@
     "notifications": {
       "tippedYou": "amekupa kiinua mgongo {{amount}} tokeni"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Tafuta emoji",
+    "searchGifs": "Tafuta GIFs...",
+    "noEmoji": "Hakuna emoji zilizopatikana",
+    "noGifs": "Hakuna GIFs zilizopatikana",
+    "trending": "Inavyovuma",
+    "searchResults": "Matokeo ya utafutaji",
+    "poweredByGiphy": "Inaendeshwa na GIPHY",
+    "skinTone": "Rangi ya ngozi",
+    "moreReactions": "Maitikio zaidi",
+    "multiPickHint": "Shift-bofya kuchagua kadhaa",
+    "group": {
+      "recent": "Zilizotumika hivi karibuni",
+      "dehub": "Chaguo za DeHub",
+      "smileys": "Tabasamu na hisia",
+      "people": "Watu na mwili",
+      "animals": "Wanyama na asili",
+      "food": "Chakula na vinywaji",
+      "travel": "Safari na maeneo",
+      "activities": "Shughuli",
+      "objects": "Vitu",
+      "symbols": "Alama",
+      "flags": "Bendera"
+    },
+    "tone": {
+      "default": "Chaguo-msingi",
+      "light": "Rangi ya ngozi nyeupe",
+      "mediumLight": "Rangi ya ngozi nyeupe kiasi",
+      "medium": "Rangi ya ngozi ya wastani",
+      "mediumDark": "Rangi ya ngozi nyeusi kiasi",
+      "dark": "Rangi ya ngozi nyeusi"
+    }
   }
 }

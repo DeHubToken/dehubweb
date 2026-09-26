@@ -6574,5 +6574,40 @@
     "backToBlog": "Блогқа қайту",
     "sharePost": "Жазбаны бөлісу",
     "relatedPosts": "Байланысты жазбалар"
+  },
+  "emojiPicker": {
+    "tabEmoji": "Эмодзи",
+    "tabGif": "GIF",
+    "searchEmoji": "Эмодзи іздеу",
+    "searchGifs": "GIF іздеу...",
+    "noEmoji": "Эмодзи табылмады",
+    "noGifs": "GIF табылмады",
+    "trending": "Тренд",
+    "searchResults": "Іздеу нәтижелері",
+    "poweredByGiphy": "GIPHY қолдауымен",
+    "skinTone": "Тері түсі",
+    "moreReactions": "Көбірек реакция",
+    "multiPickHint": "Бірнешеуін таңдау үшін Shift басып шертіңіз",
+    "group": {
+      "recent": "Жақында қолданылған",
+      "dehub": "DeHub таңдауы",
+      "smileys": "Смайликтер мен эмоциялар",
+      "people": "Адамдар мен дене",
+      "animals": "Жануарлар мен табиғат",
+      "food": "Тамақ пен сусын",
+      "travel": "Саяхат пен орындар",
+      "activities": "Белсенділіктер",
+      "objects": "Заттар",
+      "symbols": "Таңбалар",
+      "flags": "Жалаулар"
+    },
+    "tone": {
+      "default": "Әдепкі",
+      "light": "Ашық тері түсі",
+      "mediumLight": "Орташа ашық тері түсі",
+      "medium": "Орташа тері түсі",
+      "mediumDark": "Орташа қоңыр тері түсі",
+      "dark": "Қара тері түсі"
+    }
   }
 }

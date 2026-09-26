@@ -4251,5 +4251,40 @@
     "home": {
       "stakedPost": "50k DeHub ምልክታት ንኣብነት ፡ ሮዝነፍት ፡ 13% እዩ ። ናይ ነዊሕ ግዜ ኣስተንትኖ ። 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ኢሞጂ",
+    "tabGif": "GIF",
+    "searchEmoji": "ኢሞጂ ድለ",
+    "searchGifs": "GIFs ድለ...",
+    "noEmoji": "ኢሞጂ ኣይተረኽበን",
+    "noGifs": "GIFs ኣይተረኽቡን",
+    "trending": "ዝዘወር",
+    "searchResults": "ውጽኢት ምድላይ",
+    "poweredByGiphy": "ብGIPHY ዝሰርሕ",
+    "skinTone": "ሕብሪ ቆርበት",
+    "moreReactions": "ተወሳኺ ግብረ-መልሲ",
+    "multiPickHint": "ብዙሓት ንምምራጽ Shift ጸቒጥካ ጠውቕ",
+    "group": {
+      "recent": "ቀረባ እዋን ዝተጠቐምካሉ",
+      "dehub": "ምርጫታት DeHub",
+      "smileys": "ፍሽኽታን ስምዒትን",
+      "people": "ሰባትን ኣካላትን",
+      "animals": "እንስሳን ተፈጥሮን",
+      "food": "መግብን መስተን",
+      "travel": "ጉዕዞን ቦታታትን",
+      "activities": "ንጥፈታት",
+      "objects": "ኣቑሑት",
+      "symbols": "ምልክታት",
+      "flags": "ባንዴራታት"
+    },
+    "tone": {
+      "default": "ንቡር",
+      "light": "ፈኲስ ሕብሪ ቆርበት",
+      "mediumLight": "ማእከላይ-ፈኲስ ሕብሪ ቆርበት",
+      "medium": "ማእከላይ ሕብሪ ቆርበት",
+      "mediumDark": "ማእከላይ-ጸሊም ሕብሪ ቆርበት",
+      "dark": "ጸሊም ሕብሪ ቆርበት"
+    }
   }
 }

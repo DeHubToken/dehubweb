@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/popover';
 import { VoiceWaveformPlayer } from './VoiceWaveformPlayer';
 import { QUICK_CHAT_REACTIONS } from './reaction-options';
+import { MoreReactionsButton } from './MoreReactionsButton';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function ChatAvatar({ src, address, name, className }: { src?: string; address?: string; name: string; className?: string }) {
@@ -356,6 +357,11 @@ export const ChatMessage = memo(function ChatMessage({
                         </button>
                       );
                     })}
+                    <MoreReactionsButton
+                      onPick={handleQuickReact}
+                      reactions={message.reactions}
+                      viewerAddress={currentUserAddress}
+                    />
                   </div>
                 </PopoverContent>
               </Popover>

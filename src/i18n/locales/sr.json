@@ -3359,5 +3359,40 @@
     "tokenNotConfigured": "DeHub токени нису подешени на {{chain}}.",
     "notEnoughTokens": "Недовољно токена",
     "onChainBalanceTooLow": "Ваш он-чејн баланс DeHub токена на {{chain}} је пренизак. Приказани баланс се можда још није синхронизовао."
+  },
+  "emojiPicker": {
+    "tabEmoji": "Емоџи",
+    "tabGif": "GIF",
+    "searchEmoji": "Претражи емоџије",
+    "searchGifs": "Претражи GIF-ове...",
+    "noEmoji": "Нема пронађених емоџија",
+    "noGifs": "Нема пронађених GIF-ова",
+    "trending": "У тренду",
+    "searchResults": "Резултати претраге",
+    "poweredByGiphy": "Покреће GIPHY",
+    "skinTone": "Тон коже",
+    "moreReactions": "Још реакција",
+    "multiPickHint": "Shift-клик за избор више њих",
+    "group": {
+      "recent": "Недавно коришћено",
+      "dehub": "DeHub избор",
+      "smileys": "Смајлији и емоције",
+      "people": "Људи и тело",
+      "animals": "Животиње и природа",
+      "food": "Храна и пиће",
+      "travel": "Путовања и места",
+      "activities": "Активности",
+      "objects": "Предмети",
+      "symbols": "Симболи",
+      "flags": "Заставе"
+    },
+    "tone": {
+      "default": "Подразумевано",
+      "light": "Светао тон коже",
+      "mediumLight": "Средње светао тон коже",
+      "medium": "Средњи тон коже",
+      "mediumDark": "Средње таман тон коже",
+      "dark": "Таман тон коже"
+    }
   }
 }

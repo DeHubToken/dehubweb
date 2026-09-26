@@ -4317,5 +4317,40 @@
     "inProgress": "চলতাসে",
     "completed": "শেষ অইসে",
     "underReview": "পর্যালোচনায়"
+  },
+  "emojiPicker": {
+    "tabEmoji": "ইমোজি",
+    "tabGif": "GIF",
+    "searchEmoji": "ইমোজি হুদো",
+    "searchGifs": "GIFs হুদো...",
+    "noEmoji": "কোনো ইমোজি পাওয়া গেল না",
+    "noGifs": "কোনো GIFs পাওয়া গেল না",
+    "trending": "ট্রেন্ডিং",
+    "searchResults": "সার্চের ফলাফল",
+    "poweredByGiphy": "GIPHY দিয়া চালিত",
+    "skinTone": "চামড়ার রং",
+    "moreReactions": "আরো রিঅ্যাকশন",
+    "multiPickHint": "কয়টা বাছাই করতে Shift চাপিয়া ক্লিক করো",
+    "group": {
+      "recent": "হালে ব্যবহার করা",
+      "dehub": "DeHub-র বাছাই",
+      "smileys": "হাসি আর আবেগ",
+      "people": "মানুষ আর শরীর",
+      "animals": "জন্তু আর প্রকৃতি",
+      "food": "খানা আর পানীয়",
+      "travel": "সফর আর জাগা",
+      "activities": "কাজকাম",
+      "objects": "জিনিসপাতি",
+      "symbols": "চিহ্ন",
+      "flags": "পতাকা"
+    },
+    "tone": {
+      "default": "ডিফল্ট",
+      "light": "হালকা চামড়ার রং",
+      "mediumLight": "মাঝারি-হালকা চামড়ার রং",
+      "medium": "মাঝারি চামড়ার রং",
+      "mediumDark": "মাঝারি-গাঢ় চামড়ার রং",
+      "dark": "গাঢ় চামড়ার রং"
+    }
   }
 }

@@ -3643,5 +3643,40 @@
   },
   "mobilePreview": {
     "tokenAmount": "{{amount}} tokens"
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Find emoji",
+    "searchGifs": "Find GIFs...",
+    "noEmoji": "We no find any emoji",
+    "noGifs": "We no find any GIFs",
+    "trending": "Trending",
+    "searchResults": "Wetin we find",
+    "poweredByGiphy": "Na GIPHY dey power am",
+    "skinTone": "Skin colour",
+    "moreReactions": "More reaction",
+    "multiPickHint": "Shift-click for pick plenty",
+    "group": {
+      "recent": "Weti you use recent",
+      "dehub": "DeHub pick",
+      "smileys": "Smiley and feeling",
+      "people": "People and body",
+      "animals": "Animal and nature",
+      "food": "Chop and drink",
+      "travel": "Travel and place",
+      "activities": "Activity",
+      "objects": "Thing dem",
+      "symbols": "Sign dem",
+      "flags": "Flag dem"
+    },
+    "tone": {
+      "default": "Default",
+      "light": "Light skin colour",
+      "mediumLight": "Medium-light skin colour",
+      "medium": "Medium skin colour",
+      "mediumDark": "Medium-dark skin colour",
+      "dark": "Dark skin colour"
+    }
   }
 }

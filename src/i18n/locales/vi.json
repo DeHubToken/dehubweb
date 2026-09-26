@@ -6398,5 +6398,40 @@
     "notifications": {
       "tippedYou": "đã trả tiền boa cho bạn mã thông báo {{amount}}"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Tìm emoji",
+    "searchGifs": "Tìm GIFs...",
+    "noEmoji": "Không tìm thấy emoji",
+    "noGifs": "Không tìm thấy GIFs",
+    "trending": "Xu hướng",
+    "searchResults": "Kết quả tìm kiếm",
+    "poweredByGiphy": "Được cung cấp bởi GIPHY",
+    "skinTone": "Tông da",
+    "moreReactions": "Thêm cảm xúc",
+    "multiPickHint": "Shift-click để chọn nhiều",
+    "group": {
+      "recent": "Dùng gần đây",
+      "dehub": "DeHub chọn lọc",
+      "smileys": "Mặt cười & cảm xúc",
+      "people": "Con người & cơ thể",
+      "animals": "Động vật & thiên nhiên",
+      "food": "Đồ ăn & thức uống",
+      "travel": "Du lịch & địa điểm",
+      "activities": "Hoạt động",
+      "objects": "Đồ vật",
+      "symbols": "Biểu tượng",
+      "flags": "Cờ"
+    },
+    "tone": {
+      "default": "Mặc định",
+      "light": "Tông da sáng",
+      "mediumLight": "Tông da sáng vừa",
+      "medium": "Tông da trung bình",
+      "mediumDark": "Tông da tối vừa",
+      "dark": "Tông da tối"
+    }
   }
 }

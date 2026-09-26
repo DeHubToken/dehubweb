@@ -34,6 +34,7 @@ import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLink
 import { ChatLinkPreviews } from '../chat/ChatLinkPreviews';
 
 import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';
+import { MoreReactionsButton } from '@/components/app/chat/MoreReactionsButton';
 
 /**
  * A text message in the side panel, with the same cards every other chat
@@ -602,6 +603,12 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                                   </button>
                                 );
                               })}
+                              <MoreReactionsButton
+                                className="w-7 h-7"
+                                onPick={(emoji) => handleReact(msg.id, emoji)}
+                                reactions={msg.reactions}
+                                viewerAddress={walletAddress}
+                              />
                             </div>
                           </PopoverContent>
                         </Popover>

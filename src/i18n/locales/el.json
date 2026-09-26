@@ -6240,5 +6240,40 @@
     "notifications": {
       "tippedYou": "φιλοδώρημα {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Αναζήτηση emoji",
+    "searchGifs": "Αναζήτηση GIF...",
+    "noEmoji": "Δεν βρέθηκαν emoji",
+    "noGifs": "Δεν βρέθηκαν GIF",
+    "trending": "Δημοφιλή",
+    "searchResults": "Αποτελέσματα αναζήτησης",
+    "poweredByGiphy": "Με την υποστήριξη του GIPHY",
+    "skinTone": "Τόνος δέρματος",
+    "moreReactions": "Περισσότερες αντιδράσεις",
+    "multiPickHint": "Shift+κλικ για επιλογή πολλών",
+    "group": {
+      "recent": "Πρόσφατα",
+      "dehub": "Επιλογές DeHub",
+      "smileys": "Φατσούλες και συναισθήματα",
+      "people": "Άνθρωποι και σώμα",
+      "animals": "Ζώα και φύση",
+      "food": "Φαγητό και ποτό",
+      "travel": "Ταξίδια και μέρη",
+      "activities": "Δραστηριότητες",
+      "objects": "Αντικείμενα",
+      "symbols": "Σύμβολα",
+      "flags": "Σημαίες"
+    },
+    "tone": {
+      "default": "Προεπιλογή",
+      "light": "Ανοιχτός τόνος δέρματος",
+      "mediumLight": "Μεσαίος-ανοιχτός τόνος δέρματος",
+      "medium": "Μεσαίος τόνος δέρματος",
+      "mediumDark": "Μεσαίος-σκούρος τόνος δέρματος",
+      "dark": "Σκούρος τόνος δέρματος"
+    }
   }
 }

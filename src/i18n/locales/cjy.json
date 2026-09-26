@@ -4352,5 +4352,40 @@
     "followers": "关注者",
     "subscribers": "订阅者",
     "mentioned": "被提到的"
+  },
+  "emojiPicker": {
+    "tabEmoji": "表情",
+    "tabGif": "GIF",
+    "searchEmoji": "搜表情",
+    "searchGifs": "搜 GIF...",
+    "noEmoji": "没寻着表情",
+    "noGifs": "没寻着 GIF",
+    "trending": "热门",
+    "searchResults": "搜索结果",
+    "poweredByGiphy": "由 GIPHY 提供支持",
+    "skinTone": "肤色",
+    "moreReactions": "更多反应",
+    "multiPickHint": "按住 Shift 点击可以多选",
+    "group": {
+      "recent": "最近用过嘞",
+      "dehub": "DeHub 精选",
+      "smileys": "笑脸和情绪",
+      "people": "人和身体",
+      "animals": "动物和大自然",
+      "food": "吃嘞喝嘞",
+      "travel": "旅行和地方",
+      "activities": "活动",
+      "objects": "物件",
+      "symbols": "符号",
+      "flags": "旗子"
+    },
+    "tone": {
+      "default": "默认",
+      "light": "浅肤色",
+      "mediumLight": "中等偏浅肤色",
+      "medium": "中等肤色",
+      "mediumDark": "中等偏深肤色",
+      "dark": "深肤色"
+    }
   }
 }

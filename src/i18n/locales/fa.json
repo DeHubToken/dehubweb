@@ -6486,5 +6486,40 @@
     "notifications": {
       "tippedYou": "به شما {{amount}} توکن انعام دادم"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ایموجی",
+    "tabGif": "GIF",
+    "searchEmoji": "جستجوی ایموجی",
+    "searchGifs": "جستجوی GIF...",
+    "noEmoji": "ایموجی‌ای پیدا نشد",
+    "noGifs": "GIFی پیدا نشد",
+    "trending": "پرطرفدار",
+    "searchResults": "نتایج جستجو",
+    "poweredByGiphy": "قدرت‌گرفته از GIPHY",
+    "skinTone": "رنگ پوست",
+    "moreReactions": "واکنش‌های بیشتر",
+    "multiPickHint": "برای انتخاب چندتایی Shift را نگه دارید و کلیک کنید",
+    "group": {
+      "recent": "اخیراً استفاده‌شده",
+      "dehub": "منتخب DeHub",
+      "smileys": "شکلک‌ها و احساسات",
+      "people": "افراد و بدن",
+      "animals": "حیوانات و طبیعت",
+      "food": "غذا و نوشیدنی",
+      "travel": "سفر و مکان‌ها",
+      "activities": "فعالیت‌ها",
+      "objects": "اشیا",
+      "symbols": "نمادها",
+      "flags": "پرچم‌ها"
+    },
+    "tone": {
+      "default": "پیش‌فرض",
+      "light": "پوست روشن",
+      "mediumLight": "پوست نسبتاً روشن",
+      "medium": "پوست متوسط",
+      "mediumDark": "پوست نسبتاً تیره",
+      "dark": "پوست تیره"
+    }
   }
 }

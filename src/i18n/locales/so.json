@@ -4358,5 +4358,40 @@
     "notifications": {
       "tippedYou": "badiyadka to{{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Raadi emoji",
+    "searchGifs": "Raadi GIFs...",
+    "noEmoji": "Emoji lama helin",
+    "noGifs": "GIFs lama helin",
+    "trending": "Trend",
+    "searchResults": "Natiijooyinka raadinta",
+    "poweredByGiphy": "Waxaa awood siiyay GIPHY",
+    "skinTone": "Midabka maqaarka",
+    "moreReactions": "Falcelino kale",
+    "multiPickHint": "Shift-riix si aad dhowr u doorato",
+    "group": {
+      "recent": "Dhawaan la isticmaalay",
+      "dehub": "Xulashada DeHub",
+      "smileys": "Dhoolacaddeyn & dareen",
+      "people": "Dad & jir",
+      "animals": "Xayawaan & dabeecad",
+      "food": "Cunto & cabbitaan",
+      "travel": "Safar & meelo",
+      "activities": "Hawlo",
+      "objects": "Walxo",
+      "symbols": "Calaamado",
+      "flags": "Calanno"
+    },
+    "tone": {
+      "default": "Caadi",
+      "light": "Midab maqaar khafiif ah",
+      "mediumLight": "Midab maqaar khafiif-dhexe ah",
+      "medium": "Midab maqaar dhexe ah",
+      "mediumDark": "Midab maqaar madow-dhexe ah",
+      "dark": "Midab maqaar madow ah"
+    }
   }
 }

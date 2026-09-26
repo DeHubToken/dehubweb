@@ -4363,5 +4363,40 @@
     "notifications": {
       "tippedYou": "tayyar ka {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Bincika emoji",
+    "searchGifs": "Bincika GIFs...",
+    "noEmoji": "Ba a sami emoji ba",
+    "noGifs": "Ba a sami GIFs ba",
+    "trending": "Mai Yawan Sha'awa",
+    "searchResults": "Sakamakon bincike",
+    "poweredByGiphy": "GIPHY ne ke samar da shi",
+    "skinTone": "Launin fata",
+    "moreReactions": "Ƙarin martani",
+    "multiPickHint": "Shift-danna don zaɓar da yawa",
+    "group": {
+      "recent": "Waɗanda aka yi amfani da su kwanan nan",
+      "dehub": "Zaɓin DeHub",
+      "smileys": "Murmushi & motsin rai",
+      "people": "Mutane & jiki",
+      "animals": "Dabbobi & yanayi",
+      "food": "Abinci & abin sha",
+      "travel": "Tafiya & wurare",
+      "activities": "Ayyuka",
+      "objects": "Abubuwa",
+      "symbols": "Alamomi",
+      "flags": "Tutoci"
+    },
+    "tone": {
+      "default": "Na asali",
+      "light": "Fata mai haske",
+      "mediumLight": "Fata mai ɗan haske",
+      "medium": "Fata matsakaiciya",
+      "mediumDark": "Fata mai ɗan duhu",
+      "dark": "Fata mai duhu"
+    }
   }
 }

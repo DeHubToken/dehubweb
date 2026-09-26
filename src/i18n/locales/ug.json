@@ -4308,5 +4308,40 @@
     "notifications": {
       "tippedYou": "سىزنى يوقلىدى {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ئېموجى",
+    "tabGif": "GIF",
+    "searchEmoji": "ئېموجى ئىزدەش",
+    "searchGifs": "GIFs ئىزدەش...",
+    "noEmoji": "ئېموجى تېپىلمىدى",
+    "noGifs": "GIFs تېپىلمىدى",
+    "trending": "داڭلىق",
+    "searchResults": "ئىزدەش نەتىجىلىرى",
+    "poweredByGiphy": "GIPHY تەمىنلىگەن",
+    "skinTone": "تېرە رەڭگى",
+    "moreReactions": "تېخىمۇ كۆپ ئىنكاس",
+    "multiPickHint": "بىر قانچىنى تاللاش ئۈچۈن Shift نى بېسىپ چېكىڭ",
+    "group": {
+      "recent": "يېقىندا ئىشلىتىلگەن",
+      "dehub": "DeHub تاللىغانلار",
+      "smileys": "كۈلكە ۋە ھېسسىيات",
+      "people": "ئادەملەر ۋە بەدەن",
+      "animals": "ھايۋانلار ۋە تەبىئەت",
+      "food": "يېمەكلىك ۋە ئىچىملىك",
+      "travel": "ساياھەت ۋە جايلار",
+      "activities": "پائالىيەتلەر",
+      "objects": "بۇيۇملار",
+      "symbols": "بەلگىلەر",
+      "flags": "بايراقلار"
+    },
+    "tone": {
+      "default": "كۆڭۈلدىكى",
+      "light": "ئاچ تېرە رەڭگى",
+      "mediumLight": "ئوتتۇراھال ئاچ تېرە رەڭگى",
+      "medium": "ئوتتۇراھال تېرە رەڭگى",
+      "mediumDark": "ئوتتۇراھال قېنىق تېرە رەڭگى",
+      "dark": "قېنىق تېرە رەڭگى"
+    }
   }
 }

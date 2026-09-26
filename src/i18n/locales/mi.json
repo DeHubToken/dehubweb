@@ -4357,5 +4357,40 @@
     "notifications": {
       "tippedYou": "tepped koe {{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Rapua he emoji",
+    "searchGifs": "Rapua he GIF...",
+    "noEmoji": "Kāore he emoji i kitea",
+    "noGifs": "Kāore he GIF i kitea",
+    "trending": "E rongonui ana",
+    "searchResults": "Ngā hua rapu",
+    "poweredByGiphy": "Nā GIPHY i whakakaha",
+    "skinTone": "Tae kiri",
+    "moreReactions": "Ētahi atu urupare",
+    "multiPickHint": "Pēhia te Shift me te pāwhiri kia kōwhiri i ētahi",
+    "group": {
+      "recent": "Nō nā tata nei",
+      "dehub": "Ngā kōwhiringa a DeHub",
+      "smileys": "Ngā kata me ngā kare ā-roto",
+      "people": "Tāngata me te tinana",
+      "animals": "Kararehe me te taiao",
+      "food": "Kai me te inu",
+      "travel": "Haerenga me ngā wāhi",
+      "activities": "Ngā mahi",
+      "objects": "Ngā taonga",
+      "symbols": "Ngā tohu",
+      "flags": "Ngā haki"
+    },
+    "tone": {
+      "default": "Taunoa",
+      "light": "Tae kiri māmā",
+      "mediumLight": "Tae kiri māmā-waenga",
+      "medium": "Tae kiri waenga",
+      "mediumDark": "Tae kiri pōuri-waenga",
+      "dark": "Tae kiri pōuri"
+    }
   }
 }

@@ -4329,5 +4329,40 @@
     "notifications": {
       "tippedYou": "તમને ટિપ આપી{{amount}} tokens"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "ઇમોજી",
+    "tabGif": "GIF",
+    "searchEmoji": "ઇમોજી શોધો",
+    "searchGifs": "GIFs શોધો...",
+    "noEmoji": "કોઈ ઇમોજી મળ્યા નથી",
+    "noGifs": "કોઈ GIFs મળ્યા નથી",
+    "trending": "ટ્રેન્ડિંગ",
+    "searchResults": "શોધ પરિણામો",
+    "poweredByGiphy": "GIPHY દ્વારા સંચાલિત",
+    "skinTone": "ત્વચાનો રંગ",
+    "moreReactions": "વધુ પ્રતિક્રિયાઓ",
+    "multiPickHint": "ઘણા પસંદ કરવા Shift-ક્લિક કરો",
+    "group": {
+      "recent": "તાજેતરમાં વપરાયેલ",
+      "dehub": "DeHub પસંદગી",
+      "smileys": "સ્માઇલી અને લાગણી",
+      "people": "લોકો અને શરીર",
+      "animals": "પ્રાણીઓ અને પ્રકૃતિ",
+      "food": "ખોરાક અને પીણાં",
+      "travel": "પ્રવાસ અને સ્થળો",
+      "activities": "પ્રવૃત્તિઓ",
+      "objects": "વસ્તુઓ",
+      "symbols": "પ્રતીકો",
+      "flags": "ધ્વજ"
+    },
+    "tone": {
+      "default": "ડિફૉલ્ટ",
+      "light": "આછો ત્વચા રંગ",
+      "mediumLight": "મધ્યમ-આછો ત્વચા રંગ",
+      "medium": "મધ્યમ ત્વચા રંગ",
+      "mediumDark": "મધ્યમ-ઘેરો ત્વચા રંગ",
+      "dark": "ઘેરો ત્વચા રંગ"
+    }
   }
 }

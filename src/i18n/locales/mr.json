@@ -6282,5 +6282,40 @@
     "notifications": {
       "tippedYou": "तुम्हाला {{amount}} टोकन टिपले"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "इमोजी",
+    "tabGif": "GIF",
+    "searchEmoji": "इमोजी शोधा",
+    "searchGifs": "GIF शोधा...",
+    "noEmoji": "कोणतेही इमोजी सापडले नाहीत",
+    "noGifs": "कोणतेही GIF सापडले नाहीत",
+    "trending": "ट्रेंडिंग",
+    "searchResults": "शोध परिणाम",
+    "poweredByGiphy": "GIPHY द्वारे समर्थित",
+    "skinTone": "त्वचेचा रंग",
+    "moreReactions": "आणखी प्रतिक्रिया",
+    "multiPickHint": "अनेक निवडण्यासाठी Shift दाबून क्लिक करा",
+    "group": {
+      "recent": "अलीकडे वापरलेले",
+      "dehub": "DeHub च्या निवडी",
+      "smileys": "स्मायली आणि भावना",
+      "people": "लोक आणि शरीर",
+      "animals": "प्राणी आणि निसर्ग",
+      "food": "अन्न आणि पेय",
+      "travel": "प्रवास आणि ठिकाणे",
+      "activities": "उपक्रम",
+      "objects": "वस्तू",
+      "symbols": "चिन्हे",
+      "flags": "ध्वज"
+    },
+    "tone": {
+      "default": "डीफॉल्ट",
+      "light": "फिकट त्वचेचा रंग",
+      "mediumLight": "मध्यम-फिकट त्वचेचा रंग",
+      "medium": "मध्यम त्वचेचा रंग",
+      "mediumDark": "मध्यम-गडद त्वचेचा रंग",
+      "dark": "गडद त्वचेचा रंग"
+    }
   }
 }

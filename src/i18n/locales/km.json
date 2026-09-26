@@ -6312,5 +6312,40 @@
     "backToBlog": "ត្រឡប់ទៅប្លក់",
     "sharePost": "ចែករំលែកការបង្ហោះ",
     "relatedPosts": "ការបង្ហោះពាក់ព័ន្ធ"
+  },
+  "emojiPicker": {
+    "tabEmoji": "អ៊ីម៉ូជី",
+    "tabGif": "GIF",
+    "searchEmoji": "ស្វែងរកអ៊ីម៉ូជី",
+    "searchGifs": "ស្វែងរក GIF...",
+    "noEmoji": "រកមិនឃើញអ៊ីម៉ូជីទេ",
+    "noGifs": "រកមិនឃើញ GIF ទេ",
+    "trending": "និន្នាការ",
+    "searchResults": "លទ្ធផលស្វែងរក",
+    "poweredByGiphy": "ដំណើរការដោយ GIPHY",
+    "skinTone": "ពណ៌ស្បែក",
+    "moreReactions": "ប្រតិកម្មច្រើនទៀត",
+    "multiPickHint": "ចុច Shift ហើយចុចដើម្បីជ្រើសរើសច្រើន",
+    "group": {
+      "recent": "បានប្រើថ្មីៗ",
+      "dehub": "ជម្រើសរបស់ DeHub",
+      "smileys": "ញញឹម និងអារម្មណ៍",
+      "people": "មនុស្ស និងរាងកាយ",
+      "animals": "សត្វ និងធម្មជាតិ",
+      "food": "អាហារ និងភេសជ្ជៈ",
+      "travel": "ការធ្វើដំណើរ និងទីកន្លែង",
+      "activities": "សកម្មភាព",
+      "objects": "វត្ថុ",
+      "symbols": "និមិត្តសញ្ញា",
+      "flags": "ទង់ជាតិ"
+    },
+    "tone": {
+      "default": "លំនាំដើម",
+      "light": "ពណ៌ស្បែកស",
+      "mediumLight": "ពណ៌ស្បែកសល្មម",
+      "medium": "ពណ៌ស្បែកមធ្យម",
+      "mediumDark": "ពណ៌ស្បែកខ្មៅល្មម",
+      "dark": "ពណ៌ស្បែកខ្មៅ"
+    }
   }
 }

@@ -4288,5 +4288,40 @@
     "home": {
       "stakedPost": "कैलक्यूलेटर 50k. लाभ, उदाहरण के लिए, रोजनेफ्ट, 13% है । लंबे समय से प्रतीक्षित Piccionaia, हालांकि! 💎🙌"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "इमोजी",
+    "tabGif": "GIF",
+    "searchEmoji": "इमोजी खोजो",
+    "searchGifs": "GIF खोजो...",
+    "noEmoji": "कोनो इमोजी न मिलल",
+    "noGifs": "कोनो GIF न मिलल",
+    "trending": "ट्रेंडिंग",
+    "searchResults": "खोज के नतीजा",
+    "poweredByGiphy": "GIPHY से चलित",
+    "skinTone": "चमड़ी के रंग",
+    "moreReactions": "आउर रिएक्शन",
+    "multiPickHint": "कई गो चुने ला Shift दबा के क्लिक करो",
+    "group": {
+      "recent": "हाल में इस्तेमाल कइल",
+      "dehub": "DeHub के पसंद",
+      "smileys": "स्माइली आउ भाव",
+      "people": "लोग आउ देह",
+      "animals": "जानवर आउ प्रकृति",
+      "food": "खाना आउ पीना",
+      "travel": "यात्रा आउ जगह",
+      "activities": "गतिविधि",
+      "objects": "चीज-बतुस",
+      "symbols": "चिन्ह",
+      "flags": "झंडा"
+    },
+    "tone": {
+      "default": "डिफ़ॉल्ट",
+      "light": "हल्का चमड़ी रंग",
+      "mediumLight": "मध्यम-हल्का चमड़ी रंग",
+      "medium": "मध्यम चमड़ी रंग",
+      "mediumDark": "मध्यम-गाढ़ा चमड़ी रंग",
+      "dark": "गाढ़ा चमड़ी रंग"
+    }
   }
 }

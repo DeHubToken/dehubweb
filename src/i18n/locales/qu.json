@@ -4399,5 +4399,40 @@
     "notifications": {
       "tippedYou": "tipped you {{amount}} fichas"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Emojita maskay",
+    "searchGifs": "GIFkunata maskay...",
+    "noEmoji": "Mana emoji tarikurqanchu",
+    "noGifs": "Mana GIF tarikurqanchu",
+    "trending": "Kunan riqsisqa",
+    "searchResults": "Maskasqapa ruruynin",
+    "poweredByGiphy": "GIPHYwan llamk'an",
+    "skinTone": "Qara llimp'i",
+    "moreReactions": "Aswan kutichiykuna",
+    "multiPickHint": "Achkata akllanapaq Shiftwan ñit'iy",
+    "group": {
+      "recent": "Qayna llamk'achisqa",
+      "dehub": "DeHubpa akllasqankuna",
+      "smileys": "Asiykuna & sunqu",
+      "people": "Runakuna & ukhu",
+      "animals": "Uywakuna & pachamama",
+      "food": "Mikhuy & ukyay",
+      "travel": "Puriy & llaqtakuna",
+      "activities": "Ruraykuna",
+      "objects": "Imakuna",
+      "symbols": "Unanchakuna",
+      "flags": "Banderakuna"
+    },
+    "tone": {
+      "default": "Kikin",
+      "light": "Ch'uya qara llimp'i",
+      "mediumLight": "Chawpi-ch'uya qara llimp'i",
+      "medium": "Chawpi qara llimp'i",
+      "mediumDark": "Chawpi-yana qara llimp'i",
+      "dark": "Yana qara llimp'i"
+    }
   }
 }

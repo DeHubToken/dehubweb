@@ -4315,5 +4315,40 @@
     "notifications": {
       "tippedYou": "ให้ทิปเจ้า {{amount}} โทเคนแล้ว"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "อีโมจิ",
+    "tabGif": "GIF",
+    "searchEmoji": "ค้นหาอีโมจิ",
+    "searchGifs": "ค้นหา GIFs...",
+    "noEmoji": "บ่พ้ออีโมจิ",
+    "noGifs": "บ่พ้อ GIFs",
+    "trending": "กำลังฮิต",
+    "searchResults": "ผลการค้นหา",
+    "poweredByGiphy": "ขับเคลื่อนโดย GIPHY",
+    "skinTone": "สีผิว",
+    "moreReactions": "รีแอคชันอื่นๆ",
+    "multiPickHint": "Shift-คลิกเพื่อเลือกหลายอัน",
+    "group": {
+      "recent": "ใช้ล่าสุด",
+      "dehub": "DeHub เลือกให้",
+      "smileys": "หน้าฮ้าและอารมณ์",
+      "people": "ผู้คนและฮ่างกาย",
+      "animals": "สัตว์และธรรมชาติ",
+      "food": "ของกินและเครื่องดื่ม",
+      "travel": "การเดินทางและบ่อนต่างๆ",
+      "activities": "กิจกรรม",
+      "objects": "สิ่งของ",
+      "symbols": "สัญลักษณ์",
+      "flags": "ธง"
+    },
+    "tone": {
+      "default": "ค่าเริ่มต้น",
+      "light": "สีผิวอ่อน",
+      "mediumLight": "สีผิวอ่อนปานกลาง",
+      "medium": "สีผิวปานกลาง",
+      "mediumDark": "สีผิวเข้มปานกลาง",
+      "dark": "สีผิวเข้ม"
+    }
   }
 }

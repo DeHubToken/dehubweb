@@ -6494,5 +6494,40 @@
     "notifications": {
       "tippedYou": "antoi sinulle tippiä {{amount}} polettia"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emojit",
+    "tabGif": "GIF",
+    "searchEmoji": "Hae emojeja",
+    "searchGifs": "Hae GIFejä...",
+    "noEmoji": "Emojeja ei löytynyt",
+    "noGifs": "GIFejä ei löytynyt",
+    "trending": "Suositut",
+    "searchResults": "Hakutulokset",
+    "poweredByGiphy": "Palvelun tarjoaa GIPHY",
+    "skinTone": "Ihonväri",
+    "moreReactions": "Lisää reaktioita",
+    "multiPickHint": "Valitse useita Shift-napsautuksella",
+    "group": {
+      "recent": "Viimeksi käytetyt",
+      "dehub": "DeHubin valinnat",
+      "smileys": "Hymiöt ja tunteet",
+      "people": "Ihmiset ja keho",
+      "animals": "Eläimet ja luonto",
+      "food": "Ruoka ja juoma",
+      "travel": "Matkailu ja paikat",
+      "activities": "Aktiviteetit",
+      "objects": "Esineet",
+      "symbols": "Symbolit",
+      "flags": "Liput"
+    },
+    "tone": {
+      "default": "Oletus",
+      "light": "Vaalea ihonväri",
+      "mediumLight": "Keskivaalea ihonväri",
+      "medium": "Keskisävyinen ihonväri",
+      "mediumDark": "Keskitumma ihonväri",
+      "dark": "Tumma ihonväri"
+    }
   }
 }

@@ -6489,5 +6489,40 @@
     "backToBlog": "ब्लगमा फर्कनुहोस्",
     "sharePost": "पोस्ट साझा गर्नुहोस्",
     "relatedPosts": "सम्बन्धित पोस्टहरू"
+  },
+  "emojiPicker": {
+    "tabEmoji": "इमोजी",
+    "tabGif": "GIF",
+    "searchEmoji": "इमोजी खोज्नुहोस्",
+    "searchGifs": "GIF खोज्नुहोस्...",
+    "noEmoji": "कुनै इमोजी फेला परेन",
+    "noGifs": "कुनै GIF फेला परेन",
+    "trending": "ट्रेन्डिङ",
+    "searchResults": "खोज नतिजा",
+    "poweredByGiphy": "GIPHY द्वारा सञ्चालित",
+    "skinTone": "छालाको रङ",
+    "moreReactions": "थप प्रतिक्रियाहरू",
+    "multiPickHint": "धेरै छान्न Shift थिचेर क्लिक गर्नुहोस्",
+    "group": {
+      "recent": "हालै प्रयोग गरिएको",
+      "dehub": "DeHub का छनोटहरू",
+      "smileys": "स्माइली र भावना",
+      "people": "मानिस र शरीर",
+      "animals": "जनावर र प्रकृति",
+      "food": "खाना र पेय",
+      "travel": "यात्रा र ठाउँहरू",
+      "activities": "गतिविधिहरू",
+      "objects": "वस्तुहरू",
+      "symbols": "प्रतीकहरू",
+      "flags": "झण्डाहरू"
+    },
+    "tone": {
+      "default": "पूर्वनिर्धारित",
+      "light": "हल्का छालाको रङ",
+      "mediumLight": "मध्यम-हल्का छालाको रङ",
+      "medium": "मध्यम छालाको रङ",
+      "mediumDark": "मध्यम-गाढा छालाको रङ",
+      "dark": "गाढा छालाको रङ"
+    }
   }
 }

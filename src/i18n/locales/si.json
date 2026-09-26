@@ -6126,5 +6126,40 @@
     "backToBlog": "බ්ලොග් වෙත ආපසු",
     "sharePost": "පළකිරීම බෙදා ගන්න",
     "relatedPosts": "සම්බන්ධ පළකිරීම්"
+  },
+  "emojiPicker": {
+    "tabEmoji": "ඉමෝජි",
+    "tabGif": "GIF",
+    "searchEmoji": "ඉමෝජි සොයන්න",
+    "searchGifs": "GIF සොයන්න...",
+    "noEmoji": "ඉමෝජි හමු නොවීය",
+    "noGifs": "GIF හමු නොවීය",
+    "trending": "ප්‍රවණතා",
+    "searchResults": "සෙවුම් ප්‍රතිඵල",
+    "poweredByGiphy": "GIPHY මගින් බලගැන්වේ",
+    "skinTone": "සමේ වර්ණය",
+    "moreReactions": "තවත් ප්‍රතිචාර",
+    "multiPickHint": "කිහිපයක් තේරීමට Shift ඔබා ක්ලික් කරන්න",
+    "group": {
+      "recent": "මෑතකදී භාවිත කළ",
+      "dehub": "DeHub තේරීම්",
+      "smileys": "සිනාමුහුණු සහ හැඟීම්",
+      "people": "පුද්ගලයන් සහ ශරීරය",
+      "animals": "සතුන් සහ සොබාදහම",
+      "food": "ආහාර සහ පාන",
+      "travel": "සංචාර සහ ස්ථාන",
+      "activities": "ක්‍රියාකාරකම්",
+      "objects": "වස්තූන්",
+      "symbols": "සංකේත",
+      "flags": "ධජ"
+    },
+    "tone": {
+      "default": "පෙරනිමි",
+      "light": "ලා සමේ වර්ණය",
+      "mediumLight": "මධ්‍යම-ලා සමේ වර්ණය",
+      "medium": "මධ්‍යම සමේ වර්ණය",
+      "mediumDark": "මධ්‍යම-තද සමේ වර්ණය",
+      "dark": "තද සමේ වර්ණය"
+    }
   }
 }

@@ -4345,5 +4345,40 @@
     "notifications": {
       "tippedYou": "han der {{amount}} Tokens gits"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Emoji sueche",
+    "searchGifs": "GIFs sueche...",
+    "noEmoji": "Kei Emoji gfunde",
+    "noGifs": "Kei GIFs gfunde",
+    "trending": "Trending",
+    "searchResults": "Suechresultat",
+    "poweredByGiphy": "Präsentiert vo GIPHY",
+    "skinTone": "Huutfarb",
+    "moreReactions": "Meh Reaktione",
+    "multiPickHint": "Shift-Klick, zum mehreri uswähle",
+    "group": {
+      "recent": "Zletscht bruucht",
+      "dehub": "DeHub-Uswahl",
+      "smileys": "Smileys & Gfüehl",
+      "people": "Lüüt & Körper",
+      "animals": "Tier & Natur",
+      "food": "Ässe & Trinke",
+      "travel": "Reise & Ört",
+      "activities": "Aktivitäte",
+      "objects": "Objekt",
+      "symbols": "Symbol",
+      "flags": "Fahne"
+    },
+    "tone": {
+      "default": "Standard",
+      "light": "Hälli Huutfarb",
+      "mediumLight": "Mittelhälli Huutfarb",
+      "medium": "Mittleri Huutfarb",
+      "mediumDark": "Mitteldunkli Huutfarb",
+      "dark": "Dunkli Huutfarb"
+    }
   }
 }

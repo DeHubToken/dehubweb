@@ -6613,5 +6613,40 @@
     "notifications": {
       "tippedYou": "sana {{amount}} jeton bahşiş verdi"
     }
+  },
+  "emojiPicker": {
+    "tabEmoji": "Emoji",
+    "tabGif": "GIF",
+    "searchEmoji": "Emoji ara",
+    "searchGifs": "GIF ara...",
+    "noEmoji": "Emoji bulunamadı",
+    "noGifs": "GIF bulunamadı",
+    "trending": "Trend",
+    "searchResults": "Arama sonuçları",
+    "poweredByGiphy": "GIPHY tarafından desteklenmektedir",
+    "skinTone": "Ten rengi",
+    "moreReactions": "Daha fazla tepki",
+    "multiPickHint": "Birden fazla seçmek için Shift-tıkla",
+    "group": {
+      "recent": "Son kullanılanlar",
+      "dehub": "DeHub seçkileri",
+      "smileys": "İfadeler & duygular",
+      "people": "İnsanlar & vücut",
+      "animals": "Hayvanlar & doğa",
+      "food": "Yiyecek & içecek",
+      "travel": "Seyahat & yerler",
+      "activities": "Etkinlikler",
+      "objects": "Nesneler",
+      "symbols": "Semboller",
+      "flags": "Bayraklar"
+    },
+    "tone": {
+      "default": "Varsayılan",
+      "light": "Açık ten rengi",
+      "mediumLight": "Orta açık ten rengi",
+      "medium": "Orta ten rengi",
+      "mediumDark": "Orta koyu ten rengi",
+      "dark": "Koyu ten rengi"
+    }
   }
 }

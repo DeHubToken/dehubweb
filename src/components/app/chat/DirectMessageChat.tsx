@@ -84,6 +84,7 @@ import { isDmCallNotice } from '@/lib/dm-call-notice';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 import { QUICK_CHAT_REACTIONS } from './reaction-options';
+import { MoreReactionsButton } from './MoreReactionsButton';
 
 interface DirectMessageChatProps {
   conversation: DeHubConversation;
@@ -360,6 +361,16 @@ const MessageBubble = memo(function MessageBubble({
                       </button>
                     );
                   })}
+                  <MoreReactionsButton
+                    reactions={message.reactions}
+                    viewerAddress={currentUserAddress}
+                    onPick={(emoji) => {
+                      const mine = currentUserAddress && message.reactions?.[emoji]?.some(address => address.toLowerCase() === currentUserAddress.toLowerCase());
+                      if (mine) onRemoveReaction?.(message._id, emoji);
+                      else onReact(message._id, emoji);
+                      setReactionPickerOpen(false);
+                    }}
+                  />
                 </div>
               </PopoverContent>
             </Popover>
