@@ -15,7 +15,7 @@ import {
   fetchToolCatalog,
   executeDeHubTool,
   executeWebSearch,
-  GATEWAY_URL,
+  postCompletion,
   WEB_SEARCH_TOOL,
   type AgentOptions,
   type ToolTraceEntry,
@@ -28,9 +28,24 @@ interface PartialToolCall {
   args: string;
 }
 
+/**
+ * Which call a delta belongs to. Google's OpenAI-compatible stream sends each
+ * call whole with no `index`, several to a chunk when the model asks for
+ * parallel lookups — keyed on index alone they would all land in slot 0 and
+ * their arguments concatenate into JSON nobody can parse.
+ */
+function slotFor(into: Map<number, PartialToolCall>, d: any): number {
+  if (typeof d.index === 'number') return d.index;
+  if (d.id) {
+    for (const [slot, call] of into) if (call.id === d.id) return slot;
+    return into.size;
+  }
+  return Math.max(0, into.size - 1);
+}
+
 function mergeToolCallDeltas(into: Map<number, PartialToolCall>, deltas: any[]) {
   for (const d of deltas) {
-    const idx = d.index ?? 0;
+    const idx = slotFor(into, d);
     const existing = into.get(idx) || { id: '', name: '', args: '' };
     if (d.id) existing.id = d.id;
     if (d.function?.name) existing.name = d.function.name;
@@ -123,18 +138,17 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
 
           let res: Response;
           try {
-            res = await fetch(GATEWAY_URL, {
-              method: 'POST',
-              headers: { Authorization: `Bearer ${lovableApiKey}`, 'Content-Type': 'application/json' },
-              signal: abort.signal,
-              body: JSON.stringify({
+            res = await postCompletion(
+              {
                 model,
                 messages: convo,
                 ...(isFinalRound ? {} : { tools: toolSchemas }),
                 max_completion_tokens: maxTokens,
                 stream: true,
-              }),
-            });
+              },
+              lovableApiKey,
+              abort.signal,
+            );
           } finally {
             clearTimeout(timer);
           }
