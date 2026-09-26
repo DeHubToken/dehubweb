@@ -1,5 +1,6 @@
 /**
 import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
  * 3D generation paywall.
  * ======================
  * Mirrors VideoPaywallModal: pick the model, confirm the DHB cost, settle on
