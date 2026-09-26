@@ -632,7 +632,12 @@
     "cancel": "إلغاء",
     "confirm": "تأكيد",
     "paying": "كيخلص...",
-    "payAmount": "خلص {{amount}} {{currency}}"
+    "payAmount": "خلص {{amount}} {{currency}}",
+    "coverTitle": "الغلاف",
+    "coverHint": "اختر لقطة أو ارفع صورة. يُحفظ فورًا.",
+    "coverUpload": "ارفع صورة غلاف",
+    "coverSaved": "تم تحديث الغلاف",
+    "coverFailed": "تعذّر تغيير الغلاف"
   },
   "assistant": {
     "title": "المساعد",

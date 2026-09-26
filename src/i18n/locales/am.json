@@ -642,7 +642,12 @@
     "cancel": "ሰርዝ",
     "confirm": "አረጋግጥ",
     "paying": "እየከፈለ...",
-    "payAmount": "{{amount}} {{currency}} ክፈል"
+    "payAmount": "{{amount}} {{currency}} ክፈል",
+    "coverTitle": "ሽፋን",
+    "coverHint": "ፍሬም ይምረጡ ወይም ምስል ይስቀሉ። ወዲያውኑ ይቀመጣል።",
+    "coverUpload": "የሽፋን ምስል ይስቀሉ",
+    "coverSaved": "ሽፋኑ ተዘምኗል",
+    "coverFailed": "ሽፋኑን መቀየር አልተቻለም"
   },
   "assistant": {
     "title": "ረዳት",

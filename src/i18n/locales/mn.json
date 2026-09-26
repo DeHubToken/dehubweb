@@ -641,7 +641,12 @@
     "cancel": "Цуцлах",
     "confirm": "Баталгаажуулах",
     "paying": "Төлж байна...",
-    "payAmount": "{{amount}} {{currency}} төлөх"
+    "payAmount": "{{amount}} {{currency}} төлөх",
+    "coverTitle": "Нүүр зураг",
+    "coverHint": "Кадр сонгох эсвэл зураг байршуулна уу. Шууд хадгалагдана.",
+    "coverUpload": "Нүүр зураг байршуулах",
+    "coverSaved": "Нүүр зураг шинэчлэгдлээ",
+    "coverFailed": "Нүүр зургийг солих боломжгүй байна"
   },
   "assistant": {
     "title": "Туслах",

@@ -660,7 +660,12 @@
     "cancel": "Annuller",
     "confirm": "Bekræft",
     "paying": "Betaler...",
-    "payAmount": "Betal {{amount}} {{currency}}"
+    "payAmount": "Betal {{amount}} {{currency}}",
+    "coverTitle": "Forside",
+    "coverHint": "Vælg et billede fra videoen eller upload et billede. Gemmes med det samme.",
+    "coverUpload": "Upload et forsidebillede",
+    "coverSaved": "Forside opdateret",
+    "coverFailed": "Kunne ikke ændre forsiden"
   },
   "assistant": {
     "title": "Assistent",

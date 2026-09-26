@@ -639,7 +639,12 @@
     "cancel": "रद्द",
     "confirm": "पक्का",
     "paying": "भुगतान होवत हे...",
-    "payAmount": "{{amount}} {{currency}} देव"
+    "payAmount": "{{amount}} {{currency}} देव",
+    "coverTitle": "कवर",
+    "coverHint": "कोई फ़्रेम चुनें या इमेज अपलोड करें। तुरंत सेव हो जाता है।",
+    "coverUpload": "कवर इमेज अपलोड करें",
+    "coverSaved": "कवर अपडेट हो गया",
+    "coverFailed": "कवर नहीं बदला जा सका"
   },
   "assistant": {
     "title": "सहायक",

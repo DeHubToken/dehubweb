@@ -641,7 +641,12 @@
     "cancel": "Болдырмау",
     "confirm": "Растау",
     "paying": "Төленуде...",
-    "payAmount": "{{amount}} {{currency}} төлеу"
+    "payAmount": "{{amount}} {{currency}} төлеу",
+    "coverTitle": "Мұқаба",
+    "coverHint": "Кадр таңдаңыз немесе сурет жүктеңіз. Бірден сақталады.",
+    "coverUpload": "Мұқаба суретін жүктеу",
+    "coverSaved": "Мұқаба жаңартылды",
+    "coverFailed": "Мұқабаны өзгерту мүмкін болмады"
   },
   "assistant": {
     "title": "Көмекші",

@@ -638,7 +638,12 @@
     "cancel": "Batal",
     "confirm": "Konfirmasi",
     "paying": "Mbayar...",
-    "payAmount": "Bayar {{amount}} {{currency}}"
+    "payAmount": "Bayar {{amount}} {{currency}}",
+    "coverTitle": "Sampul",
+    "coverHint": "Pilih pigura utawa unggah gambar. Langsung kasimpen.",
+    "coverUpload": "Unggah gambar sampul",
+    "coverSaved": "Sampul dianyari",
+    "coverFailed": "Ora bisa ngganti sampul"
   },
   "assistant": {
     "title": "Asisten",

@@ -657,7 +657,12 @@
     "cancel": "لغو",
     "confirm": "تایید",
     "paying": "در حال پرداخت...",
-    "payAmount": "پرداخت {{amount}} {{currency}}"
+    "payAmount": "پرداخت {{amount}} {{currency}}",
+    "coverTitle": "کاور",
+    "coverHint": "یک فریم انتخاب کنید یا تصویری بارگذاری کنید. بلافاصله ذخیره می‌شود.",
+    "coverUpload": "بارگذاری تصویر کاور",
+    "coverSaved": "کاور به‌روزرسانی شد",
+    "coverFailed": "تغییر کاور ممکن نشد"
   },
   "assistant": {
     "title": "دستیار",

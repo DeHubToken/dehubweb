@@ -639,7 +639,12 @@
     "cancel": "Ακύρωση",
     "confirm": "Επιβεβαίωση",
     "paying": "Πληρωμή...",
-    "payAmount": "Πληρωμή {{amount}} {{currency}}"
+    "payAmount": "Πληρωμή {{amount}} {{currency}}",
+    "coverTitle": "Εξώφυλλο",
+    "coverHint": "Επιλέξτε ένα καρέ ή ανεβάστε μια εικόνα. Αποθηκεύεται αμέσως.",
+    "coverUpload": "Ανέβασμα εικόνας εξωφύλλου",
+    "coverSaved": "Το εξώφυλλο ενημερώθηκε",
+    "coverFailed": "Δεν ήταν δυνατή η αλλαγή του εξωφύλλου"
   },
   "assistant": {
     "title": "Βοηθός",

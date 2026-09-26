@@ -1301,6 +1301,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           open={showEditModal}
           onOpenChange={setShowEditModal}
           tokenId={id || ''}
+          canReplaceVideo={!videoData.isAudio}
           currentTitle={videoData.title}
           currentDescription={videoData.description}
           currentContentRating={videoData.contentRating}

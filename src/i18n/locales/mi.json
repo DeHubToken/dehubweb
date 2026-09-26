@@ -643,7 +643,12 @@
     "cancel": "Whakakore",
     "confirm": "Whakaū",
     "paying": "Utu ana...",
-    "payAmount": "Utu {{amount}} {{currency}}"
+    "payAmount": "Utu {{amount}} {{currency}}",
+    "coverTitle": "Uhi",
+    "coverHint": "Kōwhiria he anga, tukuake rānei he whakaahua. Ka tiakina tonutia.",
+    "coverUpload": "Tukuake he whakaahua uhi",
+    "coverSaved": "Kua whakahōungia te uhi",
+    "coverFailed": "Kāore i taea te huri i te uhi"
   },
   "assistant": {
     "title": "Kaiāwhina",

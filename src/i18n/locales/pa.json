@@ -644,7 +644,12 @@
     "cancel": "ਰੱਦ",
     "confirm": "ਪੁਸ਼ਟੀ",
     "paying": "ਭੁਗਤਾਨ ਹੋ ਰਿਹਾ ਹੈ...",
-    "payAmount": "{{amount}} {{currency}} ਭੁਗਤਾਨ ਕਰੋ"
+    "payAmount": "{{amount}} {{currency}} ਭੁਗਤਾਨ ਕਰੋ",
+    "coverTitle": "ਕਵਰ",
+    "coverHint": "ਕੋਈ ਫ੍ਰੇਮ ਚੁਣੋ ਜਾਂ ਤਸਵੀਰ ਅੱਪਲੋਡ ਕਰੋ। ਤੁਰੰਤ ਸੇਵ ਹੋ ਜਾਂਦਾ ਹੈ।",
+    "coverUpload": "ਕਵਰ ਤਸਵੀਰ ਅੱਪਲੋਡ ਕਰੋ",
+    "coverSaved": "ਕਵਰ ਅੱਪਡੇਟ ਹੋ ਗਿਆ",
+    "coverFailed": "ਕਵਰ ਬਦਲਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ"
   },
   "assistant": {
     "title": "ਸਹਾਇਕ",

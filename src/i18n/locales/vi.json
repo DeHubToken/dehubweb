@@ -622,7 +622,12 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "paying": "Paying...",
-    "payAmount": "Pay {{amount}} {{currency}}"
+    "payAmount": "Pay {{amount}} {{currency}}",
+    "coverTitle": "Ảnh bìa",
+    "coverHint": "Chọn một khung hình hoặc tải ảnh lên. Lưu ngay lập tức.",
+    "coverUpload": "Tải ảnh bìa lên",
+    "coverSaved": "Đã cập nhật ảnh bìa",
+    "coverFailed": "Không thể đổi ảnh bìa"
   },
   "assistant": {
     "title": "Assistant",

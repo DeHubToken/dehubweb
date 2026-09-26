@@ -656,7 +656,12 @@
     "cancel": "בטל",
     "confirm": "אשר",
     "paying": "משלם...",
-    "payAmount": "שלם {{amount}} {{currency}}"
+    "payAmount": "שלם {{amount}} {{currency}}",
+    "coverTitle": "תמונת שער",
+    "coverHint": "בחרו פריים או העלו תמונה. נשמר מיד.",
+    "coverUpload": "העלאת תמונת שער",
+    "coverSaved": "תמונת השער עודכנה",
+    "coverFailed": "לא ניתן היה לשנות את תמונת השער"
   },
   "assistant": {
     "title": "עוזר",

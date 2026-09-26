@@ -853,7 +853,12 @@
     "cancel": "Annuleren",
     "confirm": "Bevestigen",
     "paying": "Betalen...",
-    "payAmount": "Betaal {{amount}} {{currency}}"
+    "payAmount": "Betaal {{amount}} {{currency}}",
+    "coverTitle": "Omslag",
+    "coverHint": "Kies een frame of upload een afbeelding. Wordt direct opgeslagen.",
+    "coverUpload": "Omslagafbeelding uploaden",
+    "coverSaved": "Omslag bijgewerkt",
+    "coverFailed": "Kon de omslag niet wijzigen"
   },
   "assistant": {
     "title": "AI Assistent",

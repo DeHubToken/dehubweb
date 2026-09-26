@@ -660,7 +660,12 @@
     "cancel": "Odustani",
     "confirm": "Potvrdi",
     "paying": "Plaćanje...",
-    "payAmount": "Plati {{amount}} {{currency}}"
+    "payAmount": "Plati {{amount}} {{currency}}",
+    "coverTitle": "Naslovnica",
+    "coverHint": "Odaberite kadar ili prenesite sliku. Sprema se odmah.",
+    "coverUpload": "Prenesi sliku naslovnice",
+    "coverSaved": "Naslovnica ažurirana",
+    "coverFailed": "Naslovnicu nije moguće promijeniti"
   },
   "assistant": {
     "title": "Pomoćnik",

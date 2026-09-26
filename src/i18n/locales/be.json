@@ -657,7 +657,12 @@
     "cancel": "Адмяніць",
     "confirm": "Пацвердзіць",
     "paying": "Аплата...",
-    "payAmount": "Заплаціць {{amount}} {{currency}}"
+    "payAmount": "Заплаціць {{amount}} {{currency}}",
+    "coverTitle": "Вокладка",
+    "coverHint": "Выберыце кадр або загрузіце выяву. Захоўваецца адразу.",
+    "coverUpload": "Загрузіць выяву вокладкі",
+    "coverSaved": "Вокладка абноўлена",
+    "coverFailed": "Не ўдалося змяніць вокладку"
   },
   "assistant": {
     "title": "Памочнік",

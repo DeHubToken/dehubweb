@@ -643,7 +643,12 @@
     "cancel": "Avbryt",
     "confirm": "Bekreft",
     "paying": "Betaler...",
-    "payAmount": "Betal {{amount}} {{currency}}"
+    "payAmount": "Betal {{amount}} {{currency}}",
+    "coverTitle": "Forsidebilde",
+    "coverHint": "Velg et bilde fra videoen eller last opp et bilde. Lagres med en gang.",
+    "coverUpload": "Last opp forsidebilde",
+    "coverSaved": "Forsidebilde oppdatert",
+    "coverFailed": "Kunne ikke endre forsidebildet"
   },
   "assistant": {
     "title": "AI-assistent",

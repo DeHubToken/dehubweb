@@ -642,7 +642,12 @@
     "cancel": "ರದ್ದುಮಾಡಿ",
     "confirm": "ದೃಢೀಕರಿಸಿ",
     "paying": "ಪಾವತಿಸುತ್ತಿದೆ...",
-    "payAmount": "{{amount}} {{currency}} ಪಾವತಿಸಿ"
+    "payAmount": "{{amount}} {{currency}} ಪಾವತಿಸಿ",
+    "coverTitle": "ಕವರ್",
+    "coverHint": "ಒಂದು ಫ್ರೇಮ್ ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. ತಕ್ಷಣ ಉಳಿಸಲಾಗುತ್ತದೆ.",
+    "coverUpload": "ಕವರ್ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
+    "coverSaved": "ಕವರ್ ನವೀಕರಿಸಲಾಗಿದೆ",
+    "coverFailed": "ಕವರ್ ಬದಲಾಯಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ"
   },
   "assistant": {
     "title": "ಸಹಾಯಕ",
