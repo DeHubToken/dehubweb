@@ -37,7 +37,7 @@ import {
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
-import { reactionGlowProps } from '@/lib/reaction-glow';
+import { ReactionEmoji } from './ReactionEmoji';
 import { ReactionPicker } from './ReactionPicker';
 import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { dehubLinkFor } from '@/lib/dehub-links';
@@ -289,7 +289,6 @@ function ThreadEntry({
                 if (!isOwn) handleLike();
               }}
               {...likeTray.buttonProps}
-              {...reactionGlowProps(isOwn ? null : myPositiveReaction)}
               className={cn(
                 'flex items-center gap-1 transition-colors select-none touch-none',
                 !isOwn && state.isLiked ? 'text-white' : 'text-white/70 hover:text-white',
@@ -300,7 +299,7 @@ function ThreadEntry({
             >
               {leadReaction ? (
                 <span data-engaged-glyph className="w-3.5 h-3.5 flex items-center justify-center text-[0.8rem] leading-none" aria-hidden="true">
-                  {reactionMeta(leadReaction).emoji}
+                  <ReactionEmoji reaction={leadReaction} animate={leadReaction === (isOwn ? null : myPositiveReaction)} />
                 </span>
               ) : (
                 <ThumbsUp className={cn('w-3.5 h-3.5', !isOwn && state.isLiked && 'fill-current')} />
@@ -325,7 +324,6 @@ function ThreadEntry({
                 if (!isOwn) handleDislike();
               }}
               {...dislikeTray.buttonProps}
-              {...reactionGlowProps(myNegativeReaction)}
               className={cn(
                 'flex items-center gap-1 transition-colors select-none touch-none',
                 state.isDisliked ? 'text-white' : 'text-white/70 hover:text-white',
@@ -336,7 +334,7 @@ function ThreadEntry({
             >
               {negativeLeadReaction ? (
                 <span data-engaged-glyph className="w-3.5 h-3.5 flex items-center justify-center text-[0.8rem] leading-none" aria-hidden="true">
-                  {reactionMeta(negativeLeadReaction).emoji}
+                  <ReactionEmoji reaction={negativeLeadReaction} animate />
                 </span>
               ) : (
                 <ThumbsDown className={cn('w-3.5 h-3.5', state.isDisliked && 'fill-current')} />
