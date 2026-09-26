@@ -39,6 +39,7 @@ import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { PostChainId } from '@/components/app/ChainSelector';
+import { normalizeCategoryList } from '@/lib/category-names';
 
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
@@ -206,7 +207,7 @@ const saveDraftToDb = async (walletAddress: string, draft: Draft): Promise<strin
             payload: draft.payload,
             // Read by mobile, which has no notion of `payload`.
             titleText: draft.payload?.titleText || '',
-            categories: draft.payload?.selectedCategory ? [draft.payload.selectedCategory] : [],
+            categories: normalizeCategoryList(draft.payload?.selectedCategory ? [draft.payload.selectedCategory] : []),
             source: 'web',
             // The column is jsonb; the generated Json type won't take an
             // interface with optional keys without this.
@@ -1696,9 +1697,10 @@ export function usePostForm(
       const submittedTitle = postTitle;
 
       // Merge extracted hashtags into categories
-      const baseCategories = selectedCategory ? selectedCategory.split('|||').filter(Boolean) : ['General'];
+      const baseCategories = normalizeCategoryList(selectedCategory ? [selectedCategory] : []);
+      if (baseCategories.length === 0) baseCategories.push('General');
       const hashtagCategories = Array.from(extractedTags).map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
-      const mergedCategories = [...new Set([...baseCategories, ...hashtagCategories])];
+      const mergedCategories = normalizeCategoryList([...baseCategories, ...hashtagCategories]);
 
       /**
        * Can this account actually pay for the mint?

@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { EditPostImages } from './EditPostImages';
 import { useTranslation } from 'react-i18next';
+import { normalizeCategoryName } from '@/lib/category-names';
 
 export interface EditPostResult {
   name: string;
@@ -155,8 +156,8 @@ export function EditPostModal({
   }, [open, tokenId, currentTitle, currentDescription, currentArticleBody, currentCategories, currentCommentsDisabled, currentContentRating, currentForKids]);
 
   const handleAddCategory = () => {
-    const trimmed = categoryInput.trim();
-    if (trimmed && !categories.includes(trimmed) && categories.length < 5) {
+    const trimmed = normalizeCategoryName(categoryInput);
+    if (trimmed && !categories.some(c => c.toLowerCase() === trimmed.toLowerCase()) && categories.length < 5) {
       setCategories(prev => [...prev, trimmed]);
       setCategoryInput('');
     }
