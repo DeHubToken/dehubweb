@@ -4050,5 +4050,23 @@
     "fractionsDesc": "En Biitrag, wo uf DeHub prägt wird, wird zumne NFT, wo in 1'000 Fraktione ufteilt isch, und de Creator fangt mit allne 1'000 aa — 100 % Bsitz vom Inhalt. S Präge isch freiwillig und cha bim Veröffentliche oder spöter passiere.",
     "tokenIdDesc": "En eidütige On-Chain-Kennig, wo en Biitrag überchunnt, wänn er als NFT uf de Blockchain prägt wird. S Präge isch freiwillig, drum hät en Biitrag, wo nonig prägt worde isch, no kei Token ID.",
     "tokenIdInfoDesc": "D eidütig On-Chain-Kennig, wo en Biitrag überchunnt, sobald er als NFT prägt isch. Wird bi prägte Biiträg zoberscht uf de Siite Biitrags-Info aazeigt."
+  },
+  "tipFunding": {
+    "noRoute": "Grad kei Uniswap-Route zu DHB für dä Token",
+    "lowLiquidity": "Uf Uniswap hets grad nöd gnueg Liquidität für e Zahlig vo dere Grössi",
+    "dpayNoAmount": "DeHub Pay het kei Zahligsbetrag zruggäh",
+    "dpayDelayed": "DeHub Pay het dini Zahlig und schickt d DHB. Si chömed bald i dinere Wallet aa; schick nomal, sobald si da sind.",
+    "noBridgeRoute": "Grad isch kei chetteübergryfendi Route verfüegbar",
+    "bridgeCancelled": "Dr chetteübergryfendi Uftrag isch storniert und uf dini Wallet zruggzahlt worde",
+    "bridgeSlow": "Dr chetteübergryfendi Transfer duuret länger als süsch. Er chunnt i dinere Wallet uf Base aa; schick nomal, sobald er da isch.",
+    "txFailed": "D Transaktion isch nöd bestätigt worde. Es isch nüt usgäh worde.",
+    "noToken": "Kei {{symbol}} uf Base",
+    "notEnoughOnBase": "Nöd gnueg {{symbol}} uf Base für die Zahlig",
+    "notEnoughWithFees": "Nöd gnueg {{symbol}} für die Zahlig, inklusiv Netzwärchgebühre",
+    "notEnough": "Nöd gnueg {{symbol}} für die Zahlig",
+    "noGasForFee": "Nöd gnueg vom Netzwärch-Coin für d chetteübergryfendi Gebühr",
+    "priceMoved": "Dr DHB-Kurs het sich bewegt, während dini USDC unterwegs gsi sind. D USDC sind i dinere Wallet uf Base; schick nomal zum Abschlüsse.",
+    "usdcPending": "Dini USDC sind uf Base aacho, sind aber no nöd sichtbar. Schick grad nomal.",
+    "dhbPending": "Dr DHB-Chauf isch bestätigt, isch aber no nöd sichtbar. Schick grad nomal."
   }
 }

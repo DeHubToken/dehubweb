@@ -6391,5 +6391,23 @@
     "fractionsDesc": "Una publicación acuñada en DeHub se convierte en un NFT dividido en 1.000 fracciones, y el creador empieza con las 1.000: el 100 % de la propiedad del contenido. Acuñar es opcional y puede hacerse al publicar o más adelante.",
     "tokenIdDesc": "Un identificador on-chain único que recibe una publicación cuando se acuña como NFT en la blockchain. Acuñar es opcional, así que una publicación que no se ha acuñado todavía no tiene Token ID.",
     "tokenIdInfoDesc": "El identificador on-chain único que recibe una publicación una vez acuñada como NFT. Se muestra en la parte superior de la página de Información de la publicación en las publicaciones acuñadas."
+  },
+  "tipFunding": {
+    "noRoute": "Ahora mismo no hay ruta de Uniswap a DHB para este token",
+    "lowLiquidity": "Ahora mismo no hay suficiente liquidez en Uniswap para un pago de este tamaño",
+    "dpayNoAmount": "DeHub Pay no devolvió un importe de pago",
+    "dpayDelayed": "DeHub Pay tiene tu pago y está enviando los DHB. Llegarán a tu cartera en breve; vuelve a enviar cuando lleguen.",
+    "noBridgeRoute": "Ahora mismo no hay ninguna ruta entre cadenas disponible",
+    "bridgeCancelled": "La orden entre cadenas se canceló y se reembolsó a tu cartera",
+    "bridgeSlow": "La transferencia entre cadenas está tardando más de lo normal. Llegará a tu cartera en Base; vuelve a enviar cuando llegue.",
+    "txFailed": "La transacción no se confirmó. No se gastó nada.",
+    "noToken": "No hay {{symbol}} en Base",
+    "notEnoughOnBase": "No hay suficiente {{symbol}} en Base para este pago",
+    "notEnoughWithFees": "No hay suficiente {{symbol}} para este pago, incluidas las comisiones de red",
+    "notEnough": "No hay suficiente {{symbol}} para este pago",
+    "noGasForFee": "No hay suficiente moneda de la red para cubrir la comisión entre cadenas",
+    "priceMoved": "El precio de DHB cambió mientras llegaban tus USDC. Los USDC están en tu cartera en Base; vuelve a enviar para terminar.",
+    "usdcPending": "Tus USDC llegaron a Base pero aún no se ven. Vuelve a enviar en un momento.",
+    "dhbPending": "La compra de DHB se confirmó pero aún no aparece. Vuelve a enviar en un momento."
   }
 }

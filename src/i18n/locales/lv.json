@@ -6363,5 +6363,23 @@
     "fractionsDesc": "DeHub izkalts ieraksts kļūst par NFT, kas sadalīts 1 000 daļās, un autors sāk ar visām 1 000 — 100 % satura īpašumtiesību. Kalšana nav obligāta, un to var veikt publicējot vai vēlāk.",
     "tokenIdDesc": "Unikāls ķēdes identifikators, ko ieraksts saņem, kad tas tiek izkalts kā NFT blokķēdē. Kalšana nav obligāta, tāpēc ierakstam, kas nav izkalts, vēl nav Token ID.",
     "tokenIdInfoDesc": "Unikālais ķēdes identifikators, ko ieraksts saņem pēc tam, kad tas izkalts kā NFT. Izkaltiem ierakstiem tas redzams lapas Ieraksta informācija augšdaļā."
+  },
+  "tipFunding": {
+    "noRoute": "Šobrīd šim žetonam nav Uniswap maršruta uz DHB",
+    "lowLiquidity": "Šobrīd Uniswap nav pietiekamas likviditātes šāda apjoma maksājumam",
+    "dpayNoAmount": "DeHub Pay neatgrieza maksājuma summu",
+    "dpayDelayed": "DeHub Pay ir saņēmis jūsu maksājumu un sūta DHB. Tie drīz pienāks jūsu makā; kad pienāks, sūtiet vēlreiz.",
+    "noBridgeRoute": "Šobrīd nav pieejams neviens starpķēžu maršruts",
+    "bridgeCancelled": "Starpķēžu pasūtījums tika atcelts, un līdzekļi atmaksāti jūsu makā",
+    "bridgeSlow": "Starpķēžu pārskaitījums aizņem ilgāku laiku nekā parasti. Tas pienāks jūsu makā Base tīklā; kad pienāks, sūtiet vēlreiz.",
+    "txFailed": "Darījums netika apstiprināts. Nekas netika iztērēts.",
+    "noToken": "Base tīklā nav {{symbol}}",
+    "notEnoughOnBase": "Base tīklā nepietiek {{symbol}} šim maksājumam",
+    "notEnoughWithFees": "Nepietiek {{symbol}} šim maksājumam, ieskaitot tīkla maksas",
+    "notEnough": "Nepietiek {{symbol}} šim maksājumam",
+    "noGasForFee": "Nepietiek tīkla monētas, lai segtu starpķēžu maksu",
+    "priceMoved": "Kamēr ceļā bija jūsu USDC, DHB cena mainījās. USDC ir jūsu makā Base tīklā; sūtiet vēlreiz, lai pabeigtu.",
+    "usdcPending": "Jūsu USDC ir pienākuši Base tīklā, bet vēl nav redzami. Pēc brīža sūtiet vēlreiz.",
+    "dhbPending": "DHB pirkums ir apstiprināts, bet vēl nav parādījies. Pēc brīža sūtiet vēlreiz."
   }
 }

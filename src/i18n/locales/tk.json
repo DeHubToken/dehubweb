@@ -4035,5 +4035,23 @@
     "fractionsDesc": "DeHub-da mint edilen ýazgy 1,000 paýa bölünen NFT-e öwrülýär we döredijä başda ähli 1,000 paý degişli bolýar — mazmunyň 100% eýeçiligi. Mint etmek hökmany däl we çap edilende ýa-da soňra amala aşyrylyp bilner.",
     "tokenIdDesc": "Ýazgy blokçeýnde NFT hökmünde mint edilende alýan özboluşly blokçeýn identifikatory. Mint etmek hökmany däl, şonuň üçin mint edilmedik ýazgynyň entek Token ID-si ýok.",
     "tokenIdInfoDesc": "Ýazgynyň NFT hökmünde mint edilenden soň alýan özboluşly blokçeýn identifikatory. Mint edilen ýazgylar üçin Ýazgy maglumatlary sahypasynyň ýokarsynda görkezilýär."
+  },
+  "tipFunding": {
+    "noRoute": "Häzirki wagtda bu token üçin DHB-a Uniswap ugry ýok",
+    "lowLiquidity": "Häzirki wagtda bu möçberdäki töleg üçin Uniswap-da ýeterlik likwidlik ýok",
+    "dpayNoAmount": "DeHub Pay töleg mukdaryny gaýtarmady",
+    "dpayDelayed": "DeHub Pay tölegiňizi aldy we DHB iberýär. Ýakyn wagtda gapjygyňyza geler; gelensoň gaýtadan iberiň.",
+    "noBridgeRoute": "Häzirki wagtda zynjyrara ugur ýok",
+    "bridgeCancelled": "Zynjyrara sargyt ýatyryldy we gapjygyňyza gaýtaryldy",
+    "bridgeSlow": "Zynjyrara geçirim adatdakydan uzak wagt alýar. Ol Base-däki gapjygyňyza geler; gelensoň gaýtadan iberiň.",
+    "txFailed": "Geleşik tassyklanmady. Hiç zat sarp edilmedi.",
+    "noToken": "Base-de {{symbol}} ýok",
+    "notEnoughOnBase": "Bu töleg üçin Base-de ýeterlik {{symbol}} ýok",
+    "notEnoughWithFees": "Tor tölegleri bilen bilelikde bu töleg üçin ýeterlik {{symbol}} ýok",
+    "notEnough": "Bu töleg üçin ýeterlik {{symbol}} ýok",
+    "noGasForFee": "Zynjyrara tölegi ýapmak üçin toruň teňňesi ýeterlik däl",
+    "priceMoved": "USDC-ňiz gelýärkä DHB-nyň bahasy üýtgedi. USDC Base-däki gapjygyňyzda; tamamlamak üçin gaýtadan iberiň.",
+    "usdcPending": "USDC-ňiz Base-e geldi, ýöne entek görünmeýär. Birazdan gaýtadan iberiň.",
+    "dhbPending": "DHB satyn alşy tassyklandy, ýöne entek görünmedi. Birazdan gaýtadan iberiň."
   }
 }

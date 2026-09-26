@@ -6165,5 +6165,23 @@
     "moveFunds": "Transferați fonduri",
     "moveFundsHint": "Schimbați sau depuneți din alt lanț",
     "notNow": "Nu acum"
+  },
+  "tipFunding": {
+    "noRoute": "Momentan nu există nicio rută Uniswap către DHB pentru acest token",
+    "lowLiquidity": "Momentan nu există suficientă lichiditate pe Uniswap pentru o plată de această mărime",
+    "dpayNoAmount": "DeHub Pay nu a returnat o sumă de plată",
+    "dpayDelayed": "DeHub Pay a primit plata dvs. și trimite DHB. Vor ajunge în curând în portofelul dvs.; trimiteți din nou după ce ajung.",
+    "noBridgeRoute": "Momentan nu este disponibilă nicio rută între lanțuri",
+    "bridgeCancelled": "Ordinul între lanțuri a fost anulat și rambursat în portofelul dvs.",
+    "bridgeSlow": "Transferul între lanțuri durează mai mult decât de obicei. Va ajunge în portofelul dvs. pe Base; trimiteți din nou după ce ajunge.",
+    "txFailed": "Tranzacția nu a fost confirmată. Nu s-a cheltuit nimic.",
+    "noToken": "Nu aveți {{symbol}} pe Base",
+    "notEnoughOnBase": "Nu aveți suficient {{symbol}} pe Base pentru această plată",
+    "notEnoughWithFees": "Nu aveți suficient {{symbol}} pentru această plată, inclusiv taxele de rețea",
+    "notEnough": "Nu aveți suficient {{symbol}} pentru această plată",
+    "noGasForFee": "Nu aveți suficientă monedă a rețelei pentru a acoperi taxa între lanțuri",
+    "priceMoved": "Prețul DHB s-a schimbat cât timp sosea USDC-ul dvs. USDC-ul este în portofelul dvs. pe Base; trimiteți din nou pentru a finaliza.",
+    "usdcPending": "USDC-ul dvs. a ajuns pe Base, dar nu este încă vizibil. Trimiteți din nou peste câteva momente.",
+    "dhbPending": "Achiziția de DHB a fost confirmată, dar nu a apărut încă. Trimiteți din nou peste câteva momente."
   }
 }

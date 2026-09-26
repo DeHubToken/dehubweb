@@ -6302,5 +6302,23 @@
     "fractionsDesc": "Et opslag, der præges på DeHub, bliver en NFT opdelt i 1.000 fraktioner, og skaberen starter med alle 1.000 — 100 % ejerskab af indholdet. Prægning er valgfri og kan ske, når du udgiver, eller senere.",
     "tokenIdDesc": "En unik on-chain-identifikator, som et opslag får, når det præges som en NFT på blockchainen. Prægning er valgfri, så et opslag, der ikke er præget, har endnu intet Token-ID.",
     "tokenIdInfoDesc": "Den unikke on-chain-identifikator, et opslag får, når det er præget som en NFT. Vises øverst på siden Opslagsinfo for prægede opslag."
+  },
+  "tipFunding": {
+    "noRoute": "Ingen Uniswap-rute til DHB for denne token lige nu",
+    "lowLiquidity": "Der er ikke nok likviditet på Uniswap til en betaling af denne størrelse lige nu",
+    "dpayNoAmount": "DeHub Pay returnerede ikke et betalingsbeløb",
+    "dpayDelayed": "DeHub Pay har din betaling og sender dine DHB. De lander i din wallet om lidt; send igen, når de er kommet.",
+    "noBridgeRoute": "Ingen cross-chain-rute er tilgængelig lige nu",
+    "bridgeCancelled": "Cross-chain-ordren blev annulleret og refunderet til din wallet",
+    "bridgeSlow": "Cross-chain-overførslen tager længere tid end normalt. Den lander i din wallet på Base; send igen, når den er kommet.",
+    "txFailed": "Transaktionen blev ikke bekræftet. Intet blev brugt.",
+    "noToken": "Ingen {{symbol}} på Base",
+    "notEnoughOnBase": "Ikke nok {{symbol}} på Base til denne betaling",
+    "notEnoughWithFees": "Ikke nok {{symbol}} til denne betaling, inklusive netværksgebyrer",
+    "notEnough": "Ikke nok {{symbol}} til denne betaling",
+    "noGasForFee": "Ikke nok af netværkets mønt til at dække cross-chain-gebyret",
+    "priceMoved": "DHB-prisen ændrede sig, mens dine USDC var på vej. Dine USDC ligger i din wallet på Base; send igen for at gøre det færdigt.",
+    "usdcPending": "Dine USDC er ankommet på Base, men er ikke synlige endnu. Send igen om et øjeblik.",
+    "dhbPending": "DHB-købet er bekræftet, men er ikke dukket op endnu. Send igen om et øjeblik."
   }
 }
