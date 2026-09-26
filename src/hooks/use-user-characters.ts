@@ -131,7 +131,8 @@ export async function uploadCharacterAsset(file: File, slug: string): Promise<st
   const safe = file.name.replace(/[^a-z0-9.\-_]/gi, '_');
   const path = `characters/${slug}/${Date.now()}-${safe}`;
   const { error } = await supabase.storage.from('ai-media-uploads').upload(path, file, {
-    cacheControl: '3600',
+    // Timestamped path, never overwritten (upsert: false): safe to cache for a year.
+    cacheControl: '31536000',
     upsert: false,
   });
   if (error) throw error;

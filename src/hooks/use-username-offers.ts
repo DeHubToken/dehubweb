@@ -66,7 +66,8 @@ export function useMyUsernameOffers() {
     // The other side acts from another device: an owner accepting has to reach
     // the bidder's screen quickly, and a paid offer has to leave it.
     staleTime: 5 * 1000,
-    refetchInterval: 10 * 1000,
+    refetchInterval: 30 * 1000,
+    refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
   });
 }

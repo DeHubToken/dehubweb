@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import i18n from 'i18next';
 
 // ── My Stores ──────────────────────────────────────────────
 export function useMyStores() {
@@ -287,10 +288,44 @@ export function useUpdateStore() {
   });
 }
 
-export async function uploadStoreMedia(file: File, walletAddress: string): Promise<string> {
+const STORE_IMAGE_MAX_BYTES = 20 * 1024 * 1024;
+const STORE_IMAGE_MAX_WIDTH = 1600;
+
+/**
+ * Downscale a store image before it goes to storage. Phone photos arrive at
+ * 4000px and several MB, and every buyer who opens the listing pays for that.
+ * GIF and SVG pass through untouched (re-encoding would drop animation or
+ * rasterise), and so does anything the re-encode fails to make smaller.
+ */
+export async function prepareStoreImage(file: File): Promise<File> {
+  if (file.size > STORE_IMAGE_MAX_BYTES) {
+    throw new Error(i18n.t('creatorFlow.imageTooLarge'));
+  }
+  if (!file.type.startsWith('image/') || file.type === 'image/gif' || file.type === 'image/svg+xml') {
+    return file;
+  }
+  try {
+    const { captureImageThumbnail } = await import('@/lib/editor/mediaStore');
+    const { thumbnail } = await captureImageThumbnail(file, STORE_IMAGE_MAX_WIDTH, 'image/webp', 0.85);
+    // A browser without a WebP encoder hands back PNG, which is usually larger.
+    if (thumbnail.type !== 'image/webp' || thumbnail.size >= file.size) return file;
+    const base = file.name.replace(/\.[^.]+$/, '') || 'image';
+    return new File([thumbnail], `${base}.webp`, { type: 'image/webp' });
+  } catch {
+    return file;
+  }
+}
+
+/** Store media paths are timestamped and never rewritten, so they can be cached for a year. */
+export const STORE_MEDIA_CACHE_CONTROL = '31536000';
+
+export async function uploadStoreMedia(rawFile: File, walletAddress: string): Promise<string> {
+  const file = await prepareStoreImage(rawFile);
   const ext = file.name.split('.').pop() || 'jpg';
   const path = `${walletAddress.toLowerCase()}/${Date.now()}.${ext}`;
-  const { error } = await supabase.storage.from('store-media').upload(path, file, { upsert: true });
+  const { error } = await supabase.storage
+    .from('store-media')
+    .upload(path, file, { upsert: true, cacheControl: STORE_MEDIA_CACHE_CONTROL });
   if (error) throw error;
   const { data } = supabase.storage.from('store-media').getPublicUrl(path);
   return data.publicUrl;

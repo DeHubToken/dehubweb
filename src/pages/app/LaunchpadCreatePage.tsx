@@ -64,7 +64,7 @@ export default function LaunchpadCreatePage() {
       const ext = file.name.split('.').pop() || 'png';
       const path = `launchpad/${(walletAddress || 'anon').toLowerCase()}/${Date.now()}.${ext}`;
       const { error } = await supabase.storage.from('ai-media-uploads').upload(path, file, {
-        cacheControl: '3600', upsert: false, contentType: file.type,
+        cacheControl: '31536000', upsert: false, contentType: file.type,
       });
       if (error) throw error;
       const { data } = supabase.storage.from('ai-media-uploads').getPublicUrl(path);
