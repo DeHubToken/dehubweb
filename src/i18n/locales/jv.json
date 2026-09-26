@@ -509,7 +509,12 @@
     "stageBridge": "Ngirim {{symbol}} saka {{chain}}…",
     "stageArriving": "Lagi tekan ing Base, biasane mung sawetara detik…",
     "stageSwap": "Tuku DHB ing Uniswap…",
-    "payFailed": "Ora bisa ngowahi {{symbol}} dadi DHB"
+    "payFailed": "Ora bisa ngowahi {{symbol}} dadi DHB",
+    "stagePay": "Mbayar DeHub Pay nganggo {{symbol}}…",
+    "stageDelivering": "DeHub Pay lagi ngirim DHB-mu…",
+    "payViaDpay": "Wis dibayar menyang DeHub Pay, DHB tekan kira-kira 30 detik",
+    "payViaBridgeDpay": "Dipindhah menyang Base lan dibayar menyang DeHub Pay, DHB tekan kira-kira sak menit",
+    "dmSent": "Ngirim {{amount}} DHB menyang {{name}}!"
   },
   "postOptions": {
     "options": "Opsi",
@@ -4031,5 +4036,21 @@
     "openExchange": "Buka Exchange",
     "done": "Sampun",
     "back": "Bali"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Balance-mu",
+    "youNeed": "Kowe butuh",
+    "checking": "Mriksa dompetmu…",
+    "payHint": "Bayar nganggo apa wae sing ana ing dompetmu. Bakal dadi DHB lan langsung kebukak.",
+    "toppingUp": "Lagi ngisi…",
+    "topUpUnlock": "Isi & bukak",
+    "orFund": "Utawa tambah dana nganggo cara liya",
+    "paused": "Transfer DHB lagi dilereni on-chain saiki, dadi mbukak iki durung bisa. Coba maneh sedhela engkas.",
+    "otherChain": "Kiriman iki dirampungake ing chain liya, dadi butuh DHB ing dompetmu ing kana.",
+    "buyCard": "Tuku DHB nganggo kertu",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Lebokake dana",
+    "moveFundsHint": "Swap utawa setor saka chain liya",
+    "notNow": "Ora saiki"
   }
 }

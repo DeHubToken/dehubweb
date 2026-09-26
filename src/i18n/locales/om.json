@@ -517,7 +517,12 @@
     "stageBridge": "{{symbol}} {{chain}} irraa ergaa jira…",
     "stageArriving": "Base irra ga'aa jira, yeroo baay'ee sekondii muraasa…",
     "stageSwap": "Uniswap irratti DHB bitaa jira…",
-    "payFailed": "{{symbol}} gara DHB-tti jijjiiruun hin danda'amne"
+    "payFailed": "{{symbol}} gara DHB-tti jijjiiruun hin danda'amne",
+    "stagePay": "{{symbol}}-n DeHub Pay-f kaffalaa jira…",
+    "stageDelivering": "DeHub Pay DHB kee ergaa jira…",
+    "payViaDpay": "DeHub Pay-f kaffalame, DHB sekondii 30 naannoo keessatti ga'a",
+    "payViaBridgeDpay": "Gara Base-tti ceesifamee DeHub Pay-f kaffalame, DHB daqiiqaa tokko naannoo keessatti ga'a",
+    "dmSent": "{{amount}} DHB {{name}}-f ergame!"
   },
   "postOptions": {
     "options": "Filannoowwan",
@@ -4086,5 +4091,21 @@
     "openExchange": "Jijjiirraa banaa",
     "done": "Xumureera",
     "back": "Dugda"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Balansii kee",
+    "youNeed": "Si barbaachisa",
+    "checking": "Waleetii kee mirkaneessaa jira…",
+    "payHint": "Waan waleetii kee keessa jiru kamiinuu kaffali. DHB ta'ee battaluma banama.",
+    "toppingUp": "Guutaa jira…",
+    "topUpUnlock": "Guuti & bani",
+    "orFund": "Ykn karaa biraatiin maallaqa dabali",
+    "paused": "Dabarsi DHB amma chain irratti dhaabbateera, kanaaf banuun kun ammaaf hin raawwatamu. Yeroo muraasa booda irra deebi'ii yaali.",
+    "otherChain": "Maxxansi kun chain biraa irratti kaffalama, kanaaf achitti waleetii kee keessatti DHB barbaachisa.",
+    "buyCard": "Kaardiin DHB bitadhu",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Maallaqa galchi",
+    "moveFundsHint": "Chain biraa irraa jijjiiri ykn kuusi",
+    "notNow": "Amma miti"
   }
 }

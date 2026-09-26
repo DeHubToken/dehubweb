@@ -531,7 +531,12 @@
     "stageBridge": "Inatuma {{symbol}} kutoka {{chain}}…",
     "stageArriving": "Inafika kwenye Base, kwa kawaida sekunde chache…",
     "stageSwap": "Inanunua DHB kwenye Uniswap…",
-    "payFailed": "Imeshindwa kubadilisha {{symbol}} kuwa DHB"
+    "payFailed": "Imeshindwa kubadilisha {{symbol}} kuwa DHB",
+    "stagePay": "Inalipa DeHub Pay kwa {{symbol}}…",
+    "stageDelivering": "DeHub Pay inatuma DHB zako…",
+    "payViaDpay": "Imelipwa kwa DeHub Pay, DHB itafika baada ya sekunde 30 hivi",
+    "payViaBridgeDpay": "Imehamishwa kwenda Base na kulipwa kwa DeHub Pay, DHB itafika baada ya dakika moja hivi",
+    "dmSent": "Umetuma {{amount}} DHB kwa {{name}}!"
   },
   "postOptions": {
     "options": "Chaguzi",
@@ -6295,5 +6300,21 @@
     "openExchange": "Open Exchange",
     "done": "Imekamilika",
     "back": "Nyuma"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Salio lako",
+    "youNeed": "Unahitaji",
+    "checking": "Inakagua pochi yako…",
+    "payHint": "Lipa kwa chochote kilicho kwenye pochi yako. Kinakuwa DHB na kufungua mara moja.",
+    "toppingUp": "Inaongeza salio…",
+    "topUpUnlock": "Ongeza salio & fungua",
+    "orFund": "Au ongeza pesa kwa njia nyingine",
+    "paused": "Uhamisho wa DHB umesitishwa on-chain kwa sasa, kwa hivyo ufunguaji huu hauwezi kufanyika bado. Jaribu tena baada ya muda mfupi.",
+    "otherChain": "Chapisho hili linalipwa kwenye mnyororo mwingine, kwa hivyo linahitaji DHB kwenye pochi yako huko.",
+    "buyCard": "Nunua DHB kwa kadi",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Hamisha pesa ndani",
+    "moveFundsHint": "Badilisha au weka kutoka mnyororo mwingine",
+    "notNow": "Si sasa"
   }
 }

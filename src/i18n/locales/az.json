@@ -531,7 +531,12 @@
     "stageBridge": "{{symbol}} {{chain}} şəbəkəsindən göndərilir…",
     "stageArriving": "Base-ə çatır, adətən bir neçə saniyə…",
     "stageSwap": "Uniswap-da DHB alınır…",
-    "payFailed": "{{symbol}} DHB-yə çevrilə bilmədi"
+    "payFailed": "{{symbol}} DHB-yə çevrilə bilmədi",
+    "stagePay": "DeHub Pay-ə {{symbol}} ilə ödənilir…",
+    "stageDelivering": "DeHub Pay DHB-nizi göndərir…",
+    "payViaDpay": "DeHub Pay-ə ödənildi, DHB təxminən 30 san ərzində çatır",
+    "payViaBridgeDpay": "Base-ə köçürüldü və DeHub Pay-ə ödənildi, DHB təxminən bir dəqiqəyə çatır",
+    "dmSent": "{{amount}} DHB {{name}} üçün göndərildi!"
   },
   "postOptions": {
     "options": "Seçimlər",
@@ -6196,5 +6201,21 @@
     "openExchange": "Açıq Mübadilə",
     "done": "Hazırdır",
     "back": "Geri"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Balansınız",
+    "youNeed": "Sizə lazımdır",
+    "checking": "Pul kisəniz yoxlanılır…",
+    "payHint": "Pul kisənizdəki istənilən vəsaitlə ödəyin. O, DHB-yə çevrilir və dərhal kilidi açır.",
+    "toppingUp": "Doldurulur…",
+    "topUpUnlock": "Doldur və aç",
+    "orFund": "Və ya başqa yolla vəsait əlavə edin",
+    "paused": "DHB transferləri hazırda zəncirdə dayandırılıb, buna görə bu kilid açma hələ keçə bilməz. Bir az sonra yenidən cəhd edin.",
+    "otherChain": "Bu paylaşım başqa zəncirdə hesablaşır, ona görə orada pul kisənizdə DHB lazımdır.",
+    "buyCard": "Kartla DHB al",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Vəsait köçür",
+    "moveFundsHint": "Başqa zəncirdən dəyişdir və ya depozit et",
+    "notNow": "İndi yox"
   }
 }

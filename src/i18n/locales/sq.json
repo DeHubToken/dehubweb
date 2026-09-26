@@ -531,7 +531,12 @@
     "stageBridge": "Po dërgohet {{symbol}} nga {{chain}}…",
     "stageArriving": "Po mbërrin në Base, zakonisht disa sekonda…",
     "stageSwap": "Po blihet DHB në Uniswap…",
-    "payFailed": "{{symbol}} nuk u konvertua dot në DHB"
+    "payFailed": "{{symbol}} nuk u konvertua dot në DHB",
+    "stagePay": "Po paguhet DeHub Pay me {{symbol}}…",
+    "stageDelivering": "DeHub Pay po dërgon DHB-të e tua…",
+    "payViaDpay": "U pagua te DeHub Pay, DHB mbërrin për rreth 30 s",
+    "payViaBridgeDpay": "U kalua në Base dhe u pagua te DeHub Pay, DHB mbërrin për rreth një minutë",
+    "dmSent": "U dërguan {{amount}} DHB te {{name}}!"
   },
   "postOptions": {
     "options": "Opsionet",
@@ -4059,5 +4064,21 @@
     "openExchange": "Shkëmbim i hapur",
     "done": "Përfundoi",
     "back": "Prapa"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Bilanci yt",
+    "youNeed": "Të duhen",
+    "checking": "Po kontrollohet portofoli…",
+    "payHint": "Paguaj me çdo gjë në portofol. Kthehet në DHB dhe zhbllokohet menjëherë.",
+    "toppingUp": "Po rimbushet…",
+    "topUpUnlock": "Rimbush & zhblloko",
+    "orFund": "Ose shto fonde në një mënyrë tjetër",
+    "paused": "Transfertat e DHB janë pezulluar në zinxhir tani, ndaj ky zhbllokim nuk mund të kryhet ende. Provo sërish pak më vonë.",
+    "otherChain": "Ky postim shlyhet në një zinxhir tjetër, ndaj të duhen DHB në portofol atje.",
+    "buyCard": "Bli DHB me kartë",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Sill fonde",
+    "moveFundsHint": "Shkëmbe ose depozito nga një zinxhir tjetër",
+    "notNow": "Jo tani"
   }
 }

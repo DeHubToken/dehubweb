@@ -513,7 +513,12 @@
     "stageBridge": "{{chain}}-аас {{symbol}} илгээж байна…",
     "stageArriving": "Base рүү ирж байна, ихэвчлэн хэдхэн секунд…",
     "stageSwap": "Uniswap дээр DHB худалдан авч байна…",
-    "payFailed": "{{symbol}}-г DHB болгон хөрвүүлж чадсангүй"
+    "payFailed": "{{symbol}}-г DHB болгон хөрвүүлж чадсангүй",
+    "stagePay": "{{symbol}}-ээр DeHub Pay-д төлж байна…",
+    "stageDelivering": "DeHub Pay таны DHB-г илгээж байна…",
+    "payViaDpay": "DeHub Pay-д төлсөн, DHB ойролцоогоор 30 секундэд ирнэ",
+    "payViaBridgeDpay": "Base рүү шилжүүлж DeHub Pay-д төлсөн, DHB ойролцоогоор нэг минутад ирнэ",
+    "dmSent": "{{name}}-д {{amount}} DHB илгээлээ!"
   },
   "postOptions": {
     "options": "Сонголтууд",
@@ -4002,5 +4007,21 @@
     "openExchange": "Нээлттэй солилцоо",
     "done": "Болсон",
     "back": "БУЦАХ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Таны үлдэгдэл",
+    "youNeed": "Танд хэрэгтэй",
+    "checking": "Таны түрийвчийг шалгаж байна…",
+    "payHint": "Түрийвчиндээ байгаа ямар ч хөрөнгөөр төлөөрэй. Энэ нь DHB болж шууд нээгдэнэ.",
+    "toppingUp": "Цэнэглэж байна…",
+    "topUpUnlock": "Цэнэглээд нээх",
+    "orFund": "Эсвэл өөр аргаар хөрөнгө нэмэх",
+    "paused": "DHB шилжүүлэг одоогоор сүлжээн дээр түр зогссон тул энэ нээлтийг хийх боломжгүй байна. Удахгүй дахин оролдоно уу.",
+    "otherChain": "Энэ нийтлэл өөр сүлжээн дээр тооцоо хийгддэг тул тэнд байгаа түрийвчиндээ DHB хэрэгтэй.",
+    "buyCard": "Картаар DHB худалдаж авах",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Хөрөнгө шилжүүлэх",
+    "moveFundsHint": "Өөр сүлжээнээс солих эсвэл хадгалуулах",
+    "notNow": "Одоо биш"
   }
 }

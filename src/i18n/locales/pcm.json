@@ -430,7 +430,12 @@
     "stageBridge": "E dey send {{symbol}} from {{chain}}…",
     "stageArriving": "E dey land for Base, e no dey pass few seconds…",
     "stageSwap": "E dey buy DHB for Uniswap…",
-    "payFailed": "We no fit change {{symbol}} to DHB"
+    "payFailed": "We no fit change {{symbol}} to DHB",
+    "stagePay": "E dey pay DeHub Pay with {{symbol}}…",
+    "stageDelivering": "DeHub Pay dey send your DHB…",
+    "payViaDpay": "Don pay DeHub Pay, DHB go land in like 30s",
+    "payViaBridgeDpay": "Don move am go Base and pay DeHub Pay, DHB go land in like one minute",
+    "dmSent": "Don send {{amount}} DHB give {{name}}!"
   },
   "postOptions": {
     "options": "Option Dem",
@@ -3375,5 +3380,21 @@
     "openExchange": "Open Exchange",
     "done": "Done",
     "back": "Back"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Your balance",
+    "youNeed": "You need",
+    "checking": "E dey check your wallet…",
+    "payHint": "Pay with anything wey dey your wallet. E go turn DHB and open sharp sharp.",
+    "toppingUp": "E dey top up…",
+    "topUpUnlock": "Top up & open am",
+    "orFund": "Or add money another way",
+    "paused": "DHB transfer don pause for on-chain now, so this unlock no fit go through yet. Try again small time.",
+    "otherChain": "This post dey settle for another chain, so e need DHB for your wallet for there.",
+    "buyCard": "Buy DHB with card",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Bring money enter",
+    "moveFundsHint": "Swap or deposit from another chain",
+    "notNow": "No be now"
   }
 }

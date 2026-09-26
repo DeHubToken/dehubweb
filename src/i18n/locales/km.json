@@ -515,7 +515,12 @@
     "stageBridge": "កំពុងផ្ញើ {{symbol}} ពី {{chain}}…",
     "stageArriving": "កំពុងមកដល់ Base ជាធម្មតាប៉ុន្មានវិនាទីប៉ុណ្ណោះ…",
     "stageSwap": "កំពុងទិញ DHB នៅលើ Uniswap…",
-    "payFailed": "មិនអាចបម្លែង {{symbol}} ទៅ DHB បានទេ"
+    "payFailed": "មិនអាចបម្លែង {{symbol}} ទៅ DHB បានទេ",
+    "stagePay": "កំពុងបង់ទៅ DeHub Pay ដោយ {{symbol}}…",
+    "stageDelivering": "DeHub Pay កំពុងផ្ញើ DHB របស់អ្នក…",
+    "payViaDpay": "បានបង់ទៅ DeHub Pay, DHB មកដល់ក្នុងប្រហែល 30 វិនាទី",
+    "payViaBridgeDpay": "បានផ្ទេរទៅ Base ហើយបង់ទៅ DeHub Pay, DHB មកដល់ក្នុងប្រហែលមួយនាទី",
+    "dmSent": "បានផ្ញើ {{amount}} DHB ទៅ {{name}}!"
   },
   "postOptions": {
     "options": "ជម្រើស",
@@ -6151,5 +6156,21 @@
     "openExchange": "បើក Exchange",
     "done": "រួចរាល់",
     "back": "ថយក្រោយ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "សមតុល្យរបស់អ្នក",
+    "youNeed": "អ្នកត្រូវការ",
+    "checking": "កំពុងពិនិត្យកាបូបរបស់អ្នក…",
+    "payHint": "បង់ដោយអ្វីក៏បាននៅក្នុងកាបូបរបស់អ្នក។ វានឹងក្លាយជា DHB ហើយដោះសោភ្លាមៗ។",
+    "toppingUp": "កំពុងបញ្ចូលទឹកប្រាក់…",
+    "topUpUnlock": "បញ្ចូលទឹកប្រាក់ និងដោះសោ",
+    "orFund": "ឬបន្ថែមមូលនិធិតាមវិធីផ្សេង",
+    "paused": "ការផ្ទេរ DHB ត្រូវបានផ្អាកនៅលើ on-chain ឥឡូវនេះ ដូច្នេះការដោះសោនេះមិនទាន់អាចធ្វើបានទេ។ សូមព្យាយាមម្ដងទៀតបន្តិចទៀត។",
+    "otherChain": "ការផ្សាយនេះទូទាត់នៅលើ chain ផ្សេង ដូច្នេះវាត្រូវការ DHB នៅក្នុងកាបូបរបស់អ្នកនៅទីនោះ។",
+    "buyCard": "ទិញ DHB ដោយកាត",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "ផ្ទេរមូលនិធិចូល",
+    "moveFundsHint": "ប្ដូរ ឬដាក់ប្រាក់ពី chain ផ្សេង",
+    "notNow": "មិនទាន់ទេ"
   }
 }

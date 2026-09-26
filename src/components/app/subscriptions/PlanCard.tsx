@@ -1,3 +1,4 @@
+import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, Clock, Loader2, Star, Users, Upload, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,11 @@ import { formatDuration, normaliseDuration, BASE_CHAIN_ID } from '@/lib/contract
 import type { ChainId } from '@/components/app/ChainSelector';
 import { DHB_PRELISTING_USD, dhbForUsd, formatDhbPayment } from '@/lib/subscription-pricing';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { useAuth } from '@/contexts/AuthContext';
+import type { TipFundingSource } from '@/lib/tip-funding';
+
+// Reads wallet balances (wallet stack), so it loads with the open dialog.
+const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
 
 /**
  * One subscription plan, wherever plans are shown — the profile's Subs tab and
@@ -55,6 +61,9 @@ function PlanNotice({ children }: { children: React.ReactNode }) {
 export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps) {
   const { t } = useTranslation();
   const buyPlanMutation = useBuyPlan();
+  const { walletAddress } = useAuth();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const publishMutation = usePublishPlan();
 
   const price = planPrice(plan);
@@ -78,7 +87,11 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   const totalDhbEstimate = dhbEstimate;
 
   const handleSubscribe = async () => {
-    await buyPlanMutation.mutateAsync({ plan, chainId });
+    await buyPlanMutation.mutateAsync({
+      plan,
+      chainId,
+      fundFrom: payWith && walletAddress && chainId === BASE_CHAIN_ID ? { source: payWith, walletAddress, t } : null,
+    });
   };
 
   const busy = buyPlanMutation.isPending;
@@ -220,7 +233,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
           {t('subscriptions.subscribed')}
         </Button>
       ) : (
-        <AlertDialog>
+        <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
           <AlertDialogTrigger asChild>
             <Button
               disabled={busy || !published || !isBuyable}
@@ -277,6 +290,11 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
                 </p>
               )}
             </div>
+            {confirmOpen && walletAddress && chainId === BASE_CHAIN_ID && totalDhbEstimate ? (
+              <Suspense fallback={null}>
+                <TipPayWith amountDhb={totalDhbEstimate} value={payWith} onChange={setPayWith} />
+              </Suspense>
+            ) : null}
             <AlertDialogFooter>
               <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
                 {t('subscriptions.cancel')}

@@ -531,7 +531,12 @@
     "stageBridge": "Enviando {{symbol}} desde {{chain}}…",
     "stageArriving": "Llegando a Base, normalmente unos segundos…",
     "stageSwap": "Comprando DHB en Uniswap…",
-    "payFailed": "No se pudo convertir {{symbol}} a DHB"
+    "payFailed": "No se pudo convertir {{symbol}} a DHB",
+    "stagePay": "Pagando a DeHub Pay con {{symbol}}…",
+    "stageDelivering": "DeHub Pay te está enviando tus DHB…",
+    "payViaDpay": "Pagado a DeHub Pay, los DHB llegan en unos 30 s",
+    "payViaBridgeDpay": "Movido a Base y pagado a DeHub Pay, los DHB llegan en aproximadamente un minuto",
+    "dmSent": "¡Enviaste {{amount}} DHB a {{name}}!"
   },
   "postOptions": {
     "options": "Opciones",
@@ -6358,5 +6363,21 @@
     "openExchange": "Open Exchange",
     "done": "Listo",
     "back": "Atrás"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Tu saldo",
+    "youNeed": "Necesitas",
+    "checking": "Revisando tu billetera…",
+    "payHint": "Paga con lo que tengas en tu billetera. Se convierte en DHB y se desbloquea al instante.",
+    "toppingUp": "Recargando…",
+    "topUpUnlock": "Recargar y desbloquear",
+    "orFund": "O añade fondos de otra forma",
+    "paused": "Las transferencias de DHB están pausadas en la cadena, así que este desbloqueo aún no puede completarse. Inténtalo en breve.",
+    "otherChain": "Esta publicación se liquida en otra cadena, así que necesita DHB en tu billetera allí.",
+    "buyCard": "Comprar DHB con tarjeta",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Transferir fondos",
+    "moveFundsHint": "Intercambia o deposita desde otra cadena",
+    "notNow": "Ahora no"
   }
 }

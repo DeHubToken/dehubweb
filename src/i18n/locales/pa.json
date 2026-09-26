@@ -516,7 +516,12 @@
     "stageBridge": "{{chain}} ਤੋਂ {{symbol}} ਭੇਜਿਆ ਜਾ ਰਿਹਾ ਹੈ…",
     "stageArriving": "Base 'ਤੇ ਪਹੁੰਚ ਰਿਹਾ ਹੈ, ਆਮ ਤੌਰ 'ਤੇ ਕੁਝ ਸਕਿੰਟ…",
     "stageSwap": "Uniswap 'ਤੇ DHB ਖਰੀਦਿਆ ਜਾ ਰਿਹਾ ਹੈ…",
-    "payFailed": "{{symbol}} ਨੂੰ DHB ਵਿੱਚ ਬਦਲਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ"
+    "payFailed": "{{symbol}} ਨੂੰ DHB ਵਿੱਚ ਬਦਲਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ",
+    "stagePay": "{{symbol}} ਨਾਲ DeHub Pay ਨੂੰ ਭੁਗਤਾਨ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…",
+    "stageDelivering": "DeHub Pay ਤੁਹਾਡੇ DHB ਭੇਜ ਰਿਹਾ ਹੈ…",
+    "payViaDpay": "DeHub Pay ਨੂੰ ਭੁਗਤਾਨ ਹੋ ਗਿਆ, DHB ਲਗਭਗ 30 ਸਕਿੰਟਾਂ ਵਿੱਚ ਪਹੁੰਚੇਗਾ",
+    "payViaBridgeDpay": "Base 'ਤੇ ਭੇਜ ਕੇ DeHub Pay ਨੂੰ ਭੁਗਤਾਨ ਹੋ ਗਿਆ, DHB ਲਗਭਗ ਇੱਕ ਮਿੰਟ ਵਿੱਚ ਪਹੁੰਚੇਗਾ",
+    "dmSent": "{{name}} ਨੂੰ {{amount}} DHB ਭੇਜੇ ਗਏ!"
   },
   "postOptions": {
     "options": "ਵਿਕਲਪ",
@@ -3979,5 +3984,21 @@
     "openExchange": "ਐਕਸਚੇਂਜ ਖੋਲ੍ਹੋ",
     "done": "ਹੋ ਗਿਆ",
     "back": "ਪਿੱਛੇ"
+  },
+  "ppvTopUp": {
+    "yourBalance": "ਤੁਹਾਡਾ ਬਕਾਇਆ",
+    "youNeed": "ਤੁਹਾਨੂੰ ਲੋੜ ਹੈ",
+    "checking": "ਤੁਹਾਡਾ ਵਾਲਿਟ ਜਾਂਚਿਆ ਜਾ ਰਿਹਾ ਹੈ…",
+    "payHint": "ਆਪਣੇ ਵਾਲਿਟ ਵਿੱਚ ਕਿਸੇ ਵੀ ਚੀਜ਼ ਨਾਲ ਭੁਗਤਾਨ ਕਰੋ। ਇਹ DHB ਬਣ ਜਾਂਦਾ ਹੈ ਅਤੇ ਤੁਰੰਤ ਖੁੱਲ੍ਹ ਜਾਂਦਾ ਹੈ।",
+    "toppingUp": "ਟੌਪ ਅੱਪ ਹੋ ਰਿਹਾ ਹੈ…",
+    "topUpUnlock": "ਟੌਪ ਅੱਪ ਕਰੋ ਅਤੇ ਖੋਲ੍ਹੋ",
+    "orFund": "ਜਾਂ ਕਿਸੇ ਹੋਰ ਤਰੀਕੇ ਨਾਲ ਫੰਡ ਜੋੜੋ",
+    "paused": "DHB ਟ੍ਰਾਂਸਫਰ ਇਸ ਵੇਲੇ ਆਨ-ਚੇਨ ਰੋਕੇ ਹੋਏ ਹਨ, ਇਸ ਲਈ ਇਹ ਅਨਲੌਕ ਅਜੇ ਨਹੀਂ ਹੋ ਸਕਦਾ। ਥੋੜ੍ਹੀ ਦੇਰ ਬਾਅਦ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "otherChain": "ਇਹ ਪੋਸਟ ਕਿਸੇ ਹੋਰ ਚੇਨ 'ਤੇ ਸੈਟਲ ਹੁੰਦੀ ਹੈ, ਇਸ ਲਈ ਉੱਥੇ ਤੁਹਾਡੇ ਵਾਲਿਟ ਵਿੱਚ DHB ਚਾਹੀਦਾ ਹੈ।",
+    "buyCard": "ਕਾਰਡ ਨਾਲ DHB ਖਰੀਦੋ",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "ਫੰਡ ਅੰਦਰ ਲਿਆਓ",
+    "moveFundsHint": "ਕਿਸੇ ਹੋਰ ਚੇਨ ਤੋਂ ਸਵੈਪ ਜਾਂ ਜਮ੍ਹਾਂ ਕਰੋ",
+    "notNow": "ਹੁਣ ਨਹੀਂ"
   }
 }

@@ -724,7 +724,12 @@
     "stageBridge": "{{symbol}} verzenden vanaf {{chain}}…",
     "stageArriving": "Onderweg naar Base, meestal een paar seconden…",
     "stageSwap": "DHB kopen op Uniswap…",
-    "payFailed": "Kan {{symbol}} niet omzetten naar DHB"
+    "payFailed": "Kan {{symbol}} niet omzetten naar DHB",
+    "stagePay": "DeHub Pay betalen met {{symbol}}…",
+    "stageDelivering": "DeHub Pay verstuurt je DHB…",
+    "payViaDpay": "Betaald aan DeHub Pay, DHB komt aan in ongeveer 30 s",
+    "payViaBridgeDpay": "Naar Base verplaatst en betaald aan DeHub Pay, DHB komt aan in ongeveer een minuut",
+    "dmSent": "{{amount}} DHB verzonden naar {{name}}!"
   },
   "postOptions": {
     "options": "Opties",
@@ -6566,5 +6571,21 @@
     "openExchange": "Open Exchange",
     "done": "Klaar",
     "back": "Terug"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Je saldo",
+    "youNeed": "Je hebt nodig",
+    "checking": "Je wallet controleren…",
+    "payHint": "Betaal met alles in je wallet. Het wordt DHB en ontgrendelt meteen.",
+    "toppingUp": "Opwaarderen…",
+    "topUpUnlock": "Opwaarderen & ontgrendelen",
+    "orFund": "Of voeg op een andere manier geld toe",
+    "paused": "DHB-overdrachten zijn op dit moment on-chain gepauzeerd, dus deze ontgrendeling kan nog niet doorgaan. Probeer het zo opnieuw.",
+    "otherChain": "Deze post wordt op een andere chain afgerekend, dus je hebt daar DHB in je wallet nodig.",
+    "buyCard": "DHB kopen met kaart",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Geld overzetten",
+    "moveFundsHint": "Swap of stort vanaf een andere chain",
+    "notNow": "Niet nu"
   }
 }

@@ -515,7 +515,12 @@
     "stageBridge": "À ń fi {{symbol}} ránṣẹ́ láti {{chain}}…",
     "stageArriving": "Ó ń dé Base, ó sábà máa ń gba ìṣẹ́jú-àáyá díẹ̀…",
     "stageSwap": "À ń ra DHB lórí Uniswap…",
-    "payFailed": "A kò lè yí {{symbol}} padà sí DHB"
+    "payFailed": "A kò lè yí {{symbol}} padà sí DHB",
+    "stagePay": "Ó ń san DeHub Pay pẹ̀lú {{symbol}}…",
+    "stageDelivering": "DeHub Pay ń fi DHB rẹ ránṣẹ́…",
+    "payViaDpay": "A ti san án fún DeHub Pay, DHB yóò dé ní nǹkan bí ìṣẹ́jú-àáyá 30",
+    "payViaBridgeDpay": "A ti gbé e lọ sí Base, a sì san án fún DeHub Pay, DHB yóò dé ní nǹkan bí ìṣẹ́jú kan",
+    "dmSent": "A ti fi {{amount}} DHB ránṣẹ́ sí {{name}}!"
   },
   "postOptions": {
     "options": "Àwọn àṣàyàn",
@@ -4033,5 +4038,21 @@
     "openExchange": "Ṣí pàṣípààrọ̀",
     "done": "Ṣe",
     "back": "Pada"
+  },
+  "ppvTopUp": {
+    "yourBalance": "Ìwọ̀n owó rẹ",
+    "youNeed": "O nílò",
+    "checking": "Ó ń ṣàyẹ̀wò àpamọ́wọ́ rẹ…",
+    "payHint": "Sanwó pẹ̀lú ohunkóhun nínú àpamọ́wọ́ rẹ. Yóò di DHB, yóò sì ṣí lẹ́sẹ̀kẹsẹ̀.",
+    "toppingUp": "Ó ń fi owó kún un…",
+    "topUpUnlock": "Fi owó kún & ṣí",
+    "orFund": "Tàbí fi owó kún ní ọ̀nà mìíràn",
+    "paused": "A ti dá ìfiránṣẹ́ DHB dúró lórí chain báyìí, nítorí náà ṣíṣí yìí kò lè ṣẹlẹ̀ síbẹ̀. Gbìyànjú lẹ́ẹ̀kan sí i láìpẹ́.",
+    "otherChain": "Ìfìwéránṣẹ́ yìí ń yanjú lórí chain mìíràn, nítorí náà ó nílò DHB nínú àpamọ́wọ́ rẹ níbẹ̀.",
+    "buyCard": "Ra DHB pẹ̀lú káàdì",
+    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "moveFunds": "Mú owó wọlé",
+    "moveFundsHint": "Pààrọ̀ tàbí fi owó sí láti chain mìíràn",
+    "notNow": "Kì í ṣe báyìí"
   }
 }
