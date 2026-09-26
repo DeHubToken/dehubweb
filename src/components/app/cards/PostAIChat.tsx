@@ -228,7 +228,8 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
             content: m.content
           })),
           postContext,
-          userLanguage
+          userLanguage,
+          dehubToken: localStorage.getItem('dehub_token') || undefined,
         }
       });
 
@@ -275,7 +276,8 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
             content: m.content
           })),
           postContext,
-          userLanguage
+          userLanguage,
+          dehubToken: localStorage.getItem('dehub_token') || undefined,
         }
       });
 
