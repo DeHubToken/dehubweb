@@ -33,7 +33,7 @@ import {
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
-import { reactionGlowProps } from '@/lib/reaction-glow';
+import { ReactionEmoji } from './ReactionEmoji';
 import { ReactionPicker } from './ReactionPicker';
 import { maybeShowReactionTip, markReactionTipSeen } from '@/lib/reaction-tip';
 import { useAuth } from '@/contexts/AuthContext';
@@ -967,7 +967,6 @@ export function ActionBar({
                weight instead) — so every engagement button carries the same
                attribute and themes style one selector. */
             data-engaged={isDisliked ? 'dislike' : undefined}
-            {...reactionGlowProps(myNegativeReaction)}
             className={THUMB_BUTTON_CLASS}
             aria-label={negativeThumbLabel(myNegativeReaction)}
             aria-haspopup={reactionsEnabled && HAS_NEGATIVE_TRAY ? 'menu' : undefined}
@@ -982,7 +981,7 @@ export function ActionBar({
                 className="text-[1.05rem] leading-none w-5 h-5 flex items-center justify-center"
                 aria-hidden="true"
               >
-                {reactionMeta(negativeLeadReaction).emoji}
+                <ReactionEmoji reaction={negativeLeadReaction} animate />
               </span>
             ) : (
               <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
@@ -1067,11 +1066,6 @@ export function ActionBar({
           /* Engaged whenever the viewer holds a POSITIVE reaction, not only a
              plain 👍 — a post the viewer loved is still a post they liked. */
           data-engaged={isLiked ? (myReaction && myReaction !== 'like' ? 'reaction' : 'like') : undefined}
-          /* Your own reaction haloes the glyph in its own colour, the same
-             signal the tray's selected emoji wears — so the card agrees with
-             the picker you set it from, and a 👍 you cast is not just a filled
-             thumb among a row of grey ones. */
-          {...reactionGlowProps(myPositiveReaction)}
           className={cn(THUMB_BUTTON_CLASS, compact && COMPACT_BUTTON_CLASS)}
           aria-label={
             myPositiveReaction
@@ -1087,12 +1081,14 @@ export function ActionBar({
           {leadReaction ? (
             <span
               /* Marks the glyph so a theme can light the reaction without also
-                 lighting the count, which is a sibling span in the same row. */
+                 lighting the count, which is a sibling span in the same row.
+                 Your own reaction moves, the same as it does in the tray — a
+                 🔥 somebody else put in the lead stays still. */
               data-engaged-glyph
               className="text-[1.05rem] leading-none w-5 h-5 flex items-center justify-center"
               aria-hidden="true"
             >
-              {reactionMeta(leadReaction).emoji}
+              <ReactionEmoji reaction={leadReaction} animate={leadReaction === myPositiveReaction} />
             </span>
           ) : (
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />

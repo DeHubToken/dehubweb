@@ -11,10 +11,11 @@
  * This is a plain absolutely-positioned element instead, so a single unbroken
  * press can open the tray and land on a reaction.
  *
- * The frame around the emoji stays on the monochrome glass palette, but the
- * colour inside it no longer stops at the tray: the card's like and dislike
- * buttons wear the same per-reaction glow once the reaction is yours, off the
- * table both of them now read — `lib/reaction-glow`.
+ * The frame around the emoji stays on the monochrome glass palette. The emoji
+ * inside it move: the one you hold plays its animation (and carries a dot
+ * underneath), and whichever one the pointer is on plays too, so the tray
+ * previews what you are about to cast. The card's button plays the same
+ * animation once the reaction is yours — see `ReactionEmoji`.
  *
  * Each emoji carries its own total in the corner, so the tray doubles as the
  * public breakdown of a post — a post with 19 👍 and one ❤️ reads as exactly
@@ -40,10 +41,7 @@ import {
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
-// Shared with the card's like/dislike button, which wears the same colour once
-// the reaction is yours — see the table's own note on why it isn't in
-// `lib/reactions`.
-import { REACTION_GLOW } from '@/lib/reaction-glow';
+import { ReactionEmoji, animatedReactionSrc } from './ReactionEmoji';
 
 /** How close to the edge of the screen the tray is allowed to sit, in px. */
 const EDGE_MARGIN = 8;
@@ -114,6 +112,19 @@ export function ReactionPicker({
   // release — only a drag along the tray itself is swallowed.
   const dragOriginRef = useRef<{ x: number; y: number } | null>(null);
   const draggedRef = useRef(false);
+  // The emoji under the pointer, which plays its animation as a preview.
+  const [hovered, setHovered] = useState<PostReaction | null>(null);
+
+  // Warm the animated files as the tray opens, so a hover plays at once
+  // rather than flashing the still emoji while the first file loads.
+  useEffect(() => {
+    if (!open || reduceMotion) return;
+    for (const reaction of reactions) new Image().src = animatedReactionSrc(reaction.key);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, reduceMotion, polarity]);
+  useEffect(() => {
+    if (!open) setHovered(null);
+  }, [open]);
 
   /** Closes out a press on the tray; true when it was a scroll, not a pick. */
   const endGesture = useCallback(() => {
@@ -243,7 +254,6 @@ export function ReactionPicker({
         >
           {reactions.map((reaction) => {
             const isCurrent = current === reaction.key;
-            const glow = isCurrent ? REACTION_GLOW[reaction.key] : null;
             const tally = counts ? (counts[reaction.key] ?? 0) : null;
             const withTally =
               tally === null
@@ -260,6 +270,8 @@ export function ReactionPicker({
                 data-reaction-option
                 data-keep-round
                 data-active={isCurrent ? 'true' : undefined}
+                onPointerEnter={() => setHovered(reaction.key)}
+                onPointerLeave={() => setHovered((h) => (h === reaction.key ? null : h))}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (e.detail === 0) onSelect(reaction.key);
@@ -280,26 +292,22 @@ export function ReactionPicker({
                   'hover:-translate-y-0.5 hover:scale-110 active:translate-y-0 active:scale-95',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
                 )}
-                /* The viewer's own reaction is marked by a bloom in the
-                   emoji's own colour rather than a white disc and ring — the
-                   ring drew a hard edge around one glyph in a row of them and
-                   read as chrome. Inline because the colour is per-reaction
-                   data, and it needs no light-theme counterpart: a colour
-                   pulled from the glyph reads on paper and on glass alike. */
-                style={
-                  glow
-                    ? {
-                        backgroundImage: `radial-gradient(circle, rgb(${glow} / 0.30) 0%, rgb(${glow} / 0.12) 45%, rgb(${glow} / 0) 72%)`,
-                      }
-                    : undefined
-                }
               >
-                <span
-                  aria-hidden="true"
-                  style={glow ? { filter: `drop-shadow(0 0 5px rgb(${glow} / 0.85))` } : undefined}
-                >
-                  {reaction.emoji}
+                <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center">
+                  <ReactionEmoji
+                    reaction={reaction.key}
+                    animate={isCurrent || hovered === reaction.key}
+                  />
                 </span>
+                {/* Yours, as a dot under the emoji — the animation already
+                    says it, but a still frame of a moving emoji does not. */}
+                {isCurrent && (
+                  <span
+                    aria-hidden="true"
+                    data-reaction-current
+                    className="pointer-events-none absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-white/80"
+                  />
+                )}
                 {/* Total for this reaction, tucked into the corner above the
                     emoji. Absolutely positioned so a four-character "1.2K"
                     can never widen the tray — a row of those would push it off
