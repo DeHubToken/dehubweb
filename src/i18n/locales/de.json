@@ -64,7 +64,8 @@
     "emptyDescription": "Teile als Erste:r etwas Großartiges!",
     "loadFailed": "Feed konnte nicht geladen werden. Bitte versuche es erneut.",
     "followingEmptyTitle": "Noch keine Beiträge",
-    "followingEmptyDescription": "Folge ein paar Creator:innen, um ihre Beiträge hier zu sehen!"
+    "followingEmptyDescription": "Folge ein paar Creator:innen, um ihre Beiträge hier zu sehen!",
+    "seeAll": "Alle ansehen"
   },
   "explore": {
     "all": "Alles",

@@ -64,7 +64,8 @@
     "emptyDescription": "Bli den første til å dele noe fantastisk!",
     "loadFailed": "Kunne ikke laste inn feeden. Prøv igjen.",
     "followingEmptyTitle": "Ingen innlegg ennå",
-    "followingEmptyDescription": "Følg noen skapere for å se innleggene deres her!"
+    "followingEmptyDescription": "Følg noen skapere for å se innleggene deres her!",
+    "seeAll": "Se alle"
   },
   "explore": {
     "all": "Alle",

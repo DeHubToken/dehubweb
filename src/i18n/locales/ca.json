@@ -64,7 +64,8 @@
     "emptyDescription": "Sigues el primer a compartir alguna cosa increïble!",
     "loadFailed": "No s'ha pogut carregar el feed. Torna-ho a provar.",
     "followingEmptyTitle": "Encara no hi ha publicacions",
-    "followingEmptyDescription": "Segueix alguns creadors per veure aquí les seves publicacions!"
+    "followingEmptyDescription": "Segueix alguns creadors per veure aquí les seves publicacions!",
+    "seeAll": "Mostra-ho tot"
   },
   "explore": {
     "all": "Tot",

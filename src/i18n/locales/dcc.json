@@ -63,7 +63,8 @@
     "emptyDescription": "کچھ زبردست شیئر کرنے والے پہلے بنو!",
     "loadFailed": "فیڈ لوڈ نئیں ہوا۔ پھر کوشش کرو۔",
     "followingEmptyTitle": "ابھی کچھ پوسٹ نئیں ہیں",
-    "followingEmptyDescription": "ادھر ان کی پوسٹ دیکھنے کو کچھ کریئٹرز کو فالو کرو!"
+    "followingEmptyDescription": "ادھر ان کی پوسٹ دیکھنے کو کچھ کریئٹرز کو فالو کرو!",
+    "seeAll": "سب دیکھو"
   },
   "explore": {
     "all": "سب",

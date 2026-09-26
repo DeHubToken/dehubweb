@@ -64,7 +64,8 @@
     "emptyDescription": "成为第一个分享精彩内容的人吧！",
     "loadFailed": "无法加载动态。请重试。",
     "followingEmptyTitle": "暂无帖子",
-    "followingEmptyDescription": "关注一些创作者，即可在这里看到他们的帖子！"
+    "followingEmptyDescription": "关注一些创作者，即可在这里看到他们的帖子！",
+    "seeAll": "查看全部"
   },
   "explore": {
     "all": "全部",

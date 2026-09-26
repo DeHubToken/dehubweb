@@ -63,7 +63,8 @@
     "emptyDescription": "来做第一个分享精彩内容个人！",
     "loadFailed": "动态加载勿出来。请再试一趟。",
     "followingEmptyTitle": "还呒没帖子",
-    "followingEmptyDescription": "关注几个创作者，就好辣此地看到伊拉个帖子！"
+    "followingEmptyDescription": "关注几个创作者，就好辣此地看到伊拉个帖子！",
+    "seeAll": "看全部"
   },
   "explore": {
     "all": "全部",

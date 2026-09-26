@@ -64,7 +64,8 @@
     "emptyDescription": "Bụrụ onye mbụ ga-ekerịta ihe magburu onwe ya!",
     "loadFailed": "Enweghị ike ibunye feed. Biko nwaa ọzọ.",
     "followingEmptyTitle": "Enweghị post ugbu a",
-    "followingEmptyDescription": "Soro ụfọdụ ndị okike ka ị hụ post ha ebe a!"
+    "followingEmptyDescription": "Soro ụfọdụ ndị okike ka ị hụ post ha ebe a!",
+    "seeAll": "Hụ ha niile"
   },
   "explore": {
     "all": "Niile",

@@ -64,7 +64,8 @@
     "emptyDescription": "Wees de eerste die iets geweldigs deelt!",
     "loadFailed": "Kan de feed niet laden. Probeer het opnieuw.",
     "followingEmptyTitle": "Nog geen berichten",
-    "followingEmptyDescription": "Volg een paar makers om hun berichten hier te zien!"
+    "followingEmptyDescription": "Volg een paar makers om hun berichten hier te zien!",
+    "seeAll": "Alles bekijken"
   },
   "explore": {
     "all": "Alles",

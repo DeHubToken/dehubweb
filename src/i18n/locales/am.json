@@ -63,7 +63,8 @@
     "emptyDescription": "አስደናቂ ነገር ለማጋራት የመጀመሪያው ይሁኑ!",
     "loadFailed": "ምግቡን መጫን አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
     "followingEmptyTitle": "እስካሁን ምንም ልጥፎች የሉም",
-    "followingEmptyDescription": "ልጥፎቻቸውን እዚህ ለማየት አንዳንድ ፈጣሪዎችን ይከተሉ!"
+    "followingEmptyDescription": "ልጥፎቻቸውን እዚህ ለማየት አንዳንድ ፈጣሪዎችን ይከተሉ!",
+    "seeAll": "ሁሉንም ይመልከቱ"
   },
   "explore": {
     "all": "ሁሉም",

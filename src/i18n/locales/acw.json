@@ -63,7 +63,8 @@
     "emptyDescription": "كن أول واحد يشارك شي رهيب!",
     "loadFailed": "ما قدرنا نحمّل الموجز. حاول مرة ثانية.",
     "followingEmptyTitle": "ما فيه منشورات للحين",
-    "followingEmptyDescription": "تابع كم مبدع عشان تشوف منشوراتهم هنا!"
+    "followingEmptyDescription": "تابع كم مبدع عشان تشوف منشوراتهم هنا!",
+    "seeAll": "شوف الكل"
   },
   "explore": {
     "all": "الكل",

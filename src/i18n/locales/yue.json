@@ -64,7 +64,8 @@
     "emptyDescription": "做第一個分享精彩嘢嘅人啦！",
     "loadFailed": "載入唔到動態。請再試一次。",
     "followingEmptyTitle": "暫時未有帖子",
-    "followingEmptyDescription": "追蹤幾個創作者，就可以喺呢度睇到佢哋嘅帖子！"
+    "followingEmptyDescription": "追蹤幾個創作者，就可以喺呢度睇到佢哋嘅帖子！",
+    "seeAll": "睇晒全部"
   },
   "explore": {
     "all": "全部",

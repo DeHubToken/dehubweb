@@ -63,7 +63,8 @@
     "emptyDescription": "كون أول زول يشارك حاجة حلوة!",
     "loadFailed": "ما قدرنا نحمّل الموجز. جرّب تاني.",
     "followingEmptyTitle": "ما في منشورات لسه",
-    "followingEmptyDescription": "تابع شوية مبدعين عشان تشوف منشوراتهم هنا!"
+    "followingEmptyDescription": "تابع شوية مبدعين عشان تشوف منشوراتهم هنا!",
+    "seeAll": "شوف الكل"
   },
   "explore": {
     "all": "الكل",

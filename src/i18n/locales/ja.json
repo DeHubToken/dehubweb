@@ -63,7 +63,8 @@
     "emptyDescription": "最初に素敵なものをシェアしよう！",
     "loadFailed": "フィードを読み込めませんでした。もう一度お試しください。",
     "followingEmptyTitle": "まだ投稿がありません",
-    "followingEmptyDescription": "クリエイターをフォローすると、ここに投稿が表示されます！"
+    "followingEmptyDescription": "クリエイターをフォローすると、ここに投稿が表示されます！",
+    "seeAll": "すべて見る"
   },
   "explore": {
     "all": "すべて",

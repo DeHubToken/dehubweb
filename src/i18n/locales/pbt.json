@@ -64,7 +64,8 @@
     "emptyDescription": "لومړی کس اوسئ چې یو په زړه پورې شی شریکوي!",
     "loadFailed": "فیډ بار نه شو. مهرباني وکړئ بیا هڅه وکړئ.",
     "followingEmptyTitle": "لا تر اوسه پوسټونه نشته",
-    "followingEmptyDescription": "یو شمیر جوړونکي تعقیب کړئ ترڅو دلته د هغوی پوسټونه ووینئ!"
+    "followingEmptyDescription": "یو شمیر جوړونکي تعقیب کړئ ترڅو دلته د هغوی پوسټونه ووینئ!",
+    "seeAll": "ټول وګورئ"
   },
   "explore": {
     "all": "ټول",

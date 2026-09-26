@@ -68,7 +68,8 @@
     "emptyDescription": "มาเป็นคนแรกที่แชร์สิ่งที่น่าทึ่งกัน!",
     "loadFailed": "โหลดฟีดไม่ได้ โปรดลองอีกครั้ง",
     "followingEmptyTitle": "ยังไม่มีโพสต์",
-    "followingEmptyDescription": "ติดตามครีเอเตอร์เพื่อดูโพสต์ของพวกเขาที่นี่!"
+    "followingEmptyDescription": "ติดตามครีเอเตอร์เพื่อดูโพสต์ของพวกเขาที่นี่!",
+    "seeAll": "ดูทั้งหมด"
   },
   "explore": {
     "all": "ทั้งหมด",

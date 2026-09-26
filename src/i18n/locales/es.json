@@ -64,7 +64,8 @@
     "emptyDescription": "¡Sé el primero en compartir algo increíble!",
     "loadFailed": "No se pudo cargar el feed. Inténtalo de nuevo.",
     "followingEmptyTitle": "Aún no hay publicaciones",
-    "followingEmptyDescription": "¡Sigue a algunos creadores para ver sus publicaciones aquí!"
+    "followingEmptyDescription": "¡Sigue a algunos creadores para ver sus publicaciones aquí!",
+    "seeAll": "Ver todo"
   },
   "explore": {
     "all": "Todo",

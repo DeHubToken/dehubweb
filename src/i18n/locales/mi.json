@@ -64,7 +64,8 @@
     "emptyDescription": "Ko koe te tuatahi ki te tiri i tētahi mea whakamīharo!",
     "loadFailed": "Kāore i taea te uta i te whāngai. Tēnā, whakamātauria anō.",
     "followingEmptyTitle": "Kāore anō he pou",
-    "followingEmptyDescription": "Whaia ētahi kaihanga kia kite ai koe i ā rātou pou ki konei!"
+    "followingEmptyDescription": "Whaia ētahi kaihanga kia kite ai koe i ā rātou pou ki konei!",
+    "seeAll": "Tirohia katoa"
   },
   "explore": {
     "all": "Katoa",

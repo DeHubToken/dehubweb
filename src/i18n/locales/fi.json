@@ -64,7 +64,8 @@
     "emptyDescription": "Ole ensimmäinen, joka jakaa jotain mahtavaa!",
     "loadFailed": "Syötteen lataaminen epäonnistui. Yritä uudelleen.",
     "followingEmptyTitle": "Ei vielä julkaisuja",
-    "followingEmptyDescription": "Seuraa joitakin sisällöntuottajia nähdäksesi heidän julkaisunsa täällä!"
+    "followingEmptyDescription": "Seuraa joitakin sisällöntuottajia nähdäksesi heidän julkaisunsa täällä!",
+    "seeAll": "Näytä kaikki"
   },
   "explore": {
     "all": "Kaikki",

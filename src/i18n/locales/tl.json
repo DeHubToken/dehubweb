@@ -64,7 +64,8 @@
     "emptyDescription": "Maging una sa pagbabahagi ng isang bagay na kahanga-hanga!",
     "loadFailed": "Hindi ma-load ang feed. Pakisubukang muli.",
     "followingEmptyTitle": "Wala pang mga post",
-    "followingEmptyDescription": "I-follow ang ilang creator para makita ang kanilang mga post dito!"
+    "followingEmptyDescription": "I-follow ang ilang creator para makita ang kanilang mga post dito!",
+    "seeAll": "Tingnan lahat"
   },
   "explore": {
     "all": "All",

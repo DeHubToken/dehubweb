@@ -64,7 +64,8 @@
     "emptyDescription": "Būk pirmas, pasidalijęs kuo nors nuostabiu!",
     "loadFailed": "Nepavyko įkelti srauto. Bandykite dar kartą.",
     "followingEmptyTitle": "Įrašų dar nėra",
-    "followingEmptyDescription": "Sek kelis kūrėjus, kad čia matytum jų įrašus!"
+    "followingEmptyDescription": "Sek kelis kūrėjus, kad čia matytum jų įrašus!",
+    "seeAll": "Žiūrėti viską"
   },
   "explore": {
     "all": "Visi",

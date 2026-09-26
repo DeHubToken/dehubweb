@@ -63,7 +63,8 @@
     "emptyDescription": "Буди први који ће поделити нешто сјајно!",
     "loadFailed": "Фид није могао да се учита. Покушај поново.",
     "followingEmptyTitle": "Још нема објава",
-    "followingEmptyDescription": "Прати неке ауторе да би овде видео њихове објаве!"
+    "followingEmptyDescription": "Прати неке ауторе да би овде видео њихове објаве!",
+    "seeAll": "Прикажи све"
   },
   "explore": {
     "all": "Све",

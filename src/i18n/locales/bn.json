@@ -64,7 +64,8 @@
     "emptyDescription": "দারুণ কিছু শেয়ার করা প্রথম ব্যক্তি হোন!",
     "loadFailed": "ফিড লোড করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
     "followingEmptyTitle": "এখনও কোনো পোস্ট নেই",
-    "followingEmptyDescription": "এখানে তাদের পোস্ট দেখতে কিছু ক্রিয়েটরকে ফলো করুন!"
+    "followingEmptyDescription": "এখানে তাদের পোস্ট দেখতে কিছু ক্রিয়েটরকে ফলো করুন!",
+    "seeAll": "সব দেখুন"
   },
   "explore": {
     "all": "সব",

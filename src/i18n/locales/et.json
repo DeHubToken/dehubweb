@@ -64,7 +64,8 @@
     "emptyDescription": "Ole esimene, kes jagab midagi vinget!",
     "loadFailed": "Voogu ei õnnestunud laadida. Proovi uuesti.",
     "followingEmptyTitle": "Postitusi veel pole",
-    "followingEmptyDescription": "Jälgi mõnda loojat, et nende postitusi siin näha!"
+    "followingEmptyDescription": "Jälgi mõnda loojat, et nende postitusi siin näha!",
+    "seeAll": "Näita kõiki"
   },
   "explore": {
     "all": "Kõik",

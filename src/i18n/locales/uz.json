@@ -64,7 +64,8 @@
     "emptyDescription": "Ajoyib narsani birinchi boʻlib ulashing!",
     "loadFailed": "Lentani yuklab boʻlmadi. Iltimos, qayta urinib koʻring.",
     "followingEmptyTitle": "Hozircha postlar yoʻq",
-    "followingEmptyDescription": "Ularning postlarini shu yerda koʻrish uchun bir nechta ijodkorni kuzating!"
+    "followingEmptyDescription": "Ularning postlarini shu yerda koʻrish uchun bir nechta ijodkorni kuzating!",
+    "seeAll": "Hammasini koʻrish"
   },
   "explore": {
     "all": "Hammasi",

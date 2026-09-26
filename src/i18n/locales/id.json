@@ -64,7 +64,8 @@
     "emptyDescription": "Jadilah yang pertama membagikan sesuatu yang luar biasa!",
     "loadFailed": "Gagal memuat feed. Silakan coba lagi.",
     "followingEmptyTitle": "Belum Ada Postingan",
-    "followingEmptyDescription": "Ikuti beberapa kreator untuk melihat postingan mereka di sini!"
+    "followingEmptyDescription": "Ikuti beberapa kreator untuk melihat postingan mereka di sini!",
+    "seeAll": "Lihat semua"
   },
   "explore": {
     "all": "Semua",

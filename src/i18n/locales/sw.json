@@ -64,7 +64,8 @@
     "emptyDescription": "Kuwa wa kwanza kushiriki kitu cha kushangaza!",
     "loadFailed": "Imeshindwa kupakia mlisho. Tafadhali jaribu tena.",
     "followingEmptyTitle": "Bado hakuna machapisho",
-    "followingEmptyDescription": "Fuata baadhi ya waundaji ili kuona machapisho yao hapa!"
+    "followingEmptyDescription": "Fuata baadhi ya waundaji ili kuona machapisho yao hapa!",
+    "seeAll": "Tazama yote"
   },
   "explore": {
     "all": "Zote",

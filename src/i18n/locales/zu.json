@@ -64,7 +64,8 @@
     "emptyDescription": "Yiba ngowokuqala ukwabelana ngokuthile okumangalisayo!",
     "loadFailed": "Ayikwazanga ukulayisha i-feed. Sicela uzame futhi.",
     "followingEmptyTitle": "Awekho okuthunyelwe okwamanje",
-    "followingEmptyDescription": "Landela abadali abathile ukuze ubone okuthunyelwe kwabo lapha!"
+    "followingEmptyDescription": "Landela abadali abathile ukuze ubone okuthunyelwe kwabo lapha!",
+    "seeAll": "Buka konke"
   },
   "explore": {
     "all": "Konke",

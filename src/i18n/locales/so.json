@@ -64,7 +64,8 @@
     "emptyDescription": "Noqo qofka ugu horreeya ee wadaaga wax cajiib ah!",
     "loadFailed": "Feed-ka lama soo gelin karo. Fadlan isku day mar kale.",
     "followingEmptyTitle": "Weli wax qoraallo ah ma jiraan",
-    "followingEmptyDescription": "Raac qaar ka mid ah hal-abuurayaasha si aad halkan ugu aragto qoraalladooda!"
+    "followingEmptyDescription": "Raac qaar ka mid ah hal-abuurayaasha si aad halkan ugu aragto qoraalladooda!",
+    "seeAll": "Dhammaan eeg"
   },
   "explore": {
     "all": "Dhammaan",

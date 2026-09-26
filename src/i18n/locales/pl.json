@@ -64,7 +64,8 @@
     "emptyDescription": "Bądź pierwszą osobą, która udostępni coś niesamowitego!",
     "loadFailed": "Nie udało się załadować kanału. Spróbuj ponownie.",
     "followingEmptyTitle": "Brak postów",
-    "followingEmptyDescription": "Obserwuj twórców, aby widzieć tutaj ich posty!"
+    "followingEmptyDescription": "Obserwuj twórców, aby widzieć tutaj ich posty!",
+    "seeAll": "Zobacz wszystkie"
   },
   "explore": {
     "all": "Wszystko",

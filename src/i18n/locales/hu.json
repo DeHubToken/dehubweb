@@ -64,7 +64,8 @@
     "emptyDescription": "Légy az első, aki valami fantasztikusat oszt meg!",
     "loadFailed": "Nem sikerült betölteni a hírfolyamot. Kérjük, próbáld újra.",
     "followingEmptyTitle": "Még nincsenek bejegyzések",
-    "followingEmptyDescription": "Kövess néhány alkotót, hogy itt lásd a bejegyzéseiket!"
+    "followingEmptyDescription": "Kövess néhány alkotót, hogy itt lásd a bejegyzéseiket!",
+    "seeAll": "Összes megtekintése"
   },
   "explore": {
     "all": "Összes",

@@ -64,7 +64,8 @@
     "emptyDescription": "มาเป็นคนแรกที่แบ่งปันสิ่งที่ม่วนๆ!",
     "loadFailed": "โหลดฟีดบ่ได้ ลองใหม่อีกเทื่อ",
     "followingEmptyTitle": "ยังบ่มีโพสต์",
-    "followingEmptyDescription": "ติดตามครีเอเตอร์จักคนเพื่อเบิ่งโพสต์ของเขาอยู่นี่!"
+    "followingEmptyDescription": "ติดตามครีเอเตอร์จักคนเพื่อเบิ่งโพสต์ของเขาอยู่นี่!",
+    "seeAll": "เบิ่งทั้งหมด"
   },
   "explore": {
     "all": "ทั้งหมด",

@@ -64,7 +64,8 @@
     "emptyDescription": "I ka kɛ fɔlɔ ye ka fɛn ɲuman dɔ tila!",
     "loadFailed": "A ma se ka feed labɔ. I ka segin a kan.",
     "followingEmptyTitle": "Pɔsiti si tɛ yan fɔlɔ",
-    "followingEmptyDescription": "I ka dabɔbaga dɔw nɔfɛ walisa k'u ka pɔsitiw ye yan!"
+    "followingEmptyDescription": "I ka dabɔbaga dɔw nɔfɛ walisa k'u ka pɔsitiw ye yan!",
+    "seeAll": "A bɛɛ lajɛ"
   },
   "explore": {
     "all": "Kɔrɔbɔ",

@@ -64,7 +64,8 @@
     "emptyDescription": "Harika bir şey paylaşan ilk kişi sen ol!",
     "loadFailed": "Akış yüklenemedi. Lütfen tekrar deneyin.",
     "followingEmptyTitle": "Henüz Gönderi Yok",
-    "followingEmptyDescription": "Gönderilerini burada görmek için birkaç içerik üreticisini takip et!"
+    "followingEmptyDescription": "Gönderilerini burada görmek için birkaç içerik üreticisini takip et!",
+    "seeAll": "Tümünü gör"
   },
   "explore": {
     "all": "Tümü",

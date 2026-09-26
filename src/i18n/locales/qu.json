@@ -64,7 +64,8 @@
     "emptyDescription": "Punta kaq kay, imatapas sumaqta rakinakunaykipaq!",
     "loadFailed": "Feed mana cargakuyta atinchu. Ama hina kaspa, huktawan kallpachakuy.",
     "followingEmptyTitle": "Manaraq qillqakuna kanchu",
-    "followingEmptyDescription": "Wakin kamaqkunata qatiy, kaypi qillqankuna rikunaykipaq!"
+    "followingEmptyDescription": "Wakin kamaqkunata qatiy, kaypi qillqankuna rikunaykipaq!",
+    "seeAll": "Llapanta qhaway"
   },
   "explore": {
     "all": "Llapan",

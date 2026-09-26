@@ -64,7 +64,8 @@
     "emptyDescription": "Aoka ho ianao no voalohany hizara zavatra mahafinaritra!",
     "loadFailed": "Tsy afaka nampiditra ny feed. Andramo indray azafady.",
     "followingEmptyTitle": "Mbola tsy misy lahatsoratra",
-    "followingEmptyDescription": "Araho ireo mpamorona sasany mba hahitanao ny lahatsorany eto!"
+    "followingEmptyDescription": "Araho ireo mpamorona sasany mba hahitanao ny lahatsorany eto!",
+    "seeAll": "Jereo daholo"
   },
   "explore": {
     "all": "Rehetra",

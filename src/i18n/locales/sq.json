@@ -64,7 +64,8 @@
     "emptyDescription": "Bëhu i pari që ndan diçka të mrekullueshme!",
     "loadFailed": "Rrjedha nuk u ngarkua dot. Të lutem provo përsëri.",
     "followingEmptyTitle": "Ende nuk ka postime",
-    "followingEmptyDescription": "Ndiq disa krijues për të parë postimet e tyre këtu!"
+    "followingEmptyDescription": "Ndiq disa krijues për të parë postimet e tyre këtu!",
+    "seeAll": "Shiko të gjitha"
   },
   "explore": {
     "all": "Të gjitha",

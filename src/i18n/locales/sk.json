@@ -64,7 +64,8 @@
     "emptyDescription": "Buďte prvý, kto zdieľa niečo úžasné!",
     "loadFailed": "Kanál sa nepodarilo načítať. Skúste to znova.",
     "followingEmptyTitle": "Zatiaľ žiadne príspevky",
-    "followingEmptyDescription": "Sledujte tvorcov a ich príspevky uvidíte tu!"
+    "followingEmptyDescription": "Sledujte tvorcov a ich príspevky uvidíte tu!",
+    "seeAll": "Zobraziť všetko"
   },
   "explore": {
     "all": "Všetko",

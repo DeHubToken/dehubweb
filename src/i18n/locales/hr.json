@@ -64,7 +64,8 @@
     "emptyDescription": "Budi prvi koji će podijeliti nešto sjajno!",
     "loadFailed": "Feed se nije mogao učitati. Pokušaj ponovno.",
     "followingEmptyTitle": "Još nema objava",
-    "followingEmptyDescription": "Prati neke autore da bi ovdje vidio njihove objave!"
+    "followingEmptyDescription": "Prati neke autore da bi ovdje vidio njihove objave!",
+    "seeAll": "Prikaži sve"
   },
   "explore": {
     "all": "Sve",

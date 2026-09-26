@@ -354,7 +354,7 @@ function RadioCarouselSection({ stations }: { stations: RadioStation[] }) {
           onClick={() => navigate('/app/music?tab=radio')}
           className="text-zinc-400 text-sm hover:text-white flex items-center gap-1"
         >
-          {t('stages.seeAll')} <ChevronRight className="w-4 h-4" />
+          {t('feed.seeAll')} <ChevronRight className="w-4 h-4" />
         </button>
       </div>
       <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">

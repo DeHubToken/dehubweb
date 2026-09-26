@@ -64,7 +64,8 @@
     "emptyDescription": "Bli först med att dela något fantastiskt!",
     "loadFailed": "Det gick inte att läsa in flödet. Försök igen.",
     "followingEmptyTitle": "Inga inlägg än",
-    "followingEmptyDescription": "Följ några kreatörer för att se deras inlägg här!"
+    "followingEmptyDescription": "Följ några kreatörer för att se deras inlägg här!",
+    "seeAll": "Visa alla"
   },
   "explore": {
     "all": "Alla",

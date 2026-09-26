@@ -64,7 +64,8 @@
     "emptyDescription": "Be di first person wey go share something wey sweet!",
     "loadFailed": "Feed no gree load. Abeg try again.",
     "followingEmptyTitle": "No post dey yet",
-    "followingEmptyDescription": "Follow some creators make you see dia posts here!"
+    "followingEmptyDescription": "Follow some creators make you see dia posts here!",
+    "seeAll": "See all"
   },
   "explore": {
     "all": "All",

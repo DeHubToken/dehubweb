@@ -64,7 +64,8 @@
     "emptyDescription": "Fii primul care distribuie ceva uimitor!",
     "loadFailed": "Fluxul nu a putut fi încărcat. Încearcă din nou.",
     "followingEmptyTitle": "Încă nu există postări",
-    "followingEmptyDescription": "Urmărește câțiva creatori ca să le vezi postările aici!"
+    "followingEmptyDescription": "Urmărește câțiva creatori ca să le vezi postările aici!",
+    "seeAll": "Vezi tot"
   },
   "explore": {
     "all": "All",

@@ -64,7 +64,8 @@
     "emptyDescription": "Esi pirmais, kas dalās ar kaut ko lielisku!",
     "loadFailed": "Neizdevās ielādēt plūsmu. Lūdzu, mēģini vēlreiz.",
     "followingEmptyTitle": "Vēl nav ierakstu",
-    "followingEmptyDescription": "Seko dažiem autoriem, lai šeit redzētu viņu ierakstus!"
+    "followingEmptyDescription": "Seko dažiem autoriem, lai šeit redzētu viņu ierakstus!",
+    "seeAll": "Skatīt visu"
   },
   "explore": {
     "all": "Visi",

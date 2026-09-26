@@ -64,7 +64,8 @@
     "emptyDescription": "Vær den første til at dele noget fantastisk!",
     "loadFailed": "Feedet kunne ikke indlæses. Prøv igen.",
     "followingEmptyTitle": "Ingen opslag endnu",
-    "followingEmptyDescription": "Følg nogle skabere for at se deres opslag her!"
+    "followingEmptyDescription": "Følg nogle skabere for at se deres opslag her!",
+    "seeAll": "Se alle"
   },
   "explore": {
     "all": "Alle",
