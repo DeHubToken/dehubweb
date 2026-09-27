@@ -256,7 +256,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           style={keyboardStyle ?? undefined}
           hideCloseButton
           onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
-          className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 p-0 gap-0 rounded-2xl overflow-hidden z-[2147483646] flex flex-col max-h-[90dvh] sm:left-[calc(var(--app-main-left,0px)+var(--app-main-width,100vw)/2)] sm:w-[min(32rem,calc(var(--app-main-width,100vw)-2rem))] sm:max-w-none"
+          className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 p-0 gap-0 rounded-2xl overflow-clip z-[2147483646] flex flex-col max-h-[90dvh] sm:left-[calc(var(--app-main-left,0px)+var(--app-main-width,100vw)/2)] sm:w-[min(32rem,calc(var(--app-main-width,100vw)-2rem))] sm:max-w-none"
           overlayClassName="z-[2147483645] login-modal-overlay bg-black/40 backdrop-blur-xl"
         >
           {sheetBody}
@@ -278,7 +278,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         style={keyboardStyle ?? undefined}
         hideHandle
         onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
-        className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[2147483646] flex flex-col max-h-[90dvh]"
+        className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-clip z-[2147483646] flex flex-col max-h-[90dvh]"
         overlayClassName="z-[2147483645] login-modal-overlay backdrop-blur-xl md:bg-black/40"
       >
         {sheetBody}
