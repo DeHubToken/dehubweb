@@ -45,9 +45,10 @@ describe('video view counting', () => {
     ({ videoViewTracker } = await import('@/lib/view-tracker'));
   });
 
-  it('counts one view for a looping short however long it runs', () => {
+  it('counts every loop of a looping short', () => {
     for (let lap = 0; lap < 5; lap++) watchThenWrap(videoViewTracker, '1', true);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    // The first play, then one per wrap.
+    expect(fetchMock).toHaveBeenCalledTimes(6);
   });
 
   it('still counts a replay of a video that does not loop', () => {
@@ -57,7 +58,7 @@ describe('video view counting', () => {
   });
 
   it('counts again for a looping short after it is remounted', () => {
-    watchThenWrap(videoViewTracker, '3', true);
+    videoViewTracker.updateProgress('3', 4, DURATION, true);
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
     // Leaving and coming back is a fresh mount, which resets on unmount.
@@ -66,8 +67,13 @@ describe('video view counting', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  it('does not count a watch that never reaches the threshold', () => {
-    videoViewTracker.updateProgress('4', 1, DURATION, true);
+  it('counts as soon as playback starts', () => {
+    videoViewTracker.updateProgress('4', 0.1, DURATION, true);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not count before playback starts', () => {
+    videoViewTracker.updateProgress('5', 0, DURATION, true);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });
