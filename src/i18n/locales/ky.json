@@ -4472,7 +4472,10 @@
     "earningsAvailable": "Жеткиликтүү",
     "earningsPending": "Күтүүдө",
     "tokensSent": "{{amount}} токен жөнөтүлдү",
-    "withdrawableSoon": "Абоненттин кирешеси жакында алынып салынат"
+    "withdrawableSoon": "Абоненттин кирешеси жакында алынып салынат",
+    "percentUsed": "{{percent}}% колдонулган",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "viewInWallet": "Капчыктагы көрүнүш"
   },
   "live": {
     "chatJoined": "кошулду",

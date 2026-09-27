@@ -2750,7 +2750,10 @@
     "earningsAvailable": "उपलब्ध कराई गई",
     "earningsPending": "प्रतीक्षा में हलचल",
     "tokensSent": "{{amount}} टोकन भेजल गेल",
-    "withdrawableSoon": "जदयू के छात्र - छात्राएं जल्द होंगी भर्ती"
+    "withdrawableSoon": "जदयू के छात्र - छात्राएं जल्द होंगी भर्ती",
+    "percentUsed": "{{percent}}% खरच भेल",
+    "spentOfTotal": "{{total}} में से {{spent}}",
+    "viewInWallet": "होल्ड होल्ड ऑन लियोन"
   },
   "live": {
     "chatJoined": "जुड़लन",

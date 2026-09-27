@@ -4504,7 +4504,10 @@
     "earningsAvailable": "Dostępne",
     "earningsPending": "Oczekujące",
     "tokensSent": "Wysłano {{amount}} tokenów",
-    "withdrawableSoon": "Zarobki z subskrypcji będą wkrótce dostępne do wypłaty"
+    "withdrawableSoon": "Zarobki z subskrypcji będą wkrótce dostępne do wypłaty",
+    "percentUsed": "Użyto {{percent}}%",
+    "spentOfTotal": "{{spent}} z {{total}}",
+    "viewInWallet": "Zobacz w portfelu"
   },
   "live": {
     "chatJoined": "dołączył(a)",

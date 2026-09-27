@@ -4408,7 +4408,10 @@
     "earningsAvailable": "ಲಭ್ಯವಿದೆ",
     "earningsPending": "ಬಾಕಿ ಉಳಿದಿದೆ",
     "tokensSent": "{{amount}} ಟೋಕನ್‌ಗಳನ್ನು ಕಳುಹಿಸಲಾಗಿದೆ",
-    "withdrawableSoon": "ಚಂದಾದಾರಿಕೆ ಗಳಿಕೆಗಳನ್ನು ಶೀಘ್ರದಲ್ಲೇ ಹಿಂಪಡೆಯಲಾಗುತ್ತದೆ"
+    "withdrawableSoon": "ಚಂದಾದಾರಿಕೆ ಗಳಿಕೆಗಳನ್ನು ಶೀಘ್ರದಲ್ಲೇ ಹಿಂಪಡೆಯಲಾಗುತ್ತದೆ",
+    "percentUsed": "{{percent}}% ಬಳಸಲಾಗಿದೆ",
+    "spentOfTotal": "{{spent}} ರಲ್ಲಿ {{total}}",
+    "viewInWallet": "ವಾಲೆಟ್‌ನಲ್ಲಿ ವೀಕ್ಷಿಸಿ"
   },
   "live": {
     "chatJoined": "ಸೇರಿದರು",

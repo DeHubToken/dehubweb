@@ -4445,7 +4445,10 @@
     "earningsAvailable": "Dostupné",
     "earningsPending": "Nevyřízeno",
     "tokensSent": "Žetony {{amount}} odeslány",
-    "withdrawableSoon": "Výdělky z předplatného budou brzy k dispozici"
+    "withdrawableSoon": "Výdělky z předplatného budou brzy k dispozici",
+    "percentUsed": "{{percent}}% použito",
+    "spentOfTotal": "{{spent}} z {{total}}",
+    "viewInWallet": "Zobrazit v peněžence"
   },
   "live": {
     "chatJoined": "se připojil/a",

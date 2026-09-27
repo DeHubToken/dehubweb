@@ -2701,7 +2701,10 @@
     "earningsAvailable": "دستیاب",
     "earningsPending": "منتظر",
     "tokensSent": "{{amount}} ٹوکنز بھیجے گئے",
-    "withdrawableSoon": "سبسکرپشن کمائی جلدی نکل سکدی اے"
+    "withdrawableSoon": "سبسکرپشن کمائی جلدی نکل سکدی اے",
+    "percentUsed": "{{percent}}% استعمال تھیندا",
+    "spentOfTotal": "{{spent}} دا {{total}}",
+    "viewInWallet": "والٹ وچ ویکھو"
   },
   "live": {
     "chatJoined": "شامل تھیا",

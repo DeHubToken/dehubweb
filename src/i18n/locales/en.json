@@ -4507,7 +4507,10 @@
     "earningsAvailable": "Available",
     "earningsPending": "Pending",
     "tokensSent": "{{amount}} tokens sent",
-    "withdrawableSoon": "Subscription earnings will be withdrawable soon"
+    "withdrawableSoon": "Subscription earnings will be withdrawable soon",
+    "percentUsed": "{{percent}}% used",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "viewInWallet": "View in wallet"
   },
   "live": {
     "chatJoined": "joined",

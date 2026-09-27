@@ -2778,7 +2778,10 @@
     "earningsAvailable": "ရရှိနိုင်",
     "earningsPending": "ဆိုင်းငံ့ထားသည်",
     "tokensSent": "{{amount}} တိုကင်များ ပေးပို့ထားသည်",
-    "withdrawableSoon": "စာရင်းသွင်းမှု ဝင်ငွေကို မကြာမီ ထုတ်ယူနိုင်ပါမည်"
+    "withdrawableSoon": "စာရင်းသွင်းမှု ဝင်ငွေကို မကြာမီ ထုတ်ယူနိုင်ပါမည်",
+    "percentUsed": "{{percent}}% အသုံးပြုထားသည်",
+    "spentOfTotal": "{{spent}} ၏ {{total}}",
+    "viewInWallet": "ပိုက်ဆံအိတ်ထဲတွင် ကြည့်ရန်"
   },
   "live": {
     "chatJoined": "ဝင်ရောက်လာသည်",

@@ -2728,7 +2728,10 @@
     "earningsAvailable": "د لاسرسي وړ",
     "earningsPending": "په انتظار کې",
     "tokensSent": "{{amount}} ټوکنونه ولېږل شول",
-    "withdrawableSoon": "د ټاکنیزو شکایتونو کمېسیون دې ژر تر ژره د رایو بیا شمېرنه پیل کړي"
+    "withdrawableSoon": "د ټاکنیزو شکایتونو کمېسیون دې ژر تر ژره د رایو بیا شمېرنه پیل کړي",
+    "percentUsed": "{{percent}}% کارول شوی",
+    "spentOfTotal": "له {{total}} څخه {{spent}}",
+    "viewInWallet": "په بسته بندۍ کې لیدونه"
   },
   "live": {
     "chatJoined": "ورګډ شو",

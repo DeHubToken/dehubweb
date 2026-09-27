@@ -2724,7 +2724,10 @@
     "earningsAvailable": "متاح",
     "earningsPending": "قيد الانتظار",
     "tokensSent": "{{amount}} رموز تم إرسالها",
-    "withdrawableSoon": "أرباح الاشتراك رح تصير قابلة للسحب قريبًا"
+    "withdrawableSoon": "أرباح الاشتراك رح تصير قابلة للسحب قريبًا",
+    "percentUsed": "{{percent}}% مستَخدم",
+    "spentOfTotal": "{{spent}} من {{total}}",
+    "viewInWallet": "شوف بالمحفظة"
   },
   "live": {
     "chatJoined": "دخل",

@@ -4137,7 +4137,10 @@
     "earningsAvailable": "ມີ",
     "earningsPending": "ລໍຖ້າ",
     "tokensSent": "ສົ່ງ {{amount}} ໂທເຄັນແລ້ວ",
-    "withdrawableSoon": "ລາຍໄດ້ຈາກການຈອງຈະສາມາດຖອນໄດ້ໃນໄວໆນີ້"
+    "withdrawableSoon": "ລາຍໄດ້ຈາກການຈອງຈະສາມາດຖອນໄດ້ໃນໄວໆນີ້",
+    "percentUsed": "{{percent}}% ໃຊ້ແລ້ວ",
+    "spentOfTotal": "{{spent}} ຂອງ {{total}}",
+    "viewInWallet": "ເບິ່ງໃນກະເປົາເງິນ"
   },
   "live": {
     "chatJoined": "ເຂົ້າຮ່ວມແລ້ວ",

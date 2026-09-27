@@ -2752,7 +2752,10 @@
     "earningsAvailable": "Elýeterli",
     "earningsPending": "Garaşmak",
     "tokensSent": "{{amount}} token iberildi",
-    "withdrawableSoon": "Çykyşlar tizden çykarylar"
+    "withdrawableSoon": "Çykyşlar tizden çykarylar",
+    "percentUsed": "{{percent}}% ulanyldy",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "viewInWallet": "Çöpçäniň içine seret"
   },
   "live": {
     "chatJoined": "goşuldy",

@@ -4515,7 +4515,10 @@
     "earningsAvailable": "उपलब्ध",
     "earningsPending": "बाकी है",
     "tokensSent": "{{amount}} टोकन भेजे गए",
-    "withdrawableSoon": "सब्सक्रिप्शन से होने वाली कमाई जल्द ही वापस ली जा सकेगी"
+    "withdrawableSoon": "सब्सक्रिप्शन से होने वाली कमाई जल्द ही वापस ली जा सकेगी",
+    "percentUsed": "{{percent}}% का इस्तेमाल किया गया",
+    "spentOfTotal": "{{spent}} में से {{total}}",
+    "viewInWallet": "वॉलेट में देखें"
   },
   "live": {
     "chatJoined": "शामिल हुए",

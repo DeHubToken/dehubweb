@@ -2776,7 +2776,10 @@
     "earningsAvailable": "ይገኛል",
     "earningsPending": "በመጠባበቅ ላይ",
     "tokensSent": "{{amount}} ቶከንስ ተልኳል",
-    "withdrawableSoon": "የደንበኝነት ምዝገባ ገቢዎች በቅርቡ ይሰረዛሉ"
+    "withdrawableSoon": "የደንበኝነት ምዝገባ ገቢዎች በቅርቡ ይሰረዛሉ",
+    "percentUsed": "{{percent}}% ጥቅም ላይ ውሏል",
+    "spentOfTotal": "{{spent}} ከ {{total}}",
+    "viewInWallet": "በኪስ ቦርሳ ውስጥ ይመልከቱ"
   },
   "live": {
     "chatJoined": "ተቀላቀለ",

@@ -2740,7 +2740,10 @@
     "earningsAvailable": "ଉପଲବ୍ଧ",
     "earningsPending": "ବାକି ଅଛି",
     "tokensSent": "{{amount}} tokens ପଠାଯାଇଛି",
-    "withdrawableSoon": "ଖୁବ୍ ‌ ଶୀଘ୍ର ସବ୍ସ୍କ୍ରିପସନ୍ ‌ ରୁ ମିଳିବାକୁ ଥିବା ଅର୍ଥ ଫେରସ୍ତ କରାଯିବ ।"
+    "withdrawableSoon": "ଖୁବ୍ ‌ ଶୀଘ୍ର ସବ୍ସ୍କ୍ରିପସନ୍ ‌ ରୁ ମିଳିବାକୁ ଥିବା ଅର୍ଥ ଫେରସ୍ତ କରାଯିବ ।",
+    "percentUsed": "{{percent}}% ବ୍ୟବହୃତ ହୋଇଛି",
+    "spentOfTotal": "{{total}} ମଧ୍ୟରୁ {{spent}}",
+    "viewInWallet": "ୱାଲେଟରେ ଦୃଶ୍ୟ"
   },
   "live": {
     "chatJoined": "ଯୋଗ ଦେଲେ",

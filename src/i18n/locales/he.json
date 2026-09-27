@@ -4303,7 +4303,10 @@
     "earningsAvailable": "זמין",
     "earningsPending": "בהמתנה",
     "tokensSent": "{{amount}} אסימונים נשלחו",
-    "withdrawableSoon": "בקרוב ניתן יהיה למשוך את רווחי המינוי"
+    "withdrawableSoon": "בקרוב ניתן יהיה למשוך את רווחי המינוי",
+    "percentUsed": "%{{percent}} בשימוש",
+    "spentOfTotal": "{{spent}} מתוך {{total}}",
+    "viewInWallet": "הצגה בארנק"
   },
   "live": {
     "chatJoined": "הצטרף/ה",

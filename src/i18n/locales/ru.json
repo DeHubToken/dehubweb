@@ -4458,7 +4458,10 @@
     "earningsAvailable": "Доступно",
     "earningsPending": "В ожидании",
     "tokensSent": "Отправлено токенов:{{amount}}",
-    "withdrawableSoon": "Доход от подписки скоро можно будет вывести"
+    "withdrawableSoon": "Доход от подписки скоро можно будет вывести",
+    "percentUsed": "Использовано: {{percent}}%",
+    "spentOfTotal": "{{spent}} из {{total}}",
+    "viewInWallet": "Посмотреть в кошельке"
   },
   "live": {
     "chatJoined": "присоединился",

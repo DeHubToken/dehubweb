@@ -4325,7 +4325,10 @@
     "earningsAvailable": "Disponibil",
     "earningsPending": "În așteptare",
     "tokensSent": "{{amount}} jetoane trimise",
-    "withdrawableSoon": "Câștigurile din abonamente vor putea fi retrase în curând"
+    "withdrawableSoon": "Câștigurile din abonamente vor putea fi retrase în curând",
+    "percentUsed": "{{percent}}% utilizat",
+    "spentOfTotal": "{{spent}} din {{total}}",
+    "viewInWallet": "Afișează în portofel"
   },
   "live": {
     "chatJoined": "s-a alăturat",

@@ -2758,7 +2758,10 @@
     "earningsAvailable": "Enwere",
     "earningsPending": "Na-echere",
     "tokensSent": "{{amount}} tokens zitere",
-    "withdrawableSoon": "A ga-ewepụ ego e nwetara na ndenye aha n 'oge na-adịghị anya."
+    "withdrawableSoon": "A ga-ewepụ ego e nwetara na ndenye aha n 'oge na-adịghị anya.",
+    "percentUsed": "{{percent}}% used",
+    "spentOfTotal": "{{spent}} nke {{total}}",
+    "viewInWallet": "Gosi na obere akpa"
   },
   "live": {
     "chatJoined": "sonyere",

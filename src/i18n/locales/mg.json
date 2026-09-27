@@ -4252,7 +4252,10 @@
     "earningsAvailable": "Malalaka",
     "earningsPending": "Namidy",
     "tokensSent": "{{amount}} tokens naniraka",
-    "withdrawableSoon": "Subscription vola dia ho nofoanana tsy ho ela"
+    "withdrawableSoon": "Subscription vola dia ho nofoanana tsy ho ela",
+    "percentUsed": "{{percent}}% ampiasaina",
+    "spentOfTotal": "{{spent}} amin'ny {{total}}",
+    "viewInWallet": "Jereo ao amin'ny kitapom-bola"
   },
   "live": {
     "chatJoined": "niditra",

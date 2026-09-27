@@ -2728,7 +2728,10 @@
     "earningsAvailable": "Боломжтой",
     "earningsPending": "Хүлээгдэж байна",
     "tokensSent": "{{amount}} токен илгээлээ",
-    "withdrawableSoon": "Захиалгын орлого удахгүй татагдана"
+    "withdrawableSoon": "Захиалгын орлого удахгүй татагдана",
+    "percentUsed": "{{percent}}% ашигласан",
+    "spentOfTotal": "{{total}}-аас {{spent}}",
+    "viewInWallet": "Түрийвчээр харах"
   },
   "live": {
     "chatJoined": "нэгдлээ",

@@ -4500,7 +4500,10 @@
     "earningsAvailable": "사용 가능",
     "earningsPending": "대기 중",
     "tokensSent": "{{amount}} 개의 토큰이 전송되었습니다",
-    "withdrawableSoon": "구독 수입이 곧 인출될 예정입니다."
+    "withdrawableSoon": "구독 수입이 곧 인출될 예정입니다.",
+    "percentUsed": "{{percent}} % 사용됨",
+    "spentOfTotal": "{{total}} 중 {{spent}}",
+    "viewInWallet": "지갑에서 보기"
   },
   "live": {
     "chatJoined": "님이 참여했습니다",

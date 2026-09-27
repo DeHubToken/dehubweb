@@ -4433,7 +4433,10 @@
     "earningsAvailable": "उपलब्ध",
     "earningsPending": "विचाराधीन",
     "tokensSent": "{{amount}} टोकन पठाइयो",
-    "withdrawableSoon": "सदस्यता आम्दानी चाँडै फिर्ता लिन सकिने छ"
+    "withdrawableSoon": "सदस्यता आम्दानी चाँडै फिर्ता लिन सकिने छ",
+    "percentUsed": "{{percent}}% प्रयोग गरियो",
+    "spentOfTotal": "{{spent}} को {{total}}",
+    "viewInWallet": "वालेटमा हेर्नुहोस्"
   },
   "live": {
     "chatJoined": "सामेल भए",

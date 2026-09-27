@@ -2735,7 +2735,10 @@
     "earningsAvailable": "พร้อมใช้",
     "earningsPending": "ค้างอยู่",
     "tokensSent": "ส่งโทเคน {{amount}} แล้ว",
-    "withdrawableSoon": "รายได้จากการสมัครสมาชิกจะสามารถถอนได้เร็ว ๆ นี้"
+    "withdrawableSoon": "รายได้จากการสมัครสมาชิกจะสามารถถอนได้เร็ว ๆ นี้",
+    "percentUsed": "{{percent}}% ใช้แล้ว",
+    "spentOfTotal": "{{spent}} จาก {{total}}",
+    "viewInWallet": "เบิ่งในกระเป๋าเงิน"
   },
   "live": {
     "chatJoined": "เข้าร่วมแล้ว",
