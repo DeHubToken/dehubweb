@@ -96,18 +96,18 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
       >
         <div className="pointer-events-none absolute -top-16 -right-10 w-40 h-40 rounded-full bg-white/[0.06] blur-3xl" />
 
-        <div className="relative flex items-center gap-3">
-          <div className="shrink-0 w-12 h-12 rounded-xl border border-white/15 bg-white/[0.05] flex flex-col items-center justify-center">
-            <span className="text-[9px] uppercase tracking-wider text-white/40 leading-none">{t('live.progress.title')}</span>
+        <div className="relative flex flex-wrap items-center justify-center gap-3">
+          <div className="shrink-0 w-20 min-h-20 p-2 rounded-xl border border-white/15 bg-white/[0.05] flex flex-col items-center justify-center gap-1 text-center">
+            <span className="w-full break-words text-[9px] uppercase tracking-wider text-white/40 leading-snug">{t('live.progress.title')}</span>
             <span className="text-xl font-bold text-white leading-tight">{data.level}</span>
           </div>
 
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1 basis-32">
             <div className="flex items-center gap-2 text-sm font-semibold text-white">
               <Radio className="w-3.5 h-3.5 text-white/60" />
-              <span className="truncate">{t('live.progress.level', { level: data.level })}</span>
+              <span className="break-words">{t('live.progress.level', { level: data.level })}</span>
             </div>
-            <div className="text-[11px] text-white/50 font-mono truncate">
+            <div className="mt-1 text-[11px] text-white/50 font-mono leading-relaxed">
               {t('live.progress.xp', { xp: data.xp.toLocaleString() })}
               <span className="text-white/30"> · </span>
               {t('live.progress.hours', { hours: formatHours(data.qualifyingMinutes) })}
@@ -143,7 +143,7 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
 
         <div className="mt-2 flex items-center justify-between gap-2 text-[11px]">
           <span className="font-mono text-white/40">{percent}%</span>
-          <span className="text-white/60 truncate">
+          <span className="text-white/60 text-right leading-relaxed">
             {t('live.progress.toNext', { minutes: minutesToNext, level: data.level + 1 })}
           </span>
         </div>
