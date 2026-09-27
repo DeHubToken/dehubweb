@@ -2054,6 +2054,42 @@ export type Database = {
           },
         ]
       }
+      custom_emojis: {
+        Row: {
+          animated: boolean
+          category: string | null
+          created_at: string
+          created_by: string
+          external_id: string | null
+          id: string
+          image_url: string
+          shortcode: string
+          source: string
+        }
+        Insert: {
+          animated?: boolean
+          category?: string | null
+          created_at?: string
+          created_by: string
+          external_id?: string | null
+          id?: string
+          image_url: string
+          shortcode: string
+          source?: string
+        }
+        Update: {
+          animated?: boolean
+          category?: string | null
+          created_at?: string
+          created_by?: string
+          external_id?: string | null
+          id?: string
+          image_url?: string
+          shortcode?: string
+          source?: string
+        }
+        Relationships: []
+      }
       custom_notifications: {
         Row: {
           actor_address: string
