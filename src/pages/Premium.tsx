@@ -13,6 +13,9 @@ import { PaymentTestModeBanner } from '@/components/PaymentTestModeBanner';
 import { PremiumCheckoutModal } from '@/components/premium/PremiumCheckoutModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { usePlanFromLink } from '@/hooks/usePlanFromLink';
+
+const PREMIUM_PRICE_IDS = ['dehub_extra_monthly', 'dehub_family_monthly', 'dehub_xl_monthly'] as const;
 
 /**
  * Each perk, deep-dive and question is one key stem: `…Label`/`…Detail` for a
@@ -101,6 +104,7 @@ export default function Premium() {
   const { t } = useTranslation();
   const { walletAddress, user, openLoginModal } = useAuth() as any;
   const [checkoutPriceId, setCheckoutPriceId] = useState<string | null>(null);
+  usePlanFromLink({ allowed: PREMIUM_PRICE_IDS, walletAddress, openLoginModal, onPlan: setCheckoutPriceId });
 
   const startCheckout = (priceId: string) => {
     if (!walletAddress) {
