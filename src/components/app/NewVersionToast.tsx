@@ -41,7 +41,7 @@ async function translateNote(note: string, lang: string): Promise<string> {
   if (!note || lang === 'en' || !autoTranslateEnabled()) return note;
 
   const request = supabase.functions
-    .invoke('translate-text', { body: { text: note, targetLang: lang } })
+    .invoke('translate-text', { body: { text: note, targetLang: lang, public: true } })
     .then(({ data, error }) => {
       // The server returns the text untouched when it is already in the target
       // language and says so; treating that as a translation is what put "show

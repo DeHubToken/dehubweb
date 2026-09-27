@@ -180,6 +180,8 @@ interface TranslateRequest {
   text: string;
   targetLang: string;
   sourceLang?: string;
+  /** Sent by call sites whose text anyone can read. Absent means private. */
+  public?: boolean;
 }
 
 interface TranslateResponse {
@@ -439,6 +441,7 @@ async function translateWithMyMemory(
 async function translateWithFreeModels(
   text: string,
   targetLanguageName: string,
+  publicContent: boolean,
 ): Promise<TranslateResponse | null> {
   const res = await tryFree({
     messages: [
@@ -447,7 +450,7 @@ async function translateWithFreeModels(
     ],
     temperature: 0.1,
     max_tokens: 4000,
-  }, { label: 'translate-text' }).catch(() => null);
+  }, { label: 'translate-text', publicContent }).catch(() => null);
   if (!res) return null;
 
   try {
@@ -853,7 +856,8 @@ serve(async (req) => {
   if (limited) return limited;
 
   try {
-    const { text, targetLang, sourceLang: suppliedSource }: TranslateRequest = await req.json();
+    const { text, targetLang, sourceLang: suppliedSource, public: isPublicRequest }: TranslateRequest = await req.json();
+    const isPublicText = isPublicRequest === true;
     // Legacy clients send the old short-caption guesses as authoritative.
     const sourceLang = typeof text === 'string' && text.replace(/[^\p{L}]/gu, '').length >= 60
       && suppliedSource && !['und', 'unknown'].includes(suppliedSource)
@@ -1038,7 +1042,7 @@ serve(async (req) => {
 
     // Free model tiers before the paid budget is touched: a translation they
     // answer costs nothing and must not use up one of the day's paid slots.
-    const rawFree = await translateWithFreeModels(text, targetLanguageName);
+    const rawFree = await translateWithFreeModels(text, targetLanguageName, isPublicText);
     result = keepVerbatimIfRewrite(text, targetLang, rawFree);
     if (result) {
       rememberInIsolate(cacheKey, result);

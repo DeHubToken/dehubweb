@@ -154,7 +154,7 @@ async function viaAiChat(
       },
     ],
     tool_choice: { type: "function", function: { name: "return_translations" } },
-  }, { expectToolCall: "return_translations", label: "translate-caption" });
+  }, { expectToolCall: "return_translations", label: "translate-caption", publicContent: true });
   if (!res.ok) {
     console.error(`[translate-caption] ai ${res.status}`);
     return {};
