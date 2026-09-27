@@ -670,6 +670,14 @@ html[data-theme='jungle'] :is([data-media-full], [data-video-controls], [data-ke
 html[data-theme='jungle'] :is([data-media-full], [data-video-controls], [data-keep-dark]) * {
   filter: none !important;
   mix-blend-mode: normal !important;
+}
+
+/* The blur strip spares anything that asks for its own frost. The Shorts viewer
+   is a [data-media-full] overlay whose `backdrop-blur` is the only thing
+   separating the video from the app behind it; stripping it left the sidebar
+   and canvas reading straight through the player. */
+html[data-theme='jungle'] :is([data-media-full], [data-video-controls], [data-keep-dark]):not([class*='backdrop-blur']),
+html[data-theme='jungle'] :is([data-media-full], [data-video-controls], [data-keep-dark]) *:not([class*='backdrop-blur']) {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
@@ -685,11 +693,16 @@ html[data-theme='jungle'] [data-keep-dark] {
    box exposed, and a solid fill turns that leftover into a letterboxed slab
    beside the photo. The wrapper is a container, not a bed: anything that
    genuinely needs a dark backing ships its own bg and opts in with
-   [data-keep-dark]. Same reasoning, and the same bug, as Osaka's. */
+   [data-keep-dark]. Same reasoning, and the same bug, as Osaka's — and the
+   same exemption: a frame that ships its own bg class (VideoCard `bg-black`,
+   the Shorts viewer `bg-black/60` scrim and `bg-zinc-900` player) keeps it.
+   Clearing those turned the Shorts viewer into a window onto the app. */
 html[data-theme='jungle'] [data-media-full] {
+  box-shadow: none !important;
+}
+html[data-theme='jungle'] [data-media-full]:not([class*='bg-']) {
   background-color: transparent !important;
   background-image: none !important;
-  box-shadow: none !important;
 }
 
 /* Overlay chips drawn ON TOP of media still follow the palette — that is what
