@@ -4417,6 +4417,120 @@ export type Database = {
           },
         ]
       }
+      social_credit_topups: {
+        Row: {
+          chain: string
+          created_at: string
+          dhb: number
+          dhb_price_usd: number
+          discount_pct: number
+          id: string
+          posts: number
+          tx_hash: string
+          usd: number
+          wallet_address: string
+        }
+        Insert: {
+          chain: string
+          created_at?: string
+          dhb: number
+          dhb_price_usd: number
+          discount_pct?: number
+          id?: string
+          posts: number
+          tx_hash: string
+          usd: number
+          wallet_address: string
+        }
+        Update: {
+          chain?: string
+          created_at?: string
+          dhb?: number
+          dhb_price_usd?: number
+          discount_pct?: number
+          id?: string
+          posts?: number
+          tx_hash?: string
+          usd?: number
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      social_crossposts: {
+        Row: {
+          created_at: string
+          credits_charged: number
+          credits_refunded: number
+          error: string | null
+          id: string
+          platforms: Json
+          scheduled_for: string | null
+          status: string
+          wallet_address: string
+          zernio_post_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          credits_charged?: number
+          credits_refunded?: number
+          error?: string | null
+          id?: string
+          platforms?: Json
+          scheduled_for?: string | null
+          status?: string
+          wallet_address: string
+          zernio_post_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          credits_charged?: number
+          credits_refunded?: number
+          error?: string | null
+          id?: string
+          platforms?: Json
+          scheduled_for?: string | null
+          status?: string
+          wallet_address?: string
+          zernio_post_id?: string | null
+        }
+        Relationships: []
+      }
+      social_post_credits: {
+        Row: {
+          credits: number
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          credits?: number
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          credits?: number
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      social_profiles: {
+        Row: {
+          created_at: string
+          wallet_address: string
+          zernio_profile_id: string
+        }
+        Insert: {
+          created_at?: string
+          wallet_address: string
+          zernio_profile_id: string
+        }
+        Update: {
+          created_at?: string
+          wallet_address?: string
+          zernio_profile_id?: string
+        }
+        Relationships: []
+      }
       space_participants: {
         Row: {
           avatar: string | null
@@ -7369,6 +7483,27 @@ export type Database = {
       set_dex_pool_image: {
         Args: { p_image_url: string; p_pool_id: string }
         Returns: undefined
+      }
+      social_credit_add: {
+        Args: {
+          p_chain: string
+          p_dhb: number
+          p_discount: number
+          p_posts: number
+          p_price: number
+          p_tx_hash: string
+          p_usd: number
+          p_wallet: string
+        }
+        Returns: number
+      }
+      social_credit_consume: {
+        Args: { p_n: number; p_wallet: string }
+        Returns: number
+      }
+      social_credit_refund: {
+        Args: { p_n: number; p_wallet: string }
+        Returns: number
       }
       stage_dub_tick: {
         Args: {
