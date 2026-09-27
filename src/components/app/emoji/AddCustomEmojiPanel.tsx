@@ -22,13 +22,13 @@ import {
   addCustomEmojis,
   checkShortcode,
   fetchEmojiPack,
-  getCustomEmoji,
   normaliseShortcode,
   parseEmojiSource,
   probeImage,
   uploadEmojiImage,
   type EmojiSource,
 } from '@/lib/emoji/custom-emoji-import';
+import { getCustomEmoji } from '@/lib/emoji/custom-emoji';
 import { loadShortcodes } from '@/lib/emoji/shortcodes';
 
 const MAX_PACK = 500;
