@@ -22,24 +22,45 @@ export const ICE_SERVERS: RTCIceServer[] = [
   { urls: 'stun:stun.cloudflare.com:3478' },
 ];
 
+/** Short wait after the first useful candidate, so the rest of its round lands too. */
+const ICE_ENOUGH_GRACE_MS = 150;
+
 /** Resolves once ICE gathering completes, or once the cap elapses. */
-export function waitForIceGathering(pc: RTCPeerConnection): Promise<void> {
+export function waitForIceGathering(
+  pc: RTCPeerConnection,
+  /**
+   * Stop early once a candidate of this type exists. `complete` waits for
+   * every STUN server to answer, so one slow or blocked server costs the full
+   * cap on every connect — why a live took seconds longer to start in a
+   * browser than in the app. One reflexive (or relay) candidate is all the
+   * far side needs.
+   */
+  enough?: RTCIceCandidateType,
+): Promise<void> {
   if (pc.iceGatheringState === 'complete') return Promise.resolve();
 
   return new Promise((resolve) => {
     let settled = false;
+    let grace: ReturnType<typeof setTimeout> | undefined;
     const finish = () => {
       if (settled) return;
       settled = true;
       pc.removeEventListener('icegatheringstatechange', onChange);
+      pc.removeEventListener('icecandidate', onCandidate);
       clearTimeout(timer);
+      clearTimeout(grace);
       resolve();
     };
     const onChange = () => {
       if (pc.iceGatheringState === 'complete') finish();
     };
+    const onCandidate = (event: RTCPeerConnectionIceEvent) => {
+      if (!enough || grace || event.candidate?.type !== enough) return;
+      grace = setTimeout(finish, ICE_ENOUGH_GRACE_MS);
+    };
 
     pc.addEventListener('icegatheringstatechange', onChange);
+    pc.addEventListener('icecandidate', onCandidate);
     const timer = setTimeout(() => {
       logger.warn('ICE gathering timed out, continuing with the candidates gathered so far');
       finish();

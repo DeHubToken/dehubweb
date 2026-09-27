@@ -12,6 +12,7 @@ import type { DeHubNFT } from '@/lib/api/dehub';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import { getVoteCache } from '@/lib/vote-cache';
 import { parseFormattedCount } from '@/lib/feed-utils';
+import { liveSourceFromHlsUrl } from '@/lib/live-ingest';
 
 /**
  * Parse a duration string (e.g., "1:23" or "1:02:34") back to seconds
@@ -78,7 +79,10 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
       ? {
           streamId: video.liveStreamId,
           playbackId: video.livePlaybackId,
-          playbackUrl: video.livePlaybackUrl,
+          playbackUrl: video.livePlaybackUrl || video.livePlaybackUrls?.[0],
+          // Without the provider a self-hosted stream is read as Livepeer, and
+          // the post page dials livepeer.studio, fails, and drops to HLS.
+          provider: liveSourceFromHlsUrl(video.livePlaybackUrls?.[0])?.provider,
           status: video.liveStatus,
           isActive: video.liveIsActive,
         }

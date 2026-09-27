@@ -34,6 +34,7 @@ import { LiveEndedMedia } from './LiveEndedMedia';
 import { ButtonLoader } from '../DeHubLoader';
 import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
 import type { WhepSubscription } from '@/lib/livepeer/whep';
+import { stashLiveSession } from '@/lib/live-handoff';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 
@@ -170,7 +171,14 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
       cancelled = true;
       clearTimeout(timer);
       whepSessionsOpen = Math.max(0, whepSessionsOpen - 1);
-      void session?.stop();
+      // Leaving for the post page while the picture is up: hand the running
+      // session over instead of hanging up, so the post page carries on from
+      // this frame rather than reconnecting from black.
+      if (session && el.videoWidth && /^\/app\/post\//.test(window.location.pathname)) {
+        stashLiveSession(source.playbackId, session, el);
+      } else {
+        void session?.stop();
+      }
       // A dead srcObject left attached stops HLS ever getting a picture onto
       // this element.
       if (el.srcObject) el.srcObject = null;
