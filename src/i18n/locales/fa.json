@@ -4446,7 +4446,10 @@
     "earningsAvailable": "موجود است",
     "earningsPending": "در حال بررسی",
     "tokensSent": "{{amount}} توکن ارسال شد",
-    "withdrawableSoon": "درآمد حاصل از اشتراک به زودی قابل برداشت خواهد بود"
+    "withdrawableSoon": "درآمد حاصل از اشتراک به زودی قابل برداشت خواهد بود",
+    "percentUsed": "{{percent}}% استفاده شده",
+    "spentOfTotal": "{{spent}} از {{total}}",
+    "viewInWallet": "مشاهده در کیف پول"
   },
   "live": {
     "chatJoined": "پیوست",

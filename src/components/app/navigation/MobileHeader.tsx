@@ -4,6 +4,7 @@ import { useHistoryNavType } from '@/hooks/use-history-nav-type';
 import { Menu, Bell, ArrowLeft } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
+import { SubscriptionCreditsPill } from '../credits/SubscriptionCreditsWidget';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -237,6 +238,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
       {/* Notifications — right slot, only visible when logged in.
           When the post overlay is opened from the feed, keep the DEHUB header exactly as it was. */}
       <div className="flex items-center">
+        {isAuthenticated && <SubscriptionCreditsPill />}
         {isAuthenticated && (
           <button
             onClick={() => navigate('/app/notifications')}

@@ -2754,7 +2754,10 @@
     "earningsAvailable": "मिलत",
     "earningsPending": "लंबित",
     "tokensSent": "{{amount}} टोकन भेजे गे",
-    "withdrawableSoon": "जल्द ही नामांकन करे जा सकत हवय"
+    "withdrawableSoon": "जल्द ही नामांकन करे जा सकत हवय",
+    "percentUsed": "{{percent}}% खरचा होगे",
+    "spentOfTotal": "{{total}} म ले {{spent}}",
+    "viewInWallet": "पोर्टफोलियो म दृश्य"
   },
   "live": {
     "chatJoined": "जुड़िस",

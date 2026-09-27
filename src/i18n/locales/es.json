@@ -4508,7 +4508,10 @@
     "earningsAvailable": "Disponible",
     "earningsPending": "Pendiente",
     "tokensSent": "{{amount}} tokens enviados",
-    "withdrawableSoon": "Los ingresos de la suscripción se podrán retirar pronto"
+    "withdrawableSoon": "Los ingresos de la suscripción se podrán retirar pronto",
+    "percentUsed": "{{percent}}% usado",
+    "spentOfTotal": "{{spent}} de {{total}}",
+    "viewInWallet": "Ver en el monedero"
   },
   "live": {
     "chatJoined": "se unió",

@@ -4509,7 +4509,10 @@
     "earningsAvailable": "Disponível",
     "earningsPending": "Pendente",
     "tokensSent": "Tokens {{amount}} enviados",
-    "withdrawableSoon": "Os ganhos da assinatura poderão ser retirados em breve"
+    "withdrawableSoon": "Os ganhos da assinatura poderão ser retirados em breve",
+    "percentUsed": "{{percent}}% usado",
+    "spentOfTotal": "{{spent}} de {{total}}",
+    "viewInWallet": "Ver na carteira"
   },
   "live": {
     "chatJoined": "entrou",

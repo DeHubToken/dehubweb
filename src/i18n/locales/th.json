@@ -3827,7 +3827,10 @@
     "earningsAvailable": "ว่าง",
     "earningsPending": "รอดำเนินการ",
     "tokensSent": "ส่งโทเค็น {{amount}} แล้ว",
-    "withdrawableSoon": "รายได้จากการสมัครใช้งานจะสามารถถอนได้เร็วๆนี้"
+    "withdrawableSoon": "รายได้จากการสมัครใช้งานจะสามารถถอนได้เร็วๆนี้",
+    "percentUsed": "ใช้ไป {{percent}}%",
+    "spentOfTotal": "{{spent}} จาก {{total}}",
+    "viewInWallet": "ดูในกระเป๋าเงิน"
   },
   "live": {
     "chatJoined": "เข้าร่วมแล้ว",

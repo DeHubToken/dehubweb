@@ -4341,7 +4341,10 @@
     "earningsAvailable": "Ხელმისაწვდომია",
     "earningsPending": "Მომლოდინე",
     "tokensSent": "{{amount}} სიმბოლოს გაგზავნა",
-    "withdrawableSoon": "Სააბონენტო შემოსავალი მალე განაღდდება"
+    "withdrawableSoon": "Სააბონენტო შემოსავალი მალე განაღდდება",
+    "percentUsed": "{{percent}}% გამოყენებულია",
+    "spentOfTotal": "{{spent}} / {{total}}",
+    "viewInWallet": "Საფულეში ნახვა"
   },
   "live": {
     "chatJoined": "შემოუერთდა",

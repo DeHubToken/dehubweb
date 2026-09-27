@@ -2788,7 +2788,10 @@
     "earningsAvailable": "La heli karo",
     "earningsPending": "Sugitaanka",
     "tokensSent": "{{amount}} calaamadaha la diray",
-    "withdrawableSoon": "Dakhliga isdiiwaangelinta ayaa dib loo soo celin doonaa goor dhow"
+    "withdrawableSoon": "Dakhliga isdiiwaangelinta ayaa dib loo soo celin doonaa goor dhow",
+    "percentUsed": "{{percent}}% loo isticmaalo",
+    "spentOfTotal": "{{spent}} ee {{total}}",
+    "viewInWallet": "Eeg boorsada"
   },
   "live": {
     "chatJoined": "ayaa ku biiray",

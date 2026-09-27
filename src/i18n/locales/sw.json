@@ -4499,7 +4499,10 @@
     "earningsAvailable": "Inapatikana",
     "earningsPending": "Inasubiri",
     "tokensSent": "{{amount}} tokeni zimetumwa",
-    "withdrawableSoon": "Mapato ya usajili yataondolewa hivi karibuni"
+    "withdrawableSoon": "Mapato ya usajili yataondolewa hivi karibuni",
+    "percentUsed": "{{percent}}% imetumika",
+    "spentOfTotal": "{{spent}} ya {{total}}",
+    "viewInWallet": "Angalia kwenye pochi"
   },
   "live": {
     "chatJoined": "amejiunga",

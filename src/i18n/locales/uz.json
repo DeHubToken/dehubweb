@@ -2813,7 +2813,10 @@
     "earningsAvailable": "Mavjud",
     "earningsPending": "Kutilmoqda",
     "tokensSent": "{{amount}} tokenlar yuborildi",
-    "withdrawableSoon": "Obuna daromadlari tez orada yechib olinadi"
+    "withdrawableSoon": "Obuna daromadlari tez orada yechib olinadi",
+    "percentUsed": "{{percent}}% ishlatilgan",
+    "spentOfTotal": "{{spent}} ning {{total}}",
+    "viewInWallet": "Hamyonda ko&#39;rish"
   },
   "live": {
     "chatJoined": "qoʻshildi",

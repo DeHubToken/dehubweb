@@ -4763,7 +4763,10 @@
     "earningsAvailable": "Tersedia",
     "earningsPending": "Menunggu",
     "tokensSent": "Token {{amount}} dihantar",
-    "withdrawableSoon": "Pendapatan langganan akan dikeluarkan tidak lama lagi"
+    "withdrawableSoon": "Pendapatan langganan akan dikeluarkan tidak lama lagi",
+    "percentUsed": "{{percent}}% digunakan",
+    "spentOfTotal": "{{spent}} daripada {{total}}",
+    "viewInWallet": "Lihat dalam dompet"
   },
   "live": {
     "chatJoined": "menyertai",

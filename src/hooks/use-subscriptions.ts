@@ -9,7 +9,6 @@ import {
   confirmPlanPublished,
   confirmSubscriptionPurchase,
   payPlanWithCredits,
-  getSubscriptionCredits,
   rememberPendingSubscriptionPayment,
   clearPendingSubscriptionPayment,
   isSubscribedToCreator,
@@ -335,17 +334,7 @@ export function useUpdatePlan() {
   });
 }
 
-/** The signed-in user's subscription-token balance. */
-export function useSubscriptionCredits() {
-  const { isAuthenticated } = useAuth();
-  return useQuery({
-    queryKey: ['subscription-credits'],
-    queryFn: getSubscriptionCredits,
-    enabled: isAuthenticated,
-    staleTime: 30_000,
-    retry: false,
-  });
-}
+export { useSubscriptionCredits } from './use-subscription-credits';
 
 /**
  * Subscribe: reserve the row, pay on chain, then have the server verify it.

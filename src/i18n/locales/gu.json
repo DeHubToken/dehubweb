@@ -2764,7 +2764,10 @@
     "earningsAvailable": "ઉપલબ્ધ",
     "earningsPending": "બાકી",
     "tokensSent": "{{amount}} ટોકન્સ મોકલવામાં આવ્યા",
-    "withdrawableSoon": "સબ્સ્ક્રિપ્શનની કમાણી ટૂંક સમયમાં ઉપાડી શકાશે"
+    "withdrawableSoon": "સબ્સ્ક્રિપ્શનની કમાણી ટૂંક સમયમાં ઉપાડી શકાશે",
+    "percentUsed": "{{percent}}% વપરાયેલ",
+    "spentOfTotal": "{{spent}} નું {{total}}",
+    "viewInWallet": "વૉલેટમાં જુઓ"
   },
   "live": {
     "chatJoined": "જોડાયા",

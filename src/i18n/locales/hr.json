@@ -4445,7 +4445,10 @@
     "earningsAvailable": "Dostupno",
     "earningsPending": "Na čekanju",
     "tokensSent": "{{amount}} tokena je poslano",
-    "withdrawableSoon": "Zarada od pretplate uskoro će se moći povući"
+    "withdrawableSoon": "Zarada od pretplate uskoro će se moći povući",
+    "percentUsed": "{{percent}}% iskorišteno",
+    "spentOfTotal": "{{spent}} od {{total}}",
+    "viewInWallet": "Prikaži u novčaniku"
   },
   "live": {
     "chatJoined": "se pridružio/la",
