@@ -5155,5 +5155,10 @@
     "farcasterNote": "Farcaster 让侬批准 dehub 在 Farcaster 应用里，当前还不能使用定时发布功能。",
     "skippedScheduleToast": "跳过 {{platforms}}：目前还不支持定时发布。",
     "skippedOtherToast": "跳过 {{platforms}}：伊们无法接收该帖子。"
+  },
+  "dm": {
+    "planRestricted": "搿个用户要订阅了再好收消息。",
+    "planTypeNotAllowed": "搿个创作者个方案勿允许搿种消息。",
+    "planMinTip": "打赏搿个创作者至少要 {{amount}} DHB。"
   }
 }

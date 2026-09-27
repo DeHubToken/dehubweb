@@ -5130,5 +5130,10 @@
     "farcasterNote": "Farcaster आप ले Farcaster ऐप म Dehub के अनुमोदन करे बर पूछताछ करत हवय, अउ ए अभी तक निर्धारित पोस्ट नी ले सकत हवय ।",
     "skippedScheduleToast": "Skipped {{platforms}}: अनुसूचित पोस्ट अभी तक वहां समर्थित नी हवय ।",
     "skippedOtherToast": "Skipped {{platforms}}: ओमन ए पोस्ट ल नइ ले सकिन ।"
+  },
+  "dm": {
+    "planRestricted": "ए यूजर ल संदेस पाए बर सब्सक्रिप्सन चाही।",
+    "planTypeNotAllowed": "ए क्रिएटर के प्लान म अइसन संदेस के अनुमति नइ हे।",
+    "planMinTip": "ए क्रिएटर बर टिप कम से कम {{amount}} DHB होना चाही।"
   }
 }

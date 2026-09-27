@@ -5237,5 +5237,10 @@
     "farcasterNote": "Farcaster të kërkon të miratosh deponimin në aplikacionin Farcaster dhe nuk mund të marrë ende postime të programuara.",
     "skippedScheduleToast": "U anashkalua {{platforms}}: postimet e programuara nuk mbështeten ende atje.",
     "skippedOtherToast": "U anashkalua {{platforms}}: ata nuk mund ta merrnin këtë postim."
+  },
+  "dm": {
+    "planRestricted": "Ky përdorues kërkon abonim për të marrë mesazhe.",
+    "planTypeNotAllowed": "Plani i këtij krijuesi nuk e lejon këtë lloj mesazhi.",
+    "planMinTip": "Bakshishi për këtë krijues duhet të jetë të paktën {{amount}} DHB."
   }
 }

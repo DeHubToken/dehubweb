@@ -7593,5 +7593,10 @@
     "farcasterNote": "Farcaster vraagt je om dehub in de Farcaster-app goed te keuren en het kan nog geen geplande berichten aannemen.",
     "skippedScheduleToast": "Overgeslagen {{platforms}}: geplande berichten worden daar nog niet ondersteund.",
     "skippedOtherToast": "Overgeslagen {{platforms}}: ze konden dit bericht niet aannemen."
+  },
+  "dm": {
+    "planRestricted": "Deze gebruiker vereist een abonnement om berichten te ontvangen.",
+    "planTypeNotAllowed": "Het abonnement van deze maker staat dit soort bericht niet toe.",
+    "planMinTip": "De fooi voor deze maker moet minstens {{amount}} DHB zijn."
   }
 }

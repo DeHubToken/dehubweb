@@ -7371,5 +7371,10 @@
     "farcasterNote": "FarcasterはFarcasterアプリでdehubの承認を求めていますが、スケジュールされた投稿はまだ受け付けていません。",
     "skippedScheduleToast": "{{platforms}}をスキップしました：スケジュールされた投稿はまだサポートされていません。",
     "skippedOtherToast": "{{platforms}}をスキップしました：この投稿を投稿できませんでした。"
+  },
+  "dm": {
+    "planRestricted": "このユーザーにメッセージを送るにはサブスクリプションが必要です。",
+    "planTypeNotAllowed": "このクリエイターのプランでは、この種類のメッセージは送れません。",
+    "planMinTip": "このクリエイターへのチップは {{amount}} DHB 以上にしてください。"
   }
 }

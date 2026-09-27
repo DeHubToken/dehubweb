@@ -7387,5 +7387,10 @@
     "farcasterNote": "Farcaster, Farcaster uygulamasındaki dağıtımı onaylamanızı ister ve henüz planlanmış gönderileri alamaz.",
     "skippedScheduleToast": "{{platforms}} atlandı: Planlanan gönderiler henüz orada desteklenmiyor.",
     "skippedOtherToast": "{{platforms}} atlandı: Bu gönderiyi alamadılar."
+  },
+  "dm": {
+    "planRestricted": "Bu kullanıcı mesaj almak için abonelik gerektiriyor.",
+    "planTypeNotAllowed": "Bu içerik üreticisinin planı bu tür mesaja izin vermiyor.",
+    "planMinTip": "Bu içerik üreticisi için bahşiş en az {{amount}} DHB olmalı."
   }
 }

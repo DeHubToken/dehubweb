@@ -7270,5 +7270,10 @@
     "farcasterNote": "Farcaster ber dig att godkänna dehub i Farcaster-appen, och den kan inte ta emot schemalagda inlägg ännu.",
     "skippedScheduleToast": "Hoppade över {{platforms}}: schemalagda inlägg stöds inte där ännu.",
     "skippedOtherToast": "Hoppade över {{platforms}}: de kunde inte ta det här inlägget."
+  },
+  "dm": {
+    "planRestricted": "Den här användaren kräver en prenumeration för att ta emot meddelanden.",
+    "planTypeNotAllowed": "Den här skaparens plan tillåter inte den här typen av meddelande.",
+    "planMinTip": "Dricksen måste vara minst {{amount}} DHB för den här skaparen."
   }
 }

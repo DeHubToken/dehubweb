@@ -5255,5 +5255,10 @@
     "farcasterNote": "I-Farcaster ikucela ukuthi ugunyaze i-dehub ku-app ye-Farcaster, futhi ayikwazi ukuthatha amaphosti ashejuliwe okwamanje.",
     "skippedScheduleToast": "Yeqa {{platforms}}: amaphosti ashejuliwe awasekelwa lapho okwamanje.",
     "skippedOtherToast": "Yeqa {{platforms}}: abakwazanga ukuthatha le phosti."
+  },
+  "dm": {
+    "planRestricted": "Lo msebenzisi udinga ukubhalisa ukuze athole imilayezo.",
+    "planTypeNotAllowed": "Uhlelo lwalo mdali aluvumeli lolu hlobo lomlayezo.",
+    "planMinTip": "Ithiphu yalo mdali kufanele okungenani ibe ngu-{{amount}} DHB."
   }
 }

@@ -7376,5 +7376,10 @@
     "farcasterNote": "Farcaster가 Farcaster 앱에서 dehub를 승인해달라고 요청했지만 아직 예약된 게시물을 가져갈 수 없습니다.",
     "skippedScheduleToast": "건너뛴 {{platforms}}: 예약된 포스트는 아직 지원되지 않습니다.",
     "skippedOtherToast": "건너뛴 {{platforms}}: 이 게시물을 가져갈 수 없습니다."
+  },
+  "dm": {
+    "planRestricted": "이 사용자에게 메시지를 보내려면 구독이 필요합니다.",
+    "planTypeNotAllowed": "이 크리에이터의 플랜은 이 유형의 메시지를 허용하지 않습니다.",
+    "planMinTip": "이 크리에이터에게 보내는 팁은 최소 {{amount}} DHB여야 합니다."
   }
 }

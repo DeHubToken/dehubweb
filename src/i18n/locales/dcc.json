@@ -3110,5 +3110,10 @@
     "percentUsed": "{{percent}}% استعمال ہوا",
     "spentOfTotal": "{{spent}} کا {{total}}",
     "viewInWallet": "والٹ میں دیکھیں"
+  },
+  "dm": {
+    "planRestricted": "اس یوزر کو پیغامات لینے کے لیے سبسکرپشن چاہیے۔",
+    "planTypeNotAllowed": "اس کریئیٹر کے پلان میں اس قسم کا پیغام اجازت نہیں۔",
+    "planMinTip": "اس کریئیٹر کے لیے ٹپ کم از کم {{amount}} DHB ہونا چاہیے۔"
   }
 }

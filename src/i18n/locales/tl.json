@@ -7278,5 +7278,10 @@
     "farcasterNote": "Hinihiling sa iyo ng Farcaster na aprubahan ang dehub sa Farcaster app, at hindi pa ito maaaring tumagal ng mga naka - iskedyul na post.",
     "skippedScheduleToast": "Nilaktawan ang {{platforms}}: hindi pa sinusuportahan doon ang mga nakaiskedyul na post.",
     "skippedOtherToast": "Nilaktawan ang {{platforms}}: hindi nila makuha ang post na ito."
+  },
+  "dm": {
+    "planRestricted": "Kailangan ng user na ito ng subscription para makatanggap ng mga mensahe.",
+    "planTypeNotAllowed": "Hindi pinapayagan ng plano ng creator na ito ang ganitong uri ng mensahe.",
+    "planMinTip": "Ang tip para sa creator na ito ay dapat hindi bababa sa {{amount}} DHB."
   }
 }

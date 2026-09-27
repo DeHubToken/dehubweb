@@ -5121,5 +5121,10 @@
     "farcasterNote": "Farcaster आपसे कहिथे के Farcaster ऐप में dehub के मंजूरी देव, अउ अभी तक शेड्यूल्ड पोस्ट ले नहीं सकत.",
     "skippedScheduleToast": "Skipped {{platforms}}: scheduled posts aren't supported there yet.",
     "skippedOtherToast": "छोड़ दे गे {{platforms}}: ओमन ए पोस्ट ले नहीं ले सकिन."
+  },
+  "dm": {
+    "planRestricted": "ई यूजर के मैसेज पाएक ले सब्सक्रिप्शन लागी।",
+    "planTypeNotAllowed": "ई क्रिएटर कर प्लान में अइसन मैसेज कर अनुमति नखे।",
+    "planMinTip": "ई क्रिएटर ले टिप कम से कम {{amount}} DHB होवेक चाही।"
   }
 }

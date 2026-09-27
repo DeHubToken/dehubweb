@@ -7227,5 +7227,10 @@
     "farcasterNote": "Farcaster Farcaster tətbiqində dehub-u təsdiqləməyinizi istəyir və hələ planlaşdırılmış postları götürə bilmir.",
     "skippedScheduleToast": "{{platforms}} ötürülüb: planlaşdırılmış ismarıclar hələ ki, dəstəklənmir.",
     "skippedOtherToast": "{{platforms}}ötürüldü: bu yazını qəbul edə bilmədi."
+  },
+  "dm": {
+    "planRestricted": "Bu istifadəçi mesaj almaq üçün abunəlik tələb edir.",
+    "planTypeNotAllowed": "Bu yaradıcının planı bu növ mesaja icazə vermir.",
+    "planMinTip": "Bu yaradıcı üçün bəxşiş ən azı {{amount}} DHB olmalıdır."
   }
 }

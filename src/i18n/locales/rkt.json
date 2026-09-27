@@ -3524,5 +3524,10 @@
     "percentUsed": "{{percent}}% খরচ হইছে",
     "spentOfTotal": "{{total}}-র মইধ্যে {{spent}}",
     "viewInWallet": "ওয়ালেটোত দেখেন"
+  },
+  "dm": {
+    "planRestricted": "এই ইউজারক মেসেজ পাবার জইন্যে সাবস্ক্রিপশন লাগে।",
+    "planTypeNotAllowed": "এই ক্রিয়েটরের প্ল্যানোত এমন মেসেজ চলে না।",
+    "planMinTip": "এই ক্রিয়েটরের জইন্যে টিপ কমপক্ষে {{amount}} DHB হওয়া লাগবে।"
   }
 }

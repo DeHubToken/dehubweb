@@ -3846,5 +3846,10 @@
     "percentUsed": "Искоришћено {{percent}}%",
     "spentOfTotal": "{{spent}} од {{total}}",
     "viewInWallet": "Погледај у новчанику"
+  },
+  "dm": {
+    "planRestricted": "Овај корисник захтева претплату да би примао поруке.",
+    "planTypeNotAllowed": "План овог креатора не дозвољава ову врсту поруке.",
+    "planMinTip": "Напојница за овог креатора мора бити најмање {{amount}} DHB."
   }
 }

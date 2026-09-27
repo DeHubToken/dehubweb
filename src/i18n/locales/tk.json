@@ -5133,5 +5133,10 @@
     "farcasterNote": "Farcaster sizden Farcaster ulagynda dehuby kabul etmegi haýyş edýär we ol henizem bellenen işleri edip bilmeýär.",
     "skippedScheduleToast": "{{platforms}}: bellenen postlar henizem goldaw berilmeýär.",
     "skippedOtherToast": "{{platforms}}: olar bu posty alyp bilmediler."
+  },
+  "dm": {
+    "planRestricted": "Bu ulanyjy habar almak üçin abuna talap edýär.",
+    "planTypeNotAllowed": "Bu awtoryň meýilnamasy bu görnüşli habara rugsat bermeýär.",
+    "planMinTip": "Bu awtor üçin çaýpul iň azyndan {{amount}} DHB bolmaly."
   }
 }

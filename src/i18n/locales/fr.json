@@ -7435,5 +7435,10 @@
     "farcasterNote": "Farcaster vous demande d'approuver dehub dans l'application Farcaster, et il ne peut pas encore accepter les publications planifiées.",
     "skippedScheduleToast": "Ignoré {{platforms}} : les publications planifiées ne sont pas encore prises en charge.",
     "skippedOtherToast": "{{platforms}} : ils n'ont pas pu accepter cette publication."
+  },
+  "dm": {
+    "planRestricted": "Cet utilisateur exige un abonnement pour recevoir des messages.",
+    "planTypeNotAllowed": "L'offre de ce créateur n'autorise pas ce type de message.",
+    "planMinTip": "Le pourboire doit être d'au moins {{amount}} DHB pour ce créateur."
   }
 }

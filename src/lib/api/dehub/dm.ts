@@ -834,7 +834,16 @@ export async function getDMPlanSettings(planId: string): Promise<{
       method: 'GET',
       requiresAuth: true,
     });
-    return response?.result || response || { enabled: true };
+    const settings = response?.result ?? response;
+    if (!settings || typeof settings !== 'object') return { enabled: true };
+    const minTip = Number(settings.minTipDhb);
+    return {
+      enabled: settings.enabled !== false,
+      minTipDhb: Number.isFinite(minTip) && minTip > 0 ? minTip : undefined,
+      allowedMessageTypes: Array.isArray(settings.allowedMessageTypes)
+        ? settings.allowedMessageTypes
+        : undefined,
+    };
   } catch (error) {
     console.error('[DM API] getDMPlanSettings failed:', error);
     return { enabled: true };

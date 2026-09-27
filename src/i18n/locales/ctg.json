@@ -4624,5 +4624,10 @@
     "farcasterNote": "Farcaster অ্যাপত dehub অনুমোদন গরিত অইবো, আর Farcaster এহনো শিডিউল গরা পোস্ট ন লয়।",
     "skippedScheduleToast": "{{platforms}} বাদ দেওয়া অইয়ে: উডে এহনো শিডিউল পোস্ট চলে না।",
     "skippedOtherToast": "{{platforms}} বাদ দেওয়া অইয়ে: এই পোস্ট উগুন ন লইত পারে।"
+  },
+  "dm": {
+    "planRestricted": "এই ইউজারে মেসেজ পাইবার লাই সাবস্ক্রিপশন লাগে।",
+    "planTypeNotAllowed": "এই ক্রিয়েটরর প্ল্যানে এই রকম মেসেজ চলে না।",
+    "planMinTip": "এই ক্রিয়েটরর লাই টিপ কমপক্ষে {{amount}} DHB অইত অইবো।"
   }
 }
