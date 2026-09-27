@@ -16,6 +16,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
+import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import {
   Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn,
   Pencil, Check, Trash2, ArrowDown, type LucideIcon,
@@ -159,7 +160,7 @@ function ChatReactions({
                 : 'border-zinc-700 bg-zinc-800/50 text-zinc-400 hover:border-zinc-600'
             }`}
           >
-            <span className="text-xs">{emoji}</span>
+            <span className="text-xs inline-flex items-center"><InlineEmoji value={emoji} className="h-4 m-0" /></span>
             {mine ? (
               <>
                 <span className="group-hover/reaction:hidden">{addresses.length}</span>

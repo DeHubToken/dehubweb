@@ -1,4 +1,5 @@
 import { useState, useCallback, memo } from 'react';
+import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, Trash2, Pencil, X } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -154,7 +155,7 @@ function ReactionBar({
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
-            <span>{emoji}</span>
+            <span className="inline-flex items-center"><InlineEmoji value={emoji} className="h-4 m-0" /></span>
             {myReaction ? (
               <>
                 <span className="text-[10px] group-hover/reaction:hidden">{addresses.length}</span>
