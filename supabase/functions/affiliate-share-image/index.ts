@@ -130,7 +130,7 @@ async function fetchAsDataUri(url: string): Promise<string | null> {
   try {
     const buf = new Uint8Array(await r.arrayBuffer());
     if (buf.byteLength < 200) return null;
-    return `data:${ct};base64,${encodeB64(buf as Uint8Array<ArrayBuffer>)}`;
+    return `data:${ct};base64,${encodeB64(buf as unknown as ArrayBuffer)}`;
   } catch {
     return null;
   }
@@ -179,7 +179,7 @@ async function fetchAvatarDataUri(address: string | null, apiAvatarPath: string 
     try {
       const buf = new Uint8Array(await r.arrayBuffer());
       if (buf.byteLength < 200) continue;
-      return `data:${ct};base64,${encodeB64(buf as Uint8Array<ArrayBuffer>)}`;
+      return `data:${ct};base64,${encodeB64(buf as unknown as ArrayBuffer)}`;
     } catch { /* try next */ }
   }
   return null;
@@ -380,7 +380,7 @@ serve(async (req) => {
       }
       try {
         const png = await inflight;
-        return new Response(png, {
+        return new Response(png as unknown as BodyInit, {
           status: 200,
           headers: {
             ...corsHeaders,
