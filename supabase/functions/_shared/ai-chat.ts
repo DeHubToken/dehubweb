@@ -14,7 +14,17 @@
 // This is the pattern translate-text proved: it was the only AI function still
 // answering 200 the day the gateway started returning 402.
 
+import { tryFree } from './free-models.ts';
+
 const GATEWAY_URL = 'https://ai.gateway.lovable.dev/v1/chat/completions';
+
+/** The cheap tier — what the free models in free-models.ts stand in for. */
+const FREE_ELIGIBLE = new Set([
+  'google/gemini-2.5-flash',
+  'google/gemini-2.5-flash-lite',
+  'google/gemini-3-flash-preview',
+  'google/gemini-3.5-flash-lite',
+]);
 const GOOGLE_URL = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
 
 /**
@@ -175,6 +185,13 @@ export async function aiChat(
   body: Record<string, unknown>,
   opts: AiChatOptions = {},
 ): Promise<Response> {
+  // Free tiers first for the cheap jobs. Pro is asked for by name and is never
+  // quietly answered by a smaller free model.
+  if (typeof body.model === 'string' && FREE_ELIGIBLE.has(body.model)) {
+    const free = await tryFree(body, opts);
+    if (free) return free;
+  }
+
   const direct = await tryDirect(body, opts);
   if (direct) return direct;
 
