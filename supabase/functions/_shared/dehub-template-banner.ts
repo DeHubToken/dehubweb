@@ -20,6 +20,7 @@
 // static files — NOT the __l5e asset.json paths that fall back to SPA HTML).
 
 import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
+import { aiChat } from "./ai-chat.ts";
 
 // Overridable for local testing (globalThis.DEHUB_KIT_BASE).
 const KIT_BASE: string = (globalThis as Record<string, unknown>)["DEHUB_KIT_BASE"] as string ?? "https://dehub.io/brand-kit";
@@ -215,19 +216,14 @@ Reply with ONLY the JSON object, no markdown.`;
   try {
     const ctl = new AbortController();
     const t = setTimeout(() => ctl.abort(), 12000);
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${opts.apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: sys },
-          ...(opts.history || []).slice(-4).map((m) => ({ role: m.role === "assistant" ? "assistant" : "user", content: m.content.slice(0, 400) })),
-          { role: "user", content: user },
-        ],
-      }),
-      signal: ctl.signal,
-    });
+    const res = await aiChat({
+      model: "google/gemini-2.5-flash",
+      messages: [
+        { role: "system", content: sys },
+        ...(opts.history || []).slice(-4).map((m) => ({ role: m.role === "assistant" ? "assistant" : "user", content: m.content.slice(0, 400) })),
+        { role: "user", content: user },
+      ],
+    }, { signal: ctl.signal, label: "template-banner" });
     clearTimeout(t);
     if (!res.ok) throw new Error(`gateway ${res.status}`);
     const data = await res.json();

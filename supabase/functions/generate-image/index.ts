@@ -7,6 +7,7 @@ import {
 import { DEHUB_LOGO_DATA_URI } from '../_shared/dehub-logo.ts';
 import { recordGeneration } from '../_shared/generation-jobs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
+import { aiChat } from '../_shared/ai-chat.ts';
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
 // which chargeForJob requires and the browser will not send unless the preflight
 // says they are allowed. A local copy silently drops them; see auth.ts.
@@ -536,18 +537,13 @@ Rules (non-negotiable):
 
           const ctrl = new AbortController();
           const timer = setTimeout(() => ctrl.abort(), 4000);
-          const rewriteRes = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${lovableApiKey}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              model: 'google/gemini-2.5-flash',
-              messages: [
-                { role: 'system', content: directorSystem },
-                { role: 'user', content: `User brief: ${prompt}` },
-              ],
-            }),
-            signal: ctrl.signal,
-          });
+          const rewriteRes = await aiChat({
+            model: 'google/gemini-2.5-flash',
+            messages: [
+              { role: 'system', content: directorSystem },
+              { role: 'user', content: `User brief: ${prompt}` },
+            ],
+          }, { signal: ctrl.signal, label: 'poster-rewrite' });
           clearTimeout(timer);
           if (rewriteRes.ok) {
             const rj = await rewriteRes.json();
