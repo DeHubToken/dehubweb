@@ -213,13 +213,14 @@ class VideoViewTracker {
       this.reset(tokenId);
     }
 
-    if (this.watchedVideos.has(tokenId)) return;
-
-    // Track cumulative watch time
+    // Track cumulative watch time — even after this watch has counted, so the
+    // next wrap back to the start is recognised.
     const previousTime = this.watchProgress.get(tokenId) || 0;
     if (currentTime > previousTime) {
       this.watchProgress.set(tokenId, currentTime);
     }
+
+    if (this.watchedVideos.has(tokenId)) return;
     
     const watchedTime = this.watchProgress.get(tokenId) || 0;
     const thresholdSeconds = Math.max(
