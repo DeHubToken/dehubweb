@@ -129,7 +129,7 @@ describe('auto-translate', () => {
     render(<TranslatableText text={LINE} as="p" auto="chat" />);
 
     await waitFor(() => expect(invoke).toHaveBeenCalled());
-    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: LINE, targetLang: 'es' } });
+    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: LINE, targetLang: 'es', public: true } });
   });
 
   it('leaves a chat line with almost no letters alone', async () => {
