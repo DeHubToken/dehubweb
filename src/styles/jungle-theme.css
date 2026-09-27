@@ -202,10 +202,21 @@ html[data-theme='jungle'] :is([data-feed-tab-btn], [data-tab-btn])[data-active='
 /* The sliding indicator behind the active tab: a pressed-in recess in the
    board. Carved edge (dark top, lit bottom) — the exact inverse of every
    raised surface, which is what makes it read as depth rather than as a
-   coloured rectangle. */
+   coloured rectangle.
+
+   The transparent 3px border is what keeps the recess INSIDE the board. The
+   indicator is sized to the full tab (35px in a 36px bar, flush to the bar's
+   edge on profile), so without it the pill swallowed the board's lit top lip
+   and left the dark bottom band showing — it read as riding high. Inset
+   shadows and a padding-box background both stop at the border, so the whole
+   recess shrinks evenly on all four sides without touching the inline
+   width/height/transform the slide animation drives. */
 html[data-theme='jungle'] [data-glass-indicator] {
-  border-radius: var(--jungle-r-chip) !important;
+  border: 3px solid transparent !important;
+  border-radius: calc(var(--jungle-r-chip) + 3px) !important;
   background: rgb(var(--jungle-loam) / 0.78) !important;
+  /* after the shorthand, which would otherwise reset it to border-box */
+  background-clip: padding-box !important;
   box-shadow:
     var(--jungle-edge-carved),
     inset 0 0 0 1px rgb(var(--jungle-leaf-c) / 0.32) !important;
@@ -449,6 +460,48 @@ html[data-theme='jungle'] [data-primary-cta]:active {
     inset 0 1px 0 rgb(var(--jungle-glint) / 0.35),
     inset 0 -1px 0 rgb(0 0 0 / 0.3),
     0 2px 8px rgb(var(--jungle-gold) / 0.16) !important;
+}
+
+/* Hand-rolled primary actions (`bg-white text-black` on a button or link —
+   the arcade's Play / Fight / Deploy, the game page's actions, and dozens
+   more). Untagged, each rendered as a bare white slab on the timber. Same
+   narrow selector Osaka and War use: real controls only, whole-token match so
+   `bg-white/10` glass keeps its alpha, [data-keep-white] opts out. The gold
+   plaque without the bloom, so a tagged [data-primary-cta] still outranks it. */
+html[data-theme='jungle'] #app-root
+  :is(button, a, [role='button']):is([class~='bg-white'], [class*=' bg-white/9'], [class^='bg-white/9']):not(
+    :where([data-keep-white], [data-keep-dark], [data-primary-cta], [data-switch-track], [data-glass-indicator], [data-filter-chip])
+  ) {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--jungle-gold)) 0%,
+    rgb(var(--jungle-gold) / 0.88) 52%,
+    rgb(var(--jungle-gold) / 0.76) 100%
+  ) !important;
+  color: rgb(var(--jungle-loam)) !important;
+  border-color: transparent !important;
+  box-shadow:
+    inset 0 1px 0 rgb(var(--jungle-glint) / 0.55),
+    inset 0 -1px 0 rgb(0 0 0 / 0.3),
+    0 2px 0 rgb(112 72 22 / 0.6) !important;
+}
+html[data-theme='jungle'] #app-root
+  :is(button, a, [role='button']):is([class~='bg-white'], [class*=' bg-white/9'], [class^='bg-white/9']):not(
+    :where([data-keep-white], [data-keep-dark], [data-primary-cta], [data-switch-track], [data-glass-indicator], [data-filter-chip])
+  ) * {
+  color: rgb(var(--jungle-loam)) !important;
+}
+
+/* The app's frosted "glass card" (`bg-white/[0.03] backdrop-blur-[24px]`):
+   the profile header, the feed filter panels, notification rows, governance
+   and feature cards, the store header. Untagged, it is a see-through smear of
+   green canopy between two wooden columns. Same plank as [data-feed-item]. */
+html[data-theme='jungle'] #app-root [class*='bg-white/[0.03]'][class*='backdrop-blur-[24px]'] {
+  background: var(--jungle-grain-soft), rgb(var(--jungle-bark) / var(--glass-thin)) !important;
+  border-color: transparent !important;
+  box-shadow: var(--jungle-edge) !important;
+  backdrop-filter: var(--jungle-blur) !important;
+  -webkit-backdrop-filter: var(--jungle-blur) !important;
 }
 
 html[data-theme='jungle'] [data-follow-btn] {

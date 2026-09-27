@@ -155,11 +155,18 @@ html[data-theme='jungle'] [data-view-all] {
   color: rgb(var(--jungle-leaf-c)) !important;
 }
 
-/* The other sliding tab indicator in the app (profile/page tab bars). */
+/* The active cell in the side-panel icon tabs (leaderboard / trending). It is
+   `absolute inset-0` — the whole cell — not an underline, so painting it as a
+   2px-radius block with a glow put a square slab flush in the panel's corner
+   and bled green onto the neighbouring tabs. Same carved recess as the feed
+   nav's [data-glass-indicator], inset 4px so it sits inside the trough. */
 html[data-theme='jungle'] [data-active-tab-indicator] {
-  background: rgb(var(--jungle-leaf-c) / 0.85) !important;
-  border-radius: 2px !important;
-  box-shadow: 0 0 8px rgb(var(--jungle-leaf-c) / 0.35) !important;
+  inset: 4px !important;
+  border-radius: calc(var(--jungle-r-chip) - 2px) !important;
+  background: rgb(var(--jungle-loam) / 0.78) !important;
+  box-shadow:
+    var(--jungle-edge-carved),
+    inset 0 0 0 1px rgb(var(--jungle-leaf-c) / 0.32) !important;
 }
 
 html[data-theme='jungle'] [data-tab-active='true'] {
