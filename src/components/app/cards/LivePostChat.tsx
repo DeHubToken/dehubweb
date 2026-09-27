@@ -73,7 +73,7 @@ function TranslatableChatMsg({ content }: { content: string }) {
     isTooShort,
     handleTranslate,
     handleShowOriginal,
-  } = useTextTranslation(content);
+  } = useTextTranslation(content, 'chat');
 
   return (
     <div>
