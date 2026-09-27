@@ -5,7 +5,7 @@ import { getDocsSeoForPath } from "@/lib/docs/seo";
 import { upsertCanonical, upsertMeta, upsertSocialMeta, setJsonLd, setRobots } from "@/lib/head-meta";
 
 const DOCS_OG_IMAGE =
-  "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//new_logo_Dehub.jpg";
+  "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg";
 
 /**
  * Per-route SEO for every /docs section: title, description, canonical,
