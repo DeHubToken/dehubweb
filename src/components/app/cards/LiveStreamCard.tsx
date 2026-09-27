@@ -170,9 +170,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const hasPlaybackUrl = urlsToTry.length > 0;
   // The feed card that was just tapped may have left its running WebRTC
   // session behind for this page (lib/live-handoff). Read once, on mount: it
-  // decides the transport, the sound and the first frame before anything paints.
+  // decides the transport and the first frame before anything paints.
   const [handoff] = useState(() => peekLiveSession(liveSourceFromHlsUrl(urlsToTry[0])?.playbackId));
-  const [isMuted, setIsMuted] = useState(handoff?.muted ?? true);
+  const [isMuted, setIsMuted] = useState(true);
   // A handed-over session is proof the stream is on air, so it plays before
   // the status merge lands. The grace runs out so a stream that really has
   // ended still falls to the ended screen.

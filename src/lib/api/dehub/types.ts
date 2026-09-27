@@ -244,6 +244,8 @@ export interface DeHubNFT {
   minterFollowings?: number;
   stream?: {
     streamId?: string;
+    /** 'mediamtx' for the self-hosted ingest; absent means Livepeer. */
+    provider?: string;
     status?: string;
     isActive?: boolean;
     viewerCount?: number;

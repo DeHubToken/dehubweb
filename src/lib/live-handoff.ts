@@ -21,8 +21,6 @@ interface LiveHandoff {
   session: WhepSubscription;
   /** The last frame the card showed, painted until the new element's first. */
   poster?: string;
-  /** Whether the viewer had the card's sound on — the post page keeps it. */
-  muted: boolean;
   timer: ReturnType<typeof setTimeout>;
 }
 
@@ -58,14 +56,14 @@ export function stashLiveSession(playbackId: string, session: WhepSubscription, 
     pending.delete(playbackId);
     void session.stop();
   }, UNCLAIMED_MS);
-  pending.set(playbackId, { session, poster: snapshot(video), muted: video.muted, timer });
+  pending.set(playbackId, { session, poster: snapshot(video), timer });
 }
 
 export function peekLiveSession(
   playbackId: string | null | undefined,
-): { poster?: string; muted: boolean } | null {
+): { poster?: string } | null {
   const handoff = playbackId ? pending.get(playbackId) : undefined;
-  return handoff ? { poster: handoff.poster, muted: handoff.muted } : null;
+  return handoff ? { poster: handoff.poster } : null;
 }
 
 export function takeLiveSession(playbackId: string | null | undefined): WhepSubscription | null {
