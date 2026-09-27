@@ -4450,7 +4450,19 @@
     "tokenCheckoutNotReady": "Token abonnements-checkout er ikke klar — prøv igen om kort tid",
     "tokenQuoteUnavailable": "Live token-tilbud utilgængeligt",
     "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Token-beløb utilgængeligt"
+    "tokenAmountUnavailable": "Token-beløb utilgængeligt",
+    "subscribedToast": "Tilmeldt",
+    "confirmSubscribeTo": "Abonner på {{plan}} for {{price}}/{{duration}}.",
+    "atPreListingRate": "{{amount}}til satsen før annoncering",
+    "creditsCreator": "Krediter kreatøren {{amount}}USDT",
+    "fromSubscriptionTokens": "Fra dine abonnementstokens",
+    "addedAtTodaysPrice": "Tilføjet nu til dagens pris",
+    "subscriptionTokensNote": "Abonnementstokens er låst til prisen, når du tilføjer dem, så en prisændring ændrer aldrig, hvad et abonnement koster dig. De kan kun bruges på abonnementer.",
+    "subscriptionTokens": "Abonnementstokens",
+    "subscriptionTokensOnly": "Kun for abonnementer",
+    "untradableTokens": "Disse er abonnementstokens, der ikke kan handles",
+    "lockedValue": "Låst på{{amount}}",
+    "withdraw": "Udbetal"
   },
   "live": {
     "chatJoined": "deltog",

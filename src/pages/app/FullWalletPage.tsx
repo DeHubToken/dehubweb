@@ -48,6 +48,7 @@ import arcLogo from '@/assets/icons/arc-logo.png';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 import { TradeSheet } from '@/components/app/wallet/TradeSheet';
+import { SubscriptionTokensRow } from '@/components/app/wallet/SubscriptionTokensRow';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useSubscriptionEarnings, useWithdrawSubscriptionEarnings } from '@/hooks/use-subscriptions';
 
@@ -483,6 +484,7 @@ export default function FullWalletPage() {
             {withBalance.map(grouped => (
               <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} price={prices[grouped.symbol]} />
             ))}
+            <SubscriptionTokensRow />
           </>
         )}
       </div>

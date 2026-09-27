@@ -4404,7 +4404,19 @@
     "tokenCheckoutNotReady": "Märkide tellimuse kassasse minek pole valmis — proovige varsti uuesti",
     "tokenQuoteUnavailable": "Reaalajas märkide noteering pole saadaval",
     "tokenEstimate": "≈ {{amount}} märk",
-    "tokenAmountUnavailable": "Märkide summa pole saadaval"
+    "tokenAmountUnavailable": "Märkide summa pole saadaval",
+    "subscribedToast": "Tellitud",
+    "confirmSubscribeTo": "Telli {{plan}} eest {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} eelneva kuulutuse hinnaga",
+    "creditsCreator": "Krediiti autorile {{amount}} USDT",
+    "fromSubscriptionTokens": "Sinu tellimusmärkidest",
+    "addedAtTodaysPrice": "Lisatud nüüd tänase hinnaga",
+    "subscriptionTokensNote": "Tellimuse märgid on nende lisamisel hinnaga lukustatud, nii et hinnaliikumine ei muuda kunagi tellimuse maksumust. Neid saab kulutada ainult pakettidele.",
+    "subscriptionTokens": "Tellimuse märgid",
+    "subscriptionTokensOnly": "Ainult tellimuste puhul",
+    "untradableTokens": "Need on kättesaamatud märkimismärgid",
+    "lockedValue": "Lukustatud {{amount}}",
+    "withdraw": "Väljamakse"
   },
   "live": {
     "chatJoined": "liitus",

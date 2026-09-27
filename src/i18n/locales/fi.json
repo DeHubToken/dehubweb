@@ -4401,7 +4401,19 @@
     "tokenCheckoutNotReady": "Token-tilausmaksu ei ole valmis — yritä uudelleen pian",
     "tokenQuoteUnavailable": "Live-token-tarjous saatavilla",
     "tokenEstimate": "≈ {{amount}} tokenia",
-    "tokenAmountUnavailable": "Token-määrä ei saatavilla"
+    "tokenAmountUnavailable": "Token-määrä ei saatavilla",
+    "subscribedToast": "Tilattu",
+    "confirmSubscribeTo": "Tilaa {{plan}} hintaan {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} ennakkoilmoituksen hinnalla",
+    "creditsCreator": "Krediitit tekijälle {{amount}} USDT",
+    "fromSubscriptionTokens": "Tilaustunnuksistasi",
+    "addedAtTodaysPrice": "Lisätty nyt tämän päivän hintaan",
+    "subscriptionTokensNote": "Tilaustunnukset lukitaan hintaan, kun lisäät ne, joten hinnanmuutos ei koskaan muuta tilauksen hintaa. Niitä voi käyttää vain tilauksiin.",
+    "subscriptionTokens": "Tilaustunnukset",
+    "subscriptionTokensOnly": "Vain tilauksille",
+    "untradableTokens": "Näitä tilaustunnuksia ei voi vaihtaa",
+    "lockedValue": "Lukittu {{amount}}",
+    "withdraw": "Nosta"
   },
   "live": {
     "chatJoined": "liittyi",

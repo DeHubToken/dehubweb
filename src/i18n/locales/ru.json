@@ -4418,7 +4418,19 @@
     "tokenCheckoutNotReady": "Оформление подписки на токены не готово — пожалуйста, попробуйте снова через некоторое время",
     "tokenQuoteUnavailable": "Текущая котировка токенов недоступна",
     "tokenEstimate": "≈ {{amount}} токенов",
-    "tokenAmountUnavailable": "Сумма токенов недоступна"
+    "tokenAmountUnavailable": "Сумма токенов недоступна",
+    "subscribedToast": "Подписка оформлена",
+    "confirmSubscribeTo": "Подпишитесь на {{plan}} за {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} по цене предварительного размещения",
+    "creditsCreator": "Кредиты креатору {{amount}} USDT",
+    "fromSubscriptionTokens": "Из ваших токенов подписки",
+    "addedAtTodaysPrice": "Добавлено по сегодняшней цене",
+    "subscriptionTokensNote": "Токены подписки блокируются по цене при их добавлении, поэтому изменение цены никогда не меняет стоимость подписки. Их можно потратить только на подписки.",
+    "subscriptionTokens": "Токены подписки",
+    "subscriptionTokensOnly": "Только для подписок",
+    "untradableTokens": "Это неторгуемые токены подписки",
+    "lockedValue": "Заблокировано в {{amount}}",
+    "withdraw": "Вывести"
   },
   "live": {
     "chatJoined": "присоединился",

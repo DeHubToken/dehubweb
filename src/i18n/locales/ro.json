@@ -4285,7 +4285,19 @@
     "tokenCheckoutNotReady": "Checkout-ul abonamentului în token-uri nu este gata — te rugăm să încerci din nou în scurt timp",
     "tokenQuoteUnavailable": "Cotația live a token-ului indisponibilă",
     "tokenEstimate": "≈ {{amount}} token-uri",
-    "tokenAmountUnavailable": "Suma de token-uri indisponibilă"
+    "tokenAmountUnavailable": "Suma de token-uri indisponibilă",
+    "subscribedToast": "Abonat",
+    "confirmSubscribeTo": "Abonează-te la {{plan}} pentru {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} la tariful de pre-listare",
+    "creditsCreator": "Credite acordate creatorului {{amount}} USDT",
+    "fromSubscriptionTokens": "Din jetoanele de abonament",
+    "addedAtTodaysPrice": "Adăugat acum la prețul de astăzi",
+    "subscriptionTokensNote": "Jetoanele de abonament sunt blocate la preț atunci când le adăugați, astfel încât o mutare de preț nu schimbă niciodată cât vă costă un abonament. Acestea pot fi cheltuite numai pe abonamente.",
+    "subscriptionTokens": "Jetoane de abonament",
+    "subscriptionTokensOnly": "Numai pentru abonamente",
+    "untradableTokens": "Acestea sunt jetoane de abonament netranzacționabile",
+    "lockedValue": "Blocat la {{amount}}",
+    "withdraw": "Retragere"
   },
   "live": {
     "chatJoined": "s-a alăturat",

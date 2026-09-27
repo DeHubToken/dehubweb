@@ -4659,7 +4659,19 @@
     "tokenCheckoutNotReady": "De token-abonnement checkout is niet klaar — probeer het binnenkort opnieuw",
     "tokenQuoteUnavailable": "Live tokenkoers niet beschikbaar",
     "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Tokenbedrag niet beschikbaar"
+    "tokenAmountUnavailable": "Tokenbedrag niet beschikbaar",
+    "subscribedToast": "Geabonneerd",
+    "confirmSubscribeTo": "Abonneer je op {{plan}} voor {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} tegen de pre-listing rate",
+    "creditsCreator": "Credits de maker {{amount}} USDT",
+    "fromSubscriptionTokens": "Van uw abonnementstokens",
+    "addedAtTodaysPrice": "Nu toegevoegd tegen de prijs van vandaag",
+    "subscriptionTokensNote": "Abonnementstokens zijn vergrendeld tegen de prijs wanneer je ze toevoegt, dus een prijsbeweging verandert nooit wat een abonnement je kost. Ze kunnen alleen worden besteed aan abonnementen.",
+    "subscriptionTokens": "Abonnementstokens",
+    "subscriptionTokensOnly": "Alleen voor abonnementen",
+    "untradableTokens": "Dit zijn niet-verhandelbare abonnementstokens",
+    "lockedValue": "Vergrendeld op {{amount}}",
+    "withdraw": "Opnemen"
   },
   "live": {
     "chatJoined": "is erbij gekomen",

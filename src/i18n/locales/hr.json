@@ -4405,7 +4405,19 @@
     "tokenCheckoutNotReady": "Naplata pretplate na tokene nije spremna — pokušajte ponovno uskoro",
     "tokenQuoteUnavailable": "Trenutna cijena tokena uživo nedostupna",
     "tokenEstimate": "≈ {{amount}} tokena",
-    "tokenAmountUnavailable": "Količina tokena nedostupna"
+    "tokenAmountUnavailable": "Količina tokena nedostupna",
+    "subscribedToast": "Pretplaćeno",
+    "confirmSubscribeTo": "Pretplatite se na {{plan}} za {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} po stopi prije oglašavanja",
+    "creditsCreator": "Kredit u iznosu od kreatora {{amount}} USDT",
+    "fromSubscriptionTokens": "Iz vaših pretplatničkih tokena",
+    "addedAtTodaysPrice": "Dodano sada po današnjoj cijeni",
+    "subscriptionTokensNote": "Pretplatnički tokeni zaključavaju se po cijeni kada ih dodate, tako da promjena cijene nikada ne mijenja koliko vas pretplata košta. Mogu se potrošiti samo na pretplate.",
+    "subscriptionTokens": "Pretplatnički tokeni",
+    "subscriptionTokensOnly": "Samo za pretplate",
+    "untradableTokens": "To su nemjerljivi pretplatnički tokeni",
+    "lockedValue": "Zaključano u {{amount}}",
+    "withdraw": "Povuci"
   },
   "live": {
     "chatJoined": "se pridružio/la",

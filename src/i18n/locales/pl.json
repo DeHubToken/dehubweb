@@ -4464,7 +4464,19 @@
     "tokenCheckoutNotReady": "Kasa subskrypcji tokenowej nie jest gotowa — spróbuj ponownie za chwilę",
     "tokenQuoteUnavailable": "Brak dostępnej wyceny tokenów na żywo",
     "tokenEstimate": "≈ {{amount}} tokenów",
-    "tokenAmountUnavailable": "Ilość tokenów niedostępna"
+    "tokenAmountUnavailable": "Ilość tokenów niedostępna",
+    "subscribedToast": "Zasubskrybowano",
+    "confirmSubscribeTo": "Subskrybuj {{plan}} dla {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} w stosunku do stawki obowiązującej przed opublikowaniem oferty",
+    "creditsCreator": "Środki dla twórcy {{amount}} USDT",
+    "fromSubscriptionTokens": "Z tokenów subskrypcji",
+    "addedAtTodaysPrice": "Dodane teraz w dzisiejszej cenie",
+    "subscriptionTokensNote": "Tokeny subskrypcji są zablokowane po cenie, gdy je dodasz, więc zmiana ceny nigdy nie zmienia tego, ile kosztuje subskrypcja. Można je wydać tylko na subskrypcje.",
+    "subscriptionTokens": "Tokeny subskrypcji",
+    "subscriptionTokensOnly": "Tylko dla subskrypcji",
+    "untradableTokens": "To są niehandlowe tokeny subskrypcji",
+    "lockedValue": "Zablokowano w {{amount}}",
+    "withdraw": "Wycofaj"
   },
   "live": {
     "chatJoined": "dołączył(a)",

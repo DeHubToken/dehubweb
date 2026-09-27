@@ -4405,7 +4405,19 @@
     "tokenCheckoutNotReady": "Pokladna předplatného tokenů není připravena — zkuste to prosím brzy znovu",
     "tokenQuoteUnavailable": "Živá nabídka tokenů nedostupná",
     "tokenEstimate": "≈ {{amount}} tokenů",
-    "tokenAmountUnavailable": "Částka tokenů nedostupná"
+    "tokenAmountUnavailable": "Částka tokenů nedostupná",
+    "subscribedToast": "Odebíráno",
+    "confirmSubscribeTo": "Přihlaste se k odběru {{plan}} na {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} při sazbě před zveřejněním nabídky",
+    "creditsCreator": "Připíše tvůrci kredit ve výši {{amount}} USDT",
+    "fromSubscriptionTokens": "Z vašich tokenů předplatného",
+    "addedAtTodaysPrice": "Přidáno nyní za dnešní cenu",
+    "subscriptionTokensNote": "Předplacené tokeny jsou po přidání uzamčeny za cenu, takže pohyb ceny nikdy nemění to, co vás předplatné stojí. Lze je utratit pouze za předplatné.",
+    "subscriptionTokens": "Žetony předplatného",
+    "subscriptionTokensOnly": "Pouze pro předplatné",
+    "untradableTokens": "Jedná se o neobchodovatelné tokeny předplatného",
+    "lockedValue": "Zamčeno v {{amount}}",
+    "withdraw": "Vybrat"
   },
   "live": {
     "chatJoined": "se připojil/a",

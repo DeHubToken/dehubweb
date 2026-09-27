@@ -4368,7 +4368,19 @@
     "tokenCheckoutNotReady": "ಟೋಕನ್ ಚಂದಾದಾರಿಕೆ ಚೆಕ್‌ಔಟ್ ಸಿದ್ಧವಾಗಿಲ್ಲ — ದಯವಿಟ್ಟು ಶೀಘ್ರದಲ್ಲೇ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ",
     "tokenQuoteUnavailable": "ಲೈವ್ ಟೋಕನ್ ಉಲ್ಲೇಖ ಲಭ್ಯವಿಲ್ಲ",
     "tokenEstimate": "≈ {{amount}} ಟೋಕನ್‌ಗಳು",
-    "tokenAmountUnavailable": "ಟೋಕನ್ ಮೊತ್ತ ಲಭ್ಯವಿಲ್ಲ"
+    "tokenAmountUnavailable": "ಟೋಕನ್ ಮೊತ್ತ ಲಭ್ಯವಿಲ್ಲ",
+    "subscribedToast": "ಚಂದಾದಾರರಾಗಿದ್ದಾರೆ",
+    "atPreListingRate": "{{amount}} ಪೂರ್ವ-ಲಿಸ್ಟಿಂಗ್ ದರದಲ್ಲಿ",
+    "creditsCreator": "ಸೃಷ್ಟಿಕರ್ತನಿಗೆ ಕ್ರೆಡಿಟ್ {{amount}} USDT",
+    "fromSubscriptionTokens": "ನಿಮ್ಮ ಚಂದಾದಾರಿಕೆ ಟೋಕನ್‌ಗಳಿಂದ",
+    "addedAtTodaysPrice": "ಇಂದಿನ ಬೆಲೆಗೆ ಈಗ ಸೇರಿಸಲಾಗಿದೆ",
+    "subscriptionTokensNote": "ನೀವು ಸೇರಿಸಿದಾಗ ಚಂದಾದಾರಿಕೆ ಟೋಕನ್‌ಗಳನ್ನು ಬೆಲೆಗೆ ಲಾಕ್ ಮಾಡಲಾಗುತ್ತದೆ, ಆದ್ದರಿಂದ ಚಂದಾದಾರಿಕೆ ನಿಮಗೆ ಎಷ್ಟು ವೆಚ್ಚವಾಗುತ್ತದೆ ಎಂಬುದನ್ನು ಬೆಲೆ ಕ್ರಮವು ಎಂದಿಗೂ ಬದಲಾಯಿಸುವುದಿಲ್ಲ. ಅವುಗಳನ್ನು ಚಂದಾದಾರಿಕೆಗಳಿಗಾಗಿ ಮಾತ್ರ ಖರ್ಚು ಮಾಡಬಹುದು.",
+    "subscriptionTokens": "ಚಂದಾದಾರಿಕೆ ಟೋಕನ್‌ಗಳು",
+    "subscriptionTokensOnly": "ಚಂದಾದಾರಿಕೆಗಳಿಗೆ ಮಾತ್ರ",
+    "untradableTokens": "ಇವು ವಿಲೇವಾರಿ ಮಾಡಲಾಗದ ಚಂದಾದಾರಿಕೆ ಟೋಕನ್‌ಗಳು",
+    "lockedValue": "{{amount}} ನಲ್ಲಿ ಲಾಕ್ ಮಾಡಲಾಗಿದೆ",
+    "withdraw": "ಹಿಂತೆಗೆದುಕೊಳ್ಳಿ",
+    "confirmSubscribeTo": "{{plan}} ಗೆ {{price}} / {{duration}} ಕ್ಕೆ ಚಂದಾದಾರರಾಗಿ."
   },
   "live": {
     "chatJoined": "ಸೇರಿದರು",

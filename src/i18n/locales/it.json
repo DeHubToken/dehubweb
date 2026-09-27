@@ -4462,7 +4462,19 @@
     "tokenCheckoutNotReady": "Il checkout dell'abbonamento in token non è pronto — riprova tra poco",
     "tokenQuoteUnavailable": "Quotazione token live non disponibile",
     "tokenEstimate": "≈ {{amount}} token",
-    "tokenAmountUnavailable": "Importo token non disponibile"
+    "tokenAmountUnavailable": "Importo token non disponibile",
+    "subscribedToast": "Iscritto",
+    "confirmSubscribeTo": "Iscriviti a {{plan}} per {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} alla tariffa di pre-listing",
+    "creditsCreator": "Accredita al creator {{amount}} USDT",
+    "fromSubscriptionTokens": "Dai tuoi token di abbonamento",
+    "addedAtTodaysPrice": "Aggiunto ora al prezzo di oggi",
+    "subscriptionTokensNote": "I token di abbonamento sono bloccati al prezzo quando li aggiungi, quindi una variazione di prezzo non cambia mai il costo di un abbonamento. Possono essere spesi solo per gli abbonamenti.",
+    "subscriptionTokens": "Token di abbonamento",
+    "subscriptionTokensOnly": "Solo per abbonamenti",
+    "untradableTokens": "Questi sono token di abbonamento non negoziabili",
+    "lockedValue": "Bloccato a {{amount}}",
+    "withdraw": "Preleva"
   },
   "live": {
     "chatJoined": "si è unito/a",

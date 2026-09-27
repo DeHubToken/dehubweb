@@ -4215,7 +4215,22 @@
     "tokenCheckoutNotReady": "ടോക്കൺ സബ്സ്ക്രിപ്ഷൻ ചെക്ക്ഔട്ട് തയ്യാറായിട്ടില്ല — ദയവായി ഉടൻ വീണ്ടും ശ്രമിക്കുക",
     "tokenQuoteUnavailable": "തത്സമയ ടോക്കൺ ഉദ്ധരണി ലഭ്യമല്ല",
     "tokenEstimate": "≈ {{amount}} ടോക്കണുകൾ",
-    "tokenAmountUnavailable": "ടോക്കൺ തുക ലഭ്യമല്ല"
+    "tokenAmountUnavailable": "ടോക്കൺ തുക ലഭ്യമല്ല",
+    "totalCount": "{{count}} ആകെ",
+    "daysLeft_one": "{{count}}d ഇടത്",
+    "daysLeft_other": "{{count}}d ഇടത്",
+    "subscribedToast": "സബ്‌സ്‌ക്രൈബ് ചെയ്‌തു",
+    "atPreListingRate": "പ്രീ-ലിസ്റ്റിംഗ് നിരക്കിൽ {{amount}}",
+    "creditsCreator": "സ്രഷ്ടാവിനെ ക്രെഡിറ്റ് ചെയ്യുന്നു {{amount}} USDT",
+    "fromSubscriptionTokens": "നിങ്ങളുടെ സബ്സ്ക്രിപ്ഷൻ ടോക്കണുകളിൽ നിന്ന്",
+    "addedAtTodaysPrice": "ഇന്നത്തെ വിലയിൽ ഇപ്പോൾ ചേർത്തു",
+    "subscriptionTokensNote": "നിങ്ങൾ ചേർക്കുമ്പോൾ സബ്‌സ്‌ക്രിപ്‌ഷൻ ടോക്കണുകൾ വിലയിൽ ലോക്കുചെയ്‌തിരിക്കുന്നു, അതിനാൽ ഒരു സബ്‌സ്‌ക്രിപ്‌ഷൻ നിങ്ങൾക്ക് ചെലവാകുന്ന വിലയിൽ ഒരു വില നീക്കവും ഒരിക്കലും മാറില്ല. സബ്സ്ക്രിപ്ഷനുകൾക്കായി മാത്രമേ അവ ചെലവഴിക്കാൻ കഴിയൂ.",
+    "subscriptionTokens": "സബ്സ്ക്രിപ്ഷൻ ടോക്കണുകൾ",
+    "subscriptionTokensOnly": "സബ്സ്ക്രിപ്ഷനുകൾക്ക് മാത്രം",
+    "untradableTokens": "ഇവ പരിഹരിക്കാനാകാത്ത സബ്സ്ക്രിപ്ഷൻ ടോക്കണുകളാണ്",
+    "lockedValue": "{{amount}} ന്ലോക്ക് ചെയ്തു",
+    "withdraw": "പിൻവലിക്കുക",
+    "confirmSubscribeTo": "{{plan}}-ലേക്ക് {{price}} / {{duration}}-ന് സബ്സ്ക്രൈബ് ചെയ്യുക."
   },
   "live": {
     "chatJoined": "ചേർന്നു",
