@@ -81,7 +81,7 @@ async function chunkViaFal(numbered: string, langName: string, count: number): P
   }
 }
 
-async function chunkViaGateway(numbered: string, langName: string): Promise<string[]> {
+async function chunkViaGateway(numbered: string, langName: string, skipGateway = true): Promise<string[]> {
   const res = await aiChat({
       model: MODEL,
       messages: [
@@ -108,7 +108,7 @@ async function chunkViaGateway(numbered: string, langName: string): Promise<stri
         },
       }],
       tool_choice: { type: 'function', function: { name: 'return_translations' } },
-  }, { expectToolCall: 'return_translations', label: 'translate-transcript', publicContent: true });
+  }, { expectToolCall: 'return_translations', label: 'translate-transcript', publicContent: true, skipGateway });
   if (!res.ok) throw new Error(`AI ${res.status}: ${await res.text()}`);
   const j = await res.json();
   const args = j?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
@@ -123,7 +123,14 @@ async function translateChunk(items: Array<{ text: string }>, langName: string):
     console.error('ai chunk failed', e);
     return null;
   });
-  if (!out || out.length === 0) out = (await chunkViaFal(numbered, langName, items.length)) ?? [];
+  // A short answer would be padded with source lines and stored as done.
+  if (!out || out.length < items.length) {
+    out = (await chunkViaFal(numbered, langName, items.length)) ?? out ?? [];
+  }
+  // Last resort, the metered gateway.
+  if (out.length === 0) {
+    out = await chunkViaGateway(numbered, langName, false).catch(() => []);
+  }
   // Nothing back at all is a failure, not a chunk of blanks — without this an
   // empty answer padded out to the original lines and was persisted as the
   // translation, which nothing downstream can tell apart from success.

@@ -446,7 +446,7 @@ export function ProfileHeader({
           })()}
           
           {profile.bio && (
-            <TranslatableText text={translatedBio || profile.bio} className="mt-3 text-white/90 text-base leading-6 block" as="p" />
+            <TranslatableText publicContent text={translatedBio || profile.bio} className="mt-3 text-white/90 text-base leading-6 block" as="p" />
           )}
 
           {/* Pinned Communities */}

@@ -89,6 +89,8 @@ interface TranslatableTextProps {
    * for the post length floor.
    */
   auto?: boolean | 'chat';
+  /** Public text only: may reach a free tier that trains on input. */
+  publicContent?: boolean;
   /** Post's link was flagged by the Community Alert threshold — border it like a highlighter instead of the plain 🔗 chip. */
   flagged?: boolean;
 }
@@ -799,6 +801,8 @@ export function useTranslation(
   auto: boolean | 'chat' = true,
   /** Element the text renders in. When given, auto-translate waits until it nears the viewport. */
   nearRef?: RefObject<Element>,
+  /** Public text (post, comment, bio) may reach a training tier; chats never. */
+  publicContent = false,
 ) {
   const { language: userLang } = useUserLanguage();
   const [isTranslated, setIsTranslated] = useState(false);
@@ -859,9 +863,7 @@ export function useTranslation(
     setError(null);
 
     try {
-      // Auto-translate is only ever on for public content; private call sites
-      // pass auto={false} (see TranslatableTextProps.auto).
-      const data = await requestTranslation(text, targetLang, auto !== false);
+      const data = await requestTranslation(text, targetLang, publicContent);
 
       if (!data.translatedText) {
         if (!mountedRef.current) return;
@@ -914,7 +916,7 @@ export function useTranslation(
       inFlightRef.current = false;
       if (mountedRef.current) setIsLoading(false);
     }
-  }, [text]);
+  }, [text, publicContent]);
 
   const handleShowOriginal = useCallback(() => {
     setIsTranslated(false);
@@ -1007,6 +1009,7 @@ export function TranslatableText({
   hideControls = false,
   auto = true,
   flagged = false,
+  publicContent = false,
 }: TranslatableTextProps) {
   const sharedCtx = useContext(SharedTranslationContext);
   const elementRef = useRef<HTMLElement>(null);
@@ -1020,7 +1023,7 @@ export function TranslatableText({
     isTooShort,
     handleTranslate,
     handleShowOriginal,
-  } = useTranslation(text, auto, elementRef);
+  } = useTranslation(text, auto, elementRef, publicContent);
 
   // Listen to shared context signals — auto-translate/show-original when a sibling triggers
   const [lastTranslateSignal, setLastTranslateSignal] = useState(0);

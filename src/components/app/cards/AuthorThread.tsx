@@ -251,7 +251,7 @@ function ThreadEntry({
           <span className="text-zinc-500 text-xs">{entry.timeAgo}</span>
         </div>
         {displayText && (
-          <TranslatableText
+          <TranslatableText publicContent
             text={displayText}
             className="text-zinc-300 text-sm leading-relaxed break-words"
             as="p"
