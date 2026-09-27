@@ -384,12 +384,12 @@ describe('the desktop shorts frame', () => {
     expect(VIEWER).toContain('"shrink-0 h-full aspect-[9/16] w-auto max-w-[calc(100vw-8rem)] bg-zinc-900 rounded-none"');
   });
 
-  it('builds both corner controls from one class string', () => {
+  it('builds every corner control from one class string', () => {
     // Two hand-copied class lists in two files drifted: fullscreen picked up a
     // `saturate-[180%]` that mute never had, and the pair sat side by side in
     // different shades.
     expect(VIEWER).toContain('const CORNER_CONTROL =');
-    expect(VIEWER.match(/cn\(\s*CORNER_CONTROL,/g) ?? []).toHaveLength(2);
+    expect(VIEWER.match(/cn\(\s*CORNER_CONTROL,/g) ?? []).toHaveLength(3);
     expect(VIEWER).not.toContain('saturate-[180%] text-white rounded-xl');
   });
 
