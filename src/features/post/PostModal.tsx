@@ -8,6 +8,7 @@ import type { PollData, LiveStreamHandoff } from './types';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
+import { CrossPostPicker } from './components/CrossPostPicker';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
@@ -352,6 +353,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         mintRequired={computed.mintRequired}
         onCreatePlan={() => setPlanDrawerOpen(true)}
       />}
+
+      {!articleMode && !state.liveMode && <CrossPostPicker onNavigateAway={handleClose} />}
 
       <PostActionBar
         imageInputRef={refs.imageInputRef}
