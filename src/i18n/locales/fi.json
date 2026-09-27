@@ -5226,6 +5226,7 @@
   },
   "reactionInfo": {
     "title": "Reaktiot",
+    "seeWhoReacted": "Katso kuka reagoi",
     "privateTitle": "Reaktiot ovat yksityisiä",
     "privateDescription": "Vain artikkelin kirjoittaja voi tarkastella tätä luetteloa.",
     "empty": "Ei vielä reaktioita",

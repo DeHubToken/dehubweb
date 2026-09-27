@@ -3145,6 +3145,7 @@
   },
   "reactionInfo": {
     "title": "Reaksiýalar",
+    "seeWhoReacted": "Kim reaksiýa berendigini görüň",
     "privateTitle": "Ähli reaksiýalar özgeçikdir",
     "privateDescription": "Bu listany diňe postyň ýazgyçysy görýär.",
     "empty": "Hiç hili reaksiýa ýok",

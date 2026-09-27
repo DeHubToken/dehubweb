@@ -3180,6 +3180,7 @@
   },
   "reactionInfo": {
     "title": "Ra'ayoyi",
+    "seeWhoReacted": "Duba waɗanda suka yi martani",
     "privateTitle": "Ra'ayoyi masu zaman kansu ne",
     "privateDescription": "Kawai marubucin post zai iya duba wannan jerin.",
     "empty": "Babu martani har yanzu",

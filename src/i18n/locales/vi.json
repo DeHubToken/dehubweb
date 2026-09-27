@@ -5058,6 +5058,7 @@
   },
   "reactionInfo": {
     "title": "Phản ứng",
+    "seeWhoReacted": "Xem ai đã phản ứng",
     "privateTitle": "Phản hồi là riêng tư",
     "privateDescription": "Chỉ tác giả bài đăng mới có thể xem danh sách này.",
     "empty": "Chưa có phản hồi nào",

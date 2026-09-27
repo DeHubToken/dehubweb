@@ -5225,6 +5225,7 @@
   },
   "reactionInfo": {
     "title": "Reaccions",
+    "seeWhoReacted": "Veure qui ha reaccionat",
     "privateTitle": "Les reaccions són privades",
     "privateDescription": "Només l'autor de l'entrada pot veure aquesta llista.",
     "empty": "Encara no hi ha cap reacció",

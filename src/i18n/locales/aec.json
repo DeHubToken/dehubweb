@@ -3123,6 +3123,7 @@
   },
   "reactionInfo": {
     "title": "التفاعلات",
+    "seeWhoReacted": "شوف مين تفاعل",
     "privateTitle": "التفاعلات خاصة",
     "privateDescription": "بس صاحب البوست اللي يقدر يشوف القايمة دي.",
     "empty": "ما فيش تفاعلات لسه",

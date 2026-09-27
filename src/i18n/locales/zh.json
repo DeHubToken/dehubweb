@@ -5347,6 +5347,7 @@
   },
   "reactionInfo": {
     "title": "反应",
+    "seeWhoReacted": "查看谁有反应",
     "privateTitle": "反应是私密的",
     "privateDescription": "只有帖子作者才能查看此列表。",
     "empty": "尚无反应",

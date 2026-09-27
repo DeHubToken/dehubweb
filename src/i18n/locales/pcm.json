@@ -2619,6 +2619,7 @@
   },
   "reactionInfo": {
     "title": "Reactions",
+    "seeWhoReacted": "See who react",
     "empty": "No reactions yet",
     "labels": {
       "like": "Like",

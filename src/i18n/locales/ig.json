@@ -3147,6 +3147,7 @@
   },
   "reactionInfo": {
     "title": "Mmetụta",
+    "seeWhoReacted": "Hụ onye meghachiri omume",
     "privateTitle": "Mmeghachi omume bụ nkeonwe",
     "privateDescription": "Naanị onye dere akwụkwọ ozi nwere ike ilele ndepụta a.",
     "empty": "Enweghị mmeghachi omume ma",

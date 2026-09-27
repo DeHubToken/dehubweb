@@ -5337,6 +5337,7 @@
   },
   "reactionInfo": {
     "title": "반응",
+    "seeWhoReacted": "반응한 사람 보기",
     "privateTitle": "반응은 비공개입니다",
     "privateDescription": "글 작성자만 이 목록을 볼 수 있습니다.",
     "empty": "아직 반응 없음",
