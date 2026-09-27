@@ -169,14 +169,30 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   ].filter((u): u is string => !!u && u.includes('.m3u8')), [stream.playbackUrl, stream.playbackUrls]);
   const hasPlaybackUrl = urlsToTry.length > 0;
   // The feed card that was just tapped may have left its running WebRTC
-  // session behind for this page (lib/live-handoff). Read once, on mount: it
-  // decides the transport and the first frame before anything paints.
-  const [handoff] = useState(() => peekLiveSession(liveSourceFromHlsUrl(urlsToTry[0])?.playbackId));
+  // session behind for this page (lib/live-handoff). It decides the transport
+  // and the first frame.
+  const handoffPlaybackId = liveSourceFromHlsUrl(urlsToTry[0])?.playbackId;
+  const [handoff, setHandoff] = useState(() => peekLiveSession(handoffPlaybackId));
+  // Usually not there yet on the first render: this page renders in the same
+  // commit as the route change, and the card only stashes its session in its
+  // effect cleanup, which runs after that render. Effect cleanups all run
+  // before any new effect does, so it is there by now. Declared ahead of the
+  // WebRTC effect below, which takes it.
+  useEffect(() => {
+    if (handoff) return;
+    const late = peekLiveSession(handoffPlaybackId);
+    if (late) setHandoff(late);
+    // Mount only: a session is only ever handed to the page being opened.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [isMuted, setIsMuted] = useState(true);
   // A handed-over session is proof the stream is on air, so it plays before
   // the status merge lands. The grace runs out so a stream that really has
   // ended still falls to the ended screen.
   const [handoffGrace, setHandoffGrace] = useState(!!handoff);
+  useEffect(() => {
+    if (handoff) setHandoffGrace(true);
+  }, [handoff]);
   useEffect(() => {
     if (!handoffGrace) return;
     const timer = setTimeout(() => setHandoffGrace(false), 10_000);
@@ -368,9 +384,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   // Same flip, second consequence: the WebRTC id only exists once the card
   // knows the stream is live, which is usually a beat after mount. Take the
   // fast path when it appears — unless it has already been tried and failed.
+  // A handed-over session also overrides the Android HLS preference, since it
+  // is already delivering frames.
   useEffect(() => {
-    if (whepPlaybackId && !preferAndroidHls() && !whepFailedRef.current) setTransport('whep');
-  }, [whepPlaybackId]);
+    if (whepPlaybackId && (handoff || !preferAndroidHls()) && !whepFailedRef.current) setTransport('whep');
+  }, [whepPlaybackId, handoff]);
 
   // Fetch DHB balance when gift drawer opens
   useEffect(() => {
