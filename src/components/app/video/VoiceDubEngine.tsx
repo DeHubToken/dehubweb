@@ -9,9 +9,10 @@ interface Props {
   videoRef: React.RefObject<HTMLVideoElement>;
   segments: TranscriptSegment[] | null;
   voice: SpeechSynthesisVoice | null;
+  onFailed?: () => void;
 }
 
-export default function VoiceDubEngine({ videoRef, segments, voice }: Props) {
-  useVoiceDub(videoRef, segments, voice);
+export default function VoiceDubEngine({ videoRef, segments, voice, onFailed }: Props) {
+  useVoiceDub(videoRef, segments, voice, onFailed);
   return null;
 }

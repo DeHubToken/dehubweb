@@ -21,32 +21,45 @@ const MAX_RATE = 1.3;
 // silence the one being watched.
 let speaker: object | null = null;
 
+// One engine per <video>. A post opened over the feed shares the feed card's
+// element, and two engines on it double every line and duck twice.
+const owners = new WeakMap<HTMLVideoElement, object>();
+
 /**
  * Speak `segments` in `voice`, in step with the video. Pass null segments or
  * voice to stop. Each line starts when playback crosses its start; a line
  * still running when the next begins is cut off rather than queued, so the
- * voice can never drift behind the picture.
+ * voice can never drift behind the picture. `onFailed` fires when the
+ * browser refuses to speak (iOS Safari without a prior gesture, a dead voice),
+ * after the original audio has been put back.
  */
 export function useVoiceDub(
   videoRef: React.RefObject<HTMLVideoElement>,
   segments: TranscriptSegment[] | null,
   voice: SpeechSynthesisVoice | null,
+  onFailed?: () => void,
 ) {
   useEffect(() => {
     const v = videoRef.current;
     const s = synth();
     if (!v || !s || !voice || !segments?.length) return;
+    if (owners.has(v)) return;
 
     const me = {};
+    owners.set(v, me);
     let spoken = -1;
-    // What the viewer set; the element itself holds the ducked value.
-    let restoreVolume = v.volume;
-    const duck = () => {
-      if (v.volume > DUCK_VOLUME + 0.001) {
-        restoreVolume = v.volume;
-        v.volume = DUCK_VOLUME;
-      }
+    let failed = false;
+
+    // The viewer's level. The element holds a fraction of it while dubbing,
+    // and a change we did not make is the viewer moving the slider.
+    let userVolume = v.volume;
+    let settingVolume = false;
+    const setVolume = (x: number) => {
+      if (Math.abs(v.volume - x) < 0.001) return;
+      settingVolume = true;
+      v.volume = x;
     };
+    const duck = () => setVolume(userVolume * DUCK_VOLUME);
     duck();
 
     const stop = () => {
@@ -61,6 +74,14 @@ export function useVoiceDub(
       return -1;
     };
 
+    const fail = () => {
+      if (failed) return;
+      failed = true;
+      stop();
+      setVolume(userVolume);
+      onFailed?.();
+    };
+
     const speak = (i: number) => {
       const seg = segments[i];
       spoken = i;
@@ -73,19 +94,29 @@ export function useVoiceDub(
       const duration = Math.max(0.5, seg.end - seg.start);
       const needed = seg.text.length / duration / NATURAL_CPS;
       u.rate = Math.min(MAX_RATE, Math.max(1, needed)) * (v.playbackRate || 1);
-      u.volume = restoreVolume;
+      u.volume = userVolume;
+      // Cutting a line off for the next one reports 'interrupted'/'canceled';
+      // anything else means this browser will not speak for us.
+      u.onerror = (e) => {
+        if (e.error !== 'interrupted' && e.error !== 'canceled') fail();
+      };
       s.speak(u);
     };
 
     const tick = () => {
-      if (v.paused || v.muted || v.seeking) return;
+      if (failed || v.paused || v.muted || v.seeking) return;
       const i = indexAt(v.currentTime);
       if (i >= 0 && i !== spoken) speak(i);
     };
 
     const onVolume = () => {
       if (v.muted) stop();
-      duck();
+      if (settingVolume) {
+        settingVolume = false;
+        return;
+      }
+      userVolume = v.volume;
+      if (!failed) duck();
     };
 
     v.addEventListener('pause', stop);
@@ -107,7 +138,11 @@ export function useVoiceDub(
         s.cancel();
         speaker = null;
       }
-      v.volume = restoreVolume;
+      if (owners.get(v) === me) owners.delete(v);
+      setVolume(userVolume);
     };
+    // onFailed is a notification, not an input: a new callback identity must
+    // not restart the engine mid-line.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoRef, segments, voice]);
 }
