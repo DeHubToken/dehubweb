@@ -4977,7 +4977,11 @@
     "notEnoughTokens": "אין מספיק אסימונים לדיבוב.",
     "notEnoughTokensDescription": "אתה צריך בערך {{needed}} אסימונים ויש לך {{held}}.",
     "paymentLeftWallet": "האסימונים שלך יצאו מהארנק. לחץ על \"שלם\" שוב כדי לנסות לאשר אותם.",
-    "paidForMinutes": "שולם {{amount}} אסימונים עבור {{minutes}} דקות של דיבוב."
+    "paidForMinutes": "שולם {{amount}} אסימונים עבור {{minutes}} דקות של דיבוב.",
+    "menuItem": "דיבוב",
+    "noTranscript": "לסרטון הזה עדיין אין תמלול, ולכן אי אפשר לדבב אותו. נסו שוב מאוחר יותר.",
+    "noVoice": "אין במכשיר שלך קול לשפה הזו.",
+    "sameLanguage": "הסרטון הזה כבר בשפה שלך."
   },
   "digest": {
     "andOthers_one": "{{names}} ו-{{count}} נוספים",

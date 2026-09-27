@@ -3002,7 +3002,11 @@
     "notEnoughTokens": "ما كافيينش التوكنز للدبلجة.",
     "notEnoughTokensDescription": "محتاج حوالي {{needed}} توكنز وعندك {{held}}.",
     "paymentLeftWallet": "تم إخراج التوكنز ديالك من المحفظة. ضغط على Pay مرة أخرى لتأكيدها.",
-    "paidForMinutes": "تم دفع {{amount}} توكنز مقابل {{minutes}} دقيقة من الدوبلاج."
+    "paidForMinutes": "تم دفع {{amount}} توكنز مقابل {{minutes}} دقيقة من الدوبلاج.",
+    "menuItem": "دبلاج",
+    "noTranscript": "هاد الفيديو باقي ما عندوش النص، داكشي علاش ما يمكنش يتدبلج. عاود من بعد.",
+    "noVoice": "الجهاز ديالك ما فيهش صوت لهاد اللغة.",
+    "sameLanguage": "هاد الفيديو ديجا بلغتك."
   },
   "digest": {
     "andOthers_one": "{{names}} و {{count}} آخرون",

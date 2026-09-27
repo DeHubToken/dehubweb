@@ -3029,7 +3029,11 @@
     "notEnoughTokens": "Ba isassun tokens don yin dubbing.",
     "notEnoughTokensDescription": "Kuna buƙatar kusan tokens {{needed}} kuma kuna riƙe {{held}}.",
     "paymentLeftWallet": "An tsabar ku sun bar walat ɗinku. Danna biya sake don sake gwada tabbatar da shi.",
-    "paidForMinutes": "An biya {{amount}} tsabar kuɗi na {{minutes}} mintuna na gyaran murya."
+    "paidForMinutes": "An biya {{amount}} tsabar kuɗi na {{minutes}} mintuna na gyaran murya.",
+    "menuItem": "Fassarar murya",
+    "noTranscript": "Wannan bidiyon ba shi da rubutun magana tukuna, don haka ba za a iya fassara muryarsa ba. Sake gwadawa daga baya.",
+    "noVoice": "Na'urarka ba ta da murya don wannan harshe.",
+    "sameLanguage": "Wannan bidiyon yana cikin harshenka tuni."
   },
   "digest": {
     "andOthers_one": "{{names}} da {{count}} wasu",

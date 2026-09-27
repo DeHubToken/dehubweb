@@ -2923,7 +2923,11 @@
     "notEnoughTokens": "O tɛ se ka kɛ sababu ye mɔgɔ tɛ se ka koo fila kɛ.",
     "notEnoughTokensDescription": "I mako be {{needed}}tokens ani ka {{held}}.",
     "paymentLeftWallet": "O kɔ, a ye wari bila a ka wari la. O kama, a tun ka ɲi ka wari di a ma.",
-    "paidForMinutes": "Pay {{amount}}tokens for {{minutes}} minit of dubbing. O ye n ka miiriya ye."
+    "paidForMinutes": "Pay {{amount}}tokens for {{minutes}} minit of dubbing. O ye n ka miiriya ye.",
+    "menuItem": "Kan yɛlɛma",
+    "noTranscript": "Nin widewo sɛbɛn tɛ sɔrɔ fɔlɔ, o de kosɔn a kan tɛ se ka yɛlɛma. I ka a lajɛ tuguni kɔfɛ.",
+    "noVoice": "Kan si tɛ i ka minɛn kan nin kan in na.",
+    "sameLanguage": "Nin widewo bɛ i ka kan na kaban."
   },
   "digest": {
     "someone": "Someone"

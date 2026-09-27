@@ -2983,7 +2983,11 @@
     "notEnoughTokens": "ڊبنگ لاءِ ڪافي ٽوڪن ناهن.",
     "notEnoughTokensDescription": "توهان کي لڳ ڀڳ {{needed}} ٽوڪن گهربل آهن ۽ {{held}} آهن.",
     "paymentLeftWallet": "توهان جا ٽوڪن توهان جي والٽ مان نڪري ويا آهن. تصديق ڪرڻ لاءِ ٻيهر ادا ڪريو.",
-    "paidForMinutes": "ڊبنگ جي {{minutes}} منٽن لاءِ {{amount}} ٽوڪن ادا ڪيا ويا."
+    "paidForMinutes": "ڊبنگ جي {{minutes}} منٽن لاءِ {{amount}} ٽوڪن ادا ڪيا ويا.",
+    "menuItem": "ڊبنگ",
+    "noTranscript": "هن وڊيو جو اڃا ڪو ٽرانسڪرپٽ ناهي، تنهنڪري ان کي ڊب نٿو ڪري سگهجي. بعد ۾ ٻيهر ڪوشش ڪريو.",
+    "noVoice": "توهان جي ڊوائيس ۾ هن ٻولي لاءِ ڪو آواز ناهي.",
+    "sameLanguage": "هي وڊيو اڳ ۾ ئي توهان جي ٻولي ۾ آهي."
   },
   "digest": {
     "andOthers_one": "{{names}} ۽ {{count}} ٻيا",

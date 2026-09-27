@@ -2938,7 +2938,11 @@
     "notEnoughTokens": "ንናይ ምድማጽ ቶክን ኣይኣኽሉን።",
     "notEnoughTokensDescription": "ኣስታት {{needed}} ቶክን የድልየካ እዩ፣ {{held}} ድማ ኣሎካ።",
     "paymentLeftWallet": "ቶክንኩም ካብ ኪስዎ ኣለዎ። ንምድጋም \"ክፍሊት\" ብምጽቃጥ ዳግማይ ኪኢሉ ይፈተሽ።",
-    "paidForMinutes": "{{amount}} ቶክን ን {{minutes}} ደቒቕ ምድማጽ ከፊልኩም።"
+    "paidForMinutes": "{{amount}} ቶክን ን {{minutes}} ደቒቕ ምድማጽ ከፊልኩም።",
+    "menuItem": "ድምጺ ትርጉም",
+    "noTranscript": "እዚ ቪድዮ ገና ጽሑፍ የብሉን፣ ስለዚ ድምጹ ክትርጎም ኣይክእልን። ደሓር እንደገና ፈትን።",
+    "noVoice": "መሳርሒኻ ነዚ ቋንቋ ድምጺ የብሉን።",
+    "sameLanguage": "እዚ ቪድዮ ድሮ ብቋንቋኻ እዩ።"
   },
   "digest": {
     "andOthers_one": "{{names}} and {{count}} ካልኦት",

@@ -4988,7 +4988,11 @@
     "notEnoughTokens": "Không đủ token để lồng tiếng.",
     "notEnoughTokensDescription": "Bạn cần khoảng {{needed}} token và đang giữ {{held}}.",
     "paymentLeftWallet": "Các token của bạn đã rời ví. Nhấn Thanh toán lại để thử xác nhận.",
-    "paidForMinutes": "Đã thanh toán {{amount}} token cho {{minutes}} phút lồng tiếng."
+    "paidForMinutes": "Đã thanh toán {{amount}} token cho {{minutes}} phút lồng tiếng.",
+    "menuItem": "Lồng tiếng",
+    "noTranscript": "Video này chưa có bản chép lời nên chưa thể lồng tiếng. Hãy thử lại sau.",
+    "noVoice": "Thiết bị của bạn không có giọng đọc cho ngôn ngữ này.",
+    "sameLanguage": "Video này đã ở ngôn ngữ của bạn."
   },
   "digest": {
     "andOthers_one": "{{names}} và {{count}} người khác",

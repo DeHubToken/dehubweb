@@ -2939,7 +2939,11 @@
     "preparing": "準備配音音檔…",
     "unavailable": "此视频无配音版本。",
     "notEnoughTokens": "配音代币不足。",
-    "notEnoughTokensDescription": "您大约需要 {{needed}} 个代币，但持有 {{held}} 个。"
+    "notEnoughTokensDescription": "您大约需要 {{needed}} 个代币，但持有 {{held}} 个。",
+    "menuItem": "配音",
+    "noTranscript": "这个视频还没有文字稿，暂时无法配音。请稍后再试。",
+    "noVoice": "你的设备没有这种语言的语音。",
+    "sameLanguage": "这个视频已经是你的语言了。"
   },
   "digest": {
     "andOthers_one": "{{names}} 和 {{count}} 位其他人",

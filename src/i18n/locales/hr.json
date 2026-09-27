@@ -5160,7 +5160,11 @@
     "notEnoughTokens": "Nema dovoljno tokena za dubbing.",
     "notEnoughTokensDescription": "Treba vam oko {{needed}} tokena, a imate {{held}}.",
     "paymentLeftWallet": "Vaši tokeni su napustili vaš novčanik. Ponovno pritisnite \"Plati\" za pokušaj potvrde.",
-    "paidForMinutes": "Plaćeno {{amount}} tokena za {{minutes}} minuta sinkronizacije."
+    "paidForMinutes": "Plaćeno {{amount}} tokena za {{minutes}} minuta sinkronizacije.",
+    "menuItem": "Sinkronizacija",
+    "noTranscript": "Ovaj videozapis još nema transkript pa se ne može sinkronizirati. Pokušajte ponovno kasnije.",
+    "noVoice": "Vaš uređaj nema glas za ovaj jezik.",
+    "sameLanguage": "Ovaj videozapis već je na vašem jeziku."
   },
   "digest": {
     "andOthers_one": "{{names}} i {{count}} drugi",
