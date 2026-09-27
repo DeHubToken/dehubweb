@@ -647,8 +647,11 @@ function selectOptimalModel(message: string, hasPerplexityKey: boolean, allowPro
     return { model: 'gemini-2.5-pro', tier: 'standard', reason: 'Personal user data query' };
   }
 
-  // Live search required = PREMIUM tier (Perplexity)
-  if (needsSearch && hasPerplexityKey) {
+  // Live search required = PREMIUM tier (Perplexity). Verified users only: a
+  // keyword like "today" or "price" was enough to put an anonymous visitor on
+  // the most expensive route. Everyone else still has web_search as an agent
+  // tool, which runs only when the model decides it needs it.
+  if (allowPro && needsSearch && hasPerplexityKey) {
     return { model: 'perplexity', tier: 'premium', reason: 'Live web search' };
   }
 
@@ -858,6 +861,10 @@ async function extractAndSaveMemories(walletAddress: string, userMessages: strin
 
     // Only extract from meaningful conversations (at least 2 user messages)
     if (userMessages.length < 2) return;
+    // Every third turn, not every turn. The window below is the last four
+    // messages, so nothing said is skipped — and this call used to cost as
+    // much as the reply it followed while saving a memory a few times a day.
+    if (userMessages.length % 3 !== 0) return;
 
     const recentMessages = userMessages.slice(-4).join('\n');
     

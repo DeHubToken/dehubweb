@@ -33,9 +33,9 @@ const CHAPTERS_PROMPT =
   'covering the whole recording without gaps or overlaps. Titles are 2-6 words, ' +
   'no numbering, no markdown, no commentary.';
 
-/** fal leads because the Lovable gateway has returned 402 (out of credits)
- *  before now, and a summary that silently never appears is exactly the kind
- *  of failure nobody notices. Returns null so the caller falls through. */
+/** Haiku on fal, behind Flash-Lite. Kept as a second vendor because a summary
+ *  that silently never appears is exactly the kind of failure nobody notices.
+ *  Returns null so the caller falls through. */
 async function viaFal(system: string, prompt: string): Promise<string | null> {
   if (!FAL_KEY) return null;
   try {
@@ -86,7 +86,8 @@ async function viaAiChat(system: string, prompt: string): Promise<string | null>
 }
 
 async function ask(system: string, prompt: string): Promise<string | null> {
-  return (await viaFal(system, prompt)) ?? (await viaAiChat(system, prompt));
+  // Cheapest first: Flash-Lite via aiChat, then Haiku on fal.
+  return (await viaAiChat(system, prompt)) ?? (await viaFal(system, prompt));
 }
 
 function timedTranscript(segments: Segment[], budget = 12000): string {
