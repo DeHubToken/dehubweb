@@ -2054,6 +2054,83 @@ export type Database = {
           },
         ]
       }
+      creator_pack_items: {
+        Row: {
+          animated: boolean
+          created_at: string
+          emoji: string | null
+          id: string
+          image_url: string
+          pack_id: string
+          position: number
+        }
+        Insert: {
+          animated?: boolean
+          created_at?: string
+          emoji?: string | null
+          id?: string
+          image_url: string
+          pack_id: string
+          position?: number
+        }
+        Update: {
+          animated?: boolean
+          created_at?: string
+          emoji?: string | null
+          id?: string
+          image_url?: string
+          pack_id?: string
+          position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_pack_items_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "creator_packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      creator_packs: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          id: string
+          item_count: number
+          kind: string
+          name: string
+          owner: string
+          save_count: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          item_count?: number
+          kind: string
+          name: string
+          owner: string
+          save_count?: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          item_count?: number
+          kind?: string
+          name?: string
+          owner?: string
+          save_count?: number
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       custom_emojis: {
         Row: {
           animated: boolean
@@ -2063,6 +2140,7 @@ export type Database = {
           external_id: string | null
           id: string
           image_url: string
+          pack_id: string | null
           shortcode: string
           source: string
         }
@@ -2074,6 +2152,7 @@ export type Database = {
           external_id?: string | null
           id?: string
           image_url: string
+          pack_id?: string | null
           shortcode: string
           source?: string
         }
@@ -2085,10 +2164,19 @@ export type Database = {
           external_id?: string | null
           id?: string
           image_url?: string
+          pack_id?: string | null
           shortcode?: string
           source?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "custom_emojis_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "creator_packs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       custom_notifications: {
         Row: {
@@ -4302,6 +4390,32 @@ export type Database = {
           wallet_address?: string
         }
         Relationships: []
+      }
+      saved_creator_packs: {
+        Row: {
+          created_at: string
+          pack_id: string
+          wallet: string
+        }
+        Insert: {
+          created_at?: string
+          pack_id: string
+          wallet: string
+        }
+        Update: {
+          created_at?: string
+          pack_id?: string
+          wallet?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_creator_packs_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "creator_packs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       space_participants: {
         Row: {
