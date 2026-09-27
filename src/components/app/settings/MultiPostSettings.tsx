@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Coins, Link2, Plus, Share2, Unlink } from 'lucide-react';
+import { Clock, Coins, Link2, Plus, Share2, Unlink } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { useAuth } from '@/contexts/AuthContext';
 import { SOCIAL_CONFIGS } from '@/components/app/profile/ProfileSocialLinks';
 import { SETTINGS_CONTROL_CLASS, SETTINGS_HEADING_CLASS, SettingsRow } from '@/components/app/settings/SettingsRow';
-import { BUNDLE_STOPS, PRICE_PER_POST_USD, bundleDiscount, bundlePriceUsd } from '@/lib/social-pricing';
+import {
+  BUNDLE_STOPS, CREDIT_PRICE_USD, DEFAULT_PLATFORM_CREDITS, bundleDiscount, bundlePriceUsd, creditsFor,
+} from '@/lib/social-pricing';
 import {
   MULTIPOST_PLATFORMS, PLATFORM_NAMES, buyCredits, disconnectAccount, getMultipostStatus, startConnect,
 } from '@/lib/multipost';
@@ -19,7 +21,14 @@ const ICON_KEY: Record<string, string> = {
   youtube: 'youtubeLink', discord: 'discordLink', facebook: 'facebookLink',
 };
 
+const FARCASTER_ICON = (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M4 3h16v3h-1.5v14H20v1h-5.5v-1H16v-6.2a4 4 0 0 0-8 0V20h1.5v1H4v-1h1.5V6H4V3Z" />
+  </svg>
+);
+
 export function PlatformIcon({ platform }: { platform: string }) {
+  if (platform === 'farcaster') return <span className="[&_svg]:h-4 [&_svg]:w-4">{FARCASTER_ICON}</span>;
   const config = SOCIAL_CONFIGS.find((c) => c.key === ICON_KEY[platform]);
   if (config) return <span className="[&_svg]:h-4 [&_svg]:w-4">{config.icon}</span>;
   return (
@@ -35,7 +44,7 @@ export function MultiPostSettings() {
   const { t } = useTranslation();
   const { isAuthenticated, walletAddress } = useAuth();
   const qc = useQueryClient();
-  const [stopIndex, setStopIndex] = useState(3);
+  const [stopIndex, setStopIndex] = useState(2);
   const [buying, setBuying] = useState(false);
   const [connecting, setConnecting] = useState<string | null>(null);
 
@@ -44,6 +53,9 @@ export function MultiPostSettings() {
     queryFn: getMultipostStatus,
     enabled: isAuthenticated,
     staleTime: 30_000,
+    refetchOnWindowFocus: true,
+    // Farcaster approval happens in another app, so keep checking while it's pending.
+    refetchInterval: (query) => (query.state.data?.accounts.some((a) => a.pending) ? 5000 : false),
   });
 
   // Back from a platform's sign-in page.
@@ -66,17 +78,30 @@ export function MultiPostSettings() {
     return <p className="text-sm text-zinc-400">{t('multiPost.signIn')}</p>;
   }
 
-  const posts = BUNDLE_STOPS[stopIndex];
-  const discount = bundleDiscount(posts);
-  const total = bundlePriceUsd(posts);
+  const credits = BUNDLE_STOPS[stopIndex];
+  const discount = bundleDiscount(credits);
+  const total = bundlePriceUsd(credits);
   const accounts = status.data?.accounts ?? [];
-  const connectedPlatforms = new Set(accounts.map((a) => a.platform));
+  const connectedPlatforms = new Set(accounts.filter((a) => !a.pending).map((a) => a.platform));
 
   const handleConnect = async (platform: string) => {
     setConnecting(platform);
     try {
       const redirect = `${window.location.origin}/app/settings?tab=multipost`;
-      window.location.href = await startConnect(platform, redirect);
+      const url = await startConnect(platform, redirect);
+      if (!url) {
+        qc.invalidateQueries({ queryKey: MULTIPOST_QUERY_KEY });
+        setConnecting(null);
+        return;
+      }
+      if (platform === 'farcaster') {
+        // Approval happens in the Farcaster app; stay here and watch for it.
+        window.open(url, '_blank', 'noopener');
+        qc.invalidateQueries({ queryKey: MULTIPOST_QUERY_KEY });
+        setConnecting(null);
+        return;
+      }
+      window.location.href = url;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t('multiPost.connectFailed', { platform: PLATFORM_NAMES[platform] }));
       setConnecting(null);
@@ -96,8 +121,8 @@ export function MultiPostSettings() {
   const handleBuy = async () => {
     setBuying(true);
     try {
-      await buyCredits(posts, walletAddress ?? null);
-      toast.success(t('multiPost.bought', { count: posts }));
+      await buyCredits(credits, walletAddress ?? null);
+      toast.success(t('multiPost.bought', { count: credits }));
       qc.invalidateQueries({ queryKey: MULTIPOST_QUERY_KEY });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : String(err));
@@ -120,8 +145,8 @@ export function MultiPostSettings() {
           title={t('multiPost.credits', { count: status.data?.credits ?? 0 })}
           description={
             <>
-              {t('multiPost.creditExplainer')}{' '}
-              {t('multiPost.payAsYouGo', { price: PRICE_PER_POST_USD.toFixed(2) })}
+              {t('multiPost.creditRules', { x: creditsFor('twitter'), farcaster: creditsFor('farcaster'), other: DEFAULT_PLATFORM_CREDITS })}{' '}
+              {t('multiPost.payAsYouGoCredits', { price: CREDIT_PRICE_USD.toFixed(2) })}
             </>
           }
         />
@@ -139,16 +164,16 @@ export function MultiPostSettings() {
             value={[stopIndex]}
             onValueChange={([v]) => setStopIndex(v)}
             aria-label={t('multiPost.topUpTitle')}
-            aria-valuetext={t('multiPost.topUpPosts', { count: posts })}
+            aria-valuetext={t('multiPost.topUpCredits', { count: credits })}
           />
           <div className="mt-1 flex justify-between text-[11px] text-zinc-500">
-            {BUNDLE_STOPS.map((s) => <span key={s}>{s}</span>)}
+            {BUNDLE_STOPS.map((s) => <span key={s}>{s >= 1000 ? `${s / 1000}k` : s}</span>)}
           </div>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <div className="text-base font-semibold text-white">{t('multiPost.topUpPosts', { count: posts })}</div>
+              <div className="text-base font-semibold text-white">{t('multiPost.topUpCredits', { count: credits })}</div>
               <div className="text-xs text-zinc-400">
-                {t('multiPost.total', { usd: total.toFixed(2) })} · {t('multiPost.perPost', { price: (total / posts).toFixed(3) })}
+                {t('multiPost.total', { usd: total.toFixed(2) })} · {t('multiPost.perCredit', { price: (total / credits).toFixed(3) })}
               </div>
             </div>
             <Button className={SETTINGS_CONTROL_CLASS} onClick={handleBuy} disabled={buying}>
@@ -172,11 +197,22 @@ export function MultiPostSettings() {
               key={account.id}
               icon={<PlatformIcon platform={account.platform} />}
               title={PLATFORM_NAMES[account.platform] ?? account.platform}
-              description={account.username ? `@${account.username.replace(/^@/, '')}` : undefined}
+              description={
+                account.pending
+                  ? t('multiPost.pendingApproval')
+                  : account.username ? `@${account.username.replace(/^@/, '')}` : undefined
+              }
               action={
-                <Button className={SETTINGS_CONTROL_CLASS} onClick={() => handleDisconnect(account.id)}>
-                  <Unlink className="mr-1.5 h-3.5 w-3.5" />{t('multiPost.disconnect')}
-                </Button>
+                <div className="flex gap-2">
+                  {account.pending && account.approvalUrl && (
+                    <Button className={SETTINGS_CONTROL_CLASS} onClick={() => window.open(account.approvalUrl, '_blank', 'noopener')}>
+                      <Clock className="mr-1.5 h-3.5 w-3.5" />{t('multiPost.approve')}
+                    </Button>
+                  )}
+                  <Button className={SETTINGS_CONTROL_CLASS} onClick={() => handleDisconnect(account.id)}>
+                    <Unlink className="mr-1.5 h-3.5 w-3.5" />{t('multiPost.disconnect')}
+                  </Button>
+                </div>
               }
             />
           ))
@@ -202,7 +238,7 @@ export function MultiPostSettings() {
             </button>
           ))}
         </div>
-        <p className="mt-3 text-xs text-zinc-500">{t('multiPost.platformNotes')}</p>
+        <p className="mt-3 text-xs text-zinc-500">{t('multiPost.platformNotes')} {t('multiPost.farcasterNote')}</p>
       </section>
     </div>
   );
