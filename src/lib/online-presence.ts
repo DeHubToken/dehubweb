@@ -16,14 +16,14 @@
  * are shared with dehub-mobile too — keep them in step: topic `online-users`,
  * key = lower-cased wallet address.
  *
+ * The channel itself is held by components/app/OnlinePresenceHost, a lazy
+ * chunk; this file stays small because Messages and Settings import it.
+ *
  * @module lib/online-presence
  */
 
-import { useEffect, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import { useAuth } from '@/contexts/AuthContext';
-import { useDeHubProfile } from '@/hooks/use-dehub-profile';
-import { leaseChannel } from '@/lib/realtime-channel-lease';
 
 export const SHOW_ONLINE_CUSTOMS_KEY = 'showOnline';
 
@@ -49,12 +49,12 @@ export function mergeShowOnline(
 let online: ReadonlySet<string> = new Set();
 const listeners = new Set<() => void>();
 
-function publish(next: ReadonlySet<string>) {
+export function publishOnline(next: ReadonlySet<string>) {
   online = next;
   for (const listener of [...listeners]) listener();
 }
 
-function fromChannel(channel: RealtimeChannel): ReadonlySet<string> {
+export function onlineFromChannel(channel: RealtimeChannel): ReadonlySet<string> {
   return new Set(Object.keys(channel.presenceState()).map((k) => k.toLowerCase()));
 }
 
@@ -73,32 +73,4 @@ export function useIsOnline(address: string | null | undefined): boolean {
     () => !!key && online.has(key),
     () => false,
   );
-}
-
-/**
- * Mounted once, in AppLayout. Joins the channel while signed in so the dots
- * can be read, and tracks this account only while the switch is on — turning
- * it off untracks immediately rather than waiting for the tab to close.
- */
-export function useOnlinePresence() {
-  const { walletAddress, isAuthenticated } = useAuth();
-  const me = isAuthenticated && walletAddress ? walletAddress.toLowerCase() : null;
-  const { data: profile } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!me });
-  const showOnline = getShowOnline(profile?.customs);
-
-  useEffect(() => {
-    if (!me) return;
-    const lease = leaseChannel(ONLINE_PRESENCE_TOPIC, {
-      config: { presence: { key: me } },
-      listen: [{ type: 'presence', filter: { event: 'sync' }, handler: (_p, chan) => publish(fromChannel(chan)) }],
-      onJoin: (chan) => {
-        if (showOnline) void chan.track({ at: new Date().toISOString() });
-        else void chan.untrack();
-      },
-    });
-    return () => {
-      lease.release();
-      publish(new Set());
-    };
-  }, [me, showOnline]);
 }
