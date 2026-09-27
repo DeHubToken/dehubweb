@@ -20,6 +20,7 @@
 - Web regression tests exercise lazy loading, explicit playback, viewport exit, pending cancellation, failed playback/retry, gates, ownership transfer, metadata parsing, and pause-position preservation.
 - Native regression tests exercise native status confirmation, asynchronous focus cancellation, visibility, retry, legacy tags and encoded metadata.
 - Existing cached-page and audio-handoff suites cover neighbouring playback behavior.
+- Startup graph: the previous baseline was 3,249 KB; live main measured 3,352 KB and this change 3,356 KB. The baseline is refreshed for the current graph, with about 4 KB of source added for first-paint soundtrack controls and lifecycle handling. These are source bytes, not compressed bundle sizes.
 
 ## Limits
 
