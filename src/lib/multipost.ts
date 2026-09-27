@@ -6,19 +6,19 @@ import i18n from '@/i18n';
 
 export const MULTIPOST_PLATFORMS = [
   'twitter', 'instagram', 'facebook', 'youtube', 'tiktok', 'linkedin',
-  'threads', 'pinterest', 'reddit', 'googlebusiness', 'snapchat', 'discord',
+  'threads', 'pinterest', 'reddit', 'googlebusiness', 'snapchat', 'discord', 'farcaster',
 ] as const;
 export type MultipostPlatform = typeof MULTIPOST_PLATFORMS[number];
 
 export const PLATFORM_NAMES: Record<string, string> = {
   twitter: 'X', instagram: 'Instagram', facebook: 'Facebook', youtube: 'YouTube', tiktok: 'TikTok',
   linkedin: 'LinkedIn', threads: 'Threads', pinterest: 'Pinterest', reddit: 'Reddit',
-  googlebusiness: 'Google Business', snapchat: 'Snapchat', discord: 'Discord',
+  googlebusiness: 'Google Business', snapchat: 'Snapchat', discord: 'Discord', farcaster: 'Farcaster',
 };
 
-export interface SocialAccount { id: string; platform: string; username: string }
-export interface MultipostStatus { credits: number; accounts: SocialAccount[]; pricePerPostUsd: number }
-export interface CreditQuote { posts: number; usd: number; discount: number; dhb: number; treasury: string }
+export interface SocialAccount { id: string; platform: string; username: string; pending?: boolean; approvalUrl?: string }
+export interface MultipostStatus { credits: number; accounts: SocialAccount[] }
+export interface CreditQuote { credits: number; usd: number; discount: number; dhb: number; treasury: string }
 
 export class MultipostError extends Error {
   constructor(message: string, public status?: number, public data?: Record<string, unknown>) { super(message); }
@@ -41,17 +41,18 @@ async function call<T>(body: Record<string, unknown>): Promise<T> {
 }
 
 export const getMultipostStatus = () => call<MultipostStatus>({ action: 'status' });
-export const quoteCredits = (posts: number) => call<CreditQuote>({ action: 'quote', posts });
+export const quoteCredits = (credits: number) => call<CreditQuote>({ action: 'quote', credits });
 export const disconnectAccount = (accountId: string) => call<{ ok: true }>({ action: 'disconnect', accountId });
 
-export async function startConnect(platform: string, redirectUrl: string): Promise<string> {
-  const { authUrl } = await call<{ authUrl: string }>({ action: 'connect', platform, redirectUrl });
-  return authUrl;
+/** Returns where to send the user, or null when the account is already connected. */
+export async function startConnect(platform: string, redirectUrl: string): Promise<string | null> {
+  const { authUrl } = await call<{ authUrl?: string }>({ action: 'connect', platform, redirectUrl });
+  return authUrl ?? null;
 }
 
-/** Pay DHB for `posts` credits and have them credited. Returns the new balance. */
-export async function buyCredits(posts: number, wallet: string | null): Promise<number> {
-  const quote = await quoteCredits(posts);
+/** Pay DHB for `credits` and have them credited. Returns the new balance. */
+export async function buyCredits(credits: number, wallet: string | null): Promise<number> {
+  const quote = await quoteCredits(credits);
   const { payDhb } = await import('@/lib/dhb-payment');
   const payment = await payDhb(quote.dhb, quote.treasury, {
     context: i18n.t('multiPost.payContext'),
@@ -61,7 +62,7 @@ export async function buyCredits(posts: number, wallet: string | null): Promise<
   let lastError: unknown;
   for (let attempt = 0; attempt < 5; attempt++) {
     try {
-      const res = await call<{ credits: number }>({ action: 'topup', posts, txHash: payment.txHash });
+      const res = await call<{ credits: number }>({ action: 'topup', credits, txHash: payment.txHash });
       return res.credits;
     } catch (err) {
       lastError = err;
@@ -122,7 +123,7 @@ export async function crossPost(input: CrossPostInput): Promise<void> {
       link: postLink(input.tokenId),
     };
 
-    type PublishResult = { sent: number; failed: number; scheduled: boolean; skipped: { platform: string }[] };
+    type PublishResult = { sent: number; failed: number; scheduled: boolean; skipped: { platform: string; reason: string }[] };
     let result: PublishResult;
     try {
       result = await call<PublishResult>(body);
@@ -134,11 +135,16 @@ export async function crossPost(input: CrossPostInput): Promise<void> {
       result = await call<PublishResult>(body);
     }
 
-    if (result.skipped?.length) {
-      toast.message(i18n.t('multiPost.skippedToast', {
-        platforms: result.skipped.map((s) => PLATFORM_NAMES[s.platform] ?? s.platform).join(', '),
-      }));
-    }
+    const names = (reasons: string[] | null) => (result.skipped ?? [])
+      .filter((s) => (reasons ? reasons.includes(s.reason) : !['needs_video', 'needs_media', 'no_schedule'].includes(s.reason)))
+      .map((s) => PLATFORM_NAMES[s.platform] ?? s.platform)
+      .join(', ');
+    const media = names(['needs_video', 'needs_media']);
+    const schedule = names(['no_schedule']);
+    const other = names(null);
+    if (media) toast.message(i18n.t('multiPost.skippedToast', { platforms: media }));
+    if (schedule) toast.message(i18n.t('multiPost.skippedScheduleToast', { platforms: schedule }));
+    if (other) toast.message(i18n.t('multiPost.skippedOtherToast', { platforms: other }));
     if (result.failed > 0) {
       toast.warning(i18n.t('multiPost.partialToast', { sent: result.sent, failed: result.failed }), { id: toastId });
     } else {
