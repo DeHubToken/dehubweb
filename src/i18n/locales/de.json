@@ -7380,5 +7380,10 @@
     "farcasterNote": "Farcaster bittet dich, dehub in der Farcaster-App zu genehmigen, und es können noch keine geplanten Posts angenommen werden.",
     "skippedScheduleToast": "{{platforms}} übersprungen: Geplante Beiträge werden dort noch nicht unterstützt.",
     "skippedOtherToast": "{{platforms}} übersprungen: Sie konnten diesen Beitrag nicht annehmen."
+  },
+  "dm": {
+    "planRestricted": "Dieser Nutzer setzt ein Abo voraus, um Nachrichten zu erhalten.",
+    "planTypeNotAllowed": "Der Plan dieses Creators erlaubt diese Art von Nachricht nicht.",
+    "planMinTip": "Das Trinkgeld für diesen Creator muss mindestens {{amount}} DHB betragen."
   }
 }

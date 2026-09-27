@@ -7137,5 +7137,10 @@
     "farcasterNote": "Farcaster mangataka anao mba hanaiky dehub ao amin'ny Farcaster fampiharana, ary tsy afaka mandray voalahatra Lahatsoratra mbola.",
     "skippedScheduleToast": "Voaravaka {{platforms}}: Tsy mbola ato ireo lahatsoratra nomanina.",
     "skippedOtherToast": "Voaravaka {{platforms}}: Tsy azon'izy ireo natao ity lahatsoratra ity."
+  },
+  "dm": {
+    "planRestricted": "Mila famandrihana ity mpampiasa ity vao mahazo hafatra.",
+    "planTypeNotAllowed": "Tsy mamela an'io karazana hafatra io ny drafitr'ity mpamorona ity.",
+    "planMinTip": "Tokony ho {{amount}} DHB farafahakeliny ny tip ho an'ity mpamorona ity."
   }
 }

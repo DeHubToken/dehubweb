@@ -7440,5 +7440,10 @@
     "farcasterNote": "Farcaster te pide que apruebes el deshub en la aplicación Farcaster, y aún no puede aceptar publicaciones programadas.",
     "skippedScheduleToast": "Omitido {{platforms}}: las publicaciones programadas aún no son compatibles allí.",
     "skippedOtherToast": "Omitió {{platforms}}: no pudo aceptar esta publicación."
+  },
+  "dm": {
+    "planRestricted": "Este usuario requiere una suscripción para recibir mensajes.",
+    "planTypeNotAllowed": "El plan de este creador no permite este tipo de mensaje.",
+    "planMinTip": "La propina debe ser de al menos {{amount}} DHB para este creador."
   }
 }

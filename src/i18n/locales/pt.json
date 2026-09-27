@@ -7388,5 +7388,10 @@
     "farcasterNote": "O Farcaster pede que você aprove o dehub no aplicativo Farcaster, e ainda não pode aceitar postagens agendadas.",
     "skippedScheduleToast": "Ignorado {{platforms}}: os posts agendados ainda não são suportados lá.",
     "skippedOtherToast": "Ignorado {{platforms}}: eles não puderam aceitar este post."
+  },
+  "dm": {
+    "planRestricted": "Este usuário exige uma assinatura para receber mensagens.",
+    "planTypeNotAllowed": "O plano deste criador não permite este tipo de mensagem.",
+    "planMinTip": "A gorjeta deve ser de pelo menos {{amount}} DHB para este criador."
   }
 }

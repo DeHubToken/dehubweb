@@ -5069,5 +5069,10 @@
     "farcasterNote": "Farcaster তোমাকে Farcaster অ্যাপে dehub অনুমোদন করতে বলছে, আর এখনো শিডিউল করা পোস্ট নিতে পারে না।",
     "skippedScheduleToast": "স্কিপ করা হল {{platforms}}: শিডিউল করা পোস্ট গুলা এখনো সাপোর্ট করে না।",
     "skippedOtherToast": "স্কিপ করা হল {{platforms}}: তারা এই পোস্টটা নিতে পারে না।"
+  },
+  "dm": {
+    "planRestricted": "এই ইউজারোর মেসেজ পাওয়ার লাগি সাবস্ক্রিপশন লাগে।",
+    "planTypeNotAllowed": "এই ক্রিয়েটরর প্ল্যানে এই রকম মেসেজ চলে না।",
+    "planMinTip": "এই ক্রিয়েটরর লাগি টিপ কমপক্ষে {{amount}} DHB অওয়া লাগবো।"
   }
 }

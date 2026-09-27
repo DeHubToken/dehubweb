@@ -5217,5 +5217,10 @@
     "farcasterNote": "Farcaster na tambayar ka ka amince da dehub a cikin app ɗin Farcaster, kuma ba zai iya karɓar sakonnin da aka shirya ba tukuna.",
     "skippedScheduleToast": "An tsallake {{platforms}}: ba a tallafa sakonnin da aka shirya a can ba tukuna.",
     "skippedOtherToast": "An tsallake {{platforms}}: ba su iya karɓar wannan sakon ba."
+  },
+  "dm": {
+    "planRestricted": "Wannan mai amfani yana buƙatar biyan kuɗin shiga don karɓar saƙonni.",
+    "planTypeNotAllowed": "Tsarin wannan mahalicci bai yarda da irin wannan saƙo ba.",
+    "planMinTip": "Tip dole ya zama aƙalla {{amount}} DHB ga wannan mahalicci."
   }
 }

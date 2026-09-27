@@ -7405,5 +7405,10 @@
     "farcasterNote": "Farcaster prosi o zatwierdzenie dehub w aplikacji Farcaster i nie może jeszcze przyjmować zaplanowanych postów.",
     "skippedScheduleToast": "Pominięto {{platforms}}: zaplanowane posty nie są jeszcze obsługiwane.",
     "skippedOtherToast": "Pominięto {{platforms}}: nie mogli przyjąć tego posta."
+  },
+  "dm": {
+    "planRestricted": "Ten użytkownik wymaga subskrypcji, aby otrzymywać wiadomości.",
+    "planTypeNotAllowed": "Plan tego twórcy nie pozwala na ten rodzaj wiadomości.",
+    "planMinTip": "Napiwek dla tego twórcy musi wynosić co najmniej {{amount}} DHB."
   }
 }

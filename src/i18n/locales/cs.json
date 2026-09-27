@@ -7271,5 +7271,10 @@
     "farcasterNote": "Farcaster vás požádá o schválení dehubu v aplikaci Farcaster a zatím nemůže přijímat naplánované příspěvky.",
     "skippedScheduleToast": "Přeskočeno {{platforms}}: naplánované příspěvky tam zatím nejsou podporovány.",
     "skippedOtherToast": "Přeskočeno {{platforms}}: nemohli tento příspěvek přijmout."
+  },
+  "dm": {
+    "planRestricted": "Tento uživatel vyžaduje předplatné pro příjem zpráv.",
+    "planTypeNotAllowed": "Plán tohoto tvůrce tento typ zprávy nepovoluje.",
+    "planMinTip": "Spropitné pro tohoto tvůrce musí být alespoň {{amount}} DHB."
   }
 }

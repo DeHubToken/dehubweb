@@ -5411,5 +5411,10 @@
     "farcasterNote": "Farcaster vás požiada o schválenie dehubu v aplikácii Farcaster a zatiaľ nemôže prijímať naplánované príspevky.",
     "skippedScheduleToast": "Preskočené {{platforms}}: naplánované príspevky tam zatiaľ nie sú podporované.",
     "skippedOtherToast": "Preskočené {{platforms}}: tento príspevok nemohol prijať."
+  },
+  "dm": {
+    "planRestricted": "Tento používateľ vyžaduje predplatné na prijímanie správ.",
+    "planTypeNotAllowed": "Plán tohto tvorcu nepovoľuje tento typ správy.",
+    "planMinTip": "Prepitné pre tohto tvorcu musí byť aspoň {{amount}} DHB."
   }
 }

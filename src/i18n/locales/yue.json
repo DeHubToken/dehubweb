@@ -5223,5 +5223,10 @@
     "farcasterNote": "Farcaster 要求你喺 Farcaster 應用程式入面核准 dehub , 但係佢仲未可以接受預定嘅帖子。",
     "skippedScheduleToast": "跳過咗 {{platforms}} ：嗰度仲未支援預定嘅帖子。",
     "skippedOtherToast": "跳過咗 {{platforms}} ：佢哋攞唔到呢個 post 。"
+  },
+  "dm": {
+    "planRestricted": "呢個用戶要訂閱先可以收訊息。",
+    "planTypeNotAllowed": "呢位創作者嘅方案唔容許呢類訊息。",
+    "planMinTip": "打賞呢位創作者最少要 {{amount}} DHB。"
   }
 }

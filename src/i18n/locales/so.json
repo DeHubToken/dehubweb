@@ -5213,5 +5213,10 @@
     "farcasterNote": "Farcaster wuxuu kaa codsanayaa inaad ku ogolaato dehub barnaamijka Farcaster, mana qaadan karto qoraallo qorsheysan weli.",
     "skippedScheduleToast": "Skipped {{platforms}}: Qoraallada qorshaysan weli lama taageerin halkaas.",
     "skippedOtherToast": "Skipped {{platforms}}: ma qaadan karaan qoraalkan."
+  },
+  "dm": {
+    "planRestricted": "Isticmaalahan wuxuu u baahan yahay rukumid si uu fariimo u helo.",
+    "planTypeNotAllowed": "Qorshaha abuurahan ma oggola nooca fariintan.",
+    "planMinTip": "Tip-ka abuurahan waa inuu ahaadaa ugu yaraan {{amount}} DHB."
   }
 }

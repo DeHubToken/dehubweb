@@ -5098,5 +5098,10 @@
     "farcasterNote": "Farcaster ኣብ Farcaster App dehub ክትጽድቕ ይሓትት ፡ ገና ድማ ዝተመደበ ቦታታት ክወስድ ኣይክእልን እዩ ።",
     "skippedScheduleToast": "ስኪፕ {{platforms}}: ዝተመደቡ ልኡኻት ገና ኣይድገፉን ።",
     "skippedOtherToast": "ስኪፕ {{platforms}}: ነዚ ጽሑፍ እዚ ክወስዱ ኣይከኣሉን ።"
+  },
+  "dm": {
+    "planRestricted": "እዚ ተጠቃሚ መልእኽትታት ንምቕባል ምዝገባ የድልዮ።",
+    "planTypeNotAllowed": "ውጥን እዚ ፈጣሪ ከምዚ ዓይነት መልእኽቲ ኣይፈቅድን።",
+    "planMinTip": "ን'ዚ ፈጣሪ ቲፕ እንተነኣሰ {{amount}} DHB ክኸውን ኣለዎ።"
   }
 }

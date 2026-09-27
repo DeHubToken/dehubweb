@@ -5250,5 +5250,10 @@
     "farcasterNote": "Farcaster Farcaster app kaqpi dehub kaqmanta aprobanaykipaq mañasunki, chaymanta manaraq programasqa qillqakunata hap&#39;iyta atinchu.",
     "skippedScheduleToast": "Saltasqa {{platforms}}: programasqa qillqakuna manaraq chaypi yanapasqachu.",
     "skippedOtherToast": "Saltasqa {{platforms}}: mana kay qillqasqata apayta atirqankuchu."
+  },
+  "dm": {
+    "planRestricted": "Kay runaqa suscripciónta mañan willakuykunata chaskinanpaq.",
+    "planTypeNotAllowed": "Kay ruraqpa planninqa manam kay hina willakuyta saqinchu.",
+    "planMinTip": "Kay ruraqpaq propinaqa aswan pisillaqa {{amount}} DHB kanan."
   }
 }

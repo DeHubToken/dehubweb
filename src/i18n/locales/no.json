@@ -5210,5 +5210,10 @@
     "farcasterNote": "Farcaster ber deg om å godkjenne dehub i Farcaster-appen, og den kan ikke ta imot planlagte innlegg ennå.",
     "skippedScheduleToast": "Hoppet over {{platforms}}: planlagte innlegg støttes ikke der ennå.",
     "skippedOtherToast": "Hoppet over {{platforms}}: de kunne ikke ta dette innlegget."
+  },
+  "dm": {
+    "planRestricted": "Denne brukeren krever et abonnement for å motta meldinger.",
+    "planTypeNotAllowed": "Denne skaperens plan tillater ikke denne typen melding.",
+    "planMinTip": "Tipset må være minst {{amount}} DHB for denne skaperen."
   }
 }

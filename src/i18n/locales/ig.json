@@ -5180,5 +5180,10 @@
     "farcasterNote": "Farcaster na-arịọ gị ka ị kwado dehub na ngwa Farcaster, ma ọ nweghị ike iwepụta ndokwa.",
     "skippedScheduleToast": "Wepụrụ {{platforms}}: ha anaghị anabata post ahaziri ahazi ugbu a.",
     "skippedOtherToast": "Wepụrụ {{platforms}}: ha enweghị ike ịnabata post a."
+  },
+  "dm": {
+    "planRestricted": "Onye ọrụ a chọrọ ndenye aha iji nata ozi.",
+    "planTypeNotAllowed": "Atụmatụ onye okike a anaghị ekwe ụdị ozi a.",
+    "planMinTip": "Tip ga-abụrịrị opekata mpe {{amount}} DHB maka onye okike a."
   }
 }

@@ -5212,5 +5212,10 @@
     "farcasterNote": "Ka tono a Farcaster ki a koe kia whakaae ki te dehub i roto i te taupānga Farcaster, a kaore e taea te tango i nga pou kua whakaritea.",
     "skippedScheduleToast": "{{platforms}}: Kaore ano kia tautokohia nga pou kua whakaritea i reira.",
     "skippedOtherToast": "{{platforms}}: Kaore e taea e ratou te tango i tenei pou."
+  },
+  "dm": {
+    "planRestricted": "Me whai ohaurunga kia whiwhi karere tēnei kaiwhakamahi.",
+    "planTypeNotAllowed": "Kāore te mahere a tēnei kaihanga e whakaae ki tēnei momo karere.",
+    "planMinTip": "Me {{amount}} DHB te iti rawa o te koha mō tēnei kaihanga."
   }
 }

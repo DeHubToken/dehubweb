@@ -7324,5 +7324,10 @@
     "farcasterNote": "Farcaster inakuomba uidhinishe dehub katika programu ya Farcaster na haiwezi kuchukua machapisho yaliyoratibiwa bado.",
     "skippedScheduleToast": "Imerukwa {{platforms}}: machapisho yaliyoratibiwa bado hayajawezeshwa hapo.",
     "skippedOtherToast": "Imeruka {{platforms}}: hawakuweza kuchukua chapisho hili."
+  },
+  "dm": {
+    "planRestricted": "Mtumiaji huyu anahitaji usajili ili kupokea ujumbe.",
+    "planTypeNotAllowed": "Mpango wa mtayarishi huyu hauruhusu aina hii ya ujumbe.",
+    "planMinTip": "Bakshishi kwa mtayarishi huyu lazima iwe angalau {{amount}} DHB."
   }
 }

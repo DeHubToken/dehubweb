@@ -7387,5 +7387,10 @@
     "farcasterNote": "Farcaster meminta Anda untuk menyetujui dehub di aplikasi Farcaster, dan belum dapat menerima postingan terjadwal.",
     "skippedScheduleToast": "Dilewatkan {{platforms}}: postingan terjadwal belum didukung di sana.",
     "skippedOtherToast": "Dilewatkan {{platforms}}: mereka tidak bisa menerima postingan ini."
+  },
+  "dm": {
+    "planRestricted": "Pengguna ini memerlukan langganan untuk menerima pesan.",
+    "planTypeNotAllowed": "Paket kreator ini tidak mengizinkan jenis pesan ini.",
+    "planMinTip": "Tip untuk kreator ini minimal {{amount}} DHB."
   }
 }

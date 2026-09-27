@@ -7172,5 +7172,10 @@
     "farcasterNote": "Farcaster yêu cầu bạn phê duyệt dehub trong ứng dụng Farcaster và nó chưa thể thực hiện các bài đăng đã lên lịch.",
     "skippedScheduleToast": "Đã bỏ qua {{platforms}}: các bài đăng đã lên lịch chưa được hỗ trợ ở đó.",
     "skippedOtherToast": "Đã bỏ qua {{platforms}}: họ không thể nhận bài đăng này."
+  },
+  "dm": {
+    "planRestricted": "Người dùng này yêu cầu đăng ký để nhận tin nhắn.",
+    "planTypeNotAllowed": "Gói của nhà sáng tạo này không cho phép loại tin nhắn này.",
+    "planMinTip": "Tiền tip cho nhà sáng tạo này phải ít nhất {{amount}} DHB."
   }
 }

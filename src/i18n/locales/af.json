@@ -7268,5 +7268,10 @@
     "farcasterNote": "Farcaster vra u om dehub in die Farcaster-app goed te keur, en dit kan nog nie geskeduleerde poste neem nie.",
     "skippedScheduleToast": "Geslaan {{platforms}}: geskeduleerde plasings word nog nie daar ondersteun nie.",
     "skippedOtherToast": "Slaan {{platforms}}: hulle kon nie hierdie pos neem nie."
+  },
+  "dm": {
+    "planRestricted": "Hierdie gebruiker vereis 'n intekening om boodskappe te ontvang.",
+    "planTypeNotAllowed": "Hierdie skepper se plan laat nie hierdie soort boodskap toe nie.",
+    "planMinTip": "Fooitjie moet minstens {{amount}} DHB vir hierdie skepper wees."
   }
 }
