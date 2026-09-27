@@ -157,6 +157,8 @@ async function commons(kind: Kind, query: string, page: number, orientation: Ori
     const downloadUrl = String(info.url || "");
     const landingUrl = String(info.descriptionurl || "");
     if (!downloadUrl || !landingUrl) return [];
+    const mimeType = String(info.mime || "");
+    const duration = Number(info.duration) || 0;
     const title = text(meta.ObjectName?.value) || fileTitle(String(row.title || "Untitled"));
     const creator = text(meta.Artist?.value) || "Wikimedia Commons contributor";
     const license = text(meta.LicenseShortName?.value) || text(meta.UsageTerms?.value) || "Free licence";
