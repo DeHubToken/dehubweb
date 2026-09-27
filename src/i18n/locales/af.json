@@ -4316,7 +4316,22 @@
     "tokenCheckoutNotReady": "Die token intekening uitklok is nie gereed nie — probeer asseblief weer binnekort",
     "tokenQuoteUnavailable": "Regstreekse token kwotasie beskikbaar",
     "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Token bedrag beskikbaar"
+    "tokenAmountUnavailable": "Token bedrag beskikbaar",
+    "totalCount": "{{count}} total",
+    "daysLeft_one": "{{count}}d links",
+    "daysLeft_other": "{{count}}d links",
+    "subscribedToast": "Ingeteken",
+    "confirmSubscribeTo": "Teken in op {{plan}} vir {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} in die pre-listende Rate",
+    "creditsCreator": "Krediete die skepper {{amount}} USDT",
+    "fromSubscriptionTokens": "Van jou inskrywing tekens",
+    "addedAtTodaysPrice": "Aangevul nou teen vandag se prys",
+    "subscriptionTokensNote": "Inskrywingsteken word teen die prys gesluit wanneer jy dit byvoeg, so 'n prysbeweging verander nooit wat 'n intekening jou kos nie. Hulle kan slegs op subskripsies aangewend word.",
+    "subscriptionTokens": "Intekening tekens",
+    "subscriptionTokensOnly": "Slegs vir intekeninge",
+    "untradableTokens": "Dit is onuitwisbare subskripsie-tokens",
+    "lockedValue": "Gesluit by {{amount}}",
+    "withdraw": "Onttrek"
   },
   "live": {
     "chatJoined": "het aangesluit",

@@ -4467,7 +4467,19 @@
     "tokenCheckoutNotReady": "The token subscription checkout is not ready — please try again shortly",
     "tokenQuoteUnavailable": "Live token quote unavailable",
     "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Token amount unavailable"
+    "tokenAmountUnavailable": "Token amount unavailable",
+    "subscribedToast": "Subscribed",
+    "confirmSubscribeTo": "Subscribe to {{plan}} for {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} at the pre-listing rate",
+    "creditsCreator": "Credits the creator {{amount}} USDT",
+    "fromSubscriptionTokens": "From your subscription tokens",
+    "addedAtTodaysPrice": "Added now at today's price",
+    "subscriptionTokensNote": "Subscription tokens are locked at the price when you add them, so a price move never changes what a subscription costs you. They can only be spent on subscriptions.",
+    "subscriptionTokens": "Subscription tokens",
+    "subscriptionTokensOnly": "For subscriptions only",
+    "untradableTokens": "These are untradable subscription tokens",
+    "lockedValue": "Locked at {{amount}}",
+    "withdraw": "Withdraw"
   },
   "live": {
     "chatJoined": "joined",

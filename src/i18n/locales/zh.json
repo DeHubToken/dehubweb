@@ -4470,7 +4470,19 @@
     "tokenCheckoutNotReady": "代币订阅结账尚未准备好 — 请稍后重试",
     "tokenQuoteUnavailable": "实时代币报价不可用",
     "tokenEstimate": "约 {{amount}} 个代币",
-    "tokenAmountUnavailable": "代币数量不可用"
+    "tokenAmountUnavailable": "代币数量不可用",
+    "subscribedToast": "已订阅",
+    "confirmSubscribeTo": "以{{price}}/{{duration}}订阅{{plan}}。",
+    "atPreListingRate": "{{amount}} ，以预发布价格",
+    "creditsCreator": "为创作者添加旅行基金{{amount}} USDT",
+    "fromSubscriptionTokens": "从您的订阅令牌",
+    "addedAtTodaysPrice": "现已添加，价格为今日价格",
+    "subscriptionTokensNote": "当您添加订阅令牌时，订阅令牌将锁定在价格上，因此价格变动不会改变订阅的成本。 它们只能用于订阅。",
+    "subscriptionTokens": "订阅令牌",
+    "subscriptionTokensOnly": "仅适用于订阅",
+    "untradableTokens": "这些是不可交易的订阅代币",
+    "lockedValue": "锁定于{{amount}}",
+    "withdraw": "提款"
   },
   "live": {
     "chatJoined": "加入了",

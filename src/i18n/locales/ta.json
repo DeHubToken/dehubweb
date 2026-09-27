@@ -4103,7 +4103,19 @@
     "tokenCheckoutNotReady": "டோக்கன் சந்தா செக் அவுட் தயாராக இல்லை — தயவுசெய்து விரைவில் மீண்டும் முயற்சிக்கவும்",
     "tokenQuoteUnavailable": "நேரடி டோக்கன் மேற்கோள் கிடைக்கவில்லை",
     "tokenEstimate": "≈ {{amount}} டோக்கன்கள்",
-    "tokenAmountUnavailable": "டோக்கன் தொகை கிடைக்கவில்லை"
+    "tokenAmountUnavailable": "டோக்கன் தொகை கிடைக்கவில்லை",
+    "subscribedToast": "சந்தா செலுத்தப்பட்டது",
+    "atPreListingRate": "முன்கூட்டியே பட்டியலிடும் விகிதத்தில் {{amount}}",
+    "creditsCreator": "படைப்பாளருக்கு கிரெடிட் {{amount}} USDT",
+    "fromSubscriptionTokens": "உங்கள் சந்தா டோக்கன்களிலிருந்து",
+    "addedAtTodaysPrice": "இன்றைய விலையில் இப்போது சேர்க்கப்பட்டுள்ளது",
+    "subscriptionTokensNote": "நீங்கள் சந்தாவைச் சேர்க்கும்போது சந்தா டோக்கன்கள் விலையில் பூட்டப்படும், எனவே சந்தா உங்களுக்கு எவ்வளவு செலவாகும் என்பதை விலை நகர்வு ஒருபோதும் மாற்றாது. அவை சந்தாக்களுக்காக மட்டுமே செலவிடப்பட முடியும்.",
+    "subscriptionTokens": "சந்தா டோக்கன்கள்",
+    "subscriptionTokensOnly": "சந்தாக்களுக்கு மட்டுமே",
+    "untradableTokens": "இவை கண்காணிக்க முடியாத சந்தா டோக்கன்கள்",
+    "lockedValue": "{{amount}} மணிக்கு பூட்டப்பட்டது",
+    "withdraw": "திரும்பப் பெறு",
+    "confirmSubscribeTo": "{{plan}}-க்கு {{price}} / {{duration}}-க்கு சந்தாதாரர் ஆகுங்கள்."
   },
   "live": {
     "chatJoined": "இணைந்தார்",

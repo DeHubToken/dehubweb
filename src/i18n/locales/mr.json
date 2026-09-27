@@ -4205,7 +4205,21 @@
     "tokenCheckoutNotReady": "टोकन सबस्क्रिप्शन चेकआउट तयार नाही — कृपया लवकरच पुन्हा प्रयत्न करा.",
     "tokenQuoteUnavailable": "लाइव्ह टोकन कोट अनुपलब्ध",
     "tokenEstimate": "≈ {{amount}} टोकन",
-    "tokenAmountUnavailable": "टोकन रक्कम अनुपलब्ध"
+    "tokenAmountUnavailable": "टोकन रक्कम अनुपलब्ध",
+    "daysLeft_one": "{{count}}d बाकी",
+    "daysLeft_other": "{{count}}d बाकी",
+    "subscribedToast": "सदस्यता घेतली",
+    "atPreListingRate": "{{amount}} पूर्व - सूची दरात",
+    "creditsCreator": "निर्मिकाला {{amount}} USDT क्रेडिट करते",
+    "fromSubscriptionTokens": "तुमच्या सबस्क्रिप्शन टोकनमधून",
+    "addedAtTodaysPrice": "आजच्या किमतीत आता जोडले",
+    "subscriptionTokensNote": "आपण त्यांना जोडता तेव्हा सबस्क्रिप्शन टोकन किंमतीवर लॉक केले जातात, म्हणून किंमत हलवा आपण सबस्क्रिप्शन खर्च काय बदलत नाही. ते केवळ सबस्क्रिप्शनवर खर्च केले जाऊ शकतात.",
+    "subscriptionTokens": "सबस्क्रिप्शन टोकन",
+    "subscriptionTokensOnly": "केवळ सबस्क्रिप्शनसाठी",
+    "untradableTokens": "हे अविश्वसनीय सबस्क्रिप्शन टोकन आहेत",
+    "lockedValue": "{{amount}}ला लॉक केले",
+    "withdraw": "काढा",
+    "confirmSubscribeTo": "{{plan}} साठी {{price}} / {{duration}} मध्ये सदस्य व्हा."
   },
   "live": {
     "chatJoined": "सामील झाले",

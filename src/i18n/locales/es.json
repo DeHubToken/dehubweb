@@ -4468,7 +4468,19 @@
     "tokenCheckoutNotReady": "El pago de suscripción de tokens no está listo; inténtalo de nuevo en breve.",
     "tokenQuoteUnavailable": "Cotización de token en vivo no disponible",
     "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Cantidad de token no disponible"
+    "tokenAmountUnavailable": "Cantidad de token no disponible",
+    "subscribedToast": "Suscrito",
+    "confirmSubscribeTo": "Suscríbete a {{plan}} por {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} a la tarifa de la lista previa",
+    "creditsCreator": "Créditos al creador {{amount}} USDT",
+    "fromSubscriptionTokens": "Desde sus tokens de suscripción",
+    "addedAtTodaysPrice": "Añadido ahora al precio de hoy",
+    "subscriptionTokensNote": "Los tokens de suscripción se bloquean al precio cuando los añades, por lo que un movimiento de precio nunca cambia lo que te cuesta una suscripción. Solo se pueden gastar en suscripciones.",
+    "subscriptionTokens": "Tokens de suscripción",
+    "subscriptionTokensOnly": "Solo para suscripciones",
+    "untradableTokens": "Estos son tokens de suscripción no negociables",
+    "lockedValue": "Bloqueado en {{amount}}",
+    "withdraw": "Retirar"
   },
   "live": {
     "chatJoined": "se unió",

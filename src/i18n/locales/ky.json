@@ -4432,7 +4432,19 @@
     "tokenCheckoutNotReady": "Токен жазылуусунун төлөө барагы даяр эмес — сураныч, жакында кайра аракет кылыңыз",
     "tokenQuoteUnavailable": "Жандуу токен котировкасы жок",
     "tokenEstimate": "≈ {{amount}} токен",
-    "tokenAmountUnavailable": "Токендин суммасы жок"
+    "tokenAmountUnavailable": "Токендин суммасы жок",
+    "subscribedToast": "Жазылуу",
+    "confirmSubscribeTo": "{{plan}}{{price}}/{{duration}} жазылуу.",
+    "atPreListingRate": "Алдын ала каттоо курсу боюнча {{amount}}",
+    "creditsCreator": "Жаратканга ишенет {{amount}} USDT",
+    "fromSubscriptionTokens": "Жазылууңуздун токендеринен",
+    "addedAtTodaysPrice": "Бүгүнкү баада кошулду",
+    "subscriptionTokensNote": "Жазылуу токендери аларды кошкондо баага кулпуланат, андыктан баа кыймылы жазылуунун сизге кандай чыгым алып келерин эч качан өзгөртпөйт. Алар жазылууларга гана сарпталышы мүмкүн.",
+    "subscriptionTokens": "Жазылуу токендери",
+    "subscriptionTokensOnly": "Абоненттер үчүн гана",
+    "untradableTokens": "Бул сатылбаган жазылуу токендери",
+    "lockedValue": "{{amount}} учурунда кулпуланган",
+    "withdraw": "Чыгуу"
   },
   "live": {
     "chatJoined": "кошулду",

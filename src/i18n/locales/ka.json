@@ -4300,7 +4300,20 @@
     "tokenCheckoutNotReady": "ტოკენის სააბონენტო გადახდა მზად არ არის — გთხოვთ, სცადოთ მოგვიანებით",
     "tokenQuoteUnavailable": "ცოცხალი ტოკენის ციტირება მიუწვდომელია",
     "tokenEstimate": "≈ {{amount}} ტოკენი",
-    "tokenAmountUnavailable": "ტოკენის რაოდენობა მიუწვდომელია"
+    "tokenAmountUnavailable": "ტოკენის რაოდენობა მიუწვდომელია",
+    "totalCount": "{{count}} სულ",
+    "subscribedToast": "Გამოწერილი",
+    "atPreListingRate": "{{amount}} წინასწარ განცხადების სიხშირით",
+    "creditsCreator": "Კრედიტები შემქმნელს {{amount}} USDT",
+    "fromSubscriptionTokens": "Თქვენი სააბონენტო ტოკენებიდან",
+    "addedAtTodaysPrice": "Ახლა დამატებულია დღევანდელ ფასად",
+    "subscriptionTokensNote": "Სააბონენტო ტოკენები ჩაკეტილია ფასში მათი დამატებისას, ამიტომ ფასის ცვლილება არასდროს ცვლის გამოწერის ღირებულებას. Მათი დახარჯვა შესაძლებელია მხოლოდ გამოწერებზე.",
+    "subscriptionTokens": "გამოწერის ტოკენები",
+    "subscriptionTokensOnly": "Მხოლოდ გამოწერებისთვის",
+    "untradableTokens": "Ეს არის არატრადიციული სააბონენტო ტოკენები",
+    "lockedValue": "Დაბლოკილია: {{amount}}",
+    "withdraw": "Თანხის გამოხმობა",
+    "confirmSubscribeTo": "გამოიწერეთ {{plan}} — {{price}} / {{duration}}."
   },
   "live": {
     "chatJoined": "შემოუერთდა",

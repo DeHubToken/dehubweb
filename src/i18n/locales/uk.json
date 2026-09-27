@@ -4265,7 +4265,19 @@
     "tokenCheckoutNotReady": "Оформлення підписки на токени не готове — спробуйте ще раз незабаром",
     "tokenQuoteUnavailable": "Поточна котирування токена недоступне",
     "tokenEstimate": "≈ {{amount}} токенів",
-    "tokenAmountUnavailable": "Сума токенів недоступна"
+    "tokenAmountUnavailable": "Сума токенів недоступна",
+    "subscribedToast": "Підписка оформлена",
+    "confirmSubscribeTo": "Підпишіться на {{plan}} за {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} за ціною попереднього оголошення",
+    "creditsCreator": "Кредити автору {{amount}} USDT",
+    "fromSubscriptionTokens": "З ваших токенів підписки",
+    "addedAtTodaysPrice": "Додано зараз за сьогоднішньою ціною",
+    "subscriptionTokensNote": "Маркери підписки фіксуються за ціною під час їх додавання, тому зміна ціни ніколи не змінює вартість підписки. Їх можна витрачати лише на підписки.",
+    "subscriptionTokens": "Маркери підписки",
+    "subscriptionTokensOnly": "Тільки для підписок",
+    "untradableTokens": "Це неторгувані токени підписки",
+    "lockedValue": "Заблоковано о {{amount}}",
+    "withdraw": "Зняти"
   },
   "live": {
     "chatJoined": "приєднався",

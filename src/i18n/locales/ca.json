@@ -4400,7 +4400,19 @@
     "tokenCheckoutNotReady": "El pagament de la subscripció de testimonis no està preparat; si us plau, torneu-ho a provar aviat.",
     "tokenQuoteUnavailable": "Cotització de testimonis en directe no disponible",
     "tokenEstimate": "≈ {{amount}} testimonis",
-    "tokenAmountUnavailable": "Quantitat de testimonis no disponible"
+    "tokenAmountUnavailable": "Quantitat de testimonis no disponible",
+    "subscribedToast": "Subscrit",
+    "confirmSubscribeTo": "Subscriu-te a {{plan}} per {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} a la tarifa prèvia a l'anunci",
+    "creditsCreator": "Crèdits al creador {{amount}} USDT",
+    "fromSubscriptionTokens": "Des dels vostres tokens de subscripció",
+    "addedAtTodaysPrice": "S'ha afegit ara al preu d'avui",
+    "subscriptionTokensNote": "Els tokens de subscripció es bloquegen al preu quan els afegeixes, de manera que un moviment de preu mai canvia el que et costa una subscripció. Només es poden gastar en subscripcions.",
+    "subscriptionTokens": "Tokens de subscripció",
+    "subscriptionTokensOnly": "Només per a subscripcions",
+    "untradableTokens": "Són fitxes de subscripció no comercialitzables",
+    "lockedValue": "Bloquejat a les {{amount}}",
+    "withdraw": "Retirar"
   },
   "live": {
     "chatJoined": "s'ha unit",

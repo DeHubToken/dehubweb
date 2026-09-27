@@ -4417,7 +4417,22 @@
     "tokenCheckoutNotReady": "Токен жазылымының төлемі дайын емес — жақын арада қайта көріңіз",
     "tokenQuoteUnavailable": "Тікелей токен бағасы жоқ",
     "tokenEstimate": "≈ {{amount}} токен",
-    "tokenAmountUnavailable": "Токен сомасы жоқ"
+    "tokenAmountUnavailable": "Токен сомасы жоқ",
+    "totalCount": "{{count}} Барлығы",
+    "plan": "Жоспар",
+    "planFallback": "Жоспар",
+    "subscribedToast": "Жазылу",
+    "atPreListingRate": "Алдын ала тіркеу жылдамдығымен {{amount}}",
+    "creditsCreator": "Жасаушыға {{amount}} USDT несие береді",
+    "fromSubscriptionTokens": "Жазылым таңбашаларыңыздан",
+    "addedAtTodaysPrice": "Бүгінгі бағамен қосылды",
+    "subscriptionTokensNote": "Жазылым белгішелері оларды қосқан кезде бағамен құлыпталады, сондықтан баға қозғалысы жазылымның сізге қандай шығын әкелетінін ешқашан өзгертпейді. Оларды тек жазылымдарға жұмсауға болады.",
+    "subscriptionTokens": "Жазылу таңбашалары",
+    "subscriptionTokensOnly": "Тек жазылымдар үшін",
+    "untradableTokens": "Бұл сатылмайтын жазылым белгішелері",
+    "lockedValue": "{{amount}} кезінде бұғатталған",
+    "withdraw": "Кері қайтару",
+    "confirmSubscribeTo": "{{plan}} жоспарына {{price}} / {{duration}} үшін жазылыңыз."
   },
   "live": {
     "chatJoined": "қосылды",

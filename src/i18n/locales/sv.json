@@ -4404,7 +4404,19 @@
     "tokenCheckoutNotReady": "Tokenprenumerationsutcheckningen är inte redo — försök igen snart",
     "tokenQuoteUnavailable": "Live-tokennotering otillgänglig",
     "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Tokenbelopp otillgängligt"
+    "tokenAmountUnavailable": "Tokenbelopp otillgängligt",
+    "subscribedToast": "Prenumerera",
+    "confirmSubscribeTo": "Prenumerera på {{plan}} för {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} till priset före annonsering",
+    "creditsCreator": "Krediterar kreatören {{amount}} USDT",
+    "fromSubscriptionTokens": "Från dina prenumerationstoken",
+    "addedAtTodaysPrice": "Tillagd nu till dagens pris",
+    "subscriptionTokensNote": "Prenumerationstoken är låsta till priset när du lägger till dem, så en prisrörelse ändrar aldrig vad en prenumeration kostar dig. De kan endast spenderas på prenumerationer.",
+    "subscriptionTokens": "Prenumerationstoken",
+    "subscriptionTokensOnly": "Endast för prenumerationer",
+    "untradableTokens": "Dessa är oomsättningsbara prenumerationstoken",
+    "lockedValue": "Låst {{amount}}",
+    "withdraw": "Ta ut"
   },
   "live": {
     "chatJoined": "gick med",

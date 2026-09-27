@@ -4178,7 +4178,19 @@
     "tokenCheckoutNotReady": "Το ταμείο συνδρομής σε μάρκες δεν είναι έτοιμο — παρακαλώ προσπαθήστε ξανά σύντομα",
     "tokenQuoteUnavailable": "Η ζωντανή προσφορά μάρκας είναι μη διαθέσιμη",
     "tokenEstimate": "≈ {{amount}} μάρκες",
-    "tokenAmountUnavailable": "Το ποσό της μάρκας είναι μη διαθέσιμο"
+    "tokenAmountUnavailable": "Το ποσό της μάρκας είναι μη διαθέσιμο",
+    "subscribedToast": "Εγγεγραμμένος",
+    "confirmSubscribeTo": "Εγγραφείτε στο {{plan}} για {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} με την τιμή που ίσχυε πριν από την καταχώρηση",
+    "creditsCreator": "Ποντάρει στον δημιουργό {{amount}} USDT",
+    "fromSubscriptionTokens": "Από τα διακριτικά συνδρομής σας",
+    "addedAtTodaysPrice": "Προστέθηκε τώρα στη σημερινή τιμή",
+    "subscriptionTokensNote": "Τα διακριτικά συνδρομής κλειδώνονται στην τιμή όταν τα προσθέτετε, οπότε μια κίνηση τιμής δεν αλλάζει ποτέ το κόστος μιας συνδρομής. Μπορούν να δαπανηθούν μόνο για συνδρομές.",
+    "subscriptionTokens": "Διακριτικά συνδρομής",
+    "subscriptionTokensOnly": "Μόνο για συνδρομές",
+    "untradableTokens": "Αυτά είναι μη εμπορεύσιμα διακριτικά συνδρομής",
+    "lockedValue": "Κλειδώθηκε στις {{amount}}",
+    "withdraw": "Ανάληψη"
   },
   "live": {
     "chatJoined": "μπήκε",

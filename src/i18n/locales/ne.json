@@ -4393,7 +4393,19 @@
     "tokenCheckoutNotReady": "टोकन सदस्यता चेकआउट तयार छैन — कृपया केही बेरमा फेरि प्रयास गर्नुहोस्",
     "tokenQuoteUnavailable": "लाइभ टोकन उद्धरण अनुपलब्ध",
     "tokenEstimate": "≈ {{amount}} टोकन",
-    "tokenAmountUnavailable": "टोकन रकम अनुपलब्ध"
+    "tokenAmountUnavailable": "टोकन रकम अनुपलब्ध",
+    "subscribedToast": "सदस्यता लिइएको",
+    "confirmSubscribeTo": "{{price}}/{{duration}} को लागि {{plan}} मा सदस्यता लिनुहोस् ।",
+    "atPreListingRate": "{{amount}} पूर्व - सूचीकरण दरमा",
+    "creditsCreator": "सिर्जनाकर्तालाई क्रेडिट गर्दछ {{amount}} USDT",
+    "fromSubscriptionTokens": "तपाईंको सदस्यता टोकनबाट",
+    "addedAtTodaysPrice": "आजको मूल्यमा अहिले थपियो",
+    "subscriptionTokensNote": "सदस्यता टोकनहरू मूल्यमा लक हुन्छन् जब तपाईं तिनीहरूलाई थप्नुहुन्छ, त्यसैले मूल्य चालले सदस्यता लागतमा कहिले पनि परिवर्तन गर्दैन । तिनीहरू सदस्यताहरूमा मात्र खर्च गर्न सकिन्छ ।",
+    "subscriptionTokens": "सदस्यता टोकनहरू",
+    "subscriptionTokensOnly": "सदस्यताहरूको लागि मात्र",
+    "untradableTokens": "यी अपरिवर्तनीय सदस्यता टोकनहरू हुन्",
+    "lockedValue": "{{amount}} मा लक गरिएको",
+    "withdraw": "फिर्ता लिनुहोस्"
   },
   "live": {
     "chatJoined": "सामेल भए",
