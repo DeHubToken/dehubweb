@@ -227,7 +227,7 @@ function CommentRow<C extends ThreadedComment>({
             </button>
           </div>
         ) : (
-          <TranslatableText text={comment.content} className={cn("text-zinc-300 text-sm leading-relaxed break-words", highlighted && "reply-text-glow")} as="p" />
+          <TranslatableText publicContent text={comment.content} className={cn("text-zinc-300 text-sm leading-relaxed break-words", highlighted && "reply-text-glow")} as="p" />
         )}
 
         {!isEditing && (

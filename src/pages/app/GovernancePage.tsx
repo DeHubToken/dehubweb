@@ -156,8 +156,8 @@ function GovernanceCard({
 
       <SharedTranslationProvider>
         <div className="pt-1 space-y-2">
-          <TranslatableText text={proposal.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
-          <TranslatableText text={proposal.description} className="text-zinc-400 text-sm leading-relaxed" as="p" hideControls />
+          <TranslatableText publicContent text={proposal.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
+          <TranslatableText publicContent text={proposal.description} className="text-zinc-400 text-sm leading-relaxed" as="p" hideControls />
 
         {/* Vote ratio bar */}
         {(() => {

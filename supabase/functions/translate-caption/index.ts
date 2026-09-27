@@ -125,6 +125,7 @@ async function viaAiChat(
   text: string,
   context: string,
   languages: string[],
+  skipGateway = true,
 ): Promise<Record<string, string>> {
   const AI_KEY = Deno.env.get("GEMINI_API_KEY") ?? Deno.env.get("LOVABLE_API_KEY");
   if (!AI_KEY) return {};
@@ -155,7 +156,7 @@ async function viaAiChat(
       },
     ],
     tool_choice: { type: "function", function: { name: "return_translations" } },
-  }, { expectToolCall: "return_translations", label: "translate-caption", publicContent: true });
+  }, { expectToolCall: "return_translations", label: "translate-caption", publicContent: true, skipGateway });
   if (!res.ok) {
     console.error(`[translate-caption] ai ${res.status}`);
     return {};
@@ -229,6 +230,10 @@ Deno.serve(async (req) => {
     });
     if (!translations || Object.keys(translations).length === 0) {
       translations = await viaFal(text, context, languages);
+    }
+    // Last resort, the metered gateway.
+    if (!translations || Object.keys(translations).length === 0) {
+      translations = await viaAiChat(text, context, languages, false).catch(() => null);
     }
 
     // Partial results ship. A line translated into eight of ten languages is

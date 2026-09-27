@@ -154,8 +154,8 @@ export default function GovernanceProposalPage() {
           </div>
         </div>
 
-        <TranslatableText text={proposal.title} className="text-white font-semibold text-base leading-tight mb-2" as="h1" hideControls />
-        <TranslatableText text={proposal.description} className="text-zinc-400 text-sm leading-relaxed mb-4" as="p" />
+        <TranslatableText publicContent text={proposal.title} className="text-white font-semibold text-base leading-tight mb-2" as="h1" hideControls />
+        <TranslatableText publicContent text={proposal.description} className="text-zinc-400 text-sm leading-relaxed mb-4" as="p" />
 
         {/* Vote ratio bar */}
         <div className="space-y-1 mb-3">

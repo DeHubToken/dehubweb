@@ -329,7 +329,9 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
 
     // Echo the assistant turn back verbatim — the API requires the tool_calls
     // message to precede its tool results.
-    convo.push(choice);
+    // Only the portable fields. Groq's gpt-oss adds `reasoning`, and echoing
+    // it back is a 400 on the next round.
+    convo.push({ role: 'assistant', content: choice.content ?? '', tool_calls: choice.tool_calls });
 
     const results = await Promise.all(
       toolCalls.map(async (call: any) => {

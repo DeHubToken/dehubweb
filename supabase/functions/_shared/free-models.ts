@@ -18,6 +18,8 @@ interface FreeProvider {
   model: string;
   /** The provider may train on what it is sent. Public content only. */
   trains?: boolean;
+  /** Reasoning model: its hidden reasoning spends the same token budget. */
+  reasons?: boolean;
 }
 
 const env = (k: string) => Deno.env.get(k) || undefined;
@@ -30,12 +32,14 @@ const PROVIDERS: FreeProvider[] = [
     url: () => 'https://api.groq.com/openai/v1/chat/completions',
     key: () => env('GROQ_API_KEY'),
     model: 'openai/gpt-oss-120b',
+    reasons: true,
   },
   {
     name: 'groq/gpt-oss-20b',
     url: () => 'https://api.groq.com/openai/v1/chat/completions',
     key: () => env('GROQ_API_KEY'),
     model: 'openai/gpt-oss-20b',
+    reasons: true,
   },
   // The only free tier big enough for the translation volume on its own:
   // about a billion tokens a month, one request a second.
@@ -87,10 +91,18 @@ function isTextOnly(body: Record<string, unknown>): boolean {
  * The OpenAI fields every provider here accepts. Mistral rejects unknown
  * fields outright, and `max_completion_tokens` is not one it knows.
  */
-function portableBody(body: Record<string, unknown>, model: string): Record<string, unknown> {
-  const out: Record<string, unknown> = { model, messages: body.messages };
+function portableBody(body: Record<string, unknown>, p: FreeProvider): Record<string, unknown> {
+  const out: Record<string, unknown> = { model: p.model, messages: body.messages };
   const maxTokens = body.max_completion_tokens ?? body.max_tokens;
-  if (maxTokens != null) out.max_tokens = maxTokens;
+  if (p.reasons) {
+    // Low effort keeps the hidden reasoning short (and inside the per-minute
+    // token quota); the floor stops a 200-token budget being spent on
+    // reasoning before any answer is written.
+    out.reasoning_effort = 'low';
+    out.max_tokens = Math.max(1024, Number(maxTokens) || 0);
+  } else if (maxTokens != null) {
+    out.max_tokens = maxTokens;
+  }
   for (const k of ['tools', 'tool_choice', 'response_format', 'temperature', 'stream']) {
     if (body[k] !== undefined) out[k] = body[k];
   }
@@ -146,12 +158,12 @@ export async function tryFree(
       const res = await fetch(url, {
         method: 'POST',
         headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(portableBody(body, p.model)),
+        body: JSON.stringify(portableBody(body, p)),
         signal: opts.signal,
       });
 
       if (res.status === 429) {
-        park(p.name, retryAfterMs(res, 60_000));
+        park(p.name, retryAfterMs(res, 15_000));
         console.log(`${tag} ${p.name} rate limited, parked`);
         continue;
       }

@@ -549,7 +549,7 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
     return (
       <>
         {description ? (
-          <TranslatableText
+          <TranslatableText publicContent
             text={description}
             className="text-zinc-400 text-[14px] mb-2 line-clamp-1"
             as="p"
@@ -570,7 +570,7 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
         className={isExpanded ? '' : 'line-clamp-4'}
       >
         {description ? (
-          <TranslatableText
+          <TranslatableText publicContent
             text={description}
             className="text-zinc-400 text-[14px]"
             as="p"
@@ -773,7 +773,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     handleShowOriginal: handleVideoShowOriginal,
     sourceLang: videoSourceLang,
     isTooShort: nothingToTranslate,
-  } = useTranslation(videoText, true, containerRef);
+  } = useTranslation(videoText, true, containerRef, true);
 
   // Repost handler
   const handleRepost = useCallback(async () => {
@@ -2405,7 +2405,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     translated this text and hands the result down. Left on, this
                     asked the edge function to translate the translation. */}
                 {shownTitle && (
-                  <TranslatableText text={shownTitle} className="text-white text-[14px] mb-1" as="h3" hideControls auto={false} />
+                  <TranslatableText publicContent text={shownTitle} className="text-white text-[14px] mb-1" as="h3" hideControls auto={false} />
                 )}
                 {shownDesc && (
                   <ExpandableDescription

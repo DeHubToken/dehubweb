@@ -1107,7 +1107,7 @@ serve(async (req) => {
             }],
             tool_choice: { type: 'function', function: { name: 'execute_swap' } },
             max_completion_tokens: 200,
-          }, { expectToolCall: 'execute_swap', label: 'swap-intent' });
+          }, { expectToolCall: 'execute_swap', label: 'swap-intent', noFree: true });
 
         if (swapExtractionResponse.ok) {
           const swapData = await swapExtractionResponse.json();
