@@ -2701,7 +2701,10 @@
     "earningsAvailable": "A bɛ yen",
     "earningsPending": "A makɔnɔni",
     "tokensSent": "Token {{amount}} cilen don",
-    "withdrawableSoon": "Abonman nafolo bɛna se ka bɔ sɔɔni"
+    "withdrawableSoon": "Abonman nafolo bɛna se ka bɔ sɔɔni",
+    "percentUsed": "{{percent}} % ka baara kɛ",
+    "spentOfTotal": "{{spent}} ka {{total}}",
+    "viewInWallet": "Fɛɛn min be sɔrɔ a kɔnɔ"
   },
   "live": {
     "chatJoined": "donna",

@@ -2726,7 +2726,10 @@
     "earningsAvailable": "उपलब्ध बाटे",
     "earningsPending": "इन्तजार कइल जाव",
     "tokensSent": "{{amount}} टोकन भेजल गइल",
-    "withdrawableSoon": "उम्मीद हव जल्दी से जल्दी कुछ ना कुछ होई ।"
+    "withdrawableSoon": "उम्मीद हव जल्दी से जल्दी कुछ ना कुछ होई ।",
+    "percentUsed": "{{percent}}% खर्चा भइल",
+    "spentOfTotal": "{{total}} में से {{spent}}",
+    "viewInWallet": "वॉलेट में देखने के बिंदु"
   },
   "live": {
     "chatJoined": "जुड़ल",

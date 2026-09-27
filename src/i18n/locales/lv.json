@@ -4482,7 +4482,10 @@
     "earningsAvailable": "Pieejams",
     "earningsPending": "Gaida apstiprinājumu",
     "tokensSent": "{{amount}} nosūtītie žetoni",
-    "withdrawableSoon": "Drīzumā varēs izņemt abonementa ieņēmumus"
+    "withdrawableSoon": "Drīzumā varēs izņemt abonementa ieņēmumus",
+    "percentUsed": "{{percent}}% izmantots",
+    "spentOfTotal": "{{spent}} no {{total}}",
+    "viewInWallet": "Skatīt makā"
   },
   "live": {
     "chatJoined": "pievienojās",

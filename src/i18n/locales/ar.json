@@ -4509,7 +4509,10 @@
     "earningsAvailable": "متاح",
     "earningsPending": "معلق",
     "tokensSent": "{{amount}} تم إرسال التوكينز",
-    "withdrawableSoon": "سيتم سحب أرباح الاشتراك قريبًا"
+    "withdrawableSoon": "سيتم سحب أرباح الاشتراك قريبًا",
+    "percentUsed": "{{percent}}%مستخدم",
+    "spentOfTotal": "{{spent}} من {{total}}",
+    "viewInWallet": "عرض في المحفظة"
   },
   "live": {
     "chatJoined": "انضم",

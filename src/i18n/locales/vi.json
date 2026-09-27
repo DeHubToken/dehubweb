@@ -4275,7 +4275,10 @@
     "earningsAvailable": "Còn trống",
     "earningsPending": "Đang chờ xử lý",
     "tokensSent": "Đã gửi mã thông báo {{amount}}",
-    "withdrawableSoon": "Thu nhập từ gói đăng ký sẽ sớm được rút lại"
+    "withdrawableSoon": "Thu nhập từ gói đăng ký sẽ sớm được rút lại",
+    "percentUsed": "Đã sử dụng {{percent}}%",
+    "spentOfTotal": "{{spent}}/{{total}}",
+    "viewInWallet": "Xem trong ví"
   },
   "live": {
     "chatJoined": "đã tham gia",

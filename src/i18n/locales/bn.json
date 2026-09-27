@@ -4291,7 +4291,10 @@
     "earningsAvailable": "উপলব্ধ",
     "earningsPending": "মুলতুবি আছে",
     "tokensSent": "{{amount}} টোকেন পাঠানো হয়েছে",
-    "withdrawableSoon": "সাবস্ক্রিপশনের উপার্জন শীঘ্রই তুলে নেওয়া হবে"
+    "withdrawableSoon": "সাবস্ক্রিপশনের উপার্জন শীঘ্রই তুলে নেওয়া হবে",
+    "percentUsed": "{{percent}}% ব্যবহৃত হয়েছে",
+    "spentOfTotal": "{{spent}} এর {{total}}",
+    "viewInWallet": "ওয়ালেটে দেখুন"
   },
   "live": {
     "chatJoined": "যোগ দিয়েছেন",

@@ -4503,7 +4503,10 @@
     "earningsAvailable": "Disponible",
     "earningsPending": "En attente",
     "tokensSent": "{{amount}} jetons envoyés",
-    "withdrawableSoon": "Les revenus de l'abonnement seront bientôt retirés"
+    "withdrawableSoon": "Les revenus de l'abonnement seront bientôt retirés",
+    "percentUsed": "{{percent}}% utilisé",
+    "spentOfTotal": "{{spent}} sur {{total}}",
+    "viewInWallet": "Afficher dans le portefeuille"
   },
   "live": {
     "chatJoined": "a rejoint",

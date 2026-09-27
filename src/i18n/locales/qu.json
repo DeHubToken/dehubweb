@@ -2821,7 +2821,10 @@
     "earningsAvailable": "Hapirinalla",
     "earningsPending": "Kaqraq",
     "tokensSent": "{{amount}} tokenkuna apachisqa",
-    "withdrawableSoon": "Suscripcionmanta ganasqankuqa pisi tiempollamantan horqosqa kanqa"
+    "withdrawableSoon": "Suscripcionmanta ganasqankuqa pisi tiempollamantan horqosqa kanqa",
+    "percentUsed": "{{percent}}% llamk&#39;achisqa",
+    "spentOfTotal": "{{spent}} nisqamanta {{total}} nisqamanta.",
+    "viewInWallet": "Billeterapi qhaway"
   },
   "live": {
     "chatJoined": "yaykurqan",

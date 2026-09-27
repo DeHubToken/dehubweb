@@ -4307,7 +4307,10 @@
     "earningsAvailable": "Свободни",
     "earningsPending": "В процес на изчакване",
     "tokensSent": "Изпратени са {{amount}} токена",
-    "withdrawableSoon": "Приходите от абонаменти ще могат да се изтеглят скоро"
+    "withdrawableSoon": "Приходите от абонаменти ще могат да се изтеглят скоро",
+    "percentUsed": "Използвани: {{percent}}%",
+    "spentOfTotal": "{{spent}} от {{total}}",
+    "viewInWallet": "Преглед в портфейла"
   },
   "live": {
     "chatJoined": "се присъедини",

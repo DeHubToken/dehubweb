@@ -4364,7 +4364,10 @@
     "earningsAvailable": "అందుబాటులో ఉంది",
     "earningsPending": "పెండింగ్ ‌ లో ఉంది",
     "tokensSent": "{{amount}} టోకెన్ ‌ లు పంపబడ్డాయి",
-    "withdrawableSoon": "సబ్ ‌ స్క్రిప్షన్ ఆదాయాలు త్వరలో ఉపసంహరించుకోబడతాయి"
+    "withdrawableSoon": "సబ్ ‌ స్క్రిప్షన్ ఆదాయాలు త్వరలో ఉపసంహరించుకోబడతాయి",
+    "percentUsed": "{{percent}}% ఉపయోగించారు",
+    "spentOfTotal": "{{total}}లో {{spent}}",
+    "viewInWallet": "వాలెట్ ‌ లో చూడండి"
   },
   "live": {
     "chatJoined": "చేరారు",

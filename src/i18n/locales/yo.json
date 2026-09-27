@@ -2784,7 +2784,10 @@
     "earningsAvailable": "Ó wà",
     "earningsPending": "Ti n duro de",
     "tokensSent": "{{amount}} Awọn ami ti a firanṣẹ",
-    "withdrawableSoon": "Àwọn èrè ìforúkọsílẹ̀ yóò yọ̀ láìpẹ́."
+    "withdrawableSoon": "Àwọn èrè ìforúkọsílẹ̀ yóò yọ̀ láìpẹ́.",
+    "percentUsed": "{{percent}}% lo",
+    "spentOfTotal": "{{spent}} ti {{total}}",
+    "viewInWallet": "Wò ó nínú àpamọ́"
   },
   "live": {
     "chatJoined": "darapọ̀",

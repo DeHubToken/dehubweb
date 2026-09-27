@@ -4460,7 +4460,10 @@
     "earningsAvailable": "Қол жетімді",
     "earningsPending": "Күтуде",
     "tokensSent": "{{amount}} токен жіберілді",
-    "withdrawableSoon": "Жазылымнан түскен табыс көп ұзамай алынып тасталады"
+    "withdrawableSoon": "Жазылымнан түскен табыс көп ұзамай алынып тасталады",
+    "percentUsed": "{{percent}}% пайдаланылды",
+    "spentOfTotal": "{{total}} ішінен {{spent}}",
+    "viewInWallet": "Әмияндағы көрініс"
   },
   "live": {
     "chatJoined": "қосылды",

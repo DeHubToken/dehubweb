@@ -2731,7 +2731,10 @@
     "earningsAvailable": "ተዳልዩ ኣሎ",
     "earningsPending": "ኣብ ምፅባይ",
     "tokensSent": "{{amount}} ቶከንስ ተላኢኹ",
-    "withdrawableSoon": "ናይ ምዝገባ ኣታዊታት ኣብ ቀረባ እዋን ክስረዝ እዩ"
+    "withdrawableSoon": "ናይ ምዝገባ ኣታዊታት ኣብ ቀረባ እዋን ክስረዝ እዩ",
+    "percentUsed": "{{percent}}% ተጠቐመ",
+    "spentOfTotal": "{{spent}} ካብ {{total}}",
+    "viewInWallet": "ኣብ ቦርሳ ርአ"
   },
   "live": {
     "chatJoined": "ተጸንበረ",

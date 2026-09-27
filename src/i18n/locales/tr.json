@@ -4508,7 +4508,10 @@
     "earningsAvailable": "Mevcut",
     "earningsPending": "Beklemede",
     "tokensSent": "{{amount}} jeton gönderildi",
-    "withdrawableSoon": "Abonelik kazançları yakında geri çekilebilir olacak"
+    "withdrawableSoon": "Abonelik kazançları yakında geri çekilebilir olacak",
+    "percentUsed": "%{{percent}} kullanıldı",
+    "spentOfTotal": "{{spent}}/{{total}}",
+    "viewInWallet": "Cüzdanda görüntüle"
   },
   "live": {
     "chatJoined": "katıldı",

@@ -2729,7 +2729,10 @@
     "earningsAvailable": "उपलब्ध",
     "earningsPending": "बाकी",
     "tokensSent": "{{amount}} टोकन भेजल गेलक",
-    "withdrawableSoon": "सदस्यता कमाई जल्दिए निकाले सकब"
+    "withdrawableSoon": "सदस्यता कमाई जल्दिए निकाले सकब",
+    "percentUsed": "{{percent}}% used",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "viewInWallet": "वॉलेट में देख"
   },
   "live": {
     "chatJoined": "دخل",

@@ -4444,7 +4444,10 @@
     "earningsAvailable": "Tillgänglig",
     "earningsPending": "Väntande",
     "tokensSent": "{{amount}} polletter skickade",
-    "withdrawableSoon": "Prenumerationsintäkter kommer snart att kunna tas ut"
+    "withdrawableSoon": "Prenumerationsintäkter kommer snart att kunna tas ut",
+    "percentUsed": "{{percent}}% används",
+    "spentOfTotal": "{{spent}} av {{total}}",
+    "viewInWallet": "Visa i plånboken"
   },
   "live": {
     "chatJoined": "gick med",

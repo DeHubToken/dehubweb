@@ -2770,7 +2770,10 @@
     "earningsAvailable": "ਉਪਲੱਬਧ",
     "earningsPending": "ਬਕਾਇਆ",
     "tokensSent": "{{amount}} ਟੋਕਨ ਭੇਜੇ ਗਏ",
-    "withdrawableSoon": "ਸਬਸਕ੍ਰਿਪਸ਼ਨ ਦੀ ਕਮਾਈ ਜਲਦੀ ਹੀ ਵਾਪਸ ਲੈਣ ਯੋਗ ਹੋਵੇਗੀ"
+    "withdrawableSoon": "ਸਬਸਕ੍ਰਿਪਸ਼ਨ ਦੀ ਕਮਾਈ ਜਲਦੀ ਹੀ ਵਾਪਸ ਲੈਣ ਯੋਗ ਹੋਵੇਗੀ",
+    "percentUsed": "{{percent}}% ਵਰਤੇ ਗਏ",
+    "spentOfTotal": "{{spent}} ਦਾ {{total}}",
+    "viewInWallet": "ਵਾਲਿਟ ਵਿੱਚ ਵੇਖੋ"
   },
   "live": {
     "chatJoined": "ਸ਼ਾਮਲ ਹੋਏ",

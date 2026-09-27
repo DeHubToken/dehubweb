@@ -4441,7 +4441,10 @@
     "earningsAvailable": "Varattavissa",
     "earningsPending": "Avoin",
     "tokensSent": "{{amount}} polettia lähetetty",
-    "withdrawableSoon": "Tilaustulot ovat pian nostettavissa"
+    "withdrawableSoon": "Tilaustulot ovat pian nostettavissa",
+    "percentUsed": "{{percent}}% käytetty",
+    "spentOfTotal": "{{spent}}/{{total}}",
+    "viewInWallet": "Näytä lompakossa"
   },
   "live": {
     "chatJoined": "liittyi",

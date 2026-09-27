@@ -2814,7 +2814,10 @@
     "earningsAvailable": "Jira",
     "earningsPending": "Eeggataa kan jiru",
     "tokensSent": "{{amount}} mallattoo ergame",
-    "withdrawableSoon": "Galiin maallaqa maallaqaan bitamuu yeroo dhiyootti ni baafama"
+    "withdrawableSoon": "Galiin maallaqa maallaqaan bitamuu yeroo dhiyootti ni baafama",
+    "percentUsed": "{{percent}}% fayyadameera",
+    "spentOfTotal": "{{spent}} kan {{total}}",
+    "viewInWallet": "Wallet keessatti ilaali"
   },
   "live": {
     "chatJoined": "makaate",

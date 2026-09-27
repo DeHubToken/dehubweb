@@ -2804,7 +2804,10 @@
     "earningsAvailable": "E disponueshme",
     "earningsPending": "Në pritje",
     "tokensSent": "{{amount}} tokens u dërguan",
-    "withdrawableSoon": "Fitimet nga abonimet do të tërhiqen së shpejti"
+    "withdrawableSoon": "Fitimet nga abonimet do të tërhiqen së shpejti",
+    "percentUsed": "{{percent}}% i përdorur",
+    "spentOfTotal": "{{spent}} të {{total}}",
+    "viewInWallet": "Shfaq në portofol"
   },
   "live": {
     "chatJoined": "u bashkua",

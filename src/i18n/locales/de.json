@@ -4501,7 +4501,10 @@
     "earningsAvailable": "Verfügbar",
     "earningsPending": "Ausstehend",
     "tokensSent": "{{amount}} Token gesendet",
-    "withdrawableSoon": "Abonnementeinnahmen werden in Kürze auszahlbar sein"
+    "withdrawableSoon": "Abonnementeinnahmen werden in Kürze auszahlbar sein",
+    "percentUsed": "{{percent}}% verwendet",
+    "spentOfTotal": "{{spent}} von {{total}}",
+    "viewInWallet": "In Wallet anzeigen"
   },
   "live": {
     "chatJoined": "ist beigetreten",

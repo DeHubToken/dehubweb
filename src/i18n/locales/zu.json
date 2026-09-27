@@ -2820,7 +2820,10 @@
     "earningsAvailable": "Kuyatholakala",
     "earningsPending": "Kusalindiwe",
     "tokensSent": "{{amount}} amathokheni athunyelwe",
-    "withdrawableSoon": "Imali ekhokhelwayo izokhishwa maduzane"
+    "withdrawableSoon": "Imali ekhokhelwayo izokhishwa maduzane",
+    "percentUsed": "{{percent}}% isetshenzisiwe",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "viewInWallet": "Buka esikhwameni semali"
   },
   "live": {
     "chatJoined": "ujoyinile",

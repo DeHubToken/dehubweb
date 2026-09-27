@@ -2787,7 +2787,10 @@
     "earningsAvailable": "Akwai",
     "earningsPending": "Jiraiya",
     "tokensSent": "{{amount}} alamun da aka aika",
-    "withdrawableSoon": "Kudin biyan kuɗi za a cire nan ba da daɗewa ba"
+    "withdrawableSoon": "Kudin biyan kuɗi za a cire nan ba da daɗewa ba",
+    "percentUsed": "{{percent}}% amfani",
+    "spentOfTotal": "{{spent}} na {{total}}",
+    "viewInWallet": "Duba a cikin walat"
   },
   "live": {
     "chatJoined": "ya shiga",

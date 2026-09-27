@@ -2737,7 +2737,10 @@
     "earningsAvailable": "उपलब्धम्",
     "earningsPending": "प्रतीक्षारत",
     "tokensSent": "{{amount}} टोकनानि प्रेषितानि",
-    "withdrawableSoon": "लाभांश घोषणा शीघ्र"
+    "withdrawableSoon": "लाभांश घोषणा शीघ्र",
+    "percentUsed": "{{percent}}% प्रयुक्त",
+    "spentOfTotal": "{{total}} मध्ये {{spent}}",
+    "viewInWallet": "दृश्यः बटुआ"
   },
   "live": {
     "chatJoined": "सम्मिलितः",

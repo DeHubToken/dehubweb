@@ -2415,7 +2415,10 @@
     "earningsAvailable": "E ready",
     "earningsPending": "E still di wait",
     "tokensSent": "We don send {{amount}} tokens",
-    "withdrawableSoon": "You go fit comot your subscription money soon"
+    "withdrawableSoon": "You go fit comot your subscription money soon",
+    "percentUsed": "{{percent}}% used",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "viewInWallet": "View in wallet"
   },
   "live": {
     "chatJoined": "don join",

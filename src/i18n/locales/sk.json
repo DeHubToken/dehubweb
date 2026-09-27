@@ -2925,7 +2925,10 @@
     "earningsAvailable": "Dostupné",
     "earningsPending": "Čaká na spracovanie",
     "tokensSent": "Žetóny {{amount}} boli odoslané",
-    "withdrawableSoon": "Zárobky z predplatného budú čoskoro vyberateľné"
+    "withdrawableSoon": "Zárobky z predplatného budú čoskoro vyberateľné",
+    "percentUsed": "{{percent}}% použité",
+    "spentOfTotal": "{{spent}} z {{total}}",
+    "viewInWallet": "Zobraziť v peňaženke"
   },
   "live": {
     "chatJoined": "sa pripojil/a",

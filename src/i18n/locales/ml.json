@@ -4258,7 +4258,10 @@
     "earningsAvailable": "ലഭ്യമാണ്",
     "earningsPending": "തീർപ്പുകൽപ്പിച്ചിട്ടില്ല",
     "tokensSent": "{{amount}}ടോക്കണുകൾ അയച്ചു",
-    "withdrawableSoon": "സബ്സ്ക്രിപ്ഷൻ വരുമാനം ഉടൻ പിൻവലിക്കാവുന്നതാണ്"
+    "withdrawableSoon": "സബ്സ്ക്രിപ്ഷൻ വരുമാനം ഉടൻ പിൻവലിക്കാവുന്നതാണ്",
+    "percentUsed": "{{percent}}% ഉപയോഗിച്ചു",
+    "spentOfTotal": "{{total}}-ൽ {{spent}}",
+    "viewInWallet": "വാലറ്റിൽ കാണുക"
   },
   "live": {
     "chatJoined": "ചേർന്നു",

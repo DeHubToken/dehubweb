@@ -3842,6 +3842,9 @@
     "earningsAvailable": "Доступно",
     "earningsPending": "На чекању",
     "tokensSent": "Послато {{amount}} токена",
-    "withdrawableSoon": "Зарада од претплата ускоро ће моћи да се повуче"
+    "withdrawableSoon": "Зарада од претплата ускоро ће моћи да се повуче",
+    "percentUsed": "Искоришћено {{percent}}%",
+    "spentOfTotal": "{{spent}} од {{total}}",
+    "viewInWallet": "Погледај у новчанику"
   }
 }

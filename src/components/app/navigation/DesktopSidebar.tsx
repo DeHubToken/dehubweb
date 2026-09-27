@@ -12,6 +12,7 @@ import { useSearchHistory } from '@/hooks/use-search-history';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { WarLogo } from '@/components/app/war/WarLogoLazy';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
+import { SubscriptionCreditsSidebarCard } from '../credits/SubscriptionCreditsWidget';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 import { openStageModal } from '@/contexts/StageContext';
@@ -771,6 +772,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <div data-sidebar-fade className={cn("pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent rounded-b-2xl z-10")} />
           )}
         </motion.div>
+
+        {isAuthenticated && <SubscriptionCreditsSidebarCard collapsed={isCollapsed} />}
 
         {/* Post / Login Button — w-full with no side padding so the button's box
             is the rail's content box, i.e. identical to the nav bento above it

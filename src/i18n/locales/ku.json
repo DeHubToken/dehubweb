@@ -3796,7 +3796,10 @@
     "earningsAvailable": "بەردەستە",
     "earningsPending": "چاوەڕوانە",
     "tokensSent": "{{amount}} تۆکن نێردرا",
-    "withdrawableSoon": "داهاتی بەشداریکردن بەم زووانە دەکرێت بکێشرێتەوە"
+    "withdrawableSoon": "داهاتی بەشداریکردن بەم زووانە دەکرێت بکێشرێتەوە",
+    "percentUsed": "{{percent}}% بەکارهاتووە",
+    "spentOfTotal": "{{spent}} لە {{total}}",
+    "viewInWallet": "لە جزدان ببینە"
   },
   "live": {
     "chatJoined": "tevlî bû",
