@@ -28,7 +28,7 @@ import {
   probeImage,
   uploadEmojiImage,
   type EmojiSource,
-} from '@/lib/emoji/custom-emoji';
+} from '@/lib/emoji/custom-emoji-import';
 import { loadShortcodes } from '@/lib/emoji/shortcodes';
 
 const MAX_PACK = 500;

@@ -4,7 +4,7 @@ vi.mock('@/integrations/supabase/client', () => ({ supabase: {} }));
 vi.mock('@/lib/supabase-wallet-client', () => ({ walletScopedClient: vi.fn() }));
 
 import { tokenizeEmoji } from './tokens';
-import { normaliseShortcode, parseEmojiSource } from './custom-emoji';
+import { normaliseShortcode, parseEmojiSource } from './custom-emoji-import';
 import { loadShortcodes } from './shortcodes';
 
 describe('tokenizeEmoji', () => {
