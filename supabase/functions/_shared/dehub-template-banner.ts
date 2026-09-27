@@ -223,7 +223,7 @@ Reply with ONLY the JSON object, no markdown.`;
         ...(opts.history || []).slice(-4).map((m) => ({ role: m.role === "assistant" ? "assistant" : "user", content: m.content.slice(0, 400) })),
         { role: "user", content: user },
       ],
-    }, { signal: ctl.signal, label: "template-banner" });
+    }, { signal: ctl.signal, label: "template-banner", publicContent: true });
     clearTimeout(t);
     if (!res.ok) throw new Error(`gateway ${res.status}`);
     const data = await res.json();

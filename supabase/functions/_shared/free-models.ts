@@ -16,6 +16,8 @@ interface FreeProvider {
   url: () => string | null;
   key: () => string | undefined;
   model: string;
+  /** The provider may train on what it is sent. Public content only. */
+  trains?: boolean;
 }
 
 const env = (k: string) => Deno.env.get(k) || undefined;
@@ -42,6 +44,8 @@ const PROVIDERS: FreeProvider[] = [
     url: () => 'https://api.mistral.ai/v1/chat/completions',
     key: () => env('MISTRAL_API_KEY'),
     model: 'mistral-small-latest',
+    // The free tier's data may be used for training.
+    trains: true,
   },
   // 10,000 neurons a day — roughly 1,200 short calls on this model.
   {
@@ -94,6 +98,12 @@ function portableBody(body: Record<string, unknown>, model: string): Record<stri
 }
 
 export interface FreeOptions {
+  /**
+   * The text is already public (a feed post, a bio, a public video's
+   * transcript), so a provider that trains on its input may see it. Off by
+   * default: DMs, drafts and assistant conversations never reach one.
+   */
+  publicContent?: boolean;
   expectToolCall?: string;
   label?: string;
   signal?: AbortSignal;
@@ -129,6 +139,7 @@ export async function tryFree(
     const key = p.key();
     const url = p.url();
     if (!key || !url) continue;
+    if (p.trains && !opts.publicContent) continue;
     if (Date.now() < (parkedUntil.get(p.name) ?? 0)) continue;
 
     try {
