@@ -10,7 +10,9 @@
           { "/": "/newpost/*", "comment": "Off-chain post slug" },
           { "/": "/stage/*", "comment": "Stage invite by uuid" },
           { "/": "/stages", "comment": "Stages hub" },
-          { "/": "/stages/*", "comment": "Stage invite by short id" }
+          { "/": "/stages/*", "comment": "Stage invite by short id" },
+          { "/": "/packs", "comment": "Emoji, sticker and GIF packs hub" },
+          { "/": "/packs/*", "comment": "One pack by slug" }
         ]
       }
     ]
