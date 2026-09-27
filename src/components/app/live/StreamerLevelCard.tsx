@@ -12,23 +12,12 @@
  * that is not a streamer's must not grow a streamer panel.
  */
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { STREAMER_BADGE_IDS, badgeMaterial, streamerBadgeSvg } from '@/lib/streamer-badge-art';
 import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'framer-motion';
-import {
-  CalendarCheck,
-  Crown,
-  Flame,
-  Hourglass,
-  Layers,
-  Lock,
-  Moon,
-  Radio,
-  Sunrise,
-  Timer,
-  Users,
-  type LucideIcon,
-} from 'lucide-react';
+import { Flame, Layers, Lock, Radio } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -38,18 +27,7 @@ import {
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useStreamerProgress } from '@/hooks/use-streamer-progress';
-import type { StreamerCardId, StreamerProgress } from '@/lib/api/dehub/livestream';
-
-const CARD_ICONS: Record<StreamerCardId, LucideIcon> = {
-  'first-light': Sunrise,
-  marathon: Timer,
-  'night-owl': Moon,
-  regular: CalendarCheck,
-  'iron-streak': Flame,
-  crowd: Users,
-  century: Hourglass,
-  legend: Crown,
-};
+import type { StreamerProgress } from '@/lib/api/dehub/livestream';
 
 export interface StreamerLevelCardProps {
   address?: string | null;
@@ -121,7 +99,7 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
           >
             <Layers className="w-3.5 h-3.5" />
             <span>{t('live.progress.viewCards')}</span>
-            <span className="font-mono text-white/50">{earnedCount}/{data.cards.length}</span>
+            <span className="font-mono text-white/50">{earnedCount}/{STREAMER_BADGE_IDS.length}</span>
           </button>
         </div>
 
@@ -166,7 +144,7 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
       </div>
 
       <Dialog open={cardsOpen} onOpenChange={setCardsOpen}>
-        <DialogContent className="max-w-lg bg-black/70 backdrop-blur-[24px] border border-white/10 text-white">
+        <DialogContent className="max-w-3xl max-h-[85dvh] overflow-y-auto bg-black/70 backdrop-blur-[24px] border border-white/10 text-white">
           <DialogHeader>
             <DialogTitle className="text-white">{t('live.progress.cardsTitle')}</DialogTitle>
             <DialogDescription className="text-white/50">{t('live.progress.rule')}</DialogDescription>
@@ -181,37 +159,24 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
 
 function StreamerCardGrid({ progress, locale }: { progress: StreamerProgress; locale: string }) {
   const { t } = useTranslation();
+  const { theme } = useAppTheme();
+  const instance = useId();
+  const material = badgeMaterial(theme);
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-      {progress.cards.map((card) => {
-        const Icon = CARD_ICONS[card.id] ?? Layers;
-        const earned = !!card.earnedAt;
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {STREAMER_BADGE_IDS.map((id) => {
+        const card = progress.cards.find((c) => c.id === id);
+        const earned = !!card?.earnedAt;
         return (
-          <div
-            key={card.id}
-            className={cn(
-              'relative rounded-xl border p-3 flex flex-col items-center text-center gap-1.5 min-h-[7.5rem]',
-              earned
-                ? 'border-white/25 bg-white/[0.08] shadow-[0_0_18px_rgba(255,255,255,0.12)]'
-                : 'border-white/10 bg-white/[0.02] opacity-60',
-            )}
-          >
-            <div
-              className={cn(
-                'w-9 h-9 rounded-full flex items-center justify-center border',
-                earned ? 'border-white/40 bg-white/15 text-white' : 'border-white/10 bg-white/5 text-white/40',
-              )}
-            >
-              {earned ? <Icon className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
-            </div>
-            <div className="text-xs font-semibold text-white leading-tight">
-              {t(`live.progress.card.${card.id}.name`)}
-            </div>
-            <div className="text-[10px] leading-snug text-white/50">
-              {t(`live.progress.card.${card.id}.hint`)}
-            </div>
-            <div className="mt-auto text-[10px] text-white/40">
-              {earned ? t('live.progress.earnedOn', { date: formatDate(card.earnedAt, locale) }) : t('live.progress.locked')}
+          <div key={id} className="flex min-w-0 flex-col items-center gap-2 p-3 text-center"
+            style={{ background: material.panel, color: material.text, border: '1px solid ' + material.edge + (earned ? 'aa' : '44'), borderRadius: theme === 'minimal' || theme === 'war' ? 0 : 16 }}>
+            <div aria-hidden="true" className="w-24 h-24 shrink-0 [&>svg]:w-full [&>svg]:h-full"
+              dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, theme, earned, instance) }} />
+            <div className="text-sm font-semibold leading-snug break-words">{t(`live.progress.card.${id}.name`)}</div>
+            <div className="text-xs leading-relaxed" style={{ color: material.muted }}>{t(`live.progress.card.${id}.hint`)}</div>
+            <div className="mt-auto pt-2 flex items-center justify-center gap-1 text-[11px] leading-relaxed" style={{ color: material.muted }}>
+              {!earned && <Lock className="h-3 w-3 shrink-0" />}
+              {earned ? t('live.progress.earnedOn', { date: formatDate(card!.earnedAt, locale) }) : t('live.progress.locked')}
             </div>
           </div>
         );
