@@ -5,6 +5,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check } from 'lucide-react';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -66,7 +67,7 @@ function ChatReactions({
         return (
           <button key={emoji} onClick={() => mine ? onRemoveReaction(messageId, emoji) : onReact(messageId, emoji)}
             className={`group/reaction inline-flex items-center gap-0.5 text-[10px] px-1 py-0.5 rounded-md border transition-colors ${mine ? 'border-white/30 bg-white/10 text-white' : 'border-zinc-700 bg-zinc-800/50 text-zinc-400 hover:border-zinc-600'}`}>
-            <span className="text-xs">{emoji}</span>
+            <span className="text-xs inline-flex items-center"><InlineEmoji value={emoji} className="h-4 m-0" /></span>
             {mine ? (
               <>
                 <span className="group-hover/reaction:hidden">{addresses.length}</span>

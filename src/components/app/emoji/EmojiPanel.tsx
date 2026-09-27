@@ -7,10 +7,12 @@ import {
   Gamepad2,
   Hand,
   Heart,
+  ImagePlus,
   Lightbulb,
   Loader2,
   PawPrint,
   Plane,
+  Plus,
   Search,
   Smile,
   Sparkles,
@@ -38,12 +40,16 @@ import {
   type EmojiSupport,
   type SkinTone,
 } from '@/lib/emoji';
+import type { CustomEmoji } from '@/lib/emoji/custom-emoji';
+import { EmojiImage, useCustomEmojis } from './EmojiText';
+import { AddCustomEmojiPanel } from './AddCustomEmojiPanel';
 
-type SectionKey = 'recent' | 'dehub' | EmojiGroup;
+type SectionKey = 'recent' | 'dehub' | 'custom' | EmojiGroup;
 
 const SECTION_ICONS: Record<SectionKey, LucideIcon> = {
   recent: Clock,
   dehub: Sparkles,
+  custom: ImagePlus,
   smileys: Smile,
   people: Hand,
   animals: PawPrint,
@@ -99,6 +105,9 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
   const [active, setActive] = useState<SectionKey>('dehub');
   const [hovered, setHovered] = useState<EmojiEntry | null>(null);
   const [animate, setAnimate] = useState(false);
+  // Custom emoji (the shared :shortcode: image set) and the inline add form.
+  const custom = useCustomEmojis();
+  const [adding, setAdding] = useState(false);
   const [animFailed, setAnimFailed] = useState<Set<string>>(() => new Set());
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -157,6 +166,8 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
     const recentItems = pick(recents);
     if (recentItems.length) out.push({ key: 'recent', items: recentItems });
     out.push({ key: 'dehub', items: pick(DEHUB_PICKS) });
+    // Rendered from `custom`, not `items` — these are images, not characters.
+    out.push({ key: 'custom', items: [] });
     const byGroup = new Map<EmojiGroup, EmojiEntry[]>();
     for (const e of visible) {
       const list = byGroup.get(e.group) ?? [];
@@ -190,6 +201,7 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
 
   const jumpTo = (key: SectionKey) => {
     setQuery('');
+    setAdding(false);
     setActive(key);
     requestAnimationFrame(() => {
       const el = sectionRefs.current[key];
@@ -238,6 +250,51 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
           </button>
         );
       })}
+    </div>
+  );
+
+  const customMatches = useMemo(() => {
+    const q = query.trim().toLowerCase().replace(/^:|:$/g, '');
+    return q ? custom.filter((c) => c.shortcode.includes(q)) : [];
+  }, [custom, query]);
+
+  // A custom emoji is inserted as `:shortcode:`, which every text surface
+  // renders back as the image (see EmojiText).
+  const renderCustomGrid = (items: CustomEmoji[], withAdd: boolean) => (
+    <div className="grid grid-cols-8 gap-0.5 px-1.5">
+      {withAdd && (
+        <button
+          type="button"
+          onClick={() => setAdding(true)}
+          aria-label={t('emojiPicker.addCustom')}
+          title={t('emojiPicker.addCustom')}
+          className="h-9 w-full flex items-center justify-center rounded-lg border border-dashed border-white/20 text-zinc-400 hover:text-white hover:border-white/40"
+        >
+          <Plus className="w-4 h-4" />
+        </button>
+      )}
+      {items.map((c) => {
+        const value = `:${c.shortcode}:`;
+        return (
+          <button
+            key={c.id}
+            type="button"
+            onClick={(ev) => onSelect(value, { keepOpen: ev.shiftKey })}
+            onMouseEnter={() => setHovered(null)}
+            aria-label={value}
+            title={value}
+            className={cn(
+              'h-9 w-full flex items-center justify-center rounded-lg transition-transform hover:bg-white/10 hover:scale-110',
+              selectedSet.has(value) && 'bg-white/15 ring-1 ring-white/30',
+            )}
+          >
+            <EmojiImage src={c.image_url} name={c.shortcode} className="h-6 max-w-[1.75rem] m-0 align-middle" />
+          </button>
+        );
+      })}
+      {withAdd && items.length === 0 && (
+        <p className="col-span-7 self-center px-1 text-[11px] leading-snug text-zinc-500">{t('emojiPicker.customEmpty')}</p>
+      )}
     </div>
   );
 
@@ -343,7 +400,12 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
 
       {/* Grid */}
       <div ref={scrollRef} onScroll={onScroll} className="relative h-64 overflow-y-auto overscroll-contain py-1">
-        {failed ? (
+        {adding ? (
+          // Inline rather than a dialog: a dialog portals outside the popover this
+          // panel lives in, and the popover closes on that outside press —
+          // unmounting the form mid-upload.
+          <AddCustomEmojiPanel onDone={() => { setAdding(false); jumpTo('custom'); }} />
+        ) : failed ? (
           <div className="flex h-full items-center justify-center text-sm text-zinc-500">
             {t('emojiPicker.noEmoji')}
           </div>
@@ -352,12 +414,22 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
             <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
           </div>
         ) : results ? (
-          results.length ? (
+          results.length || customMatches.length ? (
             <>
-              <div className="px-2.5 pt-1 pb-1 text-[11px] font-medium text-zinc-500">
-                {t('emojiPicker.searchResults')}
-              </div>
-              {renderGrid(results, 'r')}
+              {customMatches.length > 0 && (
+                <>
+                  <div className="px-2.5 pt-1 pb-1 text-[11px] font-medium text-zinc-500">{t('emojiPicker.group.custom')}</div>
+                  {renderCustomGrid(customMatches, false)}
+                </>
+              )}
+              {results.length > 0 && (
+                <>
+                  <div className="px-2.5 pt-1 pb-1 text-[11px] font-medium text-zinc-500">
+                    {t('emojiPicker.searchResults')}
+                  </div>
+                  {renderGrid(results, 'r')}
+                </>
+              )}
             </>
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-1 text-zinc-500">
@@ -376,13 +448,13 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
               // Noto webfont subsets they would otherwise pull in.
               style={{
                 contentVisibility: 'auto',
-                containIntrinsicSize: `auto ${Math.ceil(s.items.length / COLS) * ROW_PX + 28}px`,
+                containIntrinsicSize: `auto ${Math.ceil((s.key === 'custom' ? custom.length + 1 : s.items.length) / COLS) * ROW_PX + 28}px`,
               }}
             >
               <div className="sticky top-0 z-[1] px-2.5 py-1 text-[11px] font-medium text-zinc-400 bg-zinc-900/90 backdrop-blur-sm">
                 {t(`emojiPicker.group.${s.key}`)}
               </div>
-              {renderGrid(s.items, s.key)}
+              {s.key === 'custom' ? renderCustomGrid(custom, true) : renderGrid(s.items, s.key)}
             </section>
           ))
         )}
