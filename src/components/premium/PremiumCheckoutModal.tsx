@@ -6,6 +6,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { getPlayExternalToken } from "@/hooks/usePlanFromLink";
 
 export interface PremiumCheckoutModalProps {
   open: boolean;
@@ -45,6 +46,10 @@ export function PremiumCheckoutModal({
           customerEmail,
           returnUrl,
           environment: getStripeEnvironment(),
+          // Set only when the Android app linked a US user here through Google
+          // Play's external content links flow; the server reports the
+          // resulting transactions to Google against it.
+          playExternalTransactionToken: getPlayExternalToken(),
         },
       },
     );

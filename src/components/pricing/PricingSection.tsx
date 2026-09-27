@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { PremiumCheckoutModal } from '@/components/premium/PremiumCheckoutModal';
 import { toast } from 'sonner';
+import { usePlanFromLink } from '@/hooks/usePlanFromLink';
 
 type Billing = 'monthly' | 'annual';
 
@@ -243,6 +244,8 @@ const plans: Plan[] = [
   },
 ];
 
+const PLAN_PRICE_IDS = plans.flatMap((p) => [p.monthlyPriceId, p.annualPriceId]);
+
 interface Props {
   showHeader?: boolean;
 }
@@ -252,6 +255,7 @@ export function PricingSection({ showHeader = true }: Props) {
   const [billing, setBilling] = useState<Billing>('annual');
   const { walletAddress, user, openLoginModal } = useAuth() as any;
   const [checkoutPriceId, setCheckoutPriceId] = useState<string | null>(null);
+  usePlanFromLink({ allowed: PLAN_PRICE_IDS, walletAddress, openLoginModal, onPlan: setCheckoutPriceId });
 
   const handleSelect = (priceId: string) => {
     if (!walletAddress) {
