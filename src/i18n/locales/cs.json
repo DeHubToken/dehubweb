@@ -1265,6 +1265,11 @@
     "loginRequired": "Vyžadováno přihlášení"
   },
   "messages": {
+    "reply": "Odpovědět",
+    "react": "Reagovat",
+    "edit": "Upravit",
+    "forward": "Přeposlat",
+    "pin": "Připnout",
     "online": "Online",
     "smartRepliesOff": "Navrhované odpovědi jsou vypnuté",
     "smartRepliesOffWhere": "Znovu je zapneš v Nastavení → Zprávy.",

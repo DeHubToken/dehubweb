@@ -1255,6 +1255,11 @@
     "loginRequired": "Ukungena kuyadingeka"
   },
   "messages": {
+    "reply": "Phendula",
+    "react": "Sabela",
+    "edit": "Hlela",
+    "forward": "Dlulisela",
+    "pin": "Phina",
     "online": "Ku-inthanethi",
     "smartRepliesOff": "Izimpendulo eziphakanyisiwe zivaliwe",
     "smartRepliesOffWhere": "Ziphinde uzivule ku- Zilungiselelo → Layezo.",

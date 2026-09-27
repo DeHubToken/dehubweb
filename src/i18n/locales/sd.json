@@ -1250,6 +1250,11 @@
     "loginRequired": "لاگ ان ضروري"
   },
   "messages": {
+    "reply": "جواب ڏيو",
+    "react": "ري ايڪٽ ڪريو",
+    "edit": "تدوين",
+    "forward": "اڳتي موڪليو",
+    "pin": "پن ڪريو",
     "online": "آن لائن",
     "smartRepliesOff": "تجويز ڪيل جواب بند ٿي ويا",
     "smartRepliesOffWhere": "انهن کي سيٽنگون ← پيغام مان ٻيهر آن ڪريو.",

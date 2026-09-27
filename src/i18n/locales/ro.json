@@ -1253,6 +1253,11 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "reply": "Răspunde",
+    "react": "Reacționează",
+    "edit": "Editează",
+    "forward": "Redirecționează",
+    "pin": "Fixează",
     "online": "Online",
     "smartRepliesOff": "Răspunsurile sugerate au fost dezactivate",
     "smartRepliesOffWhere": "Reactivează-le din Setări → Mesaje.",

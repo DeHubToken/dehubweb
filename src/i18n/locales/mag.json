@@ -1229,6 +1229,11 @@
     "loginRequired": "लॉग इन चाहिं"
   },
   "messages": {
+    "reply": "जवाब दऽ",
+    "react": "रिएक्ट करऽ",
+    "edit": "एडिट",
+    "forward": "आगे भेजूँ",
+    "pin": "पिन करऽ",
     "online": "ऑनलाइन करे",
     "smartRepliesOff": "सुझावल जवाब बंद हो गेल",
     "smartRepliesOffWhere": "इनका सेटिंग → संदेश में जाके फेर से चालू करू।",

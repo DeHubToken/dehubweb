@@ -97,6 +97,10 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   const fileInputRef = useRef<HTMLInputElement>(null);
   const docInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // Choosing Reply means about to type — put the caret there.
+  useEffect(() => {
+    if (replyTo) textareaRef.current?.focus();
+  }, [replyTo?.id]);
 
   const mention = useMention({
     inputRef: textareaRef,

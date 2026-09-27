@@ -1270,6 +1270,11 @@
     "loginRequired": "Inicio de sesión requerido"
   },
   "messages": {
+    "reply": "Responder",
+    "react": "Reaccionar",
+    "edit": "Editar",
+    "forward": "Reenviar",
+    "pin": "Fijar",
     "online": "En línea",
     "smartRepliesOff": "Respuestas sugeridas desactivadas",
     "smartRepliesOffWhere": "Vuelve a activarlas en Ajustes → Mensajes.",

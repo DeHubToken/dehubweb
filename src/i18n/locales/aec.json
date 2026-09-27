@@ -1221,6 +1221,11 @@
     "loginRequired": "سجّل دخول مطلوب"
   },
   "messages": {
+    "reply": "رد",
+    "react": "تفاعل",
+    "edit": "عدّل",
+    "forward": "إعادة توجيه",
+    "pin": "تثبيت",
     "online": "أونلاين",
     "smartRepliesOff": "اتقفلت الردود المقترحة",
     "smartRepliesOffWhere": "رجّعها من الإعدادات ← الرسايل.",

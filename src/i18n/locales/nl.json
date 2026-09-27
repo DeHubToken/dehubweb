@@ -1463,6 +1463,11 @@
     "loginRequired": "Inloggen vereist"
   },
   "messages": {
+    "reply": "Beantwoorden",
+    "react": "Reageren",
+    "edit": "Bewerken",
+    "forward": "Doorsturen",
+    "pin": "Vastzetten",
     "online": "Online",
     "smartRepliesOff": "Voorgestelde antwoorden uitgezet",
     "smartRepliesOffWhere": "Zet ze weer aan in Instellingen → Berichten.",

@@ -1270,6 +1270,11 @@
     "loginRequired": "Inloggning krävs"
   },
   "messages": {
+    "reply": "Svara",
+    "react": "Reagera",
+    "edit": "Redigera",
+    "forward": "Vidarebefordra",
+    "pin": "Fäst",
     "online": "Online",
     "smartRepliesOff": "Föreslagna svar avstängda",
     "smartRepliesOffWhere": "Slå på dem igen i Inställningar → Meddelanden.",

@@ -1248,6 +1248,11 @@
     "loginRequired": "Kudu Mlebu"
   },
   "messages": {
+    "reply": "Bales",
+    "react": "Reaksi",
+    "edit": "Sunting",
+    "forward": "Terusaké",
+    "pin": "Sematake",
     "online": "Online",
     "smartRepliesOff": "Wangsulan sing disaranake dipateni",
     "smartRepliesOffWhere": "Uripake maneh ing Setelan → Pesen.",

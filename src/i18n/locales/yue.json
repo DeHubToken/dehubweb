@@ -1253,6 +1253,11 @@
     "loginRequired": "需要登入"
   },
   "messages": {
+    "reply": "回覆",
+    "react": "回應",
+    "edit": "編輯",
+    "forward": "轉寄",
+    "pin": "置頂",
     "online": "線上",
     "smartRepliesOff": "已閂咗建議回覆",
     "smartRepliesOffWhere": "喺 設定 → 訊息 度再開返。",

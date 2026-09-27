@@ -1237,6 +1237,11 @@
     "loginRequired": "តម្រូវឲ្យចូល"
   },
   "messages": {
+    "reply": "ឆ្លើយតប",
+    "react": "តបស្នង",
+    "edit": "កែសម្រួល",
+    "forward": "បញ្ជូនបន្ត",
+    "pin": "ម្ជុល",
     "online": "អនឡាញ",
     "smartRepliesOff": "បានបិទចម្លើយដែលបានស្នើ",
     "smartRepliesOffWhere": "បើកវាឡើងវិញនៅ ការកំណត់ → សារ។",

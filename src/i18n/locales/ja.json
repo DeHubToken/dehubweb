@@ -1268,6 +1268,11 @@
     "loginRequired": "ログインが必要です"
   },
   "messages": {
+    "reply": "返信",
+    "react": "リアクション",
+    "edit": "編集",
+    "forward": "転送",
+    "pin": "ピン留め",
     "online": "オンライン",
     "smartRepliesOff": "返信の候補をオフにしました",
     "smartRepliesOffWhere": "設定 → メッセージ からいつでもオンに戻せます。",

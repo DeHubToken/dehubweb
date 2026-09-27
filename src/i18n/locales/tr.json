@@ -1270,6 +1270,11 @@
     "loginRequired": "Giriş yapılması gerekiyor"
   },
   "messages": {
+    "reply": "Yanıtla",
+    "react": "Tepki Ver",
+    "edit": "Düzenle",
+    "forward": "İlet",
+    "pin": "Sabitle",
     "online": "Çevrimiçi",
     "smartRepliesOff": "Önerilen yanıtlar kapatıldı",
     "smartRepliesOffWhere": "Ayarlar → Mesajlar bölümünden yeniden aç.",

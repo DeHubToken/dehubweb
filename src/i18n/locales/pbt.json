@@ -1227,6 +1227,11 @@
     "loginRequired": "ننوتل اړین دي"
   },
   "messages": {
+    "reply": "ځواب",
+    "react": "غبرګون",
+    "edit": "سمون",
+    "forward": "مخکې ولېږئ",
+    "pin": "پن کړئ",
     "online": "په آنلاین توګه",
     "smartRepliesOff": "وړاندیز شوي ځوابونه بند شول",
     "smartRepliesOffWhere": "هغه له تنظیمات ← پیغامونه څخه بیا فعال کړئ.",

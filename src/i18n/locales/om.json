@@ -1267,6 +1267,11 @@
     "loginRequired": "Seeninuun barbaachisa"
   },
   "messages": {
+    "reply": "Deebisi",
+    "react": "Deebii kenni",
+    "edit": "Gulaali",
+    "forward": "Dabarsi",
+    "pin": "Maxxansi",
     "online": "Toora intarneetiirraan",
     "smartRepliesOff": "Deebiiwwan yaadaman dhaamamaniiru",
     "smartRepliesOffWhere": "Qindaa'ina → Ergaawwan irratti irra deebi'ii banaa.",
