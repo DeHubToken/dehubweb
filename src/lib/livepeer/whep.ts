@@ -35,6 +35,11 @@ export interface WhepSubscription {
   /** Attach this to a <video> via srcObject. */
   stream: MediaStream;
   stop: () => Promise<void>;
+  /**
+   * Re-point state events at a new owner. A session handed from the feed card
+   * to the post page keeps running; only who hears about it changes.
+   */
+  setStateListener: (listener?: (state: WhepState, detail?: string) => void) => void;
 }
 
 export interface SubscribeOptions {
@@ -72,10 +77,11 @@ export async function subscribeToWhep({
   const stream = new MediaStream();
   let resourceUrl: string | null = null;
   let stopped = false;
+  let listener = onStateChange;
 
   const emit = (state: WhepState, detail?: string) => {
     if (stopped && state !== 'closed') return;
-    onStateChange?.(state, detail);
+    listener?.(state, detail);
   };
 
   const stop = async (): Promise<void> => {
@@ -93,7 +99,7 @@ export async function subscribeToWhep({
         // The server times the session out on its own; this is tidiness.
       }
     }
-    onStateChange?.('closed');
+    listener?.('closed');
   };
 
   emit('connecting');
@@ -127,7 +133,8 @@ export async function subscribeToWhep({
 
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
-    await waitForIceGathering(pc);
+    // A relayed run is only worth anything with its TURN candidate in the offer.
+    await waitForIceGathering(pc, extraIceServers?.length ? 'relay' : 'srflx');
 
     const endpoint =
       endpointOverride || `${WHEP_BASE_URL.replace(/\/$/, '')}/${playbackId}`;
@@ -148,7 +155,13 @@ export async function subscribeToWhep({
     await pc.setRemoteDescription({ type: 'answer', sdp: answer });
 
     logger.info('WHEP session opened', { playbackId });
-    return { stream, stop };
+    return {
+      stream,
+      stop,
+      setStateListener: (next) => {
+        listener = next;
+      },
+    };
   } catch (error) {
     await stop();
     throw error;
