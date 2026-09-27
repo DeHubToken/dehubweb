@@ -1270,6 +1270,11 @@
     "loginRequired": "Wymagane logowanie"
   },
   "messages": {
+    "reply": "Odpowiedz",
+    "react": "Reaguj",
+    "edit": "Edytuj",
+    "forward": "Przekaż dalej",
+    "pin": "Przypnij",
     "online": "Online",
     "smartRepliesOff": "Sugerowane odpowiedzi wyłączone",
     "smartRepliesOffWhere": "Włącz je ponownie w Ustawienia → Wiadomości.",

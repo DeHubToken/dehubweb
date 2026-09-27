@@ -1253,6 +1253,11 @@
     "loginRequired": "ਲੌਗ ਇਨ ਜ਼ਰੂਰੀ ਹੈ"
   },
   "messages": {
+    "reply": "ਜਵਾਬ",
+    "react": "ਪ੍ਰਤੀਕਿਰਿਆ",
+    "edit": "ਸੋਧੋ",
+    "forward": "ਅੱਗੇ ਭੇਜੋ",
+    "pin": "ਪਿੰਨ ਕਰੋ",
     "online": "ਆਨਲਾਈਨ",
     "smartRepliesOff": "ਸੁਝਾਏ ਜਵਾਬ ਬੰਦ ਕਰ ਦਿੱਤੇ",
     "smartRepliesOffWhere": "ਇਹਨਾਂ ਨੂੰ ਸੈਟਿੰਗਾਂ → ਸੁਨੇਹੇ ਵਿੱਚ ਮੁੜ ਚਾਲੂ ਕਰੋ।",

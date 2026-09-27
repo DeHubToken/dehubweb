@@ -1254,6 +1254,11 @@
     "loginRequired": "Nepieciešama pieteikšanās"
   },
   "messages": {
+    "reply": "Atbildēt",
+    "react": "Reaģēt",
+    "edit": "Rediģēt",
+    "forward": "Pārsūtīt",
+    "pin": "Piespraust",
     "online": "Tiešsaistē",
     "smartRepliesOff": "Ieteiktās atbildes izslēgtas",
     "smartRepliesOffWhere": "Ieslēdz tās atkal sadaļā Iestatījumi → Ziņojumi.",

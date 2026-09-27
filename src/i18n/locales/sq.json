@@ -1268,6 +1268,11 @@
     "loginRequired": "Kërkohet hyrja"
   },
   "messages": {
+    "reply": "Përgjigju",
+    "react": "Reago",
+    "edit": "Redakto",
+    "forward": "Përcill",
+    "pin": "Ngjit",
     "online": "Online",
     "smartRepliesOff": "Përgjigjet e sugjeruara u çaktivizuan",
     "smartRepliesOffWhere": "Aktivizoji sërish te Cilësimet → Mesazhet.",

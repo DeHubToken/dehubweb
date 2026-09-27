@@ -1097,6 +1097,11 @@
     "loginRequired": "Login dey required"
   },
   "messages": {
+    "reply": "Reply am",
+    "react": "Show feeling",
+    "edit": "Edit Am",
+    "forward": "Forward am",
+    "pin": "Pin am",
     "online": "Online",
     "smartRepliesOff": "Dem don off the reply wey we suggest",
     "smartRepliesOffWhere": "Turn am on again for Setins → Messages.",

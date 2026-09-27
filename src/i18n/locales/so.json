@@ -1254,6 +1254,11 @@
     "loginRequired": "Soo galitaan waa loo baahan yahay"
   },
   "messages": {
+    "reply": "Jawaab",
+    "react": "Falceli",
+    "edit": "Wax ka beddel",
+    "forward": "U gudbi",
+    "pin": "Dheji",
     "online": "Online",
     "smartRepliesOff": "Jawaabaha la soo jeediyay waa la damiyay",
     "smartRepliesOffWhere": "Dib uga shid Dejinta → Fariimaha.",

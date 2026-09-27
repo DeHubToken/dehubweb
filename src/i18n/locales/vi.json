@@ -1200,6 +1200,11 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "reply": "Trả lời",
+    "react": "Bày tỏ cảm xúc",
+    "edit": "Chỉnh sửa",
+    "forward": "Chuyển tiếp",
+    "pin": "Ghim",
     "online": "Trực tuyến",
     "smartRepliesOff": "Đã tắt câu trả lời gợi ý",
     "smartRepliesOffWhere": "Bật lại trong Cài đặt → Tin nhắn.",

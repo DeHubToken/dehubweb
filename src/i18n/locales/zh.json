@@ -1269,6 +1269,11 @@
     "loginRequired": "需要登录"
   },
   "messages": {
+    "reply": "回复",
+    "react": "表态",
+    "edit": "编辑",
+    "forward": "转发",
+    "pin": "置顶",
     "online": "在线",
     "smartRepliesOff": "已关闭建议回复",
     "smartRepliesOffWhere": "可在 设置 → 消息 中重新开启。",

@@ -1225,6 +1225,11 @@
     "loginRequired": "Aamäldig erforderlich"
   },
   "messages": {
+    "reply": "Antworte",
+    "react": "Reagiere",
+    "edit": "Bearbeite",
+    "forward": "Wiiterleite",
+    "pin": "Aapinne",
     "online": "Online",
     "smartRepliesOff": "Antwortvorschläg abgschaltet",
     "smartRepliesOffWhere": "Under Istelligä → Nochrichtä wieder iischalte.",

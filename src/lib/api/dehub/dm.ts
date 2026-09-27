@@ -265,7 +265,8 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
     editedAt: raw.editedAt ?? null,
     isForwarded: raw.isForwarded ?? false,
     reactions: raw.reactions && typeof raw.reactions === 'object' ? raw.reactions : {},
-    replyTo: raw.replyTo ?? null,
+    // Populated preview only — a bare id has nothing to render.
+    replyTo: raw.replyTo && typeof raw.replyTo === 'object' ? raw.replyTo : null,
     paymentStatus: raw.paymentStatus ?? null,
     paymentTxHash: raw.paymentTxHash ?? null,
     tipAmount: raw.tipAmount ?? null,

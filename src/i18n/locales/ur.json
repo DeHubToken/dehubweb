@@ -1252,6 +1252,11 @@
     "loginRequired": "لاگ ان ضروری ہے"
   },
   "messages": {
+    "reply": "جواب دیں",
+    "react": "ردِعمل",
+    "edit": "ترمیم کریں",
+    "forward": "آگے بھیجیں",
+    "pin": "پن کریں",
     "online": "آن لائن",
     "smartRepliesOff": "تجویز کردہ جوابات بند کر دیے گئے",
     "smartRepliesOffWhere": "انہیں ترتیبات ← پیغامات سے دوبارہ آن کریں۔",

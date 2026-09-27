@@ -1270,6 +1270,11 @@
     "loginRequired": "Avtorizatsiya kerak"
   },
   "messages": {
+    "reply": "Javob berish",
+    "react": "Reaksiya",
+    "edit": "Tahrirlash",
+    "forward": "Uzatish",
+    "pin": "Mahkamlash",
     "online": "Onlayn",
     "smartRepliesOff": "Tavsiya etilgan javoblar o'chirildi",
     "smartRepliesOffWhere": "Ularni Sozlamalar → Xabarlar bo'limidan qayta yoqing.",

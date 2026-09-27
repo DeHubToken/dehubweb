@@ -1270,6 +1270,11 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "reply": "Reply",
+    "react": "React",
+    "edit": "Edit",
+    "forward": "Forward",
+    "pin": "Pin",
     "online": "Online",
     "smartRepliesOff": "Suggested replies turned off",
     "smartRepliesOffWhere": "Turn them back on in Settings → Messages.",

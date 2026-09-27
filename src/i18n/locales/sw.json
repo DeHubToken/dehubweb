@@ -1271,6 +1271,11 @@
     "loginRequired": "Kuingia kunahitajika"
   },
   "messages": {
+    "reply": "Jibu",
+    "react": "Itikia",
+    "edit": "Hariri",
+    "forward": "Sambaza",
+    "pin": "Bandika",
     "online": "Mtandaoni",
     "smartRepliesOff": "Majibu yanayopendekezwa yamezimwa",
     "smartRepliesOffWhere": "Yawashe tena kwenye Mipangilio → Ujumbe.",

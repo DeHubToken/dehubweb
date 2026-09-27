@@ -1209,6 +1209,11 @@
     "loginRequired": "لاگ ان ضروری ہے"
   },
   "messages": {
+    "reply": "جواب دو",
+    "react": "ری ایکٹ کرو",
+    "edit": "ایڈٹ",
+    "forward": "आगे भेजा",
+    "pin": "पिन करा",
     "online": "آنلاین",
     "smartRepliesOff": "تجویز کیل جواب بند ہو گیل",
     "smartRepliesOffWhere": "اونکن سیٹنگ ← پیغام سے دوبارہ آن کرا۔",

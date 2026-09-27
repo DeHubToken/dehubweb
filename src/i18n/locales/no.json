@@ -1252,6 +1252,11 @@
     "loginRequired": "Innlogging påkrevd"
   },
   "messages": {
+    "reply": "Svar",
+    "react": "Reager",
+    "edit": "Rediger",
+    "forward": "Videresend",
+    "pin": "Fest",
     "online": "På nett",
     "smartRepliesOff": "Foreslåtte svar er slått av",
     "smartRepliesOffWhere": "Slå dem på igjen i Innstillinger → Meldinger.",

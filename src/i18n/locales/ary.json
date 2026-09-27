@@ -1241,6 +1241,11 @@
     "loginRequired": "خاصك تدخل"
   },
   "messages": {
+    "reply": "جاوب",
+    "react": "تفاعل",
+    "edit": "تعديل",
+    "forward": "إعادة توجيه",
+    "pin": "ثبت",
     "online": "متصل",
     "smartRepliesOff": "تطفاو الردود المقترحة",
     "smartRepliesOffWhere": "رجّعهم من الإعدادات ← الرسائل.",

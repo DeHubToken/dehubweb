@@ -1119,6 +1119,11 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "reply": "Ansa",
+    "react": "Show feeling",
+    "edit": "Change am",
+    "forward": "Forward am",
+    "pin": "Pin am",
     "online": "Online",
     "smartRepliesOff": "Dem don of di ansa dem weh wi propose",
     "smartRepliesOffWhere": "Put-am on bak fo Settings → Messages.",

@@ -1233,6 +1233,11 @@
     "loginRequired": "लॉग इन जरूरी हे"
   },
   "messages": {
+    "reply": "जवाब देवव",
+    "react": "प्रतिक्रिया देवव",
+    "edit": "संपादन करव",
+    "forward": "आगू भेजव",
+    "pin": "पिन करव",
     "online": "आनलाइन",
     "smartRepliesOff": "सुझाए गे जवाब बंद हो गे",
     "smartRepliesOffWhere": "इनला सेटिंग → संदेश म जाके फेर से चालू करव।",

@@ -1331,6 +1331,11 @@
     "loginRequired": "Vyžaduje sa prihlásenie"
   },
   "messages": {
+    "reply": "Odpovedať",
+    "react": "Reagovať",
+    "edit": "Upraviť",
+    "forward": "Preposlať",
+    "pin": "Pripnúť",
     "smartRepliesOff": "Navrhované odpovede sú vypnuté",
     "smartRepliesOffWhere": "Znova ich zapneš v Nastavenia → Správy.",
     "smartRepliesUndo": "Späť",

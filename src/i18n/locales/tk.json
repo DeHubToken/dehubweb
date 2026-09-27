@@ -1242,6 +1242,11 @@
     "loginRequired": "Girmek talap edilýär"
   },
   "messages": {
+    "reply": "Jogap ber",
+    "react": "Reaksiýa bildir",
+    "edit": "Üýtget",
+    "forward": "Ugrat",
+    "pin": "Berkit",
     "online": "Onlaýn",
     "smartRepliesOff": "Teklip edilýän jogaplar öçürildi",
     "smartRepliesOffWhere": "Sazlamalar → Habarlar bölüminden ýene açyň.",

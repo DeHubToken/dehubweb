@@ -1267,6 +1267,11 @@
     "loginRequired": "تسجيل الدخول مطلوب"
   },
   "messages": {
+    "reply": "رد",
+    "react": "تفاعل",
+    "edit": "تعديل",
+    "forward": "إعادة توجيه",
+    "pin": "تثبيت",
     "online": "متصل",
     "smartRepliesOff": "تم إيقاف الردود المقترحة",
     "smartRepliesOffWhere": "أعِد تشغيلها من الإعدادات ← الرسائل.",

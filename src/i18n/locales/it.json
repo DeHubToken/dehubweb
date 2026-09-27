@@ -1270,6 +1270,11 @@
     "loginRequired": "Accesso richiesto"
   },
   "messages": {
+    "reply": "Rispondi",
+    "react": "Reagisci",
+    "edit": "Modifica",
+    "forward": "Inoltra",
+    "pin": "Fissa",
     "online": "Online",
     "smartRepliesOff": "Risposte suggerite disattivate",
     "smartRepliesOffWhere": "Riattivale in Impostazioni → Messaggi.",

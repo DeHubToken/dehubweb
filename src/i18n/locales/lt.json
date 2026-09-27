@@ -1254,6 +1254,11 @@
     "loginRequired": "Reikia prisijungti"
   },
   "messages": {
+    "reply": "Atsakyti",
+    "react": "Reaguoti",
+    "edit": "Redaguoti",
+    "forward": "Persiųsti",
+    "pin": "Prisegti",
     "online": "Internetu",
     "smartRepliesOff": "Siūlomi atsakymai išjungti",
     "smartRepliesOffWhere": "Vėl juos įjunk skiltyje Nustatymai → Žinutės.",

@@ -1267,6 +1267,11 @@
     "loginRequired": "Moutq pahanjvoum e"
   },
   "messages": {
+    "reply": "Պատասխանել",
+    "react": "Արձագանքել",
+    "edit": "Khmbagrrel",
+    "forward": "Փոխանցել",
+    "pin": "Ամրացնել",
     "online": "Առցանց",
     "smartRepliesOff": "Առաջարկվող պատասխանները անջատված են",
     "smartRepliesOffWhere": "Նորից միացրու Կարգավորումներ → Հաղորդագրություններ բաժնում։",

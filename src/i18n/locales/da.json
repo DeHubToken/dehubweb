@@ -1270,6 +1270,11 @@
     "loginRequired": "Login påkrævet"
   },
   "messages": {
+    "reply": "Svar",
+    "react": "Reager",
+    "edit": "Rediger",
+    "forward": "Videresend",
+    "pin": "Fastgør",
     "online": "Online",
     "smartRepliesOff": "Foreslåede svar er slået fra",
     "smartRepliesOffWhere": "Slå dem til igen under Indstillinger → Beskeder.",
