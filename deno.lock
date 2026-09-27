@@ -94,6 +94,9 @@
         "npm:@types/react-dom@^18.3.7",
         "npm:@types/react@^18.3.23",
         "npm:@types/three@0.181",
+        "npm:@uniswap/sdk-core@7.19.2",
+        "npm:@uniswap/v3-sdk@3.31.3",
+        "npm:@uniswap/v4-sdk@2.3.3",
         "npm:@vitejs/plugin-react-swc@^3.11.0",
         "npm:@wagmi/connectors@^5.6.0",
         "npm:@wagmi/core@^2.16.5",
@@ -147,7 +150,7 @@
         "npm:react-i18next@^16.5.4",
         "npm:react-markdown@^10.1.0",
         "npm:react-resizable-panels@^2.1.9",
-        "npm:react-router-dom@^6.30.1",
+        "npm:react-router-dom@^6.30.6",
         "npm:react@^18.3.1",
         "npm:recharts@^2.15.4",
         "npm:socket.io-client@^4.8.3",
@@ -164,7 +167,7 @@
         "npm:vitest@^3.2.6",
         "npm:wagmi@^2.19.5",
         "npm:webm-muxer@^5.1.4",
-        "npm:wrangler@^4.119.0",
+        "npm:wrangler@^4.133.0",
         "npm:zod@^3.25.76",
         "npm:zustand@^5.0.14"
       ]
