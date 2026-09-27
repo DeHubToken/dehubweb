@@ -111,8 +111,11 @@ html[data-theme='osaka'] {
   /* -- type -------------------------------------------------------------- */
   /* System mono, not a webfont. The app already pays for one Google Fonts
      request (Exo); a second for chrome numerics is not worth the LCP cost. */
+  /* Emoji families before the generic, as in index.css's `*` stack, so 🔫
+     keeps its pistol glyph and flags draw on Windows inside mono labels. */
   --osaka-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
-    'Liberation Mono', monospace;
+    'Liberation Mono', 'DeHub Pistol', 'Apple Color Emoji', 'Noto Color Emoji',
+    'Segoe UI Emoji', monospace;
 
   /* -- shape ------------------------------------------------------------- */
   /* One universal bento radius. Osaka's chrome is rounded, but no structural
