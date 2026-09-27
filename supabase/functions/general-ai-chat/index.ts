@@ -1,3 +1,4 @@
+declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void };
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 import { rateLimitByIp, resolveDeHubAddress } from "../_shared/auth.ts";
