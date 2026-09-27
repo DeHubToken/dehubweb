@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCrossPostStore } from '@/store/crossPostStore';
 import { PLATFORM_NAMES, getMultipostStatus } from '@/lib/multipost';
+import { creditsFor } from '@/lib/social-pricing';
 import { MULTIPOST_QUERY_KEY, PlatformIcon } from '@/components/app/settings/MultiPostSettings';
 
 export function CrossPostPicker({ onNavigateAway }: { onNavigateAway?: () => void }) {
@@ -17,8 +18,8 @@ export function CrossPostPicker({ onNavigateAway }: { onNavigateAway?: () => voi
   const status = useQuery({ queryKey: MULTIPOST_QUERY_KEY, queryFn: getMultipostStatus, enabled: isAuthenticated, staleTime: 60_000 });
 
   if (!isAuthenticated || status.isError) return null;
-  const accounts = status.data?.accounts ?? [];
-  const active = accounts.filter((a) => selected.includes(a.id)).length;
+  const accounts = (status.data?.accounts ?? []).filter((a) => !a.pending);
+  const active = accounts.filter((a) => selected.includes(a.id)).reduce((sum, a) => sum + creditsFor(a.platform), 0);
 
   const openSettings = () => {
     onNavigateAway?.();
