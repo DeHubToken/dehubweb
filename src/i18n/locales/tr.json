@@ -77,6 +77,8 @@
     "live": "Canlı"
   },
   "settings": {
+    "showOnline": "Çevrimiçi olduğumda göster",
+    "showOnlineDesc": "Mesaj gönderdiğiniz kişiler, DeHub'ı kullanırken adınızın yanında yeşil bir nokta görür",
     "smartReplies": "Önerilen yanıtlar",
     "smartRepliesDesc": "Sohbette dokunabileceğin iki yanıt hazırlar. Önerilerdeki × bunu kapatır.",
     "title": "Ayarlar",
@@ -1268,6 +1270,7 @@
     "loginRequired": "Giriş yapılması gerekiyor"
   },
   "messages": {
+    "online": "Çevrimiçi",
     "smartRepliesOff": "Önerilen yanıtlar kapatıldı",
     "smartRepliesOffWhere": "Ayarlar → Mesajlar bölümünden yeniden aç.",
     "smartRepliesUndo": "Geri al",

@@ -76,6 +76,8 @@
     "live": "Уживо"
   },
   "settings": {
+    "showOnline": "Prikaži kada sam onlajn",
+    "showOnlineDesc": "Osobe kojima pošaljete poruku vide zelenu tačku pored vašeg imena dok koristite DeHub",
     "smartReplies": "Предложени одговори",
     "smartRepliesDesc": "Саставља два одговора које можеш да додирнеш у ћаскању. × на предлозима ово искључује.",
     "title": "Подешавања",
@@ -1021,6 +1023,7 @@
     "loginRequired": "Пријава је обавезна"
   },
   "messages": {
+    "online": "Onlajn",
     "smartRepliesOff": "Предложени одговори су искључени",
     "smartRepliesOffWhere": "Поново их укључи у Подешавања → Поруке.",
     "smartRepliesUndo": "Опозови",

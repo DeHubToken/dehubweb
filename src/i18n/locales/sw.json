@@ -77,6 +77,8 @@
     "live": "Moja kwa Moja"
   },
   "settings": {
+    "showOnline": "Onyesha wakati niko mtandaoni",
+    "showOnlineDesc": "Watu unaotuma ujumbe wanaona nukta ya kijani karibu na jina lako unapotumia DeHub",
     "smartReplies": "Majibu yanayopendekezwa",
     "smartRepliesDesc": "Huandaa majibu mawili unayoweza kugusa kwenye gumzo. Alama ya × kwenye mapendekezo huzima hii.",
     "title": "Mipangilio",
@@ -1269,6 +1271,7 @@
     "loginRequired": "Kuingia kunahitajika"
   },
   "messages": {
+    "online": "Mtandaoni",
     "smartRepliesOff": "Majibu yanayopendekezwa yamezimwa",
     "smartRepliesOffWhere": "Yawashe tena kwenye Mipangilio → Ujumbe.",
     "smartRepliesUndo": "Tendua",

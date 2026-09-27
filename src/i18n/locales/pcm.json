@@ -77,6 +77,8 @@
     "live": "Live"
   },
   "settings": {
+    "showOnline": "Show when I'm online",
+    "showOnlineDesc": "People you message see a green dot next to your name while you're using DeHub",
     "smartReplies": "Reply wey we suggest",
     "smartRepliesDesc": "E dey write two reply wey you fit tap for chat. The × wey dey the suggestion dey off am.",
     "title": "Setins",
@@ -1095,6 +1097,7 @@
     "loginRequired": "Login dey required"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Dem don off the reply wey we suggest",
     "smartRepliesOffWhere": "Turn am on again for Setins → Messages.",
     "smartRepliesUndo": "Undo am",

@@ -77,6 +77,8 @@
     "live": "Tiesiogiai"
   },
   "settings": {
+    "showOnline": "Rodyti, kada esu prisijungęs",
+    "showOnlineDesc": "Kai naudojatės „DeHub“, žmonės, kuriems rašote žinutes, šalia jūsų vardo mato žalią tašką",
     "smartReplies": "Siūlomi atsakymai",
     "smartRepliesDesc": "Parengia du atsakymus, kuriuos gali paliesti pokalbyje. × prie pasiūlymų tai išjungia.",
     "title": "Nustatymai",
@@ -1252,6 +1254,7 @@
     "loginRequired": "Reikia prisijungti"
   },
   "messages": {
+    "online": "Internetu",
     "smartRepliesOff": "Siūlomi atsakymai išjungti",
     "smartRepliesOffWhere": "Vėl juos įjunk skiltyje Nustatymai → Žinutės.",
     "smartRepliesUndo": "Anuliuoti",

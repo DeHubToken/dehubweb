@@ -77,6 +77,8 @@
     "live": "En direct"
   },
   "settings": {
+    "showOnline": "Montrer quand je suis en ligne",
+    "showOnlineDesc": "Les personnes que vous envoyez un message voient un point vert à côté de votre nom lorsque vous utilisez DeHub",
     "smartReplies": "Réponses suggérées",
     "smartRepliesDesc": "Rédige deux réponses à toucher dans une discussion. La × sur les suggestions désactive l'option.",
     "title": "Paramètres",
@@ -1268,6 +1270,7 @@
     "loginRequired": "Connexion requise"
   },
   "messages": {
+    "online": "En ligne",
     "smartRepliesOff": "Réponses suggérées désactivées",
     "smartRepliesOffWhere": "Réactivez-les dans Paramètres → Messages.",
     "smartRepliesUndo": "Annuler",

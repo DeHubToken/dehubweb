@@ -77,6 +77,8 @@
     "live": "Tiešraide"
   },
   "settings": {
+    "showOnline": "Rādīt, kad esmu tiešsaistē",
+    "showOnlineDesc": "Kamēr izmantojat DeHub, personas, kurām sūtāt ziņojumus, blakus jūsu vārdam redz zaļu punktu",
     "smartReplies": "Ieteiktās atbildes",
     "smartRepliesDesc": "Sagatavo divas atbildes, kurām vari pieskarties tērzēšanā. × pie ieteikumiem to izslēdz.",
     "title": "Iestatījumi",
@@ -1252,6 +1254,7 @@
     "loginRequired": "Nepieciešama pieteikšanās"
   },
   "messages": {
+    "online": "Tiešsaistē",
     "smartRepliesOff": "Ieteiktās atbildes izslēgtas",
     "smartRepliesOffWhere": "Ieslēdz tās atkal sadaļā Iestatījumi → Ziņojumi.",
     "smartRepliesUndo": "Atsaukt",

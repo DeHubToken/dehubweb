@@ -77,6 +77,8 @@
     "live": "Na żywo"
   },
   "settings": {
+    "showOnline": "Pokaż, gdy jestem online",
+    "showOnlineDesc": "Osoby, do których piszesz, widzą zieloną kropkę obok Twojego imienia podczas korzystania z DeHub",
     "smartReplies": "Sugerowane odpowiedzi",
     "smartRepliesDesc": "Przygotowuje dwie odpowiedzi, które możesz dotknąć na czacie. × przy sugestiach je wyłącza.",
     "title": "Ustawienia",
@@ -1268,6 +1270,7 @@
     "loginRequired": "Wymagane logowanie"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Sugerowane odpowiedzi wyłączone",
     "smartRepliesOffWhere": "Włącz je ponownie w Ustawienia → Wiadomości.",
     "smartRepliesUndo": "Cofnij",
