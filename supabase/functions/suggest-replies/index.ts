@@ -121,7 +121,9 @@ serve(async (req) => {
     }
 
     const response = await aiChat({
-      model: 'google/gemini-2.5-flash',
+      // Two one-line drafts: the lite tier writes these as well and costs a
+      // fraction, and it fires on every incoming DM.
+      model: 'google/gemini-2.5-flash-lite',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: renderThread(turns, peerName) },

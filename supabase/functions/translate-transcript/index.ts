@@ -47,9 +47,9 @@ const subtitleSystemPrompt = (langName: string, count: number) =>
   `Return ONLY a JSON array of exactly ${count} translated strings, one per input line, in order. ` +
   `No markdown fences, no commentary, no refusals — a line with nothing to translate is returned as given.`;
 
-/** fal leads: the Lovable gateway has returned 402 (out of credits), and when
- *  it did every chunk threw, the catch fell back to the untranslated lines,
- *  and those got persisted as the translation. */
+/** Haiku on fal, behind Flash-Lite. Kept as a second vendor: when the gateway
+ *  last ran out of credits every chunk threw and the untranslated lines were
+ *  persisted as the translation. */
 async function chunkViaFal(numbered: string, langName: string, count: number): Promise<string[] | null> {
   if (!FAL_KEY) return null;
   try {
@@ -118,8 +118,12 @@ async function chunkViaGateway(numbered: string, langName: string): Promise<stri
 
 async function translateChunk(items: Array<{ text: string }>, langName: string): Promise<string[]> {
   const numbered = items.map((s, i) => `${i + 1}. ${s.text}`).join('\n');
-  let out = await chunkViaFal(numbered, langName, items.length);
-  if (!out) out = await chunkViaGateway(numbered, langName);
+  // Cheapest first: Flash-Lite via aiChat, then Haiku on fal.
+  let out: string[] | null = await chunkViaGateway(numbered, langName).catch((e) => {
+    console.error('ai chunk failed', e);
+    return null;
+  });
+  if (!out || out.length === 0) out = (await chunkViaFal(numbered, langName, items.length)) ?? [];
   // Nothing back at all is a failure, not a chunk of blanks — without this an
   // empty answer padded out to the original lines and was persisted as the
   // translation, which nothing downstream can tell apart from success.

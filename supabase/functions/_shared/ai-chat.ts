@@ -55,6 +55,15 @@ const DIRECT_MODELS: Record<string, string[]> = {
 /** Ids Google has 404'd in this isolate — not worth asking twice. */
 const deadDirectModels = new Set<string>();
 
+/**
+ * Until when this isolate skips Google after a 429. A key over its quota stays
+ * over it for minutes to a day, and asking again on every call only adds a
+ * round trip before the gateway answers anyway. Short enough that raising the
+ * quota takes effect without a redeploy.
+ */
+const QUOTA_BACKOFF_MS = 5 * 60 * 1000;
+let directQuotaUntil = 0;
+
 export interface AiChatOptions {
   /**
    * Name of the function the caller forced with `tool_choice`. A model that
@@ -94,6 +103,7 @@ async function tryDirect(
 ): Promise<Response | null> {
   const key = Deno.env.get('GEMINI_API_KEY');
   if (!key) return null;
+  if (Date.now() < directQuotaUntil) return null;
 
   const requested = typeof body.model === 'string' ? body.model : '';
   const candidates = (DIRECT_MODELS[requested] ?? []).filter((m) => !deadDirectModels.has(m));
@@ -124,6 +134,7 @@ async function tryDirect(
       }
 
       if (!res.ok) {
+        if (res.status === 429) directQuotaUntil = Date.now() + QUOTA_BACKOFF_MS;
         console.log(`${tag} gemini direct ${res.status} on ${model}, falling back to gateway`);
         return null;
       }
