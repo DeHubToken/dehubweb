@@ -323,7 +323,7 @@ Deno.serve(async (req) => {
         credits_refunded: failed,
         scheduled_for: schedule?.toISOString() ?? null,
         status: post?.status ?? 'failed',
-        error: failed ? (res.data?.error ?? (post?.platforms ?? []).map((p: any) => p.errorMessage).filter(Boolean).join('; ') || null) : null,
+        error: failed ? ((res.data?.error ?? (post?.platforms ?? []).map((p: any) => p.errorMessage).filter(Boolean).join('; ')) || null) : null,
       });
 
       if (failed === cost) {
