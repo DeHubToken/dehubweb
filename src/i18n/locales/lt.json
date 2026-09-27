@@ -5198,7 +5198,11 @@
     "notEnoughTokens": "Nepakanka žetonų dubliavimui.",
     "notEnoughTokensDescription": "Jums reikia apie {{needed}} žetonų ir turite {{held}}.",
     "paymentLeftWallet": "Jūsų žetonai paliko jūsų piniginę. Paspauskite „Mokėti“ dar kartą, kad bandytumėte patvirtinti.",
-    "paidForMinutes": "Sumokėta {{amount}} žetonų už {{minutes}} minučių dubliavimą."
+    "paidForMinutes": "Sumokėta {{amount}} žetonų už {{minutes}} minučių dubliavimą.",
+    "menuItem": "Dubliavimas",
+    "noTranscript": "Šis vaizdo įrašas dar neturi transkripcijos, todėl jo negalima dubliuoti. Bandykite vėliau.",
+    "noVoice": "Jūsų įrenginyje nėra balso šiai kalbai.",
+    "sameLanguage": "Šis vaizdo įrašas jau yra jūsų kalba."
   },
   "support": {
     "title": "Pagalba",

@@ -3025,7 +3025,11 @@
     "notEnoughTokens": "Ikke nok tokens for dubbing.",
     "notEnoughTokensDescription": "Du trenger omtrent {{needed}} tokens og har {{held}}.",
     "paymentLeftWallet": "Dine tokens har forlatt lommeboken din. Trykk på Betal igjen for å prøve å bekrefte den på nytt.",
-    "paidForMinutes": "Betalte {{amount}} tokens for {{minutes}} minutter med dubbing."
+    "paidForMinutes": "Betalte {{amount}} tokens for {{minutes}} minutter med dubbing.",
+    "menuItem": "Dubbing",
+    "noTranscript": "Denne videoen har ingen transkripsjon ennå, så den kan ikke dubbes. Prøv igjen senere.",
+    "noVoice": "Enheten din har ingen stemme for dette språket.",
+    "sameLanguage": "Denne videoen er allerede på ditt språk."
   },
   "digest": {
     "andOthers_one": "{{names}} og {{count}} andre",

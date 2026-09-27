@@ -5218,7 +5218,11 @@
     "notEnoughTokens": "Jetons insuffisants pour le doublage.",
     "notEnoughTokensDescription": "Vous avez besoin d'environ {{needed}} jetons et vous en possédez {{held}}.",
     "paymentLeftWallet": "Vos jetons ont quitté votre portefeuille. Appuyez à nouveau sur Payer pour réessayer de les confirmer.",
-    "paidForMinutes": "Paiement de {{amount}} jetons pour {{minutes}} minutes de doublage."
+    "paidForMinutes": "Paiement de {{amount}} jetons pour {{minutes}} minutes de doublage.",
+    "menuItem": "Doublage",
+    "noTranscript": "Cette vidéo n'a pas encore de transcription, elle ne peut donc pas être doublée. Réessayez plus tard.",
+    "noVoice": "Votre appareil n'a aucune voix pour cette langue.",
+    "sameLanguage": "Cette vidéo est déjà dans votre langue."
   },
   "support": {
     "title": "Assistance",

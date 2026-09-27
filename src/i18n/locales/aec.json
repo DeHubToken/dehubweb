@@ -2974,7 +2974,11 @@
     "notEnoughTokens": "مفيش توكنات كفاية للدبلجة.",
     "notEnoughTokensDescription": "أنت محتاج حوالي {{needed}} توكن ومعاك {{held}}.",
     "paymentLeftWallet": "فلوسك طلعت من المحفظة. اضغط على ادفع تاني عشان تعيد تأكيدها.",
-    "paidForMinutes": "دفعت {{amount}} توكن مقابل {{minutes}} دقيقة دبلجة."
+    "paidForMinutes": "دفعت {{amount}} توكن مقابل {{minutes}} دقيقة دبلجة.",
+    "menuItem": "دبلجة",
+    "noTranscript": "الفيديو ده لسه مالوش نص، فمش هينفع يتدبلج. جرّب بعدين.",
+    "noVoice": "جهازك مافيهوش صوت للغة دي.",
+    "sameLanguage": "الفيديو ده أصلاً بلغتك."
   },
   "digest": {
     "andOthers_one": "{{names}} و {{count}} تانيين",

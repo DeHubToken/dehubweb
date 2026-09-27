@@ -5158,7 +5158,11 @@
     "notEnoughTokens": "Nincs elég token a szinkronizáláshoz.",
     "notEnoughTokensDescription": "Körülbelül {{needed}} tokenre van szüksége, és {{held}} van birtokában.",
     "paymentLeftWallet": "A tokenjaid elhagyták a tárcádat. Nyomd meg a Fizetés gombot az ismételt megerősítéshez.",
-    "paidForMinutes": "Fizetve {{amount}} token {{minutes}} percnyi szinkronizálásért."
+    "paidForMinutes": "Fizetve {{amount}} token {{minutes}} percnyi szinkronizálásért.",
+    "menuItem": "Szinkron",
+    "noTranscript": "Ennek a videónak még nincs átirata, ezért nem szinkronizálható. Próbáld újra később.",
+    "noVoice": "Az eszközödön nincs hang ehhez a nyelvhez.",
+    "sameLanguage": "Ez a videó már a te nyelveden van."
   },
   "digest": {
     "andOthers_one": "{{names}} és még {{count}}",

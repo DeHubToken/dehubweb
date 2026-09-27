@@ -3028,7 +3028,11 @@
     "notEnoughTokens": "لا توجد توكنات كافية للترجمة.",
     "notEnoughTokensDescription": "تحتاج إلى حوالي {{needed}} توكن ولديك {{held}}.",
     "paymentLeftWallet": "تمت مغادرة التوكنز الخاصة بك من المحفظة. اضغط على \"ادفع\" مرة أخرى لمحاولة تأكيدها.",
-    "paidForMinutes": "تم دفع {{amount}} توكنز مقابل {{minutes}} دقائق من الدبلجة."
+    "paidForMinutes": "تم دفع {{amount}} توكنز مقابل {{minutes}} دقائق من الدبلجة.",
+    "menuItem": "دبلجة",
+    "noTranscript": "الفيديو ده لسه مالوش نص، فمينفعش يتدبلج. جرّب تاني بعدين.",
+    "noVoice": "جهازك مفيهوش صوت للغة دي.",
+    "sameLanguage": "الفيديو ده بلغتك أصلاً."
   },
   "digest": {
     "andOthers_one": "{{names}} و {{count}} آخر",

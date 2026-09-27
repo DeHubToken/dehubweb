@@ -2505,7 +2505,11 @@
     "original": "Original audio",
     "dubbed": "Dubbed audio",
     "preparing": "Preparing dubbed audio…",
-    "unavailable": "Dubbed audio is not available for this video."
+    "unavailable": "Dubbed audio is not available for this video.",
+    "menuItem": "Dub",
+    "noTranscript": "Dis video never get transcript, so we no fit dub am. Try again later.",
+    "noVoice": "Your device no get voice for dis language.",
+    "sameLanguage": "Dis video don already dey your language."
   },
   "digest": {
     "someone": "Someone"

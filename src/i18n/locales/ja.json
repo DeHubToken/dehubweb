@@ -5210,7 +5210,11 @@
     "notEnoughTokens": "吹き替えに必要なトークンが不足しています。",
     "notEnoughTokensDescription": "約 {{needed}} トークン必要ですが、{{held}} しか持っていません。",
     "paymentLeftWallet": "ウォレットからトークンが引き出されました。確認をやり直すには、もう一度「支払う」を押してください。",
-    "paidForMinutes": "ダビング {{minutes}} 分間に {{amount}} トークンを支払いました。"
+    "paidForMinutes": "ダビング {{minutes}} 分間に {{amount}} トークンを支払いました。",
+    "menuItem": "吹き替え",
+    "noTranscript": "この動画にはまだ文字起こしがないため、吹き替えできません。後でもう一度お試しください。",
+    "noVoice": "お使いのデバイスにはこの言語の音声がありません。",
+    "sameLanguage": "この動画はすでにあなたの言語です。"
   },
   "support": {
     "title": "サポート",

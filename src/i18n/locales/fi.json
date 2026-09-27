@@ -5156,7 +5156,11 @@
     "notEnoughTokens": "Ei tarpeeksi tokeneita dubbaukseen.",
     "notEnoughTokensDescription": "Tarvitset noin {{needed}} tokenia ja sinulla on {{held}}.",
     "paymentLeftWallet": "Tokenisi ovat poistuneet lompakostasi. Paina Maksa uudelleen yrittääksesi vahvistaa sitä.",
-    "paidForMinutes": "Maksettu {{amount}} tokenia {{minutes}} minuutin dubbauksesta."
+    "paidForMinutes": "Maksettu {{amount}} tokenia {{minutes}} minuutin dubbauksesta.",
+    "menuItem": "Dubbaus",
+    "noTranscript": "Tällä videolla ei ole vielä litterointia, joten sitä ei voi dubata. Yritä myöhemmin uudelleen.",
+    "noVoice": "Laitteessasi ei ole ääntä tälle kielelle.",
+    "sameLanguage": "Tämä video on jo sinun kielelläsi."
   },
   "digest": {
     "andOthers_one": "{{names}} ja {{count}} muuta",

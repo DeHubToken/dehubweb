@@ -3046,7 +3046,11 @@
     "notEnoughTokens": "Nuk ka tokena të mjaftueshëm për dublim.",
     "notEnoughTokensDescription": "Ju nevojiten rreth {{needed}} tokena dhe posedoni {{held}}.",
     "paymentLeftWallet": "Të dhënat tuaja kanë dalë nga kuleta juaj. Shtypni Paguaj përsëri për të provuar të konfirmoni.",
-    "paidForMinutes": "Paguar {{amount}} tokena për {{minutes}} minuta dublimi."
+    "paidForMinutes": "Paguar {{amount}} tokena për {{minutes}} minuta dublimi.",
+    "menuItem": "Dublim",
+    "noTranscript": "Kjo video nuk ka ende transkriptim, prandaj nuk mund të dublohet. Provo përsëri më vonë.",
+    "noVoice": "Pajisja jote nuk ka zë për këtë gjuhë.",
+    "sameLanguage": "Kjo video është tashmë në gjuhën tënde."
   },
   "digest": {
     "andOthers_one": "{{names}} dhe {{count}} tjetër",

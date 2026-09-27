@@ -5040,7 +5040,11 @@
     "notEnoughTokens": "Nu sunt suficiente token-uri pentru dublare.",
     "notEnoughTokensDescription": "Ai nevoie de aproximativ {{needed}} token-uri și deții {{held}}.",
     "paymentLeftWallet": "Jetoanele tale au părăsit portofelul. Apasă din nou pe Plătește pentru a reîncerca confirmarea.",
-    "paidForMinutes": "Plătit {{amount}} jetoane pentru {{minutes}} minute de dublare."
+    "paidForMinutes": "Plătit {{amount}} jetoane pentru {{minutes}} minute de dublare.",
+    "menuItem": "Dublaj",
+    "noTranscript": "Acest videoclip nu are încă o transcriere, așa că nu poate fi dublat. Încearcă din nou mai târziu.",
+    "noVoice": "Dispozitivul tău nu are o voce pentru această limbă.",
+    "sameLanguage": "Acest videoclip este deja în limba ta."
   },
   "digest": {
     "andOthers_one": "{{names}} și încă {{count}}",

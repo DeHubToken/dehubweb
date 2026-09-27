@@ -2965,7 +2965,11 @@
     "notEnoughTokens": "डबिंग बर टोकन कम पड़त हावय।",
     "notEnoughTokensDescription": "तोला लगभग {{needed}} टोकन चाही अउर {{held}} हावय।",
     "paymentLeftWallet": "टोकन मन तोला बटुआ ले निकल गे हावय। फेर ले भुगतान करे बर 'भुगतान' दबाव।",
-    "paidForMinutes": "{{amount}} टोकन {{minutes}} मिनट डबिंग बर भुगतान करे गे हावय।"
+    "paidForMinutes": "{{amount}} टोकन {{minutes}} मिनट डबिंग बर भुगतान करे गे हावय।",
+    "menuItem": "डबिंग",
+    "noTranscript": "ए वीडियो के अभी ले कोनो ट्रांसक्रिप्ट नइ हे, एकर सेती डब नइ हो सकय। बाद म फेर कोसिस करव।",
+    "noVoice": "तुंहर डिवाइस म ए भाखा बर कोनो आवाज नइ हे।",
+    "sameLanguage": "ए वीडियो पहिली ले तुंहर भाखा म हे।"
   },
   "digest": {
     "andOthers_one": "{{names}} और {{count}} अन्य",

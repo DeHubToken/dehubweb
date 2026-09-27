@@ -3008,7 +3008,11 @@
     "notEnoughTokens": "Nicht genügend Tokens für die Synchronisation.",
     "notEnoughTokensDescription": "Sie benötigen etwa {{needed}} Tokens und besitzen {{held}}.",
     "paymentLeftWallet": "Dini Tokens sind us dim Wallet gange. Drück nomal uf \"Pay\", zum das z'bestätige.",
-    "paidForMinutes": "Zahlt {{amount}} Tokens für {{minutes}} Minute(n) Synchronisation."
+    "paidForMinutes": "Zahlt {{amount}} Tokens für {{minutes}} Minute(n) Synchronisation.",
+    "menuItem": "Synchronisiere",
+    "noTranscript": "Für das Video gits no kes Transkript, drum chas nöd synchronisiert wärde. Probier's spöter nomal.",
+    "noVoice": "Dis Gerät het kei Stimm für die Sprach.",
+    "sameLanguage": "Das Video isch scho i dinere Sprach."
   },
   "digest": {
     "andOthers_one": "{{names}} und {{count}} anderi",
