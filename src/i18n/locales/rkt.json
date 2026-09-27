@@ -3483,14 +3483,21 @@
     "subscribedToast": "সাবস্ক্রাইব হইল",
     "confirmSubscribeTo": "{{plan}}-ত {{price}} / {{duration}}-এ সাবস্ক্রাইব করেন।",
     "atPreListingRate": "প্রি-লিস্টিং রেটোত {{amount}}",
-    "creditsCreator": "ক্রিয়েটর {{amount}} USDT পাইবে",
     "fromSubscriptionTokens": "তোমার সাবস্ক্রিপশন টোকেন থাকি",
     "addedAtTodaysPrice": "আইজকার দামোত এলা যোগ করা হইল",
-    "subscriptionTokensNote": "সাবস্ক্রিপশন টোকেন যোগ করার সময়ের দামোত লক থাকে, সেই জইন্যে দাম বদলাইলেও সাবস্ক্রিপশনের খরচ বদলায় না। এইগুলা খালি সাবস্ক্রিপশনোত খরচ করা যায়।",
     "subscriptionTokens": "সাবস্ক্রিপশন টোকেন",
     "subscriptionTokensOnly": "খালি সাবস্ক্রিপশনের জইন্যে",
     "untradableTokens": "এইগুলা ট্রেড করা যায় না এমন সাবস্ক্রিপশন টোকেন",
-    "lockedValue": "{{amount}}-ত লক",
-    "withdraw": "তুলি নেন"
+    "withdraw": "তুলি নেন",
+    "creatorGetsTokens": "ক্রিয়েটর {{amount}} দামের টোকেন পাইবে",
+    "subscriptionTokensValueNote": "সাবস্ক্রিপশন টোকেন নিজের ডলারের দাম ধরি রাখে। ব্যবহারের আগোত টোকেনের দাম বদলাইলে বেশি বা কম টোকেন দেখিবেন, কিন্তুক সেইগুলা সবসময় একে সাবস্ক্রিপশন কভার করে। খালি সাবস্ক্রিপশনোত খরচ করা যায়।",
+    "earningsTitle": "সাবস্ক্রিপশনের আয়",
+    "earningsWorth": "দাম {{amount}}",
+    "earningsPaidInTokens": "আইজকার দামোত টোকেনোত দেওয়া হয়",
+    "earningsPendingReserve": "ট্রেজারি রিজার্ভ বাকি",
+    "earningsAvailable": "পাওয়া যায়",
+    "earningsPending": "বাকি",
+    "tokensSent": "{{amount}} টোকেন পাঠা হইল",
+    "withdrawableSoon": "সাবস্ক্রিপশনের আয় তাড়াতাড়ি তুলিবার পাইবেন"
   }
 }

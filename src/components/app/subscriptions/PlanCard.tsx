@@ -93,7 +93,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   const creditUsd = credits?.usd ?? 0;
   const coveredUsd = Math.min(creditUsd, total || 0);
   const tokensFromBalance =
-    coveredUsd > 0 && credits?.lockedPriceUsd ? coveredUsd / credits.lockedPriceUsd : 0;
+    coveredUsd > 0 && credits?.dhbPriceUsd ? coveredUsd / credits.dhbPriceUsd : 0;
   const shortfallUsd = Math.max(0, (total || 0) - coveredUsd);
   const topUpTokens = shortfallUsd > 0 ? dhbForUsd(shortfallUsd, credits?.dhbPriceUsd || dhbUsd) : 0;
 
@@ -297,14 +297,14 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
                   {total ? formatDhbPayment(topUpTokens ?? totalDhbEstimate) : t('subscriptions.calculating')}
                   {totalDhbEstimate !== null && (
                     <span className="block text-xs font-normal text-zinc-400">
-                      {t('subscriptions.creditsCreator', { amount: formatAmount(total, 2) })}
+                      {t('subscriptions.creatorGetsTokens', { amount: `$${formatAmount(total, 2)}` })}
                     </span>
                   )}
                 </span>
               </div>
               {isUsdPriced && (
                 <p className="mt-2 pt-2 border-t border-white/10 text-[11px] leading-relaxed text-zinc-500">
-                  {t('subscriptions.subscriptionTokensNote')}
+                  {t('subscriptions.subscriptionTokensValueNote')}
                 </p>
               )}
             </div>
