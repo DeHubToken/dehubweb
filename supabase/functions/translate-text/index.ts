@@ -556,6 +556,7 @@ const GEMINI_MODELS = [
   'gemini-2.5-flash-lite',
 ];
 let geminiModelIndex = 0;
+let geminiQuotaUntil = 0;
 
 /**
  * Gemini, called directly.
@@ -573,6 +574,9 @@ async function translateWithGemini(
 ): Promise<TranslateResponse | null> {
   const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
   if (!GEMINI_API_KEY) return null;
+  // Over quota: skip straight to the next tier rather than paying a round trip
+  // per post to hear the same 429.
+  if (Date.now() < geminiQuotaUntil) return null;
 
   const body = JSON.stringify({
     systemInstruction: {
@@ -614,6 +618,7 @@ async function translateWithGemini(
       }
 
       if (!response.ok) {
+        if (response.status === 429) geminiQuotaUntil = Date.now() + 5 * 60 * 1000;
         const errorText = await response.text();
         console.log(`Gemini returned status: ${response.status}, error: ${errorText}`);
         return null;
@@ -1012,26 +1017,10 @@ serve(async (req) => {
       );
     }
 
-    // Paid fallbacks. fal leads because it is the tier with credit on it — the
-    // Gemini key is currently 429 RESOURCE_EXHAUSTED and the gateway is a
-    // metered reseller. Reorder by moving these blocks; each returns null
-    // rather than throwing, so a dead tier falls through to the next.
-    const rawFal = await translateWithFal(text, targetLanguageName);
-    result = keepVerbatimIfRewrite(text, targetLang, rawFal);
-    if (result) {
-      rememberInIsolate(cacheKey, result);
-      await writeCachedTranslation(
-        textHash,
-        targetLang,
-        result,
-        result === rawFal ? 'fal' : 'fal-verbatim',
-      );
-      return new Response(
-        JSON.stringify(result),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
+    // Paid fallbacks, cheapest first: Flash-Lite direct is roughly a tenth of
+    // Haiku on fal, and the gateway is a metered reseller. Reorder by moving
+    // these blocks; each returns null rather than throwing, so a dead tier —
+    // a Gemini key over quota, say — falls through to the next.
     const rawGemini = await translateWithGemini(text, targetLanguageName);
     result = keepVerbatimIfRewrite(text, targetLang, rawGemini);
     if (result) {
@@ -1041,6 +1030,22 @@ serve(async (req) => {
         targetLang,
         result,
         result === rawGemini ? 'gemini' : 'gemini-verbatim',
+      );
+      return new Response(
+        JSON.stringify(result),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const rawFal = await translateWithFal(text, targetLanguageName);
+    result = keepVerbatimIfRewrite(text, targetLang, rawFal);
+    if (result) {
+      rememberInIsolate(cacheKey, result);
+      await writeCachedTranslation(
+        textHash,
+        targetLang,
+        result,
+        result === rawFal ? 'fal' : 'fal-verbatim',
       );
       return new Response(
         JSON.stringify(result),

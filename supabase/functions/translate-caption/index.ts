@@ -15,11 +15,10 @@
 //    Realtime presence, so a picker offering fourteen languages costs whatever
 //    the room is actually reading — usually two or three.
 //
-// The model chain is the one `translate-transcript` already proved: fal's
-// OpenRouter router on Claude Haiku, with the Lovable AI gateway behind it.
-// Haiku is not a compromise here — at this volume it is roughly an order of
-// magnitude cheaper than the dedicated machine-translation APIs, which bill
-// per character and have no cheap tier.
+// The model chain matches `translate-transcript`: Flash-Lite through aiChat
+// first, then Claude Haiku on fal's OpenRouter router as a second vendor. Both
+// are far cheaper than the dedicated machine-translation APIs, which bill per
+// character and have no cheap tier.
 import {
   corsHeaders,
   handleCorsPreflight,
@@ -222,9 +221,13 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "Not entitled to caption this stage." }, 403);
     }
 
-    let translations = await viaFal(text, context, languages);
+    // Cheapest first: Flash-Lite via aiChat, then Haiku on fal.
+    let translations = await viaAiChat(text, context, languages).catch((e) => {
+      console.error("[translate-caption] ai failed", e);
+      return null;
+    });
     if (!translations || Object.keys(translations).length === 0) {
-      translations = await viaAiChat(text, context, languages);
+      translations = await viaFal(text, context, languages);
     }
 
     // Partial results ship. A line translated into eight of ten languages is
