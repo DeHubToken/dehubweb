@@ -128,7 +128,10 @@ import {
 } from '@/components/ui/drawer';
 import type { VideoItem } from '@/types/feed.types';
 import { VideoSubtitleOverlay } from '@/components/app/video/VideoSubtitleOverlay';
-import { DubMenuItem } from '@/components/app/video/DubMenuItem';
+// Only shown inside the options sheet; not worth a place on the boot path.
+const DubMenuItem = lazy(() =>
+  import('@/components/app/video/DubMenuItem').then((m) => ({ default: m.DubMenuItem })),
+);
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
 
 /**
@@ -2593,6 +2596,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </button>
             )}
             {!video.isAudio && !isContentGated && video.videoUrl && (
+              <Suspense fallback={null}>
               <DubMenuItem
                 tokenId={video.id}
                 onDone={() => setShowOptionsDrawer(false)}
@@ -2607,6 +2611,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               />
+              </Suspense>
             )}
             <button 
               onClick={() => {
