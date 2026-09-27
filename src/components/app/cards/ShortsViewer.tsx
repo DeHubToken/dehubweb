@@ -337,6 +337,7 @@ const CORNER_CONTROL =
   "absolute top-3 z-10 w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 rounded-xl flex items-center justify-center text-white transition-[background-color,opacity] duration-300";
 
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
+  const { t } = useI18n();
   const instanceId = useId();
   useEffect(() => {
     const paused = Array.from(document.querySelectorAll<HTMLElement>('[data-cached-page]'))
@@ -1525,11 +1526,30 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               bottom stays reachable. */}
           {!isMobile && (
             <>
-              {/* Fullscreen and mute, in that order, parked left of each other.
-                  Fullscreen used to be drawn by the slide, which the carousel
+              {/* Options, fullscreen and mute, in that order, parked left of each
+                  other. Fullscreen used to be drawn by the slide, which the carousel
                   translates — so it slid away with the video on every step
-                  while its neighbour here held still. Both live in the
-                  container now, and neither moves. */}
+                  while its neighbour here held still. All three live in the
+                  container now, and none of them moves. */}
+              <button
+                onClick={() => {
+                  // The options drawer portals to <body>, which cannot paint
+                  // over a native-fullscreen element, so leave fullscreen first.
+                  if (isFullscreen) toggleFullscreen();
+                  setShareSheetOpen(true);
+                }}
+                className={cn(
+                  CORNER_CONTROL,
+                  // Fullscreen sits at `right-[3.75rem]` and is `w-10`, so it
+                  // ends 6.25rem in; 0.5rem gap after that.
+                  "right-[6.75rem]",
+                  chromeHidden && "opacity-0 pointer-events-none",
+                )}
+                aria-label={t('postOptions.options')}
+              >
+                <MoreHorizontal className="w-5 h-5" />
+              </button>
+
               <button
                 onClick={toggleFullscreen}
                 className={cn(
