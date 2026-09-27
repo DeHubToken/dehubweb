@@ -21,6 +21,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { rateLimitByIp } from "../_shared/auth.ts";
 import { languageNameFor } from "../_shared/language-names.ts";
 import { translationChunks } from "./chunks.ts";
+import { tryFree } from "../_shared/free-models.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -426,6 +427,35 @@ async function translateWithMyMemory(
     };
   } catch (error) {
     console.log('MyMemory failed:', error instanceof Error ? error.message : 'Unknown error');
+    return null;
+  }
+}
+
+/**
+ * The free model tiers (Groq, Mistral, Cloudflare — whichever have keys set),
+ * with the same prompt as the paid ones. Null when none is configured, all are
+ * rate limited, or the answer is empty or a refusal.
+ */
+async function translateWithFreeModels(
+  text: string,
+  targetLanguageName: string,
+): Promise<TranslateResponse | null> {
+  const res = await tryFree({
+    messages: [
+      { role: 'system', content: TRANSLATOR_SYSTEM_PROMPT(targetLanguageName) },
+      { role: 'user', content: text },
+    ],
+    temperature: 0.1,
+    max_tokens: 4000,
+  }, { label: 'translate-text' }).catch(() => null);
+  if (!res) return null;
+
+  try {
+    const data = await res.json();
+    const translatedText = data.choices?.[0]?.message?.content?.trim();
+    if (!translatedText || looksLikeRefusal(translatedText)) return null;
+    return { translatedText, detectedLanguage: { language: 'auto', confidence: 0.9 } };
+  } catch {
     return null;
   }
 }
@@ -1003,6 +1033,24 @@ serve(async (req) => {
           code: 'UNSUPPORTED_TARGET_LANGUAGE',
         }),
         { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+
+    // Free model tiers before the paid budget is touched: a translation they
+    // answer costs nothing and must not use up one of the day's paid slots.
+    const rawFree = await translateWithFreeModels(text, targetLanguageName);
+    result = keepVerbatimIfRewrite(text, targetLang, rawFree);
+    if (result) {
+      rememberInIsolate(cacheKey, result);
+      await writeCachedTranslation(
+        textHash,
+        targetLang,
+        result,
+        result === rawFree ? 'free-llm' : 'free-llm-verbatim',
+      );
+      return new Response(
+        JSON.stringify(result),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
