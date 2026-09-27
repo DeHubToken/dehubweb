@@ -385,15 +385,7 @@ export async function setEncoderDefaultTitle(defaultTitle: string): Promise<Enco
 
 // ─── Streamer progress ────────────────────────────────────────────────────────
 
-export type StreamerCardId =
-  | 'first-light'
-  | 'marathon'
-  | 'night-owl'
-  | 'regular'
-  | 'iron-streak'
-  | 'crowd'
-  | 'century'
-  | 'legend';
+export type StreamerCardId = import('../../streamer-badge-art').StreamerBadgeId;
 
 export interface StreamerProgressCard {
   id: StreamerCardId;
@@ -415,6 +407,7 @@ export interface StreamerRecentStream {
  * with at least one viewer. Level k needs 30·k·(k+1) XP.
  */
 export interface StreamerProgress {
+  selectedBadgeId?: StreamerCardId | null;
   xp: number;
   level: number;
   nextLevelXp: number;
@@ -434,8 +427,13 @@ export interface StreamerProgress {
 export async function getStreamerProgress(address: string): Promise<StreamerProgress> {
   const res = await apiCall<StreamerProgress | { result: StreamerProgress }>(
     `/api/live/creator/${address.toLowerCase()}/progress`,
+    { params: { collection: '20' } },
   );
   return 'result' in res && res.result && typeof res.result === 'object' && 'level' in res.result
     ? res.result
     : (res as StreamerProgress);
+}
+
+export function selectStreamerBadge(badgeId: StreamerCardId): Promise<{ selectedBadgeId: StreamerCardId }> {
+  return apiCall<{ selectedBadgeId: StreamerCardId }>('/api/live/creator/badge', { method: 'PATCH', body: { badgeId }, requiresAuth: true });
 }
