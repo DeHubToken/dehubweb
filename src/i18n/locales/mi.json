@@ -1249,6 +1249,11 @@
     "loginRequired": "Me takiuru"
   },
   "messages": {
+    "reply": "Whakautu",
+    "react": "Tauhohe",
+    "edit": "Whakatika",
+    "forward": "Tukuna atu",
+    "pin": "Titi",
     "online": "Tuihono",
     "smartRepliesOff": "Kua whakawetohia ngā whakautu tūtohu",
     "smartRepliesOffWhere": "Whakahohea anō i Tautuhinga → Karere.",

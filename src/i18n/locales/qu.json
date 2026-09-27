@@ -1255,6 +1255,11 @@
     "loginRequired": "Yaykuy munakun"
   },
   "messages": {
+    "reply": "Kutichiy",
+    "react": "Kutichiy sunquwan",
+    "edit": "Tikrachiy",
+    "forward": "Apachiy",
+    "pin": "Tipay",
     "online": "Tinkisqa",
     "smartRepliesOff": "Ñisqa kutichiykunaqa wañuchisqa",
     "smartRepliesOffWhere": "Churana → Willakuy nisqapi kutimanta hatarichiy.",

@@ -1208,6 +1208,11 @@
     "loginRequired": "Sɔgɔma kɛ"
   },
   "messages": {
+    "reply": "Jaabi",
+    "react": "Kɛcogo jira",
+    "edit": "Sɔrɔw",
+    "forward": "A ci ka taa",
+    "pin": "A sɔrɔ",
     "online": "Kalanbagaw, dɛmɛbagaw ani kanpaɲ",
     "smartRepliesOff": "Jaabi fɔlenw fagara",
     "smartRepliesOffWhere": "Aw bɛ se k'u lawuli tuguni Sɔrɔw → Kɔrɔbɔw kɔnɔ.",

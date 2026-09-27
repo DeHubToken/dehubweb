@@ -1188,6 +1188,11 @@
     "verifyEmail": "ইমেইল ভেরিফাই করো"
   },
   "messages": {
+    "reply": "উত্তর",
+    "react": "প্রতিক্রিয়া",
+    "edit": "এডিট",
+    "forward": "ফরোয়ার্ড করো",
+    "pin": "পিন করো",
     "smartRepliesOff": "পরামর্শ দেওয়া জবাব বন্ধ করা হইল",
     "smartRepliesOffWhere": "সেটিংস → মেসেজ থাকি ওগুলা আবার চালু করেন।",
     "smartRepliesUndo": "আগের মতোন করেন",

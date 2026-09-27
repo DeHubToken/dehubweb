@@ -1264,6 +1264,11 @@
     "loginRequired": "נדרשת התחברות"
   },
   "messages": {
+    "reply": "השב",
+    "react": "הוסף ריאקציה",
+    "edit": "ערוך",
+    "forward": "העבר",
+    "pin": "נעץ",
     "online": "אונליין",
     "smartRepliesOff": "התשובות המוצעות כובו",
     "smartRepliesOffWhere": "אפשר להפעיל אותן שוב בהגדרות → הודעות.",

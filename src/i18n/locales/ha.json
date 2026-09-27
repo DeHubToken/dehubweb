@@ -1253,6 +1253,11 @@
     "loginRequired": "Ana buƙatar shiga"
   },
   "messages": {
+    "reply": "Amsa",
+    "react": "Martani",
+    "edit": "Gyara",
+    "forward": "Tura gaba",
+    "pin": "Manna",
     "online": "Layi akan layi",
     "smartRepliesOff": "An kashe amsoshin da aka ba da shawara",
     "smartRepliesOffWhere": "Sake kunna su a Saituna → Saƙonni.",

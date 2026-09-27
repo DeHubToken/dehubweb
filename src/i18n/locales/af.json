@@ -1279,6 +1279,11 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "reply": "Antwoord",
+    "react": "Reageer",
+    "edit": "Wysig",
+    "forward": "Aanstuur",
+    "pin": "Speld vas",
     "online": "Aanlyn",
     "smartRepliesOff": "Voorgestelde antwoorde afgeskakel",
     "smartRepliesOffWhere": "Skakel hulle weer aan by Instellings → Boodskappe.",

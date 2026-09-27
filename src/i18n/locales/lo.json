@@ -1249,6 +1249,11 @@
     "loginRequired": "ຕ້ອງເຂົ້າສູ່ລະບົບ"
   },
   "messages": {
+    "reply": "ຕອບກັບ",
+    "react": "ສະແດງຄວາມຮູ້ສຶກ",
+    "edit": "ແກ້ໄຂ",
+    "forward": "ສົ່ງຕໍ່",
+    "pin": "ປັກໝຸດ",
     "online": "ອອນລາຍ",
     "smartRepliesOff": "ປິດຄຳຕອບທີ່ແນະນຳແລ້ວ",
     "smartRepliesOffWhere": "ເປີດຄືນໄດ້ທີ່ ການຕັ້ງຄ່າ → ຂໍ້ຄວາມ.",

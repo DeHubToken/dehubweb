@@ -1271,6 +1271,11 @@
     "loginRequired": "Ilaina ny fidirana"
   },
   "messages": {
+    "reply": "Valio",
+    "react": "Aneho fihetsika",
+    "edit": "Ovay",
+    "forward": "Alefaso",
+    "pin": "Apetaho",
     "online": "Fiofanana an-tserasera",
     "smartRepliesOff": "Novonoina ny valiny atolotra",
     "smartRepliesOffWhere": "Avereno alefa ao amin'ny Fikirana → Hafatra.",

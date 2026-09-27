@@ -1251,6 +1251,11 @@
     "loginRequired": "መግባት ያስፈልጋል"
   },
   "messages": {
+    "reply": "መልስ",
+    "react": "ምላሽ ስጥ",
+    "edit": "አርትዕ",
+    "forward": "አስተላልፍ",
+    "pin": "ሰካ",
     "online": "ኦንላይን",
     "smartRepliesOff": "የተጠቆሙ ምላሾች ጠፍተዋል",
     "smartRepliesOffWhere": "ቅንብሮች → መልዕክቶች ውስጥ እንደገና ያብሩዋቸው።",

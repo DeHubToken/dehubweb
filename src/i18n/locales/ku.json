@@ -1099,6 +1099,11 @@
     "loginRequired": "Têketin pêwîst e"
   },
   "messages": {
+    "reply": "Bersiv bide",
+    "react": "Bertek",
+    "edit": "Biguherîne",
+    "forward": "Bişîne pêş",
+    "pin": "Pîn bike",
     "online": "Serhêl",
     "smartRepliesOff": "Bersivên pêşniyarkirî hatin girtin",
     "smartRepliesOffWhere": "Wan ji Mîheng → Peyam dîsa veke.",

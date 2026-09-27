@@ -1272,6 +1272,11 @@
     "loginRequired": "লগইন দরকার"
   },
   "messages": {
+    "reply": "রিপ্লাই",
+    "react": "রিঅ্যাক্ট",
+    "edit": "সম্পাদনা",
+    "forward": "ফরোয়ার্ড গরন",
+    "pin": "পিন গরন",
     "smartRepliesOff": "পরামর্শ দেওয়া জবাব বন্ধ গরা অইছে",
     "smartRepliesOffWhere": "সেটিংস → বার্তা তুন ইতা আবার চালু গরন।",
     "smartRepliesUndo": "আগর অবস্থাত ফিরান",

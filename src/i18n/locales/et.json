@@ -1265,6 +1265,11 @@
     "loginRequired": "Sisselogimine nõutav"
   },
   "messages": {
+    "reply": "Vasta",
+    "react": "Reageeri",
+    "edit": "Muuda",
+    "forward": "Edasta",
+    "pin": "Kinnita",
     "online": "Võrgus",
     "smartRepliesOff": "Soovitatud vastused on välja lülitatud",
     "smartRepliesOffWhere": "Lülita need uuesti sisse jaotises Seaded → Sõnumid.",

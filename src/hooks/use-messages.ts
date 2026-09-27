@@ -551,6 +551,9 @@ export function useMessages(conversationId: string | null) {
                 // address comparison fails (e.g. Smart Account vs EOA mismatch), which would
                 // put the bubble on the wrong side.
                 author: optimistic.author,
+                // An echo that carries the quote only as an id would wipe the
+                // one the pending bubble was already showing.
+                replyTo: normalizedMsg.replyTo?.sender ? normalizedMsg.replyTo : (optimistic.replyTo ?? normalizedMsg.replyTo),
                 ...(keepIsReadFalse ? { isRead: false } : {}),
               };
             } else {
@@ -817,6 +820,7 @@ export function useSendMessage(conversationId: string) {
       mediaFile,
       voiceDuration,
       replyTo,
+      replyPreview,
       txHash,
       forwardedFrom,
     }: {
@@ -826,6 +830,8 @@ export function useSendMessage(conversationId: string) {
       mediaFile?: File;
       voiceDuration?: number;
       replyTo?: string;
+      /** The quoted message as it should show on the pending bubble — the id alone renders nothing until the echo. */
+      replyPreview?: DmMessage['replyTo'];
       txHash?: string;
       forwardedFrom?: { messageId: string };
     }): Promise<DmMessage> => {
@@ -915,7 +921,7 @@ export function useSendMessage(conversationId: string) {
         isEdited: false,
         editedAt: null,
         isForwarded: !!forwardedFrom,
-        replyTo: null,
+        replyTo: replyPreview ?? null,
         paymentStatus: null,
         paymentTxHash: null,
         tipAmount: null,
@@ -928,7 +934,7 @@ export function useSendMessage(conversationId: string) {
       return tempMessage;
     },
 
-    onMutate: async ({ content, msgType, gifUrl, mediaFile, voiceDuration }) => {
+    onMutate: async ({ content, msgType, gifUrl, mediaFile, voiceDuration, replyPreview }) => {
       await queryClient.cancelQueries({ queryKey: messagesKeys.messages(conversationId) });
       const previousMessages = queryClient.getQueryData(messagesKeys.messages(conversationId));
 
@@ -961,7 +967,7 @@ export function useSendMessage(conversationId: string) {
         isEdited: false,
         editedAt: null,
         isForwarded: false,
-        replyTo: null,
+        replyTo: replyPreview ?? null,
         paymentStatus: null,
         paymentTxHash: null,
         tipAmount: null,

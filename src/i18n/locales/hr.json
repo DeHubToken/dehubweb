@@ -1266,6 +1266,11 @@
     "loginRequired": "Potrebna prijava"
   },
   "messages": {
+    "reply": "Odgovori",
+    "react": "Reagiraj",
+    "edit": "Uredi",
+    "forward": "Proslijedi",
+    "pin": "Prikvači",
     "online": "Online",
     "smartRepliesOff": "Predloženi odgovori isključeni",
     "smartRepliesOffWhere": "Ponovno ih uključi u Postavke → Poruke.",

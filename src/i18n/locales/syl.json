@@ -1300,6 +1300,11 @@
     "verifyEmail": "ইমেইল ভেরিফাই করো"
   },
   "messages": {
+    "reply": "জবাব দেও",
+    "react": "রিঅ্যাক্ট",
+    "edit": "এডিট",
+    "forward": "ফরোয়ার্ড করইন",
+    "pin": "পিন করো",
     "smartRepliesOff": "ꠙꠞꠣꠝꠞ꠆ꠡ ꠖꠤꠅꠣ ꠎꠛꠣꠛ ꠛꠘ꠆ꠗ ꠅꠁꠍꠦ",
     "smartRepliesOffWhere": "ꠍꠦꠐꠤꠋꠍ → ꠝꠦꠍꠦꠎ ꠔꠘꠦ ꠅꠉꠥꠟꠣ ꠀꠞꠧ ꠌꠣꠟꠥ ꠇꠞꠂꠘ।",
     "smartRepliesUndo": "ꠀꠉꠞ ꠝꠔꠧ ꠇꠞꠂꠘ",

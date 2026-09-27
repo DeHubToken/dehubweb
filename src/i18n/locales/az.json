@@ -1264,6 +1264,11 @@
     "loginRequired": "Daxil olmaq lazımdır"
   },
   "messages": {
+    "reply": "Cavabla",
+    "react": "Reaksiya ver",
+    "edit": "Redaktə et",
+    "forward": "Yönləndir",
+    "pin": "Sancaqla",
     "online": "Onlayn",
     "smartRepliesOff": "Təklif olunan cavablar söndürüldü",
     "smartRepliesOffWhere": "Parametrlər → Mesajlar bölməsindən yenidən aç.",

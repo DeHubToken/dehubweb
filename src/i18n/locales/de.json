@@ -1270,6 +1270,11 @@
     "loginRequired": "Anmeldung erforderlich"
   },
   "messages": {
+    "reply": "Antworten",
+    "react": "Reagieren",
+    "edit": "Bearbeiten",
+    "forward": "Weiterleiten",
+    "pin": "Anpinnen",
     "online": "Online",
     "smartRepliesOff": "Antwortvorschläge ausgeschaltet",
     "smartRepliesOffWhere": "Unter Einstellungen → Nachrichten wieder einschalten.",
