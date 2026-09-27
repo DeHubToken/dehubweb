@@ -37,7 +37,8 @@ export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTransl
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('translate-text', {
-        body: { text: bio, targetLang: userLang },
+        // A profile bio is public.
+        body: { text: bio, targetLang: userLang, public: true },
       });
 
       if (error || !data?.translatedText) return;

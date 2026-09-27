@@ -81,7 +81,7 @@ describe('auto-translate', () => {
     // The regression: the first (and only) request must carry 'es'. It used to
     // carry 'en' — the value the language hook happened to start at.
     expect(invoke).toHaveBeenCalledTimes(1);
-    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: post, targetLang: 'es' } });
+    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: post, targetLang: 'es', public: true } });
   });
 
   it('leaves the text alone when the post is already in the reader language', async () => {
@@ -129,7 +129,7 @@ describe('auto-translate', () => {
     await renderTranslatable(JAPANESE);
 
     await waitFor(() => expect(invoke).toHaveBeenCalled());
-    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: JAPANESE, targetLang: 'es' } });
+    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: JAPANESE, targetLang: 'es', public: true } });
   });
 
   it('discards a response that is an API error message, not a translation', async () => {
@@ -181,6 +181,6 @@ describe('auto-translate', () => {
     window.dispatchEvent(new Event('load'));
 
     await waitFor(() => expect(invoke).toHaveBeenCalledTimes(1));
-    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: post, targetLang: 'es' } });
+    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: post, targetLang: 'es', public: true } });
   });
 });

@@ -184,7 +184,7 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
     tool_choice: { type: 'function', function: { name: 'categorize_post' } },
   });
 
-  let resp = await aiChat(request(fullContent), { expectToolCall: 'categorize_post', label: 'categorize' });
+  let resp = await aiChat(request(fullContent), { expectToolCall: 'categorize_post', label: 'categorize', publicContent: true });
 
   if (!resp.ok) {
     const detail = await resp.text();
@@ -195,7 +195,7 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
         return { categories: [], confidence: null, reasoning: 'Image unreachable and no text to read', model: MODEL, usedTranscript: false };
       }
       console.warn('categorize: image unreachable, retrying text-only', imageUrl);
-      resp = await aiChat(request(baseContent), { expectToolCall: 'categorize_post', label: 'categorize' });
+      resp = await aiChat(request(baseContent), { expectToolCall: 'categorize_post', label: 'categorize', publicContent: true });
     }
     if (!resp.ok) {
       const txt = await resp.text().catch(() => detail);
