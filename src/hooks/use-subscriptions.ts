@@ -127,7 +127,7 @@ export function useWithdrawSubscriptionEarnings() {
     mutationFn: withdrawSubscriptionEarnings,
     onSuccess: (result) => {
       queryClient.setQueryData(['subscription-earnings'], result.status);
-      toast.success(`${result.amountUsdt.toLocaleString(undefined, { maximumFractionDigits: 6 })} USDT sent`);
+      toast.success(i18n.t('subscriptions.tokensSent', { amount: (result.amountTokens ?? result.amountUsdt).toLocaleString(undefined, { maximumFractionDigits: 2 }) }));
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Subscription fees will be withdrawable soon');
@@ -419,7 +419,7 @@ export function useBuyPlan() {
 
       // DHB stays in DeHub custody. Nothing is sold or swapped at checkout;
       // the backend verifies this exact transfer before activating access and
-      // credits the creator the frozen USDT value of the plan.
+      // credits the creator the plan's dollar value, paid out in tokens.
       setStage('wallet');
       const { sendERC20Token } = await import('@/lib/wallet/send');
       const tx = await sendERC20Token(

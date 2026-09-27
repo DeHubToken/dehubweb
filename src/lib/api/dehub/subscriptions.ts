@@ -100,9 +100,9 @@ export interface SubscriptionIntent {
  * traded.
  */
 export interface SubscriptionCreditBalance {
+  /** The dollar balance at today's price. Moves with the price; `usd` does not. */
   tokens: number;
   usd: number;
-  lockedPriceUsd: number | null;
   dhbPriceUsd: number;
   withdrawable: false;
   tradable: false;
@@ -127,8 +127,16 @@ export interface SubscriptionCreditQuote {
   message: string;
 }
 
+/**
+ * A creator's earnings. Held in dollars, paid out in tokens at the price on
+ * the day: the token count moves with the price, the value does not.
+ * The `*Usdt` fields are dollar values kept under their old names.
+ */
 export interface SubscriptionEarnings {
-  currency: 'USDT';
+  currency: 'USDT' | 'DHB';
+  dhbPriceUsd?: number;
+  pendingTokens?: number;
+  processingTokens?: number;
   payoutChainId: number;
   pendingUsdt: number;
   processingUsdt: number;
@@ -320,6 +328,7 @@ export async function getSubscriptionEarnings(): Promise<SubscriptionEarnings> {
 export async function withdrawSubscriptionEarnings(): Promise<{
   success: true;
   amountUsdt: number;
+  amountTokens?: number;
   txHash: string;
   status: SubscriptionEarnings;
 }> {
@@ -449,4 +458,16 @@ export async function isSubscribedToCreator(creatorAddress: string): Promise<boo
   } catch {
     return false;
   }
+}
+
+/** Unwithdrawn earnings, in dollars and in tokens at today's price. */
+export function outstandingEarnings(earnings: SubscriptionEarnings | undefined): { usd: number; tokens: number } {
+  const usd = (earnings?.pendingUsdt || 0) + (earnings?.processingUsdt || 0);
+  // 0.001 is the pre-listing peg (DHB_PRELISTING_USD). Not imported: that module pulls in i18n.
+  const price = earnings?.dhbPriceUsd || 0.001;
+  const tokens =
+    earnings?.pendingTokens !== undefined
+      ? (earnings.pendingTokens || 0) + (earnings.processingTokens || 0)
+      : usd / price;
+  return { usd, tokens };
 }

@@ -3804,14 +3804,21 @@
     "subscribedToast": "Претплаћени сте",
     "confirmSubscribeTo": "Претплатите се на {{plan}} за {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} по цени пре листинга",
-    "creditsCreator": "Креатор добија {{amount}} USDT",
     "fromSubscriptionTokens": "Из ваших токена за претплату",
     "addedAtTodaysPrice": "Додато сада по данашњој цени",
-    "subscriptionTokensNote": "Токени за претплату су закључани по цени у тренутку додавања, па промена цене никада не мења колико вас претплата кошта. Могу се трошити само на претплате.",
     "subscriptionTokens": "Токени за претплату",
     "subscriptionTokensOnly": "Само за претплате",
     "untradableTokens": "Ово су токени за претплату којима се не може трговати",
-    "lockedValue": "Закључано на {{amount}}",
-    "withdraw": "Повуци"
+    "withdraw": "Повуци",
+    "creatorGetsTokens": "Креатор добија токене у вредности од {{amount}}",
+    "subscriptionTokensValueNote": "Токени за претплату задржавају своју вредност у доларима. Ако се цена токена промени пре него што их искористите, видећете више или мање токена, али они увек покривају исте претплате. Могу се трошити само на претплате.",
+    "earningsTitle": "Зарада од претплата",
+    "earningsWorth": "Вредност {{amount}}",
+    "earningsPaidInTokens": "Исплаћује се у токенима по данашњој цени",
+    "earningsPendingReserve": "Чека се резерва трезора",
+    "earningsAvailable": "Доступно",
+    "earningsPending": "На чекању",
+    "tokensSent": "Послато {{amount}} токена",
+    "withdrawableSoon": "Зарада од претплата ускоро ће моћи да се повуче"
   }
 }
