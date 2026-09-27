@@ -208,6 +208,7 @@ class VideoViewTracker {
     //
     // Loops count too: every wrap is another view. The API's 1-minute
     // per-viewer-per-post cooldown is what keeps a parked tab in check.
+    const priorProgress = this.watchProgress.get(tokenId) || 0;
     if (priorProgress > 1 && currentTime < 1) {
       this.reset(tokenId);
     }
