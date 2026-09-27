@@ -100,7 +100,7 @@ import {
 } from '@/components/app/settings/SettingsRow';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
-import { Search } from 'lucide-react';
+import { Search, Share2 } from 'lucide-react';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
@@ -263,12 +263,14 @@ const tabs = [
   { icon: Eye, value: 'content', label: 'settings.content' },
   { icon: MessageSquare, value: 'messages', label: 'settings.messages' },
   { icon: Wallet, value: 'assets', label: 'settings.assets' },
+  { icon: Share2, value: 'multipost', label: 'multiPost.tab' },
   { icon: Sparkles, value: 'skills', label: 'settings.skills' },
   { icon: Users, value: 'characters', label: 'settings.characters' },
   { icon: LifeBuoy, value: 'support', label: 'settings.support' },
 ];
 
 import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
+import { MultiPostSettings } from '@/components/app/settings/MultiPostSettings';
 import { CharactersLibrary } from '@/components/app/characters/CharactersLibrary';
 
 import { SEOHead } from '@/components/SEOHead';
@@ -522,6 +524,7 @@ export default function SettingsPage() {
         {activeTab === 'content' && <ContentSettings />}
         {activeTab === 'messages' && <MessagesSettings />}
         {activeTab === 'assets' && <AssetsSettings />}
+        {activeTab === 'multipost' && <MultiPostSettings />}
         {activeTab === 'skills' && <div data-setting-anchor="skills"><SkillsLibrary /></div>}
         {activeTab === 'characters' && <div data-setting-anchor="characters"><CharactersLibrary /></div>}
         {activeTab === 'support' && <SupportSettings />}
