@@ -34,6 +34,8 @@ import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildStreamInfo } from '../lib/stream-info';
 import { attachShopListings } from '@/lib/attach-shop-listings';
+import { crossPost } from '@/lib/multipost';
+import { useCrossPostStore } from '@/store/crossPostStore';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData, LiveStreamHandoff } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
@@ -1914,6 +1916,17 @@ export function usePostForm(
               );
             }
           });
+      }
+
+      if (!mintResponse.duplicate && !liveMode) {
+        void crossPost({
+          text: [submittedTitle, submittedDescription].filter(Boolean).join('\n\n'),
+          files: files.filter((f): f is File => f instanceof File),
+          accountIds: useCrossPostStore.getState().selected,
+          scheduledAt: mintResponse.scheduled ? (mintResponse.scheduledAt ? new Date(mintResponse.scheduledAt) : scheduledDate) : null,
+          tokenId: mintResponse.createdTokenId,
+          wallet: user?.address ?? null,
+        });
       }
 
       // A repeat of a post this composer already published: the first attempt's

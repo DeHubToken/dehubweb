@@ -136,6 +136,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'assets', anchor: 'fractions', label: 'Fractions', labelKey: 'settings.fractionsOwn', keywords: 'shares owned' },
   { tab: 'assets', anchor: 'owned-usernames', label: 'Owned Usernames', labelKey: 'settings.usernamesOwn', keywords: 'handles marketplace' },
   { tab: 'assets', anchor: 'offers-made', label: 'Offers Made', labelKey: 'settings.offersMade', keywords: 'bids offers' },
+  { tab: 'multipost', anchor: 'multipost', label: 'Multi-posting', labelKey: 'multiPost.title', keywords: 'cross post crosspost share x twitter youtube facebook instagram tiktok linkedin threads pinterest reddit schedule credits' },
 
   // Skills & characters
   { tab: 'skills', anchor: 'skills', label: 'Skills', labelKey: 'settings.skills', keywords: 'ai skills library' },
