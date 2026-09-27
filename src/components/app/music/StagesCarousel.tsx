@@ -15,7 +15,9 @@
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useLiveSpaces, useStage } from '@/contexts/StageContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -35,10 +37,15 @@ interface StagesCarouselProps {
 }
 
 function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void }) {
+  const { t } = useTranslation();
   const totalListeners = (space.speaker_count || 1) + (space.listener_count || 0);
-  const avatar =
-    buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
-    buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
+  // With no host_avatar the CDN URL is a guess that 403s for hosts who never
+  // uploaded one — drop to the initial instead of a broken image.
+  const [avatarFailed, setAvatarFailed] = useState(false);
+  const avatar = avatarFailed
+    ? undefined
+    : buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
+      buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
 
   return (
     <button
@@ -68,7 +75,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
           <div className="relative">
             <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden">
               {avatar ? (
-                <img src={avatar} alt="" className="w-full h-full object-cover" />
+                <img src={avatar} alt="" className="w-full h-full object-cover" onError={() => setAvatarFailed(true)} />
               ) : (
                 <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
                   {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
@@ -80,7 +87,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-zinc-500 text-[10px]">Hosted by</p>
+            <p className="text-zinc-500 text-[10px]">{t('stages.hostedBy')}</p>
             <BadgedName
               lookupId={space.host_username || space.host_wallet_address}
               className="text-white text-xs font-medium group-hover/host:underline"

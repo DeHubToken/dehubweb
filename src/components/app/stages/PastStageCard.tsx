@@ -69,7 +69,7 @@ export function PastStageCard({ space, className }: { space: AudioSpace; classNa
           className="flex items-center gap-2 min-w-0"
         >
           <div className="w-5 h-5 rounded-md overflow-hidden shrink-0 bg-zinc-700">
-            {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
+            {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />}
           </div>
           <BadgedName
             lookupId={space.host_username || space.host_wallet_address}

@@ -476,7 +476,7 @@ export function AudioSpacesModalBody() {
                                   const avatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
                                     || buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
                                   return avatar ? (
-                                    <img src={avatar} alt="" className="w-4 h-4 rounded-md object-cover" />
+                                    <img src={avatar} alt="" className="w-4 h-4 rounded-md object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                                   ) : (
                                     <span className="w-4 h-4 rounded-md bg-zinc-700 flex items-center justify-center text-[8px] text-white font-medium">
                                       {(space.host_username || 'A').charAt(0).toUpperCase()}
@@ -1177,7 +1177,7 @@ function StageCard({
             const avatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
               || buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
             return avatar ? (
-              <img src={avatar} alt="" className="w-4 h-4 rounded-md object-cover" />
+              <img src={avatar} alt="" className="w-4 h-4 rounded-md object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
             ) : (
               <span className="w-4 h-4 rounded-md bg-zinc-700 flex items-center justify-center text-[8px] text-white font-medium">
                 {(space.host_username || 'A').charAt(0).toUpperCase()}
