@@ -14,6 +14,7 @@
 
 import { Fragment, useEffect, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { discordEmojiUrl, mayContainEmojiTokens, tokenizeEmoji } from '@/lib/emoji/tokens';
 import { getLoadedShortcodes, loadShortcodes } from '@/lib/emoji/shortcodes';
 import {
@@ -45,7 +46,9 @@ function useShortcodes() {
 
 export function EmojiImage({ src, name, className }: { src: string; name: string; className?: string }) {
   const [broken, setBroken] = useState(false);
-  if (broken) return <>{`:${name}:`}</>;
+  // Custom and Discord emoji are unreviewed images: Kids Mode reads the name.
+  const kids = useKidsModeLock();
+  if (broken || kids) return <>{`:${name}:`}</>;
   return (
     <img
       src={src}
