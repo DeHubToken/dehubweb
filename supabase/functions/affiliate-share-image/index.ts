@@ -130,7 +130,7 @@ async function fetchAsDataUri(url: string): Promise<string | null> {
   try {
     const buf = new Uint8Array(await r.arrayBuffer());
     if (buf.byteLength < 200) return null;
-    return `data:${ct};base64,${encodeB64(buf)}`;
+    return `data:${ct};base64,${encodeB64(buf as Uint8Array<ArrayBuffer>)}`;
   } catch {
     return null;
   }
@@ -179,7 +179,7 @@ async function fetchAvatarDataUri(address: string | null, apiAvatarPath: string 
     try {
       const buf = new Uint8Array(await r.arrayBuffer());
       if (buf.byteLength < 200) continue;
-      return `data:${ct};base64,${encodeB64(buf)}`;
+      return `data:${ct};base64,${encodeB64(buf as Uint8Array<ArrayBuffer>)}`;
     } catch { /* try next */ }
   }
   return null;
@@ -353,7 +353,7 @@ serve(async (req) => {
     if (format === "png" && !noCache) {
       const cached = PNG_CACHE.get(cacheKey);
       if (cached) {
-        return new Response(cached, {
+        return new Response(cached as Uint8Array<ArrayBuffer>, {
           status: 200,
           headers: {
             ...corsHeaders,

@@ -26,6 +26,7 @@ import {
   guardPaidEndpoint,
   serviceClient,
 } from "../_shared/auth.ts";
+import { aiChat } from "../_shared/ai-chat.ts";
 
 /**
  * Languages the picker offers. An allowlist rather than free text: the code
