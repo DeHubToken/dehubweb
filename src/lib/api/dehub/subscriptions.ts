@@ -1,5 +1,4 @@
 import { apiCall } from './core';
-import { DHB_PRELISTING_USD } from '@/lib/subscription-pricing';
 
 /**
  * Creator subscription plans.
@@ -464,7 +463,8 @@ export async function isSubscribedToCreator(creatorAddress: string): Promise<boo
 /** Unwithdrawn earnings, in dollars and in tokens at today's price. */
 export function outstandingEarnings(earnings: SubscriptionEarnings | undefined): { usd: number; tokens: number } {
   const usd = (earnings?.pendingUsdt || 0) + (earnings?.processingUsdt || 0);
-  const price = earnings?.dhbPriceUsd || DHB_PRELISTING_USD;
+  // 0.001 is the pre-listing peg (DHB_PRELISTING_USD). Not imported: that module pulls in i18n.
+  const price = earnings?.dhbPriceUsd || 0.001;
   const tokens =
     earnings?.pendingTokens !== undefined
       ? (earnings.pendingTokens || 0) + (earnings.processingTokens || 0)
