@@ -201,7 +201,7 @@ class VideoViewTracker {
     // dedup that used to sit here is gone on purpose — it made the second watch
     // of a video invisible, which is not how a video's view count works
     // anywhere. What is left standing against a reload loop is the API's
-    // 30-minute per-viewer-per-post rate limit.
+    // 1-minute per-viewer-per-post rate limit.
 
     // Playback has jumped back to the top after a real watch — a replay, in the
     // same mounted player. Re-arm, so pressing play again counts again.
