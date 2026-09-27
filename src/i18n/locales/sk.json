@@ -81,6 +81,8 @@
     "recentSearches": "Nedávne vyhľadávania"
   },
   "settings": {
+    "showOnline": "Zobraziť, keď som online",
+    "showOnlineDesc": "Ľudia, ktorým napíšete správu, uvidia zelenú bodku vedľa vášho mena počas používania služby DeHub",
     "smartReplies": "Navrhované odpovede",
     "smartRepliesDesc": "Pripraví dve odpovede, na ktoré v chate klepneš. × pri návrhoch to vypne.",
     "title": "Nastavenia",

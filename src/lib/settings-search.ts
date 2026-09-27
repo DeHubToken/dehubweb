@@ -90,6 +90,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
 
   // Privacy
   { tab: 'privacy', anchor: 'private-account', label: 'Private Account', labelKey: 'settings.privateAccount', keywords: 'private lock approve followers requests' },
+  { tab: 'privacy', anchor: 'show-online', label: "Show when I'm online", labelKey: 'settings.showOnline', keywords: 'online status presence green dot active messages' },
   { tab: 'privacy', anchor: 'new-member', label: 'Show me as a new member', labelKey: 'settings.showAsNewMember', keywords: 'new member badge welcome' },
   { tab: 'privacy', anchor: 'public-profile', label: 'Public Profile', labelKey: 'settings.publicProfile' },
   { tab: 'privacy', anchor: 'follow-visibility', label: 'Follow Visibility', labelKey: 'settings.followVisibility', keywords: 'followers following hide counts' },

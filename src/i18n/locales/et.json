@@ -77,6 +77,8 @@
     "live": "Otse"
   },
   "settings": {
+    "showOnline": "Näita, kui ma olen võrgus",
+    "showOnlineDesc": "Inimesed, kellele sõnumi saadad, näevad DeHubi kasutamise ajal sinu nime kõrval rohelist täppi",
     "smartReplies": "Soovitatud vastused",
     "smartRepliesDesc": "Koostab kaks vastust, mida saad vestluses puudutada. Soovituste × lülitab selle välja.",
     "title": "Seaded",
@@ -1263,6 +1265,7 @@
     "loginRequired": "Sisselogimine nõutav"
   },
   "messages": {
+    "online": "Võrgus",
     "smartRepliesOff": "Soovitatud vastused on välja lülitatud",
     "smartRepliesOffWhere": "Lülita need uuesti sisse jaotises Seaded → Sõnumid.",
     "smartRepliesUndo": "Võta tagasi",

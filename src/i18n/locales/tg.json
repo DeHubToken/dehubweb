@@ -77,6 +77,8 @@
     "live": "Зинда"
   },
   "settings": {
+    "showOnline": "Ipakita kapag ako online",
+    "showOnlineDesc": "Ang mga tao na iyong mensahe ay makita ng isang green dot sa tabi ng iyong pangalan habang gumagamit",
     "smartReplies": "Ҷавобҳои пешниҳодшуда",
     "smartRepliesDesc": "Ду ҷавоб омода мекунад, ки дар чат зер карда метавонед. × дар пешниҳодҳо инро хомӯш мекунад.",
     "title": "Танзимот",
@@ -1244,6 +1246,7 @@
     "loginRequired": "Воридшавӣ лозим аст"
   },
   "messages": {
+    "online": "Онлайн",
     "smartRepliesOff": "Ҷавобҳои пешниҳодшуда хомӯш карда шуданд",
     "smartRepliesOffWhere": "Онҳоро дар Танзимот → Паёмҳо дубора фаъол кунед.",
     "smartRepliesUndo": "Бекор кардан",

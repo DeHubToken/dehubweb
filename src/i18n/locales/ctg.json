@@ -80,6 +80,8 @@
     "recentSearches": "হালের খোজ"
   },
   "settings": {
+    "showOnline": "আমার অনলাইন থাকলে দেখাও",
+    "showOnlineDesc": "People you message see a green dot next to your name while you're using DeHub",
     "smartReplies": "পরামর্শ দেওয়া জবাব",
     "smartRepliesDesc": "চ্যাটত টিপ মারিবার লাই দুইটা জবাব বানায়। পরামর্শর উপরর × ইতা বন্ধ গরি দেয়।",
     "title": "সেটিংস",

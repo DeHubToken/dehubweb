@@ -77,6 +77,8 @@
     "live": "प्रत्यक्षम्"
   },
   "settings": {
+    "showOnline": "ऑनलाईन सूचनाः When I am online",
+    "showOnlineDesc": "हरितवर्णेन युक्तं त्वया दृष्टं यदिदं त्वया ॥",
     "smartReplies": "सूचिताः प्रत्युत्तराणि",
     "smartRepliesDesc": "संलापे स्प्रष्टुं योग्ये द्वे प्रत्युत्तरे रचयति। सूचनासु × एतत् निवारयति।",
     "title": "विन्यासः",
@@ -1229,6 +1231,7 @@
     "loginRequired": "प्रवेशः आवश्यकः"
   },
   "messages": {
+    "online": "अन्लाइन",
     "smartRepliesOff": "सूचिताः प्रत्युत्तराणि निवारितानि",
     "smartRepliesOffWhere": "विन्यासः → सन्देशाः इत्यत्र पुनः प्रवर्तयतु।",
     "smartRepliesUndo": "प्रत्यावर्तयतु",

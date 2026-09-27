@@ -77,6 +77,8 @@
     "live": "Na ndụ"
   },
   "settings": {
+    "showOnline": "Gosi mgbe m nọ n 'ịntanetị",
+    "showOnlineDesc": "Ndị mmadụ ị na-eziga ozi na-ahụ ntụpọ akwụkwọ ndụ akwụkwọ ndụ n 'akụkụ aha gị mgbe ị na-eji DeHub",
     "smartReplies": "Nzaghachi atụrụ aro",
     "smartRepliesDesc": "Ọ na-edepụta nzaghachi abụọ ị nwere ike ịpị na nkata. Akara × dị na ndụmọdụ na-agbanyụ ya.",
     "title": "Ntọala",
@@ -1243,6 +1245,7 @@
     "loginRequired": "Achọrọ ịbanye"
   },
   "messages": {
+    "online": "N'ịntanetị",
     "smartRepliesOff": "Agbanyụọla nzaghachi atụrụ aro",
     "smartRepliesOffWhere": "Gbanyee ha ọzọ na Ntọala → Ozi.",
     "smartRepliesUndo": "Mezie ya",

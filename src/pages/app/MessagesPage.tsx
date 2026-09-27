@@ -10,10 +10,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector, CreateGroupModal } from '@/components/app/chat';
+import { OnlineDot } from '@/components/app/chat/OnlineDot';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
-import { useConversations, useUserOnlineStatus, useCreateConversation, useUserSearchForDM, useDeleteConversation } from '@/hooks/use-messages';
+import { useConversations, useCreateConversation, useUserSearchForDM, useDeleteConversation } from '@/hooks/use-messages';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { getMediaUrl, getAccountInfo, type DeHubConversation, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
@@ -90,11 +91,6 @@ function ConversationItem({
     ? formatDistanceToNow(new Date(conversation.lastMessage.createdAt), { addSuffix: false })
     : '';
 
-  // Online status via React Query (cached + deduplicated)
-  const otherAddress = otherUser?.address;
-  const { data: onlineStatus } = useUserOnlineStatus(otherAddress || null);
-  const isOnline = onlineStatus?.online ?? false;
-
   // An unsent message left in this thread's composer. Shown in place of the
   // last message, the way every mail and chat client does it — a draft nobody
   // can see from the list is indistinguishable from a draft that was lost.
@@ -132,11 +128,6 @@ function ConversationItem({
             {(fallbackName.startsWith('0x') ? fallbackName.charAt(2) : fallbackName.charAt(0)).toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        {/* Online indicator. Monochrome by default — Osaka and Jungle recolour it
-            through [data-status-dot], which is why the hook stays. */}
-        {isOnline && (
-          <div data-status-dot className="absolute bottom-0 right-0 w-3 h-3 bg-white rounded-full border-2 border-black" />
-        )}
       </div>
 
       <div className="flex-1 min-w-0">
@@ -145,12 +136,14 @@ function ConversationItem({
             {displayName ? (
               <>
                 <span className="font-semibold text-white truncate">{displayName}</span>
+                <OnlineDot address={otherUser?.address} />
                 <ConversationBadge user={otherUser} />
                 {username && <span className="text-zinc-500 text-sm truncate">@{username}</span>}
               </>
             ) : (
               <>
                 <span className="font-semibold text-white truncate">{fallbackName}</span>
+                <OnlineDot address={otherUser?.address} />
                 <ConversationBadge user={otherUser} />
               </>
             )}

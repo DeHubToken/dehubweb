@@ -1658,7 +1658,7 @@ function QuietHoursSection() {
 
 function PrivacySettings() {
   const { t } = useTranslation();
-  const { showFollowersFollowing, hideFollowerCounts, isPrivate, hideBadgeAndBalance, defaultPostVisibility, aiScraping, updateSettings, isUpdating, isLoading } = usePrivacySettings();
+  const { showFollowersFollowing, hideFollowerCounts, isPrivate, hideBadgeAndBalance, defaultPostVisibility, aiScraping, showOnline, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   const { whoCanMessage, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateDoNotDisturb } = useDmSettings();
   const { option: walletUnlockInterval, setOption: setWalletUnlockInterval } = useWalletUnlockInterval();
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
@@ -1822,6 +1822,15 @@ function PrivacySettings() {
               <FollowRequestsDrawer open={followRequestsOpen} onOpenChange={setFollowRequestsOpen} />
             </div>
           )}
+          <SettingToggle
+            icon={Radio}
+            anchor="show-online"
+            title={t('settings.showOnline')}
+            description={t('settings.showOnlineDesc')}
+            defaultChecked={showOnline}
+            onCheckedChange={(checked) => updateSettings({ show_online: checked })}
+            disabled={isUpdating || isLoading}
+          />
           {/* Only rendered while it still does something. Outside the 30-day
               window there is no row to update and no chip to hide, and a toggle
               that silently changes nothing is worse than no toggle. */}

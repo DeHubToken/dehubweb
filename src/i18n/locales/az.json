@@ -77,6 +77,8 @@
     "live": "Canlı"
   },
   "settings": {
+    "showOnline": "Onlayn olduğum vaxtı göstərin",
+    "showOnlineDesc": "Mesaj göndərdiyiniz insanlar DeHub-dan istifadə edərkən adınızın yanında yaşıl nöqtə görür",
     "smartReplies": "Təklif olunan cavablar",
     "smartRepliesDesc": "Söhbətdə toxuna biləcəyin iki cavab hazırlayır. Təkliflərdəki × bunu söndürür.",
     "title": "Parametrlər",
@@ -1262,6 +1264,7 @@
     "loginRequired": "Daxil olmaq lazımdır"
   },
   "messages": {
+    "online": "Onlayn",
     "smartRepliesOff": "Təklif olunan cavablar söndürüldü",
     "smartRepliesOffWhere": "Parametrlər → Mesajlar bölməsindən yenidən aç.",
     "smartRepliesUndo": "Geri al",

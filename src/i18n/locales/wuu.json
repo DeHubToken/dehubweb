@@ -76,6 +76,8 @@
     "live": "直播"
   },
   "settings": {
+    "showOnline": "显示我在线辰光",
+    "showOnlineDesc": "搿个辰光，搿个用DeHub，搿个名字旁边会得看到一个绿点。",
     "smartReplies": "建议回复",
     "smartRepliesDesc": "勒聊天里向写两条好点个回复。建议高头个 × 会得关脱伊。",
     "title": "设置",
@@ -1219,6 +1221,7 @@
     "loginRequired": "需要登录"
   },
   "messages": {
+    "online": "在线",
     "smartRepliesOff": "建议回复关脱哉",
     "smartRepliesOffWhere": "到 设置 → 消息 里向重新打开。",
     "smartRepliesUndo": "撤销",

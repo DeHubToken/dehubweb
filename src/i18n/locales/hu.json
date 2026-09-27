@@ -77,6 +77,8 @@
     "live": "Élő"
   },
   "settings": {
+    "showOnline": "Megjelenítés, amikor online vagyok",
+    "showOnlineDesc": "Azok a személyek, akiknek üzenetet küldesz, egy zöld pontot látnak a neved mellett, miközben a DeHubot használod",
     "smartReplies": "Javasolt válaszok",
     "smartRepliesDesc": "Két választ fogalmaz meg, amelyekre a csevegésben rákoppinthatsz. A javaslatokon lévő × kikapcsolja ezt.",
     "title": "Beállítások",
@@ -1263,6 +1265,7 @@
     "loginRequired": "Bejelentkezés szükséges"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "A javasolt válaszok ki vannak kapcsolva",
     "smartRepliesOffWhere": "Kapcsold vissza a Beállítások → Üzenetek menüben.",
     "smartRepliesUndo": "Visszavonás",

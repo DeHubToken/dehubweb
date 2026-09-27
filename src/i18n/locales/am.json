@@ -76,6 +76,8 @@
     "live": "ቀጥታ"
   },
   "settings": {
+    "showOnline": "በመስመር ላይ ስሆን አሳይ",
+    "showOnlineDesc": "እርስዎ የሚያስተላልፉት ሰዎች DeHub በሚጠቀሙበት ጊዜ ከስምዎ አጠገብ አረንጓዴ ነጥብ ያያሉ",
     "smartReplies": "የተጠቆሙ ምላሾች",
     "smartRepliesDesc": "በውይይት ውስጥ መንካት የሚችሏቸውን ሁለት ምላሾች ያዘጋጃል። በጥቆማዎቹ ላይ ያለው × ይህን ያጠፋዋል።",
     "title": "ቅንብሮች",
@@ -1249,6 +1251,7 @@
     "loginRequired": "መግባት ያስፈልጋል"
   },
   "messages": {
+    "online": "ኦንላይን",
     "smartRepliesOff": "የተጠቆሙ ምላሾች ጠፍተዋል",
     "smartRepliesOffWhere": "ቅንብሮች → መልዕክቶች ውስጥ እንደገና ያብሩዋቸው።",
     "smartRepliesUndo": "ቀልብስ",

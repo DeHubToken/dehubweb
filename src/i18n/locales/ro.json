@@ -77,6 +77,8 @@
     "live": "Live"
   },
   "settings": {
+    "showOnline": "Afișează când sunt online",
+    "showOnlineDesc": "Persoanele cărora le trimiți mesaje văd un punct verde lângă numele tău în timp ce folosești DeHub",
     "smartReplies": "Răspunsuri sugerate",
     "smartRepliesDesc": "Redactează două răspunsuri pe care le poți atinge într-un chat. × de pe sugestii dezactivează asta.",
     "title": "Setări",
@@ -1251,6 +1253,7 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Răspunsurile sugerate au fost dezactivate",
     "smartRepliesOffWhere": "Reactivează-le din Setări → Mesaje.",
     "smartRepliesUndo": "Anulează",
