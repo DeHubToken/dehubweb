@@ -532,7 +532,9 @@ export function ProfileHeader({
 
           {/* The streamer ladder. Renders nothing for a profile that has
               never ended a stream, so a non-streamer's page is unchanged. */}
-          <StreamerLevelCard address={profile.walletAddress} className="mt-4" />
+          {isViewingOwnProfile && (
+            <StreamerLevelCard address={profile.walletAddress} className="mt-4" />
+          )}
         </div>
       </div>
 
