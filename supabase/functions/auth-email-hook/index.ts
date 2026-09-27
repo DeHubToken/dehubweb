@@ -177,7 +177,7 @@ const handler = createAuthEmailHandler({
           siteUrl: SITE_URL,
           recipient: data.email,
           confirmationUrl: buildBrandedConfirmationUrl(data, 'signup'),
-          token: data.token,
+          token: data.token ?? undefined,
         }),
     },
     invite: {
@@ -195,7 +195,7 @@ const handler = createAuthEmailHandler({
         React.createElement(MagicLinkEmail, {
           siteName: SITE_NAME,
           confirmationUrl: buildBrandedConfirmationUrl(data, 'magiclink'),
-          token: data.token,
+          token: data.token ?? undefined,
         }),
     },
     recovery: {
