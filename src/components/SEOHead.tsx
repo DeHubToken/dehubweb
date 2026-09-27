@@ -28,7 +28,7 @@ interface SEOHeadProps {
 const defaults = {
   title: 'DeHub — Open Source, User Owned Social Media',
   description: 'DeHub is open source, user owned and censorship resistant media.',
-  image: 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//new_logo_Dehub.jpg',
+  image: 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg',
   url: 'https://dehub.io',
 };
 
