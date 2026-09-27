@@ -4495,6 +4495,42 @@ export type Database = {
         }
         Relationships: []
       }
+      social_farcaster_signers: {
+        Row: {
+          approval_url: string | null
+          created_at: string
+          fid: number | null
+          public_key: string | null
+          signer_uuid: string
+          status: string
+          updated_at: string
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          approval_url?: string | null
+          created_at?: string
+          fid?: number | null
+          public_key?: string | null
+          signer_uuid: string
+          status?: string
+          updated_at?: string
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          approval_url?: string | null
+          created_at?: string
+          fid?: number | null
+          public_key?: string | null
+          signer_uuid?: string
+          status?: string
+          updated_at?: string
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       social_post_credits: {
         Row: {
           credits: number
