@@ -244,7 +244,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     description,
     likes: resolveLikeCount(nft),
     dislikes: resolveDislikeCount(nft),
-    caption: description || '',
+    caption: rawDescription || '',
     comments: nft.commentCount || nft.comment_count || 0,
     status: nft.status,
     views,

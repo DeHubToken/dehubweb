@@ -91,7 +91,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
     }
 
     audio.src = audioUrl;
-    audio.play().catch(() => {});
+    audio.play().catch(() => setPlayingId((current) => current === trackId ? null : current));
     setPlayingId(trackId);
   }, [playingId]);
 
@@ -109,7 +109,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
 
     const tokenId = String(nft.tokenId || nft.id || nft.token_id);
     const rawAudioSource = nft.audioUrl || nft.videoUrl || nft.media_url;
-    const audioUrl = getMediaUrl(rawAudioSource) ?? `${DEHUB_CDN_BASE}audios/${tokenId}.mp3`;
+    const audioUrl = getMediaUrl(rawAudioSource) ?? `${DEHUB_CDN_BASE}feed-audio/${tokenId}-audio.mp3`;
     const minterAddress = nft.minter || nft.creator?.id || '';
 
     onSelect({
@@ -159,7 +159,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
               {allTracks.map((nft) => {
                 const tokenId = String(nft.tokenId || nft.id || nft.token_id);
                 const rawAudioSource = (nft as any).audioUrl || nft.videoUrl || nft.media_url;
-                const audioUrl = getMediaUrl(rawAudioSource) ?? `${DEHUB_CDN_BASE}audios/${tokenId}.mp3`;
+                const audioUrl = getMediaUrl(rawAudioSource) ?? `${DEHUB_CDN_BASE}feed-audio/${tokenId}-audio.mp3`;
                 const minterAddress = nft.minter || nft.creator?.id || '';
                 const avatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl);
                 const isSelected = currentSound?.tokenId === tokenId;
@@ -239,6 +239,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
         <audio
           ref={audioRef}
           onEnded={() => setPlayingId(null)}
+          onError={() => setPlayingId(null)}
           preload="none"
         />
       </DrawerContent>
