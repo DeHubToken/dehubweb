@@ -1,7 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 import { rateLimitByIp, resolveDeHubAddress } from "../_shared/auth.ts";
-import { agentConfigured, runAgentLoop, type AgentSurface } from "../_shared/assistant-agent.ts";
+import { aiChat } from "../_shared/ai-chat.ts";
+import { agentConfigured, postCompletion, runAgentLoop, type AgentSurface } from "../_shared/assistant-agent.ts";
 import { streamAgentLoop, teeStreamText } from "../_shared/assistant-agent-stream.ts";
 import { DEHUB_PLATFORM_KNOWLEDGE } from "../_shared/dehub-platform-knowledge.ts";
 
@@ -874,18 +875,11 @@ ${aiResponse.substring(0, 500)}
 Return ONLY a JSON array of objects with "content" (the fact) and "type" (one of: preference, interest, fact, goal). Return [] if nothing worth remembering.
 Example: [{"content": "Interested in DeFi yield farming", "type": "interest"}]`;
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${lovableApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-lite',
-        messages: [{ role: 'user', content: extractionPrompt }],
-        max_completion_tokens: 300,
-      }),
-    });
+    const response = await aiChat({
+      model: 'google/gemini-2.5-flash-lite',
+      messages: [{ role: 'user', content: extractionPrompt }],
+      max_completion_tokens: 300,
+    }, { label: 'memory-extract' });
 
     if (!response.ok) {
       await response.text();
@@ -1077,13 +1071,7 @@ serve(async (req) => {
     if (isAuthenticated && hasSwapIntent(userQuery)) {
       console.log('[Swap] Detected swap intent, extracting params...');
       try {
-        const swapExtractionResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${lovableApiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        const swapExtractionResponse = await aiChat({
             model: 'google/gemini-2.5-flash',
             messages: [
               { role: 'system', content: 'You are a swap intent parser. Extract token swap parameters from the user message. Known tokens: ETH (native, address 0x0), WETH (0x4200000000000000000000000000000000000006), DHB (0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c), USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913). If the user says "buy DHB" or "buy $DHB", tokenOut is DHB. Default tokenIn is ETH if not specified. Default amountType is "output" when buying a specific amount of a token, "input" when swapping a specific amount of input token.' },
@@ -1111,8 +1099,7 @@ serve(async (req) => {
             }],
             tool_choice: { type: 'function', function: { name: 'execute_swap' } },
             max_completion_tokens: 200,
-          }),
-        });
+          }, { expectToolCall: 'execute_swap', label: 'swap-intent' });
 
         if (swapExtractionResponse.ok) {
           const swapData = await swapExtractionResponse.json();
@@ -1643,20 +1630,23 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
     let response: Response;
     try {
       console.log(`[AI Request] model=${modelName} endpoint=${apiEndpoint} msgCount=${apiMessages.length}`);
-      response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: modelName,
-          messages: apiMessages,
-          max_completion_tokens: maxTokens,
-          ...(streamRequested ? { stream: true } : {}),
-        }),
-        signal: controller.signal,
-      });
+      const requestBody = {
+        model: modelName,
+        messages: apiMessages,
+        max_completion_tokens: maxTokens,
+        ...(streamRequested ? { stream: true } : {}),
+      };
+      response = useGrokApi
+        ? await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            signal: controller.signal,
+          })
+        : await postCompletion(requestBody, apiKey, controller.signal);
     } catch (fetchError) {
       clearTimeout(timeoutId);
       const timedOut = fetchError instanceof DOMException && fetchError.name === 'AbortError';
