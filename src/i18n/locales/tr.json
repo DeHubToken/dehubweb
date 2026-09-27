@@ -4468,7 +4468,19 @@
     "tokenCheckoutNotReady": "Jeton aboneliği ödeme işlemi hazır değil — lütfen kısa süre sonra tekrar deneyin",
     "tokenQuoteUnavailable": "Canlı jeton kotası mevcut değil",
     "tokenEstimate": "≈ {{amount}} jeton",
-    "tokenAmountUnavailable": "Jeton tutarı mevcut değil"
+    "tokenAmountUnavailable": "Jeton tutarı mevcut değil",
+    "subscribedToast": "Abone olundu",
+    "confirmSubscribeTo": "{{price}}/{{duration}} karşılığında {{plan}} aboneliği alın.",
+    "atPreListingRate": "Ön kayıt ücretinde {{amount}}",
+    "creditsCreator": "Yaratıcının {{amount}} USDT kredisi",
+    "fromSubscriptionTokens": "Abonelik tokenlerinizden",
+    "addedAtTodaysPrice": "Şimdi bugünün fiyatına eklendi",
+    "subscriptionTokensNote": "Abonelik tokenleri eklediğinizde fiyata kilitlenir, bu nedenle bir fiyat hareketi bir aboneliğin size maliyetini asla değiştirmez. Sadece aboneliklere harcanabilir.",
+    "subscriptionTokens": "Abonelik tokenleri",
+    "subscriptionTokensOnly": "Yalnızca abonelikler için",
+    "untradableTokens": "Bunlar takas edilemez abonelik belirteçleridir",
+    "lockedValue": "{{amount}} konumunda kilitli",
+    "withdraw": "Para Çekme"
   },
   "live": {
     "chatJoined": "katıldı",

@@ -4403,7 +4403,22 @@
     "tokenCheckoutNotReady": "پرداخت اشتراک توکن آماده نیست - لطفاً به زودی دوباره امتحان کنید",
     "tokenQuoteUnavailable": "نقل قول زنده توکن در دسترس نیست",
     "tokenEstimate": "≈ {{amount}} توکن",
-    "tokenAmountUnavailable": "مبلغ توکن در دسترس نیست"
+    "tokenAmountUnavailable": "مبلغ توکن در دسترس نیست",
+    "unknown": "ناشناخته",
+    "daysLeft_one": "{{count}}d سمت چپ",
+    "daysLeft_other": "{{count}}d سمت چپ",
+    "subscribedToast": "مشترک",
+    "confirmSubscribeTo": "برای {{price}} / {{duration}} در {{plan}} مشترک شوید.",
+    "atPreListingRate": "{{amount}} با نرخ پیش از ثبت",
+    "creditsCreator": "با تشکر از خالق {{amount}} USDT",
+    "fromSubscriptionTokens": "از توکن‌های اشتراک شما",
+    "addedAtTodaysPrice": "با قیمت امروز اضافه شد",
+    "subscriptionTokensNote": "توکن‌های اشتراک در قیمت هنگام اضافه شدن قفل می‌شوند، بنابراین تغییر قیمت هرگز هزینه اشتراک را برای شما تغییر نمی‌دهد. آنها فقط می‌توانند برای اشتراک‌ها خرج شوند.",
+    "subscriptionTokens": "توکن‌های اشتراک",
+    "subscriptionTokensOnly": "فقط برای اشتراک‌ها",
+    "untradableTokens": "اینها توکن‌های اشتراک غیرقابل معامله هستند",
+    "lockedValue": "قفل شده در {{amount}}",
+    "withdraw": "برداشت"
   },
   "live": {
     "chatJoined": "پیوست",

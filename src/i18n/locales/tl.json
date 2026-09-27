@@ -4301,7 +4301,19 @@
     "tokenCheckoutNotReady": "Hindi pa handa ang token subscription checkout — mangyaring subukang muli sa madaling panahon",
     "tokenQuoteUnavailable": "Hindi available ang live token quote",
     "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Hindi available ang token amount"
+    "tokenAmountUnavailable": "Hindi available ang token amount",
+    "subscribedToast": "Subscribe Unsubscribe",
+    "confirmSubscribeTo": "Mag -subscribe sa {{plan}} para sa {{price}}/{{duration}}.",
+    "atPreListingRate": "{{amount}} sa pre - listing rate",
+    "creditsCreator": "Binibigyan ng credit ang creator na {{amount}} USDT",
+    "fromSubscriptionTokens": "Mula sa iyong mga token ng subscription",
+    "addedAtTodaysPrice": "Idinagdag ngayon sa presyo ngayon",
+    "subscriptionTokensNote": "Ang mga token ng subscription ay naka - lock sa presyo kapag idinagdag mo ang mga ito, kaya ang isang paglipat ng presyo ay hindi kailanman nagbabago kung ano ang gastos sa iyo ng isang subscription. Ang mga ito ay maaari lamang gastusin sa mga subscription.",
+    "subscriptionTokens": "Mga token ng subscription",
+    "subscriptionTokensOnly": "Para sa mga subscription lamang",
+    "untradableTokens": "Ang mga ito ay untradable token subscription",
+    "lockedValue": "Naka - lock sa {{amount}}",
+    "withdraw": "Mag - withdraw"
   },
   "live": {
     "chatJoined": "sumali",

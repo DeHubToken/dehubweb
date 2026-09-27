@@ -4469,7 +4469,19 @@
     "tokenCheckoutNotReady": "نافذة دفع الاشتراك بالرموز غير جاهزة - يرجى المحاولة مرة أخرى قريبًا",
     "tokenQuoteUnavailable": "اقتباس الرمز المباشر غير متاح",
     "tokenEstimate": "≈ {{amount}} رمز",
-    "tokenAmountUnavailable": "مبلغ الرمز غير متاح"
+    "tokenAmountUnavailable": "مبلغ الرمز غير متاح",
+    "subscribedToast": "مشترك",
+    "confirmSubscribeTo": "اشترك في {{plan}} لـ {{price}}/{{duration}}.",
+    "atPreListingRate": "{{amount}} بسعر الإعلان المسبق",
+    "creditsCreator": "ينسب الفضل إلى المنشئ {{amount}} USDT",
+    "fromSubscriptionTokens": "من رموز اشتراكك",
+    "addedAtTodaysPrice": "تمت الإضافة الآن بسعر اليوم",
+    "subscriptionTokensNote": "يتم قفل رموز الاشتراك بالسعر عند إضافتها، لذلك لا تغير حركة السعر أبدًا ما يكلفك الاشتراك. لا يمكن إنفاقها إلا على الاشتراكات.",
+    "subscriptionTokens": "رموز الاشتراك",
+    "subscriptionTokensOnly": "للاشتراكات فقط",
+    "untradableTokens": "هذه رموز اشتراك غير قابلة للتداول",
+    "lockedValue": "مغلق عند {{amount}}",
+    "withdraw": "سحب"
   },
   "live": {
     "chatJoined": "انضم",

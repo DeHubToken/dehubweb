@@ -4251,7 +4251,19 @@
     "tokenCheckoutNotReady": "টোকেন সাবস্ক্রিপশন চেকআউট প্রস্তুত নয় — অনুগ্রহ করে শীঘ্রই আবার চেষ্টা করুন",
     "tokenQuoteUnavailable": "লাইভ টোকেন কোট অনুপলব্ধ",
     "tokenEstimate": "≈ {{amount}} টোকেন",
-    "tokenAmountUnavailable": "টোকেন পরিমাণ অনুপলব্ধ"
+    "tokenAmountUnavailable": "টোকেন পরিমাণ অনুপলব্ধ",
+    "subscribedToast": "সাবস্ক্রাইব করা হয়েছে",
+    "confirmSubscribeTo": "{{price}}/{{duration}} -এর জন্য {{plan}} -এ সাবস্ক্রাইব করুন ।",
+    "atPreListingRate": "{{amount}} প্রি-লিস্টিং হারে",
+    "creditsCreator": "স্রষ্টাকে ক্রেডিট {{amount}} USDT",
+    "fromSubscriptionTokens": "আপনার সাবস্ক্রিপশন টোকেন থেকে",
+    "addedAtTodaysPrice": "আজকের মূল্যে এখন যোগ করা হয়েছে",
+    "subscriptionTokensNote": "আপনি যখন এগুলি যোগ করেন তখন সাবস্ক্রিপশন টোকেনগুলি দামে লক করা থাকে, তাই কোনও সাবস্ক্রিপশনের জন্য আপনার খরচ করা মূল্য কখনই পরিবর্তন হয় না । এগুলি শুধুমাত্র সাবস্ক্রিপশনের জন্য ব্যয় করা যেতে পারে ।",
+    "subscriptionTokens": "সাবস্ক্রিপশন টোকেন",
+    "subscriptionTokensOnly": "শুধুমাত্র সাবস্ক্রিপশনের জন্য",
+    "untradableTokens": "এগুলি হল অবিস্মরণীয় সাবস্ক্রিপশন টোকেন",
+    "lockedValue": "{{amount}} -এ লক করা হয়েছে",
+    "withdraw": "প্রত্যাহার করুন"
   },
   "live": {
     "chatJoined": "যোগ দিয়েছেন",

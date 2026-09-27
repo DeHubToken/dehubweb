@@ -4243,7 +4243,19 @@
     "tokenCheckoutNotReady": "ٹوکن سبسکرپشن چیک آؤٹ تیار نہیں ہے — براہ کرم جلد دوبارہ کوشش کریں۔",
     "tokenQuoteUnavailable": "لائیو ٹوکن کوٹ دستیاب نہیں ہے",
     "tokenEstimate": "≈ {{amount}} ٹوکن",
-    "tokenAmountUnavailable": "ٹوکن کی مقدار دستیاب نہیں ہے"
+    "tokenAmountUnavailable": "ٹوکن کی مقدار دستیاب نہیں ہے",
+    "subscribedToast": "سبسکرائب شدہ",
+    "confirmSubscribeTo": "{{plan}} پر {{price}}/{{duration}} کے لیے سبسکرائب کریں ۔",
+    "atPreListingRate": "پری لسٹنگ ریٹ پر {{amount}}",
+    "creditsCreator": "تخلیق کار کو کریڈٹ کرتا ہے {{amount}} USDT",
+    "fromSubscriptionTokens": "آپ کے سبسکرپشن ٹوکنز سے",
+    "addedAtTodaysPrice": "آج کی قیمت پر ابھی شامل کیا گیا",
+    "subscriptionTokensNote": "جب آپ سبسکرپشن ٹوکن شامل کرتے ہیں تو قیمت پر سبسکرپشن ٹوکن لاک ہوجاتے ہیں، لہذا قیمت میں تبدیلی کبھی نہیں بدلتی ہے کہ سبسکرپشن پر آپ کی کیا لاگت آتی ہے ۔ انہیں صرف سبسکرپشنز پر خرچ کیا جا سکتا ہے ۔",
+    "subscriptionTokens": "سبسکرپشن ٹوکنز",
+    "subscriptionTokensOnly": "صرف سبسکرپشنز کے لیے",
+    "untradableTokens": "یہ ناقابل تجدید سبسکرپشن ٹوکنز ہیں",
+    "lockedValue": "{{amount}} پر لاک ہے",
+    "withdraw": "رقم نکلوائیں"
   },
   "live": {
     "chatJoined": "شامل ہوئے",

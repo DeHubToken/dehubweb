@@ -4461,7 +4461,19 @@
     "tokenCheckoutNotReady": "Die Token-Abonnementkasse ist nicht bereit – bitte versuchen Sie es in Kürze erneut",
     "tokenQuoteUnavailable": "Live-Token-Angebot nicht verfügbar",
     "tokenEstimate": "≈ {{amount}} Token",
-    "tokenAmountUnavailable": "Token-Betrag nicht verfügbar"
+    "tokenAmountUnavailable": "Token-Betrag nicht verfügbar",
+    "subscribedToast": "Abonniert",
+    "confirmSubscribeTo": "Abonniere {{plan}} für {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} zum Preis vor dem Inserat",
+    "creditsCreator": "Gutschriften an den/die Kreative * n {{amount}} USDT",
+    "fromSubscriptionTokens": "Von deinen Abonnement-Token",
+    "addedAtTodaysPrice": "Jetzt zum heutigen Preis hinzugefügt",
+    "subscriptionTokensNote": "Abonnement-Token sind zum Preis gesperrt, wenn du sie hinzufügst, so dass eine Preisänderung nie ändert, was ein Abonnement kostet. Sie können nur für Abonnements ausgegeben werden.",
+    "subscriptionTokens": "Abonnement-Token",
+    "subscriptionTokensOnly": "Nur für Abonnements",
+    "untradableTokens": "Dies sind nicht handelbare Abonnement-Token",
+    "lockedValue": "Gesperrt um {{amount}}",
+    "withdraw": "Zurückziehen"
   },
   "live": {
     "chatJoined": "ist beigetreten",

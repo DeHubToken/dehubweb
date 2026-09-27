@@ -4443,7 +4443,19 @@
     "tokenCheckoutNotReady": "Žetonų prenumeratos apmokėjimas dar neparuoštas – bandykite dar kartą netrukus",
     "tokenQuoteUnavailable": "Gyvos žetonų kainos citatos negalima",
     "tokenEstimate": "≈ {{amount}} žetonų",
-    "tokenAmountUnavailable": "Žetonų sumos negalima"
+    "tokenAmountUnavailable": "Žetonų sumos negalima",
+    "subscribedToast": "Prenumeruota",
+    "confirmSubscribeTo": "Prenumeruokite {{plan}} {{price}} / {{duration}} prenumeratą.",
+    "atPreListingRate": "{{amount}} pagal išankstinio skelbimo įkainį",
+    "creditsCreator": "Kreditas kūrėjui {{amount}} USDT",
+    "fromSubscriptionTokens": "Iš tavo prenumeratos žetonų",
+    "addedAtTodaysPrice": "Pridėta dabar už šiandienos kainą",
+    "subscriptionTokensNote": "Pridėjus prenumeratos žetonus užrakinama kaina, todėl kainos perkėlimas niekada nekeičia prenumeratos kainos. Juos galima išleisti tik prenumeratoms.",
+    "subscriptionTokens": "Prenumeratos prieigos raktai",
+    "subscriptionTokensOnly": "Tik prenumeratoms",
+    "untradableTokens": "Tai yra neprekybiniai prenumeratos žetonai",
+    "lockedValue": "Užrakinta {{amount}}",
+    "withdraw": "Atsiimti"
   },
   "live": {
     "chatJoined": "prisijungė",

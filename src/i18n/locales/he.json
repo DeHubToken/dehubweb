@@ -4261,7 +4261,21 @@
     "tokenCheckoutNotReady": "הצ'ק-אאוט של מנוי אסימונים אינו מוכן — אנא נסה שוב בקרוב",
     "tokenQuoteUnavailable": "ציטוט אסימון חי אינו זמין",
     "tokenEstimate": "≈ {{amount}} אסימונים",
-    "tokenAmountUnavailable": "כמות אסימונים לא זמינה"
+    "tokenAmountUnavailable": "כמות אסימונים לא זמינה",
+    "subscriberCount_one": "מנוי {{count}}",
+    "subscriberCount_other": "{{count}} מנויים",
+    "subscribedToast": "נרשמת כמנוי",
+    "confirmSubscribeTo": "הירשמו ל - {{plan}} עבור {{price}}/{{duration}}.",
+    "atPreListingRate": "{{amount}} בתעריף הרישום מראש",
+    "creditsCreator": "נקודות זיכוי ליוצר {{amount}} USDT",
+    "fromSubscriptionTokens": "מאסימוני המנוי שלך",
+    "addedAtTodaysPrice": "נוסף עכשיו במחיר של היום",
+    "subscriptionTokensNote": "אסימוני מינוי נעולים במחיר בעת הוספתם, כך שתנועת מחיר לעולם לא תשנה את העלות של מינוי עבורך. ניתן להוציא אותם רק על מנויים.",
+    "subscriptionTokens": "אסימוני מינוי",
+    "subscriptionTokensOnly": "למנויים בלבד",
+    "untradableTokens": "אלה אסימוני מנוי בלתי סחירים",
+    "lockedValue": "נעול בשעה {{amount}}",
+    "withdraw": "משיכה"
   },
   "live": {
     "chatJoined": "הצטרף/ה",

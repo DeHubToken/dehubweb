@@ -4368,7 +4368,22 @@
     "tokenCheckoutNotReady": "Token abunəliyi checkout hazır deyil — lütfən qısa müddətdə yenidən cəhd edin",
     "tokenQuoteUnavailable": "Canlı token kotirovkası mövcud deyil",
     "tokenEstimate": "≈ {{amount}} token",
-    "tokenAmountUnavailable": "Token məbləği mövcud deyil"
+    "tokenAmountUnavailable": "Token məbləği mövcud deyil",
+    "totalCount": "{{count}} cəmi",
+    "daysLeft_one": "{{count}}d qalıb",
+    "daysLeft_other": "{{count}}d qalıb",
+    "subscribedToast": "Abunə olunub",
+    "confirmSubscribeTo": "{{price}}{{duration}} üçün {{plan}} abunə olun.",
+    "atPreListingRate": "{{amount}} əvvəlcədən elan qiyməti ilə",
+    "creditsCreator": "Yaradıcı şəxsə {{amount}} USDT kredit verir",
+    "fromSubscriptionTokens": "Abunə nişanlarınızdan",
+    "addedAtTodaysPrice": "Bugünkü qiymətə indi əlavə edildi",
+    "subscriptionTokensNote": "Abunə nişanları əlavə etdiyiniz zaman qiymət kilidlənir, buna görə də qiymət hərəkəti heç vaxt abunə xərclərinizi dəyişmir. Onlar yalnız abunələrə xərclənə bilər.",
+    "subscriptionTokens": "Abunə nişanları",
+    "subscriptionTokensOnly": "Yalnız abunəçilər üçün",
+    "untradableTokens": "Bunlar təkraredilməz abunə ayələridir",
+    "lockedValue": "{{amount}} ünvanında kilidlənib",
+    "withdraw": "Geri götür"
   },
   "live": {
     "chatJoined": "qoşuldu",

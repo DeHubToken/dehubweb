@@ -4442,7 +4442,19 @@
     "tokenCheckoutNotReady": "Žetonu abonementa kase vēl nav gatava — lūdzu, mēģiniet vēlreiz drīzumā",
     "tokenQuoteUnavailable": "Tiešraides žetonu kotācija nav pieejama",
     "tokenEstimate": "≈ {{amount}} žetonu",
-    "tokenAmountUnavailable": "Žetonu summa nav pieejama"
+    "tokenAmountUnavailable": "Žetonu summa nav pieejama",
+    "subscribedToast": "Abonēts",
+    "confirmSubscribeTo": "Abonējiet {{plan}} {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} pēc iepriekšēja sludinājuma cenas",
+    "creditsCreator": "Piešķir autoram bonuspunktus {{amount}} USDT",
+    "fromSubscriptionTokens": "No jūsu abonēšanas marķieriem",
+    "addedAtTodaysPrice": "Pievienots tagad par šodienas cenu",
+    "subscriptionTokensNote": "Pievienojot abonēšanas žetonus, tiem tiek fiksēta cena, tāpēc cenas pārvietošana nekad nemaina abonementa izmaksas. Tos var tērēt tikai abonementiem.",
+    "subscriptionTokens": "Abonēšanas marķieri",
+    "subscriptionTokensOnly": "Tikai abonementiem",
+    "untradableTokens": "Tie ir netirgojami abonēšanas marķieri",
+    "lockedValue": "Bloķēts {{amount}}",
+    "withdraw": "Atsaukt"
   },
   "live": {
     "chatJoined": "pievienojās",
