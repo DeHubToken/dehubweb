@@ -2766,7 +2766,10 @@
     "earningsAvailable": "Verfügbar",
     "earningsPending": "Ufgstellt",
     "tokensSent": "{{amount}} Token gschickt",
-    "withdrawableSoon": "Abonnemente-Ertrag wird bald abziehbar sii"
+    "withdrawableSoon": "Abonnemente-Ertrag wird bald abziehbar sii",
+    "percentUsed": "{{percent}}% used",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "viewInWallet": "View in wallet"
   },
   "live": {
     "chatJoined": "isch bitrete",

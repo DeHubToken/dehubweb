@@ -2783,7 +2783,10 @@
     "earningsAvailable": "E wātea ana",
     "earningsPending": "Te tuku",
     "tokensSent": "{{amount}} tokens tonoa",
-    "withdrawableSoon": "Ka taea te tango wawe i nga whiwhinga ohaurunga"
+    "withdrawableSoon": "Ka taea te tango wawe i nga whiwhinga ohaurunga",
+    "percentUsed": "{{percent}}% used",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "viewInWallet": "Tiro i te pūkete"
   },
   "live": {
     "chatJoined": "kua uru mai",

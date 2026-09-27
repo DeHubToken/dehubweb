@@ -4440,7 +4440,10 @@
     "earningsAvailable": "Disponible",
     "earningsPending": "Pendent",
     "tokensSent": "{{amount}} fitxes enviades",
-    "withdrawableSoon": "Els ingressos de la subscripció es podran retirar aviat"
+    "withdrawableSoon": "Els ingressos de la subscripció es podran retirar aviat",
+    "percentUsed": "S'ha utilitzat el {{percent}}%",
+    "spentOfTotal": "{{spent}} de {{total}}",
+    "viewInWallet": "Veure a la cartera"
   },
   "live": {
     "chatJoined": "s'ha unit",

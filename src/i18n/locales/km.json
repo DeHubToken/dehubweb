@@ -4279,7 +4279,10 @@
     "earningsAvailable": "មាន",
     "earningsPending": "មិនទាន់សម្រេច",
     "tokensSent": "{{amount}} ថូខឹនបានផ្ញើ",
-    "withdrawableSoon": "ប្រាក់ចំណូលពីការជាវនឹងអាចដកបានឆាប់ៗនេះ"
+    "withdrawableSoon": "ប្រាក់ចំណូលពីការជាវនឹងអាចដកបានឆាប់ៗនេះ",
+    "percentUsed": "{{percent}}% បានប្រើ",
+    "spentOfTotal": "{{spent}} នៃ {{total}}",
+    "viewInWallet": "មើលនៅក្នុងកាបូប"
   },
   "live": {
     "chatJoined": "បានចូលរួម",

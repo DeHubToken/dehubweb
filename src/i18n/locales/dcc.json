@@ -3106,6 +3106,9 @@
     "earningsAvailable": "उपलब्ध",
     "earningsPending": "लंबित",
     "tokensSent": "{{amount}} टोकन भेजे गए",
-    "withdrawableSoon": "सदस्यता कमाई जल्द ही निकाली जा सकेगी"
+    "withdrawableSoon": "सदस्यता कमाई जल्द ही निकाली जा सकेगी",
+    "percentUsed": "{{percent}}% استعمال ہوا",
+    "spentOfTotal": "{{spent}} کا {{total}}",
+    "viewInWallet": "والٹ میں دیکھیں"
   }
 }

@@ -4490,7 +4490,10 @@
     "earningsAvailable": "Tilgængelig",
     "earningsPending": "Afventer",
     "tokensSent": "{{amount}}-tokens sendt",
-    "withdrawableSoon": "Abonnementsindtjening kan snart udbetales"
+    "withdrawableSoon": "Abonnementsindtjening kan snart udbetales",
+    "percentUsed": "{{percent}} % brugt",
+    "spentOfTotal": "{{spent}} af {{total}}",
+    "viewInWallet": "Se i tegnebog"
   },
   "live": {
     "chatJoined": "deltog",

@@ -4411,7 +4411,10 @@
     "earningsAvailable": "Mövcuddur",
     "earningsPending": "Gözləmədədir",
     "tokensSent": "{{amount}} tokenlər göndərildi",
-    "withdrawableSoon": "Abunə qazancları tezliklə geri götürüləcək"
+    "withdrawableSoon": "Abunə qazancları tezliklə geri götürüləcək",
+    "percentUsed": "{{percent}}% istifadə olunur",
+    "spentOfTotal": "{{spent}} {{total}}",
+    "viewInWallet": "Pul kisəsinə baxın"
   },
   "live": {
     "chatJoined": "qoşuldu",

@@ -4444,7 +4444,10 @@
     "earningsAvailable": "Saadaval",
     "earningsPending": "Ootel",
     "tokensSent": "{{amount}} märki saadetud",
-    "withdrawableSoon": "Tellimuse tulu saab varsti välja võtta"
+    "withdrawableSoon": "Tellimuse tulu saab varsti välja võtta",
+    "percentUsed": "{{percent}}% kasutatud",
+    "spentOfTotal": "{{spent}}/{{total}}",
+    "viewInWallet": "Vaata rahakotis"
   },
   "live": {
     "chatJoined": "liitus",

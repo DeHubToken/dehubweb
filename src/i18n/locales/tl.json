@@ -4341,7 +4341,10 @@
     "earningsAvailable": "Magagamit",
     "earningsPending": "Nakabinbin",
     "tokensSent": "Naipadala na ang {{amount}} token",
-    "withdrawableSoon": "Maa - withdraw sa lalong madaling panahon ang mga kita ng subscription"
+    "withdrawableSoon": "Maa - withdraw sa lalong madaling panahon ang mga kita ng subscription",
+    "percentUsed": "{{percent}}% ang nagamit",
+    "spentOfTotal": "{{spent}} ng {{total}}",
+    "viewInWallet": "Tingnan sa wallet"
   },
   "live": {
     "chatJoined": "sumali",

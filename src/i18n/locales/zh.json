@@ -4510,7 +4510,10 @@
     "earningsAvailable": "可用",
     "earningsPending": "待处理",
     "tokensSent": "已发送{{amount}}个代币",
-    "withdrawableSoon": "订阅收入即将提现"
+    "withdrawableSoon": "订阅收入即将提现",
+    "percentUsed": "已使用{{percent}} %",
+    "spentOfTotal": "{{total}}的{{spent}}",
+    "viewInWallet": "在钱包中查看"
   },
   "live": {
     "chatJoined": "加入了",

@@ -4443,7 +4443,10 @@
     "earningsAvailable": "Szabad",
     "earningsPending": "Függőben",
     "tokensSent": "{{amount}} token elküldve",
-    "withdrawableSoon": "Az előfizetésből származó bevételek hamarosan kivehetők lesznek"
+    "withdrawableSoon": "Az előfizetésből származó bevételek hamarosan kivehetők lesznek",
+    "percentUsed": "{{percent}}% felhasználva",
+    "spentOfTotal": "{{total}}/{{spent}}",
+    "viewInWallet": "Megtekintés pénztárcában"
   },
   "live": {
     "chatJoined": "csatlakozott",

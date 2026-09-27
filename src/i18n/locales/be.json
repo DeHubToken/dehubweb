@@ -4346,7 +4346,10 @@
     "earningsAvailable": "Даступна",
     "earningsPending": "У чаканні",
     "tokensSent": "{{amount}} токены адпраўленыя",
-    "withdrawableSoon": "Неўзабаве прыбытак ад падпіскі будзе зняты"
+    "withdrawableSoon": "Неўзабаве прыбытак ад падпіскі будзе зняты",
+    "percentUsed": "{{percent}}% выкарыстоўваецца",
+    "spentOfTotal": "{{spent}} з {{total}}",
+    "viewInWallet": "Прагляд у кашальку"
   },
   "live": {
     "chatJoined": "далучыўся",

@@ -4483,7 +4483,10 @@
     "earningsAvailable": "Laisva",
     "earningsPending": "Laukiama",
     "tokensSent": "{{amount}} žetonai išsiųsti",
-    "withdrawableSoon": "Prenumeratos pajamas netrukus bus galima atsiimti"
+    "withdrawableSoon": "Prenumeratos pajamas netrukus bus galima atsiimti",
+    "percentUsed": "{{percent}}% naudota",
+    "spentOfTotal": "{{spent}} iš {{total}}",
+    "viewInWallet": "Peržiūrėti piniginėje"
   },
   "live": {
     "chatJoined": "prisijungė",

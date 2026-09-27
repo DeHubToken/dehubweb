@@ -2776,7 +2776,10 @@
     "earningsAvailable": "Дастрас",
     "earningsPending": "Дар ҳоли интизорӣ",
     "tokensSent": "{{amount}} токен фиристода шуд",
-    "withdrawableSoon": "Даромади обуна ба зудӣ бозпас гирифта мешавад"
+    "withdrawableSoon": "Даромади обуна ба зудӣ бозпас гирифта мешавад",
+    "percentUsed": "{{percent}}% used",
+    "spentOfTotal": "{{spent}} аз {{total}}",
+    "viewInWallet": "Намоиш дар ҳамён"
   },
   "live": {
     "chatJoined": "ҳамроҳ шуд",

@@ -4143,7 +4143,10 @@
     "earningsAvailable": "கிடைக்கிறது",
     "earningsPending": "நிலுவையில் உள்ளது",
     "tokensSent": "{{amount}} டோக்கன்கள் அனுப்பப்பட்டன",
-    "withdrawableSoon": "சந்தா சம்பாத்தியம் விரைவில் திரும்பப் பெறப்படும்"
+    "withdrawableSoon": "சந்தா சம்பாத்தியம் விரைவில் திரும்பப் பெறப்படும்",
+    "percentUsed": "{{percent}}% பயன்படுத்தப்பட்டது",
+    "spentOfTotal": "{{spent}} இன் {{total}}",
+    "viewInWallet": "வாலெட்டில் பார்க்கவும்"
   },
   "live": {
     "chatJoined": "இணைந்தார்",

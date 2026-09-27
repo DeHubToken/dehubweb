@@ -2701,7 +2701,10 @@
     "earningsAvailable": "অ্যাভেইলেবল",
     "earningsPending": "পেন্ডিং",
     "tokensSent": "{{amount}} টোকেনস সেন্ট",
-    "withdrawableSoon": "সাবস্ক্রিপশন আর্নিংস উইল বি উইথড্রয়েবল সুন।"
+    "withdrawableSoon": "সাবস্ক্রিপশন আর্নিংস উইল বি উইথড্রয়েবল সুন।",
+    "percentUsed": "{{percent}}% ইউজড",
+    "spentOfTotal": "{{spent}} অফ {{total}}",
+    "viewInWallet": "ভিউ ইন ওয়ালেট"
   },
   "live": {
     "chatJoined": "যোগ দিছে",

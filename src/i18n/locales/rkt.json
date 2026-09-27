@@ -3520,6 +3520,9 @@
     "earningsAvailable": "পাওয়া যায়",
     "earningsPending": "বাকি",
     "tokensSent": "{{amount}} টোকেন পাঠা হইল",
-    "withdrawableSoon": "সাবস্ক্রিপশনের আয় তাড়াতাড়ি তুলিবার পাইবেন"
+    "withdrawableSoon": "সাবস্ক্রিপশনের আয় তাড়াতাড়ি তুলিবার পাইবেন",
+    "percentUsed": "{{percent}}% খরচ হইছে",
+    "spentOfTotal": "{{total}}-র মইধ্যে {{spent}}",
+    "viewInWallet": "ওয়ালেটোত দেখেন"
   }
 }

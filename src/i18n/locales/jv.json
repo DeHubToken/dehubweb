@@ -2769,7 +2769,10 @@
     "earningsAvailable": "Kasedhiya",
     "earningsPending": "Ditundha",
     "tokensSent": "{{amount}} token dikirim",
-    "withdrawableSoon": "Penghasilan langganan bakal bisa ditarik mengko"
+    "withdrawableSoon": "Penghasilan langganan bakal bisa ditarik mengko",
+    "percentUsed": "{{percent}}% digunakake",
+    "spentOfTotal": "{{spent}} saka {{total}}",
+    "viewInWallet": "Deleng ing dompet"
   },
   "live": {
     "chatJoined": "gabung",

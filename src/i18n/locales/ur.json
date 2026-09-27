@@ -4283,7 +4283,10 @@
     "earningsAvailable": "دستیاب",
     "earningsPending": "زیر التواء",
     "tokensSent": "{{amount}} ٹوکن بھیجے گئے",
-    "withdrawableSoon": "سبسکرپشن کی کمائیاں جلد ہی واپس لے لی جائیں گی"
+    "withdrawableSoon": "سبسکرپشن کی کمائیاں جلد ہی واپس لے لی جائیں گی",
+    "percentUsed": "{{percent}}% استعمال کیا گیا",
+    "spentOfTotal": "{{spent}} از {{total}}",
+    "viewInWallet": "والٹ میں دیکھیں"
   },
   "live": {
     "chatJoined": "شامل ہوئے",

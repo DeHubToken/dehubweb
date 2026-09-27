@@ -5166,6 +5166,9 @@
     "earningsAvailable": "ھازىر بار",
     "earningsPending": "كۈتۈۋاتىدۇ",
     "tokensSent": "{{amount}} توكەن ئەۋەتىلدى",
-    "withdrawableSoon": "ئابونتلارنىڭ كىرىمى يېقىندا قايتۇرۇلىدۇ"
+    "withdrawableSoon": "ئابونتلارنىڭ كىرىمى يېقىندا قايتۇرۇلىدۇ",
+    "percentUsed": "{{percent}}% ئىشلىتىلىدۇ",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "viewInWallet": "خەزىنە كۆرۈنۈشى"
   }
 }

@@ -4218,7 +4218,10 @@
     "earningsAvailable": "Διαθέσιμο",
     "earningsPending": "Σε εκκρεμότητα",
     "tokensSent": "{{amount}}: Εστάλησαν μάρκες",
-    "withdrawableSoon": "Τα έσοδα από τις συνδρομές θα είναι σύντομα αναλήψιμα"
+    "withdrawableSoon": "Τα έσοδα από τις συνδρομές θα είναι σύντομα αναλήψιμα",
+    "percentUsed": "{{percent}}% σε χρήση",
+    "spentOfTotal": "{{spent}} από {{total}}",
+    "viewInWallet": "Προβολή στο πορτοφόλι"
   },
   "live": {
     "chatJoined": "μπήκε",

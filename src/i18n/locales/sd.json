@@ -2760,7 +2760,10 @@
     "earningsAvailable": "موجود",
     "earningsPending": "منتظر",
     "tokensSent": "{{amount}} ٽوڪن موڪليا ويا",
-    "withdrawableSoon": "سبسڪرپشن جي آمدني جلد ئي منسوخ ٿي ويندي"
+    "withdrawableSoon": "سبسڪرپشن جي آمدني جلد ئي منسوخ ٿي ويندي",
+    "percentUsed": "{{percent}}٪ استعمال ڪيو ويو",
+    "spentOfTotal": "{{spent}} جي {{total}}",
+    "viewInWallet": "پرس ۾ ڏسو"
   },
   "live": {
     "chatJoined": "شامل ٿيو",

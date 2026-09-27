@@ -4699,7 +4699,10 @@
     "earningsAvailable": "Beschikbaar",
     "earningsPending": "In behandeling",
     "tokensSent": "{{amount}} tokens verzonden",
-    "withdrawableSoon": "Abonnementsinkomsten kunnen binnenkort worden ingetrokken"
+    "withdrawableSoon": "Abonnementsinkomsten kunnen binnenkort worden ingetrokken",
+    "percentUsed": "{{percent}}% gebruikt",
+    "spentOfTotal": "{{spent}} van {{total}}",
+    "viewInWallet": "Bekijken in portefeuille"
   },
   "live": {
     "chatJoined": "is erbij gekomen",

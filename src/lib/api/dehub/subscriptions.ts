@@ -103,6 +103,9 @@ export interface SubscriptionCreditBalance {
   /** The dollar balance at today's price. Moves with the price; `usd` does not. */
   tokens: number;
   usd: number;
+  /** Lifetime dollars added and spent. Absent from older API builds. */
+  totalAddedUsd?: number;
+  totalSpentUsd?: number;
   dhbPriceUsd: number;
   withdrawable: false;
   tradable: false;

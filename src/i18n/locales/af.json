@@ -4359,7 +4359,10 @@
     "earningsAvailable": "Beskikbaar",
     "earningsPending": "Hangende",
     "tokensSent": "{{amount}} tokens gestuur",
-    "withdrawableSoon": "Inskrywingsverdienste sal binnekort onttrekbaar wees"
+    "withdrawableSoon": "Inskrywingsverdienste sal binnekort onttrekbaar wees",
+    "percentUsed": "{{percent}}% gebruik",
+    "spentOfTotal": "{{spent}} van {{total}}",
+    "viewInWallet": "Besigtig in beursie"
   },
   "live": {
     "chatJoined": "het aangesluit",

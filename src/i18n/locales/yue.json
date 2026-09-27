@@ -2787,7 +2787,10 @@
     "earningsAvailable": "有位",
     "earningsPending": "待定",
     "tokensSent": "{{amount}} 已經發送咗代幣",
-    "withdrawableSoon": "訂閱收益好快就會可以提取"
+    "withdrawableSoon": "訂閱收益好快就會可以提取",
+    "percentUsed": "{{percent}}% 用過",
+    "spentOfTotal": "{{spent}} 嘅 {{total}}",
+    "viewInWallet": "喺銀包入面睇"
   },
   "live": {
     "chatJoined": "加入咗",
