@@ -395,7 +395,7 @@ export function RealtimeChatPanel({
                             </button>
                           </div>
                         ) : (
-                          <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" />
+                          <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" auto="chat" />
                         )}
                         {msg.reactions && Object.keys(msg.reactions).length > 0 && (
                           <ChatReactions

@@ -123,6 +123,23 @@ describe('auto-translate', () => {
     expect(screen.getByText('nice')).toBeInTheDocument();
   });
 
+  it('auto-translates a short live chat line', async () => {
+    const LINE = 'hoş geldiniz.';
+    const { TranslatableText } = await import('@/components/app/TranslatableText');
+    render(<TranslatableText text={LINE} as="p" auto="chat" />);
+
+    await waitFor(() => expect(invoke).toHaveBeenCalled());
+    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: LINE, targetLang: 'es' } });
+  });
+
+  it('leaves a chat line with almost no letters alone', async () => {
+    const { TranslatableText } = await import('@/components/app/TranslatableText');
+    render(<TranslatableText text="gm 🔥" as="p" auto="chat" />);
+
+    await new Promise((r) => setTimeout(r, 50));
+    expect(invoke).not.toHaveBeenCalled();
+  });
+
   it('still auto-translates a short post in another script', async () => {
     const JAPANESE = 'かわいい';
     invoke.mockResolvedValue({ data: { translatedText: 'cute', detectedLanguage: { language: 'ja' } }, error: null });
