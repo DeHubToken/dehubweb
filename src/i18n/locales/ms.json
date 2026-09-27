@@ -5475,7 +5475,11 @@
     "notEnoughTokens": "Tiada token yang mencukupi untuk dubbing.",
     "notEnoughTokensDescription": "Anda memerlukan kira-kira {{needed}} token dan memegang {{held}}.",
     "paymentLeftWallet": "Token anda telah keluar dari dompet anda. Tekan Bayar sekali lagi untuk cuba mengesahkannya.",
-    "paidForMinutes": "Membayar {{amount}} token untuk {{minutes}} minit dubbing."
+    "paidForMinutes": "Membayar {{amount}} token untuk {{minutes}} minit dubbing.",
+    "menuItem": "Alih suara",
+    "noTranscript": "Video ini belum mempunyai transkrip, jadi ia tidak boleh dialih suara. Cuba lagi nanti.",
+    "noVoice": "Peranti anda tiada suara untuk bahasa ini.",
+    "sameLanguage": "Video ini sudah dalam bahasa anda."
   },
   "digest": {
     "andOthers_one": "{{names}} dan {{count}} yang lain",

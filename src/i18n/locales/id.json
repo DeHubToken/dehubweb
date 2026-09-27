@@ -5223,7 +5223,11 @@
     "notEnoughTokens": "Token tidak cukup untuk dubbing.",
     "notEnoughTokensDescription": "Anda membutuhkan sekitar {{needed}} token dan memiliki {{held}}.",
     "paymentLeftWallet": "Token Anda telah keluar dari dompet Anda. Tekan Bayar lagi untuk mencoba mengonfirmasi.",
-    "paidForMinutes": "Membayar {{amount}} token untuk {{minutes}} menit sulih suara."
+    "paidForMinutes": "Membayar {{amount}} token untuk {{minutes}} menit sulih suara.",
+    "menuItem": "Sulih suara",
+    "noTranscript": "Video ini belum memiliki transkrip, jadi belum bisa disulihsuarakan. Coba lagi nanti.",
+    "noVoice": "Perangkat Anda tidak memiliki suara untuk bahasa ini.",
+    "sameLanguage": "Video ini sudah dalam bahasa Anda."
   },
   "support": {
     "title": "Dukungan",

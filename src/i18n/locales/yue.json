@@ -3029,7 +3029,11 @@
     "notEnoughTokens": "配音代幣不足。",
     "notEnoughTokensDescription": "您大約需要 {{needed}} 個代幣，但持有 {{held}} 個。",
     "paymentLeftWallet": "你嘅代幣已離開你嘅錢包。請再按「付款」以重試確認。",
-    "paidForMinutes": "已支付 {{amount}} 個代幣以換取 {{minutes}} 分鐘嘅配音。"
+    "paidForMinutes": "已支付 {{amount}} 個代幣以換取 {{minutes}} 分鐘嘅配音。",
+    "menuItem": "配音",
+    "noTranscript": "呢條片仲未有文字稿，所以未能夠配音。遲啲再試吓。",
+    "noVoice": "你部裝置冇呢種語言嘅語音。",
+    "sameLanguage": "呢條片已經係你嘅語言。"
   },
   "digest": {
     "andOthers_one": "{{names}} 同埋 {{count}} 位其他人",

@@ -14,7 +14,7 @@
  *   a video the sweeper has not reached yet still starts one, which is why the
  *   attempt budget is respected here rather than spinning forever.
  */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Captions, Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
@@ -31,12 +31,14 @@ import { applyCorrections, useTranscriptCorrections } from '@/hooks/use-transcri
 import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
 import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
-import { useVideoDub, useDubbedAudio, dubLangFor, type DubStatus } from '@/hooks/use-video-dub';
+import { useDubPreference, useSpeechVoices, pickVoice } from '@/hooks/dub-preference';
+
+// The speech engine only matters once a dub is playing; keep it off the boot path.
+const VoiceDubEngine = lazy(() => import('./VoiceDubEngine'));
 
 const LS_ENABLED = 'video-subs:enabled';
 const LS_LANG = 'video-subs:lang';
 const LS_SIZE = 'video-subs:size';
-const LS_DUB = 'video-dubs:on';
 
 const SIZE_PRESETS = [
   { key: 'xs', label: 'XS', px: 11 },
@@ -76,9 +78,6 @@ function readLang(): string {
   // a non-English language. Avoids junk en→en AI "translations".
   try { return localStorage.getItem(LS_LANG) || 'original'; } catch { return 'original'; }
 }
-function readDub(): boolean {
-  try { return localStorage.getItem(LS_DUB) === '1'; } catch { return false; }
-}
 function readSize(): SizeKey {
   try {
     const v = localStorage.getItem(LS_SIZE) as SizeKey | null;
@@ -96,7 +95,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const [enabled, setEnabled] = useState<boolean>(readEnabled);
   const [lang, setLang] = useState<string>(readLang);
   const [size, setSize] = useState<SizeKey>(readSize);
-  const [dubOn, setDubOn] = useState<boolean>(readDub);
+  const { on: dubOn, lang: dubPick, setDub } = useDubPreference();
+  const voices = useSpeechVoices();
   const [showSettings, setShowSettings] = useState(false);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
@@ -154,8 +154,16 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
 
   // ── Dubbed audio ──
   // The dub follows the subtitle language: pick Spanish captions and "Dubbed"
-  // plays Spanish speech. Only languages the synthesiser knows qualify.
-  const dubLang = normalizedLang === 'original' ? null : dubLangFor(normalizedLang);
+  // speaks the Spanish lines with a Spanish voice on this device. The post
+  // menu can point it at the app language instead (`dubPick`).
+  const sameAsSource = (l: string) => {
+    const base = l.toLowerCase().split('-')[0];
+    return sourceLang ? base === sourceLang : base === 'en';
+  };
+  const dubLang =
+    dubPick ? (sameAsSource(dubPick) ? null : dubPick)
+    : normalizedLang === 'original' ? null : normalizedLang;
+  const dubVoice = useMemo(() => pickVoice(voices, dubLang), [voices, dubLang]);
 
   // With captions on Original there is no language to dub into yet, so the
   // toggle borrows the viewer's own — but only when that differs from what is
@@ -165,27 +173,39 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const autoDubLang = useMemo(() => {
     if (normalizedLang !== 'original') return null;
     const guess = detectLocaleLang();
-    const voiced = dubLangFor(guess);
-    return voiced && voiced !== sourceLang ? guess : null;
-  }, [normalizedLang, sourceLang]);
+    if (guess === 'original' || sameAsSource(guess)) return null;
+    return pickVoice(voices, guess) ? guess : null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [normalizedLang, sourceLang, voices]);
 
-  const wantDub = dubOn && isReady && !!dubLang;
-  const { dub, request: requestDub, stalled: dubStalled } = useVideoDub(transcript?.id ?? null, dubLang, wantDub);
+  const wantDub = dubOn && isReady && !!dubLang && !!dubVoice;
+  const {
+    segments: dubSegments,
+    status: dubTranslationStatus,
+    request: requestDubTranslation,
+  } = useTranslatedSegments(transcript?.id ?? null, dubLang ?? 'original', !!numericId && wantDub);
 
-  // Ask once for a language nobody has rendered yet. A failed row is asked
-  // again — the function owns the attempt ceiling and backoff, not the client.
+  // Same shared translation cache as the captions. When the captions are
+  // already asking for this language, leave the request to them.
   const askedDubRef = useRef<string | null>(null);
   useEffect(() => {
-    if (!wantDub || !transcript?.id) return;
-    if (dub && dub.status !== 'failed') return;
+    if (!wantDub || !transcript?.id || !dubLang) return;
+    if (enabled && dubLang === normalizedLang) return;
+    if (dubTranslationStatus === 'ready' || dubTranslationStatus === 'processing') return;
     const token = `${transcript.id}:${dubLang}`;
     if (askedDubRef.current === token) return;
     askedDubRef.current = token;
-    requestDub().catch(() => undefined);
-  }, [wantDub, transcript?.id, dubLang, dub, requestDub]);
+    requestDubTranslation().catch(() => undefined);
+  }, [wantDub, transcript?.id, dubLang, enabled, normalizedLang, dubTranslationStatus, requestDubTranslation]);
 
-  useDubbedAudio(videoRef, wantDub && dub?.status === 'ready' && dub.audio_url ? dub.audio_url : null);
-  const dubStatus: DubStatus | 'absent' | null = !wantDub ? null : (dub?.status ?? 'absent');
+
+  const dubHint: 'preparing' | 'unavailable' | null =
+    !dubOn || !isReady || !dubLang ? null
+    // Voices load a moment after the page; an empty list is not a "no".
+    : !dubVoice ? (voices.length ? 'unavailable' : 'preparing')
+    : dubTranslationStatus === 'failed' ? 'unavailable'
+    : dubSegments ? null
+    : 'preparing';
 
   // Viewer corrections to the original-language lines. Only fetched once
   // captions are actually wanted, and only applied to the original: a
@@ -325,15 +345,20 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   useEffect(() => {
     try { localStorage.setItem(LS_SIZE, size); } catch { /* noop */ }
   }, [size]);
-  useEffect(() => {
-    try { localStorage.setItem(LS_DUB, dubOn ? '1' : '0'); } catch { /* noop */ }
-  }, [dubOn]);
 
   // "Dubbed" with captions still on Original: switch to the viewer's own
   // language if it can be voiced, otherwise there is nothing to dub into.
+  // Either way the dub follows the captions from here on.
   const handleDubToggle = (next: boolean) => {
     if (next && autoDubLang) setLang(autoDubLang);
-    setDubOn(next);
+    setDub(next, null);
+  };
+
+  // Picking a caption language takes the dub along with it, including one the
+  // post menu had pointed somewhere else.
+  const handleLangPick = (code: string) => {
+    setLang(code);
+    if (dubPick) setDub(dubOn, null);
   };
 
   // Inject ::cue size styles for native <track> rendering
@@ -385,6 +410,11 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
 
   return (
     <>
+      {wantDub && (
+        <Suspense fallback={null}>
+          <VoiceDubEngine videoRef={videoRef} segments={dubSegments ?? null} voice={dubVoice} />
+        </Suspense>
+      )}
       {/* Caption text */}
       {enabled && currentText && (
         <div
@@ -425,12 +455,11 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
         setQuery={setQuery}
         filteredLangs={filteredLangs}
         lang={lang}
-        setLang={setLang}
+        setLang={handleLangPick}
         dubOn={dubOn}
         setDubOn={handleDubToggle}
-        dubStatus={dubStatus}
-        dubStalled={dubStalled}
-        dubPossible={!!dubLang || !!autoDubLang}
+        dubHint={dubHint}
+        dubPossible={!!dubVoice || !!autoDubLang}
       />
     </>
   );
@@ -460,11 +489,10 @@ interface SubtitleMenuProps {
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   filteredLangs: typeof SUBTITLE_LANGUAGES;
   lang: string;
-  setLang: React.Dispatch<React.SetStateAction<string>>;
+  setLang: (code: string) => void;
   dubOn: boolean;
   setDubOn: (next: boolean) => void;
-  dubStatus: DubStatus | 'absent' | null;
-  dubStalled: boolean;
+  dubHint: 'preparing' | 'unavailable' | null;
   /** False when the chosen caption language has no voice. */
   dubPossible: boolean;
 }
@@ -474,19 +502,13 @@ function SubtitleMenu(props: SubtitleMenuProps) {
     open, setOpen, handleToggle, buttonVisible, buttonClassName, buttonPortalTarget, buttonState,
     enabled, setEnabled, showSettings, setShowSettings, size, setSize, sizePx,
     isReady, isWorking, isEmpty, isFailed, langLabel, query, setQuery, filteredLangs, lang, setLang,
-    dubOn, setDubOn, dubStatus, dubStalled, dubPossible,
+    dubOn, setDubOn, dubHint, dubPossible,
   } = props;
   const isTouch = useIsTouchDevice();
   const { t } = useTranslation();
 
-  // A row that has not moved in ten minutes is not on its way — say so rather
-  // than spinning at someone indefinitely.
-  const dubHint =
-    dubStatus === 'ready' || dubStatus === null
-      ? null
-      : dubStatus === 'failed' || dubStalled
-      ? t('dub.unavailable')
-      : t('dub.preparing');
+  const dubHintText =
+    dubHint === 'unavailable' ? t('dub.unavailable') : dubHint === 'preparing' ? t('dub.preparing') : null;
 
   // Inside the control row the button is a sibling of the speed/loop/PiP/mute
   // buttons and wears exactly their chrome; standalone it keeps the older
@@ -578,7 +600,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
         </p>
       )}
       {/* Audio: the original track, or the same lines spoken in the caption
-          language in the creator's cloned voice. */}
+          language by a voice on this device. */}
       <div className="mt-2 flex items-center justify-between">
         <span className="text-[11px] text-white/60">{t('dub.audio')}</span>
         <div className="flex items-center gap-1">
@@ -609,10 +631,10 @@ function SubtitleMenu(props: SubtitleMenuProps) {
           </button>
         </div>
       </div>
-      {dubOn && dubHint && (
+      {dubOn && dubHintText && (
         <p className="mt-1 text-[11px] text-white/50 flex items-center gap-1">
-          {dubStatus !== 'failed' && !dubStalled && <Loader2 className="w-3 h-3 animate-spin" />}
-          {dubHint}
+          {dubHint === 'preparing' && <Loader2 className="w-3 h-3 animate-spin" />}
+          {dubHintText}
         </p>
       )}
     </div>

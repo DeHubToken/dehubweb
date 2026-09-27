@@ -2213,7 +2213,11 @@
     "original": "Original audio",
     "dubbed": "డబ్బింగ్ ఆడియో",
     "preparing": "డబ్బింగ్ ఆడియో తయారుచేస్తున్నాం…",
-    "unavailable": "Ee video ki dubbed audio available ga ledu."
+    "unavailable": "Ee video ki dubbed audio available ga ledu.",
+    "menuItem": "ڈبنگ",
+    "noTranscript": "اس ویڈیو کا ابھی تک ٹرانسکرپٹ نئیں ہے، اس واسطے ڈب نئیں ہوسکتا۔ بعد میں پھر کوشش کرو۔",
+    "noVoice": "تمارے ڈیوائس میں اس زبان کی آواز نئیں ہے۔",
+    "sameLanguage": "یہ ویڈیو پہلے سے تمارے زبان میں ہے۔"
   },
   "reactionInfo": {
     "title": "प्रतिक्रियाएं",

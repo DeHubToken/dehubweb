@@ -5225,7 +5225,11 @@
     "notEnoughTokens": "配音代币不足。",
     "notEnoughTokensDescription": "您需要大约 {{needed}} 个代币，但持有 {{held}} 个。",
     "paymentLeftWallet": "您的代币已离开您的钱包。请再次按“支付”以重试确认。",
-    "paidForMinutes": "已支付 {{amount}} 个代币以获得 {{minutes}} 分钟的配音。"
+    "paidForMinutes": "已支付 {{amount}} 个代币以获得 {{minutes}} 分钟的配音。",
+    "menuItem": "配音",
+    "noTranscript": "该视频还没有文字稿，暂时无法配音。请稍后再试。",
+    "noVoice": "你的设备没有这种语言的语音。",
+    "sameLanguage": "该视频已经是你的语言。"
   },
   "support": {
     "title": "支持",

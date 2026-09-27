@@ -5223,7 +5223,11 @@
     "notEnoughTokens": "Dublaj için yeterli jeton yok.",
     "notEnoughTokensDescription": "Yaklaşık {{needed}} jetona ihtiyacınız var ve {{held}} tutuyorsunuz.",
     "paymentLeftWallet": "Jetonlarınız cüzdanınızdan çıktı. Onaylamayı tekrar denemek için Öde'ye basın.",
-    "paidForMinutes": "Dublajın {{minutes}} dakikası için {{amount}} jeton ödendi."
+    "paidForMinutes": "Dublajın {{minutes}} dakikası için {{amount}} jeton ödendi.",
+    "menuItem": "Dublaj",
+    "noTranscript": "Bu videonun henüz transkripti yok, bu yüzden dublaj yapılamıyor. Daha sonra tekrar deneyin.",
+    "noVoice": "Cihazınızda bu dil için bir ses yok.",
+    "sameLanguage": "Bu video zaten sizin dilinizde."
   },
   "support": {
     "title": "Destek",

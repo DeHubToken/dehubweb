@@ -23,6 +23,9 @@ const RUNPOD_API_KEY = Deno.env.get('RUNPOD_API_KEY') ?? '';
 const RUNPOD_ENDPOINT_ID = Deno.env.get('RUNPOD_DUB_ENDPOINT_ID') ?? '';
 const WORKER_SECRET = Deno.env.get('DUB_WORKER_SECRET') ?? '';
 const BUCKET = 'video-dubs';
+/** Without a worker nothing ever leaves `pending`, so opening rows only grows
+ *  a queue nobody drains. Players speak dubs on-device in the meantime. */
+const WORKER_CONFIGURED = !!RUNPOD_API_KEY && !!RUNPOD_ENDPOINT_ID;
 
 /** Every language the synthesiser speaks. The picker offers more; a language
  *  outside this set can have subtitles but not a voice. */
@@ -162,6 +165,8 @@ async function submit(db: any, row: DubRow): Promise<Submit> {
 /* ─────────────────────────────── sweep ──────────────────────────────────── */
 
 async function sweep(db: any) {
+  if (!WORKER_CONFIGURED) return { opened: 0, considered: 0, idle: 'worker not configured' };
+
   /* 1. open rows for recent, short, public videos in the auto languages */
   const { data: recent } = await db
     .from('transcripts')
@@ -220,6 +225,7 @@ async function request(db: any, body: any) {
   const transcriptId = typeof body?.transcriptId === 'string' ? body.transcriptId : null;
   const target = transcriptId ? null : parseTarget(body);
   if (!transcriptId && !target) return json({ error: 'transcriptId or tokenId required' }, 400);
+  if (!WORKER_CONFIGURED) return json({ ok: true, status: 'unavailable' });
 
   const lookup = db.from('transcripts').select('id, status, source_lang, duration_seconds, visibility, source_kind');
   const { data: t } = await (transcriptId

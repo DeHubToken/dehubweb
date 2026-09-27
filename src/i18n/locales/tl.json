@@ -5038,7 +5038,11 @@
     "notEnoughTokens": "Hindi sapat ang mga tokens para sa dubbing.",
     "notEnoughTokensDescription": "Kailangan mo ng humigit-kumulang {{needed}} tokens at mayroon kang {{held}}.",
     "paymentLeftWallet": "Naiwan ang iyong mga token sa iyong wallet. Pindutin muli ang Magbayad upang subukang kumpirmahin ito.",
-    "paidForMinutes": "Nagbayad ng {{amount}} token para sa {{minutes}} minutong pag-dub."
+    "paidForMinutes": "Nagbayad ng {{amount}} token para sa {{minutes}} minutong pag-dub.",
+    "menuItem": "I-dub",
+    "noTranscript": "Wala pang transcript ang video na ito, kaya hindi pa ito ma-dub. Subukan ulit mamaya.",
+    "noVoice": "Walang boses ang iyong device para sa wikang ito.",
+    "sameLanguage": "Nasa iyong wika na ang video na ito."
   },
   "digest": {
     "andOthers_one": "{{names}} at {{count}} iba pa",

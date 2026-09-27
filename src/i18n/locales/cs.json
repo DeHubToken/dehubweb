@@ -5159,7 +5159,11 @@
     "notEnoughTokens": "Nedostatek tokenů pro dabing.",
     "notEnoughTokensDescription": "Potřebujete přibližně {{needed}} tokenů a máte {{held}}.",
     "paymentLeftWallet": "Vaše tokeny opustily vaši peněženku. Klepněte na Zaplatit znovu a zkuste je potvrdit.",
-    "paidForMinutes": "Zaplaceno {{amount}} tokenů za {{minutes}} minut dabingu."
+    "paidForMinutes": "Zaplaceno {{amount}} tokenů za {{minutes}} minut dabingu.",
+    "menuItem": "Dabing",
+    "noTranscript": "Toto video zatím nemá přepis, takže ho nelze nadabovat. Zkuste to později.",
+    "noVoice": "Vaše zařízení nemá hlas pro tento jazyk.",
+    "sameLanguage": "Toto video už je ve vašem jazyce."
   },
   "digest": {
     "andOthers_one": "{{names}} a {{count}} další",

@@ -5116,7 +5116,11 @@
     "notEnoughTokens": "Dublyaj üçün kifayət qədər token yoxdur.",
     "notEnoughTokensDescription": "Sizə təxminən {{needed}} token lazımdır və {{held}} sahibisiniz.",
     "paymentLeftWallet": "Sizin tokenləriniz pul kisənizdən çıxıb. Təsdiqləməni yenidən cəhd etmək üçün Yenidən ödə düyməsini basın.",
-    "paidForMinutes": "Dublyaj üçün {{amount}} token ödənildi, bu da {{minutes}} dəqiqəyə bərabərdir."
+    "paidForMinutes": "Dublyaj üçün {{amount}} token ödənildi, bu da {{minutes}} dəqiqəyə bərabərdir.",
+    "menuItem": "Dublyaj",
+    "noTranscript": "Bu videonun hələ transkripti yoxdur, ona görə dublyaj edilə bilməz. Sonra yenidən cəhd edin.",
+    "noVoice": "Cihazınızda bu dil üçün səs yoxdur.",
+    "sameLanguage": "Bu video artıq sizin dilinizdədir."
   },
   "digest": {
     "andOthers_one": "{{names}} və {{count}} digər",

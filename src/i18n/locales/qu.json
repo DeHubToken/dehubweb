@@ -3062,7 +3062,11 @@
     "notEnoughTokens": "Mana doblajepaq tokenkuna suficientechu.",
     "notEnoughTokensDescription": "{{needed}} tokenkunamanta necesitanki hinaspa {{held}} hap&#39;iy.",
     "paymentLeftWallet": "Fichasniykikunaqa billeteraykimantan lloqsipun. Hukmanta Pay ñit’iy chayta takyachiyta wakmanta kallpachakunaykipaq.",
-    "paidForMinutes": "{{amount}} fichas nisqakunata pagasqa {{minutes}} minutokuna doblaje nisqapaq."
+    "paidForMinutes": "{{amount}} fichas nisqakunata pagasqa {{minutes}} minutokuna doblaje nisqapaq.",
+    "menuItem": "Rimay tikray",
+    "noTranscript": "Kay videopa manaraq qillqasqan kanchu, chayrayku mana rimayninta tikrayta atikunchu. Qhipaman yapamanta ruray.",
+    "noVoice": "Aparatuykipi mana kanchu kay simipaq kunka.",
+    "sameLanguage": "Kay video ñam simiykipi kachkan."
   },
   "digest": {
     "andOthers_one": "{{names}} chaymanta {{count}} huk",

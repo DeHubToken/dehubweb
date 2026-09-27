@@ -5213,7 +5213,11 @@
     "notEnoughTokens": "Tokeni hazitoshi kwa dubbing.",
     "notEnoughTokensDescription": "Unahitaji takriban tokeni {{needed}} na unamiliki {{held}}.",
     "paymentLeftWallet": "Token zako zimeondoka kwenye pochi yako. Bonyeza Lipa tena ili ujaribu tena kuzithibitisha.",
-    "paidForMinutes": "Umelipa tokeni {{amount}} kwa dakika {{minutes}} za kutafsiri sauti."
+    "paidForMinutes": "Umelipa tokeni {{amount}} kwa dakika {{minutes}} za kutafsiri sauti.",
+    "menuItem": "Kuweka sauti",
+    "noTranscript": "Video hii bado haina manukuu, kwa hivyo haiwezi kuwekewa sauti. Jaribu tena baadaye.",
+    "noVoice": "Kifaa chako hakina sauti ya lugha hii.",
+    "sameLanguage": "Video hii tayari iko katika lugha yako."
   },
   "digest": {
     "andOthers_one": "{{names}} na {{count}} mwingine",

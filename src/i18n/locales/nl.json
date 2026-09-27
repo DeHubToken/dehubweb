@@ -5414,7 +5414,11 @@
     "notEnoughTokens": "Niet genoeg tokens voor nasynchronisatie.",
     "notEnoughTokensDescription": "U heeft ongeveer {{needed}} tokens nodig en bezit {{held}}.",
     "paymentLeftWallet": "Je tokens zijn uit je portemonnee gehaald. Druk nogmaals op Betalen om te proberen het te bevestigen.",
-    "paidForMinutes": "Betaald {{amount}} tokens voor {{minutes}} minuten nasynchronisatie."
+    "paidForMinutes": "Betaald {{amount}} tokens voor {{minutes}} minuten nasynchronisatie.",
+    "menuItem": "Nasynchroniseren",
+    "noTranscript": "Deze video heeft nog geen transcript en kan dus niet worden nagesynchroniseerd. Probeer het later opnieuw.",
+    "noVoice": "Je apparaat heeft geen stem voor deze taal.",
+    "sameLanguage": "Deze video is al in jouw taal."
   },
   "support": {
     "title": "Ondersteuning",

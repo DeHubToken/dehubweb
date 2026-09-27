@@ -5224,7 +5224,11 @@
     "notEnoughTokens": "Tokens insuficientes para dublagem.",
     "notEnoughTokensDescription": "Você precisa de cerca de {{needed}} tokens e possui {{held}}.",
     "paymentLeftWallet": "Seus tokens saíram da sua carteira. Pressione Pagar novamente para tentar confirmar.",
-    "paidForMinutes": "Pagou {{amount}} tokens por {{minutes}} minutos de dublagem."
+    "paidForMinutes": "Pagou {{amount}} tokens por {{minutes}} minutos de dublagem.",
+    "menuItem": "Dublar",
+    "noTranscript": "Este vídeo ainda não tem transcrição, então não pode ser dublado. Tente novamente mais tarde.",
+    "noVoice": "Seu dispositivo não tem uma voz para este idioma.",
+    "sameLanguage": "Este vídeo já está no seu idioma."
   },
   "support": {
     "title": "Suporte",
