@@ -861,7 +861,7 @@ export function useTranslation(
     try {
       // Auto-translate is only ever on for public content; private call sites
       // pass auto={false} (see TranslatableTextProps.auto).
-      const data = await requestTranslation(text, targetLang, auto);
+      const data = await requestTranslation(text, targetLang, auto !== false);
 
       if (!data.translatedText) {
         if (!mountedRef.current) return;
