@@ -9,6 +9,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.wallet-session]
     verify_jwt = false
+  # Public, read-only emoji list for third-party clients (Mastodon/Misskey/Discord shapes).
+  [functions.custom-emojis]
+    verify_jwt = false
   [functions.creator-library]
     verify_jwt = false
   [functions.creator-reconcile]
