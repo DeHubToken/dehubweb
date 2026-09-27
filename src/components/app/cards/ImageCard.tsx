@@ -12,6 +12,8 @@
 import { useState, memo, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
+import { useImageSoundtrack } from '@/hooks/use-image-soundtrack';
+import { SoundtrackControl } from './SoundtrackControl';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
@@ -20,7 +22,7 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
@@ -640,55 +642,11 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
 
-  // Soundtrack: user-initiated play/pause; auto-pause when card scrolls out of view
-  const soundtrackAudioRef = useRef<HTMLAudioElement>(null);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-
-  const handleSoundtrackToggle = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    const audio = soundtrackAudioRef.current;
-    console.log('[Soundtrack] badge clicked', { audioEl: !!audio, src: audio?.src, isAudioPlaying, readyState: audio?.readyState, networkState: audio?.networkState });
-    if (!audio) { console.warn('[Soundtrack] no audio element ref'); return; }
-    if (isAudioPlaying) {
-      audio.pause();
-      setIsAudioPlaying(false);
-    } else {
-      console.log('[Soundtrack] calling audio.play()...');
-      audio.play()
-        .then(() => { console.log('[Soundtrack] play() resolved OK'); setIsAudioPlaying(true); })
-        .catch((err) => { console.error('[Soundtrack] play() rejected:', err); });
-    }
-  }, [isAudioPlaying]);
-
-  useEffect(() => {
-    if (!post.soundtrackUrl) return;
-    console.log('[Soundtrack] effect running, post.id=', post.id, 'url=', post.soundtrackUrl);
-    const audio = soundtrackAudioRef.current;
-    console.log('[Soundtrack] audio ref at effect time:', audio ? 'EXISTS' : 'NULL', audio?.src);
-    if (audio) {
-      audio.onerror = () => console.error('[Soundtrack] audio error, code:', audio.error?.code, 'msg:', audio.error?.message, 'src:', audio.src);
-      audio.oncanplay = () => console.log('[Soundtrack] canplay, readyState=', audio.readyState);
-      audio.onloadstart = () => console.log('[Soundtrack] loadstart, src=', audio.src);
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const aud = soundtrackAudioRef.current;
-        if (!aud) return;
-        if (entry.isIntersecting) {
-          console.log('[Soundtrack] in-view, attempting autoplay');
-          aud.play()
-            .then(() => { console.log('[Soundtrack] autoplay OK'); setIsAudioPlaying(true); })
-            .catch((err) => { console.warn('[Soundtrack] autoplay blocked:', err.name, err.message); });
-        } else {
-          aud.pause();
-          setIsAudioPlaying(false);
-        }
-      },
-      { threshold: 0.5 }
-    );
-    if (viewRef.current) observer.observe(viewRef.current);
-    return () => observer.disconnect();
-  }, [post.soundtrackUrl]);
+  const soundtrackEnabled = !matureGate.isGated && !isPPV && !isLocked && !isSubGated && !isW2E;
+  const soundtrack = useImageSoundtrack(post.soundtrackUrl, viewRef, soundtrackEnabled);
+  const soundtrackControl = post.soundtrackUrl && soundtrackEnabled ? (
+    <SoundtrackControl title={post.soundtrackTitle} creator={post.soundtrackCreator} {...soundtrack} />
+  ) : null;
   
   // Translation hook for text content
   const descriptionText = [post.title, post.description].filter(Boolean).join('\n\n');
@@ -1125,27 +1083,11 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           </SwipeableCarousel>
         )}
 
-        {/* Soundtrack badge — bottom-left, tap to play/pause */}
-        {post.soundtrackUrl && post.soundtrackTitle && (
-          <button
-            type="button"
-            data-no-navigate
-            onClick={handleSoundtrackToggle}
-            className="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-[16px] px-2 py-1 rounded-lg border border-white/10 max-w-[60%] hover:bg-black/60 transition-colors"
-          >
-            {isAudioPlaying
-              ? <Pause className="w-3 h-3 text-white flex-shrink-0" />
-              : <Music className="w-3 h-3 text-white flex-shrink-0" />
-            }
-            <span className="text-white text-[10px] truncate">
-              {post.soundtrackTitle}{post.soundtrackCreator ? ` — ${post.soundtrackCreator}` : ''}
-            </span>
-          </button>
+        {soundtrackControl && !fullscreenOpen && (
+          <div className="absolute bottom-2 left-2 z-10 max-w-[calc(100%-1rem)]">{soundtrackControl}</div>
         )}
-
-        {/* Hidden audio element for soundtrack playback */}
-        {post.soundtrackUrl && (
-          <audio ref={soundtrackAudioRef} src={post.soundtrackUrl} loop preload="metadata" className="hidden" />
+        {post.soundtrackUrl && soundtrackEnabled && (
+          <audio ref={soundtrack.audioRef} loop preload="none" className="hidden" />
         )}
 
         {/* Content Type Badges - Bounty only (PPV/Lock are shown via centered overlay) */}
@@ -1284,6 +1226,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       {/* Fullscreen Image Viewer */}
       <FullscreenImageViewerLazy
         images={images}
+        soundtrackControl={soundtrackControl}
         initialIndex={fullscreenIndex}
         isOpen={fullscreenOpen}
         onClose={() => setFullscreenOpen(false)}
