@@ -108,8 +108,11 @@ html[data-theme='war'] {
   /* System mono, not a webfont. The app already pays for one Google Fonts
      request (Exo); a second one for chrome text is not worth the LCP cost,
      and mono caps at wide tracking carry the readout feel on their own. */
+  /* Emoji families before the generic, as in index.css's `*` stack, so 🔫
+     keeps its pistol glyph and flags draw on Windows inside mono labels. */
   --war-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
-    'Liberation Mono', monospace;
+    'Liberation Mono', 'DeHub Pistol', 'Apple Color Emoji', 'Noto Color Emoji',
+    'Segoe UI Emoji', monospace;
 
   /* Three type roles, applied by role and never by taste. The label is the
      dense kicker the reference sheet gets most of its texture from; the

@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+const EMOJI_FONTS = ['"DeHub Pistol"', '"Apple Color Emoji"', '"Noto Color Emoji"', '"Segoe UI Emoji"'];
+
 export default {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
@@ -13,8 +15,14 @@ export default {
       },
     },
     extend: {
+      // Every family ends in the same emoji stack as `* { font-family }` in
+      // index.css. A utility class replaces that rule on its element, so
+      // without it, text directly inside a `font-exo` or `font-mono` node
+      // skips the one-glyph pistol font (🔫 draws as the platform water gun)
+      // and, on Windows, the Noto webfont (flags draw as letter pairs).
       fontFamily: {
-        exo: ['Exo', 'sans-serif'],
+        exo: ['Exo', ...EMOJI_FONTS, 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', ...EMOJI_FONTS, 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
