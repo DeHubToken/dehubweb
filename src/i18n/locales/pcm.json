@@ -3525,5 +3525,133 @@
       "shortcodeTaken": "Person don take {{name}} already",
       "shortcodeStandard": "{{name}} na normal emoji already"
     }
+  },
+  "guide": {
+    "backToApp": "Back to App",
+    "headerTitle": "DeHub User Guide",
+    "searchPlaceholder": "Search guide...",
+    "clearSearch": "Clear search",
+    "closeNavigation": "Close navigation",
+    "toggleNavigation": "Toggle navigation",
+    "heroTitle": "DeHub User Guide & Documentation",
+    "sectionsMatching_one": "{{count}} section matching \"{{query}}\"",
+    "sectionsMatching_other": "{{count}} sections matching \"{{query}}\"",
+    "proTips": "Pro Tips",
+    "screenshotComingSoon": "Screenshot coming soon",
+    "screenshotAlt": "{{title}} screenshot",
+    "sections": {
+      "getting-started": {
+        "title": "Getting Started"
+      },
+      "home-feed": {
+        "title": "Home Feed",
+        "tips": {
+          "3": "Live tab shows currently active live streams."
+        }
+      },
+      "creating-posts": {
+        "title": "Creating Posts",
+        "tips": {
+          "1": "Posts support markdown-style formatting."
+        }
+      },
+      "explore-search": {
+        "title": "Explore & Search"
+      },
+      "profile": {
+        "title": "Profile"
+      },
+      "messages": {
+        "title": "Messages"
+      },
+      "ai-assistant": {
+        "title": "AI Assistant"
+      },
+      "notifications": {
+        "title": "Notifications"
+      },
+      "wallet": {
+        "title": "Wallet"
+      },
+      "staking": {
+        "title": "Staking"
+      },
+      "leaderboard": {
+        "title": "Leaderboard",
+        "steps": {
+          "3": "Balance tab ranks users by their total token holdings."
+        },
+        "tips": {
+          "1": "Daily rankings reset every 24 hours."
+        }
+      },
+      "command-centre": {
+        "title": "Command Centre"
+      },
+      "governance": {
+        "title": "Governance",
+        "tips": {
+          "2": "Badge holders may get additional vote weight.",
+          "3": "Proposals go through stages: Active → Passed/Rejected."
+        }
+      },
+      "bookmarks": {
+        "title": "Bookmarks"
+      },
+      "settings": {
+        "title": "Settings",
+        "steps": {
+          "5": "Manage notification preferences."
+        },
+        "tips": {
+          "2": "Privacy settings apply immediately."
+        }
+      },
+      "reactions-and-safety": {
+        "title": "Reactions, Muting & Mature Content"
+      },
+      "stages": {
+        "title": "Stages (Live Audio Rooms)"
+      },
+      "communities": {
+        "title": "Communities & Events"
+      },
+      "arcade": {
+        "title": "Arcade"
+      },
+      "bounties-stores": {
+        "title": "Bounties & Stores"
+      },
+      "creator-studio": {
+        "title": "Creator Studio & Editor"
+      },
+      "buying-dhb": {
+        "title": "Buying Tokens"
+      },
+      "bridge": {
+        "title": "Bridge",
+        "tips": {
+          "1": "Bridge fees vary by chain pair."
+        }
+      },
+      "music-tv": {
+        "title": "Music & TV"
+      },
+      "post-info": {
+        "title": "Post Info & Fractions"
+      },
+      "buying-fractions": {
+        "title": "Buying Fractions"
+      },
+      "selling-fractions": {
+        "title": "Selling Fractions"
+      },
+      "minting-posts": {
+        "title": "Minting Posts (Creating NFTs)"
+      },
+      "glossary": {
+        "title": "Glossary"
+      }
+    }
   }
 }
