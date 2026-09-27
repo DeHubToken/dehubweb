@@ -106,7 +106,7 @@ const OG_CARD_ROUTES = new Set([
   'connect', 'connect/chatgpt', 'connect/claude', 'communities',
   'stages', 'guide', 'features', 'pricing', 'depin',
   'builder', 'creator', 'editor', 'prompt', 'work',
-  'affiliate', 'premium', 'governance', 'leaderboard', 'dao',
+  'affiliate', 'premium', 'governance', 'leaderboard', 'dao', 'packs',
   'top-100', 'music', 'tv', 'cinema',
   'glossary', 'bridge', 'agents', 'assistant',
   'creators', 'jobs', 'apk', 'admin-manual',
@@ -1177,6 +1177,13 @@ const MARKETING_PAGES = {
     description: "Participate in decentralized governance on DeHub. Submit proposals, vote with your staking badge weight, and shape the platform's future.",
     heading: 'DeHub Governance',
     bodyHtml: `<p>DHB holders shape the DeHub roadmap. Any staker can open a proposal — new features, moderation rules, treasury spend or partnerships — and the community votes with staked DHB weight. Results are tallied on-chain and executed by the core team on approved proposals.</p>`,
+  },
+  'packs': {
+    title: 'Emoji, Sticker & GIF Packs — DeHub',
+    description: 'Custom emoji, sticker and GIF packs made by DeHub badge holders. Add any pack to your picker and use it in chats, comments and reactions.',
+    heading: 'Emoji, Sticker & GIF Packs',
+    bodyHtml: `<p>Packs are custom emoji, stickers and GIFs published by DeHub badge holders. Anyone can add a pack to their picker and use it in chats, comments and reactions. Staking for a badge unlocks creating your own: a Crab badge runs one pack of each kind, and every tier up to Megalodon adds more packs and more room in each.</p>
+<p>Share a pack with its link and anyone who opens it can add it in one tap. <a href="${APP_URL}/stake">Get a badge</a> to start your own.</p>`,
   },
   'leaderboard': {
     title: 'Leaderboard — Top Creators & Earners',
@@ -2501,6 +2508,38 @@ function buildCreatorFlowHtml(flow) {
       ...(flow.created_at ? { dateCreated: flow.created_at } : {}),
       ...(flow.updated_at ? { dateModified: flow.updated_at } : {}),
       isPartOf: { '@type': 'SoftwareApplication', name: 'DeHub Creator Flow', url: `${APP_URL}/creator/flow` },
+    },
+  });
+}
+
+/**
+ * A single creator pack, /packs/<slug>. The pack's cover is its first item,
+ * which is exactly the art a share card should show.
+ */
+function buildCreatorPackHtml(pack) {
+  const canonicalUrl = `${APP_URL}/packs/${pack.slug}`;
+  const name = pack.name || 'Pack';
+  const kind = pack.kind === 'emoji' ? 'emoji pack' : pack.kind === 'sticker' ? 'sticker pack' : 'GIF pack';
+  const count = Number(pack.item_count) || 0;
+  const description = `${name} — a DeHub ${kind} with ${count} item${count === 1 ? '' : 's'}. Add it to your picker and use it in chats, comments and reactions.`;
+  return entityHtml({
+    canonicalUrl,
+    title: `${name} — DeHub ${kind}`,
+    description,
+    image: pack.cover_url || shareImage('packs'),
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/packs">Packs</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Add this pack</a> · <a href="${APP_URL}/packs">Browse packs</a></p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'ImageGallery',
+      name,
+      description,
+      url: canonicalUrl,
+      ...(pack.cover_url ? { image: pack.cover_url } : {}),
+      numberOfItems: count,
+      ...(pack.created_at ? { dateCreated: pack.created_at } : {}),
     },
   });
 }
@@ -4760,6 +4799,24 @@ async function handleRequest(request, env, ctx) {
     );
     if (flow) {
       return guard(new Response(buildCreatorFlowHtml(flow), { status: 200, headers: blogHeaders }));
+    }
+    return guard(new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+      },
+    }));
+  }
+
+  const packMatch = cleanPath.match(/^\/(?:app\/)?packs\/([a-z0-9][a-z0-9_-]{2,47})$/i);
+  if (packMatch) {
+    const pack = await supabaseRow(
+      `creator_packs?slug=eq.${encodeURIComponent(packMatch[1].toLowerCase())}&select=slug,name,kind,cover_url,item_count,created_at&limit=1`,
+    );
+    if (pack) {
+      return guard(new Response(buildCreatorPackHtml(pack), { status: 200, headers: blogHeaders }));
     }
     return guard(new Response(buildFallbackHtml(pathname, request.url), {
       status: 200,

@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { AppState } from '@/components/app/AppState';
 import { EmojiPanel } from '@/components/app/emoji/EmojiPanel';
+import { PackGrid, PackStrip, StickerPanel, useGifPacks } from '@/components/app/packs/PackPickerParts';
+import { useKidsModeLock } from '@/hooks/use-kids-mode';
 
 // GIPHY public beta key (intended for client-side use)
 const GIPHY_API_KEY = 'GlVGYHkr3WSBnllca54iNt0yFbjz7L65';
@@ -55,7 +57,11 @@ interface EmojiGifPickerProps {
 export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, iconClassName }: EmojiGifPickerProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'emoji' | 'gif'>('emoji');
+  const [activeTab, setActiveTab] = useState<'emoji' | 'sticker' | 'gif'>('emoji');
+  const gifPacks = useGifPacks();
+  // Kids Mode: creator packs are unreviewed uploads, the same reason custom
+  // emoji are hidden there — no Stickers tab and no GIF packs, GIPHY only.
+  const kids = useKidsModeLock();
   const [gifSearchQuery, setGifSearchQuery] = useState('');
   const [gifs, setGifs] = useState<string[]>([]);
   const [loadingGifs, setLoadingGifs] = useState(false);
@@ -136,32 +142,34 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
       >
         {/* Tab switcher */}
         <div className="flex border-b border-white/10">
-          <button
-            onClick={() => setActiveTab('emoji')}
-            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
-              activeTab === 'emoji'
-                ? 'text-white border-b-2 border-white'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            {t('emojiPicker.tabEmoji')}
-          </button>
-          <button
-            onClick={() => setActiveTab('gif')}
-            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
-              activeTab === 'gif'
-                ? 'text-white border-b-2 border-white'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            {t('emojiPicker.tabGif')}
-          </button>
+          {(kids ? (['emoji', 'gif'] as const) : (['emoji', 'sticker', 'gif'] as const)).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
+                activeTab === tab
+                  ? 'text-white border-b-2 border-white'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              {t(tab === 'emoji' ? 'emojiPicker.tabEmoji' : tab === 'sticker' ? 'creatorPacks.tabStickers' : 'emojiPicker.tabGif')}
+            </button>
+          ))}
         </div>
 
         {activeTab === 'emoji' ? (
           <EmojiPanel onSelect={handleEmojiClick} />
+        ) : activeTab === 'sticker' && !kids ? (
+          <StickerPanel onSelect={handleGifClick} />
         ) : (
           <>
+            {!kids && <PackStrip packs={gifPacks.packs} active={gifPacks.active} onChange={gifPacks.setActive} leading="GIPHY" />}
+            {!kids && gifPacks.items ? (
+              <div className="max-h-72 overflow-y-auto">
+                <PackGrid kind="gif" items={gifPacks.items} onSelect={handleGifClick} />
+              </div>
+            ) : (
+            <>
             {/* GIF Search */}
             <div className="p-2 border-b border-white/10">
               <div className="relative">
@@ -210,6 +218,8 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
             <div className="p-2 border-t border-white/10 text-center">
               <span className="text-[10px] text-zinc-500">{t('emojiPicker.poweredByGiphy')}</span>
             </div>
+            </>
+            )}
           </>
         )}
       </PopoverContent>
