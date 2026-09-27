@@ -1,7 +1,6 @@
 /**
- * FriendsOnStageBar - Shows when people you follow are in a live Stage,
- * otherwise the busiest live Stage, so a live room is never invisible from
- * home. Thin notification bar at top of home feed.
+ * FriendsOnStageBar - One thin row per live Stage at the top of the home
+ * feed, for everyone. Rows with people you follow come first and name them.
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
@@ -113,31 +112,34 @@ export function FriendsOnStageBar() {
     return Array.from(map.values());
   }, [friendsOnStage]);
 
-  // Show first stage group (most relevant)
-  const primary = stageGroups[0];
-  const hostFriend = primary?.friends.find(f => f.role === 'host');
-  const otherFriends = primary?.friends.filter(f => f !== hostFriend) ?? [];
-
-  // Nobody you follow is on stage: fall back to the busiest live room.
-  const busiest = useMemo(() => {
+  // Every live stage is public, so every one gets a row for everyone —
+  // rooms with people you follow first, then the busiest.
+  const rows = useMemo(() => {
     const size = (s: AudioSpace) => (s.speaker_count || 1) + (s.listener_count || 0);
-    return liveStages.reduce<AudioSpace | undefined>((best, s) => (!best || size(s) > size(best) ? s : best), undefined);
-  }, [liveStages]);
+    const friendsBy = new Map(stageGroups.map(g => [g.stage.id, g.friends]));
+    return [...liveStages]
+      .map(stage => ({ stage, friends: friendsBy.get(stage.id) ?? [] }))
+      .sort((x, y) => (y.friends.length > 0 ? 1 : 0) - (x.friends.length > 0 ? 1 : 0) || size(y.stage) - size(x.stage));
+  }, [liveStages, stageGroups]);
 
-  const stage = primary?.stage ?? busiest;
-  if (!stage) return null;
-  const totalListeners = (stage.speaker_count || 1) + (stage.listener_count || 0);
+  if (rows.length === 0) return null;
 
   return (
-    <>
-    {<button
+    <div className="flex flex-col gap-2 mb-2">
+      {rows.map(({ stage, friends }) => {
+        const hostFriend = friends.find(f => f.role === 'host');
+        const otherFriends = friends.filter(f => f !== hostFriend);
+        const totalListeners = (stage.speaker_count || 1) + (stage.listener_count || 0);
+        return (
+    <button
+      key={stage.id}
       onClick={() => {
         // Join the stage that was actually tapped, not a generic browse list
         // — the bar already names one specific room.
         openModal('live');
         joinSpace(stage.id);
       }}
-      className="w-full flex items-center gap-2.5 px-3 py-2 mb-2 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.08] transition-all group"
+      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.08] transition-all group"
     >
       {/* Stage mic icon */}
       <BrandIcon src={stagesMicIcon} alt="" className="w-5 h-5 object-contain shrink-0" />
@@ -165,7 +167,7 @@ export function FriendsOnStageBar() {
           <span className="font-medium">{stage.title}</span>
         </p>
         <p className="text-[11px] text-white/50 truncate">
-          {!primary ? (
+          {friends.length === 0 ? (
             <>
               {t('stages.hostedBy')}{' '}
               <span className="text-white/70">@{stage.host_username || stage.host_wallet_address?.slice(0, 6)}</span>
@@ -202,8 +204,10 @@ export function FriendsOnStageBar() {
           {totalListeners}
         </span>
       </div>
-    </button>}
-    </>
+    </button>
+        );
+      })}
+    </div>
   );
 }
 
