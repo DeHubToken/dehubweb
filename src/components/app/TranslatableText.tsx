@@ -84,8 +84,11 @@ interface TranslatableTextProps {
    * exactly what happened to direct-message image captions. Pass auto={false}
    * for private content — and note this component renders no controls of its
    * own, so the call site must provide the manual trigger.
+   *
+   * 'chat' is auto-translate for public live chat, where lines are too short
+   * for the post length floor.
    */
-  auto?: boolean;
+  auto?: boolean | 'chat';
   /** Post's link was flagged by the Community Alert threshold — border it like a highlighter instead of the plain 🔗 chip. */
   flagged?: boolean;
 }
@@ -628,8 +631,20 @@ function requestTranslation(text: string, targetLang: string, isPublic = false):
 // kana, hangul, Arabic and friends identify themselves on sight.
 const MIN_TEXT_LENGTH_FOR_DETECTION = 15;
 
-function skipsAutoTranslate(text: string): boolean {
-  return text.trim().length < MIN_TEXT_LENGTH_FOR_DETECTION && !detectNonLatinScript(text);
+// Live chat is the exception. Nearly every line in a stage or stream chat is
+// under 15 characters ("hoş geldiniz.", "turn it up"), so the post floor meant
+// chat never auto-translated at all. A chat line only has to carry a few
+// letters of actual words; "gm", "ok" and "lol" still stay as written. The
+// server's junk guard catches what MyMemory makes of the rest.
+const MIN_CHAT_LETTERS_FOR_AUTO = 4;
+
+function skipsAutoTranslate(text: string, chat = false): boolean {
+  if (detectNonLatinScript(text)) return false;
+  if (!chat) return text.trim().length < MIN_TEXT_LENGTH_FOR_DETECTION;
+  const words = text
+    .replace(/https?:\/\/\S+|www\.\S+/gi, ' ')
+    .replace(/[@#$][\p{L}\p{N}_.-]+/gu, ' ');
+  return (words.match(/\p{L}/gu)?.length ?? 0) < MIN_CHAT_LETTERS_FOR_AUTO;
 }
 
 // Detect if text contains non-Latin scripts (instant, no API needed)
@@ -777,10 +792,11 @@ export function hasTranslatableText(text: string | null | undefined): boolean {
 /**
  * @param auto  Translate without being asked. Public content should; private
  *              content must not — see the auto-translate effect below.
+ *              'chat' also translates short lines, for public live chat.
  */
 export function useTranslation(
   text: string,
-  auto: boolean = true,
+  auto: boolean | 'chat' = true,
   /** Element the text renders in. When given, auto-translate waits until it nears the viewport. */
   nearRef?: RefObject<Element>,
 ) {
@@ -939,7 +955,7 @@ export function useTranslation(
     // language, so auto-translating it is as likely wrong as right — and it is
     // the exact shape of query that pulls junk out of a shared translation
     // memory. The translate control stays; only the unasked-for pass skips.
-    if (skipsAutoTranslate(text)) return;
+    if (skipsAutoTranslate(text, auto === 'chat')) return;
 
     const key = `${text}-${userLang}`;
     if (autoDoneRef.current === key) return;
