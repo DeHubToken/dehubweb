@@ -4469,7 +4469,19 @@
     "tokenCheckoutNotReady": "O checkout da assinatura de token não está pronto — tente novamente em breve",
     "tokenQuoteUnavailable": "Cotação de token ao vivo indisponível",
     "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Valor do token indisponível"
+    "tokenAmountUnavailable": "Valor do token indisponível",
+    "subscribedToast": "Inscrito",
+    "confirmSubscribeTo": "Inscreva-se em {{plan}} para {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} à taxa de pré-listagem",
+    "creditsCreator": "Credita {{amount}} USDT ao criador",
+    "fromSubscriptionTokens": "Dos seus tokens de subscrição",
+    "addedAtTodaysPrice": "Adicionado agora ao preço de hoje",
+    "subscriptionTokensNote": "Os tokens de assinatura são bloqueados ao preço quando você os adiciona, portanto, um movimento de preço nunca muda o custo de uma assinatura. Eles só podem ser gastos em assinaturas.",
+    "subscriptionTokens": "Tokens de subscrição",
+    "subscriptionTokensOnly": "Apenas para subscrições",
+    "untradableTokens": "Estes são tokens de assinatura não negociáveis",
+    "lockedValue": "Bloqueado em {{amount}}",
+    "withdraw": "Levantar"
   },
   "live": {
     "chatJoined": "entrou",

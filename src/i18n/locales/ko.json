@@ -4460,7 +4460,19 @@
     "tokenCheckoutNotReady": "토큰 구독 결제가 준비되지 않았습니다. 곧 다시 시도해 주세요.",
     "tokenQuoteUnavailable": "실시간 토큰 시세 이용 불가",
     "tokenEstimate": "≈ {{amount}} 토큰",
-    "tokenAmountUnavailable": "토큰 금액 이용 불가"
+    "tokenAmountUnavailable": "토큰 금액 이용 불가",
+    "subscribedToast": "구독 완료",
+    "confirmSubscribeTo": "{{price}}/{{duration}} 동안 {{plan}} 구독.",
+    "atPreListingRate": "사전 등록 요금으로 {{amount}}",
+    "creditsCreator": "크리에이터 크레딧 {{amount}} USDT",
+    "fromSubscriptionTokens": "구독 토큰에서",
+    "addedAtTodaysPrice": "오늘 가격으로 지금 추가됨",
+    "subscriptionTokensNote": "구독 토큰은 추가하면 가격에 고정되므로 가격 변동은 구독 비용에 영향을 미치지 않습니다. 구독에만 사용할 수 있습니다.",
+    "subscriptionTokens": "구독 토큰",
+    "subscriptionTokensOnly": "구독 전용",
+    "untradableTokens": "이들은 거래할 수 없는 구독 토큰입니다",
+    "lockedValue": "{{amount}} 에 잠김",
+    "withdraw": "출금"
   },
   "live": {
     "chatJoined": "님이 참여했습니다",

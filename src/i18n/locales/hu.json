@@ -4403,7 +4403,19 @@
     "tokenCheckoutNotReady": "A token előfizetési fizetési felület még nem elérhető – kérjük, próbálja meg hamarosan újra",
     "tokenQuoteUnavailable": "Az élő token jegyzés nem elérhető",
     "tokenEstimate": "≈ {{amount}} token",
-    "tokenAmountUnavailable": "Token mennyiség nem elérhető"
+    "tokenAmountUnavailable": "Token mennyiség nem elérhető",
+    "subscribedToast": "Feliratkozva",
+    "confirmSubscribeTo": "Iratkozz fel erre:{{plan}} erre: {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} a hirdetés előtti áron",
+    "creditsCreator": "Jóváírja az alkotónak {{amount}} USDT összeget",
+    "fromSubscriptionTokens": "Az előfizetési tokenjeidből",
+    "addedAtTodaysPrice": "Hozzáadás most a mai áron",
+    "subscriptionTokensNote": "Az előfizetési tokenek hozzáadásukkor zárolva vannak az áron, így az ármozgás soha nem változtatja meg az előfizetés költségét. Csak előfizetésekre költhetők.",
+    "subscriptionTokens": "Előfizetési tokenek",
+    "subscriptionTokensOnly": "Csak előfizetésekhez",
+    "untradableTokens": "Ezek nem forgalomképes előfizetési tokenek",
+    "lockedValue": "Zárolva: {{amount}}",
+    "withdraw": "Kifizetés"
   },
   "live": {
     "chatJoined": "csatlakozott",

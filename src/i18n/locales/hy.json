@@ -4367,7 +4367,22 @@
     "tokenCheckoutNotReady": "Թոքենային բաժանորդագրության վճարումը պատրաստ չէ — խնդրում ենք փորձել շուտով։",
     "tokenQuoteUnavailable": "Ուղիղ թոքենի մեջբերումը հասանելի չէ",
     "tokenEstimate": "≈ {{amount}} թոքեններ",
-    "tokenAmountUnavailable": "Թոքենի գումարը հասանելի չէ"
+    "tokenAmountUnavailable": "Թոքենի գումարը հասանելի չէ",
+    "totalCount": "{{count}} total",
+    "daysLeft_one": "{{count}} d ձախ",
+    "daysLeft_other": "{{count}} d ձախ",
+    "subscribedToast": "Բաժանորդագրված է",
+    "confirmSubscribeTo": "Բաժանորդագրվեք {{plan}}{{price}}/{{duration}}- ի համար ։",
+    "atPreListingRate": "{{amount}} նախապես հայտարարված սակագնով",
+    "creditsCreator": "Բոնուսներ ստեղծողին {{amount}} USDT",
+    "fromSubscriptionTokens": "Բաժանորդագրության նշաններից",
+    "addedAtTodaysPrice": "Ավելացվել է հիմա ՝ այսօրվա գնով",
+    "subscriptionTokensNote": "Բաժանորդագրության նշանները արգելափակվում են գնի վրա, երբ դրանք ավելացնում եք, այնպես որ գնի փոփոխությունը երբեք չի փոխում բաժանորդագրության արժեքը: Դրանք կարող են ծախսվել միայն բաժանորդագրությունների վրա:",
+    "subscriptionTokens": "Բաժանորդագրության նշաններ",
+    "subscriptionTokensOnly": "Միայն բաժանորդագրությունների համար",
+    "untradableTokens": "Սրանք անտրամադրելի բաժանորդագրության նշաններ են",
+    "lockedValue": "Արգելափակված է {{amount}}",
+    "withdraw": "Հետ կանչել"
   },
   "live": {
     "chatJoined": "միացավ",

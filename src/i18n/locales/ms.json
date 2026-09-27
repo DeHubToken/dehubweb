@@ -4722,7 +4722,20 @@
     "tokenCheckoutNotReady": "Pemeriksaan langganan token belum sedia — sila cuba semula sebentar lagi",
     "tokenQuoteUnavailable": "Petikan token langsung tidak tersedia",
     "tokenEstimate": "≈ {{amount}} token",
-    "tokenAmountUnavailable": "Jumlah token tidak tersedia"
+    "tokenAmountUnavailable": "Jumlah token tidak tersedia",
+    "benefitN": "Manfaat {{number}}",
+    "subscribedToast": "Dilanggan",
+    "confirmSubscribeTo": "Langgan {{plan}} untuk {{price}} / {{duration}}.",
+    "atPreListingRate": "{{amount}} pada kadar prapenyenaraian",
+    "creditsCreator": "Kredit kepada pengkarya {{amount}} USDT",
+    "fromSubscriptionTokens": "Daripada token langganan anda",
+    "addedAtTodaysPrice": "Ditambah sekarang pada harga hari ini",
+    "subscriptionTokensNote": "Token langganan dikunci pada harga apabila anda menambahnya, jadi pergerakan harga tidak pernah mengubah kos langganan anda. Ia hanya boleh dibelanjakan untuk langganan.",
+    "subscriptionTokens": "Token langganan",
+    "subscriptionTokensOnly": "Untuk langganan sahaja",
+    "untradableTokens": "Ini adalah token langganan yang tidak boleh didagangkan",
+    "lockedValue": "Dikunci di {{amount}}",
+    "withdraw": "Tarik balik"
   },
   "live": {
     "chatJoined": "menyertai",

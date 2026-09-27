@@ -4322,7 +4322,21 @@
     "tokenCheckoutNotReady": "టోకెన్ సబ్‌స్క్రిప్షన్ చెక్అవుట్ సిద్ధంగా లేదు — దయచేసి కొద్దిసేపటి తర్వాత మళ్ళీ ప్రయత్నించండి",
     "tokenQuoteUnavailable": "లైవ్ టోకెన్ కోట్ అందుబాటులో లేదు",
     "tokenEstimate": "≈ {{amount}} టోకెన్లు",
-    "tokenAmountUnavailable": "టోకెన్ మొత్తం అందుబాటులో లేదు"
+    "tokenAmountUnavailable": "టోకెన్ మొత్తం అందుబాటులో లేదు",
+    "daysLeft_one": "{{count}}d ఎడమ",
+    "daysLeft_other": "{{count}}d ఎడమ",
+    "subscribedToast": "సబ్ ‌ స్క్రైబ్ చేయబడింది",
+    "atPreListingRate": "{{amount}} ప్రీ-లిస్టింగ్ రేటు వద్ద",
+    "creditsCreator": "సృష్టికర్తకు క్రెడిట్ {{amount}} USDT",
+    "fromSubscriptionTokens": "మీ సబ్ ‌ స్క్రిప్షన్ టోకెన్ ‌ ల నుండి",
+    "addedAtTodaysPrice": "నేటి ధర వద్ద ఇప్పుడు జోడించబడింది",
+    "subscriptionTokensNote": "మీరు వాటిని జోడించినప్పుడు సబ్ ‌ స్క్రిప్షన్ టోకెన్ ‌ లు ధర వద్ద లాక్ చేయబడతాయి, కాబట్టి సబ్ ‌ స్క్రిప్షన్ మీకు ఎంత ఖర్చవుతుందో ధర కదలిక ఎప్పటికీ మారదు. వాటిని సబ్ ‌ స్క్రిప్షన్ ‌ ల కోసం మాత్రమే ఖర్చు చేయవచ్చు.",
+    "subscriptionTokens": "సబ్‌స్క్రిప్షన్ టోకెన్‌లు",
+    "subscriptionTokensOnly": "సబ్ ‌ స్క్రిప్షన్ ‌ ల కోసం మాత్రమే",
+    "untradableTokens": "ఇవి గుర్తించలేని సబ్ ‌ స్క్రిప్షన్ టోకెన్ ‌ లు",
+    "lockedValue": "{{amount}} వద్ద లాక్ చేయబడింది",
+    "withdraw": "ఉపసంహరించుకోండి",
+    "confirmSubscribeTo": "{{plan}}కు {{price}} / {{duration}}కి సభ్యత్వం పొందండి."
   },
   "live": {
     "chatJoined": "చేరారు",

@@ -3786,7 +3786,20 @@
     "tokenCheckoutNotReady": "การชำระเงินสมัครสมาชิกโทเค็นยังไม่พร้อม — โปรดลองอีกครั้งในไม่ช้า",
     "tokenQuoteUnavailable": "ใบเสนอราคาโทเค็นสดไม่พร้อมใช้งาน",
     "tokenEstimate": "≈ {{amount}} โทเค็น",
-    "tokenAmountUnavailable": "จำนวนโทเค็นไม่พร้อมใช้งาน"
+    "tokenAmountUnavailable": "จำนวนโทเค็นไม่พร้อมใช้งาน",
+    "chain": "โซ่",
+    "subscribedToast": "สมัครใช้งานแล้ว",
+    "confirmSubscribeTo": "สมัครสมาชิก {{plan}} เพื่อ {{price}}/{{duration}}",
+    "atPreListingRate": "{{amount}} ในอัตราก่อนลงประกาศ",
+    "creditsCreator": "เติมเครดิตให้ครีเอเตอร์ {{amount}} USDT",
+    "fromSubscriptionTokens": "จากโทเค็นการสมัครใช้งานของคุณ",
+    "addedAtTodaysPrice": "เพิ่มแล้วในราคาวันนี้",
+    "subscriptionTokensNote": "โทเค็นการสมัครสมาชิกจะถูกล็อคไว้ที่ราคาเมื่อคุณเพิ่มโทเค็นดังนั้นการเคลื่อนไหวของราคาจะไม่เปลี่ยนแปลงค่าใช้จ่ายในการสมัครสมาชิกของคุณ พวกเขาสามารถใช้จ่ายในการสมัครสมาชิกเท่านั้น",
+    "subscriptionTokens": "โทเค็นการสมัครใช้งาน",
+    "subscriptionTokensOnly": "สำหรับการสมัครสมาชิกเท่านั้น",
+    "untradableTokens": "โทเค็นเหล่านี้เป็นโทเค็นการสมัครสมาชิกที่ซื้อขายไม่ได้",
+    "lockedValue": "ล็อกไว้ที่ {{amount}}",
+    "withdraw": "ถอนเงิน"
   },
   "live": {
     "chatJoined": "เข้าร่วมแล้ว",

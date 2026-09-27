@@ -4266,7 +4266,20 @@
     "tokenCheckoutNotReady": "Плащането за абонамент с токени не е готово — моля, опитайте отново скоро",
     "tokenQuoteUnavailable": "Текуща цена на токена не е налична",
     "tokenEstimate": "≈ {{amount}} токена",
-    "tokenAmountUnavailable": "Сумата на токените не е налична"
+    "tokenAmountUnavailable": "Сумата на токените не е налична",
+    "benefitN": "Полза {{number}}",
+    "subscribedToast": "Абониран",
+    "confirmSubscribeTo": "Абонирайте се за {{plan}} за {{price}}/{{duration}}.",
+    "atPreListingRate": "{{amount}} на цената на предварителната обява",
+    "creditsCreator": "Кредитира твореца {{amount}} USDT",
+    "fromSubscriptionTokens": "От вашите абонаментни токени",
+    "addedAtTodaysPrice": "Добавено сега на днешната цена",
+    "subscriptionTokensNote": "Абонаментните токени се заключват в цената, когато ги добавите, така че движението на цената никога не променя цената на абонамента. Те могат да бъдат изразходвани само за абонаменти.",
+    "subscriptionTokens": "Абонаментни токени",
+    "subscriptionTokensOnly": "Само за абонаменти",
+    "untradableTokens": "Това са нетъргуеми токени за абонамент",
+    "lockedValue": "Заключено на {{amount}}",
+    "withdraw": "Оттегляне"
   },
   "live": {
     "chatJoined": "се присъедини",
