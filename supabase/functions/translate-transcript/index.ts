@@ -108,7 +108,7 @@ async function chunkViaGateway(numbered: string, langName: string): Promise<stri
         },
       }],
       tool_choice: { type: 'function', function: { name: 'return_translations' } },
-  }, { expectToolCall: 'return_translations', label: 'translate-transcript' });
+  }, { expectToolCall: 'return_translations', label: 'translate-transcript', publicContent: true });
   if (!res.ok) throw new Error(`AI ${res.status}: ${await res.text()}`);
   const j = await res.json();
   const args = j?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;

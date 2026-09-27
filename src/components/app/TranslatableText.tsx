@@ -596,14 +596,18 @@ type TranslateResult = {
 
 const inFlightRequests = new Map<string, Promise<TranslateResult>>();
 
-function requestTranslation(text: string, targetLang: string): Promise<TranslateResult> {
-  const key = `${text}-${targetLang}`;
+/**
+ * `isPublic` marks text anyone can read — a feed post, a bio. Only that may go
+ * to a free model tier that trains on what it is sent; a DM never does.
+ */
+function requestTranslation(text: string, targetLang: string, isPublic = false): Promise<TranslateResult> {
+  const key = `${text}-${targetLang}-${isPublic ? 'p' : 'x'}`;
   const existing = inFlightRequests.get(key);
   if (existing) return existing;
 
   const request = (async () => {
     const { data, error } = await supabase.functions.invoke('translate-text', {
-      body: { text, targetLang },
+      body: isPublic ? { text, targetLang, public: true } : { text, targetLang },
     });
     if (error) throw error;
     return (data ?? {}) as TranslateResult;
@@ -839,7 +843,9 @@ export function useTranslation(
     setError(null);
 
     try {
-      const data = await requestTranslation(text, targetLang);
+      // Auto-translate is only ever on for public content; private call sites
+      // pass auto={false} (see TranslatableTextProps.auto).
+      const data = await requestTranslation(text, targetLang, auto);
 
       if (!data.translatedText) {
         if (!mountedRef.current) return;

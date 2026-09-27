@@ -86,6 +86,8 @@ export interface AiChatOptions {
   label?: string;
   /** Aborts whichever tier is in flight — the caller's timeout, not ours. */
   signal?: AbortSignal;
+  /** Public text only — lets free tiers that train on input answer. See free-models.ts. */
+  publicContent?: boolean;
 }
 
 /** Rebuilds a JSON response after the body has been read for inspection. */

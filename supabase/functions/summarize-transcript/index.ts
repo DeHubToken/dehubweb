@@ -72,7 +72,7 @@ async function viaAiChat(system: string, prompt: string): Promise<string | null>
         { role: 'system', content: system },
         { role: 'user', content: prompt },
       ],
-    }, { label: 'summarize-transcript' });
+    }, { label: 'summarize-transcript', publicContent: true });
     if (!res.ok) {
       console.error(`ai ${res.status}: ${(await res.text()).slice(0, 300)}`);
       return null;
