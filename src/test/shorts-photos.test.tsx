@@ -7,11 +7,13 @@ vi.mock('@/lib/thumbnail-fallback', () => ({ useResolvedThumbnail: (url: string)
 vi.mock('@/hooks/use-tap-gestures', () => ({ useTapGestures: () => ({}) }));
 vi.mock('@/components/app/cards/TapReactionBurst', () => ({ TapReactionBurst: () => null }));
 vi.mock('@/components/app/cards/TranscodeRetry', () => ({ TranscodeRetry: () => null }));
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => ({
+  'dex.next': 'Next photo', 'dex.previous': 'Previous photo', 'feed.images': 'Post photos',
+}[key] || key) }) }));
 
 const post = { postType: 'feed-images', imageUrls: ['nfts/images/1.jpg', 'nfts/images/2.jpg'],
   description: 'A walk [soundtrack:5373:Morning:Artist:feed-audio/5373-audio.mp3]' };
-afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.useRealTimers(); });
+afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); vi.useRealTimers(); });
 it('maps every photo and its single soundtrack without manufacturing a video', () => {
   const media = shortsPhotoMedia(post)!;
   expect(media.imageUrls).toHaveLength(2);
@@ -44,6 +46,20 @@ it('pages horizontally within bounds and leaves vertical keys alone', () => {
 it('does not show paging controls for a single musical photo', () => {
   render(<ShortsPhotoPager images={['one.jpg']} />);
   expect(screen.queryByRole('button')).toBeNull();
+});
+it('accepts horizontal flicks but leaves vertical gestures to the post pager', () => {
+  vi.stubGlobal('PointerEvent', MouseEvent);
+  render(<ShortsPhotoPager images={['one.jpg', 'two.jpg']} />);
+  const pager = screen.getByLabelText('Post photos');
+  fireEvent.pointerDown(pager, { clientX: 180, clientY: 100 });
+  fireEvent.pointerUp(pager, { clientX: 100, clientY: 108 });
+  expect(screen.getByText('2 / 2')).toBeTruthy();
+  fireEvent.pointerDown(pager, { clientX: 100, clientY: 180 });
+  fireEvent.pointerUp(pager, { clientX: 155, clientY: 20 });
+  expect(screen.getByText('2 / 2')).toBeTruthy();
+  fireEvent.pointerDown(pager, { clientX: 100, clientY: 100 });
+  fireEvent.pointerUp(pager, { clientX: 180, clientY: 108 });
+  expect(screen.getByText('1 / 2')).toBeTruthy();
 });
 it('retains the same playing soundtrack and position across photos, then pauses on leaving the post', () => {
   vi.useFakeTimers();

@@ -954,7 +954,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // before any handler inside the panel could stop it.
       if ((e.target as HTMLElement | null)?.closest?.('[data-shorts-scrollable]')) return;
 
-      if ((e.target as HTMLElement | null)?.closest?.('[data-shorts-photos]') && Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if ((e.target as HTMLElement | null)?.closest?.('[data-shorts-photos]') && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
 
