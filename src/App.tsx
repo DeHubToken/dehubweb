@@ -165,6 +165,8 @@ const NewPostPage = React.lazy(() => import("./pages/app/NewPostPage"));
 const UploadPage = React.lazy(() => import("./pages/app/UploadPage"));
 const YoutubeMigratePage = React.lazy(() => import("./pages/app/YoutubeMigratePage"));
 const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
+const PacksPage = React.lazy(() => import("./pages/app/PacksPage"));
+const PackPage = React.lazy(() => import("./pages/app/PackPage"));
 const BuilderPage = React.lazy(() => import("./pages/app/BuilderPage"));
 const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPage"));
 const PairTestPage = React.lazy(() => import("./pages/app/PairTestPage"));
@@ -626,6 +628,8 @@ function AppContent() {
               <Route path="governance" element={null} />
               <Route path="dao" element={null} />
               <Route path="governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
+              <Route path="packs" element={<Suspense fallback={<PageLoader />}><PacksPage /></Suspense>} />
+              <Route path="packs/:slug" element={<Suspense fallback={<PageLoader />}><PackPage /></Suspense>} />
               <Route path="stake" element={null} />
               <Route path="superpowers" element={<Suspense fallback={<PageLoader />}><SuperPowersPage /></Suspense>} />
               <Route path="bridge" element={null} />
@@ -729,6 +733,8 @@ function AppContent() {
                 these is the whole point of the page having an address. */}
             <Route path="/events/:eventNumber" element={<Suspense fallback={<PageLoader />}><EventPage /></Suspense>} />
             <Route path="/governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
+            <Route path="/packs" element={<Suspense fallback={<PageLoader />}><PacksPage /></Suspense>} />
+            <Route path="/packs/:slug" element={<Suspense fallback={<PageLoader />}><PackPage /></Suspense>} />
             <Route path="/post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
             <Route path="/post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
             <Route path="/video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />

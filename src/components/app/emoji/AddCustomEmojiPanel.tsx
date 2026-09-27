@@ -8,6 +8,10 @@
  *     source when it carries one.
  *   A pack — a Mastodon/Pleroma/Akkoma or Misskey instance, or any JSON emoji
  *     list; every name not already taken is added in one go.
+ *
+ * Either way the emoji land in one of your emoji packs. Packs are a badge
+ * holder perk and the tier sets how many packs and how many emoji each — the
+ * creator-packs function enforces that, this form only mirrors it.
  */
 
 import { useRef, useState } from 'react';
@@ -19,15 +23,15 @@ import { useAuth } from '@/contexts/AuthContext';
 import {
   EMOJI_UPLOAD_TYPES,
   MAX_EMOJI_UPLOAD_BYTES,
-  addCustomEmojis,
   checkShortcode,
   fetchEmojiPack,
   normaliseShortcode,
   parseEmojiSource,
   probeImage,
-  uploadEmojiImage,
   type EmojiSource,
 } from '@/lib/emoji/custom-emoji-import';
+import { addPackItems, uploadPackImage } from '@/lib/creator-packs/api';
+import { PackLocked, PackTargetField, packErrorMessage, usePackTarget } from '@/components/app/packs/PackGate';
 import { getCustomEmoji } from '@/lib/emoji/custom-emoji';
 import { loadShortcodes } from '@/lib/emoji/shortcodes';
 
@@ -46,6 +50,7 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
   const [pack, setPack] = useState('');
   const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const target = usePackTarget(walletAddress, 'emoji');
 
   const onLink = (value: string) => {
     setLink(value);
@@ -72,6 +77,7 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
     const code = normaliseShortcode(name);
     const problem = await checkShortcode(code);
     if (problem) return toast.error(t(`emojiPicker.errors.${PROBLEM_KEY[problem]}`, { name: `:${code}:` }));
+    if (!target.ready) return;
     setBusy(true);
     try {
       let imageUrl: string;
@@ -79,7 +85,7 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
       let src = 'upload';
       let externalId: string | undefined;
       if (file) {
-        imageUrl = await uploadEmojiImage(file, walletAddress);
+        imageUrl = await uploadPackImage(file, walletAddress, 'emoji');
         animated = file.type === 'image/gif';
       } else if (source) {
         if (!(await probeImage(source.imageUrl))) {
@@ -90,12 +96,19 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
       } else {
         return;
       }
-      await addCustomEmojis([{ shortcode: code, imageUrl, animated, source: src, externalId }], walletAddress);
+      void externalId;
+      const pack = await target.ensurePack();
+      const { added } = await addPackItems(pack.id, [{ shortcode: code, imageUrl, animated }], src);
+      await target.invalidate();
+      if (!added) {
+        toast.error(t('emojiPicker.errors.shortcodeTaken', { name: `:${code}:` }));
+        return;
+      }
       toast.success(t('emojiPicker.addedName', { name: `:${code}:` }));
       onDone();
     } catch (err) {
       console.error('[custom-emoji] add failed', err);
-      toast.error(t('emojiPicker.errors.addFailed'));
+      toast.error(packErrorMessage(err, t));
     } finally {
       setBusy(false);
     }
@@ -103,6 +116,7 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
 
   const submitPack = async () => {
     if (!walletAddress) return toast.error(t('emojiPicker.errors.signIn'));
+    if (!target.ready) return;
     setBusy(true);
     try {
       const [items, idx] = await Promise.all([fetchEmojiPack(pack), loadShortcodes().catch(() => null)]);
@@ -115,26 +129,21 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
         if (seen.has(i.shortcode) || getCustomEmoji(i.shortcode) || (idx && i.shortcode in idx)) return false;
         seen.add(i.shortcode);
         return true;
-      }).slice(0, MAX_PACK);
+      }).slice(0, Math.min(MAX_PACK, target.room));
       const source = /\/api\/emojis/.test(pack) ? 'misskey' : 'mastodon';
-      let added = 0;
-      // Batches, so one taken name (a race with someone else) only costs its batch.
-      for (let i = 0; i < fresh.length; i += 50) {
-        try {
-          const rows = await addCustomEmojis(
-            fresh.slice(i, i + 50).map((it) => ({ ...it, source })),
-            walletAddress,
-          );
-          added += rows.length;
-        } catch (err) {
-          console.warn('[custom-emoji] pack batch failed', err);
-        }
-      }
+      const packRow = await target.ensurePack();
+      // Taken names are skipped server-side, so one batch is enough.
+      const { added } = await addPackItems(
+        packRow.id,
+        fresh.map((it) => ({ shortcode: it.shortcode, imageUrl: it.imageUrl, animated: it.animated })),
+        source,
+      );
+      await target.invalidate();
       toast.success(t('emojiPicker.packAdded', { count: added, skipped: items.length - added }));
       if (added) onDone();
     } catch (err) {
       console.error('[custom-emoji] pack failed', err);
-      toast.error(t('emojiPicker.errors.addFailed'));
+      toast.error(packErrorMessage(err, t));
     } finally {
       setBusy(false);
     }
@@ -162,6 +171,13 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
         </div>
       </div>
 
+      {target.loading ? (
+        <div className="flex justify-center py-6"><Loader2 className="w-4 h-4 animate-spin text-zinc-500" /></div>
+      ) : target.locked ? (
+        <PackLocked compact />
+      ) : (
+      <>
+      <PackTargetField target={target} kind="emoji" />
       {mode === 'single' ? (
         <>
           <div className="flex items-center gap-2">
@@ -210,7 +226,7 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
           <p className="text-[10px] text-zinc-500 leading-snug">{t('emojiPicker.singleHint')}</p>
           <button
             type="button"
-            disabled={busy || !name || (!file && !source)}
+            disabled={busy || !target.ready || !name || (!file && !source)}
             onClick={submitSingle}
             className="h-8 rounded-md bg-white text-black font-medium disabled:opacity-40 flex items-center justify-center"
           >
@@ -228,13 +244,15 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
           <p className="text-[10px] text-zinc-500 leading-snug">{t('emojiPicker.packHint')}</p>
           <button
             type="button"
-            disabled={busy || !pack.trim()}
+            disabled={busy || !target.ready || !pack.trim()}
             onClick={submitPack}
             className="h-8 rounded-md bg-white text-black font-medium disabled:opacity-40 flex items-center justify-center"
           >
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : t('emojiPicker.importPack')}
           </button>
         </>
+      )}
+      </>
       )}
     </div>
   );
