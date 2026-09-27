@@ -26,8 +26,8 @@ import {
   type Target,
 } from '../_shared/transcripts.ts';
 import { languageNameFor } from '../_shared/language-names.ts';
+import { aiChat } from '../_shared/ai-chat.ts';
 
-const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 const FAL_KEY = Deno.env.get('FAL_KEY');
 
 const MODEL = 'google/gemini-2.5-flash-lite';
@@ -82,11 +82,7 @@ async function chunkViaFal(numbered: string, langName: string, count: number): P
 }
 
 async function chunkViaGateway(numbered: string, langName: string): Promise<string[]> {
-  if (!LOVABLE_API_KEY) return [];
-  const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
+  const res = await aiChat({
       model: MODEL,
       messages: [
         {
@@ -112,9 +108,8 @@ async function chunkViaGateway(numbered: string, langName: string): Promise<stri
         },
       }],
       tool_choice: { type: 'function', function: { name: 'return_translations' } },
-    }),
-  });
-  if (!res.ok) throw new Error(`AI gateway ${res.status}: ${await res.text()}`);
+  }, { expectToolCall: 'return_translations', label: 'translate-transcript' });
+  if (!res.ok) throw new Error(`AI ${res.status}: ${await res.text()}`);
   const j = await res.json();
   const args = j?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
   const parsed = typeof args === 'string' ? JSON.parse(args) : args;
