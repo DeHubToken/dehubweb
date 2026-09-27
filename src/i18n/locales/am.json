@@ -3085,6 +3085,7 @@
   },
   "reactionInfo": {
     "title": "ምላሾች",
+    "seeWhoReacted": "ማን እንደተነጠቀ ይመልከቱ",
     "privateTitle": "ምላሾች ግላዊ ናቸው",
     "privateDescription": "የልጥፍ ደራሲ ብቻ ይህን ዝርዝር ማየት ይችላል።",
     "empty": "ምንም ምላሽ ገና የለም",

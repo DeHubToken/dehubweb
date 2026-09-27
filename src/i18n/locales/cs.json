@@ -5229,6 +5229,7 @@
   },
   "reactionInfo": {
     "title": "Reakce",
+    "seeWhoReacted": "Zobrazit, kdo reagoval",
     "privateTitle": "Reakce jsou soukromé",
     "privateDescription": "Tento seznam může zobrazit pouze autor příspěvku.",
     "empty": "Zatím žádné reakce",

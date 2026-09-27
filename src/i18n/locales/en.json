@@ -5397,6 +5397,7 @@
   },
   "reactionInfo": {
     "title": "Reactions",
+    "seeWhoReacted": "See who reacted",
     "privateTitle": "Reactions are private",
     "privateDescription": "Only the post author can view this list.",
     "empty": "No reactions yet",

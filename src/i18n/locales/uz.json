@@ -3205,6 +3205,7 @@
   },
   "reactionInfo": {
     "title": "Reaksiyalar",
+    "seeWhoReacted": "Kim reaksiya bildirganini ko'ring",
     "privateTitle": "Reaksiyalar maxfiy",
     "privateDescription": "Ushbu ro&#39;yxatni faqat post muallifi ko&#39;rishi mumkin.",
     "empty": "Hali hech qanday reaksiya yo&#39;q",

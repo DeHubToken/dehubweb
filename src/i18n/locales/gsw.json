@@ -3159,6 +3159,7 @@
   },
   "reactionInfo": {
     "title": "Reaktione",
+    "seeWhoReacted": "Lueg, wär reagiert hät",
     "privateTitle": "Reaktione sind privat",
     "privateDescription": "Nur de Autor vom Poscht cha die Liste gse.",
     "empty": "Nonig kei Reaktione",

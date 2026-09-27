@@ -2739,6 +2739,7 @@
   },
   "reactionInfo": {
     "title": "Reactions",
+    "seeWhoReacted": "Si hu don react",
     "empty": "No reactions yet",
     "labels": {
       "like": "Like",

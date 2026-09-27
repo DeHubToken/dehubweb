@@ -3087,6 +3087,7 @@
   },
   "reactionInfo": {
     "title": "ግብረ መልሲ",
+    "seeWhoReacted": "መን ከም ዝመለሰ ርኣዮ",
     "privateTitle": "ግብረ መልሲ ብሕታዊ እዩ ።",
     "privateDescription": "እቲ ደራሲ ጥራይ እዩ ነዚ ዝርዝር እዚ ክርኢ ዝኽእል ።",
     "empty": "ክሳብ ሕጂ ዝኾነ ግብረ መልሲ የለን ።",

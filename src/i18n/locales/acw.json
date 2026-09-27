@@ -3121,6 +3121,7 @@
   },
   "reactionInfo": {
     "title": "التفاعلات",
+    "seeWhoReacted": "شاهد من تفاعل",
     "privateTitle": "التفاعلات خاصة",
     "privateDescription": "بس صاحب المنشور يقدر يشوف هالقائمة.",
     "empty": "ما فيه تفاعلات لحد الآن",

@@ -5110,6 +5110,7 @@
   },
   "reactionInfo": {
     "title": "Reacții",
+    "seeWhoReacted": "Vezi cine a reacționat",
     "privateTitle": "Reacțiile sunt private",
     "privateDescription": "Numai autorul postării poate vizualiza această listă.",
     "empty": "Nicio reacție încă",
