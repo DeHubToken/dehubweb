@@ -3019,7 +3019,11 @@
     "notEnoughTokens": "Kò tó àmi-ìṣẹ́ fún ìdánilẹ́kùn.",
     "notEnoughTokensDescription": "O nil lati lo {{needed}} àmi-ìṣẹ́, o sì ní {{held}}.",
     "paymentLeftWallet": "Àwọn àmi-ìṣẹ́ rẹ ti jáde kúrò nínú àpò owó rẹ. Tẹ \"San\" lẹẹkansi láti gbìyànjú láti jẹ́rìí sí i.",
-    "paidForMinutes": "A ti san {{amount}} àmi-ìṣẹ́ fún {{minutes}} ìṣẹ́jú ìgbóhùn-gbígbò."
+    "paidForMinutes": "A ti san {{amount}} àmi-ìṣẹ́ fún {{minutes}} ìṣẹ́jú ìgbóhùn-gbígbò.",
+    "menuItem": "Ìtumọ̀ ohùn",
+    "noTranscript": "Fídíò yìí kò tíì ní àkọsílẹ̀ ọ̀rọ̀, nítorí náà a kò lè túmọ̀ ohùn rẹ̀. Gbìyànjú lẹ́ẹ̀kan sí i nígbà míì.",
+    "noVoice": "Ẹ̀rọ rẹ kò ní ohùn fún èdè yìí.",
+    "sameLanguage": "Fídíò yìí ti wà ní èdè rẹ tẹ́lẹ̀."
   },
   "digest": {
     "andOthers_one": "{{names}} àti {{count}} mìíràn",

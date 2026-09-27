@@ -2996,7 +2996,11 @@
     "notEnoughTokens": "Dublýaž üçin sanly wagt ýeterlik däl.",
     "notEnoughTokensDescription": "Siziň üçin takmynan {{needed}} token gerek we {{held}} saklaýarsyňyz.",
     "paymentLeftWallet": "Siziň rollaryňyz jüýtden çykdy. Tassyklamak üçin \"Töle\" düwmesine täzeden basyň.",
-    "paidForMinutes": "Dublýa etmek üçin {{amount}} token we {{minutes}} minut üçin töleg tölediňiz."
+    "paidForMinutes": "Dublýa etmek üçin {{amount}} token we {{minutes}} minut üçin töleg tölediňiz.",
+    "menuItem": "Dublýaž",
+    "noTranscript": "Bu wideonyň entek transkripti ýok, şonuň üçin dublýaž edip bolmaýar. Soňrak gaýtadan synanyşyň.",
+    "noVoice": "Enjamyňyzda bu dil üçin ses ýok.",
+    "sameLanguage": "Bu wideo eýýäm siziň diliňizde."
   },
   "digest": {
     "andOthers_one": "{{names}} we {{count}} beýleki",

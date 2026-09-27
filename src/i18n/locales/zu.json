@@ -3062,7 +3062,11 @@
     "notEnoughTokens": "Awekho amathuluzi anele okudubbing.",
     "notEnoughTokensDescription": "Udinga cishe amathuluzi angama-{{needed}} futhi unama-{{held}}.",
     "paymentLeftWallet": "Amathokheni akho aphume esikhwameni sakho. Cindezela i-Pay futhi ukuze uzame ukuqinisekisa.",
-    "paidForMinutes": "Kukhokhelwe amathokheni angu-{{amount}} emizuzu {{minutes}} yokufaka izwi."
+    "paidForMinutes": "Kukhokhelwe amathokheni angu-{{amount}} emizuzu {{minutes}} yokufaka izwi.",
+    "menuItem": "Ukufaka izwi",
+    "noTranscript": "Le vidiyo ayikabi nombhalo, ngakho ayikwazi ukufakwa izwi. Zama futhi kamuva.",
+    "noVoice": "Idivayisi yakho ayinalo izwi lalolu limi.",
+    "sameLanguage": "Le vidiyo isivele isolimini lwakho."
   },
   "digest": {
     "andOthers_one": "{{names}} kanye {{count}} okunye",

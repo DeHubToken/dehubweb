@@ -4902,7 +4902,11 @@
     "notEnoughTokens": "Tsy ampy ny tapaho ho an'ny fandikana feo.",
     "notEnoughTokensDescription": "Mila tapaho {{needed}} eo ho eo ianao ary manana {{held}}.",
     "paymentLeftWallet": "Nivoaka avy tao amin'ny poketrao ny mari-panondroanao. Tsindrio ny Pay indray mba hiezaka ny hanamafisana izany.",
-    "paidForMinutes": "Nandoa mari-panondroana {{amount}} ho an'ny {{minutes}} minitra fandikana feo."
+    "paidForMinutes": "Nandoa mari-panondroana {{amount}} ho an'ny {{minutes}} minitra fandikana feo.",
+    "menuItem": "Fandikana feo",
+    "noTranscript": "Mbola tsy manana soratra ity horonan-tsary ity, ka tsy azo adika feo. Andramo indray any aoriana.",
+    "noVoice": "Tsy manana feo ho an'ity fiteny ity ny fitaovanao.",
+    "sameLanguage": "Efa amin'ny fiteninao ity horonan-tsary ity."
   },
   "support": {
     "title": "MANAMPY",

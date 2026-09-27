@@ -5223,7 +5223,11 @@
     "notEnoughTokens": "Tokens insuficientes para doblaje.",
     "notEnoughTokensDescription": "Necesitas aproximadamente {{needed}} tokens y tienes {{held}}.",
     "paymentLeftWallet": "Tus tokens han salido de tu billetera. Presiona Pagar de nuevo para intentar confirmar.",
-    "paidForMinutes": "Pagaste {{amount}} tokens por {{minutes}} minutos de doblaje."
+    "paidForMinutes": "Pagaste {{amount}} tokens por {{minutes}} minutos de doblaje.",
+    "menuItem": "Doblar",
+    "noTranscript": "Este video aún no tiene transcripción, así que no se puede doblar. Inténtalo más tarde.",
+    "noVoice": "Tu dispositivo no tiene una voz para este idioma.",
+    "sameLanguage": "Este video ya está en tu idioma."
   },
   "support": {
     "title": "Soporte",

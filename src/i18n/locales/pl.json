@@ -5219,7 +5219,11 @@
     "notEnoughTokens": "Za mało tokenów do dubbingu.",
     "notEnoughTokensDescription": "Potrzebujesz około {{needed}} tokenów, a masz {{held}}.",
     "paymentLeftWallet": "Twoje tokeny opuściły Twój portfel. Naciśnij \"Zapłać\" ponownie, aby ponowić próbę ich potwierdzenia.",
-    "paidForMinutes": "Zapłacono {{amount}} tokenów za {{minutes}} minut dubbingu."
+    "paidForMinutes": "Zapłacono {{amount}} tokenów za {{minutes}} minut dubbingu.",
+    "menuItem": "Dubbing",
+    "noTranscript": "Ten film nie ma jeszcze transkrypcji, więc nie można go zdubbingować. Spróbuj ponownie później.",
+    "noVoice": "Twoje urządzenie nie ma głosu dla tego języka.",
+    "sameLanguage": "Ten film jest już w Twoim języku."
   },
   "support": {
     "title": "Wsparcie",

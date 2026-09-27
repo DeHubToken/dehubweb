@@ -5216,7 +5216,11 @@
     "notEnoughTokens": "Nicht genügend Token für die Synchronisation.",
     "notEnoughTokensDescription": "Sie benötigen etwa {{needed}} Token und besitzen {{held}}.",
     "paymentLeftWallet": "Deine Token sind aus deiner Wallet verschwunden. Drücke erneut auf Bezahlen, um die Bestätigung zu wiederholen.",
-    "paidForMinutes": "Bezahlte {{amount}} Token für {{minutes}} Minuten Synchronisation."
+    "paidForMinutes": "Bezahlte {{amount}} Token für {{minutes}} Minuten Synchronisation.",
+    "menuItem": "Synchronisation",
+    "noTranscript": "Für dieses Video gibt es noch kein Transkript, daher kann es nicht synchronisiert werden. Versuche es später erneut.",
+    "noVoice": "Dein Gerät hat keine Stimme für diese Sprache.",
+    "sameLanguage": "Dieses Video ist bereits in deiner Sprache."
   },
   "support": {
     "title": "Support",

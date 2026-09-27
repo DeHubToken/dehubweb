@@ -2996,7 +2996,11 @@
     "notEnoughTokens": "Enweghị tokenịị zuru maka dubbing.",
     "notEnoughTokensDescription": "Ị chọrọ ihe dị ka {{needed}} akara ma jide {{held}}.",
     "paymentLeftWallet": "Akara gị apụla n'obere akpa gị. Pịa Kwụọ ụgwọ ọzọ iji nwaa ịkwado ya.",
-    "paidForMinutes": "Akwụgoro {{amount}} akara maka {{minutes}} nkeji nke ntinye aka."
+    "paidForMinutes": "Akwụgoro {{amount}} akara maka {{minutes}} nkeji nke ntinye aka.",
+    "menuItem": "Ntụgharị olu",
+    "noTranscript": "Vidiyo a enweghị ederede okwu ya ugbu a, ya mere enweghị ike ịtụgharị olu ya. Nwaa ọzọ ma emechaa.",
+    "noVoice": "Ngwaọrụ gị enweghị olu maka asụsụ a.",
+    "sameLanguage": "Vidiyo a adịlarị n'asụsụ gị."
   },
   "digest": {
     "andOthers_one": "{{names}} na {{count}} ndị ọzọ",

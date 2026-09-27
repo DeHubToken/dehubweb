@@ -2904,7 +2904,11 @@
     "notEnoughTokens": "ডাবিং-এর জন্য যথেষ্ট টোকেন নাই।",
     "notEnoughTokensDescription": "আপনার প্রায় {{needed}} টোকেন লাগিবো আর {{held}} আছে।",
     "paymentLeftWallet": "আপনার টোকেন ওয়ালেট থেইক্কা বাইর অইগেছে। কনফার্ম করার লাগি আবার পে চাপুন।",
-    "paidForMinutes": "ডাবিং-এর {{minutes}} মিনিটের লাগি {{amount}} টোকেন পে করা অইছে।"
+    "paidForMinutes": "ডাবিং-এর {{minutes}} মিনিটের লাগি {{amount}} টোকেন পে করা অইছে।",
+    "menuItem": "ডাব",
+    "noTranscript": "এই ভিডিওর এহনো কোনো ট্রান্সক্রিপ্ট নাই, তাই ডাব গরা ন যায়। পরে আবার চেষ্টা গরন।",
+    "noVoice": "অনর ডিভাইসত এই ভাষার কোনো ভয়েস নাই।",
+    "sameLanguage": "এই ভিডিও আগেরতুন অনর ভাষাত আছে।"
   },
   "digest": {
     "andOthers_one": "{{names}} এবং {{count}} জন",

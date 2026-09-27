@@ -192,41 +192,35 @@ class VideoViewTracker {
    * @param tokenId - The video token ID
    * @param currentTime - Current playback time in seconds
    * @param duration - Total video duration in seconds
-   * @param loops - Whether the element replays itself. A wrap is not a watch.
+   * @param _loops - Whether the element replays itself. Wraps count as views.
    */
-  updateProgress(tokenId: string, currentTime: number, duration: number, loops = false): void {
+  updateProgress(tokenId: string, currentTime: number, duration: number, _loops = false): void {
     // One view per watch, not one view ever. `watchedVideos` closes the current
     // watch so a single play fires once; `reset()` re-arms it, so a replay or a
     // fresh open of the same video is another view. The 24-hour localStorage
     // dedup that used to sit here is gone on purpose — it made the second watch
     // of a video invisible, which is not how a video's view count works
     // anywhere. What is left standing against a reload loop is the API's
-    // 30-minute per-viewer-per-post rate limit.
+    // 1-minute per-viewer-per-post rate limit.
 
     // Playback has jumped back to the top after a real watch — a replay, in the
     // same mounted player. Re-arm, so pressing play again counts again.
     //
-    // Not when the element loops. A loop wraps on its own, with nobody
-    // deciding anything: a short left on screen wrapped every few seconds, each
-    // wrap read as a replay, and the API's 30-second per-viewer limit turned
-    // that into a view every 30 seconds for as long as the tab stayed open. A
-    // phone put down on the desk was manufacturing view counts.
-    //
-    // A deliberate replay of a looping short is indistinguishable from a wrap,
-    // so it counts once per mount there. Leaving and coming back is a fresh
-    // mount and does count again.
+    // Loops count too: every wrap is another view. The API's 1-minute
+    // per-viewer-per-post cooldown is what keeps a parked tab in check.
     const priorProgress = this.watchProgress.get(tokenId) || 0;
-    if (!loops && priorProgress > 1 && currentTime < 1) {
+    if (priorProgress > 1 && currentTime < 1) {
       this.reset(tokenId);
     }
 
-    if (this.watchedVideos.has(tokenId)) return;
-
-    // Track cumulative watch time
+    // Track cumulative watch time — even after this watch has counted, so the
+    // next wrap back to the start is recognised.
     const previousTime = this.watchProgress.get(tokenId) || 0;
     if (currentTime > previousTime) {
       this.watchProgress.set(tokenId, currentTime);
     }
+
+    if (this.watchedVideos.has(tokenId)) return;
     
     const watchedTime = this.watchProgress.get(tokenId) || 0;
     const thresholdSeconds = Math.max(

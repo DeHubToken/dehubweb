@@ -2967,7 +2967,11 @@
     "notEnoughTokens": "配音代幣不足。",
     "notEnoughTokensDescription": "您大約需要 {{needed}} 隻代幣，但持有 {{held}} 隻。",
     "paymentLeftWallet": "侬个代币已经从侬个钱包里出去哉。再按一下“支付”来重试确认。",
-    "paidForMinutes": "支付仔 {{amount}} 个代币，用仔 {{minutes}} 分钟配音。"
+    "paidForMinutes": "支付仔 {{amount}} 个代币，用仔 {{minutes}} 分钟配音。",
+    "menuItem": "配音",
+    "noTranscript": "搿只视频还呒没文字稿，呒没办法配音。晏眼再试试看。",
+    "noVoice": "侬个设备呒没搿种语言个语音。",
+    "sameLanguage": "搿只视频已经是侬个语言了。"
   },
   "digest": {
     "andOthers_one": "{{names}} 和另外 {{count}} 人",

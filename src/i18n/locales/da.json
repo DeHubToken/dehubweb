@@ -5187,7 +5187,11 @@
     "notEnoughTokens": "Ikke nok tokens til dubbing.",
     "notEnoughTokensDescription": "Du behøver omkring {{needed}} tokens og har {{held}}.",
     "paymentLeftWallet": "Dine tokens er forladt din wallet. Tryk på Betal igen for at forsøge at bekræfte den.",
-    "paidForMinutes": "Betalt {{amount}} tokens for {{minutes}} minutters dubbing."
+    "paidForMinutes": "Betalt {{amount}} tokens for {{minutes}} minutters dubbing.",
+    "menuItem": "Dubbing",
+    "noTranscript": "Denne video har endnu ingen transskription, så den kan ikke eftersynkroniseres. Prøv igen senere.",
+    "noVoice": "Din enhed har ingen stemme til dette sprog.",
+    "sameLanguage": "Denne video er allerede på dit sprog."
   },
   "digest": {
     "andOthers_one": "{{names}} og {{count}} andre",

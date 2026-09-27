@@ -4413,7 +4413,11 @@
     "preparing": "Dengê dublajkirî tê amadekirin…",
     "unavailable": "Dengê dublajkirî ji bo vê vîdyoyê peyda nabe.",
     "notEnoughTokens": "توکن کافی برای دوبله کردن وجود ندارد.",
-    "notEnoughTokensDescription": "شما حدود {{needed}} توکن نیاز دارید و {{held}} دارید."
+    "notEnoughTokensDescription": "شما حدود {{needed}} توکن نیاز دارید و {{held}} دارید.",
+    "menuItem": "Dublaj",
+    "noTranscript": "Ev vîdyo hêj transkrîpta wê tune ye, loma nayê dublajkirin. Paşê dîsa biceribîne.",
+    "noVoice": "Di cîhaza te de ji bo vî zimanî deng tune ye.",
+    "sameLanguage": "Ev vîdyo jixwe bi zimanê te ye."
   },
   "support": {
     "title": "پشتگیری",

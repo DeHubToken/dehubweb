@@ -5222,7 +5222,11 @@
     "notEnoughTokens": "Not enough tokens for dubbing.",
     "notEnoughTokensDescription": "You need about {{needed}} tokens and hold {{held}}.",
     "paymentLeftWallet": "Your tokens have left your wallet. Press Pay again to retry confirming it.",
-    "paidForMinutes": "Paid {{amount}} tokens for {{minutes}} minutes of dubbing."
+    "paidForMinutes": "Paid {{amount}} tokens for {{minutes}} minutes of dubbing.",
+    "menuItem": "Dub",
+    "noTranscript": "This video has no transcript yet, so it can't be dubbed. Try again later.",
+    "noVoice": "Your device has no voice for this language.",
+    "sameLanguage": "This video is already in your language."
   },
   "support": {
     "title": "Support",

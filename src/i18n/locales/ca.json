@@ -5155,7 +5155,11 @@
     "notEnoughTokens": "No hi ha prou testimonis per a la doblatge.",
     "notEnoughTokensDescription": "Necessites aproximadament {{needed}} testimonis i en tens {{held}}.",
     "paymentLeftWallet": "Els teus tokens han sortit de la teva cartera. Premeu Pagar de nou per tornar a intentar confirmar-ho.",
-    "paidForMinutes": "Heu pagat {{amount}} tokens per {{minutes}} minuts de doblatge."
+    "paidForMinutes": "Heu pagat {{amount}} tokens per {{minutes}} minuts de doblatge.",
+    "menuItem": "Doblatge",
+    "noTranscript": "Aquest vídeo encara no té transcripció, així que no es pot doblar. Torna-ho a provar més tard.",
+    "noVoice": "El teu dispositiu no té cap veu per a aquest idioma.",
+    "sameLanguage": "Aquest vídeo ja és en el teu idioma."
   },
   "digest": {
     "andOthers_one": "{{names}} i {{count}} més",
