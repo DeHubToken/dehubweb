@@ -63,7 +63,12 @@ async function viaFal(system: string, prompt: string): Promise<string | null> {
   }
 }
 
-async function viaAiChat(system: string, prompt: string): Promise<string | null> {
+async function viaAiChat(
+  system: string,
+  prompt: string,
+  publicContent: boolean,
+  skipGateway: boolean,
+): Promise<string | null> {
   if (!AI_KEY) return null;
   try {
     const res = await aiChat({
@@ -72,7 +77,7 @@ async function viaAiChat(system: string, prompt: string): Promise<string | null>
         { role: 'system', content: system },
         { role: 'user', content: prompt },
       ],
-    }, { label: 'summarize-transcript', publicContent: true });
+    }, { label: 'summarize-transcript', publicContent, skipGateway });
     if (!res.ok) {
       console.error(`ai ${res.status}: ${(await res.text()).slice(0, 300)}`);
       return null;
@@ -85,9 +90,15 @@ async function viaAiChat(system: string, prompt: string): Promise<string | null>
   }
 }
 
-async function ask(system: string, prompt: string): Promise<string | null> {
-  // Cheapest first: Flash-Lite via aiChat, then Haiku on fal.
-  return (await viaAiChat(system, prompt)) ?? (await viaFal(system, prompt));
+/**
+ * Free and direct tiers first, then Haiku on fal, and only then the metered
+ * gateway. `isPublic` is the transcript's own visibility: a paid or
+ * members-only recording must never reach a free tier that trains on input.
+ */
+async function ask(isPublic: boolean, system: string, prompt: string): Promise<string | null> {
+  return (await viaAiChat(system, prompt, isPublic, true))
+    ?? (await viaFal(system, prompt))
+    ?? (await viaAiChat(system, prompt, isPublic, false));
 }
 
 function timedTranscript(segments: Segment[], budget = 12000): string {
@@ -152,7 +163,7 @@ Deno.serve(async (req) => {
 
     const { data: row, error } = await db
       .from('transcripts')
-      .select('id, status, summary, chapters, summary_status, segments, full_text, duration_seconds')
+      .select('id, status, summary, chapters, summary_status, segments, full_text, duration_seconds, visibility')
       .eq('source_kind', target.kind)
       .eq('source_ref', target.ref)
       .maybeSingle();
@@ -172,13 +183,15 @@ Deno.serve(async (req) => {
       return json({ overview: null, summary: null, chapters: [] });
     }
 
-    const overview = await ask(OVERVIEW_PROMPT, `Transcript:\n\n${fullText.slice(0, 8000)}`);
+    const isPublic = row.visibility === 'public';
+    const overview = await ask(isPublic, OVERVIEW_PROMPT, `Transcript:\n\n${fullText.slice(0, 8000)}`);
 
     // Chapters only earn their call on something long enough to navigate.
     const duration = row.duration_seconds ?? (segments.at(-1)?.end ?? 0);
     let chapters = Array.isArray(row.chapters) ? row.chapters : [];
     if (duration >= 120 && segments.length >= 8) {
       const rawChapters = await ask(
+        isPublic,
         CHAPTERS_PROMPT,
         `Recording is ${Math.round(duration)} seconds long.\n\n${timedTranscript(segments)}`,
       );

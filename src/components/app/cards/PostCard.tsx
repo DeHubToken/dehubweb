@@ -253,7 +253,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
     handleShowOriginal,
     sourceLang,
     isTooShort: nothingToTranslate,
-  } = useTranslation(post.content, true, viewRef);
+  } = useTranslation(post.content, true, viewRef, true);
 
   // DeHub links in the body become cards, and the URLs that became cards come
   // out of the text. Run on the text actually being displayed so the strip
@@ -685,7 +685,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             ran a second translation of the same body — and once the first one
             landed, a third of the translated text. */}
         {displayBody?.trim() ? (
-          <TranslatableText text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
+          <TranslatableText publicContent text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
         ) : null}
         {post.articleBody && (/\/app\/post\/|\/newpost\//.test(window.location.pathname) ? (
           <div className="prose prose-invert mt-5 max-w-none text-white/90 prose-headings:text-white prose-a:text-white"><Suspense fallback={<p className="whitespace-pre-wrap">{post.articleBody}</p>}><ReactMarkdown>{post.articleBody}</ReactMarkdown></Suspense></div>

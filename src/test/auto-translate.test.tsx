@@ -54,7 +54,7 @@ const TRANSLATED = 'El programa de staking abre el lunes y las recompensas se pa
 
 async function renderTranslatable(text: string) {
   const { TranslatableText } = await import('@/components/app/TranslatableText');
-  return render(<TranslatableText text={text} as="p" />);
+  return render(<TranslatableText text={text} as="p" publicContent />);
 }
 
 beforeEach(() => {
@@ -129,7 +129,8 @@ describe('auto-translate', () => {
     render(<TranslatableText text={LINE} as="p" auto="chat" />);
 
     await waitFor(() => expect(invoke).toHaveBeenCalled());
-    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: LINE, targetLang: 'es', public: true } });
+    // Chat is private unless the call site marks it public.
+    expect(invoke).toHaveBeenCalledWith('translate-text', { body: { text: LINE, targetLang: 'es' } });
   });
 
   it('leaves a chat line with almost no letters alone', async () => {
@@ -172,9 +173,9 @@ describe('auto-translate', () => {
     const { TranslatableText } = await import('@/components/app/TranslatableText');
     render(
       <>
-        <TranslatableText text={post} as="p" />
-        <TranslatableText text={post} as="p" />
-        <TranslatableText text={post} as="p" />
+        <TranslatableText text={post} as="p" publicContent />
+        <TranslatableText text={post} as="p" publicContent />
+        <TranslatableText text={post} as="p" publicContent />
       </>,
     );
 

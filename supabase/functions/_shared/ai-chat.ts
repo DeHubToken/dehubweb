@@ -88,6 +88,10 @@ export interface AiChatOptions {
   signal?: AbortSignal;
   /** Public text only — lets free tiers that train on input answer. See free-models.ts. */
   publicContent?: boolean;
+  /** Stop before the metered gateway, so the caller can try a cheaper paid tier first. */
+  skipGateway?: boolean;
+  /** Never ask a free tier. For calls whose output moves money. */
+  noFree?: boolean;
 }
 
 /** Rebuilds a JSON response after the body has been read for inspection. */
@@ -189,13 +193,17 @@ export async function aiChat(
 ): Promise<Response> {
   // Free tiers first for the cheap jobs. Pro is asked for by name and is never
   // quietly answered by a smaller free model.
-  if (typeof body.model === 'string' && FREE_ELIGIBLE.has(body.model)) {
+  if (!opts.noFree && typeof body.model === 'string' && FREE_ELIGIBLE.has(body.model)) {
     const free = await tryFree(body, opts);
     if (free) return free;
   }
 
   const direct = await tryDirect(body, opts);
   if (direct) return direct;
+
+  if (opts.skipGateway) {
+    return jsonResponse(JSON.stringify({ error: { message: 'Gateway skipped by caller' } }), 503);
+  }
 
   const gatewayKey = Deno.env.get('LOVABLE_API_KEY');
   if (!gatewayKey) {
