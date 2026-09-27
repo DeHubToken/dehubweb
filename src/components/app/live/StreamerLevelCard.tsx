@@ -26,8 +26,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import { useStreamerProgress } from '@/hooks/use-streamer-progress';
-import type { StreamerProgress } from '@/lib/api/dehub/livestream';
+import { useStreamerProgress, useSelectStreamerBadge } from '@/hooks/use-streamer-progress';
+import type { StreamerCardId, StreamerProgress } from '@/lib/api/dehub/livestream';
 
 export interface StreamerLevelCardProps {
   address?: string | null;
@@ -57,12 +57,16 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
   const { data } = useStreamerProgress(address);
   const [cardsOpen, setCardsOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+  const selection = useSelectStreamerBadge();
+  const { theme } = useAppTheme();
+  const instance = useId();
 
   if (!data || !(data.totalStreams > 0)) return null;
 
   const percent = Math.round(Math.min(1, Math.max(0, data.progressToNext)) * 100);
   const minutesToNext = Math.max(0, data.nextLevelXp - data.xp);
   const earnedCount = data.cards.filter((c) => c.earnedAt).length;
+  const equipped = data.cards.find((card) => card.id === data.selectedBadgeId && card.earnedAt);
 
   return (
     <>
@@ -76,11 +80,14 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
 
         <div className="relative flex flex-wrap items-center justify-center gap-3">
           <div className="shrink-0 w-20 min-h-20 p-2 rounded-xl border border-white/15 bg-white/[0.05] flex flex-col items-center justify-center gap-1 text-center">
+            {equipped ? <div aria-hidden="true" className="w-16 h-16 [&>svg]:w-full [&>svg]:h-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(equipped.id, theme, true, instance) }} /> : <>
             <span className="w-full break-words text-[9px] uppercase tracking-wider text-white/40 leading-snug">{t('live.progress.title')}</span>
             <span className="text-xl font-bold text-white leading-tight">{data.level}</span>
+            </>}
           </div>
 
           <div className="min-w-0 flex-1 basis-32">
+            {equipped && <div className="text-xs text-white/70 mb-1">{t(`live.progress.card.${equipped.id}.name`)}</div>}
             <div className="flex items-center gap-2 text-sm font-semibold text-white">
               <Radio className="w-3.5 h-3.5 text-white/60" />
               <span className="break-words">{t('live.progress.level', { level: data.level })}</span>
@@ -149,7 +156,9 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
             <DialogTitle className="text-white">{t('live.progress.cardsTitle')}</DialogTitle>
             <DialogDescription className="text-white/50">{t('live.progress.rule')}</DialogDescription>
           </DialogHeader>
-          <StreamerCardGrid progress={data} locale={i18n.language} />
+          <p className="text-xs text-white/70" role="status">{selection.isPending ? t('live.progress.savingBadge') : t('live.progress.chooseBadge')}</p>
+          {selection.isError && <p className="text-sm text-white" role="alert">{t('live.progress.saveBadgeError')}</p>}
+          <StreamerCardGrid progress={data} locale={i18n.language} saving={selection.isPending} onSelect={(badgeId) => { if (address) selection.mutate({ address, badgeId }); }} />
           <StreamerRecentList progress={data} locale={i18n.language} />
         </DialogContent>
       </Dialog>
@@ -157,7 +166,7 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
   );
 }
 
-function StreamerCardGrid({ progress, locale }: { progress: StreamerProgress; locale: string }) {
+function StreamerCardGrid({ progress, locale, saving, onSelect }: { progress: StreamerProgress; locale: string; saving: boolean; onSelect: (id: StreamerCardId) => void }) {
   const { t } = useTranslation();
   const { theme } = useAppTheme();
   const instance = useId();
@@ -178,6 +187,12 @@ function StreamerCardGrid({ progress, locale }: { progress: StreamerProgress; lo
               {!earned && <Lock className="h-3 w-3 shrink-0" />}
               {earned ? t('live.progress.earnedOn', { date: formatDate(card!.earnedAt, locale) }) : t('live.progress.locked')}
             </div>
+            {earned && <button type="button" onClick={() => onSelect(id)} disabled={saving || progress.selectedBadgeId === id}
+              aria-pressed={progress.selectedBadgeId === id}
+              className="mt-1 min-h-9 w-full rounded-lg border px-2 py-2 text-xs font-medium disabled:cursor-default"
+              style={{ color: material.text, borderColor: material.edge, borderWidth: progress.selectedBadgeId === id ? 2 : 1, background: material.face }}>
+              {progress.selectedBadgeId === id ? t('live.progress.selectedBadge') : t('live.progress.useBadge')}
+            </button>}
           </div>
         );
       })}
