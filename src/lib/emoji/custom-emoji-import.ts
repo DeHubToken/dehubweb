@@ -12,10 +12,9 @@
  *            JSON list in either shape (see fetchEmojiPack)
  */
 
-import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { discordEmojiUrl, isValidShortcode } from './tokens';
 import { loadShortcodes } from './shortcodes';
-import { dropCustomEmoji, getCustomEmoji, mergeCustomEmojis, type CustomEmoji } from './custom-emoji';
+import { getCustomEmoji } from './custom-emoji';
 
 // ---------------------------------------------------------------------------
 // Parsing what people paste
@@ -116,59 +115,10 @@ export function probeImage(src: string, timeoutMs = 8000): Promise<boolean> {
 }
 
 // ---------------------------------------------------------------------------
-// Writes
+// Upload limits (the add form checks these before uploading)
 
 export const MAX_EMOJI_UPLOAD_BYTES = 2 * 1024 * 1024;
 export const EMOJI_UPLOAD_TYPES = ['image/png', 'image/gif', 'image/webp', 'image/jpeg'];
-
-export async function uploadEmojiImage(file: File, wallet: string): Promise<string> {
-  if (!EMOJI_UPLOAD_TYPES.includes(file.type)) throw new Error('unsupported_type');
-  if (file.size > MAX_EMOJI_UPLOAD_BYTES) throw new Error('too_large');
-  const ext = file.type.split('/')[1].replace('jpeg', 'jpg');
-  const path = `custom-emojis/${wallet.toLowerCase()}/${crypto.randomUUID()}.${ext}`;
-  const client = walletScopedClient(wallet);
-  const { error } = await client.storage
-    .from('community-media')
-    .upload(path, file, { cacheControl: '31536000', contentType: file.type });
-  if (error) throw error;
-  return client.storage.from('community-media').getPublicUrl(path).data.publicUrl;
-}
-
-export interface NewCustomEmoji {
-  shortcode: string;
-  imageUrl: string;
-  animated: boolean;
-  source: string;
-  externalId?: string;
-  category?: string;
-}
-
-export async function addCustomEmojis(items: NewCustomEmoji[], wallet: string): Promise<CustomEmoji[]> {
-  if (!items.length) return [];
-  const rows = items.map((i) => ({
-    shortcode: i.shortcode,
-    image_url: i.imageUrl,
-    animated: i.animated,
-    source: i.source,
-    external_id: i.externalId ?? null,
-    category: i.category ?? null,
-    created_by: wallet.toLowerCase(),
-  }));
-  const { data, error } = await walletScopedClient(wallet)
-    .from('custom_emojis' as never)
-    .insert(rows as never)
-    .select('id, shortcode, image_url, animated, source, category, created_by');
-  if (error) throw error;
-  const added = (data ?? []) as unknown as CustomEmoji[];
-  mergeCustomEmojis(added);
-  return added;
-}
-
-export async function removeCustomEmoji(id: string, wallet: string): Promise<void> {
-  const { error } = await walletScopedClient(wallet).from('custom_emojis' as never).delete().eq('id', id);
-  if (error) throw error;
-  dropCustomEmoji(id);
-}
 
 // ---------------------------------------------------------------------------
 // Packs

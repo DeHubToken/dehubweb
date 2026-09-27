@@ -43,7 +43,7 @@ export const ROUTE_SEGMENTS = [
   'auth', 'bounty', 'bridge', 'builder', 'cinema', 'communities', 'connect', 'converter', 'creator', 'creators',
   'delete-account', 'depin', 'dex', 'docs', 'editor', 'events', 'explore', 'features',
   'governance', 'dao', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard',
-  'mcp', 'mobile-preview', 'music', 'newpost', 'posts', 'premium', 'pricing',
+  'mcp', 'mobile-preview', 'music', 'newpost', 'packs', 'posts', 'premium', 'pricing',
   'prompt', 'r',
   'radio', 'raffle', 'requests', 'shorts', 'stage', 'stages', 'stake', 'stats', 'top-100',
   'tv',
