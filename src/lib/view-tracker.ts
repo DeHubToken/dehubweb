@@ -8,9 +8,9 @@
  *   platform. No local suppression; the API's 30-minute per-viewer-per-post
  *   rate limit is what stops a reload loop.
  * - Feed items (images/posts): Batch after visibility duration, sent together
- * - Deduplication: 30-minute per-user-per-post via localStorage, feed items
- *   only. After that, seeing the post again is another view, the way X counts
- *   impressions.
+ * - Every impression is a view: no dwell time, no watch threshold, no client
+ *   cooldown. A video counts the moment it plays; a feed item counts each time
+ *   it comes into view.
  *
  * Signed-out visitors count too. The DeHub API requires a valid JWT on its view
  * endpoints, so views from visitors with no session go to the `anon-views`
@@ -28,7 +28,7 @@ const VIEW_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes, matches the API cooldown
 
 // Batch configuration
 const BATCH_INTERVAL_MS = 5000; // Send batch every 5 seconds
-const MIN_VISIBILITY_MS = 2000; // Post must be visible for 2 seconds to count
+const MIN_VISIBILITY_MS = 0; // Any impression counts — no dwell requirement
 const MAX_BATCH_SIZE = 50; // API limit
 
 // ============================================================================
@@ -79,11 +79,6 @@ function saveViewedPosts(records: ViewedRecord[]): void {
   } catch {
     // Storage full or unavailable - silently fail
   }
-}
-
-function hasBeenViewed(tokenId: string): boolean {
-  const records = getViewedPosts();
-  return records.some(r => r.tokenId === tokenId);
 }
 
 function markAsViewed(tokenIds: string[]): void {
@@ -188,8 +183,9 @@ class VideoViewTracker {
   private watchedVideos = new Set<string>();
   private watchProgress = new Map<string, number>(); // tokenId -> seconds watched
 
-  private readonly WATCH_THRESHOLD_PERCENT = 0.1; // 10% of video
-  private readonly MIN_WATCH_SECONDS = 3; // At least 3 seconds
+  // Any playback is a view. No watch-time or percentage threshold.
+  private readonly WATCH_THRESHOLD_PERCENT = 0;
+  private readonly MIN_WATCH_SECONDS = 0;
 
   /**
    * Update watch progress for a video
@@ -220,7 +216,7 @@ class VideoViewTracker {
     // so it counts once per mount there. Leaving and coming back is a fresh
     // mount and does count again.
     const priorProgress = this.watchProgress.get(tokenId) || 0;
-    if (!loops && priorProgress > this.MIN_WATCH_SECONDS && currentTime < 1) {
+    if (!loops && priorProgress > 1 && currentTime < 1) {
       this.reset(tokenId);
     }
 
@@ -239,7 +235,7 @@ class VideoViewTracker {
     );
     
     // Check if threshold met
-    if (watchedTime >= thresholdSeconds) {
+    if (watchedTime > 0 && watchedTime >= thresholdSeconds) {
       this.fireView(tokenId);
     }
   }
@@ -291,16 +287,10 @@ class FeedViewTracker {
   private visibilityStart = new Map<string, number>(); // tokenId -> timestamp when became visible
   private pendingViews = new Set<string>(); // tokenIds ready to be sent
   private batchTimer: NodeJS.Timeout | null = null;
-  private alreadySent = new Map<string, number>(); // tokenId -> sent at, in-memory dedup when storage is unavailable
   
   constructor() {
     // Start the batch interval
     this.startBatchInterval();
-  }
-
-  private sentRecently(tokenId: string): boolean {
-    const sentAt = this.alreadySent.get(tokenId);
-    return sentAt !== undefined && Date.now() - sentAt < VIEW_EXPIRY_MS;
   }
 
   private startBatchInterval(): void {
@@ -315,9 +305,7 @@ class FeedViewTracker {
    * Mark an item as visible (call when item enters viewport)
    */
   onVisible(tokenId: string): void {
-    // Skip if already sent or pending
-    if (this.sentRecently(tokenId) || hasBeenViewed(tokenId)) return;
-    
+    // Every time an item comes into view is a new impression.
     if (!this.visibilityStart.has(tokenId)) {
       this.visibilityStart.set(tokenId, Date.now());
     }
@@ -333,9 +321,7 @@ class FeedViewTracker {
       
       // If visible long enough, queue for batch
       if (visibleDuration >= MIN_VISIBILITY_MS) {
-        if (!this.sentRecently(tokenId) && !hasBeenViewed(tokenId)) {
-          this.pendingViews.add(tokenId);
-        }
+        this.pendingViews.add(tokenId);
       }
     }
     
@@ -352,9 +338,9 @@ class FeedViewTracker {
       const visibleDuration = now - startTime;
       
       if (visibleDuration >= MIN_VISIBILITY_MS) {
-        if (!this.sentRecently(tokenId) && !hasBeenViewed(tokenId)) {
-          this.pendingViews.add(tokenId);
-        }
+        // Once per impression; re-arms when the item leaves and comes back.
+        this.pendingViews.add(tokenId);
+        this.visibilityStart.delete(tokenId);
       }
     }
   }
@@ -376,7 +362,6 @@ class FeedViewTracker {
     // Remove from pending
     for (const id of tokenIds) {
       this.pendingViews.delete(id);
-      this.alreadySent.set(id, Date.now());
     }
     
     // Mark as viewed locally
