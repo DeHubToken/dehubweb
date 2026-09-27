@@ -6273,5 +6273,10 @@
     "farcasterNote": "Farcaster داوات لێدەکات dehub لە ئەپی Farcaster پەسەند بکەیت، و هێشتا پۆستی خشتەکراو وەرناگرێت.",
     "skippedScheduleToast": "{{platforms}} تێپەڕێنران: هێشتا پۆستی خشتەکراو لەوێ پشتگیری ناکرێت.",
     "skippedOtherToast": "{{platforms}} تێپەڕێنران: نەیانتوانی ئەم پۆستە وەربگرن."
+  },
+  "dm": {
+    "planRestricted": "Ev bikarhêner ji bo wergirtina peyaman abonetiyê dixwaze.",
+    "planTypeNotAllowed": "Plana vî afirîner vî cureyê peyamê qebûl nake.",
+    "planMinTip": "Ji bo vî afirîner bexşîş divê herî kêm {{amount}} DHB be."
   }
 }

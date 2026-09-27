@@ -5111,5 +5111,10 @@
     "farcasterNote": "पन्ना जेवन \"टेम्पलेटःCountry data Farcaster\" से जुड़ल बा - विकिपीडिया पर अनुप्रेषित बाटे",
     "skippedScheduleToast": "{{platforms}} छोड़ दिहल गइल: ओइजा अबहीं शेड्यूल पोस्ट ना चलेला।",
     "skippedOtherToast": "{{platforms}} छोड़ दिहल गइल: ऊ ई पोस्ट ना ले पवलस।"
+  },
+  "dm": {
+    "planRestricted": "ई यूजर के संदेश पावे खातिर सब्सक्रिप्शन चाहीं।",
+    "planTypeNotAllowed": "एह क्रिएटर के प्लान में अइसन संदेश के अनुमति नइखे।",
+    "planMinTip": "एह क्रिएटर खातिर टिप कम से कम {{amount}} DHB होखे के चाहीं।"
   }
 }

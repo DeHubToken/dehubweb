@@ -7089,5 +7089,10 @@
     "farcasterNote": "Farcaster מבקשת ממך לאשר את ביטול ההצטרפות לאפליקציה Farcaster, והיא עדיין לא יכולה לפרסם פוסטים מתוזמנים.",
     "skippedScheduleToast": "דילגנו על {{platforms}}: עדיין אין תמיכה בפוסטים מתוזמנים שם.",
     "skippedOtherToast": "דילגו על {{platforms}}: הם לא יכלו לקבל את הפוסט הזה."
+  },
+  "dm": {
+    "planRestricted": "משתמש זה דורש מינוי כדי לקבל הודעות.",
+    "planTypeNotAllowed": "התוכנית של יוצר זה אינה מאפשרת סוג הודעה זה.",
+    "planMinTip": "הטיפ ליוצר זה חייב להיות לפחות {{amount}} DHB."
   }
 }

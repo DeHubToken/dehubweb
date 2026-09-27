@@ -5200,5 +5200,10 @@
     "farcasterNote": "Farcaster bittet dich, dehub i de Farcaster-App z'bestätige, und cha no kei geplante Beiträge übernäh.",
     "skippedScheduleToast": "Übersprungen {{platforms}}: geplanti Beiträge sind dort no nöd unterstützt.",
     "skippedOtherToast": "Übersprungen {{platforms}}: sie chönd dä Beitrag nöd übernäh."
+  },
+  "dm": {
+    "planRestricted": "Dä Benutzer bruucht es Abo, zum Nachrichte übercho.",
+    "planTypeNotAllowed": "Dä Plan vo dem Creator erlaubt die Art vo Nachricht nöd.",
+    "planMinTip": "S Trinkgäld für dä Creator mues mindestens {{amount}} DHB sii."
   }
 }

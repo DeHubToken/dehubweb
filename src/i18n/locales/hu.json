@@ -7270,5 +7270,10 @@
     "farcasterNote": "A Farcaster arra kér, hogy hagyd jóvá a dehub alkalmazást a Farcaster alkalmazásban, és még nem tud ütemezett bejegyzéseket küldeni.",
     "skippedScheduleToast": "{{platforms}} kihagyva: az ütemezett bejegyzések még nincsenek támogatva.",
     "skippedOtherToast": "{{platforms}} kihagyva: nem tudta felvenni ezt a bejegyzést."
+  },
+  "dm": {
+    "planRestricted": "Ez a felhasználó előfizetést kér az üzenetek fogadásához.",
+    "planTypeNotAllowed": "Ennek az alkotónak a csomagja nem engedi ezt az üzenettípust.",
+    "planMinTip": "A borravalónak legalább {{amount}} DHB-nek kell lennie ennél az alkotónál."
   }
 }

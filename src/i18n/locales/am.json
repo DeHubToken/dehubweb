@@ -5067,5 +5067,10 @@
     "farcasterNote": "Farcaster አንተ Farcaster መተግበሪያ ውስጥ dehub ማጽደቅ ይጠይቃል, እና ገና የታቀደ ልጥፎች ሊወስድ አይችልም.",
     "skippedScheduleToast": "Skipped {{platforms}}: የታቀዱ ልጥፎች ገና አልተደገፉም ።",
     "skippedOtherToast": "{{platforms}} ተዘለዋል፦ ይህን ልጥፍ መቀበል አልቻሉም።"
+  },
+  "dm": {
+    "planRestricted": "ይህ ተጠቃሚ መልዕክቶችን ለመቀበል ምዝገባ ይፈልጋል።",
+    "planTypeNotAllowed": "የዚህ ፈጣሪ እቅድ ይህን አይነት መልዕክት አይፈቅድም።",
+    "planMinTip": "ለዚህ ፈጣሪ ቲፕ ቢያንስ {{amount}} DHB መሆን አለበት።"
   }
 }

@@ -7360,5 +7360,10 @@
     "farcasterNote": "„Farcaster“ prašo patvirtinti „Farcaster“ programėlėje pateiktą informaciją, tačiau ji dar negali priimti suplanuotų įrašų.",
     "skippedScheduleToast": "Praleista {{platforms}}: suplanuoti įrašai ten dar nepalaikomi.",
     "skippedOtherToast": "Praleido {{platforms}}: jie negalėjo priimti šio įrašo."
+  },
+  "dm": {
+    "planRestricted": "Šiam naudotojui reikia prenumeratos, kad gautų žinutes.",
+    "planTypeNotAllowed": "Šio kūrėjo planas neleidžia tokio tipo žinučių.",
+    "planMinTip": "Arbatpinigiai šiam kūrėjui turi būti bent {{amount}} DHB."
   }
 }

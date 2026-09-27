@@ -7267,5 +7267,10 @@
     "farcasterNote": "Farcaster et demana que aprovi el deshub a l'aplicació Farcaster, i encara no pot acceptar publicacions programades.",
     "skippedScheduleToast": "Omet {{platforms}}: les publicacions programades encara no són compatibles.",
     "skippedOtherToast": "S'ha saltat {{platforms}}: no han pogut acceptar aquesta publicació."
+  },
+  "dm": {
+    "planRestricted": "Aquest usuari requereix una subscripció per rebre missatges.",
+    "planTypeNotAllowed": "El pla d'aquest creador no permet aquest tipus de missatge.",
+    "planMinTip": "La propina ha de ser d'almenys {{amount}} DHB per a aquest creador."
   }
 }

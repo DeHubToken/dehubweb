@@ -7158,5 +7158,10 @@
     "farcasterNote": "Farcaster îți cere să aprobi dehub în aplicația Farcaster și nu poate prelua încă postările programate.",
     "skippedScheduleToast": "Ignorat {{platforms}}: postările programate nu sunt încă acceptate acolo.",
     "skippedOtherToast": "A omis {{platforms}}: nu a putut accepta această postare."
+  },
+  "dm": {
+    "planRestricted": "Acest utilizator necesită un abonament pentru a primi mesaje.",
+    "planTypeNotAllowed": "Planul acestui creator nu permite acest tip de mesaj.",
+    "planMinTip": "Bacșișul pentru acest creator trebuie să fie de cel puțin {{amount}} DHB."
   }
 }

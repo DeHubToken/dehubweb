@@ -7360,5 +7360,10 @@
     "farcasterNote": "Farcaster lūdz apstiprināt atmešanu Farcaster lietotnē, un tā vēl nevar uzņemt ieplānotās ziņas.",
     "skippedScheduleToast": "Izlaists {{platforms}}: ieplānotās ziņas tur vēl netiek atbalstītas.",
     "skippedOtherToast": "Izlaida {{platforms}}: viņi nevarēja ieņemt šo ziņu."
+  },
+  "dm": {
+    "planRestricted": "Šim lietotājam ziņu saņemšanai nepieciešams abonements.",
+    "planTypeNotAllowed": "Šī autora plāns neatļauj šāda veida ziņu.",
+    "planMinTip": "Dzeramnaudai šim autoram jābūt vismaz {{amount}} DHB."
   }
 }

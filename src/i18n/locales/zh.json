@@ -7385,5 +7385,10 @@
     "farcasterNote": "Farcaster要求您在Farcaster应用程序中批准dehub ，但它尚无法接受预定帖子。",
     "skippedScheduleToast": "已跳过{{platforms}} ：目前尚不支持定时帖子。",
     "skippedOtherToast": "已跳过{{platforms}} ：他们无法发表此帖子。"
+  },
+  "dm": {
+    "planRestricted": "该用户需要订阅才能接收消息。",
+    "planTypeNotAllowed": "该创作者的方案不允许发送此类消息。",
+    "planMinTip": "给该创作者的打赏至少为 {{amount}} DHB。"
   }
 }

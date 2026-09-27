@@ -5204,5 +5204,10 @@
     "farcasterNote": "Farcaster njaluk sampeyan nyetujui dehub ing aplikasi Farcaster, lan durung bisa njupuk kiriman sing dijadwalake.",
     "skippedScheduleToast": "Liwat {{platforms}}: kiriman sing dijadwalake durung didhukung ing kana.",
     "skippedOtherToast": "Liwat {{platforms}}: dheweke ora bisa njupuk kiriman iki."
+  },
+  "dm": {
+    "planRestricted": "Pangguna iki mbutuhake langganan kanggo nampa pesen.",
+    "planTypeNotAllowed": "Paket kreator iki ora ngidini jinis pesen iki.",
+    "planMinTip": "Tip kanggo kreator iki paling sithik {{amount}} DHB."
   }
 }

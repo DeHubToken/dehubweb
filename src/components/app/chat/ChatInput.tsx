@@ -24,7 +24,7 @@ import {
   validateAttachment,
 } from '@/lib/attachments';
 
-interface ChatInputSendArgs {
+export interface ChatInputSendArgs {
   content: string;
   type: 'msg' | 'media' | 'gif' | 'voice';
   mediaFile?: File;
@@ -53,6 +53,11 @@ interface ChatInputProps {
    * untouched (message, attachments) so a cancelled send loses nothing.
    */
   confirmBeforeSend?: () => Promise<boolean> | boolean;
+  /**
+   * Checked before anything leaves the composer. Returning false (after the
+   * parent has said why) keeps the message and attachments in place.
+   */
+  canSend?: (pending: Pick<ChatInputSendArgs, 'type' | 'mediaFile'>) => boolean;
   /** Message being replied to */
   replyTo?: Message | null;
   /** Cancel the current reply */
@@ -79,7 +84,7 @@ interface ChatInputProps {
   draftKey?: string | null;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey }: ChatInputProps) {
   const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
   // initialText can arrive a tick after mount (MessagesPage sets the prefill
@@ -230,6 +235,10 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   const handleSend = async () => {
     if (sendDisabled || isSendingFee) return;
+    const pendingFile = imageFile || docFile || undefined;
+    const pendingType: ChatInputSendArgs['type'] = audioPreview ? 'voice' : pendingFile ? 'media' : 'msg';
+    if (pendingType === 'msg' && !message.trim()) return;
+    if (canSend && !canSend({ type: pendingType, mediaFile: audioPreview ? audioPreview.file : pendingFile })) return;
     if (confirmBeforeSend && !(await confirmBeforeSend())) return;
     // Whatever is on the rail was drafted against a thread that no longer ends
     // where it did, so it goes down with the send and comes back up on the
@@ -306,6 +315,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   };
 
   const handleGifSelect = (gifUrl: string) => {
+    if (canSend && !canSend({ type: 'gif' })) return;
     onSendMessage({ content: '', type: 'gif', gifUrl });
   };
 

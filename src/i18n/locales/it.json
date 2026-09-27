@@ -7380,5 +7380,10 @@
     "farcasterNote": "Farcaster ti chiede di approvare dehub nell'app Farcaster e non può ancora accettare post programmati.",
     "skippedScheduleToast": "Saltato {{platforms}}: i post programmati non sono ancora supportati.",
     "skippedOtherToast": "Saltato {{platforms}}: non hanno potuto accettare questo post."
+  },
+  "dm": {
+    "planRestricted": "Questo utente richiede un abbonamento per ricevere messaggi.",
+    "planTypeNotAllowed": "Il piano di questo creator non consente questo tipo di messaggio.",
+    "planMinTip": "La mancia deve essere di almeno {{amount}} DHB per questo creator."
   }
 }

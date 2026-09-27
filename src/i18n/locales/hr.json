@@ -7272,5 +7272,10 @@
     "farcasterNote": "Farcaster od tebe traži da odobri dehub u aplikaciji Farcaster i još ne može primati zakazane objave.",
     "skippedScheduleToast": "Preskočeno {{platforms}}: planirane objave još nisu podržane.",
     "skippedOtherToast": "Preskočeno {{platforms}}: korisnik nije mogao preuzeti ovu objavu."
+  },
+  "dm": {
+    "planRestricted": "Ovaj korisnik zahtijeva pretplatu za primanje poruka.",
+    "planTypeNotAllowed": "Plan ovog kreatora ne dopušta ovu vrstu poruke.",
+    "planMinTip": "Napojnica za ovog kreatora mora biti najmanje {{amount}} DHB."
   }
 }

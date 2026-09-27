@@ -5265,5 +5265,10 @@
     "farcasterNote": "Farcaster appii Farcaster keessatti dehub akka raggaasiftan isin gaafatee, ammatti maxxansa sagantaa qabame fudhachuu hin danda&#39;u.",
     "skippedScheduleToast": "{{platforms}} darbeera: barreeffamoonni sagantaa qaban ammallee achitti hin deeggaraman.",
     "skippedOtherToast": "{{platforms}} darbeera: barreeffama kana fudhachuu hin dandeenye."
+  },
+  "dm": {
+    "planRestricted": "Fayyadamaan kun ergaa fudhachuuf maallaqa galmee barbaada.",
+    "planTypeNotAllowed": "Karoorri uumaa kanaa gosa ergaa kanaa hin hayyamu.",
+    "planMinTip": "Tip uumaa kanaaf yoo xiqqaate {{amount}} DHB ta'uu qaba."
   }
 }

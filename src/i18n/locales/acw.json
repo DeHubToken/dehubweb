@@ -5162,5 +5162,10 @@
     "farcasterNote": "Farcaster يطلب منك توافق على dehub في تطبيق Farcaster، وما يقدر يضيف البوستات المجدولة الآن.",
     "skippedScheduleToast": "تم تخطي {{platforms}}: البوستات المجدولة ما زالت غير مدعومة هناك.",
     "skippedOtherToast": "تم تخطي {{platforms}}: ما قدروا يضيفوا هالبوست."
+  },
+  "dm": {
+    "planRestricted": "هذا المستخدم يحتاج اشتراك عشان يستقبل رسائل.",
+    "planTypeNotAllowed": "خطة هذا المنشئ ما تسمح بهذا النوع من الرسائل.",
+    "planMinTip": "لازم تكون الإكرامية على الأقل {{amount}} DHB لهذا المنشئ."
   }
 }

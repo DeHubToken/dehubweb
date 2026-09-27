@@ -7235,5 +7235,10 @@
     "farcasterNote": "Farcaster palub sul dehubi Farcasteri rakenduses kinnitada ja see ei saa veel plaanitud postitusi vastu võtta.",
     "skippedScheduleToast": "Jäeti vahele {{platforms}}: ajastatud postitusi seal veel ei toetata.",
     "skippedOtherToast": "{{platforms}} jäi vahele: ta ei saanud seda postitust vastu võtta."
+  },
+  "dm": {
+    "planRestricted": "See kasutaja nõuab sõnumite saamiseks tellimust.",
+    "planTypeNotAllowed": "Selle looja pakett ei luba seda tüüpi sõnumit.",
+    "planMinTip": "Selle looja jootraha peab olema vähemalt {{amount}} DHB."
   }
 }

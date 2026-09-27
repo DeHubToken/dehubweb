@@ -5267,5 +5267,10 @@
     "farcasterNote": "Farcaster sizdan Farcaster ilovasida dehubni tasdiqlashingizni so&#39;raydi va u hali rejalashtirilgan postlarni qabul qila olmaydi.",
     "skippedScheduleToast": "{{platforms}} o&#39;tkazib yuborildi: rejalashtirilgan postlar u yerda hali qo&#39;llab-quvvatlanmaydi.",
     "skippedOtherToast": "{{platforms}} o&#39;tkazib yuborildi: ular bu postni ololmaydilar."
+  },
+  "dm": {
+    "planRestricted": "Bu foydalanuvchi xabar olish uchun obuna talab qiladi.",
+    "planTypeNotAllowed": "Bu ijodkorning rejasi bunday turdagi xabarga ruxsat bermaydi.",
+    "planMinTip": "Bu ijodkor uchun choychaqa kamida {{amount}} DHB bo‘lishi kerak."
   }
 }

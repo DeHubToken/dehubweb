@@ -44,6 +44,8 @@ interface DmTipDialogProps {
   recipientAddress: string;
   recipientName: string;
   conversationId: string;
+  /** Smallest tip the recipient's DM plan accepts, in DHB. */
+  minAmount?: number;
 }
 
 export function DmTipDialog({
@@ -52,6 +54,7 @@ export function DmTipDialog({
   recipientAddress,
   recipientName,
   conversationId,
+  minAmount = 0,
 }: DmTipDialogProps) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
@@ -82,6 +85,10 @@ export function DmTipDialog({
 
   const handleTip = async () => {
     if (!isValidAmount) return;
+    if (minAmount > 0 && parsedAmount < minAmount) {
+      toast.warning(t('dm.planMinTip', { amount: minAmount.toLocaleString() }));
+      return;
+    }
     try {
       const profile = await getAccountInfo(recipientAddress);
       if (profile?.hideBadgeAndBalance) {
@@ -180,7 +187,7 @@ export function DmTipDialog({
           <div>
             <p className="text-white/60 text-xs mb-2">Quick amounts</p>
             <div className="flex flex-wrap gap-2">
-              {QUICK_AMOUNTS.map((val) => (
+              {QUICK_AMOUNTS.filter((val) => val >= minAmount).map((val) => (
                 <button
                   key={val}
                   type="button"
@@ -204,7 +211,7 @@ export function DmTipDialog({
               <img src={dehubCoin} alt="DHB" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
               <Input
                 type="number"
-                min={1}
+                min={Math.max(1, minAmount)}
                 step={0.1}
                 placeholder="Enter amount"
                 value={amount}

@@ -16,7 +16,7 @@ import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ChatInput } from './ChatInput';
+import { ChatInput, type ChatInputSendArgs } from './ChatInput';
 import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
@@ -27,7 +27,7 @@ import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, 
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useBannedAccount } from '@/hooks/use-banned-account';
-import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
+import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DMMessageType, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { BadgedName } from '@/components/app/BadgedName';
@@ -877,6 +877,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
+  const [planRules, setPlanRules] = useState<Awaited<ReturnType<typeof getDMPlanSettings>> | null>(null);
   /**
    * Stable for the life of the thread. Keyed on conversation.id this wrote to
    * "…-new_0x<addr>" for the first few seconds of a brand new chat and to the
@@ -1103,16 +1104,47 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     const otherUserData = otherUser as any;
     const planId = otherUserData?.dmPlanId;
     if (!planId) {
+      setPlanRules(null);
       setDmGateChecked(true);
       return;
     }
     getDMPlanSettings(planId)
       .then((settings) => {
         setDmGated(!settings.enabled);
+        setPlanRules(settings);
         setDmGateChecked(true);
       })
       .catch(() => setDmGateChecked(true));
   }, [otherUser]);
+
+  // Beyond switching DMs off, a creator's plan can narrow which kinds of
+  // message go through and set a floor on tips.
+  const planMinTip = planRules?.minTipDhb ?? 0;
+  const planAllows = (kind: DMMessageType): boolean => {
+    const allowed = planRules?.allowedMessageTypes;
+    return !Array.isArray(allowed) || allowed.length === 0 || allowed.includes(kind);
+  };
+  /** False (and says why) when the peer's plan does not take this send. */
+  const planAllowsSend = ({ type, mediaFile }: Pick<ChatInputSendArgs, 'type' | 'mediaFile'>): boolean => {
+    const kind: DMMessageType =
+      type === 'msg' ? 'text'
+      : type === 'gif' ? 'gif'
+      : type === 'voice' ? 'audio'
+      : mediaFile?.type.startsWith('video/') ? 'video'
+      : 'image';
+    if (!planAllows(kind)) {
+      toast.warning(tr('dm.planTypeNotAllowed'));
+      return false;
+    }
+    return true;
+  };
+  const openTipDialog = () => {
+    if (!planAllows('tip')) {
+      toast.warning(tr('dm.planTypeNotAllowed'));
+      return;
+    }
+    setShowTipDialog(true);
+  };
 
   const {
     messages,
@@ -2168,7 +2200,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         onSendMessage={handleSendMessage}
         replyTo={composerReplyTo}
         onCancelReply={() => setReplyTarget(null)}
-        onTipClick={feeRequired ? undefined : () => setShowTipDialog(true)}
+        onTipClick={feeRequired ? undefined : openTipDialog}
+        canSend={planAllowsSend}
         sendDisabled={accountBanned || !!feeSendDisabled || (initError && isVirtualConv)}
         sendDisabledReason={
           accountBanned
@@ -2245,6 +2278,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         recipientAddress={otherUser?.address || ''}
         recipientName={displayName}
         conversationId={resolvedConversationId}
+        minAmount={planMinTip}
       />
 
       {/* DM Gated Banner */}
@@ -2252,9 +2286,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         <div className="absolute inset-0 bg-zinc-900/95 backdrop-blur-sm flex items-center justify-center z-20 rounded-lg">
           <div className="text-center px-6">
             <ShieldBan className="w-12 h-12 text-zinc-500 mx-auto mb-3" />
-            <h3 className="text-white font-semibold text-lg mb-1">DMs Restricted</h3>
-            <p className="text-zinc-400 text-sm">
-              This user requires a subscription to receive messages.
+            <p className="text-white font-semibold text-base">
+              {tr('dm.planRestricted')}
             </p>
           </div>
         </div>

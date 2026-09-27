@@ -7588,5 +7588,10 @@
     "farcasterNote": "Farcaster meminta anda meluluskan dehub dalam aplikasi Farcaster, dan ia belum boleh menerima hantaran berjadual.",
     "skippedScheduleToast": "Dilangkau {{platforms}}: hantaran berjadual belum disokong di sana.",
     "skippedOtherToast": "Dilangkau {{platforms}}: mereka tidak dapat menerima hantaran ini."
+  },
+  "dm": {
+    "planRestricted": "Pengguna ini memerlukan langganan untuk menerima mesej.",
+    "planTypeNotAllowed": "Pelan pencipta ini tidak membenarkan jenis mesej ini.",
+    "planMinTip": "Tip untuk pencipta ini mestilah sekurang-kurangnya {{amount}} DHB."
   }
 }

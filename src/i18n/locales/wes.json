@@ -4074,5 +4074,10 @@
     "farcasterNote": "Farcaster go ask yu fo approve dehub fo di Farcaster app, an e no fit tek scheduled post dem yet.",
     "skippedScheduleToast": "Skipped {{platforms}}: scheduled posts aren't supported there yet.",
     "skippedOtherToast": "Wi lef {{platforms}}: dem no fit tek dis post."
+  },
+  "dm": {
+    "planRestricted": "Dis pipul need subscription before e fit get message.",
+    "planTypeNotAllowed": "Dis creator yi plan no allow dis kain message.",
+    "planMinTip": "Tip for dis creator must be at least {{amount}} DHB."
   }
 }

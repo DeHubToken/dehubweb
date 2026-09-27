@@ -5143,5 +5143,10 @@
     "farcasterNote": "Farcaster आपको Farcaster App में dehub को मंजूरी देने के लिए कहता है, और यह अभी तक अनुसूचित पोस्ट नहीं ले सकता है ।",
     "skippedScheduleToast": "{{platforms}} छोड़ देल गेल: हुआँ अभी शेड्यूल पोस्ट न चलऽ हे।",
     "skippedOtherToast": "{{platforms}} छोड़ देल गेल: ऊ ई पोस्ट न ले सकलक।"
+  },
+  "dm": {
+    "planRestricted": "ई यूजर के संदेस पावे लेल सब्सक्रिप्सन चाही।",
+    "planTypeNotAllowed": "ई क्रिएटर के प्लान में अइसन संदेस के अनुमति नञ हे।",
+    "planMinTip": "ई क्रिएटर लेल टिप कम सँ कम {{amount}} DHB होए के चाही।"
   }
 }
