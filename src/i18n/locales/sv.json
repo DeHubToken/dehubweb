@@ -5228,6 +5228,7 @@
   },
   "reactionInfo": {
     "title": "Reaktioner",
+    "seeWhoReacted": "Se vem som reagerade",
     "privateTitle": "Reaktionerna är privata",
     "privateDescription": "Endast inläggsförfattaren kan se den här listan.",
     "empty": "Inga reaktioner ännu",

@@ -3318,6 +3318,7 @@
   },
   "reactionInfo": {
     "title": "Reakcie",
+    "seeWhoReacted": "Pozri, kto reagoval",
     "privateTitle": "Reakcie sú súkromné",
     "privateDescription": "Tento zoznam môže zobraziť iba autor príspevku.",
     "empty": "Zatiaľ žiadne reakcie",

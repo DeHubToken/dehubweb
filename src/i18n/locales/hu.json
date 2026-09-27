@@ -5228,6 +5228,7 @@
   },
   "reactionInfo": {
     "title": "Reakciók",
+    "seeWhoReacted": "Lásd, ki reagált",
     "privateTitle": "A reakciók privátak",
     "privateDescription": "Ezt a listát csak a bejegyzés szerzője tekintheti meg.",
     "empty": "Még nincsenek reakciók",

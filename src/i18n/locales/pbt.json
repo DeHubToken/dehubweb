@@ -3113,6 +3113,7 @@
   },
   "reactionInfo": {
     "title": "عکس العملونه",
+    "seeWhoReacted": "وګورئ چا غبرګون ښودلی",
     "privateTitle": "ځواب ورکول private ته ځواب لرې کړه",
     "privateDescription": "یوازې د ویب پا ownerې مالک کولی شي دا پا viewه وګوري.",
     "empty": "تر اوسه کوم غبرګون نه دی ښودل شوی",

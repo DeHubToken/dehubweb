@@ -3134,6 +3134,7 @@
   },
   "reactionInfo": {
     "title": "رد عمل",
+    "seeWhoReacted": "ڏسو ته ڪنهن رد عمل ڪيو",
     "privateTitle": "رد عمل نجي آهن",
     "privateDescription": "صرف پوسٽ جو ليکڪ هي فهرست ڏسي سگهي ٿو.",
     "empty": "ابھي ڪوئي رد عمل نه آهي",

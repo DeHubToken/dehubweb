@@ -3213,6 +3213,7 @@
   },
   "reactionInfo": {
     "title": "Ukusabela",
+    "seeWhoReacted": "Bona ukuthi ubani osabele",
     "privateTitle": "Ukusabela kuyimfihlo",
     "privateDescription": "Umbhali wephosti kuphela ongabuka lolu hlu.",
     "empty": "Akukho ukusabela okwamanje",

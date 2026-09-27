@@ -5230,6 +5230,7 @@
   },
   "reactionInfo": {
     "title": "Reakcije",
+    "seeWhoReacted": "Pogledaj tko je reagirao",
     "privateTitle": "Reakcije su privatne",
     "privateDescription": "Samo autor objave može vidjeti ovaj popis.",
     "empty": "Nema još reakcija",

@@ -3197,6 +3197,7 @@
   },
   "reactionInfo": {
     "title": "Reagimet",
+    "seeWhoReacted": "Shih kush ka reaguar",
     "privateTitle": "Reagimet janë private",
     "privateDescription": "Këtë listë mund ta shikojë vetëm autori i postimit.",
     "empty": "Ende nuk ka reagime",

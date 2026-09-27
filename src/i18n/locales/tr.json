@@ -5345,6 +5345,7 @@
   },
   "reactionInfo": {
     "title": "Tepkiler",
+    "seeWhoReacted": "Kimlerin tepki verdiğini gör",
     "privateTitle": "Tepkiler gizlidir",
     "privateDescription": "Bu listeyi yalnızca gönderinin sahibi görebilir.",
     "empty": "Henüz tepki yok",

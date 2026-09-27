@@ -5140,6 +5140,7 @@
   },
   "reactionInfo": {
     "title": "Reaksies",
+    "seeWhoReacted": "Sien wie gereageer het",
     "privateTitle": "Reaksies is privaat",
     "privateDescription": "Slegs die pos outeur kan hierdie lys sien.",
     "empty": "Nog geen reaksie",

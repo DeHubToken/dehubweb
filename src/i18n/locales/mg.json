@@ -5022,6 +5022,7 @@
   },
   "reactionInfo": {
     "title": "Fanehoan-kevitra",
+    "seeWhoReacted": "Jereo izay namaly",
     "privateTitle": "Manokana ny fanehoan-kevitra",
     "privateDescription": "Ireo mpanoratra ihany no afaka mahita an'io lisitra io.",
     "empty": "Tsy mbola misy fanehoan-kevitra",

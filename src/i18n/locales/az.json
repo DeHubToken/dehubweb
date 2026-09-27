@@ -5189,6 +5189,7 @@
   },
   "reactionInfo": {
     "title": "Reaksiyalar",
+    "seeWhoReacted": "Kim reaksiya verdi",
     "privateTitle": "Reaksiyalar məxfidir",
     "privateDescription": "Bu siyahıya yalnız yazı müəllifi baxa bilər.",
     "empty": "Hələ reaksiya yoxdur",

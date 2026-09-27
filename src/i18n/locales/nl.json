@@ -5491,6 +5491,7 @@
   },
   "reactionInfo": {
     "title": "Reacties",
+    "seeWhoReacted": "Zie wie reageerde",
     "privateTitle": "Reacties zijn privé",
     "privateDescription": "Alleen de auteur van het bericht kan deze lijst bekijken.",
     "empty": "Nog geen reacties",

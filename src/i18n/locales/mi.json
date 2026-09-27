@@ -3176,6 +3176,7 @@
   },
   "reactionInfo": {
     "title": "Ngā urupare",
+    "seeWhoReacted": "Tirohia ko wai i tauhoahō",
     "privateTitle": "He tūmataiti ngā urupare",
     "privateDescription": "Ko te kaituhi anake e taea te kite i tenei rārangi.",
     "empty": "Kaore ano kia puta he urupare",

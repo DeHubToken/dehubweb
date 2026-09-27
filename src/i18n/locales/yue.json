@@ -3180,6 +3180,7 @@
   },
   "reactionInfo": {
     "title": "反應",
+    "seeWhoReacted": "查看誰有反應",
     "privateTitle": "反應係私人嘅",
     "privateDescription": "只有帖子作者先可以睇到呢個清單。",
     "empty": "仲未有反應",

@@ -5257,6 +5257,7 @@
   },
   "reactionInfo": {
     "title": "Reaktioner",
+    "seeWhoReacted": "Se hvem der reagerede",
     "privateTitle": "Reaktionerne er private",
     "privateDescription": "Kun indlægsforfatteren kan se denne liste.",
     "empty": "Ingen reaktioner endnu",

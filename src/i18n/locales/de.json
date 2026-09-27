@@ -5338,6 +5338,7 @@
   },
   "reactionInfo": {
     "title": "Reaktionen",
+    "seeWhoReacted": "Sehen Sie, wer reagiert hat",
     "privateTitle": "Reaktionen sind privat",
     "privateDescription": "Nur der Autor des Beitrags kann diese Liste anzeigen.",
     "empty": "Noch keine Reaktionen",

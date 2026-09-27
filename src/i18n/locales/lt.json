@@ -5319,6 +5319,7 @@
   },
   "reactionInfo": {
     "title": "Reakcijos",
+    "seeWhoReacted": "Žiūrėkite, kas reagavo",
     "privateTitle": "Reakcijos yra privačios",
     "privateDescription": "Tik pranešimo autorius gali peržiūrėti šį sąrašą.",
     "empty": "Dar nėra jokių reakcijų",

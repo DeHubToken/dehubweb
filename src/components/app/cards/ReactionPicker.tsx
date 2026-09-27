@@ -29,12 +29,24 @@
  * once laid out, and scrolls horizontally for whatever still does not fit. On
  * a desktop card none of that shows: there is nothing to clamp and nothing to
  * scroll.
+ *
+ * ON A PHONE IT IS A DRAWER
+ * Below the mobile breakpoint the tray is replaced by a bottom drawer, portalled
+ * to the app root: a row hung off a ~40px thumb and clamped to a phone screen
+ * still left most of the reactions scrolled out of sight at a size too small
+ * to hit. The drawer shows every reaction at once, large, in a grid. Hover
+ * previews and hold-and-slide are pointer-device affordances, so desktop keeps
+ * the tray. React events from a portal still bubble through the card, so the
+ * drawer stops them at its root the same way the tray does.
  */
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Info } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   NEGATIVE_REACTION_LIST,
   POSITIVE_REACTION_LIST,
@@ -98,7 +110,9 @@ export function ReactionPicker({
   onShowInfo,
   polarity = 'positive',
 }: ReactionPickerProps) {
+  const { t } = useTranslation();
   const reactions = polarity === 'negative' ? NEGATIVE_REACTION_LIST : POSITIVE_REACTION_LIST;
+  const isDrawer = useIsMobile();
   const trayRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   // How far the tray has been pulled back inside the viewport, in px. Kept on a
@@ -153,7 +167,7 @@ export function ReactionPicker({
   // Measured on every opening rather than once: the button this hangs off moves
   // with the feed. A resize or a rotation invalidates the figure outright.
   useLayoutEffect(() => {
-    if (!open) {
+    if (!open || isDrawer) {
       nudgeRef.current = 0;
       setNudge(0);
       return;
@@ -161,7 +175,7 @@ export function ReactionPicker({
     clampToViewport();
     window.addEventListener('resize', clampToViewport);
     return () => window.removeEventListener('resize', clampToViewport);
-  }, [open, clampToViewport]);
+  }, [open, isDrawer, clampToViewport]);
 
   // Dismiss on any press outside the tray, on scroll, and on Escape.
   useEffect(() => {
@@ -190,6 +204,124 @@ export function ReactionPicker({
       window.removeEventListener('scroll', onScroll, true);
     };
   }, [open, onClose]);
+
+  if (isDrawer) {
+    const portalTarget =
+      typeof document === 'undefined' ? null : document.getElementById('app-root') ?? document.body;
+    if (!portalTarget) return null;
+    const stop = (e: { stopPropagation: () => void }) => e.stopPropagation();
+    return createPortal(
+      <AnimatePresence>
+        {open && (
+          <div
+            data-no-navigate
+            className="fixed inset-0 z-[80]"
+            onClick={stop}
+            onPointerDown={stop}
+            onPointerUp={stop}
+          >
+            {/* Outside the ref, so the document listener above reads a press
+                here as outside and closes. */}
+            <motion.div
+              aria-hidden="true"
+              className="absolute inset-0 bg-black/60"
+              initial={reduceMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.18 }}
+            />
+            <motion.div
+              ref={trayRef}
+              role="menu"
+              aria-label={t('reactionInfo.title')}
+              data-reaction-tray
+              data-reaction-drawer
+              data-keep-round
+              initial={reduceMotion ? false : { y: '100%' }}
+              animate={{ y: 0 }}
+              exit={reduceMotion ? { opacity: 0 } : { y: '100%' }}
+              transition={{ duration: reduceMotion ? 0 : 0.24, ease: [0.16, 1, 0.3, 1] }}
+              drag={reduceMotion ? false : 'y'}
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: 0.6 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 80 || info.velocity.y > 600) onClose();
+              }}
+              className={cn(
+                'absolute inset-x-0 bottom-0 mx-auto w-full max-w-lg',
+                'rounded-t-2xl border border-b-0 border-white/15 bg-zinc-950/95',
+                'backdrop-blur-[28px] backdrop-saturate-150',
+                'px-4 pt-2.5 pb-[calc(1rem+env(safe-area-inset-bottom))]',
+              )}
+            >
+              <div className="flex flex-col items-center pb-3">
+                <span aria-hidden="true" className="mb-3 h-1 w-10 rounded-full bg-white/25" />
+                <span className="text-[15px] font-semibold text-white">{t('reactionInfo.title')}</span>
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                {reactions.map((reaction) => {
+                  const isCurrent = current === reaction.key;
+                  const tally = counts ? (counts[reaction.key] ?? 0) : null;
+                  return (
+                    <button
+                      key={reaction.key}
+                      role="menuitemradio"
+                      aria-checked={isCurrent}
+                      type="button"
+                      aria-label={reaction.label}
+                      data-reaction-option
+                      data-keep-round
+                      data-active={isCurrent ? 'true' : undefined}
+                      onClick={() => onSelect(reaction.key)}
+                      className={cn(
+                        'relative flex aspect-square flex-col items-center justify-center gap-1 rounded-2xl border',
+                        'transition-transform duration-150 active:scale-95',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
+                        isCurrent ? 'border-white/30 bg-white/[0.09]' : 'border-transparent bg-white/[0.03]',
+                      )}
+                    >
+                      <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center text-[34px] leading-none">
+                        <ReactionEmoji reaction={reaction.key} animate={isCurrent} />
+                      </span>
+                      {tally !== null && (
+                        <span
+                          aria-hidden="true"
+                          data-reaction-count
+                          data-zero={tally === 0 ? 'true' : undefined}
+                          className={cn(
+                            'text-xs font-semibold leading-none tabular-nums',
+                            tally > 0 ? 'text-white/70' : 'text-white/30',
+                          )}
+                        >
+                          {formatTally(tally)}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+              {onShowInfo && (
+                <button
+                  role="menuitem"
+                  type="button"
+                  onClick={onShowInfo}
+                  className={cn(
+                    'mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 py-3',
+                    'text-sm font-medium text-white/80 active:scale-[0.98]',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
+                  )}
+                >
+                  <Info className="h-[18px] w-[18px]" aria-hidden="true" />
+                  {t('reactionInfo.seeWhoReacted')}
+                </button>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>,
+      portalTarget,
+    );
+  }
 
   return (
     <AnimatePresence>
@@ -338,8 +470,8 @@ export function ReactionPicker({
               <button
                 role="menuitem"
                 type="button"
-                aria-label="See who reacted"
-                title="See who reacted"
+                aria-label={t('reactionInfo.seeWhoReacted')}
+                title={t('reactionInfo.seeWhoReacted')}
                 data-keep-round
                 onClick={(e) => {
                   e.stopPropagation();

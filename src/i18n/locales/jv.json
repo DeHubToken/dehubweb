@@ -3162,6 +3162,7 @@
   },
   "reactionInfo": {
     "title": "Reaksi",
+    "seeWhoReacted": "Deleng sapa sing reaksi",
     "privateTitle": "Reaksi iku pribadi",
     "privateDescription": "Mung penulis kiriman bisa ndeleng dhaftar iki.",
     "empty": "Durung ana reaksi",

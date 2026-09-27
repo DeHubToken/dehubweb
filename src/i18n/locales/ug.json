@@ -3033,6 +3033,7 @@
   },
   "reactionInfo": {
     "title": "Reactions",
+    "seeWhoReacted": "كىمنىڭ ھەرىكەت قىلغانلىقىنى كۆرۈڭ",
     "privateTitle": "رېئاكسىيە خۇسۇسىي",
     "privateDescription": "بۇ تىزىملىكنى پەقەت پوچتا يازغۇچىسىلا كۆرەلەيدۇ.",
     "empty": "تېخى ئىنكاس قايتۇرۇلمىدى",

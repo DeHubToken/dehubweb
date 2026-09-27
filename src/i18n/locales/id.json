@@ -5345,6 +5345,7 @@
   },
   "reactionInfo": {
     "title": "Reaksi",
+    "seeWhoReacted": "Lihat siapa yang bereaksi",
     "privateTitle": "Reaksi bersifat pribadi",
     "privateDescription": "Hanya penulis pos yang dapat melihat daftar ini.",
     "empty": "Belum ada reaksi",

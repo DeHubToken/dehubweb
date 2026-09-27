@@ -5066,6 +5066,7 @@
   },
   "reactionInfo": {
     "title": "رد عمل",
+    "seeWhoReacted": "دیکھیں کس نے رد عمل ظاہر کیا",
     "privateTitle": "رد عمل نجی ہیں",
     "privateDescription": "صرف پوسٹ مصنف ہی اس فہرست کو دیکھ سکتا ہے ۔",
     "empty": "ابھی تک کوئی رد عمل نہیں ہے",

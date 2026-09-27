@@ -3169,6 +3169,7 @@
   },
   "reactionInfo": {
     "title": "Вокунишҳо",
+    "seeWhoReacted": "Бубинед, ки кӣ вокуниш нишон дод",
     "privateTitle": "Mga tugon ay pribadong",
     "privateDescription": "Танҳо муаллифи пост метавонад ин рӯйхатро бинад.",
     "empty": "Ҳанӯз ягон вокуниш нест",

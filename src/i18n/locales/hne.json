@@ -3113,6 +3113,7 @@
   },
   "reactionInfo": {
     "title": "प्रतिक्रिया",
+    "seeWhoReacted": "देखें कि किसने रिएक्ट किया",
     "privateTitle": "निजी प्रतिक्रिया",
     "privateDescription": "केवल लेखक ए सूची ल देख सकत हवय ।",
     "empty": "कोनो प्रतिक्रिया नी",

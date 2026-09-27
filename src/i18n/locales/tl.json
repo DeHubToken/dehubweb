@@ -5108,6 +5108,7 @@
   },
   "reactionInfo": {
     "title": "Mga Reaksyon",
+    "seeWhoReacted": "Tingnan kung sino ang nag-react",
     "privateTitle": "Ang mga reaksyon ay pribado",
     "privateDescription": "Tanging ang may - akda ng post ang maaaring tumingin sa listahang ito.",
     "empty": "Wala pang reaksyon",

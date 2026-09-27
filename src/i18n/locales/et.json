@@ -5229,6 +5229,7 @@
   },
   "reactionInfo": {
     "title": "Reaktsioonid",
+    "seeWhoReacted": "Vaata, kes reageeris",
     "privateTitle": "Reaktsioonid on privaatsed",
     "privateDescription": "Seda loendit saab vaadata ainult postituse autor.",
     "empty": "Reaktsioone veel ei ole",

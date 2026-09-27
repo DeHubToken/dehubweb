@@ -5049,6 +5049,7 @@
   },
   "reactionInfo": {
     "title": "תגובות",
+    "seeWhoReacted": "ראה מי הגיב",
     "privateTitle": "התגובות הן פרטיות",
     "privateDescription": "רק מחבר הפוסט יכול לצפות ברשימה זו.",
     "empty": "עדיין אין תגובות",

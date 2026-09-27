@@ -3053,6 +3053,7 @@
   },
   "reactionInfo": {
     "title": "ردعملیاں",
+    "seeWhoReacted": "ڏس ته ڪنھن رد عمل ڏنو",
     "privateTitle": "ردعملیاں نجی ہن",
     "privateDescription": "صرف پوسٹ دے لکھاری ایہ فہرست ویکھ سکدے ن۔",
     "empty": "ہنے تیک کوئی ردعمل نئیں",

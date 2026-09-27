@@ -5332,6 +5332,7 @@
   },
   "reactionInfo": {
     "title": "リアクション",
+    "seeWhoReacted": "リアクションしたユーザーを見る",
     "privateTitle": "リアクションは非公開です",
     "privateDescription": "投稿者のみがこのリストを閲覧できます。",
     "empty": "リアクションはまだありません",

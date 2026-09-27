@@ -2502,6 +2502,7 @@
   },
   "reactionInfo": {
     "title": "Реакције",
+    "seeWhoReacted": "Погледајте ко је реаговао",
     "privateTitle": "Реакције су приватне",
     "privateDescription": "Само аутор поста може видети ову листу.",
     "empty": "Нема реакција",

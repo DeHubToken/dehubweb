@@ -3116,6 +3116,7 @@
   },
   "reactionInfo": {
     "title": "ردود الفعل",
+    "seeWhoReacted": "شاهد من تفاعل",
     "privateTitle": "ردود الفعل خاصة",
     "privateDescription": "بس الكاتب الپوست يقدر يشوف هالقايمة.",
     "empty": "ما في ردود فعل لحد الحين",
