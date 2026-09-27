@@ -77,6 +77,8 @@
     "live": "Live"
   },
   "settings": {
+    "showOnline": "Visa när jag är online",
+    "showOnlineDesc": "Personer du skickar meddelanden till ser en grön prick bredvid ditt namn när du använder DeHub",
     "smartReplies": "Föreslagna svar",
     "smartRepliesDesc": "Skriver två svar som du kan trycka på i en chatt. × på förslagen stänger av det.",
     "title": "Inställningar",
@@ -1268,6 +1270,7 @@
     "loginRequired": "Inloggning krävs"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Föreslagna svar avstängda",
     "smartRepliesOffWhere": "Slå på dem igen i Inställningar → Meddelanden.",
     "smartRepliesUndo": "Ångra",

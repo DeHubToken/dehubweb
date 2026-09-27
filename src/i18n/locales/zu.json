@@ -77,6 +77,8 @@
     "live": "Bukhoma"
   },
   "settings": {
+    "showOnline": "Bonisa uma ngiku-inthanethi",
+    "showOnlineDesc": "Abantu obathumelela umyalezo babona ichashazi eliluhlaza eceleni kwegama lakho ngenkathi usebenzisa i-DeHub",
     "smartReplies": "Izimpendulo eziphakanyisiwe",
     "smartRepliesDesc": "Ibhala izimpendulo ezimbili ongazithepha engxoxweni. U-× ezincomweni uyakuvala lokhu.",
     "title": "Zilungiselelo",
@@ -1253,6 +1255,7 @@
     "loginRequired": "Ukungena kuyadingeka"
   },
   "messages": {
+    "online": "Ku-inthanethi",
     "smartRepliesOff": "Izimpendulo eziphakanyisiwe zivaliwe",
     "smartRepliesOffWhere": "Ziphinde uzivule ku- Zilungiselelo → Layezo.",
     "smartRepliesUndo": "Hlehlisa",

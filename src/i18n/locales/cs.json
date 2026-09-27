@@ -77,6 +77,8 @@
     "live": "Živě"
   },
   "settings": {
+    "showOnline": "Zobrazit, když jsem online",
+    "showOnlineDesc": "Lidé, kterým posíláte zprávu, uvidí zelenou tečku vedle vašeho jména, když používáte službu DeHub",
     "smartReplies": "Navrhované odpovědi",
     "smartRepliesDesc": "Připraví dvě odpovědi, na které v chatu klepneš. × u návrhů to vypne.",
     "title": "Nastavení",
@@ -1263,6 +1265,7 @@
     "loginRequired": "Vyžadováno přihlášení"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Navrhované odpovědi jsou vypnuté",
     "smartRepliesOffWhere": "Znovu je zapneš v Nastavení → Zprávy.",
     "smartRepliesUndo": "Zpět",

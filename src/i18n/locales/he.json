@@ -77,6 +77,8 @@
     "live": "שידור חי"
   },
   "settings": {
+    "showOnline": "הצגה כשאני במצב מחובר",
+    "showOnlineDesc": "אנשים שאתם שולחים להם הודעה רואים נקודה ירוקה ליד השם שלכם בזמן שאתם משתמשים ב - DeHub",
     "smartReplies": "תשובות מוצעות",
     "smartRepliesDesc": "מנסח שתי תשובות שאפשר להקיש עליהן בצ'אט. ה-× שעל ההצעות מכבה את זה.",
     "title": "הגדרות",
@@ -1262,6 +1264,7 @@
     "loginRequired": "נדרשת התחברות"
   },
   "messages": {
+    "online": "אונליין",
     "smartRepliesOff": "התשובות המוצעות כובו",
     "smartRepliesOffWhere": "אפשר להפעיל אותן שוב בהגדרות → הודעות.",
     "smartRepliesUndo": "ביטול",

@@ -77,6 +77,8 @@
     "live": "Langsung"
   },
   "settings": {
+    "showOnline": "Tampilake kapan aku lagi online",
+    "showOnlineDesc": "Wong sing kok peseni bakal weruh titik ijo ing sandinge jenengmu nalika lagi nggunakake DeHub",
     "smartReplies": "Wangsulan sing disaranake",
     "smartRepliesDesc": "Nyusun rong wangsulan sing bisa kokthuthuk ing obrolan. Tandha × ing saran bakal mateni iki.",
     "title": "Setelan",
@@ -1246,6 +1248,7 @@
     "loginRequired": "Kudu Mlebu"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Wangsulan sing disaranake dipateni",
     "smartRepliesOffWhere": "Uripake maneh ing Setelan → Pesen.",
     "smartRepliesUndo": "Batalake",

@@ -77,6 +77,8 @@
     "live": "Siaran Langsung"
   },
   "settings": {
+    "showOnline": "Tampilkan saat saya online",
+    "showOnlineDesc": "Orang yang Anda kirimi pesan melihat titik hijau di samping nama Anda saat Anda menggunakan DeHub",
     "smartReplies": "Balasan yang disarankan",
     "smartRepliesDesc": "Menyusun dua balasan yang bisa kamu ketuk di obrolan. Tanda × pada saran akan mematikannya.",
     "title": "Pengaturan",
@@ -1268,6 +1270,7 @@
     "loginRequired": "Login diperlukan"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Balasan yang disarankan dimatikan",
     "smartRepliesOffWhere": "Nyalakan lagi di Pengaturan → Pesan.",
     "smartRepliesUndo": "Urungkan",

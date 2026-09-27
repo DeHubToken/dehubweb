@@ -77,6 +77,8 @@
     "live": "Live"
   },
   "settings": {
+    "showOnline": "Vis, når jeg er online",
+    "showOnlineDesc": "Personer, du sender en besked til, ser en grøn prik ved siden af dit navn, mens du bruger DeHub",
     "smartReplies": "Foreslåede svar",
     "smartRepliesDesc": "Skriver to svar, du kan trykke på i en chat. × på forslagene slår det fra.",
     "title": "Indstillinger",
@@ -1268,6 +1270,7 @@
     "loginRequired": "Login påkrævet"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Foreslåede svar er slået fra",
     "smartRepliesOffWhere": "Slå dem til igen under Indstillinger → Beskeder.",
     "smartRepliesUndo": "Fortryd",

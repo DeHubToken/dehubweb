@@ -77,6 +77,8 @@
     "live": "Live"
   },
   "settings": {
+    "showOnline": "Laat zien wanneer ik online ben",
+    "showOnlineDesc": "Mensen die je een bericht stuurt, zien een groene stip naast je naam terwijl je DeHub gebruikt",
     "smartReplies": "Voorgestelde antwoorden",
     "smartRepliesDesc": "Stelt twee antwoorden op die je in een chat kunt aantikken. De × bij de suggesties zet dit uit.",
     "title": "Instellingen",
@@ -1461,6 +1463,7 @@
     "loginRequired": "Inloggen vereist"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Voorgestelde antwoorden uitgezet",
     "smartRepliesOffWhere": "Zet ze weer aan in Instellingen → Berichten.",
     "smartRepliesUndo": "Ongedaan maken",

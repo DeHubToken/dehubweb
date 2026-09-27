@@ -77,6 +77,8 @@
     "live": "Mivantana"
   },
   "settings": {
+    "showOnline": "Asehoy rehefa an-tserasera aho",
+    "showOnlineDesc": "Ny olona izay alefanao dia mahita teboka maitso eo akaikin'ny anaranao raha mampiasa DeHub ianao",
     "smartReplies": "Valiny atolotra",
     "smartRepliesDesc": "Manoratra valiny roa azonao tsindriana anaty resaka. Ny × eo amin'ny soso-kevitra dia mamono azy.",
     "title": "Fikirana",
@@ -1269,6 +1271,7 @@
     "loginRequired": "Ilaina ny fidirana"
   },
   "messages": {
+    "online": "Fiofanana an-tserasera",
     "smartRepliesOff": "Novonoina ny valiny atolotra",
     "smartRepliesOffWhere": "Avereno alefa ao amin'ny Fikirana → Hafatra.",
     "smartRepliesUndo": "Averina",

@@ -77,6 +77,8 @@
     "live": "Live"
   },
   "settings": {
+    "showOnline": "Shfaq kur jam online",
+    "showOnlineDesc": "Njerëzve që u dërgon mesazhe u shfaqet një pikë e gjelbër pranë emrit tënd ndërsa përdor DeHub",
     "smartReplies": "Përgjigje të sugjeruara",
     "smartRepliesDesc": "Harton dy përgjigje që mund t'i prekësh në një bisedë. × te sugjerimet e çaktivizon këtë.",
     "title": "Cilësimet",
@@ -1266,6 +1268,7 @@
     "loginRequired": "Kërkohet hyrja"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Përgjigjet e sugjeruara u çaktivizuan",
     "smartRepliesOffWhere": "Aktivizoji sërish te Cilësimet → Mesazhet.",
     "smartRepliesUndo": "Zhbëj",

@@ -77,6 +77,8 @@
     "live": "Jonli"
   },
   "settings": {
+    "showOnline": "Onlayn bo&#39;lganimda ko&#39;rsatilsin",
+    "showOnlineDesc": "DeHub’dan foydalanayotganingizda xabar yuborgan odamlaringiz ismingiz yonida yashil nuqta ko‘rishadi",
     "smartReplies": "Tavsiya etilgan javoblar",
     "smartRepliesDesc": "Suhbatda bosishingiz mumkin bo'lgan ikkita javob tayyorlaydi. Tavsiyalardagi × buni o'chiradi.",
     "title": "Sozlamalar",
@@ -1268,6 +1270,7 @@
     "loginRequired": "Avtorizatsiya kerak"
   },
   "messages": {
+    "online": "Onlayn",
     "smartRepliesOff": "Tavsiya etilgan javoblar o'chirildi",
     "smartRepliesOffWhere": "Ularni Sozlamalar → Xabarlar bo'limidan qayta yoqing.",
     "smartRepliesUndo": "Bekor qilish",

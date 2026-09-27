@@ -77,6 +77,8 @@
     "live": "Ora"
   },
   "settings": {
+    "showOnline": "Whakaatu i te wa e ahau i runga i te ipurangi",
+    "showOnlineDesc": "Ko nga tangata e tuku ana koe ka kite i tetahi tohu matomato i te taha o to ingoa i a koe e whakamahi ana i te DeHub",
     "smartReplies": "Ngā whakautu tūtohu",
     "smartRepliesDesc": "Ka tuhi i ētahi whakautu e rua hei pāwhiri i te kōrero. Mā te × i runga i ngā tūtohu e whakaweto.",
     "title": "Tautuhinga",
@@ -1247,6 +1249,7 @@
     "loginRequired": "Me takiuru"
   },
   "messages": {
+    "online": "Tuihono",
     "smartRepliesOff": "Kua whakawetohia ngā whakautu tūtohu",
     "smartRepliesOffWhere": "Whakahohea anō i Tautuhinga → Karere.",
     "smartRepliesUndo": "Whakakore",

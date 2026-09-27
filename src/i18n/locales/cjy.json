@@ -76,6 +76,8 @@
     "live": "直播"
   },
   "settings": {
+    "showOnline": "显示我在线时",
+    "showOnlineDesc": "当你使用 DeHub 时，你的联系人会在你的名字旁看到一个绿色点",
     "smartReplies": "建议回复",
     "smartRepliesDesc": "在聊天里头写下两条能点嘞回复。建议上头嘞 × 就把它关咾。",
     "title": "设置",
@@ -1219,6 +1221,7 @@
     "loginRequired": "须登录"
   },
   "messages": {
+    "online": "在线",
     "smartRepliesOff": "建议回复关咾",
     "smartRepliesOffWhere": "到 设置 → 消息 里头再打开。",
     "smartRepliesUndo": "撤销",

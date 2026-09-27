@@ -76,6 +76,8 @@
     "live": "بث مباشر"
   },
   "settings": {
+    "showOnline": "وريني لمن أكون أونلاين",
+    "showOnlineDesc": "الناس اللي بترسل ليهم رسائل شوفوا نقطة خضرا جنب اسمك وانت بتستخدم DeHub",
     "smartReplies": "الردود المقترحة",
     "smartRepliesDesc": "بيجهز ردين تقدر تضغط عليهن في المحادثة. علامة × على الاقتراحات بتقفل ده.",
     "title": "الإعدادات",
@@ -1221,6 +1223,7 @@
     "loginRequired": "مطلوب تسجيل دخول"
   },
   "messages": {
+    "online": "أونلاين",
     "smartRepliesOff": "اتقفلت الردود المقترحة",
     "smartRepliesOffWhere": "رجّعها من الإعدادات ← الرسايل.",
     "smartRepliesUndo": "تراجع",

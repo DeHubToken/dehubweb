@@ -32,6 +32,7 @@ import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
+import { OnlineDot } from '@/components/app/chat/OnlineDot';
 import { formatAttachmentSize, getAttachmentLabel, isAllowedAttachment } from '@/lib/attachments';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
@@ -1781,6 +1782,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 >
                   {displayName}
                 </BadgedName>
+                <OnlineDot address={otherUser?.address} />
                 <NewMemberChip address={otherUser?.address} />
               </h2>
               {otherUser?.username && (

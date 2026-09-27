@@ -77,6 +77,8 @@
     "live": "Kawsaq"
   },
   "settings": {
+    "showOnline": "Internetpi kachkaptiy qawachiy",
+    "showOnlineDesc": "Runakuna willakuyniyki huk verde ch&#39;ikuta sutiykip ladunpi rikunku DeHub llamk&#39;achkanki",
     "smartReplies": "Ñisqa kutichiykuna",
     "smartRepliesDesc": "Rimanakuypi ñitiy atina iskay kutichiyta qillqan. Yuyaychaykunapi × nisqaqa kayta wañuchin.",
     "title": "Churana",
@@ -1253,6 +1255,7 @@
     "loginRequired": "Yaykuy munakun"
   },
   "messages": {
+    "online": "Tinkisqa",
     "smartRepliesOff": "Ñisqa kutichiykunaqa wañuchisqa",
     "smartRepliesOffWhere": "Churana → Willakuy nisqapi kutimanta hatarichiy.",
     "smartRepliesUndo": "Kutichiy",

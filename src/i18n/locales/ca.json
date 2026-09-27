@@ -77,6 +77,8 @@
     "live": "En directe"
   },
   "settings": {
+    "showOnline": "Mostra quan estic en línia",
+    "showOnlineDesc": "Les persones a les quals enviïs missatges veuen un punt verd al costat del teu nom mentre utilitzes DeHub",
     "smartReplies": "Respostes suggerides",
     "smartRepliesDesc": "Redacta dues respostes que pots tocar en un xat. La × dels suggeriments ho desactiva.",
     "title": "Configuració",
@@ -1264,6 +1266,7 @@
     "loginRequired": "Cal iniciar sessió"
   },
   "messages": {
+    "online": "En línia",
     "smartRepliesOff": "Respostes suggerides desactivades",
     "smartRepliesOffWhere": "Torna a activar-les a Configuració → Missatges.",
     "smartRepliesUndo": "Desfés",

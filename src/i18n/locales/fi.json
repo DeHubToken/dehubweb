@@ -77,6 +77,8 @@
     "live": "Suora"
   },
   "settings": {
+    "showOnline": "Näytä, kun olen online-tilassa",
+    "showOnlineDesc": "Viestisi näkevät vihreän pisteen nimesi vieressä, kun käytät DeHubia",
     "smartReplies": "Ehdotetut vastaukset",
     "smartRepliesDesc": "Luonnostelee kaksi vastausta, joita voit napauttaa keskustelussa. Ehdotusten × poistaa tämän käytöstä.",
     "title": "Asetukset",
@@ -1264,6 +1266,7 @@
     "loginRequired": "Kirjautuminen vaaditaan"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Ehdotetut vastaukset poistettiin käytöstä",
     "smartRepliesOffWhere": "Ota ne takaisin käyttöön kohdassa Asetukset → Viestit.",
     "smartRepliesUndo": "Kumoa",
