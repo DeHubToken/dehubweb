@@ -43,6 +43,8 @@ import {
 import type { CustomEmoji } from '@/lib/emoji/custom-emoji';
 import { EmojiImage, useCustomEmojis } from './EmojiText';
 import { AddCustomEmojiPanel } from './AddCustomEmojiPanel';
+import { isKidsBlockedEmoji } from '@/lib/emoji/kids-safe';
+import { useKidsModeLock } from '@/hooks/use-kids-mode';
 
 type SectionKey = 'recent' | 'dehub' | 'custom' | EmojiGroup;
 
@@ -106,7 +108,10 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
   const [hovered, setHovered] = useState<EmojiEntry | null>(null);
   const [animate, setAnimate] = useState(false);
   // Custom emoji (the shared :shortcode: image set) and the inline add form.
-  const custom = useCustomEmojis();
+  // Kids Mode: no rude emoji, and no custom ones — those are unreviewed uploads.
+  const kids = useKidsModeLock();
+  const allCustom = useCustomEmojis();
+  const custom = kids ? [] : allCustom;
   const [adding, setAdding] = useState(false);
   const [animFailed, setAnimFailed] = useState<Set<string>>(() => new Set());
 
@@ -155,19 +160,23 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
 
   const visible = useMemo(() => {
     if (!data) return [];
-    return data.entries.filter((e) => e.v <= maxV && (e.group !== 'flags' || support?.flags !== false));
-  }, [data, maxV, support]);
+    return data.entries.filter(
+      (e) => e.v <= maxV && (e.group !== 'flags' || support?.flags !== false) && !(kids && isKidsBlockedEmoji(e.char)),
+    );
+  }, [data, maxV, support, kids]);
 
   const sections = useMemo(() => {
     if (!data) return [] as Array<{ key: SectionKey; items: EmojiEntry[] }>;
     const pick = (chars: string[]) =>
-      chars.map((c) => data.byChar.get(c)).filter((e): e is EmojiEntry => !!e && e.v <= maxV);
+      chars
+        .map((c) => data.byChar.get(c))
+        .filter((e): e is EmojiEntry => !!e && e.v <= maxV && !(kids && isKidsBlockedEmoji(e.char)));
     const out: Array<{ key: SectionKey; items: EmojiEntry[] }> = [];
     const recentItems = pick(recents);
     if (recentItems.length) out.push({ key: 'recent', items: recentItems });
     out.push({ key: 'dehub', items: pick(DEHUB_PICKS) });
     // Rendered from `custom`, not `items` — these are images, not characters.
-    out.push({ key: 'custom', items: [] });
+    if (!kids) out.push({ key: 'custom', items: [] });
     const byGroup = new Map<EmojiGroup, EmojiEntry[]>();
     for (const e of visible) {
       const list = byGroup.get(e.group) ?? [];
@@ -179,7 +188,7 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
       if (items?.length) out.push({ key: g, items });
     }
     return out;
-  }, [data, visible, recents, maxV]);
+  }, [data, visible, recents, maxV, kids]);
 
   const results = useMemo(
     () => (query.trim() ? searchEmoji(query, visible, [keywords.local, keywords.en]) : null),
