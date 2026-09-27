@@ -306,7 +306,9 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
 
   // Get title and description
   const title = nft.name || nft.title || '';
-  const description = nft.description || '';
+  const rawDescription = nft.description || '';
+  const soundtrack = parseSoundtrackTag(rawDescription);
+  const description = rawDescription.replace(/\[soundtrack:[^\]]*\]/, '').trim();
 
   return {
     id,
@@ -321,7 +323,8 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
     title,
     description,
     likes,
-    caption: description || title, // Legacy field for backwards compatibility
+    caption: rawDescription || title,
+    ...soundtrack,
     comments,
     views: formatViews(viewCount).replace(' views', ''),
     timeAgo: formatTimeAgo(createdAt),
