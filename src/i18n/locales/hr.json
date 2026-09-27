@@ -484,7 +484,20 @@
     "leftHandedDesc": "Premjesti gumb za sviđanje na lijevu stranu trake reakcija",
     "notifyTipsDesc": "Kada vam netko pošalje napojnicu u DeHub tokenima",
     "messageFeeDesc": "Zahtijevaj minimalnu napojnicu u DeHub tokenima za slanje poruke",
-    "tokenBalance": "Stanje tokena"
+    "tokenBalance": "Stanje tokena",
+    "signIn": "Prijava",
+    "emailSignIn": "E-pošta za prijavu",
+    "emailSignInDesc": "Povežite adresu e-pošte za prijavu bez novčanika.",
+    "emailSignInLinked": "Prijava kodom aktivna je za {{email}}",
+    "emailSignInExisting": "Već se prijavljujete s {{email}}",
+    "emailSignInExistingUnknown": "Ovaj se račun već prijavljuje bez novčanika.",
+    "emailSignInSend": "Pošalji kod",
+    "emailSignInSent": "Potražite kod u pristigloj pošti",
+    "emailSignInConfirm": "Potvrdi",
+    "emailSignInDone": "Sada se možete prijaviti ovom e-poštom",
+    "emailSignInRemove": "Ukloni",
+    "emailSignInRemoved": "Uklonjeno — ovom se e-poštom više ne možete prijaviti",
+    "cancel": "Odustani"
   },
   "common": {
     "save": "Spremi",

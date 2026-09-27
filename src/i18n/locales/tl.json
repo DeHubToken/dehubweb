@@ -484,7 +484,20 @@
     "leftHandedDesc": "Ilipat ang like button sa kaliwang bahagi ng reactions bar",
     "notifyTipsDesc": "Kapag may nagpadala sa iyo ng tip sa DeHub tokens",
     "messageFeeDesc": "Mangailangan ng minimum na tip sa DeHub tokens para makapag-message sa iyo",
-    "tokenBalance": "Token Balance"
+    "tokenBalance": "Token Balance",
+    "signIn": "Pag-sign in",
+    "emailSignIn": "Email sa pag-sign in",
+    "emailSignInDesc": "Mag-link ng email address para makapag-sign in nang walang wallet.",
+    "emailSignInLinked": "Aktibo ang code login para sa {{email}}",
+    "emailSignInExisting": "Nagsa-sign in ka na gamit ang {{email}}",
+    "emailSignInExistingUnknown": "Nagsa-sign in na ang account na ito nang walang wallet.",
+    "emailSignInSend": "Ipadala ang code",
+    "emailSignInSent": "Tingnan ang inbox mo para sa code",
+    "emailSignInConfirm": "Kumpirmahin",
+    "emailSignInDone": "Makakapag-sign in ka na gamit ang email na ito",
+    "emailSignInRemove": "Alisin",
+    "emailSignInRemoved": "Inalis — hindi ka na makakapag-sign in gamit ang email na ito",
+    "cancel": "Kanselahin"
   },
   "common": {
     "save": "I-save",

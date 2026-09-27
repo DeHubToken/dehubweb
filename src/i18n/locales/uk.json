@@ -484,7 +484,20 @@
     "leftHandedDesc": "Переносить кнопку «подобається» в ліву частину панелі реакцій",
     "notifyTipsDesc": "Коли хтось надсилає вам чайові в токенах DeHub",
     "messageFeeDesc": "Вимагати мінімальну суму чайових у токенах DeHub для надсилання вам повідомлення",
-    "tokenBalance": "Баланс токенів"
+    "tokenBalance": "Баланс токенів",
+    "signIn": "Вхід",
+    "emailSignIn": "Пошта для входу",
+    "emailSignInDesc": "Прив’яжіть адресу пошти, щоб входити без гаманця.",
+    "emailSignInLinked": "Вхід за кодом увімкнено для {{email}}",
+    "emailSignInExisting": "Ви вже входите через {{email}}",
+    "emailSignInExistingUnknown": "Цей акаунт уже входить без гаманця.",
+    "emailSignInSend": "Надіслати код",
+    "emailSignInSent": "Перевірте пошту — там код",
+    "emailSignInConfirm": "Підтвердити",
+    "emailSignInDone": "Тепер ви можете входити з цією поштою",
+    "emailSignInRemove": "Видалити",
+    "emailSignInRemoved": "Видалено — з цією поштою більше не можна увійти",
+    "cancel": "Скасувати"
   },
   "common": {
     "save": "Зберегти",

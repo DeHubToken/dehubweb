@@ -469,7 +469,20 @@
     "leftHandedDesc": "Matsar da maɓallin so zuwa gefen hagu na sandar martani",
     "notifyTipsDesc": "Lokacin da wani ya aiko maka kyauta a cikin DeHub tokens",
     "messageFeeDesc": "Bukatun mafi ƙarancin kyauta a cikin DeHub tokens don aika maka saƙo",
-    "tokenBalance": "Kudin Token"
+    "tokenBalance": "Kudin Token",
+    "signIn": "Shiga",
+    "emailSignIn": "Imel na shiga",
+    "emailSignInDesc": "Haɗa adireshin imel don ka shiga ba tare da walat ɗinka ba.",
+    "emailSignInLinked": "Shiga da lamba yana aiki don {{email}}",
+    "emailSignInExisting": "Kana riga kana shiga da {{email}}",
+    "emailSignInExistingUnknown": "Wannan asusun yana riga yana shiga ba tare da walat ba.",
+    "emailSignInSend": "Aika lamba",
+    "emailSignInSent": "Duba akwatin saƙonka don lambar",
+    "emailSignInConfirm": "Tabbatar",
+    "emailSignInDone": "Yanzu za ka iya shiga da wannan imel",
+    "emailSignInRemove": "Cire",
+    "emailSignInRemoved": "An cire — wannan imel ba zai iya shigar da kai ba kuma",
+    "cancel": "Soke"
   },
   "common": {
     "save": "Ajiye",

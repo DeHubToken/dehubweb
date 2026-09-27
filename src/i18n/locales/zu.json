@@ -470,7 +470,20 @@
     "leftHandedDesc": "Hambisa inkinobho yokuthanda iye ohlangothini lwesobunxele lwebha yokusabela",
     "notifyTipsDesc": "Uma othile ekuthumele ithiphu ngama-DeHub tokens",
     "messageFeeDesc": "Phasa isamba esincane samathiphu kuma-DeHub tokens ukuze ukwazi ukuthumela umlayezo",
-    "tokenBalance": "Isilinganiso sama-token"
+    "tokenBalance": "Isilinganiso sama-token",
+    "signIn": "Ukungena",
+    "emailSignIn": "I-imeyili yokungena",
+    "emailSignInDesc": "Xhuma ikheli le-imeyili ukuze ungene ngaphandle kwesikhwama semali.",
+    "emailSignInLinked": "Ukungena ngekhodi kuvuliwe ku-{{email}}",
+    "emailSignInExisting": "Usuvele ungena nge-{{email}}",
+    "emailSignInExistingUnknown": "Le akhawunti isivele ingena ngaphandle kwesikhwama semali.",
+    "emailSignInSend": "Thumela ikhodi",
+    "emailSignInSent": "Bheka ibhokisi lakho lemiyalezo ukuthola ikhodi",
+    "emailSignInConfirm": "Qinisekisa",
+    "emailSignInDone": "Manje ungangena ngale imeyili",
+    "emailSignInRemove": "Susa",
+    "emailSignInRemoved": "Kususiwe — le imeyili ayisakwazi ukukungenisa",
+    "cancel": "Khansela"
   },
   "common": {
     "save": "Gcina",

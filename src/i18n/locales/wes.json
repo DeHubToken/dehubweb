@@ -395,7 +395,20 @@
     "usernamesCount_other": "{{count}} usernames",
     "leftHanded": "Left-hand mode",
     "leftHandedDesc": "Move di like button go for left side for di reactions bar",
-    "tokenBalance": "Token Balance"
+    "tokenBalance": "Token Balance",
+    "signIn": "Sign-in",
+    "emailSignIn": "Sign-in email",
+    "emailSignInDesc": "Join wan email address mek yu fit sign in widowt yua wallet.",
+    "emailSignInLinked": "Code login di wok fo {{email}}",
+    "emailSignInExisting": "Yu don already di sign in wit {{email}}",
+    "emailSignInExistingUnknown": "Dis account don already di sign in widowt wallet.",
+    "emailSignInSend": "Sen code",
+    "emailSignInSent": "Chek yua inbox fo di code",
+    "emailSignInConfirm": "Confam",
+    "emailSignInDone": "Yu fit sign in wit dis email nau",
+    "emailSignInRemove": "Komot-am",
+    "emailSignInRemoved": "Dem don komot-am — dis email no fit sign yu in again",
+    "cancel": "Cancel"
   },
   "common": {
     "save": "Save am",

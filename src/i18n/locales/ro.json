@@ -484,7 +484,20 @@
     "leftHandedDesc": "Mută butonul de apreciere în partea stângă a barei de reacții",
     "notifyTipsDesc": "Când cineva îți trimite un bacșiș în tokenuri DeHub",
     "messageFeeDesc": "Necesită un bacșiș minim în tokenuri DeHub pentru a-ți trimite un mesaj",
-    "tokenBalance": "Sold de tokenuri"
+    "tokenBalance": "Sold de tokenuri",
+    "signIn": "Autentificare",
+    "emailSignIn": "E-mail de autentificare",
+    "emailSignInDesc": "Asociază o adresă de e-mail ca să te autentifici fără portofel.",
+    "emailSignInLinked": "Autentificarea cu cod este activă pentru {{email}}",
+    "emailSignInExisting": "Te autentifici deja cu {{email}}",
+    "emailSignInExistingUnknown": "Acest cont se autentifică deja fără portofel.",
+    "emailSignInSend": "Trimite codul",
+    "emailSignInSent": "Caută codul în căsuța ta de e-mail",
+    "emailSignInConfirm": "Confirmă",
+    "emailSignInDone": "Acum te poți autentifica cu acest e-mail",
+    "emailSignInRemove": "Elimină",
+    "emailSignInRemoved": "Eliminat — acest e-mail nu te mai poate autentifica",
+    "cancel": "Anulează"
   },
   "common": {
     "save": "Salvează",

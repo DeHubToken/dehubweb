@@ -484,7 +484,20 @@
     "leftHandedDesc": "Flyt synes godt om-knappen til venstre side af reaktionslinjen",
     "notifyTipsDesc": "Når nogen sender dig et tip i DeHub tokens",
     "messageFeeDesc": "Kræv et minimum tip i DeHub tokens for at sende dig en besked",
-    "tokenBalance": "Token saldo"
+    "tokenBalance": "Token saldo",
+    "signIn": "Log ind",
+    "emailSignIn": "Login-e-mail",
+    "emailSignInDesc": "Tilknyt en e-mailadresse for at logge ind uden din wallet.",
+    "emailSignInLinked": "Kodelogin er aktivt for {{email}}",
+    "emailSignInExisting": "Du logger allerede ind med {{email}}",
+    "emailSignInExistingUnknown": "Denne konto logger allerede ind uden en wallet.",
+    "emailSignInSend": "Send kode",
+    "emailSignInSent": "Tjek din indbakke for koden",
+    "emailSignInConfirm": "Bekræft",
+    "emailSignInDone": "Du kan nu logge ind med denne e-mail",
+    "emailSignInRemove": "Fjern",
+    "emailSignInRemoved": "Fjernet — denne e-mail kan ikke længere logge dig ind",
+    "cancel": "Annuller"
   },
   "common": {
     "save": "Gem",

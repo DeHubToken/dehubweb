@@ -484,7 +484,20 @@
     "leftHandedDesc": "Bəyən düyməsini reaksiyalar panelinin sol tərəfinə keçirin",
     "notifyTipsDesc": "DeHub tokenləri ilə sizə hədiyyə göndərildikdə",
     "messageFeeDesc": "Sizinlə mesajlaşmaq üçün DeHub tokenlərində minimum hədiyyə tələb edin",
-    "tokenBalance": "Token Balansı"
+    "tokenBalance": "Token Balansı",
+    "signIn": "Giriş",
+    "emailSignIn": "Giriş e-poçtu",
+    "emailSignInDesc": "Pulqabı olmadan daxil olmaq üçün e-poçt ünvanı əlavə edin.",
+    "emailSignInLinked": "Kodla giriş {{email}} üçün aktivdir",
+    "emailSignInExisting": "Siz artıq {{email}} ilə daxil olursunuz",
+    "emailSignInExistingUnknown": "Bu hesab artıq pulqabısız daxil olur.",
+    "emailSignInSend": "Kodu göndər",
+    "emailSignInSent": "Kod üçün gələnlər qutunuzu yoxlayın",
+    "emailSignInConfirm": "Təsdiqlə",
+    "emailSignInDone": "İndi bu e-poçtla daxil ola bilərsiniz",
+    "emailSignInRemove": "Sil",
+    "emailSignInRemoved": "Silindi — bu e-poçtla artıq daxil ola bilməzsiniz",
+    "cancel": "Ləğv et"
   },
   "common": {
     "save": "Saxla",

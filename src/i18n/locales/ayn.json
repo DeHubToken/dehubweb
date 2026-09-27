@@ -440,7 +440,20 @@
     "leftHandedDesc": "انقل زر الإعجاب إلى الجهة اليسرى من شريط التفاعلات",
     "notifyTipsDesc": "لما حد يبعتلك إكرامية بتوكنز DeHub",
     "messageFeeDesc": "يتطلب حد أدنى للإكرامية بتوكنز DeHub عشان تراسلني",
-    "tokenBalance": "رصيد التوكنز"
+    "tokenBalance": "رصيد التوكنز",
+    "signIn": "تسجيل الدخول",
+    "emailSignIn": "إيميل الدخول",
+    "emailSignInDesc": "اربط إيميل عشان تدخل بدون محفظتك.",
+    "emailSignInLinked": "الدخول بالكود شغّال لـ {{email}}",
+    "emailSignInExisting": "أنت أصلاً تدخل بـ {{email}}",
+    "emailSignInExistingUnknown": "هذا الحساب أصلاً يدخل بدون محفظة.",
+    "emailSignInSend": "ارسل الكود",
+    "emailSignInSent": "شوف البريد الوارد حقك عشان الكود",
+    "emailSignInConfirm": "أكّد",
+    "emailSignInDone": "الحين تقدر تدخل بهذا الإيميل",
+    "emailSignInRemove": "احذف",
+    "emailSignInRemoved": "انحذف — هذا الإيميل ما عاد يقدر يدخّلك",
+    "cancel": "إلغاء"
   },
   "common": {
     "save": "حفظ",

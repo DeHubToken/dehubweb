@@ -468,7 +468,20 @@
     "leftHandedDesc": "მოწონების ღილაკის გადატანა რეაქციების ზოლის მარცხენა მხარეს",
     "notifyTipsDesc": "როდესაც ვინმე DeHub ტოკენებით გიგზავნით რჩევას",
     "messageFeeDesc": "მოითხოვეთ მინიმალური რჩევა DeHub ტოკენებში თქვენთან შეტყობინების გასაგზავნად",
-    "tokenBalance": "ტოკენების ბალანსი"
+    "tokenBalance": "ტოკენების ბალანსი",
+    "signIn": "შესვლა",
+    "emailSignIn": "შესვლის ელფოსტა",
+    "emailSignInDesc": "მიაბით ელფოსტის მისამართი, რომ საფულის გარეშე შეხვიდეთ.",
+    "emailSignInLinked": "კოდით შესვლა აქტიურია {{email}}-ისთვის",
+    "emailSignInExisting": "თქვენ უკვე შედიხართ {{email}}-ით",
+    "emailSignInExistingUnknown": "ეს ანგარიში უკვე შედის საფულის გარეშე.",
+    "emailSignInSend": "კოდის გაგზავნა",
+    "emailSignInSent": "კოდი მოძებნეთ შემოსულ წერილებში",
+    "emailSignInConfirm": "დადასტურება",
+    "emailSignInDone": "ახლა შეგიძლიათ ამ ელფოსტით შესვლა",
+    "emailSignInRemove": "წაშლა",
+    "emailSignInRemoved": "წაიშალა — ამ ელფოსტით ვეღარ შეხვალთ",
+    "cancel": "გაუქმება"
   },
   "common": {
     "save": "შენახვა",

@@ -465,7 +465,20 @@
     "leftHandedDesc": "रोचते-गण्डं प्रतिक्रिया-पट्टिकायाः वामपार्श्वं नयतु",
     "notifyTipsDesc": "जेव्हा कोणी तुम्हाला डीहब टोकनमध्ये टीप पाठवते",
     "messageFeeDesc": "तुम्हाला संदेश पाठवण्यासाठी डीहब टोकनमध्ये किमान टीप आवश्यक आहे",
-    "tokenBalance": "टोकन शिल्लक"
+    "tokenBalance": "टोकन शिल्लक",
+    "signIn": "प्रवेशः",
+    "emailSignIn": "प्रवेश-ईमेल",
+    "emailSignInDesc": "कोषं विना प्रवेष्टुं ईमेल-सङ्केतं योजयतु।",
+    "emailSignInLinked": "{{email}} इत्यस्य कृते सङ्केताङ्क-प्रवेशः सक्रियः अस्ति",
+    "emailSignInExisting": "भवान् पूर्वमेव {{email}} इत्यनेन प्रविशति",
+    "emailSignInExistingUnknown": "इदं खातं पूर्वमेव कोषं विना प्रविशति।",
+    "emailSignInSend": "सङ्केताङ्कं प्रेषयतु",
+    "emailSignInSent": "सङ्केताङ्काय स्वकीयं इनबॉक्स् पश्यतु",
+    "emailSignInConfirm": "पुष्टीकरोतु",
+    "emailSignInDone": "इदानीं भवान् अनेन ईमेल-द्वारा प्रवेष्टुं शक्नोति",
+    "emailSignInRemove": "निष्कासयतु",
+    "emailSignInRemoved": "निष्कासितम् — अनेन ईमेल-द्वारा इतः परं प्रवेशः न शक्यः",
+    "cancel": "निरस्तं कुर्वन्तु"
   },
   "common": {
     "save": "रक्षतु",

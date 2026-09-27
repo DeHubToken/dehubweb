@@ -470,7 +470,20 @@
     "leftHandedDesc": "લાઇક બટનને પ્રતિક્રિયા બારની ડાબી બાજુએ ખસેડો",
     "notifyTipsDesc": "જ્યારે કોઈ તમને DeHub ટોકન્સમાં ટીપ મોકલે",
     "messageFeeDesc": "તમને મેસેજ કરવા માટે DeHub ટોકન્સમાં ન્યૂનતમ ટીપની જરૂર છે",
-    "tokenBalance": "ટોકન બેલેન્સ"
+    "tokenBalance": "ટોકન બેલેન્સ",
+    "signIn": "સાઇન-ઇન",
+    "emailSignIn": "સાઇન-ઇન ઇમેઇલ",
+    "emailSignInDesc": "વૉલેટ વિના સાઇન ઇન કરવા માટે ઇમેઇલ સરનામું જોડો.",
+    "emailSignInLinked": "{{email}} માટે કોડ લૉગિન સક્રિય છે",
+    "emailSignInExisting": "તમે પહેલેથી {{email}} વડે સાઇન ઇન કરો છો",
+    "emailSignInExistingUnknown": "આ એકાઉન્ટ પહેલેથી વૉલેટ વિના સાઇન ઇન કરે છે.",
+    "emailSignInSend": "કોડ મોકલો",
+    "emailSignInSent": "કોડ માટે તમારું ઇનબૉક્સ તપાસો",
+    "emailSignInConfirm": "પુષ્ટિ કરો",
+    "emailSignInDone": "હવે તમે આ ઇમેઇલ વડે સાઇન ઇન કરી શકો છો",
+    "emailSignInRemove": "દૂર કરો",
+    "emailSignInRemoved": "દૂર કરાયું — આ ઇમેઇલ વડે હવે સાઇન ઇન થઈ શકશે નહીં",
+    "cancel": "રદ કરો"
   },
   "common": {
     "save": "સાચવો",

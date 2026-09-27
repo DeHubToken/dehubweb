@@ -484,7 +484,20 @@
     "leftHandedDesc": "Flytta gilla-knappen till vänster sida av reaktionsfältet",
     "notifyTipsDesc": "När någon skickar dig ett dricks i DeHub-tokens",
     "messageFeeDesc": "Kräv ett minimidrinks i DeHub-tokens för att skicka meddelanden till dig",
-    "tokenBalance": "Tokenbalans"
+    "tokenBalance": "Tokenbalans",
+    "signIn": "Inloggning",
+    "emailSignIn": "Inloggnings-e-post",
+    "emailSignInDesc": "Koppla en e-postadress för att logga in utan din plånbok.",
+    "emailSignInLinked": "Kodinloggning är aktiv för {{email}}",
+    "emailSignInExisting": "Du loggar redan in med {{email}}",
+    "emailSignInExistingUnknown": "Det här kontot loggar redan in utan plånbok.",
+    "emailSignInSend": "Skicka kod",
+    "emailSignInSent": "Kolla inkorgen efter koden",
+    "emailSignInConfirm": "Bekräfta",
+    "emailSignInDone": "Nu kan du logga in med den här e-postadressen",
+    "emailSignInRemove": "Ta bort",
+    "emailSignInRemoved": "Borttagen — den här e-postadressen kan inte längre logga in dig",
+    "cancel": "Avbryt"
   },
   "common": {
     "save": "Spara",

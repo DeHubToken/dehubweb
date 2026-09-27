@@ -469,7 +469,20 @@
     "leftHandedDesc": "Nekehia te pātene makau ki te taha mauī o te pae tauhohenga",
     "notifyTipsDesc": "A ka tukuna e tetahi ki a koe he tohu i roto i nga tohu DeHub",
     "messageFeeDesc": "Me whai tohu tohu DeHub teitei hei tuku karere ki a koe",
-    "tokenBalance": "Tohu Tohu"
+    "tokenBalance": "Tohu Tohu",
+    "signIn": "Takiuru",
+    "emailSignIn": "Īmēra takiuru",
+    "emailSignInDesc": "Honoa he wāhitau īmēra kia takiuru ai koe me te kore pūkoro.",
+    "emailSignInLinked": "Kei te hohe te takiuru waehere mō {{email}}",
+    "emailSignInExisting": "Kei te takiuru kē koe mā {{email}}",
+    "emailSignInExistingUnknown": "Kei te takiuru kē tēnei pūkete me te kore pūkoro.",
+    "emailSignInSend": "Tukua te waehere",
+    "emailSignInSent": "Tirohia tō pouakauru mō te waehere",
+    "emailSignInConfirm": "Whakaū",
+    "emailSignInDone": "Ka taea e koe te takiuru ki tēnei īmēra ināianei",
+    "emailSignInRemove": "Tango",
+    "emailSignInRemoved": "Kua tangohia — kua kore e taea e tēnei īmēra te whakauru i a koe",
+    "cancel": "Whakakore"
   },
   "common": {
     "save": "Tiaki",

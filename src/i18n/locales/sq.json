@@ -484,7 +484,20 @@
     "leftHandedDesc": "Zhvendos butonin e pëlqimit në anën e majtë të shiritit të reagimeve",
     "notifyTipsDesc": "Kur dikush ju dërgon një sugjerim në tokena DeHub",
     "messageFeeDesc": "Kërkoni një sugjerim minimal në tokena DeHub për t'ju dërguar mesazh",
-    "tokenBalance": "Bilanci i Tokenave"
+    "tokenBalance": "Bilanci i Tokenave",
+    "signIn": "Hyrja",
+    "emailSignIn": "Email-i i hyrjes",
+    "emailSignInDesc": "Lidh një adresë email-i për të hyrë pa portofol.",
+    "emailSignInLinked": "Hyrja me kod është aktive për {{email}}",
+    "emailSignInExisting": "Ti tashmë hyn me {{email}}",
+    "emailSignInExistingUnknown": "Kjo llogari tashmë hyn pa portofol.",
+    "emailSignInSend": "Dërgo kodin",
+    "emailSignInSent": "Kontrollo kutinë hyrëse për kodin",
+    "emailSignInConfirm": "Konfirmo",
+    "emailSignInDone": "Tani mund të hysh me këtë email",
+    "emailSignInRemove": "Hiq",
+    "emailSignInRemoved": "U hoq — ky email nuk të fut më në llogari",
+    "cancel": "Anulo"
   },
   "common": {
     "save": "Ruaj",

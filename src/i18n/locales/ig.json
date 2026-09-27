@@ -468,7 +468,20 @@
     "leftHandedDesc": "Bugharịa bọtịnụ amasịrị m gaa n'akụkụ aka ekpe nke ogwe mmeghachi omume",
     "notifyTipsDesc": "Mgbe mmadụ nyere gị ego na DeHub tokens",
     "messageFeeDesc": "Chọọ ego kacha nta na DeHub tokens iji ziga gị ozi",
-    "tokenBalance": "Ngwongwo Token"
+    "tokenBalance": "Ngwongwo Token",
+    "signIn": "Ịbanye",
+    "emailSignIn": "Email ịbanye",
+    "emailSignInDesc": "Jikọọ adreesị email ka ị banye na-enweghị obere akpa ego gị.",
+    "emailSignInLinked": "Ịbanye site na koodu na-arụ ọrụ maka {{email}}",
+    "emailSignInExisting": "Ị na-eji {{email}} abanye ugbu a",
+    "emailSignInExistingUnknown": "Akaụntụ a na-abanye na-enweghị obere akpa ego.",
+    "emailSignInSend": "Zipu koodu",
+    "emailSignInSent": "Lelee igbe ozi gị maka koodu ahụ",
+    "emailSignInConfirm": "Kwado",
+    "emailSignInDone": "Ugbu a ị nwere ike iji email a banye",
+    "emailSignInRemove": "Wepụ",
+    "emailSignInRemoved": "Ewepụla — email a enweghịzi ike ịbanye gị",
+    "cancel": "Kagbuo"
   },
   "common": {
     "save": "Chekwaa",

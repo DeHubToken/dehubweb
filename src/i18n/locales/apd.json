@@ -440,7 +440,20 @@
     "leftHandedDesc": "انقل زر الإعجاب للجهة الشمال من شريط التفاعلات",
     "notifyTipsDesc": "لما زول يرسل ليك تيب بالديهاب توكنز",
     "messageFeeDesc": "تطلب حد أدنى للتيب بالديهاب توكنز عشان تراسلني",
-    "tokenBalance": "رصيد التوكنز"
+    "tokenBalance": "رصيد التوكنز",
+    "signIn": "تسجيل الدخول",
+    "emailSignIn": "إيميل الدخول",
+    "emailSignInDesc": "اربط إيميل عشان تدخل من غير محفظتك.",
+    "emailSignInLinked": "الدخول بالكود شغّال لـ {{email}}",
+    "emailSignInExisting": "إنت أصلاً بتدخل بـ {{email}}",
+    "emailSignInExistingUnknown": "الحساب ده أصلاً بدخل من غير محفظة.",
+    "emailSignInSend": "رسّل الكود",
+    "emailSignInSent": "شوف البريد الوارد بتاعك عشان الكود",
+    "emailSignInConfirm": "أكّد",
+    "emailSignInDone": "هسي تقدر تدخل بالإيميل ده",
+    "emailSignInRemove": "شيل",
+    "emailSignInRemoved": "اتشال — الإيميل ده ما بقدر يدخّلك تاني",
+    "cancel": "إلغاء"
   },
   "common": {
     "save": "احفظ",

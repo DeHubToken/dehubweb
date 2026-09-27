@@ -470,7 +470,20 @@
     "leftHandedDesc": "Qabduu jaallachuu gara bitaa sararaa deebii tti siksi",
     "notifyTipsDesc": "Yeroo namni tokko gorsa DeHub tokens keessatti siif ergu",
     "messageFeeDesc": "Ergaa siif erguuf gorsa xiqqaa DeHub tokens keessatti barbaadi",
-    "tokenBalance": "Madaallii Mallattoo"
+    "tokenBalance": "Madaallii Mallattoo",
+    "signIn": "Seensa",
+    "emailSignIn": "Imeelii seensaa",
+    "emailSignInDesc": "Boorsaa malee seenuuf teessoo imeelii walqabsiisi.",
+    "emailSignInLinked": "Koodiin seenuun {{email}}f hojii irra jira",
+    "emailSignInExisting": "Ati duraanuu {{email}}n seenta",
+    "emailSignInExistingUnknown": "Herregni kun duraanuu boorsaa malee seena.",
+    "emailSignInSend": "Koodii ergi",
+    "emailSignInSent": "Koodii argachuuf saanduqa galtee kee ilaali",
+    "emailSignInConfirm": "Mirkaneessi",
+    "emailSignInDone": "Amma imeelii kanaan seenuu dandeessa",
+    "emailSignInRemove": "Haqi",
+    "emailSignInRemoved": "Haqameera — imeelii kanaan kana booda seenuu hin dandeessu",
+    "cancel": "Dhiisi"
   },
   "common": {
     "save": "Olchi",

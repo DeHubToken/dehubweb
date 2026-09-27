@@ -470,7 +470,20 @@
     "leftHandedDesc": "Halamak düwmesini reaksiýalar setiriniň çep tarapyna geçiriň",
     "notifyTipsDesc": "DeHub tokenlerinde size sowgat iberenlerinde",
     "messageFeeDesc": "Siziň bilen habarlaşmak üçin DeHub tokenlerinde iň az sowgat talap ediň",
-    "tokenBalance": "Token balansy"
+    "tokenBalance": "Token balansy",
+    "signIn": "Giriş",
+    "emailSignIn": "Giriş e-poçtasy",
+    "emailSignInDesc": "Gapjyksyz girmek üçin e-poçta salgysyny baglaň.",
+    "emailSignInLinked": "Kod bilen giriş {{email}} üçin işjeň",
+    "emailSignInExisting": "Siz eýýäm {{email}} bilen girýärsiňiz",
+    "emailSignInExistingUnknown": "Bu hasap eýýäm gapjyksyz girýär.",
+    "emailSignInSend": "Kod iber",
+    "emailSignInSent": "Kody gelen hatlaryňyzdan barlaň",
+    "emailSignInConfirm": "Tassykla",
+    "emailSignInDone": "Indi bu e-poçta bilen girip bilersiňiz",
+    "emailSignInRemove": "Aýyr",
+    "emailSignInRemoved": "Aýryldy — bu e-poçta bilen indi girip bilmersiňiz",
+    "cancel": "Ýatyr"
   },
   "common": {
     "save": "Ýatda sakla",

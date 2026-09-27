@@ -484,7 +484,20 @@
     "leftHandedDesc": "Pindahkan tombol suka ke sisi kiri bilah reaksi",
     "notifyTipsDesc": "Saat seseorang mengirimi Anda tip dalam token DeHub",
     "messageFeeDesc": "Membutuhkan tip minimum dalam token DeHub untuk mengirim pesan kepada Anda",
-    "tokenBalance": "Saldo Token"
+    "tokenBalance": "Saldo Token",
+    "signIn": "Masuk",
+    "emailSignIn": "Email untuk masuk",
+    "emailSignInDesc": "Tautkan alamat email agar bisa masuk tanpa dompet.",
+    "emailSignInLinked": "Masuk dengan kode aktif untuk {{email}}",
+    "emailSignInExisting": "Kamu sudah masuk dengan {{email}}",
+    "emailSignInExistingUnknown": "Akun ini sudah bisa masuk tanpa dompet.",
+    "emailSignInSend": "Kirim kode",
+    "emailSignInSent": "Cek kotak masukmu untuk kodenya",
+    "emailSignInConfirm": "Konfirmasi",
+    "emailSignInDone": "Sekarang kamu bisa masuk dengan email ini",
+    "emailSignInRemove": "Hapus",
+    "emailSignInRemoved": "Dihapus — email ini tidak bisa lagi dipakai untuk masuk",
+    "cancel": "Batal"
   },
   "common": {
     "save": "Simpan",
