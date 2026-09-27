@@ -2149,6 +2149,31 @@ function repairProxiedImages(html) {
   return out;
 }
 
+/**
+ * Profile share card as a 1200x630 banner. The fn advertises the avatar as a
+ * 400-square `summary` card, and X draws that as an empty grey tile in the
+ * composer and timeline even though it fetches the image fine. Pad the avatar
+ * onto a black 1200x630 frame with the same image transform and declare a
+ * large card, so a shared profile unfurls with the person's picture.
+ */
+function profileBannerCard(html) {
+  const m = html.match(/<meta property="og:image" content="([^"]*)">/);
+  if (!m) return html;
+  const src = m[1].replace(/^https:\/\/dehub\.io\/cdn-cgi\/image\/[^/]+\//, '');
+  if (!src.startsWith(`${CDN_ORIGIN}/avatars/`)) return html;
+  const card = `${IMAGE_TRANSFORM_BASE}format=jpeg,width=1200,height=630,fit=pad,background=%23000000/${src}`;
+  let out = html
+    .replace(/(<meta (?:property="og:image(?::secure_url)?"|name="twitter:image") content=")[^"]*(">)/g, `$1${card}$2`)
+    .replace(/(<meta property="og:image:width" content=")[^"]*(">)/g, '$11200$2')
+    .replace(/(<meta property="og:image:height" content=")[^"]*(">)/g, '$1630$2')
+    .replace(/(<meta property="og:image:type" content=")[^"]*(">)/g, '$1image/jpeg$2')
+    .replace(/(<meta name="twitter:card" content=")[^"]*(">)/g, '$1summary_large_image$2');
+  if (!/name="twitter:image"/.test(out)) {
+    out = out.replace('</head>', `<meta name="twitter:image" content="${card}"></head>`);
+  }
+  return out;
+}
+
 function buildStoreHtml(store) {
   const canonicalUrl = `${APP_URL}/stores/${store.id}`;
   const name = store.name || 'Store';
@@ -5152,6 +5177,9 @@ async function handleRequest(request, env, ctx) {
     // redirect to the logo (see repairProxiedImages).
     if (isEntityRoute) {
       html = repairProxiedImages(html);
+    }
+    if (proxiedHandle) {
+      html = profileBannerCard(html);
     }
 
 
