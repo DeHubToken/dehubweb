@@ -326,7 +326,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
   const [imageFullscreen, setImageFullscreen] = useState(false);
   const avatarUrl = isAssistantAddress(comment.address) ? ASSISTANT_AVATAR : comment.avatar;
   const i18n = useI18n();
-  const translation = useTranslation(comment.text || '');
+  const translation = useTranslation(comment.text || '', true, undefined, true);
   const shownName = comment.displayName || comment.username;
 
   // Creator on one side, name-wearer on the other. Both chips are about the
@@ -532,7 +532,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                 this comment and its output is what gets rendered here. Left on,
                 every comment in the thread was translated twice. */}
             {commentDisplayText && (
-              <TranslatableText
+              <TranslatableText publicContent
                 text={commentDisplayText}
                 className={cn("text-zinc-300 text-base leading-6 break-words", highlighted && "reply-text-glow")}
                 as="p"

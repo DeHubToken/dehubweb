@@ -436,8 +436,8 @@ function FeatureCard({
           </div>
         ) : (
           <>
-            <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
-            <TranslatableText text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
+            <TranslatableText publicContent text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
+            <TranslatableText publicContent text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
 
             {/* Attached media — one full-width, several as a grid */}
             <FeatureAttachments feature={feature} />
@@ -845,13 +845,13 @@ function ShippedCard({ feature }: { feature: FeatureRequest }) {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start gap-2 mb-1.5">
-          <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
+          <TranslatableText publicContent text={feature.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
           <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-white/10 text-white/70">
             {t('features.shippedBadge')}
           </span>
         </div>
 
-        <TranslatableText text={feature.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" />
+        <TranslatableText publicContent text={feature.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" />
 
         {/* Translate control */}
         <PostMetadata

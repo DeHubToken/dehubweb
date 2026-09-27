@@ -96,11 +96,13 @@ async function saveCategories(
 }
 
 /** Whatever was transcribed for this post, and how far along it is. */
-async function transcriptFor(tokenId: string): Promise<{ text: string | null; status: string | null }> {
+async function transcriptFor(
+  tokenId: string,
+): Promise<{ text: string | null; status: string | null; isPublic: boolean }> {
   const db = admin();
   const { data } = await db
     .from('transcripts')
-    .select('full_text, status')
+    .select('full_text, status, visibility')
     .in('source_kind', ['video', 'audio', 'live'])
     .eq('source_ref', tokenId)
     // limit(1) rather than maybeSingle(): dropping the status filter widened
@@ -111,7 +113,7 @@ async function transcriptFor(tokenId: string): Promise<{ text: string | null; st
   const row = Array.isArray(data) ? data[0] : null;
   const status = row?.status ? String(row.status) : null;
   const text = status === 'ready' ? String(row?.full_text ?? '').trim() : '';
-  return { text: text || null, status };
+  return { text: text || null, status, isPublic: row?.visibility === 'public' };
 }
 
 /**
@@ -170,6 +172,7 @@ async function categorizeOne(
     title: post.name,
     description: post.description,
     transcript: transcript.text,
+    transcriptPublic: transcript.isPublic,
     imageUrl: postImageUrl(post),
     availableCategories: available,
     existing,
