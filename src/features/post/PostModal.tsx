@@ -4,6 +4,7 @@ import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
 import { usePostSound } from './hooks/usePostSound';
+import { buildSoundtrackTag } from '@/lib/soundtrack';
 import type { PollData, LiveStreamHandoff } from './types';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
@@ -12,7 +13,6 @@ import { CrossPostPicker } from './components/CrossPostPicker';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
-import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
 import { BannedAccountNotice } from '@/components/app/BannedAccountNotice';
 import { useBannedAccount } from '@/hooks/use-banned-account';
@@ -373,14 +373,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onCameraCapture={actions.openCameraCapture}
         onEnhanceWithAI={actions.handleEnhanceWithAI}
         onPost={() => {
-          const soundtrackTag = attachedSound
-            ? (() => {
-                const relPath = attachedSound.url.startsWith(DEHUB_CDN_BASE)
-                  ? attachedSound.url.slice(DEHUB_CDN_BASE.length)
-                  : attachedSound.url;
-                return `[soundtrack:${attachedSound.tokenId}:${attachedSound.title}:${attachedSound.creator}:${relPath}]`;
-              })()
-            : undefined;
+          const soundtrackTag = attachedSound ? buildSoundtrackTag(attachedSound) : undefined;
           actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}), ...(articleMode ? { articleBody: articleBody.trim(), articleImage: articleImage || undefined, socialImage: articleImage || undefined } : {}) });
         }}
         canPost={computed.canPost && (!articleMode || (state.titleText.trim().length > 0 && state.text.trim().length > 0 && articleBody.trim().length >= 100 && !computed.hasVideo && !computed.hasImage && !computed.hasAudio))}

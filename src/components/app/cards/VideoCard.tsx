@@ -963,10 +963,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 setIsLoading(false);
               });
             }
-          } else if (entry.isIntersecting && !isPlayingRef.current && !video.videoUrl && video.soundtrackUrl && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || isSubscriberGated(video.subscriberPlans, false))) {
-            // Auto-play soundtrack for image posts with attached sound
-            isPlayingRef.current = true;
-            setIsPlaying(true);
           }
         });
       },

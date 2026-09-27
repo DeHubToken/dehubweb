@@ -21,7 +21,7 @@
  *    did. Double-tap is left alone — it stays a like, as it is on the card.
  */
 
-import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
@@ -72,6 +72,7 @@ export interface FullscreenImageViewerProps {
   postId?: string;
   /** Engagement data + handlers; when set with `postId`, renders the bottom action bar. */
   actions?: FullscreenViewerActions;
+  soundtrackControl?: ReactNode;
 }
 
 const SWIPE_DOWN_THRESHOLD = 100;
@@ -83,6 +84,7 @@ export function FullscreenImageViewer({
   onClose,
   postId,
   actions,
+  soundtrackControl,
 }: FullscreenImageViewerProps) {
   // A zoomed slide owns the drag. `watchDrag` is consulted on every touchstart,
   // so a ref is enough here — no reInit, and no stale closure either.
@@ -391,6 +393,12 @@ export function FullscreenImageViewer({
             </div>
           )}
           
+          {soundtrackControl && (
+            <div data-keep-dark className="absolute top-20 left-4 right-4 z-10 flex justify-start" onClick={(e) => e.stopPropagation()}>
+              {soundtrackControl}
+            </div>
+          )}
+
           {/* Bottom action bar — like / comment / repost / tip with live counts,
               over a dark scrim so it reads on any image. Kept dark across themes. */}
           {showActionBar && (

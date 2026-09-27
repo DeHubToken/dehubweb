@@ -1,0 +1,109 @@
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { useRef } from 'react';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { useImageSoundtrack } from '@/hooks/use-image-soundtrack';
+import { videoPlaybackManager } from '@/lib/video-playback-manager';
+
+let intersect: (entries: { isIntersecting: boolean }[]) => void;
+let rejectPlay: ((reason: Error) => void) | undefined;
+let pending = false;
+
+function Player({ enabled = true, url = 'https://example.com/music.mp3' }) {
+  const anchor = useRef<HTMLDivElement>(null);
+  const state = useImageSoundtrack(url, anchor, enabled);
+  return <div ref={anchor}>
+    <button onClick={state.toggle}>{state.error ? 'retry' : state.loading ? 'loading' : state.playing ? 'pause' : 'play'}</button>
+    <audio ref={state.audioRef} />
+  </div>;
+}
+
+beforeEach(() => {
+  pending = false;
+  rejectPlay = undefined;
+  vi.stubGlobal('IntersectionObserver', class {
+    constructor(callback: typeof intersect) { intersect = callback; }
+    observe() {}
+    disconnect() {}
+  });
+  vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {});
+  vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(function () {
+    const wasPaused = this.paused;
+    Object.defineProperty(this, 'paused', { configurable: true, value: true });
+    if (!wasPaused) this.dispatchEvent(new Event('pause'));
+  });
+  vi.spyOn(HTMLMediaElement.prototype, 'play').mockImplementation(function () {
+    Object.defineProperty(this, 'paused', { configurable: true, value: false });
+    if (pending) return new Promise<void>((_, reject) => { rejectPlay = reject; });
+    this.dispatchEvent(new Event('playing'));
+    return Promise.resolve();
+  });
+});
+
+afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+
+it('loads only on tap, and never autoplays on entering the viewport', () => {
+  const { container } = render(<Player />);
+  act(() => intersect([{ isIntersecting: true }]));
+  expect(container.querySelector('audio')?.getAttribute('src')).toBeNull();
+  expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByText('play'));
+  expect(screen.getByText('pause')).toBeTruthy();
+  expect(container.querySelector('audio')?.src).toBe('https://example.com/music.mp3');
+});
+
+it('pauses out of view and does not restart when returning', () => {
+  render(<Player />);
+  fireEvent.click(screen.getByText('play'));
+  act(() => intersect([{ isIntersecting: false }]));
+  act(() => intersect([{ isIntersecting: true }]));
+  expect(screen.getByText('play')).toBeTruthy();
+  expect(HTMLMediaElement.prototype.play).toHaveBeenCalledTimes(1);
+});
+
+it('allows cancellation during load without showing a stale rejection as an error', async () => {
+  pending = true;
+  render(<Player />);
+  fireEvent.click(screen.getByText('play'));
+  fireEvent.click(screen.getByText('loading'));
+  await act(async () => rejectPlay?.(new Error('aborted')));
+  expect(screen.getByText('play')).toBeTruthy();
+});
+
+it('shows retry for a genuine playback failure', async () => {
+  pending = true;
+  render(<Player />);
+  fireEvent.click(screen.getByText('play'));
+  await act(async () => rejectPlay?.(new Error('offline')));
+  expect(screen.getByText('retry')).toBeTruthy();
+  pending = false;
+  fireEvent.click(screen.getByText('retry'));
+  expect(screen.getByText('pause')).toBeTruthy();
+});
+
+it('gates playback and pauses immediately when access is withdrawn', () => {
+  const { rerender } = render(<Player enabled={false} />);
+  fireEvent.click(screen.getByText('play'));
+  expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled();
+  rerender(<Player />);
+  fireEvent.click(screen.getByText('play'));
+  rerender(<Player enabled={false} />);
+  expect(screen.getByText('play')).toBeTruthy();
+});
+
+it('yields to another video claiming audio', () => {
+  render(<Player />);
+  fireEvent.click(screen.getByText('play'));
+  act(() => videoPlaybackManager.claimAudio('other'));
+  expect(screen.getByText('play')).toBeTruthy();
+  videoPlaybackManager.stop('other');
+});
+
+it('resets on a changed soundtrack and preserves position on normal pause', () => {
+  const { container, rerender } = render(<Player />);
+  fireEvent.click(screen.getByText('play'));
+  container.querySelector('audio')!.currentTime = 12;
+  fireEvent.click(screen.getByText('pause'));
+  expect(container.querySelector('audio')!.currentTime).toBe(12);
+  rerender(<Player url="https://example.com/other.mp3" />);
+  expect(container.querySelector('audio')?.getAttribute('src')).toBeNull();
+});

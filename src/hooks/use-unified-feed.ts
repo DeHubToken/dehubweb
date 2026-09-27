@@ -23,22 +23,8 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
-/** Parse [soundtrack:tokenId:title:creator:audioPath?] tag from a description string */
-export function parseSoundtrackTag(description?: string): { soundtrackUrl?: string; soundtrackTitle?: string; soundtrackCreator?: string } {
-  if (!description) return {};
-  // Supports both old format (4 fields) and new format (5 fields with audioPath)
-  const m = description.match(/\[soundtrack:(\d+):([^:]*):([^:\]]*):?([^\]]*)\]/);
-  if (!m) return {};
-  const tokenId = m[1];
-  const audioPath = m[4]?.trim();
-  return {
-    soundtrackUrl: audioPath
-      ? `${DEHUB_CDN_BASE}${audioPath}`
-      : `${DEHUB_CDN_BASE}feed-audio/${tokenId}-audio.mp3`,
-    soundtrackTitle: m[2] || 'Sound',
-    soundtrackCreator: m[3] || '',
-  };
-}
+import { parseSoundtrackTag } from '@/lib/soundtrack';
+export { parseSoundtrackTag } from '@/lib/soundtrack';
 
 // ===========================================================================
 // TYPES
