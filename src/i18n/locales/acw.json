@@ -2970,7 +2970,11 @@
     "notEnoughTokens": "لا توجد توكنات كافية للتعليق الصوتي.",
     "notEnoughTokensDescription": "تحتاج حوالي {{needed}} توكن ولديك {{held}}.",
     "paymentLeftWallet": "راحت توكناتك من محفظتك. اضغط دفع مرة ثانية عشان تعيد تأكيدها.",
-    "paidForMinutes": "دفعت {{amount}} توكن مقابل {{minutes}} دقيقة من الدبلجة."
+    "paidForMinutes": "دفعت {{amount}} توكن مقابل {{minutes}} دقيقة من الدبلجة.",
+    "menuItem": "دبلجة",
+    "noTranscript": "الفيديو هذا ما له نص لسه، فما يمديه يتدبلج. جرّب بعدين.",
+    "noVoice": "جهازك ما فيه صوت للغة هذي.",
+    "sameLanguage": "الفيديو هذا أصلاً بلغتك."
   },
   "digest": {
     "andOthers_one": "{{names}} و {{count}} آخرون",

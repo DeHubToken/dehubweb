@@ -5159,7 +5159,11 @@
     "notEnoughTokens": "Dubleerimiseks pole piisavalt märke.",
     "notEnoughTokensDescription": "Teil on vaja umbes {{needed}} märk ja teil on {{held}}.",
     "paymentLeftWallet": "Teie märgid on teie rahakotist lahkunud. Vajutage uuesti \"Maksa\", et proovida kinnitada.",
-    "paidForMinutes": "Makstud {{amount}} märki {{minutes}} minuti dubleerimise eest."
+    "paidForMinutes": "Makstud {{amount}} märki {{minutes}} minuti dubleerimise eest.",
+    "menuItem": "Dubleeri",
+    "noTranscript": "Sellel videol pole veel transkriptsiooni, seega seda ei saa dubleerida. Proovi hiljem uuesti.",
+    "noVoice": "Sinu seadmel pole selle keele jaoks häält.",
+    "sameLanguage": "See video on juba sinu keeles."
   },
   "digest": {
     "andOthers_one": "{{names}} ja {{count}} teist",

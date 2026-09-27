@@ -5158,7 +5158,11 @@
     "notEnoughTokens": "Inte tillräckligt med tokens för dubbning.",
     "notEnoughTokensDescription": "Du behöver cirka {{needed}} tokens och har {{held}}.",
     "paymentLeftWallet": "Dina tokens har lämnat din plånbok. Tryck på Betala igen för att försöka bekräfta den.",
-    "paidForMinutes": "Betalade {{amount}} tokens för {{minutes}} minuter av dubbning."
+    "paidForMinutes": "Betalade {{amount}} tokens för {{minutes}} minuter av dubbning.",
+    "menuItem": "Dubbning",
+    "noTranscript": "Den här videon har ingen transkription än, så den kan inte dubbas. Försök igen senare.",
+    "noVoice": "Din enhet har ingen röst för det här språket.",
+    "sameLanguage": "Den här videon är redan på ditt språk."
   },
   "digest": {
     "andOthers_one": "{{names}} och {{count}} andra",

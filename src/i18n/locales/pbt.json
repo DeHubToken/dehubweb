@@ -2962,7 +2962,11 @@
     "notEnoughTokens": "د دوبل کولو لپاره کافي توکونه نشته.",
     "notEnoughTokensDescription": "تاسو شاوخوا {{needed}} ټوکنو ته اړتیا لرئ او {{held}} ساتئ.",
     "paymentLeftWallet": "ستاسو ټوکنونه ستاسو له والټ څخه وتلي دي. د تایید کولو لپاره بیا تادیه وکړئ.",
-    "paidForMinutes": "د {{minutes}} دقیقو لپاره {{amount}} ټوکن تادیه شوي."
+    "paidForMinutes": "د {{minutes}} دقیقو لپاره {{amount}} ټوکن تادیه شوي.",
+    "menuItem": "ډبنګ",
+    "noTranscript": "دا ویډیو لا تر اوسه لیکلی متن نه لري، نو ډب کېدای نه شي. وروسته بیا هڅه وکړئ.",
+    "noVoice": "ستاسو په وسیله کې د دې ژبې لپاره غږ نشته.",
+    "sameLanguage": "دا ویډیو دمخه ستاسو په ژبه ده."
   },
   "digest": {
     "andOthers_one": "{{names}} او {{count}} نور",

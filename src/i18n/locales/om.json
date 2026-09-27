@@ -3047,7 +3047,11 @@
     "notEnoughTokens": "Dubbing gochuuf token gahaa miti.",
     "notEnoughTokensDescription": "Waa&#39;ee mallattoo {{needed}} si barbaachisa {{held}} qabadhu.",
     "paymentLeftWallet": "Tookiin keessan boorsaa keessan keessaa ba&#39;eera. Irra deebi&#39;anii mirkaneessuuf yaaluuf ammas Pay dhiibi.",
-    "paidForMinutes": "Daqiiqaa {{minutes}} dubbing gochuuf token {{amount}} kaffale."
+    "paidForMinutes": "Daqiiqaa {{minutes}} dubbing gochuuf token {{amount}} kaffale.",
+    "menuItem": "Sagalee hiiku",
+    "noTranscript": "Viidiyoon kun ammallee barreeffama hin qabu, kanaaf sagaleen isaa hiikamuu hin danda'u. Booda irra deebi'ii yaali.",
+    "noVoice": "Meeshaan kee afaan kanaaf sagalee hin qabu.",
+    "sameLanguage": "Viidiyoon kun duraanuu afaan keetiin jira."
   },
   "digest": {
     "andOthers_one": "{{names}} fi {{count}} kanneen biroo",

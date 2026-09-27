@@ -2934,7 +2934,11 @@
     "notEnoughTokens": "ለማድብለይ በቂ ቶከኖች የሉም።",
     "notEnoughTokensDescription": "በግምት {{needed}} ቶከኖች ያስፈልግዎታል እና {{held}} አለዎት።",
     "paymentLeftWallet": "ቶከኖችዎ ከኪስ ቦርሳዎ ወጥተዋል። ለማረጋገጥ እንደገና ይክፈሉ።",
-    "paidForMinutes": "ለ{{minutes}} ደቂቃ የድምፅ ቅጂ {{amount}} ቶከኖች ከፍለዋል።"
+    "paidForMinutes": "ለ{{minutes}} ደቂቃ የድምፅ ቅጂ {{amount}} ቶከኖች ከፍለዋል።",
+    "menuItem": "ድምፅ ትርጉም",
+    "noTranscript": "ይህ ቪዲዮ ገና ግልባጭ የለውም፣ ስለዚህ ድምፁ ሊተረጎም አይችልም። ቆይተው ይሞክሩ።",
+    "noVoice": "መሣሪያዎ ለዚህ ቋንቋ ድምፅ የለውም።",
+    "sameLanguage": "ይህ ቪዲዮ አስቀድሞ በቋንቋዎ ነው።"
   },
   "digest": {
     "andOthers_one": "{{names}} እና {{count}} ሌሎች",

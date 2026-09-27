@@ -3029,7 +3029,11 @@
     "notEnoughTokens": "Kama filna tokens-ka dubbing-ga.",
     "notEnoughTokensDescription": "Waxaad u baahan tahay qiyaastii {{needed}} tokens waxaadna haysataa {{held}}.",
     "paymentLeftWallet": "Token-kaaga ayaa ka baxay jeebkaaga. Riix Bixi mar kale si aad u xaqiijiso.",
-    "paidForMinutes": "Waxaad bixisay {{amount}} token oo ah {{minutes}} daqiiqo oo cod-duubis ah."
+    "paidForMinutes": "Waxaad bixisay {{amount}} token oo ah {{minutes}} daqiiqo oo cod-duubis ah.",
+    "menuItem": "Codeyn",
+    "noTranscript": "Fiidiyowgan weli qoraal ma laha, sidaa darteed lama codeyn karo. Mar kale isku day hadhow.",
+    "noVoice": "Qalabkaagu ma laha cod luqaddan ah.",
+    "sameLanguage": "Fiidiyowgani horeba wuxuu ku jiraa luqaddaada."
   },
   "digest": {
     "andOthers_one": "{{names}} iyo {{count}} kale",

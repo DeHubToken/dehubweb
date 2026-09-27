@@ -5224,7 +5224,11 @@
     "notEnoughTokens": "لا توجد رموز كافية للترجمة الصوتية.",
     "notEnoughTokensDescription": "تحتاج إلى حوالي {{needed}} رمز وتمتلك {{held}}.",
     "paymentLeftWallet": "لقد غادرت رموزك محفظتك. اضغط على \"ادفع\" مرة أخرى لمحاولة تأكيدها.",
-    "paidForMinutes": "تم دفع {{amount}} رمزًا مقابل {{minutes}} دقيقة من الدبلجة."
+    "paidForMinutes": "تم دفع {{amount}} رمزًا مقابل {{minutes}} دقيقة من الدبلجة.",
+    "menuItem": "دبلجة",
+    "noTranscript": "لا يوجد نص لهذا الفيديو بعد، لذا لا يمكن دبلجته. حاول لاحقًا.",
+    "noVoice": "لا يوجد على جهازك صوت لهذه اللغة.",
+    "sameLanguage": "هذا الفيديو بلغتك بالفعل."
   },
   "support": {
     "title": "الدعم",

@@ -2447,7 +2447,11 @@
     "original": "Originalni zvuk",
     "dubbed": "Dijagnostikovani zvuk",
     "preparing": "Pripremanje sinhronizovanog zvuka…",
-    "unavailable": "Nazvani zvuk nije dostupan za ovaj video."
+    "unavailable": "Nazvani zvuk nije dostupan za ovaj video.",
+    "menuItem": "Синхронизација",
+    "noTranscript": "Овај видео још нема транскрипт, па не може да се синхронизује. Покушајте поново касније.",
+    "noVoice": "Ваш уређај нема глас за овај језик.",
+    "sameLanguage": "Овај видео је већ на вашем језику."
   },
   "digest": {
     "andOthers_one": "{{names}} и {{count}} други",
