@@ -483,7 +483,20 @@
     "leftHandedDesc": "Переносит кнопку «нравится» в левую часть панели реакций",
     "notifyTipsDesc": "Когда кто-то отправляет вам чаевые в токенах DeHub",
     "messageFeeDesc": "Требовать минимум чаевых в токенах DeHub для отправки вам сообщения",
-    "tokenBalance": "Баланс токенов"
+    "tokenBalance": "Баланс токенов",
+    "signIn": "Вход",
+    "emailSignIn": "Почта для входа",
+    "emailSignInDesc": "Привяжите адрес почты, чтобы входить без кошелька.",
+    "emailSignInLinked": "Вход по коду включён для {{email}}",
+    "emailSignInExisting": "Вы уже входите через {{email}}",
+    "emailSignInExistingUnknown": "Этот аккаунт уже входит без кошелька.",
+    "emailSignInSend": "Отправить код",
+    "emailSignInSent": "Проверьте почту — там код",
+    "emailSignInConfirm": "Подтвердить",
+    "emailSignInDone": "Теперь вы можете входить с этой почтой",
+    "emailSignInRemove": "Удалить",
+    "emailSignInRemoved": "Удалено — с этой почтой больше нельзя войти",
+    "cancel": "Отмена"
   },
   "common": {
     "save": "Сохранить",

@@ -470,7 +470,20 @@
     "leftHandedDesc": "لائيڪ بٽڻ کي رد عمل بار جي کاٻي پاسي ڏانهن منتقل ڪريو",
     "notifyTipsDesc": "جڏهن ڪو توهان کي ڊي هب ٽوڪن ۾ ٽپ موڪلي",
     "messageFeeDesc": "توهان کي پيغام موڪلڻ لاءِ ڊي هب ٽوڪن ۾ گهٽ ۾ گهٽ ٽپ گهرجي",
-    "tokenBalance": "ٽوڪن بيلنس"
+    "tokenBalance": "ٽوڪن بيلنس",
+    "signIn": "سائن ان",
+    "emailSignIn": "سائن ان اي ميل",
+    "emailSignInDesc": "والٽ کان سواءِ سائن ان لاءِ اي ميل پتو ڳنڍيو.",
+    "emailSignInLinked": "ڪوڊ لاگ ان {{email}} لاءِ فعال آهي",
+    "emailSignInExisting": "توهان اڳ ۾ ئي {{email}} سان سائن ان ڪريو ٿا",
+    "emailSignInExistingUnknown": "هي اڪائونٽ اڳ ۾ ئي والٽ کان سواءِ سائن ان ڪري ٿو.",
+    "emailSignInSend": "ڪوڊ موڪليو",
+    "emailSignInSent": "ڪوڊ لاءِ پنهنجو ان باڪس ڏسو",
+    "emailSignInConfirm": "تصديق ڪريو",
+    "emailSignInDone": "هاڻي توهان هن اي ميل سان سائن ان ڪري سگهو ٿا",
+    "emailSignInRemove": "هٽايو",
+    "emailSignInRemoved": "هٽايو ويو — هي اي ميل هاڻي توهان کي سائن ان نٿي ڪري سگهي",
+    "cancel": "منسوخ"
   },
   "common": {
     "save": "محفوظ ڪريو",

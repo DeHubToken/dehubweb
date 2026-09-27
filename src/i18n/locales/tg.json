@@ -469,7 +469,20 @@
     "leftHandedDesc": "Тугмаи писандиданро ба тарафи чапи сатри вокунишҳо интиқол диҳед",
     "notifyTipsDesc": "Вақте ки касе ба шумо маслиҳат дар нишонаҳои DeHub мефиристад",
     "messageFeeDesc": "Талаботи маслиҳати ҳадди аққал дар нишонаҳои DeHub барои паём додан ба шумо",
-    "tokenBalance": "Тавозуни нишона"
+    "tokenBalance": "Тавозуни нишона",
+    "signIn": "Воридшавӣ",
+    "emailSignIn": "Почтаи воридшавӣ",
+    "emailSignInDesc": "Барои ворид шудан бе ҳамён суроғаи почтаи электрониро пайваст кунед.",
+    "emailSignInLinked": "Воридшавӣ бо рамз барои {{email}} фаъол аст",
+    "emailSignInExisting": "Шумо аллакай бо {{email}} ворид мешавед",
+    "emailSignInExistingUnknown": "Ин ҳисоб аллакай бе ҳамён ворид мешавад.",
+    "emailSignInSend": "Фиристодани рамз",
+    "emailSignInSent": "Рамзро дар қуттии воридотӣ ҷӯед",
+    "emailSignInConfirm": "Тасдиқ",
+    "emailSignInDone": "Акнун шумо метавонед бо ин почта ворид шавед",
+    "emailSignInRemove": "Хориҷ кардан",
+    "emailSignInRemoved": "Хориҷ шуд — бо ин почта дигар ворид шуда наметавонед",
+    "cancel": "Бекор"
   },
   "common": {
     "save": "Сабт",

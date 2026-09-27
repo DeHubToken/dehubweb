@@ -454,7 +454,20 @@
     "usernamesDesc": "ឈ្មោះដែលអ្នកមាន",
     "usernamesCount_one": "{{count}} ឈ្មោះអ្នកប្រើ",
     "leftHanded": "របៀបដៃឆ្វេង",
-    "leftHandedDesc": "ផ្លាស់ប្ដូរប៊ូតុងចូលចិត្តទៅខាងឆ្វេងនៃរបារប្រតិកម្ម"
+    "leftHandedDesc": "ផ្លាស់ប្ដូរប៊ូតុងចូលចិត្តទៅខាងឆ្វេងនៃរបារប្រតិកម្ម",
+    "signIn": "ការចូល",
+    "emailSignIn": "អ៊ីមែលសម្រាប់ចូល",
+    "emailSignInDesc": "ភ្ជាប់អាសយដ្ឋានអ៊ីមែល ដើម្បីចូលដោយគ្មានកាបូប។",
+    "emailSignInLinked": "ការចូលដោយកូដកំពុងដំណើរការសម្រាប់ {{email}}",
+    "emailSignInExisting": "អ្នកចូលដោយ {{email}} រួចហើយ",
+    "emailSignInExistingUnknown": "គណនីនេះចូលដោយគ្មានកាបូបរួចហើយ។",
+    "emailSignInSend": "ផ្ញើកូដ",
+    "emailSignInSent": "ពិនិត្យប្រអប់សំបុត្ររបស់អ្នកដើម្បីរកកូដ",
+    "emailSignInConfirm": "បញ្ជាក់",
+    "emailSignInDone": "ឥឡូវអ្នកអាចចូលដោយអ៊ីមែលនេះបាន",
+    "emailSignInRemove": "លុបចេញ",
+    "emailSignInRemoved": "បានលុប — អ៊ីមែលនេះមិនអាចចូលគណនីអ្នកទៀតទេ",
+    "cancel": "បោះបង់"
   },
   "common": {
     "save": "រក្សាទុក",

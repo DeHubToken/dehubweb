@@ -470,7 +470,20 @@
     "leftHandedDesc": "ياقتۇرۇش كۇنۇپكىسىنى ئىنكاس بالدىقىنىڭ سول تەرىپىگە يۆتكەڭ",
     "notifyTipsDesc": "DeHub نۆتىكىسى بىلەن بىرەرس سىزگە قوللاپ-قۇۋۋەتلىسە",
     "messageFeeDesc": "سىزگە خەت ئەۋەتىش ئۈچۈن DeHub نۆتىكىسىدا ئەڭ تۆۋەن قوللاپ-قۇۋۋەتلەش مىقدارى تەلەپ قىلىنىدۇ",
-    "tokenBalance": "نۆتىك پۇل"
+    "tokenBalance": "نۆتىك پۇل",
+    "signIn": "كىرىش",
+    "emailSignIn": "كىرىش ئېلخېتى",
+    "emailSignInDesc": "ھەمياندىن باشقا كىرىش ئۈچۈن ئېلخەت ئادرېسى باغلاڭ.",
+    "emailSignInLinked": "كود بىلەن كىرىش {{email}} ئۈچۈن ئوچۇق",
+    "emailSignInExisting": "سىز ئاللىقاچان {{email}} بىلەن كىرىسىز",
+    "emailSignInExistingUnknown": "بۇ ھېسابات ئاللىقاچان ھەمياندىن باشقا كىرىدۇ.",
+    "emailSignInSend": "كود ئەۋەتىش",
+    "emailSignInSent": "كودنى كىرگەن خەتلەر ساندۇقىڭىزدىن كۆرۈڭ",
+    "emailSignInConfirm": "جەزملەش",
+    "emailSignInDone": "ئەمدى بۇ ئېلخەت بىلەن كىرەلەيسىز",
+    "emailSignInRemove": "چىقىرىۋېتىش",
+    "emailSignInRemoved": "چىقىرىۋېتىلدى — بۇ ئېلخەت بىلەن ئەمدى كىرەلمەيسىز",
+    "cancel": "بىكار قىلىش"
   },
   "common": {
     "save": "ساقلاش",

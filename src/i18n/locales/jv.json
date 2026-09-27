@@ -464,7 +464,20 @@
     "leftHandedDesc": "Pindhahake tombol seneng menyang sisih kiwa bar reaksi",
     "notifyTipsDesc": "Nalika ana wong ngirim tip nganggo token DeHub",
     "messageFeeDesc": "Mbutuhake tip minimal nganggo token DeHub kanggo pesen sampeyan",
-    "tokenBalance": "Saldo Token"
+    "tokenBalance": "Saldo Token",
+    "signIn": "Mlebu",
+    "emailSignIn": "Email kanggo mlebu",
+    "emailSignInDesc": "Sambungake alamat email supaya bisa mlebu tanpa dompet.",
+    "emailSignInLinked": "Mlebu nganggo kode aktif kanggo {{email}}",
+    "emailSignInExisting": "Sampeyan wis mlebu nganggo {{email}}",
+    "emailSignInExistingUnknown": "Akun iki wis mlebu tanpa dompet.",
+    "emailSignInSend": "Kirim kode",
+    "emailSignInSent": "Priksa kothak mlebumu kanggo kodene",
+    "emailSignInConfirm": "Konfirmasi",
+    "emailSignInDone": "Saiki sampeyan bisa mlebu nganggo email iki",
+    "emailSignInRemove": "Busak",
+    "emailSignInRemoved": "Wis dibusak — email iki ora bisa dienggo mlebu maneh",
+    "cancel": "Batal"
   },
   "common": {
     "save": "Simpen",

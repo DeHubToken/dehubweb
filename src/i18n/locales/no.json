@@ -469,7 +469,20 @@
     "leftHandedDesc": "Flytt liker-knappen til venstre side av reaksjonslinjen",
     "notifyTipsDesc": "Når noen sender deg et tips i DeHub-tokens",
     "messageFeeDesc": "Krever et minimumstips i DeHub-tokens for å sende deg en melding",
-    "tokenBalance": "Token-saldo"
+    "tokenBalance": "Token-saldo",
+    "signIn": "Pålogging",
+    "emailSignIn": "E-post for pålogging",
+    "emailSignInDesc": "Knytt til en e-postadresse for å logge inn uten lommeboken.",
+    "emailSignInLinked": "Kodepålogging er aktiv for {{email}}",
+    "emailSignInExisting": "Du logger allerede inn med {{email}}",
+    "emailSignInExistingUnknown": "Denne kontoen logger allerede inn uten lommebok.",
+    "emailSignInSend": "Send kode",
+    "emailSignInSent": "Sjekk innboksen din for koden",
+    "emailSignInConfirm": "Bekreft",
+    "emailSignInDone": "Nå kan du logge inn med denne e-posten",
+    "emailSignInRemove": "Fjern",
+    "emailSignInRemoved": "Fjernet — denne e-posten kan ikke lenger logge deg inn",
+    "cancel": "Avbryt"
   },
   "common": {
     "save": "Lagre",

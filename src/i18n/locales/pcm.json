@@ -387,7 +387,20 @@
     "usernamesCount_other": "{{count}} usernames",
     "leftHanded": "Left-hand mode",
     "leftHandedDesc": "Move di like button go di left side of di reactions bar",
-    "tokenBalance": "Token Balance"
+    "tokenBalance": "Token Balance",
+    "signIn": "Sign-in",
+    "emailSignIn": "Sign-in email",
+    "emailSignInDesc": "Join one email address so you fit sign in without your wallet.",
+    "emailSignInLinked": "Code login dey work for {{email}}",
+    "emailSignInExisting": "You don already dey sign in with {{email}}",
+    "emailSignInExistingUnknown": "Dis account don already dey sign in without wallet.",
+    "emailSignInSend": "Send code",
+    "emailSignInSent": "Check your inbox for di code",
+    "emailSignInConfirm": "Confam",
+    "emailSignInDone": "You fit sign in with dis email now",
+    "emailSignInRemove": "Comot",
+    "emailSignInRemoved": "E don comot — dis email no fit sign you in again",
+    "cancel": "Cancel"
   },
   "common": {
     "save": "Save Am",

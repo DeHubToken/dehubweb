@@ -483,7 +483,20 @@
     "leftHandedDesc": "העברת כפתור הלייק לצד השמאלי של סרגל התגובות",
     "notifyTipsDesc": "כאשר מישהו שולח לך טיפ באסימוני DeHub",
     "messageFeeDesc": "דרוש טיפ מינימלי באסימוני DeHub כדי לשלוח לך הודעה",
-    "tokenBalance": "יתרת אסימונים"
+    "tokenBalance": "יתרת אסימונים",
+    "signIn": "כניסה",
+    "emailSignIn": "אימייל לכניסה",
+    "emailSignInDesc": "חברו כתובת אימייל כדי להתחבר בלי הארנק.",
+    "emailSignInLinked": "כניסה עם קוד פעילה עבור {{email}}",
+    "emailSignInExisting": "אתם כבר מתחברים עם {{email}}",
+    "emailSignInExistingUnknown": "החשבון הזה כבר מתחבר בלי ארנק.",
+    "emailSignInSend": "שליחת קוד",
+    "emailSignInSent": "חפשו את הקוד בתיבת הדואר הנכנס",
+    "emailSignInConfirm": "אישור",
+    "emailSignInDone": "עכשיו אפשר להתחבר עם האימייל הזה",
+    "emailSignInRemove": "הסרה",
+    "emailSignInRemoved": "הוסר — האימייל הזה כבר לא יכול לחבר אתכם",
+    "cancel": "בטל"
   },
   "common": {
     "save": "שמור",

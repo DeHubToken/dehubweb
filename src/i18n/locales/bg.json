@@ -481,7 +481,20 @@
     "leftHandedDesc": "Премества бутона за харесване в лявата част на лентата с реакции",
     "notifyTipsDesc": "Когато някой ви изпрати бакшиш в DeHub токени",
     "messageFeeDesc": "Изисквайте минимален бакшиш в DeHub токени, за да ви изпрати съобщение",
-    "tokenBalance": "Баланс на токени"
+    "tokenBalance": "Баланс на токени",
+    "signIn": "Вход",
+    "emailSignIn": "Имейл за вход",
+    "emailSignInDesc": "Свържете имейл адрес, за да влизате без портфейл.",
+    "emailSignInLinked": "Входът с код е активен за {{email}}",
+    "emailSignInExisting": "Вече влизате с {{email}}",
+    "emailSignInExistingUnknown": "Този профил вече влиза без портфейл.",
+    "emailSignInSend": "Изпрати код",
+    "emailSignInSent": "Проверете входящата си поща за кода",
+    "emailSignInConfirm": "Потвърди",
+    "emailSignInDone": "Вече можете да влизате с този имейл",
+    "emailSignInRemove": "Премахни",
+    "emailSignInRemoved": "Премахнато — с този имейл вече не можете да влезете",
+    "cancel": "Отмени"
   },
   "common": {
     "save": "Запази",

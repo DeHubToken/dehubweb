@@ -484,7 +484,20 @@
     "leftHandedDesc": "لائیک بٹن کو ری ایکشن بار کی بائیں جانب منتقل کریں",
     "notifyTipsDesc": "جب کوئی آپ کو DeHub ٹوکن میں ٹپ بھیجتا ہے",
     "messageFeeDesc": "آپ کو میسج کرنے کے لیے DeHub ٹوکن میں کم از کم ٹپ کی ضرورت ہے",
-    "tokenBalance": "ٹوکن بیلنس"
+    "tokenBalance": "ٹوکن بیلنس",
+    "signIn": "سائن اِن",
+    "emailSignIn": "سائن اِن ای میل",
+    "emailSignInDesc": "والیٹ کے بغیر سائن اِن کے لیے ای میل پتہ منسلک کریں۔",
+    "emailSignInLinked": "کوڈ لاگ اِن {{email}} کے لیے فعال ہے",
+    "emailSignInExisting": "آپ پہلے ہی {{email}} سے سائن اِن کرتے ہیں",
+    "emailSignInExistingUnknown": "یہ اکاؤنٹ پہلے ہی والیٹ کے بغیر سائن اِن کرتا ہے۔",
+    "emailSignInSend": "کوڈ بھیجیں",
+    "emailSignInSent": "کوڈ کے لیے اپنا اِن باکس دیکھیں",
+    "emailSignInConfirm": "تصدیق کریں",
+    "emailSignInDone": "اب آپ اس ای میل سے سائن اِن کر سکتے ہیں",
+    "emailSignInRemove": "ہٹائیں",
+    "emailSignInRemoved": "ہٹا دیا گیا — یہ ای میل اب آپ کو سائن اِن نہیں کر سکتی",
+    "cancel": "منسوخ کریں"
   },
   "common": {
     "save": "محفوظ کریں",

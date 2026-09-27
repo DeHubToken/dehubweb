@@ -482,7 +482,20 @@
     "leftHandedDesc": "Перамясціць кнопку «падабаецца» ў левы бок панэлі рэакцый",
     "notifyTipsDesc": "Калі хтосьці адпраўляе вам чаявыя ў токенах DeHub",
     "messageFeeDesc": "Патрабаваць мінімальны чаявы ў токенах DeHub, каб напісаць вам",
-    "tokenBalance": "Баланс токенаў"
+    "tokenBalance": "Баланс токенаў",
+    "signIn": "Уваход",
+    "emailSignIn": "Пошта для ўваходу",
+    "emailSignInDesc": "Прывяжыце адрас пошты, каб уваходзіць без кашалька.",
+    "emailSignInLinked": "Уваход па кодзе ўключаны для {{email}}",
+    "emailSignInExisting": "Вы ўжо ўваходзіце праз {{email}}",
+    "emailSignInExistingUnknown": "Гэты акаўнт ужо ўваходзіць без кашалька.",
+    "emailSignInSend": "Адправіць код",
+    "emailSignInSent": "Праверце пошту — там код",
+    "emailSignInConfirm": "Пацвердзіць",
+    "emailSignInDone": "Цяпер вы можаце ўваходзіць з гэтай поштай",
+    "emailSignInRemove": "Выдаліць",
+    "emailSignInRemoved": "Выдалена — з гэтай поштай больш нельга ўвайсці",
+    "cancel": "Адмяніць"
   },
   "common": {
     "save": "Захаваць",

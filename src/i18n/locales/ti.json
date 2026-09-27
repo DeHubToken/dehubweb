@@ -464,7 +464,20 @@
     "leftHandedDesc": "ቁልፊ ምፍታው ናብ ጸጋማይ ጎድኒ መስመር ግብረ-መልሲ ኣግዕዝ",
     "notifyTipsDesc": "ሓደ ሰብ ኣብ ደሆብ ምልክታት ምኽሪ ምስ ዚልእከልካ",
     "messageFeeDesc": "ኣብ DeHub ቶክን ዝተሓተተ ክፋል መኽሰብ ንኽትጽሕፈኒ የድሊ",
-    "tokenBalance": "ሚዛን ምልክት"
+    "tokenBalance": "ሚዛን ምልክት",
+    "signIn": "ምእታው",
+    "emailSignIn": "ናይ ምእታው ኢመይል",
+    "emailSignInDesc": "ብዘይ ዋሌትካ ንምእታው ናይ ኢመይል ኣድራሻ ኣራኽብ።",
+    "emailSignInLinked": "ብኮድ ምእታው ን{{email}} ንጡፍ እዩ",
+    "emailSignInExisting": "ድሮ ብ{{email}} ትኣቱ ኢኻ",
+    "emailSignInExistingUnknown": "እዚ ሕሳብ ድሮ ብዘይ ዋሌት ይኣቱ።",
+    "emailSignInSend": "ኮድ ስደድ",
+    "emailSignInSent": "ነቲ ኮድ ኣብ ናይ ዝኣተዉ መልእኽትታት ሳጹንካ ርአ",
+    "emailSignInConfirm": "ኣረጋግጽ",
+    "emailSignInDone": "ሕጂ ብዚ ኢመይል ክትኣቱ ትኽእል ኢኻ",
+    "emailSignInRemove": "ኣልግስ",
+    "emailSignInRemoved": "ተኣልዩ — ብዚ ኢመይል ደጊም ክትኣቱ ኣይትኽእልን",
+    "cancel": "ሰርዝ"
   },
   "common": {
     "save": "ዓቅብ",

@@ -470,7 +470,20 @@
     "leftHandedDesc": "Pārvieto patīk pogu uz reakciju joslas kreiso pusi",
     "notifyTipsDesc": "Kad kāds jums nosūta dzeramnaudu DeHub žetonos",
     "messageFeeDesc": "Pieprasīt minimālo dzeramnaudu DeHub žetonos, lai nosūtītu jums ziņojumu",
-    "tokenBalance": "Žetonu atlikums"
+    "tokenBalance": "Žetonu atlikums",
+    "signIn": "Pierakstīšanās",
+    "emailSignIn": "Pierakstīšanās e-pasts",
+    "emailSignInDesc": "Piesaisti e-pasta adresi, lai pierakstītos bez maka.",
+    "emailSignInLinked": "Pierakstīšanās ar kodu ir aktīva adresei {{email}}",
+    "emailSignInExisting": "Tu jau pierakstās ar {{email}}",
+    "emailSignInExistingUnknown": "Šis konts jau pierakstās bez maka.",
+    "emailSignInSend": "Sūtīt kodu",
+    "emailSignInSent": "Meklē kodu savā iesūtnē",
+    "emailSignInConfirm": "Apstiprināt",
+    "emailSignInDone": "Tagad vari pierakstīties ar šo e-pastu",
+    "emailSignInRemove": "Noņemt",
+    "emailSignInRemoved": "Noņemts — ar šo e-pastu vairs nevar pierakstīties",
+    "cancel": "Atcelt"
   },
   "common": {
     "save": "Saglabāt",

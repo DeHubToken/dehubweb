@@ -431,7 +431,20 @@
     "leftHandedDesc": "लाइक बटन के रिएक्शन बार कर बाँया बगल ले जाव",
     "notifyTipsDesc": "Jab koi aapko DeHub tokens mein tip bhejta hai",
     "messageFeeDesc": "Mujhe message karne ke liye DeHub tokens mein minimum tip ki zaroorat hai",
-    "tokenBalance": "Token Balance"
+    "tokenBalance": "Token Balance",
+    "signIn": "سائن اِن",
+    "emailSignIn": "سائن اِن ای میل",
+    "emailSignInDesc": "والیٹ بنا سائن اِن کرے لے ای میل پتہ جوڑو۔",
+    "emailSignInLinked": "کوڈ لاگ اِن {{email}} لے چالو ہے",
+    "emailSignInExisting": "تو پہلے سے {{email}} سے سائن اِن کرلا",
+    "emailSignInExistingUnknown": "ای اکاؤنٹ پہلے سے والیٹ بنا سائن اِن کرلا۔",
+    "emailSignInSend": "کوڈ بھیجو",
+    "emailSignInSent": "کوڈ لے اپن اِن باکس دیکھو",
+    "emailSignInConfirm": "پکا کرو",
+    "emailSignInDone": "اب تو ای ای میل سے سائن اِن کرے سکبے",
+    "emailSignInRemove": "ہٹاؤ",
+    "emailSignInRemoved": "ہٹائل گیل — ای ای میل اب تہار سائن اِن نہیں کرے سکی",
+    "cancel": "منسوخ"
   },
   "common": {
     "save": "محفوظ کرو",

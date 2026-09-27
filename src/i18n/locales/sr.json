@@ -369,7 +369,20 @@
       "keyCopied": "Кључ за стрим је копиран"
     },
     "leftHanded": "Режим за леворуке",
-    "leftHandedDesc": "Премешта дугме за свиђање на леву страну траке реакција"
+    "leftHandedDesc": "Премешта дугме за свиђање на леву страну траке реакција",
+    "signIn": "Пријава",
+    "emailSignIn": "Имејл за пријаву",
+    "emailSignInDesc": "Повежите имејл адресу да бисте се пријављивали без новчаника.",
+    "emailSignInLinked": "Пријава кодом је активна за {{email}}",
+    "emailSignInExisting": "Већ се пријављујете са {{email}}",
+    "emailSignInExistingUnknown": "Овај налог се већ пријављује без новчаника.",
+    "emailSignInSend": "Пошаљи код",
+    "emailSignInSent": "Потражите код у пријемном сандучету",
+    "emailSignInConfirm": "Потврди",
+    "emailSignInDone": "Сада можете да се пријавите овим имејлом",
+    "emailSignInRemove": "Уклони",
+    "emailSignInRemoved": "Уклоњено — овим имејлом више не можете да се пријавите",
+    "cancel": "Откажи"
   },
   "common": {
     "save": "Сачувај",

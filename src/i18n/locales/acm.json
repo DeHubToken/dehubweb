@@ -442,7 +442,20 @@
     "leftHandedDesc": "انقل زر الإعجاب إلى الجهة اليسرى من شريط التفاعلات",
     "notifyTipsDesc": "من واحد يدهزلك تِب بالـ DeHub توكنز",
     "messageFeeDesc": "تطلب مينيمم تِب بالـ DeHub توكنز حتى تراسلني",
-    "tokenBalance": "رصيد التوكنز"
+    "tokenBalance": "رصيد التوكنز",
+    "signIn": "تسجيل الدخول",
+    "emailSignIn": "إيميل تسجيل الدخول",
+    "emailSignInDesc": "اربط إيميل حتى تدخل بدون محفظتك.",
+    "emailSignInLinked": "الدخول بالكود شغّال لـ {{email}}",
+    "emailSignInExisting": "إنت أصلاً تدخل بـ {{email}}",
+    "emailSignInExistingUnknown": "هذا الحساب أصلاً يدخل بدون محفظة.",
+    "emailSignInSend": "دز الكود",
+    "emailSignInSent": "شوف البريد الوارد مالتك حتى تلكه للكود",
+    "emailSignInConfirm": "أكّد",
+    "emailSignInDone": "هسه تكدر تدخل بهذا الإيميل",
+    "emailSignInRemove": "احذف",
+    "emailSignInRemoved": "انحذف — هذا الإيميل ما يكدر يدخلك بعد",
+    "cancel": "إلغاء"
   },
   "common": {
     "save": "حفظ",

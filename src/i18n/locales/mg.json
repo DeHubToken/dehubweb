@@ -465,7 +465,20 @@
     "leftHandedDesc": "Afindrao eo amin'ny ilany havian'ny tsipika fihetsika ny bokotra tia",
     "notifyTipsDesc": "Rehefa misy mandefa torohevitra aminao amin'ny DeHub tokens",
     "messageFeeDesc": "Mitaky torohevitra farany ambany amin'ny DeHub tokens mba handefasana hafatra aminao",
-    "tokenBalance": "Tombanana ny volan'ny token"
+    "tokenBalance": "Tombanana ny volan'ny token",
+    "signIn": "Fidirana",
+    "emailSignIn": "Mailaka fidirana",
+    "emailSignInDesc": "Ampifandraiso adiresy mailaka mba hidirana tsy misy kitapom-bola.",
+    "emailSignInLinked": "Mandeha ny fidirana amin'ny kaody ho an'i {{email}}",
+    "emailSignInExisting": "Efa miditra amin'ny {{email}} ianao",
+    "emailSignInExistingUnknown": "Efa miditra tsy misy kitapom-bola ity kaonty ity.",
+    "emailSignInSend": "Alefaso ny kaody",
+    "emailSignInSent": "Jereo ao amin'ny boaty fandraisanao ny kaody",
+    "emailSignInConfirm": "Hamafiso",
+    "emailSignInDone": "Afaka miditra amin'ity mailaka ity ianao izao",
+    "emailSignInRemove": "Esory",
+    "emailSignInRemoved": "Nesorina — tsy afaka mampiditra anao intsony ity mailaka ity",
+    "cancel": "Hanafoana"
   },
   "common": {
     "save": "Tehirizo",

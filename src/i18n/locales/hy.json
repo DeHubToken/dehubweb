@@ -484,7 +484,20 @@
     "leftHandedDesc": "Տեղափոխել հավանելու կոճակը արձագանքների գոտու ձախ կողմ",
     "notifyTipsDesc": "Երբ ինչ-որ մեկը ձեզ DeHub թոքեններով խորհուրդ է ուղարկում",
     "messageFeeDesc": "Պահանջել նվազագույն խորհուրդ DeHub թոքեններով ձեզ հաղորդագրություն ուղարկելու համար",
-    "tokenBalance": "Թոքենի մնացորդ"
+    "tokenBalance": "Թոքենի մնացորդ",
+    "signIn": "Մուտք",
+    "emailSignIn": "Մուտքի էլ. փոստ",
+    "emailSignInDesc": "Կցեք էլ. փոստի հասցե՝ առանց դրամապանակի մուտք գործելու համար։",
+    "emailSignInLinked": "Կոդով մուտքն ակտիվ է {{email}}-ի համար",
+    "emailSignInExisting": "Դուք արդեն մուտք եք գործում {{email}}-ով",
+    "emailSignInExistingUnknown": "Այս հաշիվն արդեն մուտք է գործում առանց դրամապանակի։",
+    "emailSignInSend": "Ուղարկել կոդը",
+    "emailSignInSent": "Կոդը փնտրեք ձեր մուտքային նամակներում",
+    "emailSignInConfirm": "Հաստատել",
+    "emailSignInDone": "Այժմ կարող եք մուտք գործել այս էլ. փոստով",
+    "emailSignInRemove": "Հեռացնել",
+    "emailSignInRemoved": "Հեռացված է․ այս էլ. փոստով այլևս հնարավոր չէ մուտք գործել",
+    "cancel": "Chegharakel"
   },
   "common": {
     "save": "Pahpanel",

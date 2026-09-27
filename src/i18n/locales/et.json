@@ -484,7 +484,20 @@
     "leftHandedDesc": "Liiguta meeldimise nupp reaktsiooniriba vasakule poole",
     "notifyTipsDesc": "Kui keegi saadab teile näpunäite DeHubi žetoonides",
     "messageFeeDesc": "Nõua minimaalset näpunäidet DeHubi žetoonides, et teile sõnum saata",
-    "tokenBalance": "Žetoonide saldo"
+    "tokenBalance": "Žetoonide saldo",
+    "signIn": "Sisselogimine",
+    "emailSignIn": "Sisselogimise e-post",
+    "emailSignInDesc": "Lisa e-posti aadress, et logida sisse ilma rahakotita.",
+    "emailSignInLinked": "Koodiga sisselogimine on aktiivne aadressil {{email}}",
+    "emailSignInExisting": "Sa logid juba sisse aadressiga {{email}}",
+    "emailSignInExistingUnknown": "See konto logib juba sisse ilma rahakotita.",
+    "emailSignInSend": "Saada kood",
+    "emailSignInSent": "Vaata koodi oma postkastist",
+    "emailSignInConfirm": "Kinnita",
+    "emailSignInDone": "Nüüd saad selle e-postiga sisse logida",
+    "emailSignInRemove": "Eemalda",
+    "emailSignInRemoved": "Eemaldatud — selle e-postiga ei saa enam sisse logida",
+    "cancel": "Tühista"
   },
   "common": {
     "save": "Salvesta",

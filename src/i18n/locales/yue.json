@@ -470,7 +470,20 @@
     "leftHandedDesc": "將讚好掣搬去反應欄左邊",
     "notifyTipsDesc": "當有人喺 DeHub 代幣度俾你貼士",
     "messageFeeDesc": "需要最少嘅 DeHub 代幣貼士先可以傳訊息俾你",
-    "tokenBalance": "代幣餘額"
+    "tokenBalance": "代幣餘額",
+    "signIn": "登入",
+    "emailSignIn": "登入電郵",
+    "emailSignInDesc": "綁定一個電郵地址，唔使錢包都登入到。",
+    "emailSignInLinked": "{{email}} 已經開咗驗證碼登入",
+    "emailSignInExisting": "你已經用緊 {{email}} 登入",
+    "emailSignInExistingUnknown": "呢個帳戶已經唔使錢包都登入到。",
+    "emailSignInSend": "傳送驗證碼",
+    "emailSignInSent": "去收件匣睇下驗證碼",
+    "emailSignInConfirm": "確認",
+    "emailSignInDone": "而家你可以用呢個電郵登入",
+    "emailSignInRemove": "移除",
+    "emailSignInRemoved": "已移除 —— 呢個電郵唔可以再幫你登入",
+    "cancel": "取消"
   },
   "common": {
     "save": "儲存",

@@ -484,7 +484,20 @@
     "leftHandedDesc": "లైక్ బటన్‌ను ప్రతిస్పందనల బార్ ఎడమ వైపుకు తరలించండి",
     "notifyTipsDesc": "ఎవరైనా మీకు DeHub టోకెన్లలో చిట్కా పంపినప్పుడు",
     "messageFeeDesc": "మీకు సందేశం పంపడానికి DeHub టోకెన్లలో కనీస చిట్కా అవసరం",
-    "tokenBalance": "టోకెన్ బ్యాలెన్స్"
+    "tokenBalance": "టోకెన్ బ్యాలెన్స్",
+    "signIn": "సైన్-ఇన్",
+    "emailSignIn": "సైన్-ఇన్ ఇమెయిల్",
+    "emailSignInDesc": "వాలెట్ లేకుండా సైన్ ఇన్ చేయడానికి ఇమెయిల్ చిరునామాను జోడించండి.",
+    "emailSignInLinked": "{{email}} కోసం కోడ్ లాగిన్ సక్రియంగా ఉంది",
+    "emailSignInExisting": "మీరు ఇప్పటికే {{email}}తో సైన్ ఇన్ చేస్తున్నారు",
+    "emailSignInExistingUnknown": "ఈ ఖాతా ఇప్పటికే వాలెట్ లేకుండా సైన్ ఇన్ చేస్తుంది.",
+    "emailSignInSend": "కోడ్ పంపండి",
+    "emailSignInSent": "కోడ్ కోసం మీ ఇన్‌బాక్స్ చూడండి",
+    "emailSignInConfirm": "నిర్ధారించండి",
+    "emailSignInDone": "ఇప్పుడు మీరు ఈ ఇమెయిల్‌తో సైన్ ఇన్ చేయవచ్చు",
+    "emailSignInRemove": "తీసివేయండి",
+    "emailSignInRemoved": "తీసివేయబడింది — ఈ ఇమెయిల్‌తో ఇకపై సైన్ ఇన్ కాలేరు",
+    "cancel": "రద్దు"
   },
   "common": {
     "save": "సేవ్",

@@ -484,7 +484,20 @@
     "leftHandedDesc": "Hamisha kitufe cha kupenda upande wa kushoto wa upau wa maoni",
     "notifyTipsDesc": "Unapopokea kidokezo kutoka kwa mtu kwa tokeni za DeHub",
     "messageFeeDesc": "Inahitaji kiwango cha chini cha kidokezo kwa tokeni za DeHub ili kukutumia ujumbe",
-    "tokenBalance": "Salio la Tokeni"
+    "tokenBalance": "Salio la Tokeni",
+    "signIn": "Kuingia",
+    "emailSignIn": "Barua pepe ya kuingia",
+    "emailSignInDesc": "Unganisha anwani ya barua pepe ili uingie bila pochi yako.",
+    "emailSignInLinked": "Kuingia kwa msimbo kumewashwa kwa {{email}}",
+    "emailSignInExisting": "Tayari unaingia kwa {{email}}",
+    "emailSignInExistingUnknown": "Akaunti hii tayari inaingia bila pochi.",
+    "emailSignInSend": "Tuma msimbo",
+    "emailSignInSent": "Angalia kikasha chako upate msimbo",
+    "emailSignInConfirm": "Thibitisha",
+    "emailSignInDone": "Sasa unaweza kuingia kwa barua pepe hii",
+    "emailSignInRemove": "Ondoa",
+    "emailSignInRemoved": "Imeondolewa — barua pepe hii haiwezi tena kukuingiza",
+    "cancel": "Ghairi"
   },
   "common": {
     "save": "Hifadhi",

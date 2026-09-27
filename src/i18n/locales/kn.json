@@ -468,7 +468,20 @@
     "leftHandedDesc": "ಲೈಕ್ ಬಟನ್ ಅನ್ನು ಪ್ರತಿಕ್ರಿಯೆ ಪಟ್ಟಿಯ ಎಡಭಾಗಕ್ಕೆ ಸರಿಸಿ",
     "notifyTipsDesc": "ನೀವು DeHub ಟೋಕನ್‌ಗಳಲ್ಲಿ ಟಿಪ್ ಕಳುಹಿಸಿದಾಗ",
     "messageFeeDesc": "ನಿಮಗೆ ಸಂದೇಶ ಕಳುಹಿಸಲು DeHub ಟೋಕನ್‌ಗಳಲ್ಲಿ ಕನಿಷ್ಠ ಟಿಪ್ ಅಗತ್ಯವಿದೆ",
-    "tokenBalance": "ಟೋಕನ್ ಬ್ಯಾಲೆನ್ಸ್"
+    "tokenBalance": "ಟೋಕನ್ ಬ್ಯಾಲೆನ್ಸ್",
+    "signIn": "ಸೈನ್-ಇನ್",
+    "emailSignIn": "ಸೈನ್-ಇನ್ ಇಮೇಲ್",
+    "emailSignInDesc": "ವಾಲೆಟ್ ಇಲ್ಲದೆ ಸೈನ್ ಇನ್ ಮಾಡಲು ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ಸೇರಿಸಿ.",
+    "emailSignInLinked": "{{email}} ಗಾಗಿ ಕೋಡ್ ಲಾಗಿನ್ ಸಕ್ರಿಯವಾಗಿದೆ",
+    "emailSignInExisting": "ನೀವು ಈಗಾಗಲೇ {{email}} ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡುತ್ತೀರಿ",
+    "emailSignInExistingUnknown": "ಈ ಖಾತೆ ಈಗಾಗಲೇ ವಾಲೆಟ್ ಇಲ್ಲದೆ ಸೈನ್ ಇನ್ ಆಗುತ್ತದೆ.",
+    "emailSignInSend": "ಕೋಡ್ ಕಳುಹಿಸಿ",
+    "emailSignInSent": "ಕೋಡ್‌ಗಾಗಿ ನಿಮ್ಮ ಇನ್‌ಬಾಕ್ಸ್ ನೋಡಿ",
+    "emailSignInConfirm": "ದೃಢೀಕರಿಸಿ",
+    "emailSignInDone": "ಈಗ ನೀವು ಈ ಇಮೇಲ್ ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡಬಹುದು",
+    "emailSignInRemove": "ತೆಗೆದುಹಾಕಿ",
+    "emailSignInRemoved": "ತೆಗೆದುಹಾಕಲಾಗಿದೆ — ಈ ಇಮೇಲ್ ಮೂಲಕ ಇನ್ನು ಸೈನ್ ಇನ್ ಆಗಲು ಸಾಧ್ಯವಿಲ್ಲ",
+    "cancel": "ರದ್ದುಮಾಡಿ"
   },
   "common": {
     "save": "ಉಳಿಸಿ",

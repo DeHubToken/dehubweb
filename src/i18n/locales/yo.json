@@ -468,7 +468,20 @@
     "leftHandedDesc": "Gbé bọ́tìnnì ìfẹ́ lọ sí ẹ̀gbẹ́ òsì ti ọ̀pá ìdáhùn",
     "notifyTipsDesc": "Nígbà tí ẹnìkan bá fi ìmọ̀ràn ránṣẹ́ sí ọ nínú àwọn àmì DeHub",
     "messageFeeDesc": "Béèrè fún ìmọ̀ràn tí ó kéré jù nínú àwọn àmì DeHub láti fi ránṣẹ́ sí ọ.",
-    "tokenBalance": "Ìwọ̀ntúnwọ̀nsì Àmì"
+    "tokenBalance": "Ìwọ̀ntúnwọ̀nsì Àmì",
+    "signIn": "Ìwọlé",
+    "emailSignIn": "Ímeèlì ìwọlé",
+    "emailSignInDesc": "So àdírẹ́sì ímeèlì pọ̀ kí o lè wọlé láìsí àpamọ́wọ́ rẹ.",
+    "emailSignInLinked": "Ìwọlé pẹ̀lú kóòdù ti ṣiṣẹ́ fún {{email}}",
+    "emailSignInExisting": "O ti ń wọlé pẹ̀lú {{email}} tẹ́lẹ̀",
+    "emailSignInExistingUnknown": "Àkántì yìí ti ń wọlé láìsí àpamọ́wọ́ tẹ́lẹ̀.",
+    "emailSignInSend": "Fi kóòdù ránṣẹ́",
+    "emailSignInSent": "Wo àpótí ìwọlé rẹ fún kóòdù náà",
+    "emailSignInConfirm": "Jẹ́rìísí",
+    "emailSignInDone": "O lè wọlé pẹ̀lú ímeèlì yìí báyìí",
+    "emailSignInRemove": "Yọ kúrò",
+    "emailSignInRemoved": "Tí a yọ kúrò — ímeèlì yìí kò lè mú ọ wọlé mọ́",
+    "cancel": "Fagilee"
   },
   "common": {
     "save": "Fipamọ́",

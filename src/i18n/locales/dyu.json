@@ -454,7 +454,20 @@
     "usernamesCount_other": "{{count}} usernames",
     "leftHanded": "Numanboloden cogoya",
     "leftHandedDesc": "Ka diyanye butɔni bila reaksiyɔnw barra numanyanfan fɛ",
-    "tokenBalance": "Token Balance"
+    "tokenBalance": "Token Balance",
+    "signIn": "Donni",
+    "emailSignIn": "Donni imɛli",
+    "emailSignInDesc": "Imɛli adrɛsi dɔ fara a la walisa i ka se ka don i ka wari bɔrɔ kɔ.",
+    "emailSignInLinked": "Kodi la donni bɛ baara la {{email}} ye",
+    "emailSignInExisting": "I bɛ ka don ni {{email}} ye kaban",
+    "emailSignInExistingUnknown": "Nin jatebɔsɛbɛn bɛ don wari bɔrɔ kɔ kaban.",
+    "emailSignInSend": "Kodi ci",
+    "emailSignInSent": "I ka bataki sɔrɔyɔrɔ lajɛ kodi kama",
+    "emailSignInConfirm": "A sinsin",
+    "emailSignInDone": "Sisan i bɛ se ka don ni nin imɛli ye",
+    "emailSignInRemove": "Bɔ a la",
+    "emailSignInRemoved": "Bɔra — nin imɛli tɛ se ka i don tugun",
+    "cancel": "Kɔrɔbɔ"
   },
   "common": {
     "save": "Bɔ",

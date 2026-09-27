@@ -468,7 +468,20 @@
     "leftHandedDesc": "Ұнату түймесін реакциялар жолағының сол жағына жылжыту",
     "notifyTipsDesc": "Сізге DeHub токендерінде сыйақы жібергенде",
     "messageFeeDesc": "Сізге хабарлама жіберу үшін DeHub токендерінде ең аз сыйақы талап етіңіз",
-    "tokenBalance": "Токен балансы"
+    "tokenBalance": "Токен балансы",
+    "signIn": "Кіру",
+    "emailSignIn": "Кіруге арналған пошта",
+    "emailSignInDesc": "Әмиянсыз кіру үшін электрондық пошта мекенжайын байланыстырыңыз.",
+    "emailSignInLinked": "Кодпен кіру {{email}} үшін қосулы",
+    "emailSignInExisting": "Сіз {{email}} арқылы кіріп жүрсіз",
+    "emailSignInExistingUnknown": "Бұл аккаунт әмиянсыз кіреді.",
+    "emailSignInSend": "Код жіберу",
+    "emailSignInSent": "Кодты кіріс жәшігіңізден қараңыз",
+    "emailSignInConfirm": "Растау",
+    "emailSignInDone": "Енді осы поштамен кіре аласыз",
+    "emailSignInRemove": "Жою",
+    "emailSignInRemoved": "Жойылды — бұл поштамен енді кіре алмайсыз",
+    "cancel": "Болдырмау"
   },
   "common": {
     "save": "Сақтау",

@@ -484,7 +484,20 @@
     "leftHandedDesc": "Mou el botó de m'agrada a l'esquerra de la barra de reaccions",
     "notifyTipsDesc": "Quan algú t'envia una propina en fitxes DeHub",
     "messageFeeDesc": "Requereix una propina mínima en fitxes DeHub per enviar-te un missatge",
-    "tokenBalance": "Saldo de fitxes"
+    "tokenBalance": "Saldo de fitxes",
+    "signIn": "Inici de sessió",
+    "emailSignIn": "Correu d'inici de sessió",
+    "emailSignInDesc": "Vincula una adreça de correu per iniciar sessió sense el moneder.",
+    "emailSignInLinked": "L'inici de sessió amb codi és actiu per a {{email}}",
+    "emailSignInExisting": "Ja inicies sessió amb {{email}}",
+    "emailSignInExistingUnknown": "Aquest compte ja inicia sessió sense moneder.",
+    "emailSignInSend": "Envia el codi",
+    "emailSignInSent": "Mira la safata d'entrada per trobar el codi",
+    "emailSignInConfirm": "Confirma",
+    "emailSignInDone": "Ara pots iniciar sessió amb aquest correu",
+    "emailSignInRemove": "Treu",
+    "emailSignInRemoved": "Tret: aquest correu ja no pot iniciar la teva sessió",
+    "cancel": "Cancel·lar"
   },
   "common": {
     "save": "Desar",

@@ -484,7 +484,20 @@
     "leftHandedDesc": "Alihkan butang suka ke sebelah kiri bar reaksi",
     "notifyTipsDesc": "Apabila seseorang menghantar anda tip dalam token DeHub",
     "messageFeeDesc": "Perlu tip minimum dalam token DeHub untuk mesej anda",
-    "tokenBalance": "Baki Token"
+    "tokenBalance": "Baki Token",
+    "signIn": "Log masuk",
+    "emailSignIn": "E-mel log masuk",
+    "emailSignInDesc": "Pautkan alamat e-mel untuk log masuk tanpa dompet anda.",
+    "emailSignInLinked": "Log masuk dengan kod aktif untuk {{email}}",
+    "emailSignInExisting": "Anda sudah log masuk dengan {{email}}",
+    "emailSignInExistingUnknown": "Akaun ini sudah log masuk tanpa dompet.",
+    "emailSignInSend": "Hantar kod",
+    "emailSignInSent": "Semak peti masuk anda untuk kod",
+    "emailSignInConfirm": "Sahkan",
+    "emailSignInDone": "Kini anda boleh log masuk dengan e-mel ini",
+    "emailSignInRemove": "Buang",
+    "emailSignInRemoved": "Dibuang — e-mel ini tidak lagi boleh melog masuk anda",
+    "cancel": "Batal"
   },
   "common": {
     "save": "Simpan",

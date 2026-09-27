@@ -347,7 +347,20 @@
     "noNewMessagesDesc": "اپنی پرانی باتیں رکھو، پر کوئی نیا شروع نکو کر سکتا",
     "dmNoNewHelp": "پرانی باتیں چلتی رہتیں؛ کوئی نیا شروع نکو کر سکتا",
     "leftHanded": "بائیں ہاتھ والا موڈ",
-    "leftHandedDesc": "لائیک بٹن کو ری ایکشن بار کے بائیں طرف لے جاؤ"
+    "leftHandedDesc": "لائیک بٹن کو ری ایکشن بار کے بائیں طرف لے جاؤ",
+    "signIn": "سائن اِن",
+    "emailSignIn": "سائن اِن ای میل",
+    "emailSignInDesc": "والیٹ کے بغیر سائن اِن کرنے کو ای میل پتہ جوڑو۔",
+    "emailSignInLinked": "کوڈ لاگ اِن {{email}} کے واسطے چالو ہے",
+    "emailSignInExisting": "تم پہلے سے {{email}} سے سائن اِن کرتے",
+    "emailSignInExistingUnknown": "یہ اکاؤنٹ پہلے سے والیٹ کے بغیر سائن اِن کرتا۔",
+    "emailSignInSend": "کوڈ بھیجو",
+    "emailSignInSent": "کوڈ کے واسطے اپنا اِن باکس دیکھو",
+    "emailSignInConfirm": "پکا کرو",
+    "emailSignInDone": "اب تم اس ای میل سے سائن اِن کرسکتے",
+    "emailSignInRemove": "ہٹاؤ",
+    "emailSignInRemoved": "ہٹایا گیا — یہ ای میل اب تمہیں سائن اِن نکو کرسکتی",
+    "cancel": "منسوخ"
   },
   "common": {
     "save": "محفوظ",

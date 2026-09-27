@@ -484,7 +484,20 @@
     "leftHandedDesc": "Verschiebt den Gefällt-mir-Button auf die linke Seite der Reaktionsleiste",
     "notifyTipsDesc": "Wenn dir jemand einen Tipp in DeHub-Tokens sendet",
     "messageFeeDesc": "Mindestbetrag für einen Tipp in DeHub-Tokens festlegen, um dir eine Nachricht senden zu können",
-    "tokenBalance": "Token-Guthaben"
+    "tokenBalance": "Token-Guthaben",
+    "signIn": "Anmeldung",
+    "emailSignIn": "Anmelde-E-Mail",
+    "emailSignInDesc": "Hinterlege eine E-Mail-Adresse, um dich ohne Wallet anzumelden.",
+    "emailSignInLinked": "Code-Anmeldung ist aktiv für {{email}}",
+    "emailSignInExisting": "Du meldest dich bereits mit {{email}} an",
+    "emailSignInExistingUnknown": "Dieses Konto meldet sich bereits ohne Wallet an.",
+    "emailSignInSend": "Code senden",
+    "emailSignInSent": "Sieh in deinem Posteingang nach dem Code",
+    "emailSignInConfirm": "Bestätigen",
+    "emailSignInDone": "Du kannst dich jetzt mit dieser E-Mail anmelden",
+    "emailSignInRemove": "Entfernen",
+    "emailSignInRemoved": "Entfernt — mit dieser E-Mail kannst du dich nicht mehr anmelden",
+    "cancel": "Abbrechen"
   },
   "common": {
     "save": "Speichern",

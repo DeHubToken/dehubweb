@@ -435,7 +435,20 @@
     "usernamesCount_one": "{{count}} یوزرز نیم",
     "usernamesCount_other": "{{count}} یوزرز نیم",
     "leftHanded": "کھبے ہتھ آلا موڈ",
-    "leftHandedDesc": "لائیک بٹن کوں ری ایکشن بار دے کھبے پاسے گھن ونڄو"
+    "leftHandedDesc": "لائیک بٹن کوں ری ایکشن بار دے کھبے پاسے گھن ونڄو",
+    "signIn": "سائن اِن",
+    "emailSignIn": "سائن اِن ای میل",
+    "emailSignInDesc": "والیٹ دے بغیر سائن اِن کرݨ کیتے ای میل پتہ جوڑو۔",
+    "emailSignInLinked": "کوڈ لاگ اِن {{email}} کیتے چالو اے",
+    "emailSignInExisting": "تُساں پہلے ای {{email}} نال سائن اِن کریندے ہو",
+    "emailSignInExistingUnknown": "ایہ اکاؤنٹ پہلے ای والیٹ دے بغیر سائن اِن کریندا اے۔",
+    "emailSignInSend": "کوڈ بھیجو",
+    "emailSignInSent": "کوڈ کیتے اپݨا اِن باکس ݙیکھو",
+    "emailSignInConfirm": "پکا کرو",
+    "emailSignInDone": "ہݨ تُساں ایں ای میل نال سائن اِن کر سڳدے ہو",
+    "emailSignInRemove": "ہٹاؤ",
+    "emailSignInRemoved": "ہٹایا ڳیا — ایہ ای میل ہݨ تُہاکوں سائن اِن نئیں کر سڳدی",
+    "cancel": "منسوخ"
   },
   "common": {
     "save": "محفوظ کرو",

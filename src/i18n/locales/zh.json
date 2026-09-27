@@ -484,7 +484,20 @@
     "leftHandedDesc": "将点赞按钮移到反应栏左侧",
     "notifyTipsDesc": "当有人用 DeHub 代币给你打赏时",
     "messageFeeDesc": "需要最少打赏的 DeHub 代币数量才能给你发消息",
-    "tokenBalance": "代币余额"
+    "tokenBalance": "代币余额",
+    "signIn": "登录",
+    "emailSignIn": "登录邮箱",
+    "emailSignInDesc": "绑定一个邮箱地址，不用钱包也能登录。",
+    "emailSignInLinked": "{{email}} 已开启验证码登录",
+    "emailSignInExisting": "你已经在用 {{email}} 登录",
+    "emailSignInExistingUnknown": "此账户已经可以不用钱包登录。",
+    "emailSignInSend": "发送验证码",
+    "emailSignInSent": "请到收件箱查看验证码",
+    "emailSignInConfirm": "确认",
+    "emailSignInDone": "现在你可以用这个邮箱登录了",
+    "emailSignInRemove": "移除",
+    "emailSignInRemoved": "已移除 — 这个邮箱不能再用来登录你的账户",
+    "cancel": "取消"
   },
   "common": {
     "save": "保存",

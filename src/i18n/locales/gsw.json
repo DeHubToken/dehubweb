@@ -441,7 +441,20 @@
     "leftHandedDesc": "Tuet dr Gfallt-mr-Chnopf uf di linggi Siite vo dr Reaktionsleischte",
     "notifyTipsDesc": "Wenn öpper dir en Tip in DeHub Tokens schickt",
     "messageFeeDesc": "En Mindest-Tip in DeHub Tokens bruche zum dich schriibe",
-    "tokenBalance": "Token-Guthabe"
+    "tokenBalance": "Token-Guthabe",
+    "signIn": "Aamäldig",
+    "emailSignIn": "Aamälde-E-Mail",
+    "emailSignInDesc": "Hinterleg e E-Mail-Adrässe, zum di ohni Wallet aazmälde.",
+    "emailSignInLinked": "Code-Aamäldig isch aktiv für {{email}}",
+    "emailSignInExisting": "Du mäldisch di scho mit {{email}} aa",
+    "emailSignInExistingUnknown": "Das Konto mäldet sich scho ohni Wallet aa.",
+    "emailSignInSend": "Code schicke",
+    "emailSignInSent": "Lueg i dim Poschtiigang nach em Code",
+    "emailSignInConfirm": "Bestätige",
+    "emailSignInDone": "Du chasch di jetzt mit dere E-Mail aamälde",
+    "emailSignInRemove": "Entferne",
+    "emailSignInRemoved": "Entfernt — mit dere E-Mail chasch di nümm aamälde",
+    "cancel": "Abbräche"
   },
   "common": {
     "save": "Speichere",

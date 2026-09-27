@@ -484,7 +484,20 @@
     "leftHandedDesc": "Sposta il pulsante mi piace sul lato sinistro della barra delle reazioni",
     "notifyTipsDesc": "Quando qualcuno ti invia una mancia in token DeHub",
     "messageFeeDesc": "Richiedi una mancia minima in token DeHub per inviarti un messaggio",
-    "tokenBalance": "Saldo token"
+    "tokenBalance": "Saldo token",
+    "signIn": "Accesso",
+    "emailSignIn": "Email di accesso",
+    "emailSignInDesc": "Collega un indirizzo email per accedere senza il tuo wallet.",
+    "emailSignInLinked": "L'accesso con codice è attivo per {{email}}",
+    "emailSignInExisting": "Accedi già con {{email}}",
+    "emailSignInExistingUnknown": "Questo account accede già senza wallet.",
+    "emailSignInSend": "Invia codice",
+    "emailSignInSent": "Controlla la posta in arrivo per il codice",
+    "emailSignInConfirm": "Conferma",
+    "emailSignInDone": "Ora puoi accedere con questa email",
+    "emailSignInRemove": "Rimuovi",
+    "emailSignInRemoved": "Rimossa — questa email non può più farti accedere",
+    "cancel": "Annulla"
   },
   "common": {
     "save": "Salva",

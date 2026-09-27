@@ -463,7 +463,20 @@
     "leftHandedDesc": "लाइक बटन के रिएक्शन बार के बायाँ ओर ले जाईं",
     "notifyTipsDesc": "जब कोई आपको DeHub टोकन में टिप भेजता है",
     "messageFeeDesc": "आपको मैसेज करने के लिए DeHub टोकन में न्यूनतम टिप की आवश्यकता है",
-    "tokenBalance": "टोकन बैलेंस"
+    "tokenBalance": "टोकन बैलेंस",
+    "signIn": "साइन-इन",
+    "emailSignIn": "साइन-इन ईमेल",
+    "emailSignInDesc": "वॉलेट के बिना साइन इन करे खातिर ईमेल पता जोड़ीं।",
+    "emailSignInLinked": "{{email}} खातिर कोड लॉगिन चालू बा",
+    "emailSignInExisting": "रउरा पहिले से {{email}} से साइन इन करेनी",
+    "emailSignInExistingUnknown": "ई खाता पहिले से वॉलेट के बिना साइन इन करेला।",
+    "emailSignInSend": "कोड भेजीं",
+    "emailSignInSent": "कोड खातिर आपन इनबॉक्स देखीं",
+    "emailSignInConfirm": "पक्का करीं",
+    "emailSignInDone": "अब रउरा एह ईमेल से साइन इन कर सकीलें",
+    "emailSignInRemove": "हटाईं",
+    "emailSignInRemoved": "हटावल गइल — ई ईमेल अब रउरा के साइन इन ना करा सकी",
+    "cancel": "रद्द करीं"
   },
   "common": {
     "save": "सहेजीं",

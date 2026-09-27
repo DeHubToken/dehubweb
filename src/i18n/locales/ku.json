@@ -388,7 +388,20 @@
     "leftHandedDesc": "Bişkoka hezkirinê bibe aliyê çepê yê barika reaksiyonan",
     "notifyTipsDesc": "کاتێک کەسێک تۆپی DeHub tokens دەنێرێت",
     "messageFeeDesc": "داواکردنی کەمترین تۆپ لە DeHub tokens بۆ ناردنی پەیام",
-    "tokenBalance": "بای توکنی"
+    "tokenBalance": "بای توکنی",
+    "signIn": "Têketin",
+    "emailSignIn": "E-nameya têketinê",
+    "emailSignInDesc": "Navnîşaneke e-nameyê girê bide da ku bê cuzdan têkevî.",
+    "emailSignInLinked": "Têketina bi kodê ji bo {{email}} çalak e",
+    "emailSignInExisting": "Tu jixwe bi {{email}} têdikevî",
+    "emailSignInExistingUnknown": "Ev hesab jixwe bê cuzdan têdikeve.",
+    "emailSignInSend": "Kodê bişîne",
+    "emailSignInSent": "Ji bo kodê li qutiya xwe ya hatî binêre",
+    "emailSignInConfirm": "Piştrast bike",
+    "emailSignInDone": "Niha tu dikarî bi vê e-nameyê têkevî",
+    "emailSignInRemove": "Rake",
+    "emailSignInRemoved": "Hate rakirin — ev e-name êdî nikare te têxe hundir",
+    "cancel": "Betal bike"
   },
   "common": {
     "save": "Tomar bike",

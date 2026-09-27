@@ -468,7 +468,20 @@
     "leftHandedDesc": "نقل زر الإعجاب للجيهة اليسرى ديال شريط التفاعلات",
     "notifyTipsDesc": "عندما يرسل لك شخص ما إكرامية في عملات DeHub",
     "messageFeeDesc": "تتطلب حد أدنى للإكرامية في رموز DeHub لمراسلتك",
-    "tokenBalance": "رصيد الرمز المميز"
+    "tokenBalance": "رصيد الرمز المميز",
+    "signIn": "الدخول",
+    "emailSignIn": "إيميل الدخول",
+    "emailSignInDesc": "ربط إيميل باش تدخل بلا البزطام ديالك.",
+    "emailSignInLinked": "الدخول بالكود خدام لـ {{email}}",
+    "emailSignInExisting": "نتا ديجا كتدخل بـ {{email}}",
+    "emailSignInExistingUnknown": "هاد الحساب ديجا كيدخل بلا بزطام.",
+    "emailSignInSend": "صيفط الكود",
+    "emailSignInSent": "شوف البوات ديالك باش تلقى الكود",
+    "emailSignInConfirm": "أكّد",
+    "emailSignInDone": "دابا تقدر تدخل بهاد الإيميل",
+    "emailSignInRemove": "حيّد",
+    "emailSignInRemoved": "اتحيّد — هاد الإيميل مابقاش يقدر يدخّلك",
+    "cancel": "إلغاء"
   },
   "common": {
     "save": "حفظ",

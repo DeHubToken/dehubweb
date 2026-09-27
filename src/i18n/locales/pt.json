@@ -484,7 +484,20 @@
     "leftHandedDesc": "Move o botão de curtir para o lado esquerdo da barra de reações",
     "notifyTipsDesc": "Quando alguém te envia uma gorjeta em tokens DeHub",
     "messageFeeDesc": "Exigir uma gorjeta mínima em tokens DeHub para te enviar uma mensagem",
-    "tokenBalance": "Saldo de Tokens"
+    "tokenBalance": "Saldo de Tokens",
+    "signIn": "Início de sessão",
+    "emailSignIn": "E-mail de acesso",
+    "emailSignInDesc": "Vincule um endereço de e-mail para entrar sem sua carteira.",
+    "emailSignInLinked": "O login por código está ativo para {{email}}",
+    "emailSignInExisting": "Você já entra com {{email}}",
+    "emailSignInExistingUnknown": "Esta conta já entra sem carteira.",
+    "emailSignInSend": "Enviar código",
+    "emailSignInSent": "Confira sua caixa de entrada para ver o código",
+    "emailSignInConfirm": "Confirmar",
+    "emailSignInDone": "Agora você pode entrar com este e-mail",
+    "emailSignInRemove": "Remover",
+    "emailSignInRemoved": "Removido — este e-mail não pode mais fazer seu login",
+    "cancel": "Cancelar"
   },
   "common": {
     "save": "Salvar",

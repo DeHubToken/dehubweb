@@ -484,7 +484,20 @@
     "leftHandedDesc": "Siirrä tykkäyspainike reaktiopalkin vasempaan reunaan",
     "notifyTipsDesc": "Kun joku lähettää sinulle vinkin DeHub-tokeneina",
     "messageFeeDesc": "Vaadi vähintään DeHub-tokeneiden vinkki lähettääksesi sinulle viestin",
-    "tokenBalance": "Token-saldo"
+    "tokenBalance": "Token-saldo",
+    "signIn": "Kirjautuminen",
+    "emailSignIn": "Kirjautumissähköposti",
+    "emailSignInDesc": "Liitä sähköpostiosoite, niin voit kirjautua ilman lompakkoa.",
+    "emailSignInLinked": "Koodikirjautuminen on käytössä osoitteelle {{email}}",
+    "emailSignInExisting": "Kirjaudut jo osoitteella {{email}}",
+    "emailSignInExistingUnknown": "Tämä tili kirjautuu jo ilman lompakkoa.",
+    "emailSignInSend": "Lähetä koodi",
+    "emailSignInSent": "Katso koodi saapuneista viesteistäsi",
+    "emailSignInConfirm": "Vahvista",
+    "emailSignInDone": "Voit nyt kirjautua tällä sähköpostilla",
+    "emailSignInRemove": "Poista",
+    "emailSignInRemoved": "Poistettu — tällä sähköpostilla ei voi enää kirjautua tilillesi",
+    "cancel": "Peruuta"
   },
   "common": {
     "save": "Tallenna",

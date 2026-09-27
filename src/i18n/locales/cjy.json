@@ -440,7 +440,20 @@
     "leftHandedDesc": "把点赞按钮挪到反应栏左边",
     "notifyTipsDesc": "当有人用 DeHub 代币给你打赏时",
     "messageFeeDesc": "要求最低 DeHub 代币打赏金额才能给你发消息",
-    "tokenBalance": "代币余额"
+    "tokenBalance": "代币余额",
+    "signIn": "登录",
+    "emailSignIn": "登录邮箱",
+    "emailSignInDesc": "绑上个邮箱地址，不用钱包也能登录。",
+    "emailSignInLinked": "{{email}} 验证码登录开咾",
+    "emailSignInExisting": "你已经在用 {{email}} 登录嘞",
+    "emailSignInExistingUnknown": "这个账户已经不用钱包也能登录。",
+    "emailSignInSend": "发验证码",
+    "emailSignInSent": "到收件箱瞭瞭验证码",
+    "emailSignInConfirm": "确认",
+    "emailSignInDone": "眼下你能用这个邮箱登录嘞",
+    "emailSignInRemove": "去掉",
+    "emailSignInRemoved": "去掉咾 — 这个邮箱再登不进你嘞账户",
+    "cancel": "取消"
   },
   "common": {
     "save": "保存",

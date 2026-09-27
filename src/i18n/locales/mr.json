@@ -482,7 +482,20 @@
     "leftHandedDesc": "लाइक बटण प्रतिक्रिया बारच्या डाव्या बाजूला हलवा",
     "notifyTipsDesc": "जेव्हा कोणी तुम्हाला DeHub टोकनमध्ये टीप पाठवते",
     "messageFeeDesc": "तुम्हाला मेसेज करण्यासाठी DeHub टोकनमध्ये किमान टीप आवश्यक आहे",
-    "tokenBalance": "टोकन शिल्लक"
+    "tokenBalance": "टोकन शिल्लक",
+    "signIn": "साइन-इन",
+    "emailSignIn": "साइन-इन ईमेल",
+    "emailSignInDesc": "वॉलेटशिवाय साइन इन करण्यासाठी ईमेल पत्ता जोडा.",
+    "emailSignInLinked": "{{email}} साठी कोड लॉगिन सक्रिय आहे",
+    "emailSignInExisting": "तुम्ही आधीच {{email}} ने साइन इन करता",
+    "emailSignInExistingUnknown": "हे खाते आधीच वॉलेटशिवाय साइन इन करते.",
+    "emailSignInSend": "कोड पाठवा",
+    "emailSignInSent": "कोडसाठी तुमचा इनबॉक्स तपासा",
+    "emailSignInConfirm": "पुष्टी करा",
+    "emailSignInDone": "आता तुम्ही या ईमेलने साइन इन करू शकता",
+    "emailSignInRemove": "काढा",
+    "emailSignInRemoved": "काढले — या ईमेलने आता तुम्हाला साइन इन करता येणार नाही",
+    "cancel": "रद्द करा"
   },
   "common": {
     "save": "जतन करा",

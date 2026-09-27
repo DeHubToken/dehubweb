@@ -468,7 +468,20 @@
     "leftHandedDesc": "Таалагдсан товчийг хариу үйлдлийн мөрийн зүүн тал руу зөөх",
     "notifyTipsDesc": "Хэрэв хэн нэгэн танд DeHub токеноор бэлэг илгээвэл",
     "messageFeeDesc": "Танд мессеж бичихдээ DeHub токеноор хамгийн бага бэлэг авах шаардлагатай",
-    "tokenBalance": "Токенгийн үлдэгдэл"
+    "tokenBalance": "Токенгийн үлдэгдэл",
+    "signIn": "Нэвтрэх",
+    "emailSignIn": "Нэвтрэх имэйл",
+    "emailSignInDesc": "Түрийвчгүйгээр нэвтрэхийн тулд имэйл хаяг холбоно уу.",
+    "emailSignInLinked": "Кодоор нэвтрэх {{email}}-д идэвхтэй байна",
+    "emailSignInExisting": "Та аль хэдийн {{email}}-ээр нэвтэрдэг",
+    "emailSignInExistingUnknown": "Энэ бүртгэл аль хэдийн түрийвчгүй нэвтэрдэг.",
+    "emailSignInSend": "Код илгээх",
+    "emailSignInSent": "Кодыг ирсэн имэйлээсээ шалгана уу",
+    "emailSignInConfirm": "Баталгаажуулах",
+    "emailSignInDone": "Одоо та энэ имэйлээр нэвтэрч болно",
+    "emailSignInRemove": "Хасах",
+    "emailSignInRemoved": "Хасагдлаа — энэ имэйлээр цаашид нэвтрэх боломжгүй",
+    "cancel": "Цуцлах"
   },
   "common": {
     "save": "Хадгалах",

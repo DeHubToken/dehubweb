@@ -484,7 +484,20 @@
     "leftHandedDesc": "Zet de vind-ik-leuk-knop aan de linkerkant van de reactiebalk",
     "notifyTipsDesc": "Wanneer iemand je een tip stuurt in DeHub-tokens",
     "messageFeeDesc": "Vereis een minimale tip in DeHub-tokens om je een bericht te sturen",
-    "tokenBalance": "Tokenbalans"
+    "tokenBalance": "Tokenbalans",
+    "signIn": "Inloggen",
+    "emailSignIn": "Inlog-e-mail",
+    "emailSignInDesc": "Koppel een e-mailadres om zonder je wallet in te loggen.",
+    "emailSignInLinked": "Inloggen met code is actief voor {{email}}",
+    "emailSignInExisting": "Je logt al in met {{email}}",
+    "emailSignInExistingUnknown": "Dit account logt al in zonder wallet.",
+    "emailSignInSend": "Code versturen",
+    "emailSignInSent": "Kijk in je inbox voor de code",
+    "emailSignInConfirm": "Bevestigen",
+    "emailSignInDone": "Je kunt nu inloggen met dit e-mailadres",
+    "emailSignInRemove": "Verwijderen",
+    "emailSignInRemoved": "Verwijderd — met dit e-mailadres kun je niet meer inloggen",
+    "cancel": "Annuleren"
   },
   "common": {
     "save": "Opslaan",

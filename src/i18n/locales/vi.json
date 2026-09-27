@@ -441,7 +441,20 @@
     "leftHandedDesc": "Chuyển nút thích sang bên trái thanh cảm xúc",
     "notifyTipsDesc": "Khi ai đó gửi cho bạn một mẹo bằng token DeHub",
     "messageFeeDesc": "Yêu cầu số lượng token DeHub tối thiểu để nhắn tin cho bạn",
-    "tokenBalance": "Số dư token"
+    "tokenBalance": "Số dư token",
+    "signIn": "Đăng nhập",
+    "emailSignIn": "Email đăng nhập",
+    "emailSignInDesc": "Liên kết một địa chỉ email để đăng nhập mà không cần ví.",
+    "emailSignInLinked": "Đăng nhập bằng mã đang bật cho {{email}}",
+    "emailSignInExisting": "Bạn đã đăng nhập bằng {{email}}",
+    "emailSignInExistingUnknown": "Tài khoản này đã đăng nhập mà không cần ví.",
+    "emailSignInSend": "Gửi mã",
+    "emailSignInSent": "Kiểm tra hộp thư đến để lấy mã",
+    "emailSignInConfirm": "Xác nhận",
+    "emailSignInDone": "Giờ bạn có thể đăng nhập bằng email này",
+    "emailSignInRemove": "Gỡ",
+    "emailSignInRemoved": "Đã gỡ — email này không thể đăng nhập cho bạn nữa",
+    "cancel": "Hủy"
   },
   "common": {
     "save": "Lưu",
