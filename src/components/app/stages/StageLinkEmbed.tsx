@@ -173,7 +173,7 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
         <div className="flex items-center justify-between gap-2 pt-0.5">
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-5 h-5 rounded-md overflow-hidden shrink-0 bg-zinc-700">
-              {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
+              {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />}
             </div>
             <BadgedName
               lookupId={stage.host_username || stage.host_wallet_address}

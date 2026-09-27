@@ -1,12 +1,14 @@
 /**
- * FriendsOnStageBar - Shows when people you follow are in a live Stage
- * Thin notification bar at top of home feed.
+ * FriendsOnStageBar - Shows when people you follow are in a live Stage,
+ * otherwise the busiest live Stage, so a live room is never invisible from
+ * home. Thin notification bar at top of home feed.
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -31,6 +33,7 @@ interface FriendOnStage {
 export function FriendsOnStageBar() {
   const { walletAddress, isAuthenticated } = useAuth();
   const { openModal, joinSpace } = useStage();
+  const { t } = useTranslation();
   // This bar lives in HomeFeed, which PersistentPageCache keeps mounted
   // forever — without a route gate these two polls run every 15s for the
   // whole session on every page. Poll only while home is actually on screen.
@@ -114,11 +117,16 @@ export function FriendsOnStageBar() {
   const primary = stageGroups[0];
   const hostFriend = primary?.friends.find(f => f.role === 'host');
   const otherFriends = primary?.friends.filter(f => f !== hostFriend) ?? [];
-  const totalListeners = primary
-    ? (primary.stage.speaker_count || 1) + (primary.stage.listener_count || 0)
-    : 0;
 
-  if (friendsOnStage.length === 0) return null;
+  // Nobody you follow is on stage: fall back to the busiest live room.
+  const busiest = useMemo(() => {
+    const size = (s: AudioSpace) => (s.speaker_count || 1) + (s.listener_count || 0);
+    return liveStages.reduce<AudioSpace | undefined>((best, s) => (!best || size(s) > size(best) ? s : best), undefined);
+  }, [liveStages]);
+
+  const stage = primary?.stage ?? busiest;
+  if (!stage) return null;
+  const totalListeners = (stage.speaker_count || 1) + (stage.listener_count || 0);
 
   return (
     <>
@@ -127,7 +135,7 @@ export function FriendsOnStageBar() {
         // Join the stage that was actually tapped, not a generic browse list
         // — the bar already names one specific room.
         openModal('live');
-        joinSpace(primary.stage.id);
+        joinSpace(stage.id);
       }}
       className="w-full flex items-center gap-2.5 px-3 py-2 mb-2 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.08] transition-all group"
     >
@@ -137,9 +145,9 @@ export function FriendsOnStageBar() {
       {/* Host avatar */}
       <div className="flex -space-x-1.5 shrink-0">
         <StageBarAvatar
-          wallet={primary.stage.host_wallet_address}
-          avatar={primary.stage.host_avatar}
-          username={primary.stage.host_username}
+          wallet={stage.host_wallet_address}
+          avatar={stage.host_avatar}
+          username={stage.host_username}
         />
         {otherFriends.slice(0, 3).map(f => (
           <StageBarAvatar
@@ -154,10 +162,15 @@ export function FriendsOnStageBar() {
       {/* Text */}
       <div className="flex-1 min-w-0 text-left">
         <p className="text-xs text-white/90 truncate">
-          <span className="font-medium">{primary.stage.title}</span>
+          <span className="font-medium">{stage.title}</span>
         </p>
         <p className="text-[11px] text-white/50 truncate">
-          {hostFriend ? (
+          {!primary ? (
+            <>
+              {t('stages.hostedBy')}{' '}
+              <span className="text-white/70">@{stage.host_username || stage.host_wallet_address?.slice(0, 6)}</span>
+            </>
+          ) : hostFriend ? (
             <>
               <span className="text-white/70">{hostFriend.username || 'Someone you follow'}</span>
               {' is hosting'}
@@ -183,7 +196,7 @@ export function FriendsOnStageBar() {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
         </span>
-        <span className="text-[10px] font-semibold text-red-400 uppercase tracking-wide">Live</span>
+        <span className="text-[10px] font-semibold text-red-400 uppercase tracking-wide">{t('stages.tabLive')}</span>
         <span className="flex items-center gap-0.5 text-[10px] text-white/40">
           <Users className="w-3 h-3" />
           {totalListeners}
