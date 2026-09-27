@@ -1188,6 +1188,11 @@
     "loginRequired": "لاگ ان ضروری ہے"
   },
   "messages": {
+    "reply": "جواب",
+    "react": "ردعمل",
+    "edit": "ترمیم",
+    "forward": "اڳوں بھیجو",
+    "pin": "پن کرو",
     "online": "آنلائن",
     "smartRepliesOff": "تجویز کیتے ڳئے جواب بند تھی ڳئے",
     "smartRepliesOffWhere": "اونھاں کوں ترتیباں ← پیغام کنوں ولدا آن کرو۔",

@@ -1221,6 +1221,11 @@
     "loginRequired": "须登录"
   },
   "messages": {
+    "reply": "回复",
+    "react": "回应",
+    "edit": "编辑",
+    "forward": "转发",
+    "pin": "置顶",
     "online": "在线",
     "smartRepliesOff": "建议回复关咾",
     "smartRepliesOffWhere": "到 设置 → 消息 里头再打开。",

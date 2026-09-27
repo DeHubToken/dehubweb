@@ -1223,6 +1223,11 @@
     "loginRequired": "ብዓል ዝድሊ"
   },
   "messages": {
+    "reply": "መልሲ",
+    "react": "ግብረመልሲ ሃብ",
+    "edit": "ኣርም",
+    "forward": "ኣመሓላልፍ",
+    "pin": "ፒን",
     "online": "ኣብ ኢንተርነት",
     "smartRepliesOff": "ዝተጠቕሱ መልስታት ጠፊኦም",
     "smartRepliesOffWhere": "ኣብ ቅጥዕታት → መልእኽትታት ደጊምካ ኣብርሆም።",

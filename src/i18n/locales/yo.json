@@ -1250,6 +1250,11 @@
     "loginRequired": "Wíwọlé ni a nílò"
   },
   "messages": {
+    "reply": "Dáhùn",
+    "react": "Fèsì",
+    "edit": "Ṣàtúnṣe",
+    "forward": "Firánṣẹ́ síwájú",
+    "pin": "Kàn mọ́",
     "online": "Ní orí ayélujára",
     "smartRepliesOff": "A ti pa àwọn èsì tí a dábàá",
     "smartRepliesOffWhere": "Tún wọn ṣí ní Ètò → Ìfiránṣẹ́.",

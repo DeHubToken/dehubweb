@@ -1265,6 +1265,11 @@
     "loginRequired": "Bejelentkezés szükséges"
   },
   "messages": {
+    "reply": "Válasz",
+    "react": "Reagálás",
+    "edit": "Szerkesztés",
+    "forward": "Továbbítás",
+    "pin": "Kitűzés",
     "online": "Online",
     "smartRepliesOff": "A javasolt válaszok ki vannak kapcsolva",
     "smartRepliesOffWhere": "Kapcsold vissza a Beállítások → Üzenetek menüben.",

@@ -1270,6 +1270,11 @@
     "loginRequired": "Login diperlukan"
   },
   "messages": {
+    "reply": "Balas",
+    "react": "Reaksi",
+    "edit": "Ubah",
+    "forward": "Teruskan",
+    "pin": "Sematkan",
     "online": "Online",
     "smartRepliesOff": "Balasan yang disarankan dimatikan",
     "smartRepliesOffWhere": "Nyalakan lagi di Pengaturan → Pesan.",

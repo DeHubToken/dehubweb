@@ -9,7 +9,7 @@ import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check, Lock, Unlock, SmilePlus } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check, Lock, Unlock, SmilePlus, Reply } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useDmEncryption } from '@/hooks/use-dm-encryption';
 import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
@@ -187,6 +187,7 @@ const MessageBubble = memo(function MessageBubble({
   isEditing = false,
   onPin,
   onForward,
+  onReply,
   onEdit,
   onSaveEdit,
   onCancelEdit,
@@ -204,6 +205,7 @@ const MessageBubble = memo(function MessageBubble({
   isEditing?: boolean;
   onPin?: (messageId: string) => void;
   onForward?: (message: DmMessage) => void;
+  onReply?: (message: DmMessage) => void;
   onEdit?: (message: DmMessage) => void;
   onSaveEdit?: (messageId: string, content: string) => void;
   onCancelEdit?: () => void;
@@ -338,77 +340,6 @@ const MessageBubble = memo(function MessageBubble({
       id={`dm-msg-${message._id}`}
       className={`flex gap-3 py-2 ${isOwnMessage ? 'flex-row-reverse' : ''} group relative rounded-lg transition-colors`}
     >
-      {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onReact || onPin || onForward || (onEdit && canEdit)) && (
-        <div
-          className={`absolute top-3 ${isOwnMessage ? 'left-1' : 'right-1'} flex items-center gap-1 transition-all opacity-0 group-hover:opacity-100 z-10`}
-        >
-          {onReact && (
-            <Popover open={reactionPickerOpen} onOpenChange={setReactionPickerOpen}>
-              <PopoverTrigger asChild>
-                <button type="button" className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white" title="React">
-                  <SmilePlus className="w-3 h-3" />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent side="top" align={isOwnMessage ? 'start' : 'end'} className="w-auto p-1.5 bg-zinc-800 border-zinc-700 rounded-xl">
-                <div className="flex gap-0.5">
-                  {QUICK_CHAT_REACTIONS.map((emoji) => {
-                    const mine = currentUserAddress && message.reactions?.[emoji]?.some(address => address.toLowerCase() === currentUserAddress.toLowerCase());
-                    return (
-                      <button type="button" key={emoji} onClick={() => {
-                        if (mine) onRemoveReaction?.(message._id, emoji);
-                        else onReact(message._id, emoji);
-                        setReactionPickerOpen(false);
-                      }} className={`w-8 h-8 flex items-center justify-center text-lg rounded-lg transition-colors ${mine ? 'bg-white/15 ring-1 ring-white/30' : 'hover:bg-zinc-700'}`}>
-                        {emoji}
-                      </button>
-                    );
-                  })}
-                  <MoreReactionsButton
-                    reactions={message.reactions}
-                    viewerAddress={currentUserAddress}
-                    onPick={(emoji) => {
-                      const mine = currentUserAddress && message.reactions?.[emoji]?.some(address => address.toLowerCase() === currentUserAddress.toLowerCase());
-                      if (mine) onRemoveReaction?.(message._id, emoji);
-                      else onReact(message._id, emoji);
-                      setReactionPickerOpen(false);
-                    }}
-                  />
-                </div>
-              </PopoverContent>
-            </Popover>
-          )}
-          {onEdit && canEdit && (
-            <button
-              type="button"
-              onClick={() => onEdit(message)}
-              className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
-              title="Edit message"
-            >
-              <Pencil className="w-3 h-3" />
-            </button>
-          )}
-          {onForward && (
-            <button
-              type="button"
-              onClick={() => onForward(message)}
-              className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
-              title="Forward message"
-            >
-              <CornerUpRight className="w-3 h-3" />
-            </button>
-          )}
-          {onPin && (
-            <button
-              type="button"
-              onClick={() => onPin(message._id)}
-              className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
-              title="Pin message"
-            >
-              <Pin className="w-3 h-3" />
-            </button>
-          )}
-        </div>
-      )}
       {!isOwnMessage && (() => {
         const avatar = (
           <Avatar className="w-8 h-8 flex-shrink-0">
@@ -430,15 +361,32 @@ const MessageBubble = memo(function MessageBubble({
         ) : avatar;
       })()}
 
-      <div className={`flex-1 min-w-0 max-w-[75%] ${isOwnMessage ? 'text-right' : ''}`}>
+      {/* Shrinks to the bubble rather than filling 75% of the row, so the hover
+          toolbar pinned to its side lands next to a short message instead of at
+          the far edge of the thread. The calc() keeps room for that toolbar. */}
+      <div className={`min-w-0 ${isOwnMessage ? 'max-w-[min(75%,calc(100%_-_9rem))] text-right' : 'max-w-[min(75%,calc(100%_-_12rem))]'}`}>
         {/* Reply preview */}
         {message.replyTo && (
-          <div className={`mb-1 px-3 py-1.5 rounded-lg bg-zinc-800/60 text-xs text-zinc-400 max-w-full truncate ${isOwnMessage ? 'text-right' : ''}`}>
-            <span className="text-zinc-300 font-medium">{message.replyTo.sender?.displayName || 'User'}</span>
-            <span className="ml-1">{message.replyTo.content || '📎 Media'}</span>
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                const el = document.getElementById(`dm-msg-${message.replyTo!._id}`);
+                if (!el) return;
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('ring-2', 'ring-white/40', 'bg-white/10');
+                setTimeout(() => el.classList.remove('ring-2', 'ring-white/40', 'bg-white/10'), 2000);
+              }}
+              className="mb-1 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800/60 hover:bg-zinc-700/60 text-xs text-zinc-400 max-w-full transition-colors"
+            >
+              <Reply className="w-3 h-3 flex-shrink-0" />
+              <span className="text-zinc-300 font-medium flex-shrink-0">{message.replyTo.sender?.displayName || message.replyTo.sender?.username || 'User'}</span>
+              <span className="truncate">{message.replyTo.content || '📎 Media'}</span>
+            </button>
           </div>
         )}
 
+        <div className="relative inline-block max-w-full align-top">
         {/* Tip message — system-style bubble. Monochrome, as on mobile: the amber
             was the last colour left in a thread whose palette is black and white. */}
         {message.msgType === 'tip' && (
@@ -655,6 +603,89 @@ const MessageBubble = memo(function MessageBubble({
           </div>
         )}
 
+          {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onReply || onReact || onPin || onForward || (onEdit && canEdit)) && (
+            <div
+              className={`absolute top-1/2 -translate-y-1/2 ${isOwnMessage ? 'right-full mr-1' : 'left-full ml-1'} flex items-center gap-1 transition-all opacity-0 group-hover:opacity-100 z-10`}
+            >
+              {onReply && (
+                <button
+                  type="button"
+                  onClick={() => onReply(message)}
+                  className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
+                  title={tr('messages.reply')}
+                >
+                  <Reply className="w-3 h-3" />
+                </button>
+              )}
+              {onReact && (
+                <Popover open={reactionPickerOpen} onOpenChange={setReactionPickerOpen}>
+                  <PopoverTrigger asChild>
+                    <button type="button" className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white" title={tr('messages.react')}>
+                      <SmilePlus className="w-3 h-3" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent side="top" align={isOwnMessage ? 'start' : 'end'} className="w-auto p-1.5 bg-zinc-800 border-zinc-700 rounded-xl">
+                    <div className="flex gap-0.5">
+                      {QUICK_CHAT_REACTIONS.map((emoji) => {
+                        const mine = currentUserAddress && message.reactions?.[emoji]?.some(address => address.toLowerCase() === currentUserAddress.toLowerCase());
+                        return (
+                          <button type="button" key={emoji} onClick={() => {
+                            if (mine) onRemoveReaction?.(message._id, emoji);
+                            else onReact(message._id, emoji);
+                            setReactionPickerOpen(false);
+                          }} className={`w-8 h-8 flex items-center justify-center text-lg rounded-lg transition-colors ${mine ? 'bg-white/15 ring-1 ring-white/30' : 'hover:bg-zinc-700'}`}>
+                            {emoji}
+                          </button>
+                        );
+                      })}
+                      <MoreReactionsButton
+                        reactions={message.reactions}
+                        viewerAddress={currentUserAddress}
+                        onPick={(emoji) => {
+                          const mine = currentUserAddress && message.reactions?.[emoji]?.some(address => address.toLowerCase() === currentUserAddress.toLowerCase());
+                          if (mine) onRemoveReaction?.(message._id, emoji);
+                          else onReact(message._id, emoji);
+                          setReactionPickerOpen(false);
+                        }}
+                      />
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              )}
+              {onEdit && canEdit && (
+                <button
+                  type="button"
+                  onClick={() => onEdit(message)}
+                  className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
+                  title={tr('messages.edit')}
+                >
+                  <Pencil className="w-3 h-3" />
+                </button>
+              )}
+              {onForward && (
+                <button
+                  type="button"
+                  onClick={() => onForward(message)}
+                  className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
+                  title={tr('messages.forward')}
+                >
+                  <CornerUpRight className="w-3 h-3" />
+                </button>
+              )}
+              {onPin && (
+                <button
+                  type="button"
+                  onClick={() => onPin(message._id)}
+                  className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
+                  title={tr('messages.pin')}
+                >
+                  <Pin className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
         {!message.isDeleted && message.reactions && Object.entries(message.reactions).some(([, addresses]) => addresses.length > 0) && (
           <div className={`mt-1 flex flex-wrap gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
             {Object.entries(message.reactions).filter(([, addresses]) => addresses.length > 0).map(([emoji, addresses]) => {
@@ -842,6 +873,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [forwardMessageTarget, setForwardMessageTarget] = useState<DmMessage | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [replyTarget, setReplyTarget] = useState<DmMessage | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
@@ -1320,6 +1352,33 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     setForwardMessageTarget(message);
   }, []);
 
+  const handleReply = useCallback((message: DmMessage) => {
+    setReplyTarget(message);
+  }, []);
+
+  // A quote left open in one thread must not ride along into the next.
+  useEffect(() => {
+    setReplyTarget(null);
+  }, [draftScope]);
+
+  /*
+   * The composer is shared with Public Chat and speaks its Message shape, so
+   * the DM being answered is described to it in those terms.
+   */
+  const composerReplyTo = useMemo(() => {
+    if (!replyTarget) return null;
+    const sender = replyTarget.sender;
+    return {
+      id: replyTarget._id,
+      userId: sender?.address || sender?._id || '',
+      userName: sender?.displayName || sender?.username
+        || (sender?.address ? `${sender.address.slice(0, 6)}...${sender.address.slice(-4)}` : 'User'),
+      content: replyTarget.content || (replyTarget.msgType === 'voice' ? '🎤 Voice' : ''),
+      timestamp: new Date(replyTarget.createdAt),
+      type: replyTarget.msgType === 'gif' ? 'gif' as const : replyTarget.msgType === 'msg' ? 'text' as const : 'image' as const,
+    };
+  }, [replyTarget]);
+
   const handleStartEdit = useCallback((message: DmMessage) => {
     setEditingMessageId(message._id);
   }, []);
@@ -1458,6 +1517,21 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     gifUrl?: string;
     duration?: number;
   }) => {
+    // Taken now and cleared at once, like the composer itself — the quote goes
+    // out with this message only.
+    const replyingTo = replyTarget;
+    setReplyTarget(null);
+    const replyPreview: DmMessage['replyTo'] = replyingTo
+      ? {
+          _id: replyingTo._id,
+          content: replyingTo.content,
+          msgType: replyingTo.msgType,
+          mediaUrls: replyingTo.mediaUrls.map(m => ({ ...m, mimeType: m.mimeType || '' })),
+          voiceDuration: replyingTo.voiceDuration,
+          sender: replyingTo.sender,
+        }
+      : null;
+
     /*
      * A fee paid for a send that then failed is already on-chain. Reuse it
      * rather than charging again for the same message — the retry is the user
@@ -1500,7 +1574,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         isEdited: false,
         editedAt: null,
         isForwarded: false,
-        replyTo: null,
+        replyTo: replyPreview,
         paymentStatus: 'pending',
         paymentTxHash: null,
         tipAmount: activeFee,
@@ -1634,6 +1708,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         gifUrl,
         voiceDuration: duration,
         txHash: feeTxHash,
+        replyTo: replyingTo?._id,
+        replyPreview,
       },
       {
         onSuccess: (data) => {
@@ -2027,6 +2103,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 isEditing={editingMessageId === message._id}
                 onPin={handlePinMessage}
                 onForward={handleForward}
+                onReply={handleReply}
                 onEdit={handleStartEdit}
                 onSaveEdit={handleSaveEdit}
                 onCancelEdit={handleCancelEdit}
@@ -2089,6 +2166,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         thread={smartReplyThread}
         peerName={displayName}
         onSendMessage={handleSendMessage}
+        replyTo={composerReplyTo}
+        onCancelReply={() => setReplyTarget(null)}
         onTipClick={feeRequired ? undefined : () => setShowTipDialog(true)}
         sendDisabled={accountBanned || !!feeSendDisabled || (initError && isVirtualConv)}
         sendDisabledReason={

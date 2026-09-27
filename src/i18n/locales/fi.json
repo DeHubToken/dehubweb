@@ -1266,6 +1266,11 @@
     "loginRequired": "Kirjautuminen vaaditaan"
   },
   "messages": {
+    "reply": "Vastaa",
+    "react": "Reagoi",
+    "edit": "Muokkaa",
+    "forward": "Välitä",
+    "pin": "Kiinnitä",
     "online": "Online",
     "smartRepliesOff": "Ehdotetut vastaukset poistettiin käytöstä",
     "smartRepliesOffWhere": "Ota ne takaisin käyttöön kohdassa Asetukset → Viestit.",

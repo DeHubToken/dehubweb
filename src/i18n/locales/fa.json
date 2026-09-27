@@ -1266,6 +1266,11 @@
     "loginRequired": "ورود لازم است"
   },
   "messages": {
+    "reply": "پاسخ",
+    "react": "واکنش",
+    "edit": "ویرایش",
+    "forward": "بازارسال",
+    "pin": "سنجاق",
     "online": "آنلاین",
     "smartRepliesOff": "پاسخ‌های پیشنهادی خاموش شد",
     "smartRepliesOffWhere": "از تنظیمات ← پیام‌ها دوباره روشنش کنید.",

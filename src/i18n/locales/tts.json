@@ -1225,6 +1225,11 @@
     "loginRequired": "ต้องเข้าสู่ระบบ"
   },
   "messages": {
+    "reply": "ตอบกลับ",
+    "react": "แสดงปฏิกิริยา",
+    "edit": "แก้ไข",
+    "forward": "ส่งต่อ",
+    "pin": "ปักหมุด",
     "online": "ออนไลน์",
     "smartRepliesOff": "ปิดคำตอบแนะนำแล้ว",
     "smartRepliesOffWhere": "เปิดคืนได้เทิง ตั้งค่า → ข้อความ",

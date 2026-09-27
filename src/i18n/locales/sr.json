@@ -1023,6 +1023,11 @@
     "loginRequired": "Пријава је обавезна"
   },
   "messages": {
+    "reply": "Одговори",
+    "react": "Реагуј",
+    "edit": "Измени",
+    "forward": "Проследи",
+    "pin": "Закачи",
     "online": "Onlajn",
     "smartRepliesOff": "Предложени одговори су искључени",
     "smartRepliesOffWhere": "Поново их укључи у Подешавања → Поруке.",

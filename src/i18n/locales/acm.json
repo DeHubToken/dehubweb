@@ -1226,6 +1226,11 @@
     "loginRequired": "مطلوب تسجيل دخول"
   },
   "messages": {
+    "reply": "رد",
+    "react": "تفاعل",
+    "edit": "تعديل",
+    "forward": "إعادة توجيه",
+    "pin": "ثبّت",
     "online": "أونلاين",
     "smartRepliesOff": "انطفت الردود المقترحة",
     "smartRepliesOffWhere": "رجّعها من الإعدادات ← الرسائل.",

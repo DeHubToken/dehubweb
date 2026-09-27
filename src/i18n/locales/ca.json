@@ -1266,6 +1266,11 @@
     "loginRequired": "Cal iniciar sessió"
   },
   "messages": {
+    "reply": "Respon",
+    "react": "Reacciona",
+    "edit": "Editar",
+    "forward": "Reenvia",
+    "pin": "Fixa",
     "online": "En línia",
     "smartRepliesOff": "Respostes suggerides desactivades",
     "smartRepliesOffWhere": "Torna a activar-les a Configuració → Missatges.",

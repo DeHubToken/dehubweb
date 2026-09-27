@@ -1270,6 +1270,11 @@
     "loginRequired": "Connexion requise"
   },
   "messages": {
+    "reply": "Répondre",
+    "react": "Réagir",
+    "edit": "Modifier",
+    "forward": "Transférer",
+    "pin": "Épingler",
     "online": "En ligne",
     "smartRepliesOff": "Réponses suggérées désactivées",
     "smartRepliesOffWhere": "Réactivez-les dans Paramètres → Messages.",

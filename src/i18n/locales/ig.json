@@ -1245,6 +1245,11 @@
     "loginRequired": "Achọrọ ịbanye"
   },
   "messages": {
+    "reply": "Zaghachi",
+    "react": "Mee Mmeghachi",
+    "edit": "Dezie",
+    "forward": "Zigaa",
+    "pin": "Tụchie",
     "online": "N'ịntanetị",
     "smartRepliesOff": "Agbanyụọla nzaghachi atụrụ aro",
     "smartRepliesOffWhere": "Gbanyee ha ọzọ na Ntọala → Ozi.",

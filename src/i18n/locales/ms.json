@@ -1537,6 +1537,11 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "reply": "Balas",
+    "react": "Reaksi",
+    "edit": "Sunting",
+    "forward": "Majukan",
+    "pin": "Sematkan",
     "online": "Dalam talian",
     "smartRepliesOff": "Balasan yang dicadangkan dimatikan",
     "smartRepliesOffWhere": "Hidupkan semula di Tetapan → Mesej.",

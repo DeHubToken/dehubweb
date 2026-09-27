@@ -1298,6 +1298,11 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "reply": "Tumugon",
+    "react": "Mag-react",
+    "edit": "I-edit",
+    "forward": "I-forward",
+    "pin": "I-pin",
     "online": "Online",
     "smartRepliesOff": "Naka-off na ang mga iminungkahing sagot",
     "smartRepliesOffWhere": "I-on ulit ang mga ito sa Mga Setting → Mga Mensahe.",

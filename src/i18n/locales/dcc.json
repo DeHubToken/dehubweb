@@ -997,6 +997,11 @@
     "loginRequired": "لاگ ان ضروری ہے"
   },
   "messages": {
+    "reply": "جواب دو",
+    "react": "ری ایکٹ کرو",
+    "edit": "ایڈٹ",
+    "forward": "آگے بھیجو",
+    "pin": "پن کرو",
     "online": "آن لائن",
     "smartRepliesOff": "تجویز کیے گئے جواب بند ہو گئے",
     "smartRepliesOffWhere": "انہیں سیٹنگز ← پیغام سے دوبارہ آن کرو۔",
