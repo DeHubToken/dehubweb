@@ -60,7 +60,8 @@ import {
   edgeWhepEndpointFor,
   fetchTurnServers,
 } from '@/lib/live-ingest';
-import type { WhepSubscription } from '@/lib/livepeer/whep';
+import type { WhepState, WhepSubscription } from '@/lib/livepeer/whep';
+import { peekLiveSession, takeLiveSession } from '@/lib/live-handoff';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { GatedMedia } from './GatedMedia';
@@ -162,26 +163,42 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [giftBalanceVersion, setGiftBalanceVersion] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
   const urlsToTry = useMemo(() => [
     stream.playbackUrl,
     ...(stream.playbackUrls || []).filter((u): u is string => !!u && u !== stream.playbackUrl),
   ].filter((u): u is string => !!u && u.includes('.m3u8')), [stream.playbackUrl, stream.playbackUrls]);
   const hasPlaybackUrl = urlsToTry.length > 0;
+  // The feed card that was just tapped may have left its running WebRTC
+  // session behind for this page (lib/live-handoff). Read once, on mount: it
+  // decides the transport and the first frame before anything paints.
+  const [handoff] = useState(() => peekLiveSession(liveSourceFromHlsUrl(urlsToTry[0])?.playbackId));
+  const [isMuted, setIsMuted] = useState(true);
+  // A handed-over session is proof the stream is on air, so it plays before
+  // the status merge lands. The grace runs out so a stream that really has
+  // ended still falls to the ended screen.
+  const [handoffGrace, setHandoffGrace] = useState(!!handoff);
+  useEffect(() => {
+    if (!handoffGrace) return;
+    const timer = setTimeout(() => setHandoffGrace(false), 10_000);
+    return () => clearTimeout(timer);
+  }, [handoffGrace]);
+  const liveNow = stream.isLive || handoffGrace;
   // The WebRTC route reuses the id already embedded in the HLS URL, so nothing
   // new has to be threaded through the feed mappers to reach it.
   const whepSource = useMemo(
-    () => (stream.isLive ? liveSourceFromHlsUrl(urlsToTry[0]) : null),
-    [stream.isLive, urlsToTry]
+    () => (liveNow ? liveSourceFromHlsUrl(urlsToTry[0]) : null),
+    [liveNow, urlsToTry]
   );
   const whepPlaybackId = whepSource?.playbackId ?? null;
+  // A handed-over session is already delivering frames, which answers the
+  // Android worry below — keep it rather than dropping to HLS.
   const [transport, setTransport] = useState<'whep' | 'hls'>(
-    !preferAndroidHls() && typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
+    (handoff || !preferAndroidHls()) && typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
   );
   // A source swap pauses the element; keep the viewer's intent through fallback.
   const playbackRequestedRef = useRef(true);
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
-  const [streamEnded, setStreamEnded] = useState(!stream.isLive);
+  const [streamEnded, setStreamEnded] = useState(!liveNow);
   // The viewer's own thumb, played on tap rather than on the echo — see
   // LiveReactionFlow's `self`. The room still gets theirs off the broadcast.
   const [selfReaction, setSelfReaction] = useState<SelfReaction | null>(null);
@@ -345,8 +362,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   // a viewer landing in that window is stuck on "Stream ended" for a stream
   // that is live — with the <video> never mounted, so playback can't recover.
   useEffect(() => {
-    setStreamEnded(!stream.isLive);
-  }, [stream.isLive]);
+    setStreamEnded(!liveNow);
+  }, [liveNow]);
 
   // Same flip, second consequence: the WebRTC id only exists once the card
   // knows the stream is live, which is usually a beat after mount. Take the
@@ -448,23 +465,32 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     ) => {
       setIsBuffering(playbackRequestedRef.current);
       armStartTimer();
-      try {
-        const { subscribeToWhep } = await import('@/lib/livepeer/whep');
+      const onStateChange = (state: WhepState, detail?: string) => {
         if (cancelled) return;
-        session = await subscribeToWhep({
-          playbackId: whepPlaybackId,
-          endpoint: endpointFor({
-            provider: whepSource?.provider,
+        if (state === 'playing') setError(null);
+        else if (state === 'reconnecting') setError('Reconnecting…');
+        else if (state === 'failed') void failOver(detail || 'connection failed');
+      };
+      try {
+        // The feed card's session, still running: adopt it instead of
+        // negotiating a second one, so the picture never drops.
+        const handed = endpointFor === whepEndpointFor ? takeLiveSession(whepPlaybackId) : null;
+        if (handed) {
+          handed.setStateListener(onStateChange);
+          session = handed;
+        } else {
+          const { subscribeToWhep } = await import('@/lib/livepeer/whep');
+          if (cancelled) return;
+          session = await subscribeToWhep({
             playbackId: whepPlaybackId,
-          }),
-          iceServers,
-          onStateChange: (state, detail) => {
-            if (cancelled) return;
-            if (state === 'playing') setError(null);
-            else if (state === 'reconnecting') setError('Reconnecting…');
-            else if (state === 'failed') void failOver(detail || 'connection failed');
-          },
-        });
+            endpoint: endpointFor({
+              provider: whepSource?.provider,
+              playbackId: whepPlaybackId,
+            }),
+            iceServers,
+            onStateChange,
+          });
+        }
         if (cancelled) {
           await session.stop();
           return;
@@ -494,7 +520,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       // getting a picture onto this element.
       if (video.srcObject) video.srcObject = null;
     };
-  }, [transport, whepPlaybackId, streamEnded, videoId, stream.id]);
+  }, [transport, whepPlaybackId, whepSource?.provider, streamEnded, videoId, stream.id]);
 
   useEffect(() => {
     if (transport !== 'hls') return;
@@ -622,8 +648,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
 
             if (retryCount < maxRetriesPerUrl) {
               (hls as any)._networkRetryCount = retryCount + 1;
-              // Back off: 3s → 5s → 10s
-              const delay = retryCount < 3 ? 3000 : retryCount < 10 ? 5000 : 10000;
+              // Back off: 1s, 2s, 3s → 5s → 10s. A playlist that is not up yet is
+              // usually only a beat away; a flat 3s made every miss cost a full wait.
+              const delay = retryCount < 3 ? 1000 * (retryCount + 1) : retryCount < 10 ? 5000 : 10000;
               logger.info(`Network error, retrying in ${delay / 1000}s... (${retryCount + 1}/${maxRetriesPerUrl})`);
               setError('Connecting to stream...');
               scheduleRetry(() => {
@@ -1227,7 +1254,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               playsInline
               {...{"webkit-playsinline": ""}}
               muted={isMuted}
-              poster={stream.thumbnail || undefined}
+              poster={handoff?.poster || stream.thumbnail || undefined}
               onPlay={() => { setIsPlaying(true); setIsBuffering(true); }}
               onPlaying={() => { setIsPlaying(true); setIsBuffering(false); setError(null); }}
               onWaiting={() => setIsBuffering(true)}
