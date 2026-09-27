@@ -144,7 +144,7 @@ export async function verifyServeToken(token: string): Promise<ServeTokenPayload
   try {
     const key = await hmacKey();
     const ok = await crypto.subtle.verify(
-      'HMAC', key, b64urlDecode(sig), new TextEncoder().encode(body),
+      'HMAC', key, b64urlDecode(sig) as Uint8Array<ArrayBuffer>, new TextEncoder().encode(body),
     );
     if (!ok) return null;
     const payload = JSON.parse(new TextDecoder().decode(b64urlDecode(body))) as ServeTokenPayload;
