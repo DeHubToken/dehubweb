@@ -8,6 +8,7 @@
  */
 
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
+import { ShortsPhotoPager } from './ShortsPhotoPager';
 import { createPortal } from 'react-dom';
 import { Play, Pause, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -97,6 +98,7 @@ export const VideoSlide = memo(function VideoSlide({
   const thumbnail = useResolvedThumbnail(short.thumbnail);
   const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [soundtrackError, setSoundtrackError] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -169,7 +171,9 @@ export const VideoSlide = memo(function VideoSlide({
         if (video.currentTime === 0 || video.ended) {
           video.currentTime = 0;
         }
-        video.play().catch(() => {});
+        video.play().then(() => setSoundtrackError(false)).catch(() => {
+          if (isActiveRef.current && short.soundtrackUrl) setSoundtrackError(true);
+        });
       }, 50); // 50ms delay for buttery smooth landing
       
       return () => {
@@ -414,6 +418,7 @@ export const VideoSlide = memo(function VideoSlide({
           for centre-double-tap fullscreen; fullscreen kept its button and gave
           the gesture up, because one gesture cannot mean two things. */}
       <div className="absolute inset-0 z-[2]" {...tapGestures}>
+        {short.imageUrls?.length ? <ShortsPhotoPager images={short.imageUrls} /> : null}
         {short.transcodingStatus === 'failed' ? (
           /* Transcode job failed server-side — videoUrl was written
              optimistically at upload time and the file was never actually
@@ -443,10 +448,10 @@ export const VideoSlide = memo(function VideoSlide({
               </span>
             </div>
           </div>
-        ) : short.videoUrl ? (
+        ) : (short.videoUrl || short.soundtrackUrl) ? (
           <video
             ref={videoRef}
-            src={short.videoUrl}
+            src={short.soundtrackUrl || short.videoUrl}
             className={`shorts-inline-video pointer-events-none w-full h-full ${fitWhole || isFullscreen ? 'object-contain' : 'object-cover'} transition-none`}
             style={{ willChange: 'transform' }}
             loop
@@ -463,7 +468,7 @@ export const VideoSlide = memo(function VideoSlide({
             onLoadedMetadata={handleLoadedMetadata}
             onCanPlay={handleCanPlay}
             onPlay={handlePlay}
-            onError={() => console.error('Video load error:', short.videoUrl)}
+            onError={() => { if (short.soundtrackUrl) setSoundtrackError(true); }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-zinc-900">
@@ -475,6 +480,17 @@ export const VideoSlide = memo(function VideoSlide({
           </div>
         )}
       </div>
+
+      {short.soundtrackUrl && soundtrackError && isActive && <button type="button"
+        className="absolute top-32 left-1/2 -translate-x-1/2 z-20 min-h-11 rounded-full bg-black/70 px-4 text-white"
+        onPointerDown={event => event.stopPropagation()}
+        onClick={event => {
+          event.stopPropagation();
+          const media = videoRef.current;
+          if (!media) return;
+          if (media.error) media.load();
+          media.play().then(() => setSoundtrackError(false)).catch(() => setSoundtrackError(true));
+        }}>{t('explorePage.retry')} · {t('feed.music')}</button>}
 
       {/* The fullscreen toggle used to live here, and it showed: a slide is
           translated by the carousel, so the button slid along with the video on
