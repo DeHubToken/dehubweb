@@ -195,6 +195,8 @@ export default function ArcadePage() {
                   type="button"
                   onClick={() => setBoard(game.slug)}
                   aria-pressed={board === game.slug}
+                  data-filter-chip
+                  data-active={board === game.slug ? 'true' : 'false'}
                   className={
                     board === game.slug
                       ? 'rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-black'
