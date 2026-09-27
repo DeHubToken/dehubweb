@@ -51,6 +51,7 @@ import { TradeSheet } from '@/components/app/wallet/TradeSheet';
 import { SubscriptionTokensRow } from '@/components/app/wallet/SubscriptionTokensRow';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useSubscriptionEarnings, useWithdrawSubscriptionEarnings } from '@/hooks/use-subscriptions';
+import { outstandingEarnings } from '@/lib/api/dehub';
 
 const CHAIN_OPTIONS: { id: WalletChainId; name: string; icon: string }[] = [
   { id: BASE_CHAIN_ID, name: 'Base', icon: baseLogo },
@@ -303,7 +304,7 @@ export default function FullWalletPage() {
 
   const handleCashOut = () => {
     if (!subscriptionEarnings?.withdrawalAvailable) {
-      toast.info(subscriptionEarnings?.withdrawalMessage || 'Subscription fees will be withdrawable soon');
+      toast.info(t('subscriptions.withdrawableSoon'));
       return;
     }
     withdrawSubscriptionEarnings.mutate();
@@ -403,20 +404,24 @@ export default function FullWalletPage() {
         )}
       </div>
 
-      {(subscriptionEarningsLoading || ((subscriptionEarnings?.pendingUsdt || 0) + (subscriptionEarnings?.processingUsdt || 0)) > 0) && (
+      {(subscriptionEarningsLoading || outstandingEarnings(subscriptionEarnings).usd > 0) && (
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-xs uppercase tracking-wider text-zinc-500">Subscription earnings</p>
+              <p className="text-xs uppercase tracking-wider text-zinc-500">{t('subscriptions.earningsTitle')}</p>
               <p className="mt-1 text-xl font-bold text-white">
                 {subscriptionEarningsLoading
                   ? '…'
-                  : `${((subscriptionEarnings?.pendingUsdt || 0) + (subscriptionEarnings?.processingUsdt || 0)).toLocaleString(undefined, { maximumFractionDigits: 6 })} USDT`}
+                  : t('subscriptions.tokenAmount', { amount: outstandingEarnings(subscriptionEarnings).tokens.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}
               </p>
               <p className="mt-1 text-xs text-zinc-500">
+                {t('subscriptions.earningsWorth', {
+                  amount: outstandingEarnings(subscriptionEarnings).usd.toLocaleString(undefined, { style: 'currency', currency: 'USD' }),
+                })}
+                {' · '}
                 {subscriptionEarnings?.withdrawalAvailable
-                  ? 'Available to withdraw on Base'
-                  : 'USDT-denominated balance · pending treasury reserve'}
+                  ? t('subscriptions.earningsPaidInTokens')
+                  : t('subscriptions.earningsPendingReserve')}
               </p>
             </div>
             <Button
@@ -425,7 +430,7 @@ export default function FullWalletPage() {
               disabled={subscriptionEarningsLoading || withdrawSubscriptionEarnings.isPending}
               onClick={handleCashOut}
             >
-              {withdrawSubscriptionEarnings.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Withdraw'}
+              {withdrawSubscriptionEarnings.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : t('subscriptions.withdraw')}
             </Button>
           </div>
         </div>

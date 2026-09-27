@@ -3068,14 +3068,21 @@
     "subscribedToast": "سبسکرائب ہوگیا",
     "confirmSubscribeTo": "{{plan}} کو {{price}} / {{duration}} میں سبسکرائب کرو۔",
     "atPreListingRate": "پری لسٹنگ ریٹ پو {{amount}}",
-    "creditsCreator": "کریئٹر کو {{amount}} USDT ملتے",
     "fromSubscriptionTokens": "آپ کے سبسکرپشن ٹوکنز سے",
     "addedAtTodaysPrice": "آج کی قیمت پو ابھی جوڑے گئے",
-    "subscriptionTokensNote": "سبسکرپشن ٹوکنز جوڑتے وقت کی قیمت پو لاک ہوتے، اس واسطے قیمت بدلنے سے سبسکرپشن کی لاگت نئیں بدلتی۔ یو صرف سبسکرپشن پو خرچ ہوسکتے۔",
     "subscriptionTokens": "سبسکرپشن ٹوکنز",
     "subscriptionTokensOnly": "صرف سبسکرپشن کے واسطے",
     "untradableTokens": "یو ٹریڈ نئیں ہونے والے سبسکرپشن ٹوکنز ہیں",
-    "lockedValue": "{{amount}} پو لاک",
-    "withdraw": "نکالو"
+    "withdraw": "نکالو",
+    "creatorGetsTokens": "تخلیق کار کو {{amount}} قیمت کے ٹوکن ملتے ہیں",
+    "subscriptionTokensValueNote": "सदस्यता टोकन अपनी डॉलर वैल्यू को बरकरार रखते हैं। अगर टोकन की कीमत आपके उपयोग से पहले बदलती है तो आपको अधिक या कम टोकन दिखेंगे, लेकिन वे हमेशा वही सदस्यताएँ कवर करेंगे। इन्हें केवल सदस्यताओं पर ही खर्च किया जा सकता है।",
+    "earningsTitle": "सदस्यता कमाई",
+    "earningsWorth": "कीमत {{amount}}",
+    "earningsPaidInTokens": "आज की कीमत पर टोकन में भुगतान किया गया",
+    "earningsPendingReserve": "लंबित कोष रिज़र्व",
+    "earningsAvailable": "उपलब्ध",
+    "earningsPending": "लंबित",
+    "tokensSent": "{{amount}} टोकन भेजे गए",
+    "withdrawableSoon": "सदस्यता कमाई जल्द ही निकाली जा सकेगी"
   }
 }

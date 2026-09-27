@@ -8,9 +8,10 @@ import { useSubscriptionCredits } from '@/hooks/use-subscriptions';
 import dehubCoin from '@/assets/dehub-coin.png';
 
 /**
- * Subscription tokens in the wallet list. They look and count like tokens,
- * but they are locked at the dollar value they were added at and can only be
- * spent on subscriptions, so every way out of the wallet says so.
+ * Subscription tokens in the wallet list. The balance is a dollar amount
+ * shown as tokens at today's price, so the count moves with the price and the
+ * value does not. They can only be spent on subscriptions, so every way out
+ * of the wallet says so.
  */
 export function SubscriptionTokensRow() {
   const { t } = useTranslation();
@@ -52,8 +53,8 @@ export function SubscriptionTokensRow() {
           <div className="px-4 pb-6 space-y-4">
             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
               <p className="text-2xl font-bold text-white">{t('subscriptions.tokenAmount', { amount: tokens })}</p>
-              <p className="mt-1 text-sm text-zinc-400">{t('subscriptions.lockedValue', { amount: usd })}</p>
-              <p className="mt-3 text-xs leading-relaxed text-zinc-500">{t('subscriptions.subscriptionTokensNote')}</p>
+              <p className="mt-1 text-sm text-zinc-400">{t('subscriptions.earningsWorth', { amount: usd })}</p>
+              <p className="mt-3 text-xs leading-relaxed text-zinc-500">{t('subscriptions.subscriptionTokensValueNote')}</p>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl" onClick={refuse}>
