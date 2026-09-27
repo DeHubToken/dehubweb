@@ -13,6 +13,9 @@
  * Writes:
  *   src/lib/emoji/data/emoji.json   every emoji + skins + animated codepoints (~60 KB)
  *   src/lib/emoji/data/locales.json app locale → keyword file
+ *   src/lib/emoji/data/shortcodes.json  :shortcode: → emoji, every name Slack,
+ *     GitHub, Discord and JoyPixels use, so text pasted from any of them
+ *     (":thumbsup:", ":+1:", ":fire:") renders as the emoji
  *   public/emoji-data/<VERSION>/names/<file>.json
  *     one per Emojibase language, index-aligned with emoji.json, each entry
  *     "label|keyword keyword ...". They are 150-300 KB apiece, so neither app
@@ -114,6 +117,9 @@ async function main() {
   const data = await getJson('en/data.json');
   const github = await getJson('en/shortcodes/github.json');
   const emojibase = await getJson('en/shortcodes/emojibase.json');
+  const iamcal = await getJson('en/shortcodes/iamcal.json');
+  const joypixels = await getJson('en/shortcodes/joypixels.json');
+  const cldr = await getJson('en/shortcodes/cldr.json');
   const animatedSet = new Set((await getJson(NOTO_ANIMATED)).icons.map((i) => i.codepoint));
 
   const list = data.filter((e) => GROUPS[e.group] && e.emoji).sort((a, b) => a.order - b.order);
@@ -144,6 +150,17 @@ async function main() {
 
   const dataset = { version: VERSION, groups: GROUP_ORDER, emoji: rows, animated };
 
+  // Slack/GitHub names first: those are what people type, so they win a clash.
+  const shortcodes = {};
+  for (const set of [iamcal, github, emojibase, joypixels, cldr]) {
+    for (const e of list) {
+      for (const sc of [set[e.hexcode]].flat()) {
+        const code = sc && String(sc).toLowerCase();
+        if (code && !(code in shortcodes)) shortcodes[code] = e.emoji;
+      }
+    }
+  }
+
   const names = {};
   for (const lang of new Set(Object.values(LOCALES))) {
     const byHex = Object.fromEntries((await getJson(`${lang}/compact.json`)).map((c) => [c.hexcode, c]));
@@ -169,6 +186,7 @@ async function main() {
   await mkdir(namesDir, { recursive: true });
   await writeFile(path.join(dataDir, 'emoji.json'), json(dataset));
   await writeFile(path.join(dataDir, 'locales.json'), json(LOCALES));
+  await writeFile(path.join(dataDir, 'shortcodes.json'), json(shortcodes));
   for (const [file, arr] of Object.entries(names)) await writeFile(path.join(namesDir, `${file}.json`), json(arr));
   console.log(`wrote ${rows.length} emoji (${Object.keys(animated).length} animated), ${Object.keys(names).length} keyword files`);
 
@@ -178,6 +196,7 @@ async function main() {
     await writeFile(path.join(dir, 'emoji.json'), json(dataset));
     await writeFile(path.join(dir, 'locales.json'), json(LOCALES));
     await writeFile(path.join(dir, 'names-en.json'), json(names.en));
+    await writeFile(path.join(dir, 'shortcodes.json'), json(shortcodes));
     console.log(`wrote mobile dataset → ${dir}`);
   }
 }

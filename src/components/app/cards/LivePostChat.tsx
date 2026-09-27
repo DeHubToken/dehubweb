@@ -16,6 +16,7 @@ import { useDraft } from '@/hooks/use-draft';
 import { useLiveViewerActions } from '@/components/app/live/live-viewer-actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { replaceLinksWithEmoji, renderTextWithLinks } from '@/components/app/TranslatableText';
+import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
 import { useLiveChatMessages } from '@/hooks/use-livechat';
 import { useStreamAudience } from '@/hooks/use-stream-audience';
@@ -436,11 +437,11 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                           <DhbAmount amount={moment.giftAmount} currency={moment.giftCurrency} iconClassName="h-3 w-3" />
                         </span>
                         {msg.content && (
-                          <p className="text-zinc-300 break-words whitespace-pre-wrap mt-0.5">{msg.content}</p>
+                          <p className="text-zinc-300 break-words whitespace-pre-wrap mt-0.5"><InlineEmoji value={msg.content} /></p>
                         )}
                       </>
                     ) : (
-                      <span className="text-zinc-400 ml-1.5">{msg.content}</span>
+                      <span className="text-zinc-400 ml-1.5"><InlineEmoji value={msg.content} /></span>
                     )}
                   </div>
                 </div>

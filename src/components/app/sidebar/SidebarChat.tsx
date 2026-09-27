@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
+import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { Send, Users, Loader2, Mic, SmilePlus, Reply, CornerDownRight, Pencil, Trash2, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -120,7 +121,7 @@ function SidebarReactions({
                 : 'text-zinc-400 hover:text-white'
             }`}
           >
-            <span className="text-xs">{emoji}</span>
+            <span className="text-xs inline-flex items-center"><InlineEmoji value={emoji} className="h-4 m-0" /></span>
             {mine ? (
               <>
                 <span className="group-hover/reaction:hidden">{addresses.length}</span>
