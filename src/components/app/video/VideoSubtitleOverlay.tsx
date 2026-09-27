@@ -14,7 +14,7 @@
  *   a video the sweeper has not reached yet still starts one, which is why the
  *   attempt budget is respected here rather than spinning forever.
  */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Captions, Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
@@ -31,7 +31,10 @@ import { applyCorrections, useTranscriptCorrections } from '@/hooks/use-transcri
 import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
 import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
-import { useDubPreference, useSpeechVoices, useVoiceDub, pickVoice } from '@/hooks/use-voice-dub';
+import { useDubPreference, useSpeechVoices, pickVoice } from '@/hooks/dub-preference';
+
+// The speech engine only matters once a dub is playing; keep it off the boot path.
+const VoiceDubEngine = lazy(() => import('./VoiceDubEngine'));
 
 const LS_ENABLED = 'video-subs:enabled';
 const LS_LANG = 'video-subs:lang';
@@ -195,7 +198,6 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     requestDubTranslation().catch(() => undefined);
   }, [wantDub, transcript?.id, dubLang, enabled, normalizedLang, dubTranslationStatus, requestDubTranslation]);
 
-  useVoiceDub(videoRef, wantDub ? dubSegments : null, wantDub ? dubVoice : null);
 
   const dubHint: 'preparing' | 'unavailable' | null =
     !dubOn || !isReady || !dubLang ? null
@@ -408,6 +410,11 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
 
   return (
     <>
+      {wantDub && (
+        <Suspense fallback={null}>
+          <VoiceDubEngine videoRef={videoRef} segments={dubSegments ?? null} voice={dubVoice} />
+        </Suspense>
+      )}
       {/* Caption text */}
       {enabled && currentText && (
         <div

@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Check, Languages } from 'lucide-react';
 import { toast } from 'sonner';
 import { useVideoTranscript } from '@/hooks/use-video-transcript';
-import { useDubPreference, loadVoices, pickVoice } from '@/hooks/use-voice-dub';
+import { useDubPreference, loadVoices, pickVoice } from '@/hooks/dub-preference';
 
 interface Props {
   tokenId: number | string;
