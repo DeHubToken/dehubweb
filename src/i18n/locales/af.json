@@ -5067,7 +5067,11 @@
     "notEnoughTokens": "Nie genoeg tokens vir dubbing nie.",
     "notEnoughTokensDescription": "Jy benodig ongeveer {{needed}} tokens en besit {{held}}.",
     "paymentLeftWallet": "Jou tokens het jou beursie verlaat. Druk Betaal weer om te probeer om dit te bevestig.",
-    "paidForMinutes": "Betaal {{amount}} tokens vir {{minutes}} minute se oorklanking."
+    "paidForMinutes": "Betaal {{amount}} tokens vir {{minutes}} minute se oorklanking.",
+    "menuItem": "Oorklank",
+    "noTranscript": "Hierdie video het nog nie 'n transkripsie nie, so dit kan nie oorgeklank word nie. Probeer later weer.",
+    "noVoice": "Jou toestel het geen stem vir hierdie taal nie.",
+    "sameLanguage": "Hierdie video is reeds in jou taal."
   },
   "digest": {
     "andOthers_one": "{{names}} en {{count}} ander",

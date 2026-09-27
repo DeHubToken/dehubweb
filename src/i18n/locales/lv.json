@@ -5197,7 +5197,11 @@
     "notEnoughTokens": "Nepietiek žetonu dublēšanai.",
     "notEnoughTokensDescription": "Jums nepieciešami aptuveni {{needed}} žetoni, un jums ir {{held}}.",
     "paymentLeftWallet": "Jūsu žetoni ir izņemti no jūsu maka. Nospiediet \"Maksāt\" vēlreiz, lai mēģinātu tos apstiprināt.",
-    "paidForMinutes": "Samaksāti {{amount}} žetoni par {{minutes}} minūšu dublēšanu."
+    "paidForMinutes": "Samaksāti {{amount}} žetoni par {{minutes}} minūšu dublēšanu.",
+    "menuItem": "Dublēšana",
+    "noTranscript": "Šim video vēl nav transkripcijas, tāpēc to nevar dublēt. Mēģiniet vēlāk vēlreiz.",
+    "noVoice": "Jūsu ierīcē nav balss šai valodai.",
+    "sameLanguage": "Šis video jau ir jūsu valodā."
   },
   "support": {
     "title": "Atbalsts",

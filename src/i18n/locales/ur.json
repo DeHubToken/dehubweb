@@ -4996,7 +4996,11 @@
     "notEnoughTokens": "ڈبنگ کے لیے ٹوکن کافی نہیں ہیں۔",
     "notEnoughTokensDescription": "آپ کو تقریباً {{needed}} ٹوکن درکار ہیں اور آپ کے پاس {{held}} ہیں۔",
     "paymentLeftWallet": "آپ کے ٹوکن آپ کے والٹ سے نکل چکے ہیں۔ اس کی تصدیق دوبارہ کرنے کے لیے Pay پر کلک کریں۔",
-    "paidForMinutes": "ڈبنگ کے {{minutes}} منٹ کے لیے {{amount}} ٹوکن ادا کیے۔"
+    "paidForMinutes": "ڈبنگ کے {{minutes}} منٹ کے لیے {{amount}} ٹوکن ادا کیے۔",
+    "menuItem": "ڈب",
+    "noTranscript": "اس ویڈیو کا ابھی کوئی ٹرانسکرپٹ نہیں ہے، اس لیے اسے ڈب نہیں کیا جا سکتا۔ بعد میں دوبارہ کوشش کریں۔",
+    "noVoice": "آپ کے آلے میں اس زبان کے لیے کوئی آواز نہیں ہے۔",
+    "sameLanguage": "یہ ویڈیو پہلے ہی آپ کی زبان میں ہے۔"
   },
   "digest": {
     "andOthers_one": "{{names}} اور {{count}} دیگر",

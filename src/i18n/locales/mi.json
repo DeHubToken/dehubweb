@@ -3025,7 +3025,11 @@
     "notEnoughTokens": "Kāore e nui ngā tohu mō te reo rua.",
     "notEnoughTokensDescription": "Me pēnei te nui o {{needed}} tohu, ā, kei a koe {{held}}.",
     "paymentLeftWallet": "Kua wehe atu ngā tohu i tō putea. Pāhia anō te Utu kia whakamātau anō i te whakaūnga.",
-    "paidForMinutes": "Utua {{amount}} tohu mō {{minutes}} meneti o te whakapāpā."
+    "paidForMinutes": "Utua {{amount}} tohu mō {{minutes}} meneti o te whakapāpā.",
+    "menuItem": "Whakahua reo",
+    "noTranscript": "Kāore anō he tuhinga kōrero mō tēnei ataata, nō reira e kore e taea te whakahua reo. Whakamātauria anō ā muri ake.",
+    "noVoice": "Kāore he reo i tō pūrere mō tēnei reo.",
+    "sameLanguage": "Kei tō reo kē tēnei ataata."
   },
   "digest": {
     "andOthers_one": "{{names}} me {{count}} atu anō",

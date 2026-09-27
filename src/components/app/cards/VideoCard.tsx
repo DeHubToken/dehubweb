@@ -128,6 +128,7 @@ import {
 } from '@/components/ui/drawer';
 import type { VideoItem } from '@/types/feed.types';
 import { VideoSubtitleOverlay } from '@/components/app/video/VideoSubtitleOverlay';
+import { DubMenuItem } from '@/components/app/video/DubMenuItem';
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
 
 /**
@@ -2590,6 +2591,22 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               >
                 <FastForward className="w-5 h-5" /> {t('postOptions.markSection', 'Skippable sections')}
               </button>
+            )}
+            {!video.isAudio && !isContentGated && video.videoUrl && (
+              <DubMenuItem
+                tokenId={video.id}
+                onDone={() => setShowOptionsDrawer(false)}
+                onEnabled={() => {
+                  // A dub nobody can hear looks broken; switching it on is a
+                  // request for sound.
+                  if (!isMuted) return;
+                  setIsMuted(false);
+                  videoPlaybackManager.globalMuted = false;
+                  videoPlaybackManager.claimAudio(instanceId);
+                  if (videoRef.current) videoRef.current.muted = false;
+                }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              />
             )}
             <button 
               onClick={() => {

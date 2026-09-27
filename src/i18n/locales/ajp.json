@@ -2951,7 +2951,11 @@
     "notEnoughTokens": "لا توجد توكنات كافية للترجمة الصوتية.",
     "notEnoughTokensDescription": "تحتاج إلى حوالي {{needed}} توكن ولديك {{held}}.",
     "paymentLeftWallet": "راحت توكناتك من محفظتك. اضغط دفع مرة ثانية لتجربة تأكيدها.",
-    "paidForMinutes": "تم دفع {{amount}} توكن مقابل {{minutes}} دقيقة من الدبلجة."
+    "paidForMinutes": "تم دفع {{amount}} توكن مقابل {{minutes}} دقيقة من الدبلجة.",
+    "menuItem": "دبلجة",
+    "noTranscript": "هالفيديو لسّا ما إلو نص، فما بينفع يندبلج. جرّب بعدين.",
+    "noVoice": "جهازك ما فيه صوت لهاللغة.",
+    "sameLanguage": "هالفيديو أصلاً بلغتك."
   },
   "digest": {
     "andOthers_one": "{{names}} و {{count}} آخر",

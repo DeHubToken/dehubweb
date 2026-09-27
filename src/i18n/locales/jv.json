@@ -3018,7 +3018,11 @@
     "notEnoughTokens": "Token ora cukup kanggo dubbing.",
     "notEnoughTokensDescription": "Sampeyan butuh kira-kira {{needed}} token lan duwe {{held}}.",
     "paymentLeftWallet": "Token sampeyan wis metu saka dompet. Pencet Bayar maneh kanggo nyoba konfirmasi.",
-    "paidForMinutes": "Mbayar {{amount}} token kanggo {{minutes}} menit dubbing."
+    "paidForMinutes": "Mbayar {{amount}} token kanggo {{minutes}} menit dubbing.",
+    "menuItem": "Dubbing",
+    "noTranscript": "Video iki durung duwe transkrip, dadi durung bisa di-dubbing. Coba maneh mengko.",
+    "noVoice": "Piranti sampeyan ora duwe swara kanggo basa iki.",
+    "sameLanguage": "Video iki wis nganggo basa sampeyan."
   },
   "digest": {
     "andOthers_one": "{{names}} lan {{count}} liyane",

@@ -2902,7 +2902,11 @@
     "original": "اصل آڊيو",
     "dubbed": "ڈب آڈیو",
     "preparing": "ڈب شدہ آڈیو تیار کر رہے ہیں…",
-    "unavailable": "Azi video da dubbed audio available nai."
+    "unavailable": "Azi video da dubbed audio available nai.",
+    "menuItem": "ڈبنگ",
+    "noTranscript": "ایں ویڈیو دا ہݨ تئیں کوئی ٹرانسکرپٹ کائنی، ایں کیتے ڈب نئیں تھی سڳدی۔ بعد اچ ولا کوشش کرو۔",
+    "noVoice": "تہاڈے ڈیوائس اچ ایں زبان کیتے کوئی آواز کائنی۔",
+    "sameLanguage": "ایہ ویڈیو پہلے ای تہاڈی زبان اچ ہے۔"
   },
   "digest": {
     "andOthers_one": "{{names}} اور {{count}} دوسرے",
