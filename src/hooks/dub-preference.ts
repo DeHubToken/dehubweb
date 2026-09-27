@@ -69,7 +69,7 @@ export function synth(): SpeechSynthesis | null {
 
 /** Best voice for a BCP-47 tag: exact tag first, then same base language,
  *  preferring voices that run on the device over network ones. */
-/** App language codes whose device voices are filed under another code. */
+/** App codes whose device voices are filed under another code. */
 const VOICE_ALIASES: Record<string, string> = { no: 'nb', tl: 'fil', yue: 'zh', iw: 'he' };
 
 export function pickVoice(voices: SpeechSynthesisVoice[], lang: string | null): SpeechSynthesisVoice | null {
@@ -113,11 +113,7 @@ export function useSpeechVoices(): SpeechSynthesisVoice[] {
   return voices;
 }
 
-/**
- * iOS Safari only speaks after speech has been started inside a tap. The
- * engine is lazy and timer-driven, so every tap that turns a dub on speaks an
- * empty line through this first to unlock it.
- */
+/** iOS Safari only speaks once speech has started inside a tap: call from it. */
 export function primeSpeech() {
   const s = synth();
   if (!s) return;
