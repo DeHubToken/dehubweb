@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Check, Languages } from 'lucide-react';
 import { toast } from 'sonner';
 import { useVideoTranscript } from '@/hooks/use-video-transcript';
-import { useDubPreference, loadVoices, pickVoice } from '@/hooks/dub-preference';
+import { useDubPreference, loadVoices, pickVoice, primeSpeech } from '@/hooks/dub-preference';
 
 interface Props {
   tokenId: number | string;
@@ -31,6 +31,8 @@ export function DubMenuItem({ tokenId, className, onDone, onEnabled }: Props) {
   );
 
   const handleClick = async () => {
+    // Must run inside the tap itself, before any await (iOS Safari).
+    if (!on) primeSpeech();
     if (on) {
       setDub(false, null);
       onDone();
@@ -66,7 +68,7 @@ export function DubMenuItem({ tokenId, className, onDone, onEnabled }: Props) {
   return (
     <button
       type="button"
-      role="menuitemcheckbox"
+      role="switch"
       aria-checked={on}
       onClick={() => { void handleClick(); }}
       className={className}

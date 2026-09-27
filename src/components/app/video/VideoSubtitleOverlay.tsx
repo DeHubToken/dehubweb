@@ -31,10 +31,11 @@ import { applyCorrections, useTranscriptCorrections } from '@/hooks/use-transcri
 import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
 import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
-import { useDubPreference, useSpeechVoices, pickVoice } from '@/hooks/dub-preference';
+import { useDubPreference, useSpeechVoices, pickVoice, primeSpeech } from '@/hooks/dub-preference';
 
 // The speech engine only matters once a dub is playing; keep it off the boot path.
 const VoiceDubEngine = lazy(() => import('./VoiceDubEngine'));
+
 
 const LS_ENABLED = 'video-subs:enabled';
 const LS_LANG = 'video-subs:lang';
@@ -178,10 +179,34 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [normalizedLang, sourceLang, voices]);
 
-  const wantDub = dubOn && isReady && !!dubLang && !!dubVoice;
+  // The switch is global, but only a video someone is actually listening to
+  // gets a dub. Without this every card in the feed fetched — and, for a new
+  // language, paid to translate — its transcript the moment Dub was on.
+  const [audible, setAudible] = useState(false);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const update = () => setAudible(!v.paused && !v.muted);
+    update();
+    v.addEventListener('play', update);
+    v.addEventListener('pause', update);
+    v.addEventListener('volumechange', update);
+    return () => {
+      v.removeEventListener('play', update);
+      v.removeEventListener('pause', update);
+      v.removeEventListener('volumechange', update);
+    };
+  }, [videoRef]);
+
+  // The browser refused to speak (iOS Safari without a gesture, a dead voice).
+  const [dubFailed, setDubFailed] = useState(false);
+  useEffect(() => { setDubFailed(false); }, [dubOn, dubLang]);
+
+  const wantDub = dubOn && audible && !dubFailed && isReady && !!dubLang && !!dubVoice;
   const {
     segments: dubSegments,
     status: dubTranslationStatus,
+    isFetching: dubLookupPending,
     request: requestDubTranslation,
   } = useTranslatedSegments(transcript?.id ?? null, dubLang ?? 'original', !!numericId && wantDub);
 
@@ -192,18 +217,21 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     if (!wantDub || !transcript?.id || !dubLang) return;
     if (enabled && dubLang === normalizedLang) return;
     if (dubTranslationStatus === 'ready' || dubTranslationStatus === 'processing') return;
+    // Status is empty until the stored translation has been looked up; asking
+    // before then calls translate-transcript for rows that already exist.
+    if (dubLookupPending) return;
     const token = `${transcript.id}:${dubLang}`;
     if (askedDubRef.current === token) return;
     askedDubRef.current = token;
     requestDubTranslation().catch(() => undefined);
-  }, [wantDub, transcript?.id, dubLang, enabled, normalizedLang, dubTranslationStatus, requestDubTranslation]);
+  }, [wantDub, transcript?.id, dubLang, enabled, normalizedLang, dubTranslationStatus, dubLookupPending, requestDubTranslation]);
 
 
   const dubHint: 'preparing' | 'unavailable' | null =
     !dubOn || !isReady || !dubLang ? null
     // Voices load a moment after the page; an empty list is not a "no".
     : !dubVoice ? (voices.length ? 'unavailable' : 'preparing')
-    : dubTranslationStatus === 'failed' ? 'unavailable'
+    : dubFailed || dubTranslationStatus === 'failed' ? 'unavailable'
     : dubSegments ? null
     : 'preparing';
 
@@ -412,7 +440,12 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     <>
       {wantDub && (
         <Suspense fallback={null}>
-          <VoiceDubEngine videoRef={videoRef} segments={dubSegments ?? null} voice={dubVoice} />
+          <VoiceDubEngine
+            videoRef={videoRef}
+            segments={dubSegments ?? null}
+            voice={dubVoice}
+            onFailed={() => setDubFailed(true)}
+          />
         </Suspense>
       )}
       {/* Caption text */}
@@ -606,6 +639,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
         <div className="flex items-center gap-1">
           <button
             type="button"
+            aria-pressed={!dubOn}
             onClick={(e) => { e.stopPropagation(); setDubOn(false); }}
             className={cn(
               'text-[10px] px-2 py-0.5 rounded-md border',
@@ -619,7 +653,8 @@ function SubtitleMenu(props: SubtitleMenuProps) {
           <button
             type="button"
             disabled={!dubPossible}
-            onClick={(e) => { e.stopPropagation(); setDubOn(true); }}
+            aria-pressed={dubOn}
+            onClick={(e) => { e.stopPropagation(); primeSpeech(); setDubOn(true); }}
             className={cn(
               'text-[10px] px-2 py-0.5 rounded-md border disabled:opacity-40',
               dubOn
