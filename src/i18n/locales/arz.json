@@ -468,7 +468,20 @@
     "leftHandedDesc": "انقل زرار الإعجاب للناحية الشمال من شريط التفاعلات",
     "notifyTipsDesc": "عندما يرسل لك شخص ما إكرامية في عملات DeHub",
     "messageFeeDesc": "يتطلب الحد الأدنى من الإكرامية في رموز DeHub لمراسلتك",
-    "tokenBalance": "رصيد الرمز المميز"
+    "tokenBalance": "رصيد الرمز المميز",
+    "signIn": "تسجيل الدخول",
+    "emailSignIn": "إيميل الدخول",
+    "emailSignInDesc": "اربط إيميل عشان تدخل من غير المحفظة بتاعتك.",
+    "emailSignInLinked": "الدخول بالكود شغّال لـ {{email}}",
+    "emailSignInExisting": "إنت بتدخل أصلاً بـ {{email}}",
+    "emailSignInExistingUnknown": "الحساب ده بيدخل أصلاً من غير محفظة.",
+    "emailSignInSend": "ابعت الكود",
+    "emailSignInSent": "شوف الإنبوكس بتاعك عشان الكود",
+    "emailSignInConfirm": "أكّد",
+    "emailSignInDone": "دلوقتي تقدر تدخل بالإيميل ده",
+    "emailSignInRemove": "شيل",
+    "emailSignInRemoved": "اتشال — الإيميل ده مبقاش يقدر يدخّلك",
+    "cancel": "إلغاء"
   },
   "common": {
     "save": "حفظ",

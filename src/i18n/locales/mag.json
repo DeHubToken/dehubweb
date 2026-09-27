@@ -464,7 +464,20 @@
     "leftHandedDesc": "लाइक बटन के रिएक्शन बार के बायाँ ओर ले जाथिन",
     "notifyTipsDesc": "जब कोई आपको DeHub टोकन में टिप भेजता है",
     "messageFeeDesc": "आपको संदेश भेजने के लिए DeHub टोकन में न्यूनतम टिप की आवश्यकता है",
-    "tokenBalance": "टोकन शेष"
+    "tokenBalance": "टोकन शेष",
+    "signIn": "साइन-इन",
+    "emailSignIn": "साइन-इन ईमेल",
+    "emailSignInDesc": "वॉलेट बिना साइन इन करे लेल ईमेल पता जोड़ूँ।",
+    "emailSignInLinked": "{{email}} लेल कोड लॉगिन चालू हे",
+    "emailSignInExisting": "अहाँ पहिले से {{email}} से साइन इन करऽ ही",
+    "emailSignInExistingUnknown": "ई खाता पहिले से वॉलेट बिना साइन इन करऽ हे।",
+    "emailSignInSend": "कोड भेजूँ",
+    "emailSignInSent": "कोड लेल अपन इनबॉक्स देखूँ",
+    "emailSignInConfirm": "पक्का करूँ",
+    "emailSignInDone": "अब अहाँ ई ईमेल से साइन इन कर सकऽ ही",
+    "emailSignInRemove": "हटाऊँ",
+    "emailSignInRemoved": "हटल — ई ईमेल अब अहाँ के साइन इन नै करा सकऽ हे",
+    "cancel": "रद्द"
   },
   "common": {
     "save": "सेव",

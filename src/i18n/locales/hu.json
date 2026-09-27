@@ -484,7 +484,20 @@
     "leftHandedDesc": "A tetszik gomb a reakciósáv bal oldalára kerül",
     "notifyTipsDesc": "Amikor valaki borravalót küld neked a DeHub tokenekben",
     "messageFeeDesc": "Az üzenetküldéshez minimális borravalót kell adni a DeHub tokenekben",
-    "tokenBalance": "Token Egyenleg"
+    "tokenBalance": "Token Egyenleg",
+    "signIn": "Bejelentkezés",
+    "emailSignIn": "Bejelentkezési e-mail",
+    "emailSignInDesc": "Adj meg egy e-mail-címet, hogy tárca nélkül is bejelentkezhess.",
+    "emailSignInLinked": "A kódos bejelentkezés aktív ehhez: {{email}}",
+    "emailSignInExisting": "Már ezzel jelentkezel be: {{email}}",
+    "emailSignInExistingUnknown": "Ez a fiók már tárca nélkül jelentkezik be.",
+    "emailSignInSend": "Kód küldése",
+    "emailSignInSent": "Nézd meg a beérkezett leveleidet a kódért",
+    "emailSignInConfirm": "Megerősítés",
+    "emailSignInDone": "Mostantól bejelentkezhetsz ezzel az e-mail-címmel",
+    "emailSignInRemove": "Eltávolítás",
+    "emailSignInRemoved": "Eltávolítva — ezzel az e-mail-címmel már nem tudsz bejelentkezni",
+    "cancel": "Mégse"
   },
   "common": {
     "save": "Mentés",

@@ -483,7 +483,20 @@
     "leftHandedDesc": "いいねボタンをリアクションバーの左側に移動します",
     "notifyTipsDesc": "DeHubトークンでチップを受け取ったとき",
     "messageFeeDesc": "メッセージを送るにはDeHubトークンでの最低チップ額を設定してください",
-    "tokenBalance": "トークン残高"
+    "tokenBalance": "トークン残高",
+    "signIn": "サインイン",
+    "emailSignIn": "サインイン用メール",
+    "emailSignInDesc": "メールアドレスを登録すると、ウォレットなしでサインインできます。",
+    "emailSignInLinked": "{{email}} でコードログインが有効です",
+    "emailSignInExisting": "すでに {{email}} でサインインしています",
+    "emailSignInExistingUnknown": "このアカウントはすでにウォレットなしでサインインしています。",
+    "emailSignInSend": "コードを送信",
+    "emailSignInSent": "受信トレイでコードを確認してください",
+    "emailSignInConfirm": "確認",
+    "emailSignInDone": "このメールでサインインできるようになりました",
+    "emailSignInRemove": "削除",
+    "emailSignInRemoved": "削除しました — このメールではもうサインインできません",
+    "cancel": "キャンセル"
   },
   "common": {
     "save": "保存",

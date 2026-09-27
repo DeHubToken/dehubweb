@@ -488,7 +488,20 @@
     "leftHandedDesc": "Presunie tlačidlo Páči sa mi na ľavú stranu lišty reakcií",
     "notifyTipsDesc": "Keď vám niekto pošle tip v tokenoch DeHub",
     "messageFeeDesc": "Vyžadovať minimálny tip v tokenoch DeHub na odoslanie správy",
-    "tokenBalance": "Zostatok tokenov"
+    "tokenBalance": "Zostatok tokenov",
+    "signIn": "Prihlásenie",
+    "emailSignIn": "Prihlasovací e-mail",
+    "emailSignInDesc": "Pripojte e-mailovú adresu a prihlasujte sa bez peňaženky.",
+    "emailSignInLinked": "Prihlásenie kódom je aktívne pre {{email}}",
+    "emailSignInExisting": "Už sa prihlasujete cez {{email}}",
+    "emailSignInExistingUnknown": "Tento účet sa už prihlasuje bez peňaženky.",
+    "emailSignInSend": "Poslať kód",
+    "emailSignInSent": "Kód nájdete vo svojej doručenej pošte",
+    "emailSignInConfirm": "Potvrdiť",
+    "emailSignInDone": "Teraz sa môžete prihlásiť týmto e-mailom",
+    "emailSignInRemove": "Odstrániť",
+    "emailSignInRemoved": "Odstránené — týmto e-mailom sa už neprihlásite",
+    "cancel": "Zrušiť"
   },
   "common": {
     "save": "Uložiť",

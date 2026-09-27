@@ -467,7 +467,20 @@
     "leftHandedDesc": "ଲାଇକ୍ ବଟନ୍‌କୁ ପ୍ରତିକ୍ରିୟା ବାରର ବାମ ପଟକୁ ଘୁଞ୍ଚାନ୍ତୁ",
     "notifyTipsDesc": "ଯେତେବେଳେ କେହି ଆପଣଙ୍କୁ DeHub ଟୋକନରେ ଟିପ୍ ପଠାଏ",
     "messageFeeDesc": "ଆପଣଙ୍କୁ ମେସେଜ୍ କରିବା ପାଇଁ DeHub ଟୋକନରେ ଏକ ନିମ୍ନ ଟିପ୍ ଆବଶ୍ୟକ କରନ୍ତୁ",
-    "tokenBalance": "ଟୋକେନ୍ ବାଲାନ୍ସ"
+    "tokenBalance": "ଟୋକେନ୍ ବାଲାନ୍ସ",
+    "signIn": "ସାଇନ-ଇନ",
+    "emailSignIn": "ସାଇନ-ଇନ ଇମେଲ",
+    "emailSignInDesc": "ୱାଲେଟ ବିନା ସାଇନ ଇନ କରିବାକୁ ଏକ ଇମେଲ ଠିକଣା ଯୋଡନ୍ତୁ।",
+    "emailSignInLinked": "{{email}} ପାଇଁ କୋଡ ଲଗଇନ ସକ୍ରିୟ ଅଛି",
+    "emailSignInExisting": "ଆପଣ ପୂର୍ବରୁ {{email}} ସହ ସାଇନ ଇନ କରନ୍ତି",
+    "emailSignInExistingUnknown": "ଏହି ଆକାଉଣ୍ଟ ପୂର୍ବରୁ ୱାଲେଟ ବିନା ସାଇନ ଇନ କରେ।",
+    "emailSignInSend": "କୋଡ ପଠାନ୍ତୁ",
+    "emailSignInSent": "କୋଡ ପାଇଁ ଆପଣଙ୍କ ଇନବକ୍ସ ଦେଖନ୍ତୁ",
+    "emailSignInConfirm": "ନିଶ୍ଚିତ କରନ୍ତୁ",
+    "emailSignInDone": "ବର୍ତ୍ତମାନ ଆପଣ ଏହି ଇମେଲ ସହ ସାଇନ ଇନ କରିପାରିବେ",
+    "emailSignInRemove": "ହଟାନ୍ତୁ",
+    "emailSignInRemoved": "ହଟାଗଲା — ଏହି ଇମେଲ ଆଉ ଆପଣଙ୍କୁ ସାଇନ ଇନ କରାଇପାରିବ ନାହିଁ",
+    "cancel": "ବାତିଲ"
   },
   "common": {
     "save": "ସଞ୍ଚୟ କରନ୍ତୁ",

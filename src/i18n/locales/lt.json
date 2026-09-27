@@ -470,7 +470,20 @@
     "leftHandedDesc": "Perkelia patinka mygtuką į kairę reakcijų juostos pusę",
     "notifyTipsDesc": "Kai kas nors atsiunčia jums patarimą „DeHub“ žetonais",
     "messageFeeDesc": "Reikalauti minimalaus patarimo „DeHub“ žetonais, kad galėtumėte jums rašyti",
-    "tokenBalance": "Žetonų balansas"
+    "tokenBalance": "Žetonų balansas",
+    "signIn": "Prisijungimas",
+    "emailSignIn": "Prisijungimo el. paštas",
+    "emailSignInDesc": "Susiek el. pašto adresą, kad galėtum prisijungti be piniginės.",
+    "emailSignInLinked": "Prisijungimas kodu aktyvus adresui {{email}}",
+    "emailSignInExisting": "Jau prisijungi su {{email}}",
+    "emailSignInExistingUnknown": "Ši paskyra jau prisijungia be piniginės.",
+    "emailSignInSend": "Siųsti kodą",
+    "emailSignInSent": "Kodo ieškok savo gautuosiuose",
+    "emailSignInConfirm": "Patvirtinti",
+    "emailSignInDone": "Dabar gali prisijungti su šiuo el. paštu",
+    "emailSignInRemove": "Pašalinti",
+    "emailSignInRemoved": "Pašalinta — šiuo el. paštu nebegalėsi prisijungti",
+    "cancel": "Atšaukti"
   },
   "common": {
     "save": "Saugoti",

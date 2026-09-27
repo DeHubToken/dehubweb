@@ -482,7 +482,20 @@
     "leftHandedDesc": "دکمهٔ پسندیدن را به سمت چپ نوار واکنش‌ها ببرید",
     "notifyTipsDesc": "وقتی کسی به شما انعام با توکن‌های DeHub می‌دهد",
     "messageFeeDesc": "حداقل انعام با توکن‌های DeHub را برای پیام دادن به شما الزامی کنید",
-    "tokenBalance": "موجودی توکن"
+    "tokenBalance": "موجودی توکن",
+    "signIn": "ورود",
+    "emailSignIn": "ایمیل ورود",
+    "emailSignInDesc": "یک نشانی ایمیل متصل کنید تا بدون کیف پول وارد شوید.",
+    "emailSignInLinked": "ورود با کد برای {{email}} فعال است",
+    "emailSignInExisting": "شما هم‌اکنون با {{email}} وارد می‌شوید",
+    "emailSignInExistingUnknown": "این حساب هم‌اکنون بدون کیف پول وارد می‌شود.",
+    "emailSignInSend": "ارسال کد",
+    "emailSignInSent": "کد را در صندوق ورودی خود پیدا کنید",
+    "emailSignInConfirm": "تأیید",
+    "emailSignInDone": "اکنون می‌توانید با این ایمیل وارد شوید",
+    "emailSignInRemove": "حذف",
+    "emailSignInRemoved": "حذف شد — دیگر نمی‌توانید با این ایمیل وارد شوید",
+    "cancel": "لغو"
   },
   "common": {
     "save": "ذخیره",

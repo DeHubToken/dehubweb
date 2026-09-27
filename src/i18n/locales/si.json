@@ -482,7 +482,20 @@
     "leftHandedDesc": "කැමති බොත්තම ප්‍රතිචාර තීරුවේ වම් පැත්තට ගෙන යන්න",
     "notifyTipsDesc": "DeHub ටෝකන් වලින් ඔබට ටිප් එකක් එවන විට",
     "messageFeeDesc": "ඔබට පණිවිඩ යැවීමට DeHub ටෝකන් වලින් අවම ටිප් එකක් අවශ්‍යයි",
-    "tokenBalance": "ටෝකන් ශේෂය"
+    "tokenBalance": "ටෝකන් ශේෂය",
+    "signIn": "පුරනය",
+    "emailSignIn": "පුරනය වීමේ ඊමේල්",
+    "emailSignInDesc": "පසුම්බිය නොමැතිව පුරනය වීමට ඊමේල් ලිපිනයක් සම්බන්ධ කරන්න.",
+    "emailSignInLinked": "{{email}} සඳහා කේත පුරනය සක්‍රියයි",
+    "emailSignInExisting": "ඔබ දැනටමත් {{email}} සමඟ පුරනය වේ",
+    "emailSignInExistingUnknown": "මෙම ගිණුම දැනටමත් පසුම්බිය නොමැතිව පුරනය වේ.",
+    "emailSignInSend": "කේතය යවන්න",
+    "emailSignInSent": "කේතය සඳහා ඔබේ එන ලිපි බලන්න",
+    "emailSignInConfirm": "තහවුරු කරන්න",
+    "emailSignInDone": "දැන් ඔබට මෙම ඊමේල් සමඟ පුරනය විය හැක",
+    "emailSignInRemove": "ඉවත් කරන්න",
+    "emailSignInRemoved": "ඉවත් කරන ලදී — මෙම ඊමේල් සමඟ තවදුරටත් පුරනය විය නොහැක",
+    "cancel": "අවලංගු"
   },
   "common": {
     "save": "සුරකින්න",

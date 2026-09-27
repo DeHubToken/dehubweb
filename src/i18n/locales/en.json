@@ -484,7 +484,20 @@
     "leftHandedDesc": "Move the like button to the left side of the reactions bar",
     "notifyTipsDesc": "When someone sends you a tip in DeHub tokens",
     "messageFeeDesc": "Require a minimum tip in DeHub tokens to message you",
-    "tokenBalance": "Token Balance"
+    "tokenBalance": "Token Balance",
+    "signIn": "Sign-in",
+    "emailSignIn": "Sign-in email",
+    "emailSignInDesc": "Attach an email address to sign in without your wallet.",
+    "emailSignInLinked": "Code login is active for {{email}}",
+    "emailSignInExisting": "You already sign in with {{email}}",
+    "emailSignInExistingUnknown": "This account already signs in without a wallet.",
+    "emailSignInSend": "Send code",
+    "emailSignInSent": "Check your inbox for the code",
+    "emailSignInConfirm": "Confirm",
+    "emailSignInDone": "You can now sign in with this email",
+    "emailSignInRemove": "Remove",
+    "emailSignInRemoved": "Removed — this email can no longer sign you in",
+    "cancel": "Cancel"
   },
   "common": {
     "save": "Save",

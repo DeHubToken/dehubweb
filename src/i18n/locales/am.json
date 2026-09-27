@@ -469,7 +469,20 @@
     "leftHandedDesc": "የመውደድ አዝራሩን ወደ ምላሾች አሞሌው ግራ ጎን ያንቀሳቅሱ",
     "notifyTipsDesc": "አንድ ሰው በDeHub ቶከኖች ሲልክልዎት",
     "messageFeeDesc": "እርሶን ለመጠየቅ በDeHub ቶከኖች ዝቅተኛውን የቲፕ መጠን ይፈልጋሉ",
-    "tokenBalance": "የቶከን ቀሪ ሂሳብ"
+    "tokenBalance": "የቶከን ቀሪ ሂሳብ",
+    "signIn": "መግቢያ",
+    "emailSignIn": "የመግቢያ ኢሜይል",
+    "emailSignInDesc": "ያለ ዋሌትዎ ለመግባት የኢሜይል አድራሻ ያገናኙ።",
+    "emailSignInLinked": "በኮድ መግባት ለ{{email}} ንቁ ነው",
+    "emailSignInExisting": "አስቀድመው በ{{email}} ይገባሉ",
+    "emailSignInExistingUnknown": "ይህ መለያ አስቀድሞ ያለ ዋሌት ይገባል።",
+    "emailSignInSend": "ኮድ ላክ",
+    "emailSignInSent": "ኮዱን በገቢ መልዕክት ሳጥንዎ ይመልከቱ",
+    "emailSignInConfirm": "አረጋግጥ",
+    "emailSignInDone": "አሁን በዚህ ኢሜይል መግባት ይችላሉ",
+    "emailSignInRemove": "አስወግድ",
+    "emailSignInRemoved": "ተወግዷል — በዚህ ኢሜይል ከእንግዲህ መግባት አይችሉም",
+    "cancel": "ሰርዝ"
   },
   "common": {
     "save": "አስቀምጥ",

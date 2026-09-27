@@ -486,7 +486,20 @@
     "messageFeeDesc": "Vereis 'n minimum wenk in DeHub-tokens om jou te boodskap",
     "tokenBalance": "Token Balans",
     "security": "Sekuriteit",
-    "about": "Oor"
+    "about": "Oor",
+    "signIn": "Aanmelding",
+    "emailSignIn": "Aanmeld-e-pos",
+    "emailSignInDesc": "Koppel 'n e-posadres om sonder jou beursie aan te meld.",
+    "emailSignInLinked": "Kode-aanmelding is aktief vir {{email}}",
+    "emailSignInExisting": "Jy meld reeds aan met {{email}}",
+    "emailSignInExistingUnknown": "Hierdie rekening meld reeds sonder 'n beursie aan.",
+    "emailSignInSend": "Stuur kode",
+    "emailSignInSent": "Kyk in jou inkassie vir die kode",
+    "emailSignInConfirm": "Bevestig",
+    "emailSignInDone": "Jy kan nou met hierdie e-pos aanmeld",
+    "emailSignInRemove": "Verwyder",
+    "emailSignInRemoved": "Verwyder — hierdie e-pos kan jou nie meer aanmeld nie",
+    "cancel": "Kanselleer"
   },
   "common": {
     "save": "Stoor",

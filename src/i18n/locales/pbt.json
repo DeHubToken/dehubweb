@@ -463,7 +463,20 @@
     "leftHandedDesc": "د خوښې تڼۍ د غبرګونونو پټې کيڼ اړخ ته ولېږدوئ",
     "notifyTipsDesc": "کله چې یو څوک تاسو ته په ډی‌هب ټوکنونو کې ټیپ درکړي",
     "messageFeeDesc": "د پیغام لېږلو لپاره په ډی‌هب ټوکنونو کې لږ تر لږه ټیپ ته اړتیا لرئ",
-    "tokenBalance": "د ټوکن بیلانس"
+    "tokenBalance": "د ټوکن بیلانس",
+    "signIn": "ننوتل",
+    "emailSignIn": "د ننوتلو برېښنالیک",
+    "emailSignInDesc": "برېښنالیک پته وتړئ څو پرته له بټوې ننوځئ.",
+    "emailSignInLinked": "د کوډ ننوتل د {{email}} لپاره فعال دی",
+    "emailSignInExisting": "تاسو دمخه له {{email}} سره ننوځئ",
+    "emailSignInExistingUnknown": "دا حساب دمخه پرته له بټوې ننوځي.",
+    "emailSignInSend": "کوډ ولېږئ",
+    "emailSignInSent": "د کوډ لپاره خپل راغلي لیکونه وګورئ",
+    "emailSignInConfirm": "تایید",
+    "emailSignInDone": "اوس تاسو له دې برېښنالیک سره ننوتلی شئ",
+    "emailSignInRemove": "لرې کول",
+    "emailSignInRemoved": "لرې شو — دا برېښنالیک نور تاسو نشي ننویستلی",
+    "cancel": "لغوه"
   },
   "common": {
     "save": "خوندي",

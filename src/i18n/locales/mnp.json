@@ -437,7 +437,20 @@
     "leftHandedDesc": "共點讚按鈕徙到反應欄左爿",
     "notifyTipsDesc": "當有人用 DeHub 代幣給你小費",
     "messageFeeDesc": "需要最低 DeHub 代幣小費才能給你發消息",
-    "tokenBalance": "代幣餘額"
+    "tokenBalance": "代幣餘額",
+    "signIn": "登录",
+    "emailSignIn": "登录邮箱",
+    "emailSignInDesc": "绑蜀个邮箱地址，无用钱包也会登录。",
+    "emailSignInLinked": "{{email}} 验证码登录开啊",
+    "emailSignInExisting": "汝已经用 {{email}} 登录",
+    "emailSignInExistingUnknown": "者个账户已经无用钱包也会登录。",
+    "emailSignInSend": "发验证码",
+    "emailSignInSent": "去收件箱望验证码",
+    "emailSignInConfirm": "确认",
+    "emailSignInDone": "现在汝会用者个邮箱登录",
+    "emailSignInRemove": "提掉",
+    "emailSignInRemoved": "提掉啊 — 者个邮箱袂会再登录汝其账户",
+    "cancel": "取消"
   },
   "common": {
     "save": "保存",

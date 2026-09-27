@@ -488,7 +488,20 @@
     "leftHandedDesc": "ย้ายปุ่มถูกใจไปทางซ้ายของแถบรีแอคชัน",
     "notifyTipsDesc": "เมื่อมีคนส่งทิปโทเค็น DeHub ให้คุณ",
     "messageFeeDesc": "ต้องให้ทิปขั้นต่ำในโทเค็น DeHub เพื่อส่งข้อความถึงคุณ",
-    "tokenBalance": "ยอดคงเหลือโทเค็น"
+    "tokenBalance": "ยอดคงเหลือโทเค็น",
+    "signIn": "การเข้าสู่ระบบ",
+    "emailSignIn": "อีเมลสำหรับเข้าสู่ระบบ",
+    "emailSignInDesc": "ผูกที่อยู่อีเมลเพื่อเข้าสู่ระบบโดยไม่ต้องใช้กระเป๋าเงิน",
+    "emailSignInLinked": "เปิดใช้การเข้าสู่ระบบด้วยรหัสสำหรับ {{email}} แล้ว",
+    "emailSignInExisting": "คุณเข้าสู่ระบบด้วย {{email}} อยู่แล้ว",
+    "emailSignInExistingUnknown": "บัญชีนี้เข้าสู่ระบบได้โดยไม่ต้องใช้กระเป๋าเงินอยู่แล้ว",
+    "emailSignInSend": "ส่งรหัส",
+    "emailSignInSent": "ตรวจดูรหัสในกล่องจดหมายของคุณ",
+    "emailSignInConfirm": "ยืนยัน",
+    "emailSignInDone": "ตอนนี้คุณเข้าสู่ระบบด้วยอีเมลนี้ได้แล้ว",
+    "emailSignInRemove": "นำออก",
+    "emailSignInRemoved": "นำออกแล้ว — อีเมลนี้ใช้เข้าสู่ระบบไม่ได้อีกต่อไป",
+    "cancel": "ยกเลิก"
   },
   "common": {
     "save": "บันทึก",

@@ -468,7 +468,20 @@
     "leftHandedDesc": "ຍ້າຍປຸ່ມຖືກໃຈໄປທາງຊ້າຍຂອງແຖບປະຕິກິລິຍາ",
     "notifyTipsDesc": "ເມື່ອມີຄົນສົ່ງຄຳແນະນຳໃຫ້ທ່ານເປັນ DeHub tokens",
     "messageFeeDesc": "ຕ້ອງການຄຳແນະນຳຂັ້ນຕ່ຳເປັນ DeHub tokens ເພື່ອສົ່ງຂໍ້ຄວາມຫາທ່ານ",
-    "tokenBalance": "ຍອດເຫຼືອຂອງໂທເຄັນ"
+    "tokenBalance": "ຍອດເຫຼືອຂອງໂທເຄັນ",
+    "signIn": "ການເຂົ້າສູ່ລະບົບ",
+    "emailSignIn": "ອີເມວເຂົ້າສູ່ລະບົບ",
+    "emailSignInDesc": "ເຊື່ອມອີເມວເພື່ອເຂົ້າສູ່ລະບົບໂດຍບໍ່ຕ້ອງໃຊ້ກະເປົາເງິນ.",
+    "emailSignInLinked": "ເປີດການເຂົ້າສູ່ລະບົບດ້ວຍລະຫັດສຳລັບ {{email}} ແລ້ວ",
+    "emailSignInExisting": "ທ່ານເຂົ້າສູ່ລະບົບດ້ວຍ {{email}} ຢູ່ແລ້ວ",
+    "emailSignInExistingUnknown": "ບັນຊີນີ້ເຂົ້າສູ່ລະບົບໂດຍບໍ່ໃຊ້ກະເປົາເງິນຢູ່ແລ້ວ.",
+    "emailSignInSend": "ສົ່ງລະຫັດ",
+    "emailSignInSent": "ກວດເບິ່ງລະຫັດໃນກ່ອງຈົດໝາຍຂອງທ່ານ",
+    "emailSignInConfirm": "ຢືນຢັນ",
+    "emailSignInDone": "ຕອນນີ້ທ່ານເຂົ້າສູ່ລະບົບດ້ວຍອີເມວນີ້ໄດ້ແລ້ວ",
+    "emailSignInRemove": "ເອົາອອກ",
+    "emailSignInRemoved": "ເອົາອອກແລ້ວ — ອີເມວນີ້ເຂົ້າສູ່ລະບົບບໍ່ໄດ້ອີກ",
+    "cancel": "ຍົກເລີກ"
   },
   "common": {
     "save": "ບັນທຶກ",

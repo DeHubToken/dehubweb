@@ -470,7 +470,20 @@
     "leftHandedDesc": "ਲਾਈਕ ਬਟਨ ਨੂੰ ਪ੍ਰਤੀਕਿਰਿਆ ਬਾਰ ਦੇ ਖੱਬੇ ਪਾਸੇ ਲੈ ਜਾਓ",
     "notifyTipsDesc": "ਜਦੋਂ ਕੋਈ ਤੁਹਾਨੂੰ DeHub ਟੋਕਨਾਂ ਵਿੱਚ ਟਿਪ ਭੇਜਦਾ ਹੈ",
     "messageFeeDesc": "ਤੁਹਾਨੂੰ ਮੈਸੇਜ ਕਰਨ ਲਈ DeHub ਟੋਕਨਾਂ ਵਿੱਚ ਘੱਟੋ-ਘੱਟ ਟਿਪ ਦੀ ਲੋੜ ਹੈ",
-    "tokenBalance": "ਟੋਕਨ ਬੈਲੰਸ"
+    "tokenBalance": "ਟੋਕਨ ਬੈਲੰਸ",
+    "signIn": "ਸਾਈਨ-ਇਨ",
+    "emailSignIn": "ਸਾਈਨ-ਇਨ ਈਮੇਲ",
+    "emailSignInDesc": "ਵਾਲਿਟ ਤੋਂ ਬਿਨਾਂ ਸਾਈਨ ਇਨ ਕਰਨ ਲਈ ਈਮੇਲ ਪਤਾ ਜੋੜੋ।",
+    "emailSignInLinked": "{{email}} ਲਈ ਕੋਡ ਲੌਗਇਨ ਚਾਲੂ ਹੈ",
+    "emailSignInExisting": "ਤੁਸੀਂ ਪਹਿਲਾਂ ਹੀ {{email}} ਨਾਲ ਸਾਈਨ ਇਨ ਕਰਦੇ ਹੋ",
+    "emailSignInExistingUnknown": "ਇਹ ਖਾਤਾ ਪਹਿਲਾਂ ਹੀ ਵਾਲਿਟ ਤੋਂ ਬਿਨਾਂ ਸਾਈਨ ਇਨ ਕਰਦਾ ਹੈ।",
+    "emailSignInSend": "ਕੋਡ ਭੇਜੋ",
+    "emailSignInSent": "ਕੋਡ ਲਈ ਆਪਣਾ ਇਨਬਾਕਸ ਵੇਖੋ",
+    "emailSignInConfirm": "ਪੁਸ਼ਟੀ ਕਰੋ",
+    "emailSignInDone": "ਹੁਣ ਤੁਸੀਂ ਇਸ ਈਮੇਲ ਨਾਲ ਸਾਈਨ ਇਨ ਕਰ ਸਕਦੇ ਹੋ",
+    "emailSignInRemove": "ਹਟਾਓ",
+    "emailSignInRemoved": "ਹਟਾਇਆ — ਇਹ ਈਮੇਲ ਹੁਣ ਤੁਹਾਨੂੰ ਸਾਈਨ ਇਨ ਨਹੀਂ ਕਰ ਸਕਦੀ",
+    "cancel": "ਰੱਦ ਕਰੋ"
   },
   "common": {
     "save": "ਸੇਵ ਕਰੋ",
