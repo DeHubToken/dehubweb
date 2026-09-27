@@ -77,6 +77,8 @@
     "live": "Direkte"
   },
   "settings": {
+    "showOnline": "Vis når jeg er pålogget",
+    "showOnlineDesc": "Folk du sender meldinger til ser en grønn prikk ved siden av navnet ditt mens du bruker DeHub",
     "smartReplies": "Foreslåtte svar",
     "smartRepliesDesc": "Lager to svar du kan trykke på i en chat. × på forslagene slår dette av.",
     "title": "Innstillinger",
@@ -1250,6 +1252,7 @@
     "loginRequired": "Innlogging påkrevd"
   },
   "messages": {
+    "online": "På nett",
     "smartRepliesOff": "Foreslåtte svar er slått av",
     "smartRepliesOffWhere": "Slå dem på igjen i Innstillinger → Meldinger.",
     "smartRepliesUndo": "Angre",

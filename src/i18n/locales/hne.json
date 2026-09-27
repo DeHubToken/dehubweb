@@ -77,6 +77,8 @@
     "live": "लाइव"
   },
   "settings": {
+    "showOnline": "जब ऑनलाइन दिखावव",
+    "showOnlineDesc": "जब आप DeHub का उपयोग करत हंवय, तो आप अपन नाम के बगल म एक हरित बिंदु देख सकत हंवय",
     "smartReplies": "सुझाए गे जवाब",
     "smartRepliesDesc": "चैट म टैप करे लइक दू ठन जवाब तियार करथे। सुझाव उपर के × ला बंद कर देथे।",
     "title": "सेटिंग",
@@ -1231,6 +1233,7 @@
     "loginRequired": "लॉग इन जरूरी हे"
   },
   "messages": {
+    "online": "आनलाइन",
     "smartRepliesOff": "सुझाए गे जवाब बंद हो गे",
     "smartRepliesOffWhere": "इनला सेटिंग → संदेश म जाके फेर से चालू करव।",
     "smartRepliesUndo": "पहिली जइसन करव",

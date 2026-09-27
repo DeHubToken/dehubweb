@@ -77,6 +77,8 @@
     "live": "In diretta"
   },
   "settings": {
+    "showOnline": "Mostra quando sono online",
+    "showOnlineDesc": "Le persone a cui invii un messaggio vedono un punto verde accanto al tuo nome mentre utilizzi DeHub",
     "smartReplies": "Risposte suggerite",
     "smartRepliesDesc": "Prepara due risposte che puoi toccare in chat. La × sui suggerimenti le disattiva.",
     "title": "Impostazioni",
@@ -1268,6 +1270,7 @@
     "loginRequired": "Accesso richiesto"
   },
   "messages": {
+    "online": "Online",
     "smartRepliesOff": "Risposte suggerite disattivate",
     "smartRepliesOffWhere": "Riattivale in Impostazioni → Messaggi.",
     "smartRepliesUndo": "Annulla",

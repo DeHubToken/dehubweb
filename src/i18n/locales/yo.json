@@ -77,6 +77,8 @@
     "live": "Lásìkò"
   },
   "settings": {
+    "showOnline": "Fi hàn nígbà tí mo wà lórí ayélujára",
+    "showOnlineDesc": "Àwọn ènìyàn tí o fi àtẹ̀jíṣẹ́ ránṣẹ́ rí àmì aláwọ̀ ewé lẹ́gbẹ̀ẹ́ orúkọ rẹ nígbà tí ò ń lo DeHub",
     "smartReplies": "Àwọn èsì tí a dábàá",
     "smartRepliesDesc": "Ó ń kọ èsì méjì tí o lè tẹ̀ nínú ìjíròrò. Àmì × lórí àwọn àbá ń pa á.",
     "title": "Ètò",
@@ -1248,6 +1250,7 @@
     "loginRequired": "Wíwọlé ni a nílò"
   },
   "messages": {
+    "online": "Ní orí ayélujára",
     "smartRepliesOff": "A ti pa àwọn èsì tí a dábàá",
     "smartRepliesOffWhere": "Tún wọn ṣí ní Ètò → Ìfiránṣẹ́.",
     "smartRepliesUndo": "Yí padà",

@@ -77,6 +77,8 @@
     "live": "لائیو"
   },
   "settings": {
+    "showOnline": "Nga u shfaq kur jam online",
+    "showOnlineDesc": "Mensen die je een bericht sturen, zien een groen stipje naast je naam terwijl je DeHub gebruikt",
     "smartReplies": "تجویز کیل جواب",
     "smartRepliesDesc": "دو جواب تیار کرے لا جن پر تو چیٹ میں ٹیپ کر سکے لا۔ تجویزن پر × ایکر بند کر دے لا۔",
     "title": "سیٹنگ",
@@ -1207,6 +1209,7 @@
     "loginRequired": "لاگ ان ضروری ہے"
   },
   "messages": {
+    "online": "آنلاین",
     "smartRepliesOff": "تجویز کیل جواب بند ہو گیل",
     "smartRepliesOffWhere": "اونکن سیٹنگ ← پیغام سے دوبارہ آن کرا۔",
     "smartRepliesUndo": "واپس",

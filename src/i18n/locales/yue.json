@@ -77,6 +77,8 @@
     "live": "直播"
   },
   "settings": {
+    "showOnline": "當我上網嗰陣顯示",
+    "showOnlineDesc": "當你用緊 DeHub 嗰陣，你發訊息嘅人會見到你個名旁邊有個綠色點",
     "smartReplies": "建議回覆",
     "smartRepliesDesc": "喺傾偈度寫兩個你可以撳嘅回覆。建議上面嘅 × 會閂咗佢。",
     "title": "設定",
@@ -1251,6 +1253,7 @@
     "loginRequired": "需要登入"
   },
   "messages": {
+    "online": "線上",
     "smartRepliesOff": "已閂咗建議回覆",
     "smartRepliesOffWhere": "喺 設定 → 訊息 度再開返。",
     "smartRepliesUndo": "復原",

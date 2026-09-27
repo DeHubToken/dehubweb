@@ -80,6 +80,8 @@
     "recentSearches": "আগের খোঁজ"
   },
   "settings": {
+    "showOnline": "Mane kab dikhawe jab main online rahoon",
+    "showOnlineDesc": "जे लोगन तूं मैसेज करे छै, वे लोगन तूंरा नाम काँटे एक ठो ग्रीन डॉट देखै छै जब तूं DeHub काँटे काम करे छै।",
     "smartReplies": "পরামর্শ দেওয়া জবাব",
     "smartRepliesDesc": "চ্যাটোত টিপ দেওয়ার মতোন দুইটা জবাব বানায়। পরামর্শের উপরের × এইটা বন্ধ করি দেয়।",
     "title": "সেটিংস",

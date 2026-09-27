@@ -77,6 +77,8 @@
     "live": "Göni"
   },
   "settings": {
+    "showOnline": "Men onlayn bolanymda görkeziň",
+    "showOnlineDesc": "Adamlar DeHub ulanýan wagtyň özünde adyňyň ýanynda ýaşyl dot görýärler.",
     "smartReplies": "Teklip edilýän jogaplar",
     "smartRepliesDesc": "Söhbetde basyp bolýan iki jogap taýýarlaýar. Tekliplerdäki × muny öçürýär.",
     "title": "Sazlamalar",
@@ -1240,6 +1242,7 @@
     "loginRequired": "Girmek talap edilýär"
   },
   "messages": {
+    "online": "Onlaýn",
     "smartRepliesOff": "Teklip edilýän jogaplar öçürildi",
     "smartRepliesOffWhere": "Sazlamalar → Habarlar bölüminden ýene açyň.",
     "smartRepliesUndo": "Yzyna al",

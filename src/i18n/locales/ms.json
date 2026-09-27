@@ -77,6 +77,8 @@
     "live": "Langsung"
   },
   "settings": {
+    "showOnline": "Tunjukkan apabila saya berada dalam talian",
+    "showOnlineDesc": "Orang yang anda mesej melihat titik hijau di sebelah nama anda semasa anda menggunakan DeHub",
     "smartReplies": "Balasan yang dicadangkan",
     "smartRepliesDesc": "Menyediakan dua balasan yang boleh anda ketik dalam sembang. Tanda × pada cadangan akan mematikannya.",
     "title": "Tetapan",
@@ -1535,6 +1537,7 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "online": "Dalam talian",
     "smartRepliesOff": "Balasan yang dicadangkan dimatikan",
     "smartRepliesOffWhere": "Hidupkan semula di Tetapan → Mesej.",
     "smartRepliesUndo": "Buat asal",

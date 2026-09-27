@@ -77,6 +77,8 @@
     "live": "Kɛnɛ"
   },
   "settings": {
+    "showOnline": "N'i be n' ka site web kan, i ka n' ka site web yira",
+    "showOnlineDesc": "Mɔgɔ minw be kuma, olu be yɔrɔ dɔ ye i tɔgɔ gɛrɛfɛ n'i be DeHub ta",
     "smartReplies": "Jaabi fɔlenw",
     "smartRepliesDesc": "A bɛ jaabi fila sɛbɛn i bɛ se ka digi min kan baro kɔnɔ. × min bɛ fɔlenw kan, o bɛ nin faga.",
     "title": "Sɔrɔw",
@@ -1206,6 +1208,7 @@
     "loginRequired": "Sɔgɔma kɛ"
   },
   "messages": {
+    "online": "Kalanbagaw, dɛmɛbagaw ani kanpaɲ",
     "smartRepliesOff": "Jaabi fɔlenw fagara",
     "smartRepliesOffWhere": "Aw bɛ se k'u lawuli tuguni Sɔrɔw → Kɔrɔbɔw kɔnɔ.",
     "smartRepliesUndo": "A segin",

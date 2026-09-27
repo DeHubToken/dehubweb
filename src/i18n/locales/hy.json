@@ -77,6 +77,8 @@
     "live": "Ouvaghits"
   },
   "settings": {
+    "showOnline": "Ցույց տալ, թե երբ եմ առցանց",
+    "showOnlineDesc": "Մարդիկ, ում հաղորդագրություն եք ուղարկել, տեսնում են կանաչ կետ ձեր անվան կողքին, երբ օգտվում եք DeHub - ից",
     "smartReplies": "Առաջարկվող պատասխաններ",
     "smartRepliesDesc": "Կազմում է երկու պատասխան, որոնց կարող ես հպել զրույցում. Առաջարկների × -ը սա անջատում է։",
     "title": "Կargavoroumner",
@@ -1265,6 +1267,7 @@
     "loginRequired": "Moutq pahanjvoum e"
   },
   "messages": {
+    "online": "Առցանց",
     "smartRepliesOff": "Առաջարկվող պատասխանները անջատված են",
     "smartRepliesOffWhere": "Նորից միացրու Կարգավորումներ → Հաղորդագրություններ բաժնում։",
     "smartRepliesUndo": "Հետարկել",
