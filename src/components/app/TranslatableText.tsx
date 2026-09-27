@@ -89,10 +89,7 @@ interface TranslatableTextProps {
    * for the post length floor.
    */
   auto?: boolean | 'chat';
-  /**
-   * The text is public (a post, a comment, a bio, a proposal). Only then may it
-   * reach a free model tier that trains on its input. Chats leave it off.
-   */
+  /** Public text only: may reach a free tier that trains on input. */
   publicContent?: boolean;
   /** Post's link was flagged by the Community Alert threshold — border it like a highlighter instead of the plain 🔗 chip. */
   flagged?: boolean;
@@ -804,11 +801,7 @@ export function useTranslation(
   auto: boolean | 'chat' = true,
   /** Element the text renders in. When given, auto-translate waits until it nears the viewport. */
   nearRef?: RefObject<Element>,
-  /**
-   * The text is public (a post, a comment, a bio). Only public text may reach a
-   * free model tier that trains on its input. Off unless the call site says
-   * so — a chat that forgets stays private.
-   */
+  /** Public text (post, comment, bio) may reach a training tier; chats never. */
   publicContent = false,
 ) {
   const { language: userLang } = useUserLanguage();
