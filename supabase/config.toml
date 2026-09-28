@@ -1,6 +1,8 @@
 project_id = "aigxuutjaqsywioxjefr"
 
 [functions]
+  [functions.account-erasure]
+    verify_jwt = false
   [functions.trenchstar]
     verify_jwt = false
   [functions.editor-assets]
