@@ -2658,7 +2658,6 @@
     "transferGuarantee": "Du überchunsch de ganz Account — Bezeichnig, Posts, Follower, Trinkgeld-Historie und Abzeiche-Berechtigunge. De Verchoufer behaltet sini Wallet und alles, wo drin isch. D'Übertragig lauft erst, woni DeHub din Token-Bezahlig vo de Chätt liest; falls sie unterbroche wird, gaht s'choufe wiiter, wenn du s'no mal probiersch."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Käufer zahlen den angezeigten DeHub-Token-Betrag zum Vorlistungspreis. Sie erhalten den USD-Wert als USDT-Guthaben.",
     "legacyPlanMigrates": "Speichern migriert diesen alten Token-preisigen Plan zum Vorlistungspreis zu Dollar-Preisen.",
     "tokenAmount": "{{amount}} Tokens",
     "preListingTokenAmount": "Vorlistungs-Token-Betrag",
@@ -2689,7 +2688,6 @@
     "publish": "Veröffentliche",
     "confirmSubscription": "Abonnement bestätige",
     "planPrice": "Planpreis",
-    "youPayInclFee": "Du bezahlisch (inkl. Plattformgebühr)",
     "calculating": "berechne…",
     "cancel": "Abbräche",
     "confirm": "Bestätige",
@@ -2769,7 +2767,23 @@
     "withdrawableSoon": "Abonnemente-Ertrag wird bald abziehbar sii",
     "percentUsed": "{{percent}}% used",
     "spentOfTotal": "{{spent}} of {{total}}",
-    "viewInWallet": "View in wallet"
+    "topUp": "Tokens dezuefüüge",
+    "topUpTitle": "Abo-Tokens auflade",
+    "topUpCustom": "Andere Betrag (USD)",
+    "topUpYouSend": "Du sendisch",
+    "topUpYouGet": "Din Balance wird g'ufg'füllt",
+    "topUpConfirm": "{{amount}} auflade",
+    "topUpRange": "Gib {{min}} i für {{max}}",
+    "topUpDone": "{{amount}} sind zu dinne Abo-Tokens dazug'choume",
+    "topUpPending": "Dini Aufladige wird bestätiget. Si wird bald uf dim Balance erschtoume.",
+    "topUpFailed": "Konnt kei Abo-Tokens auflade",
+    "topUpEmptyHint": "Auflade zum Creator abonnierä",
+    "topUpStageFunding": "Tokens laade...",
+    "topUpStageWallet": "Im Wallet bestätige...",
+    "topUpStageConfirming": "Warte uf Transaktion...",
+    "topUpStageCrediting": "Wird zum Balance dazug'füeget...",
+    "creatorEarnsInTokens": "Abonnente zahled mit DeHub-Tokens. Du verdiensch de Dollar-Wärt und ziehsch ihn zu de Tokens zum Priis vom Tag ab.",
+    "youPayNow": "Du bezahlsch"
   },
   "live": {
     "chatJoined": "isch bitrete",

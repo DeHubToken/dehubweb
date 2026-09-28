@@ -2751,7 +2751,6 @@
     "noStories": "এহনো কোনো গল্প নাই"
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "ক্রেতারা প্রি-লিস্টিং হারে প্রদর্শিত DeHub টোকেন পরিমাণ প্রদান করে। আপনি USDT ব্যালেন্স হিসাবে USD মূল্য পান।",
     "legacyPlanMigrates": "সংরক্ষণ এই লিগ্যাসি টোকেন-মূল্যের প্ল্যানকে প্রি-লিস্টিং হারে ডলার মূল্যে স্থানান্তর করে।",
     "tokenAmount": "{{amount}} টোকেন",
     "preListingTokenAmount": "প্রি-লিস্টিং টোকেন পরিমাণ",
@@ -2782,7 +2781,6 @@
     "publish": "প্রকাশ",
     "confirmSubscription": "সাবস্ক্রিপশন নিশ্চিত করুন",
     "planPrice": "পরিকল্পনার মূল্য",
-    "youPayInclFee": "আপনি পরিশোধ করেন (প্ল্যাটফর্ম ফি সহ)",
     "calculating": "গণনা হচ্ছে…",
     "cancel": "বাতিল",
     "confirm": "নিশ্চিত করুন",
@@ -2862,7 +2860,23 @@
     "withdrawableSoon": "সাবস্ক্রিপশন আয় শীঘ্রই উত্তোলনযোগ্য হবে",
     "percentUsed": "{{percent}}% খরচ অইছে",
     "spentOfTotal": "{{total}}-র মাঝে {{spent}}",
-    "viewInWallet": "ওয়ালেটত দেখো"
+    "topUp": "টোকেন যোগ করুন",
+    "topUpTitle": "সাবস্ক্রিপশন টোকেন যোগ কর",
+    "topUpCustom": "অন্য পরিমাণ (USD)",
+    "topUpYouSend": "আপনি পাঠান",
+    "topUpYouGet": "আপনার ব্যালেন্সে যোগ করা হল",
+    "topUpConfirm": "{{amount}} যোগ কর",
+    "topUpRange": "{{min}} থেকে {{max}} এ প্রবেশ কর",
+    "topUpDone": "{{amount}} আপনার সাবস্ক্রিপশন টোকেনে যোগ করা হল",
+    "topUpPending": "আপনার টপ‑আপ নিশ্চিত হচ্ছে। এটি শীঘ্রই আপনার ব্যালেন্সে দেখা যাবে।",
+    "topUpFailed": "সাবস্ক্রিপশন টোকেন যোগ করা যায়নি",
+    "topUpEmptyHint": "স্রষ্টাদের সাবস্ক্রাইব করতে টপ আপ",
+    "topUpStageFunding": "টোকেন সংগ্রহ হচ্ছে…",
+    "topUpStageWallet": "আপনার ওয়ালেটে নিশ্চিত করুন…",
+    "topUpStageConfirming": "লেনদেনের জন্য অপেক্ষা করছে…",
+    "topUpStageCrediting": "আপনার ব্যালেন্সে যোগ করা হচ্ছে…",
+    "creatorEarnsInTokens": "সাবস্ক্রাইবাররা DeHub টোকেনে পেমেন্ট করে। আপনি ডলার ভ্যালু ইনকাম করেন এবং দিনের প্রাইস অনুযায়ী টোকেন হিসেবে উইথড্র করেন।",
+    "youPayNow": "আছইন"
   },
   "live": {
     "chatJoined": "যোগ দিছে",

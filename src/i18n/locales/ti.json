@@ -2624,7 +2624,6 @@
     "transferGuarantee": "ምሉእ መለያ ትረክብ — ኣተሓሕዛ ፣ ልኡኽ ፣ ተኸታተልቲ ፣ ታሪኽ ምኽርን መሰል ባጅን ። እቲ ሸያጭ ነቲ ቦርሳኡን ኣብኡ ዘሎን ነገራት ይዕቅቦ ። እቲ ዝውውር ፡ DeHub ነቲ ናይ ምልክት ክፍሊትካ ካብ ሰንሰለት ድሕሪ ምንባብ ጥራይ እዩ ዚካየድ ፣ እንተ ተቛሪጹ ፡ እቲ መግዛእቲ እንደገና ይጅምር ።"
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "ገዛእቲ ዝተጠቐሱ DeHub ቶክን መጠን ብቅድሚት ዋጋ ይኸፍሉ። ንስኻትኩም USD ብUSDT ሚዛን ትቕበሉ።",
     "legacyPlanMigrates": "ኣኽብሮት፡ እዚ ሕጋዊ መርበብ ሓበሬታ እዚ ንብረት እዚ ብዋጋ ዶላር ይሸቕጥ።",
     "tokenAmount": "{{amount}} ቶክን",
     "preListingTokenAmount": "ቅድሚ ምዝገባ ዋጋ ቶክን",
@@ -2655,7 +2654,6 @@
     "publish": "ኣሕትም",
     "confirmSubscription": "ምዝገባ ኣረጋግጽ",
     "planPrice": "ዋጋ መደብ",
-    "youPayInclFee": "ትከፍል (ብሓንሳእ ክፍሊት መደብ)",
     "calculating": "ይሰርሕ ኣሎ…",
     "cancel": "ስረዝ",
     "confirm": "ኣረጋግጽ",
@@ -2734,7 +2732,23 @@
     "withdrawableSoon": "ናይ ምዝገባ ኣታዊታት ኣብ ቀረባ እዋን ክስረዝ እዩ",
     "percentUsed": "{{percent}}% ተጠቐመ",
     "spentOfTotal": "{{spent}} ካብ {{total}}",
-    "viewInWallet": "ኣብ ቦርሳ ርአ"
+    "topUp": "ምልክታት ኣክሊል",
+    "topUpTitle": "ናይ ኣባልነት ምልክታት ኣክሊል",
+    "topUpCustom": "ካልእ መጠን (USD)",
+    "topUpYouSend": "ትልእኮ",
+    "topUpYouGet": "ናብ ሚዛንካ ኣክሊልካ",
+    "topUpConfirm": "{{amount}} ወስኽ",
+    "topUpRange": "{{min}} ናብ {{max}}",
+    "topUpDone": "{{amount}} ኣብ ናይ ኣባልነት ምልክታትካ ተወሰኸ",
+    "topUpPending": "እቲ ዝለዓለ ደረጃኻ ኣረጋጊጹ ኣሎ ። እዚ ድማ ኣብ ቀረባ እዋን ኣብ ሚዛንካ ክርአ እዩ ።",
+    "topUpFailed": "ናይ ኣባልነት ምልክታት ክውስኽ ኣይከኣለን ።",
+    "topUpEmptyHint": "ንፈጣሪያት ንምምዝጋብ",
+    "topUpStageFunding": "ኣቃውማታት...",
+    "topUpStageWallet": "ኣብ ቦርሳኻ ኣረጋጊጽካ...",
+    "topUpStageConfirming": "ነቲ ግብረ-ሰናይ ትጽበዮ ኣለኻ...",
+    "topUpStageCrediting": "ምስ ሚዛንካ ተሰማሚዕካ...",
+    "creatorEarnsInTokens": "እቶም ተመዝጋቢታት ኣብ DeHub ምልክታት ይኽፈሉ እዮም ። ነቲ ዶላር ዋጋ ትረክብ ፡ ከም ምልክት ድማ ኣብ መዓልቲ ትስሕቦ ።",
+    "youPayNow": "ንስኻ ኢኻ እትኸፍል"
   },
   "live": {
     "chatJoined": "ተጸንበረ",

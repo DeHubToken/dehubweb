@@ -2646,7 +2646,6 @@
     "transferGuarantee": "راح تحصل على الحساب كامل — المقبض، المنشورات، المتابعين، تاريخ الإكراميات وحقوق الشارات. البائع يحتفظ بمحفظته وكل شي بيها. التحويل يشتغل فقط بعد ما DeHub تقرأ دفعة التوكن الخاصة بيك من السلسلة؛ إذا انقطع، إعادة محاولة الشراء تستأنفها."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "يدفع المشترون مبلغ توكنات DeHub المعروض بالسعر قبل الإدراج. تتلقى قيمة الدولار الأمريكي كرصيد USDT.",
     "legacyPlanMigrates": "الهجرة التوفيرية لهذا الخطة المسعرة بالتوكنات القديمة إلى تسعير الدولار بالسعر قبل الإدراج.",
     "tokenAmount": "{{amount}} توكن",
     "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
@@ -2727,7 +2726,23 @@
     "withdrawableSoon": "أرباح الاشتراك رح تصير قابلة للسحب قريبًا",
     "percentUsed": "{{percent}}% مستَخدم",
     "spentOfTotal": "{{spent}} من {{total}}",
-    "viewInWallet": "شوف بالمحفظة"
+    "topUp": "ضيف توكنات",
+    "topUpTitle": "إضافة رموز اشتراك",
+    "topUpCustom": "مبلغ آخر (دولار أمريكي)",
+    "topUpYouSend": "ترسل",
+    "topUpYouGet": "تمت إضافته إلى رصيدك",
+    "topUpConfirm": "إضافة {{amount}}",
+    "topUpRange": "أدخل {{min}} إلى {{max}}",
+    "topUpDone": "تمت إضافة {{amount}} إلى رموز اشتراكك",
+    "topUpPending": "عملية الشحن قيد التأكيد. ستظهر في رصيدك قريباً.",
+    "topUpFailed": "تعذر إضافة رموز الاشتراك",
+    "topUpEmptyHint": "اشحن للاشتراك في المبدعين",
+    "topUpStageFunding": "جاري الحصول على الرموز...",
+    "topUpStageWallet": "تأكيد في محفظتك...",
+    "topUpStageConfirming": "انتظار المعاملة...",
+    "topUpStageCrediting": "جاري الإضافة إلى رصيدك...",
+    "creatorEarnsInTokens": "المشتركين يدفعون بتوكنات DeHub. انت تربح قيمة الدولار وتسحبها بتوكنات بسعر اليوم.",
+    "youPayNow": "تدفع"
   },
   "live": {
     "chatJoined": "دخل",

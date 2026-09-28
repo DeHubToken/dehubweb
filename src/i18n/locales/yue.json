@@ -2679,7 +2679,6 @@
     "transferGuarantee": "你將獲得整個帳戶 — 手柄、帖子、關注者、提示歷史記錄和徽章權利。賣家保留他們的錢包及其所有內容。轉賬僅在 DeHub 從鏈上讀取你的代幣付款後運行；如果中斷，重試購買將恢復它。"
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "買家按預計上市價格支付顯示的 DeHub 代幣金額。您將收到以 USDT 計價的餘額。",
     "legacyPlanMigrates": "節省將此舊的代幣計價計劃遷移到預計上市價格的美元計價。",
     "tokenAmount": "{{amount}} 個代幣",
     "preListingTokenAmount": "預計上市代幣數量",
@@ -2710,7 +2709,6 @@
     "publish": "發布",
     "confirmSubscription": "確認訂閱",
     "planPrice": "計劃價格",
-    "youPayInclFee": "您支付 (含平台費)",
     "calculating": "計算中…",
     "cancel": "取消",
     "confirm": "確認",
@@ -2790,7 +2788,23 @@
     "withdrawableSoon": "訂閱收益好快就會可以提取",
     "percentUsed": "{{percent}}% 用過",
     "spentOfTotal": "{{spent}} 嘅 {{total}}",
-    "viewInWallet": "喺銀包入面睇"
+    "topUp": "加入代幣",
+    "topUpTitle": "加入訂閱憑證",
+    "topUpCustom": "其他金額（美元）",
+    "topUpYouSend": "你發送",
+    "topUpYouGet": "加咗去你嘅餘額",
+    "topUpConfirm": "加 {{amount}}",
+    "topUpRange": "輸入 {{min}} 到 {{max}}",
+    "topUpDone": "{{amount}} 加入咗你嘅訂閱憑證",
+    "topUpPending": "你嘅充值確認緊。佢好快就會出現喺你嘅餘額入面。",
+    "topUpFailed": "加唔到訂閱憑證",
+    "topUpEmptyHint": "充值訂閱創作者",
+    "topUpStageFunding": "攞緊代幣 …",
+    "topUpStageWallet": "喺你個銀包入面確認 ...",
+    "topUpStageConfirming": "等緊個交易 ...",
+    "topUpStageCrediting": "增加你嘅餘額⋯",
+    "creatorEarnsInTokens": "訂閱者用 DeHub 代幣付款。你賺取美元價值，然後以當日嘅價格提取佢作為代幣。",
+    "youPayNow": "你畀錢"
   },
   "live": {
     "chatJoined": "加入咗",

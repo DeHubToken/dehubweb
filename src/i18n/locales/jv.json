@@ -2668,7 +2668,6 @@
     "transferGuarantee": "Kowe entuk akun kabeh — gagang, kiriman, pengikut, riwayat tip, lan hak lencana. Penjual nyimpen dompet lan isine. Transfer mlaku sawise DeHub maca pembayaran tokenmu maneh saka rantai; yen keganggu, nyoba maneh tuku bakal nerusake."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Pembeli mbayar jumlah token DeHub sing ditampilake kanthi rega pra-listing. Sampeyan nampa nilai USD minangka imbangan USDT.",
     "legacyPlanMigrates": "Ngirit migrasi rencana sing regane token warisan iki menyang rega dolar kanthi rega pra-listing.",
     "tokenAmount": "{{amount}} token",
     "preListingTokenAmount": "Jumlah token pra-listing",
@@ -2772,7 +2771,23 @@
     "withdrawableSoon": "Penghasilan langganan bakal bisa ditarik mengko",
     "percentUsed": "{{percent}}% digunakake",
     "spentOfTotal": "{{spent}} saka {{total}}",
-    "viewInWallet": "Deleng ing dompet"
+    "topUp": "Tambahake token",
+    "topUpTitle": "Tambah token langganan",
+    "topUpCustom": "Jumlah liyane (USD)",
+    "topUpYouSend": "Sampeyan ngirim",
+    "topUpYouGet": "Ditrapake ing imbangan sampeyan",
+    "topUpConfirm": "Tambah {{amount}}",
+    "topUpRange": "Lebokake {{min}} menyang {{max}}",
+    "topUpDone": "{{amount}} ditambahake menyang token langganan sampeyan",
+    "topUpPending": "Isi ulang sampeyan lagi dikonfirmasi. Bakal katon ing imbangan sampeyan sanalika.",
+    "topUpFailed": "Ora bisa nambah token langganan",
+    "topUpEmptyHint": "Isi ulang kanggo langganan kreator",
+    "topUpStageFunding": "Njaluk token…",
+    "topUpStageWallet": "Konfirmasi ing dompet sampeyan…",
+    "topUpStageConfirming": "Ngenteni transaksi…",
+    "topUpStageCrediting": "Ditrapake ing imbangan sampeyan…",
+    "creatorEarnsInTokens": "Pelanggan mbayar nganggo token DeHub. Sampeyan entuk nilai dolar lan narik token kasebut kanthi rega dina iku.",
+    "youPayNow": "Kowe mbayar"
   },
   "live": {
     "chatJoined": "gabung",

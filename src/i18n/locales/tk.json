@@ -2646,7 +2646,6 @@
     "transferGuarantee": "Siz tutuş hasaby alýarsyňyz — sap, ýazgylar, abonentler, sowgat taryhy we dereje hukugy. Satyjy öz gapysyny we onda näme bar bolsa, saklaýar. Göçürme diňe DeHub siziň nyşan tölegiňizi zynjyrdan okanyndan soň hereket edýär; eger kesilse, satyn almagy gaýtadan synanyşmak ony dowam etdirýär."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Alýjylar öň-sadyk bahasynda görkezilen DeHub sanly wagt mukdaryny töleýärler. Siz ABŞ dollary gymmatyny USDT balanse hökmünde alarsyňyz.",
     "legacyPlanMigrates": "Saklamak bu köne sanly wagt bahaly planymyzy öň-sadyk bahasynda dollar bahalandyrylyşyna göçürýär.",
     "tokenAmount": "{{amount}} sanly wagt",
     "preListingTokenAmount": "Öň-sadyk sanly wagt mukdary",
@@ -2675,7 +2674,6 @@
     "publish": "Neşir et",
     "confirmSubscription": "Subskripsiýany tassykla",
     "planPrice": "Planyň bahasy",
-    "youPayInclFee": "1) Birinjiden, App Find (Bu Step TV üçin)",
     "calculating": "kalkülýutor...",
     "cancel": "Gaýd Et",
     "confirm": "Tassykla",
@@ -2755,7 +2753,23 @@
     "withdrawableSoon": "Çykyşlar tizden çykarylar",
     "percentUsed": "{{percent}}% ulanyldy",
     "spentOfTotal": "{{spent}} of {{total}}",
-    "viewInWallet": "Çöpçäniň içine seret"
+    "topUp": "Tokenleri ekle",
+    "topUpTitle": "Subskripsiýa tokenleri goş",
+    "topUpCustom": "Başga pullar (USD)",
+    "topUpYouSend": "Sen iberersiň",
+    "topUpYouGet": "Sen öz deň-de-sarygyňy sakla",
+    "topUpConfirm": "{{amount}}",
+    "topUpRange": "{{min}} to{{max}}",
+    "topUpDone": "{{amount}} abuna tokenleriňize goşuldy",
+    "topUpPending": "Seniň üstüň tassyklaýar. Bu tizden siziň deň-de-sarygyňyzda görüner.",
+    "topUpFailed": "Subskripsiýa tokenlerini goşup bolmady",
+    "topUpEmptyHint": "Ýaradyjylara ýazylmak",
+    "topUpStageFunding": "Çykyşlar...",
+    "topUpStageWallet": "Çantalaryňyza girip görüň...",
+    "topUpStageConfirming": "Biz häkimiýetde pul tölemek üçin dogulduk...",
+    "topUpStageCrediting": "Sen öz deň-de-sarygyňy ýitirýärsiň...",
+    "creatorEarnsInTokens": "Abonentler DeHub tokensinde töleýärler. Siz dollaryň bahasyny gazanyp, ony günüň bahasy bilen alýarsyňyz.",
+    "youPayNow": "Sen töleýärsiň"
   },
   "live": {
     "chatJoined": "goşuldy",

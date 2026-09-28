@@ -2676,7 +2676,6 @@
     "transferGuarantee": "O gba iroyin gbogbo — oludari, awọn ifiweranṣẹ, awọn ọmọlẹhin, itan imọran ati awọn ẹtọ aami. Oluta naa n tọju apamọwọ wọn ati ohun gbogbo ti o wa ninu rẹ. Gbigbe naa n ṣiṣẹ nikan lẹhin ti DeHub ka sisanwo ami rẹ pada kuro ni pq; ti o ba da duro, atunṣe rira naa n tẹsiwaju."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Àwọn olùtaja sanwo iye àmi-ìṣẹ́ DeHub tí a fihàn ni idiyele ṣaaju-àtẹ ìtò. Ìwọ gba iye USD gẹ́gẹ́ bí ìwọ̀n USDT.",
     "legacyPlanMigrates": "Ìfipamọ́ yí ètò idiyele àmi-ìṣẹ́ ìbílẹ̀ yìí sí idiyele dọla ni idiyele ṣaaju-àtẹ ìtò.",
     "tokenAmount": "{{amount}} àmi-ìṣẹ́",
     "preListingTokenAmount": "Iye àmi-ìṣẹ́ ṣaaju-àtẹ ìtò",
@@ -2707,7 +2706,6 @@
     "publish": "Tẹjade",
     "confirmSubscription": "Jẹrisi Iforukosile",
     "planPrice": "Iye ètò",
-    "youPayInclFee": "O sanwó (títí kan owó orí pẹpẹ)",
     "calculating": "ṣíṣe ìṣirò...",
     "cancel": "Fagilee",
     "confirm": "Jẹrisi",
@@ -2787,7 +2785,23 @@
     "withdrawableSoon": "Àwọn èrè ìforúkọsílẹ̀ yóò yọ̀ láìpẹ́.",
     "percentUsed": "{{percent}}% lo",
     "spentOfTotal": "{{spent}} ti {{total}}",
-    "viewInWallet": "Wò ó nínú àpamọ́"
+    "topUp": "Ṣafikun awọn ami",
+    "topUpTitle": "Ṣafikun awọn ami ìforúkọsílẹ",
+    "topUpCustom": "Iye míràn (USD)",
+    "topUpYouSend": "O firanṣẹ",
+    "topUpYouGet": "Fi kun si iwontunwonsi rẹ",
+    "topUpConfirm": "Fi {{amount}} kun",
+    "topUpRange": "Wọ {{min}} si {{max}}",
+    "topUpDone": "{{amount}} fi kun si awọn ami ìforúkọsílẹ rẹ",
+    "topUpPending": "Top-up rẹ ń fìdí múlẹ̀. Yóò farahàn nínú ìdúróṣánṣán rẹ láìpẹ́.",
+    "topUpFailed": "Kò lè fi àwọn àmì ìforúkọsílẹ̀ kún un",
+    "topUpEmptyHint": "Top soke lati ṣe alabapin si awọn ẹlẹda",
+    "topUpStageFunding": "Gbigba awọn ami...",
+    "topUpStageWallet": "Jẹrisi ninu apamọwọ rẹ...",
+    "topUpStageConfirming": "Dúró fún ìdúnàádúrà náà...",
+    "topUpStageCrediting": "Fífi kún ìdúróṣánṣán rẹ...",
+    "creatorEarnsInTokens": "Àwọn àmúyẹ fun gbígbọ́ orin ko le ṣiṣẹ lori ẹ̀rọ rẹ Àkọlé fídíò, ìwé àṣàrò kúkúrú, ìwé àṣàrò kúkúrú, ìwé àṣàrò kúkúrú. O gba iye dọ́là náà o sì yọ ọ́ kúrò gẹ́gẹ́ bí àmì ní iye ní ọjọ́ náà.",
+    "youPayNow": "O sanwo"
   },
   "live": {
     "chatJoined": "darapọ̀",

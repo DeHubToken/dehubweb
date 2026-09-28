@@ -2680,7 +2680,6 @@
     "transferGuarantee": "Waxaad heleysaa xisaabta oo dhan — gacan-ku-qabasho, boosto, raacayaal, taariikhda talooyinka iyo xuquuqda calaamadaha. Iibiyuhu wuxuu haystaa jeebkiisa iyo wax walba oo ku jira. Wareejinta waxay socotaa oo kaliya ka dib markii DeHub ay akhrido bixinta token-kaaga dib uga soo laabashada silsiladda; haddii la joojiyo, dib u bilowga iibsashada ayaa sii wadi doona."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Iibsadayaashu waxay bixiyaan qadarka DeHub token ee la soo bandhigay qiimaha ka-hor-liiska. Waxaad helaysaa qiimaha USD sida dheelitirka USDT.",
     "legacyPlanMigrates": "Kaydinta waxay u guuraysaa qorshahan hore ee lagu qiimeeyay token-ka qiimaynta doolarka ee qiimaha ka-hor-liiska.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Qadarka token-ka ka-hor-liiska",
@@ -2711,7 +2710,6 @@
     "publish": "Daabac",
     "confirmSubscription": "Xaqiiji Isdiiwaangelinta",
     "planPrice": "Qiimaha Qorshaha",
-    "youPayInclFee": "Waxaad bixisaa (oo ay ku jiraan khidmadka madal)",
     "calculating": "Xisaabineysa…",
     "cancel": "Jooji",
     "confirm": "Xaqiiji",
@@ -2791,7 +2789,23 @@
     "withdrawableSoon": "Dakhliga isdiiwaangelinta ayaa dib loo soo celin doonaa goor dhow",
     "percentUsed": "{{percent}}% loo isticmaalo",
     "spentOfTotal": "{{spent}} ee {{total}}",
-    "viewInWallet": "Eeg boorsada"
+    "topUp": "Ku dar calaamadaha",
+    "topUpTitle": "Ku dar calaamadaha isdiiwaangelinta",
+    "topUpCustom": "Qadarka kale (USD)",
+    "topUpYouSend": "Waxaad dirtaa",
+    "topUpYouGet": "Ku dar dheelitirkaaga",
+    "topUpConfirm": "Ku dar {{amount}}",
+    "topUpRange": "Gali {{min}} ilaa {{max}}",
+    "topUpDone": "{{amount}} lagu daray calaamadahaaga isdiiwaangelinta",
+    "topUpPending": "Your top-up ayaa xaqiijinaya. Waxay ka muuqan doontaa dheelitirkaaga goor dhow.",
+    "topUpFailed": "Ma ku dari karo calaamadaha isdiiwaangelinta",
+    "topUpEmptyHint": "Top si ay u subscribe in abuurayaasha",
+    "topUpStageFunding": "Helitaanka calaamadaha...",
+    "topUpStageWallet": "Xaqiiji boorsadaada...",
+    "topUpStageConfirming": "Sugitaanka macaamilka...",
+    "topUpStageCrediting": "Ku dar dheelitirkaaga...",
+    "creatorEarnsInTokens": "Macaamiisha waxay bixiyaan calaamadaha DeHub. Waxaad kasbataa qiimaha doolarka oo aad uga saartaa sida calaamadaha qiimaha maalinta.",
+    "youPayNow": "Waxaad bixinaysaa"
   },
   "live": {
     "chatJoined": "ayaa ku biiray",
