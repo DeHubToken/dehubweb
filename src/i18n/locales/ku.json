@@ -4914,7 +4914,11 @@
       "allClear": "هیچ شتێك ده‌رنه‌كه‌وت. وه‌ڵامه‌كه‌ت وه‌ك وه‌ڵامێكی دادپه‌روه‌رانه‌ و هێمن ده‌رده‌كه‌وێت.",
       "postAnyway": "هه‌ر وه‌ك ئێستا بڵاوی بكه‌ره‌وه‌",
       "dismiss": "ئه‌م پێشنیاره‌ پشتگوێ بخه‌",
-      "settingLabel": "پیشنیاره‌كانی ڕاهێنان پیشان بده‌"
+      "settingLabel": "پیشنیاره‌كانی ڕاهێنان پیشان بده‌",
+      "aiMenu": "Amûrên AI",
+      "changeVibe": "Hewayê biguherîne",
+      "fixSpelling": "Rastnivîs û rêzimanê rast bike",
+      "rewriteFailed": "Ji nû ve nivîsandin çênebû. Dîsa biceribîne."
     }
   },
   "onboarding": {

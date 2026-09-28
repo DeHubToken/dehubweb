@@ -5891,7 +5891,11 @@
         "false_dilemma": "Или-или оквир",
         "overgeneralisation": "Општи тврдњи",
         "hostile_tone": "Непријатељски тон"
-      }
+      },
+      "aiMenu": "AI алати",
+      "changeVibe": "Промени тон",
+      "fixSpelling": "Исправи правопис и граматику",
+      "rewriteFailed": "Није могуће преписати. Покушајте поново."
     }
   },
   "onboarding": {

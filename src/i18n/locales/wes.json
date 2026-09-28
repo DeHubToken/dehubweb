@@ -5101,7 +5101,11 @@
         "false_dilemma": "Either-or framing",
         "overgeneralisation": "Sweeping claim",
         "hostile_tone": "Hostile tone"
-      }
+      },
+      "aiMenu": "AI tools dem",
+      "changeVibe": "Change the vibe",
+      "fixSpelling": "Fix spelling an grammar",
+      "rewriteFailed": "We no fit rewrite am. Try again."
     }
   },
   "onboarding": {

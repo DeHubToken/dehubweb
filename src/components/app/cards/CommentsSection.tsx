@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Anchor, Eye, Baby, Pin, PinOff, Flag, Sparkles, Handshake } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Anchor, Eye, Baby, Pin, PinOff, Flag, Sparkles, Handshake, SpellCheck, Palette, Gauge } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
@@ -34,7 +34,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
+import { supabase } from '@/integrations/supabase/client';
+import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { BannedAccountNotice } from '@/components/app/BannedAccountNotice';
 import { useBannedAccount } from '@/hooks/use-banned-account';
@@ -941,6 +946,21 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   // the three can't disagree.
   const [restoredDraft] = useState(() => loadDraft(tokenId));
   const [newComment, setNewComment] = useState(() => restoredDraft?.text ?? '');
+  const [aiRewriting, setAiRewriting] = useState(false);
+  const aiRewrite = async (mode: 'grammar' | 'style', style?: string) => {
+    const text = newComment.trim();
+    if (!text || aiRewriting) return;
+    setAiRewriting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('enhance-text', { body: { text, mode, style } });
+      if (error || !data?.enhancedText) throw error ?? new Error(data?.error);
+      setNewComment(data.enhancedText);
+    } catch {
+      toast.error(t('conversation.coach.rewriteFailed'));
+    } finally {
+      setAiRewriting(false);
+    }
+  };
   const [replyTo, setReplyTo] = useState<Comment | null>(() => draftReplyTarget(restoredDraft));
   const [tipComment, setTipComment] = useState<Comment | null>(null);
   // Which of the viewer's own comments has its likers drawer open.
@@ -2729,24 +2749,57 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     triggerClassName="bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors"
                     iconClassName="w-4 h-4"
                   />
-                  {/* Offered once there is enough text to review. Icon-only
-                      while the field is a single line, so the row stays put. */}
-                  {coachEnabled && newComment.trim().length >= COACH_MIN_CHARS && (
-                    <button
-                      type="button"
-                      onClick={() => { void coachCheck(newComment); }}
-                      disabled={coachStatus === 'loading'}
-                      data-comment-tool="coach"
-                      aria-label={t('conversation.coach.checkTone')}
-                      title={t('conversation.coach.checkTone')}
-                      className={cn(
-                        "h-8 flex-shrink-0 flex items-center justify-center gap-1.5 bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60",
-                        isInputExpanded ? "px-2.5 text-xs" : "w-8"
-                      )}
-                    >
-                      <Sparkles className="w-4 h-4" />
-                      {isInputExpanded && <span className="hidden sm:inline whitespace-nowrap">{t('conversation.coach.checkTone')}</span>}
-                    </button>
+                  {/* One AI button: tone check, a vibe rewrite (the AI Assistant
+                      styles) and a spelling/grammar pass. Icon-only while the
+                      field is a single line, so the row stays put. */}
+                  {newComment.trim().length > 0 && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          type="button"
+                          disabled={coachStatus === 'loading' || aiRewriting}
+                          data-comment-tool="ai"
+                          aria-label={t('conversation.coach.aiMenu')}
+                          title={t('conversation.coach.aiMenu')}
+                          className={cn(
+                            "h-8 flex-shrink-0 flex items-center justify-center gap-1.5 bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60",
+                            isInputExpanded ? "px-2.5 text-xs" : "w-8"
+                          )}
+                        >
+                          {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                          {isInputExpanded && <span className="hidden sm:inline whitespace-nowrap">{t('conversation.coach.aiMenu')}</span>}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" side="top" className="w-56">
+                        {coachEnabled && (
+                          <DropdownMenuItem
+                            disabled={newComment.trim().length < COACH_MIN_CHARS}
+                            onSelect={() => { void coachCheck(newComment); }}
+                          >
+                            <Gauge className="w-4 h-4 mr-2" />
+                            {t('conversation.coach.checkTone')}
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger>
+                            <Palette className="w-4 h-4 mr-2" />
+                            {t('conversation.coach.changeVibe')}
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent className="max-h-72 overflow-y-auto">
+                            {AI_STYLE_OPTIONS.map((style) => (
+                              <DropdownMenuItem key={style.id} onSelect={() => { void aiRewrite('style', style.id); }}>
+                                <span className="mr-2">{style.emoji}</span>
+                                {style.label}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuSub>
+                        <DropdownMenuItem onSelect={() => { void aiRewrite('grammar'); }}>
+                          <SpellCheck className="w-4 h-4 mr-2" />
+                          {t('conversation.coach.fixSpelling')}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   )}
                   {!voiceNote && (
                     <button
