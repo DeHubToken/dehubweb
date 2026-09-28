@@ -277,6 +277,8 @@
     "compactModeDesc": "Reduce space make more content fit show",
     "autoPlay": "Video dem go play demself",
     "autoPlayDesc": "Play videos by themselves for feed",
+    "autoPlayMuted": "Make autoplay start without sound",
+    "autoPlayMutedDesc": "Video weh di play by yi sef go always start with sound off",
     "showAnimations": "Show Animation dem",
     "showAnimationsDesc": "Make transition and effect dem move fine",
     "coinPlacement": "Place weh coin go dey",

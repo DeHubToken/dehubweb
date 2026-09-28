@@ -32,6 +32,7 @@ import {
   Sun,
   LayoutGrid,
   Play,
+  VolumeX,
   Sparkles,
   Wand2,
   Save,
@@ -2235,6 +2236,23 @@ function AutoPlayToggle() {
   );
 }
 
+function AutoPlayMutedToggle() {
+  const { t } = useTranslation();
+  const { autoplayEnabled, autoplayMuted, setAutoplayMuted } = useAutoplay();
+  if (!autoplayEnabled) return null;
+  return (
+    <SettingsRow
+      as="label"
+      className="cursor-pointer"
+      icon={<VolumeX />}
+      anchor="autoplay-muted"
+      title={t('settings.autoPlayMuted')}
+      description={t('settings.autoPlayMutedDesc')}
+      action={<Switch checked={autoplayMuted} onCheckedChange={setAutoplayMuted} />}
+    />
+  );
+}
+
 function DataSaverToggle() {
   const { t } = useTranslation();
   const { pref } = useConnectionQuality();
@@ -2664,6 +2682,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.media')}</h3>
         <div className="space-y-4">
           <AutoPlayToggle />
+          <AutoPlayMutedToggle />
           <DataSaverToggle />
           <ShowAnimationsToggle />
           <ShortsEnabledToggle />

@@ -667,7 +667,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // request — and the bump lands on the card's own share counter.
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(video.id);
   const trackLinkCopy = useTrackPostLinkCopy();
-  const { autoplayEnabled } = useAutoplay();
+  const { autoplayEnabled, autoplayMuted } = useAutoplay();
   // Slow-network / Data-Saver mode: suppress autoplay and video preloading so a
   // metered connection isn't spent fetching 50MB clips the user hasn't asked for.
   const { liteMode } = useConnectionQuality();
@@ -841,6 +841,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Keep refs in sync for autoplay-related values
   const autoplayEnabledRef = useRef(autoplayEnabled);
   autoplayEnabledRef.current = autoplayEnabled;
+  const autoplayMutedRef = useRef(autoplayMuted);
+  autoplayMutedRef.current = autoplayMuted;
   const liteModeRef = useRef(liteMode);
   liteModeRef.current = liteMode;
 
@@ -942,7 +944,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               if (!vid.getAttribute('src') && video.videoUrl) vid.src = video.videoUrl;
               // Ask manager if this video should own audio
               const ownsAudio = videoPlaybackManager.play(instanceId);
-              const shouldMute = videoPlaybackManager.globalMuted || !ownsAudio;
+              // "Start autoplay muted" beats an earlier unmute: scrolling
+              // onto a clip must never be what makes sound.
+              const shouldMute = autoplayMutedRef.current || videoPlaybackManager.globalMuted || !ownsAudio;
               vid.muted = shouldMute;
               setIsMuted(shouldMute);
               setIsLoading(true);

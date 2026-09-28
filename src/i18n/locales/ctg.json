@@ -278,6 +278,8 @@
     "compactModeDesc": "বেশি কনটেন্টর লাই ফাঁক কমাও",
     "autoPlay": "ভিডিও নিজে নিজে চলিবো",
     "autoPlayDesc": "ফিডত ভিডিও নিজে নিজে চলিবো",
+    "autoPlayMuted": "অটোপ্লে মিউট গরি শুরু গরন",
+    "autoPlayMutedDesc": "নিজে নিজে চলা ভিডিও হামেশা আওয়াজ বন্ধ গরি শুরু অইব",
     "showAnimations": "অ্যানিমেশন দেহাও",
     "showAnimationsDesc": "মসৃণ ট্রানজিশন আর ইফেক্ট চালু গরো",
     "coinPlacement": "কয়েনর জাগা",

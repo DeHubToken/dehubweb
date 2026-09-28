@@ -279,6 +279,8 @@
     "compactModeDesc": "Verminder spasiëring vir meer inhoud",
     "autoPlay": "Speel video's outomaties",
     "autoPlayDesc": "Speel video's outomaties in die voer",
+    "autoPlayMuted": "Begin outospeel sonder klank",
+    "autoPlayMutedDesc": "Video's wat vanself speel, begin altyd met die klank af",
     "showAnimations": "Wys animasies",
     "showAnimationsDesc": "Aktiveer gladde oorgange en effekte",
     "coinPlacement": "Muntplasing",
