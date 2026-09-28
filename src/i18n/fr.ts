@@ -445,7 +445,7 @@ export const fr = {
     shakeUpDesc: 'Dernières diapositives de conception de produit et mises à jour stratégiques pour 2025.',
     badgeNone: 'Pas de badge',
     badgeCrab: 'Badge Crabe',
-    badgeLobster: 'Badge Homard',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Badge Piranha',
     badgeTortoise: 'Badge Tortue géante',
     badgeCobra: 'Badge Cobra royal',

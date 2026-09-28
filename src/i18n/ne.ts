@@ -445,7 +445,7 @@ export const ne = {
     shakeUpDesc: 'उत्पादन डिजाइनको नवीनतम स्लाइडहरू र 2025 रणनीति अपडेटहरू।',
     badgeNone: 'कुनै ब्याज छैन',
     badgeCrab: 'क्र्याब',
-    badgeLobster: 'लबस्टर',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'पिरान्हा',
     badgeTortoise: 'विशाल कछुवा',
     badgeCobra: 'किङ कोब्रा',

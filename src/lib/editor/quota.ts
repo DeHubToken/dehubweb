@@ -20,7 +20,7 @@ const QUOTA_BY_BADGE: Array<{ name: string; bytes: number }> = [
   { name: "King Cobra", bytes: 15 * GB },
   { name: "Giant Tortoise", bytes: 8 * GB },
   { name: "Piranha", bytes: 4 * GB },
-  { name: "Lobster", bytes: 2 * GB },
+  { name: "Ghost Lobster", bytes: 2 * GB },
   { name: "Crab", bytes: 1 * GB },
 ];
 

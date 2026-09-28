@@ -39,7 +39,7 @@ describe('getConversations', () => {
         username: 'alice',
         displayName: 'Alice',
         badge_balance: 25000,
-        badge_lock: { tier: 'Lobster', requirement: 25000 },
+        badge_lock: { tier: 'Ghost Lobster', requirement: 25000 },
       }],
       unreadCount: 0,
     }]);
@@ -48,7 +48,7 @@ describe('getConversations', () => {
 
     expect(result.items[0].otherUser?.badgeBalance).toBe(25000);
     expect(result.items[0].otherUser?.badgeLock).toEqual({
-      tier: 'Lobster',
+      tier: 'Ghost Lobster',
       requirement: 25000,
     });
   });

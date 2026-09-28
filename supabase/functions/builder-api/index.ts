@@ -50,7 +50,7 @@ const BUILDS_BY_BADGE: Array<{ name: string; min: number; builds: number }> = [
   { name: "King Cobra", min: 250_000, builds: 20 },
   { name: "Giant Tortoise", min: 100_000, builds: 15 },
   { name: "Piranha", min: 50_000, builds: 10 },
-  { name: "Lobster", min: 25_000, builds: 8 },
+  { name: "Ghost Lobster", min: 25_000, builds: 8 },
   { name: "Crab", min: 10_000, builds: 5 },
 ];
 

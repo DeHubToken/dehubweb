@@ -445,7 +445,7 @@ export const ko = {
     shakeUpDesc: '2025년 최신 제품 디자인 슬라이드 및 전략적 업데이트.',
     badgeNone: '배지 없음',
     badgeCrab: '크랩 배지',
-    badgeLobster: '랍스터 배지',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: '피라냐 배지',
     badgeTortoise: '거대 거북 배지',
     badgeCobra: '킹코브라 배지',

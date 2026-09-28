@@ -445,7 +445,7 @@ export const el = {
     shakeUpDesc: 'Τελευταίες διαφάνειες σχεδιασμού προϊόντος και στρατηγικές ενημερώσεις.',
     badgeNone: 'Χωρίς Σήμα',
     badgeCrab: 'Σήμα Καβουριού',
-    badgeLobster: 'Σήμα Αστακού',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Σήμα Πιράνχα',
     badgeTortoise: 'Σήμα Γιγάντιας Χελώνας',
     badgeCobra: 'Σήμα Βασιλικής Κόμπρας',

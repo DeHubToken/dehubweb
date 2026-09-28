@@ -195,10 +195,10 @@ describe('the grandfather lock', () => {
 
 describe('getBadgeStanding', () => {
   it('fills across the current tier, not across the whole ladder', () => {
-    // Halfway between Crab (10k) and Lobster (25k).
+    // Halfway between Crab (10k) and Ghost Lobster (25k).
     const standing = getBadgeStanding(17_500, { scale: 1 });
     expect(standing.tier).toBe('Crab');
-    expect(standing.nextTier).toBe('Lobster');
+    expect(standing.nextTier).toBe('Ghost Lobster');
     expect(standing.nextThreshold).toBe(25_000);
     expect(standing.remaining).toBe(7_500);
     expect(standing.progress).toBeCloseTo(0.5, 5);
@@ -283,5 +283,18 @@ describe('the legacy tier spellings', () => {
     expect(badgeImage('Meglodon')).toBe(badgeImage('Megalodon'));
     expect(badgeImage('Crocodite')).toBe(badgeImage('Crocodile'));
     expect(badgeImage('Megalodon')).toBeTruthy();
+  });
+});
+
+
+describe('Ghost Lobster compatibility', () => {
+  it('preserves the second tier and a legacy grandfathered lock', () => {
+    expect(getBadgeName(25_000)).toBe('Ghost Lobster');
+    expect(canonicalTierName('Lobster')).toBe('Ghost Lobster');
+    expect(parseBadgeLock({ tier: 'Lobster', requirement: 2_500 }))
+      .toEqual({ tier: 'Ghost Lobster', requirement: 2_500 });
+    expect(getBadgeName(2_500, null, { scale: 1, lock: { tier: 'Lobster', requirement: 2_500 } })).toBe('Ghost Lobster');
+    expect(badgeImage('Lobster')).toBe(badgeImage('Ghost Lobster'));
+    expect(badgeImage('Ghost Lobster')).toBeTruthy();
   });
 });

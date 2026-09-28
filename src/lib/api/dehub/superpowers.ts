@@ -1,3 +1,4 @@
+import { canonicalTierName } from '@/lib/staking-badges';
 /**
  * SuperPowers — spending a badge on reach
  * =======================================
@@ -323,13 +324,13 @@ export async function fetchSuperpowerStatus(): Promise<SuperPowerStatus> {
   const response = await apiCall<{ result: SuperPowerStatus }>('/api/superpowers', {
     requiresAuth: true,
   });
-  return response.result;
+  return { ...currentTier(response.result), powers: response.result.powers.map(currentTier), bookings: response.result.bookings.map(currentTier) };
 }
 
 /** The published ladder. Public — no badge needed to read what one buys. */
 export async function fetchSuperpowerTiers(): Promise<SuperPowerLadder> {
   const response = await apiCall<{ result: SuperPowerLadder }>('/api/superpowers/tiers');
-  return response.result;
+  return { ...response.result, tiers: response.result.tiers.map(row => ({ ...row, name: canonicalTierName(row.name) })), powers: response.result.powers.map(currentTier) };
 }
 
 /**
@@ -439,3 +440,8 @@ export async function cancelBoost(bookingId: string): Promise<{ refunded: boolea
 // cycle". `apiCall` throws with that string as the message, so show it. Mapping
 // it back to a code to look up a second wording only gives the two places to
 // disagree.
+
+/** A cached API ladder can predate the badge rename. */
+function currentTier<T extends { tier: string | null }>(row: T): T {
+  return { ...row, tier: canonicalTierName(row.tier) ?? null };
+}

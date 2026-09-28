@@ -445,7 +445,7 @@ export const cs = {
     shakeUpDesc: 'Nejnovější prezentace designu produktů a strategické aktualizace pro rok 2025.',
     badgeNone: 'Žádný Odznak',
     badgeCrab: 'Odznak Krab',
-    badgeLobster: 'Odznak Humr',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Odznak Piraňa',
     badgeTortoise: 'Odznak Obří želva',
     badgeCobra: 'Odznak Kobra královská',

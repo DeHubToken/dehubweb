@@ -45,12 +45,12 @@ interface BadgeIconProps {
  * The artwork is intentionally irregular, so its visible check mark does not
  * share the PNG/WebP box's centre or scale. These per-tier corrections align
  * the check itself with the adjacent text rather than aligning transparent
- * pixels around it. Lobster is the neutral reference; darker wide marks get a
+ * pixels around it. Ghost Lobster is the neutral reference; darker wide marks get a
  * little more optical size so they do not recede at compact rendering sizes.
  */
 const BADGE_OPTICS: Record<string, { scale: number; bottomInset: number }> = {
   Crab: { scale: 1, bottomInset: 8 },
-  Lobster: { scale: 1.04, bottomInset: 7 },
+  "Ghost Lobster": { scale: 1.04, bottomInset: 7 },
   Piranha: { scale: 1, bottomInset: 8 },
   "Giant Tortoise": { scale: 1, bottomInset: 11 },
   "King Cobra": { scale: 1, bottomInset: 6 },

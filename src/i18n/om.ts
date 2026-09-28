@@ -441,7 +441,7 @@ export const om = {
     shakeUpDesc: "Islaayidii dizaayinii oomishaa fi haaromsa tarsiimoo dhiyeenya 2025'f.",
     badgeNone: 'Baajii Hin Qabu',
     badgeCrab: 'Baajii Crab',
-    badgeLobster: 'Baajii Lobster',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Baajii Piranha',
     badgeTortoise: 'Baajii Qocaa Guddaa',
     badgeCobra: 'Baajii Mootii Kobraa',

@@ -445,7 +445,7 @@ export const et = {
     shakeUpDesc: 'Viimased toote disaini slaidid ja strateegilised uuendused 2025. aastaks.',
     badgeNone: 'Märki pole',
     badgeCrab: 'Krabi märk',
-    badgeLobster: 'Hommari märk',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piranja märk',
     badgeTortoise: 'Hiidkilpkonna märk',
     badgeCobra: 'Kuningkobra märk',

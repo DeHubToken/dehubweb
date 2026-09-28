@@ -444,7 +444,7 @@ export const es = {
     shakeUpDesc: 'Últimas diapositivas de diseño de producto y actualizaciones estratégicas para 2025.',
     badgeNone: 'Sin insignia',
     badgeCrab: 'Insignia Cangrejo',
-    badgeLobster: 'Insignia Langosta',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Insignia Piraña',
     badgeTortoise: 'Insignia Tortuga Gigante',
     badgeCobra: 'Insignia Cobra Real',

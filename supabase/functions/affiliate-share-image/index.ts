@@ -13,7 +13,7 @@ import { BADGE_DATA_URIS } from "./badges.ts";
 // Staking badge tiers — mirror of src/lib/staking-badges.ts.
 const BADGE_LEVELS: { name: string; min: number }[] = [
   { name: "Crab", min: 10000 },
-  { name: "Lobster", min: 25000 },
+  { name: "Ghost Lobster", min: 25000 },
   { name: "Piranha", min: 50000 },
   { name: "Giant Tortoise", min: 100000 },
   { name: "King Cobra", min: 250000 },

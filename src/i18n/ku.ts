@@ -439,7 +439,7 @@ export const ku = {
     shakeUpDesc: 'Slîdên sêwirana hilberê û nûvekirinên stratejîk ên herî dawî ji bo 2025.',
     badgeNone: 'Bê Nîşan',
     badgeCrab: 'Nîşana Qevir',
-    badgeLobster: 'Nîşana Lîgostê',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Nîşana Piranha',
     badgeTortoise: 'Nîşana Kevjala Dêw',
     badgeCobra: 'Nîşana Kobraya Qral',

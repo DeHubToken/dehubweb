@@ -59,7 +59,7 @@ interface BadgeDef {
  */
 const BADGE_LEVELS: BadgeDef[] = [
   { name: "Crab", min: 10000 },
-  { name: "Lobster", min: 25000 },
+  { name: "Ghost Lobster", min: 25000 },
   { name: "Piranha", min: 50000 },
   { name: "Giant Tortoise", min: 100000 },
   { name: "King Cobra", min: 250000 },
@@ -117,6 +117,7 @@ export const BADGE_ORDER: string[] = BADGE_LEVELS.map((b) => b.name);
  * `scripts/rename-badge-tiers.ts` has run and no old payload can reach us.
  */
 const LEGACY_TIER_NAMES: Record<string, string> = {
+  Lobster: "Ghost Lobster",
   Crocodite: "Crocodile",
   Meglodon: "Megalodon",
   Tortoise: "Giant Tortoise",
@@ -147,7 +148,7 @@ const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
 import TortoiseBadge from '@/assets/badges/Giant Tortoise.webp';
 import CrabBadge from '@/assets/badges/Crab.webp';
 import PiranhaBadge from '@/assets/badges/Piranha.webp';
-import LobsterBadge from '@/assets/badges/Lobster.webp';
+import LobsterBadge from '@/assets/badges/Ghost Lobster.webp';
 import OctopusBadge from '@/assets/badges/Octopus.webp';
 import CobraBadge from '@/assets/badges/King Cobra.webp';
 import CrocodileBadge from '@/assets/badges/Crocodile.webp';
@@ -162,7 +163,7 @@ const BADGE_IMAGES: Record<string, string> = {
   "Giant Tortoise": TortoiseBadge,
   "Crab": CrabBadge,
   "Piranha": PiranhaBadge,
-  "Lobster": LobsterBadge,
+  "Ghost Lobster": LobsterBadge,
   "Octopus": OctopusBadge,
   "King Cobra": CobraBadge,
   "Crocodile": CrocodileBadge,
@@ -183,7 +184,7 @@ const BADGE_IMAGES: Record<string, string> = {
 import TortoisePlate from '@/assets/badges/plates/Giant Tortoise.png';
 import CrabPlate from '@/assets/badges/plates/Crab.png';
 import PiranhaPlate from '@/assets/badges/plates/Piranha.png';
-import LobsterPlate from '@/assets/badges/plates/Lobster.png';
+import LobsterPlate from '@/assets/badges/plates/Ghost Lobster.png';
 import OctopusPlate from '@/assets/badges/plates/Octopus.png';
 import CobraPlate from '@/assets/badges/plates/King Cobra.png';
 import CrocodilePlate from '@/assets/badges/plates/Crocodile.png';
@@ -198,7 +199,7 @@ const BADGE_PLATES: Record<string, string> = {
   "Giant Tortoise": TortoisePlate,
   "Crab": CrabPlate,
   "Piranha": PiranhaPlate,
-  "Lobster": LobsterPlate,
+  "Ghost Lobster": LobsterPlate,
   "Octopus": OctopusPlate,
   "King Cobra": CobraPlate,
   "Crocodile": CrocodilePlate,
@@ -212,7 +213,7 @@ const BADGE_PLATES: Record<string, string> = {
 
 /** The plate mask for a tier, or null for a name the ladder does not know. */
 export function getBadgePlateUrl(name: string | null | undefined): string | null {
-  return (name && BADGE_PLATES[name]) || null;
+  return (name && BADGE_PLATES[canonicalTierName(name) as string]) || null;
 }
 
 /**
@@ -303,7 +304,7 @@ export function badgeThresholds(scale: number = activeScale): readonly BadgeDef[
 /** DHB needed for `tier` at `scale`, or null for an unknown tier name. */
 export function badgeThreshold(tier: string | null | undefined, scale: number = activeScale): number | null {
   if (!tier) return null;
-  return badgeThresholds(scale).find((b) => b.name === tier)?.min ?? null;
+  return badgeThresholds(scale).find((b) => b.name === canonicalTierName(tier))?.min ?? null;
 }
 
 /** The entry requirement — below this there is no badge at all. */

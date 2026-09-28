@@ -9,7 +9,7 @@
  *
  *   no badge            2      King Cobra … Killer Whale   10
  *   Crab                3      Blue Whale                  25
- *   Lobster             4      Megalodon                    50
+ *   Ghost Lobster             4      Megalodon                    50
  *   Piranha             5
  *   Giant Tortoise      6
  *
@@ -36,7 +36,7 @@ export const BASELINE_PROFILES = 2;
  */
 const PROFILES_BY_TIER: Record<string, number> = {
   Crab: 3,
-  Lobster: 4,
+  "Ghost Lobster": 4,
   Piranha: 5,
   "Giant Tortoise": 6,
   "King Cobra": 10,

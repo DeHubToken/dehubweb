@@ -445,7 +445,7 @@ export const hu = {
     shakeUpDesc: 'A legújabb terméktervezési dia és stratégiai frissítések 2025-re.',
     badgeNone: 'Nincs jelvény',
     badgeCrab: 'Rák jelvény',
-    badgeLobster: 'Homár jelvény',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piranha jelvény',
     badgeTortoise: 'Óriásteknős jelvény',
     badgeCobra: 'Királykobra jelvény',

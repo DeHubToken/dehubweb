@@ -445,7 +445,7 @@ export const he = {
     shakeUpDesc: 'שקפי עיצוב מוצר ועדכונים אסטרטגיים אחרונים ל-2025.',
     badgeNone: 'אין תג',
     badgeCrab: 'תג סרטן',
-    badgeLobster: 'תג לובסטר',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'תג פיראנה',
     badgeTortoise: 'תג צב ענק',
     badgeCobra: 'תג קוברה מלכותית',

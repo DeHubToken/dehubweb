@@ -445,7 +445,7 @@ export const hr = {
     shakeUpDesc: 'Najnoviji slajdovi dizajna proizvoda i strateška ažuriranja za 2025.',
     badgeNone: 'Bez značke',
     badgeCrab: 'Značka Rak',
-    badgeLobster: 'Značka Jastog',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Značka Piranja',
     badgeTortoise: 'Značka Divovska kornjača',
     badgeCobra: 'Značka Kraljevska kobra',
