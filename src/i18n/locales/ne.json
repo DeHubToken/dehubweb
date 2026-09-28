@@ -23,7 +23,6 @@
     "featureRequests": "सुविधा अनुरोधहरू",
     "staking": "स्टेकिङ",
     "governance": "शासन",
-    "dao": "DAO",
     "careers": "क्यारियर",
     "glossary": "शब्दावली",
     "arcade": "आर्केड",
@@ -627,7 +626,6 @@
     "mostViewed": "सबैभन्दा धेरै हेरिएको",
     "mostLiked": "सबैभन्दा धेरै मन पराइएको",
     "mostComments": "सबैभन्दा धेरै टिप्पणी",
-    "mostTips": "Most Tips",
     "random": "अनियमित",
     "videos": "भिडियोहरू",
     "images": "तस्बिरहरू",
@@ -2702,7 +2700,6 @@
     "podBadge": "माग अनुसार छपाइ",
     "podBuyOn": "{{provider}} मा किन्नुहोस्",
     "podNote": "{{provider}} ले माग अनुसार छापेर पठाउँछ। भुक्तानी उनीहरूको साइटमा हुन्छ।",
-    "podUrlPlaceholder": "https://…",
     "title": "स्टोरहरू",
     "browse": "ब्राउज गर्नुहोस्",
     "myStore": "मेरो स्टोर",
@@ -5376,7 +5373,6 @@
     "kindVideo": "भिडियो",
     "kindAudio": "अडियो",
     "kindImage": "चित्र",
-    "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "पोस्ट गर्नु अघि समीक्षा गर्नुहोस्",
     "reviewSubtitle": "{{source}} बाट, {{kind}} सम्म । तपाईंलाई मनपर्ने कुनै पनि सम्पादन गर्नुहोस् — मौलिक राख्न शीर्षक खाली छोड्नुहोस् ।",
     "reviewName": "शीर्षक",
@@ -5389,7 +5385,6 @@
     "podcast": {
       "tab": "पोडकास्ट",
       "feedUrlLabel": "पोडकास्ट RSS फिड URL",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "फिड तान्नुहोस्",
       "fetching": "फिड तान्दै...",
       "showBy": "{{author}} द्वारा",
@@ -5461,7 +5456,6 @@
     "paying": "{{amount}} टोकनहरू तिर्दै हुनुहुन्छ...",
     "pickCount": "{{selected}} को {{total}} चयन गरिएको। तपाईंको प्रोफाइलमा पहिले नै रहेको कुनै पनि कुरा छोडिन्छ र कहिले पनि दुई पटक चार्ज गरिँदैन।",
     "pickTitle": "के ल्याउने भनी छान्नुहोस्",
-    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
     "progressDone": "{{imported}} आयात गरिएको।",
     "progressDoneWithFailures": "{{imported}} आयात गरिएको, {{failed}} आयात गर्न सकेन।",
     "progressIdle": "ब्याचमा प्रत्येक भिडियोले यहाँ आफ्नो टाइल पाउँछ, त्यसैले तपाई के अवतरण भएको र के पुनः प्रयास गर्न सकिन्छ भनी देख्न सक्नुहुन्छ। अहिले कुनै कुरा चलिरहेको छैन — तलको ग्रिड एक उदाहरण हो।",
@@ -5638,53 +5632,12 @@
     }
   },
   "nearBuy": {
-    "otherCurrencies": "Other currencies",
-    "title": "Pay with crypto",
     "description": "भुक्तान गर्नको लागि टोकन छान्नुहोस्। तपाईंको वालेटमा DeHub टोकनहरू प्राप्त गर्नुहोस्।",
     "dhbAmount": "DeHub टोकन मात्रा",
-    "search": "Search token, network or contract",
-    "noMatches": "No matching tokens.",
-    "loading": "Loading…",
-    "retry": "Retry",
-    "tokensError": "Payment tokens are temporarily unavailable.",
-    "historyError": "Your saved purchases could not be loaded. Retry before opening another payment.",
-    "statusError": "The latest status is unavailable. Your purchase is saved. Check again; do not send a second payment.",
-    "refundAddress": "Refund address on {{chain}}",
-    "refundPlaceholder": "Address on the payment network",
-    "refundHint": "Check this is a wallet you control on the payment network. Avoid exchange addresses that require a memo or tag. Any provider refund returns here.",
-    "quoteSummary": "Estimated payment: {{amount}} {{symbol}} on {{chain}}",
     "receiveNet": "तपाईंले प्राप्त गर्नुहुन्छ: {{amount}} DeHub टोकन",
-    "gasReserve": "Includes ${{amount}} for network gas.",
-    "swapEstimate": "About {{minutes}} min after your payment confirms.",
-    "estimateUnknown": "Timing depends on the payment network.",
     "confirmationTime": "नेटवर्क पुष्टिकरण र टोकन डेलिभरीले समय थप्छ। यो एक अनुमान हो, काउन्टडाउन होइन।",
-    "finalQuote": "Review the final amount before paying.",
-    "getQuote": "Continue",
-    "paymentAction": "Continue",
-    "acceptTerms": "I agree to the purchase terms.",
-    "terms": "Read terms",
-    "sendExact": "Send exactly {{amount}} {{symbol}} on {{chain}}. Allow separately for withdrawal or network fees.",
-    "paymentSummary": "Payment: {{amount}} {{symbol}} on {{chain}}",
-    "copyPayment": "Copy payment address",
-    "memoNotice": "Required memo/tag — include it with the address or the payment may not be credited.",
-    "copyMemo": "Copy memo/tag",
-    "copied": "Copied",
-    "copyFailed": "Could not copy. Select the text and copy it manually.",
-    "deadline": "Deposit deadline: {{date}}. Do not send a new payment after this time.",
-    "saved": "Your purchase is saved. You can return to it anytime.",
-    "checkStatus": "Refresh purchase status",
-    "lastChecked": "Last checked {{time}}",
-    "history": "Your purchases",
-    "startAnother": "Back to payment options",
-    "refundReceipt": "Refund destination: {{address}}",
     "destination": "Base मा टोकन गन्तव्य: {{address}}",
     "viewDelivery": "टोकन स्थानान्तरण हेर्नुहोस्",
-    "purchaseId": "Copy purchase ID: {{id}}",
-    "phase_awaiting": "Waiting for your payment",
-    "detail_awaiting": "Send once, on the selected network, before the deadline. If you have already sent it, wait for network confirmation.",
-    "phase_confirming": "Payment detected",
-    "detail_confirming": "Waiting for the network to confirm your payment. You do not need to pay again.",
-    "phase_swapping": "Converting your payment",
     "detail_swapping": "तपाईंको भुक्तानी प्रशोधन भइरहेको छ। तपाईंको टोकनहरू आइपुग्दा हामी यो रसिद अपडेट गर्नेछौं।",
     "phase_delivering": "भुक्तानी सेटल गरियो · टोकन पठाउँदै",
     "detail_delivering": "भुक्तानी प्राप्त भयो। तपाईंको टोकनहरू बाटोमा छन्।",
@@ -5692,30 +5645,8 @@
     "detail_deliveryDelayed": "तपाईंको भुक्तानी सेटल भएको छ, तर टोकन डेलिभरीलाई पुन: प्रयास गर्न आवश्यक छ। यो खरिद आईडी राख्नुहोस् र यदि यो ढिलाइ भइरह्यो भने DeHub समर्थनलाई सम्पर्क गर्नुहोस्। फेरि भुक्तान नगर्नुहोस्।",
     "phase_gasPending": "टोकनहरू डेलिभर गरियो · ग्यास पेन्डिङ",
     "detail_gasPending": "तपाईंको टोकन स्थानान्तरण पुष्टि भएको छ। छुट्टै ETH ग्यास स्थानान्तरण अझै पेन्डिङ वा पुन: प्रयास भइरहेको छ।",
-    "phase_delivered": "Purchase complete",
     "detail_delivered": "तपाईंको DeHub टोकनहरू तपाईंको Base वालेटमा डेलिभर गरिएका छन्।",
-    "phase_refunded": "Payment refunded",
-    "detail_refunded": "The provider reports the payment refunded to the refund address below. Check that wallet; network fees may apply.",
-    "phase_failed": "Payment needs attention",
-    "detail_failed": "The provider reported a failure. This does not confirm a refund. Keep this purchase ID and payment transaction hash for support; do not send again.",
-    "phase_expired": "Deposit deadline passed",
-    "detail_expired": "Do not send to this address. If you already paid, keep checking this saved purchase while the network confirms or the provider resolves it. Do not pay again.",
-    "phase_incomplete": "Deposit amount needs attention",
-    "detail_incomplete": "The provider received less than the required amount. Do not resend the full amount. Keep your transaction hash and purchase ID while the provider resolves the deposit or refund.",
-    "phase_checking": "Checking payment progress",
-    "detail_checking": "The provider has not returned a final outcome. Your purchase is saved. Do not send another payment.",
-    "pay": "Pay",
-    "directTiming": "तपाईंको भुक्तानी पुष्टि भएपछि टोकनहरू डेलिभर गरिन्छन्।",
-    "wrongNetwork": "Switch to the selected payment network and try again.",
-    "wrongWallet": "Connect the wallet shown on this purchase and try again.",
-    "reviewPay": "Review the amount, then confirm the payment in your wallet.",
-    "currency": "Currency",
-    "checkingBalances": "Checking your wallet balances…",
-    "walletBalances": "Your balances by network",
-    "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "connectSolana": "Connect Solana wallet",
-    "balanceUnknown": "Balance unavailable",
-    "balanceAmount": "Available: {{amount}} {{symbol}}"
+    "directTiming": "तपाईंको भुक्तानी पुष्टि भएपछि टोकनहरू डेलिभर गरिन्छन्।"
   },
   "conversation": {
     "commonGround": {
@@ -6265,8 +6196,7 @@
       },
       "quote": {
         "title": "उद्धरण कार्ड",
-        "body": "सरल बनाऊ, तर अर्थपूर्ण।",
-        "author": "Don Draper"
+        "body": "सरल बनाऊ, तर अर्थपूर्ण।"
       },
       "thumbnail": {
         "title": "पत्याउनुहुन्न",
@@ -6294,8 +6224,7 @@
         "change": "यो हप्ता +४२%"
       },
       "birthday": {
-        "title": "जन्मदिनको शुभकामना",
-        "name": "Sam!"
+        "title": "जन्मदिनको शुभकामना"
       },
       "meme": {
         "title": "मिम",
@@ -6310,11 +6239,9 @@
       "landscape": "तेर्सो",
       "landscapeDetail": "YouTube, वेब",
       "vertical": "ठाडो",
-      "verticalDetail": "Shorts, Reels",
       "square": "वर्गाकार",
       "squareDetail": "फिड पोस्ट",
       "portrait": "पोर्ट्रेट",
-      "portraitDetail": "Instagram",
       "canvas": "क्यानभास",
       "resolution": "रिजोलुसन",
       "frameRate": "फ्रेम दर",
@@ -6484,7 +6411,6 @@
     "paused": "टोकन स्थानान्तरण अहिले अन - चेनमा रोकिएको छ, त्यसैले यो अनलक अझै पार गर्न सक्दैन । छिट्टै फेरि प्रयास गर्नुहोस् ।",
     "otherChain": "यो पोष्ट अर्को चेनमा बसोबास गर्दछ, त्यसैले यसलाई तपाईंको वालेटमा DeHub टोकनहरू चाहिन्छ ।",
     "buyCard": "कार्डबाट टोकन किन्नुहोस्",
-    "buyCardHint": "Visa, Mastercard, Apple Pay",
     "moveFunds": "रकम भित्र ल्याउनुहोस्",
     "moveFundsHint": "अर्को चेनबाट स्वाप वा जम्मा गर्नुहोस्",
     "notNow": "अहिले होइन"
@@ -6643,7 +6569,6 @@
   },
   "emojiPicker": {
     "tabEmoji": "इमोजी",
-    "tabGif": "GIF",
     "searchEmoji": "इमोजी खोज्नुहोस्",
     "searchGifs": "GIF खोज्नुहोस्...",
     "noEmoji": "कुनै इमोजी फेला परेन",
@@ -7273,8 +7198,7 @@
       "tier": "स्तर",
       "packs": "प्याकहरू",
       "emoji": "इमोजी",
-      "stickers": "स्टिकरहरू",
-      "gifs": "GIF"
+      "stickers": "स्टिकरहरू"
     },
     "signInToCreate": "प्याकहरू सिर्जना गर्न साइन इन गर्नुहोस्",
     "signInToAdd": "थप्न साइन इन गर्नुहोस्",
@@ -7372,26 +7296,6 @@
     "planTypeNotAllowed": "यो क्रिएटरको योजनाले यस प्रकारको सन्देश अनुमति दिँदैन।",
     "planMinTip": "यो क्रिएटरका लागि टिप कम्तीमा {{amount}} DHB हुनुपर्छ।"
   },
-  "spaces": {
-    "title": "स्पेसहरू",
-    "live": "प्रत्यक्ष",
-    "upcoming": "आगामी",
-    "past": "विगत",
-    "create": "स्पेस बनाउनुहोस्",
-    "join": "सामेल हुनुहोस्",
-    "listeners": "श्रोताहरू",
-    "speakers": "वक्ताहरू",
-    "host": "होस्ट",
-    "noSpaces": "अहिलेसम्म स्पेसहरू छैनन्",
-    "loginDescription": "अडियो स्पेसहरू बनाउन र सामेल हुन लगइन गर्नुहोस्।"
-  },
-  "blog": {
-    "title": "ब्लग",
-    "readMore": "थप पढ्नुहोस्",
-    "backToBlog": "ब्लगमा फर्कनुहोस्",
-    "sharePost": "पोस्ट साझा गर्नुहोस्",
-    "relatedPosts": "सम्बन्धित पोस्टहरू"
-  },
   "credits": {
     "earningsWorth": "मूल्य {{amount}}",
     "percentUsed": "{{percent}}% प्रयोग गरियो",
@@ -7433,5 +7337,25 @@
     "back": "सेटिङहरूमा फर्कनुहोस्",
     "signIn": "आफ्नो खाता मेटाउन साइन इन गर्नुहोस्",
     "acknowledge": "मैले मेरो वालेट रिकभरी विवरणहरू बचत गरेको छु र मेटाउने स्थायी हो भनेर बुझेको छु ।"
+  },
+  "spaces": {
+    "title": "स्पेसहरू",
+    "live": "प्रत्यक्ष",
+    "upcoming": "आगामी",
+    "past": "विगत",
+    "create": "स्पेस बनाउनुहोस्",
+    "join": "सामेल हुनुहोस्",
+    "listeners": "श्रोताहरू",
+    "speakers": "वक्ताहरू",
+    "host": "होस्ट",
+    "noSpaces": "अहिलेसम्म स्पेसहरू छैनन्",
+    "loginDescription": "अडियो स्पेसहरू बनाउन र सामेल हुन लगइन गर्नुहोस्।"
+  },
+  "blog": {
+    "title": "ब्लग",
+    "readMore": "थप पढ्नुहोस्",
+    "backToBlog": "ब्लगमा फर्कनुहोस्",
+    "sharePost": "पोस्ट साझा गर्नुहोस्",
+    "relatedPosts": "सम्बन्धित पोस्टहरू"
   }
 }
