@@ -245,6 +245,14 @@ describe('the legacy tier spellings', () => {
     expect(canonicalTierName('Meglodon')).toBe('Megalodon');
   });
 
+  it('maps the pre-rename Tortoise and Cobra onto Giant Tortoise and King Cobra', () => {
+    expect(canonicalTierName('Tortoise')).toBe('Giant Tortoise');
+    expect(canonicalTierName('Cobra')).toBe('King Cobra');
+    expect(parseBadgeLock({ tier: 'Cobra', requirement: 250_000 }))
+      .toEqual({ tier: 'King Cobra', requirement: 250_000 });
+    expect(badgeImage('Tortoise')).toBe(badgeImage('Giant Tortoise'));
+  });
+
   it('leaves every current name alone', () => {
     for (const name of BADGE_ORDER) expect(canonicalTierName(name)).toBe(name);
   });

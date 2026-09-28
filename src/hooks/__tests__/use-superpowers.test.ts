@@ -3,7 +3,7 @@
  * ============================================
  * Four powers act on a comment, a Stage, a category, or a team, and the sheet has no
  * field for any of them: it sends `{ tokenId, power }`
- * and the server answers "Trend Jacker needs a category". So a Cobra saw five
+ * and the server answers "Trend Jacker needs a category". So a King Cobra saw five
  * powers ticked on the SuperPowers page, four offers in the sheet, and two
  * that could actually be spent.
  *
@@ -20,8 +20,8 @@ const LADDER: { key: SuperPowerKey; tier: string | null }[] = [
   { key: 'boost', tier: 'Crab' },
   { key: 'second_wind', tier: 'Lobster' },
   { key: 'comment_anchor', tier: 'Piranha' },
-  { key: 'trend_jacker', tier: 'Tortoise' },
-  { key: 'timeline_bomber', tier: 'Cobra' },
+  { key: 'trend_jacker', tier: 'Giant Tortoise' },
+  { key: 'timeline_bomber', tier: 'King Cobra' },
   { key: 'signal_flare', tier: 'Octopus' },
   { key: 'flak_jacket', tier: 'Crocodile' },
   { key: 'precision_strike', tier: 'Dolphin' },
