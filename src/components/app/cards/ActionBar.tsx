@@ -63,7 +63,8 @@ import {
   type OpenReactionsEventDetail,
 } from '@/lib/tap-reactions';
 import { useReactionTray } from '@/hooks/use-reaction-tray';
-import { Gem } from 'lucide-react';
+import { TipGemIcon } from './TipGemIcon';
+import { subscribePostTipped } from '@/lib/tip-events';
 import {
   Drawer,
   DrawerContent,
@@ -726,6 +727,14 @@ export function ActionBar({
   // Opening the tray means they already know it is there.
   useEffect(() => { if (likeTray.open) markReactionTipSeen(); }, [likeTray.open]);
 
+  // Bumps each time this viewer tips this post, replaying the gem's swirl.
+  const [tipBurst, setTipBurst] = useState(0);
+  useEffect(() => {
+    const ids = [postId, tokenId].filter((v) => v != null).map(String);
+    if (!ids.length) return;
+    return subscribePostTipped((id) => { if (ids.includes(id)) setTipBurst((n) => n + 1); });
+  }, [postId, tokenId]);
+
   // Only ever one open. They sit inches apart on the same row, and two trays
   // stacked over each other is unreadable however they are anchored.
   // Deps are the tray's OWN `open` plus the sibling's `close`, which the hook
@@ -926,7 +935,7 @@ export function ActionBar({
           className={cn('flex items-center gap-0 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
           aria-label="Tips"
         >
-           <Gem className="w-[17px] h-[17px] text-white" />
+          <TipGemIcon tipped={tipBurst > 0} burstKey={tipBurst} />
           {/* Counts come off over a video: the icons are the controls, and a
               tally beside each one is three more numbers on someone's frame. */}
           {!compact && (
