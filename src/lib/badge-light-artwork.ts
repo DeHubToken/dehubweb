@@ -12,5 +12,8 @@ function rules(root: string): string {
   }).join('\n');
 }
 
-// DeHub's "system" theme is its dark palette, even on a light OS desktop.
-export const badgeLightArtworkCss = rules('html[data-theme="light"]');
+// App light uses data-theme; the independent docs toggle uses html.light.
+export const badgeLightArtworkCss = [
+  rules('html[data-theme="light"]'),
+  rules('html.light'),
+].join('\n');
