@@ -17,8 +17,8 @@ const BADGE_LEVELS: { name: string; min: number }[] = [
   { name: "Crab", min: 10000 },
   { name: "Lobster", min: 25000 },
   { name: "Piranha", min: 50000 },
-  { name: "Tortoise", min: 100000 },
-  { name: "Cobra", min: 250000 },
+  { name: "Giant Tortoise", min: 100000 },
+  { name: "King Cobra", min: 250000 },
   { name: "Octopus", min: 500000 },
   { name: "Crocodile", min: 1000000 },
   { name: "Dolphin", min: 2000000 },
@@ -80,6 +80,8 @@ function thresholds(scale: number): { name: string; min: number }[] {
 const LEGACY_TIER_NAMES: Record<string, string> = {
   Crocodite: "Crocodile",
   Meglodon: "Megalodon",
+  Tortoise: "Giant Tortoise",
+  Cobra: "King Cobra",
 };
 
 function canonicalTierName(name: string): string {

@@ -126,7 +126,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'badges',
       title: 'Badges & Tiers',
-      content: 'Badge system, badge tiers, Crab, Lobster, Piranha, Tortoise, Cobra, Octopus, Crocodile, Dolphin, Tiger Shark, Killer Whale, Great White, Blue Whale, Megalodon, holder badges, token holdings, badge levels, tier system, badge rewards',
+      content: 'Badge system, badge tiers, Crab, Lobster, Piranha, Giant Tortoise, King Cobra, Octopus, Crocodile, Dolphin, Tiger Shark, Killer Whale, Great White, Blue Whale, Megalodon, holder badges, token holdings, badge levels, tier system, badge rewards',
       path: '/docs/token/utility',
       category: 'Token',
       type: 'section',
@@ -379,7 +379,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'ad-badge-targeting',
       title: 'Badge-Based Ad Targeting',
-      content: 'Target ads based on user badge tiers, CPM rates per badge, Crab Lobster Piranha Tortoise Cobra Octopus Crocodile Dolphin advertising costs',
+      content: 'Target ads based on user badge tiers, CPM rates per badge, Crab Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin advertising costs',
       path: '/docs/advertising',
       category: 'Main',
       type: 'section',

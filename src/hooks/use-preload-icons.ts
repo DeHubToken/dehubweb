@@ -63,12 +63,12 @@ import medal9 from '@/assets/medal-9.png';
 import medal10 from '@/assets/medal-10.png';
 
 // ── Badge assets (staking tiers) ──
-import TortoiseBadge from '@/assets/badges/Tortoise.webp';
+import TortoiseBadge from '@/assets/badges/Giant Tortoise.webp';
 import CrabBadge from '@/assets/badges/Crab.webp';
 import PiranhaBadge from '@/assets/badges/Piranha.webp';
 import LobsterBadge from '@/assets/badges/Lobster.webp';
 import OctopusBadge from '@/assets/badges/Octopus.webp';
-import CobraBadge from '@/assets/badges/Cobra.webp';
+import CobraBadge from '@/assets/badges/King Cobra.webp';
 import CrocodileBadge from '@/assets/badges/Crocodile.webp';
 import DolphinBadge from '@/assets/badges/Dolphin.webp';
 import TigerSharkBadge from '@/assets/badges/Tiger Shark.webp';
