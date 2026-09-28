@@ -185,7 +185,10 @@ export async function tryFree(
         continue;
       }
       console.log(`${tag} answered by ${p.name}`);
-      return new Response(text, { status: 200, headers: { 'Content-Type': 'application/json' } });
+      return new Response(text, {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', 'x-free-provider': p.name },
+      });
     } catch (e) {
       if (opts.signal?.aborted) throw e;
       console.log(`${tag} ${p.name} threw: ${e instanceof Error ? e.message : 'unknown'}`);
