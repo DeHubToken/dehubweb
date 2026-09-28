@@ -21,6 +21,7 @@ import { createLogger } from '@/lib/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useWalletRuntime } from '@/lib/wallet-runtime';
+import { prepareWalletRelay, isWalletRelayPublishError, waitForWalletSignature } from '@/lib/wallet-relay';
 import { clearWagmiStorage } from '@/lib/wagmi-session';
 import { setBackgroundPaused } from '@/lib/background-gate';
 
@@ -313,21 +314,23 @@ async function signWithProvider(
   const address = accounts[0].toLowerCase();
 
   const message = buildDeHubLoginMessage(address, Math.floor(displayedDate.getTime() / 1000));
+  const encodedMessage = `0x${Array.from(new TextEncoder().encode(message), byte => byte.toString(16).padStart(2, '0')).join('')}`;
 
   let signature: string;
+  await prepareWalletRelay(provider);
   try {
-    signature = await provider.request({
+    signature = await waitForWalletSignature<string>(() => provider.request({
       method: 'personal_sign',
-      params: [message, address],
-    }) as string;
+      params: [encodedMessage, address],
+    })) as string;
   } catch (e) {
     const error = e as { code?: number; message?: string };
     if (error?.code !== -32602 && !/invalid params|invalid parameters/i.test(error?.message ?? '')) throw e;
     console.warn(`[Auth] [${flowLabel}] personal_sign fallback...`, e);
-    signature = await provider.request({
+    signature = await waitForWalletSignature<string>(() => provider.request({
       method: 'personal_sign',
-      params: [address, message],
-    }) as string;
+      params: [address, encodedMessage],
+    })) as string;
   }
 
   return { address, signature };
@@ -1731,7 +1734,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         ...described,
       }, signError);
 
-      if (timedOut) {
+      if (isWalletRelayPublishError(signError)) {
+        toast.error('Wallet connection interrupted', {
+          description: 'Choose your wallet again to reconnect and sign in.',
+        });
+      } else if (timedOut) {
         toast.error('Your wallet never showed the request', {
           description: 'Open your wallet and check for a pending signature, then try again.',
         });
