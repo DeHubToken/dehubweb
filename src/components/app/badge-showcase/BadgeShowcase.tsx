@@ -415,6 +415,15 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
 
   // Thumbnails fade out toward whichever end still has more to scroll to,
   // so the rail melts into the play button rather than stopping at a rule.
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const onChange = () => setIsDesktop(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
   const [railFade, setRailFade] = useState({ start: false, end: true });
   const updateRailFade = useCallback(() => {
     const rail = railRef.current;
@@ -427,7 +436,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
     updateRailFade();
     window.addEventListener('resize', updateRailFade);
     return () => window.removeEventListener('resize', updateRailFade);
-  }, [updateRailFade]);
+  }, [updateRailFade, isDesktop]);
   const railMask = `linear-gradient(to right, ${railFade.start ? 'transparent 0, #000 28px' : '#000 0'}, ${
     railFade.end ? '#000 calc(100% - 40px), transparent 100%' : '#000 100%'
   })`;
@@ -561,6 +570,84 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
   const open = shown && phase !== 'exit';
   const panelIn = phase === 'open';
 
+  const dock = (
+    <nav
+      aria-label={t('badgeShowcase.badges')}
+      className="relative z-10 mx-auto flex max-w-[calc(100%-24px)] shrink-0 items-center gap-1 rounded-[20px] border border-white/10 bg-white/[0.07] p-1 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-[opacity,transform] duration-700 lg:p-1.5"
+      style={{
+        opacity: panelIn ? 1 : 0,
+        transform: panelIn ? 'none' : 'translateY(24px)',
+        transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+      }}
+    >
+      <div
+        ref={railRef}
+        onScroll={updateRailFade}
+        className="flex min-w-0 snap-x gap-0.5 overflow-x-auto py-1 scrollbar-hide"
+        style={{ maskImage: railMask, WebkitMaskImage: railMask }}
+      >
+        {BADGE_ORDER.map((tierName, i) => {
+          const active = i === index;
+          return (
+            <button
+              key={tierName}
+              type="button"
+              aria-label={tierName}
+              aria-current={active ? 'true' : undefined}
+              onClick={() => {
+                setTouched(true);
+                goTo(i);
+              }}
+              className="relative shrink-0 snap-center rounded-[14px] p-1 transition-colors duration-300 hover:bg-white/[0.07] lg:p-1.5"
+            >
+              <img
+                src={badgeImage(tierName) ?? ''}
+                alt=""
+                draggable={false}
+                className="block h-8 w-8 object-contain lg:h-10 lg:w-10"
+                style={{
+                  transform: `rotate(${TILTS[i]}deg) scale(${active ? 1.08 : 0.84})`,
+                  filter: active ? 'drop-shadow(0 3px 6px rgba(0,0,0,0.5))' : 'saturate(0.35)',
+                  opacity: active ? 1 : 0.5,
+                  transition: 'opacity 0.35s, filter 0.35s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                }}
+              />
+              {owned(i) && <span aria-hidden className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-emerald-400" />}
+              <span
+                aria-hidden
+                className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 overflow-hidden rounded-full bg-white/10 transition-opacity duration-300"
+                style={{ opacity: active ? 1 : 0 }}
+              >
+                {active && (
+                  <span
+                    key={index}
+                    className="block h-full w-full origin-left bg-white/85"
+                    style={
+                      {
+                        animation: `badge-showcase-fill ${AUTOPLAY_MS}ms linear forwards`,
+                        animationPlayState: autoplaying ? 'running' : 'paused',
+                      } as CSSProperties
+                    }
+                    onAnimationEnd={() => goTo(index + 1)}
+                  />
+                )}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <button
+        type="button"
+        onClick={() => setPlaying((p) => !p)}
+        aria-label={playing ? t('badgeShowcase.pause') : t('badgeShowcase.play')}
+        aria-pressed={!playing}
+        className="bs-chrome-dark ml-1 grid h-9 w-9 shrink-0 place-items-center rounded-full lg:h-10 lg:w-10"
+      >
+        {playing ? <Pause className="h-3.5 w-3.5" fill="currentColor" /> : <Play className="h-3.5 w-3.5" fill="currentColor" />}
+      </button>
+    </nav>
+  );
+
   return createPortal(
     <div
       ref={rootRef}
@@ -580,174 +667,164 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
         className="absolute inset-0 bg-black/85 backdrop-blur-md transition-opacity duration-500 ease-out"
         style={{ opacity: open ? 1 : 0 }}
       />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 transition-opacity duration-700"
-        style={{
-          opacity: open ? 1 : 0,
-          background: 'radial-gradient(60% 50% at 50% 38%, rgba(255,255,255,0.08), transparent 70%)',
-        }}
-      />
 
-      <header
-        className="relative z-10 flex items-center justify-between px-4 pt-[max(env(safe-area-inset-top),14px)] transition-opacity duration-300 sm:px-6"
+      {/* Close floats over the stage, so no header row eats into the sticker. */}
+      <button
+        ref={closeRef}
+        type="button"
+        onClick={requestClose}
+        aria-label={t('badgeShowcase.close')}
+        className="bs-chrome-dark absolute right-4 top-[max(env(safe-area-inset-top),12px)] z-20 grid h-9 w-9 place-items-center rounded-full transition-opacity duration-300 lg:right-6 lg:top-6 lg:h-10 lg:w-10"
         style={{ opacity: panelIn ? 1 : 0 }}
       >
-        <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/45">
-          {t('badgeShowcase.badges')}
-        </span>
-        <button
-          ref={closeRef}
-          type="button"
-          onClick={requestClose}
-          aria-label={t('badgeShowcase.close')}
-          className="bs-chrome-dark grid h-10 w-10 place-items-center rounded-full"
-        >
-          <X className="h-[18px] w-[18px]" />
-        </button>
-      </header>
+        <X className="h-[18px] w-[18px]" />
+      </button>
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col lg:flex-row lg:items-stretch">
-        {/* Stage */}
-        <div ref={stageBoxRef} className="relative min-h-[44vh] flex-1 lg:min-h-0">
-          <canvas
-            ref={canvasRef}
-            aria-hidden
-            className="absolute inset-0 h-full w-full transition-opacity duration-200"
-            style={{ opacity: stickerOn ? 1 : 0, touchAction: 'none' }}
-          />
-          <p
-            className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-[11px] text-white/35 transition-opacity duration-500"
-            style={{ opacity: panelIn && !touched && !glFailed ? 1 : 0 }}
-          >
-            {t('badgeShowcase.hint')}
-          </p>
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col lg:flex-row">
+        {/* Stage, with the dock centred under the sticker on desktop. */}
+        <div className="relative flex min-h-0 flex-1 flex-col lg:pb-6">
+          <div ref={stageBoxRef} className="relative min-h-[160px] flex-1">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 transition-opacity duration-700"
+              style={{
+                opacity: open ? 1 : 0,
+                background: 'radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,0.08), transparent 70%)',
+              }}
+            />
+            <canvas
+              ref={canvasRef}
+              aria-hidden
+              className="absolute inset-0 h-full w-full transition-opacity duration-200"
+              style={{ opacity: stickerOn ? 1 : 0, touchAction: 'none' }}
+            />
+            <p
+              className="pointer-events-none absolute inset-x-0 bottom-1 hidden text-center text-[11px] text-white/35 transition-opacity duration-500 sm:block"
+              style={{ opacity: panelIn && !touched && !glFailed ? 1 : 0 }}
+            >
+              {t('badgeShowcase.hint')}
+            </p>
+          </div>
+          {isDesktop && dock}
         </div>
 
-        {/* Details */}
+        {/* Details: one 8px gap, 16px radius and 12px padding throughout. */}
         <div
-          className="relative max-h-[50vh] min-h-0 overflow-y-auto overscroll-contain px-4 pb-2 transition-[opacity,transform] duration-500 ease-out scrollbar-hide lg:flex lg:max-h-none lg:w-[440px] lg:shrink-0 lg:flex-col lg:justify-center lg:py-6 lg:pl-2 lg:pr-10"
+          className="relative min-h-0 overflow-y-auto overscroll-contain px-4 pb-3 transition-[opacity,transform] duration-500 ease-out scrollbar-hide lg:flex lg:w-[400px] lg:shrink-0 lg:flex-col lg:py-6 lg:pl-0 lg:pr-8"
           style={{
             opacity: panelIn ? 1 : 0,
             transform: panelIn ? 'none' : 'translateY(14px)',
             pointerEvents: panelIn ? 'auto' : 'none',
           }}
         >
-          <div className="mx-auto w-full max-w-[520px]">
-            <div className="text-center lg:text-left">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/40">
+          {/* my-auto rather than justify-center: centred while it fits, and
+              scrolling from the top instead of clipping when it does not. */}
+          <div className="mx-auto w-full max-w-[480px] lg:my-auto">
+            <div className="flex flex-col items-center gap-1.5 text-center lg:items-start lg:text-left">
+              <p className="text-[10px] font-bold uppercase leading-3 tracking-[0.14em] text-white/40">
                 {t('badgeShowcase.tierOf', { index: index + 1, total: count })}
               </p>
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.h2
-                  key={name}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                  className="mt-1 text-[24px] font-black uppercase leading-none tracking-[-0.02em] sm:text-[38px]"
-                >
-                  {name}
-                </motion.h2>
-              </AnimatePresence>
-
-              <div className="mt-2 flex flex-wrap items-center justify-center gap-2 lg:mt-3 lg:justify-start">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 py-[5px] pl-[7px] pr-3 text-[15px] font-bold tabular-nums backdrop-blur-xl">
-                  <DhbCoin className="h-5 w-5" />
+              <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5 lg:justify-start">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.h2
+                    key={name}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                    className="text-[22px] font-black uppercase leading-none tracking-[-0.02em] lg:text-[30px]"
+                  >
+                    {name}
+                  </motion.h2>
+                </AnimatePresence>
+                <span className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/10 pl-1.5 pr-2.5 text-[13px] font-bold tabular-nums backdrop-blur-xl">
+                  <DhbCoin className="h-4 w-4" />
                   {shortDhb(threshold)}
-                  <span aria-hidden className="h-3.5 w-px bg-white/20" />
+                  <span aria-hidden className="h-3 w-px bg-white/20" />
                   {owned(index) ? (
-                    <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                    <Check className="h-3 w-3" strokeWidth={3} />
                   ) : (
-                    <Lock className="h-3.5 w-3.5 text-white/60" strokeWidth={2.5} />
+                    <Lock className="h-3 w-3 text-white/60" strokeWidth={2.5} />
                   )}
                 </span>
-                {price ? (
-                  <span className="text-[12.5px] tabular-nums text-white/40">≈ {formatUsd(threshold * price)}</span>
-                ) : null}
               </div>
-
-              <p className="mt-1.5 min-h-[18px] text-[12.5px] text-white/55 lg:mt-2">
+              <p className="min-h-4 text-[12px] leading-4 text-white/55">
                 {standing
                   ? owned(index)
                     ? t('badgeShowcase.youHaveThis')
                     : t('badgeShowcase.toUnlock', { amount: nf.format(Math.ceil(remaining)) })
                   : t('badgeShowcase.holdToUnlock')}
+                {price ? <span className="text-white/35"> (≈ {formatUsd(threshold * price)})</span> : null}
               </p>
             </div>
 
             {/* Token slider */}
-            <div className={cn(BENTO, BENTO_IDLE, 'mt-3 lg:mt-4')}>
-              <div className="flex h-6 items-center justify-between gap-2">
-                <span className="min-w-0 truncate text-[11px] font-bold uppercase tracking-[0.12em] text-white/45">
+            <div className={cn(BENTO, BENTO_IDLE, 'mt-3')}>
+              <div className="flex h-5 items-center justify-between gap-2">
+                <span className="min-w-0 truncate text-[10px] font-bold uppercase tracking-[0.12em] text-white/45">
                   {t('badgeShowcase.sliderLabel')}
                 </span>
-                <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[17px] font-bold tabular-nums">
+                <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[15px] font-bold tabular-nums lg:text-[16px]">
                   {nf.format(amount)}
-                  <DhbCoin className="h-4 w-4 shrink-0" />
+                  <DhbCoin className="h-3.5 w-3.5 shrink-0" />
                   {price ? (
-                    <span className="hidden text-[12px] font-medium text-white/40 min-[380px]:inline">
+                    <span className="hidden text-[11px] font-medium text-white/40 min-[380px]:inline">
                       ≈ {formatUsd(amount * price)}
                     </span>
                   ) : null}
                 </span>
               </div>
 
-              <div className="relative mt-2 pt-4">
+              <SliderPrimitive.Root
+                min={0}
+                max={SLIDER_STEPS}
+                step={1}
+                value={[toPos(amount)]}
+                onValueChange={(v) => onSlide(v[0])}
+                className="relative mt-2.5 flex h-5 w-full touch-none select-none items-center"
+              >
+                <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-white/10">
+                  <SliderPrimitive.Range className="absolute h-full rounded-full bg-gradient-to-r from-white/50 to-white" />
+                </SliderPrimitive.Track>
+                {ladder.map((rung, i) => (
+                  <span
+                    key={rung.name}
+                    aria-hidden
+                    className={cn(
+                      'pointer-events-none absolute top-1/2 h-2.5 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full',
+                      i <= index ? 'bg-black/40' : 'bg-white/25',
+                    )}
+                    style={{ left: `${(toPos(rung.min) / SLIDER_STEPS) * 100}%` }}
+                  />
+                ))}
                 {youPos !== null && (
                   <span
-                    className="pointer-events-none absolute top-0 -translate-x-1/2 rounded-full bg-emerald-400/15 px-1.5 text-[9.5px] font-bold uppercase tracking-wider text-emerald-300"
+                    aria-hidden
+                    className="pointer-events-none absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-emerald-300 bg-black"
                     style={{ left: `${youPos}%` }}
-                  >
-                    {t('badgeShowcase.you')}
-                  </span>
+                  />
                 )}
-                <SliderPrimitive.Root
-                  min={0}
-                  max={SLIDER_STEPS}
-                  step={1}
-                  value={[toPos(amount)]}
-                  onValueChange={(v) => onSlide(v[0])}
-                  className="relative flex h-6 w-full touch-none select-none items-center"
+                <SliderPrimitive.Thumb
+                  aria-label={t('badgeShowcase.sliderLabel')}
+                  aria-valuetext={t('badgeShowcase.sliderValue', { amount: nf.format(amount), tier: name })}
+                  className="block h-5 w-5 overflow-hidden rounded-full border-2 border-white bg-black shadow-[0_0_0_4px_rgba(255,255,255,0.12),0_4px_14px_rgba(0,0,0,0.5)] outline-none transition-transform focus-visible:scale-110 active:scale-110"
                 >
-                  <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-white/10">
-                    <SliderPrimitive.Range className="absolute h-full rounded-full bg-gradient-to-r from-white/50 to-white" />
-                  </SliderPrimitive.Track>
-                  {ladder.map((rung, i) => (
-                    <span
-                      key={rung.name}
-                      aria-hidden
-                      className={cn(
-                        'pointer-events-none absolute top-1/2 h-2.5 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full',
-                        i <= index ? 'bg-black/40' : 'bg-white/25',
-                      )}
-                      style={{ left: `${(toPos(rung.min) / SLIDER_STEPS) * 100}%` }}
-                    />
-                  ))}
-                  {youPos !== null && (
-                    <span
-                      aria-hidden
-                      className="pointer-events-none absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-emerald-300 bg-black"
-                      style={{ left: `${youPos}%` }}
-                    />
-                  )}
-                  <SliderPrimitive.Thumb
-                    aria-label={t('badgeShowcase.sliderLabel')}
-                    aria-valuetext={t('badgeShowcase.sliderValue', { amount: nf.format(amount), tier: name })}
-                    className="block h-6 w-6 overflow-hidden rounded-full border-2 border-white bg-black shadow-[0_0_0_4px_rgba(255,255,255,0.12),0_4px_14px_rgba(0,0,0,0.5)] outline-none transition-transform focus-visible:scale-110 active:scale-110"
-                  >
-                    <img src={badgeImage(name) ?? ''} alt="" className="h-full w-full object-contain p-[1px]" />
-                  </SliderPrimitive.Thumb>
-                </SliderPrimitive.Root>
-                <div className="mt-2 flex justify-between text-[10.5px] tabular-nums text-white/35">
-                  <span>{shortDhb(ladder[0].min)}</span>
-                  <span>{shortDhb(ladder[count - 1].min)}</span>
-                </div>
+                  <img src={badgeImage(name) ?? ''} alt="" className="h-full w-full object-contain p-[1px]" />
+                </SliderPrimitive.Thumb>
+              </SliderPrimitive.Root>
+              <div className="mt-1.5 flex h-3 items-center justify-between text-[10px] tabular-nums leading-3 text-white/35">
+                <span>{shortDhb(ladder[0].min)}</span>
+                {standing && standing.balance > 0 ? (
+                  <span className="font-semibold text-emerald-300">
+                    {t('badgeShowcase.you')} {shortDhb(standing.balance)}
+                  </span>
+                ) : null}
+                <span>{shortDhb(ladder[count - 1].min)}</span>
               </div>
             </div>
 
             {/* What it grants */}
-            <h3 className="mt-3 text-[11px] font-bold uppercase tracking-[0.12em] text-white/45">
+            <h3 className="mt-3 hidden text-[10px] font-bold uppercase leading-3 tracking-[0.12em] text-white/45 lg:block">
               {t('badgeShowcase.grants')}
             </h3>
             <ul className="mt-2 grid grid-cols-3 gap-2">
@@ -761,35 +838,34 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                     title={row.label}
                     className={cn(
                       BENTO,
-                      // Fixed geometry: the label always gets two lines, the
-                      // value one, so a one-line label never shifts its tile
-                      // out of step with the tiles beside it.
-                      'flex h-[80px] min-w-0 flex-col justify-between',
+                      // Fixed geometry: the label always gets two lines and the
+                      // value one, so no tile drifts out of line with the next.
+                      'flex h-[68px] min-w-0 flex-col justify-between',
                       up ? 'border-white/20 bg-white/[0.07]' : BENTO_IDLE,
                     )}
                   >
-                    <div className="flex min-w-0 items-start gap-1.5 text-[10.5px] leading-[13px] text-white/50">
-                      <Icon className="h-[13px] w-[13px] shrink-0" />
-                      <span className="line-clamp-2 h-[26px] min-w-0 break-words">{row.label}</span>
+                    <div className="flex min-w-0 items-start gap-1.5 text-[10px] leading-3 text-white/50">
+                      <Icon className="h-3 w-3 shrink-0" />
+                      <span className="line-clamp-2 h-6 min-w-0 break-words">{row.label}</span>
                     </div>
-                    <div className="flex h-5 min-w-0 items-center gap-1.5 overflow-hidden">
+                    <div className="flex h-[18px] min-w-0 items-center gap-1 overflow-hidden">
                       <AnimatePresence mode="popLayout" initial={false}>
                         <motion.span
                           key={row.value}
-                          initial={{ opacity: 0, y: 10 }}
+                          initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
+                          exit={{ opacity: 0, y: -8 }}
                           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                           className={cn(
-                            'min-w-0 truncate text-[16px] font-bold tabular-nums leading-5',
-                            locked && 'text-[12px] font-semibold text-white/40',
+                            'min-w-0 truncate text-[14px] font-bold tabular-nums leading-[18px] lg:text-[15px]',
+                            locked && 'text-[11px] font-semibold text-white/40 lg:text-[11px]',
                           )}
                         >
                           {row.value}
                         </motion.span>
                       </AnimatePresence>
                       {up && (
-                        <span aria-hidden className="shrink-0 text-[10px] font-bold text-emerald-400">
+                        <span aria-hidden className="shrink-0 text-[9px] font-bold text-emerald-400">
                           ▲
                         </span>
                       )}
@@ -806,7 +882,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                   onClose();
                   navigate('/app/buy');
                 }}
-                className="bs-chrome h-11 min-w-0 truncate rounded-2xl px-3 text-sm font-bold"
+                className="bs-chrome h-10 min-w-0 truncate rounded-2xl px-3 text-[13px] font-bold"
               >
                 {t('badgeShowcase.buyTokens')}
               </button>
@@ -816,7 +892,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                   onClose();
                   navigate('/app/glossary#badges');
                 }}
-                className="bs-chrome-dark h-11 min-w-0 truncate rounded-2xl px-3 text-sm font-bold"
+                className="bs-chrome-dark h-10 min-w-0 truncate rounded-2xl px-3 text-[13px] font-bold"
               >
                 {t('badgeShowcase.details')}
               </button>
@@ -825,85 +901,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
         </div>
       </div>
 
-      {/* Dock: every tier, playing through like a sticker pack. */}
-      <nav
-        aria-label={t('badgeShowcase.badges')}
-        className="relative z-10 mx-auto mb-[max(env(safe-area-inset-bottom),12px)] mt-1 flex max-w-[calc(100vw-24px)] items-center gap-1 rounded-[20px] border border-white/10 bg-white/[0.07] p-1.5 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-[opacity,transform] duration-700"
-        style={{
-          opacity: panelIn ? 1 : 0,
-          transform: panelIn ? 'none' : 'translateY(24px)',
-          transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
-      >
-        <div
-          ref={railRef}
-          onScroll={updateRailFade}
-          className="flex min-w-0 snap-x gap-0.5 overflow-x-auto py-1 scrollbar-hide"
-          style={{ maskImage: railMask, WebkitMaskImage: railMask }}
-        >
-          {BADGE_ORDER.map((tierName, i) => {
-            const active = i === index;
-            return (
-              <button
-                key={tierName}
-                type="button"
-                aria-label={tierName}
-                aria-current={active ? 'true' : undefined}
-                onClick={() => {
-                  setTouched(true);
-                  goTo(i);
-                }}
-                className="relative shrink-0 snap-center rounded-[14px] p-1.5 transition-colors duration-300 hover:bg-white/[0.07]"
-              >
-                <img
-                  src={badgeImage(tierName) ?? ''}
-                  alt=""
-                  draggable={false}
-                  className="block h-9 w-9 object-contain sm:h-10 sm:w-10"
-                  style={{
-                    transform: `rotate(${TILTS[i]}deg) scale(${active ? 1.08 : 0.84})`,
-                    filter: active ? 'drop-shadow(0 3px 6px rgba(0,0,0,0.5))' : 'saturate(0.35)',
-                    opacity: active ? 1 : 0.5,
-                    transition:
-                      'opacity 0.35s, filter 0.35s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                  }}
-                />
-                {owned(i) && (
-                  <span aria-hidden className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                )}
-                <span
-                  aria-hidden
-                  className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 overflow-hidden rounded-full bg-white/10 transition-opacity duration-300"
-                  style={{ opacity: active ? 1 : 0 }}
-                >
-                  {active && (
-                    <span
-                      key={index}
-                      className="block h-full w-full origin-left bg-white/85"
-                      style={
-                        {
-                          animation: `badge-showcase-fill ${AUTOPLAY_MS}ms linear forwards`,
-                          animationPlayState: autoplaying ? 'running' : 'paused',
-                        } as CSSProperties
-                      }
-                      onAnimationEnd={() => goTo(index + 1)}
-                    />
-                  )}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-        <button
-          type="button"
-          onClick={() => setPlaying((p) => !p)}
-          aria-label={playing ? t('badgeShowcase.pause') : t('badgeShowcase.play')}
-          aria-pressed={!playing}
-          className="bs-chrome-dark ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full"
-        >
-          {playing ? <Pause className="h-3.5 w-3.5" fill="currentColor" /> : <Play className="h-3.5 w-3.5" fill="currentColor" />}
-        </button>
-      </nav>
+      {!isDesktop && <div className="mb-[max(env(safe-area-inset-bottom),10px)] mt-1 shrink-0">{dock}</div>}
 
       {/* The badge in flight, and the stand-in if WebGL is unavailable. */}
       <img
