@@ -99,7 +99,8 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
     ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown; clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; useFree?: unknown; paySource?: unknown };
   const txHash = typeof body.txHash === 'string' ? body.txHash.toLowerCase() : '';
 
-  if (body.paySource === 'credits') return chargeCredits(guard.wallet, priceDhb, opts, body);
+  // `txHash: "credits"` is a sentinel the web client sends through the existing field.
+  if (body.paySource === 'credits' || txHash === 'credits') return chargeCredits(guard.wallet, priceDhb, opts, body);
 
   // A free starter image: no transfer, one row in ai_free_generations. The
   // per-IP cap keeps a farm of fresh wallets from draining it.
