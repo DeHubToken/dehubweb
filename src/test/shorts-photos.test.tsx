@@ -40,6 +40,25 @@ it('maps every photo and its single soundtrack without manufacturing a video', (
   expect(media.description).toBe('A walk');
   expect(isShortsPhoto({ ...post, transcodingStatus: 'failed' } as typeof post)).toBe(true);
 });
+it('keeps an incoming clip paused through the landing, then plays when selected', () => {
+  vi.useFakeTimers();
+  const play = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue();
+  const pause = vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
+  const short = { id: 'landing', type: 'short' as const, username: 'artist', verified: false,
+    likes: '0', videoUrl: '/landing.mp4', thumbnail: '' };
+  const { container, rerender } = render(<VideoSlide short={short} isActive={false} isMuted preload="auto" />);
+  act(() => vi.advanceTimersByTime(350));
+  expect(play).not.toHaveBeenCalled();
+  rerender(<VideoSlide short={short} isActive isMuted preload="auto" />);
+  act(() => vi.advanceTimersByTime(60));
+  expect(play).toHaveBeenCalledTimes(1);
+  const player = container.querySelector('video')!;
+  rerender(<VideoSlide short={short} isActive={false} isMuted preload="auto" />);
+  expect(pause).toHaveBeenCalled();
+  play.mockClear();
+  fireEvent.play(player);
+  expect(play).not.toHaveBeenCalled();
+});
 it('keeps gated, mature, silent and malformed posts out of the unguarded viewer', () => {
   for (const change of [{ description: '' }, { imageUrls: ['javascript:bad'] }, { contentRating: 'mature' },
     { streamInfo: { isPayPerView: true } }, { streamInfo: { isLockContent: true, lockContentAmount: 1 } },

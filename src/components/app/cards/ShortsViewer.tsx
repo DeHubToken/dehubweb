@@ -1497,7 +1497,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   >
                     <VideoSlide
                       short={short}
-                      isActive={isActive && !isPaused}
+                      isActive={isActive && !isPaused && !isTransitioning && dragOffset === 0}
                       isMuted={isMuted}
                       playbackRate={playbackRate}
                       onTimeUpdate={isActive ? trackView : undefined}
