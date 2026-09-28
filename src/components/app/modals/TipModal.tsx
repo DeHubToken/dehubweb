@@ -18,6 +18,7 @@
  * "All" button can actually send.
  */
 
+import { emitPostTipped } from '@/lib/tip-events';
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation } from 'react-i18next';
@@ -115,6 +116,7 @@ export function TipModal({
         queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number | undefined) => (old || 0) + lastTipAmount);
         queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId], refetchType: 'none' });
       }
+      if (!commentId && resolvedTokenId) emitPostTipped(resolvedTokenId);
       setAmount('');
       onOpenChange(false);
     },
