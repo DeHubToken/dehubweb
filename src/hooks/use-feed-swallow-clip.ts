@@ -2,7 +2,7 @@ import { useContext, useEffect, type RefObject } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
 /** Themes whose sticky feed nav is a glass surface (pill or bento). */
-const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'system'];
+const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'system'];
 
 /**
  * Swallow scrolled feed content at the top edge of a sticky glass nav surface.

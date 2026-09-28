@@ -300,7 +300,11 @@ export function resolveThemeIconKey(src: string): ThemeIconKey | null {
 }
 
 /** Return a public, cacheable WebP URL when this theme owns the icon. */
-export function resolveThemeIconAsset(src: string, theme: string): string | null {
+/** Themes with no icon set of their own; they use the refreshed system icons. */
+const SYSTEM_ICON_THEMES = new Set(['island', 'hacker', 'horror']);
+
+export function resolveThemeIconAsset(src: string, requestedTheme: string): string | null {
+  const theme = SYSTEM_ICON_THEMES.has(requestedTheme) ? 'system' : requestedTheme;
   const key = resolveThemeIconKey(src);
   if (!key) return null;
   const extension = TRANSPARENT_PNG_KEYS.has(key) ? 'png' : 'webp';

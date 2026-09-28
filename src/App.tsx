@@ -93,6 +93,15 @@ const WinterSnow = React.lazy(() =>
 const LavaLampBackground = React.lazy(() =>
   import("@/components/app/LavaLampBackground").then(m => ({ default: m.LavaLampBackground }))
 );
+const IslandBackground = React.lazy(() =>
+  import("@/components/app/IslandBackground").then(m => ({ default: m.IslandBackground }))
+);
+const HackerBackground = React.lazy(() =>
+  import("@/components/app/HackerBackground").then(m => ({ default: m.HackerBackground }))
+);
+const HorrorBackground = React.lazy(() =>
+  import("@/components/app/HorrorBackground").then(m => ({ default: m.HorrorBackground }))
+);
 const WarBackground = React.lazy(() =>
   import("@/components/app/WarBackground").then(m => ({ default: m.WarBackground }))
 );
@@ -136,6 +145,9 @@ function ThemedBackgrounds({ preview = false }: { preview?: boolean }) {
       {theme === "swarms" && <SwarmsBackground />}
       {theme === "winter" && !preview && <WinterSnow />}
       {theme === "lavalamp" && <LavaLampBackground />}
+      {theme === "island" && <IslandBackground />}
+      {theme === "hacker" && <HackerBackground />}
+      {theme === "horror" && <HorrorBackground />}
       {theme === "war" && <WarBackground />}
       {theme === "war" && !preview && <WarPreloader />}
       {theme === "war" && !preview && <WarGameLauncher />}

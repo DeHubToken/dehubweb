@@ -2538,9 +2538,9 @@ const THEME_OPTIONS = [
   { value: 'war', labelKey: 'settings.war', available: true },
   { value: 'osaka', labelKey: 'settings.osaka', available: true },
   { value: 'jungle', labelKey: 'settings.jungle', available: true },
-  { value: 'island', labelKey: 'settings.island', available: false },
-  { value: 'hacker', labelKey: 'settings.hacker', available: false },
-  { value: 'horror', labelKey: 'settings.horror', available: false },
+  { value: 'island', labelKey: 'settings.island', available: true },
+  { value: 'hacker', labelKey: 'settings.hacker', available: true },
+  { value: 'horror', labelKey: 'settings.horror', available: true },
 ];
 
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
