@@ -61,7 +61,7 @@ export function StageMiniPlayer() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className="fixed bottom-20 md:bottom-4 right-4 z-50 select-none"
+      className="hidden lg:block fixed bottom-4 right-4 z-50 select-none"
       style={{ touchAction: 'none' }}
     >
       <div className="bg-black/40 backdrop-blur-[24px] border border-white/10 rounded-2xl shadow-2xl overflow-hidden min-w-[200px]">
