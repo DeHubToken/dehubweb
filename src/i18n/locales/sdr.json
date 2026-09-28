@@ -2790,8 +2790,61 @@
         "legend": {
           "name": "Legend",
           "hint": "Reach level ten."
+        },
+        "ignition": {
+          "name": "Ignition",
+          "hint": "Ek qualifying ghanta on air pahunch."
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "Das qualifying stream khatam kar."
+        },
+        "storyteller": {
+          "name": "Storyteller",
+          "hint": "Pachis qualifying stream khatam kar."
+        },
+        "broadcaster": {
+          "name": "Broadcaster",
+          "hint": "Sau qualifying stream khatam kar."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Sau qualifying stream khatam kar."
+        },
+        "enduring": {
+          "name": "Enduring",
+          "hint": "Ek session mein char qualifying ghanta stream kar."
+        },
+        "circle": {
+          "name": "Inner circle",
+          "hint": "Ek saath pachis logan ke dekhte huye rakho."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Ek saath sau logan ke dekhte huye rakho."
+        },
+        "headliner": {
+          "name": "Headliner",
+          "hint": "Ek saath sau logan ke dekhte huye rakho."
+        },
+        "cornerstone": {
+          "name": "Cornerstone",
+          "hint": "Chhabis hafton mein lagatar stream kar."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "250 qualifying ghanta on air pahunch."
+        },
+        "icon": {
+          "name": "Icon",
+          "hint": "Level bis pahunch."
         }
-      }
+      },
+      "chooseBadge": "Apna profile mein dikhane ke liye koi bhi unlocked badge chuno.",
+      "useBadge": "Badge use karo",
+      "selectedBadge": "Selected",
+      "savingBadge": "Badge save ho raha hai…",
+      "saveBadgeError": "Badge save nahi ho paya. Kripya dobara prayas karein."
     }
   },
   "goLive": {
@@ -3418,6 +3471,28 @@
     "play": "تشغيل",
     "pause": "إيقاف مؤقت",
     "hint": "اسحب للانحناء · اسحب حافة للتقشير · اضغط للذي يليه"
+  },
+  "streamerShowcase": {
+    "cardOf": "{{total}} में से कार्ड {{index}}",
+    "progress": "Your progress",
+    "goal": {
+      "streams": "{{current}} / {{target}} streams",
+      "hours": "{{current}} / {{target}} hours",
+      "session": "एक स्ट्रीम में {{current}} / {{target}} मिनट",
+      "streak": "{{current}} / {{target}} weeks",
+      "level": "Level {{current}} / {{target}}"
+    },
+    "onStream": "स्ट्रीम में होवेक से खुलेला",
+    "stats": {
+      "level": "Level",
+      "xp": "XP",
+      "hours": "Qualifying hours",
+      "streams": "Qualifying streams",
+      "longest": "Longest stream",
+      "streak": "Best streak"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} wk"
   },
   "liveGift": {
     "pickTier": "Pick a celebration",

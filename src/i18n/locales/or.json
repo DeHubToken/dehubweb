@@ -2802,8 +2802,61 @@
         "legend": {
           "name": "କିମ୍ବଦନ୍ତୀ",
           "hint": "କିନ୍ତୁ ସେ କହିଲେ yemiti huye 1st 1st."
+        },
+        "ignition": {
+          "name": "Ignition",
+          "hint": "ଏୟାରରେ ଗୋଟିଏ ଯୋଗ୍ୟ ଘଣ୍ଟା ପୂରଣ କରନ୍ତୁ।"
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "ଦଶଟି ଯୋଗ୍ୟ ଷ୍ଟ୍ରିମ୍ ଶେଷ କରନ୍ତୁ।"
+        },
+        "storyteller": {
+          "name": "Storyteller",
+          "hint": "ପଚିଶଟି ଯୋଗ୍ୟ ଷ୍ଟ୍ରିମ୍ ଶେଷ କରନ୍ତୁ।"
+        },
+        "broadcaster": {
+          "name": "Broadcaster",
+          "hint": "ପଚାଶଟି ଯୋଗ୍ୟ ଷ୍ଟ୍ରିମ୍ ଶେଷ କରନ୍ତୁ।"
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "ଏକଶହ ଯୋଗ୍ୟ ଷ୍ଟ୍ରିମ୍ ଶେଷ କରନ୍ତୁ।"
+        },
+        "enduring": {
+          "name": "Enduring",
+          "hint": "ଏକ ଅଧିବେଶନରେ ଚାରି ଯୋଗ୍ୟ ଘଣ୍ଟା ପାଇଁ ଷ୍ଟ୍ରିମ୍ କରନ୍ତୁ।"
+        },
+        "circle": {
+          "name": "Inner circle",
+          "hint": "ଏକ ସମୟରେ ପଚିଶ ଜଣଙ୍କୁ ଦେଖୁଥିବା ବେଳେ ରଖନ୍ତୁ।"
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "ଏକ ସମୟରେ ପଚାଶ ଜଣଙ୍କୁ ଦେଖୁଥିବା ବେଳେ ରଖନ୍ତୁ।"
+        },
+        "headliner": {
+          "name": "Headliner",
+          "hint": "ଏକ ସମୟରେ ଏକଶହ ଜଣଙ୍କୁ ଦେଖୁଥିବା ବେଳେ ରଖନ୍ତୁ।"
+        },
+        "cornerstone": {
+          "name": "Cornerstone",
+          "hint": "ସତାଇଶଟି କ୍ରମାଗତ ସପ୍ତାହରେ ଷ୍ଟ୍ରିମ୍ କରନ୍ତୁ।"
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "ଏୟାରରେ 250 ଯୋଗ୍ୟ ଘଣ୍ଟା ପୂରଣ କରନ୍ତୁ।"
+        },
+        "icon": {
+          "name": "Icon",
+          "hint": "ଲେଭଲ୍ 20 ରେ ପହଞ୍ଚନ୍ତୁ।"
         }
-      }
+      },
+      "chooseBadge": "ଆପଣଙ୍କ ପ୍ରୋଫାଇଲରେ ପ୍ରଦର୍ଶନ କରିବା ପାଇଁ ଯେକୌଣସି ଅନଲକ୍ ହୋଇଥିବା ବ୍ୟାଜ୍ ବାଛନ୍ତୁ।",
+      "useBadge": "Use badge",
+      "selectedBadge": "Selected",
+      "savingBadge": "Saving badge…",
+      "saveBadgeError": "ଆପଣଙ୍କ ବ୍ୟାଜ୍ ସେଭ୍ ହୋଇପାରିଲା ନାହିଁ। ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।"
     }
   },
   "goLive": {
@@ -3440,6 +3493,28 @@
     "play": "ଚଲାନ୍ତୁ",
     "pause": "ବିରତି",
     "hint": "ବଙ୍କା କରିବାକୁ ଟାଣନ୍ତୁ · ଛଡ଼ାଇବାକୁ ଧାର ଟାଣନ୍ତୁ · ପରବର୍ତ୍ତୀ ପାଇଁ ଟ୍ୟାପ୍ କରନ୍ତୁ"
+  },
+  "streamerShowcase": {
+    "cardOf": "କାର୍ଡ଼ {{index}} {{total}}",
+    "progress": "ଆପଣଙ୍କ ପ୍ରଗତି",
+    "goal": {
+      "streams": "{{current}} / {{target}} ଷ୍ଟ୍ରିମ୍",
+      "hours": "{{current}} / {{target}} ଘଣ୍ଟା",
+      "session": "{{current}} {{target}} min in one stream",
+      "streak": "{{current}} / {{target}} ସପ୍ତାହ",
+      "level": "ସ୍ତର {{current}} {{target}}"
+    },
+    "onStream": "ଯେତେବେଳେ ଏହା ପ୍ରବାହରେ ଘଟେ ସେତେବେଳେ ଏହାକୁ ଖୋଲନ୍ତୁ",
+    "stats": {
+      "level": "ସ୍ତର",
+      "xp": "XP",
+      "hours": "ଯୋଗ୍ୟତା ସମୟ",
+      "streams": "ଯୋଗ୍ୟତା ପ୍ରବାହ",
+      "longest": "ଦୀର୍ଘତମ ଧାରା",
+      "streak": "ଶ୍ରେଷ୍ଠ ପ୍ରବାହ"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} wk"
   },
   "liveGift": {
     "pickTier": "ଏକ ଉତ୍ସବ ବାଛନ୍ତୁ",

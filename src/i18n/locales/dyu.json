@@ -2761,8 +2761,52 @@
         "legend": {
           "name": "Legenda ka koo",
           "hint": "10. O ye kunkurunninw ye."
+        },
+        "ignition": {
+          "name": "Ignition"
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "Finish ten qualifying streams."
+        },
+        "storyteller": {
+          "name": "Storyteller",
+          "hint": "Finish twenty-five qualifying streams."
+        },
+        "broadcaster": {
+          "name": "Broadcaster",
+          "hint": "Finish fifty qualifying streams."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Finish one hundred qualifying streams."
+        },
+        "enduring": {
+          "name": "Enduring"
+        },
+        "circle": {
+          "name": "Inner circle"
+        },
+        "arena": {
+          "name": "Arena"
+        },
+        "headliner": {
+          "name": "Headliner"
+        },
+        "cornerstone": {
+          "name": "Cornerstone"
+        },
+        "veteran": {
+          "name": "Veteran"
+        },
+        "icon": {
+          "name": "Icon",
+          "hint": "Reach level twenty."
         }
-      }
+      },
+      "useBadge": "Use badge",
+      "selectedBadge": "Selected",
+      "savingBadge": "Saving badge…"
     }
   },
   "goLive": {
@@ -3383,6 +3427,28 @@
     "play": "A be to ka to ka to",
     "pause": "N' ye n' ka baara dabila",
     "hint": "O kɔ, a ye dɔ fara a ka fanga kan."
+  },
+  "streamerShowcase": {
+    "cardOf": "Kariti {{index}} ka {{total}}",
+    "progress": "An ka ɲɛtaga",
+    "goal": {
+      "streams": "{{current}} {{target}} streams",
+      "hours": "{{current}} {{target}} hrs",
+      "session": "{{current}} {{target}} min in one stream",
+      "streak": "{{current}} {{target}} weeks",
+      "level": "Level {{current}} / {{target}}"
+    },
+    "onStream": "O la, a tun be se ka kɛ ko a tun be to ka taga.",
+    "stats": {
+      "level": "Kala Lagaw Ya",
+      "xp": "Fɛɛn min be yen, o ye",
+      "hours": "Mɔgɔ minw be se ka kɛ lakɔli la",
+      "streams": "Kala Lagaw Ya",
+      "longest": "Jiijan",
+      "streak": "Fɛɛn min ka di mɔgɔ ye, o ye ka to ka to ka"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} wk"
   },
   "liveGift": {
     "pickTier": "Ka ɲanagwɛ kɛ",

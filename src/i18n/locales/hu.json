@@ -4542,8 +4542,61 @@
         "legend": {
           "name": "Jelmagyarázat",
           "hint": "Érd el a tízes szintet."
+        },
+        "ignition": {
+          "name": "Gyújtás",
+          "hint": "Érj el egy minősítő órát adásban."
+        },
+        "on-air": {
+          "name": "Adásban",
+          "hint": "Teljesíts tíz minősítő streamet."
+        },
+        "storyteller": {
+          "name": "Mesélő",
+          "hint": "Teljesíts huszonöt minősítő streamet."
+        },
+        "broadcaster": {
+          "name": "Műsorszóró",
+          "hint": "Teljesíts ötven minősítő streamet."
+        },
+        "centurion": {
+          "name": "Centurio",
+          "hint": "Teljesíts száz minősítő streamet."
+        },
+        "enduring": {
+          "name": "Kitartó",
+          "hint": "Streamelj négy minősítő órát egy menetben."
+        },
+        "circle": {
+          "name": "Belső kör",
+          "hint": "Legyen huszonöt néződ egyszerre."
+        },
+        "arena": {
+          "name": "Aréna",
+          "hint": "Legyen ötven néződ egyszerre."
+        },
+        "headliner": {
+          "name": "Főszereplő",
+          "hint": "Legyen száz néződ egyszerre."
+        },
+        "cornerstone": {
+          "name": "Alapkő",
+          "hint": "Streamelj huszonhat egymást követő héten."
+        },
+        "veteran": {
+          "name": "Veterán",
+          "hint": "Érj el 250 minősítő órát adásban."
+        },
+        "icon": {
+          "name": "Ikon",
+          "hint": "Érj el huszadik szintet."
         }
-      }
+      },
+      "chooseBadge": "Válassz bármilyen feloldott kitűzőt, hogy megjelenjen a profilodon.",
+      "useBadge": "Kitűző használata",
+      "selectedBadge": "Kiválasztva",
+      "savingBadge": "Mentés folyamatban…",
+      "saveBadgeError": "Nem sikerült elmenteni a kitűzőt. Kérlek, próbáld újra."
     }
   },
   "goLive": {
@@ -5546,6 +5599,28 @@
     "play": "Játék",
     "pause": "Szüneteltetés",
     "hint": "Húzza el a hajlításhoz · húzza meg az egyik szélét a hámozáshoz · koppintson a következőre"
+  },
+  "streamerShowcase": {
+    "cardOf": "{{total}}/{{index}}. kártya",
+    "progress": "Az előrehaladásod",
+    "goal": {
+      "streams": "{{current}} / {{target}} stream",
+      "hours": "{{current}} / {{target}} óra",
+      "session": "{{current}} / {{target}} perc egy adatfolyamban",
+      "streak": "{{current}} / {{target}} hét",
+      "level": "Szint {{current}} / {{target}}"
+    },
+    "onStream": "Feloldja a zárolást, amikor az adatfolyamban történik",
+    "stats": {
+      "level": "Szint",
+      "xp": "XP",
+      "hours": "Kvalifikációs órák",
+      "streams": "Minősített adatfolyamok",
+      "longest": "Leghosszabb adatfolyam",
+      "streak": "Legjobb széria"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} hét"
   },
   "liveGift": {
     "pickTier": "Válassz egy ünnepséget",

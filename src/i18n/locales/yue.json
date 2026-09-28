@@ -2848,8 +2848,61 @@
         "legend": {
           "name": "傳奇",
           "hint": "達到十級。"
+        },
+        "ignition": {
+          "hint": "達成一小時上線資格。",
+          "name": "點火"
+        },
+        "on-air": {
+          "hint": "完成十次符合資格的直播。",
+          "name": "直播中"
+        },
+        "storyteller": {
+          "hint": "完成二十五次符合資格的直播。",
+          "name": "講故佬"
+        },
+        "broadcaster": {
+          "hint": "完成五十次符合資格的直播。",
+          "name": "廣播人"
+        },
+        "centurion": {
+          "hint": "完成一百次符合資格的直播。",
+          "name": "百夫長"
+        },
+        "enduring": {
+          "hint": "一次會話中直播四小時符合資格。",
+          "name": "持久"
+        },
+        "circle": {
+          "hint": "同時有二十五人觀看。",
+          "name": "內圈"
+        },
+        "arena": {
+          "hint": "同時有五十人觀看。",
+          "name": "競技場"
+        },
+        "headliner": {
+          "hint": "同時有一百人觀看。",
+          "name": "壓軸"
+        },
+        "cornerstone": {
+          "hint": "連續二十六週直播。",
+          "name": "基石"
+        },
+        "veteran": {
+          "hint": "達成 250 小時上線資格。",
+          "name": "老手"
+        },
+        "icon": {
+          "hint": "達到二十級。",
+          "name": "偶像"
         }
-      }
+      },
+      "chooseBadge": "選擇任何已解鎖的徽章顯示在你的個人檔案上。",
+      "selectedBadge": "已選擇",
+      "savingBadge": "儲存徽章…",
+      "saveBadgeError": "無法儲存你的徽章。請再試一次。",
+      "useBadge": "用呢個徽章"
     }
   },
   "goLive": {
@@ -3498,6 +3551,28 @@
     "play": "玩",
     "pause": "暫停",
     "hint": "拖曳就可以彎曲 · 拉一個邊緣去剝落 · 撳一下就可以睇到下一個"
+  },
+  "streamerShowcase": {
+    "cardOf": "{{total}} 嘅卡片 {{index}}",
+    "progress": "你嘅進度",
+    "goal": {
+      "streams": "{{current}}/{{target}} 流",
+      "hours": "{{current}}/{{target}}小時",
+      "session": "{{current}} / {{target}} 一個流中嘅分鐘",
+      "streak": "{{current}}/{{target}} 星期",
+      "level": "等級 {{current}} / {{target}}"
+    },
+    "onStream": "當佢喺串流上面發生嗰陣解鎖",
+    "stats": {
+      "level": "級數",
+      "xp": "XP",
+      "hours": "預選時間",
+      "streams": "合格嘅流",
+      "longest": "最長嘅流",
+      "streak": "最好嘅連勝"
+    },
+    "hoursShort": "{{hours}} 小時",
+    "weeksShort": "{{count}} 星期"
   },
   "liveGift": {
     "pickTier": "揀一個慶祝活動",

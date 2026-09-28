@@ -2443,31 +2443,95 @@
       "recentTitle": "Recent streams",
       "card": {
         "first-light": {
-          "name": "First light"
+          "name": "First light",
+          "hint": "Finish your first stream weh e count."
         },
         "marathon": {
-          "name": "Marathon"
+          "name": "Marathon",
+          "hint": "Stream for two hour for one session."
         },
         "night-owl": {
-          "name": "Night owl"
+          "name": "Night owl",
+          "hint": "Finish stream between midnight and five for morning."
         },
         "regular": {
-          "name": "Regular"
+          "name": "Regular",
+          "hint": "Stream for four week dem back to back."
         },
         "iron-streak": {
-          "name": "Iron streak"
+          "name": "Iron streak",
+          "hint": "Stream for twelve week dem back to back."
         },
         "crowd": {
-          "name": "Crowd"
+          "name": "Crowd",
+          "hint": "Make ten people dem watch for same time."
         },
         "century": {
-          "name": "Century"
+          "name": "Century",
+          "hint": "Reach one hundred hour for air weh e count."
         },
         "legend": {
           "name": "Legend",
           "hint": "Reach level ten."
+        },
+        "ignition": {
+          "name": "Ignition",
+          "hint": "Reach one hour for air weh e count."
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "Finish ten qualifying streams."
+        },
+        "storyteller": {
+          "name": "Storyteller",
+          "hint": "Finish twenty-five qualifying streams."
+        },
+        "broadcaster": {
+          "name": "Broadcaster",
+          "hint": "Finish fifty qualifying streams."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Finish one hundred qualifying streams."
+        },
+        "enduring": {
+          "name": "Enduring",
+          "hint": "Stream for four hour weh e count for one session."
+        },
+        "circle": {
+          "name": "Inner circle",
+          "hint": "Make twenty-five people dem watch for one time."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Make fifty people dem watch for one time."
+        },
+        "headliner": {
+          "name": "Headliner",
+          "hint": "Make one hundred people dem watch for one time."
+        },
+        "cornerstone": {
+          "name": "Cornerstone",
+          "hint": "Stream for twenty-six week dem back to back."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "Reach 250 hour for air weh e count."
+        },
+        "icon": {
+          "name": "Icon",
+          "hint": "Reach level twenty."
         }
-      }
+      },
+      "useBadge": "Use badge",
+      "selectedBadge": "Selected",
+      "savingBadge": "Saving badge…",
+      "toNext": "{{minutes}} more minute weh e count for reach level {{level}}",
+      "rule": "Na only stream weh e run ten minute or pass, with at least one person weh e di watch, weh e go count for your level.",
+      "notCounted": "E no count",
+      "noStreams": "Go live for start collect XP.",
+      "chooseBadge": "Choose any badge weh you don open for show for your profile.",
+      "saveBadgeError": "We no fit save your badge. Try again abeg."
     }
   },
   "goLive": {
@@ -2987,6 +3051,28 @@
     "play": "Play",
     "pause": "Pause",
     "hint": "Drag for bend am · pull one side for peel am · tap for di next one"
+  },
+  "streamerShowcase": {
+    "cardOf": "Card {{index}} for {{total}}",
+    "progress": "Your progress",
+    "goal": {
+      "streams": "{{current}} / {{target}} streams",
+      "hours": "{{current}} / {{target}} hours",
+      "session": "{{current}} / {{target}} minute for one stream",
+      "streak": "{{current}} / {{target}} weeks",
+      "level": "Level {{current}} / {{target}}"
+    },
+    "onStream": "E go open when e happen for stream",
+    "stats": {
+      "level": "Level",
+      "xp": "XP",
+      "hours": "Qualifying hours",
+      "streams": "Qualifying streams",
+      "longest": "Longest stream",
+      "streak": "Best streak"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} wk"
   },
   "liveGift": {
     "pickTier": "Pick a celebration",

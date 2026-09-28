@@ -4349,8 +4349,61 @@
         "legend": {
           "name": "Angano",
           "hint": "Ny faritr'ora dia +10."
+        },
+        "ignition": {
+          "name": "Ignition",
+          "hint": "Mifanaraha amin’ny ora iray amin’ny efijery."
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "Mamarana folo fizarana mifanaraka."
+        },
+        "storyteller": {
+          "name": "Storyteller",
+          "hint": "Mamarana dimampolo sy dimy fizarana mifanaraka."
+        },
+        "broadcaster": {
+          "name": "Broadcaster",
+          "hint": "Mamarana dimampolo sy dimby fizarana mifanaraka."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Mamarana zato fizarana mifanaraka."
+        },
+        "enduring": {
+          "name": "Enduring",
+          "hint": "Mifampizara amin’ny ora efatra mifanaraka amin’ny fivoriana iray."
+        },
+        "circle": {
+          "name": "Inner circle",
+          "hint": "Manana olona dimampolo sy dimy mijery amin’ny fotoana iray."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Manana olona dimampolo sy dimby mijery amin’ny fotoana iray."
+        },
+        "headliner": {
+          "name": "Headliner",
+          "hint": "Manana olona zato mijery amin’ny fotoana iray."
+        },
+        "cornerstone": {
+          "name": "Cornerstone",
+          "hint": "Mifampizara amin’ny herinandro 26 mitohy."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "Mifanaraha amin’ny ora 250 amin’ny efijery."
+        },
+        "icon": {
+          "name": "Icon",
+          "hint": "Mifanaraha amin’ny ambaratonga 20."
         }
-      }
+      },
+      "chooseBadge": "Safidio izay marika voafantina haneho amin’ny mombamomba anao.",
+      "useBadge": "Use badge",
+      "selectedBadge": "Selected",
+      "savingBadge": "Saving badge…",
+      "saveBadgeError": "Tsy voatahiry ny mari-pahaizanao. Andramo indray."
     }
   },
   "goLive": {
@@ -5338,6 +5391,28 @@
     "play": "Alefa",
     "pause": "Atsaharo",
     "hint": "Sintona mba hiongana · sintonina ny sisiny mba hifosaka · kitiho mba hahazo ny manaraka"
+  },
+  "streamerShowcase": {
+    "cardOf": "TAPAKA {{index}} {{total}}",
+    "progress": "Ny fivoaranao",
+    "goal": {
+      "streams": "{{current}}{{target}} streams",
+      "hours": "{{current}} {{target}} hours",
+      "session": "{{current}} {{target}} min ho an'ny tosaka iray monja",
+      "streak": "{{current}} /{{target}} herinandro",
+      "level": "Ambaratonga {{current}} {{target}}"
+    },
+    "onStream": "Manafaka ilay rojom-panalahidy raha toa ka mihatra amin'ilay tosaka izany",
+    "stats": {
+      "level": "Tarehimarika",
+      "xp": "XP",
+      "hours": "Fahaizana ora",
+      "streams": "CURRENT",
+      "longest": "Ilay tosaka lava indrindra",
+      "streak": "Tsara indrindra Streak"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} wk"
   },
   "liveGift": {
     "pickTier": "Misafidiana lanonana",

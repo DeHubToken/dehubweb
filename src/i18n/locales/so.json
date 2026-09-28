@@ -2849,8 +2849,61 @@
         "legend": {
           "name": "Halyeey",
           "hint": "Darajada 10aad."
+        },
+        "ignition": {
+          "name": "Damiin",
+          "hint": "Gaar hal saac oo u qalma oo hawada ah."
+        },
+        "on-air": {
+          "name": "Hawada",
+          "hint": "Dhameystir toban qulqul oo u qalma."
+        },
+        "storyteller": {
+          "name": "Sheeko-yaqaan",
+          "hint": "Dhameystir labaatan iyo shan qulqul oo u qalma."
+        },
+        "broadcaster": {
+          "name": "War-faafiye",
+          "hint": "Dhameystir konton qulqul oo u qalma."
+        },
+        "centurion": {
+          "name": "Boqol-jir",
+          "hint": "Dhameystir boqol qulqul oo u qalma."
+        },
+        "enduring": {
+          "name": "Joogto",
+          "hint": "Qulqul afar saacadood oo u qalma hal fadhi."
+        },
+        "circle": {
+          "name": "Geeska gudaha",
+          "hint": "Labaatan iyo shan qof oo daawanaya hal mar."
+        },
+        "arena": {
+          "name": "Garoon",
+          "hint": "Labaatan iyo shan qof oo daawanaya hal mar."
+        },
+        "headliner": {
+          "name": "Madax-kooxeed",
+          "hint": "Boqol qof oo daawanaya hal mar."
+        },
+        "cornerstone": {
+          "name": "Dabool",
+          "hint": "Qulqul lix iyo labaatan toddobaad oo isku xigta."
+        },
+        "veteran": {
+          "name": "Dagaalyahan",
+          "hint": "Gaar 250 saacadood oo u qalma oo hawada ah."
+        },
+        "icon": {
+          "name": "Astaam",
+          "hint": "Gaar heerka labaatanaad."
         }
-      }
+      },
+      "chooseBadge": "Xulo astaamo kasta oo furan si aad ugu muujiso astaantaada.",
+      "useBadge": "Isticmaal astaam",
+      "selectedBadge": "La doortay",
+      "savingBadge": "Kaydinaya astaam…",
+      "saveBadgeError": "Aan ku guuleysan inaan keydiyo astaantaada. Fadlan mar kale isku day."
     }
   },
   "goLive": {
@@ -3491,6 +3544,28 @@
     "play": "Ciyaar",
     "pause": "Jooji",
     "hint": "Ku jiid si aad u bend · jiid gees ah si aad u peel · taabo mid ka mid ah soo socda"
+  },
+  "streamerShowcase": {
+    "cardOf": "Kaarka {{index}} ee {{total}}",
+    "progress": "Horumarkaaga",
+    "goal": {
+      "streams": "{{current}} /{{target}} durdurrada",
+      "hours": "{{current}} / {{target}} saacadaha",
+      "session": "{{current}}/{{target}} min hal durdur",
+      "streak": "{{current}} / {{target}} weeks",
+      "level": "Heerka {{current}} / {{target}}"
+    },
+    "onStream": "Fureyso marka ay dhacdo qulqulka",
+    "stats": {
+      "level": "Heerka",
+      "xp": "XP",
+      "hours": "Saacadaha u qalmida",
+      "streams": "Wabiyada u qalma",
+      "longest": "Wabiga ugu dheer",
+      "streak": "Isbedelka Streak ugu fiican"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} wk"
   },
   "liveGift": {
     "pickTier": "U dooro dabaaldeg",

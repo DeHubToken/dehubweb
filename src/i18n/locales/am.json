@@ -2796,8 +2796,60 @@
         "legend": {
           "name": "አፈ ታሪክ",
           "hint": "ደረጃ አስር ይድረሱ."
+        },
+        "ignition": {
+          "hint": "አንድ ብቁ ሰዓት በአየር ላይ ይድረሱ።"
+        },
+        "on-air": {
+          "name": "በአየር ላይ",
+          "hint": "አስር ብቁ ዥረቶችን ጨርስ።"
+        },
+        "storyteller": {
+          "name": "አንባቢ",
+          "hint": "ሃያ አምስት ብቁ ዥረቶችን ጨርስ።"
+        },
+        "broadcaster": {
+          "name": "አሰራጭ",
+          "hint": "ሃምሳ ብቁ ዥረቶችን ጨርስ።"
+        },
+        "centurion": {
+          "name": "መቶ አለቃ",
+          "hint": "መቶ ብቁ ዥረቶችን ጨርስ።"
+        },
+        "enduring": {
+          "name": "ዘላቂ",
+          "hint": "በአንድ ክፍለ ጊዜ ለአራት ብቁ ሰዓታት ዥረት ይላኩ።"
+        },
+        "circle": {
+          "name": "ውስጠኛው ክበብ",
+          "hint": "ሃያ አምስት ሰዎች በአንድ ጊዜ እንዲመለከቱ ያድርጉ።"
+        },
+        "arena": {
+          "name": "መድረክ",
+          "hint": "ሃምሳ ሰዎች በአንድ ጊዜ እንዲመለከቱ ያድርጉ።"
+        },
+        "headliner": {
+          "name": "ዋና ዜና",
+          "hint": "መቶ ሰዎች በአንድ ጊዜ እንዲመለከቱ ያድርጉ።"
+        },
+        "cornerstone": {
+          "name": "የማዕዘን ድንጋይ",
+          "hint": "ሃያ ስድስት ተከታታይ ሳምንታት ዥረት ይላኩ።"
+        },
+        "veteran": {
+          "name": "ጡረተኛ",
+          "hint": "በአየር ላይ 250 ብቁ ሰዓታት ይድረሱ።"
+        },
+        "icon": {
+          "name": "አርማ",
+          "hint": "ደረጃ ሃያ ይድረሱ።"
         }
-      }
+      },
+      "chooseBadge": "በመገለጫዎ ላይ ለማሳየት ያልተከፈተ ማንኛውንም ባጅ ይምረጡ።",
+      "useBadge": "ባጅ ተጠቀም",
+      "selectedBadge": "ተመርጧል",
+      "savingBadge": "ባጅ በማስቀመጥ ላይ…",
+      "saveBadgeError": "ባጅዎን ማስቀመጥ አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
     }
   },
   "goLive": {
@@ -3382,6 +3434,28 @@
     "play": "አጫውት",
     "pause": "እረፍት",
     "hint": "ለመጎተት ይጎትቱ · ጠርዝ ወደ ፒል ይጎትቱ · ለቀጣዩ መታ ያድርጉ"
+  },
+  "streamerShowcase": {
+    "cardOf": "ካርድ {{index}} ከ{{total}}",
+    "progress": "የእርስዎ እድገት",
+    "goal": {
+      "streams": "{{current}} / {{target}} ዥረቶች",
+      "hours": "{{current}} / {{target}} ሰዓቶች",
+      "session": "{{current}} / {{target}} min በአንድ ዥረት ውስጥ",
+      "streak": "{{current}} / {{target}} ሳምንቶች",
+      "level": "ደረጃ {{current}} / {{target}}"
+    },
+    "onStream": "በዥረት ላይ ሲከሰት ይከፍታል",
+    "stats": {
+      "level": "ደረጃ",
+      "xp": "XP",
+      "hours": "የብቃት ሰዓቶች",
+      "streams": "ብቃት ያላቸው ጅረቶች",
+      "longest": "ረዥሙ ዥረት",
+      "streak": "ምርጥ streak"
+    },
+    "hoursShort": "{{hours}} ሸ",
+    "weeksShort": "{{count}} ሳምንት"
   },
   "liveGift": {
     "ttsLabel": "ጮክ ብለህ የሆነ ነገር ተናገር",

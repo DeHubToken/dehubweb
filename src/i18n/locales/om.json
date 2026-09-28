@@ -2829,26 +2829,26 @@
       "title": "Sadarkaa Streamer",
       "xp": "{{xp}} XP",
       "toNext": "{{minutes}} daqiiqaawwan ulaagaa dabalataa sadarkaa {{level}}",
-      "rule": "Yoo xiqqaate daawwataa tokko waliin daqiiqaa kudhan fi isaa ol kan fiigan qofti gara sadarkaa keetii lakkaa&#39;ama.",
+      "rule": "Yoo xiqqaate daawwataa tokko waliin daqiiqaa kudhan fi isaa ol kan fiigan qofti gara sadarkaa keetii lakkaa'ama.",
       "streak": "{{count}} torbee walitti aansuun",
       "bestStreak": "Tartiiba gaarii {{count}} torban",
-      "hours": "{{hours}} sa&#39;aatii ulaagaa guutuu",
+      "hours": "{{hours}} sa'aatii ulaagaa guutuu",
       "viewers": "{{count}} daawwattoota",
       "viewCards": "Kaardii ilaali",
       "cardsTitle": "Kaardii walitti qabamuu danda’u",
       "locked": "Cufamee jira",
       "earnedOn": "{{date}} argate.",
-      "recentTitle": "Dhangala&#39;aa dhiheenya kanaa",
-      "notCounted": "Hin lakkaa&#39;amne",
+      "recentTitle": "Dhangala'aa dhiheenya kanaa",
+      "notCounted": "Hin lakkaa'amne",
       "noStreams": "XP argachuu jalqabuuf live deemaa.",
       "card": {
         "first-light": {
           "name": "Macaafni jalqabaa",
-          "hint": "Dhangala&#39;aa kee isa jalqabaa kan lakkaa&#39;amu xumuri."
+          "hint": "Dhangala'aa kee isa jalqabaa kan lakkaa'amu xumuri."
         },
         "marathon": {
           "name": "Maraatoonii",
-          "hint": "Kutaa tokko keessatti sa&#39;aatii lamaaf tamsaasu."
+          "hint": "Kutaa tokko keessatti sa'aatii lamaaf tamsaasu."
         },
         "night-owl": {
           "name": "Owwii halkanii",
@@ -2856,7 +2856,7 @@
         },
         "regular": {
           "name": "Idilee",
-          "hint": "Torban afur walitti aansuun tamsa&#39;aa."
+          "hint": "Torban afur walitti aansuun tamsa'aa."
         },
         "iron-streak": {
           "name": "Aduu qola",
@@ -2873,8 +2873,63 @@
         "legend": {
           "name": "Aduu",
           "hint": "Lakkofsa 10 gahi."
+        },
+        "ignition": {
+          "name": "Iginishinii",
+          "hint": "Sa'aatii tokko qofaa ta'uu irratti argachuun."
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "Streamii qofaa ta'an kudhan xumuruu."
+        },
+        "storyteller": {
+          "name": "Aduunyaa dubbatuu",
+          "hint": "Streamii qofaa ta'an digdamii shan xumuruu."
+        },
+        "broadcaster": {
+          "name": "Baraa'aa",
+          "hint": "Streamii qofaa ta'an kumamaa xumuruu."
+        },
+        "centurion": {
+          "name": "Kentaayirii",
+          "hint": "Streamii qofaa ta'an dhibba tokko xumuruu."
+        },
+        "enduring": {
+          "name": "Duraa",
+          "hint": "Sa'aatii afur qofaa ta'uu tokko irratti stream godhuu."
+        },
+        "circle": {
+          "name": "Mootummaa keessoo",
+          "hint": "Namoota digdamii shan yoo walitti ilaalan."
+        },
+        "arena": {
+          "name": "Areennaa",
+          "hint": "Namoota kumamaa yoo walitti ilaalan."
+        },
+        "headliner": {
+          "name": "Guddaa",
+          "hint": "Namoota dhibba tokko yoo walitti ilaalan."
+        },
+        "cornerstone": {
+          "name": "Kaarstonee",
+          "hint": "Streamii torban digdamaa ja'a irra deddeebiin godhuu."
+        },
+        "veteran": {
+          "name": "Jiraataa",
+          "hint": "Sa'aatii 250 qofaa ta'uu irratti argachuun."
+        },
+        "icon": {
+          "name": "Aayikoonii",
+          "hint": "Leval digdamaa gahuu."
         }
-      }
+      },
+      "level": "Leval {{level}}",
+      "minutes": "{{count}} daqiiqaa",
+      "chooseBadge": "Aduunyaa banamte kamiyyuu filadhuu fuula kee irratti agarsiisi.",
+      "useBadge": "Aduunyaa fayyadami",
+      "selectedBadge": "Filatame",
+      "savingBadge": "Aduunyaa kuusuu...",
+      "saveBadgeError": "Baajii keessan qusachuu hin dandeenye. Mee irra deebi'ii yaalaa."
     }
   },
   "goLive": {
@@ -3514,6 +3569,28 @@
     "play": "Taphachuu",
     "pause": "Gidduutti dhaabuu",
     "hint": "Harkisaa gara qaxxaamuruu · qarqara tokko harkisuudhaan gogaa · isa itti aanuuf tuquu"
+  },
+  "streamerShowcase": {
+    "cardOf": "Kaardii {{index}} kan {{total}}",
+    "progress": "Guddina kee",
+    "goal": {
+      "streams": "{{current}} / {{target}} dhaamsa",
+      "hours": "{{current}} / {{target}} sa'aatii",
+      "session": "{{current}} / {{target}} daqiiqaa tamsaasa tokko keessatti",
+      "streak": "{{current}} / {{target}} torbanitti",
+      "level": "Sadarkaa {{current}} / {{target}}"
+    },
+    "onStream": "Yeroo stream irratti ta'u ni bana",
+    "stats": {
+      "level": "Sadarkaa",
+      "xp": "XP",
+      "hours": "Sa'aatii ulaagaa guutuu",
+      "streams": "Sululawwan ulaagaa guutan",
+      "longest": "Sulula dheeraa",
+      "streak": "Guddaa cimaa"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} wk"
   },
   "liveGift": {
     "pickTier": "Abaabii filadhu",

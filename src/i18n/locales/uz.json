@@ -2873,9 +2873,62 @@
         },
         "legend": {
           "name": "Afsona",
-          "hint": "O&#39;ninchi darajaga yeting."
+          "hint": "Oʻninchi darajaga yeting."
+        },
+        "ignition": {
+          "name": "Ignition",
+          "hint": "Havoda bitta mos keluvchi soatga erishing."
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "O'nta mos keluvchi translyatsiyani yakunlang."
+        },
+        "storyteller": {
+          "name": "Storyteller",
+          "hint": "Yigirma besh mos keluvchi translyatsiyani yakunlang."
+        },
+        "broadcaster": {
+          "name": "Broadcaster",
+          "hint": "Ellik mos keluvchi translyatsiyani yakunlang."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Bir yuz mos keluvchi translyatsiyani yakunlang."
+        },
+        "enduring": {
+          "name": "Enduring",
+          "hint": "Bir sessiyada to‘rt mos keluvchi soat davomida translyatsiya qiling."
+        },
+        "circle": {
+          "name": "Inner circle",
+          "hint": "Bir vaqtning o‘zida yigirma besh kishi tomosha qilayotgan bo‘lsin."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Bir vaqtning o‘zida ellik kishi tomosha qilayotgan bo‘lsin."
+        },
+        "headliner": {
+          "name": "Headliner",
+          "hint": "Bir vaqtning o‘zida bir yuz kishi tomosha qilayotgan bo‘lsin."
+        },
+        "cornerstone": {
+          "name": "Cornerstone",
+          "hint": "Yigirma olti ketma‑ketik hafta davomida translyatsiya qiling."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "Havoda 250 mos keluvchi soatga erishing."
+        },
+        "icon": {
+          "name": "Icon",
+          "hint": "Yigirma darajaga erishing."
         }
-      }
+      },
+      "chooseBadge": "Profilingizda ko‘rsatish uchun har qanday ochilgan ro‘ynatni tanlang.",
+      "useBadge": "Use badge",
+      "selectedBadge": "Selected",
+      "savingBadge": "Saving badge…",
+      "saveBadgeError": "Nishoningizni saqlab boʻlmadi. Qayta urinib koʻring."
     }
   },
   "goLive": {
@@ -3517,6 +3570,28 @@
     "play": "Ijro etish",
     "pause": "Pauza",
     "hint": "Bükmek uchun sudrang · chekkasini tortib oling · keyingisini olish uchun bosing"
+  },
+  "streamerShowcase": {
+    "cardOf": "{{total}} tadan {{index}}-karta",
+    "progress": "Sizning taraqqiyotingiz",
+    "goal": {
+      "streams": "{{current}} / {{target}} oqimlari",
+      "hours": "{{current}} / {{target}} soat",
+      "session": "bitta oqimda {{current}} / {{target}} daqiqa",
+      "streak": "{{current}} / {{target}} haftalar",
+      "level": "Daraja {{current}} / {{target}}"
+    },
+    "onStream": "Striming paytida qulfdan chiqariladi",
+    "stats": {
+      "level": "Daraja",
+      "xp": "XP",
+      "hours": "Saralash soatlari",
+      "streams": "Saralash bosqichidagi oqimlar",
+      "longest": "Eng uzun oqim",
+      "streak": "Eng yaxshi seriya"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} hafta"
   },
   "liveGift": {
     "pickTier": "Bir bayramni tanlang",

@@ -2827,8 +2827,61 @@
         "legend": {
           "name": "Legende",
           "hint": "Erreich Level zäh."
+        },
+        "ignition": {
+          "name": "Zündig",
+          "hint": "Erreichsch äni qualifizierendi Stund uf em Schirm."
+        },
+        "on-air": {
+          "name": "Uf em Schirm",
+          "hint": "Machsch zeh qualifizierendi Streams."
+        },
+        "storyteller": {
+          "name": "Erzähler",
+          "hint": "Machsch füüfundzwanzig qualifizierendi Streams."
+        },
+        "broadcaster": {
+          "name": "Sender",
+          "hint": "Machsch füüfzig qualifizierendi Streams."
+        },
+        "centurion": {
+          "name": "Zenturio",
+          "hint": "Machsch hundert qualifizierendi Streams."
+        },
+        "enduring": {
+          "name": "Uushaltend",
+          "hint": "Schteame vier qualifizierendi Stund i dimä Session."
+        },
+        "circle": {
+          "name": "Innere Chreis",
+          "hint": "Hesch füüfundzwanzig Lüüt, wo glichzitig zuelueged."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Hesch füüfzig Lüüt, wo glichzitig zuelueged."
+        },
+        "headliner": {
+          "name": "Uusverchouft",
+          "hint": "Hesch hundert Lüüt, wo glichzitig zuelueged."
+        },
+        "cornerstone": {
+          "name": "Grundstein",
+          "hint": "Schteame zwanzig-sechs Woche hingerenand."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "Erreichsch 250 qualifizierendi Stund uf em Schirm."
+        },
+        "icon": {
+          "name": "Ikone",
+          "hint": "Erreichsch Level zwanzig."
         }
-      }
+      },
+      "chooseBadge": "Wählsch äs freigschaltets Abzeiche zum uf dim Profil zeige.",
+      "useBadge": "Abzeiche bruuche",
+      "selectedBadge": "Uusgwählt",
+      "savingBadge": "Abzeiche wird gspeichered…",
+      "saveBadgeError": "Hät nid chönne din Abzeiche spichere. Versuechsch es no mal."
     }
   },
   "goLive": {
@@ -3477,6 +3530,28 @@
     "play": "Abspiele",
     "pause": "Pause",
     "hint": "Ziehe zum boge · Rand ziehe zum abziehe · tippe für s'nächschte"
+  },
+  "streamerShowcase": {
+    "cardOf": "Chärtli {{index}} vo {{total}}",
+    "progress": "Dini Fortschritti",
+    "goal": {
+      "streams": "{{current}} / {{target}} Streams",
+      "hours": "{{current}} / {{target}} Stundä",
+      "session": "{{current}} / {{target}} Min. i dimene Stream",
+      "streak": "{{current}} / {{target}} Wuchä",
+      "level": "Level {{current}} / {{target}}"
+    },
+    "onStream": "Schaltet frei, wenn's im Stream passiert",
+    "stats": {
+      "level": "Level",
+      "xp": "XP",
+      "hours": "Qualifizierendi Stundä",
+      "streams": "Qualifizierendi Streams",
+      "longest": "Längschti Stream",
+      "streak": "Beschti Serie"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} Wuchä"
   },
   "liveGift": {
     "pickTier": "Wähle es Fäscht",

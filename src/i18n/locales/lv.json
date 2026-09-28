@@ -4581,8 +4581,61 @@
         "legend": {
           "name": "Apzīmējumi",
           "hint": "Sasniedziet desmito līmeni."
+        },
+        "ignition": {
+          "name": "Aizdedze",
+          "hint": "Sasniegt vienu kvalificējošu stundu ēterā."
+        },
+        "on-air": {
+          "name": "Ēterā",
+          "hint": "Pabeigt desmit kvalificējošas straumes."
+        },
+        "storyteller": {
+          "name": "Stāstnieks",
+          "hint": "Pabeigt divdesmit piecas kvalificējošas straumes."
+        },
+        "broadcaster": {
+          "name": "Straumētājs",
+          "hint": "Pabeigt piecdesmit kvalificējošas straumes."
+        },
+        "centurion": {
+          "name": "Centurionam",
+          "hint": "Pabeigt simts kvalificējošas straumes."
+        },
+        "enduring": {
+          "name": "Izturīgs",
+          "hint": "Straumei četras kvalificējošas stundas vienā sesijā."
+        },
+        "circle": {
+          "name": "Iekšējais loks",
+          "hint": "Vienlaicīgi skatās divdesmit pieci cilvēki."
+        },
+        "arena": {
+          "name": "Arēna",
+          "hint": "Vienlaicīgi skatās piecdesmit cilvēki."
+        },
+        "headliner": {
+          "name": "Galvenais mākslinieks",
+          "hint": "Vienlaicīgi skatās simts cilvēki."
+        },
+        "cornerstone": {
+          "name": "Pamatakmens",
+          "hint": "Straumei divdesmit sešas nedēļas pēc kārtas."
+        },
+        "veteran": {
+          "name": "Veterāns",
+          "hint": "Sasniegt 250 kvalificējošas stundas ēterā."
+        },
+        "icon": {
+          "name": "Ikona",
+          "hint": "Sasniegt divdesmito līmeni."
         }
-      }
+      },
+      "chooseBadge": "Izvēlieties jebkuru atbloķēto emblēmu, lai parādītu to savā profilā.",
+      "useBadge": "Lietot emblēmu",
+      "selectedBadge": "Izvēlēts",
+      "savingBadge": "Saglabā emblēmu…",
+      "saveBadgeError": "Neizdevās saglabāt emblēmu. Lūdzu, mēģiniet vēlreiz."
     }
   },
   "goLive": {
@@ -5636,6 +5689,28 @@
     "play": "Atskaņot",
     "pause": "Apturēt",
     "hint": "Velciet, lai saliektu · pavelciet malu, lai nolobītos · pieskarieties nākamajam"
+  },
+  "streamerShowcase": {
+    "cardOf": "Karte {{index}} no {{total}}",
+    "progress": "Jūsu progress",
+    "goal": {
+      "streams": "{{current}} / {{target}} straumes",
+      "hours": "{{current}} / {{target}} stundas",
+      "session": "{{current}} / {{target}} min vienā plūsmā",
+      "streak": "{{current}} / {{target}} nedēļas",
+      "level": "Līmenis {{current}} / {{target}}"
+    },
+    "onStream": "Atbloķē, kad tas notiek straumē",
+    "stats": {
+      "level": "Līmenis",
+      "xp": "XP",
+      "hours": "Kvalifikācijai atbilstošās stundas",
+      "streams": "Kvalificētās straumes",
+      "longest": "Garākā straume",
+      "streak": "Labākā sērija"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} ned."
   },
   "liveGift": {
     "pickTier": "Izvēlieties svinības",

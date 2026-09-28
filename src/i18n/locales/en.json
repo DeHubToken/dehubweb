@@ -5716,6 +5716,28 @@
     "pause": "Pause",
     "hint": "Drag to bend · pull an edge to peel · tap for the next one"
   },
+  "streamerShowcase": {
+    "cardOf": "Card {{index}} of {{total}}",
+    "progress": "Your progress",
+    "goal": {
+      "streams": "{{current}} / {{target}} streams",
+      "hours": "{{current}} / {{target}} hours",
+      "session": "{{current}} / {{target}} min in one stream",
+      "streak": "{{current}} / {{target}} weeks",
+      "level": "Level {{current}} / {{target}}"
+    },
+    "onStream": "Unlocks when it happens on stream",
+    "stats": {
+      "level": "Level",
+      "xp": "XP",
+      "hours": "Qualifying hours",
+      "streams": "Qualifying streams",
+      "longest": "Longest stream",
+      "streak": "Best streak"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} wk"
+  },
   "liveGift": {
     "pickTier": "Pick a celebration",
     "plays": "Plays {{tier}} on the stream",

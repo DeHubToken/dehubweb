@@ -2846,8 +2846,61 @@
         "legend": {
           "name": "Sagn",
           "hint": "Nå nivå ti."
+        },
+        "ignition": {
+          "name": "Tenningssystem",
+          "hint": "Oppnå én kvalifiserende time på lufta."
+        },
+        "on-air": {
+          "name": "På lufta",
+          "hint": "Fullfør ti kvalifiserende sendinger."
+        },
+        "storyteller": {
+          "name": "Historieforteller",
+          "hint": "Fullfør tjuefem kvalifiserende sendinger."
+        },
+        "broadcaster": {
+          "name": "Sender",
+          "hint": "Fullfør femti kvalifiserende sendinger."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Fullfør hundre kvalifiserende sendinger."
+        },
+        "enduring": {
+          "name": "Utholdende",
+          "hint": "Send i fire kvalifiserende timer i én økt."
+        },
+        "circle": {
+          "name": "Indre sirkel",
+          "hint": "Ha tjuefem personer som ser på samtidig."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Ha femti personer som ser på samtidig."
+        },
+        "headliner": {
+          "name": "Hovednavn",
+          "hint": "Ha hundre personer som ser på samtidig."
+        },
+        "cornerstone": {
+          "name": "Hjørnestein",
+          "hint": "Send i tjueseks sammenhengende uker."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "Oppnå 250 kvalifiserende timer på lufta."
+        },
+        "icon": {
+          "name": "Ikon",
+          "hint": "Nå nivå tjue."
         }
-      }
+      },
+      "chooseBadge": "Velg et hvilket som helst ulåst merke å vise på profilen din.",
+      "useBadge": "Bruk merke",
+      "selectedBadge": "Valgt",
+      "savingBadge": "Lagrer merke…",
+      "saveBadgeError": "Kunne ikke lagre merket ditt. Prøv igjen."
     }
   },
   "goLive": {
@@ -3486,6 +3539,28 @@
     "play": "Spille",
     "pause": "Pause",
     "hint": "Dra for å bøye · dra i en kant for å skrelle · trykk for neste"
+  },
+  "streamerShowcase": {
+    "cardOf": "Kort {{index}} av {{total}}",
+    "progress": "Din fremgang",
+    "goal": {
+      "streams": "{{current}} / {{target}} strømmer",
+      "hours": "{{current}} / {{target}} timer",
+      "session": "{{current}} / {{target}} min i én strøm",
+      "streak": "{{current}} / {{target}} uker",
+      "level": "Nivå {{current}} / {{target}}"
+    },
+    "onStream": "Låses opp når det skjer på strømming",
+    "stats": {
+      "level": "Nivå",
+      "xp": "XP",
+      "hours": "Kvalifiserende timer",
+      "streams": "Kvalifiserende strømmer",
+      "longest": "Lengste strøm",
+      "streak": "Beste rekke"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} uke"
   },
   "liveGift": {
     "pickTier": "Velg en feiring",

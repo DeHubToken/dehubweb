@@ -4609,8 +4609,61 @@
         "legend": {
           "name": "传奇",
           "hint": "达到十级。"
+        },
+        "ignition": {
+          "name": "点火",
+          "hint": "在直播中累积一小时合格时长。"
+        },
+        "on-air": {
+          "name": "直播中",
+          "hint": "完成十个合格直播。"
+        },
+        "storyteller": {
+          "name": "故事讲述者",
+          "hint": "完成二十五个合格直播。"
+        },
+        "broadcaster": {
+          "name": "广播员",
+          "hint": "完成五十个合格直播。"
+        },
+        "centurion": {
+          "name": "百夫长",
+          "hint": "完成一百个合格直播。"
+        },
+        "enduring": {
+          "name": "持久",
+          "hint": "单次直播四小时合格时长。"
+        },
+        "circle": {
+          "name": "核心圈",
+          "hint": "同时观看人数达到二十五人。"
+        },
+        "arena": {
+          "name": "竞技场",
+          "hint": "同时观看人数达到五十人。"
+        },
+        "headliner": {
+          "name": "领衔",
+          "hint": "同时观看人数达到一百人。"
+        },
+        "cornerstone": {
+          "name": "基石",
+          "hint": "连续二十六周进行直播。"
+        },
+        "veteran": {
+          "name": "老兵",
+          "hint": "在直播中累积二百五十小时合格时长。"
+        },
+        "icon": {
+          "name": "偶像",
+          "hint": "达到二十级。"
         }
-      }
+      },
+      "chooseBadge": "选择任意已解锁的徽章显示在您的个人资料上。",
+      "useBadge": "使用徽章",
+      "selectedBadge": "已选择",
+      "savingBadge": "正在保存徽章…",
+      "saveBadgeError": "无法保存您的徽章。请重试。"
     }
   },
   "goLive": {
@@ -5665,6 +5718,28 @@
     "play": "播放",
     "pause": "暂停",
     "hint": "拖动以弯曲·拉动边缘以剥离·轻触以进行下一个"
+  },
+  "streamerShowcase": {
+    "cardOf": "第{{index}}张卡，共{{total}}张",
+    "progress": "您的进度",
+    "goal": {
+      "streams": "{{current}}/{{target}}个流",
+      "hours": "{{current}}/{{target}}小时",
+      "session": "单流{{current}}/{{target}}分钟",
+      "streak": "{{current}}/{{target}}周",
+      "level": "等级{{current}}/{{target}}"
+    },
+    "onStream": "在直播中解锁",
+    "stats": {
+      "level": "级别",
+      "xp": "XP",
+      "hours": "符合条件的营业时间",
+      "streams": "符合条件的流",
+      "longest": "最长流",
+      "streak": "最佳连胜"
+    },
+    "hoursShort": "{{hours}} 小时",
+    "weeksShort": "{{count}}周"
   },
   "liveGift": {
     "pickTier": "选择一个庆祝活动",
