@@ -2635,7 +2635,6 @@
     "transferGuarantee": "تحصل على الحساب بالكامل — المقبض، المنشورات، المتابعون، سجل النصائح، وحقوق الشارات. يحتفظ البائع بمحفظته وكل ما فيها. يتم تشغيل التحويل فقط بعد أن يقرأ DeHub دفعة الرمز المميز الخاصة بك مرة أخرى من السلسلة؛ إذا تمت مقاطعتها، فإن إعادة محاولة الشراء تستأنفها."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "يدفع المشترون مبلغ توكن DeHub المعروض بالسعر قبل الإدراج. تتلقى قيمة الدولار الأمريكي كرصيد USDT.",
     "legacyPlanMigrates": "الهجرة للتوفير تنقل هذه الخطة القديمة المسعرة بالتوكن إلى تسعير الدولار بالسعر قبل الإدراج.",
     "tokenAmount": "{{amount}} توكن",
     "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
@@ -2666,7 +2665,6 @@
     "publish": "انشر",
     "confirmSubscription": "أكد الاشتراك",
     "planPrice": "سعر الخطة",
-    "youPayInclFee": "أنت تدفع (بما فيها رسوم المنصة)",
     "calculating": "قيد الحساب…",
     "cancel": "إلغاء",
     "confirm": "تأكيد",
@@ -2746,7 +2744,23 @@
     "withdrawableSoon": "أرباح الاشتراك رح تكون قابلة للسحب قريبًا",
     "percentUsed": "تم استخدام {{percent}}%",
     "spentOfTotal": "{{spent}} من {{total}}",
-    "viewInWallet": "شوف في المحفظة"
+    "topUp": "ضيف توكنز",
+    "topUpTitle": "إضافة رموز اشتراك",
+    "topUpCustom": "مبلغ آخر (دولار أمريكي)",
+    "topUpYouSend": "ترسل",
+    "topUpYouGet": "تمت إضافته إلى رصيدك",
+    "topUpConfirm": "إضافة {{amount}}",
+    "topUpRange": "أدخل {{min}} إلى {{max}}",
+    "topUpDone": "تمت إضافة {{amount}} إلى رموز اشتراكك",
+    "topUpPending": "عملية إعادة الشحن قيد التأكيد. ستظهر في رصيدك قريبًا.",
+    "topUpFailed": "تعذر إضافة رموز الاشتراك",
+    "topUpEmptyHint": "إعادة الشحن للاشتراك في المبدعين",
+    "topUpStageFunding": "جاري الحصول على الرموز...",
+    "topUpStageWallet": "تأكيد في محفظتك...",
+    "topUpStageConfirming": "في انتظار المعاملة...",
+    "topUpStageCrediting": "جاري الإضافة إلى رصيدك...",
+    "creatorEarnsInTokens": "المشتركين يدفعون برموز DeHub. أنت تكسب القيمة بالدولار وتسحبها رموزاً بسعر اليوم.",
+    "youPayNow": "تدفع"
   },
   "live": {
     "chatJoined": "دخل",

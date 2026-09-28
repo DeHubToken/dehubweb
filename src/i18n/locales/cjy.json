@@ -2641,7 +2641,6 @@
     "noStories": "还没有动态"
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "买家按预上市价格支付显示的 DeHub 代币金额。您将收到以 USDT 余额计价的美元价值。",
     "legacyPlanMigrates": "保存会将此旧的代币定价计划迁移到以美元定价，按预上市价格计算。",
     "tokenAmount": "{{amount}} 个代币",
     "preListingTokenAmount": "预上市代币数量",
@@ -2672,7 +2671,6 @@
     "publish": "发布",
     "confirmSubscription": "确认订阅",
     "planPrice": "计划价格",
-    "youPayInclFee": "您支付（含平台费）",
     "calculating": "计算中…",
     "cancel": "取消",
     "confirm": "确认",
@@ -2752,7 +2750,23 @@
     "withdrawableSoon": "订阅收益即将可提取",
     "percentUsed": "已用 {{percent}}%",
     "spentOfTotal": "{{spent}} / {{total}}",
-    "viewInWallet": "在钱包中查看"
+    "topUp": "添加代币",
+    "topUpTitle": "添加订阅代币",
+    "topUpCustom": "其他金额 (美元)",
+    "topUpYouSend": "您发送",
+    "topUpYouGet": "已添加到您的余额",
+    "topUpConfirm": "添加 {{amount}}",
+    "topUpRange": "输入 {{min}} 以 {{max}}",
+    "topUpDone": "{{amount}} 已添加到您的订阅代币",
+    "topUpPending": "您的充值正在确认中。它将很快显示在您的余额中。",
+    "topUpFailed": "无法添加订阅代币",
+    "topUpEmptyHint": "充值以订阅创作者",
+    "topUpStageFunding": "正在获取代币…",
+    "topUpStageWallet": "在您的钱包中确认…",
+    "topUpStageConfirming": "等待交易…",
+    "topUpStageCrediting": "正在添加到您的余额…",
+    "creatorEarnsInTokens": "订阅者以 DeHub 代币支付。您赚取美元价值，并以当天的价格提取代币。",
+    "youPayNow": "你付"
   },
   "live": {
     "chatJoined": "加入了",

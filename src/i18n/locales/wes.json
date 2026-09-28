@@ -2338,7 +2338,6 @@
     "transferGuarantee": "You go get di whole account — handle, post, follower, tip history and badge entitlement. Di seller keep dem own wallet and everytin wey dey inside. Transfer go run only afta DeHub read your token payment back from di chain; if e break, try am again to continue am."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Buyer dem pay di DeHub token amount wey dem show for di pre-listing rate. You go receive di USD value as USDT balance.",
     "legacyPlanMigrates": "Saving go change dis old token-price plan to dollar price for di pre-listing rate.",
     "tokenAmount": "{{amount}} token",
     "preListingTokenAmount": "Pre-listing token amount",
@@ -2432,7 +2431,23 @@
     "withdrawableSoon": "You go fit comot your subscription money soon",
     "percentUsed": "{{percent}}% used",
     "spentOfTotal": "{{spent}} of {{total}}",
-    "viewInWallet": "View in wallet"
+    "topUp": "Add tokens",
+    "topUpTitle": "Add subscription tokens",
+    "topUpCustom": "Oda amount (USD)",
+    "topUpYouSend": "Weti you go send",
+    "topUpYouGet": "Weti go enter your balance",
+    "topUpConfirm": "Add {{amount}}",
+    "topUpRange": "Put from {{min}} reach {{max}}",
+    "topUpDone": "We don add {{amount}} for your subscription tokens",
+    "topUpPending": "Your top-up di confirm. E go show for your balance soon.",
+    "topUpFailed": "We no fit add subscription tokens",
+    "topUpEmptyHint": "Add tokens make you fit subscribe for creators",
+    "topUpStageFunding": "We di get tokens…",
+    "topUpStageWallet": "Confirm am for your wallet…",
+    "topUpStageConfirming": "We di wait for di transaction…",
+    "topUpStageCrediting": "We di add am for your balance…",
+    "youPayNow": "You pay",
+    "creatorEarnsInTokens": "Subscribers di pay with DeHub tokens. You go gain di dollar value and you go comot am as tokens for di price of dat day."
   },
   "live": {
     "chatJoined": "don join",

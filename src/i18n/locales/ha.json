@@ -2693,7 +2693,6 @@
     "transferGuarantee": "Za ku sami dukkan asusun — hannun hannu, sakonni, masu bi, tarihin bayarwa da haƙƙoƙin lambobi. Mai siyarwa yana riƙe da walat ɗinsa da komai a cikinsa. Canjin yana gudana ne kawai bayan DeHub ya karanta biyan kuɗin alamar ku daga kan sarkar; idan an katse shi, sake gwada siyan yana ci gaba da shi."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Masu siye suna biyan adadin DeHub token da aka nuna a farashin kafin jeri. Kuna karɓar ƙimar USD azaman ma'auni na USDT.",
     "legacyPlanMigrates": "Ajiya yana canza wannan tsohon tsarin da aka farashin token zuwa farashin dalar Amurka a farashin kafin jeri.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Adadin token kafin jeri",
@@ -2724,7 +2723,6 @@
     "publish": "Wallafa",
     "confirmSubscription": "Tabbatar da Biyan Kuɗi",
     "planPrice": "Farashin Shirin",
-    "youPayInclFee": "Kuna biya (ciki har da kudin dandali)",
     "calculating": "Ana ƙididdige…",
     "cancel": "Soke",
     "confirm": "Tabbatar",
@@ -2804,7 +2802,23 @@
     "withdrawableSoon": "Kudin biyan kuɗi za a cire nan ba da daɗewa ba",
     "percentUsed": "{{percent}}% amfani",
     "spentOfTotal": "{{spent}} na {{total}}",
-    "viewInWallet": "Duba a cikin walat"
+    "topUp": "Ƙara alamomi",
+    "topUpTitle": "Ƙara alamun biyan kuɗi",
+    "topUpCustom": "Sauran adadin (USD)",
+    "topUpYouSend": "Kuna aikawa",
+    "topUpYouGet": "Ƙara zuwa ma'auni naka",
+    "topUpConfirm": "Ƙara {{amount}}",
+    "topUpRange": "Shigar da {{min}} zuwa {{max}}",
+    "topUpDone": "{{amount}} kara zuwa alamomin biyan ku",
+    "topUpPending": "Your top-up yana tabbatarwa. Zai bayyana a cikin ma'auni ba da daɗewa ba.",
+    "topUpFailed": "Ba za a iya ƙara alamun biyan kuɗi ba",
+    "topUpEmptyHint": "Top har zuwa biyan kuɗi ga masu kirkiro",
+    "topUpStageFunding": "Samun alamomi...",
+    "topUpStageWallet": "Tabbatar a cikin walat ɗin ku...",
+    "topUpStageConfirming": "Jira don ma'amala...",
+    "topUpStageCrediting": "Ƙarawa zuwa ma'auni naka...",
+    "creatorEarnsInTokens": "Masu biyan kuɗi suna biyan kuɗi a cikin alamun DeHub. Kuna samun darajar dala kuma ku cire shi azaman alamomi a farashin a rana.",
+    "youPayNow": "Kuna biya"
   },
   "live": {
     "chatJoined": "ya shiga",

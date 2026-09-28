@@ -2689,7 +2689,6 @@
     "transferGuarantee": "Ka whiwhi koe i te pūkete katoa — pūkete, whakairinga, kaiwhai, hītori tohu, me ngā mana tohu. Ka noho tonu ki te kaihoko tōna putea me ngā mea katoa kei roto. Ka rere noa te whakawhiti i muri i te panuitanga a DeHub i tō utu tohu mai i te mekameka; ki te pakaru, ka tīmata anō te hoko."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Ka utua e ngā kaihoko te nui o te tohu DeHub kua whakaatuhia i te reiti i mua i te whakarārangi. Ka whiwhi koe i te uara USD hei pauna USDT.",
     "legacyPlanMigrates": "Ko te penapena ka nuku i tēnei mahere utu tohu tawhito ki te utu taara i te reiti i mua i te whakarārangi.",
     "tokenAmount": "{{amount}} tohu",
     "preListingTokenAmount": "Te nui o te tohu i mua i te whakarārangi",
@@ -2720,7 +2719,6 @@
     "publish": "Whakaputa",
     "confirmSubscription": "Whakaū Kaitono",
     "planPrice": "Utu mahere",
-    "youPayInclFee": "Ka utu koe (taurite i te utu papamahi)",
     "calculating": "e tata ana…",
     "cancel": "Whakakore",
     "confirm": "Whakaū",
@@ -2800,7 +2798,23 @@
     "withdrawableSoon": "Ka taea te tango wawe i nga whiwhinga ohaurunga",
     "percentUsed": "{{percent}}% used",
     "spentOfTotal": "{{spent}} of {{total}}",
-    "viewInWallet": "Tiro i te pūkete"
+    "topUp": "Tāpirihia nga tohu",
+    "topUpTitle": "Tāpirihia nga tohu ohaurunga",
+    "topUpCustom": "Ētahi atu moni (USD)",
+    "topUpYouSend": "Ka tonoa e koe",
+    "topUpYouGet": "Tāpiri ki to koutou toenga",
+    "topUpConfirm": "Tāpiri {{amount}}",
+    "topUpRange": "Tāurua mai i te {{min}} ki te {{max}}",
+    "topUpDone": "{{amount}} taapirihia ki to tohu ohaurunga",
+    "topUpPending": "Kei te whakapūmau tō kōtaha. Ka puta i roto i to koutou toenga tata.",
+    "topUpFailed": "Kaore e taea te taapiri i nga tohu ohaurunga",
+    "topUpEmptyHint": "Tikiake ki te ohauru ki nga Kaihanga",
+    "topUpStageFunding": "He tohu...",
+    "topUpStageWallet": "Whakautu i roto i to koutou putea...",
+    "topUpStageConfirming": "Kei te tatari ahau ki te whakawhitinga...",
+    "topUpStageCrediting": "I tua atu i to koutou toenga...",
+    "creatorEarnsInTokens": "Ka utua e nga kaiohauru nga tohu DeHub. Ka whiwhi koe i te uara tāra, ka tangohia hei tohu i te utu i te ra.",
+    "youPayNow": "Ka utua e koe"
   },
   "live": {
     "chatJoined": "kua uru mai",

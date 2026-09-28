@@ -292,7 +292,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
                 </div>
               )}
               <div className="flex justify-between text-zinc-400 mt-1.5 pt-1.5 border-t border-white/10">
-                <span>{tokensFromBalance > 0 ? t('subscriptions.addedAtTodaysPrice') : t('subscriptions.youPayInclFee')}</span>
+                <span>{tokensFromBalance > 0 ? t('subscriptions.addedAtTodaysPrice') : t('subscriptions.youPayNow')}</span>
                 <span className="text-white font-medium text-right">
                   {total ? formatDhbPayment(topUpTokens ?? totalDhbEstimate) : t('subscriptions.calculating')}
                   {totalDhbEstimate !== null && (

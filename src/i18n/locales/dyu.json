@@ -2607,7 +2607,6 @@
     "transferGuarantee": "I bena o bɛɛ sɔrɔ — ka baara kɛ, ka baara kɛ, ka tugu i kɔ, ka ladiliw di i ka tarikiko la ani ka batɛmu ta. O kɔ, a y'a fɔ ko: \"Ne ye n ka wari bɛɛ di ne ma. O la, a ka ɲi ka to ka wari di a ma."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Mɔgɔ minw be sanni kɛ, olu be wari min yira, u b'o sara ni wari min ye, u b'o sara ni wari min ye. I be wari sɔrɔ i n'a fɔ wari min be sɔrɔ a kɔnɔ.",
     "legacyPlanMigrates": "O kama, a tun man nɔgɔ ka wari caaman sɔrɔ.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "O ye wari min ye, o ye wari min ye.",
@@ -2638,7 +2637,6 @@
     "publish": "Ka fɔ",
     "confirmSubscription": "Ka bɔ kɛlɛ",
     "planPrice": "Fɛ tɔɔrɔ",
-    "youPayInclFee": "I bɛ ka fɔ (ka fɛ platform ye)",
     "calculating": "Ka bɛ kɛ...",
     "cancel": "Ka fɔlɔ",
     "confirm": "Ka bɔ",
@@ -2718,7 +2716,23 @@
     "withdrawableSoon": "Abonman nafolo bɛna se ka bɔ sɔɔni",
     "percentUsed": "{{percent}} % ka baara kɛ",
     "spentOfTotal": "{{spent}} ka {{total}}",
-    "viewInWallet": "Fɛɛn min be sɔrɔ a kɔnɔ"
+    "topUp": "Token fara a kan",
+    "topUpTitle": "Abonman token fara a kan",
+    "topUpCustom": "Wari hakɛ wɛrɛ (USD)",
+    "topUpYouSend": "I bɛ ci",
+    "topUpYouGet": "A bɛ fara i ka jatebɔ kan",
+    "topUpConfirm": "{{amount}} fara a kan",
+    "topUpRange": "A sɛbɛn {{min}} ni {{max}} cɛ",
+    "topUpDone": "{{amount}} farala i ka abonman token kan",
+    "topUpPending": "I ka sarali bɛ ka dafa. A bɛna bɔ i ka jatebɔ la sɔɔni.",
+    "topUpFailed": "Abonman token ma se ka fara a kan",
+    "topUpEmptyHint": "Token fara a kan walasa ka don dabagaw la",
+    "topUpStageFunding": "Token bɛ ka sɔrɔ…",
+    "topUpStageWallet": "A dafa i ka wariboro la…",
+    "topUpStageConfirming": "Jago makɔnɔni…",
+    "topUpStageCrediting": "A bɛ ka fara i ka jatebɔ kan…",
+    "creatorEarnsInTokens": "Abonnew bɛ sara DeHub token na. I bɛ dolari sɔngɔ sɔrɔ ka a bɔ token na o don sɔngɔ la.",
+    "youPayNow": "I bɛ sara"
   },
   "live": {
     "chatJoined": "donna",
