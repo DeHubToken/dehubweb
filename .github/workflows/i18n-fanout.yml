@@ -1,10 +1,12 @@
 name: i18n fan-out
 
-# Fills the locales that are behind en.json and opens a PR with the result.
+# Fills the locales that are behind en.json and opens one PR with the result.
 #
-# Run in batches rather than all 109 at once: each locale is ~75 calls to the
-# translate-text function, so a handful per run keeps a job to a few minutes and
-# keeps the PR small enough to actually look at.
+# One job per locale, up to 20 side by side. A locale takes one to four hours
+# (the smaller ones retry most lines singly), so running them one after another
+# inside a single job hit the time limit after two or three locales. Each job
+# only writes its own locale file; a final job gathers them, regenerates the
+# files derived from every locale, and opens the PR.
 #
 # No secret is needed. The function is called with the publishable key the
 # browser bundle already ships.
@@ -19,7 +21,7 @@ on:
       count:
         description: 'How many locales to fill when none are named'
         required: false
-        default: '8'
+        default: '20'
       keys:
         description: 'Max keys per locale in one run (blank = all missing)'
         required: false
@@ -30,54 +32,84 @@ permissions:
   pull-requests: write
 
 jobs:
-  fanout:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      locales: ${{ steps.pick.outputs.locales }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Report the gap before
+        run: node scripts/i18n-fanout.mjs --check | head -30
+      - id: pick
+        run: |
+          if [ -n "${{ inputs.locales }}" ]; then
+            LIST="${{ inputs.locales }}"
+          else
+            LIST=$(node scripts/i18n-fanout.mjs --check | awk 'NF >= 2 && $NF+0 > 0 && $(NF-1) == "missing" {print $1}' | head -${{ inputs.count }} | paste -sd, -)
+          fi
+          echo "locales=$(node -e 'console.log(JSON.stringify(process.argv[1].split(",").map(s=>s.trim()).filter(Boolean)))' "$LIST")" >> "$GITHUB_OUTPUT"
+
+  fill:
+    needs: plan
+    if: needs.plan.outputs.locales != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        locale: ${{ fromJSON(needs.plan.outputs.locales) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Report the gap before
-        run: node scripts/i18n-fanout.mjs --check | head -30
-
-
       # Runs BEFORE the fill, not after. Pruning turns a padded English value
-      # into a missing key, and only the fill that follows can translate it —
-      # pruning last leaves those holes open and costs every locale a second
-      # pass. It also catches English that older runs left behind, not just
-      # this run's output.
+      # into a missing key, and only the fill that follows can translate it.
       - name: Drop values that came back as English
-        run: |
-          if [ -n "${{ inputs.locales }}" ]; then
-            node scripts/i18n-fanout.mjs --prune --locales ${{ inputs.locales }}
-          else
-            node scripts/i18n-fanout.mjs --prune
-          fi
+        run: node scripts/i18n-fanout.mjs --prune --locale ${{ matrix.locale }}
 
       - name: Fill
         run: |
-          ARGS=""
-          if [ -n "${{ inputs.locales }}" ]; then
-            ARGS="--locales ${{ inputs.locales }}"
-          else
-            ARGS="--all --limit ${{ inputs.count }}"
-          fi
+          ARGS="--locale ${{ matrix.locale }}"
           if [ -n "${{ inputs.keys }}" ]; then ARGS="$ARGS --keys ${{ inputs.keys }}"; fi
           node scripts/i18n-fanout.mjs $ARGS
 
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: locale-${{ matrix.locale }}
+          path: src/i18n/locales/${{ matrix.locale }}.json
+
+  pr:
+    needs: fill
+    # always(): a locale that timed out loses only itself, not the others.
+    if: always() && needs.fill.result != 'skipped'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: locale-*
+          merge-multiple: true
+          path: src/i18n/locales
+
       # A locale drops off the widget fallback list the moment its file is
-      # genuinely translated, so this has to run after the fill, not before.
+      # genuinely translated, so this has to run after the fill.
       - name: Refresh the widget fallback list
-        if: always()
         run: node scripts/i18n-fanout.mjs --emit-fallback-list
 
       # seo-i18n.json is built from the locale files and a test fails when it
       # lags them, so every fill that touches a page's seoTitle/seoDescription
       # has to ship the regenerated file with it.
       - name: Regenerate SEO translations
-        if: always()
         run: node scripts/build-seo-i18n.mjs
 
       - name: Report the gap after
@@ -85,23 +117,17 @@ jobs:
           node scripts/i18n-fanout.mjs --check | head -30
           node scripts/i18n-coverage.mjs --floor || true
 
-      # always(), because the expensive thing here is the translation, not the
-      # job. A run that dies part-way has still written whole locale files to
-      # disk; without this the PR step is skipped and every completed locale is
-      # thrown away. One timeout cost six finished locales before this existed.
       - name: Open a pull request
-        if: always()
         uses: peter-evans/create-pull-request@v6
         with:
           branch: i18n-fanout-${{ github.run_number }}
           commit-message: 'Translate the outstanding keys into more locales'
           title: 'Translate the outstanding keys into more locales'
           body: |
-            Filled by `scripts/i18n-fanout.mjs`.
+            Filled by `scripts/i18n-fanout.mjs`, one job per locale.
 
             **Intent** — close the gap between what is translatable and what is
-            translated. Extraction made these pages use `t()`; until a locale
-            carries the key it still renders English.
+            translated. Until a locale carries a key it renders English.
 
             **Constraints** — an existing translation is never overwritten, and a
             string whose placeholders do not survive the round trip is dropped
