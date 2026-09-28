@@ -1,4 +1,5 @@
 import {
+  Blocks,
   AtSign,
   Store,
   Home,
@@ -54,6 +55,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
   { icon: Gamepad2, label: 'Arcade', path: '/arcade' },
+  { icon: Blocks, label: 'Apps', path: '/apps' },
   { icon: Users, label: 'Communities', path: '/app/communities' },
   { icon: Sparkles, label: 'Assistant', path: '/app/assistant' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
