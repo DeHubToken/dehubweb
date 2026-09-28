@@ -73,6 +73,13 @@ jobs:
         if: always()
         run: node scripts/i18n-fanout.mjs --emit-fallback-list
 
+      # seo-i18n.json is built from the locale files and a test fails when it
+      # lags them, so every fill that touches a page's seoTitle/seoDescription
+      # has to ship the regenerated file with it.
+      - name: Regenerate SEO translations
+        if: always()
+        run: node scripts/build-seo-i18n.mjs
+
       - name: Report the gap after
         run: |
           node scripts/i18n-fanout.mjs --check | head -30
@@ -105,3 +112,4 @@ jobs:
           add-paths: |
             src/i18n/locales/*.json
             src/i18n/widget-fallback-locales.ts
+            public/seo-i18n.json
