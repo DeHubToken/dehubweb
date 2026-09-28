@@ -7544,5 +7544,69 @@
     "back": "설정으로 돌아가기",
     "signIn": "로그인하십시오",
     "acknowledge": "지갑 복구 세부 정보를 저장했으며 삭제가 영구적임을 이해합니다."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "인증됨",
+      "unreviewed": "리뷰되지 않음",
+      "dev": "개발자 미리보기"
+    },
+    "host": {
+      "close": "앱 닫기",
+      "backToStore": "앱으로 돌아가기",
+      "notFound": "이 앱은 DeHub App Store에 없거나 삭제되었습니다.",
+      "badUrl": "해당 주소는 미니 앱으로 열 수 없습니다. https://로 시작하거나 개발자 모드에서 로컬 호스트 주소여야 합니다.",
+      "readyTimeout": "이 앱은 dehub.ready () 를 호출하지 않았기 때문에 8초 후에 시작 화면이 숨겨졌습니다."
+    },
+    "signIn": {
+      "title": "{{name}} 에 로그인하시겠습니까?",
+      "body": "이 앱은 DeHub 지갑 주소와 이 앱에서만 사용할 수 있는 로그인 토큰을 받게 됩니다. 지갑, 자금 또는 DeHub 계정에 액세스할 수 없습니다.",
+      "cancel": "나중에",
+      "confirm": "로그인"
+    },
+    "store": {
+      "title": "앱",
+      "seoTitle": "DeHub 앱 — DeHub용 미니 앱",
+      "seoDescription": "누구나 DeHub를 위해 개발한 미니 앱: DeHub 내부에서 열리는 게임, 도구 등 이미 로그인하여 피드로 다시 공유할 수 있습니다.",
+      "intro": "누구나 만들 수 있는 DeHub용 미니 앱. DeHub 내부에서 열리고 이미 로그인되어 있으며 모든 앱에 실제 웹 주소가 표시됩니다.",
+      "buildCta": "앱을 개발하세요.",
+      "emptyTitle": "아직 등록된 앱이 없습니다",
+      "emptyBody": "첫 번째 앱을 검토 중입니다. 하나를 만들면 여기에 있을 수 있습니다."
+    },
+    "dev": {
+      "title": "미니 앱 만들기",
+      "seoTitle": "DeHub 미니 앱 만들기",
+      "seoDescription": "DeHub용 미니 앱 빌드: 하나의 스크립트 태그, DeHub로 로그인, 피드에 공유. 매니페스트를 확인하고 실제 호스트에서 앱을 미리 확인하세요.",
+      "intro": "모든 웹사이트는 하나의 스크립트 태그가 있는 DeHub 미니 앱이 됩니다. 매니페스트를 확인하고, 피드 카드를 확인하고, DeHub 내에서 다른 사람이 보기 전에 앱을 실행하세요. Farcaster mini 앱은 그대로 작동합니다.",
+      "backToStore": "앱으로 돌아가기",
+      "checkTitle": "확인 및 실행",
+      "check": "체크",
+      "launch": "시작",
+      "badUrl": "로컬 테스트를 위해 https://주소 또는 http://localhost를 입력합니다.",
+      "localNote": "로컬 주소는 서버에서 확인할 수 없지만 여기에서 실행하여 테스트할 수 있습니다.",
+      "checkFailed": "검사를 실행할 수 없습니다. 다시 시도하십시오.",
+      "passed": "매니페스트가 좋아 보입니다",
+      "failed_one": "{{count}} 해결해야 할 문제",
+      "failed_other": "{{count}} 해결해야 할 문제",
+      "farcasterImport": "Farcaster.json에서 읽기",
+      "cardPreview": "피드에서 링크가 표시되는 방식",
+      "open": "열기",
+      "ownershipTitle": "도메인을 소유하고 있음을 증명하세요.",
+      "ownershipBody": "DeHub 지갑으로 한 번 서명하고 결과를 dehub.json에 붙여넣습니다. 앱이 회원님의 계정에 연결되므로 대금 수령과 후기가 회원님께 전달됩니다.",
+      "signFor": "{{domain}} 에 서명",
+      "signNeedsUrl": "위에 앱 주소를 입력하세요.",
+      "signInFirst": "DeHub에 로그인하여 로그인하세요.",
+      "signFailed": "서명이 완료되지 않았습니다.",
+      "quickstartTitle": "빠른 시작",
+      "quickstartBody": "SDK를 페이지에 추가하고 첫 화면이 나타나면 ready () 를 호출합니다.",
+      "manifestTitle": "명단",
+      "manifestBody": "앱 도메인의/.well-known/dehub.json에서 이를 제공합니다. 이미 farcaster.json이 있습니까? 우리도 그것을 읽습니다.",
+      "embedTitle": "피드 카드",
+      "embedBody": "모든 페이지에 이 태그를 추가하면 해당 페이지에 대한 링크가 버튼이 있는 카드로 표시되어 바로 앱이 열립니다.",
+      "verifyTitle": "서버에서 DeHub로 로그인",
+      "verifyBody": "auth.getToken () 은 DeHub가 서명한 토큰을 앱에 제공합니다. JWT 라이브러리로 서버에서 확인하십시오. 사용자의 지갑 주소가 SUB에 있습니다.",
+      "copy": "복사",
+      "copied": "복사됨"
+    }
   }
 }

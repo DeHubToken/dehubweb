@@ -7402,5 +7402,69 @@
     "back": "Mine tagasi seadistuste juurde",
     "signIn": "Logi oma kontole sisse",
     "acknowledge": "Salvestasin oma rahakoti taastamise üksikasjad ja mõistan, et kustutamine on lõplik."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Tõestatud",
+      "unreviewed": "Kontrollimata",
+      "dev": "Arendaja eelvaade"
+    },
+    "host": {
+      "close": "Sulge rakendus",
+      "backToStore": "Tagasi rakendustesse",
+      "notFound": "See rakendus ei ole DeHubi rakenduste kaupluses või see on eemaldatud.",
+      "badUrl": "See aadress ei saa avada mini-rakenduse kui mini-rakendusena. See peab algama https://-ga või olema localhost-aadress arendaja režiimis.",
+      "readyTimeout": "See rakendus ei kutsunud kunagi välja dehub.ready(), seetõttu peideti splahh-ekraan 8 sekundiga pärast."
+    },
+    "signIn": {
+      "title": "Sisse logi {{name}}?",
+      "body": "See rakendus võtab sinult DeHubi portfelli aadressi ja sisse logimistokeni, mis töötab ainult selle rakenduse jaoks. See ei saa juurdepääsu sinu portfellile, sinu rahalisele panusele ega DeHubi kontole.",
+      "cancel": "Hiljem",
+      "confirm": "Sisse logi"
+    },
+    "store": {
+      "title": "Rakendused",
+      "seoTitle": "DeHubi rakendused — mini-rakendused DeHubile",
+      "seoDescription": "Mini-rakendused, mis on loodud DeHubile kellegi poolt: mängud, tööriistad ja veel, mis avanevad DeHubis, kus oled juba sisse logitud, ja mis jagavad tagasi voodule.",
+      "intro": "Mini-rakendused, mis on loodud DeHubile kellegi poolt. Nad avanevad DeHubis, oled juba sisse logitud, ja iga rakendus näitab oma tõeliselt veebiaadressi.",
+      "buildCta": "Loo rakendus",
+      "emptyTitle": "Ei ole loetletud rakendusi veel",
+      "emptyBody": "Esimesed rakendused on kontrollimisel. Loo üks ja see võiks siia ilmuda."
+    },
+    "dev": {
+      "title": "Loo mini-rakendus",
+      "seoTitle": "Loo DeHubi mini-rakendus",
+      "seoDescription": "Loo DeHubi mini-rakendus: üks skripti tagi, sisse logimine DeHubiga, jagamine voodule. Kontrolli oma manifesti ja vaata rakenduse eelvaadet tõelisel hostil.",
+      "intro": "Igal veebisaidil saab DeHubi mini-rakendusega üks skripti tagi. Kontrolli oma manifesti, vaata voodukarti ja juhi rakendust DeHubis enne kui keegi teine seda näeb. Farcasteri mini-rakendused töötab nii, nagu nad on.",
+      "backToStore": "Tagasi rakendustesse",
+      "checkTitle": "Kontrolli ja starta",
+      "check": "Kontrolli",
+      "launch": "Starta",
+      "badUrl": "Sisesta https://-aadress või http://localhost kohalikku testimist vaja.",
+      "localNote": "Kohalikud aadressid ei saa kontrollida meie serveritelt, kuid saad need siin startida testimiseks.",
+      "checkFailed": "Kontroll ei suutnud käivitada. Proovi uuesti.",
+      "passed": "Manifest näib hea",
+      "failed_one": "{{count}} probleemi korrastama",
+      "failed_other": "{{count}} probleeme korrastama",
+      "farcasterImport": "Luge **farcaster.json**ist",
+      "cardPreview": "Kui teie link ulatuses näeb välja",
+      "open": "Ava",
+      "ownershipTitle": "Kinnita, et teie domiin kuulub teile",
+      "ownershipBody": "Allkirjesta ühekordselt oma DeHub-väljaarvutiga ja liida tulemus oma **dehub.json**i failisse. See seob rakenduse teie kontoga, et makseid ja arvustusi saaksite.",
+      "signFor": "Allkirjesta **{{domain}}**",
+      "signNeedsUrl": "Sisesta teie rakenduse aadress ülemisse",
+      "signInFirst": "Sisestuge DeHubisse, et allkirjesta.",
+      "signFailed": "Allkirjastamine ei lõppenud.",
+      "quickstartTitle": "Kiire algus",
+      "quickstartBody": "Lisa SDK teie leheküljele ja kutsuge **ready()** ühel esimesel ekraanil, kui see näitab.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Teenige seda **/.well-known/dehub.json**i all oma rakenduse domiinil. Olete juba **farcaster.json**i? Me lugeme seda ka.",
+      "embedTitle": "Ulatusekart",
+      "embedBody": "Lisa see märk mis tahes leheküljele, ja link sellele leheküljele näitab kartina, mis sisaldab nuppu, mis avab teie rakenduse juurde.",
+      "verifyTitle": "Sisestuge DeHubiga, serveril",
+      "verifyBody": "**auth.getToken()** annab teie rakendusele tokeni, mis on allkirjastatud DeHubi poolt. Kontrollige seda oma serveril igasuguse JWT-raamistikuga. Kasutaja väljaarvuti aadress on **sub**-sõnas.",
+      "copy": "Kopeeri",
+      "copied": "Kopeeritud"
+    }
   }
 }

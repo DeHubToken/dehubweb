@@ -62,6 +62,12 @@ project_id = "aigxuutjaqsywioxjefr"
   # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
   [functions.arcade-score]
     verify_jwt = false
+  # Mini app store. miniapp-auth checks the dehub token itself (requireDeHubAuth)
+  # and serves a public JWKS on GET; miniapp-registry is a public manifest check.
+  [functions.miniapp-auth]
+    verify_jwt = false
+  [functions.miniapp-registry]
+    verify_jwt = false
   [functions.auth-email-hook]
     verify_jwt = false
   # Deliberately left verified, unlike most of this list. Every call spends AI

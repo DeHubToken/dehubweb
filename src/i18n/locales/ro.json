@@ -7278,12 +7278,6 @@
     "planTypeNotAllowed": "Planul acestui creator nu permite acest tip de mesaj.",
     "planMinTip": "Bacșișul pentru acest creator trebuie să fie de cel puțin {{amount}} DHB."
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
   "credits": {
     "earningsWorth": "Valoare {{amount}}",
     "percentUsed": "{{percent}}% utilizat",
@@ -7325,5 +7319,75 @@
     "back": "Înapoi la Setări",
     "signIn": "Conectează-te la contul tău",
     "acknowledge": "Am salvat detaliile de recuperare a portofelului și înțeleg că ștergerea este permanentă."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verificat",
+      "unreviewed": "Nerevizuit",
+      "dev": "Previzualizare dezvoltator"
+    },
+    "host": {
+      "close": "Închide aplicația",
+      "backToStore": "Înapoi la Aplicații",
+      "notFound": "Această aplicație nu se află în magazinul de aplicații DeHub sau a fost eliminată.",
+      "badUrl": "Această adresă nu poate fi deschisă ca miniaplicație. Trebuie să înceapă cu https://sau să fie o adresă a gazdei locale în modul dezvoltator.",
+      "readyTimeout": "Această aplicație nu a apelat niciodatădehub.ready (), astfel încât ecranul de pornire a fost ascuns după 8 secunde."
+    },
+    "signIn": {
+      "title": "Te conectezi la {{name}}?",
+      "body": "Această aplicație va primi adresa portofelului DeHub și un simbol de conectare care funcționează numai pentru această aplicație. Nu va avea acces la portofelul tău, la fondurile tale sau la contul tău DeHub.",
+      "cancel": "Nu acum",
+      "confirm": "Conectează-te"
+    },
+    "store": {
+      "title": "Aplicații",
+      "seoTitle": "DeHub Apps — mini aplicații pentru DeHub",
+      "seoDescription": "Mini-aplicații construite pentru DeHub de către oricine: jocuri, instrumente și multe altele care se deschid în interiorul DeHub, deja conectat, cu partajarea înapoi în feed.",
+      "intro": "Mini-aplicații construite pentru DeHub de oricine. Acestea se deschid în cadrul DeHub, ești deja conectat (ă) și fiecare aplicație își afișează adresa web reală.",
+      "buildCta": "Creează o aplicație",
+      "emptyTitle": "Nicio aplicație listată încă",
+      "emptyBody": "Primele aplicații sunt în curs de examinare. Construiește una și ar putea fi aici."
+    },
+    "dev": {
+      "title": "Creează o miniaplicație",
+      "seoTitle": "Construiește o aplicație mini DeHub",
+      "seoDescription": "Construiește o mini aplicație pentru DeHub: o etichetă de script, conectează-te cu DeHub, distribuie în flux. Verifică manifestul și previzualizează aplicația în gazda reală.",
+      "intro": "Orice site web devine o mini aplicație DeHub cu o singură etichetă de script. Verifică-ți manifestul, vezi fișa de feed și rulează aplicația în DeHub înainte ca altcineva să o vadă. Mini-aplicațiile mai rapide funcționează așa cum sunt.",
+      "backToStore": "Înapoi la Aplicații",
+      "checkTitle": "Verificați și lansați",
+      "check": "Verificare",
+      "launch": "Lansare",
+      "badUrl": "Introdu o adresă https://sau http://localhost pentru testarea locală.",
+      "localNote": "Adresele locale nu pot fi verificate de pe serverele noastre, dar le puteți lansa aici pentru a le testa.",
+      "checkFailed": "Verificarea nu a putut fi executată. Încercați din nou.",
+      "passed": "Manifestul arată bine",
+      "failed_one": "{{count}} problemă de rezolvat",
+      "failed_other": "{{count}} probleme de rezolvat",
+      "farcasterImport": "Citește din farcaster.json",
+      "cardPreview": "Cum arată link-ul tău în feed",
+      "open": "Deschide",
+      "ownershipTitle": "Dovește că deții domeniul",
+      "ownershipBody": "Semnează odată cu portofelul tău DeHub și lipeste rezultatul în fișierul dehub.json. Aceasta leagă aplicația de contul tău, astfel încât plățile și recenziile să te ajungă.",
+      "signFor": "Semnează pentru {{domain}}",
+      "signNeedsUrl": "Introdu adresa aplicației tale mai sus",
+      "signInFirst": "Conectează-te la DeHub pentru a semna.",
+      "signFailed": "Semnarea nu s-a încheiat.",
+      "quickstartTitle": "Start rapid",
+      "quickstartBody": "Adaugă SDK-ul pe pagină și apelează ready() odată ce prima ecrană apare.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Serveste acest fișier la /.well-known/dehub.json pe domeniul aplicației tale. Ai deja un farcaster.json? Citesc și acela.",
+      "embedTitle": "Card feed",
+      "embedBody": "Adaugă această etichetă pe orice pagină, și un link către acea pagină va apărea ca un card cu un buton care deschide aplicația direct acolo.",
+      "verifyTitle": "Conectează-te cu DeHub, pe server",
+      "verifyBody": "auth.getToken() oferă aplicației tale un token semnat de DeHub. Verifică-l pe server cu orice bibliotecă JWT. Adresa portofelului utilizatorului este în sub.",
+      "copy": "Copy",
+      "copied": "Copiat"
+    }
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
   }
 }

@@ -7438,5 +7438,69 @@
     "back": "Zpět na nastavení",
     "signIn": "Přihlašte se do svého účtu",
     "acknowledge": "Uložil (a) jsem si podrobnosti o obnovení peněženky a chápu, že smazání je trvalé."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verifikováno",
+      "unreviewed": "Neprozkoumané",
+      "dev": "Vývojářská předběžná verze"
+    },
+    "host": {
+      "close": "Zavřít aplikaci",
+      "backToStore": "Zpět na Aplikace",
+      "notFound": "Tato aplikace není v DeHub App Store, nebo byla odstraněna.",
+      "badUrl": "Tuto adresu nelze otevřít jako mini aplikaci. Musí začínat https://, nebo být lokální adresa v režimu vývojáře.",
+      "readyTimeout": "Tato aplikace nikdy nevolala dehub.ready(), takže obrazovka načítání byla skryta po 8 sekundách."
+    },
+    "signIn": {
+      "title": "Přihlásit se k {{name}}?",
+      "body": "Tato aplikace získá adresu vašeho DeHub peněženky a přihlašovací token, který platí pouze pro tuto aplikaci. Nebude mít přístup k vaší peněžence, vašim fondům ani vašemu účtu DeHub.",
+      "cancel": "Nyní ne",
+      "confirm": "Přihlásit se"
+    },
+    "store": {
+      "title": "Aplikace",
+      "seoTitle": "DeHub Aplikace — mini aplikace pro DeHub",
+      "seoDescription": "Mini aplikace vytvořené pro DeHub kýmkoli: hry, nástroje a další, které se otevírají uvnitř DeHub, již přihlášené, s možností sdílení zpět do feedu.",
+      "intro": "Mini aplikace vytvořené pro DeHub kýmkoli. Otevírají se uvnitř DeHub, už jste přihlášen, a každá aplikace zobrazí svůj skutečný webový adresář.",
+      "buildCta": "Vytvořit aplikaci",
+      "emptyTitle": "Žádné aplikace zatím nejsou zobrazeny",
+      "emptyBody": "První aplikace jsou v recenzi. Vytvořte jednu a mohla by být zde."
+    },
+    "dev": {
+      "title": "Vytvořit mini aplikaci",
+      "seoTitle": "Vytvořit DeHub mini aplikaci",
+      "seoDescription": "Vytvořte mini aplikaci pro DeHub: jeden skriptový tag, přihlášení s DeHub, sdílení do feedu. Zkontrolujte svůj manifest a zhlédněte si předhlídku aplikace v reálném hostiteli.",
+      "intro": "Každý webový stránka se stane DeHub mini aplikací s jedním skriptovým tagem. Zkontrolujte svůj manifest, zhlédněte si feed kartu a spusťte svou aplikaci uvnitř DeHub, než ji uvidí někdo jiný. Mini aplikace Farcaster fungují tak, jak jsou.",
+      "backToStore": "Zpět na Aplikace",
+      "checkTitle": "Zkontrolovat a spustit",
+      "check": "Zkontrolovat",
+      "launch": "Spustit",
+      "badUrl": "Zadejte adresu https://, nebo http://localhost pro lokální testování.",
+      "localNote": "Lokální adresy nelze zkontrolovat z našich serverů, ale můžete je spustit zde pro testování.",
+      "checkFailed": "Kontrola se nemohla provést. Zkuste to znovu.",
+      "passed": "Manifest vypadá dobře",
+      "failed_one": "{{count}} problém k opravě",
+      "failed_other": "{{count}} problémy k opravě",
+      "farcasterImport": "Číst z farcaster.json",
+      "cardPreview": "Jak váš odkaz vypadá v feedu",
+      "open": "Otevřít",
+      "ownershipTitle": "Ověřte si vlastnictví domény",
+      "ownershipBody": "Podpisujte jednou svým DeHub peněženkou a vložte výsledek do souboru dehub.json. To spojí aplikaci s vaším účtem, takže platby a recenze se vám dostanou.",
+      "signFor": "Podpis pro {{domain}}",
+      "signNeedsUrl": "Zadejte adresu vaší aplikace výše",
+      "signInFirst": "Přihlaste se do DeHub, abyste mohli podepsat.",
+      "signFailed": "Podpis se nezdařil.",
+      "quickstartTitle": "Rychlý start",
+      "quickstartBody": "Přidejte SDK na vaši stránku a zavolejte ready() jednou, když se zobrazí první obrazovka.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Poskytněte tento soubor na /.well-known/dehub.json na doméně vaší aplikace. Máte již farcaster.json? Čteme i to.",
+      "embedTitle": "Karta feedu",
+      "embedBody": "Přidejte tento tag na jakoukoli stránku a odkaz na tuto stránku se zobrazí jako karta s tlačítkem, které otevře vaši aplikaci právě tam.",
+      "verifyTitle": "Přihlaste se pomocí DeHub, na vašem serveru",
+      "verifyBody": "auth.getToken() vám poskytne token podepsaný DeHub. Zkontrolujte jej na vašem serveru pomocí jakékoli knihovny JWT. Adresa peněženky uživatele je v sub.",
+      "copy": "Kopírovat",
+      "copied": "Zkopírováno"
+    }
   }
 }

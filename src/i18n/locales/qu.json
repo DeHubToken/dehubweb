@@ -5417,5 +5417,68 @@
     "back": "Ajustes nisqaman kutiy",
     "signIn": "Yaykuy yupayniyki chinkachinaykipaq",
     "acknowledge": "Billetera recuperación detallesniyta waqaychani chaymanta entiendeni qulluyqa wiñaypaq kasqanmanta."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Chiqapchasqa",
+      "unreviewed": "Mana qhawarisqa",
+      "dev": "Paqarichiq ñawpaq qhaway"
+    },
+    "host": {
+      "close": "App nisqata wichqay",
+      "backToStore": "Apps nisqaman kutiy",
+      "notFound": "Kay app mana DeHub App Store kaqpichu kachkan, utaq uraykachisqa.",
+      "badUrl": "Chay direccionqa manan kichayta atikunmanchu mini app hina. https:// kaqwan qallarinan tiyan, utaq huk localhost tiyay kanan tiyan paqarichiqniyuq ruwaypi.",
+      "readyTimeout": "Kay app mana hayk&#39;aqpas dehub.ready() waqyasqachu, chayrayku pantalla salpicadura 8 segundos qhipaman pakasqa karqa."
+    },
+    "signIn": {
+      "title": "¿{{name}} nisqaman yaykuy?",
+      "body": "Kay ruwana DeHub billetera direccionniyki chaymanta huk yaykuy token kay apppaqlla llamkan chayta chaskinqa. Mana billeteraykiman, qullqiykiman utaq DeHub yupayniykiman yaykuyta tarinqachu.",
+      "cancel": "Kunan manam",
+      "confirm": "Yaykuy"
+    },
+    "store": {
+      "title": "Apps nisqakuna",
+      "seoTitle": "DeHub Apps — DeHubpaq mini apps",
+      "seoDescription": "Mini ruwanakuna DeHub kaqpaq pillapas ruwasqa: pukllaykuna, yanapakuykuna chaymanta aswan DeHub ukhupi kichasqa, yaykusqaña, mikhuyman kutispa rakinakuywan.",
+      "intro": "Mini apps DeHubpaq pillapas ruwasqa. DeHub ukhupi kicharikunku, yaykusqaña kanki, chaymanta sapa app chiqa web direccionninta rikuchin.",
+      "buildCta": "Huk app nisqa ruway",
+      "emptyTitle": "Manaraqmi appkuna listasqachu kachkan",
+      "emptyBody": "Ñawpaq kaq appkuna qhawaypi kachkanku. Hukninta ruway hinaspa kaypi kanman."
+    },
+    "dev": {
+      "title": "Huk mini app nisqa ruway",
+      "seoTitle": "DeHub mini app nisqa ruway",
+      "seoDescription": "DeHub kaqpaq huk mini app ruway: huk script etiqueta, DeHub kaqwan yaykuy, mikhuyman rakiy. Manifestoykita qhaway chaymanta ñawpaqmanta qhaway appniyki chiqa host kaqpi.",
+      "intro": "Mayqin web kitipas huk DeHub mini app kaqman tukun huk script etiqueta kaqwan. Manifestoykita qhaway, tarjeta mikhuyniyki qhaway, chaymanta DeHub ukhupi appniyki purichiy manaraq pipas rikuchkaptin. Farcaster mini apps llamkanku imayna kasqankuman hina.",
+      "backToStore": "Apps nisqaman kutiy",
+      "checkTitle": "Qhaway hinaspa qallariy",
+      "check": "Chiqaqchay",
+      "launch": "Qallariy",
+      "badUrl": "Huk https:// tiyayta qillqay, utaq http://localhost kiti pruebapaq.",
+      "localNote": "Llaqta direccionkuna mana servidorniykumanta qhawayta atikunkuchu, ichaqa kaypi qallariyta atikunki pruebapaq.",
+      "checkFailed": "Chay chequeqa manan puriyta atirqanchu. Hukmanta kallpachakuy.",
+      "passed": "Manifestqa allintam qawakun",
+      "failed_one": "{{count}} sasachakuy allichanapaq",
+      "failed_other": "{{count}} sasachakuykunata allichanapaq",
+      "farcasterImport": "farcaster.json nisqamanta ñawinchay",
+      "cardPreview": "Imaynataq t&#39;inkiyki mikhuypi rikukun",
+      "open": "Kichasqa",
+      "ownershipTitle": "Dominiopa dueñon kasqaykita pruebay",
+      "ownershipBody": "Huk kuti DeHub billeteraykiwan firmay chaymanta chay ruwasqayki dehub.json kaqman k&#39;askachiy. Chayqa app yupayniykiman tinkin, chayrayku qullqi quykuna chaymanta qhawaykuna qamman chayanku.",
+      "signFor": "{{domain}} nisqapaq qillqay.",
+      "signNeedsUrl": "Hawapi appniykipa direccionninta qillqay",
+      "signInFirst": "DeHub nisqaman yaykuy firmakunaykipaq.",
+      "signFailed": "Firmayqa manam tukusqachu.",
+      "quickstartBody": "SDK p&#39;anqaykiman yapay chaymanta ready() waqyay huk kuti ñawpaq pantallayki rikuchiptin.",
+      "manifestTitle": "Riqsichiy",
+      "manifestBody": "Kayta /.well-known/dehub.json kaqpi appniykipa kamachiyninpi sirwiy. ¿Ya farcaster.json nisqayuqñachu kanki? Chaytapas leeyku.",
+      "embedTitle": "Mikhuna tarjeta",
+      "embedBody": "Kay etiquetata mayqin p&#39;anqamanpas yapay, chaymanta huk t&#39;inki chay p&#39;anqaman tarjeta hina rikuchikun huk botón kaqwan chaymanta chayllapi appniyki kichan.",
+      "verifyTitle": "DeHub kaqwan yaykuy, servidorniykipi",
+      "verifyBody": "auth.getToken() appniykiman huk tokenta qun DeHub firmasqa. Chayta qhaway servidorniykipi mayqin JWT bibliotecawanpas. Ruwaqpa billetera direccionninqa sub nisqapi kachkan.",
+      "copy": "Copia",
+      "copied": "Copiasqa"
+    }
   }
 }

@@ -5303,5 +5303,69 @@
     "back": "Parametrlere dolanmak",
     "signIn": "Şkaýyňy silmek üçin gir",
     "acknowledge": "Men pulumy gaýtargylamagyň jikme-jiklerini sakladym we ýitirilmegiň hemişelikdigini bilýärin."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Seret",
+      "unreviewed": "Görülmedik",
+      "dev": "Geliştirici öňünden seret"
+    },
+    "host": {
+      "close": "Ulyjy ýap",
+      "backToStore": "Ulymalara dolanmak",
+      "notFound": "Bu ulag DeHub App Store-da ýok, ýa-da ýykyldy.",
+      "badUrl": "Bu adres kiçijik ulag hökmünde açylmaýar. Bu https://bilen başlamaly ýa-da geliwci modunda ýerli host adresidir.",
+      "readyTimeout": "Bu ulag hiç haçan dehub.ready() diýip atlandyrylmady, şonuň üçin ekran 8 saniýeden soň gizlendi."
+    },
+    "signIn": {
+      "title": "{{name}}diýenýazgydaýazylanmy?",
+      "body": "Bu ulag siziň DeHub pul adresini we diňe bu ulag üçin işleýän bir girişi alar. Bu siziň pulumyza, pulumyza ýa-da DeHub hesabyňyza girmez.",
+      "cancel": "Häzir däl",
+      "confirm": "Saýlan"
+    },
+    "store": {
+      "title": "Ulymalar",
+      "seoTitle": "DeHub ulaglary — DeHub üçin mini ulaglar",
+      "seoDescription": "DeHub üçin hiç kimden gurulýan mini-ilgiler: DeHub-da açylýan oýunlar, esbaplar we başgalar, eýýäm ýazylyp, iýmitde paýlaşylýar.",
+      "intro": "DeHub üçin hiç kimden ýasalan mini-ilgiler. Olar DeHub-da açylýar, siz eýýäm girýärsiňiz we her bir ulag öz web adresini görkezýär.",
+      "buildCta": "Bir ulag ýaratmak",
+      "emptyTitle": "Hiç hili habar berilmedi",
+      "emptyBody": "Birinji ulaglar seredilýär. Birini gurup, ol ýerde bolup biler."
+    },
+    "dev": {
+      "title": "Mini App ýaratmak",
+      "seoTitle": "DeHub mini ulagyny ýaratmak",
+      "seoDescription": "DeHub üçin mini-aply ýaratmak: bir skript tag, DeHub bilen girmek, iýmit paýlamak. Öz manifestiňizi barlaň we öz ulagyňyzy hakyky hostda öňünden görüň.",
+      "intro": "Her bir web-sayt bir skript tag bilen DeHub mini ulagyna öwrülýär. Siz öz manifestiňizi barlaň, iýmit kartyňyzy görüň we başgalar görmezden öň DeHub-da barlaň. Farcaster mini ulaglary özleri ýaly işleýär.",
+      "backToStore": "Ulymalara dolanmak",
+      "checkTitle": "Çykyş we çykyş",
+      "check": "Seret",
+      "launch": "Başla",
+      "badUrl": "HTTPS:// adresini ýa-da ýerli testiň üçin HTTPS://localhosty gir.",
+      "localNote": "Ýerli adresler biziň serverlerimizden barlap bolmaýar, ýöne siz olary synamak üçin bu ýerde başlap bilersiňiz.",
+      "checkFailed": "Çek işläp bolmady. Gaýtalaň.",
+      "passed": "Manifest ýagda ýaxşı",
+      "failed_one": "{{count}} problemýnı düzelte",
+      "failed_other": "{{count}} problemsýnı düzelte",
+      "farcasterImport": "farcaster.json dan okut",
+      "cardPreview": "Sizinki feedde neçe görünür",
+      "open": "Aç",
+      "ownershipTitle": "Domainýnizi özünüzünki eýni eýni",
+      "ownershipBody": "DeHub portfelinizle bir maral beri imzalayýn, nätijeyi sizinki dehub.json-a yapýştyrýn. Bu, iltimoslarýnýzýn ve rasyonalarýnýzýn sizge yetişmesini saýlayýp, appýnizi hesapýnýzga baýlyp býraýar.",
+      "signFor": "{{domain}} için imzalayýn",
+      "signNeedsUrl": "Üzerinizde appýnýzýn adresini girin",
+      "signInFirst": "DeHub-a girýp imzalayýn.",
+      "signFailed": "Imzalama tamamlanmady.",
+      "quickstartTitle": "Hýzlyý baþlanýş",
+      "quickstartBody": "SDK-yý sizinki sayýnýza ekleyýn, ilk ekranýnýz göründükde ready()ni çaðyrýn.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Sizinki appýnýzýn domainýnde /.well-known/dehub.json-da buýný sergileyýn. Artýk farcaster.jsonýnýz var? Biz oýný da okuryoruz.",
+      "embedTitle": "Feed kartý",
+      "embedBody": "Bu tagý her sayýga ekleyýp, o sayýga link bir kart bilen düýtmeçle sizinki appýnýzý açýp görýnür.",
+      "verifyTitle": "DeHub-a serverýnizde girýp imzalayýn",
+      "verifyBody": "auth.getToken() sizinki appýnýzga DeHub tarapýndan imzalanmýş bir token verýr. Serverýnizde her JWT kitapxanasý bilen tekþerleyýn. Kullanýcýnýn portfel adresi sub-da.",
+      "copy": "Kopyala",
+      "copied": "Kopyalandý"
+    }
   }
 }

@@ -7554,5 +7554,69 @@
     "back": "Kembali ke Pengaturan",
     "signIn": "Masuk Akun Anda",
     "acknowledge": "Saya telah menyimpan detail pemulihan dompet saya dan memahami bahwa penghapusan bersifat permanen."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verified",
+      "unreviewed": "Tidak direview",
+      "dev": "Pra-rilis untuk pengembang"
+    },
+    "host": {
+      "close": "Tutup aplikasi",
+      "backToStore": "Kembali ke Aplikasi",
+      "notFound": "Aplikasi ini tidak ada di DeHub App Store, atau telah dihapus.",
+      "badUrl": "Alamat ini tidak dapat dibuka sebagai mini aplikasi. Harus diawali dengan https://, atau merupakan alamat localhost dalam mode pengembang.",
+      "readyTimeout": "Aplikasi ini tidak pernah memanggil dehub.ready(), sehingga layar pembukaannya tersembunyi setelah 8 detik."
+    },
+    "signIn": {
+      "title": "Masuk ke {{name}}?",
+      "body": "Aplikasi ini akan mendapatkan alamat dompet DeHub Anda dan token masuk yang hanya berlaku untuk aplikasi ini. Tidak akan mendapatkan akses ke dompet, dana, atau akun DeHub Anda.",
+      "cancel": "Bukan sekarang",
+      "confirm": "Masuk"
+    },
+    "store": {
+      "title": "Aplikasi",
+      "seoTitle": "DeHub Apps — mini aplikasi untuk DeHub",
+      "seoDescription": "Mini aplikasi yang dibangun untuk DeHub oleh siapa saja: permainan, alat, dan lebih banyak lagi yang dibuka di dalam DeHub, sudah masuk, dengan berbagi kembali ke berita.",
+      "intro": "Mini aplikasi yang dibangun untuk DeHub oleh siapa saja. Mereka dibuka di dalam DeHub, Anda sudah masuk, dan setiap aplikasi menampilkan alamat web aslinya.",
+      "buildCta": "Bangun aplikasi",
+      "emptyTitle": "Tidak ada aplikasi yang terdaftar saat ini",
+      "emptyBody": "Aplikasi pertama sedang dalam proses review. Bangun satu dan mungkin akan ada di sini."
+    },
+    "dev": {
+      "title": "Bangun mini aplikasi",
+      "seoTitle": "Bangun mini aplikasi DeHub",
+      "seoDescription": "Bangun mini aplikasi untuk DeHub: satu tag script, masuk dengan DeHub, berbagi ke berita. Periksa manifest Anda dan pra-tayangkan aplikasi di host asli.",
+      "intro": "Setiap situs web dapat menjadi mini aplikasi DeHub dengan satu tag script. Periksa manifest, lihat kartu berita Anda, dan jalankan aplikasi di dalam DeHub sebelum orang lain melihatnya. Mini aplikasi Farcaster berfungsi seperti biasa.",
+      "backToStore": "Kembali ke Aplikasi",
+      "checkTitle": "Periksa dan jalankan",
+      "check": "Periksa",
+      "launch": "Jalankan",
+      "badUrl": "Masukkan alamat https:// atau http://localhost untuk pengujian lokal.",
+      "localNote": "Alamat lokal tidak dapat diperiksa dari server kami, tetapi Anda dapat menjalankannya di sini untuk mengujinya.",
+      "checkFailed": "Periksa tidak dapat berjalan. Coba lagi.",
+      "passed": "Manifest terlihat bagus",
+      "failed_one": "{{count}} masalah yang perlu diperbaiki",
+      "failed_other": "{{count}} masalah yang perlu diperbaiki",
+      "farcasterImport": "Baca dari farcaster.json",
+      "cardPreview": "Bagaimana tautanmu terlihat di feed",
+      "open": "Buka",
+      "ownershipTitle": "Buktikan bahwa kamu memiliki domain",
+      "ownershipBody": "Tandatangani sekali dengan dompetmu DeHub dan tempelkan hasilnya ke dalam dehub.json. Ini akan menghubungkan aplikasi ke akunmu, sehingga pembayaran dan ulasan akan sampai kepadamu.",
+      "signFor": "Tandatangani untuk {{domain}}",
+      "signNeedsUrl": "Masukkan alamat aplikasi kamu di atas",
+      "signInFirst": "Masuk ke DeHub untuk menandatangani.",
+      "signFailed": "Proses penandatanganan tidak selesai.",
+      "quickstartTitle": "Pemula",
+      "quickstartBody": "Tambahkan SDK ke halamanmu dan panggil ready() sekali layar pertama muncul.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Sediakan ini di /.well-known/dehub.json pada domain aplikasi kamu. Sudah memiliki farcaster.json? Kami juga membacanya.",
+      "embedTitle": "Kartu feed",
+      "embedBody": "Tambahkan tag ini ke halaman mana pun, dan tautan ke halaman tersebut akan muncul sebagai kartu dengan tombol yang membuka aplikasimu langsung di sana.",
+      "verifyTitle": "Masuk dengan DeHub, di servermu",
+      "verifyBody": "auth.getToken() memberikan aplikasi kamu sebuah token yang ditandatangani oleh DeHub. Periksa di servermu dengan menggunakan library JWT apa pun. Alamat dompet pengguna ada di sub.",
+      "copy": "Salin",
+      "copied": "Disalin"
+    }
   }
 }

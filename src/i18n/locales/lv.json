@@ -7527,5 +7527,69 @@
     "back": "Dodieties atpakaļ uz iestatījumiem.",
     "signIn": "Pierakstieties, lai dzēstu kontu",
     "acknowledge": "Esmu saglabājis informāciju par maka atkopšanu un saprotu, ka dzēšana ir neatgriezeniska."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Pārbaudīts",
+      "unreviewed": "Nepārskatīts",
+      "dev": "Izstrādātāja priekšskatījums"
+    },
+    "host": {
+      "close": "Aizvērt lietotni",
+      "backToStore": "Atpakaļ uz lietotnēm",
+      "notFound": "Šī lietotne nav pieejama DeHub App Store, vai arī tā ir noņemta.",
+      "badUrl": "Šo adresi nevar atvērt kā mini lietotni. Tam jāsākas ar https://vai jābūt vietējā resursdatora adresei izstrādātāja režīmā.",
+      "readyTimeout": "Šī lietotne nekad netika saukta par dehub.ready (), tāpēc uzplaiksnījuma ekrāns tika paslēpts pēc 8 sekundēm."
+    },
+    "signIn": {
+      "title": "Vai pierakstīties {{name}}?",
+      "body": "Šī lietotne saņems jūsu DeHub maka adresi un pierakstīšanās marķieri, kas darbojas tikai šajā lietotnē. Tas nesaņems piekļuvi jūsu makam, līdzekļiem vai DeHub kontam.",
+      "cancel": "Ne tagad",
+      "confirm": "Pierakstīties"
+    },
+    "store": {
+      "title": "Lietotnes",
+      "seoTitle": "DeHub lietotnes — mini lietotnes DeHub",
+      "seoDescription": "Mini lietotnes, ko DeHub izveidojis ikviens: spēles, rīki un daudz kas cits, kas tiek atvērts DeHub, kas jau ir pierakstījies, un kopīgots atpakaļ plūsmā.",
+      "intro": "Mini lietotnes, ko DeHub izveidojis ikviens. Tie tiek atvērti DeHub, jūs jau esat pierakstījies, un katrā lietotnē ir redzama tās īstā tīmekļa adrese.",
+      "buildCta": "Izveidot aplikāciju",
+      "emptyTitle": "Pagaidām sarakstā nav nevienas lietotnes",
+      "emptyBody": "Pirmās lietotnes tiek pārskatītas. Izveidojiet to, un tas varētu būt šeit."
+    },
+    "dev": {
+      "title": "Izveidojiet mini aplikāciju",
+      "seoTitle": "Izveidojiet DeHub mini aplikāciju",
+      "seoDescription": "Izveidojiet DeHub mini lietotni: vienu skripta tagu, pierakstieties ar DeHub, kopīgojiet plūsmu. Pārbaudiet manifestu un priekšskatiet aplikāciju īstajā saimniekā.",
+      "intro": "Jebkura vietne kļūst par DeHub mini lietotni ar vienu skripta tagu. Pārbaudiet savu manifestu, skatiet savu plūsmas karti un palaidiet savu lietotni DeHub, pirms kāds to redz. Farcaster mini lietotnes darbojas tādas, kādas tās ir.",
+      "backToStore": "Atpakaļ uz lietotnēm",
+      "checkTitle": "Pārbaude un palaišana",
+      "check": "Pārbaudīt",
+      "launch": "Palaist",
+      "badUrl": "Ievadiet https:// adresi vai http://localhost vietējai testēšanai.",
+      "localNote": "Vietējās adreses nevar pārbaudīt mūsu serveros, taču varat tās palaist šeit, lai pārbaudītu.",
+      "checkFailed": "Pārbaudi nevarēja palaist. Mēģiniet vēlreiz.",
+      "passed": "Manifest izskatās labi",
+      "failed_one": "{{count}} problēma, ko jālabo",
+      "failed_other": "{{count}} problēmas, ko jālabo",
+      "farcasterImport": "Lasīt no farcaster.json",
+      "cardPreview": "Kā savs saits izskatās lapu sarakstā",
+      "open": "Atvērt",
+      "ownershipTitle": "Pārbaudiet, ka jums pieder domēns",
+      "ownershipBody": "Pazīmējieties vienu reizi ar savu DeHub portmonēju un iekopējiet rezultātu savā dehub.json. Tas saista lietotnes ar savu kontu, tāpēc maksas un atsauksmes jums tiek nosūtītas.",
+      "signFor": "Pazīmējieties par {{domain}}",
+      "signNeedsUrl": "Iekopējiet savas lietotnes adresi augšā.",
+      "signInFirst": "Pazīmējieties DeHub, lai pazīmētos.",
+      "signFailed": "Pazīmēšanās nav pabeigta.",
+      "quickstartTitle": "Īsais sākums",
+      "quickstartBody": "Pievienojiet SDK savā lapā un izsauciet ready() pēc tam, kad pirmā ekrāna ir parādījusies.",
+      "manifestTitle": "Manifests",
+      "manifestBody": "Atbalstiet šo / .well-known/dehub.json savā lietotnes domēnā. Jābūt farcaster.json? Mēs to lasām arī.",
+      "embedTitle": "Lapas karte",
+      "embedBody": "Pievienojiet šo tagu jebkurā lapā, un saits uz šo lapu parādīsies kā karte ar pogu, kas atver savu lietotni tieši šeit.",
+      "verifyTitle": "Pazīmējieties ar DeHub, uz saviem serveriem",
+      "verifyBody": "auth.getToken() jūsu lietotnei nodod tokenu, kas ir parakstīts ar DeHub. Pārbaudiet to uz saviem serveriem ar jebkuru JWT bibliotēku. Lietotāja portmonēja adresi atrodas sub.",
+      "copy": "Kopēt",
+      "copied": "Kopēts"
+    }
   }
 }

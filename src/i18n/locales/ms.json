@@ -7754,5 +7754,69 @@
     "back": "Kembali ke Tetapan",
     "signIn": "Log masuk untuk memadam akaun anda",
     "acknowledge": "Saya telah menyimpan butiran pemulihan dompet saya dan faham bahawa pemadaman adalah kekal."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Disahkan",
+      "unreviewed": "Belum disemak",
+      "dev": "Pratonton pembangun"
+    },
+    "host": {
+      "close": "Tutup aplikasi",
+      "backToStore": "Kembali ke Aplikasi",
+      "notFound": "Aplikasi ini tidak ada di DeHub App Store, atau ia telah diturunkan.",
+      "badUrl": "Alamat tersebut tidak boleh dibuka sebagai aplikasi mini. Ia mesti bermula dengan https://, atau alamat localhost dalam mod pembangun.",
+      "readyTimeout": "Aplikasi ini tidak pernah memanggildehub.ready (), jadi skrin percikan disembunyikan selepas 8 saat."
+    },
+    "signIn": {
+      "title": "Log masuk ke {{name}}?",
+      "body": "Aplikasi ini akan mendapat alamat dompet DeHub anda dan token log masuk yang hanya berfungsi untuk aplikasi ini. Ia tidak akan mendapat akses kepada dompet anda, dana anda atau akaun DeHub anda.",
+      "cancel": "Bukan sekarang",
+      "confirm": "Log masuk"
+    },
+    "store": {
+      "title": "Aplikasi",
+      "seoTitle": "Aplikasi DeHub — aplikasi mini untuk DeHub",
+      "seoDescription": "Aplikasi mini yang dibina untuk DeHub oleh sesiapa sahaja: permainan, alat dan banyak lagi yang terbuka di dalam DeHub, sudah log masuk, dengan perkongsian kembali ke suapan.",
+      "intro": "Aplikasi mini yang dibina untuk DeHub oleh sesiapa sahaja. Ia dibuka di dalam DeHub, anda sudah log masuk, dan setiap aplikasi menunjukkan alamat web sebenar.",
+      "buildCta": "Bina aplikasi",
+      "emptyTitle": "Belum ada aplikasi yang disenaraikan",
+      "emptyBody": "Aplikasi pertama sedang disemak. Bina satu dan ia boleh berada di sini."
+    },
+    "dev": {
+      "title": "Bina aplikasi mini",
+      "seoTitle": "Bina aplikasi mini DeHub",
+      "seoDescription": "Bina aplikasi mini untuk DeHub: satu tag skrip, log masuk dengan DeHub, kongsi ke suapan. Semak manifes anda dan pratonton aplikasi anda dalam hos sebenar.",
+      "intro": "Mana-mana laman web menjadi aplikasi mini DeHub dengan satu tag skrip. Semak manifes anda, lihat kad suapan anda, dan jalankan aplikasi anda di dalam DeHub sebelum orang lain melihatnya. Aplikasi mini Farcaster berfungsi seperti sedia kala.",
+      "backToStore": "Kembali ke Aplikasi",
+      "checkTitle": "Periksa dan pelancar",
+      "check": "Semak",
+      "launch": "Lancarkan",
+      "badUrl": "Masukkan https:// alamat, atau http://localhost untuk ujian tempatan.",
+      "localNote": "Alamat tempatan tidak boleh diperiksa daripada pelayan kami, tetapi anda boleh melancarkan mereka di sini untuk menguji.",
+      "checkFailed": "Pemeriksaan tidak dapat dijalankan. Cuba lagi.",
+      "passed": "Manifes kelihatan baik",
+      "failed_one": "{{count}} masalah untuk dibaiki",
+      "failed_other": "{{count}} masalah untuk dibaiki",
+      "farcasterImport": "Baca daripada farcaster.json",
+      "cardPreview": "Bagaimana pautan anda kelihatan dalam suapan",
+      "open": "Buka",
+      "ownershipTitle": "Buktikan anda memiliki domain",
+      "ownershipBody": "Tandatangan sekali dengan dompet DeHub anda dan tampal hasilnya ke dehub.json anda. Ia memautkan aplikasi kepada akaun anda, jadi pembayaran dan ulasan akan sampai kepada anda.",
+      "signFor": "Tandatangan untuk {{domain}}",
+      "signNeedsUrl": "Masukkan alamat aplikasi anda di atas",
+      "signInFirst": "Log masuk ke DeHub untuk mendaftar masuk.",
+      "signFailed": "Penandatanganan tidak selesai.",
+      "quickstartTitle": "Memulakan VNC",
+      "quickstartBody": "Tambah SDK ke halaman anda dan panggil ready() sebaik sahaja skrin pertama anda menunjukkan.",
+      "manifestTitle": "Manifes",
+      "manifestBody": "Hidangkan ini di /.wellknown/dehub.json pada domain aplikasi anda. Sudah ada farcaster.json? Kita baca juga.",
+      "embedTitle": "Kad suapan",
+      "embedBody": "Tambah tag ini ke mana-mana halaman, dan pautan ke halaman tersebut ditunjukkan sebagai kad dengan butang yang membuka aplikasi anda di sana.",
+      "verifyTitle": "Log masuk dengan DeHub, pada pelayan anda",
+      "verifyBody": "auth.getToken() memberikan aplikasi anda token yang ditandatangani oleh DeHub. Semak pada pelayan anda dengan mana-mana pustaka JWT. Alamat dompet pengguna berada dalam sub.",
+      "copy": "Salin",
+      "copied": "Disalin"
+    }
   }
 }

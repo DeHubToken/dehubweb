@@ -5367,32 +5367,6 @@
     "planTypeNotAllowed": "Bu ijodkorning rejasi bunday turdagi xabarga ruxsat bermaydi.",
     "planMinTip": "Bu ijodkor uchun choychaqa kamida {{amount}} DHB bo‘lishi kerak."
   },
-  "spaces": {
-    "title": "Boʻlimlar",
-    "live": "Jonli",
-    "upcoming": "Kelgusi",
-    "past": "Oʻtgan",
-    "create": "Boʻlim yaratish",
-    "join": "Qoʻshilish",
-    "listeners": "Tinglovchilar",
-    "speakers": "Nutqchilar",
-    "host": "Boshlovchi",
-    "endSpace": "Boʻlimni tugatish",
-    "raiseHand": "Qoʻl koʻtarish",
-    "lowerHand": "Qoʻlni tushirish",
-    "mute": "Ovozni oʻchirish",
-    "unmute": "Ovozni yoqish",
-    "leave": "Boʻlimni tark etish",
-    "noSpaces": "Hali boʻlimlar yoʻq",
-    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
-  },
-  "blog": {
-    "title": "Blog",
-    "readMore": "Koʻproq oʻqish",
-    "backToBlog": "Blogga qaytish",
-    "sharePost": "Postni ulashish",
-    "relatedPosts": "Bogʻliq postlar"
-  },
   "credits": {
     "earningsWorth": "{{amount}} ga arziydi",
     "percentUsed": "{{percent}}% ishlatilgan",
@@ -5433,5 +5407,95 @@
     "back": "Sozlamalarga qaytish",
     "signIn": "Hisobingizni o&#39;chirish uchun tizimga kiring",
     "acknowledge": "Men hamyonimni tiklash ma&#39;lumotlarini saqladim va o&#39;chirish doimiy ekanligini tushunaman."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Tasdiqlangan",
+      "unreviewed": "Ko&#39;rib chiqilmagan",
+      "dev": "Dasturchi uchun oldindan ko&#39;rish"
+    },
+    "host": {
+      "close": "Yoping uzatishni tugatish",
+      "backToStore": "Ilovalarga qaytish",
+      "notFound": "Bu ilova DeHub App Store’da yo‘q yoki olib tashlangan.",
+      "badUrl": "Bu manzilni mini-ilova sifatida ochib bo&#39;lmaydi. U https:// bilan boshlanishi yoki dasturchi rejimida localhost manzili bo&#39;lishi kerak.",
+      "readyTimeout": "Bu ilova hech qachon dehub.ready() ni chaqirmagan, shuning uchun ekran 8 soniyadan keyin yashirilgan."
+    },
+    "signIn": {
+      "title": "{{name}} ga kirish?",
+      "body": "Ushbu ilova sizning DeHub hamyoningiz manzilini va faqat ushbu ilova uchun ishlaydigan kirish tokenini oladi. U hamyoningizga, mablag&#39;laringizga yoki DeHub hisobingizga kira olmaydi.",
+      "cancel": "Hozir emas",
+      "confirm": "tizimga kirish"
+    },
+    "store": {
+      "title": "Ilovalar",
+      "seoTitle": "DeHub ilovalari — DeHub uchun mini-ilovalar",
+      "seoDescription": "DeHub uchun har kim tomonidan yaratilgan mini-ilovalar: DeHub ichida ochiladigan, allaqachon tizimga kirgan va tasmada ulashiladigan o&#39;yinlar, vositalar va boshqa ko&#39;p narsalar.",
+      "intro": "DeHub uchun har kim tomonidan yaratilgan mini-ilovalar. Ular DeHub ichida ochiladi, siz allaqachon tizimga kirgansiz va har bir ilova o&#39;zining haqiqiy veb-manzilini ko&#39;rsatadi.",
+      "buildCta": "Ilova yarating",
+      "emptyTitle": "Hali hech qanday ilova ro&#39;yxatda yo&#39;q",
+      "emptyBody": "Birinchi ilovalar ko&#39;rib chiqilmoqda. Bittasini yarating, shunda u shu yerda bo&#39;lishi mumkin."
+    },
+    "dev": {
+      "title": "Mini ilova yarating",
+      "seoTitle": "DeHub mini ilovasini yarating",
+      "seoDescription": "DeHub uchun mini-ilova yarating: bitta skript yorlig&#39;i, DeHub bilan tizimga kiring, tasmada ulashing. Manifestingizni tekshiring va ilovangizni haqiqiy xostda oldindan ko&#39;rib chiqing.",
+      "intro": "Barcha saytlar bir skript tag’i bilan DeHub mini ilovalariga aylanadi. Manifestingizni tekshiring, feed kartangizni koʻring va DeHubda ilovangizni boshqalar koʻrmadan oldin ishlating. Farcaster mini ilovalari oʻzlari kabi ishlaydi.",
+      "backToStore": "Ilovalarga qaytish",
+      "checkTitle": "Tekshirish va ishga tushirish",
+      "check": "Tekshirish",
+      "launch": "Ishga tushirish",
+      "badUrl": "Mahalliy sinov uchun https:// manzilini yoki http://localhost manzilini kiriting.",
+      "localNote": "Mahalliy manzillarni serverlarimizdan tekshirib bo&#39;lmaydi, lekin ularni sinab ko&#39;rish uchun bu yerda ishga tushirishingiz mumkin.",
+      "checkFailed": "Tekshiruvni amalga oshirib bo&#39;lmadi. Qaytadan urinib ko&#39;ring.",
+      "passed": "Manifest yaxshi koʻrinadi",
+      "failed_one": "{{count}} muammosini hal qilish kerak",
+      "failed_other": "{{count}} muammolarni hal qilish kerak",
+      "farcasterImport": "farcaster.json dan oʻqish",
+      "cardPreview": "Sizning havolangiz feedda qanday koʻrinadi",
+      "open": "Oʻpish",
+      "ownershipTitle": "Sizning domeningizga egalik qilishingizni isbotlang",
+      "ownershipBody": "Bir marta DeHub waletingiz bilan imzolang va natijani dehub.json ga joylang. Bu ilovani hisobingizga bogʻlaydi, shu tariqa toʻlovlar va baholar sizga yetadi.",
+      "signFor": "{{domain}} uchun imzolang",
+      "signNeedsUrl": "Ilovaningizning manzilini yuqoriga kiriting",
+      "signInFirst": "DeHub ga kirishingiz kerak imzolash uchun.",
+      "signFailed": "Imzolash tugallanmadi.",
+      "quickstartTitle": "Sozlash",
+      "quickstartBody": "Ilovangizga SDK ni qoʻshing va birinchi ekraningiz koʻrinishiga kelganida ready() ni chaqiring.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Sizning ilovaningizning domenida /.well-known/dehub.json ni taqdim eting. Farcaster.json da ham borligingiz bor? Biz uni ham oʻqiyapmiz.",
+      "embedTitle": "Feed kartasi",
+      "embedBody": "Bu tagni har qanday sahifaga qoʻshing, va bu sahifaga havola kartada tugma bilan birga koʻrinadi va ilovangizni shu yerda ochadi.",
+      "verifyTitle": "DeHub bilan serveringizda kirishingiz kerak",
+      "verifyBody": "auth.getToken() ilovangizga DeHub tomonidan imzolangan token beradi. Serveringizda har qanday JWT kitobxonligi bilan uni tekshiring. Foydalanuvchi walet manzili sub da boʻladi.",
+      "copy": "Nashriyot",
+      "copied": "Nashriyot qilingan"
+    }
+  },
+  "spaces": {
+    "title": "Boʻlimlar",
+    "live": "Jonli",
+    "upcoming": "Kelgusi",
+    "past": "Oʻtgan",
+    "create": "Boʻlim yaratish",
+    "join": "Qoʻshilish",
+    "listeners": "Tinglovchilar",
+    "speakers": "Nutqchilar",
+    "host": "Boshlovchi",
+    "endSpace": "Boʻlimni tugatish",
+    "raiseHand": "Qoʻl koʻtarish",
+    "lowerHand": "Qoʻlni tushirish",
+    "mute": "Ovozni oʻchirish",
+    "unmute": "Ovozni yoqish",
+    "leave": "Boʻlimni tark etish",
+    "noSpaces": "Hali boʻlimlar yoʻq",
+    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Koʻproq oʻqish",
+    "backToBlog": "Blogga qaytish",
+    "sharePost": "Postni ulashish",
+    "relatedPosts": "Bogʻliq postlar"
   }
 }

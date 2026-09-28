@@ -7395,5 +7395,69 @@
     "back": "Parametrlərə qayıt",
     "signIn": "Hesabınızı silmək üçün daxil olun",
     "acknowledge": "Cüzdan bərpa təfərrüatlarımı yaddaşda saxladım və silinmənin daimi olduğunu başa düşdüm."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Təsdiqlənib",
+      "unreviewed": "Baxılmamış",
+      "dev": "İnşaatçının önbaxışı"
+    },
+    "host": {
+      "close": "Tətbiqi bağla",
+      "backToStore": "Tətbiqlərə qayıt",
+      "notFound": "Bu tətbiq DeHub App Store-da yoxdur və ya aşağı salınıb.",
+      "badUrl": "Həmin ünvan mini tətbiq kimi açıla bilməz. O, https://ilə başlamalı və ya developer rejimində lokal ev sahibi ünvanı olmalıdır.",
+      "readyTimeout": "Bu tətbiq heç vaxt dehub. ready() adlandırılmayıb, buna görə də sıçrayış ekranı 8 saniyədən sonra gizlədilib."
+    },
+    "signIn": {
+      "title": "{{name}} ünvanına daxil olursunuz?",
+      "body": "Bu tətbiq DeHub cüzdan ünvanınızı və yalnız bu tətbiq üçün işləyən bir işarə əldə edəcək. Pul kisənizə, vəsaitinizə və ya DeHub hesabınıza giriş əldə etməyəcək.",
+      "cancel": "İndi yox",
+      "confirm": "Daxil ol"
+    },
+    "store": {
+      "title": "Tətbiqlər",
+      "seoTitle": "DeHub Tətbiqləri — DeHub üçün mini tətbiqlər",
+      "seoDescription": "Hər kəs tərəfindən DeHub üçün qurulmuş mini tətbiqlər: DeHub-un daxilində açılmış, artıq imzalanmış və lentə geri paylaşılan oyunlar, alətlər və daha çoxu.",
+      "intro": "Hər kəs tərəfindən DeHub üçün hazırlanmış mini tətbiqlər. Onlar DeHub-un daxilində açılır, siz artıq daxil olmusunuz və hər bir tətbiqdə onun həqiqi veb ünvanı göstərilir.",
+      "buildCta": "Tətbiq yaradın",
+      "emptyTitle": "Hələ ki, heç bir tətbiq aktiv deyil",
+      "emptyBody": "İlk tətbiqlər nəzərdən keçirilir. Birini qurun və o, burada ola bilər."
+    },
+    "dev": {
+      "title": "Kiçik tətbiq yaradın",
+      "seoTitle": "DeHub mini tətbiqi yaradın",
+      "seoDescription": "DeHub üçün mini tətbiq yaradın: bir skript etiketi yaradın, DeHub ilə daxil olun, lentə paylaşın. Tətbiqinizi həqiqi ev sahibində aydın yoxlayın və önbaxış edin.",
+      "intro": "İstənilən veb-sayt bir skript etiketi ilə DeHub mini tətbiqi olur. Açıqcanızı yoxlayın, yem kartınızı görün və hər kəs onu görməzdən əvvəl tətbiqinizi DeHub-da işə salın. Farcaster mini tətbiqləri olduğu kimi işləyir.",
+      "backToStore": "Tətbiqlərə qayıt",
+      "checkTitle": "Yoxlayın və işə salın",
+      "check": "Yoxla",
+      "launch": "Başla",
+      "badUrl": "Yerli test üçün https:// ünvan və ya http://yerli ev sahibi daxil edin.",
+      "localNote": "Yerli ünvanları serverlərimizdən yoxlamaq mümkün deyil, lakin onları yoxlamaq üçün burada işə sala bilərsiniz.",
+      "checkFailed": "Yoxlama icra edilə bilmədi. Yenidən cəhd edin.",
+      "passed": "Manifest yaxşı görünür",
+      "failed_one": "{{count}} problemini düzəlt",
+      "failed_other": "{{count}} problemləri düzəlt",
+      "farcasterImport": "farcaster.json-dan oxu",
+      "cardPreview": "Sizin linkiniz nasıl feed-da görünür",
+      "open": "Aç",
+      "ownershipTitle": "Sizin domeninizi sahipliyinizi sübut edin",
+      "ownershipBody": "Bir dəfə DeHub hesabınızla imzalayın və nəticəni dehub.json-a əlavə edin. Bu, təqvimə hesabınızı bağlayır, ödənişlər və rəylər sizinə çatır.",
+      "signFor": "{{domain}} üçün imzalayın",
+      "signNeedsUrl": "Yaradığınız təqvimin adresini yuxarıda daxil edin",
+      "signInFirst": "DeHub-a giriş edərək imzalayın.",
+      "signFailed": "İmzalama başa çatmadı.",
+      "quickstartTitle": "Sərbəst başlamaq",
+      "quickstartBody": "Sayfanıza SDK-yı əlavə edin və ilk ekranınızın göstərildiyi vaxtda ready() fonksiyasını çağırın.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Sizin təqviminizin domenində /.well-known/dehub.json kimi xidmət edin. Artıq farcaster.json-iniz var? Biz də onu oxuyuruq.",
+      "embedTitle": "Feed kartı",
+      "embedBody": "Bu tagı hər hansı bir sayfaya əlavə edin və bu sayfaya bir link kart kimi görünür və sizin təqviminizi açmaq üçün düymə ilə təmin olunur.",
+      "verifyTitle": "DeHub-a serverda giriş edin",
+      "verifyBody": "auth.getToken() sizin təqviminizə DeHub tərəfindən imzalanmış bir token verir. Bu tokeni serverda hər hansı bir JWT kitabxanası ilə yoxlayın. Kullanıcının cib adresi sub-da yerləşir.",
+      "copy": "Nüsxə",
+      "copied": "Nüsxə edilib"
+    }
   }
 }
