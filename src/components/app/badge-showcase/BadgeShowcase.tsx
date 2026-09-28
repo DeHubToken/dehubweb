@@ -669,16 +669,23 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
       />
 
       {/* Close floats over the stage, so no header row eats into the sticker. */}
-      <button
-        ref={closeRef}
-        type="button"
-        onClick={requestClose}
-        aria-label={t('badgeShowcase.close')}
-        className="bs-chrome-dark absolute right-4 top-[max(env(safe-area-inset-top),12px)] z-20 grid h-9 w-9 place-items-center rounded-full transition-opacity duration-300 lg:right-6 lg:top-6 lg:h-10 lg:w-10"
+      {/* Positioned by a wrapper: the chrome finish sets position: relative on
+          the button itself, which would override an absolute class there and
+          drop the button into the flow above the stage. */}
+      <div
+        className="absolute right-4 top-[max(env(safe-area-inset-top),12px)] z-20 transition-opacity duration-300 lg:right-6 lg:top-6"
         style={{ opacity: panelIn ? 1 : 0 }}
       >
-        <X className="h-[18px] w-[18px]" />
-      </button>
+        <button
+          ref={closeRef}
+          type="button"
+          onClick={requestClose}
+          aria-label={t('badgeShowcase.close')}
+          className="bs-chrome-dark grid h-9 w-9 place-items-center rounded-full lg:h-10 lg:w-10"
+        >
+          <X className="h-[18px] w-[18px]" />
+        </button>
+      </div>
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col lg:flex-row">
         {/* Stage, with the dock centred under the sticker on desktop. */}
