@@ -30,7 +30,6 @@ import {
   Filter,
   Repeat2,
   Sun,
-  Monitor,
   LayoutGrid,
   Play,
   Sparkles,
@@ -53,18 +52,8 @@ import {
   LogOut,
   Coins,
   Gift,
-  Snowflake,
   Lamp,
-  Crosshair,
-  Palmtree,
-  Terminal,
-  Skull,
-  Orbit,
-  CloudMoon,
-  CloudRain,
-  Trees,
   Bug,
-  Minus,
   Ban,
   Bot,
   Film,
@@ -286,6 +275,7 @@ import { extractBrandColors } from '@/lib/brand-colors';
 import { DeHubPageLoader, ButtonLoader } from '@/components/app/DeHubLoader';
 import { usePendingAction } from '@/hooks/use-pending-action';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
+import { ThemePreviewCard } from '@/components/app/settings/ThemePreviewCard';
 
 export default function SettingsPage() {
   // `?tab=privacy` deep-links a tab. Anything pointing someone at one specific
@@ -2536,6 +2526,23 @@ function ThemeColorPicker({ theme }: { theme: string }) {
   );
 }
 
+const THEME_OPTIONS = [
+  { value: 'system', labelKey: 'settings.system', available: true },
+  { value: 'light', labelKey: 'settings.light', available: true },
+  { value: 'minimal', labelKey: 'settings.minimal', available: true },
+  { value: 'cosmic', labelKey: 'settings.cosmic', available: true },
+  { value: 'hazy', labelKey: 'settings.hazy', available: true },
+  { value: 'swarms', labelKey: 'settings.swarms', available: true },
+  { value: 'lavalamp', labelKey: 'settings.lavalamp', available: true },
+  { value: 'winter', labelKey: 'settings.winter', available: true },
+  { value: 'war', labelKey: 'settings.war', available: true },
+  { value: 'osaka', labelKey: 'settings.osaka', available: true },
+  { value: 'jungle', labelKey: 'settings.jungle', available: true },
+  { value: 'island', labelKey: 'settings.island', available: false },
+  { value: 'hacker', labelKey: 'settings.hacker', available: false },
+  { value: 'horror', labelKey: 'settings.horror', available: false },
+];
+
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
   const { t } = useTranslation();
   const { isCollapsed, setCollapsed } = useSidebarCollapse();
@@ -2557,49 +2564,22 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
               three separate stylesheets — a grey smear over wood in jungle, a
               black bar in minimal. The mask has no colour to get wrong. */}
           <div ref={themePickerFadeRef} style={themePickerFadeStyle} className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-            {[
-              { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true },
-              { value: 'light', icon: Sun, labelKey: 'settings.light', available: true },
-              { value: 'minimal', icon: Minus, labelKey: 'settings.minimal', available: true },
-              { value: 'cosmic', icon: Orbit, labelKey: 'settings.cosmic', available: true },
-              { value: 'hazy', icon: CloudMoon, labelKey: 'settings.hazy', available: true },
-              { value: 'swarms', icon: Bug, labelKey: 'settings.swarms', available: true },
-              { value: 'lavalamp', icon: Lamp, labelKey: 'settings.lavalamp', available: true },
-              { value: 'winter', icon: Snowflake, labelKey: 'settings.winter', available: true },
-              { value: 'war', icon: Crosshair, labelKey: 'settings.war', available: true },
-              { value: 'osaka', icon: CloudRain, labelKey: 'settings.osaka', available: true },
-              { value: 'jungle', icon: Trees, labelKey: 'settings.jungle', available: true },
-              { value: 'island', icon: Palmtree, labelKey: 'settings.island', available: false },
-              { value: 'hacker', icon: Terminal, labelKey: 'settings.hacker', available: false },
-              { value: 'horror', icon: Skull, labelKey: 'settings.horror', available: false },
-            ].map((option) => {
-              const Icon = option.icon;
-              return (
-                <button
-                  key={option.value}
-                  onClick={() => {
-                    if (option.available) {
-                      setTheme(option.value);
-                    } else {
-                      toast.info(t('settings.comingSoon', 'Coming soon'));
-                    }
-                  }}
-                  data-theme-option
-                  data-active={theme === option.value ? 'true' : 'false'}
-                  className={`relative flex flex-col items-center gap-2 p-4 rounded-xl transition-colors flex-shrink-0 min-w-[100px] ${
-                    option.available
-                      ? theme === option.value
-                        ? 'bg-zinc-800/50 border-2 border-white'
-                        : 'bg-zinc-800/50 border-2 border-transparent hover:bg-zinc-800'
-                      : 'bg-zinc-800/30 border-2 border-transparent opacity-40 cursor-not-allowed'
-                  }`}
-                >
-                  <Icon className="w-6 h-6 text-zinc-400" />
-                  <span className="text-white text-sm">{option.value === 'minimal' ? t(option.labelKey, 'Minimal') : t(option.labelKey)}</span>
-                </button>
-              );
-            })}
-
+            {THEME_OPTIONS.map((option) => (
+              <ThemePreviewCard
+                key={option.value}
+                value={option.value}
+                label={t(option.labelKey)}
+                active={theme === option.value}
+                available={option.available}
+                onSelect={() => {
+                  if (option.available) {
+                    setTheme(option.value);
+                  } else {
+                    toast.info(t('settings.comingSoon', 'Coming soon'));
+                  }
+                }}
+              />
+            ))}
           </div>
         </div>
 
