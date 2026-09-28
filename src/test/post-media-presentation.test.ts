@@ -52,7 +52,7 @@ describe('post media presentation', () => {
 
     expect(imageCard).toContain("const BITMAP_RETAIN_MARGIN = '1200px 100%'");
     expect(imageCard).toContain('const BITMAP_RELEASE_DELAY_MS = 15_000');
-    expect(imageCard).toContain('src={retainBitmap ? img : undefined}');
-    expect(imageCard).toContain('srcSet={retainBitmap ? cdnImageSrcSet(img, FEED_IMAGE_WIDTHS) : undefined}');
+    expect(imageCard).toContain('src={retainBitmap && horizontalBitmap ? img : undefined}');
+    expect(imageCard).toContain('srcSet={retainBitmap && horizontalBitmap ? cdnImageSrcSet(img, FEED_IMAGE_WIDTHS) : undefined}');
   });
 });

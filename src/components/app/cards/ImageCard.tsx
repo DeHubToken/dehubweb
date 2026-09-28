@@ -13,6 +13,7 @@ import { useState, memo, useCallback, useEffect, useRef, useMemo, lazy, Suspense
 const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useImageSoundtrack } from '@/hooks/use-image-soundtrack';
+import { useHorizontalBitmap } from '@/hooks/use-horizontal-bitmap';
 import { SoundtrackControl } from './SoundtrackControl';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
@@ -152,12 +153,14 @@ function ImageSlide({
   aboveFold,
   postId,
   onImageClick,
+  viewportRef,
 }: {
   img: string;
   idx: number;
   aboveFold: boolean;
   postId?: string;
   onImageClick: (index: number) => void;
+  viewportRef: React.RefObject<HTMLDivElement>;
 }) {
   // Upgraded from the click-only double-tap to the shared ladder, so a photo
   // gets the same triple-tap ❤️ and hold-for-the-tray as every other surface.
@@ -173,6 +176,7 @@ function ImageSlide({
   const ratio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img);
   const slideRef = useRef<HTMLDivElement>(null);
   const [retainBitmap, setRetainBitmap] = useState(aboveFold);
+  const horizontalBitmap = useHorizontalBitmap(img, !!ratio, viewportRef, slideRef);
   // Resolve the ratio during render so a replaced image never paints with the
   // previous image's dimensions or needs a second render just to reset them.
 
@@ -226,8 +230,8 @@ function ImageSlide({
           side-fill. width/height attrs (from the cached ratio) reserve the box
           up front so there's no layout shift on load. */}
       <img
-        src={retainBitmap ? img : undefined}
-        srcSet={retainBitmap ? cdnImageSrcSet(img, FEED_IMAGE_WIDTHS) : undefined}
+        src={retainBitmap && horizontalBitmap ? img : undefined}
+        srcSet={retainBitmap && horizontalBitmap ? cdnImageSrcSet(img, FEED_IMAGE_WIDTHS) : undefined}
         sizes={FEED_IMAGE_SIZES}
         alt=""
         width={ratio ? Math.round(ratio * 1000) : undefined}
@@ -365,6 +369,7 @@ function ImageCarousel({
               aboveFold={aboveFold}
               postId={postId}
               onImageClick={onImageClick}
+              viewportRef={scrollRef}
             />
           </div>
         ))}
