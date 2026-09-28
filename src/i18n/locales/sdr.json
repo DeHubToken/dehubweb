@@ -2621,7 +2621,6 @@
     "noStories": "ابھی تک کوئی کہانی نہیں"
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "پیرودونکي د لیست شوي نرخ دمخه ښودل شوي د هاب توکن مقدار تادیه کوي. تاسو د USDT بیلانس په توګه د USD ارزښت ترلاسه کوئ.",
     "legacyPlanMigrates": "سپمول دا میراثي توکن-قیمت شوي پلان په ډالر قیمت کې د لیست شوي نرخ دمخه لیږدوي.",
     "tokenAmount": "{{amount}} توکن",
     "preListingTokenAmount": "مقدار توکن قبل از لیست شدن",
@@ -2652,7 +2651,6 @@
     "publish": "प्रकाशित कर",
     "confirmSubscription": "सदस्यता की पुष्टि कर",
     "planPrice": "योजना कीमत",
-    "youPayInclFee": "आप भुगतान करथो (प्लेटफॉर्म शुल्क सहित)",
     "calculating": "गणना कर रहा हे...",
     "cancel": "रद्द कर",
     "confirm": "पुष्टि कर",
@@ -2732,7 +2730,23 @@
     "withdrawableSoon": "सदस्यता कमाई जल्दिए निकाले सकब",
     "percentUsed": "{{percent}}% used",
     "spentOfTotal": "{{spent}} of {{total}}",
-    "viewInWallet": "वॉलेट में देख"
+    "topUp": "टोकन जोड़ा",
+    "topUpTitle": "सदस्यता टोकन जोड़ा",
+    "topUpCustom": "दूसर रकम (USD)",
+    "topUpYouSend": "रउरा भेजब",
+    "topUpYouGet": "रउरा बैलेंस में जुड़ी",
+    "topUpConfirm": "{{amount}} जोड़ा",
+    "topUpRange": "{{min}} से {{max}} लिखा",
+    "topUpDone": "{{amount}} रउरा सदस्यता टोकन में जुड़ गेलक",
+    "topUpPending": "रउरा टॉप-अप कर पुष्टि होवत हे। जल्दिए बैलेंस में देखाई।",
+    "topUpFailed": "सदस्यता टोकन नी जुड़ पालक",
+    "topUpEmptyHint": "क्रिएटर के सदस्यता ले ले टोकन जोड़ा",
+    "topUpStageFunding": "टोकन लावत हे…",
+    "topUpStageWallet": "आपन वॉलेट में पुष्टि करा…",
+    "topUpStageConfirming": "लेनदेन कर इंतजार…",
+    "topUpStageCrediting": "बैलेंस में जोड़त हे…",
+    "creatorEarnsInTokens": "सब्सक्राइबर डीहब टोकन में भुगतान करते हैं। आप डॉलर मूल्य अर्जित करते हैं और इसे उस दिन की कीमत पर टोकन के रूप में निकालते हैं।",
+    "youPayNow": "तूँ पइसा दे"
   },
   "live": {
     "chatJoined": "دخل",

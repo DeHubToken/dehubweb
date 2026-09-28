@@ -2617,7 +2617,6 @@
     "transferGuarantee": "تحصل على الحساب بالكامل — المقبض، المنشورات، المتابعون، سجل الإكراميات، وحقوق الشارات. يحتفظ البائع بمحفظته وكل ما فيها. يتم التحويل فقط بعد أن يقرأ DeHub دفعة التوكنز الخاصة بك مرة أخرى من السلسلة؛ إذا تمت مقاطعته، فإن إعادة محاولة الشراء تستأنفها."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "يدفع المشترون مبلغ توكنات DeHub المعروض بالسعر قبل الإدراج. تتلقى قيمة الدولار الأمريكي كرصيد USDT.",
     "legacyPlanMigrates": "الهجرة التوفيرية لهذا المخطط القديم المسعر بالتوكن إلى تسعير الدولار بالسعر قبل الإدراج.",
     "tokenAmount": "{{amount}} توكن",
     "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
@@ -2648,7 +2647,6 @@
     "publish": "انشر",
     "confirmSubscription": "تأكيد الاشتراك",
     "planPrice": "سعر الخطة",
-    "youPayInclFee": "تدفع (شامل رسوم المنصة)",
     "calculating": "جاري الحساب…",
     "cancel": "إلغاء",
     "confirm": "تأكيد",
@@ -2728,7 +2726,23 @@
     "withdrawableSoon": "أرباح الاشتراك حتكون قابلة للسحب قريبًا",
     "percentUsed": "{{percent}}% مستَخدم",
     "spentOfTotal": "{{spent}} من {{total}}",
-    "viewInWallet": "شوف في المحفظة"
+    "topUp": "ضيف توكنز",
+    "topUpTitle": "إضافة رموز اشتراك",
+    "topUpCustom": "مبلغ آخر (دولار أمريكي)",
+    "topUpYouSend": "ترسل",
+    "topUpYouGet": "تمت إضافته إلى رصيدك",
+    "topUpConfirm": "إضافة {{amount}}",
+    "topUpRange": "أدخل {{min}} إلى {{max}}",
+    "topUpDone": "تمت إضافة {{amount}} إلى رموز اشتراكك",
+    "topUpPending": "عملية الشحن قيد التأكيد. ستظهر في رصيدك قريباً.",
+    "topUpFailed": "تعذر إضافة رموز الاشتراك",
+    "topUpEmptyHint": "شحن للاشتراك في المبدعين",
+    "topUpStageFunding": "جاري الحصول على الرموز…",
+    "topUpStageWallet": "تأكيد في محفظتك…",
+    "topUpStageConfirming": "في انتظار المعاملة…",
+    "topUpStageCrediting": "جاري الإضافة إلى رصيدك…",
+    "creatorEarnsInTokens": "المشتركين بيدفعوا برموز DeHub. إنت بتكسب القيمة بالدولار وبتسحبها رموز بسعر اليوم.",
+    "youPayNow": "إنت بتدفع"
   },
   "live": {
     "chatJoined": "دخل",

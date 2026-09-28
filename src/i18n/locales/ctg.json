@@ -2613,7 +2613,6 @@
     "noStories": "এহনো কুনো গল্প নাই"
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "বায়াররা প্রি-লিস্টিং রেটে দেখানো DeHub টোকেন অ্যামাউন্ট পে করবো। তুমি USDT ব্যালেন্স হিসেবে USD ভ্যালু পাইবা।",
     "legacyPlanMigrates": "সেভিং এই লিগ্যাসি টোকেন-প্রাইসড প্ল্যানকে প্রি-লিস্টিং রেটে ডলার প্রাইসিং-এ মাইগ্রেট করবো।",
     "tokenAmount": "{{amount}} টোকেন",
     "preListingTokenAmount": "প্রি-লিস্টিং টোকেন অ্যামাউন্ট",
@@ -2704,7 +2703,23 @@
     "withdrawableSoon": "সাবস্ক্রিপশন আর্নিংস উইল বি উইথড্রয়েবল সুন।",
     "percentUsed": "{{percent}}% ইউজড",
     "spentOfTotal": "{{spent}} অফ {{total}}",
-    "viewInWallet": "ভিউ ইন ওয়ালেট"
+    "topUp": "টোকেন যোগ কর",
+    "topUpTitle": "সাবস্ক্রিপশন টোকেন যোগ করুন",
+    "topUpCustom": "অন্যান্য পরিমাণ (USD)",
+    "topUpYouSend": "আপনি পাঠান",
+    "topUpYouGet": "আপনার ব্যালেন্সে যোগ করা হয়েছে",
+    "topUpConfirm": "{{amount}} যোগ করুন",
+    "topUpRange": "{{min}} প্রবেশ করান {{max}} তে",
+    "topUpDone": "{{amount}} আপনার সাবস্ক্রিপশন টোকেনে যোগ করা হয়েছে",
+    "topUpPending": "আপনার টপ-আপ নিশ্চিত হচ্ছে। এটি শীঘ্রই আপনার ব্যালেন্সে প্রদর্শিত হবে।",
+    "topUpFailed": "সাবস্ক্রিপশন টোকেন যোগ করা যায়নি",
+    "topUpEmptyHint": "স্রষ্টাদের সাবস্ক্রাইব করতে টপ আপ করুন",
+    "topUpStageFunding": "টোকেন আনা হচ্ছে…",
+    "topUpStageWallet": "আপনার ওয়ালেটে নিশ্চিত করুন…",
+    "topUpStageConfirming": "লেনদেনের জন্য অপেক্ষা করা হচ্ছে…",
+    "topUpStageCrediting": "আপনার ব্যালেন্সে যোগ করা হচ্ছে…",
+    "creatorEarnsInTokens": "সাবস্ক্রাইবারে DeHub টোকেনে দাম দেয়। তুঁই ডলারর দাম কামাইবা আর হেই দিনর দামত টোকেনে তুলি লইবা।",
+    "youPayNow": "তুঁই দিবা"
   },
   "live": {
     "chatJoined": "যোগ দিছে",

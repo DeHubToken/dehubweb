@@ -2625,7 +2625,6 @@
     "noStories": "مافيش قصص لسه"
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "المشترين بيدفعوا مبلغ توكن DeHub المعروض بالسعر قبل الإدراج. أنت بتاخد قيمة الدولار كرصيد USDT.",
     "legacyPlanMigrates": "الحفظ بينقل الخطة القديمة اللي بتتسعر بالتوكن لتسعير الدولار بالسعر قبل الإدراج.",
     "tokenAmount": "{{amount}} توكن",
     "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
@@ -2655,7 +2654,6 @@
     "publish": "نشر",
     "confirmSubscription": "تأكيد الاشتراك",
     "planPrice": "سعر الخطة",
-    "youPayInclFee": "إنت بتدفع (مع رسوم المنصة)",
     "calculating": "بنحسبه...",
     "cancel": "إلغاء",
     "confirm": "تأكد",
@@ -2734,7 +2732,23 @@
     "withdrawableSoon": "أرباح الاشتراك هتكون قابلة للسحب قريبًا",
     "percentUsed": "تم استخدام {{percent}}%",
     "spentOfTotal": "{{spent}} من {{total}}",
-    "viewInWallet": "شوف في المحفظة"
+    "topUp": "زودني بالرموز",
+    "topUpTitle": "أضف رموز الاشتراك",
+    "topUpCustom": "مبلغ آخر (دولار أمريكي)",
+    "topUpYouSend": "ترسل",
+    "topUpYouGet": "تمت إضافته إلى رصيدك",
+    "topUpConfirm": "أضف {{amount}}",
+    "topUpRange": "أدخل {{min}} إلى {{max}}",
+    "topUpDone": "تمت إضافة {{amount}} إلى رموز الاشتراك الخاصة بك",
+    "topUpPending": "عملية الشحن الخاصة بك قيد التأكيد. ستظهر في رصيدك قريبًا.",
+    "topUpFailed": "تعذر إضافة رموز الاشتراك",
+    "topUpEmptyHint": "اشحن رصيدك للاشتراك في المبدعين",
+    "topUpStageFunding": "جاري الحصول على الرموز…",
+    "topUpStageWallet": "تأكيد في محفظتك…",
+    "topUpStageConfirming": "في انتظار المعاملة…",
+    "topUpStageCrediting": "جاري الإضافة إلى رصيدك…",
+    "creatorEarnsInTokens": "المشتركين بيدفعوا بالديهاب توكنز. انت بتاخد قيمة الدولار وبتسحبها توكنز بالسعر بتاع اليوم.",
+    "youPayNow": "بتدفع"
   },
   "live": {
     "chatJoined": "دخل",

@@ -2705,7 +2705,6 @@
     "loginDescription": "Hikoyalarni koʻrish va yaratish uchun kiring."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Xaridorlar ro'yxatdan oldingi stavkada ko'rsatilgan DeHub token miqdorini to'laydilar. Siz USDT balansi sifatida USD qiymatini olasiz.",
     "legacyPlanMigrates": "Saqlash ushbu eski token narxidagi rejani ro'yxatdan oldingi stavkada dollar narxiga o'tkazadi.",
     "tokenAmount": "{{amount}} token",
     "preListingTokenAmount": "Ro'yxatdan oldingi token miqdori",
@@ -2736,7 +2735,6 @@
     "publish": "Chop etish",
     "confirmSubscription": "Obunani tasdiqlash",
     "planPrice": "Reja narxi",
-    "youPayInclFee": "Siz to‘laysiz (platforma to‘lovi bilan)",
     "calculating": "hisoblanmoqda…",
     "cancel": "Bekor qilish",
     "confirm": "Tasdiqlash",
@@ -2816,7 +2814,23 @@
     "withdrawableSoon": "Obuna daromadlari tez orada yechib olinadi",
     "percentUsed": "{{percent}}% ishlatilgan",
     "spentOfTotal": "{{spent}} ning {{total}}",
-    "viewInWallet": "Hamyonda ko&#39;rish"
+    "topUp": "Tokenlarni qo&#39;shish",
+    "topUpTitle": "Obuna tokenlarini qo&#39;shish",
+    "topUpCustom": "Boshqa miqdor (AQSh dollari)",
+    "topUpYouSend": "Siz yuborasiz",
+    "topUpYouGet": "Balansingizga qo&#39;shildi",
+    "topUpConfirm": "{{amount}} qo&#39;shing",
+    "topUpRange": "{{min}} dan {{max}} gacha kiriting",
+    "topUpDone": "Obuna tokenlaringizga {{amount}} qo&#39;shildi",
+    "topUpPending": "Hisobingizni to&#39;ldirish tasdiqlanmoqda. Tez orada hisobingizda paydo bo&#39;ladi.",
+    "topUpFailed": "Obuna tokenlarini qo&#39;shib bo&#39;lmadi",
+    "topUpEmptyHint": "Ijodkorlarga obuna bo&#39;lish uchun hisobingizni to&#39;ldiring",
+    "topUpStageFunding": "Tokenlar olinmoqda…",
+    "topUpStageWallet": "Hamyoningizda tasdiqlang…",
+    "topUpStageConfirming": "Tranzaksiya kutilmoqda…",
+    "topUpStageCrediting": "Balansingizga qoʻshilmoqda…",
+    "creatorEarnsInTokens": "Obunachilar DeHub tokenlarida to&#39;lovlarni amalga oshiradilar. Siz dollar qiymatini olasiz va uni o&#39;sha kunning narxida token sifatida yechib olasiz.",
+    "youPayNow": "Siz to&#39;laysiz"
   },
   "live": {
     "chatJoined": "qoʻshildi",

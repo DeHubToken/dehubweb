@@ -2712,7 +2712,6 @@
     "transferGuarantee": "Uthola i-akhawunti ephelele — isibambo, okuthunyelwe, abalandeli, umlando wamathiphu namalungelo okubheja. Umdayisi ugcina isikhwama sakhe nakho konke okukuso. Ukudluliswa kuqala kuphela ngemuva kokuthi i-DeHub ifunde inkokhelo yakho yamathokheni ngaphandle kweketango; uma iphazamiseka, ukuzama ukuthenga kabusha kuyaqhubeka."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Abathengi bakhokha inani lamathuluzi e-DeHub elibonisiwe ngesilinganiso sangaphambi kokufakwa kuhlu. Uthola inani le-USD njenge-USDT balance.",
     "legacyPlanMigrates": "Ukulondoloza kuthutha leli lungiselelo elidala elibhalwe ngamathuluzi libe yizintengo zama-dollar ngesilinganiso sangaphambi kokufakwa kuhlu.",
     "tokenAmount": "{{amount}} amathuluzi",
     "preListingTokenAmount": "Inani lamathuluzi sangaphambi kokufakwa kuhlu",
@@ -2743,7 +2742,6 @@
     "publish": "Shicilela",
     "confirmSubscription": "Qinisekisa Ukubhalisa",
     "planPrice": "Intengo ye-Plan",
-    "youPayInclFee": "Ukhokha (kufaka imali yesikhulumi)",
     "calculating": "iyabalwa…",
     "cancel": "Khansela",
     "confirm": "Qinisekisa",
@@ -2823,7 +2821,23 @@
     "withdrawableSoon": "Imali ekhokhelwayo izokhishwa maduzane",
     "percentUsed": "{{percent}}% isetshenzisiwe",
     "spentOfTotal": "{{spent}} of {{total}}",
-    "viewInWallet": "Buka esikhwameni semali"
+    "topUp": "Faka amathokheni",
+    "topUpTitle": "Faka amathokheni okubhalisa",
+    "topUpCustom": "Elinye inani (USD)",
+    "topUpYouSend": "Uyathumela",
+    "topUpYouGet": "Kufakwe kubhalansi yakho",
+    "topUpConfirm": "Faka {{amount}}",
+    "topUpRange": "Faka {{min}} ku {{max}}",
+    "topUpDone": "{{amount}} kufakwe kumathokheni akho okubhalisa",
+    "topUpPending": "Okuthe xaxa kwakho kuyaqinisekisa. Izovela kubhalansi yakho maduzane.",
+    "topUpFailed": "Ayikwazanga ukufaka amathokheni okubhalisa",
+    "topUpEmptyHint": "Ngaphezu kwalokho ukuze ubhalisele abasunguli",
+    "topUpStageFunding": "Ukuthola amathokheni...",
+    "topUpStageWallet": "Qinisekisa esikhwameni sakho semali...",
+    "topUpStageConfirming": "Ilinde ukuthengiselana...",
+    "topUpStageCrediting": "Kufakwa kubhalansi yakho...",
+    "creatorEarnsInTokens": "Ababhalisile bakhokha ngamathokheni e-DeHub. Uthola inani le-dollar bese ulihoxisa njengamathokheni ngenani ngosuku.",
+    "youPayNow": "Uyakhokha"
   },
   "live": {
     "chatJoined": "ujoyinile",

@@ -2650,7 +2650,6 @@
     "transferGuarantee": "Ị ga-enweta akaụntụ ahụ dum — aka ahịa, posts, ndị na-eso ụzọ, akụkọ ndụ ndụ na ikike badge. Onye na-ere ere na-edobe akpa ego ya na ihe niile dị na ya. Mbufe ahụ na-agba naanị mgbe DeHub gụchara ịkwụ ụgwọ akara gị laghachi na yinye; ọ bụrụ na emebi ya, ịnwale ịzụta ọzọ na-eweghachi ya."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Ndị na-azụ ahịa na-akwụ ego tokenịị DeHub egosiri na ọnụahịa tupu ndepụta. Ị na-enweta uru USD dị ka ngọzi USDT.",
     "legacyPlanMigrates": "Nchekwa na-ebufe atụmatụ a nke tokenịị ochie na-agụta ego na dollar na ọnụahịa tupu ndepụta.",
     "tokenAmount": "{{amount}} tokenịị",
     "preListingTokenAmount": "Ego tokenịị tupu ndepụta",
@@ -2681,7 +2680,6 @@
     "publish": "Bipụta",
     "confirmSubscription": "Kwenye Ndebanye",
     "planPrice": "Ọnụahịa Atụmatụ",
-    "youPayInclFee": "Ị na-akwụ (gụnyere ụgwọ ikpo okwu)",
     "calculating": "na-agbakọ…",
     "cancel": "Kagbuo",
     "confirm": "Kwenye",
@@ -2761,7 +2759,23 @@
     "withdrawableSoon": "A ga-ewepụ ego e nwetara na ndenye aha n 'oge na-adịghị anya.",
     "percentUsed": "{{percent}}% used",
     "spentOfTotal": "{{spent}} nke {{total}}",
-    "viewInWallet": "Gosi na obere akpa"
+    "topUp": "Tinye tokens",
+    "topUpTitle": "Tinye ndenye aha tokens",
+    "topUpCustom": "Ego ndị ọzọ (USD)",
+    "topUpYouSend": "I zigara",
+    "topUpYouGet": "Agbakwunyere na nguzozi gị",
+    "topUpConfirm": "Tinye {{amount}}",
+    "topUpRange": "Tinye {{min}} {{max}}",
+    "topUpDone": "{{amount}} agbakwunyere gị na ndenye aha tokens",
+    "topUpPending": "Gị n 'elu-elu bụ enen. Ọ ga-apụta na nguzozi gị n 'oge na-adịghị anya.",
+    "topUpFailed": "Enweghị ike ịgbakwunye tokens ndenye aha",
+    "topUpEmptyHint": "Top elu denye aha na creators",
+    "topUpStageFunding": "Inweta tokens…",
+    "topUpStageWallet": "Gosi na obere akpa gị...",
+    "topUpStageConfirming": "Ihe ọzọ bụ na, you can reach all these destinations by train…",
+    "topUpStageCrediting": "Ihe ọzọ bụ na, you can reach all these destinations by train…",
+    "creatorEarnsInTokens": "Ndị debanyere aha na-akwụ ụgwọ na akara ngosi DeHub. Ị na-enweta dollar uru ma wepụ ya dị ka tokens na price na ụbọchị.",
+    "youPayNow": "Ị na-akwụ ụgwọ"
   },
   "live": {
     "chatJoined": "sonyere",

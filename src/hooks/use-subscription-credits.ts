@@ -6,10 +6,10 @@ import { getSubscriptionCredits } from '@/lib/api/dehub/subscriptions';
 
 /** The signed-in user's subscription-token balance. */
 export function useSubscriptionCredits() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   return useQuery({
     queryKey: ['subscription-credits'],
-    queryFn: getSubscriptionCredits,
+    queryFn: () => getSubscriptionCredits(walletAddress),
     enabled: isAuthenticated,
     staleTime: 30_000,
     retry: false,
