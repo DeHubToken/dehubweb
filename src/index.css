@@ -2660,6 +2660,11 @@ html[data-theme="light"] body::after {
 }
 
 
+/* Theme picker: the selected sample is ringed in white, which vanishes on paper. */
+html[data-theme="light"] [data-theme-option][data-active="true"] {
+  border-color: var(--ink) !important;
+}
+
 /* Invert common text colours on paper, but keep buttons white-on-grey. */
 html[data-theme="light"] .text-white,
 html[data-theme="light"] .text-zinc-50,
