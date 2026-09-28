@@ -457,6 +457,10 @@ export interface LiveStream extends BaseFeedItem {
  * Short-form video content
  */
 export interface ShortVideo extends BaseFeedItem {
+  imageUrls?: string[];
+  soundtrackUrl?: string;
+  soundtrackTitle?: string;
+  soundtrackCreator?: string;
   type: 'short';
   username: string;
   verified: boolean;
