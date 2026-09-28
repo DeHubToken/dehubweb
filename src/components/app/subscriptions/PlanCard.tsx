@@ -280,14 +280,14 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
                   {total ? formatDhbPayment(totalDhbEstimate) : t('subscriptions.calculating')}
                   {totalDhbEstimate !== null && (
                     <span className="block text-xs font-normal text-zinc-400">
-                      {t('subscriptions.paidToCreatorWallet')}
+                      {t('subscriptions.creditsCreator', { amount: formatAmount(total, 2) })}
                     </span>
                   )}
                 </span>
               </div>
               {isUsdPriced && (
                 <p className="mt-2 pt-2 border-t border-white/10 text-[11px] leading-relaxed text-zinc-500">
-                  {t('subscriptions.creatorPaidDirectNote')}
+                  {t('subscriptions.tokensStayInTreasury')}
                 </p>
               )}
             </div>

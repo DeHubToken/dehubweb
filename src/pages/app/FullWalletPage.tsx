@@ -49,6 +49,7 @@ import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 import { TradeSheet } from '@/components/app/wallet/TradeSheet';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useSubscriptionEarnings, useWithdrawSubscriptionEarnings } from '@/hooks/use-subscriptions';
 
 const CHAIN_OPTIONS: { id: WalletChainId; name: string; icon: string }[] = [
   { id: BASE_CHAIN_ID, name: 'Base', icon: baseLogo },
@@ -110,6 +111,8 @@ export default function FullWalletPage() {
   const [tradeOpen, setTradeOpen] = useState(false);
 
   const { allTokens, isLoading } = useAllChainsTokens();
+  const { earnings: subscriptionEarnings, isLoading: subscriptionEarningsLoading } = useSubscriptionEarnings();
+  const withdrawSubscriptionEarnings = useWithdrawSubscriptionEarnings();
 
   // Wallet + staked + giveaway, defined once in the hook so this page, the
   // Settings row and the badge ladder cannot drift apart again.
@@ -297,6 +300,14 @@ export default function FullWalletPage() {
     }
   };
 
+  const handleCashOut = () => {
+    if (!subscriptionEarnings?.withdrawalAvailable) {
+      toast.info(t('subscriptions.withdrawableSoon'));
+      return;
+    }
+    withdrawSubscriptionEarnings.mutate();
+  };
+
   return (
     // data-wallet-page scopes the light-mode remaps in index.css; the
     // portaled Send/Receive/Buy/Import dialogs and drawers carry the same
@@ -391,6 +402,33 @@ export default function FullWalletPage() {
         )}
       </div>
 
+      {(subscriptionEarningsLoading || ((subscriptionEarnings?.pendingUsdt || 0) + (subscriptionEarnings?.processingUsdt || 0)) > 0) && (
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-xs uppercase tracking-wider text-zinc-500">{t('subscriptions.earningsTitle')}</p>
+              <p className="mt-1 text-xl font-bold text-white">
+                {subscriptionEarningsLoading
+                  ? '…'
+                  : `${((subscriptionEarnings?.pendingUsdt || 0) + (subscriptionEarnings?.processingUsdt || 0)).toLocaleString(undefined, { maximumFractionDigits: 6 })} USDT`}
+              </p>
+              <p className="mt-1 text-xs text-zinc-500">
+                {subscriptionEarnings?.withdrawalAvailable
+                  ? t('subscriptions.earningsWithdrawableOnBase')
+                  : t('subscriptions.earningsUsdtPending')}
+              </p>
+            </div>
+            <Button
+              variant="glass"
+              className="rounded-xl"
+              disabled={subscriptionEarningsLoading || withdrawSubscriptionEarnings.isPending}
+              onClick={handleCashOut}
+            >
+              {withdrawSubscriptionEarnings.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : t('subscriptions.withdraw')}
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Action buttons — horizontally scrollable */}
       <div className="flex gap-2 mb-4 pb-1">
