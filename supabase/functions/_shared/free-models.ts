@@ -91,8 +91,27 @@ function isTextOnly(body: Record<string, unknown>): boolean {
  * The OpenAI fields every provider here accepts. Mistral rejects unknown
  * fields outright, and `max_completion_tokens` is not one it knows.
  */
+/**
+ * Mistral only accepts tool-call ids of exactly nine letters and digits, and a
+ * conversation whose earlier rounds another provider answered carries theirs.
+ * Rewrite every id the same way on both sides so calls and results still pair.
+ */
+function mistralToolIds(messages: unknown): unknown {
+  if (!Array.isArray(messages)) return messages;
+  const fix = (id: unknown) =>
+    typeof id === 'string' ? id.replace(/[^a-zA-Z0-9]/g, '').slice(-9).padStart(9, '0') : id;
+  return messages.map((m: Record<string, unknown>) => {
+    if (m?.role === 'tool') return { ...m, tool_call_id: fix(m.tool_call_id) };
+    if (Array.isArray(m?.tool_calls)) {
+      return { ...m, tool_calls: m.tool_calls.map((c: Record<string, unknown>) => ({ ...c, id: fix(c.id) })) };
+    }
+    return m;
+  });
+}
+
 function portableBody(body: Record<string, unknown>, p: FreeProvider): Record<string, unknown> {
-  const out: Record<string, unknown> = { model: p.model, messages: body.messages };
+  const messages = p.name.startsWith('mistral/') ? mistralToolIds(body.messages) : body.messages;
+  const out: Record<string, unknown> = { model: p.model, messages };
   const maxTokens = body.max_completion_tokens ?? body.max_tokens;
   if (p.reasons) {
     // Low effort keeps the hidden reasoning short (and inside the per-minute

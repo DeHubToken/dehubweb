@@ -38,7 +38,9 @@ export function postCompletion(
   lovableApiKey: string,
   signal: AbortSignal,
 ): Promise<Response> {
-  if (body.model === DEFAULT_MODEL) return aiChat(body, { signal, label: 'assistant' });
+  // Assistant conversations may use the training free tier (owner's call);
+  // DMs, suggested replies and the coach stay private.
+  if (body.model === DEFAULT_MODEL) return aiChat(body, { signal, label: 'assistant', publicContent: true });
   return fetch(GATEWAY_URL, {
     method: 'POST',
     headers: { Authorization: `Bearer ${lovableApiKey}`, 'Content-Type': 'application/json' },
