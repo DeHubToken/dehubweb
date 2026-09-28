@@ -265,6 +265,9 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
     if (stickerReady) {
       setStickerOn(true);
       setPhase('open');
+      // The sticker takes over looking exactly like the flying copy, then
+      // its paper and foil come in with a small burst of sparks.
+      stageRef.current?.reveal();
     } else if (glFailed) {
       setPhase('open');
     }
@@ -302,7 +305,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
     }
     stage.setItems(items);
     stageRef.current = stage;
-    stage.show(originIndex, { instant: true }).then((ok) => {
+    stage.show(originIndex, { instant: true, hold: true }).then((ok) => {
       if (stageRef.current !== stage) return;
       if (ok) setStickerReady(true);
       else setGlFailed(true);

@@ -70,6 +70,8 @@ interface Slot {
   height: number;
   tween: Tween | null;
   leaving: boolean;
+  /** When the reveal started; null once done (or not started while held). */
+  revealStart: number | null;
 }
 
 interface Tween {
@@ -159,6 +161,7 @@ uniform float uGlitter;
 uniform float uFoil;
 uniform float uOpacity;
 uniform float uTime;
+uniform float uReveal;
 varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vWorld;
@@ -184,6 +187,11 @@ void main() {
   }
 
   float art = texture2D(uMask, vUv).r;
+  // Opening: the paper edge comes in first, then the foil catches the light
+  // with a brief extra glint, so it never jumps from plain to glittering.
+  float paper = smoothstep(0.0, 0.5, uReveal);
+  float shine = smoothstep(0.2, 1.0, uReveal);
+  float glint = shine * (1.0 + 2.2 * sin(3.14159265 * shine));
   vec3 H = normalize(L + V);
   float ndl = max(dot(N, L), 0.0);
   float ndv = clamp(dot(N, V), 0.0, 1.0);
@@ -203,14 +211,14 @@ void main() {
   float twinkle = 0.75 + 0.25 * sin(uTime * 3.0 + hash(cell) * 40.0);
 
   vec3 border = mix(vec3(0.95), vec3(0.95) * (0.72 + 0.5 * rainbow), 0.55);
-  border += sparkle * twinkle * (0.9 + rainbow) * 1.1;
+  border += sparkle * glint * twinkle * (0.9 + rainbow) * 1.1;
 
   vec3 col = tex.rgb;
   float lum = dot(col, vec3(0.299, 0.587, 0.114));
   vec3 artCol = col;
-  artCol += uHolo * rainbow * 0.3 * (0.3 + lum) * (0.55 + 0.45 * (1.0 - ndv) + 0.4 * spec);
-  artCol += uGlitter * sparkle * twinkle * (0.6 + 0.6 * rainbow);
-  artCol = mix(artCol, artCol * (0.55 + 0.9 * rainbow), uFoil * 0.45 * (1.0 - lum * 0.5));
+  artCol += shine * uHolo * rainbow * 0.3 * (0.3 + lum) * (0.55 + 0.45 * (1.0 - ndv) + 0.4 * spec);
+  artCol += uGlitter * sparkle * glint * twinkle * (0.6 + 0.6 * rainbow);
+  artCol = mix(artCol, artCol * (0.55 + 0.9 * rainbow), shine * uFoil * 0.45 * (1.0 - lum * 0.5));
 
   vec3 c = mix(border, artCol, art);
   c *= 0.8 + 0.3 * ndl;
@@ -219,10 +227,51 @@ void main() {
   if (vFold > 0.0) c *= 1.0 - 0.18 * sin(vFold * 3.14159265);
   if (vFold < 0.0) c *= 1.0 + 0.22 * vFold;
 
-  float a = tex.a * uOpacity;
+  float a = tex.a * mix(paper, 1.0, art) * uOpacity;
   gl_FragColor = vec4(clamp(c, 0.0, 1.4) * a, a);
 }
 `;
+
+/* A handful of sparks thrown off the rim as the sticker wakes up. */
+const BURST_VERT = /* glsl */ `
+attribute vec4 aSeed;
+uniform float uT;
+uniform float uR;
+uniform float uPx;
+varying float vAlpha;
+varying float vHue;
+void main() {
+  float t = max(0.0, uT - aSeed.w);
+  float k = clamp(t / 0.95, 0.0, 1.0);
+  float ease = 1.0 - pow(1.0 - k, 3.0);
+  vec2 dir = vec2(cos(aSeed.x), sin(aSeed.x));
+  vec2 p = dir * uR * (0.82 + aSeed.y * 0.32 * ease);
+  p.y -= 0.12 * uR * k * k;
+  vAlpha = step(0.0001, t) * (1.0 - k) * smoothstep(0.0, 0.08, k);
+  vHue = aSeed.x;
+  gl_Position = projectionMatrix * viewMatrix * vec4(p, 0.5, 1.0);
+  gl_PointSize = aSeed.z * uPx * (1.0 - 0.45 * k);
+}
+`;
+
+const BURST_FRAG = /* glsl */ `
+varying float vAlpha;
+varying float vHue;
+void main() {
+  vec2 q = gl_PointCoord * 2.0 - 1.0;
+  float core = exp(-dot(q, q) * 5.0);
+  float cross = max(0.0, 1.0 - abs(q.x) * 5.0) * max(0.0, 1.0 - abs(q.y))
+    + max(0.0, 1.0 - abs(q.y) * 5.0) * max(0.0, 1.0 - abs(q.x));
+  float shape = clamp(core + cross * 0.8, 0.0, 1.0);
+  vec3 tint = 0.5 + 0.5 * cos(6.2831853 * (vHue * 0.16 + vec3(0.0, 0.33, 0.67)));
+  vec3 col = mix(vec3(1.0), tint, 0.25);
+  float a = shape * vAlpha;
+  gl_FragColor = vec4(col * a, a);
+}
+`;
+
+const BURST_COUNT = 48;
+const REVEAL_MS = 1100;
 
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -461,7 +510,10 @@ export class StickerStage {
    * DOM copy already sitting in the same spot. Resolves true once it is on
    * screen, false if a later call or dispose got there first.
    */
-  async show(index: number, { direction = 1, instant = false }: { direction?: 1 | -1; instant?: boolean } = {}) {
+  async show(
+    index: number,
+    { direction = 1, instant = false, hold = false }: { direction?: 1 | -1; instant?: boolean; hold?: boolean } = {},
+  ) {
     const item = this.items[index];
     if (!item) return false;
     if (this.current && this.current.index === index && !this.current.leaving) return true;
@@ -478,6 +530,8 @@ export class StickerStage {
     const slot = this.makeSlot(index, prepared, item);
     this.current = slot;
     this.resetInteraction();
+    // Held: drawn as the bare art until reveal(), matching a DOM copy of it.
+    if (hold) slot.mesh.material.uniforms.uReveal.value = 0;
 
     const baseTilt = THREE.MathUtils.degToRad(item.tilt ?? 0);
     const now = performance.now();
@@ -511,8 +565,67 @@ export class StickerStage {
     return true;
   }
 
+  /** Bring a held sticker to life: paper, then foil, with a burst of sparks. */
+  reveal() {
+    const s = this.current;
+    if (!s) return;
+    if (this.reduced) {
+      s.mesh.material.uniforms.uReveal.value = 1;
+      return;
+    }
+    s.revealStart = performance.now();
+    this.spawnBurst(s);
+  }
+
+  private burst: {
+    points: THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial>;
+    start: number;
+  } | null = null;
+
+  private spawnBurst(slot: Slot) {
+    this.clearBurst();
+    const seeds = new Float32Array(BURST_COUNT * 4);
+    for (let i = 0; i < BURST_COUNT; i++) {
+      seeds[i * 4] = (i / BURST_COUNT) * Math.PI * 2 + (Math.random() - 0.5) * 0.35;
+      seeds[i * 4 + 1] = 0.35 + Math.random() * 0.75;
+      seeds[i * 4 + 2] = 7 + Math.random() * 9;
+      seeds[i * 4 + 3] = Math.random() * 0.18;
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(BURST_COUNT * 3), 3));
+    geometry.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 4));
+    const material = new THREE.ShaderMaterial({
+      vertexShader: BURST_VERT,
+      fragmentShader: BURST_FRAG,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      premultipliedAlpha: true,
+      uniforms: {
+        uT: { value: 0 },
+        uR: { value: slot.height * 0.5 },
+        uPx: { value: this.renderer.getPixelRatio() },
+      },
+    });
+    const points = new THREE.Points(geometry, material);
+    points.frustumCulled = false;
+    points.renderOrder = 5;
+    this.scene.add(points);
+    this.burst = { points, start: performance.now() };
+  }
+
+  private clearBurst() {
+    if (!this.burst) return;
+    this.scene.remove(this.burst.points);
+    this.burst.points.geometry.dispose();
+    this.burst.points.material.dispose();
+    this.burst = null;
+  }
+
   dispose() {
     this.disposed = true;
+    this.clearBurst();
     cancelAnimationFrame(this.raf);
     this.resizeObserver.disconnect();
     this.canvasEl.removeEventListener("pointermove", this.onMove);
@@ -590,6 +703,7 @@ export class StickerStage {
         uFoil: { value: f.foil },
         uOpacity: { value: 1 },
         uTime: { value: 0 },
+        uReveal: { value: 1 },
         uFlex: { value: new THREE.Vector2() },
         uPress: { value: new THREE.Vector3() },
         uPeelDir: { value: new THREE.Vector2(1, 1).normalize() },
@@ -617,7 +731,7 @@ export class StickerStage {
     group.add(mesh);
     this.scene.add(group);
 
-    const slot: Slot = { index, group, mesh, shadow, prepared, width: w, height: h, tween: null, leaving: false };
+    const slot: Slot = { index, group, mesh, shadow, prepared, width: w, height: h, tween: null, leaving: false, revealStart: null };
     this.slots.push(slot);
     return slot;
   }
@@ -826,8 +940,22 @@ export class StickerStage {
     [this.peel.amt, this.peel.v] = this.spring(this.peel.amt, this.peel.v, this.peel.t, dt, 90, 14);
     this.peel.line += (this.peel.tline - this.peel.line) * Math.min(1, dt * 14);
 
+    if (this.burst) {
+      const t = (now - this.burst.start) / 1000;
+      if (t > 1.4) this.clearBurst();
+      else this.burst.points.material.uniforms.uT.value = t;
+    }
+
     for (const s of this.slots) {
       this.applyTween(s, now);
+      if (s.revealStart !== null) {
+        const k = Math.min(1, (now - s.revealStart) / REVEAL_MS);
+        s.mesh.material.uniforms.uReveal.value = 1 - Math.pow(1 - k, 2);
+        if (k >= 1) s.revealStart = null;
+      }
+      // The shadow lands with the paper, not before it.
+      const paper = Math.min(1, s.mesh.material.uniforms.uReveal.value * 2);
+      if (!s.tween) s.shadow.material.opacity = SHADOW_OPACITY * paper;
       const u = s.mesh.material.uniforms;
       u.uTime.value = time;
       if (s === this.current) {
