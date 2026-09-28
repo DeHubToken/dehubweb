@@ -321,6 +321,8 @@ async function signWithProvider(
       params: [message, address],
     }) as string;
   } catch (e) {
+    const error = e as { code?: number; message?: string };
+    if (error?.code !== -32602 && !/invalid params|invalid parameters/i.test(error?.message ?? '')) throw e;
     console.warn(`[Auth] [${flowLabel}] personal_sign fallback...`, e);
     signature = await provider.request({
       method: 'personal_sign',
