@@ -671,52 +671,58 @@ export type Database = {
       ai_generation_jobs: {
         Row: {
           created_at: string
+          credit_debit_key: string | null
           endpoint: string
           id: string
           kind: string
           metadata: Json
           model: string
+          payment_source: string
           prediction_id: string | null
           price_dhb: number
           provider: string | null
           provider_app: string | null
           result: Json | null
           status: string
-          tx_hash: string
+          tx_hash: string | null
           updated_at: string
           wallet_address: string
         }
         Insert: {
           created_at?: string
+          credit_debit_key?: string | null
           endpoint: string
           id: string
           kind: string
           metadata?: Json
           model: string
+          payment_source?: string
           prediction_id?: string | null
           price_dhb: number
           provider?: string | null
           provider_app?: string | null
           result?: Json | null
           status?: string
-          tx_hash: string
+          tx_hash?: string | null
           updated_at?: string
           wallet_address: string
         }
         Update: {
           created_at?: string
+          credit_debit_key?: string | null
           endpoint?: string
           id?: string
           kind?: string
           metadata?: Json
           model?: string
+          payment_source?: string
           prediction_id?: string | null
           price_dhb?: number
           provider?: string | null
           provider_app?: string | null
           result?: Json | null
           status?: string
-          tx_hash?: string
+          tx_hash?: string | null
           updated_at?: string
           wallet_address?: string
         }
@@ -7053,6 +7059,19 @@ export type Database = {
           p_wallet: string
         }
         Returns: boolean
+      }
+      ai_job_record_credits: {
+        Args: {
+          p_debit_key: string
+          p_dhb: number
+          p_endpoint: string
+          p_job_id: string
+          p_kind: string
+          p_metadata: Json
+          p_model: string
+          p_wallet: string
+        }
+        Returns: undefined
       }
       ai_job_spend: {
         Args: {
