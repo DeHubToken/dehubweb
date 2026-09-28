@@ -41,6 +41,7 @@ import { badgePerksForIndex, type BadgePerks } from '@/lib/badge-perks';
 import { shortDhb } from '@/lib/badge-motion';
 import { fetchVoiceClonePrice } from '@/lib/stage-voice-clone';
 import { cn } from '@/lib/utils';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { ShowcaseShell, type ShowcaseApi, type ShowcaseEntry } from './ShowcaseShell';
 import { BENTO, BENTO_IDLE, BENTO_LIT, tiltAt } from './showcase-ui';
 import type { StickerFinish } from './sticker-stage';
@@ -406,20 +407,21 @@ function HolderDetails({
       </ul>
 
       <div className="mt-2 grid grid-cols-2 gap-2">
-        <button
-          type="button"
+        <LiquidGlassBubble2
+          active
+          label={t('badgeShowcase.buyTokens')}
           onClick={() => api.close(() => navigate('/app/buy'))}
-          className="bs-chrome h-10 min-w-0 truncate rounded-2xl px-3 text-[13px] font-bold"
-        >
-          {t('badgeShowcase.buyTokens')}
-        </button>
-        <button
-          type="button"
+          width="100%"
+          height="40px"
+          className="min-w-0"
+        />
+        <LiquidGlassBubble2
+          label={t('badgeShowcase.details')}
           onClick={() => api.close(() => navigate('/app/glossary#badges'))}
-          className="bs-chrome-dark h-10 min-w-0 truncate rounded-2xl px-3 text-[13px] font-bold"
-        >
-          {t('badgeShowcase.details')}
-        </button>
+          width="100%"
+          height="40px"
+          className="min-w-0"
+        />
       </div>
     </>
   );
