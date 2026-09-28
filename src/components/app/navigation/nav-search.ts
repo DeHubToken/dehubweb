@@ -292,6 +292,11 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
     'account marketplace', 'aged account', 'followers', 'buy followers',
     'take over an account', 'transfer account', 'profile for sale',
   ],
+  // The mini app store, which people will look for by what they want to do.
+  Apps: [
+    'apps', 'app store', 'mini apps', 'miniapps', 'store', 'build an app',
+    'developer', 'developers', 'sdk', 'farcaster', 'frames',
+  ],
   // The example that started this: nobody looking for a game types "arcade".
   // The individual games are here as well as being rows of their own, so a
   // half-remembered title finds the grid even when it does not find the game.
