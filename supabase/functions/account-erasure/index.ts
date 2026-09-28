@@ -32,17 +32,22 @@ Deno.serve(async (req) => {
     // skip the Apple revocation step by selecting an alternate mode.
     if (body.prepared !== true) return jsonResponse({ error: 'Deletion must be prepared first' }, 400);
     const args = { p_wallet: wallet, p_user_id: userId };
-    const { data: objects, error: manifestError } = await db.rpc('account_erasure_storage', args);
-    if (manifestError) throw manifestError;
-    const byBucket = new Map<string, string[]>();
-    for (const obj of objects || []) {
-      const names = byBucket.get(obj.bucket_id) || [];
-      names.push(obj.name); byBucket.set(obj.bucket_id, names);
-    }
-    for (const [bucket, names] of byBucket) {
-      for (let offset = 0; offset < names.length; offset += 100) {
-        const { error } = await db.storage.from(bucket).remove(names.slice(offset, offset + 100));
-        if (error) throw error;
+    // RPC responses have a row ceiling. Continue until the manifest is empty
+    // so an account with more than one page of files does not leave data behind.
+    while (true) {
+      const { data: objects, error: manifestError } = await db.rpc('account_erasure_storage', args);
+      if (manifestError) throw manifestError;
+      if (!objects?.length) break;
+      const byBucket = new Map<string, string[]>();
+      for (const obj of objects) {
+        const names = byBucket.get(obj.bucket_id) || [];
+        names.push(obj.name); byBucket.set(obj.bucket_id, names);
+      }
+      for (const [bucket, names] of byBucket) {
+        for (let offset = 0; offset < names.length; offset += 100) {
+          const { error } = await db.storage.from(bucket).remove(names.slice(offset, offset + 100));
+          if (error) throw error;
+        }
       }
     }
     const { error: dataError } = await db.rpc('erase_account_app_data', args);
@@ -54,7 +59,7 @@ Deno.serve(async (req) => {
     }
     return jsonResponse({ status: 'complete' });
   } catch (error) {
-    console.error('[account-erasure]', error?.message || 'Erasure failed');
+    console.error('[account-erasure]', error instanceof Error ? error.message : 'Erasure failed');
     return jsonResponse({ error: 'Erasure could not finish. The request remains queued for retry.' }, 503);
   }
 });
