@@ -3408,8 +3408,8 @@
     "settingUpVoice": "Menyediakan suara anda...",
     "useThisVoice": "Gunakan suara ini",
     "autoEnd": {
-      "title": "Peringkat berakhir kerana tidak aktif",
-      "description": "Tiada siapa yang bercakap di \"{{title}}\" selama 30 minit, jadi ia ditutup."
+      "title": "Bilik audio tamat kerana tiada aktiviti",
+      "description": "Tiada sesiapa bercakap dalam \"{{title}}\" selama 30 minit, jadi ia ditutup."
     }
   },
   "ads": {

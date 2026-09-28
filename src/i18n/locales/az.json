@@ -3075,8 +3075,8 @@
     "settingUpVoice": "Səsiniz quraşdırılır...",
     "useThisVoice": "Bu səsi istifadə et",
     "autoEnd": {
-      "title": "Hərəkətsizlik səbəbindən mərhələ sona çatdı",
-      "description": "30 dəqiqə ərzində \"{{title}}\" ilə heç kəs danışmadı, beləliklə, bağlandı."
+      "title": "Səsli otaq fəaliyyətsizlik səbəbindən bağlandı",
+      "description": "\"{{title}}\" otağında 30 dəqiqə heç kim danışmadı, ona görə bağlandı."
     }
   },
   "ads": {

@@ -2422,8 +2422,8 @@
     "title": "Kan bonw",
     "alreadyCharged": "I ka tagamasiyɛnw be yen ka ban. Aw k'a ɲini tugu — aw tɛna juru sara a siɲɛ filanan na.",
     "autoEnd": {
-      "title": "Fanga min be mɔgɔ la, o be se k'a to a be to ka to yen.",
-      "description": "Mɔgɔ si ma kuma \"{{title}}\" kan miniti 30 kɔnɔ, o kama, u y'a datugu."
+      "title": "Kan bon banna sabu kuma tɛ yen",
+      "description": "Mɔgɔ si ma kuma \"{{title}}\" kɔnɔ miniti 30 kɔnɔ, o de kosɔn a datugura."
     }
   },
   "ads": {

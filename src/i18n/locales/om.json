@@ -2519,8 +2519,8 @@
     "title": "Kutaalee sagalee",
     "alreadyCharged": "Aduun kee kanaaf fudhatamee jira. Irra deebiitootiin yaali – yeroo lammaffaa si hin dabalatu.",
     "autoEnd": {
-      "title": "Waltajjiin sababa sochii dhabuutiin xumurame",
-      "description": "Daqiiqaa 30f namni &quot;{{title}}&quot; irratti dubbate waan hin jirreef cufame."
+      "title": "Kutaan sagalee sochii dhabuu irraa kan ka'e xumurameera",
+      "description": "Daqiiqaa 30f namni \"{{title}}\" keessatti hin dubbanne, kanaaf cufameera."
     }
   },
   "ads": {

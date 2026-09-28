@@ -2499,8 +2499,8 @@
     "title": "Ngā rūma ororongo",
     "alreadyCharged": "Kua tangohia kē āu tohu mō tēnei. Whakamātau anō — kāore koe e utu tuarua.",
     "autoEnd": {
-      "title": "I mutu te mahi i te kore mahi",
-      "description": "Kaore tetahi i korero i runga i \"{{title}}\" mo te 30 meneti, na ka kati."
+      "title": "Kua mutu te rūma ororongo nā te korenga o te mahi",
+      "description": "Kāore he tangata i kōrero i \"{{title}}\" mō ngā meneti 30, nā reira kua katia."
     }
   },
   "ads": {

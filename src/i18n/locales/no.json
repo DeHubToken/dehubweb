@@ -2501,8 +2501,8 @@
     "title": "Lydrom",
     "alreadyCharged": "Dine tokens er allerede tatt for dette. Prøv igjen — du vil ikke bli belastet en gang til.",
     "autoEnd": {
-      "title": "Fase avsluttet på grunn av inaktivitet",
-      "description": "Ingen snakket på «{{title}}» i 30 minutter, så det ble stengt."
+      "title": "Lydrommet ble avsluttet på grunn av inaktivitet",
+      "description": "Ingen snakket i «{{title}}» på 30 minutter, så det ble stengt."
     }
   },
   "ads": {

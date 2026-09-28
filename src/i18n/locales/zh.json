@@ -3145,8 +3145,8 @@
     "settingUpVoice": "正在设置你的声音…",
     "useThisVoice": "使用这个声音",
     "autoEnd": {
-      "title": "阶段因不活动而结束",
-      "description": "“{{title}}”有30分钟没有人说话，所以关门了。"
+      "title": "语音房因无人发言已结束",
+      "description": "“{{title}}”已有 30 分钟无人发言，因此已关闭。"
     }
   },
   "ads": {

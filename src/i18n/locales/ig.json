@@ -2474,8 +2474,8 @@
     "title": "Ọnụ ụlọ olu",
     "alreadyCharged": "Ewerela akara gị maka nke a. Nwaa ọzọ - agaghị akwụ gị ụgwọ ugboro abụọ.",
     "autoEnd": {
-      "title": "Stage biri ruru ka inactivity",
-      "description": "Ọ dịghị onye kwuru okwu na \"{{title}}\" maka nkeji 30, ya mere e mechiri ya."
+      "title": "Ọnụ ụlọ olu kwụsịrị n'ihi enweghị ọrụ",
+      "description": "Ọ dịghị onye kwuru okwu na \"{{title}}\" ruo nkeji 30, ya mere e mechiri ya."
     }
   },
   "ads": {

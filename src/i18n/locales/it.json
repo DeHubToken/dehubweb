@@ -3143,8 +3143,8 @@
     "settingUpVoice": "Configurazione della voce in corso...",
     "useThisVoice": "Usa questa voce",
     "autoEnd": {
-      "title": "Fase terminata per inattività",
-      "description": "Nessuno ha parlato su \"{{title}}\" per 30 minuti, quindi è stato chiuso."
+      "title": "Stanza audio terminata per inattività",
+      "description": "Nessuno ha parlato in \"{{title}}\" per 30 minuti, quindi è stata chiusa."
     }
   },
   "ads": {

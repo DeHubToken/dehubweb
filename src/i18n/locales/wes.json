@@ -2194,8 +2194,8 @@
   "stages": {
     "title": "Audio room dem",
     "autoEnd": {
-      "title": "Stage don finish becos nobody dey talk",
-      "description": "Nobody talk for \"{{title}}\" for 30 minutes, so dem close am."
+      "title": "Audio room don end because nobody dey talk",
+      "description": "Nobody talk for \"{{title}}\" for 30 minutes, so e don close."
     }
   },
   "ads": {

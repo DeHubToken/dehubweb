@@ -2503,8 +2503,8 @@
     "title": "Dakunan sauti",
     "alreadyCharged": "An riga an ɗauki token ɗinku don wannan. Sake gwadawa — ba za a caje ku sau biyu ba.",
     "autoEnd": {
-      "title": "Mataki ya ƙare saboda rashin aiki",
-      "description": "Babu wanda ya yi magana a kan \"{{title}}\" na minti 30, don haka an rufe shi."
+      "title": "An rufe dakin sauti saboda rashin aiki",
+      "description": "Babu wanda ya yi magana a \"{{title}}\" na mintuna 30, don haka an rufe shi."
     }
   },
   "ads": {

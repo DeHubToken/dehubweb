@@ -2537,8 +2537,8 @@
     "title": "Rimanakuy wasikuna",
     "alreadyCharged": "Kaypaqqa tokenniykikunaqa apasqañam. Hukmanta kallpachakuy — iskay kaq kutipiqa manam qullqita mañasunkichu.",
     "autoEnd": {
-      "title": "Etapa tukukurqa mana ima ruwayniyuq kasqanrayku",
-      "description": "Mana pipas &quot;{{title}}&quot; nisqapi 30 minutu rimarqanchu, chaymi wisq&#39;asqa karqan."
+      "title": "Rimanakuy wasiqa tukurqan mana pipas rimasqanrayku",
+      "description": "Mana pipas \"{{title}}\" nisqapi 30 minutu rimarqanchu, chayrayku wichqasqa."
     }
   },
   "ads": {

@@ -3088,8 +3088,8 @@
     "settingUpVoice": "A hangod beállítása folyamatban van...",
     "useThisVoice": "Használd ezt a hangot",
     "autoEnd": {
-      "title": "Inaktivitás miatt befejeződött szakasz",
-      "description": "Senki sem beszélt a következőn 30 percig: „{{title}}”, ezért zárva volt."
+      "title": "A hangszoba inaktivitás miatt véget ért",
+      "description": "30 percig senki sem beszélt itt: „{{title}}”, ezért bezárult."
     }
   },
   "ads": {

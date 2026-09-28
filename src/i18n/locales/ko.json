@@ -3142,8 +3142,8 @@
     "settingUpVoice": "음성 설정 중...",
     "useThisVoice": "이 음성 사용",
     "autoEnd": {
-      "title": "비활성으로 인해 스테이지가 종료됨",
-      "description": "30분 동안 \"{{title}}\" 에 대해 아무도 말하지 않아 닫혔습니다."
+      "title": "활동이 없어 오디오 룸이 종료되었습니다",
+      "description": "\"{{title}}\"에서 30분 동안 아무도 말하지 않아 종료되었습니다."
     }
   },
   "ads": {

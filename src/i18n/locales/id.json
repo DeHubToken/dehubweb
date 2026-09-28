@@ -3143,8 +3143,8 @@
     "settingUpVoice": "Menyiapkan suara Anda...",
     "useThisVoice": "Pakai suara ini",
     "autoEnd": {
-      "title": "Tahap berakhir karena tidak aktif",
-      "description": "Tidak ada yang berbicara di \"{{title}}\" selama 30 menit, jadi ditutup."
+      "title": "Ruang audio berakhir karena tidak ada aktivitas",
+      "description": "Tidak ada yang berbicara di \"{{title}}\" selama 30 menit, jadi ruang ini ditutup."
     }
   },
   "ads": {

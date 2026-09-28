@@ -2932,8 +2932,8 @@
     "settingUpVoice": "Đang thiết lập giọng nói của bạn...",
     "useThisVoice": "Sử dụng giọng nói này",
     "autoEnd": {
-      "title": "Giai đoạn kết thúc do không hoạt động",
-      "description": "Không ai nói về \"{{title}}\" trong 30 phút, vì vậy nó đã bị đóng."
+      "title": "Phòng âm thanh đã kết thúc do không hoạt động",
+      "description": "Không ai nói trong \"{{title}}\" suốt 30 phút nên phòng đã bị đóng."
     }
   },
   "ads": {

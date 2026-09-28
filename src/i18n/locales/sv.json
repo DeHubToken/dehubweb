@@ -3087,8 +3087,8 @@
     "settingUpVoice": "Ställer in din röst...",
     "useThisVoice": "Använd denna röst",
     "autoEnd": {
-      "title": "Fas avslutad på grund av inaktivitet",
-      "description": "Ingen pratade på \"{{title}}\" på 30 minuter, så det var stängt."
+      "title": "Ljudrummet avslutades på grund av inaktivitet",
+      "description": "Ingen pratade i ”{{title}}” på 30 minuter, så det stängdes."
     }
   },
   "ads": {
