@@ -42,7 +42,7 @@ import {
   generateRegistrationOptions,
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
-} from "npm:@simplewebauthn/server@13.1.1";
+} from "https://esm.sh/@simplewebauthn/server@13.1.1";
 import {
   corsHeaders,
   handleCorsPreflight,

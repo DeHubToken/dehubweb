@@ -9,7 +9,7 @@
 // Configure in the dashboard under Authentication -> Hooks -> Send SMS, and
 // note it only fires while the Phone provider is enabled.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { Webhook } from "npm:standardwebhooks@1.0.0";
+import { Webhook } from "https://esm.sh/standardwebhooks@1.0.0";
 import { otpSmsMessage } from "../_shared/cloudtalk.ts";
 
 const corsHeaders = {
