@@ -59,7 +59,7 @@ export function FeedFilterLoader({
         className,
       )}
     >
-      <DeHubLoader size={56} />
+      <DeHubLoader size={56} className="relative -top-1" />
       {/* text-zinc-400 rather than an opacity utility: `.dehub-loader-mark`
           animates opacity, which would override it. */}
       <p className="dehub-loader-mark text-xs uppercase tracking-[0.18em] text-zinc-400">{label}</p>
