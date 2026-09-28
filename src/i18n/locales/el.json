@@ -22,7 +22,6 @@
     "roadmap": "Χάρτης Πορείας",
     "featureRequests": "Αιτήματα",
     "governance": "Διακυβέρνηση",
-    "dao": "DAO",
     "careers": "Καριέρα",
     "glossary": "Γλωσσάριο",
     "create": "Δημιουργία",
@@ -614,7 +613,6 @@
     "mostViewed": "Πιο Δημοφιλή",
     "mostLiked": "Πιο Αγαπημένα",
     "mostComments": "Περισσότερα Σχόλια",
-    "mostTips": "Most Tips",
     "random": "Τυχαία",
     "videos": "Βίντεο",
     "images": "Εικόνες",
@@ -1263,7 +1261,6 @@
     "edit": "Επεξεργασία",
     "forward": "Προώθηση",
     "pin": "Καρφίτσωμα",
-    "online": "Online",
     "smartRepliesOff": "Οι προτεινόμενες απαντήσεις απενεργοποιήθηκαν",
     "smartRepliesOffWhere": "Ενεργοποίησέ τες ξανά στις Ρυθμίσεις → Μηνύματα.",
     "smartRepliesUndo": "Αναίρεση",
@@ -2536,7 +2533,6 @@
     "podBadge": "Εκτύπωση κατά παραγγελία",
     "podBuyOn": "Αγορά στο {{provider}}",
     "podNote": "Τυπώνεται και αποστέλλεται κατά παραγγελία από {{provider}}. Η πληρωμή γίνεται στον ιστότοπό τους.",
-    "podUrlPlaceholder": "https://…",
     "title": "Καταστήματα",
     "browse": "Περιήγηση",
     "myStore": "Το κατάστημά μου",
@@ -5150,7 +5146,6 @@
     "kindVideo": "Βίντεο",
     "kindAudio": "Ήχος",
     "kindImage": "Εικόνες",
-    "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "Έλεγχος πριν από την ανάρτηση",
     "reviewSubtitle": "Από {{source}}, ως {{kind}}. Επεξεργαστείτε ό, τι θέλετε — αφήστε τον τίτλο κενό για να διατηρήσετε το πρωτότυπο.",
     "reviewName": "Τίτλος",
@@ -5162,7 +5157,6 @@
     "reviewConfirm": "Εισαγωγή",
     "podcast": {
       "feedUrlLabel": "Διεύθυνση URL ροής RSS podcast",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Ανάκτηση τροφοδοσίας",
       "fetching": "Γίνεται λήψη της τροφοδοσίας…",
       "showBy": "Από {{author}}",
@@ -5234,7 +5228,6 @@
     "paying": "Πληρωμή {{amount}} token…",
     "pickCount": "{{selected}} από {{total}} επιλεγμένα. Οτιδήποτε υπάρχει ήδη στο προφίλ σας παραλείπεται και δεν χρεώνεται ποτέ δύο φορές.",
     "pickTitle": "Επιλέξτε τι θα μεταφέρετε",
-    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
     "progressDone": "{{imported}} εισήχθη.",
     "progressDoneWithFailures": "{{imported}} εισήχθη, {{failed}} δεν ήταν δυνατό να εισαχθεί.",
     "progressIdle": "Κάθε βίντεο σε μια παρτίδα παίρνει το δικό του πλακίδιο εδώ, ώστε να μπορείτε να δείτε τι προσγειώθηκε και να δοκιμάσετε ξανά αυτό που δεν έγινε. Τίποτα δεν τρέχει ακόμα — το πλέγμα παρακάτω είναι ένα παράδειγμα.",
@@ -5327,7 +5320,6 @@
     "toUnlock": "{{amount}} ακόμα μάρκες για να το ξεκλειδώσετε",
     "holdToUnlock": "Κρατήστε τουλάχιστον τόσα DeHub tokens για να το ξεκλειδώσετε",
     "sliderLabel": "Διακριτικά που κρατούνται",
-    "sliderValue": "{{amount}} token · {{tier}}",
     "you": "Εσείς",
     "grants": "Τι ξεκλειδώνει",
     "perks": {
@@ -5411,53 +5403,12 @@
     }
   },
   "nearBuy": {
-    "otherCurrencies": "Other currencies",
-    "title": "Pay with crypto",
     "description": "Επιλέξτε ένα token για να πληρώσετε. Λάβετε token DeHub στο πορτοφόλι σας.",
     "dhbAmount": "Ποσότητα token DeHub",
-    "search": "Search token, network or contract",
-    "noMatches": "No matching tokens.",
-    "loading": "Loading…",
-    "retry": "Retry",
-    "tokensError": "Payment tokens are temporarily unavailable.",
-    "historyError": "Your saved purchases could not be loaded. Retry before opening another payment.",
-    "statusError": "The latest status is unavailable. Your purchase is saved. Check again; do not send a second payment.",
-    "refundAddress": "Refund address on {{chain}}",
-    "refundPlaceholder": "Address on the payment network",
-    "refundHint": "Check this is a wallet you control on the payment network. Avoid exchange addresses that require a memo or tag. Any provider refund returns here.",
-    "quoteSummary": "Estimated payment: {{amount}} {{symbol}} on {{chain}}",
     "receiveNet": "Λαμβάνετε: {{amount}} token DeHub",
-    "gasReserve": "Includes ${{amount}} for network gas.",
-    "swapEstimate": "About {{minutes}} min after your payment confirms.",
-    "estimateUnknown": "Timing depends on the payment network.",
     "confirmationTime": "Οι επιβεβαιώσεις δικτύου και η παράδοση token προσθέτουν χρόνο. Αυτή είναι μια εκτίμηση, όχι αντίστροφη μέτρηση.",
-    "finalQuote": "Review the final amount before paying.",
-    "getQuote": "Continue",
-    "paymentAction": "Continue",
-    "acceptTerms": "I agree to the purchase terms.",
-    "terms": "Read terms",
-    "sendExact": "Send exactly {{amount}} {{symbol}} on {{chain}}. Allow separately for withdrawal or network fees.",
-    "paymentSummary": "Payment: {{amount}} {{symbol}} on {{chain}}",
-    "copyPayment": "Copy payment address",
-    "memoNotice": "Required memo/tag — include it with the address or the payment may not be credited.",
-    "copyMemo": "Copy memo/tag",
-    "copied": "Copied",
-    "copyFailed": "Could not copy. Select the text and copy it manually.",
-    "deadline": "Deposit deadline: {{date}}. Do not send a new payment after this time.",
-    "saved": "Your purchase is saved. You can return to it anytime.",
-    "checkStatus": "Refresh purchase status",
-    "lastChecked": "Last checked {{time}}",
-    "history": "Your purchases",
-    "startAnother": "Back to payment options",
-    "refundReceipt": "Refund destination: {{address}}",
     "destination": "Προορισμός token στο Base: {{address}}",
     "viewDelivery": "Προβολή μεταφοράς token",
-    "purchaseId": "Copy purchase ID: {{id}}",
-    "phase_awaiting": "Waiting for your payment",
-    "detail_awaiting": "Send once, on the selected network, before the deadline. If you have already sent it, wait for network confirmation.",
-    "phase_confirming": "Payment detected",
-    "detail_confirming": "Waiting for the network to confirm your payment. You do not need to pay again.",
-    "phase_swapping": "Converting your payment",
     "detail_swapping": "Η πληρωμή σας επεξεργάζεται. Θα ενημερώσουμε αυτήν την απόδειξη όταν φτάσουν τα token σας.",
     "phase_delivering": "Πληρωμή εκκαθαρίστηκε · αποστολή token",
     "detail_delivering": "Πληρωμή ελήφθη. Τα token σας είναι καθ' οδόν.",
@@ -5465,30 +5416,8 @@
     "detail_deliveryDelayed": "Η πληρωμή σας έχει εκκαθαριστεί, αλλά η παράδοση token χρειάζεται επανεκκίνηση. Κρατήστε αυτό το αναγνωριστικό αγοράς και επικοινωνήστε με την υποστήριξη DeHub εάν παραμείνει σε καθυστέρηση. Μην πληρώσετε ξανά.",
     "phase_gasPending": "Token παραδόθηκαν · gas σε αναμονή",
     "detail_gasPending": "Η μεταφορά token σας έχει επιβεβαιωθεί. Η ξεχωριστή μεταφορά ETH gas εξακολουθεί να εκκρεμεί ή να προσπαθεί ξανά.",
-    "phase_delivered": "Purchase complete",
     "detail_delivered": "Τα token DeHub σας παραδόθηκαν στο πορτοφόλι σας στο Base.",
-    "phase_refunded": "Payment refunded",
-    "detail_refunded": "The provider reports the payment refunded to the refund address below. Check that wallet; network fees may apply.",
-    "phase_failed": "Payment needs attention",
-    "detail_failed": "The provider reported a failure. This does not confirm a refund. Keep this purchase ID and payment transaction hash for support; do not send again.",
-    "phase_expired": "Deposit deadline passed",
-    "detail_expired": "Do not send to this address. If you already paid, keep checking this saved purchase while the network confirms or the provider resolves it. Do not pay again.",
-    "phase_incomplete": "Deposit amount needs attention",
-    "detail_incomplete": "The provider received less than the required amount. Do not resend the full amount. Keep your transaction hash and purchase ID while the provider resolves the deposit or refund.",
-    "phase_checking": "Checking payment progress",
-    "detail_checking": "The provider has not returned a final outcome. Your purchase is saved. Do not send another payment.",
-    "pay": "Pay",
-    "directTiming": "Τα token παραδίδονται μόλις επιβεβαιωθεί η πληρωμή σας.",
-    "wrongNetwork": "Switch to the selected payment network and try again.",
-    "wrongWallet": "Connect the wallet shown on this purchase and try again.",
-    "reviewPay": "Review the amount, then confirm the payment in your wallet.",
-    "currency": "Currency",
-    "checkingBalances": "Checking your wallet balances…",
-    "walletBalances": "Your balances by network",
-    "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "connectSolana": "Connect Solana wallet",
-    "balanceUnknown": "Balance unavailable",
-    "balanceAmount": "Available: {{amount}} {{symbol}}"
+    "directTiming": "Τα token παραδίδονται μόλις επιβεβαιωθεί η πληρωμή σας."
   },
   "conversation": {
     "commonGround": {
@@ -6039,8 +5968,7 @@
       },
       "quote": {
         "title": "Κάρτα αποφθέγματος",
-        "body": "Απλό, αλλά ουσιαστικό.",
-        "author": "Don Draper"
+        "body": "Απλό, αλλά ουσιαστικό."
       },
       "thumbnail": {
         "title": "Δεν θα το πιστέψεις!",
@@ -6068,11 +5996,9 @@
         "change": "+42% αυτή την εβδομάδα"
       },
       "birthday": {
-        "title": "Χρόνια πολλά",
-        "name": "Sam!"
+        "title": "Χρόνια πολλά"
       },
       "meme": {
-        "title": "Meme",
         "top": "Όταν ο κώδικας δουλεύει",
         "bottom": "Με την πρώτη"
       },
@@ -6082,13 +6008,10 @@
     "design": {
       "format": "Μορφή",
       "landscape": "Οριζόντιο",
-      "landscapeDetail": "YouTube, web",
       "vertical": "Κάθετο",
-      "verticalDetail": "Shorts, Reels",
       "square": "Τετράγωνο",
       "squareDetail": "Ανάρτηση feed",
       "portrait": "Πορτρέτο",
-      "portraitDetail": "Instagram",
       "canvas": "Καμβάς",
       "resolution": "Ανάλυση",
       "frameRate": "Ρυθμός καρέ",
@@ -6258,7 +6181,6 @@
     "paused": "Οι μεταφορές διακριτικών έχουν διακοπεί προσωρινά στην αλυσίδα αυτήν τη στιγμή, οπότε αυτό το ξεκλείδωμα δεν μπορεί να ολοκληρωθεί ακόμα. Προσπαθήστε ξανά σε λίγο.",
     "otherChain": "Αυτή η ανάρτηση εγκαθίσταται σε μια άλλη αλυσίδα, οπότε χρειάζεται μάρκες DeHub στο πορτοφόλι σας εκεί.",
     "buyCard": "Αγοράστε μάρκες με κάρτα",
-    "buyCardHint": "Visa, Mastercard, Apple Pay",
     "moveFunds": "Μεταφορά κεφαλαίων",
     "moveFundsHint": "Ανταλλαγή ή κατάθεση από άλλο δίκτυο",
     "notNow": "Όχι τώρα"
@@ -6417,8 +6339,6 @@
     }
   },
   "emojiPicker": {
-    "tabEmoji": "Emoji",
-    "tabGif": "GIF",
     "searchEmoji": "Αναζήτηση emoji",
     "searchGifs": "Αναζήτηση GIF...",
     "noEmoji": "Δεν βρέθηκαν emoji",
@@ -7015,9 +6935,7 @@
     "seoPackDescription": "{{name}} — ένα {{kind}} του DeHub με {{count}} αντικείμενα. Προσθέστε το στο επιλογέα σας και χρησιμοποιήστε το σε συνομιλίες, σχόλια και αντιδράσεις.",
     "tabStickers": "Αυτοκόλλητα",
     "tab": {
-      "emoji": "Emoji",
-      "sticker": "Αυτοκόλλητα",
-      "gif": "GIF"
+      "sticker": "Αυτοκόλλητα"
     },
     "kind": {
       "emoji": "Πακέτο emoji",
@@ -7041,9 +6959,7 @@
     "col": {
       "tier": "Επίπεδο",
       "packs": "Πακέτα",
-      "emoji": "Emoji",
-      "stickers": "Αυτοκόλλητα",
-      "gifs": "GIF"
+      "stickers": "Αυτοκόλλητα"
     },
     "signInToCreate": "Σύνδεση για δημιουργία πακέτων",
     "signInToAdd": "Σύνδεση για προσθήκη",
