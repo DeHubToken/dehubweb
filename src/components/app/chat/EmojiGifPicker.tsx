@@ -136,7 +136,8 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-[22rem] max-w-[calc(100vw-1rem)] p-0 overflow-hidden" 
+        collisionPadding={8}
+        className="w-[calc(100vw-1rem)] sm:w-[22rem] p-0 overflow-hidden" 
         align="start"
         side="top"
       >

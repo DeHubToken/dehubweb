@@ -274,7 +274,7 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
       {withAdd && (
         <button
           type="button"
-          onClick={() => setAdding(true)}
+          onClick={() => { setHovered(null); setAdding(true); }}
           aria-label={t('emojiPicker.addCustom')}
           title={t('emojiPicker.addCustom')}
           className="h-9 w-full flex items-center justify-center rounded-lg border border-dashed border-white/20 text-zinc-400 hover:text-white hover:border-white/40"
@@ -408,7 +408,7 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
       </div>
 
       {/* Grid */}
-      <div ref={scrollRef} onScroll={onScroll} className="relative h-64 overflow-y-auto overscroll-contain py-1">
+      <div ref={scrollRef} onScroll={onScroll} className="relative h-64 overflow-y-auto overscroll-contain pb-1">
         {adding ? (
           // Inline rather than a dialog: a dialog portals outside the popover this
           // panel lives in, and the popover closes on that outside press —
@@ -469,7 +469,8 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
         )}
       </div>
 
-      {/* Preview */}
+      {/* Preview — hidden while adding, it would show the last hovered emoji */}
+      {!adding && (
       <div className="flex items-center gap-2.5 h-14 px-3 border-t border-white/10">
         {preview && previewChar ? (
           <>
@@ -499,6 +500,7 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
           </div>
         )}
       </div>
+      )}
     </div>
   );
 }
