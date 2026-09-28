@@ -167,6 +167,9 @@ jobs:
       - name: Container surgery still lands its offsets
         run: node --experimental-strip-types supabase/functions/finalize-stage-recording/remux.test.ts
 
+      - name: Apple private key formats import and sign
+        run: node --experimental-strip-types --test supabase/functions/account-erasure/private-key.test.ts
+
   boot-path:
     name: Boot path
     runs-on: ubuntu-latest
