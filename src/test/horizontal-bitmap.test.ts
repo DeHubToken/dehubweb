@@ -18,7 +18,7 @@ it('releases measured offscreen images, cancels short excursions, and restores s
     disconnect = disconnect;
   });
   const viewport = { current: document.createElement('div') };
-  vi.spyOn(viewport.current, 'getBoundingClientRect').mockReturnValue({ left: 0, right: 600 } as DOMRect);
+  const rect = vi.spyOn(viewport.current, 'getBoundingClientRect').mockReturnValue({ left: 0, right: 600, top: 0, bottom: 600 } as DOMRect);
   const slide = { current: document.createElement('div') };
   const { result, rerender, unmount } = renderHook(({ source, measured }) => useHorizontalBitmap(source, measured, viewport, slide), {
     initialProps: { source: 'photo-a.jpg', measured: true },
@@ -33,6 +33,10 @@ it('releases measured offscreen images, cancels short excursions, and restores s
   expect(result.current).toBe(true);
   act(() => { notifySlide(true, false); vi.advanceTimersByTime(400); });
   expect(result.current).toBe(true);
+  rect.mockReturnValue({ left: 0, right: 600, top: -2500, bottom: -1900 } as DOMRect);
+  act(() => { notify([{ isIntersecting: false, boundingClientRect: { left: 0, right: 0 } }]); vi.advanceTimersByTime(1000); });
+  expect(result.current).toBe(true);
+  rect.mockReturnValue({ left: 0, right: 600, top: 0, bottom: 600 } as DOMRect);
   act(() => { notifySlide(false); vi.advanceTimersByTime(400); });
   rerender({ source: 'photo-b.jpg', measured: false });
   expect(result.current).toBe(true);
