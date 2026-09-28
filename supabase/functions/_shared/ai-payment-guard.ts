@@ -20,6 +20,7 @@ import { guardPaidEndpoint, jsonResponse, rateLimitByIp, serviceClient, type Rat
 import { claimFree, freeEligible, releaseFree } from './ai-free.ts';
 import { quotePriceDhb, type JobKind, type QuoteOptions } from './ai-pricing.ts';
 import { claimDhbPayment } from './dhb-transfer.ts';
+import { debitCredits, refundCredits } from './credits.ts';
 
 export interface ChargeRequest extends QuoteOptions {
   kind: JobKind;
@@ -95,8 +96,11 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
   // already parsed it hands it over; otherwise cloning leaves the original
   // readable, so nothing downstream had to learn about payment.
   const body = (opts.body
-    ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown; clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; useFree?: unknown };
+    ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown; clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; useFree?: unknown; paySource?: unknown };
   const txHash = typeof body.txHash === 'string' ? body.txHash.toLowerCase() : '';
+
+  // `txHash: "credits"` is a sentinel the web client sends through the existing field.
+  if (body.paySource === 'credits' || txHash === 'credits') return chargeCredits(guard.wallet, priceDhb, opts, body);
 
   // A free starter image: no transfer, one row in ai_free_generations. The
   // per-IP cap keeps a farm of fresh wallets from draining it.
@@ -238,6 +242,78 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
       if (refundError && !String(refundError.message || '').includes('REFUND_ALREADY_APPLIED')) {
         console.error(`[ai-payment] release failed for job ${jobId}:`, refundError);
       }
+    },
+  };
+}
+
+const JOURNALLED = ['generate-image', 'generate-video', 'generate-3d', 'fal-ai-tools'];
+const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/** Pay from the backend credit balance instead of a DHB transfer. */
+async function chargeCredits(
+  wallet: string,
+  priceDhb: number,
+  opts: ChargeRequest,
+  body: { clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown },
+): Promise<ChargeResult> {
+  const supabase = serviceClient();
+  const jobId = typeof body.clientJobId === 'string' && UUID_V4.test(body.clientJobId) ? body.clientJobId : crypto.randomUUID();
+  const key = `ai:${jobId}`;
+  // $0.001 per DHB: 1 DHB = 1000 micro-dollars.
+  const usdMicros = Math.round(priceDhb * 1000);
+
+  if (body.clientJobId) {
+    const previous = await supabase.from('ai_generation_jobs').select('*').eq('id', jobId).maybeSingle();
+    if (previous.error) return { ok: false, response: jsonResponse({ error: 'Could not check the previous generation. Please retry.' }, 503) };
+    if (previous.data) {
+      const job = previous.data;
+      if (job.wallet_address !== wallet || job.payment_source !== 'credits' || job.model !== opts.modelId || job.endpoint !== opts.actionType) return { ok: false, response: jsonResponse({ error: 'Generation id is already in use.' }, 409) };
+      return { ok: false, response: jsonResponse(job.result || { error: 'This generation is already being submitted. Check your library before retrying.' }, job.result ? 200 : 409) };
+    }
+  }
+
+  const outcome = await debitCredits(wallet, usdMicros, key);
+  if (outcome === 'short') {
+    return { ok: false, response: jsonResponse({ error: 'Not enough credits for this generation.', code: 'CREDITS_SHORT', priceDhb, priceUsd: priceDhb / 1000 }, 402) };
+  }
+  if (outcome !== 'debited') {
+    return { ok: false, response: jsonResponse({ error: 'Could not take payment from credits. Nothing has been charged.' }, 503) };
+  }
+
+  const journalled = JOURNALLED.includes(opts.actionType);
+  if (journalled) {
+    const { error } = await supabase.rpc('ai_job_record_credits', {
+      p_job_id: jobId,
+      p_wallet: wallet,
+      p_dhb: priceDhb,
+      p_kind: opts.kind,
+      p_model: opts.modelId,
+      p_endpoint: opts.actionType,
+      p_metadata: { prompt: typeof body.prompt === 'string' ? body.prompt.slice(0, 20000) : '', aspectRatio: typeof body.aspectRatio === 'string' ? body.aspectRatio : '' },
+      p_debit_key: key,
+    });
+    if (error) {
+      console.error('[ai-payment] credits job record failed:', error);
+      await refundCredits(key);
+      return { ok: false, response: jsonResponse({ error: 'Could not take payment from credits. Nothing has been charged.' }, 503) };
+    }
+  }
+
+  return {
+    ok: true,
+    wallet,
+    priceDhb,
+    jobId,
+    refund: async () => {
+      const restored = await refundCredits(key);
+      if (journalled) {
+        await supabase.from('ai_generation_jobs').update({
+          status: restored ? 'failed' : 'refund_pending',
+          result: { status: 'failed', error: 'Generation could not be completed', paymentRestored: restored },
+          updated_at: new Date().toISOString(),
+        }).eq('id', jobId);
+      }
+      if (!restored) console.error(`[ai-payment] credits refund failed for job ${jobId}`);
     },
   };
 }
