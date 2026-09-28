@@ -14,7 +14,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { type SubscriptionPlan, planPrice, primaryPlanChain, isPlanPublished } from '@/lib/api/dehub';
-import { useBuyPlan, usePublishPlan, useSubscriptionCredits } from '@/hooks/use-subscriptions';
+import { useBuyPlan, usePublishPlan } from '@/hooks/use-subscriptions';
 import { formatDuration, normaliseDuration, BASE_CHAIN_ID } from '@/lib/contracts';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { DHB_PRELISTING_USD, dhbForUsd, formatDhbPayment } from '@/lib/subscription-pricing';
@@ -65,7 +65,6 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const publishMutation = usePublishPlan();
-  const { data: credits } = useSubscriptionCredits();
 
   const price = planPrice(plan);
   const chainEntry = primaryPlanChain(plan);
@@ -86,16 +85,6 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
 
   const total = isUsdPriced ? numericPrice : numericPrice * DHB_PRELISTING_USD;
   const totalDhbEstimate = dhbEstimate;
-
-  // Subscription tokens are held at the dollar value they were added at, so
-  // the balance covers the plan's dollar price first and only the rest is
-  // bought now, at today's price. The API makes the final call at checkout.
-  const creditUsd = credits?.usd ?? 0;
-  const coveredUsd = Math.min(creditUsd, total || 0);
-  const tokensFromBalance =
-    coveredUsd > 0 && credits?.dhbPriceUsd ? coveredUsd / credits.dhbPriceUsd : 0;
-  const shortfallUsd = Math.max(0, (total || 0) - coveredUsd);
-  const topUpTokens = shortfallUsd > 0 ? dhbForUsd(shortfallUsd, credits?.dhbPriceUsd || dhbUsd) : 0;
 
   const handleSubscribe = async () => {
     await buyPlanMutation.mutateAsync({
@@ -285,32 +274,26 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
                   <span className="text-white text-right">{formatDhbPayment(dhbEstimate)}</span>
                 </div>
               )}
-              {tokensFromBalance > 0 && (
-                <div className="flex justify-between gap-4 text-zinc-400 mt-1.5">
-                  <span>{t('subscriptions.fromSubscriptionTokens')}</span>
-                  <span className="text-white text-right">{formatDhbPayment(tokensFromBalance)}</span>
-                </div>
-              )}
               <div className="flex justify-between text-zinc-400 mt-1.5 pt-1.5 border-t border-white/10">
-                <span>{tokensFromBalance > 0 ? t('subscriptions.addedAtTodaysPrice') : t('subscriptions.youPayNow')}</span>
+                <span>{t('subscriptions.youPayNow')}</span>
                 <span className="text-white font-medium text-right">
-                  {total ? formatDhbPayment(topUpTokens ?? totalDhbEstimate) : t('subscriptions.calculating')}
+                  {total ? formatDhbPayment(totalDhbEstimate) : t('subscriptions.calculating')}
                   {totalDhbEstimate !== null && (
                     <span className="block text-xs font-normal text-zinc-400">
-                      {t('subscriptions.creatorGetsTokens', { amount: `$${formatAmount(total, 2)}` })}
+                      {t('subscriptions.creditsCreator', { amount: formatAmount(total, 2) })}
                     </span>
                   )}
                 </span>
               </div>
               {isUsdPriced && (
                 <p className="mt-2 pt-2 border-t border-white/10 text-[11px] leading-relaxed text-zinc-500">
-                  {t('subscriptions.subscriptionTokensValueNote')}
+                  {t('subscriptions.tokensStayInTreasury')}
                 </p>
               )}
             </div>
-            {confirmOpen && walletAddress && chainId === BASE_CHAIN_ID && (topUpTokens ?? totalDhbEstimate) ? (
+            {confirmOpen && walletAddress && chainId === BASE_CHAIN_ID && totalDhbEstimate ? (
               <Suspense fallback={null}>
-                <TipPayWith amountDhb={(topUpTokens ?? totalDhbEstimate) as number} value={payWith} onChange={setPayWith} />
+                <TipPayWith amountDhb={totalDhbEstimate} value={payWith} onChange={setPayWith} />
               </Suspense>
             ) : null}
             <AlertDialogFooter>

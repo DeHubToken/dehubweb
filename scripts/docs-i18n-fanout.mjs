@@ -73,7 +73,8 @@ const escape = (v, q) =>
   v.replace(/\\/g, '\\\\').split(q).join('\\' + q).replace(/\n/g, '\\n');
 
 async function translateBatch(lines, targetLang, key) {
-  const body = JSON.stringify({ text: lines.join('\n'), targetLang, sourceLang: 'en' });
+  // The app's own copy is public, so free tiers that train on input may take it.
+  const body = JSON.stringify({ text: lines.join('\n'), targetLang, sourceLang: 'en', public: true });
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
       const res = await fetch(FN_URL, {
