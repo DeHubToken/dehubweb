@@ -4599,8 +4599,61 @@
         "legend": {
           "name": "범례",
           "hint": "레벨 10에 도달하세요."
+        },
+        "ignition": {
+          "name": "점화",
+          "hint": "방송 1시간 달성."
+        },
+        "on-air": {
+          "name": "방송 중",
+          "hint": "10개의 자격 요건을 갖춘 스트림 완료."
+        },
+        "storyteller": {
+          "name": "스토리텔러",
+          "hint": "25개의 자격 요건을 갖춘 스트림 완료."
+        },
+        "broadcaster": {
+          "name": "방송인",
+          "hint": "50개의 자격 요건을 갖춘 스트림 완료."
+        },
+        "centurion": {
+          "name": "백인대장",
+          "hint": "100개의 자격 요건을 갖춘 스트림 완료."
+        },
+        "enduring": {
+          "name": "지속",
+          "hint": "한 세션에서 4시간 동안 자격 요건을 갖춘 스트림 진행."
+        },
+        "circle": {
+          "name": "이너 서클",
+          "hint": "동시 시청자 25명 달성."
+        },
+        "arena": {
+          "name": "아레나",
+          "hint": "동시 시청자 50명 달성."
+        },
+        "headliner": {
+          "name": "헤드라이너",
+          "hint": "동시 시청자 100명 달성."
+        },
+        "cornerstone": {
+          "name": "주춧돌",
+          "hint": "26주 연속 스트림 진행."
+        },
+        "veteran": {
+          "name": "베테랑",
+          "hint": "방송 250시간 달성."
+        },
+        "icon": {
+          "name": "아이콘",
+          "hint": "레벨 20 달성."
         }
-      }
+      },
+      "chooseBadge": "프로필에 표시할 잠금 해제된 배지를 선택하세요.",
+      "useBadge": "배지 사용",
+      "selectedBadge": "선택됨",
+      "savingBadge": "배지 저장 중…",
+      "saveBadgeError": "배지를 저장할 수 없습니다. 다시 시도해 주세요."
     }
   },
   "goLive": {
@@ -5653,6 +5706,28 @@
     "play": "재생",
     "pause": "일시 중지",
     "hint": "드래그하여 구부리기 · 가장자리 당겨 벗기기 · 탭하여 다음 것"
+  },
+  "streamerShowcase": {
+    "cardOf": "{{index}} of {{total}} 카드",
+    "progress": "진행 상황",
+    "goal": {
+      "streams": "{{current}}/{{target}} 스트림",
+      "hours": "{{current}}/{{target}} 시간",
+      "session": "한 스트림에서 {{current}}/{{target}} 분",
+      "streak": "{{current}}/{{target}} 주",
+      "level": "레벨 {{current}}/{{target}}"
+    },
+    "onStream": "스트림에서 발생하면 잠금 해제",
+    "stats": {
+      "level": "레벨",
+      "xp": "XP",
+      "hours": "요건을 충족하는 시간",
+      "streams": "요건을 충족하는 스트림",
+      "longest": "가장 긴 스트림",
+      "streak": "최고의 연승"
+    },
+    "hoursShort": "{{hours}} 시간",
+    "weeksShort": "{{count}} 주"
   },
   "liveGift": {
     "pickTier": "축하를 선택하세요",

@@ -28,6 +28,12 @@ import {
 import { cn } from '@/lib/utils';
 import { useStreamerProgress, useSelectStreamerBadge } from '@/hooks/use-streamer-progress';
 import type { StreamerCardId, StreamerProgress } from '@/lib/api/dehub/livestream';
+import { openStreamerShowcase, preloadStreamerShowcase } from '@/lib/badge-showcase';
+
+/** Warm the showcase chunk on the first sign of intent. */
+const warmShowcase = () => {
+  preloadStreamerShowcase().catch(() => {});
+};
 
 export interface StreamerLevelCardProps {
   address?: string | null;
@@ -80,7 +86,7 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
 
         <div className="relative flex flex-wrap items-center justify-center gap-3">
           <div className="shrink-0 w-20 min-h-20 p-2 rounded-xl border border-white/15 bg-white/[0.05] flex flex-col items-center justify-center gap-1 text-center">
-            {equipped ? <div aria-hidden="true" className="w-16 h-16 [&>svg]:w-full [&>svg]:h-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(equipped.id, theme, true, instance) }} /> : <>
+            {equipped ? <button type="button" aria-label={t(`live.progress.card.${equipped.id}.name`)} onPointerEnter={warmShowcase} onFocus={warmShowcase} onClick={(e) => { if (address) openStreamerShowcase(equipped.id, address, true, e.currentTarget); }} className="w-16 h-16 rounded-lg transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/60 [&>div>svg]:w-full [&>div>svg]:h-full"><div aria-hidden="true" className="w-full h-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(equipped.id, theme, true, instance) }} /></button> : <>
             <span className="w-full break-words text-[9px] uppercase tracking-wider text-white/40 leading-snug">{t('live.progress.title')}</span>
             <span className="text-xl font-bold text-white leading-tight">{data.level}</span>
             </>}
@@ -158,7 +164,7 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
           </DialogHeader>
           <p className="text-xs text-white/70" role="status">{selection.isPending ? t('live.progress.savingBadge') : t('live.progress.chooseBadge')}</p>
           {selection.isError && <p className="text-sm text-white" role="alert">{t('live.progress.saveBadgeError')}</p>}
-          <StreamerCardGrid progress={data} locale={i18n.language} saving={selection.isPending} onSelect={(badgeId) => { if (address) selection.mutate({ address, badgeId }); }} />
+          <StreamerCardGrid progress={data} locale={i18n.language} saving={selection.isPending} onSelect={(badgeId) => { if (address) selection.mutate({ address, badgeId }); }} onOpen={(badgeId, anchor) => { if (!address) return; setCardsOpen(false); openStreamerShowcase(badgeId, address, true, anchor); }} />
           <StreamerRecentList progress={data} locale={i18n.language} />
         </DialogContent>
       </Dialog>
@@ -166,7 +172,7 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
   );
 }
 
-function StreamerCardGrid({ progress, locale, saving, onSelect }: { progress: StreamerProgress; locale: string; saving: boolean; onSelect: (id: StreamerCardId) => void }) {
+function StreamerCardGrid({ progress, locale, saving, onSelect, onOpen }: { progress: StreamerProgress; locale: string; saving: boolean; onSelect: (id: StreamerCardId) => void; onOpen: (id: StreamerCardId, anchor: HTMLElement) => void }) {
   const { t } = useTranslation();
   const { theme } = useAppTheme();
   const instance = useId();
@@ -179,8 +185,12 @@ function StreamerCardGrid({ progress, locale, saving, onSelect }: { progress: St
         return (
           <div key={id} className="flex min-w-0 flex-col items-center gap-2 p-3 text-center"
             style={{ background: material.panel, color: material.text, border: '1px solid ' + material.edge + (earned ? 'aa' : '44'), borderRadius: theme === 'minimal' || theme === 'war' ? 0 : 16 }}>
-            <div aria-hidden="true" className="w-24 h-24 shrink-0 [&>svg]:w-full [&>svg]:h-full"
-              dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, theme, earned, instance) }} />
+            {/* The sheet closes as the showcase opens, so the two never stack. */}
+            <button type="button" aria-label={t(`live.progress.card.${id}.name`)} onPointerEnter={warmShowcase} onFocus={warmShowcase}
+              onClick={(e) => onOpen(id, e.currentTarget)}
+              className="w-24 h-24 shrink-0 rounded-lg transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/60 [&>div>svg]:w-full [&>div>svg]:h-full">
+              <div aria-hidden="true" className="w-full h-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, theme, earned, instance) }} />
+            </button>
             <div className="text-sm font-semibold leading-snug break-words">{t(`live.progress.card.${id}.name`)}</div>
             <div className="text-xs leading-relaxed" style={{ color: material.muted }}>{t(`live.progress.card.${id}.hint`)}</div>
             <div className="mt-auto pt-2 flex items-center justify-center gap-1 text-[11px] leading-relaxed" style={{ color: material.muted }}>

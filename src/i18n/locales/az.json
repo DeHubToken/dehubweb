@@ -4510,8 +4510,61 @@
         "legend": {
           "name": "Əfsanə",
           "hint": "On səviyyəyə çatın."
+        },
+        "ignition": {
+          "name": "Ignition",
+          "hint": "Hava üzərində bir uyğun saatı tamamla."
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "Onu uyğun 10 yayını tamamla."
+        },
+        "storyteller": {
+          "name": "Storyteller",
+          "hint": "Onu uyğun 25 yayını tamamla."
+        },
+        "broadcaster": {
+          "name": "Broadcaster",
+          "hint": "Onu uyğun 50 yayını tamamla."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Onu uyğun 100 yayını tamamla."
+        },
+        "enduring": {
+          "name": "Enduring",
+          "hint": "Bir sessiyada dörd uyğun saatı yay."
+        },
+        "circle": {
+          "name": "Inner circle",
+          "hint": "Bir anda 25 nəfəri izləyici edin."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Bir anda 50 nəfəri izləyici edin."
+        },
+        "headliner": {
+          "name": "Headliner",
+          "hint": "Bir anda 100 nəfəri izləyici edin."
+        },
+        "cornerstone": {
+          "name": "Cornerstone",
+          "hint": "İki onaltı ardıcıl həftə boyunca yay."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "Hava üzərində 250 uyğun saatı tamamla."
+        },
+        "icon": {
+          "name": "Icon",
+          "hint": "20-ci səviyyəyə çat."
         }
-      }
+      },
+      "chooseBadge": "Profilinizdə göstərmək üçün açıq olan hər hansı bir nişanı seçin.",
+      "useBadge": "Use badge",
+      "selectedBadge": "Selected",
+      "savingBadge": "Saving badge…",
+      "saveBadgeError": "Nişanınızı yadda saxlamaq mümkün olmadı. Yenidən cəhd edin."
     }
   },
   "goLive": {
@@ -5505,6 +5558,28 @@
     "play": "Oxut",
     "pause": "Fasilə ver",
     "hint": "Əyilmək üçün sürükləyin · Kənarı soyunmaq üçün çəkin · Növbəti dəfə basın"
+  },
+  "streamerShowcase": {
+    "cardOf": "Kart {{index}}{{total}}",
+    "progress": "İrəliləyişiniz",
+    "goal": {
+      "streams": "{{current}} / {{target}} axınları",
+      "hours": "{{current}} {{target}} saat",
+      "session": "{{current}} {{target}} min bir axınla",
+      "streak": "{{current}} {{target}} həftə",
+      "level": "Səviyyə {{current}} / {{target}}"
+    },
+    "onStream": "Axında nə baş verdiyini kiliddən çıxarın",
+    "stats": {
+      "level": "Səviyyə",
+      "xp": "XP",
+      "hours": "Seçmə saatlar",
+      "streams": "Uyğun axınlar",
+      "longest": "Ən uzun axın",
+      "streak": "Ən yaxşı zolaq"
+    },
+    "hoursShort": "{{hours}}",
+    "weeksShort": "{{count}} wk"
   },
   "liveGift": {
     "pickTier": "Bir bayram seçin",

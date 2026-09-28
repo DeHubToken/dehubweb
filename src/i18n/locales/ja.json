@@ -4595,8 +4595,61 @@
         "legend": {
           "name": "凡例",
           "hint": "レベル10に到達する。"
+        },
+        "ignition": {
+          "name": "イグニッション",
+          "hint": "オンエアで1時間達成する。"
+        },
+        "on-air": {
+          "name": "オンエア",
+          "hint": "10件の対象配信を完了する。"
+        },
+        "storyteller": {
+          "name": "ストーリーテラー",
+          "hint": "25件の対象配信を完了する。"
+        },
+        "broadcaster": {
+          "name": "ブロードキャスター",
+          "hint": "50件の対象配信を完了する。"
+        },
+        "centurion": {
+          "name": "センチュリオン",
+          "hint": "100件の対象配信を完了する。"
+        },
+        "enduring": {
+          "name": "エンデュアリング",
+          "hint": "1回のセッションで4時間対象配信を行う。"
+        },
+        "circle": {
+          "name": "インナーサークル",
+          "hint": "同時に25人を視聴させる。"
+        },
+        "arena": {
+          "name": "アリーナ",
+          "hint": "同時に50人を視聴させる。"
+        },
+        "headliner": {
+          "name": "ヘッドライナー",
+          "hint": "同時に100人を視聴させる。"
+        },
+        "cornerstone": {
+          "name": "コーナーストーン",
+          "hint": "26週連続で配信する。"
+        },
+        "veteran": {
+          "name": "ベテラン",
+          "hint": "オンエアで250時間達成する。"
+        },
+        "icon": {
+          "name": "アイコン",
+          "hint": "レベル20に到達する。"
         }
-      }
+      },
+      "chooseBadge": "プロフィールに表示するバッジをアンロックされたものから選択してください。",
+      "useBadge": "バッジを使用",
+      "selectedBadge": "選択済み",
+      "savingBadge": "バッジを保存中…",
+      "saveBadgeError": "バッジを保存できませんでした。もう一度お試しください。"
     }
   },
   "goLive": {
@@ -5649,6 +5702,28 @@
     "play": "再生",
     "pause": "一時停止",
     "hint": "ドラッグして曲げる・端を引っ張って剥がす・タップして次のものに"
+  },
+  "streamerShowcase": {
+    "cardOf": "{{total}}の{{index}}カード",
+    "progress": "あなたの進捗状況",
+    "goal": {
+      "streams": "{{current}}/{{target}}ストリーム",
+      "hours": "{{current}}/{{target}}時間",
+      "session": "1つのストリームで{{current}}/{{target}}分",
+      "streak": "{{current}}/{{target}}週間",
+      "level": "レベル{{current}}/{{target}}"
+    },
+    "onStream": "ストリーミング中にロックが解除されます",
+    "stats": {
+      "level": "レベル",
+      "xp": "XP",
+      "hours": "対象となる営業時間",
+      "streams": "対象となるストリーム",
+      "longest": "最長ストリーム",
+      "streak": "ベストストリーク"
+    },
+    "hoursShort": "{{hours}}時間",
+    "weeksShort": "{{count}}週"
   },
   "liveGift": {
     "pickTier": "お祝いを選択",
