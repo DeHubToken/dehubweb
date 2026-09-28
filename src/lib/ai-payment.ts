@@ -16,6 +16,7 @@
  * the signature and the provider can be retried without paying twice.
  */
 
+import { getSubscriptionCredits } from '@/lib/api/dehub/credits';
 import { Interface } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
 import i18n from '@/i18n';
@@ -197,6 +198,24 @@ async function withTimeout<T>(work: Promise<T>, ms: number, message: string): Pr
  * fails — so it runs the same two getERC20Balance calls against the same
  * addresses.
  */
+/**
+ * Sent as a job's `txHash` when it is paid from subscription tokens instead
+ * of a transfer. The generation functions debit the balance server side.
+ */
+export const CREDITS_PAYMENT = 'credits';
+
+/** Prices are DHB at the peg: one DHB is $0.001, so a job costs priceDhb × 1000 micro-dollars. */
+const USD_MICROS_PER_DHB = 1000;
+
+async function creditsCover(priceDhb: number, wallet: string): Promise<boolean> {
+  try {
+    const credits = await getSubscriptionCredits(wallet);
+    return !!credits && Math.round(credits.usd * 1_000_000) >= Math.ceil(priceDhb * USD_MICROS_PER_DHB);
+  } catch {
+    return false;
+  }
+}
+
 export function useSpendableDhb() {
   const { walletAddress, isAuthenticated } = useAuth();
 
@@ -211,7 +230,12 @@ export function useSpendableDhb() {
       ]);
       // The treasury is paid from one chain, not both, so what is actually
       // spendable on a single job is the larger balance — never the sum.
-      return Math.max(Number(base), Number(bnb)) / 1e18;
+      const onChain = Math.max(Number(base), Number(bnb)) / 1e18;
+      // Subscription tokens pay a job on their own too, so the paywall may
+      // go ahead when they cover it. Still one source per job: the larger.
+      const credits = await getSubscriptionCredits(walletAddress).catch(() => null);
+      const creditsDhb = credits ? (credits.usd * 1_000_000) / USD_MICROS_PER_DHB : 0;
+      return Math.max(onChain, creditsDhb);
     },
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 60_000,
@@ -250,6 +274,11 @@ export async function payForJob(
   // Resolved before the reuse check, because the cache is keyed on it. One
   // extra read on the reuse path, and the same call the transfer below makes.
   const payer = await getWalletAddress();
+
+  // Subscription tokens pay first when they cover the job: no signature and
+  // no transfer. The generation function debits the balance and refunds it if
+  // the job fails. Anything short falls through to paying with DHB as before.
+  if (await creditsCover(priceDhb, payer)) return CREDITS_PAYMENT;
 
   // Money already sent for a job that never ran is spent before asking for
   // more. This is what stops a generation that failed after payment from

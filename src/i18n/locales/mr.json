@@ -7110,5 +7110,32 @@
     "planRestricted": "या वापरकर्त्याला संदेश मिळवण्यासाठी सदस्यता आवश्यक आहे.",
     "planTypeNotAllowed": "या क्रिएटरच्या प्लॅनमध्ये या प्रकारच्या संदेशाला परवानगी नाही.",
     "planMinTip": "या क्रिएटरसाठी टिप किमान {{amount}} DHB असावी."
+  },
+  "credits": {
+    "earningsWorth": "मूल्य {{amount}}",
+    "percentUsed": "{{percent}}% वापरलेले",
+    "spentOfTotal": "{{spent}} चे {{total}}",
+    "subscriptionTokens": "सबस्क्रिप्शन टोकन",
+    "topUp": "टोकन जोडा",
+    "topUpTitle": "सबस्क्रिप्शन टोकन जोडा",
+    "topUpCustom": "इतर रक्कम (USD)",
+    "topUpYouSend": "तुम्ही पाठवता",
+    "topUpYouGet": "तुमच्या शिलकीत जोडले",
+    "topUpConfirm": "{{amount}} जोडा",
+    "topUpRange": "{{min}} ते {{max}} प्रविष्ट करा",
+    "topUpDone": "{{amount}} आपल्या सदस्यता टोकनमध्ये जोडले",
+    "topUpPending": "तुमचे टॉप - अप पुष्टीकरण करत आहे. हे लवकरच तुमच्या शिल्लकमध्ये दिसेल.",
+    "topUpFailed": "सबस्क्रिप्शन टोकन जोडू शकले नाही",
+    "topUpStageFunding": "टोकन मिळवत आहे...",
+    "topUpStageWallet": "तुमच्या वॉलेटमध्ये पुष्टी करा...",
+    "topUpStageConfirming": "व्यवहाराची वाट पाहत आहे...",
+    "topUpStageCrediting": "तुमच्या शिल्लकमध्ये जोडत आहे...",
+    "untradableTokens": "हे अविश्वसनीय सबस्क्रिप्शन टोकन आहेत",
+    "withdraw": "काढा",
+    "close": "बंद करा",
+    "tokenAmount": "{{amount}} टोकन",
+    "subscriptionTokensOnly": "फक्त एआय पिढीसाठी",
+    "subscriptionTokensValueNote": "सब्सक्रिप्शन टोकन त्यांची डॉलर व्हॅल्यू ठेवतात. आपण त्यांचा वापर करण्यापूर्वी टोकन किंमत हलविले तर आपण अधिक किंवा कमी टोकन दिसेल, पण ते नेहमी AI पिढी समान रक्कम खरेदी. त्यांना मागे घेता येत नाही, पाठवता येत नाही किंवा व्यापार करता येत नाही.",
+    "topUpEmptyHint": "AI सह व्युत्पन्न करण्यासाठी टोकन जोडा"
   }
 }

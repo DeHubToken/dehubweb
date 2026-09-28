@@ -7322,5 +7322,32 @@
     "planRestricted": "Ez a felhasználó előfizetést kér az üzenetek fogadásához.",
     "planTypeNotAllowed": "Ennek az alkotónak a csomagja nem engedi ezt az üzenettípust.",
     "planMinTip": "A borravalónak legalább {{amount}} DHB-nek kell lennie ennél az alkotónál."
+  },
+  "credits": {
+    "earningsWorth": "Megéri {{amount}}",
+    "percentUsed": "{{percent}}% felhasználva",
+    "spentOfTotal": "{{total}}/{{spent}}",
+    "subscriptionTokens": "Előfizetési tokenek",
+    "topUp": "Token hozzáadása",
+    "topUpTitle": "Előfizetési tokenek hozzáadása",
+    "topUpCustom": "Egyéb összeg (USD)",
+    "topUpYouSend": "Ön küldi",
+    "topUpYouGet": "Hozzáadva az egyenlegedhez",
+    "topUpConfirm": "{{amount}} hozzáadása",
+    "topUpRange": "{{min}} és {{max}} között",
+    "topUpDone": "{{amount}} hozzáadva az előfizetési tokenjeidhez",
+    "topUpPending": "A feltöltés megerősítése folyamatban van. Hamarosan megjelenik az egyenlegeden.",
+    "topUpFailed": "Nem sikerült előfizetési tokeneket hozzáadni",
+    "topUpStageFunding": "Zsetonok beszerzése…",
+    "topUpStageWallet": "Megerősítés a pénztárcádban…",
+    "topUpStageConfirming": "Várakozás a tranzakcióra...",
+    "topUpStageCrediting": "Hozzáadás az egyenlegedhez…",
+    "untradableTokens": "Ezek nem forgalomképes előfizetési tokenek",
+    "withdraw": "Kifizetés",
+    "close": "Bezárás",
+    "tokenAmount": "{{amount}} token",
+    "subscriptionTokensOnly": "Csak MI-generáláshoz",
+    "subscriptionTokensValueNote": "Az előfizetési tokenek megtartják dollárértéküket. Ha a token ára a használat előtt mozog, akkor több vagy kevesebb tokent fog látni, de mindig ugyanannyi AI generációt vásárolnak. Nem lehet visszavonni, elküldeni vagy kereskedni velük.",
+    "topUpEmptyHint": "Adjon hozzá tokeneket az AI-vel történő generáláshoz"
   }
 }

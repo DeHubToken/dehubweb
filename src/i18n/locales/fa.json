@@ -7317,5 +7317,32 @@
     "planRestricted": "این کاربر برای دریافت پیام به اشتراک نیاز دارد.",
     "planTypeNotAllowed": "طرح این سازنده این نوع پیام را مجاز نمی‌داند.",
     "planMinTip": "انعام برای این سازنده باید حداقل {{amount}} DHB باشد."
+  },
+  "credits": {
+    "earningsWorth": "ارزش {{amount}}",
+    "percentUsed": "{{percent}}% استفاده شده",
+    "spentOfTotal": "{{spent}} از {{total}}",
+    "subscriptionTokens": "توکن‌های اشتراک",
+    "topUp": "اضافه کردن توکن‌ها",
+    "topUpTitle": "اضافه کردن توکن‌های اشتراک",
+    "topUpCustom": "مبلغ دیگر (دلار آمریکا)",
+    "topUpYouSend": "شما ارسال می‌کنید",
+    "topUpYouGet": "به موجودی شما اضافه شد",
+    "topUpConfirm": "اضافه کنید {{amount}}",
+    "topUpRange": "تا {{max}} از {{min}} وارد کنید",
+    "topUpDone": "{{amount}} به توکن‌های اشتراک شما اضافه شد",
+    "topUpPending": "شارژ شما در حال تأیید است. به زودی در موجودی شما نمایش داده خواهد شد.",
+    "topUpFailed": "نتوانستم توکن‌های اشتراک را اضافه کنم",
+    "topUpStageFunding": "دریافت توکن‌ها…",
+    "topUpStageWallet": "در کیف پول خود تأیید کنید…",
+    "topUpStageConfirming": "منتظر تراکنش هستم…",
+    "topUpStageCrediting": "به موجودی شما اضافه می‌شود…",
+    "untradableTokens": "اینها توکن‌های اشتراک غیرقابل معامله هستند",
+    "withdraw": "برداشت",
+    "close": "بستن",
+    "tokenAmount": "{{amount}} توکن",
+    "subscriptionTokensOnly": "فقط برای تولید هوش مصنوعی",
+    "subscriptionTokensValueNote": "توکن‌های اشتراکی ارزش دلاری خود را حفظ می‌کنند. اگر قیمت توکن قبل از استفاده شما تغییر کند، توکن‌های بیشتر یا کمتری خواهید دید، اما آنها همیشه مقدار یکسانی از تولید هوش مصنوعی را خریداری می‌کنند. آنها قابل برداشت، ارسال یا معامله نیستند.",
+    "topUpEmptyHint": "اضافه کردن توکن‌ها برای تولید با هوش مصنوعی"
   }
 }

@@ -7432,5 +7432,32 @@
     "planRestricted": "Dieser Nutzer setzt ein Abo voraus, um Nachrichten zu erhalten.",
     "planTypeNotAllowed": "Der Plan dieses Creators erlaubt diese Art von Nachricht nicht.",
     "planMinTip": "Das Trinkgeld für diesen Creator muss mindestens {{amount}} DHB betragen."
+  },
+  "credits": {
+    "earningsWorth": "Wert {{amount}}",
+    "percentUsed": "{{percent}}% verwendet",
+    "spentOfTotal": "{{spent}} von {{total}}",
+    "subscriptionTokens": "Abonnement-Token",
+    "topUp": "Token hinzufügen",
+    "topUpTitle": "Abonnement-Token hinzufügen",
+    "topUpCustom": "Sonstiger Betrag (USD)",
+    "topUpYouSend": "Sie senden",
+    "topUpYouGet": "Deinem Guthaben hinzugefügt",
+    "topUpConfirm": "{{amount}} hinzufügen",
+    "topUpRange": "Geben Sie {{min}} bis {{max}} ein",
+    "topUpDone": "{{amount}} zu Ihren Abonnement-Token hinzugefügt",
+    "topUpPending": "Ihre Aufladung wird bestätigt. Es wird in Kürze auf Ihrem Guthaben erscheinen.",
+    "topUpFailed": "Abonnement-Token konnten nicht hinzugefügt werden",
+    "topUpStageFunding": "Token werden abgerufen...",
+    "topUpStageWallet": "In Ihrem Portemonnaie bestätigen...",
+    "topUpStageConfirming": "Warten auf die Transaktion...",
+    "topUpStageCrediting": "Wird zu Ihrem Guthaben hinzugefügt...",
+    "untradableTokens": "Dies sind nicht handelbare Abonnement-Token",
+    "withdraw": "Zurückziehen",
+    "close": "Schließen",
+    "tokenAmount": "{{amount}} Token",
+    "subscriptionTokensOnly": "Nur für die KI-Generierung",
+    "subscriptionTokensValueNote": "Abonnement-Token behalten ihren Dollar-Wert. Wenn sich der Token-Preis bewegt, bevor Sie sie verwenden, werden Sie mehr oder weniger Token sehen, aber sie kaufen immer die gleiche Menge an KI-Generierung. Sie können nicht abgehoben, gesendet oder gehandelt werden.",
+    "topUpEmptyHint": "Tokens zum Generieren mit KI hinzufügen"
   }
 }

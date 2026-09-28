@@ -4884,5 +4884,32 @@
     "planRestricted": "ایں یوزر کوں سنیہے گھنݨ کیتے سبسکرپشن دی لوڑ اے۔",
     "planTypeNotAllowed": "ایں کریئیٹر دا پلان ایں قسم دے سنیہے دی اجازت نئیں ݙیندا۔",
     "planMinTip": "ایں کریئیٹر کیتے ٹپ گھٹ توں گھٹ {{amount}} DHB ہووݨی چاہیدی اے۔"
+  },
+  "credits": {
+    "earningsWorth": "قیمت {{amount}}",
+    "percentUsed": "{{percent}}% استعمال تھیندا",
+    "spentOfTotal": "{{spent}} دا {{total}}",
+    "subscriptionTokens": "سبسکرپشن ٹوکنز",
+    "topUp": "ٹیکناں دا وادھو کرو",
+    "topUpTitle": "سبسکرپشن ٹوکن شامل کرو",
+    "topUpCustom": "دوسرا رقم (USD)",
+    "topUpYouSend": "تُسیں بھیج رہے ہو",
+    "topUpYouGet": "تُہاڈے بیلنس وچ شامل ہو گیا",
+    "topUpConfirm": "{{amount}} شامل کرو",
+    "topUpRange": "{{min}} نوں {{max}} وچ داخل کرو",
+    "topUpDone": "{{amount}} تُہاڈے سبسکرپشن ٹوکن وچ شامل ہو گیا",
+    "topUpPending": "تُہاڈی ٹاپ اپ تصدیق ہو رہی ہے۔ ایہہ جلد ہی تُہاڈے بیلنس وچ ظاہر ہو جائے گا۔",
+    "topUpFailed": "سبسکرپشن ٹوکن شامل نہیں ہو سکے",
+    "topUpStageFunding": "ٹوکن حاصل ہو رہے نیں…",
+    "topUpStageWallet": "اپنے والیٹ وچ تصدیق کرو…",
+    "topUpStageConfirming": "ٹرانزیکشن دا انتظار ہو رہا اے…",
+    "topUpStageCrediting": "تُہاڈے بیلنس وچ شامل ہو رہا اے…",
+    "untradableTokens": "ایہہ سبسکرپشن ٹوکن نیں جو تبادلہ نئیں ہو سکدے",
+    "withdraw": "نکال",
+    "close": "بند کرو",
+    "tokenAmount": "{{amount}} ٹوکن",
+    "subscriptionTokensValueNote": "سبسکرپشن ٹوکن ڈالر ویلیو رکھدے نیں۔ جے ٹوکن دی قیمت استعمال کرن توں پہلاں تبدیل تھی ونجے تے تساں کوں ودھ یا گھٹ ٹوکن نظر آسن، لیکن اوہ ہمیشہ AI جنریشن دی اِک جِنی مقدار خریددے نیں۔ اوہ کڈھیا، گھلیا یا ٹریڈ نئیں کیتا جا سکدا۔",
+    "topUpEmptyHint": "AI نالے ٹوکن ایڈ کر",
+    "subscriptionTokensOnly": "صرف AI نال بݨاوݨ کیتے"
   }
 }

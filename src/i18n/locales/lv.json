@@ -7412,5 +7412,32 @@
     "planRestricted": "Šim lietotājam ziņu saņemšanai nepieciešams abonements.",
     "planTypeNotAllowed": "Šī autora plāns neatļauj šāda veida ziņu.",
     "planMinTip": "Dzeramnaudai šim autoram jābūt vismaz {{amount}} DHB."
+  },
+  "credits": {
+    "earningsWorth": "Vērts {{amount}}",
+    "percentUsed": "{{percent}}% izmantots",
+    "spentOfTotal": "{{spent}} no {{total}}",
+    "subscriptionTokens": "Abonēšanas marķieri",
+    "topUp": "Pievienot marķierus",
+    "topUpTitle": "Pievienot abonēšanas marķierus",
+    "topUpCustom": "Cita summa (USD)",
+    "topUpYouSend": "Jūs nosūtāt",
+    "topUpYouGet": "Pievienots atlikumam",
+    "topUpConfirm": "Pievienot {{amount}}",
+    "topUpRange": "Ievadiet {{min}} uz {{max}}",
+    "topUpDone": "{{amount}} pievienoja jūsu abonēšanas marķieriem",
+    "topUpPending": "Papildinājums tiek apstiprināts. Drīzumā tā būs redzama atlikumā.",
+    "topUpFailed": "Nevarēja pievienot abonēšanas marķierus",
+    "topUpStageFunding": "Iegūst marķierus...",
+    "topUpStageWallet": "Apstiprini makā...",
+    "topUpStageConfirming": "Gaida darījumu...",
+    "topUpStageCrediting": "Pievieno atlikumam...",
+    "untradableTokens": "Tie ir netirgojami abonēšanas marķieri",
+    "withdraw": "Atsaukt",
+    "close": "Aizvērt",
+    "tokenAmount": "{{amount}} žetonu",
+    "subscriptionTokensOnly": "Tikai mākslīgā intelekta ģenerēšanai",
+    "subscriptionTokensValueNote": "Abonēšanas žetoniem ir dolāra vērtība. Ja marķiera cena pārvietojas pirms jūs tos izmantojat, jūs redzēsiet vairāk vai mazāk marķierus, bet viņi vienmēr pērk tādu pašu daudzumu AI paaudzes. Tos nevar izņemt, nosūtīt vai tirgot.",
+    "topUpEmptyHint": "Pievienojiet marķierus, ko ģenerēt ar MI"
   }
 }

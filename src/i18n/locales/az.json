@@ -7280,5 +7280,32 @@
     "planRestricted": "Bu istifadəçi mesaj almaq üçün abunəlik tələb edir.",
     "planTypeNotAllowed": "Bu yaradıcının planı bu növ mesaja icazə vermir.",
     "planMinTip": "Bu yaradıcı üçün bəxşiş ən azı {{amount}} DHB olmalıdır."
+  },
+  "credits": {
+    "earningsWorth": "Dəyər {{amount}}",
+    "percentUsed": "{{percent}}% istifadə olunur",
+    "spentOfTotal": "{{spent}} {{total}}",
+    "subscriptionTokens": "Abunə nişanları",
+    "topUp": "Tokenlər əlavə edin",
+    "topUpTitle": "Abunə ayələr əlavə et",
+    "topUpCustom": "Digər məbləğ (ABŞ dolları)",
+    "topUpYouSend": "Göndərirsiniz",
+    "topUpYouGet": "Balansınıza əlavə edildi",
+    "topUpConfirm": "{{amount}} əlavə edin",
+    "topUpRange": "{{min}} ilə {{max}} arasında daxil edin",
+    "topUpDone": "{{amount}} abunə ayələrinizə əlavə edildi",
+    "topUpPending": "Üstünlüyünüz təsdiqlənir. Qısa zamanda balansınızda görünəcək.",
+    "topUpFailed": "Abunə nişanları əlavə edilə bilmədi",
+    "topUpStageFunding": "Tokenlər əldə edilir...",
+    "topUpStageWallet": "Pul kisənizdə təsdiq edin...",
+    "topUpStageConfirming": "Əməliyyat gözlənilir...",
+    "topUpStageCrediting": "Balansınıza əlavə edilir...",
+    "untradableTokens": "Bunlar təkraredilməz abunə ayələridir",
+    "withdraw": "Geri götür",
+    "close": "Bağla",
+    "tokenAmount": "{{amount}} token",
+    "subscriptionTokensOnly": "Yalnız AI nəsli üçün",
+    "subscriptionTokensValueNote": "Abunə nişanları dollar dəyərini saxlayır. İstifadə etməzdən əvvəl mötəbər qiymət hərəkət edərsə, daha çox və ya daha az işarə görəcəksiniz, lakin onlar həmişə eyni miqdarda AI nəsli alırlar. Onları geri götürmək, göndərmək və ya satmaq mümkün deyil.",
+    "topUpEmptyHint": "AI ilə yaratmaq üçün ayələr əlavə edin"
   }
 }
