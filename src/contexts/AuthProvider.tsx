@@ -21,6 +21,7 @@ import { createLogger } from '@/lib/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useWalletRuntime } from '@/lib/wallet-runtime';
+import { prepareWalletRelay, isWalletRelayPublishError } from '@/lib/wallet-relay';
 import { clearWagmiStorage } from '@/lib/wagmi-session';
 import { setBackgroundPaused } from '@/lib/background-gate';
 
@@ -315,6 +316,7 @@ async function signWithProvider(
   const message = buildDeHubLoginMessage(address, Math.floor(displayedDate.getTime() / 1000));
 
   let signature: string;
+  await prepareWalletRelay(provider);
   try {
     signature = await provider.request({
       method: 'personal_sign',
@@ -1731,7 +1733,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         ...described,
       }, signError);
 
-      if (timedOut) {
+      if (isWalletRelayPublishError(signError)) {
+        toast.error('Wallet connection interrupted', {
+          description: 'Choose your wallet again to reconnect and sign in.',
+        });
+      } else if (timedOut) {
         toast.error('Your wallet never showed the request', {
           description: 'Open your wallet and check for a pending signature, then try again.',
         });
