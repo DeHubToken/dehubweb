@@ -41,6 +41,9 @@ export const THEME_SWATCHES: Record<string, Swatch> = {
   winter: { page: '#05070a', image: 'winter', ...GLASS },
   war: { page: '#060a09', image: 'war', bento: 'rgba(14,20,18,0.82)', border: 'rgba(79,227,224,0.4)', line: 'rgba(214,208,190,0.9)', faint: 'rgba(79,227,224,0.3)', accent: '#4fe3e0', square: true },
   osaka: { page: '#0a0812', image: 'osaka', bento: 'rgba(17,14,28,0.8)', border: 'rgba(255,111,181,0.28)', line: 'rgba(236,233,245,0.9)', faint: 'rgba(176,170,196,0.35)', accent: '#ff6fb5' },
+  island: { page: '#1a2a4a', image: 'island', bento: 'rgba(220,245,255,0.16)', border: 'rgba(255,255,255,0.4)', line: 'rgba(255,255,255,0.9)', faint: 'rgba(255,255,255,0.4)', accent: '#ff7a8a' },
+  hacker: { page: '#000000', image: 'hacker', bento: 'rgba(0,8,3,0.88)', border: 'rgba(57,255,136,0.45)', line: 'rgba(57,255,136,0.95)', faint: 'rgba(57,255,136,0.28)', accent: '#39ff88', square: true },
+  horror: { page: '#0b0c0d', image: 'horror', bento: 'rgba(10,10,12,0.74)', border: 'rgba(255,255,255,0.16)', line: 'rgba(234,234,234,0.9)', faint: 'rgba(255,255,255,0.22)', accent: '#ff2b2b' },
   jungle: { page: '#16110c', image: 'jungle', bento: 'rgba(38,28,19,0.86)', border: 'rgba(226,176,96,0.28)', line: 'rgba(246,240,227,0.9)', faint: 'rgba(198,182,158,0.35)', accent: '#e2b060' },
 };
 
