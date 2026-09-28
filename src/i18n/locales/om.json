@@ -279,6 +279,8 @@
     "compactModeDesc": "Qabiyyee dabalataaf gargar hir'isi",
     "autoPlay": "Ofiin Taphadhu",
     "autoPlayDesc": "Viidiyoowwan fiidii keessaa ofiin taphadhu",
+    "autoPlayMuted": "Taphachiisa ofumaa sagalee malee jalqabi",
+    "autoPlayMutedDesc": "Viidiyoon ofumaan taphatan yeroo hunda sagalee malee jalqabu",
     "showAnimations": "Sochii Agarsiisi",
     "showAnimationsDesc": "Ce'umsa lallaafaa fi dhiibbaa bansi",
     "coinPlacement": "Coin Placement",
