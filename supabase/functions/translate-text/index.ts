@@ -442,7 +442,7 @@ async function translateWithFreeModels(
   text: string,
   targetLanguageName: string,
   publicContent: boolean,
-): Promise<TranslateResponse | null> {
+): Promise<{ result: TranslateResponse; provider: string } | null> {
   const res = await tryFree({
     messages: [
       { role: 'system', content: TRANSLATOR_SYSTEM_PROMPT(targetLanguageName) },
@@ -457,7 +457,10 @@ async function translateWithFreeModels(
     const data = await res.json();
     const translatedText = data.choices?.[0]?.message?.content?.trim();
     if (!translatedText || looksLikeRefusal(translatedText)) return null;
-    return { translatedText, detectedLanguage: { language: 'auto', confidence: 0.9 } };
+    return {
+      result: { translatedText, detectedLanguage: { language: 'auto', confidence: 0.9 } },
+      provider: res.headers.get('x-free-provider') ?? 'unknown',
+    };
   } catch {
     return null;
   }
@@ -652,6 +655,7 @@ async function translateWithGemini(
 
       if (!response.ok) {
         if (response.status === 429) geminiQuotaUntil = Date.now() + 5 * 60 * 1000;
+        if (response.status === 402) geminiQuotaUntil = Date.now() + 60 * 60 * 1000;
         const errorText = await response.text();
         console.log(`Gemini returned status: ${response.status}, error: ${errorText}`);
         return null;
@@ -1042,7 +1046,8 @@ serve(async (req) => {
 
     // Free model tiers before the paid budget is touched: a translation they
     // answer costs nothing and must not use up one of the day's paid slots.
-    const rawFree = await translateWithFreeModels(text, targetLanguageName, isPublicText);
+    const free = await translateWithFreeModels(text, targetLanguageName, isPublicText);
+    const rawFree = free?.result ?? null;
     result = keepVerbatimIfRewrite(text, targetLang, rawFree);
     if (result) {
       rememberInIsolate(cacheKey, result);
@@ -1050,7 +1055,8 @@ serve(async (req) => {
         textHash,
         targetLang,
         result,
-        result === rawFree ? 'free-llm' : 'free-llm-verbatim',
+        // Which free tier answered, so the split is readable from the table.
+        `${result === rawFree ? 'free-llm' : 'free-llm-verbatim'}:${free?.provider}`,
       );
       return new Response(
         JSON.stringify(result),
@@ -1113,7 +1119,8 @@ serve(async (req) => {
         textHash,
         targetLang,
         result,
-        result === rawAI ? 'lovable-gateway' : 'lovable-gateway-verbatim',
+        // Public or private: private text cannot use the large free tier.
+        `${result === rawAI ? 'lovable-gateway' : 'lovable-gateway-verbatim'}${isPublicText ? '' : ':private'}`,
       );
       return new Response(
         JSON.stringify(result),

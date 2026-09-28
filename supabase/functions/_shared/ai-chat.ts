@@ -150,7 +150,9 @@ async function tryDirect(
       }
 
       if (!res.ok) {
+        // 402 is a key with no paid quota at all; it will not recover in minutes.
         if (res.status === 429) directQuotaUntil = Date.now() + QUOTA_BACKOFF_MS;
+        if (res.status === 402) directQuotaUntil = Date.now() + 60 * 60 * 1000;
         console.log(`${tag} gemini direct ${res.status} on ${model}, falling back to gateway`);
         return null;
       }
