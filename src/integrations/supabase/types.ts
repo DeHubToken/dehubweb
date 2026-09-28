@@ -1064,6 +1064,7 @@ export type Database = {
           host_username: string | null
           host_wallet_address: string
           id: string
+          last_speech_at: string | null
           listener_count: number
           recording_url: string | null
           scheduled_at: string | null
@@ -1084,6 +1085,7 @@ export type Database = {
           host_username?: string | null
           host_wallet_address: string
           id?: string
+          last_speech_at?: string | null
           listener_count?: number
           recording_url?: string | null
           scheduled_at?: string | null
@@ -1104,6 +1106,7 @@ export type Database = {
           host_username?: string | null
           host_wallet_address?: string
           id?: string
+          last_speech_at?: string | null
           listener_count?: number
           recording_url?: string | null
           scheduled_at?: string | null
@@ -7342,6 +7345,7 @@ export type Database = {
         Args: { p_max_discovered?: number }
         Returns: Json
       }
+      end_inactive_stages: { Args: never; Returns: number }
       get_affiliate_cta_stats: {
         Args: never
         Returns: {
@@ -7583,6 +7587,7 @@ export type Database = {
         Args: { p_target_lang: string; p_text_hash: string }
         Returns: undefined
       }
+      touch_stage_speech: { Args: { space_id: string }; Returns: boolean }
       track_post_link_copy: {
         Args: { p_token_id: number; p_wallet?: string }
         Returns: undefined
