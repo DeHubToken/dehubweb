@@ -14,6 +14,34 @@ export interface ConfirmedTipDetails {
   receiverAddress: string;
 }
 
+/**
+ * A smart-wallet tip lands on-chain as an EntryPoint bundle, so the outer
+ * transaction's `to` is the EntryPoint, never the stream controller. Checking
+ * `to` alone rejected every such tip and nothing was ever saved. The sendTip
+ * call is still inside the bundle's calldata with its four static arguments
+ * inline, so find its selector and decode from there — after the receipt
+ * proves the stream controller actually ran in this transaction.
+ */
+async function parseWrappedTip(
+  provider: JsonRpcProvider,
+  txHash: string,
+  data: string,
+  streamController: string,
+) {
+  const receipt = await provider.getTransactionReceipt(txHash);
+  const ranController = receipt?.status === 1
+    && receipt.logs.some((log) => log.address.toLowerCase() === streamController.toLowerCase());
+  if (!ranController) {
+    throw new Error('Tip transaction was sent to an unexpected contract');
+  }
+
+  const selector = tipTransactionInterface.getFunction('sendTip')!.selector.slice(2);
+  const at = data.toLowerCase().indexOf(selector);
+  if (at < 0) return null;
+  // Selector + 4 × 32-byte words.
+  return tipTransactionInterface.parseTransaction({ data: `0x${data.slice(at, at + 8 + 256)}` });
+}
+
 export async function readConfirmedTipDetails(
   txHash: string,
   chainId: ChainId,
@@ -26,14 +54,9 @@ export async function readConfirmedTipDetails(
     throw new Error('Tip transaction not found on-chain');
   }
 
-  if (!tx.to || tx.to.toLowerCase() !== chainConfig.streamController.toLowerCase()) {
-    throw new Error('Tip transaction was sent to an unexpected contract');
-  }
-
-  const parsed = tipTransactionInterface.parseTransaction({
-    data: tx.data,
-    value: tx.value,
-  });
+  const parsed = tx.to?.toLowerCase() === chainConfig.streamController.toLowerCase()
+    ? tipTransactionInterface.parseTransaction({ data: tx.data, value: tx.value })
+    : await parseWrappedTip(provider, txHash, tx.data, chainConfig.streamController);
 
   if (!parsed || parsed.name !== 'sendTip') {
     throw new Error('Unable to decode tip transaction');
