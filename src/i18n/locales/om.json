@@ -3750,7 +3750,11 @@
         "false_dilemma": "Yookaan-ykn framing",
         "overgeneralisation": "Himata bal&#39;aa",
         "hostile_tone": "Sagalee diinummaa"
-      }
+      },
+      "aiMenu": "Meeshaalee AI",
+      "changeVibe": "Haala jijjiiri",
+      "fixSpelling": "Qubee fi seerluga sirreessi",
+      "rewriteFailed": "Irra deebiin barreessuun hin danda'amne. Irra deebi'ii yaali."
     }
   },
   "onboarding": {

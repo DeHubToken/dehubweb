@@ -3354,5 +3354,13 @@
       "badUrl": "ایک https:// پتہ درج کریں، یا مقامی ٹیسٹنگ کے لیے http://localhost.",
       "failed_other": "{{count}} समस्याएँ जो सुधारनी आवश्यक आहेत"
     }
+  },
+  "conversation": {
+    "coach": {
+      "aiMenu": "AI ٹولز",
+      "changeVibe": "انداز بدلیں",
+      "fixSpelling": "ہجے اور گرامر درست کریں",
+      "rewriteFailed": "دوبارہ نہیں لکھا جا سکا۔ پھر کوشش کریں۔"
+    }
   }
 }

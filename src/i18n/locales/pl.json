@@ -5849,7 +5849,11 @@
         "false_dilemma": "Either-or framing",
         "overgeneralisation": "Roszczenie o zamiatanie",
         "hostile_tone": "Wrogi ton"
-      }
+      },
+      "aiMenu": "Narzędzia AI",
+      "changeVibe": "Zmień klimat",
+      "fixSpelling": "Popraw pisownię i gramatykę",
+      "rewriteFailed": "Nie udało się przepisać. Spróbuj ponownie."
     }
   },
   "onboarding": {

@@ -3720,7 +3720,11 @@
         "false_dilemma": "Enten-eller-innramming",
         "overgeneralisation": "Feiende krav",
         "hostile_tone": "Fiendtlig tone"
-      }
+      },
+      "aiMenu": "AI-verktøy",
+      "changeVibe": "Endre stemningen",
+      "fixSpelling": "Rett stavemåte og grammatikk",
+      "rewriteFailed": "Kunne ikke skrive om. Prøv igjen."
     }
   },
   "onboarding": {

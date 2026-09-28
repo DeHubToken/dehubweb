@@ -5837,7 +5837,11 @@
         "false_dilemma": "Немесе жақтау",
         "overgeneralisation": "Жылтырататын шағым",
         "hostile_tone": "Дұшпандық реңк"
-      }
+      },
+      "aiMenu": "ЖИ құралдары",
+      "changeVibe": "Көңіл күйін өзгерту",
+      "fixSpelling": "Емле мен грамматиканы түзету",
+      "rewriteFailed": "Қайта жазу мүмкін болмады. Қайталап көріңіз."
     }
   },
   "onboarding": {
