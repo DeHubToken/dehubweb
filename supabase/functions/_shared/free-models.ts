@@ -41,14 +41,22 @@ const PROVIDERS: FreeProvider[] = [
     model: 'openai/gpt-oss-20b',
     reasons: true,
   },
-  // The only free tier big enough for the translation volume on its own:
-  // about a billion tokens a month, one request a second.
+  // The only free tier big enough for the translation volume on its own. Each
+  // model has its own quota; small is capped at 20k tokens a minute on this
+  // account, large at 250k (1 req/s) and ministral-8b at 625k (3 req/s).
+  // The free tier's data may be used for training, hence `trains`.
   {
-    name: 'mistral/small',
+    name: 'mistral/large',
     url: () => 'https://api.mistral.ai/v1/chat/completions',
     key: () => env('MISTRAL_API_KEY'),
-    model: 'mistral-small-latest',
-    // The free tier's data may be used for training.
+    model: 'mistral-large-latest',
+    trains: true,
+  },
+  {
+    name: 'mistral/ministral-8b',
+    url: () => 'https://api.mistral.ai/v1/chat/completions',
+    key: () => env('MISTRAL_API_KEY'),
+    model: 'ministral-8b-latest',
     trains: true,
   },
   // 10,000 neurons a day — roughly 1,200 short calls on this model.
@@ -65,6 +73,9 @@ const PROVIDERS: FreeProvider[] = [
     model: '@cf/meta/llama-3.1-8b-instruct-fp8',
   },
 ];
+
+/** The most recent free-tier refusal in this isolate, e.g. "mistral/large 401". */
+export let lastFreeFailure: string | null = null;
 
 /** Provider name → until when this isolate leaves it alone. */
 const parkedUntil = new Map<string, number>();
@@ -182,6 +193,7 @@ export async function tryFree(
         signal: opts.signal,
       });
 
+      if (!res.ok) lastFreeFailure = `${p.name} ${res.status}`;
       if (res.status === 429) {
         park(p.name, retryAfterMs(res, 15_000));
         console.log(`${tag} ${p.name} rate limited, parked`);
