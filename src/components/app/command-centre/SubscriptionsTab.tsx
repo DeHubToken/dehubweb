@@ -166,7 +166,7 @@ export function SubscriptionsTab() {
             <span className="text-3xl font-bold text-white">
               {totalMonthlySpend.toLocaleString(undefined, { maximumFractionDigits: 2 })}
             </span>
-            <span className="text-zinc-500 text-sm">USD</span>
+            <span className="text-zinc-500 text-sm">USDT</span>
           </div>
         </div>
 
