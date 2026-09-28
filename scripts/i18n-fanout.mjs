@@ -34,7 +34,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const LOCALES_DIR = 'src/i18n/locales';
+// Overridable so scripts/docs-i18n-fill.mjs can run the same guarded fill over
+// the docs bundles, exported to JSON in a scratch directory.
+const LOCALES_DIR = process.env.I18N_LOCALES_DIR || 'src/i18n/locales';
 const FN_URL = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/translate-text';
 
 /** Batching. Larger batches are cheaper but lose more work when one line drifts. */
