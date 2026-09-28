@@ -1532,7 +1532,7 @@
     "setUpNewAccount": "Załóż nowe konto",
     "createNewInstead": "Zamiast tego utwórz nowe konto",
     "migrateAccount": "Przenieś konto",
-    "importExternalWallet": "Importuj portfel zewnętrzny",
+    "importExternalWallet": "Importuj klucze",
     "migrateIntentHint": "Zaloguj się za pomocą dowolnej z poniższych opcji. Jeśli pasuje do wcześniejszego konta DeHub, przyniesiesz jego portfel, nazwę użytkownika i saldo.",
     "importIntentHint": "Zaloguj się za pomocą dowolnej z poniższych opcji, a następnie wklej frazę odzyskiwania lub klucz prywatny portfela, którego chcesz użyć.",
     "title": "Zaloguj się",

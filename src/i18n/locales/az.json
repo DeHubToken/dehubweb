@@ -1525,7 +1525,7 @@
     "setUpNewAccount": "Yeni hesab yaradın",
     "createNewInstead": "Bunun əvəzinə yeni hesab yaradın",
     "migrateAccount": "Hesabı köçürün",
-    "importExternalWallet": "Xarici cüzdanı idxal edin",
+    "importExternalWallet": "Açarları idxal et",
     "migrateIntentHint": "Aşağıdakı variantlardan hər hansı biri ilə daxil olun. Əgər bu, əvvəlki DeHub hesabına uyğun gələrsə, onun cüzdanını, istifadəçi adını və balansını köçürəcəksiniz.",
     "importIntentHint": "Aşağıdakı variantlardan hər hansı biri ilə daxil olun, sonra istifadə etmək istədiyiniz cüzdanın bərpa frazasını və ya şəxsi açarını yapışdırın.",
     "title": "Daxil ol",

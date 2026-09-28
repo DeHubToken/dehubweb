@@ -1459,7 +1459,7 @@
     "setUpNewAccount": "Es neues Konto erschaffe",
     "createNewInstead": "Es neues Konto erschaffe stattdesse",
     "migrateAccount": "Konto überneh",
-    "importExternalWallet": "Externi Wallet importiere",
+    "importExternalWallet": "Schlüssel importiere",
     "migrateIntentHint": "Logg dich mit ere vo de Optionene ume ume. Wenn's zu eme früehnere DeHub-Konto passt, wird dessen Wallet, Username und Saldo übernoh.",
     "importIntentHint": "Logg dich mit ere vo de Optionene ume ume, und füeg denn de Recovery-Phrase oder Private Key vo de Wallet, wo du wetsch bruche, ih.",
     "title": "Aamälde",

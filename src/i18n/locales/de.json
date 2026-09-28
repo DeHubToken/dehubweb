@@ -1532,7 +1532,7 @@
     "setUpNewAccount": "Ein neues Konto einrichten",
     "createNewInstead": "Stattdessen ein neues Konto erstellen",
     "migrateAccount": "Konto migrieren",
-    "importExternalWallet": "Externes Wallet importieren",
+    "importExternalWallet": "Schlüssel importieren",
     "migrateIntentHint": "Melden Sie sich mit einer der folgenden Optionen an. Wenn es mit einem früheren DeHub-Konto übereinstimmt, bringen Sie dessen Wallet, Benutzernamen und Guthaben mit.",
     "importIntentHint": "Melden Sie sich mit einer der folgenden Optionen an und fügen Sie dann die Wiederherstellungsphrase oder den privaten Schlüssel der Brieftasche ein, die Sie verwenden möchten.",
     "title": "Anmelden",

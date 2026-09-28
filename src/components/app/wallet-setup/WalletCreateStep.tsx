@@ -128,7 +128,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
   const [backendHint, setBackendHint] = useState<LegacyAccountHint | null>(null);
   const [residueDetected, setResidueDetected] = useState(false);
   // An intent picked on the login sheet counts as an explicit choice: someone
-  // who pressed "Import external wallet" is not moved onto Migrate because the
+  // who pressed "Import keys" is not moved onto Migrate because the
   // backend happens to recognise their email.
   const userChoseModeRef = useRef(intent !== null);
   // A legacy migration has been started or resumed on this mount. A ref, not

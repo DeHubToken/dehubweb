@@ -1528,7 +1528,7 @@
     "setUpNewAccount": "Configurar un compte nou",
     "createNewInstead": "Crear un compte nou en el seu lloc",
     "migrateAccount": "Migrar compte",
-    "importExternalWallet": "Importar cartera externa",
+    "importExternalWallet": "Importa claus",
     "migrateIntentHint": "Inicia sessió amb qualsevol opció a continuació. Si coincideix amb un compte de DeHub anterior, transferiràs la seva cartera, nom d'usuari i saldo.",
     "importIntentHint": "Inicia sessió amb qualsevol opció a continuació, després enganxa la frase de recuperació o la clau privada de la cartera que vulguis utilitzar.",
     "title": "Iniciar sessió",
