@@ -2694,7 +2694,6 @@
     "legacyPlanMigrates": "Ko te penapena ka nuku i tēnei mahere utu tohu tawhito ki te utu taara i te reiti i mua i te whakarārangi.",
     "tokenAmount": "{{amount}} tohu",
     "preListingTokenAmount": "Te nui o te tohu i mua i te whakarārangi",
-    "tokensStayInTreasury": "Ka noho ō tohu DeHub ki te tiaki a DeHub, kāore hoki e hokona. Ka whiwhi te kaihanga i tētahi pauna ohaurunga kua whakaingoatia ki te USDT.",
     "tokenCheckoutNotReady": "Kāore anō kia rite te pouaka takiuru ohaurunga tohu — ngana anō i te wa poto",
     "tokenQuoteUnavailable": "Kāore e wātea ana te korero tohu ora",
     "tokenEstimate": "≈ {{amount}} tohu",
@@ -2782,17 +2781,10 @@
     "subscribedToast": "Kua ohaurunga",
     "confirmSubscribeTo": "Ohaurunga ki {{plan}} mō {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} i te utu mua-rārangi",
-    "withdraw": "Whakakorea",
-    "earningsTitle": "Whiwhi ohaurunga",
-    "earningsAvailable": "E wātea ana",
-    "earningsPending": "Te tuku",
-    "withdrawableSoon": "Ka taea te tango wawe i nga whiwhinga ohaurunga",
     "youPayNow": "Ka utua e koe",
-    "usdtSent": "Kua tukuna {{amount}} USDT",
-    "earningsWithdrawableOnBase": "E wātea ana kia tangohia i Base",
-    "earningsUsdtPending": "Ka whakawhāititia ki te USDT · e tatari ana ki te pūtea rāhui",
-    "buyersPayTokenAmount": "Ka utua e ngā kaihoko te nui o te tohu DeHub kua whakaatuhia i te reiti i mua i te whakarārangi. Ka whiwhi koe i te uara USD hei pauna USDT.",
-    "creditsCreator": "Ka whiwhi te kaihanga {{amount}} USDT"
+    "paidToCreatorWallet": "Haere tika ki te putea o te Kaihanga",
+    "creatorPaidDirectNote": "Ko te wahi o te kaihanga haere tika ki to ratou putea i te wa e ohauru koe. Kei te pupuri a DeHub i te utu papa iti.",
+    "creatorEarnsDirect": "Ka utua e nga kaiohauru nga tohu DeHub. Ko to koutou wahi whenua i roto i to koutou putea i te wa e rēhita ratou, iti iho i te utu papa mo to koutou taumata badge."
   },
   "live": {
     "chatJoined": "kua uru mai",

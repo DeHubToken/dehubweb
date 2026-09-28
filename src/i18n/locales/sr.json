@@ -3885,7 +3885,6 @@
     "legacyPlanMigrates": "Уштеда мигрира овај план са ценом у токенима на цену у доларима по претпродајној цени.",
     "tokenAmount": "{{amount}} токена",
     "preListingTokenAmount": "Износ токена пре продаје",
-    "tokensStayInTreasury": "Ваши DeHub токени остају у трезору DeHub-а и не продају се. Креатор добија претплатнички биланс деноминиран у USDT.",
     "tokenCheckoutNotReady": "Наплата претплате у токенима није спремна — покушајте поново ускоро",
     "tokenQuoteUnavailable": "Квота токена уживо није доступна",
     "tokenEstimate": "≈ {{amount}} токена",
@@ -3893,17 +3892,10 @@
     "subscribedToast": "Претплаћени сте",
     "confirmSubscribeTo": "Претплатите се на {{plan}} за {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} по цени пре листинга",
-    "withdraw": "Повуци",
-    "earningsTitle": "Зарада од претплата",
-    "earningsAvailable": "Доступно",
-    "earningsPending": "На чекању",
-    "withdrawableSoon": "Зарада од претплата ускоро ће моћи да се повуче",
     "youPayNow": "Плаћате",
-    "usdtSent": "Послато {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Доступно за исплату на Base",
-    "earningsUsdtPending": "У USDT · чека резерву трезора",
-    "buyersPayTokenAmount": "Купци плаћају приказани износ DeHub токена по претпродајној цени. Ви добијате вредност у УСД као USDT биланс.",
-    "creditsCreator": "Креатор добија {{amount}} USDT"
+    "paidToCreatorWallet": "Иде директно у новчаник креатора",
+    "creatorPaidDirectNote": "Удео креатора иде директно у његов новчаник чим се претплатите. DeHub задржава малу накнаду платформе.",
+    "creatorEarnsDirect": "Претплатници плаћају DeHub токенима. Ваш удео стиже у ваш новчаник чим се претплате, умањен за накнаду платформе за ниво вашег беџа."
   },
   "dm": {
     "planRestricted": "Овај корисник захтева претплату да би примао поруке.",

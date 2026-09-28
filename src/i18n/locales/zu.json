@@ -2731,7 +2731,6 @@
     "legacyPlanMigrates": "Ukulondoloza kuthutha leli lungiselelo elidala elibhalwe ngamathuluzi libe yizintengo zama-dollar ngesilinganiso sangaphambi kokufakwa kuhlu.",
     "tokenAmount": "{{amount}} amathuluzi",
     "preListingTokenAmount": "Inani lamathuluzi sangaphambi kokufakwa kuhlu",
-    "tokensStayInTreasury": "Amathuluzi akho e-DeHub ahlala ekugcinweni komgqomo we-DeHub futhi awathengiswa. Umdali uthola ibhalansi yokubhalisa ekhonjiswe ku-USDT.",
     "tokenCheckoutNotReady": "I-checkout yokubhalisa yamathuluzi ayilungile — sicela uzame futhi kungekudala",
     "tokenQuoteUnavailable": "Isilinganiso samathuluzi ebukhoma ayatholakali",
     "tokenEstimate": "≈ {{amount}} amathuluzi",
@@ -2819,17 +2818,10 @@
     "subscribedToast": "Okubhalisiwe",
     "confirmSubscribeTo": "Bhalisa ku {{plan}} nge {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} ngesilinganiso sokufakwa kuhlu sangaphambili",
-    "withdraw": "Hoxisa",
-    "earningsTitle": "Imali ekhokhelwayo",
-    "earningsAvailable": "Kuyatholakala",
-    "earningsPending": "Kusalindiwe",
-    "withdrawableSoon": "Imali ekhokhelwayo izokhishwa maduzane",
     "youPayNow": "Uyakhokha",
-    "usdtSent": "Kuthunyelwe {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Kuyatholakala ukukhipha ku-Base",
-    "earningsUsdtPending": "Kubalwa nge-USDT · kulindwe isilondolozo somnyango wezimali",
-    "buyersPayTokenAmount": "Abathengi bakhokha inani lamathuluzi e-DeHub elibonisiwe ngesilinganiso sangaphambi kokufakwa kuhlu. Uthola inani le-USD njenge-USDT balance.",
-    "creditsCreator": "Ikhredithi kumdali {{amount}} USDT"
+    "paidToCreatorWallet": "Iya ngqo esikhwameni somsunguli",
+    "creatorPaidDirectNote": "Isabelo somsunguli siya ngqo esikhwameni sakhe semali lapho ubhalisa. I-DeHub igcina inani elincane lepulatifomu.",
+    "creatorEarnsDirect": "Ababhalisile bakhokha ngamathokheni e-DeHub. Izabelo zakho zihlala esikhwameni sakho semali lapho zibhalisa, nciphisa inani lepulatifomu lebanga lakho lebheji."
   },
   "live": {
     "chatJoined": "ujoyinile",

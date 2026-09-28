@@ -2677,7 +2677,6 @@
     "legacyPlanMigrates": "Speichern migriert diesen alten Token-preisigen Plan zum Vorlistungspreis zu Dollar-Preisen.",
     "tokenAmount": "{{amount}} Tokens",
     "preListingTokenAmount": "Vorlistungs-Token-Betrag",
-    "tokensStayInTreasury": "Ihre DeHub-Tokens bleiben im Besitz der DeHub-Kasse und werden nicht verkauft. Der Ersteller erhält ein in USDT denominiertes Abonnementguthaben.",
     "tokenCheckoutNotReady": "Die Token-Abonnementkasse ist nicht bereit – bitte versuchen Sie es bald wieder",
     "tokenQuoteUnavailable": "Live-Token-Angebot nicht verfügbar",
     "tokenEstimate": "≈ {{amount}} Tokens",
@@ -2765,17 +2764,10 @@
     "subscribedToast": "Abonniert",
     "confirmSubscribeTo": "Abonniere zu {{plan}} für {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} bei der Vorlistungsrate",
-    "withdraw": "Abheben",
-    "earningsTitle": "Abonnemente-Ertrag",
-    "earningsAvailable": "Verfügbar",
-    "earningsPending": "Ufgstellt",
-    "withdrawableSoon": "Abonnemente-Ertrag wird bald abziehbar sii",
     "youPayNow": "Du bezahlsch",
-    "usdtSent": "{{amount}} USDT gschickt",
-    "earningsWithdrawableOnBase": "Uf Base uszahlbar",
-    "earningsUsdtPending": "In USDT · wartet uf d Treasury-Reserve",
-    "buyersPayTokenAmount": "Käufer zahlen den angezeigten DeHub-Token-Betrag zum Vorlistungspreis. Sie erhalten den USD-Wert als USDT-Guthaben.",
-    "creditsCreator": "Credite dem Schöpfer {{amount}} USDT"
+    "paidToCreatorWallet": "Geit direkt i d Wallet vom Schöpfer",
+    "creatorPaidDirectNote": "Dr Schär vom Creator gaht grad i sini Wallet, grad wenn du abonnierisch. DeHub behaltet e chlii Plattform-Gebühr.",
+    "creatorEarnsDirect": "Abonnente zahled mit DeHub Tokens. Din Anteil landet i dim Wallet, grad wenn sie abonniered, abzüglich de Plattformgebühr für din Badge-Tier."
   },
   "live": {
     "chatJoined": "isch bitrete",

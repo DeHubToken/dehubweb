@@ -4347,7 +4347,6 @@
     "legacyPlanMigrates": "Besparing migreer hierdie ou token-gepryste plan na dollar pryse teen die voor-notering koers.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Voor-notering token bedrag",
-    "tokensStayInTreasury": "Jou DeHub tokens bly in DeHub skatkis bewaring en word nie verkoop nie. Die skepper ontvang 'n USDT-gedenomineerde intekening balans.",
     "tokenCheckoutNotReady": "Die token intekening uitklok is nie gereed nie — probeer asseblief weer binnekort",
     "tokenQuoteUnavailable": "Regstreekse token kwotasie beskikbaar",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -4358,17 +4357,10 @@
     "subscribedToast": "Ingeteken",
     "confirmSubscribeTo": "Teken in op {{plan}} vir {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} in die pre-listende Rate",
-    "withdraw": "Onttrek",
-    "earningsTitle": "Inskrywing verdienste",
-    "earningsAvailable": "Beskikbaar",
-    "earningsPending": "Hangende",
-    "withdrawableSoon": "Inskrywingsverdienste sal binnekort onttrekbaar wees",
     "youPayNow": "Jy betaal",
-    "usdtSent": "{{amount}} USDT gestuur",
-    "earningsWithdrawableOnBase": "Beskikbaar om op Base te onttrek",
-    "earningsUsdtPending": "In USDT · wag op tesourie-reserwe",
-    "buyersPayTokenAmount": "Kopers betaal die vertoonde DeHub token bedrag teen die voor-notering koers. Jy ontvang die USD waarde as 'n USDT balans.",
-    "creditsCreator": "Krediete die skepper {{amount}} USDT"
+    "paidToCreatorWallet": "Gaan direk na die skepper se beursie",
+    "creatorPaidDirectNote": "Die skepper se deel gaan direk na hul beursie die oomblik dat jy inteken. DeHub hou 'n klein platformfooi.",
+    "creatorEarnsDirect": "Intekenare betaal in DeHub-tokens. Jou aandeel land in jou beursie die oomblik dat hulle inteken, minder die platformfooi vir jou wapenvlak."
   },
   "live": {
     "chatJoined": "het aangesluit",

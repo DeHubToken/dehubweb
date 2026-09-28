@@ -2640,7 +2640,6 @@
     "legacyPlanMigrates": "سپمول دا میراثي توکن-قیمت شوي پلان په ډالر قیمت کې د لیست شوي نرخ دمخه لیږدوي.",
     "tokenAmount": "{{amount}} توکن",
     "preListingTokenAmount": "مقدار توکن قبل از لیست شدن",
-    "tokensStayInTreasury": "توکن‌های DeHub شما در خزانه DeHub باقی می‌مانند و فروخته نمی‌شوند. خالق یک موجودی اشتراک با ارزشی معادل USDT دریافت می‌کند.",
     "tokenCheckoutNotReady": "تسویه حساب توکن اشتراک آماده نیست - لطفاً کمی بعد دوباره امتحان کنید.",
     "tokenQuoteUnavailable": "قیمت لحظه‌ای توکن در دسترس نیست.",
     "tokenEstimate": "≈ {{amount}} توکن",
@@ -2728,17 +2727,10 @@
     "subscribedToast": "सदस्यता ली",
     "confirmSubscribeTo": "{{plan}} को {{price}} / {{duration}} के लिए सदस्यता लें।",
     "atPreListingRate": "{{amount}} पूर्व-लिस्टिंग दर पर",
-    "withdraw": "निकाल",
-    "earningsTitle": "सदस्यता कमाई",
-    "earningsAvailable": "उपलब्ध",
-    "earningsPending": "बाकी",
-    "withdrawableSoon": "सदस्यता कमाई जल्दिए निकाले सकब",
     "youPayNow": "तूँ पइसा दे",
-    "usdtSent": "{{amount}} USDT نێردرا",
-    "earningsWithdrawableOnBase": "بەردەستە بۆ دەرهێنان لەسەر Base",
-    "earningsUsdtPending": "بە USDT · چاوەڕێی یەدەگی خەزێنە",
-    "buyersPayTokenAmount": "پیرودونکي د لیست شوي نرخ دمخه ښودل شوي د هاب توکن مقدار تادیه کوي. تاسو د USDT بیلانس په توګه د USD ارزښت ترلاسه کوئ.",
-    "creditsCreator": "निर्माता {{amount}} को USDT क्रेडिट"
+    "paidToCreatorWallet": "सीधे क्रिएटर कर वॉलेट में जाएला",
+    "creatorPaidDirectNote": "دھن ٺاھڻ واري جو حصو ان جي والٽ ۾ سڌو ويندو جڏهن توهان سبسڪرائب ڪندا. ڊي ھب هڪ ننڍڙو پليٽ فارم فيس رکي ٿو.",
+    "creatorEarnsDirect": "सदस्य DeHub टोकन में भुगतान करयना। सदस्यता लेते ही रउरा हिस्सा रउरा वॉलेट में आएला, रउरा बैज लेवल कर प्लेटफॉर्म फीस काइट के।"
   },
   "live": {
     "chatJoined": "دخل",

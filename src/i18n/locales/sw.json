@@ -4490,7 +4490,6 @@
     "legacyPlanMigrates": "Hifadhi huhamisha mpango huu wa zamani unaothaminiwa kwa tokeni hadi bei ya dola kwa kiwango cha kabla ya kuorodheshwa.",
     "tokenAmount": "{{amount}} tokeni",
     "preListingTokenAmount": "Kiasi cha tokeni kabla ya kuorodheshwa",
-    "tokensStayInTreasury": "Tokeni zako za DeHub hukaa kwenye hazina ya DeHub na hazizauzwi. Muundaji hupokea salio la usajili lililoelezwa kwa USDT.",
     "tokenCheckoutNotReady": "Malipo ya usajili wa tokeni hayako tayari — tafadhali jaribu tena hivi karibuni",
     "tokenQuoteUnavailable": "Nukuu ya tokeni ya moja kwa moja haipatikani",
     "tokenEstimate": "≈ {{amount}} tokeni",
@@ -4498,17 +4497,10 @@
     "subscribedToast": "Imesajiliwa",
     "confirmSubscribeTo": "Jisajili kwenye {{plan}} kwa {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} kwa bei ya tangazo la awali",
-    "withdraw": "Ondoa",
-    "earningsTitle": "Mapato ya usajili",
-    "earningsAvailable": "Inapatikana",
-    "earningsPending": "Inasubiri",
-    "withdrawableSoon": "Mapato ya usajili yataondolewa hivi karibuni",
     "youPayNow": "Unalipa",
-    "usdtSent": "{{amount}} USDT zimetumwa",
-    "earningsWithdrawableOnBase": "Inapatikana kutolewa kwenye Base",
-    "earningsUsdtPending": "Kwa USDT · inasubiri akiba ya hazina",
-    "buyersPayTokenAmount": "Wanunuzi hulipa kiasi kilichoonyeshwa cha tokeni za DeHub kwa kiwango cha kabla ya kuorodheshwa. Unapokea thamani ya USD kama salio la USDT.",
-    "creditsCreator": "Hutoa muamana kwa mtengenezaji {{amount}} USDT"
+    "paidToCreatorWallet": "Huenda moja kwa moja kwenye pochi ya mtengenezaji",
+    "creatorPaidDirectNote": "Sehemu ya mtengenezaji huenda moja kwa moja kwenye pochi yake wakati unapojisajili. DeHub huweka ada ndogo ya tovuti.",
+    "creatorEarnsDirect": "Wasajili hulipa kwa ishara za DeHub. Gawio lako linatua kwenye mkoba wako pindi wanapojisajili, punguza ada ya tovuti ya kiwango cha beji yako."
   },
   "live": {
     "chatJoined": "amejiunga",

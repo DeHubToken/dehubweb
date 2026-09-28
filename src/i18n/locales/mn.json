@@ -2669,7 +2669,6 @@
     "legacyPlanMigrates": "Хадгаламж нь энэхүү хуучин токенээр үнэлэгдсэн төлөвлөгөөг урьдчилсан жагсаалтын ханшаар долларын үнэ болгон шилжүүлдэг.",
     "tokenAmount": "{{amount}} токен",
     "preListingTokenAmount": "Урьдчилсан жагсаалтын токен хэмжээ",
-    "tokensStayInTreasury": "Таны DeHub токенууд DeHub сангийн хадгаламжинд хэвээр байх бөгөөд зарагдахгүй. Бүтээгч нь USDT-д суурилсан захиалгын үлдэгдлийг авна.",
     "tokenCheckoutNotReady": "Токен захиалгын худалдан авалт бэлэн биш байна — удахгүй дахин оролдоно уу",
     "tokenQuoteUnavailable": "Шууд токен ханш байхгүй байна",
     "tokenEstimate": "≈ {{amount}} токен",
@@ -2727,17 +2726,10 @@
     "subscribedToast": "Захиалагдсан",
     "confirmSubscribeTo": "{{plan}}-д захиалах {{price}} / {{duration}}-ын төлбөртэй.",
     "atPreListingRate": "{{amount}} урьдчилсан жагсаалтын ханш дээр",
-    "withdraw": "Татгалзах",
-    "earningsTitle": "Хамрагдах үйлчилгээний орлого",
-    "earningsAvailable": "Боломжтой",
-    "earningsPending": "Хүлээгдэж байна",
-    "withdrawableSoon": "Захиалгын орлого удахгүй татагдана",
     "youPayNow": "Та төлөх",
-    "usdtSent": "{{amount}} USDT илгээлээ",
-    "earningsWithdrawableOnBase": "Base дээр татаж авах боломжтой",
-    "earningsUsdtPending": "USDT-ээр · сангийн нөөцийг хүлээж байна",
-    "buyersPayTokenAmount": "Худалдан авагчид урьдчилсан жагсаалтын ханшаар харуулсан DeHub токен хэмжээг төлнө. Та USDT үлдэгдлийн хэлбэрээр USD үнийг авна.",
-    "creditsCreator": "Бүтээгч {{amount}}-д USDT зээлийн"
+    "paidToCreatorWallet": "Бүтээгчийн түрийвч рүү чиглэнэ",
+    "creatorPaidDirectNote": "Бүтээгчийн эзлэх хувь таны захиалсан мөчид түрийвч рүү чиглэнэ. ДЭМБ нь платформын бага шимтгэлтэй.",
+    "creatorEarnsDirect": "Оролцогчид нь Дебабын токенд цалиндаг. Та өөрийн түрийвчнээсээ бүртгүүлсэн мөчид хувь нэмэр оруулж, платформын хураамжаа багасгана."
   },
   "live": {
     "chatJoined": "нэгдлээ",

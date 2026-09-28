@@ -2613,7 +2613,6 @@
     "legacyPlanMigrates": "保存会将此旧的以代币定价的计划迁移到以美元定价，按预上市汇率计算。",
     "tokenAmount": "{{amount}} 代币",
     "preListingTokenAmount": "预上市代币数量",
-    "tokensStayInTreasury": "您的 DeHub 代币将保留在 DeHub 金库的托管中，不会出售。创作者将收到以 USDT 计价的订阅余额。",
     "tokenCheckoutNotReady": "代币订阅结账尚未准备好 — 请稍后重试",
     "tokenQuoteUnavailable": "实时代币报价不可用",
     "tokenEstimate": "≈ {{amount}} 代币",
@@ -2700,17 +2699,10 @@
     "subscribedToast": "訂閱了",
     "confirmSubscribeTo": "訂閱 {{plan}} 為了 {{price}} / {{duration}}。",
     "atPreListingRate": "{{amount}} 在预上市价",
-    "withdraw": "提取",
-    "earningsTitle": "订阅收益",
-    "earningsAvailable": "可用",
-    "earningsPending": "待定",
-    "withdrawableSoon": "订阅收益即将可提取",
     "youPayNow": "汝付",
-    "usdtSent": "已发送 {{amount}} USDT",
-    "earningsWithdrawableOnBase": "可在 Base 上提现",
-    "earningsUsdtPending": "以 USDT 计价 · 等待国库储备",
-    "buyersPayTokenAmount": "买家支付显示的 DeHub 代币金额，按预上市汇率计算。您将收到美元价值的 USDT 余额。",
-    "creditsCreator": "功勞歸創作者 {{amount}} USDT"
+    "paidToCreatorWallet": "直落创作者个荷包",
+    "creatorPaidDirectNote": "訂閱了，創作者的份額就直接進到他們的錢包。DeHub 留一小筆平台費。",
+    "creatorEarnsDirect": "订阅者用DeHub代币支付。一旦他们订阅，你的份额就会立即进入你的钱包，减去你徽章等级的平台费用。"
   },
   "live": {
     "chatJoined": "加入了",

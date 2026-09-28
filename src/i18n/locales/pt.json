@@ -4500,7 +4500,6 @@
     "legacyPlanMigrates": "Salvar migra este plano com preço em token legado para preço em dólar na taxa pré-listagem.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Valor do token pré-listagem",
-    "tokensStayInTreasury": "Seus tokens DeHub permanecem sob custódia do tesouro DeHub e não são vendidos. O criador recebe um saldo de assinatura denominado em USDT.",
     "tokenCheckoutNotReady": "O checkout da assinatura de token não está pronto — tente novamente em breve",
     "tokenQuoteUnavailable": "Cotação de token ao vivo indisponível",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -4508,17 +4507,10 @@
     "subscribedToast": "Inscrito",
     "confirmSubscribeTo": "Inscreva-se em {{plan}} para {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} à taxa de pré-listagem",
-    "withdraw": "Levantar",
-    "earningsTitle": "Ganhos com assinaturas",
-    "earningsAvailable": "Disponível",
-    "earningsPending": "Pendente",
-    "withdrawableSoon": "Os ganhos da assinatura poderão ser retirados em breve",
     "youPayNow": "Paga",
-    "usdtSent": "{{amount}} USDT enviados",
-    "earningsWithdrawableOnBase": "Disponível para levantamento na Base",
-    "earningsUsdtPending": "Em USDT · a aguardar reserva do tesouro",
-    "buyersPayTokenAmount": "Compradores pagam o valor exibido em tokens DeHub na taxa pré-listagem. Você recebe o valor em USD como um saldo USDT.",
-    "creditsCreator": "Credita {{amount}} USDT ao criador"
+    "paidToCreatorWallet": "Vai diretamente para a carteira do criador",
+    "creatorPaidDirectNote": "A parte do criador vai diretamente para a carteira no momento em que você se inscreve. O DeHub mantém uma pequena taxa de plataforma.",
+    "creatorEarnsDirect": "Os assinantes pagam em tokens DeHub. A sua parte fica na sua carteira no momento em que é subscrita, menos a taxa da plataforma para o seu nível de emblema."
   },
   "live": {
     "chatJoined": "entrou",

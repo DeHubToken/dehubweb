@@ -2371,19 +2371,12 @@
     "daysLeft_one": "{{count}}d left",
     "daysLeft_other": "{{count}}d left",
     "subscribedToast": "Subscribed",
-    "withdraw": "Withdraw",
     "confirmSubscribeTo": "Subscribe to {{plan}} for {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} for di pre-listing rate",
-    "earningsTitle": "Subscription money wey you don make",
-    "earningsAvailable": "E dey ready",
-    "earningsPending": "E still dey wait",
-    "withdrawableSoon": "You go fit comot your subscription money soon",
     "youPayNow": "You pay",
-    "usdtSent": "{{amount}} USDT don send",
-    "earningsWithdrawableOnBase": "You fit withdraw am for Base",
-    "earningsUsdtPending": "Na USDT · e dey wait treasury reserve",
-    "creditsCreator": "Di creator go get {{amount}} USDT",
-    "buyersPayTokenAmount": "Buyers dey pay di DeHub token amount wey show for di pre-listing rate. You go receive di USD value as USDT balance."
+    "paidToCreatorWallet": "E go straight enter di creator wallet",
+    "creatorPaidDirectNote": "Di creator share go enter dia wallet di moment you subscribe. DeHub dey keep small platform fee.",
+    "creatorEarnsDirect": "Subscribers dey pay with DeHub tokens. Your share go land for your wallet di moment dem subscribe, minus di platform fee for your badge level."
   },
   "live": {
     "chatJoined": "don join",

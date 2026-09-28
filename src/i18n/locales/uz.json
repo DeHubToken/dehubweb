@@ -2724,7 +2724,6 @@
     "legacyPlanMigrates": "Saqlash ushbu eski token narxidagi rejani ro'yxatdan oldingi stavkada dollar narxiga o'tkazadi.",
     "tokenAmount": "{{amount}} token",
     "preListingTokenAmount": "Ro'yxatdan oldingi token miqdori",
-    "tokensStayInTreasury": "Sizning DeHub tokenlaringiz DeHub xazina qaramog'ida qoladi va sotilmaydi. Yaratuvchi USDT nominallangan obuna balansini oladi.",
     "tokenCheckoutNotReady": "Token obuna to'lovi tayyor emas — iltimos, birozdan keyin qayta urinib ko'ring",
     "tokenQuoteUnavailable": "Jonli token kotirovkasi mavjud emas",
     "tokenEstimate": "≈ {{amount}} token",
@@ -2812,17 +2811,10 @@
     "subscribedToast": "Obuna qilingan",
     "confirmSubscribeTo": "{{plan}} ga {{price}} / {{duration}} obuna bo'ling.",
     "atPreListingRate": "{{amount}} pre-listing tarifda",
-    "withdraw": "Yechib olish",
-    "earningsTitle": "Obuna daromadlari",
-    "earningsAvailable": "Mavjud",
-    "earningsPending": "Kutilmoqda",
-    "withdrawableSoon": "Obuna daromadlari tez orada yechib olinadi",
     "youPayNow": "Siz to&#39;laysiz",
-    "usdtSent": "{{amount}} USDT yuborildi",
-    "earningsWithdrawableOnBase": "Base da yechib olish mumkin",
-    "earningsUsdtPending": "USDT da · g'aznachilik zaxirasini kutmoqda",
-    "buyersPayTokenAmount": "Xaridorlar ro'yxatdan oldingi stavkada ko'rsatilgan DeHub token miqdorini to'laydilar. Siz USDT balansi sifatida USD qiymatini olasiz.",
-    "creditsCreator": "Yaratuvchiga kreditlar {{amount}} USDT"
+    "paidToCreatorWallet": "To&#39;g&#39;ridan-to&#39;g&#39;ri ijodkorning hamyoniga tushadi",
+    "creatorPaidDirectNote": "Obuna bo&#39;lishingiz bilan ijodkorning ulushi to&#39;g&#39;ridan-to&#39;g&#39;ri ularning hamyoniga tushadi. DeHub kichik platforma to&#39;lovini ushlab qoladi.",
+    "creatorEarnsDirect": "Obunachilar DeHub tokenlarida to&#39;lov qilishadi. Ular obuna bo&#39;lgan zahoti sizning ulushingiz hamyoningizga tushadi, nishon darajangiz uchun platforma to&#39;lovi chegiriladi."
   },
   "live": {
     "chatJoined": "qoʻshildi",

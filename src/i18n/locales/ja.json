@@ -4487,7 +4487,6 @@
     "legacyPlanMigrates": "保存により、このレガシートークン価格プランがプレリスティングレートのドル価格に移行します。",
     "tokenAmount": "{{amount}} トークン",
     "preListingTokenAmount": "プレリスティングトークン額",
-    "tokensStayInTreasury": "あなたのDeHubトークンはDeHubトレジャリーの管理下にあり、売却されません。クリエイターはUSDT建てのサブスクリプション残高を受け取ります。",
     "tokenCheckoutNotReady": "トークンサブスクリプションのチェックアウトは準備ができていません — しばらくしてからもう一度お試しください",
     "tokenQuoteUnavailable": "ライブトークン相場が利用できません",
     "tokenEstimate": "≈ {{amount}} トークン",
@@ -4495,17 +4494,10 @@
     "subscribedToast": "登録済み",
     "confirmSubscribeTo": "{{plan}}を{{price}}/{{duration}}で購読しましょう。",
     "atPreListingRate": "事前公開料金で{{amount}}",
-    "withdraw": "出金",
-    "earningsTitle": "サブスクリプション収益",
-    "earningsAvailable": "利用可能",
-    "earningsPending": "保留中",
-    "withdrawableSoon": "サブスクリプション収益はまもなく出金可能になります",
     "youPayNow": "あなたが支払うのは",
-    "usdtSent": "{{amount}} USDT を送金しました",
-    "earningsWithdrawableOnBase": "Base で出金できます",
-    "earningsUsdtPending": "USDT 建て · トレジャリー準備待ち",
-    "buyersPayTokenAmount": "購入者は、プレリスティングレートで表示されているDeHubトークン額を支払います。あなたはUSDT残高としてUSD価値を受け取ります。",
-    "creditsCreator": "クリエイターのクレジット{{amount}} USDT"
+    "paidToCreatorWallet": "クリエイターのウォレットに直接移動",
+    "creatorPaidDirectNote": "サブスクリプションを購入すると、クリエイターのシェアはウォレットに直接送られます。DeHubは少額のプラットフォーム料金を保持しています。",
+    "creatorEarnsDirect": "加入者はDeHubトークンで支払います。購読した瞬間にシェアがウォレットに表示されますが、バッジランクのプラットフォーム手数料は差し引かれます。"
   },
   "live": {
     "chatJoined": "が参加しました",

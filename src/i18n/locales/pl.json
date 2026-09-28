@@ -4495,7 +4495,6 @@
     "legacyPlanMigrates": "Oszczędzanie migruje ten plan wyceniony w starszych tokenach do wyceny w dolarach po cenie przedpremierowej.",
     "tokenAmount": "{{amount}} tokenów",
     "preListingTokenAmount": "Ilość tokenów przedpremierowych",
-    "tokensStayInTreasury": "Twoje tokeny DeHub pozostają pod opieką skarbca DeHub i nie są sprzedawane. Twórca otrzymuje saldo subskrypcji denominowane w USDT.",
     "tokenCheckoutNotReady": "Kasa subskrypcji tokenowej nie jest gotowa — spróbuj ponownie za chwilę",
     "tokenQuoteUnavailable": "Brak dostępnej wyceny tokenów na żywo",
     "tokenEstimate": "≈ {{amount}} tokenów",
@@ -4503,17 +4502,10 @@
     "subscribedToast": "Zasubskrybowano",
     "confirmSubscribeTo": "Subskrybuj {{plan}} dla {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} w stosunku do stawki obowiązującej przed opublikowaniem oferty",
-    "withdraw": "Wycofaj",
-    "earningsTitle": "Zarobki z subskrypcji",
-    "earningsAvailable": "Dostępne",
-    "earningsPending": "Oczekujące",
-    "withdrawableSoon": "Zarobki z subskrypcji będą wkrótce dostępne do wypłaty",
     "youPayNow": "Płacisz",
-    "usdtSent": "Wysłano {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Dostępne do wypłaty na Base",
-    "earningsUsdtPending": "W USDT · oczekuje na rezerwę skarbca",
-    "buyersPayTokenAmount": "Kupujący płacą wyświetloną kwotę tokenów DeHub po cenie przedpremierowej. Otrzymujesz wartość w USD jako saldo USDT.",
-    "creditsCreator": "Środki dla twórcy {{amount}} USDT"
+    "paidToCreatorWallet": "Przechodzi bezpośrednio do portfela twórcy",
+    "creatorPaidDirectNote": "Udział twórcy trafia bezpośrednio do jego portfela w momencie subskrypcji. DeHub zachowuje niewielką opłatę za platformę.",
+    "creatorEarnsDirect": "Abonenci płacą w tokenach DeHub. Twój udział pojawi się w portfelu w momencie subskrypcji, pomniejszony o opłatę platformową za próg odznaki."
   },
   "live": {
     "chatJoined": "dołączył(a)",

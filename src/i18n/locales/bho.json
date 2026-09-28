@@ -2637,7 +2637,6 @@
     "legacyPlanMigrates": "सेविंग इस लेगेसी टोकन-प्राइस्ड प्लान को प्री-लिस्टिंग दर पर डॉलर मूल्य निर्धारण में माइग्रेट करती है।",
     "tokenAmount": "{{amount}} टोकन",
     "preListingTokenAmount": "प्री-लिस्टिंग टोकन राशि",
-    "tokensStayInTreasury": "आपके DeHub टोकन DeHub खजाने की कस्टडी में रहते हैं और बेचे नहीं जाते हैं। निर्माता को USDT-डेनॉमिनेटेड सब्सक्रिप्शन बैलेंस प्राप्त होता है।",
     "tokenCheckoutNotReady": "टोकन सब्सक्रिप्शन चेकआउट तैयार नहीं है - कृपया थोड़ी देर में पुनः प्रयास करें",
     "tokenQuoteUnavailable": "लाइव टोकन कोट अनुपलब्ध",
     "tokenEstimate": "≈ {{amount}} टोकन",
@@ -2725,17 +2724,10 @@
     "subscribedToast": "सदस्यता ली",
     "confirmSubscribeTo": "सब्सक्राइब करें {{plan}} के लिए {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} पूर्व-लिस्टिंग दर पर",
-    "withdraw": "हटावे खातिर",
-    "earningsTitle": "सब्सक्राइब जरूर करे",
-    "earningsAvailable": "उपलब्ध बाटे",
-    "earningsPending": "इन्तजार कइल जाव",
-    "withdrawableSoon": "उम्मीद हव जल्दी से जल्दी कुछ ना कुछ होई ।",
     "youPayNow": "पेमेंट करे",
-    "usdtSent": "{{amount}} USDT भेजल गइल",
-    "earningsWithdrawableOnBase": "Base पर निकाले खातिर उपलब्ध",
-    "earningsUsdtPending": "USDT में · ट्रेजरी रिजर्व के इंतजार",
-    "buyersPayTokenAmount": "खरीदार प्री-लिस्टिंग दर पर प्रदर्शित DeHub टोकन राशि का भुगतान करते हैं। आपको USDT बैलेंस के रूप में USD मूल्य प्राप्त होता है।",
-    "creditsCreator": "क्रेडिट्स निर्माता {{amount}} USDT"
+    "paidToCreatorWallet": "बिल्डर के पैकेट में सब कुछ देखें",
+    "creatorPaidDirectNote": "सब्सक्राइब करते ही क्रिएटर के हिस्सा सीधे उनके वॉलेट में चल जाला। DeHub एगो छोट प्लेटफॉर्म फीस राखेला।",
+    "creatorEarnsDirect": "सब्सक्राइबर DeHub टोकन में भुगतान करेलें। सब्सक्राइब करते ही रउरा हिस्सा रउरा वॉलेट में आ जाला, रउरा बैज लेवल के प्लेटफॉर्म फीस काट के।"
   },
   "live": {
     "chatJoined": "जुड़ल",
