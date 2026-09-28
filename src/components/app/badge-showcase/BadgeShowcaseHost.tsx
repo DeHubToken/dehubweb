@@ -34,7 +34,13 @@ export function BadgeShowcaseHost() {
             onClose={closeBadgeShowcase}
           />
         ) : (
-          <BadgeShowcase key={request.id} tier={request.tier} anchor={request.anchor} onClose={closeBadgeShowcase} />
+          <BadgeShowcase
+            key={request.id}
+            tier={request.tier}
+            promotedFrom={request.promotedFrom}
+            anchor={request.anchor}
+            onClose={closeBadgeShowcase}
+          />
         )}
       </Suspense>
     </ErrorBoundary>
