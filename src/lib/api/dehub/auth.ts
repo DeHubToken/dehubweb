@@ -3,6 +3,7 @@ import { DEHUB_API_BASE, setAuthToken, setRefreshToken, setTokenExpiresAt, getRe
 import type { TokenRefreshOutcome } from './core';
 import type { AuthResponse } from './types';
 import { deviceHeaders } from '@/lib/device-id';
+import { requestSession } from './session-request';
 
 export interface UsernameCheckResponse {
   status: boolean;
@@ -127,7 +128,7 @@ export async function authenticateWallet(
   };
 
   // DeHub API only exposes /api/web/auth (doc.md). /api/auth returns 404.
-  const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
+  const response = await requestSession('/api/web/auth', {
     method: "POST",
     headers,
     body: JSON.stringify(body),
@@ -256,7 +257,7 @@ export async function authenticateWithSupabaseSession(
   supabaseAccessToken: string,
   expectedAddress?: string,
 ): Promise<AuthResponse> {
-  const response = await fetch(`${DEHUB_API_BASE}/api/web/auth/supabase`, {
+  const response = await requestSession('/api/web/auth/supabase', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
