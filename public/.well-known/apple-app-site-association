@@ -12,7 +12,13 @@
           { "/": "/stages", "comment": "Stages hub" },
           { "/": "/stages/*", "comment": "Stage invite by short id" },
           { "/": "/packs", "comment": "Emoji, sticker and GIF packs hub" },
-          { "/": "/packs/*", "comment": "One pack by slug" }
+          { "/": "/packs/*", "comment": "One pack by slug" },
+          { "/": "/creators", "comment": "Creator application" },
+          { "/": "/raffle", "comment": "Prize draws" },
+          { "/": "/cinema", "comment": "Cinema search" },
+          { "/": "/cinema/*", "comment": "One film or series" },
+          { "/": "/creator/flow", "comment": "Your Creator Flows" },
+          { "/": "/creator/flow/*", "comment": "One shared Creator Flow" }
         ]
       }
     ]
