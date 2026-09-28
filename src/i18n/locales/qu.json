@@ -4463,7 +4463,9 @@
     "step3": "DeHub tokenskunaqa chaylla jamunqanku maymanpas chainman."
   },
   "builder": {
-    "stakeForAllowance": "DeHub tokenskuna stakeyta atikanki urqu build allowance urqu punchawta"
+    "stakeForAllowance": "DeHub tokenskuna stakeyta atikanki urqu build allowance urqu punchawta",
+    "buildInChat": "Sapaq willakuyniykikunapi @assistant-wan ruray",
+    "signInRequired": "Builder llamk'achinaykipaq yaykuy."
   },
   "connect": {
     "chatgptFaqAccount": "Mana kaqta reqsinachu public content qhawana connector kaqwan. DeHub kaqta reqsinallataqmi qelqayta, tipayta chaynataq DeHub tokens hap'iyta atikanki.",

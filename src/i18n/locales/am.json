@@ -4287,7 +4287,9 @@
     "step3": "የDeHub ቶከኖችዎ በድረሱበት ሰንሰለት በቅርቡ ይደርሳሉ።"
   },
   "builder": {
-    "stakeForAllowance": "ዕለታዊ የግንባታ አበልዎን ለመጨመር የDeHub ቶከኖችን ይንከባከቡ"
+    "stakeForAllowance": "ዕለታዊ የግንባታ አበልዎን ለመጨመር የDeHub ቶከኖችን ይንከባከቡ",
+    "buildInChat": "በቀጥታ መልዕክቶችዎ ከ@assistant ጋር ይገንቡ",
+    "signInRequired": "Builderን ለመጠቀም ይግቡ።"
   },
   "connect": {
     "chatgptFaqAccount": "በአገናኙ በኩል የህዝብ ይዘትን ለማንበብ ምንም መለያ አያስፈልግም። የDeHub ቶከኖችን ለመለጠፍ፣ ለመጠቆም ወይም ለመያዝ ከፈለጉ ብቻ የDeHub መለያ ያስፈልጋል።",

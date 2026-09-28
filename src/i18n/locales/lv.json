@@ -6571,7 +6571,9 @@
     "step3": "Jūsu DeHub žetoni drīzumā tiks piegādāti galamērķa ķēdē."
   },
   "builder": {
-    "stakeForAllowance": "Iemaksājiet DeHub žetonus, lai palielinātu savu ikdienas izveides atļauju"
+    "stakeForAllowance": "Iemaksājiet DeHub žetonus, lai palielinātu savu ikdienas izveides atļauju",
+    "buildInChat": "Veido savās privātajās ziņās ar @assistant",
+    "signInRequired": "Piesakies, lai izmantotu Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Lai lasītu publisku saturu, izmantojot savienotāju, nav nepieciešams konts. DeHub konts ir nepieciešams tikai tad, ja vēlaties publicēt, dot dzeramnaudu vai turēt DeHub žetonus.",

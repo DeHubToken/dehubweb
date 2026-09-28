@@ -6598,7 +6598,9 @@
     "step3": "DeHub jetonlarınız hedef zincirde kısa süre içinde teslim edilecektir."
   },
   "builder": {
-    "stakeForAllowance": "Günlük oluşturma limitinizi artırmak için DeHub jetonlarını stake edin"
+    "stakeForAllowance": "Günlük oluşturma limitinizi artırmak için DeHub jetonlarını stake edin",
+    "buildInChat": "@assistant ile özel mesajlarında oluştur",
+    "signInRequired": "Builder'ı kullanmak için giriş yap."
   },
   "connect": {
     "chatgptFaqAccount": "Bağlayıcı aracılığıyla herkese açık içeriği okumak için hesap gerekmez. Yalnızca gönderi yapmak, bahşiş vermek veya DeHub jetonu tutmak istiyorsanız bir DeHub hesabı gereklidir.",

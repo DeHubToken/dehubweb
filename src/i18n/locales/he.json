@@ -6300,7 +6300,9 @@
     "step3": "טוקני DeHub שלך יועברו לרשת היעד בקרוב."
   },
   "builder": {
-    "stakeForAllowance": "הפקד טוקני DeHub כדי להגדיל את הקצבה היומית שלך לבנייה"
+    "stakeForAllowance": "הפקד טוקני DeHub כדי להגדיל את הקצבה היומית שלך לבנייה",
+    "buildInChat": "בנו בהודעות הפרטיות עם @assistant",
+    "signInRequired": "התחברו כדי להשתמש ב-Builder."
   },
   "connect": {
     "chatgptFaqAccount": "אין צורך בחשבון כדי לקרוא תוכן ציבורי דרך המחבר. חשבון DeHub נדרש רק אם ברצונך לפרסם, לתת טיפים או להחזיק טוקני DeHub.",

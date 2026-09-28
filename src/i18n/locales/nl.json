@@ -6804,7 +6804,9 @@
     "step3": "Je DeHub-tokens worden spoedig geleverd op de bestemmingschain."
   },
   "builder": {
-    "stakeForAllowance": "Stake DeHub-tokens om je dagelijkse build-toelage te verhogen"
+    "stakeForAllowance": "Stake DeHub-tokens om je dagelijkse build-toelage te verhogen",
+    "buildInChat": "Bouw in je DM's met @assistant",
+    "signInRequired": "Log in om de Builder te gebruiken."
   },
   "connect": {
     "chatgptFaqAccount": "Er is geen account vereist om openbare inhoud te lezen via de connector. Een DeHub-account is alleen nodig als je DeHub-tokens wilt posten, tippen of vasthouden.",

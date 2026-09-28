@@ -6587,7 +6587,9 @@
     "step3": "DeHub 토큰은 대상 체인에서 곧 제공될 예정입니다."
   },
   "builder": {
-    "stakeForAllowance": "DeHub 토큰을 스테이킹하여 일일 빌드 허용량을 늘리세요."
+    "stakeForAllowance": "DeHub 토큰을 스테이킹하여 일일 빌드 허용량을 늘리세요.",
+    "buildInChat": "@assistant와 DM에서 만들기",
+    "signInRequired": "Builder를 사용하려면 로그인하세요."
   },
   "connect": {
     "chatgptFaqAccount": "커넥터를 통해 공개 콘텐츠를 읽는 데 계정이 필요하지 않습니다. DeHub 계정은 게시, 팁 또는 DeHub 토큰 보유를 원하는 경우에만 필요합니다.",

@@ -4323,7 +4323,9 @@
     "step3": "ናይ DeHub ምልክታትካ ኣብ ቀረባ እዋን ኣብ ናይ መድረኽ ሰንሰለት ክወሃበካ እዩ ።"
   },
   "builder": {
-    "stakeForAllowance": "ናይ DeHub ምልክታት ዕለታዊ ናይ ህንጸት ድጎማኻ ንምዕባይ"
+    "stakeForAllowance": "ናይ DeHub ምልክታት ዕለታዊ ናይ ህንጸት ድጎማኻ ንምዕባይ",
+    "buildInChat": "ኣብ ብሕታዊ መልእኽትታትካ ምስ @assistant ስራሕ",
+    "signInRequired": "Builder ንምጥቃም እቶ።"
   },
   "connect": {
     "chatgptFaqAccount": "ብማእከላይ ኣቢሉ ህዝባዊ ትሕዝቶ ንምንባብ ዝኾነ ሕሳብ ኣየድልዮን እዩ ። ናይ DeHub መለያ እንተድኣ ናይ DeHub ምልክታት ክትለኣኽ ፡ ክትመኽረካ ወይ ክትሕዝ እንተ ደሊኻ ጥራይ እዩ ዝድለ ።",

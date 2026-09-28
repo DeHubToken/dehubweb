@@ -4137,7 +4137,9 @@
     "step3": "تواڈے DeHub ٹوکن منزل چین تے جلد پہنچا دتے جان گے۔"
   },
   "builder": {
-    "stakeForAllowance": "تواڈی روزانہ بلڈ الاؤنس ودھان واسطے DeHub ٹوکن سٹیک کرو"
+    "stakeForAllowance": "تواڈی روزانہ بلڈ الاؤنس ودھان واسطے DeHub ٹوکن سٹیک کرو",
+    "buildInChat": "@assistant نال اپݨے DM وچ بݨاؤ",
+    "signInRequired": "Builder ورتݨ کیتے سائن ان کرو۔"
   },
   "connect": {
     "chatgptFaqAccount": "کنیکٹر دے ذریعے عوامی مواد پڑھن واسطے کسے اکاؤنٹ دی لوڑ نہیں اے۔ صرف پوسٹ کرن، ٹپ دین یا DeHub ٹوکن رکھن واسطے DeHub اکاؤنٹ دی لوڑ اے۔",
