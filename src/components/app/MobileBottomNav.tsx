@@ -1,4 +1,6 @@
 import React, { Suspense, useState, useRef, useEffect, useMemo } from 'react';
+import { StageNavChip } from './spaces/StageNavChip';
+import { useStage } from '@/contexts/StageContext';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
@@ -124,6 +126,8 @@ export function MobileBottomNav() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
+  const { currentSpace, isConnected, isModalOpen } = useStage();
+  const hasStageChip = !!currentSpace && isConnected && !isModalOpen && !isKidsModeLocked();
   // Subscribed, not just read: `kidsNav` below calls `isKidsModeLocked()`
   // directly, and without a hook holding that value this bar would keep its
   // adult destinations until something else happened to re-render it.
@@ -272,12 +276,13 @@ export function MobileBottomNav() {
         style={{ transform: navVisible && !keyboardOpen && !chatOpen ? 'translateY(0)' : 'translateY(110%)', willChange: 'transform' }}
       >
         <nav
-          className="relative bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl"
+          className={cn("relative bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl", hasStageChip && "flex items-center")}
+          style={hasStageChip ? { maxWidth: 'min(calc(72% + 44px), 492px)' } : undefined}
         >
           {/* Nav items container */}
           <div 
             ref={scrollRef}
-            className="flex items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth"
+            className="flex min-w-0 flex-1 items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth"
             style={{ scrollSnapType: 'x proximity' }}
           >
             {/* Left side items - Home + Messages */}
@@ -463,6 +468,7 @@ export function MobileBottomNav() {
               );
             })}
           </div>
+          {hasStageChip && <StageNavChip />}
         </nav>
       </div>
 
