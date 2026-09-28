@@ -8,7 +8,6 @@ import btcLogo from '@/assets/btc-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 import ethLogo from '@/assets/eth-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { outstandingEarnings } from '@/lib/api/dehub';
 import { Button } from '@/components/ui/button';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
@@ -106,19 +105,19 @@ export function BalanceCard() {
               </span>
             </div>
           ))}
-          {outstandingEarnings(subscriptionEarnings).usd > 0 && (
+          {((subscriptionEarnings?.pendingUsdt || 0) + (subscriptionEarnings?.processingUsdt || 0)) > 0 && (
             <div className="flex items-center justify-between py-1.5 border-t border-zinc-800 pt-2 mt-1">
               <div className="flex items-center gap-2">
-                <img src={dehubCoin} alt="" className="w-6 h-6 rounded-full" />
+                <img src={usdtLogo} alt="USDT" className="w-6 h-6 rounded-full" />
                 <div>
                   <span className="text-sm text-white">{t('subscriptions.earningsTitle')}</span>
                   <span className="text-xs text-zinc-500 ml-1.5">
-                    {subscriptionEarnings?.withdrawalAvailable ? t('subscriptions.earningsAvailable') : t('subscriptions.earningsPending')}
+                    {subscriptionEarnings.withdrawalAvailable ? t('subscriptions.earningsAvailable') : t('subscriptions.earningsPending')}
                   </span>
                 </div>
               </div>
               <span className="text-sm text-zinc-400">
-                {t('subscriptions.tokenAmount', { amount: outstandingEarnings(subscriptionEarnings).tokens.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}
+                {(subscriptionEarnings.pendingUsdt + subscriptionEarnings.processingUsdt).toLocaleString(undefined, { maximumFractionDigits: 6 })} USDT
               </span>
             </div>
           )}
