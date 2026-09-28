@@ -364,6 +364,9 @@ export function ShowcaseShell({
       }
       const target = e.target as HTMLElement | null;
       if (target?.closest('[role="slider"]')) return;
+      // Nothing to page through until the badge has landed; paging mid-flight
+      // (or mid-promotion) would wake a different sticker under it.
+      if (phase !== 'open') return;
       if (e.key === 'ArrowRight') {
         setPlaying(false);
         goTo(index + 1);
@@ -377,7 +380,7 @@ export function ShowcaseShell({
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [requestClose, goTo, index]);
+  }, [requestClose, goTo, index, phase]);
 
   // Desktop keeps the dock under the sticker; phones keep it at the bottom.
   const [isDesktop, setIsDesktop] = useState(
