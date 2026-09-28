@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { LucideIcon } from 'lucide-react';
@@ -8,6 +9,7 @@ import { isHomePath } from '@/lib/home-path';
 import { resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { openStageModal } from '@/contexts/StageContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import type { NavItem } from '@/types/app.types';
 import { NAV_LABEL_KEYS } from './SidebarNavItem';
@@ -17,12 +19,12 @@ import { NAV_LABEL_KEYS } from './SidebarNavItem';
  *
  * Three columns of glossy 3D icons, the same per-theme artwork the feed tabs
  * and empty states use (public/theme-icons/<theme>/<key>.webp), so the sheet
- * reskins with the theme for free. A destination with no artwork of its own
- * draws its lucide glyph on the same tile, so nothing in the menu goes missing
- * — only the first twelve are the curated set.
+ * reskins with the theme for free. Every rail row maps to a piece of that set:
+ * a flat glyph beside the glossy renders reads as a broken tile, so the glyph
+ * is only the fallback for artwork that fails to load.
  */
 
-// Rail rows that have their own artwork. Anything absent here gets its glyph.
+// Rail row → artwork. Rows without a bespoke render borrow the closest one.
 const NAV_ICON_KEYS: Record<string, ThemeIconKey> = {
   Home: 'home', Profile: 'profile', Explore: 'search', Notifications: 'notifications',
   Messages: 'messages', Arcade: 'arcade', Communities: 'communities', Assistant: 'assistant',
@@ -32,6 +34,8 @@ const NAV_ICON_KEYS: Record<string, ThemeIconKey> = {
   Careers: 'careers', Stores: 'stores', Fractions: 'fractions', Usernames: 'usernames',
   Accounts: 'accounts', Advertising: 'ads', 'Live TV': 'tv', Prompt: 'wand',
   Glossary: 'glossary', Stats: 'stats', 'Buy Tokens': 'buy', Bridge: 'bridge',
+  Wallet: 'buy', Affiliate: 'subscriptions', Converter: 'videos', Migrate: 'bridge',
+  Guide: 'pinned', Docs: 'posts', Blog: 'email',
 };
 
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
@@ -66,21 +70,32 @@ interface TileShellProps {
 }
 
 function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProps) {
+  // A missing or blocked file would otherwise leave a broken-image box.
+  const [artFailed, setArtFailed] = useState(false);
+  const { theme } = useAppTheme();
+  useEffect(() => setArtFailed(false), [iconKey, theme]);
   return (
     <>
       <span className="relative flex h-[52px] w-[52px] items-center justify-center">
-        {iconKey ? (
-          <ThemedIcon icon={iconKey} alt="" className="h-[52px] w-[52px] object-contain" loading="lazy" decoding="async" />
+        {iconKey && !artFailed ? (
+          <ThemedIcon
+            icon={iconKey}
+            alt=""
+            className="h-[52px] w-[52px] object-contain"
+            loading="lazy"
+            decoding="async"
+            onError={() => setArtFailed(true)}
+          />
         ) : (
-          <Glyph className="h-7 w-7 text-white/90" strokeWidth={1.75} />
+          <Glyph data-menu-glyph className="h-7 w-7 text-zinc-200" strokeWidth={1.75} />
         )}
         {!!badge && badge > 0 && (
-          <span className="absolute -top-1 -right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
+          <span data-menu-badge className="absolute -top-1 -right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
             {badge > 99 ? '99+' : badge}
           </span>
         )}
       </span>
-      <span className={cn('w-full truncate text-center text-[12.5px] leading-tight', active ? 'font-semibold text-white' : 'font-medium text-white/90')}>
+      <span className={cn('w-full truncate text-center text-[12.5px] leading-tight', active ? 'font-semibold text-white' : 'font-medium text-zinc-200')}>
         {label}
       </span>
     </>
@@ -137,7 +152,7 @@ export function MobileMenuGrid({ items, searching, currentPath, notificationCoun
 
     if (item.external) {
       return (
-        <a key={item.label} href={item.path} target="_blank" rel="noopener noreferrer" onClick={onNavigate} className={tileClass(false)}>
+        <a key={item.label} href={item.path} target="_blank" rel="noopener noreferrer" onClick={onNavigate} data-menu-tile="idle" className={tileClass(false)}>
           {body}
         </a>
       );
@@ -148,7 +163,7 @@ export function MobileMenuGrid({ items, searching, currentPath, notificationCoun
           key={item.label}
           type="button"
           onClick={() => { if (item.action === 'open-stages') openStageModal(); onNavigate(); }}
-          className={tileClass(false)}
+          data-menu-tile="idle" className={tileClass(false)}
         >
           {body}
         </button>
@@ -172,7 +187,7 @@ export function MobileMenuGrid({ items, searching, currentPath, notificationCoun
         }}
         onTouchStart={() => preloadRoute(item.path)}
         onFocus={() => preloadRoute(item.path)}
-        className={tileClass(active)}
+        data-menu-tile={active ? 'active' : 'idle'} className={tileClass(active)}
       >
         {body}
       </Link>
@@ -187,7 +202,7 @@ export function MobileMenuGrid({ items, searching, currentPath, notificationCoun
         to={tile.path}
         onClick={() => openFeedTab(tile)}
         onTouchStart={() => preloadRoute(tile.path)}
-        className={tileClass(active)}
+        data-menu-tile={active ? 'active' : 'idle'} className={tileClass(active)}
       >
         <TileBody label={t(tile.labelKey)} iconKey={tile.iconKey} glyph={tile.glyph} active={active} />
       </Link>
