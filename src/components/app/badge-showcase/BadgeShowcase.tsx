@@ -37,8 +37,9 @@ import {
   getBadgeStanding,
   type BadgeStanding,
 } from '@/lib/staking-badges';
-import { FREE_VOICE_CLONING_FROM, badgePerksForIndex, type BadgePerks } from '@/lib/badge-perks';
+import { badgePerksForIndex, type BadgePerks } from '@/lib/badge-perks';
 import { shortDhb } from '@/lib/badge-motion';
+import { fetchVoiceClonePrice } from '@/lib/stage-voice-clone';
 import { cn } from '@/lib/utils';
 import { ShowcaseShell, type ShowcaseApi, type ShowcaseEntry } from './ShowcaseShell';
 import { BENTO, BENTO_IDLE, BENTO_LIT, tiltAt } from './showcase-ui';
@@ -150,6 +151,9 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
   );
 }
 
+/** Names too long for the showcase heading, shortened for display only. */
+const SHORT_NAMES: Record<string, string> = { 'Great White Shark': 'Great White' };
+
 function HolderDetails({
   api,
   standing,
@@ -173,6 +177,15 @@ function HolderDetails({
   // The slider can land between thresholds; everything else snaps the amount
   // back to the tier's own price.
   const [amount, setAmount] = useState(() => ladder[index].min);
+  const [clonePrice, setClonePrice] = useState<number | null>(null);
+  useEffect(() => {
+    let live = true;
+    void fetchVoiceClonePrice().then((p) => live && setClonePrice(p));
+    return () => {
+      live = false;
+    };
+  }, []);
+
   const slid = useRef(false);
   useEffect(() => {
     if (slid.current) {
@@ -241,7 +254,7 @@ function HolderDetails({
       key: 'voice',
       icon: Mic,
       label: t('badgeShowcase.perks.voice'),
-      value: perks.freeVoiceCloning ? t('badgeShowcase.perks.voiceFree') : t('badgeShowcase.perks.voiceLocked', { tier: FREE_VOICE_CLONING_FROM }),
+      value: perks.freeVoiceCloning ? t('badgeShowcase.perks.voiceFree') : clonePrice ? shortDhb(clonePrice) : '—',
       better: (p, q) => p.freeVoiceCloning && !q.freeVoiceCloning,
     },
   ];
@@ -249,9 +262,6 @@ function HolderDetails({
   return (
     <>
       <div className="flex flex-col items-center gap-1.5 text-center lg:items-start lg:text-left">
-        <p className="text-[10px] font-bold uppercase leading-3 tracking-[0.14em] text-white/40">
-          {t('badgeShowcase.tierOf', { index: index + 1, total: count })}
-        </p>
         <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5 lg:justify-start">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.h2
@@ -262,7 +272,7 @@ function HolderDetails({
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
               className="text-[22px] font-black uppercase leading-none tracking-[-0.02em] lg:text-[30px]"
             >
-              {name}
+              {SHORT_NAMES[name] ?? name}
             </motion.h2>
           </AnimatePresence>
           <span className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/10 pl-1.5 pr-2.5 text-[13px] font-bold tabular-nums backdrop-blur-xl">
@@ -353,7 +363,7 @@ function HolderDetails({
         {perkRows.map((row) => {
           const Icon = row.icon;
           const up = row.better(perks, below);
-          const locked = row.key === 'voice' && !perks.freeVoiceCloning;
+          const paid = row.key === 'voice' && !perks.freeVoiceCloning && !!clonePrice;
           return (
             <li
               key={row.key}
@@ -370,7 +380,7 @@ function HolderDetails({
                 <Icon className="h-3 w-3 shrink-0" />
                 <span className="line-clamp-2 h-6 min-w-0 break-words">{row.label}</span>
               </div>
-              <div className="flex h-[18px] min-w-0 items-center gap-1 overflow-hidden">
+              <div className="flex h-[18px] min-w-0 items-center justify-end gap-1 overflow-hidden">
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.span
                     key={row.value}
@@ -378,14 +388,12 @@ function HolderDetails({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className={cn(
-                      'min-w-0 truncate text-[14px] font-bold tabular-nums leading-[18px] lg:text-[15px]',
-                      locked && 'text-[11px] font-semibold text-white/40 lg:text-[11px]',
-                    )}
+                    className="min-w-0 truncate text-[14px] font-bold tabular-nums leading-[18px] lg:text-[15px]"
                   >
                     {row.value}
                   </motion.span>
                 </AnimatePresence>
+                {paid && <DhbCoin className="h-3.5 w-3.5 shrink-0" />}
                 {up && (
                   <span aria-hidden className="shrink-0 text-[9px] font-bold text-emerald-400">
                     ▲
