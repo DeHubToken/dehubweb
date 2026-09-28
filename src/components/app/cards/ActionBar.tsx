@@ -65,6 +65,7 @@ import {
 import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { TipGemIcon } from './TipGemIcon';
 import { subscribePostTipped } from '@/lib/tip-events';
+import { useViewerTippedPost } from '@/hooks/use-post-tip-count';
 import {
   Drawer,
   DrawerContent,
@@ -727,6 +728,7 @@ export function ActionBar({
   // Opening the tray means they already know it is there.
   useEffect(() => { if (likeTray.open) markReactionTipSeen(); }, [likeTray.open]);
 
+  const viewerTipped = useViewerTippedPost(tokenId != null ? String(tokenId) : postId, walletAddress);
   // Bumps each time this viewer tips this post, replaying the gem's swirl.
   const [tipBurst, setTipBurst] = useState(0);
   useEffect(() => {
@@ -935,7 +937,7 @@ export function ActionBar({
           className={cn('flex items-center gap-0 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
           aria-label="Tips"
         >
-          <TipGemIcon tipped={tipBurst > 0} burstKey={tipBurst} />
+          <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} />
           {/* Counts come off over a video: the icons are the controls, and a
               tally beside each one is three more numbers on someone's frame. */}
           {!compact && (

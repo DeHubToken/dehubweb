@@ -1,10 +1,12 @@
 /**
- * The tip button's gem. Plain outline until this viewer tips the post, then it
- * turns into a filled diamond that swirls once and throws a ring of sparkles —
- * the same acknowledgement a reaction gets, so a tip never lands silently.
+ * The tip gem. Plain outline until the viewer has tipped, then a filled
+ * diamond. Each time `burstKey` goes up it swirls in and throws a ring of
+ * sparkles — the same acknowledgement a reaction gets, so a tip never lands
+ * silently. A diamond that was already lit on load (burstKey 0) just sits still.
  */
 import { motion, useReducedMotion } from 'framer-motion';
 import { Gem, Sparkle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const SPARKLES = [0, 60, 120, 180, 240, 300].map((angle, i) => {
   const r = (angle * Math.PI) / 180;
@@ -12,22 +14,32 @@ const SPARKLES = [0, 60, 120, 180, 240, 300].map((angle, i) => {
   return { x: Math.cos(r) * d, y: Math.sin(r) * d, size: i % 2 ? 6 : 8, delay: i * 0.035 };
 });
 
-export function TipGemIcon({ tipped, burstKey }: { tipped: boolean; burstKey: number }) {
-  const reduceMotion = useReducedMotion();
-  if (!tipped) return <Gem className="w-[17px] h-[17px] text-white" />;
+interface TipGemIconProps {
+  tipped: boolean;
+  burstKey?: number;
+  /** Size classes, e.g. `w-4 h-4`. */
+  className?: string;
+  /** Colour of the unlit outline. */
+  plainClassName?: string;
+}
 
+export function TipGemIcon({ tipped, burstKey = 0, className = 'w-[17px] h-[17px]', plainClassName = 'text-white' }: TipGemIconProps) {
+  const reduceMotion = useReducedMotion();
+  if (!tipped) return <Gem className={cn(className, plainClassName)} />;
+
+  const play = burstKey > 0 && !reduceMotion;
   return (
-    <span className="relative inline-flex w-[17px] h-[17px]">
+    <span className={cn('relative inline-flex shrink-0', className)}>
       <motion.span
         key={`gem-${burstKey}`}
-        className="inline-flex"
-        initial={reduceMotion ? false : { rotate: -200, scale: 0.4 }}
-        animate={reduceMotion ? {} : { rotate: [-200, 20, 0], scale: [0.4, 1.35, 1] }}
+        className="inline-flex w-full h-full"
+        initial={play ? { rotate: -200, scale: 0.4 } : false}
+        animate={play ? { rotate: [-200, 20, 0], scale: [0.4, 1.35, 1] } : {}}
         transition={{ duration: 0.75, times: [0, 0.65, 1], ease: [0.22, 1, 0.36, 1] }}
       >
-        <Gem className="w-[17px] h-[17px] fill-cyan-400 text-cyan-200 drop-shadow-[0_0_6px_rgba(34,211,238,0.7)]" />
+        <Gem className="w-full h-full fill-cyan-400 text-cyan-200 drop-shadow-[0_0_6px_rgba(34,211,238,0.7)]" />
       </motion.span>
-      {!reduceMotion && SPARKLES.map((s, i) => (
+      {play && SPARKLES.map((s, i) => (
         <motion.span
           key={`${burstKey}-${i}`}
           className="pointer-events-none absolute left-1/2 top-1/2"
