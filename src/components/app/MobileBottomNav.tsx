@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useRef, useEffect, useMemo } from 'react';
+import React, { Suspense, useState, useRef, useEffect } from 'react';
 import { StageNavChip } from './spaces/StageNavChip';
 import { useStage } from '@/contexts/StageContext';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
@@ -166,12 +166,6 @@ export function MobileBottomNav() {
   const [isHomeRefreshing, setIsHomeRefreshing] = useState(false);
   const homeRefreshTimerRef = useRef<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  // The centre button's glass fades out as the strip is scrolled. Written
-  // straight to the node rather than held in state: this used to setState on
-  // every scroll event of the pill, re-rendering the whole bar — thirty
-  // NavLinks and their icons — on every frame of the drag, to animate one
-  // opacity.
-  const createGlassRef = useRef<HTMLDivElement>(null);
 
   // First-visit scroll hint: nudge right then back to show more options
   useEffect(() => {
@@ -242,30 +236,6 @@ export function MobileBottomNav() {
     setIsPostModalOpen(true);
   };
 
-  // Fades quickly on scroll — gone by roughly 10% of the strip's travel.
-  useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-
-    let frame = 0;
-    const apply = () => {
-      frame = 0;
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      const progress = maxScroll > 0 ? Math.min(container.scrollLeft / maxScroll, 1) : 0;
-      const glass = createGlassRef.current;
-      if (glass) glass.style.opacity = String(Math.max(0, 1 - progress * 10));
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(apply);
-    };
-
-    apply();
-    container.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      container.removeEventListener('scroll', onScroll);
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, []);
 
 
   return (
@@ -282,11 +252,11 @@ export function MobileBottomNav() {
           {/* Nav items container */}
           <div 
             ref={scrollRef}
-            className="flex min-w-0 flex-1 items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth"
+            className="flex min-w-0 flex-1 items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth [--create-size:48px] md:[--create-size:56px]"
             style={{ scrollSnapType: 'x proximity' }}
           >
             {/* Left side items - Home + Messages */}
-            <div className="flex items-center justify-start flex-shrink-0 pl-1" style={{ width: 'calc(50% - 24px)' }}>
+            <div className="flex items-center justify-start flex-shrink-0" style={{ width: 'calc((100% - var(--create-size)) / 2)' }}>
               {kidsNav(LEFT_NAV_ITEMS).map((item, index) => {
                 const isActive = item.path === '/app'
                   ? isHomePath(location.pathname)
@@ -308,8 +278,7 @@ export function MobileBottomNav() {
                       {item.label === 'Home' && isHomeRefreshing ? (
                         <Loader2
                           className={cn(
-                            'w-5 h-5 md:w-6 md:h-6 animate-spin drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]',
-                            '-ml-[6.5px] lg:ml-0'
+                            'w-5 h-5 md:w-6 md:h-6 animate-spin drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
                           )}
                         />
                       ) : (
@@ -318,9 +287,7 @@ export function MobileBottomNav() {
                             'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                             isActive
                               ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
-                              : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
-                            item.label === 'Messages' && 'lg:ml-0',
-                            item.label === 'Home' ? '-ml-[6.5px] lg:ml-0' : '-ml-[5.5px] lg:ml-0'
+                              : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
                           )}
                         />
                       )}
@@ -342,9 +309,8 @@ export function MobileBottomNav() {
             >
                 <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-transform duration-300 active:scale-95">
                   <div
-                    ref={createGlassRef}
                     aria-hidden="true"
-                    className="absolute inset-0 rounded-xl border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_2px_8px_rgba(0,0,0,0.3)] transition-opacity duration-300"
+                    className="pointer-events-none absolute inset-0 rounded-xl border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_2px_8px_rgba(0,0,0,0.3)]"
                     style={{
                       // Solid-ish white fallback for iOS 15 / browsers without backdrop-filter
                       backgroundColor: 'rgba(255,255,255,0.18)',
@@ -360,7 +326,7 @@ export function MobileBottomNav() {
             </button>
 
             {/* Right side items - AI + Profile */}
-            <div className="flex items-center justify-end flex-shrink-0 pr-1" style={{ width: 'calc(50% - 24px)' }}>
+            <div className="flex items-center justify-end flex-shrink-0" style={{ width: 'calc((100% - var(--create-size)) / 2)' }}>
               {kidsNav(RIGHT_NAV_ITEMS).map((item) => {
                 const isActive = location.pathname.startsWith(item.path);
                 
@@ -378,8 +344,7 @@ export function MobileBottomNav() {
                           'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                           isActive 
                             ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
-                            : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
-                          'ml-[6px] lg:ml-0'
+                            : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
                         )} 
                       />
                   </NavLink>
@@ -396,7 +361,7 @@ export function MobileBottomNav() {
               >
                   <Search 
                     className={cn(
-                      'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 ml-[4px] lg:ml-0',
+                      'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                       location.pathname.startsWith('/app/explore')
                         ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                         : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
@@ -419,7 +384,7 @@ export function MobileBottomNav() {
                     rel="noopener noreferrer"
                     aria-label={navLabel(item.label)}
                     className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
-                    style={{ width: 'calc((50% - 24px) / 2)' }}
+                    style={{ width: 'calc((100% - var(--create-size)) / 4)' }}
                   >
                     {navIcon(item, "w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]")}
                   </a>
@@ -433,7 +398,7 @@ export function MobileBottomNav() {
                     onClick={() => openStageModal()}
                     aria-label={navLabel(item.label)}
                     className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
-                    style={{ width: 'calc((50% - 24px) / 2)' }}
+                    style={{ width: 'calc((100% - var(--create-size)) / 4)' }}
                   >
                     {navIcon(item, "w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]")}
                   </button>
@@ -449,7 +414,7 @@ export function MobileBottomNav() {
                   onPointerEnter={() => preloadRoute(item.path)}
                   aria-label={navLabel(item.label)}
                   className="relative flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
-                  style={{ width: 'calc((50% - 24px) / 2)' }}
+                  style={{ width: 'calc((100% - var(--create-size)) / 4)' }}
                 >
                   <div className="relative">
                     {navIcon(item, cn(
