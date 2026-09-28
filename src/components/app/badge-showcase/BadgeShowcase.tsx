@@ -413,6 +413,25 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
     return () => window.removeEventListener('keydown', onKey);
   }, [requestClose, goTo, index]);
 
+  // Thumbnails fade out toward whichever end still has more to scroll to,
+  // so the rail melts into the play button rather than stopping at a rule.
+  const [railFade, setRailFade] = useState({ start: false, end: true });
+  const updateRailFade = useCallback(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const start = rail.scrollLeft > 2;
+    const end = rail.scrollLeft + rail.clientWidth < rail.scrollWidth - 2;
+    setRailFade((f) => (f.start === start && f.end === end ? f : { start, end }));
+  }, []);
+  useEffect(() => {
+    updateRailFade();
+    window.addEventListener('resize', updateRailFade);
+    return () => window.removeEventListener('resize', updateRailFade);
+  }, [updateRailFade]);
+  const railMask = `linear-gradient(to right, ${railFade.start ? 'transparent 0, #000 28px' : '#000 0'}, ${
+    railFade.end ? '#000 calc(100% - 40px), transparent 100%' : '#000 100%'
+  })`;
+
   // Keep the active thumbnail in view without scrolling anything else.
   useEffect(() => {
     const rail = railRef.current;
@@ -816,7 +835,12 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
           transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
-        <div ref={railRef} className="flex min-w-0 snap-x gap-0.5 overflow-x-auto py-1 scrollbar-hide">
+        <div
+          ref={railRef}
+          onScroll={updateRailFade}
+          className="flex min-w-0 snap-x gap-0.5 overflow-x-auto py-1 scrollbar-hide"
+          style={{ maskImage: railMask, WebkitMaskImage: railMask }}
+        >
           {BADGE_ORDER.map((tierName, i) => {
             const active = i === index;
             return (
@@ -870,7 +894,6 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
             );
           })}
         </div>
-        <span aria-hidden className="h-9 w-px shrink-0 bg-white/10" />
         <button
           type="button"
           onClick={() => setPlaying((p) => !p)}
