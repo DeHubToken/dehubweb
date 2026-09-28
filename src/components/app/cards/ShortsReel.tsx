@@ -135,6 +135,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                   />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+                {short.imageUrls?.length ? <span className="absolute top-2 right-2 rounded-full bg-black/60 px-2 py-1 text-xs text-white">♫{short.imageUrls.length > 1 ? ` · ${short.imageUrls.length}` : ''}</span> : null}
                 
                 {/* Stats at bottom - using real views from API */}
                 <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">

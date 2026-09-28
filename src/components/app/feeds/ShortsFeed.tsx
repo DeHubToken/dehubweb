@@ -1,3 +1,4 @@
+import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-photos';
 /**
  * Shorts Feed Component
  * =====================
@@ -157,6 +158,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     title: nft.name || nft.title || '',
     description: nft.description || '',
     sound: 'Original Sound',
+    ...shortsPhotoMedia(nft),
     comments: formatLikes(nft.commentCount || nft.comment_count || 0),
     shares: '0',
     repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
@@ -456,14 +458,24 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     enabled: isFollowingMode,
   });
 
+  const photosFeed = useUnifiedFeed({
+    postType: 'feed-images', search: 'soundtrack', limit: 12,
+    sortBy: selectedSort.value === 'most-liked' ? 'likes' : selectedSort.value === 'most-viewed' ? 'views' : 'createdAt', sortOrder: 'desc',
+    status: 'all', category: selectedCategory || undefined, followingOnly: isFollowingMode,
+  });
+
   // Select active data source
-  const fetchNextPage = isFollowingMode ? fetchNextPageUnified : fetchNextPageDefault;
-  const hasNextPage = isFollowingMode ? hasNextPageUnified : hasNextPageDefault;
-  const isFetchingNextPage = isFollowingMode ? isFetchingNextPageUnified : isFetchingNextPageDefault;
-  const isApiLoading = isFollowingMode ? isApiLoadingUnified : isApiLoadingDefault;
-  const isApiFetching = isFollowingMode ? isApiFetchingUnified : isApiFetchingDefault;
-  const isError = isFollowingMode ? isErrorUnified : isErrorDefault;
-  const refetch = isFollowingMode ? refetchUnified : refetchDefault;
+  const fetchNextPage = useCallback(() => Promise.all([
+    (isFollowingMode ? hasNextPageUnified : hasNextPageDefault)
+      ? (isFollowingMode ? fetchNextPageUnified() : fetchNextPageDefault()) : Promise.resolve(),
+    photosFeed.hasNextPage ? photosFeed.fetchNextPage() : Promise.resolve(),
+  ]), [isFollowingMode, hasNextPageUnified, hasNextPageDefault, fetchNextPageUnified, fetchNextPageDefault, photosFeed.hasNextPage, photosFeed.fetchNextPage]);
+  const hasNextPage = (isFollowingMode ? hasNextPageUnified : hasNextPageDefault) || photosFeed.hasNextPage;
+  const isFetchingNextPage = (isFollowingMode ? isFetchingNextPageUnified : isFetchingNextPageDefault) || photosFeed.isFetchingNextPage;
+  const isApiLoading = (isFollowingMode ? isApiLoadingUnified : isApiLoadingDefault) || photosFeed.isLoading;
+  const isApiFetching = (isFollowingMode ? isApiFetchingUnified : isApiFetchingDefault) || photosFeed.isFetching;
+  const isError = (isFollowingMode ? isErrorUnified : isErrorDefault) || photosFeed.isError;
+  const refetch = useCallback(() => Promise.all([(isFollowingMode ? refetchUnified() : refetchDefault()), photosFeed.refetch()]), [isFollowingMode, refetchUnified, refetchDefault, photosFeed.refetch]);
 
   const filterTransition = useFeedFilterTransition(isApiFetching);
   useEffect(() => {
@@ -479,13 +491,12 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Get raw items for sorting - handle both data sources
   const allRawNFTs = useMemo((): any[] => {
-    if (isFollowingMode) {
-      if (!unifiedData?.pages) return [];
-      return unifiedData.pages.flatMap(page => page.items || []);
-    }
-    if (!apiData?.pages) return [];
-    return apiData.pages.flatMap(page => page.data || []);
-  }, [apiData, unifiedData, isFollowingMode]);
+    const videos = isFollowingMode
+      ? unifiedData?.pages.flatMap(page => page.items || []) || []
+      : apiData?.pages.flatMap(page => page.data || []) || [];
+    const photos = (photosFeed.data?.pages.flatMap(page => page.items || []) || []).filter(isShortsPhoto);
+    return interleaveShorts(videos, photos);
+  }, [apiData, unifiedData, isFollowingMode, photosFeed.data]);
 
   // Apply date filter on raw NFTs, then sort and map to ShortVideo array
   const allShorts = useMemo(() => {
@@ -661,6 +672,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                   {/* Bottom Info */}
+                  {short.imageUrls?.length ? <span className="absolute top-2 right-2 rounded-full bg-black/60 px-2 py-1 text-xs text-white">♫{short.imageUrls.length > 1 ? ` · ${short.imageUrls.length}` : ''}</span> : null}
                   <div className="absolute bottom-2 left-2 right-2 flex items-end justify-between">
                     <div className="flex items-center gap-2">
                       {/* Creator Avatar */}

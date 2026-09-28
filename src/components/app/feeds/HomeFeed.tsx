@@ -1,3 +1,4 @@
+import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-photos';
 /**
  * Home Feed Component
  * ===================
@@ -850,6 +851,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     enabled: shortsEnabled && railsEnabled,
   });
 
+  const scrollPhotosFeed = useUnifiedFeed({
+    limit: SCROLL_REEL_SIZE, postType: 'feed-images', search: 'soundtrack',
+    sortBy: 'likes', sortOrder: 'desc', status: 'all', enabled: shortsEnabled && railsEnabled,
+  });
+
   // Flip the rails gate once the primary feed's first page settles (data or error).
   const primaryFeedSettled = useInterleavedFeed
     ? (!!videosFeed.data || videosFeed.isError)
@@ -866,10 +872,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Shorts carousel on Home feed
   const shorts = useMemo((): ShortVideo[] => {
     if (!shortsEnabled) return [];
-    if (!scrollFeed.data?.pages) return [];
+    if (!scrollFeed.data?.pages && !scrollPhotosFeed.data?.pages) return [];
     // Same offset-paging overlap as the main feed: without this the carousel
     // can show one short twice inside its ten slots.
-    const allItems = flattenFeedPages(scrollFeed.data.pages);
+    const allItems = flattenFeedPages(scrollFeed.data?.pages || []);
     // Exclude PPV content from shorts carousels
     const nonPPV = allItems.filter(item => !item.streamInfo?.isPayPerView);
     // Long-form first, then the rest, both already in most-liked order. Topping
@@ -878,7 +884,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     // not finished transcoding, so it counts as the top-up, not as long-form.
     const isLongForm = (item: UnifiedFeedItem) => (item.videoDuration ?? 0) > LONG_FORM_MIN_SECONDS;
     const ranked = [...nonPPV.filter(isLongForm), ...nonPPV.filter(item => !isLongForm(item))];
-    return ranked.slice(0, SCROLL_REEL_SIZE).map((item) => {
+    const photos = flattenFeedPages(scrollPhotosFeed.data?.pages || []).filter(isShortsPhoto);
+    return interleaveShorts(ranked, photos).slice(0, SCROLL_REEL_SIZE).map((item) => {
       const id = String(item.tokenId);
       const minterAddress = item.minter || '';
       const voteType = (item as any).voteType ?? (item as any).userVote ?? (item as any).myVote ?? null;
@@ -904,6 +911,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         title: item.name || '',
         description: item.description || '',
         sound: 'Original Sound',
+        ...shortsPhotoMedia(item),
         comments: formatCount(item.commentCount || 0),
         shares: '0',
         repostCount: ((item as any).totalReposts || (item as any).reposts || 0) + ((item as any).quotes || 0),
@@ -915,7 +923,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         isDisliked: (item as any).isDisliked ?? voteType === 'against',
       };
     });
-  }, [scrollFeed.data, shortsEnabled]);
+  }, [scrollFeed.data, scrollPhotosFeed.data, shortsEnabled]);
 
   // Fetch curated radio stations for carousel
   const { data: radioStations = [] } = useQuery({

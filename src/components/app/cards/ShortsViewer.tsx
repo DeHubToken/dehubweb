@@ -954,6 +954,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // before any handler inside the panel could stop it.
       if ((e.target as HTMLElement | null)?.closest?.('[data-shorts-scrollable]')) return;
 
+      if ((e.target as HTMLElement | null)?.closest?.('[data-shorts-photos]') && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
 
@@ -1011,12 +1015,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   // Handle drag for visual feedback during swipe
   const handleDrag = useCallback((_: any, info: PanInfo) => {
-    setDragOffset(info.offset.y);
+    setDragOffset(Math.abs(info.offset.x) > Math.abs(info.offset.y) ? 0 : info.offset.y);
   }, []);
 
   const handleDragEnd = useCallback((_: any, info: PanInfo) => {
     setDragOffset(0);
     
+    if (Math.abs(info.offset.x) > Math.abs(info.offset.y)) return;
     // Navigate based on drag velocity and offset
     const swipeThreshold = 80;
     const velocityThreshold = 300;
@@ -1460,6 +1465,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             className="absolute inset-0"
             drag={isTimelineSeeking || (isMobile && showComments) ? false : 'y'}
             dragListener={!isTimelineSeeking && !(isMobile && showComments)}
+            dragDirectionLock
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.15}
             onDrag={handleDrag}
