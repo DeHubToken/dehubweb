@@ -1532,7 +1532,7 @@
     "setUpNewAccount": "Siapkan akun baru",
     "createNewInstead": "Buat akun baru saja",
     "migrateAccount": "Migrasi akun",
-    "importExternalWallet": "Impor dompet eksternal",
+    "importExternalWallet": "Impor kunci",
     "migrateIntentHint": "Masuk dengan opsi apa pun di bawah ini. Jika cocok dengan akun DeHub sebelumnya, Anda akan membawa dompet, nama pengguna, dan saldo Anda.",
     "importIntentHint": "Masuk dengan opsi apa pun di bawah ini, lalu tempelkan frasa pemulihan atau kunci pribadi dompet yang ingin Anda gunakan.",
     "title": "Masuk",

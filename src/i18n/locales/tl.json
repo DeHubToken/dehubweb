@@ -1532,7 +1532,7 @@
     "setUpNewAccount": "Mag-set up ng bagong account",
     "createNewInstead": "Gumawa ng bagong account",
     "migrateAccount": "I-migrate ang account",
-    "importExternalWallet": "Mag-import ng external wallet",
+    "importExternalWallet": "Mag-import ng keys",
     "migrateIntentHint": "Mag-sign in gamit ang alinman sa mga opsyon sa ibaba. Kung tumugma ito sa isang naunang DeHub account, maililipat ang wallet, username, at balanse nito.",
     "importIntentHint": "Mag-sign in gamit ang alinman sa mga opsyon sa ibaba, pagkatapos ay i-paste ang recovery phrase o private key ng wallet na gusto mong gamitin.",
     "title": "Log in",
