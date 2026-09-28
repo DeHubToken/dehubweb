@@ -2876,31 +2876,31 @@
           "hint": "Oʻninchi darajaga yeting."
         },
         "ignition": {
-          "name": "Ignition",
+          "name": "Yondirish",
           "hint": "Havoda bitta mos keluvchi soatga erishing."
         },
         "on-air": {
-          "name": "On air",
+          "name": "Efirda",
           "hint": "O'nta mos keluvchi translyatsiyani yakunlang."
         },
         "storyteller": {
-          "name": "Storyteller",
+          "name": "Hikoyachi",
           "hint": "Yigirma besh mos keluvchi translyatsiyani yakunlang."
         },
         "broadcaster": {
-          "name": "Broadcaster",
+          "name": "Boshlovchi",
           "hint": "Ellik mos keluvchi translyatsiyani yakunlang."
         },
         "centurion": {
-          "name": "Centurion",
+          "name": "Yuzboshi",
           "hint": "Bir yuz mos keluvchi translyatsiyani yakunlang."
         },
         "enduring": {
-          "name": "Enduring",
+          "name": "Chidamli",
           "hint": "Bir sessiyada to‘rt mos keluvchi soat davomida translyatsiya qiling."
         },
         "circle": {
-          "name": "Inner circle",
+          "name": "Yaqin davra",
           "hint": "Bir vaqtning o‘zida yigirma besh kishi tomosha qilayotgan bo‘lsin."
         },
         "arena": {
@@ -2908,26 +2908,26 @@
           "hint": "Bir vaqtning o‘zida ellik kishi tomosha qilayotgan bo‘lsin."
         },
         "headliner": {
-          "name": "Headliner",
+          "name": "Bosh yulduz",
           "hint": "Bir vaqtning o‘zida bir yuz kishi tomosha qilayotgan bo‘lsin."
         },
         "cornerstone": {
-          "name": "Cornerstone",
+          "name": "Poydevor",
           "hint": "Yigirma olti ketma‑ketik hafta davomida translyatsiya qiling."
         },
         "veteran": {
-          "name": "Veteran",
+          "name": "Faxriy",
           "hint": "Havoda 250 mos keluvchi soatga erishing."
         },
         "icon": {
-          "name": "Icon",
+          "name": "Timsol",
           "hint": "Yigirma darajaga erishing."
         }
       },
       "chooseBadge": "Profilingizda ko‘rsatish uchun har qanday ochilgan ro‘ynatni tanlang.",
-      "useBadge": "Use badge",
-      "selectedBadge": "Selected",
-      "savingBadge": "Saving badge…",
+      "useBadge": "Nishondan foydalanish",
+      "selectedBadge": "Tanlangan",
+      "savingBadge": "Nishon saqlanmoqda…",
       "saveBadgeError": "Nishoningizni saqlab boʻlmadi. Qayta urinib koʻring."
     }
   },

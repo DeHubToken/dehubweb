@@ -4457,7 +4457,7 @@
         },
         "legend": {
           "name": "Legende",
-          "hint": "Bereik Level 10."
+          "hint": "Bereik vlak tien."
         },
         "ignition": {
           "name": "Ignis",
@@ -4465,26 +4465,26 @@
         },
         "on-air": {
           "name": "Op die skerm",
-          "hint": "Voltooi tien kwalifiserende streams."
+          "hint": "Voltooi tien kwalifiserende uitsendings."
         },
         "storyteller": {
           "name": "Verhaalverteller",
-          "hint": "Voltooi vyf-en-twintig kwalifiserende streams."
+          "hint": "Voltooi vyf-en-twintig kwalifiserende uitsendings."
         },
         "broadcaster": {
           "name": "Uitsender",
-          "hint": "Voltooi vyftig kwalifiserende streams."
+          "hint": "Voltooi vyftig kwalifiserende uitsendings."
         },
         "centurion": {
-          "name": "Centurion",
-          "hint": "Voltooi honderd kwalifiserende streams."
+          "name": "Centurio",
+          "hint": "Voltooi honderd kwalifiserende uitsendings."
         },
         "enduring": {
           "name": "Duurzaamheid",
           "hint": "Stream vir vier kwalifiserende ure in een sessie."
         },
         "circle": {
-          "name": "Inner circle",
+          "name": "Binnekring",
           "hint": "Het vyf-en-twintig mense wat terselfdertyd kyk."
         },
         "arena": {
@@ -4492,19 +4492,19 @@
           "hint": "Het vyftig mense wat terselfdertyd kyk."
         },
         "headliner": {
-          "name": "Headliner",
+          "name": "Hoofster",
           "hint": "Het honderd mense wat terselfdertyd kyk."
         },
         "cornerstone": {
-          "name": "Cornerstone",
+          "name": "Hoeksteen",
           "hint": "Stream in vyse-en-tyd opeenvolgende woeke."
         },
         "veteran": {
-          "name": "Veteran",
+          "name": "Veteraan",
           "hint": "Bereik 250 kwalifiserende ure op die skerm."
         },
         "icon": {
-          "name": "Icon",
+          "name": "Ikoon",
           "hint": "Bereik vlak twintig."
         }
       },
@@ -5482,7 +5482,7 @@
     "keepWhileHolding": "Sodra 'n kenteken ontsluit is, is dit joune solank jy jou DeHub tokens hou. Die aantal tokens wat nodig is om 'n nuwe kenteken te ontsluit, kan verander met die tokenprys."
   },
   "badgeShowcase": {
-    "dialogLabel": "{{tier}} badge",
+    "dialogLabel": "{{tier}}-badge",
     "close": "Sluit",
     "badges": "Kentekens",
     "tierOf": "Vlak {{index}} van {{total}}",
@@ -5501,7 +5501,7 @@
       "images": "Beelde per plasing",
       "uploads": "Daaglikse oplaai limiet",
       "storage": "Redigeerder stoor",
-      "lending": "Badge uitleen slots",
+      "lending": "Badge-uitleengleuwe",
       "voice": "Stemkloning",
       "voiceFree": "Gratis",
       "voiceLocked": "{{tier}} en op"
@@ -5510,16 +5510,16 @@
     "details": "Volle ineenstorting",
     "play": "Speel",
     "pause": "Pouseer",
-    "hint": "Sleep om te buig · trek 'n rand te skil · tap vir die volgende een"
+    "hint": "Sleep om te buig · trek ’n rand om af te skil · tik vir die volgende een"
   },
   "streamerShowcase": {
     "cardOf": "Kaart {{index}} van {{total}}",
     "progress": "Jou vordering",
     "goal": {
-      "streams": "{{current}} / {{target}} strome",
+      "streams": "{{current}} / {{target}} uitsendings",
       "hours": "{{current}} / {{target}} ure",
-      "session": "{{current}} / {{target}} min in een stroom",
-      "streak": "{{current}} {{target}} weke",
+      "session": "{{current}} / {{target}} min in een uitsending",
+      "streak": "{{current}} / {{target}} weke",
       "level": "Vlak {{current}} / {{target}}"
     },
     "onStream": "Ontsluit wanneer dit gebeur op stroom",

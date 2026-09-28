@@ -4545,19 +4545,19 @@
           "hint": "Nå nivå tio."
         },
         "ignition": {
-          "name": "Ignition",
+          "name": "Tändning",
           "hint": "Uppnå en kvalificerad timme på luft."
         },
         "on-air": {
-          "name": "On air",
+          "name": "I sändning",
           "hint": "Avsluta tio kvalificerade strömmar."
         },
         "storyteller": {
-          "name": "Storyteller",
+          "name": "Berättare",
           "hint": "Avsluta tjugo‑fem kvalificerade strömmar."
         },
         "broadcaster": {
-          "name": "Broadcaster",
+          "name": "Sändare",
           "hint": "Avsluta femtio kvalificerade strömmar."
         },
         "centurion": {
@@ -4565,11 +4565,11 @@
           "hint": "Avsluta hundra kvalificerade strömmar."
         },
         "enduring": {
-          "name": "Enduring",
-          "hint": "Ström för fyra kvalificerade timmar i en session."
+          "name": "Uthållig",
+          "hint": "Sänd i fyra kvalificerade timmar i en och samma session."
         },
         "circle": {
-          "name": "Inner circle",
+          "name": "Inre kretsen",
           "hint": "Ha tjugo‑fem personer som tittar samtidigt."
         },
         "arena": {
@@ -4577,11 +4577,11 @@
           "hint": "Ha femtio personer som tittar samtidigt."
         },
         "headliner": {
-          "name": "Headliner",
+          "name": "Huvudakt",
           "hint": "Ha hundra personer som tittar samtidigt."
         },
         "cornerstone": {
-          "name": "Cornerstone",
+          "name": "Hörnsten",
           "hint": "Ström i tjugo‑sex på varandra följande veckor."
         },
         "veteran": {
@@ -4589,14 +4589,14 @@
           "hint": "Uppnå 250 kvalificerade timmar på luft."
         },
         "icon": {
-          "name": "Icon",
+          "name": "Ikon",
           "hint": "Uppnå nivå tjugo."
         }
       },
-      "chooseBadge": "Välj vilken som helst av låsta märken att visa på din profil.",
-      "useBadge": "Use badge",
-      "selectedBadge": "Selected",
-      "savingBadge": "Saving badge…",
+      "chooseBadge": "Välj valfritt upplåst märke att visa på din profil.",
+      "useBadge": "Använd märke",
+      "selectedBadge": "Valt",
+      "savingBadge": "Sparar märke…",
       "saveBadgeError": "Det gick inte att spara ditt märke. Försök igen."
     }
   },
@@ -5604,9 +5604,9 @@
     "cardOf": "Kort {{index}} av {{total}}",
     "progress": "Dina framsteg",
     "goal": {
-      "streams": "{{current}} / {{target}} strömmar",
+      "streams": "{{current}} / {{target}} sändningar",
       "hours": "{{current}} / {{target}} timmar",
-      "session": "{{current}} / {{target}} min i en ström",
+      "session": "{{current}} / {{target}} min i en sändning",
       "streak": "{{current}} / {{target}} veckor",
       "level": "Nivå {{current}} / {{target}}"
     },
