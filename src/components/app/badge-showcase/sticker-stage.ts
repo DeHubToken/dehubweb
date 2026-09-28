@@ -11,12 +11,6 @@ export type StickerFinish = "holo" | "glitter" | "foil" | "gloss";
 
 export interface StickerItem {
   src: string;
-  /**
-   * Solid silhouette of the art, used to cut the sticker so gaps inside the
-   * outline become sticker paper instead of holes. Falls back to the art's
-   * own alpha.
-   */
-  plate?: string | null;
   finish?: StickerFinish;
   /** Resting tilt in degrees. */
   tilt?: number;
@@ -31,12 +25,17 @@ export interface StickerStageOptions {
   fill?: number;
 }
 
-export const DEFAULT_FILL = 0.64;
+export const DEFAULT_FILL = 0.8;
 // The source art is 256px; three times that is as sharp as it gets.
 const TEX = 768;
 /** Prepared stickers kept on the GPU; older ones are released. */
 const CACHE_LIMIT = 5;
-const CUT = Math.round(TEX * 0.045);
+// A thin white edge hugging the art, like a real die-cut.
+const CUT = Math.round(TEX * 0.025);
+/** The cut is traced on a grid this size, then scaled up and hardened. */
+const CUT_GRID = 384;
+/** Cast shadow strength; it has to read against the darkened page. */
+const SHADOW_OPACITY = 0.5;
 const PAD = CUT + 4;
 
 /**
@@ -251,11 +250,79 @@ function silhouette(img: HTMLImageElement, w: number, h: number, pad: number) {
   return c;
 }
 
-async function prepare(src: string, plateSrc?: string | null): Promise<Prepared> {
-  const [img, plateImg] = await Promise.all([
-    loadImage(src),
-    plateSrc ? loadImage(plateSrc).catch(() => null) : Promise.resolve(null),
-  ]);
+/**
+ * The sticker's paper: the art's outline grown by the cut, with every gap the
+ * art encloses filled in (a cutter only follows the outside edge), hardened
+ * to a crisp edge.
+ */
+function dieCut(sil: HTMLCanvasElement, w: number, h: number, cut: number): HTMLCanvasElement {
+  const gw = Math.round((CUT_GRID * w) / Math.max(w, h));
+  const gh = Math.round((CUT_GRID * h) / Math.max(w, h));
+  const r = cut * (gw / w);
+  const grown = canvas(gw, gh);
+  const gctx = grown.getContext("2d", { willReadFrequently: true })!;
+  for (let i = 0; i < 32; i++) {
+    const a = (i / 32) * Math.PI * 2;
+    gctx.drawImage(sil, Math.cos(a) * r, Math.sin(a) * r, gw, gh);
+  }
+  gctx.drawImage(sil, 0, 0, gw, gh);
+
+  const out = canvas(w, h);
+  const octx = out.getContext("2d", { willReadFrequently: true })!;
+  octx.imageSmoothingQuality = "high";
+  try {
+    const data = gctx.getImageData(0, 0, gw, gh);
+    const px = data.data;
+    // Flood the empty space in from the edges; whatever it cannot reach is
+    // enclosed by the art and becomes paper.
+    const outside = new Uint8Array(gw * gh);
+    const stack: number[] = [];
+    const visit = (x: number, y: number) => {
+      const i = y * gw + x;
+      if (outside[i] || px[i * 4 + 3] >= 128) return;
+      outside[i] = 1;
+      stack.push(i);
+    };
+    for (let x = 0; x < gw; x++) {
+      visit(x, 0);
+      visit(x, gh - 1);
+    }
+    for (let y = 0; y < gh; y++) {
+      visit(0, y);
+      visit(gw - 1, y);
+    }
+    while (stack.length) {
+      const i = stack.pop()!;
+      const x = i % gw;
+      const y = (i / gw) | 0;
+      if (x > 0) visit(x - 1, y);
+      if (x < gw - 1) visit(x + 1, y);
+      if (y > 0) visit(x, y - 1);
+      if (y < gh - 1) visit(x, y + 1);
+    }
+    for (let i = 0; i < outside.length; i++) {
+      if (!outside[i]) px[i * 4 + 3] = 255;
+    }
+    gctx.putImageData(data, 0, 0);
+
+    octx.drawImage(grown, 0, 0, w, h);
+    const full = octx.getImageData(0, 0, w, h);
+    const fp = full.data;
+    for (let i = 3; i < fp.length; i += 4) {
+      const t = Math.min(1, Math.max(0, (fp[i] - 100) / 56));
+      fp[i] = Math.round(t * t * (3 - 2 * t) * 255);
+      fp[i - 1] = fp[i - 2] = fp[i - 3] = 255;
+    }
+    octx.putImageData(full, 0, 0);
+  } catch {
+    // A tainted canvas cannot be read back; keep the soft grown outline.
+    octx.drawImage(grown, 0, 0, w, h);
+  }
+  return out;
+}
+
+async function prepare(src: string): Promise<Prepared> {
+  const img = await loadImage(src);
   const iw = img.naturalWidth || img.width || 1;
   const ih = img.naturalHeight || img.height || 1;
   const aspect = iw / ih;
@@ -266,33 +333,8 @@ async function prepare(src: string, plateSrc?: string | null): Promise<Prepared>
   const aw = w - pad * 2;
   const ah = h - pad * 2;
 
-  // White silhouettes: the art's own alpha, and the solid plate for the cut.
   const artSil = silhouette(img, w, h, pad);
-  const cutSil = plateImg ? silhouette(plateImg, w, h, pad) : artSil;
-
-  // Die-cut border: stamp the silhouette around a circle, then harden the
-  // edge — the upscaled plate is soft, and a real cut is crisp.
-  const cutLayer = canvas(w, h);
-  const cctx = cutLayer.getContext("2d", { willReadFrequently: true })!;
-  const steps = 40;
-  for (const r of [cut, cut * 0.5]) {
-    for (let i = 0; i < steps; i++) {
-      const a = (i / steps) * Math.PI * 2;
-      cctx.drawImage(cutSil, Math.cos(a) * r, Math.sin(a) * r);
-    }
-  }
-  cctx.drawImage(cutSil, 0, 0);
-  try {
-    const data = cctx.getImageData(0, 0, w, h);
-    const px = data.data;
-    for (let i = 3; i < px.length; i += 4) {
-      const t = Math.min(1, Math.max(0, (px[i] - 100) / 56));
-      px[i] = Math.round(t * t * (3 - 2 * t) * 255);
-    }
-    cctx.putImageData(data, 0, 0);
-  } catch {
-    // A tainted canvas keeps the soft edge.
-  }
+  const cutLayer = dieCut(artSil, w, h, cut);
 
   const out = canvas(w, h);
   const octx = out.getContext("2d")!;
@@ -495,7 +537,7 @@ export class StickerStage {
       this.cache.set(item.src, p);
       return p;
     }
-    p = prepare(item.src, item.plate);
+    p = prepare(item.src);
     this.cache.set(item.src, p);
     p.catch(() => this.cache.delete(item.src));
     this.evict();
@@ -561,12 +603,12 @@ export class StickerStage {
       map: prepared.shadow,
       transparent: true,
       depthWrite: false,
-      opacity: 0.28,
+      opacity: SHADOW_OPACITY,
     });
     const ss = prepared.shadowScale;
     const shadow = new THREE.Mesh(new THREE.PlaneGeometry(w * ss.x, h * ss.y), shadowMat);
     shadow.renderOrder = 1;
-    shadow.position.set(0, -h * 0.05, -0.2);
+    shadow.position.set(0, -h * 0.07, -0.2);
 
     const group = new THREE.Group();
     group.add(shadow);
@@ -598,7 +640,7 @@ export class StickerStage {
     slot.group.rotation.z = lerp(tw.from.rz, tw.to.rz);
     slot.group.scale.setScalar(lerp(tw.from.s, tw.to.s));
     slot.mesh.material.uniforms.uOpacity.value = lerp(tw.from.o, tw.to.o);
-    slot.shadow.material.opacity = 0.28 * lerp(tw.from.o, tw.to.o);
+    slot.shadow.material.opacity = SHADOW_OPACITY * lerp(tw.from.o, tw.to.o);
     if (raw >= 1) {
       slot.tween = null;
       tw.done?.();
@@ -624,7 +666,7 @@ export class StickerStage {
         const ss = s.prepared.shadowScale;
         s.shadow.geometry.dispose();
         s.shadow.geometry = new THREE.PlaneGeometry(nh * s.prepared.aspect * ss.x, nh * ss.y);
-        s.shadow.position.y = -nh * 0.05;
+        s.shadow.position.y = -nh * 0.07;
         s.mesh.material.uniforms.uCurlR.value = nh * 0.06;
         s.height = nh;
         s.width = nh * s.prepared.aspect;
@@ -790,7 +832,7 @@ export class StickerStage {
         s.mesh.rotation.x = this.tilt.x;
         s.mesh.rotation.y = this.tilt.y;
         s.shadow.position.x = -this.tilt.y * s.height * 0.12;
-        s.shadow.position.y = -s.height * 0.05 + this.tilt.x * s.height * 0.1;
+        s.shadow.position.y = -s.height * 0.07 + this.tilt.x * s.height * 0.1;
         u.uFlex.value.set(this.flex.x, this.flex.y);
         u.uPress.value.set(this.press.x, this.press.y, this.press.z);
         u.uPeel.value = Math.max(0, this.peel.amt);

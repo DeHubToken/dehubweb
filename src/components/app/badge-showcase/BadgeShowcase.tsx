@@ -43,7 +43,6 @@ import {
   BADGE_ORDER,
   badgeImage,
   badgeThresholds,
-  getBadgePlateUrl,
   getBadgeStanding,
 } from '@/lib/staking-badges';
 import { FREE_VOICE_CLONING_FROM, badgePerksForIndex, type BadgePerks } from '@/lib/badge-perks';
@@ -173,7 +172,6 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
     () =>
       BADGE_ORDER.map((name, i) => ({
         src: artFor(name),
-        plate: getBadgePlateUrl(name),
         finish: finishFor(i),
         tilt: TILTS[i] * 0.5,
       })),
@@ -359,6 +357,13 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
       setTouched(true);
     },
   };
+
+  // The how-to line is for the first look only, then the sticker stands alone.
+  useEffect(() => {
+    if (phase !== 'open') return;
+    const id = window.setTimeout(() => setTouched(true), 5000);
+    return () => window.clearTimeout(id);
+  }, [phase]);
 
   /* ---------- page plumbing ---------- */
 
@@ -579,7 +584,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col lg:flex-row lg:items-stretch">
         {/* Stage */}
-        <div ref={stageBoxRef} className="relative min-h-[36vh] flex-1 lg:min-h-0">
+        <div ref={stageBoxRef} className="relative min-h-[44vh] flex-1 lg:min-h-0">
           <canvas
             ref={canvasRef}
             aria-hidden
@@ -596,7 +601,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
 
         {/* Details */}
         <div
-          className="relative max-h-[52vh] min-h-0 overflow-y-auto overscroll-contain px-4 pb-3 transition-[opacity,transform] duration-500 ease-out scrollbar-hide lg:flex lg:max-h-none lg:w-[460px] lg:shrink-0 lg:flex-col lg:justify-center lg:py-6 lg:pl-2 lg:pr-10"
+          className="relative max-h-[50vh] min-h-0 overflow-y-auto overscroll-contain px-4 pb-2 transition-[opacity,transform] duration-500 ease-out scrollbar-hide lg:flex lg:max-h-none lg:w-[440px] lg:shrink-0 lg:flex-col lg:justify-center lg:py-6 lg:pl-2 lg:pr-10"
           style={{
             opacity: panelIn ? 1 : 0,
             transform: panelIn ? 'none' : 'translateY(14px)',
@@ -615,13 +620,13 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                  className="mt-1 text-[28px] font-black uppercase leading-none tracking-[-0.02em] sm:text-[38px]"
+                  className="mt-1 text-[24px] font-black uppercase leading-none tracking-[-0.02em] sm:text-[38px]"
                 >
                   {name}
                 </motion.h2>
               </AnimatePresence>
 
-              <div className="mt-3 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-2 lg:mt-3 lg:justify-start">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 py-[5px] pl-[7px] pr-3 text-[15px] font-bold tabular-nums backdrop-blur-xl">
                   <DhbCoin className="h-5 w-5" />
                   {shortDhb(threshold)}
@@ -637,7 +642,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                 ) : null}
               </div>
 
-              <p className="mt-2 min-h-[18px] text-[12.5px] text-white/55">
+              <p className="mt-1.5 min-h-[18px] text-[12.5px] text-white/55 lg:mt-2">
                 {standing
                   ? owned(index)
                     ? t('badgeShowcase.youHaveThis')
@@ -647,7 +652,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
             </div>
 
             {/* Token slider */}
-            <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="mt-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 lg:mt-5 lg:py-4">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/45">
                   {t('badgeShowcase.sliderLabel')}
@@ -661,7 +666,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                 </span>
               </div>
 
-              <div className="relative mt-4 pt-4">
+              <div className="relative mt-2 pt-4 lg:mt-4">
                 {youPos !== null && (
                   <span
                     className="pointer-events-none absolute top-0 -translate-x-1/2 rounded-full bg-emerald-400/15 px-1.5 text-[9.5px] font-bold uppercase tracking-wider text-emerald-300"
@@ -715,10 +720,10 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
             </div>
 
             {/* What it grants */}
-            <h3 className="mt-5 text-[11px] font-bold uppercase tracking-[0.12em] text-white/45">
+            <h3 className="mt-3 text-[11px] font-bold uppercase tracking-[0.12em] text-white/45 lg:mt-5">
               {t('badgeShowcase.grants')}
             </h3>
-            <ul className="mt-2 grid grid-cols-2 gap-2">
+            <ul className="-mx-4 mt-2 flex snap-x gap-2 overflow-x-auto px-4 scrollbar-hide lg:mx-0 lg:grid lg:grid-cols-2 lg:overflow-visible lg:px-0">
               {perkRows.map((row) => {
                 const Icon = row.icon;
                 const up = row.better(perks, below);
@@ -727,7 +732,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                   <li
                     key={row.key}
                     className={cn(
-                      'rounded-xl border px-3 py-2.5 transition-colors duration-300',
+                      'w-[138px] shrink-0 snap-start rounded-xl border px-3 py-2.5 transition-colors duration-300 lg:w-auto',
                       up ? 'border-white/20 bg-white/[0.07]' : 'border-white/10 bg-white/[0.03]',
                     )}
                   >
@@ -762,14 +767,14 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
               })}
             </ul>
 
-            <div className="mt-4 flex gap-2">
+            <div className="mt-3 flex gap-2 lg:mt-4">
               <button
                 type="button"
                 onClick={() => {
                   onClose();
                   navigate('/app/buy');
                 }}
-                className="flex-1 rounded-[12px] bg-white px-4 py-2.5 text-sm font-bold text-black transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                className="flex-1 rounded-[12px] bg-white px-4 py-2 text-sm font-bold text-black transition-transform hover:scale-[1.02] active:scale-[0.98] lg:py-2.5"
               >
                 {t('badgeShowcase.buy')}
               </button>
@@ -779,7 +784,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                   onClose();
                   navigate('/app/glossary#badges');
                 }}
-                className="flex-1 rounded-[12px] border border-white/15 bg-white/[0.06] px-4 py-2.5 text-sm font-bold text-white/85 transition-colors hover:bg-white/15"
+                className="flex-1 rounded-[12px] border border-white/15 bg-white/[0.06] px-4 py-2 text-sm font-bold text-white/85 transition-colors hover:bg-white/15 lg:py-2.5"
               >
                 {t('badgeShowcase.details')}
               </button>
