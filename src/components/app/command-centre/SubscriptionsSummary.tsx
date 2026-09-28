@@ -76,7 +76,7 @@ export function SubscriptionsSummary() {
               <span className="text-2xl font-bold text-white">
                 {totalMonthlySpend.toLocaleString(undefined, { maximumFractionDigits: 2 })}
               </span>
-              <span className="text-zinc-500 text-sm">USD</span>
+              <span className="text-zinc-500 text-sm">USDT</span>
             </div>
           </div>
 
