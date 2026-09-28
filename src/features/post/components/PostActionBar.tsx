@@ -57,6 +57,8 @@ interface PostActionBarProps {
   onClearSound?: () => void;
   onTogglePoll?: () => void;
   hasPoll?: boolean;
+  /** One more toolbar control after the emoji picker — the cross-post icon. */
+  extraTool?: React.ReactNode;
 }
 
 export function PostActionBar({
@@ -94,6 +96,7 @@ export function PostActionBar({
   onClearSound,
   onTogglePoll,
   hasPoll,
+  extraTool,
 }: PostActionBarProps) {
   const { t } = useTranslation();
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
@@ -535,6 +538,8 @@ export function PostActionBar({
           onGifSelect={onInsertGif}
           triggerClassName="h-auto w-auto p-2 rounded-xl text-white backdrop-blur-none hover:bg-white/10 [&_svg]:size-5"
         />
+
+        {extraTool}
 
       </div>
 
