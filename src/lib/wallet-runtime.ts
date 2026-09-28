@@ -23,6 +23,7 @@
  * Nothing in this file may import wagmi at runtime — types only.
  */
 import { useSyncExternalStore } from 'react';
+import { prepareWalletRelay } from './wallet-relay';
 import type {
   Connector,
   UseConnectReturnType,
@@ -142,6 +143,8 @@ const wrappedActions: WalletRuntimeActions = {
   }) as WalletRuntimeActions['disconnectAsync'],
   signMessageAsync: (async (...args: SignArgs) => {
     await ensureWalletRuntime();
+    const provider = await state.connector?.getProvider();
+    await prepareWalletRelay(provider);
     return actions!.signMessageAsync(...args);
   }) as WalletRuntimeActions['signMessageAsync'],
 };
