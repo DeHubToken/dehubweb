@@ -93,6 +93,13 @@ export const VideoSlide = memo(function VideoSlide({
   // a slide that has left the active position can never restart itself.
   const isActiveRef = useRef(isActive);
   isActiveRef.current = isActive;
+  const [neighbourReady, setNeighbourReady] = useState(false);
+  useEffect(() => {
+    setNeighbourReady(false);
+    if (isActive || preload !== 'auto') return;
+    const timer = window.setTimeout(() => setNeighbourReady(true), 400);
+    return () => window.clearTimeout(timer);
+  }, [isActive, preload, short.id]);
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
   // images/{id}.jpg — resolve to whichever exists so the poster isn't a 403.
   const thumbnail = useResolvedThumbnail(short.thumbnail);
@@ -463,7 +470,7 @@ export const VideoSlide = memo(function VideoSlide({
             {...{"webkit-playsinline": ""}}
             muted={isMuted}
             poster={thumbnail}
-            preload={preload ?? (isActive ? 'auto' : 'metadata')}
+            preload={isActive ? 'auto' : preload === 'auto' && !neighbourReady ? 'metadata' : preload ?? 'metadata'}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
             onCanPlay={handleCanPlay}
