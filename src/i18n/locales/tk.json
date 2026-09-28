@@ -5138,5 +5138,9 @@
     "planRestricted": "Bu ulanyjy habar almak üçin abuna talap edýär.",
     "planTypeNotAllowed": "Bu awtoryň meýilnamasy bu görnüşli habara rugsat bermeýär.",
     "planMinTip": "Bu awtor üçin çaýpul iň azyndan {{amount}} DHB bolmaly."
+  },
+  "builder": {
+    "buildInChat": "@assistant bilen şahsy habarlaryňyzda dörediň",
+    "signInRequired": "Builder-i ulanmak üçin giriň."
   }
 }

@@ -6571,7 +6571,9 @@
     "step3": "Jūsų „DeHub“ žetonai netrukus bus pristatyti paskirties grandinėje."
   },
   "builder": {
-    "stakeForAllowance": "Statykite „DeHub“ žetonus, kad padidintumėte savo kasdienį kūrimo limitą"
+    "stakeForAllowance": "Statykite „DeHub“ žetonus, kad padidintumėte savo kasdienį kūrimo limitą",
+    "buildInChat": "Kurkite asmeninėse žinutėse su @assistant",
+    "signInRequired": "Prisijunkite, kad galėtumėte naudoti Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Norint skaityti viešą turinį per jungtį, nereikia paskyros. „DeHub“ paskyra reikalinga tik norint skelbti, duoti ar laikyti „DeHub“ žetonus.",

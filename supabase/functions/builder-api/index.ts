@@ -7,8 +7,10 @@
 // as the static host (no Daytona sandboxes).
 //
 // Auth: wallet-native (x-wallet-address + x-dehub-token, verified against
-// api.dehub.io). Metering: each generation consumes 1 build from a daily
-// allowance derived from the caller's DHB staking badge (builder_usage table).
+// api.dehub.io), or the DeHub API building for someone who asked @assistant in
+// a DM (x-assistant-secret + x-wallet-address). Metering: each generation
+// consumes 1 build from a daily allowance derived from the caller's DHB staking
+// badge (builder_usage table) — the same allowance either way.
 import {
   corsHeaders,
   handleCorsPreflight,
@@ -64,8 +66,9 @@ function allowanceForBalance(badgeBalance: number): { tierName: string; buildsPe
 /** DHB badge balance (holdings + staked) as api.dehub.io reports it. */
 async function fetchBadgeBalance(wallet: string, token: string): Promise<number> {
   try {
+    // A public profile route, so a service call with no user token still reads it.
     const res = await fetch(`${DEHUB_API_BASE}/api/account_info/${wallet}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
     if (!res.ok) return 0;
     const data = await res.json();
@@ -458,9 +461,28 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "POST only" }, 405);
   }
 
-  const auth = await requireDeHubAuth(req);
-  if (!auth.ok) return auth.response;
-  const { wallet, token } = auth;
+  // The DeHub API builds on a user's behalf when they ask @assistant in a DM.
+  // It has already verified who sent that DM and holds no token of theirs, so
+  // it vouches for the wallet with the shared assistant secret instead. Every
+  // one of those calls leaves the API from the same address, so the per-IP
+  // build cap below would let twelve people an hour build from chat, platform
+  // wide — the per-wallet allowance is the limit that applies to them.
+  const serviceSecret = Deno.env.get("ASSISTANT_SERVICE_SECRET");
+  const isServiceCall = !!serviceSecret && req.headers.get("x-assistant-secret") === serviceSecret;
+
+  let wallet: string;
+  let token: string;
+  if (isServiceCall) {
+    wallet = (req.headers.get("x-wallet-address") || "").toLowerCase();
+    if (!/^0x[a-f0-9]{40}$/.test(wallet)) {
+      return jsonResponse({ error: "x-wallet-address required" }, 400);
+    }
+    token = "";
+  } else {
+    const auth = await requireDeHubAuth(req);
+    if (!auth.ok) return auth.response;
+    ({ wallet, token } = auth);
+  }
 
   const db = serviceClient();
 
@@ -510,8 +532,10 @@ Deno.serve(async (req) => {
         // (api.dehub.io accepts any token — platform-wide, see July audit), so
         // an attacker could rotate wallets for 3 free gateway builds each. Cap
         // the actual expensive path per IP too.
-        const ipLimited = await rateLimitByIp(req, "builder_build", { limit: 12, windowMs: 60 * 60 * 1000 });
-        if (ipLimited) return ipLimited;
+        if (!isServiceCall) {
+          const ipLimited = await rateLimitByIp(req, "builder_build", { limit: 12, windowMs: 60 * 60 * 1000 });
+          if (ipLimited) return ipLimited;
+        }
 
         const allowance = await loadAllowance(db, wallet, token);
         if (allowance.used >= allowance.limit) {
@@ -547,12 +571,14 @@ Deno.serve(async (req) => {
         if (!projectId || !content) return jsonResponse({ error: "projectId and content required" }, 400);
         if (content.length > 2000) return jsonResponse({ error: "Message too long (2000 chars max)." }, 400);
 
-        const ipLimited = await rateLimitByIp(req, "builder_build", { limit: 12, windowMs: 60 * 60 * 1000 });
-        if (ipLimited) return ipLimited;
+        if (!isServiceCall) {
+          const ipLimited = await rateLimitByIp(req, "builder_build", { limit: 12, windowMs: 60 * 60 * 1000 });
+          if (ipLimited) return ipLimited;
+        }
 
         const { data: project } = await db
           .from("builder_projects")
-          .select("id, status, prompt")
+          .select("id, status, prompt, version")
           .eq("id", projectId)
           .eq("wallet", wallet)
           .maybeSingle();
@@ -574,6 +600,11 @@ Deno.serve(async (req) => {
 
         await log(db, projectId, content, "user");
         await bumpUsage(db, wallet);
+        // Busy before this returns, not whenever the background run gets to
+        // it. Until then the project still read "live" at its old version, so
+        // anything watching for the result took the untouched app for a
+        // finished edit.
+        await setStatus(db, projectId, "queued", "Queued for build");
 
         const model = resolveModel(body.model);
         const isRetry = project.status === "error";
@@ -590,12 +621,35 @@ Deno.serve(async (req) => {
             const rebuildPrompt = `${project.prompt}\n\nAdditional note from the user: ${content}`;
             // @ts-ignore - EdgeRuntime is provided by Supabase
             EdgeRuntime.waitUntil(runBuild(db, projectId, rebuildPrompt, model));
-            return jsonResponse({ ok: true, allowance: { ...allowance, used: allowance.used + 1 } });
+            return jsonResponse({ ok: true, version: project.version, allowance: { ...allowance, used: allowance.used + 1 } });
           }
         }
         // @ts-ignore - EdgeRuntime is provided by Supabase
         EdgeRuntime.waitUntil(runEdit(db, projectId, content, model));
-        return jsonResponse({ ok: true, allowance: { ...allowance, used: allowance.used + 1 } });
+        return jsonResponse({ ok: true, version: project.version, allowance: { ...allowance, used: allowance.used + 1 } });
+      }
+
+      case "status": {
+        // What a watcher polls: the project row and the latest agent line,
+        // without the files `get` carries on every call.
+        const projectId = body.projectId ?? "";
+        if (!projectId) return jsonResponse({ error: "projectId required" }, 400);
+        const { data: project } = await db
+          .from("builder_projects")
+          .select("id, name, emoji, status, status_detail, error, version, updated_at")
+          .eq("id", projectId)
+          .eq("wallet", wallet)
+          .maybeSingle();
+        if (!project) return jsonResponse({ error: "Project not found" }, 404);
+        const { data: last } = await db
+          .from("builder_messages")
+          .select("content")
+          .eq("project_id", projectId)
+          .eq("role", "agent")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        return jsonResponse({ project, lastAgentMessage: last?.content ?? null });
       }
 
       case "get": {

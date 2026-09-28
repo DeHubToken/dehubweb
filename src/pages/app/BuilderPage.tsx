@@ -34,6 +34,7 @@ import {
   Link as LinkIcon,
   Loader2,
   Menu,
+  MessageCircle,
   MoreHorizontal,
   Play,
   Plus,
@@ -50,6 +51,7 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { useAuth } from '@/contexts/AuthContext';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import dehubIcon from '@/assets/dehub-logo-compact.png';
+import { ASSISTANT_ADDRESS, ASSISTANT_USERNAME } from '@/lib/assistant';
 import {
   BUSY_STATUSES,
   builderShareUrl,
@@ -538,6 +540,24 @@ export default function BuilderPage() {
             big
           />
         </div>
+
+        {/* The same builds from a DM: @assistant runs them against this
+            allowance and messages the link back when the app is live. */}
+        <button
+          onClick={() =>
+            navigate('/app/messages', {
+              state: { openDmWith: ASSISTANT_ADDRESS, username: ASSISTANT_USERNAME },
+            })
+          }
+          className={cn(
+            'mx-auto mt-4 flex items-center gap-2 rounded-full border px-4 py-2 text-[14px] font-medium text-[#e8e8ea] transition-colors',
+            'bg-[rgba(10,10,12,0.45)] hover:bg-[rgba(30,30,34,0.6)] backdrop-blur-md',
+            STROKE,
+          )}
+        >
+          <MessageCircle className="w-4 h-4" />
+          {t('builder.buildInChat')}
+        </button>
       </div>
 
       <div className={cn('pb-6 flex items-center justify-center gap-2 text-[13px]', TEXT_DIM)}>

@@ -6510,7 +6510,9 @@
     "step3": "Dine DeHub-tokens vil blive leveret på destinationskæden snart."
   },
   "builder": {
-    "stakeForAllowance": "Stak DeHub-tokens for at øge din daglige byggetilladelse"
+    "stakeForAllowance": "Stak DeHub-tokens for at øge din daglige byggetilladelse",
+    "buildInChat": "Byg i dine DM'er med @assistant",
+    "signInRequired": "Log ind for at bruge Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Ingen konto er påkrævet for at læse offentligt indhold via connectoren. En DeHub-konto er kun nødvendig, hvis du vil poste, give drikkepenge eller holde DeHub-tokens.",

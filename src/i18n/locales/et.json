@@ -6481,7 +6481,9 @@
     "step3": "Teie DeHub žetoonid toimetatakse sihtahelasse peagi."
   },
   "builder": {
-    "stakeForAllowance": "Panustage DeHub žetoone, et suurendada oma igapäevast ehitusluba"
+    "stakeForAllowance": "Panustage DeHub žetoone, et suurendada oma igapäevast ehitusluba",
+    "buildInChat": "Loo oma otsesõnumites koos @assistant'iga",
+    "signInRequired": "Builderi kasutamiseks logi sisse."
   },
   "connect": {
     "chatgptFaqAccount": "Avaliku sisu lugemiseks pole ühenduslüüsi kaudu kontot vaja. DeHub konto on vajalik ainult siis, kui soovite postitada, jootraha anda või DeHub žetoone hoida.",

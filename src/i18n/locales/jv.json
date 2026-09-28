@@ -4415,7 +4415,9 @@
     "step3": "Token DeHub sampeyan bakal dikirim ing rantai tujuan sanalika."
   },
   "builder": {
-    "stakeForAllowance": "Stake token DeHub kanggo nambah tunjangan mbangun saben dina"
+    "stakeForAllowance": "Stake token DeHub kanggo nambah tunjangan mbangun saben dina",
+    "buildInChat": "Gawe ing DM-mu bareng @assistant",
+    "signInRequired": "Mlebu dhisik kanggo nggunakake Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Ora perlu akun kanggo maca konten umum liwat konektor. Akun DeHub mung perlu yen sampeyan pengin posting, menehi tip, utawa nyimpen token DeHub.",

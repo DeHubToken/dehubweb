@@ -4448,7 +4448,9 @@
     "step3": "Tokenat tuaja DeHub do të dorëzohen së shpejti në zinxhirin destinacion."
   },
   "builder": {
-    "stakeForAllowance": "Vendosni tokena DeHub për të rritur lejen tuaj ditore të ndërtimit"
+    "stakeForAllowance": "Vendosni tokena DeHub për të rritur lejen tuaj ditore të ndërtimit",
+    "buildInChat": "Ndërto në mesazhet private me @assistant",
+    "signInRequired": "Hyr për të përdorur Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Nuk kërkohet llogari për të lexuar përmbajtje publike përmes lidhësit. Llogaria DeHub nevojitet vetëm nëse dëshironi të postoni, të jepni bakshish ose të mbani tokena DeHub.",

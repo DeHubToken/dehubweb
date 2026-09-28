@@ -6483,7 +6483,9 @@
     "step3": "Vaši DeHub tokeni će uskoro biti isporučeni na odredišni lanac."
   },
   "builder": {
-    "stakeForAllowance": "Uložite DeHub tokene kako biste povećali svoje dnevno dopuštenje za izgradnju"
+    "stakeForAllowance": "Uložite DeHub tokene kako biste povećali svoje dnevno dopuštenje za izgradnju",
+    "buildInChat": "Gradite u izravnim porukama s @assistant",
+    "signInRequired": "Prijavite se za korištenje Buildera."
   },
   "connect": {
     "chatgptFaqAccount": "Za čitanje javnog sadržaja putem konektora nije potreban račun. DeHub račun je potreban samo ako želite objavljivati, davati napojnice ili držati DeHub tokene.",

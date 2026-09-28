@@ -6479,7 +6479,9 @@
     "step3": "DeHub-tokenisi toimitetaan kohdeketjuun pian."
   },
   "builder": {
-    "stakeForAllowance": "Stakaa DeHub-tokeneita kasvattaaksesi päivittäistä rakennuslupaa"
+    "stakeForAllowance": "Stakaa DeHub-tokeneita kasvattaaksesi päivittäistä rakennuslupaa",
+    "buildInChat": "Rakenna yksityisviesteissä @assistantin kanssa",
+    "signInRequired": "Kirjaudu sisään käyttääksesi Builderia."
   },
   "connect": {
     "chatgptFaqAccount": "Julkisen sisällön lukemiseen liittimen kautta ei vaadita tiliä. DeHub-tiliä tarvitaan vain, jos haluat julkaista, antaa tippiä tai pitää DeHub-tokeneita.",

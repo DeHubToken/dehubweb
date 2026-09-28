@@ -4448,7 +4448,9 @@
     "step3": "Tookiin DeHub keessan yeroo gabaabaa keessatti sansalata bakka itti geessan irratti ni dhiyaatu."
   },
   "builder": {
-    "stakeForAllowance": "Tokens DeHub stake gochuun kaffaltii ijaarsaa guyyaa guyyaa keessanii ol kaasaa"
+    "stakeForAllowance": "Tokens DeHub stake gochuun kaffaltii ijaarsaa guyyaa guyyaa keessanii ol kaasaa",
+    "buildInChat": "Ergaa dhuunfaa kee keessatti @assistant waliin ijaari",
+    "signInRequired": "Builder fayyadamuuf seeni."
   },
   "connect": {
     "chatgptFaqAccount": "Qabiyyee ummataa karaa walqabsiisaa dubbisuuf herregni kamiyyuu hin barbaachisu. Akkaawuntii DeHub kan barbaachisu yoo mallattoo DeHub maxxansuu, gorsa kennuu ykn qabachuu barbaadde qofa.",

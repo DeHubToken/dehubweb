@@ -6438,7 +6438,9 @@
     "step3": "Sizin DeHub tokenləriniz təyinat zəncirində qısa müddətdə çatdırılacaq."
   },
   "builder": {
-    "stakeForAllowance": "Gündəlik tikinti limitinizi artırmaq üçün DeHub tokenlərini steykinq edin"
+    "stakeForAllowance": "Gündəlik tikinti limitinizi artırmaq üçün DeHub tokenlərini steykinq edin",
+    "buildInChat": "@assistant ilə şəxsi mesajlarınızda yaradın",
+    "signInRequired": "Builder-dən istifadə etmək üçün daxil olun."
   },
   "connect": {
     "chatgptFaqAccount": "Konnektor vasitəsilə ictimai məzmunu oxumaq üçün hesab tələb olunmur. Yalnız DeHub tokenləri yerləşdirmək, bəxşiş vermək və ya saxlamaq istəyirsinizsə, DeHub hesabı lazımdır.",

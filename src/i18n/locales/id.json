@@ -6598,7 +6598,9 @@
     "step3": "Token DeHub Anda akan segera dikirimkan di rantai tujuan."
   },
   "builder": {
-    "stakeForAllowance": "Pertaruhkan token DeHub untuk menaikkan kuota pembuatan harian Anda"
+    "stakeForAllowance": "Pertaruhkan token DeHub untuk menaikkan kuota pembuatan harian Anda",
+    "buildInChat": "Bangun di DM kamu bersama @assistant",
+    "signInRequired": "Masuk untuk menggunakan Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Tidak diperlukan akun untuk membaca konten publik melalui konektor. Akun DeHub hanya diperlukan jika Anda ingin memposting, memberi tip, atau menyimpan token DeHub.",
