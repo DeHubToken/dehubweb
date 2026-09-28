@@ -491,7 +491,7 @@ Rules:
 // served from the cache indefinitely. Matched against every paid tier's
 // output before it is accepted.
 const REFUSAL_PATTERN =
-  /no text (?:provided|to translate)|nothing to translate|text to translate in your|asked me to translate|provide the text|share the text|cannot translate|can't translate|not a recognized (?:language|code)|need clarification|don't see any text|only provided (?:a|an|the)/i;
+  /no text (?:provided|to translate)|nothing to translate|text to translate in your|asked me to translate|provide the text|share the text|cannot translate|can't translate|not a recognized (?:language|code)|need clarification|don't see any text|only provided (?:a|an|the)|can'?t fulfill|cannot fulfill|unable to (?:help|assist|fulfill|comply)|I'?m sorry, but I/i;
 
 function looksLikeRefusal(output: string): boolean {
   return REFUSAL_PATTERN.test(output);

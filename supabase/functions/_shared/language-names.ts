@@ -117,7 +117,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   wuu: 'Wu Chinese',
   ctg: 'Chittagonian',
   hne: 'Chhattisgarhi',
-  dcc: 'Deccan',
+  dcc: 'Dakhini (Deccani Urdu, written in the Urdu Perso-Arabic script)',
   dyu: 'Jula',
   gsw: 'Swiss German',
   ha: 'Hausa',
