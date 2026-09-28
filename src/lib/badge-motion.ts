@@ -2,7 +2,7 @@
  * Badge ascension — the motion contract
  * =====================================
  * One record per tier, describing how that tier's promotion should feel. The
- * web overlay (`components/app/BadgeAscension.tsx`) and the mobile one read the
+ * web ceremony (`components/app/badge-showcase/ascension.ts`) and the mobile one read the
  * same numbers, so a tier tuned on one client is tuned on the other.
  *
  * Nothing here is artwork. The ceremony animates the live badge asset out of
