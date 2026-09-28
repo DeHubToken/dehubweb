@@ -2831,7 +2831,6 @@
     "noStories": "Zatiaľ žiadne príbehy"
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Kupujúci platia zobrazenú sumu tokenov DeHub za predpredajnú cenu. Vy dostanete hodnotu v USD ako zostatok USDT.",
     "legacyPlanMigrates": "Uloženie migruje tento plán s cenou v starých tokenoch na cenu v dolároch za predpredajnú cenu.",
     "tokenAmount": "{{amount}} tokenov",
     "preListingTokenAmount": "Predpredajná suma tokenov",
@@ -2862,7 +2861,6 @@
     "publish": "Publikovať",
     "confirmSubscription": "Potvrdiť odber",
     "planPrice": "Cena plánu",
-    "youPayInclFee": "Platíte (vrátane poplatku platformy)",
     "calculating": "počítam…",
     "cancel": "Zrušiť",
     "confirm": "Potvrdiť",
@@ -2942,7 +2940,23 @@
     "withdrawableSoon": "Zárobky z predplatného budú čoskoro vyberateľné",
     "percentUsed": "{{percent}}% použité",
     "spentOfTotal": "{{spent}} z {{total}}",
-    "viewInWallet": "Zobraziť v peňaženke"
+    "topUp": "Pridať tokeny",
+    "topUpTitle": "Pridať tokeny predplatného",
+    "topUpCustom": "Iná suma (USD)",
+    "topUpYouSend": "Odosielate",
+    "topUpYouGet": "Pridané k zostatku",
+    "topUpConfirm": "Pridať {{amount}}",
+    "topUpRange": "Zadajte {{min}} až {{max}}",
+    "topUpDone": "{{amount}} pridané do vašich tokenov predplatného",
+    "topUpPending": "Vaše dobitie sa potvrdzuje. Čoskoro sa objaví na tvojom zostatku.",
+    "topUpFailed": "Nepodarilo sa pridať tokeny predplatného",
+    "topUpEmptyHint": "Dobite a prihláste sa na odber pre tvorcov",
+    "topUpStageFunding": "Získavanie tokenov...",
+    "topUpStageWallet": "Potvrďte v peňaženke...",
+    "topUpStageConfirming": "Čaká sa na transakciu...",
+    "topUpStageCrediting": "Pridáva sa k zostatku...",
+    "creatorEarnsInTokens": "Predplatitelia platia v žetónoch DeHub. Zarábate hodnotu dolára a vyberáte ju ako tokeny za cenu v daný deň.",
+    "youPayNow": "Zaplatíte"
   },
   "live": {
     "chatJoined": "sa pripojil/a",

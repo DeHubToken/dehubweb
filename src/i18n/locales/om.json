@@ -2720,7 +2720,6 @@
     "loginDescription": "Odeeffannoo ilaaluuf fi uumuuf seeni."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Bitamtoonni maallaqa mallattoo DeHub agarsiifame sadarkaa tarree duraatiin kaffalu. Gatii USD akka hafnaan USDT tti argatta.",
     "legacyPlanMigrates": "Qusannaan karoora gatii mallattoo hambaa kana gara gatii doolaaraa saffisa tarree duraatiin godaansa.",
     "tokenAmount": "{{amount}} mallattoolee",
     "preListingTokenAmount": "Hanga mallattoo dursanii tarreessuun",
@@ -2751,7 +2750,6 @@
     "publish": "Maxxansaa",
     "confirmSubscription": "Maallaqa Maallaqa Mirkaneessi",
     "planPrice": "Gatii karooraa",
-    "youPayInclFee": "Ni kaffaltu (kaffaltii waltajjii dabalatee) .",
     "calculating": "shallaguu...",
     "cancel": "Haquu",
     "confirm": "Mirkaneessuu",
@@ -2831,7 +2829,23 @@
     "withdrawableSoon": "Galiin maallaqa maallaqaan bitamuu yeroo dhiyootti ni baafama",
     "percentUsed": "{{percent}}% fayyadameera",
     "spentOfTotal": "{{spent}} kan {{total}}",
-    "viewInWallet": "Wallet keessatti ilaali"
+    "topUp": "Tokens itti dabali",
+    "topUpTitle": "Mallattoo maallaqa galchuu dabali",
+    "topUpCustom": "Maallaqa biroo (USD) .",
+    "topUpYouSend": "Ati ergita",
+    "topUpYouGet": "Hafnaan keessan irratti dabalameera",
+    "topUpConfirm": "{{amount}} itti dabali.",
+    "topUpRange": "{{min}} gara {{max}} tti galchaa.",
+    "topUpDone": "{{amount}} mallattoo maallaqa galchuu keessan irratti dabalameera",
+    "topUpPending": "Top-up keessan mirkaneessaa jira. Yeroo gabaabaa keessatti madaallii keessan keessatti ni mul&#39;ata.",
+    "topUpFailed": "Mallattoo maallaqa galchuu dabaluu hin dandeenye",
+    "topUpEmptyHint": "Uumtoota subscribe gochuuf top up godhaa",
+    "topUpStageFunding": "Tookiin argachuu...",
+    "topUpStageWallet": "Borsaa keessan keessatti mirkaneessaa...",
+    "topUpStageConfirming": "Daldala kana eegaa...",
+    "topUpStageCrediting": "Madaallii keessanitti dabaluudhaan...",
+    "creatorEarnsInTokens": "Maamiltoonni mallattoo DeHub tiin kaffalu. Gatii doolaaraa argattee akka tookinitti gatii guyyaa sanatti baafta.",
+    "youPayNow": "Ati ni kaffaltu"
   },
   "live": {
     "chatJoined": "makaate",

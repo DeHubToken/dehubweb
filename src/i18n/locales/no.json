@@ -2691,7 +2691,6 @@
     "transferGuarantee": "Du får hele kontoen — håndtak, innlegg, følgere, tips-historikk og merkerettigheter. Selgeren beholder lommeboken sin og alt i den. Overføringen kjører først etter at DeHub har lest tokenbetalingen din tilbake fra kjeden; hvis den avbrytes, gjenopptar forsøk på kjøp den."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Kjøpere betaler det viste DeHub-tokenbeløpet til forhåndsnoteringskursen. Du mottar USD-verdien som en USDT-saldo.",
     "legacyPlanMigrates": "Lagring migrerer denne eldre token-prisplanen til dollarprising til forhåndsnoteringskursen.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Forhåndsnoterings token-beløp",
@@ -2722,7 +2721,6 @@
     "publish": "Publiser",
     "confirmSubscription": "Bekreft abonnement",
     "planPrice": "Planpris",
-    "youPayInclFee": "Du betaler (inkl. plattformavgift)",
     "calculating": "beregner…",
     "cancel": "Avbryt",
     "confirm": "Bekreft",
@@ -2802,7 +2800,23 @@
     "withdrawableSoon": "Abonnementsinntekter vil snart være mulig å ta ut",
     "percentUsed": "{{percent}}% brukt",
     "spentOfTotal": "{{spent}} av {{total}}",
-    "viewInWallet": "Vis i lommeboken"
+    "topUp": "Legg til tokener",
+    "topUpTitle": "Legg til abonnementstokener",
+    "topUpCustom": "Annet beløp (USD)",
+    "topUpYouSend": "Du sender",
+    "topUpYouGet": "Lagt til saldoen din",
+    "topUpConfirm": "Legg til {{amount}}",
+    "topUpRange": "Skriv inn {{min}} til {{max}}",
+    "topUpDone": "{{amount}} lagt til i abonnementstokenene dine",
+    "topUpPending": "Påfyllingen din bekreftes. Den vil vises på saldoen din snart.",
+    "topUpFailed": "Kunne ikke legge til abonnementstokener",
+    "topUpEmptyHint": "Fyll på penger for å abonnere på skapere",
+    "topUpStageFunding": "Henter tokener …",
+    "topUpStageWallet": "Bekreft i lommeboken din…",
+    "topUpStageConfirming": "Venter på transaksjonen …",
+    "topUpStageCrediting": "Legger til i saldoen din …",
+    "creatorEarnsInTokens": "Abonnenter betaler med DeHub-tokens. Du tjener dollarverdien og tar den ut som tokens til dagens pris.",
+    "youPayNow": "Du betaler"
   },
   "live": {
     "chatJoined": "ble med",

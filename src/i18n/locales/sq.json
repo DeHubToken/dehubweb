@@ -2710,7 +2710,6 @@
     "transferGuarantee": "Ju merrni të gjithë llogarinë — dorezë, postime, ndjekës, histori këshillash dhe të drejta për distinktivë. Shitësi ruan portofolin e tij dhe gjithçka që ka brenda. Transferimi funksionon vetëm pasi DeHub të lexojë pagesën tuaj të tokenit nga zinxhiri; nëse ndërpritet, rifillimi i blerjes e vazhdon atë."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Blerësit paguajnë shumën e treguar të tokenave DeHub me normën para listimit. Ju merrni vlerën USD si një bilanc USDT.",
     "legacyPlanMigrates": "Kursimi migron këtë plan të vjetër me çmim tokeni në çmime dollarësh me normën para listimit.",
     "tokenAmount": "{{amount}} tokena",
     "preListingTokenAmount": "Shuma e tokenave para listimit",
@@ -2741,7 +2740,6 @@
     "publish": "Publiko",
     "confirmSubscription": "Konfirmo Abonimin",
     "planPrice": "Çmimi i planit",
-    "youPayInclFee": "Ju paguani (përfshirë tarifën e platformës)",
     "calculating": "po llogaritet…",
     "cancel": "Anulo",
     "confirm": "Konfirmo",
@@ -2821,7 +2819,23 @@
     "withdrawableSoon": "Fitimet nga abonimet do të tërhiqen së shpejti",
     "percentUsed": "{{percent}}% i përdorur",
     "spentOfTotal": "{{spent}} të {{total}}",
-    "viewInWallet": "Shfaq në portofol"
+    "topUp": "Shto shenjat",
+    "topUpTitle": "Shto shenjat e abonimit",
+    "topUpCustom": "Shuma të tjera (USD)",
+    "topUpYouSend": "Dërgo",
+    "topUpYouGet": "U shtua në bilancin tënd",
+    "topUpConfirm": "Shto {{amount}}",
+    "topUpRange": "Shkruaj {{min}} në {{max}}",
+    "topUpDone": "{{amount}} u shtua në shenjat e abonimit",
+    "topUpPending": "Përditësimi yt po konfirmohet. Së shpejti do të shfaqet në bilancin tënd.",
+    "topUpFailed": "I pamundur shtimi i tokenëve të abonimit",
+    "topUpEmptyHint": "Bëhu pjesë për t 'u abonuar te krijuesit",
+    "topUpStageFunding": "Marrja e simboleve...",
+    "topUpStageWallet": "Konfirmo në portofolin tënd...",
+    "topUpStageConfirming": "Në pritje të transaksionit...",
+    "topUpStageCrediting": "Duke shtuar në bilancin tënd...",
+    "creatorEarnsInTokens": "Abonentët paguajnë në tokenët DeHub. Fiton vlerën e dollarit dhe e tërheq si monedha me çmimin e ditës.",
+    "youPayNow": "Ti paguan"
   },
   "live": {
     "chatJoined": "u bashkua",

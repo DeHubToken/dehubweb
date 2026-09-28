@@ -2727,7 +2727,6 @@
     "transferGuarantee": "Sumaq kaqta hap'inki — ch'aqchiy, qillqakuna, qatiqkuna, yanapaykuna k'anchaywan, qhawana hayñikuna. Rant'iqqa waqaychana wasinta imaymanataq chaypi kaqta waqaychan. Llamk'ayqa chaymanta llamk'an DeHub qanpa token pagoyta qhawaspa chainmanta lloqsimusqanta; chayta hark'aykuptinqa, salt'ayta kutichiyqa kutirichin."
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "Ranqhaqkuna rikuchisqa DeHub token qullqita qunku chaymanta ñawpaqmanta listasqa tarifa kaqpi. USD chanin USDT saldo hina chaskinki.",
     "legacyPlanMigrates": "Waqaychay kay herencia token-precio planta dólar chaninman ñawpaq listasqa tarifa kaqpi astakun.",
     "tokenAmount": "{{amount}} fichas nisqakuna",
     "preListingTokenAmount": "Ñawpaq listasqa tokenpa chanin",
@@ -2758,7 +2757,6 @@
     "publish": "Llamk'ay",
     "confirmSubscription": "Maqtaqta qhipa",
     "planPrice": "Plan pusaq",
-    "youPayInclFee": "Qam chaskinki (platforma chaskikuna)",
     "calculating": "Hisapachkan…",
     "cancel": "Chinkachiy",
     "confirm": "Qhipa",
@@ -2838,7 +2836,23 @@
     "withdrawableSoon": "Suscripcionmanta ganasqankuqa pisi tiempollamantan horqosqa kanqa",
     "percentUsed": "{{percent}}% llamk&#39;achisqa",
     "spentOfTotal": "{{spent}} nisqamanta {{total}} nisqamanta.",
-    "viewInWallet": "Billeterapi qhaway"
+    "topUp": "Tokenkunata yapay",
+    "topUpTitle": "Suscripción tokenkunata yapay",
+    "topUpCustom": "Huk qullqi (USD) .",
+    "topUpYouSend": "Qam kachayki",
+    "topUpYouGet": "Saldoykiman yapasqa",
+    "topUpConfirm": "Yanapay {{amount}}",
+    "topUpRange": "{{min}} nisqamanta {{max}} nisqaman qillqay.",
+    "topUpDone": "{{amount}} suscripción tokensniykiman yapasqa",
+    "topUpPending": "Recargoykiqa takyachiqmi. Pisi tiempollamantan balanzaykipi rikhurimunqa.",
+    "topUpFailed": "Mana suscripción tokenkunata yapayta atirqanchu",
+    "topUpEmptyHint": "Ruwaqkunaman qillqakunaykipaq yapay",
+    "topUpStageFunding": "Fichas nisqakunata chaskispa...",
+    "topUpStageWallet": "Billeteraykipi takyachiy...",
+    "topUpStageConfirming": "Chay rantinakuyta suyaspa...",
+    "topUpStageCrediting": "Saldoykiman yapaspa...",
+    "creatorEarnsInTokens": "Suscriptorkuna DeHub tokenkunapi qullqita qunku. Dólar valorta gananki hinaspa chay p’unchaypi precioman hina fichas hina horqonki.",
+    "youPayNow": "Qamqa paganki"
   },
   "live": {
     "chatJoined": "yaykurqan",

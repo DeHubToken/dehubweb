@@ -2682,7 +2682,6 @@
     "transferGuarantee": "ሙሉውን አካውንት ያገኛሉ — እጀታ፣ ልጥፎች፣ ተከታዮች፣ የጠቃሚ ምክር ታሪክ እና የባጅ መብቶች። ሻጩ የኪስ ቦርሳውን እና በውስጡ ያለውን ሁሉ ይይዛል። ማስተላለፉ DeHub የቶከን ክፍያዎን ከሰንሰለቱ ሲያነብ ብቻ ነው የሚሰራው፤ ከተቋረጠ፣ ግዢውን እንደገና መሞከር ይቀጥላል።"
   },
   "subscriptions": {
-    "buyersPayTokenAmount": "ገዢዎች ቅድመ-ዝርዝር ዋጋ ላይ የሚታየውን የDeHub ቶከን መጠን ይከፍላሉ። የUSD እሴቱን እንደ USDT ሚዛን ይቀበላሉ።",
     "legacyPlanMigrates": "ማስቀመጥ ይህንን የቆየ የቶከን-ዋጋ እቅድ በቅድመ-ዝርዝር ዋጋ ወደ ዶላር ዋጋ ያሸጋግራል።",
     "tokenAmount": "{{amount}} ቶከኖች",
     "preListingTokenAmount": "የቅድመ-ዝርዝር ቶከን መጠን",
@@ -2713,7 +2712,6 @@
     "publish": "አትም",
     "confirmSubscription": "ምዝገባን ያረጋግጡ",
     "planPrice": "የእቅድ ዋጋ",
-    "youPayInclFee": "ይከፍላሉ (የመድረክ ክፍያ ጨምሮ)",
     "calculating": "በመቁጠር ላይ…",
     "cancel": "ይቅር",
     "confirm": "አረጋግጥ",
@@ -2793,7 +2791,23 @@
     "withdrawableSoon": "የደንበኝነት ምዝገባ ገቢዎች በቅርቡ ይሰረዛሉ",
     "percentUsed": "{{percent}}% ጥቅም ላይ ውሏል",
     "spentOfTotal": "{{spent}} ከ {{total}}",
-    "viewInWallet": "በኪስ ቦርሳ ውስጥ ይመልከቱ"
+    "topUp": "ምልክቶችን ያክሉ",
+    "topUpTitle": "የደንበኝነት ምዝገባ ምልክቶችን ያክሉ",
+    "topUpCustom": "ሌላ መጠን (ዶላር)",
+    "topUpYouSend": "አንተ መላክ",
+    "topUpYouGet": "ወደ ሚዛናዊነትዎ ታክሏል",
+    "topUpConfirm": "ያክሉ {{amount}}",
+    "topUpRange": "ያስገቡ {{min}} ወደ {{max}}",
+    "topUpDone": "{{amount}} በደንበኝነት ምዝገባ ምልክቶችዎ ላይ ታክሏል",
+    "topUpPending": "የእርስዎ ከፍተኛ-ላይ ያረጋግጣል. በአጭር ጊዜ ውስጥ በእርስዎ ሚዛን ውስጥ ይታያል.",
+    "topUpFailed": "የደንበኝነት ምዝገባ ምልክቶችን ማከል አልተቻለም",
+    "topUpEmptyHint": "ለፈጣሪዎች ለመመዝገብ ከላይ",
+    "topUpStageFunding": "ምልክቶችን ማግኘት...",
+    "topUpStageWallet": "በኪስ ቦርሳዎ ውስጥ ያረጋግጡ…",
+    "topUpStageConfirming": "ግብይቱን በመጠባበቅ ላይ…",
+    "topUpStageCrediting": "ወደ ሚዛናዊነትዎ ማከል...",
+    "creatorEarnsInTokens": "ተመዝጋቢዎች በ DeHub ምልክቶች ውስጥ ይከፍላሉ ። የዶላር እሴት ታገኛለህ እና በቀን ዋጋ እንደ ቶከኖች ትወስዳለህ.",
+    "youPayNow": "እርስዎ ይከፍላሉ"
   },
   "live": {
     "chatJoined": "ተቀላቀለ",
