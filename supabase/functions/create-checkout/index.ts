@@ -88,6 +88,14 @@ Deno.serve(async (req) => {
       environment: StripeEnv;
       quantity?: number;
     } = body;
+    const playToken = typeof body?.playExternalTransactionToken === "string" &&
+        /^[A-Za-z0-9._~+/=-]{1,2048}$/.test(body.playExternalTransactionToken)
+      ? body.playExternalTransactionToken
+      : undefined;
+    // Stripe metadata values are capped at 500 chars.
+    const playMeta: Record<string, string> = playToken && playToken.length <= 500
+      ? { play_ext_token: playToken }
+      : {};
 
     // Enforce per-plan seat minimums (matches the Stripe price quantity bounds).
     const seatMin: Record<string, number> = {
@@ -175,9 +183,9 @@ Deno.serve(async (req) => {
       ui_mode: "embedded_page",
       return_url: returnUrl,
       customer: customerId,
-      metadata: { userId, walletAddress: userId, priceId },
+      metadata: { userId, walletAddress: userId, priceId, ...playMeta },
       subscription_data: {
-        metadata: { userId, walletAddress: userId, priceId },
+        metadata: { userId, walletAddress: userId, priceId, ...playMeta },
       },
     });
 
