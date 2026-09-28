@@ -249,9 +249,6 @@ function HolderDetails({
   return (
     <>
       <div className="flex flex-col items-center gap-1.5 text-center lg:items-start lg:text-left">
-        <p className="text-[10px] font-bold uppercase leading-3 tracking-[0.14em] text-white/40">
-          {t('badgeShowcase.tierOf', { index: index + 1, total: count })}
-        </p>
         <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5 lg:justify-start">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.h2
@@ -370,7 +367,7 @@ function HolderDetails({
                 <Icon className="h-3 w-3 shrink-0" />
                 <span className="line-clamp-2 h-6 min-w-0 break-words">{row.label}</span>
               </div>
-              <div className="flex h-[18px] min-w-0 items-center gap-1 overflow-hidden">
+              <div className="flex h-[18px] min-w-0 items-center justify-end gap-1 overflow-hidden">
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.span
                     key={row.value}

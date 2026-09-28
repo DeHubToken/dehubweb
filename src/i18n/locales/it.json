@@ -5683,7 +5683,6 @@
     "dialogLabel": "Badge {{tier}}",
     "close": "Chiudi",
     "badges": "Distintivi",
-    "tierOf": "Livello {{index}} di {{total}}",
     "youHaveThis": "Hai questo badge",
     "toUnlock": "{{amount}} altri token per sbloccarlo",
     "holdToUnlock": "Tieni almeno questi token DeHub per sbloccarlo",
