@@ -61,8 +61,8 @@ const BADGE_LEVELS: BadgeDef[] = [
   { name: "Crab", min: 10000 },
   { name: "Lobster", min: 25000 },
   { name: "Piranha", min: 50000 },
-  { name: "Tortoise", min: 100000 },
-  { name: "Cobra", min: 250000 },
+  { name: "Giant Tortoise", min: 100000 },
+  { name: "King Cobra", min: 250000 },
   { name: "Octopus", min: 500000 },
   { name: "Crocodile", min: 1000000 },
   { name: "Dolphin", min: 2000000 },
@@ -101,9 +101,11 @@ export const MIN_BADGE_SCALE = 0.001;
 export const BADGE_ORDER: string[] = BADGE_LEVELS.map((b) => b.name);
 
 /**
- * Tier names as they were spelled before 2026-09-13, mapped to the real ones.
+ * Tier names the ladder used to carry, mapped to the current ones.
  *
- * Both were misspellings, and the names are not only labels: the API stores
+ * `Crocodite` and `Meglodon` were misspellings, fixed 2026-09-13; `Tortoise`
+ * and `Cobra` were renamed Giant Tortoise and King Cobra on 2026-09-28. The
+ * names are not only labels: the API stores
  * them on rows that outlive the deploy that wrote them (`badgeLock.tier`, a
  * delegation's granted tier, a SuperPowers booking's frozen tier). Everything
  * on this side that matches a name fails CLOSED — `parseBadgeLock` returns
@@ -117,6 +119,8 @@ export const BADGE_ORDER: string[] = BADGE_LEVELS.map((b) => b.name);
 const LEGACY_TIER_NAMES: Record<string, string> = {
   Crocodite: "Crocodile",
   Meglodon: "Megalodon",
+  Tortoise: "Giant Tortoise",
+  Cobra: "King Cobra",
 };
 
 /** The current spelling of a tier name, whatever spelling it arrived in. */
@@ -140,12 +144,12 @@ const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
 };
 
 // Import all badge images
-import TortoiseBadge from '@/assets/badges/Tortoise.webp';
+import TortoiseBadge from '@/assets/badges/Giant Tortoise.webp';
 import CrabBadge from '@/assets/badges/Crab.webp';
 import PiranhaBadge from '@/assets/badges/Piranha.webp';
 import LobsterBadge from '@/assets/badges/Lobster.webp';
 import OctopusBadge from '@/assets/badges/Octopus.webp';
-import CobraBadge from '@/assets/badges/Cobra.webp';
+import CobraBadge from '@/assets/badges/King Cobra.webp';
 import CrocodileBadge from '@/assets/badges/Crocodile.webp';
 import DolphinBadge from '@/assets/badges/Dolphin.webp';
 import TigerSharkBadge from '@/assets/badges/Tiger Shark.webp';
@@ -155,12 +159,12 @@ import BlueWhaleBadge from '@/assets/badges/Blue Whale.webp';
 import MegalodonBadge from '@/assets/badges/Megalodon.webp';
 
 const BADGE_IMAGES: Record<string, string> = {
-  "Tortoise": TortoiseBadge,
+  "Giant Tortoise": TortoiseBadge,
   "Crab": CrabBadge,
   "Piranha": PiranhaBadge,
   "Lobster": LobsterBadge,
   "Octopus": OctopusBadge,
-  "Cobra": CobraBadge,
+  "King Cobra": CobraBadge,
   "Crocodile": CrocodileBadge,
   "Dolphin": DolphinBadge,
   "Tiger Shark": TigerSharkBadge,
@@ -176,12 +180,12 @@ const BADGE_IMAGES: Record<string, string> = {
 // dark plate behind the artwork masked by these rather than by the art's own
 // alpha, which has transparent gaps inside the outline that would otherwise
 // show the page through next to the check mark.
-import TortoisePlate from '@/assets/badges/plates/Tortoise.png';
+import TortoisePlate from '@/assets/badges/plates/Giant Tortoise.png';
 import CrabPlate from '@/assets/badges/plates/Crab.png';
 import PiranhaPlate from '@/assets/badges/plates/Piranha.png';
 import LobsterPlate from '@/assets/badges/plates/Lobster.png';
 import OctopusPlate from '@/assets/badges/plates/Octopus.png';
-import CobraPlate from '@/assets/badges/plates/Cobra.png';
+import CobraPlate from '@/assets/badges/plates/King Cobra.png';
 import CrocodilePlate from '@/assets/badges/plates/Crocodile.png';
 import DolphinPlate from '@/assets/badges/plates/Dolphin.png';
 import TigerSharkPlate from '@/assets/badges/plates/Tiger Shark.png';
@@ -191,12 +195,12 @@ import BlueWhalePlate from '@/assets/badges/plates/Blue Whale.png';
 import MegalodonPlate from '@/assets/badges/plates/Megalodon.png';
 
 const BADGE_PLATES: Record<string, string> = {
-  "Tortoise": TortoisePlate,
+  "Giant Tortoise": TortoisePlate,
   "Crab": CrabPlate,
   "Piranha": PiranhaPlate,
   "Lobster": LobsterPlate,
   "Octopus": OctopusPlate,
-  "Cobra": CobraPlate,
+  "King Cobra": CobraPlate,
   "Crocodile": CrocodilePlate,
   "Dolphin": DolphinPlate,
   "Tiger Shark": TigerSharkPlate,

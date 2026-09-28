@@ -50,7 +50,7 @@ describe('engagementWeight', () => {
 
   it('honours a grandfathered tier', () => {
     // Below the live entry rung, but locked in at what it cost.
-    expect(engagementWeight(10_000, null, { lock: { tier: 'Cobra', requirement: 10_000 } })).toBe(6);
+    expect(engagementWeight(10_000, null, { lock: { tier: 'King Cobra', requirement: 10_000 } })).toBe(6);
   });
 
   it('treats a missing balance as no badge', () => {

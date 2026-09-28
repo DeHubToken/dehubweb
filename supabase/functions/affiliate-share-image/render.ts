@@ -58,8 +58,8 @@ export function buildInviteSvg(opts: InviteImageOptions): string {
     `font-size="${value.fontSize}" textLength="${value.width}" lengthAdjust="spacingAndGlyphs"`;
   const badgeOptics: Record<string, { scale: number; bottomInset: number }> = {
     Crab: { scale: 1, bottomInset: 5 }, Lobster: { scale: 1.04, bottomInset: 4 },
-    Piranha: { scale: 1, bottomInset: 7 }, Tortoise: { scale: 1, bottomInset: 10 },
-    Cobra: { scale: 1, bottomInset: 4 }, Octopus: { scale: 1.02, bottomInset: 4 },
+    Piranha: { scale: 1, bottomInset: 7 }, "Giant Tortoise": { scale: 1, bottomInset: 10 },
+    "King Cobra": { scale: 1, bottomInset: 4 }, Octopus: { scale: 1.02, bottomInset: 4 },
     Crocodile: { scale: 1, bottomInset: 10 }, Dolphin: { scale: 1.03, bottomInset: 4 },
     "Tiger Shark": { scale: 1.03, bottomInset: 5 }, "Killer Whale": { scale: 1.04, bottomInset: 6 },
     "Great White Shark": { scale: 1.04, bottomInset: 4 }, "Blue Whale": { scale: 1.1, bottomInset: 11 },
