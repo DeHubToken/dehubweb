@@ -109,13 +109,27 @@ async function customerCountry(stripe: any, invoice: any): Promise<string | unde
   return c?.address?.country || c?.shipping?.address?.country || undefined;
 }
 
+function playTokenFromMetadata(md: Record<string, string> | undefined | null): string | undefined {
+  if (!md) return undefined;
+  if (md.play_ext_token) return md.play_ext_token;
+  const n = Number(md.play_ext_token_n);
+  if (!Number.isInteger(n) || n < 1 || n > 9) return undefined;
+  let token = "";
+  for (let i = 0; i < n; i++) {
+    const part = md[`play_ext_token_${i}`];
+    if (!part) return undefined;
+    token += part;
+  }
+  return token.length <= 4096 ? token : undefined;
+}
+
 export async function reportInvoiceToPlay(invoice: any, env: StripeEnv) {
   try {
     const subscriptionId = subscriptionIdOf(invoice);
     if (!subscriptionId) return;
     const stripe = createStripeClient(env) as any;
     const sub = await stripe.subscriptions.retrieve(subscriptionId);
-    const playToken = sub.metadata?.play_ext_token;
+    const playToken = playTokenFromMetadata(sub.metadata);
     if (!playToken) return;
     if (!Deno.env.get("GOOGLE_PLAY_SERVICE_ACCOUNT_JSON")) {
       console.warn("GOOGLE_PLAY_SERVICE_ACCOUNT_JSON not set; skipping Play reporting");
@@ -195,7 +209,7 @@ export async function reportRefundToPlay(charge: any, env: StripeEnv) {
       const subId = subscriptionIdOf(invoice);
       if (!subId) return;
       const sub = await stripe.subscriptions.retrieve(subId);
-      reported = !!sub.metadata?.play_ext_token && !!sub.metadata?.play_initial_ext_txn_id;
+      reported = !!playTokenFromMetadata(sub.metadata) && !!sub.metadata?.play_initial_ext_txn_id;
     }
     if (!reported) return;
     if (!Deno.env.get("GOOGLE_PLAY_SERVICE_ACCOUNT_JSON")) {
