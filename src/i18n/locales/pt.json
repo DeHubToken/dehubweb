@@ -1536,7 +1536,7 @@
     "setUpNewAccount": "Configurar uma nova conta",
     "createNewInstead": "Em vez disso, crie uma nova conta",
     "migrateAccount": "Migrar conta",
-    "importExternalWallet": "Importar carteira externa",
+    "importExternalWallet": "Importar chaves",
     "migrateIntentHint": "Inicie sessão com qualquer opção abaixo. Se corresponder a uma conta DeHub anterior, trará a respetiva carteira, nome de utilizador e saldo.",
     "importIntentHint": "Entre com qualquer opção abaixo e cole a frase de recuperação ou a chave privada da carteira que deseja usar.",
     "title": "Entrar",

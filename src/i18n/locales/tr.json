@@ -1532,7 +1532,7 @@
     "setUpNewAccount": "Yeni bir hesap oluşturun",
     "createNewInstead": "Bunun yerine yeni bir hesap oluşturun",
     "migrateAccount": "Hesabı taşı",
-    "importExternalWallet": "Harici cüzdanı içe aktar",
+    "importExternalWallet": "Anahtarları içe aktar",
     "migrateIntentHint": "Aşağıdaki seçeneklerden herhangi biriyle oturum açın. Daha önceki bir DeHub hesabıyla eşleşirse cüzdanını, kullanıcı adını ve bakiyesini getireceksiniz.",
     "importIntentHint": "Aşağıdaki herhangi bir seçenekle oturum açın, ardından kullanmak istediğiniz cüzdanın kurtarma ifadesini veya özel anahtarını yapıştırın.",
     "title": "Giriş Yap",

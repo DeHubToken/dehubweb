@@ -1798,7 +1798,7 @@
     "setUpNewAccount": "Sediakan akaun baharu",
     "createNewInstead": "Cipta akaun baharu",
     "migrateAccount": "Pindahkan akaun",
-    "importExternalWallet": "Import dompet luaran",
+    "importExternalWallet": "Import kunci",
     "migrateIntentHint": "Log masuk dengan mana-mana pilihan di bawah. Jika ia sepadan dengan akaun DeHub terdahulu, anda akan membawa dompet, nama pengguna dan bakinya.",
     "importIntentHint": "Log masuk dengan mana-mana pilihan di bawah, kemudian tampal frasa pemulihan atau kunci peribadi dompet yang anda ingin gunakan.",
     "title": "Log in",

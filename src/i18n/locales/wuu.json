@@ -1455,7 +1455,7 @@
     "setUpNewAccount": "新建一个账号",
     "createNewInstead": "改而新建一个账号",
     "migrateAccount": "迁移账号",
-    "importExternalWallet": "导入外部钱包",
+    "importExternalWallet": "导入密钥",
     "migrateIntentHint": "用下面任意一个选项登录。如果匹配到早先个 DeHub 账号，就会带回佢个钱包、用户名同余额。",
     "importIntentHint": "用下面任意一个选项登录，然后粘贴你想用个钱包个恢复短语或者私钥。",
     "title": "登录",

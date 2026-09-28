@@ -174,7 +174,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   const [phoneCode, setPhoneCode] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
-  // "Migrate account" / "Import external wallet", chosen before signing in.
+  // "Migrate account" / "Import keys", chosen before signing in.
   // Mirrored from sessionStorage so it survives an OAuth redirect and reaches
   // the wallet step once the identity exists (see lib/wallet-setup-intent).
   const [setupIntent, setSetupIntentState] = useState<WalletSetupIntent | null>(() => getWalletSetupIntent());
@@ -665,7 +665,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
             className="h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-2 border-white/10 px-2"
           >
             <KeyRound className="w-5 h-5 shrink-0" />
-            <span className="truncate">{t('loginModal.importExternalWallet', 'Import external wallet')}</span>
+            <span className="truncate">{t('loginModal.importExternalWallet', 'Import keys')}</span>
           </Button>
         </div>
       )}
