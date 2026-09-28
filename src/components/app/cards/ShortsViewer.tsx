@@ -1014,12 +1014,34 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [goToNext, goToPrev, onClose, isFullscreen, toggleFullscreen, showComments]);
 
   // Handle drag for visual feedback during swipe
+  const isRestoreDrag = useCallback((info: PanInfo) => {
+    const frame = videoContainer?.getBoundingClientRect();
+    if (!isMobile || !(overlaysHidden || autoHidden) || showComments || !frame) return false;
+    const startY = info.point.y - info.offset.y - frame.top;
+    return startY > frame.height * RESTORE_ZONE_TOP &&
+      info.offset.y < -16 && Math.abs(info.offset.y) > Math.abs(info.offset.x);
+  }, [isMobile, overlaysHidden, autoHidden, showComments, videoContainer]);
+
   const handleDrag = useCallback((_: any, info: PanInfo) => {
+    if (isRestoreDrag(info)) {
+      setDragOffset(0);
+      return;
+    }
     setDragOffset(Math.abs(info.offset.x) > Math.abs(info.offset.y) ? 0 : info.offset.y);
-  }, []);
+  }, [isRestoreDrag]);
 
   const handleDragEnd = useCallback((_: any, info: PanInfo) => {
     setDragOffset(0);
+
+    // The upward counterpart of clearing the caption belongs to the panel,
+    // even when its velocity would otherwise page to the next short.
+    if (isRestoreDrag(info)) {
+      if (info.offset.y < -40) {
+        setOverlaysHidden(false);
+        setAutoHidden(false);
+      }
+      return;
+    }
     
     if (Math.abs(info.offset.x) > Math.abs(info.offset.y)) return;
     // Navigate based on drag velocity and offset
@@ -1031,7 +1053,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     } else if (info.offset.y > swipeThreshold || info.velocity.y > velocityThreshold) {
       goToPrev();
     }
-  }, [goToNext, goToPrev]);
+  }, [goToNext, goToPrev, isRestoreDrag]);
 
   // Toggle play/pause - only shows indicator on explicit tap
   /**
@@ -1139,28 +1161,17 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (!isMobile) return;
     
     const touch = e.touches[0];
-    const screenHeight = window.innerHeight;
-    const screenWidth = window.innerWidth;
     
-    // Track if touch started in bottom 1/5 OR right 1/5 for swipe-down detection
-    const inBottomZone = touch.clientY > screenHeight * 0.8;
-    const inRightZone = touch.clientX > screenWidth * 0.8;
-    
-    if (inBottomZone || inRightZone) {
-      overlaySwipeStartY.current = touch.clientY;
-      overlaySwipeStartX.current = touch.clientX;
-    } else {
-      overlaySwipeStartY.current = null;
-      overlaySwipeStartX.current = null;
-    }
+    // These handlers are on the caption/action stack itself: all of that
+    // stack must accept the gesture, including captions above the bottom 20%.
+    overlaySwipeStartY.current = touch.clientY;
+    overlaySwipeStartX.current = touch.clientX;
   }, [isMobile]);
 
   const handleOverlayGestureTouchEnd = useCallback((e: React.TouchEvent) => {
     if (!isMobile) return;
     
     const touch = e.changedTouches[0];
-    const screenHeight = window.innerHeight;
-    const screenWidth = window.innerWidth;
     
     // Need start position to determine gesture
     if (overlaySwipeStartY.current === null || overlaySwipeStartX.current === null) {
@@ -1171,12 +1182,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const deltaX = Math.abs(touch.clientX - overlaySwipeStartX.current);
     const isVerticalSwipe = Math.abs(deltaY) > 40 && Math.abs(deltaY) > deltaX;
 
-    const inBottomZone = overlaySwipeStartY.current > screenHeight * 0.8;
-    const inRightZone = overlaySwipeStartX.current > screenWidth * 0.8;
-
-    // Hide overlays: swipe down in bottom/right zone. (Restoring is a plain tap
-    // — see handleRestoreTouchEnd — so nothing here runs while they're hidden.)
-    if (!overlaysHidden && isVerticalSwipe && deltaY > 40 && (inBottomZone || inRightZone)) {
+    if (!overlaysHidden && isVerticalSwipe && deltaY > 40) {
       setOverlaysHidden(true);
     }
 
@@ -1184,27 +1190,18 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     overlaySwipeStartX.current = null;
   }, [isMobile, overlaysHidden]);
 
-  // Tap-to-restore, mounted on the video container so it never covers the
-  // carousel drag layer or the seek strip.
-  //
-  // Restoring used to require a small swipe *up* through a sliver of a
-  // pointer-events-auto zone stack. That was fiddly (the bottom zone was a 5%
-  // band), it stole vertical swipes from the carousel while the chrome was
-  // hidden, and an upward flick is exactly the gesture that navigates — so the
-  // two constantly fought. Now a plain tap anywhere in the lower band brings
-  // the chrome back, and every swipe stays navigation.
-  const handleRestoreTouchStart = useCallback((e: React.TouchEvent) => {
+  // Keep tap-to-restore as a second route. The carousel also accepts an
+  // upward swipe from this lower area without paging (isRestoreDrag).
+  const handleRestoreTouchStart = useCallback((e: React.PointerEvent) => {
     if (!isMobile || !overlaysHidden || showComments) return;
-    const touch = e.touches[0];
-    restoreTouchStart.current = { x: touch.clientX, y: touch.clientY };
+    restoreTouchStart.current = { x: e.clientX, y: e.clientY };
   }, [isMobile, overlaysHidden, showComments]);
 
-  const handleRestoreTouchEnd = useCallback((e: React.TouchEvent) => {
+  const handleRestoreTouchEnd = useCallback((e: React.PointerEvent) => {
     const start = restoreTouchStart.current;
     restoreTouchStart.current = null;
     if (!isMobile || !overlaysHidden || showComments || !start) return;
 
-    const touch = e.changedTouches[0];
     const screenHeight = window.innerHeight;
 
     // Stops short of the bottom 15% so a restore tap never scrubs the timeline.
@@ -1214,10 +1211,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (!startedInZone) return;
 
     const isTap =
-      Math.abs(touch.clientY - start.y) < 20 && Math.abs(touch.clientX - start.x) < 20;
+      Math.abs(e.clientY - start.y) < 10 && Math.abs(e.clientX - start.x) < 10;
     if (!isTap) return;
 
     setOverlaysHidden(false);
+    setAutoHidden(false);
     suppressVideoTapRef.current = true;
     if (suppressVideoTapTimer.current) clearTimeout(suppressVideoTapTimer.current);
     suppressVideoTapTimer.current = setTimeout(() => {
@@ -1311,6 +1309,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // a cleared frame never carries into the next one.
   useEffect(() => {
     setAutoHidden(false);
+    setOverlaysHidden(false);
     if (!isMobile) scheduleDesktopHide();
   }, [currentIndex, isMobile, scheduleDesktopHide]);
 
@@ -1452,10 +1451,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           )}
           animate={isMobile ? { height: showComments ? '50%' : '100%' } : undefined}
           transition={SMOOTH_TRANSITION}
-          // Tap-to-restore listens here (bubbled) so it can't block the drag
-          // layer or the seek strip below it. No-ops unless the chrome is hidden.
-          onTouchStart={handleRestoreTouchStart}
-          onTouchEnd={handleRestoreTouchEnd}
+          // Capture runs before the slide's pointer-up playback toggle. A
+          // restore tap must be consumed before that toggle, not after it.
+          onPointerDownCapture={handleRestoreTouchStart}
+          onPointerUpCapture={handleRestoreTouchEnd}
+          onPointerCancelCapture={() => { restoreTouchStart.current = null; }}
           onMouseMove={isMobile ? undefined : handleDesktopPointerMove}
           onMouseLeave={isMobile ? undefined : handleDesktopPointerLeave}
         >
@@ -1843,11 +1843,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {/* Mobile-only overlays - TikTok-style layout */}
           {isMobile && (
             <>
-              {/* Restoring the hidden chrome is a tap in the lower band —
-                  handled on the video container itself (see
-                  handleRestoreTouchEnd) rather than by a stack of
-                  pointer-events-auto zones, which used to swallow the
-                  navigation swipes that started inside them. */}
+              {/* Lower-area upward swipes restore through the carousel;
+                  lower-band taps restore through the video container. */}
 
               {/* Animated overlay container */}
               <motion.div
