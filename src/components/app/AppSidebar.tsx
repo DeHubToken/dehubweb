@@ -1,6 +1,7 @@
 import React, { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PenSquare, LogIn, LogOut, Search, X, CornerDownLeft, Gem } from 'lucide-react';
+import { PenSquare, LogIn, LogOut, Search, X, CornerDownLeft } from 'lucide-react';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation } from 'react-i18next';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
@@ -42,7 +43,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   const navigate = useNavigate();
   const { isAuthenticated, disconnect, user } = useAuth();
   // Read-only: SelfBadgeSync and the header already own these fetches.
-  const gemBalance = useSelfBadge().balance ?? 0;
+  const dhbBalance = useSelfBadge().balance ?? 0;
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const notificationCount = (unreadCount?.total ?? 0) + (customUnread ?? 0);
@@ -111,15 +112,17 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
             <p className="truncate text-[15px] font-semibold text-white">{user.displayName || user.username}</p>
             {user.username && <p className="truncate text-[13px] text-zinc-400">@{user.username}</p>}
           </div>
-          <button
-            type="button"
-            onClick={() => { closeMenu(); navigate('/app/wallet'); }}
-            aria-label={t('nav.wallet')}
-            className="flex h-9 flex-shrink-0 items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.06] px-3 text-[13px] font-semibold text-white tabular-nums"
-          >
-            <Gem className="h-4 w-4" />
-            {Math.floor(gemBalance).toLocaleString()}
-          </button>
+          {Math.floor(dhbBalance) > 0 && (
+            <button
+              type="button"
+              onClick={() => { closeMenu(); navigate('/app/wallet'); }}
+              aria-label={t('nav.wallet')}
+              className="flex h-9 flex-shrink-0 items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.06] px-3 text-[13px] font-semibold text-white tabular-nums"
+            >
+              <DhbCoin className="h-4 w-4 align-middle" />
+              {Math.floor(dhbBalance).toLocaleString()}
+            </button>
+          )}
         </div>
       )}
 
