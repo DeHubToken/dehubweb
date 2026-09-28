@@ -48,10 +48,8 @@ import arcLogo from '@/assets/icons/arc-logo.png';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 import { TradeSheet } from '@/components/app/wallet/TradeSheet';
-import { SubscriptionTokensRow } from '@/components/app/wallet/SubscriptionTokensRow';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useSubscriptionEarnings, useWithdrawSubscriptionEarnings } from '@/hooks/use-subscriptions';
-import { outstandingEarnings } from '@/lib/api/dehub';
 
 const CHAIN_OPTIONS: { id: WalletChainId; name: string; icon: string }[] = [
   { id: BASE_CHAIN_ID, name: 'Base', icon: baseLogo },
@@ -404,7 +402,7 @@ export default function FullWalletPage() {
         )}
       </div>
 
-      {(subscriptionEarningsLoading || outstandingEarnings(subscriptionEarnings).usd > 0) && (
+      {(subscriptionEarningsLoading || ((subscriptionEarnings?.pendingUsdt || 0) + (subscriptionEarnings?.processingUsdt || 0)) > 0) && (
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0">
@@ -412,16 +410,12 @@ export default function FullWalletPage() {
               <p className="mt-1 text-xl font-bold text-white">
                 {subscriptionEarningsLoading
                   ? '…'
-                  : t('subscriptions.tokenAmount', { amount: outstandingEarnings(subscriptionEarnings).tokens.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}
+                  : `${((subscriptionEarnings?.pendingUsdt || 0) + (subscriptionEarnings?.processingUsdt || 0)).toLocaleString(undefined, { maximumFractionDigits: 6 })} USDT`}
               </p>
               <p className="mt-1 text-xs text-zinc-500">
-                {t('subscriptions.earningsWorth', {
-                  amount: outstandingEarnings(subscriptionEarnings).usd.toLocaleString(undefined, { style: 'currency', currency: 'USD' }),
-                })}
-                {' · '}
                 {subscriptionEarnings?.withdrawalAvailable
-                  ? t('subscriptions.earningsPaidInTokens')
-                  : t('subscriptions.earningsPendingReserve')}
+                  ? t('subscriptions.earningsWithdrawableOnBase')
+                  : t('subscriptions.earningsUsdtPending')}
               </p>
             </div>
             <Button
@@ -489,7 +483,6 @@ export default function FullWalletPage() {
             {withBalance.map(grouped => (
               <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} price={prices[grouped.symbol]} />
             ))}
-            <SubscriptionTokensRow />
           </>
         )}
       </div>

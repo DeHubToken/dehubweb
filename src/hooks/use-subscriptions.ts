@@ -8,7 +8,6 @@ import {
   buyPlan,
   confirmPlanPublished,
   confirmSubscriptionPurchase,
-  payPlanWithCredits,
   rememberPendingSubscriptionPayment,
   clearPendingSubscriptionPayment,
   isSubscribedToCreator,
@@ -126,10 +125,10 @@ export function useWithdrawSubscriptionEarnings() {
     mutationFn: withdrawSubscriptionEarnings,
     onSuccess: (result) => {
       queryClient.setQueryData(['subscription-earnings'], result.status);
-      toast.success(i18n.t('subscriptions.tokensSent', { amount: (result.amountTokens ?? result.amountUsdt).toLocaleString(undefined, { maximumFractionDigits: 2 }) }));
+      toast.success(i18n.t('subscriptions.usdtSent', { amount: result.amountUsdt.toLocaleString(undefined, { maximumFractionDigits: 6 }) }));
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Subscription fees will be withdrawable soon');
+      toast.error(error.message || i18n.t('subscriptions.withdrawableSoon'));
     },
   });
 }
@@ -163,7 +162,6 @@ function useSubscriptionInvalidation() {
     queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
     queryClient.invalidateQueries({ queryKey: ['subscription-check'] });
     queryClient.invalidateQueries({ queryKey: ['subscription-earnings'] });
-    queryClient.invalidateQueries({ queryKey: ['subscription-credits'] });
     queryClient.refetchQueries({ queryKey: ['plans', walletAddress?.toLowerCase() || 'self'] });
   }, [queryClient, walletAddress]);
 }
@@ -334,8 +332,6 @@ export function useUpdatePlan() {
   });
 }
 
-export { useSubscriptionCredits } from './use-subscription-credits';
-
 /**
  * Subscribe: reserve the row, pay on chain, then have the server verify it.
  */
@@ -360,35 +356,6 @@ export function useBuyPlan() {
       }
 
       const targetChain = (intent.chainId || chainId || BASE_CHAIN_ID) as ChainId;
-
-      // Subscription tokens: the plan's dollar price comes out of a balance
-      // locked at the token price when it was added. Only a shortfall is sent
-      // as DHB, and the API values it at today's price before debiting.
-      if (intent.credits) {
-        const topUp = intent.credits.topUp;
-        let hash: string | undefined;
-        const topUpChain = (topUp?.chainId || targetChain) as ChainId;
-        if (topUp) {
-          if (fundFrom && topUpChain === BASE_CHAIN_ID) {
-            setStage('funding');
-            const ready = await fundTipFromSource(fundFrom.source, Number(topUp.dhbAmount), fundFrom.walletAddress, fundFrom.t, 'subscribe-fund');
-            if (!ready) throw new Error(FUNDING_ABORTED);
-          }
-          setStage('wallet');
-          const { sendERC20Token } = await import('@/lib/wallet/send');
-          const tx = await sendERC20Token(topUp.dhbToken, topUp.treasuryAddress, String(topUp.dhbAmount), 18, topUpChain);
-          setStage('confirming');
-          await tx.wait();
-          hash = tx.hash;
-          rememberPendingSubscriptionPayment({ subId: String(intent.id), hash, chainId: topUpChain, mode: 'credits' });
-        }
-        setStage('recording');
-        await payPlanWithCredits(String(intent.id), hash, topUpChain);
-        clearPendingSubscriptionPayment(String(intent.id));
-        setStage('done');
-        return intent;
-      }
-
       if (
         intent.settlementMode !== 'dhb_custody' ||
         !intent.dhbToken ||
@@ -408,7 +375,7 @@ export function useBuyPlan() {
 
       // DHB stays in DeHub custody. Nothing is sold or swapped at checkout;
       // the backend verifies this exact transfer before activating access and
-      // credits the creator the plan's dollar value, paid out in tokens.
+      // credits the creator the frozen USDT value of the plan.
       setStage('wallet');
       const { sendERC20Token } = await import('@/lib/wallet/send');
       const tx = await sendERC20Token(
