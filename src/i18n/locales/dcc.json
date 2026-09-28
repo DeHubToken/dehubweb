@@ -3187,5 +3187,32 @@
     "planRestricted": "اس یوزر کو پیغامات لینے کے لیے سبسکرپشن چاہیے۔",
     "planTypeNotAllowed": "اس کریئیٹر کے پلان میں اس قسم کا پیغام اجازت نہیں۔",
     "planMinTip": "اس کریئیٹر کے لیے ٹپ کم از کم {{amount}} DHB ہونا چاہیے۔"
+  },
+  "credits": {
+    "earningsWorth": "कीमत {{amount}}",
+    "percentUsed": "{{percent}}% استعمال ہوا",
+    "spentOfTotal": "{{spent}} کا {{total}}",
+    "subscriptionTokens": "سبسکرپشن ٹوکنز",
+    "topUp": "ٹوکنز جوڑو",
+    "topUpTitle": "سبسکرپشن ٹوکنز جوڑو",
+    "topUpCustom": "دوسری رقم (USD)",
+    "topUpYouSend": "آپ بھیجتے",
+    "topUpYouGet": "آپ کے بیلنس میں جڑتا",
+    "topUpConfirm": "{{amount}} جوڑو",
+    "topUpRange": "{{min}} سے {{max}} تک لکھو",
+    "topUpDone": "{{amount}} آپ کے سبسکرپشن ٹوکنز میں جڑ گئے",
+    "topUpPending": "آپ کا ٹاپ اپ تصدیق ہو رہا۔ تھوڑی دیر میں بیلنس میں دکھتا۔",
+    "topUpFailed": "سبسکرپشن ٹوکنز نئیں جڑ سکے",
+    "topUpStageFunding": "ٹوکنز لا رئیں…",
+    "topUpStageWallet": "اپنے والٹ میں تصدیق کرو…",
+    "topUpStageConfirming": "ٹرانزیکشن کا انتظار…",
+    "topUpStageCrediting": "بیلنس میں جوڑ رئیں…",
+    "untradableTokens": "یو ٹریڈ نئیں ہونے والے سبسکرپشن ٹوکنز ہیں",
+    "withdraw": "نکالو",
+    "close": "بند کریں",
+    "subscriptionTokensOnly": "صرف AI جنریشن کے واسطے",
+    "tokenAmount": "{{amount}} ٹوکنز",
+    "subscriptionTokensValueNote": "سبسکرپشن ٹوکنز اپنی ڈالر قیمت رکھتے۔ استعمال سے پہلے ٹوکن کی قیمت بدلے تو زیادہ یا کم ٹوکنز دکھتے، مگر ہمیشہ اتنی ہی AI جنریشن ملتی۔ یو نکالے، بھیجے یا ٹریڈ نئیں کیے جاسکتے۔",
+    "topUpEmptyHint": "AI سے بنانے کے واسطے ٹوکنز جوڑو"
   }
 }

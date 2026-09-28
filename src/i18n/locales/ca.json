@@ -7319,5 +7319,32 @@
     "planRestricted": "Aquest usuari requereix una subscripció per rebre missatges.",
     "planTypeNotAllowed": "El pla d'aquest creador no permet aquest tipus de missatge.",
     "planMinTip": "La propina ha de ser d'almenys {{amount}} DHB per a aquest creador."
+  },
+  "credits": {
+    "earningsWorth": "Val {{amount}}",
+    "percentUsed": "S'ha utilitzat el {{percent}}%",
+    "spentOfTotal": "{{spent}} de {{total}}",
+    "subscriptionTokens": "Tokens de subscripció",
+    "topUp": "Afegeix fitxes",
+    "topUpTitle": "Afegeix fitxes de subscripció",
+    "topUpCustom": "Altres quantitats (USD)",
+    "topUpYouSend": "Tu envies",
+    "topUpYouGet": "S'ha afegit al teu saldo",
+    "topUpConfirm": "Afegeix {{amount}}",
+    "topUpRange": "Escriu {{min}} a {{max}}",
+    "topUpDone": "S'han afegit {{amount}} als tokens de subscripció",
+    "topUpPending": "La recàrrega s'està confirmant. En breu apareixerà al teu saldo.",
+    "topUpFailed": "No s'han pogut afegir fitxes de subscripció",
+    "topUpStageFunding": "S'estan obtenint fitxes...",
+    "topUpStageWallet": "Confirma a la teva cartera...",
+    "topUpStageConfirming": "S'està esperant la transacció...",
+    "topUpStageCrediting": "S'està afegint al teu saldo...",
+    "untradableTokens": "Són fitxes de subscripció no comercialitzables",
+    "withdraw": "Retirar",
+    "close": "Tancar",
+    "tokenAmount": "{{amount}} testimonis",
+    "subscriptionTokensOnly": "Només per a la generació d'IA",
+    "subscriptionTokensValueNote": "Les fitxes de subscripció mantenen el seu valor en dòlars. Si el preu del token es mou abans que els facis servir, veuràs més o menys tokens, però sempre compren la mateixa quantitat de generació d'IA. No es poden retirar, enviar ni comercialitzar.",
+    "topUpEmptyHint": "Afegeix fitxes per generar amb IA"
   }
 }

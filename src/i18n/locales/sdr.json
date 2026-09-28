@@ -5186,5 +5186,32 @@
     "inProgress": "جاری ہے",
     "completed": "مکمل",
     "underReview": "جائزے میں"
+  },
+  "credits": {
+    "earningsWorth": "कीमत {{amount}}",
+    "percentUsed": "{{percent}}% used",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "subscriptionTokens": "सदस्यता टोकन",
+    "topUp": "टोकन जोड़ा",
+    "topUpTitle": "सदस्यता टोकन जोड़ा",
+    "topUpCustom": "दूसर रकम (USD)",
+    "topUpYouSend": "रउरा भेजब",
+    "topUpYouGet": "रउरा बैलेंस में जुड़ी",
+    "topUpConfirm": "{{amount}} जोड़ा",
+    "topUpRange": "{{min}} से {{max}} लिखा",
+    "topUpDone": "{{amount}} रउरा सदस्यता टोकन में जुड़ गेलक",
+    "topUpPending": "रउरा टॉप-अप कर पुष्टि होवत हे। जल्दिए बैलेंस में देखाई।",
+    "topUpFailed": "सदस्यता टोकन नी जुड़ पालक",
+    "topUpStageFunding": "टोकन लावत हे…",
+    "topUpStageWallet": "आपन वॉलेट में पुष्टि करा…",
+    "topUpStageConfirming": "लेनदेन कर इंतजार…",
+    "topUpStageCrediting": "बैलेंस में जोड़त हे…",
+    "untradableTokens": "ई सब अनट्रेडेबल सब्सक्रिप्शन टोकन हें",
+    "withdraw": "निकाल",
+    "close": "बंद कर",
+    "tokenAmount": "{{amount}} توکن",
+    "subscriptionTokensValueNote": "सब्सक्रिप्शन टोकन अपना डॉलर मूल्य बनाए रखते हैं। यदि टोकन की कीमत आपके द्वारा उनका उपयोग करने से पहले बदल जाती है, तो आप अधिक या कम टोकन देखेंगे, लेकिन वे हमेशा समान मात्रा में AI जनरेशन खरीदते हैं। उन्हें निकाला, भेजा या कारोबार नहीं किया जा सकता है।",
+    "topUpEmptyHint": "AI से उत्पन्न करने के लिए टोकन जोड़ें",
+    "subscriptionTokensOnly": "खाली AI बनावे ले"
   }
 }

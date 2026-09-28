@@ -6903,5 +6903,32 @@
     "planRestricted": "ຜູ້ໃຊ້ນີ້ຕ້ອງການການສະໝັກສະມາຊິກເພື່ອຮັບຂໍ້ຄວາມ.",
     "planTypeNotAllowed": "ແຜນຂອງຜູ້ສ້າງນີ້ບໍ່ອະນຸຍາດຂໍ້ຄວາມປະເພດນີ້.",
     "planMinTip": "ທິບສຳລັບຜູ້ສ້າງນີ້ຕ້ອງຢ່າງໜ້ອຍ {{amount}} DHB."
+  },
+  "credits": {
+    "earningsWorth": "ມູນຄ່າ {{amount}}",
+    "percentUsed": "{{percent}}% ໃຊ້ແລ້ວ",
+    "spentOfTotal": "{{spent}} ຂອງ {{total}}",
+    "subscriptionTokens": "Token ການສະໝັກ",
+    "topUp": "ເພີ່ມໂທເຄນ",
+    "topUpTitle": "ເພີ່ມໂທເຄນການຈອງ",
+    "topUpCustom": "ຈໍາ ນວນເງິນອື່ນໆ (USD)",
+    "topUpYouSend": "ທ່ານສົ່ງ",
+    "topUpYouGet": "ເພີ່ມເຂົ້າໃນການດຸ່ນດ່ຽງຂອງທ່ານ",
+    "topUpConfirm": "ເພີ່ມ {{amount}}",
+    "topUpRange": "ໃສ່ {{min}} ເຖິງ {{max}}",
+    "topUpDone": "ເພີ່ມ {{amount}} ເຂົ້າໃນໂທເຄັນສະມາຊິກຂອງທ່ານແລ້ວ",
+    "topUpPending": "ການເຕີມເງິນຂອງເຈົ້າກຳລັງຢືນຢັນ. ມັນຈະປາກົດຢູ່ໃນຄວາມສົມດຸນຂອງທ່ານໃນໄວໆນີ້.",
+    "topUpFailed": "ບໍ່ສາມາດເພີ່ມໂທເຄນສະໝັກສະມາຊິກໄດ້",
+    "topUpStageFunding": "ກຳລັງກຳລັງເອົາໂທເຄນ...",
+    "topUpStageWallet": "ຢືນຢັນໃນກະເປົາເງິນຂອງທ່ານ...",
+    "topUpStageConfirming": "ລໍຖ້າການເຮັດທຸລະກໍາ...",
+    "topUpStageCrediting": "ເພື່ອຮັກສາຄວາມສົມດຸນ...",
+    "untradableTokens": "ເຫຼົ່ານີ້ແມ່ນ token ການສະໝັກທີ່ບໍ່ສາມາດຊ່ວຍແລກປ່ຽນ",
+    "withdraw": "ຖອນເງິນ",
+    "close": "ປິດ",
+    "subscriptionTokensOnly": "ສໍາລັບຄົນໃນຍຸກ AI ເທົ່ານັ້ນ",
+    "subscriptionTokensValueNote": "ໂທເຄັນສະມາຊິກຮັກສາມູນຄ່າເປັນໂດລາ. ຖ້າລາຄາໂທເຄັນປ່ຽນກ່ອນທ່ານໃຊ້, ທ່ານຈະເຫັນໂທເຄັນຫຼາຍຂຶ້ນ ຫຼື ໜ້ອຍລົງ, ແຕ່ມັນຈະຊື້ການສ້າງດ້ວຍ AI ໄດ້ເທົ່າເດີມສະເໝີ. ບໍ່ສາມາດຖອນ, ສົ່ງ ຫຼື ຊື້ຂາຍໄດ້.",
+    "topUpEmptyHint": "ເພີ່ມໂທເຄັນເພື່ອສ້າງດ້ວຍ AI",
+    "tokenAmount": "{{amount}} ໂທເຄັນ"
   }
 }
