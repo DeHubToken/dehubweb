@@ -262,6 +262,8 @@
     "compact": "Compact",
     "compactMode": "Compact Mode",
     "autoPlay": "Auto-play Videos",
+    "autoPlayMuted": "Tự động phát ở chế độ tắt tiếng",
+    "autoPlayMutedDesc": "Video tự phát luôn bắt đầu với âm thanh tắt",
     "showAnimations": "Show Animations",
     "coinPlacement": "Coin Placement",
     "applyChanges": "Apply Changes",
