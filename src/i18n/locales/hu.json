@@ -6481,7 +6481,9 @@
     "step3": "A DeHub tokenjeid hamarosan megérkeznek a cél láncra."
   },
   "builder": {
-    "stakeForAllowance": "Stakel DeHub tokeneket a napi építési kereted növeléséhez"
+    "stakeForAllowance": "Stakel DeHub tokeneket a napi építési kereted növeléséhez",
+    "buildInChat": "Építs a privát üzeneteidben az @assistant segítségével",
+    "signInRequired": "Jelentkezz be a Builder használatához."
   },
   "connect": {
     "chatgptFaqAccount": "Nincs szükség fiókra a nyilvános tartalom olvasásához a csatlakozón keresztül. DeHub fiók csak akkor szükséges, ha szeretnél posztolni, borravalót adni vagy DeHub tokeneket tartani.",

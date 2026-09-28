@@ -6536,7 +6536,9 @@
     "step3": "Alama zako za DeHub zitawasilishwa kwenye mlolongo wa mahali unakoenda hivi karibuni."
   },
   "builder": {
-    "stakeForAllowance": "Alama za Stake DeHub ili kuongeza posho yako ya kila siku ya ujenzi"
+    "stakeForAllowance": "Alama za Stake DeHub ili kuongeza posho yako ya kila siku ya ujenzi",
+    "buildInChat": "Jenga kwenye jumbe zako za faragha ukiwa na @assistant",
+    "signInRequired": "Ingia ili kutumia Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Hakuna akaunti inayohitajika kusoma maudhui ya umma kupitia kiunganishi. Akaunti ya DeHub inahitajika tu ikiwa unataka kuchapisha, kutoa kiinua mgongo au kushikilia tokeni za DeHub.",

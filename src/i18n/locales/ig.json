@@ -4394,7 +4394,9 @@
     "step3": "A ga-ebugara token DeHub gị na agbụ ebe a ga-aga n'oge na-adịghị anya."
   },
   "builder": {
-    "stakeForAllowance": "Tinye token DeHub iji welie ikike iwulite kwa ụbọchị gị"
+    "stakeForAllowance": "Tinye token DeHub iji welie ikike iwulite kwa ụbọchị gị",
+    "buildInChat": "Wuo n'ozi nzuzo gị na @assistant",
+    "signInRequired": "Banye iji jiri Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Achọghị akaụntụ iji gụọ ọdịnaya ọha site na njikọ. A chọrọ naanị akaụntụ DeHub ma ọ bụrụ na ịchọrọ ibipụta, ịkwanye ma ọ bụ jide token DeHub.",

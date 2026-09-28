@@ -6294,7 +6294,9 @@
     "step3": "DeHub tokens របស់អ្នកនឹងត្រូវបានចែកចាយនៅលើខ្សែសង្វាក់គោលដៅក្នុងពេលឆាប់ៗនេះ។"
   },
   "builder": {
-    "stakeForAllowance": "Stake DeHub tokens ដើម្បីបង្កើនការអនុញ្ញាតសាងសង់ប្រចាំថ្ងៃរបស់អ្នក"
+    "stakeForAllowance": "Stake DeHub tokens ដើម្បីបង្កើនការអនុញ្ញាតសាងសង់ប្រចាំថ្ងៃរបស់អ្នក",
+    "buildInChat": "បង្កើតក្នុងសារផ្ទាល់ជាមួយ @assistant",
+    "signInRequired": "ចូលគណនីដើម្បីប្រើ Builder។"
   },
   "connect": {
     "chatgptFaqAccount": "មិនតម្រូវឱ្យមានគណនីដើម្បីអានមាតិកាសាធារណៈតាមរយៈឧបករណ៍ភ្ជាប់ទេ។ គណនី DeHub ត្រូវបានទាមទារតែប៉ុណ្ណោះ ប្រសិនបើអ្នកចង់បង្ហោះ ផ្តល់ ឬកាន់ DeHub tokens។",

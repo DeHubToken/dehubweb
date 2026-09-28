@@ -4427,7 +4427,9 @@
     "step3": "Ka tae mai kōrero ngā tohu DeHub kua tukuna ki te mekameka ūnga."
   },
   "builder": {
-    "stakeForAllowance": "Tāwhiria ngā tohu DeHub hei whakanui ake i tō whakaaetanga hanga ia rā"
+    "stakeForAllowance": "Tāwhiria ngā tohu DeHub hei whakanui ake i tō whakaaetanga hanga ia rā",
+    "buildInChat": "Hangaia i ō karere tōtika me @assistant",
+    "signInRequired": "Takiuru kia whakamahi i te Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Kāore he pūkete e hiahiatia ana hei pānui i ngā kōrero tūmatanui mā te hononga. Me whai pūkete DeHub anake koe ki te hiahia koe ki te whakaputa, ki te hoatu ranei, ki te pupuri rānei i ngā tohu DeHub.",

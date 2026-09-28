@@ -3529,5 +3529,9 @@
     "planRestricted": "এই ইউজারক মেসেজ পাবার জইন্যে সাবস্ক্রিপশন লাগে।",
     "planTypeNotAllowed": "এই ক্রিয়েটরের প্ল্যানোত এমন মেসেজ চলে না।",
     "planMinTip": "এই ক্রিয়েটরের জইন্যে টিপ কমপক্ষে {{amount}} DHB হওয়া লাগবে।"
+  },
+  "builder": {
+    "buildInChat": "@assistant-এর সাথে তোমার DM-ত বানাও",
+    "signInRequired": "Builder ব্যবহার করির তানে সাইন ইন করো।"
   }
 }

@@ -6482,7 +6482,9 @@
     "step3": "Vaše tokeny DeHub budou brzy doručeny na cílový řetězec."
   },
   "builder": {
-    "stakeForAllowance": "Vsaďte tokeny DeHub pro navýšení denního povoleného množství pro tvorbu"
+    "stakeForAllowance": "Vsaďte tokeny DeHub pro navýšení denního povoleného množství pro tvorbu",
+    "buildInChat": "Tvořte v soukromých zprávách s @assistant",
+    "signInRequired": "Pro použití Builderu se přihlaste."
   },
   "connect": {
     "chatgptFaqAccount": "Pro čtení veřejného obsahu prostřednictvím konektoru není vyžadován žádný účet. Účet DeHub je potřeba pouze v případě, že chcete publikovat, dávat spropitné nebo držet tokeny DeHub.",

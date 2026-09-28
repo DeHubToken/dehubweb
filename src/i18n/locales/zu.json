@@ -4466,7 +4466,9 @@
     "step3": "Amathokheni akho e-DeHub azohanjiswa ochungechungeni lokuya maduzane."
   },
   "builder": {
-    "stakeForAllowance": "Amathokheni e-Stake DeHub ukuze ukhuphule imali yakho yokwakha yansuku zonke"
+    "stakeForAllowance": "Amathokheni e-Stake DeHub ukuze ukhuphule imali yakho yokwakha yansuku zonke",
+    "buildInChat": "Yakha kuma-DM akho no-@assistant",
+    "signInRequired": "Ngena ukuze usebenzise i-Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Ayikho i-akhawunti edingekayo ukuze ufunde okusunguliwe komphakathi ngesixhumi. I-akhawunti ye-DeHub iyadingeka kuphela uma ufuna ukuphosta, ukusikisela noma ukubamba amathokheni e-DeHub.",

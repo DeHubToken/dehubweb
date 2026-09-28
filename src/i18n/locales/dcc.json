@@ -3115,5 +3115,9 @@
     "planRestricted": "اس یوزر کو پیغامات لینے کے لیے سبسکرپشن چاہیے۔",
     "planTypeNotAllowed": "اس کریئیٹر کے پلان میں اس قسم کا پیغام اجازت نہیں۔",
     "planMinTip": "اس کریئیٹر کے لیے ٹپ کم از کم {{amount}} DHB ہونا چاہیے۔"
+  },
+  "builder": {
+    "buildInChat": "@assistant کے ساتھ اپنے DM میں بناؤ",
+    "signInRequired": "Builder استعمال کرنے کو سائن ان کرو۔"
   }
 }

@@ -6272,7 +6272,9 @@
     "step3": "Ho tonga tsy ho ela eo amin'ny onja kendrena ny tapaka DeHub anao."
   },
   "builder": {
-    "stakeForAllowance": "Apetraho ny tapaka DeHub mba hampitomboana ny fahazoan-dalana isan'andro"
+    "stakeForAllowance": "Apetraho ny tapaka DeHub mba hampitomboana ny fahazoan-dalana isan'andro",
+    "buildInChat": "Manamboara ao amin'ny hafatra manokana miaraka amin'i @assistant",
+    "signInRequired": "Midira mba hampiasa ny Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Tsy mila kaonty ny famakiana votoaty ampahibemaso amin'ny alalan'ny mpampifandray. Ny kaonty DeHub ihany no ilaina raha te-mandefa, manome na mitazona tapaka DeHub ianao.",

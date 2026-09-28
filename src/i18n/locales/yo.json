@@ -4420,7 +4420,9 @@
     "step3": "Àwọn tóka DeHub rẹ yóò dé ilé-iṣẹ́ tí wọ́n ń lọ sí láìpẹ́."
   },
   "builder": {
-    "stakeForAllowance": "Fi tóka DeHub pamọ́ láti mú ìyọ̀ọ̀da ìkógun rẹ ojoojúmọ́ gbòòrò"
+    "stakeForAllowance": "Fi tóka DeHub pamọ́ láti mú ìyọ̀ọ̀da ìkógun rẹ ojoojúmọ́ gbòòrò",
+    "buildInChat": "Kọ́ nínú àwọn ìfiránṣẹ́ àdáni rẹ pẹ̀lú @assistant",
+    "signInRequired": "Wọlé láti lo Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Kò sí àkọsílẹ̀ tí ó jẹ́ dandan láti ka ohun tí gbogbo ènìyàn lè kà nípasẹ̀ ìsopọ̀. Àkọsílẹ̀ DeHub nìkan ni a nílò tí o bá fẹ́ fi ohun sílẹ̀, fúnni ní ẹ̀bùn tàbí kó tóka DeHub.",

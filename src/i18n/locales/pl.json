@@ -6616,7 +6616,9 @@
     "step3": "Twoje tokeny DeHub zostaną wkrótce dostarczone w docelowej sieci."
   },
   "builder": {
-    "stakeForAllowance": "Stakuj tokeny DeHub, aby zwiększyć swój dzienny limit budowania"
+    "stakeForAllowance": "Stakuj tokeny DeHub, aby zwiększyć swój dzienny limit budowania",
+    "buildInChat": "Twórz w wiadomościach prywatnych z @assistant",
+    "signInRequired": "Zaloguj się, aby korzystać z Buildera."
   },
   "connect": {
     "chatgptFaqAccount": "Do czytania publicznych treści za pośrednictwem konektora nie jest wymagane żadne konto. Konto DeHub jest potrzebne tylko wtedy, gdy chcesz publikować, dawać napiwki lub posiadać tokeny DeHub.",

@@ -6369,7 +6369,9 @@
     "step3": "Tokenurile tale DeHub vor fi livrate pe lanțul de destinație în curând."
   },
   "builder": {
-    "stakeForAllowance": "Mizează tokenuri DeHub pentru a-ți crește alocația zilnică de creare"
+    "stakeForAllowance": "Mizează tokenuri DeHub pentru a-ți crește alocația zilnică de creare",
+    "buildInChat": "Construiește în mesajele directe cu @assistant",
+    "signInRequired": "Conectează-te pentru a folosi Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Nu este necesar un cont pentru a citi conținut public prin conector. Un cont DeHub este necesar doar dacă dorești să postezi, să oferi bacșiș sau să deții tokenuri DeHub.",

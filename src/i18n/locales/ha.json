@@ -4430,7 +4430,9 @@
     "step3": "Za a isar da token na DeHub ɗinka a kan sarƙoƙi na makoma nan da wani lokaci."
   },
   "builder": {
-    "stakeForAllowance": "Saka token na DeHub don ƙara izinin ginawa na yau da kullun"
+    "stakeForAllowance": "Saka token na DeHub don ƙara izinin ginawa na yau da kullun",
+    "buildInChat": "Gina a cikin saƙonninka na sirri tare da @assistant",
+    "signInRequired": "Shiga don amfani da Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Ba a buƙatar asusu don karanta abubuwan jama'a ta hanyar haɗin gwiwa. Ana buƙatar asusu na DeHub ne kawai idan kana son aika sako, ba da kyauta, ko riƙe token na DeHub.",
