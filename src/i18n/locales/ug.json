@@ -2808,61 +2808,61 @@
           "hint": "ئايروپىلاندا 100 سائەت سەپەر قىلغىلى بولىدۇ."
         },
         "legend": {
-          "name": "Legend",
+          "name": "رىۋايەت",
           "hint": "ئونىنچى سەۋىيەگە يېتىش."
         },
         "ignition": {
-          "name": "Ignition",
+          "name": "ئوت ئالدۇرۇش",
           "hint": "ئېتىرگە بىر سىغىش ساعەتنى يەتكۈزۈش."
         },
         "on-air": {
-          "name": "On air",
+          "name": "ئېفىردا",
           "hint": "ئېتىرگە ئون سىغىش سىيرىقنى تاماملاش."
         },
         "storyteller": {
-          "name": "Storyteller",
+          "name": "ھېكايىچى",
           "hint": "ئېتىرگە يىگىرمە-بەش سىغىش سىيرىقنى تاماملاش."
         },
         "broadcaster": {
-          "name": "Broadcaster",
+          "name": "تارقاتقۇچى",
           "hint": "ئېتىرگە بەش يۈز سىغىش سىيرىقنى تاماملاش."
         },
         "centurion": {
-          "name": "Centurion",
+          "name": "يۈزبېشى",
           "hint": "ئېتىرگە يۈز سىغىش سىيرىقنى تاماملاش."
         },
         "enduring": {
-          "name": "Enduring",
+          "name": "چىدامچان",
           "hint": "بىر سىغىش سىيرىقنى توغرا سەيلىتىپ، تۆت سىغىش سىيرىقنى بىر سەيلىتىدە سىيرىقلاش."
         },
         "circle": {
-          "name": "Inner circle",
+          "name": "ئىچكى چەمبەر",
           "hint": "بىر ۋاقىتتا يىگىرمە-بەش ئادەم كۆرۈش."
         },
         "arena": {
-          "name": "Arena",
+          "name": "مەيدان",
           "hint": "بىر ۋاقىتتا بەش يۈز ئادەم كۆرۈش."
         },
         "headliner": {
-          "name": "Headliner",
+          "name": "باش يۇلتۇز",
           "hint": "بىر ۋاقىتتا يۈز ئادەم كۆرۈش."
         },
         "cornerstone": {
-          "name": "Cornerstone",
+          "name": "ئۇل تېشى",
           "hint": "ئېتىرگە يىگىرمە-ئالتە توغرا سەيلىتىدە سىيرىقلاش."
         },
         "veteran": {
-          "name": "Veteran",
+          "name": "پېشقەدەم",
           "hint": "ئېتىرگە 250 سىغىش سىيرىقنى يەتكۈزۈش."
         },
         "icon": {
-          "name": "Icon",
+          "name": "سىمۋول",
           "hint": "ئېتىرگە سەۋىيە يىگىرمەگە يەتكۈزۈش."
         }
       },
-      "useBadge": "Use badge",
-      "selectedBadge": "Selected",
-      "savingBadge": "Saving badge…",
+      "useBadge": "بەلگىنى ئىشلىتىش",
+      "selectedBadge": "تاللاندى",
+      "savingBadge": "بەلگە ساقلىنىۋاتىدۇ…",
       "chooseBadge": "ئارخىپىڭىزدا كۆرسىتىش ئۈچۈن ئېچىلغان خالىغان بەلگىنى تاللاڭ.",
       "saveBadgeError": "بەلگىڭىزنى ساقلىغىلى بولمىدى. قايتا سىناڭ."
     }
@@ -3478,7 +3478,7 @@
     "keepWhileHolding": "بىر خاسلىق (badge) نى ئېچىۋەتكەندىن كېيىن، سىزنىڭ DeHub ھەميانلىرىڭىز بار تۇرغۇچە ئۇ سىزگە تەۋە بولىدۇ. يېڭى خاسلىقنى ئېچىش ئۈچۈن كېتىدىغان ھەميانلىق مىقدارى ھەميان باھاسى بىلەن ئۆزگىرىشى مۇمكىن."
   },
   "badgeShowcase": {
-    "dialogLabel": "{{tier}} badge",
+    "dialogLabel": "{{tier}} بەلگىسى",
     "close": "قۇلۇپلاش",
     "badges": "بەلگىلەر",
     "tierOf": "{{total}} دىن {{index}}-دەرىجە",
@@ -3486,7 +3486,7 @@
     "toUnlock": "ئېچىش ئۈچۈن يەنە {{amount}} توكەن",
     "holdToUnlock": "قۇلۇپنى ئېچىش ئۈچۈن ئەڭ ئاز بولغاندا بۇ نۇرغۇن DeHub بەلگىلىرىنى تۇتۇڭ",
     "sliderLabel": "توكېنلار تۇتۇلدى",
-    "sliderValue": "{{amount}} tokens {{tier}}",
+    "sliderValue": "{{amount}} توكەن · {{tier}}",
     "you": "سەن",
     "grants": "ئۇ (بەچچىدانلارغا) تۆكىلىدىغان (ئاجىز مەنىي) ئەر",
     "perks": {
@@ -3512,15 +3512,15 @@
     "cardOf": "كارتا {{index}} of {{total}}",
     "progress": "ئىلگىرىلەش",
     "goal": {
-      "streams": "{{current}} /{{target}} streams",
-      "hours": "{{current}} /{{target}} hours",
+      "streams": "{{current}} / {{target}} قېتىم تارقىتىش",
+      "hours": "{{current}} / {{target}} سائەت",
       "session": "بىر قېتىملىق تارقىتىشتا {{current}} / {{target}} مىنۇت",
-      "streak": "{{current}} / {{target}} weeks",
+      "streak": "{{current}} / {{target}} ھەپتە",
       "level": "دەرىجە {{current}} / {{target}}"
     },
     "onStream": "ئېقىمىدا بولغاندا قۇلۇپنى ئېچىش پروگراممىسى",
     "stats": {
-      "level": "Level",
+      "level": "دەرىجە",
       "xp": "XP",
       "hours": "قابىلىيەتلىك سائەتلەر",
       "streams": "ئىختىساسلىق ئېقىمى",

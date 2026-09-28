@@ -4351,58 +4351,58 @@
           "hint": "Ny faritr'ora dia +10."
         },
         "ignition": {
-          "name": "Ignition",
+          "name": "Fandrehitra",
           "hint": "Mifanaraha amin’ny ora iray amin’ny efijery."
         },
         "on-air": {
-          "name": "On air",
+          "name": "An-tsehatra",
           "hint": "Mamarana folo fizarana mifanaraka."
         },
         "storyteller": {
-          "name": "Storyteller",
+          "name": "Mpitantara",
           "hint": "Mamarana dimampolo sy dimy fizarana mifanaraka."
         },
         "broadcaster": {
-          "name": "Broadcaster",
+          "name": "Mpandefa",
           "hint": "Mamarana dimampolo sy dimby fizarana mifanaraka."
         },
         "centurion": {
-          "name": "Centurion",
+          "name": "Zato",
           "hint": "Mamarana zato fizarana mifanaraka."
         },
         "enduring": {
-          "name": "Enduring",
+          "name": "Maharitra",
           "hint": "Mifampizara amin’ny ora efatra mifanaraka amin’ny fivoriana iray."
         },
         "circle": {
-          "name": "Inner circle",
+          "name": "Faribolana akaiky",
           "hint": "Manana olona dimampolo sy dimy mijery amin’ny fotoana iray."
         },
         "arena": {
-          "name": "Arena",
+          "name": "Kianja",
           "hint": "Manana olona dimampolo sy dimby mijery amin’ny fotoana iray."
         },
         "headliner": {
-          "name": "Headliner",
+          "name": "Kintana lohany",
           "hint": "Manana olona zato mijery amin’ny fotoana iray."
         },
         "cornerstone": {
-          "name": "Cornerstone",
+          "name": "Vato fehizoro",
           "hint": "Mifampizara amin’ny herinandro 26 mitohy."
         },
         "veteran": {
-          "name": "Veteran",
+          "name": "Efa za-draharaha",
           "hint": "Mifanaraha amin’ny ora 250 amin’ny efijery."
         },
         "icon": {
-          "name": "Icon",
+          "name": "Olo-malaza",
           "hint": "Mifanaraha amin’ny ambaratonga 20."
         }
       },
       "chooseBadge": "Safidio izay marika voafantina haneho amin’ny mombamomba anao.",
-      "useBadge": "Use badge",
-      "selectedBadge": "Selected",
-      "savingBadge": "Saving badge…",
+      "useBadge": "Ampiasao ny marika",
+      "selectedBadge": "Voafidy",
+      "savingBadge": "Tahirizina ny marika…",
       "saveBadgeError": "Tsy voatahiry ny mari-pahaizanao. Andramo indray."
     }
   },
@@ -5366,7 +5366,7 @@
     "close": "Hidio",
     "badges": "Mari-pahaizana",
     "tierOf": "Ambaratonga {{index}} amin'ny {{total}}",
-    "youHaveThis": "Manana ity mari-pahaizana ity ianao",
+    "youHaveThis": "Manana ity marika ity ianao",
     "toUnlock": "{{amount}} famantarana hafa mba hamohana azy",
     "holdToUnlock": "Hazonina, fara fahakeliny, izany maro DeHub famantarana mba hamoha azy",
     "sliderLabel": "Famantarana notazonina",
@@ -5396,11 +5396,11 @@
     "cardOf": "TAPAKA {{index}} {{total}}",
     "progress": "Ny fivoaranao",
     "goal": {
-      "streams": "{{current}}{{target}} streams",
-      "hours": "{{current}} {{target}} hours",
-      "session": "{{current}} {{target}} min ho an'ny tosaka iray monja",
-      "streak": "{{current}} /{{target}} herinandro",
-      "level": "Ambaratonga {{current}} {{target}}"
+      "streams": "{{current}} / {{target}} fandefasana",
+      "hours": "{{current}} / {{target}} ora",
+      "session": "{{current}} / {{target}} min amin’ny fandefasana iray",
+      "streak": "{{current}} / {{target}} herinandro",
+      "level": "Ambaratonga {{current}} / {{target}}"
     },
     "onStream": "Manafaka ilay rojom-panalahidy raha toa ka mihatra amin'ilay tosaka izany",
     "stats": {

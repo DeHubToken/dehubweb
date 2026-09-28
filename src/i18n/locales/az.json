@@ -4471,7 +4471,7 @@
       "hours": "{{hours}} uyğun saat",
       "minutes": "{{count}} dəqiqə",
       "viewers": "{{count}} tamaşaçı",
-      "viewCards": "Kartları izləyin",
+      "viewCards": "Kartlara bax",
       "cardsTitle": "Kolleksiya kartları",
       "locked": "Kilidli",
       "earnedOn": "Qazanılmış {{date}}",
@@ -4505,65 +4505,65 @@
         },
         "century": {
           "name": "Əsr",
-          "hint": "Havada yüz uyğun saat əldə edin."
+          "hint": "Efirdə yüz uyğun saat toplayın."
         },
         "legend": {
           "name": "Əfsanə",
           "hint": "On səviyyəyə çatın."
         },
         "ignition": {
-          "name": "Ignition",
-          "hint": "Hava üzərində bir uyğun saatı tamamla."
+          "name": "Alovlanma",
+          "hint": "Efirdə bir uyğun saat toplayın."
         },
         "on-air": {
-          "name": "On air",
+          "name": "Efirdə",
           "hint": "Onu uyğun 10 yayını tamamla."
         },
         "storyteller": {
-          "name": "Storyteller",
+          "name": "Hekayəçi",
           "hint": "Onu uyğun 25 yayını tamamla."
         },
         "broadcaster": {
-          "name": "Broadcaster",
+          "name": "Yayımçı",
           "hint": "Onu uyğun 50 yayını tamamla."
         },
         "centurion": {
-          "name": "Centurion",
+          "name": "Yüzbaşı",
           "hint": "Onu uyğun 100 yayını tamamla."
         },
         "enduring": {
-          "name": "Enduring",
+          "name": "Dözümlü",
           "hint": "Bir sessiyada dörd uyğun saatı yay."
         },
         "circle": {
-          "name": "Inner circle",
-          "hint": "Bir anda 25 nəfəri izləyici edin."
+          "name": "Yaxın dairə",
+          "hint": "Eyni anda iyirmi beş nəfərin izləməsini təmin edin."
         },
         "arena": {
           "name": "Arena",
-          "hint": "Bir anda 50 nəfəri izləyici edin."
+          "hint": "Eyni anda əlli nəfərin izləməsini təmin edin."
         },
         "headliner": {
-          "name": "Headliner",
-          "hint": "Bir anda 100 nəfəri izləyici edin."
+          "name": "Baş ulduz",
+          "hint": "Eyni anda yüz nəfərin izləməsini təmin edin."
         },
         "cornerstone": {
-          "name": "Cornerstone",
-          "hint": "İki onaltı ardıcıl həftə boyunca yay."
+          "name": "Təməl daşı",
+          "hint": "İyirmi altı həftə ardıcıl yayım edin."
         },
         "veteran": {
           "name": "Veteran",
-          "hint": "Hava üzərində 250 uyğun saatı tamamla."
+          "hint": "Efirdə 250 uyğun saat toplayın."
         },
         "icon": {
-          "name": "Icon",
+          "name": "İkona",
           "hint": "20-ci səviyyəyə çat."
         }
       },
       "chooseBadge": "Profilinizdə göstərmək üçün açıq olan hər hansı bir nişanı seçin.",
-      "useBadge": "Use badge",
-      "selectedBadge": "Selected",
-      "savingBadge": "Saving badge…",
+      "useBadge": "Nişanı istifadə et",
+      "selectedBadge": "Seçilib",
+      "savingBadge": "Nişan saxlanılır…",
       "saveBadgeError": "Nişanınızı yadda saxlamaq mümkün olmadı. Yenidən cəhd edin."
     }
   },
@@ -5532,23 +5532,23 @@
     "dialogLabel": "{{tier}} nişan",
     "close": "Bağla",
     "badges": "Nişanlar",
-    "tierOf": "Səviyyə {{index}}{{total}}",
+    "tierOf": "Səviyyə {{index}} / {{total}}",
     "youHaveThis": "Bu nişanınız var",
-    "toUnlock": "{{amount}} onu kiliddən çıxarmaq üçün daha çox ayələr",
-    "holdToUnlock": "Kilidini açmaq üçün ən azı bu sayda DeHub işarəsini saxlayın",
-    "sliderLabel": "Tokenlər keçirilib",
-    "sliderValue": "{{amount}} tokens · {{tier}}",
+    "toUnlock": "Açmaq üçün daha {{amount}} token",
+    "holdToUnlock": "Açmaq üçün ən azı bu qədər DeHub tokeni saxlayın",
+    "sliderLabel": "Saxlanılan tokenlər",
+    "sliderValue": "{{amount}} token · {{tier}}",
     "you": "Siz",
-    "grants": "Nəyi blokdan çıxarır",
+    "grants": "Nəyi açır",
     "perks": {
       "fee": "Platforma haqqı",
       "votes": "İdarəçilik səsləri",
       "reach": "Hər baxış və reaksiya üçün çəki",
-      "feedPosts": "Gündə bir ev qidası paylaşımı",
+      "feedPosts": "Gündə ana lent paylaşımları",
       "images": "Hər yazıya düşən şəkillər",
       "uploads": "Gündəlik yüklənmə limiti",
       "storage": "Redaktor yaddaşı",
-      "lending": "Nişan verən aralıqlar",
+      "lending": "Nişan icarəsi yerləri",
       "voice": "Səs klonlaması",
       "voiceFree": "Pulsuz",
       "voiceLocked": "{{tier}} və yuxarı"
@@ -5556,20 +5556,20 @@
     "buyTokens": "Tokenlər al",
     "details": "Tam təhlil",
     "play": "Oxut",
-    "pause": "Fasilə ver",
-    "hint": "Əyilmək üçün sürükləyin · Kənarı soyunmaq üçün çəkin · Növbəti dəfə basın"
+    "pause": "Fasilə",
+    "hint": "Əymək üçün sürüşdürün · soymaq üçün kənarından çəkin · növbəti üçün toxunun"
   },
   "streamerShowcase": {
     "cardOf": "Kart {{index}}{{total}}",
     "progress": "İrəliləyişiniz",
     "goal": {
-      "streams": "{{current}} / {{target}} axınları",
-      "hours": "{{current}} {{target}} saat",
-      "session": "{{current}} {{target}} min bir axınla",
-      "streak": "{{current}} {{target}} həftə",
+      "streams": "{{current}} / {{target}} yayım",
+      "hours": "{{current}} / {{target}} saat",
+      "session": "Bir yayımda {{current}} / {{target}} dəq",
+      "streak": "{{current}} / {{target}} həftə",
       "level": "Səviyyə {{current}} / {{target}}"
     },
-    "onStream": "Axında nə baş verdiyini kiliddən çıxarın",
+    "onStream": "Yayım zamanı baş verəndə açılır",
     "stats": {
       "level": "Səviyyə",
       "xp": "XP",

@@ -2863,7 +2863,7 @@
           "hint": "Pari aadọta awọn ṣiṣan ti o yẹ."
         },
         "centurion": {
-          "name": "Centurion",
+          "name": "Ọgọ́rùn-ún",
           "hint": "Pari ọgọrun awọn ṣiṣan ti o yẹ."
         },
         "enduring": {
@@ -2875,15 +2875,15 @@
           "hint": "Ni awọn eniyan mejilelaadọta ti n wo ni ẹẹkan."
         },
         "arena": {
-          "name": "Arena",
+          "name": "Pápá ìṣeré",
           "hint": "Ni awọn eniyan aadọta ti n wo ni ẹẹkan."
         },
         "headliner": {
-          "name": "Headliner",
+          "name": "Olórí ìràwọ̀",
           "hint": "Ni awọn eniyan ọgọrun ti n wo ni ẹẹkan."
         },
         "cornerstone": {
-          "name": "Cornerstone",
+          "name": "Òkúta igun ilé",
           "hint": "Ṣe ṣiṣan ni ọsẹ mẹrindilogun ti o tẹle."
         },
         "veteran": {
@@ -3509,7 +3509,7 @@
     "keepWhileHolding": "Lọ́jọ́ kan tí a bá ti ṣí àmì-ìdánimọ̀ kan sílẹ̀, yóò jẹ́ tirẹ fún ìgbà tí o bá ní àwọn àmi-ìṣẹ́ DeHub. Iye àwọn àmi-ìṣẹ́ tí a nilò láti ṣí àmì-ìdánimọ̀ tuntun sílẹ̀ lè yí padà pẹ̀lú iye àmi-ìṣẹ́ náà."
   },
   "badgeShowcase": {
-    "dialogLabel": "{{tier}} badge",
+    "dialogLabel": "Àmì {{tier}}",
     "close": "Pa",
     "badges": "Àmì ọ̀pá àṣẹ ilẹ̀",
     "tierOf": "Tier {{index}} ti {{total}}",
@@ -3529,15 +3529,15 @@
       "uploads": "Ifilelẹ gbigbe lojoojumọ",
       "storage": "Ibi ìpamọ́ atọ́ka",
       "lending": "Àwọn ìkòkò ìfẹ̀yìntì badge",
-      "voice": "Ṣíṣe ìfipamọ́ ohùn",
+      "voice": "Ṣíṣe àdàkọ ohùn",
       "voiceFree": "FREE",
       "voiceLocked": "{{tier}} àti sókè"
     },
     "buyTokens": "Ra àwọn àmì",
     "details": "Ìparun kíkún",
-    "play": "Play",
+    "play": "Bẹ̀rẹ̀",
     "pause": "Duro",
-    "hint": "Fa lati bend · fa eti lati peel · tẹ fun ọkan ti o tẹle"
+    "hint": "Fà á láti tẹ̀ ẹ́ · fa etí láti bó o · tẹ̀ fún èyí tó kàn"
   },
   "streamerShowcase": {
     "cardOf": "Káàdì {{index}} ti {{total}}",
@@ -3556,7 +3556,7 @@
       "hours": "Awọn wakati ti o yẹ",
       "streams": "Awọn ṣiṣan ti o yẹ",
       "longest": "Odò tó gùn jùlọ",
-      "streak": "Ti o dara ju streak"
+      "streak": "Ìtẹ̀léra tó dára jù"
     },
     "hoursShort": "{{hours}} h",
     "weeksShort": "{{count}} wk"

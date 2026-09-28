@@ -5656,7 +5656,7 @@
     "hint": "Buruta ili uinamishe · vuta ukingo ili uungue · bofya kwa ajili ya inayofuata"
   },
   "streamerShowcase": {
-    "cardOf": "Card {{index}} ya {{total}}",
+    "cardOf": "Kadi {{index}} ya {{total}}",
     "progress": "Maendeleo yako",
     "goal": {
       "streams": "{{current}} / {{target}} mito",

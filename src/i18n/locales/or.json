@@ -2801,61 +2801,61 @@
         },
         "legend": {
           "name": "କିମ୍ବଦନ୍ତୀ",
-          "hint": "କିନ୍ତୁ ସେ କହିଲେ yemiti huye 1st 1st."
+          "hint": "ସ୍ତର ଦଶରେ ପହଞ୍ଚନ୍ତୁ।"
         },
         "ignition": {
-          "name": "Ignition",
+          "name": "ପ୍ରଜ୍ୱଳନ",
           "hint": "ଏୟାରରେ ଗୋଟିଏ ଯୋଗ୍ୟ ଘଣ୍ଟା ପୂରଣ କରନ୍ତୁ।"
         },
         "on-air": {
-          "name": "On air",
+          "name": "ପ୍ରସାରଣରେ",
           "hint": "ଦଶଟି ଯୋଗ୍ୟ ଷ୍ଟ୍ରିମ୍ ଶେଷ କରନ୍ତୁ।"
         },
         "storyteller": {
-          "name": "Storyteller",
+          "name": "କାହାଣୀକାର",
           "hint": "ପଚିଶଟି ଯୋଗ୍ୟ ଷ୍ଟ୍ରିମ୍ ଶେଷ କରନ୍ତୁ।"
         },
         "broadcaster": {
-          "name": "Broadcaster",
+          "name": "ପ୍ରସାରକ",
           "hint": "ପଚାଶଟି ଯୋଗ୍ୟ ଷ୍ଟ୍ରିମ୍ ଶେଷ କରନ୍ତୁ।"
         },
         "centurion": {
-          "name": "Centurion",
+          "name": "ଶତକବୀର",
           "hint": "ଏକଶହ ଯୋଗ୍ୟ ଷ୍ଟ୍ରିମ୍ ଶେଷ କରନ୍ତୁ।"
         },
         "enduring": {
-          "name": "Enduring",
+          "name": "ସହନଶୀଳ",
           "hint": "ଏକ ଅଧିବେଶନରେ ଚାରି ଯୋଗ୍ୟ ଘଣ୍ଟା ପାଇଁ ଷ୍ଟ୍ରିମ୍ କରନ୍ତୁ।"
         },
         "circle": {
-          "name": "Inner circle",
+          "name": "ଘନିଷ୍ଠ ମଣ୍ଡଳ",
           "hint": "ଏକ ସମୟରେ ପଚିଶ ଜଣଙ୍କୁ ଦେଖୁଥିବା ବେଳେ ରଖନ୍ତୁ।"
         },
         "arena": {
-          "name": "Arena",
+          "name": "ଅଖାଡ଼ା",
           "hint": "ଏକ ସମୟରେ ପଚାଶ ଜଣଙ୍କୁ ଦେଖୁଥିବା ବେଳେ ରଖନ୍ତୁ।"
         },
         "headliner": {
-          "name": "Headliner",
+          "name": "ମୁଖ୍ୟ ଆକର୍ଷଣ",
           "hint": "ଏକ ସମୟରେ ଏକଶହ ଜଣଙ୍କୁ ଦେଖୁଥିବା ବେଳେ ରଖନ୍ତୁ।"
         },
         "cornerstone": {
-          "name": "Cornerstone",
+          "name": "ମୂଳଦୁଆ",
           "hint": "ସତାଇଶଟି କ୍ରମାଗତ ସପ୍ତାହରେ ଷ୍ଟ୍ରିମ୍ କରନ୍ତୁ।"
         },
         "veteran": {
-          "name": "Veteran",
+          "name": "ଅଭିଜ୍ଞ",
           "hint": "ଏୟାରରେ 250 ଯୋଗ୍ୟ ଘଣ୍ଟା ପୂରଣ କରନ୍ତୁ।"
         },
         "icon": {
-          "name": "Icon",
+          "name": "ଆଇକନ୍",
           "hint": "ଲେଭଲ୍ 20 ରେ ପହଞ୍ଚନ୍ତୁ।"
         }
       },
       "chooseBadge": "ଆପଣଙ୍କ ପ୍ରୋଫାଇଲରେ ପ୍ରଦର୍ଶନ କରିବା ପାଇଁ ଯେକୌଣସି ଅନଲକ୍ ହୋଇଥିବା ବ୍ୟାଜ୍ ବାଛନ୍ତୁ।",
-      "useBadge": "Use badge",
-      "selectedBadge": "Selected",
-      "savingBadge": "Saving badge…",
+      "useBadge": "ବ୍ୟାଜ୍ ବ୍ୟବହାର କରନ୍ତୁ",
+      "selectedBadge": "ବଛାଯାଇଛି",
+      "savingBadge": "ବ୍ୟାଜ୍ ସେଭ୍ ହେଉଛି…",
       "saveBadgeError": "ଆପଣଙ୍କ ବ୍ୟାଜ୍ ସେଭ୍ ହୋଇପାରିଲା ନାହିଁ। ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।"
     }
   },
@@ -3464,7 +3464,7 @@
     "keepWhileHolding": "ଥରେ ଏକ ବ୍ୟାଜ୍ ଅନଲକ୍ ହୋଇଗଲେ, ଆପଣଙ୍କ DeHub ଟୋକେନ୍‌ଗୁଡ଼ିକ ଧାରଣ କରିବା ପର୍ଯ୍ୟନ୍ତ ତାହା ଆପଣଙ୍କର ହୋଇ ରହିବ। ଏକ ନୂତନ ବ୍ୟାଜ୍ ଅନଲକ୍ କରିବା ପାଇଁ ଆବଶ୍ୟକ ଟୋକେନ୍‌ ସଂଖ୍ୟା ଟୋକେନ୍‌ ମୂଲ୍ୟ ସହିତ ପରିବର୍ତ୍ତନ ହୋଇପାରେ।"
   },
   "badgeShowcase": {
-    "dialogLabel": "{{tier}} badge",
+    "dialogLabel": "{{tier}} ବ୍ୟାଜ୍",
     "close": "ବନ୍ଦ କରନ୍ତୁ",
     "badges": "ବ୍ୟାଜଗୁଡ଼ିକ",
     "tierOf": "{{total}} ମଧ୍ୟରୁ ସ୍ତର {{index}}",
@@ -3472,7 +3472,7 @@
     "toUnlock": "ଅନଲକ୍ କରିବାକୁ ଆଉ {{amount}} ଟୋକେନ୍",
     "holdToUnlock": "ଏହାକୁ ଖୋଲିବା ପାଇଁ ଅତି କମରେ ଏହି ଅନେକ DeHub ଟୋକନକୁ ଧାରଣ କରନ୍ତୁ",
     "sliderLabel": "ଟୋକନ ଧାରଣ କରାଯାଇଛି",
-    "sliderValue": "{{amount}} tokens · {{tier}}",
+    "sliderValue": "{{amount}} ଟୋକେନ୍ · {{tier}}",
     "you": "ଆପଣ",
     "grants": "କ 'ଣ ଖୋଲା ଅଛି",
     "perks": {
@@ -3500,9 +3500,9 @@
     "goal": {
       "streams": "{{current}} / {{target}} ଷ୍ଟ୍ରିମ୍",
       "hours": "{{current}} / {{target}} ଘଣ୍ଟା",
-      "session": "{{current}} {{target}} min in one stream",
+      "session": "ଗୋଟିଏ ଷ୍ଟ୍ରିମ୍‌ରେ {{current}} / {{target}} ମିନିଟ୍",
       "streak": "{{current}} / {{target}} ସପ୍ତାହ",
-      "level": "ସ୍ତର {{current}} {{target}}"
+      "level": "ସ୍ତର {{current}} / {{target}}"
     },
     "onStream": "ଯେତେବେଳେ ଏହା ପ୍ରବାହରେ ଘଟେ ସେତେବେଳେ ଏହାକୁ ଖୋଲନ୍ତୁ",
     "stats": {
