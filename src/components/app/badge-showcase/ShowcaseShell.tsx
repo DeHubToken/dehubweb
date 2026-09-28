@@ -487,7 +487,7 @@ export function ShowcaseShell({
           the button itself, which would override an absolute class there and
           drop the button into the flow above the stage. */}
       <div
-        className="absolute right-4 top-[max(env(safe-area-inset-top),12px)] z-20 transition-opacity duration-300 lg:right-6 lg:top-6"
+        className="absolute right-4 top-[max(env(safe-area-inset-top),12px)] z-20 transition-opacity duration-300 lg:right-[max(1.5rem,calc(50%-590px+1.5rem))] lg:top-6"
         style={{ opacity: panelIn ? 1 : 0 }}
       >
         <button
@@ -501,7 +501,9 @@ export function ShowcaseShell({
         </button>
       </div>
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col lg:flex-row">
+      {/* Capped and centred on desktop, so the details and the X stay beside
+          the badge instead of drifting to the far edges of a wide screen. */}
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col lg:mx-auto lg:w-full lg:max-w-[1180px] lg:flex-row">
         {/* Stage, with the dock centred under the sticker on desktop. */}
         <div className="relative flex min-h-0 flex-1 flex-col lg:pb-6">
           <div ref={stageBoxRef} className="relative min-h-[160px] flex-1">
