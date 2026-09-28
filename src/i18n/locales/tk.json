@@ -513,7 +513,8 @@
     "close": "Ýap",
     "loadingMore": "Has köp ýüklenýär...",
     "loadMore": "Has köp ýükle",
-    "continue": "Dowam et"
+    "continue": "Dowam et",
+    "undo": "Gaýd Et"
   },
   "tip": {
     "title": "Sowgat Iber",
@@ -1291,7 +1292,8 @@
     "feeNotEnough": "Tokenler ýeterlik däl ({{amount}} gerek)",
     "feeWarningTitle": "Habarlar tokenleriň bahasyna düşýär",
     "customTipMin": "Sazlama sowgat (iň az {{amount}} token)",
-    "checkingTokenBalance": "Token balansyňyzy barlaýarys..."
+    "checkingTokenBalance": "Token balansyňyzy barlaýarys...",
+    "deleteConversationFailed": "Söhbetden çykyp bilmedim"
   },
   "music": {
     "all": "Ählisi",
@@ -5177,6 +5179,19 @@
   },
   "builder": {
     "buildInChat": "@assistant bilen şahsy habarlaryňyzda dörediň",
-    "signInRequired": "Builder-i ulanmak üçin giriň."
+    "stakeForAllowance": "Gündelik gurluşyk tölegini artdyrmak üçin DeHub tokenlerini goýuň",
+    "landerTitle": "Bir soragyň jogabyny tapmak",
+    "landerSubtitle": "@Helpant-a habarlaryňyzda näme isleýändigiňizi aýt. Bu programy gurýar, ony gurýar we size her kes açyp biljek bir baglanyşygy iberýär. Ähli zady üýtgetmek üçin jogap beriň.",
+    "promptPlaceholder": "Siz islän ulagyňyzy ýazyň...",
+    "sendToAssistant": "@ kömekçisine habar beriň",
+    "example1": "Pomodoro wagtlaýyn gündelik çaryş bilen",
+    "example2": "Kalkülýutoryň kalkülýutory",
+    "example3": "Meniň iň gowy görýän filmim barada gürrüň beriň",
+    "step1Title": "Ony beýan ediň",
+    "step1Body": "Öz sözüň bilen, ulagyň näme etmelidigini aýt.",
+    "step2Title": "Bir minutda ýykyldy",
+    "step2Body": "@ Assistant ýazýar we ulanýar, soňra habarlaryňyza baglaýyş iberýär.",
+    "step3Title": "Öwrenmek ýa-da üýtgetmek",
+    "step3Body": "Kimdir biri baglanyşygy açyp biler. Ähli zady üýtgetmek üçin, gürrüňdeşlige jogap beriň."
   }
 }

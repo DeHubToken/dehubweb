@@ -25,6 +25,7 @@ import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import { conversationIdentity } from '@/lib/conversation-identity';
 import { useDraftText } from '@/hooks/use-draft';
 import { SwipeableRow } from '@/components/ui/swipeable-row';
+import { scheduleDelete, undoDelete, usePendingDeletes, UNDO_WINDOW_MS } from '@/lib/undoable-delete';
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
@@ -112,6 +113,7 @@ function ConversationItem({
           icon: <Trash2 className="w-4 h-4" />,
           className: 'bg-red-600',
           onSelect: () => onDelete(conversation),
+          destructive: true,
         },
       ]}
     >
@@ -242,14 +244,26 @@ export default function MessagesPage() {
    * menu. The row's left swipe does it from the list, as Mail and Messages do.
    */
   const deleteConversationMutation = useDeleteConversation();
+  const pendingDeletes = usePendingDeletes();
 
+  // The row is gone the moment it is swiped away, with Undo in the toast; the
+  // real delete runs when that window closes. A swipe is one careless thumb
+  // away, and a confirm dialog after every one defeats the point of swiping.
   const handleDeleteConversation = useCallback((conv: DeHubConversation) => {
-    deleteConversationMutation.mutate(conv.id, {
-      onSuccess: () => toast.success('Conversation deleted'),
-      onError: () => toast.error('Failed to delete conversation'),
-    });
     setSelectedConversation(prev => (prev?.id === conv.id ? null : prev));
-  }, [deleteConversationMutation]);
+    scheduleDelete(conv.id, () =>
+      deleteConversationMutation.mutate(conv.id, {
+        onError: () => toast.error(t('messages.deleteConversationFailed')),
+      }),
+    );
+    toast(t('toasts.conversation_deleted'), {
+      id: `dm-delete-${conv.id}`,
+      duration: UNDO_WINDOW_MS,
+      action: { label: t('common.undo'), onClick: () => undoDelete(conv.id) },
+    });
+  }, [deleteConversationMutation, t]);
+
+  const visibleConversations = (conversations || []).filter(c => !pendingDeletes.has(c.id));
 
   const handleBlockConversationUser = useCallback(async (conv: DeHubConversation) => {
     const user = conv.otherUser || conv.participants?.[0];
@@ -647,7 +661,7 @@ export default function MessagesPage() {
 
 
             {/* Empty state */}
-            {!isLoading && !isError && !searchQuery.trim() && (conversations?.length ?? 0) === 0 && (
+            {!isLoading && !isError && !searchQuery.trim() && visibleConversations.length === 0 && (
               <AppState
                 icon="messages"
                 title={t('messages.noConversationsYet', 'No conversations yet')}
@@ -657,7 +671,7 @@ export default function MessagesPage() {
             )}
 
             {/* Conversations */}
-            {!isLoading && !isError && conversations.map((conv) => (
+            {!isLoading && !isError && visibleConversations.map((conv) => (
               <ConversationItem
                 key={conv.id}
                 conversation={readConvIds.has(conv.id) ? { ...conv, unreadCount: 0 } : conv}

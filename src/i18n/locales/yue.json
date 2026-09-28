@@ -513,7 +513,8 @@
     "close": "關閉",
     "loadingMore": "載入更多緊...",
     "loadMore": "載入更多",
-    "continue": "繼續"
+    "continue": "繼續",
+    "undo": "復原"
   },
   "tip": {
     "title": "送禮物",
@@ -1302,7 +1303,8 @@
     "feeNotEnough": "代幣不足 (需要 {{amount}})",
     "feeWarningTitle": "訊息需要代幣",
     "customTipMin": "自訂貼士 (最少 {{amount}} 代幣)",
-    "checkingTokenBalance": "正在檢查你嘅代幣餘額..."
+    "checkingTokenBalance": "正在檢查你嘅代幣餘額...",
+    "deleteConversationFailed": "刪除唔到對話"
   },
   "music": {
     "all": "全部",
@@ -4471,7 +4473,19 @@
   "builder": {
     "stakeForAllowance": "質押 DeHub 代幣以提高您的每日建置配額",
     "buildInChat": "喺私訊同 @assistant 一齊整",
-    "signInRequired": "登入先可以用 Builder。"
+    "landerTitle": "只需要問就可以建立一個應用程式",
+    "landerSubtitle": "喺你嘅訊息入面話畀 @ 助理知你想要啲咩。佢會構建應用程式，托管應用程式，然後向你發送任何人都可以打開嘅連結。回覆要改任何嘢。",
+    "promptPlaceholder": "描述下你想要嘅應用程式⋯",
+    "sendToAssistant": "傳送去 @ 助理",
+    "example1": "每日連續嘅番茄計時器",
+    "example2": "一個可以分割帳單嘅小費計算器",
+    "example3": "關於我最鍾意嘅電影嘅測驗",
+    "step1Title": "形容下佢",
+    "step1Body": "用你自己嘅語言講下個應用程式應該做啲咩。",
+    "step2Title": "佢大約一分鐘就可以建立",
+    "step2Body": "@assistant 會寫同埋寄存個應用程式，然後將連結傳送去你嘅訊息。",
+    "step3Title": "分享或者改變佢",
+    "step3Body": "任何人都可以打開個連結。喺即時通訊入面回覆就可以改任何嘢。"
   },
   "connect": {
     "chatgptFaqAccount": "無需帳戶即可透過連接器閱讀公開內容。只有當您想發布、打賞或持有 DeHub 代幣時，才需要 DeHub 帳戶。",

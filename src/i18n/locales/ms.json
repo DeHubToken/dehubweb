@@ -1586,7 +1586,8 @@
     "feeNotEnough": "Token tidak mencukupi (perlu {{amount}})",
     "feeWarningTitle": "Mesej memerlukan token",
     "customTipMin": "Tip tersuai (min {{amount}} token)",
-    "checkingTokenBalance": "Memeriksa baki token anda..."
+    "checkingTokenBalance": "Memeriksa baki token anda...",
+    "deleteConversationFailed": "Tidak dapat menghapuskan perbualan"
   },
   "music": {
     "all": "All",
@@ -6837,7 +6838,19 @@
   "builder": {
     "stakeForAllowance": "Pertaruhkan token DeHub untuk meningkatkan elaun binaan harian anda",
     "buildInChat": "Bina dalam DM anda bersama @assistant",
-    "signInRequired": "Log masuk untuk menggunakan Builder."
+    "landerTitle": "Bina aplikasi hanya dengan bertanya",
+    "landerSubtitle": "Beritahu @assistant apa yang anda mahu dalam mesej anda. Ia membina aplikasi, menjadi hos dan menghantar pautan kepada anda yang boleh dibuka oleh sesiapa sahaja. Jawab untuk mengubah apa-apa.",
+    "promptPlaceholder": "Terangkan aplikasi yang anda mahu...",
+    "sendToAssistant": "Hantar kepada @assistant",
+    "example1": "Pemasa pomodoro dengan rentetan harian",
+    "example2": "Kalkulator tip yang membahagikan bil",
+    "example3": "Kuiz tentang filem kegemaran saya",
+    "step1Title": "Terangkannya",
+    "step1Body": "Katakan apa yang perlu dilakukan oleh aplikasi, dengan kata-kata anda sendiri.",
+    "step2Title": "Ia dibina dalam masa kira-kira satu minit",
+    "step2Body": "@assistant menulis dan menjadi hos aplikasi, kemudian menghantar pautan kepada mesej anda.",
+    "step3Title": "Kongsi atau ubahnya",
+    "step3Body": "Sesiapa sahaja boleh membuka pautan. Jawab dalam sembang untuk mengubah apa-apa."
   },
   "connect": {
     "chatgptFaqAccount": "Tiada akaun diperlukan untuk membaca kandungan awam melalui penyambung. Akaun DeHub hanya diperlukan jika anda ingin menyiarkan, memberi tip atau memegang token DeHub.",

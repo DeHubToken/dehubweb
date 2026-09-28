@@ -527,7 +527,8 @@
     "close": "Stäng",
     "loadingMore": "Laddar fler...",
     "loadMore": "Ladda fler",
-    "continue": "Fortsätt"
+    "continue": "Fortsätt",
+    "undo": "Ångra"
   },
   "tip": {
     "title": "Skicka dricks",
@@ -1319,7 +1320,8 @@
     "feeNotEnough": "Inte tillräckligt med tokens (behöver {{amount}})",
     "feeWarningTitle": "Meddelanden kostar tokens",
     "customTipMin": "Anpassat dricks (min {{amount}} tokens)",
-    "checkingTokenBalance": "Kontrollerar din tokenbalans..."
+    "checkingTokenBalance": "Kontrollerar din tokenbalans...",
+    "deleteConversationFailed": "Det gick inte att ta bort konversationen"
   },
   "music": {
     "all": "Alla",
@@ -6519,7 +6521,19 @@
   "builder": {
     "stakeForAllowance": "Satsa DeHub-tokens för att öka din dagliga byggkvot",
     "buildInChat": "Bygg i dina DM med @assistant",
-    "signInRequired": "Logga in för att använda Builder."
+    "landerTitle": "Bygg en app bara genom att fråga",
+    "landerSubtitle": "Berätta för @assistant vad du vill ha i dina meddelanden. Den bygger appen, är värd för den och skickar dig en länk som alla kan öppna. Svara för att ändra något.",
+    "promptPlaceholder": "Beskriv appen du vill ha...",
+    "sendToAssistant": "Skicka till @assistant",
+    "example1": "En pomodoro-timer med en daglig strimma",
+    "example2": "En TIP-kalkylator som delar räkningen",
+    "example3": "En frågesport om mina favoritfilmer",
+    "step1Title": "Beskriv det",
+    "step1Body": "Säg vad appen ska göra, med dina egna ord.",
+    "step2Title": "Det byggs på ungefär en minut",
+    "step2Body": "@assistant skriver och är värd för appen och skickar sedan länken till dina meddelanden.",
+    "step3Title": "Dela den eller ändra den",
+    "step3Body": "Vem som helst kan öppna länken. Svara i chatten för att ändra något."
   },
   "connect": {
     "chatgptFaqAccount": "Ingen konto krävs för att läsa offentligt innehåll via anslutningen. Ett DeHub-konto behövs endast om du vill posta, ge dricks eller hålla DeHub-tokens.",

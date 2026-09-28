@@ -527,7 +527,8 @@
     "close": "Zatvori",
     "loadingMore": "Učitavanje...",
     "loadMore": "Učitaj više",
-    "continue": "Nastavi"
+    "continue": "Nastavi",
+    "undo": "Poništi"
   },
   "tip": {
     "title": "Pošalji napojnicu",
@@ -1315,7 +1316,8 @@
     "feeNotEnough": "Nema dovoljno tokena (potrebno {{amount}})",
     "feeWarningTitle": "Poruke koštaju tokene",
     "customTipMin": "Prilagođena napojnica (min {{amount}} tokena)",
-    "checkingTokenBalance": "Provjera stanja vaših tokena..."
+    "checkingTokenBalance": "Provjera stanja vaših tokena...",
+    "deleteConversationFailed": "Brisanje razgovora nije uspjelo"
   },
   "music": {
     "all": "Sve",
@@ -6521,7 +6523,19 @@
   "builder": {
     "stakeForAllowance": "Uložite DeHub tokene kako biste povećali svoje dnevno dopuštenje za izgradnju",
     "buildInChat": "Gradite u izravnim porukama s @assistant",
-    "signInRequired": "Prijavite se za korištenje Buildera."
+    "landerTitle": "Izradite aplikaciju samo pitanjem",
+    "landerSubtitle": "Recite korisniku @assistant što želite u svojim porukama. Izrađuje aplikaciju, hostira je i šalje vam poveznicu koju svatko može otvoriti. Odgovorite ako želite nešto promijeniti.",
+    "promptPlaceholder": "Opišite aplikaciju koju želite...",
+    "sendToAssistant": "Pošalji korisniku @assistant",
+    "example1": "Pomodoro mjerač vremena s dnevnim nizom",
+    "example2": "Kalkulator za izračun napojnice koji dijeli račun",
+    "example3": "Kviz o mojim omiljenim filmovima",
+    "step1Title": "Opišite ga",
+    "step1Body": "Svojim riječima recite što bi aplikacija trebala učiniti.",
+    "step2Title": "Stvara se za oko minutu",
+    "step2Body": "@assistant piše i hostira aplikaciju, a zatim šalje poveznicu na vaše poruke.",
+    "step3Title": "Podijelite ga ili promijenite",
+    "step3Body": "Poveznicu može otvoriti svatko. Odgovori u chatu i promijeni bilo što."
   },
   "connect": {
     "chatgptFaqAccount": "Za čitanje javnog sadržaja putem konektora nije potreban račun. DeHub račun je potreban samo ako želite objavljivati, davati napojnice ili držati DeHub tokene.",

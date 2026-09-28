@@ -511,7 +511,8 @@
     "close": "Pàdé",
     "loadingMore": "Ó ń rù síi...",
     "loadMore": "Rù síi",
-    "continue": "Tèsíwájú"
+    "continue": "Tèsíwájú",
+    "undo": "Fagihun"
   },
   "tip": {
     "title": "Fi Ẹ̀bùn Ránṣẹ́",
@@ -1299,7 +1300,8 @@
     "feeNotEnough": "Ko to awọn ami (nilo {{amount}})",
     "feeWarningTitle": "Awọn ifiranṣẹ iye owo awọn ami",
     "customTipMin": "Italolobo aṣa (min {{amount}} tokens)",
-    "checkingTokenBalance": "Ṣíṣàyẹ̀wò ìdúróṣánṣán àmì rẹ..."
+    "checkingTokenBalance": "Ṣíṣàyẹ̀wò ìdúróṣánṣán àmì rẹ...",
+    "deleteConversationFailed": "N kò lè pa ọ̀rọ̀ náà rẹ́."
   },
   "music": {
     "all": "Gbogbo",
@@ -4458,7 +4460,19 @@
   "builder": {
     "stakeForAllowance": "Fi tóka DeHub pamọ́ láti mú ìyọ̀ọ̀da ìkógun rẹ ojoojúmọ́ gbòòrò",
     "buildInChat": "Kọ́ nínú àwọn ìfiránṣẹ́ àdáni rẹ pẹ̀lú @assistant",
-    "signInRequired": "Wọlé láti lo Builder."
+    "landerTitle": "Kọ́ ohun èlò kan nípa bíbéèrè",
+    "landerSubtitle": "Sọ fún @olùrànlọ́wọ́ ohun tí o fẹ́ nínú àwọn àtẹ̀jíṣẹ́ rẹ. Ó máa ń kọ́ ohun èlò náà, ó máa ń gbà á, ó sì máa ń rán ọ ní àsopọ̀ tí ẹnikẹ́ni lè ṣí. Fèsì láti yí ohunkóhun padà.",
+    "promptPlaceholder": "Ṣàlàyé ohun èlò tí o fẹ́...",
+    "sendToAssistant": "Fi ranṣẹ si @oluranlọwọ",
+    "example1": "Akoko pomodoro pẹlu okun ojoojumọ",
+    "example2": "Kọ̀ǹpútà alágbèéká tí ó pín owó náà",
+    "example3": "Ìbéèrè nípa àwọn fíìmù tí mo fẹ́ràn jù.",
+    "step1Title": "Ṣàlàyé rẹ̀",
+    "step1Body": "Sọ ohun tí ohun èlò náà gbọ́dọ̀ ṣe, ní ọ̀rọ̀ tìrẹ.",
+    "step2Title": "Ó máa ń kọ́ ní nǹkan bí ìṣẹ́jú kan.",
+    "step2Body": "@oluranlọwọ kọ ati gbalejo ohun elo naa, lẹhinna fi ọna asopọ ranṣẹ si awọn ifiranṣẹ rẹ.",
+    "step3Title": "Pín in tàbí yí i padà",
+    "step3Body": "Ẹnikẹ́ni lè ṣí àsopọ̀ náà. Fesi ninu iwiregbe lati yi ohunkohun pada."
   },
   "connect": {
     "chatgptFaqAccount": "Kò sí àkọsílẹ̀ tí ó jẹ́ dandan láti ka ohun tí gbogbo ènìyàn lè kà nípasẹ̀ ìsopọ̀. Àkọsílẹ̀ DeHub nìkan ni a nílò tí o bá fẹ́ fi ohun sílẹ̀, fúnni ní ẹ̀bùn tàbí kó tóka DeHub.",

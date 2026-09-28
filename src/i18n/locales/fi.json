@@ -527,7 +527,8 @@
     "close": "Sulje",
     "loadingMore": "Ladataan lisää...",
     "loadMore": "Lataa lisää",
-    "continue": "Jatka"
+    "continue": "Jatka",
+    "undo": "Kumoa"
   },
   "tip": {
     "title": "Lähetä tippi",
@@ -1315,7 +1316,8 @@
     "feeNotEnough": "Ei tarpeeksi tokeneita (tarvitaan {{amount}})",
     "feeWarningTitle": "Viestit maksavat tokeneita",
     "customTipMin": "Mukautettu vinkki (minimi {{amount}} tokenia)",
-    "checkingTokenBalance": "Tarkistetaan token-saldoasi..."
+    "checkingTokenBalance": "Tarkistetaan token-saldoasi...",
+    "deleteConversationFailed": "Keskustelua ei voitu poistaa"
   },
   "music": {
     "all": "Kaikki",
@@ -6517,7 +6519,19 @@
   "builder": {
     "stakeForAllowance": "Stakaa DeHub-tokeneita kasvattaaksesi päivittäistä rakennuslupaa",
     "buildInChat": "Rakenna yksityisviesteissä @assistantin kanssa",
-    "signInRequired": "Kirjaudu sisään käyttääksesi Builderia."
+    "landerTitle": "Rakenna sovellus kysymällä",
+    "landerSubtitle": "Kerro avustajalle @Assistant, mitä haluat viesteistäsi. Se rakentaa sovelluksen, isännöi sitä ja lähettää sinulle linkin, jonka kuka tahansa voi avata. Vastaa muuttaaksesi jotain.",
+    "promptPlaceholder": "Kuvaile haluamaasi sovellusta…",
+    "sendToAssistant": "Lähetä henkilölle @assistant",
+    "example1": "Pomodoro-ajastin päivittäisellä viivalla",
+    "example2": "Tippilaskin, joka jakaa laskun",
+    "example3": "Tietovisa suosikkielokuvistani",
+    "step1Title": "Kuvaile sitä",
+    "step1Body": "Sano omin sanoin, mitä sovelluksen pitäisi tehdä.",
+    "step2Title": "Se rakentuu noin minuutissa",
+    "step2Body": "@assistant kirjoittaa ja isännöi sovellusta ja lähettää sitten linkin viesteihisi.",
+    "step3Title": "Jaa se tai muuta sitä",
+    "step3Body": "Kuka tahansa voi avata linkin. Vastaa chatissa muuttaaksesi jotain."
   },
   "connect": {
     "chatgptFaqAccount": "Julkisen sisällön lukemiseen liittimen kautta ei vaadita tiliä. DeHub-tiliä tarvitaan vain, jos haluat julkaista, antaa tippiä tai pitää DeHub-tokeneita.",

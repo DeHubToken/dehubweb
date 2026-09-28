@@ -512,7 +512,8 @@
     "close": "Rufe",
     "loadingMore": "Ana ɗora ƙari...",
     "loadMore": "Ɗora ƙari",
-    "continue": "Cigaba"
+    "continue": "Cigaba",
+    "undo": "Janye"
   },
   "tip": {
     "title": "Aika Kyauta",
@@ -1302,7 +1303,8 @@
     "feeNotEnough": "Babu isassun tokens (ana buƙatar {{amount}})",
     "feeWarningTitle": "Saƙonni suna cin tokens",
     "customTipMin": "Kyauta na musamman (mafi ƙarancin {{amount}} tokens)",
-    "checkingTokenBalance": "Duba kuɗin token ɗin ku..."
+    "checkingTokenBalance": "Duba kuɗin token ɗin ku...",
+    "deleteConversationFailed": "Ba za a iya share tattaunawar ba"
   },
   "music": {
     "all": "Duka",
@@ -4468,7 +4470,19 @@
   "builder": {
     "stakeForAllowance": "Saka token na DeHub don ƙara izinin ginawa na yau da kullun",
     "buildInChat": "Gina a cikin saƙonninka na sirri tare da @assistant",
-    "signInRequired": "Shiga don amfani da Builder."
+    "landerTitle": "Gina aikace-aikacen kawai ta hanyar tambaya",
+    "landerSubtitle": "Faɗa wa @mataimaki abin da kuke so a cikin saƙonninku. Yana gina aikace-aikacen, yana karɓar bakuncin sa kuma yana aiko muku da hanyar haɗi wanda kowa zai iya buɗewa. Amsa don canza komai.",
+    "promptPlaceholder": "Bayyana aikace-aikacen da kuke so...",
+    "sendToAssistant": "Aika zuwa @mataimaki",
+    "example1": "Lokaci na pomodoro tare da kullun yau da kullum",
+    "example2": "Mai ƙididdigar tip wanda ya raba lissafin",
+    "example3": "Tambaya game da fina-finai da na fi so",
+    "step1Title": "Bayyana shi",
+    "step1Body": "Ka ce abin da aikace-aikacen ya kamata ya yi, a cikin kalmominka.",
+    "step2Title": "Yana gina a cikin kimanin minti daya",
+    "step2Body": "@mataimaki rubuta da kuma rundunar da app, sa'an nan kuma aika da mahada zuwa ga saƙonnin ka.",
+    "step3Title": "Raba shi ko canza shi",
+    "step3Body": "Kowane mutum na iya buɗe hanyar haɗi. Amsa a cikin hira don canza komai."
   },
   "connect": {
     "chatgptFaqAccount": "Ba a buƙatar asusu don karanta abubuwan jama'a ta hanyar haɗin gwiwa. Ana buƙatar asusu na DeHub ne kawai idan kana son aika sako, ba da kyauta, ko riƙe token na DeHub.",

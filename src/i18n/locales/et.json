@@ -527,7 +527,8 @@
     "close": "Sulge",
     "loadingMore": "Laaditakse rohkem...",
     "loadMore": "Laadi rohkem",
-    "continue": "Jätka"
+    "continue": "Jätka",
+    "undo": "Võta tagasi"
   },
   "tip": {
     "title": "Saada jootraha",
@@ -1314,7 +1315,8 @@
     "feeNotEnough": "Žetoone pole piisavalt (vajalik {{amount}})",
     "feeWarningTitle": "Sõnumid maksavad žetoone",
     "customTipMin": "Kohandatud näpunäide (min {{amount}} žetooni)",
-    "checkingTokenBalance": "Teie žetoonide saldot kontrollitakse..."
+    "checkingTokenBalance": "Teie žetoonide saldot kontrollitakse...",
+    "deleteConversationFailed": "Vestlust ei saanud kustutada"
   },
   "music": {
     "all": "Kõik",
@@ -6519,7 +6521,19 @@
   "builder": {
     "stakeForAllowance": "Panustage DeHub žetoone, et suurendada oma igapäevast ehitusluba",
     "buildInChat": "Loo oma otsesõnumites koos @assistant'iga",
-    "signInRequired": "Builderi kasutamiseks logi sisse."
+    "landerTitle": "Koosta rakendus lihtsalt küsides",
+    "landerSubtitle": "Ütle assistendile @, mida oma sõnumites soovid. See loob rakenduse, majutab seda ja saadab sulle lingi, mida igaüks saab avada. Vasta, et midagi muuta.",
+    "promptPlaceholder": "Kirjelda soovitud rakendust…",
+    "sendToAssistant": "Saada @assistendile",
+    "example1": "Pomodoro taimer igapäevase triibuga",
+    "example2": "Jootraha kalkulaator, mis jagab arve",
+    "example3": "Viktoriin minu lemmikfilmide kohta",
+    "step1Title": "Kirjeldage seda:",
+    "step1Body": "Ütle oma sõnadega, mida rakendus peaks tegema.",
+    "step2Title": "See valmib umbes minutiga",
+    "step2Body": "@assistant kirjutab ja majutab rakendust ning saadab seejärel lingi sinu sõnumitele.",
+    "step3Title": "Jaga või muuda seda",
+    "step3Body": "Igaüks võib lingi avada. Kui soovid midagi muuta, vasta vestluses."
   },
   "connect": {
     "chatgptFaqAccount": "Avaliku sisu lugemiseks pole ühenduslüüsi kaudu kontot vaja. DeHub konto on vajalik ainult siis, kui soovite postitada, jootraha anda või DeHub žetoone hoida.",

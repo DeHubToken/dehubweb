@@ -513,7 +513,8 @@
     "close": "Cufi",
     "loadingMore": "Loading more...",
     "loadMore": "Dabalataa fe'i",
-    "continue": "Itti fufuu"
+    "continue": "Itti fufuu",
+    "undo": "Deebisuu"
   },
   "tip": {
     "title": "Tiippii Ergi",
@@ -1316,7 +1317,8 @@
     "feeNotEnough": "Token gahaa miti ({{amount}} barbaachisa)",
     "feeWarningTitle": "Ergaawwan mallattoo gatii",
     "customTipMin": "Gorsa amala (min {{amount}} tokens) .",
-    "checkingTokenBalance": "Hafnaan mallattoo keessanii sakatta&#39;aa jiru..."
+    "checkingTokenBalance": "Hafnaan mallattoo keessanii sakatta&#39;aa jiru...",
+    "deleteConversationFailed": "Haasaa sana haquu hin dandeenye"
   },
   "music": {
     "all": "Hundaa",
@@ -4486,7 +4488,19 @@
   "builder": {
     "stakeForAllowance": "Tokens DeHub stake gochuun kaffaltii ijaarsaa guyyaa guyyaa keessanii ol kaasaa",
     "buildInChat": "Ergaa dhuunfaa kee keessatti @assistant waliin ijaari",
-    "signInRequired": "Builder fayyadamuuf seeni."
+    "landerTitle": "Gaafachuu qofaan app ijaaraa",
+    "landerSubtitle": "Ergaa keessan keessatti waan barbaaddan @assistant itti himaa. Appicha ijaaree, host godhee link namni kamiyyuu banuu danda&#39;u siif erga. Waan fedhe jijjiiruuf deebii kenni.",
+    "promptPlaceholder": "Appii barbaaddan ibsi...",
+    "sendToAssistant": "@assistant jechuun ergaa",
+    "example1": "Sa&#39;aatii pomodoro kan guyyaa guyyaan walduraa duubaan hojjetu",
+    "example2": "Shallaggii tippii kan kaffaltii qoodu",
+    "example3": "Quiz waa&#39;ee fiilmiiwwan ani jaalladhu",
+    "step1Title": "Ibsi",
+    "step1Body": "Appichi maal gochuu akka qabu jedhi, jecha keetiin.",
+    "step2Title": "Gara daqiiqaa tokkoo keessatti ijaara",
+    "step2Body": "@assistant appicha barreessee keessummeessa, sana booda link ergaawwan keessaniif erga.",
+    "step3Title": "Share godhaa ykn jijjiiraa",
+    "step3Body": "Namni kamiyyuu link banachuu ni danda&#39;a. Waan kamiyyuu jijjiiruuf chat keessatti deebii kenni."
   },
   "connect": {
     "chatgptFaqAccount": "Qabiyyee ummataa karaa walqabsiisaa dubbisuuf herregni kamiyyuu hin barbaachisu. Akkaawuntii DeHub kan barbaachisu yoo mallattoo DeHub maxxansuu, gorsa kennuu ykn qabachuu barbaadde qofa.",

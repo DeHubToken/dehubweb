@@ -848,11 +848,11 @@ const MARKETING_PAGES = {
   },
   'builder': {
     title: 'Builder — Build Apps with AI on DeHub',
-    description: 'Describe an app and DeHub Builder creates it live: AI-written, DeHub-hosted mini apps you can share with anyone.',
+    description: 'Tell @assistant what you want in your DeHub messages. It builds the app, hosts it and sends you a link anyone can open.',
     heading: 'DeHub Builder',
-    bodyHtml: `<p>DeHub Builder turns a sentence into a working mini app. Describe what you want; the builder writes it, hosts it on DeHub and hands you a link anyone can open — nothing to install, deploy or configure.</p>
+    bodyHtml: `<p>DeHub Builder turns a sentence into a working mini app. Message @assistant with what you want; it writes the app, hosts it on DeHub and sends the link back in the same chat — nothing to install, deploy or configure.</p>
 <h2>It stays a conversation</h2>
-<p>An app is never finished at the first attempt. Ask for another screen, a different colour or a new feature and the build updates in place, so the link you already shared shows the latest version.</p>
+<p>An app is never finished at the first attempt. Reply in the chat for another screen, a different colour or a new feature and the build updates in place, so the link you already shared shows the latest version. Every build lives in your messages.</p>
 <h2>Shareable by default</h2>
 <p>Finished apps render straight from a dehub.io link in any browser, which means they can be posted anywhere on DeHub or sent to somebody who has never opened it before.</p>
 <p>Building needs a free DeHub account — sign in with an email or social login and a sponsored-gas wallet is created for you. How many apps you can build at once depends on your DeHub plan.</p>`,

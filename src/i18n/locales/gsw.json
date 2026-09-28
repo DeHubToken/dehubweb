@@ -484,7 +484,8 @@
     "close": "Schliesse",
     "loadingMore": "Am meh Lade...",
     "loadMore": "Meh lade",
-    "continue": "Witer"
+    "continue": "Witer",
+    "undo": "Undo"
   },
   "tip": {
     "title": "Trinkgäld schicke",
@@ -1274,7 +1275,8 @@
     "feeNotEnough": "Nöd gnueg Tokens (bruche {{amount}})",
     "feeWarningTitle": "Nachrichte kosted Tokens",
     "customTipMin": "Individuelle Tip (min. {{amount}} Tokens)",
-    "checkingTokenBalance": "Dini Token-Guthabe wird prüfe..."
+    "checkingTokenBalance": "Dini Token-Guthabe wird prüfe...",
+    "deleteConversationFailed": "Han d'Konversation nöd chönne lösche"
   },
   "music": {
     "all": "Alli",
@@ -4450,7 +4452,19 @@
   "builder": {
     "stakeForAllowance": "DeHub Token stäke, zum din tägliche Build-Allowance erhöhe",
     "buildInChat": "I dine DMs mit @assistant baue",
-    "signInRequired": "Mäld di aa, zum dr Builder z bruuche."
+    "landerTitle": "Build e App nume mit em Frag",
+    "landerSubtitle": "Sag @assistant, was du wotsch i dine Nachrichtä. Es baut d App, hostt sie und schickt dir e Link, wo jedi öppis öppne cha. Antwort i de Chat, wenn du öppis ändere wotsch.",
+    "promptPlaceholder": "Beschriibe d App, wo du wotsch…",
+    "sendToAssistant": "Schick i @assistant",
+    "example1": "E Pomodoro-Timer mit em tägliche Streak",
+    "example2": "E Trinkgeld-Calculator, wo d Rechnung spaltet",
+    "example3": "E Quiz über mini Lieblingsfilme",
+    "step1Title": "Beschriibe es",
+    "step1Body": "Sag, was d App mache söll, in dine eigene Worte.",
+    "step2Title": "Es wird in ungefär e Minute gebaut",
+    "step2Body": "@assistant schreibt und hostet d App, und schickt dä Link i dine Nachrichtä.",
+    "step3Title": "Teile es oder ändere es",
+    "step3Body": "Jedä cha dä Link öppne. Antwort i de Chat, wenn du öppis ändere wotsch."
   },
   "connect": {
     "chatgptFaqAccount": "Zum öffentliche Inhaalt über de Connector z'lese, bruchsch kei Account. E DeHub Account bruchsch nur, wenn du wotsch poste, tip-ge oder DeHub Token halte.",
