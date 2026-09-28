@@ -7547,5 +7547,69 @@
     "back": "Torna alle Impostazioni",
     "signIn": "Accedi al tuo account",
     "acknowledge": "Ho salvato i dettagli di recupero del mio portafoglio e capisco che l'eliminazione è permanente."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verificato",
+      "unreviewed": "Non recensito",
+      "dev": "Anteprima sviluppatore"
+    },
+    "host": {
+      "close": "Chiudi l'app",
+      "backToStore": "Torna alle app",
+      "notFound": "Questa app non è nell'App Store di DeHub o è stata rimossa.",
+      "badUrl": "Quell' indirizzo non può essere aperto come una mini app. Deve iniziare con https://, o essere un indirizzo localhost in modalità sviluppatore.",
+      "readyTimeout": "Questa app non ha mai chiamatodehub.ready (), quindi la schermata iniziale è stata nascosta dopo 8 secondi."
+    },
+    "signIn": {
+      "title": "Accedi a {{name}}?",
+      "body": "Questa app otterrà l'indirizzo del tuo portafoglio DeHub e un token di accesso che funziona solo per questa app. Non avrà accesso al tuo portafoglio, ai tuoi fondi o al tuo account DeHub.",
+      "cancel": "Non ora",
+      "confirm": "Accedi"
+    },
+    "store": {
+      "title": "App",
+      "seoTitle": "App DeHub — mini app per DeHub",
+      "seoDescription": "Mini app create per DeHub da chiunque: giochi, strumenti e altro ancora che si aprono all'interno di DeHub, già registrati, con la condivisione nel feed.",
+      "intro": "Mini app create per DeHub da chiunque. Si aprono all'interno di DeHub, hai già effettuato l'accesso e ogni app mostra il suo vero indirizzo web.",
+      "buildCta": "Crea un'app",
+      "emptyTitle": "Nessuna app ancora elencata",
+      "emptyBody": "Le prime app sono in fase di revisione. Costruiscine uno e potrebbe essere qui."
+    },
+    "dev": {
+      "title": "Crea una mini app",
+      "seoTitle": "Crea una mini app DeHub",
+      "seoDescription": "Crea una mini app per DeHub: un tag script, accedi con DeHub, condividi nel feed. Controlla il tuo manifesto e visualizza in anteprima la tua app nell'host reale.",
+      "intro": "Qualsiasi sito web diventa una mini app DeHub con un tag script. Controlla il tuo manifesto, visualizza la tua scheda feed ed esegui la tua app all'interno di DeHub prima che qualcun altro la veda. Le mini app Farcaster funzionano così come sono.",
+      "backToStore": "Torna alle app",
+      "checkTitle": "Verifica e avvia",
+      "check": "Verifica",
+      "launch": "Lancio",
+      "badUrl": "Inserisci un indirizzo https://o http://localhost per i test locali.",
+      "localNote": "Gli indirizzi locali non possono essere controllati dai nostri server, ma puoi lanciarli qui per testarli.",
+      "checkFailed": "Impossibile eseguire il controllo. Riprova.",
+      "passed": "Il manifesto sembra buono",
+      "failed_one": "{{count}} problema da risolvere",
+      "failed_other": "{{count}} problemi da risolvere",
+      "farcasterImport": "Leggi da farcaster.json",
+      "cardPreview": "Come appare il tuo link nel feed",
+      "open": "Apri",
+      "ownershipTitle": "Dimostra di essere il proprietario del dominio",
+      "ownershipBody": "Firma una volta con il tuo portafoglio DeHub e incolla il risultato nel tuo dehub.json. Collega l'app al tuo account, in modo che i compensi e le recensioni ti raggiungano.",
+      "signFor": "Firma per {{domain}}",
+      "signNeedsUrl": "Inserisci l'indirizzo della tua app qui sopra",
+      "signInFirst": "Accedi a DeHub per accedere.",
+      "signFailed": "La firma non è stata completata.",
+      "quickstartTitle": "Avvio rapido",
+      "quickstartBody": "Aggiungi l'SDK alla tua pagina e chiama Ready() una volta visualizzata la prima schermata.",
+      "manifestTitle": "Manifesto",
+      "manifestBody": "Servilo su/.well-known/dehub.json sul dominio della tua app. Hai già un farcaster.json? Abbiamo letto anche quello.",
+      "embedTitle": "Scheda alimentazione",
+      "embedBody": "Aggiungi questo tag a qualsiasi pagina e un link a quella pagina viene visualizzato come una scheda con un pulsante che apre l'app proprio lì.",
+      "verifyTitle": "Accedi con DeHub, sul tuo server",
+      "verifyBody": "auth.getToken() dà alla tua app un token firmato da DeHub. Controllalo sul tuo server con qualsiasi libreria JWT. L'indirizzo del portafoglio dell'utente è in sub.",
+      "copy": "Copia",
+      "copied": "Copiato"
+    }
   }
 }

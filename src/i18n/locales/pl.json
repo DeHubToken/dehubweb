@@ -7572,5 +7572,69 @@
     "back": "Wróć do Ustawień",
     "signIn": "Zaloguj się",
     "acknowledge": "Zapisałem szczegóły odzyskiwania portfela i rozumiem, że usunięcie jest trwałe."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Zweryfikowano",
+      "unreviewed": "Nie oceniono",
+      "dev": "Podgląd dewelopera"
+    },
+    "host": {
+      "close": "Zamknij aplikację",
+      "backToStore": "Wróć do aplikacji",
+      "notFound": "Ta aplikacja nie znajduje się w DeHub App Store lub została usunięta.",
+      "badUrl": "Tego adresu nie można otworzyć jako mini aplikacji. Musi zaczynać się od https://lub być adresem hosta lokalnego w trybie programisty.",
+      "readyTimeout": "Ta aplikacja nigdy nie wywołaładehub.ready (), więc ekran powitalny został ukryty po 8 sekundach."
+    },
+    "signIn": {
+      "title": "Zaloguj się do {{name}}?",
+      "body": "Ta aplikacja otrzyma Twój adres portfela DeHub i token logowania, który działa tylko dla tej aplikacji. Nie uzyska dostępu do Twojego portfela, środków ani konta DeHub.",
+      "cancel": "Nie teraz",
+      "confirm": "Zaloguj się"
+    },
+    "store": {
+      "title": "Aplikacje",
+      "seoTitle": "Aplikacje DeHub — mini aplikacje dla DeHub",
+      "seoDescription": "Miniaturowe aplikacje stworzone dla DeHub przez każdego: gry, narzędzia i nie tylko, które otwierają się wewnątrz DeHub, są już zalogowane i udostępniane z powrotem na kanale.",
+      "intro": "Miniaturowe aplikacje stworzone dla DeHub przez każdego. Otwierają się w DeHub, jesteś już zalogowany, a każda aplikacja pokazuje swój prawdziwy adres internetowy.",
+      "buildCta": "Stwórz aplikację",
+      "emptyTitle": "Brak aplikacji na liście",
+      "emptyBody": "Pierwsze aplikacje są sprawdzane. Zbuduj jeden i może być tutaj."
+    },
+    "dev": {
+      "title": "Stwórz mini aplikację",
+      "seoTitle": "Stwórz mini aplikację DeHub",
+      "seoDescription": "Zbuduj mini aplikację dla DeHub: jeden tag skryptu, zaloguj się do DeHub, udostępnij na kanale. Sprawdź swój manifest i wyświetl podgląd aplikacji u prawdziwego gospodarza.",
+      "intro": "Każda witryna staje się mini aplikacją DeHub z jednym tagiem skryptu. Sprawdź manifest, zobacz kartę kanału i uruchom aplikację w DeHub, zanim ktokolwiek inny ją zobaczy. Miniaturowe aplikacje Farcaster działają tak, jak są.",
+      "backToStore": "Wróć do aplikacji",
+      "checkTitle": "Sprawdź i uruchom",
+      "check": "Sprawdź",
+      "launch": "Uruchom",
+      "badUrl": "Wprowadź https:// adres lub http://localhost do testowania lokalnego.",
+      "localNote": "Lokalnych adresów nie można sprawdzić na naszych serwerach, ale możesz je uruchomić tutaj, aby przetestować.",
+      "checkFailed": "Nie można uruchomić testu. Spróbuj ponownie.",
+      "passed": "Manifest wygląda dobrze",
+      "failed_one": "{{count}} problem do naprawienia",
+      "failed_other": "{{count}} problemy do naprawienia",
+      "farcasterImport": "Czytaj z farcaster.json",
+      "cardPreview": "Jak wygląda twój link w wątku",
+      "open": "Otwórz",
+      "ownershipTitle": "Potwierdź posiadanie domeny",
+      "ownershipBody": "Zasignuj raz swoim portfelem DeHub i wklej wynik do dehub.json. Łączy to aplikację z twoim kontem, dzięki czemu wypłaty i recenzje trafią do ciebie.",
+      "signFor": "Zasignuj dla {{domain}}",
+      "signNeedsUrl": "Wprowadź adres swojej aplikacji powyżej",
+      "signInFirst": "Zaloguj się do DeHub, aby zasignować.",
+      "signFailed": "Proces podpisywania nie został ukończony.",
+      "quickstartTitle": "Szybki start",
+      "quickstartBody": "Dodaj SDK do swojej strony i wywołaj ready() po pojawieniu się pierwszej ekrany.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Zapewnij dostęp do tego pliku pod adresem /.well-known/dehub.json na swojej domenie. Masz już farcaster.json? Przeczytamy to również.",
+      "embedTitle": "Karta wątku",
+      "embedBody": "Dodaj ten tag do dowolnej strony, a link do tej strony pojawi się jako karta z przyciskiem, który otworzy twoją aplikację na miejscu.",
+      "verifyTitle": "Zaloguj się z DeHub, na serwerze",
+      "verifyBody": "auth.getToken() daje twojej aplikacji token podpisany przez DeHub. Sprawdź go na serwerze za pomocą dowolnej biblioteki JWT. Adres portfela użytkownika znajduje się w sub.",
+      "copy": "Kopiuj",
+      "copied": "Skopiowano"
+    }
   }
 }

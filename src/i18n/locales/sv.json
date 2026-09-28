@@ -7437,5 +7437,69 @@
     "back": "Tillbaka till inställningar",
     "signIn": "Logga in på ditt konto",
     "acknowledge": "Jag har sparat mina återställningsuppgifter för plånboken och förstår att raderingen är permanent."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verifierad",
+      "unreviewed": "Ogranskad",
+      "dev": "Utvecklarförhandsvisning"
+    },
+    "host": {
+      "close": "Stäng app",
+      "backToStore": "Tillbaka till Appar",
+      "notFound": "Denna app finns inte i DeHub App Store, eller den har tagits bort.",
+      "badUrl": "Den här adressen kan inte öppnas som en mini-app. Den måste börja med https://, eller vara en localhost-adress i utvecklarläget.",
+      "readyTimeout": "Denna app har aldrig anropat dehub.ready(), så startskärmen dök upp efter 8 sekunder."
+    },
+    "signIn": {
+      "title": "Logga in på {{name}}?",
+      "body": "Denna app kommer att få din DeHub-plånboksadress och ett inloggningstoken som endast fungerar för denna app. Den kommer inte att få tillgång till din plånbok, dina medel eller din DeHub-konto.",
+      "cancel": "Inte nu",
+      "confirm": "Logga in"
+    },
+    "store": {
+      "title": "Appar",
+      "seoTitle": "DeHub Appar — mini-appar för DeHub",
+      "seoDescription": "Mini-appar byggda för DeHub av vem som helst: spel, verktyg och mer som öppnas inom DeHub, redan inloggad, med möjlighet att dela tillbaka till flödet.",
+      "intro": "Mini-appar byggda för DeHub av vem som helst. De öppnas inom DeHub, du är redan inloggad, och varje app visar sin riktiga webbadress.",
+      "buildCta": "Bygg en app",
+      "emptyTitle": "Inga appar listade ännu",
+      "emptyBody": "De första apparna är under granskning. Bygg en och den kan vara här."
+    },
+    "dev": {
+      "title": "Bygg en mini-app",
+      "seoTitle": "Bygg en DeHub mini-app",
+      "seoDescription": "Bygg en mini-app för DeHub: en script-tagg, logga in med DeHub, dela till flödet. Kontrollera din manifest och förhandsgranska din app i den riktiga värden.",
+      "intro": "Varje webbplats blir en DeHub mini-app med en script-tagg. Kontrollera din manifest, se din flödeskort och kör din app inom DeHub innan någon annan ser den. Farcaster mini-appar fungerar som de är.",
+      "backToStore": "Tillbaka till Appar",
+      "checkTitle": "Kontrollera och starta",
+      "check": "Kontrollera",
+      "launch": "Starta",
+      "badUrl": "Ange en https://-adress, eller http://localhost för lokalt testande.",
+      "localNote": "Lokala adresser kan inte kontrolleras från våra servrar, men du kan starta dem här för att testa.",
+      "checkFailed": "Kontrollen kunde inte köras. Försök igen.",
+      "passed": "Manifest ser ut bra",
+      "failed_one": "{{count}} problem att fixa",
+      "failed_other": "{{count}} problem att fixa",
+      "farcasterImport": "Läs från farcaster.json",
+      "cardPreview": "Hur din länk ser ut i flödet",
+      "open": "Öppna",
+      "ownershipTitle": "Bevisa att du äger domänen",
+      "ownershipBody": "Signera en gång med din DeHub-plånbok och klistra in resultatet i din dehub.json. Det kopplar appen till ditt konto, så utbetalningar och recensioner når dig.",
+      "signFor": "Signera för {{domain}}",
+      "signNeedsUrl": "Skriv in din apps adress ovanför",
+      "signInFirst": "Logga in på DeHub för att signera.",
+      "signFailed": "Signeringen avslutades inte.",
+      "quickstartTitle": "Snabbstart",
+      "quickstartBody": "Lägg till SDK på din sida och ring ready() en gång när din första skärm visas.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Servera detta på /.well-known/dehub.json på din apps domän. Har du redan en farcaster.json? Vi läser den också.",
+      "embedTitle": "Feed-kort",
+      "embedBody": "Lägg till detta tag på någon sida, och en länk till den sidan visas som ett kort med en knapp som öppnar din app direkt där.",
+      "verifyTitle": "Logga in med DeHub, på din server",
+      "verifyBody": "auth.getToken() ger din app ett token som är signerat av DeHub. Kontrollera det på din server med någon JWT-bibliotek. Användarens plånboksadress finns i sub.",
+      "copy": "Kopiera",
+      "copied": "Kopierat"
+    }
   }
 }

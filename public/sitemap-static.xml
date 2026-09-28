@@ -133,6 +133,18 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://dehub.io/apps</loc>
+    <lastmod>2026-09-28T00:00:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/apps/dev</loc>
+    <lastmod>2026-09-28T00:00:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://dehub.io/arcade/kings-gambit</loc>
     <lastmod>2026-08-10T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>

@@ -7439,5 +7439,69 @@
     "back": "Natrag na postavke",
     "signIn": "Prijavite se na svoj račun",
     "acknowledge": "Spremio/la sam podatke o oporavku novčanika i razumijem da je brisanje trajno."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verificirano",
+      "unreviewed": "Neprovjereno",
+      "dev": "Pregled razvojne verzije"
+    },
+    "host": {
+      "close": "Zatvori aplikaciju",
+      "backToStore": "Natrag na Aplikacije",
+      "notFound": "Ova aplikacija nije dostupna u DeHub App Store-u, ili je uklonjena.",
+      "badUrl": "Ova adresa ne može biti otvorena kao mini aplikacija. Mora početi s `https://`, ili morati biti lokalna adresa u razvojnom načinu.",
+      "readyTimeout": "Ova aplikacija nikad nije pozvala `dehub.ready()`, pa je ekran pojava skrio nakon 8 sekundi."
+    },
+    "signIn": {
+      "title": "Prijavi se na {{name}}?",
+      "body": "Ova aplikacija će dobiti vašu DeHub novčanu adresu i token za prijavu koji važi samo za ovu aplikaciju. Neće imati pristup vašem novčaniku, vašim sredstvima ili vašem DeHub računu.",
+      "cancel": "Ne sad",
+      "confirm": "Prijavi se"
+    },
+    "store": {
+      "title": "Aplikacije",
+      "seoTitle": "DeHub Aplikacije — mini aplikacije za DeHub",
+      "seoDescription": "Mini aplikacije koje su izgrađene za DeHub od strane bilo tko: igre, alati i više, koje se otvaraju unutar DeHub-a, već prijavljeni, s dijeljenjem natrag u feed.",
+      "intro": "Mini aplikacije koje su izgrađene za DeHub od strane bilo tko. Otvaraju se unutar DeHub-a, već ste prijavljeni, i svaka aplikacija prikazuje svoju stvarnu web adresu.",
+      "buildCta": "Izgradi aplikaciju",
+      "emptyTitle": "Nema aplikacija na popisu još.",
+      "emptyBody": "Prve aplikacije su u provjeri. Izgradi jednu i možda će se pojaviti ovdje."
+    },
+    "dev": {
+      "title": "Izgradi mini aplikaciju",
+      "seoTitle": "Izgradi DeHub mini aplikaciju",
+      "seoDescription": "Izgradi mini aplikaciju za DeHub: jedan tag skripte, prijava s DeHub-om, dijeljenje u feed. Provjeri svoj manifest i pregledaš svoju aplikaciju u stvarnom hostu.",
+      "intro": "Svaka web stranica postaje DeHub mini aplikacija s jednim tagom skripte. Provjeri svoj manifest, pogledaj svoju karticu feeda i pokreni svoju aplikaciju unutar DeHub-a prije nego što je vidijo netko drugi. Farcaster mini aplikacije rade kao što su.",
+      "backToStore": "Natrag na Aplikacije",
+      "checkTitle": "Provjeri i pokreni",
+      "check": "Provjeri",
+      "launch": "Pokreni",
+      "badUrl": "Unesi adresu `https://`, ili `http://localhost` za lokalno testiranje.",
+      "localNote": "Lokalne adrese ne mogu biti provjerene s naših servera, ali ih možete pokrenuti ovdje za testiranje.",
+      "checkFailed": "Provjera nije uspjela. Pokusajte ponovno.",
+      "passed": "Manifest izgleda dobro",
+      "failed_one": "{{count}} problem koji treba riješiti",
+      "failed_other": "Problemi koje treba riješiti:{{count}}",
+      "farcasterImport": "Pročitajte iz farcaster.json",
+      "cardPreview": "Kako tvoja poveznica izgleda u feedu",
+      "open": "Otvorena",
+      "ownershipTitle": "Dokažite da ste vlasnik domene",
+      "ownershipBody": "Prijavite se jednom svojim DeHub novčanikom i zalijepite rezultat u svoj dehub.json. Povezuje aplikaciju s vašim korisničkim računom kako biste mogli primati isplate i recenzije.",
+      "signFor": "Potpiši za {{domain}}",
+      "signNeedsUrl": "Gore unesi adresu aplikacije",
+      "signInFirst": "Prijavite se na DeHub kako biste se prijavili.",
+      "signFailed": "Potpisivanje nije dovršeno.",
+      "quickstartTitle": "Brzo zagrijavanje",
+      "quickstartBody": "Dodajte SDK na svoju stranicu i nazovite Ready() nakon što se prikaže prvi zaslon.",
+      "manifestTitle": "dokazivati",
+      "manifestBody": "Poslužite ovo na /.well-known/dehub.json na domeni svoje aplikacije. Već imate farcaster.json? I to smo pročitali.",
+      "embedTitle": "Kartica za ulaganje",
+      "embedBody": "Dodajte ovu oznaku na bilo koju stranicu, a poveznica na tu stranicu prikazuje se kao kartica s gumbom koji otvara vašu aplikaciju upravo tamo.",
+      "verifyTitle": "Prijavite se s DeHubom na svom poslužitelju",
+      "verifyBody": "auth.getToken() daje vašoj aplikaciji token koji je potpisao DeHub. Provjerite ga na svom poslužitelju s bilo kojom JWT bibliotekom. Korisnikova adresa novčanika nalazi se u pod.",
+      "copy": "Kopiraj",
+      "copied": "Kopirano"
+    }
   }
 }

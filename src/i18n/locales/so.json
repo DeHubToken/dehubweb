@@ -5381,5 +5381,69 @@
     "back": "Back to Settings",
     "signIn": "Soo gal si aad u tirtirto akoonkaaga",
     "acknowledge": "Waxaan kaydiyay faahfaahinta soo kabashada jeebkayga oo waxaan fahamsanahay in tirtiridu ay tahay mid joogto ah."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "La xaqiijiyay",
+      "unreviewed": "Lama eegi karo",
+      "dev": "Horudhac horumariyaha"
+    },
+    "host": {
+      "close": "Xidh APP",
+      "backToStore": "Ku noqo Apps",
+      "notFound": "App-kan kuma jiro DeHub App Store, ama waa la qaaday.",
+      "badUrl": "Cinwaankaas lama furi karo sida app mini ah. Waa inay ku bilaabataa https://, ama noqo cinwaanka maxalliga ah ee qaabka horumariyaha.",
+      "readyTimeout": "App Tani marna loo yaqaan dehub.ready(), sidaa darteed shaashadda splash ayaa la qariyey ka dib 8 ilbiriqsi."
+    },
+    "signIn": {
+      "title": "Gal {{name}}?",
+      "body": "Codsigan wuxuu heli doonaa cinwaankaaga boorsada DeHub iyo calaamadda is-diiwaangelinta ee kaliya u shaqeysa barnaamijkan. Ma heli doonto boorsadaada, lacagtaada ama koontadaada DeHub.",
+      "cancel": "Hadda ma ahan",
+      "confirm": "Gal"
+    },
+    "store": {
+      "title": "Barnaamijyada",
+      "seoTitle": "DeHub Apps — barnaamijyo yaryar oo loogu talagalay DeHub",
+      "seoDescription": "Barnaamijyada Mini ee loo dhisay DeHub qof kasta: ciyaaraha, aaladaha iyo in ka badan oo ka furan gudaha DeHub, horeyba u saxiixay, iyada oo dib loogu wadaagayo quudinta.",
+      "intro": "Barnaamijyada Mini ee loo dhisay DeHub qof kasta. Waxay u furan yihiin gudaha DeHub, horeyba waad u saxiixday, barnaamij kastana wuxuu muujinayaa cinwaankiisa dhabta ah ee webka.",
+      "buildCta": "Samee app ah",
+      "emptyTitle": "Ma jiro barnaamijyo weli la taxay",
+      "emptyBody": "Codsiyada ugu horreeya ayaa dib u eegis ku jira. Dhis mid ka mid ah iyo waxaa laga yaabaa in ay halkan."
+    },
+    "dev": {
+      "title": "Dhis app mini ah",
+      "seoTitle": "Dhis app DeHub mini ah",
+      "seoDescription": "Dhis app mini ah DeHub: hal calaamad qoraal ah, la saxiixo DeHub, wadaag quudinta. Hubi app-kaaga muuqda oo horay u eeg app-kaaga martigeliyaha dhabta ah.",
+      "intro": "Websaydh kasta wuxuu noqdaa barnaamij DeHub mini ah oo leh hal astaan qoraal ah. Hubi kaadhkaaga cad, fiiri kaarka quudinta, oo ku ordi app-kaaga gudaha DeHub ka hor inta qof kale uusan arkin. Farcaster mini apps shaqeeyaan sida ay yihiin.",
+      "backToStore": "Ku noqo Apps",
+      "checkTitle": "Hubi oo bilaabi",
+      "check": "Hubi",
+      "launch": "Bilaabida",
+      "badUrl": "Ku qor https:// cinwaan, ama http://localhost imtixaanka maxalliga ah.",
+      "localNote": "Cinwaanada maxalliga ah laguma hubin karo server-kayaga, laakiin waxaad bilaabi kartaa halkan si aad u tijaabiso.",
+      "checkFailed": "Jeegga ma ordi karin. isku day mar kale.",
+      "passed": "Manifest looks soo good",
+      "failed_one": "{{count}} dhibaatada si loo saxo",
+      "failed_other": "{{count}} Dhibaatooyinka la sixi karo",
+      "farcasterImport": "Akhri farcaster.json",
+      "cardPreview": "Sida xiriiriyahaagu u muuqdo quudinta",
+      "open": "Furan",
+      "ownershipTitle": "Xaqiiji inaad leedahay domainka",
+      "ownershipBody": "Saxiix hal mar boorsadaada DeHub oo ku dheji natiijada dehub.json. Waxay kuxirantahay barnaamijka koontadaada, sidaa darteed lacag-bixinta iyo dib-u-eegista ayaa kugu soo gaaraya.",
+      "signFor": "Saxiix {{domain}}",
+      "signNeedsUrl": "Ku qor cinwaanka app-kaaga kor ku xusan",
+      "signInFirst": "Saxiix DeHub si aad u saxiixdo.",
+      "signFailed": "Saxiixa ma dhameystirin.",
+      "quickstartTitle": "Bilow Degdeg ah",
+      "quickstartBody": "Ku dar SDK boggaaga oo wac diyaar() marka shaashaddaada ugu horreysa ay muujiso.",
+      "manifestTitle": "Cadeynta",
+      "manifestBody": "U adeegso tan/.well known/dehub.json domain-ka app-kaaga. Waxaan sidoo kale akhrinay farcaster.json?",
+      "embedTitle": "Kaarka quudinta",
+      "embedBody": "Ku dar calaamaddan bog kasta, iyo isku xirka bogaas wuxuu muujinayaa kaarka leh badhanka furaya app-kaaga halkaas.",
+      "verifyTitle": "Ku qor DeHub, server-kaaga",
+      "verifyBody": "auth.getToken() wuxuu siinayaa app-kaaga calaamad uu saxiixay DeHub. Ka hubi server-kaaga maktabad kasta oo JWT ah. Cinwaanka boorsada isticmaalaha ayaa ku jira sub.",
+      "copy": "Nuqul Ka Samee",
+      "copied": "La koobiyay"
+    }
   }
 }

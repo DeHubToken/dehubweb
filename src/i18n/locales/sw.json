@@ -7491,5 +7491,69 @@
     "back": "Rudi kwenye Mipangilio",
     "signIn": "Ingia ili kufuta akaunti yako",
     "acknowledge": "Nimehifadhi maelezo yangu ya kurejesha pochi na ninaelewa kuwa kufutwa ni kwa kudumu."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verified",
+      "unreviewed": "Unreviewed",
+      "dev": "Kutoka kwa Mwongozaji"
+    },
+    "host": {
+      "close": "Kua App",
+      "backToStore": "Kua Apps",
+      "notFound": "App hii si katika DeHub App Store, au imeondolewa.",
+      "badUrl": "Hiyo hawezi kufikika kama app ndogo. Lazo lakiwepo lakiwepo la https://, au lakiwepo la localhost katika modda ya mwongozaji.",
+      "readyTimeout": "App hii hakikufanya dehub.ready(), kwa hiyo, kura ya kwanza ilipatikana baada ya dakika 8."
+    },
+    "signIn": {
+      "title": "Kujisajiliwa katika {{name}}?",
+      "body": "App hii itapata barua ya fedha yako ya DeHub na token ya kujisajiliwa ambayo haikutokana na app hii tu. Hata hivyo, hatawezi kufika katika fedha yako, fedha zako au hesabu yako ya DeHub.",
+      "cancel": "Sasa siku",
+      "confirm": "Kujisajiliwa"
+    },
+    "store": {
+      "title": "Apps",
+      "seoTitle": "DeHub Apps — apps ndogo za DeHub",
+      "seoDescription": "Apps ndogo zilizojengwa kwa DeHub na kila mtu: majadwala, vituo na zaidi zaidi ambazo zinafungwa ndani ya DeHub, zimejisajiliwa kabla, na kushiriki na kuingia katika feed.",
+      "intro": "Apps ndogo zilizojengwa kwa DeHub na kila mtu. Zinafungwa ndani ya DeHub, unaweza kujisajiliwa kabla, na kila app inajulikana na barua yake ya mtandao wa kawaida.",
+      "buildCta": "Jenga app",
+      "emptyTitle": "Hainajulikana app yoyote bado",
+      "emptyBody": "Apps ya kwanza zimekuwa katika ufuatiliaji. Jenga moja na hatawezi kuwa hapa."
+    },
+    "dev": {
+      "title": "Jenga app ndogo",
+      "seoTitle": "Jenga app ndogo ya DeHub",
+      "seoDescription": "Jenga app ndogo ya DeHub: kipande cha kodi moja, kujisajiliwa na DeHub, kushiriki katika feed. Fikiria manifestu yako na kuficha app yako katika mfumo wa kawaida.",
+      "intro": "Kila mtandao unaweza kuwa app ndogo ya DeHub na kipande cha kodi moja. Fikiria manifestu yako,ona kadi ya feed yako, na run app yako ndani ya DeHub kabla ya kila mtu akuelewa. Apps ndogo za Farcaster zinafunga kama zilizojengwa.",
+      "backToStore": "Kua Apps",
+      "checkTitle": "Fikiria na Kufunga",
+      "check": "Fikiria",
+      "launch": "Kufunga",
+      "badUrl": "Andika alama ya https://, au http://localhost kwa ufanyaji wa mahali pake.",
+      "localNote": "Alama za mahali pake hazifanyiwa ufuatiliaji kutoka kwa seravisi zetu, lakini unaweza kufunga zao hapa kwa ajili ya ufanyaji wa ufafanuzi.",
+      "checkFailed": "Ufanyaji wa ufuatiliaji haikuweza kufanyika. Jaribu tena.",
+      "passed": "Dhihirisho linaonekana kuwa zuri",
+      "failed_one": "{{count}} tatizo la kurekebisha",
+      "failed_other": "{{count}} matatizo ya kurekebisha",
+      "farcasterImport": "Soma kutoka farcaster.json",
+      "cardPreview": "Jinsi kiunganishi chako kinavyoonekana kwenye mpasho",
+      "open": "Fungua",
+      "ownershipTitle": "Thibitisha kuwa unamiliki kikoa",
+      "ownershipBody": "Saini mara moja kwa kutumia mkoba wako wa DeHub na ubandike matokeo kwenye dehub.json yako. Inaunganisha programu na akaunti yako, kwa hivyo malipo na tathmini hukufikia.",
+      "signFor": "Saini kwa {{domain}}",
+      "signNeedsUrl": "Weka anwani ya programu yako hapo juu",
+      "signInFirst": "Ingia kwenye DeHub ili utie saini.",
+      "signFailed": "Utiaji saini haujakamilika.",
+      "quickstartTitle": "Anza haraka",
+      "quickstartBody": "Weka SDK kwenye ukurasa wako na upige simu tayari() mara tu skrini yako ya kwanza itakapoonekana.",
+      "manifestTitle": "Dhahiri",
+      "manifestBody": "Hudumia hii katika /.ijulikane vizuri/dehub.json kwenye kikoa cha programu yako. Tayari tuna farcaster.json? Tunasoma hivyo pia.",
+      "embedTitle": "Kadi ya malisho",
+      "embedBody": "Weka lebo hii kwenye ukurasa wowote na kiunganishi cha ukurasa huo kinaonekana kama kadi iliyo na kitufe kinachofungua programu yako hapo hapo.",
+      "verifyTitle": "Ingia kwa kutumia DeHub, kwenye seva yako",
+      "verifyBody": "auth.getToken() inaipa programu yako ishara iliyosainiwa na DeHub. Iangalie kwenye seva yako na maktaba yoyote ya JWT. Anwani ya mkoba wa mtumiaji iko katika sehemu ndogo.",
+      "copy": "Nakili",
+      "copied": "Imenakiliwa"
+    }
   }
 }
