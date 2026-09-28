@@ -11,7 +11,11 @@ export function useHorizontalBitmap(source: string, measured: boolean, viewportR
     let timer: ReturnType<typeof setTimeout> | undefined;
     const observer = new IntersectionObserver(([entry]) => {
       if (timer) clearTimeout(timer);
-      if (entry.isIntersecting) setRetained(true);
+      const viewport = root.getBoundingClientRect();
+      const slide = entry.boundingClientRect;
+      // Vertical retention owns the feed's scroll-back buffer and grace period.
+      const horizontallyVisible = slide.right > viewport.left - 32 && slide.left < viewport.right + 32;
+      if (horizontallyVisible) setRetained(true);
       else timer = setTimeout(() => setRetained(false), 400);
     }, { root, rootMargin: '0px 32px' });
     observer.observe(node);
