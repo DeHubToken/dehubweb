@@ -135,6 +135,14 @@ export function emitDepinStored(payload: DepinStoredPayload): void {
   depinSocket?.emit('depin:stored', payload);
 }
 
+export function emitDepinErased(assetKey: string): void {
+  depinSocket?.emit('depin:erased', { assetKey });
+}
+
+export function onDepinErase(cb: (data: { assetKey: string }) => void): () => void {
+  return onEvent('depin:erase', cb);
+}
+
 export function emitDepinChallengeResponse(payload: DepinChallengeResponsePayload): void {
   depinSocket?.emit('depin:challenge-response', payload);
 }
