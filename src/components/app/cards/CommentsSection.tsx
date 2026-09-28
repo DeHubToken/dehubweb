@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem , Anchor, Eye, Baby, Pin, PinOff, Flag, Sparkles, Handshake } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Anchor, Eye, Baby, Pin, PinOff, Flag, Sparkles, Handshake } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
@@ -73,6 +73,8 @@ import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useCommentTips } from '@/hooks/use-comment-tips';
+import { TipGemIcon } from './TipGemIcon';
+import { subscribePostTipped, commentTipKey } from '@/lib/tip-events';
 import { useAuthorThread } from '@/hooks/use-author-thread';
 import { TipModal } from '@/components/app/modals/TipModal';
 import { ReportModal } from '@/components/app/modals/ReportModal';
@@ -214,6 +216,8 @@ interface CommentItemProps {
   onTip: (id: string) => void;
   /** DHB already tipped to this comment, shown beside the gem when > 0. */
   tipTotal?: number;
+  /** This viewer has tipped this comment before. */
+  viewerTipped?: boolean;
   onUserPress: (username: string) => void;
   isReply?: boolean;
   /** Draw the thread line up out of this row's avatar to the one above it. */
@@ -320,8 +324,14 @@ const PostCreatorContext = createContext<{
   username?: string | null;
 } | null>(null);
 
-function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
+  // Bumps each time this viewer tips this comment, replaying the gem swirl.
+  const [tipBurst, setTipBurst] = useState(0);
+  useEffect(() => {
+    const key = commentTipKey(comment.id);
+    return subscribePostTipped((id) => { if (id === key) setTipBurst((n) => n + 1); });
+  }, [comment.id]);
   const [editText, setEditText] = useState(comment.text);
   const [imageFullscreen, setImageFullscreen] = useState(false);
   const avatarUrl = isAssistantAddress(comment.address) ? ASSISTANT_AVATAR : comment.avatar;
@@ -669,7 +679,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
               className={cn(COMMENT_ACTION_HIT, "flex items-center gap-1 text-white hover:text-zinc-400 transition-colors")}
               aria-label="Tip"
             >
-              <Gem className="w-4 h-4" />
+              <TipGemIcon tipped={!!viewerTipped || tipBurst > 0} burstKey={tipBurst} className="w-4 h-4" plainClassName="" />
               {(tipTotal ?? 0) > 0 && <span className="text-xs">{formatCount(tipTotal!)}</span>}
             </button>
             {/*
@@ -2061,6 +2071,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           onDelete={handleDeleteComment}
           onTip={handleTip}
           tipTotal={commentTips.totals[comment.id]}
+          viewerTipped={!!walletAddress && !!commentTips.tippers[comment.id]?.includes(walletAddress.toLowerCase())}
           onUserPress={handleUserPress}
           isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
           onAnchor={canAnchor ? handleAnchor : undefined}
@@ -2087,6 +2098,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             onDelete={handleDeleteComment}
             onTip={handleTip}
             tipTotal={commentTips.totals[reply.id]}
+            viewerTipped={!!walletAddress && !!commentTips.tippers[reply.id]?.includes(walletAddress.toLowerCase())}
             onUserPress={handleUserPress}
             isReply
             threadLineAbove
