@@ -3466,6 +3466,38 @@
     "continue": "Hoki ki DeHub",
     "keepWhileHolding": "Ka wātea ana tētahi tohu, māu tonu ia mō te roa o tō pupuri i ō tohu DeHub. Ka taea te whakarerekē te maha o ngā tohu e hiahiatia ana kia wātea ai tētahi tohu hou i runga i te utu o te tohu."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} badge",
+    "close": "Tata",
+    "badges": "Ngā pātene",
+    "tierOf": "Tier {{index}} {{total}}",
+    "youHaveThis": "Kei a koe tenei potae",
+    "toUnlock": "{{amount}} Ētahi atu tohu ki te whakatuwhera i te reira",
+    "holdToUnlock": "Kia mau ki te iti rawa tenei maha tohu DeHub ki te whakatuwhera i te reira",
+    "sliderLabel": "Tokens pupuri",
+    "sliderValue": "{{amount}} tokens · {{tier}}",
+    "you": "Ko koe",
+    "grants": "He aha te mea e whakatuwhera ana",
+    "perks": {
+      "fee": "Utu papa",
+      "votes": "Ngā pōti kāwanatanga",
+      "reach": "Te taumaha mo ia tirohanga me te urupare",
+      "feedPosts": "Ngā pou i te kāinga i te rā",
+      "images": "Whakaahua mo ia pou",
+      "uploads": "Te rohe tuku i ia ra",
+      "storage": "Te rokiroki o te kaituhi",
+      "profiles": "Ngā pūkete whakaora",
+      "lending": "Badge i 'ai nama",
+      "voice": "Kohikohinga reo",
+      "voiceFree": "Free",
+      "voiceLocked": "{{tier}} me runga ake"
+    },
+    "buy": "Haere DHB",
+    "details": "Te wehenga katoa",
+    "play": "Play",
+    "pause": "Pause",
+    "hint": "Drag to bend · pull a edge to peel · tap for the next one"
+  },
   "liveGift": {
     "pickTier": "Tīpakohia tētahi whakanui",
     "plays": "Ka tākaro a {{tier}} ki runga i te roma",

@@ -5519,6 +5519,38 @@
     "continue": "Zpět na DeHub",
     "keepWhileHolding": "Jakmile odemknete odznak, je váš tak dlouho, dokud držíte své DeHub tokeny. Počet tokenů potřebných k odemčení nového odznaku se může měnit s cenou tokenu."
   },
+  "badgeShowcase": {
+    "dialogLabel": "Odznak {{tier}}",
+    "close": "Zavřít",
+    "badges": "Odznaky",
+    "tierOf": "Úroveň {{index}} z {{total}}",
+    "youHaveThis": "Máte tento odznak",
+    "toUnlock": "{{amount}} další žetony k odemknutí",
+    "holdToUnlock": "Podržte alespoň tolik žetonů DeHub, abyste jej odemkli",
+    "sliderLabel": "Podržené žetony",
+    "sliderValue": "{{amount}} tokeny · {{tier}}",
+    "you": "Ty",
+    "grants": "Co odemkne",
+    "perks": {
+      "fee": "Poplatek za platformu",
+      "votes": "Hlasy pro správu",
+      "reach": "Hmotnost na zobrazení a reakci",
+      "feedPosts": "Příspěvky na domovském kanálu denně",
+      "images": "Obrázky na příspěvek",
+      "uploads": "Denní limit nahrávání",
+      "storage": "Úložiště editoru",
+      "profiles": "Uložené profily",
+      "lending": "Sloty pro půjčování odznaků",
+      "voice": "Klonování hlasu",
+      "voiceFree": "Zdarma",
+      "voiceLocked": "{{tier}} a vyšší"
+    },
+    "buy": "Získat DHB",
+    "details": "Úplný rozpis",
+    "play": "Hrát",
+    "pause": "Pozastavit",
+    "hint": "Přetažením ohnete · vytáhněte okraj pro odloupnutí · klepněte pro další"
+  },
   "liveGift": {
     "pickTier": "Vyberte oslavu",
     "plays": "Přehrává {{tier}} na streamu",

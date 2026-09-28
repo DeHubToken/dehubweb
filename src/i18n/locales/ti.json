@@ -3371,6 +3371,38 @@
     "continue": "ናብ ደሆብ ተመለስ",
     "keepWhileHolding": "ሓደ ባጅ ምስ ተኸፈተ፡ ንብረት DeHub ቶክንኩም ክሳብ ዘለዎ እዩ። ንሓድሽ ባጅ ዝድለ ቶክን ብዋጋ ቶክን ክቕየር ይኽእል።"
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} ባጅ",
+    "close": "ምዕጻው",
+    "badges": "ባጅታት",
+    "tierOf": "ደረጃ {{index}} of {{total}}",
+    "youHaveThis": "እዚ ባጅ እዚ",
+    "toUnlock": "{{amount}} ዝያዳ ምልክታት ንምኽፋት",
+    "holdToUnlock": "ነዚ ንምኽፋት ብውሑዱ ነዚ ብዙሕ DeHub ምልክታት ሒዝካ",
+    "sliderLabel": "ተዓጽዩ",
+    "sliderValue": "{{amount}} ቶከናት · {{tier}}",
+    "you": "ንስኻ",
+    "grants": "እንታይ ይከፍት",
+    "perks": {
+      "fee": "ክፍሊት መድረኽ",
+      "votes": "ናይ ምምሕዳር ድምጺ",
+      "reach": "ክብደት ኣብ ነፍሲ ወከፍ ርእይቶን ግብረመልስን",
+      "feedPosts": "Home \"ዜናታት\" ኣብ መዓልቲ",
+      "images": "ኣብ ነፍሲ ወከፍ ልኡኽ እተቐርቡ ስእል",
+      "uploads": "ዕለታዊ ናይ ምስዋእ ገደብ",
+      "storage": "ኣሰናዳኢ ኣሰናዳኢ",
+      "profiles": "እተድሕኑ መገለጫታት",
+      "lending": "ናይ ባጅ ልቓሕ ኣፈታትሓ",
+      "voice": "ድምጺ ክሎኒንግ",
+      "voiceFree": "ነጻ",
+      "voiceLocked": "{{tier}}ን ልዕሊኡን"
+    },
+    "buy": "DHB ውሰድ",
+    "details": "ምሉእ ምብትታን",
+    "play": "ተጻወት",
+    "pause": "ዕረፍቲ",
+    "hint": "ነቲ ቐጺሉ ዘሎ ጸጉሩ ኣውጽኣዮ"
+  },
   "liveGift": {
     "pickTier": "በዓል ምረጽ",
     "plays": "{{tier}} ኣብ መርበብ ሓበሬታ",

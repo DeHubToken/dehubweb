@@ -5515,6 +5515,38 @@
     "continue": "Torna a DeHub",
     "keepWhileHolding": "Un cop s'ha desbloquejat una insígnia, és teva mentre tinguis els teus tokens de DeHub. El nombre de tokens necessaris per desbloquejar una nova insígnia pot canviar amb el preu del token."
   },
+  "badgeShowcase": {
+    "dialogLabel": "Insígnia {{tier}}",
+    "close": "Tanca",
+    "badges": "Insígnies",
+    "tierOf": "Nivell {{index}} de {{total}}",
+    "youHaveThis": "Tens aquest distintiu",
+    "toUnlock": "{{amount}} més fitxes per desbloquejar-lo",
+    "holdToUnlock": "Mantén almenys aquesta quantitat de fitxes DeHub per desbloquejar-la",
+    "sliderLabel": "Tokens en possessió",
+    "sliderValue": "{{amount}} tokens · {{tier}}",
+    "you": "Tu",
+    "grants": "Què desbloqueja?",
+    "perks": {
+      "fee": "Tarifa de la plataforma",
+      "votes": "Vots de governança",
+      "reach": "Pes per visualització i reacció",
+      "feedPosts": "Publicacions de menjar a casa al dia",
+      "images": "Imatges per publicació",
+      "uploads": "Límit de càrrega diària",
+      "storage": "Emmagatzematge de l'",
+      "profiles": "Perfils desats",
+      "lending": "Ranures per al préstec d'insígnies",
+      "voice": "Clonació de veu",
+      "voiceFree": "Gratis",
+      "voiceLocked": "{{tier}} o més"
+    },
+    "buy": "Aconsegueix DHB",
+    "details": "Desglossament complet",
+    "play": "Jugar",
+    "pause": "Pausa",
+    "hint": "Arrossega per doblar · tira d'una vora per pelar · toca per a la següent"
+  },
   "liveGift": {
     "pickTier": "Tria una celebració",
     "plays": "Reprodueix {{tier}} a la transmissió",

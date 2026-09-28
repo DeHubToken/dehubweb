@@ -1,11 +1,22 @@
 /**
- * BadgeIcon — Reusable staking badge image with tooltip and click-to-glossary.
+ * BadgeIcon — Reusable staking badge image with tooltip. A click opens the
+ * badge showcase, flying the badge out of this spot.
  */
-import { useNavigate } from 'react-router-dom';
 import type { CSSProperties } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
 import { type BadgeLock } from '@/lib/staking-badges';
+import { openBadgeShowcase, preloadBadgeShowcase } from '@/lib/badge-showcase';
+
+/** Fetch the showcase chunk on the first sign of intent, once per page. */
+let preloaded = false;
+function warmShowcase() {
+  if (preloaded) return;
+  preloaded = true;
+  preloadBadgeShowcase().catch(() => {
+    preloaded = false;
+  });
+}
 
 interface BadgeIconProps {
   /** Pass badgeBalance to resolve badge from balance */
@@ -72,7 +83,6 @@ function badgeNameFromAssetUrl(url: string | null): string | undefined {
 }
 
 export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, className = 'w-[1em] h-[1em]' }: BadgeIconProps) {
-  const navigate = useNavigate();
   const { url, name } = useBadgeVisual({ badgeBalance, username, lookupId, badgeLock, src });
   // Profiles already hold a resolved asset URL. Recover its tier so the same
   // size and measured artwork inset still apply there as everywhere else.
@@ -105,10 +115,12 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
         <span
           style={opticalStyle}
           className={`shrink-0 self-baseline align-baseline cursor-pointer ${className}`}
+          onPointerEnter={warmShowcase}
+          onTouchStart={warmShowcase}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
-            navigate('/app/glossary#badges');
+            openBadgeShowcase(visualName ?? null, e.currentTarget);
           }}
         >
           <img

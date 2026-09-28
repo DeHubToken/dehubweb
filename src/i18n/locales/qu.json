@@ -3500,6 +3500,38 @@
     "continue": "DeHub nisqaman kutiy",
     "keepWhileHolding": "Huk kuti huk insignia kichasqa kaqtin, qampaq kan mayk&#39;aqchus DeHub tokensniyki hap&#39;inki. Musuq insignia kichaypaq hayk&#39;a tokenkuna necesitakun token chaninwan tikrakunman."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} insignia nisqa",
+    "close": "Wichqay",
+    "badges": "Insigniakuna",
+    "tierOf": "Nivel {{index}} nisqamanta {{total}} nisqamanta.",
+    "youHaveThis": "Kay insigniayuqmi kanki",
+    "toUnlock": "{{amount}} aswan tokenkuna chayta kicharinapaq",
+    "holdToUnlock": "Kichanapaq aswan pisiqa kay chhika DeHub tokenkunata hap'iy",
+    "sliderLabel": "Fichas hap’isqa",
+    "sliderValue": "{{amount}} fichas · {{tier}}",
+    "you": "Qam",
+    "grants": "Imakunatataq kicharin",
+    "perks": {
+      "fee": "Plataformamanta qullqi",
+      "votes": "Kamachiy votokuna",
+      "reach": "Llasaq sapa qhaway & reacción",
+      "feedPosts": "Wasi-mikhuy qillqakuna huk punchaw",
+      "images": "Imahinakuna sapa qillqasqa",
+      "uploads": "Sapa punchaw cargapa limite",
+      "storage": "Editor waqaychasqa",
+      "profiles": "Waqaychasqa perfiles",
+      "lending": "Insignia manukuy ranuras",
+      "voice": "Kunka clonación nisqa",
+      "voiceFree": "Qispisqa",
+      "voiceLocked": "{{tier}} y wichayman"
+    },
+    "buy": "DHB nisqawan yanapachikuy",
+    "details": "Hunt’asqa pakiy",
+    "play": "Pukllay",
+    "pause": "Suyay",
+    "hint": "K’umuykachinapaq aysay · huk kantuta aysay qaranpaq · qatiqninpaq ñit’iy"
+  },
   "liveGift": {
     "pickTier": "Apuyaqta akllay",
     "plays": "P'anqapi kachkan {{tier}}",

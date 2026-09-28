@@ -13,6 +13,7 @@ import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 import { GiveawayPrizeModal } from "@/components/app/GiveawayPrizeModal";
 import { ConnectLinkedWalletModal } from "@/components/app/wallet-setup/ConnectLinkedWalletModal";
 import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
+import { BadgeShowcaseHost } from "@/components/app/badge-showcase/BadgeShowcaseHost";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
@@ -411,6 +412,7 @@ function AppContent() {
   return (
     <>
       <SelfBadgeSync />
+      <BadgeShowcaseHost />
       <ViewingPreferencesSync />
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />

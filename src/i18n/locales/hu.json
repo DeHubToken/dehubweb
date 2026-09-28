@@ -5518,6 +5518,38 @@
     "continue": "Vissza a DeHubra",
     "keepWhileHolding": "Miután egy jelvényt feloldottál, az mindaddig a tiéd marad, amíg birtoklod a DeHub tokenjeidet. Az új jelvény feloldásához szükséges tokenek száma változhat a token árfolyamával."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} jelvény",
+    "close": "Bezárás",
+    "badges": "Jelvények",
+    "tierOf": "{{total}}/{{index}}. szint",
+    "youHaveThis": "Van ez a jelvényed",
+    "toUnlock": "Még {{amount}} token a feloldáshoz",
+    "holdToUnlock": "Tartson legalább ennyi DeHub tokent a feloldáshoz",
+    "sliderLabel": "Birtokolt tokenek",
+    "sliderValue": "{{amount}} token · {{tier}}",
+    "you": "Te",
+    "grants": "Mit nyit meg?",
+    "perks": {
+      "fee": "Platformdíj",
+      "votes": "Kormányzati szavazatok",
+      "reach": "Tömeg megtekintésenként és reakciónként",
+      "feedPosts": "Home-feed bejegyzések naponta",
+      "images": "Képek bejegyzésenként",
+      "uploads": "Napi feltöltési korlát",
+      "storage": "Szerkesztő tárhelye",
+      "profiles": "Mentett profilok",
+      "lending": "Jelvénykölcsönző bővítőhelyek",
+      "voice": "Hangklónozás",
+      "voiceFree": "Ingyenes",
+      "voiceLocked": "{{tier}} és feljebb"
+    },
+    "buy": "Kérjen DHB-t",
+    "details": "Teljes részletezés",
+    "play": "Játék",
+    "pause": "Szüneteltetés",
+    "hint": "Húzza el a hajlításhoz · húzza meg az egyik szélét a hámozáshoz · koppintson a következőre"
+  },
   "liveGift": {
     "pickTier": "Válassz egy ünnepséget",
     "plays": "Játssza le a(z) {{tier}} a streamben",

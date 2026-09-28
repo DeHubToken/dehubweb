@@ -5836,6 +5836,38 @@
     "continue": "Kembali ke DeHub",
     "keepWhileHolding": "Sebaik sahaja lencana dibuka, ia adalah milik anda selagi anda memegang token DeHub anda. Bilangan token yang diperlukan untuk membuka lencana baharu boleh berubah dengan harga token."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} lencana",
+    "close": "Tutup",
+    "badges": "Lencana",
+    "tierOf": "Peringkat {{index}} daripada {{total}}",
+    "youHaveThis": "Anda ada lencana ini",
+    "toUnlock": "{{amount}} lagi token untuk membukanya",
+    "holdToUnlock": "Pegang sekurang-kurangnya token DeHub sebanyak ini untuk membukanya",
+    "sliderLabel": "Token dipegang",
+    "sliderValue": "{{amount}} token · {{tier}}",
+    "you": "Anda",
+    "grants": "Apa yang ia buka",
+    "perks": {
+      "fee": "Yuran platform",
+      "votes": "Undian tadbir urus",
+      "reach": "Berat setiap paparan & tindak balas",
+      "feedPosts": "Hantaran makanan rumah sehari",
+      "images": "Imej setiap hantaran",
+      "uploads": "Had muat naik harian",
+      "storage": "Storan editor",
+      "profiles": "Profil yang disimpan",
+      "lending": "Slot pinjaman lencana",
+      "voice": "Pengklonan suara",
+      "voiceFree": "Percuma",
+      "voiceLocked": "{{tier}} dan ke atas"
+    },
+    "buy": "Dapatkan DHB",
+    "details": "Pecahan penuh",
+    "play": "Main",
+    "pause": "Jeda",
+    "hint": "Seret untuk bengkok · tarik tepi untuk dikupas · ketik untuk yang seterusnya"
+  },
   "liveGift": {
     "pickTier": "Pilih sambutan",
     "plays": "Mainkan {{tier}} di strim",

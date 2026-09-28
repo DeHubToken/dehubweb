@@ -5587,6 +5587,38 @@
     "continue": "Powrót do DeHub",
     "keepWhileHolding": "Gdy odblokujesz odznakę, będzie ona Twoja tak długo, jak będziesz posiadać swoje tokeny DeHub. Liczba tokenów potrzebnych do odblokowania nowej odznaki może się zmieniać wraz z ceną tokena."
   },
+  "badgeShowcase": {
+    "dialogLabel": "Odznaka {{tier}}",
+    "close": "Zamknij",
+    "badges": "Odznaki",
+    "tierOf": "Próg {{index}} z {{total}}",
+    "youHaveThis": "Masz tę odznakę",
+    "toUnlock": "{{amount}} więcej tokenów do odblokowania",
+    "holdToUnlock": "Przytrzymaj co najmniej tyle tokenów DeHub, aby je odblokować",
+    "sliderLabel": "Posiadane tokeny",
+    "sliderValue": "{{amount}} tokenów · {{tier}}",
+    "you": "Ty",
+    "grants": "Co odblokowuje",
+    "perks": {
+      "fee": "Opłata za platformę",
+      "votes": "Głosowanie nad zarządzaniem",
+      "reach": "Waga na widok i reakcję",
+      "feedPosts": "Domowe posty dziennie",
+      "images": "Zdjęcia na post",
+      "uploads": "Dzienny limit przesyłania",
+      "storage": "Pamięć edytora",
+      "profiles": "Zapisane profile",
+      "lending": "Miejsca do wypożyczania odznak",
+      "voice": "Klonowanie głosu",
+      "voiceFree": "Darmowe",
+      "voiceLocked": "{{tier}} i więcej"
+    },
+    "buy": "Pobierz DHB",
+    "details": "Pełne zestawienie",
+    "play": "Odtwórz",
+    "pause": "Wstrzymaj",
+    "hint": "Przeciągnij, aby zgiąć · pociągnij za krawędź, aby oderwać · dotknij, aby wybrać następną"
+  },
   "liveGift": {
     "pickTier": "Wybierz uroczystość",
     "plays": "Odtwarza {{tier}} na streamie",

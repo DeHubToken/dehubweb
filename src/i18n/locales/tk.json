@@ -3425,6 +3425,38 @@
     "continue": "DeHub-a dolanmak",
     "keepWhileHolding": "Bir nyşan açylanda, DeHub rollaryňyzy saklaýan wagtyňyzda ol siziňki bolar. Täze nyşany açmak üçin gerek bolan rollaryň sany rollaryň bahasy bilen üýtgeýär."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} badge",
+    "close": "Ýap",
+    "badges": "Ýagdaýlar",
+    "tierOf": "{{index}} of {{total}}",
+    "youHaveThis": "Men bu çüýçäni alyp barýaryn",
+    "toUnlock": "{{amount}} more tokens ony açmak üçin",
+    "holdToUnlock": "Ony açmak üçin, iň bolmanda, bu köp DeHub tokenlerini saklaň",
+    "sliderLabel": "Ýapyşýan toksinler",
+    "sliderValue": "{{amount}} tokens {{tier}}",
+    "you": "Siz",
+    "grants": "Näme açýar",
+    "perks": {
+      "fee": "Platforma tölegi",
+      "votes": "Ýolbaşçylyk saýlamalary",
+      "reach": "Görüş we reaksiýa üçin ýük",
+      "feedPosts": "Öýden-öýe postlary",
+      "images": "Post üçin suratlar",
+      "uploads": "Gündelik yükleme çägi",
+      "storage": "Editör depgesi",
+      "profiles": "Saýlanan profiler",
+      "lending": "Garawul diňi we Garawul diňi",
+      "voice": "Ses klonlaşmagy",
+      "voiceFree": "Azat",
+      "voiceLocked": "{{tier}} we ondan ýokary"
+    },
+    "buy": "DHB al",
+    "details": "Bütin döwüş",
+    "play": "Oynat",
+    "pause": "Galanlar",
+    "hint": "Draw to bend · pull a edge to peel · tap for the next one"
+  },
   "liveGift": {
     "pickTier": "Bir baýramçylyga gatnaşmak",
     "plays": "Oýunlar {{tier}} akymda",
