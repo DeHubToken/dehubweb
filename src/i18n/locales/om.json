@@ -2827,12 +2827,14 @@
     "transfersPaused": "Jijjiirraan mallattoo ni dhaabbata",
     "progress": {
       "title": "Sadarkaa Streamer",
+      "level": "Leval {{level}}",
       "xp": "{{xp}} XP",
       "toNext": "{{minutes}} daqiiqaawwan ulaagaa dabalataa sadarkaa {{level}}",
       "rule": "Yoo xiqqaate daawwataa tokko waliin daqiiqaa kudhan fi isaa ol kan fiigan qofti gara sadarkaa keetii lakkaa'ama.",
       "streak": "{{count}} torbee walitti aansuun",
       "bestStreak": "Tartiiba gaarii {{count}} torban",
       "hours": "{{hours}} sa'aatii ulaagaa guutuu",
+      "minutes": "{{count}} daqiiqaa",
       "viewers": "{{count}} daawwattoota",
       "viewCards": "Kaardii ilaali",
       "cardsTitle": "Kaardii walitti qabamuu danda’u",
@@ -2923,8 +2925,6 @@
           "hint": "Leval digdamaa gahuu."
         }
       },
-      "level": "Leval {{level}}",
-      "minutes": "{{count}} daqiiqaa",
       "chooseBadge": "Aduunyaa banamte kamiyyuu filadhuu fuula kee irratti agarsiisi.",
       "useBadge": "Aduunyaa fayyadami",
       "selectedBadge": "Filatame",
@@ -5367,32 +5367,6 @@
     "planTypeNotAllowed": "Karoorri uumaa kanaa gosa ergaa kanaa hin hayyamu.",
     "planMinTip": "Tip uumaa kanaaf yoo xiqqaate {{amount}} DHB ta'uu qaba."
   },
-  "spaces": {
-    "title": "Bakkeewwan",
-    "live": "Kallattii",
-    "upcoming": "Dhufaa jiru",
-    "past": "Darbe",
-    "create": "Bakkee Uumi",
-    "join": "Makamsi",
-    "listeners": "Dhaggeeffattoota",
-    "speakers": "Dubbattoota",
-    "host": "Keessummeessaa",
-    "endSpace": "Bakkee Dhaabi",
-    "raiseHand": "Harka Ol Kaasi",
-    "lowerHand": "Harka Gadi Buusi",
-    "mute": "Callisuun",
-    "unmute": "Sagalee Bansi",
-    "leave": "Bakkee Gadi Dhiisi",
-    "noSpaces": "Ammallee bakkeewwan hin jiran",
-    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
-  },
-  "blog": {
-    "title": "Biloogii",
-    "readMore": "Dabalataa dubbisi",
-    "backToBlog": "Biloogiitti deebi'i",
-    "sharePost": "Barreeffama qoodi",
-    "relatedPosts": "Barreeffamoota Walqabatan"
-  },
   "credits": {
     "earningsWorth": "Gatii {{amount}} .",
     "percentUsed": "{{percent}}% fayyadameera",
@@ -5434,5 +5408,95 @@
     "back": "Gara Sajootti deebi&#39;aa",
     "signIn": "Akkaawuntii keessan haquuf seena",
     "acknowledge": "Bal&#39;ina boorsaa koo deebisuu save godheera, haquun dhaabbataa akka ta&#39;e hubadheera."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Mirkanaa&#39;eera",
+      "unreviewed": "Hin ilaalamne",
+      "dev": "Durargii developer"
+    },
+    "host": {
+      "close": "App cufaa",
+      "backToStore": "Gara Apps tti deebi&#39;aa",
+      "notFound": "Appiin kun DeHub App Store keessa hin jiru, ykn gadi bu&#39;eera.",
+      "badUrl": "Teessoon sun akka appii xiqqaatti banamuu hin danda&#39;u. https:// irraa jalqabuu qaba, ykn haalata developer keessatti teessoo localhost ta&#39;uu qaba.",
+      "readyTimeout": "Appiin kun dehub.ready() jedhee waamee hin beeku, kanaaf splash screen sekondii 8 booda dhokate."
+    },
+    "signIn": {
+      "title": "{{name}} irratti galmaa&#39;aa?",
+      "body": "Appiin kun teessoo boorsaa DeHub keessanii fi mallattoo seensaa kan appii kanaaf qofa hojjetu ni argata. Borsaa keessan, maallaqa keessan ykn herrega DeHub keessan hin argatu.",
+      "cancel": "Amma miti",
+      "confirm": "🔒 **Qabdiin**"
+    },
+    "store": {
+      "title": "Appilikeeshiniiwwan",
+      "seoTitle": "Appilikeeshiniiwwan DeHub — appii xiqqaa DeHub",
+      "seoDescription": "Mini apps DeHub&#39;f nama kamiinuu ijaaraman: taphoota, meeshaalee fi kanneen biroo DeHub keessaa banaman, duraan galmaa&#39;an, gara feed tti deebi&#39;anii qooduun.",
+      "intro": "Mini apps nama kamiinuu DeHub&#39;f ijaarame. DeHub keessaa banamu, ati duraan galtee jirta, appiin hundi teessoo weeb isaa isa dhugaa agarsiisa.",
+      "buildCta": "Appii ijaaraa",
+      "emptyTitle": "Appilikeeshiniiwwan hanga ammaatti hin tarreeffamne",
+      "emptyBody": "Appilikeeshiniiwwan jalqabaa gamaaggama irra jiru. Tokko ijaaraa asitti ta&#39;uu danda&#39;a."
+    },
+    "dev": {
+      "title": "Mini app ijaaraa",
+      "seoTitle": "Appii xiqqaa DeHub ijaaraa",
+      "seoDescription": "DeHub&#39;f appii xiqqaa ijaari: mallattoo iskiriiptii tokko, DeHub waliin galmaa&#39;i, gara nyaataatti qoodi. Manifest keessan ilaalaa app keessan host dhugaa keessatti dursitanii ilaalaa.",
+      "intro": "Website kamiyyuu DeHub mini app kan script tag tokko qabu ta&#39;a. Manifest keessan ilaalaa, feed card keessan ilaalaa, app keessan osoo namni biraa hin argin DeHub keessa hojjedhaa. Farcaster mini apps akkuma jirutti hojjetu.",
+      "backToStore": "Gara Apps tti deebi&#39;aa",
+      "checkTitle": "🔍 **Qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee**",
+      "check": "Sakatta&#39;uu",
+      "launch": "Jalqabsiisuu",
+      "badUrl": "Teessoo https:// galchi, ykn http://localhost qorannoo naannoodhaaf.",
+      "localNote": "Teessoowwan naannoo sarvaroota keenya irraa sakatta&#39;amuu hin danda&#39;an, garuu qorachuuf asitti eegaluu dandeessu.",
+      "checkFailed": "Cheekiin sun fiiguu hin dandeenye. Ammas yaalaa.",
+      "passed": "Manifest gaarii fakkaata",
+      "failed_one": "{{count}} rakkoo sirreessuuf",
+      "failed_other": "{{count}} rakkoolee sirreessuu qabna",
+      "farcasterImport": "farcaster.json irraa dubbisaa",
+      "cardPreview": "Akkaataa link keessan feed keessatti mul&#39;atu",
+      "open": "Banaa",
+      "ownershipTitle": "Domain sana akka qabdu mirkaneessi",
+      "ownershipBody": "Boorsaa DeHub keetiin al tokko mallatteessi fi bu&#39;aa isaa dehub.json kee irratti maxxansi. Appicha akkaawuntii keessan waliin walqabsiisa, kanaaf kaffaltiin fi gamaaggamni isin bira ga&#39;a.",
+      "signFor": "{{domain}} irratti galmaa&#39;aa.",
+      "signNeedsUrl": "Teessoo appii keessanii armaan olitti galchaa",
+      "signInFirst": "Mallatteessuuf gara DeHub seena.",
+      "signFailed": "Mallatteessuun hin xumuramne.",
+      "quickstartTitle": "Saffisaan jalqabuu",
+      "quickstartBody": "SDK fuula kee irratti dabaliitii al tokko iskiriiniin kee inni jalqabaa mul&#39;atee ready() waami.",
+      "manifestTitle": "Mul&#39;isuu",
+      "manifestBody": "Kana /.well-known/dehub.json irratti domeenii appii keessanii irratti tajaajilaa. Duraanis farcaster.json qabduu? Sanas dubbisna.",
+      "embedTitle": "Kaardii nyaataa",
+      "embedBody": "Taagi kana fuula kamiyyuu irratti dabali, linkiin fuula sanaa akka kaardii button appii keessan achitti banu qabuun mul&#39;ata.",
+      "verifyTitle": "DeHub waliin galmaa&#39;i, sarvarii kee irratti",
+      "verifyBody": "auth.getToken() appii kee mallattoo DeHub mallatteesse kenna. Mana kitaabaa JWT kamiyyuu waliin sarvarii keessan irratti ilaalaa. Teessoon boorsaa fayyadamaa sub keessa jira.",
+      "copy": "Koppii godhaa",
+      "copied": "Koppii godhame"
+    }
+  },
+  "spaces": {
+    "title": "Bakkeewwan",
+    "live": "Kallattii",
+    "upcoming": "Dhufaa jiru",
+    "past": "Darbe",
+    "create": "Bakkee Uumi",
+    "join": "Makamsi",
+    "listeners": "Dhaggeeffattoota",
+    "speakers": "Dubbattoota",
+    "host": "Keessummeessaa",
+    "endSpace": "Bakkee Dhaabi",
+    "raiseHand": "Harka Ol Kaasi",
+    "lowerHand": "Harka Gadi Buusi",
+    "mute": "Callisuun",
+    "unmute": "Sagalee Bansi",
+    "leave": "Bakkee Gadi Dhiisi",
+    "noSpaces": "Ammallee bakkeewwan hin jiran",
+    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
+  },
+  "blog": {
+    "title": "Biloogii",
+    "readMore": "Dabalataa dubbisi",
+    "backToBlog": "Biloogiitti deebi'i",
+    "sharePost": "Barreeffama qoodi",
+    "relatedPosts": "Barreeffamoota Walqabatan"
   }
 }

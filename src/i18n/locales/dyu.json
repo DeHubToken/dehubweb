@@ -5077,5 +5077,69 @@
     "back": "An ka segi an ka ladɛrɛsiw kan",
     "signIn": "N'i ye mɔgɔ dɔ weele ka na i ka site web kan",
     "acknowledge": "Ne ye n ka wari sɔrɔli kunnafoniw mara ani n' y'a faamu ko n' ka wari bɔli ye kudayi ye."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verified",
+      "unreviewed": "Unreviewed",
+      "dev": "Developer preview"
+    },
+    "host": {
+      "close": "Close app",
+      "backToStore": "Back to Apps",
+      "notFound": "O app tɛ DeHub App Store kɔnɔ, wala a bɔra.",
+      "badUrl": "O la, a ka ɲi ka tɛmɛ fɛɛrɛ dɔw fɛ k'a yira ko a ka di mɔgɔ ye ka baara kɛ n'a ye. O ka kan ka daminɛ ni https://, walima ka kɛ yɔrɔ labɛnbaga ka ladɛrɛsi ye.",
+      "readyTimeout": "O app tun ma deli ka wele dehub. ready (), o la, a tun dogonin lo segindi 8 kɔnɔ."
+    },
+    "signIn": {
+      "title": "Sign in to {{name}}?",
+      "body": "O app bena i ka DeHub ka wari sɔrɔyɔrɔ n'i ka siginiden tagamasiɲɛ sɔrɔ min be baara kɛ o app dɔrɔn lo kama. O la, i tɛna se ka wari sɔrɔ i ka wari la, i ka wari wala i ka DeHub ka wari la.",
+      "cancel": "Not now",
+      "confirm": "Sign in"
+    },
+    "store": {
+      "title": "Apps",
+      "seoTitle": "Kala Lagaw Ya — Kala Lagaw Ya",
+      "seoDescription": "Mɔgɔ o mɔgɔ ye minan dɔw dilan DeHub kama: tulonkow, baarakɛminanw ani fɛɛn wɛrɛw minw be yɛlɛla DeHub kɔnɔ, u ye minw bila sen kan ka ban, u be segi k'u di mɔgɔw ma.",
+      "intro": "Mɔgɔ si tɛ se ka min kɛ, o ye ka baara kɛ n'o ye. U be yɛlɛ DeHub kɔnɔ, i ye siginiden ye ka ban, ani app kelen kelen bɛɛ b'a ka site web tɔgɔ yira.",
+      "buildCta": "Build an app",
+      "emptyTitle": "PAS EncARA Kɔrɔbɔli",
+      "emptyBody": "O kama, a ka ɲi ka tɛmɛ fɛɛrɛ dɔw fɛ k'a yira ko a ka ɲi ka kɛ ni miiriya ɲuman A tun be se ka kɛ ko a tun be se ka kɛ a yɛrɛ ye."
+    },
+    "dev": {
+      "title": "I ka kan ka min kɛ, o ye ka baara kɛ",
+      "seoTitle": "I ka kan ka min kɛ, o ye ka dɔ fara i ka baara kan.",
+      "seoDescription": "Aw ye mini app dɔ dilan DeHub kama: tag kelen, aw ye siginiden dɔ kɛ ni DeHub ye, aw ye a di a ma. I ka mansin lajɛ ani i ka app lajɛ mɔgɔ sɔbɛ dɔ fɛ.",
+      "intro": "Web site o site be kɛ DeHub mini app ye ni sɛbɛnin kelen ye. I ka sɛbɛ lajɛ, i ka dumuni kɛyɔrɔ lajɛ ani i ka app bila DeHub kɔnɔ sanni mɔgɔ wɛrɛ k'a ye. Farcaster ka porogramuw be baara kɛ i n'a fɔ u be cogo min na.",
+      "backToStore": "Back to Apps",
+      "checkTitle": "Ka taga ɲɛ ani ka taga ɲɛ",
+      "check": "Check",
+      "launch": "Launch",
+      "badUrl": "Https://adrɛsi don, walima http://localhost ka kɛ yɔrɔ sɛgɛsɛgɛri ye.",
+      "localNote": "An ka baaradenw tɛ se ka yɔrɔ dɔw ka ladɛrɛsiw sɛgɛsɛgɛ, nka i be se k'u bila yan walisa k'u sɛgɛsɛgɛ.",
+      "checkFailed": "I be se ka segi k'o kɛ tugu!",
+      "passed": "Manifeste nin be komi a ka ɲi",
+      "failed_one": "{{count}} ka koo ɲɛnabɔ",
+      "failed_other": "{{count}} ka gwɛlɛyaw ɲɛnabɔ",
+      "farcasterImport": "Kalan farcaster.json",
+      "cardPreview": "A be i n'a fɔ a be dumuni kɛ cogo min na",
+      "open": "Ka yɛlɛ",
+      "ownershipTitle": "I b'a yira ko i ye mara tigi ye",
+      "ownershipBody": "I ka DeHub ka wari sɔrɔli kɛ siɲɛ kelen ani i ka o kɛ i ka dehub.json kɔnɔ. A be baara kɛ n'i ka ɔriganisasiyɔn ye walisa ka wari caaman sara ani ka sɛgɛsɛgɛri kɛ.",
+      "signFor": "Ala ka Kuma {{domain}}",
+      "signNeedsUrl": "I ka kan ka min fɔ, o ye tiɲɛ ye.",
+      "signInFirst": "I ka kan ka sɛbɛri kɛ walisa k'a yira ko i ye Jehova Seere dɔ ye.",
+      "signFailed": "Aw ye to ka miiri, ko sariya sɛbɛbaga ma labɛn.",
+      "quickstartTitle": "K'a daminɛ joona",
+      "quickstartBody": "I ka SDK fara i ka site kan ani i ka telefɔni () wele i ka filɛli fɔlɔ kɔ.",
+      "manifestTitle": "Manifestew",
+      "manifestBody": "I ka baara kɛ n'o ye/.well known/dehub.json kan i ka app ka mara la. An ye farcaster.json sɔrɔ ka ban wa? An y'o kalan fana.",
+      "embedTitle": "Fɛɛn min be dumuni di mɔgɔ ma",
+      "embedBody": "N'i ye tagamasiɲɛ nin fara a kan, a yira ko i ye karti dɔ ye min be i ka porogramu yɛlɛ yen.",
+      "verifyTitle": "I ka baara kɛyɔrɔ la, i ka baara kɛyɔrɔ la",
+      "verifyBody": "auth.gettoken() be tokeni di i ka app ma min sɛbɛnna DeHub fɛ. I ka kan ka taga a filɛ i ka baarakɛyɔrɔ la JWT lakɔliso la. O la, a ka ɲi ka tɛmɛ fɛɛrɛ dɔw fɛ k'a yira ko a ka ɲi ka kɛ ni mɔgɔ dɔ ye min be se ka mɔgɔ dɔ ka baara kɛ.",
+      "copy": "Kɔrɔbɔli",
+      "copied": "Ka kopi kɛ"
+    }
   }
 }

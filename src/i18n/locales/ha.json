@@ -5384,5 +5384,68 @@
     "back": "Komawa zuwa Saituna",
     "signIn": "Shiga don share asusunka",
     "acknowledge": "Na ajiye ta walat dawo da cikakkun bayanai da kuma fahimtar cewa shafewa ne na dindindin."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Tabbatacce",
+      "unreviewed": "Ba a duba shi ba",
+      "dev": "Mai haɓaka samfoti"
+    },
+    "host": {
+      "close": "Kusa app",
+      "backToStore": "Komawa zuwa Apps",
+      "notFound": "Wannan app ba a cikin DeHub App Store, ko an sauke shi.",
+      "badUrl": "Ba za a iya buɗe wannan adireshin a matsayin aikace-aikacen mini ba. Dole ne ya fara da https://, ko zama adireshin gidahost a yanayin mai haɓakawa.",
+      "readyTimeout": "Wannan app taba kira dehub.ready(), don haka splash allon da aka boye bayan 8 seconds."
+    },
+    "signIn": {
+      "title": "Shiga cikin {{name}}?",
+      "body": "Wannan app zai samu your DeHub walat address da kuma sa hannu alama cewa kawai aiki ga wannan app. Ba zai sami damar shiga walat ɗinku ba, kuɗin ku ko asusun DeHub ɗinku.",
+      "cancel": "Ba yanzu ba",
+      "confirm": "Shiga ciki"
+    },
+    "store": {
+      "title": "Aikace-aikace",
+      "seoTitle": "DeHub Apps — mini apps don DeHub",
+      "seoDescription": "Mini apps gina ga DeHub da kowa: wasanni, kayan aiki da kuma mafi cewa bude ciki DeHub, riga sanya hannu a, tare da raba baya ga ciyarwa.",
+      "intro": "Mini apps gina don DeHub da kowa. Suna buɗewa a ciki DeHub, kun riga kun sanya hannu a ciki, kuma kowane aikace-aikacen yana nuna ainihin adireshin yanar gizon sa.",
+      "buildCta": "Gina wani app",
+      "emptyTitle": "Babu apps da aka jera tukuna",
+      "emptyBody": "Aikace-aikacen farko suna cikin bita. Gina daya kuma zai iya zama a nan."
+    },
+    "dev": {
+      "title": "Gina mini app",
+      "seoTitle": "Gina aikace-aikacen DeHub mini",
+      "seoDescription": "Gina aikace-aikacen mini don DeHub: alamar rubutun ɗaya, shiga tare da DeHub, raba zuwa abincin. Duba bayyanannen ku kuma samfoti aikace-aikacenku a cikin ainihin mai watsa shiri.",
+      "intro": "Duk wani shafin yanar gizon ya zama aikace-aikacen DeHub mini tare da alamar rubutun ɗaya. Duba bayyanarku, duba katin ciyarwar ku, kuma gudanar da aikace-aikacenku a cikin DeHub kafin wani ya gan shi. Farcaster mini apps aiki kamar yadda suke.",
+      "backToStore": "Komawa zuwa Apps",
+      "checkTitle": "Dubawa da ƙaddamarwa",
+      "check": "Duba",
+      "launch": "Kaddamarwa",
+      "badUrl": "Shigar da wani https:// adireshin, ko http://localhost don gwajin gida.",
+      "localNote": "Adireshin gida ba za a iya bincika daga sabobinmu ba, amma zaka iya ƙaddamar da su a nan don gwadawa.",
+      "checkFailed": "Binciken ba zai iya gudu ba. sake gwadawa.",
+      "passed": "Manifest yayi kyau",
+      "failed_one": "{{count}} matsala don gyarawa",
+      "failed_other": "{{count}} matsaloli don gyarawa",
+      "farcasterImport": "Karanta daga farcaster.json",
+      "cardPreview": "Yadda mahaɗin ku ya dubi a cikin ciyarwa",
+      "open": "Bude",
+      "ownershipTitle": "Tabbatar da kai mallakar yankin",
+      "ownershipBody": "Sa hannu sau ɗaya tare da walat ɗin DeHub ɗinku kuma liƙa sakamakon cikin dehub.json ɗinku. Yana danganta da app zuwa asusunka, don haka payouts da sake dubawa isa gare ku.",
+      "signFor": "Sa hannu don {{domain}}",
+      "signNeedsUrl": "Shigar da adireshin aikace-aikacenku a sama",
+      "signInFirst": "Shiga cikin DeHub don sa hannu.",
+      "signFailed": "Sa hannu bai cika ba.",
+      "quickstartTitle": "Farawa mai sauri",
+      "quickstartBody": "Ƙara SDK zuwa shafinku kuma kira shirye() da zarar allonku na farko ya nuna.",
+      "manifestTitle": "bayyana",
+      "embedTitle": "Ciyar da katin",
+      "embedBody": "Ƙara wannan alamar zuwa kowane shafi, kuma hanyar haɗi zuwa wannan shafin yana nunawa azaman katin tare da maɓallin da ke buɗe aikace-aikacenku a can.",
+      "verifyTitle": "Shiga tare da DeHub, a kan uwar garken ku",
+      "verifyBody": "auth.getToken() yana ba da aikace-aikacenku alamar da DeHub ya sanya hannu. Duba shi a kan uwar garkenka tare da kowane ɗakin karatu na JWT. Adireshin walat na mai amfani yana cikin sub.",
+      "copy": "Juya",
+      "copied": "Kwafa"
+    }
   }
 }

@@ -5176,44 +5176,6 @@
     "planTypeNotAllowed": "這隻創作者其方案無允許這種消息。",
     "planMinTip": "打賞乞這隻創作者至少要 {{amount}} DHB。"
   },
-  "post": {
-    "like": "赞",
-    "comment": "评论",
-    "repost": "转发",
-    "share": "分享",
-    "bookmark": "书签",
-    "tip": "打赏",
-    "delete": "删除",
-    "edit": "编辑",
-    "report": "举报",
-    "translate": "翻译",
-    "pinned": "置顶",
-    "replying": "回复中",
-    "reply": "回复",
-    "writeReply": "写回复...",
-    "noComments": "还无评论",
-    "viewMore": "看更多",
-    "postDeleted": "帖子删除了",
-    "likes": "赞",
-    "comments": "评论",
-    "reposts": "转发",
-    "shares": "分享"
-  },
-  "create": {
-    "title": "创建帖子",
-    "placeholder": "你在想什乇？",
-    "post": "发布",
-    "addImage": "加图片",
-    "addVideo": "加视频",
-    "addGif": "加GIF",
-    "addPoll": "加投票",
-    "addLocation": "加位置",
-    "visibility": "谁看得着",
-    "everyone": "所有人",
-    "followers": "关注者",
-    "subscribers": "订阅者",
-    "mentioned": "提到其人"
-  },
   "credits": {
     "earningsWorth": "价值 {{amount}}",
     "percentUsed": "{{percent}}% 已使用",
@@ -5255,5 +5217,76 @@
     "back": "返回设置",
     "signIn": "登录以删除您的账户",
     "acknowledge": "我已保存钱包恢复详情，并了解删除是永久性的。"
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "🔍 **確認過**",
+      "dev": "開發者預覽版"
+    },
+    "host": {
+      "close": "🔌📱 **關閉應用**",
+      "backToStore": "回到 App 囉",
+      "notFound": "😢 這個 App 咱家 DeHub App Store 咱家有，或者已經被刪除咧！",
+      "badUrl": "🚫 咱家這個地址無法開啟小程式，得是以 `https://` 開頭，或者開發模式下用本地地址。",
+      "readyTimeout": "😅 這個 app 好像都唔係用 `dehub.ready()` 咧，所以 splash screen 8 秒後就自動隱藏咧！"
+    },
+    "signIn": {
+      "title": "登入 {{name}} 嗎？",
+      "confirm": "登入"
+    },
+    "store": {
+      "emptyTitle": "😕 尚未有應用列出喔！",
+      "emptyBody": "🔥 先頭幾個 App 正在審核中！你也快點做一個，可能就會出來囉！"
+    },
+    "dev": {
+      "backToStore": "回到 App 囉",
+      "checkTitle": "🔍 **檢查**🚀 **啓動**",
+      "badUrl": "進入一個 `https://` 網址，或是用 `http://localhost` 做本地測試。",
+      "localNote": "🔍 **本地網址無法從我哋伺服器檢查，但哋可以直接啟動測試喔！**",
+      "passed": "👍 好看喎！",
+      "signNeedsUrl": "你的應用網址寫上來就好👆🏼",
+      "signInFirst": "登入 DeHub 簽署。",
+      "embedBody": "🔗 你可以把這個標籤加到任何網頁上，那麼網頁上的連結就會變成一個卡片，上面有一個按鈕，可以直接開啟你的應用程式。",
+      "verifyTitle": "登入 DeHub，在你的伺候上",
+      "verifyBody": "`auth.getToken()` 你的 app 會得到一個由 DeHub 簽署的 token。你可以用任何 JWT 库在伺候端檢查它。用戶的錢包地址在 `sub` 裡頭。"
+    }
+  },
+  "post": {
+    "like": "赞",
+    "comment": "评论",
+    "repost": "转发",
+    "share": "分享",
+    "bookmark": "书签",
+    "tip": "打赏",
+    "delete": "删除",
+    "edit": "编辑",
+    "report": "举报",
+    "translate": "翻译",
+    "pinned": "置顶",
+    "replying": "回复中",
+    "reply": "回复",
+    "writeReply": "写回复...",
+    "noComments": "还无评论",
+    "viewMore": "看更多",
+    "postDeleted": "帖子删除了",
+    "likes": "赞",
+    "comments": "评论",
+    "reposts": "转发",
+    "shares": "分享"
+  },
+  "create": {
+    "title": "创建帖子",
+    "placeholder": "你在想什乇？",
+    "post": "发布",
+    "addImage": "加图片",
+    "addVideo": "加视频",
+    "addGif": "加GIF",
+    "addPoll": "加投票",
+    "addLocation": "加位置",
+    "visibility": "谁看得着",
+    "everyone": "所有人",
+    "followers": "关注者",
+    "subscribers": "订阅者",
+    "mentioned": "提到其人"
   }
 }

@@ -5404,5 +5404,69 @@
     "back": "Kthehu te Cilësimet",
     "signIn": "Hyr në llogarinë tënde",
     "acknowledge": "Kam ruajtur detajet e rimëkëmbjes së portofolit dhe e kuptoj se fshirja është e përhershme."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verifikuar",
+      "unreviewed": "Pa revizuar",
+      "dev": "Përshkrim nga zhvilluesi"
+    },
+    "host": {
+      "close": "Mbyll aplikacion",
+      "backToStore": "Kthehu tek Aplikacionet",
+      "notFound": "Ky aplikacion nuk është në DeHub App Store, ose është fshirë.",
+      "badUrl": "Ky adresë nuk mund të hapet si një mini-aplikacion. Ai duhet të fillojë me **https://**, ose të jetë një adresë localhost në modin e zhvillimit.",
+      "readyTimeout": "Ky aplikacion nuk ka thirrur **dehub.ready()**, për këtë arsye ekrani i fillimit u fshi pas 8 sekondave."
+    },
+    "signIn": {
+      "title": "Regjistrohu në **{{name}}**?",
+      "body": "Ky aplikacion do të marrë adresën e portofolit të DeHub-të dhe një token për hyrje që vepron vetëm për këtë aplikacion. Ai nuk do të marrë akses në portofolin tuaj, fondet tuaja ose kontot tuaj në DeHub.",
+      "cancel": "Jo tani",
+      "confirm": "Regjistrohu"
+    },
+    "store": {
+      "title": "Aplikacionet",
+      "seoTitle": "DeHub Aplikacionet — mini-aplikacionet për DeHub",
+      "seoDescription": "Mini-aplikacionet ndërtuar për DeHub nga çdo person: lojëra, instrumenta dhe më shumë që hapen brenda DeHub-it, të regjistruara me sukses, me shërbim të kthimit tek feed-i.",
+      "intro": "Mini-aplikacionet ndërtuar për DeHub nga çdo person. Ata hapen brenda DeHub-it, ju jeni të regjistruar me sukses, dhe çdo aplikacion shfaq adresën e tij të vërtetë të web-it.",
+      "buildCta": "Bëj një aplikacion",
+      "emptyTitle": "Nuk janë listuar aplikacionet ende",
+      "emptyBody": "Aplikacionet e para janë në procesin e revizimit. Bëj një tjetër dhe ai mund të përfshijë këtu."
+    },
+    "dev": {
+      "title": "Bëj një mini-aplikacion",
+      "seoTitle": "Bëj një mini-aplikacion për DeHub: një tag skripti, regjistrohu me DeHub, shërbimi i kthimit tek feed-i.",
+      "seoDescription": "Një faqe të internetit të çdo webi bëhet një mini-aplikacion DeHub me një tag skripti. Kontrolloj manifestin tuaj, shikoj kartën e feed-it dhe ekzekutoj aplikacionin brenda DeHub-it para se të shikojë të tjerët. Mini-aplikacionet e Farcaster-it punojnë si janë.",
+      "intro": "Kthehu tek Aplikacionet",
+      "backToStore": "Kontrolloj dhe hapi",
+      "checkTitle": "Kontrolloj",
+      "check": "Hapi",
+      "launch": "Shkruaj një adresë **https://**, ose **http://localhost** për testimin lokal.",
+      "badUrl": "Adresat lokale nuk mund të kontrollohen nga shërbimet tonë, por mund të hapet këtu për testim.",
+      "localNote": "Kontrolli nuk mund të ekzekutohej. Provoni përsëri.",
+      "checkFailed": "Çeku nuk mund të funksiononte. Provo përsëri.",
+      "passed": "Manifesti duket i mirë",
+      "failed_one": "{{count}} problemi për të rregulluar",
+      "failed_other": "{{count}} probleme për të rregulluar",
+      "farcasterImport": "Lexo nga farcaster.json",
+      "cardPreview": "Si duket linku yt në feed",
+      "open": "E hapur",
+      "ownershipTitle": "Provo që zotëron domenin",
+      "ownershipBody": "Nënshkruaj një herë me portofolin tënd DeHub dhe ngjit rezultatin në dehub.json. Ai e lidh aplikacionin me llogarinë tënde, kështu që shlyerjet e pagesave dhe recensionet të arrijnë.",
+      "signFor": "Nënshkruaj për {{domain}}",
+      "signNeedsUrl": "Shkruaj adresën e aplikacionit më sipër",
+      "signInFirst": "Hyr në DeHub për t 'u identifikuar.",
+      "signFailed": "Nënshkrimi nuk përfundoi.",
+      "quickstartTitle": "Nisja E shpejtë",
+      "quickstartBody": "Shto SDK-në në faqen tënde dhe telefono gati() sapo të shfaqet ekrani yt i parë.",
+      "manifestTitle": "Manifesto",
+      "manifestBody": "Shërbejeni këtë në /.well-njohur/dehub.json në domenin e aplikacionit tuaj. Tashmë kemi një farcaster.json? E lexuam edhe këtë.",
+      "embedTitle": "Karta e burimit",
+      "embedBody": "Shtoje këtë etiketë në çdo faqe dhe një link në atë faqe shfaqet si një kartë me një buton që hap aplikacionin aty.",
+      "verifyTitle": "Hyr me DeHub, në serverin tënd",
+      "verifyBody": "auth.getToken() i jep aplikacionit tuaj një shenjë të nënshkruar nga DeHub. Kontrolloje në serverin tënd me ndonjë bibliotekë JWT. Adresa e portofolit të përdoruesit është në nën.",
+      "copy": "Kopjo",
+      "copied": "Kopjuar"
+    }
   }
 }

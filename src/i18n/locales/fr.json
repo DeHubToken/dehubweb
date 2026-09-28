@@ -7549,5 +7549,69 @@
     "back": "Revenir aux paramètres par défaut",
     "signIn": "Connectez-vous pour supprimer votre compte",
     "acknowledge": "J'ai enregistré les détails de récupération de mon portefeuille et je comprends que la suppression est permanente."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Vérifié",
+      "unreviewed": "Non révisé",
+      "dev": "Aperçu développeur"
+    },
+    "host": {
+      "close": "Fermer l'application",
+      "backToStore": "Retour aux Applications",
+      "notFound": "Cette application n'est pas dans le DeHub App Store, ou elle a été retirée.",
+      "badUrl": "Cette adresse ne peut pas être ouverte en tant qu'application mini. Elle doit commencer par **https://**, ou être une adresse localhost en mode développeur.",
+      "readyTimeout": "Cette application n'a jamais appelé **dehub.ready()**, donc l'écran de chargement a été masqué après 8 secondes."
+    },
+    "signIn": {
+      "title": "Se connecter à {{name}} ?",
+      "body": "Cette application récupérera votre adresse de portefeuille DeHub et un jeton de connexion qui ne fonctionne que pour cette application. Elle n'aura **pas accès** à votre portefeuille, à vos fonds ou à votre compte DeHub.",
+      "cancel": "Pas maintenant",
+      "confirm": "Se connecter"
+    },
+    "store": {
+      "title": "Applications",
+      "seoTitle": "Applications DeHub — mini-applications pour DeHub",
+      "seoDescription": "Mini-applications construites pour DeHub par n'importe qui : jeux, outils et plus encore qui s'ouvrent à l'intérieur de DeHub, déjà connectées, avec partage vers le fil d'actualité.",
+      "intro": "Mini-applications construites pour DeHub par n'importe qui. Elles s'ouvrent à l'intérieur de DeHub, vous êtes déjà connecté(e), et chaque application affiche son adresse web réelle.",
+      "buildCta": "Créer une application",
+      "emptyTitle": "Aucune application listée pour l'instant",
+      "emptyBody": "Les premières applications sont en cours d'examen. Construisez-en une et elle pourrait apparaître ici."
+    },
+    "dev": {
+      "title": "Créer une mini-application",
+      "seoTitle": "Créer une mini-application DeHub",
+      "seoDescription": "Créez une mini application pour DeHub : une balise de script, connectez-vous avec DeHub, partagez avec le flux. Consultez votre manifeste et prévisualisez votre application chez le véritable hôte.",
+      "intro": "Tout site Web devient une mini application DeHub avec une balise de script. Vérifiez votre manifeste, consultez votre fiche d'alimentation et exécutez votre application dans DeHub avant que quiconque ne la voie. Les mini-applications Farcaster fonctionnent comme elles le sont.",
+      "backToStore": "Retour aux Applications",
+      "checkTitle": "Vérifier et lancer",
+      "check": "Vérifier",
+      "launch": "Lancer",
+      "badUrl": "Entrez une adresse **https://**, ou **http://localhost** pour le test local.",
+      "localNote": "Les adresses locales ne peuvent pas être vérifiées depuis nos serveurs, mais vous pouvez les lancer ici pour les tester.",
+      "checkFailed": "La vérification n'a pas pu être effectuée. Réessayez.",
+      "passed": "Le manifeste a l'air bien",
+      "failed_one": "{{count}} problème à résoudre",
+      "failed_other": "{{count}} problèmes à résoudre",
+      "farcasterImport": "Lire sur farcaster.json",
+      "cardPreview": "À quoi ressemble votre lien dans le flux",
+      "open": "Ouvrir",
+      "ownershipTitle": "Prouvez que vous possédez le domaine",
+      "ownershipBody": "Signez une fois avec votre portefeuille DeHub et collez le résultat dans votre dehub.json. Il relie l'application à votre compte, de sorte que les versements et les commentaires vous parviennent.",
+      "signFor": "Signer pour {{domain}}",
+      "signNeedsUrl": "Saisissez l'adresse de votre application ci-dessus",
+      "signInFirst": "Connectez-vous à DeHub pour vous connecter.",
+      "signFailed": "La signature n'est pas terminée.",
+      "quickstartTitle": "Démarrage rapide",
+      "quickstartBody": "Ajoutez le SDK à votre page et appelez Ready() une fois que votre premier écran s'affiche.",
+      "manifestTitle": "Manifeste",
+      "manifestBody": "Servez-le à /.well-known/dehub.json sur le domaine de votre application. Vous avez déjà un farcaster.json ? Nous lisons cela aussi.",
+      "embedTitle": "Carte d'alimentation",
+      "embedBody": "Ajoutez cette balise à n'importe quelle page, et un lien vers cette page apparaît sous la forme d'une carte avec un bouton qui ouvre votre application juste là.",
+      "verifyTitle": "Connectez-vous avec DeHub, sur votre serveur",
+      "verifyBody": "auth.getToken() donne à votre application un jeton signé par DeHub. Vérifiez-le sur votre serveur avec n'importe quelle bibliothèque JWT. L'adresse du portefeuille de l'utilisateur est dans le sous.",
+      "copy": "Copier",
+      "copied": "Copié"
+    }
   }
 }

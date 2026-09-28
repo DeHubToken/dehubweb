@@ -7527,5 +7527,69 @@
     "back": "Grįžti į nustatymus",
     "signIn": "Prisijunkite, kad ištrintumėte paskyrą",
     "acknowledge": "Išsaugojau savo piniginės atkūrimo informaciją ir suprantu, kad ištrynimas yra negrįžtamas."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Patvirtinta",
+      "unreviewed": "Nepateikta recenzija",
+      "dev": "Kūrėjo apžiūra"
+    },
+    "host": {
+      "close": "Uždaryti prietaisą",
+      "backToStore": "Grįžti į Prietaisus",
+      "notFound": "Šis prietaisas nėra DeHub prietaisų sandūroje, arba buvo pašalintas.",
+      "badUrl": "Ši adreso nuoroda negali būti atidaryta kaip mažas prietaisas. Ji turi prasidėti su **https://**, arba būti vietinėje vietoje (localhost) kūrėjo režime.",
+      "readyTimeout": "Šis prietaisas niekada nešaukė **dehub.ready()**, todėl pradinė ekranų dėmė buvo paslėpta po 8 sekundžių."
+    },
+    "signIn": {
+      "title": "Prisijungti prie {{name}}?",
+      "body": "Šis prietaisas gaus jūsų DeHub portmonės adresą ir prisijungimo tokeną, kuris veikia tik šiam prietaisui. Jis nebus prisijungęs prie jūsų portmonės, pinigų arba DeHub sąskaitos.",
+      "cancel": "Vėliau",
+      "confirm": "Prisijungti"
+    },
+    "store": {
+      "title": "Prietaisai",
+      "seoTitle": "DeHub prietaisai — maži prietaisai DeHub",
+      "seoDescription": "Maži prietaisai, sukurti DeHub naudotojams: žaidimai, įrankiai ir daugiau, kurie atidarysi DeHub viduje, jau prisijungę, su galimybe pasidalinti su feedu.",
+      "intro": "Maži prietaisai, sukurti DeHub naudotojams. Jie atidarysi DeHub viduje, jūs jau prisijungę, ir kiekvienas prietaisas rodo savo tikrąjį interneto adresą.",
+      "buildCta": "Sukurkite prietaisą",
+      "emptyTitle": "Nėra sąrašo prietaisų",
+      "emptyBody": "Pirmieji prietaisai yra recenzijai. Sukurkite vieną ir jis gali būti čia."
+    },
+    "dev": {
+      "title": "Sukurkite mažą prietaisą",
+      "seoTitle": "Sukurkite DeHub mažą prietaisą",
+      "seoDescription": "Sukurkite mažą DeHub prietaisą: vienas skriptų žymėjimas, prisijungimas per DeHub, pasidalinti su feedu. Patikrinkite savo manifestą ir išbandykite prietaisą tikrąjame šeimininko vietoje.",
+      "intro": "Kiekvienas interneto puslapis gali tapti DeHub mažu prietaisu su vienu skriptų žymėjimu. Patikrinkite savo manifestą, matykite savo feed kortelę ir paleiskite savo prietaisą DeHub viduje, kol jį nepasirodo kitiems. Farcaster maži prietaisai veikia taip pat.",
+      "backToStore": "Grįžti į Prietaisus",
+      "checkTitle": "Patikrinti ir paleisti",
+      "check": "Patikrinti",
+      "launch": "Paleisti",
+      "badUrl": "Įveskite **https://** adresą, arba **http://localhost** vietinėms bandymams.",
+      "localNote": "Vietinės nuorodos negali būti patikrintos iš mūsų serverių, bet jūs galite jas paleisti čia bandymams.",
+      "checkFailed": "Patikrinimas nepavyko. Bandykite dar kartą.",
+      "passed": "Manifestas atrodo gerai",
+      "failed_one": "{{count}} spręstina problema",
+      "failed_other": "{{count}} spręstinos problemos",
+      "farcasterImport": "Skaityti iš farcaster.json",
+      "cardPreview": "Kaip tavo nuoroda atrodo sklaidos kanale",
+      "open": "Atvi-",
+      "ownershipTitle": "Įrodykite, kad esate domeno savininkas",
+      "ownershipBody": "Prisijunkite vieną kartą su „DeHub“ pinigine ir įklijuokite rezultatą į savo dehub.json. Ji susieja programėlę su jūsų paskyra, todėl išmokos ir atsiliepimai jus pasiekia.",
+      "signFor": "Registruotis {{domain}}",
+      "signNeedsUrl": "Įveskite programėlės adresą viršuje",
+      "signInFirst": "Prisijunkite prie „DeHub“, kad pasirašytumėte.",
+      "signFailed": "Pasirašymas nebaigtas.",
+      "quickstartTitle": "Trumpas pradžios vadovas",
+      "quickstartBody": "Įtraukite SDK į savo puslapį ir paskambinkite Ready(), kai pasirodys pirmasis ekranas.",
+      "manifestTitle": "Deklaracija",
+      "manifestBody": "Pateikite tai adresu /.well known/dehub.json savo programėlės domene. Jau turime farcaster.json? Mes taip pat tai skaitome.",
+      "embedTitle": "Tiekimo kortelė",
+      "embedBody": "Pridėkite šią žymą prie bet kurio puslapio, o nuoroda į tą puslapį rodoma kaip kortelė su mygtuku, kuris atidaro jūsų programėlę.",
+      "verifyTitle": "Prisijunkite naudodami „DeHub“ savo serveryje",
+      "verifyBody": "auth.getToken() suteikia jūsų programėlei prieigos raktą, pasirašytą DeHub. Patikrinkite tai savo serveryje su bet kuria JWT biblioteka. Naudotojo piniginės adresas yra sub.",
+      "copy": "Kopija",
+      "copied": "Nukopijuota"
+    }
   }
 }

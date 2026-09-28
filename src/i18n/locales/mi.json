@@ -5379,5 +5379,69 @@
     "back": "Hoki ki ngā tautuhinga",
     "signIn": "Hokona ki roto ki te muku i to koutou pūkete",
     "acknowledge": "Kua penapena e au aku taipitopito whakaora putea me te mohio he pumau te whakakore."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Whakamātauria",
+      "unreviewed": "Kaore i kitea",
+      "dev": "Te tirohanga a te kaiwhakawhanake"
+    },
+    "host": {
+      "close": "Tikiake taupānga",
+      "backToStore": "Hoki ki ngā taupānga",
+      "notFound": "E kore tenei taupānga i roto i te DeHub App Store, ranei kua tangohia iho.",
+      "badUrl": "Kaore e taea te whakatuwhera i taua wāhitau hei taupānga iti. Me tīmata ki https://, ranei kia he wāhitau ā-rohe i roto i te aratau kaiwhakawhanake.",
+      "readyTimeout": "Tenei taupānga kihai i huaina dehub.ready(), na ka huna te mata splash i muri i 8 hēkona."
+    },
+    "signIn": {
+      "title": "Hokona ki {{name}}?",
+      "body": "Ka whiwhi tēnei taupānga i tō wāhitau putea DeHub me tētahi tohu tohu e mahi ana anake mō tēnei taupānga. Kaore e uru atu ki to putea, ki o moni, ki to kaute DeHub ranei.",
+      "cancel": "Ehara i te mea i tenei wa",
+      "confirm": "Tohu i roto i"
+    },
+    "store": {
+      "title": "Ngā taupānga",
+      "seoTitle": "DeHub Apps — taupānga iti mō DeHub",
+      "seoDescription": "Ko nga taupānga iti i hangaia mo DeHub e tetahi: kēmu, taputapu me te maha atu e tuwhera ana i roto i DeHub, kua hainahia, me te tohatoha ano ki te kai.",
+      "intro": "Ko nga taupānga iti i hangaia mo DeHub e tetahi. Ka whakatuwhera ratou i roto i DeHub, kua hainatia koe, a ka whakaatu ia taupānga tona wāhitau tukutuku tūturu.",
+      "buildCta": "Hangaia he taupānga",
+      "emptyTitle": "Kaore ano nga taupānga kua whakarārangitia",
+      "emptyBody": "Kei te arotakehia nga taupānga tuatahi. Hangaia tetahi, a ka taea e te reira i konei."
+    },
+    "dev": {
+      "title": "Hangaia he taupānga iti",
+      "seoTitle": "Hangaia he taupānga DeHub Mini",
+      "seoDescription": "Hangaia he taupānga iti mo DeHub: kotahi tohu tuhinga, haina ki DeHub, tohaina ki te kai. Tirohia tō whakaaturanga, me te kite i tō taupānga i roto i te kaihauturu tūturu.",
+      "intro": "Ko nga paetukutuku katoa ka riro hei taupānga DeHub iti me te tohu tuhi kotahi. Tirohia tō whakaaturanga, tirohia tō kāri kai, me te whakahaere i tō taupānga i roto i DeHub i mua i te kite tetahi atu. Ka mahi ngā taupānga iti Farcaster rite ratou.",
+      "backToStore": "Hoki ki ngā taupānga",
+      "checkTitle": "Tirohia me te whakarewatanga",
+      "check": "Tirohia",
+      "launch": "Te whakarewatanga",
+      "badUrl": "Whakamahia i te ngāhu https://, me te ngāhu http://localhost e tūhura i te whakamahinga whakamua.",
+      "localNote": "Kaore e taea te tirotiro i nga wahitau rohe mai i a maatau tūmau, engari ka taea e koe te whakarewa i a raatau ki konei ki te whakamatautau.",
+      "checkFailed": "Kaore e taea e te tirotiro te rere. Whakamātauria ano.",
+      "passed": "He pai te ahua o te Manifest",
+      "failed_one": "{{count}} raruraru ki te whakatika",
+      "failed_other": "{{count}} raruraru ki te whakatika",
+      "farcasterImport": "Pānuihia farcaster.json",
+      "cardPreview": "Me pehea te ahua o to hononga i roto i te kai",
+      "open": "Whakatuwherahia",
+      "ownershipTitle": "Whakamātauria kei a koe te rohe",
+      "ownershipBody": "Hokona kotahi ki to putea DeHub ka whakapiri i te hua ki to dehub.json. Ka hono te taupānga ki tō pūkete, na ka tae atu ngā utu me ngā arotake ki a koe.",
+      "signFor": "Tohu mo {{domain}}",
+      "signNeedsUrl": "Whakauru i te wāhitau o tō taupānga i runga ake nei",
+      "signInFirst": "Hokona ki DeHub ki te haina.",
+      "signFailed": "Kaore i oti te hainatanga.",
+      "quickstartTitle": "Tīmata tere",
+      "quickstartBody": "Tāpirihia te SDK ki tō whārangi, me te karanga rite() i te wa e whakaatu ana tō mata tuatahi.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Whakamahia tenei i /.well mohiotia/dehub.json i runga i te rohe o to taupānga. Kua oti i a tatou te pānui i te Farcaster.json?",
+      "embedTitle": "Kāri kai",
+      "embedBody": "Tāpirihia tenei tohu ki tetahi whārangi, me te hono ki taua whārangi whakaatu rite te kāri ki te pātene e whakatuwhera i to koutou taupānga tika i reira.",
+      "verifyTitle": "Hokona ki a DeHub, i runga i to tūmau",
+      "verifyBody": "author.getToken() hoatu koutou taupānga he tohu hainatia e DeHub. Tirohia i runga i to koutou tūmau ki tetahi whare pukapuka JWT. Ko te wāhitau putea a te kaiwhakamahi kei raro.",
+      "copy": "Tārua",
+      "copied": "Tārua"
+    }
   }
 }

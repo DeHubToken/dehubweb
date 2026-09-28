@@ -2860,10 +2860,10 @@
           "hint": "ئېتىرگە سەۋىيە يىگىرمەگە يەتكۈزۈش."
         }
       },
+      "chooseBadge": "ئارخىپىڭىزدا كۆرسىتىش ئۈچۈن ئېچىلغان خالىغان بەلگىنى تاللاڭ.",
       "useBadge": "بەلگىنى ئىشلىتىش",
       "selectedBadge": "تاللاندى",
       "savingBadge": "بەلگە ساقلىنىۋاتىدۇ…",
-      "chooseBadge": "ئارخىپىڭىزدا كۆرسىتىش ئۈچۈن ئېچىلغان خالىغان بەلگىنى تاللاڭ.",
       "saveBadgeError": "بەلگىڭىزنى ساقلىغىلى بولمىدى. قايتا سىناڭ."
     }
   },
@@ -5337,5 +5337,69 @@
     "back": "تەڭشەكلەرگە قايتىش",
     "signIn": "ھېساباتىڭىزنى ئۆچۈرۈش ئۈچۈن تىزىملىتىڭ",
     "acknowledge": "مەن يانچۇقۇمنى ئەسلىگە كەلتۈرۈش تەپسىلاتىنى ساقلىدىم ۋە ئۆچۈرۈشنىڭ مەڭگۈلۈك ئىكەنلىكىنى چۈشىنىمەن."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Tasdiqlanmighan",
+      "unreviewed": "Tartibsiz",
+      "dev": "Kelgizhkan yig'izhkan"
+    },
+    "host": {
+      "close": "Qurghun app",
+      "backToStore": "App'larga qayt",
+      "notFound": "Bu app DeHub App Store'ida yo'q, yoki uni olib tashlagan.",
+      "badUrl": "Bu mini app manzili ochilmaydi. U https:// bilan boshlanishi kerak, yoki developer rejimida localhost manzili bo'lishi kerak.",
+      "readyTimeout": "Bu app dehub.ready()ni chaqirmagan, shuning uchun splash ekrani 8 sekunddan keyin yashilandi."
+    },
+    "signIn": {
+      "title": "{{name}}ga kirish kerakmi?",
+      "body": "Bu app sizning DeHub pul yig'imi manzili va faqat bu app uchun ishlaydigan kirish tokenini oladi. U sizning pul yig'imi, pulingiz yoki DeHub hisobingizga kirish huquqiga ega bo'lmaydi.",
+      "cancel": "Keyinchalik",
+      "confirm": "Kirish"
+    },
+    "store": {
+      "title": "App'lardan",
+      "seoTitle": "DeHub App'lari — DeHub uchun mini app'lardan",
+      "seoDescription": "Har qanday odam tomonidan DeHub uchun qurilgan mini app'lardan: o'yinlar, qurollar va boshqalar, ular DeHub ichida ochiladi, siz avvaldan kirish qilingan, va feed'ga qaytarish bilan.",
+      "intro": "DeHub uchun har qanday odam tomonidan qurilgan mini app'lardan. Ular DeHub ichida ochiladi, siz avvaldan kirish qilingan, va har bir appning haqiqiy web manzili ko'rsatiladi.",
+      "buildCta": "App qur",
+      "emptyTitle": "App'lardan yo'q",
+      "emptyBody": "App'lardan birinchi app'lardan tartibsiz. Birini qurib, u erda bo'lishi mumkin."
+    },
+    "dev": {
+      "title": "Mini app qur",
+      "seoTitle": "DeHub mini app qur",
+      "seoDescription": "DeHub uchun mini app qur: bir script tag'i, DeHub bilan kirish, feed'ga qaytarish. Manifestingizni tekshirib, real hostda app'ning yig'izhkanini ko'ring.",
+      "intro": "Bir web sayti ham DeHub mini appiga aylanadi bir script tag' bilan. Manifestingizni tekshirib, feed kartasini ko'ring, va sizdan oldin odamlar uni ko'rishdan oldin app'ni DeHub ichida ishga tushiring. Farcaster mini app'lari shu holatda ishlaydi.",
+      "backToStore": "App'larga qayt",
+      "checkTitle": "Tekshirib, ishga tushir",
+      "check": "Tekshir",
+      "launch": "Ishga tushir",
+      "badUrl": "https:// manzilini kiriting, yoki http://localhost mahalliy sinov uchun.",
+      "localNote": "Mahalliy manzillar bizning serverlarimizdan tekshirilmaydi, lekin ularni shu yerda sinov uchun ishga tushirish mumkin.",
+      "checkFailed": "Tekshirish amalga oshirilmadi. Yana urinib ko'ring.",
+      "passed": "Manifest yaxshi",
+      "failed_one": "{{count}} muammosini yengilash",
+      "failed_other": "{{count}} muammolarni yengilash",
+      "farcasterImport": "farcaster.jsondan oqish",
+      "cardPreview": "Sizning linkingiz feedda qanday ko'riladi",
+      "open": "Oqish",
+      "ownershipTitle": "Sizning domainingizni egallangizni isbotlash",
+      "ownershipBody": "Bir marta DeHub waletingiz bilan imzolañip, natijani sizning dehub.jsonga yig'ip qo'ying. Bu appingizni hisobingizga bog'laydi, to'lovlar va baholar sizga yetkaziladi.",
+      "signFor": "{{domain}} uchun imzolañ",
+      "signNeedsUrl": "Sizning appingizning manzilingizni yuqoriga kiriting",
+      "signInFirst": "DeHubga kirish uchun imzolañ.",
+      "signFailed": "Imzolash tugamadi.",
+      "quickstartTitle": "Tez orada boshlash",
+      "quickstartBody": "SDKni sizning sahifangizga qo'shing va birinchi ekraningiz ko'rinib turganida ready()ni chaqiring.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Sizning appingizning domainida /.well-known/dehub.jsonni taqdim eting. Qadimgi farcaster.jsoningiz bor? Biz uni ham oqib yuramiz.",
+      "embedTitle": "Feed kartasi",
+      "embedBody": "Barcha sahifalarga bu tagni qo'shing, va shu sahifaga bog'liq bir link kartasi bilan, sizning appingizni o'qish uchun tugmani bor.",
+      "verifyTitle": "DeHub bilan serveringizda kirish",
+      "verifyBody": "auth.getToken() sizning appingizga DeHub tomonidan imzolangan bir token beradi. Serveringizda ko'pchilik JWT kitobxonalaridan birini qo'llab, uni tekshiring. Foydalanuvchi waletingiz subda.",
+      "copy": "Nashri qiling",
+      "copied": "Nashri qilingan"
+    }
   }
 }

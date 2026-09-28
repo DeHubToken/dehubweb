@@ -7547,5 +7547,69 @@
     "back": "Zurück zu den Einstellungen",
     "signIn": "Melden Sie sich bei Ihrem Konto an",
     "acknowledge": "Ich habe meine Daten zur Wiederherstellung der Brieftasche gespeichert und verstehe, dass die Löschung dauerhaft ist."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verifiziert",
+      "unreviewed": "Ungeprüft",
+      "dev": "Entwickler-Vorschau"
+    },
+    "host": {
+      "close": "App schließen",
+      "backToStore": "Zurück zu Apps",
+      "notFound": "Diese App ist nicht im DeHub App Store verfügbar oder wurde entfernt.",
+      "badUrl": "Diese Adresse kann nicht als Mini-App geöffnet werden. Sie muss mit **https://** beginnen oder eine localhost-Adresse in der Entwicklermodus sein.",
+      "readyTimeout": "Diese App hat nie **dehub.ready()** aufgerufen, daher wurde der Splash-Screen nach 8 Sekunden versteckt."
+    },
+    "signIn": {
+      "title": "Anmelden bei {{name}}?",
+      "body": "Diese App wird deine DeHub-Wallet-Adresse und einen Anmeldetoken abrufen, der nur für diese App gilt. Sie erhält keinen Zugriff auf dein Wallet, deine Mittel oder dein DeHub-Konto.",
+      "cancel": "Nicht jetzt",
+      "confirm": "Anmelden"
+    },
+    "store": {
+      "title": "Apps",
+      "seoTitle": "DeHub Apps — Mini-Apps für DeHub",
+      "seoDescription": "Mini-Apps, die für DeHub von jedem erstellt werden: Spiele, Tools und mehr, die innerhalb von DeHub geöffnet werden, bereits angemeldet, mit der Möglichkeit, Inhalte zurück in den Feed zu teilen.",
+      "intro": "Mini-Apps, die für DeHub von jedem erstellt werden. Sie öffnen sich innerhalb von DeHub, du bist bereits angemeldet, und jede App zeigt ihre echte Webadresse an.",
+      "buildCta": "Eine App erstellen",
+      "emptyTitle": "Keine Apps aufgelistet",
+      "emptyBody": "Die ersten Apps werden geprüft. Erstelle eine und sie könnte hier erscheinen."
+    },
+    "dev": {
+      "title": "Eine Mini-App erstellen",
+      "seoTitle": "Eine DeHub Mini-App erstellen",
+      "seoDescription": "Erstelle eine DeHub Mini-App: ein Skript-Tag, Anmeldung mit DeHub, Teilen im Feed. Prüfe dein Manifest und teste deine App im echten Host.",
+      "intro": "Jede Website wird mit einem Skript-Tag zu einer DeHub Mini-App. Prüfe dein Manifest, sieh dir deine Feed-Karte an und führe deine App innerhalb von DeHub aus, bevor andere sie sehen. Farcaster Mini-Apps funktionieren so, wie sie sind.",
+      "backToStore": "Zurück zu Apps",
+      "checkTitle": "Prüfen und starten",
+      "check": "Prüfen",
+      "launch": "Starten",
+      "badUrl": "Gib eine **https://**-Adresse ein oder **http://localhost** für lokales Testen.",
+      "localNote": "Lokale Adressen können nicht von unseren Servern geprüft werden, aber du kannst sie hier starten, um sie zu testen.",
+      "checkFailed": "Die Prüfung konnte nicht durchgeführt werden. Versuche es erneut.",
+      "passed": "Manifest sieht gut aus",
+      "failed_one": "{{count}} Problem zu beheben",
+      "failed_other": "{{count}} Probleme zu beheben",
+      "farcasterImport": "Aus farcaster.json lesen",
+      "cardPreview": "Wie dein Link im Feed aussieht",
+      "open": "Öffnen",
+      "ownershipTitle": "Beweise, dass du die Domain besitzt",
+      "ownershipBody": "Signiere einmal mit deinem DeHub-Wallet und füge das Ergebnis in deine dehub.json ein. Das verknüpft die App mit deinem Konto, sodass Auszahlungen und Bewertungen bei dir ankommen.",
+      "signFor": "Signiere für {{domain}}",
+      "signNeedsUrl": "Gib oben die Adresse deiner App ein",
+      "signInFirst": "Melde dich bei DeHub an, um zu signieren.",
+      "signFailed": "Die Signatur wurde nicht abgeschlossen.",
+      "quickstartTitle": "Schnellstart",
+      "quickstartBody": "Füge das SDK auf deiner Seite hinzu und rufe ready() einmal auf, wenn deine erste Bildschirm angezeigt wird.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Biete dies unter /.well-known/dehub.json auf deiner App-Domain an. Hast du bereits eine farcaster.json? Wir lesen die auch.",
+      "embedTitle": "Feed-Karte",
+      "embedBody": "Füge diesen Tag auf jede Seite hinzu, und ein Link zu dieser Seite erscheint als Karte mit einem Button, der deine App direkt öffnet.",
+      "verifyTitle": "Anmeldung mit DeHub, auf deinem Server",
+      "verifyBody": "auth.getToken() gibt deiner App einen von DeHub signierten Token. Prüfe ihn auf deinem Server mit jeder JWT-Bibliothek. Die Wallet-Adresse des Nutzers steht im sub.",
+      "copy": "Kopieren",
+      "copied": "Kopiert"
+    }
   }
 }

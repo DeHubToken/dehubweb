@@ -5422,5 +5422,69 @@
     "back": "Buyela Kumasethingi",
     "signIn": "Ngena ngemvume ukuze ususe i-akhawunti yakho",
     "acknowledge": "Ngilondoloze imininingwane yami yokubuyisela isikhwama semali futhi ngiyaqonda ukuthi ukudilitha akupheli."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Kuqinisekisiwe",
+      "unreviewed": "Akubuyekeziwe",
+      "dev": "Ukubuka kuqala konjiniyela"
+    },
+    "host": {
+      "close": "Vala i-app",
+      "backToStore": "Buyela kuma-App",
+      "notFound": "Le app ayikho ku-DeHub App Store, noma ikhishiwe.",
+      "badUrl": "Ngokwe nge-inkomo yethu yethu, i-inkomo yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yethu yeth",
+      "readyTimeout": "Le app ayikaze ibizwenge-dehub.ready (), ngakho isikrini sokushelela sasifihliwe ngemva kwemizuzwana engu-8."
+    },
+    "signIn": {
+      "title": "Ngena ngemvume ku- {{name}}?",
+      "body": "Le app izothola ikheli lakho lesikhwama se-DeHub nethokheni yokungena ngemvume esebenza kuphela kule app. Ngeke ikwazi ukungena esikhwameni sakho semali, izimali zakho noma i-akhawunti yakho ye-DeHub.",
+      "cancel": "Hhayi manje",
+      "confirm": "Ngena ngemvume ku-akhawunti"
+    },
+    "store": {
+      "title": "Ama-app",
+      "seoTitle": "Ama-app e-DeHub — ama-app amancane e-DeHub",
+      "seoDescription": "Ama-app amancane akhelwe i-DeHub yinoma ubani: imidlalo, amathuluzi nokuningi okuvula ngaphakathi kwe-DeHub, asevele engene ngemvume, nokwabelana kabusha ku-feed.",
+      "intro": "Ama-app amancane akhelwe i-DeHub yinoma ubani. Ivuleka ngaphakathi kwe-DeHub, usuvele ungene ngemvume, futhi yonke i-app ibonisa ikheli layo lewebhu langempela.",
+      "buildCta": "Yakha i-app",
+      "emptyTitle": "Awekho ama-app afakiwe okwamanje",
+      "emptyBody": "Ama-app okuqala ayahlolwa. Yakha eyodwa futhi kungaba lapha."
+    },
+    "dev": {
+      "title": "Yakha i-app encane",
+      "seoTitle": "Yakha i-app ye-DeHub mini",
+      "seoDescription": "Yakha i-app encane ye-DeHub: ithegi eyodwa yeskripthi, ngena ngemvume nge-DeHub, yabelana nge-feed. Hlola i-app yakho ebonakalayo bese ubuka kuqala i-app yakho kumbungazi wangempela.",
+      "intro": "Noma iyiphi iwebhusayithi iba yi-app encane ye-DeHub enethegi eyodwa yeskripthi. Hlola i-manifest yakho, bheka ikhadi lakho le-feed, futhi usebenzise i-app yakho ngaphakathi kwe-DeHub ngaphambi kokuba noma ubani omunye ayibone. Ama-app amancane e-Farcaster asebenza njengoba enjalo.",
+      "backToStore": "Buyela kuma-App",
+      "checkTitle": "Hlola bese uqalisa",
+      "check": "Hlola",
+      "launch": "Qalisa",
+      "badUrl": "Faka i-https:// ikheli, noma i-http://umbungazi wendawo ukuze atheste endaweni.",
+      "localNote": "Amakheli endawo awakwazi ukuhlolwa kumaseva ethu, kodwa ungawaqalisa lapha ukuze uwatheste.",
+      "checkFailed": "Ukuhlola akukwazanga ukusebenza. Zama futhi.",
+      "passed": "Ukubonakala kubukeka kukuhle",
+      "failed_one": "{{count}} inkinga okufanele ilungiswe",
+      "failed_other": "{{count}} izinkinga okufanele zilungiswe",
+      "farcasterImport": "Funda ku-farcaster.json",
+      "cardPreview": "Indlela ilinki yakho ebukeka ngayo ku-feed",
+      "open": "Ijubane",
+      "ownershipTitle": "Fakazela ukuthi ungumnikazi wedomeyini",
+      "ownershipBody": "Bhalisa kanye ngesikhwama sakho semali se-DeHub bese unamathisela umphumela ku-dehub.json yakho. Ixhumanisa i-app ne-akhawunti yakho, ngakho ukukhokhelwa nokuphawula kukufinyelela.",
+      "signFor": "Bhalisela i- {{domain}}",
+      "signNeedsUrl": "Faka ikheli le-app yakho ngenhla",
+      "signInFirst": "Ngena ngemvume ku-DeHub ukuze usayine.",
+      "signFailed": "Ukusayina akuqedanga.",
+      "quickstartTitle": "Qala ngokushesha",
+      "quickstartBody": "Faka i-SDK ekhasini lakho bese ushaya ucingo ngomumo() uma isikrini sakho sokuqala sibonisa.",
+      "manifestTitle": "Bonisa",
+      "manifestBody": "Sebenzela lokhu ku /.laziwayo/dehub.json esizindeni se-app yakho. Usunayo kakade i-farcaster.json? Nathi sikufundile lokho.",
+      "embedTitle": "Ikhadi lokuphakelayo",
+      "embedBody": "Faka leli thegi kunoma yiliphi ikhasi, futhi ilinki yalelo khasi ibonisa njengekhadi elinenkinobho evula i-app yakho khona lapho.",
+      "verifyTitle": "Ngena ngemvume nge-DeHub, kuseva yakho",
+      "verifyBody": "auth.getToken() inikeza i-app yakho ithokheni esayinwe yi-DeHub. Yihlole kuseva yakho nganoma yimuphi umtapo wezincwadi we-JWT. Ikheli lesikhwama somsebenzisi lingaphansi.",
+      "copy": "Phinda",
+      "copied": "Kukopishiwe"
+    }
   }
 }

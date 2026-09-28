@@ -7554,5 +7554,69 @@
     "back": "Ayarlara Dön",
     "signIn": "Hesabınızda oturum açın",
     "acknowledge": "Cüzdan kurtarma bilgilerimi kaydettim ve silmenin kalıcı olduğunu anladım."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Doğrulandı",
+      "unreviewed": "İncelenmemiş",
+      "dev": "Geliştirici önizlemesi"
+    },
+    "host": {
+      "close": "Uygulamayı kapat",
+      "backToStore": "Uygulamalara geri dön",
+      "notFound": "Bu uygulama DeHub App Store'da yok veya kaldırılmış.",
+      "badUrl": "Bu adres mini uygulama olarak açılamaz. Https :// ile başlamalı veya geliştirici modunda yerel ana bilgisayar adresi olmalıdır.",
+      "readyTimeout": "Bu uygulama hiçbir zaman dehub.ready() olarak adlandırılmadı, bu nedenle açılış ekranı 8 saniye sonra gizlendi."
+    },
+    "signIn": {
+      "title": "Giriş yapın {{name}}?",
+      "body": "Bu uygulama, DeHub cüzdan adresinizi ve yalnızca bu uygulama için çalışan bir oturum açma jetonunu alacaktır. Cüzdanınıza, paranıza veya DeHub hesabınıza erişemez.",
+      "cancel": "Şimdi değil",
+      "confirm": "Oturum aç"
+    },
+    "store": {
+      "title": "Uygulamalar",
+      "seoTitle": "DeHub Uygulamaları — DeHub için mini uygulamalar",
+      "seoDescription": "Herkes tarafından DeHub için oluşturulmuş mini uygulamalar: DeHub'ın içinde açılan oyunlar, araçlar ve daha fazlası, akışa geri dönerek zaten oturum açtı.",
+      "intro": "Herkes tarafından DeHub için oluşturulmuş mini uygulamalar. DeHub'da açılırlar, zaten oturum açmışsınızdır ve her uygulama gerçek web adresini gösterir.",
+      "buildCta": "Bir uygulama oluşturun",
+      "emptyTitle": "Henüz listelenen uygulama yok",
+      "emptyBody": "İlk uygulamalar inceleniyor. Bir tane inşa edersen burada olabilir."
+    },
+    "dev": {
+      "title": "Bir mini uygulama oluşturun",
+      "seoTitle": "DeHub mini uygulaması oluşturun",
+      "seoDescription": "DeHub için mini bir uygulama oluşturun: bir komut dosyası etiketi, DeHub ile oturum açın, akışta paylaşın. Manifestonuzu kontrol edin ve uygulamanızı gerçek ev sahibinde önizleyin.",
+      "intro": "Herhangi bir web sitesi, tek bir komut dosyası etiketine sahip bir DeHub mini uygulaması haline gelir. Manifestonuzu kontrol edin, akış kartınıza bakın ve uygulamanızı kimse görmeden DeHub'da çalıştırın. Farcaster mini uygulamaları olduğu gibi çalışır.",
+      "backToStore": "Uygulamalara geri dön",
+      "checkTitle": "Kontrol et ve başlat",
+      "check": "Kontrol",
+      "launch": "Başlat",
+      "badUrl": "Yerel test için bir https :// adresi veya http :// localhost girin.",
+      "localNote": "Yerel adresler sunucularımızdan kontrol edilemez, ancak test etmek için buradan başlatabilirsiniz.",
+      "checkFailed": "Kontrol çalıştırılamadı. Tekrar deneyin.",
+      "passed": "Manifesto iyi görünüyor",
+      "failed_one": "Düzeltilmesi gereken {{count}} sorunu",
+      "failed_other": "Düzeltilmesi gereken {{count}} sorunları",
+      "farcasterImport": "Farcaster.json adresinden okuyun",
+      "cardPreview": "Bağlantınızın akışta nasıl göründüğü",
+      "open": "Aç",
+      "ownershipTitle": "Alan adının sahibi olduğunuzu kanıtlayın",
+      "ownershipBody": "DeHub cüzdanınızla bir kez imzalayın ve sonucu dehub.json'unuza yapıştırın. Ödemelerin ve değerlendirmelerin size ulaşması için uygulamayı hesabınıza bağlar.",
+      "signFor": "İmzala:{{domain}}",
+      "signNeedsUrl": "Uygulamanızın adresini yukarıya girin",
+      "signInFirst": "İmzalamak için DeHub'da oturum açın.",
+      "signFailed": "İmzalama tamamlanmadı.",
+      "quickstartTitle": "Hızlı başlangıç",
+      "quickstartBody": "SDK'yı sayfanıza ekleyin ve ilk ekranınız göründüğünde hazır() olarak arayın.",
+      "manifestTitle": "MANİFESTO",
+      "manifestBody": "Bunu /.well-known /dehub.json adresinde uygulamanızın etki alanında yayınlayın. Zaten bir farcaster.json var mı? Bunu da okuduk.",
+      "embedTitle": "Besleme kartı",
+      "embedBody": "Bu etiketi herhangi bir sayfaya eklediğinizde o sayfanın bağlantısı, uygulamanızı orada açan bir düğmeye sahip bir kart olarak görünür.",
+      "verifyTitle": "Sunucunuzda DeHub ile oturum açın",
+      "verifyBody": "auth.getToken() uygulamanıza DeHub tarafından imzalanmış bir token verir. Herhangi bir JWT kütüphanesiyle sunucunuzda kontrol edin. Kullanıcının cüzdan adresi altta.",
+      "copy": "Kopyala",
+      "copied": "Kopyalandı"
+    }
   }
 }

@@ -27,6 +27,8 @@
           { "/": "/depin", "comment": "DePin network" },
           { "/": "/agents", "comment": "AI agents" },
           { "/": "/arcade/kings-gambit/online", "comment": "King's Gambit online lobby" },
+          { "/": "/apps", "comment": "Mini app store" },
+          { "/": "/apps/*", "comment": "One mini app" },
           { "/": "/connect", "comment": "Connect AI" },
           { "/": "/connect/*", "comment": "One assistant guide" },
           { "/": "/premium", "comment": "Premium" },

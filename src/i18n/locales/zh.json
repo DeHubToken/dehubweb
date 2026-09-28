@@ -7553,5 +7553,69 @@
     "back": "返回设置",
     "signIn": "登录",
     "acknowledge": "我已保存钱包恢复详细信息，并了解删除是永久性的。"
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "已验证",
+      "unreviewed": "未审阅",
+      "dev": "开发者预览"
+    },
+    "host": {
+      "close": "关闭应用",
+      "backToStore": "返回应用",
+      "notFound": "此应用程序不在DeHub App Store中，或者已被删除。",
+      "badUrl": "该地址无法作为迷你应用程序打开。它必须以https://开头，或在开发人员模式下为本地主机地址。",
+      "readyTimeout": "此应用程序从未调用dehub.ready () ，因此初始屏幕在8秒后被隐藏。"
+    },
+    "signIn": {
+      "title": "登录到{{name}} ？",
+      "body": "此应用程序将获取您的DeHub钱包地址和仅适用于此应用程序的登录令牌。它将无法访问您的钱包、资金或DeHub账户。",
+      "cancel": "暂时不要",
+      "confirm": "登录"
+    },
+    "store": {
+      "title": "应用",
+      "seoTitle": "DeHub应用程序—适用于DeHub的迷你应用程序",
+      "seoDescription": "任何人为DeHub构建的迷你应用程序：在DeHub内部打开的游戏、工具等，已经登录，并共享回源。",
+      "intro": "任何人都可以为DeHub构建迷你应用程序。它们在DeHub中打开，您已经登录，每个应用都会显示其真实网址。",
+      "buildCta": "构建应用",
+      "emptyTitle": "尚未列出任何应用程序",
+      "emptyBody": "首批应用正在审核中。建造一个，它可能就在这里。"
+    },
+    "dev": {
+      "title": "构建迷你应用",
+      "seoTitle": "构建DeHub迷你应用程序",
+      "seoDescription": "为DeHub构建一个迷你应用：一个脚本标签，使用DeHub登录，分享到订阅源。请检查您的清单，并在真实房东中预览您的应用。",
+      "intro": "任何网站都会成为一个带有一个脚本标签的DeHub迷你应用程序。请检查您的清单，查看您的订阅卡，并在其他人看到之前在DeHub内运行您的应用程序。Farcaster迷你应用程序可以正常工作。",
+      "backToStore": "返回应用",
+      "checkTitle": "检查并启动",
+      "check": "检查",
+      "launch": "启动",
+      "badUrl": "输入https://地址或http://localhost进行本地测试。",
+      "localNote": "无法从我们的服务器检查本地地址，但您可以在此处启动它们以进行测试。",
+      "checkFailed": "检查无法运行。请重试。",
+      "passed": "清单看起来不错",
+      "failed_one": "{{count}}待解决的问题",
+      "failed_other": "{{count}}待解决的问题",
+      "farcasterImport": "从farcaster.json读取",
+      "cardPreview": "您的链接在动态中的显示方式",
+      "open": "开启",
+      "ownershipTitle": "证明您拥有该域名",
+      "ownershipBody": "使用DeHub钱包签名一次，然后将结果粘贴到dehub.json中。它会将应用程序关联到您的账号，以便您收到收款和评价。",
+      "signFor": "为{{domain}}签名",
+      "signNeedsUrl": "在上方输入您的应用地址",
+      "signInFirst": "登录DeHub进行签名。",
+      "signFailed": "签名未完成。",
+      "quickstartTitle": "快速启动",
+      "quickstartBody": "将SDK添加到您的页面，并在第一个屏幕显示后调用ready ()。",
+      "manifestTitle": "显示",
+      "manifestBody": "在应用程序域名的/.well-known/dehub.json上提供此服务。已经有一个farcaster.json了？我们也读过。",
+      "embedTitle": "Feed卡片",
+      "embedBody": "将此标签添加到任何页面，指向该页面的链接将显示为卡片，并带有打开应用程序的按钮。",
+      "verifyTitle": "在您的服务器上使用DeHub登录",
+      "verifyBody": "auth.getToken ()为您的应用程序提供由DeHub签名的令牌。使用任何JWT库在您的服务器上检查它。用户的钱包地址在SUB中。",
+      "copy": "复制",
+      "copied": "已复制"
+    }
   }
 }

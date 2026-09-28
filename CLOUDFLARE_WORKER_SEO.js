@@ -114,6 +114,7 @@ const OG_CARD_ROUTES = new Set([
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
   'arcade/trenchstar',
+  'apps', 'apps/dev',
   // App surfaces that had no card of their own and unfurled as the homepage.
   // `superpowers` art was rendered when the page shipped and was never added
   // here, so the file has been sitting in public/og unreferenced.
@@ -958,6 +959,23 @@ const MARKETING_PAGES = {
 <li><a href="${APP_URL}/arcade/street-slayer">Street Slayer</a> — a side-scrolling beat 'em up down a neon-lit street, built for DeHub rather than found.</li>
 <li><a href="${APP_URL}/arcade/trenchstar">Chartopia</a> — a trading floor you can walk, built out of forty live market screens.</li>
 </ul>`,
+  },
+  // The mini app store and its developer page. Individual apps are not
+  // listed here: they live in the registry, and until the SSR function learns
+  // them a shared /apps/<slug> link falls back to the store's card.
+  'apps': {
+    title: 'DeHub Apps — mini apps for DeHub',
+    description: 'Mini apps built for DeHub by anyone: games, tools and more that open inside DeHub, already signed in, with sharing back to the feed.',
+    heading: 'DeHub Apps',
+    bodyHtml: `<p>Mini apps are web apps that open inside DeHub. You arrive already signed in, and anything worth sharing goes straight back to the feed. Every app shows its real web address, so you always know who you are dealing with.</p>
+<p><a href="${APP_URL}/apps">Browse the apps</a> or <a href="${APP_URL}/apps/dev">build one</a>.</p>`,
+  },
+  'apps/dev': {
+    title: 'Build a DeHub mini app',
+    description: 'Build a mini app for DeHub: one script tag, sign in with DeHub, share to the feed. Check your manifest and preview your app in the real host.',
+    heading: 'Build a DeHub mini app',
+    bodyHtml: `<p>A DeHub mini app is any website plus one script tag. Add a manifest at /.well-known/dehub.json — or keep your Farcaster manifest, which DeHub reads as it is — and your app opens inside DeHub with the user already signed in.</p>
+<p><a href="${APP_URL}/apps/dev">Check your manifest and launch your app</a>.</p>`,
   },
   'arcade/gods-eye': {
     title: "God's Eye | DeHub Arcade",
@@ -4224,6 +4242,21 @@ async function handleRequest(request, env, ctx) {
     const out = new Response(resp.body, resp);
     out.headers.set('Access-Control-Allow-Origin', '*');
     out.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+    return out;
+  }
+
+  // The mini app SDK, loaded by third-party pages on their own domains. An ES
+  // module import of it is a CORS fetch, so the allow-origin is pinned here
+  // for the same reason as the entry above. A missing file must 404 rather
+  // than fall through to the SPA shell, which a <script> tag would try to run.
+  if (pathname.startsWith('/sdk/')) {
+    const resp = await env.ASSETS.fetch(request);
+    const isScript = resp.ok && !(resp.headers.get('Content-Type') || '').includes('text/html');
+    if (!isScript) return new Response('Not found', { status: 404 });
+    const out = new Response(resp.body, resp);
+    out.headers.set('Access-Control-Allow-Origin', '*');
+    out.headers.set('Content-Type', 'text/javascript; charset=utf-8');
+    out.headers.set('Cache-Control', 'public, max-age=300');
     return out;
   }
 
