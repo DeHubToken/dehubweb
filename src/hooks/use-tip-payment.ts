@@ -163,7 +163,8 @@ export function useTipPayment({
               amount: confirmedTip.amount,
               chainId,
               txHash: confirmedTxHash,
-              tokenId: confirmedTip.tokenId,
+              // The chain wins; the post this modal was opened for fills a zero id in.
+              tokenId: confirmedTip.tokenId ?? (/^[1-9]\d*$/.test(String(tokenId ?? '')) ? String(tokenId) : null),
               commentId: commentId ?? null,
             });
 
