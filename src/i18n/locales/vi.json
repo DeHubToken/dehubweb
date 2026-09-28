@@ -4374,8 +4374,61 @@
         "legend": {
           "name": "Huyền thoại",
           "hint": "Đạt cấp mười."
+        },
+        "ignition": {
+          "name": "Ignition",
+          "hint": "Đạt một giờ phát sóng đủ điều kiện."
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "Hoàn thành mười buổi phát sóng đủ điều kiện."
+        },
+        "storyteller": {
+          "name": "Storyteller",
+          "hint": "Hoàn thành hai mươi lăm buổi phát sóng đủ điều kiện."
+        },
+        "broadcaster": {
+          "name": "Broadcaster",
+          "hint": "Hoàn thành năm mươi buổi phát sóng đủ điều kiện."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Hoàn thành một trăm buổi phát sóng đủ điều kiện."
+        },
+        "enduring": {
+          "name": "Enduring",
+          "hint": "Phát sóng bốn giờ đủ điều kiện trong một phiên."
+        },
+        "circle": {
+          "name": "Inner circle",
+          "hint": "Có hai mươi lăm người xem cùng lúc."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Có năm mươi người xem cùng lúc."
+        },
+        "headliner": {
+          "name": "Headliner",
+          "hint": "Có một trăm người xem cùng lúc."
+        },
+        "cornerstone": {
+          "name": "Cornerstone",
+          "hint": "Phát sóng liên tục trong hai mươi sáu tuần."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "Đạt hai trăm năm mươi giờ phát sóng đủ điều kiện."
+        },
+        "icon": {
+          "name": "Icon",
+          "hint": "Đạt cấp độ hai mươi."
         }
-      }
+      },
+      "chooseBadge": "Chọn bất kỳ huy hiệu đã mở khóa nào để hiển thị trên hồ sơ của bạn.",
+      "useBadge": "Use badge",
+      "selectedBadge": "Selected",
+      "savingBadge": "Saving badge…",
+      "saveBadgeError": "Không thể lưu huy hiệu của bạn. Vui lòng thử lại."
     }
   },
   "goLive": {
@@ -5376,6 +5429,28 @@
     "play": "Phát",
     "pause": "Tạm dừng",
     "hint": "Kéo để uốn cong · kéo một cạnh để bóc · chạm vào cạnh tiếp theo"
+  },
+  "streamerShowcase": {
+    "cardOf": "Thẻ {{index}} trong số {{total}}",
+    "progress": "Tiến độ của bạn",
+    "goal": {
+      "streams": "{{current}} / {{target}} buổi phát",
+      "hours": "{{current}} / {{target}} giờ",
+      "session": "{{current}} / {{target}} phút trong một luồng",
+      "streak": "{{current}} / {{target}} tuần",
+      "level": "Cấp {{current}} / {{target}}"
+    },
+    "onStream": "Mở khóa khi sự cố xảy ra trên luồng",
+    "stats": {
+      "level": "Cấp",
+      "xp": "XP",
+      "hours": "Số giờ đủ điều kiện",
+      "streams": "Các luồng đủ điều kiện",
+      "longest": "Luồng dài nhất",
+      "streak": "Chuỗi tốt nhất"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} tuần"
   },
   "liveGift": {
     "pickTier": "Chọn một màn ăn mừng",

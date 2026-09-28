@@ -2810,8 +2810,61 @@
         "legend": {
           "name": "Legend",
           "hint": "ئونىنچى سەۋىيەگە يېتىش."
+        },
+        "ignition": {
+          "name": "Ignition",
+          "hint": "ئېتىرگە بىر سىغىش ساعەتنى يەتكۈزۈش."
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "ئېتىرگە ئون سىغىش سىيرىقنى تاماملاش."
+        },
+        "storyteller": {
+          "name": "Storyteller",
+          "hint": "ئېتىرگە يىگىرمە-بەش سىغىش سىيرىقنى تاماملاش."
+        },
+        "broadcaster": {
+          "name": "Broadcaster",
+          "hint": "ئېتىرگە بەش يۈز سىغىش سىيرىقنى تاماملاش."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "ئېتىرگە يۈز سىغىش سىيرىقنى تاماملاش."
+        },
+        "enduring": {
+          "name": "Enduring",
+          "hint": "بىر سىغىش سىيرىقنى توغرا سەيلىتىپ، تۆت سىغىش سىيرىقنى بىر سەيلىتىدە سىيرىقلاش."
+        },
+        "circle": {
+          "name": "Inner circle",
+          "hint": "بىر ۋاقىتتا يىگىرمە-بەش ئادەم كۆرۈش."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "بىر ۋاقىتتا بەش يۈز ئادەم كۆرۈش."
+        },
+        "headliner": {
+          "name": "Headliner",
+          "hint": "بىر ۋاقىتتا يۈز ئادەم كۆرۈش."
+        },
+        "cornerstone": {
+          "name": "Cornerstone",
+          "hint": "ئېتىرگە يىگىرمە-ئالتە توغرا سەيلىتىدە سىيرىقلاش."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "ئېتىرگە 250 سىغىش سىيرىقنى يەتكۈزۈش."
+        },
+        "icon": {
+          "name": "Icon",
+          "hint": "ئېتىرگە سەۋىيە يىگىرمەگە يەتكۈزۈش."
         }
-      }
+      },
+      "useBadge": "Use badge",
+      "selectedBadge": "Selected",
+      "savingBadge": "Saving badge…",
+      "chooseBadge": "ئارخىپىڭىزدا كۆرسىتىش ئۈچۈن ئېچىلغان خالىغان بەلگىنى تاللاڭ.",
+      "saveBadgeError": "بەلگىڭىزنى ساقلىغىلى بولمىدى. قايتا سىناڭ."
     }
   },
   "goLive": {
@@ -3454,6 +3507,28 @@
     "play": "قويۇش",
     "pause": "توختىتىش",
     "hint": "ئېگىزلىككە تارتىش --- كېينكى ئېگىزلىككە تارتىش --- كېيىنكى ئېگىزلىككە تارتىش"
+  },
+  "streamerShowcase": {
+    "cardOf": "كارتا {{index}} of {{total}}",
+    "progress": "ئىلگىرىلەش",
+    "goal": {
+      "streams": "{{current}} /{{target}} streams",
+      "hours": "{{current}} /{{target}} hours",
+      "session": "بىر قېتىملىق تارقىتىشتا {{current}} / {{target}} مىنۇت",
+      "streak": "{{current}} / {{target}} weeks",
+      "level": "دەرىجە {{current}} / {{target}}"
+    },
+    "onStream": "ئېقىمىدا بولغاندا قۇلۇپنى ئېچىش پروگراممىسى",
+    "stats": {
+      "level": "Level",
+      "xp": "XP",
+      "hours": "قابىلىيەتلىك سائەتلەر",
+      "streams": "ئىختىساسلىق ئېقىمى",
+      "longest": "ئەڭ ئۇزۇن ئېقىن",
+      "streak": "ئەڭ ياخشى سەپلىمە"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} wk"
   },
   "liveGift": {
     "plays": "ئويۇن {{tier}} نى قويىدۇ",

@@ -4861,8 +4861,61 @@
         "legend": {
           "name": "Legenda",
           "hint": "Capai tahap sepuluh."
+        },
+        "ignition": {
+          "name": "Penyalaan",
+          "hint": "Capai satu jam kelayakan di udara."
+        },
+        "on-air": {
+          "name": "Di udara",
+          "hint": "Selesaikan sepuluh strim kelayakan."
+        },
+        "storyteller": {
+          "name": "Pencerita",
+          "hint": "Selesikan dua puluh lima strim kelayakan."
+        },
+        "broadcaster": {
+          "name": "Penyiar",
+          "hint": "Selesaikan lima puluh strim kelayakan."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Selesaikan seratus strim kelayakan."
+        },
+        "enduring": {
+          "name": "Tahan lama",
+          "hint": "Strim selama empat jam kelayakan dalam satu sesi."
+        },
+        "circle": {
+          "name": "Bulatan dalam",
+          "hint": "Ada dua puluh lima orang menonton serentak."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Ada lima puluh orang menonton serentak."
+        },
+        "headliner": {
+          "name": "Ketua utama",
+          "hint": "Ada seratus orang menonton serentak."
+        },
+        "cornerstone": {
+          "name": "Batu asas",
+          "hint": "Strim selama dua puluh enam minggu berturut-turut."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "Capai 250 jam kelayakan di udara."
+        },
+        "icon": {
+          "name": "Ikon",
+          "hint": "Capai tahap dua puluh."
         }
-      }
+      },
+      "chooseBadge": "Pilih lencana yang tidak dikunci untuk dipaparkan pada profil anda.",
+      "useBadge": "Gunakan lencana",
+      "selectedBadge": "Dipilih",
+      "savingBadge": "Menyimpan lencana…",
+      "saveBadgeError": "Gagal menyimpan lencana anda. Sila cuba lagi."
     }
   },
   "goLive": {
@@ -5863,6 +5916,28 @@
     "play": "Main",
     "pause": "Jeda",
     "hint": "Seret untuk bengkok · tarik tepi untuk dikupas · ketik untuk yang seterusnya"
+  },
+  "streamerShowcase": {
+    "cardOf": "Kad {{index}} daripada {{total}}",
+    "progress": "Kemajuan anda",
+    "goal": {
+      "streams": "{{current}} / {{target}} strim",
+      "hours": "{{current}} / {{target}} jam",
+      "session": "{{current}} / {{target}} min dalam satu strim",
+      "streak": "{{current}} / {{target}} minggu",
+      "level": "Tahap {{current}} / {{target}}"
+    },
+    "onStream": "Dibuka apabila ia berlaku semasa strim",
+    "stats": {
+      "level": "Tahap",
+      "xp": "XP",
+      "hours": "Jam kelayakan",
+      "streams": "Strim kelayakan",
+      "longest": "Strim terpanjang",
+      "streak": "Rentetan terbaik"
+    },
+    "hoursShort": "{{hours}} j",
+    "weeksShort": "{{count}} mgg"
   },
   "liveGift": {
     "pickTier": "Pilih sambutan",

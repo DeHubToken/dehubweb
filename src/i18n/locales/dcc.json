@@ -2437,6 +2437,28 @@
     "pause": "پاز",
     "hint": "موڑنے کے لیے ڈریگ کریں · کنارے کو کھینچ کر چھڑکیں · اگلے کے لیے ٹیپ کریں"
   },
+  "streamerShowcase": {
+    "cardOf": "{{total}} میں سے کارڈ {{index}}",
+    "progress": "آپ کی پیش رفت",
+    "goal": {
+      "streams": "{{current}} / {{target}} سٹریم",
+      "hours": "{{current}} / {{target}} گھنٹے",
+      "session": "ایک سٹریم میں {{current}} / {{target}} منٹ",
+      "streak": "{{current}} / {{target}} ہفتے",
+      "level": "لیول {{current}} / {{target}}"
+    },
+    "onStream": "سٹریم پر ہونے سے کھلتا ہے",
+    "stats": {
+      "level": "لیول",
+      "xp": "XP",
+      "hours": "گنے جانے والے گھنٹے",
+      "streams": "گنے جانے والے سٹریم",
+      "longest": "سب سے لمبا سٹریم",
+      "streak": "بہترین سلسلہ"
+    },
+    "hoursShort": "{{hours}} گھنٹے",
+    "weeksShort": "{{count}} ہفتے"
+  },
   "liveGift": {
     "ttsLabel": "Ek goṣṭ bol",
     "ttsPlaceholder": "Stream la vāchūn dākhav…",

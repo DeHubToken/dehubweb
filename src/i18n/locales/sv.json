@@ -4543,8 +4543,61 @@
         "legend": {
           "name": "Förklaring",
           "hint": "Nå nivå tio."
+        },
+        "ignition": {
+          "name": "Ignition",
+          "hint": "Uppnå en kvalificerad timme på luft."
+        },
+        "on-air": {
+          "name": "On air",
+          "hint": "Avsluta tio kvalificerade strömmar."
+        },
+        "storyteller": {
+          "name": "Storyteller",
+          "hint": "Avsluta tjugo‑fem kvalificerade strömmar."
+        },
+        "broadcaster": {
+          "name": "Broadcaster",
+          "hint": "Avsluta femtio kvalificerade strömmar."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Avsluta hundra kvalificerade strömmar."
+        },
+        "enduring": {
+          "name": "Enduring",
+          "hint": "Ström för fyra kvalificerade timmar i en session."
+        },
+        "circle": {
+          "name": "Inner circle",
+          "hint": "Ha tjugo‑fem personer som tittar samtidigt."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Ha femtio personer som tittar samtidigt."
+        },
+        "headliner": {
+          "name": "Headliner",
+          "hint": "Ha hundra personer som tittar samtidigt."
+        },
+        "cornerstone": {
+          "name": "Cornerstone",
+          "hint": "Ström i tjugo‑sex på varandra följande veckor."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "Uppnå 250 kvalificerade timmar på luft."
+        },
+        "icon": {
+          "name": "Icon",
+          "hint": "Uppnå nivå tjugo."
         }
-      }
+      },
+      "chooseBadge": "Välj vilken som helst av låsta märken att visa på din profil.",
+      "useBadge": "Use badge",
+      "selectedBadge": "Selected",
+      "savingBadge": "Saving badge…",
+      "saveBadgeError": "Det gick inte att spara ditt märke. Försök igen."
     }
   },
   "goLive": {
@@ -5546,6 +5599,28 @@
     "play": "Spela",
     "pause": "Pausa",
     "hint": "Dra för att böja · dra en kant för att skala · tryck för nästa"
+  },
+  "streamerShowcase": {
+    "cardOf": "Kort {{index}} av {{total}}",
+    "progress": "Dina framsteg",
+    "goal": {
+      "streams": "{{current}} / {{target}} strömmar",
+      "hours": "{{current}} / {{target}} timmar",
+      "session": "{{current}} / {{target}} min i en ström",
+      "streak": "{{current}} / {{target}} veckor",
+      "level": "Nivå {{current}} / {{target}}"
+    },
+    "onStream": "Låses upp när det händer i strömmen",
+    "stats": {
+      "level": "Nivå",
+      "xp": "XP",
+      "hours": "Kvalificerande timmar",
+      "streams": "Kvalificerande strömmar",
+      "longest": "Längsta ström",
+      "streak": "Bästa strimman"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} wk"
   },
   "liveGift": {
     "pickTier": "Välj en firande",

@@ -4544,8 +4544,61 @@
         "legend": {
           "name": "Legenda",
           "hint": "Dosegnite razinu deset."
+        },
+        "ignition": {
+          "name": "Paljenje",
+          "hint": "Dosegnite jedan kvalificirajući sat u eteru."
+        },
+        "on-air": {
+          "name": "U eteru",
+          "hint": "Završite deset kvalificirajućih prijenosa."
+        },
+        "storyteller": {
+          "name": "Pripovjedač",
+          "hint": "Završite dvadeset i pet kvalificirajućih prijenosa."
+        },
+        "broadcaster": {
+          "name": "Emiter",
+          "hint": "Završite pedeset kvalificirajućih prijenosa."
+        },
+        "centurion": {
+          "name": "Centurion",
+          "hint": "Završite sto kvalificirajućih prijenosa."
+        },
+        "enduring": {
+          "name": "Istrajan",
+          "hint": "Stremirajte četiri kvalificirajuća sata u jednoj sesiji."
+        },
+        "circle": {
+          "name": "Uži krug",
+          "hint": "Neka vas istovremeno gleda dvadeset i pet ljudi."
+        },
+        "arena": {
+          "name": "Arena",
+          "hint": "Neka vas istovremeno gleda pedeset ljudi."
+        },
+        "headliner": {
+          "name": "Glavna zvijezda",
+          "hint": "Neka vas istovremeno gleda sto ljudi."
+        },
+        "cornerstone": {
+          "name": "Kamen temeljac",
+          "hint": "Stremirajte dvadeset i šest uzastopnih tjedana."
+        },
+        "veteran": {
+          "name": "Veteran",
+          "hint": "Dosegnite 250 kvalificirajućih sati u eteru."
+        },
+        "icon": {
+          "name": "Ikona",
+          "hint": "Dosegnite dvadesetu razinu."
         }
-      }
+      },
+      "chooseBadge": "Odaberite bilo koju otključanu značku za prikaz na svom profilu.",
+      "useBadge": "Koristi značku",
+      "selectedBadge": "Odabrano",
+      "savingBadge": "Spremanje značke...",
+      "saveBadgeError": "Nije moguće spremiti vašu značku. Molimo pokušajte ponovno."
     }
   },
   "goLive": {
@@ -5548,6 +5601,28 @@
     "play": "Pokreni",
     "pause": "Pauziraj",
     "hint": "Povucite za savijanje · povucite rub za ljuštenje · dodirnite za sljedeći"
+  },
+  "streamerShowcase": {
+    "cardOf": "Kartica {{index}} od {{total}}",
+    "progress": "Vaš napredak",
+    "goal": {
+      "streams": "{{current}} / {{target}} streamovi",
+      "hours": "{{current}} / {{target}} h",
+      "session": "{{current}} / {{target}} min u jednom streamu",
+      "streak": "{{current}} / {{target}} tjedana",
+      "level": "Razina {{current}} / {{target}}"
+    },
+    "onStream": "Otključava se kada se to dogodi na streamu",
+    "stats": {
+      "level": "Razina",
+      "xp": "XP",
+      "hours": "Kvalificirani sati",
+      "streams": "Kvalificirani prijenosi",
+      "longest": "Najduži stream",
+      "streak": "Najbolji niz"
+    },
+    "hoursShort": "{{hours}} h",
+    "weeksShort": "{{count}} tjedno"
   },
   "liveGift": {
     "pickTier": "Odaberi proslavu",

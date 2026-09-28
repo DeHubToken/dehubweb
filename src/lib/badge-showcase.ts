@@ -1,20 +1,37 @@
 /**
- * Opens the badge showcase from anywhere a badge is drawn.
+ * Opens a badge showcase from anywhere a badge is drawn.
  *
  * BadgeIcon sits in the entry bundle, so this is a few lines of state and
- * nothing else; the showcase itself (three.js and all) is a separate chunk
- * that BadgeShowcaseHost loads the first time someone asks for it.
+ * nothing else; the showcases themselves (three.js and all) are separate
+ * chunks that BadgeShowcaseHost loads the first time someone asks for one.
  */
 import { useSyncExternalStore } from 'react';
+import type { StreamerBadgeId } from '@/lib/streamer-badge-art';
 
-export interface BadgeShowcaseRequest {
-  /** Tier that was clicked. */
-  tier: string | null;
+interface RequestBase {
   /** The clicked badge, which the showcase flies out of and back into. */
   anchor: HTMLElement | null;
   /** Changes on every open so reopening the same badge starts fresh. */
   id: number;
 }
+
+/** A staking tier next to someone's name. */
+export interface HolderShowcaseRequest extends RequestBase {
+  kind: 'holder';
+  tier: string | null;
+}
+
+/** A collectible card on a streamer's ladder. */
+export interface StreamerShowcaseRequest extends RequestBase {
+  kind: 'streamer';
+  badgeId: StreamerBadgeId;
+  /** Whose ladder it is. */
+  address: string;
+  /** True on your own ladder, where earned cards can be equipped. */
+  canSelect: boolean;
+}
+
+export type BadgeShowcaseRequest = HolderShowcaseRequest | StreamerShowcaseRequest;
 
 let current: BadgeShowcaseRequest | null = null;
 let sequence = 0;
@@ -32,7 +49,17 @@ function subscribe(listener: () => void) {
 }
 
 export function openBadgeShowcase(tier: string | null, anchor: HTMLElement | null) {
-  current = { tier, anchor, id: ++sequence };
+  current = { kind: 'holder', tier, anchor, id: ++sequence };
+  emit();
+}
+
+export function openStreamerShowcase(
+  badgeId: StreamerBadgeId,
+  address: string,
+  canSelect: boolean,
+  anchor: HTMLElement | null,
+) {
+  current = { kind: 'streamer', badgeId, address, canSelect, anchor, id: ++sequence };
   emit();
 }
 
@@ -46,7 +73,12 @@ export function useBadgeShowcaseRequest(): BadgeShowcaseRequest | null {
   return useSyncExternalStore(subscribe, () => current, () => null);
 }
 
-/** Start fetching the showcase chunk, so a click opens it without a wait. */
+/** Start fetching the holder showcase chunk, so a click opens it without a wait. */
 export function preloadBadgeShowcase() {
   return import('@/components/app/badge-showcase/BadgeShowcase');
+}
+
+/** Start fetching the streamer showcase chunk. */
+export function preloadStreamerShowcase() {
+  return import('@/components/app/badge-showcase/StreamerShowcase');
 }
