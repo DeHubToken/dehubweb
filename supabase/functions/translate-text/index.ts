@@ -21,7 +21,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { rateLimitByIp } from "../_shared/auth.ts";
 import { languageNameFor } from "../_shared/language-names.ts";
 import { translationChunks } from "./chunks.ts";
-import { tryFree } from "../_shared/free-models.ts";
+import { tryFree, lastFreeFailure } from "../_shared/free-models.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -1120,7 +1120,8 @@ serve(async (req) => {
         targetLang,
         result,
         // Public or private: private text cannot use the large free tier.
-        `${result === rawAI ? 'lovable-gateway' : 'lovable-gateway-verbatim'}${isPublicText ? '' : ':private'}`,
+        // Why the free tiers did not answer, readable straight from the table.
+        `${result === rawAI ? 'lovable-gateway' : 'lovable-gateway-verbatim'}${isPublicText ? '' : ':private'}${lastFreeFailure ? ` [${lastFreeFailure}]` : ''}`,
       );
       return new Response(
         JSON.stringify(result),
