@@ -24,9 +24,11 @@ export interface CommentTips {
   totals: Record<string, number>;
   /** The best-tipped comment ids, most first, capped at TOP_TIPPED_COUNT. */
   topTippedIds: string[];
+  /** commentId → lowercase wallets that tipped it, so a tipper sees their own gem lit. */
+  tippers: Record<string, string[]>;
 }
 
-const EMPTY: CommentTips = { totals: {}, topTippedIds: [] };
+const EMPTY: CommentTips = { totals: {}, topTippedIds: [], tippers: {} };
 
 export function useCommentTips(tokenId: string) {
   const query = useQuery({
@@ -40,7 +42,7 @@ export function useCommentTips(tokenId: string) {
       // string sends its type-level parser into TS2589 recursion. The insert
       // side (use-tip-payment) casts for the same reason.
       const { data, error } = await (supabase.from('tip_records') as any)
-        .select('comment_id, amount')
+        .select('comment_id, amount, sender_address')
         .eq('token_id', tokenId)
         .not('comment_id', 'is', null);
 
@@ -49,12 +51,15 @@ export function useCommentTips(tokenId: string) {
       const rows = (data ?? []) as Array<{
         comment_id: string | null;
         amount: number;
+        sender_address: string | null;
       }>;
 
       const totals: Record<string, number> = {};
+      const tippers: Record<string, string[]> = {};
       for (const r of rows) {
         if (!r.comment_id) continue;
         totals[r.comment_id] = (totals[r.comment_id] || 0) + Number(r.amount);
+        if (r.sender_address) (tippers[r.comment_id] ??= []).push(r.sender_address.toLowerCase());
       }
 
       const topTippedIds = Object.entries(totals)
@@ -62,7 +67,7 @@ export function useCommentTips(tokenId: string) {
         .slice(0, TOP_TIPPED_COUNT)
         .map(([id]) => id);
 
-      return { totals, topTippedIds };
+      return { totals, topTippedIds, tippers };
     },
     enabled: Boolean(tokenId),
     staleTime: 60_000,

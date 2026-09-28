@@ -10,6 +10,7 @@ import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check, Lock, Unlock, SmilePlus, Reply } from 'lucide-react';
+import { TipGemIcon } from '@/components/app/cards/TipGemIcon';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useDmEncryption } from '@/hooks/use-dm-encryption';
 import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
@@ -102,6 +103,9 @@ interface DirectMessageChatProps {
   /** Window controls (minimise/close) for dock mode, pinned to the header end. */
   headerActions?: ReactNode;
 }
+
+/** A tip that just arrived or was just sent plays its diamond swirl; history stays still. */
+const isFreshTip = (createdAt: string) => Date.now() - new Date(createdAt).getTime() < 15_000;
 
 function VoiceMessagePlayer({
   audioUrl,
@@ -391,7 +395,7 @@ const MessageBubble = memo(function MessageBubble({
             was the last colour left in a thread whose palette is black and white. */}
         {message.msgType === 'tip' && (
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.16] text-zinc-200 text-sm">
-            <Gem className="w-4 h-4 text-white" />
+            <TipGemIcon tipped burstKey={isFreshTip(message.createdAt) ? 1 : 0} className="w-4 h-4" />
             <span>
               Tip: <DhbAmount amount={message.tipAmount} currency={message.tipSymbol} />
             </span>
@@ -581,7 +585,7 @@ const MessageBubble = memo(function MessageBubble({
             {/* Tip badge on regular messages */}
             {message.tipAmount != null && (message.msgType as string) !== 'tip' && (
               <div className="inline-flex items-center gap-1 mt-1 text-xs text-zinc-300">
-                <Gem className="w-3 h-3 text-zinc-300" />
+                <TipGemIcon tipped burstKey={isFreshTip(message.createdAt) ? 1 : 0} className="w-3 h-3" />
                 <DhbAmount amount={message.tipAmount} currency={message.tipSymbol} />
               </div>
             )}

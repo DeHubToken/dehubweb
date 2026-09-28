@@ -74,3 +74,49 @@ export function usePostTipCount(tokenId?: string, backendTotal?: number) {
   });
   return { ...query, data: Math.max(query.data ?? 0, backendTotal ?? 0) };
 }
+
+// Same coalescing, keyed by wallet: which of these posts has this viewer tipped?
+const pendingTipped = new Map<string, Map<string, Array<(tipped: boolean) => void>>>();
+let tippedTimer: ReturnType<typeof setTimeout> | null = null;
+
+function flushViewerTipped() {
+  tippedTimer = null;
+  const byWallet = new Map(pendingTipped);
+  pendingTipped.clear();
+  byWallet.forEach((batch, wallet) => {
+    supabase
+      .from('tip_records')
+      .select('token_id')
+      .in('token_id', [...batch.keys()])
+      .eq('sender_address', wallet)
+      .is('comment_id', null)
+      .then(({ data, error }) => {
+        if (error) console.warn('[ViewerTipped] Batch query error:', error);
+        const hit = new Set((data || []).map((r) => String(r.token_id)));
+        batch.forEach((resolvers, id) => resolvers.forEach((resolve) => resolve(hit.has(id))));
+      });
+  });
+}
+
+function requestViewerTipped(tokenId: string, wallet: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    const batch = pendingTipped.get(wallet) ?? new Map();
+    const resolvers = batch.get(tokenId) ?? [];
+    resolvers.push(resolve);
+    batch.set(tokenId, resolvers);
+    pendingTipped.set(wallet, batch);
+    if (!tippedTimer) tippedTimer = setTimeout(flushViewerTipped, 50);
+  });
+}
+
+/** Whether this wallet has ever tipped this post — lights the tip gem on load. */
+export function useViewerTippedPost(tokenId?: string, walletAddress?: string | null) {
+  const wallet = walletAddress?.toLowerCase();
+  const query = useQuery({
+    queryKey: ['post-viewer-tipped', tokenId, wallet],
+    queryFn: () => requestViewerTipped(tokenId!, wallet!),
+    enabled: !!tokenId && !!wallet,
+    staleTime: 10 * 60_000,
+  });
+  return query.data ?? false;
+}
