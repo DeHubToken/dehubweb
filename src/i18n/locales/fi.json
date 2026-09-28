@@ -497,7 +497,21 @@
     "emailSignInDone": "Voit nyt kirjautua tällä sähköpostilla",
     "emailSignInRemove": "Poista",
     "emailSignInRemoved": "Poistettu — tällä sähköpostilla ei voi enää kirjautua tilillesi",
-    "cancel": "Peruuta"
+    "cancel": "Peruuta",
+    "solanaWallet": "Solana-lompakko",
+    "solanaWalletHint": "Yhdistä Phantom, niin voit vastaanottaa tippejä ja maksullisia avauksia Solanassa.",
+    "solanaConnect": "Yhdistä",
+    "solanaDisconnect": "Katkaise yhteys",
+    "solanaCopy": "Kopioi Solana-osoite",
+    "solanaCopyFailed": "Osoitetta ei voitu kopioida",
+    "solanaNeedsSignIn": "Kirjaudu ensin sisään",
+    "solanaNoPhantom": "Phantomia ei löytynyt",
+    "solanaNoPhantomHint": "Asenna Phantom-laajennus tai avaa dehub.io Phantom-selaimessa.",
+    "solanaNotSigned": "Mitään ei yhdistetty",
+    "solanaLinked": "Solana-lompakko yhdistetty",
+    "solanaLinkFailed": "Lompakkoa ei voitu yhdistää",
+    "solanaUnlinked": "Solana-lompakon yhteys katkaistu",
+    "solanaUnlinkFailed": "Lompakon yhteyttä ei voitu katkaista"
   },
   "common": {
     "save": "Tallenna",

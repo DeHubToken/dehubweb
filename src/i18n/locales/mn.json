@@ -481,7 +481,21 @@
     "emailSignInDone": "Одоо та энэ имэйлээр нэвтэрч болно",
     "emailSignInRemove": "Хасах",
     "emailSignInRemoved": "Хасагдлаа — энэ имэйлээр цаашид нэвтрэх боломжгүй",
-    "cancel": "Цуцлах"
+    "cancel": "Цуцлах",
+    "solanaWallet": "Solana түрийвч",
+    "solanaWalletHint": "Solana дээр цайны мөнгө болон төлбөртэй нээлт авахын тулд Phantom-ыг холбоно уу.",
+    "solanaConnect": "Холбох",
+    "solanaDisconnect": "Салан тусгаарлах",
+    "solanaCopy": "Solana хаягийг хуулах",
+    "solanaCopyFailed": "Хаягийг хуулж чадсангүй",
+    "solanaNeedsSignIn": "Эхлээд нэвтэрнэ үү",
+    "solanaNoPhantom": "Phantom олдсонгүй",
+    "solanaNoPhantomHint": "Phantom өргөтгөлийг суулгах эсвэл dehub.io-г Phantom хөтөч дээр нээнэ үү.",
+    "solanaNotSigned": "Юу ч холбогдсонгүй",
+    "solanaLinked": "Solana түрийвч холбогдлоо",
+    "solanaLinkFailed": "Тэр түрийвчийг холбож чадсангүй",
+    "solanaUnlinked": "Solana түрийвч салгагдлаа",
+    "solanaUnlinkFailed": "Тэр түрийвчийг салгаж чадсангүй"
   },
   "common": {
     "save": "Хадгалах",
@@ -3255,7 +3269,10 @@
       "failed": "Aмжилтгүй",
       "emptyFeed": "Тэжээлийн аль нэг хэсгийг олж чадсангүй.",
       "badFeed": "Энэ холбоос нь подкастийн тэжээл шиг биш юм.",
-      "tooMany": "Нэг дор 20 хүртэлх хэсгийг импортлох."
+      "tooMany": "Нэг дор 20 хүртэлх хэсгийг импортлох.",
+      "episodes": "{{count}} анги",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Сувгийг татах"
     }
   },
   "banned": {

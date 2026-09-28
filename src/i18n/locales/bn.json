@@ -497,7 +497,21 @@
     "emailSignInDone": "এখন আপনি এই ইমেল দিয়ে সাইন ইন করতে পারবেন",
     "emailSignInRemove": "সরান",
     "emailSignInRemoved": "সরানো হয়েছে — এই ইমেল দিয়ে আর সাইন ইন করা যাবে না",
-    "cancel": "বাতিল"
+    "cancel": "বাতিল",
+    "solanaWallet": "সোলানা ওয়ালেট",
+    "solanaWalletHint": "Solana-তে টিপ ও পেইড আনলক পেতে Phantom সংযুক্ত করুন।",
+    "solanaConnect": "সংযুক্ত করুন",
+    "solanaDisconnect": "সংযোগ বিচ্ছিন্ন করুন",
+    "solanaCopy": "সোলানা ঠিকানা কপি করুন",
+    "solanaCopyFailed": "ঠিকানাটি কপি করা যায়নি",
+    "solanaNeedsSignIn": "আগে সাইন ইন করুন",
+    "solanaNoPhantom": "Phantom পাওয়া যায়নি",
+    "solanaNoPhantomHint": "Phantom এক্সটেনশন ইনস্টল করুন, অথবা Phantom ব্রাউজারে dehub.io খুলুন।",
+    "solanaNotSigned": "কিছুই সংযুক্ত হয়নি",
+    "solanaLinked": "সোলানা ওয়ালেট যুক্ত হয়েছে",
+    "solanaLinkFailed": "ওই ওয়ালেট সংযুক্ত করা যায়নি",
+    "solanaUnlinked": "সোলানা ওয়ালেট বিচ্ছিন্ন হয়েছে",
+    "solanaUnlinkFailed": "ওই ওয়ালেট বিচ্ছিন্ন করা যায়নি"
   },
   "common": {
     "save": "সংরক্ষণ",
@@ -5192,7 +5206,7 @@
       "feedUrlLabel": "পডকাস্ট আরএসএস ফিড URL",
       "fetchFeed": "ফিড আনুন",
       "fetching": "ফিড আনা হচ্ছে...",
-      "showBy": "{{author}} -এর মাধ্যমে",
+      "showBy": "{{author}}-এর মাধ্যমে",
       "episodes": "{{count}} পর্ব",
       "selectAll": "সবগুলো নির্বাচন করুন",
       "alreadyImported": "ইতিমধ্যে ইম্পোর্ট করা হয়েছে",
@@ -5203,7 +5217,8 @@
       "failed": "ব্যর্থ হয়েছে",
       "emptyFeed": "আমরা সেই ফিডে কোনও পর্ব খুঁজে পাইনি ।",
       "badFeed": "সেই লিঙ্কটি পডকাস্ট ফিডের মতো দেখাচ্ছে না ।",
-      "tooMany": "একবারে 20টি পর্যন্ত পর্ব ইম্পোর্ট করুন ।"
+      "tooMany": "একবারে 20টি পর্যন্ত পর্ব ইম্পোর্ট করুন ।",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

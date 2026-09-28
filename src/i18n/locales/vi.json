@@ -454,7 +454,21 @@
     "emailSignInDone": "Giờ bạn có thể đăng nhập bằng email này",
     "emailSignInRemove": "Gỡ",
     "emailSignInRemoved": "Đã gỡ — email này không thể đăng nhập cho bạn nữa",
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "solanaWallet": "Ví Solana",
+    "solanaWalletHint": "Kết nối Phantom để nhận tiền tip và mở khóa trả phí trên Solana.",
+    "solanaConnect": "Kết nối",
+    "solanaDisconnect": "Ngắt kết nối",
+    "solanaCopy": "Sao chép địa chỉ Solana",
+    "solanaCopyFailed": "Không thể sao chép địa chỉ",
+    "solanaNeedsSignIn": "Hãy đăng nhập trước",
+    "solanaNoPhantom": "Không tìm thấy Phantom",
+    "solanaNoPhantomHint": "Cài tiện ích Phantom, hoặc mở dehub.io trong trình duyệt Phantom.",
+    "solanaNotSigned": "Không có gì được kết nối",
+    "solanaLinked": "Đã kết nối ví Solana",
+    "solanaLinkFailed": "Không thể kết nối ví đó",
+    "solanaUnlinked": "Đã ngắt kết nối ví Solana",
+    "solanaUnlinkFailed": "Không thể ngắt kết nối ví đó"
   },
   "common": {
     "save": "Lưu",

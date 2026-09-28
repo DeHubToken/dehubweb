@@ -444,7 +444,21 @@
     "emailSignInDone": "اب تو ای ای میل سے سائن اِن کرے سکبے",
     "emailSignInRemove": "ہٹاؤ",
     "emailSignInRemoved": "ہٹائل گیل — ای ای میل اب تہار سائن اِن نہیں کرے سکی",
-    "cancel": "منسوخ"
+    "cancel": "منسوخ",
+    "solanaWallet": "سولانا والیٹ",
+    "solanaWalletHint": "Solana میں ٹپ آؤر پیڈ اَن لاک پاوے کے Phantom جوڑا۔",
+    "solanaConnect": "جوڑا",
+    "solanaDisconnect": "ہٹاوا",
+    "solanaCopy": "সোলানা ঠিকানা কপি করো",
+    "solanaCopyFailed": "پتہ کاپی نی ہو پالک",
+    "solanaNeedsSignIn": "پہلے سائن ان کرا",
+    "solanaNoPhantom": "Phantom نی ملالک",
+    "solanaNoPhantomHint": "Phantom ایکسٹینشن انسٹال کرا، یا dehub.io کے Phantom براؤزر میں کھولا۔",
+    "solanaNotSigned": "کچھو نی جُڑلک",
+    "solanaLinked": "سولانا والیٹ جُڑ گیلک",
+    "solanaLinkFailed": "اُ والیٹ نی جُڑ پالک",
+    "solanaUnlinked": "سولانا والیٹ ہٹ گیلک",
+    "solanaUnlinkFailed": "اُ والیٹ نی ہٹ پالک"
   },
   "common": {
     "save": "محفوظ کرو",
@@ -3231,7 +3245,20 @@
     "reviewConfirm": "आयात करें",
     "podcast": {
       "tab": "پادکست",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "alreadyImported": "پہلے سے امپورٹ ہو گیلک",
+      "badFeed": "ای لنک پوڈکاسٹ فیڈ جیسن نی لاگت ہے۔",
+      "done": "قطار میں ہے",
+      "emptyFeed": "اُ فیڈ میں کونو ایپیسوڈ نی مِلک۔",
+      "episodes": "{{count}} ایپیسوڈ",
+      "feedUrlLabel": "پوڈکاسٹ RSS فیڈ کر URL",
+      "fetchFeed": "فیڈ لانا",
+      "fetching": "فیڈ لاوت ہی…",
+      "importSelected": "{{count}} ایپیسوڈ امپورٹ کرا",
+      "importing": "امپورٹ ہوت ہی…",
+      "selectAll": "سب چُنا",
+      "showBy": "{{author}} کر",
+      "tooMany": "ایک بار میں 20 ایپیسوڈ تک امپورٹ کرا۔"
     }
   },
   "banned": {

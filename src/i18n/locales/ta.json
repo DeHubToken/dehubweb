@@ -494,7 +494,21 @@
     "emailSignInDone": "இப்போது இந்த மின்னஞ்சலுடன் உள்நுழையலாம்",
     "emailSignInRemove": "அகற்று",
     "emailSignInRemoved": "அகற்றப்பட்டது — இந்த மின்னஞ்சலால் இனி உள்நுழைய முடியாது",
-    "cancel": "ரத்துசெய்"
+    "cancel": "ரத்துசெய்",
+    "solanaWallet": "சோலானா வாலட்",
+    "solanaWalletHint": "Solana-வில் டிப்ஸ் மற்றும் கட்டண அன்லாக்குகளைப் பெற Phantom-ஐ இணைக்கவும்.",
+    "solanaConnect": "இணைக்கவும்",
+    "solanaDisconnect": "துண்டிக்கவும்",
+    "solanaCopy": "சோலானா முகவரியை நகலெடு",
+    "solanaCopyFailed": "முகவரியை நகலெடுக்க முடியவில்லை",
+    "solanaNeedsSignIn": "முதலில் உள்நுழையவும்",
+    "solanaNoPhantom": "Phantom கிடைக்கவில்லை",
+    "solanaNoPhantomHint": "Phantom நீட்டிப்பை நிறுவவும், அல்லது Phantom உலாவியில் dehub.io ஐத் திறக்கவும்.",
+    "solanaNotSigned": "எதுவும் இணைக்கப்படவில்லை",
+    "solanaLinked": "சோலானா வாலட் இணைக்கப்பட்டது",
+    "solanaLinkFailed": "அந்த வாலட்டை இணைக்க முடியவில்லை",
+    "solanaUnlinked": "சோலானா வாலட் துண்டிக்கப்பட்டது",
+    "solanaUnlinkFailed": "அந்த வாலட்டைத் துண்டிக்க முடியவில்லை"
   },
   "common": {
     "save": "சேமி",
@@ -5036,7 +5050,8 @@
       "failed": "தோல்வியுற்றது",
       "emptyFeed": "அந்த ஊட்டத்தில் எந்த அத்தியாயங்களையும் எங்களால் கண்டுபிடிக்க முடியவில்லை.",
       "badFeed": "அந்த இணைப்பு வலையொலி ஊட்டம் போல் தெரியவில்லை.",
-      "tooMany": "ஒரே நேரத்தில் 20 அத்தியாயங்கள் வரை இறக்குமதி செய்யவும்."
+      "tooMany": "ஒரே நேரத்தில் 20 அத்தியாயங்கள் வரை இறக்குமதி செய்யவும்.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

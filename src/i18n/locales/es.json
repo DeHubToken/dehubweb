@@ -497,7 +497,21 @@
     "emailSignInDone": "Ahora puedes iniciar sesión con este correo",
     "emailSignInRemove": "Quitar",
     "emailSignInRemoved": "Quitado: este correo ya no puede iniciar tu sesión",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "solanaWallet": "Billetera de Solana",
+    "solanaWalletHint": "Conecta Phantom para recibir propinas y desbloqueos de pago en Solana.",
+    "solanaConnect": "Conectar",
+    "solanaDisconnect": "Desconectar",
+    "solanaCopy": "Copiar dirección de Solana",
+    "solanaCopyFailed": "No se ha podido copiar la dirección",
+    "solanaNeedsSignIn": "Inicia sesión primero",
+    "solanaNoPhantom": "No se encontró Phantom",
+    "solanaNoPhantomHint": "Instala la extensión de Phantom o abre dehub.io en el navegador de Phantom.",
+    "solanaNotSigned": "No se conectó nada",
+    "solanaLinked": "Billetera de Solana conectada",
+    "solanaLinkFailed": "No se pudo conectar esa billetera",
+    "solanaUnlinked": "Billetera de Solana desconectada",
+    "solanaUnlinkFailed": "No se pudo desconectar esa billetera"
   },
   "common": {
     "save": "Guardar",

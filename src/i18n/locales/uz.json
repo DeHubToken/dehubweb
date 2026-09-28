@@ -482,7 +482,21 @@
     "emailSignInDone": "Endi bu email bilan kira olasiz",
     "emailSignInRemove": "Olib tashlash",
     "emailSignInRemoved": "Olib tashlandi — bu email bilan endi kira olmaysiz",
-    "cancel": "Bekor qilish"
+    "cancel": "Bekor qilish",
+    "solanaWallet": "Solana hamyoni",
+    "solanaWalletHint": "Solana’da choychaqa va pullik ochishlarni olish uchun Phantom’ni ulang.",
+    "solanaConnect": "Ulanish",
+    "solanaDisconnect": "Ulanishni uzish",
+    "solanaCopy": "Solana manzilini nusxalash",
+    "solanaCopyFailed": "Manzilni nusxalab bo&#39;lmadi",
+    "solanaNeedsSignIn": "Avval tizimga kiring",
+    "solanaNoPhantom": "Phantom topilmadi",
+    "solanaNoPhantomHint": "Phantom kengaytmasini o‘rnating yoki dehub.io saytini Phantom brauzerida oching.",
+    "solanaNotSigned": "Hech narsa ulanmadi",
+    "solanaLinked": "Solana hamyoni ulandi",
+    "solanaLinkFailed": "Bu hamyonni ulab bo‘lmadi",
+    "solanaUnlinked": "Solana hamyoni uzildi",
+    "solanaUnlinkFailed": "Bu hamyonni uzib bo‘lmadi"
   },
   "common": {
     "save": "Saqlash",

@@ -482,7 +482,21 @@
     "emailSignInDone": "Акнун шумо метавонед бо ин почта ворид шавед",
     "emailSignInRemove": "Хориҷ кардан",
     "emailSignInRemoved": "Хориҷ шуд — бо ин почта дигар ворид шуда наметавонед",
-    "cancel": "Бекор"
+    "cancel": "Бекор",
+    "solanaWallet": "Ҳамёни Solana",
+    "solanaWalletHint": "Phantom-ро пайваст кунед, то дар Solana чойпулӣ ва кушодани пулакӣ гиред.",
+    "solanaConnect": "Пайваст кунед",
+    "solanaDisconnect": "Бекор кунед",
+    "solanaCopy": "Суроғаи Solana-ро нусхабардорӣ кунед",
+    "solanaCopyFailed": "Суроға нусхабардорӣ карда нашуд",
+    "solanaNeedsSignIn": "Аввал ворид шавед",
+    "solanaNoPhantom": "Phantom ёфт нашуд",
+    "solanaNoPhantomHint": "Васеъкунии Phantom-ро насб кунед ё dehub.io-ро дар браузери Phantom кушоед.",
+    "solanaNotSigned": "Ҳеҷ чиз пайваст нашуд",
+    "solanaLinked": "Ҳамёни Solana пайваст шуд",
+    "solanaLinkFailed": "Ин ҳамёнро пайваст кардан нашуд",
+    "solanaUnlinked": "Ҳамёни Solana ҷудо шуд",
+    "solanaUnlinkFailed": "Ин ҳамёнро ҷудо кардан нашуд"
   },
   "common": {
     "save": "Сабт",
@@ -3306,7 +3320,8 @@
       "failed": "Хатогӣ",
       "emptyFeed": "Hindi namin mahanap ang anumang mga episodes sa feed na ito.",
       "badFeed": "Ang link na ito ay hindi tulad ng feed ng podcast.",
-      "tooMany": "Mag-import ng hanggang 20 na mga episod sa isang oras."
+      "tooMany": "Mag-import ng hanggang 20 na mga episod sa isang oras.",
+      "importSelected": "Ворид кардани {{count}} қисм"
     }
   },
   "banned": {

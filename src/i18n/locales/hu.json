@@ -497,7 +497,21 @@
     "emailSignInDone": "Mostantól bejelentkezhetsz ezzel az e-mail-címmel",
     "emailSignInRemove": "Eltávolítás",
     "emailSignInRemoved": "Eltávolítva — ezzel az e-mail-címmel már nem tudsz bejelentkezni",
-    "cancel": "Mégse"
+    "cancel": "Mégse",
+    "solanaWallet": "Solana-tárca",
+    "solanaWalletHint": "Csatlakoztasd a Phantomot, hogy borravalót és fizetős feloldásokat kapj Solanán.",
+    "solanaConnect": "Csatlakoztatás",
+    "solanaDisconnect": "Szétkapcsolás",
+    "solanaCopy": "Solana-cím másolása",
+    "solanaCopyFailed": "A cím másolása nem sikerült",
+    "solanaNeedsSignIn": "Előbb jelentkezz be",
+    "solanaNoPhantom": "A Phantom nem található",
+    "solanaNoPhantomHint": "Telepítsd a Phantom bővítményt, vagy nyisd meg a dehub.io-t a Phantom böngészőben.",
+    "solanaNotSigned": "Semmi sem csatlakozott",
+    "solanaLinked": "Solana-tárca csatlakoztatva",
+    "solanaLinkFailed": "Nem sikerült csatlakoztatni ezt a tárcát",
+    "solanaUnlinked": "Solana-tárca leválasztva",
+    "solanaUnlinkFailed": "Nem sikerült leválasztani ezt a tárcát"
   },
   "common": {
     "save": "Mentés",

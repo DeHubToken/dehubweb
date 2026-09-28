@@ -481,7 +481,21 @@
     "emailSignInDone": "Енді осы поштамен кіре аласыз",
     "emailSignInRemove": "Жою",
     "emailSignInRemoved": "Жойылды — бұл поштамен енді кіре алмайсыз",
-    "cancel": "Болдырмау"
+    "cancel": "Болдырмау",
+    "solanaWallet": "Solana әмияны",
+    "solanaWalletHint": "Solana-да шайпұл мен ақылы ашуларды алу үшін Phantom-ды қосыңыз.",
+    "solanaConnect": "Қосу",
+    "solanaDisconnect": "Ажырату",
+    "solanaCopy": "Solana мекенжайын көшіру",
+    "solanaCopyFailed": "Мекенжайды көшіру мүмкін болмады",
+    "solanaNeedsSignIn": "Алдымен кіріңіз",
+    "solanaNoPhantom": "Phantom табылмады",
+    "solanaNoPhantomHint": "Phantom кеңейтімін орнатыңыз немесе dehub.io сайтын Phantom браузерінде ашыңыз.",
+    "solanaNotSigned": "Ештеңе қосылмады",
+    "solanaLinked": "Solana әмияны қосылды",
+    "solanaLinkFailed": "Бұл әмиянды қосу мүмкін болмады",
+    "solanaUnlinked": "Solana әмияны ажыратылды",
+    "solanaUnlinkFailed": "Бұл әмиянды ажырату мүмкін болмады"
   },
   "common": {
     "save": "Сақтау",
@@ -5428,7 +5442,8 @@
       "failed": "Сәтсіздік",
       "emptyFeed": "Бұл арнаның эпизодтарын таба алмадық.",
       "badFeed": "Бұл сілтеме подкаст арнасына ұқсамайды.",
-      "tooMany": "Бір уақытта 20 эпизодқа дейін импорттау."
+      "tooMany": "Бір уақытта 20 эпизодқа дейін импорттау.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

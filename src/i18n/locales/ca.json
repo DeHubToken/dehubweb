@@ -497,7 +497,21 @@
     "emailSignInDone": "Ara pots iniciar sessió amb aquest correu",
     "emailSignInRemove": "Treu",
     "emailSignInRemoved": "Tret: aquest correu ja no pot iniciar la teva sessió",
-    "cancel": "Cancel·lar"
+    "cancel": "Cancel·lar",
+    "solanaWallet": "Moneder de Solana",
+    "solanaWalletHint": "Connecta Phantom per rebre propines i desbloquejos de pagament a Solana.",
+    "solanaConnect": "Connectar",
+    "solanaDisconnect": "Desconnectar",
+    "solanaCopy": "Copia l'adreça de Solana",
+    "solanaCopyFailed": "No s'ha pogut copiar l'adreça",
+    "solanaNeedsSignIn": "Inicia la sessió primer",
+    "solanaNoPhantom": "No s'ha trobat Phantom",
+    "solanaNoPhantomHint": "Instal·la l'extensió Phantom o obre dehub.io al navegador de Phantom.",
+    "solanaNotSigned": "No s'ha connectat res",
+    "solanaLinked": "Moneder de Solana connectat",
+    "solanaLinkFailed": "No s'ha pogut connectar aquest moneder",
+    "solanaUnlinked": "Moneder de Solana desconnectat",
+    "solanaUnlinkFailed": "No s'ha pogut desconnectar aquest moneder"
   },
   "common": {
     "save": "Desar",

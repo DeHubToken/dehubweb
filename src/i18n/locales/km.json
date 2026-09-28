@@ -467,7 +467,21 @@
     "emailSignInDone": "ឥឡូវអ្នកអាចចូលដោយអ៊ីមែលនេះបាន",
     "emailSignInRemove": "លុបចេញ",
     "emailSignInRemoved": "បានលុប — អ៊ីមែលនេះមិនអាចចូលគណនីអ្នកទៀតទេ",
-    "cancel": "បោះបង់"
+    "cancel": "បោះបង់",
+    "solanaWallet": "កាបូប Solana",
+    "solanaWalletHint": "ភ្ជាប់ Phantom ដើម្បីទទួលលុយទឹកតែ និងការដោះសោដែលបង់ប្រាក់នៅលើ Solana។",
+    "solanaConnect": "ភ្ជាប់",
+    "solanaDisconnect": "ផ្តាច់",
+    "solanaCopy": "ចម្លងអាសយដ្ឋាន Solana",
+    "solanaCopyFailed": "មិនអាចចម្លងអាសយដ្ឋានបានទេ",
+    "solanaNeedsSignIn": "សូមចូលគណនីជាមុនសិន",
+    "solanaNoPhantom": "រកមិនឃើញ Phantom",
+    "solanaNoPhantomHint": "ដំឡើងកម្មវិធីបន្ថែម Phantom ឬបើក dehub.io ក្នុងកម្មវិធីរុករក Phantom។",
+    "solanaNotSigned": "គ្មានអ្វីត្រូវបានភ្ជាប់ទេ",
+    "solanaLinked": "បានភ្ជាប់កាបូប Solana",
+    "solanaLinkFailed": "មិនអាចភ្ជាប់កាបូបនោះបានទេ",
+    "solanaUnlinked": "បានផ្ដាច់កាបូប Solana",
+    "solanaUnlinkFailed": "មិនអាចផ្ដាច់កាបូបនោះបានទេ"
   },
   "common": {
     "save": "រក្សាទុក",
@@ -5217,7 +5231,9 @@
       "failed": "បរាជ័យ",
       "emptyFeed": "យើងមិនអាចរកឃើញវគ្គណាមួយនៅក្នុងចំណីអាហារនោះទេ ។",
       "badFeed": "ខ្ញុំ មិន បាន ពិនិត្យ មើល ថា តើ វា មាន ក្នុង រូបភាព Podcast ទេ",
-      "tooMany": "នាំចូលរហូតដល់ 20 រឿងក្នុងមួយពេល ។"
+      "tooMany": "នាំចូលរហូតដល់ 20 រឿងក្នុងមួយពេល ។",
+      "episodes": "{{count}} វគ្គ",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

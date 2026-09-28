@@ -497,7 +497,21 @@
     "emailSignInDone": "Тепер ви можете входити з цією поштою",
     "emailSignInRemove": "Видалити",
     "emailSignInRemoved": "Видалено — з цією поштою більше не можна увійти",
-    "cancel": "Скасувати"
+    "cancel": "Скасувати",
+    "solanaWallet": "Гаманець Solana",
+    "solanaWalletHint": "Підключіть Phantom, щоб отримувати чайові та платні відкриття в Solana.",
+    "solanaConnect": "Підключити",
+    "solanaDisconnect": "Відключити",
+    "solanaCopy": "Скопіювати адресу Solana",
+    "solanaCopyFailed": "Не вдалося скопіювати адресу",
+    "solanaNeedsSignIn": "Спочатку увійдіть",
+    "solanaNoPhantom": "Phantom не знайдено",
+    "solanaNoPhantomHint": "Установіть розширення Phantom або відкрийте dehub.io у браузері Phantom.",
+    "solanaNotSigned": "Нічого не підключено",
+    "solanaLinked": "Гаманець Solana підключено",
+    "solanaLinkFailed": "Не вдалося підключити цей гаманець",
+    "solanaUnlinked": "Гаманець Solana відключено",
+    "solanaUnlinkFailed": "Не вдалося відключити цей гаманець"
   },
   "common": {
     "save": "Зберегти",
@@ -5228,7 +5242,8 @@
       "failed": "Помилка",
       "emptyFeed": "Не вдалося знайти жодного епізоду в цій стрічці.",
       "badFeed": "Це посилання не схоже на стрічку подкастів.",
-      "tooMany": "Імпортувати до 20 серій одночасно."
+      "tooMany": "Імпортувати до 20 серій одночасно.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

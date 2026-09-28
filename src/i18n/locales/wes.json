@@ -408,7 +408,21 @@
     "emailSignInDone": "Yu fit sign in wit dis email nau",
     "emailSignInRemove": "Komot-am",
     "emailSignInRemoved": "Dem don komot-am — dis email no fit sign yu in again",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "solanaWallet": "Solana wallet",
+    "solanaWalletHint": "Connect Phantom make you fit collect tip and paid unlock for Solana.",
+    "solanaConnect": "Connect",
+    "solanaDisconnect": "Disconnect",
+    "solanaCopy": "Copy di Solana address",
+    "solanaCopyFailed": "No fit copy the address",
+    "solanaNeedsSignIn": "Sign in first",
+    "solanaNoPhantom": "We no see Phantom",
+    "solanaNoPhantomHint": "Install the Phantom extension, or open dehub.io for inside Phantom browser.",
+    "solanaNotSigned": "Notin no connect",
+    "solanaLinked": "Solana wallet don connect",
+    "solanaLinkFailed": "We no fit connect dat wallet",
+    "solanaUnlinked": "Solana wallet don disconnect",
+    "solanaUnlinkFailed": "We no fit disconnect dat wallet"
   },
   "common": {
     "save": "Save am",
@@ -2853,8 +2867,12 @@
       "importSelected": "Import {{count}} episodes",
       "importing": "Importing…",
       "done": "Queued",
-      "failed": "Failed"
-    }
+      "failed": "Failed",
+      "badFeed": "That link no resemble podcast feed.",
+      "emptyFeed": "We no see any episode for that feed.",
+      "tooMany": "Bring reach 20 episode dem one time."
+    },
+    "ownership": "Na me get this content, or the person weh get the rights don allow me publish am for DeHub."
   },
   "banned": {
     "reason": "Reason: {{reason}}"

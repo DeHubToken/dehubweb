@@ -483,7 +483,21 @@
     "emailSignInDone": "Dabar gali prisijungti su šiuo el. paštu",
     "emailSignInRemove": "Pašalinti",
     "emailSignInRemoved": "Pašalinta — šiuo el. paštu nebegalėsi prisijungti",
-    "cancel": "Atšaukti"
+    "cancel": "Atšaukti",
+    "solanaWallet": "Solana piniginė",
+    "solanaWalletHint": "Prijunkite Phantom, kad gautumėte arbatpinigių ir mokamų atrakinimų Solana tinkle.",
+    "solanaConnect": "Prijungti",
+    "solanaDisconnect": "Atjungti",
+    "solanaCopy": "Kopijuoti Solana adresą",
+    "solanaCopyFailed": "Nepavyko nukopijuoti adreso",
+    "solanaNeedsSignIn": "Pirmiausia prisijunkite",
+    "solanaNoPhantom": "Phantom nerastas",
+    "solanaNoPhantomHint": "Įdiekite Phantom plėtinį arba atidarykite dehub.io Phantom naršyklėje.",
+    "solanaNotSigned": "Nieko neprijungta",
+    "solanaLinked": "Solana piniginė prijungta",
+    "solanaLinkFailed": "Nepavyko prijungti šios piniginės",
+    "solanaUnlinked": "Solana piniginė atjungta",
+    "solanaUnlinkFailed": "Nepavyko atjungti šios piniginės"
   },
   "common": {
     "save": "Saugoti",

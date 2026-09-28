@@ -497,7 +497,21 @@
     "emailSignInDone": "Sada se možete prijaviti ovom e-poštom",
     "emailSignInRemove": "Ukloni",
     "emailSignInRemoved": "Uklonjeno — ovom se e-poštom više ne možete prijaviti",
-    "cancel": "Odustani"
+    "cancel": "Odustani",
+    "solanaWallet": "Solana novčanik",
+    "solanaWalletHint": "Povežite Phantom kako biste primali napojnice i plaćena otključavanja na Solani.",
+    "solanaConnect": "Poveži",
+    "solanaDisconnect": "Odspoji",
+    "solanaCopy": "Kopiraj Solana adresu",
+    "solanaCopyFailed": "Kopiranje adrese nije uspjelo",
+    "solanaNeedsSignIn": "Najprije se prijavite",
+    "solanaNoPhantom": "Phantom nije pronađen",
+    "solanaNoPhantomHint": "Instalirajte proširenje Phantom ili otvorite dehub.io u pregledniku Phantom.",
+    "solanaNotSigned": "Ništa nije povezano",
+    "solanaLinked": "Solana novčanik je povezan",
+    "solanaLinkFailed": "Taj novčanik nije bilo moguće povezati",
+    "solanaUnlinked": "Solana novčanik je odspojen",
+    "solanaUnlinkFailed": "Taj novčanik nije bilo moguće odspojiti"
   },
   "common": {
     "save": "Spremi",

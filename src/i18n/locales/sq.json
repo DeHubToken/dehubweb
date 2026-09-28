@@ -497,7 +497,21 @@
     "emailSignInDone": "Tani mund të hysh me këtë email",
     "emailSignInRemove": "Hiq",
     "emailSignInRemoved": "U hoq — ky email nuk të fut më në llogari",
-    "cancel": "Anulo"
+    "cancel": "Anulo",
+    "solanaWallet": "Portofoli Solana",
+    "solanaWalletHint": "Lidh Phantom për të marrë bakshishe dhe zhbllokime me pagesë në Solana.",
+    "solanaConnect": "Lidhni",
+    "solanaDisconnect": "Shkëputni",
+    "solanaCopy": "Kopjo adresën Solana",
+    "solanaCopyFailed": "Nuk mund të kopjohet adresa",
+    "solanaNeedsSignIn": "Hyr fillimisht",
+    "solanaNoPhantom": "Phantom nuk u gjet",
+    "solanaNoPhantomHint": "Instalo shtesën Phantom ose hap dehub.io në shfletuesin Phantom.",
+    "solanaNotSigned": "Asgjë nuk u lidh",
+    "solanaLinked": "Portofoli Solana u lidh",
+    "solanaLinkFailed": "Ai portofol nuk mund të lidhej",
+    "solanaUnlinked": "Portofoli Solana u shkëput",
+    "solanaUnlinkFailed": "Ai portofol nuk mund të shkëputej"
   },
   "common": {
     "save": "Ruaj",

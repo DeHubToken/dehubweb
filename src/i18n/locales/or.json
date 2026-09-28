@@ -480,7 +480,21 @@
     "emailSignInDone": "ବର୍ତ୍ତମାନ ଆପଣ ଏହି ଇମେଲ ସହ ସାଇନ ଇନ କରିପାରିବେ",
     "emailSignInRemove": "ହଟାନ୍ତୁ",
     "emailSignInRemoved": "ହଟାଗଲା — ଏହି ଇମେଲ ଆଉ ଆପଣଙ୍କୁ ସାଇନ ଇନ କରାଇପାରିବ ନାହିଁ",
-    "cancel": "ବାତିଲ"
+    "cancel": "ବାତିଲ",
+    "solanaWallet": "ସୋଲାନା ୱାଲେଟ୍",
+    "solanaWalletHint": "Solana ରେ ଟିପ୍ସ ଏବଂ ଦେୟଯୁକ୍ତ ଅନଲକ୍ ପାଇବା ପାଇଁ Phantom ସଂଯୋଗ କରନ୍ତୁ।",
+    "solanaConnect": "ଯୋଡନ୍ତୁ",
+    "solanaDisconnect": "ଡିସକନେକ୍ଟ",
+    "solanaCopy": "ସୋଲାନା ଠିକଣା କପି କରନ୍ତୁ",
+    "solanaCopyFailed": "ଠିକଣା ନକଲ କରିପାରିଲା ନାହିଁ",
+    "solanaNeedsSignIn": "ପ୍ରଥମେ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ",
+    "solanaNoPhantom": "Phantom ମିଳିଲା ନାହିଁ",
+    "solanaNoPhantomHint": "Phantom ଏକ୍ସଟେନସନ୍ ଇନଷ୍ଟଲ୍ କରନ୍ତୁ, କିମ୍ବା Phantom ବ୍ରାଉଜରରେ dehub.io ଖୋଲନ୍ତୁ।",
+    "solanaNotSigned": "କିଛି ସଂଯୋଗ ହେଲା ନାହିଁ",
+    "solanaLinked": "ସୋଲାନା ୱାଲେଟ୍ ସଂଯୁକ୍ତ ହେଲା",
+    "solanaLinkFailed": "ସେହି ୱାଲେଟ୍ ସଂଯୋଗ କରିହେଲା ନାହିଁ",
+    "solanaUnlinked": "ସୋଲାନା ୱାଲେଟ୍ ବିଚ୍ଛିନ୍ନ ହେଲା",
+    "solanaUnlinkFailed": "ସେହି ୱାଲେଟ୍ ବିଚ୍ଛିନ୍ନ କରିହେଲା ନାହିଁ"
   },
   "common": {
     "save": "ସଞ୍ଚୟ କରନ୍ତୁ",

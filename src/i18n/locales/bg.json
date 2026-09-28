@@ -494,7 +494,21 @@
     "emailSignInDone": "Вече можете да влизате с този имейл",
     "emailSignInRemove": "Премахни",
     "emailSignInRemoved": "Премахнато — с този имейл вече не можете да влезете",
-    "cancel": "Отмени"
+    "cancel": "Отмени",
+    "solanaWallet": "Портфейл Solana",
+    "solanaWalletHint": "Свържете Phantom, за да получавате бакшиши и платени отключвания в Solana.",
+    "solanaConnect": "Свържи",
+    "solanaDisconnect": "Прекъсни връзката",
+    "solanaCopy": "Копирай Solana адреса",
+    "solanaCopyFailed": "Адресът не може да бъде копиран",
+    "solanaNeedsSignIn": "Първо влезте",
+    "solanaNoPhantom": "Phantom не е намерен",
+    "solanaNoPhantomHint": "Инсталирайте разширението Phantom или отворете dehub.io в браузъра Phantom.",
+    "solanaNotSigned": "Нищо не беше свързано",
+    "solanaLinked": "Портфейлът Solana е свързан",
+    "solanaLinkFailed": "Този портфейл не можа да бъде свързан",
+    "solanaUnlinked": "Портфейлът Solana е изключен",
+    "solanaUnlinkFailed": "Този портфейл не можа да бъде прекъснат"
   },
   "common": {
     "save": "Запази",
@@ -5230,7 +5244,8 @@
       "failed": "Неуспешно",
       "emptyFeed": "Не можахме да намерим никакви епизоди в тази емисия.",
       "badFeed": "Тази връзка не изглежда като емисия на подкаст.",
-      "tooMany": "Импортирайте до 20 епизода наведнъж."
+      "tooMany": "Импортирайте до 20 епизода наведнъж.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

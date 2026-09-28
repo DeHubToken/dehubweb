@@ -479,7 +479,21 @@
     "emailSignInDone": "अब तैं ए ईमेल ले साइन इन कर सकथस",
     "emailSignInRemove": "हटावव",
     "emailSignInRemoved": "हट गिस — ए ईमेल अब तोला साइन इन नइ करा सकय",
-    "cancel": "रद्द करव"
+    "cancel": "रद्द करव",
+    "solanaWallet": "सोलाना वॉलेट",
+    "solanaWalletHint": "Solana म टिप अउ पेड अनलॉक पाए बर Phantom जोड़व।",
+    "solanaConnect": "कनेक्ट करें",
+    "solanaDisconnect": "डिस्कनेक्ट करें",
+    "solanaCopy": "सोलाना पता कॉपी करव",
+    "solanaCopyFailed": "पता के नकल नइ कर सकिस",
+    "solanaNeedsSignIn": "पहिली साइन इन करव",
+    "solanaNoPhantom": "Phantom नइ मिलिस",
+    "solanaNoPhantomHint": "Phantom एक्सटेंशन इंस्टॉल करव, या dehub.io ल Phantom ब्राउज़र म खोलव।",
+    "solanaNotSigned": "कुछु नइ जुड़िस",
+    "solanaLinked": "सोलाना वॉलेट जुड़ गे",
+    "solanaLinkFailed": "वो वॉलेट नइ जुड़ पाइस",
+    "solanaUnlinked": "सोलाना वॉलेट हट गे",
+    "solanaUnlinkFailed": "वो वॉलेट नइ हट पाइस"
   },
   "common": {
     "save": "बचाव",
@@ -3242,7 +3256,9 @@
       "failed": "फेल",
       "emptyFeed": "हमन ओ फीड म कोनो एपिसोड नी पा सकेन ।",
       "badFeed": "मैं हर जांच नी करिस कि क्या यह एक पॉडकास्ट प्रारूप म उपलब्ध हवय ।",
-      "tooMany": "एक बार म 20 एपिसोड तक आयात करे ।"
+      "tooMany": "एक बार म 20 एपिसोड तक आयात करे ।",
+      "episodes": "{{count}} ठन एपिसोड",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

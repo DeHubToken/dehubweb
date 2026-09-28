@@ -497,7 +497,21 @@
     "emailSignInDone": "İndi bu e-poçtla daxil ola bilərsiniz",
     "emailSignInRemove": "Sil",
     "emailSignInRemoved": "Silindi — bu e-poçtla artıq daxil ola bilməzsiniz",
-    "cancel": "Ləğv et"
+    "cancel": "Ləğv et",
+    "solanaWallet": "Solana cüzdanı",
+    "solanaWalletHint": "Solana-da ianələr və ödənişli kilidaçmalar almaq üçün Phantom-u qoşun.",
+    "solanaConnect": "Qoş",
+    "solanaDisconnect": "Bağlantını kəs",
+    "solanaCopy": "Solana ünvanını kopyala",
+    "solanaCopyFailed": "Ünvanı kopyalamaq mümkün olmadı",
+    "solanaNeedsSignIn": "Əvvəlcə daxil olun",
+    "solanaNoPhantom": "Phantom tapılmadı",
+    "solanaNoPhantomHint": "Phantom genişlənməsini quraşdırın və ya dehub.io-nu Phantom brauzerində açın.",
+    "solanaNotSigned": "Heç nə qoşulmadı",
+    "solanaLinked": "Solana cüzdanı qoşuldu",
+    "solanaLinkFailed": "Həmin pul kisəsini qoşmaq alınmadı",
+    "solanaUnlinked": "Solana cüzdanı ayrıldı",
+    "solanaUnlinkFailed": "Həmin pul kisəsini ayırmaq alınmadı"
   },
   "common": {
     "save": "Saxla",
@@ -5332,7 +5346,8 @@
       "failed": "Uğursuz oldu",
       "emptyFeed": "Bu lentdə heç bir epizod tapa bilmədik.",
       "badFeed": "Bu link podkast lentinə bənzəmir.",
-      "tooMany": "Bir dəfəyə 20-yə qədər seriya idxal edin."
+      "tooMany": "Bir dəfəyə 20-yə qədər seriya idxal edin.",
+      "showBy": "Müəllif: {{author}}"
     }
   },
   "banned": {

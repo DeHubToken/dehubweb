@@ -453,7 +453,21 @@
     "emailSignInDone": "هلّق فيك تفوت بهاد الإيميل",
     "emailSignInRemove": "شيل",
     "emailSignInRemoved": "اتشال — هاد الإيميل ما عاد فيه يفوّتك",
-    "cancel": "إلغاء"
+    "cancel": "إلغاء",
+    "solanaWallet": "محفظة سولانا",
+    "solanaWalletHint": "اربط Phantom لتستلم البقشيش وفتح المحتوى المدفوع على Solana.",
+    "solanaConnect": "ربط",
+    "solanaDisconnect": "فصل",
+    "solanaCopy": "انسخ عنوان سولانا",
+    "solanaCopyFailed": "لم يتم نسخ العنوان",
+    "solanaNeedsSignIn": "سجّل دخول أول",
+    "solanaNoPhantom": "ما لقينا Phantom",
+    "solanaNoPhantomHint": "نزّل إضافة Phantom، أو افتح dehub.io بمتصفح Phantom.",
+    "solanaNotSigned": "ما انربط إشي",
+    "solanaLinked": "انربطت محفظة سولانا",
+    "solanaLinkFailed": "ما قدرنا نربط هالمحفظة",
+    "solanaUnlinked": "انفصلت محفظة سولانا",
+    "solanaUnlinkFailed": "ما قدرنا نفصل هالمحفظة"
   },
   "common": {
     "save": "حفظ",
@@ -3245,7 +3259,8 @@
       "failed": "فشل",
       "emptyFeed": "لم نتمكن من العثور على أي حلقات في هذه التغذية.",
       "badFeed": "هذا الرابط لا يبدو أنه تغذية بودكاست.",
-      "tooMany": "استيراد ما يصل إلى 20 حلقة في المرة الواحدة."
+      "tooMany": "استيراد ما يصل إلى 20 حلقة في المرة الواحدة.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

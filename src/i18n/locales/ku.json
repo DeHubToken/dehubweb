@@ -401,7 +401,21 @@
     "emailSignInDone": "Niha tu dikarî bi vê e-nameyê têkevî",
     "emailSignInRemove": "Rake",
     "emailSignInRemoved": "Hate rakirin — ev e-name êdî nikare te têxe hundir",
-    "cancel": "Betal bike"
+    "cancel": "Betal bike",
+    "solanaWallet": "Cizdana Solana",
+    "solanaWalletHint": "Phantom girê bide da ku li ser Solana bexşîş û vekirinên bi pere bistînî.",
+    "solanaConnect": "بەستن",
+    "solanaDisconnect": "لابردن",
+    "solanaCopy": "Navnîşana Solana kopî bike",
+    "solanaCopyFailed": "Navnîşan nehat kopîkirin",
+    "solanaNeedsSignIn": "Pêşî têkeve",
+    "solanaNoPhantom": "Phantom nehat dîtin",
+    "solanaNoPhantomHint": "Pêveka Phantom saz bike, an jî dehub.io di geroka Phantom de veke.",
+    "solanaNotSigned": "Tiştek nehat girêdan",
+    "solanaLinked": "Cizdana Solana hate girêdan",
+    "solanaLinkFailed": "Ev cizdan nehat girêdan",
+    "solanaUnlinked": "Girêdana cizdana Solana hate qutkirin",
+    "solanaUnlinkFailed": "Girêdana vê cizdanê nehat qutkirin"
   },
   "common": {
     "save": "Tomar bike",
@@ -4588,8 +4602,23 @@
     "reviewConfirm": "Anîn",
     "podcast": {
       "tab": "پۆدکاست",
-      "failed": "سه‌رنه‌که‌وتوو"
-    }
+      "failed": "سه‌رنه‌که‌وتوو",
+      "alreadyImported": "Berê hatiye îtxalkirin",
+      "badFeed": "Ev girêdan wek feeda podcastê xuya nake.",
+      "done": "Di rêzê de ye",
+      "emptyFeed": "Me di wê feedê de tu beş nedîtin.",
+      "episodes": "{{count}} beş",
+      "feedUrlLabel": "URLya feeda RSS ya podcastê",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Feedê bîne",
+      "fetching": "Feed tê anîn…",
+      "importSelected": "{{count}} beşan îtxal bike",
+      "importing": "Tê îtxalkirin…",
+      "selectAll": "Hemûyan hilbijêre",
+      "showBy": "Ji aliyê {{author}}",
+      "tooMany": "Di carekê de heta 20 beşan îtxal bike."
+    },
+    "ownership": "Ez xwediyê vê naverokê me, an jî destûra xwediyê mafan heye ku ez wê li ser DeHub biweşînim."
   },
   "migrate": {
     "costsNote": "بە توکنی DeHub دانرا، جارێک، پێش ئەوەی کۆمەڵەکە دەست پێ بکات. خاوەنانی بەیج کەمتر پارە دەدەن - کەمکردنەوەکەت لەسەر کوتە جێبەجێ دەکرێت. ئەگەر ڤیدیۆیەک نەتوانرێت هاوردە بکرێت، بەشی ئەو دەگەڕێندرێتەوە بۆ کۆچبەری داهاتووت.",

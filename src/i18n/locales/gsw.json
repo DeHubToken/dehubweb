@@ -454,7 +454,21 @@
     "emailSignInDone": "Du chasch di jetzt mit dere E-Mail aamälde",
     "emailSignInRemove": "Entferne",
     "emailSignInRemoved": "Entfernt — mit dere E-Mail chasch di nümm aamälde",
-    "cancel": "Abbräche"
+    "cancel": "Abbräche",
+    "solanaWallet": "Solana-Wallet",
+    "solanaWalletHint": "Verbind Phantom, zum Trinkgäld und zahlti Freischaltige uf Solana übercho.",
+    "solanaConnect": "Verbinde",
+    "solanaDisconnect": "Trenne",
+    "solanaCopy": "Solana-Adrässe kopiere",
+    "solanaCopyFailed": "Adrässe konnt nöd kopiert werde",
+    "solanaNeedsSignIn": "Mäld di zerscht aa",
+    "solanaNoPhantom": "Phantom nöd gfunde",
+    "solanaNoPhantomHint": "Installier d Phantom-Erwiterig oder mach dehub.io im Phantom-Browser uf.",
+    "solanaNotSigned": "Es isch nüt verbunde worde",
+    "solanaLinked": "Solana-Wallet verbunde",
+    "solanaLinkFailed": "Die Wallet het nöd chöne verbunde wärde",
+    "solanaUnlinked": "Solana-Wallet trännt",
+    "solanaUnlinkFailed": "Die Wallet het nöd chöne trennt wärde"
   },
   "common": {
     "save": "Speichere",

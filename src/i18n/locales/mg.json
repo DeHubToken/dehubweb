@@ -478,7 +478,21 @@
     "emailSignInDone": "Afaka miditra amin'ity mailaka ity ianao izao",
     "emailSignInRemove": "Esory",
     "emailSignInRemoved": "Nesorina — tsy afaka mampiditra anao intsony ity mailaka ity",
-    "cancel": "Hanafoana"
+    "cancel": "Hanafoana",
+    "solanaWallet": "Kitapom-bola Solana",
+    "solanaWalletHint": "Ampifandraiso ny Phantom mba handraisana tip sy famohana voaloa amin'ny Solana.",
+    "solanaConnect": "Ampifandraiso",
+    "solanaDisconnect": "Esory",
+    "solanaCopy": "Adikao ny adiresy Solana",
+    "solanaCopyFailed": "Tsy afaka mandika ilay adiresy",
+    "solanaNeedsSignIn": "Midira aloha",
+    "solanaNoPhantom": "Tsy hita ny Phantom",
+    "solanaNoPhantomHint": "Apetraho ny fanitarana Phantom, na sokafy ao amin'ny mpitety Phantom ny dehub.io.",
+    "solanaNotSigned": "Tsy nisy nifandray",
+    "solanaLinked": "Voafandrika ny kitapom-bola Solana",
+    "solanaLinkFailed": "Tsy afaka nampifandray io kitapom-bola io",
+    "solanaUnlinked": "Tapaka ny kitapom-bola Solana",
+    "solanaUnlinkFailed": "Tsy afaka nanapaka io kitapom-bola io"
   },
   "common": {
     "save": "Tehirizo",

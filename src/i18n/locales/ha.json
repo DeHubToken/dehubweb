@@ -482,7 +482,21 @@
     "emailSignInDone": "Yanzu za ka iya shiga da wannan imel",
     "emailSignInRemove": "Cire",
     "emailSignInRemoved": "An cire — wannan imel ba zai iya shigar da kai ba kuma",
-    "cancel": "Soke"
+    "cancel": "Soke",
+    "solanaWallet": "Walat ɗin Solana",
+    "solanaWalletHint": "Haɗa Phantom don karɓar tukuici da buɗe abubuwan da aka biya a Solana.",
+    "solanaConnect": "Haɗa",
+    "solanaDisconnect": "Cire haɗin",
+    "solanaCopy": "Kwafi adireshin Solana",
+    "solanaCopyFailed": "Ba za a iya kwafa adireshin ba",
+    "solanaNeedsSignIn": "Fara shiga tukuna",
+    "solanaNoPhantom": "Ba a sami Phantom ba",
+    "solanaNoPhantomHint": "Saka ƙarin Phantom, ko buɗe dehub.io a cikin burauzar Phantom.",
+    "solanaNotSigned": "Ba a haɗa komai ba",
+    "solanaLinked": "An haɗa walat ɗin Solana",
+    "solanaLinkFailed": "Ba a iya haɗa wannan walat ba",
+    "solanaUnlinked": "An cire walat ɗin Solana",
+    "solanaUnlinkFailed": "Ba a iya cire haɗin wannan walat ba"
   },
   "common": {
     "save": "Ajiye",

@@ -495,7 +495,21 @@
     "emailSignInDone": "Цяпер вы можаце ўваходзіць з гэтай поштай",
     "emailSignInRemove": "Выдаліць",
     "emailSignInRemoved": "Выдалена — з гэтай поштай больш нельга ўвайсці",
-    "cancel": "Адмяніць"
+    "cancel": "Адмяніць",
+    "solanaWallet": "Кашалёк Solana",
+    "solanaWalletHint": "Падключыце Phantom, каб атрымліваць чаявыя і платныя адкрыцці ў Solana.",
+    "solanaConnect": "Падключыць",
+    "solanaDisconnect": "Адключыць",
+    "solanaCopy": "Скапіяваць адрас Solana",
+    "solanaCopyFailed": "Немагчыма скапіяваць адрас",
+    "solanaNeedsSignIn": "Спачатку ўвайдзіце",
+    "solanaNoPhantom": "Phantom не знойдзены",
+    "solanaNoPhantomHint": "Усталюйце пашырэнне Phantom або адкрыйце dehub.io у браўзеры Phantom.",
+    "solanaNotSigned": "Нічога не падключана",
+    "solanaLinked": "Кашалёк Solana падключаны",
+    "solanaLinkFailed": "Не ўдалося падключыць гэты кашалёк",
+    "solanaUnlinked": "Кашалёк Solana адключаны",
+    "solanaUnlinkFailed": "Не ўдалося адключыць гэты кашалёк"
   },
   "common": {
     "save": "Захаваць",
@@ -5264,7 +5278,8 @@
       "failed": "Немагчыма",
       "emptyFeed": "У гэтай стужцы мы не знайшлі ніводнага эпізоду.",
       "badFeed": "Гэтая спасылка не падобная на стужку падкастаў.",
-      "tooMany": "Імпартаваць да 20 эпізодаў адначасова."
+      "tooMany": "Імпартаваць да 20 эпізодаў адначасова.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

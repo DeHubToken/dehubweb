@@ -499,7 +499,21 @@
     "emailSignInDone": "Jy kan nou met hierdie e-pos aanmeld",
     "emailSignInRemove": "Verwyder",
     "emailSignInRemoved": "Verwyder — hierdie e-pos kan jou nie meer aanmeld nie",
-    "cancel": "Kanselleer"
+    "cancel": "Kanselleer",
+    "solanaWallet": "Solana-beursie",
+    "solanaWalletHint": "Koppel Phantom om fooitjies en betaalde ontsluitings op Solana te ontvang.",
+    "solanaConnect": "Koppel",
+    "solanaDisconnect": "Ontkoppel",
+    "solanaCopy": "Kopieer Solana-adres",
+    "solanaCopyFailed": "Kon nie die adres kopieer nie",
+    "solanaNeedsSignIn": "Meld eers aan",
+    "solanaNoPhantom": "Phantom nie gevind nie",
+    "solanaNoPhantomHint": "Installeer die Phantom-uitbreiding, of maak dehub.io in die Phantom-blaaier oop.",
+    "solanaNotSigned": "Niks is gekoppel nie",
+    "solanaLinked": "Solana-beursie gekoppel",
+    "solanaLinkFailed": "Kon nie daardie beursie koppel nie",
+    "solanaUnlinked": "Solana-beursie ontkoppel",
+    "solanaUnlinkFailed": "Kon nie daardie beursie ontkoppel nie"
   },
   "common": {
     "save": "Stoor",

@@ -382,7 +382,21 @@
     "emailSignInDone": "Сада можете да се пријавите овим имејлом",
     "emailSignInRemove": "Уклони",
     "emailSignInRemoved": "Уклоњено — овим имејлом више не можете да се пријавите",
-    "cancel": "Откажи"
+    "cancel": "Откажи",
+    "solanaWallet": "Solana новчаник",
+    "solanaWalletHint": "Повежите Phantom да бисте примали напојнице и плаћена откључавања на Solana мрежи.",
+    "solanaConnect": "Повежи",
+    "solanaDisconnect": "Прекини везу",
+    "solanaCopy": "Копирај Solana адресу",
+    "solanaCopyFailed": "Адресу није могуће копирати",
+    "solanaNeedsSignIn": "Прво се пријавите",
+    "solanaNoPhantom": "Phantom није пронађен",
+    "solanaNoPhantomHint": "Инсталирајте Phantom екстензију или отворите dehub.io у Phantom прегледачу.",
+    "solanaNotSigned": "Ништа није повезано",
+    "solanaLinked": "Solana новчаник је повезан",
+    "solanaLinkFailed": "Тај новчаник није могуће повезати",
+    "solanaUnlinked": "Solana новчаник је искључен",
+    "solanaUnlinkFailed": "Тај новчаник није могуће искључити"
   },
   "common": {
     "save": "Сачувај",
@@ -2565,7 +2579,27 @@
     "reviewDescriptionPlaceholder": "Recite nešto o ovoj objavi (nije obavezno)",
     "reviewLiveWarning": "Taj link je strim uživo. Sačekajte da se završi i umesto toga uvezite snimak.",
     "reviewCancel": "Otkaži",
-    "reviewConfirm": "Uvoz"
+    "reviewConfirm": "Uvoz",
+    "errorNeedRights": "Молимо потврдите да имате права на овај садржај",
+    "errorQueueFailed": "Није могуће додати тај увоз у ред",
+    "ownership": "Власник сам овог садржаја, или имам дозволу власника права да га објавим на DeHub-у.",
+    "podcast": {
+      "alreadyImported": "Већ увезено",
+      "badFeed": "Та веза не изгледа као фид подкаста.",
+      "done": "У реду чекања",
+      "emptyFeed": "У том фиду нисмо пронашли ниједну епизоду.",
+      "episodes": "Епизода: {{count}}",
+      "feedUrlLabel": "URL RSS фида подкаста",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "Учитај фид",
+      "fetching": "Учитавање фида…",
+      "importSelected": "Увези епизоде ({{count}})",
+      "importing": "Увоз…",
+      "selectAll": "Изабери све",
+      "showBy": "Аутор: {{author}}",
+      "tooMany": "Увезите до 20 епизода одједном."
+    },
+    "toastQueued": "У реду — објавиће се на вашем профилу када заврши."
   },
   "migrate": {
     "clearAll": "Очисти све",

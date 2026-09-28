@@ -480,7 +480,21 @@
     "emailSignInDone": "Τώρα μπορείτε να συνδέεστε με αυτό το email",
     "emailSignInRemove": "Αφαίρεση",
     "emailSignInRemoved": "Αφαιρέθηκε — αυτό το email δεν μπορεί πλέον να σας συνδέσει",
-    "cancel": "Ακύρωση"
+    "cancel": "Ακύρωση",
+    "solanaWallet": "Πορτοφόλι Solana",
+    "solanaWalletHint": "Συνδέστε το Phantom για να λαμβάνετε φιλοδωρήματα και πληρωμένα ξεκλειδώματα στο Solana.",
+    "solanaConnect": "Σύνδεση",
+    "solanaDisconnect": "Αποσύνδεση",
+    "solanaCopy": "Αντιγραφή διεύθυνσης Solana",
+    "solanaCopyFailed": "Δεν ήταν δυνατή η αντιγραφή της διεύθυνσης",
+    "solanaNeedsSignIn": "Συνδεθείτε πρώτα",
+    "solanaNoPhantom": "Το Phantom δεν βρέθηκε",
+    "solanaNoPhantomHint": "Εγκαταστήστε την επέκταση Phantom ή ανοίξτε το dehub.io στον browser του Phantom.",
+    "solanaNotSigned": "Δεν συνδέθηκε τίποτα",
+    "solanaLinked": "Το πορτοφόλι Solana συνδέθηκε",
+    "solanaLinkFailed": "Δεν ήταν δυνατή η σύνδεση αυτού του πορτοφολιού",
+    "solanaUnlinked": "Το πορτοφόλι Solana αποσυνδέθηκε",
+    "solanaUnlinkFailed": "Δεν ήταν δυνατή η αποσύνδεση αυτού του πορτοφολιού"
   },
   "common": {
     "save": "Αποθήκευση",
@@ -5116,7 +5130,8 @@
       "failed": "Απέτυχε",
       "emptyFeed": "Δεν μπορέσαμε να βρούμε επεισόδια σε αυτήν τη ροή.",
       "badFeed": "Αυτός ο σύνδεσμος δεν μοιάζει με ροή podcast.",
-      "tooMany": "Εισαγάγετε έως και 20 επεισόδια κάθε φορά."
+      "tooMany": "Εισαγάγετε έως και 20 επεισόδια κάθε φορά.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

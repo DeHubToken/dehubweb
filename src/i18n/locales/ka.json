@@ -481,7 +481,21 @@
     "emailSignInDone": "ახლა შეგიძლიათ ამ ელფოსტით შესვლა",
     "emailSignInRemove": "წაშლა",
     "emailSignInRemoved": "წაიშალა — ამ ელფოსტით ვეღარ შეხვალთ",
-    "cancel": "გაუქმება"
+    "cancel": "გაუქმება",
+    "solanaWallet": "Solana საფულე",
+    "solanaWalletHint": "დააკავშირეთ Phantom, რომ Solana-ზე მიიღოთ ჩაის ფული და ფასიანი განბლოკვები.",
+    "solanaConnect": "დაკავშირება",
+    "solanaDisconnect": "გათიშვა",
+    "solanaCopy": "Solana მისამართის კოპირება",
+    "solanaCopyFailed": "Მისამართის კოპირება ვერ მოხერხდა",
+    "solanaNeedsSignIn": "ჯერ შედით სისტემაში",
+    "solanaNoPhantom": "Phantom ვერ მოიძებნა",
+    "solanaNoPhantomHint": "დააინსტალირეთ Phantom-ის გაფართოება ან გახსენით dehub.io Phantom-ის ბრაუზერში.",
+    "solanaNotSigned": "არაფერი დაკავშირებულა",
+    "solanaLinked": "Solana საფულე დაკავშირებულია",
+    "solanaLinkFailed": "ამ საფულის დაკავშირება ვერ მოხერხდა",
+    "solanaUnlinked": "Solana საფულე გათიშულია",
+    "solanaUnlinkFailed": "ამ საფულის გათიშვა ვერ მოხერხდა"
   },
   "common": {
     "save": "შენახვა",
@@ -5273,7 +5287,7 @@
       "feedUrlLabel": "Პოდკასტის RSS ლენტის URL",
       "fetchFeed": "Არხის გამოთხოვა",
       "fetching": "Მიმდინარეობს ლენტის გამოთხოვა…",
-      "showBy": "{{author}} -ის მიერ",
+      "showBy": "{{author}}-ის მიერ",
       "episodes": "{{count}} ეპიზოდები",
       "selectAll": "Ყველას არჩევა",
       "alreadyImported": "Უკვე შემოტანილია",
@@ -5284,7 +5298,8 @@
       "failed": "Შეცდომა",
       "emptyFeed": "Ამ არხზე ეპიზოდები ვერ ვიპოვეთ.",
       "badFeed": "Ეს ბმული არ ჰგავს პოდკასტის ნაკადს.",
-      "tooMany": "Ერთდროულად 20 ‑ მდე ეპიზოდის შემოტანა."
+      "tooMany": "Ერთდროულად 20 ‑ მდე ეპიზოდის შემოტანა.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

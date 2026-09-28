@@ -496,7 +496,21 @@
     "emailSignInDone": "Теперь вы можете входить с этой почтой",
     "emailSignInRemove": "Удалить",
     "emailSignInRemoved": "Удалено — с этой почтой больше нельзя войти",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "solanaWallet": "Кошелёк Solana",
+    "solanaWalletHint": "Подключите Phantom, чтобы получать чаевые и платные открытия в Solana.",
+    "solanaConnect": "Подключить",
+    "solanaDisconnect": "Отключить",
+    "solanaCopy": "Скопировать адрес Solana",
+    "solanaCopyFailed": "Не удалось скопировать адрес",
+    "solanaNeedsSignIn": "Сначала войдите",
+    "solanaNoPhantom": "Phantom не найден",
+    "solanaNoPhantomHint": "Установите расширение Phantom или откройте dehub.io в браузере Phantom.",
+    "solanaNotSigned": "Ничего не подключено",
+    "solanaLinked": "Кошелёк Solana подключён",
+    "solanaLinkFailed": "Не удалось подключить этот кошелёк",
+    "solanaUnlinked": "Кошелёк Solana отключён",
+    "solanaUnlinkFailed": "Не удалось отключить этот кошелёк"
   },
   "common": {
     "save": "Сохранить",
@@ -5435,7 +5449,8 @@
       "failed": "Сбой",
       "emptyFeed": "Мы не смогли найти ни одного эпизода в этой ленте.",
       "badFeed": "Эта ссылка не похожа на ленту подкастов.",
-      "tooMany": "Импортируйте до 20 эпизодов за раз."
+      "tooMany": "Импортируйте до 20 эпизодов за раз.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {
