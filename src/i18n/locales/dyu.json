@@ -2713,100 +2713,110 @@
     "chatSentGift": "ci la",
     "transfersPaused": "O kɔ, u ye wari caaman di u ma.",
     "progress": {
-      "title": "Fɛɛn minw be se ka kɛ",
-      "level": "O ye {{level}}",
+      "title": "Jɛnsɛnbaga hakɛ",
+      "level": "Hakɛ {{level}}",
       "xp": "{{xp}} XP",
-      "rule": "O kɔ, a be se ka kɛ ko a be tɛmɛ miniti 10 wala ka tɛmɛ o kan.",
-      "streak": "{{count}} week streak",
-      "bestStreak": "Best Streak {{count}} Weeks",
-      "hours": "{{hours}} ߕߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐߐ",
-      "minutes": "{{count}} min",
-      "viewers": "{{count}} viewers",
-      "viewCards": "Kɛnɛ kɔɔduw",
-      "cardsTitle": "Kadi za kukusanya",
-      "locked": "Ka to ka to ka baara kɛ",
-      "earnedOn": "Ala ka Kuma {{date}}",
-      "recentTitle": "Jɛnɛɛla nɛɛla",
-      "notCounted": "A ka jɛn",
-      "noStreams": "I ka kan ka to ka ɲɛnamaya kɛ walisa ka se ka XP sɔrɔ.",
+      "toNext": "Miniti jatelen {{minutes}} wɛrɛ ka se hakɛ {{level}} ma",
+      "rule": "Jɛnsɛnni minw bɛ miniti tan wala ka tɛmɛ o kan, ni filɛbaga kelen bɛ yen a dɔgɔman na, olu dɔrɔn de bɛ jate i ka hakɛ la.",
+      "streak": "Dɔgɔkun {{count}} ɲɔgɔn kɔ",
+      "bestStreak": "A ɲumanba: dɔgɔkun {{count}} ɲɔgɔn kɔ",
+      "hours": "Lɛrɛ jatelen {{hours}}",
+      "minutes": "Miniti {{count}}",
+      "viewers": "Filɛbaga {{count}}",
+      "viewCards": "Karitaw filɛ",
+      "cardsTitle": "Karita lajɛlenw",
+      "locked": "A datugulen don",
+      "earnedOn": "A sɔrɔla {{date}}",
+      "recentTitle": "Jɛnsɛnni labanw",
+      "notCounted": "A ma jate",
+      "noStreams": "Jɛnsɛnni daminɛ walasa ka XP sɔrɔ.",
       "card": {
         "first-light": {
-          "name": "Fɔɔli laati",
-          "hint": "I ka koo fɔlɔ min kɔrɔtanin lo, i k'o dafa."
+          "name": "Yeelen fɔlɔ",
+          "hint": "I ka jɛnsɛnni fɔlɔ min bɛ jate, o laban."
         },
         "marathon": {
           "name": "Marathon",
-          "hint": "Aw ka to ka sɛbɛw labɛn waati la min fɔra."
+          "hint": "Jɛnsɛnni kɛ lɛrɛ fila jɛnsɛnni kelen kɔnɔ."
         },
         "night-owl": {
-          "name": "Okey ka junker",
-          "hint": "4-Hɛrɛ ka se ka bɔ sɔgɔma wala wulafɛ, tile ka se tile ma walima suu ka se."
+          "name": "Sufɛ jɛnsɛnbaga",
+          "hint": "Jɛnsɛnni laban sufɛ cɛmancɛ ni sɔgɔma lɛrɛ duuru cɛ."
         },
         "regular": {
-          "name": "Fɛɛn minw be kɛ tuma o tuma",
-          "hint": "O kama, an ka ɲi ka to ka waajuli kɛ saan naani kɔnɔ."
+          "name": "Tuma bɛɛ",
+          "hint": "Jɛnsɛnni kɛ dɔgɔkun naani ɲɔgɔn kɔ."
         },
         "iron-streak": {
-          "name": "O ye nɛgɛ ye.",
-          "hint": "O kama, a ka ɲi ka to ka baara kɛ ni a ye fɔɔ ka se a laban ma."
+          "name": "Nɛgɛ sira",
+          "hint": "Jɛnsɛnni kɛ dɔgɔkun tan ni fila ɲɔgɔn kɔ."
         },
         "crowd": {
-          "name": "Jamaba",
-          "hint": "Mɔgɔ 10 lo be to ka filɛli kɛ ɲɔgɔn fɛ."
+          "name": "Jama",
+          "hint": "Mɔgɔ tan ka i filɛ waati kelen."
         },
         "century": {
-          "name": "Saan kɛmɛkulu",
-          "hint": "A tun be se ka kɛ ko a tun be se ka kɛ ni lɛri 100 ye."
+          "name": "Kɛmɛ",
+          "hint": "Lɛrɛ jatelen kɛmɛ sɔrɔ jɛnsɛnni la."
         },
         "legend": {
-          "name": "Legenda ka koo",
-          "hint": "10. O ye kunkurunninw ye."
+          "name": "Tɔgɔba",
+          "hint": "Se hakɛ tan ma."
         },
         "ignition": {
-          "name": "Ignition"
+          "name": "Mɛnɛni",
+          "hint": "Lɛrɛ jatelen kelen sɔrɔ jɛnsɛnni la."
         },
         "on-air": {
-          "name": "On air",
-          "hint": "Finish ten qualifying streams."
+          "name": "Jɛnsɛnni kan",
+          "hint": "Jɛnsɛnni jatelen tan laban."
         },
         "storyteller": {
-          "name": "Storyteller",
-          "hint": "Finish twenty-five qualifying streams."
+          "name": "Nsiirinfɔla",
+          "hint": "Jɛnsɛnni jatelen mugan ni duuru laban."
         },
         "broadcaster": {
-          "name": "Broadcaster",
-          "hint": "Finish fifty qualifying streams."
+          "name": "Jɛnsɛnbaga",
+          "hint": "Jɛnsɛnni jatelen biduuru laban."
         },
         "centurion": {
-          "name": "Centurion",
-          "hint": "Finish one hundred qualifying streams."
+          "name": "Kɛmɛtigi",
+          "hint": "Jɛnsɛnni jatelen kɛmɛ laban."
         },
         "enduring": {
-          "name": "Enduring"
+          "name": "Muɲuli",
+          "hint": "Jɛnsɛnni kɛ lɛrɛ jatelen naani jɛnsɛnni kelen kɔnɔ."
         },
         "circle": {
-          "name": "Inner circle"
+          "name": "Kɔnɔnna jɛkulu",
+          "hint": "Mɔgɔ mugan ni duuru ka i filɛ waati kelen."
         },
         "arena": {
-          "name": "Arena"
+          "name": "Ɲɛnajɛyɔrɔ",
+          "hint": "Mɔgɔ biduuru ka i filɛ waati kelen."
         },
         "headliner": {
-          "name": "Headliner"
+          "name": "Ɲɛmɔgɔ",
+          "hint": "Mɔgɔ kɛmɛ ka i filɛ waati kelen."
         },
         "cornerstone": {
-          "name": "Cornerstone"
+          "name": "Jusigi",
+          "hint": "Jɛnsɛnni kɛ dɔgɔkun mugan ni wɔɔrɔ ɲɔgɔn kɔ."
         },
         "veteran": {
-          "name": "Veteran"
+          "name": "Kɔrɔba",
+          "hint": "Lɛrɛ jatelen 250 sɔrɔ jɛnsɛnni la."
         },
         "icon": {
-          "name": "Icon",
-          "hint": "Reach level twenty."
+          "name": "Misali",
+          "hint": "Se hakɛ mugan ma."
         }
       },
-      "useBadge": "Use badge",
-      "selectedBadge": "Selected",
-      "savingBadge": "Saving badge…"
+      "chooseBadge": "Taamasiyɛn dayɛlɛlen o o sugandi ka a jira i ka porofili kan.",
+      "useBadge": "Nin taamasiyɛn ta",
+      "selectedBadge": "A sugandira",
+      "savingBadge": "Taamasiyɛn bɛ mara…",
+      "saveBadgeError": "I ka taamasiyɛn ma se ka mara. A lajɛ tugun."
     }
   },
   "goLive": {
@@ -3398,57 +3408,57 @@
     "keepWhileHolding": "N'i ye batɛmu ta, o ye i ta ye fɔɔ i ka DeHub tagamasiɲɛw mara. tagamasiɲɛ minw ka kan ka yɛlɛ badge kura dɔ la, olu hakɛ be se ka yɛlɛma ni tagamasiɲɛ sɔngɔ ye"
   },
   "badgeShowcase": {
-    "dialogLabel": "{{tier}} badge",
-    "close": "O kɔ, a ye dɔ fara",
-    "badges": "Fanga be mɔgɔ minw na, olu ka kan",
-    "tierOf": "Tier {{index}} ka {{total}}",
-    "youHaveThis": "I ka kan ka o kɛ",
-    "toUnlock": "Tokɛn {{amount}} wɛrɛ ka a dayɛlɛ",
-    "holdToUnlock": "O la, a tun ka kan ka kɛ i n'a fɔ a tun y'a fɔ cogo min na.",
-    "sliderLabel": "O kɔ, a ye n' ka soow lɔ.",
-    "sliderValue": "{{amount}} tokens · {{tier}}",
-    "you": "Aw kɔni, aw ye",
-    "grants": "Mun lo be yɛlɛ",
+    "dialogLabel": "Taamasiyɛn {{tier}}",
+    "close": "A datugu",
+    "badges": "Taamasiyɛnw",
+    "tierOf": "Hakɛ {{index}} {{total}} kɔnɔ",
+    "youHaveThis": "I bɛ ni taamasiyɛn nin ye",
+    "toUnlock": "Tokɛn {{amount}} wɛrɛ walasa ka a dayɛlɛ",
+    "holdToUnlock": "DeHub tokɛn hakɛ nin mara walasa ka a dayɛlɛ",
+    "sliderLabel": "Tokɛn maralenw",
+    "sliderValue": "Tokɛn {{amount}} · {{tier}}",
+    "you": "Ele",
+    "grants": "A bɛ min dayɛlɛ",
     "perks": {
-      "fee": "Fɛɛn min be se k'an dɛmɛ ka baara kɛ",
-      "votes": "Kalanfaw ka kan ka vote",
-      "reach": "Fanga min be mɔgɔ la ani a be min kɛ",
-      "feedPosts": "Fɛɛn minw be sɔrɔ soo kɔnɔ loon o loon",
-      "images": "Jaa kelen kelen bɛɛ kɔnɔ",
-      "uploads": "Lon o lon, a ka kan ka yɛlɛ",
-      "storage": "Dɔnkililabaga",
-      "lending": "Lɛnpominɛlaw ka juruw",
-      "voice": "Kloning kaan",
-      "voiceFree": "See min dira mɔgɔ ma ka hɔɔrɔnya",
-      "voiceLocked": "{{tier}} and up"
+      "fee": "Pilatifɔrɔmu sara",
+      "votes": "Ɲɛmɔgɔya kalata",
+      "reach": "Filɛli ni jaabi kelen-kelen fanga",
+      "feedPosts": "Kunnafoni sɛbɛn minw bɛ bila tile o tile",
+      "images": "Ja minw bɛ sɛbɛn kelen kɔnɔ",
+      "uploads": "Tile o tile bilali dan",
+      "storage": "Labɛnni mara yɔrɔ",
+      "lending": "Taamasiyɛn juru dili yɔrɔw",
+      "voice": "Kan ladegeli",
+      "voiceFree": "Gansan",
+      "voiceLocked": "{{tier}} ani a sanfɛ"
     },
-    "buyTokens": "Ka to ka to ka to ka dumuni kɛ",
-    "details": "Fɛɛn bɛɛ halakira",
-    "play": "A be to ka to ka to",
-    "pause": "N' ye n' ka baara dabila",
-    "hint": "O kɔ, a ye dɔ fara a ka fanga kan."
+    "buyTokens": "Tokɛnw san",
+    "details": "Kunnafoni bɛɛ",
+    "play": "A daminɛ",
+    "pause": "A lalɔ",
+    "hint": "A sama ka a kuru · a da sama ka a wuli · a digi ka dɔ wɛrɛ filɛ"
   },
   "streamerShowcase": {
-    "cardOf": "Kariti {{index}} ka {{total}}",
-    "progress": "An ka ɲɛtaga",
+    "cardOf": "Karita {{index}} {{total}} kɔnɔ",
+    "progress": "I ka ɲɛtaga",
     "goal": {
-      "streams": "{{current}} {{target}} streams",
-      "hours": "{{current}} {{target}} hrs",
-      "session": "{{current}} {{target}} min in one stream",
-      "streak": "{{current}} {{target}} weeks",
-      "level": "Level {{current}} / {{target}}"
+      "streams": "Jɛnsɛnni {{current}} / {{target}}",
+      "hours": "Lɛrɛ {{current}} / {{target}}",
+      "session": "Miniti {{current}} / {{target}} jɛnsɛnni kelen kɔnɔ",
+      "streak": "Dɔgɔkun {{current}} / {{target}}",
+      "level": "Hakɛ {{current}} / {{target}}"
     },
-    "onStream": "O la, a tun be se ka kɛ ko a tun be to ka taga.",
+    "onStream": "A bɛ dayɛlɛ ni a kɛra jɛnsɛnni waati la",
     "stats": {
-      "level": "Kala Lagaw Ya",
-      "xp": "Fɛɛn min be yen, o ye",
-      "hours": "Mɔgɔ minw be se ka kɛ lakɔli la",
-      "streams": "Kala Lagaw Ya",
-      "longest": "Jiijan",
-      "streak": "Fɛɛn min ka di mɔgɔ ye, o ye ka to ka to ka"
+      "level": "Hakɛ",
+      "xp": "XP",
+      "hours": "Lɛrɛ jatelenw",
+      "streams": "Jɛnsɛnni jatelenw",
+      "longest": "Jɛnsɛnni janman",
+      "streak": "Tugunni ɲumanba"
     },
     "hoursShort": "{{hours}} h",
-    "weeksShort": "{{count}} wk"
+    "weeksShort": "{{count}} dɔg."
   },
   "liveGift": {
     "pickTier": "Ka ɲanagwɛ kɛ",

@@ -3517,17 +3517,17 @@
     "details": "مڪمل ٽوڙڻ",
     "play": "کيڏيو",
     "pause": "پوئتي هٽايو",
-    "hint": "جھڪڻ لاء ڇڪيو · هڪ ڪنڊ کي ڇڪڻ لاء Peel · ايندڙ لاء ٽيپ ڪريو"
+    "hint": "موڙڻ لاءِ ڇڪيو · اکيڙڻ لاءِ ڪنڊ ڇڪيو · ايندڙ لاءِ ٽيپ ڪريو"
   },
   "streamerShowcase": {
     "cardOf": "ڪارڊ {{index}} جي {{total}}",
     "progress": "توھان جي ترقي",
     "goal": {
-      "streams": "{{current}}{{target}} اسٽريمز",
-      "hours": "{{current}} {{target}} ڪلاڪ",
-      "session": "{{current}}{{target}} منٽ هڪ وهڪرو ۾",
-      "streak": "{{current}} {{target}} هفتو",
-      "level": "سطح {{current}} {{target}}"
+      "streams": "{{current}} / {{target}} اسٽريمز",
+      "hours": "{{current}} / {{target}} ڪلاڪ",
+      "session": "هڪ اسٽريم ۾ {{current}} / {{target}} منٽ",
+      "streak": "{{current}} / {{target}} هفتا",
+      "level": "سطح {{current}} / {{target}}"
     },
     "onStream": "انلاڪ جڏهن اهو وهڪرو تي ٿئي ٿو",
     "stats": {

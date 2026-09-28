@@ -3533,13 +3533,13 @@
     "details": "Барҳамдиҳии пурра",
     "play": "Бозикунӣ",
     "pause": "Таваққуф",
-    "hint": "Кашидани ба хам · кашидани канори ба peel · ламс барои яке аз оянда"
+    "hint": "Барои хам кардан кашед · барои кандан канорро кашед · барои навбатӣ ламс кунед"
   },
   "streamerShowcase": {
     "cardOf": "Корт {{index}} аз {{total}}",
     "progress": "Пешрафти шумо",
     "goal": {
-      "streams": "{{current}}/ {{target}} streams",
+      "streams": "{{current}} / {{target}} пахш",
       "hours": "{{current}} / {{target}} hours",
       "session": "{{current}} / {{target}} дақ дар як ҷараён",
       "streak": "{{current}} / {{target}} ҳафтаҳо",
