@@ -1,0 +1,84 @@
+name: docs i18n fill
+
+# Fills the docs/marketing bundles (src/i18n/<lang>.ts, read by useLanguage())
+# that are behind en.ts and opens a PR with the result. The app strings have
+# their own workflow, i18n-fanout.yml; this runs the same guarded fill over the
+# docs bundles through scripts/docs-i18n-fill.mjs.
+#
+# Run a handful of locales per job, several jobs side by side with different
+# locales: each job only touches the files it was given, so their PRs never
+# conflict. No secret is needed — the translate function is called with the
+# publishable key the browser bundle already ships.
+
+on:
+  workflow_dispatch:
+    inputs:
+      locales:
+        description: 'Comma-separated locale codes (blank = the furthest behind)'
+        required: false
+        default: ''
+      count:
+        description: 'How many locales to fill when none are named'
+        required: false
+        default: '8'
+      keys:
+        description: 'Max keys per locale in one run (blank = all missing)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  fill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      # 24 imports the .ts bundles directly; 20 cannot.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Report the gap before
+        run: node scripts/docs-i18n-fill.mjs --check | head -30
+
+      - name: Fill
+        run: |
+          ARGS=""
+          if [ -n "${{ inputs.locales }}" ]; then
+            ARGS="--locales ${{ inputs.locales }}"
+          else
+            ARGS="--all --limit ${{ inputs.count }}"
+          fi
+          if [ -n "${{ inputs.keys }}" ]; then ARGS="$ARGS --keys ${{ inputs.keys }}"; fi
+          node scripts/docs-i18n-fill.mjs $ARGS
+
+      - name: Report the gap after
+        if: always()
+        run: node scripts/docs-i18n-fill.mjs --check | head -30
+
+      # always(): each locale is written back the moment it finishes, so a run
+      # that hits the time limit still has whole locales on disk worth keeping.
+      - name: Open a pull request
+        if: always()
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: docs-i18n-fill-${{ github.run_number }}
+          commit-message: 'Translate the docs pages into more locales'
+          title: 'Translate the docs pages into more locales'
+          body: |
+            Filled by `scripts/docs-i18n-fill.mjs`.
+
+            **Intent** — the docs and marketing pages rendered mostly in English
+            outside a few locales; this fills the missing strings.
+
+            **Constraints** — same guards as the app fill: existing values are
+            never overwritten, broken placeholders, English echoes and
+            wrong-script answers are dropped. Each file is re-imported after the
+            write and left untouched if it does not match.
+
+            **Result** — see the before/after gap in the run log.
+          add-paths: |
+            src/i18n/*.ts
