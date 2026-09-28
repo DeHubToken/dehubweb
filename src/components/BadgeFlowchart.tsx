@@ -22,7 +22,7 @@ const BadgeFlowchart = () => {
   const { t } = useTranslation();
   const badges = [
     { threshold: "10,000", usd: "$10", badge: "Crab Badge", color: "bg-muted", image: badgeImage('Crab') },
-    { threshold: "25k", usd: "$25", badge: "Lobster Badge", color: "bg-muted", image: badgeImage('Lobster') },
+    { threshold: "25k", usd: "$25", badge: "Ghost Lobster Badge", color: "bg-muted", image: badgeImage('Ghost Lobster') },
     { threshold: "50k", usd: "$50", badge: "Piranha Badge", color: "bg-muted", image: badgeImage('Piranha') },
     { threshold: "100k", usd: "$100", badge: "Giant Tortoise Badge", color: "bg-muted", image: badgeImage('Giant Tortoise') },
     { threshold: "250k", usd: "$250", badge: "King Cobra Badge", color: "bg-muted", image: badgeImage('King Cobra') },

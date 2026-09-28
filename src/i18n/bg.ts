@@ -445,7 +445,7 @@ export const bg = {
     shakeUpDesc: 'Последни слайдове за дизайна на продукта и стратегически обновления за 2025.',
     badgeNone: 'Без бадж',
     badgeCrab: 'Бадж "Рак"',
-    badgeLobster: 'Бадж "Омар"',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Бадж "Пираня"',
     badgeTortoise: 'Бадж "Гигантска костенурка"',
     badgeCobra: 'Бадж "Кралска кобра"',

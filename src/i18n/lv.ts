@@ -445,7 +445,7 @@ export const lv = {
     shakeUpDesc: 'Jaunākie produkta dizaina slaidi un stratēģiskie atjauninājumi 2025.',
     badgeNone: 'Bez žetonzīmes',
     badgeCrab: 'Krabis',
-    badgeLobster: 'Omārs',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piranja',
     badgeTortoise: 'Milzu bruņurupucis',
     badgeCobra: 'Karaliskā kobra',

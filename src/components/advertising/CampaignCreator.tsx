@@ -33,7 +33,7 @@ const CampaignCreator = () => {
   const badgeImages: Record<string, string> = {
     'No Badge': '',
     'Crab': badgeImage('Crab'),
-    'Lobster': badgeImage('Lobster'),
+    'Ghost Lobster': badgeImage('Ghost Lobster'),
     'Piranha': badgeImage('Piranha'),
     'Giant Tortoise': badgeImage('Giant Tortoise'),
     'King Cobra': badgeImage('King Cobra'),

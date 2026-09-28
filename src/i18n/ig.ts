@@ -444,7 +444,7 @@ export const ig = {
     shakeUpDesc: 'Slide nhazi ngwaahịa kachasị ọhụrụ na mmelite atụmatụ maka 2025.',
     badgeNone: 'Enweghị baajị',
     badgeCrab: 'Baajị Crab',
-    badgeLobster: 'Baajị Lobster',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Baajị Piranha',
     badgeTortoise: 'Baajị Nnukwu Mbe',
     badgeCobra: 'Baajị Eze Cobra',

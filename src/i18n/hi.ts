@@ -445,7 +445,7 @@ export const hi = {
     shakeUpDesc: '2025 के लिए नवीनतम उत्पाद डिज़ाइन स्लाइड और रणनीतिक अपडेट।',
     badgeNone: 'कोई बैज नहीं',
     badgeCrab: 'क्रैब बैज',
-    badgeLobster: 'लॉबस्टर बैज',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'पिरान्हा बैज',
     badgeTortoise: 'विशाल कछुआ बैज',
     badgeCobra: 'किंग कोबरा बैज',

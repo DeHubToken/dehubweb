@@ -444,7 +444,7 @@ export const ca = {
     shakeUpDesc: "Últimes diapositives de disseny de producte i actualitzacions estratègiques per al 2025.",
     badgeNone: 'Sense insígnia',
     badgeCrab: 'Insígnia Cranc',
-    badgeLobster: 'Insígnia Llagosta',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Insígnia Piranya',
     badgeTortoise: 'Insígnia Tortuga Gegant',
     badgeCobra: 'Insígnia Cobra Reial',

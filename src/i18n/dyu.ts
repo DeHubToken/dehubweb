@@ -445,7 +445,7 @@ export const dyu = {
     shakeUpDesc: 'Produi jɔcogo sɛbɛn kuraw ani fɛɛrɛ ladoniw 2025 kama.',
     badgeNone: 'Badge tɛ',
     badgeCrab: 'Crabe',
-    badgeLobster: 'Homard',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piranha',
     badgeTortoise: 'Koorow Belebele',
     badgeCobra: 'Masakɛ Kobra',

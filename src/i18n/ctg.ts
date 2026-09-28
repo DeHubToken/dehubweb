@@ -440,7 +440,7 @@ export const ctg = {
     shakeUpDesc: '2025-এর লাইগা সর্বশেষ প্রোডাক্ট ডিজাইন স্লাইড আর স্ট্র্যাটেজিক আপডেট।',
     badgeNone: 'কোনো ব্যাজ নাই',
     badgeCrab: 'কাঁকড়া ব্যাজ',
-    badgeLobster: 'লবস্টার ব্যাজ',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'পিরানহা ব্যাজ',
     badgeTortoise: 'দৈত্য কচ্ছপ ব্যাজ',
     badgeCobra: 'কিং কোবরা ব্যাজ',

@@ -126,11 +126,11 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'badges',
       title: 'Badges & Tiers',
-      content: 'Badge system, badge tiers, Crab, Lobster, Piranha, Giant Tortoise, King Cobra, Octopus, Crocodile, Dolphin, Tiger Shark, Killer Whale, Great White, Blue Whale, Megalodon, holder badges, token holdings, badge levels, tier system, badge rewards',
+      content: 'Badge system, badge tiers, Crab, Ghost Lobster, Piranha, Giant Tortoise, King Cobra, Octopus, Crocodile, Dolphin, Tiger Shark, Killer Whale, Great White, Blue Whale, Megalodon, holder badges, token holdings, badge levels, tier system, badge rewards',
       path: '/docs/token/utility',
       category: 'Token',
       type: 'section',
-      keywords: ['badge', 'badges', 'tier', 'tiers', 'crab', 'lobster', 'piranha', 'tortoise', 'cobra', 'octopus', 'crocodile', 'dolphin', 'tiger shark', 'killer whale', 'great white', 'blue whale', 'megalodon', 'holder', 'level', 'rank']
+      keywords: ['badge', 'badges', 'tier', 'tiers', 'crab', 'ghost lobster', 'lobster', 'piranha', 'tortoise', 'cobra', 'octopus', 'crocodile', 'dolphin', 'tiger shark', 'killer whale', 'great white', 'blue whale', 'megalodon', 'holder', 'level', 'rank']
     },
     {
       id: 'tipping',
@@ -379,11 +379,11 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'ad-badge-targeting',
       title: 'Badge-Based Ad Targeting',
-      content: 'Target ads based on user badge tiers, CPM rates per badge, Crab Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin advertising costs',
+      content: 'Target ads based on user badge tiers, CPM rates per badge, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin advertising costs',
       path: '/docs/advertising',
       category: 'Main',
       type: 'section',
-      keywords: ['badge', 'targeting', 'cpm', 'ad', 'tier', 'crab', 'lobster', 'advertising', 'cost', 'rate']
+      keywords: ['badge', 'targeting', 'cpm', 'ad', 'tier', 'crab', 'ghost lobster', 'lobster', 'advertising', 'cost', 'rate']
     },
     {
       id: 'wallet',

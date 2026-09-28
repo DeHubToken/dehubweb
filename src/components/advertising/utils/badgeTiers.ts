@@ -13,7 +13,7 @@ export interface BadgeTier {
 export const badgeTiers: BadgeTier[] = [
   { name: 'No Badge', cpm: 10, audience: 500000, holdings: '< 10,000' },
   { name: 'Crab', cpm: 100, audience: 100000, holdings: '10k+' },
-  { name: 'Lobster', cpm: 180, audience: 50000, holdings: '25k+' },
+  { name: 'Ghost Lobster', cpm: 180, audience: 50000, holdings: '25k+' },
   { name: 'Piranha', cpm: 285, audience: 25000, holdings: '50k+' },
   { name: 'Giant Tortoise', cpm: 450, audience: 15000, holdings: '100k+' },
   { name: 'King Cobra', cpm: 800, audience: 8000, holdings: '250k+' },

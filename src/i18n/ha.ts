@@ -443,7 +443,7 @@ export const ha = {
     shakeUpDesc: 'Sabbin faranti na ƙirar samfur da sabuntawar dabaru na 2025.',
     badgeNone: 'Babu Badge',
     badgeCrab: 'Badge na Kaguwa',
-    badgeLobster: 'Badge na Lobster',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Badge na Piranha',
     badgeTortoise: 'Badge na Babban Kunkuru',
     badgeCobra: 'Badge na Sarkin Kumurci',
