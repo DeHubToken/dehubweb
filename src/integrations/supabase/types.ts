@@ -3832,6 +3832,105 @@ export type Database = {
         }
         Relationships: []
       }
+      miniapp_apps: {
+        Row: {
+          category: string | null
+          crawled_at: string | null
+          created_at: string
+          description: string | null
+          domain: string
+          home_url: string
+          icon_url: string | null
+          id: string
+          manifest: Json
+          name: string
+          owner_wallet: string | null
+          permissions: string[]
+          slug: string
+          source: string
+          splash_background_color: string | null
+          splash_image_url: string | null
+          status: string
+          subtitle: string | null
+          tags: string[]
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          crawled_at?: string | null
+          created_at?: string
+          description?: string | null
+          domain: string
+          home_url: string
+          icon_url?: string | null
+          id?: string
+          manifest?: Json
+          name: string
+          owner_wallet?: string | null
+          permissions?: string[]
+          slug: string
+          source?: string
+          splash_background_color?: string | null
+          splash_image_url?: string | null
+          status?: string
+          subtitle?: string | null
+          tags?: string[]
+          tier?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          crawled_at?: string | null
+          created_at?: string
+          description?: string | null
+          domain?: string
+          home_url?: string
+          icon_url?: string | null
+          id?: string
+          manifest?: Json
+          name?: string
+          owner_wallet?: string | null
+          permissions?: string[]
+          slug?: string
+          source?: string
+          splash_background_color?: string | null
+          splash_image_url?: string | null
+          status?: string
+          subtitle?: string | null
+          tags?: string[]
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      miniapp_signing_keys: {
+        Row: {
+          alg: string
+          created_at: string
+          kid: string
+          private_jwk: Json
+          public_jwk: Json
+          retired_at: string | null
+        }
+        Insert: {
+          alg?: string
+          created_at?: string
+          kid: string
+          private_jwk: Json
+          public_jwk: Json
+          retired_at?: string | null
+        }
+        Update: {
+          alg?: string
+          created_at?: string
+          kid?: string
+          private_jwk?: Json
+          public_jwk?: Json
+          retired_at?: string | null
+        }
+        Relationships: []
+      }
       new_members: {
         Row: {
           avatar_url: string | null
