@@ -573,7 +573,8 @@
     "all": "Lahat",
     "new": "Bago",
     "old": "Luma",
-    "home": "Home"
+    "home": "Home",
+    "undo": "I - undo"
   },
   "tip": {
     "title": "Magpadala ng tip",
@@ -1346,7 +1347,8 @@
     "feeNotEnough": "Hindi sapat na tokens (kailangan ng {{amount}})",
     "feeWarningTitle": "Ang mga mensahe ay nagkakahalaga ng tokens",
     "customTipMin": "Custom na tip (min {{amount}} tokens)",
-    "checkingTokenBalance": "Sinusuri ang iyong token balance..."
+    "checkingTokenBalance": "Sinusuri ang iyong token balance...",
+    "deleteConversationFailed": "Hindi matanggal ang pag - uusap"
   },
   "music": {
     "all": "All",
@@ -6467,7 +6469,19 @@
   "builder": {
     "stakeForAllowance": "Mag-stake ng DeHub token para mapataas ang iyong daily build allowance",
     "buildInChat": "Gumawa sa iyong mga DM kasama si @assistant",
-    "signInRequired": "Mag-sign in para magamit ang Builder."
+    "landerTitle": "Bumuo ng app sa pamamagitan lamang ng pagtatanong",
+    "landerSubtitle": "Sabihin sa @assist kung ano ang gusto mo sa iyong mga mensahe. Ito ay bumubuo ng app, nagho - host ito at nagpapadala sa iyo ng isang link kahit sino ay maaaring buksan. Tumugon upang baguhin ang anumang bagay.",
+    "promptPlaceholder": "Ilarawan ang app na gusto mo...",
+    "sendToAssistant": "Ipadala sa @assistant",
+    "example1": "Isang pomodoro timer na may pang - araw - araw na streak",
+    "example2": "Isang tip calculator na naghahati sa bill",
+    "example3": "Isang pagsusulit tungkol sa aking mga paboritong pelikula",
+    "step1Title": "Ilarawan ito",
+    "step1Body": "Sabihin kung ano ang dapat gawin ng app, sa iyong sariling mga salita.",
+    "step2Title": "Nagtatayo ito sa loob ng halos isang minuto",
+    "step2Body": "@assist nagsusulat at nagho - host ng app, pagkatapos ay nagpapadala ng link sa iyong mga mensahe.",
+    "step3Title": "Ibahagi ito o baguhin ito",
+    "step3Body": "Kahit sino ay maaaring buksan ang link. Tumugon sa chat upang baguhin ang anumang bagay."
   },
   "connect": {
     "chatgptFaqAccount": "Hindi kailangan ng account para basahin ang pampublikong nilalaman sa pamamagitan ng connector. Kailangan lang ng DeHub account kung gusto mong mag-post, mag-tip, o mag-hold ng DeHub token.",

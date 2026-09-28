@@ -513,7 +513,8 @@
     "close": "Xir",
     "loadingMore": "Wax kale waa la soo dejinayaa...",
     "loadMore": "Wax kale soo dejiso",
-    "continue": "Sii wad"
+    "continue": "Sii wad",
+    "undo": "Dib u noqo"
   },
   "tip": {
     "title": "Dir Bakhshiish",
@@ -1303,7 +1304,8 @@
     "feeNotEnough": "Kama filna tokens (waxaa loo baahan yahay {{amount}})",
     "feeWarningTitle": "Fariimaha waxay ku kacayaan tokens",
     "customTipMin": "Talo gaar ah (ugu yaraan {{amount}} tokens)",
-    "checkingTokenBalance": "La hubinayo dhaqaalahaaga token..."
+    "checkingTokenBalance": "La hubinayo dhaqaalahaaga token...",
+    "deleteConversationFailed": "Wadahadalka ma tirtiri karo"
   },
   "music": {
     "all": "Dhammaan",
@@ -4455,7 +4457,19 @@
   "builder": {
     "stakeForAllowance": "Lacagta DeHub ku keydi si aad u kordhiso ogolaanshahaaga dhismaha maalinlaha ah",
     "buildInChat": "Ku dhis fariimahaaga gaarka ah adigoo la jooga @assistant",
-    "signInRequired": "Gal si aad u isticmaasho Builder."
+    "landerTitle": "Samee app kaliya adoo weydiinaya",
+    "landerSubtitle": "U sheeg @caawiye waxa aad rabto farriimahaaga. Waxay dhisaysaa barnaamijka, martigelisaa oo kuu soo dirtaa isku xirka qof kasta oo furi kara. Ka jawaab wax kasta si aad u bedesho.",
+    "promptPlaceholder": "Sharax barnaamijka aad rabto...",
+    "sendToAssistant": "U dir @caawiye",
+    "example1": "Waqtiga pomodoro oo leh maalin kasta",
+    "example2": "Xisaabiye tip ah oo kala soocaya biilka",
+    "example3": "Su 'aal ku saabsan filimada aan ugu jeclahay",
+    "step1Title": "Sharaxaad ka bixi",
+    "step1Body": "Sheeg waxa app waa in ay sameeyaan, in erayadaada.",
+    "step2Title": "Waxay ku dhisan tahay qiyaastii daqiiqad.",
+    "step2Body": "@caawiye wuxuu qoraa oo martigeliyaa barnaamijka, ka dibna wuxuu u diraa xiriiriyaha farriimahaaga.",
+    "step3Title": "La wadaag ama beddel",
+    "step3Body": "Qof kastaa wuu furi karaa linkiga. Ka jawaab sheekada si aad wax uga bedesho."
   },
   "connect": {
     "chatgptFaqAccount": "Maaha lagama maarmaan in akoon la yeesho si loo akhriyo waxyaabaha dadwaynaha loo soo bandhigay iyadoo la isticmaalayo isku xiraha. Akoon DeHub waxa kaliya loo baahan yahay haddii aad rabto inaad soo dhigto, siiso ama aad hayso lacagta DeHub.",

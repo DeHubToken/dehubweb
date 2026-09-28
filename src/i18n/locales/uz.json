@@ -512,7 +512,8 @@
     "close": "Yopish",
     "loadingMore": "Koʻproq yuklanmoqda...",
     "loadMore": "Koʻproq yuklash",
-    "continue": "Davom eting"
+    "continue": "Davom eting",
+    "undo": "Bekor qilish"
   },
   "tip": {
     "title": "Tip yuborish",
@@ -1319,7 +1320,8 @@
     "feeNotEnough": "Tokenlar yetarli emas (kerak {{amount}})",
     "feeWarningTitle": "Xabarlar tokenlarga tushadi",
     "customTipMin": "Maxsus sovrg'a (min {{amount}} token)",
-    "checkingTokenBalance": "Token balansingiz tekshirilmoqda..."
+    "checkingTokenBalance": "Token balansingiz tekshirilmoqda...",
+    "deleteConversationFailed": "Suhbatni o&#39;chirib bo&#39;lmadi"
   },
   "music": {
     "all": "Hammasi",
@@ -4481,7 +4483,19 @@
   "builder": {
     "stakeForAllowance": "Kunlik yaratish imkoniyatingizni oshirish uchun DeHub tokenlarini stavka qiling",
     "buildInChat": "@assistant bilan shaxsiy xabarlarda yarating",
-    "signInRequired": "Builder'dan foydalanish uchun tizimga kiring."
+    "landerTitle": "Shunchaki so&#39;rash orqali ilova yarating",
+    "landerSubtitle": "Xabarlaringizda nimani xohlashingizni @assistant ga ayting. U ilovani yaratadi, joylashtiradi va sizga istalgan kishi ochishi mumkin bo&#39;lgan havolani yuboradi. Biror narsani o&#39;zgartirish uchun javob bering.",
+    "promptPlaceholder": "Kerakli ilovani tasvirlab bering...",
+    "sendToAssistant": "@assistantga yuboring",
+    "example1": "Kundalik seriyali pomodoro taymeri",
+    "example2": "Hisobni bo&#39;lib-bo&#39;lib beradigan chaychaqa kalkulyatori",
+    "example3": "Sevimli filmlarim haqida viktorina",
+    "step1Title": "Ta&#39;riflang",
+    "step1Body": "Ilova nima qilishi kerakligini o&#39;z so&#39;zlaringiz bilan ayting.",
+    "step2Title": "Taxminan bir daqiqada quriladi",
+    "step2Body": "@assistant ilovani yozadi va joylashtiradi, so&#39;ngra xabarlaringizga havolani yuboradi.",
+    "step3Title": "Uni ulashing yoki o&#39;zgartiring",
+    "step3Body": "Havolani istalgan kishi ochishi mumkin. Biror narsani o&#39;zgartirish uchun chatda javob bering."
   },
   "connect": {
     "chatgptFaqAccount": "Konektor orqali ommaviy kontentni o'qish uchun hisob talab qilinmaydi. Faqat DeHub tokenlarini joylashtirish, maslahat berish yoki saqlashni istasangiz, DeHub hisobi kerak bo'ladi.",

@@ -508,7 +508,8 @@
     "close": "Hidio",
     "loadingMore": "Mampiditra betsaka kokoa...",
     "loadMore": "Ampidiro betsaka kokoa",
-    "continue": "Sehon'ny mpiaty"
+    "continue": "Sehon'ny mpiaty",
+    "undo": "Foano"
   },
   "tip": {
     "title": "Handefa fanomezana",
@@ -1320,7 +1321,8 @@
     "feeNotEnough": "Tsy ampy ny tokens (mila {{amount}})",
     "feeWarningTitle": "Ny hafatra dia mitentina tokens",
     "customTipMin": "Torohevitra manokana (farafahakeliny {{amount}} tokens)",
-    "checkingTokenBalance": "Mijery ny volan'ny token anao..."
+    "checkingTokenBalance": "Mijery ny volan'ny token anao...",
+    "deleteConversationFailed": "Tsy afaka namafa ny resaka"
   },
   "music": {
     "all": "Rehetra",
@@ -6302,7 +6304,19 @@
   "builder": {
     "stakeForAllowance": "Apetraho ny tapaka DeHub mba hampitomboana ny fahazoan-dalana isan'andro",
     "buildInChat": "Manamboara ao amin'ny hafatra manokana miaraka amin'i @assistant",
-    "signInRequired": "Midira mba hampiasa ny Builder."
+    "landerTitle": "Manorena fampiharana fotsiny amin'ny fanontaniana",
+    "landerSubtitle": "Lazao amin'nympanampy anao izay tianao hapetraka amin'ny hafatrao. Manorina ilay app izy, mampiantrano azy io ary mandefa rohy ho anao izay mety hisokatra. Atsaharo ny miezaka manova izany.",
+    "promptPlaceholder": "Farito ny fampiharana tianao...",
+    "sendToAssistant": "Alefaso any amin'ny @assistant",
+    "example1": "Ny pomodoro fameram-potoana misy streak isan'andro",
+    "example2": "Ny tendron'ny ravin fanaovana kajy izay mizara ny volavolan-dalàna",
+    "example3": "Fanontaniana momba ny sarimihetsika tiako indrindra",
+    "step1Title": "Farito izy io",
+    "step1Body": "Lazao izay tokony hataon'ilay fampiharana, amin'ny teninao manokana.",
+    "step2Title": "Miverena ao anatin'ny iray minitra.",
+    "step2Body": "@assistant manoratra ary mampiantrano ilay fampiasa, avy eo mandefa ny rohy mankany amin'ireo hafatrao.",
+    "step3Title": "Minoa ahy ianao na tsia, ny hanovanao ny",
+    "step3Body": "Afaka mamandrika izany mialoha eto an-tany ny tsirairay. Azonao atao ny manova ny fampandrenesana amin'ny chat mba hanova ny zava-drehetra."
   },
   "connect": {
     "chatgptFaqAccount": "Tsy mila kaonty ny famakiana votoaty ampahibemaso amin'ny alalan'ny mpampifandray. Ny kaonty DeHub ihany no ilaina raha te-mandefa, manome na mitazona tapaka DeHub ianao.",

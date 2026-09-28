@@ -527,7 +527,8 @@
     "close": "Cerrar",
     "loadingMore": "Cargando más...",
     "loadMore": "Cargar más",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "undo": "Deshacer"
   },
   "tip": {
     "title": "Enviar propina",
@@ -1319,7 +1320,8 @@
     "feeNotEnough": "Tokens insuficientes (necesitas {{amount}})",
     "feeWarningTitle": "Los mensajes cuestan tokens",
     "customTipMin": "Propina personalizada (mínimo {{amount}} tokens)",
-    "checkingTokenBalance": "Verificando tu saldo de tokens..."
+    "checkingTokenBalance": "Verificando tu saldo de tokens...",
+    "deleteConversationFailed": "No se ha podido eliminar la conversación"
   },
   "music": {
     "all": "Todo",
@@ -6681,7 +6683,19 @@
   "builder": {
     "stakeForAllowance": "Haz staking de tokens de DeHub para aumentar tu asignación de construcción diaria",
     "buildInChat": "Crea en tus mensajes directos con @assistant",
-    "signInRequired": "Inicia sesión para usar el Builder."
+    "landerTitle": "Crea una aplicación con solo preguntar",
+    "landerSubtitle": "Dile a @Assistant lo que quieres en tus mensajes. Crea la aplicación, la aloja y te envía un enlace que cualquiera puede abrir. Responde para cambiar cualquier cosa.",
+    "promptPlaceholder": "Describe la aplicación que quieres...",
+    "sendToAssistant": "Enviar a @Assistant",
+    "example1": "Un temporizador Pomodoro con una racha diaria",
+    "example2": "Una calculadora de propinas que divide la factura",
+    "example3": "Un cuestionario sobre mis películas favoritas",
+    "step1Title": "Descríbelo.",
+    "step1Body": "Di lo que la aplicación debería hacer, en tus propias palabras.",
+    "step2Title": "Se acumula en aproximadamente un minuto",
+    "step2Body": "@Assistant escribe y aloja la aplicación, luego envía el enlace a tus mensajes.",
+    "step3Title": "Compártelo o cámbialo",
+    "step3Body": "Cualquiera puede abrir el enlace. Responde en el chat para cambiar cualquier cosa."
   },
   "connect": {
     "chatgptFaqAccount": "No se requiere cuenta para leer contenido público a través del conector. Solo se necesita una cuenta de DeHub si deseas publicar, dar propinas o mantener tokens de DeHub.",

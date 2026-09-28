@@ -527,7 +527,8 @@
     "close": "Kapat",
     "loadingMore": "Daha fazla yükleniyor...",
     "loadMore": "Daha fazla yükle",
-    "continue": "Devam et"
+    "continue": "Devam et",
+    "undo": "Geri al"
   },
   "tip": {
     "title": "Bahşiş Gönder",
@@ -1319,7 +1320,8 @@
     "feeNotEnough": "Yeterli jeton yok ({{amount}} gerekiyor)",
     "feeWarningTitle": "Mesajlar jeton maliyetli",
     "customTipMin": "Özel bahşiş (min {{amount}} jeton)",
-    "checkingTokenBalance": "Jeton bakiyeniz kontrol ediliyor..."
+    "checkingTokenBalance": "Jeton bakiyeniz kontrol ediliyor...",
+    "deleteConversationFailed": "Konuşma silinemedi"
   },
   "music": {
     "all": "Tümü",
@@ -6628,7 +6630,19 @@
   "builder": {
     "stakeForAllowance": "Günlük oluşturma limitinizi artırmak için DeHub jetonlarını stake edin",
     "buildInChat": "@assistant ile özel mesajlarında oluştur",
-    "signInRequired": "Builder'ı kullanmak için giriş yap."
+    "landerTitle": "Sadece sorarak bir uygulama oluşturun",
+    "landerSubtitle": "@ASSISTANT'a mesajlarınızda ne istediğinizi söyleyin. Uygulamayı oluşturur, barındırır ve size herkesin açabileceği bir bağlantı gönderir. Herhangi bir şeyi değiştirmek için yanıt verin.",
+    "promptPlaceholder": "İstediğiniz uygulamayı tanımlayın…",
+    "sendToAssistant": "@assistant adresine gönder",
+    "example1": "Günlük serisi olan bir pomodoro zamanlayıcı",
+    "example2": "Faturayı bölen bir bahşiş hesaplayıcısı",
+    "example3": "En sevdiğim filmler hakkında bir bilgi yarışması",
+    "step1Title": "Tarif et.",
+    "step1Body": "Uygulamanın ne yapması gerektiğini kendi kelimelerinizle söyleyin.",
+    "step2Title": "Yaklaşık bir dakika içinde oluşur",
+    "step2Body": "@assistant uygulamayı yazar ve barındırır, ardından mesajlarınızın bağlantısını gönderir.",
+    "step3Title": "Paylaşın veya değiştirin",
+    "step3Body": "Bağlantıyı herkes açabilir. Herhangi bir şeyi değiştirmek için sohbette yanıt verin."
   },
   "connect": {
     "chatgptFaqAccount": "Bağlayıcı aracılığıyla herkese açık içeriği okumak için hesap gerekmez. Yalnızca gönderi yapmak, bahşiş vermek veya DeHub jetonu tutmak istiyorsanız bir DeHub hesabı gereklidir.",

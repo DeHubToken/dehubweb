@@ -527,7 +527,8 @@
     "close": "Close",
     "loadingMore": "Loading more...",
     "loadMore": "Load more",
-    "continue": "Continue"
+    "continue": "Continue",
+    "undo": "Undo"
   },
   "tip": {
     "title": "Send Tip",
@@ -1319,7 +1320,8 @@
     "feeNotEnough": "Not enough tokens (need {{amount}})",
     "feeWarningTitle": "Messages cost tokens",
     "customTipMin": "Custom tip (min {{amount}} tokens)",
-    "checkingTokenBalance": "Checking your token balance..."
+    "checkingTokenBalance": "Checking your token balance...",
+    "deleteConversationFailed": "Couldn't delete the conversation"
   },
   "music": {
     "all": "All",
@@ -6680,7 +6682,19 @@
   "builder": {
     "stakeForAllowance": "Stake DeHub tokens to raise your daily build allowance",
     "buildInChat": "Build in your DMs with @assistant",
-    "signInRequired": "Sign in to use the Builder."
+    "landerTitle": "Build an app just by asking",
+    "landerSubtitle": "Tell @assistant what you want in your messages. It builds the app, hosts it and sends you a link anyone can open. Reply to change anything.",
+    "promptPlaceholder": "Describe the app you want…",
+    "sendToAssistant": "Send to @assistant",
+    "example1": "A pomodoro timer with a daily streak",
+    "example2": "A tip calculator that splits the bill",
+    "example3": "A quiz about my favourite films",
+    "step1Title": "Describe it",
+    "step1Body": "Say what the app should do, in your own words.",
+    "step2Title": "It builds in about a minute",
+    "step2Body": "@assistant writes and hosts the app, then sends the link to your messages.",
+    "step3Title": "Share it or change it",
+    "step3Body": "Anyone can open the link. Reply in the chat to change anything."
   },
   "connect": {
     "chatgptFaqAccount": "No account is required to read public content through the connector. A DeHub account is only needed if you want to post, tip or hold DeHub tokens.",

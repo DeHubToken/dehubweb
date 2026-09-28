@@ -527,7 +527,8 @@
     "close": "Tutup",
     "loadingMore": "Memuat lebih banyak...",
     "loadMore": "Muat lebih banyak",
-    "continue": "Lanjutkan"
+    "continue": "Lanjutkan",
+    "undo": "Batalkan"
   },
   "tip": {
     "title": "Kirim Tip",
@@ -1319,7 +1320,8 @@
     "feeNotEnough": "Token tidak cukup (butuh {{amount}})",
     "feeWarningTitle": "Pesan membutuhkan token",
     "customTipMin": "Tip kustom (min {{amount}} token)",
-    "checkingTokenBalance": "Memeriksa saldo token Anda..."
+    "checkingTokenBalance": "Memeriksa saldo token Anda...",
+    "deleteConversationFailed": "Tidak dapat menghapus percakapan"
   },
   "music": {
     "all": "Semua",
@@ -6628,7 +6630,19 @@
   "builder": {
     "stakeForAllowance": "Pertaruhkan token DeHub untuk menaikkan kuota pembuatan harian Anda",
     "buildInChat": "Bangun di DM kamu bersama @assistant",
-    "signInRequired": "Masuk untuk menggunakan Builder."
+    "landerTitle": "Buat aplikasi hanya dengan bertanya",
+    "landerSubtitle": "Beri tahu @assistant apa yang Anda inginkan di pesan Anda. Ini membangun aplikasi, menghostingnya, dan mengirimi Anda tautan yang bisa dibuka siapa saja. Balas untuk mengubah apa pun.",
+    "promptPlaceholder": "Jelaskan aplikasi yang Anda inginkan…",
+    "sendToAssistant": "Kirim ke @assistant",
+    "example1": "Timer pomodoro dengan rangkaian harian",
+    "example2": "Kalkulator tip yang membagi tagihan",
+    "example3": "Kuis tentang film favorit saya",
+    "step1Title": "Jelaskan",
+    "step1Body": "Katakan apa yang harus dilakukan aplikasi, dengan kata - kata Anda sendiri.",
+    "step2Title": "Dibangun dalam waktu sekitar satu menit",
+    "step2Body": "@assistant menulis dan menjadi tuan rumah aplikasi, lalu mengirimkan tautan ke pesan Anda.",
+    "step3Title": "Bagikan atau ubah",
+    "step3Body": "Siapa pun dapat membuka tautan. Balas di obrolan untuk mengubah apa pun."
   },
   "connect": {
     "chatgptFaqAccount": "Tidak diperlukan akun untuk membaca konten publik melalui konektor. Akun DeHub hanya diperlukan jika Anda ingin memposting, memberi tip, atau menyimpan token DeHub.",

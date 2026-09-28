@@ -527,7 +527,8 @@
     "close": "关闭",
     "loadingMore": "加载更多...",
     "loadMore": "加载更多",
-    "continue": "继续"
+    "continue": "继续",
+    "undo": "撤销"
   },
   "tip": {
     "title": "发送打赏",
@@ -1318,7 +1319,8 @@
     "feeNotEnough": "代币不足（需要 {{amount}}）",
     "feeWarningTitle": "消息需要消耗代币",
     "customTipMin": "自定义打赏（最少 {{amount}} 代币）",
-    "checkingTokenBalance": "正在检查您的代币余额..."
+    "checkingTokenBalance": "正在检查您的代币余额...",
+    "deleteConversationFailed": "无法删除对话"
   },
   "music": {
     "all": "全部",
@@ -6630,7 +6632,19 @@
   "builder": {
     "stakeForAllowance": "质押 DeHub 代币以提高您的每日构建额度",
     "buildInChat": "在私信中与 @assistant 一起搭建",
-    "signInRequired": "登录后即可使用 Builder。"
+    "landerTitle": "只需询问即可构建应用程序",
+    "landerSubtitle": "告诉@ assistant您想要的消息内容。它构建应用程序，托管应用程序，并向您发送任何人都可以打开的链接。回复以更改任何内容。",
+    "promptPlaceholder": "描述您想要的应用……",
+    "sendToAssistant": "发送至@ assistant",
+    "example1": "每日一连串的番茄工作制计时器",
+    "example2": "拆分账单的小费计算器",
+    "example3": "关于我最喜欢的电影的测验",
+    "step1Title": "将其描述出来！",
+    "step1Body": "用您自己的话说出应用应该怎么做。",
+    "step2Title": "它在大约一分钟内建成",
+    "step2Body": "@ assistant编写并托管应用程序，然后发送指向您的消息的链接。",
+    "step3Title": "分享或更改",
+    "step3Body": "任何人都可以打开链接。在聊天中回复以更改任何内容。"
   },
   "connect": {
     "chatgptFaqAccount": "无需账户即可通过连接器阅读公开内容。只有当您想发布、打赏或持有 DeHub 代币时，才需要 DeHub 账户。",

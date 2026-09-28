@@ -527,7 +527,8 @@
     "close": "Bağla",
     "loadingMore": "Daha çox yüklənir...",
     "loadMore": "Daha çox yüklə",
-    "continue": "Davam et"
+    "continue": "Davam et",
+    "undo": "Geri qaytar"
   },
   "tip": {
     "title": "Bəxşiş Göndər",
@@ -1313,7 +1314,8 @@
     "feeNotEnough": "Kifayət qədər token yoxdur ({{amount}} lazımdır)",
     "feeWarningTitle": "Mesajlar tokenlərə başa gəlir",
     "customTipMin": "Xüsusi hədiyyə (min {{amount}} token)",
-    "checkingTokenBalance": "Token balansınızı yoxlayır..."
+    "checkingTokenBalance": "Token balansınızı yoxlayır...",
+    "deleteConversationFailed": "Söhbəti silmək mümkün olmadı"
   },
   "music": {
     "all": "Hamısı",
@@ -6469,7 +6471,19 @@
   "builder": {
     "stakeForAllowance": "Gündəlik tikinti limitinizi artırmaq üçün DeHub tokenlərini steykinq edin",
     "buildInChat": "@assistant ilə şəxsi mesajlarınızda yaradın",
-    "signInRequired": "Builder-dən istifadə etmək üçün daxil olun."
+    "landerTitle": "Yalnız xahiş edərək tətbiq yaradın",
+    "landerSubtitle": "Mesajlarınızda nə istədiyinizi @ köməkçinizə bildirin. O, tətbiqi qurur, ona ev sahibliyi edir və hər kəsin aça biləcəyi linki sizə göndərir. Nəyisə dəyişmək üçün cavab verin.",
+    "promptPlaceholder": "İstədiyiniz tətbiqi təsvir edin...",
+    "sendToAssistant": "@köməkçisinə göndərin",
+    "example1": "Gündəlik zolağı olan pomodoro taymeri",
+    "example2": "Hesabı ayıran ipucu kalkulyatoru",
+    "example3": "Sevdiyim filmlər haqqında viktorina",
+    "step1Title": "Onu təsvir edin",
+    "step1Body": "Tətbiqin nə etməli olduğunu öz sözlərinizlə deyin.",
+    "step2Title": "Təxminən bir dəqiqə sonra yaranır",
+    "step2Body": "@köməkçi tətbiqi yazır və ona ev sahibliyi edir, sonra isə mesajlarınızın linkini göndərir.",
+    "step3Title": "Paylaşın və ya dəyişdirin",
+    "step3Body": "İstənilən şəxs linki aça bilər. Nəyisə dəyişmək üçün söhbətdə cavab verin."
   },
   "connect": {
     "chatgptFaqAccount": "Konnektor vasitəsilə ictimai məzmunu oxumaq üçün hesab tələb olunmur. Yalnız DeHub tokenləri yerləşdirmək, bəxşiş vermək və ya saxlamaq istəyirsinizsə, DeHub hesabı lazımdır.",
