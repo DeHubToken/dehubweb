@@ -3921,5 +3921,32 @@
     "planRestricted": "Овај корисник захтева претплату да би примао поруке.",
     "planTypeNotAllowed": "План овог креатора не дозвољава ову врсту поруке.",
     "planMinTip": "Напојница за овог креатора мора бити најмање {{amount}} DHB."
+  },
+  "credits": {
+    "earningsWorth": "Вредност {{amount}}",
+    "percentUsed": "Искоришћено {{percent}}%",
+    "spentOfTotal": "{{spent}} од {{total}}",
+    "subscriptionTokens": "Токени за претплату",
+    "topUp": "Додај токене",
+    "topUpTitle": "Додај токене за претплату",
+    "topUpCustom": "Други износ (USD)",
+    "topUpYouSend": "Шаљете",
+    "topUpYouGet": "Додаје се на ваше стање",
+    "topUpConfirm": "Додај {{amount}}",
+    "topUpRange": "Унесите од {{min}} до {{max}}",
+    "topUpDone": "{{amount}} додато на ваше токене за претплату",
+    "topUpPending": "Ваша уплата се потврђује. Ускоро ће се појавити на стању.",
+    "topUpFailed": "Није могуће додати токене за претплату",
+    "topUpStageFunding": "Прибављање токена…",
+    "topUpStageWallet": "Потврдите у новчанику…",
+    "topUpStageConfirming": "Чека се трансакција…",
+    "topUpStageCrediting": "Додавање на ваше стање…",
+    "untradableTokens": "Ово су токени за претплату којима се не може трговати",
+    "withdraw": "Повуци",
+    "close": "Затвори",
+    "tokenAmount": "{{amount}} токена",
+    "subscriptionTokensOnly": "Само за AI генерисање",
+    "subscriptionTokensValueNote": "Токени за претплату задржавају вредност у доларима. Ако се цена токена промени пре него што их искористите, видећете више или мање токена, али они увек купују исту количину AI генерисања. Не могу се повући, послати нити њима трговати.",
+    "topUpEmptyHint": "Додајте токене да бисте генерисали помоћу AI"
   }
 }

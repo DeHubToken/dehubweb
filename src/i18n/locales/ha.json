@@ -5269,5 +5269,32 @@
     "planRestricted": "Wannan mai amfani yana buƙatar biyan kuɗin shiga don karɓar saƙonni.",
     "planTypeNotAllowed": "Tsarin wannan mahalicci bai yarda da irin wannan saƙo ba.",
     "planMinTip": "Tip dole ya zama aƙalla {{amount}} DHB ga wannan mahalicci."
+  },
+  "credits": {
+    "earningsWorth": "Darajarsa {{amount}}",
+    "percentUsed": "{{percent}}% amfani",
+    "spentOfTotal": "{{spent}} na {{total}}",
+    "subscriptionTokens": "Subscription tokens",
+    "topUp": "Ƙara alamomi",
+    "topUpTitle": "Ƙara alamun biyan kuɗi",
+    "topUpCustom": "Sauran adadin (USD)",
+    "topUpYouSend": "Kuna aikawa",
+    "topUpYouGet": "Ƙara zuwa ma'auni naka",
+    "topUpConfirm": "Ƙara {{amount}}",
+    "topUpRange": "Shigar da {{min}} zuwa {{max}}",
+    "topUpDone": "{{amount}} kara zuwa alamomin biyan ku",
+    "topUpPending": "Your top-up yana tabbatarwa. Zai bayyana a cikin ma'auni ba da daɗewa ba.",
+    "topUpFailed": "Ba za a iya ƙara alamun biyan kuɗi ba",
+    "topUpStageFunding": "Samun alamomi...",
+    "topUpStageWallet": "Tabbatar a cikin walat ɗin ku...",
+    "topUpStageConfirming": "Jira don ma'amala...",
+    "topUpStageCrediting": "Ƙarawa zuwa ma'auni naka...",
+    "untradableTokens": "Waɗannan alamun biyan kuɗi ne waɗanda ba za a iya amfana ba",
+    "withdraw": "Janyewa",
+    "close": "Rufe",
+    "tokenAmount": "{{amount}} tokens",
+    "subscriptionTokensOnly": "Domin AI tsara kawai",
+    "subscriptionTokensValueNote": "Alamomin biyan kuɗi suna riƙe da darajar dala. Idan farashin alamar yana motsawa kafin kayi amfani da su za ku ga alamomi da yawa ko ƙasa, amma koyaushe suna siyan adadin ƙarni na AI. Ba za a iya janye su ba, aika su ko ciniki.",
+    "topUpEmptyHint": "Ƙara alamomi don samar da AI"
   }
 }

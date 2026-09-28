@@ -3595,5 +3595,32 @@
     "inProgress": "চলতাছে",
     "completed": "শেষ হইছে",
     "underReview": "পর্যালোচনায়"
+  },
+  "credits": {
+    "earningsWorth": "দাম {{amount}}",
+    "percentUsed": "{{percent}}% খরচ হইছে",
+    "spentOfTotal": "{{total}}-র মইধ্যে {{spent}}",
+    "subscriptionTokens": "সাবস্ক্রিপশন টোকেন",
+    "topUp": "টোকেন যোগ করেন",
+    "topUpTitle": "সাবস্ক্রিপশন টোকেন যোগ করেন",
+    "topUpCustom": "অইন্য পরিমাণ (USD)",
+    "topUpYouSend": "তোমরা পাঠাইবেন",
+    "topUpYouGet": "তোমার ব্যালেন্সোত যোগ হইবে",
+    "topUpConfirm": "{{amount}} যোগ করেন",
+    "topUpRange": "{{min}} থাকি {{max}} লেখেন",
+    "topUpDone": "{{amount}} তোমার সাবস্ক্রিপশন টোকেনোত যোগ হইল",
+    "topUpPending": "তোমার টপ-আপ কনফার্ম হওছে। তাড়াতাড়ি ব্যালেন্সোত দেখা যাইবে।",
+    "topUpFailed": "সাবস্ক্রিপশন টোকেন যোগ করা গেইল না",
+    "topUpStageFunding": "টোকেন আনা হওছে…",
+    "topUpStageWallet": "ওয়ালেটোত কনফার্ম করেন…",
+    "topUpStageConfirming": "লেনদেনের জইন্যে অপেক্ষা…",
+    "topUpStageCrediting": "ব্যালেন্সোত যোগ করা হওছে…",
+    "untradableTokens": "এইগুলা ট্রেড করা যায় না এমন সাবস্ক্রিপশন টোকেন",
+    "withdraw": "তুলি নেন",
+    "close": "বন্ধ করুন",
+    "tokenAmount": "{{amount}} টোকেন",
+    "subscriptionTokensOnly": "শুধু AI জেনারেশনের জন্য",
+    "subscriptionTokensValueNote": "সাবস্ক্রিপশন টোকেন নিজের ডলারের দাম ধরি রাখে। ব্যবহারের আগোত টোকেনের দাম বদলাইলে বেশি বা কম টোকেন দেখিবেন, কিন্তুক সেইগুলা সবসময় একে পরিমাণ AI জেনারেশন কিনে। তোলা, পাঠা বা ট্রেড করা যায় না।",
+    "topUpEmptyHint": "AI দিয়া বানাবার তানে টোকেন যোগ করেন"
   }
 }

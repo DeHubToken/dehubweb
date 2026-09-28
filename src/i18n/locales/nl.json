@@ -7645,5 +7645,32 @@
     "planRestricted": "Deze gebruiker vereist een abonnement om berichten te ontvangen.",
     "planTypeNotAllowed": "Het abonnement van deze maker staat dit soort bericht niet toe.",
     "planMinTip": "De fooi voor deze maker moet minstens {{amount}} DHB zijn."
+  },
+  "credits": {
+    "earningsWorth": "Waarde {{amount}}",
+    "percentUsed": "{{percent}}% gebruikt",
+    "spentOfTotal": "{{spent}} van {{total}}",
+    "subscriptionTokens": "Abonnementstokens",
+    "topUp": "Tokens toevoegen",
+    "topUpTitle": "Abonnementstokens toevoegen",
+    "topUpCustom": "Ander bedrag (USD)",
+    "topUpYouSend": "U verzendt",
+    "topUpYouGet": "Toegevoegd aan je saldo",
+    "topUpConfirm": "{{amount}} toevoegen",
+    "topUpRange": "Voer {{min}} in tot {{max}}",
+    "topUpDone": "{{amount}} toegevoegd aan je abonnementstokens",
+    "topUpPending": "Je opwaardering wordt bevestigd. Deze wordt binnenkort in je saldo weergegeven.",
+    "topUpFailed": "Kan abonnementstokens niet toevoegen",
+    "topUpStageFunding": "Tokens krijgen...",
+    "topUpStageWallet": "Bevestig in je portemonnee...",
+    "topUpStageConfirming": "Wachten op de transactie...",
+    "topUpStageCrediting": "Toe te voegen aan uw saldo...",
+    "untradableTokens": "Dit zijn niet-verhandelbare abonnementstokens",
+    "withdraw": "Opnemen",
+    "close": "Sluiten",
+    "tokenAmount": "{{amount}} tokens",
+    "subscriptionTokensOnly": "Alleen voor AI-generatie",
+    "subscriptionTokensValueNote": "Abonnementstokens hebben hun dollarwaarde. Als de tokenprijs beweegt voordat je ze gebruikt, zie je meer of minder tokens, maar ze kopen altijd dezelfde hoeveelheid AI-generatie. Ze kunnen niet worden ingetrokken, verzonden of verhandeld.",
+    "topUpEmptyHint": "Voeg tokens toe om te genereren met AI"
   }
 }
