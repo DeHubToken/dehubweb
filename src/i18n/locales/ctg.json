@@ -466,7 +466,21 @@
     "emailSignInDone": "এহন আঁই এই ইমেল দি সাইন ইন গরিত পারিবেন",
     "emailSignInRemove": "সরান",
     "emailSignInRemoved": "সরানো অইয়ে — এই ইমেল দি আর সাইন ইন গরা ন যাইবো",
-    "cancel": "বাতিল"
+    "cancel": "বাতিল",
+    "solanaWallet": "সোলানা ওয়ালেট",
+    "solanaWalletHint": "Solana-ত টিপ আর পেইড আনলক পাইবার লাই Phantom জুড়ন।",
+    "solanaConnect": "কানেক্ট",
+    "solanaDisconnect": "ডিসকানেক্ট",
+    "solanaCopy": "সোলানা ঠিকানা কপি গরন",
+    "solanaCopyFailed": "এড্রেস কপি অইতা পারে নাই",
+    "solanaNeedsSignIn": "আগে সাইন ইন গরন",
+    "solanaNoPhantom": "Phantom ন পাইয়ে",
+    "solanaNoPhantomHint": "Phantom এক্সটেনশন ইনস্টল গরন, নইলে Phantom ব্রাউজারত dehub.io খুলন।",
+    "solanaNotSigned": "কিছুই ন জুড়ে",
+    "solanaLinked": "সোলানা ওয়ালেট জুড়ি গেইয়ে",
+    "solanaLinkFailed": "অই ওয়ালেট জুড়িত ন পারিয়ে",
+    "solanaUnlinked": "সোলানা ওয়ালেট খুলি দেওয়া অইয়ে",
+    "solanaUnlinkFailed": "অই ওয়ালেট খুলিত ন পারিয়ে"
   },
   "common": {
     "save": "সেভ গরো",
@@ -3129,7 +3143,23 @@
     "reviewDescriptionPlaceholder": "এই পোস্ট সম্পর্কে কিছু বলুন (ঐচ্ছিক)",
     "reviewLiveWarning": "সেই লিংকটা লাইভ স্ট্রিম। এটা শেষ না হওয়া পর্যন্ত অপেক্ষা করুন এবং তারপর রেকর্ডিং ইম্পোর্ট করুন।",
     "reviewCancel": "বাতিল",
-    "reviewConfirm": "ইম্পোর্ট"
+    "reviewConfirm": "ইম্পোর্ট",
+    "podcast": {
+      "alreadyImported": "আগেই ইমপোর্ট অইয়ে",
+      "badFeed": "এই লিংক পডকাস্ট ফিডর মতো ন লাগের।",
+      "done": "লাইনত আছে",
+      "emptyFeed": "এই ফিডত কোনো এপিসোড পাই ন পারি।",
+      "episodes": "{{count}}টা এপিসোড",
+      "feedUrlLabel": "পডকাস্ট RSS ফিডর URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "ফিড আনো",
+      "fetching": "ফিড আনর…",
+      "importSelected": "{{count}}টা এপিসোড ইমপোর্ট গরো",
+      "importing": "ইমপোর্ট অর…",
+      "selectAll": "বেগ্গুন বাছো",
+      "showBy": "{{author}} র",
+      "tooMany": "একবারে ২০টা পর্যন্ত এপিসোড ইমপোর্ট গরো।"
+    }
   },
   "banned": {
     "title": "আপনার অ্যাকাউন্ট ব্যান করা হইছে",

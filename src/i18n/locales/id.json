@@ -497,7 +497,21 @@
     "emailSignInDone": "Sekarang kamu bisa masuk dengan email ini",
     "emailSignInRemove": "Hapus",
     "emailSignInRemoved": "Dihapus — email ini tidak bisa lagi dipakai untuk masuk",
-    "cancel": "Batal"
+    "cancel": "Batal",
+    "solanaWallet": "Dompet Solana",
+    "solanaWalletHint": "Hubungkan Phantom untuk menerima tip dan buka kunci berbayar di Solana.",
+    "solanaConnect": "Hubungkan",
+    "solanaDisconnect": "Putuskan sambungan",
+    "solanaCopy": "Salin alamat Solana",
+    "solanaCopyFailed": "Tidak dapat menyalin alamat",
+    "solanaNeedsSignIn": "Masuk terlebih dahulu",
+    "solanaNoPhantom": "Phantom tidak ditemukan",
+    "solanaNoPhantomHint": "Pasang ekstensi Phantom, atau buka dehub.io di browser Phantom.",
+    "solanaNotSigned": "Tidak ada yang terhubung",
+    "solanaLinked": "Dompet Solana terhubung",
+    "solanaLinkFailed": "Tidak dapat menghubungkan dompet itu",
+    "solanaUnlinked": "Dompet Solana diputuskan",
+    "solanaUnlinkFailed": "Tidak dapat memutuskan dompet itu"
   },
   "common": {
     "save": "Simpan",

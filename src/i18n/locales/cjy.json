@@ -453,7 +453,21 @@
     "emailSignInDone": "眼下你能用这个邮箱登录嘞",
     "emailSignInRemove": "去掉",
     "emailSignInRemoved": "去掉咾 — 这个邮箱再登不进你嘞账户",
-    "cancel": "取消"
+    "cancel": "取消",
+    "solanaWallet": "Solana 钱包",
+    "solanaWalletHint": "连接 Phantom，在 Solana 上收打赏和付费解锁。",
+    "solanaConnect": "连接",
+    "solanaDisconnect": "断开连接",
+    "solanaCopy": "复制 Solana 地址",
+    "solanaCopyFailed": "无法复制地址",
+    "solanaNeedsSignIn": "先登录",
+    "solanaNoPhantom": "没找到 Phantom",
+    "solanaNoPhantomHint": "安装 Phantom 扩展，或者在 Phantom 浏览器里打开 dehub.io。",
+    "solanaNotSigned": "啥也没连上",
+    "solanaLinked": "Solana 钱包已连接",
+    "solanaLinkFailed": "连不上这个钱包",
+    "solanaUnlinked": "Solana 钱包已断开",
+    "solanaUnlinkFailed": "断不开这个钱包"
   },
   "common": {
     "save": "保存",
@@ -3271,7 +3285,8 @@
       "failed": "失败",
       "emptyFeed": "我们在该 feed 中找不到任何剧集。",
       "badFeed": "该链接看起来不像播客 feed。",
-      "tooMany": "一次最多导入 20 集。"
+      "tooMany": "一次最多导入 20 集。",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

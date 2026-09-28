@@ -454,7 +454,21 @@
     "emailSignInDone": "ตอนนี้เจ้าเข้าสู่ระบบด้วยอีเมลนี้ได้แล้ว",
     "emailSignInRemove": "เอาออก",
     "emailSignInRemoved": "เอาออกแล้ว — อีเมลนี้เข้าสู่ระบบให้เจ้าบ่ได้อีกแล้ว",
-    "cancel": "ยกเลิก"
+    "cancel": "ยกเลิก",
+    "solanaWallet": "กระเป๋า Solana",
+    "solanaWalletHint": "เชื่อมต่อ Phantom เพื่อฮับทิปและการปลดล็อกแบบจ่ายเงินเทิง Solana",
+    "solanaConnect": "เชื่อมต่อ",
+    "solanaDisconnect": "ตัดการเชื่อมต่อ",
+    "solanaCopy": "คัดลอกที่อยู่ Solana",
+    "solanaCopyFailed": "ບໍ່ສາມາດຄັດລອກທີ່ຢູ່ໄດ້",
+    "solanaNeedsSignIn": "ลงชื่อเข้าใช้ก่อนเด้อ",
+    "solanaNoPhantom": "บ่พ้อ Phantom",
+    "solanaNoPhantomHint": "ติดตั้งส่วนขยาย Phantom หรือเปิด dehub.io ในเบราว์เซอร์ Phantom",
+    "solanaNotSigned": "บ่มีหยังเชื่อมต่อ",
+    "solanaLinked": "เชื่อมต่อกระเป๋า Solana แล้วเด้อ",
+    "solanaLinkFailed": "เชื่อมต่อกระเป๋านั้นบ่ได้",
+    "solanaUnlinked": "ยกเลิกการเชื่อมต่อกระเป๋า Solana แล้วเด้อ",
+    "solanaUnlinkFailed": "ยกเลิกการเชื่อมต่อกระเป๋านั้นบ่ได้"
   },
   "common": {
     "save": "บันทึก",

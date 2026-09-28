@@ -496,7 +496,21 @@
     "emailSignInDone": "このメールでサインインできるようになりました",
     "emailSignInRemove": "削除",
     "emailSignInRemoved": "削除しました — このメールではもうサインインできません",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "solanaWallet": "Solana ウォレット",
+    "solanaWalletHint": "Phantom を接続すると、Solana でチップや有料アンロックを受け取れます。",
+    "solanaConnect": "接続",
+    "solanaDisconnect": "切断",
+    "solanaCopy": "Solana アドレスをコピー",
+    "solanaCopyFailed": "住所をコピーできませんでした",
+    "solanaNeedsSignIn": "先にサインインしてください",
+    "solanaNoPhantom": "Phantom が見つかりません",
+    "solanaNoPhantomHint": "Phantom 拡張機能をインストールするか、Phantom ブラウザで dehub.io を開いてください。",
+    "solanaNotSigned": "何も接続されませんでした",
+    "solanaLinked": "Solana ウォレットを接続しました",
+    "solanaLinkFailed": "そのウォレットを接続できませんでした",
+    "solanaUnlinked": "Solana ウォレットの接続を解除しました",
+    "solanaUnlinkFailed": "そのウォレットの接続を解除できませんでした"
   },
   "common": {
     "save": "保存",
@@ -5474,7 +5488,8 @@
       "failed": "失敗",
       "emptyFeed": "そのフィードにエピソードが見つかりませんでした。",
       "badFeed": "そのリンクはポッドキャストフィードのようには見えません。",
-      "tooMany": "一度に最大20エピソードをインポートできます。"
+      "tooMany": "一度に最大20エピソードをインポートできます。",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

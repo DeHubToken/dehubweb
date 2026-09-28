@@ -482,7 +482,21 @@
     "emailSignInDone": "Ka taea e koe te takiuru ki tēnei īmēra ināianei",
     "emailSignInRemove": "Tango",
     "emailSignInRemoved": "Kua tangohia — kua kore e taea e tēnei īmēra te whakauru i a koe",
-    "cancel": "Whakakore"
+    "cancel": "Whakakore",
+    "solanaWallet": "Pūkoro Solana",
+    "solanaWalletHint": "Honoa a Phantom kia whiwhi koha me ngā whakatuwheratanga utu i runga Solana.",
+    "solanaConnect": "Hono",
+    "solanaDisconnect": "Wete",
+    "solanaCopy": "Tāruatia te wāhitau Solana",
+    "solanaCopyFailed": "Kaore e taea te kape i te wāhitau",
+    "solanaNeedsSignIn": "Takiuru tuatahi",
+    "solanaNoPhantom": "Kāore i kitea a Phantom",
+    "solanaNoPhantomHint": "Tāutahia te toronga Phantom, whakatuwheratia rānei a dehub.io i te pūtirotiro Phantom.",
+    "solanaNotSigned": "Kāore he mea i hono",
+    "solanaLinked": "Kua honoa te pūkoro Solana",
+    "solanaLinkFailed": "Kāore i taea te hono i taua pūkoro",
+    "solanaUnlinked": "Kua wetekina te pūkoro Solana",
+    "solanaUnlinkFailed": "Kāore i taea te momotu i taua pūkoro"
   },
   "common": {
     "save": "Tiaki",

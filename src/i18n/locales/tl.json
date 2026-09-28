@@ -497,7 +497,21 @@
     "emailSignInDone": "Makakapag-sign in ka na gamit ang email na ito",
     "emailSignInRemove": "Alisin",
     "emailSignInRemoved": "Inalis — hindi ka na makakapag-sign in gamit ang email na ito",
-    "cancel": "Kanselahin"
+    "cancel": "Kanselahin",
+    "solanaWallet": "Solana wallet",
+    "solanaWalletHint": "Ikonekta ang Phantom para makatanggap ng tips at bayad na unlock sa Solana.",
+    "solanaConnect": "Ikonekta",
+    "solanaDisconnect": "Idiskonekta",
+    "solanaCopy": "Kopyahin ang Solana address",
+    "solanaCopyFailed": "Hindi makopya ang address",
+    "solanaNeedsSignIn": "Mag-sign in muna",
+    "solanaNoPhantom": "Hindi nahanap ang Phantom",
+    "solanaNoPhantomHint": "I-install ang Phantom extension, o buksan ang dehub.io sa Phantom browser.",
+    "solanaNotSigned": "Walang naikonekta",
+    "solanaLinked": "Nakakonekta na ang Solana wallet",
+    "solanaLinkFailed": "Hindi maikonekta ang wallet na iyon",
+    "solanaUnlinked": "Nadiskonekta na ang Solana wallet",
+    "solanaUnlinkFailed": "Hindi madiskonekta ang wallet na iyon"
   },
   "common": {
     "save": "I-save",

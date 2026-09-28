@@ -495,7 +495,21 @@
     "emailSignInDone": "දැන් ඔබට මෙම ඊමේල් සමඟ පුරනය විය හැක",
     "emailSignInRemove": "ඉවත් කරන්න",
     "emailSignInRemoved": "ඉවත් කරන ලදී — මෙම ඊමේල් සමඟ තවදුරටත් පුරනය විය නොහැක",
-    "cancel": "අවලංගු"
+    "cancel": "අවලංගු",
+    "solanaWallet": "Solana පසුම්බිය",
+    "solanaWalletHint": "Solana මත ඉඟි සහ ගෙවීම් සහිත අගුලු හැරීම් ලබා ගැනීමට Phantom සම්බන්ධ කරන්න.",
+    "solanaConnect": "සම්බන්ධ කරන්න",
+    "solanaDisconnect": "සම්බන්ධතාවය විසන්ධි කරන්න",
+    "solanaCopy": "Solana ලිපිනය පිටපත් කරන්න",
+    "solanaCopyFailed": "ලිපිනය පිටපත් කළ නොහැකි විය",
+    "solanaNeedsSignIn": "පළමුව පුරනය වන්න",
+    "solanaNoPhantom": "Phantom හමු නොවීය",
+    "solanaNoPhantomHint": "Phantom දිගුව ස්ථාපනය කරන්න, නැතහොත් Phantom බ්‍රවුසරයේ dehub.io විවෘත කරන්න.",
+    "solanaNotSigned": "කිසිවක් සම්බන්ධ නොවීය",
+    "solanaLinked": "Solana පසුම්බිය සම්බන්ධ කළා",
+    "solanaLinkFailed": "එම පසුම්බිය සම්බන්ධ කළ නොහැකි විය",
+    "solanaUnlinked": "Solana පසුම්බිය විසන්ධි කළා",
+    "solanaUnlinkFailed": "එම පසුම්බිය විසන්ධි කළ නොහැකි විය"
   },
   "common": {
     "save": "සුරකින්න",
@@ -5021,7 +5035,8 @@
       "failed": "අසමත් විය",
       "emptyFeed": "අපිට ඒ ආහාරයේ කිසිම සිද්ධියක් හොයාගන්න බැරි වුණා.",
       "badFeed": "මේ ලින්ක් එක පේන්නේ Podcast Feed එකක් විදියට නෙවෙයි.",
-      "tooMany": "එක පාර Episode 20ක් විතර දාන්න."
+      "tooMany": "එක පාර Episode 20ක් විතර දාන්න.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

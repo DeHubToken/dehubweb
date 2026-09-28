@@ -497,7 +497,21 @@
     "emailSignInDone": "Teraz możesz logować się tym adresem e-mail",
     "emailSignInRemove": "Usuń",
     "emailSignInRemoved": "Usunięto — ten e-mail nie może już Cię zalogować",
-    "cancel": "Anuluj"
+    "cancel": "Anuluj",
+    "solanaWallet": "Portfel Solana",
+    "solanaWalletHint": "Połącz Phantom, aby otrzymywać napiwki i płatne odblokowania w sieci Solana.",
+    "solanaConnect": "Połącz",
+    "solanaDisconnect": "Rozłącz",
+    "solanaCopy": "Kopiuj adres Solana",
+    "solanaCopyFailed": "Nie można skopiować adresu",
+    "solanaNeedsSignIn": "Najpierw się zaloguj",
+    "solanaNoPhantom": "Nie znaleziono Phantom",
+    "solanaNoPhantomHint": "Zainstaluj rozszerzenie Phantom lub otwórz dehub.io w przeglądarce Phantom.",
+    "solanaNotSigned": "Nic nie zostało połączone",
+    "solanaLinked": "Portfel Solana połączony",
+    "solanaLinkFailed": "Nie udało się połączyć tego portfela",
+    "solanaUnlinked": "Portfel Solana odłączony",
+    "solanaUnlinkFailed": "Nie udało się odłączyć tego portfela"
   },
   "common": {
     "save": "Zapisz",

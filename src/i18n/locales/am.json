@@ -482,7 +482,21 @@
     "emailSignInDone": "አሁን በዚህ ኢሜይል መግባት ይችላሉ",
     "emailSignInRemove": "አስወግድ",
     "emailSignInRemoved": "ተወግዷል — በዚህ ኢሜይል ከእንግዲህ መግባት አይችሉም",
-    "cancel": "ሰርዝ"
+    "cancel": "ሰርዝ",
+    "solanaWallet": "የሶላና ቦርሳ",
+    "solanaWalletHint": "በSolana ላይ ጉርሻዎችን እና የሚከፈልባቸው ይዘቶችን ለመቀበል Phantomን ያገናኙ።",
+    "solanaConnect": "አገናኝ",
+    "solanaDisconnect": "አቋርጥ",
+    "solanaCopy": "የሶላና አድራሻ ቅዳ",
+    "solanaCopyFailed": "አድራሻውን መቅዳት አልተቻለም",
+    "solanaNeedsSignIn": "መጀመሪያ ይግቡ",
+    "solanaNoPhantom": "Phantom አልተገኘም",
+    "solanaNoPhantomHint": "የPhantom ቅጥያውን ይጫኑ፣ ወይም dehub.ioን በPhantom አሳሽ ይክፈቱ።",
+    "solanaNotSigned": "ምንም አልተገናኘም",
+    "solanaLinked": "የሶላና ቦርሳ ተገናኝቷል",
+    "solanaLinkFailed": "ያንን ቦርሳ ማገናኘት አልተቻለም",
+    "solanaUnlinked": "የሶላና ቦርሳ ተቋርጧል",
+    "solanaUnlinkFailed": "ያንን ቦርሳ ማላቀቅ አልተቻለም"
   },
   "common": {
     "save": "አስቀምጥ",
@@ -3218,7 +3232,9 @@
       "failed": "አልተሳካም",
       "emptyFeed": "በዚያ ምግብ ውስጥ ምንም ክፍሎችን ማግኘት አልቻልንም ።",
       "badFeed": "ያ አገናኝ የፖድካስት ምግብ አይመስልም ።",
-      "tooMany": "በአንድ ጊዜ እስከ 20 ክፍሎች ያስመጡ ።"
+      "tooMany": "በአንድ ጊዜ እስከ 20 ክፍሎች ያስመጡ ።",
+      "done": "ተሰልፏል",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

@@ -483,7 +483,21 @@
     "emailSignInDone": "Amma imeelii kanaan seenuu dandeessa",
     "emailSignInRemove": "Haqi",
     "emailSignInRemoved": "Haqameera — imeelii kanaan kana booda seenuu hin dandeessu",
-    "cancel": "Dhiisi"
+    "cancel": "Dhiisi",
+    "solanaWallet": "Waalleetii Solana",
+    "solanaWalletHint": "Solana irratti kennaa fi banamuu kaffaltii argachuuf Phantom walqabsiisi.",
+    "solanaConnect": "Walitti qabi",
+    "solanaDisconnect": "Addaan bahuu",
+    "solanaCopy": "Teessoo Solana garagalchi",
+    "solanaCopyFailed": "Teessoo waraabuu hin dandeenye",
+    "solanaNeedsSignIn": "Dura seeni",
+    "solanaNoPhantom": "Phantom hin argamne",
+    "solanaNoPhantomHint": "Dabalata Phantom fe'i, ykn dehub.io barbaadduu Phantom keessatti bani.",
+    "solanaNotSigned": "Wanti walqabate hin jiru",
+    "solanaLinked": "Waalleetiin Solana walqunnameera",
+    "solanaLinkFailed": "Borsaa sana walqabsiisuun hin danda'amne",
+    "solanaUnlinked": "Waalleetiin Solana addaan citeera",
+    "solanaUnlinkFailed": "Borsaa sana addaan kutuun hin danda'amne"
   },
   "common": {
     "save": "Olchi",

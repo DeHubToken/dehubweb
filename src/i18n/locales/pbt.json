@@ -476,7 +476,21 @@
     "emailSignInDone": "اوس تاسو له دې برېښنالیک سره ننوتلی شئ",
     "emailSignInRemove": "لرې کول",
     "emailSignInRemoved": "لرې شو — دا برېښنالیک نور تاسو نشي ننویستلی",
-    "cancel": "لغوه"
+    "cancel": "لغوه",
+    "solanaWallet": "د سولانا والټ",
+    "solanaWalletHint": "Phantom ونښلوئ ترڅو په Solana کې ټیپونه او تادیه شوي خلاصونونه ترلاسه کړئ.",
+    "solanaConnect": "وصل کړئ",
+    "solanaDisconnect": "جلا کړئ",
+    "solanaCopy": "د Solana پته کاپي کړئ",
+    "solanaCopyFailed": "د ادرس د کاپي کولو توان نلري",
+    "solanaNeedsSignIn": "لومړی ننوځئ",
+    "solanaNoPhantom": "Phantom ونه موندل شو",
+    "solanaNoPhantomHint": "د Phantom توسعه نصب کړئ، یا dehub.io د Phantom په براوزر کې پرانیزئ.",
+    "solanaNotSigned": "هېڅ شی ونه نښلول شو",
+    "solanaLinked": "د سولانا والټ وصل شو",
+    "solanaLinkFailed": "هغه والټ ونه نښلول شو",
+    "solanaUnlinked": "د سولانا والټ پرې شو",
+    "solanaUnlinkFailed": "هغه والټ جلا نه شو"
   },
   "common": {
     "save": "خوندي",
@@ -3242,7 +3256,11 @@
       "failed": "ناکامي او ناکامي",
       "emptyFeed": "موږ په دې خواړو کې هیڅ شی نه شو موندلی.",
       "badFeed": "دا لینک د ویډیو په څیر نه ښکاري.",
-      "tooMany": "په یو وخت کې تر 20 پورې ویډیوګانې ثبت کړئ."
+      "tooMany": "په یو وخت کې تر 20 پورې ویډیوګانې ثبت کړئ.",
+      "episodes": "{{count}} برخې",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "importSelected": "{{count}} برخې واردې کړئ",
+      "showBy": "د {{author}} لخوا"
     }
   },
   "banned": {

@@ -497,7 +497,21 @@
     "emailSignInDone": "अब तपाईं यो इमेलबाट साइन इन गर्न सक्नुहुन्छ",
     "emailSignInRemove": "हटाउनुहोस्",
     "emailSignInRemoved": "हटाइयो — यो इमेलले अब तपाईंलाई साइन इन गराउन सक्दैन",
-    "cancel": "रद्द गर्नुहोस्"
+    "cancel": "रद्द गर्नुहोस्",
+    "solanaWallet": "सोलाना वालेट",
+    "solanaWalletHint": "Solana मा टिप र सशुल्क अनलक प्राप्त गर्न Phantom जोड्नुहोस्।",
+    "solanaConnect": "जडान गर्नुहोस्",
+    "solanaDisconnect": "विच्छेद गर्नुहोस्",
+    "solanaCopy": "सोलाना ठेगाना प्रतिलिपि गर्नुहोस्",
+    "solanaCopyFailed": "ठेगाना प्रतिलिपि गर्न सकेन",
+    "solanaNeedsSignIn": "पहिले साइन इन गर्नुहोस्",
+    "solanaNoPhantom": "Phantom भेटिएन",
+    "solanaNoPhantomHint": "Phantom एक्सटेन्सन इन्स्टल गर्नुहोस्, वा dehub.io लाई Phantom ब्राउजरमा खोल्नुहोस्।",
+    "solanaNotSigned": "केही पनि जोडिएन",
+    "solanaLinked": "सोलाना वालेट जोडियो",
+    "solanaLinkFailed": "त्यो वालेट जोड्न सकिएन",
+    "solanaUnlinked": "सोलाना वालेट विच्छेद भयो",
+    "solanaUnlinkFailed": "त्यो वालेट विच्छेद गर्न सकिएन"
   },
   "common": {
     "save": "सुरक्षित गर्नुहोस्",
@@ -5347,7 +5361,8 @@
       "failed": "असफल",
       "emptyFeed": "हामीले त्यो फिडमा कुनै एपिसोडहरू फेला पार्न सकेनौं ।",
       "badFeed": "त्यो लिङ्क पोडकास्ट फिड जस्तो देखिँदैन ।",
-      "tooMany": "एक पटकमा २० एपिसोडसम्म आयात गर्नुहोस् ।"
+      "tooMany": "एक पटकमा २० एपिसोडसम्म आयात गर्नुहोस् ।",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

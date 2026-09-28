@@ -481,7 +481,21 @@
     "emailSignInDone": "O lè wọlé pẹ̀lú ímeèlì yìí báyìí",
     "emailSignInRemove": "Yọ kúrò",
     "emailSignInRemoved": "Tí a yọ kúrò — ímeèlì yìí kò lè mú ọ wọlé mọ́",
-    "cancel": "Fagilee"
+    "cancel": "Fagilee",
+    "solanaWallet": "Àpamọ́wọ́ Solana",
+    "solanaWalletHint": "So Phantom pọ̀ láti gba owó ẹ̀bùn àti ṣíṣí tí a sanwó fún lórí Solana.",
+    "solanaConnect": "So mọ́",
+    "solanaDisconnect": "Yọkuro",
+    "solanaCopy": "Ṣe àdàkọ àdírẹ́sì Solana",
+    "solanaCopyFailed": "Kò lè ṣe ẹ̀dà àdírẹ̀sì náà.",
+    "solanaNeedsSignIn": "Kọ́kọ́ wọlé",
+    "solanaNoPhantom": "A kò rí Phantom",
+    "solanaNoPhantomHint": "Fi àfikún Phantom sórí ẹ̀rọ, tàbí ṣí dehub.io nínú aṣàwákiri Phantom.",
+    "solanaNotSigned": "Kò sí ohun tí a so pọ̀",
+    "solanaLinked": "A ti so àpamọ́wọ́ Solana pọ̀",
+    "solanaLinkFailed": "A kò lè so àpamọ́wọ́ yẹn pọ̀",
+    "solanaUnlinked": "A ti yọ àpamọ́wọ́ Solana kúrò",
+    "solanaUnlinkFailed": "A kò lè yọ àpamọ́wọ́ yẹn kúrò"
   },
   "common": {
     "save": "Fipamọ́",

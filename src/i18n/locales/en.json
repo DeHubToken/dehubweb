@@ -497,7 +497,21 @@
     "emailSignInDone": "You can now sign in with this email",
     "emailSignInRemove": "Remove",
     "emailSignInRemoved": "Removed — this email can no longer sign you in",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "solanaWallet": "Solana wallet",
+    "solanaWalletHint": "Connect Phantom to receive tips and paid unlocks on Solana.",
+    "solanaConnect": "Connect",
+    "solanaDisconnect": "Disconnect",
+    "solanaCopy": "Copy Solana address",
+    "solanaCopyFailed": "Could not copy the address",
+    "solanaNeedsSignIn": "Sign in first",
+    "solanaNoPhantom": "Phantom not found",
+    "solanaNoPhantomHint": "Install the Phantom extension, or open dehub.io in the Phantom browser.",
+    "solanaNotSigned": "Nothing was connected",
+    "solanaLinked": "Solana wallet connected",
+    "solanaLinkFailed": "Could not connect that wallet",
+    "solanaUnlinked": "Solana wallet disconnected",
+    "solanaUnlinkFailed": "Could not disconnect that wallet"
   },
   "common": {
     "save": "Save",

@@ -501,7 +501,21 @@
     "emailSignInDone": "ตอนนี้คุณเข้าสู่ระบบด้วยอีเมลนี้ได้แล้ว",
     "emailSignInRemove": "นำออก",
     "emailSignInRemoved": "นำออกแล้ว — อีเมลนี้ใช้เข้าสู่ระบบไม่ได้อีกต่อไป",
-    "cancel": "ยกเลิก"
+    "cancel": "ยกเลิก",
+    "solanaWallet": "กระเป๋า Solana",
+    "solanaWalletHint": "เชื่อมต่อ Phantom เพื่อรับทิปและการปลดล็อกแบบชำระเงินบน Solana",
+    "solanaConnect": "เชื่อมต่อ",
+    "solanaDisconnect": "ยกเลิกการเชื่อมต่อ",
+    "solanaCopy": "คัดลอกที่อยู่ Solana",
+    "solanaCopyFailed": "ไม่สามารถคัดลอกที่อยู่ได้",
+    "solanaNeedsSignIn": "กรุณาลงชื่อเข้าใช้ก่อน",
+    "solanaNoPhantom": "ไม่พบ Phantom",
+    "solanaNoPhantomHint": "ติดตั้งส่วนขยาย Phantom หรือเปิด dehub.io ในเบราว์เซอร์ Phantom",
+    "solanaNotSigned": "ไม่มีอะไรเชื่อมต่อ",
+    "solanaLinked": "เชื่อมต่อกระเป๋า Solana แล้ว",
+    "solanaLinkFailed": "ไม่สามารถเชื่อมต่อกระเป๋านั้นได้",
+    "solanaUnlinked": "ยกเลิกการเชื่อมต่อกระเป๋า Solana แล้ว",
+    "solanaUnlinkFailed": "ไม่สามารถยกเลิกการเชื่อมต่อกระเป๋านั้นได้"
   },
   "common": {
     "save": "บันทึก",
@@ -4707,7 +4721,8 @@
       "failed": "ล้มเหลว",
       "emptyFeed": "เราไม่พบตอนใดๆในฟีดนั้น",
       "badFeed": "ลิงก์นั้นดูไม่เหมือนฟีดพอดแคสต์",
-      "tooMany": "นำเข้าได้สูงสุด 20 ตอนต่อครั้ง"
+      "tooMany": "นำเข้าได้สูงสุด 20 ตอนต่อครั้ง",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

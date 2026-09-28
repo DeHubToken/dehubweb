@@ -477,7 +477,21 @@
     "emailSignInDone": "अब अहाँ ई ईमेल से साइन इन कर सकऽ ही",
     "emailSignInRemove": "हटाऊँ",
     "emailSignInRemoved": "हटल — ई ईमेल अब अहाँ के साइन इन नै करा सकऽ हे",
-    "cancel": "रद्द"
+    "cancel": "रद्द",
+    "solanaWallet": "सोलाना वॉलेट",
+    "solanaWalletHint": "Solana पर टिप आउ पेड अनलॉक पावे ला Phantom जोड़हो।",
+    "solanaConnect": "कनेक्ट करें",
+    "solanaDisconnect": "डिस्कनेक्ट करें",
+    "solanaCopy": "सोलाना पता कॉपी करू",
+    "solanaCopyFailed": "पता नही, पता भी, पता भी बता दे",
+    "solanaNeedsSignIn": "पहिले साइन इन करहो",
+    "solanaNoPhantom": "Phantom नञ् मिलल",
+    "solanaNoPhantomHint": "Phantom एक्सटेंशन इंस्टॉल करहो, या dehub.io के Phantom ब्राउज़र में खोलहो।",
+    "solanaNotSigned": "कुछो नञ् जुड़ल",
+    "solanaLinked": "सोलाना वॉलेट जुड़ गेल",
+    "solanaLinkFailed": "ऊ वॉलेट नञ् जुड़ सकल",
+    "solanaUnlinked": "सोलाना वॉलेट हट गेल",
+    "solanaUnlinkFailed": "ऊ वॉलेट नञ् हट सकल"
   },
   "common": {
     "save": "सेव",
@@ -3270,7 +3284,11 @@
       "failed": "असफल रहलै",
       "emptyFeed": "येई मामला में, समाधान सूचीबद्ध ना कैल जा सकई छलो ।",
       "badFeed": "ई लिंक पॉडकास्ट फ़ीड जैसन ना लगई छई ।",
-      "tooMany": "एक से एक, एक सौ पाउंड तो, केवल रिश्तेदारों या परिचितों के साथ,"
+      "tooMany": "एक से एक, एक सौ पाउंड तो, केवल रिश्तेदारों या परिचितों के साथ,",
+      "episodes": "{{count}} गो एपिसोड",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "importSelected": "{{count}} गो एपिसोड इंपोर्ट करऽ",
+      "showBy": "{{author}} के"
     }
   },
   "banned": {

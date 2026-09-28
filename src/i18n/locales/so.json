@@ -483,7 +483,21 @@
     "emailSignInDone": "Hadda waxaad ku soo geli kartaa iimaylkan",
     "emailSignInRemove": "Ka saar",
     "emailSignInRemoved": "Waa la saaray — iimaylkan mar dambe kuma soo gelin karo",
-    "cancel": "Jooji"
+    "cancel": "Jooji",
+    "solanaWallet": "Boorsada Solana",
+    "solanaWalletHint": "Ku xidh Phantom si aad u hesho lacag-bixin iyo furitaanno lacag ah oo Solana ah.",
+    "solanaConnect": "Ku xir",
+    "solanaDisconnect": "Ka fur",
+    "solanaCopy": "Koobi cinwaanka Solana",
+    "solanaCopyFailed": "Ma nuquli karin cinwaanka",
+    "solanaNeedsSignIn": "Marka hore gal",
+    "solanaNoPhantom": "Phantom lama helin",
+    "solanaNoPhantomHint": "Ku rakib kordhinta Phantom, ama ku fur dehub.io biraawsarka Phantom.",
+    "solanaNotSigned": "Waxba lama xidhin",
+    "solanaLinked": "Boorsada Solana waa la xiray",
+    "solanaLinkFailed": "Boorsadaas lama xidhi karin",
+    "solanaUnlinked": "Boorsada Solana waa laga jaray",
+    "solanaUnlinkFailed": "Boorsadaas lagama goyn karin"
   },
   "common": {
     "save": "Kaydi",
@@ -3317,7 +3331,8 @@
       "emptyFeed": "Ma heli karno qayb ka mid ah cuntadaas.",
       "badFeed": "Link Tani uma muuqato sida quudinta podcast ah.",
       "tooMany": "Soo dejiso ilaa 20 qaybood hal mar."
-    }
+    },
+    "ownership": "Waxaan leeyahay qaab-dhismeedkan, ama waxaan haysaa ogolaanshaha qof-hayaha xuquuqda inuu daabaco DeHub-ka."
   },
   "banned": {
     "title": "Koontadaada waa la mamnuucay",

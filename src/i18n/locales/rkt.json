@@ -407,7 +407,21 @@
     "emailSignInDone": "এলা তোমরা এই ইমেল দিয়া সাইন ইন করির পাইমেন",
     "emailSignInRemove": "সরান",
     "emailSignInRemoved": "সরানো হইল — এই ইমেল দিয়া আর সাইন ইন করা যাবার নয়",
-    "cancel": "বাদ দাও"
+    "cancel": "বাদ দাও",
+    "solanaWallet": "সোলানা ওয়ালেট",
+    "solanaWalletHint": "Solana-ত টিপ আর পেইড আনলক পাবার বাদে Phantom জুড়েন।",
+    "solanaConnect": "সংযোগ করুন",
+    "solanaDisconnect": "ডিসকানেক্ট",
+    "solanaCopy": "সোলানা ঠিকানা কপি করো",
+    "solanaCopyFailed": "ঠিকানা কপি করা গেইল না",
+    "solanaNeedsSignIn": "আগোত সাইন ইন করেন",
+    "solanaNoPhantom": "Phantom পাওয়া গেইল না",
+    "solanaNoPhantomHint": "Phantom এক্সটেনশন ইনস্টল করেন, নাহয় Phantom ব্রাউজারত dehub.io খোলেন।",
+    "solanaNotSigned": "কিছুয়ে জুড়িল না",
+    "solanaLinked": "সোলানা ওয়ালেট জুড়ি গেইল",
+    "solanaLinkFailed": "ওই ওয়ালেট জুড়া গেইল না",
+    "solanaUnlinked": "সোলানা ওয়ালেট খুলি গেইল",
+    "solanaUnlinkFailed": "ওই ওয়ালেট খোলা গেইল না"
   },
   "common": {
     "save": "সেভ করো",
@@ -2529,7 +2543,23 @@
     "reviewDescriptionPlaceholder": "এই পোস্ট সম্পর্কে কিছু বলুন (ঐচ্ছিক)",
     "reviewLiveWarning": "সেই লিঙ্কটি একটি লাইভ স্ট্রিম। এটি শেষ না হওয়া পর্যন্ত অপেক্ষা করুন এবং পরিবর্তে রেকর্ডিং আমদানি করুন।",
     "reviewCancel": "বাতিল করুন",
-    "reviewConfirm": "আমদানি করুন"
+    "reviewConfirm": "আমদানি করুন",
+    "podcast": {
+      "alreadyImported": "আগোতে ইমপোর্ট হইছে",
+      "badFeed": "এই লিংকটা পডকাস্ট ফিডের নাখান দেখা যায় না।",
+      "done": "লাইনোত আছে",
+      "emptyFeed": "ওই ফিডোত কোনো এপিসোড পাওয়া গেইল না।",
+      "episodes": "{{count}}টা এপিসোড",
+      "feedUrlLabel": "পডকাস্ট RSS ফিডের URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "ফিড আনেন",
+      "fetching": "ফিড আনা হবার নাগছে…",
+      "importSelected": "{{count}}টা এপিসোড ইমপোর্ট করেন",
+      "importing": "ইমপোর্ট হবার নাগছে…",
+      "selectAll": "সগগুলা বাছেন",
+      "showBy": "{{author}}-এর",
+      "tooMany": "একবারে ২০টা পর্যন্ত এপিসোড ইমপোর্ট করেন।"
+    }
   },
   "banned": {
     "title": "আপনার অ্যাকাউন্ট নিষিদ্ধ করা হয়েছে",

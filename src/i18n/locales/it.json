@@ -497,7 +497,21 @@
     "emailSignInDone": "Ora puoi accedere con questa email",
     "emailSignInRemove": "Rimuovi",
     "emailSignInRemoved": "Rimossa — questa email non può più farti accedere",
-    "cancel": "Annulla"
+    "cancel": "Annulla",
+    "solanaWallet": "Wallet Solana",
+    "solanaWalletHint": "Collega Phantom per ricevere mance e sblocchi a pagamento su Solana.",
+    "solanaConnect": "Connetti",
+    "solanaDisconnect": "Disconnetti",
+    "solanaCopy": "Copia indirizzo Solana",
+    "solanaCopyFailed": "Impossibile copiare l'indirizzo",
+    "solanaNeedsSignIn": "Accedi prima",
+    "solanaNoPhantom": "Phantom non trovato",
+    "solanaNoPhantomHint": "Installa l'estensione Phantom oppure apri dehub.io nel browser di Phantom.",
+    "solanaNotSigned": "Non è stato collegato nulla",
+    "solanaLinked": "Wallet Solana collegato",
+    "solanaLinkFailed": "Impossibile collegare quel wallet",
+    "solanaUnlinked": "Wallet Solana scollegato",
+    "solanaUnlinkFailed": "Impossibile scollegare quel wallet"
   },
   "common": {
     "save": "Salva",

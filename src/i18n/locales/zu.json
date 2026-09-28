@@ -483,7 +483,21 @@
     "emailSignInDone": "Manje ungangena ngale imeyili",
     "emailSignInRemove": "Susa",
     "emailSignInRemoved": "Kususiwe — le imeyili ayisakwazi ukukungenisa",
-    "cancel": "Khansela"
+    "cancel": "Khansela",
+    "solanaWallet": "Isikhwama se-Solana",
+    "solanaWalletHint": "Xhuma i-Phantom ukuze uthole amathiphu nokuvula okukhokhelwayo ku-Solana.",
+    "solanaConnect": "Xhuma",
+    "solanaDisconnect": "Susa uxhumano",
+    "solanaCopy": "Kopisha ikheli le-Solana",
+    "solanaCopyFailed": "Ayikwazanga ukukopisha ikheli",
+    "solanaNeedsSignIn": "Ngena kuqala",
+    "solanaNoPhantom": "I-Phantom ayitholakalanga",
+    "solanaNoPhantomHint": "Faka isandiso se-Phantom, noma uvule i-dehub.io kusiphequluli se-Phantom.",
+    "solanaNotSigned": "Akukho okuxhunyiwe",
+    "solanaLinked": "Isikhwama se-Solana sixhunyiwe",
+    "solanaLinkFailed": "Asikwazanga ukuxhuma leso sikhwama",
+    "solanaUnlinked": "Isikhwama se-Solana sinqanyuliwe",
+    "solanaUnlinkFailed": "Asikwazanga ukunqamula leso sikhwama"
   },
   "common": {
     "save": "Gcina",

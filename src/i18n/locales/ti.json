@@ -477,7 +477,21 @@
     "emailSignInDone": "ሕጂ ብዚ ኢመይል ክትኣቱ ትኽእል ኢኻ",
     "emailSignInRemove": "ኣልግስ",
     "emailSignInRemoved": "ተኣልዩ — ብዚ ኢመይል ደጊም ክትኣቱ ኣይትኽእልን",
-    "cancel": "ሰርዝ"
+    "cancel": "ሰርዝ",
+    "solanaWallet": "ናይ Solana ቦርሳ",
+    "solanaWalletHint": "ኣብ Solana ገጸ በረኸትን ክፍሊት ዘለዎ ምኽፋትን ንምቕባል Phantom ኣራኽብ።",
+    "solanaConnect": "ርክብ",
+    "solanaDisconnect": "ምጥፋእ",
+    "solanaCopy": "ኣድራሻ Solana ቅዳሕ",
+    "solanaCopyFailed": "ኣድራሻኻ ክትቅዳዕ ኣይትኽእልን ኢኻ",
+    "solanaNeedsSignIn": "ቅድም እቶ",
+    "solanaNoPhantom": "Phantom ኣይተረኽበን",
+    "solanaNoPhantomHint": "ናይ Phantom መስፋሕቲ ጽዓን፣ ወይ ድማ dehub.io ኣብ Phantom መርበብ ክፈት።",
+    "solanaNotSigned": "ዋላ ሓንቲ ኣይተራኸበን",
+    "solanaLinked": "ናይ Solana ቦርሳ ተራኺቡ",
+    "solanaLinkFailed": "እቲ ቦርሳ ከራኽብ ኣይተኻእለን",
+    "solanaUnlinked": "ናይ Solana ቦርሳ ተፈልዩ",
+    "solanaUnlinkFailed": "እቲ ቦርሳ ክፈላሊ ኣይተኻእለን"
   },
   "common": {
     "save": "ዓቅብ",
@@ -3226,7 +3240,9 @@
       "failed": "ኣይተዓወተን",
       "emptyFeed": "ኣብዚ ምግቢ እዚ ገለ ፍጻመታት ክንረክብ ኣይንኽእልን ኢና ።",
       "badFeed": "ኣብ ፖድካስት መልክዕ እንተተረኽበ ኣይመስለንን ።",
-      "tooMany": "ኣብ ሓደ እዋን ክሳብ 20 ክፋላት ኣእቲኻ ።"
+      "tooMany": "ኣብ ሓደ እዋን ክሳብ 20 ክፋላት ኣእቲኻ ።",
+      "episodes": "{{count}} ክፍልታት",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

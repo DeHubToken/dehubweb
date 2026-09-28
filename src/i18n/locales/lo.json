@@ -481,7 +481,21 @@
     "emailSignInDone": "ຕອນນີ້ທ່ານເຂົ້າສູ່ລະບົບດ້ວຍອີເມວນີ້ໄດ້ແລ້ວ",
     "emailSignInRemove": "ເອົາອອກ",
     "emailSignInRemoved": "ເອົາອອກແລ້ວ — ອີເມວນີ້ເຂົ້າສູ່ລະບົບບໍ່ໄດ້ອີກ",
-    "cancel": "ຍົກເລີກ"
+    "cancel": "ຍົກເລີກ",
+    "solanaWallet": "ກະເປົາ Solana",
+    "solanaWalletHint": "ເຊື່ອມຕໍ່ Phantom ເພື່ອຮັບທິບ ແລະ ການປົດລັອກແບບເສຍເງິນໃນ Solana.",
+    "solanaConnect": "ເຊື່ອມຕໍ່",
+    "solanaDisconnect": "ຕັດການເຊື່ອມຕໍ່",
+    "solanaCopy": "ສຳເນົາທີ່ຢູ່ Solana",
+    "solanaCopyFailed": "ບໍ່ສາມາດສຳເນົາທີ່ຢູ່ໄດ້",
+    "solanaNeedsSignIn": "ກະລຸນາເຂົ້າສູ່ລະບົບກ່ອນ",
+    "solanaNoPhantom": "ບໍ່ພົບ Phantom",
+    "solanaNoPhantomHint": "ຕິດຕັ້ງສ່ວນຂະຫຍາຍ Phantom, ຫຼື ເປີດ dehub.io ໃນບຣາວເຊີ Phantom.",
+    "solanaNotSigned": "ບໍ່ມີຫຍັງເຊື່ອມຕໍ່",
+    "solanaLinked": "ເຊື່ອມຕໍ່ກະເປົາ Solana ແລ້ວ",
+    "solanaLinkFailed": "ບໍ່ສາມາດເຊື່ອມຕໍ່ກະເປົາເງິນນັ້ນໄດ້",
+    "solanaUnlinked": "ຕັດການເຊື່ອມຕໍ່ກະເປົາ Solana ແລ້ວ",
+    "solanaUnlinkFailed": "ບໍ່ສາມາດຕັດການເຊື່ອມຕໍ່ກະເປົາເງິນນັ້ນໄດ້"
   },
   "common": {
     "save": "ບັນທຶກ",
@@ -5094,7 +5108,9 @@
       "failed": "ລົ້ມເຫຼວ",
       "emptyFeed": "ພວກເຮົາບໍ່ສາມາດຊອກຫາບົດບັນທຶກໃດໆໃນອາຫານນັ້ນໄດ້.",
       "badFeed": "ຂ້ອຍບໍ່ໄດ້ກວດເບິ່ງວ່າມັນມີຢູ່ໃນຮູບແບບ podcast ໄດ້ຫຼືບໍ່.",
-      "tooMany": "ນໍາເຂົ້າເຖິງ 20 ຕອນໃນເວລາດຽວກັນ."
+      "tooMany": "ນໍາເຂົ້າເຖິງ 20 ຕອນໃນເວລາດຽວກັນ.",
+      "episodes": "{{count}} ຕອນ",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {
