@@ -35,6 +35,7 @@ import {
 import type { StageRadioStation, StageRadioStatus } from '@/lib/stage-radio';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import i18n from '@/i18n';
 import { useVoiceEffects } from '@/hooks/use-voice-effects';
 import { useStageCaptionPublisher } from '@/hooks/use-stage-captions';
 import type { VoiceEffectId } from '@/constants/voice-effects.constants';
@@ -209,6 +210,22 @@ export interface AudioInjectionSource {
 }
 
 const StageContext = createContext<StageContextType | null>(null);
+
+/** Stages auto-close after 30 silent minutes; a row older than this ended that way. */
+const INACTIVITY_END_MS = 29 * 60_000;
+function endedForInactivity(row: { last_speech_at?: string | null; started_at?: string | null }): boolean {
+  const last = row.last_speech_at || row.started_at;
+  return !!last && Date.now() - new Date(last).getTime() >= INACTIVITY_END_MS;
+}
+function toastInactivityEnd(title: string) {
+  toast.info(i18n.t('stages.autoEnd.title'), {
+    description: i18n.t('stages.autoEnd.description', { title }),
+    duration: 6000,
+  });
+}
+/** Agora level (0-100) above which the local mic counts as someone talking. */
+const SPEECH_LEVEL = 8;
+const SPEECH_TOUCH_MS = 60_000;
 
 // ─── Volume store ────────────────────────────────────────────────────────────
 // Agora's volume-indicator fires ~every 2s while in a stage. Keeping the level
@@ -621,6 +638,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const userRef = useRef(user);
   userRef.current = user;
   const myRoleRef = useRef(myRole);
+  const isMutedRef = useRef(isMuted);
+  isMutedRef.current = isMuted;
+  const currentSpaceIdRef = useRef<string | null>(null);
+  currentSpaceIdRef.current = currentSpace?.id ?? null;
+  /** Last time this client reported the local user speaking (throttle: once a minute). */
+  const lastSpeechTouchRef = useRef(0);
   const hasHandledStageEndRef = useRef(false);
   // Keep refs aligned before effects run (avoids host-only fetches seeing stale role on first mount).
   walletAddressRef.current = walletAddress;
@@ -1022,6 +1045,20 @@ export function StageProvider({ children }: { children: ReactNode }) {
           return;
         }
         const maxVol = Math.max(...volumes.map((v: any) => v.level || 0));
+        // Keep the stage alive while the local host/speaker is actually talking.
+        const role = myRoleRef.current;
+        if ((role === 'host' || role === 'speaker') && !isMutedRef.current) {
+          const local = volumes.find((v: any) => v.uid === 0 || v.uid === client.uid);
+          const spaceId = currentSpaceIdRef.current;
+          const now = Date.now();
+          if (local && (local.level || 0) >= SPEECH_LEVEL && spaceId && now - lastSpeechTouchRef.current >= SPEECH_TOUCH_MS) {
+            lastSpeechTouchRef.current = now;
+            void withWalletHeader(
+              supabase.rpc('touch_stage_speech' as never, { space_id: spaceId } as never) as never,
+              walletAddressRef.current,
+            );
+          }
+        }
         // Agora levels are 0-100, normalize to 0-1
         setStageVolumeLevel(maxVol / 100);
       });
@@ -1564,8 +1601,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'audio_spaces', filter: `id=eq.${guestSpace.id}` },
         (payload) => {
-          if ((payload.new as { status?: string })?.status === 'ended') {
-            toast.info('Stage ended', {
+          const row = payload.new as { status?: string; last_speech_at?: string | null; started_at?: string | null };
+          if (row?.status === 'ended') {
+            if (endedForInactivity(row)) toastInactivityEnd(guestSpace.title);
+            else toast.info('Stage ended', {
               description: `The host ended "${guestSpace.title}".`,
               duration: 6000,
             });
@@ -2340,7 +2379,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
           if (updated.status === 'ended') {
             if (hasHandledStageEndRef.current) return;
             hasHandledStageEndRef.current = true;
-            if (myRoleRef.current !== 'host') {
+            if (endedForInactivity(updated)) {
+              toastInactivityEnd(updated.title);
+            } else if (myRoleRef.current !== 'host') {
               // Named and given room to be read: the room vanishing off the
               // screen is the only other signal a listener gets.
               toast.info('Stage ended', {
