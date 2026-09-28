@@ -2468,7 +2468,11 @@
   },
   "stages": {
     "title": "Ses otaglary",
-    "alreadyCharged": "Siziň sanawly mukdaryňyz eýýäm muňa alyndy. Ýene-de synanyşyň — ikinji gezek pul tölemeýärsiňiz."
+    "alreadyCharged": "Siziň sanawly mukdaryňyz eýýäm muňa alyndy. Ýene-de synanyşyň — ikinji gezek pul tölemeýärsiňiz.",
+    "autoEnd": {
+      "title": "Öňki ýaly, bu işleriň ählisi işsizlik sebäpli tamamlanýar.",
+      "description": "Hiç kim \"{{title}}\" bilen 30 minut gürleşmedi, şol sebäpli ol ýapyldy."
+    }
   },
   "ads": {
     "priceUnavailable": "Sanawly mukdaryň bahasy ýok — gysga wagtdan soň ýene-de synanyşyň.",
@@ -2662,13 +2666,6 @@
     "transferGuarantee": "Siz tutuş hasaby alýarsyňyz — sap, ýazgylar, abonentler, sowgat taryhy we dereje hukugy. Satyjy öz gapysyny we onda näme bar bolsa, saklaýar. Göçürme diňe DeHub siziň nyşan tölegiňizi zynjyrdan okanyndan soň hereket edýär; eger kesilse, satyn almagy gaýtadan synanyşmak ony dowam etdirýär."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Saklamak bu köne sanly wagt bahaly planymyzy öň-sadyk bahasynda dollar bahalandyrylyşyna göçürýär.",
-    "tokenAmount": "{{amount}} sanly wagt",
-    "preListingTokenAmount": "Öň-sadyk sanly wagt mukdary",
-    "tokenCheckoutNotReady": "Sanly wagt abonentlik tölegi heniz taýyn däl — haýyş edýäris, gysga wagtdan soň täzeden synanyşyň",
-    "tokenQuoteUnavailable": "Göni sanly wagt sitata elýeterli däl",
-    "tokenEstimate": "≈ {{amount}} sanly wagt",
-    "tokenAmountUnavailable": "Sanly wagt mukdary elýeterli däl",
     "subscribersOnly": "Diňe ýazylanlar",
     "draft": "Görnüş",
     "subscribed": "Saýlan",
@@ -2747,6 +2744,13 @@
     "inactive": "Işleme",
     "daysLeft_one": "{{count}}d çep",
     "daysLeft_other": "{{count}}d çep",
+    "legacyPlanMigrates": "Saklamak bu köne sanly wagt bahaly planymyzy öň-sadyk bahasynda dollar bahalandyrylyşyna göçürýär.",
+    "tokenAmount": "{{amount}} sanly wagt",
+    "preListingTokenAmount": "Öň-sadyk sanly wagt mukdary",
+    "tokenCheckoutNotReady": "Sanly wagt abonentlik tölegi heniz taýyn däl — haýyş edýäris, gysga wagtdan soň täzeden synanyşyň",
+    "tokenQuoteUnavailable": "Göni sanly wagt sitata elýeterli däl",
+    "tokenEstimate": "≈ {{amount}} sanly wagt",
+    "tokenAmountUnavailable": "Sanly wagt mukdary elýeterli däl",
     "subscribedToast": "Saýlan",
     "confirmSubscribeTo": "{{plan}} meýilnamasyna {{price}} / {{duration}} üçin abuna boluň.",
     "atPreListingRate": "Sanawa girizilmezden öňki nyrhda {{amount}}",
@@ -4398,6 +4402,23 @@
     "transactionsPaused": "Token söwdasy togtadyldy",
     "transactionsPausedDesc": "DeHub token söwdasy wagtlaýynça zynjyryň üstünde togtadyldy. Ýene synanyşyň."
   },
+  "builder": {
+    "stakeForAllowance": "Gündelik gurluşyk tölegini artdyrmak üçin DeHub tokenlerini goýuň",
+    "buildInChat": "@assistant bilen şahsy habarlaryňyzda dörediň",
+    "landerTitle": "Bir soragyň jogabyny tapmak",
+    "landerSubtitle": "@Helpant-a habarlaryňyzda näme isleýändigiňizi aýt. Bu programy gurýar, ony gurýar we size her kes açyp biljek bir baglanyşygy iberýär. Ähli zady üýtgetmek üçin jogap beriň.",
+    "promptPlaceholder": "Siz islän ulagyňyzy ýazyň...",
+    "sendToAssistant": "@ kömekçisine habar beriň",
+    "example1": "Pomodoro wagtlaýyn gündelik çaryş bilen",
+    "example2": "Kalkülýutoryň kalkülýutory",
+    "example3": "Meniň iň gowy görýän filmim barada gürrüň beriň",
+    "step1Title": "Ony beýan ediň",
+    "step1Body": "Öz sözüň bilen, ulagyň näme etmelidigini aýt.",
+    "step2Title": "Bir minutda ýykyldy",
+    "step2Body": "@ Assistant ýazýar we ulanýar, soňra habarlaryňyza baglaýyş iberýär.",
+    "step3Title": "Öwrenmek ýa-da üýtgetmek",
+    "step3Body": "Kimdir biri baglanyşygy açyp biler. Ähli zady üýtgetmek üçin, gürrüňdeşlige jogap beriň."
+  },
   "raffle": {
     "noPurchase": "Satyn almak hökmany däl. Her çekilişde mugt girizme ýoly bar, bilet hödürlense-de, ol hiç haçan ýeke-täk ýol bolup bilmez."
   },
@@ -5167,22 +5188,5 @@
     "planRestricted": "Bu ulanyjy habar almak üçin abuna talap edýär.",
     "planTypeNotAllowed": "Bu awtoryň meýilnamasy bu görnüşli habara rugsat bermeýär.",
     "planMinTip": "Bu awtor üçin çaýpul iň azyndan {{amount}} DHB bolmaly."
-  },
-  "builder": {
-    "buildInChat": "@assistant bilen şahsy habarlaryňyzda dörediň",
-    "stakeForAllowance": "Gündelik gurluşyk tölegini artdyrmak üçin DeHub tokenlerini goýuň",
-    "landerTitle": "Bir soragyň jogabyny tapmak",
-    "landerSubtitle": "@Helpant-a habarlaryňyzda näme isleýändigiňizi aýt. Bu programy gurýar, ony gurýar we size her kes açyp biljek bir baglanyşygy iberýär. Ähli zady üýtgetmek üçin jogap beriň.",
-    "promptPlaceholder": "Siz islän ulagyňyzy ýazyň...",
-    "sendToAssistant": "@ kömekçisine habar beriň",
-    "example1": "Pomodoro wagtlaýyn gündelik çaryş bilen",
-    "example2": "Kalkülýutoryň kalkülýutory",
-    "example3": "Meniň iň gowy görýän filmim barada gürrüň beriň",
-    "step1Title": "Ony beýan ediň",
-    "step1Body": "Öz sözüň bilen, ulagyň näme etmelidigini aýt.",
-    "step2Title": "Bir minutda ýykyldy",
-    "step2Body": "@ Assistant ýazýar we ulanýar, soňra habarlaryňyza baglaýyş iberýär.",
-    "step3Title": "Öwrenmek ýa-da üýtgetmek",
-    "step3Body": "Kimdir biri baglanyşygy açyp biler. Ähli zady üýtgetmek üçin, gürrüňdeşlige jogap beriň."
   }
 }

@@ -2490,7 +2490,11 @@
   },
   "stages": {
     "title": "Утоқҳои аудиоӣ",
-    "alreadyCharged": "Токенҳои шумо аллакай барои ин гирифта шудаанд. Боз кӯшиш кунед — аз шумо дубора пул гирифта намешавад."
+    "alreadyCharged": "Токенҳои шумо аллакай барои ин гирифта шудаанд. Боз кӯшиш кунед — аз шумо дубора пул гирифта намешавад.",
+    "autoEnd": {
+      "title": "Марҳила бо сабаби ғайрифаъолшавӣ ба итмом расид",
+      "description": "Ҳеҷ кас дар \"{{title}}\" барои дақиқаҳои 30 гап назад, бинобар ин пӯшида шуд."
+    }
   },
   "ads": {
     "priceUnavailable": "Нархи токен дастрас нест — ба зудӣ боз кӯшиш кунед.",
@@ -2684,13 +2688,6 @@
     "transferGuarantee": "Шумо тамоми ҳисобро мегиред — дастак, постҳо, пайравон, таърихи маслиҳатҳо ва ҳуқуқҳои нишон. Фурӯшанда ҳамёни худро ва ҳама чизро дар он нигоҳ медорад. Интиқол танҳо пас аз он ки DeHub пардохти токени шуморо аз блокчейн хонда мегирад, идома меёбад; агар он қатъ карда шавад, такрори харид онро барқарор мекунад."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Захира ин нақшаи кӯҳнаи нархгузории токенро ба нархгузории долларӣ бо нархи пеш аз бақайдгирӣ муҳоҷир мекунад.",
-    "tokenAmount": "{{amount}} токенҳо",
-    "preListingTokenAmount": "Миқдори токенҳо пеш аз бақайдгирӣ",
-    "tokenCheckoutNotReady": "Пардохти обунаи токен омода нест — лутфан ба зудӣ дубора кӯшиш кунед",
-    "tokenQuoteUnavailable": "Нархи ҷории токен дастрас нест",
-    "tokenEstimate": "≈ {{amount}} токенҳо",
-    "tokenAmountUnavailable": "Миқдори токенҳо дастрас нест",
     "subscribersOnly": "Танҳо барои муштариён",
     "creatorKeepsPost": "{{creator}} ин паёмро барои муштариёни худ нигоҳ медорад.",
     "creatorNoPlans": "{{creator}} дар айни замон ягон обунаи кушода надорад.",
@@ -2771,6 +2768,13 @@
     "inactive": "Ғайрифаъол",
     "daysLeft_one": "{{count}} рӯз мондааст",
     "daysLeft_other": "{{count}} рӯз мондааст",
+    "legacyPlanMigrates": "Захира ин нақшаи кӯҳнаи нархгузории токенро ба нархгузории долларӣ бо нархи пеш аз бақайдгирӣ муҳоҷир мекунад.",
+    "tokenAmount": "{{amount}} токенҳо",
+    "preListingTokenAmount": "Миқдори токенҳо пеш аз бақайдгирӣ",
+    "tokenCheckoutNotReady": "Пардохти обунаи токен омода нест — лутфан ба зудӣ дубора кӯшиш кунед",
+    "tokenQuoteUnavailable": "Нархи ҷории токен дастрас нест",
+    "tokenEstimate": "≈ {{amount}} токенҳо",
+    "tokenAmountUnavailable": "Миқдори токенҳо дастрас нест",
     "subscribedToast": "Обуна шудааст",
     "confirmSubscribeTo": "Ба {{plan}} барои {{price}} / {{duration}} обуна шавед.",
     "atPreListingRate": "{{amount}} бо нархи пеш аз баровардан",
@@ -3299,13 +3303,13 @@
       "selectAll": "Pumili ng lahat",
       "alreadyImported": "Hindi nai-import",
       "ownership": "Nag-aari ako ang nilalaman na ito, o may pahintulot ng may-ari upang i-publish ito sa DeHub.",
+      "importSelected": "Ворид кардани {{count}} қисм",
       "importing": "Воридот...",
       "done": "Дар навбат",
       "failed": "Хатогӣ",
       "emptyFeed": "Hindi namin mahanap ang anumang mga episodes sa feed na ito.",
       "badFeed": "Ang link na ito ay hindi tulad ng feed ng podcast.",
-      "tooMany": "Mag-import ng hanggang 20 na mga episod sa isang oras.",
-      "importSelected": "Ворид кардани {{count}} қисм"
+      "tooMany": "Mag-import ng hanggang 20 na mga episod sa isang oras."
     }
   },
   "banned": {

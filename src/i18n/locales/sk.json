@@ -532,6 +532,7 @@
     "loadingMore": "Načítava sa viac...",
     "loadMore": "Načítať viac",
     "continue": "Pokračovať",
+    "undo": "Vrátiť späť",
     "error": "Chyba",
     "retry": "Skúsiť znova",
     "confirm": "Potvrdiť",
@@ -554,8 +555,7 @@
     "showMore": "Zobraziť viac",
     "showLess": "Zobraziť menej",
     "noResults": "Žiadne výsledky",
-    "comingSoon": "Čoskoro",
-    "undo": "Vrátiť späť"
+    "comingSoon": "Čoskoro"
   },
   "tip": {
     "title": "Poslať prepitné",
@@ -1364,6 +1364,7 @@
     "edit": "Upraviť",
     "forward": "Preposlať",
     "pin": "Pripnúť",
+    "online": "Online",
     "smartRepliesOff": "Navrhované odpovede sú vypnuté",
     "smartRepliesOffWhere": "Znova ich zapneš v Nastavenia → Správy.",
     "smartRepliesUndo": "Späť",
@@ -1381,15 +1382,14 @@
     "feeWarningTitle": "Správy stoja tokeny",
     "customTipMin": "Vlastný tip (min. {{amount}} tokenov)",
     "checkingTokenBalance": "Kontroluje sa váš zostatok tokenov...",
+    "deleteConversationFailed": "Konverzáciu sa nepodarilo odstrániť",
     "search": "Hľadať správy",
     "newMessage": "Nová správa",
     "noMessages": "Zatiaľ žiadne správy",
     "typeMessage": "Napíšte správu...",
     "send": "Odoslať",
-    "online": "Online",
     "offline": "Offline",
-    "lastSeen": "Naposledy videný",
-    "deleteConversationFailed": "Konverzáciu sa nepodarilo odstrániť"
+    "lastSeen": "Naposledy videný"
   },
   "music": {
     "all": "All",
@@ -2633,7 +2633,11 @@
   },
   "stages": {
     "title": "Audio miestnosti",
-    "alreadyCharged": "Vaše tokeny už boli na toto použité. Skúste to znova — druhýkrát vám nebude účtovaný poplatok."
+    "alreadyCharged": "Vaše tokeny už boli na toto použité. Skúste to znova — druhýkrát vám nebude účtovaný poplatok.",
+    "autoEnd": {
+      "title": "Fáza sa skončila z dôvodu nečinnosti",
+      "description": "Nikto nehovoril na „{{title}}“ 30 minút, takže bolo zatvorené."
+    }
   },
   "ads": {
     "priceUnavailable": "Cena tokenu nedostupná — skúste to čoskoro znova.",
@@ -2833,13 +2837,6 @@
     "noStories": "Zatiaľ žiadne príbehy"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Uloženie migruje tento plán s cenou v starých tokenoch na cenu v dolároch za predpredajnú cenu.",
-    "tokenAmount": "{{amount}} tokenov",
-    "preListingTokenAmount": "Predpredajná suma tokenov",
-    "tokenCheckoutNotReady": "Pokladňa predplatného tokenov nie je pripravená — skúste to znova čoskoro",
-    "tokenQuoteUnavailable": "Žiadna aktuálna ponuka tokenov",
-    "tokenEstimate": "≈ {{amount}} tokenov",
-    "tokenAmountUnavailable": "Suma tokenov nedostupná",
     "subscribersOnly": "Len pre odberateľov",
     "creatorKeepsPost": "{{creator}} uchováva tento príspevok pre svojich odberateľov.",
     "creatorNoPlans": "{{creator}} momentálne nemá otvorenú žiadnu predplatné.",
@@ -2920,6 +2917,13 @@
     "inactive": "Neaktívne",
     "daysLeft_one": "Zostáva{{count}}d",
     "daysLeft_other": "Zostáva{{count}}d",
+    "legacyPlanMigrates": "Uloženie migruje tento plán s cenou v starých tokenoch na cenu v dolároch za predpredajnú cenu.",
+    "tokenAmount": "{{amount}} tokenov",
+    "preListingTokenAmount": "Predpredajná suma tokenov",
+    "tokenCheckoutNotReady": "Pokladňa predplatného tokenov nie je pripravená — skúste to znova čoskoro",
+    "tokenQuoteUnavailable": "Žiadna aktuálna ponuka tokenov",
+    "tokenEstimate": "≈ {{amount}} tokenov",
+    "tokenAmountUnavailable": "Suma tokenov nedostupná",
     "subscribedToast": "Prihlásené",
     "confirmSubscribeTo": "Prihláste sa na odber {{plan}} na {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} pri sadzbe predbežnej ponuky",
@@ -4678,57 +4682,6 @@
       "tippedYou": "prepitné vo výške {{amount}} žetónov"
     }
   },
-  "post": {
-    "like": "Páči sa mi",
-    "comment": "Komentár",
-    "repost": "Zdieľať",
-    "share": "Zdieľať",
-    "bookmark": "Záložka",
-    "tip": "Tip",
-    "delete": "Vymazať",
-    "edit": "Upraviť",
-    "report": "Nahlásiť",
-    "translate": "Preložiť",
-    "pinned": "Pripnuté",
-    "replying": "Odpovedanie",
-    "reply": "Odpoveď",
-    "writeReply": "Napíšte odpoveď...",
-    "noComments": "Zatiaľ žiadne komentáre",
-    "viewMore": "Zobraziť viac",
-    "postDeleted": "Príspevok bol vymazaný",
-    "likes": "páči sa mi",
-    "comments": "komentáre",
-    "reposts": "zdieľania",
-    "shares": "zdieľania"
-  },
-  "create": {
-    "title": "Vytvoriť príspevok",
-    "placeholder": "Čo máte na mysli?",
-    "post": "Publikovať",
-    "addImage": "Pridať obrázok",
-    "addVideo": "Pridať video",
-    "addGif": "Pridať GIF",
-    "addPoll": "Pridať anketu",
-    "addLocation": "Pridať polohu",
-    "visibility": "Viditeľnosť",
-    "everyone": "Každý",
-    "followers": "Sledovatelia",
-    "subscribers": "Predplatitelia",
-    "mentioned": "Spomenutí"
-  },
-  "featureRequests": {
-    "title": "Požiadavky na funkcie",
-    "submit": "Odoslať požiadavku",
-    "vote": "Hlasovať",
-    "status": "Stav",
-    "category": "Kategória",
-    "description": "Popis",
-    "comments": "Komentáre",
-    "planned": "Plánované",
-    "inProgress": "V realizácii",
-    "completed": "Dokončené",
-    "underReview": "V recenzii"
-  },
   "emojiPicker": {
     "tabEmoji": "Emoji",
     "tabGif": "GIF",
@@ -5459,5 +5412,56 @@
     "planRestricted": "Tento používateľ vyžaduje predplatné na prijímanie správ.",
     "planTypeNotAllowed": "Plán tohto tvorcu nepovoľuje tento typ správy.",
     "planMinTip": "Prepitné pre tohto tvorcu musí byť aspoň {{amount}} DHB."
+  },
+  "post": {
+    "like": "Páči sa mi",
+    "comment": "Komentár",
+    "repost": "Zdieľať",
+    "share": "Zdieľať",
+    "bookmark": "Záložka",
+    "tip": "Tip",
+    "delete": "Vymazať",
+    "edit": "Upraviť",
+    "report": "Nahlásiť",
+    "translate": "Preložiť",
+    "pinned": "Pripnuté",
+    "replying": "Odpovedanie",
+    "reply": "Odpoveď",
+    "writeReply": "Napíšte odpoveď...",
+    "noComments": "Zatiaľ žiadne komentáre",
+    "viewMore": "Zobraziť viac",
+    "postDeleted": "Príspevok bol vymazaný",
+    "likes": "páči sa mi",
+    "comments": "komentáre",
+    "reposts": "zdieľania",
+    "shares": "zdieľania"
+  },
+  "create": {
+    "title": "Vytvoriť príspevok",
+    "placeholder": "Čo máte na mysli?",
+    "post": "Publikovať",
+    "addImage": "Pridať obrázok",
+    "addVideo": "Pridať video",
+    "addGif": "Pridať GIF",
+    "addPoll": "Pridať anketu",
+    "addLocation": "Pridať polohu",
+    "visibility": "Viditeľnosť",
+    "everyone": "Každý",
+    "followers": "Sledovatelia",
+    "subscribers": "Predplatitelia",
+    "mentioned": "Spomenutí"
+  },
+  "featureRequests": {
+    "title": "Požiadavky na funkcie",
+    "submit": "Odoslať požiadavku",
+    "vote": "Hlasovať",
+    "status": "Stav",
+    "category": "Kategória",
+    "description": "Popis",
+    "comments": "Komentáre",
+    "planned": "Plánované",
+    "inProgress": "V realizácii",
+    "completed": "Dokončené",
+    "underReview": "V recenzii"
   }
 }

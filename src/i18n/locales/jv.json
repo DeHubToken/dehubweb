@@ -2490,7 +2490,11 @@
   },
   "stages": {
     "title": "Ruang swara",
-    "alreadyCharged": "Token sampeyan wis dijupuk kanggo iki. Coba maneh — sampeyan ora bakal dikenani biaya kaping pindho."
+    "alreadyCharged": "Token sampeyan wis dijupuk kanggo iki. Coba maneh — sampeyan ora bakal dikenani biaya kaping pindho.",
+    "autoEnd": {
+      "title": "Panggung rampung amarga ora aktif",
+      "description": "Ora ana sing ngomong ing \"{{title}}\" suwene 30 menit, mula ditutup."
+    }
   },
   "ads": {
     "priceUnavailable": "Regane token ora kasedhiya — coba maneh sedhela.",
@@ -2684,13 +2688,6 @@
     "transferGuarantee": "Kowe entuk akun kabeh — gagang, kiriman, pengikut, riwayat tip, lan hak lencana. Penjual nyimpen dompet lan isine. Transfer mlaku sawise DeHub maca pembayaran tokenmu maneh saka rantai; yen keganggu, nyoba maneh tuku bakal nerusake."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Ngirit migrasi rencana sing regane token warisan iki menyang rega dolar kanthi rega pra-listing.",
-    "tokenAmount": "{{amount}} token",
-    "preListingTokenAmount": "Jumlah token pra-listing",
-    "tokenCheckoutNotReady": "Checkout langganan token durung siyap — coba maneh mengko",
-    "tokenQuoteUnavailable": "Kutipan token langsung ora kasedhiya",
-    "tokenEstimate": "≈ {{amount}} token",
-    "tokenAmountUnavailable": "Jumlah token ora kasedhiya",
     "subscribersOnly": "Subscribers only",
     "draft": "Draft",
     "subscribed": "Subscribed",
@@ -2765,6 +2762,13 @@
     "inactive": "Ora Aktif",
     "daysLeft_one": "{{count}}d tinggal",
     "daysLeft_other": "{{count}}d tinggal",
+    "legacyPlanMigrates": "Ngirit migrasi rencana sing regane token warisan iki menyang rega dolar kanthi rega pra-listing.",
+    "tokenAmount": "{{amount}} token",
+    "preListingTokenAmount": "Jumlah token pra-listing",
+    "tokenCheckoutNotReady": "Checkout langganan token durung siyap — coba maneh mengko",
+    "tokenQuoteUnavailable": "Kutipan token langsung ora kasedhiya",
+    "tokenEstimate": "≈ {{amount}} token",
+    "tokenAmountUnavailable": "Jumlah token ora kasedhiya",
     "subscribedToast": "Langganan",
     "confirmSubscribeTo": "Langganan {{plan}} kanggo {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} ing tarif pra-pendaftaran",

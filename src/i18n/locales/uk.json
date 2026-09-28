@@ -528,6 +528,7 @@
     "loadingMore": "Завантажуємо ще...",
     "loadMore": "Завантажити ще",
     "continue": "Продовжити",
+    "undo": "Скасувати",
     "allRightsReserved": "Всі права захищені",
     "noData": "Немає даних для відображення",
     "yes": "Так",
@@ -891,8 +892,7 @@
     "guests": "Гості",
     "anonymousUsers": "Анонімні користувачі",
     "registered": "Зареєстровано",
-    "unregistered": "Незареєстровано",
-    "undo": "Скасувати"
+    "unregistered": "Незареєстровано"
   },
   "tip": {
     "title": "Надіслати чайові",
@@ -3007,7 +3007,11 @@
     "sampleReady": "Зразок готовий.",
     "discardRecording": "Відкинути запис",
     "settingUpVoice": "Налаштування вашого голосу...",
-    "useThisVoice": "Використовувати цей голос"
+    "useThisVoice": "Використовувати цей голос",
+    "autoEnd": {
+      "title": "Етап завершено через відсутність активності",
+      "description": "Протягом 30 хвилин ніхто не розмовляв із \"{{title}}\", тому він був закритий."
+    }
   },
   "ads": {
     "seoTitle": "Менеджер оголошень | DeHub",
@@ -5213,6 +5217,7 @@
     "podcast": {
       "tab": "Подкаст",
       "feedUrlLabel": "URL-адреса RSS-каналу подкасту",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Отримати корм",
       "fetching": "Отримання подачі…",
       "showBy": "Автор:{{author}}",
@@ -5226,8 +5231,7 @@
       "failed": "Помилка",
       "emptyFeed": "Не вдалося знайти жодного епізоду в цій стрічці.",
       "badFeed": "Це посилання не схоже на стрічку подкастів.",
-      "tooMany": "Імпортувати до 20 серій одночасно.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "Імпортувати до 20 серій одночасно."
     }
   },
   "banned": {
@@ -6510,64 +6514,6 @@
       "tippedYou": "чайові: {{amount}} токенів"
     }
   },
-  "pages": {
-    "home": {
-      "title": "Головна",
-      "description": "Опис головної сторінки"
-    },
-    "explore": {
-      "title": "Огляд",
-      "description": "Опис сторінки огляду"
-    },
-    "notifications": {
-      "title": "Сповіщення",
-      "description": "Опис сторінки сповіщень"
-    },
-    "messages": {
-      "encrypted": "Наскрізне шифрування",
-      "encryptionOff": "Шифрування на цьому пристрої вимкнено",
-      "encryptionTurnOn": "Увімкнути",
-      "cannotDecrypt": "Зашифроване повідомлення — не можна відкрити на цьому пристрої",
-      "title": "Повідомлення",
-      "description": "Опис сторінки повідомлень"
-    },
-    "profile": {
-      "title": "Профіль",
-      "description": "Опис сторінки профілю"
-    },
-    "settings": {
-      "title": "Налаштування",
-      "description": "Опис сторінки налаштувань"
-    },
-    "blog": {
-      "title": "Блог",
-      "description": "Опис сторінки блогу"
-    },
-    "careers": {
-      "title": "Вакансії",
-      "description": "Опис сторінки вакансій"
-    },
-    "glossary": {
-      "title": "Глосарій",
-      "description": "Опис сторінки глосарію"
-    }
-  },
-  "components": {
-    "navbar": {
-      "home": "Головна",
-      "explore": "Огляд",
-      "notifications": "Сповіщення",
-      "messages": "Повідомлення",
-      "profile": "Профіль",
-      "settings": "Налаштування",
-      "blog": "Блог",
-      "careers": "Вакансії",
-      "glossary": "Глосарій"
-    },
-    "footer": {
-      "allRightsReserved": "Всі права захищені"
-    }
-  },
   "emojiPicker": {
     "tabEmoji": "Емодзі",
     "tabGif": "GIF",
@@ -7298,5 +7244,63 @@
     "planRestricted": "Цей користувач приймає повідомлення лише за підпискою.",
     "planTypeNotAllowed": "План цього автора не дозволяє такий тип повідомлень.",
     "planMinTip": "Чайові для цього автора мають бути не менше {{amount}} DHB."
+  },
+  "pages": {
+    "home": {
+      "title": "Головна",
+      "description": "Опис головної сторінки"
+    },
+    "explore": {
+      "title": "Огляд",
+      "description": "Опис сторінки огляду"
+    },
+    "notifications": {
+      "title": "Сповіщення",
+      "description": "Опис сторінки сповіщень"
+    },
+    "messages": {
+      "encrypted": "Наскрізне шифрування",
+      "encryptionOff": "Шифрування на цьому пристрої вимкнено",
+      "encryptionTurnOn": "Увімкнути",
+      "cannotDecrypt": "Зашифроване повідомлення — не можна відкрити на цьому пристрої",
+      "title": "Повідомлення",
+      "description": "Опис сторінки повідомлень"
+    },
+    "profile": {
+      "title": "Профіль",
+      "description": "Опис сторінки профілю"
+    },
+    "settings": {
+      "title": "Налаштування",
+      "description": "Опис сторінки налаштувань"
+    },
+    "blog": {
+      "title": "Блог",
+      "description": "Опис сторінки блогу"
+    },
+    "careers": {
+      "title": "Вакансії",
+      "description": "Опис сторінки вакансій"
+    },
+    "glossary": {
+      "title": "Глосарій",
+      "description": "Опис сторінки глосарію"
+    }
+  },
+  "components": {
+    "navbar": {
+      "home": "Головна",
+      "explore": "Огляд",
+      "notifications": "Сповіщення",
+      "messages": "Повідомлення",
+      "profile": "Профіль",
+      "settings": "Налаштування",
+      "blog": "Блог",
+      "careers": "Вакансії",
+      "glossary": "Глосарій"
+    },
+    "footer": {
+      "allRightsReserved": "Всі права захищені"
+    }
   }
 }

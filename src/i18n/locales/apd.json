@@ -2439,7 +2439,11 @@
   },
   "stages": {
     "title": "الغرف الصوتية",
-    "alreadyCharged": "توكنزك تم أخذها بالفعل لهذه العملية. حاول تاني — ما حتُخصم منك مرة تانية."
+    "alreadyCharged": "توكنزك تم أخذها بالفعل لهذه العملية. حاول تاني — ما حتُخصم منك مرة تانية.",
+    "autoEnd": {
+      "title": "انتهت الجلسة لعدم النشاط",
+      "description": "ما اتكلم زول في \"{{title}}\" لمدة 30 دقيقة، عشان كدا اتقفلت."
+    }
   },
   "ads": {
     "priceUnavailable": "سعر التوكنز غير متاح — حاول تاني بعد شوية.",
@@ -2633,13 +2637,6 @@
     "transferGuarantee": "تحصل على الحساب بالكامل — المقبض، المنشورات، المتابعون، سجل الإكراميات، وحقوق الشارات. يحتفظ البائع بمحفظته وكل ما فيها. يتم التحويل فقط بعد أن يقرأ DeHub دفعة التوكنز الخاصة بك مرة أخرى من السلسلة؛ إذا تمت مقاطعته، فإن إعادة محاولة الشراء تستأنفها."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "الهجرة التوفيرية لهذا المخطط القديم المسعر بالتوكن إلى تسعير الدولار بالسعر قبل الإدراج.",
-    "tokenAmount": "{{amount}} توكن",
-    "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
-    "tokenCheckoutNotReady": "نافذة دفع توكن الاشتراك غير جاهزة - يرجى المحاولة مرة أخرى قريبًا",
-    "tokenQuoteUnavailable": "اقتباس التوكن المباشر غير متاح",
-    "tokenEstimate": "≈ {{amount}} توكن",
-    "tokenAmountUnavailable": "مبلغ التوكن غير متاح",
     "subscribersOnly": "للمشتركين فقط",
     "creatorKeepsPost": "{{creator}} يحتفظ بهذا المنشور لمشتركيه.",
     "creatorNoPlans": "{{creator}} لا يوجد لديه اشتراك مفتوح حاليًا.",
@@ -2720,6 +2717,13 @@
     "inactive": "غير نشط",
     "daysLeft_one": "{{count}}d يسار",
     "daysLeft_other": "{{count}}d يسار",
+    "legacyPlanMigrates": "الهجرة التوفيرية لهذا المخطط القديم المسعر بالتوكن إلى تسعير الدولار بالسعر قبل الإدراج.",
+    "tokenAmount": "{{amount}} توكن",
+    "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
+    "tokenCheckoutNotReady": "نافذة دفع توكن الاشتراك غير جاهزة - يرجى المحاولة مرة أخرى قريبًا",
+    "tokenQuoteUnavailable": "اقتباس التوكن المباشر غير متاح",
+    "tokenEstimate": "≈ {{amount}} توكن",
+    "tokenAmountUnavailable": "مبلغ التوكن غير متاح",
     "subscribedToast": "مشترك",
     "confirmSubscribeTo": "اشترك في {{plan}} عشان {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} بمعدل ما قبل القوائم",
@@ -3245,6 +3249,7 @@
     "podcast": {
       "tab": "بودكاست",
       "feedUrlLabel": "رابط تغذية البودكاست RSS",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "جلب التغذية",
       "fetching": "جاري جلب التغذية...",
       "showBy": "بواسطة {{author}}",
@@ -3258,8 +3263,7 @@
       "failed": "فشل",
       "emptyFeed": "لم نتمكن من العثور على أي حلقات في هذه التغذية.",
       "badFeed": "هذا الرابط لا يبدو أنه تغذية بودكاست.",
-      "tooMany": "استيراد ما يصل إلى 20 حلقة في المرة الواحدة.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "استيراد ما يصل إلى 20 حلقة في المرة الواحدة."
     }
   },
   "banned": {

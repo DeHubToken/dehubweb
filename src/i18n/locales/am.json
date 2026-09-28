@@ -2491,7 +2491,11 @@
   },
   "stages": {
     "title": "የድምፅ ክፍሎች",
-    "alreadyCharged": "ቶከኖችዎ ለዚህ ቀድሞውኑ ተወስደዋል። እንደገና ይሞክሩ — ሁለተኛ ጊዜ አይከፍሉም።"
+    "alreadyCharged": "ቶከኖችዎ ለዚህ ቀድሞውኑ ተወስደዋል። እንደገና ይሞክሩ — ሁለተኛ ጊዜ አይከፍሉም።",
+    "autoEnd": {
+      "title": "እንቅስቃሴ ባለማድረግ ምክንያት ደረጃው አብቅቷል",
+      "description": "ለ 30 ደቂቃዎች በ \"{{title}}\" ላይ ማንም አልተናገረም ፣ ስለሆነም ተዘግቷል ።"
+    }
   },
   "ads": {
     "priceUnavailable": "የቶከን ዋጋ አይገኝም — በቅርቡ እንደገና ይሞክሩ።",
@@ -2684,13 +2688,6 @@
     "transferGuarantee": "ሙሉውን አካውንት ያገኛሉ — እጀታ፣ ልጥፎች፣ ተከታዮች፣ የጠቃሚ ምክር ታሪክ እና የባጅ መብቶች። ሻጩ የኪስ ቦርሳውን እና በውስጡ ያለውን ሁሉ ይይዛል። ማስተላለፉ DeHub የቶከን ክፍያዎን ከሰንሰለቱ ሲያነብ ብቻ ነው የሚሰራው፤ ከተቋረጠ፣ ግዢውን እንደገና መሞከር ይቀጥላል።"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "ማስቀመጥ ይህንን የቆየ የቶከን-ዋጋ እቅድ በቅድመ-ዝርዝር ዋጋ ወደ ዶላር ዋጋ ያሸጋግራል።",
-    "tokenAmount": "{{amount}} ቶከኖች",
-    "preListingTokenAmount": "የቅድመ-ዝርዝር ቶከን መጠን",
-    "tokenCheckoutNotReady": "የቶከን የደንበኝነት ምዝገባ ክፍያ ዝግጁ አይደለም — እባክዎን በቅርቡ እንደገና ይሞክሩ",
-    "tokenQuoteUnavailable": "የቀጥታ ቶከን ጥቅስ አይገኝም",
-    "tokenEstimate": "≈ {{amount}} ቶከኖች",
-    "tokenAmountUnavailable": "የቶከን መጠን አይገኝም",
     "subscribersOnly": "ለደንበኞች ብቻ",
     "creatorKeepsPost": "{{creator}} ይህን ጽሁፍ ለደንበኞቹ ያስቀምጣል።",
     "creatorNoPlans": "{{creator}} በአሁኑ ጊዜ ክፍት የደንበኝነት ምዝገባ የለውም።",
@@ -2771,6 +2768,13 @@
     "inactive": "ተሰናክሏል",
     "daysLeft_one": "{{count}} ቀናት ቀርተዋል",
     "daysLeft_other": "{{count}} ቀናት ቀርተዋል",
+    "legacyPlanMigrates": "ማስቀመጥ ይህንን የቆየ የቶከን-ዋጋ እቅድ በቅድመ-ዝርዝር ዋጋ ወደ ዶላር ዋጋ ያሸጋግራል።",
+    "tokenAmount": "{{amount}} ቶከኖች",
+    "preListingTokenAmount": "የቅድመ-ዝርዝር ቶከን መጠን",
+    "tokenCheckoutNotReady": "የቶከን የደንበኝነት ምዝገባ ክፍያ ዝግጁ አይደለም — እባክዎን በቅርቡ እንደገና ይሞክሩ",
+    "tokenQuoteUnavailable": "የቀጥታ ቶከን ጥቅስ አይገኝም",
+    "tokenEstimate": "≈ {{amount}} ቶከኖች",
+    "tokenAmountUnavailable": "የቶከን መጠን አይገኝም",
     "subscribedToast": "ተመዝግቧል",
     "confirmSubscribeTo": "ለ {{price}} / {{duration}} ለ {{plan}} ይመዝገቡ።",
     "atPreListingRate": "በቅድመ-ዝርዝር ዋጋ በ {{amount}}",
@@ -3204,6 +3208,7 @@
     "podcast": {
       "tab": "ፖድካስት",
       "feedUrlLabel": "ፖድካስት RSS ምግብ ዩአርኤል",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Fetch ምግብ",
       "fetching": "የምግብ አዘገጃጀት...",
       "showBy": "በ {{author}}",
@@ -3213,12 +3218,11 @@
       "ownership": "ይህንን ይዘት ባለቤት ነኝ ፣ ወይም በ DeHub ላይ ለማተም የመብቱ ባለቤት ፈቃድ አለኝ ።",
       "importSelected": "አስመጣ {{count}} episodes",
       "importing": "በማስመጣት ላይ...",
+      "done": "ተሰልፏል",
       "failed": "አልተሳካም",
       "emptyFeed": "በዚያ ምግብ ውስጥ ምንም ክፍሎችን ማግኘት አልቻልንም ።",
       "badFeed": "ያ አገናኝ የፖድካስት ምግብ አይመስልም ።",
-      "tooMany": "በአንድ ጊዜ እስከ 20 ክፍሎች ያስመጡ ።",
-      "done": "ተሰልፏል",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "በአንድ ጊዜ እስከ 20 ክፍሎች ያስመጡ ።"
     }
   },
   "banned": {

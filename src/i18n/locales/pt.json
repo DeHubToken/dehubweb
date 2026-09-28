@@ -3145,7 +3145,11 @@
     "sampleReady": "Amostra pronta.",
     "discardRecording": "Descartar gravação",
     "settingUpVoice": "Configurando sua voz...",
-    "useThisVoice": "Use esta voz"
+    "useThisVoice": "Use esta voz",
+    "autoEnd": {
+      "title": "Etapa encerrada devido a inatividade",
+      "description": "Ninguém falou em \"{{title}}\" durante 30 minutos, por isso foi encerrado."
+    }
   },
   "ads": {
     "seoTitle": "Gerenciador de Anúncios | DeHub",

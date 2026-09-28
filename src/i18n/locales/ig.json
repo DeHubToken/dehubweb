@@ -2472,7 +2472,11 @@
   },
   "stages": {
     "title": "Ọnụ ụlọ olu",
-    "alreadyCharged": "Ewerela akara gị maka nke a. Nwaa ọzọ - agaghị akwụ gị ụgwọ ugboro abụọ."
+    "alreadyCharged": "Ewerela akara gị maka nke a. Nwaa ọzọ - agaghị akwụ gị ụgwọ ugboro abụọ.",
+    "autoEnd": {
+      "title": "Stage biri ruru ka inactivity",
+      "description": "Ọ dịghị onye kwuru okwu na \"{{title}}\" maka nkeji 30, ya mere e mechiri ya."
+    }
   },
   "ads": {
     "priceUnavailable": "Ọnụ ahịa akara adịghị - nwaa ọzọ n'oge na-adịghị anya.",
@@ -2666,13 +2670,6 @@
     "transferGuarantee": "Ị ga-enweta akaụntụ ahụ dum — aka ahịa, posts, ndị na-eso ụzọ, akụkọ ndụ ndụ na ikike badge. Onye na-ere ere na-edobe akpa ego ya na ihe niile dị na ya. Mbufe ahụ na-agba naanị mgbe DeHub gụchara ịkwụ ụgwọ akara gị laghachi na yinye; ọ bụrụ na emebi ya, ịnwale ịzụta ọzọ na-eweghachi ya."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Nchekwa na-ebufe atụmatụ a nke tokenịị ochie na-agụta ego na dollar na ọnụahịa tupu ndepụta.",
-    "tokenAmount": "{{amount}} tokenịị",
-    "preListingTokenAmount": "Ego tokenịị tupu ndepụta",
-    "tokenCheckoutNotReady": "Ebe ịzụrụ ndebanye aha tokenịị adịghị njikere — biko nwaa ọzọ n'oge na-adịghị anya",
-    "tokenQuoteUnavailable": "Akwụkwọ ọnụahịa tokenịị ndụ adịghị",
-    "tokenEstimate": "≈ {{amount}} tokenịị",
-    "tokenAmountUnavailable": "Ego tokenịị adịghị",
     "subscribersOnly": "Naanị ndị debanyere",
     "creatorKeepsPost": "{{creator}} na-echekwa post a maka ndị debanyere ha.",
     "creatorNoPlans": "{{creator}} enweghị ndebanye aha mepere ugbu a.",
@@ -2753,6 +2750,13 @@
     "inactive": "Na-arụghị ọrụ",
     "daysLeft_one": "{{count}}d ekpe",
     "daysLeft_other": "{{count}}d ekpe",
+    "legacyPlanMigrates": "Nchekwa na-ebufe atụmatụ a nke tokenịị ochie na-agụta ego na dollar na ọnụahịa tupu ndepụta.",
+    "tokenAmount": "{{amount}} tokenịị",
+    "preListingTokenAmount": "Ego tokenịị tupu ndepụta",
+    "tokenCheckoutNotReady": "Ebe ịzụrụ ndebanye aha tokenịị adịghị njikere — biko nwaa ọzọ n'oge na-adịghị anya",
+    "tokenQuoteUnavailable": "Akwụkwọ ọnụahịa tokenịị ndụ adịghị",
+    "tokenEstimate": "≈ {{amount}} tokenịị",
+    "tokenAmountUnavailable": "Ego tokenịị adịghị",
     "subscribedToast": "Debanyere",
     "confirmSubscribeTo": "Denye aha na {{plan}} maka {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} na tupu-ndepụta ọnụego",

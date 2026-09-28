@@ -2485,7 +2485,11 @@
   },
   "stages": {
     "title": "အသံခန်းများ",
-    "alreadyCharged": "သင့်တိုကင်များကို ဤအတွက် ရယူပြီးပါပြီ။ ထပ်မံကြိုးစားပါ — သင့်ထံ ဒုတိယအကြိမ် မယူပါ။"
+    "alreadyCharged": "သင့်တိုကင်များကို ဤအတွက် ရယူပြီးပါပြီ။ ထပ်မံကြိုးစားပါ — သင့်ထံ ဒုတိယအကြိမ် မယူပါ။",
+    "autoEnd": {
+      "title": "သက်ဝင်မှုမရှိခြင်းကြောင့် အဆင့်အဆုံးသတ်ခဲ့သည်",
+      "description": "အဘယ်သူမျှမ \"{{title}}\" အပေါ် 30 မိနစ်ကြာစကားပြော, ဒါကြောင့်ပိတ်ထားခဲ့သည် ။"
+    }
   },
   "ads": {
     "priceUnavailable": "တိုကင်စျေးနှုန်း မရရှိနိုင်ပါ — မကြာမီ ထပ်မံကြိုးစားပါ။",
@@ -2686,13 +2690,6 @@
     "loginDescription": "ပုံပြင်များကြည့်ရှုရန်နှင့် ဖန်တီးရန် ဝင်ရောက်ပါ။"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "သိမ်းဆည်းခြင်းသည် ဤအမွေအနှစ် တိုကင်-စျေးနှုန်းဖြင့် အစီအစဉ်ကို ကြို-စာရင်းသွင်းနှုန်းဖြင့် ဒေါ်လာစျေးနှုန်းသို့ ပြောင်းရွှေ့ပေးပါသည်။",
-    "tokenAmount": "{{amount}} တိုကင်များ",
-    "preListingTokenAmount": "ကြို-စာရင်းသွင်း တိုကင်ပမာဏ",
-    "tokenCheckoutNotReady": "တိုကင် subscription checkout အဆင်သင့်မဖြစ်သေးပါ — မကြာမီ ပြန်လည်ကြိုးစားပါ။",
-    "tokenQuoteUnavailable": "Live token quote မရရှိနိုင်ပါ။",
-    "tokenEstimate": "≈ {{amount}} တိုကင်များ",
-    "tokenAmountUnavailable": "Token ပမာဏ မရရှိနိုင်ပါ။",
     "subscribersOnly": "စာရင်းသွင်းသူများအတွက်သာ",
     "creatorKeepsPost": "{{creator}} က ဤပို့စ်ကို ၎င်း၏ စာရင်းသွင်းသူများအတွက် သိမ်းဆည်းထားသည်။",
     "creatorNoPlans": "{{creator}} သည် ယခုအချိန်တွင် စာရင်းသွင်းမှု ဖွင့်လှစ်ထားခြင်း မရှိပါ။",
@@ -2773,6 +2770,13 @@
     "inactive": "မလှုပ်ရှားပါ",
     "daysLeft_one": "{{count}} ရက် ကျန်ရှိနေသည်",
     "daysLeft_other": "{{count}} ရက် ကျန်ရှိနေသည်",
+    "legacyPlanMigrates": "သိမ်းဆည်းခြင်းသည် ဤအမွေအနှစ် တိုကင်-စျေးနှုန်းဖြင့် အစီအစဉ်ကို ကြို-စာရင်းသွင်းနှုန်းဖြင့် ဒေါ်လာစျေးနှုန်းသို့ ပြောင်းရွှေ့ပေးပါသည်။",
+    "tokenAmount": "{{amount}} တိုကင်များ",
+    "preListingTokenAmount": "ကြို-စာရင်းသွင်း တိုကင်ပမာဏ",
+    "tokenCheckoutNotReady": "တိုကင် subscription checkout အဆင်သင့်မဖြစ်သေးပါ — မကြာမီ ပြန်လည်ကြိုးစားပါ။",
+    "tokenQuoteUnavailable": "Live token quote မရရှိနိုင်ပါ။",
+    "tokenEstimate": "≈ {{amount}} တိုကင်များ",
+    "tokenAmountUnavailable": "Token ပမာဏ မရရှိနိုင်ပါ။",
     "subscribedToast": "စာရင်းသွင်းထားသည်",
     "confirmSubscribeTo": "{{plan}} ကို {{price}} / {{duration}} ဖြင့် စာရင်းသွင်းပါ။",
     "atPreListingRate": "ကြိုတင်စာရင်းသွင်းနှုန်းဖြင့် {{amount}}",
@@ -3274,8 +3278,11 @@
     "reviewCancel": "ပယ်ဖျက်မည်",
     "reviewConfirm": "ထည့်သွင်း",
     "podcast": {
+      "feedUrlLabel": "ပေါ့ဒ်ကာစ် RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Feed ကိုရယူပါ",
       "fetching": "Feed ရယူေနပါသည္...",
+      "showBy": "{{author}} မှ",
       "episodes": "{{count}} ဇာတ်လမ်းတွဲများ",
       "selectAll": "အားလုံးကို ရွေးပါ",
       "alreadyImported": "ထည့်သွင်းပြီးပါပြီ",
@@ -3286,10 +3293,7 @@
       "failed": "မအောင်မြင်ပါ",
       "emptyFeed": "အဲဒီအစားအစာထဲမှာ ဘယ်ဇာတ်ဝင်ခန်းကိုမှ ငါတို့ ရှာမတွေ့ခဲ့ဘူး ။",
       "badFeed": "ဒီလင့်ခ်က podcast feed နဲ့မတူဘူး ။",
-      "tooMany": "တစ်ကြိမ်လျှင် Episode 20 အထိ တင်သွင်းပါ ။",
-      "feedUrlLabel": "ပေါ့ဒ်ကာစ် RSS feed URL",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
-      "showBy": "{{author}} မှ"
+      "tooMany": "တစ်ကြိမ်လျှင် Episode 20 အထိ တင်သွင်းပါ ။"
     }
   },
   "banned": {
@@ -4503,26 +4507,6 @@
       "tippedYou": "{{amount}} တိုကင် ပေးလိုက်ပါပြီ။"
     }
   },
-  "spaces": {
-    "title": "အခန်းများ",
-    "live": "တိုက်ရိုက်",
-    "upcoming": "လာမည့်",
-    "past": "ပြီးခဲ့သော",
-    "create": "အခန်းဖန်တီးရန်",
-    "join": "ပါဝင်ရန်",
-    "listeners": "နားထောင်သူများ",
-    "speakers": "ပြောဆိုသူများ",
-    "host": "အိမ်ရှင်",
-    "noSpaces": "အခန်းများ မရှိသေးပါ",
-    "loginDescription": "အသံအခန်းများ ဖန်တီးရန်နှင့် ပါဝင်ရန် ဝင်ရောက်ပါ။"
-  },
-  "blog": {
-    "title": "ဘလော့ဂ်",
-    "readMore": "နောက်ထပ်ဖတ်ရန်",
-    "backToBlog": "ဘလော့ဂ်သို့ပြန်ရန်",
-    "sharePost": "ပို့စ်မျှဝေရန်",
-    "relatedPosts": "ဆက်စပ်ပို့စ်များ"
-  },
   "emojiPicker": {
     "tabEmoji": "အီမိုဂျီ",
     "tabGif": "GIF",
@@ -5244,5 +5228,25 @@
     "planRestricted": "ဤအသုံးပြုသူသည် မက်ဆေ့ချ်လက်ခံရန် စာရင်းသွင်းမှု လိုအပ်သည်။",
     "planTypeNotAllowed": "ဤဖန်တီးသူ၏ အစီအစဉ်သည် ဤမက်ဆေ့ချ်အမျိုးအစားကို ခွင့်မပြုပါ။",
     "planMinTip": "ဤဖန်တီးသူအတွက် tip သည် အနည်းဆုံး {{amount}} DHB ဖြစ်ရမည်။"
+  },
+  "spaces": {
+    "title": "အခန်းများ",
+    "live": "တိုက်ရိုက်",
+    "upcoming": "လာမည့်",
+    "past": "ပြီးခဲ့သော",
+    "create": "အခန်းဖန်တီးရန်",
+    "join": "ပါဝင်ရန်",
+    "listeners": "နားထောင်သူများ",
+    "speakers": "ပြောဆိုသူများ",
+    "host": "အိမ်ရှင်",
+    "noSpaces": "အခန်းများ မရှိသေးပါ",
+    "loginDescription": "အသံအခန်းများ ဖန်တီးရန်နှင့် ပါဝင်ရန် ဝင်ရောက်ပါ။"
+  },
+  "blog": {
+    "title": "ဘလော့ဂ်",
+    "readMore": "နောက်ထပ်ဖတ်ရန်",
+    "backToBlog": "ဘလော့ဂ်သို့ပြန်ရန်",
+    "sharePost": "ပို့စ်မျှဝေရန်",
+    "relatedPosts": "ဆက်စပ်ပို့စ်များ"
   }
 }

@@ -3125,7 +3125,11 @@
     "sampleReady": "Pavyzdys paruoštas.",
     "discardRecording": "Panaikinti įrašą",
     "settingUpVoice": "Jūsų balsas nustatomas...",
-    "useThisVoice": "Naudoti šį balsą"
+    "useThisVoice": "Naudoti šį balsą",
+    "autoEnd": {
+      "title": "Etapas baigėsi dėl neaktyvumo",
+      "description": "Niekas nekalbėjo apie „{{title}}“ 30 minučių, todėl jis buvo uždarytas."
+    }
   },
   "ads": {
     "seoTitle": "Reklamų tvarkytuvė | DeHub",

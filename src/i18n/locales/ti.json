@@ -2447,7 +2447,11 @@
   },
   "stages": {
     "title": "ናይ ድምጺ ክፍልታት",
-    "alreadyCharged": "እቲ ምልክታትካ ነዚ ንምግባር ድሮ ተወስደ ። ደጊም ፈትኖ — ካልኣይ ግዜ ክትከፍል ኣይትኽእልን ኢኻ ።"
+    "alreadyCharged": "እቲ ምልክታትካ ነዚ ንምግባር ድሮ ተወስደ ። ደጊም ፈትኖ — ካልኣይ ግዜ ክትከፍል ኣይትኽእልን ኢኻ ።",
+    "autoEnd": {
+      "title": "ብሰንኪ ዘይምግባራዊነት ዝተዛዘመ ደረጃ",
+      "description": "ኣብ \"{{title}}\" ን30 ደቒቕ ዝዛረብ ሰብ ኣይነበረን ፣ ስለዚ ተዓጽዩ እዩ ።"
+    }
   },
   "ads": {
     "priceUnavailable": "ዋጋ ቶከን ኣይተረኽበን - ኣብ ቀረባ እዋን እንደገና ፈትኖ ።",
@@ -2640,13 +2644,6 @@
     "transferGuarantee": "ምሉእ መለያ ትረክብ — ኣተሓሕዛ ፣ ልኡኽ ፣ ተኸታተልቲ ፣ ታሪኽ ምኽርን መሰል ባጅን ። እቲ ሸያጭ ነቲ ቦርሳኡን ኣብኡ ዘሎን ነገራት ይዕቅቦ ። እቲ ዝውውር ፡ DeHub ነቲ ናይ ምልክት ክፍሊትካ ካብ ሰንሰለት ድሕሪ ምንባብ ጥራይ እዩ ዚካየድ ፣ እንተ ተቛሪጹ ፡ እቲ መግዛእቲ እንደገና ይጅምር ።"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "ኣኽብሮት፡ እዚ ሕጋዊ መርበብ ሓበሬታ እዚ ንብረት እዚ ብዋጋ ዶላር ይሸቕጥ።",
-    "tokenAmount": "{{amount}} ቶክን",
-    "preListingTokenAmount": "ቅድሚ ምዝገባ ዋጋ ቶክን",
-    "tokenCheckoutNotReady": "ናይ ቶክን ምዝገባ ገጽ ኣይተዳለወን - ብቕልጡፍ ዳግማይ ኪኢሉ ይፈተሽ።",
-    "tokenQuoteUnavailable": "ናይ ቶክን ዋጋ ኣብ ህይወት ኣይረኸበን",
-    "tokenEstimate": "≈ {{amount}} ቶክን",
-    "tokenAmountUnavailable": "ዋጋ ቶክን ኣይረኸበን",
     "subscribersOnly": "ተመዝጋቢታት ጥራይ",
     "creatorKeepsPost": "{{creator}} ነዚ ፖስቲ እዚ ንተመዝጋቢኡ ይዕቅቦ።",
     "creatorNoPlans": "{{creator}} ሕጂ ዝተከፈተ ምዝገባ የብሉን።",
@@ -2726,6 +2723,13 @@
     "inactive": "ኣይተግባርን",
     "daysLeft_one": "{{count}} መዓልቲታት",
     "daysLeft_other": "{{count}} መዓልቲታት",
+    "legacyPlanMigrates": "ኣኽብሮት፡ እዚ ሕጋዊ መርበብ ሓበሬታ እዚ ንብረት እዚ ብዋጋ ዶላር ይሸቕጥ።",
+    "tokenAmount": "{{amount}} ቶክን",
+    "preListingTokenAmount": "ቅድሚ ምዝገባ ዋጋ ቶክን",
+    "tokenCheckoutNotReady": "ናይ ቶክን ምዝገባ ገጽ ኣይተዳለወን - ብቕልጡፍ ዳግማይ ኪኢሉ ይፈተሽ።",
+    "tokenQuoteUnavailable": "ናይ ቶክን ዋጋ ኣብ ህይወት ኣይረኸበን",
+    "tokenEstimate": "≈ {{amount}} ቶክን",
+    "tokenAmountUnavailable": "ዋጋ ቶክን ኣይረኸበን",
     "subscribedToast": "ተመዝጊቡ",
     "confirmSubscribeTo": "ን{{plan}} ብ{{price}} / {{duration}} ምዝገባ ግበሩ።",
     "atPreListingRate": "ብቅድመ-ዝርዝር ዋጋ ብ{{amount}}",
@@ -3212,9 +3216,11 @@
     "podcast": {
       "tab": "ፖድካስት",
       "feedUrlLabel": "ፖድካስት RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "መግብን መግብን",
       "fetching": "መግብን መግብን...",
       "showBy": "ብ {{author}}",
+      "episodes": "{{count}} ክፍልታት",
       "selectAll": "ንዅሉ ምረጽ",
       "alreadyImported": "ቀዲሙ ዝተኣተወ",
       "ownership": "ነዚ ትሕዝቶ እዚ ኣለኒ ፣ ወይ ድማ ነቲ መሰል ዘለዎ ሰብ ኣብ DeHub ክሕተም ፍቓድ ኣለኒ ።",
@@ -3224,9 +3230,7 @@
       "failed": "ኣይተዓወተን",
       "emptyFeed": "ኣብዚ ምግቢ እዚ ገለ ፍጻመታት ክንረክብ ኣይንኽእልን ኢና ።",
       "badFeed": "ኣብ ፖድካስት መልክዕ እንተተረኽበ ኣይመስለንን ።",
-      "tooMany": "ኣብ ሓደ እዋን ክሳብ 20 ክፋላት ኣእቲኻ ።",
-      "episodes": "{{count}} ክፍልታት",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ኣብ ሓደ እዋን ክሳብ 20 ክፋላት ኣእቲኻ ።"
     }
   },
   "banned": {

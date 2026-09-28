@@ -3145,7 +3145,11 @@
     "sampleReady": "Prøve klar.",
     "discardRecording": "Kassér optagelse",
     "settingUpVoice": "Konfigurerer din stemme...",
-    "useThisVoice": "Brug denne stemme"
+    "useThisVoice": "Brug denne stemme",
+    "autoEnd": {
+      "title": "Fasen sluttede på grund af inaktivitet",
+      "description": "Ingen talte på \"{{title}}\" i 30 minutter, så det var lukket."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",

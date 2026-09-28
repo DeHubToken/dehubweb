@@ -2501,7 +2501,11 @@
   },
   "stages": {
     "title": "Dakunan sauti",
-    "alreadyCharged": "An riga an ɗauki token ɗinku don wannan. Sake gwadawa — ba za a caje ku sau biyu ba."
+    "alreadyCharged": "An riga an ɗauki token ɗinku don wannan. Sake gwadawa — ba za a caje ku sau biyu ba.",
+    "autoEnd": {
+      "title": "Mataki ya ƙare saboda rashin aiki",
+      "description": "Babu wanda ya yi magana a kan \"{{title}}\" na minti 30, don haka an rufe shi."
+    }
   },
   "ads": {
     "priceUnavailable": "Farashin token ba a samu ba — sake gwadawa nan da jimawa.",
@@ -2695,13 +2699,6 @@
     "transferGuarantee": "Za ku sami dukkan asusun — hannun hannu, sakonni, masu bi, tarihin bayarwa da haƙƙoƙin lambobi. Mai siyarwa yana riƙe da walat ɗinsa da komai a cikinsa. Canjin yana gudana ne kawai bayan DeHub ya karanta biyan kuɗin alamar ku daga kan sarkar; idan an katse shi, sake gwada siyan yana ci gaba da shi."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Ajiya yana canza wannan tsohon tsarin da aka farashin token zuwa farashin dalar Amurka a farashin kafin jeri.",
-    "tokenAmount": "{{amount}} tokens",
-    "preListingTokenAmount": "Adadin token kafin jeri",
-    "tokenCheckoutNotReady": "Checkout na biyan kuɗi na token bai shirya ba — da fatan za a sake gwadawa nan ba da jimawa ba",
-    "tokenQuoteUnavailable": "Rabon token kai tsaye ba ya samuwa",
-    "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Adadin token ba ya samuwa",
     "subscribersOnly": "Masu biyan kuɗi kawai",
     "creatorKeepsPost": "{{creator}} yana riƙe wannan rubutu don masu biyan kuɗinsa.",
     "creatorNoPlans": "{{creator}} baya da biyan kuɗi a bude yanzu.",
@@ -2782,6 +2779,13 @@
     "inactive": "Inactive",
     "daysLeft_one": "{{count}}d left",
     "daysLeft_other": "{{count}}d left",
+    "legacyPlanMigrates": "Ajiya yana canza wannan tsohon tsarin da aka farashin token zuwa farashin dalar Amurka a farashin kafin jeri.",
+    "tokenAmount": "{{amount}} tokens",
+    "preListingTokenAmount": "Adadin token kafin jeri",
+    "tokenCheckoutNotReady": "Checkout na biyan kuɗi na token bai shirya ba — da fatan za a sake gwadawa nan ba da jimawa ba",
+    "tokenQuoteUnavailable": "Rabon token kai tsaye ba ya samuwa",
+    "tokenEstimate": "≈ {{amount}} tokens",
+    "tokenAmountUnavailable": "Adadin token ba ya samuwa",
     "subscribedToast": "Subscribed",
     "confirmSubscribeTo": "Biyan kuɗi zuwa {{plan}} don {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} a pre-listing kudi",

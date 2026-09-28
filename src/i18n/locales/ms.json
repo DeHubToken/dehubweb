@@ -528,6 +528,7 @@
     "loadingMore": "Memuatkan lebih banyak...",
     "loadMore": "Muat lagi",
     "continue": "Teruskan",
+    "undo": "Batal",
     "yes": "Ya",
     "no": "Tidak",
     "confirm": "Sahkan",
@@ -567,7 +568,6 @@
     "download": "Muat turun",
     "copy": "Salin",
     "copied": "Disalin",
-    "undo": "Batal",
     "redo": "Ulang",
     "refresh": "Segar semula",
     "filter": "Tapis",
@@ -3406,7 +3406,11 @@
     "sampleReady": "Sampel sedia.",
     "discardRecording": "Buang rakaman",
     "settingUpVoice": "Menyediakan suara anda...",
-    "useThisVoice": "Gunakan suara ini"
+    "useThisVoice": "Gunakan suara ini",
+    "autoEnd": {
+      "title": "Peringkat berakhir kerana tidak aktif",
+      "description": "Tiada siapa yang bercakap di \"{{title}}\" selama 30 minit, jadi ia ditutup."
+    }
   },
   "ads": {
     "seoTitle": "Pengurus Iklan | DeHub",
@@ -4712,6 +4716,7 @@
     "presetLifetime": "Seumur hidup",
     "onePlanPerDuration": "Satu pelan setiap tempoh — rantaian menyimpan pelan mengikut pengkarya dan tempoh.",
     "benefitsOptional": "Faedah (pilihan)",
+    "benefitN": "Manfaat {{number}}",
     "addBenefit": "Tambah manfaat",
     "creating": "Menggantikkan",
     "createAndPublish": "Cipta & Terbitkan",
@@ -4756,7 +4761,6 @@
     "tokenQuoteUnavailable": "Petikan token langsung tidak tersedia",
     "tokenEstimate": "≈ {{amount}} token",
     "tokenAmountUnavailable": "Jumlah token tidak tersedia",
-    "benefitN": "Manfaat {{number}}",
     "subscribedToast": "Dilanggan",
     "confirmSubscribeTo": "Langgan {{plan}} untuk {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} pada kadar prapenyenaraian",

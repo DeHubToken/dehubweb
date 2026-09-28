@@ -2441,7 +2441,11 @@
   },
   "stages": {
     "title": "الغرف الصوتية",
-    "alreadyCharged": "توكنزك اتاخدت خلاص عشان ده. جرب تاني — مش هيتخصم منك تاني."
+    "alreadyCharged": "توكنزك اتاخدت خلاص عشان ده. جرب تاني — مش هيتخصم منك تاني.",
+    "autoEnd": {
+      "title": "خلصت القاعة عشان محدش اتكلم فيها",
+      "description": "محدش اتكلم في \"{{title}}\" بقاله نص ساعة، فعشان كده اتقفلت."
+    }
   },
   "ads": {
     "priceUnavailable": "سعر التوكن مش متاح — جرب تاني كمان شوية.",
@@ -2641,13 +2645,6 @@
     "noStories": "مافيش قصص لسه"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "الحفظ بينقل الخطة القديمة اللي بتتسعر بالتوكن لتسعير الدولار بالسعر قبل الإدراج.",
-    "tokenAmount": "{{amount}} توكن",
-    "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
-    "tokenCheckoutNotReady": "الدفع بتاع اشتراك التوكن مش جاهز — حاول تاني بعد شوية",
-    "tokenQuoteUnavailable": "اقتباس التوكن المباشر غير متاح",
-    "tokenEstimate": "≈ {{amount}} توكن",
-    "tokenAmountUnavailable": "مبلغ التوكن غير متاح",
     "subscribersOnly": "المشتركين بس",
     "creatorKeepsPost": "{{creator}} بيحتفظ بالبوست ده لمتابعينه.",
     "creatorNoPlans": "{{creator}} ما عنده اشتراك مفتوح دلوقتي.",
@@ -2726,6 +2723,13 @@
     "inactive": "غير نشط",
     "daysLeft_one": "{{count}}يوم متبقي",
     "daysLeft_other": "{{count}}يوم متبقي",
+    "legacyPlanMigrates": "الحفظ بينقل الخطة القديمة اللي بتتسعر بالتوكن لتسعير الدولار بالسعر قبل الإدراج.",
+    "tokenAmount": "{{amount}} توكن",
+    "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
+    "tokenCheckoutNotReady": "الدفع بتاع اشتراك التوكن مش جاهز — حاول تاني بعد شوية",
+    "tokenQuoteUnavailable": "اقتباس التوكن المباشر غير متاح",
+    "tokenEstimate": "≈ {{amount}} توكن",
+    "tokenAmountUnavailable": "مبلغ التوكن غير متاح",
     "subscribedToast": "مشترك",
     "confirmSubscribeTo": "اشتري من {{plan}} مقابل {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} بنسبة ما قبل القوائم",
@@ -3251,6 +3255,7 @@
     "podcast": {
       "tab": "بودكاست",
       "feedUrlLabel": "رابط تغذية البودكاست RSS",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "جلب التغذية",
       "fetching": "جاري جلب التغذية…",
       "showBy": "بواسطة {{author}}",
@@ -3264,8 +3269,7 @@
       "failed": "فشل",
       "emptyFeed": "لم نتمكن من العثور على أي حلقات في هذه التغذية.",
       "badFeed": "هذا الرابط لا يبدو أنه تغذية بودكاست.",
-      "tooMany": "استيراد ما يصل إلى 20 حلقة في المرة الواحدة.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "استيراد ما يصل إلى 20 حلقة في المرة الواحدة."
     }
   },
   "banned": {
@@ -4482,44 +4486,6 @@
       "tippedYou": "بصيتلك {{amount}} توكن"
     }
   },
-  "post": {
-    "like": "إعجاب",
-    "comment": "تعليق",
-    "repost": "إعادة نشر",
-    "share": "مشاركة",
-    "bookmark": "علامة",
-    "tip": "بقشيش",
-    "delete": "امسح",
-    "edit": "عدّل",
-    "report": "بلّغ",
-    "translate": "ترجم",
-    "pinned": "متثبّت",
-    "replying": "بيرد",
-    "reply": "رد",
-    "writeReply": "اكتب رد...",
-    "noComments": "مافيش تعليقات لسه",
-    "viewMore": "شوف أكتر",
-    "postDeleted": "المنشور اتمسح",
-    "likes": "إعجابات",
-    "comments": "تعليقات",
-    "reposts": "إعادة نشر",
-    "shares": "مشاركات"
-  },
-  "create": {
-    "title": "انشر حاجة",
-    "placeholder": "بتفكّر في إيه؟",
-    "post": "انشر",
-    "addImage": "زوّد صورة",
-    "addVideo": "زوّد فيديو",
-    "addGif": "زوّد GIF",
-    "addPoll": "زوّد استطلاع",
-    "addLocation": "زوّد موقع",
-    "visibility": "الظهور",
-    "everyone": "الكل",
-    "followers": "المتابعين",
-    "subscribers": "المشتركين",
-    "mentioned": "اللي اتذكروا"
-  },
   "emojiPicker": {
     "tabEmoji": "إيموجي",
     "tabGif": "GIF",
@@ -5250,5 +5216,43 @@
     "planRestricted": "المستخدم ده محتاج اشتراك علشان يستقبل رسايل.",
     "planTypeNotAllowed": "خطة المنشئ ده ما بتسمحش بالنوع ده من الرسايل.",
     "planMinTip": "التيب لازم يكون على الأقل {{amount}} DHB للمنشئ ده."
+  },
+  "post": {
+    "like": "إعجاب",
+    "comment": "تعليق",
+    "repost": "إعادة نشر",
+    "share": "مشاركة",
+    "bookmark": "علامة",
+    "tip": "بقشيش",
+    "delete": "امسح",
+    "edit": "عدّل",
+    "report": "بلّغ",
+    "translate": "ترجم",
+    "pinned": "متثبّت",
+    "replying": "بيرد",
+    "reply": "رد",
+    "writeReply": "اكتب رد...",
+    "noComments": "مافيش تعليقات لسه",
+    "viewMore": "شوف أكتر",
+    "postDeleted": "المنشور اتمسح",
+    "likes": "إعجابات",
+    "comments": "تعليقات",
+    "reposts": "إعادة نشر",
+    "shares": "مشاركات"
+  },
+  "create": {
+    "title": "انشر حاجة",
+    "placeholder": "بتفكّر في إيه؟",
+    "post": "انشر",
+    "addImage": "زوّد صورة",
+    "addVideo": "زوّد فيديو",
+    "addGif": "زوّد GIF",
+    "addPoll": "زوّد استطلاع",
+    "addLocation": "زوّد موقع",
+    "visibility": "الظهور",
+    "everyone": "الكل",
+    "followers": "المتابعين",
+    "subscribers": "المشتركين",
+    "mentioned": "اللي اتذكروا"
   }
 }

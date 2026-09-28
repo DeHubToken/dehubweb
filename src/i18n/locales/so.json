@@ -2502,7 +2502,11 @@
   },
   "stages": {
     "title": "Qolalka codka",
-    "alreadyCharged": "Tokenkaaga ayaa mar hore loo qaatay tan. Isku day mar kale — lagugu dalacayn doono labaad."
+    "alreadyCharged": "Tokenkaaga ayaa mar hore loo qaatay tan. Isku day mar kale — lagugu dalacayn doono labaad.",
+    "autoEnd": {
+      "title": "Marxaladdu waxay ku dhammaatay waxqabad la 'aan darteed",
+      "description": "Qofna kama hadlin \"{{title}}\" muddo 30 daqiiqo ah, sidaa darteed waa la xiray."
+    }
   },
   "ads": {
     "priceUnavailable": "Qiimaha token lama heli karo — isku day mar kale dhawaan.",
@@ -2696,13 +2700,6 @@
     "transferGuarantee": "Waxaad heleysaa xisaabta oo dhan — gacan-ku-qabasho, boosto, raacayaal, taariikhda talooyinka iyo xuquuqda calaamadaha. Iibiyuhu wuxuu haystaa jeebkiisa iyo wax walba oo ku jira. Wareejinta waxay socotaa oo kaliya ka dib markii DeHub ay akhrido bixinta token-kaaga dib uga soo laabashada silsiladda; haddii la joojiyo, dib u bilowga iibsashada ayaa sii wadi doona."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Kaydinta waxay u guuraysaa qorshahan hore ee lagu qiimeeyay token-ka qiimaynta doolarka ee qiimaha ka-hor-liiska.",
-    "tokenAmount": "{{amount}} tokens",
-    "preListingTokenAmount": "Qadarka token-ka ka-hor-liiska",
-    "tokenCheckoutNotReady": "Lacag-bixinta rukunka token-ka ma diyaarsana — fadlan isku day mar kale dhawaan",
-    "tokenQuoteUnavailable": "Xigashada token-ka tooska ah lama heli karo",
-    "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Qadarka token-ka lama heli karo",
     "subscribersOnly": "Kaliya Diiwaangeliyayaasha",
     "creatorKeepsPost": "{{creator}} waxay ku kaydinaysaa qoraalkan diiwaangeliyayaasha.",
     "creatorNoPlans": "{{creator}} ma jiro isdiiwaangelin furan hadda.",
@@ -2783,6 +2780,13 @@
     "inactive": "Xiran",
     "daysLeft_one": "{{count}} maalmood oo haray",
     "daysLeft_other": "{{count}} maalmood oo haray",
+    "legacyPlanMigrates": "Kaydinta waxay u guuraysaa qorshahan hore ee lagu qiimeeyay token-ka qiimaynta doolarka ee qiimaha ka-hor-liiska.",
+    "tokenAmount": "{{amount}} tokens",
+    "preListingTokenAmount": "Qadarka token-ka ka-hor-liiska",
+    "tokenCheckoutNotReady": "Lacag-bixinta rukunka token-ka ma diyaarsana — fadlan isku day mar kale dhawaan",
+    "tokenQuoteUnavailable": "Xigashada token-ka tooska ah lama heli karo",
+    "tokenEstimate": "≈ {{amount}} tokens",
+    "tokenAmountUnavailable": "Qadarka token-ka lama heli karo",
     "subscribedToast": "La-diiwaangeliyay",
     "confirmSubscribeTo": "Isku-diiwaangelinta {{plan}} oo ah {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} qiimaha hore ee liiska",
@@ -3253,6 +3257,7 @@
     "title": "Import a video",
     "migrateAll": "Migrate all",
     "paste": "Paste",
+    "ownership": "Waxaan leeyahay qaab-dhismeedkan, ama waxaan haysaa ogolaanshaha qof-hayaha xuquuqda inuu daabaco DeHub-ka.",
     "import": "Import",
     "addToQueue": "Add to queue",
     "signInToImport": "Sign in to import",
@@ -3315,8 +3320,7 @@
       "emptyFeed": "Ma heli karno qayb ka mid ah cuntadaas.",
       "badFeed": "Link Tani uma muuqato sida quudinta podcast ah.",
       "tooMany": "Soo dejiso ilaa 20 qaybood hal mar."
-    },
-    "ownership": "Waxaan leeyahay qaab-dhismeedkan, ama waxaan haysaa ogolaanshaha qof-hayaha xuquuqda inuu daabaco DeHub-ka."
+    }
   },
   "banned": {
     "title": "Koontadaada waa la mamnuucay",

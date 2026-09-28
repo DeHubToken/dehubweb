@@ -3065,7 +3065,11 @@
     "sampleReady": "नमुना तयार आहे.",
     "discardRecording": "रेकॉर्डिंग रद्द करा",
     "settingUpVoice": "तुमचा आवाज सेट करत आहे...",
-    "useThisVoice": "हा आवाज वापरा"
+    "useThisVoice": "हा आवाज वापरा",
+    "autoEnd": {
+      "title": "निष्क्रियतेमुळे टप्पा संपला",
+      "description": "\"{{title}}\" वर 30 मिनिटांपर्यंत कोणीही बोलले नाही, म्हणून ते बंद झाले."
+    }
   },
   "ads": {
     "seoTitle": "जाहिरात व्यवस्थापक | DeHub",
@@ -4233,6 +4237,8 @@
     "expired": "मुदत संपली",
     "active": "सक्रिय",
     "inactive": "निष्क्रिय",
+    "daysLeft_one": "{{count}}d बाकी",
+    "daysLeft_other": "{{count}}d बाकी",
     "legacyPlanMigrates": "सेव्हिंग या जुन्या टोकन-किंमत योजनेला प्री-लिस्टिंग दराने डॉलर किमतीत रूपांतरित करते.",
     "tokenAmount": "{{amount}} टोकन",
     "preListingTokenAmount": "प्री-लिस्टिंग टोकन रक्कम",
@@ -4240,11 +4246,9 @@
     "tokenQuoteUnavailable": "लाइव्ह टोकन कोट अनुपलब्ध",
     "tokenEstimate": "≈ {{amount}} टोकन",
     "tokenAmountUnavailable": "टोकन रक्कम अनुपलब्ध",
-    "daysLeft_one": "{{count}}d बाकी",
-    "daysLeft_other": "{{count}}d बाकी",
     "subscribedToast": "सदस्यता घेतली",
-    "atPreListingRate": "{{amount}} पूर्व - सूची दरात",
     "confirmSubscribeTo": "{{plan}} साठी {{price}} / {{duration}} मध्ये सदस्य व्हा.",
+    "atPreListingRate": "{{amount}} पूर्व - सूची दरात",
     "youPayNow": "तुम्ही पैसे देता",
     "paidToCreatorWallet": "थेट निर्मिकाच्या वॉलेटवर जाते",
     "creatorPaidDirectNote": "तुम्ही सदस्यता घेतल्यावर निर्मिकाचा हिस्सा थेट त्यांच्या वॉलेटमध्ये जातो. डेहब एक लहान प्लॅटफॉर्म शुल्क ठेवते.",
@@ -5150,6 +5154,7 @@
     "podcast": {
       "tab": "पॉडकास्ट",
       "feedUrlLabel": "पॉडकास्ट आरएसएस फीड URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "फीड मिळवा",
       "fetching": "फीड प्राप्त करत आहे...",
       "showBy": "{{author}} द्वारे",
@@ -5163,8 +5168,7 @@
       "failed": "अयशस्वी",
       "emptyFeed": "आम्हाला त्या फीडमध्ये कोणतेही एपिसोड सापडले नाहीत.",
       "badFeed": "पण ही लिंक फूड पॉडकास्टसारखी वाटत नाही.",
-      "tooMany": "एका वेळी 20 एपिसोड्स पर्यंत आयात करा.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "एका वेळी 20 एपिसोड्स पर्यंत आयात करा."
     }
   },
   "banned": {

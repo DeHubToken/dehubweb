@@ -3141,7 +3141,11 @@
     "sampleReady": "Sampel siap.",
     "discardRecording": "Buang rekaman",
     "settingUpVoice": "Menyiapkan suara Anda...",
-    "useThisVoice": "Pakai suara ini"
+    "useThisVoice": "Pakai suara ini",
+    "autoEnd": {
+      "title": "Tahap berakhir karena tidak aktif",
+      "description": "Tidak ada yang berbicara di \"{{title}}\" selama 30 menit, jadi ditutup."
+    }
   },
   "ads": {
     "seoTitle": "Pengelola Iklan | DeHub",

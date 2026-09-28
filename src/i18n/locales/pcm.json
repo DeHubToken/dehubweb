@@ -2301,11 +2301,6 @@
     "priceDhb": "Price (tokens)"
   },
   "subscriptions": {
-    "tokenAmount": "{{amount}} tokens",
-    "preListingTokenAmount": "Pre-listing token amount",
-    "tokenQuoteUnavailable": "Live token quote unavailable",
-    "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Token amount unavailable",
     "subscribersOnly": "Subscribers only",
     "draft": "Draft",
     "subscribed": "Subscribed",
@@ -2370,6 +2365,11 @@
     "inactive": "Inactive",
     "daysLeft_one": "{{count}}d left",
     "daysLeft_other": "{{count}}d left",
+    "tokenAmount": "{{amount}} tokens",
+    "preListingTokenAmount": "Pre-listing token amount",
+    "tokenQuoteUnavailable": "Live token quote unavailable",
+    "tokenEstimate": "≈ {{amount}} tokens",
+    "tokenAmountUnavailable": "Token amount unavailable",
     "subscribedToast": "Subscribed",
     "confirmSubscribeTo": "Subscribe to {{plan}} for {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} for di pre-listing rate",
@@ -2678,6 +2678,7 @@
     "title": "Import a video",
     "migrateAll": "Migrate all",
     "paste": "Paste",
+    "ownership": "Na me get this content, or the person wey get the rights don allow me publish am for DeHub.",
     "import": "Import",
     "addToQueue": "Add to queue",
     "signInToImport": "Sign in to import",
@@ -2698,6 +2699,9 @@
     "statusDownloadingPercent": "Downloading {{percent}}%",
     "statusQueued": "Queued",
     "detailWaiting": "Waiting its turn.",
+    "toastQueued": "E don enter queue — e go publish for your profile when e finish.",
+    "errorNeedRights": "Abeg confirm say you get the rights to this content",
+    "errorQueueFailed": "We no fit queue that import",
     "publishAs": "Publish as",
     "kindVideo": "Video",
     "kindAudio": "Audio",
@@ -2726,14 +2730,10 @@
       "importing": "Importing…",
       "done": "Queued",
       "failed": "Failed",
-      "badFeed": "That link no resemble podcast feed.",
       "emptyFeed": "We no see any episode for that feed.",
+      "badFeed": "That link no resemble podcast feed.",
       "tooMany": "Bring reach 20 episode dem at once."
-    },
-    "errorNeedRights": "Abeg confirm say you get the rights to this content",
-    "errorQueueFailed": "We no fit queue that import",
-    "ownership": "Na me get this content, or the person wey get the rights don allow me publish am for DeHub.",
-    "toastQueued": "E don enter queue — e go publish for your profile when e finish."
+    }
   },
   "banned": {
     "reason": "Reason: {{reason}}"
@@ -3601,6 +3601,23 @@
     "subtitle": "Move DeHub tokens between chains",
     "tokensOnBase": "Tokens on Base"
   },
+  "builder": {
+    "stakeForAllowance": "Stake DeHub token make your daily build allowance go up",
+    "buildInChat": "Build for your DM wit @assistant",
+    "landerTitle": "Build app just by asking",
+    "landerSubtitle": "Tell @assistant wetin you want for your messages. E go build the app, host am, come send you link wey anybody fit open. Reply make you change anything.",
+    "promptPlaceholder": "Talk the kain app wey you want…",
+    "sendToAssistant": "Send to @assistant",
+    "example1": "Pomodoro timer wey get daily streak",
+    "example2": "Tip calculator wey go share the bill",
+    "example3": "Quiz about the films wey I like pass",
+    "step1Title": "Describe it",
+    "step1Body": "Talk wetin the app suppose do, for your own words.",
+    "step2Title": "E go build reach like one minute",
+    "step2Body": "@assistant go write the app, host am, then send the link enter your messages.",
+    "step3Title": "Share it or change it",
+    "step3Body": "Anybody fit open the link. Reply for the chat make you change anything."
+  },
   "raffle": {
     "stakeTitle": "Stake Tokens",
     "readAboutTokens": "Read about DeHub tokens"
@@ -3938,22 +3955,5 @@
     "planRestricted": "Dis user need subscription before e fit receive message.",
     "planTypeNotAllowed": "Dis creator plan no allow dis kain message.",
     "planMinTip": "Tip for dis creator must reach at least {{amount}} DHB."
-  },
-  "builder": {
-    "buildInChat": "Build for your DM wit @assistant",
-    "stakeForAllowance": "Stake DeHub token make your daily build allowance go up",
-    "landerTitle": "Build app just by asking",
-    "landerSubtitle": "Tell @assistant wetin you want for your messages. E go build the app, host am, come send you link wey anybody fit open. Reply make you change anything.",
-    "promptPlaceholder": "Talk the kain app wey you want…",
-    "sendToAssistant": "Send to @assistant",
-    "example1": "Pomodoro timer wey get daily streak",
-    "example2": "Tip calculator wey go share the bill",
-    "example3": "Quiz about the films wey I like pass",
-    "step1Title": "Describe it",
-    "step1Body": "Talk wetin the app suppose do, for your own words.",
-    "step2Title": "E go build reach like one minute",
-    "step2Body": "@assistant go write the app, host am, then send the link enter your messages.",
-    "step3Title": "Share it or change it",
-    "step3Body": "Anybody fit open the link. Reply for the chat make you change anything."
   }
 }

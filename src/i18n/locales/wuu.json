@@ -2439,7 +2439,11 @@
   },
   "stages": {
     "title": "语音房",
-    "alreadyCharged": "您的代币已为此支付。请重试 — 您不会被收取第二次费用。"
+    "alreadyCharged": "您的代币已为此支付。请重试 — 您不会被收取第二次费用。",
+    "autoEnd": {
+      "title": "阶段因无活动而结束",
+      "description": "“{{title}}”上30分钟没人讲话，所以关掉了。"
+    }
   },
   "ads": {
     "priceUnavailable": "代币价格不可用 — 请稍后重试。",
@@ -2633,13 +2637,6 @@
     "transferGuarantee": "您将获得整个账户 — 用户名、帖子、关注者、打赏历史和徽章权益。卖家保留其钱包及其中的所有物品。转移仅在 DeHub 从链上读回您的代币付款后运行；如果中断，重试购买将恢复它。"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "節省將此舊的基於代幣定價的計劃以預上市匯率遷移到美元定價。",
-    "tokenAmount": "{{amount}} 隻代幣",
-    "preListingTokenAmount": "預上市代幣數量",
-    "tokenCheckoutNotReady": "代幣訂閱結帳尚未準備好 — 請稍後重試",
-    "tokenQuoteUnavailable": "實時代幣報價不可用",
-    "tokenEstimate": "≈ {{amount}} 隻代幣",
-    "tokenAmountUnavailable": "代幣數量不可用",
     "subscribersOnly": "仅限订阅者",
     "creatorKeepsPost": "{{creator}} 保留此帖子给其订阅者。",
     "creatorNoPlans": "{{creator}} 目前没有开放订阅。",
@@ -2720,6 +2717,13 @@
     "inactive": "不活跃",
     "daysLeft_one": "剩余 {{count}} 天",
     "daysLeft_other": "剩余 {{count}} 天",
+    "legacyPlanMigrates": "節省將此舊的基於代幣定價的計劃以預上市匯率遷移到美元定價。",
+    "tokenAmount": "{{amount}} 隻代幣",
+    "preListingTokenAmount": "預上市代幣數量",
+    "tokenCheckoutNotReady": "代幣訂閱結帳尚未準備好 — 請稍後重試",
+    "tokenQuoteUnavailable": "實時代幣報價不可用",
+    "tokenEstimate": "≈ {{amount}} 隻代幣",
+    "tokenAmountUnavailable": "代幣數量不可用",
     "subscribedToast": "已订阅",
     "confirmSubscribeTo": "订阅 {{plan}} 以 {{price}} / {{duration}}。",
     "atPreListingRate": "以预售价格 {{amount}}",
@@ -3243,6 +3247,7 @@
     "podcast": {
       "tab": "播客",
       "feedUrlLabel": "播客 RSS feed 网址",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "获取 feed",
       "fetching": "正在获取 feed…",
       "showBy": "作者：{{author}}",
@@ -3256,8 +3261,7 @@
       "failed": "失败",
       "emptyFeed": "在该 feed 中未找到任何播客。",
       "badFeed": "该链接看起来不像播客 feed。",
-      "tooMany": "一次最多导入 20 集。",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "一次最多导入 20 集。"
     }
   },
   "banned": {

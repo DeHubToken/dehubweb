@@ -3141,7 +3141,11 @@
     "sampleReady": "Próbka gotowa.",
     "discardRecording": "Odrzuć nagranie",
     "settingUpVoice": "Konfigurowanie Twojego głosu...",
-    "useThisVoice": "Użyj tego głosu"
+    "useThisVoice": "Użyj tego głosu",
+    "autoEnd": {
+      "title": "Etap zakończony z powodu braku aktywności",
+      "description": "Nikt nie mówił „{{title}}” przez 30 minut, więc było zamknięte."
+    }
   },
   "ads": {
     "seoTitle": "Menedżer reklam | DeHub",

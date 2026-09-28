@@ -2518,7 +2518,11 @@
   },
   "stages": {
     "title": "Dhoma audio",
-    "alreadyCharged": "Tokenat tuaja tashmë janë marrë për këtë. Provoni përsëri — nuk do të tarifoheni për herë të dytë."
+    "alreadyCharged": "Tokenat tuaja tashmë janë marrë për këtë. Provoni përsëri — nuk do të tarifoheni për herë të dytë.",
+    "autoEnd": {
+      "title": "Faza përfundoi për shkak të pasivitetit",
+      "description": "Askush nuk foli në \"{{title}}\" për 30 minuta, kështu që u mbyll."
+    }
   },
   "ads": {
     "priceUnavailable": "Çmimi i tokenit nuk është i disponueshëm — provoni përsëri së shpejti.",
@@ -2712,13 +2716,6 @@
     "transferGuarantee": "Ju merrni të gjithë llogarinë — dorezë, postime, ndjekës, histori këshillash dhe të drejta për distinktivë. Shitësi ruan portofolin e tij dhe gjithçka që ka brenda. Transferimi funksionon vetëm pasi DeHub të lexojë pagesën tuaj të tokenit nga zinxhiri; nëse ndërpritet, rifillimi i blerjes e vazhdon atë."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Kursimi migron këtë plan të vjetër me çmim tokeni në çmime dollarësh me normën para listimit.",
-    "tokenAmount": "{{amount}} tokena",
-    "preListingTokenAmount": "Shuma e tokenave para listimit",
-    "tokenCheckoutNotReady": "Pagesa e abonimit me tokena nuk është gati — ju lutem provoni përsëri së shpejti",
-    "tokenQuoteUnavailable": "Kuota live e tokenave e paarritshme",
-    "tokenEstimate": "≈ {{amount}} tokena",
-    "tokenAmountUnavailable": "Shuma e tokenave e paarritshme",
     "subscribersOnly": "Vetëm abonentët",
     "creatorKeepsPost": "{{creator}} e mban këtë postim për abonentët e tyre.",
     "creatorNoPlans": "{{creator}} nuk ka abonim të hapur tani.",
@@ -2799,6 +2796,13 @@
     "inactive": "Joaktiv",
     "daysLeft_one": "{{count}} ditë të mbetura",
     "daysLeft_other": "{{count}} ditë të mbetura",
+    "legacyPlanMigrates": "Kursimi migron këtë plan të vjetër me çmim tokeni në çmime dollarësh me normën para listimit.",
+    "tokenAmount": "{{amount}} tokena",
+    "preListingTokenAmount": "Shuma e tokenave para listimit",
+    "tokenCheckoutNotReady": "Pagesa e abonimit me tokena nuk është gati — ju lutem provoni përsëri së shpejti",
+    "tokenQuoteUnavailable": "Kuota live e tokenave e paarritshme",
+    "tokenEstimate": "≈ {{amount}} tokena",
+    "tokenAmountUnavailable": "Shuma e tokenave e paarritshme",
     "subscribedToast": "Abonuar",
     "confirmSubscribeTo": "Abonohuni te {{plan}} për {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} me çmimin e para-listimit",

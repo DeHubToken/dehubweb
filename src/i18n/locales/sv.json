@@ -3085,7 +3085,11 @@
     "sampleReady": "Prov klart.",
     "discardRecording": "Kassera inspelning",
     "settingUpVoice": "Ställer in din röst...",
-    "useThisVoice": "Använd denna röst"
+    "useThisVoice": "Använd denna röst",
+    "autoEnd": {
+      "title": "Fas avslutad på grund av inaktivitet",
+      "description": "Ingen pratade på \"{{title}}\" på 30 minuter, så det var stängt."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",

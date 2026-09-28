@@ -2497,7 +2497,11 @@
   },
   "stages": {
     "title": "Ngā rūma ororongo",
-    "alreadyCharged": "Kua tangohia kē āu tohu mō tēnei. Whakamātau anō — kāore koe e utu tuarua."
+    "alreadyCharged": "Kua tangohia kē āu tohu mō tēnei. Whakamātau anō — kāore koe e utu tuarua.",
+    "autoEnd": {
+      "title": "I mutu te mahi i te kore mahi",
+      "description": "Kaore tetahi i korero i runga i \"{{title}}\" mo te 30 meneti, na ka kati."
+    }
   },
   "ads": {
     "priceUnavailable": "Kāore e wātea te utu o te tohu — whakamātau anō i muri tata nei.",
@@ -2691,13 +2695,6 @@
     "transferGuarantee": "Ka whiwhi koe i te pūkete katoa — pūkete, whakairinga, kaiwhai, hītori tohu, me ngā mana tohu. Ka noho tonu ki te kaihoko tōna putea me ngā mea katoa kei roto. Ka rere noa te whakawhiti i muri i te panuitanga a DeHub i tō utu tohu mai i te mekameka; ki te pakaru, ka tīmata anō te hoko."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Ko te penapena ka nuku i tēnei mahere utu tohu tawhito ki te utu taara i te reiti i mua i te whakarārangi.",
-    "tokenAmount": "{{amount}} tohu",
-    "preListingTokenAmount": "Te nui o te tohu i mua i te whakarārangi",
-    "tokenCheckoutNotReady": "Kāore anō kia rite te pouaka takiuru ohaurunga tohu — ngana anō i te wa poto",
-    "tokenQuoteUnavailable": "Kāore e wātea ana te korero tohu ora",
-    "tokenEstimate": "≈ {{amount}} tohu",
-    "tokenAmountUnavailable": "Kāore e wātea ana te nui o te tohu",
     "subscribersOnly": "Kaitono anake",
     "creatorKeepsPost": "{{creator}} ka tiaki i tēnei pou mō ō rātou kaitono.",
     "creatorNoPlans": "{{creator}} kāore he kaitono i te wā nei.",
@@ -2778,6 +2775,13 @@
     "inactive": "Kāore i te mahi",
     "daysLeft_one": "{{count}} rā i toe",
     "daysLeft_other": "{{count}} rā i toe",
+    "legacyPlanMigrates": "Ko te penapena ka nuku i tēnei mahere utu tohu tawhito ki te utu taara i te reiti i mua i te whakarārangi.",
+    "tokenAmount": "{{amount}} tohu",
+    "preListingTokenAmount": "Te nui o te tohu i mua i te whakarārangi",
+    "tokenCheckoutNotReady": "Kāore anō kia rite te pouaka takiuru ohaurunga tohu — ngana anō i te wa poto",
+    "tokenQuoteUnavailable": "Kāore e wātea ana te korero tohu ora",
+    "tokenEstimate": "≈ {{amount}} tohu",
+    "tokenAmountUnavailable": "Kāore e wātea ana te nui o te tohu",
     "subscribedToast": "Kua ohaurunga",
     "confirmSubscribeTo": "Ohaurunga ki {{plan}} mō {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} i te utu mua-rārangi",

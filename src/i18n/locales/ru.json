@@ -3097,7 +3097,11 @@
     "sampleReady": "Образец готов.",
     "discardRecording": "Удалить запись",
     "settingUpVoice": "Настройка вашего голоса...",
-    "useThisVoice": "Использовать этот голос"
+    "useThisVoice": "Использовать этот голос",
+    "autoEnd": {
+      "title": "Этап завершен из-за бездействия",
+      "description": "Никто не говорил по \"{{title}}\" в течение 30 минут, поэтому он был закрыт."
+    }
   },
   "ads": {
     "seoTitle": "Менеджер объявлений | DeHub",
@@ -5420,6 +5424,7 @@
     "podcast": {
       "tab": "Подкаст",
       "feedUrlLabel": "URL-адрес RSS-канала подкаста",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Извлечь корм",
       "fetching": "Получение корма...",
       "showBy": "От {{author}}",
@@ -5433,8 +5438,7 @@
       "failed": "Сбой",
       "emptyFeed": "Мы не смогли найти ни одного эпизода в этой ленте.",
       "badFeed": "Эта ссылка не похожа на ленту подкастов.",
-      "tooMany": "Импортируйте до 20 эпизодов за раз.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "Импортируйте до 20 эпизодов за раз."
     }
   },
   "banned": {

@@ -3141,7 +3141,11 @@
     "sampleReady": "Campione pronto.",
     "discardRecording": "Scarta registrazione",
     "settingUpVoice": "Configurazione della voce in corso...",
-    "useThisVoice": "Usa questa voce"
+    "useThisVoice": "Usa questa voce",
+    "autoEnd": {
+      "title": "Fase terminata per inattività",
+      "description": "Nessuno ha parlato su \"{{title}}\" per 30 minuti, quindi è stato chiuso."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",

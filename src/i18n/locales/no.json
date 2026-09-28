@@ -2499,7 +2499,11 @@
   },
   "stages": {
     "title": "Lydrom",
-    "alreadyCharged": "Dine tokens er allerede tatt for dette. Prøv igjen — du vil ikke bli belastet en gang til."
+    "alreadyCharged": "Dine tokens er allerede tatt for dette. Prøv igjen — du vil ikke bli belastet en gang til.",
+    "autoEnd": {
+      "title": "Fase avsluttet på grunn av inaktivitet",
+      "description": "Ingen snakket på «{{title}}» i 30 minutter, så det ble stengt."
+    }
   },
   "ads": {
     "priceUnavailable": "Tokenpris utilgjengelig — prøv igjen snart.",
@@ -2693,13 +2697,6 @@
     "transferGuarantee": "Du får hele kontoen — håndtak, innlegg, følgere, tips-historikk og merkerettigheter. Selgeren beholder lommeboken sin og alt i den. Overføringen kjører først etter at DeHub har lest tokenbetalingen din tilbake fra kjeden; hvis den avbrytes, gjenopptar forsøk på kjøp den."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Lagring migrerer denne eldre token-prisplanen til dollarprising til forhåndsnoteringskursen.",
-    "tokenAmount": "{{amount}} tokens",
-    "preListingTokenAmount": "Forhåndsnoterings token-beløp",
-    "tokenCheckoutNotReady": "Token-abonnementsutsjekkingen er ikke klar — prøv igjen snart",
-    "tokenQuoteUnavailable": "Live token-kurs utilgjengelig",
-    "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Token-beløp utilgjengelig",
     "subscribersOnly": "Kun abonnenter",
     "creatorKeepsPost": "{{creator}} beholder dette innlegget for sine abonnenter.",
     "creatorNoPlans": "{{creator}} har ingen abonnementer åpne akkurat nå.",
@@ -2780,6 +2777,13 @@
     "inactive": "Inaktiv",
     "daysLeft_one": "{{count}}d igjen",
     "daysLeft_other": "{{count}}d igjen",
+    "legacyPlanMigrates": "Lagring migrerer denne eldre token-prisplanen til dollarprising til forhåndsnoteringskursen.",
+    "tokenAmount": "{{amount}} tokens",
+    "preListingTokenAmount": "Forhåndsnoterings token-beløp",
+    "tokenCheckoutNotReady": "Token-abonnementsutsjekkingen er ikke klar — prøv igjen snart",
+    "tokenQuoteUnavailable": "Live token-kurs utilgjengelig",
+    "tokenEstimate": "≈ {{amount}} tokens",
+    "tokenAmountUnavailable": "Token-beløp utilgjengelig",
     "subscribedToast": "Abonnert",
     "confirmSubscribeTo": "Abonner på {{plan}} for {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} til forhåndslisteprisen",
@@ -3303,6 +3307,8 @@
       "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "& Hent kjelde",
       "fetching": "Henter feeden …",
+      "showBy": "Av {{author}}",
+      "episodes": "{{count}} episoder",
       "selectAll": "Velg alle",
       "alreadyImported": "Allerede importert",
       "ownership": "Jeg eier dette innholdet, eller har rettighetshaverens tillatelse til å publisere det på DeHub.",
@@ -3312,9 +3318,7 @@
       "failed": "Mislyktes",
       "emptyFeed": "Vi fant ingen episoder i den feeden.",
       "badFeed": "Den lenken ser ikke ut som en podkastfeed.",
-      "tooMany": "Importer opptil 20 episoder om gangen.",
-      "episodes": "{{count}} episoder",
-      "showBy": "Av {{author}}"
+      "tooMany": "Importer opptil 20 episoder om gangen."
     }
   },
   "banned": {

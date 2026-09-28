@@ -2465,7 +2465,11 @@
   },
   "stages": {
     "title": "ऑडियो रूम",
-    "alreadyCharged": "आपके टोकन पहले ही इसके लिए ले लिए गए हैं। फिर से प्रयास करें — आपसे दूसरी बार शुल्क नहीं लिया जाएगा।"
+    "alreadyCharged": "आपके टोकन पहले ही इसके लिए ले लिए गए हैं। फिर से प्रयास करें — आपसे दूसरी बार शुल्क नहीं लिया जाएगा।",
+    "autoEnd": {
+      "title": "निष्क्रियता के कारण निष्क्रियता",
+      "description": "कोनो 30 मिनट बर \"{{title}}\" म बात नी करिस, एखरबर बंद हो गिस ।"
+    }
   },
   "ads": {
     "priceUnavailable": "टोकन मूल्य अनुपलब्ध — थोड़ी देर में फिर से प्रयास करें।",
@@ -2665,13 +2669,6 @@
     "noStories": "अभी तक कोनो कहानी नइ हे"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "सेविंग ये लेगेसी टोकन-प्राइज्ड प्लान ला प्री-लिस्टिंग रेट प डॉलर प्राइसिंग म माइग्रेट करथे।",
-    "tokenAmount": "{{amount}} टोकन",
-    "preListingTokenAmount": "प्री-लिस्टिंग टोकन रकम",
-    "tokenCheckoutNotReady": "टोकन सब्सक्रिप्शन चेकआउट तैयार नइंय - कृपया कुछ बेरा म फेर ले कोशिश कर",
-    "tokenQuoteUnavailable": "लाइव टोकन कोट अनुपलब्ध",
-    "tokenEstimate": "≈ {{amount}} टोकन",
-    "tokenAmountUnavailable": "टोकन रकम अनुपलब्ध",
     "subscribersOnly": "केवळ सब्सक्राइबर मन बर",
     "creatorKeepsPost": "{{creator}} अपन सब्सक्राइबर बर ए पोस्ट रखथे.",
     "creatorNoPlans": "{{creator}} अभी कोनो सब्सक्रिप्शन खुले नइ हे.",
@@ -2749,6 +2746,13 @@
     "expired": "समाप्त",
     "active": "सक्रिय",
     "inactive": "निष्क्रिय",
+    "legacyPlanMigrates": "सेविंग ये लेगेसी टोकन-प्राइज्ड प्लान ला प्री-लिस्टिंग रेट प डॉलर प्राइसिंग म माइग्रेट करथे।",
+    "tokenAmount": "{{amount}} टोकन",
+    "preListingTokenAmount": "प्री-लिस्टिंग टोकन रकम",
+    "tokenCheckoutNotReady": "टोकन सब्सक्रिप्शन चेकआउट तैयार नइंय - कृपया कुछ बेरा म फेर ले कोशिश कर",
+    "tokenQuoteUnavailable": "लाइव टोकन कोट अनुपलब्ध",
+    "tokenEstimate": "≈ {{amount}} टोकन",
+    "tokenAmountUnavailable": "टोकन रकम अनुपलब्ध",
     "subscribedToast": "सदस्यता ली",
     "confirmSubscribeTo": "सब्सक्राइब करें {{plan}} के लिए {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} पूर्व-लिस्टिंग दर पर",
@@ -3228,9 +3232,11 @@
     "podcast": {
       "tab": "पॉडकास्ट",
       "feedUrlLabel": "पॉडकास्ट आरएसएस फीड यूआरएल",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "फीड लाव",
       "fetching": "भोजन करे बर...",
       "showBy": "द्वारा {{author}}",
+      "episodes": "{{count}} ठन एपिसोड",
       "selectAll": "सब्बो चुनव",
       "alreadyImported": "पहिले से ही आयात करे गे हे",
       "ownership": "मैं ए सामग्री के मालिक हंव, या DeHub म प्रकाशित करे बर अधिकार धारक के अनुमति हवय ।",
@@ -3240,9 +3246,7 @@
       "failed": "फेल",
       "emptyFeed": "हमन ओ फीड म कोनो एपिसोड नी पा सकेन ।",
       "badFeed": "मैं हर जांच नी करिस कि क्या यह एक पॉडकास्ट प्रारूप म उपलब्ध हवय ।",
-      "tooMany": "एक बार म 20 एपिसोड तक आयात करे ।",
-      "episodes": "{{count}} ठन एपिसोड",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "एक बार म 20 एपिसोड तक आयात करे ।"
     }
   },
   "banned": {
@@ -4412,44 +4416,6 @@
       "stakedPost": "50k DeHub टोकन । एपीवाई 12.4% म मजबूत दिखत हवय । दीर्घकालिक धारक मानसिकता । 💎🙌"
     }
   },
-  "post": {
-    "like": "पसंद",
-    "comment": "टिप्पणी",
-    "repost": "फेर शेयर करव",
-    "share": "शेयर करव",
-    "bookmark": "बुकमार्क",
-    "tip": "टिप",
-    "delete": "मिटाव",
-    "edit": "संपादन करव",
-    "report": "रिपोर्ट करव",
-    "translate": "अनुवाद करव",
-    "pinned": "पिन करे हे",
-    "replying": "जवाब देत हे",
-    "reply": "जवाब",
-    "writeReply": "जवाब लिखव...",
-    "noComments": "अभी तक कोनो टिप्पणी नइ हे",
-    "viewMore": "अउर देखव",
-    "postDeleted": "पोस्ट मिटा दे गइस",
-    "likes": "पसंद",
-    "comments": "टिप्पणी",
-    "reposts": "रीपोस्ट",
-    "shares": "शेयर"
-  },
-  "create": {
-    "title": "पोस्ट बनाव",
-    "placeholder": "का सोचत हव?",
-    "post": "पोस्ट करव",
-    "addImage": "तसवीर जोड़व",
-    "addVideo": "वीडियो जोड़व",
-    "addGif": "GIF जोड़व",
-    "addPoll": "पोल जोड़व",
-    "addLocation": "जगह जोड़व",
-    "visibility": "दिखई",
-    "everyone": "सब मनखे",
-    "followers": "फॉलोअर",
-    "subscribers": "सब्सक्राइबर",
-    "mentioned": "जेकर नाम लिखे गइस"
-  },
   "emojiPicker": {
     "tabEmoji": "इमोजी",
     "tabGif": "GIF",
@@ -5180,5 +5146,43 @@
     "planRestricted": "ए यूजर ल संदेस पाए बर सब्सक्रिप्सन चाही।",
     "planTypeNotAllowed": "ए क्रिएटर के प्लान म अइसन संदेस के अनुमति नइ हे।",
     "planMinTip": "ए क्रिएटर बर टिप कम से कम {{amount}} DHB होना चाही।"
+  },
+  "post": {
+    "like": "पसंद",
+    "comment": "टिप्पणी",
+    "repost": "फेर शेयर करव",
+    "share": "शेयर करव",
+    "bookmark": "बुकमार्क",
+    "tip": "टिप",
+    "delete": "मिटाव",
+    "edit": "संपादन करव",
+    "report": "रिपोर्ट करव",
+    "translate": "अनुवाद करव",
+    "pinned": "पिन करे हे",
+    "replying": "जवाब देत हे",
+    "reply": "जवाब",
+    "writeReply": "जवाब लिखव...",
+    "noComments": "अभी तक कोनो टिप्पणी नइ हे",
+    "viewMore": "अउर देखव",
+    "postDeleted": "पोस्ट मिटा दे गइस",
+    "likes": "पसंद",
+    "comments": "टिप्पणी",
+    "reposts": "रीपोस्ट",
+    "shares": "शेयर"
+  },
+  "create": {
+    "title": "पोस्ट बनाव",
+    "placeholder": "का सोचत हव?",
+    "post": "पोस्ट करव",
+    "addImage": "तसवीर जोड़व",
+    "addVideo": "वीडियो जोड़व",
+    "addGif": "GIF जोड़व",
+    "addPoll": "पोल जोड़व",
+    "addLocation": "जगह जोड़व",
+    "visibility": "दिखई",
+    "everyone": "सब मनखे",
+    "followers": "फॉलोअर",
+    "subscribers": "सब्सक्राइबर",
+    "mentioned": "जेकर नाम लिखे गइस"
   }
 }
