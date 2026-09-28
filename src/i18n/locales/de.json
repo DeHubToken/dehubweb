@@ -4492,7 +4492,6 @@
     "legacyPlanMigrates": "Speichern migriert diesen alten, token-preisigen Plan zu Dollar-Preisen zum Vorlistungspreis.",
     "tokenAmount": "{{amount}} Token",
     "preListingTokenAmount": "Vorlistungs-Token-Betrag",
-    "tokensStayInTreasury": "Ihre DeHub-Token bleiben im Besitz der DeHub-Kasse und werden nicht verkauft. Der Ersteller erhält ein in USDT denominiertes Abonnementguthaben.",
     "tokenCheckoutNotReady": "Die Token-Abonnementkasse ist nicht bereit – bitte versuchen Sie es in Kürze erneut",
     "tokenQuoteUnavailable": "Live-Token-Angebot nicht verfügbar",
     "tokenEstimate": "≈ {{amount}} Token",
@@ -4500,17 +4499,10 @@
     "subscribedToast": "Abonniert",
     "confirmSubscribeTo": "Abonniere {{plan}} für {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} zum Preis vor dem Inserat",
-    "withdraw": "Zurückziehen",
-    "earningsTitle": "Abonnement-Einnahmen",
-    "earningsAvailable": "Verfügbar",
-    "earningsPending": "Ausstehend",
-    "withdrawableSoon": "Abonnementeinnahmen werden in Kürze auszahlbar sein",
     "youPayNow": "Sie zahlen",
-    "usdtSent": "{{amount}} USDT gesendet",
-    "earningsWithdrawableOnBase": "Auf Base auszahlbar",
-    "earningsUsdtPending": "In USDT · wartet auf Treasury-Reserve",
-    "buyersPayTokenAmount": "Käufer zahlen den angezeigten DeHub-Token-Betrag zum Vorlistungspreis. Sie erhalten den USD-Wert als USDT-Guthaben.",
-    "creditsCreator": "Gutschriften an den/die Kreative * n {{amount}} USDT"
+    "paidToCreatorWallet": "Geht direkt zum Wallet des/der Kreativen",
+    "creatorPaidDirectNote": "Der Anteil des/der Kreativen geht in dem Moment, in dem du dich abonnierst, direkt in sein/ihr Portemonnaie. DeHub behält eine geringe Plattformgebühr.",
+    "creatorEarnsDirect": "Abonnenten zahlen in DeHub-Token. Deine Aktie landet in deinem Wallet, sobald sie abonniert wird, abzüglich der Plattformgebühr für dein Abzeichen-Level."
   },
   "live": {
     "chatJoined": "ist beigetreten",

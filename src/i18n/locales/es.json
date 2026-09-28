@@ -4499,7 +4499,6 @@
     "legacyPlanMigrates": "El ahorro migra este plan heredado con precios en tokens a precios en dólares a la tasa previa a la cotización.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Cantidad de tokens previa a la cotización",
-    "tokensStayInTreasury": "Tus tokens DeHub permanecen bajo la custodia del tesoro de DeHub y no se venden. El creador recibe un saldo de suscripción denominado en USDT.",
     "tokenCheckoutNotReady": "El pago de suscripción de tokens no está listo; inténtalo de nuevo en breve.",
     "tokenQuoteUnavailable": "Cotización de token en vivo no disponible",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -4507,17 +4506,10 @@
     "subscribedToast": "Suscrito",
     "confirmSubscribeTo": "Suscríbete a {{plan}} por {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} a la tarifa de la lista previa",
-    "withdraw": "Retirar",
-    "earningsTitle": "Ingresos por suscripción",
-    "earningsAvailable": "Disponible",
-    "earningsPending": "Pendiente",
-    "withdrawableSoon": "Los ingresos de la suscripción se podrán retirar pronto",
     "youPayNow": "Tú pagas",
-    "usdtSent": "Se enviaron {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Disponible para retirar en Base",
-    "earningsUsdtPending": "En USDT · pendiente de la reserva de tesorería",
-    "buyersPayTokenAmount": "Los compradores pagan la cantidad de tokens DeHub mostrada a la tasa previa a la cotización. Tú recibes el valor en USD como un saldo de USDT.",
-    "creditsCreator": "Créditos al creador {{amount}} USDT"
+    "paidToCreatorWallet": "Va directamente al monedero del creador",
+    "creatorPaidDirectNote": "La parte del creador va directamente a su billetera en el momento en que te suscribes. DeHub mantiene una pequeña tarifa de plataforma.",
+    "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "live": {
     "chatJoined": "se unió",

@@ -4274,7 +4274,6 @@
     "legacyPlanMigrates": "سیونگ اس پرانے ٹوکن پرائسڈ پلان کو پری لسٹنگ ریٹ پر ڈالر پرائسنگ میں منتقل کرتی ہے۔",
     "tokenAmount": "{{amount}} ٹوکنز",
     "preListingTokenAmount": "پری لسٹنگ ٹوکن رقم",
-    "tokensStayInTreasury": "آپ کے DeHub ٹوکنز DeHub خزانے کی تحویل میں رہتے ہیں اور فروخت نہیں ہوتے۔ تخلیق کار کو USDT میں نامزد سبسکرپشن بیلنس ملتا ہے۔",
     "tokenCheckoutNotReady": "ٹوکن سبسکرپشن چیک آؤٹ تیار نہیں ہے — براہ کرم جلد دوبارہ کوشش کریں۔",
     "tokenQuoteUnavailable": "لائیو ٹوکن کوٹ دستیاب نہیں ہے",
     "tokenEstimate": "≈ {{amount}} ٹوکن",
@@ -4282,17 +4281,10 @@
     "subscribedToast": "سبسکرائب شدہ",
     "confirmSubscribeTo": "{{plan}} پر {{price}}/{{duration}} کے لیے سبسکرائب کریں ۔",
     "atPreListingRate": "پری لسٹنگ ریٹ پر {{amount}}",
-    "withdraw": "رقم نکلوائیں",
-    "earningsTitle": "سبسکرپشن کی کمائیاں",
-    "earningsAvailable": "دستیاب",
-    "earningsPending": "زیر التواء",
-    "withdrawableSoon": "سبسکرپشن کی کمائیاں جلد ہی واپس لے لی جائیں گی",
     "youPayNow": "آپ ادائیگی کرتے ہیں",
-    "usdtSent": "{{amount}} USDT بھیج دیے گئے",
-    "earningsWithdrawableOnBase": "Base پر نکالنے کے لیے دستیاب",
-    "earningsUsdtPending": "USDT میں · ٹریژری ریزرو کا انتظار",
-    "buyersPayTokenAmount": "خریدار پری لسٹنگ ریٹ پر ظاہر کردہ DeHub ٹوکن رقم ادا کرتے ہیں۔ آپ کو USDT بیلنس کے طور پر USD ویلیو ملتی ہے۔",
-    "creditsCreator": "تخلیق کار کو کریڈٹ کرتا ہے {{amount}} USDT"
+    "paidToCreatorWallet": "براہ راست تخلیق کار کے والٹ پر جاتا ہے",
+    "creatorPaidDirectNote": "جب آپ سبسکرائب کرتے ہیں تو تخلیق کار کا حصہ براہ راست ان کے والٹ میں چلا جاتا ہے ۔ ڈی ہب ایک چھوٹی پلیٹ فارم فیس رکھتا ہے ۔",
+    "creatorEarnsDirect": "سبسکرائبرز DeHub ٹوکنز میں ادائیگی کرتے ہیں ۔ جیسے ہی وہ سبسکرائب کرتے ہیں آپ کا شیئر آپ کے والٹ میں آ جاتا ہے، آپ کے بیج کے درجے کے لیے پلیٹ فارم فیس کم ہو جاتی ہے ۔"
   },
   "live": {
     "chatJoined": "شامل ہوئے",

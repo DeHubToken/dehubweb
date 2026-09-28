@@ -2653,7 +2653,6 @@
     "legacyPlanMigrates": "बचत इस लीगेसी टोकन-मूल्य योजना को प्री-लिस्टिंग दर पर डॉलर मूल्य निर्धारण में माइग्रेट करती है।",
     "tokenAmount": "{{amount}} टोकन",
     "preListingTokenAmount": "प्री-लिस्टिंग टोकन राशि",
-    "tokensStayInTreasury": "आपके DeHub टोकन DeHub खजाने की हिरासत में रहते हैं और बेचे नहीं जाते हैं। निर्माता को USDT-मूल्यवर्गित सदस्यता शेष राशि प्राप्त होती है।",
     "tokenCheckoutNotReady": "टोकन सदस्यता चेकआउट तैयार नहीं है - कृपया शीघ्र ही पुनः प्रयास करें",
     "tokenQuoteUnavailable": "लाइव टोकन कोट अनुपलब्ध",
     "tokenEstimate": "≈ {{amount}} टोकन",
@@ -2736,17 +2735,10 @@
     "subscribedToast": "सदस्यीकृत",
     "confirmSubscribeTo": "{{plan}} इति सदस्य्यताम् {{price}} / {{duration}} कृते।",
     "atPreListingRate": "{{amount}} पूर्व-सूची दरे",
-    "withdraw": "निवर्त्यताम्",
-    "earningsTitle": "अभिदान लाभ",
-    "earningsAvailable": "उपलब्धम्",
-    "earningsPending": "प्रतीक्षारत",
-    "withdrawableSoon": "लाभांश घोषणा शीघ्र",
     "youPayNow": "त्वं वेतनं",
-    "usdtSent": "{{amount}} USDT प्रेषितम्",
-    "earningsWithdrawableOnBase": "Base इत्यत्र अपसारणाय उपलब्धम्",
-    "earningsUsdtPending": "USDT मानेन · कोषसञ्चयं प्रतीक्षते",
-    "buyersPayTokenAmount": "खरीदार प्री-लिस्टिंग दर पर प्रदर्शित DeHub टोकन राशि का भुगतान करते हैं। आपको USDT शेष राशि के रूप में USD मूल्य प्राप्त होता है।",
-    "creditsCreator": "सर्जकस्य {{amount}} USDT क्रेडिट्"
+    "paidToCreatorWallet": "जाऊं तो सीधे साहिब पे जाऊं",
+    "creatorPaidDirectNote": "मते कारकलक्षणादिकं शब्दार्थरत्नेऽस्मामिर्दर्शितं यथा देवदत्तः क्षुद्रं क्षुद्रं रक्षति ।",
+    "creatorEarnsDirect": "देवानामध्ये देवानामध्ये देवानामध्ये । मते कारकलक्षणादिकं शब्दार्थरत्नेऽस्मामिर्दर्शितं यथा"
   },
   "live": {
     "chatJoined": "सम्मिलितः",

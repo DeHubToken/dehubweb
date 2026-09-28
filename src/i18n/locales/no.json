@@ -2696,7 +2696,6 @@
     "legacyPlanMigrates": "Lagring migrerer denne eldre token-prisplanen til dollarprising til forhåndsnoteringskursen.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Forhåndsnoterings token-beløp",
-    "tokensStayInTreasury": "Dine DeHub-tokens forblir i DeHub-skattekammerets forvaring og selges ikke. Skaperen mottar en USDT-denominert abonnementssaldo.",
     "tokenCheckoutNotReady": "Token-abonnementsutsjekkingen er ikke klar — prøv igjen snart",
     "tokenQuoteUnavailable": "Live token-kurs utilgjengelig",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -2784,17 +2783,10 @@
     "subscribedToast": "Abonnert",
     "confirmSubscribeTo": "Abonner på {{plan}} for {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} til forhåndslisteprisen",
-    "withdraw": "Uttak",
-    "earningsTitle": "Abonnementsinntekter",
-    "earningsAvailable": "Tilgjengelig",
-    "earningsPending": "I påvente av",
-    "withdrawableSoon": "Abonnementsinntekter vil snart være mulig å ta ut",
     "youPayNow": "Du betaler",
-    "usdtSent": "{{amount}} USDT sendt",
-    "earningsWithdrawableOnBase": "Kan tas ut på Base",
-    "earningsUsdtPending": "I USDT · venter på treasury-reserve",
-    "buyersPayTokenAmount": "Kjøpere betaler det viste DeHub-tokenbeløpet til forhåndsnoteringskursen. Du mottar USD-verdien som en USDT-saldo.",
-    "creditsCreator": "Krediterer skaperen {{amount}} USDT"
+    "paidToCreatorWallet": "Går rett til skaperens lommebok",
+    "creatorPaidDirectNote": "Skaperens andel går rett til lommeboken deres i det øyeblikket du abonnerer. DeHub har en liten plattformavgift.",
+    "creatorEarnsDirect": "Abonnenter betaler med DeHub-tokens. Andelen din havner i lommeboken din i det øyeblikket de abonnerer, minus plattformavgiften for badge-nivået ditt."
   },
   "live": {
     "chatJoined": "ble med",

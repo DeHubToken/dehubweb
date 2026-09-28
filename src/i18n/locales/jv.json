@@ -2687,7 +2687,6 @@
     "legacyPlanMigrates": "Ngirit migrasi rencana sing regane token warisan iki menyang rega dolar kanthi rega pra-listing.",
     "tokenAmount": "{{amount}} token",
     "preListingTokenAmount": "Jumlah token pra-listing",
-    "tokensStayInTreasury": "Token DeHubmu tetep ana ing pengawasan kas DeHub lan ora didol. Pencipta nampa imbangan langganan sing didenominasi USDT.",
     "tokenCheckoutNotReady": "Checkout langganan token durung siyap — coba maneh mengko",
     "tokenQuoteUnavailable": "Kutipan token langsung ora kasedhiya",
     "tokenEstimate": "≈ {{amount}} token",
@@ -2769,17 +2768,10 @@
     "subscribedToast": "Langganan",
     "confirmSubscribeTo": "Langganan {{plan}} kanggo {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} ing tarif pra-pendaftaran",
-    "withdraw": "Tarik",
-    "earningsTitle": "Penghasilan langganan",
-    "earningsAvailable": "Kasedhiya",
-    "earningsPending": "Ditundha",
-    "withdrawableSoon": "Penghasilan langganan bakal bisa ditarik mengko",
     "youPayNow": "Kowe mbayar",
-    "usdtSent": "{{amount}} USDT wis dikirim",
-    "earningsWithdrawableOnBase": "Bisa ditarik ing Base",
-    "earningsUsdtPending": "Ing USDT · ngenteni cadangan kas",
-    "buyersPayTokenAmount": "Pembeli mbayar jumlah token DeHub sing ditampilake kanthi rega pra-listing. Sampeyan nampa nilai USD minangka imbangan USDT.",
-    "creditsCreator": "Kredit kreator {{amount}} USDT"
+    "paidToCreatorWallet": "Mlebu langsung menyang dompet pangripta",
+    "creatorPaidDirectNote": "Bagean kreator langsung mlebu menyang dompete nalika sampeyan langganan. DeHub njupuk biaya platform cilik.",
+    "creatorEarnsDirect": "Pelanggan mbayar nganggo token DeHub. Bagianmu mlebu ing dompetmu nalika dheweke langganan, dikurangi biaya platform kanggo tingkatan lencana."
   },
   "live": {
     "chatJoined": "gabung",

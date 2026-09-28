@@ -2643,7 +2643,6 @@
     "legacyPlanMigrates": "ኣኽብሮት፡ እዚ ሕጋዊ መርበብ ሓበሬታ እዚ ንብረት እዚ ብዋጋ ዶላር ይሸቕጥ።",
     "tokenAmount": "{{amount}} ቶክን",
     "preListingTokenAmount": "ቅድሚ ምዝገባ ዋጋ ቶክን",
-    "tokensStayInTreasury": "ኣብ ቤት ጽሕፈት ቤት DeHub ዝተሓዝዎ ቶክንኩም ኣይሸየጥን። ንፈጣሪ ብUSDT ዝተሰርዐ ክፍሊት ይረክብ።",
     "tokenCheckoutNotReady": "ናይ ቶክን ምዝገባ ገጽ ኣይተዳለወን - ብቕልጡፍ ዳግማይ ኪኢሉ ይፈተሽ።",
     "tokenQuoteUnavailable": "ናይ ቶክን ዋጋ ኣብ ህይወት ኣይረኸበን",
     "tokenEstimate": "≈ {{amount}} ቶክን",
@@ -2730,17 +2729,10 @@
     "subscribedToast": "ተመዝጊቡ",
     "confirmSubscribeTo": "ን{{plan}} ብ{{price}} / {{duration}} ምዝገባ ግበሩ።",
     "atPreListingRate": "ብቅድመ-ዝርዝር ዋጋ ብ{{amount}}",
-    "withdraw": "ምስሕሓብ",
-    "earningsTitle": "ኣታዊታት ኣባልነት",
-    "earningsAvailable": "ተዳልዩ ኣሎ",
-    "earningsPending": "ኣብ ምፅባይ",
-    "withdrawableSoon": "ናይ ምዝገባ ኣታዊታት ኣብ ቀረባ እዋን ክስረዝ እዩ",
     "youPayNow": "ንስኻ ኢኻ እትኸፍል",
-    "usdtSent": "{{amount}} USDT ተላኢኹ",
-    "earningsWithdrawableOnBase": "ኣብ Base ክውጻእ ይከኣል",
-    "earningsUsdtPending": "ብ USDT · ናይ ግምጃ ቤት መዋህለሊ ይጽበ ኣሎ",
-    "buyersPayTokenAmount": "ገዛእቲ ዝተጠቐሱ DeHub ቶክን መጠን ብቅድሚት ዋጋ ይኸፍሉ። ንስኻትኩም USD ብUSDT ሚዛን ትቕበሉ።",
-    "creditsCreator": "ንፈጣሪ ብ{{amount}} USDT"
+    "paidToCreatorWallet": "ብቐጥታ ናብ ናይ ፈጣሪ ቦርሳ ይኸይድ",
+    "creatorPaidDirectNote": "እቲ ናይ ፈጣሪ ክፋል ፡ ኣብ እትመዝገቡሉ እዋን ፡ ብቐጥታ ናብ ቦርሳኦም ይኸይድ ። DeHub ንእሽቶ ናይ መድረኽ ክፍሊት ይሕዝ ።",
+    "creatorEarnsDirect": "እቶም ተመዝጋቢታት ኣብ DeHub ምልክታት ይኽፈሉ እዮም ። እቲ ናይ ባጅ ደረጃኻ ናይ መድረኽ ክፍሊት ዝሕተተሉ እዋን ፡ ኣብ ቦርሳኻ ዘሎ መሬትካ ።"
   },
   "live": {
     "chatJoined": "ተጸንበረ",

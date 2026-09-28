@@ -11,8 +11,6 @@ import {
   rememberPendingSubscriptionPayment,
   clearPendingSubscriptionPayment,
   isSubscribedToCreator,
-  getSubscriptionEarnings,
-  withdrawSubscriptionEarnings,
   planPrice,
   primaryPlanChain,
   type SubscriptionPlan,
@@ -106,31 +104,6 @@ export function useMySubscriptions() {
     error: subscriptionsQuery.error,
     refetch: subscriptionsQuery.refetch,
   };
-}
-
-export function useSubscriptionEarnings() {
-  const { isAuthenticated } = useAuth();
-  const query = useQuery({
-    queryKey: ['subscription-earnings'],
-    queryFn: getSubscriptionEarnings,
-    enabled: isAuthenticated,
-    staleTime: 15_000,
-  });
-  return { earnings: query.data, isLoading: query.isLoading, refetch: query.refetch };
-}
-
-export function useWithdrawSubscriptionEarnings() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: withdrawSubscriptionEarnings,
-    onSuccess: (result) => {
-      queryClient.setQueryData(['subscription-earnings'], result.status);
-      toast.success(i18n.t('subscriptions.usdtSent', { amount: result.amountUsdt.toLocaleString(undefined, { maximumFractionDigits: 6 }) }));
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || i18n.t('subscriptions.withdrawableSoon'));
-    },
-  });
 }
 
 /**

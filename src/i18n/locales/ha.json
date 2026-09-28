@@ -2698,7 +2698,6 @@
     "legacyPlanMigrates": "Ajiya yana canza wannan tsohon tsarin da aka farashin token zuwa farashin dalar Amurka a farashin kafin jeri.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Adadin token kafin jeri",
-    "tokensStayInTreasury": "DeHub tokens ɗinka suna zama a hannun ajiyar DeHub kuma ba a sayar da su ba. Mai ƙirƙira yana karɓar ma'auni na biyan kuɗi na USDT.",
     "tokenCheckoutNotReady": "Checkout na biyan kuɗi na token bai shirya ba — da fatan za a sake gwadawa nan ba da jimawa ba",
     "tokenQuoteUnavailable": "Rabon token kai tsaye ba ya samuwa",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -2786,17 +2785,10 @@
     "subscribedToast": "Subscribed",
     "confirmSubscribeTo": "Biyan kuɗi zuwa {{plan}} don {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} a pre-listing kudi",
-    "withdraw": "Janyewa",
-    "earningsTitle": "Kudin biyan kuɗi",
-    "earningsAvailable": "Akwai",
-    "earningsPending": "Jiraiya",
-    "withdrawableSoon": "Kudin biyan kuɗi za a cire nan ba da daɗewa ba",
     "youPayNow": "Kuna biya",
-    "usdtSent": "An aika {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Ana iya cirewa a Base",
-    "earningsUsdtPending": "An lissafa cikin USDT · ana jiran ajiyar baitulmali",
-    "buyersPayTokenAmount": "Masu siye suna biyan adadin DeHub token da aka nuna a farashin kafin jeri. Kuna karɓar ƙimar USD azaman ma'auni na USDT.",
-    "creditsCreator": "Credits mahaliccin {{amount}} USDT"
+    "paidToCreatorWallet": "Je kai tsaye zuwa walat na mahalicci",
+    "creatorPaidDirectNote": "Rabon mahalicci yana kai tsaye zuwa walat ɗin su lokacin da kuka yi rajista. DeHub yana riƙe da ƙaramin kuɗin dandamali.",
+    "creatorEarnsDirect": "Masu biyan kuɗi suna biyan kuɗi a cikin alamun DeHub. Kasashen rabon ku a cikin walat ɗin ku lokacin da suka yi rajista, ƙasa da kuɗin dandamali don ƙimar alamar ku."
   },
   "live": {
     "chatJoined": "ya shiga",

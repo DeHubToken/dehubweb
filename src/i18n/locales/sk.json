@@ -2836,7 +2836,6 @@
     "legacyPlanMigrates": "Uloženie migruje tento plán s cenou v starých tokenoch na cenu v dolároch za predpredajnú cenu.",
     "tokenAmount": "{{amount}} tokenov",
     "preListingTokenAmount": "Predpredajná suma tokenov",
-    "tokensStayInTreasury": "Vaše tokeny DeHub zostávajú v správe pokladnice DeHub a nepredávajú sa. Tvorca dostane predplatné v USDT.",
     "tokenCheckoutNotReady": "Pokladňa predplatného tokenov nie je pripravená — skúste to znova čoskoro",
     "tokenQuoteUnavailable": "Žiadna aktuálna ponuka tokenov",
     "tokenEstimate": "≈ {{amount}} tokenov",
@@ -2924,17 +2923,10 @@
     "subscribedToast": "Prihlásené",
     "confirmSubscribeTo": "Prihláste sa na odber {{plan}} na {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} pri sadzbe predbežnej ponuky",
-    "withdraw": "Vybrať",
-    "earningsTitle": "Zárobky z predplatného",
-    "earningsAvailable": "Dostupné",
-    "earningsPending": "Čaká na spracovanie",
-    "withdrawableSoon": "Zárobky z predplatného budú čoskoro vyberateľné",
     "youPayNow": "Zaplatíte",
-    "usdtSent": "Odoslaných {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Dostupné na výber na Base",
-    "earningsUsdtPending": "V USDT · čaká na rezervu pokladnice",
-    "buyersPayTokenAmount": "Kupujúci platia zobrazenú sumu tokenov DeHub za predpredajnú cenu. Vy dostanete hodnotu v USD ako zostatok USDT.",
-    "creditsCreator": "Pripisuje kredit tvorcovi {{amount}} USDT"
+    "paidToCreatorWallet": "Ide priamo do peňaženky tvorcu",
+    "creatorPaidDirectNote": "Podiel tvorcu ide priamo do jeho peňaženky v okamihu, keď sa prihlásite na odber. DeHub si ponecháva malý poplatok za platformu.",
+    "creatorEarnsDirect": "Predplatitelia platia v žetónoch DeHub. Váš podiel sa dostane do peňaženky v okamihu, keď sa prihlásia na odber, po odpočítaní poplatku za platformu pre vašu úroveň odznaku."
   },
   "live": {
     "chatJoined": "sa pripojil/a",

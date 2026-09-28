@@ -2639,7 +2639,6 @@
     "legacyPlanMigrates": "سپما دا زوړ توکن-قیمت شوی پلان د مخکې لیست شوي نرخ سره ډالر قیمت ته لیږدوي.",
     "tokenAmount": "{{amount}} توکونه",
     "preListingTokenAmount": "د مخکې لیست کولو توکن مقدار",
-    "tokensStayInTreasury": "ستاسو ډی هب (DeHub) توکونه د ډی هب (DeHub) خزانې په واک کې پاتې کیږي او نه پلورل کیږي. جوړونکی د USDT نومول شوي ګډون بیلانس ترلاسه کوي.",
     "tokenCheckoutNotReady": "د توکن ګډون چیک آوټ (checkout) چمتو نه دی - مهرباني وکړئ ژر بیا هڅه وکړئ",
     "tokenQuoteUnavailable": "د ژوندی توکن نرخ شتون نلري",
     "tokenEstimate": "≈ {{amount}} توکونه",
@@ -2727,17 +2726,10 @@
     "subscribedToast": "ګډون شوی",
     "confirmSubscribeTo": "د {{plan}} ګډون وکړئ د {{price}} / {{duration}} لپاره.",
     "atPreListingRate": "د {{amount}} د مخکې لیست نرخ",
-    "withdraw": "لرې کړئ",
-    "earningsTitle": "د داوطلبۍ عایدات",
-    "earningsAvailable": "د لاسرسي وړ",
-    "earningsPending": "په انتظار کې",
-    "withdrawableSoon": "د ټاکنیزو شکایتونو کمېسیون دې ژر تر ژره د رایو بیا شمېرنه پیل کړي",
     "youPayNow": "تاسو پیسې ورکوئ",
-    "usdtSent": "{{amount}} USDT ولېږل شو",
-    "earningsWithdrawableOnBase": "په Base کې د ایستلو وړ",
-    "earningsUsdtPending": "په USDT کې · د خزانې ذخیرې ته په تمه",
-    "buyersPayTokenAmount": "پیرودونکي د مخکې لیست شوي نرخ سره ښودل شوي ډی هب (DeHub) توکن مقدار تادیه کوي. تاسو د USDT بیلانس په توګه د USD ارزښت ترلاسه کوئ.",
-    "creditsCreator": "د خالق {{amount}} USDT کریډیټونه"
+    "paidToCreatorWallet": "د خالق په لار روان دی د خالق په لار روان دی",
+    "creatorPaidDirectNote": "د خالق برخه مستقیم د دوی جیب ته ځي کله چې تاسو ګډون کوئ. DeHub د کوچني پلیټ فارم فیس ساتي.",
+    "creatorEarnsDirect": "پیرودونکي په DeHub توکیو کې پیسې ورکوي. ستاسو د ونډې ځمکه په هغه شیبه کې چې دوی ګډون کوي، ستاسو د بیج ټایر لپاره د پلیټ فارم فیس کموي."
   },
   "live": {
     "chatJoined": "ورګډ شو",

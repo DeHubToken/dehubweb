@@ -2715,7 +2715,6 @@
     "legacyPlanMigrates": "التوفير كينقل هاد الخطة القديمة المسعرة بالتوكن لتسعير الدولار بالسعر قبل الإدراج.",
     "tokenAmount": "{{amount}} توكنز",
     "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
-    "tokensStayInTreasury": "توكنز DeHub ديالك كيبقاو تحت وصاية خزينة DeHub وما كيتباعوش. المبدع كياخد رصيد اشتراك مقدر بالدولار.",
     "tokenCheckoutNotReady": "الدفع ديال اشتراك التوكن ما موجودش — عاود جرب قريباً",
     "tokenQuoteUnavailable": "عرض التوكن المباشر غير متاح",
     "tokenEstimate": "≈ {{amount}} توكنز",
@@ -2803,17 +2802,10 @@
     "subscribedToast": "مشترك",
     "confirmSubscribeTo": "اشترك فـ {{plan}} مقابل {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} بالأسعار قبل القوائم",
-    "withdraw": "سحب",
-    "earningsTitle": "أرباح الاشتراك",
-    "earningsAvailable": "متاح",
-    "earningsPending": "معلق",
-    "withdrawableSoon": "سيتم سحب أرباح الاشتراك قريبًا",
     "youPayNow": "أنت تدفع",
-    "usdtSent": "تصيفط {{amount}} USDT",
-    "earningsWithdrawableOnBase": "متاح للسحب ف Base",
-    "earningsUsdtPending": "محسوب بالـ USDT · كيتسنا احتياطي الخزينة",
-    "buyersPayTokenAmount": "المشترين كيدفعو مبلغ توكنز DeHub المعروض بالسعر قبل الإدراج. كتاخد قيمة الدولار كرصيد USDT.",
-    "creditsCreator": "الائتمانات لصانع {{amount}} USDT"
+    "paidToCreatorWallet": "يذهب مباشرة إلى محفظة منشئ المحتوى",
+    "creatorPaidDirectNote": "تذهب حصة منشئ المحتوى مباشرة إلى محفظته في اللحظة التي تشترك فيها. تحتفظ DeHub برسوم منصة صغيرة.",
+    "creatorEarnsDirect": "يدفع المشتركون بعملات DeHub. تصل حصتك إلى محفظتك في اللحظة التي يشتركون فيها، مخصومًا منها رسوم المنصة لمستوى شارتك."
   },
   "live": {
     "chatJoined": "دخل",
