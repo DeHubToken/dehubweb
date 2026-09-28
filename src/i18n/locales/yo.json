@@ -3719,7 +3719,11 @@
         "false_dilemma": "Boya-tabi framing",
         "overgeneralisation": "Sweeping claim",
         "hostile_tone": "Ohun orin Hostile"
-      }
+      },
+      "aiMenu": "Àwọn irinṣẹ́ AI",
+      "changeVibe": "Yí ìhùwàsí padà",
+      "fixSpelling": "Ṣàtúnṣe akọtọ́ àti gírámà",
+      "rewriteFailed": "A kò lè tún un kọ. Gbìyànjú lẹ́ẹ̀kan sí i."
     }
   },
   "onboarding": {
