@@ -1,6 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { type StripeEnv, verifyWebhook } from "../_shared/stripe.ts";
 import { planGrantDhb } from "../_shared/ai-plans.ts";
+import { reportInvoiceToPlay, reportRefundToPlay } from "./play-report.ts";
 
 let _supabase: ReturnType<typeof createClient> | null = null;
 function getSupabase() {
@@ -277,6 +278,10 @@ async function handleWebhook(req: Request, env: StripeEnv) {
       break;
     case "invoice.paid":
       await handleInvoicePaid(event.data.object, env);
+      await reportInvoiceToPlay(event.data.object, env);
+      break;
+    case "charge.refunded":
+      await reportRefundToPlay(event.data.object, env);
       break;
     default:
       console.log("Unhandled event:", event.type);
