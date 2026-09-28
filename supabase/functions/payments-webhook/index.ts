@@ -162,8 +162,6 @@ async function deliverPlanTokens(args: {
         invoiceId: args.invoiceId,
         walletAddress: args.wallet,
         amountDhb: args.dhb,
-        // Pegged at $0.001 per DHB; the backend credits this dollar value.
-        amountUsd: Math.round(args.dhb * 1000) / 1_000_000,
         priceId: args.priceId,
         seats: args.seats,
       }),

@@ -3073,7 +3073,11 @@
     "sampleReady": "Nümunə hazırdır.",
     "discardRecording": "Yazını sil",
     "settingUpVoice": "Səsiniz quraşdırılır...",
-    "useThisVoice": "Bu səsi istifadə et"
+    "useThisVoice": "Bu səsi istifadə et",
+    "autoEnd": {
+      "title": "Səsli otaq fəaliyyətsizlik səbəbindən bağlandı",
+      "description": "\"{{title}}\" otağında 30 dəqiqə heç kim danışmadı, ona görə bağlandı."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4384,6 +4388,7 @@
     "noneYet": "Hələ abunə yoxdur",
     "noneYetHint": "Fəaliyyətinizi burada görmək üçün yaradıcılara abunə olun",
     "subscriptionList": "Abunə siyahısı",
+    "totalCount": "{{count}} cəmi",
     "creator": "Yaradıcı",
     "plan": "Planlaşdırın",
     "planFallback": "Planlaşdırın",
@@ -4396,31 +4401,22 @@
     "expired": "Müddəti bitib",
     "active": "Aktiv",
     "inactive": "Qeyri-aktiv",
+    "daysLeft_one": "{{count}}d qalıb",
+    "daysLeft_other": "{{count}}d qalıb",
     "legacyPlanMigrates": "Saxlama bu köhnə tokenlə qiymətləndirilən planı siyahıdan əvvəlki tariflə dollar qiymətinə köçürür.",
     "tokenAmount": "{{amount}} token",
     "preListingTokenAmount": "Siyahıdan əvvəlki token məbləği",
-    "tokensStayInTreasury": "Sizin DeHub tokenləriniz DeHub xəzinəsinin nəzarətində qalır və satılmır. Yaradıcı USDT ilə ifadə edilmiş abunə balansı alır.",
     "tokenCheckoutNotReady": "Token abunəliyi checkout hazır deyil — lütfən qısa müddətdə yenidən cəhd edin",
     "tokenQuoteUnavailable": "Canlı token kotirovkası mövcud deyil",
     "tokenEstimate": "≈ {{amount}} token",
     "tokenAmountUnavailable": "Token məbləği mövcud deyil",
-    "totalCount": "{{count}} cəmi",
-    "daysLeft_one": "{{count}}d qalıb",
-    "daysLeft_other": "{{count}}d qalıb",
     "subscribedToast": "Abunə olunub",
     "confirmSubscribeTo": "{{price}}{{duration}} üçün {{plan}} abunə olun.",
     "atPreListingRate": "{{amount}} əvvəlcədən elan qiyməti ilə",
-    "withdraw": "Geri götür",
-    "earningsTitle": "Abunə qazancları",
-    "earningsAvailable": "Mövcuddur",
-    "earningsPending": "Gözləmədədir",
-    "withdrawableSoon": "Abunə qazancları tezliklə geri götürüləcək",
     "youPayNow": "Ödəniş edirsiniz",
-    "usdtSent": "{{amount}} USDT göndərildi",
-    "earningsWithdrawableOnBase": "Base şəbəkəsində çıxarıla bilər",
-    "earningsUsdtPending": "USDT ilə ifadə olunur · xəzinə ehtiyatı gözlənilir",
-    "buyersPayTokenAmount": "Alıcılar siyahıdan əvvəlki tariflə göstərilən DeHub token məbləğini ödəyirlər. Siz USDT balansı kimi USD dəyərini alırsınız.",
-    "creditsCreator": "Yaradıcı şəxsə {{amount}} USDT kredit verir"
+    "paidToCreatorWallet": "Birbaşa yaradıcının cüzdanına doğru gedir",
+    "creatorPaidDirectNote": "Yaradıcı şəxsin payı birbaşa abunə olduğunuz an cüzdanına keçir. DeHub kiçik platforma haqqı saxlayır.",
+    "creatorEarnsDirect": "Abunəçilər DeHub tokenlərində ödəniş edirlər. Pay torpaqlarınız abunə olduqları an cüzdanınızda olur, nişan səviyyəniz üçün platforma haqqını azaldın."
   },
   "live": {
     "chatJoined": "qoşuldu",
@@ -5328,6 +5324,7 @@
       "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Dəzgah lenti",
       "fetching": "Yem əldə edilir...",
+      "showBy": "Müəllif: {{author}}",
       "episodes": "{{count}} epizod",
       "selectAll": "Hamısını seç",
       "alreadyImported": "Artıq idxal edilib",
@@ -5338,8 +5335,7 @@
       "failed": "Uğursuz oldu",
       "emptyFeed": "Bu lentdə heç bir epizod tapa bilmədik.",
       "badFeed": "Bu link podkast lentinə bənzəmir.",
-      "tooMany": "Bir dəfəyə 20-yə qədər seriya idxal edin.",
-      "showBy": "Müəllif: {{author}}"
+      "tooMany": "Bir dəfəyə 20-yə qədər seriya idxal edin."
     }
   },
   "banned": {
@@ -5499,13 +5495,12 @@
       "images": "Hər yazıya düşən şəkillər",
       "uploads": "Gündəlik yüklənmə limiti",
       "storage": "Redaktor yaddaşı",
-      "profiles": "Saxlanılan profillər",
       "lending": "Nişan verən aralıqlar",
       "voice": "Səs klonlaması",
       "voiceFree": "Pulsuz",
       "voiceLocked": "{{tier}} və yuxarı"
     },
-    "buy": "DHB əldə edin",
+    "buyTokens": "Tokenlər al",
     "details": "Tam təhlil",
     "play": "Oxut",
     "pause": "Fasilə ver",

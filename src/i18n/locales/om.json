@@ -2517,7 +2517,11 @@
   },
   "stages": {
     "title": "Kutaalee sagalee",
-    "alreadyCharged": "Aduun kee kanaaf fudhatamee jira. Irra deebiitootiin yaali – yeroo lammaffaa si hin dabalatu."
+    "alreadyCharged": "Aduun kee kanaaf fudhatamee jira. Irra deebiitootiin yaali – yeroo lammaffaa si hin dabalatu.",
+    "autoEnd": {
+      "title": "Kutaan sagalee sochii dhabuu irraa kan ka'e xumurameera",
+      "description": "Daqiiqaa 30f namni \"{{title}}\" keessatti hin dubbanne, kanaaf cufameera."
+    }
   },
   "ads": {
     "priceUnavailable": "Bara aduu hin argamuu – yeroo muraasa booddee irra deebiitootiin yaali.",
@@ -2722,14 +2726,6 @@
     "loginDescription": "Odeeffannoo ilaaluuf fi uumuuf seeni."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Qusannaan karoora gatii mallattoo hambaa kana gara gatii doolaaraa saffisa tarree duraatiin godaansa.",
-    "tokenAmount": "{{amount}} mallattoolee",
-    "preListingTokenAmount": "Hanga mallattoo dursanii tarreessuun",
-    "tokensStayInTreasury": "Tookiin DeHub keessan eegumsa kaznaa DeHub keessa turuu fi hin gurguramu. Uumaan hafnaan maallaqa maallaqaan bitamuu USDT-denominated argata.",
-    "tokenCheckoutNotReady": "Kaffaltiin maallaqa token qophii miti — maaloo yeroo gabaabaa keessatti irra deebi&#39;ii yaali",
-    "tokenQuoteUnavailable": "Live token quote hin argamu",
-    "tokenEstimate": "≈ {{amount}} mallattoolee",
-    "tokenAmountUnavailable": "Hanga mallattoo hin argamne",
     "subscribersOnly": "Subscribers qofa",
     "creatorKeepsPost": "{{creator}} barreeffama kana subscribers isaaniif qabatu.",
     "creatorNoPlans": "{{creator}} yeroo ammaa kana subscription banaa hin qabu.",
@@ -2810,20 +2806,20 @@
     "inactive": "Hin hojjatamu",
     "daysLeft_one": "{{count}}d hafe",
     "daysLeft_other": "{{count}}d hafe",
+    "legacyPlanMigrates": "Qusannaan karoora gatii mallattoo hambaa kana gara gatii doolaaraa saffisa tarree duraatiin godaansa.",
+    "tokenAmount": "{{amount}} mallattoolee",
+    "preListingTokenAmount": "Hanga mallattoo dursanii tarreessuun",
+    "tokenCheckoutNotReady": "Kaffaltiin maallaqa token qophii miti — maaloo yeroo gabaabaa keessatti irra deebi&#39;ii yaali",
+    "tokenQuoteUnavailable": "Live token quote hin argamu",
+    "tokenEstimate": "≈ {{amount}} mallattoolee",
+    "tokenAmountUnavailable": "Hanga mallattoo hin argamne",
     "subscribedToast": "Galmaa'e",
     "confirmSubscribeTo": "Uumataa {{plan}} galmaa'i {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} gatii duraa",
-    "withdraw": "Gidduutti dhaabuu",
-    "earningsTitle": "Galii maallaqa maallaqaan bitamuu (subscription).",
-    "earningsAvailable": "Jira",
-    "earningsPending": "Eeggataa kan jiru",
-    "withdrawableSoon": "Galiin maallaqa maallaqaan bitamuu yeroo dhiyootti ni baafama",
     "youPayNow": "Ati ni kaffaltu",
-    "usdtSent": "{{amount}} USDT ergameera",
-    "earningsWithdrawableOnBase": "Base irratti baafamuu dandaʼa",
-    "earningsUsdtPending": "USDT-n · kuusaa qabeenyaa eeggachaa jira",
-    "buyersPayTokenAmount": "Bitamtoonni maallaqa mallattoo DeHub agarsiifame sadarkaa tarree duraatiin kaffalu. Gatii USD akka hafnaan USDT tti argatta.",
-    "creditsCreator": "Kireeditii uumataa {{amount}} USDT"
+    "paidToCreatorWallet": "Kallattiin gara boorsaa uumaa deema",
+    "creatorPaidDirectNote": "Share uumaa yeroo subscribe gootan kallattiin gara boorsaa isaaniitti deema. DeHub kaffaltii waltajjii xiqqaa qaba.",
+    "creatorEarnsDirect": "Maamiltoonni mallattoo DeHub tiin kaffalu. Aksiyooniin keessan yeroo isaan subscribe godhanitti boorsaa keessan keessa bu&#39;a, kaffaltii waltajjii sadarkaa baajii keessanii hir&#39;isuun."
   },
   "live": {
     "chatJoined": "makaate",
@@ -3508,13 +3504,12 @@
       "images": "Suuraalee maxxansa tokkoon tokkoon",
       "uploads": "Daangaa olkaa'uu guyyaa",
       "storage": "Kuusaa gulaalaa",
-      "profiles": "Profaayilota qusataman",
       "lending": "Bakkeewwan liqii baajii",
       "voice": "Sagalee cloning gochuu",
       "voiceFree": "Bilisa",
       "voiceLocked": "{{tier}} fi ol"
     },
-    "buy": "DHB argadhu",
+    "buyTokens": "Tookiin bitadhaa",
     "details": "Guutuu caccabuu",
     "play": "Taphachuu",
     "pause": "Gidduutti dhaabuu",
@@ -4566,32 +4561,6 @@
       "tippedYou": "tip siif kenne {{amount}} tokens"
     }
   },
-  "spaces": {
-    "title": "Bakkeewwan",
-    "live": "Kallattii",
-    "upcoming": "Dhufaa jiru",
-    "past": "Darbe",
-    "create": "Bakkee Uumi",
-    "join": "Makamsi",
-    "listeners": "Dhaggeeffattoota",
-    "speakers": "Dubbattoota",
-    "host": "Keessummeessaa",
-    "endSpace": "Bakkee Dhaabi",
-    "raiseHand": "Harka Ol Kaasi",
-    "lowerHand": "Harka Gadi Buusi",
-    "mute": "Callisuun",
-    "unmute": "Sagalee Bansi",
-    "leave": "Bakkee Gadi Dhiisi",
-    "noSpaces": "Ammallee bakkeewwan hin jiran",
-    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
-  },
-  "blog": {
-    "title": "Biloogii",
-    "readMore": "Dabalataa dubbisi",
-    "backToBlog": "Biloogiitti deebi'i",
-    "sharePost": "Barreeffama qoodi",
-    "relatedPosts": "Barreeffamoota Walqabatan"
-  },
   "emojiPicker": {
     "tabEmoji": "Emoojii",
     "tabGif": "GIF",
@@ -5322,5 +5291,31 @@
     "planRestricted": "Fayyadamaan kun ergaa fudhachuuf maallaqa galmee barbaada.",
     "planTypeNotAllowed": "Karoorri uumaa kanaa gosa ergaa kanaa hin hayyamu.",
     "planMinTip": "Tip uumaa kanaaf yoo xiqqaate {{amount}} DHB ta'uu qaba."
+  },
+  "spaces": {
+    "title": "Bakkeewwan",
+    "live": "Kallattii",
+    "upcoming": "Dhufaa jiru",
+    "past": "Darbe",
+    "create": "Bakkee Uumi",
+    "join": "Makamsi",
+    "listeners": "Dhaggeeffattoota",
+    "speakers": "Dubbattoota",
+    "host": "Keessummeessaa",
+    "endSpace": "Bakkee Dhaabi",
+    "raiseHand": "Harka Ol Kaasi",
+    "lowerHand": "Harka Gadi Buusi",
+    "mute": "Callisuun",
+    "unmute": "Sagalee Bansi",
+    "leave": "Bakkee Gadi Dhiisi",
+    "noSpaces": "Ammallee bakkeewwan hin jiran",
+    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
+  },
+  "blog": {
+    "title": "Biloogii",
+    "readMore": "Dabalataa dubbisi",
+    "backToBlog": "Biloogiitti deebi'i",
+    "sharePost": "Barreeffama qoodi",
+    "relatedPosts": "Barreeffamoota Walqabatan"
   }
 }

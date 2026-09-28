@@ -2501,7 +2501,11 @@
   },
   "stages": {
     "title": "Dakunan sauti",
-    "alreadyCharged": "An riga an ɗauki token ɗinku don wannan. Sake gwadawa — ba za a caje ku sau biyu ba."
+    "alreadyCharged": "An riga an ɗauki token ɗinku don wannan. Sake gwadawa — ba za a caje ku sau biyu ba.",
+    "autoEnd": {
+      "title": "An rufe dakin sauti saboda rashin aiki",
+      "description": "Babu wanda ya yi magana a \"{{title}}\" na mintuna 30, don haka an rufe shi."
+    }
   },
   "ads": {
     "priceUnavailable": "Farashin token ba a samu ba — sake gwadawa nan da jimawa.",
@@ -2695,14 +2699,6 @@
     "transferGuarantee": "Za ku sami dukkan asusun — hannun hannu, sakonni, masu bi, tarihin bayarwa da haƙƙoƙin lambobi. Mai siyarwa yana riƙe da walat ɗinsa da komai a cikinsa. Canjin yana gudana ne kawai bayan DeHub ya karanta biyan kuɗin alamar ku daga kan sarkar; idan an katse shi, sake gwada siyan yana ci gaba da shi."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Ajiya yana canza wannan tsohon tsarin da aka farashin token zuwa farashin dalar Amurka a farashin kafin jeri.",
-    "tokenAmount": "{{amount}} tokens",
-    "preListingTokenAmount": "Adadin token kafin jeri",
-    "tokensStayInTreasury": "DeHub tokens ɗinka suna zama a hannun ajiyar DeHub kuma ba a sayar da su ba. Mai ƙirƙira yana karɓar ma'auni na biyan kuɗi na USDT.",
-    "tokenCheckoutNotReady": "Checkout na biyan kuɗi na token bai shirya ba — da fatan za a sake gwadawa nan ba da jimawa ba",
-    "tokenQuoteUnavailable": "Rabon token kai tsaye ba ya samuwa",
-    "tokenEstimate": "≈ {{amount}} tokens",
-    "tokenAmountUnavailable": "Adadin token ba ya samuwa",
     "subscribersOnly": "Masu biyan kuɗi kawai",
     "creatorKeepsPost": "{{creator}} yana riƙe wannan rubutu don masu biyan kuɗinsa.",
     "creatorNoPlans": "{{creator}} baya da biyan kuɗi a bude yanzu.",
@@ -2783,20 +2779,20 @@
     "inactive": "Inactive",
     "daysLeft_one": "{{count}}d left",
     "daysLeft_other": "{{count}}d left",
+    "legacyPlanMigrates": "Ajiya yana canza wannan tsohon tsarin da aka farashin token zuwa farashin dalar Amurka a farashin kafin jeri.",
+    "tokenAmount": "{{amount}} tokens",
+    "preListingTokenAmount": "Adadin token kafin jeri",
+    "tokenCheckoutNotReady": "Checkout na biyan kuɗi na token bai shirya ba — da fatan za a sake gwadawa nan ba da jimawa ba",
+    "tokenQuoteUnavailable": "Rabon token kai tsaye ba ya samuwa",
+    "tokenEstimate": "≈ {{amount}} tokens",
+    "tokenAmountUnavailable": "Adadin token ba ya samuwa",
     "subscribedToast": "Subscribed",
     "confirmSubscribeTo": "Biyan kuɗi zuwa {{plan}} don {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} a pre-listing kudi",
-    "withdraw": "Janyewa",
-    "earningsTitle": "Kudin biyan kuɗi",
-    "earningsAvailable": "Akwai",
-    "earningsPending": "Jiraiya",
-    "withdrawableSoon": "Kudin biyan kuɗi za a cire nan ba da daɗewa ba",
     "youPayNow": "Kuna biya",
-    "usdtSent": "An aika {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Ana iya cirewa a Base",
-    "earningsUsdtPending": "An lissafa cikin USDT · ana jiran ajiyar baitulmali",
-    "buyersPayTokenAmount": "Masu siye suna biyan adadin DeHub token da aka nuna a farashin kafin jeri. Kuna karɓar ƙimar USD azaman ma'auni na USDT.",
-    "creditsCreator": "Credits mahaliccin {{amount}} USDT"
+    "paidToCreatorWallet": "Je kai tsaye zuwa walat na mahalicci",
+    "creatorPaidDirectNote": "Rabon mahalicci yana kai tsaye zuwa walat ɗin su lokacin da kuka yi rajista. DeHub yana riƙe da ƙaramin kuɗin dandamali.",
+    "creatorEarnsDirect": "Masu biyan kuɗi suna biyan kuɗi a cikin alamun DeHub. Kasashen rabon ku a cikin walat ɗin ku lokacin da suka yi rajista, ƙasa da kuɗin dandamali don ƙimar alamar ku."
   },
   "live": {
     "chatJoined": "ya shiga",
@@ -3492,13 +3488,12 @@
       "images": "Images da Post",
       "uploads": "Iyakar loda yau da kullum",
       "storage": "Edita ajiya",
-      "profiles": "An adana bayanan martaba",
       "lending": "Baje bashi ramummuka",
       "voice": "Muryar murya cloning",
       "voiceFree": "Kyauta",
       "voiceLocked": "{{tier}} kuma sama"
     },
-    "buy": "Samu DHB",
+    "buyTokens": "Sayi alamomi",
     "details": "Cikakken rushewa",
     "play": "Yi wasa",
     "pause": "Dakatar da",

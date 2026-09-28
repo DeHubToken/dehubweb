@@ -3065,7 +3065,11 @@
     "sampleReady": "नमुना तयार आहे.",
     "discardRecording": "रेकॉर्डिंग रद्द करा",
     "settingUpVoice": "तुमचा आवाज सेट करत आहे...",
-    "useThisVoice": "हा आवाज वापरा"
+    "useThisVoice": "हा आवाज वापरा",
+    "autoEnd": {
+      "title": "निष्क्रियतेमुळे ऑडिओ रूम संपला",
+      "description": "\"{{title}}\" मध्ये 30 मिनिटे कोणीही बोलले नाही, म्हणून तो बंद करण्यात आला."
+    }
   },
   "ads": {
     "seoTitle": "जाहिरात व्यवस्थापक | DeHub",
@@ -4233,30 +4237,22 @@
     "expired": "मुदत संपली",
     "active": "सक्रिय",
     "inactive": "निष्क्रिय",
+    "daysLeft_one": "{{count}}d बाकी",
+    "daysLeft_other": "{{count}}d बाकी",
     "legacyPlanMigrates": "सेव्हिंग या जुन्या टोकन-किंमत योजनेला प्री-लिस्टिंग दराने डॉलर किमतीत रूपांतरित करते.",
     "tokenAmount": "{{amount}} टोकन",
     "preListingTokenAmount": "प्री-लिस्टिंग टोकन रक्कम",
-    "tokensStayInTreasury": "तुमचे DeHub टोकन DeHub खजिन्याच्या ताब्यात राहतात आणि विकले जात नाहीत. निर्मात्याला USDT-नामांकित सबस्क्रिप्शन शिल्लक प्राप्त होते.",
     "tokenCheckoutNotReady": "टोकन सबस्क्रिप्शन चेकआउट तयार नाही — कृपया लवकरच पुन्हा प्रयत्न करा.",
     "tokenQuoteUnavailable": "लाइव्ह टोकन कोट अनुपलब्ध",
     "tokenEstimate": "≈ {{amount}} टोकन",
     "tokenAmountUnavailable": "टोकन रक्कम अनुपलब्ध",
-    "daysLeft_one": "{{count}}d बाकी",
-    "daysLeft_other": "{{count}}d बाकी",
     "subscribedToast": "सदस्यता घेतली",
-    "atPreListingRate": "{{amount}} पूर्व - सूची दरात",
-    "withdraw": "काढा",
     "confirmSubscribeTo": "{{plan}} साठी {{price}} / {{duration}} मध्ये सदस्य व्हा.",
-    "earningsTitle": "सदस्यता कमाई",
-    "earningsAvailable": "उपलब्ध",
-    "earningsPending": "प्रलंबित",
-    "withdrawableSoon": "सदस्यता कमाई लवकरच काढता येईल",
+    "atPreListingRate": "{{amount}} पूर्व - सूची दरात",
     "youPayNow": "तुम्ही पैसे देता",
-    "usdtSent": "{{amount}} USDT पाठवले",
-    "earningsWithdrawableOnBase": "Base वर काढण्यासाठी उपलब्ध",
-    "earningsUsdtPending": "USDT मध्ये · ट्रेझरी राखीवची प्रतीक्षा",
-    "buyersPayTokenAmount": "खरेदीदार प्री-लिस्टिंग दराने दर्शविलेली DeHub टोकन रक्कम भरतात. तुम्हाला USDT शिल्लक म्हणून USD मूल्य प्राप्त होते.",
-    "creditsCreator": "निर्मिकाला {{amount}} USDT क्रेडिट करते"
+    "paidToCreatorWallet": "थेट निर्मिकाच्या वॉलेटवर जाते",
+    "creatorPaidDirectNote": "तुम्ही सदस्यता घेतल्यावर निर्मिकाचा हिस्सा थेट त्यांच्या वॉलेटमध्ये जातो. डेहब एक लहान प्लॅटफॉर्म शुल्क ठेवते.",
+    "creatorEarnsDirect": "डेहब टोकनमध्ये सबस्क्रायबर्स पैसे देतात. तुमच्या बॅज स्तरासाठी प्लॅटफॉर्म फी कमी, त्यांनी सदस्यता घेतल्याच्या क्षणी तुमचे शेअर तुमच्या वॉलेटमध्ये आहेत."
   },
   "live": {
     "chatJoined": "सामील झाले",
@@ -5158,6 +5154,7 @@
     "podcast": {
       "tab": "पॉडकास्ट",
       "feedUrlLabel": "पॉडकास्ट आरएसएस फीड URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "फीड मिळवा",
       "fetching": "फीड प्राप्त करत आहे...",
       "showBy": "{{author}} द्वारे",
@@ -5171,8 +5168,7 @@
       "failed": "अयशस्वी",
       "emptyFeed": "आम्हाला त्या फीडमध्ये कोणतेही एपिसोड सापडले नाहीत.",
       "badFeed": "पण ही लिंक फूड पॉडकास्टसारखी वाटत नाही.",
-      "tooMany": "एका वेळी 20 एपिसोड्स पर्यंत आयात करा.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "एका वेळी 20 एपिसोड्स पर्यंत आयात करा."
     }
   },
   "banned": {
@@ -5332,13 +5328,12 @@
       "images": "प्रति पोस्ट प्रतिमा",
       "uploads": "दररोज अपलोड करण्याची मर्यादा",
       "storage": "संपादक संचयन",
-      "profiles": "जतन केलेले प्रोफाइल",
       "lending": "बॅज लेंडिंग स्लॉट्स",
       "voice": "व्हॉइस क्लोनिंग",
       "voiceFree": "विनामूल्य",
       "voiceLocked": "{{tier}} आणि वर"
     },
-    "buy": "DHB मिळवा",
+    "buyTokens": "टोकन खरेदी करा",
     "details": "संपूर्ण विश्लेषण",
     "play": "खेळ",
     "pause": "विराम द्या",

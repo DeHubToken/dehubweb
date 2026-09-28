@@ -528,6 +528,7 @@
     "loadingMore": "Завантажуємо ще...",
     "loadMore": "Завантажити ще",
     "continue": "Продовжити",
+    "undo": "Скасувати",
     "allRightsReserved": "Всі права захищені",
     "noData": "Немає даних для відображення",
     "yes": "Так",
@@ -891,8 +892,7 @@
     "guests": "Гості",
     "anonymousUsers": "Анонімні користувачі",
     "registered": "Зареєстровано",
-    "unregistered": "Незареєстровано",
-    "undo": "Скасувати"
+    "unregistered": "Незареєстровано"
   },
   "tip": {
     "title": "Надіслати чайові",
@@ -3007,7 +3007,11 @@
     "sampleReady": "Зразок готовий.",
     "discardRecording": "Відкинути запис",
     "settingUpVoice": "Налаштування вашого голосу...",
-    "useThisVoice": "Використовувати цей голос"
+    "useThisVoice": "Використовувати цей голос",
+    "autoEnd": {
+      "title": "Аудіокімнату завершено через неактивність",
+      "description": "У «{{title}}» 30 хвилин ніхто не говорив, тому кімнату закрито."
+    }
   },
   "ads": {
     "seoTitle": "Менеджер оголошень | DeHub",
@@ -4296,7 +4300,6 @@
     "legacyPlanMigrates": "Збереження мігрує цей план з ціною в застарілих токенах на ціноутворення в доларах за передлістинговою ставкою.",
     "tokenAmount": "{{amount}} токенів",
     "preListingTokenAmount": "Сума токенів перед лістингом",
-    "tokensStayInTreasury": "Ваші токени DeHub залишаються під опікою скарбниці DeHub і не продаються. Творець отримує баланс підписки, номінований в USDT.",
     "tokenCheckoutNotReady": "Оформлення підписки на токени не готове — спробуйте ще раз незабаром",
     "tokenQuoteUnavailable": "Поточна котирування токена недоступне",
     "tokenEstimate": "≈ {{amount}} токенів",
@@ -4304,17 +4307,10 @@
     "subscribedToast": "Підписка оформлена",
     "confirmSubscribeTo": "Підпишіться на {{plan}} за {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} за ціною попереднього оголошення",
-    "withdraw": "Зняти",
-    "earningsTitle": "Прибутки від підписки",
-    "earningsAvailable": "Доступно",
-    "earningsPending": "В очікуванні",
-    "withdrawableSoon": "Дохід від підписки буде знято найближчим часом",
     "youPayNow": "Ви платите",
-    "usdtSent": "Надіслано {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Доступно для виведення в Base",
-    "earningsUsdtPending": "У USDT · очікує резерву скарбниці",
-    "buyersPayTokenAmount": "Покупці сплачують відображену суму токенів DeHub за передлістинговою ставкою. Ви отримуєте еквівалент в USD як баланс USDT.",
-    "creditsCreator": "Кредити автору {{amount}} USDT"
+    "paidToCreatorWallet": "Переходить безпосередньо до гаманця автора",
+    "creatorPaidDirectNote": "Частка автора надходить безпосередньо на його гаманець, коли ви оформлюєте підписку. DeHub стягує невелику плату за платформу.",
+    "creatorEarnsDirect": "Абоненти платять токенами DeHub. Ваша частка потрапляє у ваш гаманець з моменту підписки за вирахуванням плати за платформу для вашого рівня значків."
   },
   "live": {
     "chatJoined": "приєднався",
@@ -5221,6 +5217,7 @@
     "podcast": {
       "tab": "Подкаст",
       "feedUrlLabel": "URL-адреса RSS-каналу подкасту",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Отримати корм",
       "fetching": "Отримання подачі…",
       "showBy": "Автор:{{author}}",
@@ -5234,8 +5231,7 @@
       "failed": "Помилка",
       "emptyFeed": "Не вдалося знайти жодного епізоду в цій стрічці.",
       "badFeed": "Це посилання не схоже на стрічку подкастів.",
-      "tooMany": "Імпортувати до 20 серій одночасно.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "Імпортувати до 20 серій одночасно."
     }
   },
   "banned": {
@@ -5397,13 +5393,12 @@
       "images": "Зображень на допис",
       "uploads": "Щоденний ліміт завантаження",
       "storage": "Пам 'ять редактора",
-      "profiles": "Збережені профілі",
       "lending": "Слоти для надання значків",
       "voice": "Голосове клонування",
       "voiceFree": "Безкоштовно",
       "voiceLocked": "{{tier}} і більше"
     },
-    "buy": "Отримати DHB",
+    "buyTokens": "Купити токени",
     "details": "Повна розбивка",
     "play": "Грати",
     "pause": "Призупинити",
@@ -6519,64 +6514,6 @@
       "tippedYou": "чайові: {{amount}} токенів"
     }
   },
-  "pages": {
-    "home": {
-      "title": "Головна",
-      "description": "Опис головної сторінки"
-    },
-    "explore": {
-      "title": "Огляд",
-      "description": "Опис сторінки огляду"
-    },
-    "notifications": {
-      "title": "Сповіщення",
-      "description": "Опис сторінки сповіщень"
-    },
-    "messages": {
-      "encrypted": "Наскрізне шифрування",
-      "encryptionOff": "Шифрування на цьому пристрої вимкнено",
-      "encryptionTurnOn": "Увімкнути",
-      "cannotDecrypt": "Зашифроване повідомлення — не можна відкрити на цьому пристрої",
-      "title": "Повідомлення",
-      "description": "Опис сторінки повідомлень"
-    },
-    "profile": {
-      "title": "Профіль",
-      "description": "Опис сторінки профілю"
-    },
-    "settings": {
-      "title": "Налаштування",
-      "description": "Опис сторінки налаштувань"
-    },
-    "blog": {
-      "title": "Блог",
-      "description": "Опис сторінки блогу"
-    },
-    "careers": {
-      "title": "Вакансії",
-      "description": "Опис сторінки вакансій"
-    },
-    "glossary": {
-      "title": "Глосарій",
-      "description": "Опис сторінки глосарію"
-    }
-  },
-  "components": {
-    "navbar": {
-      "home": "Головна",
-      "explore": "Огляд",
-      "notifications": "Сповіщення",
-      "messages": "Повідомлення",
-      "profile": "Профіль",
-      "settings": "Налаштування",
-      "blog": "Блог",
-      "careers": "Вакансії",
-      "glossary": "Глосарій"
-    },
-    "footer": {
-      "allRightsReserved": "Всі права захищені"
-    }
-  },
   "emojiPicker": {
     "tabEmoji": "Емодзі",
     "tabGif": "GIF",
@@ -7307,5 +7244,63 @@
     "planRestricted": "Цей користувач приймає повідомлення лише за підпискою.",
     "planTypeNotAllowed": "План цього автора не дозволяє такий тип повідомлень.",
     "planMinTip": "Чайові для цього автора мають бути не менше {{amount}} DHB."
+  },
+  "pages": {
+    "home": {
+      "title": "Головна",
+      "description": "Опис головної сторінки"
+    },
+    "explore": {
+      "title": "Огляд",
+      "description": "Опис сторінки огляду"
+    },
+    "notifications": {
+      "title": "Сповіщення",
+      "description": "Опис сторінки сповіщень"
+    },
+    "messages": {
+      "encrypted": "Наскрізне шифрування",
+      "encryptionOff": "Шифрування на цьому пристрої вимкнено",
+      "encryptionTurnOn": "Увімкнути",
+      "cannotDecrypt": "Зашифроване повідомлення — не можна відкрити на цьому пристрої",
+      "title": "Повідомлення",
+      "description": "Опис сторінки повідомлень"
+    },
+    "profile": {
+      "title": "Профіль",
+      "description": "Опис сторінки профілю"
+    },
+    "settings": {
+      "title": "Налаштування",
+      "description": "Опис сторінки налаштувань"
+    },
+    "blog": {
+      "title": "Блог",
+      "description": "Опис сторінки блогу"
+    },
+    "careers": {
+      "title": "Вакансії",
+      "description": "Опис сторінки вакансій"
+    },
+    "glossary": {
+      "title": "Глосарій",
+      "description": "Опис сторінки глосарію"
+    }
+  },
+  "components": {
+    "navbar": {
+      "home": "Головна",
+      "explore": "Огляд",
+      "notifications": "Сповіщення",
+      "messages": "Повідомлення",
+      "profile": "Профіль",
+      "settings": "Налаштування",
+      "blog": "Блог",
+      "careers": "Вакансії",
+      "glossary": "Глосарій"
+    },
+    "footer": {
+      "allRightsReserved": "Всі права захищені"
+    }
   }
 }

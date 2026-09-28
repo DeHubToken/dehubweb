@@ -2443,7 +2443,11 @@
   },
   "stages": {
     "title": "语音房",
-    "alreadyCharged": "您的代币已被用于此。请重试 — 您不会被收取第二次费用。"
+    "alreadyCharged": "您的代币已被用于此。请重试 — 您不会被收取第二次费用。",
+    "autoEnd": {
+      "title": "语音房因无人发言已结束",
+      "description": "“{{title}}”已有 30 分钟无人发言，因此已关闭。"
+    }
   },
   "ads": {
     "priceUnavailable": "代币价格不可用 — 请稍后重试。",
@@ -2643,14 +2647,6 @@
     "noStories": "还没有动态"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "保存会将此旧的代币定价计划迁移到以美元定价，按预上市价格计算。",
-    "tokenAmount": "{{amount}} 个代币",
-    "preListingTokenAmount": "预上市代币数量",
-    "tokensStayInTreasury": "您的 DeHub 代币将保留在 DeHub 金库的托管中，不会出售。创建者将收到以 USDT 计价的订阅余额。",
-    "tokenCheckoutNotReady": "代币订阅结账尚未准备就绪 — 请稍后重试",
-    "tokenQuoteUnavailable": "实时代币报价不可用",
-    "tokenEstimate": "约 {{amount}} 个代币",
-    "tokenAmountUnavailable": "代币数量不可用",
     "subscribersOnly": "仅限订阅者",
     "creatorKeepsPost": "{{creator}} 为其订阅者保留此帖子。",
     "creatorNoPlans": "{{creator}} 目前没有开放订阅。",
@@ -2731,20 +2727,20 @@
     "inactive": "非活跃",
     "daysLeft_one": "{{count}} 天剩余",
     "daysLeft_other": "{{count}} 天剩余",
+    "legacyPlanMigrates": "保存会将此旧的代币定价计划迁移到以美元定价，按预上市价格计算。",
+    "tokenAmount": "{{amount}} 个代币",
+    "preListingTokenAmount": "预上市代币数量",
+    "tokenCheckoutNotReady": "代币订阅结账尚未准备就绪 — 请稍后重试",
+    "tokenQuoteUnavailable": "实时代币报价不可用",
+    "tokenEstimate": "约 {{amount}} 个代币",
+    "tokenAmountUnavailable": "代币数量不可用",
     "subscribedToast": "已订阅",
     "confirmSubscribeTo": "订阅 {{plan}}，每 {{price}} / {{duration}}。",
     "atPreListingRate": "{{amount}} 以预上市价格",
-    "withdraw": "提现",
-    "earningsTitle": "订阅收益",
-    "earningsAvailable": "可用",
-    "earningsPending": "待处理",
-    "withdrawableSoon": "订阅收益即将可提取",
     "youPayNow": "你付",
-    "usdtSent": "已发送 {{amount}} USDT",
-    "earningsWithdrawableOnBase": "可在 Base 上提现",
-    "earningsUsdtPending": "以 USDT 计价 · 等待国库储备",
-    "buyersPayTokenAmount": "买家按预上市价格支付显示的 DeHub 代币金额。您将收到以 USDT 余额计价的美元价值。",
-    "creditsCreator": "给创作者 {{amount}} USDT"
+    "paidToCreatorWallet": "直接进入创作者的钱包",
+    "creatorPaidDirectNote": "创作者的份额在你订阅的那一刻就会直接进入他们的钱包。DeHub 会收取少量平台费用。",
+    "creatorEarnsDirect": "订阅者以 DeHub 代币支付。一旦他们订阅，您的份额就会立即进入您的钱包，减去您徽章级别的平台费用。"
   },
   "live": {
     "chatJoined": "加入了",
@@ -3264,6 +3260,7 @@
     "podcast": {
       "tab": "播客",
       "feedUrlLabel": "播客 RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "获取 feed",
       "fetching": "正在获取 feed…",
       "showBy": "作者 {{author}}",
@@ -3277,8 +3274,7 @@
       "failed": "失败",
       "emptyFeed": "我们在该 feed 中找不到任何剧集。",
       "badFeed": "该链接看起来不像播客 feed。",
-      "tooMany": "一次最多导入 20 集。",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "一次最多导入 20 集。"
     }
   },
   "banned": {
@@ -3440,13 +3436,12 @@
       "images": "每帖图片数",
       "uploads": "每日上传限制",
       "storage": "编辑器存储空间",
-      "profiles": "已保存的个人资料",
       "lending": "徽章借用槽位",
       "voice": "语音克隆",
       "voiceFree": "免费",
       "voiceLocked": "{{tier}} 及以上"
     },
-    "buy": "获取 DHB",
+    "buyTokens": "购买代币",
     "details": "完整明细",
     "play": "播放",
     "pause": "暂停",
@@ -4497,44 +4492,6 @@
       "tippedYou": "给了你 {{amount}} 个代币"
     }
   },
-  "post": {
-    "like": "喜欢",
-    "comment": "评论",
-    "repost": "转发",
-    "share": "分享",
-    "bookmark": "收藏",
-    "tip": "打赏",
-    "delete": "删除",
-    "edit": "编辑",
-    "report": "举报",
-    "translate": "翻译",
-    "pinned": "置顶",
-    "replying": "回复中",
-    "reply": "回复",
-    "writeReply": "写个回复...",
-    "noComments": "还没有评论",
-    "viewMore": "查看更多",
-    "postDeleted": "帖子已删除",
-    "likes": "喜欢",
-    "comments": "评论",
-    "reposts": "转发",
-    "shares": "分享"
-  },
-  "create": {
-    "title": "发帖",
-    "placeholder": "你在想甚？",
-    "post": "发布",
-    "addImage": "加图片",
-    "addVideo": "加视频",
-    "addGif": "加GIF",
-    "addPoll": "加投票",
-    "addLocation": "加位置",
-    "visibility": "可见性",
-    "everyone": "所有人",
-    "followers": "关注者",
-    "subscribers": "订阅者",
-    "mentioned": "被提到的"
-  },
   "emojiPicker": {
     "tabEmoji": "表情",
     "tabGif": "GIF",
@@ -5260,5 +5217,43 @@
     "planRestricted": "这个用户要订阅才能收消息。",
     "planTypeNotAllowed": "这个创作者的方案不允许这类消息。",
     "planMinTip": "给这个创作者的打赏至少要 {{amount}} DHB。"
+  },
+  "post": {
+    "like": "喜欢",
+    "comment": "评论",
+    "repost": "转发",
+    "share": "分享",
+    "bookmark": "收藏",
+    "tip": "打赏",
+    "delete": "删除",
+    "edit": "编辑",
+    "report": "举报",
+    "translate": "翻译",
+    "pinned": "置顶",
+    "replying": "回复中",
+    "reply": "回复",
+    "writeReply": "写个回复...",
+    "noComments": "还没有评论",
+    "viewMore": "查看更多",
+    "postDeleted": "帖子已删除",
+    "likes": "喜欢",
+    "comments": "评论",
+    "reposts": "转发",
+    "shares": "分享"
+  },
+  "create": {
+    "title": "发帖",
+    "placeholder": "你在想甚？",
+    "post": "发布",
+    "addImage": "加图片",
+    "addVideo": "加视频",
+    "addGif": "加GIF",
+    "addPoll": "加投票",
+    "addLocation": "加位置",
+    "visibility": "可见性",
+    "everyone": "所有人",
+    "followers": "关注者",
+    "subscribers": "订阅者",
+    "mentioned": "被提到的"
   }
 }

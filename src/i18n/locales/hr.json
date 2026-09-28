@@ -3088,7 +3088,11 @@
     "sampleReady": "Uzorak je spreman.",
     "discardRecording": "Odbacite snimku",
     "settingUpVoice": "Postavljam vaš glas...",
-    "useThisVoice": "Koristite ovaj glas"
+    "useThisVoice": "Koristite ovaj glas",
+    "autoEnd": {
+      "title": "Audio soba završena zbog neaktivnosti",
+      "description": "Nitko nije govorio u „{{title}}” 30 minuta pa je zatvorena."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4436,7 +4440,6 @@
     "legacyPlanMigrates": "Ušteda migrira ovaj plan s cijenama u starim tokenima na cijene u dolarima po pretprodajnoj cijeni.",
     "tokenAmount": "{{amount}} tokena",
     "preListingTokenAmount": "Pretprodajna količina tokena",
-    "tokensStayInTreasury": "Vaši DeHub tokeni ostaju u skrbništvu riznice DeHub-a i ne prodaju se. Kreator prima pretplatnički saldo denominiran u USDT.",
     "tokenCheckoutNotReady": "Naplata pretplate na tokene nije spremna — pokušajte ponovno uskoro",
     "tokenQuoteUnavailable": "Trenutna cijena tokena uživo nedostupna",
     "tokenEstimate": "≈ {{amount}} tokena",
@@ -4444,17 +4447,10 @@
     "subscribedToast": "Pretplaćeno",
     "confirmSubscribeTo": "Pretplatite se na {{plan}} za {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} po stopi prije oglašavanja",
-    "withdraw": "Povuci",
-    "earningsTitle": "Zarada od pretplate",
-    "earningsAvailable": "Dostupno",
-    "earningsPending": "Na čekanju",
-    "withdrawableSoon": "Zarada od pretplate uskoro će se moći povući",
     "youPayNow": "Plaćate",
-    "usdtSent": "Poslano {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Dostupno za isplatu na Baseu",
-    "earningsUsdtPending": "U USDT-u · čeka rezervu riznice",
-    "buyersPayTokenAmount": "Kupci plaćaju prikazani iznos DeHub tokena po pretprodajnoj cijeni. Vi primate USD vrijednost kao USDT saldo.",
-    "creditsCreator": "Kredit u iznosu od kreatora {{amount}} USDT"
+    "paidToCreatorWallet": "Ide izravno u kreatorov novčanik",
+    "creatorPaidDirectNote": "Kreatorov udio ide izravno u njegov novčanik čim se pretplatiš. DeHub zadržava malu naknadu za platformu.",
+    "creatorEarnsDirect": "Pretplatnici plaćaju u DeHub žetonima. Tvoja dionica završava u novčaniku čim se pretplati, umanjena za naknadu za platformu za tvoju razinu značke."
   },
   "live": {
     "chatJoined": "se pridružio/la",
@@ -5542,13 +5538,12 @@
       "images": "Slike po objavi",
       "uploads": "Dnevno ograničenje prijenosa",
       "storage": "Pohrana uređivača",
-      "profiles": "Spremljeni profili",
       "lending": "Slotovi za posudbu znački",
       "voice": "Kloniranje glasa",
       "voiceFree": "Besplatno",
       "voiceLocked": "{{tier}} i više"
     },
-    "buy": "Nabavite DHB",
+    "buyTokens": "Kupi žetone",
     "details": "Cijeli prikaz po stavkama",
     "play": "Pokreni",
     "pause": "Pauziraj",

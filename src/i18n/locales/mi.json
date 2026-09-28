@@ -2497,7 +2497,11 @@
   },
   "stages": {
     "title": "Ngā rūma ororongo",
-    "alreadyCharged": "Kua tangohia kē āu tohu mō tēnei. Whakamātau anō — kāore koe e utu tuarua."
+    "alreadyCharged": "Kua tangohia kē āu tohu mō tēnei. Whakamātau anō — kāore koe e utu tuarua.",
+    "autoEnd": {
+      "title": "Kua mutu te rūma ororongo nā te korenga o te mahi",
+      "description": "Kāore he tangata i kōrero i \"{{title}}\" mō ngā meneti 30, nā reira kua katia."
+    }
   },
   "ads": {
     "priceUnavailable": "Kāore e wātea te utu o te tohu — whakamātau anō i muri tata nei.",
@@ -2691,14 +2695,6 @@
     "transferGuarantee": "Ka whiwhi koe i te pūkete katoa — pūkete, whakairinga, kaiwhai, hītori tohu, me ngā mana tohu. Ka noho tonu ki te kaihoko tōna putea me ngā mea katoa kei roto. Ka rere noa te whakawhiti i muri i te panuitanga a DeHub i tō utu tohu mai i te mekameka; ki te pakaru, ka tīmata anō te hoko."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Ko te penapena ka nuku i tēnei mahere utu tohu tawhito ki te utu taara i te reiti i mua i te whakarārangi.",
-    "tokenAmount": "{{amount}} tohu",
-    "preListingTokenAmount": "Te nui o te tohu i mua i te whakarārangi",
-    "tokensStayInTreasury": "Ka noho ō tohu DeHub ki te tiaki a DeHub, kāore hoki e hokona. Ka whiwhi te kaihanga i tētahi pauna ohaurunga kua whakaingoatia ki te USDT.",
-    "tokenCheckoutNotReady": "Kāore anō kia rite te pouaka takiuru ohaurunga tohu — ngana anō i te wa poto",
-    "tokenQuoteUnavailable": "Kāore e wātea ana te korero tohu ora",
-    "tokenEstimate": "≈ {{amount}} tohu",
-    "tokenAmountUnavailable": "Kāore e wātea ana te nui o te tohu",
     "subscribersOnly": "Kaitono anake",
     "creatorKeepsPost": "{{creator}} ka tiaki i tēnei pou mō ō rātou kaitono.",
     "creatorNoPlans": "{{creator}} kāore he kaitono i te wā nei.",
@@ -2779,20 +2775,20 @@
     "inactive": "Kāore i te mahi",
     "daysLeft_one": "{{count}} rā i toe",
     "daysLeft_other": "{{count}} rā i toe",
+    "legacyPlanMigrates": "Ko te penapena ka nuku i tēnei mahere utu tohu tawhito ki te utu taara i te reiti i mua i te whakarārangi.",
+    "tokenAmount": "{{amount}} tohu",
+    "preListingTokenAmount": "Te nui o te tohu i mua i te whakarārangi",
+    "tokenCheckoutNotReady": "Kāore anō kia rite te pouaka takiuru ohaurunga tohu — ngana anō i te wa poto",
+    "tokenQuoteUnavailable": "Kāore e wātea ana te korero tohu ora",
+    "tokenEstimate": "≈ {{amount}} tohu",
+    "tokenAmountUnavailable": "Kāore e wātea ana te nui o te tohu",
     "subscribedToast": "Kua ohaurunga",
     "confirmSubscribeTo": "Ohaurunga ki {{plan}} mō {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} i te utu mua-rārangi",
-    "withdraw": "Whakakorea",
-    "earningsTitle": "Whiwhi ohaurunga",
-    "earningsAvailable": "E wātea ana",
-    "earningsPending": "Te tuku",
-    "withdrawableSoon": "Ka taea te tango wawe i nga whiwhinga ohaurunga",
     "youPayNow": "Ka utua e koe",
-    "usdtSent": "Kua tukuna {{amount}} USDT",
-    "earningsWithdrawableOnBase": "E wātea ana kia tangohia i Base",
-    "earningsUsdtPending": "Ka whakawhāititia ki te USDT · e tatari ana ki te pūtea rāhui",
-    "buyersPayTokenAmount": "Ka utua e ngā kaihoko te nui o te tohu DeHub kua whakaatuhia i te reiti i mua i te whakarārangi. Ka whiwhi koe i te uara USD hei pauna USDT.",
-    "creditsCreator": "Ka whiwhi te kaihanga {{amount}} USDT"
+    "paidToCreatorWallet": "Haere tika ki te putea o te Kaihanga",
+    "creatorPaidDirectNote": "Ko te wahi o te kaihanga haere tika ki to ratou putea i te wa e ohauru koe. Kei te pupuri a DeHub i te utu papa iti.",
+    "creatorEarnsDirect": "Ka utua e nga kaiohauru nga tohu DeHub. Ko to koutou wahi whenua i roto i to koutou putea i te wa e rēhita ratou, iti iho i te utu papa mo to koutou taumata badge."
   },
   "live": {
     "chatJoined": "kua uru mai",
@@ -3488,13 +3484,12 @@
       "images": "Whakaahua mo ia pou",
       "uploads": "Te rohe tuku i ia ra",
       "storage": "Te rokiroki o te kaituhi",
-      "profiles": "Ngā pūkete whakaora",
       "lending": "Badge i 'ai nama",
       "voice": "Kohikohinga reo",
       "voiceFree": "Free",
       "voiceLocked": "{{tier}} me runga ake"
     },
-    "buy": "Haere DHB",
+    "buyTokens": "Hokona nga tohu",
     "details": "Te wehenga katoa",
     "play": "Play",
     "pause": "Pause",

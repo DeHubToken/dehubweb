@@ -2447,7 +2447,11 @@
   },
   "stages": {
     "title": "ናይ ድምጺ ክፍልታት",
-    "alreadyCharged": "እቲ ምልክታትካ ነዚ ንምግባር ድሮ ተወስደ ። ደጊም ፈትኖ — ካልኣይ ግዜ ክትከፍል ኣይትኽእልን ኢኻ ።"
+    "alreadyCharged": "እቲ ምልክታትካ ነዚ ንምግባር ድሮ ተወስደ ። ደጊም ፈትኖ — ካልኣይ ግዜ ክትከፍል ኣይትኽእልን ኢኻ ።",
+    "autoEnd": {
+      "title": "ናይ ድምጺ ክፍሊ ብሰንኪ ዘይምንቅስቓስ ተዓጺዩ",
+      "description": "ኣብ \"{{title}}\" ን30 ደቒቕ ዝተዛረበ ሰብ ስለዘይነበረ ተዓጺዩ።"
+    }
   },
   "ads": {
     "priceUnavailable": "ዋጋ ቶከን ኣይተረኽበን - ኣብ ቀረባ እዋን እንደገና ፈትኖ ።",
@@ -2640,14 +2644,6 @@
     "transferGuarantee": "ምሉእ መለያ ትረክብ — ኣተሓሕዛ ፣ ልኡኽ ፣ ተኸታተልቲ ፣ ታሪኽ ምኽርን መሰል ባጅን ። እቲ ሸያጭ ነቲ ቦርሳኡን ኣብኡ ዘሎን ነገራት ይዕቅቦ ። እቲ ዝውውር ፡ DeHub ነቲ ናይ ምልክት ክፍሊትካ ካብ ሰንሰለት ድሕሪ ምንባብ ጥራይ እዩ ዚካየድ ፣ እንተ ተቛሪጹ ፡ እቲ መግዛእቲ እንደገና ይጅምር ።"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "ኣኽብሮት፡ እዚ ሕጋዊ መርበብ ሓበሬታ እዚ ንብረት እዚ ብዋጋ ዶላር ይሸቕጥ።",
-    "tokenAmount": "{{amount}} ቶክን",
-    "preListingTokenAmount": "ቅድሚ ምዝገባ ዋጋ ቶክን",
-    "tokensStayInTreasury": "ኣብ ቤት ጽሕፈት ቤት DeHub ዝተሓዝዎ ቶክንኩም ኣይሸየጥን። ንፈጣሪ ብUSDT ዝተሰርዐ ክፍሊት ይረክብ።",
-    "tokenCheckoutNotReady": "ናይ ቶክን ምዝገባ ገጽ ኣይተዳለወን - ብቕልጡፍ ዳግማይ ኪኢሉ ይፈተሽ።",
-    "tokenQuoteUnavailable": "ናይ ቶክን ዋጋ ኣብ ህይወት ኣይረኸበን",
-    "tokenEstimate": "≈ {{amount}} ቶክን",
-    "tokenAmountUnavailable": "ዋጋ ቶክን ኣይረኸበን",
     "subscribersOnly": "ተመዝጋቢታት ጥራይ",
     "creatorKeepsPost": "{{creator}} ነዚ ፖስቲ እዚ ንተመዝጋቢኡ ይዕቅቦ።",
     "creatorNoPlans": "{{creator}} ሕጂ ዝተከፈተ ምዝገባ የብሉን።",
@@ -2727,20 +2723,20 @@
     "inactive": "ኣይተግባርን",
     "daysLeft_one": "{{count}} መዓልቲታት",
     "daysLeft_other": "{{count}} መዓልቲታት",
+    "legacyPlanMigrates": "ኣኽብሮት፡ እዚ ሕጋዊ መርበብ ሓበሬታ እዚ ንብረት እዚ ብዋጋ ዶላር ይሸቕጥ።",
+    "tokenAmount": "{{amount}} ቶክን",
+    "preListingTokenAmount": "ቅድሚ ምዝገባ ዋጋ ቶክን",
+    "tokenCheckoutNotReady": "ናይ ቶክን ምዝገባ ገጽ ኣይተዳለወን - ብቕልጡፍ ዳግማይ ኪኢሉ ይፈተሽ።",
+    "tokenQuoteUnavailable": "ናይ ቶክን ዋጋ ኣብ ህይወት ኣይረኸበን",
+    "tokenEstimate": "≈ {{amount}} ቶክን",
+    "tokenAmountUnavailable": "ዋጋ ቶክን ኣይረኸበን",
     "subscribedToast": "ተመዝጊቡ",
     "confirmSubscribeTo": "ን{{plan}} ብ{{price}} / {{duration}} ምዝገባ ግበሩ።",
     "atPreListingRate": "ብቅድመ-ዝርዝር ዋጋ ብ{{amount}}",
-    "withdraw": "ምስሕሓብ",
-    "earningsTitle": "ኣታዊታት ኣባልነት",
-    "earningsAvailable": "ተዳልዩ ኣሎ",
-    "earningsPending": "ኣብ ምፅባይ",
-    "withdrawableSoon": "ናይ ምዝገባ ኣታዊታት ኣብ ቀረባ እዋን ክስረዝ እዩ",
     "youPayNow": "ንስኻ ኢኻ እትኸፍል",
-    "usdtSent": "{{amount}} USDT ተላኢኹ",
-    "earningsWithdrawableOnBase": "ኣብ Base ክውጻእ ይከኣል",
-    "earningsUsdtPending": "ብ USDT · ናይ ግምጃ ቤት መዋህለሊ ይጽበ ኣሎ",
-    "buyersPayTokenAmount": "ገዛእቲ ዝተጠቐሱ DeHub ቶክን መጠን ብቅድሚት ዋጋ ይኸፍሉ። ንስኻትኩም USD ብUSDT ሚዛን ትቕበሉ።",
-    "creditsCreator": "ንፈጣሪ ብ{{amount}} USDT"
+    "paidToCreatorWallet": "ብቐጥታ ናብ ናይ ፈጣሪ ቦርሳ ይኸይድ",
+    "creatorPaidDirectNote": "እቲ ናይ ፈጣሪ ክፋል ፡ ኣብ እትመዝገቡሉ እዋን ፡ ብቐጥታ ናብ ቦርሳኦም ይኸይድ ። DeHub ንእሽቶ ናይ መድረኽ ክፍሊት ይሕዝ ።",
+    "creatorEarnsDirect": "እቶም ተመዝጋቢታት ኣብ DeHub ምልክታት ይኽፈሉ እዮም ። እቲ ናይ ባጅ ደረጃኻ ናይ መድረኽ ክፍሊት ዝሕተተሉ እዋን ፡ ኣብ ቦርሳኻ ዘሎ መሬትካ ።"
   },
   "live": {
     "chatJoined": "ተጸንበረ",
@@ -3220,9 +3216,11 @@
     "podcast": {
       "tab": "ፖድካስት",
       "feedUrlLabel": "ፖድካስት RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "መግብን መግብን",
       "fetching": "መግብን መግብን...",
       "showBy": "ብ {{author}}",
+      "episodes": "{{count}} ክፍልታት",
       "selectAll": "ንዅሉ ምረጽ",
       "alreadyImported": "ቀዲሙ ዝተኣተወ",
       "ownership": "ነዚ ትሕዝቶ እዚ ኣለኒ ፣ ወይ ድማ ነቲ መሰል ዘለዎ ሰብ ኣብ DeHub ክሕተም ፍቓድ ኣለኒ ።",
@@ -3232,9 +3230,7 @@
       "failed": "ኣይተዓወተን",
       "emptyFeed": "ኣብዚ ምግቢ እዚ ገለ ፍጻመታት ክንረክብ ኣይንኽእልን ኢና ።",
       "badFeed": "ኣብ ፖድካስት መልክዕ እንተተረኽበ ኣይመስለንን ።",
-      "tooMany": "ኣብ ሓደ እዋን ክሳብ 20 ክፋላት ኣእቲኻ ።",
-      "episodes": "{{count}} ክፍልታት",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ኣብ ሓደ እዋን ክሳብ 20 ክፋላት ኣእቲኻ ።"
     }
   },
   "banned": {
@@ -3393,13 +3389,12 @@
       "images": "ኣብ ነፍሲ ወከፍ ልኡኽ እተቐርቡ ስእል",
       "uploads": "ዕለታዊ ናይ ምስዋእ ገደብ",
       "storage": "ኣሰናዳኢ ኣሰናዳኢ",
-      "profiles": "እተድሕኑ መገለጫታት",
       "lending": "ናይ ባጅ ልቓሕ ኣፈታትሓ",
       "voice": "ድምጺ ክሎኒንግ",
       "voiceFree": "ነጻ",
       "voiceLocked": "{{tier}}ን ልዕሊኡን"
     },
-    "buy": "DHB ውሰድ",
+    "buyTokens": "ምልክታት ግዛ",
     "details": "ምሉእ ምብትታን",
     "play": "ተጻወት",
     "pause": "ዕረፍቲ",

@@ -3086,7 +3086,11 @@
     "sampleReady": "Näidis valmis.",
     "discardRecording": "Hülgake salvestis",
     "settingUpVoice": "Teie häält seadistatakse...",
-    "useThisVoice": "Kasutage seda häält"
+    "useThisVoice": "Kasutage seda häält",
+    "autoEnd": {
+      "title": "Helituba lõpetati tegevusetuse tõttu",
+      "description": "Keegi ei rääkinud toas „{{title}}“ 30 minutit, seega see suleti."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4435,7 +4439,6 @@
     "legacyPlanMigrates": "Salvestamine migreerib selle pärandmärgihinnaga plaani dollaritesse hinnastamisele ettemüügieelsel kursil.",
     "tokenAmount": "{{amount}} märk",
     "preListingTokenAmount": "Eelmüügieelne märkide summa",
-    "tokensStayInTreasury": "Teie DeHub märgid jäävad DeHub kassasse hoiule ja neid ei müüda. Loojad saavad USDT-denominatsiooni tellimuse saldo.",
     "tokenCheckoutNotReady": "Märkide tellimuse kassasse minek pole valmis — proovige varsti uuesti",
     "tokenQuoteUnavailable": "Reaalajas märkide noteering pole saadaval",
     "tokenEstimate": "≈ {{amount}} märk",
@@ -4443,17 +4446,10 @@
     "subscribedToast": "Tellitud",
     "confirmSubscribeTo": "Telli {{plan}} eest {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} eelneva kuulutuse hinnaga",
-    "withdraw": "Väljamakse",
-    "earningsTitle": "Tellimuse tulu",
-    "earningsAvailable": "Saadaval",
-    "earningsPending": "Ootel",
-    "withdrawableSoon": "Tellimuse tulu saab varsti välja võtta",
     "youPayNow": "Sina maksad",
-    "usdtSent": "{{amount}} USDT saadetud",
-    "earningsWithdrawableOnBase": "Saadaval väljavõtmiseks Base'is",
-    "earningsUsdtPending": "USDT-s · ootab varakassa reservi",
-    "buyersPayTokenAmount": "Ostjad maksavad kuvatava DeHub märkide summa ettemüügieelsel kursil. Te saate USD väärtuse USDT saldona.",
-    "creditsCreator": "Krediiti autorile {{amount}} USDT"
+    "paidToCreatorWallet": "Avab otse looja rahakoti",
+    "creatorPaidDirectNote": "Kohe, kui tellid, läheb looja osa otse tema rahakotti. DeHubil on väike platvormitasu.",
+    "creatorEarnsDirect": "Tellijad maksavad DeHubi žetoonides. Sinu osa jõuab Sinu rahakotti kohe, kui nad tellimuse tellivad, millest on maha arvatud platvormi tasu Sinu erimärgi taseme eest."
   },
   "live": {
     "chatJoined": "liitus",
@@ -5540,13 +5536,12 @@
       "images": "Pildid postituse kohta",
       "uploads": "Päevane üleslaadimise limiit",
       "storage": "Redaktori salvestusruum",
-      "profiles": "Salvestatud profiilid",
       "lending": "Märgilaenu teenindusajad",
       "voice": "Hääle kloonimine",
       "voiceFree": "Tasuta",
       "voiceLocked": "{{tier}} ja järgmised"
     },
-    "buy": "Hangi DHB",
+    "buyTokens": "Osta žetoone",
     "details": "Täielik jaotus",
     "play": "Esita",
     "pause": "Peata",

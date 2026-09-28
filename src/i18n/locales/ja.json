@@ -3138,7 +3138,11 @@
     "sampleReady": "サンプル準備完了。",
     "discardRecording": "録音を破棄",
     "settingUpVoice": "音声を設定中...",
-    "useThisVoice": "この音声を使用"
+    "useThisVoice": "この音声を使用",
+    "autoEnd": {
+      "title": "無操作のため音声ルームが終了しました",
+      "description": "「{{title}}」で30分間誰も話さなかったため、終了しました。"
+    }
   },
   "ads": {
     "seoTitle": "広告マネージャー | DeHub",
@@ -4487,7 +4491,6 @@
     "legacyPlanMigrates": "保存により、このレガシートークン価格プランがプレリスティングレートのドル価格に移行します。",
     "tokenAmount": "{{amount}} トークン",
     "preListingTokenAmount": "プレリスティングトークン額",
-    "tokensStayInTreasury": "あなたのDeHubトークンはDeHubトレジャリーの管理下にあり、売却されません。クリエイターはUSDT建てのサブスクリプション残高を受け取ります。",
     "tokenCheckoutNotReady": "トークンサブスクリプションのチェックアウトは準備ができていません — しばらくしてからもう一度お試しください",
     "tokenQuoteUnavailable": "ライブトークン相場が利用できません",
     "tokenEstimate": "≈ {{amount}} トークン",
@@ -4495,17 +4498,10 @@
     "subscribedToast": "登録済み",
     "confirmSubscribeTo": "{{plan}}を{{price}}/{{duration}}で購読しましょう。",
     "atPreListingRate": "事前公開料金で{{amount}}",
-    "withdraw": "出金",
-    "earningsTitle": "サブスクリプション収益",
-    "earningsAvailable": "利用可能",
-    "earningsPending": "保留中",
-    "withdrawableSoon": "サブスクリプション収益はまもなく出金可能になります",
     "youPayNow": "あなたが支払うのは",
-    "usdtSent": "{{amount}} USDT を送金しました",
-    "earningsWithdrawableOnBase": "Base で出金できます",
-    "earningsUsdtPending": "USDT 建て · トレジャリー準備待ち",
-    "buyersPayTokenAmount": "購入者は、プレリスティングレートで表示されているDeHubトークン額を支払います。あなたはUSDT残高としてUSD価値を受け取ります。",
-    "creditsCreator": "クリエイターのクレジット{{amount}} USDT"
+    "paidToCreatorWallet": "クリエイターのウォレットに直接移動",
+    "creatorPaidDirectNote": "サブスクリプションを購入すると、クリエイターのシェアはウォレットに直接送られます。DeHubは少額のプラットフォーム料金を保持しています。",
+    "creatorEarnsDirect": "加入者はDeHubトークンで支払います。購読した瞬間にシェアがウォレットに表示されますが、バッジランクのプラットフォーム手数料は差し引かれます。"
   },
   "live": {
     "chatJoined": "が参加しました",
@@ -5467,6 +5463,7 @@
     "podcast": {
       "tab": "ポッドキャスト",
       "feedUrlLabel": "ポッドキャストRSSフィードURL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "フィードを取得",
       "fetching": "フィードを取得しています…",
       "showBy": "{{author}}による",
@@ -5480,8 +5477,7 @@
       "failed": "失敗",
       "emptyFeed": "そのフィードにエピソードが見つかりませんでした。",
       "badFeed": "そのリンクはポッドキャストフィードのようには見えません。",
-      "tooMany": "一度に最大20エピソードをインポートできます。",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "一度に最大20エピソードをインポートできます。"
     }
   },
   "banned": {
@@ -5643,13 +5639,12 @@
       "images": "投稿ごとの画像",
       "uploads": "1日あたりのアップロード制限",
       "storage": "エディターストレージ",
-      "profiles": "保存されたプロフィール",
       "lending": "バッジ貸出スロット",
       "voice": "音声クローニング",
       "voiceFree": "無料",
       "voiceLocked": "{{tier}}以上"
     },
-    "buy": "DHBを取得",
+    "buyTokens": "トークンを購入",
     "details": "完全な内訳",
     "play": "再生",
     "pause": "一時停止",

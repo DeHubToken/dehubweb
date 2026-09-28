@@ -3130,7 +3130,11 @@
     "sampleReady": "نمونه آماده است.",
     "discardRecording": "حذف ضبط",
     "settingUpVoice": "تنظیم صدای شما...",
-    "useThisVoice": "از این صدا استفاده کنید"
+    "useThisVoice": "از این صدا استفاده کنید",
+    "autoEnd": {
+      "title": "اتاق صوتی به دلیل عدم فعالیت پایان یافت",
+      "description": "به مدت ۳۰ دقیقه کسی در «{{title}}» صحبت نکرد، بنابراین بسته شد."
+    }
   },
   "ads": {
     "seoTitle": "مدیر تبلیغات | DeHub",
@@ -4426,36 +4430,28 @@
     "period": "دوره",
     "status": "وضعیت",
     "remaining": "باقی مانده",
+    "unknown": "ناشناخته",
     "to": "به",
     "never": "هرگز",
     "expired": "منقضی شده",
     "active": "فعال",
     "inactive": "غیر فعال",
+    "daysLeft_one": "{{count}}d سمت چپ",
+    "daysLeft_other": "{{count}}d سمت چپ",
     "legacyPlanMigrates": "ذخیره این طرح قیمت‌گذاری شده با توکن قدیمی را به قیمت‌گذاری دلاری با نرخ پیش از لیست منتقل می‌کند.",
     "tokenAmount": "{{amount}} توکن",
     "preListingTokenAmount": "مبلغ توکن پیش از لیست",
-    "tokensStayInTreasury": "توکن‌های DeHub شما در اختیار خزانه DeHub باقی می‌مانند و فروخته نمی‌شوند. خالق یک موجودی اشتراک دلاری دریافت می‌کند.",
     "tokenCheckoutNotReady": "پرداخت اشتراک توکن آماده نیست - لطفاً به زودی دوباره امتحان کنید",
     "tokenQuoteUnavailable": "نقل قول زنده توکن در دسترس نیست",
     "tokenEstimate": "≈ {{amount}} توکن",
     "tokenAmountUnavailable": "مبلغ توکن در دسترس نیست",
-    "unknown": "ناشناخته",
-    "daysLeft_one": "{{count}}d سمت چپ",
-    "daysLeft_other": "{{count}}d سمت چپ",
     "subscribedToast": "مشترک",
     "confirmSubscribeTo": "برای {{price}} / {{duration}} در {{plan}} مشترک شوید.",
     "atPreListingRate": "{{amount}} با نرخ پیش از ثبت",
-    "withdraw": "برداشت",
-    "earningsTitle": "درآمد حاصل از اشتراک",
-    "earningsAvailable": "موجود است",
-    "earningsPending": "در حال بررسی",
-    "withdrawableSoon": "درآمد حاصل از اشتراک به زودی قابل برداشت خواهد بود",
     "youPayNow": "شما پرداخت می‌کنید",
-    "usdtSent": "{{amount}} USDT ارسال شد",
-    "earningsWithdrawableOnBase": "قابل برداشت در Base",
-    "earningsUsdtPending": "به USDT · در انتظار ذخیره خزانه",
-    "buyersPayTokenAmount": "خریداران مبلغ نمایش داده شده توکن DeHub را با نرخ پیش از لیست پرداخت می‌کنند. شما ارزش USD را به عنوان موجودی USDT دریافت می‌کنید.",
-    "creditsCreator": "با تشکر از خالق {{amount}} USDT"
+    "paidToCreatorWallet": "مستقیماً به کیف پول خالق می‌رود",
+    "creatorPaidDirectNote": "سهم سازنده به محض عضویت شما مستقیماً به کیف پولش واریز می‌شود. DeHub کارمزد کمی از پلتفرم را برای خود نگه می‌دارد.",
+    "creatorEarnsDirect": "مشترکین با توکن‌های DeHub پرداخت می‌کنند. سهم شما به محض اشتراک، منهای هزینه پلتفرم برای سطح نشان شما، در کیف پولتان قرار می‌گیرد."
   },
   "live": {
     "chatJoined": "پیوست",
@@ -5359,9 +5355,11 @@
     "podcast": {
       "tab": "پادکست",
       "feedUrlLabel": "آدرس فید RSS پادکست",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "& واکشی خوراندن‌",
       "fetching": "در حال دریافت خوراک…",
       "showBy": "توسط {{author}}",
+      "episodes": "{{count}} قسمت",
       "selectAll": "انتخاب همه",
       "alreadyImported": "دمو با موفقیت درون ریزی شد",
       "ownership": "من مالک این محتوا هستم، یا اجازه‌ی صاحب حق نشر آن را در DeHub دارم.",
@@ -5371,9 +5369,7 @@
       "failed": "شکست خورد",
       "emptyFeed": "ما نتوانستیم هیچ قسمتی را در آن فید پیدا کنیم.",
       "badFeed": "آن لینک شبیه فید پادکست نیست.",
-      "tooMany": "حداکثر 20 قسمت را همزمان وارد کنید.",
-      "episodes": "{{count}} قسمت",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "حداکثر 20 قسمت را همزمان وارد کنید."
     }
   },
   "banned": {
@@ -5535,13 +5531,12 @@
       "images": "تصاویر در هر پست",
       "uploads": "محدودیت آپلود روزانه",
       "storage": "فضای ذخیره‌سازی ویرایشگر",
-      "profiles": "پروفایل‌های ذخیره شده",
       "lending": "جایگاه‌های قرض دادن نشان",
       "voice": "شبیه‌سازی صدا",
       "voiceFree": "رایگان",
       "voiceLocked": "{{tier}} و بالاتر"
     },
-    "buy": "دریافت DHB",
+    "buyTokens": "خرید توکن",
     "details": "تجزیه کامل",
     "play": "بازی",
     "pause": "مکث",

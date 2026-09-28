@@ -3141,7 +3141,11 @@
     "sampleReady": "Örnek hazır.",
     "discardRecording": "Kaydı sil",
     "settingUpVoice": "Sesiniz kuruluyor...",
-    "useThisVoice": "Bu sesi kullan"
+    "useThisVoice": "Bu sesi kullan",
+    "autoEnd": {
+      "title": "Sesli oda etkinlik olmadığı için sona erdi",
+      "description": "\"{{title}}\" odasında 30 dakika boyunca kimse konuşmadı, bu yüzden kapatıldı."
+    }
   },
   "ads": {
     "seoTitle": "Reklam Yöneticisi | DeHub",
@@ -4499,7 +4503,6 @@
     "legacyPlanMigrates": "Kaydetme, bu eski jeton fiyatlı planı listeleme öncesi orandan dolar fiyatlandırmasına geçirir.",
     "tokenAmount": "{{amount}} jeton",
     "preListingTokenAmount": "Listeleme öncesi jeton tutarı",
-    "tokensStayInTreasury": "DeHub jetonlarınız DeHub hazinesi gözetiminde kalır ve satılmaz. Oluşturucu, USDT cinsinden bir abonelik bakiyesi alır.",
     "tokenCheckoutNotReady": "Jeton aboneliği ödeme işlemi hazır değil — lütfen kısa süre sonra tekrar deneyin",
     "tokenQuoteUnavailable": "Canlı jeton kotası mevcut değil",
     "tokenEstimate": "≈ {{amount}} jeton",
@@ -4507,17 +4510,10 @@
     "subscribedToast": "Abone olundu",
     "confirmSubscribeTo": "{{price}}/{{duration}} karşılığında {{plan}} aboneliği alın.",
     "atPreListingRate": "Ön kayıt ücretinde {{amount}}",
-    "withdraw": "Para Çekme",
-    "earningsTitle": "Abonelik kazançları",
-    "earningsAvailable": "Mevcut",
-    "earningsPending": "Beklemede",
-    "withdrawableSoon": "Abonelik kazançları yakında geri çekilebilir olacak",
     "youPayNow": "Siz ödersiniz",
-    "usdtSent": "{{amount}} USDT gönderildi",
-    "earningsWithdrawableOnBase": "Base üzerinde çekilebilir",
-    "earningsUsdtPending": "USDT cinsinden · hazine rezervi bekleniyor",
-    "buyersPayTokenAmount": "Alıcılar, listeleme öncesi orandan görüntülenen DeHub jetonu tutarını öderler. USD değerini USDT bakiyesi olarak alırsınız.",
-    "creditsCreator": "Yaratıcının {{amount}} USDT kredisi"
+    "paidToCreatorWallet": "Doğrudan yaratıcının cüzdanına gider",
+    "creatorPaidDirectNote": "Abone olduğun anda yaratıcının payı doğrudan cüzdanına gider. DeHub küçük bir platform ücreti alır.",
+    "creatorEarnsDirect": "Aboneler DeHub tokenleri ile ödeme yapar. Payınız, abone oldukları anda cüzdanınıza düşer ve rozet seviyenizin platform ücreti düşülür."
   },
   "live": {
     "chatJoined": "katıldı",
@@ -5657,13 +5653,12 @@
       "images": "Gönderi başına resim",
       "uploads": "Günlük yükleme sınırı",
       "storage": "Düzenleyici depolama alanı",
-      "profiles": "Kayıtlı profiller",
       "lending": "Rozet ödünç verme yuvaları",
       "voice": "Ses klonlama",
       "voiceFree": "Ücretsiz",
       "voiceLocked": "{{tier}} ve üzeri"
     },
-    "buy": "DHB al",
+    "buyTokens": "Jeton satın al",
     "details": "Tam döküm",
     "play": "Oynat",
     "pause": "Duraklat",

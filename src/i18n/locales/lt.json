@@ -3125,7 +3125,11 @@
     "sampleReady": "Pavyzdys paruoštas.",
     "discardRecording": "Panaikinti įrašą",
     "settingUpVoice": "Jūsų balsas nustatomas...",
-    "useThisVoice": "Naudoti šį balsą"
+    "useThisVoice": "Naudoti šį balsą",
+    "autoEnd": {
+      "title": "Garso kambarys baigtas dėl neveiklumo",
+      "description": "Niekas nekalbėjo „{{title}}“ 30 minučių, todėl jis buvo uždarytas."
+    }
   },
   "ads": {
     "seoTitle": "Reklamų tvarkytuvė | DeHub",
@@ -4474,7 +4478,6 @@
     "legacyPlanMigrates": "Taupymas migruoja šį seną žetonų kainos planą į dolerių kainodarą pagal išankstinę kainą.",
     "tokenAmount": "{{amount}} žetonų",
     "preListingTokenAmount": "Išankstinio kainos žetonų suma",
-    "tokensStayInTreasury": "Jūsų DeHub žetonai lieka DeHub iždo saugojime ir nėra parduodami. Kūrėjas gauna USDT denominuotą prenumeratos likutį.",
     "tokenCheckoutNotReady": "Žetonų prenumeratos apmokėjimas dar neparuoštas – bandykite dar kartą netrukus",
     "tokenQuoteUnavailable": "Gyvos žetonų kainos citatos negalima",
     "tokenEstimate": "≈ {{amount}} žetonų",
@@ -4482,17 +4485,10 @@
     "subscribedToast": "Prenumeruota",
     "confirmSubscribeTo": "Prenumeruokite {{plan}} {{price}} / {{duration}} prenumeratą.",
     "atPreListingRate": "{{amount}} pagal išankstinio skelbimo įkainį",
-    "withdraw": "Atsiimti",
-    "earningsTitle": "Prenumeratos pajamos",
-    "earningsAvailable": "Laisva",
-    "earningsPending": "Laukiama",
-    "withdrawableSoon": "Prenumeratos pajamas netrukus bus galima atsiimti",
     "youPayNow": "Jūs mokate",
-    "usdtSent": "Išsiųsta {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Galima išsiimti Base tinkle",
-    "earningsUsdtPending": "USDT verte · laukiama iždo rezervo",
-    "buyersPayTokenAmount": "Pirkėjai moka nurodytą DeHub žetonų sumą pagal išankstinę kainą. Jūs gaunate USD vertę kaip USDT likutį.",
-    "creditsCreator": "Kreditas kūrėjui {{amount}} USDT"
+    "paidToCreatorWallet": "Eina tiesiai į kūrėjo piniginę",
+    "creatorPaidDirectNote": "Kūrėjo dalis iškart patenka į jo piniginę, kai tik užsiprenumeruoji. „DeHub“ taiko nedidelį platformos mokestį.",
+    "creatorEarnsDirect": "Prenumeratoriai moka DeHub žetonais. Kai tik užsiprenumeruosi, tavo dalis atsidurs tavo piniginėje, atėmus platformos mokestį už tavo ženklelio lygį."
   },
   "live": {
     "chatJoined": "prisijungė",
@@ -5631,13 +5627,12 @@
       "images": "Paveikslėliai vienam įrašui",
       "uploads": "Įkėlimo per dieną limitas",
       "storage": "Redaktoriaus saugykla",
-      "profiles": "Išsaugoti profiliai",
       "lending": "Ženklelių skolinimo lizdai",
       "voice": "Balso klonavimas",
       "voiceFree": "Nemokamai",
       "voiceLocked": "{{tier}} ir aukštyn"
     },
-    "buy": "Gauti DHB",
+    "buyTokens": "Pirkite žetonus",
     "details": "Išsamus išskaidymas",
     "play": "Paleisti",
     "pause": "Pristabdyti",

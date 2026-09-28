@@ -2518,7 +2518,11 @@
   },
   "stages": {
     "title": "Dhoma audio",
-    "alreadyCharged": "Tokenat tuaja tashmë janë marrë për këtë. Provoni përsëri — nuk do të tarifoheni për herë të dytë."
+    "alreadyCharged": "Tokenat tuaja tashmë janë marrë për këtë. Provoni përsëri — nuk do të tarifoheni për herë të dytë.",
+    "autoEnd": {
+      "title": "Dhoma audio përfundoi për shkak të mosaktivitetit",
+      "description": "Askush nuk foli në „{{title}}“ për 30 minuta, prandaj u mbyll."
+    }
   },
   "ads": {
     "priceUnavailable": "Çmimi i tokenit nuk është i disponueshëm — provoni përsëri së shpejti.",
@@ -2712,14 +2716,6 @@
     "transferGuarantee": "Ju merrni të gjithë llogarinë — dorezë, postime, ndjekës, histori këshillash dhe të drejta për distinktivë. Shitësi ruan portofolin e tij dhe gjithçka që ka brenda. Transferimi funksionon vetëm pasi DeHub të lexojë pagesën tuaj të tokenit nga zinxhiri; nëse ndërpritet, rifillimi i blerjes e vazhdon atë."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Kursimi migron këtë plan të vjetër me çmim tokeni në çmime dollarësh me normën para listimit.",
-    "tokenAmount": "{{amount}} tokena",
-    "preListingTokenAmount": "Shuma e tokenave para listimit",
-    "tokensStayInTreasury": "Tokenat tuaja DeHub qëndrojnë në kujdestarinë e thesarit DeHub dhe nuk shiten. Krijuesi merr një bilanc abonimi të denominuar në USDT.",
-    "tokenCheckoutNotReady": "Pagesa e abonimit me tokena nuk është gati — ju lutem provoni përsëri së shpejti",
-    "tokenQuoteUnavailable": "Kuota live e tokenave e paarritshme",
-    "tokenEstimate": "≈ {{amount}} tokena",
-    "tokenAmountUnavailable": "Shuma e tokenave e paarritshme",
     "subscribersOnly": "Vetëm abonentët",
     "creatorKeepsPost": "{{creator}} e mban këtë postim për abonentët e tyre.",
     "creatorNoPlans": "{{creator}} nuk ka abonim të hapur tani.",
@@ -2800,20 +2796,20 @@
     "inactive": "Joaktiv",
     "daysLeft_one": "{{count}} ditë të mbetura",
     "daysLeft_other": "{{count}} ditë të mbetura",
+    "legacyPlanMigrates": "Kursimi migron këtë plan të vjetër me çmim tokeni në çmime dollarësh me normën para listimit.",
+    "tokenAmount": "{{amount}} tokena",
+    "preListingTokenAmount": "Shuma e tokenave para listimit",
+    "tokenCheckoutNotReady": "Pagesa e abonimit me tokena nuk është gati — ju lutem provoni përsëri së shpejti",
+    "tokenQuoteUnavailable": "Kuota live e tokenave e paarritshme",
+    "tokenEstimate": "≈ {{amount}} tokena",
+    "tokenAmountUnavailable": "Shuma e tokenave e paarritshme",
     "subscribedToast": "Abonuar",
     "confirmSubscribeTo": "Abonohuni te {{plan}} për {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} me çmimin e para-listimit",
-    "withdraw": "Tërhiq",
-    "earningsTitle": "Fitimet nga abonimet",
-    "earningsAvailable": "E disponueshme",
-    "earningsPending": "Në pritje",
-    "withdrawableSoon": "Fitimet nga abonimet do të tërhiqen së shpejti",
     "youPayNow": "Ti paguan",
-    "usdtSent": "U dërguan {{amount}} USDT",
-    "earningsWithdrawableOnBase": "I disponueshëm për tërheqje në Base",
-    "earningsUsdtPending": "Në USDT · në pritje të rezervës së thesarit",
-    "buyersPayTokenAmount": "Blerësit paguajnë shumën e treguar të tokenave DeHub me normën para listimit. Ju merrni vlerën USD si një bilanc USDT.",
-    "creditsCreator": "Kreditohet krijuesi {{amount}} USDT"
+    "paidToCreatorWallet": "Shkon drejt e në portofolin e krijuesit",
+    "creatorPaidDirectNote": "Pjesa e krijuesit shkon direkt në portofolin e tij në momentin që ti regjistrohesh. DeHub mban një tarifë të vogël të platformës.",
+    "creatorEarnsDirect": "Abonentët paguajnë në tokenët DeHub. Pjesa jote vendoset në portofolin tënd në momentin që ata regjistrohen, minus tarifën e platformës për nivelin e distinktivit tënd."
   },
   "live": {
     "chatJoined": "u bashkua",
@@ -3509,13 +3505,12 @@
       "images": "Imazhe për postim",
       "uploads": "Kufiri ditor i ngarkimit",
       "storage": "Ruajtja e redaktorit",
-      "profiles": "Profilet e ruajtura",
       "lending": "Vende për kreditimin e distinktivit",
       "voice": "Klonimi i zërit",
       "voiceFree": "Falas",
       "voiceLocked": "{{tier}} dhe lart"
     },
-    "buy": "Merr DHB",
+    "buyTokens": "Bli argumente",
     "details": "Zbërthimi i plotë",
     "play": "Luaj",
     "pause": "Ndalo",

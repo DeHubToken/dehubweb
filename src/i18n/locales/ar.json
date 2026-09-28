@@ -3142,7 +3142,11 @@
     "sampleReady": "العينة جاهزة.",
     "discardRecording": "تجاهل التسجيل",
     "settingUpVoice": "جارٍ إعداد صوتك...",
-    "useThisVoice": "استخدم هذا الصوت"
+    "useThisVoice": "استخدم هذا الصوت",
+    "autoEnd": {
+      "title": "انتهت الغرفة الصوتية بسبب عدم النشاط",
+      "description": "لم يتحدث أحد في \"{{title}}\" لمدة 30 دقيقة، لذلك تم إغلاقها."
+    }
   },
   "ads": {
     "seoTitle": "مدير الإعلانات | DeHub",
@@ -4500,7 +4504,6 @@
     "legacyPlanMigrates": "يقوم التوفير بترحيل هذه الخطة القديمة المسعرة بالرموز إلى التسعير بالدولار بالسعر قبل الإدراج.",
     "tokenAmount": "{{amount}} رمز",
     "preListingTokenAmount": "مبلغ الرمز قبل الإدراج",
-    "tokensStayInTreasury": "تبقى رموز DeHub الخاصة بك في عهدة خزينة DeHub ولا يتم بيعها. يتلقى المنشئ رصيد اشتراك مقوم بالدولار الأمريكي.",
     "tokenCheckoutNotReady": "نافذة دفع الاشتراك بالرموز غير جاهزة - يرجى المحاولة مرة أخرى قريبًا",
     "tokenQuoteUnavailable": "اقتباس الرمز المباشر غير متاح",
     "tokenEstimate": "≈ {{amount}} رمز",
@@ -4508,17 +4511,10 @@
     "subscribedToast": "مشترك",
     "confirmSubscribeTo": "اشترك في {{plan}} لـ {{price}}/{{duration}}.",
     "atPreListingRate": "{{amount}} بسعر الإعلان المسبق",
-    "withdraw": "سحب",
-    "earningsTitle": "أرباح الاشتراك",
-    "earningsAvailable": "متاح",
-    "earningsPending": "معلق",
-    "withdrawableSoon": "سيتم سحب أرباح الاشتراك قريبًا",
     "youPayNow": "أنت تدفع",
-    "usdtSent": "تم إرسال {{amount}} USDT",
-    "earningsWithdrawableOnBase": "متاح للسحب على Base",
-    "earningsUsdtPending": "مقوَّم بالدولار USDT · بانتظار احتياطي الخزينة",
-    "buyersPayTokenAmount": "يدفع المشترون مبلغ رمز DeHub المعروض بالسعر قبل الإدراج. تتلقى قيمة الدولار الأمريكي كرصيد USDT.",
-    "creditsCreator": "ينسب الفضل إلى المنشئ {{amount}} USDT"
+    "paidToCreatorWallet": "يذهب مباشرة إلى محفظة منشئ المحتوى",
+    "creatorPaidDirectNote": "تذهب حصة منشئ المحتوى مباشرة إلى محفظته في اللحظة التي تشترك فيها. تحتفظ DeHub برسوم منصة صغيرة.",
+    "creatorEarnsDirect": "يدفع المشتركون بعملات DeHub. تصل حصتك إلى محفظتك في اللحظة التي يشتركون فيها، مخصومًا منها رسوم المنصة لمستوى شارتك."
   },
   "live": {
     "chatJoined": "انضم",
@@ -5481,6 +5477,7 @@
     "podcast": {
       "tab": "بودكاست",
       "feedUrlLabel": "رابط موجز RSS للبودكاست",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "إحضار الخلاصة",
       "fetching": "جارٍ جلب الخلاصة...",
       "showBy": "بواسطة {{author}}",
@@ -5494,8 +5491,7 @@
       "failed": "فشل",
       "emptyFeed": "لم نتمكن من العثور على أي حلقات في تلك الخلاصة.",
       "badFeed": "لا يبدو هذا الرابط كملف بودكاست.",
-      "tooMany": "استيراد ما يصل إلى 20 حلقة في وقت واحد.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "استيراد ما يصل إلى 20 حلقة في وقت واحد."
     }
   },
   "banned": {
@@ -5657,13 +5653,12 @@
       "images": "الصور لكل منشور",
       "uploads": "حد التحميل اليومي",
       "storage": "مخزن المحرر",
-      "profiles": "الملفات التعريفية المحفوظة",
       "lending": "خانات إقراض الشارات",
       "voice": "استنساخ الصوت",
       "voiceFree": "مجاني",
       "voiceLocked": "{{tier}} وما فوق"
     },
-    "buy": "احصل على DHB",
+    "buyTokens": "شراء العملات الرمزية",
     "details": "عطل كامل",
     "play": "تشغيل",
     "pause": "إيقاف مؤقت",

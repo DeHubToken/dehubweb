@@ -2490,7 +2490,11 @@
   },
   "stages": {
     "title": "Ruang swara",
-    "alreadyCharged": "Token sampeyan wis dijupuk kanggo iki. Coba maneh — sampeyan ora bakal dikenani biaya kaping pindho."
+    "alreadyCharged": "Token sampeyan wis dijupuk kanggo iki. Coba maneh — sampeyan ora bakal dikenani biaya kaping pindho.",
+    "autoEnd": {
+      "title": "Ruang swara rampung amarga ora ana kegiatan",
+      "description": "Ora ana sing ngomong ing \"{{title}}\" suwene 30 menit, mula ditutup."
+    }
   },
   "ads": {
     "priceUnavailable": "Regane token ora kasedhiya — coba maneh sedhela.",
@@ -2684,14 +2688,6 @@
     "transferGuarantee": "Kowe entuk akun kabeh — gagang, kiriman, pengikut, riwayat tip, lan hak lencana. Penjual nyimpen dompet lan isine. Transfer mlaku sawise DeHub maca pembayaran tokenmu maneh saka rantai; yen keganggu, nyoba maneh tuku bakal nerusake."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Ngirit migrasi rencana sing regane token warisan iki menyang rega dolar kanthi rega pra-listing.",
-    "tokenAmount": "{{amount}} token",
-    "preListingTokenAmount": "Jumlah token pra-listing",
-    "tokensStayInTreasury": "Token DeHubmu tetep ana ing pengawasan kas DeHub lan ora didol. Pencipta nampa imbangan langganan sing didenominasi USDT.",
-    "tokenCheckoutNotReady": "Checkout langganan token durung siyap — coba maneh mengko",
-    "tokenQuoteUnavailable": "Kutipan token langsung ora kasedhiya",
-    "tokenEstimate": "≈ {{amount}} token",
-    "tokenAmountUnavailable": "Jumlah token ora kasedhiya",
     "subscribersOnly": "Subscribers only",
     "draft": "Draft",
     "subscribed": "Subscribed",
@@ -2766,20 +2762,20 @@
     "inactive": "Ora Aktif",
     "daysLeft_one": "{{count}}d tinggal",
     "daysLeft_other": "{{count}}d tinggal",
+    "legacyPlanMigrates": "Ngirit migrasi rencana sing regane token warisan iki menyang rega dolar kanthi rega pra-listing.",
+    "tokenAmount": "{{amount}} token",
+    "preListingTokenAmount": "Jumlah token pra-listing",
+    "tokenCheckoutNotReady": "Checkout langganan token durung siyap — coba maneh mengko",
+    "tokenQuoteUnavailable": "Kutipan token langsung ora kasedhiya",
+    "tokenEstimate": "≈ {{amount}} token",
+    "tokenAmountUnavailable": "Jumlah token ora kasedhiya",
     "subscribedToast": "Langganan",
     "confirmSubscribeTo": "Langganan {{plan}} kanggo {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} ing tarif pra-pendaftaran",
-    "withdraw": "Tarik",
-    "earningsTitle": "Penghasilan langganan",
-    "earningsAvailable": "Kasedhiya",
-    "earningsPending": "Ditundha",
-    "withdrawableSoon": "Penghasilan langganan bakal bisa ditarik mengko",
     "youPayNow": "Kowe mbayar",
-    "usdtSent": "{{amount}} USDT wis dikirim",
-    "earningsWithdrawableOnBase": "Bisa ditarik ing Base",
-    "earningsUsdtPending": "Ing USDT · ngenteni cadangan kas",
-    "buyersPayTokenAmount": "Pembeli mbayar jumlah token DeHub sing ditampilake kanthi rega pra-listing. Sampeyan nampa nilai USD minangka imbangan USDT.",
-    "creditsCreator": "Kredit kreator {{amount}} USDT"
+    "paidToCreatorWallet": "Mlebu langsung menyang dompet pangripta",
+    "creatorPaidDirectNote": "Bagean kreator langsung mlebu menyang dompete nalika sampeyan langganan. DeHub njupuk biaya platform cilik.",
+    "creatorEarnsDirect": "Pelanggan mbayar nganggo token DeHub. Bagianmu mlebu ing dompetmu nalika dheweke langganan, dikurangi biaya platform kanggo tingkatan lencana."
   },
   "live": {
     "chatJoined": "gabung",
@@ -3475,13 +3471,12 @@
       "images": "Gambar saben kiriman",
       "uploads": "Watesan unggah saben dina",
       "storage": "Panyimpenan editor",
-      "profiles": "Profil disimpen",
       "lending": "Slot ngutangi lencana",
       "voice": "Kloning swara",
       "voiceFree": "Gratis",
       "voiceLocked": "{{tier}} lan munggah"
     },
-    "buy": "Entuk DHB",
+    "buyTokens": "Tuku token",
     "details": "Rincian lengkap",
     "play": "Putar",
     "pause": "Paus",

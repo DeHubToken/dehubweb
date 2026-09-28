@@ -3145,7 +3145,11 @@
     "sampleReady": "Prøve klar.",
     "discardRecording": "Kassér optagelse",
     "settingUpVoice": "Konfigurerer din stemme...",
-    "useThisVoice": "Brug denne stemme"
+    "useThisVoice": "Brug denne stemme",
+    "autoEnd": {
+      "title": "Lydrummet blev afsluttet på grund af inaktivitet",
+      "description": "Ingen talte i \"{{title}}\" i 30 minutter, så det blev lukket."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4481,7 +4485,6 @@
     "legacyPlanMigrates": "Besparelse migrerer denne ældre token-prissatte plan til dollarprissætning til forhåndsprisen.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Forhåndspris token-beløb",
-    "tokensStayInTreasury": "Dine DeHub tokens forbliver i DeHub skatkammerets varetægt og sælges ikke. Skaberen modtager en USDT-denomineret abonnementssaldo.",
     "tokenCheckoutNotReady": "Token abonnements-checkout er ikke klar — prøv igen om kort tid",
     "tokenQuoteUnavailable": "Live token-tilbud utilgængeligt",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -4489,17 +4492,10 @@
     "subscribedToast": "Tilmeldt",
     "confirmSubscribeTo": "Abonner på {{plan}} for {{price}}/{{duration}}.",
     "atPreListingRate": "{{amount}}til satsen før annoncering",
-    "withdraw": "Udbetal",
-    "earningsTitle": "Abonnementsindtjening",
-    "earningsAvailable": "Tilgængelig",
-    "earningsPending": "Afventer",
-    "withdrawableSoon": "Abonnementsindtjening kan snart udbetales",
     "youPayNow": "Du betaler",
-    "usdtSent": "{{amount}} USDT sendt",
-    "earningsWithdrawableOnBase": "Kan hæves på Base",
-    "earningsUsdtPending": "I USDT · afventer statskassereserve",
-    "buyersPayTokenAmount": "Købere betaler det viste DeHub token-beløb til forhåndsprisen. Du modtager USD-værdien som en USDT-saldo.",
-    "creditsCreator": "Krediter kreatøren {{amount}}USDT"
+    "paidToCreatorWallet": "Går direkte til kreatørens tegnebog",
+    "creatorPaidDirectNote": "Kreatørens andel går direkte til vedkommendes tegnebog, så snart du abonnerer. DeHub beholder et lille platformgebyr.",
+    "creatorEarnsDirect": "Abonnenter betaler i DeHub-tokens. Din andel lander i din tegnebog, så snart vedkommende abonnerer, minus platformsgebyret for dit badgeniveau."
   },
   "live": {
     "chatJoined": "deltog",
@@ -5569,13 +5565,12 @@
       "images": "Billeder pr. indlæg",
       "uploads": "Daglig uploadgrænse",
       "storage": "Editor opbevaring",
-      "profiles": "Gemte profiler",
       "lending": "Pladser til badgeudlån",
       "voice": "Stemmekloning",
       "voiceFree": "Gratis",
       "voiceLocked": "{{tier}} og op"
     },
-    "buy": "Få DHB",
+    "buyTokens": "Køb tokens",
     "details": "Fuld opdeling",
     "play": "Spil",
     "pause": "Sæt på pause",

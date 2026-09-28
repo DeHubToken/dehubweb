@@ -3140,7 +3140,11 @@
     "sampleReady": "샘플 준비 완료.",
     "discardRecording": "녹음 삭제",
     "settingUpVoice": "음성 설정 중...",
-    "useThisVoice": "이 음성 사용"
+    "useThisVoice": "이 음성 사용",
+    "autoEnd": {
+      "title": "활동이 없어 오디오 룸이 종료되었습니다",
+      "description": "\"{{title}}\"에서 30분 동안 아무도 말하지 않아 종료되었습니다."
+    }
   },
   "ads": {
     "seoTitle": "광고 관리자 | DeHub",
@@ -4491,7 +4495,6 @@
     "legacyPlanMigrates": "저장하면 이 레거시 토큰 가격 책정 계획이 사전 상장 가격으로 달러 가격 책정으로 마이그레이션됩니다.",
     "tokenAmount": "{{amount}} 토큰",
     "preListingTokenAmount": "사전 상장 토큰 금액",
-    "tokensStayInTreasury": "귀하의 DeHub 토큰은 DeHub 보물창고에 보관되며 판매되지 않습니다. 제작자는 USDT로 표시된 구독 잔액을 받습니다.",
     "tokenCheckoutNotReady": "토큰 구독 결제가 준비되지 않았습니다. 곧 다시 시도해 주세요.",
     "tokenQuoteUnavailable": "실시간 토큰 시세 이용 불가",
     "tokenEstimate": "≈ {{amount}} 토큰",
@@ -4499,17 +4502,10 @@
     "subscribedToast": "구독 완료",
     "confirmSubscribeTo": "{{price}}/{{duration}} 동안 {{plan}} 구독.",
     "atPreListingRate": "사전 등록 요금으로 {{amount}}",
-    "withdraw": "출금",
-    "earningsTitle": "구독 수입",
-    "earningsAvailable": "사용 가능",
-    "earningsPending": "대기 중",
-    "withdrawableSoon": "구독 수입이 곧 인출될 예정입니다.",
     "youPayNow": "결제 금액",
-    "usdtSent": "{{amount}} USDT 전송 완료",
-    "earningsWithdrawableOnBase": "Base에서 출금 가능",
-    "earningsUsdtPending": "USDT 기준 · 트레저리 준비금 대기 중",
-    "buyersPayTokenAmount": "구매자는 사전 상장 가격으로 표시된 DeHub 토큰 금액을 지불합니다. USDT 잔액으로 USD 가치를 받습니다.",
-    "creditsCreator": "크리에이터 크레딧 {{amount}} USDT"
+    "paidToCreatorWallet": "크리에이터 지갑으로 바로 이동합니다.",
+    "creatorPaidDirectNote": "구독하는 순간 크리에이터의 몫이 지갑으로 바로 이동합니다. DeHub는 소정의 플랫폼 수수료를 부과합니다.",
+    "creatorEarnsDirect": "구독자는 DeHub 토큰으로 결제합니다. 구독하는 순간 지갑에 공유가 들어오므로 배지 등급에 대한 플랫폼 수수료가 줄어듭니다."
   },
   "live": {
     "chatJoined": "님이 참여했습니다",
@@ -5472,6 +5468,7 @@
     "podcast": {
       "tab": "팟캐스트",
       "feedUrlLabel": "팟캐스트 RSS 피드 URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "피드 가져오기",
       "fetching": "피드 가져오는 중...",
       "showBy": "작성자: {{author}}",
@@ -5485,8 +5482,7 @@
       "failed": "실패",
       "emptyFeed": "해당 피드에서 에피소드를 찾을 수 없습니다.",
       "badFeed": "해당 링크는 팟캐스트 피드처럼 보이지 않습니다.",
-      "tooMany": "한 번에 최대 20개의 에피소드를 가져옵니다.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "한 번에 최대 20개의 에피소드를 가져옵니다."
     }
   },
   "banned": {
@@ -5647,13 +5643,12 @@
       "images": "게시물당 이미지 수",
       "uploads": "일일 업로드 한도",
       "storage": "편집기 저장소",
-      "profiles": "저장된 프로필",
       "lending": "배지 대여 슬롯",
       "voice": "음성 복제",
       "voiceFree": "무료",
       "voiceLocked": "{{tier}} 이상"
     },
-    "buy": "DHB 받기",
+    "buyTokens": "토큰 구매",
     "details": "전체 내역",
     "play": "재생",
     "pause": "일시 중지",

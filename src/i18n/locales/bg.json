@@ -2998,7 +2998,11 @@
     "sampleReady": "Примерът е готов.",
     "discardRecording": "Отхвърлете записа",
     "settingUpVoice": "Настройване на вашия глас...",
-    "useThisVoice": "Използвайте този глас"
+    "useThisVoice": "Използвайте този глас",
+    "autoEnd": {
+      "title": "Аудио стаята приключи поради неактивност",
+      "description": "Никой не говори в „{{title}}“ 30 минути, затова стаята беше затворена."
+    }
   },
   "ads": {
     "newCampaign": "Нова кампания",
@@ -4257,6 +4261,7 @@
     "presetLifetime": "Срок на използване",
     "onePlanPerDuration": "По един план на продължителност — веригата съхранява планове по създател и продължителност.",
     "benefitsOptional": "Ползи (незадължително)",
+    "benefitN": "Полза {{number}}",
     "addBenefit": "Добавяне на нова полза",
     "creating": "Създаване...",
     "createAndPublish": "Създаване и публикуване",
@@ -4297,26 +4302,17 @@
     "legacyPlanMigrates": "Запазването мигрира този план, ценообразуван в стари токени, към ценообразуване в долари по предлистинговата цена.",
     "tokenAmount": "{{amount}} токена",
     "preListingTokenAmount": "Предлистингова сума на токени",
-    "tokensStayInTreasury": "Вашите DeHub токени остават под попечителството на хазната на DeHub и не се продават. Създателят получава абонаментен баланс, деноминиран в USDT.",
     "tokenCheckoutNotReady": "Плащането за абонамент с токени не е готово — моля, опитайте отново скоро",
     "tokenQuoteUnavailable": "Текуща цена на токена не е налична",
     "tokenEstimate": "≈ {{amount}} токена",
     "tokenAmountUnavailable": "Сумата на токените не е налична",
-    "benefitN": "Полза {{number}}",
     "subscribedToast": "Абониран",
     "confirmSubscribeTo": "Абонирайте се за {{plan}} за {{price}}/{{duration}}.",
     "atPreListingRate": "{{amount}} на цената на предварителната обява",
-    "withdraw": "Оттегляне",
-    "earningsTitle": "Приходи от абонаменти",
-    "earningsAvailable": "Свободни",
-    "earningsPending": "В процес на изчакване",
-    "withdrawableSoon": "Приходите от абонаменти ще могат да се изтеглят скоро",
     "youPayNow": "Вие плащате",
-    "usdtSent": "Изпратени {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Достъпно за теглене в Base",
-    "earningsUsdtPending": "В USDT · изчаква резерва на хазната",
-    "buyersPayTokenAmount": "Купувачите плащат показаната сума в DeHub токени по предлистинговата цена. Вие получавате стойността в USD като USDT баланс.",
-    "creditsCreator": "Кредитира твореца {{amount}} USDT"
+    "paidToCreatorWallet": "Насочва се директно към портфейла на твореца",
+    "creatorPaidDirectNote": "Делът на твореца отива направо в портфейла му в момента, в който се абонирате. DeHub поддържа малка такса за платформата.",
+    "creatorEarnsDirect": "Абонатите плащат в токени DeHub. Вашият дял попада в портфейла ви в момента, в който се абонира, без таксата за платформата за нивото на значката ви."
   },
   "live": {
     "chatJoined": "се присъедини",
@@ -5223,6 +5219,7 @@
     "podcast": {
       "tab": "Подкаст",
       "feedUrlLabel": "Url адрес на RSS емисия на подкаст",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Изтегляне на емисия",
       "fetching": "Извличане на емисия...",
       "showBy": "До {{author}}",
@@ -5236,8 +5233,7 @@
       "failed": "Неуспешно",
       "emptyFeed": "Не можахме да намерим никакви епизоди в тази емисия.",
       "badFeed": "Тази връзка не изглежда като емисия на подкаст.",
-      "tooMany": "Импортирайте до 20 епизода наведнъж.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "Импортирайте до 20 епизода наведнъж."
     }
   },
   "banned": {
@@ -5399,13 +5395,12 @@
       "images": "Изображения на публикация",
       "uploads": "Дневен лимит за качване",
       "storage": "Съхранение на редактора",
-      "profiles": "Запазени профили",
       "lending": "Слотове за заемане на значки",
       "voice": "Гласово клониране",
       "voiceFree": "Безплатно",
       "voiceLocked": "{{tier}} и нагоре"
     },
-    "buy": "Получаване на DHB",
+    "buyTokens": "Купете жетони",
     "details": "Пълна разбивка",
     "play": "Възпроизвеждане",
     "pause": "Пауза",

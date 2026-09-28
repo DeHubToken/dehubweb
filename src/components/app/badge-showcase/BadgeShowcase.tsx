@@ -31,7 +31,6 @@ import {
   Play,
   Share2,
   Upload,
-  Users,
   X,
   type LucideIcon,
 } from 'lucide-react';
@@ -92,7 +91,20 @@ interface Box {
 }
 
 const KEYFRAMES = `@keyframes badge-showcase-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes badge-showcase-float{0%,100%{translate:0 0}50%{translate:0 -6px}}`;
+@keyframes badge-showcase-float{0%,100%{translate:0 0}50%{translate:0 -6px}}
+.bs-chrome,.bs-chrome-dark{position:relative;overflow:hidden;isolation:isolate;transition:transform .15s ease,filter .2s ease}
+.bs-chrome{color:#0b0c0e;text-shadow:0 1px 0 rgba(255,255,255,.6);background:linear-gradient(180deg,#fdfdfe 0%,#e1e4e8 16%,#a8adb5 47%,#eceef1 53%,#c2c6cc 78%,#f6f7f8 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.3),0 8px 20px -8px rgba(0,0,0,.85)}
+.bs-chrome-dark{color:#f3f4f6;text-shadow:0 -1px 0 rgba(0,0,0,.55);background:linear-gradient(180deg,#50545b 0%,#2c2f34 45%,#15171a 55%,#2d3035 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.14),0 8px 20px -8px rgba(0,0,0,.85)}
+.bs-chrome::before,.bs-chrome-dark::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 32%,rgba(255,255,255,.7) 50%,transparent 68%);transform:translateX(-130%);transition:transform .75s cubic-bezier(.16,1,.3,1)}
+.bs-chrome-dark::before{background:linear-gradient(105deg,transparent 32%,rgba(255,255,255,.22) 50%,transparent 68%)}
+.bs-chrome:hover::before,.bs-chrome-dark:hover::before{transform:translateX(130%)}
+.bs-chrome:hover,.bs-chrome-dark:hover{filter:brightness(1.07)}
+.bs-chrome:active,.bs-chrome-dark:active{transform:translateY(1px)}
+.bs-chrome:focus-visible,.bs-chrome-dark:focus-visible{outline:2px solid rgba(255,255,255,.7);outline-offset:2px}`;
+
+/** Every panel in the details column shares one shape, so the edges line up. */
+const BENTO = 'rounded-2xl border p-3 transition-colors duration-300';
+const BENTO_IDLE = 'border-white/10 bg-white/[0.04]';
 
 /** Three significant figures, so a dragged amount reads as a price. */
 function roundAmount(value: number): number {
@@ -454,6 +466,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
   const youPos =
     standing && standing.balance > 0 ? Math.min(100, (toPos(standing.balance) / SLIDER_STEPS) * 100) : null;
 
+  // Nine tiles, so the three-column grid never ends on a ragged row.
   const perkRows: {
     key: string;
     icon: LucideIcon;
@@ -509,13 +522,6 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
       label: t('badgeShowcase.perks.storage'),
       value: formatBytes(perks.editorStorageBytes),
       better: (p, q) => p.editorStorageBytes > q.editorStorageBytes,
-    },
-    {
-      key: 'profiles',
-      icon: Users,
-      label: t('badgeShowcase.perks.profiles'),
-      value: nf.format(perks.savedProfiles),
-      better: (p, q) => p.savedProfiles > q.savedProfiles,
     },
     {
       key: 'lending',
@@ -576,7 +582,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
           type="button"
           onClick={requestClose}
           aria-label={t('badgeShowcase.close')}
-          className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.06] text-white/80 backdrop-blur-xl transition-colors hover:bg-white/15 hover:text-white"
+          className="bs-chrome-dark grid h-10 w-10 place-items-center rounded-full"
         >
           <X className="h-[18px] w-[18px]" />
         </button>
@@ -652,21 +658,23 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
             </div>
 
             {/* Token slider */}
-            <div className="mt-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 lg:mt-5 lg:py-4">
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/45">
+            <div className={cn(BENTO, BENTO_IDLE, 'mt-3 lg:mt-4')}>
+              <div className="flex h-6 items-center justify-between gap-2">
+                <span className="min-w-0 truncate text-[11px] font-bold uppercase tracking-[0.12em] text-white/45">
                   {t('badgeShowcase.sliderLabel')}
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-[17px] font-bold tabular-nums">
+                <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[17px] font-bold tabular-nums">
                   {nf.format(amount)}
-                  <DhbCoin className="h-4 w-4" />
+                  <DhbCoin className="h-4 w-4 shrink-0" />
                   {price ? (
-                    <span className="text-[12px] font-medium text-white/40">≈ {formatUsd(amount * price)}</span>
+                    <span className="hidden text-[12px] font-medium text-white/40 min-[380px]:inline">
+                      ≈ {formatUsd(amount * price)}
+                    </span>
                   ) : null}
                 </span>
               </div>
 
-              <div className="relative mt-2 pt-4 lg:mt-4">
+              <div className="relative mt-2 pt-4">
                 {youPos !== null && (
                   <span
                     className="pointer-events-none absolute top-0 -translate-x-1/2 rounded-full bg-emerald-400/15 px-1.5 text-[9.5px] font-bold uppercase tracking-wider text-emerald-300"
@@ -720,10 +728,10 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
             </div>
 
             {/* What it grants */}
-            <h3 className="mt-3 text-[11px] font-bold uppercase tracking-[0.12em] text-white/45 lg:mt-5">
+            <h3 className="mt-3 text-[11px] font-bold uppercase tracking-[0.12em] text-white/45">
               {t('badgeShowcase.grants')}
             </h3>
-            <ul className="-mx-4 mt-2 flex snap-x gap-2 overflow-x-auto px-4 scrollbar-hide lg:mx-0 lg:grid lg:grid-cols-2 lg:overflow-visible lg:px-0">
+            <ul className="mt-2 grid grid-cols-3 gap-2">
               {perkRows.map((row) => {
                 const Icon = row.icon;
                 const up = row.better(perks, below);
@@ -731,16 +739,21 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                 return (
                   <li
                     key={row.key}
+                    title={row.label}
                     className={cn(
-                      'w-[138px] shrink-0 snap-start rounded-xl border px-3 py-2.5 transition-colors duration-300 lg:w-auto',
-                      up ? 'border-white/20 bg-white/[0.07]' : 'border-white/10 bg-white/[0.03]',
+                      BENTO,
+                      // Fixed geometry: the label always gets two lines, the
+                      // value one, so a one-line label never shifts its tile
+                      // out of step with the tiles beside it.
+                      'flex h-[80px] min-w-0 flex-col justify-between',
+                      up ? 'border-white/20 bg-white/[0.07]' : BENTO_IDLE,
                     )}
                   >
-                    <div className="flex items-center gap-1.5 text-[11px] leading-tight text-white/50">
-                      <Icon className="h-3.5 w-3.5 shrink-0" />
-                      <span className="line-clamp-2">{row.label}</span>
+                    <div className="flex min-w-0 items-start gap-1.5 text-[10.5px] leading-[13px] text-white/50">
+                      <Icon className="h-[13px] w-[13px] shrink-0" />
+                      <span className="line-clamp-2 h-[26px] min-w-0 break-words">{row.label}</span>
                     </div>
-                    <div className="mt-1 flex items-center gap-1.5 overflow-hidden">
+                    <div className="flex h-5 min-w-0 items-center gap-1.5 overflow-hidden">
                       <AnimatePresence mode="popLayout" initial={false}>
                         <motion.span
                           key={row.value}
@@ -749,15 +762,15 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                           exit={{ opacity: 0, y: -10 }}
                           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                           className={cn(
-                            'text-[17px] font-bold tabular-nums leading-tight',
-                            locked && 'text-[13px] font-semibold text-white/40',
+                            'min-w-0 truncate text-[16px] font-bold tabular-nums leading-5',
+                            locked && 'text-[12px] font-semibold text-white/40',
                           )}
                         >
                           {row.value}
                         </motion.span>
                       </AnimatePresence>
                       {up && (
-                        <span aria-hidden className="text-[10px] font-bold text-emerald-400">
+                        <span aria-hidden className="shrink-0 text-[10px] font-bold text-emerald-400">
                           ▲
                         </span>
                       )}
@@ -767,16 +780,16 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
               })}
             </ul>
 
-            <div className="mt-3 flex gap-2 lg:mt-4">
+            <div className="mt-2 grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => {
                   onClose();
                   navigate('/app/buy');
                 }}
-                className="flex-1 rounded-[12px] bg-white px-4 py-2 text-sm font-bold text-black transition-transform hover:scale-[1.02] active:scale-[0.98] lg:py-2.5"
+                className="bs-chrome h-11 min-w-0 truncate rounded-2xl px-3 text-sm font-bold"
               >
-                {t('badgeShowcase.buy')}
+                {t('badgeShowcase.buyTokens')}
               </button>
               <button
                 type="button"
@@ -784,7 +797,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
                   onClose();
                   navigate('/app/glossary#badges');
                 }}
-                className="flex-1 rounded-[12px] border border-white/15 bg-white/[0.06] px-4 py-2 text-sm font-bold text-white/85 transition-colors hover:bg-white/15 lg:py-2.5"
+                className="bs-chrome-dark h-11 min-w-0 truncate rounded-2xl px-3 text-sm font-bold"
               >
                 {t('badgeShowcase.details')}
               </button>
@@ -863,7 +876,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
           onClick={() => setPlaying((p) => !p)}
           aria-label={playing ? t('badgeShowcase.pause') : t('badgeShowcase.play')}
           aria-pressed={!playing}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+          className="bs-chrome-dark ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-full"
         >
           {playing ? <Pause className="h-3.5 w-3.5" fill="currentColor" /> : <Play className="h-3.5 w-3.5" fill="currentColor" />}
         </button>

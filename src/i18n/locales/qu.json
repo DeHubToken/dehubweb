@@ -2535,7 +2535,11 @@
   },
   "stages": {
     "title": "Rimanakuy wasikuna",
-    "alreadyCharged": "Kaypaqqa tokenniykikunaqa apasqañam. Hukmanta kallpachakuy — iskay kaq kutipiqa manam qullqita mañasunkichu."
+    "alreadyCharged": "Kaypaqqa tokenniykikunaqa apasqañam. Hukmanta kallpachakuy — iskay kaq kutipiqa manam qullqita mañasunkichu.",
+    "autoEnd": {
+      "title": "Rimanakuy wasiqa tukurqan mana pipas rimasqanrayku",
+      "description": "Mana pipas \"{{title}}\" nisqapi 30 minutu rimarqanchu, chayrayku wichqasqa."
+    }
   },
   "ads": {
     "priceUnavailable": "Token chanin mana kanchu — pisi pachamanta wakmanta kallpachakuy.",
@@ -2729,14 +2733,6 @@
     "transferGuarantee": "Sumaq kaqta hap'inki — ch'aqchiy, qillqakuna, qatiqkuna, yanapaykuna k'anchaywan, qhawana hayñikuna. Rant'iqqa waqaychana wasinta imaymanataq chaypi kaqta waqaychan. Llamk'ayqa chaymanta llamk'an DeHub qanpa token pagoyta qhawaspa chainmanta lloqsimusqanta; chayta hark'aykuptinqa, salt'ayta kutichiyqa kutirichin."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Waqaychay kay herencia token-precio planta dólar chaninman ñawpaq listasqa tarifa kaqpi astakun.",
-    "tokenAmount": "{{amount}} fichas nisqakuna",
-    "preListingTokenAmount": "Ñawpaq listasqa tokenpa chanin",
-    "tokensStayInTreasury": "DeHub tokenniykikuna DeHub qullqi waqaychanapi qhipakunku chaymanta mana ranqhasqachu kanku. Ruwaqqa USDT-wan sutichasqa suscripción saldota chaskikun.",
-    "tokenCheckoutNotReady": "Token suscripción qullqi quyqa manam wakichisqachu — ama hina kaspa pisi pachamanta musuqmanta kallpachakuy",
-    "tokenQuoteUnavailable": "Kawsaq token cita mana kanchu",
-    "tokenEstimate": "≈ {{amount}} nisqa fichas",
-    "tokenAmountUnavailable": "Tokenpa chanin mana kanchu",
     "subscribersOnly": "Maqtaqkunapaq",
     "creatorKeepsPost": "{{creator}} kay postta maqtaqkunapaq waqaychay.",
     "creatorNoPlans": "{{creator}} mana ima suscripción nisqa kachkanchu kunan.",
@@ -2817,20 +2813,20 @@
     "inactive": "Mana kuska",
     "daysLeft_one": "{{count}}d qhipa",
     "daysLeft_other": "{{count}}d qhipa",
+    "legacyPlanMigrates": "Waqaychay kay herencia token-precio planta dólar chaninman ñawpaq listasqa tarifa kaqpi astakun.",
+    "tokenAmount": "{{amount}} fichas nisqakuna",
+    "preListingTokenAmount": "Ñawpaq listasqa tokenpa chanin",
+    "tokenCheckoutNotReady": "Token suscripción qullqi quyqa manam wakichisqachu — ama hina kaspa pisi pachamanta musuqmanta kallpachakuy",
+    "tokenQuoteUnavailable": "Kawsaq token cita mana kanchu",
+    "tokenEstimate": "≈ {{amount}} nisqa fichas",
+    "tokenAmountUnavailable": "Tokenpa chanin mana kanchu",
     "subscribedToast": "Suscribido",
     "confirmSubscribeTo": "Suscribete {{plan}}-man {{price}} / {{duration}}-ta.",
     "atPreListingRate": "{{amount}} pre-lista tasa",
-    "withdraw": "Hark'ay",
-    "earningsTitle": "Suscripcionmanta gananciakuna",
-    "earningsAvailable": "Hapirinalla",
-    "earningsPending": "Kaqraq",
-    "withdrawableSoon": "Suscripcionmanta ganasqankuqa pisi tiempollamantan horqosqa kanqa",
     "youPayNow": "Qamqa paganki",
-    "usdtSent": "{{amount}} USDT apachisqa",
-    "earningsWithdrawableOnBase": "Base ukhupi horqonapaq",
-    "earningsUsdtPending": "USDT-pi · qullqi wasi waqaychaykuta suyachkan",
-    "buyersPayTokenAmount": "Ranqhaqkuna rikuchisqa DeHub token qullqita qunku chaymanta ñawpaqmanta listasqa tarifa kaqpi. USD chanin USDT saldo hina chaskinki.",
-    "creditsCreator": "Rikch'aykuna {{amount}} USDT creditokuna"
+    "paidToCreatorWallet": "Kamaqpa billeteranman chiqan rin",
+    "creatorPaidDirectNote": "Ruwaqpa rakiyninqa derecho billeterankuman rin chay rato suscribisqayki. DeHub huk huch&#39;uy plataforma qullqita waqaychan.",
+    "creatorEarnsDirect": "Suscriptorkuna DeHub tokenkunapi qullqita qunku. Accionesniyki billeteraykipi chayan chay rato suscribisqanku, menos plataforma qullqita insignia nivelniykipaq."
   },
   "live": {
     "chatJoined": "yaykurqan",
@@ -3522,13 +3518,12 @@
       "images": "Imahinakuna sapa qillqasqa",
       "uploads": "Sapa punchaw cargapa limite",
       "storage": "Editor waqaychasqa",
-      "profiles": "Waqaychasqa perfiles",
       "lending": "Insignia manukuy ranuras",
       "voice": "Kunka clonación nisqa",
       "voiceFree": "Qispisqa",
       "voiceLocked": "{{tier}} y wichayman"
     },
-    "buy": "DHB nisqawan yanapachikuy",
+    "buyTokens": "Fichas nisqakunata rantiy",
     "details": "Hunt’asqa pakiy",
     "play": "Pukllay",
     "pause": "Suyay",
