@@ -15,7 +15,7 @@
 
 const BADGE_LEVELS: { name: string; min: number }[] = [
   { name: "Crab", min: 10000 },
-  { name: "Lobster", min: 25000 },
+  { name: "Ghost Lobster", min: 25000 },
   { name: "Piranha", min: 50000 },
   { name: "Giant Tortoise", min: 100000 },
   { name: "King Cobra", min: 250000 },
@@ -78,6 +78,7 @@ function thresholds(scale: number): { name: string; min: number }[] {
  * backend's rename migration, new rows after it.
  */
 const LEGACY_TIER_NAMES: Record<string, string> = {
+  Lobster: "Ghost Lobster",
   Crocodite: "Crocodile",
   Meglodon: "Megalodon",
   Tortoise: "Giant Tortoise",

@@ -21,7 +21,7 @@ export interface PovrTier {
  */
 export const POVR_TIERS: PovrTier[] = [
   { name: 'Crab', min: 10_000, cpmUsd: 100 },
-  { name: 'Lobster', min: 25_000, cpmUsd: 180 },
+  { name: 'Ghost Lobster', min: 25_000, cpmUsd: 180 },
   { name: 'Piranha', min: 50_000, cpmUsd: 285 },
   { name: 'Giant Tortoise', min: 100_000, cpmUsd: 450 },
   { name: 'King Cobra', min: 250_000, cpmUsd: 800 },
@@ -58,6 +58,7 @@ export function tierForBalance(balance: number | null | undefined): string {
  * different age from the rows it matches against.
  */
 const LEGACY_TIER_NAMES: Record<string, string> = {
+  Lobster: "Ghost Lobster",
   Crocodite: 'Crocodile',
   Meglodon: 'Megalodon',
   Tortoise: 'Giant Tortoise',

@@ -181,7 +181,7 @@ const Dapp = () => {
    */
   const superPowers = [
     { key: 'boost', nameKey: 'spNameBoost', descKey: 'spDescBoost', tier: 'Crab', tierKey: 'spTierCrab', homeKey: 'spHomePost' },
-    { key: 'second_wind', nameKey: 'spNameSecondWind', descKey: 'spDescSecondWind', tier: 'Lobster', tierKey: 'spTierLobster', homeKey: 'spHomePost' },
+    { key: 'second_wind', nameKey: 'spNameSecondWind', descKey: 'spDescSecondWind', tier: 'Ghost Lobster', tierKey: 'spTierLobster', homeKey: 'spHomePost' },
     { key: 'comment_anchor', nameKey: 'spNameCommentAnchor', descKey: 'spDescCommentAnchor', tier: 'Piranha', tierKey: 'spTierPiranha', homeKey: 'spHomeComment' },
     { key: 'trend_jacker', nameKey: 'spNameTrendJacker', descKey: 'spDescTrendJacker', tier: 'Giant Tortoise', tierKey: 'spTierTortoise', homeKey: 'spHomePage' },
     { key: 'timeline_bomber', nameKey: 'spNameTimelineBomber', descKey: 'spDescTimelineBomber', tier: 'King Cobra', tierKey: 'spTierCobra', homeKey: 'spHomePost' },
@@ -203,7 +203,7 @@ const Dapp = () => {
   const superPowerLadder = [
     { tierKey: 'spTierNone', hold: '< 10,000', boosts: 0, minutes: 0, image: null, unlockKey: null },
     { tierKey: 'spTierCrab', hold: '10,000+', boosts: 1, minutes: 15, image: badgeImage('Crab'), unlockKey: 'spNameBoost' },
-    { tierKey: 'spTierLobster', hold: '25k+', boosts: 1, minutes: 20, image: badgeImage('Lobster'), unlockKey: 'spNameSecondWind' },
+    { tierKey: 'spTierLobster', hold: '25k+', boosts: 1, minutes: 20, image: badgeImage('Ghost Lobster'), unlockKey: 'spNameSecondWind' },
     { tierKey: 'spTierPiranha', hold: '50k+', boosts: 1, minutes: 25, image: badgeImage('Piranha'), unlockKey: 'spNameCommentAnchor' },
     { tierKey: 'spTierTortoise', hold: '100k+', boosts: 1, minutes: 30, image: badgeImage('Giant Tortoise'), unlockKey: 'spNameTrendJacker' },
     { tierKey: 'spTierCobra', hold: '250k+', boosts: 2, minutes: 35, image: badgeImage('King Cobra'), unlockKey: 'spNameTimelineBomber' },
@@ -220,7 +220,7 @@ const Dapp = () => {
   const feeReductions = [
     { badgeKey: 'badgeNone', threshold: "< 10,000", fee: "10.00%", color: "bg-muted", image: null },
     { badgeKey: 'badgeCrab', threshold: "10,000+", fee: "9.31%", color: "bg-muted", image: badgeImage('Crab') },
-    { badgeKey: 'badgeLobster', threshold: "25k+", fee: "8.62%", color: "bg-muted", image: badgeImage('Lobster') },
+    { badgeKey: 'badgeLobster', threshold: "25k+", fee: "8.62%", color: "bg-muted", image: badgeImage('Ghost Lobster') },
     { badgeKey: 'badgePiranha', threshold: "50k+", fee: "7.93%", color: "bg-muted", image: badgeImage('Piranha') },
     { badgeKey: 'badgeTortoise', threshold: "100k+", fee: "7.24%", color: "bg-muted", image: badgeImage('Giant Tortoise') },
     { badgeKey: 'badgeCobra', threshold: "250k+", fee: "6.55%", color: "bg-muted", image: badgeImage('King Cobra') },

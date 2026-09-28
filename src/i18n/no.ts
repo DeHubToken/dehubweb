@@ -439,7 +439,7 @@ export const no = {
     shakeUpDesc: 'Nyeste produktdesignlysbilde og 2025 strategioppdateringer.',
     badgeNone: 'Ingen merke',
     badgeCrab: 'Krabbe',
-    badgeLobster: 'Hummer',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piraja',
     badgeTortoise: 'Kjempeskilpadde',
     badgeCobra: 'Kongekobra',

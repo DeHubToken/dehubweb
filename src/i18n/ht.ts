@@ -445,7 +445,7 @@ export const ht = {
     shakeUpDesc: 'Dènye slide konsepsyon pwodui ak mizajou estratejik pou 2025.',
     badgeNone: 'Pa gen Badge',
     badgeCrab: 'Badge Krab',
-    badgeLobster: 'Badge Oma',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Badge Piranya',
     badgeTortoise: 'Badge Gwo Tòti',
     badgeCobra: 'Badge Kobra Wa',

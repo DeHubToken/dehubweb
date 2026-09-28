@@ -441,7 +441,7 @@ export const apd = {
     shakeUpDesc: 'أحدث شرائح تصميم المنتج والتحديثات الاستراتيجية لـ 2025.',
     badgeNone: 'بدون شارة',
     badgeCrab: 'شارة السلطعون',
-    badgeLobster: 'شارة الكركند',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'شارة البيرانا',
     badgeTortoise: 'شارة السلحفاة العملاقة',
     badgeCobra: 'شارة الكوبرا الملكية',

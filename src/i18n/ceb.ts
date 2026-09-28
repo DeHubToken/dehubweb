@@ -445,7 +445,7 @@ export const ceb = {
     shakeUpDesc: 'Pinakabag-o nga product design slides ug strategic updates para sa 2025.',
     badgeNone: 'Walay Badge',
     badgeCrab: 'Crab Badge',
-    badgeLobster: 'Lobster Badge',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piranha Badge',
     badgeTortoise: 'Badge sa Dakong Bao',
     badgeCobra: 'Badge sa King Cobra',

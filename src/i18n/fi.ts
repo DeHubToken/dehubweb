@@ -445,7 +445,7 @@ export const fi = {
     shakeUpDesc: 'Viimeisimmät tuotesuunnitteluslidet ja strategiset päivitykset vuodelle 2025.',
     badgeNone: 'Ei merkkiä',
     badgeCrab: 'Rapumerkki',
-    badgeLobster: 'Hummerimerkki',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piranjamerkki',
     badgeTortoise: 'Jättiläiskilpikonna-merkki',
     badgeCobra: 'Kuningaskobramerkki',

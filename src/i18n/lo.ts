@@ -445,7 +445,7 @@ export const lo = {
     shakeUpDesc: 'ສະໄລ້ການອອກແບບຜະລິດຕະພັນລ່າສຸດ ແລະ ການອັບເດດຍຸດທະສາດ 2025.',
     badgeNone: 'ບໍ່ມີ Badge',
     badgeCrab: 'Badge ປູ',
-    badgeLobster: 'Badge ກຸ້ງ',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Badge Piranha',
     badgeTortoise: 'Badge ເຕົ່າຍັກ',
     badgeCobra: 'Badge ງູຈົງອາງ',

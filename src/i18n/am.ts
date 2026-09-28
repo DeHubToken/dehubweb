@@ -446,7 +446,7 @@ export const am = {
     // የባጅ ስሞች
     badgeNone: 'ባጅ የለም',
     badgeCrab: 'ሸርጣን ባጅ',
-    badgeLobster: 'ሎብስተር ባጅ',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'ፒራንያ ባጅ',
     badgeTortoise: 'ግዙፍ ኤሊ ባጅ',
     badgeCobra: 'ንጉሥ ኮብራ ባጅ',

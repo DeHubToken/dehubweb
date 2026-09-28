@@ -445,7 +445,7 @@ export const da = {
     shakeUpDesc: 'Seneste produktdesignslides og strategiske opdateringer for 2025.',
     badgeNone: 'Intet badge',
     badgeCrab: 'Krabbe-badge',
-    badgeLobster: 'Hummer-badge',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piranha-badge',
     badgeTortoise: 'Kæmpeskildpadde-badge',
     badgeCobra: 'Kongekobra-badge',

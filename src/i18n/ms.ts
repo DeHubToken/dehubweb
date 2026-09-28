@@ -445,7 +445,7 @@ export const ms = {
     shakeUpDesc: 'Slaid reka bentuk produk terkini dan kemas kini strategik 2025.',
     badgeNone: 'Tiada Lencana',
     badgeCrab: 'Ketam',
-    badgeLobster: 'Udang Galah',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piranha',
     badgeTortoise: 'Kura-kura Gergasi',
     badgeCobra: 'Tedung Selar',
