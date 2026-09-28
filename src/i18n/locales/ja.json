@@ -6582,7 +6582,9 @@
     "step3": "DeHubトークンは、宛先チェーンでまもなく配信されます。"
   },
   "builder": {
-    "stakeForAllowance": "DeHubトークンをステーキングして、毎日のビルド割り当てを増やしましょう"
+    "stakeForAllowance": "DeHubトークンをステーキングして、毎日のビルド割り当てを増やしましょう",
+    "buildInChat": "@assistant とのDMでつくる",
+    "signInRequired": "Builder を使うにはサインインしてください。"
   },
   "connect": {
     "chatgptFaqAccount": "コネクタを介して公開コンテンツを読むのにアカウントは必要ありません。DeHubアカウントは、DeHubトークンを投稿、チップ、または保持したい場合にのみ必要です。",

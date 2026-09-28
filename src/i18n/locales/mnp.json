@@ -4276,7 +4276,9 @@
     "step3": "您的 DeHub 代币将很快在目标链上交付。"
   },
   "builder": {
-    "stakeForAllowance": "质押 DeHub 代币以提高您的每日构建额度"
+    "stakeForAllowance": "质押 DeHub 代币以提高您的每日构建额度",
+    "buildInChat": "在私信里共 @assistant 一起搭建",
+    "signInRequired": "登录了正会使用 Builder。"
   },
   "connect": {
     "chatgptFaqAccount": "无需账户即可通过连接器读取公共内容。只有当您想发布、打赏或持有 DeHub 代币时，才需要 DeHub 账户。",

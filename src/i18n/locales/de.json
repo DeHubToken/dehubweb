@@ -6591,7 +6591,9 @@
     "step3": "Ihre DeHub-Token werden in Kürze auf der Zielkette zugestellt."
   },
   "builder": {
-    "stakeForAllowance": "Setzen Sie DeHub-Token ein, um Ihr tägliches Erstellungsguthaben zu erhöhen"
+    "stakeForAllowance": "Setzen Sie DeHub-Token ein, um Ihr tägliches Erstellungsguthaben zu erhöhen",
+    "buildInChat": "In deinen DMs mit @assistant bauen",
+    "signInRequired": "Melde dich an, um den Builder zu nutzen."
   },
   "connect": {
     "chatgptFaqAccount": "Zum Lesen öffentlicher Inhalte über den Connector ist kein Konto erforderlich. Ein DeHub-Konto wird nur benötigt, wenn Sie DeHub-Token posten, Trinkgeld geben oder halten möchten.",

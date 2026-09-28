@@ -6651,7 +6651,9 @@
     "step3": "Tus tokens de DeHub se entregarán en la cadena de destino en breve."
   },
   "builder": {
-    "stakeForAllowance": "Haz staking de tokens de DeHub para aumentar tu asignación de construcción diaria"
+    "stakeForAllowance": "Haz staking de tokens de DeHub para aumentar tu asignación de construcción diaria",
+    "buildInChat": "Crea en tus mensajes directos con @assistant",
+    "signInRequired": "Inicia sesión para usar el Builder."
   },
   "connect": {
     "chatgptFaqAccount": "No se requiere cuenta para leer contenido público a través del conector. Solo se necesita una cuenta de DeHub si deseas publicar, dar propinas o mantener tokens de DeHub.",

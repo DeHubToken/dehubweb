@@ -4424,7 +4424,9 @@
     "step3": "Lacagta DeHub-kaaga waxa laguugu soo gudbin doonaa silsiladda aad u dirtay dhawaan."
   },
   "builder": {
-    "stakeForAllowance": "Lacagta DeHub ku keydi si aad u kordhiso ogolaanshahaaga dhismaha maalinlaha ah"
+    "stakeForAllowance": "Lacagta DeHub ku keydi si aad u kordhiso ogolaanshahaaga dhismaha maalinlaha ah",
+    "buildInChat": "Ku dhis fariimahaaga gaarka ah adigoo la jooga @assistant",
+    "signInRequired": "Gal si aad u isticmaasho Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Maaha lagama maarmaan in akoon la yeesho si loo akhriyo waxyaabaha dadwaynaha loo soo bandhigay iyadoo la isticmaalayo isku xiraha. Akoon DeHub waxa kaliya loo baahan yahay haddii aad rabto inaad soo dhigto, siiso ama aad hayso lacagta DeHub.",

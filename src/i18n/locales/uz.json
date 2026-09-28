@@ -4451,7 +4451,9 @@
     "step3": "Sizning DeHub tokenlaringiz belgilangan zanjirda tez orada yetkazib beriladi."
   },
   "builder": {
-    "stakeForAllowance": "Kunlik yaratish imkoniyatingizni oshirish uchun DeHub tokenlarini stavka qiling"
+    "stakeForAllowance": "Kunlik yaratish imkoniyatingizni oshirish uchun DeHub tokenlarini stavka qiling",
+    "buildInChat": "@assistant bilan shaxsiy xabarlarda yarating",
+    "signInRequired": "Builder'dan foydalanish uchun tizimga kiring."
   },
   "connect": {
     "chatgptFaqAccount": "Konektor orqali ommaviy kontentni o'qish uchun hisob talab qilinmaydi. Faqat DeHub tokenlarini joylashtirish, maslahat berish yoki saqlashni istasangiz, DeHub hisobi kerak bo'ladi.",

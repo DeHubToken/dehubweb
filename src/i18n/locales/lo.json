@@ -6199,7 +6199,9 @@
     "step3": "DeHub tokens ຂອງທ່ານຈະຖືກຈັດສົ່ງໃນ destination chain ໃນໄວໆນີ້."
   },
   "builder": {
-    "stakeForAllowance": "Stake DeHub tokens ເພື່ອເພີ່ມ build allowance ປະຈໍາວັນຂອງທ່ານ"
+    "stakeForAllowance": "Stake DeHub tokens ເພື່ອເພີ່ມ build allowance ປະຈໍາວັນຂອງທ່ານ",
+    "buildInChat": "ສ້າງໃນຂໍ້ຄວາມສ່ວນຕົວກັບ @assistant",
+    "signInRequired": "ເຂົ້າສູ່ລະບົບເພື່ອໃຊ້ Builder."
   },
   "connect": {
     "chatgptFaqAccount": "ບໍ່ຈໍາເປັນຕ້ອງມີບັນຊີເພື່ອອ່ານເນື້ອຫາສາທາລະນະຜ່ານ connector. ບັນຊີ DeHub ຕ້ອງການພຽງແຕ່ເມື່ອທ່ານຕ້ອງການໂພສ, ໃຫ້ tip, ຫຼືຖື DeHub tokens.",

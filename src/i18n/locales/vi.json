@@ -6383,7 +6383,9 @@
     "step3": "Token DeHub của bạn sẽ sớm được gửi đến chuỗi đích."
   },
   "builder": {
-    "stakeForAllowance": "Đặt cược token DeHub để tăng hạn mức xây dựng hàng ngày của bạn"
+    "stakeForAllowance": "Đặt cược token DeHub để tăng hạn mức xây dựng hàng ngày của bạn",
+    "buildInChat": "Tạo trong tin nhắn riêng với @assistant",
+    "signInRequired": "Đăng nhập để dùng Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Không cần tài khoản để đọc nội dung công khai thông qua trình kết nối. Chỉ cần tài khoản DeHub nếu bạn muốn đăng, tặng tiền hoặc giữ token DeHub.",

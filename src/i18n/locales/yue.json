@@ -4432,7 +4432,9 @@
     "step3": "您的 DeHub 代幣將很快在目標鏈上送達。"
   },
   "builder": {
-    "stakeForAllowance": "質押 DeHub 代幣以提高您的每日建置配額"
+    "stakeForAllowance": "質押 DeHub 代幣以提高您的每日建置配額",
+    "buildInChat": "喺私訊同 @assistant 一齊整",
+    "signInRequired": "登入先可以用 Builder。"
   },
   "connect": {
     "chatgptFaqAccount": "無需帳戶即可透過連接器閱讀公開內容。只有當您想發布、打賞或持有 DeHub 代幣時，才需要 DeHub 帳戶。",

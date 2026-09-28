@@ -1436,6 +1436,14 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
       // naming their wallet. `callerAddress` is accepted for logging only.
       const userToken = dehubToken || null;
       const caller = callerAddress || userContext?.walletAddress || null;
+      // The exception to the above: the DeHub API's own DM bot, proved by the
+      // service secret, names the sender it has already verified. That is the
+      // only caller whose `callerAddress` is believed, and only on the one
+      // surface whose tools read the asker's own records.
+      const trustedCaller =
+        isServiceCall && surface === 'assistant' && /^0x[a-fA-F0-9]{40}$/.test(callerAddress || '')
+          ? callerAddress!.toLowerCase()
+          : null;
       // Godmode replaces the consumer prompt rather than extending it: no
       // persona, no marketing, no support desk it has no tool for. It keeps
       // the platform context, which is the same set of facts either way.
@@ -1526,6 +1534,7 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
           systemPrompt: agentPrompt,
           surface,
           userToken,
+          trustedCaller,
           adminToken: adminToken || null,
           model: agentModel,
           lovableApiKey,

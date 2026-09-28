@@ -4412,7 +4412,9 @@
     "step3": "Dini DeHub Token werded bald uf de Ziel-Chän gliferet."
   },
   "builder": {
-    "stakeForAllowance": "DeHub Token stäke, zum din tägliche Build-Allowance erhöhe"
+    "stakeForAllowance": "DeHub Token stäke, zum din tägliche Build-Allowance erhöhe",
+    "buildInChat": "I dine DMs mit @assistant baue",
+    "signInRequired": "Mäld di aa, zum dr Builder z bruuche."
   },
   "connect": {
     "chatgptFaqAccount": "Zum öffentliche Inhaalt über de Connector z'lese, bruchsch kei Account. E DeHub Account bruchsch nur, wenn du wotsch poste, tip-ge oder DeHub Token halte.",

@@ -6437,7 +6437,9 @@
     "step3": "Ang iyong DeHub token ay maihahatid sa destinasyong chain sa madaling panahon."
   },
   "builder": {
-    "stakeForAllowance": "Mag-stake ng DeHub token para mapataas ang iyong daily build allowance"
+    "stakeForAllowance": "Mag-stake ng DeHub token para mapataas ang iyong daily build allowance",
+    "buildInChat": "Gumawa sa iyong mga DM kasama si @assistant",
+    "signInRequired": "Mag-sign in para magamit ang Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Hindi kailangan ng account para basahin ang pampublikong nilalaman sa pamamagitan ng connector. Kailangan lang ng DeHub account kung gusto mong mag-post, mag-tip, o mag-hold ng DeHub token.",

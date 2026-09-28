@@ -4,7 +4,9 @@
  * preview URL served by builder-serve.
  */
 import { supabase } from "@/integrations/supabase/client";
-import { getAuthToken } from "@/lib/api/dehub/core";
+import i18n from "@/i18n";
+import { ensureFreshToken, refreshTokenSharedDetailed } from "@/lib/api/dehub/core";
+import { dehubAuthHeaders } from "@/lib/ai-invoke";
 
 const SUPABASE_URL =
   import.meta.env.VITE_SUPABASE_URL || "https://aigxuutjaqsywioxjefr.supabase.co";
@@ -87,20 +89,27 @@ interface InvokeOptions {
   model?: BuilderModel;
 }
 
-async function invokeBuilder<T>(body: InvokeOptions): Promise<T> {
-  const token = getAuthToken();
-  const wallet = localStorage.getItem("dehub_wallet")?.toLowerCase();
-  if (!token || !wallet) throw new Error("Sign in to use the Builder.");
+async function invokeBuilder<T>(body: InvokeOptions, retried = false): Promise<T> {
+  // Refresh first, the way every other signed-in AI call does. This sent
+  // whatever sat in storage, so a session whose access token had quietly
+  // expired got a 401 on every build while the rest of the app still looked
+  // signed in. It also refused outright when `dehub_wallet` was missing even
+  // with a good token — the token is the identity, the wallet header is only
+  // a cross-check.
+  await ensureFreshToken().catch(() => {});
+  const headers = dehubAuthHeaders();
+  if (!headers["x-dehub-token"]) throw new Error(i18n.t("builder.signInRequired"));
 
-  const { data, error } = await supabase.functions.invoke("builder-api", {
-    body,
-    headers: {
-      "x-wallet-address": wallet,
-      "x-dehub-token": token,
-    },
-  });
+  const { data, error } = await supabase.functions.invoke("builder-api", { body, headers });
 
   if (error) {
+    // A token the server has already retired can still look unexpired here.
+    // Rotate it once and try again before calling the session dead.
+    const status = (error as { context?: Response }).context?.status;
+    if (status === 401 && !retried) {
+      const refreshed = await refreshTokenSharedDetailed().catch(() => null);
+      if (refreshed?.ok) return invokeBuilder<T>(body, true);
+    }
     // supabase-js swallows non-2xx response bodies into a generic error;
     // surface the server's message when it is available.
     const ctx = (error as { context?: Response }).context;

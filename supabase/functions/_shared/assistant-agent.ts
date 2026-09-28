@@ -98,6 +98,16 @@ export interface AgentOptions {
    */
   userToken: string | null;
   /**
+   * Who is asking, when that was vouched for by the DeHub API itself rather
+   * than by a user token — the @assistant DM bot, which holds the verified
+   * sender's address but no token of theirs. Without it every `self` tool in a
+   * DM (balance, earnings, tickets, builds) answered as if nobody had signed in.
+   *
+   * Only ever set when the inbound request carried the service secret. A
+   * browser's claimed address never reaches this.
+   */
+  trustedCaller?: string | null;
+  /**
    * On the `admin` surface only: the short-lived, assistant-only token the API
    * minted for the admin who asked. Not their panel session — that never leaves
    * `api.dehub.io`. The API verifies this on the way back in and decides which
@@ -182,6 +192,7 @@ export async function executeDeHubTool(
   userToken: string | null,
   surface: AgentSurface,
   adminToken?: string | null,
+  trustedCaller?: string | null,
 ): Promise<unknown> {
   const res = await fetch(`${DEHUB_API_BASE}/assistant/tool`, {
     method: 'POST',
@@ -195,7 +206,9 @@ export async function executeDeHubTool(
       // the admin tools this admin's role is allowed to run.
       ...(adminToken && { 'x-admin-token': adminToken }),
     },
-    body: JSON.stringify({ tool: name, args, surface }),
+    // The API takes `caller` only when no token is present, and only from a
+    // holder of the service secret.
+    body: JSON.stringify({ tool: name, args, surface, ...(!userToken && trustedCaller && { caller: trustedCaller }) }),
   });
   if (!res.ok) return { error: `Tool call failed with status ${res.status}` };
   const body = await res.json();
@@ -240,6 +253,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
     systemPrompt,
     surface,
     userToken,
+    trustedCaller,
     adminToken,
     model,
     lovableApiKey,
@@ -349,7 +363,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
           output =
             name === 'web_search'
               ? await executeWebSearch(String(args.query || ''), perplexityKey)
-              : await executeDeHubTool(name, args, userToken, surface, adminToken);
+              : await executeDeHubTool(name, args, userToken, surface, adminToken, trustedCaller);
         } catch (err) {
           output = { error: err instanceof Error ? err.message : 'Tool threw' };
         }

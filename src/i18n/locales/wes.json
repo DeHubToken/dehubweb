@@ -4079,5 +4079,9 @@
     "planRestricted": "Dis pipul need subscription before e fit get message.",
     "planTypeNotAllowed": "Dis creator yi plan no allow dis kain message.",
     "planMinTip": "Tip for dis creator must be at least {{amount}} DHB."
+  },
+  "builder": {
+    "buildInChat": "Build for ya DM wit @assistant",
+    "signInRequired": "Sign in make you fit use Builder."
   }
 }

@@ -4419,7 +4419,9 @@
     "step3": "DeHub-tokenene dine vil snart bli levert på destinasjonskjeden."
   },
   "builder": {
-    "stakeForAllowance": "Sett inn DeHub-tokens for å øke den daglige byggekvoten din"
+    "stakeForAllowance": "Sett inn DeHub-tokens for å øke den daglige byggekvoten din",
+    "buildInChat": "Bygg i direktemeldingene dine med @assistant",
+    "signInRequired": "Logg inn for å bruke Builder."
   },
   "connect": {
     "chatgptFaqAccount": "Det kreves ingen konto for å lese offentlig innhold gjennom koblingen. En DeHub-konto er bare nødvendig hvis du vil legge ut, gi tips eller oppbevare DeHub-tokens.",

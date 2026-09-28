@@ -4252,7 +4252,9 @@
     "step3": "I ka DeHub tagamasiyɛnw bena don i ka yɔrɔ la yanni dɔɔni."
   },
   "builder": {
-    "stakeForAllowance": "Stake DeHub ka tagamasiɲɛw ka caya i ka loon o loon lɔli nafa la"
+    "stakeForAllowance": "Stake DeHub ka tagamasiɲɛw ka caya i ka loon o loon lɔli nafa la",
+    "buildInChat": "I ka DM kɔnɔ dilanni kɛ ni @assistant ye",
+    "signInRequired": "Don i ka jatebɔsɛbɛn kɔnɔ ka Builder baara."
   },
   "connect": {
     "chatgptFaqAccount": "O kama, a man kan ka kɛ ko mɔgɔ si tɛ se ka kunnafoni sɔrɔ a ka site web kan. DeHub ka kunnafoniw be se ka kɛ n'i b'a fɛ ka DeHub ka tagamasiɲɛw ci, k'u ci wala k'u mara.",

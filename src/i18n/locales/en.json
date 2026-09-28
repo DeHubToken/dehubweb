@@ -6650,7 +6650,9 @@
     "step3": "Your DeHub tokens will be delivered on the destination chain shortly."
   },
   "builder": {
-    "stakeForAllowance": "Stake DeHub tokens to raise your daily build allowance"
+    "stakeForAllowance": "Stake DeHub tokens to raise your daily build allowance",
+    "buildInChat": "Build in your DMs with @assistant",
+    "signInRequired": "Sign in to use the Builder."
   },
   "connect": {
     "chatgptFaqAccount": "No account is required to read public content through the connector. A DeHub account is only needed if you want to post, tip or hold DeHub tokens.",
