@@ -191,7 +191,9 @@ void main() {
 
   // Iridescence driven by surface orientation, so tilting sweeps the rainbow.
   float t = vUv.x * 0.8 + vUv.y * 0.55 + N.x * 2.2 - N.y * 1.7 + (1.0 - ndv) * 1.6;
-  vec3 rainbow = ramp(t);
+  // Toned to 65% colour so the foil reads as metal first, rainbow second.
+  vec3 hue = ramp(t);
+  vec3 rainbow = mix(vec3(dot(hue, vec3(0.3333))), hue, 0.65);
 
   // Glitter: each cell is a tiny mirror with its own random normal.
   vec2 cell = floor(vUv * 260.0);

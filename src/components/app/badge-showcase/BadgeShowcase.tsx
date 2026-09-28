@@ -573,7 +573,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
   const dock = (
     <nav
       aria-label={t('badgeShowcase.badges')}
-      className="relative z-10 mx-auto flex max-w-[calc(100%-24px)] shrink-0 items-center gap-1 rounded-[20px] border border-white/10 bg-white/[0.07] p-1 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-[opacity,transform] duration-700 lg:p-1.5"
+      className="relative z-10 mx-auto flex w-full max-w-[480px] shrink-0 items-center lg:w-auto lg:max-w-[calc(100%-24px)] gap-1 rounded-[20px] border border-white/10 bg-white/[0.07] p-1 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-[opacity,transform] duration-700 lg:p-1.5"
       style={{
         opacity: panelIn ? 1 : 0,
         transform: panelIn ? 'none' : 'translateY(24px)',
@@ -583,7 +583,7 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
       <div
         ref={railRef}
         onScroll={updateRailFade}
-        className="flex min-w-0 snap-x gap-0.5 overflow-x-auto py-1 scrollbar-hide"
+        className="flex min-w-0 flex-1 snap-x gap-0.5 overflow-x-auto py-1 scrollbar-hide lg:flex-none"
         style={{ maskImage: railMask, WebkitMaskImage: railMask }}
       >
         {BADGE_ORDER.map((tierName, i) => {
@@ -908,7 +908,8 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
         </div>
       </div>
 
-      {!isDesktop && <div className="mb-[max(env(safe-area-inset-bottom),10px)] mt-1 shrink-0">{dock}</div>}
+      {/* Same 480px column and 16px gutters as the details, so the edges line up. */}
+      {!isDesktop && <div className="mb-[max(env(safe-area-inset-bottom),10px)] mt-2 shrink-0 px-4">{dock}</div>}
 
       {/* The badge in flight, and the stand-in if WebGL is unavailable. */}
       <img
