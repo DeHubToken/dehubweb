@@ -476,7 +476,21 @@
     "emailSignInDone": "अब रउरा एह ईमेल से साइन इन कर सकीलें",
     "emailSignInRemove": "हटाईं",
     "emailSignInRemoved": "हटावल गइल — ई ईमेल अब रउरा के साइन इन ना करा सकी",
-    "cancel": "रद्द करीं"
+    "cancel": "रद्द करीं",
+    "solanaWallet": "सोलाना वॉलेट",
+    "solanaWalletHint": "Solana पर टिप आ पेड अनलॉक पावे खातिर Phantom जोड़ीं।",
+    "solanaConnect": "कनेक्ट करें",
+    "solanaDisconnect": "डिस्कनेक्ट करें",
+    "solanaCopy": "सोलाना पता कॉपी करीं",
+    "solanaCopyFailed": "एड्रेस कॉपी नहीं हो सका",
+    "solanaNeedsSignIn": "पहिले साइन इन करीं",
+    "solanaNoPhantom": "Phantom ना मिलल",
+    "solanaNoPhantomHint": "Phantom एक्सटेंशन इंस्टॉल करीं, भा dehub.io के Phantom ब्राउज़र में खोलीं।",
+    "solanaNotSigned": "कुछुओ ना जुड़ल",
+    "solanaLinked": "सोलाना वॉलेट जुड़ गइल",
+    "solanaLinkFailed": "ऊ वॉलेट ना जुड़ पावल",
+    "solanaUnlinked": "सोलाना वॉलेट हट गइल",
+    "solanaUnlinkFailed": "ऊ वॉलेट ना हट पावल"
   },
   "common": {
     "save": "सहेजीं",
@@ -3246,7 +3260,11 @@
       "failed": "असफल भइल",
       "emptyFeed": "हमहन के एह फूड में कुछुवो ना लउकत रहे ।",
       "badFeed": "ई श्रेणी अइसन आधार लेख कुल खातिर बाटे जेवन टेम्पलेटःCountry data Podcast से संबंधित होखें ।",
-      "tooMany": "एक ही समय में 20 फाइलें बदलें ।"
+      "tooMany": "एक ही समय में 20 फाइलें बदलें ।",
+      "episodes": "{{count}} गो एपिसोड",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "importSelected": "{{count}} गो एपिसोड इंपोर्ट करीं",
+      "showBy": "{{author}} के ओर से"
     }
   },
   "banned": {

@@ -495,7 +495,21 @@
     "emailSignInDone": "اکنون می‌توانید با این ایمیل وارد شوید",
     "emailSignInRemove": "حذف",
     "emailSignInRemoved": "حذف شد — دیگر نمی‌توانید با این ایمیل وارد شوید",
-    "cancel": "لغو"
+    "cancel": "لغو",
+    "solanaWallet": "کیف پول سولانا",
+    "solanaWalletHint": "Phantom را متصل کنید تا انعام‌ها و بازگشایی‌های پولی را روی Solana دریافت کنید.",
+    "solanaConnect": "وصل کردن",
+    "solanaDisconnect": "قطع کردن",
+    "solanaCopy": "کپی آدرس سولانا",
+    "solanaCopyFailed": "آدرس کپی نشد",
+    "solanaNeedsSignIn": "اول وارد شوید",
+    "solanaNoPhantom": "Phantom پیدا نشد",
+    "solanaNoPhantomHint": "افزونه Phantom را نصب کنید یا dehub.io را در مرورگر Phantom باز کنید.",
+    "solanaNotSigned": "چیزی متصل نشد",
+    "solanaLinked": "کیف پول سولانا متصل شد",
+    "solanaLinkFailed": "اتصال آن کیف پول ممکن نشد",
+    "solanaUnlinked": "اتصال کیف پول سولانا قطع شد",
+    "solanaUnlinkFailed": "قطع اتصال آن کیف پول ممکن نشد"
   },
   "common": {
     "save": "ذخیره",
@@ -5365,7 +5379,9 @@
       "failed": "شکست خورد",
       "emptyFeed": "ما نتوانستیم هیچ قسمتی را در آن فید پیدا کنیم.",
       "badFeed": "آن لینک شبیه فید پادکست نیست.",
-      "tooMany": "حداکثر 20 قسمت را همزمان وارد کنید."
+      "tooMany": "حداکثر 20 قسمت را همزمان وارد کنید.",
+      "episodes": "{{count}} قسمت",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

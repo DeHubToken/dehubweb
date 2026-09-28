@@ -482,7 +482,21 @@
     "emailSignInDone": "Nå kan du logge inn med denne e-posten",
     "emailSignInRemove": "Fjern",
     "emailSignInRemoved": "Fjernet — denne e-posten kan ikke lenger logge deg inn",
-    "cancel": "Avbryt"
+    "cancel": "Avbryt",
+    "solanaWallet": "Solana-lommebok",
+    "solanaWalletHint": "Koble til Phantom for å motta tips og betalte opplåsinger på Solana.",
+    "solanaConnect": "Koble til",
+    "solanaDisconnect": "Koble fra",
+    "solanaCopy": "Kopier Solana-adresse",
+    "solanaCopyFailed": "Kunne ikke kopiere adressen",
+    "solanaNeedsSignIn": "Logg inn først",
+    "solanaNoPhantom": "Fant ikke Phantom",
+    "solanaNoPhantomHint": "Installer Phantom-utvidelsen, eller åpne dehub.io i Phantom-nettleseren.",
+    "solanaNotSigned": "Ingenting ble koblet til",
+    "solanaLinked": "Solana-lommebok tilkoblet",
+    "solanaLinkFailed": "Kunne ikke koble til den lommeboken",
+    "solanaUnlinked": "Solana-lommebok frakoblet",
+    "solanaUnlinkFailed": "Kunne ikke koble fra den lommeboken"
   },
   "common": {
     "save": "Lagre",
@@ -3314,7 +3328,9 @@
       "failed": "Mislyktes",
       "emptyFeed": "Vi fant ingen episoder i den feeden.",
       "badFeed": "Den lenken ser ikke ut som en podkastfeed.",
-      "tooMany": "Importer opptil 20 episoder om gangen."
+      "tooMany": "Importer opptil 20 episoder om gangen.",
+      "episodes": "{{count}} episoder",
+      "showBy": "Av {{author}}"
     }
   },
   "banned": {

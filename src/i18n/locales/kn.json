@@ -481,7 +481,21 @@
     "emailSignInDone": "ಈಗ ನೀವು ಈ ಇಮೇಲ್ ಮೂಲಕ ಸೈನ್ ಇನ್ ಮಾಡಬಹುದು",
     "emailSignInRemove": "ತೆಗೆದುಹಾಕಿ",
     "emailSignInRemoved": "ತೆಗೆದುಹಾಕಲಾಗಿದೆ — ಈ ಇಮೇಲ್ ಮೂಲಕ ಇನ್ನು ಸೈನ್ ಇನ್ ಆಗಲು ಸಾಧ್ಯವಿಲ್ಲ",
-    "cancel": "ರದ್ದುಮಾಡಿ"
+    "cancel": "ರದ್ದುಮಾಡಿ",
+    "solanaWallet": "ಸೋಲಾನಾ ವಾಲೆಟ್",
+    "solanaWalletHint": "Solana ನಲ್ಲಿ ಟಿಪ್ಸ್ ಮತ್ತು ಪಾವತಿಸಿದ ಅನ್‌ಲಾಕ್‌ಗಳನ್ನು ಪಡೆಯಲು Phantom ಸಂಪರ್ಕಿಸಿ.",
+    "solanaConnect": "ಸಂಪರ್ಕಿಸಿ",
+    "solanaDisconnect": "ಡಿಸ್ಕನೆಕ್ಟ್",
+    "solanaCopy": "ಸೋಲಾನಾ ವಿಳಾಸ ನಕಲಿಸಿ",
+    "solanaCopyFailed": "ವಿಳಾಸವನ್ನು ನಕಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
+    "solanaNeedsSignIn": "ಮೊದಲು ಸೈನ್ ಇನ್ ಮಾಡಿ",
+    "solanaNoPhantom": "Phantom ಕಂಡುಬಂದಿಲ್ಲ",
+    "solanaNoPhantomHint": "Phantom ವಿಸ್ತರಣೆಯನ್ನು ಸ್ಥಾಪಿಸಿ, ಅಥವಾ Phantom ಬ್ರೌಸರ್‌ನಲ್ಲಿ dehub.io ತೆರೆಯಿರಿ.",
+    "solanaNotSigned": "ಏನೂ ಸಂಪರ್ಕಗೊಂಡಿಲ್ಲ",
+    "solanaLinked": "ಸೋಲಾನಾ ವಾಲೆಟ್ ಸಂಪರ್ಕಗೊಂಡಿದೆ",
+    "solanaLinkFailed": "ಆ ವಾಲೆಟ್ ಅನ್ನು ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
+    "solanaUnlinked": "ಸೋಲಾನಾ ವಾಲೆಟ್ ಸಂಪರ್ಕ ಕಡಿತಗೊಂಡಿದೆ",
+    "solanaUnlinkFailed": "ಆ ವಾಲೆಟ್ ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ"
   },
   "common": {
     "save": "ಉಳಿಸಿ",
@@ -5385,7 +5399,8 @@
       "failed": "ವಿಫಲವಾಗಿದೆ",
       "emptyFeed": "ಆ ಫೀಡ್‌ನಲ್ಲಿ ನಮಗೆ ಯಾವುದೇ ಎಪಿಸೋಡ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ.",
       "badFeed": "ಆ ಲಿಂಕ್ ಪಾಡ್‌ಕಾಸ್ಟ್ ಫೀಡ್‌ನಂತೆ ಕಾಣುತ್ತಿಲ್ಲ.",
-      "tooMany": "ಒಂದು ಸಮಯದಲ್ಲಿ 20 ಎಪಿಸೋಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳಿ."
+      "tooMany": "ಒಂದು ಸಮಯದಲ್ಲಿ 20 ಎಪಿಸೋಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳಿ.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

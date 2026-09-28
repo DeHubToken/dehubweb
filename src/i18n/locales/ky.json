@@ -482,7 +482,21 @@
     "emailSignInDone": "Эми бул почта менен кире аласыз",
     "emailSignInRemove": "Өчүрүү",
     "emailSignInRemoved": "Өчүрүлдү — бул почта менен мындан ары кире албайсыз",
-    "cancel": "Жокко чыгаруу"
+    "cancel": "Жокко чыгаруу",
+    "solanaWallet": "Solana капчыгы",
+    "solanaWalletHint": "Solana'да чайпул жана акылуу ачууларды алуу үчүн Phantom'ду туташтырыңыз.",
+    "solanaConnect": "Туташтыруу",
+    "solanaDisconnect": "Ажыратуу",
+    "solanaCopy": "Solana дарегин көчүрүү",
+    "solanaCopyFailed": "Даректи көчүрүүгө болбоду",
+    "solanaNeedsSignIn": "Адегенде кириңиз",
+    "solanaNoPhantom": "Phantom табылган жок",
+    "solanaNoPhantomHint": "Phantom кеңейтүүсүн орнотуңуз же dehub.io'ну Phantom браузеринде ачыңыз.",
+    "solanaNotSigned": "Эч нерсе туташкан жок",
+    "solanaLinked": "Solana капчыгы туташтырылды",
+    "solanaLinkFailed": "Бул капчыкты туташтыруу мүмкүн болгон жок",
+    "solanaUnlinked": "Solana капчыгы ажыратылды",
+    "solanaUnlinkFailed": "Бул капчыкты ажыратуу мүмкүн болгон жок"
   },
   "common": {
     "save": "Сактоо",

@@ -448,7 +448,21 @@
     "emailSignInDone": "ہݨ تُساں ایں ای میل نال سائن اِن کر سڳدے ہو",
     "emailSignInRemove": "ہٹاؤ",
     "emailSignInRemoved": "ہٹایا ڳیا — ایہ ای میل ہݨ تُہاکوں سائن اِن نئیں کر سڳدی",
-    "cancel": "منسوخ"
+    "cancel": "منسوخ",
+    "solanaWallet": "سولانا والیٹ",
+    "solanaWalletHint": "Solana تے ٹپ تے پیڈ اَن لاک گھنݨ کیتے Phantom جوڑو۔",
+    "solanaConnect": "کنیکٹ",
+    "solanaDisconnect": "ڈسکنیکٹ",
+    "solanaCopy": "سولانا پتہ کاپی کرو",
+    "solanaCopyFailed": "ایڈریس کاپی نہ تھی سگیا",
+    "solanaNeedsSignIn": "پہلے سائن اِن کرو",
+    "solanaNoPhantom": "Phantom نئیں لبھا",
+    "solanaNoPhantomHint": "Phantom ایکسٹینشن انسٹال کرو، یا dehub.io کوں Phantom براؤزر وچ کھولو۔",
+    "solanaNotSigned": "کجھ وی نئیں جُڑیا",
+    "solanaLinked": "سولانا والیٹ جُڑ ڳیا",
+    "solanaLinkFailed": "او والیٹ نئیں جُڑ سڳیا",
+    "solanaUnlinked": "سولانا والیٹ ہٹ ڳیا",
+    "solanaUnlinkFailed": "او والیٹ نئیں ہٹ سڳیا"
   },
   "common": {
     "save": "محفوظ کرو",
@@ -3196,7 +3210,8 @@
       "failed": "ناکامی",
       "emptyFeed": "سانوں اوہ فیڈ وچ کوئی ایپیسوڈ نئیں لبھیا.",
       "badFeed": "اوہ لنک پوڈ کاسٹ فیڈ ورگا نئیں لگدا.",
-      "tooMany": "اک ویلھے وچ 20 ایپیسوڈ تئیں امپورٹ کرو."
+      "tooMany": "اک ویلھے وچ 20 ایپیسوڈ تئیں امپورٹ کرو.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

@@ -483,7 +483,21 @@
     "emailSignInDone": "ئەمدى بۇ ئېلخەت بىلەن كىرەلەيسىز",
     "emailSignInRemove": "چىقىرىۋېتىش",
     "emailSignInRemoved": "چىقىرىۋېتىلدى — بۇ ئېلخەت بىلەن ئەمدى كىرەلمەيسىز",
-    "cancel": "بىكار قىلىش"
+    "cancel": "بىكار قىلىش",
+    "solanaWallet": "Solana ھەميان",
+    "solanaWalletHint": "Solana دا ئىنئام ۋە پۇللۇق ئېچىشلارنى تاپشۇرۇۋېلىش ئۈچۈن Phantom نى ئۇلاڭ.",
+    "solanaConnect": "ئۇلاڭ",
+    "solanaDisconnect": "ئۈزۈڭ",
+    "solanaCopy": "Solana ئادرېسىنى كۆچۈرۈڭ",
+    "solanaCopyFailed": "ئادرېسنى كۆچۈرگىلى بولمىدى",
+    "solanaNeedsSignIn": "ئالدى بىلەن كىرىڭ",
+    "solanaNoPhantom": "Phantom تېپىلمىدى",
+    "solanaNoPhantomHint": "Phantom كېڭەيتمىسىنى ئورنىتىڭ، ياكى dehub.io نى Phantom توركۆرگۈدە ئېچىڭ.",
+    "solanaNotSigned": "ھېچنېمە ئۇلانمىدى",
+    "solanaLinked": "Solana ھەميان ئۇلاندى",
+    "solanaLinkFailed": "بۇ ھەميياننى ئۇلىغىلى بولمىدى",
+    "solanaUnlinked": "Solana ھەميان ئۈزۈلدى",
+    "solanaUnlinkFailed": "بۇ ھەميياننى ئۈزگىلى بولمىدى"
   },
   "common": {
     "save": "ساقلاش",

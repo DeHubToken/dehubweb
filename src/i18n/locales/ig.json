@@ -481,7 +481,21 @@
     "emailSignInDone": "Ugbu a ị nwere ike iji email a banye",
     "emailSignInRemove": "Wepụ",
     "emailSignInRemoved": "Ewepụla — email a enweghịzi ike ịbanye gị",
-    "cancel": "Kagbuo"
+    "cancel": "Kagbuo",
+    "solanaWallet": "Obere akpa Solana",
+    "solanaWalletHint": "Jikọọ Phantom ka ị nata onyinye na mkpọghe akwụ ụgwọ na Solana.",
+    "solanaConnect": "Jikọọ",
+    "solanaDisconnect": "Kwupu",
+    "solanaCopy": "Detuo adreesị Solana",
+    "solanaCopyFailed": "Agaghị enwenwu ike iṅomi ngwe ahụ",
+    "solanaNeedsSignIn": "Buru ụzọ banye",
+    "solanaNoPhantom": "Ahụghị Phantom",
+    "solanaNoPhantomHint": "Wụnye ndọtị Phantom, ma ọ bụ mepee dehub.io na ihe nchọgharị Phantom.",
+    "solanaNotSigned": "Ọ dịghị ihe ejikọrọ",
+    "solanaLinked": "Ejikọtala obere akpa Solana",
+    "solanaLinkFailed": "Enweghị ike ijikọ obere akpa ego ahụ",
+    "solanaUnlinked": "Ewepụla obere akpa Solana",
+    "solanaUnlinkFailed": "Enweghị ike ịwepụ njikọ obere akpa ego ahụ"
   },
   "common": {
     "save": "Chekwaa",

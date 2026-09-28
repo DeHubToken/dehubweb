@@ -478,7 +478,21 @@
     "emailSignInDone": "इदानीं भवान् अनेन ईमेल-द्वारा प्रवेष्टुं शक्नोति",
     "emailSignInRemove": "निष्कासयतु",
     "emailSignInRemoved": "निष्कासितम् — अनेन ईमेल-द्वारा इतः परं प्रवेशः न शक्यः",
-    "cancel": "निरस्तं कुर्वन्तु"
+    "cancel": "निरस्तं कुर्वन्तु",
+    "solanaWallet": "सोलाना-धनपात्रम्",
+    "solanaWalletHint": "Solana इत्यत्र उपहारान् सशुल्क-उद्घाटनानि च प्राप्तुं Phantom संयोजयतु।",
+    "solanaConnect": "जडयन्तु",
+    "solanaDisconnect": "वियोजयन्तु",
+    "solanaCopy": "सोलाना-सङ्केतं प्रतिलिख्यताम्",
+    "solanaCopyFailed": "पते की नकल न कर सकोगे",
+    "solanaNeedsSignIn": "प्रथमं प्रविशतु",
+    "solanaNoPhantom": "Phantom न लब्धम्",
+    "solanaNoPhantomHint": "Phantom विस्तारं स्थापयतु, अथवा Phantom ब्राउज़र् मध्ये dehub.io उद्घाटयतु।",
+    "solanaNotSigned": "किमपि न संयोजितम्",
+    "solanaLinked": "सोलाना-धनपात्रं संयोजितम्",
+    "solanaLinkFailed": "तत् धनकोषं संयोजयितुं न शक्तम्",
+    "solanaUnlinked": "सोलाना-धनपात्रं वियोजितम्",
+    "solanaUnlinkFailed": "तत् धनकोषं वियोजयितुं न शक्तम्"
   },
   "common": {
     "save": "रक्षतु",
@@ -3230,7 +3244,9 @@
       "failed": "असफलम्",
       "emptyFeed": "अन्नदानं न शक्यमस्माभिर्भवेत् ।",
       "badFeed": "अयं वर्गः खाद्यपदार्थानां विषये विद्यते न वा ।",
-      "tooMany": "20 एकवारं चित्राणि पश्यन्तु ।"
+      "tooMany": "20 एकवारं चित्राणि पश्यन्तु ।",
+      "episodes": "{{count}} प्रकरणानि",
+      "showBy": "{{author}} द्वारा"
     }
   },
   "banned": {

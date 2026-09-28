@@ -496,7 +496,21 @@
     "emailSignInDone": "עכשיו אפשר להתחבר עם האימייל הזה",
     "emailSignInRemove": "הסרה",
     "emailSignInRemoved": "הוסר — האימייל הזה כבר לא יכול לחבר אתכם",
-    "cancel": "בטל"
+    "cancel": "בטל",
+    "solanaWallet": "ארנק Solana",
+    "solanaWalletHint": "חברו את Phantom כדי לקבל טיפים ופתיחות בתשלום ב-Solana.",
+    "solanaConnect": "חבר",
+    "solanaDisconnect": "נתק",
+    "solanaCopy": "העתק כתובת Solana",
+    "solanaCopyFailed": "לא ניתן להעתיק את הכתובת",
+    "solanaNeedsSignIn": "התחברו קודם",
+    "solanaNoPhantom": "Phantom לא נמצא",
+    "solanaNoPhantomHint": "התקינו את התוסף Phantom, או פתחו את dehub.io בדפדפן של Phantom.",
+    "solanaNotSigned": "שום דבר לא חובר",
+    "solanaLinked": "ארנק Solana חובר",
+    "solanaLinkFailed": "לא ניתן היה לחבר את הארנק הזה",
+    "solanaUnlinked": "ארנק Solana נותק",
+    "solanaUnlinkFailed": "לא ניתן היה לנתק את הארנק הזה"
   },
   "common": {
     "save": "שמור",
@@ -5192,7 +5206,8 @@
       "failed": "נכשל",
       "emptyFeed": "לא הצלחנו למצוא פרקים בפיד הזה.",
       "badFeed": "הקישור הזה לא נראה כמו הזנת פודקאסט.",
-      "tooMany": "ייבא עד 20 פרקים בכל פעם."
+      "tooMany": "ייבא עד 20 פרקים בכל פעם.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

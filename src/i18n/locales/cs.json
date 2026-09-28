@@ -497,7 +497,21 @@
     "emailSignInDone": "Nyní se můžete přihlásit tímto e-mailem",
     "emailSignInRemove": "Odebrat",
     "emailSignInRemoved": "Odebráno — tímto e-mailem se už nepřihlásíte",
-    "cancel": "Zrušit"
+    "cancel": "Zrušit",
+    "solanaWallet": "Peněženka Solana",
+    "solanaWalletHint": "Připojte Phantom a přijímejte spropitné a placená odemčení na Solaně.",
+    "solanaConnect": "Připojit",
+    "solanaDisconnect": "Odpojit",
+    "solanaCopy": "Kopírovat adresu Solana",
+    "solanaCopyFailed": "Adresu se nepodařilo zkopírovat",
+    "solanaNeedsSignIn": "Nejdřív se přihlaste",
+    "solanaNoPhantom": "Phantom nenalezen",
+    "solanaNoPhantomHint": "Nainstalujte rozšíření Phantom nebo otevřete dehub.io v prohlížeči Phantom.",
+    "solanaNotSigned": "Nic nebylo připojeno",
+    "solanaLinked": "Peněženka Solana připojena",
+    "solanaLinkFailed": "Tuto peněženku se nepodařilo připojit",
+    "solanaUnlinked": "Peněženka Solana odpojena",
+    "solanaUnlinkFailed": "Tuto peněženku se nepodařilo odpojit"
   },
   "common": {
     "save": "Uložit",

@@ -483,7 +483,21 @@
     "emailSignInDone": "Tagad vari pierakstīties ar šo e-pastu",
     "emailSignInRemove": "Noņemt",
     "emailSignInRemoved": "Noņemts — ar šo e-pastu vairs nevar pierakstīties",
-    "cancel": "Atcelt"
+    "cancel": "Atcelt",
+    "solanaWallet": "Solana maks",
+    "solanaWalletHint": "Savienojiet Phantom, lai Solana tīklā saņemtu dzeramnaudu un maksas atbloķēšanas.",
+    "solanaConnect": "Savienot",
+    "solanaDisconnect": "Atvienot",
+    "solanaCopy": "Kopēt Solana adresi",
+    "solanaCopyFailed": "Nevarēja nokopēt adresi",
+    "solanaNeedsSignIn": "Vispirms pierakstieties",
+    "solanaNoPhantom": "Phantom netika atrasts",
+    "solanaNoPhantomHint": "Instalējiet Phantom paplašinājumu vai atveriet dehub.io Phantom pārlūkā.",
+    "solanaNotSigned": "Nekas netika savienots",
+    "solanaLinked": "Solana maks pievienots",
+    "solanaLinkFailed": "Neizdevās savienot šo maku",
+    "solanaUnlinked": "Solana maks atvienots",
+    "solanaUnlinkFailed": "Neizdevās atvienot šo maku"
   },
   "common": {
     "save": "Saglabāt",

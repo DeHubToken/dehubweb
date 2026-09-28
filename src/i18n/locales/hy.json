@@ -497,7 +497,21 @@
     "emailSignInDone": "Այժմ կարող եք մուտք գործել այս էլ. փոստով",
     "emailSignInRemove": "Հեռացնել",
     "emailSignInRemoved": "Հեռացված է․ այս էլ. փոստով այլևս հնարավոր չէ մուտք գործել",
-    "cancel": "Chegharakel"
+    "cancel": "Chegharakel",
+    "solanaWallet": "Solana դրամապանակ",
+    "solanaWalletHint": "Միացրեք Phantom-ը՝ Solana-ում թեյավճարներ և վճարովի բացումներ ստանալու համար։",
+    "solanaConnect": "Միացնել",
+    "solanaDisconnect": "Անջատել",
+    "solanaCopy": "Պատճենել Solana հասցեն",
+    "solanaCopyFailed": "Չհաջողվեց պատճենել հասցեն",
+    "solanaNeedsSignIn": "Նախ մուտք գործեք",
+    "solanaNoPhantom": "Phantom-ը չի գտնվել",
+    "solanaNoPhantomHint": "Տեղադրեք Phantom ընդլայնումը կամ բացեք dehub.io-ն Phantom դիտարկիչում։",
+    "solanaNotSigned": "Ոչինչ չմիացվեց",
+    "solanaLinked": "Solana դրամապանակը միացված է",
+    "solanaLinkFailed": "Չհաջողվեց միացնել այդ դրամապանակը",
+    "solanaUnlinked": "Solana դրամապանակն անջատված է",
+    "solanaUnlinkFailed": "Չհաջողվեց անջատել այդ դրամապանակը"
   },
   "common": {
     "save": "Pahpanel",

@@ -497,7 +497,21 @@
     "emailSignInDone": "Je kunt nu inloggen met dit e-mailadres",
     "emailSignInRemove": "Verwijderen",
     "emailSignInRemoved": "Verwijderd — met dit e-mailadres kun je niet meer inloggen",
-    "cancel": "Annuleren"
+    "cancel": "Annuleren",
+    "solanaWallet": "Solana-wallet",
+    "solanaWalletHint": "Koppel Phantom om fooien en betaalde ontgrendelingen op Solana te ontvangen.",
+    "solanaConnect": "Verbinden",
+    "solanaDisconnect": "Verbinding verbreken",
+    "solanaCopy": "Solana-adres kopiëren",
+    "solanaCopyFailed": "Kon het adres niet kopiëren",
+    "solanaNeedsSignIn": "Log eerst in",
+    "solanaNoPhantom": "Phantom niet gevonden",
+    "solanaNoPhantomHint": "Installeer de Phantom-extensie of open dehub.io in de Phantom-browser.",
+    "solanaNotSigned": "Er is niets gekoppeld",
+    "solanaLinked": "Solana-wallet gekoppeld",
+    "solanaLinkFailed": "Kon die wallet niet koppelen",
+    "solanaUnlinked": "Solana-wallet ontkoppeld",
+    "solanaUnlinkFailed": "Kon die wallet niet ontkoppelen"
   },
   "common": {
     "save": "Opslaan",

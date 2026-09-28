@@ -497,7 +497,21 @@
     "emailSignInDone": "Nüüd saad selle e-postiga sisse logida",
     "emailSignInRemove": "Eemalda",
     "emailSignInRemoved": "Eemaldatud — selle e-postiga ei saa enam sisse logida",
-    "cancel": "Tühista"
+    "cancel": "Tühista",
+    "solanaWallet": "Solana rahakott",
+    "solanaWalletHint": "Ühenda Phantom, et saada Solanas jootraha ja tasulisi avamisi.",
+    "solanaConnect": "Ühenda",
+    "solanaDisconnect": "Katkesta ühendus",
+    "solanaCopy": "Kopeeri Solana aadress",
+    "solanaCopyFailed": "Aadressi ei saanud kopeerida",
+    "solanaNeedsSignIn": "Logi esmalt sisse",
+    "solanaNoPhantom": "Phantomit ei leitud",
+    "solanaNoPhantomHint": "Paigalda Phantomi laiendus või ava dehub.io Phantomi brauseris.",
+    "solanaNotSigned": "Midagi ei ühendatud",
+    "solanaLinked": "Solana rahakott ühendatud",
+    "solanaLinkFailed": "Seda rahakotti ei õnnestunud ühendada",
+    "solanaUnlinked": "Solana rahakott lahti ühendatud",
+    "solanaUnlinkFailed": "Seda rahakotti ei õnnestunud lahti ühendada"
   },
   "common": {
     "save": "Salvesta",

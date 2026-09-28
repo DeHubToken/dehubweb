@@ -497,7 +497,21 @@
     "emailSignInDone": "이제 이 이메일로 로그인할 수 있습니다",
     "emailSignInRemove": "제거",
     "emailSignInRemoved": "제거됨 — 이제 이 이메일로 로그인할 수 없습니다",
-    "cancel": "취소"
+    "cancel": "취소",
+    "solanaWallet": "Solana 지갑",
+    "solanaWalletHint": "Phantom을 연결하면 Solana에서 팁과 유료 잠금 해제를 받을 수 있습니다.",
+    "solanaConnect": "연결",
+    "solanaDisconnect": "연결 해제",
+    "solanaCopy": "Solana 주소 복사",
+    "solanaCopyFailed": "주소를 복사할 수 없습니다",
+    "solanaNeedsSignIn": "먼저 로그인하세요",
+    "solanaNoPhantom": "Phantom을 찾을 수 없습니다",
+    "solanaNoPhantomHint": "Phantom 확장 프로그램을 설치하거나 Phantom 브라우저에서 dehub.io를 여세요.",
+    "solanaNotSigned": "연결된 항목이 없습니다",
+    "solanaLinked": "Solana 지갑이 연결되었습니다",
+    "solanaLinkFailed": "해당 지갑을 연결할 수 없습니다",
+    "solanaUnlinked": "Solana 지갑 연결이 해제되었습니다",
+    "solanaUnlinkFailed": "해당 지갑의 연결을 해제할 수 없습니다"
   },
   "common": {
     "save": "저장",
@@ -5479,7 +5493,8 @@
       "failed": "실패",
       "emptyFeed": "해당 피드에서 에피소드를 찾을 수 없습니다.",
       "badFeed": "해당 링크는 팟캐스트 피드처럼 보이지 않습니다.",
-      "tooMany": "한 번에 최대 20개의 에피소드를 가져옵니다."
+      "tooMany": "한 번에 최대 20개의 에피소드를 가져옵니다.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

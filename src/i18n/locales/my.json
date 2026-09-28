@@ -479,7 +479,21 @@
     "emailSignInDone": "ယခု ဤအီးမေးလ်ဖြင့် ဝင်ရောက်နိုင်ပါပြီ",
     "emailSignInRemove": "ဖယ်ရှားရန်",
     "emailSignInRemoved": "ဖယ်ရှားပြီး — ဤအီးမေးလ်ဖြင့် ဝင်ရောက်၍ မရတော့ပါ",
-    "cancel": "ပယ်ဖျက်ရန်"
+    "cancel": "ပယ်ဖျက်ရန်",
+    "solanaWallet": "Solana ပိုက်ဆံအိတ်",
+    "solanaWalletHint": "Solana ပေါ်တွင် tip များနှင့် ငွေပေးဖွင့်မှုများ လက်ခံရန် Phantom ကို ချိတ်ဆက်ပါ။",
+    "solanaConnect": "ချိတ်ဆက်ပါ။",
+    "solanaDisconnect": "အဆက်အသွယ်ဖြတ်ပါ။",
+    "solanaCopy": "Solana လိပ်စာ ကူးယူရန်",
+    "solanaCopyFailed": "လိပ်စာကိုကူးယူ ၍ မရပါ",
+    "solanaNeedsSignIn": "ဦးစွာ အကောင့်ဝင်ပါ",
+    "solanaNoPhantom": "Phantom ကို မတွေ့ပါ",
+    "solanaNoPhantomHint": "Phantom extension ကို ထည့်သွင်းပါ သို့မဟုတ် Phantom browser တွင် dehub.io ကို ဖွင့်ပါ။",
+    "solanaNotSigned": "ဘာမျှ ချိတ်ဆက်မထားပါ",
+    "solanaLinked": "Solana ပိုက်ဆံအိတ် ချိတ်ဆက်ပြီးပါပြီ",
+    "solanaLinkFailed": "ထို wallet ကို ချိတ်ဆက်၍ မရပါ",
+    "solanaUnlinked": "Solana ပိုက်ဆံအိတ် ချိတ်ဆက်မှု ဖြုတ်ပြီးပါပြီ",
+    "solanaUnlinkFailed": "ထို wallet ကို ချိတ်ဆက်မှုဖြုတ်၍ မရပါ"
   },
   "common": {
     "save": "သိမ်းရန်",
@@ -3288,7 +3302,10 @@
       "failed": "မအောင်မြင်ပါ",
       "emptyFeed": "အဲဒီအစားအစာထဲမှာ ဘယ်ဇာတ်ဝင်ခန်းကိုမှ ငါတို့ ရှာမတွေ့ခဲ့ဘူး ။",
       "badFeed": "ဒီလင့်ခ်က podcast feed နဲ့မတူဘူး ။",
-      "tooMany": "တစ်ကြိမ်လျှင် Episode 20 အထိ တင်သွင်းပါ ။"
+      "tooMany": "တစ်ကြိမ်လျှင် Episode 20 အထိ တင်သွင်းပါ ။",
+      "feedUrlLabel": "ပေါ့ဒ်ကာစ် RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "showBy": "{{author}} မှ"
     }
   },
   "banned": {

@@ -497,7 +497,21 @@
     "emailSignInDone": "Artık bu e-postayla giriş yapabilirsiniz",
     "emailSignInRemove": "Kaldır",
     "emailSignInRemoved": "Kaldırıldı — bu e-posta artık sizi giriş yaptıramaz",
-    "cancel": "İptal"
+    "cancel": "İptal",
+    "solanaWallet": "Solana cüzdanı",
+    "solanaWalletHint": "Solana'da bahşiş ve ücretli kilit açmaları almak için Phantom'u bağlayın.",
+    "solanaConnect": "Bağlan",
+    "solanaDisconnect": "Bağlantıyı kes",
+    "solanaCopy": "Solana adresini kopyala",
+    "solanaCopyFailed": "Adres kopyalanamadı",
+    "solanaNeedsSignIn": "Önce giriş yapın",
+    "solanaNoPhantom": "Phantom bulunamadı",
+    "solanaNoPhantomHint": "Phantom uzantısını yükleyin veya dehub.io'yu Phantom tarayıcısında açın.",
+    "solanaNotSigned": "Hiçbir şey bağlanmadı",
+    "solanaLinked": "Solana cüzdanı bağlandı",
+    "solanaLinkFailed": "Bu cüzdan bağlanamadı",
+    "solanaUnlinked": "Solana cüzdanının bağlantısı kesildi",
+    "solanaUnlinkFailed": "Bu cüzdanın bağlantısı kesilemedi"
   },
   "common": {
     "save": "Kaydet",

@@ -455,7 +455,21 @@
     "emailSignInDone": "অখন আপনে ই ইমেল দিয়া সাইন ইন করতা পারবা",
     "emailSignInRemove": "সরাউক্কা",
     "emailSignInRemoved": "সরানো অইছে — ই ইমেল দিয়া আর সাইন ইন করা যাইতো নায়",
-    "cancel": "বাদ দেও"
+    "cancel": "বাদ দেও",
+    "solanaWallet": "সোলানা ওয়ালেট",
+    "solanaWalletHint": "Solana-ত টিপ আর পেইড আনলক পাইবার লাগি Phantom জুড়ো।",
+    "solanaConnect": "কানেক্ট করো",
+    "solanaDisconnect": "ডিসকানেক্ট",
+    "solanaCopy": "সোলানা ঠিকানা কপি করো",
+    "solanaCopyFailed": "ঠিকানা কপি করা গেছে না",
+    "solanaNeedsSignIn": "আগে সাইন ইন করো",
+    "solanaNoPhantom": "Phantom পাওয়া গেছে না",
+    "solanaNoPhantomHint": "Phantom এক্সটেনশন ইনস্টল করো, না অইলে Phantom ব্রাউজারো dehub.io খুলো।",
+    "solanaNotSigned": "কিচ্ছু জুড়ছে না",
+    "solanaLinked": "সোলানা ওয়ালেট জুড়ি গেছে",
+    "solanaLinkFailed": "অউ ওয়ালেট জুড়া গেছে না",
+    "solanaUnlinked": "সোলানা ওয়ালেট খুলি গেছে",
+    "solanaUnlinkFailed": "অউ ওয়ালেট খুলা গেছে না"
   },
   "common": {
     "save": "সেভ করো",
@@ -3378,7 +3392,8 @@
       "failed": "ব্যর্থ",
       "emptyFeed": "আমরা ঐ ফিডে কোনো পর্ব খুঁজে পাইনি।",
       "badFeed": "ঐ লিঙ্কটি পডকাস্ট ফিডের মতো দেখাচ্ছে না।",
-      "tooMany": "একবারে ২০টি পর্যন্ত পর্ব আমদানি করুন।"
+      "tooMany": "একবারে ২০টি পর্যন্ত পর্ব আমদানি করুন।",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

@@ -360,7 +360,21 @@
     "emailSignInDone": "اب تم اس ای میل سے سائن اِن کرسکتے",
     "emailSignInRemove": "ہٹاؤ",
     "emailSignInRemoved": "ہٹایا گیا — یہ ای میل اب تمہیں سائن اِن نکو کرسکتی",
-    "cancel": "منسوخ"
+    "cancel": "منسوخ",
+    "solanaWallet": "سولانا والیٹ",
+    "solanaWalletHint": "Solana پو ٹپ اور پیڈ اَن لاک لینے کو Phantom جوڑو۔",
+    "solanaConnect": "جوڑو",
+    "solanaDisconnect": "الگ کرو",
+    "solanaCopy": "سولانا ایڈریس کاپی کرو",
+    "solanaCopyFailed": "پتہ کاپی نئیں ہو سکا",
+    "solanaNeedsSignIn": "پہلے سائن ان کرو",
+    "solanaNoPhantom": "Phantom نئیں ملا",
+    "solanaNoPhantomHint": "Phantom ایکسٹینشن انسٹال کرو، یا dehub.io کو Phantom براؤزر میں کھولو۔",
+    "solanaNotSigned": "کچھ بی نئیں جُڑا",
+    "solanaLinked": "سولانا والیٹ جُڑ گیا",
+    "solanaLinkFailed": "وو والیٹ نئیں جُڑ سکا",
+    "solanaUnlinked": "سولانا والیٹ ہٹ گیا",
+    "solanaUnlinkFailed": "وو والیٹ نئیں ہٹ سکا"
   },
   "common": {
     "save": "محفوظ",
@@ -2287,7 +2301,27 @@
     "reviewDescriptionPlaceholder": "Ee post gurinchi emaina cheppu (optional)",
     "reviewLiveWarning": "That link is a live stream. Wait until it ends and import the recording instead.",
     "reviewCancel": "Cancel",
-    "reviewConfirm": "Import"
+    "reviewConfirm": "Import",
+    "errorNeedRights": "براہ کرم تصدیق کریں کہ آپ کے پاس اس مواد کے حقوق ہیں",
+    "errorQueueFailed": "اس درآمد کی قطار نہیں لگائی جا سکی",
+    "ownership": "میں اس مواد کا مالک ہوں، یا DeHub پر اسے شائع کرنے کی اجازت حاصل ہے۔",
+    "podcast": {
+      "alreadyImported": "پیلے ئچ امپورٹ ہوگیا",
+      "badFeed": "یہ لنک پوڈکاسٹ فیڈ جیسا نئیں دِکھتا۔",
+      "done": "قطار میں ہے",
+      "emptyFeed": "اس فیڈ میں کوئی ایپیسوڈ نئیں ملے۔",
+      "episodes": "{{count}} ایپیسوڈ",
+      "feedUrlLabel": "پوڈکاسٹ RSS فیڈ کا URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
+      "fetchFeed": "فیڈ لاؤ",
+      "fetching": "فیڈ لا رئیں…",
+      "importSelected": "{{count}} ایپیسوڈ امپورٹ کرو",
+      "importing": "امپورٹ ہو رئیں…",
+      "selectAll": "سب چُنو",
+      "showBy": "{{author}} کا",
+      "tooMany": "ایک بار میں 20 ایپیسوڈ تک امپورٹ کرو۔"
+    },
+    "toastQueued": "قطار میں — یہ آپ کی پروفائل پر شائع ہوگی جب یہ مکمل ہو۔"
   },
   "migrate": {
     "editDescription": "वर्णन",

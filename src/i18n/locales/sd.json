@@ -483,7 +483,21 @@
     "emailSignInDone": "هاڻي توهان هن اي ميل سان سائن ان ڪري سگهو ٿا",
     "emailSignInRemove": "هٽايو",
     "emailSignInRemoved": "هٽايو ويو — هي اي ميل هاڻي توهان کي سائن ان نٿي ڪري سگهي",
-    "cancel": "منسوخ"
+    "cancel": "منسوخ",
+    "solanaWallet": "سولانا والٽ",
+    "solanaWalletHint": "Solana تي ٽپس ۽ ادا ٿيل انلاڪ حاصل ڪرڻ لاءِ Phantom ڳنڍيو.",
+    "solanaConnect": "ڳنڍيو",
+    "solanaDisconnect": "ڊسڪنيڪٽ",
+    "solanaCopy": "سولانا پتو ڪاپي ڪريو",
+    "solanaCopyFailed": "ايڊريس نقل نه ٿي سگهيو",
+    "solanaNeedsSignIn": "پهريان سائن ان ڪريو",
+    "solanaNoPhantom": "Phantom نه مليو",
+    "solanaNoPhantomHint": "Phantom ايڪسٽينشن انسٽال ڪريو، يا dehub.io کي Phantom برائوزر ۾ کوليو.",
+    "solanaNotSigned": "ڪجهه به نه ڳنڍيو ويو",
+    "solanaLinked": "سولانا والٽ ڳنڍجي ويو",
+    "solanaLinkFailed": "اهو والٽ ڳنڍي نه سگهيو",
+    "solanaUnlinked": "سولانا والٽ ڌار ٿي ويو",
+    "solanaUnlinkFailed": "اهو والٽ ڌار نه ٿي سگهيو"
   },
   "common": {
     "save": "محفوظ ڪريو",
@@ -3277,7 +3291,8 @@
       "failed": "ناڪام",
       "emptyFeed": "اسان ان فيڊ ۾ ڪا به قسط ڳولي نه سگهياسين.",
       "badFeed": "اهو لنڪ پوڊ ڪاسٽ فيڊ وانگر نظر نٿو اچي.",
-      "tooMany": "20 Off آف ھڪڙي وقت ۾ ھڪڙي شيءِ ان اسٽور ۾."
+      "tooMany": "20 Off آف ھڪڙي وقت ۾ ھڪڙي شيءِ ان اسٽور ۾.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

@@ -467,7 +467,21 @@
     "emailSignInDone": "Sisan i bɛ se ka don ni nin imɛli ye",
     "emailSignInRemove": "Bɔ a la",
     "emailSignInRemoved": "Bɔra — nin imɛli tɛ se ka i don tugun",
-    "cancel": "Kɔrɔbɔ"
+    "cancel": "Kɔrɔbɔ",
+    "solanaWallet": "Solana wari bɔrɔ",
+    "solanaWalletHint": "Phantom siri walasa ka sama ani sara kɔnɔnafɛnw sɔrɔ Solana kan.",
+    "solanaConnect": "A siri",
+    "solanaDisconnect": "A bɔ",
+    "solanaCopy": "Solana ladɛrɛsi kopi",
+    "solanaCopyFailed": "I tɛ se ka a ka ladɛrɛsi kopi kɛ",
+    "solanaNeedsSignIn": "I don a kɔnɔ fɔlɔ",
+    "solanaNoPhantom": "Phantom ma sɔrɔ",
+    "solanaNoPhantomHint": "Phantom extension bila i ka navigateur la, walima dehub.io da wuli Phantom navigateur kɔnɔ.",
+    "solanaNotSigned": "Foyi ma siri",
+    "solanaLinked": "Solana wari bɔrɔ sirilen don",
+    "solanaLinkFailed": "O wari bɔrɔ ma se ka siri",
+    "solanaUnlinked": "Solana wari bɔrɔ bɔra a la",
+    "solanaUnlinkFailed": "O wari bɔrɔ ma se ka bɔ"
   },
   "common": {
     "save": "Bɔ",
@@ -3209,7 +3223,9 @@
       "failed": "Fanga tɛ min na",
       "emptyFeed": "An tun tɛ se ka dumuni kɛ o cogo la.",
       "badFeed": "N' ma a sɛgɛsɛgɛ k'a filɛ n'o be se ka kɛ podcast ye.",
-      "tooMany": "Aw ka se ka koo 20 kɛ ɲɔgɔn fɛ."
+      "tooMany": "Aw ka se ka koo 20 kɛ ɲɔgɔn fɛ.",
+      "importSelected": "Episode {{count}} ladon",
+      "showBy": "{{author}} ta"
     }
   },
   "banned": {

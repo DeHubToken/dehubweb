@@ -483,7 +483,21 @@
     "emailSignInDone": "હવે તમે આ ઇમેઇલ વડે સાઇન ઇન કરી શકો છો",
     "emailSignInRemove": "દૂર કરો",
     "emailSignInRemoved": "દૂર કરાયું — આ ઇમેઇલ વડે હવે સાઇન ઇન થઈ શકશે નહીં",
-    "cancel": "રદ કરો"
+    "cancel": "રદ કરો",
+    "solanaWallet": "સોલાના વૉલેટ",
+    "solanaWalletHint": "Solana પર ટિપ્સ અને પેઇડ અનલૉક મેળવવા માટે Phantom કનેક્ટ કરો.",
+    "solanaConnect": "કનેક્ટ કરો",
+    "solanaDisconnect": "ડિસ્કનેક્ટ કરો",
+    "solanaCopy": "સોલાના સરનામું કૉપિ કરો",
+    "solanaCopyFailed": "સરનામાની નકલ કરી શક્યા નહિં",
+    "solanaNeedsSignIn": "પહેલાં સાઇન ઇન કરો",
+    "solanaNoPhantom": "Phantom મળ્યું નહીં",
+    "solanaNoPhantomHint": "Phantom એક્સ્ટેન્શન ઇન્સ્ટોલ કરો, અથવા Phantom બ્રાઉઝરમાં dehub.io ખોલો.",
+    "solanaNotSigned": "કંઈ કનેક્ટ થયું નહીં",
+    "solanaLinked": "સોલાના વૉલેટ જોડાયું",
+    "solanaLinkFailed": "તે વૉલેટ કનેક્ટ કરી શકાયું નહીં",
+    "solanaUnlinked": "સોલાના વૉલેટ અલગ થયું",
+    "solanaUnlinkFailed": "તે વૉલેટ ડિસ્કનેક્ટ કરી શકાયું નહીં"
   },
   "common": {
     "save": "સાચવો",
@@ -3290,7 +3304,8 @@
       "failed": "નિષ્ફળ",
       "emptyFeed": "અમને તે ફીડમાં કોઈ એપિસોડ મળી શક્યા નહીં.",
       "badFeed": "તે લિંક પોડકાસ્ટ ફીડ જેવી દેખાતી નથી.",
-      "tooMany": "એક સમયે 20 એપિસોડ સુધી આયાત કરો."
+      "tooMany": "એક સમયે 20 એપિસોડ સુધી આયાત કરો.",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

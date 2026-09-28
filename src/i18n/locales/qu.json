@@ -483,7 +483,21 @@
     "emailSignInDone": "Kunanqa kay emailwan yaykuyta atinki",
     "emailSignInRemove": "Hurquy",
     "emailSignInRemoved": "Hurqusqa — kay emailwanqa manañam yaykuyta atinkichu",
-    "cancel": "Hina kachun"
+    "cancel": "Hina kachun",
+    "solanaWallet": "Solana qullqi waqaychana",
+    "solanaWalletHint": "Phantom tinkiy Solana nisqapi propinakunata, qullqisqa kichaykunatapas chaskinaykipaq.",
+    "solanaConnect": "Ruwachiy",
+    "solanaDisconnect": "Chinkachiy",
+    "solanaCopy": "Solana ñan sutita kikinchay",
+    "solanaCopyFailed": "Mana direccionta copiayta atirqanchu",
+    "solanaNeedsSignIn": "Ñawpaqta yaykuy",
+    "solanaNoPhantom": "Phantom mana tarikunchu",
+    "solanaNoPhantomHint": "Phantom yapakuyta churay, utaq dehub.io nisqata Phantom maskanapi kichay.",
+    "solanaNotSigned": "Mana imapas tinkirqachu",
+    "solanaLinked": "Solana qullqi waqaychanaqa tinkisqañam",
+    "solanaLinkFailed": "Mana atikurqachu chay qullqi wayaqata tinkiyta",
+    "solanaUnlinked": "Solana qullqi waqaychanaqa t'aqasqañam",
+    "solanaUnlinkFailed": "Mana atikurqachu chay qullqi wayaqata t'aqayta"
   },
   "common": {
     "save": "Waqaychay",

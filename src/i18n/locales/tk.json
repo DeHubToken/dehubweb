@@ -483,7 +483,21 @@
     "emailSignInDone": "Indi bu e-poçta bilen girip bilersiňiz",
     "emailSignInRemove": "Aýyr",
     "emailSignInRemoved": "Aýryldy — bu e-poçta bilen indi girip bilmersiňiz",
-    "cancel": "Ýatyr"
+    "cancel": "Ýatyr",
+    "solanaWallet": "Solana gapjygy",
+    "solanaWalletHint": "Solana-da çaý pullaryny we tölegli açyşlary almak üçin Phantom-y birikdiriň.",
+    "solanaConnect": "Birikdir",
+    "solanaDisconnect": "Aýyr",
+    "solanaCopy": "Solana salgysyny göçür",
+    "solanaCopyFailed": "Adresini nusgalap bolmady",
+    "solanaNeedsSignIn": "Ilki bilen giriň",
+    "solanaNoPhantom": "Phantom tapylmady",
+    "solanaNoPhantomHint": "Phantom giňeltmesini guruň ýa-da dehub.io-ny Phantom brauzerinde açyň.",
+    "solanaNotSigned": "Hiç zat birikdirilmedi",
+    "solanaLinked": "Solana gapjygy birikdirildi",
+    "solanaLinkFailed": "Ol gapjygy birikdirip bolmady",
+    "solanaUnlinked": "Solana gapjygy aýryldy",
+    "solanaUnlinkFailed": "Ol gapjygy aýryp bolmady"
   },
   "common": {
     "save": "Ýatda sakla",

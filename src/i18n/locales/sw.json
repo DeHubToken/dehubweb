@@ -497,7 +497,21 @@
     "emailSignInDone": "Sasa unaweza kuingia kwa barua pepe hii",
     "emailSignInRemove": "Ondoa",
     "emailSignInRemoved": "Imeondolewa — barua pepe hii haiwezi tena kukuingiza",
-    "cancel": "Ghairi"
+    "cancel": "Ghairi",
+    "solanaWallet": "Pochi ya Solana",
+    "solanaWalletHint": "Unganisha Phantom ili kupokea bakshishi na ufunguaji wa kulipia kwenye Solana.",
+    "solanaConnect": "Unganisha",
+    "solanaDisconnect": "Kata muunganisho",
+    "solanaCopy": "Nakili anwani ya Solana",
+    "solanaCopyFailed": "Haikuweza kunakili anwani",
+    "solanaNeedsSignIn": "Ingia kwanza",
+    "solanaNoPhantom": "Phantom haijapatikana",
+    "solanaNoPhantomHint": "Sakinisha kiendelezi cha Phantom, au fungua dehub.io kwenye kivinjari cha Phantom.",
+    "solanaNotSigned": "Hakuna kilichounganishwa",
+    "solanaLinked": "Pochi ya Solana imeunganishwa",
+    "solanaLinkFailed": "Imeshindwa kuunganisha pochi hiyo",
+    "solanaUnlinked": "Pochi ya Solana imetenganishwa",
+    "solanaUnlinkFailed": "Imeshindwa kutenganisha pochi hiyo"
   },
   "common": {
     "save": "Hifadhi",

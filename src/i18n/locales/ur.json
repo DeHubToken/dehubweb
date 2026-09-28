@@ -497,7 +497,21 @@
     "emailSignInDone": "اب آپ اس ای میل سے سائن اِن کر سکتے ہیں",
     "emailSignInRemove": "ہٹائیں",
     "emailSignInRemoved": "ہٹا دیا گیا — یہ ای میل اب آپ کو سائن اِن نہیں کر سکتی",
-    "cancel": "منسوخ کریں"
+    "cancel": "منسوخ کریں",
+    "solanaWallet": "سولانا والیٹ",
+    "solanaWalletHint": "Solana پر ٹپس اور ادا شدہ اَن لاکس حاصل کرنے کے لیے Phantom منسلک کریں۔",
+    "solanaConnect": "کنیکٹ کریں",
+    "solanaDisconnect": "ڈسکنیکٹ کریں",
+    "solanaCopy": "سولانا ایڈریس کاپی کریں",
+    "solanaCopyFailed": "پتہ کاپی نہیں کیا جا سکا",
+    "solanaNeedsSignIn": "پہلے سائن ان کریں",
+    "solanaNoPhantom": "Phantom نہیں ملا",
+    "solanaNoPhantomHint": "Phantom ایکسٹینشن انسٹال کریں، یا dehub.io کو Phantom براؤزر میں کھولیں۔",
+    "solanaNotSigned": "کچھ بھی منسلک نہیں ہوا",
+    "solanaLinked": "سولانا والیٹ منسلک ہو گیا",
+    "solanaLinkFailed": "وہ والیٹ منسلک نہیں ہو سکا",
+    "solanaUnlinked": "سولانا والیٹ منقطع ہو گیا",
+    "solanaUnlinkFailed": "وہ والیٹ منقطع نہیں ہو سکا"
   },
   "common": {
     "save": "محفوظ کریں",
@@ -5207,7 +5221,8 @@
       "failed": "ناکام",
       "emptyFeed": "ہمیں اس فیڈ میں کوئی قسط نہیں مل سکی ۔",
       "badFeed": "یہ لنک پوڈ کاسٹ فیڈ کی طرح نہیں لگتا ہے ۔",
-      "tooMany": "ایک وقت میں 20 اقساط تک درآمد کریں ۔"
+      "tooMany": "ایک وقت میں 20 اقساط تک درآمد کریں ۔",
+      "feedUrlPlaceholder": "https://example.com/feed.xml"
     }
   },
   "banned": {

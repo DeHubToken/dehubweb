@@ -400,7 +400,21 @@
     "emailSignInDone": "You fit sign in with dis email now",
     "emailSignInRemove": "Comot",
     "emailSignInRemoved": "E don comot — dis email no fit sign you in again",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "solanaWallet": "Solana wallet",
+    "solanaWalletHint": "Connect Phantom make you fit collect tips and paid unlocks for Solana.",
+    "solanaConnect": "Connect",
+    "solanaDisconnect": "Disconnect",
+    "solanaCopy": "Copy Solana address",
+    "solanaCopyFailed": "We no fit copy di address",
+    "solanaNeedsSignIn": "Sign in first",
+    "solanaNoPhantom": "We no see Phantom",
+    "solanaNoPhantomHint": "Install di Phantom extension, or open dehub.io for inside Phantom browser.",
+    "solanaNotSigned": "Nothing connect",
+    "solanaLinked": "Solana wallet don connect",
+    "solanaLinkFailed": "We no fit connect dat wallet",
+    "solanaUnlinked": "Solana wallet don disconnect",
+    "solanaUnlinkFailed": "We no fit disconnect dat wallet"
   },
   "common": {
     "save": "Save Am",
@@ -2724,8 +2738,15 @@
       "importSelected": "Import {{count}} episodes",
       "importing": "Importing…",
       "done": "Queued",
-      "failed": "Failed"
-    }
+      "failed": "Failed",
+      "badFeed": "That link no resemble podcast feed.",
+      "emptyFeed": "We no see any episode for that feed.",
+      "tooMany": "Bring reach 20 episode dem at once."
+    },
+    "errorNeedRights": "Abeg confirm say you get the rights to this content",
+    "errorQueueFailed": "We no fit queue that import",
+    "ownership": "Na me get this content, or the person wey get the rights don allow me publish am for DeHub.",
+    "toastQueued": "E don enter queue — e go publish for your profile when e finish."
   },
   "banned": {
     "reason": "Reason: {{reason}}"

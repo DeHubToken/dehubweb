@@ -497,7 +497,21 @@
     "emailSignInDone": "Acum te poți autentifica cu acest e-mail",
     "emailSignInRemove": "Elimină",
     "emailSignInRemoved": "Eliminat — acest e-mail nu te mai poate autentifica",
-    "cancel": "Anulează"
+    "cancel": "Anulează",
+    "solanaWallet": "Portofel Solana",
+    "solanaWalletHint": "Conectează Phantom pentru a primi bacșișuri și deblocări plătite pe Solana.",
+    "solanaConnect": "Conectează",
+    "solanaDisconnect": "Deconectează",
+    "solanaCopy": "Copiază adresa Solana",
+    "solanaCopyFailed": "Adresa nu a putut fi copiată",
+    "solanaNeedsSignIn": "Conectează-te mai întâi",
+    "solanaNoPhantom": "Phantom nu a fost găsit",
+    "solanaNoPhantomHint": "Instalează extensia Phantom sau deschide dehub.io în browserul Phantom.",
+    "solanaNotSigned": "Nu s-a conectat nimic",
+    "solanaLinked": "Portofel Solana conectat",
+    "solanaLinkFailed": "Nu s-a putut conecta acel portofel",
+    "solanaUnlinked": "Portofel Solana deconectat",
+    "solanaUnlinkFailed": "Nu s-a putut deconecta acel portofel"
   },
   "common": {
     "save": "Salvează",
