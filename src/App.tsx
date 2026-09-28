@@ -230,6 +230,12 @@ const AdminManualPage = React.lazy(() => import("./pages/AdminManualPage"));
 // theme launchers', so the iframe plumbing never rides along in a page bundle.
 const ArcadeGamePage = React.lazy(() => import("./pages/ArcadeGamePage"));
 const ArcadeChessOnlinePage = React.lazy(() => import("./pages/ArcadeChessOnlinePage"));
+// Mini app player: standalone like the arcade player, because the app owns the
+// viewport and dehub draws only its own header above it.
+const MiniAppPage = React.lazy(() => import("./pages/MiniAppPage"));
+const MiniAppDevRunPage = React.lazy(() => import("./pages/MiniAppPage").then((m) => ({ default: m.MiniAppDevRunPage })));
+const AppsPage = React.lazy(() => import("./pages/app/AppsPage"));
+const AppsDevPage = React.lazy(() => import("./pages/app/AppsDevPage"));
 
 
 
@@ -576,6 +582,12 @@ function AppContent() {
               /arcade/:slug either. */}
           <Route path="/arcade/kings-gambit/online" element={<Suspense fallback={<PageLoader />}><ArcadeChessOnlinePage /></Suspense>} />
 
+          {/* Mini app player. Two and three segments, so neither is ordered
+              against the /:username catch-all; /apps and /apps/dev themselves
+              sit inside AppLayout below. */}
+          <Route path="/apps/:slug" element={<Suspense fallback={<PageLoader />}><MiniAppPage /></Suspense>} />
+          <Route path="/apps/dev/run" element={<Suspense fallback={<PageLoader />}><MiniAppDevRunPage /></Suspense>} />
+
 
 
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
@@ -603,6 +615,11 @@ function AppContent() {
                 Standalone, opening a title threw straight to the error
                 boundary. */}
             <Route path="/cinema" element={<Suspense fallback={<PageLoader />}><CinemaPage /></Suspense>} />
+
+            {/* The mini app store and the developer tool. Inside the layout: they
+                are pages you browse, unlike the player at /apps/:slug. */}
+            <Route path="/apps" element={<Suspense fallback={<PageLoader />}><AppsPage /></Suspense>} />
+            <Route path="/apps/dev" element={<Suspense fallback={<PageLoader />}><AppsDevPage /></Suspense>} />
             {/* One title. Same page — the open film is URL state so it can be
                 shared, carded and indexed; see the note in CinemaPage. */}
             <Route path="/cinema/:filmType/:filmId" element={<Suspense fallback={<PageLoader />}><CinemaPage /></Suspense>} />

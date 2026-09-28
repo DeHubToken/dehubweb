@@ -7339,5 +7339,69 @@
     "back": "Quay lại Cài đặt",
     "signIn": "ĐĂNG NHẬP VÀO TÀI KHOẢN CỦA BẠN",
     "acknowledge": "Tôi đã lưu chi tiết khôi phục ví của mình và hiểu rằng việc xóa là vĩnh viễn."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Xác minh",
+      "unreviewed": "Chưa được đánh giá",
+      "dev": "Phiên bản thử nghiệm dành cho nhà phát triển"
+    },
+    "host": {
+      "close": "Đóng ứng dụng",
+      "backToStore": "Quay lại Ứng dụng",
+      "notFound": "Ứng dụng này không có trong DeHub App Store, hoặc đã bị gỡ bỏ.",
+      "badUrl": "Địa chỉ này không thể mở được dưới dạng mini ứng dụng. Nó phải bắt đầu bằng `https://`, hoặc là địa chỉ localhost trong chế độ phát triển.",
+      "readyTimeout": "Ứng dụng này chưa gọi `dehub.ready()`, vì vậy màn hình loading đã bị ẩn sau 8 giây."
+    },
+    "signIn": {
+      "title": "Đăng nhập vào {{name}}?",
+      "body": "Ứng dụng này sẽ lấy địa chỉ ví DeHub của bạn và một mã token đăng nhập chỉ hoạt động cho ứng dụng này. Nó sẽ không lấy quyền truy cập vào ví, tài sản hoặc tài khoản DeHub của bạn.",
+      "cancel": "Không bây giờ",
+      "confirm": "Đăng nhập"
+    },
+    "store": {
+      "title": "Ứng dụng",
+      "seoTitle": "DeHub Apps — mini ứng dụng cho DeHub",
+      "seoDescription": "Mini ứng dụng được xây dựng cho DeHub bởi bất kỳ ai: trò chơi, công cụ và nhiều hơn nữa, mở trong DeHub, bạn đã đăng nhập, với chức năng chia sẻ lại lên tường.",
+      "intro": "Mini ứng dụng được xây dựng cho DeHub bởi bất kỳ ai. Chúng mở trong DeHub, bạn đã đăng nhập, và mỗi ứng dụng hiển thị địa chỉ web thực của nó.",
+      "buildCta": "Xây dựng ứng dụng",
+      "emptyTitle": "Không có ứng dụng nào được liệt kê hiện tại",
+      "emptyBody": "Các ứng dụng đầu tiên đang trong quá trình đánh giá. Xây dựng một ứng dụng và nó có thể xuất hiện ở đây."
+    },
+    "dev": {
+      "title": "Xây dựng một mini ứng dụng",
+      "seoTitle": "Xây dựng một mini ứng dụng DeHub",
+      "seoDescription": "Xây dựng một mini ứng dụng cho DeHub: một thẻ script, đăng nhập với DeHub, chia sẻ lên tường. Kiểm tra manifest và xem trước ứng dụng trong host thực tế.",
+      "intro": "Bất kỳ trang web nào cũng có thể trở thành một mini ứng dụng DeHub với một thẻ script. Kiểm tra manifest, xem thẻ chia sẻ của bạn và chạy ứng dụng trong DeHub trước khi ai khác nhìn thấy nó. Mini ứng dụng Farcaster hoạt động như là nó.",
+      "backToStore": "Quay lại Ứng dụng",
+      "checkTitle": "Kiểm tra và khởi động",
+      "check": "Kiểm tra",
+      "launch": "Khởi động",
+      "badUrl": "Nhập địa chỉ `https://` hoặc `http://localhost` để thử nghiệm cục bộ.",
+      "localNote": "Địa chỉ cục bộ không thể kiểm tra từ máy chủ của chúng tôi, nhưng bạn có thể khởi động chúng ở đây để thử nghiệm.",
+      "checkFailed": "Quá trình kiểm tra không thể chạy được. Hãy thử lại.",
+      "passed": "Biểu hiện có vẻ tốt",
+      "failed_one": "{{count}} vấn đề cần khắc phục",
+      "failed_other": "{{count}} vấn đề cần khắc phục",
+      "farcasterImport": "Đọc từ farcaster.json",
+      "cardPreview": "Liên kết của bạn trông như thế nào trong nguồn cấp dữ liệu",
+      "open": "Mở",
+      "ownershipTitle": "Chứng minh bạn sở hữu miền",
+      "ownershipBody": "Ký một lần bằng ví DeHub của bạn và dán kết quả vào dehub.json của bạn. Nó liên kết ứng dụng với tài khoản của bạn, vì vậy bạn sẽ nhận được các khoản chi trả và đánh giá.",
+      "signFor": "Ký tên cho {{domain}}",
+      "signNeedsUrl": "Nhập địa chỉ ứng dụng của bạn ở trên",
+      "signInFirst": "Đăng nhập vào DeHub để đăng ký.",
+      "signFailed": "Việc ký tên chưa hoàn tất.",
+      "quickstartTitle": "Khởi động nhanh",
+      "quickstartBody": "Thêm SDK vào trang của bạn và gọi ready() khi màn hình đầu tiên của bạn hiển thị.",
+      "manifestTitle": "Bản kê khai hàng hoá",
+      "manifestBody": "Cung cấp thông tin này tại /.well-known/dehub.json trên miền ứng dụng của bạn. Bạn đã có farcaster.json chưa? Chúng tôi cũng đã đọc bài viết đó.",
+      "embedTitle": "Thẻ nguồn cấp dữ liệu",
+      "embedBody": "Thêm thẻ này vào bất kỳ trang nào và liên kết đến trang đó hiển thị dưới dạng thẻ có nút mở ứng dụng của bạn ngay tại đó.",
+      "verifyTitle": "Đăng nhập bằng DeHub, trên máy chủ của bạn",
+      "verifyBody": "auth.getToken() cung cấp cho ứng dụng của bạn một mã thông báo có chữ ký của DeHub. Kiểm tra nó trên máy chủ của bạn với bất kỳ thư viện JWT nào. Địa chỉ ví của người dùng nằm trong sub.",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép"
+    }
   }
 }

@@ -2431,6 +2431,8 @@
       "title": "Streamer level",
       "level": "Level {{level}}",
       "xp": "{{xp}} XP",
+      "toNext": "{{minutes}} more minute weh e count for reach level {{level}}",
+      "rule": "Na only stream weh e run ten minute or pass, with at least one person weh e di watch, weh e go count for your level.",
       "streak": "{{count}} week streak",
       "bestStreak": "Best streak {{count}} weeks",
       "hours": "{{hours}} qualifying hours",
@@ -2441,6 +2443,8 @@
       "locked": "Locked",
       "earnedOn": "Earned {{date}}",
       "recentTitle": "Recent streams",
+      "notCounted": "E no count",
+      "noStreams": "Go live for start collect XP.",
       "card": {
         "first-light": {
           "name": "First light",
@@ -2523,14 +2527,10 @@
           "hint": "Reach level twenty."
         }
       },
+      "chooseBadge": "Choose any badge weh you don open for show for your profile.",
       "useBadge": "Use badge",
       "selectedBadge": "Selected",
       "savingBadge": "Saving badge…",
-      "toNext": "{{minutes}} more minute weh e count for reach level {{level}}",
-      "rule": "Na only stream weh e run ten minute or pass, with at least one person weh e di watch, weh e go count for your level.",
-      "notCounted": "E no count",
-      "noStreams": "Go live for start collect XP.",
-      "chooseBadge": "Choose any badge weh you don open for show for your profile.",
       "saveBadgeError": "We no fit save your badge. Try again abeg."
     }
   },
@@ -4254,5 +4254,52 @@
     "accepted": "Account deletion requested",
     "done": "Done",
     "back": "Back to Settings"
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verified",
+      "unreviewed": "Unreviewed",
+      "dev": "Developer preview"
+    },
+    "host": {
+      "close": "Close app",
+      "backToStore": "Back to Apps",
+      "notFound": "\"App dis no fit find wey in DeHub App Store, or dem take down for real.\"",
+      "readyTimeout": "\"Dis app no call dehub.ready(), so de splash screen go hide after 8 seconds.\""
+    },
+    "signIn": {
+      "title": "Sign in to {{name}}?",
+      "body": "Dis app go get yu DeHub wallet address an a sign-in token dat only work fo dis app. Na dis app go no access fo yu wallet, yu funds, or yu DeHub account.",
+      "cancel": "Not now",
+      "confirm": "Sign in"
+    },
+    "store": {
+      "title": "Apps",
+      "seoDescription": "Mini app wey anybody build for DeHub: game, tool, na more wey open inside DeHub, already log in, na share back to feed.",
+      "buildCta": "Build an app",
+      "emptyTitle": "No apps wey go show yet 😕",
+      "emptyBody": "\"Foist app wey go review na. Build one, wey go dey here.\""
+    },
+    "dev": {
+      "backToStore": "Back to Apps",
+      "check": "Check",
+      "launch": "Launch",
+      "badUrl": "Enter **http://localhost** or **https://** any weblink for test local.",
+      "localNote": "\"Local address wey no dey fit check from our server, but you go try dem here for test.\"",
+      "checkFailed": "\"Check no go run. Try again.\"",
+      "passed": "Manifest looks good",
+      "failed_one": "{{count}} problem wey go fix",
+      "failed_other": "{{count}} problem wey go fix 🔧",
+      "open": "Open",
+      "ownershipBody": "Sign wan once wey yu use DeHub wallet yu, na paste result wey yu get wey yu dehub.json. Na dis link app wey yu account, so payout wey yu get na review wey yu get reach yu.",
+      "signNeedsUrl": "En a yu app wey yu wan use, put wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey",
+      "signInFirst": "Sign in wey DeHub for sign document.",
+      "quickstartTitle": "Quick start",
+      "manifestTitle": "Manifest",
+      "embedTitle": "Feed card",
+      "embedBody": "Add dis tag fi any page, and link fi dat page go show as card wey got button dat go open app yu right there 👆",
+      "copy": "Copy",
+      "copied": "Copied"
+    }
   }
 }

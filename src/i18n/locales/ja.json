@@ -7539,5 +7539,69 @@
     "back": "設定に戻る",
     "signIn": "アカウントにサインインする",
     "acknowledge": "ウォレットの復元の詳細を保存しました。削除は永久的なものであることを理解しています。"
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "認証済み",
+      "unreviewed": "未審査",
+      "dev": "デベロッパープレビュー"
+    },
+    "host": {
+      "close": "アプリを閉じる",
+      "backToStore": "アプリに戻る",
+      "notFound": "このアプリはDeHub App Storeにないか、削除されました。",
+      "badUrl": "そのアドレスをミニアプリとして開くことはできません。https ://で始まるか、開発者モードではlocalhostアドレスである必要があります。",
+      "readyTimeout": "このアプリはdehub.ready ()を呼び出していないため、スプラッシュ画面は8秒後に非表示になりました。"
+    },
+    "signIn": {
+      "title": "{{name}}にサインインしますか？",
+      "body": "このアプリは、DeHubウォレットアドレスと、このアプリでのみ機能するサインイントークンを取得します。ウォレット、資金、DeHubアカウントにはアクセスできません。",
+      "cancel": "あとで",
+      "confirm": "サインイン"
+    },
+    "store": {
+      "title": "アプリ",
+      "seoTitle": "DeHubアプリ— DeHub用ミニアプリ",
+      "seoDescription": "誰でもDeHub用に構築されたミニアプリ：すでにサインインしているDeHub内で開かれ、フィードに共有されるゲーム、ツールなど。",
+      "intro": "誰でもDeHub用に構築されたミニアプリ。DeHub内で開き、すでにサインインしており、すべてのアプリに実際のWebアドレスが表示されます。",
+      "buildCta": "アプリを構築する",
+      "emptyTitle": "まだアプリがリストされていません",
+      "emptyBody": "最初のアプリは審査中です。1つ建てれば、ここにあるかもしれません。"
+    },
+    "dev": {
+      "title": "ミニアプリを構築する",
+      "seoTitle": "DeHubミニアプリを構築する",
+      "seoDescription": "DeHub用のミニアプリを構築します。1つのスクリプトタグ、DeHubでサインイン、フィードに共有します。マニフェストを確認し、実際のホストでアプリをプレビューします。",
+      "intro": "すべてのウェブサイトは、1つのスクリプトタグを持つDeHubミニアプリになります。マニフェストを確認し、フィードカードを確認し、他の人に表示される前にDeHub内でアプリを実行します。Farcasterミニアプリはそのまま動作します。",
+      "backToStore": "アプリに戻る",
+      "checkTitle": "確認して起動",
+      "check": "チェック",
+      "launch": "ローンチ",
+      "badUrl": "ローカルテスト用にhttps ://アドレスまたはhttp :// localhostを入力します。",
+      "localNote": "サーバーからローカルアドレスを確認することはできませんが、ここで起動してテストすることができます。",
+      "checkFailed": "チェックを実行できませんでした。もう一度やり直してください。",
+      "passed": "マニフェストは良好に見えます",
+      "failed_one": "{{count}}修正が必要な問題",
+      "failed_other": "{{count}}修正が必要な問題",
+      "farcasterImport": "Farcaster.jsonからの読み取り",
+      "cardPreview": "フィードでのリンクの表示方法",
+      "open": "未解決",
+      "ownershipTitle": "ドメインを所有していることを証明する",
+      "ownershipBody": "DeHubウォレットで1回署名し、結果をdehub.jsonに貼り付けます。アプリをアカウントにリンクするため、受取金やレビューが届きます。",
+      "signFor": "{{domain}}にサインする",
+      "signNeedsUrl": "上にアプリのアドレスを入力してください",
+      "signInFirst": "DeHubにサインインしてサインインします。",
+      "signFailed": "署名が完了しませんでした。",
+      "quickstartTitle": "クイックスタート",
+      "quickstartBody": "SDKをページに追加し、最初の画面が表示されたらready ()を呼び出します。",
+      "manifestTitle": "マニフェスト",
+      "manifestBody": "これをアプリのドメインの/.well-known/dehub.jsonで提供します。すでにfarcaster.jsonを持っていますか？私たちもそれを読んでいます。",
+      "embedTitle": "フィードカード",
+      "embedBody": "このタグを任意のページに追加すると、そのページへのリンクがアプリを開くボタン付きのカードとして表示されます。",
+      "verifyTitle": "サーバー上のDeHubでサインイン",
+      "verifyBody": "auth.getToken ()は、DeHubによって署名されたトークンをアプリに提供します。JWTライブラリを使用してサーバーで確認してください。ユーザーのウォレットアドレスはSUBにあります。",
+      "copy": "コピー",
+      "copied": "コピーしました"
+    }
   }
 }

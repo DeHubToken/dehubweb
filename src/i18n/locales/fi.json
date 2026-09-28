@@ -7435,5 +7435,69 @@
     "back": "Takaisin asetukset -sivulle",
     "signIn": "Kirjaudu tilillesi",
     "acknowledge": "Olen tallentanut lompakkoni palautustiedot ja ymmärrän, että poistaminen on pysyvää."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Tarkistettu",
+      "unreviewed": "Ei tarkistettu",
+      "dev": "Kehittäjän esikatselu"
+    },
+    "host": {
+      "close": "Sulje sovellus",
+      "backToStore": "Takaisin sovelluksiin",
+      "notFound": "Tämä sovellus ei ole DeHub-sovellusliikkeessä, tai se on poistettu.",
+      "badUrl": "Tätä osoitetta ei voida avata mini-sovelluksena. Se täytyy alkaa https://:lla tai olla localhost-osoite kehittäjätilassa.",
+      "readyTimeout": "Tämä sovellus ei koskaan kutsunut dehub.ready(), joten latausruutu piiloutui 8 sekunnin kuluttua."
+    },
+    "signIn": {
+      "title": "Kirjaudu sisään {{name}}?",
+      "body": "Tämä sovellus saa DeHub-lompakkosi osoitteen ja kirjautumistokenin, joka toimii vain tälle sovellukselle. Se ei saa pääsyä lompakkosi, varoihisi tai DeHub-tiliisi.",
+      "cancel": "Ei nyt",
+      "confirm": "Kirjaudu sisään"
+    },
+    "store": {
+      "title": "Sovellukset",
+      "seoTitle": "DeHub-sovellukset — mini-sovellukset DeHubille",
+      "seoDescription": "Mini-sovellukset, jotka on rakennettu DeHubille kuka tahansa: pelit, työkalut ja muuta, jotka avautuvat DeHubin sisällä, joissa olet jo kirjautunut sisään, ja jotka jakavat takaisin uutisvirtaan.",
+      "intro": "Mini-sovellukset, jotka on rakennettu DeHubille kuka tahansa. Ne avautuvat DeHubin sisällä, olet jo kirjautunut sisään, ja jokainen sovellus näyttää sen todellisen verkkosivun osoitteen.",
+      "buildCta": "Rakennetaan sovellus",
+      "emptyTitle": "Ei sovelluksia vielä lueteltuina",
+      "emptyBody": "Ensimmäiset sovellukset ovat tarkastuksessa. Rakennathan yhden ja se saattaa tulla tänne."
+    },
+    "dev": {
+      "title": "Rakennetaan mini-sovellus",
+      "seoTitle": "Rakennetaan DeHub-mini-sovellus",
+      "seoDescription": "Rakennathan mini-sovelluksen DeHubille: yksi skriptimerkki, kirjautuminen DeHubin kanssa, jakaminen uutisvirtaan. Tarkista manifestisi ja esikatselka sovellustasi todellisessa isäntäsovelluksessa.",
+      "intro": "Jokainen verkkosivusto voi tulla DeHub-mini-sovellukseksi yhdellä skriptimerkillä. Tarkista manifestisi, näe uutisvirran korttisi ja käynnistä sovellus DeHubin sisällä ennen kuin kukaan muu näkee sen. Farcaster-mini-sovellukset toimivat sellaisenaan.",
+      "backToStore": "Takaisin sovelluksiin",
+      "checkTitle": "Tarkista ja käynnistä",
+      "check": "Tarkista",
+      "launch": "Käynnistä",
+      "badUrl": "Syötä https://-osoite tai http://localhost paikalliseen testaukseen.",
+      "localNote": "Paikalliset osoitteet eivät voi tulla tarkistettua palvelimiltamme, mutta voit käynnistää ne täällä testaukseen.",
+      "checkFailed": "Tarkistus ei voinut suoritettua. Yritä uudelleen.",
+      "passed": "Lastiluettelo näyttää hyvältä",
+      "failed_one": "{{count}} korjattava ongelma",
+      "failed_other": "{{count}} korjattavat ongelmat",
+      "farcasterImport": "Lue farcaster.json",
+      "cardPreview": "Miltä linkkisi näyttää syötteessä",
+      "open": "Auki",
+      "ownershipTitle": "Todista, että omistat verkkotunnuksen",
+      "ownershipBody": "Allekirjoita kerran DeHub-lompakollasi ja liitä tulos dehub.jsoniin. Se yhdistää sovelluksen tiliisi, jotta saat majoittajan maksut ja arvostelut.",
+      "signFor": "Kuittaa {{domain}}",
+      "signNeedsUrl": "Anna sovelluksen osoite yläpuolelle",
+      "signInFirst": "Kirjaudu sisään DeHubiin kirjautuaksesi sisään.",
+      "signFailed": "Allekirjoittamista ei suoritettu loppuun.",
+      "quickstartTitle": "Pikakäynnistys",
+      "quickstartBody": "Lisää SDK sivullesi ja soita Ready(), kun ensimmäinen näyttö tulee näkyviin.",
+      "manifestTitle": "Luettelo",
+      "manifestBody": "Tarjoile tämä osoitteessa /.well known/dehub.json sovelluksesi verkkotunnuksessa. Onko sinulla jo farcaster.json? Luemme myös sen.",
+      "embedTitle": "Syöttökortti",
+      "embedBody": "Lisää tämä tunniste mille tahansa sivulle, ja linkki kyseiselle sivulle näkyy korttina, jossa on painike, joka avaa sovelluksesi juuri siellä.",
+      "verifyTitle": "Kirjaudu sisään DeHubilla palvelimellasi",
+      "verifyBody": "auth.getToken() antaa sovelluksellesi DeHubin allekirjoittaman tunnuksen. Tarkista se palvelimeltasi mistä tahansa JWT-kirjastosta. Käyttäjän lompakon osoite on alaosassa.",
+      "copy": "Kopio",
+      "copied": "Kopioitu"
+    }
   }
 }

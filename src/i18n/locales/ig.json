@@ -5347,5 +5347,69 @@
     "back": "Laghachi na ntọala",
     "signIn": "Banye ka ihichapụ akaụntụ gị",
     "acknowledge": "Echekwala m nkọwa mgbake obere akpa m ma ghọta na nhichapụ na-adịgide adịgide."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Nyochaa",
+      "unreviewed": "Enyochaghị",
+      "dev": "🔧 **Nwoke a nwoke nwoke** 🔧"
+    },
+    "host": {
+      "close": "Mechie ngwa",
+      "backToStore": "Laghachi na Apps",
+      "notFound": "Ngwa a adịghị na DeHub App Store, ma ọ bụ ewepụla ya.",
+      "badUrl": "Enweghị ike imepe adreesị ahụ dịka obere ngwa. Ọ ga-amalite na https://, ma ọ bụ bụrụ adreesị localhost na ọnọdụ onye nrụpụta.",
+      "readyTimeout": "Ngwa a akpọghị dehub.ready (), ya mere e zoro ihuenyo ahụ mgbe sekọnd 8 gachara."
+    },
+    "signIn": {
+      "title": "Banye na {{name}}?",
+      "body": "Ngwa a ga-enweta adreesị akpa DeHub gị na akara ntinye aka nke na-arụ ọrụ naanị maka ngwa a. Ọ gaghị enwe ike ịnweta obere akpa gị, ego gị ma ọ bụ akaụntụ DeHub gị.",
+      "cancel": "Ọ bụghị ugbu a",
+      "confirm": "Nbanye"
+    },
+    "store": {
+      "title": "Ngwa",
+      "seoTitle": "DeHub Apps — Obere ngwa ọdịnala maka DeHub",
+      "seoDescription": "Obere ngwa ndị e wuru maka DeHub site n 'aka onye ọ bụla: egwuregwu, ngwaọrụ na ihe ndị ọzọ na-emeghe n' ime DeHub, abanyelarị, na ịkekọrịta azụ na ndepụta.",
+      "intro": "Obere ngwa ndị e wuru maka DeHub site n 'aka onye ọ bụla. Ha na-emeghe n' ime DeHub, ị banyela, ma ngwa ọ bụla na-egosi ezigbo adreesị weebụ ya.",
+      "buildCta": "Mepụta ngwa",
+      "emptyTitle": "Enweghị usoroiheomume edepụtara ma",
+      "emptyBody": "A na-enyocha ngwa ndị mbụ ahụ. Mepụta otu ma ọ nwere ike ịdị ebe a."
+    },
+    "dev": {
+      "title": "Iwuli a mini ngwa",
+      "seoTitle": "Mepụta ngwa DeHub mini",
+      "seoDescription": "Mepụta obere ngwa maka DeHub: otu mkpado edemede, banye na DeHub, kesaa na ndepụta. Lelee ihe ngosi gị ma hụchalụ ngwa gị n 'ime ezigbo onye ọbịa.",
+      "intro": "Ebe nrụọrụ weebụ ọ bụla na-aghọ ngwa ngwa DeHub na otu mkpado edemede. Lelee ihe ngosi gị, hụ kaadị ndepụta gị, ma gbanye ngwa gị n 'ime DeHub tupu onye ọ bụla ọzọ ahụ ya. Ngwa Farcaster mini na-arụ ọrụ dịka ha dị.",
+      "backToStore": "Laghachi na Apps",
+      "checkTitle": "Lelee na ẹkedori",
+      "check": "Lelee",
+      "launch": "Bubata",
+      "badUrl": "Tinye https:// address, ma ọ bụ http://localhost maka obodo ule.",
+      "localNote": "Enweghị ike inyocha adreesị mpaghara site na sava anyị, mana ị nwere ike ibido ha ebe a iji nwalee.",
+      "checkFailed": "Nnyocha ahụ enweghị ike ịgba ọsọ. Gbalịa ọzọ.",
+      "passed": "Gosi na ọ dị mma",
+      "failed_one": "{{count}} nsogbu idozi",
+      "failed_other": "{{count}} nsogbu idozi",
+      "farcasterImport": "Gụọ site na farcaster.json",
+      "cardPreview": "Kedu ka njikọ gị si dị na ndepụta ahụ",
+      "open": "Mepee",
+      "ownershipTitle": "Gosi na ị nwere ngalaba ahụ",
+      "ownershipBody": "Binye aka otu ugboro na obere akpa DeHub gị ma tinye nsonazụ ya n 'ime dehub.json gị. Ọ na-ejikọ ngwa ahụ na akaụntụ gị, ya mere ịkwụ ụgwọ na nyocha na-abịakwute gị.",
+      "signFor": "Banye maka {{domain}}",
+      "signNeedsUrl": "Tinye adreesị ngwa gị n 'elu",
+      "signInFirst": "E nwere ihe atọ afọ na-adịghị eju eju, ee, ihe anọ na-adịghị asị: “O zuola",
+      "signFailed": "Mbinye aka agwụbeghị.",
+      "quickstartTitle": "Mbido ngwa ngwa",
+      "quickstartBody": "Tinye SDK na ibe gị ma kpọọ njikere() ozugbo ihuenyo mbụ gị gosipụtara.",
+      "manifestTitle": "Ngosipụta",
+      "manifestBody": "Fee nke a na /.maara nke ọma/dehub.json na ngalaba ngwa gị. Enweelarị farcaster.json? Anyị gụrụ nke ahụ kwa.",
+      "embedTitle": "Kaadị nri",
+      "embedBody": "Tinye mkpado a na ibe ọ bụla, ma njikọ na ibe ahụ na-egosi dị ka kaadị nwere bọtịnụ na-emepe ngwa gị ebe ahụ.",
+      "verifyTitle": "Banye na DeHub, na sava gị",
+      "verifyBody": "auth.getToken() na-enye ngwa gị akara ngosi nke DeHub bịanyere aka na ya. Lelee ya na sava gị na ọbá akwụkwọ JWT ọ bụla. Adreesị obere akpa nke onye ọrụ ahụ dị n 'okpuru.",
+      "copy": "Debata",
+      "copied": "E depụtaghachiri"
+    }
   }
 }

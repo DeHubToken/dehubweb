@@ -7360,40 +7360,6 @@
     "planTypeNotAllowed": "Hierdie skepper se plan laat nie hierdie soort boodskap toe nie.",
     "planMinTip": "Fooitjie moet minstens {{amount}} DHB vir hierdie skepper wees."
   },
-  "footer": {
-    "company": "Maatskappy",
-    "about": "Oor",
-    "contact": "Kontak",
-    "careers": "Loopbane",
-    "community": "Gemeenskap",
-    "discord": "Discord",
-    "twitter": "Twitter",
-    "telegram": "Telegram",
-    "github": "Github",
-    "legal": "Wettig",
-    "terms": "Voorwaardes",
-    "privacy": "Privaatheid",
-    "copyright": "Kopiereg © {year} Dhobaverse. Alle regte voorbehou."
-  },
-  "roadmap": {
-    "title": "Padkaart",
-    "description": "Kyk wat kom.",
-    "upcoming": "Komende",
-    "inProgress": "Aan die gang",
-    "completed": "Voltooi"
-  },
-  "featureRequests": {
-    "title": "Versoeke",
-    "description": "Stel 'n kenmerk voor of stem vir bestaande versoeke.",
-    "submitRequest": "Dien versoek in",
-    "vote": "Stem"
-  },
-  "create": {
-    "title": "Skep",
-    "description": "Skep iets nuuts.",
-    "newProject": "Nuwe projek",
-    "newPost": "Nuwe plasing"
-  },
   "credits": {
     "earningsWorth": "Die moeite werd {{amount}}",
     "percentUsed": "{{percent}}% gebruik",
@@ -7435,5 +7401,103 @@
     "back": "Terug na Instellings",
     "signIn": "Teken in om jou rekening te skrap",
     "acknowledge": "Ek het my beursie herstel besonderhede gestoor en verstaan dat skrapping permanent is."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verifiseer",
+      "unreviewed": "Ongeëvalueer",
+      "dev": "Ontwikkelaarvoorskou"
+    },
+    "host": {
+      "close": "Sluit app",
+      "backToStore": "Terug na Apps",
+      "notFound": "Hierdie app is nie in die DeHub App Store nie, of dit is afgeneem.",
+      "badUrl": "Hierdie adres kan nie geopen word as 'n mini-app nie. Dit moet begin met **https://**, of 'n localhost-adres wees in ontwikkelaarmodus.",
+      "readyTimeout": "Hierdie app het nooit **dehub.ready()** aangeroep nie, dus is die splash-skerm na 8 sekondes verberg."
+    },
+    "signIn": {
+      "title": "Inlog by {{name}}?",
+      "body": "Hierdie app sal jou DeHub portemonnei-adres en 'n inlogtoeken kry wat slegs vir hierdie app geld. Dit sal nie toegang tot jou portemonnei, jou fondse of jou DeHub-rekening kry nie.",
+      "cancel": "Nog nie",
+      "confirm": "Inlog"
+    },
+    "store": {
+      "title": "Apps",
+      "seoTitle": "DeHub Apps — mini-apps vir DeHub",
+      "seoDescription": "Mini-apps wat deur iemand vir DeHub gebou word: spelletjies, gereedskappe en meer wat binne DeHub oopgaan, alreeds ingelog, met deel van terug na die voedingslewering.",
+      "intro": "Mini-apps wat deur iemand vir DeHub gebou word. Hulle oop binne DeHub, jy is al ingelog, en elke app toon sy eie werklike webadres.",
+      "buildCta": "Maak 'n app",
+      "emptyTitle": "Geen apps gelys nie",
+      "emptyBody": "Die eerste apps is in voorskou. Bou een en dit kan hier wees."
+    },
+    "dev": {
+      "title": "Maak 'n mini-app",
+      "seoTitle": "Maak 'n DeHub mini-app",
+      "seoDescription": "Maak 'n mini-app vir DeHub: een skrip-tag, inlog met DeHub, deel na die voedingslewering. Kontroleer jou manifest en voorskou jou app in die werklike gasheer.",
+      "intro": "Enige webwerf word 'n DeHub mini-app met een skrip-tag. Kontroleer jou manifest, sien jou voedingskaartjie, en draai jou app binne DeHub voor iemand anders dit sien. Farcaster mini-apps werk soos hulle is.",
+      "backToStore": "Terug na Apps",
+      "checkTitle": "Kontroleer en lê uit",
+      "check": "Kontroleer",
+      "launch": "Lê uit",
+      "badUrl": "Voer 'n **https://**-adres in, of **http://localhost** vir lokaal toetsing.",
+      "localNote": "Lokaal adresses kan nie van ons servers gekontroleer word nie, maar jy kan hulle hier lê om te toets.",
+      "checkFailed": "Die kontrole kon nie uitvoer word nie. Probeer weer.",
+      "passed": "Manifest lyk goed",
+      "failed_one": "{{count}} probleem om te verander",
+      "failed_other": "{{count}} probleme om te verander",
+      "farcasterImport": "Lees vanaf farcaster.json",
+      "cardPreview": "Hoe jou lyn in die voeders lyk",
+      "open": "Oop",
+      "ownershipTitle": "Bewees jy eienaar is van die domein",
+      "ownershipBody": "Teken eenmaal met jou DeHub portemonnee en plak die resultaat in jou dehub.json. Dit koppel die toepassing aan jou rekening, sodat betalings en resensies tot jou kom.",
+      "signFor": "Teken vir {{domain}}",
+      "signNeedsUrl": "Voer jou toepassing se adres bo bo in.",
+      "signInFirst": "Teken in by DeHub om te teken.",
+      "signFailed": "Tekenproses het nie voltooi nie.",
+      "quickstartTitle": "Snel begin",
+      "quickstartBody": "Voeg die SDK by jou blad toe en roep ready() eenmaal op as jou eerste skerm verskyn.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Diens hierdie by /.well-known/dehub.json op jou toepassing se domein. Het jy al 'n farcaster.json? Ons lees dié ook.",
+      "embedTitle": "Voederkart",
+      "embedBody": "Voeg hierdie tag by enige blad toe, en 'n lyn na dié blad sal as 'n kart met 'n knop verskyn wat jou toepassing reg daar oopmaak.",
+      "verifyTitle": "Teken in met DeHub, op jou server",
+      "verifyBody": "auth.getToken() gee jou toepassing 'n token wat deur DeHub geteken is. Kontroleer dit op jou server met enige JWT-biblioteek. Die gebruiker se portemonnee-adres is in sub.",
+      "copy": "Kopieer",
+      "copied": "Gekopieer"
+    }
+  },
+  "footer": {
+    "company": "Maatskappy",
+    "about": "Oor",
+    "contact": "Kontak",
+    "careers": "Loopbane",
+    "community": "Gemeenskap",
+    "discord": "Discord",
+    "twitter": "Twitter",
+    "telegram": "Telegram",
+    "github": "Github",
+    "legal": "Wettig",
+    "terms": "Voorwaardes",
+    "privacy": "Privaatheid",
+    "copyright": "Kopiereg © {year} Dhobaverse. Alle regte voorbehou."
+  },
+  "roadmap": {
+    "title": "Padkaart",
+    "description": "Kyk wat kom.",
+    "upcoming": "Komende",
+    "inProgress": "Aan die gang",
+    "completed": "Voltooi"
+  },
+  "featureRequests": {
+    "title": "Versoeke",
+    "description": "Stel 'n kenmerk voor of stem vir bestaande versoeke.",
+    "submitRequest": "Dien versoek in",
+    "vote": "Stem"
+  },
+  "create": {
+    "title": "Skep",
+    "description": "Skep iets nuuts.",
+    "newProject": "Nuwe projek",
+    "newPost": "Nuwe plasing"
   }
 }

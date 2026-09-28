@@ -5373,5 +5373,69 @@
     "back": "Pada si Eto",
     "signIn": "Wọle lati paarẹ akọọlẹ rẹ",
     "acknowledge": "Mo ti fi àwọn kúlẹ̀kúlẹ̀ ìmúpadàbọ̀sípò àpamọ́wọ́ mi pamọ́, mo sì lóye pé píparẹ́ jẹ́ ohun tí ó wà pẹ́ títí."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Ti jẹrisi",
+      "unreviewed": "A kò ṣe àyẹ̀wò rẹ̀",
+      "dev": "Awotẹlẹ Olùgbéejáde"
+    },
+    "host": {
+      "close": "Sún APP",
+      "backToStore": "Pada si Awọn ohun elo",
+      "notFound": "Ohun-èlò yìí kò sí nínú ilé-ìtajà ohun-èlò DeHub, tàbí wọ́n ti mú un kúrò.",
+      "badUrl": "Àdírẹ̀sì yẹn kò lè ṣí gẹ́gẹ́ bí ohun èlò kékeré. Ó gbọ́dọ̀ bẹ̀rẹ̀ pẹ̀lú https://, tàbí kí ó jẹ́ àdírẹ́sì àlejò àdúgbò ní ipò olùdásílẹ̀.",
+      "readyTimeout": "Ohun-èlò yìí kò pè nídehub.ready (), nítorí náà a fi mànàárà pamọ́ lẹ́yìn ìṣẹ́jú-aaya 8."
+    },
+    "signIn": {
+      "title": "Wọlé sí {{name}}?",
+      "body": "Ohun-èlò yìí yóò gba àdírẹ́sì apamọwọ DeHub rẹ àti àmì ìforúkọsílẹ̀ tí ó kàn ń ṣiṣẹ́ fún ohun-èlò yìí. Kò ní wọlé sí àpamọ́ rẹ, owó rẹ tàbí àkọsílẹ̀ DeHub rẹ.",
+      "cancel": "Kò sí ní ìsinsin yìí",
+      "confirm": "Wọlé"
+    },
+    "store": {
+      "title": "Àwọn ohun-èlò",
+      "seoTitle": "Awọn ohun elo DeHub — awọn ohun elo kekere fun DeHub",
+      "seoDescription": "Àwọn ohun-èlò kéékèèké tí ẹnikẹ́ni kọ́ fún DeHub: àwọn eré, àwọn ohun-èlò àti àwọn mìíràn tí ó ṣí inú DeHub, tí wọ́n ti fọwọ́ sí tẹ́lẹ̀, pẹ̀lú pínpín padà sí oúnjẹ.",
+      "intro": "Àwọn ohun-èlò kéékèèké tí ẹnikẹ́ni kọ́ fún DeHub. Wọ́n ṣí inú DeHub, o ti wọlé tẹ́lẹ̀, gbogbo ohun èlò sì ń fi àdírẹ́sì ayélujára gidi hàn.",
+      "buildCta": "Kọ ohun elo kan",
+      "emptyTitle": "Ko si awọn ohun elo ti a ṣe akojọ sibẹ",
+      "emptyBody": "Àwọn ohun èlò àkọ́kọ́ wà nínú àtúnyẹ̀wò. Kọ́ ọ̀kan ó sì lè wà níbí."
+    },
+    "dev": {
+      "title": "Kọ ohun-èlò kékeré kan",
+      "seoTitle": "Kọ ohun elo DeHub mini kan",
+      "seoDescription": "Kọ ohun-èlò kékeré kan fún DeHub: èdìdì ìkọ̀wé kan, wọlé pẹ̀lú DeHub, pín sí oúnjẹ. Ṣàyẹ̀wò àfihàn rẹ kí o sì ṣe àfihàn ohun-èlò rẹ nínú olùgbé gidi.",
+      "intro": "Eyikeyi oju opo wẹẹbu di ohun elo kekere DeHub pẹlu aami iwe afọwọkọ kan. Ṣàyẹ̀wò ìfihàn rẹ, wo káàdì àjẹsára rẹ, kí o sì ṣiṣẹ́ ohun-èlò rẹ nínú DeHub kí ẹnikẹ́ni mìíràn tó rí i. Àwọn ohun-èlò Farcaster mini máa ń ṣiṣẹ́ bí wọ́n ti wà.",
+      "backToStore": "Pada si Awọn ohun elo",
+      "checkTitle": "Ṣayẹwo ati ṣe ifilọlẹ",
+      "check": "Ṣayẹwo",
+      "launch": "Ifilole",
+      "badUrl": "Tẹ HTTPS:// adirẹsi, tàbí HTTP://localhost fún ìdánwò àdúgbò.",
+      "localNote": "Àwọn àdírẹ́sì àdúgbò kò lè ṣe àyẹ̀wò láti inú àwọn aṣàmúlò wa, ṣùgbọ́n o lè ṣe ìfilọ̀ wọn níbí láti dán wọn wò.",
+      "checkFailed": "Àyẹ̀wò náà kò lè sáré. Gbìyànjú lẹ́ẹ̀kan síi.",
+      "passed": "Ìfihàn náà dára",
+      "failed_one": "{{count}} ìṣòro láti yanjú",
+      "failed_other": "{{count}} ìṣòro láti yanjú",
+      "farcasterImport": "Ka lati farcaster.json",
+      "cardPreview": "Bawo ni ọna asopọ rẹ ṣe dabi ninu ifunni naa",
+      "open": "Sí",
+      "ownershipTitle": "Fi hàn pé ìwọ ni ìkápá náà.",
+      "ownershipBody": "Wọlé lẹ́ẹ̀kan pẹ̀lú àpamọ́wọ́ DeHub rẹ kí o sì fi èsì náà sínú dehub.json rẹ. Ó so ohun-èlò náà pọ̀ mọ́ àkáǹtì rẹ, nítorí náà owó àti àtúnyẹ̀wò dé ọ̀dọ̀ rẹ.",
+      "signFor": "Forukọsilẹ fun {{domain}}",
+      "signNeedsUrl": "Tẹ àdírẹ̀sì ohun-èlò rẹ sí òkè",
+      "signInFirst": "Wọlé sí DeHub láti forúkọ sílẹ̀.",
+      "signFailed": "Ìforúkọsílẹ̀ kò parí.",
+      "quickstartTitle": "Ìbẹ̀rẹ̀ kíákíá",
+      "quickstartBody": "Ṣàfikún SDK sí ojú-ìwé rẹ kí o sì pè setan() lẹ́yìn tí mànàárà àkọ́kọ́ rẹ bá hàn.",
+      "manifestTitle": "Ìfihàn",
+      "manifestBody": "Sin èyí ní /. Well known/dehub.json lórí ìkápá ẹ̀rọ-ayárabíàsá rẹ. Ṣé a ti ní farcaster.json tẹ́lẹ̀? A tún ka ìyẹn.",
+      "embedTitle": "Káàdì oúnjẹ",
+      "embedBody": "Ṣàfikún àmì yìí sí ojú-ìwé èyíkéyìí, ìjápọ sí ojú-ìwé yẹn sì hàn gẹ́gẹ́ bí káàdì pẹ̀lú bọ́tìnì tí ó ṣí ohun èlò rẹ níbẹ̀ yẹn.",
+      "verifyTitle": "Wọle pẹlu DeHub, lori olupin rẹ",
+      "verifyBody": "auth.getToken() fún ohun èlò rẹ ní àmì tí DeHub fọwọ́ sí. Ṣàyẹ̀wò rẹ̀ lórí ẹ̀rọ-ayárabíàsá rẹ pẹ̀lú ilé-ìkówèésí JWT èyíkéyìí. Àdírẹ̀sì àpò-ìfowópamọ́ oníṣe wà ní abẹ́.",
+      "copy": "Ṣe ẹ̀dà",
+      "copied": "Ti dàákọ"
+    }
   }
 }

@@ -7437,5 +7437,68 @@
     "back": "Vissza a beállításokhoz",
     "signIn": "Jelentkezzen be a fiókjába",
     "acknowledge": "Elmentettem a pénztárcám helyreállítási adatait, és tudomásul veszem, hogy a törlés végleges."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Igazolt",
+      "unreviewed": "Nem felülvizsgált",
+      "dev": "Fejlesztői előnézet"
+    },
+    "host": {
+      "close": "Alkalmazás bezárása",
+      "backToStore": "Vissza az alkalmazásokhoz",
+      "notFound": "Ez az alkalmazás nincs a DeHub App Store-ban, vagy eltávolították.",
+      "badUrl": "Ez a cím nem nyitható meg minialkalmazásként. https://kezdetűnek kell lennie, vagy fejlesztői módban helyi házigazdai címnek kell lennie.",
+      "readyTimeout": "Ez az alkalmazás soha nem hívta a dehub.ready () fájlt, így a nyitókép 8 másodperc után el lett rejtve."
+    },
+    "signIn": {
+      "title": "Bejelentkezel ide: {{name}}?",
+      "body": "Ez az alkalmazás megkapja a DeHub pénztárca címét és egy bejelentkezési tokent, amely csak ehhez az alkalmazáshoz működik. Nem fog hozzáférni a pénztárcádhoz, a pénzedhez vagy a DeHub-fiókodhoz.",
+      "cancel": "Most nem",
+      "confirm": "Bejelentkezés"
+    },
+    "store": {
+      "title": "Alkalmazások",
+      "seoTitle": "DeHub Apps — mini alkalmazások DeHub-hoz",
+      "seoDescription": "Bárki által a DeHub számára készített minialkalmazások: játékok, eszközök és egyebek, amelyek a DeHubon belül nyílnak meg, már be vannak jelentkezve, és meg vannak osztva a hírcsatornán.",
+      "intro": "Bárki által a DeHub számára készített minialkalmazások. Megnyílnak a DeHubon belül, Ön már be van jelentkezve, és minden alkalmazás a valódi webcímét mutatja.",
+      "buildCta": "Alkalmazás készítése",
+      "emptyTitle": "Még nincsenek alkalmazások a listában",
+      "emptyBody": "Az első alkalmazások áttekintése folyamatban van. Építs egyet, és itt lehet."
+    },
+    "dev": {
+      "title": "Minialkalmazás készítése",
+      "seoTitle": "DeHub minialkalmazás készítése",
+      "seoDescription": "Hozzon létre egy minialkalmazást a DeHub számára: egy szkriptcímkét, jelentkezzen be a DeHub segítségével, és ossza meg a hírcsatornán. Ellenőrizd a jegyzéket, és tekintsd meg az alkalmazás előnézetét az igazi házigazdánál.",
+      "intro": "Bármely webhely DeHub minialkalmazássá válik egy szkriptcímkével. Ellenőrizd a jegyzéket, nézd meg a feedkártyádat, és futtasd az alkalmazást a DeHubon, mielőtt bárki más látná. A Farcaster minialkalmazások úgy működnek, ahogy vannak.",
+      "backToStore": "Vissza az alkalmazásokhoz",
+      "checkTitle": "Ellenőrzés és indítás",
+      "check": "Ellenőrzés",
+      "launch": "Indítás",
+      "badUrl": "Adjon meg egy https:// címet vagy http://localhost címet a helyi teszteléshez.",
+      "localNote": "A helyi címek nem ellenőrizhetők a szervereinkről, de itt elindíthatja őket a teszteléshez.",
+      "checkFailed": "Az ellenőrzés nem futtatható. Próbálja újra.",
+      "passed": "A manifeszt jól néz ki",
+      "failed_one": "{{count}} megoldandó probléma",
+      "failed_other": "{{count}} megoldandó probléma",
+      "farcasterImport": "Farcaster.json olvasása",
+      "cardPreview": "Így néz ki a hivatkozásod a hírcsatornában",
+      "open": "Megnyitás",
+      "ownershipTitle": "Bizonyítsa, hogy Ön a domain tulajdonosa",
+      "ownershipBody": "Jelentkezz be egyszer a DeHub pénztárcáddal, és illeszd be az eredményt a dehub.json fiókodba. Összekapcsolja az alkalmazást a fiókoddal, hogy a kifizetések és a vélemények eljussanak hozzád.",
+      "signFor": "Írd alá a következőt:{{domain}}",
+      "signNeedsUrl": "Add meg fent az alkalmazásod címét",
+      "signInFirst": "Jelentkezz be a DeHubba a bejelentkezéshez.",
+      "signFailed": "Az aláírás nem fejeződött be.",
+      "quickstartTitle": "Gyors kezdés",
+      "quickstartBody": "Adja hozzá az SDK-t az oldalához, és hívja készenlétben(), amint megjelenik az első képernyő.",
+      "manifestBody": "Tálalja ezt a /.well known/dehub.json címen az alkalmazás domainjén. Már van farcaster.json fiókod? Ezt is olvastuk.",
+      "embedTitle": "Takarmánykártya",
+      "embedBody": "Add hozzá ezt a címkét bármelyik oldalhoz, és az oldalra mutató hivatkozás kártyaként jelenik meg, amelyen egy gomb megnyílik az alkalmazás.",
+      "verifyTitle": "Jelentkezz be a DeHub használatával a szervereden",
+      "verifyBody": "auth.getToken() egy DeHub által aláírt tokent ad az alkalmazásnak. Ellenőrizd a szervereden bármilyen JWT könyvtárban. A felhasználó pénztárcacíme az alkönyvtárban található.",
+      "copy": "Másolás",
+      "copied": "Másoltam."
+    }
   }
 }

@@ -5354,9 +5354,9 @@
     "withdraw": "Tarik",
     "close": "Close",
     "tokenAmount": "{{amount}} token",
+    "subscriptionTokensOnly": "Mung kanggo nggawe nganggo AI",
     "subscriptionTokensValueNote": "Token langganan nyekel nilai dolare. Yen rega token owah sadurunge sampeyan nggunakake, sampeyan bakal weruh luwih akeh utawa luwih sithik token, nanging mesthi bakal tuku jumlah generasi AI sing padha. Dheweke ora bisa ditarik, dikirim utawa didagang.",
-    "topUpEmptyHint": "Tambahake token kanggo digawe karo AI",
-    "subscriptionTokensOnly": "Mung kanggo nggawe nganggo AI"
+    "topUpEmptyHint": "Tambahake token kanggo digawe karo AI"
   },
   "accountDeletion": {
     "title": "Mbusak akun",
@@ -5372,5 +5372,69 @@
     "back": "Balik menyang Setelan",
     "signIn": "Mlebu kanggo mbusak akun sampeyan",
     "acknowledge": "Aku wis nyimpen rincian pemulihan dompetku lan ngerti yen mbusak iku permanen."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verified",
+      "unreviewed": "Unreviewed",
+      "dev": "Prawojogono"
+    },
+    "host": {
+      "close": "Tutup aplikasian",
+      "backToStore": "Kembali ke Aplikasi",
+      "notFound": "Aplikasi ini ga ada di DeHub App Store, atau udah dihilangkan.",
+      "badUrl": "Alamat ini ga bisa dibuka sebagai mini aplikasian, harusan diawali dengan **https://**, atau alamat localhost di modus pengembang.",
+      "readyTimeout": "Aplikasi ini ga pernah panggil **dehub.ready()**, jadi layar splash ga ditutup sampai 8 detik."
+    },
+    "signIn": {
+      "title": "Masuk ke {{name}}?",
+      "body": "Aplikasi ini bakal ambil alamat dompet DeHubmu dan token masuk yang cuma bisa dipake buat aplikasian ini. Ga bakal ambil akses ke dompetmu, uangmu, atau akun DeHubmu.",
+      "cancel": "Nggak sekarang",
+      "confirm": "Masuk"
+    },
+    "store": {
+      "title": "Aplikasi",
+      "seoTitle": "DeHub Aplikasi — mini aplikasian buat DeHub",
+      "seoDescription": "Mini aplikasian yang dibangun buat DeHub oleh siapa saja: game, alat-alat, dan lebih lagi yang buka di dalam DeHub, udah masuk, dengan fitur berbagi ke feed.",
+      "intro": "Mini aplikasian yang dibangun buat DeHub oleh siapa saja. Mereka buka di dalam DeHub, kamu udah masuk, dan setiap aplikasian nampilin alamat web aslinya.",
+      "buildCta": "Buat aplikasian",
+      "emptyTitle": "Ga ada aplikasian yang terdaftar sekarang",
+      "emptyBody": "Aplikasi pertama masih di review. Buat satu dan bisa nampilin di sini."
+    },
+    "dev": {
+      "title": "Buat mini aplikasian",
+      "seoTitle": "Buat mini aplikasian DeHub",
+      "seoDescription": "Buat mini aplikasian buat DeHub: satu tag script, masuk dengan DeHub, berbagi ke feed. Cek manifestmu dan liat pratinjau aplikasianmu di host asli.",
+      "intro": "Setiap website bisa jadi mini aplikasian DeHub dengan satu tag script. Cek manifestmu, liat kartu feedmu, dan jalankan aplikasianmu di dalam DeHub sebelum orang lain liat. Mini aplikasian Farcaster kerja sama aja.",
+      "backToStore": "Kembali ke Aplikasi",
+      "checkTitle": "Cek dan jalankan",
+      "check": "Cek",
+      "launch": "Jalankan",
+      "badUrl": "Masukin alamat **https://**, atau **http://localhost** buat testing lokal.",
+      "localNote": "Alamat lokal ga bisa dicek dari server kami, tapi kamu bisa jalankan di sini buat testing.",
+      "checkFailed": "Cek ga bisa jalan. Coba lagi.",
+      "passed": "Manifest ngarani ngoko",
+      "failed_one": "{{count}} problem wong dikarani",
+      "failed_other": "{{count}} problems wong dikarani",
+      "farcasterImport": "Bacara laning farcaster.json",
+      "cardPreview": "Kanggo ngelihat linkmu kanggo feed",
+      "open": "Bukti",
+      "ownershipTitle": "Kanggo ngarani domainmu",
+      "ownershipBody": "Tulisi ngelamun sing wong dikarani lanisipkeun ke dehub.json. Kaya appmu kanggo akunmu, kanggo payout lan review sing wong kanggo mu.",
+      "signFor": "Tulisi kanggo {{domain}}",
+      "signNeedsUrl": "Isipin alamat appmu kanggo atasan",
+      "signInFirst": "Mangga DeHub kanggo tulisi.",
+      "signFailed": "Tulisan wong wajib.",
+      "quickstartTitle": "Quick start",
+      "quickstartBody": "Isipin SDK ke halamanmu lan panggil ready() kanggo kaler sing wong kanggo pertama.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Servekeun kanggo /.well-known/dehub.json ke domain appmu. Sudah wong farcaster.json? Kami bacara laning.",
+      "embedTitle": "Feed card",
+      "embedBody": "Isipin tag sing wong kanggo halamanmu, lan link ke halamanmu wong ditampilin kanggo card sing wong kanggo button sing wong buka appmu kanggo langsung.",
+      "verifyTitle": "Mangga DeHub, kanggo servermu",
+      "verifyBody": "auth.getToken() wong ngarani token kanggo appmu sing wong tulisi DeHub. Cekkeun ke servermu kanggo any JWT library. Alamat wallet user wong kanggo sub.",
+      "copy": "Copy",
+      "copied": "Kopi"
+    }
   }
 }

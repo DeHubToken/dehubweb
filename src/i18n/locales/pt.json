@@ -7555,5 +7555,69 @@
     "back": "Voltar para as Configurações",
     "signIn": "Inicie sessão na sua conta",
     "acknowledge": "Salvei os detalhes de recuperação da minha carteira e entendi que a exclusão é permanente."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verificado",
+      "unreviewed": "Não avaliado",
+      "dev": "Pré-visualização do programador"
+    },
+    "host": {
+      "close": "Fechar aplicação",
+      "backToStore": "Voltar às aplicações",
+      "notFound": "Este aplicativo não está na DeHub App Store ou foi removido.",
+      "badUrl": "Esse endereço não pode ser aberto como um mini app. Ele deve começar com https://ou ser um endereço localhost no modo de desenvolvedor.",
+      "readyTimeout": "Este aplicativo nunca chamou odehub.ready (), então a tela inicial ficou oculta após 8 segundos."
+    },
+    "signIn": {
+      "title": "Iniciar sessão em {{name}}?",
+      "body": "Esta aplicação receberá o endereço da sua carteira DeHub e um token de início de sessão que só funciona para esta aplicação. Não terá acesso à sua carteira, aos seus fundos ou à sua conta DeHub.",
+      "cancel": "Agora não",
+      "confirm": "Entrar"
+    },
+    "store": {
+      "title": "Aplicações",
+      "seoTitle": "DeHub Apps — mini apps para DeHub",
+      "seoDescription": "Miniaplicativos criados para o DeHub por qualquer pessoa: jogos, ferramentas e muito mais que abrem dentro do DeHub, já conectados, com compartilhamento de volta ao feed.",
+      "intro": "Miniaplicativos criados para o DeHub por qualquer pessoa. Eles abrem dentro do DeHub, você já está conectado e cada aplicativo mostra o seu endereço real da web.",
+      "buildCta": "Criar uma aplicação",
+      "emptyTitle": "Ainda não há aplicações listadas",
+      "emptyBody": "As primeiras aplicações estão em análise. Construa um e pode estar aqui."
+    },
+    "dev": {
+      "title": "Crie uma mini app",
+      "seoTitle": "Crie uma mini app DeHub",
+      "seoDescription": "Crie uma mini aplicação para o DeHub: uma etiqueta de script, inicie sessão com o DeHub, partilhe no feed. Verifique o seu manifesto e pré-visualize a sua aplicação no anfitrião real.",
+      "intro": "Qualquer site se torna um mini app DeHub com uma tag script. Verifique o seu manifesto, veja o seu cartão de feed e execute a sua aplicação dentro do DeHub antes que mais alguém o veja. Os mini-aplicativos Farcaster funcionam como estão.",
+      "backToStore": "Voltar às aplicações",
+      "checkTitle": "Verificar e iniciar",
+      "check": "Verificar",
+      "launch": "Lançamento",
+      "badUrl": "Insira um endereço https://ou http://localhost para testes locais.",
+      "localNote": "Os endereços locais não podem ser verificados nos nossos servidores, mas pode iniciá-los aqui para testar.",
+      "checkFailed": "A verificação não pôde ser executada. Tente novamente.",
+      "passed": "O manifesto parece bom",
+      "failed_one": "{{count}} problema para corrigir",
+      "failed_other": "{{count}} problemas para corrigir",
+      "farcasterImport": "Lido de farcaster.json",
+      "cardPreview": "Como o seu link aparece no feed",
+      "open": "Transparente",
+      "ownershipTitle": "Prove que é o proprietário do domínio",
+      "ownershipBody": "Assine uma vez com a sua carteira DeHub e cole o resultado no seu dehub.json. Ele vincula o aplicativo à sua conta, para que os pagamentos e as avaliações cheguem até você.",
+      "signFor": "Assinar para {{domain}}",
+      "signNeedsUrl": "Introduza o endereço da sua aplicação acima",
+      "signInFirst": "Inicie sessão no DeHub para iniciar sessão.",
+      "signFailed": "A assinatura não foi concluída.",
+      "quickstartTitle": "Início rápido",
+      "quickstartBody": "Adicione o SDK à sua página e chame ready() assim que a primeira tela for exibida.",
+      "manifestTitle": "Manifesto",
+      "manifestBody": "Faça isso em /.well-known/dehub.json no domínio do seu aplicativo. Já tem um farcaster.json? Também lemos isso.",
+      "embedTitle": "Cartão de alimentação",
+      "embedBody": "Adicione esta etiqueta a qualquer página e um link para essa página aparece como um cartão com um botão que abre a aplicação ali mesmo.",
+      "verifyTitle": "Inicie sessão com o DeHub, no seu servidor",
+      "verifyBody": "auth.getToken() dá ao seu aplicativo um token assinado pelo DeHub. Verifique no seu servidor com qualquer biblioteca JWT. O endereço da carteira do utilizador está em sub.",
+      "copy": "Copiar",
+      "copied": "Copiado"
+    }
   }
 }

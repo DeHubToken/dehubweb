@@ -5379,5 +5379,69 @@
     "back": "Tilbake til innstillinger",
     "signIn": "Logg inn for å slette kontoen din",
     "acknowledge": "Jeg har lagret gjenopprettingsdetaljene for lommeboken min og forstår at slettingen er permanent."
+  },
+  "miniApps": {
+    "badge": {
+      "verified": "Verifisert",
+      "unreviewed": "Uvurdert",
+      "dev": "Utviklerforhåndsvisning"
+    },
+    "host": {
+      "close": "Lukk app",
+      "backToStore": "Tilbake til Apps",
+      "notFound": "Denne appen finnes ikke i DeHub App Store, eller den er fjernet.",
+      "badUrl": "Denne adressen kan ikke åpnes som en mini-app. Den må starte med https://, eller være en localhost-adresse i utviklermodus.",
+      "readyTimeout": "Denne appen kalte aldri dehub.ready(), så startskjermen ble skjult etter 8 sekunder."
+    },
+    "signIn": {
+      "title": "Logg inn på {{name}}?",
+      "body": "Denne appen vil få din DeHub-lommebokadresse og en innloggingstoken som bare gjelder for denne appen. Den vil ikke få tilgang til din lommebok, dine midler eller din DeHub-konto.",
+      "cancel": "Ikke nå",
+      "confirm": "Logg inn"
+    },
+    "store": {
+      "title": "Apps",
+      "seoTitle": "DeHub Apps — mini-apper for DeHub",
+      "seoDescription": "Mini-apper bygget for DeHub av alle: spill, verktøy og mer som åpnes inne i DeHub, allerede logget inn, med deling tilbake til feed.",
+      "intro": "Mini-apper bygget for DeHub av alle. De åpnes inne i DeHub, du er allerede logget inn, og hver app viser sin sanne nettadresse.",
+      "buildCta": "Bygg en app",
+      "emptyTitle": "Ingen apps listet ennå",
+      "emptyBody": "De første appene er under vurdering. Bygg en og den kan være her."
+    },
+    "dev": {
+      "title": "Bygg en mini-app",
+      "seoTitle": "Bygg en DeHub mini-app",
+      "seoDescription": "Bygg en mini-app for DeHub: ett skript-tag, logg inn med DeHub, del til feed. Sjekk manifestet ditt og forhåndsvis appen i den sanne hosten.",
+      "intro": "Enhver nettside blir en DeHub mini-app med ett skript-tag. Sjekk manifestet ditt, se feed-kortet ditt, og kjør appen din inne i DeHub før noen andre ser den. Farcaster mini-apper fungerer som de er.",
+      "backToStore": "Tilbake til Apps",
+      "checkTitle": "Sjekk og kjør",
+      "check": "Sjekk",
+      "launch": "Kjør",
+      "badUrl": "Skriv inn en https://-adresse, eller http://localhost for lokal testing.",
+      "localNote": "Lokale adresser kan ikke sjekkes fra våre servere, men du kan kjøre dem her for å teste.",
+      "checkFailed": "Sjekken kunne ikke kjøres. Prøv igjen.",
+      "passed": "Manifest ser ut bra",
+      "failed_one": "{{count}} problem å fikse",
+      "failed_other": "{{count}} problemer å fikse",
+      "farcasterImport": "Les fra farcaster.json",
+      "cardPreview": "Hvordan din lenke ser ut i feedet",
+      "open": "Åpen",
+      "ownershipTitle": "Bekreft at du eier domenet",
+      "ownershipBody": "Signer en gang med din DeHub-lommebok og lim inn resultatet i din dehub.json. Dette kobler appen til din konto, slik at utbetalinger og anmeldelser når deg.",
+      "signFor": "Signer for {{domain}}",
+      "signNeedsUrl": "Skriv inn appens adresse over",
+      "signInFirst": "Logg inn på DeHub for å signere.",
+      "signFailed": "Signeringen fullførte seg ikke.",
+      "quickstartTitle": "Snabbstart",
+      "quickstartBody": "Legg til SDK på siden din og kall på ready() når din første skjerm vises.",
+      "manifestTitle": "Manifest",
+      "manifestBody": "Server denne på /.well-known/dehub.json på appens domene. Har du allerede en farcaster.json? Vi leser også det.",
+      "embedTitle": "Feed-kort",
+      "embedBody": "Legg til denne taggen på noen side, og en lenke til siden vises som et kort med en knapp som åpner appen rett der.",
+      "verifyTitle": "Logg inn med DeHub, på serveren",
+      "verifyBody": "auth.getToken() gir appen en token signert av DeHub. Sjekk den på serveren med noen JWT-bibliotek. Brukerens lommeboksadresse er i sub.",
+      "copy": "Kopier",
+      "copied": "Kopiert"
+    }
   }
 }
