@@ -4335,7 +4335,6 @@
     "legacyPlanMigrates": "Захаванне мігруе гэты план з цэнамі ў старых токенах на цэны ў доларах па далістынгавым курсе.",
     "tokenAmount": "{{amount}} токенаў",
     "preListingTokenAmount": "Далістынгавая сума токенаў",
-    "tokensStayInTreasury": "Вашы токены DeHub застаюцца пад апекай казначэйства DeHub і не прадаюцца. Стваральнік атрымлівае баланс падпіскі ў дэнамінацыі USDT.",
     "tokenCheckoutNotReady": "Афармленне падпіскі на токены не гатова — паспрабуйце зноў праз некаторы час",
     "tokenQuoteUnavailable": "Жывая каціроўка токенаў недаступная",
     "tokenEstimate": "≈ {{amount}} токенаў",
@@ -4345,17 +4344,10 @@
     "subscribedToast": "Падпісвацца",
     "confirmSubscribeTo": "Падпішыцеся на {{plan}} для {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} на хуткасці папярэдняга спісу",
-    "withdraw": "Адклікаць",
-    "earningsTitle": "Даходы ад падпіскі",
-    "earningsAvailable": "Даступна",
-    "earningsPending": "У чаканні",
-    "withdrawableSoon": "Неўзабаве прыбытак ад падпіскі будзе зняты",
     "youPayNow": "Вы плаціце",
-    "usdtSent": "Адпраўлена {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Даступна для вываду на Base",
-    "earningsUsdtPending": "У USDT · чакае рэзерву казначэйства",
-    "buyersPayTokenAmount": "Пакупнікі плацяць паказаную суму токенаў DeHub па далістынгавым курсе. Вы атрымліваеце USD-эквівалент у выглядзе балансу USDT.",
-    "creditsCreator": "Крэдыты стваральніку {{amount}} USDT"
+    "paidToCreatorWallet": "Перайсці прама да кашалька стваральніка",
+    "creatorPaidDirectNote": "Доля стваральніка ідзе непасрэдна ў яго кашалёк, калі вы падпісваецеся. DeHub захоўвае невялікую плату за платформу.",
+    "creatorEarnsDirect": "Абаненты плацяць у токенах DeHub. Ваша доля прыпадае на ваш кашалёк, калі яны падпісваюцца, менш платы за платформу для вашага ўзроўню значка."
   },
   "live": {
     "chatJoined": "далучыўся",

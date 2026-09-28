@@ -2665,7 +2665,6 @@
     "legacyPlanMigrates": "الهجرة التوفيرية لهذا الخطة المسعرة بالتوكنات القديمة إلى تسعير الدولار بالسعر قبل الإدراج.",
     "tokenAmount": "{{amount}} توكن",
     "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
-    "tokensStayInTreasury": "تبقى توكنات DeHub الخاصة بك في عهدة خزانة DeHub ولا يتم بيعها. يتلقى المنشئ رصيد اشتراك مقوم بالدولار الأمريكي.",
     "tokenCheckoutNotReady": "نافذة دفع اشتراك التوكن غير جاهزة - يرجى المحاولة مرة أخرى قريبًا",
     "tokenQuoteUnavailable": "عرض سعر التوكن المباشر غير متاح",
     "tokenEstimate": "≈ {{amount}} توكن",
@@ -2724,17 +2723,10 @@
     "subscribedToast": "مشترك",
     "confirmSubscribeTo": "اشترك في {{plan}} للحصول على {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} بسعر ما قبل الإدراج",
-    "withdraw": "اسحب",
-    "earningsTitle": "أرباح الاشتراك",
-    "earningsAvailable": "متاح",
-    "earningsPending": "قيد الانتظار",
-    "withdrawableSoon": "أرباح الاشتراك رح تصير قابلة للسحب قريبًا",
     "youPayNow": "تدفع",
-    "usdtSent": "انرسل {{amount}} USDT",
-    "earningsWithdrawableOnBase": "متاح للسحب على Base",
-    "earningsUsdtPending": "مقوّم بالـ USDT · بانتظار احتياطي الخزينة",
-    "buyersPayTokenAmount": "يدفع المشترون مبلغ توكنات DeHub المعروض بالسعر قبل الإدراج. تتلقى قيمة الدولار الأمريكي كرصيد USDT.",
-    "creditsCreator": "يعطي الائتمان للمنشئ {{amount}} USDT"
+    "paidToCreatorWallet": "يروح دغري على محفظة المبدع",
+    "creatorPaidDirectNote": "حصّة المبدع تروح مباشرة لمحفظته بلحظة تشترك. ديهب ياخذ نسبة بسيطة رسوم للمنصة.",
+    "creatorEarnsDirect": "المشتركون يدفعون بتوكنات DeHub. حصتك توصل لمحفظتك بنفس لحظة اشتراكهم، مطروح منها رسوم المنصة حسب فئة البادج مالتك."
   },
   "live": {
     "chatJoined": "دخل",

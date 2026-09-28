@@ -2675,7 +2675,6 @@
     "legacyPlanMigrates": "સેવિંગ આ લેગસી ટોકન-પ્રાઇસ્ડ પ્લાનને પ્રી-લિસ્ટિંગ રેટ પર ડોલર પ્રાઇસિંગમાં માઇગ્રેટ કરે છે.",
     "tokenAmount": "{{amount}} ટોકન્સ",
     "preListingTokenAmount": "પ્રી-લિસ્ટિંગ ટોકન રકમ",
-    "tokensStayInTreasury": "તમારા DeHub ટોકન્સ DeHub ટ્રેઝરી કસ્ટડીમાં રહે છે અને વેચવામાં આવતા નથી. નિર્માતાને USDT-ડેનોમિનેટેડ સબ્સ્ક્રિપ્શન બેલેન્સ પ્રાપ્ત થાય છે.",
     "tokenCheckoutNotReady": "ટોકન સબ્સ્ક્રિપ્શન ચેકઆઉટ તૈયાર નથી — કૃપા કરીને ટૂંક સમયમાં ફરી પ્રયાસ કરો",
     "tokenQuoteUnavailable": "લાઇવ ટોકન ક્વોટ અનુપલબ્ધ",
     "tokenEstimate": "≈ {{amount}} ટોકન્સ",
@@ -2763,17 +2762,10 @@
     "subscribedToast": "સબ્સ્ક્રાઇબ થયેલ",
     "confirmSubscribeTo": "{{plan}} ને {{price}} / {{duration}} માટે સબ્સ્ક્રાઇબ કરો.",
     "atPreListingRate": "પ્રિ-લિસ્ટિંગ દર પર {{amount}}",
-    "withdraw": "ઉપાડ",
-    "earningsTitle": "સબ્સ્ક્રિપ્શન કમાણી",
-    "earningsAvailable": "ઉપલબ્ધ",
-    "earningsPending": "બાકી",
-    "withdrawableSoon": "સબ્સ્ક્રિપ્શનની કમાણી ટૂંક સમયમાં ઉપાડી શકાશે",
     "youPayNow": "તમે ચૂકવણી કરો છો",
-    "usdtSent": "{{amount}} USDT મોકલાયા",
-    "earningsWithdrawableOnBase": "Base પર ઉપાડવા માટે ઉપલબ્ધ",
-    "earningsUsdtPending": "USDT માં · ટ્રેઝરી રિઝર્વની રાહમાં",
-    "buyersPayTokenAmount": "ખરીદદારો પ્રી-લિસ્ટિંગ રેટ પર દર્શાવેલ DeHub ટોકન રકમ ચૂકવે છે. તમને USDT બેલેન્સ તરીકે USD મૂલ્ય પ્રાપ્ત થાય છે.",
-    "creditsCreator": "સર્જક {{amount}} ને USDT ક્રેડિટ્સ"
+    "paidToCreatorWallet": "સીધા સર્જકના વૉલેટ પર જાય છે",
+    "creatorPaidDirectNote": "જ્યારે તમે સબ્સ્ક્રાઇબ કરો છો ત્યારે ક્રિએટરનો શેર સીધો તેમના વૉલેટમાં જાય છે. DeHub એક નાની પ્લેટફોર્મ ફી રાખે છે.",
+    "creatorEarnsDirect": "સબ્સ્ક્રાઇબર્સ DeHub ટોકન્સમાં ચૂકવણી કરે છે. જ્યારે તેઓ સબ્સ્ક્રાઇબ કરે છે ત્યારે તમારા શેર તમારા વૉલેટમાં ઉતરી જાય છે, તમારા બેજ ટાયર માટે પ્લેટફોર્મ ફી ઓછી હોય છે."
   },
   "live": {
     "chatJoined": "જોડાયા",

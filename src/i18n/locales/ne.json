@@ -4424,7 +4424,6 @@
     "legacyPlanMigrates": "बचतले यो पुरानो टोकन-मूल्य योजनालाई पूर्व-सूचीकरण दरमा डलर मूल्य निर्धारणमा स्थानान्तरण गर्दछ।",
     "tokenAmount": "{{amount}} टोकन",
     "preListingTokenAmount": "पूर्व-सूचीकरण टोकन रकम",
-    "tokensStayInTreasury": "तपाईंको DeHub टोकनहरू DeHub कोषको हिरासतमा रहन्छन् र बेचिँदैनन्। सिर्जनाकर्ताले USDT-निर्दिष्ट सदस्यता ब्यालेन्स प्राप्त गर्दछ।",
     "tokenCheckoutNotReady": "टोकन सदस्यता चेकआउट तयार छैन — कृपया केही बेरमा फेरि प्रयास गर्नुहोस्",
     "tokenQuoteUnavailable": "लाइभ टोकन उद्धरण अनुपलब्ध",
     "tokenEstimate": "≈ {{amount}} टोकन",
@@ -4432,17 +4431,10 @@
     "subscribedToast": "सदस्यता लिइएको",
     "confirmSubscribeTo": "{{price}}/{{duration}} को लागि {{plan}} मा सदस्यता लिनुहोस् ।",
     "atPreListingRate": "{{amount}} पूर्व - सूचीकरण दरमा",
-    "withdraw": "फिर्ता लिनुहोस्",
-    "earningsTitle": "सदस्यता आम्दानी",
-    "earningsAvailable": "उपलब्ध",
-    "earningsPending": "विचाराधीन",
-    "withdrawableSoon": "सदस्यता आम्दानी चाँडै फिर्ता लिन सकिने छ",
     "youPayNow": "तपाईंले भुक्तानी गर्नुहुन्छ",
-    "usdtSent": "{{amount}} USDT पठाइयो",
-    "earningsWithdrawableOnBase": "Base मा झिक्न उपलब्ध",
-    "earningsUsdtPending": "USDT मा · ट्रेजरी रिजर्भ पर्खाइमा",
-    "buyersPayTokenAmount": "क्रेताहरूले पूर्व-सूचीकरण दरमा प्रदर्शित DeHub टोकन रकम तिर्छन्। तपाईंले USDT ब्यालेन्सको रूपमा USD मूल्य प्राप्त गर्नुहुन्छ।",
-    "creditsCreator": "सिर्जनाकर्तालाई क्रेडिट गर्दछ {{amount}} USDT"
+    "paidToCreatorWallet": "सिधै सिर्जनाकर्ताको वालेटमा जान्छ",
+    "creatorPaidDirectNote": "तपाईंले सदस्यता लिएको क्षणमा सिर्जनाकर्ताको सेयर सिधै उनीहरूको वालेटमा जान्छ । DeHub ले सानो प्लेटफर्म शुल्क राख्छ ।",
+    "creatorEarnsDirect": "ग्राहकहरूले DeHub टोकनमा भुक्तानी गर्छन् । उनीहरूले सदस्यता लिएपछि तपाईंको शेयर तपाईंको वालेटमा अवतरण हुन्छ, तपाईंको ब्याज टियरको लागि प्लेटफर्म शुल्क कम हुन्छ ।"
   },
   "live": {
     "chatJoined": "सामेल भए",

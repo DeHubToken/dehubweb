@@ -2661,7 +2661,6 @@
     "legacyPlanMigrates": "सेविंग ई लेगेसी टोकन-प्राइज्ड प्लान के प्री-लिस्टिंग रेट पऽ डॉलर प्राइसिंग में माइग्रेट करेला।",
     "tokenAmount": "{{amount}} टोकन",
     "preListingTokenAmount": "प्री-लिस्टिंग टोकन अमाउंट",
-    "tokensStayInTreasury": "तोहार DeHub टोकन DeHub ट्रेजरी कस्टडी में रहs आ बिके नइखे। क्रिएटर के USDT-डिनॉमिनेटेड सब्सक्रिप्शन बैलेंस मिली।",
     "tokenCheckoutNotReady": "टोकन सब्सक्रिप्शन चेकआउट तैयार नइखे — कृपया जल्दी दोबारा कोशिश करs",
     "tokenQuoteUnavailable": "लाइव टोकन कोट अनुपलब्ध",
     "tokenEstimate": "≈ {{amount}} टोकन",
@@ -2749,17 +2748,10 @@
     "subscribedToast": "सब्सक्राइब कइल",
     "confirmSubscribeTo": "{{plan}} के सब्सक्राइब करीं {{price}} / {{duration}} खातिर.",
     "atPreListingRate": "{{amount}} प्री-लिस्टिंग दर पर",
-    "withdraw": "हटावे के लेल",
-    "earningsTitle": "लाभ कैलक्यूलेटर",
-    "earningsAvailable": "उपलब्ध कराई गई",
-    "earningsPending": "प्रतीक्षा में हलचल",
-    "withdrawableSoon": "जदयू के छात्र - छात्राएं जल्द होंगी भर्ती",
     "youPayNow": "करवा लगाई के",
-    "usdtSent": "{{amount}} USDT भेजल गेल",
-    "earningsWithdrawableOnBase": "Base पर निकासे लेल उपलब्ध",
-    "earningsUsdtPending": "USDT में · ट्रेजरी रिजर्व के इंतजार में",
-    "buyersPayTokenAmount": "खरीददार प्री-लिस्टिंग रेट पऽ देखावल DeHub टोकन अमाउंट देबे। तू USDT बैलेंस के रूप में USD वैल्यू पाई।",
-    "creditsCreator": "रचनाकार {{amount}} के USDT क्रेडिट"
+    "paidToCreatorWallet": "जा, जा रे जा, जा रे जा रे जा ओ पगली",
+    "creatorPaidDirectNote": "सब्सक्राइब करते ही क्रिएटर के हिस्सा सीधे ओकर वॉलेट में चल जा हे। DeHub एगो छोट प्लेटफॉर्म फीस रखऽ हे।",
+    "creatorEarnsDirect": "डेल्फी पर होल्डिंग बोनस । जब आप सब्सक्राइब करे तब आपकी शेयर आपके वॉलेट में लैंड करे, आपके बैज टियर के लिए प्लेटफॉर्म फीस कम हो जाए ।"
   },
   "live": {
     "chatJoined": "जुड़लन",

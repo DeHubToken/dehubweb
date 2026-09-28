@@ -4498,7 +4498,6 @@
     "legacyPlanMigrates": "Saving migrates this legacy token-priced plan to dollar pricing at the pre-listing rate.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Pre-listing token amount",
-    "tokensStayInTreasury": "Your DeHub tokens stay in DeHub treasury custody and are not sold. The creator receives a USDT-denominated subscription balance.",
     "tokenCheckoutNotReady": "The token subscription checkout is not ready — please try again shortly",
     "tokenQuoteUnavailable": "Live token quote unavailable",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -4506,17 +4505,10 @@
     "subscribedToast": "Subscribed",
     "confirmSubscribeTo": "Subscribe to {{plan}} for {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} at the pre-listing rate",
-    "withdraw": "Withdraw",
-    "earningsTitle": "Subscription earnings",
-    "earningsAvailable": "Available",
-    "earningsPending": "Pending",
-    "withdrawableSoon": "Subscription earnings will be withdrawable soon",
     "youPayNow": "You pay",
-    "usdtSent": "{{amount}} USDT sent",
-    "earningsWithdrawableOnBase": "Available to withdraw on Base",
-    "earningsUsdtPending": "USDT-denominated · pending treasury reserve",
-    "buyersPayTokenAmount": "Buyers pay the displayed DeHub token amount at the pre-listing rate. You receive the USD value as a USDT balance.",
-    "creditsCreator": "Credits the creator {{amount}} USDT"
+    "paidToCreatorWallet": "Goes straight to the creator's wallet",
+    "creatorPaidDirectNote": "The creator's share goes straight to their wallet the moment you subscribe. DeHub keeps a small platform fee.",
+    "creatorEarnsDirect": "Subscribers pay in DeHub tokens. Your share lands in your wallet the moment they subscribe, less the platform fee for your badge tier."
   },
   "live": {
     "chatJoined": "joined",
