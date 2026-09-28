@@ -6955,6 +6955,13 @@ export type Database = {
       }
     }
     Functions: {
+      account_erasure_storage: {
+        Args: { p_user_id?: string; p_wallet: string }
+        Returns: {
+          bucket_id: string
+          name: string
+        }[]
+      }
       admin_onboarding_dropoff: {
         Args: { p_since: string }
         Returns: {
@@ -7346,6 +7353,10 @@ export type Database = {
         Returns: Json
       }
       end_inactive_stages: { Args: never; Returns: number }
+      erase_account_app_data: {
+        Args: { p_user_id?: string; p_wallet: string }
+        Returns: undefined
+      }
       get_affiliate_cta_stats: {
         Args: never
         Returns: {
