@@ -381,8 +381,8 @@ export const VideoSlide = memo(function VideoSlide({
     )}>
       <div className="absolute inset-0 bg-white/20" />
       <div
-        className="absolute top-0 left-0 bottom-0 bg-white/80"
-        style={{ width: `${progress * 100}%` }}
+        className="absolute inset-0 origin-left bg-white/80"
+        style={{ transform: `scaleX(${Math.min(1, Math.max(0, progress))})` }}
       />
     </div>
   );
