@@ -338,6 +338,10 @@
       "title": "Rekeningmarktplaas — DeHub",
       "description": "Koop en verkoop gevestigde DeHub-rekeninge vir DHB. Blaai rekeninge deur volgers, opladings en ouderdom — die handvat, plasings, volgers en sertifikaat-regte word almal oorgedra, en betaling gaan direk na die verkoper."
     },
+    "am": {
+      "title": "የመለያ የገበያ ቦታ — DeHub",
+      "description": "ለ DHB የተቋቋሙ የ DeHub መለያዎችን ይግዙ እና ይሸጡ ። በተከታዮች ፣ በሰቀላዎች እና በእድሜዎች መለያዎችን ያስሱ — እጀታ ፣ ልጥፎች ፣ ተከታዮች እና የባጅ መብቶች ሁሉም ማስተላለፍ ፣ እና ክፍያ በቀጥታ ወደ ሻጩ ይሄዳል ።"
+    },
     "ar": {
       "title": "سوق الحسابات — DeHub",
       "description": "بِع واشترِ حسابات DeHub القائمة بـ DHB. تصفّح الحسابات حسب المتابعين والرفوعات والقِدم — ينتقل الاسم والمنشورات والمتابعون واستحقاقات الشارات كلها، ويذهب الدفع مباشرةً إلى البائع."
@@ -393,6 +397,10 @@
     "fr": {
       "title": "Marché des comptes — DeHub",
       "description": "Achetez et vendez des comptes DeHub établis pour DHB. Parcourez les comptes par nombre d'abonnés, téléchargements et ancienneté — l'identifiant, les publications, les abonnés et les droits de badge se transfèrent tous, et le paiement va directement au vendeur."
+    },
+    "gu": {
+      "title": "એકાઉન્ટ માર્કેટપ્લેસ — DeHub",
+      "description": "DHB માટે સ્થાપિત DeHub અકાઉન્ટ્સ ખરીદો અને વેચો. ફોલોવર્સ, અપલોડ્સ અને ઉમર અનુસાર અકાઉન્ટ્સ બ્રાઉઝ કરો — હેન્ડલ, પોસ્ટ્સ, ફોલોવર્સ અને બેડજ એન્ટાઇટલમેન્ટ્સ બધા ટ્રાન્સફર થાય છે, અને ભરાવો સીધા વેચાણકારને જાય છે."
     },
     "hi": {
       "title": "अकाउंट मार्केटप्लेस — DeHub",
@@ -478,6 +486,10 @@
       "title": "Account Marketplace — DeHub",
       "description": "Koop en verkoop gevestigde DeHub-accounts voor DHB. Blader door accounts op volgers, uploads en leeftijd — de handle, berichten, volgers en badge-rechten worden allemaal overgedragen, en de betaling gaat rechtstreeks naar de verkoper."
     },
+    "pa": {
+      "title": "ਖਾਤਾ ਮਾਰਕੀਟਪਲੇਸ — DeHub",
+      "description": "DHB ਲਈ ਸਥਾਪਿਤ DeHub ਖਾਤੇ ਖਰੀਦੋ ਅਤੇ ਵੇਚੋ. ਪੈਰੋਕਾਰਾਂ, ਅਪਲੋਡਾਂ ਅਤੇ ਉਮਰ ਦੁਆਰਾ ਖਾਤਿਆਂ ਨੂੰ ਬ੍ਰਾਉਜ਼ ਕਰੋ — ਹੈਂਡਲ, ਪੋਸਟਾਂ, ਪੈਰੋਕਾਰਾਂ ਅਤੇ ਬੈਜ ਦੇ ਹੱਕ ਸਾਰੇ ਟ੍ਰਾਂਸਫਰ, ਅਤੇ ਭੁਗਤਾਨ ਸਿੱਧੇ ਵਿਕਰੇਤਾ ਨੂੰ ਜਾਂਦਾ ਹੈ."
+    },
     "pl": {
       "title": "Rynek kont — DeHub",
       "description": "Kupuj i sprzedawaj ustalone konta DeHub za DHB. Przeglądaj konta według liczby obserwujących, przesyłek i wieku — uchwyt, posty, obserwujący i uprawnienia do odznak są przenoszone, a płatność trafia bezpośrednio do sprzedawcy."
@@ -494,9 +506,17 @@
       "title": "Маркетплейс аккаунтов — DeHub",
       "description": "Покупайте и продавайте установленные аккаунты DeHub за DHB. Просматривайте аккаунты по количеству подписчиков, загрузкам и возрасту — имя, посты, подписчики и права на значки передаются, а платеж идет напрямую продавцу."
     },
+    "sa": {
+      "title": "उपयोगकर्ता समीक्षा - देहरादून",
+      "description": "विक्रीणीते च देवेशि देवेशि देवेशि विक्रीणीते च । अनुयायिकाः, अपलोडः, आयुः — ह्याण्डलः, पोस्टः, अनुयायीः, बैज अधिकारः सर्वे हस्तांतरण, च भुगतान विक्रेता प्रत्यक्ष जाता है ।"
+    },
     "si": {
       "title": "ගිණුම් වෙළඳ පොළ — DeHub",
       "description": "DHB සඳහා ස්ථාපිත DeHub ගිණුම් ගැනුම් කරන්න සහ විකිණින්න. අනුගාමිකයින්, උඩුගත කිරීම් සහ වයස අනුව ගිණුම් ගවේෂණ කරන්න — හසුරුව, පෝස්ට්, අනුගාමිකයින් සහ බාජ් අයිතිවාසිකම් සියල්ල ස්ථානාන්තරණය වේ, සහ ගෙවීම විකිණුම්කරුට සරලව යায়."
+    },
+    "sr": {
+      "title": "Тржиште рачуна — DeHub",
+      "description": "Купите и продајте успостављене DeHub рачуне за DHB. Претражите рачуне према пратитељима, уплоадовима и старости — хандле, постови, пратитељи и ентитлети за ознаке се преносе, а плаћа се директно продавачу."
     },
     "sv": {
       "title": "Account Marketplace — DeHub",
@@ -866,6 +886,10 @@
       "title": "Omskakelaar — voer 'n video in DeHub in",
       "description": "Plak 'n skakel van YouTube, TikTok, Instagram, X en meer, en publiseer dit as 'n DeHub-pos."
     },
+    "am": {
+      "title": "ኮንቬርተር — ቪዲዮ ወደ DeHub ያስገቡ",
+      "description": "ከዩቲዩብ ፣ ቲክቶክ ፣ ኢንስታግራም ፣ ኤክስ እና ሌሎችንም አገናኝ ይለጥፉ እና እንደ DeHub ልጥፍ ያትሙ ።"
+    },
     "ar": {
       "title": "محول — استيراد فيديو إلى DeHub",
       "description": "الصق رابطًا من YouTube أو TikTok أو Instagram أو X وغيرها، وانشره كمنشور على DeHub."
@@ -1094,6 +1118,10 @@
       "title": "Konvertuesi — importo një video në DeHub",
       "description": "Ngjit një lidhje nga YouTube, TikTok, Instagram, X dhe më shumë, dhe publikoje atë si një postim DeHub."
     },
+    "sr": {
+      "title": "Преводилац — унеси видео у ДеХаб",
+      "description": "Улепи линк са Јутуба, ТикТока, Инстаграма, Екс-а и више, и објави га као пост у ДеХабу."
+    },
     "sv": {
       "title": "Konverterare — importera en video till DeHub",
       "description": "Klistra in en länk från YouTube, TikTok, Instagram, X och mer, och publicera den som ett DeHub-inlägg."
@@ -1160,6 +1188,10 @@
       "title": "DePin | Community-Powered Media Infrastructure | DeHub",
       "description": "DeHub DePin laat mense opslag, bandwydte en bereken bydra om media deur 'n veerkragtige netwerk te host, te transkodeer en af te lewer."
     },
+    "am": {
+      "title": "DePin | የማህበረሰብ-ተኮር የመገናኛ ብዙሃን መሠረተ ልማት | DeHub",
+      "description": "DeHub DePin ሰዎች በጠንካራ አውታረ መረብ አማካኝነት ሚዲያዎችን ለማስተናገድ ፣ ለማስተላለፍ እና ለማድረስ ለማገዝ ማከማቻ ፣ የመተላለፊያ ይዘት እና ኮምፕዩተር አስተዋፅዖ እንዲያደርጉ ያስችላቸዋል ።"
+    },
     "ar": {
       "title": "DePin | بنية تحتية للوسائط يشغّلها المجتمع | DeHub",
       "description": "يتيح DePin من DeHub للناس المساهمة بالتخزين وعرض النطاق والحوسبة للمساعدة في استضافة الوسائط وتحويلها وتوصيلها عبر شبكة مرنة."
@@ -1215,6 +1247,10 @@
     "fr": {
       "title": "DePin | Infrastructure médiatique alimentée par la communauté | DeHub",
       "description": "DeHub DePin permet aux gens de contribuer du stockage, de la bande passante et de la puissance de calcul pour aider à héberger, transcoder et livrer des médias via un réseau résilient."
+    },
+    "gu": {
+      "title": "DePin | સમુદાય-પાવરડ મીડિયા ઇન્ફ્રાસ્ટ્રક્ચર | DeHub",
+      "description": "DeHub DePin લોકોને સ્ટોરેજ, બેન્ડવિડ્થ અને કમ્પ્યુટર આપવા દે છે જેથી તેઓ મીડિયાને રિઝિલિયન્ટ નેટવર્ક દ્વારા હોસ્ટ, ટ્રાન્સકોડ અને ડિલિવર કરી શકે."
     },
     "he": {
       "title": "DePin | תשתית מדיה מונעת קהילה | DeHub",
@@ -1308,6 +1344,10 @@
       "title": "DePin | Community-Powered Media Infrastructure | DeHub",
       "description": "DeHub DePin stelt mensen in staat om opslag, bandbreedte en rekenkracht bij te dragen om media via een veerkrachtig netwerk te hosten, transcoderen en af te leveren."
     },
+    "pa": {
+      "title": "DePin | ਕਮਿਊਨਿਟੀ-ਸੰਚਾਲਿਤ ਮੀਡੀਆ ਬੁਨਿਆਦੀ ਢਾਂਚਾ | DeHub",
+      "description": "DeHub DePin ਲੋਕਾਂ ਨੂੰ ਇੱਕ ਲਚਕੀਲੇ ਨੈਟਵਰਕ ਦੁਆਰਾ ਹੋਸਟ, ਟ੍ਰਾਂਸਕੋਡ ਅਤੇ ਮੀਡੀਆ ਪ੍ਰਦਾਨ ਕਰਨ ਵਿੱਚ ਸਹਾਇਤਾ ਕਰਨ ਲਈ ਸਟੋਰੇਜ, ਬੈਂਡਵਿਡਥ ਅਤੇ ਗਣਨਾ ਵਿੱਚ ਯੋਗਦਾਨ ਪਾਉਣ ਦਿੰਦਾ ਹੈ."
+    },
     "pl": {
       "title": "DePin | Infrastruktura Mediów Napędzana Społecznością | DeHub",
       "description": "DeHub DePin pozwala ludziom wnosić magazynowanie, przepustowość i moc obliczeniową, aby pomóc w hostowaniu, transkodowaniu i dostarczaniu mediów przez odporną sieć."
@@ -1320,9 +1360,17 @@
       "title": "DePin | Infrastructură Media Alimentată de Comunitate | DeHub",
       "description": "DeHub DePin permite oamenilor să contribuie cu stocare, lățime de bandă și putere de calcul pentru a ajuta la găzduirea, transcodarea și livrarea de media printr-o rețea rezistentă."
     },
+    "sa": {
+      "title": "- |",
+      "description": "DeHub DePin इत्यनेन सह अधो लिखितानां पृष्ठानां परिसन्धिं करोतुः BANDWIDTH AND COMPUT, HOST, TRANSCODE AND DELEVER MEDIA THE LESSIENT NETWORK."
+    },
     "si": {
       "title": "DePin | ප්‍රජා-බලයෙන් ක්‍රියාත්මක වන මාධ්‍ය යටිතල ව්‍යුහය | DeHub",
       "description": "DeHub DePin, මාධ්‍ය සත්කාරකත්වය, සංස්කරණය සහ බෙදා හැරීමට උපකාර කිරීම සඳහා ගබඩා කිරීම, කලාප පළල සහ පරිගණක ධාරිතාව සපයන ප්‍රජාවට ඉඩ සලසයි."
+    },
+    "sr": {
+      "title": "ДеПин | Инфраструктура медија на основу заједнице | DeHub",
+      "description": "DeHub ДеПин омогућава људима да доприносе складиштењу, преносу података и рачунарству како би помогли у хостовању, транскодирању и достави медија кроз отпоран мрежни систем."
     },
     "sv": {
       "title": "DePin | Community-Powered Media Infrastructure | DeHub",
@@ -1621,6 +1669,10 @@
     "sq": {
       "title": "DEX — Tregtoh DHB me çmimin tuaj",
       "description": "Vendosni çmimin tuaj të blerjes ose shitjes së DHB me një urdhër kufitar Uniswap v4 në Base ose BNB Chain. Libër urdhrash i drejtpërdrejtë, thellësi tregu dhe një çmim i përbashkët USD."
+    },
+    "sr": {
+      "title": "DEX — Тргујте DHB по вашој цени",
+      "description": "Поставите своју цену за куповину или продају DHB-а са лимитним налогом на Унисwап в4 на мрежи Басе или BNB Цхаин. Живи књига налога, дубина тржишта и једна заједничка цена у УСД."
     },
     "sv": {
       "title": "DEX — Handla DHB till ditt pris",
@@ -2034,6 +2086,10 @@
       "title": "Gebeurtenisse — Byeenkomste & Gemeenskapsevenementen op DeHub",
       "description": "Blaai deur komende DeHub-gemeenskapsevenementen, RSVP tot byeenkomste en gasheer jou eie gebeurtenisse op die desentraliseerde, gebruiker-eiendom sosiale platform."
     },
+    "am": {
+      "title": "ክስተቶች — በ DeHub ላይ Meetups & የማህበረሰብ ክስተቶች",
+      "description": "መጪውን የ DeHub የማህበረሰብ ዝግጅቶችን ያስሱ ፣ RSVP ለማሟላት እና በተጠቃሚ ባለቤትነት ባላቸው ማህበራዊ መድረክ ላይ የራስዎን ዝግጅቶች ለማስተናገድ ።"
+    },
     "ar": {
       "title": "الفعاليات — لقاءات وفعاليات المجتمع على DeHub",
       "description": "تصفّح فعاليات مجتمع DeHub القادمة، وأكّد حضورك للقاءات، ونظّم فعالياتك الخاصة على منصة اجتماعية لامركزية يملكها مستخدموها."
@@ -2097,6 +2153,10 @@
     "fr": {
       "title": "Événements — Rencontres et événements communautaires sur DeHub",
       "description": "Parcourez les événements communautaires à venir de DeHub, répondez aux invitations des rencontres et organisez vos propres événements sur la plateforme sociale décentralisée et appartenant aux utilisateurs."
+    },
+    "gu": {
+      "title": "ઈવેન્ટ્સ — મીટઅપ્સ & કોમ્યુનિટી ઇવેન્ટ્સ ઓન ડીહબ",
+      "description": "ડીહબ પર આવતી કોમ્યુનિટી ઇવેન્ટ્સ બ્રાઉઝ કરો, મીટઅપ્સમાં રસવણી કરો અને ડીસેન્ટ્રલાઇઝ્ડ, યુઝર-ઓવ્ડ સોશિયલ પ્લેટફોર્મ પર તમારો પોતાનો ઇવેન્ટ હોસ્ટ કરો."
     },
     "hi": {
       "title": "इवेंट — DeHub पर मीटअप और कम्युनिटी इवेंट",
@@ -2190,6 +2250,10 @@
       "title": "Events — Meetups & Community Events op DeHub",
       "description": "Blader door aankomende DeHub-communitygebeurtenissen, RSVP voor meetups en host je eigen events op het gedecentraliseerde, gebruikerseigen sociale platform."
     },
+    "pa": {
+      "title": "ਇਵੈਂਟਸ — DeHub 'ਤੇ ਮੀਟਅਪਸ ਅਤੇ ਕਮਿ Communityਨਿਟੀ ਇਵੈਂਟਸ",
+      "description": "ਆਉਣ ਵਾਲੇ ਡੀਹਬ ਕਮਿ communityਨਿਟੀ ਇਵੈਂਟਾਂ, ਆਰਐਸਵੀਪੀ ਨੂੰ ਵਿਕੇਂਦਰੀਕ੍ਰਿਤ, ਉਪਭੋਗਤਾ-ਮਲਕੀਅਤ ਵਾਲੇ ਸੋਸ਼ਲ ਪਲੇਟਫਾਰਮ ਤੇ ਆਪਣੇ ਖੁਦ ਦੇ ਸਮਾਗਮਾਂ ਨੂੰ ਮਿਲਣ ਅਤੇ ਹੋਸਟ ਕਰਨ ਲਈ ਬ੍ਰਾਉਜ਼ ਕਰੋ."
+    },
     "pl": {
       "title": "Wydarzenia — Spotkania i wydarzenia społeczności na DeHub",
       "description": "Przeglądaj nadchodzące wydarzenia społeczności DeHub, potwierdź uczestnictwo w spotkaniach i organizuj własne wydarzenia na zdecentralizowanej, należącej do użytkowników platformie społecznej."
@@ -2206,9 +2270,17 @@
       "title": "События — встречи и мероприятия сообщества на DeHub",
       "description": "Просмотрите предстоящие мероприятия сообщества DeHub, подтвердите участие на встречах и организуйте свои собственные мероприятия на децентрализованной социальной платформе, принадлежащей пользователям."
     },
+    "sa": {
+      "title": "Tag Archives: देहरादून में जनसभाएं एवं कार्यक्रम",
+      "description": "विकेन्द्रीकृत, उपयोगकर्ता - स्वामित्व वाली सामाजिक प्लेटफ़ॉर्म पर अपने स्वयं के इवेंट्स को होस्ट करने के लिए आने वाले DeHub समुदाय इवेंट्स, RSVP ब्राउज़ करें ।"
+    },
     "si": {
       "title": "ඉවෙන්ට් — DeHub හි රැස්වීම් සහ ප්‍රජා ඉවෙන්ට්",
       "description": "DeHub ප්‍රජා ඉවෙන්ට් ගවේෂණ කරන්න, රැස්වීම් වලට RSVP කරන්න සහ විකේන්ද්‍රීකරණය කරන ලද, පරිශ්‍රිත සামාජික වේදිකාවේ ඔබේ ම ඉවෙන්ට් ගෙවසරු කරන්න."
+    },
+    "sr": {
+      "title": "Догадјаји — Сусрети & Заједничке Активности на DeHub",
+      "description": "Претресите упадајуће заједничке догађаје на DeHub, потпишите се за сусрете и организујте своје догађаје на децентрализованој, кориснички власничкој друштвеној платформи."
     },
     "sw": {
       "title": "Matukio — Mikutano & Matukio ya Jamii kwenye DeHub",
@@ -2247,6 +2319,10 @@
     "af": {
       "title": "Fraksies | DeHub",
       "description": "Koop en verkoop fraksies van DeHub-plasings. 'n Gemunte plasing is 1000 on-chain fraksies — besit 'n sny van 'n video, snit of beeld en verhandel dit in DHB."
+    },
+    "am": {
+      "title": "ቁርጥራጮች | DeHub",
+      "description": "የDeHub ልጥፎችን ክፍልፋዮች ይግዙ እና ይሽጡ። የተመታ ልጥፍ 1000 በሰንሰለት ላይ ያሉ ክፍልፋዮች ነው — የቪዲዮ፣ የትራክ ወይም የምስል ድርሻ ይያዙ እና በDHB ይገበያዩበት።"
     },
     "ar": {
       "title": "الأجزاء | DeHub",
@@ -2307,6 +2383,10 @@
     "fr": {
       "title": "Fractions | DeHub",
       "description": "Achetez et vendez des fractions de publications DeHub. Une publication frappée représente 1000 fractions on-chain — possédez une part d'une vidéo, d'une piste ou d'une image et échangez-la en DHB."
+    },
+    "gu": {
+      "title": "અપૂર્ણાંક | DeHub",
+      "description": "DeHub પોસ્ટ્સના હિસ્સા ખરીદો અને વેચો. મિન્ટ થયેલી પોસ્ટ 1000 ઓન-ચેન હિસ્સા છે — કોઈ વિડિયો, ટ્રેક કે ઇમેજનો એક ભાગ ધરાવો અને તેને DHBમાં ટ્રેડ કરો."
     },
     "hi": {
       "title": "फ़्रैक्शन | DeHub",
@@ -2384,6 +2464,10 @@
       "title": "Fracties | DeHub",
       "description": "Koop en verkoop fracties van DeHub-berichten. Een gemint bericht is 1000 on-chain fracties — bezit een deel van een video, nummer of afbeelding en handel het in DHB."
     },
+    "pa": {
+      "title": "ਭਿੰਨਲਿੰਗੀ | DeHub",
+      "description": "DeHub ਪੋਸਟਾਂ ਦੇ ਹਿੱਸੇ ਖਰੀਦੋ ਅਤੇ ਵੇਚੋ। ਮਿੰਟ ਕੀਤੀ ਪੋਸਟ 1000 ਆਨ-ਚੇਨ ਹਿੱਸੇ ਹੁੰਦੀ ਹੈ — ਕਿਸੇ ਵੀਡੀਓ, ਟਰੈਕ ਜਾਂ ਤਸਵੀਰ ਦਾ ਇੱਕ ਹਿੱਸਾ ਆਪਣਾ ਬਣਾਓ ਅਤੇ ਇਸਨੂੰ DHB ਵਿੱਚ ਵਪਾਰ ਕਰੋ।"
+    },
     "pl": {
       "title": "Frakcje | DeHub",
       "description": "Kupuj i sprzedawaj frakcje postów DeHub. Wybity post to 1000 frakcji on-chain — posiadaj część wideo, utworu lub obrazu i handluj nią w DHB."
@@ -2399,6 +2483,14 @@
     "ru": {
       "title": "Fractions | DeHub",
       "description": "Покупайте и продавайте доли постов DeHub. Заминченный пост — это 1000 долей в блокчейне — владейте частью видео, трека или изображения и торгуйте ею за DHB."
+    },
+    "sa": {
+      "title": "विभक्तिः - dehub",
+      "description": "DeHub-प्रकाशनानां भागान् क्रीणातु विक्रीणातु च। मिण्ट्-कृतं प्रकाशनं 1000 शृङ्खलास्थ-भागाः भवति — चलचित्रस्य, गीतस्य, चित्रस्य वा अंशस्य स्वामी भवतु, DHB-द्वारा तस्य व्यापारं करोतु च।"
+    },
+    "sr": {
+      "title": "Фракције | DeHub",
+      "description": "Купујте и продајте уделе DeHub објава. Искована објава има 1000 on-chain удела — поседујте део видеа, нумере или слике и тргујте њиме у DHB."
     },
     "sv": {
       "title": "Fraktioner | DeHub",
@@ -2433,6 +2525,10 @@
     "af": {
       "title": "Loopbane by DeHub — Oop Poste in Web3 Sosiale Media",
       "description": "Sluit aan by die DeHub-span — oop posisies in besigheid-ontwikkeling, bemarking en meer."
+    },
+    "am": {
+      "title": "በ DeHub ውስጥ ሙያዎች — በ Web3 ማህበራዊ ሚዲያ ውስጥ ክፍት ሚናዎች",
+      "description": "የ DeHub ቡድን ይቀላቀሉ — በንግድ ልማት ፣ በግብይት እና በሌሎችም ክፍት ቦታዎች ።"
     },
     "ar": {
       "title": "وظائف في DeHub — شواغر في وسائل التواصل بويب 3",
@@ -2493,6 +2589,10 @@
     "fr": {
       "title": "Carrières chez DeHub — Postes ouverts dans les médias sociaux Web3",
       "description": "Rejoignez l'équipe DeHub — postes ouverts en développement commercial, marketing et plus."
+    },
+    "gu": {
+      "title": "DeHub પર કારકિર્દી — Web3 સોશિયલ મીડિયામાં ઓપન રોલ્સ",
+      "description": "DeHub ટીમમાં જોડાઓ — બિઝનેસ ડેવલપમેન્ટ, માર્કેટિંગ અને વધુમાં ઓપન પોઝિશન્સ."
     },
     "he": {
       "title": "קריירה ב-DeHub — תפקידים פתוחים בתקשורת חברתית Web3",
@@ -2590,6 +2690,10 @@
       "title": "Carrières bij DeHub — Open Functies in Web3 Social Media",
       "description": "Sluit je aan bij het DeHub-team — open posities in business development, marketing en meer."
     },
+    "pa": {
+      "title": "ਡੀਹੱਬ 'ਚ ਕੈਰੀਅਰ — ਵੈਬ3 ਸੋਸ਼ਲ ਮੀਡੀਆ ਵਿੱਚ ਖੁੱਲ੍ਹੇ ਪੋਜ਼ੀਸ਼ਨ",
+      "description": "DeHub ਟੀਮ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ — ਕਾਰੋਬਾਰ ਦੇ ਵਿਕਾਸ, ਮਾਰਕੀਟਿੰਗ ਅਤੇ ਹੋਰ ਵਿੱਚ ਖੁੱਲੇ ਅਹੁਦੇ."
+    },
     "pl": {
       "title": "Kariera w DeHub — Otwarte stanowiska w Web3 Social Media",
       "description": "Dołącz do zespołu DeHub — otwarte stanowiska w rozwoju biznesu, marketingu i nie tylko."
@@ -2606,9 +2710,17 @@
       "title": "Карьера в DeHub — открытые вакансии в Web3 социальных сетях",
       "description": "Присоединитесь к команде DeHub — открытые позиции в развитии бизнеса, маркетинге и многом другом."
     },
+    "sa": {
+      "title": "Web Title:सामाजिक संजाल पर भाषण — सोशल मीडिया पर भाषण",
+      "description": "DeHub टीममा सामेल हुनुहोस् — व्यवसाय विकास, मार्केटिंग र अधिक मा खुला पदहरू ।"
+    },
     "si": {
       "title": "DeHub හි රැකියා — Web3 සමාජ මාධ්‍ය වල විවෘත තනතුරු",
       "description": "DeHub කණ්ඩායමට එක්වන්න — ව්‍යාපාර සංවර්ධනය, අලෙවිකරණය සහ තවත් බොහෝ දේවල විවෘත තනතුරු."
+    },
+    "sr": {
+      "title": "Каријере у DeHub-у — отворене улоге на друштвеним мрежама Web3",
+      "description": "Придружите се DeHub тиму — отворене позиције у развоју пословања, маркетингу и још много тога."
     },
     "sv": {
       "title": "Karriärer på DeHub — Öppna roller inom Web3 Social Media",
@@ -2655,6 +2767,10 @@
     "af": {
       "title": "Launchpad — DeHub",
       "description": "Tokeniseer 'n besigheid op die DeHub launchpad: blaai deur lewendige munte of skep jou eie."
+    },
+    "am": {
+      "title": "ለንግድት ምስጢር የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥበት ምክንያት የሚሰጥ",
+      "description": "በ DeHub launchpad ላይ የንግድ ምልክት ያድርጉ-ቀጥታ ሳንቲሞችን ያስሱ ወይም የራስዎን ይፍጠሩ ።"
     },
     "ar": {
       "title": "منصة الإطلاق — DeHub",
@@ -2703,6 +2819,10 @@
     "fr": {
       "title": "Launchpad — DeHub",
       "description": "Tokenisez une entreprise sur le launchpad DeHub : parcourez les pièces en direct ou créez la vôtre."
+    },
+    "gu": {
+      "title": "લોન્ચપેડ — ડીહબ",
+      "description": "DeHub લોન્ચપેડ પર વ્યવસાયને ટોકન કરો: જીવંત સિક્કા બ્રાઉઝ કરો અથવા તમારી પોતાની બનાવો."
     },
     "hi": {
       "title": "लॉन्चपैड — DeHub",
@@ -2764,6 +2884,10 @@
       "title": "Launchpad — DeHub",
       "description": "Tokeniseer een bedrijf op het DeHub launchpad: blader door live coins of maak je eigen."
     },
+    "pa": {
+      "title": "ਲਾਂਚਪੈਡ — ਡੀਹੱਬ",
+      "description": "ਬਿਜ਼ਨਸ ਨੂੰ ਡੀਹੱਬ ਲਾਂਚਪੈਡ 'ਤੇ ਟੋਕਨਾਈਜ਼ ਕਰੋ: ਲਾਈਵ ਕੋਇਨਾਂ ਨੂੰ ਬ੍ਰਾਊਜ਼ ਕਰੋ ਜਾਂ ਆਪਣਾ ਬਣਾਓ।"
+    },
     "pl": {
       "title": "Launchpad — DeHub",
       "description": "Tokenizuj biznes na launchpadzie DeHub: przeglądaj aktywne monety lub utwórz własną."
@@ -2779,6 +2903,14 @@
     "ru": {
       "title": "Launchpad — DeHub",
       "description": "Токенизируйте бизнес на DeHub launchpad: просмотрите активные монеты или создайте свою."
+    },
+    "sa": {
+      "title": "लॉन्चपैड — डिहब",
+      "description": "बिज़नेस को टोकनाइज़ करें: डिहब लॉन्चपैड पर लाइव मुद्राएँ ब्राउज़ करें या अपनी स्वयं की बनाएं।"
+    },
+    "sr": {
+      "title": "Ланцирна платформа — DeHub",
+      "description": "Токенизујте предузеће на DeHub лансирној рампи: прегледајте живе новчиће или креирајте сопствени."
     },
     "sv": {
       "title": "Launchpad — DeHub",
@@ -3066,6 +3198,10 @@
       "title": "Migro të gjitha — sjell një profil të tërë në DeHub",
       "description": "Importo në masë një kanal ose profil të tërë në DeHub — YouTube, TikTok, Vimeo, SoundCloud dhe më shumë."
     },
+    "sr": {
+      "title": "Пребаци све — пребаци цео профил у DeHub",
+      "description": "Унеси цео канал или профил у DeHub — YouTube, TikTok, Вимео, СоундЦлоуд и више."
+    },
     "sv": {
       "title": "Migrera allt — ta en hel profil till DeHub",
       "description": "Massimportera en hel kanal eller profil till DeHub — YouTube, TikTok, Vimeo, SoundCloud och mer."
@@ -3144,6 +3280,10 @@
       "title": "DeHub Extra — Premium-lidmaatskap",
       "description": "Gaan sonder advertensies, ontsluit agtergrondafspeel, pasgemaakte temas, profielinsigte en meer KI. Extra $4.99/mnd, Familie $11.99/mnd, Extra Groot $50/mnd met 100% token-terugbetaling vir eerste 50."
     },
+    "am": {
+      "title": "DeHub Extra — ፕሪሚየም አባልነት",
+      "description": "ከማስታወቂያ ነፃ ይሂዱ ፣ የጀርባ መልሶ ማጫወት ይክፈቱ ፣ ብጁ ጭብጦች ፣ የመገለጫ ግንዛቤዎች እና ተጨማሪ አይ. ተጨማሪ $ 4.99/mo, ቤተሰብ $ 11.99/mo, ተጨማሪ ትልቅ $ 50/mo ጋር 100% ለመጀመሪያ 50 ለ ምልክት Cashback."
+    },
     "ar": {
       "title": "DeHub Extra — العضوية المميزة",
       "description": "تجربة بلا إعلانات، وتشغيل في الخلفية، وسمات مخصصة، وإحصاءات للملف الشخصي، ومزيد من الذكاء الاصطناعي. Extra بـ4.99$ شهريًا، وFamily بـ11.99$، وExtra Large بـ50$ مع استرداد 100% بالتوكن لأول 50 مشتركًا."
@@ -3207,6 +3347,10 @@
     "fr": {
       "title": "DeHub Extra — Adhésion Premium",
       "description": "Supprimez les publicités, déverrouillez la lecture en arrière-plan, les thèmes personnalisés, les statistiques de profil et plus d'IA. Extra 4,99 $/mois, Family 11,99 $/mois, Extra Large 50 $/mois avec 100 % de remboursement en jetons pour les 50 premiers."
+    },
+    "gu": {
+      "title": "DeHub વધારાની — પ્રીમિયમ સભ્યપદ",
+      "description": "જાહેરાત-મુક્ત જાઓ, બેકગ્રાઉન્ડ પ્લેબેક, કસ્ટમ થીમ્સ, પ્રોફાઇલ આંતરદૃષ્ટિ અને વધુ AI અનલૉક કરો. વધારાની $ 4.99/mo, કૌટુંબિક $ 11.99/mo, પ્રથમ 50 માટે 100% ટોકન કેશબેક સાથે વધારાની મોટી $ 50/mo."
     },
     "he": {
       "title": "DeHub Extra — חברות פרימיום",
@@ -3304,6 +3448,10 @@
       "title": "DeHub Extra — Premium-lidmaatschap",
       "description": "Geen advertenties, ontgrendel achtergrondafspelen, aangepaste thema's, profielinzichten en meer AI. Extra $4,99/mnd, Familie $11,99/mnd, Extra Large $50/mnd met 100% token cashback voor de eerste 50."
     },
+    "pa": {
+      "title": "DeHub ਵਾਧੂ — ਪ੍ਰੀਮੀਅਮ ਸਦੱਸਤਾ",
+      "description": "ਵਿਗਿਆਪਨ-ਮੁਕਤ ਜਾਓ, ਬੈਕਗ੍ਰਾਉਂਡ ਪਲੇਬੈਕ, ਕਸਟਮ ਥੀਮ, ਪ੍ਰੋਫਾਈਲ ਇਨਸਾਈਟਸ ਅਤੇ ਹੋਰ ਏਆਈ ਨੂੰ ਅਨਲੌਕ ਕਰੋ. ਵਾਧੂ $ 4.99/mo, ਪਰਿਵਾਰਕ $ 11.99/mo, ਪਹਿਲੇ 50 ਲਈ 100% ਟੋਕਨ ਕੈਸ਼ਬੈਕ ਦੇ ਨਾਲ ਵਾਧੂ ਵੱਡੇ $ 50/mo."
+    },
     "pl": {
       "title": "DeHub Extra — Członkostwo Premium",
       "description": "Bez reklam, odblokuj odtwarzanie w tle, niestandardowe motywy, statystyki profilu i więcej AI. Extra 4,99 USD/mies., Family 11,99 USD/mies., Extra Large 50 USD/mies. ze 100% zwrotem tokenów za pierwsze 50."
@@ -3320,9 +3468,17 @@
       "title": "DeHub Extra — Премиум-членство",
       "description": "Без рекламы, разблокируйте воспроизведение в фоне, пользовательские темы, аналитику профиля и многое другое с ИИ. Extra $4.99/мес, Family $11.99/мес, Extra Large $50/мес с 100% возвратом токенов за первые 50."
     },
+    "sa": {
+      "title": "Msgstr \"अतिरिक्त सदस्यता\"",
+      "description": "विज्ञापन मुक्त जाओ, पृष्ठभूमि प्लेबैक अनलॉक, कस्टम विषयों, प्रोफ़ाइल अंतर्दृष्टि और अधिक AI. अतिरिक्त $ 4.99/mo, परिवार $ 11.99/mo, अतिरिक्त बड़े $ 50/mo 100% टोकन कैशबैक के साथ पहले 50 के लिए ।"
+    },
     "si": {
       "title": "DeHub අතිරේක — ප්‍රිමියම් සාමාජිකත්වය",
       "description": "ප්‍රකාශන-රහිත, පසුබිම් ප්‍ලේබැක් අनුවාද කරන්න, අභිරුචි තේමා, පැතිකඩ අවබෝධ සහ තවත් AI අගුලු හරින්න. අතිරේක $4.99/මාස, පවුල $11.99/මාස, අතිරේක විශාල $50/මාස පළමු 50 සඳහා 100% ටෝකන් ආපසු ගෙවීමක් සමඟ."
+    },
+    "sr": {
+      "title": "DeHub Еxтра — Премиум чланство",
+      "description": "Идите без огласа, откључајте позадинску репродукцију, прилагођене теме, увиде у профил и још вештачке интелигенције. Додатних 4,99 $ месечно, породичних 11,99 $ месечно, екстра великих 50 $ месечно са повраћајем новца од 100% за првих 50."
     },
     "sv": {
       "title": "DeHub Extra — Premium-medlemskap",
@@ -3623,8 +3779,8 @@
       "description": "Tregoi DeHub-it se çfarë dëshiron të shohësh dhe ne do të rregullojmë kronologjinë tënde."
     },
     "sr": {
-      "title": "Prilagodite svoj feed — DeHub",
-      "description": "Recite DeHubu šta želite da vidite i mi ćemo podesiti vašu vremensku liniju."
+      "title": "Подстакни ваш ток — DeHub",
+      "description": "Кажи DeHubу шта желиш да видиш и ми ћемо подесити ваш временски ток."
     },
     "sv": {
       "title": "Styr ditt flöde — DeHub",
@@ -3704,6 +3860,10 @@
       "title": "Oudiokamers — regstreekse gesprekke op DeHub",
       "description": "Sluit aan by regstreekse oudiokamers, luister terug na opgeneemde gesprekke, en gaan regstreeks met jou eie kamer op DeHub — die gedesentraliseerde oopbron-sosiale platform."
     },
+    "am": {
+      "title": "ደረጃዎች — DeHub ላይ የቀጥታ ኦዲዮ ክፍሎች",
+      "description": "የቀጥታ የድምፅ ደረጃዎችን ይቀላቀሉ ፣ የተመዘገቡ ውይይቶችን ወደኋላ ያዳምጡ ፣ እና በ DeHub ላይ ከራስዎ ክፍል ጋር በቀጥታ ይሂዱ — ያልተማከለ ፣ ክፍት ምንጭ ማህበራዊ መድረክ ።"
+    },
     "ar": {
       "title": "الغرف الصوتية — غرف صوتية مباشرة على DeHub",
       "description": "انضم إلى غرف صوتية مباشرة، واستمع إلى محادثات مسجّلة، وابثّ من غرفتك الخاصة على DeHub — المنصة الاجتماعية اللامركزية مفتوحة المصدر."
@@ -3763,6 +3923,10 @@
     "fr": {
       "title": "Salons audio — Conversations audio en direct sur DeHub",
       "description": "Rejoignez des salons audio en direct, réécoutez des conversations enregistrées et lancez votre propre salon en direct sur DeHub — la plateforme sociale décentralisée et open source."
+    },
+    "gu": {
+      "title": "તબક્કાઓ — DeHub પર લાઇવ ઑડિઓ રૂમ",
+      "description": "લાઇવ ઑડિઓ સ્ટેજીસમાં જોડાઓ, રેકોર્ડ કરેલી વાતચીતો સાંભળો અને DeHub — વિકેન્દ્રિત, ઓપન સોર્સ સોશિયલ પ્લેટફોર્મ પર તમારા પોતાના રૂમ સાથે લાઇવ જાઓ."
     },
     "he": {
       "title": "חדרי אודיו — שידורי אודיו חיים ב-DeHub",
@@ -3860,6 +4024,10 @@
       "title": "Stages — Live audioruimtes op DeHub",
       "description": "Neem deel aan live audioruimtes, luister opgenomen gesprekken terug en ga live met je eigen ruimte op DeHub — het gedecentraliseerde, open source sociale platform."
     },
+    "pa": {
+      "title": "ਸਟੇਜ — ਡੀਹਬ 'ਤੇ ਲਾਈਵ ਆਡੀਓ ਰੂਮ",
+      "description": "ਲਾਈਵ ਆਡੀਓ ਸਟੇਜਾਂ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ, ਰਿਕਾਰਡ ਕੀਤੀ ਗੱਲਬਾਤ ਨੂੰ ਵਾਪਸ ਸੁਣੋ, ਅਤੇ ਡੀਹਬ — ਵਿਕੇਂਦਰੀਕ੍ਰਿਤ, ਓਪਨ ਸੋਰਸ ਸੋਸ਼ਲ ਪਲੇਟਫਾਰਮ ਤੇ ਆਪਣੇ ਖੁਦ ਦੇ ਕਮਰੇ ਨਾਲ ਲਾਈਵ ਜਾਓ."
+    },
     "pl": {
       "title": "Stages — pokoje audio na żywo na DeHub",
       "description": "Dołączaj do pokojów audio na żywo, odsłuchuj nagrane rozmowy i nadawaj na żywo we własnym pokoju na DeHub — zdecentralizowanej platformie społecznościowej o otwartym kodzie."
@@ -3876,9 +4044,17 @@
       "title": "Stages — аудиокомнаты в прямом эфире на DeHub",
       "description": "Присоединяйтесь к аудиокомнатам в прямом эфире, слушайте записи прошлых разговоров и создавайте свою комнату на DeHub — децентрализованной социальной платформе с открытым исходным кодом."
     },
+    "sa": {
+      "title": "Tag Archives: देहरादून पर भाषण",
+      "description": "प्रत्यक्ष अडियो चरणहरूमा सामेल हुनुहोस्, रेकर्ड गरिएको वार्तालापहरू फिर्ता सुन्नुहोस्, र DeHub मा तपाइँको आफ्नै कोठा संग प्रत्यक्ष जानुहोस् — विकेन्द्रीकृत, खुला स्रोत सामाजिक प्लेटफर्म ।"
+    },
     "si": {
       "title": "Stages — DeHub හි සජීවී ශ්‍රව්‍ය කාමර",
       "description": "සජීවී ශ්‍රව්‍ය කාමරවලට එක්වන්න, පටිගත කළ සංවාදවලට නැවත සවන් දෙන්න, සහ DeHub හි ඔබේම කාමරයක් සමඟ සජීවී වන්න — විමධ්‍යගත, විවෘත මූලාශ්‍ර සමාජ මාධ්‍ය වේදිකාව."
+    },
+    "sr": {
+      "title": "Фазе — Аудио просторије уживо на DeHub-у",
+      "description": "Придружите се аудио сценама уживо, слушајте снимљене разговоре и идите уживо са сопственом собом на DeHub — децентрализованој друштвеној платформи отвореног кода."
     },
     "sv": {
       "title": "Stages — Live-ljudrum på DeHub",
@@ -3925,6 +4101,10 @@
     "af": {
       "title": "Live TV — Gratis Kanale Uit Die Hele Wêreld",
       "description": "Kyk gratis live TV-kanale uit die hele wêreld op DeHub. Nuus, sport, vermaak en meer — gestroom in die blaaier, geen inskrywing nodig."
+    },
+    "am": {
+      "title": "የቀጥታ ቴሌቪዥን — በዓለም ዙሪያ ነፃ ቻናሎች",
+      "description": "DeHub ላይ በዓለም ዙሪያ ከ ነጻ የቀጥታ የቴሌቪዥን ሰርጦች ይመልከቱ. ዜና, ስፖርት, መዝናኛ እና ተጨማሪ — በአሳሽ ውስጥ ዥረት, ምንም የደንበኝነት ምዝገባ አያስፈልግም."
     },
     "ar": {
       "title": "بث تلفزيوني مباشر — قنوات مجانية من كل أنحاء العالم",
@@ -3989,6 +4169,10 @@
     "fr": {
       "title": "Télévision en direct — Chaînes gratuites du monde entier",
       "description": "Regardez des chaînes de télévision en direct gratuites du monde entier sur DeHub. Actualités, sports, divertissement et plus — diffusés dans le navigateur, aucun abonnement nécessaire."
+    },
+    "gu": {
+      "title": "લાઇવ ટીવી — દુનિયાભરમાંથી મફત ચેનલ્સ",
+      "description": "દુનિયાભરમાંથી મફત લાઇવ ટીવી ચેનલ્સ ડીહબ પર જુઓ. ન્યૂઝ, સ્પોર્ટ્સ, એન્ટર્ટેઇનમેન્ટ અને વધુ — બ્રાઉઝરમાં સ્ટ્રીમ કરવામાં આવે છે, કોઇ સબ્સ્ક્રિપ્શનની જરૂર નથી."
     },
     "he": {
       "title": "Live TV — ערוצים חינמיים מסביב לעולם",
@@ -4082,6 +4266,10 @@
       "title": "Live TV — Gratis kanalen van over de hele wereld",
       "description": "Bekijk gratis live TV-kanalen van over de hele wereld op DeHub. Nieuws, sport, entertainment en meer — gestreamd in de browser, geen abonnement nodig."
     },
+    "pa": {
+      "title": "ਲਾਈਵ ਟੀਵੀ — ਦੁਨੀਆ ਭਰ ਦੇ ਮੁਫਤ ਚੈਨਲ",
+      "description": "DeHub 'ਤੇ ਦੁਨੀਆ ਭਰ ਦੇ ਮੁਫਤ ਲਾਈਵ ਟੀਵੀ ਚੈਨਲ ਵੇਖੋ. ਖ਼ਬਰਾਂ, ਖੇਡਾਂ, ਮਨੋਰੰਜਨ ਅਤੇ ਹੋਰ — ਬ੍ਰਾ inਜ਼ਰ ਵਿੱਚ ਸਟ੍ਰੀਮ ਕੀਤਾ ਗਿਆ, ਕੋਈ ਗਾਹਕੀ ਦੀ ਲੋੜ ਨਹੀਂ."
+    },
     "pl": {
       "title": "Live TV — Bezpłatne kanały z całego świata",
       "description": "Oglądaj bezpłatne kanały telewizji na żywo z całego świata na DeHub. Wiadomości, sport, rozrywka i wiele więcej — transmitowane w przeglądarce, bez potrzeby subskrypcji."
@@ -4098,9 +4286,17 @@
       "title": "Live TV — Бесплатные каналы со всего мира",
       "description": "Смотрите бесплатные трансляции телеканалов со всего мира на DeHub. Новости, спорт, развлечения и многое другое — трансляция в браузере, подписка не требуется."
     },
+    "sa": {
+      "title": "LIVE CANNELS — देश — दुनिया भर सेः मुफ्त चैनल्स",
+      "description": "देहली > देहली > देहली > विश्वे देहली > दूरदर्शनं सर्वत्र निशुल्कं दृश्यम् । समाचार, खेल, मनोरंजन, और अधिक — ब्राउज़र में धारा, कोई सदस्यता आवश्यक नहीं है ।"
+    },
     "si": {
       "title": "Live TV — ලෝකය පුරා නිදහස් නාලිකා",
       "description": "DeHub හි ලෝකය පුරා නිදහස් live TV නාලිකා නරඹන්න. පුවත්, ක්‍රීඩා, විනෝදන සහ තවත් බොහෝ දේ — බ්‍රවුසරයේ ප්‍රවාහිත, දැක්ම සඳහා දැමුම අවශ්‍ය නොවේ."
+    },
+    "sr": {
+      "title": "Жива ТВ — Бесплатне Канале Из Цеог Света",
+      "description": "Гледај бесплатне живе ТВ канале из цеог света на ДеХуб-у. Вести, спорт, забава и више — стримовано у прегледачу, без абонамента потребног."
     },
     "sv": {
       "title": "Live TV — Gratis kanaler från hela världen",
@@ -4151,6 +4347,10 @@
     "af": {
       "title": "Gebruikernaam Marketplace | DeHub",
       "description": "Koop en verkoop DeHub-gebruikersname met DHB. Soek kort, numeriese en oorspronklike handvatsels te koop, of lys jou eie — die oordrag gebeur op-ketting die oomblik betaling skoonmaak."
+    },
+    "am": {
+      "title": "የተጠቃሚ ስም የገበያ ቦታ | DeHub",
+      "description": "ይግዙ እና DHB ጋር DeHub የተጠቃሚ ስሞች መሸጥ. ለሽያጭ አጭር ፣ ቁጥራዊ እና ኦሪጅናል እጀታዎች ይፈልጉ ፣ ወይም የራስዎን ይዘርዝሩ — ዝውውሩ የሚከናወነው ክፍያ በሚወጣበት ጊዜ ነው ።"
     },
     "ar": {
       "title": "سوق أسماء المستخدمين | DeHub",
@@ -4215,6 +4415,10 @@
     "fr": {
       "title": "Nom d'utilisateur Marketplace | DeHub",
       "description": "Achetez et vendez des noms d'utilisateur DeHub avec DHB. Recherchez des poignées courtes, numériques et originales à vendre, ou répertoriez les vôtres — le transfert se fait en chaîne au moment où le paiement est effacé."
+    },
+    "gu": {
+      "title": "વપરાશકર્તા નામ માર્કેટપ્લેસ | DeHub",
+      "description": "DHB સાથે DeHub વપરાશકર્તાનામ ખરીદો અને વેચો. વેચાણ માટે ટૂંકા, આંકડાકીય અને મૂળ હેન્ડલ્સ શોધો, અથવા તમારી પોતાની સૂચિ બનાવો — ચુકવણી સાફ થતાં જ ટ્રાન્સફર ચેઇન પર થાય છે."
     },
     "he": {
       "title": "שם משתמש שוק | DeHub",
@@ -4308,6 +4512,10 @@
       "title": "Gebruikersnaammarktplaats | DeHub",
       "description": "Koop en verkoop DeHub-gebruikersnamen met DHB. Zoek naar korte, numerieke en originele gebruikersnamen die te koop staan, of bied je eigen gebruikersnaam aan — de overdracht vindt on-chain plaats zodra de betaling is verwerkt."
     },
+    "pa": {
+      "title": "ਉਪਭੋਗਤਾ ਨਾਮ ਮਾਰਕੀਟਪਲੇਸ | DeHub",
+      "description": "ਡੀਐਚਬੀ ਨਾਲ ਡੀਹਬ ਉਪਭੋਗਤਾ ਨਾਮ ਖਰੀਦੋ ਅਤੇ ਵੇਚੋ. ਛੋਟੀ, ਸੰਖਿਆਤਮਕ ਅਤੇ ਵਿਕਰੀ ਲਈ ਅਸਲ ਹੈਂਡਲਜ਼ ਦੀ ਭਾਲ ਕਰੋ, ਜਾਂ ਆਪਣੀ ਖੁਦ ਦੀ ਸੂਚੀ ਬਣਾਓ — ਜਦੋਂ ਭੁਗਤਾਨ ਸਾਫ ਹੁੰਦਾ ਹੈ ਤਾਂ ਤਬਾਦਲਾ ਆਨ-ਚੇਨ ਹੁੰਦਾ ਹੈ."
+    },
     "pl": {
       "title": "Nazwa użytkownika Marketplace | DeHub",
       "description": "Kupuj i sprzedawaj nazwy użytkowników DeHub z DHB. Szukaj krótkich, liczbowych i oryginalnych uchwytów do sprzedaży lub wystawiaj własne — przelew odbywa się w łańcuchu w momencie rozliczenia płatności."
@@ -4324,9 +4532,17 @@
       "title": "Торговая площадка имени пользователя | DeHub",
       "description": "Покупайте и продавайте логины DeHub через DHB. Ищите короткие, числовые и оригинальные ручки для продажи или перечисляйте свои собственные — перевод происходит в сети, как только платеж очищается."
     },
+    "sa": {
+      "title": "उपयोगकर्ता नाम - DeHub",
+      "description": "DHB सह DHB उपयोगकर्ता नाम खरीदें और बेचें ।."
+    },
     "si": {
       "title": "පරිශීලක නාමය වෙළඳපොළ | DeHub",
       "description": "DHB සමඟ DeHub පරිශීලක නාම මිලදී ගැනීම සහ විකිණීම. කෙටි සොයන්න, විකිණීමට සඳහා සංඛ්යාත්මක හා මුල් හසුරුවන, හෝ ඔබේ ම ලැයිස්තුගත — මාරු මත-දාම ගෙවීම් නිෂ්කාශනය මොහොතේ සිදු."
+    },
+    "sr": {
+      "title": "Тржиште корисничких имена | DeHub",
+      "description": "Купујте и продавајте DeHub корисничка имена са DHB-ом. Претражите кратке, нумеричке и оригиналне ручке за продају или наведите своје — пренос се одвија на ланцу у тренутку када се плаћање избрише."
     },
     "sv": {
       "title": "Användarnamn Marketplace | DeHub",

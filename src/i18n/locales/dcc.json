@@ -2646,8 +2646,7 @@
   },
   "dex": {
     "convertBnbNote": "BNB Chain پر ٹریڈنگ بند ہوگئی۔ BNB ہے؟ اس کو Base پر ETH میں بدلو، پھر ETH سے ادا کرو۔",
-    "convertBnb": "BNB بدلو",
-    "pools": {}
+    "convertBnb": "BNB بدلو"
   },
   "editor": {
     "canvas": {
