@@ -381,14 +381,31 @@ function HolderDetails({
             <img src={badgeImage(name) ?? ''} alt="" className="h-full w-full object-contain p-[1px]" />
           </SliderPrimitive.Thumb>
         </SliderPrimitive.Root>
-        <div className="mt-1.5 flex h-3 items-center justify-between text-[10px] tabular-nums leading-3 text-white/35">
-          <span>{shortDhb(ladder[0].min)}</span>
-          {standing && standing.balance > 0 ? (
-            <span className="font-semibold text-emerald-300">
-              {t('badgeShowcase.you')} {shortDhb(standing.balance)}
-            </span>
+        {/* "You" hangs directly under the green dot, like a you-are-here pin.
+            The label clamps inside the bento; the pointer never does, so it
+            always touches the dot. End labels step aside when it gets near. */}
+        <div className="relative mt-1.5 flex h-3 items-center justify-between text-[10px] tabular-nums leading-3 text-white/35">
+          <span className={cn('transition-opacity', youPos !== null && youPos < 18 && 'opacity-0')}>
+            {shortDhb(ladder[0].min)}
+          </span>
+          <span className={cn('transition-opacity', youPos !== null && youPos > 82 && 'opacity-0')}>
+            {shortDhb(ladder[count - 1].min)}
+          </span>
+          {youPos !== null && standing ? (
+            <>
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -top-[5px] h-0 w-0 -translate-x-1/2 border-x-[4px] border-b-[4px] border-x-transparent border-b-emerald-300"
+                style={{ left: `${youPos}%` }}
+              />
+              <span
+                className="pointer-events-none absolute top-0 -translate-x-1/2 whitespace-nowrap font-semibold text-emerald-300"
+                style={{ left: `clamp(30px, ${youPos}%, calc(100% - 30px))` }}
+              >
+                {t('badgeShowcase.you')} {shortDhb(standing.balance)}
+              </span>
+            </>
           ) : null}
-          <span>{shortDhb(ladder[count - 1].min)}</span>
         </div>
       </div>
 
