@@ -19,6 +19,12 @@ interface RequestBase {
 export interface HolderShowcaseRequest extends RequestBase {
   kind: 'holder';
   tier: string | null;
+  /**
+   * Set when this opens as a promotion: the tier left behind (null for a
+   * first badge). The showcase then opens with the ascension instead of a
+   * plain flight.
+   */
+  promotedFrom?: string | null;
 }
 
 /** A collectible card on a streamer's ladder. */
@@ -50,6 +56,12 @@ function subscribe(listener: () => void) {
 
 export function openBadgeShowcase(tier: string | null, anchor: HTMLElement | null) {
   current = { kind: 'holder', tier, anchor, id: ++sequence };
+  emit();
+}
+
+/** Open the showcase on a tier just reached, playing the promotion first. */
+export function openBadgePromotion(from: string | null, to: string, anchor: HTMLElement | null) {
+  current = { kind: 'holder', tier: to, promotedFrom: from, anchor, id: ++sequence };
   emit();
 }
 

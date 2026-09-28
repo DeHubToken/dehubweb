@@ -7,6 +7,10 @@
  * pack. Everything that says what a badge *means* (tokens and perks for a
  * holder tier, a milestone for a streamer card) is the caller's details
  * column, rendered through `children`.
+ *
+ * With an `intro` the opening is a promotion instead: the old badge flies
+ * out, bursts into glitter and comes back together as the new one before the
+ * sticker takes over (see `ascension.ts`).
  */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
@@ -16,6 +20,8 @@ import { useReducedMotion } from 'framer-motion';
 import { Pause, Play, X } from 'lucide-react';
 import { StickerStage, stickerArtRect, type StickerFinish, type StickerItem } from './sticker-stage';
 import { SHOWCASE_CSS } from './showcase-ui';
+import { playAscension, type AscensionHandle } from './ascension';
+import type { BadgeMotion } from '@/lib/badge-motion';
 
 export interface ShowcaseEntry {
   key: string;
@@ -28,6 +34,14 @@ export interface ShowcaseEntry {
   finish: StickerFinish;
   /** Resting tilt in degrees, CSS direction. */
   tilt: number;
+}
+
+/** Opens the showcase with a promotion rather than a plain flight. */
+export interface ShowcaseIntro {
+  /** Art of the badge being left behind; null for a first badge. */
+  fromArt: string | null;
+  /** Sizing for the tier being reached. */
+  motion: BadgeMotion;
 }
 
 export interface ShowcaseApi {
@@ -54,10 +68,13 @@ interface ShowcaseShellProps {
   /** Marks an entry in the dock as held or earned. */
   owned: (index: number) => boolean;
   children: (api: ShowcaseApi) => ReactNode;
+  intro?: ShowcaseIntro;
 }
 
 /** How long each entry holds before the dock plays on to the next. */
 const AUTOPLAY_MS = 4800;
+
+const FLYER_FILTER = 'drop-shadow(0 18px 30px rgba(0,0,0,0.55))';
 
 const outCubic = (x: number) => 1 - Math.pow(1 - x, 3);
 const inOutCubic = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
@@ -81,13 +98,15 @@ export function ShowcaseShell({
   dockLabel,
   owned,
   children,
+  intro,
 }: ShowcaseShellProps) {
   const { t } = useTranslation();
   const reduceMotion = !!useReducedMotion();
   const count = entries.length;
 
   const [index, setIndex] = useState(originIndex);
-  const [playing, setPlaying] = useState(!reduceMotion);
+  // A promotion holds on the badge just earned rather than playing on.
+  const [playing, setPlaying] = useState(!reduceMotion && !intro);
   const [phase, setPhase] = useState<'enter' | 'open' | 'exit'>('enter');
   const [shown, setShown] = useState(false);
   const [landed, setLanded] = useState(false);
@@ -96,6 +115,8 @@ export function ShowcaseShell({
   const [glFailed, setGlFailed] = useState(false);
   const [touched, setTouched] = useState(false);
   const [fading, setFading] = useState(false);
+  const [ceremony, setCeremony] = useState(false);
+  const [showOld, setShowOld] = useState(!!intro?.fromArt && !reduceMotion);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const stageBoxRef = useRef<HTMLDivElement>(null);
@@ -106,6 +127,8 @@ export function ShowcaseShell({
   const stageRef = useRef<StickerStage | null>(null);
   const shownIndex = useRef(originIndex);
   const flightRaf = useRef(0);
+  const introCanvasRef = useRef<HTMLCanvasElement>(null);
+  const introRef = useRef<AscensionHandle | null>(null);
 
   const items = useMemo<StickerItem[]>(
     () => entries.map((entry) => ({ src: entry.art, finish: entry.finish, tilt: entry.tilt * 0.5 })),
@@ -167,14 +190,38 @@ export function ShowcaseShell({
     const from = anchorBox();
     if (anchor) anchor.style.visibility = 'hidden';
     if (hero) placeFlyer(from && !reduceMotion ? from : hero, from && !reduceMotion ? -18 : restTilt);
+    const promote = !!intro && !!hero && !reduceMotion;
+    // A first badge has nothing to fly out: it gathers from glitter alone.
+    if (promote && !intro.fromArt && flyerRef.current) flyerRef.current.style.visibility = 'hidden';
     const raf = requestAnimationFrame(() => {
       setShown(true);
-      if (hero && from && !reduceMotion) fly(from, hero, 760, 'out', () => setLanded(true));
+      const canvas = introCanvasRef.current;
+      const flyer = flyerRef.current;
+      if (promote && hero && canvas && flyer) {
+        setCeremony(true);
+        introRef.current = playAscension({
+          canvas,
+          flyer,
+          from,
+          hero: () => heroBox() ?? hero,
+          fromArt: intro.fromArt,
+          restTilt,
+          motion: intro.motion,
+          baseFilter: FLYER_FILTER,
+          place: placeFlyer,
+          onSwap: () => setShowOld(false),
+          onLanded: () => {
+            setCeremony(false);
+            setLanded(true);
+          },
+        });
+      } else if (hero && from && !reduceMotion) fly(from, hero, 760, 'out', () => setLanded(true));
       else setLanded(true);
     });
     return () => {
       cancelAnimationFrame(raf);
       cancelAnimationFrame(flightRaf.current);
+      introRef.current?.cancel();
       if (anchor) anchor.style.visibility = '';
     };
     // Runs once: the flight is a one-off from where the click happened.
@@ -269,6 +316,9 @@ export function ShowcaseShell({
     if (phase === 'exit') return;
     setPhase('exit');
     setPlaying(false);
+    introRef.current?.cancel();
+    setCeremony(false);
+    setShowOld(false);
     const home = anchorBox();
     const hero = heroBox();
     const flyHome = !!home && !!hero && !reduceMotion && index === originIndex;
@@ -475,6 +525,18 @@ export function ShowcaseShell({
     >
       <style>{SHOWCASE_CSS}</style>
 
+      {/* The promotion's glitter. Catches taps while it plays, so a tap
+          skips to the new badge instead of closing the showcase. */}
+      {intro && (
+        <canvas
+          ref={introCanvasRef}
+          aria-hidden
+          onClick={() => introRef.current?.skip()}
+          className="fixed inset-0 z-[21] h-full w-full"
+          style={{ pointerEvents: ceremony ? 'auto' : 'none' }}
+        />
+      )}
+
       {/* The page falls away behind the badge. */}
       <div
         aria-hidden
@@ -552,14 +614,14 @@ export function ShowcaseShell({
       {/* The badge in flight, and the stand-in if WebGL is unavailable. */}
       <img
         ref={flyerRef}
-        src={glFailed ? entries[index].art : entries[originIndex].art}
+        src={showOld && intro?.fromArt ? intro.fromArt : glFailed ? entries[index].art : entries[originIndex].art}
         alt=""
         aria-hidden
         className="pointer-events-none fixed left-0 top-0 z-20 object-contain will-change-transform"
         style={{
           opacity: stickerOn ? 0 : phase === 'exit' && index !== originIndex ? 0 : 1,
           transition: 'opacity 0.2s',
-          filter: 'drop-shadow(0 18px 30px rgba(0,0,0,0.55))',
+          filter: FLYER_FILTER,
           animation: glFailed && phase === 'open' ? 'badge-showcase-float 4s ease-in-out infinite' : undefined,
         }}
       />
