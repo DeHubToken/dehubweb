@@ -26,12 +26,8 @@ export interface MiniAppListing {
 const COLUMNS =
   'id, slug, domain, home_url, name, subtitle, description, icon_url, splash_image_url, splash_background_color, category, tier';
 
-// The generated Database types predate these tables.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = supabase as any;
-
 export async function fetchListedApps(): Promise<MiniAppListing[]> {
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from('miniapp_apps')
     .select(COLUMNS)
     .in('tier', ['listed', 'verified'])
@@ -43,7 +39,7 @@ export async function fetchListedApps(): Promise<MiniAppListing[]> {
 
 export async function fetchAppBySlug(slug: string): Promise<MiniAppListing | null> {
   if (!/^[a-z0-9][a-z0-9-]{1,39}$/.test(slug)) return null;
-  const { data, error } = await db.from('miniapp_apps').select(COLUMNS).eq('slug', slug).maybeSingle();
+  const { data, error } = await supabase.from('miniapp_apps').select(COLUMNS).eq('slug', slug).maybeSingle();
   if (error) return null;
   return (data as MiniAppListing | null) ?? null;
 }
