@@ -28,7 +28,6 @@
     "featureRequests": "คำขอ",
     "staking": "สเตกกิ้ง",
     "governance": "การกำกับดูแล",
-    "dao": "DAO",
     "careers": "สมัครงาน",
     "glossary": "อภิธานศัพท์",
     "arcade": "อาร์เคด",
@@ -2239,7 +2238,6 @@
     "podBadge": "พิมพ์ตามสั่ง",
     "podBuyOn": "ซื้อที่ {{provider}}",
     "podNote": "พิมพ์และจัดส่งตามสั่งโดย {{provider}} ชำระเงินบนเว็บไซต์ของพวกเขา",
-    "podUrlPlaceholder": "https://…",
     "title": "ร้านค้า",
     "browse": "เรียกดู",
     "myStore": "ร้านค้าของฉัน",
@@ -4736,7 +4734,6 @@
     "kindVideo": "วิดีโอ",
     "kindAudio": "เสียง",
     "kindImage": "รูป",
-    "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "ตรวจสอบก่อนโพสต์",
     "reviewSubtitle": "จาก {{source}} เป็น {{kind}} แก้ไขอะไรก็ได้ที่คุณชอบ — ปล่อยให้ชื่อว่างไว้เพื่อเก็บต้นฉบับไว้",
     "reviewName": "ชื่อ",
@@ -4749,7 +4746,6 @@
     "podcast": {
       "tab": "พอดคาสต์",
       "feedUrlLabel": "URL ฟีด RSS ของพอดคาสต์",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "ดึงฟีด",
       "fetching": "กำลังเรียกดูฟีด…",
       "showBy": "โดย {{author}}",
@@ -4998,53 +4994,12 @@
     }
   },
   "nearBuy": {
-    "otherCurrencies": "Other currencies",
-    "title": "Pay with crypto",
     "description": "เลือกโทเค็นเพื่อชำระเงิน รับโทเค็น DeHub ในกระเป๋าเงินของคุณ",
     "dhbAmount": "จำนวนโทเค็น DeHub",
-    "search": "Search token, network or contract",
-    "noMatches": "No matching tokens.",
-    "loading": "Loading…",
-    "retry": "Retry",
-    "tokensError": "Payment tokens are temporarily unavailable.",
-    "historyError": "Your saved purchases could not be loaded. Retry before opening another payment.",
-    "statusError": "The latest status is unavailable. Your purchase is saved. Check again; do not send a second payment.",
-    "refundAddress": "Refund address on {{chain}}",
-    "refundPlaceholder": "Address on the payment network",
-    "refundHint": "Check this is a wallet you control on the payment network. Avoid exchange addresses that require a memo or tag. Any provider refund returns here.",
-    "quoteSummary": "Estimated payment: {{amount}} {{symbol}} on {{chain}}",
     "receiveNet": "คุณได้รับ: {{amount}} โทเค็น DeHub",
-    "gasReserve": "Includes ${{amount}} for network gas.",
-    "swapEstimate": "About {{minutes}} min after your payment confirms.",
-    "estimateUnknown": "Timing depends on the payment network.",
     "confirmationTime": "การยืนยันเครือข่ายและการจัดส่งโทเค็นจะใช้เวลา นี่เป็นการประมาณการ ไม่ใช่การนับถอยหลัง",
-    "finalQuote": "Review the final amount before paying.",
-    "getQuote": "Continue",
-    "paymentAction": "Continue",
-    "acceptTerms": "I agree to the purchase terms.",
-    "terms": "Read terms",
-    "sendExact": "Send exactly {{amount}} {{symbol}} on {{chain}}. Allow separately for withdrawal or network fees.",
-    "paymentSummary": "Payment: {{amount}} {{symbol}} on {{chain}}",
-    "copyPayment": "Copy payment address",
-    "memoNotice": "Required memo/tag — include it with the address or the payment may not be credited.",
-    "copyMemo": "Copy memo/tag",
-    "copied": "Copied",
-    "copyFailed": "Could not copy. Select the text and copy it manually.",
-    "deadline": "Deposit deadline: {{date}}. Do not send a new payment after this time.",
-    "saved": "Your purchase is saved. You can return to it anytime.",
-    "checkStatus": "Refresh purchase status",
-    "lastChecked": "Last checked {{time}}",
-    "history": "Your purchases",
-    "startAnother": "Back to payment options",
-    "refundReceipt": "Refund destination: {{address}}",
     "destination": "ปลายทางโทเค็นบน Base: {{address}}",
     "viewDelivery": "ดูการโอนโทเค็น",
-    "purchaseId": "Copy purchase ID: {{id}}",
-    "phase_awaiting": "Waiting for your payment",
-    "detail_awaiting": "Send once, on the selected network, before the deadline. If you have already sent it, wait for network confirmation.",
-    "phase_confirming": "Payment detected",
-    "detail_confirming": "Waiting for the network to confirm your payment. You do not need to pay again.",
-    "phase_swapping": "Converting your payment",
     "detail_swapping": "การชำระเงินของคุณกำลังดำเนินการ เราจะอัปเดตใบเสร็จนี้เมื่อโทเค็นของคุณมาถึง",
     "phase_delivering": "การชำระเงินได้รับการชำระบัญชี · กำลังส่งโทเค็น",
     "detail_delivering": "ได้รับเงินแล้ว โทเค็นของคุณกำลังเดินทาง",
@@ -5052,30 +5007,8 @@
     "detail_deliveryDelayed": "การชำระเงินของคุณได้รับการชำระบัญชีแล้ว แต่การจัดส่งโทเค็นต้องการการลองอีกครั้ง โปรดเก็บรหัสการซื้อนี้ไว้และติดต่อฝ่ายสนับสนุน DeHub หากยังคงล่าช้า อย่าชำระเงินอีกครั้ง",
     "phase_gasPending": "โทเค็นถูกจัดส่ง · กำลังรอค่าแก๊ส",
     "detail_gasPending": "การโอนโทเค็นของคุณได้รับการยืนยันแล้ว การโอน ETH gas แยกต่างหากยังคงรอดำเนินการหรือกำลังลองอีกครั้ง",
-    "phase_delivered": "Purchase complete",
     "detail_delivered": "โทเค็น DeHub ของคุณได้ถูกจัดส่งไปยังกระเป๋าเงิน Base ของคุณแล้ว",
-    "phase_refunded": "Payment refunded",
-    "detail_refunded": "The provider reports the payment refunded to the refund address below. Check that wallet; network fees may apply.",
-    "phase_failed": "Payment needs attention",
-    "detail_failed": "The provider reported a failure. This does not confirm a refund. Keep this purchase ID and payment transaction hash for support; do not send again.",
-    "phase_expired": "Deposit deadline passed",
-    "detail_expired": "Do not send to this address. If you already paid, keep checking this saved purchase while the network confirms or the provider resolves it. Do not pay again.",
-    "phase_incomplete": "Deposit amount needs attention",
-    "detail_incomplete": "The provider received less than the required amount. Do not resend the full amount. Keep your transaction hash and purchase ID while the provider resolves the deposit or refund.",
-    "phase_checking": "Checking payment progress",
-    "detail_checking": "The provider has not returned a final outcome. Your purchase is saved. Do not send another payment.",
-    "pay": "Pay",
-    "directTiming": "โทเค็นจะถูกจัดส่งเมื่อการชำระเงินของคุณได้รับการยืนยัน",
-    "wrongNetwork": "Switch to the selected payment network and try again.",
-    "wrongWallet": "Connect the wallet shown on this purchase and try again.",
-    "reviewPay": "Review the amount, then confirm the payment in your wallet.",
-    "currency": "Currency",
-    "checkingBalances": "Checking your wallet balances…",
-    "walletBalances": "Your balances by network",
-    "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "connectSolana": "Connect Solana wallet",
-    "balanceUnknown": "Balance unavailable",
-    "balanceAmount": "Available: {{amount}} {{symbol}}"
+    "directTiming": "โทเค็นจะถูกจัดส่งเมื่อการชำระเงินของคุณได้รับการยืนยัน"
   },
   "conversation": {
     "commonGround": {
@@ -5626,8 +5559,7 @@
       },
       "quote": {
         "title": "การ์ดคำคม",
-        "body": "ทำให้เรียบง่าย แต่มีความหมาย",
-        "author": "Don Draper"
+        "body": "ทำให้เรียบง่าย แต่มีความหมาย"
       },
       "thumbnail": {
         "title": "ไม่อยากเชื่อเลย",
@@ -5643,7 +5575,6 @@
         "place": "The Warehouse ใจกลางเมือง"
       },
       "podcast": {
-        "title": "The Creator Show",
         "episode": "ตอนที่ 12 · มาแล้ว"
       },
       "announcement": {
@@ -5655,8 +5586,7 @@
         "change": "+42% สัปดาห์นี้"
       },
       "birthday": {
-        "title": "สุขสันต์วันเกิด",
-        "name": "Sam!"
+        "title": "สุขสันต์วันเกิด"
       },
       "meme": {
         "title": "มีม",
@@ -5671,11 +5601,9 @@
       "landscape": "แนวนอน",
       "landscapeDetail": "YouTube, เว็บ",
       "vertical": "แนวตั้ง",
-      "verticalDetail": "Shorts, Reels",
       "square": "สี่เหลี่ยมจัตุรัส",
       "squareDetail": "โพสต์ฟีด",
       "portrait": "พอร์ตเทรต",
-      "portraitDetail": "Instagram",
       "canvas": "แคนวาส",
       "resolution": "ความละเอียด",
       "frameRate": "อัตราเฟรม",
@@ -5845,7 +5773,6 @@
     "paused": "การโอนโทเค็นถูกหยุดชั่วคราวในห่วงโซ่ในขณะนี้ดังนั้นการปลดล็อกนี้จึงยังไม่สามารถดำเนินการได้โปรดลองอีกครั้งในอีกสักครู่",
     "otherChain": "โพสต์นี้ตั้งอยู่บนห่วงโซ่อื่นดังนั้นจึงต้องมีโทเค็น DeHub ในกระเป๋าเงินของคุณที่นั่น",
     "buyCard": "ซื้อโทเค็นด้วยบัตร",
-    "buyCardHint": "Visa, Mastercard, Apple Pay",
     "moveFunds": "โอนเงินเข้า",
     "moveFundsHint": "สลับหรือฝากจากเชนอื่น",
     "notNow": "ไว้ทีหลัง"
@@ -6010,7 +5937,6 @@
   },
   "emojiPicker": {
     "tabEmoji": "อีโมจิ",
-    "tabGif": "GIF",
     "searchEmoji": "ค้นหาอีโมจิ",
     "searchGifs": "ค้นหา GIFs...",
     "noEmoji": "ไม่พบอีโมจิ",
@@ -6606,8 +6532,7 @@
     "tabStickers": "สติกเกอร์",
     "tab": {
       "emoji": "อิโมจิ",
-      "sticker": "สติกเกอร์",
-      "gif": "GIF"
+      "sticker": "สติกเกอร์"
     },
     "kind": {
       "emoji": "อิโมจิแพ็ก",
@@ -6632,8 +6557,7 @@
       "tier": "ระดับ",
       "packs": "แพ็ก",
       "emoji": "อิโมจิ",
-      "stickers": "สติกเกอร์",
-      "gifs": "GIF"
+      "stickers": "สติกเกอร์"
     },
     "signInToCreate": "ลงชื่อเข้าใช้เพื่อสร้างแพ็ก",
     "signInToAdd": "ลงชื่อเข้าใช้เพื่อเพิ่ม",
@@ -6731,9 +6655,6 @@
     "planTypeNotAllowed": "แพ็กเกจของครีเอเตอร์นี้ไม่อนุญาตข้อความประเภทนี้",
     "planMinTip": "ทิปสำหรับครีเอเตอร์นี้ต้องมีอย่างน้อย {{amount}} DHB"
   },
-  "footer": {
-    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
-  },
   "credits": {
     "earningsWorth": "คุ้มค่า {{amount}}",
     "percentUsed": "ใช้ไป {{percent}}%",
@@ -6775,5 +6696,8 @@
     "back": "กลับไปที่การตั้งค่า",
     "signIn": "ลงชื่อเข้าใช้บัญชีของคุณ",
     "acknowledge": "ฉันได้บันทึกรายละเอียดการกู้คืนกระเป๋าเงินของฉันและเข้าใจว่าการลบนั้นถาวร"
+  },
+  "footer": {
+    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
   }
 }
