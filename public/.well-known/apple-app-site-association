@@ -30,7 +30,9 @@
           { "/": "/connect", "comment": "Connect AI" },
           { "/": "/connect/*", "comment": "One assistant guide" },
           { "/": "/premium", "comment": "Premium" },
-          { "/": "/pricing", "comment": "AI plans" }
+          { "/": "/pricing", "comment": "AI plans" },
+          { "/": "/work/history", "comment": "Bounty history" },
+          { "/": "/work/disputes", "comment": "Bounty disputes" }
         ]
       }
     ]
