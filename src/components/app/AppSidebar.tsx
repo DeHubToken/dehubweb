@@ -117,7 +117,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
               type="button"
               onClick={() => { closeMenu(); navigate('/app/wallet'); }}
               aria-label={t('nav.wallet')}
-              className="flex h-9 flex-shrink-0 items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.06] px-3 text-[13px] font-semibold text-white tabular-nums"
+              data-menu-chip className="flex h-9 flex-shrink-0 items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.06] px-3 text-[13px] font-semibold text-white tabular-nums"
             >
               <DhbCoin className="h-4 w-4 align-middle" />
               {Math.floor(dhbBalance).toLocaleString()}
@@ -141,6 +141,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
           }}
           placeholder={t('sidebar.searchMenu')}
           aria-label={t('sidebar.searchMenu')}
+          data-menu-search
           className="w-full h-[42px] pl-10 pr-9 rounded-xl bg-white/5 border border-white/10 text-[15px] text-white placeholder:text-zinc-500 outline-none focus:border-white/30 transition-colors"
         />
         {menuQuery && (
