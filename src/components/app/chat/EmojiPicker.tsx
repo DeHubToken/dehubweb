@@ -23,7 +23,8 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
           <Smile className="w-5 h-5" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[22rem] max-w-[calc(100vw-1rem)] p-0 overflow-hidden" align="start" side="top">
+      <PopoverContent collisionPadding={8}
+        className="w-[calc(100vw-1rem)] sm:w-[22rem] p-0 overflow-hidden" align="start" side="top">
         <EmojiPanel
           onSelect={(emoji, { keepOpen }) => {
             onEmojiSelect(emoji);

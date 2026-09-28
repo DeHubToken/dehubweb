@@ -115,7 +115,7 @@ export type PackTarget = ReturnType<typeof usePackTarget>;
 export function PackTargetField({ target, kind }: { target: PackTarget; kind: PackKind }) {
   const { t } = useTranslation();
   const input =
-    'w-full h-8 px-2 rounded-md bg-white/5 border border-white/10 text-xs text-white placeholder:text-zinc-500 outline-none focus:border-white/30';
+    'w-full min-w-0 h-8 px-2 rounded-md bg-white/5 border border-white/10 text-xs text-white placeholder:text-zinc-500 outline-none focus:border-white/30';
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center gap-2">
