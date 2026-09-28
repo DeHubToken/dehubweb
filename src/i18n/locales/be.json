@@ -625,7 +625,6 @@
     "mostViewed": "Найбольш праглянутыя",
     "mostLiked": "Найбольш лайканыя",
     "mostComments": "Найбольш каментарыяў",
-    "mostTips": "Most Tips",
     "random": "Выпадковыя",
     "videos": "Відэа",
     "images": "Выявы",
@@ -2618,7 +2617,6 @@
     "podBadge": "Друк па запыце",
     "podBuyOn": "Купіць на {{provider}}",
     "podNote": "Друкуецца і адпраўляецца па запыце праз {{provider}}. Аплата — на іх сайце.",
-    "podUrlPlaceholder": "https://…",
     "title": "Крамы",
     "browse": "Праглядзець",
     "myStore": "Мая крама",
@@ -5293,7 +5291,6 @@
     "kindVideo": "Відэа",
     "kindAudio": "Аудыа",
     "kindImage": "Малюнкі",
-    "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "Перагледзець перад публікацыяй",
     "reviewSubtitle": "Ад {{source}}, як {{kind}}. Рэдагаваць усё, што вам падабаецца — пакіньце назву пустой, каб захаваць арыгінал.",
     "reviewName": "Назва",
@@ -5306,7 +5303,6 @@
     "podcast": {
       "tab": "Падкаст",
       "feedUrlLabel": "URL падкаста RSS-канала",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Атрымаць стужку навін",
       "fetching": "Пошук стужкі...",
       "showBy": "Па {{author}}",
@@ -5378,7 +5374,6 @@
     "paying": "Аплата {{amount}} токенаў…",
     "pickCount": "{{selected}} з {{total}} выбрана. Усё, што ўжо ёсць у вашым профілі, прапускаецца і ніколі не спляцаецца двойчы.",
     "pickTitle": "Выберыце, што перанесці",
-    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
     "progressDone": "{{imported}} імпартавана.",
     "progressDoneWithFailures": "{{imported}} імпартавана, {{failed}} не ўдалося імпартаваць.",
     "progressIdle": "Кожнае відэа ў партыі атрымлівае сваю плітку тут, каб вы маглі ўбачыць, што прыземліліся, і паўтарыць спробу тога, што не ўдалося. Нічога не запушчана - сетка ніжэй - гэта прыклад.",
@@ -5555,53 +5550,12 @@
     }
   },
   "nearBuy": {
-    "otherCurrencies": "Other currencies",
-    "title": "Pay with crypto",
     "description": "Выберыце токен для аплаты. Атрымайце токены DeHub у свой кашалёк.",
     "dhbAmount": "Колькасць токенаў DeHub",
-    "search": "Search token, network or contract",
-    "noMatches": "No matching tokens.",
-    "loading": "Loading…",
-    "retry": "Retry",
-    "tokensError": "Payment tokens are temporarily unavailable.",
-    "historyError": "Your saved purchases could not be loaded. Retry before opening another payment.",
-    "statusError": "The latest status is unavailable. Your purchase is saved. Check again; do not send a second payment.",
-    "refundAddress": "Refund address on {{chain}}",
-    "refundPlaceholder": "Address on the payment network",
-    "refundHint": "Check this is a wallet you control on the payment network. Avoid exchange addresses that require a memo or tag. Any provider refund returns here.",
-    "quoteSummary": "Estimated payment: {{amount}} {{symbol}} on {{chain}}",
     "receiveNet": "Вы атрымліваеце: {{amount}} токенаў DeHub",
-    "gasReserve": "Includes ${{amount}} for network gas.",
-    "swapEstimate": "About {{minutes}} min after your payment confirms.",
-    "estimateUnknown": "Timing depends on the payment network.",
     "confirmationTime": "Пацвярджэнні сеткі і дастаўка токенаў займаюць час. Гэта ацэнка, а не зваротны адлік.",
-    "finalQuote": "Review the final amount before paying.",
-    "getQuote": "Continue",
-    "paymentAction": "Continue",
-    "acceptTerms": "I agree to the purchase terms.",
-    "terms": "Read terms",
-    "sendExact": "Send exactly {{amount}} {{symbol}} on {{chain}}. Allow separately for withdrawal or network fees.",
-    "paymentSummary": "Payment: {{amount}} {{symbol}} on {{chain}}",
-    "copyPayment": "Copy payment address",
-    "memoNotice": "Required memo/tag — include it with the address or the payment may not be credited.",
-    "copyMemo": "Copy memo/tag",
-    "copied": "Copied",
-    "copyFailed": "Could not copy. Select the text and copy it manually.",
-    "deadline": "Deposit deadline: {{date}}. Do not send a new payment after this time.",
-    "saved": "Your purchase is saved. You can return to it anytime.",
-    "checkStatus": "Refresh purchase status",
-    "lastChecked": "Last checked {{time}}",
-    "history": "Your purchases",
-    "startAnother": "Back to payment options",
-    "refundReceipt": "Refund destination: {{address}}",
     "destination": "Пункт прызначэння токенаў на Base: {{address}}",
     "viewDelivery": "Прагляд перадачы токенаў",
-    "purchaseId": "Copy purchase ID: {{id}}",
-    "phase_awaiting": "Waiting for your payment",
-    "detail_awaiting": "Send once, on the selected network, before the deadline. If you have already sent it, wait for network confirmation.",
-    "phase_confirming": "Payment detected",
-    "detail_confirming": "Waiting for the network to confirm your payment. You do not need to pay again.",
-    "phase_swapping": "Converting your payment",
     "detail_swapping": "Ваша аплата апрацоўваецца. Мы абновім гэты чэк пры паступленні вашых токенаў.",
     "phase_delivering": "Аплата ўрэгулявана · адпраўка токенаў",
     "detail_delivering": "Аплата атрымана. Вашы токены ў дарозе.",
@@ -5609,30 +5563,8 @@
     "detail_deliveryDelayed": "Ваша аплата ўрэгулявана, але дастаўка токенаў патрабуе паўторнай спробы. Захавайце гэты ідэнтыфікатар пакупкі і звярніцеся ў службу падтрымкі DeHub, калі затрымка захаваецца. Не плаціце зноў.",
     "phase_gasPending": "Токены дастаўлены · газ чакае",
     "detail_gasPending": "Ваша перадача токенаў пацверджана. Асобная перадача ETH газу ўсё яшчэ чакае або паўтараецца.",
-    "phase_delivered": "Purchase complete",
     "detail_delivered": "Вашы токены DeHub былі дастаўлены ў ваш кашалёк Base.",
-    "phase_refunded": "Payment refunded",
-    "detail_refunded": "The provider reports the payment refunded to the refund address below. Check that wallet; network fees may apply.",
-    "phase_failed": "Payment needs attention",
-    "detail_failed": "The provider reported a failure. This does not confirm a refund. Keep this purchase ID and payment transaction hash for support; do not send again.",
-    "phase_expired": "Deposit deadline passed",
-    "detail_expired": "Do not send to this address. If you already paid, keep checking this saved purchase while the network confirms or the provider resolves it. Do not pay again.",
-    "phase_incomplete": "Deposit amount needs attention",
-    "detail_incomplete": "The provider received less than the required amount. Do not resend the full amount. Keep your transaction hash and purchase ID while the provider resolves the deposit or refund.",
-    "phase_checking": "Checking payment progress",
-    "detail_checking": "The provider has not returned a final outcome. Your purchase is saved. Do not send another payment.",
-    "pay": "Pay",
-    "directTiming": "Токены дастаўляюцца пасля пацвярджэння аплаты.",
-    "wrongNetwork": "Switch to the selected payment network and try again.",
-    "wrongWallet": "Connect the wallet shown on this purchase and try again.",
-    "reviewPay": "Review the amount, then confirm the payment in your wallet.",
-    "currency": "Currency",
-    "checkingBalances": "Checking your wallet balances…",
-    "walletBalances": "Your balances by network",
-    "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "connectSolana": "Connect Solana wallet",
-    "balanceUnknown": "Balance unavailable",
-    "balanceAmount": "Available: {{amount}} {{symbol}}"
+    "directTiming": "Токены дастаўляюцца пасля пацвярджэння аплаты."
   },
   "conversation": {
     "commonGround": {
@@ -6183,8 +6115,7 @@
       },
       "quote": {
         "title": "Картка з цытатай",
-        "body": "Рабі проста, але значна.",
-        "author": "Don Draper"
+        "body": "Рабі проста, але значна."
       },
       "thumbnail": {
         "title": "Вы не паверыце!",
@@ -6212,8 +6143,7 @@
         "change": "+42% за тыдзень"
       },
       "birthday": {
-        "title": "З днём нараджэння",
-        "name": "Sam!"
+        "title": "З днём нараджэння"
       },
       "meme": {
         "title": "Мем",
@@ -6228,11 +6158,9 @@
       "landscape": "Гарызантальны",
       "landscapeDetail": "YouTube, вэб",
       "vertical": "Вертыкальны",
-      "verticalDetail": "Shorts, Reels",
       "square": "Квадрат",
       "squareDetail": "Пост у стужцы",
       "portrait": "Партрэтны",
-      "portraitDetail": "Instagram",
       "canvas": "Палатно",
       "resolution": "Раздзяленне",
       "frameRate": "Частата кадраў",
@@ -6402,7 +6330,6 @@
     "paused": "Пераклады жэтонаў зараз прыпыненыя на ланцугу, таму гэтая разблакіроўка пакуль не можа прайсці. Паўтарыце спробу ў бліжэйшы час.",
     "otherChain": "Гэты пост асядае на іншай ланцужку, таму яму патрэбныя жэтоны DeHub у вашым кашальку.",
     "buyCard": "Купіць маркеры з дапамогай карты",
-    "buyCardHint": "Visa, Mastercard, Apple Pay",
     "moveFunds": "Перавесці сродкі",
     "moveFundsHint": "Абмен або дэпазіт з іншай сеткі",
     "notNow": "Не зараз"
@@ -6562,7 +6489,6 @@
   },
   "emojiPicker": {
     "tabEmoji": "Эмодзі",
-    "tabGif": "GIF",
     "searchEmoji": "Пошук эмодзі",
     "searchGifs": "Пошук GIF...",
     "noEmoji": "Эмодзі не знойдзены",
@@ -7291,26 +7217,6 @@
     "planTypeNotAllowed": "План гэтага аўтара не дазваляе такі тып паведамлення.",
     "planMinTip": "Чаявыя для гэтага аўтара павінны быць не менш за {{amount}} DHB."
   },
-  "spaces": {
-    "title": "Прасторы",
-    "live": "Прамая трансляцыя",
-    "upcoming": "Надыходныя",
-    "past": "Мінулыя",
-    "create": "Стварыць прастору",
-    "join": "Далучыцца",
-    "listeners": "Слухачы",
-    "speakers": "Выступоўцы",
-    "host": "Вядучы",
-    "noSpaces": "Пакуль няма прастораў",
-    "loginDescription": "Увайдзіце, каб ствараць і далучацца да аўдыяпрастораў."
-  },
-  "blog": {
-    "title": "Блог",
-    "readMore": "Чытаць далей",
-    "backToBlog": "Вярнуцца да блога",
-    "sharePost": "Падзяліцца публікацыяй",
-    "relatedPosts": "Звязаныя публікацыі"
-  },
   "credits": {
     "earningsWorth": "Варта {{amount}}",
     "percentUsed": "{{percent}}% выкарыстоўваецца",
@@ -7352,5 +7258,25 @@
     "back": "Назад да налад",
     "signIn": "Увайсці, каб выдаліць уліковы запіс",
     "acknowledge": "Я захаваў дэталі аднаўлення кашалька і зразумеў, што выдаленне з 'яўляецца пастаянным."
+  },
+  "spaces": {
+    "title": "Прасторы",
+    "live": "Прамая трансляцыя",
+    "upcoming": "Надыходныя",
+    "past": "Мінулыя",
+    "create": "Стварыць прастору",
+    "join": "Далучыцца",
+    "listeners": "Слухачы",
+    "speakers": "Выступоўцы",
+    "host": "Вядучы",
+    "noSpaces": "Пакуль няма прастораў",
+    "loginDescription": "Увайдзіце, каб ствараць і далучацца да аўдыяпрастораў."
+  },
+  "blog": {
+    "title": "Блог",
+    "readMore": "Чытаць далей",
+    "backToBlog": "Вярнуцца да блога",
+    "sharePost": "Падзяліцца публікацыяй",
+    "relatedPosts": "Звязаныя публікацыі"
   }
 }
