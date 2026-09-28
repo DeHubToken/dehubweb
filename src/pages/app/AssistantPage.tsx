@@ -1961,7 +1961,7 @@ export default function AssistantPage() {
             }`}
           >
             <span className="text-lg">{style.emoji}</span>
-            {style.label}
+            {t(`aiStyles.${style.id}`)}
           </button>
         ))}
       </div>

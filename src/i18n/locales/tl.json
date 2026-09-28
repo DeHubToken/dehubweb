@@ -7513,5 +7513,36 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
+  },
+  "aiStyles": {
+    "normal": "Normal",
+    "old-english": "Lumang Ingles",
+    "cockney": "Cockney",
+    "celtic": "Celtic",
+    "scouse": "Scouse",
+    "wild-west": "Wild West",
+    "asian-uncle": "Asyanong Tito",
+    "russian-mafia": "Russian Mafia",
+    "pirate": "Pirata",
+    "alien": "Alien",
+    "e-girl": "E-Girl",
+    "chad": "Chad",
+    "hopeless-romantic": "Hopeless Romantic",
+    "daddy": "Tatay",
+    "mommy": "Nanay",
+    "big-brother": "Kuya",
+    "lil-bro": "Bunsong Kapatid na Lalaki",
+    "big-sister": "Ate",
+    "little-sister": "Bunsong Kapatid na Babae",
+    "conservative": "Konserbatibo",
+    "liberal": "Liberal",
+    "antifa": "ANTIFA",
+    "capitalist": "Kapitalista",
+    "socialist": "Sosyalista",
+    "neocon": "Neocon",
+    "feminist": "Peminista",
+    "progressive": "Progresibo",
+    "nationalist": "Nasyonalista",
+    "communist": "Komunista"
   }
 }

@@ -7534,5 +7534,36 @@
       "copy": "Kopier",
       "copied": "Kopieret"
     }
+  },
+  "aiStyles": {
+    "normal": "Normal",
+    "old-english": "Oldengelsk",
+    "cockney": "Cockney",
+    "celtic": "Keltisk",
+    "scouse": "Scouse",
+    "wild-west": "Det Vilde Vesten",
+    "asian-uncle": "Asiatisk onkel",
+    "russian-mafia": "Russisk mafia",
+    "pirate": "Pirat",
+    "alien": "Rumvæsen",
+    "e-girl": "E-Girl",
+    "chad": "Chad",
+    "hopeless-romantic": "Håbløs romantiker",
+    "daddy": "Far",
+    "mommy": "Mor",
+    "big-brother": "Storebror",
+    "lil-bro": "Lillebror",
+    "big-sister": "Storesøster",
+    "little-sister": "Lillesøster",
+    "conservative": "Konservativ",
+    "liberal": "Liberal",
+    "antifa": "ANTIFA",
+    "capitalist": "Kapitalist",
+    "socialist": "Socialist",
+    "neocon": "Neokon",
+    "feminist": "Feminist",
+    "progressive": "Progressiv",
+    "nationalist": "Nationalist",
+    "communist": "Kommunist"
   }
 }

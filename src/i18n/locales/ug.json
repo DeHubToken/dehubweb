@@ -5405,5 +5405,36 @@
       "copy": "Nashri qiling",
       "copied": "Nashri qilingan"
     }
+  },
+  "aiStyles": {
+    "normal": "ئادەتتىكى",
+    "old-english": "قەدىمكى ئىنگلىزچە",
+    "cockney": "كوكنى",
+    "celtic": "كېلت",
+    "scouse": "سكاۋس",
+    "wild-west": "ياۋايى غەرب",
+    "asian-uncle": "ئاسىيالىق تاغا",
+    "russian-mafia": "رۇس مافىيەسى",
+    "pirate": "دېڭىز قاراقچىسى",
+    "alien": "يات پلانېتلىق",
+    "e-girl": "ئى-گېرل",
+    "chad": "چاد",
+    "hopeless-romantic": "ئۈمىدسىز رومانتىك",
+    "daddy": "دادا",
+    "mommy": "ئاپا",
+    "big-brother": "ئاكا",
+    "lil-bro": "ئۇكا",
+    "big-sister": "ھەدە",
+    "little-sister": "سىڭىل",
+    "conservative": "كونسېرۋاتىپ",
+    "liberal": "لىبېرال",
+    "antifa": "ئانتىفا",
+    "capitalist": "كاپىتالىست",
+    "socialist": "سوتسىيالىست",
+    "neocon": "نېئوكون",
+    "feminist": "فېمىنىست",
+    "progressive": "ئىلغار",
+    "nationalist": "مىللەتچى",
+    "communist": "كوممۇنىست"
   }
 }
