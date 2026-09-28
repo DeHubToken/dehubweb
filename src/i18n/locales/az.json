@@ -7463,5 +7463,36 @@
       "copy": "Nüsxə",
       "copied": "Nüsxə edilib"
     }
+  },
+  "aiStyles": {
+    "normal": "Normal",
+    "old-english": "Qədim İngilis",
+    "cockney": "Kokni",
+    "celtic": "Kelt",
+    "scouse": "Skaus",
+    "wild-west": "Vəhşi Qərb",
+    "asian-uncle": "Asiyalı Əmi",
+    "russian-mafia": "Rus Mafiyası",
+    "pirate": "Pirat",
+    "alien": "Yadplanetli",
+    "e-girl": "E-Girl",
+    "chad": "Chad",
+    "hopeless-romantic": "Ümidsiz Romantik",
+    "daddy": "Ata",
+    "mommy": "Ana",
+    "big-brother": "Böyük Qardaş",
+    "lil-bro": "Kiçik Qardaş",
+    "big-sister": "Böyük Bacı",
+    "little-sister": "Kiçik Bacı",
+    "conservative": "Mühafizəkar",
+    "liberal": "Liberal",
+    "antifa": "ANTİFA",
+    "capitalist": "Kapitalist",
+    "socialist": "Sosialist",
+    "neocon": "Neokon",
+    "feminist": "Feminist",
+    "progressive": "Proqressiv",
+    "nationalist": "Millətçi",
+    "communist": "Kommunist"
   }
 }
