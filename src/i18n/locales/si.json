@@ -6938,5 +6938,32 @@
     "backToBlog": "බ්ලොග් වෙත ආපසු",
     "sharePost": "පළකිරීම බෙදා ගන්න",
     "relatedPosts": "සම්බන්ධ පළකිරීම්"
+  },
+  "credits": {
+    "earningsWorth": "ප් ‍ රති-පිළිතුරු සැපයීම {{amount}}",
+    "percentUsed": "{{percent}}% භාවිතා කර ඇත",
+    "spentOfTotal": "{{total}} න් {{spent}}",
+    "subscriptionTokens": "ග් ‍ රාහකත්ව ටෝකන",
+    "topUp": "ටෝකන එක් කරන්න",
+    "topUpTitle": "ග් ‍ රාහකත්ව සංකේත එක් කරන්න",
+    "topUpCustom": "වෙනත් මුදල (ඇ .ඩො.)",
+    "topUpYouSend": "ඔබ එවයි",
+    "topUpYouGet": "ඔබේ ශේෂයට එක් කරන ලදි",
+    "topUpConfirm": "එකතු කරන්න {{amount}}",
+    "topUpRange": "{{min}} සිට {{max}} දක්වා ඇතුළත් කරන්න",
+    "topUpDone": "{{amount}} ඔබේ දායකත්ව ටෝකනයට එකතු කරන ලදි",
+    "topUpPending": "ඔබේ උඩුගත කිරීම තහවුරු කරයි. එය ඉක්මනින් ඔබේ ශේෂයේ දිස්වනු ඇත.",
+    "topUpFailed": "ග් ‍ රාහකත්ව ටෝකන එක් කළ නොහැකි විය",
+    "topUpStageFunding": "ටෝකන ලබා ගනිමින්...",
+    "topUpStageWallet": "ඔබේ පසුම්බියේ තහවුරු කරන්න...",
+    "topUpStageConfirming": "ගනුදෙනුව සඳහා බලා සිටී...",
+    "topUpStageCrediting": "ඔබේ ශේෂයට එක් කරමින්...",
+    "untradableTokens": "මේවා ඇදහිය නොහැකි ග් ‍ රාහක ටෝකන වේ",
+    "withdraw": "ඉවත් වන්න",
+    "close": "වසා දමන්න",
+    "tokenAmount": "{{amount}} ටෝකන",
+    "subscriptionTokensOnly": "පරම්පරාවට පමණයි",
+    "subscriptionTokensValueNote": "දායකත්ව ටෝකන ඒවායේ ඩොලර් වටිනාකම රඳවා ගනී. භාවිතයට පෙර ටෝකන මිල වෙනස් වුවහොත් ඔබට වැඩි හෝ අඩු ටෝකන පෙනෙනු ඇත, නමුත් ඒවා සැමවිටම එකම AI නිර්මාණ ප්‍රමාණය මිලදී ගනී. ඒවා ආපසු ගැනීමට, යැවීමට හෝ වෙළඳාම් කිරීමට නොහැක.",
+    "topUpEmptyHint": "AI සමඟ උත්පාදනය කිරීමට ටෝකන එක් කරන්න"
   }
 }

@@ -3959,5 +3959,32 @@
     "planRestricted": "Dis user need subscription before e fit receive message.",
     "planTypeNotAllowed": "Dis creator plan no allow dis kain message.",
     "planMinTip": "Tip for dis creator must reach at least {{amount}} DHB."
+  },
+  "credits": {
+    "earningsWorth": "E worth {{amount}}",
+    "percentUsed": "{{percent}}% used",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "subscriptionTokens": "Subscription tokens",
+    "topUp": "Add tokens",
+    "topUpTitle": "Add subscription tokens",
+    "topUpCustom": "Anoda amount (USD)",
+    "topUpYouSend": "Wetin you go send",
+    "topUpYouGet": "Wetin go enter your balance",
+    "topUpConfirm": "Add {{amount}}",
+    "topUpRange": "Put from {{min}} reach {{max}}",
+    "topUpDone": "We don add {{amount}} to your subscription tokens",
+    "topUpPending": "Your top-up dey confirm. E go show for your balance soon.",
+    "topUpFailed": "We no fit add subscription tokens",
+    "topUpStageFunding": "We dey get tokens…",
+    "topUpStageWallet": "Confirm am for your wallet…",
+    "topUpStageConfirming": "We dey wait for di transaction…",
+    "topUpStageCrediting": "We dey add am to your balance…",
+    "untradableTokens": "Dis na subscription tokens wey you no fit trade",
+    "withdraw": "Withdraw",
+    "close": "Close",
+    "tokenAmount": "{{amount}} tokens",
+    "subscriptionTokensOnly": "Na only for AI generation",
+    "subscriptionTokensValueNote": "Subscription tokens dey keep dia dollar value. If token price change before you use dem, you go see more or less tokens, but dem go always buy di same amount of AI generation. You no fit withdraw, send or trade dem.",
+    "topUpEmptyHint": "Add tokens make you fit generate with AI"
   }
 }

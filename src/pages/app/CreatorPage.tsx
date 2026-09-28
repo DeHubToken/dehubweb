@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
+import { SubscriptionCreditsPill } from '@/components/app/credits/SubscriptionCreditsWidget';
 import SwipeableCarousel from '@/components/app/SwipeableCarousel';
 import { CreatorStudio } from '@/components/app/creator/studio/CreatorStudio';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
@@ -372,6 +373,10 @@ export default function CreatorPage() {
                 ))}
               </nav>
 
+              {isAuthenticated && (
+                // Subscription tokens: the balance AI generation here is paid from.
+                <SubscriptionCreditsPill />
+              )}
               <div className="hidden items-center gap-2 sm:flex">
                 <button
                   type="button"

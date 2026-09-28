@@ -5194,5 +5194,32 @@
     "planRestricted": "هاد المستخدم بدو اشتراك ليستقبل رسائل.",
     "planTypeNotAllowed": "خطة هاد المنشئ ما بتسمح بهاد النوع من الرسائل.",
     "planMinTip": "لازم تكون الإكرامية على الأقل {{amount}} DHB لهاد المنشئ."
+  },
+  "credits": {
+    "earningsWorth": "القيمة {{amount}}",
+    "percentUsed": "مستخدم {{percent}}%",
+    "spentOfTotal": "{{spent}} من {{total}}",
+    "subscriptionTokens": "رموز الاشتراك",
+    "topUp": "ضُف رموز",
+    "topUpTitle": "إضافة رموز اشتراك",
+    "topUpCustom": "مبلغ آخر (دولار أمريكي)",
+    "topUpYouSend": "ترسل",
+    "topUpYouGet": "تمت إضافته إلى رصيدك",
+    "topUpConfirm": "إضافة {{amount}}",
+    "topUpRange": "أدخل {{min}} إلى {{max}}",
+    "topUpDone": "تمت إضافة {{amount}} إلى رموز اشتراكك",
+    "topUpPending": "عملية الشحن قيد التأكيد. ستظهر في رصيدك قريباً.",
+    "topUpFailed": "تعذر إضافة رموز الاشتراك",
+    "topUpStageFunding": "جاري الحصول على الرموز...",
+    "topUpStageWallet": "تأكيد في محفظتك...",
+    "topUpStageConfirming": "في انتظار المعاملة...",
+    "topUpStageCrediting": "جاري الإضافة إلى رصيدك...",
+    "untradableTokens": "هذول توكنات اشتراك ما بينباعوا",
+    "withdraw": "اسحب",
+    "close": "إغلاق",
+    "tokenAmount": "{{amount}} توكن",
+    "subscriptionTokensOnly": "بس لتوليد الذكاء الاصطناعي",
+    "subscriptionTokensValueNote": "رصيد التوكنز تبع الاشتراك بيضل بنفس قيمته بالدولار. إذا سعر التوكن تغير قبل ما تستخدمهم، رح تشوف توكنز أكتر أو أقل، بس دايماً بيشتروا نفس كمية توليد الذكاء الاصطناعي. ما فيك تسحبهم، تبعتهم أو تتاجر فيهم.",
+    "topUpEmptyHint": "ضيف توكنز لتوليدها بالذكاء الاصطناعي"
   }
 }

@@ -5307,5 +5307,32 @@
     "planRestricted": "Lo msebenzisi udinga ukubhalisa ukuze athole imilayezo.",
     "planTypeNotAllowed": "Uhlelo lwalo mdali aluvumeli lolu hlobo lomlayezo.",
     "planMinTip": "Ithiphu yalo mdali kufanele okungenani ibe ngu-{{amount}} DHB."
+  },
+  "credits": {
+    "earningsWorth": "Kubiza {{amount}}",
+    "percentUsed": "{{percent}}% isetshenzisiwe",
+    "spentOfTotal": "{{spent}} of {{total}}",
+    "subscriptionTokens": "Amathokheni okubhalisa",
+    "topUp": "Faka amathokheni",
+    "topUpTitle": "Faka amathokheni okubhalisa",
+    "topUpCustom": "Elinye inani (USD)",
+    "topUpYouSend": "Uyathumela",
+    "topUpYouGet": "Kufakwe kubhalansi yakho",
+    "topUpConfirm": "Faka {{amount}}",
+    "topUpRange": "Faka {{min}} ku {{max}}",
+    "topUpDone": "{{amount}} kufakwe kumathokheni akho okubhalisa",
+    "topUpPending": "Okuthe xaxa kwakho kuyaqinisekisa. Izovela kubhalansi yakho maduzane.",
+    "topUpFailed": "Ayikwazanga ukufaka amathokheni okubhalisa",
+    "topUpStageFunding": "Ukuthola amathokheni...",
+    "topUpStageWallet": "Qinisekisa esikhwameni sakho semali...",
+    "topUpStageConfirming": "Ilinde ukuthengiselana...",
+    "topUpStageCrediting": "Kufakwa kubhalansi yakho...",
+    "untradableTokens": "Lawa amathokheni okubhalisa angenakudluliswa",
+    "withdraw": "Hoxisa",
+    "close": "Vala",
+    "tokenAmount": "{{amount}} amathuluzi",
+    "subscriptionTokensOnly": "Okwesizukulwane se-AI kuphela",
+    "subscriptionTokensValueNote": "Amathokheni okubhalisa anenani lawo lamadola. Uma inani lethokheni lihamba ngaphambi kokulisebenzisa uzobona amathokheni amaningi noma ambalwa, kodwa ngaso sonke isikhathi bathenga inani elifanayo lesizukulwane se-AI. Awukwazi ukuhoxiswa, ukuthunyelwa noma ukudayiswa.",
+    "topUpEmptyHint": "Faka amathokheni ukuze ukhiqize nge-AI"
   }
 }

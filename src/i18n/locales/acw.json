@@ -5215,5 +5215,32 @@
     "planRestricted": "هذا المستخدم يحتاج اشتراك عشان يستقبل رسائل.",
     "planTypeNotAllowed": "خطة هذا المنشئ ما تسمح بهذا النوع من الرسائل.",
     "planMinTip": "لازم تكون الإكرامية على الأقل {{amount}} DHB لهذا المنشئ."
+  },
+  "credits": {
+    "earningsWorth": "القيمة {{amount}}",
+    "percentUsed": "تم استخدام {{percent}}%",
+    "spentOfTotal": "{{spent}} من {{total}}",
+    "subscriptionTokens": "رموز الاشتراك",
+    "topUp": "ضيف توكنز",
+    "topUpTitle": "إضافة رموز اشتراك",
+    "topUpCustom": "مبلغ آخر (دولار أمريكي)",
+    "topUpYouSend": "ترسل",
+    "topUpYouGet": "تمت إضافته إلى رصيدك",
+    "topUpConfirm": "إضافة {{amount}}",
+    "topUpRange": "أدخل {{min}} إلى {{max}}",
+    "topUpDone": "تمت إضافة {{amount}} إلى رموز اشتراكك",
+    "topUpPending": "عملية إعادة الشحن قيد التأكيد. ستظهر في رصيدك قريبًا.",
+    "topUpFailed": "تعذر إضافة رموز الاشتراك",
+    "topUpStageFunding": "جاري الحصول على الرموز...",
+    "topUpStageWallet": "تأكيد في محفظتك...",
+    "topUpStageConfirming": "في انتظار المعاملة...",
+    "topUpStageCrediting": "جاري الإضافة إلى رصيدك...",
+    "untradableTokens": "هذي توكنات اشتراك ما ينفع يتسوق",
+    "withdraw": "سحب",
+    "close": "إغلاق",
+    "tokenAmount": "{{amount}} توكن",
+    "subscriptionTokensOnly": "بس لتوليد الذكاء الاصطناعي فقط",
+    "subscriptionTokensValueNote": "رموز الاشتراك تحتفظ بقيمتها بالدولار. لو سعر الرمز تحرك قبل ما تستخدمها حتشوف رموز زيادة أو أقل، بس دايماً بتشتري نفس كمية توليد الذكاء الاصطناعي. ما تقدر تسحبها، ترسلها أو تتاجر فيها.",
+    "topUpEmptyHint": "ضيف توكنز عشان تولد بالذكاء الاصطناعي"
   }
 }

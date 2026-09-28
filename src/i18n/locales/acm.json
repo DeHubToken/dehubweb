@@ -5210,5 +5210,32 @@
     "planRestricted": "هذا المستخدم يحتاج اشتراك حتى يستلم رسائل.",
     "planTypeNotAllowed": "خطة هذا المنشئ ما تسمح بهذا النوع من الرسائل.",
     "planMinTip": "لازم تكون الإكرامية على الأقل {{amount}} DHB لهذا المنشئ."
+  },
+  "credits": {
+    "earningsWorth": "القيمة {{amount}}",
+    "percentUsed": "{{percent}}% مستَخدم",
+    "spentOfTotal": "{{spent}} من {{total}}",
+    "subscriptionTokens": "توكنات الاشتراك",
+    "topUp": "ضيف توكنات",
+    "topUpTitle": "إضافة رموز اشتراك",
+    "topUpCustom": "مبلغ آخر (دولار أمريكي)",
+    "topUpYouSend": "ترسل",
+    "topUpYouGet": "تمت إضافته إلى رصيدك",
+    "topUpConfirm": "إضافة {{amount}}",
+    "topUpRange": "أدخل {{min}} إلى {{max}}",
+    "topUpDone": "تمت إضافة {{amount}} إلى رموز اشتراكك",
+    "topUpPending": "عملية الشحن قيد التأكيد. ستظهر في رصيدك قريباً.",
+    "topUpFailed": "تعذر إضافة رموز الاشتراك",
+    "topUpStageFunding": "جاري الحصول على الرموز...",
+    "topUpStageWallet": "تأكيد في محفظتك...",
+    "topUpStageConfirming": "انتظار المعاملة...",
+    "topUpStageCrediting": "جاري الإضافة إلى رصيدك...",
+    "untradableTokens": "هذوله توكنات اشتراك ما تنكدر تتبدل",
+    "withdraw": "اسحب",
+    "tokenAmount": "{{amount}} توكن",
+    "subscriptionTokensOnly": "للتوليد بالذكاء الاصطناعي فقط",
+    "subscriptionTokensValueNote": "التوكنات مال الاشتراك تحتفظ بقيمتها بالدولار. إذا سعر التوكن تغير قبل ما تستخدمهن راح تشوف توكنات أكثر أو أقل، بس دايماً يشترن نفس الكمية من توليد الذكاء الاصطناعي. ما ينفع تسحبهن، ترسلهن أو تبادلهن.",
+    "topUpEmptyHint": "ضيف توكنات لتوليدها بالذكاء الاصطناعي",
+    "close": "إغلاق"
   }
 }
