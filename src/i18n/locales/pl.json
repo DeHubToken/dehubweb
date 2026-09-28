@@ -3143,8 +3143,8 @@
     "settingUpVoice": "Konfigurowanie Twojego głosu...",
     "useThisVoice": "Użyj tego głosu",
     "autoEnd": {
-      "title": "Etap zakończony z powodu braku aktywności",
-      "description": "Nikt nie mówił „{{title}}” przez 30 minut, więc było zamknięte."
+      "title": "Pokój audio zakończony z powodu braku aktywności",
+      "description": "Nikt nie mówił w „{{title}}” przez 30 minut, więc został zamknięty."
     }
   },
   "ads": {

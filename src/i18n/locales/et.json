@@ -3088,8 +3088,8 @@
     "settingUpVoice": "Teie häält seadistatakse...",
     "useThisVoice": "Kasutage seda häält",
     "autoEnd": {
-      "title": "Etapp lõppes tegevusetuse tõttu",
-      "description": "Keegi ei rääkinud 30 minuti jooksul teemal „{{title}}“, nii et see oli suletud."
+      "title": "Helituba lõpetati tegevusetuse tõttu",
+      "description": "Keegi ei rääkinud toas „{{title}}“ 30 minutit, seega see suleti."
     }
   },
   "ads": {

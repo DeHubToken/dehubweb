@@ -3089,8 +3089,8 @@
     "settingUpVoice": "Configurant la teva veu...",
     "useThisVoice": "Utilitza aquesta veu",
     "autoEnd": {
-      "title": "Etapa finalitzada per inactivitat",
-      "description": "Ningú va parlar a \"{{title}}\" durant 30 minuts, així que estava tancat."
+      "title": "La sala d'àudio ha acabat per inactivitat",
+      "description": "Ningú no ha parlat a «{{title}}» durant 30 minuts, així que s'ha tancat."
     }
   },
   "ads": {

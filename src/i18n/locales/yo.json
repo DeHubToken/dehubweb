@@ -2501,8 +2501,8 @@
     "title": "Àwọn yàrá ohùn",
     "alreadyCharged": "Àwọn tókeni rẹ ti lọ fún èyí tẹ́lẹ̀. Gbìyànjú lẹ́ẹ̀kan sí i — a kò ní san ọ́ ní ẹ̀ẹ̀kejì.",
     "autoEnd": {
-      "title": "Ipele ti pari nitori aiṣedede",
-      "description": "Kò sí ẹni tí ó sọ̀rọ̀ lórí \"{{title}}\" fún ọgbọ̀n ìṣẹ́jú, nítorí náà ó ti di títì."
+      "title": "Yàrá ohùn ti parí nítorí àìsí ìgbòkègbodò",
+      "description": "Kò sí ẹni tó sọ̀rọ̀ nínú \"{{title}}\" fún ìṣẹ́jú 30, nítorí náà a ti tì í."
     }
   },
   "ads": {

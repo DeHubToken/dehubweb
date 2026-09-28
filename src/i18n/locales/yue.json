@@ -2503,8 +2503,8 @@
     "title": "語音房",
     "alreadyCharged": "你的代幣已為此支付。請再試一次 — 你不會被收取第二次費用。",
     "autoEnd": {
-      "title": "由於閒置而結束",
-      "description": "「 {{title}} 」 30 分鐘都冇人講，所以閂咗。"
+      "title": "語音房因無人發言已結束",
+      "description": "「{{title}}」已有 30 分鐘無人發言，因此已關閉。"
     }
   },
   "ads": {

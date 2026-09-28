@@ -2985,8 +2985,8 @@
     "settingUpVoice": "Se configurează vocea ta...",
     "useThisVoice": "Folosește această voce",
     "autoEnd": {
-      "title": "Etapa s-a încheiat din cauza inactivității",
-      "description": "Nimeni nu a vorbit pe \"{{title}}\" timp de 30 de minute, așa că a fost închis."
+      "title": "Camera audio s-a încheiat din cauza inactivității",
+      "description": "Nimeni nu a vorbit în „{{title}}” timp de 30 de minute, așa că a fost închisă."
     }
   },
   "ads": {

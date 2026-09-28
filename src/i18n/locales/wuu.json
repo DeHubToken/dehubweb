@@ -2441,8 +2441,8 @@
     "title": "语音房",
     "alreadyCharged": "您的代币已为此支付。请重试 — 您不会被收取第二次费用。",
     "autoEnd": {
-      "title": "阶段因无活动而结束",
-      "description": "“{{title}}”上30分钟没人讲话，所以关掉了。"
+      "title": "语音房因无人发言已结束",
+      "description": "“{{title}}”已有 30 分钟无人发言，因此已关闭。"
     }
   },
   "ads": {

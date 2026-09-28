@@ -2470,8 +2470,8 @@
     "title": "Ses otaglary",
     "alreadyCharged": "Siziň sanawly mukdaryňyz eýýäm muňa alyndy. Ýene-de synanyşyň — ikinji gezek pul tölemeýärsiňiz.",
     "autoEnd": {
-      "title": "Öňki ýaly, bu işleriň ählisi işsizlik sebäpli tamamlanýar.",
-      "description": "Hiç kim \"{{title}}\" bilen 30 minut gürleşmedi, şol sebäpli ol ýapyldy."
+      "title": "Ses otagy işjeňsizlik sebäpli tamamlandy",
+      "description": "\"{{title}}\" otagynda 30 minut hiç kim gürlemedi, şonuň üçin ýapyldy."
     }
   },
   "ads": {

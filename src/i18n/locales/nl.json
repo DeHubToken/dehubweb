@@ -3336,8 +3336,8 @@
     "settingUpVoice": "Je stem instellen...",
     "useThisVoice": "Deze stem gebruiken",
     "autoEnd": {
-      "title": "Fase beëindigd vanwege inactiviteit",
-      "description": "Niemand sprak gedurende 30 minuten op \"{{title}}\", dus het was gesloten."
+      "title": "Audioruimte beëindigd wegens inactiviteit",
+      "description": "Niemand sprak 30 minuten in \"{{title}}\", dus is die gesloten."
     }
   },
   "ads": {

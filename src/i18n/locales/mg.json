@@ -3060,7 +3060,8 @@
     "settingUpVoice": "Manomana ny feonao...",
     "useThisVoice": "Ampiasao io feo io",
     "autoEnd": {
-      "title": "Tapitra ny fe-potoana noho ny tsy fiasana"
+      "title": "Nifarana ny efitrano feo noho ny tsy fisian'asa",
+      "description": "Tsy nisy niteny tao amin'ny \"{{title}}\" nandritra ny 30 minitra, ka nakatona izy."
     }
   },
   "ads": {

@@ -3127,8 +3127,8 @@
     "settingUpVoice": "Jūsų balsas nustatomas...",
     "useThisVoice": "Naudoti šį balsą",
     "autoEnd": {
-      "title": "Etapas baigėsi dėl neaktyvumo",
-      "description": "Niekas nekalbėjo apie „{{title}}“ 30 minučių, todėl jis buvo uždarytas."
+      "title": "Garso kambarys baigtas dėl neveiklumo",
+      "description": "Niekas nekalbėjo „{{title}}“ 30 minučių, todėl jis buvo uždarytas."
     }
   },
   "ads": {

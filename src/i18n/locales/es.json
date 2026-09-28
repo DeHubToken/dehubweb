@@ -3143,8 +3143,8 @@
     "settingUpVoice": "Configurando tu voz...",
     "useThisVoice": "Usar esta voz",
     "autoEnd": {
-      "title": "Etapa finalizada por inactividad",
-      "description": "Nadie habló en \"{{title}}\" durante 30 minutos, así que estaba cerrado."
+      "title": "La sala de audio terminó por inactividad",
+      "description": "Nadie habló en «{{title}}» durante 30 minutos, así que se cerró."
     }
   },
   "ads": {

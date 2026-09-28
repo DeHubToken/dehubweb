@@ -3143,8 +3143,8 @@
     "settingUpVoice": "Inasanidi sauti yako...",
     "useThisVoice": "Tumia sauti hii",
     "autoEnd": {
-      "title": "Hatua ilimalizika kwa sababu ya kutofanya kazi",
-      "description": "Hakuna mtu aliyezungumza kwenye \"{{title}}\" kwa dakika 30, kwa hivyo ilifungwa."
+      "title": "Chumba cha sauti kimefungwa kwa kukosa shughuli",
+      "description": "Hakuna aliyezungumza kwenye \"{{title}}\" kwa dakika 30, kwa hivyo kimefungwa."
     }
   },
   "ads": {

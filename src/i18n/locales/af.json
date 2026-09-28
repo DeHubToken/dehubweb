@@ -3011,8 +3011,8 @@
     "settingUpVoice": "Jou stem word opgestel...",
     "useThisVoice": "Gebruik hierdie stem",
     "autoEnd": {
-      "title": "Fase geëindig as gevolg van onaktiwiteit",
-      "description": "Niemand het 30 minute lank op \"{{title}}\" gepraat nie, so dit was gesluit."
+      "title": "Oudiokamer beëindig weens onaktiwiteit",
+      "description": "Niemand het vir 30 minute in \"{{title}}\" gepraat nie, dus is dit gesluit."
     }
   },
   "ads": {

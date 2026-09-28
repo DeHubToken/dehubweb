@@ -2520,8 +2520,8 @@
     "title": "Dhoma audio",
     "alreadyCharged": "Tokenat tuaja tashmë janë marrë për këtë. Provoni përsëri — nuk do të tarifoheni për herë të dytë.",
     "autoEnd": {
-      "title": "Faza përfundoi për shkak të pasivitetit",
-      "description": "Askush nuk foli në \"{{title}}\" për 30 minuta, kështu që u mbyll."
+      "title": "Dhoma audio përfundoi për shkak të mosaktivitetit",
+      "description": "Askush nuk foli në „{{title}}“ për 30 minuta, prandaj u mbyll."
     }
   },
   "ads": {

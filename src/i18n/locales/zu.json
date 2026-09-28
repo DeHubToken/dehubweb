@@ -2536,8 +2536,8 @@
     "title": "Amagumbi omsindo",
     "alreadyCharged": "Amathokheni akho asevele athathwe kulokhu. Zama futhi — ngeke ushajwe okwesibili.",
     "autoEnd": {
-      "title": "Isigaba siphelile ngenxa yokungasebenzi",
-      "description": "Akekho okhulume ku- \"{{title}}\" imizuzu engu-30, ngakho-ke ivaliwe."
+      "title": "Igumbi lomsindo liphelile ngenxa yokungasebenzi",
+      "description": "Akekho okhulume ku-\"{{title}}\" imizuzu engu-30, ngakho livaliwe."
     }
   },
   "ads": {

@@ -2519,8 +2519,8 @@
     "title": "Audio xonalar",
     "alreadyCharged": "Sizning tokenlaringiz allaqachon bunga sarflangan. Qayta urinib ko'ring — sizga ikkinchi marta haq olinmaydi.",
     "autoEnd": {
-      "title": "Bosqich harakatsizlik tufayli yakunlandi",
-      "description": "&quot;{{title}}&quot; da 30 daqiqa davomida hech kim gapirmadi, shuning uchun u yopildi."
+      "title": "Audio xona faollik yo‘qligi sababli yakunlandi",
+      "description": "\"{{title}}\" xonasida 30 daqiqa hech kim gapirmadi, shuning uchun u yopildi."
     }
   },
   "ads": {

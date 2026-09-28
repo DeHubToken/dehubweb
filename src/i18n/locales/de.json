@@ -3143,8 +3143,8 @@
     "settingUpVoice": "Deine Stimme wird eingerichtet...",
     "useThisVoice": "Diese Stimme verwenden",
     "autoEnd": {
-      "title": "Abschnitt aufgrund von Inaktivität beendet",
-      "description": "30 Minuten lang hat niemand auf \"{{title}}\" gesprochen, also wurde es geschlossen."
+      "title": "Audioraum wegen Inaktivität beendet",
+      "description": "In „{{title}}“ hat 30 Minuten lang niemand gesprochen, daher wurde er geschlossen."
     }
   },
   "ads": {

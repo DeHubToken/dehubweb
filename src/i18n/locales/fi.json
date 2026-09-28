@@ -3090,8 +3090,8 @@
     "settingUpVoice": "Äänesi asettaminen käynnissä...",
     "useThisVoice": "Käytä tätä ääntä",
     "autoEnd": {
-      "title": "Vaihe päättyi käyttämättömyyden vuoksi",
-      "description": "Kukaan ei puhunut aiheesta \"{{title}}\" 30 minuuttiin, joten se suljettiin."
+      "title": "Äänihuone päättyi toimettomuuden vuoksi",
+      "description": "Kukaan ei puhunut huoneessa ”{{title}}” 30 minuuttiin, joten se suljettiin."
     }
   },
   "ads": {

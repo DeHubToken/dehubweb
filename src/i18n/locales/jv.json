@@ -2492,7 +2492,7 @@
     "title": "Ruang swara",
     "alreadyCharged": "Token sampeyan wis dijupuk kanggo iki. Coba maneh — sampeyan ora bakal dikenani biaya kaping pindho.",
     "autoEnd": {
-      "title": "Panggung rampung amarga ora aktif",
+      "title": "Ruang swara rampung amarga ora ana kegiatan",
       "description": "Ora ana sing ngomong ing \"{{title}}\" suwene 30 menit, mula ditutup."
     }
   },

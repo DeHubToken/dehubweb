@@ -3030,7 +3030,7 @@
     "settingUpVoice": "Itinatakda ang iyong boses...",
     "useThisVoice": "Gamitin ang boses na ito",
     "autoEnd": {
-      "title": "Natapos ang entablado dahil sa hindi aktibo",
+      "title": "Natapos ang audio room dahil walang aktibidad",
       "description": "Walang nagsalita sa \"{{title}}\" sa loob ng 30 minuto, kaya isinara ito."
     }
   },

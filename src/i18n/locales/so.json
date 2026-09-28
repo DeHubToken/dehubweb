@@ -2504,8 +2504,8 @@
     "title": "Qolalka codka",
     "alreadyCharged": "Tokenkaaga ayaa mar hore loo qaatay tan. Isku day mar kale — lagugu dalacayn doono labaad.",
     "autoEnd": {
-      "title": "Marxaladdu waxay ku dhammaatay waxqabad la 'aan darteed",
-      "description": "Qofna kama hadlin \"{{title}}\" muddo 30 daqiiqo ah, sidaa darteed waa la xiray."
+      "title": "Qolka codka waa la xiray firfircoonaan la'aan dartood",
+      "description": "Qofna kama hadlin \"{{title}}\" 30 daqiiqo, sidaas darteed waa la xiray."
     }
   },
   "ads": {

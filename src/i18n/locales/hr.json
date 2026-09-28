@@ -3090,8 +3090,8 @@
     "settingUpVoice": "Postavljam vaš glas...",
     "useThisVoice": "Koristite ovaj glas",
     "autoEnd": {
-      "title": "Faza je završena zbog neaktivnosti",
-      "description": "Nitko nije govorio na \"{{title}}\" 30 minuta, tako da je bio zatvoren."
+      "title": "Audio soba završena zbog neaktivnosti",
+      "description": "Nitko nije govorio u „{{title}}” 30 minuta pa je zatvorena."
     }
   },
   "ads": {

@@ -3089,8 +3089,8 @@
     "settingUpVoice": "Nastavování vašeho hlasu...",
     "useThisVoice": "Použít tento hlas",
     "autoEnd": {
-      "title": "Fáze skončila z důvodu nečinnosti",
-      "description": "Na „{{title}}“ 30 minut nikdo nemluvil, takže bylo zavřeno."
+      "title": "Audio místnost skončila kvůli nečinnosti",
+      "description": "V „{{title}}“ nikdo 30 minut nemluvil, proto byla uzavřena."
     }
   },
   "ads": {

@@ -3147,8 +3147,8 @@
     "settingUpVoice": "Configurando sua voz...",
     "useThisVoice": "Use esta voz",
     "autoEnd": {
-      "title": "Etapa encerrada devido a inatividade",
-      "description": "Ninguém falou em \"{{title}}\" durante 30 minutos, por isso foi encerrado."
+      "title": "A sala de áudio foi encerrada por inatividade",
+      "description": "Ninguém falou em \"{{title}}\" durante 30 minutos, então ela foi encerrada."
     }
   },
   "ads": {

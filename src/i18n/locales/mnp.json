@@ -2412,8 +2412,8 @@
     "title": "語音房",
     "alreadyCharged": "您的代币已被用于此。请重试 — 您不会被收取第二次费用。",
     "autoEnd": {
-      "title": "因不活跃而结束阶段",
-      "description": "在“{{title}}”上30分钟无人发言，已关闭。"
+      "title": "語音房因無人發言已結束",
+      "description": "「{{title}}」已有 30 分鐘無人發言，因此已關閉。"
     }
   },
   "ads": {
