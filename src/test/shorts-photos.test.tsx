@@ -14,6 +14,24 @@ vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => (
 const post = { postType: 'feed-images', imageUrls: ['nfts/images/1.jpg', 'nfts/images/2.jpg'],
   description: 'A walk [soundtrack:5373:Morning:Artist:feed-audio/5373-audio.mp3]' };
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); vi.useRealTimers(); });
+it('buffers only a settled neighbour and immediately loads a selected clip', () => {
+  vi.useFakeTimers();
+  vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue();
+  vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
+  const short = { id: 'first', type: 'short' as const, username: 'artist', verified: false,
+    likes: '0', videoUrl: '/first.mp4', thumbnail: '' };
+  const { container, rerender } = render(<VideoSlide short={short} isActive={false} isMuted preload="auto" />);
+  const player = () => container.querySelector('video')!;
+  expect(player().preload).toBe('metadata');
+  act(() => vi.advanceTimersByTime(200));
+  rerender(<VideoSlide short={{ ...short, id: 'second' }} isActive={false} isMuted preload="auto" />);
+  act(() => vi.advanceTimersByTime(200));
+  expect(player().preload).toBe('metadata');
+  act(() => vi.advanceTimersByTime(200));
+  expect(player().preload).toBe('auto');
+  rerender(<VideoSlide short={short} isActive isMuted preload="auto" />);
+  expect(player().preload).toBe('auto');
+});
 it('maps every photo and its single soundtrack without manufacturing a video', () => {
   const media = shortsPhotoMedia(post)!;
   expect(media.imageUrls).toHaveLength(2);
