@@ -2535,7 +2535,11 @@
   },
   "stages": {
     "title": "Rimanakuy wasikuna",
-    "alreadyCharged": "Kaypaqqa tokenniykikunaqa apasqañam. Hukmanta kallpachakuy — iskay kaq kutipiqa manam qullqita mañasunkichu."
+    "alreadyCharged": "Kaypaqqa tokenniykikunaqa apasqañam. Hukmanta kallpachakuy — iskay kaq kutipiqa manam qullqita mañasunkichu.",
+    "autoEnd": {
+      "title": "Etapa tukukurqa mana ima ruwayniyuq kasqanrayku",
+      "description": "Mana pipas &quot;{{title}}&quot; nisqapi 30 minutu rimarqanchu, chaymi wisq&#39;asqa karqan."
+    }
   },
   "ads": {
     "priceUnavailable": "Token chanin mana kanchu — pisi pachamanta wakmanta kallpachakuy.",
@@ -2729,13 +2733,6 @@
     "transferGuarantee": "Sumaq kaqta hap'inki — ch'aqchiy, qillqakuna, qatiqkuna, yanapaykuna k'anchaywan, qhawana hayñikuna. Rant'iqqa waqaychana wasinta imaymanataq chaypi kaqta waqaychan. Llamk'ayqa chaymanta llamk'an DeHub qanpa token pagoyta qhawaspa chainmanta lloqsimusqanta; chayta hark'aykuptinqa, salt'ayta kutichiyqa kutirichin."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Waqaychay kay herencia token-precio planta dólar chaninman ñawpaq listasqa tarifa kaqpi astakun.",
-    "tokenAmount": "{{amount}} fichas nisqakuna",
-    "preListingTokenAmount": "Ñawpaq listasqa tokenpa chanin",
-    "tokenCheckoutNotReady": "Token suscripción qullqi quyqa manam wakichisqachu — ama hina kaspa pisi pachamanta musuqmanta kallpachakuy",
-    "tokenQuoteUnavailable": "Kawsaq token cita mana kanchu",
-    "tokenEstimate": "≈ {{amount}} nisqa fichas",
-    "tokenAmountUnavailable": "Tokenpa chanin mana kanchu",
     "subscribersOnly": "Maqtaqkunapaq",
     "creatorKeepsPost": "{{creator}} kay postta maqtaqkunapaq waqaychay.",
     "creatorNoPlans": "{{creator}} mana ima suscripción nisqa kachkanchu kunan.",
@@ -2816,6 +2813,13 @@
     "inactive": "Mana kuska",
     "daysLeft_one": "{{count}}d qhipa",
     "daysLeft_other": "{{count}}d qhipa",
+    "legacyPlanMigrates": "Waqaychay kay herencia token-precio planta dólar chaninman ñawpaq listasqa tarifa kaqpi astakun.",
+    "tokenAmount": "{{amount}} fichas nisqakuna",
+    "preListingTokenAmount": "Ñawpaq listasqa tokenpa chanin",
+    "tokenCheckoutNotReady": "Token suscripción qullqi quyqa manam wakichisqachu — ama hina kaspa pisi pachamanta musuqmanta kallpachakuy",
+    "tokenQuoteUnavailable": "Kawsaq token cita mana kanchu",
+    "tokenEstimate": "≈ {{amount}} nisqa fichas",
+    "tokenAmountUnavailable": "Tokenpa chanin mana kanchu",
     "subscribedToast": "Suscribido",
     "confirmSubscribeTo": "Suscribete {{plan}}-man {{price}} / {{duration}}-ta.",
     "atPreListingRate": "{{amount}} pre-lista tasa",

@@ -2534,7 +2534,11 @@
   },
   "stages": {
     "title": "Amagumbi omsindo",
-    "alreadyCharged": "Amathokheni akho asevele athathwe kulokhu. Zama futhi — ngeke ushajwe okwesibili."
+    "alreadyCharged": "Amathokheni akho asevele athathwe kulokhu. Zama futhi — ngeke ushajwe okwesibili.",
+    "autoEnd": {
+      "title": "Isigaba siphelile ngenxa yokungasebenzi",
+      "description": "Akekho okhulume ku- \"{{title}}\" imizuzu engu-30, ngakho-ke ivaliwe."
+    }
   },
   "ads": {
     "priceUnavailable": "Intengo yamathokheni ayatholakali — zama futhi maduze.",
@@ -2728,13 +2732,6 @@
     "transferGuarantee": "Uthola i-akhawunti ephelele — isibambo, okuthunyelwe, abalandeli, umlando wamathiphu namalungelo okubheja. Umdayisi ugcina isikhwama sakhe nakho konke okukuso. Ukudluliswa kuqala kuphela ngemuva kokuthi i-DeHub ifunde inkokhelo yakho yamathokheni ngaphandle kweketango; uma iphazamiseka, ukuzama ukuthenga kabusha kuyaqhubeka."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Ukulondoloza kuthutha leli lungiselelo elidala elibhalwe ngamathuluzi libe yizintengo zama-dollar ngesilinganiso sangaphambi kokufakwa kuhlu.",
-    "tokenAmount": "{{amount}} amathuluzi",
-    "preListingTokenAmount": "Inani lamathuluzi sangaphambi kokufakwa kuhlu",
-    "tokenCheckoutNotReady": "I-checkout yokubhalisa yamathuluzi ayilungile — sicela uzame futhi kungekudala",
-    "tokenQuoteUnavailable": "Isilinganiso samathuluzi ebukhoma ayatholakali",
-    "tokenEstimate": "≈ {{amount}} amathuluzi",
-    "tokenAmountUnavailable": "Inani lamathuluzi ayatholakali",
     "subscribersOnly": "Ababhalisile kuphela",
     "creatorKeepsPost": "{{creator}} igcina le posthi kubabhalisile bayo.",
     "creatorNoPlans": "{{creator}} ayinawo okwamanje okubhalisile okuvuliwe.",
@@ -2815,6 +2812,13 @@
     "inactive": "Akusebenzi",
     "daysLeft_one": "{{count}}d kushiyekile",
     "daysLeft_other": "{{count}}d kushiyekile",
+    "legacyPlanMigrates": "Ukulondoloza kuthutha leli lungiselelo elidala elibhalwe ngamathuluzi libe yizintengo zama-dollar ngesilinganiso sangaphambi kokufakwa kuhlu.",
+    "tokenAmount": "{{amount}} amathuluzi",
+    "preListingTokenAmount": "Inani lamathuluzi sangaphambi kokufakwa kuhlu",
+    "tokenCheckoutNotReady": "I-checkout yokubhalisa yamathuluzi ayilungile — sicela uzame futhi kungekudala",
+    "tokenQuoteUnavailable": "Isilinganiso samathuluzi ebukhoma ayatholakali",
+    "tokenEstimate": "≈ {{amount}} amathuluzi",
+    "tokenAmountUnavailable": "Inani lamathuluzi ayatholakali",
     "subscribedToast": "Okubhalisiwe",
     "confirmSubscribeTo": "Bhalisa ku {{plan}} nge {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} ngesilinganiso sokufakwa kuhlu sangaphambili",

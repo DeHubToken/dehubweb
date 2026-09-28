@@ -2410,7 +2410,11 @@
   },
   "stages": {
     "title": "語音房",
-    "alreadyCharged": "您的代币已被用于此。请重试 — 您不会被收取第二次费用。"
+    "alreadyCharged": "您的代币已被用于此。请重试 — 您不会被收取第二次费用。",
+    "autoEnd": {
+      "title": "因不活跃而结束阶段",
+      "description": "在“{{title}}”上30分钟无人发言，已关闭。"
+    }
   },
   "ads": {
     "priceUnavailable": "代币价格不可用 — 请稍后重试。",
@@ -2610,13 +2614,6 @@
     "noStories": "还无故事"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "保存会将此旧的以代币定价的计划迁移到以美元定价，按预上市汇率计算。",
-    "tokenAmount": "{{amount}} 代币",
-    "preListingTokenAmount": "预上市代币数量",
-    "tokenCheckoutNotReady": "代币订阅结账尚未准备好 — 请稍后重试",
-    "tokenQuoteUnavailable": "实时代币报价不可用",
-    "tokenEstimate": "≈ {{amount}} 代币",
-    "tokenAmountUnavailable": "代币数量不可用",
     "subscribersOnly": "僅限訂閱者",
     "creatorKeepsPost": "{{creator}} 將此貼文保留給其訂閱者。",
     "creatorNoPlans": "{{creator}} 目前沒有開放訂閱。",
@@ -2696,6 +2693,13 @@
     "inactive": "不活跃",
     "daysLeft_one": "{{count}}左",
     "daysLeft_other": "{{count}}左",
+    "legacyPlanMigrates": "保存会将此旧的以代币定价的计划迁移到以美元定价，按预上市汇率计算。",
+    "tokenAmount": "{{amount}} 代币",
+    "preListingTokenAmount": "预上市代币数量",
+    "tokenCheckoutNotReady": "代币订阅结账尚未准备好 — 请稍后重试",
+    "tokenQuoteUnavailable": "实时代币报价不可用",
+    "tokenEstimate": "≈ {{amount}} 代币",
+    "tokenAmountUnavailable": "代币数量不可用",
     "subscribedToast": "訂閱了",
     "confirmSubscribeTo": "訂閱 {{plan}} 為了 {{price}} / {{duration}}。",
     "atPreListingRate": "{{amount}} 在预上市价",
@@ -3217,8 +3221,10 @@
     "podcast": {
       "tab": "播客",
       "feedUrlLabel": "播客 RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "抓取 feed",
       "fetching": "抓取 feed 中…",
+      "showBy": "作者：{{author}}",
       "episodes": "{{count}} 集",
       "selectAll": "全选",
       "alreadyImported": "已导入",
@@ -3229,9 +3235,7 @@
       "failed": "失败",
       "emptyFeed": "在该 feed 中未找到任何集。",
       "badFeed": "该链接看起来不像播客 feed。",
-      "tooMany": "一次最多导入 20 集。",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
-      "showBy": "作者：{{author}}"
+      "tooMany": "一次最多导入 20 集。"
     }
   },
   "banned": {
@@ -4379,44 +4383,6 @@
       "stakedPost": "抵押 50k DeHub 代币。年化收益率看起来很稳，12.4%。长期持有者心态。💎🙌"
     }
   },
-  "post": {
-    "like": "赞",
-    "comment": "评论",
-    "repost": "转发",
-    "share": "分享",
-    "bookmark": "书签",
-    "tip": "打赏",
-    "delete": "删除",
-    "edit": "编辑",
-    "report": "举报",
-    "translate": "翻译",
-    "pinned": "置顶",
-    "replying": "回复中",
-    "reply": "回复",
-    "writeReply": "写回复...",
-    "noComments": "还无评论",
-    "viewMore": "看更多",
-    "postDeleted": "帖子删除了",
-    "likes": "赞",
-    "comments": "评论",
-    "reposts": "转发",
-    "shares": "分享"
-  },
-  "create": {
-    "title": "创建帖子",
-    "placeholder": "你在想什乇？",
-    "post": "发布",
-    "addImage": "加图片",
-    "addVideo": "加视频",
-    "addGif": "加GIF",
-    "addPoll": "加投票",
-    "addLocation": "加位置",
-    "visibility": "谁看得着",
-    "everyone": "所有人",
-    "followers": "关注者",
-    "subscribers": "订阅者",
-    "mentioned": "提到其人"
-  },
   "emojiPicker": {
     "tabEmoji": "表情",
     "tabGif": "GIF",
@@ -5136,5 +5102,43 @@
     "planRestricted": "這隻用戶要訂閱正收得著消息。",
     "planTypeNotAllowed": "這隻創作者其方案無允許這種消息。",
     "planMinTip": "打賞乞這隻創作者至少要 {{amount}} DHB。"
+  },
+  "post": {
+    "like": "赞",
+    "comment": "评论",
+    "repost": "转发",
+    "share": "分享",
+    "bookmark": "书签",
+    "tip": "打赏",
+    "delete": "删除",
+    "edit": "编辑",
+    "report": "举报",
+    "translate": "翻译",
+    "pinned": "置顶",
+    "replying": "回复中",
+    "reply": "回复",
+    "writeReply": "写回复...",
+    "noComments": "还无评论",
+    "viewMore": "看更多",
+    "postDeleted": "帖子删除了",
+    "likes": "赞",
+    "comments": "评论",
+    "reposts": "转发",
+    "shares": "分享"
+  },
+  "create": {
+    "title": "创建帖子",
+    "placeholder": "你在想什乇？",
+    "post": "发布",
+    "addImage": "加图片",
+    "addVideo": "加视频",
+    "addGif": "加GIF",
+    "addPoll": "加投票",
+    "addLocation": "加位置",
+    "visibility": "谁看得着",
+    "everyone": "所有人",
+    "followers": "关注者",
+    "subscribers": "订阅者",
+    "mentioned": "提到其人"
   }
 }

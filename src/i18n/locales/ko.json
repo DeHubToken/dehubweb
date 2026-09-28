@@ -3140,7 +3140,11 @@
     "sampleReady": "샘플 준비 완료.",
     "discardRecording": "녹음 삭제",
     "settingUpVoice": "음성 설정 중...",
-    "useThisVoice": "이 음성 사용"
+    "useThisVoice": "이 음성 사용",
+    "autoEnd": {
+      "title": "비활성으로 인해 스테이지가 종료됨",
+      "description": "30분 동안 \"{{title}}\" 에 대해 아무도 말하지 않아 닫혔습니다."
+    }
   },
   "ads": {
     "seoTitle": "광고 관리자 | DeHub",
@@ -5464,6 +5468,7 @@
     "podcast": {
       "tab": "팟캐스트",
       "feedUrlLabel": "팟캐스트 RSS 피드 URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "피드 가져오기",
       "fetching": "피드 가져오는 중...",
       "showBy": "작성자: {{author}}",
@@ -5477,8 +5482,7 @@
       "failed": "실패",
       "emptyFeed": "해당 피드에서 에피소드를 찾을 수 없습니다.",
       "badFeed": "해당 링크는 팟캐스트 피드처럼 보이지 않습니다.",
-      "tooMany": "한 번에 최대 20개의 에피소드를 가져옵니다.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "한 번에 최대 20개의 에피소드를 가져옵니다."
     }
   },
   "banned": {

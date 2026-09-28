@@ -3141,7 +3141,11 @@
     "sampleReady": "Örnek hazır.",
     "discardRecording": "Kaydı sil",
     "settingUpVoice": "Sesiniz kuruluyor...",
-    "useThisVoice": "Bu sesi kullan"
+    "useThisVoice": "Bu sesi kullan",
+    "autoEnd": {
+      "title": "Aşama hareketsizlik nedeniyle sona erdi",
+      "description": "30 dakika boyunca kimse \"{{title}}\" hakkında konuşmadı, bu yüzden kapatıldı."
+    }
   },
   "ads": {
     "seoTitle": "Reklam Yöneticisi | DeHub",

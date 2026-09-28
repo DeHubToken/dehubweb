@@ -2442,7 +2442,10 @@
   },
   "stages": {
     "title": "غږيزې خونې",
-    "alreadyCharged": "ستاسو ټوکن لا دمخه د دې لپاره اخیستل شوي. بیا هڅه وکړئ — تاسو به دوهم ځل چارج نه شئ."
+    "alreadyCharged": "ستاسو ټوکن لا دمخه د دې لپاره اخیستل شوي. بیا هڅه وکړئ — تاسو به دوهم ځل چارج نه شئ.",
+    "autoEnd": {
+      "title": "د بې روزګارۍ له امله د کوکنارو کښت پای ته ورسید"
+    }
   },
   "ads": {
     "priceUnavailable": "د ټوکن قیمت شتون نلري — ژر بیا هڅه وکړئ.",
@@ -2636,13 +2639,6 @@
     "transferGuarantee": "تاسو ټول حساب ترلاسه کوئ — هینډل، پوسټونه، پیروان، د لارښوونو تاریخ او د لقب حقونه. پلورونکی خپل والټ او په کې هرڅه ساتي. لیږد یوازې وروسته پرمخ ځي کله چې DeHub ستاسو د ټوکن تادیه له زنځیر څخه بیرته لوستل کوي؛ که دا مداخله شي، د پیرودلو بیا هڅه کول دا بیا پیلوي."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "سپما دا زوړ توکن-قیمت شوی پلان د مخکې لیست شوي نرخ سره ډالر قیمت ته لیږدوي.",
-    "tokenAmount": "{{amount}} توکونه",
-    "preListingTokenAmount": "د مخکې لیست کولو توکن مقدار",
-    "tokenCheckoutNotReady": "د توکن ګډون چیک آوټ (checkout) چمتو نه دی - مهرباني وکړئ ژر بیا هڅه وکړئ",
-    "tokenQuoteUnavailable": "د ژوندی توکن نرخ شتون نلري",
-    "tokenEstimate": "≈ {{amount}} توکونه",
-    "tokenAmountUnavailable": "د توکن مقدار شتون نلري",
     "subscribersOnly": "یوازې د سبسکرایبرانو لپاره",
     "creatorKeepsPost": "{{creator}} دا پوسټ د خپلو سبسکرایبرانو لپاره ساتي.",
     "creatorNoPlans": "{{creator}} اوس مهال هیڅ سبسکرایب نه لري.",
@@ -2723,6 +2719,13 @@
     "inactive": "غیر فعال",
     "daysLeft_one": "د {{count}} ورځې پاتې",
     "daysLeft_other": "د {{count}} ورځې پاتې",
+    "legacyPlanMigrates": "سپما دا زوړ توکن-قیمت شوی پلان د مخکې لیست شوي نرخ سره ډالر قیمت ته لیږدوي.",
+    "tokenAmount": "{{amount}} توکونه",
+    "preListingTokenAmount": "د مخکې لیست کولو توکن مقدار",
+    "tokenCheckoutNotReady": "د توکن ګډون چیک آوټ (checkout) چمتو نه دی - مهرباني وکړئ ژر بیا هڅه وکړئ",
+    "tokenQuoteUnavailable": "د ژوندی توکن نرخ شتون نلري",
+    "tokenEstimate": "≈ {{amount}} توکونه",
+    "tokenAmountUnavailable": "د توکن مقدار شتون نلري",
     "subscribedToast": "ګډون شوی",
     "confirmSubscribeTo": "د {{plan}} ګډون وکړئ د {{price}} / {{duration}} لپاره.",
     "atPreListingRate": "د {{amount}} د مخکې لیست نرخ",
@@ -3230,21 +3233,21 @@
     "podcast": {
       "tab": "پوډکاسټ",
       "feedUrlLabel": "د RSS فیډ URL ډاونلوډ کړئ",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "د تغذیې خواړه",
       "fetching": "د خوراکي توکو د...",
+      "showBy": "د {{author}} لخوا",
+      "episodes": "{{count}} برخې",
       "selectAll": "ټول غوره کړئ",
       "alreadyImported": "له دې وړاندې لیکنه واردات",
       "ownership": "زه دا مینځپانګه لرم، یا د دې حق لرم چې دا په DeHub کې خپور کړم.",
+      "importSelected": "{{count}} برخې واردې کړئ",
       "importing": "د وارداتو لپاره...",
       "done": "په صف کې",
       "failed": "ناکامي او ناکامي",
       "emptyFeed": "موږ په دې خواړو کې هیڅ شی نه شو موندلی.",
       "badFeed": "دا لینک د ویډیو په څیر نه ښکاري.",
-      "tooMany": "په یو وخت کې تر 20 پورې ویډیوګانې ثبت کړئ.",
-      "episodes": "{{count}} برخې",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
-      "importSelected": "{{count}} برخې واردې کړئ",
-      "showBy": "د {{author}} لخوا"
+      "tooMany": "په یو وخت کې تر 20 پورې ویډیوګانې ثبت کړئ."
     }
   },
   "banned": {

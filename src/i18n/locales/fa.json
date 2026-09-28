@@ -3130,7 +3130,11 @@
     "sampleReady": "نمونه آماده است.",
     "discardRecording": "حذف ضبط",
     "settingUpVoice": "تنظیم صدای شما...",
-    "useThisVoice": "از این صدا استفاده کنید"
+    "useThisVoice": "از این صدا استفاده کنید",
+    "autoEnd": {
+      "title": "مرحله به دلیل عدم فعالیت به پایان رسید",
+      "description": "به مدت ۳۰ دقیقه هیچکس با صدای «{{title}}» صحبت نکرد، بنابراین بسته شد."
+    }
   },
   "ads": {
     "seoTitle": "مدیر تبلیغات | DeHub",
@@ -4426,11 +4430,14 @@
     "period": "دوره",
     "status": "وضعیت",
     "remaining": "باقی مانده",
+    "unknown": "ناشناخته",
     "to": "به",
     "never": "هرگز",
     "expired": "منقضی شده",
     "active": "فعال",
     "inactive": "غیر فعال",
+    "daysLeft_one": "{{count}}d سمت چپ",
+    "daysLeft_other": "{{count}}d سمت چپ",
     "legacyPlanMigrates": "ذخیره این طرح قیمت‌گذاری شده با توکن قدیمی را به قیمت‌گذاری دلاری با نرخ پیش از لیست منتقل می‌کند.",
     "tokenAmount": "{{amount}} توکن",
     "preListingTokenAmount": "مبلغ توکن پیش از لیست",
@@ -4438,9 +4445,6 @@
     "tokenQuoteUnavailable": "نقل قول زنده توکن در دسترس نیست",
     "tokenEstimate": "≈ {{amount}} توکن",
     "tokenAmountUnavailable": "مبلغ توکن در دسترس نیست",
-    "unknown": "ناشناخته",
-    "daysLeft_one": "{{count}}d سمت چپ",
-    "daysLeft_other": "{{count}}d سمت چپ",
     "subscribedToast": "مشترک",
     "confirmSubscribeTo": "برای {{price}} / {{duration}} در {{plan}} مشترک شوید.",
     "atPreListingRate": "{{amount}} با نرخ پیش از ثبت",
@@ -5351,9 +5355,11 @@
     "podcast": {
       "tab": "پادکست",
       "feedUrlLabel": "آدرس فید RSS پادکست",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "& واکشی خوراندن‌",
       "fetching": "در حال دریافت خوراک…",
       "showBy": "توسط {{author}}",
+      "episodes": "{{count}} قسمت",
       "selectAll": "انتخاب همه",
       "alreadyImported": "دمو با موفقیت درون ریزی شد",
       "ownership": "من مالک این محتوا هستم، یا اجازه‌ی صاحب حق نشر آن را در DeHub دارم.",
@@ -5363,9 +5369,7 @@
       "failed": "شکست خورد",
       "emptyFeed": "ما نتوانستیم هیچ قسمتی را در آن فید پیدا کنیم.",
       "badFeed": "آن لینک شبیه فید پادکست نیست.",
-      "tooMany": "حداکثر 20 قسمت را همزمان وارد کنید.",
-      "episodes": "{{count}} قسمت",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "حداکثر 20 قسمت را همزمان وارد کنید."
     }
   },
   "banned": {

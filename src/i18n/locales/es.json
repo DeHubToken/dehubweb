@@ -3141,7 +3141,11 @@
     "sampleReady": "Muestra lista.",
     "discardRecording": "Descartar la grabación",
     "settingUpVoice": "Configurando tu voz...",
-    "useThisVoice": "Usar esta voz"
+    "useThisVoice": "Usar esta voz",
+    "autoEnd": {
+      "title": "Etapa finalizada por inactividad",
+      "description": "Nadie habló en \"{{title}}\" durante 30 minutos, así que estaba cerrado."
+    }
   },
   "ads": {
     "seoTitle": "Gestor de anuncios | DeHub",

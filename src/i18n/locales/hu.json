@@ -3086,7 +3086,11 @@
     "sampleReady": "A minta kész.",
     "discardRecording": "Felvétel elvetése",
     "settingUpVoice": "A hangod beállítása folyamatban van...",
-    "useThisVoice": "Használd ezt a hangot"
+    "useThisVoice": "Használd ezt a hangot",
+    "autoEnd": {
+      "title": "Inaktivitás miatt befejeződött szakasz",
+      "description": "Senki sem beszélt a következőn 30 percig: „{{title}}”, ezért zárva volt."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",

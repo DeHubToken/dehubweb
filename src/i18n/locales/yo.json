@@ -2499,7 +2499,11 @@
   },
   "stages": {
     "title": "Àwọn yàrá ohùn",
-    "alreadyCharged": "Àwọn tókeni rẹ ti lọ fún èyí tẹ́lẹ̀. Gbìyànjú lẹ́ẹ̀kan sí i — a kò ní san ọ́ ní ẹ̀ẹ̀kejì."
+    "alreadyCharged": "Àwọn tókeni rẹ ti lọ fún èyí tẹ́lẹ̀. Gbìyànjú lẹ́ẹ̀kan sí i — a kò ní san ọ́ ní ẹ̀ẹ̀kejì.",
+    "autoEnd": {
+      "title": "Ipele ti pari nitori aiṣedede",
+      "description": "Kò sí ẹni tí ó sọ̀rọ̀ lórí \"{{title}}\" fún ọgbọ̀n ìṣẹ́jú, nítorí náà ó ti di títì."
+    }
   },
   "ads": {
     "priceUnavailable": "Ojú ọjọ́ tókeni kò sí — gbìyànjú lẹ́ẹ̀kan sí i ní kùtùkùtù.",
@@ -2692,13 +2696,6 @@
     "transferGuarantee": "O gba iroyin gbogbo — oludari, awọn ifiweranṣẹ, awọn ọmọlẹhin, itan imọran ati awọn ẹtọ aami. Oluta naa n tọju apamọwọ wọn ati ohun gbogbo ti o wa ninu rẹ. Gbigbe naa n ṣiṣẹ nikan lẹhin ti DeHub ka sisanwo ami rẹ pada kuro ni pq; ti o ba da duro, atunṣe rira naa n tẹsiwaju."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Ìfipamọ́ yí ètò idiyele àmi-ìṣẹ́ ìbílẹ̀ yìí sí idiyele dọla ni idiyele ṣaaju-àtẹ ìtò.",
-    "tokenAmount": "{{amount}} àmi-ìṣẹ́",
-    "preListingTokenAmount": "Iye àmi-ìṣẹ́ ṣaaju-àtẹ ìtò",
-    "tokenCheckoutNotReady": "Ìdánilẹ́kùn ìtò àmi-ìṣẹ́ kò tii ṣetan — jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i laipẹ",
-    "tokenQuoteUnavailable": "Ìwọ̀n àmi-ìṣẹ́ laaye kò sí",
-    "tokenEstimate": "≈ {{amount}} àmi-ìṣẹ́",
-    "tokenAmountUnavailable": "Iye àmi-ìṣẹ́ kò sí",
     "subscribersOnly": "Àwọn àmúyẹ fun gbígbọ́ orin ko le ṣiṣẹ lori ẹ̀rọ rẹ Àkọlé fídíò",
     "creatorKeepsPost": "{{creator}} tọju ifiweranṣẹ yii fun awọn alabapin wọn.",
     "creatorNoPlans": "{{creator}} kò ní ìforúkọsílẹ̀ tí ó ṣí sílẹ̀ nísinsìnyí.",
@@ -2779,6 +2776,13 @@
     "inactive": "Ailagbara",
     "daysLeft_one": "{{count}} ọjọ ti o ku",
     "daysLeft_other": "{{count}} ọjọ ti o ku",
+    "legacyPlanMigrates": "Ìfipamọ́ yí ètò idiyele àmi-ìṣẹ́ ìbílẹ̀ yìí sí idiyele dọla ni idiyele ṣaaju-àtẹ ìtò.",
+    "tokenAmount": "{{amount}} àmi-ìṣẹ́",
+    "preListingTokenAmount": "Iye àmi-ìṣẹ́ ṣaaju-àtẹ ìtò",
+    "tokenCheckoutNotReady": "Ìdánilẹ́kùn ìtò àmi-ìṣẹ́ kò tii ṣetan — jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i laipẹ",
+    "tokenQuoteUnavailable": "Ìwọ̀n àmi-ìṣẹ́ laaye kò sí",
+    "tokenEstimate": "≈ {{amount}} àmi-ìṣẹ́",
+    "tokenAmountUnavailable": "Iye àmi-ìṣẹ́ kò sí",
     "subscribedToast": "Ti ṣe alabapin",
     "confirmSubscribeTo": "Ṣe alabapin si {{plan}} fun {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} ni idiyele atokọ iṣaaju",

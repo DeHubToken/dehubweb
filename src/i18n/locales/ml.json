@@ -3024,7 +3024,11 @@
     "sampleReady": "സാമ്പിൾ തയ്യാറാണ്.",
     "discardRecording": "റെക്കോർഡിംഗ് നിരസിക്കുക",
     "settingUpVoice": "നിങ്ങളുടെ വോയ്സ് സജ്ജീകരിക്കുന്നു...",
-    "useThisVoice": "ഈ വോയ്സ് ഉപയോഗിക്കുക"
+    "useThisVoice": "ഈ വോയ്സ് ഉപയോഗിക്കുക",
+    "autoEnd": {
+      "title": "നിഷ്‌ക്രിയത്വം കാരണം സ്റ്റേജ് അവസാനിച്ചു",
+      "description": "30 മിനിറ്റോളം ആരും \"{{title}}\" എന്നതിൽ സംസാരിച്ചില്ല, അതിനാൽ അത് അടച്ചു."
+    }
   },
   "ads": {
     "newCampaign": "പുതിയ കാമ്പെയ്ൻ",
@@ -4231,6 +4235,7 @@
     "noneYet": "ഇതുവരെ സബ്സ്ക്രിപ്ഷനുകളൊന്നുമില്ല",
     "noneYetHint": "നിങ്ങളുടെ പ്രവർത്തനം ഇവിടെ കാണുന്നതിന് സ്രഷ്ടാക്കൾക്ക് സബ്‌സ്‌ക്രൈബുചെയ്യുക",
     "subscriptionList": "സബ്സ്ക്രിപ്ഷൻ ലിസ്റ്റ്",
+    "totalCount": "{{count}} ആകെ",
     "creator": "സ്രഷ്ടാവ്",
     "plan": "പദ്ധതി",
     "planFallback": "പദ്ധതി",
@@ -4243,6 +4248,8 @@
     "expired": "കാലഹരണപ്പെട്ടു",
     "active": "സജീവമാണ്",
     "inactive": "നിഷ്‌ക്രിയം",
+    "daysLeft_one": "{{count}}d ഇടത്",
+    "daysLeft_other": "{{count}}d ഇടത്",
     "legacyPlanMigrates": "സേവിംഗ്സ് ഈ പഴയ ടോക്കൺ വിലയിലുള്ള പ്ലാൻ പ്രീ-ലിസ്റ്റിംഗ് നിരക്കിൽ ഡോളർ വിലയിലേക്ക് മാറ്റുന്നു.",
     "tokenAmount": "{{amount}} ടോക്കണുകൾ",
     "preListingTokenAmount": "പ്രീ-ലിസ്റ്റിംഗ് ടോക്കൺ തുക",
@@ -4250,12 +4257,9 @@
     "tokenQuoteUnavailable": "തത്സമയ ടോക്കൺ ഉദ്ധരണി ലഭ്യമല്ല",
     "tokenEstimate": "≈ {{amount}} ടോക്കണുകൾ",
     "tokenAmountUnavailable": "ടോക്കൺ തുക ലഭ്യമല്ല",
-    "totalCount": "{{count}} ആകെ",
-    "daysLeft_one": "{{count}}d ഇടത്",
-    "daysLeft_other": "{{count}}d ഇടത്",
     "subscribedToast": "സബ്‌സ്‌ക്രൈബ് ചെയ്‌തു",
-    "atPreListingRate": "പ്രീ-ലിസ്റ്റിംഗ് നിരക്കിൽ {{amount}}",
     "confirmSubscribeTo": "{{plan}}-ലേക്ക് {{price}} / {{duration}}-ന് സബ്സ്ക്രൈബ് ചെയ്യുക.",
+    "atPreListingRate": "പ്രീ-ലിസ്റ്റിംഗ് നിരക്കിൽ {{amount}}",
     "youPayNow": "നിങ്ങൾ പണമടയ്ക്കുന്നു",
     "paidToCreatorWallet": "നേരെ സ്രഷ്ടാവിന്റെ വാലറ്റിലേക്ക് പോകുന്നു",
     "creatorPaidDirectNote": "നിങ്ങൾ സബ്‌സ്‌ക്രൈബുചെയ്യുന്ന നിമിഷം സ്രഷ്ടാവിന്റെ പങ്ക് അവരുടെ വാലറ്റിലേക്ക് നേരിട്ട് പോകുന്നു. DeHub ഒരു ചെറിയ പ്ലാറ്റ്‌ഫോം ഫീസ് സൂക്ഷിക്കുന്നു.",
@@ -5160,6 +5164,7 @@
     "podcast": {
       "tab": "പോഡ്കാസ്റ്റ്",
       "feedUrlLabel": "പോഡ്കാസ്റ്റ് RSS ഫീഡ് URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "ഫീഡ് കൊണ്ടുവരിക",
       "fetching": "ഫീഡ് എടുക്കുന്നു...",
       "showBy": "{{author}} മുഖേന",
@@ -5173,8 +5178,7 @@
       "failed": "പരാജയപ്പെട്ടു",
       "emptyFeed": "ആ ഫീഡിൽ എപ്പിസോഡുകളൊന്നും കണ്ടെത്താൻ ഞങ്ങൾക്ക് കഴിഞ്ഞില്ല.",
       "badFeed": "ആ ലിങ്ക് ഒരു പോഡ്‌കാസ്റ്റ് ഫീഡായി തോന്നുന്നില്ല.",
-      "tooMany": "ഒരു സമയം 20 എപ്പിസോഡുകൾ വരെ ഇറക്കുമതി ചെയ്യുക.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ഒരു സമയം 20 എപ്പിസോഡുകൾ വരെ ഇറക്കുമതി ചെയ്യുക."
     }
   },
   "banned": {

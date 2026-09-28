@@ -3141,7 +3141,11 @@
     "sampleReady": "Sampuli iko tayari.",
     "discardRecording": "Futa rekodi",
     "settingUpVoice": "Inasanidi sauti yako...",
-    "useThisVoice": "Tumia sauti hii"
+    "useThisVoice": "Tumia sauti hii",
+    "autoEnd": {
+      "title": "Hatua ilimalizika kwa sababu ya kutofanya kazi",
+      "description": "Hakuna mtu aliyezungumza kwenye \"{{title}}\" kwa dakika 30, kwa hivyo ilifungwa."
+    }
   },
   "ads": {
     "seoTitle": "Meneja wa Matangazo | DeHub",

@@ -2440,7 +2440,10 @@
   },
   "stages": {
     "title": "ऑडियो रूम",
-    "alreadyCharged": "आपके टोकन पहले ही इसके लिए ले लिए गए हैं। फिर से प्रयास करें — आपसे दूसरी बार शुल्क नहीं लिया जाएगा।"
+    "alreadyCharged": "आपके टोकन पहले ही इसके लिए ले लिए गए हैं। फिर से प्रयास करें — आपसे दूसरी बार शुल्क नहीं लिया जाएगा।",
+    "autoEnd": {
+      "title": "निष्क्रियता के कारण टर्मिनल स्थगित"
+    }
   },
   "ads": {
     "priceUnavailable": "टोकन मूल्य अनुपलब्ध — थोड़ी देर में फिर से प्रयास करें।",
@@ -2634,13 +2637,6 @@
     "transferGuarantee": "आपको पूरा खाता मिलता है — हैंडल, पोस्ट, अनुयायी, टिप्स इतिहास और बैज अधिकार। विक्रेता अपना वॉलेट और उसमें सब कुछ रखता है। DeHub द्वारा आपके टोकन भुगतान को ब्लॉकचेन से वापस पढ़ने के बाद ही स्थानांतरण चलता है; यदि यह बाधित होता है, तो खरीद को फिर से शुरू करने से यह फिर से शुरू हो जाता है।"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "सेविंग इस लेगेसी टोकन-प्राइस्ड प्लान को प्री-लिस्टिंग दर पर डॉलर मूल्य निर्धारण में माइग्रेट करती है।",
-    "tokenAmount": "{{amount}} टोकन",
-    "preListingTokenAmount": "प्री-लिस्टिंग टोकन राशि",
-    "tokenCheckoutNotReady": "टोकन सब्सक्रिप्शन चेकआउट तैयार नहीं है - कृपया थोड़ी देर में पुनः प्रयास करें",
-    "tokenQuoteUnavailable": "लाइव टोकन कोट अनुपलब्ध",
-    "tokenEstimate": "≈ {{amount}} टोकन",
-    "tokenAmountUnavailable": "टोकन राशि अनुपलब्ध",
     "subscribersOnly": "केवल सब्सक्राइबर",
     "creatorKeepsPost": "{{creator}} ई पोस्ट अपने सब्सक्राइबर लोग खातिर रखेला।",
     "creatorNoPlans": "{{creator}} के पास अभी कवनो सब्सक्रिप्शन खुलल नइखे।",
@@ -2721,6 +2717,13 @@
     "inactive": "निष्क्रिय",
     "daysLeft_one": "{{count}} दिन बचे",
     "daysLeft_other": "{{count}} दिन बचे",
+    "legacyPlanMigrates": "सेविंग इस लेगेसी टोकन-प्राइस्ड प्लान को प्री-लिस्टिंग दर पर डॉलर मूल्य निर्धारण में माइग्रेट करती है।",
+    "tokenAmount": "{{amount}} टोकन",
+    "preListingTokenAmount": "प्री-लिस्टिंग टोकन राशि",
+    "tokenCheckoutNotReady": "टोकन सब्सक्रिप्शन चेकआउट तैयार नहीं है - कृपया थोड़ी देर में पुनः प्रयास करें",
+    "tokenQuoteUnavailable": "लाइव टोकन कोट अनुपलब्ध",
+    "tokenEstimate": "≈ {{amount}} टोकन",
+    "tokenAmountUnavailable": "टोकन राशि अनुपलब्ध",
     "subscribedToast": "सदस्यता ली",
     "confirmSubscribeTo": "सब्सक्राइब करें {{plan}} के लिए {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} पूर्व-लिस्टिंग दर पर",
@@ -3234,21 +3237,21 @@
     "podcast": {
       "tab": "पॉडकास्ट, पॉडकास्ट,",
       "feedUrlLabel": "पन्ना जेवन \"आरएसएस फ़ीड यूआरएल\" से जुड़ल बा",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "भोजन समायोजित करें",
       "fetching": "करेला खाने के फायदे-",
+      "showBy": "{{author}} के ओर से",
+      "episodes": "{{count}} गो एपिसोड",
       "selectAll": "सब कुछ चुनें",
       "alreadyImported": "आयात कइल गइल",
       "ownership": "हमरा पास ई सामग्री बा, या एकरा के DeHub पर प्रकाशित करे खातिर अधिकार धारक के अनुमति बा ।",
+      "importSelected": "{{count}} गो एपिसोड इंपोर्ट करीं",
       "importing": "आयात कइल गइल...",
       "done": "क्वारंटीन कइल गइल",
       "failed": "असफल भइल",
       "emptyFeed": "हमहन के एह फूड में कुछुवो ना लउकत रहे ।",
       "badFeed": "ई श्रेणी अइसन आधार लेख कुल खातिर बाटे जेवन टेम्पलेटःCountry data Podcast से संबंधित होखें ।",
-      "tooMany": "एक ही समय में 20 फाइलें बदलें ।",
-      "episodes": "{{count}} गो एपिसोड",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
-      "importSelected": "{{count}} गो एपिसोड इंपोर्ट करीं",
-      "showBy": "{{author}} के ओर से"
+      "tooMany": "एक ही समय में 20 फाइलें बदलें ।"
     }
   },
   "banned": {

@@ -3131,7 +3131,11 @@
     "sampleReady": "Үлгі дайын.",
     "discardRecording": "Жазуды жою",
     "settingUpVoice": "Дауысыңызды орнатудамыз...",
-    "useThisVoice": "Бұл дауысты пайдалану"
+    "useThisVoice": "Бұл дауысты пайдалану",
+    "autoEnd": {
+      "title": "Белсенділіктің болмауына байланысты кезең аяқталды",
+      "description": "Ешкім 30 минут бойы «{{title}}» -де сөйлеспеді, сондықтан ол жабылды."
+    }
   },
   "ads": {
     "seoTitle": "Жарнамалар менеджері | DeHub",
@@ -4433,7 +4437,10 @@
     "noneYet": "Әзірге жазылымдар жоқ",
     "noneYetHint": "Қызметіңізді көру үшін жасаушыларға жазылыңыз",
     "subscriptionList": "Жазылулар тізімі",
+    "totalCount": "{{count}} Барлығы",
     "creator": "Құрушысы",
+    "plan": "Жоспар",
+    "planFallback": "Жоспар",
     "period": "Период",
     "status": "Мәртебе",
     "remaining": "%s қалды",
@@ -4452,12 +4459,9 @@
     "tokenQuoteUnavailable": "Тікелей токен бағасы жоқ",
     "tokenEstimate": "≈ {{amount}} токен",
     "tokenAmountUnavailable": "Токен сомасы жоқ",
-    "totalCount": "{{count}} Барлығы",
-    "plan": "Жоспар",
-    "planFallback": "Жоспар",
     "subscribedToast": "Жазылу",
-    "atPreListingRate": "Алдын ала тіркеу жылдамдығымен {{amount}}",
     "confirmSubscribeTo": "{{plan}} жоспарына {{price}} / {{duration}} үшін жазылыңыз.",
+    "atPreListingRate": "Алдын ала тіркеу жылдамдығымен {{amount}}",
     "youPayNow": "Сіз төлейсіз",
     "paidToCreatorWallet": "Жаратушының әмиянына тікелей барады",
     "creatorPaidDirectNote": "Жаратушының үлесі жазылу сәтінде тікелей олардың әмиянына түседі. DeHub шағын платформа ақысын сақтайды.",
@@ -5413,6 +5417,7 @@
     "podcast": {
       "tab": "Подкаст",
       "feedUrlLabel": "Подкаст RSS арнасының URL мекенжайы",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Ақпаратты алу",
       "fetching": "Ақпаратты алу...",
       "showBy": "{{author}} арқылы",
@@ -5426,8 +5431,7 @@
       "failed": "Сәтсіздік",
       "emptyFeed": "Бұл арнаның эпизодтарын таба алмадық.",
       "badFeed": "Бұл сілтеме подкаст арнасына ұқсамайды.",
-      "tooMany": "Бір уақытта 20 эпизодқа дейін импорттау.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "Бір уақытта 20 эпизодқа дейін импорттау."
     }
   },
   "banned": {
@@ -6644,32 +6648,6 @@
       "tippedYou": "сізге қоңырау шалды {{amount}} tokens"
     }
   },
-  "spaces": {
-    "title": "Кеңістіктер",
-    "live": "Тікелей",
-    "upcoming": "Алдағы",
-    "past": "Өткен",
-    "create": "Кеңістік жасау",
-    "join": "Қосылу",
-    "listeners": "Тыңдаушылар",
-    "speakers": "Сөйлеушілер",
-    "host": "Жүргізуші",
-    "endSpace": "Кеңістікті аяқтау",
-    "raiseHand": "Қол көтеру",
-    "lowerHand": "Қолды түсіру",
-    "mute": "Дыбысты өшіру",
-    "unmute": "Дыбысты қосу",
-    "leave": "Кеңістіктен шығу",
-    "noSpaces": "Әлі кеңістіктер жоқ",
-    "loginDescription": "Аудио кеңістіктер жасау және қосылу үшін кіріңіз."
-  },
-  "blog": {
-    "title": "Блог",
-    "readMore": "Көбірек оқу",
-    "backToBlog": "Блогқа қайту",
-    "sharePost": "Жазбаны бөлісу",
-    "relatedPosts": "Байланысты жазбалар"
-  },
   "emojiPicker": {
     "tabEmoji": "Эмодзи",
     "tabGif": "GIF",
@@ -7399,5 +7377,31 @@
     "planRestricted": "Бұл пайдаланушыға хабар алу үшін жазылым қажет.",
     "planTypeNotAllowed": "Бұл автордың жоспары мұндай хабарға рұқсат бермейді.",
     "planMinTip": "Бұл автор үшін шайпұл кемінде {{amount}} DHB болуы керек."
+  },
+  "spaces": {
+    "title": "Кеңістіктер",
+    "live": "Тікелей",
+    "upcoming": "Алдағы",
+    "past": "Өткен",
+    "create": "Кеңістік жасау",
+    "join": "Қосылу",
+    "listeners": "Тыңдаушылар",
+    "speakers": "Сөйлеушілер",
+    "host": "Жүргізуші",
+    "endSpace": "Кеңістікті аяқтау",
+    "raiseHand": "Қол көтеру",
+    "lowerHand": "Қолды түсіру",
+    "mute": "Дыбысты өшіру",
+    "unmute": "Дыбысты қосу",
+    "leave": "Кеңістіктен шығу",
+    "noSpaces": "Әлі кеңістіктер жоқ",
+    "loginDescription": "Аудио кеңістіктер жасау және қосылу үшін кіріңіз."
+  },
+  "blog": {
+    "title": "Блог",
+    "readMore": "Көбірек оқу",
+    "backToBlog": "Блогқа қайту",
+    "sharePost": "Жазбаны бөлісу",
+    "relatedPosts": "Байланысты жазбалар"
   }
 }

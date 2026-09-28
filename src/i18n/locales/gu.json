@@ -2478,7 +2478,11 @@
   },
   "stages": {
     "title": "ઑડિયો રૂમ",
-    "alreadyCharged": "તમારા ટોકન આ માટે પહેલેથી જ લઈ લેવામાં આવ્યા છે. ફરી પ્રયાસ કરો — તમને બીજી વાર ચાર્જ કરવામાં આવશે નહીં."
+    "alreadyCharged": "તમારા ટોકન આ માટે પહેલેથી જ લઈ લેવામાં આવ્યા છે. ફરી પ્રયાસ કરો — તમને બીજી વાર ચાર્જ કરવામાં આવશે નહીં.",
+    "autoEnd": {
+      "title": "નિષ્ક્રિયતાને કારણે સ્ટેજ સમાપ્ત થયું",
+      "description": "કોઈએ \"{{title}}\" પર 30 મિનિટ સુધી વાત કરી ન હતી, તેથી તે બંધ હતું."
+    }
   },
   "ads": {
     "priceUnavailable": "ટોકન કિંમત અનુપલબ્ધ — થોડીવારમાં ફરી પ્રયાસ કરો.",
@@ -2672,13 +2676,6 @@
     "transferGuarantee": "તમને આખું એકાઉન્ટ મળે છે — હેન્ડલ, પોસ્ટ્સ, ફોલોઅર્સ, ટિપ્સ ઇતિહાસ અને બેજ અધિકારો. વિક્રેતા તેમનું વોલેટ અને તેમાં જે છે તે રાખે છે. DeHub તમારા ટોકન ચુકવણીને ચેઇનમાંથી પાછું વાંચે પછી જ ટ્રાન્સફર ચાલે છે; જો તે વિક્ષેપિત થાય, તો ખરીદી ફરીથી કરવાનો પ્રયાસ તેને ફરી શરૂ કરે છે."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "સેવિંગ આ લેગસી ટોકન-પ્રાઇસ્ડ પ્લાનને પ્રી-લિસ્ટિંગ રેટ પર ડોલર પ્રાઇસિંગમાં માઇગ્રેટ કરે છે.",
-    "tokenAmount": "{{amount}} ટોકન્સ",
-    "preListingTokenAmount": "પ્રી-લિસ્ટિંગ ટોકન રકમ",
-    "tokenCheckoutNotReady": "ટોકન સબ્સ્ક્રિપ્શન ચેકઆઉટ તૈયાર નથી — કૃપા કરીને ટૂંક સમયમાં ફરી પ્રયાસ કરો",
-    "tokenQuoteUnavailable": "લાઇવ ટોકન ક્વોટ અનુપલબ્ધ",
-    "tokenEstimate": "≈ {{amount}} ટોકન્સ",
-    "tokenAmountUnavailable": "ટોકન રકમ અનુપલબ્ધ",
     "subscribersOnly": "માત્ર સબ્સ્ક્રાઇબર્સ માટે",
     "creatorKeepsPost": "{{creator}} તેમના સબ્સ્ક્રાઇબર્સ માટે આ પોસ્ટ રાખે છે.",
     "creatorNoPlans": "{{creator}} પાસે હાલમાં કોઈ સબ્સ્ક્રિપ્શન ખુલ્લું નથી.",
@@ -2759,6 +2756,13 @@
     "inactive": "નિષ્ક્રિય",
     "daysLeft_one": "{{count}}d બાકી",
     "daysLeft_other": "{{count}}d બાકી",
+    "legacyPlanMigrates": "સેવિંગ આ લેગસી ટોકન-પ્રાઇસ્ડ પ્લાનને પ્રી-લિસ્ટિંગ રેટ પર ડોલર પ્રાઇસિંગમાં માઇગ્રેટ કરે છે.",
+    "tokenAmount": "{{amount}} ટોકન્સ",
+    "preListingTokenAmount": "પ્રી-લિસ્ટિંગ ટોકન રકમ",
+    "tokenCheckoutNotReady": "ટોકન સબ્સ્ક્રિપ્શન ચેકઆઉટ તૈયાર નથી — કૃપા કરીને ટૂંક સમયમાં ફરી પ્રયાસ કરો",
+    "tokenQuoteUnavailable": "લાઇવ ટોકન ક્વોટ અનુપલબ્ધ",
+    "tokenEstimate": "≈ {{amount}} ટોકન્સ",
+    "tokenAmountUnavailable": "ટોકન રકમ અનુપલબ્ધ",
     "subscribedToast": "સબ્સ્ક્રાઇબ થયેલ",
     "confirmSubscribeTo": "{{plan}} ને {{price}} / {{duration}} માટે સબ્સ્ક્રાઇબ કરો.",
     "atPreListingRate": "પ્રિ-લિસ્ટિંગ દર પર {{amount}}",
@@ -3275,6 +3279,7 @@
     "podcast": {
       "tab": "પોડકાસ્ટ",
       "feedUrlLabel": "પોડકાસ્ટ RSS ફીડ URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "ફીડ મેળવો",
       "fetching": "ફીડ લાવી રહ્યા છીએ...",
       "showBy": "{{author}} દ્વારા",
@@ -3288,8 +3293,7 @@
       "failed": "નિષ્ફળ",
       "emptyFeed": "અમને તે ફીડમાં કોઈ એપિસોડ મળી શક્યા નહીં.",
       "badFeed": "તે લિંક પોડકાસ્ટ ફીડ જેવી દેખાતી નથી.",
-      "tooMany": "એક સમયે 20 એપિસોડ સુધી આયાત કરો.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "એક સમયે 20 એપિસોડ સુધી આયાત કરો."
     }
   },
   "banned": {

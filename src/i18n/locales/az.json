@@ -3073,7 +3073,11 @@
     "sampleReady": "Nümunə hazırdır.",
     "discardRecording": "Yazını sil",
     "settingUpVoice": "Səsiniz quraşdırılır...",
-    "useThisVoice": "Bu səsi istifadə et"
+    "useThisVoice": "Bu səsi istifadə et",
+    "autoEnd": {
+      "title": "Hərəkətsizlik səbəbindən mərhələ sona çatdı",
+      "description": "30 dəqiqə ərzində \"{{title}}\" ilə heç kəs danışmadı, beləliklə, bağlandı."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4384,6 +4388,7 @@
     "noneYet": "Hələ abunə yoxdur",
     "noneYetHint": "Fəaliyyətinizi burada görmək üçün yaradıcılara abunə olun",
     "subscriptionList": "Abunə siyahısı",
+    "totalCount": "{{count}} cəmi",
     "creator": "Yaradıcı",
     "plan": "Planlaşdırın",
     "planFallback": "Planlaşdırın",
@@ -4396,6 +4401,8 @@
     "expired": "Müddəti bitib",
     "active": "Aktiv",
     "inactive": "Qeyri-aktiv",
+    "daysLeft_one": "{{count}}d qalıb",
+    "daysLeft_other": "{{count}}d qalıb",
     "legacyPlanMigrates": "Saxlama bu köhnə tokenlə qiymətləndirilən planı siyahıdan əvvəlki tariflə dollar qiymətinə köçürür.",
     "tokenAmount": "{{amount}} token",
     "preListingTokenAmount": "Siyahıdan əvvəlki token məbləği",
@@ -4403,9 +4410,6 @@
     "tokenQuoteUnavailable": "Canlı token kotirovkası mövcud deyil",
     "tokenEstimate": "≈ {{amount}} token",
     "tokenAmountUnavailable": "Token məbləği mövcud deyil",
-    "totalCount": "{{count}} cəmi",
-    "daysLeft_one": "{{count}}d qalıb",
-    "daysLeft_other": "{{count}}d qalıb",
     "subscribedToast": "Abunə olunub",
     "confirmSubscribeTo": "{{price}}{{duration}} üçün {{plan}} abunə olun.",
     "atPreListingRate": "{{amount}} əvvəlcədən elan qiyməti ilə",
@@ -5320,6 +5324,7 @@
       "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Dəzgah lenti",
       "fetching": "Yem əldə edilir...",
+      "showBy": "Müəllif: {{author}}",
       "episodes": "{{count}} epizod",
       "selectAll": "Hamısını seç",
       "alreadyImported": "Artıq idxal edilib",
@@ -5330,8 +5335,7 @@
       "failed": "Uğursuz oldu",
       "emptyFeed": "Bu lentdə heç bir epizod tapa bilmədik.",
       "badFeed": "Bu link podkast lentinə bənzəmir.",
-      "tooMany": "Bir dəfəyə 20-yə qədər seriya idxal edin.",
-      "showBy": "Müəllif: {{author}}"
+      "tooMany": "Bir dəfəyə 20-yə qədər seriya idxal edin."
     }
   },
   "banned": {

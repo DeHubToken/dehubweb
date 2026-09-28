@@ -2957,7 +2957,11 @@
     "sampleReady": "نمونہ تیار ہے۔",
     "discardRecording": "ریکارڈنگ ختم کریں",
     "settingUpVoice": "آپ کی آواز سیٹ اپ کی جا رہی ہے...",
-    "useThisVoice": "اس آواز کو استعمال کریں"
+    "useThisVoice": "اس آواز کو استعمال کریں",
+    "autoEnd": {
+      "title": "غیر فعالیت کی وجہ سے مرحلہ ختم ہو گیا",
+      "description": "کسی نے \"{{title}}\" پر 30 منٹ تک بات نہیں کی، لہذا اسے بند کر دیا گیا ۔"
+    }
   },
   "ads": {
     "adsManager": "اشتہارات منیجر",
@@ -5192,6 +5196,7 @@
     "podcast": {
       "tab": "پوڈ کاسٹ",
       "feedUrlLabel": "پوڈ کاسٹ آر ایس ایس فیڈ یو آر ایل",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "فیڈ حاصل کریں",
       "fetching": "فیڈ حاصل کی جا رہی ہے…",
       "showBy": "بذریعہ {{author}}",
@@ -5205,8 +5210,7 @@
       "failed": "ناکام",
       "emptyFeed": "ہمیں اس فیڈ میں کوئی قسط نہیں مل سکی ۔",
       "badFeed": "یہ لنک پوڈ کاسٹ فیڈ کی طرح نہیں لگتا ہے ۔",
-      "tooMany": "ایک وقت میں 20 اقساط تک درآمد کریں ۔",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ایک وقت میں 20 اقساط تک درآمد کریں ۔"
     }
   },
   "banned": {

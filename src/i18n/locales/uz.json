@@ -2517,7 +2517,11 @@
   },
   "stages": {
     "title": "Audio xonalar",
-    "alreadyCharged": "Sizning tokenlaringiz allaqachon bunga sarflangan. Qayta urinib ko'ring — sizga ikkinchi marta haq olinmaydi."
+    "alreadyCharged": "Sizning tokenlaringiz allaqachon bunga sarflangan. Qayta urinib ko'ring — sizga ikkinchi marta haq olinmaydi.",
+    "autoEnd": {
+      "title": "Bosqich harakatsizlik tufayli yakunlandi",
+      "description": "&quot;{{title}}&quot; da 30 daqiqa davomida hech kim gapirmadi, shuning uchun u yopildi."
+    }
   },
   "ads": {
     "priceUnavailable": "Token narxi mavjud emas — birozdan keyin qayta urinib ko'ring.",
@@ -2721,13 +2725,6 @@
     "loginDescription": "Hikoyalarni koʻrish va yaratish uchun kiring."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Saqlash ushbu eski token narxidagi rejani ro'yxatdan oldingi stavkada dollar narxiga o'tkazadi.",
-    "tokenAmount": "{{amount}} token",
-    "preListingTokenAmount": "Ro'yxatdan oldingi token miqdori",
-    "tokenCheckoutNotReady": "Token obuna to'lovi tayyor emas — iltimos, birozdan keyin qayta urinib ko'ring",
-    "tokenQuoteUnavailable": "Jonli token kotirovkasi mavjud emas",
-    "tokenEstimate": "≈ {{amount}} token",
-    "tokenAmountUnavailable": "Token miqdori mavjud emas",
     "subscribersOnly": "Faqat obunachilar uchun",
     "creatorKeepsPost": "{{creator}} ushbu postni o‘z obunachilari uchun saqlaydi.",
     "creatorNoPlans": "{{creator}} hozirda hech qanday obuna ochmagan.",
@@ -2808,6 +2805,13 @@
     "inactive": "Faol bo'lmagan",
     "daysLeft_one": "{{count}} kun qolgan",
     "daysLeft_other": "{{count}} kun qolgan",
+    "legacyPlanMigrates": "Saqlash ushbu eski token narxidagi rejani ro'yxatdan oldingi stavkada dollar narxiga o'tkazadi.",
+    "tokenAmount": "{{amount}} token",
+    "preListingTokenAmount": "Ro'yxatdan oldingi token miqdori",
+    "tokenCheckoutNotReady": "Token obuna to'lovi tayyor emas — iltimos, birozdan keyin qayta urinib ko'ring",
+    "tokenQuoteUnavailable": "Jonli token kotirovkasi mavjud emas",
+    "tokenEstimate": "≈ {{amount}} token",
+    "tokenAmountUnavailable": "Token miqdori mavjud emas",
     "subscribedToast": "Obuna qilingan",
     "confirmSubscribeTo": "{{plan}} ga {{price}} / {{duration}} obuna bo'ling.",
     "atPreListingRate": "{{amount}} pre-listing tarifda",
@@ -4559,32 +4563,6 @@
       "tippedYou": "sizga {{amount}} tokenlarini yubordi"
     }
   },
-  "spaces": {
-    "title": "Boʻlimlar",
-    "live": "Jonli",
-    "upcoming": "Kelgusi",
-    "past": "Oʻtgan",
-    "create": "Boʻlim yaratish",
-    "join": "Qoʻshilish",
-    "listeners": "Tinglovchilar",
-    "speakers": "Nutqchilar",
-    "host": "Boshlovchi",
-    "endSpace": "Boʻlimni tugatish",
-    "raiseHand": "Qoʻl koʻtarish",
-    "lowerHand": "Qoʻlni tushirish",
-    "mute": "Ovozni oʻchirish",
-    "unmute": "Ovozni yoqish",
-    "leave": "Boʻlimni tark etish",
-    "noSpaces": "Hali boʻlimlar yoʻq",
-    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
-  },
-  "blog": {
-    "title": "Blog",
-    "readMore": "Koʻproq oʻqish",
-    "backToBlog": "Blogga qaytish",
-    "sharePost": "Postni ulashish",
-    "relatedPosts": "Bogʻliq postlar"
-  },
   "emojiPicker": {
     "tabEmoji": "Emoji",
     "tabGif": "GIF",
@@ -5315,5 +5293,31 @@
     "planRestricted": "Bu foydalanuvchi xabar olish uchun obuna talab qiladi.",
     "planTypeNotAllowed": "Bu ijodkorning rejasi bunday turdagi xabarga ruxsat bermaydi.",
     "planMinTip": "Bu ijodkor uchun choychaqa kamida {{amount}} DHB bo‘lishi kerak."
+  },
+  "spaces": {
+    "title": "Boʻlimlar",
+    "live": "Jonli",
+    "upcoming": "Kelgusi",
+    "past": "Oʻtgan",
+    "create": "Boʻlim yaratish",
+    "join": "Qoʻshilish",
+    "listeners": "Tinglovchilar",
+    "speakers": "Nutqchilar",
+    "host": "Boshlovchi",
+    "endSpace": "Boʻlimni tugatish",
+    "raiseHand": "Qoʻl koʻtarish",
+    "lowerHand": "Qoʻlni tushirish",
+    "mute": "Ovozni oʻchirish",
+    "unmute": "Ovozni yoqish",
+    "leave": "Boʻlimni tark etish",
+    "noSpaces": "Hali boʻlimlar yoʻq",
+    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Koʻproq oʻqish",
+    "backToBlog": "Blogga qaytish",
+    "sharePost": "Postni ulashish",
+    "relatedPosts": "Bogʻliq postlar"
   }
 }

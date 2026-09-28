@@ -3142,7 +3142,11 @@
     "sampleReady": "العينة جاهزة.",
     "discardRecording": "تجاهل التسجيل",
     "settingUpVoice": "جارٍ إعداد صوتك...",
-    "useThisVoice": "استخدم هذا الصوت"
+    "useThisVoice": "استخدم هذا الصوت",
+    "autoEnd": {
+      "title": "انتهت المرحلة بسبب عدم النشاط",
+      "description": "لم يتحدث أحد على \"{{title}}\" لمدة 30 دقيقة، لذلك تم إغلاقه."
+    }
   },
   "ads": {
     "seoTitle": "مدير الإعلانات | DeHub",
@@ -5473,6 +5477,7 @@
     "podcast": {
       "tab": "بودكاست",
       "feedUrlLabel": "رابط موجز RSS للبودكاست",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "إحضار الخلاصة",
       "fetching": "جارٍ جلب الخلاصة...",
       "showBy": "بواسطة {{author}}",
@@ -5486,8 +5491,7 @@
       "failed": "فشل",
       "emptyFeed": "لم نتمكن من العثور على أي حلقات في تلك الخلاصة.",
       "badFeed": "لا يبدو هذا الرابط كملف بودكاست.",
-      "tooMany": "استيراد ما يصل إلى 20 حلقة في وقت واحد.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "استيراد ما يصل إلى 20 حلقة في وقت واحد."
     }
   },
   "banned": {

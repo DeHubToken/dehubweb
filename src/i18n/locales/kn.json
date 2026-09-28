@@ -3060,7 +3060,11 @@
     "sampleReady": "ಮಾದರಿ ಸಿದ್ಧವಾಗಿದೆ.",
     "discardRecording": "ರೆಕಾರ್ಡಿಂಗ್ ಅನ್ನು ತಿರಸ್ಕರಿಸಿ",
     "settingUpVoice": "ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ಸೆಟಪ್ ಮಾಡುತ್ತಿದೆ...",
-    "useThisVoice": "ಈ ಧ್ವನಿಯನ್ನು ಬಳಸಿ"
+    "useThisVoice": "ಈ ಧ್ವನಿಯನ್ನು ಬಳಸಿ",
+    "autoEnd": {
+      "title": "ನಿಷ್ಕ್ರಿಯತೆಯಿಂದಾಗಿ ಹಂತವು ಕೊನೆಗೊಂಡಿತು",
+      "description": "30 ನಿಮಿಷಗಳ ಕಾಲ \"{{title}}\" ನಲ್ಲಿ ಯಾರೂ ಮಾತನಾಡಲಿಲ್ಲ, ಆದ್ದರಿಂದ ಅದನ್ನು ಮುಚ್ಚಲಾಯಿತು."
+    }
   },
   "ads": {
     "seoTitle": "ಜಾಹೀರಾತು ನಿರ್ವಾಹಕ | DeHub",
@@ -4404,8 +4408,8 @@
     "tokenEstimate": "≈ {{amount}} ಟೋಕನ್‌ಗಳು",
     "tokenAmountUnavailable": "ಟೋಕನ್ ಮೊತ್ತ ಲಭ್ಯವಿಲ್ಲ",
     "subscribedToast": "ಚಂದಾದಾರರಾಗಿದ್ದಾರೆ",
-    "atPreListingRate": "{{amount}} ಪೂರ್ವ-ಲಿಸ್ಟಿಂಗ್ ದರದಲ್ಲಿ",
     "confirmSubscribeTo": "{{plan}} ಗೆ {{price}} / {{duration}} ಕ್ಕೆ ಚಂದಾದಾರರಾಗಿ.",
+    "atPreListingRate": "{{amount}} ಪೂರ್ವ-ಲಿಸ್ಟಿಂಗ್ ದರದಲ್ಲಿ",
     "youPayNow": "ನೀವು ಪಾವತಿಸುತ್ತೀರಿ",
     "paidToCreatorWallet": "ನೇರವಾಗಿ ಸೃಷ್ಟಿಕರ್ತರ ವಾಲೆಟ್‌ಗೆ ಹೋಗುತ್ತದೆ",
     "creatorPaidDirectNote": "ನೀವು ಚಂದಾದಾರರಾದ ಕ್ಷಣವೇ ಸೃಷ್ಟಿಕರ್ತರ ಪಾಲು ನೇರವಾಗಿ ಅವರ ವಾಲೆಟ್‌ಗೆ ಹೋಗುತ್ತದೆ. DeHub ಸಣ್ಣ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಶುಲ್ಕವನ್ನು ಹೊಂದಿದೆ.",
@@ -5370,6 +5374,7 @@
     "podcast": {
       "tab": "ಪಾಡ್‌ಕಾಸ್ಟ್",
       "feedUrlLabel": "ಪಾಡ್‌ಕಾಸ್ಟ್ RSS ಫೀಡ್ URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "ಫೀಡ್ ಪಡೆಯಿರಿ",
       "fetching": "ಫೀಡ್ ಪಡೆಯಲಾಗುತ್ತಿದೆ...",
       "showBy": "{{author}}ಅವರಿಂದ",
@@ -5383,8 +5388,7 @@
       "failed": "ವಿಫಲವಾಗಿದೆ",
       "emptyFeed": "ಆ ಫೀಡ್‌ನಲ್ಲಿ ನಮಗೆ ಯಾವುದೇ ಎಪಿಸೋಡ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ.",
       "badFeed": "ಆ ಲಿಂಕ್ ಪಾಡ್‌ಕಾಸ್ಟ್ ಫೀಡ್‌ನಂತೆ ಕಾಣುತ್ತಿಲ್ಲ.",
-      "tooMany": "ಒಂದು ಸಮಯದಲ್ಲಿ 20 ಎಪಿಸೋಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳಿ.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ಒಂದು ಸಮಯದಲ್ಲಿ 20 ಎಪಿಸೋಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳಿ."
     }
   },
   "banned": {

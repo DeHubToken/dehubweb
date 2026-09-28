@@ -2474,7 +2474,11 @@
   },
   "stages": {
     "title": "آڊيو روم",
-    "alreadyCharged": "توهان جا ٽوڪن اڳ ۾ ئي ان لاءِ ورتا ويا آهن. ٻيهر ڪوشش ڪريو — توهان کي ٻيو ڀيرو چارج نه ڪيو ويندو."
+    "alreadyCharged": "توهان جا ٽوڪن اڳ ۾ ئي ان لاءِ ورتا ويا آهن. ٻيهر ڪوشش ڪريو — توهان کي ٻيو ڀيرو چارج نه ڪيو ويندو.",
+    "autoEnd": {
+      "title": "غير فعال ٿيڻ جي ڪري اسٽيج ختم ٿي وئي",
+      "description": "ڪو به نه ڳالهايو \"{{title}}\" 30 منٽن تائين، تنهن ڪري اهو بند ٿي ويو."
+    }
   },
   "ads": {
     "priceUnavailable": "ٽوڪن جي قيمت دستياب ناهي — ٿوري دير بعد ٻيهر ڪوشش ڪريو.",
@@ -2668,13 +2672,6 @@
     "transferGuarantee": "توهان کي سڄو اڪائونٽ ملي ٿو — هينڊل، پوسٽون، فالورز، ٽپ تاريخ ۽ بيج جا حق. وڪڻندڙ پنهنجو والٽ ۽ ان ۾ موجود سڀ ڪجهه رکندو. منتقلي صرف تڏهن ٿيندي جڏهن DeHub توهان جي ٽوڪن جي ادائگي کي چين مان واپس پڙهي؛ جيڪڏهن اهو رڪاوٽ بڻجي ٿو، ته خريداري کي ٻيهر ڪوشش ڪرڻ سان اهو جاري رهندو."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "بچت هن پراڻي ٽوڪن-قيمتي پلان کي پري-لسٽنگ جي شرح تي ڊالر جي قيمت ۾ منتقل ڪري ٿي.",
-    "tokenAmount": "{{amount}} ٽوڪن",
-    "preListingTokenAmount": "پري-لسٽنگ ٽوڪن رقم",
-    "tokenCheckoutNotReady": "ٽوڪن سبسڪرپشن چيڪ آئوٽ تيار ناهي - مهرباني ڪري ٿوري دير بعد ٻيهر ڪوشش ڪريو",
-    "tokenQuoteUnavailable": "لائيو ٽوڪن ڪوٽ دستياب ناهي",
-    "tokenEstimate": "≈ {{amount}} ٽوڪن",
-    "tokenAmountUnavailable": "ٽوڪن رقم دستياب ناهي",
     "subscribersOnly": "صرف سبسڪرائبرز",
     "creatorKeepsPost": "{{creator}} انهن جي سبسڪرائبرز لاءِ هي پوسٽ محفوظ رکي ٿو.",
     "creatorNoPlans": "{{creator}} هن وقت ڪو به سبسڪرپشن کليل ناهي.",
@@ -2755,6 +2752,13 @@
     "inactive": "غير فعال",
     "daysLeft_one": "{{count}}d باقي",
     "daysLeft_other": "{{count}}d باقي",
+    "legacyPlanMigrates": "بچت هن پراڻي ٽوڪن-قيمتي پلان کي پري-لسٽنگ جي شرح تي ڊالر جي قيمت ۾ منتقل ڪري ٿي.",
+    "tokenAmount": "{{amount}} ٽوڪن",
+    "preListingTokenAmount": "پري-لسٽنگ ٽوڪن رقم",
+    "tokenCheckoutNotReady": "ٽوڪن سبسڪرپشن چيڪ آئوٽ تيار ناهي - مهرباني ڪري ٿوري دير بعد ٻيهر ڪوشش ڪريو",
+    "tokenQuoteUnavailable": "لائيو ٽوڪن ڪوٽ دستياب ناهي",
+    "tokenEstimate": "≈ {{amount}} ٽوڪن",
+    "tokenAmountUnavailable": "ٽوڪن رقم دستياب ناهي",
     "subscribedToast": "سبسڪرائب ٿيل",
     "confirmSubscribeTo": "{{plan}} کي سبسڪرائب ڪريو {{price}} / {{duration}} لاءِ.",
     "atPreListingRate": "{{amount}} اڳ-لسٽنگ شرح تي",
@@ -3262,6 +3266,7 @@
     "podcast": {
       "tab": "پوڊ ڪاسٽ",
       "feedUrlLabel": "پوڊ ڪاسٽ آر ايس ايس فيڊ URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "کاڌ خوراڪ حاصل ڪريو",
       "fetching": "کاڌ خوراڪ حاصل ڪئي پئي وڃي...",
       "showBy": "جي جي {{author}}",
@@ -3275,8 +3280,7 @@
       "failed": "ناڪام",
       "emptyFeed": "اسان ان فيڊ ۾ ڪا به قسط ڳولي نه سگهياسين.",
       "badFeed": "اهو لنڪ پوڊ ڪاسٽ فيڊ وانگر نظر نٿو اچي.",
-      "tooMany": "20 Off آف ھڪڙي وقت ۾ ھڪڙي شيءِ ان اسٽور ۾.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "20 Off آف ھڪڙي وقت ۾ ھڪڙي شيءِ ان اسٽور ۾."
     }
   },
   "banned": {

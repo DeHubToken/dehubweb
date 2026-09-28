@@ -2501,7 +2501,11 @@
   },
   "stages": {
     "title": "語音房",
-    "alreadyCharged": "你的代幣已為此支付。請再試一次 — 你不會被收取第二次費用。"
+    "alreadyCharged": "你的代幣已為此支付。請再試一次 — 你不會被收取第二次費用。",
+    "autoEnd": {
+      "title": "由於閒置而結束",
+      "description": "「 {{title}} 」 30 分鐘都冇人講，所以閂咗。"
+    }
   },
   "ads": {
     "priceUnavailable": "代幣價格無法取得 — 請稍後再試。",
@@ -2695,13 +2699,6 @@
     "transferGuarantee": "你將獲得整個帳戶 — 手柄、帖子、關注者、提示歷史記錄和徽章權利。賣家保留他們的錢包及其所有內容。轉賬僅在 DeHub 從鏈上讀取你的代幣付款後運行；如果中斷，重試購買將恢復它。"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "節省將此舊的代幣計價計劃遷移到預計上市價格的美元計價。",
-    "tokenAmount": "{{amount}} 個代幣",
-    "preListingTokenAmount": "預計上市代幣數量",
-    "tokenCheckoutNotReady": "代幣訂閱結帳尚未準備好 — 請稍後重試",
-    "tokenQuoteUnavailable": "實時代幣報價不可用",
-    "tokenEstimate": "≈ {{amount}} 個代幣",
-    "tokenAmountUnavailable": "代幣數量不可用",
     "subscribersOnly": "只有訂閱者",
     "creatorKeepsPost": "{{creator}} 將此帖子保留給其訂閱者。",
     "creatorNoPlans": "{{creator}} 目前沒有開放訂閱。",
@@ -2782,6 +2779,13 @@
     "inactive": "不活躍",
     "daysLeft_one": "剩餘 {{count}} 日",
     "daysLeft_other": "剩餘 {{count}} 日",
+    "legacyPlanMigrates": "節省將此舊的代幣計價計劃遷移到預計上市價格的美元計價。",
+    "tokenAmount": "{{amount}} 個代幣",
+    "preListingTokenAmount": "預計上市代幣數量",
+    "tokenCheckoutNotReady": "代幣訂閱結帳尚未準備好 — 請稍後重試",
+    "tokenQuoteUnavailable": "實時代幣報價不可用",
+    "tokenEstimate": "≈ {{amount}} 個代幣",
+    "tokenAmountUnavailable": "代幣數量不可用",
     "subscribedToast": "已訂閱",
     "confirmSubscribeTo": "訂閱 {{plan}} 以 {{price}} / {{duration}}。",
     "atPreListingRate": "以預售價的 {{amount}}",
@@ -3308,6 +3312,7 @@
     "podcast": {
       "tab": "網路廣播",
       "feedUrlLabel": "播客 RSS 資訊提供網址",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "攞資訊提供",
       "fetching": "攞緊資訊提供 …",
       "showBy": "由 {{author}}",
@@ -3321,8 +3326,7 @@
       "failed": "失敗咗",
       "emptyFeed": "我哋喺嗰個資訊提供入面搵唔到任何劇集。",
       "badFeed": "嗰個連結唔似播客資訊提供。",
-      "tooMany": "一次最多匯入20集。",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "一次最多匯入20集。"
     }
   },
   "banned": {

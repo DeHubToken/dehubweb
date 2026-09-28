@@ -2983,7 +2983,11 @@
     "sampleReady": "Eșantion gata.",
     "discardRecording": "Renunță la înregistrare",
     "settingUpVoice": "Se configurează vocea ta...",
-    "useThisVoice": "Folosește această voce"
+    "useThisVoice": "Folosește această voce",
+    "autoEnd": {
+      "title": "Etapa s-a încheiat din cauza inactivității",
+      "description": "Nimeni nu a vorbit pe \"{{title}}\" timp de 30 de minute, așa că a fost închis."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -6470,12 +6474,6 @@
       "stakedPost": "Jetoane DeHub de 50k mizate. Apy arată solid la 12,4%. Mentalitatea deținătorului pe termen lung. 💎🙌"
     }
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
   "emojiPicker": {
     "tabEmoji": "Emoji",
     "tabGif": "GIF",
@@ -7206,5 +7204,11 @@
     "planRestricted": "Acest utilizator necesită un abonament pentru a primi mesaje.",
     "planTypeNotAllowed": "Planul acestui creator nu permite acest tip de mesaj.",
     "planMinTip": "Bacșișul pentru acest creator trebuie să fie de cel puțin {{amount}} DHB."
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
   }
 }

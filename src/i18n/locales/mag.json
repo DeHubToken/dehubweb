@@ -2466,7 +2466,11 @@
   },
   "stages": {
     "title": "ऑडियो रूम",
-    "alreadyCharged": "आपके टोकन पहले ही इसके लिए ले लिए गए हैं। फिर से प्रयास करें — आपसे दूसरी बार शुल्क नहीं लिया जाएगा।"
+    "alreadyCharged": "आपके टोकन पहले ही इसके लिए ले लिए गए हैं। फिर से प्रयास करें — आपसे दूसरी बार शुल्क नहीं लिया जाएगा।",
+    "autoEnd": {
+      "title": "निष्क्रियता के कारण लगाई गई रोक",
+      "description": "कोई भी \"{{title}}\" पर 30 मिनट के लिए बात नहीं किया, इसलिए यह बंद हो गई है ।"
+    }
   },
   "ads": {
     "priceUnavailable": "टोकन मूल्य अनुपलब्ध — थोड़ी देर में फिर से प्रयास करें।",
@@ -2658,13 +2662,6 @@
     "transferGuarantee": "आपको पूरा खाता मिलता है — हैंडल, पोस्ट, अनुयायी, टिप्स इतिहास और बैज अधिकार। विक्रेता अपना बटुआ और उसमें सब कुछ रखता है। डीहब द्वारा आपके टोकन भुगतान को श्रृंखला से वापस पढ़ने के बाद ही हस्तांतरण चलता है; यदि यह बाधित होता है, तो खरीद को फिर से शुरू करने से यह फिर से शुरू हो जाता है।"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "सेविंग ई लेगेसी टोकन-प्राइज्ड प्लान के प्री-लिस्टिंग रेट पऽ डॉलर प्राइसिंग में माइग्रेट करेला।",
-    "tokenAmount": "{{amount}} टोकन",
-    "preListingTokenAmount": "प्री-लिस्टिंग टोकन अमाउंट",
-    "tokenCheckoutNotReady": "टोकन सब्सक्रिप्शन चेकआउट तैयार नइखे — कृपया जल्दी दोबारा कोशिश करs",
-    "tokenQuoteUnavailable": "लाइव टोकन कोट अनुपलब्ध",
-    "tokenEstimate": "≈ {{amount}} टोकन",
-    "tokenAmountUnavailable": "टोकन अमाउंट अनुपलब्ध",
     "subscribersOnly": "सदस्य मात्र",
     "creatorKeepsPost": "{{creator}} अपने सदस्यन के लिए ई पोस्ट रख रहल बा।",
     "creatorNoPlans": "{{creator}} के पास अभी कोई सदस्यता खुलल नइखे।",
@@ -2745,6 +2742,13 @@
     "inactive": "निष्क्रिय",
     "daysLeft_one": "{{count}}d बाकी",
     "daysLeft_other": "{{count}}d बाकी",
+    "legacyPlanMigrates": "सेविंग ई लेगेसी टोकन-प्राइज्ड प्लान के प्री-लिस्टिंग रेट पऽ डॉलर प्राइसिंग में माइग्रेट करेला।",
+    "tokenAmount": "{{amount}} टोकन",
+    "preListingTokenAmount": "प्री-लिस्टिंग टोकन अमाउंट",
+    "tokenCheckoutNotReady": "टोकन सब्सक्रिप्शन चेकआउट तैयार नइखे — कृपया जल्दी दोबारा कोशिश करs",
+    "tokenQuoteUnavailable": "लाइव टोकन कोट अनुपलब्ध",
+    "tokenEstimate": "≈ {{amount}} टोकन",
+    "tokenAmountUnavailable": "टोकन अमाउंट अनुपलब्ध",
     "subscribedToast": "सब्सक्राइब कइल",
     "confirmSubscribeTo": "{{plan}} के सब्सक्राइब करीं {{price}} / {{duration}} खातिर.",
     "atPreListingRate": "{{amount}} प्री-लिस्टिंग दर पर",
@@ -3258,21 +3262,21 @@
     "podcast": {
       "tab": "पॉडकास्ट कैलक्यूलेटर",
       "feedUrlLabel": "कैलक्यूलेटर आरएसएस फ़ीड यूआरएल",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "हल्दी वाला फ़ीड",
       "fetching": "हल्दी वाला भोजन -",
+      "showBy": "{{author}} के",
+      "episodes": "{{count}} गो एपिसोड",
       "selectAll": "सभी जीएलई चुने",
       "alreadyImported": "पहिले से आयात कैल गेल",
       "ownership": "हम ई सामग्री के मालिक हई, या एकरा DeHub पर प्रकाशित करे के अधिकार धारक के पास हई ।",
+      "importSelected": "{{count}} गो एपिसोड इंपोर्ट करऽ",
       "importing": "आयात कैलक्यूलेटर...",
       "done": "कायर कैलक्यूलेशन",
       "failed": "असफल रहलै",
       "emptyFeed": "येई मामला में, समाधान सूचीबद्ध ना कैल जा सकई छलो ।",
       "badFeed": "ई लिंक पॉडकास्ट फ़ीड जैसन ना लगई छई ।",
-      "tooMany": "एक से एक, एक सौ पाउंड तो, केवल रिश्तेदारों या परिचितों के साथ,",
-      "episodes": "{{count}} गो एपिसोड",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
-      "importSelected": "{{count}} गो एपिसोड इंपोर्ट करऽ",
-      "showBy": "{{author}} के"
+      "tooMany": "एक से एक, एक सौ पाउंड तो, केवल रिश्तेदारों या परिचितों के साथ,"
     }
   },
   "banned": {

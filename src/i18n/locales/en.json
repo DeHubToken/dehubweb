@@ -3140,7 +3140,11 @@
     "sampleReady": "Sample ready.",
     "discardRecording": "Discard recording",
     "settingUpVoice": "Setting up your voice...",
-    "useThisVoice": "Use this voice"
+    "useThisVoice": "Use this voice",
+    "autoEnd": {
+      "title": "Stage ended due to inactivity",
+      "description": "Nobody spoke on \"{{title}}\" for 30 minutes, so it was closed."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",

@@ -3148,7 +3148,11 @@
     "sampleReady": "नमूना तैयार है।",
     "discardRecording": "रिकॉर्डिंग हटाएँ",
     "settingUpVoice": "आपकी आवाज़ सेट हो रही है...",
-    "useThisVoice": "यही आवाज़ इस्तेमाल करें"
+    "useThisVoice": "यही आवाज़ इस्तेमाल करें",
+    "autoEnd": {
+      "title": "निष्क्रियता के कारण चरण समाप्त हो गया",
+      "description": "\"{{title}}\" पर 30 मिनट तक किसी ने बात नहीं की, इसलिए इसे बंद कर दिया गया।"
+    }
   },
   "ads": {
     "seoTitle": "विज्ञापन प्रबंधक | DeHub",
@@ -5479,6 +5483,7 @@
     "podcast": {
       "tab": "पॉडकास्ट",
       "feedUrlLabel": "पॉडकास्ट RSS फ़ीड URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "फ़ीड प्राप्त करें",
       "fetching": "फ़ीड लाया जा रहा है...",
       "showBy": "{{author}} तक",
@@ -5492,8 +5497,7 @@
       "failed": "विफल",
       "emptyFeed": "हमें उस फ़ीड में कोई एपिसोड नहीं मिला।",
       "badFeed": "यह लिंक पॉडकास्ट फ़ीड की तरह नहीं दिखता है।",
-      "tooMany": "एक बार में अधिकतम 20 एपिसोड इम्पोर्ट करें।",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "एक बार में अधिकतम 20 एपिसोड इम्पोर्ट करें।"
     }
   },
   "banned": {

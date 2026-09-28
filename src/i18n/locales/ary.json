@@ -2518,7 +2518,11 @@
   },
   "stages": {
     "title": "الغرف الصوتية",
-    "alreadyCharged": "تم أخذ توكنزك بالفعل لهذا. حاول مرة أخرى — لن يتم محاسبتك مرة ثانية."
+    "alreadyCharged": "تم أخذ توكنزك بالفعل لهذا. حاول مرة أخرى — لن يتم محاسبتك مرة ثانية.",
+    "autoEnd": {
+      "title": "انتهت المرحلة بسبب عدم النشاط",
+      "description": "لم يتحدث أحد على \"{{title}}\" لمدة 30 دقيقة، لذلك تم إغلاقه."
+    }
   },
   "ads": {
     "priceUnavailable": "سعر التوكنز غير متاح — حاول مرة أخرى بعد قليل.",
@@ -2712,13 +2716,6 @@
     "transferGuarantee": "تحصل على الحساب بالكامل — المقبض، المنشورات، المتابعون، سجل الإكراميات، وحقوق الشارة. يحتفظ البائع بمحفظته وكل ما فيها. يتم التحويل فقط بعد أن يقرأ DeHub دفعة الرمز الخاصة بك مرة أخرى من السلسلة؛ إذا تمت مقاطعتها، فإن إعادة محاولة الشراء تستأنفها."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "التوفير كينقل هاد الخطة القديمة المسعرة بالتوكن لتسعير الدولار بالسعر قبل الإدراج.",
-    "tokenAmount": "{{amount}} توكنز",
-    "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
-    "tokenCheckoutNotReady": "الدفع ديال اشتراك التوكن ما موجودش — عاود جرب قريباً",
-    "tokenQuoteUnavailable": "عرض التوكن المباشر غير متاح",
-    "tokenEstimate": "≈ {{amount}} توكنز",
-    "tokenAmountUnavailable": "مبلغ التوكن غير متاح",
     "subscribersOnly": "غِير للمشتركين",
     "creatorKeepsPost": "{{creator}} كايحتافظ بهاذ البوست للمشتركين ديالو.",
     "creatorNoPlans": "{{creator}} ما عندوش اشتراك مفتوح دابا.",
@@ -2799,6 +2796,13 @@
     "inactive": "غير نشط",
     "daysLeft_one": "{{count}} يوم متبقين",
     "daysLeft_other": "{{count}} يوم متبقين",
+    "legacyPlanMigrates": "التوفير كينقل هاد الخطة القديمة المسعرة بالتوكن لتسعير الدولار بالسعر قبل الإدراج.",
+    "tokenAmount": "{{amount}} توكنز",
+    "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
+    "tokenCheckoutNotReady": "الدفع ديال اشتراك التوكن ما موجودش — عاود جرب قريباً",
+    "tokenQuoteUnavailable": "عرض التوكن المباشر غير متاح",
+    "tokenEstimate": "≈ {{amount}} توكنز",
+    "tokenAmountUnavailable": "مبلغ التوكن غير متاح",
     "subscribedToast": "مشترك",
     "confirmSubscribeTo": "اشترك فـ {{plan}} مقابل {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} بالأسعار قبل القوائم",
@@ -3252,6 +3256,9 @@
     "statusQueued": "في قائمة الانتظار",
     "detailFailed": "تعذر استيراد هذا الفيديو.",
     "detailRateLimited": "{{source}} يحد من معدل الطلبات. سيتم تشغيل هذا تلقائياً — لا حاجة لإعادة لصق أي شيء.",
+    "toastQueued": "في الطابور — سيتم نشره على ملفك الشخصي عند انتهاء المعالجة.",
+    "errorNeedRights": "يرجى تأكيد أن لديك حقوق هذا المحتوى",
+    "errorQueueFailed": "تعذر وضع هذا الاستيراد في قائمة الانتظار",
     "publishAs": "نشر كـ",
     "kindVideo": "فيديو",
     "kindAudio": "الصوت",
@@ -3269,6 +3276,7 @@
     "podcast": {
       "tab": "بودكاست",
       "feedUrlLabel": "رابط موجز RSS للبودكاست",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "إحضار الخلاصة",
       "fetching": "جارٍ جلب الخلاصة...",
       "showBy": "بواسطة {{author}}",
@@ -3282,12 +3290,8 @@
       "failed": "فشل",
       "emptyFeed": "لم نتمكن من العثور على أي حلقات في تلك الخلاصة.",
       "badFeed": "لا يبدو هذا الرابط كملف بودكاست.",
-      "tooMany": "استيراد ما يصل إلى 20 حلقة في وقت واحد.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
-    },
-    "errorNeedRights": "يرجى تأكيد أن لديك حقوق هذا المحتوى",
-    "errorQueueFailed": "تعذر وضع هذا الاستيراد في قائمة الانتظار",
-    "toastQueued": "في الطابور — سيتم نشره على ملفك الشخصي عند انتهاء المعالجة."
+      "tooMany": "استيراد ما يصل إلى 20 حلقة في وقت واحد."
+    }
   },
   "banned": {
     "title": "حسابك محظور",

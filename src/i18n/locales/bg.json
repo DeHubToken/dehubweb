@@ -2998,7 +2998,11 @@
     "sampleReady": "Примерът е готов.",
     "discardRecording": "Отхвърлете записа",
     "settingUpVoice": "Настройване на вашия глас...",
-    "useThisVoice": "Използвайте този глас"
+    "useThisVoice": "Използвайте този глас",
+    "autoEnd": {
+      "title": "Етап, приключил поради неактивност",
+      "description": "Никой не говори по „{{title}}“ в продължение на 30 минути, така че беше затворен."
+    }
   },
   "ads": {
     "newCampaign": "Нова кампания",
@@ -4257,6 +4261,7 @@
     "presetLifetime": "Срок на използване",
     "onePlanPerDuration": "По един план на продължителност — веригата съхранява планове по създател и продължителност.",
     "benefitsOptional": "Ползи (незадължително)",
+    "benefitN": "Полза {{number}}",
     "addBenefit": "Добавяне на нова полза",
     "creating": "Създаване...",
     "createAndPublish": "Създаване и публикуване",
@@ -4301,7 +4306,6 @@
     "tokenQuoteUnavailable": "Текуща цена на токена не е налична",
     "tokenEstimate": "≈ {{amount}} токена",
     "tokenAmountUnavailable": "Сумата на токените не е налична",
-    "benefitN": "Полза {{number}}",
     "subscribedToast": "Абониран",
     "confirmSubscribeTo": "Абонирайте се за {{plan}} за {{price}}/{{duration}}.",
     "atPreListingRate": "{{amount}} на цената на предварителната обява",
@@ -5215,6 +5219,7 @@
     "podcast": {
       "tab": "Подкаст",
       "feedUrlLabel": "Url адрес на RSS емисия на подкаст",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Изтегляне на емисия",
       "fetching": "Извличане на емисия...",
       "showBy": "До {{author}}",
@@ -5228,8 +5233,7 @@
       "failed": "Неуспешно",
       "emptyFeed": "Не можахме да намерим никакви епизоди в тази емисия.",
       "badFeed": "Тази връзка не изглежда като емисия на подкаст.",
-      "tooMany": "Импортирайте до 20 епизода наведнъж.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "Импортирайте до 20 епизода наведнъж."
     }
   },
   "banned": {

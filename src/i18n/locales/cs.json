@@ -3087,7 +3087,11 @@
     "sampleReady": "Vzorek připraven.",
     "discardRecording": "Zahodit nahrávku",
     "settingUpVoice": "Nastavování vašeho hlasu...",
-    "useThisVoice": "Použít tento hlas"
+    "useThisVoice": "Použít tento hlas",
+    "autoEnd": {
+      "title": "Fáze skončila z důvodu nečinnosti",
+      "description": "Na „{{title}}“ 30 minut nikdo nemluvil, takže bylo zavřeno."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",

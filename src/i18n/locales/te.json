@@ -3097,7 +3097,11 @@
     "sampleReady": "నమూనా సిద్ధంగా ఉంది.",
     "discardRecording": "రికార్డింగ్‌ను విస్మరించండి",
     "settingUpVoice": "మీ వాయిస్‌ను సెట్ అప్ చేస్తోంది...",
-    "useThisVoice": "ఈ వాయిస్‌ని ఉపయోగించండి"
+    "useThisVoice": "ఈ వాయిస్‌ని ఉపయోగించండి",
+    "autoEnd": {
+      "title": "ఇనాక్టివిటీ కారణంగా స్టేజ్ ముగిసింది",
+      "description": "30 నిమిషాల పాటు \"{{title}}\" లో ఎవరూ మాట్లాడలేదు, కాబట్టి అది మూసివేయబడింది."
+    }
   },
   "ads": {
     "seoTitle": "ప్రకటనల నిర్వాహకుడు | DeHub",
@@ -4350,6 +4354,8 @@
     "expired": "గడువు ముగిసిన",
     "active": "క్రియాశీల",
     "inactive": "నిష్క్రియ",
+    "daysLeft_one": "{{count}}d ఎడమ",
+    "daysLeft_other": "{{count}}d ఎడమ",
     "legacyPlanMigrates": "సేవింగ్ ప్రీ-లిస్టింగ్ రేటు వద్ద ఈ లెగసీ టోకెన్-ధర ప్లాన్‌ను డాలర్ ధరలకు మారుస్తుంది.",
     "tokenAmount": "{{amount}} టోకెన్లు",
     "preListingTokenAmount": "ప్రీ-లిస్టింగ్ టోకెన్ మొత్తం",
@@ -4357,11 +4363,9 @@
     "tokenQuoteUnavailable": "లైవ్ టోకెన్ కోట్ అందుబాటులో లేదు",
     "tokenEstimate": "≈ {{amount}} టోకెన్లు",
     "tokenAmountUnavailable": "టోకెన్ మొత్తం అందుబాటులో లేదు",
-    "daysLeft_one": "{{count}}d ఎడమ",
-    "daysLeft_other": "{{count}}d ఎడమ",
     "subscribedToast": "సబ్ ‌ స్క్రైబ్ చేయబడింది",
-    "atPreListingRate": "{{amount}} ప్రీ-లిస్టింగ్ రేటు వద్ద",
     "confirmSubscribeTo": "{{plan}}కు {{price}} / {{duration}}కి సభ్యత్వం పొందండి.",
+    "atPreListingRate": "{{amount}} ప్రీ-లిస్టింగ్ రేటు వద్ద",
     "youPayNow": "మీరు చెల్లిస్తారు",
     "paidToCreatorWallet": "నేరుగా సృష్టికర్త వాలెట్ ‌ కు వెళ్తుంది",
     "creatorPaidDirectNote": "మీరు సబ్ ‌ స్క్రైబ్ చేసిన క్షణం క్రియేటర్ వాటా నేరుగా వారి వాలెట్ ‌ కు వెళుతుంది. DeHub ఒక చిన్న ప్లాట్ ‌ ఫారమ్ ఫీజును ఉంచుతుంది.",
@@ -5269,6 +5273,7 @@
     "podcast": {
       "tab": "పోడ్ ‌ కాస్ట్",
       "feedUrlLabel": "పోడ్ ‌ కాస్ట్ RSS ఫీడ్ URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "ఫీడ్ ‌ ను తీసుకురండి",
       "fetching": "ఫీడ్ ‌ ను తీసుకువస్తోంది...",
       "showBy": "{{author}} ద్వారా",
@@ -5282,8 +5287,7 @@
       "failed": "విఫలమైంది",
       "emptyFeed": "మేము ఆ ఫీడ్ ‌ లో ఎటువంటి ఎపిసోడ్ ‌ లను కనుగొనలేకపోయాము.",
       "badFeed": "ఆ లింక్ పోడ్ ‌ కాస్ట్ ఫీడ్ లాగా కనిపించడం లేదు.",
-      "tooMany": "ఒకేసారి 20 ఎపిసోడ్ ‌ ల వరకు దిగుమతి చేసుకోండి.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ఒకేసారి 20 ఎపిసోడ్ ‌ ల వరకు దిగుమతి చేసుకోండి."
     }
   },
   "banned": {

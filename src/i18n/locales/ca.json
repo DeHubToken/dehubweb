@@ -3087,7 +3087,11 @@
     "sampleReady": "Mostra llista.",
     "discardRecording": "Descarta la gravació",
     "settingUpVoice": "Configurant la teva veu...",
-    "useThisVoice": "Utilitza aquesta veu"
+    "useThisVoice": "Utilitza aquesta veu",
+    "autoEnd": {
+      "title": "Etapa finalitzada per inactivitat",
+      "description": "Ningú va parlar a \"{{title}}\" durant 30 minuts, així que estava tancat."
+    }
   },
   "ads": {
     "seoTitle": "Gestor d'anuncis | DeHub",

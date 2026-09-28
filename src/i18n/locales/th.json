@@ -532,6 +532,7 @@
     "loadingMore": "กำลังโหลดเพิ่ม...",
     "loadMore": "โหลดเพิ่ม",
     "continue": "ดำเนินการต่อ",
+    "undo": "เลิกทำ",
     "yes": "ใช่",
     "no": "ไม่",
     "error": "เกิดข้อผิดพลาด",
@@ -558,8 +559,7 @@
     "closeMenu": "ปิดเมนู",
     "openMenu": "เปิดเมนู",
     "white": "สีขาว",
-    "black": "สีดำ",
-    "undo": "เลิกทำ"
+    "black": "สีดำ"
   },
   "tip": {
     "title": "ส่งทิป",
@@ -2617,7 +2617,11 @@
     "sampleReady": "ตัวอย่างพร้อม",
     "discardRecording": "ยกเลิกการบันทึก",
     "settingUpVoice": "กำลังตั้งค่าเสียงของคุณ...",
-    "useThisVoice": "ใช้เสียงนี้"
+    "useThisVoice": "ใช้เสียงนี้",
+    "autoEnd": {
+      "title": "ขั้นตอนสิ้นสุดลงเนื่องจากไม่มีการใช้งาน",
+      "description": "ไม่มีใครพูดบน \"{{title}}\" เป็นเวลา 30 นาทีดังนั้นจึงปิด"
+    }
   },
   "ads": {
     "newCampaign": "แคมเปญใหม่",
@@ -3768,6 +3772,7 @@
     "descriptionPlaceholder": "อธิบายว่าสมาชิกจะได้รับอะไร...",
     "price": "ราคา",
     "youReceiveInFull": "คุณได้รับเต็มจำนวน ผู้สมัครสมาชิกจ่ายค่าธรรมเนียมแพลตฟอร์มเพิ่มเติม",
+    "chain": "โซ่",
     "duration": "ระยะเวลา",
     "preset1Month": "1 เดือน",
     "preset3Months": "3 เดือน",
@@ -3821,7 +3826,6 @@
     "tokenQuoteUnavailable": "ใบเสนอราคาโทเค็นสดไม่พร้อมใช้งาน",
     "tokenEstimate": "≈ {{amount}} โทเค็น",
     "tokenAmountUnavailable": "จำนวนโทเค็นไม่พร้อมใช้งาน",
-    "chain": "โซ่",
     "subscribedToast": "สมัครใช้งานแล้ว",
     "confirmSubscribeTo": "สมัครสมาชิก {{plan}} เพื่อ {{price}}/{{duration}}",
     "atPreListingRate": "{{amount}} ในอัตราก่อนลงประกาศ",
@@ -4692,6 +4696,7 @@
     "podcast": {
       "tab": "พอดคาสต์",
       "feedUrlLabel": "URL ฟีด RSS ของพอดคาสต์",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "ดึงฟีด",
       "fetching": "กำลังเรียกดูฟีด…",
       "showBy": "โดย {{author}}",
@@ -4705,8 +4710,7 @@
       "failed": "ล้มเหลว",
       "emptyFeed": "เราไม่พบตอนใดๆในฟีดนั้น",
       "badFeed": "ลิงก์นั้นดูไม่เหมือนฟีดพอดแคสต์",
-      "tooMany": "นำเข้าได้สูงสุด 20 ตอนต่อครั้ง",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "นำเข้าได้สูงสุด 20 ตอนต่อครั้ง"
     }
   },
   "banned": {
@@ -5929,9 +5933,6 @@
       "tippedYou": "ให้ทิปโทเค็น {{amount}} แก่คุณ"
     }
   },
-  "footer": {
-    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
-  },
   "emojiPicker": {
     "tabEmoji": "อีโมจิ",
     "tabGif": "GIF",
@@ -6654,5 +6655,8 @@
     "planRestricted": "ผู้ใช้นี้ต้องสมัครสมาชิกก่อนจึงจะรับข้อความได้",
     "planTypeNotAllowed": "แพ็กเกจของครีเอเตอร์นี้ไม่อนุญาตข้อความประเภทนี้",
     "planMinTip": "ทิปสำหรับครีเอเตอร์นี้ต้องมีอย่างน้อย {{amount}} DHB"
+  },
+  "footer": {
+    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
   }
 }

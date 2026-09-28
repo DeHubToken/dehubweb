@@ -3143,7 +3143,11 @@
     "sampleReady": "样本已就绪。",
     "discardRecording": "丢弃录音",
     "settingUpVoice": "正在设置你的声音…",
-    "useThisVoice": "使用这个声音"
+    "useThisVoice": "使用这个声音",
+    "autoEnd": {
+      "title": "阶段因不活动而结束",
+      "description": "“{{title}}”有30分钟没有人说话，所以关门了。"
+    }
   },
   "ads": {
     "seoTitle": "广告管理 | DeHub",
@@ -5475,6 +5479,7 @@
     "podcast": {
       "tab": "播客",
       "feedUrlLabel": "播客RSS源网址",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "获取订阅源",
       "fetching": "正在获取订阅源…",
       "showBy": "作者： {{author}}",
@@ -5488,8 +5493,7 @@
       "failed": "失败",
       "emptyFeed": "我们在该订阅源中找不到任何剧集。",
       "badFeed": "该链接看起来不像播客源。",
-      "tooMany": "一次最多可导入20集。",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "一次最多可导入20集。"
     }
   },
   "banned": {

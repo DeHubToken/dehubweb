@@ -3039,7 +3039,11 @@
     "sampleReady": "הדגימה מוכנה.",
     "discardRecording": "בטל הקלטה",
     "settingUpVoice": "מגדיר את הקול שלך...",
-    "useThisVoice": "השתמש בקול זה"
+    "useThisVoice": "השתמש בקול זה",
+    "autoEnd": {
+      "title": "השלב הסתיים עקב חוסר פעילות",
+      "description": "אף אחד לא דיבר ב-\"{{title}}\" במשך 30 דקות, ולכן הוא נסגר."
+    }
   },
   "ads": {
     "seoTitle": "מנהל מודעות | DeHub",
@@ -4218,6 +4222,8 @@
     "subscribed": "רשום כמנוי",
     "subscribe": "הירשם",
     "subscribing": "מנויה...",
+    "subscriberCount_one": "מנוי {{count}}",
+    "subscriberCount_other": "{{count}} מנויים",
     "durationLifetime": "לכל החיים",
     "durationOneYear": "1 שנה",
     "durationMonths_one": "{{count}} חודש",
@@ -4296,8 +4302,6 @@
     "tokenQuoteUnavailable": "ציטוט אסימון חי אינו זמין",
     "tokenEstimate": "≈ {{amount}} אסימונים",
     "tokenAmountUnavailable": "כמות אסימונים לא זמינה",
-    "subscriberCount_one": "מנוי {{count}}",
-    "subscriberCount_other": "{{count}} מנויים",
     "subscribedToast": "נרשמת כמנוי",
     "confirmSubscribeTo": "הירשמו ל - {{plan}} עבור {{price}}/{{duration}}.",
     "atPreListingRate": "{{amount}} בתעריף הרישום מראש",
@@ -5177,6 +5181,7 @@
     "podcast": {
       "tab": "פודקאסט",
       "feedUrlLabel": "כתובת אתר להזנת RSS של פודקאסט",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "עדכן את הפיד",
       "fetching": "מעדכן את הפיד...",
       "showBy": "מאת {{author}}",
@@ -5190,8 +5195,7 @@
       "failed": "נכשל",
       "emptyFeed": "לא הצלחנו למצוא פרקים בפיד הזה.",
       "badFeed": "הקישור הזה לא נראה כמו הזנת פודקאסט.",
-      "tooMany": "ייבא עד 20 פרקים בכל פעם.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ייבא עד 20 פרקים בכל פעם."
     }
   },
   "banned": {

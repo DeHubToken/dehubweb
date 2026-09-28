@@ -3088,7 +3088,11 @@
     "sampleReady": "Näyte valmis.",
     "discardRecording": "Hylkää nauhoitus",
     "settingUpVoice": "Äänesi asettaminen käynnissä...",
-    "useThisVoice": "Käytä tätä ääntä"
+    "useThisVoice": "Käytä tätä ääntä",
+    "autoEnd": {
+      "title": "Vaihe päättyi käyttämättömyyden vuoksi",
+      "description": "Kukaan ei puhunut aiheesta \"{{title}}\" 30 minuuttiin, joten se suljettiin."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",

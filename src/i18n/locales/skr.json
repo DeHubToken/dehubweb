@@ -2416,7 +2416,11 @@
   },
   "stages": {
     "title": "آڈیو روم",
-    "alreadyCharged": "آپ کے ٹوکن پہلے ہی اس کے لیے لے لیے گئے ہیں۔ دوبارہ کوشش کریں — آپ سے دوسری بار چارج نہیں کیا جائے گا۔"
+    "alreadyCharged": "آپ کے ٹوکن پہلے ہی اس کے لیے لے لیے گئے ہیں۔ دوبارہ کوشش کریں — آپ سے دوسری بار چارج نہیں کیا جائے گا۔",
+    "autoEnd": {
+      "title": "اسٹیج غیرفعالیت دی وجہ نال ختم تھی گئ",
+      "description": "\"{{title}}\" تے 30 منٹ تئیں کسے نے گل نئیں کیتی، ایں لئی ایہہ بند کر دتی گئ۔"
+    }
   },
   "ads": {
     "priceUnavailable": "ٹوکن کی قیمت دستیاب نہیں ہے — جلد دوبارہ کوشش کریں۔",
@@ -2609,13 +2613,6 @@
     "transferGuarantee": "آپ نوں پورا اکاؤنٹ ملدا اے — ہینڈل، پوسٹاں، فالوورز، ٹپس دی تریخ تے بیج دے حق۔ ویچن آلا اپنا والیٹ تے اوہدے وچ جو کچھ اے اوہ رکھدا اے۔ ٹرانسفر صرف اودو ں ای چلدی اے جدو ں DeHub آپ دی ٹوکن ادائیگی نوں چین توں واپس پڑھدا اے؛ جے ایہہ رُک جاندی اے، تاں دوبارہ کوشش کرن نال ایہہ جاری رہندی اے۔"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "سیونگ ایس لیگیسی ٹوکن-پرائسڈ پلان نوں پری-لسٹنگ ریٹ تے ڈالر پرائسنگ وچ مائیگریٹ کر دیندی اے۔",
-    "tokenAmount": "{{amount}} ٹوکن",
-    "preListingTokenAmount": "پری-لسٹنگ ٹوکن رقم",
-    "tokenCheckoutNotReady": "ٹوکن سبسکرپشن چیک آؤٹ تیار نئیں — براہ کرم جلد دوبارہ کوشش کرن",
-    "tokenQuoteUnavailable": "لائیو ٹوکن کوٹ دستیاب نئیں",
-    "tokenEstimate": "≈ {{amount}} ٹوکن",
-    "tokenAmountUnavailable": "ٹوکن رقم دستیاب نئیں",
     "subscribersOnly": "صرف سبسکرائبرز",
     "creatorKeepsPost": "{{creator}} اپنے سبسکرائبرز لئی ایہ پوسٹ رکھدا اے۔",
     "creatorNoPlans": "{{creator}} کول ہن کوئی سبسکرپشن کھلی نئیں اے۔",
@@ -2696,6 +2693,13 @@
     "inactive": "غیر فعال",
     "daysLeft_one": "{{count}}d وچھو",
     "daysLeft_other": "{{count}}d وچھو",
+    "legacyPlanMigrates": "سیونگ ایس لیگیسی ٹوکن-پرائسڈ پلان نوں پری-لسٹنگ ریٹ تے ڈالر پرائسنگ وچ مائیگریٹ کر دیندی اے۔",
+    "tokenAmount": "{{amount}} ٹوکن",
+    "preListingTokenAmount": "پری-لسٹنگ ٹوکن رقم",
+    "tokenCheckoutNotReady": "ٹوکن سبسکرپشن چیک آؤٹ تیار نئیں — براہ کرم جلد دوبارہ کوشش کرن",
+    "tokenQuoteUnavailable": "لائیو ٹوکن کوٹ دستیاب نئیں",
+    "tokenEstimate": "≈ {{amount}} ٹوکن",
+    "tokenAmountUnavailable": "ٹوکن رقم دستیاب نئیں",
     "subscribedToast": "رکنیت لی",
     "confirmSubscribeTo": "سبسکرائب کریں {{plan}} لئیے {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} پری لسٹنگ ریٹ تے",
@@ -3181,6 +3185,7 @@
     "podcast": {
       "tab": "پوڈ کاسٹ",
       "feedUrlLabel": "پوڈ کاسٹ آر ایس ایس فیڈ یو آر ایل",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "فیڈ حاصل کرو",
       "fetching": "فیڈ حاصل کریندے پئے آں…",
       "showBy": "{{author}} ولوں",
@@ -3194,8 +3199,7 @@
       "failed": "ناکامی",
       "emptyFeed": "سانوں اوہ فیڈ وچ کوئی ایپیسوڈ نئیں لبھیا.",
       "badFeed": "اوہ لنک پوڈ کاسٹ فیڈ ورگا نئیں لگدا.",
-      "tooMany": "اک ویلھے وچ 20 ایپیسوڈ تئیں امپورٹ کرو.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "اک ویلھے وچ 20 ایپیسوڈ تئیں امپورٹ کرو."
     }
   },
   "banned": {

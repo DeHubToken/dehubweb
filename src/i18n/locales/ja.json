@@ -3138,7 +3138,11 @@
     "sampleReady": "サンプル準備完了。",
     "discardRecording": "録音を破棄",
     "settingUpVoice": "音声を設定中...",
-    "useThisVoice": "この音声を使用"
+    "useThisVoice": "この音声を使用",
+    "autoEnd": {
+      "title": "非アクティブのためステージが終了しました",
+      "description": "「{{title}}」は30分間誰もしゃべらなかったので、閉まっていました。"
+    }
   },
   "ads": {
     "seoTitle": "広告マネージャー | DeHub",
@@ -5459,6 +5463,7 @@
     "podcast": {
       "tab": "ポッドキャスト",
       "feedUrlLabel": "ポッドキャストRSSフィードURL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "フィードを取得",
       "fetching": "フィードを取得しています…",
       "showBy": "{{author}}による",
@@ -5472,8 +5477,7 @@
       "failed": "失敗",
       "emptyFeed": "そのフィードにエピソードが見つかりませんでした。",
       "badFeed": "そのリンクはポッドキャストフィードのようには見えません。",
-      "tooMany": "一度に最大20エピソードをインポートできます。",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "一度に最大20エピソードをインポートできます。"
     }
   },
   "banned": {

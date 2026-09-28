@@ -528,6 +528,7 @@
     "loadingMore": "Meer laden...",
     "loadMore": "Meer laden",
     "continue": "Doorgaan",
+    "undo": "Ongedaan maken",
     "allRightsReserved": "Alle rechten voorbehouden",
     "noData": "Geen gegevens",
     "yes": "Ja",
@@ -724,8 +725,7 @@
     "age": "Leeftijd",
     "from": "Van",
     "to": "Naar",
-    "value": "Waarde",
-    "undo": "Ongedaan maken"
+    "value": "Waarde"
   },
   "tip": {
     "title": "Fooi versturen",
@@ -3334,7 +3334,11 @@
     "sampleReady": "Opname klaar.",
     "discardRecording": "Opname verwijderen",
     "settingUpVoice": "Je stem instellen...",
-    "useThisVoice": "Deze stem gebruiken"
+    "useThisVoice": "Deze stem gebruiken",
+    "autoEnd": {
+      "title": "Fase beëindigd vanwege inactiviteit",
+      "description": "Niemand sprak gedurende 30 minuten op \"{{title}}\", dus het was gesloten."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",

@@ -3086,7 +3086,11 @@
     "sampleReady": "Näidis valmis.",
     "discardRecording": "Hülgake salvestis",
     "settingUpVoice": "Teie häält seadistatakse...",
-    "useThisVoice": "Kasutage seda häält"
+    "useThisVoice": "Kasutage seda häält",
+    "autoEnd": {
+      "title": "Etapp lõppes tegevusetuse tõttu",
+      "description": "Keegi ei rääkinud 30 minuti jooksul teemal „{{title}}“, nii et see oli suletud."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
