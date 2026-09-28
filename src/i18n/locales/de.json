@@ -5628,6 +5628,38 @@
     "continue": "Zurück zu DeHub",
     "keepWhileHolding": "Sobald ein Abzeichen freigeschaltet ist, gehört es dir, solange du deine DeHub-Token behältst. Die Anzahl der Token, die zum Freischalten eines neuen Abzeichens benötigt werden, kann sich mit dem Tokenpreis ändern."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} Abzeichen",
+    "close": "Schließen",
+    "badges": "Abzeichen",
+    "tierOf": "Level {{index}} von {{total}}",
+    "youHaveThis": "Sie haben dieses Abzeichen",
+    "toUnlock": "{{amount}} weitere Token zum Freischalten",
+    "holdToUnlock": "Halte mindestens so viele DeHub-Token, um sie freizuschalten",
+    "sliderLabel": "Gehaltene Token",
+    "sliderValue": "{{amount}} Token · {{tier}}",
+    "you": "Sie",
+    "grants": "Was es freischaltet",
+    "perks": {
+      "fee": "Plattformgebühr",
+      "votes": "Governance-Stimmen",
+      "reach": "Gewicht pro Ansicht & Reaktion",
+      "feedPosts": "Home-Feed-Posts pro Tag",
+      "images": "Bilder pro Beitrag",
+      "uploads": "Tägliches Upload-Lim",
+      "storage": "Editor-Speicher",
+      "profiles": "Gespeicherte Profile",
+      "lending": "Ausleih-Slots für Abzeichen",
+      "voice": "Voice-Klonen",
+      "voiceFree": "Kostenlos",
+      "voiceLocked": "{{tier}} und höher"
+    },
+    "buy": "Holen Sie sich DHB",
+    "details": "Vollständige Aufschlüsselung",
+    "play": "Spielen",
+    "pause": "Pause",
+    "hint": "Zum Biegen ziehen · eine Kante zum Abziehen ziehen · für die nächste tippen"
+  },
   "liveGift": {
     "pickTier": "Wähle eine Feier",
     "plays": "Spielt {{tier}} im Stream",

@@ -5430,6 +5430,38 @@
     "continue": "Terug na Dehub",
     "keepWhileHolding": "Sodra 'n kenteken ontsluit is, is dit joune solank jy jou DeHub tokens hou. Die aantal tokens wat nodig is om 'n nuwe kenteken te ontsluit, kan verander met die tokenprys."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} badge",
+    "close": "Sluit",
+    "badges": "Kentekens",
+    "tierOf": "Vlak {{index}} van {{total}}",
+    "youHaveThis": "Jy het hierdie badge",
+    "toUnlock": "{{amount}} meer tekens om dit te ontsluit",
+    "holdToUnlock": "Hou ten minste hierdie baie DeHub tekens om dit te ontsluit",
+    "sliderLabel": "Tekens gehou",
+    "sliderValue": "{{amount}} tokens · {{tier}}",
+    "you": "Jy",
+    "grants": "Wat is ontsluierd",
+    "perks": {
+      "fee": "Platformfooi",
+      "votes": "Regeringsstemme",
+      "reach": "Gewig per aansig en reaksie",
+      "feedPosts": "Home Posters EenVandaag",
+      "images": "Beelde per plasing",
+      "uploads": "Daaglikse oplaai limiet",
+      "storage": "Redigeerder stoor",
+      "profiles": "Gestoorde profiele",
+      "lending": "Badge uitleen slots",
+      "voice": "Stemkloning",
+      "voiceFree": "Gratis",
+      "voiceLocked": "{{tier}} en op"
+    },
+    "buy": "Kry DHB",
+    "details": "Volle ineenstorting",
+    "play": "Speel",
+    "pause": "Pouseer",
+    "hint": "Sleep om te buig · trek 'n rand te skil · tap vir die volgende een"
+  },
   "liveGift": {
     "pickTier": "Kies 'n viering",
     "plays": "Speel {{tier}} op die stroom",

@@ -5310,6 +5310,38 @@
     "continue": "Bumalik sa DeHub",
     "keepWhileHolding": "Raha vao misokatra ny mari-pankasitrahana, dia anao mandrakariva izany raha mbola mitazona ny mari-panondroanao DeHub ianao. Ny isan'ny mari-panondroana ilaina mba hisokafan'ny mari-pankasitrahana vaovao dia mety miova arakaraka ny vidin'ny mari-panondroana."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} mari-pahaizana",
+    "close": "Hidio",
+    "badges": "Mari-pahaizana",
+    "tierOf": "Ambaratonga {{index}} amin'ny {{total}}",
+    "youHaveThis": "Manana ity mari-pahaizana ity ianao",
+    "toUnlock": "{{amount}} famantarana hafa mba hamohana azy",
+    "holdToUnlock": "Hazonina, fara fahakeliny, izany maro DeHub famantarana mba hamoha azy",
+    "sliderLabel": "Famantarana notazonina",
+    "sliderValue": "{{amount}} famantarana · {{tier}}",
+    "you": "Ianao",
+    "grants": "Izay amohany azy",
+    "perks": {
+      "fee": "Sarany sehatra",
+      "votes": "Latsa-bato fitantanana",
+      "reach": "Lanja isaky ny fahitana & fihetsika",
+      "feedPosts": "Lahatsoratra fohy ao an-trano isan'andro",
+      "images": "Sary isaky ny lahatsoratra",
+      "uploads": "Daily mampakatra fetra",
+      "storage": "Fitehirizana fanontana",
+      "profiles": "Tohanan-javatra voavonjy",
+      "lending": "Slots fampisamborana mari-pahaizana",
+      "voice": "Fanakarana feo",
+      "voiceFree": "Maimaimpoana",
+      "voiceLocked": "{{tier}} and."
+    },
+    "buy": "Mahazoa DHB",
+    "details": "Famakafakana feno",
+    "play": "Alefa",
+    "pause": "Atsaharo",
+    "hint": "Sintona mba hiongana · sintonina ny sisiny mba hifosaka · kitiho mba hahazo ny manaraka"
+  },
   "liveGift": {
     "pickTier": "Misafidiana lanonana",
     "plays": "Mampiseho ny {{tier}} ao amin'ny stream",

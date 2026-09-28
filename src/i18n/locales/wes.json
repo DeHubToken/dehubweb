@@ -2959,6 +2959,38 @@
     },
     "continue": "Back to DeHub"
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} badge",
+    "close": "Close",
+    "badges": "Badges",
+    "tierOf": "Level {{index}} for {{total}}",
+    "youHaveThis": "You get dis badge",
+    "toUnlock": "{{amount}} more token for open am",
+    "holdToUnlock": "Hold at least dis much DeHub token for open am",
+    "sliderLabel": "Tokens held",
+    "sliderValue": "{{amount}} tokens · {{tier}}",
+    "you": "You",
+    "grants": "What it unlocks",
+    "perks": {
+      "fee": "Platform fee",
+      "votes": "Governance votes",
+      "reach": "Weight per view & reaction",
+      "feedPosts": "Home-feed post dem every day",
+      "images": "Images per post",
+      "uploads": "Daily upload limit",
+      "storage": "Editor storage",
+      "profiles": "Saved profiles",
+      "lending": "Badge lending slots",
+      "voice": "Voice cloning",
+      "voiceFree": "Free",
+      "voiceLocked": "{{tier}} and up"
+    },
+    "buy": "Get DHB",
+    "details": "Full breakdown",
+    "play": "Play",
+    "pause": "Pause",
+    "hint": "Drag for bend am · pull one side for peel am · tap for di next one"
+  },
   "liveGift": {
     "pickTier": "Pick a celebration",
     "you": "You",

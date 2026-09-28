@@ -5518,6 +5518,38 @@
     "continue": "Tagasi DeHubi",
     "keepWhileHolding": "Kui märgi avate, on see teie oma seni, kuni hoiate oma DeHub märke. Uue märgi avamiseks vajalike märkide arv võib muutuda koos märgihinnaga."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} märk",
+    "close": "Sulge",
+    "badges": "Märgid",
+    "tierOf": "Tase {{index}}/{{total}}",
+    "youHaveThis": "Sul on see märk",
+    "toUnlock": "{{amount}} veel märki selle avamiseks",
+    "holdToUnlock": "Selle avamiseks hoia vähemalt nii palju DeHubi žetoone",
+    "sliderLabel": "Ootel žetoonid",
+    "sliderValue": "{{amount}} märgid · {{tier}}",
+    "you": "Sina",
+    "grants": "Mida see avab",
+    "perks": {
+      "fee": "Platvormi tasu",
+      "votes": "Juhtimishääled",
+      "reach": "Kaal vaate ja reaktsiooni kohta",
+      "feedPosts": "Koduvoogude postitused päevas",
+      "images": "Pildid postituse kohta",
+      "uploads": "Päevane üleslaadimise limiit",
+      "storage": "Redaktori salvestusruum",
+      "profiles": "Salvestatud profiilid",
+      "lending": "Märgilaenu teenindusajad",
+      "voice": "Hääle kloonimine",
+      "voiceFree": "Tasuta",
+      "voiceLocked": "{{tier}} ja järgmised"
+    },
+    "buy": "Hangi DHB",
+    "details": "Täielik jaotus",
+    "play": "Esita",
+    "pause": "Peata",
+    "hint": "Painutamiseks lohistage · koorimiseks tõmmake serva · puudutage järgmise jaoks"
+  },
   "liveGift": {
     "pickTier": "Vali tähistamine",
     "plays": "Mängib {{tier}} striimil",

@@ -3463,6 +3463,38 @@
     "continue": "Ku noqo DeHub",
     "keepWhileHolding": "Marka calaamad la furo, waa kuu ahaaneysaa inta aad haysato token-kaaga DeHub. Tirada token-ka loo baahan yahay si loo furo calaamad cusub ayaa isbeddeli karta iyadoo ku xiran qiimaha token-ka."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} badge",
+    "close": "Xir",
+    "badges": "Calaamadaha",
+    "tierOf": "Tier {{index}} ee {{total}}",
+    "youHaveThis": "Calaamadan adaa leh",
+    "toUnlock": "{{amount}} calaamado dheeraad ah si loo furo",
+    "holdToUnlock": "Ku hay ugu yaraan calaamado badan DeHub si aad u furto",
+    "sliderLabel": "Calaamadaha la qabtay",
+    "sliderValue": "{{amount}} tokens · {{tier}}",
+    "you": "Adiga",
+    "grants": "Waxa uu furo",
+    "perks": {
+      "fee": "Khidmadda barxadda",
+      "votes": "Codadka maamulka",
+      "reach": "Miisaanka aragti kasta & falcelin",
+      "feedPosts": "Home Googooska Geeska Maalin Kasta",
+      "images": "Images per post",
+      "uploads": "Xadka soo dejinta maalinlaha ah",
+      "storage": "Kaydinta tifaftiraha",
+      "profiles": "Faahfaahinta la keydiyay",
+      "lending": "Boosaska amaahda badge",
+      "voice": "Codaynta",
+      "voiceFree": "Bilaash",
+      "voiceLocked": "{{tier}} iyo kor"
+    },
+    "buy": "Hel DHB",
+    "details": "Burbur buuxa",
+    "play": "Ciyaar",
+    "pause": "Jooji",
+    "hint": "Ku jiid si aad u bend · jiid gees ah si aad u peel · taabo mid ka mid ah soo socda"
+  },
   "liveGift": {
     "pickTier": "U dooro dabaaldeg",
     "plays": "Waxay ciyaartaa {{tier}} durdurka",
