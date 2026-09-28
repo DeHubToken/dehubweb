@@ -279,6 +279,8 @@
     "compactModeDesc": "Krchatsnel harakavoroume aveli shat bovalandakoutyunn hamar",
     "autoPlay": "Inqnagortarkhoom",
     "autoPlayDesc": "Inqnagortarkhel tesaholvakere inqnagortsab",
+    "autoPlayMuted": "Ավտոնվագարկումը սկսել առանց ձայնի",
+    "autoPlayMutedDesc": "Ինքնուրույն նվագարկվող տեսանյութերը միշտ սկսվում են անջատված ձայնով",
     "showAnimations": "Tsoutsel animitsiyanere",
     "showAnimationsDesc": "Miatsnel smoune antsoumanere",
     "coinPlacement": "Manraman teghavoroum",

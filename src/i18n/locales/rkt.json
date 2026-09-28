@@ -282,6 +282,8 @@
     "compactModeDesc": "বেশি কনটেন্টের নাগি ফাঁক কমাও",
     "autoPlay": "ভিডিও নিজে নিজে চলুক",
     "autoPlayDesc": "ফিডোত ভিডিও নিজে নিজে চলিবে",
+    "autoPlayMuted": "অটোপ্লে মিউট করি শুরু করেন",
+    "autoPlayMutedDesc": "নিজে নিজে চলা ভিডিও সোগ সময় আওয়াজ বন্ধ করি শুরু হইবে",
     "showAnimations": "অ্যানিমেশন দেখাও",
     "showAnimationsDesc": "মসৃণ ট্রানজিশন আর ইফেক্ট চালু করো",
     "coinPlacement": "কয়েন কোটে থাকিবে",
