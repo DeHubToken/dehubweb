@@ -12,6 +12,9 @@ export function useHorizontalBitmap(source: string, measured: boolean, viewportR
     const observer = new IntersectionObserver(([entry]) => {
       if (timer) clearTimeout(timer);
       const viewport = root.getBoundingClientRect();
+      // Skipped offscreen feed rows can report empty descendant rectangles.
+      // Keep the last horizontal selection; vertical retention owns its grace.
+      if (viewport.bottom <= 0 || viewport.top >= window.innerHeight) return;
       const slide = entry.boundingClientRect;
       // Vertical retention owns the feed's scroll-back buffer and grace period.
       const horizontallyVisible = slide.right > viewport.left - 32 && slide.left < viewport.right + 32;
