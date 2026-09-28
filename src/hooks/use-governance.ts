@@ -67,7 +67,7 @@ export interface GovernanceProposal {
  */
 const BADGE_VOTE_WEIGHT: Record<string, number> = {
   "Crab": 1,
-  "Lobster": 2,
+  "Ghost Lobster": 2,
   "Piranha": 3,
   "Giant Tortoise": 4,
   "King Cobra": 5,

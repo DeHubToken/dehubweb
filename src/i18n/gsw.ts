@@ -441,7 +441,7 @@ export const gsw = {
     shakeUpDesc: 'Nöischti Produktdesign-Slides und strategischi Updates für 2025.',
     badgeNone: 'Keis Badge',
     badgeCrab: 'Chrabbe-Badge',
-    badgeLobster: 'Hummer-Badge',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piranha-Badge',
     badgeTortoise: 'Riesenschildchrote-Badge',
     badgeCobra: 'Königskobra-Badge',

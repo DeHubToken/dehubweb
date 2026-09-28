@@ -445,7 +445,7 @@ export const id = {
     shakeUpDesc: 'Slide desain produk terbaru dan pembaruan strategis untuk 2025.',
     badgeNone: 'Tanpa lencana',
     badgeCrab: 'Lencana Kepiting',
-    badgeLobster: 'Lencana Lobster',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Lencana Piranha',
     badgeTortoise: 'Lencana Kura-kura Raksasa',
     badgeCobra: 'Lencana Kobra Raja',

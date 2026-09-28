@@ -445,7 +445,7 @@ export const bn = {
     shakeUpDesc: '২০২৫-এর জন্য সর্বশেষ পণ্য ডিজাইন স্লাইড এবং কৌশলগত আপডেট।',
     badgeNone: 'কোনো ব্যাজ নেই',
     badgeCrab: 'ক্র্যাব ব্যাজ',
-    badgeLobster: 'লবস্টার ব্যাজ',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'পিরানহা ব্যাজ',
     badgeTortoise: 'দৈত্য কচ্ছপ ব্যাজ',
     badgeCobra: 'কিং কোবরা ব্যাজ',

@@ -18,7 +18,7 @@ import type { SuperPowerKey, SuperPowerStatus } from '@/lib/api/dehub/superpower
 /** Every power on the ladder, unlocked, with an allowance to spend. */
 const LADDER: { key: SuperPowerKey; tier: string | null }[] = [
   { key: 'boost', tier: 'Crab' },
-  { key: 'second_wind', tier: 'Lobster' },
+  { key: 'second_wind', tier: 'Ghost Lobster' },
   { key: 'comment_anchor', tier: 'Piranha' },
   { key: 'trend_jacker', tier: 'Giant Tortoise' },
   { key: 'timeline_bomber', tier: 'King Cobra' },

@@ -439,7 +439,7 @@ export const fa = {
     shakeUpDesc: 'آخرین اسلایدهای طراحی محصول و به‌روزرسانی‌های استراتژیک برای ۲۰۲۵.',
     badgeNone: 'بدون نشان',
     badgeCrab: 'نشان خرچنگ',
-    badgeLobster: 'نشان خرچنگ دریایی',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'نشان پیرانا',
     badgeTortoise: 'نشان لاک‌پشت غول‌پیکر',
     badgeCobra: 'نشان کبرای شاه',

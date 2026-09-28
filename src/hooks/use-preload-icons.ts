@@ -66,7 +66,7 @@ import medal10 from '@/assets/medal-10.png';
 import TortoiseBadge from '@/assets/badges/Giant Tortoise.webp';
 import CrabBadge from '@/assets/badges/Crab.webp';
 import PiranhaBadge from '@/assets/badges/Piranha.webp';
-import LobsterBadge from '@/assets/badges/Lobster.webp';
+import LobsterBadge from '@/assets/badges/Ghost Lobster.webp';
 import OctopusBadge from '@/assets/badges/Octopus.webp';
 import CobraBadge from '@/assets/badges/King Cobra.webp';
 import CrocodileBadge from '@/assets/badges/Crocodile.webp';

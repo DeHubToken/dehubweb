@@ -445,7 +445,7 @@ export const de = {
     shakeUpDesc: 'Neueste Produktdesign-Folien und strategische Updates für 2025.',
     badgeNone: 'Kein Abzeichen',
     badgeCrab: 'Krabbe',
-    badgeLobster: 'Hummer',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Piranha',
     badgeTortoise: 'Riesenschildkröte',
     badgeCobra: 'Königskobra',

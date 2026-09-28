@@ -444,7 +444,7 @@ export const mn = {
     shakeUpDesc: 'Бүтээгдэхүүний дизайны сүүлийн үеийн слайдууд болон 2025 стратегийн шинэчлэлтүүд.',
     badgeNone: 'Тэмдэггүй',
     badgeCrab: 'Хавч',
-    badgeLobster: 'Сам хорхой',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'Пиранья',
     badgeTortoise: 'Аварга яст мэлхий',
     badgeCobra: 'Хаан кобра',

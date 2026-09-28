@@ -15,7 +15,7 @@ const AdvertisingPricing = () => {
   const pricingTiers = [
     { threshold: "< 10,000", badge: "No Badge", cpm: "$10", multiplier: "1x", image: null, color: "bg-gray-300" },
     { threshold: "10,000+", badge: "Crab Badge", cpm: "$100", multiplier: "10x", image: badgeImage('Crab'), color: "bg-orange-500" },
-    { threshold: "25,000+", badge: "Lobster Badge", cpm: "$180", multiplier: "18x", image: badgeImage('Lobster'), color: "bg-red-500" },
+    { threshold: "25,000+", badge: "Ghost Lobster Badge", cpm: "$180", multiplier: "18x", image: badgeImage('Ghost Lobster'), color: "bg-red-500" },
     { threshold: "50,000+", badge: "Piranha Badge", cpm: "$285", multiplier: "28x", image: badgeImage('Piranha'), color: "bg-purple-500" },
     { threshold: "100,000+", badge: "Giant Tortoise Badge", cpm: "$450", multiplier: "45x", image: badgeImage('Giant Tortoise'), color: "bg-green-600" },
     { threshold: "250,000+", badge: "King Cobra Badge", cpm: "$800", multiplier: "80x", image: badgeImage('King Cobra'), color: "bg-gray-800" },

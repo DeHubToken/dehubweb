@@ -441,7 +441,7 @@ export const dcc = {
     shakeUpDesc: '2025 के लिए लेटेस्ट प्रोडक्ट डिज़ाइन स्लाइड और स्ट्रैटेजिक अपडेट।',
     badgeNone: 'कोई बैज नइ',
     badgeCrab: 'क्रैब बैज',
-    badgeLobster: 'लॉबस्टर बैज',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: 'पिरान्हा बैज',
     badgeTortoise: 'विशाल कछुआ बैज',
     badgeCobra: 'किंग कोबरा बैज',

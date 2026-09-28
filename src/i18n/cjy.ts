@@ -445,7 +445,7 @@ export const cjy = {
     shakeUpDesc: '2025 年嘞最新产品设计幻灯片和战略更新。',
     badgeNone: '无徽章',
     badgeCrab: '螃蟹徽章',
-    badgeLobster: '龙虾徽章',
+    badgeLobster: 'Ghost Lobster Badge',
     badgePiranha: '食人鱼徽章',
     badgeTortoise: '巨龟徽章',
     badgeCobra: '眼镜王蛇徽章',
