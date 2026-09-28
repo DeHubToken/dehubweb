@@ -441,7 +441,7 @@ export function ShowcaseShell({
   const dock = (
     <nav
       aria-label={dockLabel}
-      className="relative z-10 mx-auto flex w-full max-w-[480px] shrink-0 items-center gap-1 rounded-[20px] border border-white/10 bg-white/[0.07] p-1 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-[opacity,transform] duration-700 pr-2 lg:w-auto lg:max-w-[calc(100%-24px)] lg:p-1.5 lg:pr-3"
+      className="relative z-10 mx-auto flex w-full max-w-[480px] shrink-0 items-center gap-1 rounded-[20px] border border-white/10 bg-white/[0.07] p-1 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-[opacity,transform] duration-700 lg:w-auto lg:max-w-[calc(100%-24px)] lg:p-1.5"
       style={{
         opacity: panelIn ? 1 : 0,
         transform: panelIn ? 'none' : 'translateY(24px)',
@@ -509,7 +509,7 @@ export function ShowcaseShell({
         onClick={() => setPlaying((p) => !p)}
         aria-label={playing ? t('badgeShowcase.pause') : t('badgeShowcase.play')}
         aria-pressed={!playing}
-        className="bs-chrome-dark ml-1 grid h-9 w-9 shrink-0 place-items-center rounded-full lg:h-10 lg:w-10"
+        className="bs-chrome-dark grid h-9 w-9 shrink-0 place-items-center rounded-full lg:h-10 lg:w-10"
       >
         {playing ? <Pause className="h-3.5 w-3.5" fill="currentColor" /> : <Play className="h-3.5 w-3.5" fill="currentColor" />}
       </button>
