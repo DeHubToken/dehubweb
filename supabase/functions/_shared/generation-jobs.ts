@@ -1,6 +1,7 @@
 import { serviceClient } from './auth.ts';
 import type { ChargeResult } from './ai-payment-guard.ts';
 import { archiveGeneration } from './archive-generation.ts';
+import { refundCredits } from './credits.ts';
 
 async function saveOutput(job: any, result: Record<string, any>): Promise<void> {
   const url = result.videoUrl || result.modelUrl || result.imageUrl || result.audioUrl || result.image;
@@ -68,11 +69,17 @@ export async function settleGeneration(endpoint: string, predictionId: string, r
   if (error) throw new Error('Could not reconcile the render. Reconnect to collect it.');
   if (!job) return response;
   if (result.status !== 'succeeded') {
-    const { error: releaseError } = await db.rpc('ai_payment_release', {
-      p_tx_hash: job.tx_hash, p_wallet: job.wallet_address, p_dhb: job.price_dhb, p_job_id: job.id,
-    });
-    if (releaseError && !releaseError.message.includes('REFUND_ALREADY_APPLIED')) {
-      throw new Error('The render failed. Payment recovery is pending; reconnect without paying again.');
+    if (job.payment_source === 'credits') {
+      if (!(await refundCredits(job.credit_debit_key))) {
+        throw new Error('The render failed. Payment recovery is pending; reconnect without paying again.');
+      }
+    } else {
+      const { error: releaseError } = await db.rpc('ai_payment_release', {
+        p_tx_hash: job.tx_hash, p_wallet: job.wallet_address, p_dhb: job.price_dhb, p_job_id: job.id,
+      });
+      if (releaseError && !releaseError.message.includes('REFUND_ALREADY_APPLIED')) {
+        throw new Error('The render failed. Payment recovery is pending; reconnect without paying again.');
+      }
     }
     result.paymentRestored = true;
   } else {
