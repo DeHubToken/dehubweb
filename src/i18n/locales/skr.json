@@ -3338,6 +3338,38 @@
     },
     "continue": "DeHub ڏانهن واپس"
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} بیج",
+    "close": "بند کرو",
+    "badges": "بیجز",
+    "tierOf": "ٹائر {{index}} آف {{total}}",
+    "youHaveThis": "تھاکوں ایہہ بیج ہے",
+    "toUnlock": "{{amount}} ودھ ٹوکن ایندے کھولن واسطے",
+    "holdToUnlock": "ایں کوں کھولݨ کیتے گھٹ توں گھٹ اتنے DeHub ٹوکن رکھو",
+    "sliderLabel": "ٹوکن رکھے",
+    "sliderValue": "{{amount}} ٹوکن · {{tier}}",
+    "you": "توں",
+    "grants": "ایہہ کیہ کھولسی",
+    "perks": {
+      "fee": "پلیٹ فارم فیس",
+      "votes": "گورننس ووٹ",
+      "reach": "فی ویو تے ری ایکشن واسطے وزن",
+      "feedPosts": "ہوم فیڈ پوسٹ فی ڈے",
+      "images": "امیجز فی پوسٹ",
+      "uploads": "روزانہ اپلوڈ حد",
+      "storage": "ایڈیٹر سٹوریج",
+      "profiles": "محفوظ پروفائلز",
+      "lending": "بیج لین دین سلاٹ",
+      "voice": "وائس کلوننگ",
+      "voiceFree": "مفت",
+      "voiceLocked": "{{tier}} تے اُتے"
+    },
+    "buy": "ڈی ایچ بی حاصل کرو",
+    "details": "پورا بریک ڈاؤن",
+    "play": "کھیڈو",
+    "pause": "روکو",
+    "hint": "موڑن واسطے کھچو · چھلݨ واسطے کنارہ کھچو · اگلے واسطے ٹیپ کرو"
+  },
   "liveGift": {
     "ttsLabel": "کجھ زور نال آکھو",
     "ttsPlaceholder": "سٹریم تے وِچّھ آکھو…",

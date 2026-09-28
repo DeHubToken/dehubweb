@@ -3458,6 +3458,38 @@
     "continue": "Tilbake til DeHub",
     "keepWhileHolding": "Når et merke er låst opp, er det ditt så lenge du beholder DeHub-tokensene dine. Antallet tokens som trengs for å låse opp et nytt merke kan endre seg med tokenprisen."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}}-merket",
+    "close": "Lukke",
+    "badges": "Merker",
+    "tierOf": "Nivå {{index}} av {{total}}",
+    "youHaveThis": "Du har dette merket",
+    "toUnlock": "{{amount}} flere tokens for å låse den opp",
+    "holdToUnlock": "Hold minst så mange DeHub-tokens for å låse den opp",
+    "sliderLabel": "Poletter holdt",
+    "sliderValue": "{{amount}} tokens · {{tier}}",
+    "you": "Du",
+    "grants": "Hva den låser opp",
+    "perks": {
+      "fee": "Plattformavgift",
+      "votes": "Styringsstemmer",
+      "reach": "Vekt per visning og reaksjon",
+      "feedPosts": "Hjemmefeed-innlegg om dagen",
+      "images": "Bilder per innlegg",
+      "uploads": "Daglig opplastingsgrense",
+      "storage": "Redaktørens lagringsplass",
+      "profiles": "Lagrede profiler",
+      "lending": "Utlånsautomater for navneskilt",
+      "voice": "Stemmekloning",
+      "voiceFree": "Gratis",
+      "voiceLocked": "{{tier}} og oppover"
+    },
+    "buy": "Få DHB",
+    "details": "Fullstendig oversikt",
+    "play": "Spille",
+    "pause": "Pause",
+    "hint": "Dra for å bøye · dra i en kant for å skrelle · trykk for neste"
+  },
   "liveGift": {
     "pickTier": "Velg en feiring",
     "plays": "Spiller {{tier}} på strømmen",

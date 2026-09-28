@@ -3144,5 +3144,37 @@
   "builder": {
     "buildInChat": "@assistant کے ساتھ اپنے DM میں بناؤ",
     "signInRequired": "Builder استعمال کرنے کو سائن ان کرو۔"
+  },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} بیج",
+    "close": "بند کریں",
+    "badges": "بیجز",
+    "tierOf": "سطح {{index}} از {{total}}",
+    "youHaveThis": "آپ کے پاس یہ بیج ہے",
+    "toUnlock": "{{amount}} مزید ٹوکنز اسے کھولنے کے لیے",
+    "holdToUnlock": "اس کو کھولنے کے لیے کم سے کم اتنے DeHub ٹوکن رکھو",
+    "sliderLabel": "رکھے گئے ٹوکنز",
+    "sliderValue": "{{amount}} ٹوکنز · {{tier}}",
+    "you": "آپ",
+    "grants": "یہ کیا کھولتا ہے",
+    "perks": {
+      "fee": "پلیٹ فارم فیس",
+      "votes": "حکومت کے ووٹ",
+      "reach": "ہر ویو اور ردعمل کا وزن",
+      "feedPosts": "روزانہ ہوم فیڈ پوسٹس",
+      "images": "پوسٹ فی تصویر",
+      "uploads": "روز کی اپلوڈ حد",
+      "storage": "ایڈیٹر اسٹوریج",
+      "profiles": "محفوظ شدہ پروفائلز",
+      "lending": "بیج ادھار سلاٹس",
+      "voice": "آواز کی نقل",
+      "voiceFree": "مفت",
+      "voiceLocked": "{{tier}} اور اوپر"
+    },
+    "buy": "DH​B حاصل کریں",
+    "details": "مکمل تفصیل",
+    "play": "پلے",
+    "pause": "پاز",
+    "hint": "موڑنے کے لیے ڈریگ کریں · کنارے کو کھینچ کر چھڑکیں · اگلے کے لیے ٹیپ کریں"
   }
 }

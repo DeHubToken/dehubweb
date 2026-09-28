@@ -15,6 +15,7 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import glossaryIcon from '@/assets/glossary-icon.png';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
 import { badgeImage, badgeThresholds } from '@/lib/staking-badges';
+import { platformFeeForIndex } from '@/lib/badge-perks';
 import { useBadgeScale } from '@/hooks/use-badge-scale';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
@@ -220,7 +221,7 @@ export default function GlossaryPage() {
       entries: [
         { icon: <CheckCircle2 size={iconSize} />, title: t('glossary.stakingBadge', 'Staking Badges'), description: t('glossary.stakingBadgeDesc') },
         ...badgeLadder.map((b, i) => {
-          const fee = i === badgeLadder.length - 1 ? 1 : parseFloat((10 - i * 0.69).toFixed(2));
+          const fee = platformFeeForIndex(i);
           return {
             icon: <img src={badgeImage(b.name) || ''} alt={b.name} className="w-6 h-6 object-contain art-rim" />,
             title: b.name,

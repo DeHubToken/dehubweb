@@ -5628,6 +5628,38 @@
     "continue": "Torna a DeHub",
     "keepWhileHolding": "Una volta sbloccato un badge, sarà tuo finché manterrai i tuoi token DeHub. Il numero di token necessari per sbloccare un nuovo badge può cambiare con il prezzo del token."
   },
+  "badgeShowcase": {
+    "dialogLabel": "Badge {{tier}}",
+    "close": "Chiudi",
+    "badges": "Distintivi",
+    "tierOf": "Livello {{index}} di {{total}}",
+    "youHaveThis": "Hai questo badge",
+    "toUnlock": "{{amount}} altri token per sbloccarlo",
+    "holdToUnlock": "Tieni almeno questi token DeHub per sbloccarlo",
+    "sliderLabel": "Gettoni detenuti",
+    "sliderValue": "{{amount}} token · {{tier}}",
+    "you": "Tu",
+    "grants": "Cosa sblocca",
+    "perks": {
+      "fee": "Canone piattaforma",
+      "votes": "Voti di governance",
+      "reach": "Peso per vista e reazione",
+      "feedPosts": "Post di alimentazione domestica al giorno",
+      "images": "Immagini per post",
+      "uploads": "Limite di caricamento giornaliero",
+      "storage": "Archiviazione editor",
+      "profiles": "Profili salvati",
+      "lending": "Slot per prestito badge",
+      "voice": "Clonazione vocale",
+      "voiceFree": "Gratis",
+      "voiceLocked": "{{tier}} e oltre"
+    },
+    "buy": "Ottieni DHB",
+    "details": "Dettaglio completo",
+    "play": "Gioca",
+    "pause": "Pausa",
+    "hint": "Trascina per piegare · tira un bordo per staccare · tocca per il prossimo"
+  },
   "liveGift": {
     "pickTier": "Scegli una celebrazione",
     "plays": "Riproduce {{tier}} in streaming",

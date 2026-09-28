@@ -3453,6 +3453,38 @@
     "continue": "Bali menyang DeHub",
     "keepWhileHolding": "Yen lencana wis dibukak kunci, iku bakal dadi duweke sampeyan anggere sampeyan nyekeli token DeHub. Jumlah token sing dibutuhake kanggo mbukak kunci lencana anyar bisa owah karo rega token."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} lencana",
+    "close": "Tutup",
+    "badges": "Lencana",
+    "tierOf": "Tingkat {{index}} saka {{total}}",
+    "youHaveThis": "Sampeyan duwe lencana iki",
+    "toUnlock": "{{amount}} token liyane kanggo mbukak kunci",
+    "holdToUnlock": "Tahan paling ora token DeHub saakeh iki kanggo mbukak kunci",
+    "sliderLabel": "Token dicekel",
+    "sliderValue": "{{amount}} token · {{tier}}",
+    "you": "Sampeyan",
+    "grants": "Apa sing mbukak kunci",
+    "perks": {
+      "fee": "Biaya platform",
+      "votes": "Swara pamaréntahan",
+      "reach": "Bobot saben tampilan & reaksi",
+      "feedPosts": "Pos feed-omah dina",
+      "images": "Gambar saben kiriman",
+      "uploads": "Watesan unggah saben dina",
+      "storage": "Panyimpenan editor",
+      "profiles": "Profil disimpen",
+      "lending": "Slot ngutangi lencana",
+      "voice": "Kloning swara",
+      "voiceFree": "Gratis",
+      "voiceLocked": "{{tier}} lan munggah"
+    },
+    "buy": "Entuk DHB",
+    "details": "Rincian lengkap",
+    "play": "Putar",
+    "pause": "Paus",
+    "hint": "Seret kanggo mbengkongake · tarik pinggiran kanggo ngupas · tutul kanggo sabanjure"
+  },
   "liveGift": {
     "pickTier": "Pilih perayaan",
     "plays": "Putar {{tier}} ing stream",

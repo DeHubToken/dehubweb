@@ -3470,6 +3470,38 @@
     "continue": "Komawa zuwa DeHub",
     "keepWhileHolding": "Da zarar an buɗe lambar yabo, sai ta zama tawa muddin kuna riƙe da tsabar kuɗin DeHub ɗinku. Adadin tsabar kuɗin da ake buƙata don buɗe sabuwar lambar yabo na iya canzawa tare da farashin tsabar kuɗin."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} badge",
+    "close": "Kusa",
+    "badges": "BAGGE",
+    "tierOf": "Tier {{index}} na {{total}}",
+    "youHaveThis": "Kuna da wannan alamar",
+    "toUnlock": "{{amount}} karin alamomi don buɗe shi",
+    "holdToUnlock": "Riƙe akalla wannan alamun DeHub da yawa don buɗe shi",
+    "sliderLabel": "Tokens da aka gudanar",
+    "sliderValue": "{{amount}}tokens · {{tier}}",
+    "you": "Kai",
+    "grants": "Abin da yake buše",
+    "perks": {
+      "fee": "Kudin dandamali",
+      "votes": "Gwamnati ta kada kuri'u",
+      "reach": "Nauyin kowane ra'ayi & amsawa",
+      "feedPosts": "Gida-feed posts a rana",
+      "images": "Images da Post",
+      "uploads": "Iyakar loda yau da kullum",
+      "storage": "Edita ajiya",
+      "profiles": "An adana bayanan martaba",
+      "lending": "Baje bashi ramummuka",
+      "voice": "Muryar murya cloning",
+      "voiceFree": "Kyauta",
+      "voiceLocked": "{{tier}} kuma sama"
+    },
+    "buy": "Samu DHB",
+    "details": "Cikakken rushewa",
+    "play": "Yi wasa",
+    "pause": "Dakatar da",
+    "hint": "Ja zuwa bend · ja wani gefen zuwa peel · tap ga na gaba daya"
+  },
   "liveGift": {
     "pickTier": "Zaɓi bikin",
     "plays": "Yana kunna {{tier}} a kan tashar",

@@ -5608,6 +5608,38 @@
     "continue": "Atpakaļ uz DeHub",
     "keepWhileHolding": "Kad emblēma ir atbloķēta, tā ir jūsu, kamēr vien jums pieder jūsu DeHub žetoni. Žetonu skaits, kas nepieciešams jaunas emblēmas atbloķēšanai, var mainīties atkarībā no žetona cenas."
   },
+  "badgeShowcase": {
+    "dialogLabel": "{{tier}} nozīme",
+    "close": "Aizvērt",
+    "badges": "Nozīmītes",
+    "tierOf": "Līmenis {{index}} no {{total}}",
+    "youHaveThis": "Jums ir šī nozīmīte",
+    "toUnlock": "{{amount}} vēl žetoni, lai to atbloķētu",
+    "holdToUnlock": "Turiet vismaz tik daudz DeHub marķieru, lai to atbloķētu",
+    "sliderLabel": "Turētie žetoni",
+    "sliderValue": "{{amount}} tokens · {{tier}}",
+    "you": "Jūs",
+    "grants": "Ko tā atbloķē",
+    "perks": {
+      "fee": "Platformas nodeva",
+      "votes": "Pārvaldības balsis",
+      "reach": "Svars vienam skatam un reakcijai",
+      "feedPosts": "Mājas padeves ieraksti dienā",
+      "images": "Attēli uz ziņu",
+      "uploads": "Ikdienas augšupielādes ierobežojums",
+      "storage": "Redaktora krātuve",
+      "profiles": "Saglabātie profili",
+      "lending": "Žetonu aizdošanas laika nišas",
+      "voice": "Balss klonēšana",
+      "voiceFree": "Bezmaksas",
+      "voiceLocked": "{{tier}} un uz augšu"
+    },
+    "buy": "Iegūt DHB",
+    "details": "Pilns sadalījums",
+    "play": "Atskaņot",
+    "pause": "Apturēt",
+    "hint": "Velciet, lai saliektu · pavelciet malu, lai nolobītos · pieskarieties nākamajam"
+  },
   "liveGift": {
     "pickTier": "Izvēlieties svinības",
     "plays": "Atskaņo {{tier}} straumē",
