@@ -77,9 +77,9 @@ export interface Ceremony {
 }
 
 /**
- * Returns the ceremony to play, or null. Call `dismiss` when it finishes (or
- * when it is interrupted) — the marker is written there, so an interrupted
- * ceremony is not replayed on the next visit.
+ * Returns the ceremony to play, or null. Call `dismiss` once it has been handed
+ * to the badge showcase — the marker is written there, so a ceremony that is
+ * skipped or closed early is not replayed on the next visit.
  */
 export function useBadgeCeremony({ enabled, address, tier }: CeremonyArgs) {
   const [ceremony, setCeremony] = useState<Ceremony | null>(null);

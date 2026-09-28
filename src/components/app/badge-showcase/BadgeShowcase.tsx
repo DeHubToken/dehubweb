@@ -34,21 +34,27 @@ import {
   BADGE_ORDER,
   badgeImage,
   badgeThresholds,
+  canonicalTierName,
   getBadgeStanding,
   type BadgeStanding,
 } from '@/lib/staking-badges';
 import { badgePerksForIndex, type BadgePerks } from '@/lib/badge-perks';
-import { shortDhb } from '@/lib/badge-motion';
+import { badgeMotion, shortDhb } from '@/lib/badge-motion';
 import { fetchVoiceClonePrice } from '@/lib/stage-voice-clone';
 import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
-import { ShowcaseShell, type ShowcaseApi, type ShowcaseEntry } from './ShowcaseShell';
+import { ShowcaseShell, type ShowcaseApi, type ShowcaseEntry, type ShowcaseIntro } from './ShowcaseShell';
 import { BENTO, BENTO_IDLE, BENTO_LIT, tiltAt } from './showcase-ui';
 import type { StickerFinish } from './sticker-stage';
 
 interface BadgeShowcaseProps {
   /** Tier that was clicked; the showcase opens on it. */
   tier: string | null;
+  /**
+   * Present when this opens as a promotion: the tier left behind, or null
+   * for a first badge. Undefined for an ordinary click.
+   */
+  promotedFrom?: string | null;
   /** The badge element that was clicked, flown out of and back into. */
   anchor: HTMLElement | null;
   onClose: () => void;
@@ -96,7 +102,7 @@ function formatUsd(value: number): string {
   return `$${Math.round(value)}`;
 }
 
-export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcaseProps) {
+export default function BadgeShowcase({ tier, promotedFrom, anchor, onClose }: BadgeShowcaseProps) {
   const { t } = useTranslation();
   // Read the context directly: badges render above AuthProvider in places.
   const auth = useContext(AuthContext);
@@ -135,18 +141,35 @@ export default function BadgeShowcase({ tier, anchor, onClose }: BadgeShowcasePr
 
   const owned = (i: number) => !!standing && standing.index >= i;
 
+  const intro = useMemo<ShowcaseIntro | undefined>(() => {
+    if (promotedFrom === undefined) return undefined;
+    const motion = badgeMotion(BADGE_ORDER[originIndex]);
+    if (!motion) return undefined;
+    const from = canonicalTierName(promotedFrom);
+    return { fromArt: from ? artFor(from) : null, motion };
+  }, [promotedFrom, originIndex]);
+
   return (
     <ShowcaseShell
       entries={entries}
       originIndex={originIndex}
       anchor={anchor}
       onClose={onClose}
+      intro={intro}
       dialogLabel={(i) => t('badgeShowcase.dialogLabel', { tier: BADGE_ORDER[i] })}
       dockLabel={t('badgeShowcase.badges')}
       owned={owned}
     >
       {(api) => (
-        <HolderDetails api={api} standing={standing} ladder={ladder} price={price} scale={scale} owned={owned} />
+        <HolderDetails
+          api={api}
+          standing={standing}
+          ladder={ladder}
+          price={price}
+          scale={scale}
+          owned={owned}
+          promotedTo={intro ? originIndex : null}
+        />
       )}
     </ShowcaseShell>
   );
@@ -162,7 +185,10 @@ function HolderDetails({
   price,
   scale,
   owned,
+  promotedTo,
 }: {
+  /** Ladder index just reached, when the showcase opened as a promotion. */
+  promotedTo: number | null;
   api: ShowcaseApi;
   standing: BadgeStanding | null;
   ladder: ReturnType<typeof badgeThresholds>;
@@ -225,6 +251,9 @@ function HolderDetails({
 
   const name = BADGE_ORDER[index];
   const threshold = ladder[index].min;
+  // On the tier just reached, the header congratulates instead of counting.
+  const celebrating = promotedTo === index;
+  const lineKey = celebrating ? badgeMotion(name)?.lineKey : undefined;
   // The quotas resolve against the live ladder, so a new price means new perks.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const perks = useMemo(() => badgePerksForIndex(index), [index, scale]);
@@ -263,6 +292,11 @@ function HolderDetails({
   return (
     <>
       <div className="flex flex-col items-center gap-1.5 text-center lg:items-start lg:text-left">
+        {lineKey && (
+          <p className="text-[10px] font-bold uppercase leading-3 tracking-[0.14em] text-emerald-300 [text-shadow:0_0_14px_rgba(110,231,183,0.45)]">
+            {t(lineKey)}
+          </p>
+        )}
         <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5 lg:justify-start">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.h2
@@ -284,7 +318,9 @@ function HolderDetails({
           </span>
         </div>
         <p className="min-h-4 text-[12px] leading-4 text-white/55">
-          {standing
+          {celebrating
+            ? t('badgeAscension.reached', { tier: name })
+            : standing
             ? owned(index)
               ? t('badgeShowcase.youHaveThis')
               : t('badgeShowcase.toUnlock', { amount: nf.format(Math.ceil(remaining)) })
