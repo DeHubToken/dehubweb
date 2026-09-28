@@ -14,11 +14,14 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createReplicaOperations, removeReplicaFile } from './depin-erasure';
 import {
   connectDepinSocket,
   disconnectDepinSocket,
   emitDepinChallengeResponse,
   emitDepinStored,
+  emitDepinErased,
+  onDepinErase,
   onDepinAssign,
   onDepinChallenge,
   onDepinConnectError,
@@ -85,6 +88,7 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
 
   const rootDirRef = useRef<FileSystemDirectoryHandle | null>(null);
   const nodeIdRef = useRef<string | null>(null);
+  const replicaOperations = useRef(createReplicaOperations());
 
   const getRootDir = useCallback(async (): Promise<FileSystemDirectoryHandle> => {
     if (rootDirRef.current) return rootDirRef.current;
@@ -95,6 +99,7 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
 
   const handleAssign = useCallback(async (assign: DepinAssignData) => {
     try {
+      await replicaOperations.current.store(assign.assetKey, async () => {
       const res = await fetch(assign.url);
       if (!res.ok) throw new Error(`fetch failed: ${res.status}`);
       const buf = await res.arrayBuffer();
@@ -111,10 +116,28 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
       // No node id and no byte count: the server knows both already, and a
       // client-supplied size would be a lever on this node's own rewards.
       emitDepinStored({ assetKey: assign.assetKey, sha256 });
+      });
     } catch (err) {
       // A failed download/store is not fatal — the server's verify-cron will
       // notice this node never confirmed the asset and reassign it elsewhere.
       console.warn('[DePin] Failed to store assigned asset:', assign.assetKey, err);
+    }
+  }, [getRootDir]);
+
+  const handleErase = useCallback(async (assetKey: string) => {
+    try {
+      await replicaOperations.current.erase(assetKey, async () => {
+        const dir = await getRootDir();
+        const filename = sanitizeAssetKey(assetKey);
+        let bytes = 0;
+        try { bytes = (await (await dir.getFileHandle(filename)).getFile()).size; }
+        catch (error) { if ((error as DOMException)?.name !== 'NotFoundError') throw error; }
+        await removeReplicaFile(dir, filename);
+        setStoredBytes(previous => Math.max(0, previous - bytes));
+      });
+      emitDepinErased(assetKey);
+    } catch {
+      console.warn('[DePin] Could not erase a replica; the server will retry.');
     }
   }, [getRootDir]);
 
@@ -213,6 +236,7 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
     const unsubAssign = onDepinAssign((assign) => {
       void handleAssign(assign);
     });
+    const unsubErase = onDepinErase(({ assetKey }) => { void handleErase(assetKey); });
     const unsubChallenge = onDepinChallenge((challenge) => {
       void handleChallenge(challenge);
     });
@@ -230,11 +254,12 @@ export function useDepinNode(walletAddress: string | null | undefined): UseDepin
     return () => {
       unsubRegistered();
       unsubAssign();
+      unsubErase();
       unsubChallenge();
       unsubDisconnect();
       unsubConnectError();
     };
-  }, [socketReady, handleAssign, handleChallenge]);
+  }, [socketReady, handleAssign, handleChallenge, handleErase]);
 
   // Clean up the socket and any pending work when the page unmounts, or the
   // wallet disconnects out from under an opted-in node.
