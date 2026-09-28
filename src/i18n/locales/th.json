@@ -3817,7 +3817,6 @@
     "legacyPlanMigrates": "การบันทึกจะย้ายแผนที่กำหนดราคาโทเค็นเดิมนี้ไปยังการกำหนดราคาเป็นดอลลาร์ในอัตราก่อนการลิสต์",
     "tokenAmount": "{{amount}} โทเค็น",
     "preListingTokenAmount": "จำนวนโทเค็นก่อนการลิสต์",
-    "tokensStayInTreasury": "โทเค็น DeHub ของคุณยังคงอยู่ในการดูแลของคลัง DeHub และจะไม่ถูกขาย ผู้สร้างจะได้รับยอดสมัครสมาชิกที่ระบุเป็น USDT",
     "tokenCheckoutNotReady": "การชำระเงินสมัครสมาชิกโทเค็นยังไม่พร้อม — โปรดลองอีกครั้งในไม่ช้า",
     "tokenQuoteUnavailable": "ใบเสนอราคาโทเค็นสดไม่พร้อมใช้งาน",
     "tokenEstimate": "≈ {{amount}} โทเค็น",
@@ -3826,17 +3825,10 @@
     "subscribedToast": "สมัครใช้งานแล้ว",
     "confirmSubscribeTo": "สมัครสมาชิก {{plan}} เพื่อ {{price}}/{{duration}}",
     "atPreListingRate": "{{amount}} ในอัตราก่อนลงประกาศ",
-    "withdraw": "ถอนเงิน",
-    "earningsTitle": "รายได้จากการสมัครใช้งาน",
-    "earningsAvailable": "ว่าง",
-    "earningsPending": "รอดำเนินการ",
-    "withdrawableSoon": "รายได้จากการสมัครใช้งานจะสามารถถอนได้เร็วๆนี้",
     "youPayNow": "คุณชำระเงิน",
-    "usdtSent": "ส่ง {{amount}} USDT แล้ว",
-    "earningsWithdrawableOnBase": "ถอนได้บน Base",
-    "earningsUsdtPending": "คิดเป็น USDT · รอเงินสำรองคลัง",
-    "buyersPayTokenAmount": "ผู้ซื้อจ่ายจำนวนโทเค็น DeHub ที่แสดงในอัตราก่อนการลิสต์ คุณจะได้รับมูลค่า USD เป็นยอดคงเหลือ USDT",
-    "creditsCreator": "เติมเครดิตให้ครีเอเตอร์ {{amount}} USDT"
+    "paidToCreatorWallet": "ตรงไปที่กระเป๋าเงินของครีเอเตอร์",
+    "creatorPaidDirectNote": "ส่วนแบ่งของครีเอเตอร์จะส่งตรงไปยังกระเป๋าเงินทันทีที่คุณสมัครรับข้อมูล DeHub เก็บค่าธรรมเนียมแพลตฟอร์มขนาดเล็ก",
+    "creatorEarnsDirect": "สมาชิกชำระเป็นโทเค็น DeHub การแชร์ของคุณจะปรากฏในกระเป๋าเงินของคุณทันทีที่พวกเขาสมัครรับข้อมูลจะลดค่าธรรมเนียมแพลตฟอร์มสำหรับระดับแบดจ์ของคุณ"
   },
   "live": {
     "chatJoined": "เข้าร่วมแล้ว",

@@ -2632,7 +2632,6 @@
     "legacyPlanMigrates": "সেভিং এই লিগ্যাসি টোকেন-প্রাইসড প্ল্যানকে প্রি-লিস্টিং রেটে ডলার প্রাইসিং-এ মাইগ্রেট করবো।",
     "tokenAmount": "{{amount}} টোকেন",
     "preListingTokenAmount": "প্রি-লিস্টিং টোকেন অ্যামাউন্ট",
-    "tokensStayInTreasury": "তোমার DeHub টোকেনগুলা DeHub ট্রেজারির কাস্টোডিতে থাকবো আর বিক্রি হইবো না। ক্রিয়েটর একটা USDT-ডেনোমিনেটেড সাবস্ক্রিপশন ব্যালেন্স পাইবো।",
     "tokenCheckoutNotReady": "টোকেন সাবস্ক্রিপশন চেকআউট রেডি না — অনুগ্রহ কইরা কিছুক্ষণের মধ্যে আবার চেষ্টা করো",
     "tokenQuoteUnavailable": "লাইভ টোকেন কোট নাই",
     "tokenEstimate": "≈ {{amount}} টোকেন",
@@ -2701,17 +2700,10 @@
     "subscribedToast": "সাবস্ক্রাইব করা",
     "confirmSubscribeTo": "{{plan}} কে {{price}} / {{duration}} তে সাবস্ক্রাইব করুন।",
     "atPreListingRate": "প্রি-লিস্টিং রেটে {{amount}}",
-    "withdraw": "উইথড্র",
-    "earningsTitle": "সাবস্ক্রিপশন আর্নিংস",
-    "earningsAvailable": "অ্যাভেইলেবল",
-    "earningsPending": "পেন্ডিং",
-    "withdrawableSoon": "সাবস্ক্রিপশন আর্নিংস উইল বি উইথড্রয়েবল সুন।",
     "youPayNow": "তুঁই দিবা",
-    "usdtSent": "{{amount}} USDT পাঠানো অইছে",
-    "earningsWithdrawableOnBase": "Base ত তুলিবার লাই আছে",
-    "earningsUsdtPending": "USDT ত হিসাব · ট্রেজারি রিজার্ভর অপেক্ষাত",
-    "buyersPayTokenAmount": "বায়াররা প্রি-লিস্টিং রেটে দেখানো DeHub টোকেন অ্যামাউন্ট পে করবো। তুমি USDT ব্যালেন্স হিসেবে USD ভ্যালু পাইবা।",
-    "creditsCreator": "আপনার সাবস্ক্রিপশন টোকেন দিয়ে {{amount}} USDT"
+    "paidToCreatorWallet": "সোজা ক্রিয়েটরর ওয়ালেটত যায়",
+    "creatorPaidDirectNote": "তুঁই সাবস্ক্রাইব গরন লগে লগে ক্রিয়েটরর ভাগ সোজা তেঁআর ওয়ালেটত যায়। DeHub এক্কান ছোড প্ল্যাটফর্ম ফি রাখে।",
+    "creatorEarnsDirect": "সাবস্ক্রাইবাররা ডিহাব টোকেনে পেমেন্ট করে। আপনার শেয়ার সাথে সাথে আপনার ওয়ালেটে চলে আসে যখন তারা সাবস্ক্রাইব করে, আপনার ব্যাজ টায়ারের জন্য প্ল্যাটফর্ম ফি বাদ দিয়ে।"
   },
   "live": {
     "chatJoined": "যোগ দিছে",

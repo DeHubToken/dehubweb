@@ -2687,7 +2687,6 @@
     "legacyPlanMigrates": "ማስቀመጥ ይህንን የቆየ የቶከን-ዋጋ እቅድ በቅድመ-ዝርዝር ዋጋ ወደ ዶላር ዋጋ ያሸጋግራል።",
     "tokenAmount": "{{amount}} ቶከኖች",
     "preListingTokenAmount": "የቅድመ-ዝርዝር ቶከን መጠን",
-    "tokensStayInTreasury": "የእርስዎ DeHub ቶከኖች በDeHub ግምጃ ቤት ቁጥጥር ስር ይቆያሉ እና አይሸጡም። ፈጣሪው በUSDT የተመዘገበ የደንበኝነት ምዝገባ ሚዛን ይቀበላል።",
     "tokenCheckoutNotReady": "የቶከን የደንበኝነት ምዝገባ ክፍያ ዝግጁ አይደለም — እባክዎን በቅርቡ እንደገና ይሞክሩ",
     "tokenQuoteUnavailable": "የቀጥታ ቶከን ጥቅስ አይገኝም",
     "tokenEstimate": "≈ {{amount}} ቶከኖች",
@@ -2775,17 +2774,10 @@
     "subscribedToast": "ተመዝግቧል",
     "confirmSubscribeTo": "ለ {{price}} / {{duration}} ለ {{plan}} ይመዝገቡ።",
     "atPreListingRate": "በቅድመ-ዝርዝር ዋጋ በ {{amount}}",
-    "withdraw": "ማውጣት",
-    "earningsTitle": "የደንበኝነት ምዝገባ ገቢዎች",
-    "earningsAvailable": "ይገኛል",
-    "earningsPending": "በመጠባበቅ ላይ",
-    "withdrawableSoon": "የደንበኝነት ምዝገባ ገቢዎች በቅርቡ ይሰረዛሉ",
     "youPayNow": "እርስዎ ይከፍላሉ",
-    "usdtSent": "{{amount}} USDT ተልኳል",
-    "earningsWithdrawableOnBase": "በBase ላይ ለማውጣት ዝግጁ",
-    "earningsUsdtPending": "በUSDT የተተመነ · የግምጃ ቤት ክምችት በመጠባበቅ ላይ",
-    "buyersPayTokenAmount": "ገዢዎች ቅድመ-ዝርዝር ዋጋ ላይ የሚታየውን የDeHub ቶከን መጠን ይከፍላሉ። የUSD እሴቱን እንደ USDT ሚዛን ይቀበላሉ።",
-    "creditsCreator": "ፈጣሪውን {{amount}} USDT ክሬዲት ያድርጉ"
+    "paidToCreatorWallet": "በቀጥታ ወደ ፈጣሪ ቦርሳ ይሂዱ",
+    "creatorPaidDirectNote": "የፈጣሪ ድርሻ እርስዎ በሚመዘገቡበት ቅጽበት በቀጥታ ወደ ኪስዎ ይሄዳል ። DeHub አነስተኛ የመሣሪያ ስርዓት ክፍያዎችን ይጠብቃል ።",
+    "creatorEarnsDirect": "ተመዝጋቢዎች በ DeHub ምልክቶች ውስጥ ይከፍላሉ ። የእርስዎ ድርሻ መሬቶች በኪስ ቦርሳዎ ውስጥ በሚመዘገቡበት ቅጽበት ፣ ለባጅ ደረጃዎ የመድረክ ክፍያ ያነሰ ።"
   },
   "live": {
     "chatJoined": "ተቀላቀለ",

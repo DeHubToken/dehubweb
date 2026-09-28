@@ -4690,7 +4690,6 @@
     "legacyPlanMigrates": "Besparen migreert dit legacy token-geprijsde plan naar dollar-prijzen tegen de pre-listing koers.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Pre-listing token bedrag",
-    "tokensStayInTreasury": "Uw DeHub tokens blijven in bewaring van de DeHub treasury en worden niet verkocht. De maker ontvangt een op USDT gebaseerd abonnementsaldo.",
     "tokenCheckoutNotReady": "De token-abonnement checkout is niet klaar — probeer het binnenkort opnieuw",
     "tokenQuoteUnavailable": "Live tokenkoers niet beschikbaar",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -4698,17 +4697,10 @@
     "subscribedToast": "Geabonneerd",
     "confirmSubscribeTo": "Abonneer je op {{plan}} voor {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} tegen de pre-listing rate",
-    "withdraw": "Opnemen",
-    "earningsTitle": "Abonnementsomzet",
-    "earningsAvailable": "Beschikbaar",
-    "earningsPending": "In behandeling",
-    "withdrawableSoon": "Abonnementsinkomsten kunnen binnenkort worden ingetrokken",
     "youPayNow": "U betaalt",
-    "usdtSent": "{{amount}} USDT verzonden",
-    "earningsWithdrawableOnBase": "Beschikbaar om op te nemen via Base",
-    "earningsUsdtPending": "In USDT · wacht op treasuryreserve",
-    "buyersPayTokenAmount": "Kopers betalen het getoonde DeHub token bedrag tegen de pre-listing koers. U ontvangt de USD waarde als een USDT saldo.",
-    "creditsCreator": "Credits de maker {{amount}} USDT"
+    "paidToCreatorWallet": "Gaat rechtstreeks naar de portemonnee van de maker",
+    "creatorPaidDirectNote": "Het aandeel van de maker gaat direct naar zijn/haar portemonnee op het moment dat je je abonneert. DeHub houdt een kleine platformvergoeding in.",
+    "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "live": {
     "chatJoined": "is erbij gekomen",

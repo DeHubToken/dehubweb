@@ -4292,7 +4292,6 @@
     "legacyPlanMigrates": "חיסכון מעביר תוכנית זו המתומחרת באסימונים ישנים לתמחור בדולרים לפי שער טרום-רישום.",
     "tokenAmount": "{{amount}} אסימונים",
     "preListingTokenAmount": "כמות אסימונים לפני רישום",
-    "tokensStayInTreasury": "אסימוני ה-DeHub שלך נשארים בחזקת אוצר ה-DeHub ואינם נמכרים. היוצר מקבל יתרת מנוי הנקובה ב-USDT.",
     "tokenCheckoutNotReady": "הצ'ק-אאוט של מנוי אסימונים אינו מוכן — אנא נסה שוב בקרוב",
     "tokenQuoteUnavailable": "ציטוט אסימון חי אינו זמין",
     "tokenEstimate": "≈ {{amount}} אסימונים",
@@ -4302,17 +4301,10 @@
     "subscribedToast": "נרשמת כמנוי",
     "confirmSubscribeTo": "הירשמו ל - {{plan}} עבור {{price}}/{{duration}}.",
     "atPreListingRate": "{{amount}} בתעריף הרישום מראש",
-    "withdraw": "משיכה",
-    "earningsTitle": "רווחי מינוי",
-    "earningsAvailable": "זמין",
-    "earningsPending": "בהמתנה",
-    "withdrawableSoon": "בקרוב ניתן יהיה למשוך את רווחי המינוי",
     "youPayNow": "אתם משלמים",
-    "usdtSent": "נשלחו {{amount}} USDT",
-    "earningsWithdrawableOnBase": "זמין למשיכה ב-Base",
-    "earningsUsdtPending": "נקוב ב-USDT · ממתין לרזרבת האוצר",
-    "buyersPayTokenAmount": "קונים משלמים את כמות אסימוני DeHub המוצגת לפי שער טרום-רישום. אתה מקבל את ערך הדולר כיתרת USDT.",
-    "creditsCreator": "נקודות זיכוי ליוצר {{amount}} USDT"
+    "paidToCreatorWallet": "הולך ישר לארנק של היוצר",
+    "creatorPaidDirectNote": "החלק של היוצר הולך ישר לארנק שלו ברגע שאתם נרשמים. DeHub שומר עמלה קטנה על הפלטפורמה.",
+    "creatorEarnsDirect": "מנויים משלמים באסימוני DeHub. החלק שלכם מגיע לארנק ברגע שהם נרשמים, בניכוי עמלת הפלטפורמה עבור רמת התג שלכם."
   },
   "live": {
     "chatJoined": "הצטרף/ה",
