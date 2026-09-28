@@ -95,16 +95,21 @@ export function LoginWalletsStep({
   // WalletButton throws "Connector not found" for a wallet that is missing,
   // so the rows wait for them. One skeleton frame on a warm cache.
   const [connectorsReady, setConnectorsReady] = useState(false);
+  const [connectorError, setConnectorError] = useState(false);
+  const [connectorAttempt, setConnectorAttempt] = useState(0);
   useEffect(() => {
     let alive = true;
+    setConnectorError(false);
     import('@/lib/wagmi-wallets').then((m) => {
       m.ensureWalletConnectors();
       if (alive) setConnectorsReady(true);
+    }).catch(() => {
+      if (alive) setConnectorError(true);
     });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [connectorAttempt]);
 
   /*
     Reaching this step with a wallet already attached is normal — a previous
@@ -159,6 +164,19 @@ export function LoginWalletsStep({
   /** The chip belongs under whichever row owns the live connection. */
   const chipFor = (walletId: string) =>
     connectedChip && connectedWalletId === walletId ? connectedChip : null;
+
+  if (connectorError) {
+    return (
+      <div className="space-y-3 py-4" role="alert">
+        <p className="text-sm text-white/70 text-center">
+          {t('loginModal.walletLoadFailed', 'Could not load wallets. Please try again.')}
+        </p>
+        <Button className={walletButtonClass} onClick={() => setConnectorAttempt(n => n + 1)}>
+          {t('common.retry', 'Retry')}
+        </Button>
+      </div>
+    );
+  }
 
   if (!connectorsReady) {
     return (
