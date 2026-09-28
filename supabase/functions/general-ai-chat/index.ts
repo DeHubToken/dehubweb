@@ -887,7 +887,7 @@ Example: [{"content": "Interested in DeFi yield farming", "type": "interest"}]`;
       model: 'google/gemini-2.5-flash-lite',
       messages: [{ role: 'user', content: extractionPrompt }],
       max_completion_tokens: 300,
-    }, { label: 'memory-extract' });
+    }, { label: 'memory-extract', publicContent: true });
 
     if (!response.ok) {
       await response.text();
