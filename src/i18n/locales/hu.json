@@ -7504,5 +7504,36 @@
       "copy": "Másolás",
       "copied": "Másoltam."
     }
+  },
+  "aiStyles": {
+    "normal": "Normál",
+    "old-english": "Óangol",
+    "cockney": "Cockney",
+    "celtic": "Kelta",
+    "scouse": "Scouse",
+    "wild-west": "Vadnyugat",
+    "asian-uncle": "Ázsiai nagybácsi",
+    "russian-mafia": "Orosz maffia",
+    "pirate": "Kalóz",
+    "alien": "Földönkívüli",
+    "e-girl": "E-Girl",
+    "chad": "Chad",
+    "hopeless-romantic": "Reménytelen romantikus",
+    "daddy": "Apu",
+    "mommy": "Anyu",
+    "big-brother": "Nagytesó",
+    "lil-bro": "Öcsi",
+    "big-sister": "Nővér",
+    "little-sister": "Húgi",
+    "conservative": "Konzervatív",
+    "liberal": "Liberális",
+    "antifa": "ANTIFA",
+    "capitalist": "Kapitalista",
+    "socialist": "Szocialista",
+    "neocon": "Neokon",
+    "feminist": "Feminista",
+    "progressive": "Progresszív",
+    "nationalist": "Nacionalista",
+    "communist": "Kommunista"
   }
 }
