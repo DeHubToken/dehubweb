@@ -91,6 +91,24 @@ async function callJson<T>(wallet: string, action: string): Promise<T | null> {
   }
 }
 
+let quoteOnce: Promise<number | null> | null = null;
+
+/** The one-off clone price in DHB. Public, so it needs no wallet or sign-in. */
+export function fetchVoiceClonePrice(): Promise<number | null> {
+  quoteOnce ??= supabase.functions
+    .invoke(FUNCTION, { body: { action: 'quote' } })
+    .then(({ data }) => {
+      const priceDhb = Number((data as { priceDhb?: number } | null)?.priceDhb);
+      return priceDhb > 0 ? priceDhb : null;
+    })
+    .catch(() => null)
+    .then((priceDhb) => {
+      if (priceDhb === null) quoteOnce = null;
+      return priceDhb;
+    });
+  return quoteOnce;
+}
+
 /** What this wallet owns, owes, or is owed. */
 export function fetchVoiceCloneStatus(wallet: string): Promise<VoiceCloneStatus | null> {
   return callJson<VoiceCloneStatus>(wallet, 'status');
