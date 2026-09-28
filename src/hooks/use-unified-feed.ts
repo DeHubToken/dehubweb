@@ -20,6 +20,7 @@ import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import type { ContentRating } from '@/lib/api/dehub/types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
+import { memoizeFeedRow } from '@/lib/memoize-feed-row';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
@@ -215,7 +216,11 @@ function isBlockedPost(item: UnifiedFeedItem): boolean {
 /**
  * Map unified feed item to VideoItem
  */
-export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
+export const mapToVideoItem = memoizeFeedRow(mapVideoItem);
+export const mapToImagePost = memoizeFeedRow(mapImagePost);
+export const mapToTextPost = memoizeFeedRow(mapTextPost);
+
+function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
   const id = String(item.tokenId);
   
   // A live post carries no imageUrl of its own — its poster lives on the
@@ -332,7 +337,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
 /**
  * Map unified feed item to ImagePost
  */
-export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost {
+function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
   const id = String(item.tokenId);
   
   const imageUrls = buildFeedImageUrls(item.imageUrls);
@@ -405,7 +410,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
 /**
  * Map unified feed item to TextPost
  */
-export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
+function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
   const id = String(item.tokenId);
   
   const rawAvatarPath = extractAvatarPath(item);
