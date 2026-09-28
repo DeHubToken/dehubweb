@@ -23,8 +23,8 @@ export const POVR_TIERS: PovrTier[] = [
   { name: 'Crab', min: 10_000, cpmUsd: 100 },
   { name: 'Lobster', min: 25_000, cpmUsd: 180 },
   { name: 'Piranha', min: 50_000, cpmUsd: 285 },
-  { name: 'Tortoise', min: 100_000, cpmUsd: 450 },
-  { name: 'Cobra', min: 250_000, cpmUsd: 800 },
+  { name: 'Giant Tortoise', min: 100_000, cpmUsd: 450 },
+  { name: 'King Cobra', min: 250_000, cpmUsd: 800 },
   { name: 'Octopus', min: 500_000, cpmUsd: 1_250 },
   { name: 'Crocodile', min: 1_000_000, cpmUsd: 2_000 },
   { name: 'Dolphin', min: 2_000_000, cpmUsd: 3_000 },
@@ -50,7 +50,8 @@ export function tierForBalance(balance: number | null | undefined): string {
 }
 
 /**
- * Tier names as they were spelled before 2026-09-13, mapped to the real ones.
+ * Old tier names (the 2026-09-13 spelling fixes, the 2026-09-28 Giant Tortoise
+ * and King Cobra renames), mapped to the current ones.
  *
  * An advertiser's stored `targeting.tiers` can still hold either spelling, and
  * an edge function does not ride the deploy — so this file is routinely a
@@ -59,6 +60,8 @@ export function tierForBalance(balance: number | null | undefined): string {
 const LEGACY_TIER_NAMES: Record<string, string> = {
   Crocodite: 'Crocodile',
   Meglodon: 'Megalodon',
+  Tortoise: 'Giant Tortoise',
+  Cobra: 'King Cobra',
 };
 
 /** The current spelling of a tier name, whatever spelling it arrived in. */

@@ -221,7 +221,7 @@ Deno.serve(async (req) => {
       const t = (c.targeting || {}) as Targeting;
 
       // `t.tiers` is the advertiser's stored targeting. A campaign saved before
-      // the 2026-09-13 tier rename can still hold Crocodite/Meglodon, and this
+      // a tier rename can still hold an old name (Crocodite, Tortoise...), and this
       // is a silent skip — the campaign simply stops being served, with nothing
       // logged anywhere. Normalise before matching.
       if (t.tiers?.length && !t.tiers.map(canonicalTierName).includes(viewerTier)) continue;

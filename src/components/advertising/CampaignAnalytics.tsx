@@ -24,16 +24,16 @@ const CampaignAnalytics = () => {
     { tier: 'Crab', impressions: 15000, clicks: 480, ctr: '3.2%', cost: '$300' },
     { tier: 'Lobster', impressions: 12000, clicks: 420, ctr: '3.5%', cost: '$450' },
     { tier: 'Piranha', impressions: 8000, clicks: 320, ctr: '4.0%', cost: '$400' },
-    { tier: 'Tortoise', impressions: 5000, clicks: 225, ctr: '4.5%', cost: '$312' },
-    { tier: 'Cobra', impressions: 3000, clicks: 150, ctr: '5.0%', cost: '$225' }
+    { tier: 'Giant Tortoise', impressions: 5000, clicks: 225, ctr: '4.5%', cost: '$312' },
+    { tier: 'King Cobra', impressions: 3000, clicks: 150, ctr: '5.0%', cost: '$225' }
   ];
 
   const audienceBreakdown = [
     { tier: 'Crab', value: 35, color: '#f97316' },
     { tier: 'Lobster', value: 25, color: '#ef4444' },
     { tier: 'Piranha', value: 20, color: '#8b5cf6' },
-    { tier: 'Tortoise', value: 12, color: '#22c55e' },
-    { tier: 'Cobra', value: 8, color: '#374151' }
+    { tier: 'Giant Tortoise', value: 12, color: '#22c55e' },
+    { tier: 'King Cobra', value: 8, color: '#374151' }
   ].map((entry) => ({ ...entry, name: fill(t('adTools.tierBadge'), { tier: entry.tier }) }));
 
   const headlineStats = [

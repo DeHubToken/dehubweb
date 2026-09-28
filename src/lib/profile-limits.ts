@@ -7,11 +7,11 @@
  * about as much as the middle. It now opens up sharply at the top and leaves
  * the bottom exactly where it was:
  *
- *   no badge            2      Cobra … Killer Whale        10
+ *   no badge            2      King Cobra … Killer Whale   10
  *   Crab                3      Blue Whale                  25
  *   Lobster             4      Megalodon                    50
  *   Piranha             5
- *   Tortoise            6
+ *   Giant Tortoise      6
  *
  * Nobody loses a slot: every rung is at or above what it allowed before.
  *
@@ -38,8 +38,8 @@ const PROFILES_BY_TIER: Record<string, number> = {
   Crab: 3,
   Lobster: 4,
   Piranha: 5,
-  Tortoise: 6,
-  Cobra: 10,
+  "Giant Tortoise": 6,
+  "King Cobra": 10,
   Octopus: 10,
   Crocodile: 10,
   Dolphin: 10,

@@ -471,14 +471,14 @@ describe('badge-tier profile allowance', () => {
   });
 
   it('names the next tier that is actually worth more, not the next one along', () => {
-    // Cobra through Killer Whale all keep ten, so the offer under a
-    // Cobra badge is Blue Whale's twenty-five — not "Octopus keeps 10".
+    // King Cobra through Killer Whale all keep ten, so the offer under a
+    // King Cobra badge is Blue Whale's twenty-five — not "Octopus keeps 10".
     seedAccount(1, 250_000);
     adoptCurrentProfile();
 
     const allowance = profileAllowance();
     expect(allowance.maxProfiles).toBe(10);
-    expect(allowance.tierName).toBe('Cobra');
+    expect(allowance.tierName).toBe('King Cobra');
     expect(allowance.nextTierName).toBe('Blue Whale');
     expect(allowance.nextTierProfiles).toBe(25);
   });
