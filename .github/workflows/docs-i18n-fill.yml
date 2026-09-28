@@ -1,14 +1,15 @@
 name: docs i18n fill
 
 # Fills the docs/marketing bundles (src/i18n/<lang>.ts, read by useLanguage())
-# that are behind en.ts and opens a PR with the result. The app strings have
+# that are behind en.ts and opens one PR with the result. The app strings have
 # their own workflow, i18n-fanout.yml; this runs the same guarded fill over the
 # docs bundles through scripts/docs-i18n-fill.mjs.
 #
-# Run a handful of locales per job, several jobs side by side with different
-# locales: each job only touches the files it was given, so their PRs never
-# conflict. No secret is needed — the translate function is called with the
-# publishable key the browser bundle already ships.
+# One job per locale, up to 20 side by side: a bundle takes one to four hours,
+# so a job filling several in a row hit the time limit after two or three.
+# Each job only writes its own bundle; a final job gathers them into one PR.
+# No secret is needed — the translate function is called with the publishable
+# key the browser bundle already ships.
 
 on:
   workflow_dispatch:
@@ -20,7 +21,7 @@ on:
       count:
         description: 'How many locales to fill when none are named'
         required: false
-        default: '8'
+        default: '20'
       keys:
         description: 'Max keys per locale in one run (blank = all missing)'
         required: false
@@ -31,45 +32,80 @@ permissions:
   pull-requests: write
 
 jobs:
-  fill:
+  plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 350
+    outputs:
+      locales: ${{ steps.pick.outputs.locales }}
     steps:
       - uses: actions/checkout@v4
       # 24 imports the .ts bundles directly; 20 cannot.
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-
       - name: Report the gap before
         run: node scripts/docs-i18n-fill.mjs --check | head -30
+      - id: pick
+        run: |
+          if [ -n "${{ inputs.locales }}" ]; then
+            LIST="${{ inputs.locales }}"
+          else
+            LIST=$(node scripts/docs-i18n-fill.mjs --check | awk 'NF >= 2 && $(NF-1) == "missing" && $NF+0 > 0 {print $1}' | head -${{ inputs.count }} | paste -sd, -)
+          fi
+          echo "locales=$(node -e 'console.log(JSON.stringify(process.argv[1].split(",").map(s=>s.trim()).filter(Boolean)))' "$LIST")" >> "$GITHUB_OUTPUT"
 
+  fill:
+    needs: plan
+    if: needs.plan.outputs.locales != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        locale: ${{ fromJSON(needs.plan.outputs.locales) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
       - name: Fill
         run: |
-          ARGS=""
-          if [ -n "${{ inputs.locales }}" ]; then
-            ARGS="--locales ${{ inputs.locales }}"
-          else
-            ARGS="--all --limit ${{ inputs.count }}"
-          fi
+          ARGS="--locales ${{ matrix.locale }}"
           if [ -n "${{ inputs.keys }}" ]; then ARGS="$ARGS --keys ${{ inputs.keys }}"; fi
           node scripts/docs-i18n-fill.mjs $ARGS
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-${{ matrix.locale }}
+          path: src/i18n/${{ matrix.locale }}.ts
+
+  pr:
+    needs: fill
+    # always(): a bundle that timed out loses only itself, not the others.
+    if: always() && needs.fill.result != 'skipped'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: bundle-*
+          merge-multiple: true
+          path: src/i18n
 
       - name: Report the gap after
-        if: always()
         run: node scripts/docs-i18n-fill.mjs --check | head -30
 
-      # always(): each locale is written back the moment it finishes, so a run
-      # that hits the time limit still has whole locales on disk worth keeping.
       - name: Open a pull request
-        if: always()
         uses: peter-evans/create-pull-request@v6
         with:
           branch: docs-i18n-fill-${{ github.run_number }}
           commit-message: 'Translate the docs pages into more locales'
           title: 'Translate the docs pages into more locales'
           body: |
-            Filled by `scripts/docs-i18n-fill.mjs`.
+            Filled by `scripts/docs-i18n-fill.mjs`, one job per locale.
 
             **Intent** — the docs and marketing pages rendered mostly in English
             outside a few locales; this fills the missing strings.
