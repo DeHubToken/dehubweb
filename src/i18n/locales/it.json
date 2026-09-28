@@ -1532,7 +1532,7 @@
     "setUpNewAccount": "Crea un nuovo account",
     "createNewInstead": "Crea un nuovo account invece",
     "migrateAccount": "Migra account",
-    "importExternalWallet": "Importa wallet esterno",
+    "importExternalWallet": "Importa chiavi",
     "migrateIntentHint": "Accedi con una qualsiasi delle opzioni qui sotto. Se corrisponde a un account DeHub precedente, trasferirai il suo wallet, nome utente e saldo.",
     "importIntentHint": "Accedi con una qualsiasi delle opzioni qui sotto, quindi incolla la frase di recupero o la chiave privata del wallet che desideri utilizzare.",
     "title": "Accedi",

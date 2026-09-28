@@ -1532,7 +1532,7 @@
     "setUpNewAccount": "Configurar una cuenta nueva",
     "createNewInstead": "Crear una cuenta nueva en su lugar",
     "migrateAccount": "Migrar cuenta",
-    "importExternalWallet": "Importar billetera externa",
+    "importExternalWallet": "Importar claves",
     "migrateIntentHint": "Inicia sesión con cualquier opción a continuación. Si coincide con una cuenta de DeHub anterior, transferirás su billetera, nombre de usuario y saldo.",
     "importIntentHint": "Inicia sesión con cualquier opción a continuación, luego pega la frase de recuperación o la clave privada de la billetera que deseas usar.",
     "title": "Iniciar sesión",

@@ -137,7 +137,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // behind this sheet to go back to, so it does not close. Log out is the
     // other way out, and it clears the flag itself.
     if (requiresUsername) return;
-    // Closing by hand abandons a "Migrate account" / "Import external wallet"
+    // Closing by hand abandons a "Migrate account" / "Import keys"
     // choice too; a completed login clears it itself.
     setWalletSetupIntent(null);
     setStep('main');
@@ -173,7 +173,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // account only usable by them — is also the more accurate description.
     : step === 'wallet-create' ? (
         getWalletSetupIntent() === 'migrate' ? t('loginModal.migrateAccount', 'Migrate account')
-        : getWalletSetupIntent() === 'import' ? t('loginModal.importExternalWallet', 'Import external wallet')
+        : getWalletSetupIntent() === 'import' ? t('loginModal.importExternalWallet', 'Import keys')
         : t('loginModal.secureAccount', 'Secure account')
       )
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')

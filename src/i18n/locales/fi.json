@@ -1528,7 +1528,7 @@
     "setUpNewAccount": "Luo uusi tili",
     "createNewInstead": "Luo sen sijaan uusi tili",
     "migrateAccount": "Siirrä tili",
-    "importExternalWallet": "Tuo ulkoinen lompakko",
+    "importExternalWallet": "Tuo avaimet",
     "migrateIntentHint": "Kirjaudu sisään millä tahansa alla olevalla vaihtoehdolla. Jos se vastaa aiempaa DeHub-tiliä, tuot sen lompakon, käyttäjänimen ja saldon.",
     "importIntentHint": "Kirjaudu sisään millä tahansa alla olevalla vaihtoehdolla ja liitä sitten haluamasi lompakon palautuslause tai yksityinen avain.",
     "title": "Kirjaudu sisään",
