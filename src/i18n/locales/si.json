@@ -622,7 +622,6 @@
     "mostViewed": "වැඩිපුරම නැරඹූ",
     "mostLiked": "වැඩිපුරම කැමතිවූ",
     "mostComments": "වැඩිපුරම අදහස්",
-    "mostTips": "Most Tips",
     "random": "අහඹු",
     "videos": "වීඩියෝ",
     "images": "පින්තූර",
@@ -2552,7 +2551,6 @@
     "podBadge": "ඉල්ලුම මත මුද්‍රණය",
     "podBuyOn": "{{provider}} හි මිලදී ගන්න",
     "podNote": "{{provider}} විසින් ඉල්ලුම මත මුද්‍රණය කර යවයි. ගෙවීම ඔවුන්ගේ අඩවියේ සිදු වේ.",
-    "podUrlPlaceholder": "https://…",
     "title": "ගබඩා",
     "browse": "බ් ‍ රවුස් කරන්න",
     "myStore": "මගේ වෙළඳසැල",
@@ -4207,52 +4205,52 @@
           "hint": "10 වන මට්ටමට ළඟා වන්න."
         },
         "ignition": {
-          "hint": "සම්මානනීය පැයක් විකාශනය කරන්න.",
-          "name": "දැල්වීම"
+          "name": "දැල්වීම",
+          "hint": "සම්මානනීය පැයක් විකාශනය කරන්න."
         },
         "on-air": {
-          "hint": "සම්මානනීය ප්‍රවාහ දහයක් අවසන් කරන්න.",
-          "name": "සජීවීව"
+          "name": "සජීවීව",
+          "hint": "සම්මානනීය ප්‍රවාහ දහයක් අවසන් කරන්න."
         },
         "storyteller": {
-          "hint": "සම්මානනීය ප්‍රවාහ විසිපහක් අවසන් කරන්න.",
-          "name": "කතන්දරකරු"
+          "name": "කතන්දරකරු",
+          "hint": "සම්මානනීය ප්‍රවාහ විසිපහක් අවසන් කරන්න."
         },
         "broadcaster": {
-          "hint": "සම්මානනීය ප්‍රවාහ පනහක් අවසන් කරන්න.",
-          "name": "විකාශකයා"
+          "name": "විකාශකයා",
+          "hint": "සම්මානනීය ප්‍රවාහ පනහක් අවසන් කරන්න."
         },
         "centurion": {
-          "hint": "සම්මානනීය ප්‍රවාහ සියයක් අවසන් කරන්න.",
-          "name": "සෙන්චූරියන්"
+          "name": "සෙන්චූරියන්",
+          "hint": "සම්මානනීය ප්‍රවාහ සියයක් අවසන් කරන්න."
         },
         "enduring": {
-          "hint": "එක් සැසිවාරයකදී සම්මානනීය පැය හතරක් විකාශනය කරන්න.",
-          "name": "ඔරොත්තු දෙන"
+          "name": "ඔරොත්තු දෙන",
+          "hint": "එක් සැසිවාරයකදී සම්මානනීය පැය හතරක් විකාශනය කරන්න."
         },
         "circle": {
-          "hint": "එකවර පුද්ගලයින් විසිපහක් නරඹන්න.",
-          "name": "සමීප කවය"
+          "name": "සමීප කවය",
+          "hint": "එකවර පුද්ගලයින් විසිපහක් නරඹන්න."
         },
         "arena": {
-          "hint": "එකවර පුද්ගලයින් පනහක් නරඹන්න.",
-          "name": "ක්‍රීඩාංගනය"
+          "name": "ක්‍රීඩාංගනය",
+          "hint": "එකවර පුද්ගලයින් පනහක් නරඹන්න."
         },
         "headliner": {
-          "hint": "එකවර පුද්ගලයින් සියයක් නරඹන්න.",
-          "name": "ප්‍රධාන තරුව"
+          "name": "ප්‍රධාන තරුව",
+          "hint": "එකවර පුද්ගලයින් සියයක් නරඹන්න."
         },
         "cornerstone": {
-          "hint": "සති විසිහයක් අඛණ්ඩව විකාශනය කරන්න.",
-          "name": "මුල්ගල"
+          "name": "මුල්ගල",
+          "hint": "සති විසිහයක් අඛණ්ඩව විකාශනය කරන්න."
         },
         "veteran": {
-          "hint": "සම්මානනීය පැය 250ක් විකාශනය කරන්න.",
-          "name": "ප්‍රවීණ"
+          "name": "ප්‍රවීණ",
+          "hint": "සම්මානනීය පැය 250ක් විකාශනය කරන්න."
         },
         "icon": {
-          "hint": "ලෙවල් විස්සට ළඟා වන්න.",
-          "name": "නිරූපකය"
+          "name": "නිරූපකය",
+          "hint": "ලෙවල් විස්සට ළඟා වන්න."
         }
       },
       "chooseBadge": "ඔබේ පැතිකඩේ පෙන්වීමට අගුළු හැරි ඕනෑම ලාංඡනයක් තෝරන්න.",
@@ -5063,7 +5061,6 @@
     "podcast": {
       "tab": "පොඩ්කාස්ට්",
       "feedUrlLabel": "පොඩ්කාස්ට් RSS සංග් ‍ රහ URL",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "සංග් ‍ රහ ලබා ගන්න",
       "fetching": "සංග් ‍ රහය ලබා ගනිමින්...",
       "showBy": "විසින් {{author}}",
@@ -5307,53 +5304,12 @@
     }
   },
   "nearBuy": {
-    "otherCurrencies": "Other currencies",
-    "title": "Pay with crypto",
     "description": "ගෙවීමට ටෝකනයක් තෝරන්න. ඔබේ පසුම්බියේ DeHub ටෝකන් ලබා ගන්න.",
     "dhbAmount": "DeHub ටෝකන් ප්‍රමාණය",
-    "search": "Search token, network or contract",
-    "noMatches": "No matching tokens.",
-    "loading": "Loading…",
-    "retry": "Retry",
-    "tokensError": "Payment tokens are temporarily unavailable.",
-    "historyError": "Your saved purchases could not be loaded. Retry before opening another payment.",
-    "statusError": "The latest status is unavailable. Your purchase is saved. Check again; do not send a second payment.",
-    "refundAddress": "Refund address on {{chain}}",
-    "refundPlaceholder": "Address on the payment network",
-    "refundHint": "Check this is a wallet you control on the payment network. Avoid exchange addresses that require a memo or tag. Any provider refund returns here.",
-    "quoteSummary": "Estimated payment: {{amount}} {{symbol}} on {{chain}}",
     "receiveNet": "ඔබට ලැබේ: {{amount}} DeHub ටෝකන්",
-    "gasReserve": "Includes ${{amount}} for network gas.",
-    "swapEstimate": "About {{minutes}} min after your payment confirms.",
-    "estimateUnknown": "Timing depends on the payment network.",
     "confirmationTime": "ජාල තහවුරු කිරීම් සහ ටෝකන් භාරදීම කාලය එකතු කරයි. මෙය ඇස්තමේන්තුවක් මිස ප්‍රති-ගණනයක් නොවේ.",
-    "finalQuote": "Review the final amount before paying.",
-    "getQuote": "Continue",
-    "paymentAction": "Continue",
-    "acceptTerms": "I agree to the purchase terms.",
-    "terms": "Read terms",
-    "sendExact": "Send exactly {{amount}} {{symbol}} on {{chain}}. Allow separately for withdrawal or network fees.",
-    "paymentSummary": "Payment: {{amount}} {{symbol}} on {{chain}}",
-    "copyPayment": "Copy payment address",
-    "memoNotice": "Required memo/tag — include it with the address or the payment may not be credited.",
-    "copyMemo": "Copy memo/tag",
-    "copied": "Copied",
-    "copyFailed": "Could not copy. Select the text and copy it manually.",
-    "deadline": "Deposit deadline: {{date}}. Do not send a new payment after this time.",
-    "saved": "Your purchase is saved. You can return to it anytime.",
-    "checkStatus": "Refresh purchase status",
-    "lastChecked": "Last checked {{time}}",
-    "history": "Your purchases",
-    "startAnother": "Back to payment options",
-    "refundReceipt": "Refund destination: {{address}}",
     "destination": "Base මත ටෝකන් ගමනාන්තය: {{address}}",
     "viewDelivery": "ටෝකන් මාරු කිරීම බලන්න",
-    "purchaseId": "Copy purchase ID: {{id}}",
-    "phase_awaiting": "Waiting for your payment",
-    "detail_awaiting": "Send once, on the selected network, before the deadline. If you have already sent it, wait for network confirmation.",
-    "phase_confirming": "Payment detected",
-    "detail_confirming": "Waiting for the network to confirm your payment. You do not need to pay again.",
-    "phase_swapping": "Converting your payment",
     "detail_swapping": "ඔබේ ගෙවීම සකසමින් පවතී. ඔබේ ටෝකන් පැමිණි විට අපි මෙම රිසිට්පත යාවත්කාලීන කරන්නෙමු.",
     "phase_delivering": "ගෙවීම පදිංචි විය · ටෝකන් යවමින්",
     "detail_delivering": "ගෙවීම ලැබුණි. ඔබේ ටෝකන් ගමනේ යෙදී ඇත.",
@@ -5361,30 +5317,8 @@
     "detail_deliveryDelayed": "ඔබේ ගෙවීම පදිංචි වී ඇත, නමුත් ටෝකන් භාරදීමට නැවත උත්සාහයක් අවශ්‍ය වේ. මෙම මිලදී ගැනීමේ හැඳුනුම්පත තබාගෙන, එය ප්‍රමාද වී පවතී නම් DeHub සහාය අමතන්න. නැවත ගෙවන්න එපා.",
     "phase_gasPending": "ටෝකන් භාර දී ඇත · ගෑස් පොරොත්තුවෙන්",
     "detail_gasPending": "ඔබේ ටෝකන් මාරු කිරීම තහවුරු කර ඇත. වෙනම ETH ගෑස් මාරු කිරීම තවමත් පොරොත්තුවෙන් හෝ නැවත උත්සාහ කරමින් පවතී.",
-    "phase_delivered": "Purchase complete",
     "detail_delivered": "ඔබේ DeHub ටෝකන් ඔබේ Base පසුම්බියට භාර දී ඇත.",
-    "phase_refunded": "Payment refunded",
-    "detail_refunded": "The provider reports the payment refunded to the refund address below. Check that wallet; network fees may apply.",
-    "phase_failed": "Payment needs attention",
-    "detail_failed": "The provider reported a failure. This does not confirm a refund. Keep this purchase ID and payment transaction hash for support; do not send again.",
-    "phase_expired": "Deposit deadline passed",
-    "detail_expired": "Do not send to this address. If you already paid, keep checking this saved purchase while the network confirms or the provider resolves it. Do not pay again.",
-    "phase_incomplete": "Deposit amount needs attention",
-    "detail_incomplete": "The provider received less than the required amount. Do not resend the full amount. Keep your transaction hash and purchase ID while the provider resolves the deposit or refund.",
-    "phase_checking": "Checking payment progress",
-    "detail_checking": "The provider has not returned a final outcome. Your purchase is saved. Do not send another payment.",
-    "pay": "Pay",
-    "directTiming": "ඔබේ ගෙවීම තහවුරු වූ පසු ටෝකන් භාර දෙනු ලැබේ.",
-    "wrongNetwork": "Switch to the selected payment network and try again.",
-    "wrongWallet": "Connect the wallet shown on this purchase and try again.",
-    "reviewPay": "Review the amount, then confirm the payment in your wallet.",
-    "currency": "Currency",
-    "checkingBalances": "Checking your wallet balances…",
-    "walletBalances": "Your balances by network",
-    "noWalletFunds": "Choose a currency, or search other currencies and networks.",
-    "connectSolana": "Connect Solana wallet",
-    "balanceUnknown": "Balance unavailable",
-    "balanceAmount": "Available: {{amount}} {{symbol}}"
+    "directTiming": "ඔබේ ගෙවීම තහවුරු වූ පසු ටෝකන් භාර දෙනු ලැබේ."
   },
   "conversation": {
     "commonGround": {
@@ -5933,8 +5867,7 @@
       },
       "quote": {
         "title": "උපුටා දැක්වීම් කාඩ්පත",
-        "body": "සරලව කරන්න, නමුත් අර්ථවත්ව.",
-        "author": "Don Draper"
+        "body": "සරලව කරන්න, නමුත් අර්ථවත්ව."
       },
       "thumbnail": {
         "title": "විශ්වාස කරන්න බැරි වෙයි",
@@ -5950,7 +5883,6 @@
         "place": "The Warehouse, නගර මධ්‍යයේ"
       },
       "podcast": {
-        "title": "The Creator Show",
         "episode": "කථාංගය 12 · දැන් නිකුත්"
       },
       "announcement": {
@@ -5962,8 +5894,7 @@
         "change": "මෙම සතියේ +42%"
       },
       "birthday": {
-        "title": "සුබ උපන්දිනයක්",
-        "name": "Sam!"
+        "title": "සුබ උපන්දිනයක්"
       },
       "meme": {
         "title": "මීම්",
@@ -5978,11 +5909,9 @@
       "landscape": "තිරස්",
       "landscapeDetail": "YouTube, වෙබ්",
       "vertical": "සිරස්",
-      "verticalDetail": "Shorts, Reels",
       "square": "සමචතුරස්‍ර",
       "squareDetail": "ෆීඩ් පළකිරීම",
       "portrait": "පෝට්‍රේට්",
-      "portraitDetail": "Instagram",
       "canvas": "කැන්වසය",
       "resolution": "විභේදනය",
       "frameRate": "රාමු අනුපාතය",
@@ -6152,7 +6081,6 @@
     "paused": "ටෝකන් මාරු කිරීම් දැන් දාමයේ විරාම කර ඇත, එබැවින් මෙම අගුළු හැරීම තවමත් සිදු කළ නොහැක. මඳ වේලාවකින් නැවත උත්සාහ කරන්න.",
     "otherChain": "මෙම පශ්චාත් තවත් දාම මත පදිංචි, ඒ නිසා එය එහි ඔබේ මුදල් පසුම්බිය තුළ DeHub ටෝකන අවශ්ය.",
     "buyCard": "කාඩ්පත සමඟ ටෝකන මිලදී ගන්න",
-    "buyCardHint": "Visa, Mastercard, Apple Pay",
     "moveFunds": "අරමුදල් ගෙන එන්න",
     "moveFundsHint": "වෙනත් chain එකකින් හුවමාරු කරන්න හෝ තැන්පත් කරන්න",
     "notNow": "දැන් නොවේ"
@@ -6311,7 +6239,6 @@
   },
   "emojiPicker": {
     "tabEmoji": "ඉමෝජි",
-    "tabGif": "GIF",
     "searchEmoji": "ඉමෝජි සොයන්න",
     "searchGifs": "GIF සොයන්න...",
     "noEmoji": "ඉමෝජි හමු නොවීය",
@@ -6869,8 +6796,7 @@
     "tabStickers": "ස්ටිකර්",
     "tab": {
       "emoji": "ඉමෝජි",
-      "sticker": "ස්ටිකර්",
-      "gif": "GIF"
+      "sticker": "ස්ටිකර්"
     },
     "kind": {
       "emoji": "ඉමෝජි පැක්",
@@ -6895,8 +6821,7 @@
       "tier": "ශ්‍රේණිය",
       "packs": "පැක්ස්",
       "emoji": "ඉමෝජි",
-      "stickers": "ස්ටිකර්",
-      "gifs": "GIF"
+      "stickers": "ස්ටිකර්"
     },
     "signInToCreate": "පැක්ස් සෑදීමට පිවිසෙන්න",
     "signInToAdd": "එකතු කිරීමට පිවිසෙන්න",
@@ -6994,26 +6919,6 @@
     "planTypeNotAllowed": "මෙම නිර්මාණකරුගේ සැලැස්ම මෙවැනි පණිවිඩයකට ඉඩ නොදේ.",
     "planMinTip": "මෙම නිර්මාණකරුට ටිප් එක අවම වශයෙන් {{amount}} DHB විය යුතුයි."
   },
-  "spaces": {
-    "title": "අවකාශ",
-    "live": "සජීවී",
-    "upcoming": "ඉදිරි",
-    "past": "පසුගිය",
-    "create": "අවකාශයක් නිර්මාණය",
-    "join": "එකතු වන්න",
-    "listeners": "සවන්දෙන්නන්",
-    "speakers": "කථිකයන්",
-    "host": "සත්කාරක",
-    "noSpaces": "තවම අවකාශ නැත",
-    "loginDescription": "ශ්‍රව්‍ය අවකාශ නිර්මාණය කිරීමට සහ එකතු වීමට පිවිසෙන්න."
-  },
-  "blog": {
-    "title": "බ්ලොග්",
-    "readMore": "තවත් කියවන්න",
-    "backToBlog": "බ්ලොග් වෙත ආපසු",
-    "sharePost": "පළකිරීම බෙදා ගන්න",
-    "relatedPosts": "සම්බන්ධ පළකිරීම්"
-  },
   "credits": {
     "earningsWorth": "ප් ‍ රති-පිළිතුරු සැපයීම {{amount}}",
     "percentUsed": "{{percent}}% භාවිතා කර ඇත",
@@ -7055,5 +6960,25 @@
     "back": "සැකසුම් වෙත ආපසු යන්න",
     "signIn": "ඔබගේ ගිණුම මකා දැමීමට පිවිසෙන්න",
     "acknowledge": "මම මගේ පසුම්බියේ ප් ‍ රතිසාධන විස්තර සුරැක ඇති අතර මකා දැමීම ස්ථිර බව තේරුම් ගතිමි."
+  },
+  "spaces": {
+    "title": "අවකාශ",
+    "live": "සජීවී",
+    "upcoming": "ඉදිරි",
+    "past": "පසුගිය",
+    "create": "අවකාශයක් නිර්මාණය",
+    "join": "එකතු වන්න",
+    "listeners": "සවන්දෙන්නන්",
+    "speakers": "කථිකයන්",
+    "host": "සත්කාරක",
+    "noSpaces": "තවම අවකාශ නැත",
+    "loginDescription": "ශ්‍රව්‍ය අවකාශ නිර්මාණය කිරීමට සහ එකතු වීමට පිවිසෙන්න."
+  },
+  "blog": {
+    "title": "බ්ලොග්",
+    "readMore": "තවත් කියවන්න",
+    "backToBlog": "බ්ලොග් වෙත ආපසු",
+    "sharePost": "පළකිරීම බෙදා ගන්න",
+    "relatedPosts": "සම්බන්ධ පළකිරීම්"
   }
 }
