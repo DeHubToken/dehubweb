@@ -288,7 +288,7 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
               </div>
             </div>
             <p className="text-xs text-zinc-500 mt-1.5">
-              {t('subscriptions.creatorEarnsInTokens')}
+              {t('subscriptions.buyersPayTokenAmount')}
             </p>
           </div>
 
