@@ -388,7 +388,7 @@ export function ShowcaseShell({
   const dock = (
     <nav
       aria-label={dockLabel}
-      className="relative z-10 mx-auto flex w-full max-w-[480px] shrink-0 items-center gap-1 rounded-[20px] border border-white/10 bg-white/[0.07] p-1 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-[opacity,transform] duration-700 lg:w-auto lg:max-w-[calc(100%-24px)] lg:p-1.5"
+      className="relative z-10 mx-auto flex w-full max-w-[480px] shrink-0 items-center gap-1 rounded-[20px] border border-white/10 bg-white/[0.07] p-1 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-[opacity,transform] duration-700 pr-2 lg:w-auto lg:max-w-[calc(100%-24px)] lg:p-1.5 lg:pr-3"
       style={{
         opacity: panelIn ? 1 : 0,
         transform: panelIn ? 'none' : 'translateY(24px)',
