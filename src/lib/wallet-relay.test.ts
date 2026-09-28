@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { prepareWalletRelay, isWalletRelayPublishError } from './wallet-relay';
+import { prepareWalletRelay, isWalletRelayPublishError, waitForWalletSignature } from './wallet-relay';
 
 describe('wallet relay readiness', () => {
   afterEach(() => vi.useRealTimers());
@@ -30,5 +30,20 @@ describe('wallet relay readiness', () => {
   it('recognizes WalletConnect publish failures inside a viem error', () => {
     expect(isWalletRelayPublishError({ cause: new Error('Failed to publish payload, please try again. id:1 tag:1108') })).toBe(true);
     expect(isWalletRelayPublishError({ code: 4001, message: 'Failed to publish payload' })).toBe(false);
+  });
+  it('releases a signature request that never answers', async () => {
+    vi.useFakeTimers();
+    const request = vi.fn(() => new Promise<string>(() => {}));
+    const pending = waitForWalletSignature(request);
+    const check = expect(pending).rejects.toThrow('Wallet signature timed out');
+    await vi.advanceTimersByTimeAsync(120_000);
+    await check;
+    expect(request).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+  it('preserves a completed signature and removes the deadline', async () => {
+    vi.useFakeTimers();
+    await expect(waitForWalletSignature(async () => '0xsigned')).resolves.toBe('0xsigned');
+    expect(vi.getTimerCount()).toBe(0);
   });
 });
