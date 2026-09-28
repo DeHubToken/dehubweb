@@ -430,7 +430,8 @@
     "translating": "Tê wergerandin...",
     "close": "Bigire",
     "loadingMore": "Zêdetir tê barkirin...",
-    "loadMore": "Zêdetir bar bike"
+    "loadMore": "Zêdetir bar bike",
+    "undo": "Vegerîne"
   },
   "tip": {
     "title": "Bexşîş Bişîne",
@@ -1148,7 +1149,8 @@
     "feeNotEnough": "توکنی بەس نییە (پێویستە {{amount}})",
     "feeWarningTitle": "پەیامەکان توکن تێدەچن",
     "customTipMin": "تۆپی تایبەت (کەمترین {{amount}} توکن)",
-    "checkingTokenBalance": "بای توکنی تۆت دەپشکنێت..."
+    "checkingTokenBalance": "بای توکنی تۆت دەپشکنێت...",
+    "deleteConversationFailed": "Axaftin nehat jêbirin"
   },
   "music": {
     "all": "Hemû",
@@ -5584,7 +5586,19 @@
   "builder": {
     "stakeForAllowance": "دەب هوب توکنەکان دابنێ بۆ زیادکردنی ڕێگەپێدانی دروستکردنی ڕۆژانەت",
     "buildInChat": "لە نامە تایبەتەکانتدا لەگەڵ @assistant دروستی بکە",
-    "signInRequired": "بۆ بەکارهێنانی Builder بچۆ ژوورەوە."
+    "landerTitle": "Tenê bi pirsînê sepanekê ava bike",
+    "landerSubtitle": "Di peyamên xwe de ji @assistant re bêje tu çi dixwazî. Ew sepanê ava dike, mêvandar dike û lînkekê ji te re dişîne ku her kes dikare veke. Ji bo guhertinê bersiv bide.",
+    "promptPlaceholder": "Sepana ku tu dixwazî rave bike…",
+    "sendToAssistant": "Ji @assistant re bişîne",
+    "example1": "Demjimêreke pomodoro bi rêzeya rojane",
+    "example2": "Hesabkereke bexşîşê ku fatûreyê parve dike",
+    "example3": "Quizek li ser fîlmên min ên hezkirî",
+    "step1Title": "Rave bike",
+    "step1Body": "Bi gotinên xwe bêje sepan divê çi bike.",
+    "step2Title": "Di nêzîkî deqeyekê de tê avakirin",
+    "step2Body": "@assistant sepanê dinivîse û mêvandar dike, paşê lînkê dişîne peyamên te.",
+    "step3Title": "Parve bike an biguherîne",
+    "step3Body": "Her kes dikare lînkê veke. Ji bo guhertinê di chatê de bersiv bide."
   },
   "raffle": {
     "stakeTitle": "توکنەکان دابنێ",

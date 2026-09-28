@@ -507,7 +507,8 @@
     "close": "ዕጸው",
     "loadingMore": "ዝያዳ ይጽዓን ኣሎ...",
     "loadMore": "ዝያዳ ጽዓን",
-    "continue": "ቀጽል"
+    "continue": "ቀጽል",
+    "undo": "ዘርዝዕ"
   },
   "tip": {
     "title": "ሽልማት ስደድ",
@@ -1272,7 +1273,8 @@
     "feeNotEnough": "እኹል ምልክታት (ኣድላይነት {{amount}})",
     "feeWarningTitle": "ናይ መልእኽቲ ዋጋታት",
     "customTipMin": "ናይ ልሙድ ምኽሪ (min {{amount}} tokens)",
-    "checkingTokenBalance": "ነቲ ናይ ምልክት ሚዛንካ መርምሮ..."
+    "checkingTokenBalance": "ነቲ ናይ ምልክት ሚዛንካ መርምሮ...",
+    "deleteConversationFailed": "ነቲ ዝርርብ ክሰርሖ ኣይከኣልኩን ።"
   },
   "music": {
     "all": "ኩሉ",
@@ -4355,7 +4357,19 @@
   "builder": {
     "stakeForAllowance": "ናይ DeHub ምልክታት ዕለታዊ ናይ ህንጸት ድጎማኻ ንምዕባይ",
     "buildInChat": "ኣብ ብሕታዊ መልእኽትታትካ ምስ @assistant ስራሕ",
-    "signInRequired": "Builder ንምጥቃም እቶ።"
+    "landerTitle": "ነቲ መተግበሪ ብምሕታት ጥራይ ምህናጽ",
+    "landerSubtitle": "@ሓጋዚ ኣብ መልእኽትታትካ እንታይ ከም እትደሊ ንገሮ ። ነቲ መተግበሪ ትሃንጽ ፡ ትቕበል ፡ ዝኾነ ሰብ ክኸፍተልካ ዝኽእል ሊንክ ትልእኽ ። ዝኾነ ነገር ንምቕያር መልሲ ሃበኒ ።",
+    "promptPlaceholder": "ነቲ እትደልዮ ኣፕሊኬሽን ግለጽ...",
+    "sendToAssistant": "ናብ @ሓጋዚ ልኢኽ",
+    "example1": "ናይ ፖሞዶሮ ሰዓት ምስ ናይ ዕለታዊ ስክሪፕት",
+    "example2": "እቲ ሕሳብ ዚፈላልየሉ መቑጸሪ",
+    "example3": "ብዛዕባ እቲ ዝፈቱኒ ፊልምታት",
+    "step1Title": "ክገልጾ",
+    "step1Body": "እቲ መተግበሪ ብቓላትካ እንታይ ከም ዚገብር ንገሮ ።",
+    "step2Title": "ኣብ ውሽጢ ሓደ ደቒቕ",
+    "step2Body": "@ሓጋዚ ነቲ መተግበሪ ይጽሕፍን ይዕቅቦን ፡ ድሕሪኡ ድማ ነቲ ሊንክ ናብ መልእኽትታትካ ይልእኽ ።",
+    "step3Title": "ክትቅይሮ ወይ ክትቅይሮ",
+    "step3Body": "ዝኾነ ሰብ ነቲ ሊንክ ክኸፍት ይኽእል እዩ ። ዝኾነ ነገር ንምቕያር ኣብ ቻት መልሲ ሃቡ ።"
   },
   "connect": {
     "chatgptFaqAccount": "ብማእከላይ ኣቢሉ ህዝባዊ ትሕዝቶ ንምንባብ ዝኾነ ሕሳብ ኣየድልዮን እዩ ። ናይ DeHub መለያ እንተድኣ ናይ DeHub ምልክታት ክትለኣኽ ፡ ክትመኽረካ ወይ ክትሕዝ እንተ ደሊኻ ጥራይ እዩ ዝድለ ።",

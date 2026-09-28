@@ -438,7 +438,8 @@
     "close": "Close",
     "loadingMore": "E dey load more...",
     "loadMore": "Bring more",
-    "continue": "Continue"
+    "continue": "Continue",
+    "undo": "Undo"
   },
   "tip": {
     "title": "Send Tip",
@@ -1166,7 +1167,8 @@
     "tryAgain": "Try Again",
     "feePerMessage": "{{amount}} tokens per message",
     "feeWarningTitle": "Messages cost tokens",
-    "customTipMin": "Custom tip (min {{amount}} tokens)"
+    "customTipMin": "Custom tip (min {{amount}} tokens)",
+    "deleteConversationFailed": "No fit delete the chat"
   },
   "music": {
     "all": "All",
@@ -4115,6 +4117,19 @@
   },
   "builder": {
     "buildInChat": "Build for ya DM wit @assistant",
-    "signInRequired": "Sign in make you fit use Builder."
+    "stakeForAllowance": "Stake DeHub token for make ya daily build allowance go up",
+    "landerTitle": "Build app just by asking",
+    "landerSubtitle": "Tell @assistant weti you want for ya messages. E go build the app, host am, send you link weh any man fit open. Reply for change any ting.",
+    "promptPlaceholder": "Talk the kind app weh you want…",
+    "sendToAssistant": "Send am for @assistant",
+    "example1": "Pomodoro timer weh get daily streak",
+    "example2": "Tip calculator weh di share the bill",
+    "example3": "Quiz for the film dem weh I like",
+    "step1Title": "Talk weti you want",
+    "step1Body": "Talk weti the app go do, for ya own word dem.",
+    "step2Title": "E di build for like one minute",
+    "step2Body": "@assistant di write the app, host am, then send the link for ya messages.",
+    "step3Title": "Share am or change am",
+    "step3Body": "Any man fit open the link. Reply for the chat for change any ting."
   }
 }

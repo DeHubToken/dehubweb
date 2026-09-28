@@ -527,7 +527,8 @@
     "close": "Bezárás",
     "loadingMore": "Több betöltése...",
     "loadMore": "Több betöltése",
-    "continue": "Folytatás"
+    "continue": "Folytatás",
+    "undo": "Visszavonás"
   },
   "tip": {
     "title": "Borravaló küldése",
@@ -1314,7 +1315,8 @@
     "feeNotEnough": "Nincs elég token ({{amount}} szükséges)",
     "feeWarningTitle": "Üzenetek költsége tokenek",
     "customTipMin": "Egyedi borravaló (min. {{amount}} token)",
-    "checkingTokenBalance": "A tokenegyenleg ellenőrzése..."
+    "checkingTokenBalance": "A tokenegyenleg ellenőrzése...",
+    "deleteConversationFailed": "Nem sikerült törölni a beszélgetést"
   },
   "music": {
     "all": "Összes",
@@ -6511,7 +6513,19 @@
   "builder": {
     "stakeForAllowance": "Stakel DeHub tokeneket a napi építési kereted növeléséhez",
     "buildInChat": "Építs a privát üzeneteidben az @assistant segítségével",
-    "signInRequired": "Jelentkezz be a Builder használatához."
+    "landerTitle": "Hozzon létre egy alkalmazást csupán egy kéréssel",
+    "landerSubtitle": "Üzeneteiben közölje @ assistantrel, hogy mit szeretne. Megépíti az alkalmazást, házigazdává teszi, és elküldi neked azt a linket, amelyet bárki megnyithat. Válaszolj, ha bármit megváltoztatsz.",
+    "promptPlaceholder": "Írd le a kívánt alkalmazást…",
+    "sendToAssistant": "Küldés a következőnek: @assistant",
+    "example1": "Pomodoro időzítő napi csíkkal",
+    "example2": "Borravaló kalkulátor, amely elosztja a számlát",
+    "example3": "Kvíz a kedvenc filmjeimről",
+    "step1Title": "Írd le",
+    "step1Body": "Mondd el a saját szavaiddal, hogy mit kell tennie az alkalmazásnak.",
+    "step2Title": "Körülbelül egy perc alatt felépül",
+    "step2Body": "@assistant írja és üzemelteti az alkalmazást, majd elküldi az üzeneteidre mutató linket.",
+    "step3Title": "Oszd meg vagy módosítsd",
+    "step3Body": "A linket bárki megnyithatja. Bárminek a megváltoztatásához válaszolj a csevegésben."
   },
   "connect": {
     "chatgptFaqAccount": "Nincs szükség fiókra a nyilvános tartalom olvasásához a csatlakozón keresztül. DeHub fiók csak akkor szükséges, ha szeretnél posztolni, borravalót adni vagy DeHub tokeneket tartani.",

@@ -527,7 +527,8 @@
     "close": "Zamknij",
     "loadingMore": "Ładowanie więcej...",
     "loadMore": "Załaduj więcej",
-    "continue": "Kontynuuj"
+    "continue": "Kontynuuj",
+    "undo": "Cofnij"
   },
   "tip": {
     "title": "Wyślij napiwek",
@@ -1319,7 +1320,8 @@
     "feeNotEnough": "Za mało tokenów (potrzeba {{amount}})",
     "feeWarningTitle": "Wiadomości kosztują tokeny",
     "customTipMin": "Niestandardowy napiwek (min. {{amount}} tokenów)",
-    "checkingTokenBalance": "Sprawdzanie salda tokenów..."
+    "checkingTokenBalance": "Sprawdzanie salda tokenów...",
+    "deleteConversationFailed": "Nie można usunąć konwersacji"
   },
   "music": {
     "all": "Wszystko",
@@ -6646,7 +6648,19 @@
   "builder": {
     "stakeForAllowance": "Stakuj tokeny DeHub, aby zwiększyć swój dzienny limit budowania",
     "buildInChat": "Twórz w wiadomościach prywatnych z @assistant",
-    "signInRequired": "Zaloguj się, aby korzystać z Buildera."
+    "landerTitle": "Stwórz aplikację, pytając",
+    "landerSubtitle": "Powiedz @assistantowi, co chcesz w swoich wiadomościach. Tworzy aplikację, hostuje ją i wysyła link, który każdy może otworzyć. Odpowiedz, aby coś zmienić.",
+    "promptPlaceholder": "Opisz aplikację, którą chcesz…",
+    "sendToAssistant": "Wyślij do @asystenta",
+    "example1": "Timer pomodoro z codzienną serią",
+    "example2": "Kalkulator napiwków, który dzieli rachunek",
+    "example3": "Quiz o moich ulubionych filmach",
+    "step1Title": "Opisz to:",
+    "step1Body": "Powiedz, co powinna zrobić aplikacja, własnymi słowami.",
+    "step2Title": "Powstaje w ciągu około minuty",
+    "step2Body": "@assistant pisze i hostuje aplikację, a następnie wysyła link do Twoich wiadomości.",
+    "step3Title": "Udostępnij lub zmień",
+    "step3Body": "Każdy może otworzyć link. Odpowiedz na czacie, aby coś zmienić."
   },
   "connect": {
     "chatgptFaqAccount": "Do czytania publicznych treści za pośrednictwem konektora nie jest wymagane żadne konto. Konto DeHub jest potrzebne tylko wtedy, gdy chcesz publikować, dawać napiwki lub posiadać tokeny DeHub.",

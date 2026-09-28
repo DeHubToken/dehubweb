@@ -527,7 +527,8 @@
     "close": "Tancar",
     "loadingMore": "Carregant més...",
     "loadMore": "Carregar més",
-    "continue": "Continua"
+    "continue": "Continua",
+    "undo": "Desfés"
   },
   "tip": {
     "title": "Enviar propina",
@@ -1315,7 +1316,8 @@
     "feeNotEnough": "No hi ha prou fitxes (calen {{amount}})",
     "feeWarningTitle": "Els missatges costen fitxes",
     "customTipMin": "Propina personalitzada (mínim {{amount}} fitxes)",
-    "checkingTokenBalance": "Comprovant el teu saldo de fitxes..."
+    "checkingTokenBalance": "Comprovant el teu saldo de fitxes...",
+    "deleteConversationFailed": "No s'ha pogut eliminar la conversa"
   },
   "music": {
     "all": "Tot",
@@ -6508,7 +6510,19 @@
   "builder": {
     "stakeForAllowance": "Aposta tokens DeHub per augmentar la teva assignació diària de creació",
     "buildInChat": "Crea als teus missatges directes amb @assistant",
-    "signInRequired": "Inicia la sessió per utilitzar el Builder."
+    "landerTitle": "Crea una aplicació només demanant-ho",
+    "landerSubtitle": "Explica a @assistant el que vols en els teus missatges. Crea l'aplicació, l'allotja i t'envia un enllaç que tothom pot obrir. Respon si vols canviar alguna cosa.",
+    "promptPlaceholder": "Descriu l'aplicació que vols...",
+    "sendToAssistant": "Envia a @assistant",
+    "example1": "Un temporitzador pomodoro amb una ratxa diària",
+    "example2": "Una calculadora de propines que divideix la factura",
+    "example3": "Un qüestionari sobre les meves pel·lícules preferides",
+    "step1Title": "Descriu-ho",
+    "step1Body": "Digues el que hauria de fer l'aplicació amb les teves pròpies paraules.",
+    "step2Title": "S'acumula en aproximadament un minut",
+    "step2Body": "@assistant escriu i allotja l'aplicació i després envia l'enllaç als teus missatges.",
+    "step3Title": "Comparteix-lo o canvia'l",
+    "step3Body": "Qualsevol persona pot obrir l'enllaç. Respon al xat per canviar qualsevol cosa."
   },
   "connect": {
     "chatgptFaqAccount": "No es requereix cap compte per llegir contingut públic a través del connector. Només es necessita un compte DeHub si voleu publicar, donar propines o tenir tokens DeHub.",

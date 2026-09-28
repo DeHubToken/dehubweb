@@ -527,7 +527,8 @@
     "close": "Zavřít",
     "loadingMore": "Načítání dalších...",
     "loadMore": "Načíst více",
-    "continue": "Pokračovat"
+    "continue": "Pokračovat",
+    "undo": "Zpět"
   },
   "tip": {
     "title": "Poslat spropitné",
@@ -1314,7 +1315,8 @@
     "feeNotEnough": "Nedostatek tokenů (potřeba {{amount}})",
     "feeWarningTitle": "Zprávy stojí tokeny",
     "customTipMin": "Vlastní spropitné (min. {{amount}} tokenů)",
-    "checkingTokenBalance": "Kontrola zůstatku tokenů..."
+    "checkingTokenBalance": "Kontrola zůstatku tokenů...",
+    "deleteConversationFailed": "Konverzaci se nepodařilo smazat"
   },
   "music": {
     "all": "Vše",
@@ -6512,7 +6514,19 @@
   "builder": {
     "stakeForAllowance": "Vsaďte tokeny DeHub pro navýšení denního povoleného množství pro tvorbu",
     "buildInChat": "Tvořte v soukromých zprávách s @assistant",
-    "signInRequired": "Pro použití Builderu se přihlaste."
+    "landerTitle": "Vytvořte aplikaci pouhým požádáním",
+    "landerSubtitle": "Řekněte @assistant, co chcete ve svých zprávách. Vytváří aplikaci, hostí ji a pošle ti odkaz, který může otevřít kdokoli. Chcete-li cokoli změnit, odpovězte.",
+    "promptPlaceholder": "Popiš aplikaci, kterou chceš…",
+    "sendToAssistant": "Odeslat @asistentovi",
+    "example1": "Pomodoro časovač s denním pruhem",
+    "example2": "Kalkulačka spropitného, která rozděluje účet",
+    "example3": "Kvíz o mých oblíbených filmech",
+    "step1Title": "„Popiš to.“",
+    "step1Body": "Řekněte, co by aplikace měla dělat, vlastními slovy.",
+    "step2Title": "Staví se asi za minutu",
+    "step2Body": "@assistant napíše a hostuje aplikaci a pak pošle odkaz na tvé zprávy.",
+    "step3Title": "Sdílej nebo změň",
+    "step3Body": "Odkaz může otevřít kdokoli. Chcete-li cokoli změnit, odpovězte v chatu."
   },
   "connect": {
     "chatgptFaqAccount": "Pro čtení veřejného obsahu prostřednictvím konektoru není vyžadován žádný účet. Účet DeHub je potřeba pouze v případě, že chcete publikovat, dávat spropitné nebo držet tokeny DeHub.",

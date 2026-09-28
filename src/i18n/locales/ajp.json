@@ -483,7 +483,8 @@
     "close": "إغلاق",
     "loadingMore": "عم يحمّل أكثر...",
     "loadMore": "حمّل أكثر",
-    "continue": "كمل"
+    "continue": "كمل",
+    "undo": "تراجع"
   },
   "tip": {
     "title": "أرسل إكرامية",
@@ -1270,7 +1271,8 @@
     "feeNotEnough": "ما في توكنز كفاية (بحاجة {{amount}})",
     "feeWarningTitle": "الرسائل بتكلف توكنز",
     "customTipMin": "إكرامية مخصصة (حد أدنى {{amount}} توكنز)",
-    "checkingTokenBalance": "عم بفحص رصيد التوكنز تبعك..."
+    "checkingTokenBalance": "عم بفحص رصيد التوكنز تبعك...",
+    "deleteConversationFailed": "ما قدرت أحذف المحادثة"
   },
   "music": {
     "all": "الكل",
@@ -4385,7 +4387,19 @@
   "builder": {
     "stakeForAllowance": "قم بتخزين توكنات DeHub لزيادة مخصص البناء اليومي الخاص بك",
     "buildInChat": "ابني بالرسائل الخاصة مع @assistant",
-    "signInRequired": "سجّل دخولك لتستخدم Builder."
+    "landerTitle": "ابني تطبيق بس بطلب",
+    "landerSubtitle": "قُل للـ @assistant شو بدك برسائلك. هو بيبني التطبيق، بيستضيفه وببعثلك رابط أي حدا فيّه يفتحه. رد لتغيّر أي شي.",
+    "promptPlaceholder": "وصف التطبيق اللي بدك ياه…",
+    "sendToAssistant": "إبعته للـ @assistant",
+    "example1": "مؤقِّت بومودورو مع سلسلة يومية",
+    "example2": "حاسبة إكراميات بتقسم الفاتورة",
+    "example3": "اختبار عن أفلامي المفضلة",
+    "step1Title": "وصفّه",
+    "step1Body": "قُل شو لازم يعمل التطبيق، بكلامك.",
+    "step2Title": "بيستغرق تقريباً دقيقة",
+    "step2Body": "الـ @assistant بيكتب ويستضيف التطبيق، بعدين بيبعث الرابط برسائلك.",
+    "step3Title": "شاركّه أو غيره",
+    "step3Body": "أي حدا فيّه يفتح الرابط. رد على الشات لتغيّر أي شي."
   },
   "connect": {
     "chatgptFaqAccount": "لا يلزم وجود حساب لقراءة المحتوى العام عبر الموصل. يلزم وجود حساب DeHub فقط إذا كنت ترغب في النشر أو الإكرامية أو الاحتفاظ بتوكنات DeHub.",

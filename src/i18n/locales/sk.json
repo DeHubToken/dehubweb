@@ -554,7 +554,8 @@
     "showMore": "Zobraziť viac",
     "showLess": "Zobraziť menej",
     "noResults": "Žiadne výsledky",
-    "comingSoon": "Čoskoro"
+    "comingSoon": "Čoskoro",
+    "undo": "Vrátiť späť"
   },
   "tip": {
     "title": "Poslať prepitné",
@@ -1387,7 +1388,8 @@
     "send": "Odoslať",
     "online": "Online",
     "offline": "Offline",
-    "lastSeen": "Naposledy videný"
+    "lastSeen": "Naposledy videný",
+    "deleteConversationFailed": "Konverzáciu sa nepodarilo odstrániť"
   },
   "music": {
     "all": "All",
@@ -4601,7 +4603,19 @@
   "builder": {
     "stakeForAllowance": "Stavte tokeny DeHub, aby ste zvýšili svoje denné povolenie na tvorbu",
     "buildInChat": "Tvorte v súkromných správach s @assistant",
-    "signInRequired": "Ak chcete používať Builder, prihláste sa."
+    "landerTitle": "Vytvorte aplikáciu jednoduchým požiadaním",
+    "landerSubtitle": "Povedzte @assistant, čo chcete vo svojich správach. Vytvára aplikáciu, hostí ju a pošle vám odkaz, ktorý môže otvoriť ktokoľvek. Ak chcete niečo zmeniť, odpovedzte.",
+    "promptPlaceholder": "Opíšte aplikáciu, ktorú chcete...",
+    "sendToAssistant": "Odoslať @asistentovi",
+    "example1": "Pomodoro časovač s denným prúžkom",
+    "example2": "Kalkulačka prepitného, ktorá rozdeľuje účet",
+    "example3": "Kvíz o mojich obľúbených filmoch",
+    "step1Title": "Opíšete to:",
+    "step1Body": "Povedzte vlastnými slovami, čo by mala aplikácia robiť.",
+    "step2Title": "Stavia sa asi za minútu",
+    "step2Body": "@assistant napíše a hosťuje aplikáciu a potom odošle odkaz na vaše správy.",
+    "step3Title": "Zdieľajte ho alebo ho zmeňte",
+    "step3Body": "Odkaz môže otvoriť ktokoľvek. Ak chcete niečo zmeniť, odpovedzte v chate."
   },
   "connect": {
     "chatgptFaqAccount": "Na čítanie verejného obsahu prostredníctvom konektora nie je potrebný žiadny účet. Účet DeHub je potrebný iba v prípade, že chcete publikovať, dávať tipy alebo držať tokeny DeHub.",

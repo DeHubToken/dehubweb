@@ -498,7 +498,8 @@
     "error": "Lỗi",
     "success": "Thành công",
     "warning": "Cảnh báo",
-    "info": "Thông tin"
+    "info": "Thông tin",
+    "undo": "Hoàn tác"
   },
   "tip": {
     "title": "Gửi tiền tip",
@@ -1248,7 +1249,8 @@
     "feeNotEnough": "Không đủ token (cần {{amount}})",
     "feeWarningTitle": "Tin nhắn tốn token",
     "customTipMin": "Mẹo tùy chỉnh (tối thiểu {{amount}} token)",
-    "checkingTokenBalance": "Đang kiểm tra số dư token của bạn..."
+    "checkingTokenBalance": "Đang kiểm tra số dư token của bạn...",
+    "deleteConversationFailed": "Không thể xóa cuộc trò chuyện"
   },
   "music": {
     "all": "All",
@@ -6413,7 +6415,19 @@
   "builder": {
     "stakeForAllowance": "Đặt cược token DeHub để tăng hạn mức xây dựng hàng ngày của bạn",
     "buildInChat": "Tạo trong tin nhắn riêng với @assistant",
-    "signInRequired": "Đăng nhập để dùng Builder."
+    "landerTitle": "Xây dựng một ứng dụng chỉ bằng cách yêu cầu",
+    "landerSubtitle": "Hãy cho @assistant biết bạn muốn gì trong tin nhắn của mình. Nó xây dựng ứng dụng, lưu trữ ứng dụng và gửi cho bạn một liên kết mà bất kỳ ai cũng có thể mở. Trả lời để thay đổi bất cứ điều gì.",
+    "promptPlaceholder": "Mô tả ứng dụng bạn muốn…",
+    "sendToAssistant": "Gửi đến @assistant",
+    "example1": "Một bộ đếm thời gian Pomodoro với một vệt hàng ngày",
+    "example2": "Máy tính tiền boa để chia hóa đơn",
+    "example3": "Bài kiểm tra về những bộ phim yêu thích của tôi",
+    "step1Title": "Em diễn tả thử xem.",
+    "step1Body": "Nói những gì ứng dụng nên làm, theo cách riêng của bạn.",
+    "step2Title": "Nó được xây dựng trong khoảng một phút",
+    "step2Body": "@assistant viết và lưu trữ ứng dụng, sau đó gửi liên kết đến tin nhắn của bạn.",
+    "step3Title": "Chia sẻ hoặc thay đổi",
+    "step3Body": "Bất kỳ ai cũng có thể mở liên kết. Trả lời trong cuộc trò chuyện để thay đổi mọi thứ."
   },
   "connect": {
     "chatgptFaqAccount": "Không cần tài khoản để đọc nội dung công khai thông qua trình kết nối. Chỉ cần tài khoản DeHub nếu bạn muốn đăng, tặng tiền hoặc giữ token DeHub.",

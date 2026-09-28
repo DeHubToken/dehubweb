@@ -512,7 +512,8 @@
     "close": "ዝጋ",
     "loadingMore": "ተጨማሪ እየጫነ...",
     "loadMore": "ተጨማሪ ጫን",
-    "continue": "ይቀጥሉ"
+    "continue": "ይቀጥሉ",
+    "undo": "አስገባ"
   },
   "tip": {
     "title": "ጥቆማ ላክ",
@@ -1300,7 +1301,8 @@
     "feeNotEnough": "በቂ ቶከኖች የሉም ({{amount}} ያስፈልጋል)",
     "feeWarningTitle": "መልዕክቶች ቶከኖችን ያስከፍላሉ",
     "customTipMin": "ብጁ ቲፕ (ዝቅተኛው {{amount}} ቶከኖች)",
-    "checkingTokenBalance": "የእርስዎን የቶከን ቀሪ ሂሳብ እየፈተሸ ነው..."
+    "checkingTokenBalance": "የእርስዎን የቶከን ቀሪ ሂሳብ እየፈተሸ ነው...",
+    "deleteConversationFailed": "ውይይቱን መሰረዝ አልተቻለም"
   },
   "music": {
     "all": "ሁሉም",
@@ -4319,7 +4321,19 @@
   "builder": {
     "stakeForAllowance": "ዕለታዊ የግንባታ አበልዎን ለመጨመር የDeHub ቶከኖችን ይንከባከቡ",
     "buildInChat": "በቀጥታ መልዕክቶችዎ ከ@assistant ጋር ይገንቡ",
-    "signInRequired": "Builderን ለመጠቀም ይግቡ።"
+    "landerTitle": "በመጠየቅ ብቻ አንድ መተግበሪያ ይገንቡ",
+    "landerSubtitle": "በመልዕክቶችዎ ውስጥ የሚፈልጉትን @ረዳት ይንገሩ ። መተግበሪያውን ይገነባል ፣ ያስተናግዳል እና ማንም ሊከፍት የሚችል አገናኝ ይልክልዎታል ። ማንኛውንም ነገር ለመለወጥ መልስ ይስጡ ።",
+    "promptPlaceholder": "የሚፈልጉትን መተግበሪያ ይግለጹ…",
+    "sendToAssistant": "ወደ @ረዳት ይላኩ",
+    "example1": "ፖሞዶሮ ቆጣሪ ከዕለት ተዕለት ጭረት ጋር",
+    "example2": "ሂሳቡን የሚከፋፈል ጠቃሚ ካልኩሌተር",
+    "example3": "ስለ ተወዳጅ ፊልሞቼ አንድ ጥያቄ",
+    "step1Title": "ግለፁት።",
+    "step1Body": "በራስዎ ቃላት ውስጥ መተግበሪያው ምን ማድረግ እንዳለበት ይናገሩ.",
+    "step2Title": "በአንድ ደቂቃ ውስጥ ይገነባል",
+    "step2Body": "@ረዳት መተግበሪያውን ይጽፋል እና ያስተናግዳል ፣ ከዚያ ወደ መልዕክቶችዎ አገናኝ ይልካል ።",
+    "step3Title": "ያጋሩ ወይም ይለውጡት",
+    "step3Body": "ማንኛውም ሰው ሊንኩን መክፈት ይችላል ። ማንኛውንም ነገር ለመለወጥ በውይይቱ ውስጥ መልስ ይስጡ ።"
   },
   "connect": {
     "chatgptFaqAccount": "በአገናኙ በኩል የህዝብ ይዘትን ለማንበብ ምንም መለያ አያስፈልግም። የDeHub ቶከኖችን ለመለጠፍ፣ ለመጠቆም ወይም ለመያዝ ከፈለጉ ብቻ የDeHub መለያ ያስፈልጋል።",

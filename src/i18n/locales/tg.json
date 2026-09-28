@@ -512,7 +512,8 @@
     "close": "Бастан",
     "loadingMore": "Бештар бор мешавад...",
     "loadMore": "Бештар бор кардан",
-    "continue": "Давом додан"
+    "continue": "Давом додан",
+    "undo": "Бекор кардан"
   },
   "tip": {
     "title": "Фиристодани инъом",
@@ -1295,7 +1296,8 @@
     "feeNotEnough": "Нишонаҳои кофӣ нест (ҳоҷат ба {{amount}})",
     "feeWarningTitle": "Ð  Ð ° Ð ¼ Ð ¾ Ð ¸ Ñ",
     "customTipMin": "Маслиҳати оддӣ (дақ {{amount}} tokens)",
-    "checkingTokenBalance": "Санҷиши тавозуни нишона..."
+    "checkingTokenBalance": "Санҷиши тавозуни нишона...",
+    "deleteConversationFailed": "Наметавонам гуфтугӯро ҳузф кунам"
   },
   "music": {
     "all": "Ҳама",
@@ -4441,7 +4443,19 @@
   "builder": {
     "stakeForAllowance": "Токенҳои DeHub-ро барои зиёд кардани кӯмаки ҳаррӯзаи худ барои эҷод кардан истифода баред",
     "buildInChat": "Дар паёмҳои шахсӣ бо @assistant созед",
-    "signInRequired": "Барои истифодаи Builder ворид шавед."
+    "landerTitle": "Lumikha ng isang application lamang sa pamamag",
+    "landerSubtitle": "@ action: inmenu Ito ay nagbuo ng app, host ito at nagpapadala sa iyo ng isang link na maaaring buksan Ҷавоб додан барои тағйир додани ягон чиз.",
+    "promptPlaceholder": "Тасвир кардани барномае, ки шумо мехоҳед...",
+    "sendToAssistant": "Фиристодан ба @ title: group",
+    "example1": "Name",
+    "example2": "Name",
+    "example3": "A quiz дар бораи филмҳои дӯстдоштаи ман",
+    "step1Title": "Тасвир кардан",
+    "step1Body": "Бигӯед, ки барнома бояд чӣ кор кунад, бо суханони худ.",
+    "step2Title": "Он тақрибан дар як дақиқа сохта мешавад",
+    "step2Body": "@alistanto ay nilalaman at magsubaybay ng app, pagkatapos ay nagpapadala ng link sa",
+    "step3Title": "Ibahagi ito o baguhin ito",
+    "step3Body": "Ҳар кас метавонад пайвандро кушояд. Ҷавоб додан дар чат барои тағир додани ягон чиз."
   },
   "connect": {
     "chatgptFaqAccount": "Барои хондани мундариҷаи ҷамъиятӣ тавассути пайвасткунак ҳисоб лозим нест. Ҳисоби DeHub танҳо дар сурате лозим аст, ки агар шумо хоҳед, ки токенҳои DeHub-ро нашр кунед, ба дигарон фиристед ё нигоҳ доред.",

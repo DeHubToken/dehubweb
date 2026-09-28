@@ -513,7 +513,8 @@
     "close": "Aizvērt",
     "loadingMore": "Ielādē vairāk...",
     "loadMore": "Ielādēt vairāk",
-    "continue": "Turpināt"
+    "continue": "Turpināt",
+    "undo": "Atsaukt"
   },
   "tip": {
     "title": "Sūtīt dzeramnaudu",
@@ -1303,7 +1304,8 @@
     "feeNotEnough": "Nepietiek žetonu (nepieciešami {{amount}})",
     "feeWarningTitle": "Ziņojumi maksā žetonus",
     "customTipMin": "Pielāgota dzeramnauda (min. {{amount}} žetoni)",
-    "checkingTokenBalance": "Pārbaudot jūsu žetonu atlikumu..."
+    "checkingTokenBalance": "Pārbaudot jūsu žetonu atlikumu...",
+    "deleteConversationFailed": "Nevarēja izdzēst sarunu"
   },
   "music": {
     "all": "Visas",
@@ -6601,7 +6603,19 @@
   "builder": {
     "stakeForAllowance": "Iemaksājiet DeHub žetonus, lai palielinātu savu ikdienas izveides atļauju",
     "buildInChat": "Veido savās privātajās ziņās ar @assistant",
-    "signInRequired": "Piesakies, lai izmantotu Builder."
+    "landerTitle": "Izveidojiet aplikāciju, vienkārši pajautājot",
+    "landerSubtitle": "Pastāstiet @assistant, ko vēlaties savos ziņojumos. Tā izveido aplikāciju, uzņem viesus un nosūta jums saiti, ko ikviens var atvērt. Atbildiet, lai kaut ko mainītu.",
+    "promptPlaceholder": "Apraksti vēlamo lietotni...",
+    "sendToAssistant": "Sūtīt @asistents",
+    "example1": "Pomodoro taimeris ar ikdienas svītru",
+    "example2": "Padomu kalkulators, kas sadala rēķinu",
+    "example3": "Viktorīna par manām mīļākajām filmām",
+    "step1Title": "Aprakstiet to",
+    "step1Body": "Izsakiet, ko lietotnei vajadzētu darīt, saviem vārdiem.",
+    "step2Title": "Tas izveidojas aptuveni minūtes laikā",
+    "step2Body": "@assistant raksta un uzņem viesus aplikācijā, pēc tam nosūta saiti uz jūsu ziņojumiem.",
+    "step3Title": "Nosūtiet to citiem vai mainiet",
+    "step3Body": "Ikviens var atvērt saiti. Lai kaut ko mainītu, atbildiet tērzēšanā."
   },
   "connect": {
     "chatgptFaqAccount": "Lai lasītu publisku saturu, izmantojot savienotāju, nav nepieciešams konts. DeHub konts ir nepieciešams tikai tad, ja vēlaties publicēt, dot dzeramnaudu vai turēt DeHub žetonus.",
