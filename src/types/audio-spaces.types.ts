@@ -22,6 +22,8 @@ export interface AudioSpace {
   speaker_count: number;
   started_at: string;
   ended_at?: string | null;
+  /** Last time a host or speaker was heard; the stage auto-ends after 30 silent minutes. */
+  last_speech_at?: string | null;
   created_at: string;
   recording_url?: string | null;
   total_listens?: number;
