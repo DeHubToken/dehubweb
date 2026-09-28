@@ -55,12 +55,13 @@ const PROVIDERS: FreeProvider[] = [
   {
     name: 'cloudflare/llama-3.1-8b',
     url: () => {
-      const account = env('CLOUDFLARE_ACCOUNT_ID');
+      // The project already stores these under the dashboard's lowercase names.
+      const account = env('CLOUDFLARE_ACCOUNT_ID') ?? env('cloudflare_id');
       return account
         ? `https://api.cloudflare.com/client/v4/accounts/${account}/ai/v1/chat/completions`
         : null;
     },
-    key: () => env('CLOUDFLARE_AI_TOKEN'),
+    key: () => env('CLOUDFLARE_AI_TOKEN') ?? env('cloudflare_apitoken'),
     model: '@cf/meta/llama-3.1-8b-instruct-fp8',
   },
 ];
