@@ -5335,5 +5335,36 @@
       "copy": "ቅዳሕ",
       "copied": "ቅዳሕ"
     }
+  },
+  "aiStyles": {
+    "normal": "ንቡር",
+    "old-english": "ጥንታዊ እንግሊዝኛ",
+    "cockney": "ኮክኒ",
+    "celtic": "ኬልቲክ",
+    "scouse": "ስካውስ",
+    "wild-west": "ዘገምተኛ ምዕራብ",
+    "asian-uncle": "ኣኮ እስያዊ",
+    "russian-mafia": "ሩስያዊ ማፍያ",
+    "pirate": "ናይ ባሕሪ ሽፍታ",
+    "alien": "ባዕዳዊ ፍጡር",
+    "e-girl": "ኢ-ገርል",
+    "chad": "ቻድ",
+    "hopeless-romantic": "ተስፋ ዘይብሉ ሮማንቲክ",
+    "daddy": "ኣቦ",
+    "mommy": "ኣደ",
+    "big-brother": "ዓቢ ሓው",
+    "lil-bro": "ንእሽቶ ሓው",
+    "big-sister": "ዓባይ ሓብቲ",
+    "little-sister": "ንእሽቶ ሓብቲ",
+    "conservative": "ወግዓዊ",
+    "liberal": "ሊበራል",
+    "antifa": "ኣንቲፋ",
+    "capitalist": "ካፒታሊስት",
+    "socialist": "ሶሻሊስት",
+    "neocon": "ኒዮኮን",
+    "feminist": "ፈሚኒስት",
+    "progressive": "ተራማዲ",
+    "nationalist": "ሃገራዊ",
+    "communist": "ኮሚኒስት"
   }
 }

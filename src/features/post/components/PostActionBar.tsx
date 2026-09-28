@@ -182,7 +182,7 @@ export function PostActionBar({
               className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
             >
               <span className="text-lg">{style.emoji}</span>
-              {style.label}
+              {t(`aiStyles.${style.id}`)}
             </button>
           ))}
         </>
