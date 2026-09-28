@@ -528,6 +528,7 @@
     "loadingMore": "Naglo-load pa...",
     "loadMore": "Mag-load pa",
     "continue": "Magpatuloy",
+    "undo": "I - undo",
     "okay": "Sige",
     "back": "Bumalik",
     "submit": "Ipasa",
@@ -573,8 +574,7 @@
     "all": "Lahat",
     "new": "Bago",
     "old": "Luma",
-    "home": "Home",
-    "undo": "I - undo"
+    "home": "Home"
   },
   "tip": {
     "title": "Magpadala ng tip",
@@ -3028,7 +3028,11 @@
     "sampleReady": "Handa na ang sample.",
     "discardRecording": "Itapon ang recording",
     "settingUpVoice": "Itinatakda ang iyong boses...",
-    "useThisVoice": "Gamitin ang boses na ito"
+    "useThisVoice": "Gamitin ang boses na ito",
+    "autoEnd": {
+      "title": "Natapos ang audio room dahil walang aktibidad",
+      "description": "Walang nagsalita sa \"{{title}}\" sa loob ng 30 minuto, kaya isinara ito."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4332,7 +4336,6 @@
     "legacyPlanMigrates": "Ang pag-save ay nagmi-migrate ng legacy token-priced plan na ito sa dollar pricing sa pre-listing rate.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Pre-listing token amount",
-    "tokensStayInTreasury": "Ang iyong DeHub tokens ay mananatili sa pangangalaga ng DeHub treasury at hindi ibebenta. Ang creator ay makakatanggap ng subscription balance na denominated sa USDT.",
     "tokenCheckoutNotReady": "Hindi pa handa ang token subscription checkout — mangyaring subukang muli sa madaling panahon",
     "tokenQuoteUnavailable": "Hindi available ang live token quote",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -4340,17 +4343,10 @@
     "subscribedToast": "Subscribe Unsubscribe",
     "confirmSubscribeTo": "Mag -subscribe sa {{plan}} para sa {{price}}/{{duration}}.",
     "atPreListingRate": "{{amount}} sa pre - listing rate",
-    "withdraw": "Mag - withdraw",
-    "earningsTitle": "Mga kita sa subscription",
-    "earningsAvailable": "Magagamit",
-    "earningsPending": "Nakabinbin",
-    "withdrawableSoon": "Maa - withdraw sa lalong madaling panahon ang mga kita ng subscription",
     "youPayNow": "Magbabayad ka",
-    "usdtSent": "Naipadala ang {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Puwedeng i-withdraw sa Base",
-    "earningsUsdtPending": "Nakasukat sa USDT · naghihintay ng treasury reserve",
-    "buyersPayTokenAmount": "Ang mga mamimili ay magbabayad ng ipinakitang halaga ng DeHub token sa pre-listing rate. Matatanggap mo ang halaga sa USD bilang USDT balance.",
-    "creditsCreator": "Binibigyan ng credit ang creator na {{amount}} USDT"
+    "paidToCreatorWallet": "Dumiretso sa wallet ng creator",
+    "creatorPaidDirectNote": "Ang bahagi ng tagalikha ay dumiretso sa kanilang wallet sa sandaling mag - subscribe ka. Ang DeHub ay nagpapanatili ng isang maliit na bayad sa platform.",
+    "creatorEarnsDirect": "Nagbabayad ang mga subscriber sa mga token ng DeHub. Ang iyong share ay nasa iyong wallet sa sandaling mag - subscribe sila, mas mababa ang bayarin sa platform para sa iyong badge tier."
   },
   "live": {
     "chatJoined": "sumali",
@@ -5418,13 +5414,12 @@
       "images": "Mga larawan bawat post",
       "uploads": "Araw - araw na limitasyon sa pag - upload",
       "storage": "Imbakan ng editor",
-      "profiles": "Naka - save na mga profile",
       "lending": "Mga puwang ng pagpapahiram ng badge",
       "voice": "Pag - clone ng boses",
       "voiceFree": "Libre",
       "voiceLocked": "{{tier}}pataas"
     },
-    "buy": "Kunin ang DHB",
+    "buyTokens": "Bumili ng mga token",
     "details": "Buong detalye",
     "play": "Maglaro",
     "pause": "I - pause",
@@ -6553,58 +6548,6 @@
       "tippedYou": "tipped sa iyo {{amount}}token"
     }
   },
-  "walletSelector": {
-    "title": "Piliin ang Wallet",
-    "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."
-  },
-  "transaction": {
-    "swap": "Swap",
-    "send": "Ipadala",
-    "wrap": "I-wrap",
-    "unwrap": "I-unwrap",
-    "deposit": "Magdeposito",
-    "withdraw": "Mag-withdraw",
-    "stake": "I-stake",
-    "unstake": "I-unstake",
-    "claim": "I-claim",
-    "mint": "I-mint",
-    "burn": "I-burn",
-    "create": "Lumikha",
-    "update": "I-update",
-    "buy": "Bumili",
-    "sell": "Magbenta",
-    "add": "Magdagdag",
-    "remove": "Alisin",
-    "approve": "Aprubahan",
-    "transfer": "Ilipat"
-  },
-  "pageTitles": {
-    "home": "Home",
-    "explore": "Galugarin",
-    "notifications": "Mga Abiso",
-    "messages": "Mga Mensahe",
-    "assistant": "Assistant",
-    "leaderboard": "Leaderboard",
-    "bookmarks": "Mga Bookmark",
-    "settings": "Mga Setting",
-    "profile": "Profile",
-    "blog": "Blog",
-    "command": "Command",
-    "commandCentre": "Command Centre",
-    "wallet": "Wallet",
-    "docs": "Mga Dokumento",
-    "roadmap": "Roadmap",
-    "featureRequests": "Mga Kahilingan sa Feature",
-    "governance": "Pamamahala",
-    "careers": "Mga Trabaho",
-    "glossary": "Glossary",
-    "create": "Lumikha",
-    "login": "Mag-login"
-  },
-  "notification": {
-    "noNotifications": "Walang mga abiso",
-    "loadMore": "Mag-load ng higit pa"
-  },
   "emojiPicker": {
     "tabEmoji": "Emoji",
     "tabGif": "GIF",
@@ -7335,5 +7278,57 @@
     "planRestricted": "Kailangan ng user na ito ng subscription para makatanggap ng mga mensahe.",
     "planTypeNotAllowed": "Hindi pinapayagan ng plano ng creator na ito ang ganitong uri ng mensahe.",
     "planMinTip": "Ang tip para sa creator na ito ay dapat hindi bababa sa {{amount}} DHB."
+  },
+  "walletSelector": {
+    "title": "Piliin ang Wallet",
+    "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."
+  },
+  "transaction": {
+    "swap": "Swap",
+    "send": "Ipadala",
+    "wrap": "I-wrap",
+    "unwrap": "I-unwrap",
+    "deposit": "Magdeposito",
+    "withdraw": "Mag-withdraw",
+    "stake": "I-stake",
+    "unstake": "I-unstake",
+    "claim": "I-claim",
+    "mint": "I-mint",
+    "burn": "I-burn",
+    "create": "Lumikha",
+    "update": "I-update",
+    "buy": "Bumili",
+    "sell": "Magbenta",
+    "add": "Magdagdag",
+    "remove": "Alisin",
+    "approve": "Aprubahan",
+    "transfer": "Ilipat"
+  },
+  "pageTitles": {
+    "home": "Home",
+    "explore": "Galugarin",
+    "notifications": "Mga Abiso",
+    "messages": "Mga Mensahe",
+    "assistant": "Assistant",
+    "leaderboard": "Leaderboard",
+    "bookmarks": "Mga Bookmark",
+    "settings": "Mga Setting",
+    "profile": "Profile",
+    "blog": "Blog",
+    "command": "Command",
+    "commandCentre": "Command Centre",
+    "wallet": "Wallet",
+    "docs": "Mga Dokumento",
+    "roadmap": "Roadmap",
+    "featureRequests": "Mga Kahilingan sa Feature",
+    "governance": "Pamamahala",
+    "careers": "Mga Trabaho",
+    "glossary": "Glossary",
+    "create": "Lumikha",
+    "login": "Mag-login"
+  },
+  "notification": {
+    "noNotifications": "Walang mga abiso",
+    "loadMore": "Mag-load ng higit pa"
   }
 }

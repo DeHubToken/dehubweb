@@ -2443,7 +2443,11 @@
   },
   "stages": {
     "title": "الغرف الصوتية",
-    "alreadyCharged": "توكنزك أخذوها خلاص لهذي. جرب مرة ثانية — ما راح ينخصم منك مرة ثانية."
+    "alreadyCharged": "توكنزك أخذوها خلاص لهذي. جرب مرة ثانية — ما راح ينخصم منك مرة ثانية.",
+    "autoEnd": {
+      "title": "انتهت الغرفة الصوتية بسبب عدم النشاط",
+      "description": "لم يتحدث أحد في \"{{title}}\" لمدة 30 دقيقة، لذلك تم إغلاقها."
+    }
   },
   "ads": {
     "priceUnavailable": "سعر التوكنز مو متوفر — جرب بعد شوي.",
@@ -2637,14 +2641,6 @@
     "transferGuarantee": "تحصل على الحساب بالكامل — المقبض، المنشورات، المتابعون، سجل الإكراميات، وحقوق الشارات. يحتفظ البائع بمحفظته وكل ما فيها. يتم التحويل فقط بعد أن تقرأ DeHub دفعة التوكن الخاصة بك مرة أخرى من السلسلة؛ إذا تمت مقاطعتها، فإن إعادة محاولة الشراء تستأنفها."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "يقوم التوفير بترحيل هذه الخطة القديمة المسعرة بالتوكن إلى تسعير الدولار بالسعر قبل الإدراج.",
-    "tokenAmount": "{{amount}} توكن",
-    "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
-    "tokensStayInTreasury": "تبقى توكنات DeHub الخاصة بك في عهدة خزانة DeHub ولا يتم بيعها. يتلقى المنشئ رصيد اشتراك مقوم بالدولار الأمريكي.",
-    "tokenCheckoutNotReady": "نافذة دفع اشتراك التوكن غير جاهزة - يرجى المحاولة مرة أخرى قريبًا",
-    "tokenQuoteUnavailable": "اقتباس التوكن المباشر غير متاح",
-    "tokenEstimate": "≈ {{amount}} توكن",
-    "tokenAmountUnavailable": "مبلغ التوكن غير متاح",
     "subscribersOnly": "للمشتركين بس",
     "creatorKeepsPost": "{{creator}} يحفظ هذي البوست لمشتركيه.",
     "creatorNoPlans": "{{creator}} ما عنده اشتراك مفتوح الآن.",
@@ -2725,20 +2721,20 @@
     "inactive": "غير نشط",
     "daysLeft_one": "{{count}} يوم متبقي",
     "daysLeft_other": "{{count}} يوم متبقي",
+    "legacyPlanMigrates": "يقوم التوفير بترحيل هذه الخطة القديمة المسعرة بالتوكن إلى تسعير الدولار بالسعر قبل الإدراج.",
+    "tokenAmount": "{{amount}} توكن",
+    "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
+    "tokenCheckoutNotReady": "نافذة دفع اشتراك التوكن غير جاهزة - يرجى المحاولة مرة أخرى قريبًا",
+    "tokenQuoteUnavailable": "اقتباس التوكن المباشر غير متاح",
+    "tokenEstimate": "≈ {{amount}} توكن",
+    "tokenAmountUnavailable": "مبلغ التوكن غير متاح",
     "subscribedToast": "مشترك",
     "confirmSubscribeTo": "اشتري من {{plan}} مقابل {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} بسعر ما قبل القوائم",
-    "withdraw": "اسحب",
-    "earningsTitle": "أرباح الاشتراك",
-    "earningsAvailable": "متاح",
-    "earningsPending": "قيد الانتظار",
-    "withdrawableSoon": "أرباح الاشتراك حتكون قابلة للسحب قريبًا",
     "youPayNow": "تدفع",
-    "usdtSent": "انرسل {{amount}} USDT",
-    "earningsWithdrawableOnBase": "متاح للسحب على Base",
-    "earningsUsdtPending": "مقوّم بالـ USDT · بانتظار احتياطي الخزينة",
-    "buyersPayTokenAmount": "يدفع المشترون مبلغ توكنات DeHub المعروض بالسعر قبل الإدراج. تتلقى قيمة الدولار الأمريكي كرصيد USDT.",
-    "creditsCreator": "الاعتمادات للمُنشئ {{amount}} USDT"
+    "paidToCreatorWallet": "يروح مباشرة لحافظة المبدع",
+    "creatorPaidDirectNote": "حق المبدع يروح مباشرة لمحفظته أول ما تشترك. ديهاب ياخذ نسبة بسيطة رسوم للمنصة.",
+    "creatorEarnsDirect": "المشتركين يدفعوا بتوكنات دي هاب. حصتك توصل لمحفظتك لحظة اشتراكهم، ناقص رسوم المنصة لفئة شارتك."
   },
   "live": {
     "chatJoined": "دخل",
@@ -3257,6 +3253,7 @@
     "podcast": {
       "tab": "بودكاست",
       "feedUrlLabel": "رابط تغذية البودكاست RSS",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "جلب التغذية",
       "fetching": "جاري جلب التغذية...",
       "showBy": "بواسطة {{author}}",
@@ -3270,8 +3267,7 @@
       "failed": "فشل",
       "emptyFeed": "لم نتمكن من العثور على أي حلقات في هذه التغذية.",
       "badFeed": "هذا الرابط لا يبدو أنه تغذية بودكاست.",
-      "tooMany": "استيراد ما يصل إلى 20 حلقة في المرة الواحدة.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "استيراد ما يصل إلى 20 حلقة في المرة الواحدة."
     }
   },
   "banned": {
@@ -3433,13 +3429,12 @@
       "images": "صور لكل منشور",
       "uploads": "حد الرفع اليومي",
       "storage": "مساحة تخزين المحرر",
-      "profiles": "ملفات شخصية محفوظة",
       "lending": "فتحات إعارة الشارات",
       "voice": "استنساخ الصوت",
       "voiceFree": "مجاني",
       "voiceLocked": "{{tier}} وأكثر"
     },
-    "buy": "احصل على DHB",
+    "buyTokens": "اشترِ توكنز",
     "details": "تفصيل كامل",
     "play": "تشغيل",
     "pause": "إيقاف مؤقت",

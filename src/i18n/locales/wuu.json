@@ -2439,7 +2439,11 @@
   },
   "stages": {
     "title": "语音房",
-    "alreadyCharged": "您的代币已为此支付。请重试 — 您不会被收取第二次费用。"
+    "alreadyCharged": "您的代币已为此支付。请重试 — 您不会被收取第二次费用。",
+    "autoEnd": {
+      "title": "语音房因无人发言已结束",
+      "description": "“{{title}}”已有 30 分钟无人发言，因此已关闭。"
+    }
   },
   "ads": {
     "priceUnavailable": "代币价格不可用 — 请稍后重试。",
@@ -2633,14 +2637,6 @@
     "transferGuarantee": "您将获得整个账户 — 用户名、帖子、关注者、打赏历史和徽章权益。卖家保留其钱包及其中的所有物品。转移仅在 DeHub 从链上读回您的代币付款后运行；如果中断，重试购买将恢复它。"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "節省將此舊的基於代幣定價的計劃以預上市匯率遷移到美元定價。",
-    "tokenAmount": "{{amount}} 隻代幣",
-    "preListingTokenAmount": "預上市代幣數量",
-    "tokensStayInTreasury": "您的 DeHub 代幣將保留在 DeHub 金庫保管中，不會出售。創作者將收到以 USDT 計價的訂閱餘額。",
-    "tokenCheckoutNotReady": "代幣訂閱結帳尚未準備好 — 請稍後重試",
-    "tokenQuoteUnavailable": "實時代幣報價不可用",
-    "tokenEstimate": "≈ {{amount}} 隻代幣",
-    "tokenAmountUnavailable": "代幣數量不可用",
     "subscribersOnly": "仅限订阅者",
     "creatorKeepsPost": "{{creator}} 保留此帖子给其订阅者。",
     "creatorNoPlans": "{{creator}} 目前没有开放订阅。",
@@ -2721,20 +2717,20 @@
     "inactive": "不活跃",
     "daysLeft_one": "剩余 {{count}} 天",
     "daysLeft_other": "剩余 {{count}} 天",
+    "legacyPlanMigrates": "節省將此舊的基於代幣定價的計劃以預上市匯率遷移到美元定價。",
+    "tokenAmount": "{{amount}} 隻代幣",
+    "preListingTokenAmount": "預上市代幣數量",
+    "tokenCheckoutNotReady": "代幣訂閱結帳尚未準備好 — 請稍後重試",
+    "tokenQuoteUnavailable": "實時代幣報價不可用",
+    "tokenEstimate": "≈ {{amount}} 隻代幣",
+    "tokenAmountUnavailable": "代幣數量不可用",
     "subscribedToast": "已订阅",
     "confirmSubscribeTo": "订阅 {{plan}} 以 {{price}} / {{duration}}。",
     "atPreListingRate": "以预售价格 {{amount}}",
-    "withdraw": "提现",
-    "earningsTitle": "订阅收益",
-    "earningsAvailable": "可用",
-    "earningsPending": "待定",
-    "withdrawableSoon": "订阅收益即将可提取",
     "youPayNow": "侬付",
-    "usdtSent": "已发送 {{amount}} USDT",
-    "earningsWithdrawableOnBase": "可在 Base 上提现",
-    "earningsUsdtPending": "以 USDT 计价 · 等待国库储备",
-    "buyersPayTokenAmount": "買家按預上市匯率支付顯示的 DeHub 代幣金額。您將收到美元價值的 USDT 餘額。",
-    "creditsCreator": "赠予创作者 {{amount}} USDT"
+    "paidToCreatorWallet": "径直进创作者个钱包",
+    "creatorPaidDirectNote": "创作者个份会即刻进渠个钱包，你订阅个辰光。DeHub会收一小块平台费。",
+    "creatorEarnsDirect": "订户用DeHub代币支付。一旦他们订阅，您的份额就会立即进入您的钱包，减去您徽章级别的平台费用。"
   },
   "live": {
     "chatJoined": "加入了",
@@ -3251,6 +3247,7 @@
     "podcast": {
       "tab": "播客",
       "feedUrlLabel": "播客 RSS feed 网址",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "获取 feed",
       "fetching": "正在获取 feed…",
       "showBy": "作者：{{author}}",
@@ -3264,8 +3261,7 @@
       "failed": "失败",
       "emptyFeed": "在该 feed 中未找到任何播客。",
       "badFeed": "该链接看起来不像播客 feed。",
-      "tooMany": "一次最多导入 20 集。",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "一次最多导入 20 集。"
     }
   },
   "banned": {
@@ -3426,13 +3422,12 @@
       "images": "每帖图片数",
       "uploads": "每日上传限制",
       "storage": "编辑器存储空间",
-      "profiles": "已保存的个人资料",
       "lending": "徽章借用槽位",
       "voice": "语音克隆",
       "voiceFree": "免费",
       "voiceLocked": "{{tier}} 及以上"
     },
-    "buy": "获取 DHB",
+    "buyTokens": "买代币",
     "details": "完整明细",
     "play": "播放",
     "pause": "暂停",

@@ -2983,7 +2983,11 @@
     "sampleReady": "Eșantion gata.",
     "discardRecording": "Renunță la înregistrare",
     "settingUpVoice": "Se configurează vocea ta...",
-    "useThisVoice": "Folosește această voce"
+    "useThisVoice": "Folosește această voce",
+    "autoEnd": {
+      "title": "Camera audio s-a încheiat din cauza inactivității",
+      "description": "Nimeni nu a vorbit în „{{title}}” timp de 30 de minute, așa că a fost închisă."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4316,7 +4320,6 @@
     "legacyPlanMigrates": "Salvarea migrează acest plan vechi cotat în token-uri la prețuri în dolari la rata pre-listare.",
     "tokenAmount": "{{amount}} token-uri",
     "preListingTokenAmount": "Suma de token-uri pre-listare",
-    "tokensStayInTreasury": "Token-urile tale DeHub rămân în custodia trezoreriei DeHub și nu sunt vândute. Creatorul primește un sold de abonament denominat în USDT.",
     "tokenCheckoutNotReady": "Checkout-ul abonamentului în token-uri nu este gata — te rugăm să încerci din nou în scurt timp",
     "tokenQuoteUnavailable": "Cotația live a token-ului indisponibilă",
     "tokenEstimate": "≈ {{amount}} token-uri",
@@ -4324,17 +4327,10 @@
     "subscribedToast": "Abonat",
     "confirmSubscribeTo": "Abonează-te la {{plan}} pentru {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} la tariful de pre-listare",
-    "withdraw": "Retragere",
-    "earningsTitle": "Câștiguri din abonamente",
-    "earningsAvailable": "Disponibil",
-    "earningsPending": "În așteptare",
-    "withdrawableSoon": "Câștigurile din abonamente vor putea fi retrase în curând",
     "youPayNow": "Plătești",
-    "usdtSent": "{{amount}} USDT trimiși",
-    "earningsWithdrawableOnBase": "Disponibil pentru retragere pe Base",
-    "earningsUsdtPending": "În USDT · în așteptarea rezervei de trezorerie",
-    "buyersPayTokenAmount": "Cumpărătorii plătesc suma afișată de token-uri DeHub la rata pre-listare. Tu primești valoarea în USD ca sold USDT.",
-    "creditsCreator": "Credite acordate creatorului {{amount}} USDT"
+    "paidToCreatorWallet": "Merge direct la portofelul creatorului",
+    "creatorPaidDirectNote": "Cota creatorului ajunge direct în portofel în momentul în care te abonezi. DeHub păstrează o mică taxă de platformă.",
+    "creatorEarnsDirect": "Abonații plătesc în jetoane DeHub. Cota ta ajunge în portofel în momentul în care se abonează, mai puțin taxa de platformă pentru nivelul insignei."
   },
   "live": {
     "chatJoined": "s-a alăturat",
@@ -5422,13 +5418,12 @@
       "images": "Imagini per postare",
       "uploads": "Limita zilnică de încărcare",
       "storage": "Stocarea editorului",
-      "profiles": "Profiluri salvate",
       "lending": "Sloturi de creditare a insignelor",
       "voice": "Clonare vocală",
       "voiceFree": "Gratuit",
       "voiceLocked": "{{tier}} și în sus"
     },
-    "buy": "Obțineți DHB",
+    "buyTokens": "Cumpără jetoane",
     "details": "Defalcare completă",
     "play": "Redare",
     "pause": "Pauză",
@@ -6479,12 +6474,6 @@
       "stakedPost": "Jetoane DeHub de 50k mizate. Apy arată solid la 12,4%. Mentalitatea deținătorului pe termen lung. 💎🙌"
     }
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
   "emojiPicker": {
     "tabEmoji": "Emoji",
     "tabGif": "GIF",
@@ -7215,5 +7204,11 @@
     "planRestricted": "Acest utilizator necesită un abonament pentru a primi mesaje.",
     "planTypeNotAllowed": "Planul acestui creator nu permite acest tip de mesaj.",
     "planMinTip": "Bacșișul pentru acest creator trebuie să fie de cel puțin {{amount}} DHB."
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
   }
 }

@@ -2491,7 +2491,11 @@
   },
   "stages": {
     "title": "የድምፅ ክፍሎች",
-    "alreadyCharged": "ቶከኖችዎ ለዚህ ቀድሞውኑ ተወስደዋል። እንደገና ይሞክሩ — ሁለተኛ ጊዜ አይከፍሉም።"
+    "alreadyCharged": "ቶከኖችዎ ለዚህ ቀድሞውኑ ተወስደዋል። እንደገና ይሞክሩ — ሁለተኛ ጊዜ አይከፍሉም።",
+    "autoEnd": {
+      "title": "የድምፅ ክፍሉ እንቅስቃሴ ባለመኖሩ ተዘግቷል",
+      "description": "በ\"{{title}}\" ውስጥ ለ30 ደቂቃ ማንም ስላልተናገረ ተዘግቷል።"
+    }
   },
   "ads": {
     "priceUnavailable": "የቶከን ዋጋ አይገኝም — በቅርቡ እንደገና ይሞክሩ።",
@@ -2684,14 +2688,6 @@
     "transferGuarantee": "ሙሉውን አካውንት ያገኛሉ — እጀታ፣ ልጥፎች፣ ተከታዮች፣ የጠቃሚ ምክር ታሪክ እና የባጅ መብቶች። ሻጩ የኪስ ቦርሳውን እና በውስጡ ያለውን ሁሉ ይይዛል። ማስተላለፉ DeHub የቶከን ክፍያዎን ከሰንሰለቱ ሲያነብ ብቻ ነው የሚሰራው፤ ከተቋረጠ፣ ግዢውን እንደገና መሞከር ይቀጥላል።"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "ማስቀመጥ ይህንን የቆየ የቶከን-ዋጋ እቅድ በቅድመ-ዝርዝር ዋጋ ወደ ዶላር ዋጋ ያሸጋግራል።",
-    "tokenAmount": "{{amount}} ቶከኖች",
-    "preListingTokenAmount": "የቅድመ-ዝርዝር ቶከን መጠን",
-    "tokensStayInTreasury": "የእርስዎ DeHub ቶከኖች በDeHub ግምጃ ቤት ቁጥጥር ስር ይቆያሉ እና አይሸጡም። ፈጣሪው በUSDT የተመዘገበ የደንበኝነት ምዝገባ ሚዛን ይቀበላል።",
-    "tokenCheckoutNotReady": "የቶከን የደንበኝነት ምዝገባ ክፍያ ዝግጁ አይደለም — እባክዎን በቅርቡ እንደገና ይሞክሩ",
-    "tokenQuoteUnavailable": "የቀጥታ ቶከን ጥቅስ አይገኝም",
-    "tokenEstimate": "≈ {{amount}} ቶከኖች",
-    "tokenAmountUnavailable": "የቶከን መጠን አይገኝም",
     "subscribersOnly": "ለደንበኞች ብቻ",
     "creatorKeepsPost": "{{creator}} ይህን ጽሁፍ ለደንበኞቹ ያስቀምጣል።",
     "creatorNoPlans": "{{creator}} በአሁኑ ጊዜ ክፍት የደንበኝነት ምዝገባ የለውም።",
@@ -2772,20 +2768,20 @@
     "inactive": "ተሰናክሏል",
     "daysLeft_one": "{{count}} ቀናት ቀርተዋል",
     "daysLeft_other": "{{count}} ቀናት ቀርተዋል",
+    "legacyPlanMigrates": "ማስቀመጥ ይህንን የቆየ የቶከን-ዋጋ እቅድ በቅድመ-ዝርዝር ዋጋ ወደ ዶላር ዋጋ ያሸጋግራል።",
+    "tokenAmount": "{{amount}} ቶከኖች",
+    "preListingTokenAmount": "የቅድመ-ዝርዝር ቶከን መጠን",
+    "tokenCheckoutNotReady": "የቶከን የደንበኝነት ምዝገባ ክፍያ ዝግጁ አይደለም — እባክዎን በቅርቡ እንደገና ይሞክሩ",
+    "tokenQuoteUnavailable": "የቀጥታ ቶከን ጥቅስ አይገኝም",
+    "tokenEstimate": "≈ {{amount}} ቶከኖች",
+    "tokenAmountUnavailable": "የቶከን መጠን አይገኝም",
     "subscribedToast": "ተመዝግቧል",
     "confirmSubscribeTo": "ለ {{price}} / {{duration}} ለ {{plan}} ይመዝገቡ።",
     "atPreListingRate": "በቅድመ-ዝርዝር ዋጋ በ {{amount}}",
-    "withdraw": "ማውጣት",
-    "earningsTitle": "የደንበኝነት ምዝገባ ገቢዎች",
-    "earningsAvailable": "ይገኛል",
-    "earningsPending": "በመጠባበቅ ላይ",
-    "withdrawableSoon": "የደንበኝነት ምዝገባ ገቢዎች በቅርቡ ይሰረዛሉ",
     "youPayNow": "እርስዎ ይከፍላሉ",
-    "usdtSent": "{{amount}} USDT ተልኳል",
-    "earningsWithdrawableOnBase": "በBase ላይ ለማውጣት ዝግጁ",
-    "earningsUsdtPending": "በUSDT የተተመነ · የግምጃ ቤት ክምችት በመጠባበቅ ላይ",
-    "buyersPayTokenAmount": "ገዢዎች ቅድመ-ዝርዝር ዋጋ ላይ የሚታየውን የDeHub ቶከን መጠን ይከፍላሉ። የUSD እሴቱን እንደ USDT ሚዛን ይቀበላሉ።",
-    "creditsCreator": "ፈጣሪውን {{amount}} USDT ክሬዲት ያድርጉ"
+    "paidToCreatorWallet": "በቀጥታ ወደ ፈጣሪ ቦርሳ ይሂዱ",
+    "creatorPaidDirectNote": "የፈጣሪ ድርሻ እርስዎ በሚመዘገቡበት ቅጽበት በቀጥታ ወደ ኪስዎ ይሄዳል ። DeHub አነስተኛ የመሣሪያ ስርዓት ክፍያዎችን ይጠብቃል ።",
+    "creatorEarnsDirect": "ተመዝጋቢዎች በ DeHub ምልክቶች ውስጥ ይከፍላሉ ። የእርስዎ ድርሻ መሬቶች በኪስ ቦርሳዎ ውስጥ በሚመዘገቡበት ቅጽበት ፣ ለባጅ ደረጃዎ የመድረክ ክፍያ ያነሰ ።"
   },
   "live": {
     "chatJoined": "ተቀላቀለ",
@@ -3212,6 +3208,7 @@
     "podcast": {
       "tab": "ፖድካስት",
       "feedUrlLabel": "ፖድካስት RSS ምግብ ዩአርኤል",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Fetch ምግብ",
       "fetching": "የምግብ አዘገጃጀት...",
       "showBy": "በ {{author}}",
@@ -3221,12 +3218,11 @@
       "ownership": "ይህንን ይዘት ባለቤት ነኝ ፣ ወይም በ DeHub ላይ ለማተም የመብቱ ባለቤት ፈቃድ አለኝ ።",
       "importSelected": "አስመጣ {{count}} episodes",
       "importing": "በማስመጣት ላይ...",
+      "done": "ተሰልፏል",
       "failed": "አልተሳካም",
       "emptyFeed": "በዚያ ምግብ ውስጥ ምንም ክፍሎችን ማግኘት አልቻልንም ።",
       "badFeed": "ያ አገናኝ የፖድካስት ምግብ አይመስልም ።",
-      "tooMany": "በአንድ ጊዜ እስከ 20 ክፍሎች ያስመጡ ።",
-      "done": "ተሰልፏል",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "በአንድ ጊዜ እስከ 20 ክፍሎች ያስመጡ ።"
     }
   },
   "banned": {
@@ -3376,13 +3372,12 @@
       "images": "ምስሎች በእያንዳንዱ ልጥፍ",
       "uploads": "ዕለታዊ የሰቀላ ገደብ",
       "storage": "የአርትዖት ማከማቻ",
-      "profiles": "የተቀመጡ መገለጫዎች",
       "lending": "ባጅ ብድር መክተቻዎች",
       "voice": "የድምፅ ክሎኒንግ",
       "voiceFree": "ነጻ",
       "voiceLocked": "{{tier}} እና ወደ ላይ"
     },
-    "buy": "DHB ያግኙ",
+    "buyTokens": "ምልክቶችን ይግዙ",
     "details": "ሙሉ ማፍረስ",
     "play": "አጫውት",
     "pause": "እረፍት",

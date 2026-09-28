@@ -532,6 +532,7 @@
     "loadingMore": "กำลังโหลดเพิ่ม...",
     "loadMore": "โหลดเพิ่ม",
     "continue": "ดำเนินการต่อ",
+    "undo": "เลิกทำ",
     "yes": "ใช่",
     "no": "ไม่",
     "error": "เกิดข้อผิดพลาด",
@@ -558,8 +559,7 @@
     "closeMenu": "ปิดเมนู",
     "openMenu": "เปิดเมนู",
     "white": "สีขาว",
-    "black": "สีดำ",
-    "undo": "เลิกทำ"
+    "black": "สีดำ"
   },
   "tip": {
     "title": "ส่งทิป",
@@ -2617,7 +2617,11 @@
     "sampleReady": "ตัวอย่างพร้อม",
     "discardRecording": "ยกเลิกการบันทึก",
     "settingUpVoice": "กำลังตั้งค่าเสียงของคุณ...",
-    "useThisVoice": "ใช้เสียงนี้"
+    "useThisVoice": "ใช้เสียงนี้",
+    "autoEnd": {
+      "title": "ห้องเสียงสิ้นสุดเนื่องจากไม่มีการใช้งาน",
+      "description": "ไม่มีใครพูดใน \"{{title}}\" เป็นเวลา 30 นาที จึงถูกปิดแล้ว"
+    }
   },
   "ads": {
     "newCampaign": "แคมเปญใหม่",
@@ -3768,6 +3772,7 @@
     "descriptionPlaceholder": "อธิบายว่าสมาชิกจะได้รับอะไร...",
     "price": "ราคา",
     "youReceiveInFull": "คุณได้รับเต็มจำนวน ผู้สมัครสมาชิกจ่ายค่าธรรมเนียมแพลตฟอร์มเพิ่มเติม",
+    "chain": "โซ่",
     "duration": "ระยะเวลา",
     "preset1Month": "1 เดือน",
     "preset3Months": "3 เดือน",
@@ -3817,26 +3822,17 @@
     "legacyPlanMigrates": "การบันทึกจะย้ายแผนที่กำหนดราคาโทเค็นเดิมนี้ไปยังการกำหนดราคาเป็นดอลลาร์ในอัตราก่อนการลิสต์",
     "tokenAmount": "{{amount}} โทเค็น",
     "preListingTokenAmount": "จำนวนโทเค็นก่อนการลิสต์",
-    "tokensStayInTreasury": "โทเค็น DeHub ของคุณยังคงอยู่ในการดูแลของคลัง DeHub และจะไม่ถูกขาย ผู้สร้างจะได้รับยอดสมัครสมาชิกที่ระบุเป็น USDT",
     "tokenCheckoutNotReady": "การชำระเงินสมัครสมาชิกโทเค็นยังไม่พร้อม — โปรดลองอีกครั้งในไม่ช้า",
     "tokenQuoteUnavailable": "ใบเสนอราคาโทเค็นสดไม่พร้อมใช้งาน",
     "tokenEstimate": "≈ {{amount}} โทเค็น",
     "tokenAmountUnavailable": "จำนวนโทเค็นไม่พร้อมใช้งาน",
-    "chain": "โซ่",
     "subscribedToast": "สมัครใช้งานแล้ว",
     "confirmSubscribeTo": "สมัครสมาชิก {{plan}} เพื่อ {{price}}/{{duration}}",
     "atPreListingRate": "{{amount}} ในอัตราก่อนลงประกาศ",
-    "withdraw": "ถอนเงิน",
-    "earningsTitle": "รายได้จากการสมัครใช้งาน",
-    "earningsAvailable": "ว่าง",
-    "earningsPending": "รอดำเนินการ",
-    "withdrawableSoon": "รายได้จากการสมัครใช้งานจะสามารถถอนได้เร็วๆนี้",
     "youPayNow": "คุณชำระเงิน",
-    "usdtSent": "ส่ง {{amount}} USDT แล้ว",
-    "earningsWithdrawableOnBase": "ถอนได้บน Base",
-    "earningsUsdtPending": "คิดเป็น USDT · รอเงินสำรองคลัง",
-    "buyersPayTokenAmount": "ผู้ซื้อจ่ายจำนวนโทเค็น DeHub ที่แสดงในอัตราก่อนการลิสต์ คุณจะได้รับมูลค่า USD เป็นยอดคงเหลือ USDT",
-    "creditsCreator": "เติมเครดิตให้ครีเอเตอร์ {{amount}} USDT"
+    "paidToCreatorWallet": "ตรงไปที่กระเป๋าเงินของครีเอเตอร์",
+    "creatorPaidDirectNote": "ส่วนแบ่งของครีเอเตอร์จะส่งตรงไปยังกระเป๋าเงินทันทีที่คุณสมัครรับข้อมูล DeHub เก็บค่าธรรมเนียมแพลตฟอร์มขนาดเล็ก",
+    "creatorEarnsDirect": "สมาชิกชำระเป็นโทเค็น DeHub การแชร์ของคุณจะปรากฏในกระเป๋าเงินของคุณทันทีที่พวกเขาสมัครรับข้อมูลจะลดค่าธรรมเนียมแพลตฟอร์มสำหรับระดับแบดจ์ของคุณ"
   },
   "live": {
     "chatJoined": "เข้าร่วมแล้ว",
@@ -4700,6 +4696,7 @@
     "podcast": {
       "tab": "พอดคาสต์",
       "feedUrlLabel": "URL ฟีด RSS ของพอดคาสต์",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "ดึงฟีด",
       "fetching": "กำลังเรียกดูฟีด…",
       "showBy": "โดย {{author}}",
@@ -4713,8 +4710,7 @@
       "failed": "ล้มเหลว",
       "emptyFeed": "เราไม่พบตอนใดๆในฟีดนั้น",
       "badFeed": "ลิงก์นั้นดูไม่เหมือนฟีดพอดแคสต์",
-      "tooMany": "นำเข้าได้สูงสุด 20 ตอนต่อครั้ง",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "นำเข้าได้สูงสุด 20 ตอนต่อครั้ง"
     }
   },
   "banned": {
@@ -4876,13 +4872,12 @@
       "images": "ภาพต่อโพสต์",
       "uploads": "ขีดจำกัดการอัปโหลดรายวัน",
       "storage": "ที่เก็บข้อมูลตัวแก้ไข",
-      "profiles": "โปรไฟล์ที่บันทึกไว้",
       "lending": "ช่องให้ยืมป้าย",
       "voice": "การโคลนเสียง",
       "voiceFree": "ฟรี",
       "voiceLocked": "{{tier}} ขึ้นไป"
     },
-    "buy": "รับ DHB",
+    "buyTokens": "ซื้อโทเค็น",
     "details": "รายละเอียดทั้งหมด",
     "play": "เล่น",
     "pause": "หยุดชั่วคราว",
@@ -5938,9 +5933,6 @@
       "tippedYou": "ให้ทิปโทเค็น {{amount}} แก่คุณ"
     }
   },
-  "footer": {
-    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
-  },
   "emojiPicker": {
     "tabEmoji": "อีโมจิ",
     "tabGif": "GIF",
@@ -6663,5 +6655,8 @@
     "planRestricted": "ผู้ใช้นี้ต้องสมัครสมาชิกก่อนจึงจะรับข้อความได้",
     "planTypeNotAllowed": "แพ็กเกจของครีเอเตอร์นี้ไม่อนุญาตข้อความประเภทนี้",
     "planMinTip": "ทิปสำหรับครีเอเตอร์นี้ต้องมีอย่างน้อย {{amount}} DHB"
+  },
+  "footer": {
+    "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"
   }
 }

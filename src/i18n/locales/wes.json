@@ -2192,7 +2192,11 @@
     "title": "Stores"
   },
   "stages": {
-    "title": "Audio room dem"
+    "title": "Audio room dem",
+    "autoEnd": {
+      "title": "Audio room don end because nobody dey talk",
+      "description": "Nobody talk for \"{{title}}\" for 30 minutes, so e don close."
+    }
   },
   "ads": {
     "priceUnavailable": "Token price unavailable — try again shortly.",
@@ -2340,14 +2344,6 @@
     "transferGuarantee": "You go get di whole account — handle, post, follower, tip history and badge entitlement. Di seller keep dem own wallet and everytin wey dey inside. Transfer go run only afta DeHub read your token payment back from di chain; if e break, try am again to continue am."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Saving go change dis old token-price plan to dollar price for di pre-listing rate.",
-    "tokenAmount": "{{amount}} token",
-    "preListingTokenAmount": "Pre-listing token amount",
-    "tokensStayInTreasury": "Your DeHub token remain for DeHub treasury custody and dem no sell am. Di creator go receive USDT subscription balance.",
-    "tokenCheckoutNotReady": "Di token subscription checkout no ready — please try again soon",
-    "tokenQuoteUnavailable": "Live token quote no dey",
-    "tokenEstimate": "≈ {{amount}} token",
-    "tokenAmountUnavailable": "Token amount no dey",
     "subscribersOnly": "Subscribers only",
     "draft": "Draft",
     "subscribed": "Subscribed",
@@ -2412,20 +2408,20 @@
     "inactive": "Inactive",
     "daysLeft_one": "{{count}}d left",
     "daysLeft_other": "{{count}}d left",
+    "legacyPlanMigrates": "Saving go change dis old token-price plan to dollar price for di pre-listing rate.",
+    "tokenAmount": "{{amount}} token",
+    "preListingTokenAmount": "Pre-listing token amount",
+    "tokenCheckoutNotReady": "Di token subscription checkout no ready — please try again soon",
+    "tokenQuoteUnavailable": "Live token quote no dey",
+    "tokenEstimate": "≈ {{amount}} token",
+    "tokenAmountUnavailable": "Token amount no dey",
     "subscribedToast": "Subscribed",
-    "withdraw": "Withdraw",
     "confirmSubscribeTo": "Subscribe for {{plan}} for {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} for di pre-listing price",
-    "earningsTitle": "Subscription money weh you don gain",
-    "earningsAvailable": "E ready",
-    "earningsPending": "E still di wait",
-    "withdrawableSoon": "You go fit comot your subscription money soon",
     "youPayNow": "You pay",
-    "usdtSent": "{{amount}} USDT don send",
-    "earningsWithdrawableOnBase": "You fit withdraw am for Base",
-    "earningsUsdtPending": "Na USDT · e dey wait treasury reserve",
-    "buyersPayTokenAmount": "Buyer dem pay di DeHub token amount wey dem show for di pre-listing rate. You go receive di USD value as USDT balance.",
-    "creditsCreator": "Di creator go get {{amount}} USDT"
+    "paidToCreatorWallet": "E go straight for di creator wallet",
+    "creatorPaidDirectNote": "Di creator share go straight go im wallet as soon as you subscribe. DeHub dey keep small platform fee.",
+    "creatorEarnsDirect": "Subscribers di pay with DeHub tokens. Your share go land for your wallet di moment dem subscribe, minus di platform fee for your badge level."
   },
   "live": {
     "chatJoined": "don join",
@@ -2804,6 +2800,7 @@
     "title": "Import a video",
     "migrateAll": "Migrate all",
     "paste": "Paste",
+    "ownership": "Na me get this content, or the person weh get the rights don allow me publish am for DeHub.",
     "import": "Import",
     "addToQueue": "Add to queue",
     "signInToImport": "Sign in to import",
@@ -2861,11 +2858,10 @@
       "importing": "Importing…",
       "done": "Queued",
       "failed": "Failed",
-      "badFeed": "That link no resemble podcast feed.",
       "emptyFeed": "We no see any episode for that feed.",
+      "badFeed": "That link no resemble podcast feed.",
       "tooMany": "Bring reach 20 episode dem one time."
-    },
-    "ownership": "Na me get this content, or the person weh get the rights don allow me publish am for DeHub."
+    }
   },
   "banned": {
     "reason": "Reason: {{reason}}"
@@ -2981,13 +2977,12 @@
       "images": "Images per post",
       "uploads": "Daily upload limit",
       "storage": "Editor storage",
-      "profiles": "Saved profiles",
       "lending": "Badge lending slots",
       "voice": "Voice cloning",
       "voiceFree": "Free",
       "voiceLocked": "{{tier}} and up"
     },
-    "buy": "Get DHB",
+    "buyTokens": "Buy tokens",
     "details": "Full breakdown",
     "play": "Play",
     "pause": "Pause",
@@ -3765,6 +3760,23 @@
     "subtitle": "Move DeHub tokens between chains",
     "tokensOnBase": "Tokens on Base"
   },
+  "builder": {
+    "stakeForAllowance": "Stake DeHub token for make ya daily build allowance go up",
+    "buildInChat": "Build for ya DM wit @assistant",
+    "landerTitle": "Build app just by asking",
+    "landerSubtitle": "Tell @assistant weti you want for ya messages. E go build the app, host am, send you link weh any man fit open. Reply for change any ting.",
+    "promptPlaceholder": "Talk the kind app weh you want…",
+    "sendToAssistant": "Send am for @assistant",
+    "example1": "Pomodoro timer weh get daily streak",
+    "example2": "Tip calculator weh di share the bill",
+    "example3": "Quiz for the film dem weh I like",
+    "step1Title": "Talk weti you want",
+    "step1Body": "Talk weti the app go do, for ya own word dem.",
+    "step2Title": "E di build for like one minute",
+    "step2Body": "@assistant di write the app, host am, then send the link for ya messages.",
+    "step3Title": "Share am or change am",
+    "step3Body": "Any man fit open the link. Reply for the chat for change any ting."
+  },
   "raffle": {
     "stakeTitle": "Stake Tokens",
     "faqPurchaseAnswer": "No. Every draw get at least one free way to enter, wey you fit get by taking part on DeHub. Some draws dey sell ticket wey you go pay with DeHub tokens, but ticket no be the only way to enter.",
@@ -4122,22 +4134,5 @@
     "planRestricted": "Dis pipul need subscription before e fit get message.",
     "planTypeNotAllowed": "Dis creator yi plan no allow dis kain message.",
     "planMinTip": "Tip for dis creator must be at least {{amount}} DHB."
-  },
-  "builder": {
-    "buildInChat": "Build for ya DM wit @assistant",
-    "stakeForAllowance": "Stake DeHub token for make ya daily build allowance go up",
-    "landerTitle": "Build app just by asking",
-    "landerSubtitle": "Tell @assistant weti you want for ya messages. E go build the app, host am, send you link weh any man fit open. Reply for change any ting.",
-    "promptPlaceholder": "Talk the kind app weh you want…",
-    "sendToAssistant": "Send am for @assistant",
-    "example1": "Pomodoro timer weh get daily streak",
-    "example2": "Tip calculator weh di share the bill",
-    "example3": "Quiz for the film dem weh I like",
-    "step1Title": "Talk weti you want",
-    "step1Body": "Talk weti the app go do, for ya own word dem.",
-    "step2Title": "E di build for like one minute",
-    "step2Body": "@assistant di write the app, host am, then send the link for ya messages.",
-    "step3Title": "Share am or change am",
-    "step3Body": "Any man fit open the link. Reply for the chat for change any ting."
   }
 }

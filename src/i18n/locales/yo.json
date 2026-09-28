@@ -2499,7 +2499,11 @@
   },
   "stages": {
     "title": "Àwọn yàrá ohùn",
-    "alreadyCharged": "Àwọn tókeni rẹ ti lọ fún èyí tẹ́lẹ̀. Gbìyànjú lẹ́ẹ̀kan sí i — a kò ní san ọ́ ní ẹ̀ẹ̀kejì."
+    "alreadyCharged": "Àwọn tókeni rẹ ti lọ fún èyí tẹ́lẹ̀. Gbìyànjú lẹ́ẹ̀kan sí i — a kò ní san ọ́ ní ẹ̀ẹ̀kejì.",
+    "autoEnd": {
+      "title": "Yàrá ohùn ti parí nítorí àìsí ìgbòkègbodò",
+      "description": "Kò sí ẹni tó sọ̀rọ̀ nínú \"{{title}}\" fún ìṣẹ́jú 30, nítorí náà a ti tì í."
+    }
   },
   "ads": {
     "priceUnavailable": "Ojú ọjọ́ tókeni kò sí — gbìyànjú lẹ́ẹ̀kan sí i ní kùtùkùtù.",
@@ -2692,14 +2696,6 @@
     "transferGuarantee": "O gba iroyin gbogbo — oludari, awọn ifiweranṣẹ, awọn ọmọlẹhin, itan imọran ati awọn ẹtọ aami. Oluta naa n tọju apamọwọ wọn ati ohun gbogbo ti o wa ninu rẹ. Gbigbe naa n ṣiṣẹ nikan lẹhin ti DeHub ka sisanwo ami rẹ pada kuro ni pq; ti o ba da duro, atunṣe rira naa n tẹsiwaju."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Ìfipamọ́ yí ètò idiyele àmi-ìṣẹ́ ìbílẹ̀ yìí sí idiyele dọla ni idiyele ṣaaju-àtẹ ìtò.",
-    "tokenAmount": "{{amount}} àmi-ìṣẹ́",
-    "preListingTokenAmount": "Iye àmi-ìṣẹ́ ṣaaju-àtẹ ìtò",
-    "tokensStayInTreasury": "Awọn àmi-ìṣẹ́ DeHub rẹ wa ni ile-iṣura DeHub ati pe ko ta. Ẹlẹda naa gba iwọ̀n ṣiṣẹ-akoko ti a sọ ni USDT.",
-    "tokenCheckoutNotReady": "Ìdánilẹ́kùn ìtò àmi-ìṣẹ́ kò tii ṣetan — jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i laipẹ",
-    "tokenQuoteUnavailable": "Ìwọ̀n àmi-ìṣẹ́ laaye kò sí",
-    "tokenEstimate": "≈ {{amount}} àmi-ìṣẹ́",
-    "tokenAmountUnavailable": "Iye àmi-ìṣẹ́ kò sí",
     "subscribersOnly": "Àwọn àmúyẹ fun gbígbọ́ orin ko le ṣiṣẹ lori ẹ̀rọ rẹ Àkọlé fídíò",
     "creatorKeepsPost": "{{creator}} tọju ifiweranṣẹ yii fun awọn alabapin wọn.",
     "creatorNoPlans": "{{creator}} kò ní ìforúkọsílẹ̀ tí ó ṣí sílẹ̀ nísinsìnyí.",
@@ -2780,20 +2776,20 @@
     "inactive": "Ailagbara",
     "daysLeft_one": "{{count}} ọjọ ti o ku",
     "daysLeft_other": "{{count}} ọjọ ti o ku",
+    "legacyPlanMigrates": "Ìfipamọ́ yí ètò idiyele àmi-ìṣẹ́ ìbílẹ̀ yìí sí idiyele dọla ni idiyele ṣaaju-àtẹ ìtò.",
+    "tokenAmount": "{{amount}} àmi-ìṣẹ́",
+    "preListingTokenAmount": "Iye àmi-ìṣẹ́ ṣaaju-àtẹ ìtò",
+    "tokenCheckoutNotReady": "Ìdánilẹ́kùn ìtò àmi-ìṣẹ́ kò tii ṣetan — jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i laipẹ",
+    "tokenQuoteUnavailable": "Ìwọ̀n àmi-ìṣẹ́ laaye kò sí",
+    "tokenEstimate": "≈ {{amount}} àmi-ìṣẹ́",
+    "tokenAmountUnavailable": "Iye àmi-ìṣẹ́ kò sí",
     "subscribedToast": "Ti ṣe alabapin",
     "confirmSubscribeTo": "Ṣe alabapin si {{plan}} fun {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} ni idiyele atokọ iṣaaju",
-    "withdraw": "Yiyọ kuro",
-    "earningsTitle": "Owó ìforúkọsílẹ̀",
-    "earningsAvailable": "Ó wà",
-    "earningsPending": "Ti n duro de",
-    "withdrawableSoon": "Àwọn èrè ìforúkọsílẹ̀ yóò yọ̀ láìpẹ́.",
     "youPayNow": "O sanwo",
-    "usdtSent": "A ti fi {{amount}} USDT ránṣẹ́",
-    "earningsWithdrawableOnBase": "Ó wà fún yíyọ lórí Base",
-    "earningsUsdtPending": "Ní USDT · ń dúró de ìpamọ́ ilé-ìṣúra",
-    "buyersPayTokenAmount": "Àwọn olùtaja sanwo iye àmi-ìṣẹ́ DeHub tí a fihàn ni idiyele ṣaaju-àtẹ ìtò. Ìwọ gba iye USD gẹ́gẹ́ bí ìwọ̀n USDT.",
-    "creditsCreator": "Awọn kirediti oludasile {{amount}} USDT"
+    "paidToCreatorWallet": "Lọ taara si apamọwọ ẹlẹda.",
+    "creatorPaidDirectNote": "Ìpín olùṣẹ̀dá náà lọ tààrà sí àpamọ́ wọn ní àsìkò tí o bá ṣe ìforúkọsílẹ̀. DeHub máa ń san owó orí pẹpẹ kékeré.",
+    "creatorEarnsDirect": "Àwọn àmúyẹ fun gbígbọ́ orin ko le ṣiṣẹ lori ẹ̀rọ rẹ Àkọlé fídíò, ìwé àṣàrò kúkúrú, ìwé àṣàrò kúkúrú, ìwé àṣàrò kúkúrú. Àwọn ilẹ̀ ìpín rẹ nínú àpamọ́ rẹ ní àsìkò tí wọ́n bá ṣe ìforúkọsílẹ̀, dín owó pẹpẹ kù fún ìpele ìfipamọ́ rẹ."
   },
   "live": {
     "chatJoined": "darapọ̀",
@@ -3479,13 +3475,12 @@
       "images": "Awọn aworan fun ifiweranṣẹ",
       "uploads": "Ifilelẹ gbigbe lojoojumọ",
       "storage": "Ibi ìpamọ́ atọ́ka",
-      "profiles": "Fipamọ awọn profaili",
       "lending": "Àwọn ìkòkò ìfẹ̀yìntì badge",
       "voice": "Ṣíṣe ìfipamọ́ ohùn",
       "voiceFree": "FREE",
       "voiceLocked": "{{tier}} àti sókè"
     },
-    "buy": "Gba DHB",
+    "buyTokens": "Ra àwọn àmì",
     "details": "Ìparun kíkún",
     "play": "Play",
     "pause": "Duro",

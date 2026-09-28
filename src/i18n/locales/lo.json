@@ -2965,7 +2965,11 @@
     "sampleReady": "ຕົວຢ່າງພ້ອມແລ້ວ.",
     "discardRecording": "ຍົກເລີກການບັນທຶກ",
     "settingUpVoice": "ກຳລັງຕັ້ງຄ່າສຽງຂອງທ່ານ...",
-    "useThisVoice": "ໃຊ້ສຽງນີ້"
+    "useThisVoice": "ໃຊ້ສຽງນີ້",
+    "autoEnd": {
+      "title": "ຫ້ອງສຽງສິ້ນສຸດເນື່ອງຈາກບໍ່ມີການເຄື່ອນໄຫວ",
+      "description": "ບໍ່ມີໃຜເວົ້າໃນ \"{{title}}\" ເປັນເວລາ 30 ນາທີ, ສະນັ້ນມັນຈຶ່ງຖືກປິດ."
+    }
   },
   "ads": {
     "seoTitle": "ຜູ້ຈັດການໂຄສະນາ | DeHub",
@@ -4129,24 +4133,16 @@
     "daysLeft_other": "ເຫຼືອ {{count}} ມື້",
     "legacyPlanMigrates": "ການບັນທຶກຈະໂອນແຜນການລາຄາ token ເດັກກະດັບນີ້ເປັນລາຄາໂດລາຕາມອັດຕາກ່ອນການລາຍການ.",
     "preListingTokenAmount": "ຈໍານວນ token ກ່ອນການລາຍການ",
-    "tokensStayInTreasury": "Token DeHub ຂອງທ່ານຍັງຢູ່ໃນການຄຸ້ມຄອງຂອງກະຊວງ DeHub ແລະບໍ່ຖືກຂາຍ. ຜູ້ສ້າງຈະໄດ້ຮັບຍອດສົດການສະໝັກທີ່ມີສະກຸນເງິນ USDT.",
     "tokenCheckoutNotReady": "ການຊຳລະການສະໝັກ token ບໍ່ພ້ອມ — ກະລຸນາລອງໃໝ່ພາຍໃນບໍ່ດົນ",
     "tokenQuoteUnavailable": "ບໍ່ມີການອ້າງອີງ token ສົດຊີວິດ",
     "tokenAmountUnavailable": "ຈໍານວນ token ບໍ່ພ້ອມ",
     "subscribedToast": "ສະໝັກສະມາຊິກ",
     "confirmSubscribeTo": "ສະໝັກກັບ {{plan}} ສຳລັບ {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} ຕາມອັດຕາກ່ອນການລາຍການ",
-    "withdraw": "ຖອນເງິນ",
-    "earningsTitle": "ລາຍໄດ້ຈາກການຈອງ",
-    "earningsAvailable": "ມີ",
-    "earningsPending": "ລໍຖ້າ",
-    "withdrawableSoon": "ລາຍໄດ້ຈາກການຈອງຈະສາມາດຖອນໄດ້ໃນໄວໆນີ້",
     "youPayNow": "ທ່ານ ຈ່າຍ",
-    "usdtSent": "ສົ່ງ {{amount}} USDT ແລ້ວ",
-    "earningsWithdrawableOnBase": "ຖອນໄດ້ຢູ່ Base",
-    "earningsUsdtPending": "ຄິດເປັນ USDT · ລໍຖ້າທຶນສຳຮອງ",
-    "buyersPayTokenAmount": "ຜູ້ຊື້ຈ່າຍຈຳນວນໂທເຄັນ DeHub ທີ່ສະແດງຕາມອັດຕາກ່ອນເປີດຂາຍ. ທ່ານໄດ້ຮັບມູນຄ່າ USD ເປັນຍອດເງິນ USDT.",
-    "creditsCreator": "ກູ້ຢືມຜູ້ສ້າງ {{amount}} USDT"
+    "paidToCreatorWallet": "ໄປໂດຍກົງກັບກະເປົາເງິນຂອງຜູ້ສ້າງ",
+    "creatorPaidDirectNote": "ສ່ວນແບ່ງຂອງຜູ້ສ້າງຈະໄປຫາກະເປົາເງິນຂອງພວກເຂົາທັນທີທີ່ທ່ານລົງທະບຽນ. DeHub ຮັກສາຄ່າ ທໍາ ນຽມເວທີຂະ ຫນາດ ນ້ອຍ.",
+    "creatorEarnsDirect": "ຜູ້ສະມາຊິກຈ່າຍເປັນໂທເຄັນ DeHub. ສ່ວນແບ່ງຂອງທ່ານເຂົ້າກະເປົາເງິນຂອງທ່ານທັນທີທີ່ເຂົາເຈົ້າສະໝັກ, ຫັກຄ່າທຳນຽມແພລດຟອມຕາມລະດັບປ້າຍຂອງທ່ານ."
   },
   "live": {
     "chatJoined": "ເຂົ້າຮ່ວມແລ້ວ",
@@ -5088,9 +5084,11 @@
     "reviewConfirm": "ນໍາເຂົ້າ",
     "podcast": {
       "feedUrlLabel": "ຄວາມຄິດເຫັນທີ່ Podcast RSS feed URL:",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "ໄປຮັບອາຫານ",
       "fetching": "ກຳລັງຮວບຮວມອາຫານ...",
       "showBy": "ໂດຍ {{author}}",
+      "episodes": "{{count}} ຕອນ",
       "selectAll": "ເລືອກທັງໝົດ",
       "alreadyImported": "ໄດ້ນໍາເຂົ້າແລ້ວ",
       "ownership": "ຂ້ອຍເປັນເຈົ້າຂອງເນື້ອຫານີ້, ຫຼືຂ້ອຍໄດ້ຮັບອະນຸຍາດຈາກຜູ້ຖືສິດທີ່ຈະເຜີຍແຜ່ມັນໃນ DeHub.",
@@ -5100,9 +5098,7 @@
       "failed": "ລົ້ມເຫຼວ",
       "emptyFeed": "ພວກເຮົາບໍ່ສາມາດຊອກຫາບົດບັນທຶກໃດໆໃນອາຫານນັ້ນໄດ້.",
       "badFeed": "ຂ້ອຍບໍ່ໄດ້ກວດເບິ່ງວ່າມັນມີຢູ່ໃນຮູບແບບ podcast ໄດ້ຫຼືບໍ່.",
-      "tooMany": "ນໍາເຂົ້າເຖິງ 20 ຕອນໃນເວລາດຽວກັນ.",
-      "episodes": "{{count}} ຕອນ",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ນໍາເຂົ້າເຖິງ 20 ຕອນໃນເວລາດຽວກັນ."
     }
   },
   "banned": {
@@ -5263,13 +5259,12 @@
       "images": "ຮູບພາບຕໍ່ໂພສ",
       "uploads": "ຈຳກັດການອັບໂຫຼດປະຈ",
       "storage": "ການເກັບຮັກສາບັນນາທິການ",
-      "profiles": "ໂປຣໄຟລ໌ທີ່ຖືກບັນທຶກໄວ້",
       "lending": "Badge ສະລັອດຕິງການໃຫ້ກູ້ຢືມ",
       "voice": "ການກັ່ນຕອງສຽງ",
       "voiceFree": "ຟຣີ",
       "voiceLocked": "{{tier}} ແລະຂຶ້ນໄປ"
     },
-    "buy": "ຮັບ DHB",
+    "buyTokens": "ຊື້ tokens",
     "details": "ການລະລາຍເຕັມຮູບແບບ",
     "play": "ຫຼິ້ນ",
     "pause": "ພັກຜ່ອນ",

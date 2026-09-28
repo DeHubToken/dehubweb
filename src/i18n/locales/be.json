@@ -3048,7 +3048,11 @@
     "sampleReady": "Узор гатовы.",
     "discardRecording": "Адхіліць запіс",
     "settingUpVoice": "Наладка вашага голаса...",
-    "useThisVoice": "Выкарыстаць гэты голас"
+    "useThisVoice": "Выкарыстаць гэты голас",
+    "autoEnd": {
+      "title": "Галасавы пакой завершаны з-за неактыўнасці",
+      "description": "У «{{title}}» 30 хвілін ніхто не гаварыў, таму пакой закрыты."
+    }
   },
   "ads": {
     "newCampaign": "Новая кампанія",
@@ -4332,30 +4336,22 @@
     "expired": "Тэрмін дзеяння скончыўся",
     "active": "Актыўны",
     "inactive": "Неактыўны",
+    "daysLeft_one": "{{count}}d злева",
+    "daysLeft_other": "{{count}}d злева",
     "legacyPlanMigrates": "Захаванне мігруе гэты план з цэнамі ў старых токенах на цэны ў доларах па далістынгавым курсе.",
     "tokenAmount": "{{amount}} токенаў",
     "preListingTokenAmount": "Далістынгавая сума токенаў",
-    "tokensStayInTreasury": "Вашы токены DeHub застаюцца пад апекай казначэйства DeHub і не прадаюцца. Стваральнік атрымлівае баланс падпіскі ў дэнамінацыі USDT.",
     "tokenCheckoutNotReady": "Афармленне падпіскі на токены не гатова — паспрабуйце зноў праз некаторы час",
     "tokenQuoteUnavailable": "Жывая каціроўка токенаў недаступная",
     "tokenEstimate": "≈ {{amount}} токенаў",
     "tokenAmountUnavailable": "Сума токенаў недаступная",
-    "daysLeft_one": "{{count}}d злева",
-    "daysLeft_other": "{{count}}d злева",
     "subscribedToast": "Падпісвацца",
     "confirmSubscribeTo": "Падпішыцеся на {{plan}} для {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} на хуткасці папярэдняга спісу",
-    "withdraw": "Адклікаць",
-    "earningsTitle": "Даходы ад падпіскі",
-    "earningsAvailable": "Даступна",
-    "earningsPending": "У чаканні",
-    "withdrawableSoon": "Неўзабаве прыбытак ад падпіскі будзе зняты",
     "youPayNow": "Вы плаціце",
-    "usdtSent": "Адпраўлена {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Даступна для вываду на Base",
-    "earningsUsdtPending": "У USDT · чакае рэзерву казначэйства",
-    "buyersPayTokenAmount": "Пакупнікі плацяць паказаную суму токенаў DeHub па далістынгавым курсе. Вы атрымліваеце USD-эквівалент у выглядзе балансу USDT.",
-    "creditsCreator": "Крэдыты стваральніку {{amount}} USDT"
+    "paidToCreatorWallet": "Перайсці прама да кашалька стваральніка",
+    "creatorPaidDirectNote": "Доля стваральніка ідзе непасрэдна ў яго кашалёк, калі вы падпісваецеся. DeHub захоўвае невялікую плату за платформу.",
+    "creatorEarnsDirect": "Абаненты плацяць у токенах DeHub. Ваша доля прыпадае на ваш кашалёк, калі яны падпісваюцца, менш платы за платформу для вашага ўзроўню значка."
   },
   "live": {
     "chatJoined": "далучыўся",
@@ -5257,6 +5253,7 @@
     "podcast": {
       "tab": "Падкаст",
       "feedUrlLabel": "URL падкаста RSS-канала",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Атрымаць стужку навін",
       "fetching": "Пошук стужкі...",
       "showBy": "Па {{author}}",
@@ -5270,8 +5267,7 @@
       "failed": "Немагчыма",
       "emptyFeed": "У гэтай стужцы мы не знайшлі ніводнага эпізоду.",
       "badFeed": "Гэтая спасылка не падобная на стужку падкастаў.",
-      "tooMany": "Імпартаваць да 20 эпізодаў адначасова.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "Імпартаваць да 20 эпізодаў адначасова."
     }
   },
   "banned": {
@@ -5433,13 +5429,12 @@
       "images": "Малюнкі за пост",
       "uploads": "Штодзённы ліміт загрузкі",
       "storage": "Сховішча рэдактара",
-      "profiles": "Захаваныя профілі",
       "lending": "Слоты для крэдытавання значкоў",
       "voice": "Кланаванне голасу",
       "voiceFree": "Бясплатна",
       "voiceLocked": "{{tier}} і ўверх"
     },
-    "buy": "Атрымаць DHB",
+    "buyTokens": "Купіць маркеры",
     "details": "Поўны разбіўка",
     "play": "Прайграць",
     "pause": "Паўза",
@@ -6490,26 +6485,6 @@
       "tippedYou": "падказалі вам {{amount}} tokens"
     }
   },
-  "spaces": {
-    "title": "Прасторы",
-    "live": "Прамая трансляцыя",
-    "upcoming": "Надыходныя",
-    "past": "Мінулыя",
-    "create": "Стварыць прастору",
-    "join": "Далучыцца",
-    "listeners": "Слухачы",
-    "speakers": "Выступоўцы",
-    "host": "Вядучы",
-    "noSpaces": "Пакуль няма прастораў",
-    "loginDescription": "Увайдзіце, каб ствараць і далучацца да аўдыяпрастораў."
-  },
-  "blog": {
-    "title": "Блог",
-    "readMore": "Чытаць далей",
-    "backToBlog": "Вярнуцца да блога",
-    "sharePost": "Падзяліцца публікацыяй",
-    "relatedPosts": "Звязаныя публікацыі"
-  },
   "emojiPicker": {
     "tabEmoji": "Эмодзі",
     "tabGif": "GIF",
@@ -7240,5 +7215,25 @@
     "planRestricted": "Гэты карыстальнік патрабуе падпіску, каб атрымліваць паведамленні.",
     "planTypeNotAllowed": "План гэтага аўтара не дазваляе такі тып паведамлення.",
     "planMinTip": "Чаявыя для гэтага аўтара павінны быць не менш за {{amount}} DHB."
+  },
+  "spaces": {
+    "title": "Прасторы",
+    "live": "Прамая трансляцыя",
+    "upcoming": "Надыходныя",
+    "past": "Мінулыя",
+    "create": "Стварыць прастору",
+    "join": "Далучыцца",
+    "listeners": "Слухачы",
+    "speakers": "Выступоўцы",
+    "host": "Вядучы",
+    "noSpaces": "Пакуль няма прастораў",
+    "loginDescription": "Увайдзіце, каб ствараць і далучацца да аўдыяпрастораў."
+  },
+  "blog": {
+    "title": "Блог",
+    "readMore": "Чытаць далей",
+    "backToBlog": "Вярнуцца да блога",
+    "sharePost": "Падзяліцца публікацыяй",
+    "relatedPosts": "Звязаныя публікацыі"
   }
 }

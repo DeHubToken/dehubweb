@@ -3039,7 +3039,11 @@
     "sampleReady": "הדגימה מוכנה.",
     "discardRecording": "בטל הקלטה",
     "settingUpVoice": "מגדיר את הקול שלך...",
-    "useThisVoice": "השתמש בקול זה"
+    "useThisVoice": "השתמש בקול זה",
+    "autoEnd": {
+      "title": "חדר האודיו הסתיים עקב חוסר פעילות",
+      "description": "אף אחד לא דיבר ב\"{{title}}\" במשך 30 דקות, ולכן הוא נסגר."
+    }
   },
   "ads": {
     "seoTitle": "מנהל מודעות | DeHub",
@@ -4218,6 +4222,8 @@
     "subscribed": "רשום כמנוי",
     "subscribe": "הירשם",
     "subscribing": "מנויה...",
+    "subscriberCount_one": "מנוי {{count}}",
+    "subscriberCount_other": "{{count}} מנויים",
     "durationLifetime": "לכל החיים",
     "durationOneYear": "1 שנה",
     "durationMonths_one": "{{count}} חודש",
@@ -4292,27 +4298,17 @@
     "legacyPlanMigrates": "חיסכון מעביר תוכנית זו המתומחרת באסימונים ישנים לתמחור בדולרים לפי שער טרום-רישום.",
     "tokenAmount": "{{amount}} אסימונים",
     "preListingTokenAmount": "כמות אסימונים לפני רישום",
-    "tokensStayInTreasury": "אסימוני ה-DeHub שלך נשארים בחזקת אוצר ה-DeHub ואינם נמכרים. היוצר מקבל יתרת מנוי הנקובה ב-USDT.",
     "tokenCheckoutNotReady": "הצ'ק-אאוט של מנוי אסימונים אינו מוכן — אנא נסה שוב בקרוב",
     "tokenQuoteUnavailable": "ציטוט אסימון חי אינו זמין",
     "tokenEstimate": "≈ {{amount}} אסימונים",
     "tokenAmountUnavailable": "כמות אסימונים לא זמינה",
-    "subscriberCount_one": "מנוי {{count}}",
-    "subscriberCount_other": "{{count}} מנויים",
     "subscribedToast": "נרשמת כמנוי",
     "confirmSubscribeTo": "הירשמו ל - {{plan}} עבור {{price}}/{{duration}}.",
     "atPreListingRate": "{{amount}} בתעריף הרישום מראש",
-    "withdraw": "משיכה",
-    "earningsTitle": "רווחי מינוי",
-    "earningsAvailable": "זמין",
-    "earningsPending": "בהמתנה",
-    "withdrawableSoon": "בקרוב ניתן יהיה למשוך את רווחי המינוי",
     "youPayNow": "אתם משלמים",
-    "usdtSent": "נשלחו {{amount}} USDT",
-    "earningsWithdrawableOnBase": "זמין למשיכה ב-Base",
-    "earningsUsdtPending": "נקוב ב-USDT · ממתין לרזרבת האוצר",
-    "buyersPayTokenAmount": "קונים משלמים את כמות אסימוני DeHub המוצגת לפי שער טרום-רישום. אתה מקבל את ערך הדולר כיתרת USDT.",
-    "creditsCreator": "נקודות זיכוי ליוצר {{amount}} USDT"
+    "paidToCreatorWallet": "הולך ישר לארנק של היוצר",
+    "creatorPaidDirectNote": "החלק של היוצר הולך ישר לארנק שלו ברגע שאתם נרשמים. DeHub שומר עמלה קטנה על הפלטפורמה.",
+    "creatorEarnsDirect": "מנויים משלמים באסימוני DeHub. החלק שלכם מגיע לארנק ברגע שהם נרשמים, בניכוי עמלת הפלטפורמה עבור רמת התג שלכם."
   },
   "live": {
     "chatJoined": "הצטרף/ה",
@@ -5185,6 +5181,7 @@
     "podcast": {
       "tab": "פודקאסט",
       "feedUrlLabel": "כתובת אתר להזנת RSS של פודקאסט",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "עדכן את הפיד",
       "fetching": "מעדכן את הפיד...",
       "showBy": "מאת {{author}}",
@@ -5198,8 +5195,7 @@
       "failed": "נכשל",
       "emptyFeed": "לא הצלחנו למצוא פרקים בפיד הזה.",
       "badFeed": "הקישור הזה לא נראה כמו הזנת פודקאסט.",
-      "tooMany": "ייבא עד 20 פרקים בכל פעם.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ייבא עד 20 פרקים בכל פעם."
     }
   },
   "banned": {
@@ -5361,13 +5357,12 @@
       "images": "תמונות לפוסט",
       "uploads": "מגבלת העלאה יומית",
       "storage": "אחסון בעורך",
-      "profiles": "פרופילים שמורים",
       "lending": "חריצי השאלת תג",
       "voice": "שכפול קולי",
       "voiceFree": "חינם",
       "voiceLocked": "{{tier}} ומעלה"
     },
-    "buy": "לרכישת DHB",
+    "buyTokens": "קנה אסימונים",
     "details": "פירוט מלא",
     "play": "הפעלה",
     "pause": "השהיה",

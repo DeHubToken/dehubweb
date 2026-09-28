@@ -3085,7 +3085,11 @@
     "sampleReady": "Prov klart.",
     "discardRecording": "Kassera inspelning",
     "settingUpVoice": "Ställer in din röst...",
-    "useThisVoice": "Använd denna röst"
+    "useThisVoice": "Använd denna röst",
+    "autoEnd": {
+      "title": "Ljudrummet avslutades på grund av inaktivitet",
+      "description": "Ingen pratade i ”{{title}}” på 30 minuter, så det stängdes."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4435,7 +4439,6 @@
     "legacyPlanMigrates": "Sparande migrerar denna äldre token-prissatta plan till dollarprissättning till förhandslistningskursen.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Förhandslistnings-tokenbelopp",
-    "tokensStayInTreasury": "Dina DeHub-tokens förblir i DeHubs kassas förvar och säljs inte. Skaparen får ett USDT-denominerat prenumerationssaldo.",
     "tokenCheckoutNotReady": "Tokenprenumerationsutcheckningen är inte redo — försök igen snart",
     "tokenQuoteUnavailable": "Live-tokennotering otillgänglig",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -4443,17 +4446,10 @@
     "subscribedToast": "Prenumerera",
     "confirmSubscribeTo": "Prenumerera på {{plan}} för {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} till priset före annonsering",
-    "withdraw": "Ta ut",
-    "earningsTitle": "Prenumerationsintäkter",
-    "earningsAvailable": "Tillgänglig",
-    "earningsPending": "Väntande",
-    "withdrawableSoon": "Prenumerationsintäkter kommer snart att kunna tas ut",
     "youPayNow": "Du betalar",
-    "usdtSent": "{{amount}} USDT skickat",
-    "earningsWithdrawableOnBase": "Går att ta ut på Base",
-    "earningsUsdtPending": "I USDT · väntar på treasury-reserven",
-    "buyersPayTokenAmount": "Köpare betalar det visade DeHub-tokenbeloppet till förhandslistningskursen. Du får USD-värdet som ett USDT-saldo.",
-    "creditsCreator": "Krediterar kreatören {{amount}} USDT"
+    "paidToCreatorWallet": "Går direkt till kreatörens plånbok",
+    "creatorPaidDirectNote": "Kreatörens andel går direkt till hans eller hennes plånbok så fort du prenumererar. DeHub behåller en liten plattformsavgift.",
+    "creatorEarnsDirect": "Prenumeranter betalar i DeHub-tokens. Din andel hamnar i din plånbok så fort de prenumererar, minus plattformsavgiften för din märkesnivå."
   },
   "live": {
     "chatJoined": "gick med",
@@ -5540,13 +5536,12 @@
       "images": "Bilder per inlägg",
       "uploads": "Daglig uppladdningsgräns",
       "storage": "Redigeringslagring",
-      "profiles": "Sparade profiler",
       "lending": "Utlåningsplatser för emblem",
       "voice": "Röstkloning",
       "voiceFree": "Gratis",
       "voiceLocked": "{{tier}} och uppåt"
     },
-    "buy": "Skaffa DHB",
+    "buyTokens": "Köp polletter",
     "details": "Fullständig uppdelning",
     "play": "Spela",
     "pause": "Pausa",

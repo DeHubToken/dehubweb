@@ -3087,7 +3087,11 @@
     "sampleReady": "Mostra llista.",
     "discardRecording": "Descarta la gravació",
     "settingUpVoice": "Configurant la teva veu...",
-    "useThisVoice": "Utilitza aquesta veu"
+    "useThisVoice": "Utilitza aquesta veu",
+    "autoEnd": {
+      "title": "La sala d'àudio ha acabat per inactivitat",
+      "description": "Ningú no ha parlat a «{{title}}» durant 30 minuts, així que s'ha tancat."
+    }
   },
   "ads": {
     "seoTitle": "Gestor d'anuncis | DeHub",
@@ -4431,7 +4435,6 @@
     "legacyPlanMigrates": "L'estalvi migra aquest pla antic basat en testimonis a preus en dòlars a la tarifa de prellistament.",
     "tokenAmount": "{{amount}} testimonis",
     "preListingTokenAmount": "Quantitat de testimonis de prellistament",
-    "tokensStayInTreasury": "Els teus testimonis DeHub romanen sota la custòdia del tresor de DeHub i no es venen. El creador rep un saldo de subscripció denominat en USDT.",
     "tokenCheckoutNotReady": "El pagament de la subscripció de testimonis no està preparat; si us plau, torneu-ho a provar aviat.",
     "tokenQuoteUnavailable": "Cotització de testimonis en directe no disponible",
     "tokenEstimate": "≈ {{amount}} testimonis",
@@ -4439,17 +4442,10 @@
     "subscribedToast": "Subscrit",
     "confirmSubscribeTo": "Subscriu-te a {{plan}} per {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} a la tarifa prèvia a l'anunci",
-    "withdraw": "Retirar",
-    "earningsTitle": "Ingressos per subscripció",
-    "earningsAvailable": "Disponible",
-    "earningsPending": "Pendent",
-    "withdrawableSoon": "Els ingressos de la subscripció es podran retirar aviat",
     "youPayNow": "Tu pagues",
-    "usdtSent": "S'han enviat {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Disponible per retirar a Base",
-    "earningsUsdtPending": "En USDT · pendent de la reserva de tresoreria",
-    "buyersPayTokenAmount": "Els compradors paguen la quantitat de testimonis DeHub mostrada a la tarifa de prellistament. Tu reps el valor en USD com a saldo USDT.",
-    "creditsCreator": "Crèdits al creador {{amount}} USDT"
+    "paidToCreatorWallet": "Va directament a la cartera del creador",
+    "creatorPaidDirectNote": "La part del creador es dirigeix directament a la seva cartera en el moment en què et subscrius. DeHub manté una petita tarifa de plataforma.",
+    "creatorEarnsDirect": "Els subscriptors paguen amb fitxes DeHub. La teva participació arribarà a la teva cartera en el moment en què es subscriguin, menys la tarifa de la plataforma per al teu nivell d'distintiu."
   },
   "live": {
     "chatJoined": "s'ha unit",
@@ -5537,13 +5533,12 @@
       "images": "Imatges per publicació",
       "uploads": "Límit de càrrega diària",
       "storage": "Emmagatzematge de l'",
-      "profiles": "Perfils desats",
       "lending": "Ranures per al préstec d'insígnies",
       "voice": "Clonació de veu",
       "voiceFree": "Gratis",
       "voiceLocked": "{{tier}} o més"
     },
-    "buy": "Aconsegueix DHB",
+    "buyTokens": "Comprar fitxes",
     "details": "Desglossament complet",
     "play": "Jugar",
     "pause": "Pausa",

@@ -2975,7 +2975,11 @@
     "sampleReady": "নমুনা প্রস্তুত।",
     "discardRecording": "রেকর্ডিং বাতিল করুন",
     "settingUpVoice": "আপনার ভয়েস সেট আপ করা হচ্ছে...",
-    "useThisVoice": "এই ভয়েস ব্যবহার করুন"
+    "useThisVoice": "এই ভয়েস ব্যবহার করুন",
+    "autoEnd": {
+      "title": "নিষ্ক্রিয়তার কারণে অডিও রুম শেষ হয়েছে",
+      "description": "\"{{title}}\"-এ ৩০ মিনিট কেউ কথা বলেনি, তাই এটি বন্ধ করা হয়েছে।"
+    }
   },
   "ads": {
     "seoTitle": "বিজ্ঞাপন ম্যানেজার | DeHub",
@@ -4282,7 +4286,6 @@
     "legacyPlanMigrates": "সেভিং এই লিগ্যাসি টোকেন-মূল্যের প্ল্যানটিকে প্রি-লিস্টিং হারে ডলার মূল্যে স্থানান্তর করে।",
     "tokenAmount": "{{amount}} টোকেন",
     "preListingTokenAmount": "প্রি-লিস্টিং টোকেন পরিমাণ",
-    "tokensStayInTreasury": "আপনার DeHub টোকেনগুলি DeHub ট্রেজারি কাস্টোডিতে থাকে এবং বিক্রি হয় না। নির্মাতা একটি USDT-নামাঙ্কিত সাবস্ক্রিপশন ব্যালেন্স পান।",
     "tokenCheckoutNotReady": "টোকেন সাবস্ক্রিপশন চেকআউট প্রস্তুত নয় — অনুগ্রহ করে শীঘ্রই আবার চেষ্টা করুন",
     "tokenQuoteUnavailable": "লাইভ টোকেন কোট অনুপলব্ধ",
     "tokenEstimate": "≈ {{amount}} টোকেন",
@@ -4290,17 +4293,10 @@
     "subscribedToast": "সাবস্ক্রাইব করা হয়েছে",
     "confirmSubscribeTo": "{{price}}/{{duration}} -এর জন্য {{plan}} -এ সাবস্ক্রাইব করুন ।",
     "atPreListingRate": "{{amount}} প্রি-লিস্টিং হারে",
-    "withdraw": "প্রত্যাহার করুন",
-    "earningsTitle": "সাবস্ক্রিপশন উপার্জন",
-    "earningsAvailable": "উপলব্ধ",
-    "earningsPending": "মুলতুবি আছে",
-    "withdrawableSoon": "সাবস্ক্রিপশনের উপার্জন শীঘ্রই তুলে নেওয়া হবে",
     "youPayNow": "আপনি পরিশোধ করেন",
-    "usdtSent": "{{amount}} USDT পাঠানো হয়েছে",
-    "earningsWithdrawableOnBase": "Base-এ তোলার জন্য উপলব্ধ",
-    "earningsUsdtPending": "USDT-তে হিসাব · ট্রেজারি রিজার্ভের অপেক্ষায়",
-    "buyersPayTokenAmount": "ক্রেতারা প্রি-লিস্টিং হারে প্রদর্শিত DeHub টোকেন পরিমাণ প্রদান করে। আপনি USDT ব্যালেন্স হিসাবে USD মূল্য গ্রহণ করেন।",
-    "creditsCreator": "স্রষ্টাকে ক্রেডিট {{amount}} USDT"
+    "paidToCreatorWallet": "সরাসরি নির্মাতার ওয়ালেটে যায়",
+    "creatorPaidDirectNote": "আপনি সাবস্ক্রাইব করার মুহূর্তে নির্মাতার শেয়ার সরাসরি তাদের ওয়ালেটে চলে যায় । DeHub একটি ছোট প্ল্যাটফর্ম ফি রাখে ।",
+    "creatorEarnsDirect": "সাবস্ক্রাইবাররা DeHub টোকেনে পেমেন্ট করে । আপনার শেয়ারটি সাবস্ক্রাইব করার মুহূর্তে আপনার ওয়ালেটে ল্যান্ড করে, আপনার ব্যাজ স্তরের জন্য প্ল্যাটফর্ম ফি কম ।"
   },
   "live": {
     "chatJoined": "যোগ দিয়েছেন",
@@ -5196,6 +5192,7 @@
     "podcast": {
       "tab": "পডকাস্ট",
       "feedUrlLabel": "পডকাস্ট আরএসএস ফিড URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "ফিড আনুন",
       "fetching": "ফিড আনা হচ্ছে...",
       "showBy": "{{author}}-এর মাধ্যমে",
@@ -5209,8 +5206,7 @@
       "failed": "ব্যর্থ হয়েছে",
       "emptyFeed": "আমরা সেই ফিডে কোনও পর্ব খুঁজে পাইনি ।",
       "badFeed": "সেই লিঙ্কটি পডকাস্ট ফিডের মতো দেখাচ্ছে না ।",
-      "tooMany": "একবারে 20টি পর্যন্ত পর্ব ইম্পোর্ট করুন ।",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "একবারে 20টি পর্যন্ত পর্ব ইম্পোর্ট করুন ।"
     }
   },
   "banned": {
@@ -5372,13 +5368,12 @@
       "images": "প্রতি পোস্টে ছবি",
       "uploads": "দৈনিক আপলোডের সীমা",
       "storage": "এডিটর স্টোরেজ",
-      "profiles": "সেভ করা প্রোফাইল",
       "lending": "ব্যাজ লেন্ডিং স্লট",
       "voice": "ভয়েস ক্লোনিং",
       "voiceFree": "বিনামূল্যে",
       "voiceLocked": "{{tier}} এবং উপরে"
     },
-    "buy": "DHB পান",
+    "buyTokens": "টোকেন কিনুন",
     "details": "সম্পূর্ণ ব্রেকডাউন",
     "play": "খেলুন",
     "pause": "বিরতি",

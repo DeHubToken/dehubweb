@@ -3097,7 +3097,11 @@
     "sampleReady": "నమూనా సిద్ధంగా ఉంది.",
     "discardRecording": "రికార్డింగ్‌ను విస్మరించండి",
     "settingUpVoice": "మీ వాయిస్‌ను సెట్ అప్ చేస్తోంది...",
-    "useThisVoice": "ఈ వాయిస్‌ని ఉపయోగించండి"
+    "useThisVoice": "ఈ వాయిస్‌ని ఉపయోగించండి",
+    "autoEnd": {
+      "title": "నిష్క్రియత కారణంగా ఆడియో రూమ్ ముగిసింది",
+      "description": "\"{{title}}\"లో 30 నిమిషాలు ఎవరూ మాట్లాడలేదు, కాబట్టి దాన్ని మూసివేశారు."
+    }
   },
   "ads": {
     "seoTitle": "ప్రకటనల నిర్వాహకుడు | DeHub",
@@ -4350,30 +4354,22 @@
     "expired": "గడువు ముగిసిన",
     "active": "క్రియాశీల",
     "inactive": "నిష్క్రియ",
+    "daysLeft_one": "{{count}}d ఎడమ",
+    "daysLeft_other": "{{count}}d ఎడమ",
     "legacyPlanMigrates": "సేవింగ్ ప్రీ-లిస్టింగ్ రేటు వద్ద ఈ లెగసీ టోకెన్-ధర ప్లాన్‌ను డాలర్ ధరలకు మారుస్తుంది.",
     "tokenAmount": "{{amount}} టోకెన్లు",
     "preListingTokenAmount": "ప్రీ-లిస్టింగ్ టోకెన్ మొత్తం",
-    "tokensStayInTreasury": "మీ DeHub టోకెన్లు DeHub ట్రెజరీ కస్టడీలో ఉంటాయి మరియు అమ్మబడవు. సృష్టికర్త USDT-డినామినేటెడ్ సబ్‌స్క్రిప్షన్ బ్యాలెన్స్‌ను అందుకుంటారు.",
     "tokenCheckoutNotReady": "టోకెన్ సబ్‌స్క్రిప్షన్ చెక్అవుట్ సిద్ధంగా లేదు — దయచేసి కొద్దిసేపటి తర్వాత మళ్ళీ ప్రయత్నించండి",
     "tokenQuoteUnavailable": "లైవ్ టోకెన్ కోట్ అందుబాటులో లేదు",
     "tokenEstimate": "≈ {{amount}} టోకెన్లు",
     "tokenAmountUnavailable": "టోకెన్ మొత్తం అందుబాటులో లేదు",
-    "daysLeft_one": "{{count}}d ఎడమ",
-    "daysLeft_other": "{{count}}d ఎడమ",
     "subscribedToast": "సబ్ ‌ స్క్రైబ్ చేయబడింది",
-    "atPreListingRate": "{{amount}} ప్రీ-లిస్టింగ్ రేటు వద్ద",
-    "withdraw": "ఉపసంహరించుకోండి",
     "confirmSubscribeTo": "{{plan}}కు {{price}} / {{duration}}కి సభ్యత్వం పొందండి.",
-    "earningsTitle": "సబ్ ‌ స్క్రిప్షన్ ఆదాయాలు",
-    "earningsAvailable": "అందుబాటులో ఉంది",
-    "earningsPending": "పెండింగ్ ‌ లో ఉంది",
-    "withdrawableSoon": "సబ్ ‌ స్క్రిప్షన్ ఆదాయాలు త్వరలో ఉపసంహరించుకోబడతాయి",
+    "atPreListingRate": "{{amount}} ప్రీ-లిస్టింగ్ రేటు వద్ద",
     "youPayNow": "మీరు చెల్లిస్తారు",
-    "usdtSent": "{{amount}} USDT పంపబడింది",
-    "earningsWithdrawableOnBase": "Base లో ఉపసంహరించుకోవడానికి అందుబాటులో",
-    "earningsUsdtPending": "USDT లో · ట్రెజరీ నిల్వ కోసం వేచి ఉంది",
-    "buyersPayTokenAmount": "కొనుగోలుదారులు ప్రీ-లిస్టింగ్ రేటు వద్ద ప్రదర్శించబడిన DeHub టోకెన్ మొత్తాన్ని చెల్లిస్తారు. మీరు USDT బ్యాలెన్స్‌గా USD విలువను అందుకుంటారు.",
-    "creditsCreator": "సృష్టికర్తకు క్రెడిట్ {{amount}} USDT"
+    "paidToCreatorWallet": "నేరుగా సృష్టికర్త వాలెట్ ‌ కు వెళ్తుంది",
+    "creatorPaidDirectNote": "మీరు సబ్ ‌ స్క్రైబ్ చేసిన క్షణం క్రియేటర్ వాటా నేరుగా వారి వాలెట్ ‌ కు వెళుతుంది. DeHub ఒక చిన్న ప్లాట్ ‌ ఫారమ్ ఫీజును ఉంచుతుంది.",
+    "creatorEarnsDirect": "చందాదారులు DeHub టోకెన్ ‌ లలో చెల్లిస్తారు. మీ షేర్ వారు సబ్ ‌ స్క్రైబ్ చేసిన క్షణం మీ వాలెట్ ‌ లో ఉంటుంది, మీ బ్యాడ్జ్ టైర్ ‌ కు ప్లాట్ ‌ ఫారమ్ ఫీజు తక్కువగా ఉంటుంది."
   },
   "live": {
     "chatJoined": "చేరారు",
@@ -5277,6 +5273,7 @@
     "podcast": {
       "tab": "పోడ్ ‌ కాస్ట్",
       "feedUrlLabel": "పోడ్ ‌ కాస్ట్ RSS ఫీడ్ URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "ఫీడ్ ‌ ను తీసుకురండి",
       "fetching": "ఫీడ్ ‌ ను తీసుకువస్తోంది...",
       "showBy": "{{author}} ద్వారా",
@@ -5290,8 +5287,7 @@
       "failed": "విఫలమైంది",
       "emptyFeed": "మేము ఆ ఫీడ్ ‌ లో ఎటువంటి ఎపిసోడ్ ‌ లను కనుగొనలేకపోయాము.",
       "badFeed": "ఆ లింక్ పోడ్ ‌ కాస్ట్ ఫీడ్ లాగా కనిపించడం లేదు.",
-      "tooMany": "ఒకేసారి 20 ఎపిసోడ్ ‌ ల వరకు దిగుమతి చేసుకోండి.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ఒకేసారి 20 ఎపిసోడ్ ‌ ల వరకు దిగుమతి చేసుకోండి."
     }
   },
   "banned": {
@@ -5453,13 +5449,12 @@
       "images": "ప్రతి పోస్ట్ ‌ కు చిత్రాలు",
       "uploads": "రోజువారీ అప్ ‌ లోడ్ పరిమితి",
       "storage": "ఎడిటర్ స్టోరేజ్",
-      "profiles": "సేవ్ చేసిన ప్రొఫైల్ ‌ లు",
       "lending": "బ్యాడ్జ్ లెండింగ్ స్లాట్లు",
       "voice": "వాయిస్ క్లోనింగ్",
       "voiceFree": "ఉచితం",
       "voiceLocked": "{{tier}} మరియు అంతకంటే ఎక్కువ"
     },
-    "buy": "DHB పొందండి",
+    "buyTokens": "టోకెన్ ‌ లు కొనండి",
     "details": "పూర్తి విభజన",
     "play": "ప్లే చేయండి",
     "pause": "పాజ్ చేయండి",

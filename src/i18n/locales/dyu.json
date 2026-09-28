@@ -2420,7 +2420,11 @@
   },
   "stages": {
     "title": "Kan bonw",
-    "alreadyCharged": "I ka tagamasiyɛnw be yen ka ban. Aw k'a ɲini tugu — aw tɛna juru sara a siɲɛ filanan na."
+    "alreadyCharged": "I ka tagamasiyɛnw be yen ka ban. Aw k'a ɲini tugu — aw tɛna juru sara a siɲɛ filanan na.",
+    "autoEnd": {
+      "title": "Kan bon banna sabu kuma tɛ yen",
+      "description": "Mɔgɔ si ma kuma \"{{title}}\" kɔnɔ miniti 30 kɔnɔ, o de kosɔn a datugura."
+    }
   },
   "ads": {
     "priceUnavailable": "O la, i bena a ɲini ka dɔ fara i ka wari kan.",
@@ -2609,14 +2613,6 @@
     "transferGuarantee": "I bena o bɛɛ sɔrɔ — ka baara kɛ, ka baara kɛ, ka tugu i kɔ, ka ladiliw di i ka tarikiko la ani ka batɛmu ta. O kɔ, a y'a fɔ ko: \"Ne ye n ka wari bɛɛ di ne ma. O la, a ka ɲi ka to ka wari di a ma."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "O kama, a tun man nɔgɔ ka wari caaman sɔrɔ.",
-    "tokenAmount": "{{amount}} tokens",
-    "preListingTokenAmount": "O ye wari min ye, o ye wari min ye.",
-    "tokensStayInTreasury": "I ka DeHub tagamasiyɛnw be to DeHub ka nafolo marayɔrɔ la ani u tɛ feere. O la, a be se ka kɛ ko a ye wari sɔrɔ ka tɛmɛ wari hakɛ kan.",
-    "tokenCheckoutNotReady": "I ka siginiden tɔgɔtɔgɔnin tɛ labɛnna — i ka segi k'a ɲini joona",
-    "tokenQuoteUnavailable": "A ka fɔta tɛ se ka fɔ",
-    "tokenEstimate": "O jaabi ye {{amount}} tokens",
-    "tokenAmountUnavailable": "Fanga min be sɔrɔ o la, o tɛ se ka yɛlɛma",
     "subscribersOnly": "Kɛlɛbɛw kɛ",
     "creatorKeepsPost": "{{creator}} bɛ ka fɔ kɛlɛbɛw ye.",
     "creatorNoPlans": "{{creator}} n ye kɛlɛbɛ fɛ ka bɛ taa.",
@@ -2697,20 +2693,20 @@
     "inactive": "Fanga tɛ min na",
     "daysLeft_one": "{{count}}d left",
     "daysLeft_other": "{{count}}d left",
+    "legacyPlanMigrates": "O kama, a tun man nɔgɔ ka wari caaman sɔrɔ.",
+    "tokenAmount": "{{amount}} tokens",
+    "preListingTokenAmount": "O ye wari min ye, o ye wari min ye.",
+    "tokenCheckoutNotReady": "I ka siginiden tɔgɔtɔgɔnin tɛ labɛnna — i ka segi k'a ɲini joona",
+    "tokenQuoteUnavailable": "A ka fɔta tɛ se ka fɔ",
+    "tokenEstimate": "O jaabi ye {{amount}} tokens",
+    "tokenAmountUnavailable": "Fanga min be sɔrɔ o la, o tɛ se ka yɛlɛma",
     "subscribedToast": "Mɔgɔ min y'a ka sɛbɛ ci",
-    "atPreListingRate": "{{amount}} ka kɛɲɛ ni sɔngɔ ye sani a ka bila feere la",
-    "withdraw": "Ka bɔ yen",
     "confirmSubscribeTo": "Don {{plan}} la {{price}} / {{duration}} kama.",
-    "earningsTitle": "Abonman nafolo",
-    "earningsAvailable": "A bɛ yen",
-    "earningsPending": "A makɔnɔni",
-    "withdrawableSoon": "Abonman nafolo bɛna se ka bɔ sɔɔni",
+    "atPreListingRate": "{{amount}} ka kɛɲɛ ni sɔngɔ ye sani a ka bila feere la",
     "youPayNow": "I bɛ sara",
-    "usdtSent": "{{amount}} USDT cira",
-    "earningsWithdrawableOnBase": "A bɛ se ka bɔ Base kan",
-    "earningsUsdtPending": "USDT la · sɔrɔyɔrɔ marali makɔnɔni",
-    "buyersPayTokenAmount": "Sanbagaw bɛ DeHub token hakɛ min yirali don sara, ka kɛɲɛ ni sɔngɔ ye sani a ka bila feere la. I bɛ USD sɔngɔ sɔrɔ USDT jatebɔ la.",
-    "creditsCreator": "Dabaga bɛ {{amount}} USDT sɔrɔ"
+    "paidToCreatorWallet": "A bɛ taa dabaga ka wariboro la sisan",
+    "creatorPaidDirectNote": "I mana don tuma min na, dabaga ka tila bɛ taa a ka wariboro la sisan. DeHub bɛ sara fitinin dɔ mara.",
+    "creatorEarnsDirect": "Abonnew bɛ sara DeHub token na. U mana don tuma min na, i ka tila bɛ se i ka wariboro la, i ka badge hakɛ ka sara bɔlen a la."
   },
   "live": {
     "chatJoined": "donna",
@@ -3206,18 +3202,18 @@
       "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Fetch ka dumuni",
       "fetching": "O ye dumuni nafamanba ye.",
+      "showBy": "{{author}} ta",
       "episodes": "{{count}} episodes",
       "selectAll": "I ka koo bɛɛ sugandi",
       "alreadyImported": "Fɛɛn minw donna jamana wɛrɛ la",
       "ownership": "N' ye nin gafe nin tigi ye, walima n' ye sira di a tigi ma k'a bila a ka site web kan.",
+      "importSelected": "Episode {{count}} ladon",
       "importing": "Fɛɛn minw be se ka don jamana wɛrɛ la...",
       "done": "Ka to ka kuma",
       "failed": "Fanga tɛ min na",
       "emptyFeed": "An tun tɛ se ka dumuni kɛ o cogo la.",
       "badFeed": "N' ma a sɛgɛsɛgɛ k'a filɛ n'o be se ka kɛ podcast ye.",
-      "tooMany": "Aw ka se ka koo 20 kɛ ɲɔgɔn fɛ.",
-      "importSelected": "Episode {{count}} ladon",
-      "showBy": "{{author}} ta"
+      "tooMany": "Aw ka se ka koo 20 kɛ ɲɔgɔn fɛ."
     }
   },
   "banned": {
@@ -3377,13 +3373,12 @@
       "images": "Jaa kelen kelen bɛɛ kɔnɔ",
       "uploads": "Lon o lon, a ka kan ka yɛlɛ",
       "storage": "Dɔnkililabaga",
-      "profiles": "Mɔgɔ minw tun ye mɔgɔ dɔw ye, u tun be",
       "lending": "Lɛnpominɛlaw ka juruw",
       "voice": "Kloning kaan",
       "voiceFree": "See min dira mɔgɔ ma ka hɔɔrɔnya",
       "voiceLocked": "{{tier}} and up"
     },
-    "buy": "Ne ye DHB ye",
+    "buyTokens": "Ka to ka to ka to ka dumuni kɛ",
     "details": "Fɛɛn bɛɛ halakira",
     "play": "A be to ka to ka to",
     "pause": "N' ye n' ka baara dabila",

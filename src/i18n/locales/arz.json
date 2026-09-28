@@ -2501,7 +2501,11 @@
   },
   "stages": {
     "title": "الغرف الصوتية",
-    "alreadyCharged": "تم أخذ رموزك بالفعل لهذا. حاول مرة أخرى — لن يتم محاسبتك للمرة الثانية."
+    "alreadyCharged": "تم أخذ رموزك بالفعل لهذا. حاول مرة أخرى — لن يتم محاسبتك للمرة الثانية.",
+    "autoEnd": {
+      "title": "انتهت الغرفة الصوتية بسبب عدم النشاط",
+      "description": "لم يتحدث أحد في \"{{title}}\" لمدة 30 دقيقة، لذلك تم إغلاقها."
+    }
   },
   "ads": {
     "priceUnavailable": "سعر الرمز المميز غير متاح — حاول مرة أخرى بعد قليل.",
@@ -2695,14 +2699,6 @@
     "transferGuarantee": "تحصل على الحساب بالكامل — المقبض، المنشورات، المتابعون، سجل الإكراميات واستحقاقات الشارات. يحتفظ البائع بمحفظته وكل ما فيها. يتم التشغيل فقط بعد أن يقرأ DeHub دفعة التوكن الخاصة بك مرة أخرى من السلسلة؛ إذا تمت مقاطعتها، فإن إعادة محاولة الشراء تستأنفها."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "الهجرة التوفيرية لهذا الخطة المسعرة بالتوكن القديمة إلى تسعير الدولار بالسعر قبل الإدراج.",
-    "tokenAmount": "{{amount}} توكن",
-    "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
-    "tokensStayInTreasury": "تبقى توكنات DeHub الخاصة بك في عهدة خزانة DeHub ولا يتم بيعها. يتلقى المنشئ رصيد اشتراك مقوم بالدولار الأمريكي.",
-    "tokenCheckoutNotReady": "نافذة دفع اشتراك التوكن غير جاهزة - يرجى المحاولة مرة أخرى قريبًا",
-    "tokenQuoteUnavailable": "اقتباس التوكن المباشر غير متاح",
-    "tokenEstimate": "≈ {{amount}} توكن",
-    "tokenAmountUnavailable": "مبلغ التوكن غير متاح",
     "subscribersOnly": "للمشتركين فقط",
     "creatorKeepsPost": "{{creator}} يحتفظ بهذا المنشور لمشتركيه.",
     "creatorNoPlans": "{{creator}} ليس لديه اشتراك مفتوح حاليًا.",
@@ -2783,20 +2779,20 @@
     "inactive": "غير نشط",
     "daysLeft_one": "{{count}}d متبقي",
     "daysLeft_other": "{{count}}d متبقي",
+    "legacyPlanMigrates": "الهجرة التوفيرية لهذا الخطة المسعرة بالتوكن القديمة إلى تسعير الدولار بالسعر قبل الإدراج.",
+    "tokenAmount": "{{amount}} توكن",
+    "preListingTokenAmount": "مبلغ التوكن قبل الإدراج",
+    "tokenCheckoutNotReady": "نافذة دفع اشتراك التوكن غير جاهزة - يرجى المحاولة مرة أخرى قريبًا",
+    "tokenQuoteUnavailable": "اقتباس التوكن المباشر غير متاح",
+    "tokenEstimate": "≈ {{amount}} توكن",
+    "tokenAmountUnavailable": "مبلغ التوكن غير متاح",
     "subscribedToast": "مشترك",
     "confirmSubscribeTo": "اشترك في {{plan}} لـ {{price}}/{{duration}}.",
     "atPreListingRate": "{{amount}} بسعر الإعلان المسبق",
-    "withdraw": "سحب",
-    "earningsTitle": "أرباح الاشتراك",
-    "earningsAvailable": "متاح",
-    "earningsPending": "معلق",
-    "withdrawableSoon": "سيتم سحب أرباح الاشتراك قريبًا",
     "youPayNow": "أنت تدفع",
-    "usdtSent": "اتبعت {{amount}} USDT",
-    "earningsWithdrawableOnBase": "متاح للسحب على Base",
-    "earningsUsdtPending": "محسوب بالـ USDT · مستني احتياطي الخزينة",
-    "buyersPayTokenAmount": "يدفع المشترون مبلغ توكن DeHub المعروض بالسعر قبل الإدراج. تتلقى قيمة الدولار الأمريكي كرصيد USDT.",
-    "creditsCreator": "ينسب الفضل إلى المنشئ {{amount}} USDT"
+    "paidToCreatorWallet": "يذهب مباشرة إلى محفظة منشئ المحتوى",
+    "creatorPaidDirectNote": "تذهب حصة منشئ المحتوى مباشرة إلى محفظته في اللحظة التي تشترك فيها. تحتفظ DeHub برسوم منصة صغيرة.",
+    "creatorEarnsDirect": "يدفع المشتركون بعملات DeHub. تصل حصتك إلى محفظتك في اللحظة التي يشتركون فيها، مخصومًا منها رسوم المنصة لمستوى شارتك."
   },
   "live": {
     "chatJoined": "دخل",
@@ -3314,6 +3310,7 @@
     "podcast": {
       "tab": "بودكاست",
       "feedUrlLabel": "رابط موجز RSS للبودكاست",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "إحضار الخلاصة",
       "fetching": "جارٍ جلب الخلاصة...",
       "showBy": "بواسطة {{author}}",
@@ -3327,8 +3324,7 @@
       "failed": "فشل",
       "emptyFeed": "لم نتمكن من العثور على أي حلقات في تلك الخلاصة.",
       "badFeed": "لا يبدو هذا الرابط كملف بودكاست.",
-      "tooMany": "استيراد ما يصل إلى 20 حلقة في وقت واحد.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "استيراد ما يصل إلى 20 حلقة في وقت واحد."
     }
   },
   "banned": {
@@ -3490,13 +3486,12 @@
       "images": "الصور لكل منشور",
       "uploads": "حد التحميل اليومي",
       "storage": "مخزن المحرر",
-      "profiles": "الملفات التعريفية المحفوظة",
       "lending": "خانات إقراض الشارات",
       "voice": "استنساخ الصوت",
       "voiceFree": "مجاني",
       "voiceLocked": "{{tier}} وما فوق"
     },
-    "buy": "احصل على DHB",
+    "buyTokens": "شراء العملات الرمزية",
     "details": "عطل كامل",
     "play": "تشغيل",
     "pause": "إيقاف مؤقت",

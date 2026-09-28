@@ -2472,7 +2472,11 @@
   },
   "stages": {
     "title": "Ọnụ ụlọ olu",
-    "alreadyCharged": "Ewerela akara gị maka nke a. Nwaa ọzọ - agaghị akwụ gị ụgwọ ugboro abụọ."
+    "alreadyCharged": "Ewerela akara gị maka nke a. Nwaa ọzọ - agaghị akwụ gị ụgwọ ugboro abụọ.",
+    "autoEnd": {
+      "title": "Ọnụ ụlọ olu kwụsịrị n'ihi enweghị ọrụ",
+      "description": "Ọ dịghị onye kwuru okwu na \"{{title}}\" ruo nkeji 30, ya mere e mechiri ya."
+    }
   },
   "ads": {
     "priceUnavailable": "Ọnụ ahịa akara adịghị - nwaa ọzọ n'oge na-adịghị anya.",
@@ -2666,14 +2670,6 @@
     "transferGuarantee": "Ị ga-enweta akaụntụ ahụ dum — aka ahịa, posts, ndị na-eso ụzọ, akụkọ ndụ ndụ na ikike badge. Onye na-ere ere na-edobe akpa ego ya na ihe niile dị na ya. Mbufe ahụ na-agba naanị mgbe DeHub gụchara ịkwụ ụgwọ akara gị laghachi na yinye; ọ bụrụ na emebi ya, ịnwale ịzụta ọzọ na-eweghachi ya."
   },
   "subscriptions": {
-    "legacyPlanMigrates": "Nchekwa na-ebufe atụmatụ a nke tokenịị ochie na-agụta ego na dollar na ọnụahịa tupu ndepụta.",
-    "tokenAmount": "{{amount}} tokenịị",
-    "preListingTokenAmount": "Ego tokenịị tupu ndepụta",
-    "tokensStayInTreasury": "Tokenịị DeHub gị na-anọ na nchekwa DeHub ma anaghị ere ha. Onye okike na-enweta ngọzi ndebanye aha nke USDT.",
-    "tokenCheckoutNotReady": "Ebe ịzụrụ ndebanye aha tokenịị adịghị njikere — biko nwaa ọzọ n'oge na-adịghị anya",
-    "tokenQuoteUnavailable": "Akwụkwọ ọnụahịa tokenịị ndụ adịghị",
-    "tokenEstimate": "≈ {{amount}} tokenịị",
-    "tokenAmountUnavailable": "Ego tokenịị adịghị",
     "subscribersOnly": "Naanị ndị debanyere",
     "creatorKeepsPost": "{{creator}} na-echekwa post a maka ndị debanyere ha.",
     "creatorNoPlans": "{{creator}} enweghị ndebanye aha mepere ugbu a.",
@@ -2754,20 +2750,20 @@
     "inactive": "Na-arụghị ọrụ",
     "daysLeft_one": "{{count}}d ekpe",
     "daysLeft_other": "{{count}}d ekpe",
+    "legacyPlanMigrates": "Nchekwa na-ebufe atụmatụ a nke tokenịị ochie na-agụta ego na dollar na ọnụahịa tupu ndepụta.",
+    "tokenAmount": "{{amount}} tokenịị",
+    "preListingTokenAmount": "Ego tokenịị tupu ndepụta",
+    "tokenCheckoutNotReady": "Ebe ịzụrụ ndebanye aha tokenịị adịghị njikere — biko nwaa ọzọ n'oge na-adịghị anya",
+    "tokenQuoteUnavailable": "Akwụkwọ ọnụahịa tokenịị ndụ adịghị",
+    "tokenEstimate": "≈ {{amount}} tokenịị",
+    "tokenAmountUnavailable": "Ego tokenịị adịghị",
     "subscribedToast": "Debanyere",
     "confirmSubscribeTo": "Denye aha na {{plan}} maka {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} na tupu-ndepụta ọnụego",
-    "withdraw": "Wepụ",
-    "earningsTitle": "Ndenye aha ịkpata",
-    "earningsAvailable": "Enwere",
-    "earningsPending": "Na-echere",
-    "withdrawableSoon": "A ga-ewepụ ego e nwetara na ndenye aha n 'oge na-adịghị anya.",
     "youPayNow": "Ị na-akwụ ụgwọ",
-    "usdtSent": "Ezigara {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Ị nwere ike iwepụ ya na Base",
-    "earningsUsdtPending": "N'USDT · na-echere ndoputa akụ",
-    "buyersPayTokenAmount": "Ndị na-azụ ahịa na-akwụ ego tokenịị DeHub egosiri na ọnụahịa tupu ndepụta. Ị na-enweta uru USD dị ka ngọzi USDT.",
-    "creditsCreator": "Ebe e si nweta onye okike {{amount}} USDT"
+    "paidToCreatorWallet": "Na-aga ozugbo na obere akpa nke onye mmepụta",
+    "creatorPaidDirectNote": "Akụkụ onye mmepụta na-aga ozugbo na obere akpa ha mgbe ị debanyere aha. DeHub na-edebe obere ego n 'elu ikpo okwu.",
+    "creatorEarnsDirect": "Ndị debanyere aha na-akwụ ụgwọ na akara ngosi DeHub. Gị òkè ala gị obere akpa mgbe ha debanyere aha, obere n 'elu ikpo okwu ego maka gị baajị tier."
   },
   "live": {
     "chatJoined": "sonyere",
@@ -3453,13 +3449,12 @@
       "images": "Images kwa post",
       "uploads": "Daily bulite ịgba",
       "storage": "Nchekwa ndezi",
-      "profiles": "Chekwaa profaịlụ",
       "lending": "Baajị agbazinye ohere mpere",
       "voice": "Voice cloning",
       "voiceFree": "Free",
       "voiceLocked": "{{tier}} na elu"
     },
-    "buy": "Nweta DHB",
+    "buyTokens": "Ịzụta tokens",
     "details": "Full mebiri emebi",
     "play": "Gwuo",
     "pause": "Kwụsị",

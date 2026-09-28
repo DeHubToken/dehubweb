@@ -485,8 +485,6 @@
     "notifyTipsDesc": "Wanneer iemand vir jou 'n wenk in DeHub-tokens stuur",
     "messageFeeDesc": "Vereis 'n minimum wenk in DeHub-tokens om jou te boodskap",
     "tokenBalance": "Token Balans",
-    "security": "Sekuriteit",
-    "about": "Oor",
     "signIn": "Aanmelding",
     "emailSignIn": "Aanmeld-e-pos",
     "emailSignInDesc": "Koppel 'n e-posadres om sonder jou beursie aan te meld.",
@@ -513,7 +511,9 @@
     "solanaLinked": "Solana-beursie gekoppel",
     "solanaLinkFailed": "Kon nie daardie beursie koppel nie",
     "solanaUnlinked": "Solana-beursie ontkoppel",
-    "solanaUnlinkFailed": "Kon nie daardie beursie ontkoppel nie"
+    "solanaUnlinkFailed": "Kon nie daardie beursie ontkoppel nie",
+    "security": "Sekuriteit",
+    "about": "Oor"
   },
   "common": {
     "save": "Stoor",
@@ -3009,7 +3009,11 @@
     "sampleReady": "Opname gereed.",
     "discardRecording": "Gooi opname weg",
     "settingUpVoice": "Jou stem word opgestel...",
-    "useThisVoice": "Gebruik hierdie stem"
+    "useThisVoice": "Gebruik hierdie stem",
+    "autoEnd": {
+      "title": "Oudiokamer beëindig weens onaktiwiteit",
+      "description": "Niemand het vir 30 minute in \"{{title}}\" gepraat nie, dus is dit gesluit."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4332,6 +4336,7 @@
     "noneYet": "Geen intekeninge nog nie",
     "noneYetHint": "Teken in op skeppers om jou aktiwiteit hier te sien",
     "subscriptionList": "Intekeninglys",
+    "totalCount": "{{count}} total",
     "creator": "Skepper",
     "plan": "Plan",
     "planFallback": "Plan",
@@ -4344,31 +4349,22 @@
     "expired": "Verval",
     "active": "Aktief",
     "inactive": "Onaktief",
+    "daysLeft_one": "{{count}}d links",
+    "daysLeft_other": "{{count}}d links",
     "legacyPlanMigrates": "Besparing migreer hierdie ou token-gepryste plan na dollar pryse teen die voor-notering koers.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Voor-notering token bedrag",
-    "tokensStayInTreasury": "Jou DeHub tokens bly in DeHub skatkis bewaring en word nie verkoop nie. Die skepper ontvang 'n USDT-gedenomineerde intekening balans.",
     "tokenCheckoutNotReady": "Die token intekening uitklok is nie gereed nie — probeer asseblief weer binnekort",
     "tokenQuoteUnavailable": "Regstreekse token kwotasie beskikbaar",
     "tokenEstimate": "≈ {{amount}} tokens",
     "tokenAmountUnavailable": "Token bedrag beskikbaar",
-    "totalCount": "{{count}} total",
-    "daysLeft_one": "{{count}}d links",
-    "daysLeft_other": "{{count}}d links",
     "subscribedToast": "Ingeteken",
     "confirmSubscribeTo": "Teken in op {{plan}} vir {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} in die pre-listende Rate",
-    "withdraw": "Onttrek",
-    "earningsTitle": "Inskrywing verdienste",
-    "earningsAvailable": "Beskikbaar",
-    "earningsPending": "Hangende",
-    "withdrawableSoon": "Inskrywingsverdienste sal binnekort onttrekbaar wees",
     "youPayNow": "Jy betaal",
-    "usdtSent": "{{amount}} USDT gestuur",
-    "earningsWithdrawableOnBase": "Beskikbaar om op Base te onttrek",
-    "earningsUsdtPending": "In USDT · wag op tesourie-reserwe",
-    "buyersPayTokenAmount": "Kopers betaal die vertoonde DeHub token bedrag teen die voor-notering koers. Jy ontvang die USD waarde as 'n USDT balans.",
-    "creditsCreator": "Krediete die skepper {{amount}} USDT"
+    "paidToCreatorWallet": "Gaan direk na die skepper se beursie",
+    "creatorPaidDirectNote": "Die skepper se deel gaan direk na hul beursie die oomblik dat jy inteken. DeHub hou 'n klein platformfooi.",
+    "creatorEarnsDirect": "Intekenare betaal in DeHub-tokens. Jou aandeel land in jou beursie die oomblik dat hulle inteken, minder die platformfooi vir jou wapenvlak."
   },
   "live": {
     "chatJoined": "het aangesluit",
@@ -5452,13 +5448,12 @@
       "images": "Beelde per plasing",
       "uploads": "Daaglikse oplaai limiet",
       "storage": "Redigeerder stoor",
-      "profiles": "Gestoorde profiele",
       "lending": "Badge uitleen slots",
       "voice": "Stemkloning",
       "voiceFree": "Gratis",
       "voiceLocked": "{{tier}} en op"
     },
-    "buy": "Kry DHB",
+    "buyTokens": "Koop tekens",
     "details": "Volle ineenstorting",
     "play": "Speel",
     "pause": "Pouseer",
@@ -6561,40 +6556,6 @@
       "tippedYou": "getik jy {{amount}} tokens"
     }
   },
-  "footer": {
-    "company": "Maatskappy",
-    "about": "Oor",
-    "contact": "Kontak",
-    "careers": "Loopbane",
-    "community": "Gemeenskap",
-    "discord": "Discord",
-    "twitter": "Twitter",
-    "telegram": "Telegram",
-    "github": "Github",
-    "legal": "Wettig",
-    "terms": "Voorwaardes",
-    "privacy": "Privaatheid",
-    "copyright": "Kopiereg © {year} Dhobaverse. Alle regte voorbehou."
-  },
-  "roadmap": {
-    "title": "Padkaart",
-    "description": "Kyk wat kom.",
-    "upcoming": "Komende",
-    "inProgress": "Aan die gang",
-    "completed": "Voltooi"
-  },
-  "featureRequests": {
-    "title": "Versoeke",
-    "description": "Stel 'n kenmerk voor of stem vir bestaande versoeke.",
-    "submitRequest": "Dien versoek in",
-    "vote": "Stem"
-  },
-  "create": {
-    "title": "Skep",
-    "description": "Skep iets nuuts.",
-    "newProject": "Nuwe projek",
-    "newPost": "Nuwe plasing"
-  },
   "emojiPicker": {
     "tabEmoji": "Emoji",
     "tabGif": "GIF",
@@ -7325,5 +7286,39 @@
     "planRestricted": "Hierdie gebruiker vereis 'n intekening om boodskappe te ontvang.",
     "planTypeNotAllowed": "Hierdie skepper se plan laat nie hierdie soort boodskap toe nie.",
     "planMinTip": "Fooitjie moet minstens {{amount}} DHB vir hierdie skepper wees."
+  },
+  "footer": {
+    "company": "Maatskappy",
+    "about": "Oor",
+    "contact": "Kontak",
+    "careers": "Loopbane",
+    "community": "Gemeenskap",
+    "discord": "Discord",
+    "twitter": "Twitter",
+    "telegram": "Telegram",
+    "github": "Github",
+    "legal": "Wettig",
+    "terms": "Voorwaardes",
+    "privacy": "Privaatheid",
+    "copyright": "Kopiereg © {year} Dhobaverse. Alle regte voorbehou."
+  },
+  "roadmap": {
+    "title": "Padkaart",
+    "description": "Kyk wat kom.",
+    "upcoming": "Komende",
+    "inProgress": "Aan die gang",
+    "completed": "Voltooi"
+  },
+  "featureRequests": {
+    "title": "Versoeke",
+    "description": "Stel 'n kenmerk voor of stem vir bestaande versoeke.",
+    "submitRequest": "Dien versoek in",
+    "vote": "Stem"
+  },
+  "create": {
+    "title": "Skep",
+    "description": "Skep iets nuuts.",
+    "newProject": "Nuwe projek",
+    "newPost": "Nuwe plasing"
   }
 }

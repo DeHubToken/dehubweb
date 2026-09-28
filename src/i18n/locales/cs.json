@@ -3087,7 +3087,11 @@
     "sampleReady": "Vzorek připraven.",
     "discardRecording": "Zahodit nahrávku",
     "settingUpVoice": "Nastavování vašeho hlasu...",
-    "useThisVoice": "Použít tento hlas"
+    "useThisVoice": "Použít tento hlas",
+    "autoEnd": {
+      "title": "Audio místnost skončila kvůli nečinnosti",
+      "description": "V „{{title}}“ nikdo 30 minut nemluvil, proto byla uzavřena."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4436,7 +4440,6 @@
     "legacyPlanMigrates": "Uložení migruje tento starý plán oceněný v tokenech na dolarové ceny za předlistovací sazbu.",
     "tokenAmount": "{{amount}} tokenů",
     "preListingTokenAmount": "Předlistovací částka tokenů",
-    "tokensStayInTreasury": "Vaše tokeny DeHub zůstávají v úschově pokladny DeHub a neprodávají se. Tvůrce obdrží předplatné v USDT.",
     "tokenCheckoutNotReady": "Pokladna předplatného tokenů není připravena — zkuste to prosím brzy znovu",
     "tokenQuoteUnavailable": "Živá nabídka tokenů nedostupná",
     "tokenEstimate": "≈ {{amount}} tokenů",
@@ -4444,17 +4447,10 @@
     "subscribedToast": "Odebíráno",
     "confirmSubscribeTo": "Přihlaste se k odběru {{plan}} na {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} při sazbě před zveřejněním nabídky",
-    "withdraw": "Vybrat",
-    "earningsTitle": "Výdělky z předplatného",
-    "earningsAvailable": "Dostupné",
-    "earningsPending": "Nevyřízeno",
-    "withdrawableSoon": "Výdělky z předplatného budou brzy k dispozici",
     "youPayNow": "Zaplatíš",
-    "usdtSent": "Odesláno {{amount}} USDT",
-    "earningsWithdrawableOnBase": "K dispozici k výběru na Base",
-    "earningsUsdtPending": "V USDT · čeká na rezervu pokladny",
-    "buyersPayTokenAmount": "Kupující platí zobrazenou částku tokenů DeHub za předlistovací sazbu. Vy obdržíte hodnotu v USD jako zůstatek USDT.",
-    "creditsCreator": "Připíše tvůrci kredit ve výši {{amount}} USDT"
+    "paidToCreatorWallet": "Přejde přímo do peněženky tvůrce",
+    "creatorPaidDirectNote": "Podíl tvůrce jde přímo do jeho peněženky v okamžiku, kdy se přihlásíš k odběru. DeHub si ponechává malý poplatek za platformu.",
+    "creatorEarnsDirect": "Předplatitelé platí v žetonech DeHub. Váš podíl se dostane do peněženky v okamžiku, kdy se přihlásí k odběru, po odečtení poplatku za platformu pro vaši úroveň odznaku."
   },
   "live": {
     "chatJoined": "se připojil/a",
@@ -5541,13 +5537,12 @@
       "images": "Obrázky na příspěvek",
       "uploads": "Denní limit nahrávání",
       "storage": "Úložiště editoru",
-      "profiles": "Uložené profily",
       "lending": "Sloty pro půjčování odznaků",
       "voice": "Klonování hlasu",
       "voiceFree": "Zdarma",
       "voiceLocked": "{{tier}} a vyšší"
     },
-    "buy": "Získat DHB",
+    "buyTokens": "Koupit žetony",
     "details": "Úplný rozpis",
     "play": "Hrát",
     "pause": "Pozastavit",

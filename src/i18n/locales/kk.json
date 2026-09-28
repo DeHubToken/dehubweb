@@ -3131,7 +3131,11 @@
     "sampleReady": "Үлгі дайын.",
     "discardRecording": "Жазуды жою",
     "settingUpVoice": "Дауысыңызды орнатудамыз...",
-    "useThisVoice": "Бұл дауысты пайдалану"
+    "useThisVoice": "Бұл дауысты пайдалану",
+    "autoEnd": {
+      "title": "Аудио бөлме белсенділік болмағандықтан аяқталды",
+      "description": "«{{title}}» бөлмесінде 30 минут бойы ешкім сөйлемеді, сондықтан ол жабылды."
+    }
   },
   "ads": {
     "seoTitle": "Жарнамалар менеджері | DeHub",
@@ -4433,7 +4437,10 @@
     "noneYet": "Әзірге жазылымдар жоқ",
     "noneYetHint": "Қызметіңізді көру үшін жасаушыларға жазылыңыз",
     "subscriptionList": "Жазылулар тізімі",
+    "totalCount": "{{count}} Барлығы",
     "creator": "Құрушысы",
+    "plan": "Жоспар",
+    "planFallback": "Жоспар",
     "period": "Период",
     "status": "Мәртебе",
     "remaining": "%s қалды",
@@ -4448,28 +4455,17 @@
     "legacyPlanMigrates": "Сақтау осы ескі токенмен бағаланған жоспарды тізім алдындағы баға бойынша доллар бағасына көшіреді.",
     "tokenAmount": "{{amount}} токен",
     "preListingTokenAmount": "Тізім алдындағы токен сомасы",
-    "tokensStayInTreasury": "Сіздің DeHub токендеріңіз DeHub қазынасының қарамағында қалады және сатылмайды. Жасаушы USDT-мен көрсетілген жазылым балансын алады.",
     "tokenCheckoutNotReady": "Токен жазылымының төлемі дайын емес — жақын арада қайта көріңіз",
     "tokenQuoteUnavailable": "Тікелей токен бағасы жоқ",
     "tokenEstimate": "≈ {{amount}} токен",
     "tokenAmountUnavailable": "Токен сомасы жоқ",
-    "totalCount": "{{count}} Барлығы",
-    "plan": "Жоспар",
-    "planFallback": "Жоспар",
     "subscribedToast": "Жазылу",
-    "atPreListingRate": "Алдын ала тіркеу жылдамдығымен {{amount}}",
-    "withdraw": "Кері қайтару",
     "confirmSubscribeTo": "{{plan}} жоспарына {{price}} / {{duration}} үшін жазылыңыз.",
-    "earningsTitle": "Жазылымнан түсетін табыс",
-    "earningsAvailable": "Қол жетімді",
-    "earningsPending": "Күтуде",
-    "withdrawableSoon": "Жазылымнан түскен табыс көп ұзамай алынып тасталады",
+    "atPreListingRate": "Алдын ала тіркеу жылдамдығымен {{amount}}",
     "youPayNow": "Сіз төлейсіз",
-    "usdtSent": "{{amount}} USDT жіберілді",
-    "earningsWithdrawableOnBase": "Base желісінде шығаруға болады",
-    "earningsUsdtPending": "USDT-мен · қазынашылық резервін күтуде",
-    "buyersPayTokenAmount": "Сатып алушылар тізім алдындағы баға бойынша көрсетілген DeHub токен сомасын төлейді. Сіз USDT балансы ретінде USD құнын аласыз.",
-    "creditsCreator": "Жасаушыға {{amount}} USDT несие береді"
+    "paidToCreatorWallet": "Жаратушының әмиянына тікелей барады",
+    "creatorPaidDirectNote": "Жаратушының үлесі жазылу сәтінде тікелей олардың әмиянына түседі. DeHub шағын платформа ақысын сақтайды.",
+    "creatorEarnsDirect": "Жазылушылар DeHub токендерінде төлейді. Сіздің үлесіңіз олар жазылу сәтінде әмияныңызға түседі, белгішенің деңгейі үшін платформа ақысы аз."
   },
   "live": {
     "chatJoined": "қосылды",
@@ -5421,6 +5417,7 @@
     "podcast": {
       "tab": "Подкаст",
       "feedUrlLabel": "Подкаст RSS арнасының URL мекенжайы",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Ақпаратты алу",
       "fetching": "Ақпаратты алу...",
       "showBy": "{{author}} арқылы",
@@ -5434,8 +5431,7 @@
       "failed": "Сәтсіздік",
       "emptyFeed": "Бұл арнаның эпизодтарын таба алмадық.",
       "badFeed": "Бұл сілтеме подкаст арнасына ұқсамайды.",
-      "tooMany": "Бір уақытта 20 эпизодқа дейін импорттау.",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "Бір уақытта 20 эпизодқа дейін импорттау."
     }
   },
   "banned": {
@@ -5597,13 +5593,12 @@
       "images": "Бір пост бойынша кескіндер",
       "uploads": "Күнделікті жүктеу шегі",
       "storage": "Редактордың сақтау орны",
-      "profiles": "Сақталған профильдер",
       "lending": "Танымбелгіні несие беру слоттары",
       "voice": "Дауысты клондау",
       "voiceFree": "ТЕГІН",
       "voiceLocked": "{{tier}} және жоғары"
     },
-    "buy": "DHB алу",
+    "buyTokens": "Токендерді сатып алу",
     "details": "Толық бұзылу",
     "play": "Ойнату",
     "pause": "Пауза",
@@ -6653,32 +6648,6 @@
       "tippedYou": "сізге қоңырау шалды {{amount}} tokens"
     }
   },
-  "spaces": {
-    "title": "Кеңістіктер",
-    "live": "Тікелей",
-    "upcoming": "Алдағы",
-    "past": "Өткен",
-    "create": "Кеңістік жасау",
-    "join": "Қосылу",
-    "listeners": "Тыңдаушылар",
-    "speakers": "Сөйлеушілер",
-    "host": "Жүргізуші",
-    "endSpace": "Кеңістікті аяқтау",
-    "raiseHand": "Қол көтеру",
-    "lowerHand": "Қолды түсіру",
-    "mute": "Дыбысты өшіру",
-    "unmute": "Дыбысты қосу",
-    "leave": "Кеңістіктен шығу",
-    "noSpaces": "Әлі кеңістіктер жоқ",
-    "loginDescription": "Аудио кеңістіктер жасау және қосылу үшін кіріңіз."
-  },
-  "blog": {
-    "title": "Блог",
-    "readMore": "Көбірек оқу",
-    "backToBlog": "Блогқа қайту",
-    "sharePost": "Жазбаны бөлісу",
-    "relatedPosts": "Байланысты жазбалар"
-  },
   "emojiPicker": {
     "tabEmoji": "Эмодзи",
     "tabGif": "GIF",
@@ -7408,5 +7377,31 @@
     "planRestricted": "Бұл пайдаланушыға хабар алу үшін жазылым қажет.",
     "planTypeNotAllowed": "Бұл автордың жоспары мұндай хабарға рұқсат бермейді.",
     "planMinTip": "Бұл автор үшін шайпұл кемінде {{amount}} DHB болуы керек."
+  },
+  "spaces": {
+    "title": "Кеңістіктер",
+    "live": "Тікелей",
+    "upcoming": "Алдағы",
+    "past": "Өткен",
+    "create": "Кеңістік жасау",
+    "join": "Қосылу",
+    "listeners": "Тыңдаушылар",
+    "speakers": "Сөйлеушілер",
+    "host": "Жүргізуші",
+    "endSpace": "Кеңістікті аяқтау",
+    "raiseHand": "Қол көтеру",
+    "lowerHand": "Қолды түсіру",
+    "mute": "Дыбысты өшіру",
+    "unmute": "Дыбысты қосу",
+    "leave": "Кеңістіктен шығу",
+    "noSpaces": "Әлі кеңістіктер жоқ",
+    "loginDescription": "Аудио кеңістіктер жасау және қосылу үшін кіріңіз."
+  },
+  "blog": {
+    "title": "Блог",
+    "readMore": "Көбірек оқу",
+    "backToBlog": "Блогқа қайту",
+    "sharePost": "Жазбаны бөлісу",
+    "relatedPosts": "Байланысты жазбалар"
   }
 }

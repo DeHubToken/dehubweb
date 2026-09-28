@@ -485,6 +485,7 @@
     "loadingMore": "Loading more...",
     "loadMore": "Load more",
     "continue": "Tiếp tục",
+    "undo": "Hoàn tác",
     "yes": "Có",
     "no": "Không",
     "update": "Cập nhật",
@@ -498,8 +499,7 @@
     "error": "Lỗi",
     "success": "Thành công",
     "warning": "Cảnh báo",
-    "info": "Thông tin",
-    "undo": "Hoàn tác"
+    "info": "Thông tin"
   },
   "tip": {
     "title": "Gửi tiền tip",
@@ -2930,7 +2930,11 @@
     "sampleReady": "Mẫu sẵn sàng.",
     "discardRecording": "Loại bỏ bản ghi",
     "settingUpVoice": "Đang thiết lập giọng nói của bạn...",
-    "useThisVoice": "Sử dụng giọng nói này"
+    "useThisVoice": "Sử dụng giọng nói này",
+    "autoEnd": {
+      "title": "Phòng âm thanh đã kết thúc do không hoạt động",
+      "description": "Không ai nói trong \"{{title}}\" suốt 30 phút nên phòng đã bị đóng."
+    }
   },
   "ads": {
     "seoTitle": "Trình quản lý Quảng cáo | DeHub",
@@ -4266,7 +4270,6 @@
     "legacyPlanMigrates": "Lưu lại sẽ chuyển đổi kế hoạch định giá bằng token cũ này sang định giá bằng đô la theo tỷ lệ trước niêm yết.",
     "tokenAmount": "{{amount}} token",
     "preListingTokenAmount": "Số lượng token trước niêm yết",
-    "tokensStayInTreasury": "Token DeHub của bạn vẫn thuộc quyền giám sát của kho bạc DeHub và không được bán. Người tạo nhận được số dư đăng ký được định giá bằng USDT.",
     "tokenCheckoutNotReady": "Thanh toán đăng ký token chưa sẵn sàng — vui lòng thử lại sau",
     "tokenQuoteUnavailable": "Trích dẫn token trực tiếp không khả dụng",
     "tokenEstimate": "≈ {{amount}} token",
@@ -4274,17 +4277,10 @@
     "subscribedToast": "Đã đăng ký",
     "confirmSubscribeTo": "Đăng ký {{plan}} cho {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} theo giá trước khi niêm yết",
-    "withdraw": "Rút tiền",
-    "earningsTitle": "Thu nhập từ đăng ký",
-    "earningsAvailable": "Còn trống",
-    "earningsPending": "Đang chờ xử lý",
-    "withdrawableSoon": "Thu nhập từ gói đăng ký sẽ sớm được rút lại",
     "youPayNow": "Bạn thanh toán",
-    "usdtSent": "Đã gửi {{amount}} USDT",
-    "earningsWithdrawableOnBase": "Có thể rút trên Base",
-    "earningsUsdtPending": "Tính bằng USDT · đang chờ quỹ dự trữ",
-    "buyersPayTokenAmount": "Người mua thanh toán số lượng token DeHub hiển thị theo tỷ lệ trước niêm yết. Bạn nhận được giá trị USD dưới dạng số dư USDT.",
-    "creditsCreator": "Ghi có cho người sáng tạo {{amount}} USDT"
+    "paidToCreatorWallet": "Đi thẳng vào ví của người sáng tạo",
+    "creatorPaidDirectNote": "Phần của người sáng tạo sẽ được chuyển thẳng vào ví của họ ngay khi bạn đăng ký. DeHub giữ một khoản phí nền tảng nhỏ.",
+    "creatorEarnsDirect": "Người đăng ký thanh toán bằng mã thông báo DeHub. Cổ phần của bạn nằm trong ví của bạn ngay khi họ đăng ký, trừ đi phí nền tảng cho cấp độ huy hiệu của bạn."
   },
   "live": {
     "chatJoined": "đã tham gia",
@@ -5370,13 +5366,12 @@
       "images": "Hình ảnh trên mỗi bài đăng",
       "uploads": "Giới hạn tải lên hàng ngày",
       "storage": "Lưu trữ trình chỉnh sửa",
-      "profiles": "Hồ sơ đã lưu",
       "lending": "Các vị trí cho vay huy hiệu",
       "voice": "Nhân bản giọng nói",
       "voiceFree": "Miễn phí",
       "voiceLocked": "{{tier}} trở lên"
     },
-    "buy": "Nhận DHB",
+    "buyTokens": "Mua mã thông báo",
     "details": "Phân tích đầy đủ",
     "play": "Phát",
     "pause": "Tạm dừng",

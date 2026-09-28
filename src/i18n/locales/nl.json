@@ -528,6 +528,7 @@
     "loadingMore": "Meer laden...",
     "loadMore": "Meer laden",
     "continue": "Doorgaan",
+    "undo": "Ongedaan maken",
     "allRightsReserved": "Alle rechten voorbehouden",
     "noData": "Geen gegevens",
     "yes": "Ja",
@@ -724,8 +725,7 @@
     "age": "Leeftijd",
     "from": "Van",
     "to": "Naar",
-    "value": "Waarde",
-    "undo": "Ongedaan maken"
+    "value": "Waarde"
   },
   "tip": {
     "title": "Fooi versturen",
@@ -3334,7 +3334,11 @@
     "sampleReady": "Opname klaar.",
     "discardRecording": "Opname verwijderen",
     "settingUpVoice": "Je stem instellen...",
-    "useThisVoice": "Deze stem gebruiken"
+    "useThisVoice": "Deze stem gebruiken",
+    "autoEnd": {
+      "title": "Audioruimte beëindigd wegens inactiviteit",
+      "description": "Niemand sprak 30 minuten in \"{{title}}\", dus is die gesloten."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4690,7 +4694,6 @@
     "legacyPlanMigrates": "Besparen migreert dit legacy token-geprijsde plan naar dollar-prijzen tegen de pre-listing koers.",
     "tokenAmount": "{{amount}} tokens",
     "preListingTokenAmount": "Pre-listing token bedrag",
-    "tokensStayInTreasury": "Uw DeHub tokens blijven in bewaring van de DeHub treasury en worden niet verkocht. De maker ontvangt een op USDT gebaseerd abonnementsaldo.",
     "tokenCheckoutNotReady": "De token-abonnement checkout is niet klaar — probeer het binnenkort opnieuw",
     "tokenQuoteUnavailable": "Live tokenkoers niet beschikbaar",
     "tokenEstimate": "≈ {{amount}} tokens",
@@ -4698,17 +4701,10 @@
     "subscribedToast": "Geabonneerd",
     "confirmSubscribeTo": "Abonneer je op {{plan}} voor {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} tegen de pre-listing rate",
-    "withdraw": "Opnemen",
-    "earningsTitle": "Abonnementsomzet",
-    "earningsAvailable": "Beschikbaar",
-    "earningsPending": "In behandeling",
-    "withdrawableSoon": "Abonnementsinkomsten kunnen binnenkort worden ingetrokken",
     "youPayNow": "U betaalt",
-    "usdtSent": "{{amount}} USDT verzonden",
-    "earningsWithdrawableOnBase": "Beschikbaar om op te nemen via Base",
-    "earningsUsdtPending": "In USDT · wacht op treasuryreserve",
-    "buyersPayTokenAmount": "Kopers betalen het getoonde DeHub token bedrag tegen de pre-listing koers. U ontvangt de USD waarde als een USDT saldo.",
-    "creditsCreator": "Credits de maker {{amount}} USDT"
+    "paidToCreatorWallet": "Gaat rechtstreeks naar de portemonnee van de maker",
+    "creatorPaidDirectNote": "Het aandeel van de maker gaat direct naar zijn/haar portemonnee op het moment dat je je abonneert. DeHub houdt een kleine platformvergoeding in.",
+    "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "live": {
     "chatJoined": "is erbij gekomen",
@@ -5803,13 +5799,12 @@
       "images": "Afbeeldingen per post",
       "uploads": "Dagelijkse uploadlimiet",
       "storage": "Editoropslag",
-      "profiles": "Opgeslagen profielen",
       "lending": "Sleuven voor het uitlenen van bad",
       "voice": "Stem klonen",
       "voiceFree": "Gratis",
       "voiceLocked": "{{tier}} en hoger"
     },
-    "buy": "Ontvang DHB",
+    "buyTokens": "Tokens kopen",
     "details": "Volledige uitsplitsing",
     "play": "Afspelen",
     "pause": "Pauzeren",

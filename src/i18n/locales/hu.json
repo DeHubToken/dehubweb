@@ -3086,7 +3086,11 @@
     "sampleReady": "A minta kész.",
     "discardRecording": "Felvétel elvetése",
     "settingUpVoice": "A hangod beállítása folyamatban van...",
-    "useThisVoice": "Használd ezt a hangot"
+    "useThisVoice": "Használd ezt a hangot",
+    "autoEnd": {
+      "title": "A hangszoba inaktivitás miatt véget ért",
+      "description": "30 percig senki sem beszélt itt: „{{title}}”, ezért bezárult."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4434,7 +4438,6 @@
     "legacyPlanMigrates": "A mentés átmigrálja ezt a régi, token-alapú ártervezetet dollár alapú árazásra a listázás előtti árfolyamon.",
     "tokenAmount": "{{amount}} token",
     "preListingTokenAmount": "Listázás előtti token mennyiség",
-    "tokensStayInTreasury": "Az Ön DeHub tokenjei a DeHub kincstárának őrizetében maradnak, és nem kerülnek eladásra. Az alkotó USDT-denominált előfizetési egyenleget kap.",
     "tokenCheckoutNotReady": "A token előfizetési fizetési felület még nem elérhető – kérjük, próbálja meg hamarosan újra",
     "tokenQuoteUnavailable": "Az élő token jegyzés nem elérhető",
     "tokenEstimate": "≈ {{amount}} token",
@@ -4442,17 +4445,10 @@
     "subscribedToast": "Feliratkozva",
     "confirmSubscribeTo": "Iratkozz fel erre:{{plan}} erre: {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} a hirdetés előtti áron",
-    "withdraw": "Kifizetés",
-    "earningsTitle": "Előfizetésből származó bevételek",
-    "earningsAvailable": "Szabad",
-    "earningsPending": "Függőben",
-    "withdrawableSoon": "Az előfizetésből származó bevételek hamarosan kivehetők lesznek",
     "youPayNow": "Te fizetsz",
-    "usdtSent": "{{amount}} USDT elküldve",
-    "earningsWithdrawableOnBase": "Kivehető a Base-en",
-    "earningsUsdtPending": "USDT-ben · a kincstári tartalékra vár",
-    "buyersPayTokenAmount": "A vásárlók a feltüntetett DeHub token összeget fizetik a listázás előtti árfolyamon. Ön az USD értéket USDT egyenlegként kapja meg.",
-    "creditsCreator": "Jóváírja az alkotónak {{amount}} USDT összeget"
+    "paidToCreatorWallet": "Egyenesen az alkotó pénztárcájára ugrik",
+    "creatorPaidDirectNote": "Az alkotó részesedése azonnal a pénztárcájába kerül, amint feliratkozol. A DeHub egy kis platformdíjat tart fenn.",
+    "creatorEarnsDirect": "Az előfizetők DeHub tokenekben fizetnek. A részvényed az előfizetés pillanatában a pénztárcádba kerül, levonva belőle a jelvényszinted platformdíját."
   },
   "live": {
     "chatJoined": "csatlakozott",
@@ -5540,13 +5536,12 @@
       "images": "Képek bejegyzésenként",
       "uploads": "Napi feltöltési korlát",
       "storage": "Szerkesztő tárhelye",
-      "profiles": "Mentett profilok",
       "lending": "Jelvénykölcsönző bővítőhelyek",
       "voice": "Hangklónozás",
       "voiceFree": "Ingyenes",
       "voiceLocked": "{{tier}} és feljebb"
     },
-    "buy": "Kérjen DHB-t",
+    "buyTokens": "Tokenvásárlás",
     "details": "Teljes részletezés",
     "play": "Játék",
     "pause": "Szüneteltetés",

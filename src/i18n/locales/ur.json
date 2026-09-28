@@ -2957,7 +2957,11 @@
     "sampleReady": "نمونہ تیار ہے۔",
     "discardRecording": "ریکارڈنگ ختم کریں",
     "settingUpVoice": "آپ کی آواز سیٹ اپ کی جا رہی ہے...",
-    "useThisVoice": "اس آواز کو استعمال کریں"
+    "useThisVoice": "اس آواز کو استعمال کریں",
+    "autoEnd": {
+      "title": "غیر فعالیت کی وجہ سے آڈیو روم ختم ہو گیا",
+      "description": "\"{{title}}\" میں 30 منٹ تک کوئی نہیں بولا، اس لیے اسے بند کر دیا گیا۔"
+    }
   },
   "ads": {
     "adsManager": "اشتہارات منیجر",
@@ -4274,7 +4278,6 @@
     "legacyPlanMigrates": "سیونگ اس پرانے ٹوکن پرائسڈ پلان کو پری لسٹنگ ریٹ پر ڈالر پرائسنگ میں منتقل کرتی ہے۔",
     "tokenAmount": "{{amount}} ٹوکنز",
     "preListingTokenAmount": "پری لسٹنگ ٹوکن رقم",
-    "tokensStayInTreasury": "آپ کے DeHub ٹوکنز DeHub خزانے کی تحویل میں رہتے ہیں اور فروخت نہیں ہوتے۔ تخلیق کار کو USDT میں نامزد سبسکرپشن بیلنس ملتا ہے۔",
     "tokenCheckoutNotReady": "ٹوکن سبسکرپشن چیک آؤٹ تیار نہیں ہے — براہ کرم جلد دوبارہ کوشش کریں۔",
     "tokenQuoteUnavailable": "لائیو ٹوکن کوٹ دستیاب نہیں ہے",
     "tokenEstimate": "≈ {{amount}} ٹوکن",
@@ -4282,17 +4285,10 @@
     "subscribedToast": "سبسکرائب شدہ",
     "confirmSubscribeTo": "{{plan}} پر {{price}}/{{duration}} کے لیے سبسکرائب کریں ۔",
     "atPreListingRate": "پری لسٹنگ ریٹ پر {{amount}}",
-    "withdraw": "رقم نکلوائیں",
-    "earningsTitle": "سبسکرپشن کی کمائیاں",
-    "earningsAvailable": "دستیاب",
-    "earningsPending": "زیر التواء",
-    "withdrawableSoon": "سبسکرپشن کی کمائیاں جلد ہی واپس لے لی جائیں گی",
     "youPayNow": "آپ ادائیگی کرتے ہیں",
-    "usdtSent": "{{amount}} USDT بھیج دیے گئے",
-    "earningsWithdrawableOnBase": "Base پر نکالنے کے لیے دستیاب",
-    "earningsUsdtPending": "USDT میں · ٹریژری ریزرو کا انتظار",
-    "buyersPayTokenAmount": "خریدار پری لسٹنگ ریٹ پر ظاہر کردہ DeHub ٹوکن رقم ادا کرتے ہیں۔ آپ کو USDT بیلنس کے طور پر USD ویلیو ملتی ہے۔",
-    "creditsCreator": "تخلیق کار کو کریڈٹ کرتا ہے {{amount}} USDT"
+    "paidToCreatorWallet": "براہ راست تخلیق کار کے والٹ پر جاتا ہے",
+    "creatorPaidDirectNote": "جب آپ سبسکرائب کرتے ہیں تو تخلیق کار کا حصہ براہ راست ان کے والٹ میں چلا جاتا ہے ۔ ڈی ہب ایک چھوٹی پلیٹ فارم فیس رکھتا ہے ۔",
+    "creatorEarnsDirect": "سبسکرائبرز DeHub ٹوکنز میں ادائیگی کرتے ہیں ۔ جیسے ہی وہ سبسکرائب کرتے ہیں آپ کا شیئر آپ کے والٹ میں آ جاتا ہے، آپ کے بیج کے درجے کے لیے پلیٹ فارم فیس کم ہو جاتی ہے ۔"
   },
   "live": {
     "chatJoined": "شامل ہوئے",
@@ -5200,6 +5196,7 @@
     "podcast": {
       "tab": "پوڈ کاسٹ",
       "feedUrlLabel": "پوڈ کاسٹ آر ایس ایس فیڈ یو آر ایل",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "فیڈ حاصل کریں",
       "fetching": "فیڈ حاصل کی جا رہی ہے…",
       "showBy": "بذریعہ {{author}}",
@@ -5213,8 +5210,7 @@
       "failed": "ناکام",
       "emptyFeed": "ہمیں اس فیڈ میں کوئی قسط نہیں مل سکی ۔",
       "badFeed": "یہ لنک پوڈ کاسٹ فیڈ کی طرح نہیں لگتا ہے ۔",
-      "tooMany": "ایک وقت میں 20 اقساط تک درآمد کریں ۔",
-      "feedUrlPlaceholder": "https://example.com/feed.xml"
+      "tooMany": "ایک وقت میں 20 اقساط تک درآمد کریں ۔"
     }
   },
   "banned": {
@@ -5376,13 +5372,12 @@
       "images": "تصاویر فی پوسٹ",
       "uploads": "روزانہ اپ لوڈ کی حد",
       "storage": "ایڈیٹر اسٹوریج",
-      "profiles": "محفوظ کردہ پروفائلز",
       "lending": "بیج قرض دینے کے دورانیے",
       "voice": "صوتی کلوننگ",
       "voiceFree": "مفت",
       "voiceLocked": "{{tier}} اور اس سے زیادہ"
     },
-    "buy": "DHB حاصل کریں",
+    "buyTokens": "ٹوکن خریدیں",
     "details": "مکمل تفصیل",
     "play": "کھیلیں",
     "pause": "موقوف کریں",

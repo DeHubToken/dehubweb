@@ -2485,7 +2485,11 @@
   },
   "stages": {
     "title": "အသံခန်းများ",
-    "alreadyCharged": "သင့်တိုကင်များကို ဤအတွက် ရယူပြီးပါပြီ။ ထပ်မံကြိုးစားပါ — သင့်ထံ ဒုတိယအကြိမ် မယူပါ။"
+    "alreadyCharged": "သင့်တိုကင်များကို ဤအတွက် ရယူပြီးပါပြီ။ ထပ်မံကြိုးစားပါ — သင့်ထံ ဒုတိယအကြိမ် မယူပါ။",
+    "autoEnd": {
+      "title": "လှုပ်ရှားမှုမရှိသဖြင့် အသံခန်း ပြီးဆုံးသွားပါပြီ",
+      "description": "\"{{title}}\" တွင် မိနစ် 30 ကြာ မည်သူမျှ မပြောသဖြင့် ပိတ်လိုက်ပါပြီ။"
+    }
   },
   "ads": {
     "priceUnavailable": "တိုကင်စျေးနှုန်း မရရှိနိုင်ပါ — မကြာမီ ထပ်မံကြိုးစားပါ။",
@@ -2686,14 +2690,6 @@
     "loginDescription": "ပုံပြင်များကြည့်ရှုရန်နှင့် ဖန်တီးရန် ဝင်ရောက်ပါ။"
   },
   "subscriptions": {
-    "legacyPlanMigrates": "သိမ်းဆည်းခြင်းသည် ဤအမွေအနှစ် တိုကင်-စျေးနှုန်းဖြင့် အစီအစဉ်ကို ကြို-စာရင်းသွင်းနှုန်းဖြင့် ဒေါ်လာစျေးနှုန်းသို့ ပြောင်းရွှေ့ပေးပါသည်။",
-    "tokenAmount": "{{amount}} တိုကင်များ",
-    "preListingTokenAmount": "ကြို-စာရင်းသွင်း တိုကင်ပမာဏ",
-    "tokensStayInTreasury": "သင့် DeHub တိုကင်များသည် DeHub ဘဏ္ဍာတိုက်၏ ထိန်းသိမ်းမှုတွင် ရှိနေပြီး ရောင်းချမည်မဟုတ်ပါ။ ဖန်တီးသူသည် USDT-denominated subscription လက်ကျန်ငွေကို ရရှိမည်ဖြစ်သည်။",
-    "tokenCheckoutNotReady": "တိုကင် subscription checkout အဆင်သင့်မဖြစ်သေးပါ — မကြာမီ ပြန်လည်ကြိုးစားပါ။",
-    "tokenQuoteUnavailable": "Live token quote မရရှိနိုင်ပါ။",
-    "tokenEstimate": "≈ {{amount}} တိုကင်များ",
-    "tokenAmountUnavailable": "Token ပမာဏ မရရှိနိုင်ပါ။",
     "subscribersOnly": "စာရင်းသွင်းသူများအတွက်သာ",
     "creatorKeepsPost": "{{creator}} က ဤပို့စ်ကို ၎င်း၏ စာရင်းသွင်းသူများအတွက် သိမ်းဆည်းထားသည်။",
     "creatorNoPlans": "{{creator}} သည် ယခုအချိန်တွင် စာရင်းသွင်းမှု ဖွင့်လှစ်ထားခြင်း မရှိပါ။",
@@ -2774,20 +2770,20 @@
     "inactive": "မလှုပ်ရှားပါ",
     "daysLeft_one": "{{count}} ရက် ကျန်ရှိနေသည်",
     "daysLeft_other": "{{count}} ရက် ကျန်ရှိနေသည်",
+    "legacyPlanMigrates": "သိမ်းဆည်းခြင်းသည် ဤအမွေအနှစ် တိုကင်-စျေးနှုန်းဖြင့် အစီအစဉ်ကို ကြို-စာရင်းသွင်းနှုန်းဖြင့် ဒေါ်လာစျေးနှုန်းသို့ ပြောင်းရွှေ့ပေးပါသည်။",
+    "tokenAmount": "{{amount}} တိုကင်များ",
+    "preListingTokenAmount": "ကြို-စာရင်းသွင်း တိုကင်ပမာဏ",
+    "tokenCheckoutNotReady": "တိုကင် subscription checkout အဆင်သင့်မဖြစ်သေးပါ — မကြာမီ ပြန်လည်ကြိုးစားပါ။",
+    "tokenQuoteUnavailable": "Live token quote မရရှိနိုင်ပါ။",
+    "tokenEstimate": "≈ {{amount}} တိုကင်များ",
+    "tokenAmountUnavailable": "Token ပမာဏ မရရှိနိုင်ပါ။",
     "subscribedToast": "စာရင်းသွင်းထားသည်",
     "confirmSubscribeTo": "{{plan}} ကို {{price}} / {{duration}} ဖြင့် စာရင်းသွင်းပါ။",
     "atPreListingRate": "ကြိုတင်စာရင်းသွင်းနှုန်းဖြင့် {{amount}}",
-    "withdraw": "ဆုတ်ခွာပါ",
-    "earningsTitle": "စာရင်းသွင်းခြင်း ၏ ဝင်ငွေများ",
-    "earningsAvailable": "ရရှိနိုင်",
-    "earningsPending": "ဆိုင်းငံ့ထားသည်",
-    "withdrawableSoon": "စာရင်းသွင်းမှု ဝင်ငွေကို မကြာမီ ထုတ်ယူနိုင်ပါမည်",
     "youPayNow": "သင်ပေးချေသည်",
-    "usdtSent": "{{amount}} USDT ပို့ပြီး",
-    "earningsWithdrawableOnBase": "Base တွင် ထုတ်ယူနိုင်သည်",
-    "earningsUsdtPending": "USDT ဖြင့် · ဘဏ္ဍာရေး အရန်ငွေ စောင့်ဆိုင်းဆဲ",
-    "buyersPayTokenAmount": "ဝယ်သူများသည် ကြို-စာရင်းသွင်းနှုန်းဖြင့် ပြသထားသော DeHub တိုကင်ပမာဏကို ပေးဆောင်ပါသည်။ သင်သည် USDT လက်ကျန်ငွေအဖြစ် USD တန်ဖိုးကို ရရှိမည်ဖြစ်သည်။",
-    "creditsCreator": "ဖန်တီးသူအား {{amount}} USDT ခရက်ဒစ်များ"
+    "paidToCreatorWallet": "ဖန္တီးသူ ၏ ပိုက္ဆံအိတ္ထဲသို႔ တည့္တည့္ေရာက္သြားသည္",
+    "creatorPaidDirectNote": "သင်စာရင်းသွင်းသည့်အချိန်တွင် ဖန်တီးသူ ၏ မျှဝေမှုသည် ၎ င်းတို့ ၏ ပိုက်ဆံအိတ်ထဲသို့ တိုက်ရိုက်ရောက်သွားသည် ။ DeHub သည်ပလက်ဖောင်းအသေးစားအခကြေးငွေကိုသိမ်းဆည်းသည် ။",
+    "creatorEarnsDirect": "စာရင်းသွင်းသူများသည် DeHub တိုကင်ဖြင့် ပေးချေသည်။ သူတို့ စာရင်းသွင်းသည်နှင့် သင့်ဝေစုသည် သင့်ပိုက်ဆံအိတ်ထဲသို့ ရောက်လာပြီး သင့်တံဆိပ်အဆင့်အလိုက် ပလက်ဖောင်းကြေး နုတ်ယူသည်။"
   },
   "live": {
     "chatJoined": "ဝင်ရောက်လာသည်",
@@ -3282,8 +3278,11 @@
     "reviewCancel": "ပယ်ဖျက်မည်",
     "reviewConfirm": "ထည့်သွင်း",
     "podcast": {
+      "feedUrlLabel": "ပေါ့ဒ်ကာစ် RSS feed URL",
+      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "Feed ကိုရယူပါ",
       "fetching": "Feed ရယူေနပါသည္...",
+      "showBy": "{{author}} မှ",
       "episodes": "{{count}} ဇာတ်လမ်းတွဲများ",
       "selectAll": "အားလုံးကို ရွေးပါ",
       "alreadyImported": "ထည့်သွင်းပြီးပါပြီ",
@@ -3294,10 +3293,7 @@
       "failed": "မအောင်မြင်ပါ",
       "emptyFeed": "အဲဒီအစားအစာထဲမှာ ဘယ်ဇာတ်ဝင်ခန်းကိုမှ ငါတို့ ရှာမတွေ့ခဲ့ဘူး ။",
       "badFeed": "ဒီလင့်ခ်က podcast feed နဲ့မတူဘူး ။",
-      "tooMany": "တစ်ကြိမ်လျှင် Episode 20 အထိ တင်သွင်းပါ ။",
-      "feedUrlLabel": "ပေါ့ဒ်ကာစ် RSS feed URL",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
-      "showBy": "{{author}} မှ"
+      "tooMany": "တစ်ကြိမ်လျှင် Episode 20 အထိ တင်သွင်းပါ ။"
     }
   },
   "banned": {
@@ -3459,13 +3455,12 @@
       "images": "ပို့စ်တစ်ခုလျှင် ရုပ်ပုံများ",
       "uploads": "နေ့စဉ် အပ်လုဒ်ကန့်သတ်ချက်",
       "storage": "အယ်ဒီတာသိုလှောင်မှု",
-      "profiles": "သိမ်းဆည်းထားသော ပရိုဖိုင်များ",
       "lending": "တံဆိပ်ချေးငွေ slots",
       "voice": "အသံကလုန်းလုပ်ခြင်း",
       "voiceFree": "အခမဲ့",
       "voiceLocked": "{{tier}} နှင့်အထက်"
     },
-    "buy": "DHB ရယူပါ",
+    "buyTokens": "တိုကင်များကိုဝယ်ပါ",
     "details": "ပြတ်တောက်မှုအပြည့်အစုံ",
     "play": "ကစားပါ",
     "pause": "ခေတ္တရပ်နားပါ",
@@ -4512,26 +4507,6 @@
       "tippedYou": "{{amount}} တိုကင် ပေးလိုက်ပါပြီ။"
     }
   },
-  "spaces": {
-    "title": "အခန်းများ",
-    "live": "တိုက်ရိုက်",
-    "upcoming": "လာမည့်",
-    "past": "ပြီးခဲ့သော",
-    "create": "အခန်းဖန်တီးရန်",
-    "join": "ပါဝင်ရန်",
-    "listeners": "နားထောင်သူများ",
-    "speakers": "ပြောဆိုသူများ",
-    "host": "အိမ်ရှင်",
-    "noSpaces": "အခန်းများ မရှိသေးပါ",
-    "loginDescription": "အသံအခန်းများ ဖန်တီးရန်နှင့် ပါဝင်ရန် ဝင်ရောက်ပါ။"
-  },
-  "blog": {
-    "title": "ဘလော့ဂ်",
-    "readMore": "နောက်ထပ်ဖတ်ရန်",
-    "backToBlog": "ဘလော့ဂ်သို့ပြန်ရန်",
-    "sharePost": "ပို့စ်မျှဝေရန်",
-    "relatedPosts": "ဆက်စပ်ပို့စ်များ"
-  },
   "emojiPicker": {
     "tabEmoji": "အီမိုဂျီ",
     "tabGif": "GIF",
@@ -5253,5 +5228,25 @@
     "planRestricted": "ဤအသုံးပြုသူသည် မက်ဆေ့ချ်လက်ခံရန် စာရင်းသွင်းမှု လိုအပ်သည်။",
     "planTypeNotAllowed": "ဤဖန်တီးသူ၏ အစီအစဉ်သည် ဤမက်ဆေ့ချ်အမျိုးအစားကို ခွင့်မပြုပါ။",
     "planMinTip": "ဤဖန်တီးသူအတွက် tip သည် အနည်းဆုံး {{amount}} DHB ဖြစ်ရမည်။"
+  },
+  "spaces": {
+    "title": "အခန်းများ",
+    "live": "တိုက်ရိုက်",
+    "upcoming": "လာမည့်",
+    "past": "ပြီးခဲ့သော",
+    "create": "အခန်းဖန်တီးရန်",
+    "join": "ပါဝင်ရန်",
+    "listeners": "နားထောင်သူများ",
+    "speakers": "ပြောဆိုသူများ",
+    "host": "အိမ်ရှင်",
+    "noSpaces": "အခန်းများ မရှိသေးပါ",
+    "loginDescription": "အသံအခန်းများ ဖန်တီးရန်နှင့် ပါဝင်ရန် ဝင်ရောက်ပါ။"
+  },
+  "blog": {
+    "title": "ဘလော့ဂ်",
+    "readMore": "နောက်ထပ်ဖတ်ရန်",
+    "backToBlog": "ဘလော့ဂ်သို့ပြန်ရန်",
+    "sharePost": "ပို့စ်မျှဝေရန်",
+    "relatedPosts": "ဆက်စပ်ပို့စ်များ"
   }
 }

@@ -3088,7 +3088,11 @@
     "sampleReady": "Näyte valmis.",
     "discardRecording": "Hylkää nauhoitus",
     "settingUpVoice": "Äänesi asettaminen käynnissä...",
-    "useThisVoice": "Käytä tätä ääntä"
+    "useThisVoice": "Käytä tätä ääntä",
+    "autoEnd": {
+      "title": "Äänihuone päättyi toimettomuuden vuoksi",
+      "description": "Kukaan ei puhunut huoneessa ”{{title}}” 30 minuuttiin, joten se suljettiin."
+    }
   },
   "ads": {
     "seoTitle": "Ads Manager | DeHub",
@@ -4432,7 +4436,6 @@
     "legacyPlanMigrates": "Tallennus siirtää tämän vanhan token-hinnoitellun suunnitelman dollarimääräiseen hinnoitteluun listautumista edeltävällä kurssilla.",
     "tokenAmount": "{{amount}} tokenia",
     "preListingTokenAmount": "Listautumista edeltävä token-määrä",
-    "tokensStayInTreasury": "DeHub-tokenisi pysyvät DeHub-rahaston hallussa eivätkä ole myynnissä. Luoja saa USDT-nimellisen tilaussaldon.",
     "tokenCheckoutNotReady": "Token-tilausmaksu ei ole valmis — yritä uudelleen pian",
     "tokenQuoteUnavailable": "Live-token-tarjous saatavilla",
     "tokenEstimate": "≈ {{amount}} tokenia",
@@ -4440,17 +4443,10 @@
     "subscribedToast": "Tilattu",
     "confirmSubscribeTo": "Tilaa {{plan}} hintaan {{price}} / {{duration}}.",
     "atPreListingRate": "{{amount}} ennakkoilmoituksen hinnalla",
-    "withdraw": "Nosta",
-    "earningsTitle": "Tilausansiot",
-    "earningsAvailable": "Varattavissa",
-    "earningsPending": "Avoin",
-    "withdrawableSoon": "Tilaustulot ovat pian nostettavissa",
     "youPayNow": "Sinä maksat",
-    "usdtSent": "{{amount}} USDT lähetetty",
-    "earningsWithdrawableOnBase": "Nostettavissa Basessa",
-    "earningsUsdtPending": "USDT-määräinen · odottaa rahaston reserviä",
-    "buyersPayTokenAmount": "Ostajat maksavat näytetyn DeHub-token-määrän listautumista edeltävällä kurssilla. Saat USD-arvon USDT-saldona.",
-    "creditsCreator": "Krediitit tekijälle {{amount}} USDT"
+    "paidToCreatorWallet": "Siirtyy suoraan tekijän lompakkoon",
+    "creatorPaidDirectNote": "Tekijän osuus menee suoraan hänen lompakkoonsa heti, kun tilaat. DeHubilla on pieni palvelumaksu.",
+    "creatorEarnsDirect": "Tilaajat maksavat DeHub-poletteina. Osuutesi siirtyy lompakkoosi heti, kun he tilaavat sen, vähennettynä erikoismerkkitasostasi perittävällä alustamaksulla."
   },
   "live": {
     "chatJoined": "liittyi",
@@ -5538,13 +5534,12 @@
       "images": "Kuvia julkaisua kohti",
       "uploads": "Päivittäinen latausraja",
       "storage": "Muokkaimen tallennustila",
-      "profiles": "Tallennetut profiilit",
       "lending": "Merkkien lainausajat",
       "voice": "Äänen kloonaus",
       "voiceFree": "Ilmainen",
       "voiceLocked": "{{tier}} ja ylös"
     },
-    "buy": "Hanki DHB",
+    "buyTokens": "Osta poletteja",
     "details": "Täydellinen erittely",
     "play": "Toista",
     "pause": "Keskeytä",
