@@ -1416,6 +1416,39 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
     0 12px 24px -20px rgb(0 0 0 / 0.45);
 }
 
+/* Hacker — the same glass, dressed as a terminal (matches the app's skin):
+   green-black smoke, a rain-green ring and top edge instead of white, square
+   corners, and green on whatever is selected. */
+html[data-theme="hacker"] {
+  --glass-tint: 0 8 3;
+  --glass-thin: 0.72;
+  --glass-regular: 0.80;
+  --glass-raised: 0.86;
+  --glass-highlight: linear-gradient(160deg, rgb(57 255 136 / 0.05) 0%, rgb(57 255 136 / 0) 45%);
+  --glass-edge:
+    inset 0 0 0 1px rgb(57 255 136 / 0.30),
+    inset 0 1.5px 0 rgb(57 255 136 / 0.22),
+    0 8px 32px rgb(0 0 0 / 0.45);
+  --glass-edge-flat:
+    inset 0 0 0 1px rgb(57 255 136 / 0.30),
+    inset 0 1.5px 0 rgb(57 255 136 / 0.22);
+  --glass-edge-panel:
+    inset 0 0 0 1px rgb(57 255 136 / 0.30),
+    inset 0 1.5px 0 rgb(57 255 136 / 0.22),
+    0 12px 24px -20px rgb(0 0 0 / 0.6);
+}
+html[data-theme="hacker"] :is([data-feed-item], [data-side-panel], [data-page-bento], [data-feed-nav], [data-bottom-nav] > nav, [data-search-bento], [data-theme-option]) {
+  border-radius: 0 !important;
+}
+html[data-theme="hacker"] :is([role="tab"][aria-selected="true"], [data-state="active"][role="tab"]),
+html[data-theme="hacker"] :is([role="tab"][aria-selected="true"], [data-state="active"][role="tab"]) svg {
+  color: rgb(57 255 136) !important;
+}
+html[data-theme="hacker"] ::selection {
+  background: rgb(57 255 136 / 0.35);
+  color: #fff;
+}
+
 /* Post bentos — thin glass. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-feed-item] {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-thin)) !important;
