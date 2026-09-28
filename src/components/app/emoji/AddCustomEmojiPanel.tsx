@@ -149,21 +149,21 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
     }
   };
 
-  const input = 'w-full h-8 px-2 rounded-md bg-white/5 border border-white/10 text-xs text-white placeholder:text-zinc-500 outline-none focus:border-white/30';
+  const input = 'w-full min-w-0 h-8 px-2 rounded-md bg-white/5 border border-white/10 text-xs text-white placeholder:text-zinc-500 outline-none focus:border-white/30';
 
   return (
-    <div className="flex flex-col gap-2 p-1 text-xs text-zinc-300">
+    <div className="flex flex-col gap-2 min-w-0 px-3 py-2 text-xs text-zinc-300 break-words">
       <div className="flex items-center gap-2">
         <button type="button" onClick={onDone} aria-label={t('emojiPicker.back')} className="p-1 rounded hover:bg-white/10">
           <ArrowLeft className="w-4 h-4" />
         </button>
-        <div className="flex rounded-md bg-white/5 p-0.5">
+        <div className="flex min-w-0 flex-1 rounded-md bg-white/5 p-0.5">
           {(['single', 'pack'] as const).map((m) => (
             <button
               key={m}
               type="button"
               onClick={() => setMode(m)}
-              className={cn('px-2.5 py-1 rounded text-[11px]', mode === m ? 'bg-white/15 text-white' : 'text-zinc-400')}
+              className={cn('flex-1 min-w-0 truncate px-2 py-1 rounded text-[11px]', mode === m ? 'bg-white/15 text-white' : 'text-zinc-400')}
             >
               {t(m === 'single' ? 'emojiPicker.modeSingle' : 'emojiPicker.modePack')}
             </button>
@@ -190,11 +190,11 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
                 </button>
               )}
             </div>
-            <div className="flex-1 flex flex-col gap-1.5">
+            <div className="flex-1 min-w-0 flex flex-col gap-1.5">
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
-                className="h-8 rounded-md border border-white/10 bg-white/5 hover:bg-white/10 text-[11px]"
+                className="h-8 px-2 truncate rounded-md border border-white/10 bg-white/5 hover:bg-white/10 text-[11px]"
               >
                 {t('emojiPicker.upload')}
               </button>
