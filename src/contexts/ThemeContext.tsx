@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from 'react';
 import { loadThemeCss } from '@/lib/theme-css';
 import { badgeLightArtworkCss } from '@/lib/badge-light-artwork';
 import { THEME_COLOR } from '@/lib/theme-color';
@@ -224,7 +224,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     pushDimStrength(clamped);
   }, [pushDimStrength]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // Commit the chrome before painting consumers of the new theme.
     // War / Osaka / Jungle chrome is a separate CSS chunk (src/lib/theme-css.ts):
     // fetch it before stamping data-theme, or the switch paints the default
     // chrome for a beat. The token guards against a slow fetch landing after a
@@ -273,7 +274,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 export function ThemePreviewProvider({ children, initialTheme = 'system' }: { children: ReactNode; initialTheme?: string }) {
   const [theme, setTheme] = useState(initialTheme);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let cancelled = false;
     const pending = loadThemeCss(theme);
     const apply = () => {
