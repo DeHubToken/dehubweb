@@ -1,14 +1,18 @@
 import React, { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { isHomePath } from '@/lib/home-path';
-import { PenSquare, LogIn, LogOut, Search, X, CornerDownLeft } from 'lucide-react';
+import { PenSquare, LogIn, LogOut, Search, X, CornerDownLeft, Gem } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { MobileHeader } from './navigation/MobileHeader';
 import { DesktopSidebar } from './navigation/DesktopSidebar';
-import { SidebarNavItem } from './navigation/SidebarNavItem';
+import { MobileMenuGrid } from './navigation/MobileMenuGrid';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { buildAvatarUrl } from '@/lib/media-url';
+import { useSelfBadge } from '@/hooks/use-self-badge-balance';
+import { useUnreadNotificationCount } from '@/hooks/use-notifications';
+import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { filterNavItems, exploreSearchHref } from './navigation/nav-search';
 import { useSearchHistory } from '@/hooks/use-search-history';
@@ -26,7 +30,6 @@ const PostModal = React.lazy(() =>
   import('@/features/post/PostModal').then(m => ({ default: m.PostModal }))
 );
 import { useAuth } from '@/contexts/AuthContext';
-import { openStageModal } from '@/contexts/StageContext';
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -37,7 +40,12 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   const closeMenu = useCallback(() => onOpenChange(false), [onOpenChange]);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, disconnect } = useAuth();
+  const { isAuthenticated, disconnect, user } = useAuth();
+  // Read-only: SelfBadgeSync and the header already own these fetches.
+  const gemBalance = useSelfBadge().balance ?? 0;
+  const { data: unreadCount } = useUnreadNotificationCount();
+  const { data: customUnread } = useCustomUnreadCount();
+  const notificationCount = (unreadCount?.total ?? 0) + (customUnread ?? 0);
   const isDesktop = useIsDesktopViewport();
 
   const { t } = useTranslation();
@@ -88,6 +96,33 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
         </div>
       )}
 
+      {/* Who is signed in, and what they hold. The chip opens the wallet. */}
+      {isAuthenticated && user && (
+        <div className="mb-3 flex items-center gap-3 px-1">
+          <Avatar className="h-11 w-11 flex-shrink-0 rounded-xl">
+            {user.avatarImageUrl && user.address && (
+              <AvatarImage src={buildAvatarUrl(user.address, user.avatarImageUrl)} alt="" className="object-cover rounded-xl" />
+            )}
+            <AvatarFallback className="rounded-xl bg-zinc-700 text-white text-sm font-medium">
+              {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[15px] font-semibold text-white">{user.displayName || user.username}</p>
+            {user.username && <p className="truncate text-[13px] text-zinc-400">@{user.username}</p>}
+          </div>
+          <button
+            type="button"
+            onClick={() => { closeMenu(); navigate('/app/wallet'); }}
+            aria-label={t('nav.wallet')}
+            className="flex h-9 flex-shrink-0 items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.06] px-3 text-[13px] font-semibold text-white tabular-nums"
+          >
+            <Gem className="h-4 w-4" />
+            {Math.floor(gemBalance).toLocaleString()}
+          </button>
+        </div>
+      )}
+
       {/* Menu search — filters the list below. Content search is one row away
           via the hand-off at the bottom, which runs whatever is typed on
           Explore rather than leaving the field as a dead end. */}
@@ -103,7 +138,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
           }}
           placeholder={t('sidebar.searchMenu')}
           aria-label={t('sidebar.searchMenu')}
-          className="w-full h-10 pl-10 pr-9 rounded-xl bg-white/5 border border-white/10 text-[15px] text-white placeholder:text-zinc-500 outline-none focus:border-white/30 transition-colors"
+          className="w-full h-[42px] pl-10 pr-9 rounded-xl bg-white/5 border border-white/10 text-[15px] text-white placeholder:text-zinc-500 outline-none focus:border-white/30 transition-colors"
         />
         {menuQuery && (
           <button
@@ -117,28 +152,14 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
         )}
       </div>
 
-      {/* Navigation Items */}
-      <nav className="space-y-1">
-        {visibleNavItems.map((item) => {
-          const isActive =
-            item.path === '/app'
-              ? isHomePath(location.pathname)
-              : !item.external && !item.action && location.pathname.startsWith(item.path);
-
-          return (
-            <SidebarNavItem
-              key={item.label}
-              item={item}
-              isActive={isActive}
-              isHome={item.path === '/app'}
-              currentPath={location.pathname}
-              onNavigate={closeMenu}
-              onClick={item.action === 'open-stages' ? () => openStageModal() : undefined}
-              variant="mobile"
-            />
-          );
-        })}
-      </nav>
+      {/* Navigation tiles */}
+      <MobileMenuGrid
+        items={visibleNavItems}
+        searching={!!menuQuery.trim()}
+        currentPath={location.pathname}
+        notificationCount={notificationCount}
+        onNavigate={closeMenu}
+      />
 
       {menuQuery && (
         <>
