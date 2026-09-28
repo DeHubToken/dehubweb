@@ -46,7 +46,8 @@ export function MoreReactionsButton({ onPick, reactions, viewerAddress, classNam
           <Plus className="w-4 h-4" />
         </button>
       </PopoverTrigger>
-      <PopoverContent side="top" align="end" className="w-[22rem] max-w-[calc(100vw-1rem)] p-0 overflow-hidden">
+      <PopoverContent side="top" align="end" collisionPadding={8}
+        className="w-[calc(100vw-1rem)] sm:w-[22rem] p-0 overflow-hidden">
         <EmojiPanel
           selected={mine}
           onSelect={(emoji, { keepOpen }) => {
