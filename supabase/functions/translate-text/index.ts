@@ -220,7 +220,6 @@ const langCodeMap: Record<string, string> = {
   'fa': 'fa',
   'arz': 'ar',  // Egyptian Arabic → standard Arabic for MyMemory
   'ary': 'ar',  // Moroccan Arabic → standard Arabic for MyMemory
-  'pcm': 'en',  // Nigerian Pidgin → English for MyMemory (AI fallback handles properly)
   'ha': 'ha',
   'yo': 'yo',
   'ig': 'ig',
@@ -323,6 +322,8 @@ async function translateWithMyMemory(
   targetLang: string,
   sourceLang: string = 'auto'
 ): Promise<TranslateResponse | null> {
+  // MyMemory has no Nigerian Pidgin; let the AI path handle it.
+  if (targetLang === 'pcm') return null;
   try {
     console.log('Attempting translation with MyMemory API');
     
