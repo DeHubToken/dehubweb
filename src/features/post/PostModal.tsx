@@ -354,9 +354,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onCreatePlan={() => setPlanDrawerOpen(true)}
       />}
 
-      {!articleMode && !state.liveMode && <CrossPostPicker onNavigateAway={handleClose} />}
-
       <PostActionBar
+        extraTool={!articleMode && !state.liveMode ? <CrossPostPicker onNavigateAway={handleClose} /> : undefined}
         imageInputRef={refs.imageInputRef}
         videoInputRef={refs.videoInputRef}
         audioInputRef={refs.audioInputRef}
