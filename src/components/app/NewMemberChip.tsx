@@ -41,6 +41,7 @@ export function NewMemberChip({ address, lookupId, className }: NewMemberChipPro
 
   return (
     <span
+      data-new-member-chip
       title={`Joined ${joinedAgoLabel(joinedAt)} — say hello`}
       className={cn(
         'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md',
