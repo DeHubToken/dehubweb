@@ -18,7 +18,19 @@
           { "/": "/cinema", "comment": "Cinema search" },
           { "/": "/cinema/*", "comment": "One film or series" },
           { "/": "/creator/flow", "comment": "Your Creator Flows" },
-          { "/": "/creator/flow/*", "comment": "One shared Creator Flow" }
+          { "/": "/creator/flow/*", "comment": "One shared Creator Flow" },
+          { "/": "/builder", "comment": "App builder" },
+          { "/": "/builder/*", "comment": "One shared app preview" },
+          { "/": "/launchpad", "comment": "Launchpad" },
+          { "/": "/launchpad/*", "comment": "One coin, or create a coin" },
+          { "/": "/bridge", "comment": "Bridge" },
+          { "/": "/depin", "comment": "DePin network" },
+          { "/": "/agents", "comment": "AI agents" },
+          { "/": "/arcade/kings-gambit/online", "comment": "King's Gambit online lobby" },
+          { "/": "/connect", "comment": "Connect AI" },
+          { "/": "/connect/*", "comment": "One assistant guide" },
+          { "/": "/premium", "comment": "Premium" },
+          { "/": "/pricing", "comment": "AI plans" }
         ]
       }
     ]
