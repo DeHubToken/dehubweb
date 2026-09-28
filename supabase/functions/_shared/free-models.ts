@@ -20,6 +20,8 @@ interface FreeProvider {
   trains?: boolean;
   /** Reasoning model: its hidden reasoning spends the same token budget. */
   reasons?: boolean;
+  /** Too small for tool use: only plain text jobs (translation, summaries). */
+  textOnly?: boolean;
 }
 
 const env = (k: string) => Deno.env.get(k) || undefined;
@@ -71,6 +73,9 @@ const PROVIDERS: FreeProvider[] = [
     },
     key: () => env('CLOUDFLARE_AI_TOKEN') ?? env('cloudflare_apitoken'),
     model: '@cf/meta/llama-3.1-8b-instruct-fp8',
+    // With the assistant's tool catalog it prints tool calls as prose and
+    // garbles figures read back from them; it stays on plain text jobs.
+    textOnly: true,
   },
 ];
 
@@ -88,6 +93,13 @@ function park(name: string, ms: number) {
 function retryAfterMs(res: Response, fallback: number): number {
   const s = Number(res.headers.get('retry-after'));
   return Number.isFinite(s) && s > 0 ? Math.min(s * 1000, 60 * 60 * 1000) : fallback;
+}
+
+/** A tool-calling request, or a later round of one. */
+function usesTools(body: Record<string, unknown>): boolean {
+  if (body.tools || body.tool_choice) return true;
+  const messages = Array.isArray(body.messages) ? body.messages : [];
+  return messages.some((m: { role?: string; tool_calls?: unknown }) => m?.role === 'tool' || !!m?.tool_calls);
 }
 
 /** Text-only requests: none of these tiers is given images or video. */
@@ -183,6 +195,7 @@ export async function tryFree(
     const url = p.url();
     if (!key || !url) continue;
     if (p.trains && !opts.publicContent) continue;
+    if (p.textOnly && usesTools(body)) continue;
     if (Date.now() < (parkedUntil.get(p.name) ?? 0)) continue;
 
     try {
