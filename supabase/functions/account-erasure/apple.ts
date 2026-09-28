@@ -1,4 +1,5 @@
 import { createRemoteJWKSet, importPKCS8, jwtVerify, SignJWT } from 'https://esm.sh/jose@6.1.0';
+import { normalizeApplePrivateKey } from './private-key.ts';
 
 const keys = createRemoteJWKSet(new URL('https://appleid.apple.com/auth/keys'));
 
@@ -11,7 +12,7 @@ export async function revokeAppleAuthorization(user: any, code?: string, refresh
   const pem = Deno.env.get('APPLE_PRIVATE_KEY');
   if (!team || !keyId || !pem) throw new Error('Apple account deletion is not configured');
   const clientId = code ? 'io.dehub.mobile' : 'io.dehub.mobile.signin';
-  const key = await importPKCS8(pem.replace(/\\n/g, '\n'), 'ES256');
+  const key = await importPKCS8(normalizeApplePrivateKey(pem), 'ES256');
   const secret = await new SignJWT({}).setProtectedHeader({ alg: 'ES256', kid: keyId })
     .setIssuer(team).setSubject(clientId).setAudience('https://appleid.apple.com')
     .setIssuedAt().setExpirationTime('5m').sign(key);
