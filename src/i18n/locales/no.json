@@ -512,7 +512,8 @@
     "close": "Lukk",
     "loadingMore": "Laster mer...",
     "loadMore": "Last mer",
-    "continue": "Fortsett"
+    "continue": "Fortsett",
+    "undo": "Angre"
   },
   "tip": {
     "title": "Send tips",
@@ -1301,7 +1302,8 @@
     "feeNotEnough": "Ikke nok tokens (trenger {{amount}})",
     "feeWarningTitle": "Meldinger koster tokens",
     "customTipMin": "Egendefinert tips (min. {{amount}} tokens)",
-    "checkingTokenBalance": "Sjekker token-saldoen din..."
+    "checkingTokenBalance": "Sjekker token-saldoen din...",
+    "deleteConversationFailed": "Kunne ikke slette samtalen"
   },
   "music": {
     "all": "Alle",
@@ -4459,7 +4461,19 @@
   "builder": {
     "stakeForAllowance": "Sett inn DeHub-tokens for å øke den daglige byggekvoten din",
     "buildInChat": "Bygg i direktemeldingene dine med @assistant",
-    "signInRequired": "Logg inn for å bruke Builder."
+    "landerTitle": "Bygg en app bare ved å spørre",
+    "landerSubtitle": "Fortell @assistent hva du vil ha i meldingene dine. Den bygger appen, er vert for den og sender deg en lenke som alle kan åpne. Svar for å endre noe.",
+    "promptPlaceholder": "Beskriv appen du ønsker …",
+    "sendToAssistant": "Send til @assistent",
+    "example1": "En pomodoro-timer med en daglig strek",
+    "example2": "En tipskalkulator som deler regningen",
+    "example3": "En quiz om favorittfilmene mine",
+    "step1Title": "Beskriv det",
+    "step1Body": "Si hva appen skal gjøre, med dine egne ord.",
+    "step2Title": "Det bygger seg opp på omtrent et minutt",
+    "step2Body": "@assistant skriver og er vert for appen, og sender deretter lenken til meldingene dine.",
+    "step3Title": "Del det eller endre det",
+    "step3Body": "Hvem som helst kan åpne lenken. Svar i chatten for å endre noe."
   },
   "connect": {
     "chatgptFaqAccount": "Det kreves ingen konto for å lese offentlig innhold gjennom koblingen. En DeHub-konto er bare nødvendig hvis du vil legge ut, gi tips eller oppbevare DeHub-tokens.",

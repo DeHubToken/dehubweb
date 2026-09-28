@@ -527,7 +527,8 @@
     "close": "Chiudi",
     "loadingMore": "Caricamento...",
     "loadMore": "Carica altro",
-    "continue": "Continua"
+    "continue": "Continua",
+    "undo": "Annulla"
   },
   "tip": {
     "title": "Invia mancia",
@@ -1319,7 +1320,8 @@
     "feeNotEnough": "Token insufficienti (necessari {{amount}})",
     "feeWarningTitle": "I messaggi costano token",
     "customTipMin": "Mancia personalizzata (minimo {{amount}} token)",
-    "checkingTokenBalance": "Verifica del tuo saldo token..."
+    "checkingTokenBalance": "Verifica del tuo saldo token...",
+    "deleteConversationFailed": "Impossibile eliminare la conversazione"
   },
   "music": {
     "all": "Tutto",
@@ -6629,7 +6631,19 @@
   "builder": {
     "stakeForAllowance": "Metti in staking i token DeHub per aumentare la tua quota di creazione giornaliera",
     "buildInChat": "Crea nei tuoi messaggi diretti con @assistant",
-    "signInRequired": "Accedi per usare il Builder."
+    "landerTitle": "Crea un'app semplicemente chiedendo",
+    "landerSubtitle": "Di 'all' @assistente cosa vuoi nei tuoi messaggi. Crea l'app, la ospita e ti invia un link che chiunque può aprire. Rispondi per cambiare qualcosa.",
+    "promptPlaceholder": "Descrivi l'app che desideri...",
+    "sendToAssistant": "Invia a @assistant",
+    "example1": "Timer pomodoro con sequenza giornaliera",
+    "example2": "Un calcolatore di mance che divide il conto",
+    "example3": "Un quiz sui miei film preferiti",
+    "step1Title": "Descrivilo:",
+    "step1Body": "Di 'cosa dovrebbe fare l'app, con parole tue.",
+    "step2Title": "Si costruisce in circa un minuto",
+    "step2Body": "@assistant scrive e ospita l'app, quindi invia il link ai tuoi messaggi.",
+    "step3Title": "Condividilo o modificalo",
+    "step3Body": "Chiunque può aprire il link. Rispondi nella chat per cambiare qualcosa."
   },
   "connect": {
     "chatgptFaqAccount": "Non è richiesto alcun account per leggere contenuti pubblici tramite il connettore. Un account DeHub è necessario solo se desideri pubblicare, inviare mance o detenere token DeHub.",

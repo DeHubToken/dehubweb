@@ -513,7 +513,8 @@
     "close": "Vala",
     "loadingMore": "Ilayisha okwengeziwe...",
     "loadMore": "Layisha okwengeziwe",
-    "continue": "Qhubeka"
+    "continue": "Qhubeka",
+    "undo": "Lungisa"
   },
   "tip": {
     "title": "Thumela Ithiphu",
@@ -1304,7 +1305,8 @@
     "feeNotEnough": "Awanawo ama-tokens anele (udinga ama-{{amount}})",
     "feeWarningTitle": "Imilayezo ibiza ama-tokens",
     "customTipMin": "Ithiphu yangokwezifiso (ubuncane obungu-{{amount}} tokens)",
-    "checkingTokenBalance": "Kuhlolwa isilinganiso sama-token akho..."
+    "checkingTokenBalance": "Kuhlolwa isilinganiso sama-token akho...",
+    "deleteConversationFailed": "Ayikwazanga ukususa ingxoxo"
   },
   "music": {
     "all": "Konke",
@@ -4504,7 +4506,19 @@
   "builder": {
     "stakeForAllowance": "Amathokheni e-Stake DeHub ukuze ukhuphule imali yakho yokwakha yansuku zonke",
     "buildInChat": "Yakha kuma-DM akho no-@assistant",
-    "signInRequired": "Ngena ukuze usebenzise i-Builder."
+    "landerTitle": "Yakha i-app ngokubuza nje",
+    "landerSubtitle": "Tshela u- @assistant ukuthi yini oyifunayo emiyalezweni yakho. Yakha i-app, iyibungaze futhi ikuthumele ilinki noma ubani angayivula. Phendula ukuze ushintshe noma yini.",
+    "promptPlaceholder": "Chaza i-app oyifunayo...",
+    "sendToAssistant": "Thumela ku- @assistant",
+    "example1": "I-pomodoro timer enomugqa wansuku zonke",
+    "example2": "Umshini wokubala amacebiso ohlukanisa izindleko",
+    "example3": "Imibuzo emayelana namafilimu engiwathandayo",
+    "step1Title": "Yichaze",
+    "step1Body": "Yisho ukuthi i-app kufanele yenzeni, ngamazwi akho.",
+    "step2Title": "Yakha cishe ngomzuzu",
+    "step2Body": "@assistant uyabhala futhi ubungaze i-app, bese uthumela ilinki emiyalezweni yakho.",
+    "step3Title": "Yabelana ngayo noma uyishintshe",
+    "step3Body": "Noma ubani angavula ilinki. Phendula engxoxweni ukuze ushintshe noma yini."
   },
   "connect": {
     "chatgptFaqAccount": "Ayikho i-akhawunti edingekayo ukuze ufunde okusunguliwe komphakathi ngesixhumi. I-akhawunti ye-DeHub iyadingeka kuphela uma ufuna ukuphosta, ukusikisela noma ukubamba amathokheni e-DeHub.",

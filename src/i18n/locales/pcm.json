@@ -430,7 +430,8 @@
     "close": "Close Am",
     "loadingMore": "Dey load more...",
     "loadMore": "Bring more",
-    "continue": "Continue"
+    "continue": "Continue",
+    "undo": "Undo"
   },
   "tip": {
     "title": "Send Tip",
@@ -1144,7 +1145,8 @@
     "tryAgain": "Try again",
     "feePerMessage": "{{amount}} tokens per message",
     "feeWarningTitle": "Messages cost tokens",
-    "customTipMin": "Custom tip (min {{amount}} tokens)"
+    "customTipMin": "Custom tip (min {{amount}} tokens)",
+    "deleteConversationFailed": "We no fit delete the conversation"
   },
   "music": {
     "all": "All",
@@ -3947,6 +3949,19 @@
   },
   "builder": {
     "buildInChat": "Build for your DM wit @assistant",
-    "signInRequired": "Sign in make you fit use the Builder."
+    "stakeForAllowance": "Stake DeHub token make your daily build allowance go up",
+    "landerTitle": "Build app just by asking",
+    "landerSubtitle": "Tell @assistant wetin you want for your messages. E go build the app, host am, come send you link wey anybody fit open. Reply make you change anything.",
+    "promptPlaceholder": "Talk the kain app wey you want…",
+    "sendToAssistant": "Send to @assistant",
+    "example1": "Pomodoro timer wey get daily streak",
+    "example2": "Tip calculator wey go share the bill",
+    "example3": "Quiz about the films wey I like pass",
+    "step1Title": "Describe it",
+    "step1Body": "Talk wetin the app suppose do, for your own words.",
+    "step2Title": "E go build reach like one minute",
+    "step2Body": "@assistant go write the app, host am, then send the link enter your messages.",
+    "step3Title": "Share it or change it",
+    "step3Body": "Anybody fit open the link. Reply for the chat make you change anything."
   }
 }

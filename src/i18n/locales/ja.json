@@ -526,7 +526,8 @@
     "close": "閉じる",
     "loadingMore": "読み込み中...",
     "loadMore": "もっと読み込む",
-    "continue": "はい"
+    "continue": "はい",
+    "undo": "元に戻す"
   },
   "tip": {
     "title": "チップを送る",
@@ -1317,7 +1318,8 @@
     "feeNotEnough": "トークンが不足しています（{{amount}}必要です）",
     "feeWarningTitle": "メッセージにはトークンが必要です",
     "customTipMin": "カスタムチップ（最低{{amount}}トークン）",
-    "checkingTokenBalance": "トークン残高を確認しています..."
+    "checkingTokenBalance": "トークン残高を確認しています...",
+    "deleteConversationFailed": "会話を削除できませんでした"
   },
   "music": {
     "all": "すべて",
@@ -6621,7 +6623,19 @@
   "builder": {
     "stakeForAllowance": "DeHubトークンをステーキングして、毎日のビルド割り当てを増やしましょう",
     "buildInChat": "@assistant とのDMでつくる",
-    "signInRequired": "Builder を使うにはサインインしてください。"
+    "landerTitle": "質問するだけでアプリを構築できます",
+    "landerSubtitle": "@ assistantにメッセージの内容を伝えてください。アプリを構築し、ホストし、誰でも開くことができるリンクを送信します。返信して変更してください。",
+    "promptPlaceholder": "目的のアプリを説明してください…",
+    "sendToAssistant": "@ assistantに送信",
+    "example1": "毎日連続したポモドーロタイマー",
+    "example2": "請求書を分割するチップ計算機",
+    "example3": "お気に入りの映画に関するクイズ",
+    "step1Title": "どんなの？",
+    "step1Body": "アプリで何をすべきかを自分の言葉で言いましょう。",
+    "step2Title": "約1分で構築されます",
+    "step2Body": "@ assistantはアプリを書き込み、ホストし、メッセージへのリンクを送信します。",
+    "step3Title": "共有または変更する",
+    "step3Body": "誰でもリンクを開くことができます。何かを変更するには、チャットで返信してください。"
   },
   "connect": {
     "chatgptFaqAccount": "コネクタを介して公開コンテンツを読むのにアカウントは必要ありません。DeHubアカウントは、DeHubトークンを投稿、チップ、または保持したい場合にのみ必要です。",

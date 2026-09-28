@@ -529,7 +529,8 @@
     "close": "Maak toe",
     "loadingMore": "Laai tans meer...",
     "loadMore": "Laai meer",
-    "continue": "Gaan voort"
+    "continue": "Gaan voort",
+    "undo": "Ontdoen"
   },
   "tip": {
     "title": "Stuur Fooitjie",
@@ -1327,7 +1328,8 @@
     "feeNotEnough": "Nie genoeg tokens nie (benodig {{amount}})",
     "feeWarningTitle": "Boodskappe kos tokens",
     "customTipMin": "Pasgemaakte wenk (min {{amount}} tokens)",
-    "checkingTokenBalance": "Kontroleer jou tokenbalans..."
+    "checkingTokenBalance": "Kontroleer jou tokenbalans...",
+    "deleteConversationFailed": "Kon nie die gesprek uitvee nie"
   },
   "music": {
     "all": "All",
@@ -6483,7 +6485,19 @@
   "builder": {
     "stakeForAllowance": "Stel DeHub-tokens in om jou daaglikse bou-toelae te verhoog",
     "buildInChat": "Bou in jou DM's met @assistant",
-    "signInRequired": "Meld aan om die Builder te gebruik."
+    "landerTitle": "Bou 'n app net deur te vra",
+    "landerSubtitle": "Vertel @assistent wat jy in jou boodskappe wil hê. Dit bou die app, huisves dit en stuur jou 'n skakel wat enigiemand kan oopmaak. Antwoord om iets te veranderen.",
+    "promptPlaceholder": "Beskryf die app wat jy wil hê...",
+    "sendToAssistant": "Stuur aan @assistent",
+    "example1": "'n Pomodoro-timer met 'n daaglikse streep",
+    "example2": "'N Wenk sakrekenaar wat die rekening verdeel",
+    "example3": "'N vasvra oor my gunsteling films",
+    "step1Title": "Beskryf dit",
+    "step1Body": "Sê wat die app moet doen, in jou eie woorde.",
+    "step2Title": "Creëer in 1 minuut",
+    "step2Body": "@assistent skryf en gasheer die app, dan stuur die skakel na jou boodskappe.",
+    "step3Title": "Deel dit of verander dit",
+    "step3Body": "Iedereen kan die link openen. Antwoord in die chat om iets te verander."
   },
   "connect": {
     "chatgptFaqAccount": "Geen rekening word benodig om publieke inhoud deur die connector te lees nie. 'n DeHub-rekening word slegs benodig as jy DeHub-tokens wil plaas, wenk of hou.",

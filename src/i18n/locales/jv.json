@@ -507,7 +507,8 @@
     "close": "Tutup",
     "loadingMore": "Ngemot luwih akeh...",
     "loadMore": "Muat Luwih Akeh",
-    "continue": "Terusna"
+    "continue": "Terusna",
+    "undo": "Batalake"
   },
   "tip": {
     "title": "Kirim Hadiah",
@@ -1297,7 +1298,8 @@
     "feeNotEnough": "Ora cukup token (mbutuhake {{amount}})",
     "feeWarningTitle": "Pesen regane token",
     "customTipMin": "Tip khusus (minimal {{amount}} token)",
-    "checkingTokenBalance": "Mriksa saldo token sampeyan..."
+    "checkingTokenBalance": "Mriksa saldo token sampeyan...",
+    "deleteConversationFailed": "Ora bisa mbusak obrolan"
   },
   "music": {
     "all": "Kabeh",
@@ -4454,7 +4456,19 @@
   "builder": {
     "stakeForAllowance": "Stake token DeHub kanggo nambah tunjangan mbangun saben dina",
     "buildInChat": "Gawe ing DM-mu bareng @assistant",
-    "signInRequired": "Mlebu dhisik kanggo nggunakake Builder."
+    "landerTitle": "Gawe aplikasi mung kanthi takon",
+    "landerSubtitle": "Ngomong marang @assistant apa sing dikarepake ing pesenmu. Iku nggawe aplikasi, nyimpen, lan ngirim link sing bisa dibukak sapa wae. Wangsulana kanggo ngganti apa wae.",
+    "promptPlaceholder": "Jelasake aplikasi sing dikarepake...",
+    "sendToAssistant": "Kirim menyang @assistant",
+    "example1": "Pomodoro timer kanthi streak saben dina",
+    "example2": "Kalkulator tip sing mbagi tagihan",
+    "example3": "Kuis babagan film favoritku",
+    "step1Title": "Jelasake",
+    "step1Body": "Ngomong apa sing kudu ditindakake aplikasi, nganggo tembungmu dhewe.",
+    "step2Title": "Iku dibangun kira-kira sak menit",
+    "step2Body": "@assistant nulis lan nyimpen aplikasi, banjur ngirim link menyang pesenmu.",
+    "step3Title": "Bagike utawa ganti",
+    "step3Body": "Sapa wae bisa mbukak link kasebut. Wangsulana ing obrolan kanggo ngganti apa wae."
   },
   "connect": {
     "chatgptFaqAccount": "Ora perlu akun kanggo maca konten umum liwat konektor. Akun DeHub mung perlu yen sampeyan pengin posting, menehi tip, utawa nyimpen token DeHub.",

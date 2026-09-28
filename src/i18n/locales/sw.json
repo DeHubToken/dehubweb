@@ -527,7 +527,8 @@
     "close": "Funga",
     "loadingMore": "Inapakia zaidi...",
     "loadMore": "Pakia zaidi",
-    "continue": "Endelea"
+    "continue": "Endelea",
+    "undo": "Tangua"
   },
   "tip": {
     "title": "Tuma Kidokezo",
@@ -1320,7 +1321,8 @@
     "feeNotEnough": "Tokeni hazitoshi (zinahitajika {{amount}})",
     "feeWarningTitle": "Ujumbe unagharimu tokeni",
     "customTipMin": "Kidokezo maalum (kiwango cha chini {{amount}} tokeni)",
-    "checkingTokenBalance": "Inakagua salio lako la tokeni..."
+    "checkingTokenBalance": "Inakagua salio lako la tokeni...",
+    "deleteConversationFailed": "Imeshindwa kufuta mazungumzo"
   },
   "music": {
     "all": "Zote",
@@ -6574,7 +6576,19 @@
   "builder": {
     "stakeForAllowance": "Alama za Stake DeHub ili kuongeza posho yako ya kila siku ya ujenzi",
     "buildInChat": "Jenga kwenye jumbe zako za faragha ukiwa na @assistant",
-    "signInRequired": "Ingia ili kutumia Builder."
+    "landerTitle": "Unda programu kwa kuuliza tu",
+    "landerSubtitle": "Mwambie @ assistant unachotaka katika ujumbe wako. Huunda programu, huikaribisha na kukutumia kiunganishi ambacho mtu yeyote anaweza kufungua. Jibu ili ubadilishe chochote.",
+    "promptPlaceholder": "Eleza programu unayotaka...",
+    "sendToAssistant": "Tuma kwa @assistant",
+    "example1": "Kipima muda cha pomodoro kilicho na safu ya kila siku",
+    "example2": "Kikokotoo cha kiinua mgongo kinachogawanya bili",
+    "example3": "Jaribio kuhusu filamu ninazozipenda",
+    "step1Title": "kueleza.",
+    "step1Body": "Sema kile ambacho programu inapaswa kufanya, kwa maneno yako mwenyewe.",
+    "step2Title": "Inajengeka kwa takribani dakika moja",
+    "step2Body": "@assistant anaandika na kukaribisha wageni kwenye programu, kisha atume kiunganishi kwenye ujumbe wako.",
+    "step3Title": "Ishiriki au uibadilishe",
+    "step3Body": "Mtu yeyote anaweza kufungua kiunganishi. Jibu kwenye gumzo ili ubadilishe chochote."
   },
   "connect": {
     "chatgptFaqAccount": "Hakuna akaunti inayohitajika kusoma maudhui ya umma kupitia kiunganishi. Akaunti ya DeHub inahitajika tu ikiwa unataka kuchapisha, kutoa kiinua mgongo au kushikilia tokeni za DeHub.",

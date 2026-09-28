@@ -511,7 +511,8 @@
     "close": "Mechie",
     "loadingMore": "Na-ebugo ọzọ...",
     "loadMore": "Bughachite ọzọ",
-    "continue": "Gaa n 'ihu?"
+    "continue": "Gaa n 'ihu?",
+    "undo": "Wepụtagharịa"
   },
   "tip": {
     "title": "Ziga Onyinye",
@@ -1294,7 +1295,8 @@
     "feeNotEnough": "Ezuola tokens (chọrọ {{amount}})",
     "feeWarningTitle": "Ozi na-eri tokens",
     "customTipMin": "Ntipụ omenala (min {{amount}} tokens)",
-    "checkingTokenBalance": "Na-enyocha ngwongwo token gị..."
+    "checkingTokenBalance": "Na-enyocha ngwongwo token gị...",
+    "deleteConversationFailed": "Agaghị enwenwu ike ihicha mkparịtaụka ahụ"
   },
   "music": {
     "all": "Niile",
@@ -4432,7 +4434,19 @@
   "builder": {
     "stakeForAllowance": "Tinye token DeHub iji welie ikike iwulite kwa ụbọchị gị",
     "buildInChat": "Wuo n'ozi nzuzo gị na @assistant",
-    "signInRequired": "Banye iji jiri Builder."
+    "landerTitle": "Mepụta ngwa naanị site n 'ịjụ",
+    "landerSubtitle": "Gwa @nnyemaaka ihe ị chọrọ na ozi gị. Ọ na-ewu ngwa ahụ, na-akwado ya ma na-ezitere gị njikọ onye ọ bụla nwere ike imeghe. Zaghachi ịgbanwe ihe ọ bụla.",
+    "promptPlaceholder": "Ihe ọzọ bụ na, you can reach all these destinations by train…",
+    "sendToAssistant": "Ziga na @nnyemaaka",
+    "example1": "A pomodoro ngụ oge na a kwa ụbọchị streak",
+    "example2": "A n 'ọnụ mgbako na gbawara ụgwọ",
+    "example3": "Ajụjụ gbasara ihe nkiri kacha amasị m",
+    "step1Title": "Kọwaa ya",
+    "step1Body": "Kwuo ihe ngwa ahụ kwesịrị ime, n 'okwu nke gị.",
+    "step2Title": "Ọ na-ewuli n 'ime ihe dị ka nkeji",
+    "step2Body": "@nnyemaaka na-ede ma na-akwado ngwa ahụ, wee zipụ njikọ ahụ na ozi gị.",
+    "step3Title": "Kekọrịta ya ma ọ bụ gbanwee ya",
+    "step3Body": "Onye ọbụla nwere ike imepe njikọ ahụ. Zaa na nkata iji gbanwee ihe ọ bụla."
   },
   "connect": {
     "chatgptFaqAccount": "Achọghị akaụntụ iji gụọ ọdịnaya ọha site na njikọ. A chọrọ naanị akaụntụ DeHub ma ọ bụrụ na ịchọrọ ibipụta, ịkwanye ma ọ bụ jide token DeHub.",

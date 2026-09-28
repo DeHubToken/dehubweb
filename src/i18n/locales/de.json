@@ -527,7 +527,8 @@
     "close": "Schließen",
     "loadingMore": "Mehr laden...",
     "loadMore": "Mehr laden",
-    "continue": "Fortfahren"
+    "continue": "Fortfahren",
+    "undo": "Rückgängig machen"
   },
   "tip": {
     "title": "Trinkgeld senden",
@@ -1319,7 +1320,8 @@
     "feeNotEnough": "Nicht genügend Tokens (benötigt {{amount}})",
     "feeWarningTitle": "Nachrichten kosten Tokens",
     "customTipMin": "Benutzerdefinierter Tipp (min. {{amount}} Tokens)",
-    "checkingTokenBalance": "Überprüfe dein Token-Guthaben..."
+    "checkingTokenBalance": "Überprüfe dein Token-Guthaben...",
+    "deleteConversationFailed": "Konversation konnte nicht gelöscht werden"
   },
   "music": {
     "all": "Alle",
@@ -6629,7 +6631,19 @@
   "builder": {
     "stakeForAllowance": "Setzen Sie DeHub-Token ein, um Ihr tägliches Erstellungsguthaben zu erhöhen",
     "buildInChat": "In deinen DMs mit @assistant bauen",
-    "signInRequired": "Melde dich an, um den Builder zu nutzen."
+    "landerTitle": "Erstellen Sie eine App, indem Sie einfach fragen",
+    "landerSubtitle": "Sagen Sie @assistant, was Sie in Ihren Nachrichten wollen. Es erstellt die App, hostet sie und sendet dir einen Link, den jeder öffnen kann. Antworte, um etwas zu ändern.",
+    "promptPlaceholder": "Beschreiben Sie die gewünschte App...",
+    "sendToAssistant": "An @assistant senden",
+    "example1": "Ein Pomodoro-Timer mit einer täglichen Ader",
+    "example2": "Ein Trinkgeldrechner, der die Rechnung aufteilt",
+    "example3": "Ein Quiz zu meinen Lieblingsfilmen",
+    "step1Title": "Beschreiben Sie es:",
+    "step1Body": "Sagen Sie in Ihren eigenen Worten, was die App tun soll.",
+    "step2Title": "Es baut sich in etwa einer Minute auf",
+    "step2Body": "@assistant schreibt und hostet die App und sendet dann den Link zu deinen Nachrichten.",
+    "step3Title": "Teilen oder ändern",
+    "step3Body": "Jeder kann den Link öffnen. Antworte im Chat, um etwas zu ändern."
   },
   "connect": {
     "chatgptFaqAccount": "Zum Lesen öffentlicher Inhalte über den Connector ist kein Konto erforderlich. Ein DeHub-Konto wird nur benötigt, wenn Sie DeHub-Token posten, Trinkgeld geben oder halten möchten.",

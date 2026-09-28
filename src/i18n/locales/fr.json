@@ -527,7 +527,8 @@
     "close": "Fermer",
     "loadingMore": "Chargement...",
     "loadMore": "Charger plus",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "undo": "Annuler"
   },
   "tip": {
     "title": "Envoyer un pourboire",
@@ -1319,7 +1320,8 @@
     "feeNotEnough": "Jetons insuffisants (besoin de {{amount}})",
     "feeWarningTitle": "Les messages coûtent des jetons",
     "customTipMin": "Pourboire personnalisé (min {{amount}} jetons)",
-    "checkingTokenBalance": "Vérification de votre solde de jetons..."
+    "checkingTokenBalance": "Vérification de votre solde de jetons...",
+    "deleteConversationFailed": "Impossible de supprimer la conversation"
   },
   "music": {
     "all": "Tout",
@@ -6684,7 +6686,19 @@
   "builder": {
     "stakeForAllowance": "Staker des tokens DeHub pour augmenter votre allocation de création quotidienne",
     "buildInChat": "Créez dans vos messages privés avec @assistant",
-    "signInRequired": "Connectez-vous pour utiliser le Builder."
+    "landerTitle": "Créez une application en demandant simplement",
+    "landerSubtitle": "Dites à @assistant ce que vous voulez dans vos messages. Il crée l'application, l'héberge et vous envoie un lien que tout le monde peut ouvrir. Répondez pour changer quoi que ce soit.",
+    "promptPlaceholder": "Décrivez l'application que vous voulez…",
+    "sendToAssistant": "Envoyer à @assistant",
+    "example1": "Une minuterie pomodoro avec une série quotidienne",
+    "example2": "Une calculatrice de pourboire qui divise la facture",
+    "example3": "Un quiz sur mes films préférés",
+    "step1Title": "Décrivez-la.",
+    "step1Body": "Dites ce que l'application devrait faire, avec vos propres mots.",
+    "step2Title": "Il se construit en environ une minute",
+    "step2Body": "@assistant écrit et héberge l'application, puis envoie le lien vers vos messages.",
+    "step3Title": "Partagez-le ou modifiez-le",
+    "step3Body": "Tout le monde peut ouvrir le lien. Répondez dans le chat pour changer quoi que ce soit."
   },
   "connect": {
     "chatgptFaqAccount": "Aucun compte n'est requis pour lire le contenu public via le connecteur. Un compte DeHub n'est nécessaire que si vous souhaitez publier, donner un pourboire ou détenir des tokens DeHub.",

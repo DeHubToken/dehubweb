@@ -389,7 +389,8 @@
     "translating": "ترجمہ ہو رئی ہے...",
     "close": "بند",
     "loadingMore": "اور لوڈ ہو رئی ہے...",
-    "loadMore": "اور لوڈ کرو"
+    "loadMore": "اور لوڈ کرو",
+    "undo": "واپس لو"
   },
   "tip": {
     "title": "ٹپ بھیجو",
@@ -1041,7 +1042,8 @@
     "title": "پیغام",
     "searchConversations": "بات چیت ڈھونڈو...",
     "failedToLoad": "بات چیت لوڈ نئیں ہوئی",
-    "tryAgain": "دوبارہ کوشش کرو"
+    "tryAgain": "دوبارہ کوشش کرو",
+    "deleteConversationFailed": "بات چیت ڈیلیٹ نئیں ہوئی"
   },
   "music": {
     "all": "سب",
@@ -3143,7 +3145,20 @@
   },
   "builder": {
     "buildInChat": "@assistant کے ساتھ اپنے DM میں بناؤ",
-    "signInRequired": "Builder استعمال کرنے کو سائن ان کرو۔"
+    "stakeForAllowance": "روز کی بلڈ حد بڑھانے کو DeHub ٹوکن اسٹیک کرو",
+    "landerTitle": "بس پوچھ کے ایپ بناؤ",
+    "landerSubtitle": "اپنے میسیجز میں @assistant کو بولو کیا چاہیے۔ وہ ایپ بناتا، ہوسٹ کرتا اور ایک لنک بھیجتا جو کوئی بھی کھول سکتا۔ کچھ بدلنا ہے تو جواب دو۔",
+    "promptPlaceholder": "جو ایپ چاہیے وہ بتاؤ…",
+    "sendToAssistant": "@assistant کو بھیجو",
+    "example1": "روز کی اسٹریک والا پوموڈورو ٹائمر",
+    "example2": "بل بانٹنے والا ٹپ کیلکولیٹر",
+    "example3": "میری پسند کی فلموں پو ایک کوئز",
+    "step1Title": "بتاؤ",
+    "step1Body": "ایپ کیا کرنا، اپنے لفظاں میں بولو۔",
+    "step2Title": "کوئی ایک منٹ میں بن جاتی",
+    "step2Body": "@assistant ایپ لکھتا اور ہوسٹ کرتا، پھر لنک تمہارے میسیجز میں بھیجتا۔",
+    "step3Title": "شیئر کرو یا بدلو",
+    "step3Body": "کوئی بھی لنک کھول سکتا۔ کچھ بدلنا ہے تو چیٹ میں جواب دو۔"
   },
   "badgeShowcase": {
     "dialogLabel": "{{tier}} بیج",

@@ -527,7 +527,8 @@
     "close": "Închide",
     "loadingMore": "Se încarcă mai multe...",
     "loadMore": "Încarcă mai multe",
-    "continue": "Continuare"
+    "continue": "Continuare",
+    "undo": "Anulează"
   },
   "tip": {
     "title": "Trimite bacșiș",
@@ -1301,7 +1302,8 @@
     "feeNotEnough": "Nu sunt suficiente tokenuri (necesar {{amount}})",
     "feeWarningTitle": "Mesajele costă tokenuri",
     "customTipMin": "Bacșiș personalizat (min {{amount}} tokenuri)",
-    "checkingTokenBalance": "Verificarea soldului tău de tokenuri..."
+    "checkingTokenBalance": "Verificarea soldului tău de tokenuri...",
+    "deleteConversationFailed": "Conversația nu a putut fi ștearsă"
   },
   "music": {
     "all": "All",
@@ -6407,7 +6409,19 @@
   "builder": {
     "stakeForAllowance": "Mizează tokenuri DeHub pentru a-ți crește alocația zilnică de creare",
     "buildInChat": "Construiește în mesajele directe cu @assistant",
-    "signInRequired": "Conectează-te pentru a folosi Builder."
+    "landerTitle": "Construiește o aplicație doar întrebând",
+    "landerSubtitle": "Spune-i @asistentului ce vrei în mesajele tale. Construiește aplicația, o găzduiește și îți trimite un link pe care oricine îl poate deschide. Răspundeți pentru a schimba ceva.",
+    "promptPlaceholder": "Descrie aplicația pe care o dorești...",
+    "sendToAssistant": "Trimiteți la @assistant",
+    "example1": "Un cronometru pomodoro cu o dungă zilnică",
+    "example2": "Un calculator de bacșișuri care împarte factura",
+    "example3": "Un test despre filmele mele preferate",
+    "step1Title": "\"Descrieți...\"",
+    "step1Body": "Spuneți ce ar trebui să facă aplicația, cu propriile cuvinte.",
+    "step2Title": "Se construiește în aproximativ un minut",
+    "step2Body": "@asistent scrie și găzduiește aplicația, apoi trimite linkul către mesajele tale.",
+    "step3Title": "Distribuiți-l sau modificați-l",
+    "step3Body": "Oricine poate deschide linkul. Răspundeți în chat pentru a schimba ceva."
   },
   "connect": {
     "chatgptFaqAccount": "Nu este necesar un cont pentru a citi conținut public prin conector. Un cont DeHub este necesar doar dacă dorești să postezi, să oferi bacșiș sau să deții tokenuri DeHub.",
