@@ -986,6 +986,9 @@ export const ceb = {
     spNameFrontRow: 'Atubangan nga Laray',
     spNameTrendJacker: 'Trend Jacker',
     spTierPiranha: 'Piranha',
+    feedsMute: 'I-mute & I-block:',
+    marketsB1: 'Usernames:',
+    studioB3: 'Kuey & Librerya:',
   },
   games: {
     title: 'Mga Dula',
@@ -1050,6 +1053,7 @@ export const ceb = {
     salesTitle: 'Pagbaligya',
     salesDesc: 'Ang 100% nga nakuha nga likido naka-lock sa mga pool alang sa mga negosyante. Wala \'y mga panghitabo sa pre sale o pagpamuhunan diin gipataas aron pondohan ang pag-uswag ug gilansad ang DeHub ingon FTV nga adunay usa ka hingpit nga gitukod nga app sa google play store sa wala pa ang bisan unsang pagpagawas sa token o fundraise. Lamang liquidity kaliwatan mga panghitabo (LGE) sa ngalan sa komunidad aron sa pagpahigayon sa trading nahitabo. BNB, busa ang DeHub mahimo ra makuha pinaagi sa mga pitaka sa KYCd nga nagpasabut nga dili namon kinahanglan ang dugang nga mga sapaw alang sa among kaugalingon nga pagpamaligya.',
     disclaimerText: 'Ang mga token sa DeHub istrikto alang sa mga katuyoan sa utility sa parehas nga paagi nga ang bisan unsang in-game o in-app nga digital token o kwarta gawas kung diin ang among operasyon on-chain, mahimo kami magtanyag dugang nga utility ingon man wala pa hitupngang lebel sa mapamatud-an nga transparency. Ang datos sa ibabaw gitigum lamang alang sa transparency, pang-edukasyon ug kasayuran nga mga katuyoan lamang. Ang DeHub ug ang tanan nga mga kaubanan wala \'y tulubagon alang sa mga pagkawala sa panalapi nga nahiaguman gikan sa pagpalit sa bisan unsang mga token o NFT nga among gipagawas. Ang mga merkado hilabihan ka volatile. Mahimo ka usab mawad-an sa tanan nimong salapi tungod sa bisan unsang wala damha nga mga hitabo sama sa mga pag-hack, pagkapakyas sa kakompetensya o mga sayup sa teknikal. Busa, kinahanglan ka lang nga mamuhunan kung unsa ang mahimo nimo nga mawad-an.',
+    team: 'Timo',
   },
   tokenUtility: {
     title: 'Token Utility / Benepisyo sa mga Naghupot',
@@ -1748,6 +1752,10 @@ export const ceb = {
     q4_2022: 'Q4 2022',
     q4_2023: 'Q4 2023',
     q4_2025: 'Q4 2025',
+    q2_2021: 'Q2 2021',
+    q3_2021: 'Q3 2021',
+    q3_2024: 'Q3 2024',
+    q4_2024: 'Q4 2024',
   },
   brandAssets: {
     title: 'Mga Asset sa Brand',
@@ -1794,6 +1802,7 @@ export const ceb = {
     shakeUp2025Desc: 'Pinakabag-o nga mga slide sa laraw sa produkto ug estratehikong pag-update alang sa 2025.',
     completeBrandPackage: 'Kompleto nga Pakete sa Brand',
     completeBrandPackageDesc: 'Kinahanglan dugang nga mga format o ang kompleto nga pakete sa brand?',
+    logoIconName: 'DeHub Logo - Icon',
   },
   legalDisclaimer: {
     title: 'Legal Disclaimer',
@@ -2023,6 +2032,7 @@ export const ceb = {
     thirdPartyItem7: 'Ang Cloudflare nagsilbi ug nagtago sa site ug sa media niini',
     thirdPartyItem8Prefix: 'AI & Paghubad:',
     thirdPartyItem6Prefix: 'Streaming & Rooms:',
+    thirdPartyItem10Prefix: 'Multi-posting:',
   },
   contact: {
     title: 'Kontaka Kami',
@@ -2304,6 +2314,9 @@ export const ceb = {
     overview: 'Kinatibuk-ang Pagpasabot',
     createCampaign: 'Paghimo Kampanya',
     budgetCalculator: 'Calculator sa Badyet',
+    avgCtr: 'Avg CTR',
+    roas: 'ROAS',
+    analytics: 'Analytics',
   },
   docsSearch: {
     title: 'Pangitaa ang docs',
@@ -2477,5 +2490,9 @@ export const ceb = {
     ctr: 'CTR',
     ctrRow: 'CTR:',
     dayCountOne: '{count} kaadto',
+    povrAdvantage: 'POVR Advantage',
+    tierBadge: '{tier} Badge',
+    roas: 'ROAS',
+    cpmRow: 'CPM:',
   },
 };
