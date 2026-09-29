@@ -4,6 +4,7 @@ import { StreamableHTTPTransport } from "@hono/mcp";
 import { z } from "zod";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Interface, JsonRpcProvider, Wallet, formatEther } from "ethers";
+import { requireDeHubAuth } from "../_shared/auth.ts";
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -31,7 +32,7 @@ const RATE_LIMITS: Record<string, { limit: number; windowMs: number }> = {
 };
 
 // Cap on agents per owner wallet. dehub_register mints a real DeHub account
-// every call and runs unauthenticated, so without this it is a spam faucet.
+// every call, and wallets are free to make, so without this it is a spam faucet.
 const MAX_AGENTS_PER_OWNER = 5;
 
 // The agent name becomes its DeHub username, so it has to satisfy the same
@@ -399,15 +400,46 @@ function touchAgent(supabase: SupabaseClient, agentId: string) {
 
 // ============= Registration =============
 
+const REGISTER_AUTH_HINT =
+  "Registering needs the owner's DeHub session token in the x-dehub-token header. Sign in at https://dehub.io/app/agents to create an agent with your connected wallet.";
+
 /**
  * Shared by the dehub_register tool and the POST /register REST route the web
  * app uses. Kept in one place so the two entry points cannot drift.
+ *
+ * The owner is the wallet on the caller's verified DeHub token. It used to be
+ * whatever owner_wallet_address the caller sent, so anyone could file agents
+ * under someone else's wallet: they showed up in that wallet's /app/agents,
+ * were attributed to it, and used up its MAX_AGENTS_PER_OWNER slots. The field
+ * is still accepted, but only as a cross-check.
  */
-async function registerAgent(input: {
-  name: string;
-  description?: string;
-  owner_wallet_address?: string;
-}): Promise<{ status: number; body: Record<string, unknown> }> {
+async function registerAgent(
+  req: Request,
+  input: {
+    name: string;
+    description?: string;
+    owner_wallet_address?: string;
+  },
+): Promise<{ status: number; body: Record<string, unknown> }> {
+  const auth = await requireDeHubAuth(req);
+  if (!auth.ok) {
+    const body = await auth.response.json().catch(() => ({ error: "Authentication failed." }));
+    const status = auth.response.status;
+    return { status, body: status === 401 ? { ...body, hint: REGISTER_AUTH_HINT } : body };
+  }
+  const owner = auth.wallet;
+
+  const claimed = input.owner_wallet_address?.trim().toLowerCase();
+  if (claimed && claimed !== owner) {
+    return {
+      status: 403,
+      body: {
+        error: "owner_wallet_address does not match the wallet your DeHub token belongs to.",
+        hint: "Omit owner_wallet_address, or sign in again with the wallet you meant to use.",
+      },
+    };
+  }
+
   const supabase = db();
   const name = input.name?.trim().toLowerCase();
 
@@ -417,17 +449,6 @@ async function registerAgent(input: {
       status: 400,
       body: {
         error: "Invalid name. Use 3-20 characters: lowercase letters, numbers and underscores only.",
-      },
-    };
-  }
-
-  const owner = input.owner_wallet_address?.trim().toLowerCase();
-  if (!owner || !/^0x[0-9a-f]{40}$/.test(owner)) {
-    return {
-      status: 400,
-      body: {
-        error: "owner_wallet_address is required and must be a 0x wallet address.",
-        hint: "Every agent is attributed to a human owner. Sign in at https://dehub.io/app/agents to create one with your connected wallet.",
       },
     };
   }
@@ -569,13 +590,14 @@ const MIN_GAS_WEI = 200_000_000_000_000n; // 0.0002 ETH
 // ============= MCP server =============
 
 /**
- * A fresh server per request, with the caller's API key captured in the
- * closure.
+ * A fresh server per request, with the caller's API key and request captured
+ * in the closure. Only dehub_register reads the request, for the owner's DeHub
+ * token.
  *
  * The previous version held the key in a module-level `let` that every request
  * overwrote, so two agents calling at once could execute each other's writes.
  */
-function buildServer(apiKey: string | null): McpServer {
+function buildServer(apiKey: string | null, req: Request): McpServer {
   const server = new McpServer({ name: "dehub-mcp", version: "2.0.0" });
   const READ = { readOnlyHint: true, openWorldHint: true } as const;
   const WRITE = { readOnlyHint: false, destructiveHint: false, openWorldHint: true } as const;
@@ -593,18 +615,21 @@ function buildServer(apiKey: string | null): McpServer {
     {
       title: "Register a DeHub agent",
       description:
-        "Register a new AI agent with a real DeHub account. Generates an Ethereum wallet, creates the DeHub account, claims the username, and returns an API key plus a ready-to-paste connector URL. Requires the owner's wallet address.",
+        "Register a new AI agent with a real DeHub account. Generates an Ethereum wallet, creates the DeHub account, claims the username, and returns an API key plus a ready-to-paste connector URL. The owner is the wallet your DeHub session token belongs to, sent in the x-dehub-token header — without a client that can set that header, create the agent at https://dehub.io/app/agents instead.",
       inputSchema: {
         name: z
           .string()
           .describe("Unique username for the agent (3-20 chars, lowercase letters/numbers/underscore)"),
         description: z.string().optional().describe("Bio describing what the agent does"),
-        owner_wallet_address: z.string().describe("Your own 0x wallet address — the agent is attributed to it"),
+        owner_wallet_address: z
+          .string()
+          .optional()
+          .describe("Optional cross-check: your 0x wallet address. Refused if it is not the wallet your token belongs to"),
       },
       annotations: { ...WRITE, title: "Register a DeHub agent" },
     },
     async (input) => {
-      const { status, body } = await registerAgent(input);
+      const { status, body } = await registerAgent(req, input);
       return status === 200 ? ok(body) : fail(String(body.error), body.hint as string | undefined);
     },
   );
@@ -1284,6 +1309,9 @@ app.use("/*", async (c, next) => {
  * MCP request and the Accept header is missing — so creating an agent in the UI
  * always failed. A plain REST route is a better fit than making the UI speak
  * MCP.
+ *
+ * Needs the owner's DeHub token in x-dehub-token; the agent is filed under the
+ * wallet that token belongs to.
  */
 app.post("/*", async (c, next) => {
   if (!new URL(c.req.url).pathname.endsWith("/register")) return next();
@@ -1295,7 +1323,7 @@ app.post("/*", async (c, next) => {
     return c.json({ error: "Invalid JSON body" }, 400);
   }
 
-  const { status, body } = await registerAgent({
+  const { status, body } = await registerAgent(c.req.raw, {
     name: input.name ?? "",
     description: input.description,
     owner_wallet_address: input.owner_wallet_address,
@@ -1319,7 +1347,7 @@ app.all("/*", async (c) => {
   // Response is still streaming when this handler returns and closing the
   // server would truncate it. Both are unreachable once the request ends and
   // are collected normally.
-  const server = buildServer(extractApiKey(c.req.raw));
+  const server = buildServer(extractApiKey(c.req.raw), c.req.raw);
   const transport = new StreamableHTTPTransport();
   await server.connect(transport);
 
