@@ -2695,6 +2695,7 @@
     "boosted": "Impulsado",
     "embedStatus": "{{status}} qullqi quy · {{type}}",
     "appsCount": "{{count}} nisqa aplicacionkuna",
+    "subsCount": "{{count}} subs",
     "fieldTitle": "Suti",
     "titlePlaceholder": "¿Imatan ruwana?",
     "fieldDescription": "Willay",
@@ -6290,6 +6291,7 @@
       "priceImpact": "Preciopa imayna kaqnin",
       "minimum": "Mana hunt'ay atiy atiq",
       "instantNote": "Chaylla ruwaykunaqa chaylla hunt'akunmi allin precioypi tukuy chay networkpi, 1% hilla chaymanta.",
+      "solanaLimitNote": "Qullqiykikunaqa on-chain kamachisqapi kachkanmi, hunt'akama chayri pakiykamama chayri qulluykamama.",
       "evmLimitNote": "Tokenkunayki huk ladu Uniswap kaqpi tiyakunku chaninniykipi chaymanta tikranku imaynachus qhatu chayninta qhatukun. Ima pachapas lluqsiy.",
       "openOrders": "Kichasqa kamachiykuna",
       "myOrders": "Kamachikuyniy",
@@ -7749,7 +7751,9 @@
       "fromDehub": "DeHub nisqamanta",
       "noMatch": "Mana ima appkuna chay maskaywan tupanchu.",
       "yourApps": "Apps nisqaykikuna",
+      "notificationsOn": "Willakuykuna kachkan",
       "remove": "Qichuy",
+      "removed": "Qullusqa. Kutinqa manam willasunkichu.",
       "rising": "Musuq hinaspa wichariq"
     },
     "dev": {
@@ -7796,6 +7800,12 @@
       "stateListed": "Tiendapi",
       "stateSuspended": "Sayachisqa",
       "copyLink": "Copia link nisqa",
+      "notifyKey": "Willakuy kiy",
+      "notifyKeyOnce": "Sut'in willakuy kiy {{name}}-paq. Kunan qillqaykuy: huk kutillam rikuchisqa, hukta ruwaspaqa chaytaqa ancha.",
+      "payTitle": "Qullqiyta chaskiy",
+      "payBody": "pay() mañakusunki DHB apamunata, hunt'asqayki dehub.json-man chayanankama. Serviyki ukhupi rikuy imaymana apamusqayta, imatapas qullusqayki ñawpaqta.",
+      "notifyTitle": "Willakuykunata apay",
+      "notifyBody": "Runa masikikuna apuyta atisqanku, serviykimanta willakuyta atikunki willakuy kiykimwan. Mana runa masikikunapaq qullqiykikunata waqaychaychu.",
       "rankTitle": "Imaynatachus tienda apps nisqakunata rankikun",
       "rewardsBody": "Sapa killa {{pool}} DHB appkunapura kikin puntuación kaqwan rakisqa, sapa semana yupasqa. Calificarpaq, huk app huk chiqaqchasqa dueño billetera chaymanta 3 kutimuq usuariokunallapas necesitan. Premiokuna DeHub kaqwan qun dueño billetera kaqman.",
       "rewardsWeek": "{{date}} nisqa semana.",
@@ -7820,6 +7830,14 @@
       "developer-tools": "Paqarichiqpa yanapakuyninkuna",
       "entertainment": "Kusirikuy",
       "art-creativity": "Arte & creatividad nisqa"
+    },
+    "pay": {
+      "sending": "Qullqiyta apachkan...",
+      "noOwner": "Kay apukunaqa manam tarirqanchu kunan p'unchawpi qullqiyta apanankama."
+    },
+    "add": {
+      "body": "Apukuna ukhupi rikchaykanqa chayri willakuykunata apayta atikunqa. Apukuna p'anqamantaqa atikunki qulluyta imayna munanki.",
+      "confirm": "Apuyta yapay"
     }
   },
   "aiStyles": {

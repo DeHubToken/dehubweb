@@ -4928,6 +4928,7 @@
     "heading": "DeHubda iş",
     "subheading": "Dezentralleşdirilen içi-mädäni habar beriş serişdesiniň gelejegini gurýan toparyň agzasy boluň",
     "open": "Aç",
+    "aboutTheRole": "Rol barada",
     "keyResponsibilities": "Esasy borçlar",
     "whatWereLookingFor": "Biz näme gözleýäris",
     "compensation": "Tazminat",
@@ -4991,6 +4992,7 @@
     "readTheDocs": "Doktorlar bilen gürrüňdeş boluň",
     "heroEyebrow": "Işgärlik bilen gurulýan gurluşyk",
     "heroTitle": "Siziň donanma. DeHub 'yň habar beriş tarapy.",
+    "heroBlurb": "**Garaşyňy boş disk, bantwit ve hesaplama güçünü** DeHub materyallarını host etme, transkodlama etme ve dağıtmağa kömek etmek için katkıda bulunun.",
     "seeHowItWorks": "Gör, nähili işläp barýar",
     "heroImageAlt": "Öýler we ýaradýan stúdiýalar bilen baglanyşykly kompakt kenar-kompýuter node",
     "heroCaption": "DeHub asly nusgasyny saklaýar. Galyberse-de, bu ýerde ýerli serişdeler we serişdeler bar.",
@@ -6767,6 +6769,7 @@
     "intro": "Her bir haýwan dollara bir sany pul töleýär. Onuň ýanyndaky göçme manydaky surat $ 0.001 -iň esasy bahasy - ulag şol sany diri bahasy üçin talap edýär, hiç haçan ondan artyk däl, şonuň üçin düşen bahasy bary artdyryp ýa-da eýýäm gazanan derejä gaýtaryp bilmez."
   },
   "postingAllowance": {
+    "footnote": "**Badjeň tierýň sýny — DeHub tokenlarýňýzýň baryň, BNB Chainde ve Base’de staklanýp, badjenýň sýnyňýn bazasy bolýr. Ladderýň fiyaty dollarlarda hesaplanýr, oşagly tokenlarýň sýny — her bir tierýň $0.001 satyshy fiyatynda neçe bolýp, token fiyatý arttyrýp, tierýň talepi azalyýr; bir tierýňýzý artyk kazandýp, fiyatýnýn gýzýndan alýnmaz. Bir patron sýnýna berýp bergen badjeňýňýzýňýz profilyňýze görünýr, amma post edýp berýp berýnizi artýrmaz — bu, sýnýzýňýzýň baryňdan kelýr. Talepler 00:00 UTCda sýfýrlaýp, burda bir gigabyte 1,024 MB bolýr.**"
   },
   "postComposer": {
     "homeFeedRestrictedDescription": "Bu post siziň profilyňyzda we \"Follow\" da diridir, ýöne öýde görünmez. DeHub tokenlerini saklaň we her gün öýden-öýe iýmitlenmek üçin ýokary tagtlary açyň.",

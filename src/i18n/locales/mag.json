@@ -7383,6 +7383,7 @@
     "linkPlaceholder": "इमेज या GIF के लिंक पेस्ट करीं",
     "addFromLink": "लिंक से जोड़ीं",
     "uploadFiles": "इमेज अपलोड करीं",
+    "uploadHint": "PNG, GIF, WebP या JPEG, हर एक २ MB तक का। आप एक साथ कई चुन सकते हैं।",
     "uploadHintGif": "जीआईएफ, पीएनजी, वेबपी या जेपीईजी 8 एमबी तक अभी लोग कुछ समय प्रतीक्षा करे हम आपलोगो को बहुत जल्द Solve Paper लेकर",
     "itemsAdded": "{{count}} जोड़ल गेल ({{skipped}} छोड़ल गेल)",
     "removeItem": "हटाबे के लेल",

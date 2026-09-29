@@ -729,6 +729,7 @@
     "errorVideoGenFailed": "Video generation failed",
     "errorVideoGenStart": "Yehlulekile ukuqala ukukhiqizwa kwevidiyo",
     "errorImageGenFailed": "Yehlulekile ukukhiqiza isithombe",
+    "fallbackGrokNotConfigured": "**Nginga kufuna ukuthi i-API key ya Grok asikho ukuthi isetshenziswe ngaphandle kweDeHub AI.**",
     "paymentSuccessGenerating": "Ukukhokha kuphumelele! Ukukhiqiza ividiyo yakho...",
     "imageGenerated": "Image generated!",
     "videoGenFailedDetail": "Video generation failed: {{error}}",
@@ -3605,6 +3606,7 @@
     "forShareOfPost": "nge {{pct}}% yephosti",
     "pctOfPost": "{{pct}}% yephosti",
     "overdueTitle_one": "{{count}} trade kudlule umnqamulajuqu wokuxazulula",
+    "overdueTitle_other": "{{count}} izohweba ngale kwesikhathi sokuxazululwa",
     "lateCount_one": "{{count}} sekwephuzile",
     "lateCount_other": "{{count}} sekwephuzile",
     "newSellerTitle": "Lo mthengisi akakaqedi ukuhweba ngezingxenyana",
@@ -4059,6 +4061,7 @@
     "toolImageEdit": "Ukuhlela Isithombe",
     "toolImageEditDesc": "Faka isithombe, chaza ushintsho, londoloza inhloso.",
     "toolSongStudio": "Istudiyo Sezingoma",
+    "toolSongStudioDesc": "Amathrekhi, izingwegwe, amazwi nokukhiqizwa kukhuthaza ngokugeleza okukodwa.",
     "toolVoiceAssistant": "Umsizi Wezwi",
     "toolVoiceAssistantDesc": "Ukusungulwa okungenazandla, ukusesha nokushicilela izilawuli.",
     "toolCreativeChat": "Ingxoxo Yobuciko",
@@ -4085,6 +4088,7 @@
     "featureMemoryCopy": "Izinhlamvu, amakhono nemithetho yebhrendi kuhlala kutholakala kuyo yonke imiyalelo.",
     "featureConnectedTitle": "Ixhunywe ku-DeHub",
     "featureConnectedCopy": "Gxuma usuka ethuluzini uye kumsizi, umhleli, i-TV, ama-ejenti noma amasethingi.",
+    "originalsAlt": "Ama-DeHub Originals — inkangala yangemva kwe-apocalyptic ene-wordmark ye-DeHub",
     "originalsBadge": "Okwasekuqaleni",
     "communityFeed": "Okuphakelayo Komphakathi",
     "userCreations": "OKUSUNGULIWE KOMSEBENZISI",
@@ -4298,7 +4302,8 @@
     "noneCreatedYet": "Awukasunguli amakhono okwamanje.",
     "noneYet": "Awekho amakhono okwamanje.",
     "createTheFirst": "Sungula eyokuqala",
-    "docsSeoTitle": "Iziqondiso Zekhono le-AI — DeHub"
+    "docsSeoTitle": "Iziqondiso Zekhono le-AI — DeHub",
+    "docsSeoDescription": "Imibhalo yereferensi yamakhono omsizi we-AI we-DeHub kanye nomtapo wezincwadi osheshayo."
   },
   "usernames": {
     "seoTitle": "Indawo Yemakethe Yegama Lomsebenzisi | I-DeHub",
@@ -4440,6 +4445,7 @@
     "sortPriceAsc": "Inani: Eliphansi → Eliphezulu",
     "sortPriceDesc": "Inani: Liphansi → Kakhulu",
     "sortFollowers": "Iningi labalandeli",
+    "sortUploads": "Most uploads",
     "priceDhb": "Intengo (amathokheni)",
     "bandUnder10k": "Ngaphansi kuka-10k",
     "band10kTo100k": "10 000 – 100 000",
@@ -4877,6 +4883,7 @@
     "requestAccessToAttend": "Cela ukufinyelela ukuze ube khona",
     "pending": "Kusalindiwe",
     "requestAccess": "Cela Imvume",
+    "details": "Details",
     "guests": "Izivakashi",
     "payFeeForChat": "Khokha imali yokungena ukuze ungene engxoxweni naku-RSVP",
     "requestPendingReview": "Isicelo sakho sisalindile — umsunguli uzosibuyekeza",
@@ -5082,6 +5089,7 @@
   },
   "depin": {
     "seoTitle": "I-DePin | Ingqalasizinda Yemidiya Eqhutshwa Umphakathi | I-DeHub",
+    "seoDescription": "I-DeHub DePin ivumela abantu ukuba banikele ngesitoreji, umkhawulokudonsa kanye nekhompyutha ukuze basize ekubungazeni, ekudluliseni ikhodi futhi bahambise imidiya ngenethiwekhi eqinile.",
     "navAria": "Ukunavigeyitha kwe-DePin",
     "dehubHome": "Ikhaya le-DeHub",
     "navHowItWorks": "Indlela okusebenza ngayo",
@@ -5180,6 +5188,7 @@
     "faqCanOperatorSeeQ": "Ingabe umsebenzisi we-node angakubona okusunguliwe akubungazayo?",
     "faqCanOperatorSeeA": "Okuqukethwe okuvikelwe kugcinwa njengezingxenye ezifihliwe futhi umbungazi akatholi okhiye bokudlala. Okusunguliwe komphakathi kuhlala kubonakala esidlangalaleni nge-DeHub ngomklamo.",
     "faqHowMuchQ": "Umsebenzisi we-node uzothola malini?",
+    "faqHowMuchA": "Asikho isilinganiso esinqunyiwe noma isibikezelo. Umnikelo oqinisekisiwe ungathola ingxenye ye-pool yomvuzo exhaswe ngemali engenayo ngemva kokuvalwa kwenkathi. Imivuzo ayiqinisekisiwe, futhi izindleko zikagesi, umkhawulokudonsa nomkhawulokudonsa zingadlula noma yimuphi umvuzo.",
     "faqSoftwareAvailableQ": "Ingabe isofthiwe ye-node iyatholakala manje?",
     "faqSoftwareAvailableA": "Ibanga elingasindi, elisekelwe kubhrawuza liyatholakala namuhla: ngena ngemvume futhi ukhethe ukungena kuleli khasi, futhi ithebhu yakho evulekile iba yinodi ngenkathi ihlala ivuliwe. I-node yedeskithophu esindayo, ehlala ikhona isiqondiso esishiwo sesikhathi esizayo — ayikho okwamanje.",
     "faqInstallNeededQ": "Ingabe kukhona engikudingayo ukufaka i-node yebhrawuza?",
@@ -7715,6 +7724,7 @@
       "close": "Vala i-app",
       "backToStore": "Buyela kuma-App",
       "notFound": "Le app ayikho ku-DeHub App Store, noma ikhishiwe.",
+      "badUrl": "Lelo kheli alikwazi ukuvulwa njenge-app encane. Kumelwe iqale nge-https://, noma ibe ikheli lombungazi wendawo kumodi yonjiniyela.",
       "readyTimeout": "Le app ayikaze ibizwenge-dehub.ready (), ngakho isikrini sokushelela sasifihliwe ngemva kwemizuzwana engu-8."
     },
     "signIn": {
@@ -7738,6 +7748,7 @@
       "yourApps": "Ama-app akho",
       "notificationsOn": "Izaziso zivuliwe",
       "remove": "Khipha",
+      "removed": "Ikhishiwe. Ngeke iphinde ikutshele.",
       "rising": "Okusha nokunyukayo"
     },
     "dev": {
@@ -7789,6 +7800,7 @@
       "payTitle": "Thatha izinkokhelo",
       "payBody": "Pay() ukuqala ukuthi ngumntu ube nge-DHB, ngokuhle kuwalethu olwethu olubhekisana naye nge-dehub.json. Ufuna ukuthi ufunde isikhathi esebenzisa yethu ngokuhle be kuya kuthi ufanele ukudlala ngokuthi ufanele ukudlala ngokuthi ufanele ukudlala.",
       "notifyTitle": "Senda i-notifikesheni",
+      "notifyBody": "Abasebenzisi abafaka i-app yakho bangatshelwa kusuka kuseva yakho ngokhiye wakho wokwazisa. Awekho amathokheni omsebenzisi ngamunye ongawagcina.",
       "rankTitle": "Indlela isitolo esilinganisa ngayo ama-app",
       "rankBody": "Njalo ebusuku i-app ngayinye efakwe ohlwini ithola amaphuzu: u-55% kubasebenzisi ababuyayo (abantu abayivulile kuleli sonto nangeviki elandulele), u-35% kubasebenzisi bamasonto onke, kanye nokukhuphuka ngo-10% ezinsukwini zalo zokuqala ezingu-14. Ama-akhawunti angene ngemvume e-DeHub kuphela abalwayo, ngakho ama-bots nokulayishwa kabusha kwamakhasi akuzuzi lutho.",
       "rewardsBody": "Inyanga ngayinye {{pool}} DHB yabiwa phakathi kwama-app ngamaphuzu afanayo, abalwa masonto onke. Ukuze ifaneleke, i-app idinga isikhwama somnikazi esiqinisekisiwe futhi okungenani abasebenzisi ababuyayo abangu-3. Imiklomelo ikhokhwa yi-DeHub esikhwameni semali somnikazi.",
@@ -7820,9 +7832,11 @@
       "body": "I-DHB iya ngqo esikhwameni se-app, {{wallet}}. Izinkokhelo azikwazi ukuhlehliswa.",
       "confirm": "Pay {{amount}} i-DHB",
       "sending": "Siyaphuma imali yethu…",
-      "sent": "Ngiyabonga kakhulu kwe{{amount}} DHB kwe{{name}}."
+      "sent": "Ngiyabonga kakhulu kwe{{amount}} DHB kwe{{name}}.",
+      "noOwner": "Le app ayinayo i-wallet eqinisekisiwe yokukhokha okwamanje."
     },
     "add": {
+      "body": "Izovela ngaphansi kwama-app Akho futhi ingakuthumela izaziso. Ungayisusa nganoma yisiphi isikhathi ekhasini le-Apps.",
       "confirm": "Faka i-app"
     }
   },

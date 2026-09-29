@@ -2540,7 +2540,6 @@
     }
   },
   "superpowers": {
-    "title": "SuperPowers",
     "intro": "একখান ব্যাজ আঁর নামর পাশর শিল্পর তুন বেশি কিছু কিনে দেয়। হর দুই সপ্তাহে ইয়ান বুস্ট দেয় — হর একখান পোস্টরে হোম ফিডর উপরর স্লটত থয়। তেরো স্তর, তেরো ক্ষমতা, প্রতি ধাপে একখান আনলক।",
     "boost": "বুস্ট",
     "secondWind": "সেকেন্ড উইন্ড",
@@ -4073,7 +4072,8 @@
     "type": "টাইপ করো",
     "searchPlaceholder": "নাম অনুসারে সার্চ করুন, ট্রিগার ফ্রেজ বা ক্রিয়েটর…",
     "noSearchMatch": "আপনার সার্চে কোনো স্কিল মিললো না।",
-    "noSkillsMatch": "কোনো স্কিল মিলে নাই।"
+    "noSkillsMatch": "কোনো স্কিল মিলে নাই।",
+    "docsSeoDescription": "DeHub-র AI অ্যাসিস্ট্যান্ট স্কিলস আর প্রম্পট লাইব্রেরির রেফারেন্স ডকুমেন্টেশন।"
   },
   "usernames": {
     "seoTitle": "Username Marketplace | ডিহাব",
@@ -5436,14 +5436,12 @@
     "statusError": "লেটেস্ট স্ট্যাটাস আনঅভেইলেবল। আপনার পেয়ার্চ সেভ হয়ে গেল। আবার চেক করুন; আরেকটি পেমেন্ট পাঠাবেন না।",
     "refundAddress": "রিফান্ড ঠিকানা: {{chain}}",
     "refundPlaceholder": "Address on the payment network",
-    "refundHint": "Check this is a wallet you control on the payment network. Avoid exchange addresses that require a memo or tag. Any provider refund returns here.",
     "quoteSummary": "Estimated payment: {{amount}} {{symbol}} on {{chain}}",
     "receiveNet": "তুমি রিসিভ করবা: {{amount}} ডিহাব টোকেন",
     "gasReserve": "${{amount}} ফি নেটওয়ার্ক গ্যাস অন্তর্ভুক্ত আছে",
     "swapEstimate": "আপনার পেমেন্ট কনফার্ম হয়ে গেলে {{minutes}} মিনিটের মধ্যে।",
     "estimateUnknown": "টাইমিং পেমেন্ট নেটওয়ার্কের উপর নির্ভর করে।",
     "confirmationTime": "নেটওয়ার্ক কনফার্মেশন আর টোকেন ডেলিভারি টাইম এড করে। এইটা একটা এস্টিমেট, কাউন্টডাউন না।",
-    "finalQuote": "Review the final amount before paying.",
     "getQuote": "কন্টিনিউ",
     "paymentAction": "কন্টিনিউ",
     "acceptTerms": "আমি ক্রয় শর্তাবলীতে সম্মত হইলাম।",
@@ -6523,6 +6521,7 @@
         "steps": {
           "1": "ক্লিক করো সাইডবারে 'পোস্ট' বাটনে (ডেস্কটপ) অথবা মোবাইলে '+' বাটনে।",
           "4": "ভয়েস নোট রেকর্ড করতে মাইক্রোফোন আইকন ক্লিক করুন।",
+          "6": "#হ্যাশট্যাগ দিয়ে আপনার পোস্ট ক্যাটাগরাইজ করুন (উদাহরণ: #ক্রিপ্টো, #ডিফাই)",
           "7": "$কাস্ট্যাগ ব্যবহার করে টোকেনস্‌স্‌ রেফারেন্স দিন (উদাহরণ: $ডিএইচবি, $ইথি)",
           "8": "@mentions কে ব্যবহার করো অন্য ইউজারদের ট্যাগ করার জন্য (উদাহরণ: @username)",
           "9": "\"পোস্ট\" বাটনে ক্লিক করো প্রকাশের জন্য। আপনার পোস্ট ফিডে তৎক্ষণাত দেখাবে।"
