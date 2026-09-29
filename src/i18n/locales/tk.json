@@ -4928,6 +4928,7 @@
     "heading": "DeHubda iş",
     "subheading": "Dezentralleşdirilen içi-mädäni habar beriş serişdesiniň gelejegini gurýan toparyň agzasy boluň",
     "open": "Aç",
+    "aboutTheRole": "Rol barada",
     "keyResponsibilities": "Esasy borçlar",
     "whatWereLookingFor": "Biz näme gözleýäris",
     "compensation": "Tazminat",
@@ -6766,8 +6767,7 @@
   "badgeLadder": {
     "intro": "Her bir haýwan dollara bir sany pul töleýär. Onuň ýanyndaky göçme manydaky surat $ 0.001 -iň esasy bahasy - ulag şol sany diri bahasy üçin talap edýär, hiç haçan ondan artyk däl, şonuň üçin düşen bahasy bary artdyryp ýa-da eýýäm gazanan derejä gaýtaryp bilmez."
   },
-  "postingAllowance": {
-  },
+  "postingAllowance": {},
   "postComposer": {
     "homeFeedRestrictedDescription": "Bu post siziň profilyňyzda we \"Follow\" da diridir, ýöne öýde görünmez. DeHub tokenlerini saklaň we her gün öýden-öýe iýmitlenmek üçin ýokary tagtlary açyň.",
     "postCostShortfall": "Bu post {{amount}}tokens we siz {{held}}saklaň.",
