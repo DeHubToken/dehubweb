@@ -64,6 +64,8 @@ export interface Comment {
    * the paid Comment Anchor and the tipped comments below it.
    */
   isPinned?: boolean;
+  /** The post's creator has replied somewhere in this comment's thread. */
+  creatorReplied?: boolean;
   /**
    * When this comment's paid Comment Anchor expires, or undefined.
    *
@@ -152,6 +154,7 @@ export function mapApiComment(apiComment: ApiCommentResponse): Comment {
     // reach draws the badge below the one they earned.
     badgeLock: hideBadge ? null : parseBadgeLock(apiComment.user?.badgeLock),
     isPinned: apiComment.isPinned === true,
+    creatorReplied: apiComment.creatorReplied === true,
     anchoredUntil: apiComment.anchoredUntil ? new Date(apiComment.anchoredUntil) : undefined,
   };
 }

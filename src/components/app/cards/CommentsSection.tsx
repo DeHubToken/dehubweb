@@ -91,7 +91,7 @@ import { ASSISTANT_AVATAR, mentionsAssistant, isAssistantAddress } from '@/lib/a
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { mapApiComment, type Comment, type VoiceNote } from '@/lib/comment-mapper';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
-import { hasUnresolvedParent } from '@/lib/comment-threading';
+import { hasUnresolvedParent, previewReplies, recordCreatorLifts } from '@/lib/comment-threading';
 import { usePostDiscussionSettings, useCommonGroundCompletion } from '@/hooks/use-post-discussion-settings';
 import { useConversationCoach, COACH_MIN_CHARS } from '@/hooks/use-conversation-coach';
 import { useCoachEnabled } from '@/hooks/use-coach-enabled';
@@ -1129,6 +1129,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   });
   const apiComments = useMemo(() => commentPages?.pages.flat(), [commentPages]);
 
+  // Threads the creator answered, ranked as the API first delivered them.
+  // Sticky per comment — see recordCreatorLifts for why a refetch can't move one.
+  const creatorLiftSeenRef = useRef(new Set<string>());
+  const creatorLiftedRef = useRef(new Set<string>());
+  const creatorLiftRanks = useMemo(
+    () => recordCreatorLifts(apiComments, creatorLiftSeenRef.current, creatorLiftedRef.current),
+    [apiComments],
+  );
+
   /**
    * Pull the pages a loaded reply's parent is sitting on.
    *
@@ -1558,13 +1567,19 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
      * and this list re-sorts client-side on every tab and search — which is
      * exactly how a bought anchor used to lose the top of the thread the
      * moment the page it arrived on was rendered.
+     *
+     * Under those, on Recent only, the threads the creator has answered, most
+     * recently answered first. Oldest and Most Liked are the reader asking for
+     * a specific order, and a ranking signal has no business overriding it.
      */
     const now = Date.now();
     const lift = ({ comment }: CommentThread) => {
       if (comment.isPinned) return 0;
       if (comment.anchoredUntil && comment.anchoredUntil.getTime() > now) return 1;
       const tipped = topTippedIds.indexOf(comment.id);
-      return tipped === -1 ? Number.MAX_SAFE_INTEGER : 2 + tipped;
+      if (tipped !== -1) return 2 + tipped;
+      const answered = sortBy === 'recent' ? creatorLiftRanks.get(comment.id) : undefined;
+      return answered === undefined ? Number.MAX_SAFE_INTEGER : 2 + topTippedIds.length + answered;
     };
 
     return [...filtered].sort((a, b) => {
@@ -1581,7 +1596,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       // Default: sort by most recent (newest first)
       return b.comment.createdAt.getTime() - a.comment.createdAt.getTime();
     });
-  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId, topTippedIds]);
+  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId, topTippedIds, creatorLiftRanks]);
 
   /**
    * Bring the linked comment into view once it has actually rendered.
@@ -2073,7 +2088,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     // A search hit can be the reply itself — collapsing the thread would hide
     // the very row the query matched, so searching opens every thread.
     const isExpanded = expandedThreads.has(comment.id) || !!searchQuery.trim();
-    const shown = isExpanded ? replies : replies.slice(0, REPLIES_SHOWN_COLLAPSED);
+    const shown = isExpanded
+      ? replies
+      : previewReplies(replies, postCreator?.address, REPLIES_SHOWN_COLLAPSED);
     const hiddenCount = replies.length - shown.length;
 
     return (
