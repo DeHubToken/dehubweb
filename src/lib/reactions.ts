@@ -284,6 +284,7 @@ export function reactionForTap(
  * headline count and the per-reaction split by it, so a tray that moved by one
  * while the headline moved by three would visibly disagree with itself. It is
  * one reaction either way; the weight is only what that reaction counts for.
+ * Dislikes are the exception: they always display as one.
  */
 export function applyReactionDelta(
   counts: ReactionCounts | null | undefined,
@@ -294,8 +295,11 @@ export function applyReactionDelta(
   const result: ReactionCounts = { ...(counts ?? {}) };
   if (previous === next) return result;
   const by = Number.isFinite(weight) ? Math.max(1, Math.floor(weight)) : 1;
-  if (previous) result[previous] = Math.max(0, (result[previous] ?? 0) - by);
-  if (next) result[next] = (result[next] ?? 0) + by;
+  // A dislike always shows as one. Its badge weight still counts toward
+  // moderation on the server, it just is not what the post displays.
+  const shown = (reaction: PostReaction) => (isPositiveReaction(reaction) ? by : 1);
+  if (previous) result[previous] = Math.max(0, (result[previous] ?? 0) - shown(previous));
+  if (next) result[next] = (result[next] ?? 0) + shown(next);
   return result;
 }
 

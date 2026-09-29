@@ -137,6 +137,12 @@ describe('applyReactionDelta', () => {
   it('is a no-op when the reaction is unchanged', () => {
     expect(applyReactionDelta({ like: 5 }, 'like', 'like')).toEqual({ like: 5 });
   });
+
+  it('shows a badge holder\'s dislike as one while their like keeps its weight', () => {
+    expect(applyReactionDelta({}, null, 'dislike', 14)).toEqual({ dislike: 1 });
+    expect(applyReactionDelta({ like: 14 }, 'like', 'dislike', 14)).toEqual({ like: 0, dislike: 1 });
+    expect(applyReactionDelta({ dislike: 1 }, 'dislike', 'love', 14)).toEqual({ dislike: 0, love: 14 });
+  });
 });
 
 describe('resolveReactionCounts', () => {
