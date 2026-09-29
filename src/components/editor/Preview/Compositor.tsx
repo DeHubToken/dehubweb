@@ -29,7 +29,8 @@ import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
 import type { Clip, MediaClip, TextClip } from "@/lib/editor/types";
 import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
-import { clipBox, drawClip, getTransform, isVisualClip, placementPatch, pointInBox, type ClipBox } from "@/lib/editor/render";
+import { clipBox, drawClip, getTransform, isVisualClip, placementPatch, placementPatchAt, pointInBox, type ClipBox } from "@/lib/editor/render";
+import { resolveClipAt } from "@/lib/editor/keyframes";
 import { useCloseOnSurfaceSwitch } from "@/hooks/use-surface-switch";
 import { useEditorQuota } from "@/hooks/use-editor-quota";
 import { importFiles } from "@/lib/editor/importFiles";
@@ -297,7 +298,7 @@ export function Compositor() {
           const selId = state.selectedClipIds.length === 1 ? state.selectedClipIds[0] : null;
           const sel = selId ? state.clips.find((c) => c.id === selId) : null;
           const visible = sel && isVisualClip(sel) && !sel.hidden && time >= sel.start && time <= sel.start + sel.duration;
-          const next = visible ? clipBox(ctx, sel, W, H, sources) : null;
+          const next = visible ? clipBox(ctx, resolveClipAt(sel, time), W, H, sources) : null;
           if (!sameBox(next, selBoxRef.current)) {
             selBoxRef.current = next;
             setSelBox(next);
@@ -417,7 +418,7 @@ export function Compositor() {
       // Hidden and locked layers are not pickable on the canvas; the Layers panel still reaches them.
       .filter((c) => isVisualClip(c) && !c.hidden && !c.locked && !hidden.has(c.trackId) && now >= c.start && now <= c.start + c.duration)
       .sort((a, b) => z(a.trackId) - z(b.trackId))
-      .map((clip) => ({ clip, box: clipBox(ctx, clip, s.settings.width, s.settings.height, sources) }))
+      .map((clip) => ({ clip, box: clipBox(ctx, resolveClipAt(clip, now), s.settings.width, s.settings.height, sources) }))
       .filter((l): l is { clip: Clip; box: ClipBox } => !!l.box);
   }, [sources]);
 
@@ -505,10 +506,10 @@ export function Compositor() {
       setGuides({ v: sx ? [sx.line] : [], h: sy ? [sy.line] : [] });
       const dx = (cx - g.box.cx) / W;
       const dy = (cy - g.box.cy) / H;
-      s.patchClipLive(g.id, placementPatch(clip, { x: g.ax + dx, y: g.ay + dy }));
+      s.patchClipLive(g.id, placementPatchAt(clip, { x: g.ax + dx, y: g.ay + dy }, s.currentTime));
       for (const m of g.group) {
         const other = s.clips.find((c) => c.id === m.id);
-        if (other) s.patchClipLive(m.id, placementPatch(other, { x: m.ax + dx, y: m.ay + dy }));
+        if (other) s.patchClipLive(m.id, placementPatchAt(other, { x: m.ax + dx, y: m.ay + dy }, s.currentTime));
       }
       return;
     }
@@ -519,7 +520,7 @@ export function Compositor() {
       if (clip.kind === "text") {
         s.patchClipLive(g.id, { fontSize: Math.round(Math.max(6, Math.min(800, g.font * k))) });
       } else {
-        s.patchClipLive(g.id, placementPatch(clip, { scale: Math.max(0.05, Math.min(20, g.scale * k)) }));
+        s.patchClipLive(g.id, placementPatchAt(clip, { scale: Math.max(0.05, Math.min(20, g.scale * k)) }, s.currentTime));
       }
       return;
     }
@@ -546,7 +547,7 @@ export function Compositor() {
       const nearest = Math.round(rot / 45) * 45;
       if (Math.abs(rot - nearest) < 4) rot = nearest;
     }
-    s.patchClipLive(g.id, placementPatch(clip, { rotation: Math.round(rot * 10) / 10 }));
+    s.patchClipLive(g.id, placementPatchAt(clip, { rotation: Math.round(rot * 10) / 10 }, s.currentTime));
   }, [toCanvas, layersAt, scale, setMarquee]);
 
   const onGestureEnd = useCallback(() => {
@@ -651,14 +652,15 @@ export function Compositor() {
     // Grabbing a layer that is part of a multi-selection moves the whole group.
     const inGroup = selectedClipIds.length > 1 && selectedClipIds.includes(hit.clip.id);
     if (!inGroup && (selectedClipIds[0] !== hit.clip.id || selectedClipIds.length !== 1)) selectClip(hit.clip.id);
-    const tr = getTransform(hit.clip);
+    const now = useEditorStore.getState().currentTime;
+    const tr = getTransform(resolveClipAt(hit.clip, now));
     const all = useEditorStore.getState().clips;
     const group = inGroup
       ? selectedClipIds
           .filter((id) => id !== hit.clip.id)
           .map((id) => all.find((c) => c.id === id))
           .filter((c): c is Clip => !!c && isVisualClip(c) && !c.locked)
-          .map((c) => ({ id: c.id, ax: getTransform(c).x, ay: getTransform(c).y }))
+          .map((c) => { const r = getTransform(resolveClipAt(c, now)); return { id: c.id, ax: r.x, ay: r.y }; })
       : [];
     startGesture({ mode: "move", id: hit.clip.id, px: p.x, py: p.y, box: hit.box, ax: tr.x, ay: tr.y, group });
   };
@@ -668,7 +670,7 @@ export function Compositor() {
     e.stopPropagation();
     if (!selectedClip || !selBox) return;
     const p = toCanvas(e.clientX, e.clientY);
-    const tr = getTransform(selectedClip);
+    const tr = getTransform(resolveClipAt(selectedClip, useEditorStore.getState().currentTime));
     if (mode === "stretch-x" || mode === "stretch-y") {
       startGesture({ mode: "stretch", id: selectedClip.id, box: selBox, axis: mode === "stretch-x" ? "x" : "y", scale: tr.scale });
     } else if (mode === "scale") {
