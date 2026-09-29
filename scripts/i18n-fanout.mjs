@@ -371,6 +371,11 @@ function toLocaleScript(text, locale) {
   // line into Mtavruli (U+1C90…), which reads as a stray display capital —
   // "Საყოველთაო". Every letter there has a Mkhedruli lowercase form.
   if (locale === 'ka') return text.replace(/[Ა-Ჿ]/g, (ch) => ch.toLowerCase());
+  // French puts a no-break space before » : ; ! ?. The regular one (U+00A0)
+  // after é reads to scripts/mojibake-check.mjs as a mis-decoded CJK character
+  // and fails CI; the narrow one (U+202F) is the preferred French spacing and
+  // does not.
+  if (locale === 'fr') return text.replace(/ (?=[»:;!?])/g, ' ');
   if (locale !== 'sr') return text;
   let out = '';
   let last = 0;
