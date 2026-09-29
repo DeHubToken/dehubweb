@@ -21,7 +21,8 @@ import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMiniAppHost } from '@/lib/miniapp/host-bridge';
-import { parseAppUrl, type LaunchSource, type MiniAppContext } from '@/lib/miniapp/protocol';
+import { launchUrl, parseAppUrl, type LaunchSource, type MiniAppContext } from '@/lib/miniapp/protocol';
+import { useFarcasterHost } from '@/lib/miniapp/farcaster-host';
 import { fetchAppBySlug, type MiniAppListing } from '@/lib/miniapp/registry';
 
 const PostModal = React.lazy(() =>
@@ -118,17 +119,15 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
     setSignInAsk(null);
   };
 
-  useMiniAppHost(frameRef, {
-    appUrl: app.url,
-    context,
-    onReady: () => setReady(true),
-    onClose: close,
-    onCompose: (text) => {
-      setComposerMounted(true);
-      setDraft(text || ' ');
-    },
-    requestSignIn,
-  });
+  const onCompose = useCallback((text: string) => {
+    setComposerMounted(true);
+    setDraft(text || ' ');
+  }, []);
+  const onReady = useCallback(() => setReady(true), []);
+
+  useMiniAppHost(frameRef, { appUrl: app.url, context, onReady, onClose: close, onCompose, requestSignIn });
+  // Apps built for Farcaster speak its SDK instead; answer that too.
+  useFarcasterHost(frameRef, { appUrl: app.url, context, onReady, onClose: close, onCompose });
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-center bg-black">
@@ -266,6 +265,7 @@ export function MiniAppDevRunPage() {
 export default function MiniAppPage() {
   const { t } = useTranslation();
   const { slug = '' } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
   const [listing, setListing] = useState<MiniAppListing | null | undefined>(undefined);
 
   useEffect(() => {
@@ -286,7 +286,7 @@ export default function MiniAppPage() {
       </div>
     );
   }
-  const url = listing ? parseAppUrl(listing.home_url) : null;
+  const url = listing ? launchUrl(listing.home_url, searchParams) : null;
   if (!listing || !url) return <Unavailable message={t('miniApps.host.notFound')} />;
 
   const pageUrl = `https://dehub.io/apps/${listing.slug}`;
