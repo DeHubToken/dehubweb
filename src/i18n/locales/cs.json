@@ -7571,5 +7571,22 @@
     "progressive": "Progresivista",
     "nationalist": "Nacionalista",
     "communist": "Komunista"
+  },
+  "apk": {
+    "seoTitle": "Stáhněte si DeHub APK — nejnovější verze pro Android",
+    "seoDescription": "Vynechte obchody a stáhněte si nejnovější verzi DeHub přímo tady. Přímé stažení APK pro Android — open source, sociální síť vlastněná uživateli, bez účtu v obchodě.",
+    "ldDescription": "Aplikace DeHub pro Android jako přímé stažení APK. Open source, sociální síť vlastněná uživateli — bez účtu v obchodě.",
+    "back": "Zpět na DeHub",
+    "title": "Vynechte obchody.",
+    "subtitle": "Stáhněte si nejnovější verzi DeHub přímo tady — rovnou od nás, bez účtu v obchodě a bez čekání na schválení.",
+    "download": "Stáhnout",
+    "installHint": "Až se Android zeptá, povolte instalaci z prohlížeče. Aktualizujete? Nainstalujte novou verzi přes stávající aplikaci, není třeba ji odinstalovat.",
+    "useInBrowser": "Používat DeHub v prohlížeči",
+    "googlePlay": "Dáváte přednost Google Play? Stáhněte si ho tam.",
+    "shareText": "Vynechte obchody — stáhněte si nejnovější verzi DeHub pro Android přímo.",
+    "shareX": "Sdílet na X",
+    "shareFacebook": "Sdílet na Facebooku",
+    "shareTelegram": "Sdílet na Telegramu",
+    "copyLink": "Kopírovat odkaz"
   }
 }

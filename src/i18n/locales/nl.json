@@ -7893,5 +7893,22 @@
     "progressive": "Progressief",
     "nationalist": "Nationalist",
     "communist": "Communist"
+  },
+  "apk": {
+    "seoTitle": "Download de DeHub APK — nieuwste Android-build",
+    "seoDescription": "Sla de appwinkels over en haal de nieuwste versie van DeHub gewoon hier. Directe APK-download voor Android — open source, sociale media in handen van gebruikers, geen winkelaccount nodig.",
+    "ldDescription": "De DeHub Android-app als directe APK-download. Open source, sociale media in handen van gebruikers — geen winkelaccount nodig.",
+    "back": "Terug naar DeHub",
+    "title": "Sla de appwinkels over.",
+    "subtitle": "Haal de nieuwste versie van DeHub gewoon hier — rechtstreeks van ons, zonder winkelaccount en zonder te wachten in een beoordelingswachtrij.",
+    "download": "Nu downloaden",
+    "installHint": "Sta installaties vanuit je browser toe wanneer Android erom vraagt. Aan het updaten? Installeer over je bestaande app heen, zonder eerst te verwijderen.",
+    "useInBrowser": "Gebruik DeHub in je browser",
+    "googlePlay": "Liever Google Play? Haal hem daar.",
+    "shareText": "Sla de appwinkels over — haal de nieuwste DeHub Android-build rechtstreeks.",
+    "shareX": "Delen op X",
+    "shareFacebook": "Delen op Facebook",
+    "shareTelegram": "Delen op Telegram",
+    "copyLink": "Link kopiëren"
   }
 }

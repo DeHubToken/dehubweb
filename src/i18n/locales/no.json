@@ -5512,5 +5512,22 @@
     "progressive": "Progressiv",
     "nationalist": "Nasjonalist",
     "communist": "Kommunist"
+  },
+  "apk": {
+    "seoTitle": "Last ned DeHub APK — nyeste Android-bygg",
+    "seoDescription": "Hopp over appbutikkene og hent den nyeste versjonen av DeHub rett her. Direkte APK-nedlasting for Android — åpen kildekode, sosiale medier eid av brukerne, ingen butikkonto nødvendig.",
+    "ldDescription": "DeHub-appen for Android som direkte APK-nedlasting. Åpen kildekode, sosiale medier eid av brukerne — ingen butikkonto nødvendig.",
+    "back": "Tilbake til DeHub",
+    "title": "Hopp over appbutikkene.",
+    "subtitle": "Hent den nyeste versjonen av DeHub rett her — direkte fra oss, uten butikkonto og uten å vente i en gjennomgangskø.",
+    "download": "Last ned nå",
+    "installHint": "Tillat installasjoner fra nettleseren når Android spør. Oppdaterer du? Installer over den eksisterende appen uten å avinstallere.",
+    "useInBrowser": "Bruk DeHub i nettleseren",
+    "googlePlay": "Foretrekker du Google Play? Hent den der i stedet.",
+    "shareText": "Hopp over appbutikkene — hent det nyeste DeHub Android-bygget direkte.",
+    "shareX": "Del på X",
+    "shareFacebook": "Del på Facebook",
+    "shareTelegram": "Del på Telegram",
+    "copyLink": "Kopier lenke"
   }
 }

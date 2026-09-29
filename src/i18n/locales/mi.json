@@ -5512,5 +5512,22 @@
     "progressive": "Kauneke",
     "nationalist": "Tangata whenua",
     "communist": "Komunihi"
+  },
+  "apk": {
+    "seoTitle": "Tangohia te APK DeHub — Te Putanga Android Hou Rawa",
+    "seoDescription": "Waiho ngā toa taupānga, tikina te putanga hou rawa o DeHub i konei tonu. He APK tika mō Android — he pūtake tuwhera, he pāpāho pāpori nā ngā kaiwhakamahi, kāore he pūkete toa e hiahiatia.",
+    "ldDescription": "Te taupānga Android DeHub hei APK ka tangohia tikatia. He pūtake tuwhera, he pāpāho pāpori nā ngā kaiwhakamahi — kāore he pūkete toa e hiahiatia.",
+    "back": "Hoki ki DeHub",
+    "title": "Waiho ngā toa.",
+    "subtitle": "Tikina te putanga hou rawa o DeHub i konei tonu — mai i a mātou tonu, kāore he pūkete toa, kāore he tatari mō te arotake.",
+    "download": "Tangohia ināianei",
+    "installHint": "Whakaaetia ngā tāutanga mai i tō pūtirotiro ina pātai a Android. Kei te whakahou? Tāutahia ki runga i tō taupānga o nāianei, kaua e wetewete.",
+    "useInBrowser": "Whakamahia a DeHub i tō pūtirotiro",
+    "googlePlay": "He pai ake ki a koe a Google Play? Tikina i reira.",
+    "shareText": "Waiho ngā toa — tikina tikatia te putanga Android hou rawa o DeHub.",
+    "shareX": "Tiri ki X",
+    "shareFacebook": "Tiri ki Facebook",
+    "shareTelegram": "Tiri ki Telegram",
+    "copyLink": "Tāruatia te hononga"
   }
 }

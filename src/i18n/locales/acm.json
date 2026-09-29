@@ -5447,5 +5447,22 @@
     "progressive": "تقدمي",
     "nationalist": "قومي",
     "communist": "شيوعي"
+  },
+  "apk": {
+    "seoTitle": "نزّل APK مال DeHub — آخر نسخة Android",
+    "seoDescription": "طفّر المتاجر وخذ آخر نسخة من DeHub هنا. تحميل APK مباشر لـ Android — مفتوح المصدر، سوشيال ميديا ملك المستخدمين، وما تحتاج حساب بالمتجر.",
+    "ldDescription": "تطبيق DeHub لـ Android كتحميل APK مباشر. مفتوح المصدر، سوشيال ميديا ملك المستخدمين — ما تحتاج حساب بالمتجر.",
+    "back": "ارجع لـ DeHub",
+    "title": "طفّر المتاجر.",
+    "subtitle": "خذ آخر نسخة من DeHub هنا — منّا مباشرة، بلا حساب متجر، وبلا انتظار مراجعة.",
+    "download": "حمّل هسه",
+    "installHint": "من يسألك Android، اسمح بالتثبيت من المتصفح. دتحدّث؟ ثبّت فوق التطبيق الموجود بلا ما تمسحه.",
+    "useInBrowser": "استخدم DeHub بالمتصفح",
+    "googlePlay": "تفضّل Google Play؟ نزّله من هناك.",
+    "shareText": "طفّر المتاجر — خذ آخر نسخة DeHub لـ Android مباشرة.",
+    "shareX": "شارك على X",
+    "shareFacebook": "شارك على Facebook",
+    "shareTelegram": "شارك على Telegram",
+    "copyLink": "انسخ الرابط"
   }
 }

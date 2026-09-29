@@ -6326,5 +6326,22 @@
     "followers": "关注者",
     "subscribers": "订阅者",
     "mentioned": "提到其人"
+  },
+  "apk": {
+    "seoTitle": "下载 DeHub APK — 最新 Android 版本",
+    "seoDescription": "绕开应用商店，直接在这里获取最新版 DeHub。Android 版 APK 直接下载 — 开源、由用户拥有的社交媒体，无需商店账号。",
+    "ldDescription": "DeHub Android 应用，APK 直接下载。开源、由用户拥有的社交媒体 — 无需商店账号。",
+    "back": "返回 DeHub",
+    "title": "绕开应用商店。",
+    "subtitle": "直接在这里获取最新版 DeHub — 由我们直接提供，无需商店账号，不用排队等审核。",
+    "download": "立即下载",
+    "installHint": "Android 询问时，请允许从浏览器安装。要更新？直接覆盖安装现有应用即可，无需卸载。",
+    "useInBrowser": "在浏览器中使用 DeHub",
+    "googlePlay": "更喜欢 Google Play？也可以在那里下载。",
+    "shareText": "绕开应用商店 — 直接获取最新的 DeHub Android 版本。",
+    "shareX": "分享到 X",
+    "shareFacebook": "分享到 Facebook",
+    "shareTelegram": "分享到 Telegram",
+    "copyLink": "复制链接"
   }
 }

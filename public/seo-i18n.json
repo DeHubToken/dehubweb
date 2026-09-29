@@ -551,6 +551,340 @@
       "description": "用 DHB 买卖已经养起来的 DeHub 账号。按粉丝数、上传量和账号年龄浏览——handle、帖子、粉丝和徽章权益全部随之转移，款项直接付给卖家。"
     }
   },
+  "/apk": {
+    "af": {
+      "title": "Laai die DeHub APK af — Nuutste Android-weergawe",
+      "description": "Slaan die winkels oor en kry die nuutste weergawe van DeHub hier. Direkte APK-aflaai vir Android — oopbron, gebruikers-besitte sosiale media, geen winkelrekening nodig nie."
+    },
+    "am": {
+      "title": "የDeHub APK ያውርዱ — የቅርብ ጊዜው የAndroid ስሪት",
+      "description": "መደብሮችን ይዝለሉ እና የቅርብ ጊዜውን የDeHub ስሪት እዚሁ ያግኙ። ለAndroid ቀጥተኛ የAPK ማውረድ — ክፍት ምንጭ፣ በተጠቃሚዎች የተያዘ ማህበራዊ ሚዲያ፣ የመደብር መለያ አያስፈልግም።"
+    },
+    "ar": {
+      "title": "تنزيل DeHub APK — أحدث إصدار لـ Android",
+      "description": "تجاوز المتاجر واحصل على أحدث إصدار من DeHub هنا. تنزيل APK مباشر لـ Android — مفتوح المصدر، وسائل تواصل اجتماعي يملكها المستخدمون، دون الحاجة إلى حساب في المتجر."
+    },
+    "az": {
+      "title": "DeHub APK-nı endir — Ən son Android versiyası",
+      "description": "Mağazaları keçin və DeHub-ın ən son versiyasını elə buradan əldə edin. Android üçün birbaşa APK endirmə — açıq mənbəli, istifadəçilərə məxsus sosial media, mağaza hesabı lazım deyil."
+    },
+    "be": {
+      "title": "Спампаваць DeHub APK — апошняя зборка для Android",
+      "description": "Абыдзіце крамы і атрымайце апошнюю версію DeHub проста тут. Прамое спампоўванне APK для Android — адкрыты код, сацыяльная сетка, якая належыць карыстальнікам, уліковы запіс у краме не патрэбны."
+    },
+    "bg": {
+      "title": "Изтегли DeHub APK — най-новата версия за Android",
+      "description": "Пропуснете магазините и вземете най-новата версия на DeHub направо тук. Директно изтегляне на APK за Android — отворен код, социална мрежа, притежавана от потребителите, без нужда от акаунт в магазин."
+    },
+    "bn": {
+      "title": "DeHub APK ডাউনলোড করুন — সর্বশেষ Android বিল্ড",
+      "description": "স্টোর এড়িয়ে DeHub-এর সর্বশেষ সংস্করণ এখানেই নিন। Android-এর জন্য সরাসরি APK ডাউনলোড — ওপেন সোর্স, ব্যবহারকারীদের মালিকানাধীন সোশ্যাল মিডিয়া, কোনো স্টোর অ্যাকাউন্ট লাগবে না।"
+    },
+    "ca": {
+      "title": "Descarrega l'APK de DeHub — Última versió per a Android",
+      "description": "Salta't les botigues i aconsegueix l'última versió de DeHub aquí mateix. Descàrrega directa de l'APK per a Android — codi obert, xarxa social propietat dels usuaris, sense compte de botiga."
+    },
+    "cs": {
+      "title": "Stáhněte si DeHub APK — nejnovější verze pro Android",
+      "description": "Vynechte obchody a stáhněte si nejnovější verzi DeHub přímo tady. Přímé stažení APK pro Android — open source, sociální síť vlastněná uživateli, bez účtu v obchodě."
+    },
+    "da": {
+      "title": "Download DeHub APK — Nyeste Android-build",
+      "description": "Spring butikkerne over og få den nyeste version af DeHub lige her. Direkte APK-download til Android — open source, brugerejede sociale medier, ingen butikskonto nødvendig."
+    },
+    "de": {
+      "title": "DeHub APK herunterladen — Neuester Android-Build",
+      "description": "Vergiss die Stores und hol dir die neueste Version von DeHub direkt hier. Direkter APK-Download für Android — Open Source, Social Media im Besitz der Nutzer, kein Store-Konto nötig."
+    },
+    "el": {
+      "title": "Κατεβάστε το DeHub APK — Η νεότερη έκδοση για Android",
+      "description": "Παρακάμψτε τα καταστήματα και πάρτε την πιο πρόσφατη έκδοση του DeHub εδώ. Άμεση λήψη APK για Android — ανοιχτός κώδικας, μέσο κοινωνικής δικτύωσης που ανήκει στους χρήστες, χωρίς λογαριασμό καταστήματος."
+    },
+    "en": {
+      "title": "Download the DeHub APK — Latest Android Build",
+      "description": "Skip the stores and get the latest version of DeHub right here. Direct APK download for Android — open source, user-owned social media, no store account needed."
+    },
+    "es": {
+      "title": "Descarga el APK de DeHub — Última versión para Android",
+      "description": "Olvídate de las tiendas y consigue la última versión de DeHub aquí mismo. Descarga directa del APK para Android — código abierto, red social propiedad de sus usuarios, sin cuenta en ninguna tienda."
+    },
+    "et": {
+      "title": "Laadi alla DeHub APK — uusim Android-versioon",
+      "description": "Jäta poed vahele ja hangi DeHubi uusim versioon otse siit. Otsene APK allalaadimine Androidile — avatud lähtekoodiga, kasutajatele kuuluv sotsiaalmeedia, poe kontot pole vaja."
+    },
+    "fa": {
+      "title": "دانلود APK برنامه DeHub — آخرین نسخه Android",
+      "description": "فروشگاه‌های برنامه را کنار بگذارید و آخرین نسخه DeHub را همین‌جا دریافت کنید. دانلود مستقیم APK برای Android — شبکه اجتماعی متن‌باز و متعلق به کاربران، بدون نیاز به حساب فروشگاه."
+    },
+    "fi": {
+      "title": "Lataa DeHub APK — uusin Android-versio",
+      "description": "Ohita sovelluskaupat ja hanki DeHubin uusin versio suoraan täältä. Suora APK-lataus Androidille — avoimen lähdekoodin, käyttäjien omistama sosiaalinen media, kauppatiliä ei tarvita."
+    },
+    "fr": {
+      "title": "Télécharger l'APK DeHub — Dernière version Android",
+      "description": "Passez-vous des stores et obtenez la dernière version de DeHub ici même. Téléchargement direct de l'APK pour Android — réseau social open source, détenu par ses utilisateurs, sans compte store."
+    },
+    "gu": {
+      "title": "DeHub APK ડાઉનલોડ કરો — નવીનતમ Android બિલ્ડ",
+      "description": "એપ સ્ટોર્સને છોડો અને DeHub નું નવીનતમ વર્ઝન અહીંથી જ મેળવો. Android માટે સીધું APK ડાઉનલોડ — ઓપન સોર્સ, યુઝર્સની માલિકીનું સોશિયલ મીડિયા, સ્ટોર એકાઉન્ટની જરૂર નથી."
+    },
+    "ha": {
+      "title": "Sauke APK na DeHub — Sabon Sigar Android",
+      "description": "Ka tsallake shagunan manhajoji ka sami sabon sigar DeHub a nan. Saukewar APK kai tsaye don Android — kafar sada zumunta ta buɗaɗɗen tushe mallakar masu amfani, ba a buƙatar asusun shago."
+    },
+    "he": {
+      "title": "הורדת ה-APK של DeHub — גרסת Android העדכנית",
+      "description": "מדלגים על חנויות האפליקציות ומקבלים את הגרסה העדכנית של DeHub ממש כאן. הורדת APK ישירה ל-Android — רשת חברתית בקוד פתוח בבעלות המשתמשים, בלי צורך בחשבון בחנות."
+    },
+    "hi": {
+      "title": "DeHub APK डाउनलोड करें — नवीनतम Android बिल्ड",
+      "description": "ऐप स्टोर की झंझट छोड़ें और DeHub का नवीनतम वर्ज़न यहीं पाएँ। Android के लिए सीधा APK डाउनलोड — ओपन सोर्स, यूज़र्स के स्वामित्व वाला सोशल मीडिया, स्टोर अकाउंट की ज़रूरत नहीं।"
+    },
+    "hr": {
+      "title": "Preuzmi DeHub APK — najnovija verzija za Android",
+      "description": "Zaobiđi trgovine aplikacija i preuzmi najnoviju verziju DeHuba upravo ovdje. Izravno preuzimanje APK-a za Android — društvena mreža otvorenog koda u vlasništvu korisnika, bez računa u trgovini."
+    },
+    "hu": {
+      "title": "DeHub APK letöltése — a legújabb Android-verzió",
+      "description": "Hagyd ki az alkalmazásboltokat, és töltsd le a DeHub legújabb verzióját itt. Közvetlen APK-letöltés Androidra — nyílt forráskódú, felhasználói tulajdonú közösségi média, bolti fiók nélkül."
+    },
+    "hy": {
+      "title": "Ներբեռնեք DeHub APK-ն — Android-ի վերջին տարբերակը",
+      "description": "Շրջանցեք հավելվածների խանութները և ստացեք DeHub-ի վերջին տարբերակը հենց այստեղ։ APK-ի ուղիղ ներբեռնում Android-ի համար — բաց կոդով, օգտատերերին պատկանող սոցիալական ցանց, առանց խանութի հաշվի։"
+    },
+    "id": {
+      "title": "Unduh APK DeHub — Build Android Terbaru",
+      "description": "Tak perlu toko aplikasi, dapatkan versi terbaru DeHub langsung di sini. Unduhan APK langsung untuk Android — media sosial sumber terbuka milik pengguna, tanpa perlu akun toko."
+    },
+    "ig": {
+      "title": "Budata APK DeHub — Ụdị Android Kachasị Ọhụrụ",
+      "description": "Gafee ụlọ ahịa ngwa ma nweta ụdị DeHub kachasị ọhụrụ ebe a. Nbudata APK ozugbo maka Android — mgbasa ozi mmekọrịta nwere koodu mepere emepe, nke ndị ọrụ nwe, achọghị akaụntụ ụlọ ahịa."
+    },
+    "it": {
+      "title": "Scarica l'APK di DeHub — Ultima build Android",
+      "description": "Salta gli store e scarica l'ultima versione di DeHub direttamente qui. Download diretto dell'APK per Android — social media open source e di proprietà degli utenti, senza bisogno di un account store."
+    },
+    "ja": {
+      "title": "DeHub APK をダウンロード — 最新の Android ビルド",
+      "description": "アプリストアを通さずに、DeHub の最新バージョンをここから入手できます。Android 向け APK の直接ダウンロード — オープンソースでユーザーが所有するソーシャルメディア。ストアのアカウントは不要です。"
+    },
+    "jv": {
+      "title": "Unduh APK DeHub — Build Android Paling Anyar",
+      "description": "Ora perlu toko aplikasi, entuk versi DeHub paling anyar langsung ing kene. Unduhan APK langsung kanggo Android — media sosial open source sing diduweni pangguna, ora perlu akun toko."
+    },
+    "ka": {
+      "title": "ჩამოტვირთეთ DeHub APK — Android-ის უახლესი ვერსია",
+      "description": "გვერდი აუარეთ აპების მაღაზიებს და მიიღეთ DeHub-ის უახლესი ვერსია პირდაპირ აქ. APK-ის პირდაპირი ჩამოტვირთვა Android-ისთვის — ღია კოდის, მომხმარებლების საკუთრებაში არსებული სოციალური ქსელი, მაღაზიის ანგარიშის გარეშე."
+    },
+    "kk": {
+      "title": "DeHub APK жүктеп алу — Android-тың соңғы нұсқасы",
+      "description": "Қолданбалар дүкенін айналып өтіп, DeHub-тың соңғы нұсқасын дәл осы жерден алыңыз. Android үшін APK-ны тікелей жүктеп алу — ашық бастапқы кодты, пайдаланушыларға тиесілі әлеуметтік желі, дүкен тіркелгісі қажет емес."
+    },
+    "km": {
+      "title": "ទាញយក DeHub APK — កំណែ Android ចុងក្រោយបំផុត",
+      "description": "រំលងហាងកម្មវិធី ហើយទទួលបានកំណែចុងក្រោយបំផុតរបស់ DeHub នៅទីនេះ។ ទាញយក APK ដោយផ្ទាល់សម្រាប់ Android — បណ្ដាញសង្គមកូដចំហ ដែលអ្នកប្រើប្រាស់ជាម្ចាស់ មិនចាំបាច់មានគណនីហាងទេ។"
+    },
+    "kn": {
+      "title": "DeHub APK ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ — ಇತ್ತೀಚಿನ Android ಬಿಲ್ಡ್",
+      "description": "ಆ್ಯಪ್ ಸ್ಟೋರ್‌ಗಳನ್ನು ಬಿಟ್ಟು DeHub ನ ಇತ್ತೀಚಿನ ಆವೃತ್ತಿಯನ್ನು ಇಲ್ಲಿಯೇ ಪಡೆಯಿರಿ. Android ಗಾಗಿ ನೇರ APK ಡೌನ್‌ಲೋಡ್ — ಓಪನ್ ಸೋರ್ಸ್, ಬಳಕೆದಾರರ ಒಡೆತನದ ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ, ಸ್ಟೋರ್ ಖಾತೆ ಅಗತ್ಯವಿಲ್ಲ."
+    },
+    "ko": {
+      "title": "DeHub APK 다운로드 — 최신 Android 빌드",
+      "description": "앱 스토어를 거치지 않고 DeHub 최신 버전을 바로 여기서 받으세요. Android용 APK 직접 다운로드 — 사용자가 소유하는 오픈 소스 소셜 미디어, 스토어 계정이 필요 없습니다."
+    },
+    "ku": {
+      "title": "داگرتنی APK ی DeHub — دوایین وەشانی Android",
+      "description": "واز لە فرۆشگاکانی ئەپ بهێنە و دوایین وەشانی DeHub هەر لێرە وەربگرە. داگرتنی ڕاستەوخۆی APK بۆ Android — تۆڕی کۆمەڵایەتیی سەرچاوە-کراوە کە موڵکی بەکارهێنەرانە، پێویستت بە هەژماری فرۆشگا نییە."
+    },
+    "ky": {
+      "title": "DeHub APK жүктөп алуу — Android-дин акыркы версиясы",
+      "description": "Колдонмо дүкөндөрүн айланып өтүп, DeHub-тун акыркы версиясын ушул жерден алыңыз. Android үчүн APK-ны түз жүктөп алуу — ачык булак коддуу, колдонуучуларга таандык социалдык тармак, дүкөн аккаунту талап кылынбайт."
+    },
+    "lo": {
+      "title": "ດາວໂຫຼດ APK ຂອງ DeHub — ເວີຊັນ Android ລ່າສຸດ",
+      "description": "ຂ້າມຮ້ານແອັບ ແລະ ຮັບເອົາເວີຊັນລ່າສຸດຂອງ DeHub ໄດ້ທີ່ນີ້. ດາວໂຫຼດ APK ໂດຍກົງສຳລັບ Android — ສື່ສັງຄົມແບບໂອເພັນຊອດ ທີ່ຜູ້ໃຊ້ເປັນເຈົ້າຂອງ, ບໍ່ຕ້ອງມີບັນຊີຮ້ານແອັບ."
+    },
+    "lt": {
+      "title": "Atsisiųskite DeHub APK — naujausia Android versija",
+      "description": "Aplenkite programėlių parduotuves ir gaukite naujausią DeHub versiją čia pat. Tiesioginis APK atsisiuntimas Android įrenginiams — atvirojo kodo, naudotojams priklausantis socialinis tinklas, parduotuvės paskyros nereikia."
+    },
+    "lv": {
+      "title": "Lejupielādē DeHub APK — jaunākā Android versija",
+      "description": "Apej lietotņu veikalus un iegūsti jaunāko DeHub versiju tieši šeit. Tieša APK lejupielāde Android ierīcēm — atvērtā koda, lietotājiem piederošs sociālais tīkls, veikala konts nav vajadzīgs."
+    },
+    "mg": {
+      "title": "Alaivo ny APK DeHub — Dikan-teny Android farany",
+      "description": "Tsy mila mandalo amin'ny fivarotana fampiharana: alaivo eto mivantana ny dikan-teny farany an'i DeHub. APK alaina mivantana ho an'ny Android — open source, media sosialy fananan'ny mpampiasa, tsy mila kaonty fivarotana."
+    },
+    "mi": {
+      "title": "Tangohia te APK DeHub — Te Putanga Android Hou Rawa",
+      "description": "Waiho ngā toa taupānga, tikina te putanga hou rawa o DeHub i konei tonu. He APK tika mō Android — he pūtake tuwhera, he pāpāho pāpori nā ngā kaiwhakamahi, kāore he pūkete toa e hiahiatia."
+    },
+    "ml": {
+      "title": "DeHub APK ഡൗൺലോഡ് ചെയ്യുക — ഏറ്റവും പുതിയ Android ബിൽഡ്",
+      "description": "സ്റ്റോറുകൾ ഒഴിവാക്കി DeHub-ന്റെ ഏറ്റവും പുതിയ പതിപ്പ് ഇവിടെനിന്നുതന്നെ നേടൂ. Android-നുള്ള നേരിട്ടുള്ള APK ഡൗൺലോഡ് — ഓപ്പൺ സോഴ്സ്, ഉപയോക്താക്കളുടെ ഉടമസ്ഥതയിലുള്ള സോഷ്യൽ മീഡിയ, സ്റ്റോർ അക്കൗണ്ട് ആവശ്യമില്ല."
+    },
+    "mn": {
+      "title": "DeHub APK татах — Android-ийн хамгийн сүүлийн хувилбар",
+      "description": "Дэлгүүрүүдийг алгасаад DeHub-ийн хамгийн сүүлийн хувилбарыг эндээс шууд аваарай. Android-д зориулсан шууд APK татах — нээлттэй эх, хэрэглэгчдийн өөрсдийн эзэмшдэг сошиал медиа, дэлгүүрийн бүртгэл шаардлагагүй."
+    },
+    "mr": {
+      "title": "DeHub APK डाउनलोड करा — नवीनतम Android बिल्ड",
+      "description": "स्टोअर्सना वगळा आणि DeHub ची नवीनतम आवृत्ती इथेच मिळवा. Android साठी थेट APK डाउनलोड — ओपन सोर्स, वापरकर्त्यांच्या मालकीचे सोशल मीडिया, स्टोअर खात्याची गरज नाही."
+    },
+    "ms": {
+      "title": "Muat Turun APK DeHub — Binaan Android Terkini",
+      "description": "Langkau gedung aplikasi dan dapatkan versi terkini DeHub terus di sini. Muat turun APK terus untuk Android — sumber terbuka, media sosial milik pengguna, tiada akaun gedung diperlukan."
+    },
+    "my": {
+      "title": "DeHub APK ကို ဒေါင်းလုဒ်လုပ်ပါ — နောက်ဆုံး Android ဗားရှင်း",
+      "description": "စတိုးများကို ကျော်ပြီး DeHub ၏ နောက်ဆုံးဗားရှင်းကို ဤနေရာမှ တိုက်ရိုက် ရယူပါ။ Android အတွက် APK တိုက်ရိုက်ဒေါင်းလုဒ် — open source၊ အသုံးပြုသူများ ပိုင်ဆိုင်သော ဆိုရှယ်မီဒီယာ၊ စတိုးအကောင့် မလိုပါ။"
+    },
+    "ne": {
+      "title": "DeHub APK डाउनलोड गर्नुहोस् — पछिल्लो Android बिल्ड",
+      "description": "स्टोरहरू छोड्नुहोस् र DeHub को पछिल्लो संस्करण यहीँबाट लिनुहोस्। Android का लागि सिधा APK डाउनलोड — ओपन सोर्स, प्रयोगकर्ताको स्वामित्वमा रहेको सामाजिक सञ्जाल, स्टोर खाता आवश्यक छैन।"
+    },
+    "nl": {
+      "title": "Download de DeHub APK — nieuwste Android-build",
+      "description": "Sla de appwinkels over en haal de nieuwste versie van DeHub gewoon hier. Directe APK-download voor Android — open source, sociale media in handen van gebruikers, geen winkelaccount nodig."
+    },
+    "no": {
+      "title": "Last ned DeHub APK — nyeste Android-bygg",
+      "description": "Hopp over appbutikkene og hent den nyeste versjonen av DeHub rett her. Direkte APK-nedlasting for Android — åpen kildekode, sosiale medier eid av brukerne, ingen butikkonto nødvendig."
+    },
+    "om": {
+      "title": "APK DeHub Buufi — Gulaallii Android Haaraa",
+      "description": "Mana gurgurtaa appii irra darbiitii gulaallii DeHub isa haaraa kallattiin asuma argadhu. APK Android-f kallattiin buufachuu — madda banaa, miidiyaa hawaasaa kan fayyadamtootaa, herrega mana gurgurtaa hin barbaachisu."
+    },
+    "or": {
+      "title": "DeHub APK ଡାଉନଲୋଡ କରନ୍ତୁ — ସର୍ବଶେଷ Android ବିଲ୍ଡ",
+      "description": "ଷ୍ଟୋର ଛାଡ଼ନ୍ତୁ ଏବଂ DeHub ର ସର୍ବଶେଷ ସଂସ୍କରଣ ଏଠାରୁ ହିଁ ପାଆନ୍ତୁ। Android ପାଇଁ ସିଧାସଳଖ APK ଡାଉନଲୋଡ — ଓପନ ସୋର୍ସ, ବ୍ୟବହାରକାରୀଙ୍କ ମାଲିକାନାରେ ଥିବା ସୋସିଆଲ ମିଡିଆ, ଷ୍ଟୋର ଆକାଉଣ୍ଟ ଆବଶ୍ୟକ ନାହିଁ।"
+    },
+    "pa": {
+      "title": "DeHub APK ਡਾਊਨਲੋਡ ਕਰੋ — ਨਵੀਨਤਮ Android ਬਿਲਡ",
+      "description": "ਸਟੋਰਾਂ ਨੂੰ ਛੱਡੋ ਅਤੇ DeHub ਦਾ ਨਵੀਨਤਮ ਵਰਜਨ ਇੱਥੋਂ ਹੀ ਲਵੋ। Android ਲਈ ਸਿੱਧਾ APK ਡਾਊਨਲੋਡ — ਓਪਨ ਸੋਰਸ, ਯੂਜ਼ਰਾਂ ਦੀ ਮਾਲਕੀ ਵਾਲਾ ਸੋਸ਼ਲ ਮੀਡੀਆ, ਕਿਸੇ ਸਟੋਰ ਖਾਤੇ ਦੀ ਲੋੜ ਨਹੀਂ।"
+    },
+    "pl": {
+      "title": "Pobierz APK DeHub — najnowsza wersja na Androida",
+      "description": "Pomiń sklepy i pobierz najnowszą wersję DeHub prosto stąd. Bezpośrednie pobieranie APK na Androida — open source, media społecznościowe należące do użytkowników, bez konta w sklepie."
+    },
+    "pt": {
+      "title": "Baixe o APK do DeHub — Versão mais recente para Android",
+      "description": "Deixe as lojas de lado e baixe a versão mais recente do DeHub aqui mesmo. Download direto do APK para Android — rede social de código aberto e dos próprios usuários, sem precisar de conta na loja."
+    },
+    "qu": {
+      "title": "DeHub APK-ta uraykachiy — Android-paq musuq kaq",
+      "description": "App qhatukunata saqispa, DeHub-pa musuq kaq versionninta kaypi hap'iy. Android-paq APK-ta chiqaqta uraykachiy — kichasqa pukyu, runakunaq kaqnin llika tinkinakuy, mana qhatu cuentata munanchu."
+    },
+    "ro": {
+      "title": "Descarcă APK-ul DeHub — cea mai nouă versiune Android",
+      "description": "Ocolește magazinele de aplicații și ia cea mai nouă versiune DeHub chiar de aici. Descărcare APK directă pentru Android — rețea socială open source, deținută de utilizatori, fără cont în magazin."
+    },
+    "ru": {
+      "title": "Скачать APK DeHub — последняя сборка для Android",
+      "description": "Обойдитесь без магазинов приложений и скачайте последнюю версию DeHub прямо здесь. Прямая загрузка APK для Android — соцсеть с открытым исходным кодом, принадлежащая пользователям, без аккаунта в магазине."
+    },
+    "sa": {
+      "title": "DeHub APK अवतारयतु — नूतनतमं Android संस्करणम्",
+      "description": "आपणान् परित्यज्य DeHub इत्यस्य नूतनतमं संस्करणम् अत्रैव प्राप्नोतु। Android कृते साक्षात् APK अवतरणम् — मुक्तस्रोतः, उपयोक्तृस्वामिकं सामाजिकमाध्यमम्, आपणखातस्य आवश्यकता नास्ति।"
+    },
+    "sd": {
+      "title": "DeHub APK ڊائونلوڊ ڪريو — Android جو تازو ورزن",
+      "description": "اسٽورن کي ڇڏيو ۽ DeHub جو تازو ورزن هتان ئي حاصل ڪريو. Android لاءِ سڌو APK ڊائونلوڊ — اوپن سورس، استعمال ڪندڙن جي ملڪيت وارو سوشل ميڊيا، ڪنهن اسٽور اڪائونٽ جي ضرورت ناهي."
+    },
+    "si": {
+      "title": "DeHub APK බාගන්න — නවතම Android නිකුතුව",
+      "description": "ගබඩා මඟහැර DeHub හි නවතම අනුවාදය මෙතැනින්ම ලබා ගන්න. Android සඳහා සෘජු APK බාගැනීම — විවෘත කේත, පරිශීලකයන් සතු සමාජ මාධ්‍ය, ගබඩා ගිණුමක් අවශ්‍ය නැත."
+    },
+    "sk": {
+      "title": "Stiahnite si DeHub APK — najnovšia verzia pre Android",
+      "description": "Obíďte obchody s aplikáciami a získajte najnovšiu verziu DeHub priamo tu. Priame stiahnutie APK pre Android — open source sociálna sieť vo vlastníctve používateľov, bez potreby účtu v obchode."
+    },
+    "so": {
+      "title": "Soo deji DeHub APK — Nooca ugu dambeeyay ee Android",
+      "description": "Ka bood dukaamada abka oo halkan ka hel nooca ugu dambeeyay ee DeHub. Soo dejin toos ah oo APK ah oo loogu talagalay Android — baraha bulshada il furan ah oo ay leeyihiin isticmaalayaashu, looma baahna akoon dukaan."
+    },
+    "sq": {
+      "title": "Shkarko DeHub APK — Versioni më i ri për Android",
+      "description": "Anashkalo dyqanet e aplikacioneve dhe merr versionin më të ri të DeHub pikërisht këtu. Shkarkim i drejtpërdrejtë APK për Android — media sociale me burim të hapur, në pronësi të përdoruesve, pa nevojë për llogari dyqani."
+    },
+    "sr": {
+      "title": "Преузми DeHub APK — најновија Android верзија",
+      "description": "Заобиђи продавнице апликација и преузми најновију верзију DeHub-а баш овде. Директно преузимање APK-а за Android — друштвена мрежа отвореног кода у власништву корисника, без налога у продавници."
+    },
+    "sv": {
+      "title": "Ladda ner DeHub APK — senaste Android-versionen",
+      "description": "Hoppa över appbutikerna och hämta den senaste versionen av DeHub direkt här. Direkt APK-nedladdning för Android — sociala medier med öppen källkod som ägs av användarna, inget butikskonto behövs."
+    },
+    "sw": {
+      "title": "Pakua DeHub APK — Toleo Jipya la Android",
+      "description": "Ruka maduka ya programu na upate toleo jipya zaidi la DeHub hapa hapa. Upakuaji wa moja kwa moja wa APK kwa Android — mitandao ya kijamii ya chanzo huria inayomilikiwa na watumiaji, bila kuhitaji akaunti ya duka."
+    },
+    "ta": {
+      "title": "DeHub APK-ஐப் பதிவிறக்கு — சமீபத்திய Android பதிப்பு",
+      "description": "ஆப் ஸ்டோர்களைத் தவிர்த்து, DeHub-இன் சமீபத்திய பதிப்பை இங்கேயே பெறுங்கள். Android-க்கான நேரடி APK பதிவிறக்கம் — திறந்த மூல, பயனர்களுக்குச் சொந்தமான சமூக ஊடகம், ஸ்டோர் கணக்கு தேவையில்லை."
+    },
+    "te": {
+      "title": "DeHub APK డౌన్‌లోడ్ చేయండి — తాజా Android బిల్డ్",
+      "description": "యాప్ స్టోర్‌లను దాటవేసి DeHub తాజా వెర్షన్‌ను ఇక్కడే పొందండి. Android కోసం నేరుగా APK డౌన్‌లోడ్ — ఓపెన్ సోర్స్, వినియోగదారుల యాజమాన్యంలోని సోషల్ మీడియా, స్టోర్ ఖాతా అవసరం లేదు."
+    },
+    "tg": {
+      "title": "DeHub APK-ро боргирӣ кунед — Нусхаи навтарини Android",
+      "description": "Мағозаҳои барномаҳоро сарфи назар кунед ва нусхаи навтарини DeHub-ро маҳз дар ин ҷо гиред. Боргирии мустақими APK барои Android — шабакаи иҷтимоии кушодаманбаъ, ки ба корбарон тааллуқ дорад, бе ҳисоби мағоза."
+    },
+    "th": {
+      "title": "ดาวน์โหลด DeHub APK — เวอร์ชัน Android ล่าสุด",
+      "description": "ไม่ต้องผ่านสโตร์ รับ DeHub เวอร์ชันล่าสุดได้ที่นี่เลย ดาวน์โหลด APK โดยตรงสำหรับ Android — โซเชียลมีเดียโอเพนซอร์สที่ผู้ใช้เป็นเจ้าของ ไม่ต้องมีบัญชีสโตร์"
+    },
+    "ti": {
+      "title": "DeHub APK ኣውርድ — ሓድሽ ናይ Android ስሪት",
+      "description": "ድኳናት ኣፕሊኬሽን ሕለፍ፣ ሓድሽ ስሪት DeHub ኣብዚ ርከብ። ቀጥታዊ APK ምውራድ ን Android — ክፉት ምንጪ ዘለዎ፣ ብተጠቀምቲ ዝውነን ማሕበራዊ ሚድያ፣ ናይ ድኳን ሕሳብ ኣየድልን።"
+    },
+    "tk": {
+      "title": "DeHub APK göçürip al — Iň täze Android wersiýasy",
+      "description": "Dükanlary aýlanyp geçiň we DeHub-yň iň täze wersiýasyny şu ýerden alyň. Android üçin göni APK göçürip almak — açyk çeşmeli, ulanyjylara degişli sosial media, dükan hasaby gerek däl."
+    },
+    "tl": {
+      "title": "I-download ang DeHub APK — Pinakabagong Android Build",
+      "description": "Laktawan ang mga app store at kunin ang pinakabagong bersyon ng DeHub dito mismo. Direktang pag-download ng APK para sa Android — open source na social media na pag-aari ng mga user, hindi kailangan ng store account."
+    },
+    "tr": {
+      "title": "DeHub APK'yı İndir — En Yeni Android Sürümü",
+      "description": "Uygulama mağazalarını atlayın ve DeHub'ın en yeni sürümünü tam burada edinin. Android için doğrudan APK indirme — açık kaynaklı, kullanıcılara ait sosyal medya, mağaza hesabı gerekmez."
+    },
+    "ug": {
+      "title": "DeHub APK نى چۈشۈرۈش — ئەڭ يېڭى Android نەشرى",
+      "description": "ئەپ دۇكانلىرىدىن ئايلىنىپ ئۆتۈپ، DeHub نىڭ ئەڭ يېڭى نەشرىنى مۇشۇ يەردىن ئېلىڭ. Android ئۈچۈن بىۋاسىتە APK چۈشۈرۈش — ئوچۇق كودلۇق، ئىشلەتكۈچىلەرگە تەۋە ئىجتىمائىي تاراتقۇ، دۇكان ھېساباتى كېرەك ئەمەس."
+    },
+    "uk": {
+      "title": "Завантажити DeHub APK — остання збірка для Android",
+      "description": "Обійдіть магазини застосунків і отримайте найновішу версію DeHub просто тут. Пряме завантаження APK для Android — соцмережа з відкритим кодом, що належить користувачам, без облікового запису в магазині."
+    },
+    "ur": {
+      "title": "DeHub APK ڈاؤن لوڈ کریں — تازہ ترین Android بلڈ",
+      "description": "ایپ اسٹورز کو چھوڑیں اور DeHub کا تازہ ترین ورژن یہیں حاصل کریں۔ Android کے لیے براہِ راست APK ڈاؤن لوڈ — اوپن سورس، صارفین کی ملکیت والا سوشل میڈیا، اسٹور اکاؤنٹ کی ضرورت نہیں۔"
+    },
+    "uz": {
+      "title": "DeHub APK'ni yuklab oling — eng so'nggi Android versiyasi",
+      "description": "Ilova do'konlarini chetlab o'ting va DeHub'ning eng so'nggi versiyasini shu yerdan oling. Android uchun to'g'ridan-to'g'ri APK yuklab olish — ochiq kodli, foydalanuvchilarga tegishli ijtimoiy tarmoq, do'kon hisobi kerak emas."
+    },
+    "vi": {
+      "title": "Tải DeHub APK — Bản dựng Android mới nhất",
+      "description": "Bỏ qua các kho ứng dụng và tải phiên bản DeHub mới nhất ngay tại đây. Tải APK trực tiếp cho Android — mạng xã hội mã nguồn mở do người dùng sở hữu, không cần tài khoản cửa hàng."
+    },
+    "yo": {
+      "title": "Gba DeHub APK sílẹ̀ — Ẹ̀dà Android Tuntun Jùlọ",
+      "description": "Fo àwọn ilé ìtajà app kọjá kí o sì gba ẹ̀dà DeHub tuntun jùlọ níbí gan-an. Ìgbàsílẹ̀ APK tààrà fún Android — ìkànnì àjọlò orísun ṣíṣí tí àwọn olùlò ní, kò sí ìdí fún àkọọ́lẹ̀ ilé ìtajà."
+    },
+    "zh": {
+      "title": "下载 DeHub APK — 最新 Android 版本",
+      "description": "绕过应用商店，直接在这里获取最新版 DeHub。Android APK 直接下载 — 开源、归用户所有的社交媒体，无需商店账号。"
+    },
+    "zu": {
+      "title": "Landa i-DeHub APK — Inguqulo Yakamuva ye-Android",
+      "description": "Yeqa izitolo zezinhlelo zokusebenza bese uthola inguqulo yakamuva ye-DeHub khona lapha. Ukulanda kwe-APK okuqondile kwe-Android — inkundla yezokuxhumana yomthombo ovulekile ephethwe abasebenzisi, akudingeki i-akhawunti yesitolo."
+    }
+  },
   "/arcade": {
     "af": {
       "title": "Arcade | DeHub",

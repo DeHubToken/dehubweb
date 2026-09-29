@@ -7677,5 +7677,22 @@
     "progressive": "진보주의자",
     "nationalist": "민족주의자",
     "communist": "공산주의자"
+  },
+  "apk": {
+    "seoTitle": "DeHub APK 다운로드 — 최신 Android 빌드",
+    "seoDescription": "앱 스토어를 거치지 않고 DeHub 최신 버전을 바로 여기서 받으세요. Android용 APK 직접 다운로드 — 사용자가 소유하는 오픈 소스 소셜 미디어, 스토어 계정이 필요 없습니다.",
+    "ldDescription": "APK로 직접 다운로드하는 DeHub Android 앱. 사용자가 소유하는 오픈 소스 소셜 미디어 — 스토어 계정이 필요 없습니다.",
+    "back": "DeHub로 돌아가기",
+    "title": "스토어는 건너뛰세요.",
+    "subtitle": "DeHub 최신 버전을 바로 여기서 받으세요 — 저희가 직접 제공하니 스토어 계정도, 심사 대기도 필요 없습니다.",
+    "download": "지금 다운로드",
+    "installHint": "Android에서 물어보면 브라우저의 설치를 허용하세요. 업데이트하시나요? 기존 앱을 삭제하지 않고 그 위에 설치하면 됩니다.",
+    "useInBrowser": "브라우저에서 DeHub 사용하기",
+    "googlePlay": "Google Play가 더 편하신가요? 거기서 받으세요.",
+    "shareText": "스토어는 건너뛰고 — DeHub 최신 Android 빌드를 바로 받으세요.",
+    "shareX": "X에 공유",
+    "shareFacebook": "Facebook에 공유",
+    "shareTelegram": "Telegram에 공유",
+    "copyLink": "링크 복사"
   }
 }

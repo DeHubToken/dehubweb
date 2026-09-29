@@ -5436,5 +5436,22 @@
     "progressive": "Progressiw",
     "nationalist": "Milletçi",
     "communist": "Kommunist"
+  },
+  "apk": {
+    "seoTitle": "DeHub APK göçürip al — Iň täze Android wersiýasy",
+    "seoDescription": "Dükanlary aýlanyp geçiň we DeHub-yň iň täze wersiýasyny şu ýerden alyň. Android üçin göni APK göçürip almak — açyk çeşmeli, ulanyjylara degişli sosial media, dükan hasaby gerek däl.",
+    "ldDescription": "Göni APK göçürip almak görnüşinde DeHub Android programmasy. Açyk çeşmeli, ulanyjylara degişli sosial media — dükan hasaby gerek däl.",
+    "back": "DeHub-a gaýdyp baryň",
+    "title": "Dükanlary aýlanyp geçiň.",
+    "subtitle": "DeHub-yň iň täze wersiýasyny şu ýerden alyň — göni bizden, dükan hasaby gerek däl, barlag nobatynda garaşmak ýok.",
+    "download": "Häzir göçürip al",
+    "installHint": "Android soranda, brauzeriňizden gurnamaga rugsat beriň. Täzeleýärsiňizmi? Bar bolan programmany aýyrman, onuň üstünden guruň.",
+    "useInBrowser": "DeHub-y brauzeriňizde ulanyň",
+    "googlePlay": "Google Play-i makul görýärsiňizmi? Ony şol ýerden alyň.",
+    "shareText": "Dükanlary aýlanyp geçiň — DeHub-yň iň täze Android wersiýasyny göni alyň.",
+    "shareX": "X-de paýlaş",
+    "shareFacebook": "Facebook-da paýlaş",
+    "shareTelegram": "Telegram-da paýlaş",
+    "copyLink": "Baglanyşygy göçür"
   }
 }

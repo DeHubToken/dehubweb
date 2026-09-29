@@ -7457,5 +7457,22 @@
     "contact": "Contact",
     "privacy": "Politica de confidențialitate",
     "terms": "Termeni și condiții"
+  },
+  "apk": {
+    "seoTitle": "Descarcă APK-ul DeHub — cea mai nouă versiune Android",
+    "seoDescription": "Ocolește magazinele de aplicații și ia cea mai nouă versiune DeHub chiar de aici. Descărcare APK directă pentru Android — rețea socială open source, deținută de utilizatori, fără cont în magazin.",
+    "ldDescription": "Aplicația DeHub pentru Android, ca descărcare APK directă. Rețea socială open source, deținută de utilizatori — fără cont în magazin.",
+    "back": "Înapoi la DeHub",
+    "title": "Ocolește magazinele.",
+    "subtitle": "Ia cea mai nouă versiune DeHub chiar de aici — direct de la noi, fără cont în magazin, fără să aștepți la coada de verificare.",
+    "download": "Descarcă acum",
+    "installHint": "Permite instalările din browser când Android te întreabă. Actualizezi? Instalează peste aplicația existentă, fără s-o dezinstalezi.",
+    "useInBrowser": "Folosește DeHub în browser",
+    "googlePlay": "Preferi Google Play? Ia-o de acolo.",
+    "shareText": "Ocolește magazinele — ia direct cea mai nouă versiune DeHub pentru Android.",
+    "shareX": "Distribuie pe X",
+    "shareFacebook": "Distribuie pe Facebook",
+    "shareTelegram": "Distribuie pe Telegram",
+    "copyLink": "Copiază linkul"
   }
 }

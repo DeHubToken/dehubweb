@@ -7577,5 +7577,22 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
+  },
+  "apk": {
+    "seoTitle": "I-download ang DeHub APK — Pinakabagong Android Build",
+    "seoDescription": "Laktawan ang mga app store at kunin ang pinakabagong bersyon ng DeHub dito mismo. Direktang pag-download ng APK para sa Android — open source na social media na pag-aari ng mga user, hindi kailangan ng store account.",
+    "ldDescription": "Ang DeHub Android app bilang direktang pag-download ng APK. Open source na social media na pag-aari ng mga user — hindi kailangan ng store account.",
+    "back": "Bumalik sa DeHub",
+    "title": "Laktawan ang mga store.",
+    "subtitle": "Kunin ang pinakabagong bersyon ng DeHub dito mismo — diretso mula sa amin, walang store account, walang paghihintay sa review queue.",
+    "download": "I-download ngayon",
+    "installHint": "Payagan ang pag-install mula sa iyong browser kapag nagtanong ang Android. Nag-a-update? I-install sa ibabaw ng kasalukuyang app nang hindi ina-uninstall.",
+    "useInBrowser": "Gamitin ang DeHub sa iyong browser",
+    "googlePlay": "Mas gusto ang Google Play? Doon mo na lang kunin.",
+    "shareText": "Laktawan ang mga store — kunin nang direkta ang pinakabagong DeHub Android build.",
+    "shareX": "Ibahagi sa X",
+    "shareFacebook": "Ibahagi sa Facebook",
+    "shareTelegram": "Ibahagi sa Telegram",
+    "copyLink": "Kopyahin ang link"
   }
 }

@@ -5502,5 +5502,22 @@
     "followers": "المتابعين",
     "subscribers": "المشتركين",
     "mentioned": "اللي اتذكروا"
+  },
+  "apk": {
+    "seoTitle": "حمّل APK بتاع DeHub — آخر نسخة Android",
+    "seoDescription": "سيبك من المتاجر وخد آخر نسخة من DeHub من إهنه. تحميل APK مباشر لـ Android — مفتوح المصدر، سوشيال ميديا ملك المستخدمين، ومش محتاج حساب في المتجر.",
+    "ldDescription": "تطبيق DeHub لـ Android كتحميل APK مباشر. مفتوح المصدر، سوشيال ميديا ملك المستخدمين — مش محتاج حساب في المتجر.",
+    "back": "ارجع لـ DeHub",
+    "title": "سيبك من المتاجر.",
+    "subtitle": "خد آخر نسخة من DeHub من إهنه — مننا على طول، من غير حساب متجر، ومن غير ما تستنى مراجعة.",
+    "download": "حمّل دلوك",
+    "installHint": "لما Android يسألك، اسمح بالتثبيت من المتصفح. بتحدّث؟ ثبّت فوق التطبيق اللي عندك من غير ما تمسحه.",
+    "useInBrowser": "استخدم DeHub في المتصفح",
+    "googlePlay": "بتفضّل Google Play؟ حمّله من هناك.",
+    "shareText": "سيبك من المتاجر — خد آخر نسخة DeHub لـ Android على طول.",
+    "shareX": "شارك على X",
+    "shareFacebook": "شارك على Facebook",
+    "shareTelegram": "شارك على Telegram",
+    "copyLink": "انسخ الرابط"
   }
 }
