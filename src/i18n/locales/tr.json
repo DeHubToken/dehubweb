@@ -1390,6 +1390,7 @@
     "offerCommitsNothing": "Teklif vermenin bir maliyeti yoktur ve jeton tutmaz. Yalnızca sahip kabul ederse ödeme yaparsınız.",
     "offerNeedsHandle": "Bu hesabın teklif verilecek bir kullanıcı adı yok.",
     "options": "Profil seçenekleri",
+    "links": "Bağlantılar",
     "translateBio": "Biyografiyi çevir"
   },
   "tv": {

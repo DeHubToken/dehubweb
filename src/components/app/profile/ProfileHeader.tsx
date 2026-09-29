@@ -11,7 +11,7 @@ import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { TranslatableText, hasTranslatableText } from '@/components/app/TranslatableText';
 import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
-import { ProfileSocialLinks } from '@/components/app/profile/ProfileSocialLinks';
+import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
 import { TotalReachPill } from '@/components/app/profile/TotalReachPill';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
 import { StreamerLevelCard } from '@/components/app/live/StreamerLevelCard';
@@ -169,6 +169,11 @@ export function ProfileHeader({
   const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false);
   const [avatarFailed, setAvatarFailed] = useState(false);
   const [avatarCdnFailed, setAvatarCdnFailed] = useState(false);
+  // The badge rides on the last word so a wrapping name never leaves it
+  // alone on a line of its own.
+  const nameSplit = (profile.name ?? '').lastIndexOf(' ');
+  const nameHead = nameSplit > 0 ? profile.name.slice(0, nameSplit + 1) : '';
+  const nameTail = nameSplit > 0 ? profile.name.slice(nameSplit + 1) : profile.name;
   const cdnFallbackUrl = buildAvatarCdnFallbackUrl(profile.walletAddress || '', profile.avatarUrl);
 
   return (
@@ -366,40 +371,44 @@ export function ProfileHeader({
         {/* Profile Info */}
         <div>
           <div className="flex flex-col">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="group inline-flex items-baseline gap-1">
-                  <h2 className="text-2xl font-bold leading-8 text-white">{profile.name}</h2>
-                  {/* The ceremony flies the badge out of this slot and back
-                      into it, so it needs an element to measure. */}
-                  <span ref={badgeSlotRef} className="inline-flex">
-                    <BadgeIcon src={badgeUrl} className="w-[1em] h-[1em]" />
+            {/* The name owns the full width and may take two lines. Social
+                links used to share this row, so a long name was cut or
+                crushed beside them; they now live in the Links pill at the
+                bottom of the header. The badge stays glued to the last word. */}
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
+              <span className="group min-w-0 inline-flex items-baseline gap-1">
+                <h2 className="text-2xl font-bold leading-8 text-white break-words line-clamp-2 [text-wrap:balance]">
+                  {nameHead}
+                  <span className="whitespace-nowrap">
+                    {nameTail}
+                    {/* The ceremony flies the badge out of this slot and back
+                        into it, so it needs an element to measure. */}
+                    <span ref={badgeSlotRef} className="inline-flex align-baseline ml-1">
+                      <BadgeIcon src={badgeUrl} className="w-[1em] h-[1em]" />
+                    </span>
                   </span>
-                  {/* A lent badge draws like any other badge everywhere else
-                      on the site. Hovering the name it sits on is the one
-                      place that says whose badge it is. */}
-                  <BadgePatronChip lookupId={profile.walletAddress} />
-                </span>
-                {/* Temporary — gone NEW_MEMBER_WINDOW_DAYS after signup, and
-                    immediately if they switch it off in Settings › Privacy. */}
-                <NewMemberChip address={profile.walletAddress} />
-                {/* Your own profile only, and only once the walkthrough is
-                    finished — it is derived from your progress row, not from
-                    anything stored on the profile. */}
-                <OnboardingCompleteChip address={profile.walletAddress} />
-              </div>
-              {profile.customs && (
-                <ProfileSocialLinks customs={profile.customs} />
-              )}
+                </h2>
+                {/* A lent badge draws like any other badge everywhere else
+                    on the site. Hovering the name it sits on is the one
+                    place that says whose badge it is. */}
+                <BadgePatronChip lookupId={profile.walletAddress} />
+              </span>
+              {/* Temporary — gone NEW_MEMBER_WINDOW_DAYS after signup, and
+                  immediately if they switch it off in Settings › Privacy. */}
+              <NewMemberChip address={profile.walletAddress} />
+              {/* Your own profile only, and only once the walkthrough is
+                  finished — it is derived from your progress row, not from
+                  anything stored on the profile. */}
+              <OnboardingCompleteChip address={profile.walletAddress} />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <button
                 onClick={() => {
                   const username = profile.handle.replace('@', '');
                   navigator.clipboard.writeText(`https://dehub.io/${username}`);
                   toast.success('Profile URL copied to clipboard');
                 }}
-                className="text-zinc-500 text-lg hover:text-zinc-300 transition-colors"
+                className="min-w-0 max-w-full truncate text-zinc-500 text-lg hover:text-zinc-300 transition-colors"
               >
                 {profile.handle}
               </button>
@@ -473,8 +482,8 @@ export function ProfileHeader({
           
 
           {/* Followers/Following */}
-          {(!hideFollowerCounts || isViewingOwnProfile) && (
-            <div className="flex items-center gap-4 mt-3">
+          {(!hideFollowerCounts || isViewingOwnProfile) ? (
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3">
               {(showFollowersFollowing || isViewingOwnProfile) ? (
                 <button 
                   onClick={() => {
@@ -524,7 +533,14 @@ export function ProfileHeader({
               {/* DeHub followers plus the creator's own figures for their
                   linked socials. Absent until a social carries a count. */}
               <TotalReachPill customs={profile.customs} followers={profile.followers} />
+              <ProfileLinksPill customs={profile.customs} className="ml-auto" />
             </div>
+          ) : (
+            profile.customs && (
+              <div className="flex justify-end mt-3">
+                <ProfileLinksPill customs={profile.customs} />
+              </div>
+            )
           )}
 
           {/* Mutual followers */}
