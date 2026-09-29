@@ -1,0 +1,35 @@
+name: take refill (branch only)
+
+on:
+  push:
+    branches: [i18n-prune-garbled]
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  take:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: bundle-*
+          merge-multiple: true
+          path: src/i18n
+          run-id: 36585497346
+          github-token: ${{ github.token }}
+      - run: node scripts/docs-i18n-fill.mjs --prune-garbled --dry-run | grep '^  ' || echo "no garbled docs values left"
+      - run: node scripts/i18n-fanout.mjs --prune --garbled --dry-run | grep '^  ' || echo "no garbled app values left"
+      - run: |
+          git status --short
+          git config user.name maldoteth
+          git config user.email dev@dehub.io
+          git add src/i18n/*.ts
+          git commit -q -m "Refill the rebuilt docs bundles"
+          git show --shortstat HEAD | tail -1
+          git push origin HEAD:i18n-prune-garbled
