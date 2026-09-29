@@ -108,6 +108,11 @@ const SinglePostPage = React.lazy(() => import('@/pages/app/SinglePostPage'));
 // green dot on Messages is right wherever this person is. Lazy: nothing on
 // first paint needs it.
 const OnlinePresenceHost = React.lazy(() => import('@/components/app/OnlinePresenceHost'));
+// The shorts feed a phone opens by swiping up out of a fullscreen video. Lazy
+// and mounted only from the first swipe on: the viewer and its five feed
+// queries are nothing to anyone who never makes the gesture.
+const BrainrotFeedHost = React.lazy(() => import('@/components/app/BrainrotFeedHost'));
+import { useBrainrotEverOpened } from '@/lib/brainrot-feed';
 
 
 interface AppLayoutContentProps {
@@ -183,6 +188,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const mainRef = useRef<HTMLElement | null>(null);
   // Gate for the corner player's chunk — see its lazy import above.
   const hasPoppedOutAudio = useAudioPostPoppedOut();
+  const brainrotOpened = useBrainrotEverOpened();
 
   // "A stage you set a reminder for is starting soon / just started" — announced
   // wherever you are in the app, so it mounts with the shell rather than on the
@@ -520,6 +526,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       <Suspense fallback={null}>
         <OnlinePresenceHost />
       </Suspense>
+      {brainrotOpened && (
+        <Suspense fallback={<div className="fixed inset-0 z-[200] bg-black" />}>
+          <BrainrotFeedHost />
+        </Suspense>
+      )}
       
       {postModalMounted && (
         <Suspense fallback={null}>

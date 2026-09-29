@@ -10,6 +10,12 @@ export interface VideoFullscreenOptions {
   allowSimulated?: boolean;
   /** Keep the fallback outside transformed or clipped feed ancestors. */
   escapeAncestors?: boolean;
+  /**
+   * Skip the system video player (`webkitEnterFullscreen`) and fullscreen the
+   * container instead, falling back to the simulated overlay. The system player
+   * owns every touch, so nothing on the page can react to a swipe inside it.
+   */
+  preferContainer?: boolean;
 }
 /** Move the existing player without replacing its media connection. */
 export function liftFullscreenElement(element: HTMLElement): () => void {
@@ -40,7 +46,7 @@ export function liftFullscreenElement(element: HTMLElement): () => void {
 export function useVideoFullscreen(
   videoRef: RefObject<HTMLVideoElement | null>,
   containerRef: RefObject<HTMLElement | null>,
-  { allowSimulated = true, escapeAncestors = false }: VideoFullscreenOptions = {},
+  { allowSimulated = true, escapeAncestors = false, preferContainer = false }: VideoFullscreenOptions = {},
 ) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>();
@@ -101,7 +107,7 @@ export function useVideoFullscreen(
     }
     if (isFullscreen || simulated.current) { restoreInline(); setIsFullscreen(false); return; }
     if (!container) return;
-    if (typeof video?.webkitEnterFullscreen === 'function') {
+    if (!preferContainer && typeof video?.webkitEnterFullscreen === 'function') {
       try { video.webkitEnterFullscreen(); return; } catch { /* Try the container next. */ }
     }
     const requestGeneration = generation.current;
@@ -122,6 +128,6 @@ export function useVideoFullscreen(
       }
     } catch { /* Synchronous rejection uses the same fallback. */ }
     activateSimulated();
-  }, [isFullscreen, videoRef, containerRef, allowSimulated, escapeAncestors, cancelPending, restoreInline]);
+  }, [isFullscreen, videoRef, containerRef, allowSimulated, escapeAncestors, preferContainer, cancelPending, restoreInline]);
   return { isFullscreen, toggleFullscreen, setIsFullscreen };
 }
