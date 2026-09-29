@@ -135,7 +135,7 @@ function ThreadEntry({
   const handleReact = async (reaction: PostReaction) => {
     if (isOwn) return;
     if (!isAuthenticated) {
-      toast.error('Please log in to react to comments');
+      toast.error(t('comments.logInToReact'));
       return;
     }
     const previous =
@@ -179,7 +179,7 @@ function ThreadEntry({
     } catch {
       setVotes({});
       toast.error(
-        isPositiveReaction(reaction) ? 'Failed to react to comment' : 'Failed to dislike comment',
+        isPositiveReaction(reaction) ? t('comments.reactFailed') : t('comments.dislikeFailed'),
       );
     }
   };
@@ -192,8 +192,8 @@ function ThreadEntry({
   const handleShare = () => {
     navigator.clipboard
       .writeText(dehubLinkFor.threadEntry(tokenId, entry.id))
-      .then(() => toast.success('Link copied'))
-      .catch(() => toast.error('Could not copy link'));
+      .then(() => toast.success(t('comments.linkCopied')))
+      .catch(() => toast.error(t('comments.copyLinkFailed')));
   };
 
   const handleDelete = async () => {
@@ -208,7 +208,7 @@ function ThreadEntry({
       queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
     } catch {
       setRemoved(false);
-      toast.error('Failed to delete comment');
+      toast.error(t('toasts.failed_to_delete_comment'));
     }
   };
 
@@ -231,9 +231,12 @@ function ThreadEntry({
         navigate(`/posts/${tokenId}/b/${entry.id}`);
       }}
     >
+      {/* The avatar is a picture and nothing else, so it needs a name of its
+          own or a screen reader announces a bare "button". */}
       <button
         onClick={(e) => { e.stopPropagation(); onProfile(entry.username); }}
         className="flex-shrink-0 relative z-10"
+        aria-label={t('feed.viewProfile', { name: entry.displayName || entry.username })}
       >
         <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
           {(isAssistantAddress(entry.address) || entry.avatar) && (
@@ -262,7 +265,7 @@ function ThreadEntry({
           </button>
           {isAssistantAddress(entry.address) && (
             <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
-              AI
+              {t('editor.rail.agent')}
             </span>
           )}
           <span className="text-zinc-500 text-xs truncate max-w-[120px]">@{entry.username}</span>
@@ -311,7 +314,9 @@ function ThreadEntry({
                 'flex items-center gap-1 transition-colors select-none touch-none',
                 !isOwn && state.isLiked ? 'text-white' : 'text-white/70 hover:text-white',
               )}
-              aria-label={isOwn ? 'Likes' : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`}
+              aria-label={isOwn
+                ? t('postInfo.likes')
+                : t('comments.holdToReact', { reaction: reactionMeta(leadReaction ?? 'like').label })}
               aria-haspopup={isOwn ? undefined : 'menu'}
               aria-expanded={isOwn ? undefined : likeTray.open}
             >
@@ -363,7 +368,7 @@ function ThreadEntry({
           <button
             onClick={(e) => { e.stopPropagation(); handleShare(); }}
             className="text-white/70 hover:text-white transition-colors"
-            aria-label="Copy link"
+            aria-label={t('postOptions.copyLink')}
           >
             <Share2 className="w-3.5 h-3.5" />
           </button>
@@ -371,7 +376,7 @@ function ThreadEntry({
             <button
               onClick={(e) => { e.stopPropagation(); setConfirmingDelete(true); }}
               className="text-white/70 hover:text-red-400 transition-colors"
-              aria-label="Delete"
+              aria-label={t('common.delete')}
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
