@@ -416,6 +416,7 @@
     "smsPricesHeading": "Owó wo ni àtẹ̀jíṣẹ́ máa ná",
     "smsPricePerMessage": "{{dhb}} tokens (${{usd}})",
     "smsBand": {
+      "domestic": "United Kingdom",
       "global": "Ọ̀pọ̀lọpọ̀ àwọn orílẹ̀-èdè mìíràn",
       "premium": "Nibikibi"
     },
@@ -1390,6 +1391,7 @@
   "tv": {
     "seoTitle": "TV Live — Awọn ikanni ọfẹ lati kakiri agbaye",
     "seoDescription": "Wo àwọn ẹ̀rọ amóhùnmáwòrán alágbèéká lọ́fẹ̀ẹ́ láti gbogbo àgbáyé lórí DeHub. Ìròyìn, eré ìdárayá, eré ìnàjú àti púpọ̀ sí i — tí a gbé jáde nínú aṣàwákiri, kò sí ìforúkọsílẹ̀ tí a nílò.",
+    "srHeading": "DeHub Live TV — Àjọṣepọ̀ Àwọn Ènìyàn Tó Ṣe Àgbékalẹ̀ Ọ̀rọ̀, Tó Lè Kọ̀ Àṣẹ́wọ̀n, Àti Ẹ̀tọ́ Ọ̀rọ̀ Ọ̀fẹ́",
     "searchPlaceholder": "Wá ọgọ́rọ̀ọ̀rún ẹ̀rọ amóhùnmáwòrán ọ̀fẹ́...",
     "filterAll": "Gbogbo",
     "resultsFor": "Àwọn àbájáde fún \"{{query}}\"",
@@ -3880,6 +3882,7 @@
     "presetSlowPushHint": "Dolly tí ó dúró ṣinṣin ń lọ sí orí kókó náà.",
     "presetOrbitName": "Orbit",
     "presetOrbitHint": "Gbigbe iyipo ti o ṣafihan ijinle",
+    "presetCraneRevealName": "Ifoju Kere",
     "presetCraneRevealHint": "Dide ti o ṣii sinu ibon jakejado.",
     "presetProductTurnName": "Ọja Yipada",
     "presetProductTurnHint": "Ìyípo tí a lè yí padà fún ọjà kan",
@@ -3892,6 +3895,7 @@
     "presetAnimateStillHint": "Ó nílò àwòrán tí ó so mọ́ra",
     "presetGamePropName": "Ere Prop",
     "presetGamePropHint": "Ohun kan ṣoṣo tí ó wà ní ìmúratán ní àkókò gidi",
+    "presetCharacterFigureName": "Oríṣìíríṣìí Àmì",
     "presetCharacterFigureHint": "Ìwà tí ó mọ́ tónítóní tí ó máa ń rì ní àsìkò tó yá.",
     "presetProductScanName": "Àdàkọ Ọjà",
     "presetProductScanHint": "Àdàkọ olóòótọ́ ti ohun gidi kan",
@@ -4981,6 +4985,7 @@
     "seoDescription": "DeHub DePin jẹ́ kí àwọn ènìyàn ṣe àfikún ìpamọ́, àfiránṣẹ́ àfiránṣẹ́ àti ìṣirò láti ran olùgbé, transcode àti pípèsè ìròyìn nípasẹ̀ nẹ́tìwọ̀n tí ó lágbára.",
     "navAria": "Ìrìn-àjò DePin",
     "dehubHome": "DeHub ile",
+    "navPrivacy": "Ìpamọ́ra",
     "openDehub": "Ṣii DeHub",
     "readTheDocs": "Ka àwọn ìwé-ìwé náà",
     "heroEyebrow": "Àwọn ìpèsè ìpèsè agbègbè",

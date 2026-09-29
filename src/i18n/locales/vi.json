@@ -7876,6 +7876,7 @@
       "notifyKeyOnce": "Mã thông báo mới cho {{name}}. Sao chép ngay: nó chỉ hiển thị một lần, và tạo một lần nữa sẽ thay thế nó.",
       "payTitle": "Nhận thanh toán",
       "payBody": "Nhận thanh toán",
+      "notifyTitle": "Gửi thông báo",
       "notifyBody": "Gửi thông báo",
       "rankTitle": "Cách cửa hàng xếp hạng ứng dụng",
       "rankBody": "Mỗi đêm, mỗi ứng dụng được liệt kê đều nhận được điểm số: 55% từ người dùng cũ (những người đã mở ứng dụng trong tuần này và tuần trước đó), 35% từ người dùng hàng tuần, cộng với mức tăng 10% trong 14 ngày đầu tiên. Chỉ tính số tài khoản DeHub đã đăng nhập, vì vậy bot và lượt tải lại trang không kiếm được gì.",
@@ -7913,7 +7914,8 @@
     },
     "add": {
       "title": "Thêm {{name}}?",
-      "body": "Nó sẽ xuất hiện trong danh sách Ứng dụng của bạn và có thể gửi thông báo cho bạn. Bạn có thể xóa nó bất kỳ lúc nào từ trang Ứng dụng."
+      "body": "Nó sẽ xuất hiện trong danh sách Ứng dụng của bạn và có thể gửi thông báo cho bạn. Bạn có thể xóa nó bất kỳ lúc nào từ trang Ứng dụng.",
+      "confirm": "Thêm ứng dụng"
     }
   },
   "aiStyles": {
