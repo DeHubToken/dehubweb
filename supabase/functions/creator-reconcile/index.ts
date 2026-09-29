@@ -18,9 +18,20 @@ Deno.serve(async (req) => {
     .or(`status.in.(starting,processing,refund_pending),result->>savePending.eq.true,and(status.eq.submitting,created_at.lt.${stale})`)
     .order('updated_at').limit(8);
   if (error) return jsonResponse({ error: 'Could not load pending renders' }, 503);
+  // Renders finish in minutes. One still starting or processing after six hours
+  // is not coming back, so it is refunded rather than re-polled forever.
+  const abandonedBefore = Date.now() - 6 * 3600_000;
   let processed = 0;
   await Promise.all((jobs ?? []).map(async (job) => {
     try {
+      if ((job.status === 'starting' || job.status === 'processing') && new Date(job.created_at).getTime() < abandonedBefore) {
+        // Only refund if the row was still running: a render that settled since
+        // the select above must not be paid back as well.
+        const { data: marked, error: markError } = await db.from('ai_generation_jobs').update({ status: 'refund_pending' })
+          .eq('id', job.id).in('status', ['starting', 'processing']).select('id');
+        if (markError) throw markError;
+        if (marked?.length) job.status = 'refund_pending';
+      }
       if (job.status === 'refund_pending' || job.status === 'submitting') {
         if (job.payment_source === 'credits') {
           if (!(await refundCredits(job.credit_debit_key))) throw new Error('credits refund failed');
