@@ -469,7 +469,13 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
       }, () => {
         queryClient.invalidateQueries({ queryKey: ['stage-transcript-translation', transcriptId] });
       })
-      .subscribe();
+      .subscribe((status) => {
+        // Changes made before the channel joined (or while it was down) never arrive.
+        if (status === 'SUBSCRIBED') {
+          queryClient.invalidateQueries({ queryKey: ['stage-transcript', stageId] });
+          queryClient.invalidateQueries({ queryKey: ['stage-transcript-translation', transcriptId] });
+        }
+      });
     return () => { supabase.removeChannel(ch); };
   }, [open, stageId, transcriptId, queryClient]);
 

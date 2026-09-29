@@ -18,7 +18,7 @@ import { customNotificationKeys } from '@/hooks/use-custom-notifications';
  *   lands. This is the one that matters: the API has no socket event for a
  *   new notification, so a tab left open otherwise learns nothing until its
  *   five-minute poll.
- * - Supabase realtime, which only covers `custom_notifications`.
+ * - a Supabase broadcast ping, which only covers `custom_notifications`.
  * - coming back to the tab, since the app disables refetch-on-focus globally
  *   and a backgrounded tab's timers are throttled to near nothing anyway.
  */
@@ -51,19 +51,13 @@ export function useNotificationRealtime() {
     socket.on('notification', refresh);
     socket.on('connect', refresh);
 
+    // A content-free ping the database sends whenever this wallet's
+    // custom_notifications rows change; the lists are re-read through the API.
+    // Broadcast keeps no backlog, so every join re-reads as well.
     const channel = supabase
-      .channel(`notification-list:${walletAddress.toLowerCase()}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'custom_notifications',
-          filter: `recipient_address=eq.${walletAddress.toLowerCase()}`,
-        },
-        refresh,
-      )
-      .subscribe();
+      .channel(`notif:${walletAddress.toLowerCase()}`, { config: { private: true } })
+      .on('broadcast', { event: 'ping' }, refresh)
+      .subscribe((status) => { if (status === 'SUBSCRIBED') refresh(); });
 
     const onWorkerMessage = (event: MessageEvent<{ type?: string }>) => {
       const type = event.data?.type;

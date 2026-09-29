@@ -33,7 +33,9 @@ export function useLaunchpadTrades(tokenId?: string, limit = 50) {
         qc.invalidateQueries({ queryKey: ['launchpad-trades', tokenId ?? 'all'] });
         qc.invalidateQueries({ queryKey: ['launchpad-token', tokenId] });
         qc.invalidateQueries({ queryKey: ['launchpad-tokens'] });
-      }).subscribe();
+      }).subscribe((status) => {
+        if (status === 'SUBSCRIBED') qc.invalidateQueries({ queryKey: ['launchpad-trades', tokenId ?? 'all'] });
+      });
     return () => { supabase.removeChannel(ch); };
   }, [tokenId, qc]);
 

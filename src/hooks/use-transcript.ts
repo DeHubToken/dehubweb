@@ -124,7 +124,9 @@ export function useTranscript(
           qc.invalidateQueries({ queryKey: key });
         },
       )
-      .subscribe();
+      .subscribe((channelStatus) => {
+        if (channelStatus === 'SUBSCRIBED') qc.invalidateQueries({ queryKey: key });
+      });
 
     return () => { supabase.removeChannel(channel); };
     // `key` is derived from kind+ref, which are already dependencies.

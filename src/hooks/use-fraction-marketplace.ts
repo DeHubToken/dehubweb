@@ -139,7 +139,10 @@ function useRealtimeInvalidate(
         { event: '*', schema: 'public', table, ...(filter ? { filter } : {}) },
         () => queryClient.invalidateQueries({ queryKey }),
       )
-      .subscribe();
+      .subscribe((status) => {
+        // Changes made before the channel joined (or while it was down) never arrive.
+        if (status === 'SUBSCRIBED') queryClient.invalidateQueries({ queryKey });
+      });
     return () => { supabase.removeChannel(sub); };
     // queryKey is a stable tuple from fractionKeys; serialising it keeps the
     // effect from resubscribing on every render.

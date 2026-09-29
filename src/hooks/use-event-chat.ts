@@ -106,7 +106,9 @@ export function useEventChat(eventId: string | undefined) {
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') queryClient.invalidateQueries({ queryKey: [QUERY_KEY, eventId] });
+      });
 
     return () => { supabase.removeChannel(channel); };
   }, [eventId, queryClient]);

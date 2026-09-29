@@ -152,12 +152,14 @@ export function useStageChat(
           }
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') queryClient.invalidateQueries({ queryKey: [QUERY_KEY, spaceId] });
+      });
 
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [active, unavailable, spaceId, patch]);
+  }, [active, unavailable, spaceId, patch, queryClient]);
 
   const sendMessage = useCallback(
     async (

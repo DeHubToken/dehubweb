@@ -4,7 +4,7 @@
  * Used in PublicChat and SidebarChat to show buy bot alerts inline.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface BuyAlertMessage {
@@ -17,23 +17,23 @@ export interface BuyAlertMessage {
 export function useBuyAlerts() {
   const [alerts, setAlerts] = useState<BuyAlertMessage[]>([]);
 
+  const fetchAlerts = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('community_chat_messages')
+      .select('id, content, created_at, message_type')
+      .eq('message_type', 'buy_alert')
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (!error && data) {
+      setAlerts(([...data] as BuyAlertMessage[]).reverse());
+    }
+  }, []);
+
   // Initial fetch
   useEffect(() => {
-    const fetchAlerts = async () => {
-      const { data, error } = await supabase
-        .from('community_chat_messages')
-        .select('id, content, created_at, message_type')
-        .eq('message_type', 'buy_alert')
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (!error && data) {
-        setAlerts(([...data] as BuyAlertMessage[]).reverse());
-      }
-    };
-
     fetchAlerts();
-  }, []);
+  }, [fetchAlerts]);
 
   // Realtime subscription
   useEffect(() => {
@@ -57,12 +57,14 @@ export function useBuyAlerts() {
           });
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') fetchAlerts();
+      });
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [fetchAlerts]);
 
   return alerts;
 }

@@ -68,7 +68,9 @@ export function useLaunchpadTokens(filter: LaunchpadFilter, mineAddress?: string
           ? { event: '*', schema: 'public', table: 'launchpad_tokens', filter: `creator_address=eq.${mine}` }
           : { event: '*', schema: 'public', table: 'launchpad_tokens' },
         schedule,
-      ).subscribe();
+      ).subscribe((status) => {
+        if (status === 'SUBSCRIBED') void refetchRef.current();
+      });
     const onVisible = () => {
       if (document.visibilityState !== 'visible' || !missed) return;
       missed = false;
@@ -98,7 +100,9 @@ export function useLaunchpadToken(id?: string) {
         if (!row?.id) return;
         queryClient.setQueryData<LaunchpadToken>(['launchpad-token', id], (prev) =>
           prev ? { ...prev, ...row } : (row as LaunchpadToken));
-      }).subscribe();
+      }).subscribe((status) => {
+        if (status === 'SUBSCRIBED') queryClient.invalidateQueries({ queryKey: ['launchpad-token', id] });
+      });
     return () => { supabase.removeChannel(ch); };
   }, [id, queryClient]);
 

@@ -31,15 +31,14 @@
  * without the header. Ordinary fetches are fine — withWalletHeader sets it —
  * which is why the second path can read the rows directly.
  *
- * ── Detecting the transition without OLD.status ──
+ * ── Detecting the transition ──
  *
- * audio_spaces has REPLICA IDENTITY DEFAULT, so an UPDATE payload's `old`
- * carries the primary key and nothing else: `scheduled → live` is
- * indistinguishable from a listener_count bump by comparing statuses. What is
- * reliable is `started_at`, which startScheduledSpace stamps at the moment of
- * the flip — so "status is live AND started_at is seconds old AND we have not
- * already announced this stage" identifies it, and survives the duplicate
- * events a reconnect replays.
+ * The `stages` broadcast carries the previous status in `old`, so an update
+ * to a stage that was already live — a listener_count bump — is dropped
+ * before it costs a reminder lookup. `started_at`, which startScheduledSpace
+ * stamps at the moment of the flip, still has to be seconds old: "status is
+ * live AND started_at is fresh AND we have not already announced this stage"
+ * is what identifies a start.
  *
  * A stage opened with "Go live now" also has a fresh started_at, but it never
  * had a scheduled phase for anyone to set a reminder on, so the reminder lookup
@@ -61,6 +60,7 @@ import {
   stageNotificationPath,
 } from '@/lib/stage-notifications';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { watchStages } from '@/lib/stage-broadcast';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 /**
@@ -187,23 +187,13 @@ export function useStageAlerts() {
       });
     };
 
-    const channel = supabase
-      .channel(`stage_alerts:${wallet}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'audio_spaces',
-          // Realtime filters match the NEW row, so this drops every update that
-          // lands a stage on scheduled or ended before it reaches the client.
-          filter: 'status=eq.live',
-        },
-        (payload) => { void announce(payload.new as AudioSpace); },
-      )
-      .subscribe();
-
-    return () => { void supabase.removeChannel(channel); };
+    // Shares the app-wide `stages` broadcast with the stage lists. Only an
+    // update that lands a stage on live can be a start.
+    return watchStages((change) => {
+      if (change.eventType !== 'UPDATE' || change.new?.status !== 'live') return;
+      if (change.old?.status === 'live') return;
+      void announce(change.new);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, walletAddress, raise]);
 
