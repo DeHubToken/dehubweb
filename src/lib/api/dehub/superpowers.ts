@@ -349,6 +349,20 @@ export async function fetchBoostSlot(): Promise<BoostSlot | null> {
   return response.result ?? null;
 }
 
+export interface QueuedBoost extends BoostSlot {
+  startsAt: string;
+}
+
+/**
+ * Every live boost this viewer can see, oldest first. The home feed shows the
+ * first at the top and each next one three posts further down; when the oldest
+ * ends the rest move up. Includes the viewer's own boosts.
+ */
+export async function fetchBoostQueue(): Promise<QueuedBoost[]> {
+  const response = await apiCall<{ result: QueuedBoost[] }>('/api/superpowers/slots');
+  return response.result ?? [];
+}
+
 /**
  * Spend a boost on one of your posts.
  *
