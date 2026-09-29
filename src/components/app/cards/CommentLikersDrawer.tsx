@@ -21,6 +21,7 @@
 import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Loader2, ThumbsUp } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -40,6 +41,7 @@ interface CommentLikersDrawerProps {
 
 export function CommentLikersDrawer({ open, onOpenChange, commentId }: CommentLikersDrawerProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const {
     data,
@@ -81,7 +83,7 @@ export function CommentLikersDrawer({ open, onOpenChange, commentId }: CommentLi
         <DrawerHeader className="px-5 pt-4 pb-3 shrink-0">
           <DrawerTitle className="text-base font-medium text-white text-center flex items-center justify-center gap-2">
             <ThumbsUp aria-hidden="true" className="w-4 h-4" />
-            Likes
+            {t('postInfo.likes')}
             <span className="text-white/40 font-normal">· {totalCount}</span>
           </DrawerTitle>
         </DrawerHeader>
@@ -92,19 +94,19 @@ export function CommentLikersDrawer({ open, onOpenChange, commentId }: CommentLi
               <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
             </div>
           ) : !canView ? (
-            <AppState icon="lock" title="Likes are private" description="Only the comment author can view this list." kind="restricted" size="drawer" />
+            <AppState icon="lock" title={t('comments.likersPrivateTitle')} description={t('comments.likersPrivateBody')} kind="restricted" size="drawer" />
           ) : rows.length === 0 && anonymousCount === 0 ? (
-            <AppState icon="pinned" title="No likes yet" description="Likes on this comment will appear here." size="drawer" />
+            <AppState icon="pinned" title={t('comments.likersEmptyTitle')} description={t('comments.likersEmptyBody')} size="drawer" />
           ) : (
             <div className="space-y-2">
               {anonymousCount > 0 ? (
                 <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
-                  {anonymousCount} {anonymousCount === 1 ? 'like' : 'likes'} from anonymous badge {anonymousCount === 1 ? 'holder' : 'holders'}
+                  {t('comments.anonymousLikes', { count: anonymousCount })}
                 </div>
               ) : null}
               {rows.map((person) => {
                 const displayName =
-                  person.displayName || person.username || person.address?.slice(0, 8) || 'Unknown';
+                  person.displayName || person.username || person.address?.slice(0, 8) || t('comments.unknownUser');
                 const avatarUrl = buildAvatarUrl(person.address, extractAvatarPath(person));
                 return (
                   <button
@@ -143,7 +145,7 @@ export function CommentLikersDrawer({ open, onOpenChange, commentId }: CommentLi
                   disabled={isFetchingNextPage}
                   className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white/70 hover:bg-white/10 hover:text-white transition-colors disabled:opacity-50"
                 >
-                  {isFetchingNextPage ? 'Loading…' : 'Load more'}
+                  {isFetchingNextPage ? t('common.loading') : t('common.loadMore')}
                 </button>
               )}
             </div>
