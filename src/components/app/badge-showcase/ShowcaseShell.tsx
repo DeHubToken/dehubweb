@@ -68,6 +68,8 @@ interface ShowcaseShellProps {
   /** Marks an entry in the dock as held or earned. */
   owned: (index: number) => boolean;
   children: (api: ShowcaseApi) => ReactNode;
+  /** The action row: under the dock on phones, under the details on desktop. */
+  footer?: (api: ShowcaseApi) => ReactNode;
   intro?: ShowcaseIntro;
 }
 
@@ -98,6 +100,7 @@ export function ShowcaseShell({
   dockLabel,
   owned,
   children,
+  footer,
   intro,
 }: ShowcaseShellProps) {
   const { t } = useTranslation();
@@ -598,7 +601,7 @@ export function ShowcaseShell({
 
         {/* Details: one 8px gap, 16px radius and 12px padding throughout. */}
         <div
-          className="relative min-h-0 overflow-y-auto overscroll-contain px-4 pb-3 transition-[opacity,transform] duration-500 ease-out scrollbar-hide lg:flex lg:w-[400px] lg:shrink-0 lg:flex-col lg:py-6 lg:pl-0 lg:pr-8"
+          className="relative min-h-0 overflow-y-auto overscroll-contain px-4 transition-[opacity,transform] duration-500 ease-out scrollbar-hide lg:flex lg:w-[400px] lg:shrink-0 lg:flex-col lg:py-6 lg:pl-0 lg:pr-8"
           style={{
             opacity: panelIn ? 1 : 0,
             transform: panelIn ? 'none' : 'translateY(14px)',
@@ -607,12 +610,27 @@ export function ShowcaseShell({
         >
           {/* my-auto rather than justify-center: centred while it fits, and
               scrolling from the top instead of clipping when it does not. */}
-          <div className="mx-auto w-full max-w-[480px] lg:my-auto">{children(api)}</div>
+          <div className="mx-auto w-full max-w-[480px] lg:my-auto">
+            {children(api)}
+            {isDesktop && footer ? <div className="mt-2">{footer(api)}</div> : null}
+          </div>
         </div>
       </div>
 
-      {/* Same 480px column and 16px gutters as the details, so the edges line up. */}
-      {!isDesktop && <div className="mb-[max(env(safe-area-inset-bottom),10px)] mt-2 shrink-0 px-4">{dock}</div>}
+      {/* Same 480px column and 16px gutters as the details, so the edges line up.
+          On phones the dock sits between the details and the actions; the three
+          are one even gap apart, and the last keeps that gap above the inset. */}
+      {!isDesktop && (
+        <div className={`${footer ? '' : 'mb-[calc(env(safe-area-inset-bottom)+12px)] '}mt-3 shrink-0 px-4`}>{dock}</div>
+      )}
+      {!isDesktop && footer ? (
+        <div
+          className="mb-[calc(env(safe-area-inset-bottom)+12px)] mt-3 shrink-0 px-4 transition-opacity duration-500"
+          style={{ opacity: panelIn ? 1 : 0, pointerEvents: panelIn ? 'auto' : 'none' }}
+        >
+          <div className="mx-auto w-full max-w-[480px]">{footer(api)}</div>
+        </div>
+      ) : null}
 
       {/* The badge in flight, and the stand-in if WebGL is unavailable. */}
       <img
