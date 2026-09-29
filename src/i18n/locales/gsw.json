@@ -75,7 +75,19 @@
     "images": "Bilder",
     "videos": "Videos",
     "music": "Musig",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "DeHub entdecke — Trendigi Creator, Videos & Communitys",
+    "seoDescription": "Lueg, was uf DeHub grad im Trend isch: Top-Creator, Videos, Musig, Livestreams und Communitys uf de Open-Source-Sozialplattform, wo de Nutzer ghört."
+  },
+  "videos": {
+    "seoTitle": "Video-Feed — On-Chain-Videos uf DeHub luege",
+    "seoDescription": "Lueg di neuste On-Chain-Videos vo Creator uf DeHub: langi Uploads mit Pay-per-View, Inhalt mit Token-Zuegang und Beteiligung a de Werbiiinahme uf de Videoplattform, wo de Nutzer ghört.",
+    "heading": "DeHub Video-Feed"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Churzvideos uf DeHub",
+    "seoDescription": "Scroll dur di neuste Churzvideos uf DeHub: en vertikale Shorts-Feed zum Wische uf de Open-Source-Sozialplattform, wo de Nutzer ghört und wo d Creator ihre Inhalt sälber bsitzed.",
+    "heading": "DeHub Shorts"
   },
   "settings": {
     "showOnline": "Zeig, wenn i online bi.",
@@ -1373,7 +1385,9 @@
     "offerWorthNow": "Um die {{amount}} Tokens zum aktuelle Kurs",
     "offerNotePlaceholder": "Notiz dezuetue (optional)",
     "offerCommitsNothing": "Es kostet nüt, es Aagebot z'mache und es binde kei Tokens. Du bezahlsch erst, wenn de Besitze acceptiert.",
-    "offerNeedsHandle": "Das Konto het kein Benutzername, für wo me chönnt biete."
+    "offerNeedsHandle": "Das Konto het kein Benutzername, für wo me chönnt biete.",
+    "options": "Profil-Optione",
+    "translateBio": "Bio übersetze"
   },
   "tv": {
     "seoDescription": "Schau kostenlos Live-TV-Kanäle aus der ganzen Welt auf DeHub. Nachrichten, Sport, Unterhaltung und mehr — direkt im Browser, ohne Abo.",

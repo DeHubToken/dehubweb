@@ -75,7 +75,19 @@
     "images": "Gambar",
     "videos": "Video",
     "music": "Musik",
-    "live": "Siaran Langsung"
+    "live": "Siaran Langsung",
+    "seoTitle": "Jelajahi DeHub — Kreator, Video & Komunitas yang Sedang Tren",
+    "seoDescription": "Temukan yang sedang tren di DeHub: kreator teratas, video, musik, siaran langsung, dan komunitas di platform sosial sumber terbuka milik penggunanya."
+  },
+  "videos": {
+    "seoTitle": "Feed Video — Tonton Video On-Chain di DeHub",
+    "seoDescription": "Tonton video on-chain terbaru dari kreator di DeHub: unggahan durasi panjang dengan bayar-per-tonton, konten khusus pemegang token, dan bagi hasil pendapatan iklan di platform video milik penggunanya.",
+    "heading": "Feed Video DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Video Pendek di DeHub",
+    "seoDescription": "Gulir video pendek terbaru di DeHub: feed Shorts vertikal yang bisa digeser di platform sosial sumber terbuka milik penggunanya, tempat kreator memiliki konten mereka sendiri.",
+    "heading": "DeHub Shorts"
   },
   "settings": {
     "showOnline": "Tampilkan saat saya online",
@@ -1376,7 +1388,9 @@
     "offerWorthNow": "Sekitar {{amount}} token dengan kurs saat ini",
     "offerNotePlaceholder": "Tambahkan catatan (opsional)",
     "offerCommitsNothing": "Membuat tawaran tidak dikenakan biaya dan tidak menahan token. Anda hanya membayar jika pemilik menerima.",
-    "offerNeedsHandle": "Akun ini tidak punya nama pengguna untuk ditawar."
+    "offerNeedsHandle": "Akun ini tidak punya nama pengguna untuk ditawar.",
+    "options": "Opsi profil",
+    "translateBio": "Terjemahkan bio"
   },
   "tv": {
     "seoTitle": "TV Langsung — Kanal gratis dari seluruh dunia",

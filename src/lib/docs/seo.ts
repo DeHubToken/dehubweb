@@ -8,10 +8,12 @@ export interface DocsSeoEntry {
 }
 
 export const DOCS_SEO: Record<string, DocsSeoEntry> = {
+  // The docs index: the worker's crawler strings for /docs, which are also
+  // en.json docs.seoTitle / docs.seoDescription (DocsSEO shows those, translated).
   "": {
-    title: "DeHub Docs — Decentralized Social Platform Documentation",
+    title: "DeHub Documentation — Guides, Token, dApps & FAQ",
     description:
-      "Official DeHub documentation. Learn the platform, token, dApps, APIs and developer guides for the decentralized social network.",
+      "Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more.",
     keywords: "DeHub, docs, documentation, web3, decentralized social",
   },
   overview: {

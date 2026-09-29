@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getDocsSeoForPath } from "@/lib/docs/seo";
 import { upsertCanonical, upsertMeta, upsertSocialMeta, setJsonLd, setRobots } from "@/lib/head-meta";
-
-const DOCS_OG_IMAGE =
-  "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg";
+import { HUB_ROUTE_META, SHARE_IMAGE } from "@/lib/seo/route-meta";
 
 /**
  * Per-route SEO for every /docs section: title, description, canonical,
@@ -14,7 +13,14 @@ const DOCS_OG_IMAGE =
  */
 export function DocsSEO() {
   const { pathname } = useLocation();
-  const { entry, canonical } = getDocsSeoForPath(pathname);
+  const { t } = useTranslation();
+  const { entry: baseEntry, canonical, slug } = getDocsSeoForPath(pathname);
+  // The docs index carries translated head strings — the same keys the
+  // worker's localised /docs?hl= variants are built from.
+  const entry =
+    slug === ""
+      ? { ...baseEntry, title: t(HUB_ROUTE_META.docs.titleKey), description: t(HUB_ROUTE_META.docs.descriptionKey) }
+      : baseEntry;
 
   // Same reason as SEOHead: react-helmet-async (v3) emits nothing here, so every
   // docs page sat on the static index.html title. Write the whole head set
@@ -32,7 +38,7 @@ export function DocsSEO() {
       title: entry.title,
       description: entry.description,
       url: canonical,
-      image: DOCS_OG_IMAGE,
+      image: SHARE_IMAGE,
       type: "article",
     });
     setJsonLd(

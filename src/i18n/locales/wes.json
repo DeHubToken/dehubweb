@@ -75,7 +75,19 @@
     "images": "Images",
     "videos": "Videos",
     "music": "Music",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "Waka Round DeHub — Creators, Video an Community Weh Dey Hot",
+    "seoDescription": "Find wetin dey trend for DeHub: top creators, video, music, live stream an community dem for di open source social platform weh na users dem own am."
+  },
+  "videos": {
+    "seoTitle": "Video Feed — Look On-Chain Video dem for DeHub",
+    "seoDescription": "Look di latest on-chain video dem from creators for DeHub: long video weh you fit pay-per-view, token-gated content an ad money weh dem di share, for di video platform weh users own.",
+    "heading": "Video dem for DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Short Video dem for DeHub",
+    "seoDescription": "Scroll di latest short video dem for DeHub: shorts feed weh e stand up an you fit swipe, for di open source social platform weh users own, weh creators dem own dia own content.",
+    "heading": "Shorts dem for DeHub"
   },
   "settings": {
     "showOnline": "Show when I'm online",
@@ -1295,7 +1307,9 @@
     "offerWorthNow": "Wetin go on wey {{amount}} token go dey at dis time?",
     "offerNotePlaceholder": "Add smɔl not (if yu want)",
     "offerCommitsNothing": "Go make offer no cost na no token. You only pay when owner say yes.",
-    "offerNeedsHandle": "Dis akaunt no get yusaneim wei yu fit offa fo am."
+    "offerNeedsHandle": "Dis akaunt no get yusaneim wei yu fit offa fo am.",
+    "options": "Profile option dem",
+    "translateBio": "Translate di bio"
   },
   "tv": {
     "filterAll": "All",

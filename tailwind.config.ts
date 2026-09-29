@@ -21,7 +21,7 @@ export default {
       // skips the one-glyph pistol font (🔫 draws as the platform water gun)
       // and, on Windows, the Noto webfont (flags draw as letter pairs).
       fontFamily: {
-        exo: ['Exo', ...EMOJI_FONTS, 'sans-serif'],
+        exo: ['Exo', '"Exo Fallback"', ...EMOJI_FONTS, 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', ...EMOJI_FONTS, 'monospace'],
       },
       colors: {

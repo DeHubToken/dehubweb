@@ -106,6 +106,16 @@ function isRealAsset(res) {
   return !(res.headers.get('Content-Type') || '').toLowerCase().startsWith('text/html');
 }
 
+/** A successful, same-origin (or CORS), non-redirected HTML page. */
+function isShellResponse(res) {
+  return (
+    res.ok &&
+    !res.redirected &&
+    (res.type === 'basic' || res.type === 'cors') &&
+    (res.headers.get('Content-Type') || '').toLowerCase().startsWith('text/html')
+  );
+}
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
@@ -122,8 +132,13 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(SHELL_CACHE).then((c) => c.put('/', copy)).catch(() => {});
+          // Only a real page may become the offline shell. Storing every
+          // response let an edge error page, a 404 or an opaque redirect be
+          // what an offline visitor got for every route from then on.
+          if (isShellResponse(res)) {
+            const copy = res.clone();
+            caches.open(SHELL_CACHE).then((c) => c.put('/', copy)).catch(() => {});
+          }
           return res;
         })
         .catch(() =>

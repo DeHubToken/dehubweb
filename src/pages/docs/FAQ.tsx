@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import SEO from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const FAQ = () => {
@@ -15,11 +14,6 @@ const FAQ = () => {
   // dehub.io serves comes from the worker's prerendered head.
   return (
     <>
-      <SEO
-        title={t('faq.title')}
-        description={t('faq.subtitle')}
-        url="/docs/faq"
-      />
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
           <h1 className="text-4xl font-bold text-foreground mb-4">{t('faq.title')}</h1>

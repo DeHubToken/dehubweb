@@ -75,7 +75,19 @@
     "images": "Whakaahua",
     "videos": "Ataata",
     "music": "Waiata",
-    "live": "Ora"
+    "live": "Ora",
+    "seoTitle": "Tūhuratia a DeHub — Ngā Kaihanga, Ataata me ngā Hapori Rongonui",
+    "seoDescription": "Kitea ngā mea rongonui i DeHub: ngā kaihanga matua, ngā ataata, ngā waiata, ngā pāho ora me ngā hapori i te papa pāpori puna tuwhera nā ngā kaiwhakamahi."
+  },
+  "videos": {
+    "seoTitle": "Whāngai Ataata — Mātakihia ngā Ataata On-Chain i DeHub",
+    "seoDescription": "Mātakihia ngā ataata on-chain hou rawa mai i ngā kaihanga i DeHub: ngā ataata roa me te utu ia mātakitanga, ngā ihirangi kua herea ki te tohu (token) me te tiritiri moni pānuihoko i te papa ataata nā ngā kaiwhakamahi.",
+    "heading": "Whāngai Ataata DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Poto — Ngā Ataata Poto i DeHub",
+    "seoDescription": "Panukutia ngā ataata poto hou rawa i DeHub: he whāngai ataata poto poutū, ka taea te whakakōrere, i te papa pāpori puna tuwhera nā ngā kaiwhakamahi, ā, nō ngā kaihanga ō rātou ake ihirangi.",
+    "heading": "DeHub Poto"
   },
   "settings": {
     "showOnline": "Whakaatu i te wa e ahau i runga i te ipurangi",
@@ -1371,7 +1383,9 @@
     "offerWorthNow": "Tata ki te {{amount}} tohu i te reiti o nāianei",
     "offerNotePlaceholder": "Tāpiritia he tuhipoka (kōwhiringa)",
     "offerCommitsNothing": "Kore utu te tuku tono, ā, kāore he tohu e mau ana. Ka utua koe mēnā ka whakaae te rangatira.",
-    "offerNeedsHandle": "Kāore he ingoa kaiwhakamahi o tēnei pūkete hei tāpae."
+    "offerNeedsHandle": "Kāore he ingoa kaiwhakamahi o tēnei pūkete hei tāpae.",
+    "options": "Ngā kōwhiringa kōtaha",
+    "translateBio": "Whakamāoritia te haurongo"
   },
   "tv": {
     "seoTitle": "Te pouaka whakaata ora — Nga hongere koreutu mai i te ao katoa",

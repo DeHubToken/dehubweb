@@ -75,7 +75,19 @@
     "images": "Sary",
     "videos": "Horonan-tsary",
     "music": "Mozika",
-    "live": "Mivantana"
+    "live": "Mivantana",
+    "seoTitle": "Jereo ny DeHub — Mpamorona, Horonan-tsary & Vondrona malaza",
+    "seoDescription": "Fantaro izay malaza ao amin’ny DeHub: mpamorona ambony indrindra, horonan-tsary, mozika, fandefasana mivantana ary vondrona ao amin’ny sehatra sosialy loharano misokatra an’ny mpampiasa."
+  },
+  "videos": {
+    "seoTitle": "Lisitry ny Horonan-tsary — Horonan-tsary On-Chain ao amin’ny DeHub",
+    "seoDescription": "Jereo ireo horonan-tsary on-chain vaovao indrindra avy amin’ny mpamorona ao amin’ny DeHub: horonan-tsary lava misy fandoavana isaky ny fijerena, votoaty voafetra amin’ny token ary fizarana ny vola miditra avy amin’ny dokambarotra ao amin’ny sehatra horonan-tsary an’ny mpampiasa.",
+    "heading": "Lisitry ny Horonan-tsary DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Fohy — Horonan-tsary fohy ao amin’ny DeHub",
+    "seoDescription": "Jereo ireo horonan-tsary fohy vaovao indrindra ao amin’ny DeHub: lisitry ny horonan-tsary fohy mitsangana azo sintonina ao amin’ny sehatra sosialy loharano misokatra an’ny mpampiasa, izay ananan’ny mpamorona ny votoatiny.",
+    "heading": "DeHub Fohy"
   },
   "settings": {
     "showOnline": "Asehoy rehefa an-tserasera aho",
@@ -1377,7 +1389,9 @@
     "offerWorthNow": "Tokotokony {{amount}} tokeny amin'ny tahan'ny ankehitriny",
     "offerNotePlaceholder": "Ampio naoty (tsy voatery)",
     "offerCommitsNothing": "Tsy misy vidiny ny fanaovana tolo-bidy ary tsy mitazona tokeny. Vao mandoa ianao raha manaiky ny tompony.",
-    "offerNeedsHandle": "Tsy manana anaram-pikambanana hanaovana tolotra ity kaonty ity."
+    "offerNeedsHandle": "Tsy manana anaram-pikambanana hanaovana tolotra ity kaonty ity.",
+    "options": "Safidin’ny mombamomba",
+    "translateBio": "Adikao ny tantaram-piainana"
   },
   "tv": {
     "seoTitle": "Fahitalavitra Live ¢avy amin'ny lafivalon'izao tontolo izao",
