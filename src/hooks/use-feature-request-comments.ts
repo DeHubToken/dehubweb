@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import { getAccountSummariesByUsernames } from '@/lib/api/dehub';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { dehubAuthHeaders } from '@/lib/ai-invoke';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import type { PostReaction } from '@/lib/reactions';
 import {
   attachReactions,
@@ -132,17 +133,20 @@ async function notifyMentions(params: {
   if (recipients.size === 0) return;
 
   try {
-    await supabase.from('custom_notifications').insert(
-      [...recipients].map((address) => ({
-        recipient_address: address,
-        actor_address: params.actorAddress,
-        actor_username: params.actorUsername,
-        actor_avatar: params.actorAvatar,
-        type: 'feature_request_mention',
-        content: params.content.slice(0, 100),
-        reference_id: params.featureRequestId,
-        reference_title: params.featureTitle,
-      })),
+    await withWalletHeader(
+      supabase.from('custom_notifications').insert(
+        [...recipients].map((address) => ({
+          recipient_address: address,
+          actor_address: params.actorAddress,
+          actor_username: params.actorUsername,
+          actor_avatar: params.actorAvatar,
+          type: 'feature_request_mention',
+          content: params.content.slice(0, 100),
+          reference_id: params.featureRequestId,
+          reference_title: params.featureTitle,
+        })),
+      ),
+      params.actorAddress,
     );
   } catch {
     // The comment stands whether or not the mention row landed.
