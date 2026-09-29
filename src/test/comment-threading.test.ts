@@ -10,7 +10,7 @@
  * replies in a row addressed to nobody.
  */
 import { describe, expect, it } from 'vitest';
-import { selectAuthorThreadEntries, hasUnresolvedParent } from '@/lib/comment-threading';
+import { selectAuthorThreadEntries, hasUnresolvedParent, previewReplies, recordCreatorLifts } from '@/lib/comment-threading';
 import type { ApiCommentResponse } from '@/lib/api/dehub';
 
 const AUTHOR = '0xAuThOr';
@@ -94,5 +94,49 @@ describe('unresolved parents', () => {
 
   it('does not chase a parent for a top-level comment', () => {
     expect(hasUnresolvedParent([row({ id: '1', createdAt: '2026-01-01T00:00:00Z' })])).toBe(false);
+  });
+});
+
+describe('creator-replied lift', () => {
+  it('keeps the API order and ignores a lift that arrives on a refetch', () => {
+    const seen = new Set<string>();
+    const lifted = new Set<string>();
+    const first = recordCreatorLifts(
+      [
+        row({ id: '9', createdAt: '2026-01-01T00:09:00Z', creatorReplied: true }),
+        row({ id: '4', createdAt: '2026-01-01T00:04:00Z', creatorReplied: true }),
+        row({ id: '7', createdAt: '2026-01-01T00:07:00Z' }),
+      ],
+      seen,
+      lifted,
+    );
+    expect([...first]).toEqual([['9', 0], ['4', 1]]);
+
+    // The creator answers comment 7 while reading; it must stay where it is.
+    const refetched = recordCreatorLifts(
+      [row({ id: '7', createdAt: '2026-01-01T00:07:00Z', creatorReplied: true })],
+      seen,
+      lifted,
+    );
+    expect(refetched.has('7')).toBe(false);
+  });
+});
+
+describe('collapsed thread preview', () => {
+  const reply = (id: string, address: string, replyToId?: string) => ({ comment: { id, address, replyToId }, depth: 1 });
+
+  it('shows the first reply when the creator has not answered', () => {
+    const replies = [reply('2', OTHER, '1'), reply('3', OTHER, '1')];
+    expect(previewReplies(replies, AUTHOR, 1).map(r => r.comment.id)).toEqual(['2']);
+  });
+
+  it("shows the creator's answer instead of the first reply", () => {
+    const replies = [reply('2', OTHER, '1'), reply('3', AUTHOR.toLowerCase(), '1')];
+    expect(previewReplies(replies, AUTHOR, 1).map(r => r.comment.id)).toEqual(['3']);
+  });
+
+  it('keeps the replies a deep answer hangs from', () => {
+    const replies = [reply('2', OTHER, '1'), reply('3', OTHER, '1'), reply('4', AUTHOR, '3')];
+    expect(previewReplies(replies, AUTHOR, 1).map(r => r.comment.id)).toEqual(['3', '4']);
   });
 });
