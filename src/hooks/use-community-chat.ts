@@ -213,7 +213,9 @@ export function useCommunityChat(
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') queryClient.invalidateQueries({ queryKey: messagesKey });
+      });
 
     return () => {
       supabase.removeChannel(channel);

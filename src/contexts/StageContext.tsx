@@ -19,6 +19,7 @@ import {
   dismissRecordingToast,
 } from '@/lib/stage-recording-toast';
 import { withWalletHeader, endStageOnExit } from '@/lib/supabase-wallet-client';
+import { watchStages, type StageChange } from '@/lib/stage-broadcast';
 import { isChunkLoadError } from '@/lib/lazy-with-retry';
 import { createLogger } from '@/lib/logger';
 import {
@@ -2306,6 +2307,24 @@ export function StageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!currentSpace) return;
 
+    const loadParticipants = () => {
+      supabase
+        .from('space_participants')
+        .select('*')
+        .eq('space_id', currentSpace.id)
+        .is('left_at', null)
+        .then(({ data }) => { if (data) setParticipants(data as SpaceParticipant[]); });
+    };
+    const loadHandRequests = () => {
+      if (myRoleRef.current !== 'host') return;
+      supabase
+        .from('raise_hand_requests')
+        .select('*')
+        .eq('space_id', currentSpace.id)
+        .eq('status', 'pending')
+        .then(({ data }) => { if (data) setHandRequests(data as RaiseHandRequest[]); });
+    };
+
     const participantsChannel = supabase
       .channel(`participants:${currentSpace.id}`)
       .on(
@@ -2336,7 +2355,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
           }
         },
       )
-      .subscribe();
+      // Re-read on every join: Realtime's change feed starts cold when nobody
+      // else is subscribed, and a rejoin after a dropped socket replays nothing.
+      .subscribe((status) => { if (status === 'SUBSCRIBED') loadParticipants(); });
 
     const handChannel = supabase
       .channel(`hands:${currentSpace.id}`)
@@ -2367,7 +2388,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           }
         },
       )
-      .subscribe();
+      .subscribe((status) => { if (status === 'SUBSCRIBED') loadHandRequests(); });
 
     const spaceChannel = supabase
       .channel(`space:${currentSpace.id}`)
@@ -2401,21 +2422,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
       .subscribe();
 
     // Initial fetch
-    supabase
-      .from('space_participants')
-      .select('*')
-      .eq('space_id', currentSpace.id)
-      .is('left_at', null)
-      .then(({ data }) => { if (data) setParticipants(data as SpaceParticipant[]); });
-
-    if (myRoleRef.current === 'host') {
-      supabase
-        .from('raise_hand_requests')
-        .select('*')
-        .eq('space_id', currentSpace.id)
-        .eq('status', 'pending')
-        .then(({ data }) => { if (data) setHandRequests(data as RaiseHandRequest[]); });
-    }
+    loadParticipants();
+    loadHandRequests();
 
     return () => {
       supabase.removeChannel(participantsChannel);
@@ -2543,7 +2551,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       next[index] = { ...store[index], ...row };
       return next;
     };
-    const onSpaceChange = (payload: { eventType: string; new: Partial<AudioSpace>; old: Partial<AudioSpace> }) => {
+    const onSpaceChange = (payload: StageChange) => {
       if (payload.eventType === 'INSERT') {
         const status = payload.new?.status;
         if (status === 'live' || status === 'scheduled') scheduleLiveSpacesRefresh();
@@ -2556,7 +2564,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         }
         return;
       }
-      const row = payload.new as AudioSpace | undefined;
+      const row = payload.new;
       if (!row?.id) return;
       const inLive = liveSpacesStore.find(s => s.id === row.id);
       const inScheduled = scheduledSpacesStore.find(s => s.id === row.id);
@@ -2574,13 +2582,13 @@ export function StageProvider({ children }: { children: ReactNode }) {
         if (next) { setScheduledSpaces(next); publishScheduledSpaces(next); }
       }
     };
-    const channel = supabase
-      .channel('live_spaces_global')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'audio_spaces' }, onSpaceChange)
-      .subscribe();
+    // Re-read on every join as well: a broadcast sent while this client was
+    // not joined is simply gone, so a stage that started during a dropped
+    // socket would otherwise never reach the list.
+    const stopWatching = watchStages(onSpaceChange, scheduleLiveSpacesRefresh);
     return () => {
       if (liveSpacesRefreshDebounceRef.current) clearTimeout(liveSpacesRefreshDebounceRef.current);
-      supabase.removeChannel(channel);
+      stopWatching();
     };
   }, [refreshSpaces, refreshScheduledSpaces]);
 

@@ -206,7 +206,12 @@ export function useDaoProposals() {
         if (!row?.wallet_address || row.wallet_address.toLowerCase() === mine) votesDirty = true;
         schedule();
       })
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          queryClient.invalidateQueries({ queryKey: DAO_PROPOSALS_KEY });
+          queryClient.invalidateQueries({ queryKey: ['dao-proposal-votes'] });
+        }
+      });
     return () => {
       if (timer) clearTimeout(timer);
       void supabase.removeChannel(channel);

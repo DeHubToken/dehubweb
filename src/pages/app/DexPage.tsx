@@ -231,10 +231,11 @@ export default function DexPage() {
     return () => { clearInterval(timer); document.removeEventListener('visibilitychange', resume); };
   }, [loadPositions]);
   // The server announces each rebuilt snapshot, so the page follows the write instead of the
-  // poll above, which stays as the fallback for a socket that drops.
+  // poll above, which stays as the fallback for a socket that drops. A broadcast rather than a
+  // table subscription: this one page was enough to keep the database change feed polling.
   useEffect(() => {
-    const channel = supabase.channel('dex-market-tick')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'dex_market_tick' }, () => {
+    const channel = supabase.channel('dex:market', { config: { private: true } })
+      .on('broadcast', { event: 'tick' }, () => {
         readSharedMarket.invalidate();
         void loadPositions();
       })
