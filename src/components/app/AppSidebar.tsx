@@ -167,8 +167,10 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
 
       </div>
 
-      {/* Only the tiles scroll */}
-      <div className="-mx-1 min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 [touch-action:pan-y]">
+      {/* Only the tiles scroll. No-drag, as in the app: the sheet drags from
+          its top only, so a swipe on the tiles never nudges the whole sheet
+          (which also smeared the pinned footer while it moved). */}
+      <div data-vaul-no-drag className="-mx-1 min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 pb-2 [touch-action:pan-y]">
       {/* Navigation tiles */}
       <MobileMenuGrid
         items={visibleNavItems}
@@ -199,14 +201,14 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
 
       {/* Pinned bottom: account actions - only shown when authenticated */}
       {isAuthenticated && (
-        <div className="shrink-0 mt-2 pt-3 space-y-3 px-1 border-t border-white/10">
+        <div data-vaul-no-drag data-menu-footer className="shrink-0 -mx-4 space-y-1 border-t border-white/10 px-4 pt-2">
           {/* Every other account saved on this device, one tap away. Settings
               → Profile used to be the only surface for this, which made
               multi-account invisible unless you already knew it existed. */}
           <Suspense fallback={null}>
             <SidebarProfileSwitcher onNavigate={closeMenu} />
           </Suspense>
-          <div className="flex items-center justify-between px-2">
+          <div className="-mx-1.5 flex items-center justify-between">
             {/* forgetProfile: logging out revokes this session's tokens
                 server-side, so its stored snapshot is dead the moment this
                 runs. Left on the list it looked like a working profile and
@@ -215,9 +217,9 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
                 account rather than of the device. */}
             <button
               onClick={() => { closeMenu(); disconnect({ forgetProfile: true }); }}
-              className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors py-2"
+              className="flex h-12 items-center gap-3 rounded-xl px-3.5 text-[15px] font-medium text-zinc-400 hover:text-white transition-colors"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-5 h-5" />
               {t('sidebar.logOut')}
             </button>
             <button
