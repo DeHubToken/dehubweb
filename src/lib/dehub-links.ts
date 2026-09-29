@@ -37,8 +37,7 @@ export type DehubLinkKind =
   | 'event'
   | 'stage'
   | 'film'
-  | 'bounty'
-  | 'app';
+  | 'bounty';
 
 export interface DehubLinkMatch {
   kind: DehubLinkKind;
@@ -70,8 +69,6 @@ export interface DehubLinkMatch {
    * fields.
    */
   bountyJobKey?: string;
-  /** `/apps/<slug>` — a mini app in the store. */
-  appSlug?: string;
 }
 
 // ── Hosts ───────────────────────────────────────────────────────────────────
@@ -120,8 +117,7 @@ const ABSOLUTE_URL_RE = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)+[a-z]{2,}(?::\d+)?\/[^
 // short post/thread form for the same reason (/posts/1, /posts/1/b/9). `bounty`
 // and `work` are the same story again for bounty detail pages — /bounty/7 is
 // canonical, /work/<uuid> is the pre-numbering form still out in the wild.
-// `apps` is the mini app store, /apps/<slug>.
-const BARE_PATH_RE = /\/(?:app|apps|communities|posts|stages?|bounty|work)\/[^\s<>"'`]*/gi;
+const BARE_PATH_RE = /\/(?:app|communities|posts|stages?|bounty|work)\/[^\s<>"'`]*/gi;
 
 // A URL at the end of a sentence carries the punctuation with it.
 const TRAILING_PUNCTUATION_RE = /[.,;:!?)\]}>"']+$/;
@@ -287,15 +283,6 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
   if (scoped[0] === 'bounty' && scoped[1]) {
     if (!/^\d+$/.test(scoped[1])) return null;
     return { ...base, kind: 'bounty', bountyJobKey: scoped[1] };
-  }
-
-  // ── /apps/:slug — one mini app ──
-  //
-  // Top-level. `dev` is the developer page, not an app, so it stays a plain
-  // link; a query string (a deep link into the app) rides along in `path`.
-  if (segments[0] === 'apps' && segments[1] && segments[1] !== 'dev' && !segments[2]) {
-    if (!/^[a-z0-9][a-z0-9-]{1,39}$/.test(segments[1])) return null;
-    return { ...base, kind: 'app', appSlug: segments[1] };
   }
 
   // ── /work/:uuid — the legacy bounty detail link, from before job numbers ──
@@ -472,6 +459,5 @@ export function dehubLinkLabel(kind: DehubLinkKind): string {
     case 'stage': return 'stage';
     case 'film': return 'title';
     case 'bounty': return 'bounty';
-    case 'app': return 'app';
   }
 }
