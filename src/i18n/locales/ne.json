@@ -2487,6 +2487,7 @@
     }
   },
   "superpowers": {
+    "title": "सुपरपावर",
     "intro": "ब्याजले तपाईंको नामछेउको चित्रभन्दा बढी दिन्छ। हरेक पन्ध्र दिनमा यसले बुस्टहरू दिन्छ — प्रत्येकले पोस्टलाई होम फिडको माथिल्लो स्लटमा राख्छ। तेह्र तह, तेह्र शक्ति, प्रत्येक खुड्किलोमा एउटा अनलक।",
     "boost": "बुस्ट",
     "secondWind": "सेकेन्ड विन्ड",
@@ -2667,6 +2668,7 @@
     "statusPaid": "भुक्तानी गरिएको",
     "statusAwaitingPayment": "भुक्तानी पर्खिरहेको",
     "boosted": "बढाइएको",
+    "subsCount": "{{count}} अब्जेक्टहरू",
     "fieldTitle": "शीर्षक",
     "titlePlaceholder": "के गर्न आवश्यक छ?",
     "fieldDescription": "विवरण",
@@ -3510,7 +3512,9 @@
     "imageFilesOnly": "छवि फाइलहरू मात्र",
     "max5mb": "अधिकतम 5MB",
     "uploadFailed": "अपलोड असफल भयो",
-    "website": "वेबसाइट"
+    "website": "वेबसाइट",
+    "twitter": "X / ट्विटर",
+    "mockNote": "Phase 1 mock — चेनमा कुनै पनि लेनदेन हुंदैन।"
   },
   "fractions": {
     "seoDescription": "DeHub पोस्टका अंशहरू किन्नुहोस् र बेच्नुहोस्। मिन्ट गरिएको पोस्ट 1000 अन-चेन अंश हो — भिडियो, ट्र्याक, वा छविको एक टुक्राको मालिक बन्नुहोस् र DHB मा यसको व्यापार गर्नुहोस्।",
@@ -3983,7 +3987,7 @@
     "heroOriginalsSubtitle": "समुदाय द्वारा निर्मित र क्यूरेट गरिएको सामग्री",
     "heroHollywoodSubtitle": "सिनेमा ग्रेड उत्पादन बनाउनुहोस्",
     "heroSkillsSubtitle": "पुनः प्रयोगयोग्य रचनात्मक प्रणाली र ब्र्यान्ड दिमाग",
-    "heroAgentsSubtitle": "च्याट, सिर्जना गर्नुहोस्, प्रकाशित गर्नुहोस्, रिमिक्स गर्नुहोस् र स्वचालित गर्नुहोस्",
+    "heroAgentsSubtitle": "च्याट गर्नुहोस्, बनाउनुहोस्, प्रकाशित गर्नुहोस्, रिमिक्स गर्नुहोस् र स्वचालित गर्नुहोस्",
     "toolBuilder": "बिल्डर",
     "toolBuilderDesc": "एक अ्यप वर्णन गर्नुहोस् र यो लाइभ पाउनुहोस् — AI यसलाई बनाउँछ, DeHub यसलाई होस्ट गर्छ, तपाई लिङ्क साझा गर्नुहोस्।",
     "toolPoster": "DeHub पोस्टर",
@@ -4275,6 +4279,7 @@
     "history": "इतिहास",
     "sold": "बेचिएको",
     "bought": "किनिएको",
+    "askingPrice": "माग गरिएको मूल्य",
     "paidStraightToSeller": "≈ ${{usd}} · विक्रेताको सीधा भुक्तानी, DeHub कुनै कट लिदैन",
     "yourHandleChanges": "आपको ह्यान्डल परिवर्तन",
     "payingWithDhbOn": "{{chain}} मा DeHub टोकनहरूसँग भुक्तान गर्दै",
@@ -5340,6 +5345,10 @@
     "noVoice": "तपाईंको उपकरणमा यो भाषाको लागि आवाज छैन।",
     "sameLanguage": "यो भिडियो पहिले नै तपाईंको भाषामा छ।"
   },
+  "support": {
+    "descriptionPlaceholder": "तपाईंले कस्तो गरेको थिए, तपाईंको अपेक्षा के थियो र त्यसको बजाय के भयो।",
+    "contactEmailPlaceholder": "यदि तपाईं यसलाई खाली छोड्नुहुन्छ भने हाम्रो खाता ईमेल प्रयोग गर्नेछौं"
+  },
   "digest": {
     "andOthers_one": "{{names}} र {{count}} अन्य",
     "andOthers_other": "{{names}} र {{count}} अरू",
@@ -5434,6 +5443,7 @@
     "seoTitle": "कनभर्टर — DeHub मा भिडियो आयात गर्नुहोस्",
     "seoDescription": "YouTube, TikTok, Instagram, X र अन्य स्रोतहरूबाट लिङ्क पेस्ट गर्नुहोस् र यसलाई DeHub पोस्टको रूपमा प्रकाशित गर्नुहोस्।",
     "title": "भिडियो आयात गर्नुहोस्",
+    "subtitle": "तपाईंले स्वामित्वमा रहेको भिडियोको लिंक पेस्ट गर्नुहोस् र हामी तपाईंको प्रोफाइलमा पोस्टको रूपमा प्रकाशित गर्नेछौं। तपाईंको इच्छा अनुसार धेरै लिंक पेस्ट गर्न सक्नुहुन्छ — यी एकपछि अर्को पृष्ठभूमिमा चलिरहन्छन्।",
     "migrateAll": "सबै माइग्रेट गर्नुहोस्",
     "placeholder": "भिडियो लिङ्क पेस्ट गर्नुहोस्",
     "paste": "पेस्ट गर्नुहोस्",
@@ -5748,26 +5758,26 @@
     "statusError": "The latest status is unavailable. Your purchase is saved. Check again; do not send a second payment.",
     "refundAddress": "Refund address on {{chain}}",
     "refundPlaceholder": "Address on the payment network",
-    "refundHint": "Check this is a wallet you control on the payment network. Avoid exchange addresses that require a memo or tag. Any provider refund returns here.",
+    "refundHint": "यो भुक्तानी नेटवर्कमा तपाईंले नियन्त्रण गर्न सक्ने एक वॉलेट हो भनेर यसलाई समीक्षा गर्नुहोस्। मेमो वा ट्याग आवश्यक पार्ने विनिमयको पतेबाट बच्नुहोस्। कुनै पनि प्रदायकले यसमा फिर्ता गर्ने भुक्तानी यता आउँछ।",
     "quoteSummary": "Estimated payment: {{amount}} {{symbol}} on {{chain}}",
     "receiveNet": "तपाईंले प्राप्त गर्नुहुन्छ: {{amount}} DeHub टोकन",
     "gasReserve": "Includes ${{amount}} for network gas.",
     "swapEstimate": "About {{minutes}} min after your payment confirms.",
     "estimateUnknown": "Timing depends on the payment network.",
     "confirmationTime": "नेटवर्क पुष्टिकरण र टोकन डेलिभरीले समय थप्छ। यो एक अनुमान हो, काउन्टडाउन होइन।",
-    "finalQuote": "Review the final amount before paying.",
-    "getQuote": "Continue",
-    "paymentAction": "Continue",
+    "finalQuote": "भुक्तानी गर्नु अघि अन्तिम रकमको समीक्षा गर्नुहोस्।",
+    "getQuote": "जारी राख्नुहोस्",
+    "paymentAction": "जारी राख्नुहोस्",
     "acceptTerms": "I agree to the purchase terms.",
     "terms": "Read terms",
     "sendExact": "Send exactly {{amount}} {{symbol}} on {{chain}}. Allow separately for withdrawal or network fees.",
     "paymentSummary": "Payment: {{amount}} {{symbol}} on {{chain}}",
     "copyPayment": "Copy payment address",
-    "memoNotice": "Required memo/tag — include it with the address or the payment may not be credited.",
+    "memoNotice": "आवश्यक मेमो/ट्याग — यसको पतेसँगै समावेश गर्नुहोस् वा भुक्तानी क्रेडिट गरिएन सक्छ।",
     "copyMemo": "Copy memo/tag",
     "copied": "Copied",
     "copyFailed": "Could not copy. Select the text and copy it manually.",
-    "deadline": "Deposit deadline: {{date}}. Do not send a new payment after this time.",
+    "deadline": "जम्मा गर्ने समयसीमा: {{date}}. यस समयपछि नयाँ भुक्तानी पठाउनुहोस् भनेर नगर्नुहोस्।",
     "saved": "Your purchase is saved. You can return to it anytime.",
     "checkStatus": "Refresh purchase status",
     "lastChecked": "Last checked {{time}}",
@@ -5809,7 +5819,7 @@
     "currency": "Currency",
     "checkingBalances": "Checking your wallet balances…",
     "walletBalances": "Your balances by network",
-    "noWalletFunds": "Choose a currency, or search other currencies and networks.",
+    "noWalletFunds": "मुद्रा चयन गर्नुहोस्, वा अन्य मुद्राहरू र नेटवर्कहरू खोज्नुहोस्।",
     "connectSolana": "Connect Solana wallet",
     "balanceUnknown": "Balance unavailable",
     "balanceAmount": "Available: {{amount}} {{symbol}}"
@@ -7724,6 +7734,23 @@
     "nationalist": "राष्ट्रवादी",
     "communist": "साम्यवादी"
   },
+  "apk": {
+    "seoTitle": "DeHub APK डाउनलोड गर्नुहोस् — पछिल्लो Android बिल्ड",
+    "seoDescription": "स्टोरहरू छोड्नुहोस् र DeHub को पछिल्लो संस्करण यहीँबाट लिनुहोस्। Android का लागि सिधा APK डाउनलोड — ओपन सोर्स, प्रयोगकर्ताको स्वामित्वमा रहेको सामाजिक सञ्जाल, स्टोर खाता आवश्यक छैन।",
+    "ldDescription": "सिधा APK डाउनलोडका रूपमा DeHub Android एप। ओपन सोर्स, प्रयोगकर्ताको स्वामित्वमा रहेको सामाजिक सञ्जाल — स्टोर खाता आवश्यक छैन।",
+    "back": "DeHub मा फर्कनुहोस्",
+    "title": "स्टोरहरू छोड्नुहोस्।",
+    "subtitle": "DeHub को पछिल्लो संस्करण यहीँबाट लिनुहोस् — सिधै हामीबाट, स्टोर खाता चाहिँदैन, समीक्षाको लाइनमा पर्खनु पर्दैन।",
+    "download": "अहिले डाउनलोड गर्नुहोस्",
+    "installHint": "Android ले सोध्दा आफ्नो ब्राउजरबाट इन्स्टल गर्न अनुमति दिनुहोस्। अपडेट गर्दै हुनुहुन्छ? हालको एप अनइन्स्टल नगरी त्यसमाथि नै इन्स्टल गर्नुहोस्।",
+    "useInBrowser": "आफ्नो ब्राउजरमा DeHub प्रयोग गर्नुहोस्",
+    "googlePlay": "Google Play मन पर्छ? त्यहीँबाट लिनुहोस्।",
+    "shareText": "स्टोरहरू छोड्नुहोस् — DeHub को पछिल्लो Android बिल्ड सिधै लिनुहोस्।",
+    "shareX": "X मा साझा गर्नुहोस्",
+    "shareFacebook": "Facebook मा साझा गर्नुहोस्",
+    "shareTelegram": "Telegram मा साझा गर्नुहोस्",
+    "copyLink": "लिंक प्रतिलिपि गर्नुहोस्"
+  },
   "spaces": {
     "title": "स्पेसहरू",
     "live": "प्रत्यक्ष",
@@ -7743,22 +7770,5 @@
     "backToBlog": "ब्लगमा फर्कनुहोस्",
     "sharePost": "पोस्ट साझा गर्नुहोस्",
     "relatedPosts": "सम्बन्धित पोस्टहरू"
-  },
-  "apk": {
-    "seoTitle": "DeHub APK डाउनलोड गर्नुहोस् — पछिल्लो Android बिल्ड",
-    "seoDescription": "स्टोरहरू छोड्नुहोस् र DeHub को पछिल्लो संस्करण यहीँबाट लिनुहोस्। Android का लागि सिधा APK डाउनलोड — ओपन सोर्स, प्रयोगकर्ताको स्वामित्वमा रहेको सामाजिक सञ्जाल, स्टोर खाता आवश्यक छैन।",
-    "ldDescription": "सिधा APK डाउनलोडका रूपमा DeHub Android एप। ओपन सोर्स, प्रयोगकर्ताको स्वामित्वमा रहेको सामाजिक सञ्जाल — स्टोर खाता आवश्यक छैन।",
-    "back": "DeHub मा फर्कनुहोस्",
-    "title": "स्टोरहरू छोड्नुहोस्।",
-    "subtitle": "DeHub को पछिल्लो संस्करण यहीँबाट लिनुहोस् — सिधै हामीबाट, स्टोर खाता चाहिँदैन, समीक्षाको लाइनमा पर्खनु पर्दैन।",
-    "download": "अहिले डाउनलोड गर्नुहोस्",
-    "installHint": "Android ले सोध्दा आफ्नो ब्राउजरबाट इन्स्टल गर्न अनुमति दिनुहोस्। अपडेट गर्दै हुनुहुन्छ? हालको एप अनइन्स्टल नगरी त्यसमाथि नै इन्स्टल गर्नुहोस्।",
-    "useInBrowser": "आफ्नो ब्राउजरमा DeHub प्रयोग गर्नुहोस्",
-    "googlePlay": "Google Play मन पर्छ? त्यहीँबाट लिनुहोस्।",
-    "shareText": "स्टोरहरू छोड्नुहोस् — DeHub को पछिल्लो Android बिल्ड सिधै लिनुहोस्।",
-    "shareX": "X मा साझा गर्नुहोस्",
-    "shareFacebook": "Facebook मा साझा गर्नुहोस्",
-    "shareTelegram": "Telegram मा साझा गर्नुहोस्",
-    "copyLink": "लिंक प्रतिलिपि गर्नुहोस्"
   }
 }

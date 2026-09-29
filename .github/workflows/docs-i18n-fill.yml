@@ -26,6 +26,10 @@ on:
         description: 'Max keys per locale in one run (blank = all missing)'
         required: false
         default: ''
+      paths:
+        description: 'Comma-separated en.ts keys or arrays to fill and nothing else (blank = every missing key)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -69,10 +73,12 @@ jobs:
         with:
           node-version: '24'
       - name: Fill
+        env:
+          PATHS: ${{ inputs.paths }}
         run: |
           ARGS="--locales ${{ matrix.locale }}"
           if [ -n "${{ inputs.keys }}" ]; then ARGS="$ARGS --keys ${{ inputs.keys }}"; fi
-          node scripts/docs-i18n-fill.mjs $ARGS
+          node scripts/docs-i18n-fill.mjs $ARGS ${PATHS:+--paths "$PATHS"}
       - if: always()
         uses: actions/upload-artifact@v4
         with:

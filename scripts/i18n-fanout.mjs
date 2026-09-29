@@ -8,6 +8,7 @@
  *   node scripts/i18n-fanout.mjs --locales de,fr,pt      # fill several
  *   node scripts/i18n-fanout.mjs --all --limit 8         # the 8 furthest-behind locales
  *   node scripts/i18n-fanout.mjs --locale de --keys 200  # cap the work in one run
+ *   node scripts/i18n-fanout.mjs --locales de,fr --only a.b,c.d  # exactly these keys
  *
  * Why this exists: extracting a page into `t()` calls makes it translatable, it
  * does not make it translated. A key that reaches only en.json renders English
@@ -62,6 +63,12 @@ const KEY_BUDGET = Number(value('keys') || Infinity);
  * the wider backlog (and without a 2,000-key run per locale to get there).
  */
 const KEY_PREFIX = value('prefix') || '';
+/**
+ * `--only a.b,c.d` restricts the run to exactly these keys: refilling values
+ * that were deleted as bad, say, without also taking on the locale's backlog.
+ * --prune honours it too, so it only ever touches the keys named.
+ */
+const ONLY_KEYS = value('only') ? new Set(value('only').split(',').map((k) => k.trim()).filter(Boolean)) : null;
 
 /** The publishable key the browser bundle already ships — not a secret. */
 function anonKey() {
@@ -503,6 +510,7 @@ function missingFor(locale) {
   for (const [k, v] of enFlat) {
     if (typeof v !== 'string') continue;
     if (KEY_PREFIX && !k.startsWith(KEY_PREFIX)) continue;
+    if (ONLY_KEYS && !ONLY_KEYS.has(k)) continue;
     const have = flat.get(k);
     if (typeof have !== 'string' || have.trim() === '') missing.push(k);
   }
@@ -575,6 +583,7 @@ if (flag('prune')) {
     let pruned = 0;
     for (const [k, v] of flat) {
       if (typeof v !== 'string') continue;
+      if (ONLY_KEYS && !ONLY_KEYS.has(k)) continue;
       const source = enFlat.get(k);
       if (typeof source === 'string' && isUntranslatedProse(source, v, locale)) {
         const parts = k.split('.');
