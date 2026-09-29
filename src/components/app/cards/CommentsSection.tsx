@@ -10,7 +10,7 @@
  * ```
  */
 
-import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext, lazy, Suspense } from 'react';
+import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext, lazy, Suspense, memo } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { saveDraft, loadDraft, clearDraft, type CommentDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -171,11 +171,55 @@ function draftReplyTarget(draft: CommentDraft | null): Comment | null {
   };
 }
 
+/**
+ * The three orders the header's sort toggle steps through, as translation
+ * keys. `short` is the word beside the icon — one word, because it shares a
+ * row with the four tabs on a 360px phone — and `sortedBy` is the full
+ * sentence for the tooltip and for the button's accessible name, which is all
+ * a screen reader gets in the narrow panel where the word is hidden.
+ */
 const SORT_OPTIONS = [
-  { value: 'recent', label: 'Most Recent' },
-  { value: 'oldest', label: 'Oldest' },
-  { value: 'liked', label: 'Most Liked' },
-];
+  { value: 'recent', short: 'comments.sortRecent', sortedBy: 'comments.sortedByRecent' },
+  { value: 'oldest', short: 'comments.sortOldest', sortedBy: 'comments.sortedByOldest' },
+  { value: 'liked', short: 'comments.sortLiked', sortedBy: 'comments.sortedByLiked' },
+] as const;
+
+type SortOrder = (typeof SORT_OPTIONS)[number]['value'];
+
+/** The comment tabs, in header order, with the name each icon-only tab is read out as. */
+const COMMENT_TABS = [
+  { value: 'replies', label: 'comments.tabReplies' },
+  { value: 'quotes', label: 'comments.tabQuotes' },
+  { value: 'reposts', label: 'comments.tabReposts' },
+  { value: 'search', label: 'comments.tabSearch' },
+] as const;
+
+/**
+ * The row's `onShare`, which nothing reads — sharing is the row's own menu.
+ * Hoisted so every row gets the same function: an inline `() => {}` was a new
+ * prop on every render, which alone was enough to re-render every row.
+ */
+const NOOP_SHARE = () => {};
+
+/**
+ * A callback whose identity never changes but which always runs the latest
+ * render's version of `fn`.
+ *
+ * The row handlers read half the section's state — the loaded comments, the
+ * vote overrides, the viewer — so a useCallback over them would still get a
+ * new identity on nearly every render, and each new identity re-renders every
+ * memoised row. Reading `fn` through a ref keeps the prop the rows see fixed
+ * while the body still sees current state. The ref is written in a layout
+ * effect rather than during render, so a render React throws away never leaks
+ * into it; the handlers only ever run from events, after that effect lands.
+ */
+function useStableCallback<A extends unknown[], R>(fn: (...args: A) => R): (...args: A) => R {
+  const ref = useRef(fn);
+  useLayoutEffect(() => {
+    ref.current = fn;
+  });
+  return useCallback((...args: A) => ref.current(...args), []);
+}
 
 // Threading itself is unlimited — the server happily accepts a reply to a reply
 // at any depth. Nesting is NOT drawn as indentation: every reply sits flush
@@ -338,7 +382,16 @@ const PostCreatorContext = createContext<{
   username?: string | null;
 } | null>(null);
 
-function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
+/**
+ * Memoised because the composer lives in the same component as the list: every
+ * keystroke re-renders the section, and without this every row in the thread —
+ * each with its own translation, link-embed and reaction-tray hooks — re-rendered
+ * with it. That only holds while every prop is stable across a keystroke: the
+ * section passes its handlers through useStableCallback, the no-op share as a
+ * module constant, and the per-row figures (tip total, tipped, highlighted) as
+ * primitives. A new inline function here would quietly undo all of it.
+ */
+const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   // Bumps each time this viewer tips this comment, replaying the gem swirl.
   const [tipBurst, setTipBurst] = useState(0);
@@ -459,7 +512,13 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
       {threadLineBelow && (
         <span aria-hidden className="absolute left-4 -ml-px top-7 bottom-0 w-px bg-white/20" />
       )}
-      <button onClick={() => onUserPress(comment.username)} className="relative flex-shrink-0">
+      {/* The avatar is a picture and nothing else, so without a label a screen
+          reader announced it as a bare "button". */}
+      <button
+        onClick={() => onUserPress(comment.username)}
+        className="relative flex-shrink-0"
+        aria-label={i18n.t('feed.viewProfile', { name: shownName })}
+      >
         <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
           {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
           <AvatarFallback className="bg-zinc-700">{comment.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
@@ -505,10 +564,10 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
               the comment — the reader decides, this only removes the doubt. */}
           {isImpersonating && (
             <span
-              title="This account is not the creator of this post"
+              title={i18n.t('comments.notCreatorTitle')}
               className="px-1.5 py-0.5 rounded-md bg-red-500/15 border border-red-500/30 text-[10px] font-semibold text-red-300 leading-none flex-shrink-0"
             >
-              Not the creator
+              {i18n.t('comments.notCreator')}
             </span>
           )}
           {/* A creator already carries the "Creator" chip above — pairing it
@@ -549,12 +608,14 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             <button
               onClick={() => { onEdit(comment.id, editText); setIsEditing(false); }}
               className="text-green-400 hover:text-green-300 transition-colors"
+              aria-label={i18n.t('common.save')}
             >
               <Check className="w-4 h-4" />
             </button>
             <button
               onClick={() => { setEditText(comment.text); setIsEditing(false); }}
               className="text-zinc-400 hover:text-white transition-colors"
+              aria-label={i18n.t('common.cancel')}
             >
               <X className="w-4 h-4" />
             </button>
@@ -580,7 +641,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
               <>
                 <img
                   src={comment.imageUrl}
-                  alt="Comment media"
+                  alt={i18n.t('comments.imageAlt')}
                   className="mt-1.5 rounded-lg max-w-[240px] max-h-[200px] object-contain cursor-zoom-in"
                   onClick={() => setImageFullscreen(true)}
                   loading="lazy"
@@ -638,7 +699,9 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                   "flex items-center gap-1 transition-colors select-none touch-none",
                   !isOwnComment && comment.isLiked ? "text-white" : "text-white/70 hover:text-white"
                 )}
-                aria-label={isOwnComment ? "See who liked" : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`}
+                aria-label={isOwnComment
+                  ? i18n.t('comments.seeWhoLiked')
+                  : i18n.t('comments.holdToReact', { reaction: reactionMeta(leadReaction ?? 'like').label })}
                 aria-haspopup={isOwnComment ? undefined : 'menu'}
                 aria-expanded={isOwnComment ? undefined : likeTray.open}
               >
@@ -695,7 +758,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             <button
               onClick={() => onReply(comment.id)}
               className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
-              aria-label="Reply"
+              aria-label={i18n.t('features.replyToComment')}
             >
               <MessageSquare className="w-4 h-4" />
             </button>
@@ -705,7 +768,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             <button
               onClick={() => onTip(comment.id)}
               className={cn(COMMENT_ACTION_HIT, "flex items-center gap-1 text-white hover:text-zinc-400 transition-colors")}
-              aria-label="Tip"
+              aria-label={i18n.t('comments.tip')}
             >
               <TipGemIcon tipped={!!viewerTipped || tipBurst > 0} burstKey={tipBurst} className="w-4 h-4" plainClassName="" />
               {(tipTotal ?? 0) > 0 && <span className="text-xs">{formatCount(tipTotal!)}</span>}
@@ -722,8 +785,8 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
               <button
                 onClick={() => onAnchor(comment.id)}
                 className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
-                aria-label="Anchor this comment to the top"
-                title="Anchor to the top of this thread"
+                aria-label={i18n.t('comments.anchorAction')}
+                title={i18n.t('comments.anchorTitle')}
               >
                 <Anchor className="w-4 h-4" />
               </button>
@@ -759,14 +822,14 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                 <button
                   onClick={() => setIsEditing(true)}
                   className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
-                  aria-label="Edit"
+                  aria-label={i18n.t('common.edit')}
                 >
                   <Pencil className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => onDelete(comment.id)}
                   className={cn(COMMENT_ACTION_HIT, "text-white hover:text-red-400 transition-colors")}
-                  aria-label="Delete"
+                  aria-label={i18n.t('common.delete')}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -776,7 +839,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
               <DropdownMenuTrigger asChild>
                 <button
                   className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
-                  aria-label="Share"
+                  aria-label={i18n.t('comments.share')}
                 >
                   <Share2 className="w-4 h-4" />
                 </button>
@@ -788,29 +851,29 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                       ? dehubLinkFor.threadEntry(tokenId, comment.id)
                       : `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
                     navigator.clipboard.writeText(url);
-                    toast.success('Link copied');
+                    toast.success(i18n.t('comments.linkCopied'));
                   }}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
                 >
                   <Link className="w-4 h-4" />
-                  Copy Link
+                  {i18n.t('postOptions.copyLink')}
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => toast.info('Repost from comments coming soon!')}
+                  onClick={() => toast.info(i18n.t('toasts.repost_from_comments_coming_soon'))}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
                 >
                   <Repeat2 className="w-4 h-4" />
-                  Repost
+                  {i18n.t('comments.repost')}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
                     navigator.clipboard.writeText(comment.text);
-                    toast.success('Comment text copied');
+                    toast.success(i18n.t('comments.textCopied'));
                   }}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
                 >
                   <Quote className="w-4 h-4" />
-                  Copy Text
+                  {i18n.t('comments.copyText')}
                 </DropdownMenuItem>
                 {onReport && !isOwnComment && (
                   <DropdownMenuItem
@@ -834,7 +897,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                       translation.isLoading ? "text-white/60" : 
                       translation.isTranslated ? "text-white" : "text-white hover:text-zinc-400"
                     )}
-                    aria-label="Translate"
+                    aria-label={i18n.t('comments.translate')}
                     disabled={translation.isLoading}
                   >
                     {translation.isLoading ? (
@@ -844,7 +907,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
                     )}
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>{translation.isTranslated ? 'Show original' : 'Translate'}</TooltipContent>
+                <TooltipContent>{translation.isTranslated ? i18n.t('common.showOriginal') : i18n.t('comments.translate')}</TooltipContent>
               </Tooltip>
             )}
             {/* Views on the comment itself, recorded by the observer below
@@ -860,7 +923,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             {comment.views > 0 && (
               <span
                 className="flex items-center gap-1 text-white/70"
-                aria-label={`${comment.views} views`}
+                aria-label={i18n.t('comments.viewCount', { count: comment.views })}
               >
                 <Eye className="w-4 h-4" />
                 <span className="text-xs">{formatCount(comment.views)}</span>
@@ -871,7 +934,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
       </div>
     </motion.div>
   );
-}
+});
 
 // ============================================================================
 // MAIN COMPONENT
@@ -963,7 +1026,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const commentsIsDraggingRef = useRef(false);
   const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab, undefined, commentsIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'liked'>('recent');
+  const [sortBy, setSortBy] = useState<SortOrder>('recent');
+  const sortOption = SORT_OPTIONS.find(option => option.value === sortBy) ?? SORT_OPTIONS[0];
   // Whatever was left unsent last time, restored whole: the text, the reply it
   // was aimed at and a GIF. Read once here rather than in each initialiser so
   // the three can't disagree.
@@ -1581,11 +1645,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
   const acceptCommentImage = (file: File) => {
     if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
+      toast.error(t('toasts.please_select_an_image_file'));
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      toast.error('Image must be under 10MB');
+      toast.error(t('comments.imageTooLarge'));
       return;
     }
     setCommentGifUrl(null);
@@ -1792,22 +1856,26 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   // Report a comment. The row hides the item on your own comments and when
   // signed out; this is the one door in for every other comment in the thread.
   const [reportCommentId, setReportCommentId] = useState<string | null>(null);
-  const handleReportComment = (commentId: string) => {
+  // Every handler below that a row receives as a prop goes through
+  // useStableCallback: they are props on the memoised CommentItem, and a fresh
+  // function per render would re-render the whole thread on every keystroke in
+  // the composer.
+  const handleReportComment = useStableCallback((commentId: string) => {
     if (!isAuthenticated) return;
     setReportCommentId(commentId);
-  };
+  });
 
-  const handleAnchor = (commentId: string) => {
+  const handleAnchor = useStableCallback((commentId: string) => {
     anchorComment.mutate(
       { tokenId: 0, power: 'comment_anchor', commentId },
       {
         onSuccess: booking =>
-          toast.success(`Anchored to the top for ${booking.minutes} minutes`),
+          toast.success(t('comments.anchoredToast', { count: booking.minutes })),
         // The server writes these sentences for a person to read.
-        onError: (error: any) => toast.error(error?.message || 'Could not anchor that comment'),
+        onError: (error: any) => toast.error(error?.message || t('comments.anchorFailed')),
       },
     );
-  };
+  });
 
   /**
    * Pin a comment to the top of your own thread, or take the pin off.
@@ -1817,7 +1885,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
    * is what makes the change survive a reload, and a refusal puts the list
    * back exactly as it was.
    */
-  const handlePinComment = async (commentId: string) => {
+  const handlePinComment = useStableCallback(async (commentId: string) => {
     const wasPinned = allComments.find(c => c.id === commentId)?.isPinned === true;
     const previous = pinOverride;
     setPinOverride({ id: commentId, pinned: !wasPinned, base: apiRowsById.get(commentId) });
@@ -1833,12 +1901,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       setPinOverride(previous);
       toast.error(err?.message || t('comments.pinFailed', 'Could not pin that comment'));
     }
-  };
+  });
 
-  const handleUserPress = useCallback((username: string) => {
+  // Stable rather than useCallback over [navigate, onClose]: `onClose` is the
+  // host's, and a host that passes an inline arrow would otherwise hand every
+  // row a new prop on each of its renders.
+  const handleUserPress = useStableCallback((username: string) => {
     onClose();
     navigate(`/${username}`);
-  }, [navigate, onClose]);
+  });
 
   /**
    * Cast one of the ten reactions on a comment.
@@ -1852,9 +1923,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
    * every time. A comment reaction is worth one, never a badge weight — see
    * the note on the API's Comment model.
    */
-  const handleReact = async (commentId: string, reaction: PostReaction) => {
+  const handleReact = useStableCallback(async (commentId: string, reaction: PostReaction) => {
     if (!isAuthenticated) {
-      toast.error('Please log in to react to comments');
+      toast.error(t('comments.logInToReact'));
       return;
     }
 
@@ -1927,10 +1998,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         return next;
       });
       toast.error(
-        isPositiveReaction(reaction) ? 'Failed to react to comment' : 'Failed to dislike comment',
+        isPositiveReaction(reaction) ? t('comments.reactFailed') : t('comments.dislikeFailed'),
       );
     }
-  };
+  });
 
   /**
    * A plain tap on the comment's thumbs-up.
@@ -1939,7 +2010,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
    * with 🔥 draws a 🔥 thumb, and tapping it has to mean that, or the button
    * lies about what it does. Same promise `reactionForTap` keeps on a post.
    */
-  const handleLike = (commentId: string) => {
+  const handleLike = useStableCallback((commentId: string) => {
     const comment = allComments.find(c => c.id === commentId);
     if (!comment) return;
     // Own comments can't be liked — their thumb shows who liked them instead.
@@ -1952,16 +2023,16 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       commentId,
       reactionForTap(true, comment.myReaction, comment.reactionCounts),
     );
-  };
+  });
 
   /** …and on the thumbs-down: a plain 👎, cast or toggled off. */
-  const handleDislike = (commentId: string) => {
+  const handleDislike = useStableCallback((commentId: string) => {
     const comment = allComments.find(c => c.id === commentId);
     if (!comment) return;
     return handleReact(commentId, reactionForTap(false, comment.myReaction));
-  };
+  });
 
-  const handleReply = (commentId: string) => {
+  const handleReply = useStableCallback((commentId: string) => {
     // A row still posting has no id the server knows — see CommentItem.
     if (commentId.startsWith('temp-')) return;
     const found = allComments.find(c => c.id === commentId);
@@ -1974,7 +2045,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         inputRef.current?.focus();
       }, 100);
     }
-  };
+  });
 
   /**
    * Drop the reply target, keep what was typed — it posts as a top-level
@@ -1988,10 +2059,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     setReplyTo(null);
   };
 
-  const handleTip = (commentId: string) => {
+  const handleTip = useStableCallback((commentId: string) => {
     const found = allComments.find(c => c.id === commentId);
     if (found) setTipComment(found);
-  };
+  });
 
   /** The comment whose trash button was tapped, waiting on the confirmation. */
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
@@ -2031,11 +2102,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         return next;
       });
       console.error('Delete comment error:', err);
-      toast.error('Failed to delete comment');
+      toast.error(t('toasts.failed_to_delete_comment'));
     }
   };
 
-  const handleEditComment = async (commentId: string, newContent: string) => {
+  const handleEditComment = useStableCallback(async (commentId: string, newContent: string) => {
     if (!newContent.trim()) return;
     // Optimistic: swap the text instantly, revert if the server refuses.
     setEditOverrides(prev =>
@@ -2051,15 +2122,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         return next;
       });
       console.error('Edit comment error:', err);
-      toast.error('Failed to edit comment');
+      toast.error(t('comments.editFailed'));
     }
-  };
+  });
 
   const submitComment = useCallback(async () => {
     if ((!newComment.trim() && !voiceNote && !commentImage && !commentGifUrl) || isSubmitting || submitInFlightRef.current) return;
 
     if (!isAuthenticated || !user) {
-      toast.error('Please log in to comment');
+      toast.error(t('toasts.please_log_in_to_comment'));
       return;
     }
 
@@ -2073,7 +2144,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
     const tempComment: Comment = {
       id: tempId,
-      username: user.username || 'you',
+      username: user.username || t('comments.youFallback'),
       avatar: resolvedAvatar,
       text: newComment,
       likes: 0,
@@ -2081,7 +2152,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       // Nobody has scrolled past a comment that does not exist on the server
       // yet; the real count arrives with the refetch.
       views: 0,
-      timeAgo: 'Just now',
+      timeAgo: t('comments.justNow'),
       createdAt: new Date(),
       voiceNote: voiceNote || undefined,
       replyToId: replyTo?.id,
@@ -2127,7 +2198,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         // the optimistic row back off the list and puts the draft back in the
         // composer. An early return here left both behind.
         if (audioBlob.size > 2 * 1024 * 1024) {
-          throw new Error('Voice note must be under 2MB');
+          throw new Error(t('comments.voiceNoteTooLarge'));
         }
         await addVoiceComment({
           tokenId: parseInt(tokenId, 10),
@@ -2195,13 +2266,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       // The server's own words when it has them — a refusal explains itself
       // ("comments are turned off", a link that cannot be posted) and a
       // generic failure message would leave the author guessing.
-      toast.error(err instanceof Error && err.message ? err.message : 'Failed to post comment');
+      toast.error(err instanceof Error && err.message ? err.message : t('toasts.failed_to_post_comment'));
       console.error('Comment error:', err);
     } finally {
       setIsSubmitting(false);
       submitInFlightRef.current = false;
     }
-  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply, coachReset]);
+  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply, coachReset, t]);
 
   /**
    * What every Post control calls. On a Common Ground thread the first reply
@@ -2214,14 +2285,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     if (!hasContent || isSubmitting || submitInFlightRef.current) return;
     if (commonGround && !isOwnThread && !commonGroundDone()) {
       if (!isAuthenticated || !user) {
-        toast.error('Please log in to comment');
+        toast.error(t('toasts.please_log_in_to_comment'));
         return;
       }
       setCommonGroundOpen(true);
       return;
     }
     await submitComment();
-  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, commonGround, isOwnThread, commonGroundDone, isAuthenticated, user, submitComment]);
+  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, commonGround, isOwnThread, commonGroundDone, isAuthenticated, user, submitComment, t]);
 
   const handleCommonGroundConfirm = useCallback(() => {
     markCommonGroundDone();
@@ -2276,7 +2347,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           onShowLikers={setLikersCommentId}
           onDislike={handleDislike}
           onReply={handleReply}
-          onShare={() => {}}
+          onShare={NOOP_SHARE}
           onEdit={handleEditComment}
           onDelete={setPendingDeleteId}
           onTip={handleTip}
@@ -2303,7 +2374,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             onShowLikers={setLikersCommentId}
             onDislike={handleDislike}
             onReply={handleReply}
-            onShare={() => {}}
+            onShare={NOOP_SHARE}
             onEdit={handleEditComment}
             onDelete={setPendingDeleteId}
             onTip={handleTip}
@@ -2362,7 +2433,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           <button
             onClick={onClose}
             className="hidden"
-            aria-label="Close comments"
+            aria-label={t('comments.close')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -2384,8 +2455,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
               onPointerCancel={handleCommentsDragEnd}
             />
           )}
-          <div className="relative z-20 flex gap-1">
-            {(['replies', 'quotes', 'reposts', 'search'] as const).map((tab) => (
+          {/* The tabs are icons only, so each carries its name and the row says
+              it is a set of tabs — without either, a screen reader heard four
+              unlabelled buttons and no hint of which one was open. */}
+          <div className="relative z-20 flex gap-1" role="tablist" aria-label={t('postInfo.comments')}>
+            {COMMENT_TABS.map(({ value: tab, label }) => (
               <button
                 key={tab}
                 ref={(el) => {
@@ -2393,6 +2467,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   commentsTabPositions.current[tab] = el;
                 }}
                 type="button"
+                role="tab"
+                aria-selected={activeTab === tab}
+                aria-label={t(label)}
                 data-tab-btn
                 data-active={activeTab === tab ? 'true' : undefined}
                 onClick={() => setActiveTab(tab)}
@@ -2419,6 +2496,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
               <button
                 type="button"
                 onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
+                // The full sentence, not the one word: below lg in the embedded
+                // panel the word is hidden and a tooltip is invisible to a
+                // screen reader, so this is the only name the button has there.
+                aria-label={t(sortOption.sortedBy)}
                 className={cn(
                   "py-1.5 flex items-center justify-center gap-1.5 transition-colors rounded-xl text-zinc-400 hover:text-white",
                   embedded ? "px-2" : "px-3"
@@ -2427,10 +2508,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 <ArrowUpDown className="w-[17px] h-[17px]" />
                 {/* In the narrow embedded panel the label only fits at lg+;
                     below that the icon + tooltip carry the meaning. */}
-                <span className={cn("text-[11px]", embedded && "hidden lg:inline")}>{sortBy === 'recent' ? 'Recent' : sortBy === 'oldest' ? 'Oldest' : 'Liked'}</span>
+                <span className={cn("text-[11px]", embedded && "hidden lg:inline")}>{t(sortOption.short)}</span>
               </button>
             </TooltipTrigger>
-            <TooltipContent>{sortBy === 'recent' ? 'Sorted by Most Recent' : sortBy === 'oldest' ? 'Sorted by Oldest' : 'Sorted by Most Liked'}</TooltipContent>
+            <TooltipContent>{t(sortOption.sortedBy)}</TooltipContent>
           </Tooltip>
           {/* Collapse control for the inline expansion on feed cards. The
               embedded shorts side panel has nothing to close, so no X there. */}
@@ -2440,13 +2521,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 <button
                   type="button"
                   onClick={onClose}
-                  aria-label="Close comments"
+                  aria-label={t('comments.close')}
                   className="py-1.5 px-3 flex items-center justify-center transition-colors rounded-xl text-zinc-400 hover:text-white"
                 >
                   <X className="w-[17px] h-[17px]" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>Close comments</TooltipContent>
+              <TooltipContent>{t('comments.close')}</TooltipContent>
             </Tooltip>
           )}
         </div>
@@ -2457,7 +2538,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       {/* Search Input - always rendered but hidden when not on search tab to maintain consistent height */}
       <div className={`mb-3 ${activeTab === 'search' ? 'visible' : 'invisible h-0 mb-0 overflow-hidden'}`}>
         <Input
-          placeholder="Search comments & quotes..."
+          placeholder={t('comments.searchPlaceholder')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           data-comment-search
@@ -2476,7 +2557,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
               </div>
             ) : error ? (
-              <p className="text-zinc-500 text-sm py-6 text-center">Failed to load comments</p>
+              <p className="text-zinc-500 text-sm py-6 text-center">{t('comments.loadFailed')}</p>
             ) : (
               <AnimatePresence mode="popLayout">
                 {isAssistantReplying && (
@@ -2488,13 +2569,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     className="flex items-center gap-2 px-4 py-3 text-sm text-zinc-400"
                   >
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>DeHub Assistant is replying…</span>
+                    <span>{t('comments.assistantReplying')}</span>
                   </motion.div>
                 )}
                 {filteredGroupedComments.length > 0 ? (
                   filteredGroupedComments.map(renderThread)
                 ) : (
-                  <AppState icon="posts" title="No replies yet" description="Be the first to reply." size="section" />
+                  <AppState icon="posts" title={t('comments.emptyRepliesTitle')} description={t('comments.emptyRepliesBody')} size="section" />
                 )}
               </AnimatePresence>
             )}
@@ -2526,7 +2607,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     post.minterUsername ||
                     post.mintername ||
                     post.minter?.slice(0, 8) ||
-                    'Unknown';
+                    t('comments.unknownUser');
                   const avatarPath = extractAvatarPath(post) || extractAvatarPath(post.minterUser);
                   const avatarUrl = buildAvatarUrl(post.minter || post.minterUser?.address || '', avatarPath);
                   const preview = (post.description || post.name || '').slice(0, 120);
@@ -2561,7 +2642,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 })}
               </div>
             ) : (
-              <AppState icon="posts" title="No quotes yet" description="Quoted posts will appear here." size="section" />
+              <AppState icon="posts" title={t('comments.emptyQuotesTitle')} description={t('comments.emptyQuotesBody')} size="section" />
             )}
           </div>
         )}
@@ -2576,7 +2657,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             ) : repostersData?.items && repostersData.items.length > 0 ? (
               <div className="space-y-2">
                 {repostersData.items.map((user) => {
-                  const displayName = user.displayName || user.username || user.address?.slice(0, 8) || 'Unknown';
+                  const displayName = user.displayName || user.username || user.address?.slice(0, 8) || t('comments.unknownUser');
                   const avatarUrl = buildAvatarUrl(user.address, extractAvatarPath(user));
                   return (
                     <button
@@ -2633,7 +2714,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                                 : "bg-white/10 text-white hover:bg-white/20"
                             )}
                           >
-                            {isUserFollowed ? 'Following ✓' : 'Follow'}
+                            {isUserFollowed ? `${t('follow.following')} ✓` : t('follow.follow')}
                           </button>
                         );
                       })()}
@@ -2642,7 +2723,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 })}
               </div>
             ) : (
-              <AppState icon="subscriptions" title="No reposts yet" description="People who repost this will appear here." size="section" />
+              <AppState icon="subscriptions" title={t('comments.emptyRepostsTitle')} description={t('comments.emptyRepostsBody')} size="section" />
             )}
           </div>
         )}
@@ -2661,8 +2742,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 ) : (
                   <AppState
                     icon={searchQuery ? 'search' : 'posts'}
-                    title={searchQuery ? 'No results found' : 'No comments or quotes yet'}
-                    description={searchQuery ? 'Try a different search.' : 'Comments and quoted posts will appear here.'}
+                    title={searchQuery ? t('comments.searchEmptyTitle') : t('comments.emptySearchTabTitle')}
+                    description={searchQuery ? t('comments.searchEmptyBody') : t('comments.emptySearchTabBody')}
                     kind={searchQuery ? 'search-empty' : 'empty'}
                     size="section"
                   />
@@ -2681,7 +2762,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           <div data-comment-composer="off" className={cn("mt-auto", isMobile ? "pt-2 pb-1" : "pt-3")}>
             <div className="flex items-center justify-center gap-2 rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3">
               <MessageSquare className="w-4 h-4 text-zinc-500 shrink-0" />
-              <span className="text-sm text-zinc-400">Comments are turned off for this post</span>
+              <span className="text-sm text-zinc-400">{t('comments.turnedOff')}</span>
             </div>
           </div>
         ) : kidsOnlyThread ? (
@@ -2723,11 +2804,12 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 "text-xs text-zinc-400",
                 isMobile && "truncate max-w-[70%]"
               )}>
-                Replying to @{replyTo.username}
+                {t('features.replyingTo', { name: `@${replyTo.username}` })}
               </span>
-              <button 
+              <button
                 onClick={handleClearReply}
                 className="ml-auto text-zinc-500 hover:text-white transition-colors"
+                aria-label={t('comments.cancelReply')}
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -2747,13 +2829,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 />
               </Suspense>
               <div className="flex items-center justify-between px-3 py-2 bg-zinc-800">
-                <span className="text-xs text-zinc-400">{voiceNote.duration}s voice note</span>
+                <span className="text-xs text-zinc-400">{t('comments.voiceNoteDuration', { duration: voiceNote.duration })}</span>
                 <button
                   onClick={removeVoiceNote}
                   className="flex items-center gap-1.5 text-red-400 hover:text-red-300 transition-colors text-xs"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  Remove
+                  {t('comments.remove')}
                 </button>
               </div>
             </div>
@@ -2764,11 +2846,12 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             <div className="mb-3 relative inline-block">
               <img 
                 src={commentImagePreview} 
-                alt="Comment attachment" 
+                alt={t('comments.imageAttachmentAlt')}
                 className="max-h-32 rounded-xl object-cover"
               />
               <button
                 onClick={removeCommentImage}
+                aria-label={t('comments.removeImage')}
                 data-keep-dark
                 className="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-lg flex items-center justify-center text-white hover:bg-black/80 transition-colors"
               >
@@ -2782,11 +2865,12 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             <div className="mb-3 relative inline-block">
               <img
                 src={commentGifUrl}
-                alt="GIF attachment"
+                alt={t('comments.gifAttachmentAlt')}
                 className="max-h-32 rounded-xl object-cover"
               />
               <button
                 onClick={removeCommentGif}
+                aria-label={t('comments.removeGif')}
                 data-keep-dark
                 className="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-lg flex items-center justify-center text-white hover:bg-black/80 transition-colors"
               >
@@ -2826,7 +2910,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   className="flex items-center gap-1 text-red-400 hover:text-red-300 text-xs font-medium"
                 >
                   <Square className="w-3 h-3 fill-current" />
-                  Stop
+                  {t('comments.stopRecording')}
                 </button>
               </div>
             ) : (
@@ -2853,7 +2937,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 <textarea
                   ref={inputRef}
                   data-vaul-no-drag
-                  placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Type here'}
+                  placeholder={replyTo ? t('comments.replyPlaceholder', { name: replyTo.username }) : t('comments.composerPlaceholder')}
                   value={newComment}
                   onChange={(e) => {
                     setNewComment(e.target.value);
@@ -2932,7 +3016,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     onClick={() => imageInputRef.current?.click()}
                     data-comment-tool="image"
                     className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors"
-                    aria-label="Attach image"
+                    aria-label={t('comments.attachImage')}
                   >
                     <ImagePlus className="w-4 h-4" />
                   </button>
@@ -3032,7 +3116,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                       onClick={startRecording}
                       data-comment-tool="mic"
                       className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-red-400 transition-colors"
-                      aria-label="Record voice note"
+                      aria-label={t('comments.recordVoiceNote')}
                     >
                       <Mic className="w-4 h-4" />
                     </button>
@@ -3053,10 +3137,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     }}
                     onClick={() => { if (canPost) handlePostComment(); }}
                     disabled={!canPost}
+                    // Named outright because while a post is in flight the
+                    // word is swapped for a spinner and the button has no text.
+                    aria-label={t('comments.post')}
                     data-comment-send
                     className="h-8 px-3 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
                   >
-                    {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Post'}
+                    {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : t('comments.post')}
                   </button>
                 </div>
               </div>
