@@ -322,12 +322,17 @@ for (const l of locales) have.set(l, await load(l));
  * `--prune-garbled` deletes what the fill's answer guards now reject (loops, a
  * sentence for a label, markdown the English lacks), printing each path and
  * why, so a `--paths` refill can replace exactly those. `--dry-run` only reports.
+ * Values the guards flag that are right as they stand ("FAQ" spelled out) are
+ * listed by locale in scripts/docs-i18n-garbled-keep.json and left alone.
  */
 if (flag('prune-garbled')) {
+  const keepFile = 'scripts/docs-i18n-garbled-keep.json';
+  const keep = fs.existsSync(keepFile) ? JSON.parse(fs.readFileSync(keepFile, 'utf8')) : {};
   const clip = (v) => JSON.stringify([...v].length > 80 ? `${[...v].slice(0, 80).join('')}…` : v);
   let total = 0;
   for (const [l, obj] of have) {
-    const found = garbledPaths(en, obj);
+    const kept = new Set(keep[l] ?? []);
+    const found = garbledPaths(en, obj).filter(([p]) => !kept.has(p));
     if (!found.length) continue;
     const ok = flag('dry-run') || (await pruneBundle(l, obj, found));
     console.log(ok ? `${l}.ts: pruned ${found.length} garbled value(s)` : `${l}.ts: removal did not round-trip, left untouched`);
