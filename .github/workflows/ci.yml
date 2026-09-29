@@ -42,6 +42,10 @@ jobs:
       # sentence. Placeholders survive and the coverage count goes UP, so the
       # existing gates read it as a success.
       - run: node scripts/i18n-script-check.mjs
+      # The fill's answer guards: loops on short words and inside words, labels
+      # answered with a sentence, added markdown, and batches answered out of
+      # step. Also run over batches cut from the locale files above.
+      - run: node --test scripts/i18n-guards.test.mjs
 
   # A request header missing from a function's Access-Control-Allow-Headers
   # makes the BROWSER drop the request — no network row, no function log, and a
