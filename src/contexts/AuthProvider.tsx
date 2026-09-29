@@ -61,7 +61,7 @@ import { isWalletReconnectGuardActive } from '@/lib/wallet-reconnect';
 import { fetchTelegramLoginConfig, startTelegramLogin, takeStoredTelegramResult, type TelegramUser } from '@/lib/telegram-login';
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { isMidSessionUnlock } from '@/lib/session-unlock';
-import { authenticateProfileSession } from '@/lib/profile-login';
+import { authenticateProfileSession, SupabaseSessionMissingError } from '@/lib/profile-login';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
 import { clearPersistedQueryCache } from '@/lib/query-persist';
 import { supabase } from '@/integrations/supabase/client';
@@ -2090,6 +2090,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         authLogger.warn('No profile linked to this login yet', {
           reason: e.message,
         });
+      } else if (restoringExistingSession && e instanceof SupabaseSessionMissingError) {
+        // The Supabase session lapsed but the DeHub token did not, and the
+        // restore carries on with that token. Nothing failed, yet this used to
+        // write a "session expired" warning on every page load (~125 a week),
+        // which read as the DeHub token dying when it had not.
       } else {
         authLogger.warn('Supabase profile session exchange unavailable', {
           error: e instanceof Error ? e.message : String(e),
