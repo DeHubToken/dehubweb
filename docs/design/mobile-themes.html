@@ -1,0 +1,202 @@
+<title>DeHub Mobile Themes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{color-scheme:dark;
+  --bg:#07080a;--panel:#0e1013;--line:#1c1f24;--ink:#eceef1;--mute:#8d929b;--dim:#5d626b;
+  --acc:#f4f4f5;--acc-ink:#09090b;
+  --sans:'Exo',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);padding-inline:16px;padding-block:28px 72px;transition:background .6s}
+.wrap{max-width:1280px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;margin-bottom:22px}
+h1{font-size:clamp(28px,4.4vw,46px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1;text-wrap:balance}
+h1 span{color:var(--acc);transition:color .4s}
+.lede{color:var(--mute);max-width:62ch;line-height:1.55;margin:10px 0 0;font-size:15px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font:12px var(--mono);color:var(--mute)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.ok{background:#7fe3a0}.part{background:#f0c05c}.no{background:#ff7a7a}
+
+/* theme rail */
+.rail{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 14px;margin:0 -2px 18px;scrollbar-width:thin}
+.grp{display:flex;gap:8px;align-items:stretch;padding-left:12px;border-left:1px solid var(--line)}
+.grp:first-child{border-left:0;padding-left:0}
+.grp small{writing-mode:vertical-rl;transform:rotate(180deg);font:10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);align-self:center}
+.th{flex:none;display:flex;flex-direction:column;gap:8px;width:104px;padding:8px;border-radius:12px;background:var(--panel);border:1px solid var(--line);color:var(--ink);font:600 13px var(--sans);text-align:left;cursor:pointer;transition:border-color .2s,transform .2s}
+.th:hover{transform:translateY(-2px)}
+.th:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.th[aria-pressed="true"]{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.th .sw{height:40px;border-radius:7px;border:1px solid #ffffff14}
+.th .row{display:flex;justify-content:space-between;align-items:center}
+.th .row i{width:7px;height:7px;border-radius:50%}
+
+/* stage */
+.stage{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:start}
+.phones{display:flex;gap:22px;flex-wrap:wrap;justify-content:center}
+.dev{display:flex;flex-direction:column;align-items:center;gap:10px}
+.dev figcaption{font:11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.bezel{--s:.74;position:relative;width:calc(375px*var(--s) + 16px);height:calc(812px*var(--s) + 16px);padding:8px;border-radius:44px;background:linear-gradient(145deg,#2a2d33,#111316 40%,#1c1e22);box-shadow:0 30px 70px rgba(0,0,0,.6),inset 0 0 0 1px #ffffff12}
+.screen{position:relative;width:calc(375px*var(--s));height:calc(812px*var(--s));border-radius:36px;overflow:hidden;background:#000}
+.screen iframe{position:absolute;top:0;left:0;width:375px;height:812px;border:0;transform:scale(var(--s));transform-origin:0 0}
+.screen::after{content:"";position:absolute;top:8px;left:50%;width:78px;height:22px;margin-left:-39px;border-radius:12px;background:#000;z-index:3;pointer-events:none}
+.load{position:absolute;inset:0;display:grid;place-items:center;font:11px var(--mono);color:var(--dim);letter-spacing:.12em}
+
+/* spec panel */
+.spec{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 22px 24px;min-width:0}
+.spec .top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.spec h2{margin:0;font-size:30px;font-weight:800;letter-spacing:-.01em}
+.pill{font:11px var(--mono);padding:4px 10px;border-radius:99px;border:1px solid var(--line);color:var(--mute);display:inline-flex;align-items:center;gap:6px}
+.pill i{width:7px;height:7px;border-radius:50%}
+.tag{color:var(--mute);margin:8px 0 18px;line-height:1.5;font-size:15px;max-width:60ch}
+.spec h3{font:11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:20px 0 10px;font-weight:500}
+.spec ul{margin:0;padding-left:18px;line-height:1.6;font-size:14px;color:#c9ccd2}
+.spec li+li{margin-top:4px}
+.spec li b{color:var(--ink);font-weight:600}
+.tok{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.tok div{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;background:#ffffff06;border:1px solid var(--line);min-width:0}
+.tok i{width:28px;height:28px;border-radius:7px;flex:none;border:1px solid #ffffff1c}
+.tok span{font:11px var(--mono);color:var(--mute);line-height:1.35;overflow-wrap:anywhere}
+.tok span b{display:block;color:var(--ink);font:600 12px var(--sans)}
+code{font:12px var(--mono);color:var(--ink);background:#ffffff0a;padding:1px 5px;border-radius:5px}
+.src{font:12px var(--mono);color:var(--mute);line-height:1.7}
+.foot{margin-top:40px;border-top:1px solid var(--line);padding-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
+.foot h3{font:11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 10px;font-weight:500}
+.foot p,.foot li{color:#c2c6cc;font-size:14px;line-height:1.6;margin:0}
+.foot ul{padding-left:18px;margin:0}
+.kbd{font:11px var(--mono);color:var(--dim);margin-top:12px}
+@media (max-width:1100px){.stage{grid-template-columns:1fr}}
+@media (max-width:420px){.bezel{--s:.7}}
+@media (prefers-reduced-motion:reduce){.th{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>DeHub mobile themes, <span id="hname">System</span></h1>
+      <p class="lede">All 11 dehub.io themes, rebuilt as APK screens. The moving backgrounds in these phones are the real background code from <code>dehubweb</code> <code>main</code>, bundled unchanged. Colours, corners and glow were measured on the live site at phone width. The menu icons are the site's own image sets.</p>
+    </div>
+    <div class="legend"><span><i class="ok"></i>on the APK</span><span><i class="part"></i>on the APK, differs</span><span><i class="no"></i>missing on the APK</span></div>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Themes"></nav>
+
+  <section class="stage">
+    <div class="phones">
+      <figure class="dev" style="margin:0"><div class="bezel"><div class="screen" id="s-feed"><div class="load">LOADING</div></div></div><figcaption>Home feed</figcaption></figure>
+      <figure class="dev" style="margin:0"><div class="bezel"><div class="screen" id="s-menu"><div class="load">LOADING</div></div></div><figcaption>Menu sheet</figcaption></figure>
+    </div>
+    <article class="spec" id="spec"></article>
+  </section>
+
+  <div class="foot">
+    <div>
+      <h3>Shipped to the APK</h3>
+      <ul><li>All eight canvas themes, in Settings with web's names in 110 languages (dehub-mobile #1312)</li><li>The real backgrounds: web's own code runs in a WebView behind the home feed, paused whenever it is off screen</li><li>Themed feed card, feed tabs, bottom nav, header and menu sheet, with Jungle grain and War HUD corners and monospace readouts</li><li>Every other screen takes the theme's page colour</li></ul>
+    </div>
+    <div>
+      <h3>Still to do</h3>
+      <ul><li>Light: removed from the app on purpose in #673; not re-added</li><li>The theme choice is saved per device in the app; web saves it to the account, so it does not follow you between them yet</li></ul>
+    </div>
+    <div>
+      <h3>Keep in sync</h3>
+      <p>The theme choice is already saved to the account on web (<code>useSyncedPreference('theme')</code>). If the APK reads the same preference, picking War on your laptop turns the phone to War too. Each background already pauses when it's off screen, which is what saves battery on a phone.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const T=[
+ {k:'system',n:'System',g:'Plain',st:'part',acc:'#f4f4f5',sw:'#000',
+  tag:'The default. Pure black page, see-through glass cards, smoked-glass tab bar and bottom bar.',
+  what:['<b>Page</b> pure black #000','<b>Cards</b> white at 3% with a 12% white hairline and 16px corners. The APK uses solid #1C1C1C today, which reads heavier','<b>Tab bar</b> smoked glass (9,9,11 at 40%) with a 20px blur; the active tab is a lifted glass tile','<b>Inactive icons</b> zinc #A1A1AA, handles #808089'],
+  tok:[['Page','#000000','#000'],['Card','rgba(255,255,255,.03)','rgba(255,255,255,.06)'],['Hairline','rgba(255,255,255,.12)','rgba(255,255,255,.12)'],['Inactive','#A1A1AA','#A1A1AA'],['Handle','#808089','#808089']],
+  apk:['Swap the solid card fill for 3% white plus a hairline','Put <code>BlurView</code> behind the tab bar and bottom bar'],src:'src/index.css'},
+ {k:'minimal',n:'Minimal',g:'Plain',st:'part',acc:'#ffffff',sw:'linear-gradient(#000 70%,#fff 70% 71%,#000 71%)',
+  tag:'System stripped flat. No cards, square corners, photos edge to edge, a folder tab for the active feed.',
+  what:['<b>No card boxes.</b> Posts are separated by a 1px line at 8% white','<b>Media runs the full screen width</b> with square corners','<b>Active tab is a folder tab:</b> a 1px 69% white line on top and sides, open at the bottom into the rule under the tabs','<b>Every radius is 0</b>, including avatars, chips and the bottom bar'],
+  tok:[['Page','#000000','#000'],['Divider','rgba(255,255,255,.08)','rgba(255,255,255,.08)'],['Folder line','rgba(255,255,255,.69)','rgba(255,255,255,.69)'],['Bottom bar','rgba(24,24,27,.1) + 40px blur','rgba(24,24,27,.6)']],
+  apk:['The APK already squares every corner. Add the folder tab and full-width media'],src:'src/index.css'},
+ {k:'light',n:'Light',g:'Plain',st:'no',acc:'#1a1a1a',sw:'#f9f8f4',
+  tag:'Minimal\'s flat layout on warm, textured paper. The only light theme.',
+  what:['<b>Paper</b> #F9F8F4 with <code>paper-texture.png</code> tiled at 256px','<b>Ink</b> #1A1A1A, secondary text #5A5A5A','<b>Lines</b> at 12% black, folder tab like Minimal','<b>Its own light icon set</b> in the menu'],
+  tok:[['Paper','#F9F8F4','#f9f8f4'],['Paper deep','#ECE8DF','#ece8df'],['Ink','#1A1A1A','#1a1a1a'],['Muted','#5A5A5A','#5a5a5a'],['Hairline','rgba(0,0,0,.12)','rgba(0,0,0,.12)']],
+  apk:['Tile the paper texture as the screen background','Every icon and chip needs a dark-on-light version. On web the "New" chip is white on paper and disappears, so fix that on both'],src:'src/index.css · src/assets/textures/paper-texture.png'},
+ {k:'cosmic',n:'Cosmic',g:'Live 3D',st:'ok',acc:'#e9ecf5',sw:'radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#fff,transparent),radial-gradient(1px 1px at 45% 80%,#fff,transparent),radial-gradient(60% 50% at 60% 30%,#ffffff22,transparent),#030306',
+  tag:'A live 3D starfield drifting behind smoked-glass cards.',
+  what:['<b>Background</b> <code>NebulaBackground</code>, a Three.js star and nebula scene','<b>Theme colour</b> ships as White. Users can pick any hue, Black, Rainbow, or colours taken from their profile picture','<b>Cards</b> 9,9,11 at 82% with a 160° sheen and a 1px inner edge at 10% white','<b>Icons</b> its own cosmic 3D set'],
+  tok:[['Card','rgba(9,9,11,.82)','rgba(9,9,11,.82)'],['Sheen','white 7% → 2% → 4%','linear-gradient(160deg,#ffffff22,#ffffff05,#ffffff10)'],['Edge','inset 1px white 10%','rgba(255,255,255,.1)'],['Bottom bar','rgba(9,9,11,.86)','rgba(9,9,11,.86)']],
+  apk:['Run the same nebula scene in <code>expo-gl</code>','Reuse the colour picker model from <code>lib/theme-color.ts</code> as is'],src:'components/ui/NebulaBackground.tsx · lib/three/nebula.ts'},
+ {k:'hazy',n:'Hazy Nights',g:'Live 3D',st:'ok',acc:'#b69cff',sw:'radial-gradient(70% 60% at 30% 30%,#7a4fe0,transparent),radial-gradient(60% 50% at 80% 80%,#4a2a90,transparent),#0a0714',
+  tag:'Slow violet smoke with faint stars, under the same glass as Cosmic.',
+  what:['<b>Background</b> <code>HazyNightsBackground</code>, a Three.js shader','<b>Default hue 260</b> (violet), user-changeable like Cosmic','<b>Glass</b> identical to Cosmic, so the smoke shows through the gaps'],
+  tok:[['Default hue','260°','hsl(260 70% 55%)'],['Card','rgba(9,9,11,.82)','rgba(9,9,11,.82)'],['Edge','inset 1px white 10%','rgba(255,255,255,.1)']],
+  apk:['Port the shader into <code>expo-gl</code>. It is one full-screen pass, cheap on phones'],src:'components/app/HazyNightsBackground.tsx'},
+ {k:'swarms',n:'Swarms',g:'Live 3D',st:'ok',acc:'#5cc8ff',sw:'radial-gradient(1px 1px at 20% 20%,#5cc8ff,transparent),radial-gradient(1px 1px at 60% 40%,#9be2ff,transparent),radial-gradient(1px 1px at 35% 75%,#5cc8ff,transparent),radial-gradient(1px 1px at 80% 70%,#5cc8ff,transparent),#03080d',
+  tag:'A dense swarm of glowing particles in sky blue.',
+  what:['<b>Background</b> <code>SwarmsBackground</code>, Three.js particles with a bloom glow pass','<b>Default hue 200</b>, user-changeable','<b>Glass</b> as Cosmic'],
+  tok:[['Default hue','200°','hsl(200 80% 55%)'],['Card','rgba(9,9,11,.82)','rgba(9,9,11,.82)']],
+  apk:['Particles port directly. Bloom may need to drop to half resolution on cheaper phones'],src:'components/app/SwarmsBackground.tsx'},
+ {k:'lavalamp',n:'Lavalamp',g:'Live 2D',st:'ok',acc:'#ff8a4f',sw:'radial-gradient(40% 35% at 30% 35%,#ff6a2a,transparent),radial-gradient(40% 35% at 70% 70%,#c2410c,transparent),#1a0a05',
+  tag:'Warm orange blobs rising, merging and splitting behind the glass.',
+  what:['<b>Background</b> <code>LavaLampBackground</code>, a 2D canvas (no 3D)','<b>Default hue 20</b>, user-changeable','<b>Glass</b> as Cosmic'],
+  tok:[['Default hue','20°','hsl(20 85% 55%)'],['Card','rgba(9,9,11,.82)','rgba(9,9,11,.82)']],
+  apk:['Draw it with Skia. The blob maths is plain JavaScript and copies straight across'],src:'components/app/LavaLampBackground.tsx'},
+ {k:'winter',n:'Winter',g:'Live 2D',st:'ok',acc:'#a4c4e4',sw:'radial-gradient(90% 60% at 85% 0%,#a4c4e440,transparent),#05070a',
+  tag:'Snow that falls and piles up along the bottom edge, then blows away when you change page.',
+  what:['<b>Background</b> <code>WinterSnow</code>, a 2D canvas','<b>Page</b> #05070A with an icy glow in the top-right corner','<b>Hidden game:</b> arrow keys start Santa Snake, with a leaderboard','<b>Glass</b> as Cosmic'],
+  tok:[['Page','#05070A','#05070a'],['Ice glow','rgba(164,196,228,.10)','rgba(164,196,228,.4)'],['Card','rgba(9,9,11,.82)','rgba(9,9,11,.82)']],
+  apk:['Skia for the snow; blow the drift away on every screen change','Santa Snake can start on a swipe instead of arrow keys'],src:'components/app/WinterSnow.tsx'},
+ {k:'war',n:'War',g:'Full dress',st:'ok',acc:'#4fe3e0',sw:'repeating-linear-gradient(0deg,#4fe3e022 0 1px,transparent 1px 8px),repeating-linear-gradient(90deg,#4fe3e014 0 1px,transparent 1px 12px),#060a09',
+  tag:'A tactical HUD. Wireframe terrain, one cyan accent, cut corners and glowing brackets on everything.',
+  what:['<b>Background</b> <code>WarBackground</code>, a Three.js wireframe terrain scene (about 1,800 lines)','<b>One accent only:</b> HUD cyan 79,227,224. Readouts in sand 197,186,156','<b>10px cut corners</b> on the tab bar (bottom) and bottom bar (top), with glowing corner brackets','<b>Titles and counts in monospace</b> with 0.1em letter spacing','<b>Square cards</b> with a 1px cyan inner line at 32%','<b>No image icon set.</b> Menu icons are drawn as glowing HUD glyphs'],
+  tok:[['HUD cyan','rgb(79,227,224)','rgb(79,227,224)'],['HUD dim','rgb(44,132,131)','rgb(44,132,131)'],['Sand','rgb(197,186,156)','rgb(197,186,156)'],['Void','rgb(6,10,9)','rgb(6,10,9)'],['Card','rgba(14,20,18,.8)','rgba(14,20,18,.8)'],['Olive','rgb(47,58,36)','rgb(47,58,36)']],
+  apk:['Terrain scene in <code>expo-gl</code>','Cut corners and brackets as SVG paths behind each bar and card','Monospace on titles and counts only; names stay in Exo'],src:'components/app/WarBackground.tsx · styles/war-*.css'},
+ {k:'osaka',n:'Osaka',g:'Full dress',st:'ok',acc:'#ff6fb5',sw:'linear-gradient(180deg,transparent 55%,#ff6fb540),radial-gradient(50% 30% at 80% 15%,#6fe3ff40,transparent),#0a0812',
+  tag:'A rainy neon city. The background carries every sign colour; the interface keeps to one pink.',
+  what:['<b>Background</b> <code>OsakaBackground</code>, Three.js grading a 1 MB rain-city video loop (<code>public/osaka/osaka-loop.mp4</code>)','<b>The house rule:</b> the background gets the full neon rainbow, the interface locks to sakura pink 255,111,181','<b>Panels</b> slate 17,14,28 at 84% with a pink-to-cyan sheen along the top edge; 16px corners','<b>Glow</b> on the active tab and the + button','<b>Icons</b> glass covered in rain'],
+  tok:[['Sakura','rgb(255,111,181)','rgb(255,111,181)'],['Cyan edge','rgb(111,227,255)','rgb(111,227,255)'],['Slate','rgba(17,14,28,.84)','rgba(17,14,28,.84)'],['Mist text','rgb(236,233,245)','rgb(236,233,245)'],['Haze text','rgb(176,170,196)','rgb(176,170,196)'],['Void','rgb(10,8,18)','rgb(10,8,18)']],
+  apk:['<code>expo-video</code> (already installed) feeds the loop into the GL scene','If the video fails, fall back to the void colour plus the neon wash, as web does'],src:'components/app/OsakaBackground.tsx · styles/osaka-*.css'},
+ {k:'jungle',n:'Jungle',g:'Full dress',st:'ok',acc:'#e2b060',sw:'repeating-linear-gradient(92deg,#0000 0 3px,#0000002e 3px 4px),linear-gradient(#3a2b1c,#261c13)',
+  tag:'Carved timber over a living jungle. Every surface is a wooden plank with real grain.',
+  what:['<b>Background</b> <code>JungleBackground</code>, a Three.js jungle scene (about 2,700 lines) with day and evening moods','<b>Every surface is bark</b> 38,28,19 with generated fibre grain','<b>Carved edges:</b> a lit line on top, dark inset below; the active tab sits sunk into the wood','<b>Header and bottom bar</b> are full-width planks','<b>Text</b> bone 246,240,227, secondary sand 198,182,158; 11px card and 14px bar corners','<b>Icons</b> carved wood with brass studs'],
+  tok:[['Bark','rgb(38,28,19)','rgb(38,28,19)'],['Timber','rgb(58,43,28)','rgb(58,43,28)'],['Loam','rgb(22,17,12)','rgb(22,17,12)'],['Bone','rgb(246,240,227)','rgb(246,240,227)'],['Gold','rgb(226,176,96)','rgb(226,176,96)'],['Leaf','rgb(138,206,116)','rgb(138,206,116)']],
+  apk:['Jungle scene in <code>expo-gl</code>, keeping the day/evening switch','Save the grain as a PNG tile once, instead of generating it on the phone'],src:'components/app/JungleBackground.tsx · styles/jungle-*.css'}
+];
+const ST={ok:['on the APK','#7fe3a0'],part:['on the APK, differs','#f0c05c'],no:['missing on the APK','#ff7a7a']};
+
+const rail=document.getElementById('rail');
+const groups=[...new Set(T.map(t=>t.g))];
+rail.innerHTML=groups.map(g=>'<div class="grp"><small>'+g+'</small>'+T.filter(t=>t.g===g).map(t=>'<button class="th" id="th-'+t.k+'" data-k="'+t.k+'" aria-pressed="false"><span class="sw" style="background:'+t.sw+'"></span><span class="row">'+t.n+'<i style="background:'+ST[t.st][1]+'"></i></span></button>').join('')+'</div>').join('');
+
+function frame(id,theme,screen){
+  const host=document.getElementById(id);
+  host.innerHTML='<div class="load">LOADING '+theme.toUpperCase()+'</div>';
+  const f=document.createElement('iframe');
+  f.title=theme+' '+screen;f.loading='eager';
+  f.src='phone.html#'+theme+(screen==='menu'?':menu':'');
+  host.appendChild(f);
+}
+function pick(k,push){
+  const t=T.find(x=>x.k===k)||T[0];
+  document.querySelectorAll('.th').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===t.k));
+  document.documentElement.style.setProperty('--acc',t.acc);
+  document.getElementById('hname').textContent=t.n;
+  frame('s-feed',t.k,'feed');frame('s-menu',t.k,'menu');
+  const s=ST[t.st];
+  document.getElementById('spec').innerHTML=
+    '<div class="top"><h2>'+t.n+'</h2><span class="pill"><i style="background:'+s[1]+'"></i>'+s[0]+'</span></div>'+
+    '<p class="tag">'+t.tag+'</p>'+
+    '<h3>What makes it</h3><ul>'+t.what.map(x=>'<li>'+x+'</li>').join('')+'</ul>'+
+    '<h3>Exact values from the site</h3><div class="tok">'+t.tok.map(([n,v,c])=>'<div><i style="background:'+c+'"></i><span><b>'+n+'</b>'+v+'</span></div>').join('')+'</div>'+
+    '<h3>On the APK</h3><ul>'+t.apk.map(x=>'<li>'+x+'</li>').join('')+'</ul>'+
+    '<h3>Source on web</h3><div class="src">'+t.src+'</div>'+
+    '<div class="kbd">← → to switch themes</div>';
+  try{localStorage.setItem('dehub-apk-theme',t.k)}catch(e){}
+  if(push)document.getElementById('th-'+t.k).scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+}
+rail.addEventListener('click',e=>{const b=e.target.closest('.th');if(b)pick(b.dataset.k,false)});
+document.addEventListener('keydown',e=>{if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;const cur=document.querySelector('.th[aria-pressed="true"]').dataset.k;const i=T.findIndex(t=>t.k===cur);pick(T[(i+(e.key==='ArrowRight'?1:T.length-1))%T.length].k,true)});
+let start='war';const h=location.hash.slice(1);
+if(T.some(t=>t.k===h))start=h;else{try{const s=localStorage.getItem('dehub-apk-theme');if(s&&T.some(t=>t.k===s))start=s}catch(e){}}
+pick(start,true);
+</script>
