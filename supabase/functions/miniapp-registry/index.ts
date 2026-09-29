@@ -12,11 +12,14 @@
  * concrete line per field, because a single "invalid manifest" is the most
  * complained-about thing in every other mini app ecosystem.
  *
- * Read-only in phase 1: listing an app is a staff action on miniapp_apps.
+ *   POST { action: 'submit', url }   (x-dehub-token) register or update the app
+ *   POST { action: 'mine' }          (x-dehub-token) the caller's apps
+ *
+ * Promoting an app into the store (tier) and suspending one are staff writes.
  */
 import { verifyMessage } from "https://esm.sh/ethers@6.13.4";
 import { handleCorsPreflight } from "../_shared/cors.ts";
-import { jsonResponse, rateLimitByIp } from "../_shared/auth.ts";
+import { checkRateLimit, jsonResponse, rateLimitByIp, requireDeHubAuth, serviceClient } from "../_shared/auth.ts";
 
 const FETCH_TIMEOUT_MS = 8000;
 const MAX_BYTES = 512_000;
@@ -227,15 +230,20 @@ async function isImage(url: string | undefined): Promise<boolean> {
   return Boolean(res?.ok && (res.headers.get("content-type") || "").startsWith("image/"));
 }
 
-async function validate(raw: string): Promise<Response> {
+interface Inspection {
+  status: number;
+  body: Record<string, unknown> & { ok?: boolean; errors?: Problem[] };
+}
+
+async function inspect(raw: string): Promise<Inspection> {
   let origin: URL;
   try {
     origin = new URL(raw);
   } catch {
-    return jsonResponse({ error: "That is not a URL." }, 400);
+    return { body: { error: "That is not a URL." }, status: 400 };
   }
-  if (origin.protocol !== "https:") return jsonResponse({ error: "The app must be served over https://." }, 400);
-  if (isBlockedHost(origin.hostname)) return jsonResponse({ error: "That host cannot be checked from the internet." }, 400);
+  if (origin.protocol !== "https:") return { body: { error: "The app must be served over https://." }, status: 400 };
+  if (isBlockedHost(origin.hostname)) return { body: { error: "That host cannot be checked from the internet." }, status: 400 };
   const domain = origin.hostname.toLowerCase();
 
   let source: "dehub" | "farcaster" | null = null;
@@ -248,21 +256,21 @@ async function validate(raw: string): Promise<Response> {
       source = kind;
       break;
     } catch {
-      return jsonResponse({
+      return { body: {
         ok: false,
         domain,
         errors: [{ field: path, message: "Found, but it is not valid JSON." }],
         warnings: [],
-      });
+      }, status: 200 };
     }
   }
   if (!json || !source) {
-    return jsonResponse({
+    return { body: {
       ok: false,
       domain,
       errors: [{ field: "/.well-known/dehub.json", message: `Not found at https://${domain}/.well-known/dehub.json (and no farcaster.json either).` }],
       warnings: [],
-    });
+    }, status: 200 };
   }
 
   const manifest = normalise(json, source);
@@ -304,7 +312,124 @@ async function validate(raw: string): Promise<Response> {
     errors.push({ field: "embed.imageUrl", message: "Required: a 3:2 image." });
   }
 
-  return jsonResponse({ ok: errors.length === 0, domain, source, owner, manifest, embed, errors, warnings });
+  return { body: { ok: errors.length === 0, domain, source, owner, manifest, embed, errors, warnings }, status: 200 };
+}
+
+
+// ── Submissions ─────────────────────────────────────────────────────────────
+//
+// A manifest that passes goes live at once as UNLISTED: it opens from a
+// shared /apps/<slug> link under an "Unreviewed" badge, the way any link works
+// on Farcaster, but stays out of the store. Review promotes the tier to
+// `listed`; `status = 'suspended'` is the kill switch. Both are staff writes.
+
+const APP_COLUMNS =
+  "slug, domain, home_url, name, subtitle, icon_url, tier, status, source, owner_wallet, review_note, updated_at";
+
+function slugify(name: string): string {
+  const base = name
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 32);
+  return base.length >= 2 ? base : `app-${base || "x"}`;
+}
+
+async function freeSlug(db: ReturnType<typeof serviceClient>, name: string): Promise<string> {
+  const base = slugify(name);
+  const { data } = await db.from("miniapp_apps").select("slug").like("slug", `${base}%`);
+  const taken = new Set((data ?? []).map((r: { slug: string }) => r.slug));
+  if (!taken.has(base) && base !== "dev") return base;
+  for (let i = 2; i < 1000; i++) {
+    const candidate = `${base}-${i}`.slice(0, 40);
+    if (!taken.has(candidate)) return candidate;
+  }
+  return `${base}-${crypto.randomUUID().slice(0, 6)}`;
+}
+
+async function submit(req: Request, raw: string): Promise<Response> {
+  const auth = await requireDeHubAuth(req);
+  if (!auth.ok) return auth.response;
+  const db = serviceClient();
+  const rl = await checkRateLimit(db, auth.wallet, "miniapp-submit", { limit: 10, windowMs: 3600_000 });
+  if (!rl.allowed) return jsonResponse({ error: "Too many submissions. Try again in an hour." }, 429);
+
+  const inspection = await inspect(raw);
+  const result = inspection.body as Record<string, any>;
+  if (inspection.status !== 200) return jsonResponse(result, inspection.status);
+  if (!result.ok) return jsonResponse({ ...result, error: "Fix the problems above, then submit again." }, 422);
+
+  const m = result.manifest as ReturnType<typeof normalise>;
+  const domain = result.domain as string;
+  const owner = (result.owner as string | null) ?? null;
+  const fields = {
+    home_url: m.homeUrl,
+    source: result.source,
+    manifest: m,
+    name: m.name,
+    subtitle: m.subtitle ?? null,
+    description: m.description ?? null,
+    icon_url: m.iconUrl ?? null,
+    splash_image_url: m.splashImageUrl ?? null,
+    splash_background_color: m.splashBackgroundColor ?? null,
+    category: m.category ?? null,
+    tags: m.tags,
+    permissions: m.permissions,
+    crawled_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  const { data: existing } = await db.from("miniapp_apps").select("id, owner_wallet, submitted_by, status").eq("domain", domain).maybeSingle();
+  if (existing) {
+    // The domain's verified owner may always update it; so may whoever first
+    // submitted an app nobody has claimed. A verified owner arriving later
+    // claims an import that somebody else registered.
+    const mayUpdate =
+      (owner && (existing.owner_wallet === owner || !existing.owner_wallet)) ||
+      (!existing.owner_wallet && existing.submitted_by === auth.wallet);
+    if (!mayUpdate) {
+      return jsonResponse({ error: `${domain} is already registered by its owner. Sign a dehub.json with the owning wallet to update it.` }, 409);
+    }
+    if (existing.status === "suspended") return jsonResponse({ error: "This app is suspended. Contact DeHub support." }, 403);
+    const { data, error } = await db
+      .from("miniapp_apps")
+      .update({ ...fields, ...(owner ? { owner_wallet: owner } : {}), status: "live" })
+      .eq("id", existing.id)
+      .select(APP_COLUMNS)
+      .single();
+    if (error) throw error;
+    return jsonResponse({ ok: true, app: data, updated: true });
+  }
+
+  const { data, error } = await db
+    .from("miniapp_apps")
+    .insert({
+      ...fields,
+      slug: await freeSlug(db, m.name ?? domain),
+      domain,
+      owner_wallet: owner,
+      submitted_by: auth.wallet,
+      tier: "unlisted",
+      status: "live",
+    })
+    .select(APP_COLUMNS)
+    .single();
+  if (error) throw error;
+  return jsonResponse({ ok: true, app: data, updated: false });
+}
+
+async function mine(req: Request): Promise<Response> {
+  const auth = await requireDeHubAuth(req);
+  if (!auth.ok) return auth.response;
+  const { data, error } = await serviceClient()
+    .from("miniapp_apps")
+    .select(APP_COLUMNS)
+    .or(`submitted_by.eq.${auth.wallet},owner_wallet.eq.${auth.wallet}`)
+    .order("updated_at", { ascending: false })
+    .limit(50);
+  if (error) throw error;
+  return jsonResponse({ apps: data ?? [] });
 }
 
 Deno.serve(async (req: Request) => {
@@ -317,10 +442,16 @@ Deno.serve(async (req: Request) => {
 
   try {
     const body = await req.json().catch(() => ({}));
-    if (body?.action === "validate" && typeof body.url === "string") return await validate(body.url.slice(0, 2048));
+    const url = typeof body?.url === "string" ? body.url.slice(0, 2048) : "";
+    if (body?.action === "validate" && url) {
+      const r = await inspect(url);
+      return jsonResponse(r.body, r.status);
+    }
+    if (body?.action === "submit" && url) return await submit(req, url);
+    if (body?.action === "mine") return await mine(req);
     return jsonResponse({ error: "Unknown action." }, 400);
   } catch (error) {
     console.error("[miniapp-registry]", error);
-    return jsonResponse({ error: "The check failed. Try again." }, 500);
+    return jsonResponse({ error: "The request failed. Try again." }, 500);
   }
 });

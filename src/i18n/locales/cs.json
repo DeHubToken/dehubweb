@@ -7471,7 +7471,11 @@
       "intro": "Mini aplikace vytvořené pro DeHub kýmkoli. Otevírají se uvnitř DeHub, už jste přihlášen, a každá aplikace zobrazí svůj skutečný webový adresář.",
       "buildCta": "Vytvořit aplikaci",
       "emptyTitle": "Žádné aplikace zatím nejsou zobrazeny",
-      "emptyBody": "První aplikace jsou v recenzi. Vytvořte jednu a mohla by být zde."
+      "emptyBody": "První aplikace jsou v recenzi. Vytvořte jednu a mohla by být zde.",
+      "search": "Hledat aplikace",
+      "all": "Vše",
+      "fromDehub": "Od společnosti DeHub",
+      "noMatch": "Tomuto vyhledávání neodpovídají žádné aplikace."
     },
     "dev": {
       "title": "Vytvořit mini aplikaci",
@@ -7506,7 +7510,35 @@
       "verifyTitle": "Přihlaste se pomocí DeHub, na vašem serveru",
       "verifyBody": "auth.getToken() vám poskytne token podepsaný DeHub. Zkontrolujte jej na vašem serveru pomocí jakékoli knihovny JWT. Adresa peněženky uživatele je v sub.",
       "copy": "Kopírovat",
-      "copied": "Zkopírováno"
+      "copied": "Zkopírováno",
+      "submitBody": "Váš manifest projde. Odešlete jej a vaše aplikace bude okamžitě spuštěna na odkazu DeHub s označením Nekontrolováno. Po kontrole se objeví v obchodě.",
+      "submit": "Odeslat společnosti DeHub",
+      "submitSignIn": "Pro odeslání se přihlaste do služby DeHub.",
+      "submitDone": "Odesláno. Vaše aplikace je k dispozici na odkazu DeHub.",
+      "submitUpdated": "Aktualizováno. DeHub má nejnovější verzi vašeho manifestu.",
+      "yourAppsTitle": "Vaše aplikace",
+      "stateUnlisted": "Live by link · hodnocení podniku",
+      "stateListed": "V obchodě",
+      "stateSuspended": "Pozastaveno",
+      "copyLink": "Kopírovat odkaz"
+    },
+    "card": {
+      "open": "Otevřít"
+    },
+    "category": {
+      "games": "Hry",
+      "social": "Sociální",
+      "finance": "Finance",
+      "utility": "Užitek",
+      "productivity": "Produktivita",
+      "health-fitness": "Zdraví a fitness",
+      "news-media": "Zprávy a média",
+      "music": "Hudba",
+      "shopping": "Nákupy",
+      "education": "Vzdělání",
+      "developer-tools": "Nástroje pro vývojáře",
+      "entertainment": "Zábava",
+      "art-creativity": "Umění a kreativita"
     }
   },
   "aiStyles": {

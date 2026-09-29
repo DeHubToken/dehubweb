@@ -6642,19 +6642,23 @@
       "title": "Apps",
       "seoDescription": "Mini app wey anybody build for DeHub: game, tool, na more wey open inside DeHub, already log in, na share back to feed.",
       "buildCta": "Build an app",
-      "emptyTitle": "No apps wey go show yet 😕",
-      "emptyBody": "\"Foist app wey go review na. Build one, wey go dey here.\""
+      "emptyTitle": "No apps wey go show yet",
+      "emptyBody": "\"Foist app wey go review na. Build one, wey go dey here.\"",
+      "search": "Search apps",
+      "all": "All",
+      "fromDehub": "From DeHub",
+      "noMatch": "Wetin app no fit match dis search?"
     },
     "dev": {
       "backToStore": "Back to Apps",
       "check": "Check",
       "launch": "Launch",
-      "badUrl": "Enter **http://localhost** or **https://** any weblink for test local.",
+      "badUrl": "Enter http://localhost or https:// any weblink for test local.",
       "localNote": "\"Local address wey no dey fit check from our server, but you go try dem here for test.\"",
       "checkFailed": "\"Check no go run. Try again.\"",
       "passed": "Manifest looks good",
       "failed_one": "{{count}} problem wey go fix",
-      "failed_other": "{{count}} problem wey go fix 🔧",
+      "failed_other": "{{count}} problem wey go fix",
       "open": "Open",
       "ownershipBody": "Sign wan once wey yu use DeHub wallet yu, na paste result wey yu get wey yu dehub.json. Na dis link app wey yu account, so payout wey yu get na review wey yu get reach yu.",
       "signNeedsUrl": "En a yu app wey yu wan use, put wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey",
@@ -6662,9 +6666,35 @@
       "quickstartTitle": "Quick start",
       "manifestTitle": "Manifest",
       "embedTitle": "Feed card",
-      "embedBody": "Add dis tag fi any page, and link fi dat page go show as card wey got button dat go open app yu right there 👆",
+      "embedBody": "Add dis tag fi any page, and link fi dat page go show as card wey got button dat go open app yu right there",
       "copy": "Copy",
-      "copied": "Copied"
+      "copied": "Copied",
+      "submitBody": "Yas manifest na pass. Submit wey, app wey go live straight away fi DeHub link, mark \"Unreviewed\". Na time review wey complete, app go appear fi store.",
+      "submit": "Submit to DeHub",
+      "submitSignIn": "Sign in to DeHub wey go dey submit for you.",
+      "submitUpdated": "\"Update!\" DeHub na get new version we yu manifest now.",
+      "yourAppsTitle": "Your apps",
+      "stateListed": "In the store",
+      "stateSuspended": "Suspended",
+      "copyLink": "Copy link"
+    },
+    "card": {
+      "open": "Open"
+    },
+    "category": {
+      "games": "Gam",
+      "social": "Soshal",
+      "finance": "Finans",
+      "utility": "Yutiliti",
+      "productivity": "Poduktiviti",
+      "health-fitness": "Hels & fitnes",
+      "news-media": "Nyuz & midia",
+      "music": "Muzik",
+      "shopping": "Shop",
+      "education": "Edukeisyon",
+      "developer-tools": "Developa tuul",
+      "entertainment": "Entertaenment",
+      "art-creativity": "Art & kreativiti"
     }
   },
   "aiStyles": {

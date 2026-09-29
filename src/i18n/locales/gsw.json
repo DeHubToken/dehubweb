@@ -5384,8 +5384,8 @@
       "close": "App schliessen",
       "backToStore": "Zurück zu Apps",
       "notFound": "Diese App ist nicht im DeHub App Store, oder sie wurde entfernt.",
-      "badUrl": "Diese Adresse kann nicht als Mini-App geöffnet werden. Sie muss mit **https://** beginnen oder eine localhost-Adresse in Entwicklermodus sein.",
-      "readyTimeout": "Diese App hat nie **dehub.ready()** aufgerufen, deshalb wurde der Splash-Screen nach 8 Sekunden versteckt."
+      "badUrl": "Diese Adresse kann nicht als Mini-App geöffnet werden. Sie muss mit https:// beginnen oder eine localhost-Adresse in Entwicklermodus sein.",
+      "readyTimeout": "Diese App hat nie dehub.ready() aufgerufen, deshalb wurde der Splash-Screen nach 8 Sekunden versteckt."
     },
     "signIn": {
       "title": "Anmelden bei {{name}}?",
@@ -5400,7 +5400,11 @@
       "intro": "Mini-Apps, die von jedermann für DeHub gebaut werden. Sie öffnen sich innerhalb von DeHub, du bist bereits angemeldet, und jede App zeigt ihre echte Web-Adresse an.",
       "buildCta": "Eine App erstellen",
       "emptyTitle": "Keine Apps aufgelistet",
-      "emptyBody": "Die ersten Apps werden geprüft. Baue eine und sie könnte hier erscheinen."
+      "emptyBody": "Die ersten Apps werden geprüft. Baue eine und sie könnte hier erscheinen.",
+      "search": "Suche Apps",
+      "all": "All",
+      "fromDehub": "Von DeHub",
+      "noMatch": "Keini Apps passen zu deiner Suche."
     },
     "dev": {
       "title": "Eine Mini-App erstellen",
@@ -5411,7 +5415,7 @@
       "checkTitle": "Prüfen und starten",
       "check": "Prüfen",
       "launch": "Starten",
-      "badUrl": "Gib eine **https://**-Adresse ein oder **http://localhost** für lokales Testen ein.",
+      "badUrl": "Gib eine https://-Adresse ein oder http://localhost für lokales Testen ein.",
       "localNote": "Lokale Adressen können nicht von unseren Servern geprüft werden, aber du kannst sie hier starten, um sie zu testen.",
       "checkFailed": "Die Prüfung konnte nicht durchgeführt werden. Versuche es erneut.",
       "passed": "Manifest schaut guet aus",
@@ -5435,7 +5439,35 @@
       "verifyTitle": "Signiere mit DeHub, auf deinem Server",
       "verifyBody": "auth.getToken() gibt deiner App einen Token, der von DeHub signiert ist. Prüfe ihn auf deinem Server mit jeder JWT-Bibliothek. Die Wallet-Adresse des Users steht in sub.",
       "copy": "Kopieren",
-      "copied": "Kopiert"
+      "copied": "Kopiert",
+      "submitBody": "De Manifest is gutgehessen. Schteig’s es ab und deine App geht direkt live auf einem DeHub-Link, markiert als *Unreviewed*. Es taucht im Store erst auf, sobald es revidiert wurde.",
+      "submit": "Einschicken an DeHub",
+      "submitSignIn": "Logg dich bei DeHub ein, um zu submitten.",
+      "submitDone": "Eingereicht. Deine App isch live auf dem DeHub-Link.",
+      "submitUpdated": "Aktualisiert. DeHub hat die neueste Version von deinem Manifest.",
+      "yourAppsTitle": "De Appis",
+      "stateUnlisted": "Live by Link · in der Rezension für den Laden",
+      "stateListed": "Im Laden",
+      "stateSuspended": "Ausschafft",
+      "copyLink": "Link"
+    },
+    "card": {
+      "open": "Öffne"
+    },
+    "category": {
+      "games": "Spueli",
+      "social": "Gesellschaft",
+      "finance": "Finanzen",
+      "utility": "Werkzeug",
+      "productivity": "Produktivität",
+      "health-fitness": "Gesundheit & Fitness",
+      "news-media": "Nöie uusig & Medie",
+      "music": "Musik",
+      "shopping": "Einkaufen",
+      "education": "Bildung",
+      "developer-tools": "Entwickler-Tools",
+      "entertainment": "Unterhaltungsindustrie",
+      "art-creativity": "Kunst un Chreischtikait"
     }
   },
   "aiStyles": {

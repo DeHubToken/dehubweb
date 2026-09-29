@@ -7544,8 +7544,8 @@
       "close": "Uždaryti prietaisą",
       "backToStore": "Grįžti į Prietaisus",
       "notFound": "Šis prietaisas nėra DeHub prietaisų sandūroje, arba buvo pašalintas.",
-      "badUrl": "Ši adreso nuoroda negali būti atidaryta kaip mažas prietaisas. Ji turi prasidėti su **https://**, arba būti vietinėje vietoje (localhost) kūrėjo režime.",
-      "readyTimeout": "Šis prietaisas niekada nešaukė **dehub.ready()**, todėl pradinė ekranų dėmė buvo paslėpta po 8 sekundžių."
+      "badUrl": "Ši adreso nuoroda negali būti atidaryta kaip mažas prietaisas. Ji turi prasidėti su https://, arba būti vietinėje vietoje (localhost) kūrėjo režime.",
+      "readyTimeout": "Šis prietaisas niekada nešaukė dehub.ready(), todėl pradinė ekranų dėmė buvo paslėpta po 8 sekundžių."
     },
     "signIn": {
       "title": "Prisijungti prie {{name}}?",
@@ -7560,7 +7560,11 @@
       "intro": "Maži prietaisai, sukurti DeHub naudotojams. Jie atidarysi DeHub viduje, jūs jau prisijungę, ir kiekvienas prietaisas rodo savo tikrąjį interneto adresą.",
       "buildCta": "Sukurkite prietaisą",
       "emptyTitle": "Nėra sąrašo prietaisų",
-      "emptyBody": "Pirmieji prietaisai yra recenzijai. Sukurkite vieną ir jis gali būti čia."
+      "emptyBody": "Pirmieji prietaisai yra recenzijai. Sukurkite vieną ir jis gali būti čia.",
+      "search": "Ieškoti programėlių",
+      "all": "Visi",
+      "fromDehub": "Iš DeHub",
+      "noMatch": "Nėra programėlių, atitinkančių šią paiešką."
     },
     "dev": {
       "title": "Sukurkite mažą prietaisą",
@@ -7571,7 +7575,7 @@
       "checkTitle": "Patikrinti ir paleisti",
       "check": "Patikrinti",
       "launch": "Paleisti",
-      "badUrl": "Įveskite **https://** adresą, arba **http://localhost** vietinėms bandymams.",
+      "badUrl": "Įveskite https:// adresą, arba http://localhost vietinėms bandymams.",
       "localNote": "Vietinės nuorodos negali būti patikrintos iš mūsų serverių, bet jūs galite jas paleisti čia bandymams.",
       "checkFailed": "Patikrinimas nepavyko. Bandykite dar kartą.",
       "passed": "Manifestas atrodo gerai",
@@ -7595,7 +7599,35 @@
       "verifyTitle": "Prisijunkite naudodami „DeHub“ savo serveryje",
       "verifyBody": "auth.getToken() suteikia jūsų programėlei prieigos raktą, pasirašytą DeHub. Patikrinkite tai savo serveryje su bet kuria JWT biblioteka. Naudotojo piniginės adresas yra sub.",
       "copy": "Kopija",
-      "copied": "Nukopijuota"
+      "copied": "Nukopijuota",
+      "submitBody": "Jūsų deklaracijos leidimai. Pateikite juos ir programėlė bus iš karto paskelbta „DeHub“ nuorodoje, pažymėtoje kaip „Neperžiūrėta“. Parduotuvėje jis pasirodo, kai tik yra peržiūrimas.",
+      "submit": "Pateikti DeHub",
+      "submitSignIn": "Prisijunkite prie „DeHub“, kad pateiktumėte.",
+      "submitDone": "Pateikta. Jūsų programėlė veikia per „DeHub“ nuorodą.",
+      "submitUpdated": "Atnaujinta. „DeHub“ turi naujausią jūsų deklaracijos versiją.",
+      "yourAppsTitle": "Jūsų programos",
+      "stateUnlisted": "Tiesioginė nuoroda · peržiūrima parduotuvėje",
+      "stateListed": "Parduotuvėje",
+      "stateSuspended": "Sustabdyta",
+      "copyLink": "Kopijuoti nuorodą"
+    },
+    "card": {
+      "open": "Atidaryti"
+    },
+    "category": {
+      "games": "Žaidimai",
+      "social": "Socialiniai tinklai",
+      "finance": "Finansai",
+      "utility": "Komunalinės paslaugos",
+      "productivity": "Produktyvumas",
+      "health-fitness": "Sveikata ir kūno rengyba",
+      "news-media": "Naujienos ir žiniasklaida",
+      "music": "Muzika",
+      "shopping": "Apsipirkimas",
+      "education": "Išsilavinimas",
+      "developer-tools": "Kūrėjo įrankiai",
+      "entertainment": "Pramogos",
+      "art-creativity": "Menas ir kūrybiškumas"
     }
   },
   "aiStyles": {

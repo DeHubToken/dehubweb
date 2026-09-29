@@ -5358,7 +5358,7 @@
     "badge": {
       "verified": "Nyochaa",
       "unreviewed": "Enyochaghị",
-      "dev": "🔧 **Nwoke a nwoke nwoke** 🔧"
+      "dev": "Nwoke a nwoke nwoke"
     },
     "host": {
       "close": "Mechie ngwa",
@@ -5380,7 +5380,11 @@
       "intro": "Obere ngwa ndị e wuru maka DeHub site n 'aka onye ọ bụla. Ha na-emeghe n' ime DeHub, ị banyela, ma ngwa ọ bụla na-egosi ezigbo adreesị weebụ ya.",
       "buildCta": "Mepụta ngwa",
       "emptyTitle": "Enweghị usoroiheomume edepụtara ma",
-      "emptyBody": "A na-enyocha ngwa ndị mbụ ahụ. Mepụta otu ma ọ nwere ike ịdị ebe a."
+      "emptyBody": "A na-enyocha ngwa ndị mbụ ahụ. Mepụta otu ma ọ nwere ike ịdị ebe a.",
+      "search": "Usoroiheomume nchọcha",
+      "all": "Ha niile",
+      "fromDehub": "Site na DeHub",
+      "noMatch": "Enweghị ngwa dabara na nchọcha ahụ."
     },
     "dev": {
       "title": "Iwuli a mini ngwa",
@@ -5415,7 +5419,34 @@
       "verifyTitle": "Banye na DeHub, na sava gị",
       "verifyBody": "auth.getToken() na-enye ngwa gị akara ngosi nke DeHub bịanyere aka na ya. Lelee ya na sava gị na ọbá akwụkwọ JWT ọ bụla. Adreesị obere akpa nke onye ọrụ ahụ dị n 'okpuru.",
       "copy": "Debata",
-      "copied": "E depụtaghachiri"
+      "copied": "E depụtaghachiri",
+      "submitBody": "Gị pụta ìhè agafe. Nyefee ya na gị na ngwa na-aga na-ebi ndụ na a DeHub njikọ ozugbo, akara Unreviewed. Ọ pụtara n 'ụlọ ahịa ozugbo enyochala ya.",
+      "submit": "N 'okpuru DeHub",
+      "submitSignIn": "Maka echichi na-etinye ihe keikuku dobe waya USB na mwekota nke shei.",
+      "submitDone": "E debere ya. Ngwa gị dị ndụ na njikọ DeHub ya.",
+      "submitUpdated": "Emelitere. DeHub nwere ụdị ọhụụ nke ngosipụta gị.",
+      "yourAppsTitle": "Usoroiheomume gị",
+      "stateUnlisted": "Na-ebi ndụ site na njikọ · na nyochaa maka ụlọ ahịa ahụ",
+      "stateListed": "Na ụlọ ahịa",
+      "stateSuspended": "Akwụsịla",
+      "copyLink": "Debata ụzọ njikọ"
+    },
+    "card": {
+      "open": "Mepee"
+    },
+    "category": {
+      "games": "Egwuregwu",
+      "finance": "Nkììrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìrìr",
+      "utility": "Utiwari",
+      "productivity": "Arụpụtaghị",
+      "health-fitness": "Ahụike & mma",
+      "news-media": "News & mgbasa ozi",
+      "music": "Mùsìkì",
+      "shopping": "Ịzụ ahịa",
+      "education": "Educashia",
+      "developer-tools": "Developer ngwaọrụ",
+      "entertainment": "Ntụrụndụ",
+      "art-creativity": "Ndị ụlọtị na ụlọtị ụlọtị"
     }
   },
   "aiStyles": {

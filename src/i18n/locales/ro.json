@@ -7352,7 +7352,11 @@
       "intro": "Mini-aplicații construite pentru DeHub de oricine. Acestea se deschid în cadrul DeHub, ești deja conectat (ă) și fiecare aplicație își afișează adresa web reală.",
       "buildCta": "Creează o aplicație",
       "emptyTitle": "Nicio aplicație listată încă",
-      "emptyBody": "Primele aplicații sunt în curs de examinare. Construiește una și ar putea fi aici."
+      "emptyBody": "Primele aplicații sunt în curs de examinare. Construiește una și ar putea fi aici.",
+      "search": "Aplicații de căutare",
+      "all": "Toate",
+      "fromDehub": "De la DeHub",
+      "noMatch": "Nicio aplicație nu se potrivește cu acea căutare."
     },
     "dev": {
       "title": "Creează o miniaplicație",
@@ -7387,14 +7391,35 @@
       "verifyTitle": "Conectează-te cu DeHub, pe server",
       "verifyBody": "auth.getToken() oferă aplicației tale un token semnat de DeHub. Verifică-l pe server cu orice bibliotecă JWT. Adresa portofelului utilizatorului este în sub.",
       "copy": "Copy",
-      "copied": "Copiat"
+      "copied": "Copiat",
+      "submitBody": "Permisul tău manifest. Trimite-l și aplicația va fi lansată imediat la un link DeHub, marcat Nerevizuit. Apare în magazin după ce a fost revizuit.",
+      "submit": "Trimiteți la DeHub",
+      "submitSignIn": "Conectează-te la DeHub pentru a trimite.",
+      "submitDone": "Trimis. Aplicația ta este live la link-ul său DeHub.",
+      "submitUpdated": "Actualizat. DeHub are cea mai recentă versiune a manifestului tău.",
+      "yourAppsTitle": "Aplicațiile dvs.",
+      "stateUnlisted": "Live by link · în curs de verificare pentru comerciant",
+      "stateListed": "În magazin",
+      "stateSuspended": "Suspendat",
+      "copyLink": "Copiază linkul"
+    },
+    "card": {
+      "open": "Deschide"
+    },
+    "category": {
+      "games": "Jocuri",
+      "finance": "Finanțe",
+      "utility": "Utilitate",
+      "productivity": "Productivitate",
+      "health-fitness": "Sănătate și fitness",
+      "news-media": "Știri și media",
+      "music": "Muzică",
+      "shopping": "Cumpărături",
+      "education": "Educație",
+      "developer-tools": "Instrumente pentru dezvoltatori",
+      "entertainment": "Divertisment",
+      "art-creativity": "Artă și creativitate"
     }
-  },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
   },
   "aiStyles": {
     "normal": "Normal",
@@ -7426,5 +7451,11 @@
     "progressive": "Progresist",
     "nationalist": "Naționalist",
     "communist": "Comunist"
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
   }
 }
