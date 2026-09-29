@@ -84,14 +84,14 @@ const BrandAssets = () => {
   ];
 
   const palette = [
-    { name: 'Black', hex: '#000000', text: '#ffffff' },
-    { name: 'Graphite', hex: '#0a0b0d', text: '#ffffff' },
-    { name: 'Surface', hex: '#16181d', text: '#ffffff' },
-    { name: 'Surface +1', hex: '#262a31', text: '#ffffff' },
-    { name: 'Grey', hex: '#6b727d', text: '#ffffff' },
-    { name: 'Light Grey', hex: '#9aa1ad', text: '#000000' },
-    { name: 'Off White', hex: '#eef0f3', text: '#000000' },
-    { name: 'White', hex: '#ffffff', text: '#000000' },
+    { name: t('brandAssets.swatchBlack'), hex: '#000000', text: '#ffffff' },
+    { name: t('brandAssets.swatchGraphite'), hex: '#0a0b0d', text: '#ffffff' },
+    { name: t('brandAssets.swatchSurface'), hex: '#16181d', text: '#ffffff' },
+    { name: t('brandAssets.swatchSurfaceRaised'), hex: '#262a31', text: '#ffffff' },
+    { name: t('brandAssets.swatchGrey'), hex: '#6b727d', text: '#ffffff' },
+    { name: t('brandAssets.swatchLightGrey'), hex: '#9aa1ad', text: '#000000' },
+    { name: t('brandAssets.swatchOffWhite'), hex: '#eef0f3', text: '#000000' },
+    { name: t('brandAssets.swatchWhite'), hex: '#ffffff', text: '#000000' },
   ];
 
   return (
@@ -161,22 +161,26 @@ const BrandAssets = () => {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {palette.map((c) => {
-              const isLight = c.hex === '#eef0f3' || c.hex === '#ffffff';
+              const inkOnSwatch = c.text === '#000000';
+              // The label colour is inline on every line, not just the card:
+              // docs-dark.css paints each div white, which left "Light Grey"
+              // white on its own grey swatch on every dark docs theme.
+              const label = inkOnSwatch ? '#0a0b0d' : c.text;
               return (
                 <div
                   key={c.hex}
                   className="rounded-xl p-4 border border-border"
                   style={{
                     background: c.hex,
-                    color: isLight ? '#0a0b0d' : c.text,
+                    color: label,
                   }}
                 >
-                  <div className="font-semibold text-sm" style={{ color: isLight ? '#0a0b0d' : undefined }}>
+                  <div className="font-semibold text-sm" style={{ color: label }}>
                     {c.name}
                   </div>
                   <div
-                    className={`font-mono text-xs mt-1 ${isLight ? '' : 'opacity-70'}`}
-                    style={{ color: isLight ? '#0a0b0d' : undefined }}
+                    className={`font-mono text-xs mt-1 ${inkOnSwatch ? '' : 'opacity-70'}`}
+                    style={{ color: label }}
                   >
                     {c.hex}
                   </div>

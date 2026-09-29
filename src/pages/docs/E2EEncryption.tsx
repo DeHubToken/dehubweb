@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lock, Shield, Key, CheckCircle, XCircle, AlertTriangle, Zap, Clock, QrCode, Smartphone } from 'lucide-react';
+import { Lock, Shield, Key, CheckCircle, XCircle, AlertTriangle, Clock, QrCode, Smartphone } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -342,7 +342,6 @@ Plaintext bytes (authentication verified!)
                   [Smartphone, t('e2ee.coming2')],
                   [QrCode, t('e2ee.coming3')],
                   [Key, t('e2ee.coming4')],
-                  [Zap, t('e2ee.coming5')],
                 ].map(([Icon, text], i) => (
                   <li key={i} className="text-muted-foreground text-sm flex items-center gap-2">
                     {React.createElement(Icon as any, { className: "w-4 h-4 flex-shrink-0" })}

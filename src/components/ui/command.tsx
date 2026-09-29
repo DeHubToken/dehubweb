@@ -27,13 +27,19 @@ Command.displayName = CommandPrimitive.displayName;
 interface CommandDialogProps extends DialogProps {
   /** Set false when items are pre-filtered (e.g. by Fuse) so cmdk doesn't re-filter them. */
   shouldFilter?: boolean;
+  /** Merged onto the dialog shell (tailwind-merge, so a bg-/border- here replaces the default). */
+  contentClassName?: string;
+  /** Extra attributes for the dialog shell, e.g. a data- hook for surface-scoped styles. */
+  contentProps?: Record<`data-${string}`, string | boolean>;
+  /** Screen-reader title for the dialog. */
+  title?: string;
 }
 
-const CommandDialog = ({ children, shouldFilter, ...props }: CommandDialogProps) => {
+const CommandDialog = ({ children, shouldFilter, contentClassName, contentProps, title = "Command menu", ...props }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
-      <DialogContent className="overflow-hidden p-0 shadow-lg" aria-describedby={undefined}>
-        <DialogTitle className="sr-only">Command menu</DialogTitle>
+      <DialogContent className={cn("overflow-hidden p-0 shadow-lg", contentClassName)} aria-describedby={undefined} {...contentProps}>
+        <DialogTitle className="sr-only">{title}</DialogTitle>
         <Command shouldFilter={shouldFilter} className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           {children}
         </Command>

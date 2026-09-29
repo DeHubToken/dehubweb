@@ -119,7 +119,15 @@ export default function DocsSurface() {
     <LanguageProvider>
       <SearchProvider>
 
-        <DocsChatBot />
+        {/* The chat bot is fixed-position and mounts outside DocsLayout, so it
+            sat outside .docs-root and missed every docs token and theme rule
+            (navy card on canvas themes, white-on-grey code chips). A
+            display:contents wrapper puts it in scope without creating a box —
+            .docs-root's own position/z-index never apply, so the fixed
+            launcher still stacks above the page. */}
+        <div className="docs-root" style={{ display: 'contents' }}>
+          <DocsChatBot />
+        </div>
         <Routes>
           <Route element={<DocsLayout />}>
             {/* Docs pages */}

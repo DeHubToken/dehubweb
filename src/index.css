@@ -4541,6 +4541,9 @@ html:not(.dark) .docs-root .bg-gray-100 {
 html:not(.dark) .docs-root .from-blue-50,
 html:not(.dark) .docs-root .from-purple-50,
 html:not(.dark) .docs-root .from-indigo-50,
+html:not(.dark) .docs-root .from-green-50,
+html:not(.dark) .docs-root .from-pink-50,
+html:not(.dark) .docs-root .from-yellow-50,
 html:not(.dark) .docs-root .from-plain-white,
 html:not(.dark) .docs-root .to-blue-50,
 html:not(.dark) .docs-root .to-purple-50,
@@ -4636,6 +4639,14 @@ html:not(.dark) .docs-root .docs-glass {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   box-shadow: 0 1px 2px rgba(40, 34, 20, 0.05), 0 8px 24px -12px rgba(40, 34, 20, 0.14);
+}
+
+/* Dark docs off the canvas themes (system on dark, minimal) sit on opaque
+   black too, so the blur has nothing to sample there either. The canvas
+   themes keep theirs: docs-glass.css restates it with !important. */
+html.dark .docs-root .docs-glass {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 /* Typography plugin (prose-slate) → ink scale */

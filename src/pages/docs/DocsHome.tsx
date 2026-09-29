@@ -11,7 +11,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 declare const __BUILD_TIME__: string;
 const DocsHome = () => {
   const [copiedAddress, setCopiedAddress] = useState<string>('');
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // Monitor performance for this page
   usePerformance();
@@ -63,7 +63,17 @@ const DocsHome = () => {
   };
 
   // Manual last updated date - update this when you publish changes
-  const lastPublishedDate = new Date('2026-02-22T22:22:00Z'); // February 22, 2026 at 22:22 UTC
+  const lastPublishedDate = new Date('2026-09-29T12:00:00Z'); // September 29, 2026
+  // Written in the reader's language. Bundle codes use an underscore (zh_tw);
+  // Intl wants a hyphen, and falls back to English for a tag it cannot use.
+  const formatPublished = (date: Date) => {
+    const opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
+    try {
+      return date.toLocaleDateString(language.replace('_', '-'), opts);
+    } catch {
+      return date.toLocaleDateString('en', opts);
+    }
+  };
 
   // Quick Links
   const quickLinks = [{
@@ -244,11 +254,7 @@ const DocsHome = () => {
         {/* Last Updated */}
         <div className="text-center pt-4 border-t border-border">
           <p className="text-sm text-muted-foreground font-exo">
-            {t('common.lastUpdated')}: {lastPublishedDate.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}, 04:44
+            {t('common.lastUpdated')}: {formatPublished(lastPublishedDate)}
           </p>
         </div>
       </div>

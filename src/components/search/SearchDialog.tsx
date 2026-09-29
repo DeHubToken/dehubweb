@@ -11,8 +11,20 @@ import {
 } from '@/components/ui/command';
 import { useDocsSearch } from '@/hooks/useDocsSearch';
 import { AppState } from '@/components/app/AppState';
+import { useLanguage } from '@/contexts/LanguageContext';
+
+// The query each popular chip runs stays English, the language the index is
+// built in; only the label is translated.
+const POPULAR_SEARCHES = [
+  { key: 'popularTokenEconomics', query: 'token economics' },
+  { key: 'popularStaking', query: 'staking' },
+  { key: 'popularWatchToEarn', query: 'watch to earn' },
+  { key: 'popularDepin', query: 'depin' },
+  { key: 'popularGovernance', query: 'governance' },
+] as const;
 
 export const SearchDialog = () => {
+  const { t } = useLanguage();
   const {
     isOpen,
     setIsOpen,
@@ -46,7 +58,7 @@ export const SearchDialog = () => {
     // mis-highlighted every other occurrence via lastIndex carry-over.)
     return parts.map((part, index) =>
       index % 2 === 1 ? (
-        <mark key={index} className="bg-yellow-200 dark:bg-yellow-800 px-1 rounded">
+        <mark key={index} className="bg-foreground/15 text-foreground px-1 rounded">
           {part}
         </mark>
       ) : part
@@ -72,9 +84,12 @@ export const SearchDialog = () => {
       open={isOpen}
       onOpenChange={handleOpenChange}
       shouldFilter={false}
+      title={t('docsSearch.title')}
+      contentClassName="bg-popover text-popover-foreground border-border"
+      contentProps={{ 'data-docs-dialog': true }}
     >
       <CommandInput
-        placeholder="Search docs & blog..."
+        placeholder={t('docsSearch.placeholder')}
         value={query}
         onValueChange={setQuery}
       />
@@ -82,7 +97,7 @@ export const SearchDialog = () => {
       <CommandList className="max-h-[400px] overflow-y-auto">
         {!query && recentSearches.length > 0 && (
           <>
-            <CommandGroup heading="Recent Searches">
+            <CommandGroup heading={t('docsSearch.recent')}>
               {recentSearches.map(search => (
                 <CommandItem
                   key={search}
@@ -99,7 +114,7 @@ export const SearchDialog = () => {
                 onSelect={clearRecentSearches}
                 className="cursor-pointer text-muted-foreground"
               >
-                Clear recent searches
+                {t('docsSearch.clearRecent')}
               </CommandItem>
             </CommandGroup>
             <CommandSeparator />
@@ -107,11 +122,11 @@ export const SearchDialog = () => {
         )}
 
         {!query && !recentSearches.length && (
-          <CommandGroup heading="Popular Searches">
-            {['Token Economics', 'Staking', 'Watch to Earn', 'DePIN', 'Governance'].map(term => (
-              <CommandItem key={term} value={`popular-${term}`} onSelect={() => setQuery(term.toLowerCase())}>
+          <CommandGroup heading={t('docsSearch.popular')}>
+            {POPULAR_SEARCHES.map(({ key, query: term }) => (
+              <CommandItem key={key} value={`popular-${key}`} onSelect={() => setQuery(term)}>
                 <Hash className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>{term}</span>
+                <span>{t(`docsSearch.${key}`)}</span>
               </CommandItem>
             ))}
           </CommandGroup>
@@ -121,8 +136,8 @@ export const SearchDialog = () => {
           <CommandEmpty>
             <AppState
               icon="search"
-              title={`No results found for "${query}"`}
-              description="Try different keywords or check the spelling."
+              title={t('docsSearch.noResults').replace('{query}', query)}
+              description={t('docsSearch.noResultsHint')}
               kind="search-empty"
               size="compact"
             />
@@ -157,11 +172,11 @@ export const SearchDialog = () => {
                       </p>
                       <div className="flex items-center mt-2 text-xs text-muted-foreground">
                         <span className="bg-muted px-2 py-0.5 rounded text-xs">
-                          {result.type === 'blog' && result.category === 'Blog' ? 'Blog post' : result.category}
+                          {result.type === 'blog' && result.category === 'Blog' ? t('docsSearch.blogPost') : result.category}
                         </span>
                         {typeof result.score === 'number' && (
                           <span className="ml-2">
-                            {Math.round((1 - result.score) * 100)}% match
+                            {t('docsSearch.match').replace('{percent}', String(Math.round((1 - result.score) * 100)))}
                           </span>
                         )}
                       </div>
@@ -176,8 +191,8 @@ export const SearchDialog = () => {
 
       <div className="border-t px-3 py-2 text-xs text-muted-foreground">
         <div className="flex items-center justify-between">
-          <span>Use ↑↓ to navigate, ↵ to select, ⎋ to close</span>
-          <span>{results.length > 0 && `${results.length} result${results.length === 1 ? '' : 's'}`}</span>
+          <span>{t('docsSearch.keyboardHint')}</span>
+          <span>{results.length > 0 && (results.length === 1 ? t('docsSearch.resultOne') : t('docsSearch.resultMany').replace('{count}', String(results.length)))}</span>
         </div>
       </div>
     </CommandDialog>

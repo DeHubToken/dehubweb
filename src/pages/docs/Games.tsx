@@ -48,7 +48,7 @@ const Games = () => {
             <div className="bg-card/50 rounded-lg p-6 border border-border">
               <h3 className="text-2xl font-semibold text-foreground mb-6">{t('games.releasedTitle')}</h3>
               <p className="text-foreground/90 mb-6">{t('games.releasedIntro')}</p>
-              {/* The five entries in `config/arcade-games.ts`, in the order the
+              {/* The six entries in `config/arcade-games.ts`, in the order the
                   grid shows them. Deliberately not imported from that registry:
                   it pulls in the GPU probe, and this is a docs page that never
                   launches a game. The old arcade.dehub.net titles (Whack A
@@ -56,6 +56,10 @@ const Games = () => {
                   and are gone — that site is retired and 301'd to dehub.io, so
                   every one of those names led nowhere. */}
               <div className="space-y-6">
+                <div>
+                  <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.godsEyeTitle')}</h4>
+                  <p className="text-foreground/90">{t('games.godsEyeDesc')}</p>
+                </div>
                 <div>
                   <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.trenchTitle')}</h4>
                   <p className="text-foreground/90">{t('games.trenchDesc')}</p>
@@ -76,6 +80,7 @@ const Games = () => {
                   <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.jungleTitle')}</h4>
                   <p className="text-foreground/90">{t('games.jungleDesc')}</p>
                 </div>
+                <p className="text-foreground/90">{t('games.submitGames')}</p>
                 <div className="mt-6 pt-4 border-t border-border">
                   <p className="text-foreground/90 mb-3">{t('games.playArcade')}</p>
                   <Link to="/arcade" className="text-primary hover:text-primary/80 underline font-semibold">

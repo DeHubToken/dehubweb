@@ -6,6 +6,7 @@
  *   node scripts/docs-i18n-fill.mjs --locales ar,tr         # fill these
  *   node scripts/docs-i18n-fill.mjs --all --limit 8         # the 8 furthest behind
  *   node scripts/docs-i18n-fill.mjs --locales ar --keys 200 # cap the work per locale
+ *   node scripts/docs-i18n-fill.mjs --all --paths @keys.json # only these dotted keys, every locale
  *
  * Everything under `src/pages/docs/` reads these bundles through useLanguage(),
  * which falls back to English one key at a time. Most bundles carried only part
@@ -205,7 +206,28 @@ async function writeBack(locale, have, add) {
 
 /* ---------- main ---------- */
 
-const en = await load('en');
+/**
+ * `--paths a.b,c.d` (or `--paths @file.json`, a JSON array) limits the run to
+ * those dotted keys, so a change can fill its own strings in every locale
+ * without taking on the whole backlog. A path may name a string or an array.
+ */
+function pick(src, paths) {
+  const out = {};
+  for (const p of paths) {
+    const parts = p.split('.');
+    const v = parts.reduce((o, k) => (isObj(o) ? o[k] : undefined), src);
+    if (v === undefined) throw new Error(`--paths: en.ts has no ${p}`);
+    let node = out;
+    parts.slice(0, -1).forEach((k) => { node = node[k] ??= {}; });
+    node[parts.at(-1)] = v;
+  }
+  return out;
+}
+const pathsArg = value('paths');
+const paths = pathsArg
+  ? (pathsArg.startsWith('@') ? JSON.parse(fs.readFileSync(pathsArg.slice(1), 'utf8')) : pathsArg.split(',')).map((s) => s.trim()).filter(Boolean)
+  : null;
+const en = paths ? pick(await load('en'), paths) : await load('en');
 const locales = value('locales') ? value('locales').split(',').map((s) => s.trim()).filter(Boolean) : bundleLocales();
 const have = new Map();
 for (const l of locales) have.set(l, await load(l));
