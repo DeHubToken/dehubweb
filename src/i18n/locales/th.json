@@ -2509,7 +2509,6 @@
     }
   },
   "superpowers": {
-    "title": "**อำนาจพิเศษ**",
     "intro": "ตราสัญลักษณ์ให้มากกว่าภาพข้างชื่อคุณ ทุกสองสัปดาห์มันมอบบูสต์ — แต่ละครั้งวางโพสต์ไว้ในช่องบนสุดของฟีดหน้าแรก สิบสามขั้น สิบสามพลัง ปลดล็อกขั้นละหนึ่ง",
     "boost": "บูสต์",
     "secondWind": "ลมหายใจที่สอง",
@@ -3380,6 +3379,7 @@
     "langArabic": "อารบิก",
     "langTurkish": "ตุรกี",
     "langHindi": "ภาษาฮินดี",
+    "langIndonesian": "อินโดนีเซีย",
     "langVietnamese": "เวียดนาม",
     "communities": "ชุมชน",
     "communitiesHint": "เข้าถึงสมาชิกที่ใช้งานอยู่ของชุมชน DeHub ที่เฉพาะเจาะจง",
@@ -3956,6 +3956,7 @@
     "presetOrbitHint": "การเคลื่อนตัวแบบวงกลมที่เปิดเผยความลึก",
     "presetCraneRevealName": "การเปิดเผยนกกระเรียน",
     "presetCraneRevealHint": "การยกขึ้นที่เปิดเข้าสู่ภาพกว้าง",
+    "presetProductTurnName": "เทิร์นผลิตภัณฑ์",
     "presetProductTurnHint": "ลูปแบบโต๊ะหมุนสำหรับผลิตภัณฑ์",
     "presetTalkingPortraitHint": "ชิ้นส่วนแนวตั้งหันหน้าไปยังกล้อง",
     "presetDroneFlyoverName": "โดรนฟลายโอเวอร์",

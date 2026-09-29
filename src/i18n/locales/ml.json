@@ -23,7 +23,6 @@
     "featureRequests": "ഫീച്ചർ അഭ്യർത്ഥനകൾ",
     "staking": "സ്റ്റേക്കിംഗ്",
     "governance": "ഭരണം",
-    "dao": "ഡിസിഎം (Decentralized Autonomous Organization)",
     "careers": "ജോലികൾ",
     "glossary": "പദകോശം",
     "arcade": "ആർക്കേഡ്",
@@ -1009,7 +1008,6 @@
     "cashOutComingSoon": "ക്യാഷ് ഔട്ട് ഉടൻ!",
     "back": "തിരികെ",
     "chooseAddressNetwork": "ഏത് നെറ്റ്‌വർക്ക്?",
-    "evmAddressLabel": "ഇലക്ട്രോണിക് വോട്ടിംഗ് മെഷീൻ (ഇവിഎം)",
     "solanaAddressLabel": "സോളാന",
     "solanaAddressHint": "SOL, SPL ടോക്കണുകൾ മാത്രം",
     "solanaAddressLinkedHint": "നിങ്ങളുടെ ലിങ്കുചെയ്ത ഫാന്റം വാലറ്റ്",
@@ -3515,7 +3513,6 @@
     "max5mb": "പരമാവധി 5MB",
     "uploadFailed": "അപ്‌ലോഡുചെയ്യൽ പരാജയപ്പെട്ടു",
     "website": "വെബ്‌സൈറ്റ്",
-    "twitter": "മനുഷ്യാവകാശങ്ങളുടെ ദിനം ആഘോഷിക്കുന്ന ദേശീയ ദിനമാണ് ഡിസംബർ 10. മനുഷ്യാവകാശങ്ങളുടെ ദിനം ആഘോഷിക്കുന്നതിനുള്ള പശ്ചാത്തലം ഇതാ.",
     "telegram": "ടെലിഗ്രാം",
     "fieldChain": "ചെയിൻ",
     "fieldCurve": "കർവ്",
@@ -5434,6 +5431,7 @@
     "filingFailed": "ആ ടിക്കറ്റ് ഫയൽ ചെയ്യാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.",
     "status": {
       "open": "തുറക്കുക",
+      "in_progress": "പുരോഗതിയിലാണ്",
       "resolved": "പരിഹരിച്ചു",
       "closed": "അടച്ചു"
     },

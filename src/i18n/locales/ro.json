@@ -7739,8 +7739,7 @@
       "yourApps": "Aplicațiile dvs.",
       "notificationsOn": "Notificări pe",
       "remove": "Notificare cheie",
-      "removed": "Textul a fost șters. Nu vei primi niciun alt mesaj de notificare.",
-      "rising": "Textul este deja în limba engleză, fără conținut tradusbile. Nu există modificări necesare."
+      "removed": "Textul a fost șters. Nu vei primi niciun alt mesaj de notificare."
     },
     "dev": {
       "title": "Creează o miniaplicație",

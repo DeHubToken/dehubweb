@@ -89,11 +89,13 @@ scripts/*
 !scripts/boot-path-baseline.json
 !scripts/i18n-coverage.mjs
 !scripts/i18n-fanout.mjs
+!scripts/i18n-garbled-keep.json
 !scripts/i18n-guards.mjs
 !scripts/i18n-guards.test.mjs
 !scripts/i18n-script-check.mjs
 !scripts/docs-i18n-fanout.mjs
 !scripts/docs-i18n-fill.mjs
+!scripts/docs-i18n-garbled-keep.json
 !scripts/i18n-rebuild-pr.mjs
 !scripts/edge-cors-check.mjs
 !scripts/build-theme-icon-materials.mjs

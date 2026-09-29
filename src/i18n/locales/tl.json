@@ -4319,7 +4319,7 @@
     "shortDescription": "Maikling paglalarawan",
     "shortDescriptionPlaceholder": "Ano ang ginagawa ng kasanayan na ito sa isang linya",
     "type": "Uri",
-    "kind": "dalawang klase ang mga tao sa mundo",
+    "kind": "Mabait",
     "kindImage": "Pagbuo ng imahe",
     "kindChat": "Chat / prompt",
     "kindImageShort": "iniharap",
@@ -5504,12 +5504,15 @@
     "filingFailed": "Hindi ma - file ang tiket na iyon. Pakisubukan muli.",
     "status": {
       "open": "Buksan",
+      "in_progress": "Kasalukuyang ginagawa",
       "resolved": "Nalutas na",
       "closed": "Sarado"
     },
     "severity": {
       "low": "Mababa",
-      "high": "Mataas"
+      "normal": "Normal",
+      "high": "Mataas",
+      "urgent": "Kagyat"
     },
     "category": {
       "account_access": "Access sa account",

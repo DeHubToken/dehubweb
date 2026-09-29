@@ -637,7 +637,6 @@ export const ko = {
     miniAppsB3: '빌드 1:',
     miniAppsB3Desc: '모든 웹사이트는 하나의 스크립트 태그가 있는 미니 앱이 됩니다. dehub.io/apps/dev는 매니페스트를 확인하고, 피드 카드를 미리 보고, 다른 사람이 보기 전에 DeHub 내에서 앱을 실행합니다. Farcaster mini 앱은 그대로 작동합니다.',
     miniAppsB4: '검토된 숙소:',
-    miniAppsB4Desc: '각 앱은 **확인된 앱**, **검토 대기**, 또는 **개발자 미리보기**로 표시되어서 어떤 것을 설치하는지 알 수 있습니다.',
     arcadeDesc: '아케이드는 브라우저 탭의 DeHub 내부에서 실행되는 게임 선반입니다. 설치할 것도, 구입할 것도, 별도의 계정도 없습니다. 계정을 열고 플레이하세요. 6개의 타이틀이 오늘 출시됩니다 — 온라인 엘로 사다리가 있는 시네마틱 3D 체스 게임인 킹스 갬빗 (King\'s Gambit), 레벨이 올라갈 때 기계의 모든 메시, 질감 및 사운드를 생성하는 슈팅 게임인 클로드 오브 듀티 (Claude of Duty), 절차적으로 생성된 열대 우림을 걷는 1인칭 정글 트레일 (Jungle Trail), 횡스크롤 비트 업 빌드인 스트리트 슬레이어 (Street Slayer) deHub의 경우, Chartopia는 책상 모니터에 라이브 마켓 피드가 있고 WebXR을 통한 VR 모드가 있는 트레이딩 플로어이며, God\'s Eye는 DeHub 커뮤니티에 자신의 대략적인 버전을 배치하도록 선택할 수 있는 라이브 3D 글로브입니다. 개발자는 검토를 위해 자신의 게임을 제출할 수 있습니다.',
     settingsB2Desc: '각 테마의 샘플이 있는 테마 선택기, 편안하거나 컴팩트한 밀도, 희미한 조명, 하나를 차지하는 테마의 악센트 색상, 왼손잡이 모드.',
     settingsB3Desc: '성숙한 콘텐츠가 표시되는지 여부, 키즈 모드, 기본 게시물 표시 여부, 자동 재생 및 음소거 시작 여부, 계량된 연결을 위한 데이터 세이버 모드.',
@@ -994,6 +993,9 @@ export const ko = {
     moreB7Desc: '별도의 채용 사이트가 아닌 앱에 나열된 DeHub 팀에서 역할 열기.',
     moreB8: '경품 추첨:',
     moreB8Desc: 'DeHub는 2022년 $ 1,000,000 홈 경품 추첨 이후 경품 추첨을 진행했습니다. 현재 경품 추첨은 dehub.io/raffle에서 진행됩니다.',
+    articlesTitle: '게시글',
+    miniAppsB4Desc: '각 앱은 검증됨, 검토되지 않음 또는 개발자 미리보기로 표시되므로 무엇을 열었는지 알 수 있습니다.',
+    tocArticles: '게시글',
   },
   games: {
     title: '게임',
@@ -1304,6 +1306,7 @@ export const ko = {
     conclusionText1: '제안된 DePIN은 DeHub를 위한 진정한 분산형, 검열 방지, 무한 확장성 및 비용 효율적인 인프라를 가능하게 합니다. 공유된 컴퓨팅 파워를 활용하고 수익에서 직접 채굴자에게 보상을 제공함으로써 시스템은 인플레이션을 방지하고 장기적인 지속 가능성을 보장합니다.',
     conclusionText2: '이 모델은 휴대폰에서 서버에 이르기까지 여분의 컴퓨팅 리소스를 가진 모든 사람이 DeHub의 성장에 참여하고 혜택을 누릴 수 있도록 지원합니다. 이 산업의 거대 기업을 혼란에 빠뜨리기 위해서는 이 DePIN과 마찬가지로 억만장자의 지원이나 진정한 혁신이 필요합니다.',
     openSourceNote: '* 전체 코드는 완료 시 공개됩니다.',
+    pcLaptops: 'PC/노트북',
   },
   e2ee: {
     title: '종단간 암호화',
@@ -2486,7 +2489,6 @@ export const ko = {
     povrAudienceTargeting: 'POVR 대상 타겟팅',
     povrAudienceTargetingDesc: '재정 능력이 검증된 사용자를 대상으로 할 배지 등급 선택',
     holdingsRow: '보유:',
-    cpmRow: 'CPM: **CPM**(Cost Per Mille, 천명당 비용)은 광고주가 광고가 1,000명에게 노출될 때마다 지불하는 비용을 의미합니다.',
     launchInAdsManager: '광고 관리자에서 캠페인 시작',
     partnerTitle: '앱 출시를 위해 DeHub와 파트너십 체결',
     partnerSubtitle: 'DeHub 앱에서 브랜드를 홍보하여 막대한 자금을 투입한 출시 캠페인을 진행하세요.',

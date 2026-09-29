@@ -758,7 +758,6 @@ export const fr = {
     spDescCommentAnchor: 'Maintenez le haut du fil de commentaires de quelqu\'un d\'autre. Pas le code PIN gratuit qu\'un auteur a déjà sur son propre post — celui-ci est le vôtre, sur son fil de discussion, et il expire.',
     spNameTrendJacker: 'Vérin de tendance',
     spDescTrendJacker: 'Mettez l\'une de vos catégories sur la liste des tendances, où l\'ensemble de la plateforme est déjà à la recherche.',
-    spDescTimelineBomber: 'Vos abonnés voient votre publication avant toute autre mise en avant, donc un **Cobra Roi** remporte le tirage au sort contre un **Mégalodon** pour les personnes qui ont choisi de vous suivre.',
     spNameSignalFlare: 'Flare de signal',
     spDescSignalFlare: 'Une notification à vos abonnés au sujet d\'une publication. Il dépense une allocation de signal distincte, pas vos boosts.',
     spNameFlakJacket: 'Veste Flak',
