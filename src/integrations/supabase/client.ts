@@ -2,6 +2,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 import { brokeredPreviewStorage } from './previewAuthStorage';
+import { supabaseRelayFetch } from './relayFetch';
 
 // These are Supabase *publishable* values (project URL + anon key). They ship in
 // every browser bundle by design, so hardcoding them as fallbacks is safe and keeps
@@ -21,5 +22,6 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     storage: brokeredPreviewStorage(),
     persistSession: true,
     autoRefreshToken: true,
-  }
+  },
+  global: { fetch: supabaseRelayFetch },
 });

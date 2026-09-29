@@ -4855,6 +4855,97 @@ export async function proxyApiRequest(request) {
   }
 }
 
+const SUPABASE_RELAY_PREFIX = '/_sb';
+const SUPABASE_RELAY_ORIGIN = 'https://aigxuutjaqsywioxjefr.supabase.co';
+// Hosts that serve the web app. The client picks its own origin as the relay
+// base on these, so each has to answer /_sb itself.
+const SUPABASE_RELAY_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io', 'origin.dehub.io']);
+const HOP_BY_HOP_HEADERS = [
+  'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
+  'proxy-connection', 'te', 'trailer', 'transfer-encoding', 'upgrade',
+];
+
+export function isSupabaseRelayRequest(url) {
+  return SUPABASE_RELAY_HOSTS.has(url.hostname) &&
+    (url.pathname === SUPABASE_RELAY_PREFIX || url.pathname.startsWith(`${SUPABASE_RELAY_PREFIX}/`));
+}
+
+function supabaseRelayError(status, message) {
+  return new Response(JSON.stringify({ message }), {
+    status,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': 'noindex',
+      'X-DeHub-Relay': 'dehub.io',
+    },
+  });
+}
+
+/**
+ * Same-origin route to Supabase for browsers whose network blocks the project
+ * host's address ranges (see src/integrations/supabase/relayFetch.ts). It only
+ * ever reaches the one project host: the path is appended to a fixed origin
+ * and re-checked, and dot segments or encoded separators are refused. Auth
+ * headers pass through untouched; nothing is cached. No client IP is
+ * forwarded — Supabase ignores forwarded addresses on publishable-key calls.
+ */
+export async function proxySupabaseRequest(request) {
+  const incoming = new URL(request.url);
+  // The URL parser has already resolved dot segments; one that climbed out of
+  // the prefix no longer starts with it.
+  if (!isSupabaseRelayRequest(incoming)) return supabaseRelayError(400, 'Bad relay path');
+  const rest = incoming.pathname.slice(SUPABASE_RELAY_PREFIX.length) || '/';
+  let decoded;
+  try {
+    decoded = decodeURIComponent(rest);
+  } catch {
+    return supabaseRelayError(400, 'Bad relay path');
+  }
+  if (
+    !rest.startsWith('/') ||
+    /%2f|%5c/i.test(rest) ||
+    decoded.includes('\\') ||
+    decoded.split('/').some((segment) => segment === '..' || segment === '.')
+  ) {
+    return supabaseRelayError(400, 'Bad relay path');
+  }
+  const upstreamUrl = new URL(`${SUPABASE_RELAY_ORIGIN}${rest}${incoming.search}`);
+  if (upstreamUrl.origin !== SUPABASE_RELAY_ORIGIN) return supabaseRelayError(400, 'Bad relay path');
+
+  const method = request.method.toUpperCase();
+  const websocket = (request.headers.get('upgrade') || '').toLowerCase() === 'websocket';
+  const upstreamHeaders = new Headers(request.headers);
+  const named = (request.headers.get('connection') || '').split(',').map((h) => h.trim().toLowerCase());
+  for (const header of [...HOP_BY_HOP_HEADERS, ...named]) {
+    if (header) upstreamHeaders.delete(header);
+  }
+  // A websocket handshake needs its Upgrade header to reach the upstream.
+  if (websocket) upstreamHeaders.set('Upgrade', 'websocket');
+  for (const header of ['host', 'cf-connecting-ip', 'cf-ray', 'cf-worker', 'cf-ipcountry', 'cf-visitor', 'x-forwarded-for', 'x-real-ip']) {
+    upstreamHeaders.delete(header);
+  }
+
+  try {
+    const upstream = await fetch(upstreamUrl, {
+      method,
+      headers: upstreamHeaders,
+      body: method === 'GET' || method === 'HEAD' ? undefined : await request.arrayBuffer(),
+      redirect: 'manual',
+    });
+    if (upstream.status === 101) return upstream;
+    const response = new Response(upstream.body, upstream);
+    for (const header of HOP_BY_HOP_HEADERS) response.headers.delete(header);
+    response.headers.set('Cache-Control', 'no-store');
+    response.headers.set('X-Robots-Tag', 'noindex');
+    response.headers.set('X-DeHub-Relay', 'dehub.io');
+    response.headers.delete('alt-svc');
+    return response;
+  } catch {
+    return supabaseRelayError(502, 'Supabase temporarily unreachable');
+  }
+}
+
 export function canonicalOriginRequest(request) {
   const target = new URL(request.url);
   // The direct gateway uses a separate upstream DNS name to avoid a loop
@@ -5263,6 +5354,12 @@ async function handleRequest(request, env, ctx) {
   // Response.redirect() headers are immutable — build redirects by hand so
   // guard() can still stamp mirror hosts.
   const redirect301 = (to) => guard(new Response(null, { status: 301, headers: { Location: to } }));
+
+  // Supabase relay, ahead of the www → apex 301: a redirected POST would lose
+  // its method and body, and the client uses whichever app host it is on.
+  if (url.protocol === 'https:' && isSupabaseRelayRequest(url)) {
+    return proxySupabaseRequest(request);
+  }
 
   // Alias hosts → apex, path + query preserved; wrangler.jsonc routes bind
   // these hosts to this worker so the 301 is served at the edge with no
