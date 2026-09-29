@@ -425,14 +425,11 @@ export default function MiniAppPage() {
         noindex={listing.tier === 'unlisted'}
         jsonLd={{
           '@context': 'https://schema.org',
-          '@type': 'SoftwareApplication',
+          '@type': 'WebPage',
           name: listing.name,
           description: listing.description ?? listing.subtitle ?? undefined,
           url: pageUrl,
           image: listing.icon_url ?? undefined,
-          applicationCategory: listing.category ?? 'WebApplication',
-          operatingSystem: 'Web, Android',
-          offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         }}
       />
       <MiniAppFrame

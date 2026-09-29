@@ -32,7 +32,7 @@ export default function BuilderPreviewPage() {
 
   return (
     <div className="fixed inset-0 bg-[#000]">
-      <SEOHead title="Built with DeHub Builder" description="An app built on DeHub Builder." />
+      <SEOHead title="Built with DeHub Builder" description="An app built on DeHub Builder." noindex />
       {srcDoc ? (
         <iframe
           title="App"
