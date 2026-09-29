@@ -110,7 +110,7 @@ import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
-import { useMediaAspect, DEFAULT_ASPECT } from '@/hooks/use-media-aspect';
+import { useMediaAspect, DEFAULT_ASPECT, THIN_MIN_RATIO } from '@/hooks/use-media-aspect';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { deviceWidth, isMdUp } from '@/lib/media-url';
 import {
@@ -152,6 +152,14 @@ const TAP_SLOP_PX = 10;
  * screen rather than three.
  */
 const MAX_MEDIA_HEIGHT = 600;
+
+/**
+ * Tallest the media may get on the post page. The clip is the page there, so
+ * it grows to most of the screen instead of stopping at the feed's 600px. On
+ * phones it may also grow as tall as a full-width 9:16 clip, so a vertical
+ * video spans the screen edge to edge (index.css, --post-media-max-h).
+ */
+const IMMERSIVE_MAX_MEDIA_HEIGHT = 'var(--post-media-max-h, 80dvh)';
 
 /**
  * How long the player's controls stay up after the interaction that revealed
@@ -1380,8 +1388,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
    * cropped into a 16:9 slot. Falls back to the poster's ratio until the element
    * reports its own, and to 16:9 until either is measured. Audio posts keep the
    * fixed frame: their "poster" is square cover art, not a video frame.
+   * On the post page a clip thinner than 9:16 keeps its real shape too, so it
+   * fills the height instead of being cropped into a 9:16 box.
    */
-  const measuredAspect = useMediaAspect(video.isAudio ? null : thumbnail, intrinsicAspect);
+  const measuredAspect = useMediaAspect(
+    video.isAudio ? null : thumbnail,
+    intrinsicAspect,
+    isImmersive ? THIN_MIN_RATIO : undefined,
+  );
   const mediaAspect = video.isAudio ? DEFAULT_ASPECT : measuredAspect;
 
   // Claims the shared <video> for this post into the slot rendered below, and
@@ -1704,18 +1718,26 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         /* Fills the card width when the clip is wide enough; a portrait clip
            caps at MAX_MEDIA_HEIGHT tall and shrinks its own width instead, so
            it sits hugged to the left like a portrait photo does in the feed.
-           On the post page (immersive) it's centred in the column instead. */
+           On the post page (immersive) it's centred in the column instead, and
+           grows until it fills either the column width or most of the screen
+           height, whichever it hits first — never cropped, never stretched. */
         style={
           isFullscreen || (isImmersive && showComments)
             ? undefined
-            : {
-                aspectRatio: mediaAspect,
-                width: `min(100%, ${Math.round(MAX_MEDIA_HEIGHT * mediaAspect)}px)`,
-                // Backstop for the minimal theme, which forces media to full
-                // bleed with !important width: the box letterboxes there rather
-                // than growing past a screen.
-                maxHeight: MAX_MEDIA_HEIGHT,
-              }
+            : isImmersive
+              ? {
+                  aspectRatio: mediaAspect,
+                  width: `min(100%, calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
+                  maxHeight: IMMERSIVE_MAX_MEDIA_HEIGHT,
+                }
+              : {
+                  aspectRatio: mediaAspect,
+                  width: `min(100%, ${Math.round(MAX_MEDIA_HEIGHT * mediaAspect)}px)`,
+                  // Backstop for the minimal theme, which forces media to full
+                  // bleed with !important width: the box letterboxes there rather
+                  // than growing past a screen.
+                  maxHeight: MAX_MEDIA_HEIGHT,
+                }
         }
         onClick={video.isAudio ? undefined : handleVideoAreaClick}
         onTouchStart={video.isAudio ? undefined : handleTouchStart}

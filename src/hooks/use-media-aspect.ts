@@ -31,20 +31,31 @@ const cache = new Map<string, number>();
 const MIN_RATIO = 9 / 16;
 const MAX_RATIO = 2.4;
 
+/**
+ * Floor for the post page, which shows a clip at its real shape however thin
+ * it is. Still bounded so a bad measurement can't collapse the player to a line.
+ */
+export const THIN_MIN_RATIO = 1 / 5;
+
 /** Every video falls back to this until something better is known. */
 export const DEFAULT_ASPECT = 16 / 9;
 
-export function clampAspect(ratio: number): number {
+export function clampAspect(ratio: number, minRatio: number = MIN_RATIO): number {
   if (!Number.isFinite(ratio) || ratio <= 0) return DEFAULT_ASPECT;
-  return Math.min(MAX_RATIO, Math.max(MIN_RATIO, ratio));
+  return Math.min(MAX_RATIO, Math.max(minRatio, ratio));
 }
 
 /**
  * @param posterUrl thumbnail to measure
  * @param intrinsic ratio read off the `<video>` once metadata loaded, if any
+ * @param minRatio narrowest shape allowed; defaults to 9:16
  * @returns a clamped width/height ratio, never null — 16:9 until measured
  */
-export function useMediaAspect(posterUrl?: string | null, intrinsic?: number | null): number {
+export function useMediaAspect(
+  posterUrl?: string | null,
+  intrinsic?: number | null,
+  minRatio: number = MIN_RATIO,
+): number {
   const [posterRatio, setPosterRatio] = useState<number | null>(() =>
     posterUrl ? cache.get(posterUrl) ?? null : null,
   );
@@ -79,7 +90,7 @@ export function useMediaAspect(posterUrl?: string | null, intrinsic?: number | n
     };
   }, [posterUrl]);
 
-  if (intrinsic && intrinsic > 0) return clampAspect(intrinsic);
-  if (posterRatio) return clampAspect(posterRatio);
+  if (intrinsic && intrinsic > 0) return clampAspect(intrinsic, minRatio);
+  if (posterRatio) return clampAspect(posterRatio, minRatio);
   return DEFAULT_ASPECT;
 }
