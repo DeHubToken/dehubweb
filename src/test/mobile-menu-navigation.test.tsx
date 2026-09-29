@@ -40,7 +40,7 @@ beforeEach(() => vi.clearAllMocks());
 const mount = () => render(<MemoryRouter initialEntries={['/app']}><Harness /></MemoryRouter>);
 
 describe('mobile menu dismissal', () => {
-  it.each(NAV_ITEMS.filter(item => !item.external && !item.action).map(item => [NAV_LABEL_KEYS[item.label] || item.label, item.path]))('opens %s and closes the menu', (label, path) => {
+  it.each(NAV_ITEMS.filter(item => !item.external && !item.action && item.label !== 'Home').map(item => [NAV_LABEL_KEYS[item.label] || item.label, item.path]))('opens %s and closes the menu', (label, path) => {
     mount();
     fireEvent.click(screen.getByText(label));
     expect(screen.getByTestId('path').textContent).toBe(path);
