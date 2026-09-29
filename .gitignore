@@ -92,6 +92,7 @@ scripts/*
 !scripts/i18n-script-check.mjs
 !scripts/docs-i18n-fanout.mjs
 !scripts/docs-i18n-fill.mjs
+!scripts/i18n-rebuild-pr.mjs
 !scripts/edge-cors-check.mjs
 !scripts/build-theme-icon-materials.mjs
 !scripts/edge-imports-check.mjs
