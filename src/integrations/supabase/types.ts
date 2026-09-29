@@ -3846,11 +3846,14 @@ export type Database = {
           name: string
           owner_wallet: string | null
           permissions: string[]
+          review_note: string | null
+          reviewed_at: string | null
           slug: string
           source: string
           splash_background_color: string | null
           splash_image_url: string | null
           status: string
+          submitted_by: string | null
           subtitle: string | null
           tags: string[]
           tier: string
@@ -3869,11 +3872,14 @@ export type Database = {
           name: string
           owner_wallet?: string | null
           permissions?: string[]
+          review_note?: string | null
+          reviewed_at?: string | null
           slug: string
           source?: string
           splash_background_color?: string | null
           splash_image_url?: string | null
           status?: string
+          submitted_by?: string | null
           subtitle?: string | null
           tags?: string[]
           tier?: string
@@ -3892,11 +3898,14 @@ export type Database = {
           name?: string
           owner_wallet?: string | null
           permissions?: string[]
+          review_note?: string | null
+          reviewed_at?: string | null
           slug?: string
           source?: string
           splash_background_color?: string | null
           splash_image_url?: string | null
           status?: string
+          submitted_by?: string | null
           subtitle?: string | null
           tags?: string[]
           tier?: string
