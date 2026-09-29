@@ -6,6 +6,7 @@ import Replicate from "https://esm.sh/replicate@0.25.2";
 import { corsHeaders, rateLimitByIp } from "../_shared/auth.ts";
 import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
 import { chargeForJob } from "../_shared/ai-payment-guard.ts";
+import { falQueueUrls } from "../_shared/fal-queue.ts";
 import {
   kieKey,
   kieUsableUrl,
@@ -301,7 +302,7 @@ async function falSubmit(
   falKey: string,
   appId: string,
   input: Record<string, unknown>,
-): Promise<{ request_id: string }> {
+): Promise<{ request_id: string; status_url?: string; response_url?: string }> {
   const res = await fetch(`https://queue.fal.run/${appId}`, {
     method: 'POST',
     headers: {
@@ -319,13 +320,9 @@ async function falSubmit(
 
 async function falStatus(
   falKey: string,
-  appId: string,
-  requestId: string,
+  statusUrl: string,
 ): Promise<{ status: string; response_url?: string }> {
-  const res = await fetch(
-    `https://queue.fal.run/${appId}/requests/${requestId}/status`,
-    { headers: { Authorization: `Key ${falKey}` } },
-  );
+  const res = await fetch(statusUrl, { headers: { Authorization: `Key ${falKey}` } });
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`fal.ai status error (${res.status}): ${text}`);
@@ -335,13 +332,9 @@ async function falStatus(
 
 async function falResult(
   falKey: string,
-  appId: string,
-  requestId: string,
+  responseUrl: string,
 ): Promise<{ video?: { url: string }; [key: string]: unknown }> {
-  const res = await fetch(
-    `https://queue.fal.run/${appId}/requests/${requestId}`,
-    { headers: { Authorization: `Key ${falKey}` } },
-  );
+  const res = await fetch(responseUrl, { headers: { Authorization: `Key ${falKey}` } });
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`fal.ai result error (${res.status}): ${text}`);
@@ -929,7 +922,7 @@ serve(async (req) => {
         return await settleGeneration('generate-video', body.predictionId, await handleKieVeoStatusCheck(body.predictionId));
       }
       if (provider === 'fal') {
-        return await settleGeneration('generate-video', body.predictionId, await handleFalStatusCheck(body.predictionId, body.falAppId));
+        return await settleGeneration('generate-video', body.predictionId, await handleFalStatusCheck(body.predictionId, body.falAppId, ticket?.result));
       }
       return await settleGeneration('generate-video', body.predictionId, await handleReplicateStatusCheck(body.predictionId));
     }
@@ -1068,26 +1061,38 @@ async function handleFalGeneration(
     provider: 'fal',
   };
 
-  return new Response(JSON.stringify({ ...response, falAppId: appId }), {
+  // statusUrl and responseUrl ride into the ticket's stored result, which the
+  // status check reads back — fal's own URLs, not ones rebuilt from appId.
+  return new Response(JSON.stringify({
+    ...response,
+    falAppId: appId,
+    statusUrl: result.status_url,
+    responseUrl: result.response_url,
+  }), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 }
 
 // ─── fal.ai status check ───
 
-async function handleFalStatusCheck(requestId: string, falAppId?: string) {
+async function handleFalStatusCheck(
+  requestId: string,
+  falAppId?: string,
+  stored?: { statusUrl?: unknown; responseUrl?: unknown } | null,
+) {
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
 
   const appId = falAppId || 'fal-ai/seedance-2.0/text-to-video';
-  console.log(`[fal.ai] Checking status for ${requestId} on ${appId}`);
+  const urls = falQueueUrls(appId, requestId, stored);
+  console.log(`[fal.ai] Checking status for ${requestId} at ${urls.statusUrl}`);
 
-  const statusData = await falStatus(FAL_KEY, appId, requestId);
+  const statusData = await falStatus(FAL_KEY, urls.statusUrl);
   const mappedStatus = mapFalStatus(statusData.status);
 
   let videoUrl: string | undefined;
   if (mappedStatus === 'succeeded') {
-    const resultData = await falResult(FAL_KEY, appId, requestId);
+    const resultData = await falResult(FAL_KEY, urls.responseUrl);
     videoUrl = resultData.video?.url;
   }
 
