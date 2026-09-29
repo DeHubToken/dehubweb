@@ -16,6 +16,7 @@
 import { corsHeaders, rateLimitByIp } from '../_shared/auth.ts';
 import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
+import { falQueueUrls } from '../_shared/fal-queue.ts';
 
 type Mode = 'text-to-3d' | 'image-to-3d';
 
@@ -78,6 +79,9 @@ interface Generate3dResponse {
   predictionId?: string;
   provider?: string;
   falAppId?: string;
+  /** fal's own queue URLs from the submit response, stored on the ticket for polling. */
+  statusUrl?: string;
+  responseUrl?: string;
   status: 'starting' | 'processing' | 'succeeded' | 'failed';
   error?: string;
 }
@@ -88,7 +92,7 @@ async function falSubmit(
   falKey: string,
   appId: string,
   input: Record<string, unknown>,
-): Promise<{ request_id: string }> {
+): Promise<{ request_id: string; status_url?: string; response_url?: string }> {
   const res = await fetch(`https://queue.fal.run/${appId}`, {
     method: 'POST',
     headers: { Authorization: `Key ${falKey}`, 'Content-Type': 'application/json' },
@@ -103,10 +107,9 @@ async function falSubmit(
 
 async function falStatus(
   falKey: string,
-  appId: string,
-  requestId: string,
+  statusUrl: string,
 ): Promise<{ status: string }> {
-  const res = await fetch(`https://queue.fal.run/${appId}/requests/${requestId}/status`, {
+  const res = await fetch(statusUrl, {
     headers: { Authorization: `Key ${falKey}` },
   });
   if (!res.ok) {
@@ -118,10 +121,9 @@ async function falStatus(
 
 async function falResult(
   falKey: string,
-  appId: string,
-  requestId: string,
+  responseUrl: string,
 ): Promise<Record<string, unknown>> {
-  const res = await fetch(`https://queue.fal.run/${appId}/requests/${requestId}`, {
+  const res = await fetch(responseUrl, {
     headers: { Authorization: `Key ${falKey}` },
   });
   if (!res.ok) {
@@ -288,7 +290,7 @@ Deno.serve(async (req) => {
       if (pollLimited) return pollLimited;
       const ticket = await generationTicket('generate-3d', body.predictionId);
       if (ticket) body.falAppId = ticket.provider_app;
-      return await settleGeneration('generate-3d', body.predictionId, await handleStatusCheck(body.predictionId, body.falAppId));
+      return await settleGeneration('generate-3d', body.predictionId, await handleStatusCheck(body.predictionId, body.falAppId, ticket?.result));
     }
 
     // ─── New generation ───
@@ -349,6 +351,8 @@ Deno.serve(async (req) => {
       predictionId: submitted.request_id,
       provider: 'fal',
       falAppId: appId,
+      statusUrl: submitted.status_url,
+      responseUrl: submitted.response_url,
     };
 
     return await recordGeneration(charged, new Response(JSON.stringify(response), {
@@ -364,7 +368,11 @@ Deno.serve(async (req) => {
   }
 });
 
-async function handleStatusCheck(requestId: string, falAppId?: string) {
+async function handleStatusCheck(
+  requestId: string,
+  falAppId?: string,
+  stored?: { statusUrl?: unknown; responseUrl?: unknown } | null,
+) {
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
 
@@ -372,13 +380,14 @@ async function handleStatusCheck(requestId: string, falAppId?: string) {
   // guessing one would poll a different queue and never resolve.
   if (!falAppId) throw new Error('falAppId is required to check a 3D render');
 
-  const statusData = await falStatus(FAL_KEY, falAppId, requestId);
+  const urls = falQueueUrls(falAppId, requestId, stored);
+  const statusData = await falStatus(FAL_KEY, urls.statusUrl);
   const mapped = mapFalStatus(statusData.status);
 
   let modelUrl: string | undefined;
   let previewImageUrl: string | undefined;
   if (mapped === 'succeeded') {
-    const result = await falResult(FAL_KEY, falAppId, requestId);
+    const result = await falResult(FAL_KEY, urls.responseUrl);
     modelUrl = extractMeshUrl(result);
     previewImageUrl = extractPreviewUrl(result);
   }
