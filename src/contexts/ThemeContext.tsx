@@ -270,7 +270,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/** Lightweight provider for the development-only theme state gallery. */
+/** Isolated theme preview; gallery switches never save account preferences. */
 export function ThemePreviewProvider({ children, initialTheme = 'system' }: { children: ReactNode; initialTheme?: string }) {
   const [theme, setTheme] = useState(initialTheme);
 
