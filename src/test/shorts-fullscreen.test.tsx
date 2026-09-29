@@ -93,6 +93,22 @@ describe('useVideoFullscreen', () => {
     expect((container as any).requestFullscreen).not.toHaveBeenCalled();
   });
 
+  it('skips the system player when asked, so the page still sees swipes', () => {
+    // Phones swipe up out of a fullscreen feed video into the shorts feed; the
+    // iOS system player keeps every touch to itself, so it must not be used.
+    const container = document.createElement('div');
+    (container as any).requestFullscreen = vi.fn(() => Promise.resolve());
+    const video = document.createElement('video');
+    (video as any).webkitEnterFullscreen = vi.fn();
+    const { videoRef, containerRef } = refs(container, video);
+
+    const { result } = renderHook(() => useVideoFullscreen(videoRef, containerRef, { preferContainer: true }));
+    act(() => result.current.toggleFullscreen());
+
+    expect((video as any).webkitEnterFullscreen).not.toHaveBeenCalled();
+    expect((container as any).requestFullscreen).toHaveBeenCalledTimes(1);
+  });
+
   it('falls back to simulated fullscreen when a WebView resolves but does nothing', async () => {
     // SafePal's WebView exposes requestFullscreen, resolves it, and never enters
     // fullscreen. Only the delayed re-check catches that.
@@ -204,7 +220,11 @@ describe('the two players share one fullscreen implementation', () => {
     // The iOS and WebView fallbacks are subtle enough that a second copy would
     // drift. Neither file should re-implement the raw API.
     expect(VIEWER).toContain('useVideoFullscreen(noVideoRef, fullscreenTargetRef, {');
-    expect(CARD).toContain('useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true })');
+    expect(CARD).toContain('useVideoFullscreen(videoRef, containerRef, {');
+    expect(CARD).toContain('escapeAncestors: true,');
+    // Touch screens stay on the page's own fullscreen so a swipe up can reach
+    // the shorts feed — see the preferContainer test above.
+    expect(CARD).toContain('preferContainer: swipeToShorts,');
     expect(CARD).not.toContain('webkitEnterFullscreen');
   });
 

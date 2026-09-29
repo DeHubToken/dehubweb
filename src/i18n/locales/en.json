@@ -87,7 +87,8 @@
   "shorts": {
     "seoTitle": "Shorts — Short-Form Videos on DeHub",
     "seoDescription": "Scroll the latest short-form videos on DeHub: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content.",
-    "heading": "DeHub Shorts"
+    "heading": "DeHub Shorts",
+    "nothingToWatch": "Nothing to watch right now"
   },
   "settings": {
     "showOnline": "Show when I'm online",

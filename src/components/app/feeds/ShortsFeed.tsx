@@ -1,4 +1,5 @@
-import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-photos';
+import { isShortsPhoto, interleaveShorts } from '@/lib/shorts-photos';
+import { mapToShortVideo } from '@/lib/short-video';
 /**
  * Shorts Feed Component
  * =====================
@@ -31,8 +32,7 @@ const ShortsViewer = lazy(() =>
 );
 import { useDeHubFeed } from '@/hooks/use-dehub-feed';
 import { useUnifiedFeed } from '@/hooks/use-unified-feed';
-import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -40,7 +40,6 @@ import { SORT_OPTIONS, DEFAULT_FEED_SORT, SHORTS_RESET_SORT, DATE_FILTER_OPTIONS
 import type { ShortVideo } from '@/types/feed.types';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { AutoplayVideo } from '@/components/app/AutoplayVideo';
-import { resolveViewCount } from '@/lib/engagement';
 
 // ============================================================================
 // CONSTANTS
@@ -84,21 +83,6 @@ const INACTIVE_FILTER_CLASS = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
 // HELPERS
 // ============================================================================
 
-function formatLikes(count: number): string {
-  if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
-  if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
-  return String(count);
-}
-
-// Parse duration string to seconds (e.g., "0:15" → 15)
-function parseDurationToSeconds(duration: string): number {
-  if (!duration) return 0;
-  const parts = duration.split(':').map(Number);
-  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-  if (parts.length === 2) return parts[0] * 60 + parts[1];
-  return parts[0] || 0;
-}
-
 // Parse timeAgo string to approximate Date
 function parseTimeAgoToDate(timeAgo: string): Date {
   const now = new Date();
@@ -119,58 +103,6 @@ function parseTimeAgoToDate(timeAgo: string): Date {
     case 'y': return new Date(now.getTime() - value * 365 * 24 * 60 * 60 * 1000);
     default: return now;
   }
-}
-
-// Map video NFT to ShortVideo format
-function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSeconds: number; uploadedAgo: string } {
-  const id = String(nft.tokenId || nft.id || nft.token_id);
-  // Use videoDuration (number in seconds) directly if available, fallback to string parsing
-  const durationSeconds = typeof nft.videoDuration === 'number' 
-    ? nft.videoDuration 
-    : parseDurationToSeconds(nft.duration || '0:00');
-  const viewCount = resolveViewCount(nft);
-  const minterAddress = nft.minter || nft.creator?.id || nft.creator?.address || '';
-  
-  // Try all possible avatar fields - same pattern as leaderboard/profile
-  const rawAvatarUrl = nft.minterAvatarUrl || nft.minterAvatarImg || nft.avatarUrl || nft.avatarImg ||
-                       nft.creator?.avatar_url || nft.creator?.avatarImg || nft.creator?.avatarUrl;
-  const avatarUrl = rawAvatarUrl?.startsWith('http') 
-    ? rawAvatarUrl 
-    : buildAvatarUrl(minterAddress, rawAvatarUrl);
-  
-  const voteType = nft.voteType ?? nft.userVote ?? nft.myVote ?? null;
-
-  return {
-    id,
-    type: 'short',
-    username: nft.minterDisplayName || nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
-    // Use minterUsername for the @handle, not display name
-    handle: nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
-    verified: nft.creator?.is_verified || false,
-    avatar: avatarUrl || undefined,
-    likes: String(nft.totalVotes?.for || nft.like_count || 0),
-    dislikes: nft.totalVotes?.against || nft.dislike_count || 0,
-    thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
-    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),
-    transcodingStatus: nft.transcodingStatus,
-    // Title and body separately, and both are rendered: the caption usually
-    // lives in the title, but a short that has both used to show only one.
-    title: nft.name || nft.title || '',
-    description: nft.description || '',
-    sound: 'Original Sound',
-    ...shortsPhotoMedia(nft),
-    comments: formatLikes(nft.commentCount || nft.comment_count || 0),
-    shares: '0',
-    repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
-    views: formatLikes(viewCount),
-    durationSeconds: Math.round(durationSeconds),
-    uploadedAgo: nft.uploadedAgo || nft.createdAt || '1d ago',
-    creatorUsername: nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
-    creatorId: minterAddress,
-    displayName: nft.minterDisplayName || undefined,
-    isLiked: nft.isLiked ?? voteType === 'for',
-    isDisliked: nft.isDisliked ?? voteType === 'against',
-  } as ShortVideo & { durationSeconds: number; uploadedAgo: string; handle: string };
 }
 
 // ============================================================================
