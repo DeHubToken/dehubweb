@@ -5,7 +5,6 @@
  * applied by hand, and an empty store beats an error page.
  */
 import { supabase } from '@/integrations/supabase/client';
-import { getAuthToken } from '@/lib/api/dehub';
 
 const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co'}/functions/v1`;
 
@@ -79,50 +78,4 @@ export async function checkManifest(url: string): Promise<ManifestCheck> {
   const body = await res.json().catch(() => ({}));
   if (!res.ok) return { ok: false, errors: [], warnings: [], error: body?.error || 'The check failed.' };
   return body as ManifestCheck;
-}
-
-export interface MyApp {
-  slug: string;
-  domain: string;
-  home_url: string;
-  name: string;
-  subtitle: string | null;
-  icon_url: string | null;
-  tier: 'unlisted' | 'listed' | 'verified';
-  status: 'pending' | 'live' | 'suspended' | 'rejected';
-  source: 'dehub' | 'farcaster' | 'base' | 'first_party';
-  owner_wallet: string | null;
-  review_note: string | null;
-  updated_at: string;
-}
-
-async function registryCall<T>(body: Record<string, unknown>): Promise<T> {
-  const session = getAuthToken();
-  if (!session) throw new Error('signin');
-  const res = await fetch(`${FUNCTIONS_URL}/miniapp-registry`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-dehub-token': session },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw Object.assign(new Error(data?.error || 'The request failed.'), { detail: data });
-  return data as T;
-}
-
-/** Register or update an app. It goes live at once as unlisted; review lists it. */
-export function submitApp(url: string): Promise<{ ok: true; app: MyApp; updated: boolean }> {
-  return registryCall({ action: 'submit', url });
-}
-
-export async function fetchMyApps(): Promise<MyApp[]> {
-  return (await registryCall<{ apps: MyApp[] }>({ action: 'mine' })).apps;
-}
-
-/** A live app registered for this domain, if any — how a plain link to an app's site becomes an app card. */
-export async function fetchAppByDomain(domain: string): Promise<MiniAppListing | null> {
-  const host = domain.toLowerCase();
-  if (!/^[a-z0-9.-]{3,253}$/.test(host)) return null;
-  const { data, error } = await supabase.from('miniapp_apps').select(COLUMNS).eq('domain', host).maybeSingle();
-  if (error) return null;
-  return (data as MiniAppListing | null) ?? null;
 }
