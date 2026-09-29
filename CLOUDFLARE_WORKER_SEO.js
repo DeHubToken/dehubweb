@@ -65,6 +65,46 @@ export function couldBeProfileSegment(segment, systemRoutes) {
   return !segment.includes('.') || isEnsHandle(segment);
 }
 
+/**
+ * True when a path names a file rather than a page: its last segment ends in
+ * a known file extension, or it walks into a dotfile or dot-directory other
+ * than /.well-known/. A known list rather than "anything after a dot", because
+ * slugs and handles can carry a dot and must still reach the SPA; .html is
+ * left out because a real HTML file and the SPA fallback look the same.
+ */
+const FILE_EXTENSION = /\.(?:php\d?|phtml|aspx?|jsp|cgi|env|ini|cfg|conf|config|ya?ml|toml|sql|bak|old|orig|swp|log|txt|md|csv|json|xml|rss|atom|js|mjs|cjs|map|ts|css|pdf|docx?|xlsx?|pptx?|zip|gz|tgz|tar|rar|7z|exe|dmg|apk|ipa|png|jpe?g|gif|webp|avif|svg|ico|bmp|mp3|mp4|m4a|mov|webm|ogg|opus|wav|woff2?|ttf|otf|eot|wasm|webmanifest|glb|fbx)$/i;
+export function isFilePath(pathname) {
+  const segments = String(pathname).split('/').filter(Boolean);
+  if (!segments.length) return false;
+  if (segments.some((s, i) => s.startsWith('.') && !(i === 0 && s === '.well-known' && segments.length > 1))) {
+    return true;
+  }
+  return FILE_EXTENSION.test(segments[segments.length - 1]);
+}
+
+/**
+ * The SPA shell under a noindex, saying so in both places. index.html carries
+ * `<meta name="robots" content="index, follow">` for the pages that are meant
+ * to rank, so a shell sent with an `X-Robots-Tag: noindex` header contradicted
+ * itself; the meta now agrees with the header.
+ */
+async function noindexShell(resp) {
+  const type = (resp.headers.get('Content-Type') || '').toLowerCase();
+  let out;
+  if (resp.status === 200 && type.startsWith('text/html')) {
+    const html = (await resp.text()).replace(
+      /<meta name="robots" content="[^"]*"\s*\/?>/i,
+      '<meta name="robots" content="noindex, follow">',
+    );
+    out = new Response(html, resp);
+    out.headers.delete('Content-Length');
+  } else {
+    out = new Response(resp.body, resp);
+  }
+  out.headers.set('X-Robots-Tag', 'noindex, follow');
+  return out;
+}
+
 const SUPABASE_FN_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1';
 const SUPABASE_FUNCTION_URL = `${SUPABASE_FN_BASE}/ssr-seo`;
 const DEHUB_LOGO = 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg';
@@ -156,7 +196,11 @@ const ORG_SAME_AS = [
   'https://www.linkedin.com/company/dehub-dao',
   'https://t.me/dehub_dhb',
   'https://play.google.com/store/apps/details?id=io.dehub.mobile',
-  'https://www.coingecko.com/en/coins/dehub',
+  // Instagram and TikTok as recorded on the Wikidata item (P2003, P7085). The
+  // CoinGecko coin page is gone: it now redirects to CoinGecko's home page,
+  // which says nothing about who DeHub is.
+  'https://www.instagram.com/dehub_official/',
+  'https://www.tiktok.com/@dehub_official',
   'https://coinmarketcap.com/currencies/dehub/',
 ];
 const ORG_JSONLD = {
@@ -318,6 +362,10 @@ const DOCS_PAGES = {
   'brand-guidelines': { title: 'DeHub Brand Guidelines', description: 'How to use the DeHub brand: identity, logo usage, colour and design standards.' },
   'donate': { title: 'Donate to DeHub', description: 'Support DeHub development through community donations and contributions.' },
   'terms-of-service': { title: 'Terms of Service — DeHub', description: "DeHub's terms of service: the agreement, user responsibilities and platform rules." },
+  // Linked from the docs sidebar (DocsLayout) on every docs page, and missing
+  // here, so every crawler following that link got a 404. No card of its own
+  // in public/og yet, so it borrows the docs section's.
+  'guidelines': { title: 'Community Guidelines — DeHub', description: 'What is and is not allowed on DeHub, how to report content, what happens after a report and how to appeal a moderation decision.', og: 'docs' },
 };
 
 /** Legacy and typo'd /docs slugs Google still holds. `quick-start` (the real
@@ -413,7 +461,7 @@ function buildDocsHtml(route, meta, contentHtml) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-${shareMetaTags(`docs/${route}`, meta.title)}
+${shareMetaTags(meta.og || `docs/${route}`, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'TechArticle',
@@ -1493,6 +1541,21 @@ async function supabaseRows(query) {
   }
 }
 
+/**
+ * First row of a PostgREST select, `null` when the select matched nothing, or
+ * `undefined` when PostgREST could not be read (error status, timeout, bad
+ * JSON). Never throws.
+ *
+ * The two misses mean opposite things to a crawler: no row is a real 404, an
+ * unreadable table is "try again later". Callers that only care whether they
+ * got a row can keep treating both as falsy.
+ */
+async function supabaseLookup(query) {
+  const rows = await supabaseRows(query);
+  if (rows === null) return undefined;
+  return rows[0] || null;
+}
+
 /** First row of a PostgREST select, or null. Never throws. */
 async function supabaseRow(query) {
   const controller = new AbortController();
@@ -1981,6 +2044,7 @@ function localizePage(html, route, hl, table) {
     )
     .replace(/(<link rel="canonical" href=")[^"]*(">)/i, (m, a, b) => `${a}${self}${b}`)
     .replace(/(<meta property="og:url" content=")[^"]*(">)/i, (m, a, b) => `${a}${self}${b}`)
+    .replace(/(<meta name="twitter:url" content=")[^"]*(">)/i, (m, a, b) => `${a}${self}${b}`)
     .replace(/(<h1[^>]*>)[^<]*(<\/h1>)/i, (m, a, b) => `${a}${title}${b}`);
 }
 
@@ -2486,9 +2550,12 @@ function bountyMetaDescription(job) {
   );
 }
 
-/** Live bounties are indexable; finished ones are dead listings. */
-function isBountyIndexable(job) {
-  return job.status === 'open' || job.status === 'in_progress';
+/** Live bounties are indexable; finished ones are dead listings. So is one
+ *  still marked open whose deadline has passed: nobody can act on it. */
+export function isBountyIndexable(job, now = Date.now()) {
+  if (job.status !== 'open' && job.status !== 'in_progress') return false;
+  const deadline = job.deadline ? Date.parse(job.deadline) : NaN;
+  return !(Number.isFinite(deadline) && deadline <= now);
 }
 
 /** The poster's full brief as paragraphs, or the meta description when there is none. */
@@ -2838,7 +2905,24 @@ const SYSTEM_ROUTES = new Set([
 // Deliberately excludes headless-browser UAs: those execute JS and are better
 // served the real SPA. Every UA added here is a non-rendering fetcher, so the
 // prerendered HTML is strictly more than it could otherwise see.
-const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber|google-inspectiontool|googleother|apis-google|feedfetcher|curl|wget|python-requests|python-urllib|axios|node-fetch|got |okhttp|go-http-client|java\/|libwww-perl|ruby|postmanruntime|insomnia|httpie/i;
+//
+// The link-preview fetchers on the second line name no bot at all: Bluesky's
+// Cardyb, Mastodon before 4.2 (`http.rb/… (Mastodon/…)`), Teams/Skype,
+// Embedly, Iframely, VK, Google Chat's snippet fetcher, and the user-triggered
+// AI fetchers (the `*-User/1.0` agents, matched on `-user/`). Each of them unfurled
+// every DeHub link as the homepage card. Naver's Yeti and Yahoo's Slurp are
+// search crawlers that do not run the SPA.
+const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber|google-inspectiontool|googleother|apis-google|feedfetcher|curl|wget|python-requests|python-urllib|axios|node-fetch|got |okhttp|go-http-client|java\/|libwww-perl|ruby|postmanruntime|insomnia|httpie|cardyb|bluesky|mastodon|http\.rb|skypeuripreview|embedly|iframely|vkshare|yeti|slurp|-user\/|google \(\+https/i;
+
+// Search engines, as opposed to link previewers. When the data behind a page
+// cannot be read, a search engine should be told to come back (503) rather
+// than shown a thin stand-in it might index; a previewer only ever wants a
+// card, and a stand-in card beats a failed unfurl.
+const SEARCH_BOT_UA_PATTERN = /googlebot|google-inspectiontool|googleother|storebot-google|adsbot-google|bingbot|msnbot|bingpreview|applebot|duckduckbot|duckassistbot|yandex|baiduspider|petalbot|seznambot|qwantbot|yeti|slurp|gptbot|oai-searchbot|claudebot|claude-searchbot|perplexitybot|ccbot|amazonbot|bytespider|ahrefsbot|semrushbot|mj12bot|dotbot/i;
+
+export function isSearchBotUa(ua) {
+  return SEARCH_BOT_UA_PATTERN.test(ua || '');
+}
 
 // A link-preview crawler and a social app's in-app browser are not the same
 // thing, and the brand words above cannot tell them apart. "Twitter for
@@ -2859,7 +2943,9 @@ const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|tele
 //
 // Anything that still names itself a crawler inside a browser-shaped UA
 // (Applebot, Chrome-Lighthouse, SkypeUriPreview) stays on the bot side.
-const CRAWLER_TOKEN_PATTERN = /\b(?:bot|crawler|spider|scraper)\b|(?:bot|crawler|spider)[/-]|externalhit|externalagent|externalfetcher|oggrabber|lighthouse|inspectiontool|preview/i;
+// Google Chat's fetcher is the one of those that wears a full Chrome UA with
+// no `compatible;`, so its signature is listed here too.
+const CRAWLER_TOKEN_PATTERN = /\b(?:bot|crawler|spider|scraper)\b|(?:bot|crawler|spider)[/-]|externalhit|externalagent|externalfetcher|oggrabber|lighthouse|inspectiontool|preview|cardyb|embedly|iframely|vkshare|-user\/|google \(\+https/i;
 
 function looksLikeRenderingBrowser(ua) {
   if (!/AppleWebKit\/[\d.]|Gecko\/\d/i.test(ua)) return false;
@@ -2939,9 +3025,12 @@ th{color:#fff;font-weight:700}
 @media(max-width:600px){h1{font-size:27px}.dh-main{padding:26px 16px 40px}}
 </style>`;
 
-const PRERENDER_HEADER = `<header class="dh-head"><a href="${APP_URL}/"><img src="${APP_URL}/dehub-header-logo.png" alt="DeHub" width="270" height="81"></a><a class="dh-open" href="${APP_URL}/app/explore">Open DeHub</a></header><main class="dh-main">`;
+// Site-wide links on every crawler page point at canonical URLs: /app/explore
+// canonicalises to /explore and /guides 301s to /docs/blog, so linking either
+// spent a hop or a duplicate on every page.
+const PRERENDER_HEADER = `<header class="dh-head"><a href="${APP_URL}/"><img src="${APP_URL}/dehub-header-logo.png" alt="DeHub" width="270" height="81"></a><a class="dh-open" href="${APP_URL}/explore">Open DeHub</a></header><main class="dh-main">`;
 
-const PRERENDER_FOOTER = `</main><footer class="dh-foot">DeHub — open source, user owned and censorship resistant media.<br><a href="${APP_URL}/docs">Docs</a> · <a href="${APP_URL}/guides">Blog</a> · <a href="${APP_URL}/app/explore">Explore</a></footer>`;
+const PRERENDER_FOOTER = `</main><footer class="dh-foot">DeHub — open source, user owned and censorship resistant media.<br><a href="${APP_URL}/docs">Docs</a> · <a href="${APP_URL}/docs/blog">Blog</a> · <a href="${APP_URL}/explore">Explore</a></footer>`;
 
 /**
  * The other half of the problem: every builder in this file, and the ssr-seo
@@ -3064,6 +3153,26 @@ function canonicalizePath(pathname) {
     }
   }
   return p;
+}
+
+/**
+ * Make `pageUrl` the page's one URL: rel=canonical and og:url set to it (added
+ * if missing), and twitter:url too where the page carries one. Every existing
+ * copy is dropped first, so a proxied page can never end up declaring two.
+ * Written in exactly the shape localizePage and the profile branch match on.
+ */
+export function setPageUrl(html, pageUrl) {
+  const hadTwitterUrl = /<meta\s+(?:name|property)="twitter:url"/i.test(html);
+  const out = html
+    .replace(/[ \t]*<link\s+rel="canonical"[^>]*>\n?/gi, '')
+    .replace(/[ \t]*<meta\s+(?:property|name)="og:url"[^>]*>\n?/gi, '')
+    .replace(/[ \t]*<meta\s+(?:name|property)="twitter:url"[^>]*>\n?/gi, '');
+  const tags = [
+    `<link rel="canonical" href="${pageUrl}">`,
+    `<meta property="og:url" content="${pageUrl}">`,
+    ...(hadTwitterUrl ? [`<meta name="twitter:url" content="${pageUrl}">`] : []),
+  ].join('\n');
+  return out.replace('</head>', `${tags}\n</head>`);
 }
 
 /** Exact <title> strings the deployed Supabase fn emits when an entity
@@ -3298,6 +3407,48 @@ async function fetchSitemapFeedPage(page) {
     }
   }
   return null;
+}
+
+/**
+ * Whether the sitemap index lists posts page `raw` — true, false, or null when
+ * the newest post id could not be read.
+ *
+ * Counted the way the sitemap-index function counts: one page per
+ * POST_SITEMAP_CHUNK_SIZE ids up to the newest minted post, never fewer than
+ * one. Page 1 always exists and costs nothing; any other number costs one
+ * single-row feed read instead of a full walk. `01` or `0` is not a page.
+ */
+async function postSitemapPageListed(raw) {
+  if (!/^[1-9]\d{0,5}$/.test(String(raw))) return false;
+  const page = Number(raw);
+  if (page === 1) return true;
+  try {
+    const res = await fetch(
+      'https://api.dehub.io/api/feed?limit=1&page=1&sortBy=createdAt&sortOrder=desc&status=minted',
+      { signal: AbortSignal.timeout(5000) },
+    );
+    if (!res.ok) return null;
+    const json = await res.json();
+    const maxId = Number(json && Array.isArray(json.result) && json.result[0] && json.result[0].tokenId);
+    if (!Number.isFinite(maxId)) return null;
+    return page <= Math.max(1, Math.ceil(maxId / POST_SITEMAP_CHUNK_SIZE));
+  } catch {
+    return null;
+  }
+}
+
+/** The answer for a posts page the index does not list, or null to build it.
+ *  An uncountable index is a 503 (retry), never a walk. */
+async function unlistedPostSitemapResponse(raw) {
+  const listed = await postSitemapPageListed(raw);
+  if (listed === true) return null;
+  if (listed === null) {
+    return new Response('sitemap temporarily unavailable', { status: 503, headers: { 'Retry-After': '600' } });
+  }
+  return new Response('Not Found', {
+    status: 404,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' },
+  });
 }
 
 /**
@@ -4028,6 +4179,13 @@ async function handleRequest(request, env, ctx) {
     '/tournaments': '/arcade',
     '/prize-draw': '/raffle',
     '/ppv': '/videos',
+    // Old dApp landers still linked from third-party listings. /stream goes
+    // where the stream subdomain and /web/stream already go; /prediction was
+    // a price-prediction game, so it lands with the other games.
+    '/games': '/arcade',
+    '/stream': '/videos',
+    '/prediction': '/arcade',
+    '/ad-free': '/premium',
   };
   // /web/* is the pre-Angular site chrome, still in Google's index. Flattening
   // the lot onto "/" reads as a soft 404 and throws away the best links the old
@@ -4163,6 +4321,29 @@ async function handleRequest(request, env, ctx) {
   // either): bare /guides has no route, /app twins of the blog duplicate it.
   const trimmedPath = pathname.replace(/\/+$/, '') || '/';
   if (trimmedPath === '/guides') return redirect301(`${APP_URL}/docs/blog`);
+
+  // Docs and blog paths are all lowercase, but /Docs, /DOCS/FAQ and
+  // /Guides/What-Is-Dehub answered 200 (the SPA shell, under a noindex): a
+  // dead end for whoever typed or linked them. One hop to the real page.
+  // Only these two spaces — profile handles and entity ids are case-sensitive.
+  const docsCase = pathname.match(/^\/(docs|guides)(\/.*)?$/i);
+  if (docsCase && pathname !== pathname.toLowerCase()) {
+    const lower = pathname.toLowerCase();
+    return redirect301(lower.replace(/\/+$/, '') === '/guides'
+      ? `${APP_URL}/docs/blog`
+      : `${APP_URL}${lower}${url.search}`);
+  }
+
+  // The asset layer answers /index.html with a 307 to /, which tells a
+  // crawler to keep the old URL. It is permanent.
+  if (pathname === '/index.html') return redirect301(`${APP_URL}/${url.search}`);
+
+  // Whitepaper PDFs from the dehub.net era (/uploads/DeHub-English-Whitepaper.pdf
+  // and the like) still rank for brand queries, and dehub.net's path-preserving
+  // 301 lands them here. There is no PDF any more; the docs are its successor.
+  if (/^\/uploads\/[^/]*(?:white|lite)(?:[-_ ]|%20)?paper[^/]*\.pdf$/i.test(pathname)) {
+    return redirect301(`${APP_URL}/docs`);
+  }
 
   // The legal pages live at /docs/privacy and /docs/terms — the bare paths were
   // never React routes. Browsers got the SPA catch-all (a soft 404 that looked
@@ -4384,9 +4565,11 @@ async function handleRequest(request, env, ctx) {
   // crawl and a soft-404 signal.
   if (pathname === '/sitemap-bounties.xml') {
     const rows = await supabaseRows(
-      'work_jobs?status=in.(open,in_progress)&select=job_number,updated_at&order=job_number.asc&limit=5000',
+      'work_jobs?status=in.(open,in_progress)&select=job_number,updated_at,deadline&order=job_number.asc&limit=5000',
     );
-    const urls = (rows || []).map((j) => `  <url>
+    // Same bar as the page's own robots: an open bounty past its deadline is
+    // noindex, so it has no place in the sitemap either.
+    const urls = (rows || []).filter((j) => isBountyIndexable({ status: 'open', deadline: j.deadline })).map((j) => `  <url>
     <loc>${APP_URL}/bounty/${j.job_number}</loc>${j.updated_at ? `
     <lastmod>${new Date(j.updated_at).toISOString().split('T')[0]}</lastmod>` : ''}
     <changefreq>daily</changefreq>
@@ -4433,7 +4616,12 @@ async function handleRequest(request, env, ctx) {
   // partial one.
   const postSitemapMatch = pathname.match(/^\/sitemap-posts-(\d+)\.xml$/);
   if (postSitemapMatch) {
-    const page = Number(postSitemapMatch[1]) || 1;
+    const page = Number(postSitemapMatch[1]);
+    // Only the pages the index lists. Any other number used to start the
+    // whole feed walk (posts-2 took ten seconds to answer an empty urlset),
+    // which made every made-up page number a free way to burn the API.
+    const unlisted = await unlistedPostSitemapResponse(postSitemapMatch[1]);
+    if (unlisted) return unlisted;
     const cached = await cachedSitemap(request, ctx, async () => {
       const posts = await dehubPostSitemap(page);
       return posts ? sitemapResponse(postSitemapXml(posts)) : null;
@@ -4551,7 +4739,25 @@ async function handleRequest(request, env, ctx) {
   // so every other extension still short-circuits exactly as it did.
   if (pathname.startsWith('/_') ||
       (pathname.includes('.') && !pathname.includes('/post/') && !isEnsHandle(firstSegmentOf(pathname)))) {
-    return guardNext();
+    const resp = await guardNext();
+    // …but a file that is not there must say so. The SPA fallback answers a
+    // miss with index.html at 200, so /x.pdf, /.env, /ads.txt and every legacy
+    // dehub.net upload became an indexable copy of the homepage. Same tell as
+    // /assets/ above: none of these extensions is ever an HTML document, so
+    // text/html means the asset lookup missed. Real files keep their own type
+    // and pass straight through.
+    if (isFilePath(pathname) &&
+        (resp.headers.get('Content-Type') || '').toLowerCase().startsWith('text/html')) {
+      return new Response('Not Found', {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'X-Robots-Tag': 'noindex',
+        },
+      });
+    }
+    return resp;
   }
 
   // Everything reaching here without a per-route SSR handler gets the raw SPA
@@ -4569,15 +4775,65 @@ async function handleRequest(request, env, ctx) {
   // index; and `follow` keeps internal link equity flowing to /docs.
   // Static assets already returned above, so they never reach this branch.
   if (!shouldServeSSR(pathname)) {
-    const resp = await guardNext();
-    const r = new Response(resp.body, resp);
-    r.headers.set('X-Robots-Tag', 'noindex, follow');
-    return r;
+    return noindexShell(await guardNext());
+  }
+
+  // A profile deep path, /<user>/<anything>. The SPA has no such route (it
+  // renders Not Found) and crawlers were served the profile under a canonical,
+  // so every handle carried an unbounded space of 200 URLs. Send all of them
+  // to the profile itself. Posts and communities have their own shapes and
+  // are left alone.
+  const pathSegments = pathname.split('/').filter(Boolean);
+  if (
+    pathSegments.length > 1 &&
+    !pathname.includes('/post/') &&
+    !pathname.includes('/communities/') &&
+    couldBeProfileSegment(firstSegmentOf(pathname), SYSTEM_ROUTES)
+  ) {
+    return redirect301(`${APP_URL}/${pathSegments[0].replace(/^(?:@|%40)/i, '')}`);
   }
 
   const userAgent = request.headers.get('User-Agent') || '';
   const forceApp = url.searchParams.get(APP_ESCAPE_PARAM) === '1';
   const isBot = !forceApp && isCrawlerUa(userAgent);
+
+  // The two ways an entity page can come up empty. A row that does not exist
+  // is a 404 — answering 200 with the generic card minted an indexable
+  // homepage-titled page at every deleted or made-up id. A row we could not
+  // read is not a 404 either: a search engine is told to come back (503 +
+  // Retry-After), a link previewer still gets the generic card so the unfurl
+  // does not fail, and neither version asks to be indexed.
+  const entityNotFound = () => guard(new Response(buildFallbackHtml(pathname, request.url), {
+    status: 404,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'public, s-maxage=300',
+      'Vary': 'User-Agent',
+      'X-Robots-Tag': 'noindex',
+    },
+  }));
+  const entityUnavailable = () => (isSearchBotUa(userAgent)
+    ? guard(new Response('Temporarily unavailable', {
+      status: 503,
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-store',
+        'Retry-After': '120',
+        'Vary': 'User-Agent',
+        'X-Robots-Tag': 'noindex',
+      },
+    }))
+    : guard(new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+        'X-Robots-Tag': 'noindex',
+      },
+    })));
+  /** `undefined` from supabaseLookup is the unreadable case, `null` the missing one. */
+  const entityMiss = (row) => (row === undefined ? entityUnavailable() : entityNotFound());
 
   // Non-bots (regular browsers) always get the React SPA directly.
   // The SSR HTML contains `window.location.href = '<same-url>'` for non-bots,
@@ -4592,7 +4848,7 @@ async function handleRequest(request, env, ctx) {
     varied.headers.append('Vary', 'User-Agent');
     // ?app=1 is a duplicate of the canonical URL: keep it out of the index,
     // while still letting a crawler follow the links on the page it lands on.
-    if (forceApp) varied.headers.set('X-Robots-Tag', 'noindex, follow');
+    if (forceApp) return noindexShell(varied);
     return varied;
   }
 
@@ -4725,10 +4981,7 @@ async function handleRequest(request, env, ctx) {
       }));
     }
     if (DOCS_COMING_SOON.has(route)) {
-      const resp = await guardNext();
-      const r = new Response(resp.body, resp);
-      r.headers.set('X-Robots-Tag', 'noindex, follow');
-      return r;
+      return noindexShell(await guardNext());
     }
     // Unknown docs subpage: previously fell through to the SPA shell, which
     // answered 200 with homepage meta — a soft-404 that let any typo'd URL mint
@@ -4771,9 +5024,12 @@ async function handleRequest(request, env, ctx) {
     /^cinema\/(?:film|series|movie|show)\/[A-Za-z0-9_-]{1,64}$/.test(sectionKey) &&
     Object.hasOwn(MARKETING_PAGES, 'cinema')
   ) {
+    // noindex, follow: with no way to check the id, every string that fits the
+    // pattern answered 200 with the same page as /cinema. The card is what
+    // these links exist for, and unfurlers ignore robots.
     return guard(new Response(buildMarketingHtml('cinema', MARKETING_PAGES['cinema']), {
       status: 200,
-      headers: blogHeaders,
+      headers: { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' },
     }));
   }
 
@@ -4876,86 +5132,56 @@ async function handleRequest(request, env, ctx) {
         }));
       }
     }
-    const store = await supabaseRow(
+    const store = await supabaseLookup(
       `stores?id=eq.${encodeURIComponent(storeMatch[1])}&select=id,name,description,banner_url,avatar_url&limit=1`,
     );
     if (store) {
       return guard(new Response(buildStoreHtml(store), { status: 200, headers: blogHeaders }));
     }
-    // Row missing or Supabase unreachable: fall through to the generic stub
-    // rather than 404, because we cannot tell those two apart from here.
-    return guard(new Response(buildFallbackHtml(pathname, request.url), {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-        'Vary': 'User-Agent',
-      },
-    }));
+    return entityMiss(store);
   }
+  // Store ids are uuids, so anything else under /stores/ names no store.
+  if (/^\/(?:app\/)?stores\/[^/]+$/.test(cleanPath)) return entityNotFound();
 
   // A shared Creator Flow. Public rows are readable with the anon key (RLS
   // select policy on is_public), so this reads PostgREST directly like
-  // proposals do; a private or missing flow gets the generic stub.
+  // proposals do; a private or missing flow is a 404.
   const flowMatch = cleanPath.match(/^\/creator\/flow\/([a-z0-9]{6,32})$/);
   if (flowMatch) {
-    const flow = await supabaseRow(
+    const flow = await supabaseLookup(
       `creator_flows?id=eq.${encodeURIComponent(flowMatch[1])}&is_public=eq.true&select=id,name,cover_url,node_count,created_at,updated_at&limit=1`,
     );
     if (flow) {
       return guard(new Response(buildCreatorFlowHtml(flow), { status: 200, headers: blogHeaders }));
     }
-    return guard(new Response(buildFallbackHtml(pathname, request.url), {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-        'Vary': 'User-Agent',
-      },
-    }));
+    return entityMiss(flow);
   }
 
   const packMatch = cleanPath.match(/^\/(?:app\/)?packs\/([a-z0-9][a-z0-9_-]{2,47})$/i);
   if (packMatch) {
-    const pack = await supabaseRow(
+    const pack = await supabaseLookup(
       `creator_packs?slug=eq.${encodeURIComponent(packMatch[1].toLowerCase())}&select=slug,name,kind,cover_url,item_count,created_at&limit=1`,
     );
     if (pack) {
       return guard(new Response(buildCreatorPackHtml(pack), { status: 200, headers: blogHeaders }));
     }
-    return guard(new Response(buildFallbackHtml(pathname, request.url), {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-        'Vary': 'User-Agent',
-      },
-    }));
+    return entityMiss(pack);
   }
 
   const proposalMatch = cleanPath.match(/^\/(?:app\/)?governance\/([0-9a-fA-F-]{8,})$/);
   if (proposalMatch) {
-    const proposal = await supabaseRow(
+    const proposal = await supabaseLookup(
       `governance_proposals?id=eq.${encodeURIComponent(proposalMatch[1])}&select=*&limit=1`,
     );
     if (proposal) {
       return guard(new Response(buildProposalHtml(proposal), { status: 200, headers: blogHeaders }));
     }
-    // Row missing or Supabase unreachable — indistinguishable from here, so
-    // the generic stub rather than a 404, same as stores and events.
-    return guard(new Response(buildFallbackHtml(pathname, request.url), {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-        'Vary': 'User-Agent',
-      },
-    }));
+    return entityMiss(proposal);
   }
 
   const eventMatch = cleanPath.match(/^\/(?:app\/)?events\/(\d+)$/);
   if (eventMatch) {
-    const event = await supabaseRow(
+    const event = await supabaseLookup(
       `community_events?event_number=eq.${eventMatch[1]}&select=*&limit=1`,
     );
     if (event) {
@@ -4966,14 +5192,7 @@ async function handleRequest(request, env, ctx) {
           : blogHeaders,
       }));
     }
-    return guard(new Response(buildFallbackHtml(pathname, request.url), {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-        'Vary': 'User-Agent',
-      },
-    }));
+    return entityMiss(event);
   }
 
   // Stage invite links: /stages/<n> is the short share form
@@ -4984,7 +5203,7 @@ async function handleRequest(request, env, ctx) {
   const stageShortMatch = cleanPath.match(/^\/stages\/(\d+)$/);
   const stageIdMatch = cleanPath.match(/^\/stage\/([0-9a-fA-F-]{16,})$/);
   if (stageShortMatch || stageIdMatch) {
-    const stage = await supabaseRow(
+    const stage = await supabaseLookup(
       stageShortMatch
         ? `audio_spaces?short_id=eq.${stageShortMatch[1]}&select=*&limit=1`
         : `audio_spaces?id=eq.${encodeURIComponent(stageIdMatch[1])}&select=*&limit=1`,
@@ -4997,14 +5216,7 @@ async function handleRequest(request, env, ctx) {
           : blogHeaders,
       }));
     }
-    return guard(new Response(buildFallbackHtml(pathname, request.url), {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-        'Vary': 'User-Agent',
-      },
-    }));
+    return entityMiss(stage);
   }
 
   // A community DEX pool, /dex/<chain>/<token>. The share image is the picture
@@ -5035,7 +5247,7 @@ async function handleRequest(request, env, ctx) {
 
   const bountyMatch = cleanPath.match(/^\/bounty\/(\d+)$/);
   if (bountyMatch) {
-    const job = await supabaseRow(
+    const job = await supabaseLookup(
       `work_jobs?job_number=eq.${bountyMatch[1]}&select=*&limit=1`,
     );
     if (job) {
@@ -5046,14 +5258,7 @@ async function handleRequest(request, env, ctx) {
           : { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' },
       }));
     }
-    return guard(new Response(buildFallbackHtml(pathname, request.url), {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-        'Vary': 'User-Agent',
-      },
-    }));
+    return entityMiss(job);
   }
 
   // Every post shape is normalised onto /app/post/<tokenId> before the proxy,
@@ -5089,6 +5294,12 @@ async function handleRequest(request, env, ctx) {
     ssrPath = `/app/post/${videoPath[1]}`;
   } else if (bareCommunity && bareCommunity[1] !== 'join') {
     ssrPath = `/app/communities/${bareCommunity[1]}`;
+  } else if (/^\/%40[^/]+\/?$/i.test(pathname)) {
+    // Browsers asking for /@user are sent to /%40user by the asset layer, so
+    // that is the form that gets copied and shared. The fn only knows the
+    // literal @, and looked up a user called "%40user": a 404 for crawlers on
+    // a profile that exists. Same page as /@user, canonical at /user.
+    ssrPath = `/@${pathname.slice(4).replace(/\/+$/, '')}`;
   }
 
   const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(ssrPath)}&original_url=${encodeURIComponent(request.url)}`;
@@ -5113,14 +5324,7 @@ async function handleRequest(request, env, ctx) {
 
     if (!response.ok && response.status !== 404) {
       console.error(`[Edge] SSR returned ${response.status} for ${pathname}`);
-      return guard(new Response(buildFallbackHtml(pathname, request.url), {
-        status: 200,
-        headers: {
-          'Content-Type': 'text/html; charset=utf-8',
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-          'Vary': 'User-Agent',
-        },
-      }));
+      return entityUnavailable();
     }
 
     let html = await response.text();
@@ -5193,20 +5397,34 @@ async function handleRequest(request, env, ctx) {
       (m, href, attrs, label) => `<a class="dh-cta" href="${appHref(href)}" rel="nofollow">${label}</a>`,
     );
 
-    if (!html.includes('og:url')) {
-      html = html.replace('</head>', `<meta property="og:url" content="${request.url}"></head>`);
-    }
-
     // Canonical: SSR pages historically had none, letting ?param URLs and
     // /app-prefixed twins index as duplicates. Referral landings (/r/<code>)
     // get noindex ONLY — Google ignores cross-URL canonicals on noindexed
     // pages, so pairing the two just sends mixed signals.
+    //
+    // Everything else gets its URL set here rather than trusted from the fn.
+    // For the homepage (and any other non-entity route) the fn builds
+    // canonical, og:url and twitter:url from original_url — query and mirror
+    // host included — so /?utm_source=x, /?fbclid=…, /?ref=… and /?hl=xx each
+    // declared themselves the canonical homepage. Entity pages keep the fn's
+    // canonical, which is deliberately a different shape from the request
+    // (/posts/5 → /app/post/5, /@x → /x), minus any query it picked up.
+    // localizePage below swaps in the ?hl= self-canonical only for a locale
+    // the page is actually translated into.
     const isReferral = /^\/r\/[A-Za-z0-9]+/.test(pathname);
     const canonicalUrl = `${APP_URL}${canonicalizePath(pathname)}`;
     if (isReferral) {
+      if (!html.includes('og:url')) {
+        html = html.replace('</head>', `<meta property="og:url" content="${request.url}"></head>`);
+      }
       html = html.replace(/<link rel="canonical"[^>]*>/gi, '');
-    } else if (!html.includes('rel="canonical"')) {
-      html = html.replace('</head>', `<link rel="canonical" href="${canonicalUrl}"></head>`);
+    } else {
+      let pageUrl = canonicalUrl;
+      if (isEntityRoute) {
+        const fnCanonical = (html.match(/<link\s+rel="canonical"\s+href="([^"]*)"/i) || [])[1];
+        if (fnCanonical && fnCanonical.startsWith(`${APP_URL}/`)) pageUrl = fnCanonical.replace(/[?#].*$/, '');
+      }
+      html = setPageUrl(html, pageUrl);
     }
 
     // Profile titles from the deployed fn are CTA-first ("Join @x on DeHub
@@ -5300,9 +5518,15 @@ async function handleRequest(request, env, ctx) {
     }
 
     // Footer nav in the deployed fn's HTML links /app/* twins of canonical
-    // pages; route internal link equity straight to the canonical URLs.
+    // pages; route internal link equity straight to the canonical URLs. The
+    // edge-rendered sections and marketing pages count too — /app/explore,
+    // /app/stages and /app/stake all have a bare canonical twin.
     html = html.replace(/href="(?:https:\/\/dehub\.io)?\/app\/([a-z0-9-]+)"/g, (m, seg) =>
-      SSR_STATIC_ROUTES.has(seg) ? `href="${APP_URL}/${seg}"` : m);
+      SSR_STATIC_ROUTES.has(seg) || Object.hasOwn(SECTION_PAGES, seg) || Object.hasOwn(MARKETING_PAGES, seg)
+        ? `href="${APP_URL}/${seg}"`
+        : m);
+    // Bare /guides is only a 301 to the blog index.
+    html = html.replace(/href="(?:https:\/\/dehub\.io)?\/guides\/?"/g, `href="${APP_URL}/docs/blog"`);
 
     // Homepage for bots was a ~70-word shell with nav-only links, leaving
     // posts/profiles crawlable solely via sitemap. Inject the latest posts
@@ -5415,17 +5639,11 @@ async function handleRequest(request, env, ctx) {
     } else {
       console.error('[Edge] Error:', e);
     }
-    // On timeout/error, serve a minimal branded OG page so bots don't cache
-    // the generic React SPA index.html (which causes the 2-3 hr re-scrape delay).
-    return guard(new Response(buildFallbackHtml(pathname, request.url), {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        // Short cache on fallback so bots re-scrape soon and get the real image
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-        'Vary': 'User-Agent',
-      },
-    }));
+    // On timeout/error, previewers get a minimal branded OG page so they don't
+    // cache the generic React SPA index.html (which causes the 2-3 hr
+    // re-scrape delay). Search engines get a 503 and come back: the stand-in
+    // carries a generic title, and at 200 it was indexable at the entity URL.
+    return entityUnavailable();
   }
 }
 
