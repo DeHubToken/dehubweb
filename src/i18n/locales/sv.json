@@ -75,7 +75,19 @@
     "images": "Bilder",
     "videos": "Videor",
     "music": "Musik",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "Utforska DeHub — trendande kreatörer, videor och communities",
+    "seoDescription": "Upptäck vad som trendar på DeHub: toppkreatörer, videor, musik, livesändningar och communities på den sociala plattformen med öppen källkod som ägs av användarna."
+  },
+  "videos": {
+    "seoTitle": "Videoflöde — se on-chain-videor på DeHub",
+    "seoDescription": "Se de senaste on-chain-videorna från kreatörer på DeHub: långa uppladdningar med betala per visning, tokenlåst innehåll och delade annonsintäkter på videoplattformen som ägs av användarna.",
+    "heading": "DeHubs videoflöde"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — korta videor på DeHub",
+    "seoDescription": "Skrolla bland de senaste korta videorna på DeHub: ett vertikalt, svepbart shorts-flöde på den sociala plattformen med öppen källkod som ägs av användarna, där kreatörer äger sitt innehåll.",
+    "heading": "Shorts på DeHub"
   },
   "settings": {
     "showOnline": "Visa när jag är online",
@@ -1373,7 +1385,9 @@
     "offerWorthNow": "Cirka {{amount}} tokens till nuvarande kurs",
     "offerNotePlaceholder": "Lägg till en notering (valfritt)",
     "offerCommitsNothing": "Att lägga ett bud kostar inget och reserverar inga tokens. Du betalar bara om ägaren accepterar.",
-    "offerNeedsHandle": "Det här kontot har inget användarnamn att buda på."
+    "offerNeedsHandle": "Det här kontot har inget användarnamn att buda på.",
+    "options": "Profilalternativ",
+    "translateBio": "Översätt bio"
   },
   "tv": {
     "seoTitle": "Live TV — Gratis kanaler från hela världen",

@@ -75,7 +75,19 @@
     "images": "Képek",
     "videos": "Videók",
     "music": "Zene",
-    "live": "Élő"
+    "live": "Élő",
+    "seoTitle": "Fedezd fel a DeHubot — Felkapott alkotók, videók és közösségek",
+    "seoDescription": "Nézd meg, mi felkapott a DeHubon: top alkotók, videók, zene, élő közvetítések és közösségek a nyílt forráskódú, felhasználók tulajdonában lévő közösségi platformon."
+  },
+  "videos": {
+    "seoTitle": "Videófolyam — Nézz on-chain videókat a DeHubon",
+    "seoDescription": "Nézd meg az alkotók legújabb on-chain videóit a DeHubon: hosszú videók pay-per-view fizetéssel, tokenhez kötött tartalommal és hirdetési bevételmegosztással a felhasználók tulajdonában lévő videóplatformon.",
+    "heading": "DeHub videófolyam"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Rövid videók a DeHubon",
+    "seoDescription": "Görgesd a DeHub legújabb rövid videóit: függőleges, lapozható Shorts-folyam a nyílt forráskódú, felhasználók tulajdonában lévő közösségi platformon, ahol az alkotóké a saját tartalmuk.",
+    "heading": "DeHub Shorts"
   },
   "settings": {
     "showOnline": "Megjelenítés, amikor online vagyok",
@@ -1368,7 +1380,9 @@
     "offerWorthNow": "Körülbelül {{amount}} token a jelenlegi árfolyamon",
     "offerNotePlaceholder": "Írj egy üzenetet (nem kötelező)",
     "offerCommitsNothing": "Ajánlatot tenni nem kerül semmibe, és nem foglal le tokeneket. Csak akkor fizetsz, ha a tulajdonos elfogadja.",
-    "offerNeedsHandle": "Ennek a fióknak nincs felhasználóneve, amire ajánlatot lehetne tenni."
+    "offerNeedsHandle": "Ennek a fióknak nincs felhasználóneve, amire ajánlatot lehetne tenni.",
+    "options": "Profilbeállítások",
+    "translateBio": "Bemutatkozás fordítása"
   },
   "tv": {
     "seoTitle": "Élő TV — Ingyenes csatornák a világ minden tájáról",

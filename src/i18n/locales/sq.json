@@ -75,7 +75,19 @@
     "images": "Imazhe",
     "videos": "Video",
     "music": "Muzikë",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "Eksploro DeHub — Krijues, video dhe komunitete në trend",
+    "seoDescription": "Zbulo çfarë është në trend në DeHub: krijuesit kryesorë, video, muzikë, transmetime live dhe komunitete në platformën sociale me burim të hapur, në pronësi të përdoruesve."
+  },
+  "videos": {
+    "seoTitle": "Rrjedha e videove — Shiko video on-chain në DeHub",
+    "seoDescription": "Shiko videot më të reja on-chain nga krijuesit në DeHub: video të gjata me pagesë për shikim, përmbajtje e kufizuar me token dhe ndarje e të ardhurave nga reklamat në platformën video në pronësi të përdoruesve.",
+    "heading": "Rrjedha e videove DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Shkurtimëtra — Video të shkurtra në DeHub",
+    "seoDescription": "Shfleto videot më të reja të shkurtra në DeHub: një rrjedhë vertikale shkurtimesh që rrëshqitet me gisht, në platformën sociale me burim të hapur, në pronësi të përdoruesve, ku krijuesit zotërojnë përmbajtjen e tyre.",
+    "heading": "Shkurtimëtra DeHub"
   },
   "settings": {
     "showOnline": "Shfaq kur jam online",
@@ -1373,7 +1385,9 @@
     "offerWorthNow": "Rreth {{amount}} tokeneve me kursin aktual",
     "offerNotePlaceholder": "Shto një shënim (opsionale)",
     "offerCommitsNothing": "Bërja e një oferte nuk kushton asgjë dhe nuk mban asnjë token. Ju paguani vetëm nëse pronari pranon.",
-    "offerNeedsHandle": "Kjo llogari nuk ka emër përdoruesi për të cilin të ofrosh."
+    "offerNeedsHandle": "Kjo llogari nuk ka emër përdoruesi për të cilin të ofrosh.",
+    "options": "Opsionet e profilit",
+    "translateBio": "Përkthe biografinë"
   },
   "tv": {
     "seoTitle": "TV Live — Kanalet e Gratuita nga Çdo Përballë Botës",

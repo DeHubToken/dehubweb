@@ -75,7 +75,19 @@
     "images": "Images",
     "videos": "Videos",
     "music": "Music",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "Khám phá DeHub — Nhà sáng tạo, video & cộng đồng thịnh hành",
+    "seoDescription": "Khám phá những gì đang thịnh hành trên DeHub: nhà sáng tạo hàng đầu, video, âm nhạc, phát trực tiếp và cộng đồng trên nền tảng xã hội mã nguồn mở, thuộc sở hữu người dùng."
+  },
+  "videos": {
+    "seoTitle": "Bảng tin video — Xem video on-chain trên DeHub",
+    "seoDescription": "Xem các video on-chain mới nhất từ nhà sáng tạo trên DeHub: video dài với trả phí theo lượt xem, nội dung yêu cầu token và chia sẻ doanh thu quảng cáo trên nền tảng video thuộc sở hữu người dùng.",
+    "heading": "Bảng tin video DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Video ngắn trên DeHub",
+    "seoDescription": "Lướt xem các video ngắn mới nhất trên DeHub: bảng tin Shorts dạng dọc, vuốt để xem trên nền tảng xã hội mã nguồn mở, thuộc sở hữu người dùng, nơi nhà sáng tạo sở hữu nội dung của mình.",
+    "heading": "Video ngắn DeHub"
   },
   "settings": {
     "showOnline": "Hiển thị khi tôi trực tuyến",
@@ -1266,7 +1278,8 @@
     "newReleases": "New Releases"
   },
   "notFound": {
-    "returnHome": "Return Home"
+    "returnHome": "Return Home",
+    "title": "Không tìm thấy trang"
   },
   "profile": {
     "back": "Back",
@@ -1294,7 +1307,9 @@
     "offerWorthNow": "Khoảng {{amount}} token với tỷ giá hiện tại",
     "offerNotePlaceholder": "Thêm ghi chú (không bắt buộc)",
     "offerCommitsNothing": "Việc đưa ra đề nghị không tốn kém và không giữ token. Bạn chỉ thanh toán nếu chủ sở hữu chấp nhận.",
-    "offerNeedsHandle": "Tài khoản này không có tên người dùng để đề nghị mua."
+    "offerNeedsHandle": "Tài khoản này không có tên người dùng để đề nghị mua.",
+    "options": "Tùy chọn hồ sơ",
+    "translateBio": "Dịch tiểu sử"
   },
   "tv": {
     "seoTitle": "Live TV — Các Kênh Miễn Phí Từ Khắp Nơi Trên Thế Giới",

@@ -75,7 +75,19 @@
     "images": "Mga Larawan",
     "videos": "Mga Video",
     "music": "Musika",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "I-explore ang DeHub — Trending na Creator, Video at Komunidad",
+    "seoDescription": "Tuklasin kung ano ang trending sa DeHub: mga nangungunang creator, video, musika, live stream at komunidad sa open source na social platform na pag-aari ng mga user."
+  },
+  "videos": {
+    "seoTitle": "Feed ng Video — Manood ng On-Chain na Video sa DeHub",
+    "seoDescription": "Panoorin ang pinakabagong on-chain na video mula sa mga creator sa DeHub: mahahabang upload na may pay-per-view, token-gated na content at hatian ng kita sa ads sa video platform na pag-aari ng mga user.",
+    "heading": "Feed ng Video ng DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Maiikling Video sa DeHub",
+    "seoDescription": "Mag-scroll sa pinakabagong maiikling video sa DeHub: isang patayo at naii-swipe na shorts feed sa open source na social platform na pag-aari ng mga user, kung saan pag-aari ng mga creator ang kanilang content.",
+    "heading": "Shorts ng DeHub"
   },
   "settings": {
     "showOnline": "Ipakita kapag ako ay online",
@@ -1364,7 +1376,8 @@
     "newReleases": "New Releases"
   },
   "notFound": {
-    "returnHome": "Return Home"
+    "returnHome": "Return Home",
+    "title": "Hindi Nahanap ang Pahina"
   },
   "profile": {
     "back": "Back",
@@ -1392,7 +1405,9 @@
     "offerWorthNow": "Tinatayang {{amount}} na token sa kasalukuyang rate",
     "offerNotePlaceholder": "Magdagdag ng paalala (opsyonal)",
     "offerCommitsNothing": "Walang gastos ang paggawa ng alok at hindi ito kumukuha ng anumang token. Magbabayad ka lamang kung tatanggapin ito ng may-ari.",
-    "offerNeedsHandle": "Walang username ang account na ito na puwedeng alukin."
+    "offerNeedsHandle": "Walang username ang account na ito na puwedeng alukin.",
+    "options": "Mga opsyon sa profile",
+    "translateBio": "Isalin ang bio"
   },
   "tv": {
     "seoTitle": "Live TV — Libreng Channels Mula sa Buong Mundo",

@@ -348,13 +348,14 @@ export function ProfileHeader({
                     variant="glass" 
                     size="icon" 
                     className="rounded-xl h-9 w-9"
+                    aria-label={t('profile.options')}
                   >
                     <Plus className="w-4 h-4" />
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
                   <DrawerHeader className="sr-only">
-                    <DrawerTitle>Profile Options</DrawerTitle>
+                    <DrawerTitle>{t('profile.options')}</DrawerTitle>
                   </DrawerHeader>
                   <ShareOptions />
                 </DrawerContent>

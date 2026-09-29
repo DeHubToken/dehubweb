@@ -75,7 +75,19 @@
     "images": "Pildid",
     "videos": "Videod",
     "music": "Muusika",
-    "live": "Otse"
+    "live": "Otse",
+    "seoTitle": "Avasta DeHubi — Populaarsed loojad, videod ja kogukonnad",
+    "seoDescription": "Vaata, mis on DeHubis praegu populaarne: parimad loojad, videod, muusika, otseülekanded ja kogukonnad avatud lähtekoodiga, kasutajatele kuuluval sotsiaalplatvormil."
+  },
+  "videos": {
+    "seoTitle": "Videovoog — Vaata ahelasiseseid videoid DeHubis",
+    "seoDescription": "Vaata loojate uusimaid ahelasiseseid videoid DeHubis: pikad videod tasulise vaatamise, tokeniga piiratud sisu ja reklaamitulu jagamisega kasutajatele kuuluval videoplatvormil.",
+    "heading": "DeHubi videovoog"
+  },
+  "shorts": {
+    "seoTitle": "Lühivideod — Uusimad lühiklipid DeHubis",
+    "seoDescription": "Keri DeHubi uusimaid lühivideoid: vertikaalne, pühitav lühivideote voog avatud lähtekoodiga, kasutajatele kuuluval sotsiaalplatvormil, kus loojad omavad oma sisu.",
+    "heading": "DeHubi lühivideod"
   },
   "settings": {
     "showOnline": "Näita, kui ma olen võrgus",
@@ -1368,7 +1380,9 @@
     "offerWorthNow": "Umbes {{amount}} žetooni praeguse kursiga",
     "offerNotePlaceholder": "Lisa märkus (valikuline)",
     "offerCommitsNothing": "Pakkumise tegemine ei maksa midagi ja ei broneeri žetoone. Maksate ainult siis, kui omanik nõustub.",
-    "offerNeedsHandle": "Sellel kontol pole kasutajanime, millele pakkuda."
+    "offerNeedsHandle": "Sellel kontol pole kasutajanime, millele pakkuda.",
+    "options": "Profiili valikud",
+    "translateBio": "Tõlgi tutvustus"
   },
   "tv": {
     "seoTitle": "Live TV — tasuta kanalid kogu maailmast",
