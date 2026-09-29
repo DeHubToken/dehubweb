@@ -693,7 +693,6 @@ export const ht = {
     allowanceStep3Title: 'Lè sa a, ou peye/Lè sa',
     allowanceStep3: 'Yon transfè, yon siyati, pou pòs sa a sèlman. Li etabli sou nenpòt ki baz oswa chèn BNB kenbe ase token DeHub.',
     allowanceUnpaidTitle: 'Si ou refize',
-    allowanceUnpaidDesc: 'Pòs la rete pibliye. Montan ki poko peye a rete louvri kont kont kont ou epi bloke pwochen pòs ou peye jiskaske li rezoud — men pa janm yon sèl gratis. Kèlkeswa sa alokasyon demen an ba ou se toujou ou, si wi ou non anyen se eksepsyonèl.',
     allowanceCountsTitle: 'Ki sa ki konte kont li/Ce qui compte',
     allowanceCounts1: 'Pòs tèks sèlman depanse youn nan pòs tèks chak jou ou yo chak.',
     allowanceCounts2: 'Pòs videyo, imaj ak odyo depanse gwosè dosye yo kont alokasyon done — ti klip enkli, depi sa yo estoke ak sèvi tou.',
