@@ -7796,7 +7796,6 @@
       "notifyKeyOnce": "Kunci notifikasi baru untuk {{name}}. Salin sekarang: ditampilkan sekali, dan membuat yang lain menggantikannya.",
       "payTitle": "Ambil pembayaran",
       "payBody": "Terima pembayaran",
-      "notifyTitle": "`pay()` meminta pengguna untuk mengirimkan DHB langsung ke dompet yang menandatangani dehub.json Anda. Periksa resi di server Anda sebelum menyerahkan sesuatu.",
       "notifyBody": "Kirim notifikasi",
       "rankTitle": "Cara toko memberi peringkat aplikasi",
       "rankBody": "Setiap malam setiap aplikasi yang terdaftar mendapat skor: 55% dari pengguna yang kembali (orang yang membukanya minggu ini dan minggu sebelumnya), 35% dari pengguna mingguan, ditambah peningkatan 10% dalam 14 hari pertama. Hanya akun DeHub yang masuk yang dihitung, jadi bot dan pemuatan ulang halaman tidak menghasilkan apa - apa.",
@@ -7834,8 +7833,7 @@
     },
     "add": {
       "title": "Tambahkan {{name}}?",
-      "body": "Aplikasi ini akan muncul di bawah Your apps dan dapat mengirimkan notifikasi. Anda dapat menghapusnya kapan saja dari halaman Apps.",
-      "confirm": "Aplikasi ini akan muncul di bawah \"Aplikasi Anda\" dan dapat mengirimkan notifikasi. Anda dapat menghapusnya kapan saja dari halaman Aplikasi."
+      "body": "Aplikasi ini akan muncul di bawah Your apps dan dapat mengirimkan notifikasi. Anda dapat menghapusnya kapan saja dari halaman Apps."
     }
   },
   "aiStyles": {

@@ -1875,7 +1875,6 @@ export const om = {
     popularStaking: 'Mootummaa',
     popularDepin: 'DePIN jedhu',
     popularGovernance: 'Bulchiinsa',
-    noResults: '**{query}** *gummaa qabaa* **gummaa qabaa**',
     noResultsHint: 'Jechoota ijoo adda addaa yaali ykn qubee isaa ilaali.',
     blogPost: 'Barreeffama biloogii',
     match: '{percent}% walsimsiisa',

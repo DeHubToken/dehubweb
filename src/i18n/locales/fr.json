@@ -419,7 +419,6 @@
     "smsBand": {
       "domestic": "Royaume-Uni",
       "europe": "Europe",
-      "global": "Dans la plupart des autres pays, les organismes de recherche ont enregistré soit un mouvement constant, soit une progression du nombre de chercheurs accueillis.",
       "premium": "Partout ailleurs"
     },
     "smsDepositAction": "Envoyer {{dhb}} jetons",
@@ -6238,7 +6237,6 @@
       "imageRules": "Choisissez un PNG, JPG, WebP ou GIF de 5 Mo maximum.",
       "feeDhb": "≈ {{amount}} jetons DeHub",
       "priceUnavailable": "Le prix du jeton DeHub n'est pas disponible pour le moment. Réessayez dans une minute.",
-      "swapNote": "Vos {{symbol}} sont échangés contre des jetons DeHub contre les frais de la même transaction. Tout ce qui reste reste reste dans votre portefeuille.",
       "alreadyPaid": "Vos frais sont déjà payés. Terminez l'ouverture de la piscine.",
       "finish": "Terminer l'ouverture de la piscine",
       "notEnough": "Solde insuffisant pour les frais de 100 $",

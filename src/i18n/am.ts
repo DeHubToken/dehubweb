@@ -1847,7 +1847,6 @@ export const am = {
     popularTokenEconomics: 'ቶከን ኢኮኖሚክስ',
     popularStaking: 'ማደንዘዣ',
     popularWatchToEarn: 'ገቢ ለማግኘት ይመልከቱ',
-    popularDepin: 'የደረጃቸው የክልል አስተዋጽናቸው አስተዋልናቸው (DePIN)',
     popularGovernance: 'አስተዳደር',
     noResults: 'ምንም ውጤቶች አልተገኙም ለ "{query}"',
     noResultsHint: 'የተለያዩ ቁልፍ ቃላትን ይሞክሩ ወይም የፊደል አጻጻፉን ያረጋግጡ ።',
