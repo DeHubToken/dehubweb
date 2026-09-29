@@ -1482,7 +1482,8 @@
     "copied": "คัดลอกแล้ว",
     "visibilityUpdated": "อัปเดตการมองเห็นแล้ว",
     "visibilityFailed": "ไม่สามารถอัปเดตการมองเห็นได้",
-    "copyFailed": "คัดลอกไม่สำเร็จ"
+    "copyFailed": "คัดลอกไม่สำเร็จ",
+    "creator": "ผู้สร้าง"
   },
   "profileOptions": {
     "copyProfileUrl": "คัดลอก URL โปรไฟล์",
