@@ -7605,7 +7605,11 @@
       "search": "ئەپلەرنى ئىزدەش پروگراممىسى",
       "all": "ھەممىسى",
       "fromDehub": "DeHub دىن",
-      "noMatch": "بۇ ئىزدەشكە ماس كېلىدىغان ئەپلەر يوق."
+      "noMatch": "بۇ ئىزدەشكە ماس كېلىدىغان ئەپلەر يوق.",
+      "yourApps": "Sizning iltizarliklaringiz",
+      "notificationsOn": "Habarlar ochun",
+      "remove": "Och",
+      "removed": "Ochildi. Sizga yana habar berish mayqan."
     },
     "dev": {
       "title": "Mini app qur",
@@ -7650,7 +7654,13 @@
       "stateUnlisted": "باغلىنىش ئارقىلىق ياشاش -- دۇكانغا قاراپ چىقىش",
       "stateListed": "دۇكاندىكى",
       "stateSuspended": "توختىتىلدى",
-      "copyLink": "ئۇلىنىشنى كۆچۈر"
+      "copyLink": "ئۇلىنىشنى كۆچۈر",
+      "notifyKey": "Habar kalitini och",
+      "notifyKeyOnce": "{{name}} uchun yengi habar kaliti. Unni hozir koplaying: uni bir marta ko'rish mumkin, va yana birini qilib alish uni o'chiradi.",
+      "payTitle": "To'lovlarni qabul qiling",
+      "payBody": "pay() foydalanuvchidan sizga DHB yuborishni so'raydi, sizning dehub.json imzolagan portfelingizga bevosita. To'lovni serveringizda tekshiring, keyin faqat shuni bering.",
+      "notifyTitle": "Habarlarni yuboring",
+      "notifyBody": "Sizning iltizarlikningizni qo'shgan foydalanuvchilar sizning serveringizdan habar kalitingiz bilan habar berilishi mumkin. Har bir foydalanuvchi uchun token saqlash yo'q."
     },
     "card": {
       "open": "ئېچىش"
@@ -7659,6 +7669,7 @@
       "games": "ئويۇنلار",
       "social": "ئىجتىمائىي",
       "finance": "پۇل مۇئامىلە",
+      "utility": "Yordamchi",
       "productivity": "ھوسۇللۇق",
       "health-fitness": "سالامەتلىك ۋە بەدەن چېنىقتۇرۇش",
       "news-media": "خەۋەر ۋە ئاخبارات ۋاسىتىلىرى",
@@ -7668,6 +7679,19 @@
       "developer-tools": "دېتاللارنى ياساش پروگراممىسى",
       "entertainment": "Ehtirof",
       "art-creativity": "سەنئەت ۋە ئىجادىيەت"
+    },
+    "pay": {
+      "title": "{{name}}ga to'lov berish?",
+      "body": "DHB bevosita iltizarlikning portfeliga boradi, {{wallet}}. To'lovlar qaytarib olinmaydi.",
+      "confirm": "{{amount}} DHBga to'lov bering",
+      "sending": "To'lovingizni yuborilmoqda…",
+      "sent": "{{amount}} DHBni {{name}}ga to'lov qilingan.",
+      "noOwner": "Bu iltizarlik hali tasdiqlangan portfelga ega emas."
+    },
+    "add": {
+      "title": "{{name}}ni qo'shing?",
+      "body": "U sizning iltizarliklaringiz ostida ko'rinishi mumkin va sizga habarlar yuborishi mumkin. Siz har qanday vaqtda Apps sahifasidan uni ochishga qoyishingiz mumkin.",
+      "confirm": "Iltizarlik qo'shing"
     }
   },
   "aiStyles": {

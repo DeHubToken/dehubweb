@@ -6675,7 +6675,8 @@
       "verifyTitle": "登入 DeHub，在你的伺候上",
       "verifyBody": "`auth.getToken()` 你的 app 會得到一個由 DeHub 簽署的 token。你可以用任何 JWT 库在伺候端檢查它。用戶的錢包地址在 `sub` 裡頭。",
       "submitSignIn": "登入 DeHub 送交喔。",
-      "stateListed": "店仔里面"
+      "stateListed": "店仔里面",
+      "notifyKeyOnce": "新通知鍵給{{name}}。快點抄下來：這個只顯示一次，再做一次就會替換掉。"
     },
     "category": {
       "health-fitness": "健康跟運動",
@@ -6683,6 +6684,19 @@
       "shopping": "買東西 / 逛街",
       "developer-tools": "開發工具",
       "entertainment": "娛樂"
+    },
+    "pay": {
+      "title": "付{{name}}?",
+      "body": "DHB直接存到應用的錢包裡，{{wallet}}。付款無法退款。",
+      "confirm": "付{{amount}} DHB",
+      "sending": "正在發送你的付款…",
+      "sent": "已付{{amount}} DHB給{{name}}。",
+      "noOwner": "這個應用目前沒有驗證過的錢包可以收款。"
+    },
+    "add": {
+      "title": "要加{{name}}?",
+      "body": "它會出現在「你的應用」裡，可以發送通知給你。你隨時可以從「應用」頁面移除它。",
+      "confirm": "加應用"
     }
   },
   "aiStyles": {

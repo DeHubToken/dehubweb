@@ -7687,7 +7687,9 @@
       "search": "搜尋應用程式",
       "all": "全部",
       "fromDehub": "嚟自 DeHub",
-      "noMatch": "冇應用程式同呢個搜尋相符。"
+      "noMatch": "冇應用程式同呢個搜尋相符。",
+      "yourApps": "你嘅應用程式",
+      "remove": "去除"
     },
     "dev": {
       "title": "建立一個迷你應用程式",
@@ -7732,7 +7734,11 @@
       "stateUnlisted": "按連結直播 · 喺店舖嘅評論中",
       "stateListed": "喺舖頭入面",
       "stateSuspended": "暫停",
-      "copyLink": "複製連結"
+      "copyLink": "複製連結",
+      "notifyKey": "通知關鍵人士",
+      "notifyKeyOnce": "新通知鑰匙供 {{name}}。即時複製：只會顯示一次，再次複製會取代舊的。",
+      "payBody": "「pay()」要求用家直接將 DHB 送到你的 dehub.json 簽署的錢包。在交付任何東西之前，務必先檢查你的伺服器收據。",
+      "notifyBody": "用戶加入你的應用程式後，你的伺服器可以透過你的 notify 金鑰發送通知予他們，無需儲存每個用戶的個別令牌。"
     },
     "card": {
       "open": "打開"
@@ -7751,6 +7757,16 @@
       "developer-tools": "開發人員工具",
       "entertainment": "娛樂",
       "art-creativity": "藝術同創意"
+    },
+    "pay": {
+      "confirm": "支付 {{amount}} DHB",
+      "sending": "傳送你的付款中…",
+      "sent": "已付 {{amount}} 衛生署 {{name}}。",
+      "noOwner": "呢個應用程式仲無已驗證嘅錢包可以付款。"
+    },
+    "add": {
+      "body": "你哋可以於「應用程式」下找到，並可發送通知。你哋可以隨時於「應用程式」頁面刪除它。",
+      "confirm": "加入應用程式"
     }
   },
   "aiStyles": {

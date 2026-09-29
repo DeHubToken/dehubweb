@@ -7469,7 +7469,11 @@
       "search": "Aplicații de căutare",
       "all": "Toate",
       "fromDehub": "De la DeHub",
-      "noMatch": "Nicio aplicație nu se potrivește cu acea căutare."
+      "noMatch": "Nicio aplicație nu se potrivește cu acea căutare.",
+      "yourApps": "Aplicațiile dvs.",
+      "notificationsOn": "Notificări pe",
+      "remove": "Notificare cheie",
+      "removed": "Textul a fost șters. Nu vei primi niciun alt mesaj de notificare."
     },
     "dev": {
       "title": "Creează o miniaplicație",
@@ -7514,13 +7518,20 @@
       "stateUnlisted": "Live by link · în curs de verificare pentru comerciant",
       "stateListed": "În magazin",
       "stateSuspended": "Suspendat",
-      "copyLink": "Copiază linkul"
+      "copyLink": "Copiază linkul",
+      "notifyKey": "Tasta de notificare",
+      "notifyKeyOnce": "Nouă cheie de notificare pentru {{name}}. Copiază-o acum: apare o dată, iar dacă faci alta, o înlocuiește.",
+      "payTitle": "Primiți plăți",
+      "payBody": "Plătește() te cere să trimiți DHB direct în portofelul care a semnat fișierul tău dehub.json. Verifică chitanța pe serverul tău înainte de a livra ceva.",
+      "notifyTitle": "Trimite notificări",
+      "notifyBody": "Utilizatorii care adaugă aplicația dvs. pot fi notificați de pe serverul dvs. cu cheia `notify` a aplicației. Nu sunt necesare token-uri individuale pentru stocare."
     },
     "card": {
       "open": "Deschide"
     },
     "category": {
       "games": "Jocuri",
+      "social": "Social",
       "finance": "Finanțe",
       "utility": "Utilitate",
       "productivity": "Productivitate",
@@ -7532,6 +7543,19 @@
       "developer-tools": "Instrumente pentru dezvoltatori",
       "entertainment": "Divertisment",
       "art-creativity": "Artă și creativitate"
+    },
+    "pay": {
+      "title": "Plătesc {{name}}?",
+      "body": "DHB merge direct în portofelul aplicației, {{wallet}}. Plățile nu pot fi anulate.",
+      "confirm": "Plătește {{amount}} DHB",
+      "sending": "Trimiteți plățirea…",
+      "sent": "Plătit {{amount}} DHB către {{name}}.",
+      "noOwner": "Această aplicație nu are încă portofel verificat pentru plată."
+    },
+    "add": {
+      "title": "Adăugați {{name}}?",
+      "body": "Va apărea sub Your apps și poate trimite notificări. Poți șterge-o oricând din pagina Apps.",
+      "confirm": "Adaugă aplicație"
     }
   },
   "aiStyles": {
@@ -7565,12 +7589,6 @@
     "nationalist": "Naționalist",
     "communist": "Comunist"
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
   "apk": {
     "seoTitle": "Descarcă APK-ul DeHub — cea mai nouă versiune Android",
     "seoDescription": "Ocolește magazinele de aplicații și ia cea mai nouă versiune DeHub chiar de aici. Descărcare APK directă pentru Android — rețea socială open source, deținută de utilizatori, fără cont în magazin.",
@@ -7587,5 +7605,11 @@
     "shareFacebook": "Distribuie pe Facebook",
     "shareTelegram": "Distribuie pe Telegram",
     "copyLink": "Copiază linkul"
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
   }
 }

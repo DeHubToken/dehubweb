@@ -7616,7 +7616,11 @@
       "search": "Søg apps",
       "all": "Alle",
       "fromDehub": "Fra DeHub",
-      "noMatch": "Ingen apps matcher din søgning."
+      "noMatch": "Ingen apps matcher din søgning.",
+      "yourApps": "Dine apps",
+      "notificationsOn": "Bespøring på",
+      "remove": "Fjern",
+      "removed": "Fjernet. Det vil ikke bespørge dig igen."
     },
     "dev": {
       "title": "Byg en mini-app",
@@ -7661,7 +7665,13 @@
       "stateUnlisted": "Live via link · i gennemgang for butikken",
       "stateListed": "I butikken",
       "stateSuspended": "Ophævet",
-      "copyLink": "Kopier link"
+      "copyLink": "Kopier link",
+      "notifyKey": "Bespør nøgle",
+      "notifyKeyOnce": "Ny bespør nøgle for {{name}}. Kopier den nu: den vises kun én gang, og at lave en ny erstatter den.",
+      "payTitle": "Modtag betalinger",
+      "payBody": "`pay()` bedrer brugeren om at sende dig DHB, direkte til lommen, der har signeret din dehub.json. Tjek kvitteringen på din server før du leverer noget.",
+      "notifyTitle": "Send bespørgelser",
+      "notifyBody": "Brugere, der tilføjer din app, kan bespørges fra din server med din bespør nøgle. Ingen bruger-specifikke tokens at gemme."
     },
     "card": {
       "open": "Åbn"
@@ -7680,6 +7690,19 @@
       "developer-tools": "Udviklerværktøjer",
       "entertainment": "Underholdning",
       "art-creativity": "Kunst & kreativitet"
+    },
+    "pay": {
+      "title": "Betal {{name}}?",
+      "body": "DHB'en går direkte til appens lomme, {{wallet}}. Betalinger kan ikke annulleres.",
+      "confirm": "Betal {{amount}} DHB",
+      "sending": "Sender din betaling…",
+      "sent": "Betalt {{amount}} DHB til {{name}}.",
+      "noOwner": "Denne app har ingen bekræftet lomme til betaling endnu."
+    },
+    "add": {
+      "title": "Tilføj {{name}}?",
+      "body": "Den vil dukke op under Dine apps og kan sende dig bespørgelser. Du kan fjerne den når som helst fra Apps-siden.",
+      "confirm": "Tilføj app"
     }
   },
   "aiStyles": {

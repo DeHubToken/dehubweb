@@ -7489,7 +7489,11 @@
       "search": "Tìm kiếm ứng dụng",
       "all": "Tất cả",
       "fromDehub": "Từ DeHub",
-      "noMatch": "Không có ứng dụng nào phù hợp với kết quả tìm kiếm của bạn."
+      "noMatch": "Không có ứng dụng nào phù hợp với kết quả tìm kiếm của bạn.",
+      "yourApps": "Các ứng dụng của bạn",
+      "notificationsOn": "Thông báo về",
+      "remove": "Thông báo đã bật",
+      "removed": "Xóa"
     },
     "dev": {
       "title": "Xây dựng một mini ứng dụng",
@@ -7534,7 +7538,13 @@
       "stateUnlisted": "Trực tuyến theo liên kết · đang được xem xét cho cửa hàng",
       "stateListed": "Trong cửa hàng",
       "stateSuspended": "Tạm ngừng",
-      "copyLink": "Sao chép liên kết"
+      "copyLink": "Sao chép liên kết",
+      "notifyKey": "Đã xóa. Nó sẽ không thông báo cho bạn nữa.",
+      "notifyKeyOnce": "Mã thông báo mới cho {{name}}. Sao chép ngay: nó chỉ hiển thị một lần, và tạo một lần nữa sẽ thay thế nó.",
+      "payTitle": "Nhận thanh toán",
+      "payBody": "Nhận thanh toán",
+      "notifyTitle": "pay() yêu cầu người dùng gửi DHB cho bạn, trực tiếp vào ví đã ký dehub.json của bạn. Kiểm tra hóa đơn trên máy chủ của bạn trước khi giao bất cứ thứ gì.",
+      "notifyBody": "Gửi thông báo"
     },
     "card": {
       "open": "Mở"
@@ -7553,6 +7563,18 @@
       "developer-tools": "Công cụ phát triển",
       "entertainment": "Giải trí",
       "art-creativity": "Nghệ thuật & sáng tạo"
+    },
+    "pay": {
+      "title": "Trả {{name}}?",
+      "body": "Thanh toán {{wallet}}?",
+      "confirm": "DHB sẽ được chuyển trực tiếp vào ví của ứng dụng, {{amount}}. Thanh toán không thể hoàn lại.",
+      "sending": "Đang gửi thanh toán của bạn…",
+      "sent": "Đã thanh toán {{amount}} cho {{name}}.",
+      "noOwner": "Ứng dụng này chưa có ví được xác minh để thanh toán."
+    },
+    "add": {
+      "body": "Nó sẽ xuất hiện trong danh sách Ứng dụng của bạn và có thể gửi thông báo cho bạn. Bạn có thể xóa nó bất kỳ lúc nào từ trang Ứng dụng.",
+      "confirm": "Nó sẽ xuất hiện dưới mục Các ứng dụng của bạn và có thể gửi thông báo cho bạn. Bạn có thể xóa nó bất kỳ lúc nào từ trang Ứng dụng."
     }
   },
   "aiStyles": {

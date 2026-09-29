@@ -7910,7 +7910,10 @@
       "search": "Apps zoeken",
       "all": "Alle",
       "fromDehub": "Van DeHub",
-      "noMatch": "Er komen geen apps overeen met die zoekopdracht."
+      "noMatch": "Er komen geen apps overeen met die zoekopdracht.",
+      "yourApps": "Uw apps",
+      "notificationsOn": "Berichtjes op",
+      "removed": "Verwijderd. Het zal je niet nogmaals melden."
     },
     "dev": {
       "title": "Een mini-app bouwen",
@@ -7955,7 +7958,12 @@
       "stateUnlisted": "Live via link · in beoordeling voor de winkel",
       "stateListed": "In de winkel",
       "stateSuspended": "Opgeschort",
-      "copyLink": "Link kopiëren"
+      "copyLink": "Link kopiëren",
+      "notifyKeyOnce": "Nieuwe meldingssleutel voor {{name}}. Kopieer hem nu: hij wordt één keer getoond, en een nieuwe vervangt hem.",
+      "payTitle": "Betalingen accepteren",
+      "payBody": "Betaal() vraagt de gebruiker om u DHB te sturen, rechtstreeks naar de portemonnee die uw dehub.json heeft ondertekend. Controleer de ontvangstbon op uw server voordat u iets levert.",
+      "notifyTitle": "Stuur notificaties",
+      "notifyBody": "Gebruikers die uw app toevoegen, kunnen vanaf uw server worden genotificeerd met uw `notify`-sleutel. Geen per-gebruikers tokens om op te slaan."
     },
     "card": {
       "open": "Open"
@@ -7974,6 +7982,19 @@
       "developer-tools": "Tools voor ontwikkelaars",
       "entertainment": "Onderhouding",
       "art-creativity": "Kunst & creativiteit"
+    },
+    "pay": {
+      "title": "Betaal je {{name}}?",
+      "body": "De DHB gaat rechtstreeks naar de portemonnee van de app, {{wallet}}. Betalingen kunnen niet worden teruggedraaid.",
+      "confirm": "Betaal {{amount}} DHB",
+      "sending": "Stuur je betaling op…",
+      "sent": "Betaald {{amount}} DHB aan {{name}}.",
+      "noOwner": "Deze app heeft nog geen bevestigde wallet om mee te betalen."
+    },
+    "add": {
+      "title": "Vul {{name}} toe?",
+      "body": "Het zal onder Je apps verschijnen en kan je notificaties sturen. Je kunt het op elk moment verwijderen vanaf de Apps-pagina.",
+      "confirm": "Voeg app toe"
     }
   },
   "aiStyles": {

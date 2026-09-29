@@ -7704,7 +7704,10 @@
       "search": "Uygulama ara",
       "all": "Tümü",
       "fromDehub": "DeHub'dan",
-      "noMatch": "Bu aramayla eşleşen uygulama yok."
+      "noMatch": "Bu aramayla eşleşen uygulama yok.",
+      "yourApps": "Uygulamalarınız",
+      "notificationsOn": "Bildirimler açık",
+      "removed": "Silindi. Artık tekrar bildirim yapmayacak."
     },
     "dev": {
       "title": "Bir mini uygulama oluşturun",
@@ -7749,7 +7752,11 @@
       "stateUnlisted": "Bağlantıya göre yaşa · mağaza için incelemede",
       "stateListed": "Mağazada",
       "stateSuspended": "Askıya alındı",
-      "copyLink": "Bağlantıyı kopyala"
+      "copyLink": "Bağlantıyı kopyala",
+      "notifyKeyOnce": "Yeni bildirim anahtarı için {{name}}. Şimdi kopyalayın: sadece bir kez gösterilir ve bir başkası yapıldığında yerini alır.",
+      "payTitle": "Ödemeleri alın",
+      "payBody": "`pay()` kullanıcının size doğrudan imzaladığınız `dehub.json` cüzdanına DHB göndermesini ister. Sunucunuzdaki fatura/ödemenin onayını kontrol edin önce herhangi bir şey teslim edin.",
+      "notifyBody": "Kullanıcılarınızın uygulamanıza eklediği kullanıcılar, bildirim anahtarı (notify key) ile sunucunuzdan bildirim alabilir. Her kullanıcı için ayrı token saklamanız gerekmez."
     },
     "card": {
       "open": "Açık"
@@ -7768,6 +7775,16 @@
       "developer-tools": "Geliştirici araçları",
       "entertainment": "Eğlence",
       "art-creativity": "Sanat ve yaratıcılık"
+    },
+    "pay": {
+      "body": "DHB doğrudan uygulamanın cüzdanına gider, {{wallet}}. Ödemeler iptal edilemez.",
+      "confirm": "Pay {{amount}} DHB",
+      "sending": "Ödeme gönderiliyor...",
+      "sent": "Ödenmiş {{amount}} DHB'yi {{name}}.",
+      "noOwner": "Bu uygulamanın henüz ödenecek doğrulanmış bir cüzdanı yok."
+    },
+    "add": {
+      "body": "Yükleme sonrası \"Senin Uygulamaların\" altında görünecek ve size bildirimler göndermeye devam edecek. Herhangi bir zaman \"Uygulamalar\" sayfasından kaldırılabilir."
     }
   },
   "aiStyles": {

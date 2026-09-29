@@ -7691,7 +7691,11 @@
       "search": "Søk i apper",
       "all": "Alle",
       "fromDehub": "Fra DeHub",
-      "noMatch": "Ingen apper samsvarer med det søket."
+      "noMatch": "Ingen apper samsvarer med det søket.",
+      "yourApps": "Dine apps",
+      "notificationsOn": "Varsler på",
+      "remove": "Fjern",
+      "removed": "Fjernet. Det vil ikke varsle deg igjen."
     },
     "dev": {
       "title": "Bygg en mini-app",
@@ -7736,7 +7740,13 @@
       "stateUnlisted": "Live via lenke · anmeldelse for butikken",
       "stateListed": "I butikken",
       "stateSuspended": "Suspendert",
-      "copyLink": "Kopier lenke"
+      "copyLink": "Kopier lenke",
+      "notifyKey": "Varsler nøkkel",
+      "notifyKeyOnce": "Ny varsler nøkkel for {{name}}. Kopier den nå: den vises en gang, og å lage en annen erstatter den.",
+      "payTitle": "Ta imot betalinger",
+      "payBody": "`pay()` ber brukeren sende deg DHB, direkte til lommeboken som signerte din dehub.json. Sjekk kvitteringen på din server før du leverer noe.",
+      "notifyTitle": "Send varsler",
+      "notifyBody": "Brukere som legger til din app kan varsles fra din server med din varsler nøkkel. Ingen bruker-spesifikke token å lagre."
     },
     "card": {
       "open": "Åpne"
@@ -7755,6 +7765,19 @@
       "developer-tools": "Utviklerverktøy",
       "entertainment": "Underholdning",
       "art-creativity": "Kunst og kreativitet"
+    },
+    "pay": {
+      "title": "Betale {{name}}?",
+      "body": "DHB-en går direkte til appens lommebok, {{wallet}}. Betalinger kan ikke trekkes tilbake.",
+      "confirm": "Betale {{amount}} DHB",
+      "sending": "Sender din betaling…",
+      "sent": "Betalt {{amount}} DHB til {{name}}.",
+      "noOwner": "Denne appen har ingen verifisert lommebok for betalinger ennå."
+    },
+    "add": {
+      "title": "Legg til {{name}}?",
+      "body": "Den vil dukke opp under Dine apps og kan sende deg varsler. Du kan fjerne den når som helst fra Apps-siden.",
+      "confirm": "Legg til app"
     }
   },
   "aiStyles": {

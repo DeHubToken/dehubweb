@@ -7551,7 +7551,10 @@
       "search": "Soek programme",
       "all": "Alle",
       "fromDehub": "Van DeHub",
-      "noMatch": "Geen programme pas by daardie soektog nie."
+      "noMatch": "Geen programme pas by daardie soektog nie.",
+      "yourApps": "Jou programme",
+      "notificationsOn": "Berigte op",
+      "removed": "Verwyder. Dit sal jou nie weer waarsku nie."
     },
     "dev": {
       "title": "Maak 'n mini-app",
@@ -7596,7 +7599,13 @@
       "stateUnlisted": "Live by link · in resensie vir die winkel",
       "stateListed": "In die winkel",
       "stateSuspended": "Opgeskort",
-      "copyLink": "Kopieer skakel"
+      "copyLink": "Kopieer skakel",
+      "notifyKey": "Benoem sleutelhouers",
+      "notifyKeyOnce": "Nuwe berigstoets vir {{name}}. Kopieer dit nou: dit word eenmalig getoon, en 'n ander vervang dit.",
+      "payTitle": "Neem betalings aan.",
+      "payBody": "betaal() vra die gebruiker om jou DHB te stuur, regstreeks na die portemonnee wat jou dehub.json onderteken het. Kontroleer die ontvangstbewys op jou server voor jy iets lewer.",
+      "notifyTitle": "Stuur kennisgewings",
+      "notifyBody": "Gebruikers wat jou toepassing byvoeg, kan deur jou diens met jou notify sleutel genootifiseer word. Geen per-gebruiker-tokens om te berg."
     },
     "category": {
       "games": "Speletjies",
@@ -7612,6 +7621,18 @@
       "developer-tools": "Ontwikkelaar gereedskap",
       "entertainment": "Vermaak",
       "art-creativity": "Kuns en kreatiwiteit"
+    },
+    "pay": {
+      "title": "Betaal {{name}}?",
+      "body": "Die DHB gaan regstreeks na die app se portemonnee, {{wallet}}. Betalings kan nie teruggedraai word nie.",
+      "confirm": "Betaal {{amount}} DHB",
+      "sending": "Stuur jou betaaling…",
+      "sent": "Betaal {{amount}} DHB vir {{name}}.",
+      "noOwner": "Hierdie app het nog geen bevestigde portemonnee om met te betaal nie."
+    },
+    "add": {
+      "title": "Vegt {{name}}?",
+      "body": "Daar sal dit onder U se toepassings verskyn en kan dit jou kennisgewings stuur. Jy kan dit op enige tyd uit die Toepassings-blad verwder."
     }
   },
   "aiStyles": {
@@ -7644,6 +7665,23 @@
     "progressive": "Progressief",
     "nationalist": "Nasionalis",
     "communist": "Kommunis"
+  },
+  "apk": {
+    "seoTitle": "Laai die DeHub APK af — Nuutste Android-weergawe",
+    "seoDescription": "Slaan die winkels oor en kry die nuutste weergawe van DeHub hier. Direkte APK-aflaai vir Android — oopbron, gebruikers-besitte sosiale media, geen winkelrekening nodig nie.",
+    "ldDescription": "Die DeHub Android-toep as 'n direkte APK-aflaai. Oopbron, gebruikers-besitte sosiale media — geen winkelrekening nodig nie.",
+    "back": "Terug na DeHub",
+    "title": "Slaan die winkels oor.",
+    "subtitle": "Kry die nuutste weergawe van DeHub hier — reguit van ons af, geen winkelrekening nie, geen wag op 'n hersieningsry nie.",
+    "download": "Laai nou af",
+    "installHint": "Laat installasies vanaf jou blaaier toe wanneer Android vra. Dateer jy op? Installeer oor jou bestaande toep sonder om dit te deïnstalleer.",
+    "useInBrowser": "Gebruik DeHub in jou blaaier",
+    "googlePlay": "Verkies jy Google Play? Kry dit eerder daar.",
+    "shareText": "Slaan die winkels oor — kry die nuutste DeHub Android-weergawe direk.",
+    "shareX": "Deel op X",
+    "shareFacebook": "Deel op Facebook",
+    "shareTelegram": "Deel op Telegram",
+    "copyLink": "Kopieer skakel"
   },
   "footer": {
     "company": "Maatskappy",
@@ -7678,22 +7716,5 @@
     "description": "Skep iets nuuts.",
     "newProject": "Nuwe projek",
     "newPost": "Nuwe plasing"
-  },
-  "apk": {
-    "seoTitle": "Laai die DeHub APK af — Nuutste Android-weergawe",
-    "seoDescription": "Slaan die winkels oor en kry die nuutste weergawe van DeHub hier. Direkte APK-aflaai vir Android — oopbron, gebruikers-besitte sosiale media, geen winkelrekening nodig nie.",
-    "ldDescription": "Die DeHub Android-toep as 'n direkte APK-aflaai. Oopbron, gebruikers-besitte sosiale media — geen winkelrekening nodig nie.",
-    "back": "Terug na DeHub",
-    "title": "Slaan die winkels oor.",
-    "subtitle": "Kry die nuutste weergawe van DeHub hier — reguit van ons af, geen winkelrekening nie, geen wag op 'n hersieningsry nie.",
-    "download": "Laai nou af",
-    "installHint": "Laat installasies vanaf jou blaaier toe wanneer Android vra. Dateer jy op? Installeer oor jou bestaande toep sonder om dit te deïnstalleer.",
-    "useInBrowser": "Gebruik DeHub in jou blaaier",
-    "googlePlay": "Verkies jy Google Play? Kry dit eerder daar.",
-    "shareText": "Slaan die winkels oor — kry die nuutste DeHub Android-weergawe direk.",
-    "shareX": "Deel op X",
-    "shareFacebook": "Deel op Facebook",
-    "shareTelegram": "Deel op Telegram",
-    "copyLink": "Kopieer skakel"
   }
 }

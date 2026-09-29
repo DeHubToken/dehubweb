@@ -6327,7 +6327,10 @@
       "search": "Search apps",
       "all": "All",
       "fromDehub": "From DeHub",
-      "noMatch": "No app fit dem search."
+      "noMatch": "No app fit dem search.",
+      "yourApps": "Your apps",
+      "notificationsOn": "Notifications on",
+      "remove": "Remove"
     },
     "dev": {
       "backToStore": "Back to Apps",
@@ -6354,7 +6357,11 @@
       "yourAppsTitle": "Your apps",
       "stateListed": "In the store",
       "stateSuspended": "Suspended",
-      "copyLink": "Copy link"
+      "copyLink": "Copy link",
+      "notifyKey": "Notify key",
+      "payTitle": "Take payments",
+      "notifyTitle": "Send notifications",
+      "notifyBody": "User wey go add your app, you go send notification to dem from your server use your notify key. No need for per-user token to keep."
     },
     "card": {
       "open": "Open"
@@ -6373,6 +6380,15 @@
       "developer-tools": "Developer Tools (e.g., *VS Code*, *GitHub*)",
       "entertainment": "Entertainment (e.g., *Netflix*, *YouTube*)",
       "art-creativity": "Art & Creativity (e.g., *Canva*, *Procreate*)"
+    },
+    "pay": {
+      "title": "Pay {{name}}?",
+      "body": "DHB go direct to app's wallet, {{wallet}}. Payment no go reverse.",
+      "confirm": "Pay {{amount}} DHB"
+    },
+    "add": {
+      "title": "Add {{name}}?",
+      "confirm": "Add app"
     }
   },
   "aiStyles": {

@@ -7703,7 +7703,11 @@
       "search": "搜索应用",
       "all": "全部",
       "fromDehub": "来自DeHub",
-      "noMatch": "没有与该搜索匹配的应用。"
+      "noMatch": "没有与该搜索匹配的应用。",
+      "yourApps": "您的应用",
+      "notificationsOn": "通知开启",
+      "remove": "移除",
+      "removed": "已移除。不会再通知您了。"
     },
     "dev": {
       "title": "构建迷你应用",
@@ -7748,7 +7752,13 @@
       "stateUnlisted": "LIVE BY LINK ·商店审核中",
       "stateListed": "在商店里",
       "stateSuspended": "已下架",
-      "copyLink": "复制链接"
+      "copyLink": "复制链接",
+      "notifyKey": "通知密钥",
+      "notifyKeyOnce": "{{name}} 的新通知密钥。复制它：它只显示一次，再次生成会替换它。",
+      "payTitle": "接收付款",
+      "payBody": "pay() 会要求用户向您发送 DHB，直接发送到签署您的 dehub.json 的钱包。在交付任何东西之前，请在服务器上检查收据。",
+      "notifyTitle": "发送通知",
+      "notifyBody": "添加您应用的用户可以通过您的服务器和通知密钥进行通知。无需为每个用户存储令牌。"
     },
     "card": {
       "open": "打开"
@@ -7767,6 +7777,19 @@
       "developer-tools": "开发者工具",
       "entertainment": "娱乐",
       "art-creativity": "艺术与创意"
+    },
+    "pay": {
+      "title": "支付 {{name}}？",
+      "body": "DHB 将直接发送到应用的钱包 {{wallet}}。付款无法撤销。",
+      "confirm": "支付 {{amount}} DHB",
+      "sending": "正在发送您的付款…",
+      "sent": "已支付 {{amount}} DHB 给 {{name}}。",
+      "noOwner": "此应用尚未设置可验证的付款钱包。"
+    },
+    "add": {
+      "title": "添加 {{name}}？",
+      "body": "它将出现在“您的应用”中，并能向您发送通知。您可以随时从“应用”页面中移除它。",
+      "confirm": "添加应用"
     }
   },
   "aiStyles": {

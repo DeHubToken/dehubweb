@@ -22,7 +22,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { signEncryptionMessage } from '@/lib/dm-e2ee/signer';
 import { ownershipMessage, parseAppUrl } from '@/lib/miniapp/protocol';
-import { checkManifest, fetchMyApps, submitApp, type ManifestCheck } from '@/lib/miniapp/registry';
+import { checkManifest, createNotifyKey, fetchMyApps, submitApp, type ManifestCheck } from '@/lib/miniapp/registry';
 
 const QUICKSTART = `<script src="https://dehub.io/sdk/miniapp.js"></script>
 <script>
@@ -67,6 +67,34 @@ const MANIFEST = `// https://app.example.com/.well-known/dehub.json
   }
 }`;
 
+const PAY = `// In your app. DeHub shows the amount, your app and your wallet;
+// the DHB goes straight to the wallet that signed your dehub.json.
+const { txHash, receipt } = await dehub.actions.pay({ amount: 50, memo: 'Extra life' });
+
+// On your server: the receipt is a JWT, checked against the same JWKS.
+const { payload } = await jwtVerify(receipt, JWKS, {
+  issuer: 'https://dehub.io',
+  audience: 'app.example.com',
+});
+// payload.typ === 'payment', payload.amount, payload.token === 'DHB', payload.txHash`;
+
+const NOTIFY = `// In your app: ask once. Only people who add your app can be notified.
+await dehub.actions.addApp();
+
+// On your server, with the notify key from "Your apps" above.
+await fetch('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-notify', {
+  method: 'POST',
+  headers: { Authorization: 'Bearer dhmk_…', 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    notificationId: 'daily-2026-09-30',   // same id twice in 24h is skipped
+    title: 'Your turn',                    // 32 characters
+    body: 'The board has moved.',          // 128 characters
+    targetUrl: 'https://app.example.com/game/42',
+    wallets: ['0x…'],                      // optional; omit for everyone who added you
+  }),
+});
+// Limits per person: one every 30 seconds, ten a day.`;
+
 const EMBED = `<meta name="dehub:miniapp" content='{"version":"1","imageUrl":"https://app.example.com/card-3x2.png","button":{"title":"Play","url":"https://app.example.com/?room=42"}}' />`;
 
 function CodeBlock({ code }: { code: string }) {
@@ -110,6 +138,14 @@ export default function AppsDevPage() {
   const [signing, setSigning] = useState(false);
   const [ownership, setOwnership] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [notifyKey, setNotifyKey] = useState<{ slug: string; key: string } | null>(null);
+  const makeNotifyKey = async (slug: string) => {
+    try {
+      setNotifyKey({ slug, key: await createNotifyKey(slug) });
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  };
   const queryClient = useQueryClient();
   const { data: myApps } = useQuery({
     queryKey: ['miniapp-mine', walletAddress],
@@ -341,8 +377,23 @@ export default function AppsDevPage() {
                   >
                     {t('miniApps.dev.open')}
                   </Link>
+                  {app.owner_wallet ? (
+                    <button
+                      type="button"
+                      onClick={() => void makeNotifyKey(app.slug)}
+                      className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-700"
+                    >
+                      {t('miniApps.dev.notifyKey')}
+                    </button>
+                  ) : null}
                 </div>
               ))}
+              {notifyKey ? (
+                <div className="space-y-1.5">
+                  <p className="text-xs text-amber-300">{t('miniApps.dev.notifyKeyOnce', { name: notifyKey.slug })}</p>
+                  <CodeBlock code={notifyKey.key} />
+                </div>
+              ) : null}
             </div>
           </Section>
         ) : null}
@@ -382,6 +433,16 @@ export default function AppsDevPage() {
         <Section title={t('miniApps.dev.verifyTitle')}>
           <p className="text-xs leading-relaxed text-zinc-400">{t('miniApps.dev.verifyBody')}</p>
           <CodeBlock code={VERIFY} />
+        </Section>
+
+        <Section title={t('miniApps.dev.payTitle')}>
+          <p className="text-xs leading-relaxed text-zinc-400">{t('miniApps.dev.payBody')}</p>
+          <CodeBlock code={PAY} />
+        </Section>
+
+        <Section title={t('miniApps.dev.notifyTitle')}>
+          <p className="text-xs leading-relaxed text-zinc-400">{t('miniApps.dev.notifyBody')}</p>
+          <CodeBlock code={NOTIFY} />
         </Section>
       </div>
     </div>

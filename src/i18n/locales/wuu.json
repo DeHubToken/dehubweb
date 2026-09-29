@@ -6697,9 +6697,19 @@
       "copy": "複製",
       "copied": "已複製",
       "submit": "提交到DeHub",
-      "submitSignIn": "登入 DeHub 提交。"
+      "submitSignIn": "登入 DeHub 提交。",
+      "notifyKey": "通知鍵",
+      "notifyKeyOnce": "新通知鍵給{{name}}。快點抄下去：只會顯示一次，再做一次就會替換掉。",
+      "payTitle": "收款",
+      "payBody": "`pay()` 會請使用者直接把 DHB 送到簽署你的 `dehub.json` 的錢包裡。在送出任何東西前，請在你的伺服器檢查收據。",
+      "notifyTitle": "發送通知",
+      "notifyBody": "使用者加入你的 app 後，你可以用你的 `notify` 金鑰從伺服器發送通知。不需要儲存每個使用者的 token。"
+    },
+    "card": {
+      "open": "開啟"
     },
     "category": {
+      "games": "遊戲",
       "social": "社會",
       "finance": "金融",
       "utility": "公共事務",
@@ -6712,6 +6722,19 @@
       "developer-tools": "開發工具",
       "entertainment": "娛樂",
       "art-creativity": "藝術與創意"
+    },
+    "pay": {
+      "title": "付 {{name}}?",
+      "body": "DHB 會直接送到 app 的錢包 {{wallet}}。付款無法撤銷。",
+      "confirm": "付 {{amount}} DHB",
+      "sending": "正在發送付款…",
+      "sent": "已付 {{amount}} DHB 給 {{name}}。",
+      "noOwner": "這個 app 還沒有驗證過的錢包可以收款。"
+    },
+    "add": {
+      "title": "加入 {{name}}?",
+      "body": "它會出現在「你的 app」底下，並可以發送通知給你。你可以隨時從「app 頁面」移除它。",
+      "confirm": "加入 app"
     }
   },
   "aiStyles": {

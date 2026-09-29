@@ -20,10 +20,11 @@ import { AlertTriangle, BadgeCheck, Loader2, ShieldAlert, Wrench, X } from 'luci
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
-import { useMiniAppHost } from '@/lib/miniapp/host-bridge';
+import { useMiniAppHost, type PaymentResult } from '@/lib/miniapp/host-bridge';
+import { payDhb } from '@/lib/dhb-payment';
 import { launchUrl, parseAppUrl, type LaunchSource, type MiniAppContext } from '@/lib/miniapp/protocol';
 import { useFarcasterHost } from '@/lib/miniapp/farcaster-host';
-import { fetchAppBySlug, type MiniAppListing } from '@/lib/miniapp/registry';
+import { addApp, fetchAddedApps, fetchAppBySlug, recordPayment, type MiniAppListing } from '@/lib/miniapp/registry';
 
 const PostModal = React.lazy(() =>
   import('@/features/post/PostModal').then((m) => ({ default: m.PostModal })),
@@ -43,6 +44,10 @@ type Badge = 'verified' | 'unreviewed' | 'dev' | null;
 
 interface HostedApp {
   url: URL;
+  /** Registered apps only; a developer preview has none, so it cannot be added or paid. */
+  slug?: string;
+  /** Where payments go, when the domain's owner is verified. */
+  ownerWallet?: string | null;
   name: string;
   iconUrl: string | null;
   splashBackground: string;
@@ -51,7 +56,7 @@ interface HostedApp {
 }
 
 function launchSource(value: string | null, dev: boolean): LaunchSource {
-  if (value === 'store' || value === 'feed' || value === 'share') return value;
+  if (value === 'store' || value === 'feed' || value === 'share' || value === 'notification') return value;
   return dev ? 'dev' : 'direct';
 }
 
@@ -65,6 +70,25 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
   const [draft, setDraft] = useState<string | null>(null);
   const [composerMounted, setComposerMounted] = useState(false);
   const [signInAsk, setSignInAsk] = useState<{ domain: string; resolve: (ok: boolean) => void } | null>(null);
+  const [addAsk, setAddAsk] = useState<{ resolve: (ok: boolean) => void } | null>(null);
+  const [payAsk, setPayAsk] = useState<{ amount: number; memo: string | null; resolve: (ok: boolean) => void } | null>(null);
+  const [added, setAdded] = useState(false);
+
+  useEffect(() => {
+    let live = true;
+    if (!app.slug || !walletAddress) return;
+    fetchAddedApps(walletAddress).then((rows) => {
+      if (live) setAdded(rows.some((r) => r.miniapp_apps?.slug === app.slug));
+    });
+    return () => {
+      live = false;
+    };
+  }, [app.slug, walletAddress]);
+
+  const answer = (sheet: { resolve: (ok: boolean) => void } | null, clear: () => void, ok: boolean) => {
+    sheet?.resolve(ok);
+    clear();
+  };
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -97,12 +121,13 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
       location: { type: launchSource(params.get('from'), dev) },
       client: {
         platform: 'web',
+        added,
         locale: i18n.language || 'en',
         theme: 'dark',
         safeAreaInsets: { top: 0, bottom: 0, left: 0, right: 0 },
       },
     };
-  }, [walletAddress, user, params, dev, i18n.language]);
+  }, [walletAddress, user, params, dev, i18n.language, added]);
 
   const close = useCallback(() => {
     if (window.history.length > 1) navigate(-1);
@@ -125,9 +150,55 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
   }, []);
   const onReady = useCallback(() => setReady(true), []);
 
-  useMiniAppHost(frameRef, { appUrl: app.url, context, onReady, onClose: close, onCompose, requestSignIn });
+  // Adding and paying both go through a sheet DeHub draws over the app:
+  // nothing is added and nothing leaves the wallet without that tap.
+  const slug = app.slug;
+  const addAppFlow = useCallback(async () => {
+    const allowed = await new Promise<boolean>((resolve) => setAddAsk({ resolve }));
+    if (!allowed || !slug) return { added: false };
+    await addApp(slug);
+    setAdded(true);
+    return { added: true };
+  }, [slug]);
+
+  const payFlow = useCallback(
+    async (request: { amount: number; memo: string | null }): Promise<PaymentResult> => {
+      if (!slug || !app.ownerWallet) throw Object.assign(new Error(t('miniApps.pay.noOwner')), { code: 'unsupported' });
+      const allowed = await new Promise<boolean>((resolve) => setPayAsk({ ...request, resolve }));
+      if (!allowed) throw Object.assign(new Error('The user declined to pay.'), { code: 'rejected' });
+      const toastId = toast.loading(t('miniApps.pay.sending'));
+      try {
+        const sent = await payDhb(request.amount, app.ownerWallet, { context: `${app.name} payment` });
+        const recorded = await recordPayment({ slug, txHash: sent.txHash, chainId: sent.chainId, amount: request.amount, memo: request.memo });
+        toast.success(t('miniApps.pay.sent', { amount: recorded.amount, name: app.name }), { id: toastId });
+        return recorded;
+      } catch (error) {
+        toast.error((error as Error).message, { id: toastId });
+        throw error;
+      }
+    },
+    [slug, app.ownerWallet, app.name, t],
+  );
+
+  useMiniAppHost(frameRef, {
+    appUrl: app.url,
+    context,
+    onReady,
+    onClose: close,
+    onCompose,
+    requestSignIn,
+    addApp: slug ? addAppFlow : undefined,
+    pay: slug && app.ownerWallet ? payFlow : undefined,
+  });
   // Apps built for Farcaster speak its SDK instead; answer that too.
-  useFarcasterHost(frameRef, { appUrl: app.url, context, onReady, onClose: close, onCompose });
+  useFarcasterHost(frameRef, {
+    appUrl: app.url,
+    context,
+    onReady,
+    onClose: close,
+    onCompose,
+    addApp: slug ? addAppFlow : undefined,
+  });
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-center bg-black">
@@ -215,6 +286,60 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
         </div>
       ) : null}
 
+      {addAsk ? (
+        <div className="absolute inset-0 z-20 flex items-end justify-center bg-black/70 p-4 sm:items-center">
+          <div className="w-full max-w-sm rounded-2xl bg-zinc-950 p-5 ring-1 ring-white/10">
+            <p className="text-base font-semibold text-white">{t('miniApps.add.title', { name: app.name })}</p>
+            <p className="mt-1 font-mono text-xs text-zinc-400">{app.url.host}</p>
+            <p className="mt-3 text-sm leading-relaxed text-zinc-300">{t('miniApps.add.body')}</p>
+            <div className="mt-5 flex gap-2">
+              <button
+                type="button"
+                onClick={() => answer(addAsk, () => setAddAsk(null), false)}
+                className="flex-1 rounded-lg bg-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-200 hover:bg-zinc-700"
+              >
+                {t('miniApps.signIn.cancel')}
+              </button>
+              <button
+                type="button"
+                onClick={() => answer(addAsk, () => setAddAsk(null), true)}
+                className="flex-1 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black hover:opacity-90"
+              >
+                {t('miniApps.add.confirm')}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+      {payAsk ? (
+        <div className="absolute inset-0 z-20 flex items-end justify-center bg-black/70 p-4 sm:items-center">
+          <div className="w-full max-w-sm rounded-2xl bg-zinc-950 p-5 ring-1 ring-white/10">
+            <p className="text-base font-semibold text-white">{t('miniApps.pay.title', { name: app.name })}</p>
+            <p className="mt-1 font-mono text-xs text-zinc-400">{app.url.host}</p>
+            <p className="mt-4 text-3xl font-bold tabular-nums text-white">{payAsk?.amount.toLocaleString()} DHB</p>
+            {payAsk?.memo ? <p className="mt-1 text-sm text-zinc-300">{payAsk.memo}</p> : null}
+            <p className="mt-3 text-xs leading-relaxed text-zinc-400">
+              {t('miniApps.pay.body', { wallet: `${app.ownerWallet?.slice(0, 6)}…${app.ownerWallet?.slice(-4)}` })}
+            </p>
+            <div className="mt-5 flex gap-2">
+              <button
+                type="button"
+                onClick={() => answer(payAsk, () => setPayAsk(null), false)}
+                className="flex-1 rounded-lg bg-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-200 hover:bg-zinc-700"
+              >
+                {t('miniApps.signIn.cancel')}
+              </button>
+              <button
+                type="button"
+                onClick={() => answer(payAsk, () => setPayAsk(null), true)}
+                className="flex-1 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black hover:opacity-90"
+              >
+                {t('miniApps.pay.confirm', { amount: payAsk?.amount.toLocaleString() })}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
       {composerMounted ? (
         <Suspense fallback={null}>
           <PostModal isOpen={draft !== null} onClose={() => setDraft(null)} initialText={draft ?? undefined} />
@@ -314,6 +439,8 @@ export default function MiniAppPage() {
         dev={false}
         app={{
           url,
+          slug: listing.slug,
+          ownerWallet: listing.owner_wallet,
           name: listing.name,
           iconUrl: listing.icon_url,
           splashBackground: /^#[0-9a-fA-F]{6}$/.test(listing.splash_background_color ?? '')

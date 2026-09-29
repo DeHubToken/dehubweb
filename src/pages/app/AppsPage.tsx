@@ -12,7 +12,9 @@ import { useTranslation } from 'react-i18next';
 import { BadgeCheck, Blocks, Code2, Search } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { fetchListedApps, type MiniAppListing } from '@/lib/miniapp/registry';
+import { fetchAddedApps, fetchListedApps, removeApp, type AddedApp, type MiniAppListing } from '@/lib/miniapp/registry';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 import { ARCADE_GAMES } from '@/config/arcade-games';
 
 function AppCard({ app }: { app: MiniAppListing }) {
@@ -43,6 +45,26 @@ function AppCard({ app }: { app: MiniAppListing }) {
 export default function AppsPage() {
   const { t } = useTranslation();
   const [apps, setApps] = useState<MiniAppListing[] | null>(null);
+  const { walletAddress } = useAuth();
+  const [added, setAdded] = useState<AddedApp[]>([]);
+  useEffect(() => {
+    let live = true;
+    fetchAddedApps(walletAddress).then((rows) => {
+      if (live) setAdded(rows);
+    });
+    return () => {
+      live = false;
+    };
+  }, [walletAddress]);
+  const remove = async (slug: string) => {
+    try {
+      await removeApp(slug);
+      setAdded((rows) => rows.filter((r) => r.miniapp_apps?.slug !== slug));
+      toast.success(t('miniApps.store.removed'));
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  };
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
   const categories = useMemo(
@@ -142,6 +164,42 @@ export default function AppsPage() {
             </div>
           ) : null}
         </div>
+
+        {!query && category === 'all' && added.length > 0 ? (
+          <section data-feed-item>
+            <h2 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              {t('miniApps.store.yourApps')}
+            </h2>
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {added.map((row) =>
+                row.miniapp_apps ? (
+                  <div key={row.app_id} className="flex items-center gap-3 rounded-2xl bg-zinc-900/60 p-3 ring-1 ring-white/[0.06]">
+                    <Link to={`/apps/${row.miniapp_apps.slug}?from=store`} className="flex min-w-0 flex-1 items-center gap-3">
+                      {row.miniapp_apps.icon_url ? (
+                        <img src={row.miniapp_apps.icon_url} alt="" loading="lazy" className="h-12 w-12 shrink-0 rounded-xl object-cover" />
+                      ) : (
+                        <div className="h-12 w-12 shrink-0 rounded-xl bg-zinc-800" />
+                      )}
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-white">{row.miniapp_apps.name}</p>
+                        <p className="truncate text-xs text-zinc-400">
+                          {row.notifications_on ? t('miniApps.store.notificationsOn') : row.miniapp_apps.domain}
+                        </p>
+                      </div>
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => void remove(row.miniapp_apps!.slug)}
+                      className="shrink-0 rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-700"
+                    >
+                      {t('miniApps.store.remove')}
+                    </button>
+                  </div>
+                ) : null,
+              )}
+            </div>
+          </section>
+        ) : null}
 
         {!query && category === 'all' ? (
           <section data-feed-item>

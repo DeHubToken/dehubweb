@@ -6,6 +6,7 @@
  */
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 
 const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co'}/functions/v1`;
 
@@ -22,10 +23,12 @@ export interface MiniAppListing {
   splash_background_color: string | null;
   category: string | null;
   tier: 'unlisted' | 'listed' | 'verified';
+  /** Where payments go: the wallet that signed the domain's dehub.json. */
+  owner_wallet: string | null;
 }
 
 const COLUMNS =
-  'id, slug, domain, home_url, name, subtitle, description, icon_url, splash_image_url, splash_background_color, category, tier';
+  'id, slug, domain, home_url, name, subtitle, description, icon_url, splash_image_url, splash_background_color, category, tier, owner_wallet';
 
 export async function fetchListedApps(): Promise<MiniAppListing[]> {
   const { data, error } = await supabase
@@ -125,4 +128,59 @@ export async function fetchAppByDomain(domain: string): Promise<MiniAppListing |
   const { data, error } = await supabase.from('miniapp_apps').select(COLUMNS).eq('domain', host).maybeSingle();
   if (error) return null;
   return (data as MiniAppListing | null) ?? null;
+}
+
+async function userCall<T>(body: Record<string, unknown>): Promise<T> {
+  const session = getAuthToken();
+  if (!session) throw Object.assign(new Error('Sign in to DeHub first.'), { code: 'signin' });
+  const res = await fetch(`${FUNCTIONS_URL}/miniapp-user`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-dehub-token': session },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw Object.assign(new Error(data?.error || 'The request failed.'), { code: 'failed' });
+  return data as T;
+}
+
+/** Add an app for the signed-in person; its notifications are on. */
+export function addApp(slug: string): Promise<{ added: true; notificationsEnabled: boolean }> {
+  return userCall({ action: 'add', slug });
+}
+
+export function removeApp(slug: string): Promise<{ removed: true }> {
+  return userCall({ action: 'remove', slug });
+}
+
+/** Record a payment the host just sent to the app, and get the signed receipt. */
+export function recordPayment(input: {
+  slug: string;
+  txHash: string;
+  chainId: number;
+  amount: number;
+  memo: string | null;
+}): Promise<{ txHash: string; chainId: number; amount: number; receipt: string }> {
+  return userCall({ action: 'payment', ...input });
+}
+
+/** A fresh notify key for an app the caller owns. Shown once. */
+export async function createNotifyKey(slug: string): Promise<string> {
+  return (await registryCall<{ key: string }>({ action: 'notifyKey', slug })).key;
+}
+
+export interface AddedApp {
+  app_id: string;
+  notifications_on: boolean;
+  miniapp_apps: Pick<MiniAppListing, 'slug' | 'name' | 'icon_url' | 'subtitle' | 'domain'> | null;
+}
+
+/** The apps this person has added. RLS scopes the rows to the signed-in wallet. */
+export async function fetchAddedApps(wallet: string | null): Promise<AddedApp[]> {
+  if (!wallet) return [];
+  const { data, error } = await withWalletHeader(
+    supabase.from('miniapp_installs').select('app_id, notifications_on, miniapp_apps(slug, name, icon_url, subtitle, domain)'),
+    wallet.toLowerCase(),
+  );
+  if (error) return [];
+  return (data ?? []) as unknown as AddedApp[];
 }
