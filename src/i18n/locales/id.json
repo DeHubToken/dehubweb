@@ -523,6 +523,9 @@
     "edit": "Edit",
     "loading": "Memuat...",
     "tryAgain": "Coba Lagi",
+    "retry": "Coba lagi",
+    "failedToLoad": "Gagal memuat",
+    "somethingWentWrong": "Terjadi kesalahan",
     "search": "Cari",
     "goBack": "Kembali",
     "showOriginal": "Tampilkan asli",
@@ -6652,6 +6655,10 @@
     "desc": "Siang yang cerah atau senja biru temaram di hutan",
     "day": "Siang",
     "evening": "Senja"
+  },
+  "affiliate": {
+    "loadFailed": "Tidak bisa memuat statistik afiliasi",
+    "checkingForUpdates": "Memeriksa pembaruan…"
   },
   "affiliateLanding": {
     "title": "Sesuaikan halaman undanganmu",

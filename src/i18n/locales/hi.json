@@ -523,6 +523,9 @@
     "edit": "संपादित करें",
     "loading": "लोड हो रहा है...",
     "tryAgain": "फिर कोशिश करें",
+    "retry": "फिर कोशिश करें",
+    "failedToLoad": "लोड करने में विफल",
+    "somethingWentWrong": "कुछ गड़बड़ हो गई",
     "search": "खोजें",
     "goBack": "वापस जाएँ",
     "showOriginal": "मूल दिखाएँ",
@@ -6658,6 +6661,10 @@
     "desc": "जंगल में उजला दिन या धुंधली नीली शाम",
     "day": "दिन",
     "evening": "शाम"
+  },
+  "affiliate": {
+    "loadFailed": "एफिलिएट आँकड़े लोड नहीं हो सके",
+    "checkingForUpdates": "अपडेट की जाँच हो रही है…"
   },
   "affiliateLanding": {
     "title": "अपना आमंत्रण पेज कस्टमाइज़ करें",

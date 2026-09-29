@@ -496,6 +496,9 @@
     "edit": "تعديل",
     "loading": "يحمّل...",
     "tryAgain": "جرب مرة ثانية",
+    "retry": "جرّب مرة ثانية",
+    "failedToLoad": "فشل التحميل",
+    "somethingWentWrong": "صار خطأ",
     "search": "بحث",
     "goBack": "ارجع",
     "showOriginal": "عرض الأصل",
@@ -5679,6 +5682,10 @@
     "desc": "نهار مشمس لو مسا أزرق هادي بالغابة",
     "day": "نهار",
     "evening": "مسا"
+  },
+  "affiliate": {
+    "loadFailed": "تعذّر تحميل إحصاءات التسويق بالعمولة",
+    "checkingForUpdates": "دا نتأكد من التحديثات…"
   },
   "affiliateLanding": {
     "title": "خصّص صفحة الدعوة مالتك",

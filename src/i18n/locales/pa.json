@@ -523,6 +523,9 @@
     "edit": "ਸੋਧੋ",
     "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
     "tryAgain": "ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+    "retry": "ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+    "failedToLoad": "ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+    "somethingWentWrong": "ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ",
     "search": "ਖੋਜੋ",
     "goBack": "ਵਾਪਸ ਜਾਓ",
     "showOriginal": "ਅਸਲੀ ਦਿਖਾਓ",
@@ -6641,6 +6644,10 @@
     "desc": "ਜੰਗਲ ਵਿੱਚ ਚਮਕਦਾ ਦਿਨ ਜਾਂ ਨੀਲੀ ਧੁੰਦਲੀ ਸ਼ਾਮ",
     "day": "ਦਿਨ",
     "evening": "ਸ਼ਾਮ"
+  },
+  "affiliate": {
+    "loadFailed": "ਸੰਬੰਧਿਤ ਅੰਕੜੇ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੇ",
+    "checkingForUpdates": "ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ…"
   },
   "affiliateLanding": {
     "title": "ਆਪਣਾ ਸੱਦਾ ਪੰਨਾ ਅਨੁਕੂਲਿਤ ਕਰੋ",

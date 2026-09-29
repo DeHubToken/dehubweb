@@ -523,6 +523,9 @@
     "edit": "Hariri",
     "loading": "Inapakia...",
     "tryAgain": "Jaribu Tena",
+    "retry": "Jaribu tena",
+    "failedToLoad": "Imeshindwa kupakia",
+    "somethingWentWrong": "Hitilafu imetokea",
     "search": "Tafuta",
     "goBack": "Rudi",
     "showOriginal": "Onyesha asili",
@@ -6590,6 +6593,10 @@
     "desc": "Mchana angavu au jioni ya samawati msituni",
     "day": "Mchana",
     "evening": "Jioni"
+  },
+  "affiliate": {
+    "loadFailed": "Imeshindwa kupakia takwimu za washirika",
+    "checkingForUpdates": "Inakagua masasisho…"
   },
   "affiliateLanding": {
     "title": "Badilisha ukurasa wako wa mwaliko",

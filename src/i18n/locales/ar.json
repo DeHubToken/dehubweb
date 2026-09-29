@@ -521,6 +521,9 @@
     "edit": "تعديل",
     "loading": "جاري التحميل...",
     "tryAgain": "أعد المحاولة",
+    "retry": "إعادة المحاولة",
+    "failedToLoad": "فشل التحميل",
+    "somethingWentWrong": "حدث خطأ ما",
     "search": "بحث",
     "goBack": "رجوع",
     "showOriginal": "عرض الأصلي",
@@ -6652,6 +6655,10 @@
     "desc": "نهار مشرق أو مساء أزرق خافت في الغابة",
     "day": "نهار",
     "evening": "مساء"
+  },
+  "affiliate": {
+    "loadFailed": "تعذّر تحميل إحصاءات التسويق بالعمولة",
+    "checkingForUpdates": "جارٍ التحقق من التحديثات…"
   },
   "affiliateLanding": {
     "title": "خصّص صفحة الدعوة الخاصة بك",

@@ -523,6 +523,9 @@
     "edit": "Khmbagrrel",
     "loading": "Bernvoum e...",
     "tryAgain": "Կրկին փորձել",
+    "retry": "Կրկին փորձել",
+    "failedToLoad": "Չհաջողվեց բեռնել",
+    "somethingWentWrong": "Ինչ-որ բան սխալ գնաց",
     "search": "Voronel",
     "goBack": "Veradardel",
     "showOriginal": "Tsoutsel bnaghbayre",
@@ -6497,6 +6500,10 @@
     "desc": "Պայծառ օր կամ կապտավուն մթնշաղ ջունգլիներում",
     "day": "Ցերեկ",
     "evening": "Երեկո"
+  },
+  "affiliate": {
+    "loadFailed": "Չհաջողվեց բեռնել գործընկերային վիճակագրությունը",
+    "checkingForUpdates": "Թարմացումների ստուգում…"
   },
   "affiliateLanding": {
     "title": "Անհատականացրու հրավերի էջդ",

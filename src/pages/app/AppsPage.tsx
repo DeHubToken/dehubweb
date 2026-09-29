@@ -6,7 +6,7 @@
  * appear here. Ranking arrives with miniapp-rank; until then the order is
  * alphabetical, which at least is not a secret.
  */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { BadgeCheck, Blocks, Code2, Search } from 'lucide-react';
@@ -82,15 +82,26 @@ export default function AppsPage() {
   const contentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
+  // A failed read is kept apart from an empty store: it gets a retry, and a
+  // list already on screen stays put.
+  const [failed, setFailed] = useState(false);
+  const mounted = useRef(true);
   useEffect(() => {
-    let live = true;
-    fetchListedApps().then((rows) => {
-      if (live) setApps(rows);
-    });
+    mounted.current = true;
     return () => {
-      live = false;
+      mounted.current = false;
     };
   }, []);
+  const load = useCallback(() => {
+    fetchListedApps().then((rows) => {
+      if (!mounted.current) return;
+      setFailed(rows === null);
+      setApps((prev) => rows ?? prev ?? []);
+    });
+  }, []);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   return (
     <div className="min-h-screen">
@@ -233,6 +244,20 @@ export default function AppsPage() {
             {Array.from({ length: 6 }, (_, i) => (
               <div key={i} className="h-20 animate-pulse rounded-2xl bg-zinc-900/60" />
             ))}
+          </div>
+        ) : apps.length === 0 && failed ? (
+          <div data-feed-item role="alert" className="rounded-2xl bg-zinc-900/60 p-6 text-center ring-1 ring-white/[0.06]">
+            <p className="text-sm font-semibold text-white">{t('common.failedToLoad')}</p>
+            <button
+              type="button"
+              onClick={() => {
+                setApps(null);
+                load();
+              }}
+              className="mt-4 inline-block rounded-full bg-white px-4 py-2 text-xs font-semibold text-black"
+            >
+              {t('common.retry')}
+            </button>
           </div>
         ) : apps.length === 0 ? (
           <div data-feed-item className="rounded-2xl bg-zinc-900/60 p-6 text-center ring-1 ring-white/[0.06]">

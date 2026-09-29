@@ -523,6 +523,9 @@
     "edit": "Wax ka beddel",
     "loading": "Waa la soo dejinayaa...",
     "tryAgain": "Isku day mar kale",
+    "retry": "Isku day mar kale",
+    "failedToLoad": "Load-ka waa ku guuldareystay",
+    "somethingWentWrong": "Wax baa qaldamay",
     "search": "Raadi",
     "goBack": "Dib u noqo",
     "showOriginal": "Muuji asal ahaan",
@@ -6591,6 +6594,10 @@
     "desc": "Maalin iftiin leh ama fiid buluug ah oo kaynta ah",
     "day": "Maalin",
     "evening": "Fiid"
+  },
+  "affiliate": {
+    "loadFailed": "Kuma guulaysan inaan soo dejiyo xogta xiriirka",
+    "checkingForUpdates": "Waxaa la hubinayaa cusboonaysiinta…"
   },
   "affiliateLanding": {
     "title": "Habee boggaaga martiqaadka",

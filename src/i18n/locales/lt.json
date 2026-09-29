@@ -509,6 +509,9 @@
     "edit": "Redaguoti",
     "loading": "Kraunama...",
     "tryAgain": "Bandyti dar kartą",
+    "retry": "Bandyti dar kartą",
+    "failedToLoad": "Nepavyko įkelti",
+    "somethingWentWrong": "Kažkas nutiko ne taip",
     "search": "Ieškoti",
     "goBack": "Grįžti atgal",
     "showOriginal": "Rodyti originalą",
@@ -6625,6 +6628,10 @@
     "desc": "Šviesi diena arba prieblandos mėlynas vakaras džiunglėse",
     "day": "Diena",
     "evening": "Vakaras"
+  },
+  "affiliate": {
+    "loadFailed": "Nepavyko įkelti partnerių statistikos",
+    "checkingForUpdates": "Ieškoma atnaujinimų…"
   },
   "affiliateLanding": {
     "title": "Pritaikyk savo kvietimo puslapį",

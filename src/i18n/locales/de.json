@@ -523,6 +523,9 @@
     "edit": "Bearbeiten",
     "loading": "Laden...",
     "tryAgain": "Erneut versuchen",
+    "retry": "Erneut versuchen",
+    "failedToLoad": "Laden fehlgeschlagen",
+    "somethingWentWrong": "Etwas ist schiefgelaufen",
     "search": "Suchen",
     "goBack": "Zurück",
     "showOriginal": "Original anzeigen",
@@ -6645,6 +6648,10 @@
     "desc": "Ein heller Tag oder ein dämmrig blauer Abend im Dschungel",
     "day": "Tag",
     "evening": "Abend"
+  },
+  "affiliate": {
+    "loadFailed": "Partner-Statistiken konnten nicht geladen werden",
+    "checkingForUpdates": "Suche nach Updates…"
   },
   "affiliateLanding": {
     "title": "Passe deine Einladungsseite an",

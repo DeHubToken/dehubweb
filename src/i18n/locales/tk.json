@@ -523,6 +523,9 @@
     "edit": "Üýtget",
     "loading": "Ýüklenýär...",
     "tryAgain": "Gaýtadan synanyş",
+    "retry": "Gaýtadan synanyş",
+    "failedToLoad": "Ýüklemek başa barmady",
+    "somethingWentWrong": "Bir zat nädogry boldy",
     "search": "Gözle",
     "goBack": "Yza",
     "showOriginal": "Asyl nusgasyny görkez",
@@ -6537,6 +6540,10 @@
     "desc": "Jeňňelde ýagty gün ýa-da gök öwüşginli agşam",
     "day": "Gündiz",
     "evening": "Agşam"
+  },
+  "affiliate": {
+    "loadFailed": "Affiliate statistikasy ýüklenip bilinmedi",
+    "checkingForUpdates": "Täzelenmeler barlanýar…"
   },
   "affiliateLanding": {
     "title": "Çakylyk sahypaňy sazla",

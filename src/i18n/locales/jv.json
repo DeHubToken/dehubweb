@@ -523,6 +523,9 @@
     "edit": "Sunting",
     "loading": "Ngemot...",
     "tryAgain": "Coba maneh",
+    "retry": "Coba maneh",
+    "failedToLoad": "Gagal dimuat",
+    "somethingWentWrong": "Ana sing salah",
     "search": "Goleki",
     "goBack": "Bali",
     "showOriginal": "Tampilake Asli",
@@ -6288,6 +6291,10 @@
     "desc": "Awan sing padhang utawa sore biru surem ing alas",
     "day": "Awan",
     "evening": "Sore"
+  },
+  "affiliate": {
+    "loadFailed": "Ora bisa mbukak statistik afiliasi",
+    "checkingForUpdates": "Mriksa nganyaran…"
   },
   "affiliateLanding": {
     "title": "Atur kaca undanganmu",

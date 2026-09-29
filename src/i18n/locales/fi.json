@@ -523,6 +523,9 @@
     "edit": "Muokkaa",
     "loading": "Ladataan...",
     "tryAgain": "Yritä uudelleen",
+    "retry": "Yritä uudelleen",
+    "failedToLoad": "Lataus epäonnistui",
+    "somethingWentWrong": "Jokin meni pieleen",
     "search": "Haku",
     "goBack": "Takaisin",
     "showOriginal": "Näytä alkuperäinen",
@@ -6533,6 +6536,10 @@
     "desc": "Kirkas päivä tai hämärän sininen ilta viidakossa",
     "day": "Päivä",
     "evening": "Ilta"
+  },
+  "affiliate": {
+    "loadFailed": "Liitännäistilastojen lataaminen epäonnistui",
+    "checkingForUpdates": "Tarkistetaan päivityksiä…"
   },
   "affiliateLanding": {
     "title": "Muokkaa kutsusivuasi",
