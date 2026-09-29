@@ -1400,7 +1400,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         case 'image':
           return <ImageCard key={`image-${item.data.id}`} post={item.data} aboveFold={index < 3} />;
         case 'shorts':
-          return <ShortsReel key={`shorts-${index}`} shorts={item.data} title={t('feed.mostViewedThisMonth')} />;
+          return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
         case 'ad':
           return <SponsoredAdCard key={`ad-${item.data.serveId}`} ad={item.data} />;
         default:
@@ -1670,7 +1670,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           )}
           {shouldSplitForShorts && shorts.length > 0 && (
             <div className={cn('my-3', isCollapsed && 'mt-5')}>
-              <ShortsReel shorts={shorts} title={t('feed.mostViewedThisMonth')} />
+              <ShortsReel shorts={shorts} />
             </div>
           )}
           {segments.map((seg, segIdx) => {
@@ -1690,7 +1690,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 )}
                 {showShortsHere && (
                   <div className={cn('my-3', isCollapsed && 'mt-5')}>
-                    <ShortsReel shorts={shorts} title={t('feed.mostViewedThisMonth')} />
+                    <ShortsReel shorts={shorts} />
                   </div>
                 )}
                 {segIdx < fullWidthInserts.length && fullWidthInserts[segIdx]}
@@ -1739,7 +1739,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
 
       if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
-        addFullWidth(<div key={`shorts-carousel-${index}`}><ShortsReel shorts={shorts} title={t('feed.mostViewedThisMonth')} /></div>);
+        addFullWidth(<div key={`shorts-carousel-${index}`}><ShortsReel shorts={shorts} /></div>);
         shortsInserted = true;
       }
 
@@ -1781,7 +1781,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     });
 
     if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
-      currentCards.push(<div key="shorts-carousel-end"><ShortsReel shorts={shorts} title={t('feed.mostViewedThisMonth')} /></div>);
+      currentCards.push(<div key="shorts-carousel-end"><ShortsReel shorts={shorts} /></div>);
     }
 
     flushCards();
