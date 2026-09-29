@@ -3200,6 +3200,48 @@ export type Database = {
           },
         ]
       }
+      film_reviews: {
+        Row: {
+          address: string
+          body: string | null
+          created_at: string
+          id: string
+          justwatch_id: string
+          object_type: string
+          poster: string | null
+          rating: number
+          title: string
+          updated_at: string
+          year: number | null
+        }
+        Insert: {
+          address: string
+          body?: string | null
+          created_at?: string
+          id?: string
+          justwatch_id: string
+          object_type: string
+          poster?: string | null
+          rating: number
+          title: string
+          updated_at?: string
+          year?: number | null
+        }
+        Update: {
+          address?: string
+          body?: string | null
+          created_at?: string
+          id?: string
+          justwatch_id?: string
+          object_type?: string
+          poster?: string | null
+          rating?: number
+          title?: string
+          updated_at?: string
+          year?: number | null
+        }
+        Relationships: []
+      }
       fraction_listings: {
         Row: {
           chain_id: number
@@ -7095,35 +7137,6 @@ export type Database = {
           },
         ]
       }
-      work_view_snapshots: {
-        Row: {
-          id: string
-          polled_at: string
-          submission_id: string
-          view_count: number
-        }
-        Insert: {
-          id?: string
-          polled_at?: string
-          submission_id: string
-          view_count: number
-        }
-        Update: {
-          id?: string
-          polled_at?: string
-          submission_id?: string
-          view_count?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "work_view_snapshots_submission_id_fkey"
-            columns: ["submission_id"]
-            isOneToOne: false
-            referencedRelation: "work_submissions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
     }
     Views: {
       chess_records: {
@@ -7471,7 +7484,6 @@ export type Database = {
           wins: number
         }[]
       }
-      chess_settle_wagers: { Args: { p_match_id: string }; Returns: string }
       claim_paid_translation: { Args: { p_cap: number }; Returns: boolean }
       claim_xl_cashback_slot: {
         Args: { p_subscription_id: string; p_xl_price_id: string }
@@ -7723,10 +7735,6 @@ export type Database = {
           view_count: number
         }[]
       }
-      get_community_role: {
-        Args: { _community_id: string; _wallet_address: string }
-        Returns: string
-      }
       get_creator_gallery: {
         Args: { p_limit?: number }
         Returns: {
@@ -7814,47 +7822,6 @@ export type Database = {
         Returns: number
       }
       miniapp_compute_scores: { Args: { p_day?: string }; Returns: number }
-      pg_relpages:
-        | {
-            Args: { relname: unknown }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.pg_relpages(relname => text), public.pg_relpages(relname => regclass). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-          }
-        | {
-            Args: { relname: string }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.pg_relpages(relname => text), public.pg_relpages(relname => regclass). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-          }
-      pgstatginindex: {
-        Args: { relname: unknown }
-        Returns: Record<string, unknown>
-      }
-      pgstathashindex: {
-        Args: { relname: unknown }
-        Returns: Record<string, unknown>
-      }
-      pgstatindex:
-        | {
-            Args: { relname: unknown }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.pgstatindex(relname => text), public.pgstatindex(relname => regclass). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-          }
-        | {
-            Args: { relname: string }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.pgstatindex(relname => text), public.pgstatindex(relname => regclass). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-          }
-      pgstattuple:
-        | { Args: { relname: string }; Returns: Record<string, unknown> }
-        | { Args: { reloid: unknown }; Returns: Record<string, unknown> }
-      pgstattuple_approx: {
-        Args: { reloid: unknown }
-        Returns: Record<string, unknown>
-      }
       record_affiliate_cta_click: {
         Args: {
           p_code: string
@@ -7888,6 +7855,7 @@ export type Database = {
         Args: { p_address?: string; p_events: Json; p_viewer_id: string }
         Returns: number
       }
+      recount_space: { Args: { p_space_id: string }; Returns: undefined }
       release_fraction_listing: {
         Args: { p_listing_id: string; p_quantity: number }
         Returns: undefined
