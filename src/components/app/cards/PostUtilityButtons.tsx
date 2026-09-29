@@ -24,7 +24,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin, useIsPostPinned } from '@/hooks/use-pins';
-import { SaveToFolderDrawer } from '@/components/app/bookmarks/SaveToFolderDrawer';
+import { SaveToFolderDrawerLazy } from '@/components/app/bookmarks/SaveToFolderDrawerLazy';
 
 interface PostUtilityButtonsProps {
   postId?: string;
@@ -125,7 +125,7 @@ export function PostUtilityButtons({
         <Info className={iconSize} />
       </button>
 
-      <SaveToFolderDrawer
+      <SaveToFolderDrawerLazy
         open={showFolderDrawer}
         onOpenChange={setShowFolderDrawer}
         tokenId={folderTokenId}

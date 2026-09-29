@@ -48,7 +48,7 @@ import {
   useStagePlayback,
 } from '@/lib/stage-playback';
 import { myStagesKeys } from '@/hooks/use-my-stages';
-import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
+import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 import { toast } from 'sonner';
 

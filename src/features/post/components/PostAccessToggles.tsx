@@ -26,6 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
 import { Star } from 'lucide-react';
 import { normalizeCategoryName } from '@/lib/category-names';
+import { storageImage, deviceWidth } from '@/lib/media-url';
 
 interface PostAccessTogglesProps {
   /** Gate this post behind the creator's own subscription plans. */
@@ -892,7 +893,7 @@ export function PostAccessToggles({
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden">
                       {community.avatar_url ? (
-                        <img src={community.avatar_url} alt="" className="w-full h-full object-cover" />
+                        <img src={storageImage(community.avatar_url, deviceWidth(28))} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                       ) : (
                         <Users className="w-3.5 h-3.5 text-zinc-500" />
                       )}

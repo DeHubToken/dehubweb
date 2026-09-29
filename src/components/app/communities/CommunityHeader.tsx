@@ -14,6 +14,7 @@ import { dehubLinkFor } from '@/lib/dehub-links';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { DescriptionWithLinks } from './DescriptionWithLinks';
+import { storageImage, deviceWidth, isMdUp } from '@/lib/media-url';
 
 interface CommunityHeaderProps {
   community: Community;
@@ -106,7 +107,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
         style={canEdit ? { cursor: 'pointer' } : undefined}
       >
         {community.banner_url ? (
-          <img src={community.banner_url} alt="" className="w-full h-full object-cover" />
+          <img src={storageImage(community.banner_url, deviceWidth(isMdUp() ? 900 : 430))} alt="" className="w-full h-full object-cover" fetchPriority="high" />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-white/[0.06] to-white/[0.02]" />
         )}
@@ -143,7 +144,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
           style={canEdit ? { cursor: 'pointer' } : undefined}
         >
           {community.avatar_url ? (
-            <img src={community.avatar_url} alt={community.name} className="w-full h-full object-cover" />
+            <img src={storageImage(community.avatar_url, deviceWidth(64))} alt={community.name} className="w-full h-full object-cover" />
           ) : (
             <Users className="w-7 h-7 text-zinc-500" />
           )}

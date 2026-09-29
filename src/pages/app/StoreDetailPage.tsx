@@ -16,6 +16,7 @@ import { dehubLinkFor } from '@/lib/dehub-links';
 import { Button } from '@/components/ui/button';
 import { SEOHead } from '@/components/SEOHead';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { storageImage, deviceWidth, isMdUp } from '@/lib/media-url';
 
 export default function StoreDetailPage() {
   const { storeId } = useParams<{ storeId: string }>();
@@ -87,7 +88,7 @@ export default function StoreDetailPage() {
 
         <div className="aspect-[3/1] w-full bg-zinc-900">
           {store.banner_url ? (
-            <img src={store.banner_url} className="w-full h-full object-cover" alt="" />
+            <img src={storageImage(store.banner_url, deviceWidth(isMdUp() ? 600 : 430))} className="w-full h-full object-cover" alt="" fetchPriority="high" />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
           )}

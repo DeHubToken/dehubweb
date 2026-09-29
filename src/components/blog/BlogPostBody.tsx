@@ -25,6 +25,7 @@ export const BlogPostBody: React.FC<BlogPostBodyProps> = ({ bannerImage, bannerI
                   alt={bannerImageAlt}
                   className={`w-full h-auto ${isFullImagePost ? 'object-cover' : 'object-cover'}`}
                   loading="eager"
+                  fetchPriority="high"
                 />
             </div>
             <div className="mb-12">

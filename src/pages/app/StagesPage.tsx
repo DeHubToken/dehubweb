@@ -40,7 +40,7 @@ import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useStageReminder } from '@/hooks/use-stage-reminders';
 import { useMyStages, myStagesKeys } from '@/hooks/use-my-stages';
 import { supabase } from '@/integrations/supabase/client';
-import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
+import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 type StagesTab = 'live' | 'upcoming' | 'recorded' | 'hosting';

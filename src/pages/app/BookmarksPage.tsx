@@ -16,7 +16,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
 import type { FeedItem } from '@/types/feed.types';
-import bookmark3dIcon from '@/assets/icons/bookmark-3d-icon.png';
+import bookmark3dIcon from '@/assets/icons/bookmark-3d-icon.webp';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';

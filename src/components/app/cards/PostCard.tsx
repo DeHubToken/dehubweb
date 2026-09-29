@@ -44,7 +44,7 @@ const EditPostModal = lazy(() =>
 );
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { useMintExistingPost } from '@/hooks/use-mint-existing-post';
-import { QuotePostModal } from '../modals/QuotePostModal';
+import { QuotePostModalLazy } from '../modals/QuotePostModalLazy';
 import { TipModal } from '../modals/TipModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -1015,7 +1015,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       )}
 
       {/* Quote Post Modal */}
-      <QuotePostModal
+      <QuotePostModalLazy
         open={showQuoteModal}
         onOpenChange={setShowQuoteModal}
         quotedPost={postAsNFT}
