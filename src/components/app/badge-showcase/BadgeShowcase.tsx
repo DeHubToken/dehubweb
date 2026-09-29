@@ -159,6 +159,7 @@ export default function BadgeShowcase({ tier, promotedFrom, anchor, onClose }: B
       dialogLabel={(i) => t('badgeShowcase.dialogLabel', { tier: BADGE_ORDER[i] })}
       dockLabel={t('badgeShowcase.badges')}
       owned={owned}
+      footer={(api) => <HolderActions api={api} />}
     >
       {(api) => (
         <HolderDetails
@@ -197,7 +198,6 @@ function HolderDetails({
   owned: (i: number) => boolean;
 }) {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
   const { index } = api;
   const count = BADGE_ORDER.length;
 
@@ -458,24 +458,32 @@ function HolderDetails({
           );
         })}
       </ul>
-
-      <div className="mt-2 grid grid-cols-2 gap-2">
-        <LiquidGlassBubble2
-          active
-          label={t('badgeShowcase.buyTokens')}
-          onClick={() => api.close(() => navigate('/app/buy'))}
-          width="100%"
-          height="40px"
-          className="min-w-0"
-        />
-        <LiquidGlassBubble2
-          label={t('badgeShowcase.details')}
-          onClick={() => api.close(() => navigate('/app/glossary#badges'))}
-          width="100%"
-          height="40px"
-          className="min-w-0"
-        />
-      </div>
     </>
+  );
+}
+
+/** Buy and the full breakdown, under the dock on phones. The breakdown is the
+ *  badges chapter of the docs: every tier, its threshold and what it grants. */
+function HolderActions({ api }: { api: ShowcaseApi }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      <LiquidGlassBubble2
+        active
+        label={t('badgeShowcase.buyTokens')}
+        onClick={() => api.close(() => navigate('/app/buy'))}
+        width="100%"
+        height="40px"
+        className="min-w-0"
+      />
+      <LiquidGlassBubble2
+        label={t('badgeShowcase.details')}
+        onClick={() => api.close(() => navigate('/docs/dapps#badges'))}
+        width="100%"
+        height="40px"
+        className="min-w-0"
+      />
+    </div>
   );
 }
