@@ -985,6 +985,15 @@ export const nl = {
     altAds: 'Het selfservice advertentieportaal voor het maken en financieren van campagnes.',
     altFeatures: 'Het feature request board, waar de community ideeën indient en stemt.',
     altConnect: 'De Connect-pagina, voor het koppelen van DeHub aan ChatGPT of Claude via MCP.',
+    aiSuiteB3: 'AI Builder:',
+    appsB2: 'Android:',
+    directTitle: 'Direct',
+    labelCreatorControl: 'Creator Control:',
+    spNameBoost: 'Boost',
+    spTierCobra: 'King Cobra',
+    themesDesc2: 'Twee van de skins verbergen een spel. Stel het thema in op Oorlog en Claude of Duty is van binnenuit bereikbaar; stel het in op Jungle en Jungle Trail is. Beide staan ook in de arcade, maar het thema is waar ze thuishoren.',
+    tocAccounts: 'Accounts',
+    tvRadioB3: 'Radio:',
   },
   games: {
     title: 'Spellen',
@@ -1202,6 +1211,8 @@ export const nl = {
     contractSecurity: 'Contractbeveiliging',
     disclaimer: 'Disclaimer',
     disclaimerText: 'DeHub-tokens zijn strikt voor nutsdoeleinden op dezelfde manier als in-game of in-app digitale tokens of valuta\'s en zijn strikt geen investering. Aangezien onze token on-chain leeft, kunnen we extra hulpprogramma\'s en ongekende niveaus van verifieerbare transparantie bieden. De bovenstaande gegevens worden uitsluitend verzameld voor transparantie, educatieve en informatieve doeleinden. DeHub en alle gelieerde ondernemingen zijn niet aansprakelijk voor financiële verliezen die voortvloeien uit de aankoop van tokens of NFT\'s die we vrijgeven. Markten zijn zeer volatiel. U kunt ook al uw geld verliezen als gevolg van onvoorziene fouten zoals competentiestoringen, technische fouten, hacks enzovoort. Daarom moet je alleen uitgeven wat je je kunt veroorloven om te verliezen.',
+    audit: 'Audit',
+    bugBounty: 'Bug Bounty',
   },
   depin: {
     title: 'DePIN',
@@ -1410,6 +1421,7 @@ export const nl = {
     never1: 'Je versleutelde berichten lezen',
     evenIfConclusion: 'Uw versleutelde berichten blijven onleesbaar. Dat is de kracht van end-to-end encryptie.',
     commitmentDesc: 'Bij DeHub geloven we dat privacy een fundamenteel recht is. Versleutelde berichten worden beschermd door wiskunde, niet alleen door beleid, met behulp van gecontroleerde, breed beoordeelde cryptografische bibliotheken en algoritmen. Waar iets nog niet versleuteld is — foto\'s, video\'s en bestanden, of een gesprek met iemand die de versleuteling niet heeft ontgrendeld — zeggen we dat duidelijk.',
+    live3: 'Sessietoets caching',
   },
   aiToolkits: {
     title: 'Het is een toolkits',
@@ -1781,6 +1793,7 @@ export const nl = {
     paragraph9: 'Alle DeHub-ontvangers zijn verantwoordelijk voor het implementeren van redelijke maatregelen voor het beveiligen van hun eigen portemonnee, kluis of ander opslagmechanisme dat wordt gebruikt om DeHub-tokens te ontvangen en vast te houden, inclusief alle vereiste privésleutel(s) of andere referenties die nodig zijn om toegang te krijgen tot dergelijke opslagmechanismen. Als er privésleutels of andere toegangsgegevens verloren gaan, kan de houder de toegang tot zijn DeHub-tokens verliezen. DeHub is niet verantwoordelijk voor eventuele verliezen, kosten of uitgaven met betrekking tot verloren toegangsgegevens. DeHub heeft geen verplichtingen in welke vorm dan ook jegens u met betrekking tot het beheer van DeHub-tokens. Het is de volledige verantwoordelijkheid van de tokenhouder om de juiste belastingen in te houden, te innen, te melden en over te maken aan de juiste belastingautoriteiten met betrekking tot alle ontvangen DeHub-tokens. DeHub zal nooit de bewaring van fondsen of uw zaadzin behouden, noch zouden wij of iemand die aan DeHub is gekoppeld u onder geen enkele omstandigheid ooit om deze informatie vragen.',
     importantNotice: 'Belangrijke mededeling',
     disclaimerText: 'DeHub-tokens zijn strikt voor nutsdoeleinden op dezelfde manier als in-game of in-app digitale tokens of valuta\'s en zijn strikt geen investering. Aangezien onze token on-chain leeft, kunnen we extra hulpprogramma\'s en ongekende niveaus van verifieerbare transparantie bieden. De bovenstaande gegevens worden uitsluitend verzameld voor transparantie, educatieve en informatieve doeleinden. DeHub en alle gelieerde ondernemingen zijn niet aansprakelijk voor financiële verliezen die voortvloeien uit de aankoop van tokens of NFT\'s die we vrijgeven. Markten zijn zeer volatiel. U kunt ook al uw geld verliezen als gevolg van onvoorziene fouten zoals competentiestoringen, technische fouten, hacks enzovoort. Daarom moet je alleen uitgeven wat je je kunt veroorloven om te verliezen.',
+    disclaimer: 'Disclaimer:',
   },
   termsOfService: {
     title: 'DeHub Gebruiksvoorwaarden',
@@ -1895,6 +1908,7 @@ export const nl = {
     changesToAgreement: 'Wijziging van overeenkomst',
     changesToAgreementText: 'Wijzigingen in deze voorwaarden zullen worden voorgesteld via mechanismen voor gemeenschapsbestuur. Grote veranderingen vereisen goedkeuring van de gemeenschap door middel van stemmen van tokenhouders.',
     contactText: 'Voor vragen over deze Gebruiksvoorwaarden kun je contact opnemen met onze community-governancekanalen of voorstellen indienen via het DAO-mechanisme.',
+    contact: 'Contact',
   },
   communityGuidelines: {
     title: 'Communityrichtlijnen',
@@ -1929,6 +1943,7 @@ export const nl = {
     appeals: 'Beroep',
     appealsText: 'Als je van mening bent dat een moderatiebeslissing verkeerd was, kan hiertegen beroep worden aangetekend via community-governance. Governance stelt de beleidsmoderators in staat om individuele beslissingen af te dwingen en te herzien of terug te draaien. De handhaving is echter onmiddellijk — de inhoud blijft laag terwijl een beroep wordt overwogen.',
     contactText: 'Vragen over deze richtlijnen of meldingen die dringend aandacht nodig hebben, kunnen worden gestuurd naar dev@dehub.io.',
+    contact: 'Contact',
   },
   privacyPolicy: {
     title: 'Privacybeleid',
@@ -2168,6 +2183,7 @@ export const nl = {
     backToBlog: 'Terug naar Blog',
     loadFailed: 'Kan dit artikel niet laden.',
     retry: 'Opnieuw proberen',
+    featuredPost: 'Uitgelicht bericht',
   },
   installation: {
     title: 'Installatie',

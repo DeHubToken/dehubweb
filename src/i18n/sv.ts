@@ -1023,6 +1023,9 @@ export const sv = {
     altAds: 'Den självbetjänade annonsportalen för att skapa och finansiera kampanjer.',
     altFeatures: 'Anslagstavlan för förfrågningar om funktioner, där communityn skickar in och röstar om idéer.',
     altConnect: 'Anslut-sidan, för att länka DeHub till ChatGPT eller Claude över MCP.',
+    forFans: 'För fläktar',
+    spNameBoost: 'Öka',
+    tipping1: 'Visuella effekter och nivåer',
   },
   games: {
     title: 'DeHub Spel',
@@ -1835,6 +1838,7 @@ export const sv = {
       'Kommersiella integreringar med befintliga strömnings- och hemunderhållningsmärken',
       'V/AR-profilhubb & konsumentdata-mätvärden',
     ],
+    q4_2022: 'Kvartal 4 2022',
   },
   brandAssets: {
     title: 'Varumärkestillgångar',

@@ -981,6 +981,17 @@ export const sw = {
     tocArticles: 'Makala',
     tocConverter: 'Kigeuzi',
     uploadComposerTools: 'Bandika picha au video moja kwa moja kwenye mtunzi, hifadhi chapisho zima kama rasimu, ipange kwa baadaye (machapisho yaliyopangwa huonekana kwenye wasifu wako), iweke alama kuwa "Imeundwa kwa ajili ya watoto" au kukomaa, na uitume kwa akaunti zako zingine za kijamii katika hatua sawa. Jalada la video linaweza kubadilishwa baadaye kutoka Hariri Chapisho.',
+    badgePriceDesc: 'Daraja la kumi na tatu, Kaa kupitia Megalodon, kila moja iligharimu kiasi kisichobadilika kwa dola badala ya idadi isiyobadilika ya tokeni. Idadi ya ishara za DeHub ambazo kiwango kinaomba ni gharama ya dola kwa bei ya moja kwa moja, kwa hivyo beji inamaanisha kujitolea sawa kwa chochote ambacho soko linafanya. Ulinzi mbili huja pamoja nayo: hitaji halipandi kamwe juu ya nambari zilizochapishwa ikiwa bei itashuka na mara baada ya kufikia kiwango unakihifadhi — beji uliyopata imefungwa kulingana na hitaji la bei nafuu zaidi lililowahi kupatikana, kwa hivyo kuzamishwa hakuwezi kukuondolea.',
+    badgeSubtitle: 'Mfano wa Beji ya Heshima',
+    badgeUnlock2: 'Posho kubwa zaidi ya kuchapisha kila siku bila malipo na punguzo kwa chochote kilichopita.',
+    badgeUnlock5: 'Uzito zaidi juu ya kile unachofanya: mtazamo au mwitikio kutoka kwa mshikilia beji huhesabiwa kwa zaidi, kwenye ngazi sawa na upigaji kura wa utawala — moja bila beji, mbili kwenye Kaa, na rung zaidi kwa kila daraja juu yake hadi kumi na nne huko Megalodon. Ni kizidishaji kwenye mwitikio wako mmoja, sio wa pili.',
+    dehubTokenDesc: 'Tokeni hutumiwa kwa ajili ya kujisajili kwa wabunifu, kutoa kiinua mgongo au kufungua maudhui. Kadiri unavyoshikilia zaidi, ndivyo ada zako zinavyopungua na ndivyo unavyofungua madaraka makubwa zaidi kama vile ongezeko la mwenendo wa ratiba na beji za uthibitishaji.',
+    dehubTokenTitle: 'Token ya DeHub',
+    directTitle: 'Moja kwa moja',
+    exploreFormula: 'Hiyo kwa pamoja itaamua mgao wa mapato ya matangazo (RS). Algorithimu halisi ya hii iko chini ya beta na inaweza kubadilika kulingana na mapato yanayotokana (RG)',
+    tokenDisclaimer: 'Alama za DeHub hutumika kama ishara za matumizi ndani ya mfumo wetu wa ikolojia, sawa na sarafu za ndani ya mchezo na sio magari ya uwekezaji. Wakati miundombinu yetu ya blockchain inatoa uwazi usio na kifani na data inayothibitishwa kwenye mnyororo kwa madhumuni ya elimu, masoko yote hubeba hatari za asili. Unaweza kupoteza uwekezaji wako wote kwa sababu ya tete ya soko, maswala ya kiufundi, ukiukaji wa usalama, au hali zisizotarajiwa. Shiriki tu na fedha ambazo unaweza kumudu kupoteza kabisa. DeHub na washirika wake hawawajibiki kwa hasara yoyote ya kifedha iliyopatikana.',
+    topUpShotAlt: 'Kununua tokeni za DeHub moja kwa moja ndani ya programu.',
+    topUpTitle: 'Tokeni za Kuongeza Katika Mibofyo 2',
   },
   games: {
     title: 'Michezo ya DeHub',
@@ -1063,6 +1074,7 @@ export const sw = {
     salesDesc: 'Asilimia 100 ya ukwasi ulioinuliwa ulifungwa kwenye mabwawa kwa wafanyabiashara. Hakuna hafla za mauzo ya awali au uwekezaji ambapo umewekwa ili kufadhili maendeleo na DeHub ilizinduliwa kama FTV na programu iliyojengwa kikamilifu kwenye duka la Google Play kabla ya kutolewa kwa ishara au kuchangisha fedha. Matukio tu ya uzalishaji wa ukwasi (LGE) kwa niaba ya jamii ili kuwezesha biashara yalitokea. BNB, kwa hivyo DeHub inaweza kupatikana tu kupitia pochi za KYCd ikimaanisha kuwa hatukuhitaji matabaka ya ziada kwa mauzo yetu wenyewe.',
     disclaimer: 'Kanusho',
     disclaimerText: 'Ishara za DeHub ni madhubuti kwa madhumuni ya matumizi kwa njia ile ile ambayo ishara au sarafu za kidijitali zozote za ndani ya mchezo au ndani ya programu isipokuwa pale ambapo zetu zinafanya kazi kwenye mnyororo, tunaweza kutoa huduma zilizoongezwa pamoja na viwango vya uwazi ambavyo havijawahi kuthibitishwa. Takwimu zilizo hapo juu zimekusanywa tu kwa madhumuni ya uwazi, elimu na habari tu. DeHub na washirika wote hawawajibiki kwa hasara za kifedha zinazotokana na ununuzi wa tokeni au NFT zozote tunazozitoa. Masoko ni tete sana. Unaweza pia kupoteza pesa zako zote kwa sababu ya matukio yoyote yasiyotarajiwa kama vile hacks, kushindwa kwa umahiri au makosa ya kiufundi. Kwa hivyo, unapaswa kuwekeza kile unachoweza kumudu kupoteza.',
+    salesTitle: 'Mauzo',
   },
   tokenUtility: {
     title: 'Matumizi ya Tokeni',
@@ -1462,6 +1474,10 @@ export const sw = {
     evenIfConclusion: 'Ujumbe wako fiche unabaki hauwezi kusomeka. Hiyo ndiyo nguvu ya usimbaji fiche wa mwisho hadi mwisho.',
     pfsDesc: 'Kila mazungumzo ina ufunguo wake mwenyewe, unaotokana na anwani zote mbili',
     storedServerDesc: 'Ufunguo wako wa umma, ili wengine waweze kukutumia ujumbe kwa njia fiche',
+    hkdfTitle: 'HKDF-SHA256 - Utoaji Muhimu',
+    live5: 'Maelezo mafupi yaliyosimbwa, na maelezo ya mbele yaliyosimbwa yaliyotumwa tena kutoka kwenye kifaa chako',
+    militaryGrade: '🔒 Imesimbwa Kwenye Kifaa Chako',
+    replayProtection: 'Cheza tena Ulinzi',
   },
   aiToolkits: {
     title: 'Vifaa vya AI',
@@ -1489,6 +1505,9 @@ export const sw = {
     globalTranslation: 'Tafsiri ya Kimataifa',
     contentAnalysis: 'Uchambuzi wa Maudhui',
     comingSoonDesc: 'Baraza la software yetu, ambalo linapendekezwa na patenti, linofanya hivi kwa njia ya mfumo wa rangi wa kumi na tano (13-tier ranking system) unaolengwa na viwandani vya kufanyika kazi vilivyotolewa katika mchango wa kwanza wa kufanyika kazi.',
+    comingSoon: 'Inakuja Hivi Karibuni',
+    contentAnalysisDesc: 'Pata muktadha au ufafanue machapisho yenye uwezo wa kuchambua na kutafsiri maudhui yanayowezeshwa na AI.',
+    globalTranslationDesc: 'Tafsiri na ufafanue maudhui kwa hadhira ya kimataifa, ukivunja vizuizi vya lugha katika mwingiliano wako.',
   },
   advertising: {
     title: 'Matangazo',
@@ -1551,6 +1570,12 @@ export const sw = {
     dashboardDesc: 'Pata uzoefu wa jukwaa la matangazo la POVR kutoka kwa mtazamo wa mtangazaji. Uhakiki huu wa maingiliano unaonyesha nyenzo na uchanganuzi unaopatikana kwa kampuni zinazotangaza kwenye DeHub.',
     analytics: 'Uchanganuzi',
     budgetCalculator: 'Kikokotoo cha Bajeti',
+    impactDesc: 'Taka hii inaweza kumaanisha £ 100k-£ 150k kupotea kwenye bajeti ya £ 500k, na kuathiri ROI halisi',
+    incentives: 'Motisha:',
+    povrDesc2: '"Uthibitisho wa Mtazamo" ni wa kiwango kimoja na zaidi ya utambulisho, unaongeza faida kidogo kwa watumiaji au wamiliki.',
+    povrTitle: 'POVR: Uthibitisho wa Mtazamo na Kiwango',
+    problemAmount: '$ 84 bilioni hadi zaidi ya $ 125 bilioni kwa mwaka',
+    problemTitle: 'Tatizo',
   },
   team: {
 
@@ -1814,6 +1839,12 @@ export const sw = {
       'Simu ilikamatana katika milisho, hatua, machapisho, ujumbe na arifa ✅',
       'Kiwango cha machapisho ya kila siku na malipo ya ziada kwa bei kwa tokeni za DeHub: machapisho kumi ya maandishi na gigabyte moja bila malipo kila siku, ikiongezeka na beji yako ya kuweka hisa hadi machapisho 100 na GB 10 ✅',
     ],
+    q4_2023_items: [
+      'Kuondoa orodha kwa hiari kutoka Gate.io ili kuweka kipaumbele ugatuzi',
+      'Kujitolea kwa uwazi na utekelezaji wote wa sera ya DEX',
+      'Utekelezaji wa mikakati ya utoaji wa ukwasi wa kiotomatiki',
+      'Imechapisha ripoti kamili za uwazi zinazoonyesha metriki zote za itifaki',
+    ],
   },
   brandAssets: {
     title: 'Mali za Nembo',
@@ -1995,6 +2026,7 @@ export const sw = {
     changesToAgreementText: 'Mabadiliko ya masharti haya yatapendekezwa kupitia mifumo ya utawala wa jamii. Mabadiliko makubwa yanahitaji idhini ya jamii kupitia upigaji kura wa mmiliki wa ishara.',
     contact: 'Mawasiliano',
     contactText: 'Kwa maswali kuhusu Masharti haya ya Huduma, tafadhali shirikiana na njia zetu za utawala wa jamii au uwasilishe mapendekezo kupitia utaratibu wa DAO.',
+    decentralizedModerationText: 'Upimaji wa maudhui kwenye DeHub unashughulikiwa kupitia mifumo ya utawala wa jamii:',
   },
   privacyPolicy: {
     title: 'Sera ya Faragha',
@@ -2097,6 +2129,7 @@ export const sw = {
     thirdPartyItem10: 'Unapounganisha akaunti zingine za kijamii, machapisho unayochagua kutuma hutolewa kwenye tovuti hizo kupitia huduma ya kuchapisha na kwa Farcaster kupitia saini unayoidhinisha',
     dataSovereigntyItem5: 'Umechaguliwa kama kama AI systems inaweza kuandika kwa kazi yako. Ila ni sahihi kwa kawaida chini ya kuwaweza kuondoa kwa ajili ya Settings, na chaguo lako linaonyeshwa kwa crawlers katika ukurasa zilizozalishwa na sisi.',
     dataSovereigntyItem6: 'Unaweza kufuta akaunti yako mwenyewe kwenye Mipangilio; wasifu wako, upakiaji na vyombo vya habari vilivyohifadhiwa, ikiwemo nakala mbadala, vimefutwa',
+    dataSovereigntyItem2: 'Ujumbe wako wa moja kwa moja umesimbwa kwa njia fiche, kwa hivyo hakuna mtu katika DeHub anayeweza kuusoma',
   },
   contact: {
     title: 'Wasiliana',
@@ -2312,6 +2345,7 @@ export const sw = {
     disclaimerText: 'Alama za DeHub ni madhubuti kwa madhumuni ya matumizi kwa njia ile ile ambayo ishara au sarafu za kidijitali zozote za ndani ya mchezo au ndani ya programu na sio uwekezaji. Kadiri ishara yetu inavyoendelea, tunaweza kutoa huduma za ziada pamoja na viwango visivyo na kifani vya uwazi unaoweza kuthibitishwa. Takwimu zilizo hapo juu zimekusanywa tu kwa madhumuni ya uwazi, elimu na habari tu. DeHub na washirika wote hawawajibiki kwa hasara za kifedha zinazotokana na ununuzi wa tokeni au NFT zozote tunazozitoa. Masoko ni tete sana. Unaweza pia kupoteza pesa zako zote kwa sababu ya makosa yoyote yasiyotarajiwa kama vile kushindwa kwa umahiri, hitilafu ya kiufundi, hacks na kadhalika. Kwa hivyo, unapaswa tu kutumia kile unachoweza kumudu kupoteza.',
     useAiTitle: 'Kizazi cha AI',
     useAiDesc: 'Lipia kizazi cha AI katika Studio ya Muumba — picha, video, sauti na 3D — kwa ishara za DeHub, kwa bei iliyonukuliwa kabla ya kila kazi kuanza, badala ya kushikilia usajili tofauti kwa kila zana.',
+    pegTitle: 'Bei iliyoshikamana na tangazo la DEX',
   },
   communityGuidelines: {
     title: 'Miongozo ya Jumuiya',
@@ -2430,6 +2464,8 @@ export const sw = {
     nextStakeDesc: 'Kushiriki DeHub tokens kwa thibitisho na kufikia kipadri cha juu',
     nextFaqTitle: 'Maswali Yanayoulizwa Mara kwa Mara',
     nextFaqDesc: 'Majibu ya maswali ya kawaida',
+    step2Desc: 'Katika → Wasifu wa Mipangilio weka jina la onyesho, jina la mtumiaji, avatar, picha ya jalada na wasifu, na unganisha jamii zako nyingine ili wasifu wako uonyeshe ufikiaji wako wote. Chagua mada katika → Mwonekano wa Mipangilio ukiwa hapo, na uchukue njia ya hiari ya kuongozwa ikiwa unataka kuonyeshwa kote.',
+    step3Desc: 'Bofya Unda. Andika chapisho, weka picha, video au sauti, badilisha kwenda kwenye Makala kwa ajili ya uandishi wa fomu ndefu, au nenda moja kwa moja. Kuchapisha ni bure hadi posho ya kila siku — machapisho kumi ya maandishi na gigabyte ya vyombo vya habari kwa siku bila beji. Kuweka picha kwenye mnyororo ni hiari na inaweza kufanywa baadaye.',
   },
   apiEndpoints: {
     title: 'Vituo vya Mwisho vya API',
@@ -2583,5 +2619,6 @@ export const sw = {
     clearRecent: 'Futa utafutaji wa hivi majuzi',
     popularStaking: 'Kuweka rehani',
     title: 'Tafuta hati',
+    popularWatchToEarn: 'Tazama ili Ujipatie Mapato',
   },
 };
