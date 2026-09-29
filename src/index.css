@@ -2100,19 +2100,14 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    home feed. Re-adding the halo would give the post page a text shadow the home
    feed does not have, which is the difference this was meant to remove.) */
 
-/* Phones and touch devices: no backdrop blur on the canvas themes.
-   Every feed card, bento and nav surface re-blurred the animated canvas on
-   every frame, which is what made scrolling judder on phones. The blur goes and
-   the smoke gets denser in its place — without the defocus the canvas behind a
-   surface is sharp and busy, so the tint alone has to carry legibility. Sheen,
-   ring and shadow stay, so each theme still reads as its material.
+/* Phones and touch devices: denser smoke on the canvas themes.
+   The blur stays on (it was switched off here once for scroll smoothness, and
+   the surfaces read as see-through without it); the tint is thicker than on
+   desktop so copy stays readable over the moving canvas. Sheen, ring and
+   shadow are unchanged, so each theme still reads as its material.
 
    Osaka, jungle and war set their own --glass-* values in sheets that load
    after this file, so each repeats the token half of this block for itself.
-   The #app-root rule is the other half: it carries an id, so no theme sheet's
-   id-less backdrop-filter can put blur back on anything in the app shell,
-   pseudo-elements included (war paints its nav plates on ::before). Portalled
-   dialogs, sheets and toasts sit outside #app-root and keep theirs.
 
    Declared BEFORE the @supports and reduced-transparency blocks on purpose:
    the header rule here ties theirs at (0,3,1), and theirs must win. */
@@ -2121,13 +2116,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
     --glass-thin: 0.82;
     --glass-regular: 0.86;
     --glass-raised: 0.90;
-    --glass-blur: none;
-  }
-  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) #app-root *,
-  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) #app-root *::before,
-  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) #app-root *::after {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
   }
   /* Chrome that ships its own thin tint instead of reading the tokens. The
      pill changes material, not shape, so the swallow clip is untouched: the
@@ -4133,7 +4121,7 @@ html[data-theme="light"] [data-poll-card] .hover\:bg-white\/20:hover {
 /* [data-comments-wrapper] joins the opt-outs: the reply panel is styled as the
    post card it belongs to, and this wash was repainting it a grey slab on top
    of that card in the feed. */
-html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *):not(.login-modal-overlay):not([data-radix-popper-content-wrapper] *):not([data-comments-wrapper]):not([data-ai-chat]):not([data-ai-chat] *) {
+html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([role="dialog"]):not([data-vaul-drawer]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *):not(.login-modal-overlay):not([data-radix-popper-content-wrapper] *):not([data-comments-wrapper]):not([data-ai-chat]):not([data-ai-chat] *) {
   background-color: rgba(0, 0, 0, 0.05) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
