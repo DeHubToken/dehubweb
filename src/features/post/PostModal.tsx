@@ -31,9 +31,11 @@ interface PostModalProps {
   initialText?: string;
   initialCategory?: string;
   initialPoll?: PollData | null;
+  /** Open on the Livestream tab instead of Post. */
+  initialLiveMode?: 'video';
 }
 
-export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll }: PostModalProps) {
+export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll, initialLiveMode }: PostModalProps) {
   const { style: keyboardStyle } = useKeyboardSafeSheet(isOpen);
   const { isBanned } = useBannedAccount();
   // Where a live post goes once its mint has provisioned the stream. Held here
@@ -117,6 +119,22 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
       }, 0);
     }
   }, [isOpen, initialText]);
+
+  // Opened from the Live feed's + button: land on Livestream, not Post. The
+  // modal stays mounted between opens, so a later open from anywhere else
+  // hands back the Post tab instead of inheriting Livestream.
+  const liveModeFromOpenerRef = useRef(false);
+  useEffect(() => {
+    if (!isOpen) return;
+    if (initialLiveMode) {
+      setArticleMode(false);
+      actions.setLiveMode(initialLiveMode);
+      liveModeFromOpenerRef.current = true;
+    } else if (liveModeFromOpenerRef.current) {
+      actions.setLiveMode(null);
+      liveModeFromOpenerRef.current = false;
+    }
+  }, [isOpen, initialLiveMode]);
 
   // Set initial category when modal opens
   useEffect(() => {
