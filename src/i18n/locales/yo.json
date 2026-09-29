@@ -7628,7 +7628,11 @@
       "all": "Gbogbo",
       "fromDehub": "Láti DeHub",
       "noMatch": "Kò sí àwọn ohun èlò tí ó bá àwárí yẹn mu.",
-      "yourApps": "Àwọn ohun-èlò rẹ"
+      "yourApps": "Àwọn ohun-èlò rẹ",
+      "notificationsOn": "Àwọn ìfitonilétí ti wà ní títàn",
+      "remove": "Yọ kúrò",
+      "removed": "Yíyọ. Kò ní jẹ́ kí o mọ̀ mọ́.",
+      "rising": "Tuntun ati dide"
     },
     "dev": {
       "title": "Kọ ohun-èlò kékeré kan",
@@ -7674,7 +7678,19 @@
       "stateListed": "Ninu ile itaja",
       "stateSuspended": "Wọ́n dáwọ́ iṣẹ́ dúró",
       "copyLink": "Àdàkọ ìjápọ",
-      "payBody": "Páy() ti kò lẹ́ẹ́ jẹ́ ọmọ ẹni kò lẹ́ẹ́ pẹ̀lẹ̀ DHB mo, jẹ́ ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹ"
+      "notifyKey": "Ṣàkíyèsí kọ́kọ́rọ́",
+      "notifyKeyOnce": "Bọtini ifitonileti tuntun fun {{name}}. Ṣàdàkọ rẹ̀ báyìí: ó ti farahàn lẹ́ẹ̀kan, àti ṣíṣe ẹlòmíràn rọ́pò rẹ̀.",
+      "payTitle": "Gba owó sísan",
+      "payBody": "Páy() ti kò lẹ́ẹ́ jẹ́ ọmọ ẹni kò lẹ́ẹ́ pẹ̀lẹ̀ DHB mo, jẹ́ ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹ",
+      "notifyTitle": "Fi awọn iwifunni ranṣẹ",
+      "notifyBody": "Àwọn olùṣàmúlò tí ó fi ohun-èlò rẹ kún un lè jẹ́ kí wọ́n mọ̀ láti ọ̀dọ̀ aṣàmúlò rẹ pẹ̀lú kọ́kọ́rọ́ ìkìlọ̀ rẹ. Kò sí àmì oníṣe láti fi pamọ́.",
+      "rankTitle": "Bí ilé-ìtajà ṣe ń ṣètò àwọn ohun èlò",
+      "rankBody": "Ní alẹ́ gbogbo ohun èlò tí a ṣe àkọsílẹ̀ máa ń gba àmì: 55% láti ọ̀dọ̀ àwọn oníṣe tí wọ́n padà (àwọn tí wọ́n ṣí i lọ́sẹ̀ yìí àti lọ́sẹ̀ tó ṣáájú), 35% láti ọ̀dọ̀ àwọn oníṣe ọ̀sọ̀ọ̀sẹ̀, pẹ̀lú ìlọsíwájú 10% ní ọjọ́ 14 àkọ́kọ́ rẹ̀. Àwọn àkáǹtì DeHub tí wọ́n fọwọ́ sí nìkan ni wọ́n kà, nítorí náà àwọn bot àti àwọn àtúntò ojú-ìwé kò rí nǹkan kan.",
+      "rewardsBody": "Oṣù kọ̀ọ̀kan {{pool}}DHB ni a pín láàrin àwọn ohun-èlò pẹ̀lú àmì kan náà, tí a kà lọ́sọ̀ọ̀sẹ̀. Láti tóótun, ohun-èlò nílò apamọwọ onílé tí a ti fìdí múlẹ̀ àti ó kéré tán àwọn oníṣe 3 tí wọ́n ń padà. Èrè ni DeHub máa ń san fún àpò-ìfowópamọ́ onílé.",
+      "rewardsWeek": "Ọ̀sẹ̀ {{date}}",
+      "rewardPaid": "Ti sanwo",
+      "rewardPending": "Ndúró",
+      "rewardsNone": "Kò tíì sí èrè kankan tí a ti ṣe iye rẹ̀. Ọ̀sẹ̀ àkọ́kọ́ máa dópin ní ọjọ́ Àbámẹ́ta."
     },
     "card": {
       "open": "Ṣii"
@@ -7697,7 +7713,15 @@
     "pay": {
       "title": "Páàwón {{name}}?",
       "body": "Dàgbàgbà DHB jẹ́ ni ẹ̀kọ́ àwọn ẹ̀kọ́ àpẹ́ẹ̀, {{wallet}}. Àwọn ẹ̀kọ́ ni ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti",
+      "confirm": "San {{amount}} DHB",
+      "sending": "Fífi owó rẹ ránṣẹ́...",
+      "sent": "San {{amount}} DHB sí {{name}}.",
       "noOwner": "Mo app de ti o jé óọ̀ǹkọ̀ǹ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ"
+    },
+    "add": {
+      "title": "Fi {{name}} kún un?",
+      "body": "Yóò farahàn lábẹ́ àwọn ohun-èlò rẹ ó sì lè fi ìkìlọ̀ ránṣẹ́ sí ọ. O lè yọ ọ́ kúrò ní ojú-ìwé Apps nígbàkigbà.",
+      "confirm": "Ṣàfikún áàpù"
     }
   },
   "aiStyles": {

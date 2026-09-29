@@ -7746,7 +7746,8 @@
       "yourApps": "Two aplikacje",
       "notificationsOn": "Powiadomienia włączone",
       "remove": "Usuń",
-      "removed": "Usunięto. Już nie powiadomi Cię o tym ponownie."
+      "removed": "Usunięto. Już nie powiadomi Cię o tym ponownie.",
+      "rising": "Nowy i rosnący"
     },
     "dev": {
       "title": "Stwórz mini aplikację",
@@ -7797,7 +7798,14 @@
       "payTitle": "Odbieraj płatności",
       "payBody": "pay() prosi użytkownika o wysłanie Ci DHB, bezpośrednio do portfela, który podpisał Twoją plik dehub.json. Sprawdź potwierdzenie na swoim serwerze przed dostarczeniem czegoś.",
       "notifyTitle": "Wyślij powiadomienia",
-      "notifyBody": "Użytkownicy, którzy dodadzą Twoją aplikację, mogą być powiadamiani z Twojego serwera za pomocą Twojego klucza powiadomień. Nie ma potrzeby przechowywania indywidualnych tokenów dla użytkowników."
+      "notifyBody": "Użytkownicy, którzy dodadzą Twoją aplikację, mogą być powiadamiani z Twojego serwera za pomocą Twojego klucza powiadomień. Nie ma potrzeby przechowywania indywidualnych tokenów dla użytkowników.",
+      "rankTitle": "Jak sklep ocenia aplikacje",
+      "rankBody": "Każdej nocy każda z wymienionych aplikacji otrzymuje wynik: 55% od powracających użytkowników (osób, które otworzyły ją w tym tygodniu i tydzień wcześniej), 35% od cotygodniowych użytkowników, plus 10% wzrostu w ciągu pierwszych 14 dni. Liczą się tylko zalogowane konta DeHub, więc boty i ponowne ładowanie stron nic nie zarabiają.",
+      "rewardsBody": "Każdego miesiąca {{pool}} DHB jest współdzielone między aplikacjami według tego samego wyniku, obliczanego co tydzień. Aby się zakwalifikować, aplikacja potrzebuje zweryfikowanego portfela właściciela i co najmniej 3 powracających użytkowników. Nagrody są wypłacane przez DeHub do portfela właściciela.",
+      "rewardsWeek": "Tydzień {{date}}",
+      "rewardPaid": "Zapłacono",
+      "rewardPending": "Oczekujące",
+      "rewardsNone": "Nie obliczono jeszcze żadnych nagród. Pierwszy tydzień kończy się w poniedziałek."
     },
     "card": {
       "open": "Otwórz"

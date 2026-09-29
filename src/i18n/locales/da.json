@@ -7640,7 +7640,8 @@
       "yourApps": "Dine apps",
       "notificationsOn": "Bespøring på",
       "remove": "Fjern",
-      "removed": "Fjernet. Det vil ikke bespørge dig igen."
+      "removed": "Fjernet. Det vil ikke bespørge dig igen.",
+      "rising": "Ny og stigende"
     },
     "dev": {
       "title": "Byg en mini-app",
@@ -7691,7 +7692,14 @@
       "payTitle": "Modtag betalinger",
       "payBody": "`pay()` bedrer brugeren om at sende dig DHB, direkte til lommen, der har signeret din dehub.json. Tjek kvitteringen på din server før du leverer noget.",
       "notifyTitle": "Send bespørgelser",
-      "notifyBody": "Brugere, der tilføjer din app, kan bespørges fra din server med din bespør nøgle. Ingen bruger-specifikke tokens at gemme."
+      "notifyBody": "Brugere, der tilføjer din app, kan bespørges fra din server med din bespør nøgle. Ingen bruger-specifikke tokens at gemme.",
+      "rankTitle": "Sådan rangerer butikken apps",
+      "rankBody": "Hver nat får hver listeapp en score: 55% fra tilbagevendende brugere (folk, der har åbnet den denne uge og sidste uge), 35% fra ugentlige brugere, plus en 10% boost i de første 14 dage. Kun indloggede DeHub-konti tæller, så bots og side-omlæsninger tjener intet.",
+      "rewardsBody": "Hver måned bliver {{pool}} DHB fordelt mellem apps baseret på samme score, beregnet ugentligt. For at kvalificere sig, skal en app have en verifieret ejervælve og mindst 3 tilbagevendende brugere. Belønninger betales af DeHub til ejervælven.",
+      "rewardsWeek": "Uge af {{date}}",
+      "rewardPaid": "Betalt",
+      "rewardPending": "Ventende",
+      "rewardsNone": "Der er endnu ikke beregnet nogen belønninger. Første uge lukker mandag."
     },
     "card": {
       "open": "Åbn"

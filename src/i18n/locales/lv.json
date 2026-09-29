@@ -7701,7 +7701,8 @@
       "yourApps": "Tavas programmas",
       "notificationsOn": "Paziņojumi ienāktā",
       "remove": "Noņemt",
-      "removed": "Noņemts. Tā jums vairāk nepiezīmēs."
+      "removed": "Noņemts. Tā jums vairāk nepiezīmēs.",
+      "rising": "Jauns un augošs"
     },
     "dev": {
       "title": "Izveidojiet mini aplikāciju",
@@ -7752,7 +7753,14 @@
       "payTitle": "Saņemt maksas",
       "payBody": "pay() pieprasa lietotāju sūtīt Jums DHB, tiesīgi uz portmonēju, kas parakstīja Jūsu dehub.json. Pārbaudiet kvitanci uz Jūsu serverī, pirms nododāt ko jebko.",
       "notifyTitle": "Sūtīt paziņojumus",
-      "notifyBody": "Lietotāji, kas pievieno Jūsu programmu, var Jums paziņot no Jūsu servera ar Jūsu paziņojumu atslēgu. Nav jāglabā atsevišķi lietotāju tokeni."
+      "notifyBody": "Lietotāji, kas pievieno Jūsu programmu, var Jums paziņot no Jūsu servera ar Jūsu paziņojumu atslēgu. Nav jāglabā atsevišķi lietotāju tokeni.",
+      "rankTitle": "Kā veikals ierindo lietotnes",
+      "rankBody": "Katru nakti katra norādītā lietotne saņem rezultātu: 55% no atkārtotiem lietotājiem (cilvēkiem, kuri to atvēra šonedēļ un nedēļu iepriekš), 35% no iknedēļas lietotājiem, kā arī 10% pieaugums pirmajās 14 dienās. Skaitās tikai pierakstījušies DeHub konti, tāpēc roboti un lapu atkārtota ielāde neko nenopelnīs.",
+      "rewardsBody": "Katru mēnesi {{pool}} DHB tiek kopīgots starp lietotnēm pēc viena un tā paša rezultāta, kas tiek aprēķināts katru nedēļu. Lai atbilstu prasībām, lietotnei ir nepieciešams verificēts īpašnieka maks un vismaz trīs lietotāji, kas atgriežas. Atlīdzības DeHub izmaksā īpašnieka makā.",
+      "rewardsWeek": "Nedēļa no {{date}}",
+      "rewardPaid": "Izmaksāts",
+      "rewardPending": "Gaida",
+      "rewardsNone": "Atlīdzības vēl nav aprēķinātas. Pirmā nedēļa beidzas pirmdien."
     },
     "card": {
       "open": "Atvērt"

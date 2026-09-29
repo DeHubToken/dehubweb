@@ -24,7 +24,7 @@ import { useMiniAppHost, type PaymentResult } from '@/lib/miniapp/host-bridge';
 import { payDhb } from '@/lib/dhb-payment';
 import { launchUrl, parseAppUrl, type LaunchSource, type MiniAppContext } from '@/lib/miniapp/protocol';
 import { useFarcasterHost } from '@/lib/miniapp/farcaster-host';
-import { addApp, fetchAddedApps, fetchAppBySlug, recordPayment, type MiniAppListing } from '@/lib/miniapp/registry';
+import { addApp, fetchAddedApps, fetchAppBySlug, recordOpen, recordPayment, type MiniAppListing } from '@/lib/miniapp/registry';
 
 const PostModal = React.lazy(() =>
   import('@/features/post/PostModal').then((m) => ({ default: m.PostModal })),
@@ -179,6 +179,11 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
     },
     [slug, app.ownerWallet, app.name, t],
   );
+
+  // One open per launch, for the ranking. Previews are not registered apps.
+  useEffect(() => {
+    if (app.slug && walletAddress) recordOpen(app.slug);
+  }, [app.slug, walletAddress]);
 
   useMiniAppHost(frameRef, {
     appUrl: app.url,

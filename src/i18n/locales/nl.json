@@ -7933,7 +7933,9 @@
       "noMatch": "Er komen geen apps overeen met die zoekopdracht.",
       "yourApps": "Uw apps",
       "notificationsOn": "Berichtjes op",
-      "removed": "Verwijderd. Het zal je niet nogmaals melden."
+      "remove": "Verwijderen",
+      "removed": "Verwijderd. Het zal je niet nogmaals melden.",
+      "rising": "Nieuw en gewild"
     },
     "dev": {
       "title": "Een mini-app bouwen",
@@ -7979,11 +7981,19 @@
       "stateListed": "In de winkel",
       "stateSuspended": "Opgeschort",
       "copyLink": "Link kopiëren",
+      "notifyKey": "Meldingssleutel",
       "notifyKeyOnce": "Nieuwe meldingssleutel voor {{name}}. Kopieer hem nu: hij wordt één keer getoond, en een nieuwe vervangt hem.",
       "payTitle": "Betalingen accepteren",
       "payBody": "Betaal() vraagt de gebruiker om u DHB te sturen, rechtstreeks naar de portemonnee die uw dehub.json heeft ondertekend. Controleer de ontvangstbon op uw server voordat u iets levert.",
       "notifyTitle": "Stuur notificaties",
-      "notifyBody": "Gebruikers die uw app toevoegen, kunnen vanaf uw server worden genotificeerd met uw `notify`-sleutel. Geen per-gebruikers tokens om op te slaan."
+      "notifyBody": "Gebruikers die uw app toevoegen, kunnen vanaf uw server worden genotificeerd met uw `notify`-sleutel. Geen per-gebruikers tokens om op te slaan.",
+      "rankTitle": "Hoe de winkel apps rangschikt",
+      "rankBody": "Elke avond krijgt elke vermelde app een score: 55% van terugkerende gebruikers (mensen die deze week en de week ervoor hebben geopend), 35% van wekelijkse gebruikers, plus een boost van 10% in de eerste 14 dagen. Alleen ingelogde DeHub-accounts tellen mee, dus bots en opnieuw laden van pagina's verdienen niets.",
+      "rewardsBody": "Elke maand wordt {{pool}} DHB gedeeld tussen apps met dezelfde score, wekelijks berekend. Om in aanmerking te komen, heeft een app een geverifieerde eigenaarsportefeuille en ten minste drie terugkerende gebruikers nodig. Beloningen worden door DeHub betaald aan de eigenaarsportefeuille.",
+      "rewardsWeek": "Week van {{date}}",
+      "rewardPaid": "Uitbetaalde",
+      "rewardPending": "Openstaand",
+      "rewardsNone": "Er zijn nog geen beloningen berekend. De eerste week sluit op maandag."
     },
     "card": {
       "open": "Open"

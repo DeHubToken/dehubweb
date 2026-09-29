@@ -7528,7 +7528,8 @@
       "search": "Aikace-aikacen bincike",
       "all": "Duka",
       "noMatch": "Babu apps dace da cewa search.",
-      "yourApps": "Aikace-aikacen ku"
+      "yourApps": "Aikace-aikacen ku",
+      "rising": "Sabuwa da tashi"
     },
     "dev": {
       "title": "Gina mini app",
@@ -7572,7 +7573,14 @@
       "stateUnlisted": "Live by link · a sake dubawa don shagon",
       "stateListed": "A cikin shagon",
       "stateSuspended": "Dakatarwa",
-      "copyLink": "Kwafi mahada"
+      "copyLink": "Kwafi mahada",
+      "rankTitle": "Ta yaya kantin sayar da martaba apps",
+      "rankBody": "Kowace dare kowane aikace-aikacen da aka lissafa yana samun maki: 55% daga masu amfani da dawowa (mutanen da suka buɗe shi a wannan makon da makon da ya gabata), 35% daga masu amfani da mako-mako, da haɓaka 10% a cikin kwanaki 14 na farko. Kawai sanya hannu a asusun DeHub ƙidaya, don haka bots da shafin reloads ba su da wani abu.",
+      "rewardsBody": "Kowace wata {{pool}}DHB an raba tsakanin aikace-aikace ta maki ɗaya, an lasafta mako-mako. Don cancanta, aikace-aikacen yana buƙatar walat ɗin mai mallakar da aka tabbatar kuma akalla 3 masu amfani da dawowa. Ana biyan lada ta DeHub zuwa walat ɗin mai shi.",
+      "rewardsWeek": "Mako na {{date}}",
+      "rewardPaid": "Biyan kuɗi",
+      "rewardPending": "Jiraiya",
+      "rewardsNone": "Ba a lissafta wani lada ba tukuna. Mako na farko yana rufe a ranar Litinin."
     },
     "card": {
       "open": "Bude"

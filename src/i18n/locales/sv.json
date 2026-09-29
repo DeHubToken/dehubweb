@@ -7611,7 +7611,8 @@
       "yourApps": "Dina appar",
       "notificationsOn": "Notifikationer på",
       "remove": "Ta bort",
-      "removed": "Tagen bort. Det kommer inte att notifiera dig igen."
+      "removed": "Tagen bort. Det kommer inte att notifiera dig igen.",
+      "rising": "Nya och populära"
     },
     "dev": {
       "title": "Bygg en mini-app",
@@ -7662,7 +7663,14 @@
       "payTitle": "Ta emot betalningar",
       "payBody": "pay() frågar användaren att skicka dig DHB, direkt till plånboken som signerade din dehub.json. Kontrollera kvittot på din server innan du levererar något.",
       "notifyTitle": "Skicka notifikationer",
-      "notifyBody": "Användare som lägger till din app kan notifieras från din server med din notifikationsnyckel. Inga enskilda användartoken att spara."
+      "notifyBody": "Användare som lägger till din app kan notifieras från din server med din notifikationsnyckel. Inga enskilda användartoken att spara.",
+      "rankTitle": "Hur butiken rankar appar",
+      "rankBody": "Varje kväll får varje listad app ett resultat: 55% från återkommande användare (personer som öppnade den den här veckan och veckan innan), 35% från veckoanvändare plus en ökning på 10% under de första 14 dagarna. Endast inloggade DeHub-konton räknas, så botar och omladdningar av sidor tjänar ingenting.",
+      "rewardsBody": "Varje månad delas {{pool}} DHB mellan appar med samma poäng, beräknat varje vecka. För att kvalificera sig behöver en app en verifierad ägarportfölj och minst tre återkommande användare. Belöningar betalas av DeHub till ägarportföljen.",
+      "rewardsWeek": "Vecka {{date}}",
+      "rewardPaid": "Betald",
+      "rewardPending": "Väntande",
+      "rewardsNone": "Inga belöningar har beräknats ännu. Den första veckan stänger på måndag."
     },
     "card": {
       "open": "Öppna"

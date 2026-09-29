@@ -7576,7 +7576,8 @@
       "yourApps": "Sinu rakendused",
       "notificationsOn": "Häälestused sisse",
       "remove": "Eemalda",
-      "removed": "Eemaldatud. See ei teata enam sinule."
+      "removed": "Eemaldatud. See ei teata enam sinule.",
+      "rising": "Populaarsed"
     },
     "dev": {
       "title": "Loo mini-rakendus",
@@ -7627,7 +7628,14 @@
       "payTitle": "Võtke makseid",
       "payBody": "pay() palub kasutajat saadada sinule DHB, suora raamatule, mis allkirjastas sinu dehub.json. Kontrolli kvitse serveril enne kui saad midagi.",
       "notifyTitle": "Saada häälestusi",
-      "notifyBody": "Kasutajad, kes lisavad sinu rakendust, võivad serverilt häälestada sinu häälestusavakuutlusega. Pole kasutaja kohta eraldi tokeniteid hoidmiseks."
+      "notifyBody": "Kasutajad, kes lisavad sinu rakendust, võivad serverilt häälestada sinu häälestusavakuutlusega. Pole kasutaja kohta eraldi tokeniteid hoidmiseks.",
+      "rankTitle": "Kuidas toidukoht rakendusi järjestab",
+      "rankBody": "Igal õhtul saab iga loetletud rakendus skoori: 55% tagasipöörduvatelt kasutajatelt (inimesed, kes selle sel nädalal ja eelmisel nädalal avasid), 35% iganädalastelt kasutajatelt, pluss 10% tõusu esimese 14 päeva jooksul. Arvesse lähevad ainult sisse logitud DeHubi kontod, nii et robotid ja lehe taaslaadimised ei teeni midagi.",
+      "rewardsBody": "Rakenduste vahel jagatakse iga kuu {{pool}} DHB sama skoori alusel, mis arvutatakse kord nädalas. Kvalifitseerumiseks peab rakendusel olema kinnitatud omaniku rahakott ja vähemalt kolm tagasipöörduvat kasutajat. DeHub maksab preemiad omaniku rahakotile.",
+      "rewardsWeek": "Nädal {{date}}",
+      "rewardPaid": "Makstud",
+      "rewardPending": "Ootel",
+      "rewardsNone": "Hüvesid pole veel arvutatud. Esimene nädal lõpeb esmaspäeval."
     },
     "card": {
       "open": "Ava"

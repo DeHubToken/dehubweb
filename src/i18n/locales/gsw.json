@@ -7563,7 +7563,8 @@
       "yourApps": "Deine Apps",
       "notificationsOn": "Benachrichtigungen aktiviert",
       "remove": "Entfernen",
-      "removed": "Entfernt. Es wird dich nicht mehr benachrichtigen."
+      "removed": "Entfernt. Es wird dich nicht mehr benachrichtigen.",
+      "rising": "Neu und aufstrebend"
     },
     "dev": {
       "title": "Eine Mini-App erstellen",
@@ -7614,7 +7615,11 @@
       "payTitle": "Zahlungen empfangen",
       "payBody": "`pay()` fragt den Benutzer, dir DHB direkt in die Wallet zu schicken, die deine `dehub.json` unterschrieben hat. Prüfe den Beleg auf deinem Server, bevor du etwas lieferst.",
       "notifyTitle": "Benachrichtigungen senden",
-      "notifyBody": "Benutzer, die deine App hinzufügen, können von deinem Server mit deinem Benachrichtigungsschlüssel benachrichtigt werden. Keine Benutzer-Tokens, die du speichern musst."
+      "notifyBody": "Benutzer, die deine App hinzufügen, können von deinem Server mit deinem Benachrichtigungsschlüssel benachrichtigt werden. Keine Benutzer-Tokens, die du speichern musst.",
+      "rankTitle": "Wie der Store Apps bewertet",
+      "rewardsBody": "Jedern Monat wird der {{pool}} DHB unter den Apps nach demselben Score aufgeteilt, der wöchentlich berechnet wird. Um zu qualifizieren, braucht eine App ein verifiziertes Owner-Wallet und mindestens 3 wiederkehrende Nutzer. Die Belohnungen werden von DeHub an das Owner-Wallet ausgezahlt.",
+      "rewardsWeek": "Woche vo {{date}}",
+      "rewardsNone": "No Belohnungen wurden bis anhin berechnet. Die erste Woche schliessst am Montag ab."
     },
     "card": {
       "open": "Öffne"

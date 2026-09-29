@@ -22,7 +22,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { signEncryptionMessage } from '@/lib/dm-e2ee/signer';
 import { ownershipMessage, parseAppUrl } from '@/lib/miniapp/protocol';
-import { checkManifest, createNotifyKey, fetchMyApps, submitApp, type ManifestCheck } from '@/lib/miniapp/registry';
+import { checkManifest, fetchLatestRewards, createNotifyKey, fetchMyApps, submitApp, type ManifestCheck } from '@/lib/miniapp/registry';
 
 const QUICKSTART = `<script src="https://dehub.io/sdk/miniapp.js"></script>
 <script>
@@ -138,6 +138,7 @@ export default function AppsDevPage() {
   const [signing, setSigning] = useState(false);
   const [ownership, setOwnership] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const { data: rewards } = useQuery({ queryKey: ['miniapp-rewards'], queryFn: fetchLatestRewards, staleTime: 5 * 60_000 });
   const [notifyKey, setNotifyKey] = useState<{ slug: string; key: string } | null>(null);
   const makeNotifyKey = async (slug: string) => {
     try {
@@ -433,6 +434,30 @@ export default function AppsDevPage() {
         <Section title={t('miniApps.dev.verifyTitle')}>
           <p className="text-xs leading-relaxed text-zinc-400">{t('miniApps.dev.verifyBody')}</p>
           <CodeBlock code={VERIFY} />
+        </Section>
+
+        <Section title={t('miniApps.dev.rankTitle')}>
+          <p className="text-xs leading-relaxed text-zinc-400">{t('miniApps.dev.rankBody')}</p>
+          <p className="text-xs leading-relaxed text-zinc-400">
+            {t('miniApps.dev.rewardsBody', { pool: (rewards?.monthlyPool ?? 0).toLocaleString() })}
+          </p>
+          {rewards?.weekStart && rewards.rows.length > 0 ? (
+            <div className="space-y-1">
+              <p className="text-xs font-semibold text-zinc-300">{t('miniApps.dev.rewardsWeek', { date: rewards.weekStart })}</p>
+              {rewards.rows.map((row) => (
+                <div key={row.app_id} className="flex items-center gap-2 text-xs">
+                  <span className="min-w-0 flex-1 truncate text-white">{row.miniapp_apps?.name ?? row.app_id}</span>
+                  <span className="tabular-nums text-zinc-400">{(Number(row.share) * 100).toFixed(1)}%</span>
+                  <span className="w-28 text-right tabular-nums text-white">{Number(row.amount_dhb).toLocaleString()} DHB</span>
+                  <span className={row.paid_at ? 'w-16 text-right text-emerald-400' : 'w-16 text-right text-zinc-500'}>
+                    {row.paid_at ? t('miniApps.dev.rewardPaid') : t('miniApps.dev.rewardPending')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-zinc-500">{t('miniApps.dev.rewardsNone')}</p>
+          )}
         </Section>
 
         <Section title={t('miniApps.dev.payTitle')}>

@@ -7663,7 +7663,10 @@
       "fromDehub": "Kutoka DeHub",
       "noMatch": "Hakuna programu zinazolingana na utafutaji huo.",
       "yourApps": "Programu zako",
-      "removed": "Kulikaliwa. Hutumia wako hivi kwa mara moja tu."
+      "notificationsOn": "Arifa zimewashwa",
+      "remove": "Ondoa",
+      "removed": "Kulikaliwa. Hutumia wako hivi kwa mara moja tu.",
+      "rising": "Mpya na inayoinuka"
     },
     "dev": {
       "title": "Jenga app ndogo",
@@ -7714,7 +7717,14 @@
       "payTitle": "Kubali malipo",
       "payBody": "Kutoka pay(), msaada huu unaomwona kuwa na msaada kutoka kwa mtu kuwapeleka dhb nayo, hata hadi gharama ya kwenye gharama ya dehub.json ambayo ilisainiwa. Kufikiria kwenye receipt yako ya server kabla ya kutoa kitucho chote.",
       "notifyTitle": "Kutolea habari zaidi",
-      "notifyBody": "Watu wa kuongeza app yako wanapokabiliwa na kwenye server yako kwa kuhusu notify key yako. Hakuna token za kila mtu kuweka."
+      "notifyBody": "Watu wa kuongeza app yako wanapokabiliwa na kwenye server yako kwa kuhusu notify key yako. Hakuna token za kila mtu kuweka.",
+      "rankTitle": "Jinsi duka linavyoorodhesha programu",
+      "rankBody": "Kila usiku kila programu iliyotangazwa inapata alama: asilimia 55 kutoka kwa watumiaji wanaorudi (watu walioifungua wiki hii na wiki iliyopita), asilimia 35 kutoka kwa watumiaji wa kila wiki, pamoja na ongezeko la asilimia 10 katika siku 14 za kwanza. Akaunti za DeHub zilizoingia tu ndizo zinahesabu, kwa hivyo roboti na upakiaji wa ukurasa haupati chochote.",
+      "rewardsBody": "Kila mwezi {{pool}} DHB inashirikiwa kati ya programu kwa alama sawa, inayohesabiwa kila wiki. Ili kustahiki, programu inahitaji mkoba wa mmiliki uliothibitishwa na angalau watumiaji 3 wanaorudi. Zawadi hulipwa na DeHub kwenye mkoba wa mmiliki.",
+      "rewardsWeek": "Wiki ya {{date}}",
+      "rewardPaid": "Iliyolipwa",
+      "rewardPending": "Inashuhulikiwa",
+      "rewardsNone": "Bado hakuna zawadi zilizohesabiwa. Wiki ya kwanza inafungwa Jumatatu."
     },
     "card": {
       "open": "Fungua"
@@ -7735,6 +7745,7 @@
       "art-creativity": "Sanaa na ubunifu"
     },
     "pay": {
+      "title": "Lipa {{name}}?",
       "body": "DHB inatoka nyuma kwenda gharama za akiba ya appi, {{wallet}}. Malipo hayasahibiwa.",
       "confirm": "Baada ya kufikia {{amount}} DHB",
       "sending": "Tunaondoa malipo yako…",
@@ -7742,6 +7753,7 @@
       "noOwner": "Hivi app haina waleti mwelekeo wa kurejea kufikia kiasi cha kuzalisha malipo bado."
     },
     "add": {
+      "title": "Weka {{name}}?",
       "body": "Kutajwa chini ya Your apps na inaweza kusafiri habari zaidi. Unaweza kutumia kutangaza kila wakati kutoka kwa Apps page.",
       "confirm": "Kujenga App"
     }
