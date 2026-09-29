@@ -18,8 +18,11 @@
  * once enforcement is on, nothing races ahead unsigned.
  */
 import { supabase } from '@/integrations/supabase/client';
+import { defaultRelayBase, SUPABASE_RELAY_PREFIX } from '@/integrations/supabase/relayFetch';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
+import { createLogger } from '@/lib/logger';
 
+const log = createLogger('WalletSession');
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co';
 const STORAGE_KEY = 'dehub_wallet_sessions';
 /** Refresh this long before expiry, so a long page never sends a stale one. */
@@ -31,9 +34,23 @@ const FIRST_WAIT_MS = 4000;
 
 interface Session { token: string; expiresAt: number }
 
+/**
+ * Why a wallet-scoped request went out without a session. Enforcement can only
+ * be switched on once almost nothing lands here, so the reasons have to be told
+ * apart: no_token is a sign-in problem, mint_error a server refusal or wallet
+ * mismatch, timeout a mint that was merely slow.
+ */
+type UnsignedReason = 'no_token' | 'mint_error' | 'timeout';
+interface MintFailure { reason: UnsignedReason; detail: string }
+
+class MintError extends Error {
+  constructor(readonly reason: UnsignedReason, detail: string) { super(detail); }
+}
+
 const sessions = new Map<string, Session>();
 const inflight = new Map<string, Promise<Session | null>>();
 const failedAt = new Map<string, number>();
+const lastFailure = new Map<string, MintFailure>();
 
 function load() {
   try {
@@ -56,13 +73,38 @@ function fresh(wallet: string): Session | null {
   return s && s.expiresAt - REFRESH_MARGIN_MS > Date.now() ? s : null;
 }
 
+/**
+ * A failed invoke as a reason and "status message", e.g. "403 Token does not
+ * belong…". A 401 is the DeHub token itself being dead, so it counts as no
+ * token rather than a server fault.
+ */
+async function invokeFailure(error: unknown): Promise<MintError> {
+  const res = (error as { context?: unknown })?.context;
+  if (!(res instanceof Response)) {
+    return new MintError('mint_error', error instanceof Error ? error.message : String(error));
+  }
+  // A body something else already read cannot be cloned; the status alone still says a lot.
+  const body = await Promise.resolve().then(() => res.clone().json()).catch(() => null);
+  const detail = `${res.status} ${body?.error ?? res.statusText}`.trim();
+  return new MintError(res.status === 401 ? 'no_token' : 'mint_error', detail);
+}
+
 async function mint(wallet: string): Promise<Session | null> {
-  const token = await ensureFreshToken();
+  let token: string;
+  try {
+    token = await ensureFreshToken();
+  } catch (e) {
+    throw new MintError('no_token', e instanceof Error ? e.message : String(e));
+  }
   const { data, error } = await supabase.functions.invoke('wallet-session', {
     body: { client: 'web' },
     headers: { 'x-dehub-token': token, 'x-wallet-address': wallet },
   });
-  if (error || !data?.token || String(data.wallet).toLowerCase() !== wallet) return null;
+  if (error) throw await invokeFailure(error);
+  if (!data?.token) throw new MintError('mint_error', 'response carried no session');
+  if (String(data.wallet).toLowerCase() !== wallet) {
+    throw new MintError('mint_error', 'session minted for a different wallet');
+  }
   const session = { token: String(data.token), expiresAt: new Date(data.expiresAt).getTime() };
   sessions.set(wallet, session);
   save();
@@ -79,7 +121,12 @@ export function ensureWalletSession(wallet: string): Promise<Session | null> {
   let pending = inflight.get(w);
   if (!pending) {
     pending = mint(w)
-      .catch(() => null)
+      .catch((e: unknown) => {
+        lastFailure.set(w, e instanceof MintError
+          ? { reason: e.reason, detail: e.message }
+          : { reason: 'mint_error', detail: e instanceof Error ? e.message : String(e) });
+        return null;
+      })
       .then((s) => {
         if (!s) failedAt.set(w, Date.now());
         inflight.delete(w);
@@ -90,14 +137,49 @@ export function ensureWalletSession(wallet: string): Promise<Session | null> {
   return pending;
 }
 
-function timeout<T>(p: Promise<T>, ms: number): Promise<T | null> {
+const TIMED_OUT = Symbol('timed out');
+
+function timeout<T>(p: Promise<T>, ms: number): Promise<T | typeof TIMED_OUT> {
   let timer: ReturnType<typeof setTimeout> | undefined;
-  const late = new Promise<null>((r) => { timer = setTimeout(() => r(null), ms); });
+  const late = new Promise<typeof TIMED_OUT>((r) => { timer = setTimeout(() => r(TIMED_OUT), ms); });
   return Promise.race([p, late]).finally(() => clearTimeout(timer));
 }
 
+let reportedUnsigned = false;
+
+/**
+ * One row per page load, the first time a wallet-scoped request goes out
+ * unsigned. Enough to count the wallets affected and see why, without a
+ * signed-out tab writing a row for every query it makes.
+ */
+function reportUnsigned(wallet: string, url: string, why: MintFailure) {
+  if (reportedUnsigned) return;
+  reportedUnsigned = true;
+  let path = url;
+  try { path = new URL(url).pathname; } catch { /* keep the raw url */ }
+  void log.warn(`Unsigned wallet request (${why.reason})`, {
+    reason: why.reason,
+    detail: why.detail.slice(0, 300),
+    path,
+    client: 'web',
+    wallet,
+  });
+}
+
+/**
+ * A REST or storage call to our project, direct or through the same-origin
+ * relay (/_sb) that supabaseRelayFetch switches to when the project host is
+ * unreachable. The relay forwards headers untouched, so a relayed request
+ * needs its session just as much, and missing it would pass silently.
+ */
 function isRestOrStorage(url: string) {
-  return url.startsWith(SUPABASE_URL) && (url.includes('/rest/v1/') || url.includes('/storage/v1/'));
+  const relay = defaultRelayBase();
+  const path = url.startsWith(SUPABASE_URL)
+    ? url.slice(SUPABASE_URL.length)
+    : relay && url.startsWith(relay + SUPABASE_RELAY_PREFIX + '/')
+      ? url.slice(relay.length + SUPABASE_RELAY_PREFIX.length)
+      : null;
+  return !!path && (path.startsWith('/rest/v1/') || path.startsWith('/storage/v1/'));
 }
 
 let installed = false;
@@ -119,7 +201,12 @@ export function installWalletSessionFetch(): void {
     const usable = valid && valid.expiresAt - 30_000 > Date.now() ? valid : null;
     if (usable && !fresh(wallet)) void ensureWalletSession(wallet);
     const session = usable ?? (await timeout(ensureWalletSession(wallet), FIRST_WAIT_MS));
-    if (!session) return next.call(this, input, init);
+    if (!session || session === TIMED_OUT) {
+      reportUnsigned(wallet, url, session === TIMED_OUT
+        ? { reason: 'timeout', detail: `no session within ${FIRST_WAIT_MS}ms` }
+        : lastFailure.get(wallet) ?? { reason: 'mint_error', detail: 'unknown' });
+      return next.call(this, input, init);
+    }
     headers.set('x-wallet-session', session.token);
     if (input instanceof Request && !init) return next.call(this, new Request(input, { headers }));
     return next.call(this, input, { ...init, headers });
