@@ -55,8 +55,14 @@ if (dhHost !== "dehub.io" && dhHost !== "localhost" && dhHost !== "127.0.0.1") {
 // ladder with lazyWithRetry and the ErrorBoundary so the three paths can't
 // reload over each other — this one used to keep its own flag that was never
 // cleared, so a second stale deploy in the same session got no reload at all.
-window.addEventListener('vite:preloadError', (event) => {
-  if (recoverFromChunkError() === 'reloading') event.preventDefault();
+//
+// Never preventDefault here: that makes Vite resolve the import with
+// `undefined` instead of rejecting, and any React.lazy() that renders before
+// the reload lands crashes on `undefined.default`. Letting the error through
+// is safe — lazyWithRetry and the ErrorBoundary see the reload in flight and
+// render nothing until it lands.
+window.addEventListener('vite:preloadError', () => {
+  recoverFromChunkError();
 });
 
 // Two things are awaited before the first render, both so that the HTML shell
