@@ -47,8 +47,6 @@ Every link below is a public page that renders without an account. The app's sig
 
 ## Guides
 
-- [Best decentralized social media 2026](https://dehub.io/guides/best-decentralized-social-media): DeHub, Mastodon, Bluesky, Farcaster and Lens compared.
-- [Best Web3 social media dapps 2026](https://dehub.io/guides/best-web3-social-media-dapps): Web3 social dapps scored on monetization, censorship resistance and UX.
 - [Best decentralized streaming apps 2026](https://dehub.io/guides/best-decentralized-streaming-apps): Decentralized streaming apps you can actually watch on, compared.
 - [What is watch-to-earn?](https://dehub.io/guides/what-is-watch-to-earn): How watch-to-earn works and how DeHub pays viewers on-chain.
 - [Is watch-to-earn legit?](https://dehub.io/guides/is-watch-to-earn-legit): Realistic earnings, red flags and a checklist for any platform.
