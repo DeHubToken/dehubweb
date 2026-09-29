@@ -162,7 +162,7 @@ export default function BrainrotFeedHost() {
       ) : session ? (
         <BrainrotPlaceholder
           key="brainrot-loading"
-          label={emptyForGood ? t('shorts.nothingToWatch', 'Nothing to watch right now') : undefined}
+          label={emptyForGood ? t('feed.emptyTitle', 'No Content Yet') : undefined}
           closeLabel={t('common.close', 'Close')}
         />
       ) : null}
