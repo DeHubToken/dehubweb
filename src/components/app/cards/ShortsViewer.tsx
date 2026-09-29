@@ -657,14 +657,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const nextPositive = next ? isPositiveReaction(next) : false;
     const nextNegative = next ? !nextPositive : false;
 
-    // One reaction, counted for the reactor's badge weight — the same number
-    // the server will move both rollups by.
+    // One reaction. A like counts for the reactor's badge weight, the same
+    // number the server moves it by.
     let likeDelta = 0;
     let dislikeDelta = 0;
     if (wasPositive && !nextPositive) likeDelta = -voteWeight;
     if (!wasPositive && nextPositive) likeDelta = voteWeight;
-    if (wasNegative && !nextNegative) dislikeDelta = -voteWeight;
-    if (!wasNegative && nextNegative) dislikeDelta = voteWeight;
+    // A dislike always shows as one, whatever badge cast it.
+    if (wasNegative && !nextNegative) dislikeDelta = -1;
+    if (!wasNegative && nextNegative) dislikeDelta = 1;
 
     const newLiked = nextPositive;
     const newDisliked = nextNegative;

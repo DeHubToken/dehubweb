@@ -533,8 +533,9 @@ export function ActionBar({
       let dislike = localDislikeCount;
       if (wasPositive && !nextPositive) like = Math.max(0, like - weight);
       if (!wasPositive && nextPositive) like += weight;
-      if (wasNegative && !nextNegative) dislike = Math.max(0, dislike - weight);
-      if (!wasNegative && nextNegative) dislike += weight;
+      // A dislike always shows as one, whatever badge cast it.
+      if (wasNegative && !nextNegative) dislike = Math.max(0, dislike - 1);
+      if (!wasNegative && nextNegative) dislike += 1;
       return {
         likeCount: like,
         dislikeCount: dislike,
