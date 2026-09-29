@@ -396,8 +396,8 @@ export default function DexPage() {
 
   return <div className="dex-terminal">
     <SEOHead title={t('dex.seoTitle')} description={t('dex.seoDescription')} url="https://dehub.io/dex"
-      jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub DEX', url: 'https://dehub.io/dex',
-        applicationCategory: 'FinanceApplication', operatingSystem: 'Web', description: t('dex.seoDescription') }} />
+      jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub DEX', url: 'https://dehub.io/dex',
+        description: t('dex.seoDescription') }} />
     <header className="dex-top">
       <PoolPicker current={null} />
       <div className="dex-stat"><small>{t('dex.marketPrice')}</small><strong className="dex-reference">{usdPrice != null ? `$${formatPrice(usdPrice)}` : '—'}</strong></div>

@@ -177,26 +177,22 @@ export default function ApkPage() {
     .filter(Boolean)
     .join(" · ");
 
+  // A WebPage about the app, as the edge renders it for crawlers: Google's
+  // Software App result requires a rating or review, which the APK does not
+  // have, and without one the page is reported as an invalid item.
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
+    "@type": "WebPage",
     name: "DeHub for Android",
     alternateName: "DeHub APK",
     description: t("apk.ldDescription"),
     url: PAGE_URL,
-    installUrl: PAGE_URL,
-    downloadUrl: DOWNLOAD_URL,
-    // Omitted entirely rather than filled in with a guess — a stale
-    // softwareVersion in structured data is the same lie as one on the page,
-    // and every field here is optional to Schema.org.
-    ...(release?.version ? { softwareVersion: release.version } : {}),
-    ...(release?.size ? { fileSize: release.size } : {}),
+    significantLink: DOWNLOAD_URL,
+    about: { "@type": "Thing", name: "DeHub for Android", sameAs: PLAY_URL },
+    // Omitted entirely rather than filled in with a guess — a stale date in
+    // structured data is the same lie as one on the page.
     ...(release?.iso ? { datePublished: release.iso, dateModified: release.iso } : {}),
-    applicationCategory: "SocialNetworkingApplication",
-    operatingSystem: "Android 8.0 and up",
     image: OG_IMAGE,
-    screenshot: OG_IMAGE,
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     publisher: {
       "@type": "Organization",
       name: "DeHub",
