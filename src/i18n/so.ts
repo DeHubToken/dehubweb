@@ -42,6 +42,7 @@ export const so = {
     faq: "Su'aalaha Badanaa",
     donate: 'Ku deeq',
     communityGuidelines: 'Tilmaamaha Bulshada',
+    docsChatAssistant: 'Kaaliyaha',
   },
   common: {
     lightMode: 'Qaabka Iftiinka',
@@ -950,6 +951,25 @@ export const so = {
     altAssistant: 'Caawiyaha AI, waxaa laga heli karaa koonto kasta oo ka mid ah barnaamijka.',
     altAds: 'Bogga xayeysiinta is-dabajoogga ah ee loogu talagalay sameynta iyo maalgelinta ololaha.',
     altFeatures: '**Dhamaadka Xiriirka Soomaaliyeed, iyo ayaa ku saabsan ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid',
+    accountsB7: 'Soo deji ama u haajir:',
+    altUpload: 'Qoraalka boostada, oo leh cinwaan, qayb, bulsho iyo doorashooyinka kaliya ee macaamiisha',
+    converterB2Desc: 'Ku dheji cinwaanka kanaalka si aad u keento kanaal dhan hal mar, oo leh faraha, cimri dhererka iyo tirooyinka aragtida ee la muujiyey si aad u dooran karto waxa soo gala oo aad u aragto qiimaha ka hor intaadan bilaabin.',
+    exchangeTitle: 'Isweydaarsiga',
+    feedsDubDesc: 'Maqal fiidiyow ku qoran luqaddaada: dooro Dub ka menu subtitles ama fursadaha fiidiyowga, iyo qalabkaaga akhriya transcript turjumay cod dheer. Waa lacag la \'aan waxayna ku socotaa qalabkaaga.',
+    feedsSortDesc: 'Ugu dambayntii waxay marka hore ku timaadaa tabs nooca, oo ay ku xigto noocyada ka qaybqaadashada, oo ay ku jiraan Talooyinka badankood. Taabashada hashtag shaandhaynta quudinta iyada, fiidiyowyada aad horey u daawatay waa la calaamadeyn karaa oo la qarsan karaa, iyo marxalad kasta oo toos ah oo fadhiya dusha sare ee Guriga.',
+    kidsB2Desc: 'Abuurayaashu waxay calaamadeynayaan boostada "Loogu talagalay carruurta" oo ku jira mawduuca waxayna xaqiijinayaan. Boostada ayaa markaa lagu muujiyaa Habka Carruurta, waxay ka soo baxdaa quudinta caadiga ah, waxay ku sii jirtaa astaanta abuuraha iyo raadinta, oo kaliya Habka Carruurta ayaa ka faalloon kara. Qoraalku ma noqon karo mid qaangaar ah oo loogu talagalay carruurta.',
+    kidsDesc: 'Qaabka Carruurta wuxuu u beddelaa aalad meel loogu talagalay carruurta. Iyada oo ay ku jirto, DeHub waxay muujineysaa oo keliya qoraallo ay abuurayaashoodu u daabaceen carruurta, meel kasta oo ka mid ah barnaamijka, iyo emoji qaawan ama caadada ah ayaa la hayaa. Wax kale oo ku saabsan DeHub ma gaarto ilmo isticmaalaya.',
+    marketsDesc: 'Saddex suuq ayaa kuu oggolaanaya inaad iibsato oo aad iibiso waxa aad ku leedahay DeHub, oo lagu bixiyay calaamadaha DeHub.',
+    messagesDesc: 'Farriimaha tooska ah ee DeHub waa qarsoodi dhammaadka-ilaa-dhamaadka by default, waa la kormeeri karaa, oo waxay la yimaadaan kontaroolada aad ka filan lahayd rasuul casri ah. Qoraalka waxaa lagu shaabadeeyay qalabkaaga ka hor inta aan la dirin, abuurayaashu waxay dadka ku dalban karaan inay fariin u diraan, iyo wadahadalada ku yaal geeska shaashadda si aad u sii wadi karto daalacashada inta aad sheekeysaneyso.',
+    multipostDesc: 'Ku daabac DeHub iyo xisaabtaada kale ee bulshada isla talaabadaas. Ku xir xisaabaadka hal mar Settings → Multi-post, ka dibna dooro meesha boostada kasta ka tagto icon cross-post ee composer ah. DeHub wuxuu joogaa guriga boostada; nuquladu waxay u qaadaan dhagaystayaasha aad horey u haysato meelo kale.',
+    packsB2Desc: 'Baakad kastaa waxay leedahay bog u gaar ah dehub.io/packs oo leh xiriir la wadaago, iyo baakadaha ugu badan ee lagu daray ayaa lagu taxay qof walba si uu u baaro.',
+    profileB3Desc: 'Isku xir bulshadaada kale iyo astaanta ayaa ku daraysa raacahaaga tirooyinka halkaas ku jira kuwa raacsan DeHub, iyadoo hal taabo laga jebinayo.',
+    profileB5Desc: 'Soo-booqdayaashu waxay raadin karaan, kala saari karaan oo miiri karaan qoraallada kanaalka iyadoo loo marayo category, taariikhda, nooca iyo marin u helka, waxayna arki karaan qoraallada la qorsheeyay ka hor inta aysan si toos ah u socon.',
+    settingsB2Desc: 'The picker theme la muunad ka mid ah mawduuc kasta, cufnaanta raaxo ama compact, nalalka dimmed, midab accent on mawduucyada qaadataa mid ka mid ah, iyo hab gacanta bidix.',
+    themesDesc: 'DeHub maraakiibta afar iyo toban fursadaha muuqaalka, ma aha toggle iftiin-iyo-dark ah: System, Light, Minimal, Cosmic, Hazy, Swarms, Lava Lamp, Winter, War, Osaka, Jungle, Island, Hacker iyo Naxdin. Mid kastaa waa maqaar buuxa — palette u gaar ah, chrome, iconography iyo, waayo, qaar ka mid ah, asalka live animated ku qoran GPU. Jasiiraddu waa lagoon raacaya saacaddaada maxalliga ah saacadda dahabka ilaa habeenkii, Hacker waa roob cagaaran oo gaabis ah oo leh barnaamijka lagu dejiyay monospace, iyo Naxdin ayaa laga helaa sawirro cajalad VHS ah oo xiran. Dooro mid ka mid ah → Muuqaalka Dejinta, halkaas oo mid kastaa muujiyo muunad; afar ka mid ah ayaa sidoo kale kuu oggolaanaya inaad dejiso midabkaaga dhawaaqa, Jungle wuxuu leeyahay beddelkeeda maalin iyo fiid.',
+    tocExchange: 'Isweydaarsiga',
+    walletHubB1Desc: 'Boorsada jeebka badan ee haysta calaamadaha DeHub oo ay weheliso ETH, BnB, USDT, USDC iyo in ka badan oo ku baahsan Base, BnB Chain, Ethereum, Robinhood Chain iyo Arc, iyo sidoo kale qabashada Solana. Miisaaniyada zero waa la qariyey, iyo app weydiiyo shabakad aad ula jeeddo ka hor nuqul cinwaan. Hel, Send, Buy, Trade, Stake, Bridge iyo Cash Out oo dhan waa hal tuubada ka dheelitirka.',
+    walletHubB3Desc: 'Top in app iyada oo loo marayo DeHub Pay, by kaarka ama la crypto ka silsilad kale, ka $ 0.50.',
   },
   games: {
     title: 'Ciyaaraha DeHub',
@@ -1416,6 +1436,11 @@ export const so = {
     live5: 'Kabtanka la qariyey, oo la qariyey abaalmarinta ka qalabkaaga',
     coming4: '**Dhacaynta ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid',
     commitmentDesc: '**Waa DeHub, iyo ayaa siyaad **privacy** ku dhigay **haddii ahaan** **ka mid ka mid ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka mid** **ka',
+    evenIfConclusion: 'Farriintaada sirta ah ayaa weli ah mid aan la akhrin karin. Taasi waa awoodda sirta dhamaadka ilaa dhamaadka.',
+    forwardSecrecyDesc: 'Furaha hal wadahadal ma furi karo mid kale',
+    live4: 'Fureyaasha isku midka ah ee aalad kasta, laga bilaabo hal saxiix',
+    storedDeviceDesc: 'Lammaanahaaga muhiimka ah ee asalka ah, oo lagu hayo keydinta biraawsarka cinwaankaaga',
+    xchacha1: 'Sirta la xaqiijiyay ee maktabadda la baaray @sharaf/ciphers, oo leh random cusub 24-byte nonce fariin kasta',
   },
   aiToolkits: {
     title: 'Qalabka AI',
@@ -1513,6 +1538,7 @@ export const so = {
     dashboardDesc: 'La kulan barmaamijka xayeysiinta POVR ee aragtida xayeysiiyaha. Horudhacgan isdhexgalka ah wuxuu muujinayaa aaladaha iyo falanqaynta laga heli karo shirkadaha ku xayeysiinta DeHub.',
     analytics: '**Analitika**',
     budgetCalculator: 'Xisaabiyaha Miisaaniyadda',
+    povrDesc4: 'Software-keena, oo leh shatiyada la sugayo, wuxuu tan ku sameeyaa iyada oo loo marayo nidaam darajo 13 darajo oo aan horay loo arag oo ay weheliso astaamahayaga xaqiijinta, oo lagu muujiyey iftiinkan hore ee muuqaalka.',
   },
   team: {
 
@@ -1725,6 +1751,7 @@ export const so = {
       'Isku-darka ganacsiga ee hadda jira ee qulqulka iyo astaamaha madadaalada guriga',
       'V/AR profile hub & qiyaasta xogta macaamiisha',
     ],
+    q4_2021: 'Q4 2021',
   },
   brandAssets: {
     title: 'Hantida Calaamadda',
@@ -1900,6 +1927,8 @@ export const so = {
     changesToAgreementText: 'Isbedelada ku yimaada shuruudahan waxaa lagu soo bandhigi doonaa hababka maamulka bulshada. Isbedelada waaweyn waxay u baahan yihiin oggolaanshaha bulshada iyada oo loo marayo codeynta milkiilaha calaamadda.',
     contact: 'La xiriir',
     contactText: 'Wixii su \'aalo ah ee ku saabsan Shuruudahaan Adeegga, fadlan la xiriir kanaalkeena maamulka bulshada ama soo gudbinta soo jeedinta iyada oo loo marayo habka DAO.',
+    monetizationText: 'Si ka duwan madal-yada caadiga ah, DeHub waxay siisaa xuquuq aan xad lahayn oo lacag-soo-saar ah dhammaan isticmaalayaasha, oo kaliya lagu xaddiday:',
+    notAllowedItem6: 'Si macmal ah u maamulida cabbirada ka qaybgalka iyadoo loo marayo isdhexgalka lacagta lagu bixiyay ama lagu dhiirigeliyay',
   },
   privacyPolicy: {
     title: 'Siyaasadda Asturnaanta',
@@ -2003,6 +2032,7 @@ export const so = {
     thirdPartyItem10Prefix: 'Boostada badan:',
     thirdPartyItem10: '**Caddooyinka iyo caddooyinaha sociaala ee ugu dhaafay, waxaa ugu soo saarayaa postaha ee ugu soo dhaafay ayaa uu ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid ka mid',
     dataSovereigntyItem5: 'Waxaad doorataa haddii nidaamyada AI ay ku tababaran karaan shaqadaada. Waa la oggol yahay haddii aadan ku beddelin Settings, xulashadaada waxaa lagu daabacay crawlers bogagga aan xakameyno',
+    dataSovereigntyItem6: 'Waxaad iska tirtiri kartaa koontadaada Settings; profile, uploads iyo warbaahinta kaydsan, oo ay ku jiraan nuqulada gurmad, waa la tirtiray',
   },
   contact: {
     title: 'Xiriir',
@@ -2120,6 +2150,9 @@ export const so = {
     a30: 'In ka badan boqol. Boostada iyo faallooyinka waxay ku tarjumaan luqaddaada sida aad u xoqdo iyada oo aan waxba loo dejin oo aan xiriir boorsada loo baahnayn, interface laftiisa ayaa la tarjumay, iyo marxaladaha tooska ah waxaa lagu qoraa oo loo tarjumay waqtiga dhabta ah.',
     a7: 'Lix kulan ordaya gudaha DeHub laftiisa, tab biraawsarka, oo aan lahayn wax lagu rakibo iyo wax la iibsado: King\'s Gambit (3D chess oo leh jaranjarada Elo khadka tooska ah), Claude of Duty (toogasho ah oo soo saarta dhammaan farshaxankeeda mashiinkaaga), Jungle Trail (geeddi-socod ahaan laga soo saaray socodka kaynta roobka), Street Slayer (dhinac-gelling em \'em up for DeHubt, oo loo dhisay CharHubt (VR), oo sidoo kale ka ganacsada dusha sare ee dunida (VR). Last Chad Standing, our flagship MMA dagaal royale, waa in la horumariyo.',
     a29: 'Abuurayaashu waxay calaamadeynayaan boostada qaangaarka ah inta ay sameynayaan, iyo qoraalladaas waxay ka fogaadaan quudinta guriga dadweynaha iyo raadinta illaa aad ku soo rogto "Muuji waxyaabaha qaangaarka ah" goobaha. Waxaad mute kartaa ama xannibi kartaa qoraaga ka menu ― on post kasta, dooro qayb kasta oo ogeysiisyo ku gaarto, oo ku shido Kids Mode, ilaalin by PIN ah, sidaas qalab muujinaysaa oo kaliya posts loogu talagalay carruurta.',
+    a13: 'Dadka haysta calaamadaha waxay ka qayb qaataan bogga Maamulka: akhri oo ka wada hadlaan soo-jeedinnada faallooyinkooda xariiqda ah, u codee ama ka soo horjeeda si bilaash ah miisaanka ay ku dejisay calaamaddaada, ama u fur soo-jeedin adiga kuu gaar ah oo loogu talagalay khidmadda 10,000-token. Bogga khasnadda ee DAO wuxuu u oggolaanayaa qof kasta inuu ku biiriyo calaamadaha DeHub oo uu u codeeyo sida khasnaddaas loo isticmaalo, iyadoo loo eegayo waxa ay gacan ka geysteen.',
+    a22: 'Maya. Waxaad ku qori kartaa Google, Apple ama Telegram, oo leh koodh loo soo diray cinwaankaaga emaylka ama SMS, ama baaskiil, iyo boorsada aan custodial ahayn ayaa laguu abuuray asalka — waxaad haysataa furayaasha weligeedna ma qaadan doonno ilaalin. Haddii aad horey u haysato boorsada, waad isku xiri kartaa ama soo dejisan kartaa furayaasheeda halkii. Saxiixyada aan ku salaysnayn boorsada ayaa sidoo kale leh khidmaddooda gaaska, sidaa darteed waxaad ku dhejin kartaa, tip iyo ururin kartaa adigoon waligaa iibsan calaamadda asalka ah.',
+    a3: 'Soo jeedinta ayaa kor loo qaadayaa oo laga codeeyay bogga Maamulka. Furitaanka soo jeedinta waxay ku kacaysaa khidmad ah 10,000 calaamadaha DeHub, oo lagu xaqiijiyey silsilad, taas oo ka dhigaysa guddiga bilaashka ah ee spam. Codeynta laftiisa waa lacag la \'aan oo miisaankeedu yahay astaantaada staking. Codbixintu waxay socotaa toddoba maalmood, soo jeedintuna waxay ku gudubtaa aqlabiyad miisaan leh oo keliya haddii ugu yaraan toban boorsooyin kala duwan ay ka qaybqaateen, sidaa darteed hal haye oo weyn wax kaligiis ma dhaafi karo.',
   },
   donate: {
     title: 'Ku deeq',
@@ -2138,6 +2171,7 @@ export const so = {
     btcNetwork: 'Bitcoin (BTC)',
     addressCopied: 'Cinwaanka La Nuqulay',
     addressCopiedDesc: 'cinwaanka loo nuqulay clipboard',
+    aboutP2: 'Dhammaan dakhliga waxaa lagu bixiyaa iyadoo la raacayo soo jeedinta DAO, iyadoo la hubinayo in 100% dib loo maalgeliyo nidaamka deegaanka. DeHub weligeed waxaa loo ilaalin doonaa sida wanaagga dadweynaha iyada oo loo marayo dakhliga iyo deeqaha.',
   },
   blog: {
     title: 'Blog',
@@ -2212,6 +2246,7 @@ export const so = {
     disclaimerNoApy: 'Muhiim: inta ay haysato calaamadaha DeHub waxay siisaa lahaanshaha shabakadda DeHub waxayna xaq u leedahay stakers qayb ka mid ah faa \'iidooyinka borotokoolka, ma jiro APY set, heerka soo noqoshada damaanad qaaday iyo filasho faa\' iido nooc kasta ah. Dhammaan qaybinta gebi ahaanba waxay kuxirantahay waxqabadka shabakadda iyo dakhliga ay dhab ahaantii soo saarto borotokoolka muddo cayiman. Abaalmarinta ayaa laga yaabaa inay ka hooseyso xilli kasta oo hore, waxayna noqon kartaa eber. Wax kasta oo ku yaal boggan ma aha ballanqaad, saadaalin ama dalab soo noqosho, mana jiraan wax halkan ku yaal talo maaliyadeed.',
     disclaimerText: 'Calaamadaha DeHub ayaa si adag loogu talagalay ujeeddooyinka adeegsiga si la mid ah in kasta oo calaamadaha ama aaladaha dhijitaalka ah ee gudaha ama app-ka iyo si adag ma aha maalgashi. Maaddaama calaamaddeenu ku nooshahay jadwalka, waxaan bixin karnaa adeegyo dheeri ah iyo sidoo kale heerar aan horay loo arag oo daahfurnaan la hubin karo. Xogta kor ku xusan waxaa loo ururiyaa oo keliya daahfurnaanta, ujeeddooyinka waxbarashada iyo macluumaadka oo keliya. DeHub iyo dhammaan la-hawlgalayaasha ma haystaan mas \'uuliyadda khasaaraha dhaqaale ee ka dhashay iibsashada calaamado kasta ama NFTs aan sii deyno. Suuqyada waa kuwo aad u kacsan. Waxaad sidoo kale waayi kartaa dhammaan lacagtaada sababtoo ah khaladaad kasta oo aan la fileynin sida guul darrooyinka aqoonta, qalad farsamo, hacks iyo wixii la mid ah. Sidaa darteed, waa inaad marwalba isticmaashaa oo keliya waxa aad awoodi karto inaad lumiso.',
     useAiTitle: 'Qarniga AI',
+    useAiDesc: 'Bixi wax soo saarka AI ee ku jira Creator Studio — sawir, muuqaal, cod iyo 3D — DeHub tokens, qiimo lagu qiyaasay ka hor inta aan shaqo kasta la samayn, halkii laga ilaalin lahaa is-diiwaangelin gooni ah qalab kasta.',
   },
   communityGuidelines: {
     title: 'Tilmaamaha Bulshada',
@@ -2319,6 +2354,13 @@ export const so = {
     nextStakeTitle: '**Stake**',
     nextStakeDesc: '**Xiriirka DeHub toookan ka soo saariyo rewards ka mid kaa inay badiga ku jiraa ayaa**',
     nextFaqTitle: 'Su \'aalaha la isweydiiyo',
+    nextDappDesc: 'Qayb kasta oo ka mid ah barnaamijyada, qayb ka mid ah qayb ka mid ah',
+    nextDappTitle: 'dApp Tilmaamaha',
+    nextFaqDesc: 'Jawaabaha su \'aalaha ugu caansan',
+    step1Desc: 'Open dehub.io oo taabo Sign in. Dooro Google, Apple, Telegram, email, SMS, passkey ama boorsada. Boorsada aan custodial-ka ahayn ayaa laguu abuuray asalka — waxaad haysataa furayaasha — gaaska ayaa kafaala qaadaya, sidaa darteed ma jiraan wax lagu maalgeliyo ka hor intaadan bilaabin.',
+    step2Title: 'Deji astaantaada',
+    step4Desc: 'Qoraal kasta waxaa lagu dhejin karaa calaamadaha DeHub. Laga soo bilaabo halkaas waxaad ka iibin kartaa subscriptions, daabacan post-per-view, dejiso talooyin ugu yar ee farriimaha tooska ah, furitaanka dukaanka, boostada bounties oo la wadaag xiriirkaaga xiriirka si aad uga kasbato dadka aad keento.',
+    step6Title: 'Isticmaal boorsadaada',
   },
   apiEndpoints: {
     subtitle: 'Tixraac dhammaystiran oo loogu talagalay dhammaan dhibcaha API ee la heli karo oo leh tusaalooyin iyo jadwalka jawaabta.',
@@ -2465,5 +2507,7 @@ export const so = {
     match: '{percent}% **kaab**',
     resultOne: '1 result',
     resultMany: '{count} **kaadibka**',
+    noResultsHint: 'Isku day ereyada muhiimka ah ee kala duwan ama hubi qoraalka.',
+    popular: 'Raadinta caanka ah',
   },
 };
