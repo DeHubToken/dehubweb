@@ -6984,7 +6984,13 @@
       "notifyKeyOnce": "New notify key fo {{name}}. Copy wey na now: dem show only one time, na if you make another, dem replace de old one.",
       "payTitle": "Take payments",
       "notifyTitle": "Send notifications",
-      "notifyBody": "User wey add your app, you can send dem notification from your server wey use your notify key. No need for per-user token wey you go store."
+      "notifyBody": "User wey add your app, you can send dem notification from your server wey use your notify key. No need for per-user token wey you go store.",
+      "rankBody": "Efere night, ebi app a list get score: 55% from user wey go back (people wey open a dem dis wee a wee before), 35% from user wey come wee wee, plus 10% boost fi dem fi fi 14 day a dem. Only account DeHub wey sign-in count, so bot a page reload no get nafa.",
+      "rewardsBody": "Chere month, {{pool}} DHB go share by apps by same score, calculate wek wek. For qualify, app need owner wallet confirm and at least 3 users return. Reward dey pay by DeHub to owner wallet.",
+      "rewardsWeek": "Week of {{date}}",
+      "rewardPaid": "Paid",
+      "rewardPending": "Pending",
+      "rewardsNone": "Wetin no go dey yet for reward. First week go close on Monday."
     },
     "card": {
       "open": "Open"

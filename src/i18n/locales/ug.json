@@ -7629,7 +7629,8 @@
       "yourApps": "Sizning iltizarliklaringiz",
       "notificationsOn": "Habarlar ochun",
       "remove": "Och",
-      "removed": "Ochildi. Sizga yana habar berish mayqan."
+      "removed": "Ochildi. Sizga yana habar berish mayqan.",
+      "rising": "يېڭى ۋە ئېشىش"
     },
     "dev": {
       "title": "Mini app qur",
@@ -7680,7 +7681,13 @@
       "payTitle": "To'lovlarni qabul qiling",
       "payBody": "pay() foydalanuvchidan sizga DHB yuborishni so'raydi, sizning dehub.json imzolagan portfelingizga bevosita. To'lovni serveringizda tekshiring, keyin faqat shuni bering.",
       "notifyTitle": "Habarlarni yuboring",
-      "notifyBody": "Sizning iltizarlikningizni qo'shgan foydalanuvchilar sizning serveringizdan habar kalitingiz bilan habar berilishi mumkin. Har bir foydalanuvchi uchun token saqlash yo'q."
+      "notifyBody": "Sizning iltizarlikningizni qo'shgan foydalanuvchilar sizning serveringizdan habar kalitingiz bilan habar berilishi mumkin. Har bir foydalanuvchi uchun token saqlash yo'q.",
+      "rankTitle": "دۇكان ئەپلەرنى قانداق ئورۇنلاشتۇرىدۇ",
+      "rankBody": "ھەر كۈنى كەچتە تىزىملىتىپ قويۇلغان ھەر بىر ئەپنىڭ نەتىجىسى بولىدۇ: قايتىپ كەلگەن ئىشلەتكۈچىلەرنىڭ % 55 ى (بۇ ھەپتىدە ۋە ئۇنىڭدىن ئالدىنقى ھەپتىدە ئاچقانلار)، ھەپتىلىك ئىشلەتكۈچىلەرنىڭ % 35 ى، بىرىنچى 14 كۈندە % 10 ئېشىش. پەقەت تىزىملىتىلغان DeHub ھېساباتىلا ھېسابلىنىدۇ، شۇڭا بوتلار ۋە بەتنى قايتا يۈكلەش ھېچقانداق پايدا ئېلىپ كەلمەيدۇ.",
+      "rewardsBody": "ھەر ئاي {{pool}} DHB ھەر ھەپتىلىك ھېسابلانغان ئوخشاش نومۇر بويىچە ئەپلەر ئارىسىدا بۆلۈنىدۇ. ئىلتىماس قىلىش ئۈچۈن، ئىلتىماس قىلغۇچىنىڭ تەستىقلانغان خەزىنىسى ۋە ئەڭ ئاز بولغاندا 3 قايتۇرۇلغان ئىشلەتكۈچى بولۇشى كېرەك. مۇكاپاتلار DeHub تەرىپىدىن مال ئىگىسىنىڭ خەزىنىسىگە تۆلىنىدۇ.",
+      "rewardsWeek": "{{date}} ھەپتىلىكى",
+      "rewardPaid": "پۇل تۆلەندى",
+      "rewardsNone": "مۇكاپات تېخى ھېسابلانمىدى. بىرىنچى ھەپتىلىك دۈشەنبە كۈنى تاقىلىدۇ."
     },
     "card": {
       "open": "ئېچىش"

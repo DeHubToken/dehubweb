@@ -7721,7 +7721,8 @@
       "yourApps": "Deine Apps",
       "notificationsOn": "Benachrichtigungen aktiviert",
       "remove": "Entfernen",
-      "removed": "Entfernt. Es wird dich nicht mehr benachrichtigen."
+      "removed": "Entfernt. Es wird dich nicht mehr benachrichtigen.",
+      "rising": "Neu und aufstrebend"
     },
     "dev": {
       "title": "Eine Mini-App erstellen",
@@ -7772,7 +7773,14 @@
       "payTitle": "Zahlungen erhalten",
       "payBody": "`pay()` fragt den Nutzer auf, dir DHB zu senden, direkt in die Wallet, die deine `dehub.json` unterschrieben hat. Prüfe den Beleg auf deinem Server, bevor du etwas lieferst.",
       "notifyTitle": "Benachrichtigungen senden",
-      "notifyBody": "Nutzer, die deine App hinzufügen, können von deinem Server mit deinem Benachrichtigungsschlüssel benachrichtigt werden. Keine individuellen Tokens, die du speichern musst."
+      "notifyBody": "Nutzer, die deine App hinzufügen, können von deinem Server mit deinem Benachrichtigungsschlüssel benachrichtigt werden. Keine individuellen Tokens, die du speichern musst.",
+      "rankTitle": "Wie der Store Apps einstuft",
+      "rankBody": "Jede Nacht erhält jede aufgelistete App eine Punktzahl: 55 % von wiederkehrenden Nutzern (Personen, die sie diese Woche und die Woche zuvor geöffnet haben), 35 % von wöchentlichen Nutzern sowie 10 % mehr in den ersten 14 Tagen. Nur angemeldete DeHub-Konten zählen, sodass Bots und das erneute Laden von Seiten nichts einbringen.",
+      "rewardsBody": "Jeden Monat wird {{pool}} DHB zwischen Apps mit derselben Punktzahl geteilt, die wöchentlich berechnet wird. Um sich zu qualifizieren, benötigt eine App ein verifiziertes Inhaber-Wallet und mindestens 3 wiederkehrende Nutzer. Belohnungen werden von DeHub an das Wallet des Eigentümers ausgezahlt.",
+      "rewardsWeek": "Woche von {{date}}",
+      "rewardPaid": "Bezahlt .",
+      "rewardPending": "Ausstehend",
+      "rewardsNone": "Es wurden noch keine Belohnungen berechnet. Die erste Woche endet am Montag."
     },
     "card": {
       "open": "Offen"

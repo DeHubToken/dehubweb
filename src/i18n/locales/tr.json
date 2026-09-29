@@ -7727,7 +7727,9 @@
       "noMatch": "Bu aramayla eşleşen uygulama yok.",
       "yourApps": "Uygulamalarınız",
       "notificationsOn": "Bildirimler açık",
-      "removed": "Silindi. Artık tekrar bildirim yapmayacak."
+      "remove": "Kaldır",
+      "removed": "Silindi. Artık tekrar bildirim yapmayacak.",
+      "rising": "Yeni ve Popüler"
     },
     "dev": {
       "title": "Bir mini uygulama oluşturun",
@@ -7773,10 +7775,19 @@
       "stateListed": "Mağazada",
       "stateSuspended": "Askıya alındı",
       "copyLink": "Bağlantıyı kopyala",
+      "notifyKey": "Bildirim anahtarı",
       "notifyKeyOnce": "Yeni bildirim anahtarı için {{name}}. Şimdi kopyalayın: sadece bir kez gösterilir ve bir başkası yapıldığında yerini alır.",
       "payTitle": "Ödemeleri alın",
       "payBody": "`pay()` kullanıcının size doğrudan imzaladığınız `dehub.json` cüzdanına DHB göndermesini ister. Sunucunuzdaki fatura/ödemenin onayını kontrol edin önce herhangi bir şey teslim edin.",
-      "notifyBody": "Kullanıcılarınızın uygulamanıza eklediği kullanıcılar, bildirim anahtarı (notify key) ile sunucunuzdan bildirim alabilir. Her kullanıcı için ayrı token saklamanız gerekmez."
+      "notifyTitle": "Bildirim gönder",
+      "notifyBody": "Kullanıcılarınızın uygulamanıza eklediği kullanıcılar, bildirim anahtarı (notify key) ile sunucunuzdan bildirim alabilir. Her kullanıcı için ayrı token saklamanız gerekmez.",
+      "rankTitle": "Mağaza uygulamaları nasıl sıralıyor?",
+      "rankBody": "Listelenen her uygulama her gece bir puan alır: geri dönen kullanıcılardan (bu hafta ve bir hafta önce açanlar) % 55, haftalık kullanıcılardan % 35 ve ilk 14 gününde % 10 artış. Yalnızca oturum açmış DeHub hesapları sayılır, bu nedenle botlar ve sayfa yeniden yüklemeleri hiçbir şey kazandırmaz.",
+      "rewardsBody": "Her ay {{pool}} DHB, uygulamalar arasında haftalık olarak hesaplanan aynı puanla paylaşılır. Hak kazanmak için bir uygulamanın doğrulanmış bir sahip cüzdanına ve en az 3 geri dönen kullanıcıya ihtiyacı vardır. Ödüller DeHub tarafından cüzdan sahibine ödenir.",
+      "rewardsWeek": "{{date}} haftası",
+      "rewardPaid": "Ödendi",
+      "rewardPending": "Bekleyen",
+      "rewardsNone": "Henüz hiçbir ödül hesaplanmadı. İlk hafta pazartesi günü kapanıyor."
     },
     "card": {
       "open": "Açık"
@@ -7804,7 +7815,8 @@
       "noOwner": "Bu uygulamanın henüz ödenecek doğrulanmış bir cüzdanı yok."
     },
     "add": {
-      "body": "Yükleme sonrası \"Senin Uygulamaların\" altında görünecek ve size bildirimler göndermeye devam edecek. Herhangi bir zaman \"Uygulamalar\" sayfasından kaldırılabilir."
+      "body": "Yükleme sonrası \"Senin Uygulamaların\" altında görünecek ve size bildirimler göndermeye devam edecek. Herhangi bir zaman \"Uygulamalar\" sayfasından kaldırılabilir.",
+      "confirm": "Uygulama ekle"
     }
   },
   "aiStyles": {

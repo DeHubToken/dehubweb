@@ -7720,7 +7720,9 @@
       "noMatch": "Nessuna app corrisponde alla ricerca.",
       "yourApps": "Le tue app",
       "notificationsOn": "Notifiche su",
-      "removed": "Rimosso. Non ti notificherà più."
+      "remove": "Rimuovi",
+      "removed": "Rimosso. Non ti notificherà più.",
+      "rising": "Nuovo e nascente"
     },
     "dev": {
       "title": "Crea una mini app",
@@ -7771,7 +7773,14 @@
       "payTitle": "Prenota pagamenti",
       "payBody": "`pay()` chiede all'utente di inviarti DHB, direttamente nel portafoglio che ha firmato il tuo `dehub.json`. Controlla lo scontrino sul tuo server prima di consegnare qualcosa.",
       "notifyTitle": "Invia notifiche",
-      "notifyBody": "Gli utenti che aggiungono la tua app possono essere notificati dal tuo server utilizzando la tua chiave `notify`. Nessun token personalizzato da memorizzare."
+      "notifyBody": "Gli utenti che aggiungono la tua app possono essere notificati dal tuo server utilizzando la tua chiave `notify`. Nessun token personalizzato da memorizzare.",
+      "rankTitle": "Come lo store classifica le app",
+      "rankBody": "Ogni sera ogni app elencata ottiene un punteggio: 55% dagli utenti di ritorno (persone che l'hanno aperta questa settimana e la settimana prima), 35% dagli utenti settimanali, più un aumento del 10% nei primi 14 giorni. Contano solo gli account DeHub registrati, quindi i bot e le ricariche delle pagine non guadagnano nulla.",
+      "rewardsBody": "Ogni mese {{pool}} DHB viene condiviso tra le app con lo stesso punteggio, calcolato settimanalmente. Per qualificarsi, un'app ha bisogno di un portafoglio proprietario verificato e di almeno 3 utenti di ritorno. Le ricompense vengono pagate da DeHub al portafoglio del proprietario.",
+      "rewardsWeek": "Settimana del {{date}}",
+      "rewardPaid": "Accreditato",
+      "rewardPending": "In sospeso",
+      "rewardsNone": "Non sono state ancora calcolate ricompense. La prima settimana si chiude il lunedì."
     },
     "card": {
       "open": "Apri"

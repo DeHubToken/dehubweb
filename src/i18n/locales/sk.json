@@ -7839,7 +7839,8 @@
       "yourApps": "Vaše aplikácie",
       "notificationsOn": "Oznámenia na",
       "remove": "Zabraňte",
-      "removed": "Odstránené. Nebude sa vám o tom viac oznámiť."
+      "removed": "Odstránené. Nebude sa vám o tom viac oznámiť.",
+      "rising": "Nové a rastúce"
     },
     "dev": {
       "title": "Vytvoriť mini aplikáciu",
@@ -7890,7 +7891,14 @@
       "payTitle": "Prijímate platby",
       "payBody": "Platiť() požaduje od používateľa odoslanie DHB priamo na peňaženku, ktorá podpísala váš súbor dehub.json. Skontrolujte potvrdenie na svojom serveri pred dodaním niečoho.",
       "notifyTitle": "Poslať upozornenia",
-      "notifyBody": "Užívatelia, ktorí pridajú vašu aplikáciu, môžu byť informovaní z vašej serverovej strany pomocou vašeho klúča `notify`. Nepotrebujete ukladáť osobné tokeny pre každého užívateľa."
+      "notifyBody": "Užívatelia, ktorí pridajú vašu aplikáciu, môžu byť informovaní z vašej serverovej strany pomocou vašeho klúča `notify`. Nepotrebujete ukladáť osobné tokeny pre každého užívateľa.",
+      "rankTitle": "Ako obchod hodnotí aplikácie",
+      "rankBody": "Každú noc získava každá uvedená aplikácia skóre: 55% od vracajúcich sa používateľov (ľudí, ktorí ju otvorili tento týždeň a týždeň predtým), 35% od týždenných používateľov a 10% navýšenie za prvých 14 dní. Počítajú sa len prihlásené účty DeHub, takže roboty a opätovné načítanie stránok nezarábajú nič.",
+      "rewardsBody": "Každý mesiac {{pool}} DHB je zdieľaný medzi aplikáciami podľa rovnakého skóre, vypočítaného týždenne. Na splnenie podmienok potrebuje aplikácia overenú peňaženku vlastníka a najmenej 3 vracajúcich sa používateľov. Odmeny vypláca spoločnosť DeHub do peňaženky majiteľa.",
+      "rewardsWeek": "Týždeň {{date}}",
+      "rewardPaid": "Zaplatené",
+      "rewardPending": "Čakajúce",
+      "rewardsNone": "Zatiaľ neboli vypočítané žiadne odmeny. Prvý týždeň končí v pondelok."
     },
     "card": {
       "open": "Otvoriť"

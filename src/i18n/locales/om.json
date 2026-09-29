@@ -7675,7 +7675,10 @@
       "fromDehub": "DeHub irraa",
       "noMatch": "Appilikeeshiniin barbaacha sanaan walsimu hin jiru.",
       "yourApps": "Appilikeeshiniiwwan keessan",
-      "remove": "Irraa kaasuu"
+      "notificationsOn": "Beeksisa irratti",
+      "remove": "Irraa kaasuu",
+      "removed": "Buqqifame. Ammas isin hin beeksisu.",
+      "rising": "Haaraa fi ka&#39;aa jiru"
     },
     "dev": {
       "title": "Mini app ijaaraa",
@@ -7721,8 +7724,19 @@
       "stateListed": "Suuqii keessatti",
       "stateSuspended": "Rarraasuu",
       "copyLink": "Link waraabuu",
+      "notifyKey": "Furtuu beeksisuu",
+      "notifyKeyOnce": "Furtuu beeksisa haaraa {{name}}. Amma waraabi: al tokko agarsiifama, kan biraa hojjechuun immoo bakka bu&#39;a.",
       "payTitle": "Qabbaa dhaabbaa",
-      "notifyTitle": "Qaballee dhaabataa"
+      "payBody": "pay() fayyadamaan DHB akka siif ergu gaafatee, kallattiin gara boorsaa dehub.json kee mallatteesseetti. Waan tokkollee osoo hin geessiin dura nagahee server keessan irratti argamu ilaalaa.",
+      "notifyTitle": "Qaballee dhaabataa",
+      "notifyBody": "Fayyadamtoonni app keessan itti dabalan furtuu beeksisa keessaniin server keessan irraa beeksisuu dandeessu. Tookiin fayyadamaa tokkoof kan kuufamu hin jiru.",
+      "rankTitle": "Akkaataa manni daldalaa kun appii sadarkaa itti kennu",
+      "rankBody": "Halkan hunda tokkoon tokkoon appii tarreeffame qabxii argatu: %55 fayyadamtoota deebi&#39;an irraa (namoota torban kanaa fi torban duraa banan), %35 fayyadamtoota torban torbaniin, dabalataan guyyoota 14 jalqabaa keessatti %10 guddina. Akkaawuntii DeHub galmaa&#39;e qofatu lakkaa&#39;ama, kanaaf bots fi fuula irra deebi&#39;anii fe&#39;uun homaa hin argatan.",
+      "rewardsBody": "Ji&#39;a ji&#39;aan {{pool}} DHB qabxii walfakkaatuun appii gidduutti qoodama, torbanitti shallagama. Appiin tokko ulaagaa guutuuf boorsaa abbaa qabeenyaa mirkanaa&#39;ee fi yoo xiqqaate fayyadamtoota deebi&#39;an 3 barbaachisa. Badhaasni kan kaffalamu DeHub tiin boorsaa abbaa qabeenyaa irratti.",
+      "rewardsWeek": "Torban {{date}}",
+      "rewardPaid": "Kaffalame",
+      "rewardPending": "Eeggataa kan jiru",
+      "rewardsNone": "Badhaasni hanga ammaatti hin shallagamne. Torban jalqabaa Isniina cufama."
     },
     "card": {
       "open": "Banaa"
@@ -7743,9 +7757,15 @@
       "art-creativity": "Aartii & kalaqa"
     },
     "pay": {
-      "title": "Baasi {{name}}?"
+      "title": "Baasi {{name}}?",
+      "body": "DHB kallattiin gara boorsaa appii kanaa {{wallet}} tti deema. Kaffaltiin duubatti deebi&#39;uu hin danda&#39;u.",
+      "confirm": "{{amount}} DHB kaffalaa",
+      "sending": "Kaffaltii keessan erguun...",
+      "sent": "Kaffaltii {{amount}} DHB gara {{name}} tti.",
+      "noOwner": "Appiin kun hanga ammaatti boorsaa mirkanaa&#39;ee kaffaluuf hin qabu."
     },
     "add": {
+      "title": "{{name}} itti dabalaa?",
       "body": "Gummaa *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa*",
       "confirm": "App itti dabali"
     }

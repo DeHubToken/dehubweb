@@ -7735,7 +7735,8 @@
       "fromDehub": "DeHub nisqamanta",
       "noMatch": "Mana ima appkuna chay maskaywan tupanchu.",
       "yourApps": "Apps nisqaykikuna",
-      "remove": "Qichuy"
+      "remove": "Qichuy",
+      "rising": "Musuq hinaspa wichariq"
     },
     "dev": {
       "title": "Huk mini app nisqa ruway",
@@ -7780,7 +7781,13 @@
       "stateUnlisted": "Kawsay link · tiendapaq qhawaypi",
       "stateListed": "Tiendapi",
       "stateSuspended": "Sayachisqa",
-      "copyLink": "Copia link nisqa"
+      "copyLink": "Copia link nisqa",
+      "rankTitle": "Imaynatachus tienda apps nisqakunata rankikun",
+      "rewardsBody": "Sapa killa {{pool}} DHB appkunapura kikin puntuación kaqwan rakisqa, sapa semana yupasqa. Calificarpaq, huk app huk chiqaqchasqa dueño billetera chaymanta 3 kutimuq usuariokunallapas necesitan. Premiokuna DeHub kaqwan qun dueño billetera kaqman.",
+      "rewardsWeek": "{{date}} nisqa semana.",
+      "rewardPaid": "Huntachisqa",
+      "rewardPending": "Kaqraq",
+      "rewardsNone": "Manaraqmi premiokuna yupasqachu. Ñawpaq semanaqa lunes p’unchaymi wisq’akun."
     },
     "card": {
       "open": "Kichasqa"

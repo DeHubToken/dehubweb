@@ -7729,7 +7729,8 @@
       "yourApps": "Your apps",
       "notificationsOn": "Notifications on",
       "remove": "Remove",
-      "removed": "Removed. It will not notify you again."
+      "removed": "Removed. It will not notify you again.",
+      "rising": "New and rising"
     },
     "dev": {
       "title": "Build a mini app",
@@ -7780,7 +7781,14 @@
       "payTitle": "Take payments",
       "payBody": "pay() asks the user to send you DHB, straight to the wallet that signed your dehub.json. Check the receipt on your server before you deliver anything.",
       "notifyTitle": "Send notifications",
-      "notifyBody": "Users who add your app can be notified from your server with your notify key. No per-user tokens to store."
+      "notifyBody": "Users who add your app can be notified from your server with your notify key. No per-user tokens to store.",
+      "rankTitle": "How the store ranks apps",
+      "rankBody": "Every night each listed app gets a score: 55% from returning users (people who opened it this week and the week before), 35% from weekly users, plus a 10% boost in its first 14 days. Only signed-in DeHub accounts count, so bots and page reloads earn nothing.",
+      "rewardsBody": "Each month {{pool}} DHB is shared between apps by the same score, calculated weekly. To qualify, an app needs a verified owner wallet and at least 3 returning users. Rewards are paid by DeHub to the owner wallet.",
+      "rewardsWeek": "Week of {{date}}",
+      "rewardPaid": "Paid",
+      "rewardPending": "Pending",
+      "rewardsNone": "No rewards have been calculated yet. The first week closes on Monday."
     },
     "card": {
       "open": "Open"

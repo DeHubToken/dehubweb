@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { BadgeCheck, Blocks, Code2, Search } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { fetchAddedApps, fetchListedApps, removeApp, type AddedApp, type MiniAppListing } from '@/lib/miniapp/registry';
+import { fetchAddedApps, fetchLatestScores, fetchListedApps, removeApp, type AddedApp, type MiniAppListing, type AppScore } from '@/lib/miniapp/registry';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { ARCADE_GAMES } from '@/config/arcade-games';
@@ -71,14 +71,30 @@ export default function AppsPage() {
     () => [...new Set((apps ?? []).map((a) => a.category).filter((c): c is string => Boolean(c)))].sort(),
     [apps],
   );
+  const [scores, setScores] = useState<Map<string, AppScore>>(new Map());
+  useEffect(() => {
+    let live = true;
+    fetchLatestScores().then((map) => {
+      if (live) setScores(map);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return (apps ?? []).filter(
-      (a) =>
-        (category === 'all' || a.category === category) &&
-        (!q || [a.name, a.subtitle, a.description, a.domain].some((v) => v?.toLowerCase().includes(q))),
-    );
-  }, [apps, query, category]);
+    // Ranked by the published nightly score; apps it has not scored yet
+    // (new listings) follow in name order.
+    const rankOf = (id: string) => scores.get(id)?.rank ?? Number.MAX_SAFE_INTEGER;
+    return (apps ?? [])
+      .filter(
+        (a) =>
+          (category === 'all' || a.category === category) &&
+          (!q || [a.name, a.subtitle, a.description, a.domain].some((v) => v?.toLowerCase().includes(q))),
+      )
+      .sort((a, b) => rankOf(a.id) - rankOf(b.id) || a.name.localeCompare(b.name));
+  }, [apps, query, category, scores]);
+  const rising = useMemo(() => (apps ?? []).filter((a) => scores.get(a.id)?.is_new), [apps, scores]);
   const contentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
@@ -230,6 +246,19 @@ export default function AppsPage() {
                     <p className="truncate text-xs text-zinc-400">{game.tagline}</p>
                   </div>
                 </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {!query && category === 'all' && rising.length > 0 ? (
+          <section data-feed-item>
+            <h2 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              {t('miniApps.store.rising')}
+            </h2>
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {rising.map((app) => (
+                <AppCard key={app.id} app={app} />
               ))}
             </div>
           </section>

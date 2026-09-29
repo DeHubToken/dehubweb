@@ -7494,7 +7494,8 @@
       "yourApps": "Aplicațiile dvs.",
       "notificationsOn": "Notificări pe",
       "remove": "Notificare cheie",
-      "removed": "Textul a fost șters. Nu vei primi niciun alt mesaj de notificare."
+      "removed": "Textul a fost șters. Nu vei primi niciun alt mesaj de notificare.",
+      "rising": "Textul este deja în limba engleză, fără conținut tradusbile. Nu există modificări necesare."
     },
     "dev": {
       "title": "Creează o miniaplicație",
@@ -7545,7 +7546,14 @@
       "payTitle": "Primiți plăți",
       "payBody": "Plătește() te cere să trimiți DHB direct în portofelul care a semnat fișierul tău dehub.json. Verifică chitanța pe serverul tău înainte de a livra ceva.",
       "notifyTitle": "Trimite notificări",
-      "notifyBody": "Utilizatorii care adaugă aplicația dvs. pot fi notificați de pe serverul dvs. cu cheia `notify` a aplicației. Nu sunt necesare token-uri individuale pentru stocare."
+      "notifyBody": "Utilizatorii care adaugă aplicația dvs. pot fi notificați de pe serverul dvs. cu cheia `notify` a aplicației. Nu sunt necesare token-uri individuale pentru stocare.",
+      "rankTitle": "Cum clasifică magazinul aplicațiile",
+      "rankBody": "În fiecare noapte, fiecare aplicație înregistrată primește un scor: 55% de la utilizatorii recurenți (persoanele care au deschis-o în această săptămână și în săptămâna anterioară), 35% de la utilizatorii săptămânali, plus o creștere de 10% în primele 14 zile. Numai conturile DeHub autentificate sunt luate în considerare, astfel încât boții și reîncărcările de pagini nu câștigă nimic.",
+      "rewardsBody": "În fiecare lună {{pool}} DHB este partajat între aplicații cu același scor, calculat săptămânal. Pentru a se califica, o aplicație are nevoie de un portofel al proprietarului verificat și de cel puțin 3 utilizatori care se întorc. Recompensele sunt plătite de DeHub în portofelul proprietarului.",
+      "rewardsWeek": "Săptămâna {{date}}",
+      "rewardPaid": "Plătit",
+      "rewardPending": "În așteptare",
+      "rewardsNone": "Încă nu au fost calculate recompense. Prima săptămână se încheie luni."
     },
     "card": {
       "open": "Deschide"

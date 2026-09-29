@@ -6501,7 +6501,12 @@
       "notifyKey": "Notify key",
       "payTitle": "Take payments",
       "notifyTitle": "Send notifications",
-      "notifyBody": "User wey go add your app, you go send notification to dem from your server use your notify key. No need for per-user token to keep."
+      "notifyBody": "User wey go add your app, you go send notification to dem from your server use your notify key. No need for per-user token to keep.",
+      "rewardsBody": "Each month, {{pool}} DHB go share among apps by same score, calculate wey dey do every week. For an app go qualify, dem need one owner wallet go verify and at least 3 users go come back. Reward dey pay by DeHub to owner wallet.",
+      "rewardsWeek": "Week of {{date}}",
+      "rewardPaid": "Paid",
+      "rewardPending": "Pending",
+      "rewardsNone": "No reward dey finish calculate yet. First week close on Monday."
     },
     "card": {
       "open": "Open"

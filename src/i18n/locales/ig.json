@@ -7563,7 +7563,8 @@
       "noMatch": "Enweghị ngwa dabara na nchọcha ahụ.",
       "yourApps": "Usoroiheomume gị",
       "notificationsOn": "Ịma Ọkwa na",
-      "removed": "Ewepụrụ ya. Ọ gaghị agwa gị ọzọ."
+      "removed": "Ewepụrụ ya. Ọ gaghị agwa gị ọzọ.",
+      "rising": "New na-ebili"
     },
     "dev": {
       "title": "Iwuli a mini ngwa",
@@ -7610,7 +7611,13 @@
       "stateSuspended": "Akwụsịla",
       "copyLink": "Debata ụzọ njikọ",
       "notifyKeyOnce": "Igodo nkwupụta ọhụrụ maka {{name}}. Detuo ya ugbu a: a na-egosi ya otu ugboro, ma ime nke ọzọ na-anọchi ya.",
-      "payBody": "Nne nke pay() nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne"
+      "payBody": "Nne nke pay() nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne nke nne",
+      "rankTitle": "Olee otú ụlọ ahịa n 'usoro n' usoro ihe omume",
+      "rankBody": "Kwa abalị ọ bụla edepụtara ngwa na-enweta akara: 55% site na ndị ọrụ na-alọghachi (ndị meghere ya n 'izu a na izu gara aga), 35% site na ndị ọrụ kwa izu, gbakwunyere 10% kwalite na ụbọchị 14 mbụ ya. Naanị akaụntụ DeHub bịanyere aka na-agụta, ya bụ na bots na reloads peeji anaghị enweta ihe ọ bụla.",
+      "rewardsWeek": "Izu nke {{date}}",
+      "rewardPaid": "Akwụ ụgwọ",
+      "rewardPending": "Na-echere",
+      "rewardsNone": "Enwebeghị ụgwọ ọrụ a gbakọọla. Izu nke mbụ ga-emechi na Mọnde."
     },
     "card": {
       "open": "Mepee"

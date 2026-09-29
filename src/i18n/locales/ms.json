@@ -7926,7 +7926,8 @@
       "noMatch": "Tiada aplikasi yang sepadan dengan carian tersebut.",
       "yourApps": "Aplikasi anda",
       "notificationsOn": "Pemberitahuan di",
-      "removed": "Dihapuskan. Ia tidak akan memberitahu anda lagi."
+      "removed": "Dihapuskan. Ia tidak akan memberitahu anda lagi.",
+      "rising": "Baharu dan semakin meningkat"
     },
     "dev": {
       "title": "Bina aplikasi mini",
@@ -7977,7 +7978,14 @@
       "payTitle": "Terima pembayaran",
       "payBody": "bayar() meminta pengguna untuk menghantar DHB langsung ke dompet yang menandatangani fail dehub.json anda. Sempurnakan resit pada pelayan anda sebelum anda menyerahkan apa-apa pun.",
       "notifyTitle": "Kirim pemberitahuan",
-      "notifyBody": "Pengguna yang menambahkan aplikasi anda boleh diberitahu dari server anda menggunakan kunci notify anda. Tiada token per-pengguna untuk disimpan."
+      "notifyBody": "Pengguna yang menambahkan aplikasi anda boleh diberitahu dari server anda menggunakan kunci notify anda. Tiada token per-pengguna untuk disimpan.",
+      "rankTitle": "Cara kedai menilai aplikasi",
+      "rankBody": "Setiap malam setiap aplikasi yang disenaraikan mendapat skor: 55% daripada pengguna yang kembali (orang yang membukanya minggu ini dan minggu sebelumnya), 35% daripada pengguna mingguan, serta peningkatan 10% dalam 14 hari pertama. Hanya akaun DeHub yang dilog masuk dikira, jadi bot dan muat semula halaman tidak akan mendapat apa-apa.",
+      "rewardsBody": "Setiap bulan {{pool}} DHB dikongsi antara aplikasi dengan skor yang sama, dikira setiap minggu. Untuk layak, aplikasi memerlukan dompet pemilik yang disahkan dan sekurang-kurangnya 3 pengguna yang kembali. Ganjaran dibayar oleh DeHub kepada dompet pemilik.",
+      "rewardsWeek": "Minggu {{date}}",
+      "rewardPaid": "Dibayar",
+      "rewardPending": "Menunggu",
+      "rewardsNone": "Belum ada ganjaran yang dikira. Minggu pertama ditutup pada hari Isnin."
     },
     "card": {
       "open": "Buka"

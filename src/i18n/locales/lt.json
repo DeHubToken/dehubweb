@@ -7698,7 +7698,11 @@
       "all": "Visi",
       "fromDehub": "Iš DeHub",
       "noMatch": "Nėra programėlių, atitinkančių šią paiešką.",
-      "yourApps": "Jūsų programos"
+      "yourApps": "Jūsų programos",
+      "notificationsOn": "Pranešimai apie",
+      "remove": "Pašalinti",
+      "removed": "Pašalinta. Ji daugiau jums nepraneš.",
+      "rising": "Nauji ir kylantys"
     },
     "dev": {
       "title": "Sukurkite mažą prietaisą",
@@ -7749,7 +7753,14 @@
       "payTitle": "Įmokėti mokėjimus",
       "payBody": "Mokėti() prašo naudotoją siųsti DHB tiesiog į portfelį, kuris parašė jūsų dehub.json. Patikrinkite kvitą savo serveryje prieš nusiųsdami bet kokį turinį.",
       "notifyTitle": "Siųsti pranešimus",
-      "notifyBody": "Naudotojai, kurie prideda jūsų prietaisą, gali būti pranešami iš jūsų serverio naudojant jūsų pranešimo raktą. Nereikia saugoti individualių naudotojo tokenų."
+      "notifyBody": "Naudotojai, kurie prideda jūsų prietaisą, gali būti pranešami iš jūsų serverio naudojant jūsų pranešimo raktą. Nereikia saugoti individualių naudotojo tokenų.",
+      "rankTitle": "Kaip parduotuvė vertina programėles",
+      "rankBody": "Kiekvieną naktį kiekviena nurodyta programėlė gauna rezultatą: 55% iš sugrįžtančių naudotojų (žmonių, kurie ją atidarė šią savaitę ir prieš savaitę), 35% iš savaitinių naudotojų ir 10% padidėjimą per pirmąsias 14 dienų. Skaičiuojamos tik prisijungusios „DeHub“ paskyros, todėl robotai ir puslapių perkrovimai nieko neuždirba.",
+      "rewardsBody": "Kiekvieną mėnesį {{pool}} DHB bendrinamas tarp programėlių pagal tą patį balą, apskaičiuojamą kas savaitę. Kad atitiktų reikalavimus, programėlei reikia patvirtintos savininko piniginės ir bent 3 sugrįžtančių naudotojų. Atlygius „DeHub“ moka į savininko piniginę.",
+      "rewardsWeek": "{{date}} savaitė",
+      "rewardPaid": "Apmokėta",
+      "rewardPending": "Laukiama",
+      "rewardsNone": "Atlygiai dar neapskaičiuoti. Pirmoji savaitė baigiasi pirmadienį."
     },
     "card": {
       "open": "Atidaryti"
