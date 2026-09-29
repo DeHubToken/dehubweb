@@ -38,6 +38,7 @@ import { DocsLayout } from "@/components/DocsLayout";
 import ComingSoonPage from "@/components/ComingSoonPage";
 import { useAppTheme } from "@/contexts/ThemeContext";
 import { getDocsForcedTheme } from "@/lib/docs-theme";
+import { badgeLightArtworkCss } from "@/lib/badge-light-artwork";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
 import { DeHubPageLoader } from "@/components/app/DeHubLoader";
 
@@ -116,6 +117,7 @@ export default function DocsSurface() {
 
   return (
     <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="dehub-docs-theme" forcedTheme={forcedTheme}>
+    <style data-badge-light-artwork="docs">{badgeLightArtworkCss}</style>
     <LanguageProvider>
       <SearchProvider>
 
