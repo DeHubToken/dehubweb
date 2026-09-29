@@ -6152,7 +6152,8 @@
     "inspector": {
       "selectHint": "Zaɓi shimfiɗa a kan zane ko wani yanki a kan jadawalin lokaci.",
       "textHint": "Ja a kan zane don motsawa, yi amfani da kusurwa don sake girman. Danna sau biyu don gyara kalmomi.",
-      "selection": "Zaɓi"
+      "selection": "Zaɓi",
+      "title": "Mai dubawa"
     },
     "layer": {
       "alignToPage": "Daidaita zuwa shafi",
@@ -6451,6 +6452,14 @@
       "noCurve": "Sanya alamar kunnawa kan firam mai mahimmanci don tsara lanƙwasarsa.",
       "applyAll": "Yi amfani da wannan lanƙwasa a kowane firam mai mahimmanci",
       "timelineKey": "Firam mai mahimmanci. Ja don matsar da shi, danna sau biyu don goge shi.",
+      "tabLayer": "Layi",
+      "record": "Naɗa",
+      "recordHint": "Ana naɗawa: matsawa, canza girma, juyawa ko dusashe layi a ƙarƙashin alamar kunnawa yana ƙara firam masu mahimmanci a wurin.",
+      "recording": "Ana naɗa motsi",
+      "lanes": "Firam masu mahimmanci",
+      "scrub": "Ja hagu ko dama don canzawa. Riƙe Shift don sauri.",
+      "addKeyShortcut": "Ƙara firam mai mahimmanci a alamar kunnawa (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Madaidaici",
         "ease": "Mai laushi",

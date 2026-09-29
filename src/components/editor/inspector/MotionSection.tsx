@@ -1,22 +1,25 @@
 /**
  * Motion: keyframes for a layer's position, size, rotation and transparency,
- * and the curve each keyframe eases out with.
+ * and the curve each keyframe eases out with. Lives in its own inspector tab.
  *
  * A property is either static or animated. Turning the stopwatch on drops a
  * first key at the playhead; from then on any change to that property (here,
  * in the Layer controls, or by dragging on the canvas) writes a key at the
- * playhead instead of a new static value.
+ * playhead instead of a new static value. Record mode does the same for
+ * properties that are not animated yet, so the beginner's path is simply:
+ * press Record, move the playhead, move the layer.
  */
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Diamond, Plus, Timer, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
+import { useEditorUiStore } from "@/store/editorUiStore";
 import { EASE_PRESETS, type Clip, type Ease, type EasePreset, type KeyframeProp } from "@/lib/editor/types";
 import { placementPatchAt } from "@/lib/editor/render";
 import {
-  DEFAULT_EASE, KEY_EPSILON, activeKeyTime, applyEase, bezierOf, easeAt, isAnimated, keyAt, keyTimes,
-  keyframeProps, keysOf, propAt, removeKey, removeKeysAt, setEaseAt, setKey, stopAnimatingPatch,
+  DEFAULT_EASE, KEY_EPSILON, activeKeyTime, applyEase, bezierOf, easeAt, isAnimated, keyAllAt, keyAt, keyTimes,
+  keyframeProps, keysOf, propAt, removeKey, removeKeysAt, retimeKey, setEaseAt, setKey, stopAnimatingPatch,
 } from "@/lib/editor/keyframes";
 
 export function MotionSection({ clip }: { clip: Clip }) {
@@ -28,6 +31,8 @@ export function MotionSection({ clip }: { clip: Clip }) {
   const beginGesture = useEditorStore((s) => s.beginGesture);
   const setCurrentTime = useEditorStore((s) => s.setCurrentTime);
   const setIsPlaying = useEditorStore((s) => s.setIsPlaying);
+  const recording = useEditorUiStore((s) => s.recordMotion);
+  const setRecording = useEditorUiStore((s) => s.setRecordMotion);
 
   const props = keyframeProps(clip);
   if (!props.length) return null;
@@ -38,7 +43,9 @@ export function MotionSection({ clip }: { clip: Clip }) {
   const times = keyTimes(clip);
   const keyHere = times.some((k) => Math.abs(k - local) < KEY_EPSILON);
   const curveAt = animated ? activeKeyTime(clip, local) : null;
+  const curveTo = curveAt === null ? null : times.find((k) => k > curveAt + KEY_EPSILON) ?? null;
   const ease = curveAt !== null ? easeAt(clip, curveAt) : DEFAULT_EASE;
+  const animatedProps = props.filter((p) => isAnimated(clip, p));
 
   const labels: Record<KeyframeProp, string> = {
     x: t("editor.motion.posX"),
@@ -57,6 +64,8 @@ export function MotionSection({ clip }: { clip: Clip }) {
   const fromDisplay = (p: KeyframeProp, n: number) =>
     p === "x" ? n / settings.width : p === "y" ? n / settings.height : p === "rotation" ? n : n / 100;
   const unit = (p: KeyframeProp) => (p === "x" || p === "y" ? "px" : p === "rotation" ? "°" : "%");
+  const clampValue = (p: KeyframeProp, v: number) =>
+    p === "opacity" ? Math.max(0, Math.min(1, v)) : p === "scale" ? Math.max(0.02, Math.min(20, v)) : v;
 
   const seek = (keyLocal: number) => {
     setIsPlaying(false);
@@ -73,56 +82,91 @@ export function MotionSection({ clip }: { clip: Clip }) {
     else patchClip(clip.id, { keyframes: setKey(clip, p, local, propAt(clip, p, now)) });
   };
 
-  /** Key every property at the playhead, holding its current value. */
-  const addKeyAll = () => {
-    let next: Clip = clip;
-    for (const p of props) next = { ...next, keyframes: setKey(next, p, local, propAt(clip, p, now)) } as Clip;
-    patchClip(clip.id, { keyframes: next.keyframes });
-  };
-
   const setValue = (p: KeyframeProp, n: number) => {
     if (!Number.isFinite(n)) return;
-    patchClip(clip.id, placementPatchAt(clip, { [p]: fromDisplay(p, n) }, now));
+    patchClip(clip.id, placementPatchAt(clip, { [p]: clampValue(p, fromDisplay(p, n)) }, now, { record: recording }));
+  };
+
+  /** Drag a property's name left or right to change it, like a slider you cannot miss. */
+  const scrub = (p: KeyframeProp) => (e: React.PointerEvent) => {
+    if (e.button !== 0 || (!inside && isAnimated(clip, p))) return;
+    e.preventDefault();
+    const x0 = e.clientX;
+    const v0 = propAt(clip, p, now);
+    const per = p === "x" ? 1 / settings.width : p === "y" ? 1 / settings.height : p === "rotation" ? 0.5 : 0.005;
+    let began = false;
+    const move = (ev: PointerEvent) => {
+      const dx = ev.clientX - x0;
+      if (!began && Math.abs(dx) < 2) return;
+      if (!began) { beginGesture(); began = true; }
+      const cur = latestClip(clip.id);
+      if (!cur) return;
+      const v = clampValue(p, v0 + dx * per * (ev.shiftKey ? 10 : 1));
+      patchClipLive(clip.id, placementPatchAt(cur, { [p]: v }, useEditorStore.getState().currentTime, { record: useEditorUiStore.getState().recordMotion }));
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
   };
 
   const prevKey = (p: KeyframeProp) => [...keysOf(clip, p)].reverse().find((k) => k.t < local - KEY_EPSILON);
   const nextKey = (p: KeyframeProp) => keysOf(clip, p).find((k) => k.t > local + KEY_EPSILON);
 
   const iconBtn = "flex h-6 w-6 shrink-0 items-center justify-center rounded text-white/50 transition hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-25";
+  const fmt = (s: number) => `${s.toFixed(2)}s`;
 
   return (
-    <div className="space-y-2 pt-2">
-      <div className="flex items-center justify-between">
-        <p className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.motion.title")}</p>
-        <div className="flex items-center gap-1">
-          {keyHere && (
-            <button type="button" className={iconBtn} title={t("editor.motion.removeKey")} aria-label={t("editor.motion.removeKey")}
-              onClick={() => patchClip(clip.id, { keyframes: removeKeysAt(clip, local) })}>
-              <Trash2 className="h-3.5 w-3.5" />
-            </button>
+    <div className="space-y-3">
+      <div className="flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => setRecording(!recording)}
+          aria-pressed={recording}
+          title={t("editor.motion.recordHint")}
+          className={cn(
+            "flex h-7 items-center gap-1.5 rounded-md border px-2.5 text-[11px] font-medium transition",
+            recording ? "border-red-400/50 bg-red-500/15 text-red-200" : "border-white/15 text-white/75 hover:bg-white/10 hover:text-white",
           )}
-          <button
-            type="button"
-            disabled={!inside}
-            onClick={addKeyAll}
-            className="flex h-6 items-center gap-1 rounded-md border border-white/15 px-2 text-[10px] font-medium text-white/80 transition hover:bg-white/10 hover:text-white disabled:opacity-30"
-          >
-            <Plus className="h-3 w-3" /> {t("editor.motion.addKey")}
+        >
+          <span className={cn("h-2 w-2 rounded-full", recording ? "animate-pulse bg-red-400" : "bg-red-400/70")} aria-hidden />
+          {t("editor.motion.record")}
+        </button>
+        <div className="flex-1" />
+        {keyHere && (
+          <button type="button" className={iconBtn} title={t("editor.motion.removeKey")} aria-label={t("editor.motion.removeKey")}
+            onClick={() => patchClip(clip.id, { keyframes: removeKeysAt(clip, local) })}>
+            <Trash2 className="h-3.5 w-3.5" />
           </button>
-        </div>
+        )}
+        <button
+          type="button"
+          disabled={!inside}
+          onClick={() => patchClip(clip.id, { keyframes: keyAllAt(clip, now) })}
+          title={t("editor.motion.addKeyShortcut")}
+          className="flex h-7 items-center gap-1 rounded-md bg-white px-2.5 text-[11px] font-semibold text-black transition hover:bg-white/90 disabled:opacity-30"
+        >
+          <Plus className="h-3 w-3" /> {t("editor.motion.addKey")}
+        </button>
       </div>
 
-      {!animated && <p className="text-[10px] leading-snug text-white/40">{t("editor.motion.hint")}</p>}
+      {recording ? (
+        <p className="rounded-md border border-red-400/20 bg-red-500/[0.06] px-2 py-1.5 text-[10px] leading-snug text-red-100/80">{t("editor.motion.recordHint")}</p>
+      ) : !animated ? (
+        <p className="text-[10px] leading-snug text-white/45">{t("editor.motion.hint")}</p>
+      ) : null}
       {animated && !inside && <p className="text-[10px] leading-snug text-amber-200/70">{t("editor.motion.outside")}</p>}
 
-      <div className="divide-y divide-white/5 rounded-md border border-white/10 bg-white/[0.02]">
+      <div className="divide-y divide-white/5 rounded-lg border border-white/10 bg-white/[0.02]">
         {props.map((p) => {
           const on = isAnimated(clip, p);
           const here = on && !!keyAt(clip, p, local);
           const prev = on ? prevKey(p) : undefined;
           const next = on ? nextKey(p) : undefined;
           return (
-            <div key={p} className="flex h-8 items-center gap-1 px-1">
+            <div key={p} className="flex h-8 items-center gap-0.5 px-1">
               <button
                 type="button"
                 onClick={() => toggleStopwatch(p)}
@@ -134,7 +178,13 @@ export function MotionSection({ clip }: { clip: Clip }) {
               >
                 <Timer className="h-3.5 w-3.5" />
               </button>
-              <span className="min-w-0 flex-1 truncate text-[11px] text-white/70">{labels[p]}</span>
+              <span
+                onPointerDown={scrub(p)}
+                title={t("editor.motion.scrub")}
+                className="min-w-0 flex-1 cursor-ew-resize touch-none select-none truncate px-1 text-[11px] text-white/75 hover:text-white"
+              >
+                {labels[p]}
+              </span>
               {on && (
                 <>
                   <button type="button" className={iconBtn} disabled={!prev} onClick={() => prev && seek(prev.t)}
@@ -152,7 +202,10 @@ export function MotionSection({ clip }: { clip: Clip }) {
                   </button>
                 </>
               )}
-              <label className="flex w-[74px] shrink-0 items-center rounded border border-white/10 bg-white/5 pr-1.5 focus-within:ring-1 focus-within:ring-white/30">
+              <label className={cn(
+                "ml-0.5 flex w-[68px] shrink-0 items-center rounded border bg-white/5 pr-1.5 focus-within:ring-1 focus-within:ring-white/30",
+                here ? "border-sky-300/40" : "border-white/10",
+              )}>
                 <input
                   type="number"
                   key={`${p}:${display(p, propAt(clip, p, now))}`}
@@ -173,10 +226,34 @@ export function MotionSection({ clip }: { clip: Clip }) {
         })}
       </div>
 
+      {animatedProps.length > 0 && (
+        <div className="space-y-1.5">
+          <p className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.motion.lanes")}</p>
+          <div className="space-y-1 rounded-lg border border-white/10 bg-white/[0.02] p-1.5">
+            {animatedProps.map((p) => (
+              <KeyLane
+                key={p}
+                clip={clip}
+                prop={p}
+                label={labels[p]}
+                local={local}
+                segment={curveAt !== null && curveTo !== null ? [curveAt, curveTo] : null}
+                onSeek={seek}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {animated && times.length > 1 && (
-        <div className="space-y-2 pt-1">
-          <p className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.motion.curve")}</p>
-          {curveAt === null ? (
+        <div className="space-y-2">
+          <div className="flex items-baseline justify-between gap-2">
+            <p className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.motion.curve")}</p>
+            {curveAt !== null && curveTo !== null && (
+              <p className="text-[10px] tabular-nums text-sky-200/80">{t("editor.motion.segment", { from: fmt(curveAt), to: fmt(curveTo) })}</p>
+            )}
+          </div>
+          {curveAt === null || curveTo === null ? (
             <p className="text-[10px] leading-snug text-white/40">{t("editor.motion.noCurve")}</p>
           ) : (
             <>
@@ -188,23 +265,22 @@ export function MotionSection({ clip }: { clip: Clip }) {
               <p className="text-[10px] leading-snug text-white/40">{t("editor.motion.curveHint")}</p>
             </>
           )}
-          <div className="grid grid-cols-5 gap-1">
+          <div className="grid grid-cols-3 gap-1">
             {EASE_PRESETS.map((preset) => (
               <button
                 key={preset}
                 type="button"
-                disabled={curveAt === null}
+                disabled={curveAt === null || curveTo === null}
                 onClick={() => patchClip(clip.id, { keyframes: setEaseAt(clip, curveAt, preset) })}
                 title={t(`editor.motion.ease.${preset}`)}
-                aria-label={t(`editor.motion.ease.${preset}`)}
                 aria-pressed={ease === preset}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 rounded-md border p-1 transition disabled:opacity-30",
-                  ease === preset ? "border-sky-300/60 bg-sky-400/10" : "border-white/10 hover:bg-white/5",
+                  "flex items-center gap-1.5 rounded-md border px-1.5 py-1 text-left transition disabled:opacity-30",
+                  ease === preset ? "border-sky-300/60 bg-sky-400/10 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
                 )}
               >
                 <EaseThumb ease={preset} />
-                <span className="w-full truncate text-center text-[8px] leading-tight text-white/50">{t(`editor.motion.ease.${preset}`)}</span>
+                <span className="line-clamp-2 min-w-0 text-[9px] leading-tight">{t(`editor.motion.ease.${preset}`)}</span>
               </button>
             ))}
           </div>
@@ -217,6 +293,93 @@ export function MotionSection({ clip }: { clip: Clip }) {
           </button>
         </div>
       )}
+    </div>
+  );
+}
+
+/**
+ * One property's keys across the clip, like a row of a motion tool's dope
+ * sheet. Click to move the playhead, drag a key to retime it, double-click a
+ * key to delete it. The segment whose curve is being edited is tinted.
+ */
+function KeyLane({ clip, prop, label, local, segment, onSeek }: {
+  clip: Clip;
+  prop: KeyframeProp;
+  label: string;
+  local: number;
+  segment: [number, number] | null;
+  onSeek: (keyLocal: number) => void;
+}) {
+  const { t } = useTranslation();
+  const ref = useRef<HTMLDivElement>(null);
+  const dur = Math.max(0.01, clip.duration);
+  const pct = (s: number) => `${Math.max(0, Math.min(1, s / dur)) * 100}%`;
+  const timeAt = (clientX: number) => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return 0;
+    return Math.round(Math.max(0, Math.min(1, (clientX - r.left) / r.width)) * dur * 100) / 100;
+  };
+
+  const onKeyDown = (kt: number) => (e: React.PointerEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onSeek(kt);
+    const x0 = e.clientX;
+    let from = kt;
+    let began = false;
+    const move = (ev: PointerEvent) => {
+      if (!began && Math.abs(ev.clientX - x0) < 3) return;
+      const s = useEditorStore.getState();
+      if (!began) { s.beginGesture(); began = true; }
+      const cur = latestClip(clip.id);
+      if (!cur) return;
+      const to = timeAt(ev.clientX);
+      if (Math.abs(to - from) < 0.005) return;
+      s.patchClipLive(clip.id, { keyframes: retimeKey(cur, prop, from, to) });
+      s.setCurrentTime(cur.start + to);
+      from = to;
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="w-14 shrink-0 truncate text-[10px] text-white/50">{label}</span>
+      <div
+        ref={ref}
+        onPointerDown={(e) => onSeek(timeAt(e.clientX))}
+        className="relative h-5 flex-1 cursor-pointer rounded bg-white/[0.04]"
+      >
+        {segment && (
+          <div className="absolute inset-y-0 bg-sky-400/10" style={{ left: pct(segment[0]), width: `calc(${pct(segment[1])} - ${pct(segment[0])})` }} />
+        )}
+        <div className="absolute inset-y-0 w-px bg-red-400/80" style={{ left: pct(local) }} />
+        {keysOf(clip, prop).map((k) => {
+          const here = Math.abs(k.t - local) < KEY_EPSILON;
+          return (
+            <div
+              key={k.t}
+              onPointerDown={onKeyDown(k.t)}
+              onDoubleClick={(e) => {
+                e.stopPropagation();
+                const cur = latestClip(clip.id);
+                if (cur) useEditorStore.getState().patchClip(clip.id, { keyframes: removeKey(cur, prop, k.t) });
+              }}
+              title={t("editor.motion.timelineKey")}
+              className={cn(
+                "absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rotate-45 cursor-ew-resize touch-none rounded-[1px] border",
+                here ? "border-sky-100 bg-sky-300" : "border-black/60 bg-white hover:bg-sky-200",
+              )}
+              style={{ left: pct(k.t) }}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -246,7 +409,7 @@ function curvePath(ease: Ease, w: number, h: number, pad: number): string {
 
 function EaseThumb({ ease }: { ease: EasePreset }) {
   return (
-    <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden>
+    <svg viewBox="0 0 32 32" className="h-6 w-6 shrink-0" aria-hidden>
       <path d={curvePath(ease, 32, 32, 3)} fill="none" stroke="currentColor" strokeWidth={1.5} className="text-white/80" />
     </svg>
   );

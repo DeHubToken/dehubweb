@@ -6105,7 +6105,8 @@
     "inspector": {
       "selectHint": "Pumili ng isang layer sa canvas o isang clip sa timeline.",
       "textHint": "I-drag sa canvas para igalaw, gamitin ang mga kanto para baguhin ang laki. I-double-click para i-edit ang mga salita.",
-      "selection": "Pinili"
+      "selection": "Pinili",
+      "title": "Inspector"
     },
     "layer": {
       "alignToPage": "I-align sa pahina",
@@ -6404,6 +6405,14 @@
       "noCurve": "Ilagay ang playhead sa isang keyframe para hubugin ang kurba nito.",
       "applyAll": "Gamitin ang kurbang ito sa bawat keyframe",
       "timelineKey": "Keyframe. I-drag para ilipat, i-double click para burahin.",
+      "tabLayer": "Layer",
+      "record": "I-record",
+      "recordHint": "Nagre-record: ang paglipat, pagpapalaki, pag-ikot o pagpapalabo ng layer sa ilalim ng playhead ay nagdadagdag ng keyframe doon.",
+      "recording": "Nire-record ang galaw",
+      "lanes": "Mga keyframe",
+      "scrub": "I-drag pakaliwa o pakanan para baguhin. Pindutin ang Shift para bumilis.",
+      "addKeyShortcut": "Magdagdag ng keyframe sa playhead (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Linear",
         "ease": "Malumanay",

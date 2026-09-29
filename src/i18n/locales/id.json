@@ -6346,7 +6346,8 @@
     "inspector": {
       "selectHint": "Pilih lapisan di kanvas atau klip di linimasa.",
       "textHint": "Seret di kanvas untuk memindahkan, gunakan sudut untuk mengubah ukuran. Klik dua kali untuk mengedit kata-kata.",
-      "selection": "Pilihan"
+      "selection": "Pilihan",
+      "title": "Inspektur"
     },
     "layer": {
       "alignToPage": "Sejajarkan ke halaman",
@@ -6645,6 +6646,14 @@
       "noCurve": "Letakkan playhead di sebuah keyframe untuk membentuk kurvanya.",
       "applyAll": "Gunakan kurva ini di semua keyframe",
       "timelineKey": "Keyframe. Seret untuk memindahkan, klik dua kali untuk menghapus.",
+      "tabLayer": "Lapisan",
+      "record": "Rekam",
+      "recordHint": "Merekam: memindahkan, mengubah ukuran, memutar, atau memudarkan lapisan di bawah playhead menambahkan keyframe di sana.",
+      "recording": "Merekam gerakan",
+      "lanes": "Keyframe",
+      "scrub": "Seret ke kiri atau kanan untuk mengubah. Tahan Shift agar lebih cepat.",
+      "addKeyShortcut": "Tambah keyframe di playhead (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Linear",
         "ease": "Halus",

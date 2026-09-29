@@ -6353,7 +6353,8 @@
     "inspector": {
       "selectHint": "Lienzopi huk capata utaq pacha siqipi huk clipta akllay.",
       "textHint": "Lienzopi aysay kuyuchinapaq, k'uchukunata llamk'achiy sayayninta tikranapaq. Iskay kutita ñit'iy simikunata allichanapaq.",
-      "selection": "Akllasqa"
+      "selection": "Akllasqa",
+      "title": "Qhawaq"
     },
     "layer": {
       "alignToPage": "P'anqaman churay",
@@ -6652,6 +6653,14 @@
       "noCurve": "Reproducción umata llave fotograma hawapi churay k’umunta ruranaykipaq.",
       "applyAll": "Kay k’umuta llapan llave fotogramakunapi llamk’achiy",
       "timelineKey": "Llave fotograma. Aysay kuyuchinaykipaq, iskay kutita ñit’iy qichunaykipaq.",
+      "tabLayer": "Capa",
+      "record": "Waqaychay",
+      "recordHint": "Waqaychaspa: reproducción uma urapi capata kuyuchispa, hatunyachispa, muyuchispa utaq pisiyachispa chaypi llave fotogramakunata yapan.",
+      "recording": "Kuyuyta waqaychachkan",
+      "lanes": "Llave fotogramakuna",
+      "scrub": "Lluq’iman utaq pañaman aysay tikranaykipaq. Shiftta hap’iy utqaylla kananpaq.",
+      "addKeyShortcut": "Reproducción umapi llave fotogramata yapay (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Siq’i",
         "ease": "Llampu",

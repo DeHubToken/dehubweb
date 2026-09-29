@@ -6346,7 +6346,8 @@
     "inspector": {
       "selectHint": "Tuvalde bir katman veya zaman çizelgesinde bir klip seçin.",
       "textHint": "Taşımak için tuval üzerinde sürükleyin, yeniden boyutlandırmak için köşeleri kullanın. Kelimeleri düzenlemek için çift tıklayın.",
-      "selection": "Seçim"
+      "selection": "Seçim",
+      "title": "Denetçi"
     },
     "layer": {
       "alignToPage": "Sayfaya hizala",
@@ -6645,6 +6646,14 @@
       "noCurve": "Eğrisini şekillendirmek için oynatma kafasını bir anahtar karenin üzerine getirin.",
       "applyAll": "Bu eğriyi tüm anahtar karelerde kullan",
       "timelineKey": "Anahtar kare. Taşımak için sürükleyin, silmek için çift tıklayın.",
+      "tabLayer": "Katman",
+      "record": "Kaydet",
+      "recordHint": "Kayıt: oynatma kafasının altındaki bir katmanı taşımak, boyutlandırmak, döndürmek veya soldurmak oraya anahtar kare ekler.",
+      "recording": "Hareket kaydediliyor",
+      "lanes": "Anahtar kareler",
+      "scrub": "Değiştirmek için sola veya sağa sürükleyin. Daha hızlı için Shift’e basılı tutun.",
+      "addKeyShortcut": "Oynatma kafasına anahtar kare ekle (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Doğrusal",
         "ease": "Yumuşak",

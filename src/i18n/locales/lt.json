@@ -6319,7 +6319,8 @@
     "inspector": {
       "selectHint": "Pasirinkite sluoksnį drobėje arba klipą laiko juostoje.",
       "textHint": "Vilkti drobėje, kad perkeltumėte, naudokite kampus, kad pakeistumėte dydį. Dukart spustelėkite, kad redaguotumėte žodžius.",
-      "selection": "Pasirinkimas"
+      "selection": "Pasirinkimas",
+      "title": "Inspektorius"
     },
     "layer": {
       "alignToPage": "Lygiuoti pagal puslapį",
@@ -6618,6 +6619,14 @@
       "noCurve": "Perkelkite atkūrimo žymeklį ant pagrindinio kadro, kad keistumėte jo kreivę.",
       "applyAll": "Naudoti šią kreivę visiems pagrindiniams kadrams",
       "timelineKey": "Pagrindinis kadras. Tempkite, kad perkeltumėte, dukart spustelėkite, kad ištrintumėte.",
+      "tabLayer": "Sluoksnis",
+      "record": "Įrašyti",
+      "recordHint": "Įrašymas: perkeliant, keičiant dydį, sukant ar blukinant sluoksnį ties atkūrimo žymekliu ten pridedami pagrindiniai kadrai.",
+      "recording": "Įrašomas judėjimas",
+      "lanes": "Pagrindiniai kadrai",
+      "scrub": "Tempkite į kairę ar dešinę, kad pakeistumėte. Laikykite Shift, kad būtų greičiau.",
+      "addKeyShortcut": "Pridėti pagrindinį kadrą ties atkūrimo žymekliu (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Tiesinė",
         "ease": "Švelni",
