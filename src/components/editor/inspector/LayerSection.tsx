@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
+import { useEditorUiStore } from "@/store/editorUiStore";
 import { BLEND_MODES, type BlendMode, type Clip, type ClipShadow, type MediaClip, type TextClip } from "@/lib/editor/types";
 import { clipBoxForSize, getTransform, placementPatch, placementPatchAt } from "@/lib/editor/render";
 import { isAnimated, resolveClipAt } from "@/lib/editor/keyframes";
@@ -37,7 +38,8 @@ export function LayerSection({ clip }: { clip: Clip }) {
   const runBgRemoval = useBgRemovalStore((s) => s.run);
   const quota = useEditorQuota();
   // Keyed layers show and edit their values at the playhead; static ones skip the per-frame re-render.
-  const now = useEditorStore((s) => (isAnimated(clip) ? s.currentTime : 0));
+  const recording = useEditorUiStore((s) => s.recordMotion);
+  const now = useEditorStore((s) => (isAnimated(clip) || recording ? s.currentTime : 0));
 
   if (clip.kind === "audio") return null;
   const tr = getTransform(resolveClipAt(clip, now));
@@ -74,7 +76,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
     // Text stores an anchor, not a centre; shift by the anchor-to-centre offset.
     const current = axis === "x" ? tr.x : tr.y;
     const offset = box ? (axis === "x" ? box.cx : box.cy) / size - current : 0;
-    patchClip(clip.id, placementPatchAt(clip, { [axis]: centre / size - offset }, now));
+    patchClip(clip.id, placementPatchAt(clip, { [axis]: centre / size - offset }, now, { record: recording }));
   };
 
   const iconBtn = (label: string, icon: React.ReactNode, onClick: () => void, active = false) => (
@@ -162,7 +164,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
               () => patchClip(clip.id, placementPatch(clip, { flipV: !tr.flipV })), !!tr.flipV)}
           </div>
           {live(t("editor.layer.size", { value: Math.round(tr.scale * 100) }), tr.scale, 0.05, 6, 0.01,
-            (v) => patchClipLive(clip.id, placementPatchAt(clip, { scale: v }, now)))}
+            (v) => patchClipLive(clip.id, placementPatchAt(clip, { scale: v }, now, { record: recording })))}
           <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{t("editor.shape.style")}</p>
           {shape.shape !== "line" && shape.shape !== "arrow" && shape.shape !== "path" && (
             <div className="grid grid-cols-[1fr_auto] items-end gap-2">
@@ -233,14 +235,14 @@ export function LayerSection({ clip }: { clip: Clip }) {
               () => patchClip(clip.id, placementPatch(clip, { flipV: !tr.flipV })), !!tr.flipV)}
           </div>
           {live(t("editor.layer.size", { value: Math.round(tr.scale * 100) }), tr.scale, 0.05, 4, 0.01,
-            (v) => patchClipLive(clip.id, placementPatchAt(clip, { scale: v }, now)))}
+            (v) => patchClipLive(clip.id, placementPatchAt(clip, { scale: v }, now, { record: recording })))}
         </>
       )}
 
       {live(t("editor.layer.rotation", { value: Math.round(tr.rotation) }), tr.rotation, -180, 180, 1,
-        (v) => patchClipLive(clip.id, placementPatchAt(clip, { rotation: v }, now)))}
+        (v) => patchClipLive(clip.id, placementPatchAt(clip, { rotation: v }, now, { record: recording })))}
       {live(t("editor.layer.opacity", { value: Math.round((tr.opacity ?? 1) * 100) }), tr.opacity ?? 1, 0, 1, 0.01,
-        (v) => patchClipLive(clip.id, placementPatchAt(clip, { opacity: v }, now)))}
+        (v) => patchClipLive(clip.id, placementPatchAt(clip, { opacity: v }, now, { record: recording })))}
 
       <button
         type="button"

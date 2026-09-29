@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
+import { useEditorUiStore } from "@/store/editorUiStore";
+import { isAnimated } from "@/lib/editor/keyframes";
 import { aspectToDims, type AspectPreset, type Clip, type MediaClip, type TextClip } from "@/lib/editor/types";
 import { FILTER_PRESETS, applyFilterPreset } from "@/lib/editor/filterPresets";
 import { ANIMATION_PRESETS, newAnimation } from "@/lib/editor/animationPresets";
@@ -71,6 +73,13 @@ export function Inspector() {
     else if (text.fontFamily) loadGoogleFont(primaryFamily(text.fontFamily), [text.fontWeight]);
   }, [text?.fontFamily, text?.fontWeight, text]);
 
+  // A layer gets two tabs: its look and placement, and its motion over time.
+  const tab = useEditorUiStore((s) => s.inspectorTab);
+  const setTab = useEditorUiStore((s) => s.setInspectorTab);
+  const tabbed = !!selected && selected.kind !== "audio";
+  const showMotion = tabbed && tab === "motion";
+  const animated = !!selected && isAnimated(selected);
+
   const setAspect = (a: AspectPreset) => {
     const { width, height } = aspectToDims(a, Math.min(settings.height, 1080));
     updateSettings({ aspectPreset: a, width, height });
@@ -79,9 +88,37 @@ export function Inspector() {
 
   return (
     <aside className="flex h-full w-full flex-col overflow-y-auto border-l border-white/10 bg-black/60 backdrop-blur-[24px]">
-      <header className="border-b border-white/10 px-3 py-2.5">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-white/70">Inspector</h2>
+      <header className="sticky top-0 z-10 border-b border-white/10 bg-black/80 px-3 py-2 backdrop-blur-[24px]">
+        {tabbed ? (
+          <div role="tablist" className="grid grid-cols-2 gap-0.5 rounded-lg bg-white/5 p-0.5">
+            {(["layer", "motion"] as const).map((k) => (
+              <button
+                key={k}
+                type="button"
+                role="tab"
+                aria-selected={tab === k}
+                onClick={() => setTab(k)}
+                className={cn(
+                  "flex h-7 items-center justify-center gap-1.5 rounded-md text-[11px] font-medium transition",
+                  tab === k ? "bg-white/15 text-white" : "text-white/55 hover:text-white",
+                )}
+              >
+                {k === "layer" ? t("editor.motion.tabLayer") : t("editor.motion.title")}
+                {k === "motion" && animated && <span className="h-1.5 w-1.5 rounded-full bg-sky-300" aria-hidden />}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <h2 className="py-0.5 text-xs font-semibold uppercase tracking-wide text-white/70">{t("editor.inspector.title")}</h2>
+        )}
       </header>
+
+      {showMotion && selected ? (
+        <section className="p-3">
+          <MotionSection clip={selected} />
+        </section>
+      ) : (
+      <>
 
       <section className="space-y-2 border-b border-white/10 p-3">
         <h3 className="text-[11px] font-semibold uppercase tracking-wide text-white/50">Canvas</h3>
@@ -135,7 +172,6 @@ export function Inspector() {
         )}
 
         {selected && selected.kind !== "audio" && <LayerSection clip={selected} />}
-        {selected && selected.kind !== "audio" && <MotionSection clip={selected} />}
 
         {visualMedia && (
           <div className="space-y-3">
@@ -416,6 +452,8 @@ export function Inspector() {
           </div>
         )}
       </section>
+      </>
+      )}
     </aside>
   );
 }

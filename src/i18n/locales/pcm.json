@@ -5305,7 +5305,8 @@
     "inspector": {
       "selectHint": "Pick one layer for di canvas or one clip for di timeline.",
       "textHint": "Drag am for di canvas to move am, use di corner dem to resize. Double-click to change di words.",
-      "selection": "Wetin you select"
+      "selection": "Wetin you select",
+      "title": "Inspector"
     },
     "layer": {
       "alignToPage": "Align to page",
@@ -5602,6 +5603,14 @@
       "noCurve": "Put di playhead for top one keyframe to shape im curve.",
       "applyAll": "Use dis curve for all di keyframes",
       "timelineKey": "Keyframe. Drag am to move am, double-click am to delete am.",
+      "tabLayer": "Layer",
+      "record": "Record",
+      "recordHint": "As e dey record, if you move, resize, turn or fade layer wey playhead dey inside, e go add keyframe for dat place.",
+      "recording": "E dey record movement",
+      "lanes": "Keyframes",
+      "scrub": "Drag am left or right to change am. Hold Shift make e go fast.",
+      "addKeyShortcut": "Add keyframe for di playhead (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Straight",
         "ease": "Smooth",

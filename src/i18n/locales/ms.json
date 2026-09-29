@@ -6545,7 +6545,8 @@
     "inspector": {
       "selectHint": "Pilih lapisan pada kanvas atau klip pada garis masa.",
       "textHint": "Seret pada kanvas untuk mengalih, gunakan sudut untuk mengubah saiz. Klik dua kali untuk mengedit perkataan.",
-      "selection": "Pilihan"
+      "selection": "Pilihan",
+      "title": "Pemeriksa"
     },
     "layer": {
       "alignToPage": "Selaras dengan halaman",
@@ -6844,6 +6845,14 @@
       "noCurve": "Letakkan kepala main pada kerangka kunci untuk membentuk lengkungnya.",
       "applyAll": "Guna lengkung ini pada semua kerangka kunci",
       "timelineKey": "Kerangka kunci. Seret untuk mengalihkannya, klik dua kali untuk memadamnya.",
+      "tabLayer": "Lapisan",
+      "record": "Rakam",
+      "recordHint": "Merakam: mengalih, mengubah saiz, memutar atau memudarkan lapisan di bawah kepala main menambah kerangka kunci di situ.",
+      "recording": "Merakam gerakan",
+      "lanes": "Kerangka kunci",
+      "scrub": "Seret ke kiri atau kanan untuk menukar. Tahan Shift untuk lebih laju.",
+      "addKeyShortcut": "Tambah kerangka kunci di kepala main (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Linear",
         "ease": "Lembut",

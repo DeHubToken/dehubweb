@@ -6350,7 +6350,8 @@
     "inspector": {
       "selectHint": "Khetha ungqimba ku-canvas noma isiqeshana emugqeni wesikhathi.",
       "textHint": "Dweba ku-canvas ukuze uhambise, sebenzisa amakhona ukuze ushintshe usayizi. Chofoza kabili ukuze uhlele amagama.",
-      "selection": "Ukukhetha"
+      "selection": "Ukukhetha",
+      "title": "Umhloli"
     },
     "layer": {
       "alignToPage": "Qondanisa nekhasi",
@@ -6649,6 +6650,14 @@
       "noCurve": "Beka ikhanda lokudlala efreyimini eyisihluthulelo ukuze ubumbe ijika layo.",
       "applyAll": "Sebenzisa leli jika kuwo wonke amafreyimu ayisihluthulelo",
       "timelineKey": "Ifreyimu eyisihluthulelo. Hudula ukuze uyihambise, chofoza kabili ukuze uyisuse.",
+      "tabLayer": "Isendlalelo",
+      "record": "Rekhoda",
+      "recordHint": "Iyarekhoda: ukuhambisa, ukushintsha usayizi, ukuzungezisa noma ukufiphalisa isendlalelo ngaphansi kwekhanda lokudlala kwengeza amafreyimu ayisihluthulelo lapho.",
+      "recording": "Irekhoda ukunyakaza",
+      "lanes": "Amafreyimu ayisihluthulelo",
+      "scrub": "Hudula kwesobunxele noma kwesokudla ukuze ushintshe. Bamba u-Shift ukuze kushesha.",
+      "addKeyShortcut": "Engeza ifreyimu eyisihluthulelo ekhanda lokudlala (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Okuqondile",
         "ease": "Okuthambile",

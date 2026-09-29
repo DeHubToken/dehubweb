@@ -26,11 +26,11 @@ import {
 } from "@/components/ui/context-menu";
 import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
-import { useEditorUiStore } from "@/store/editorUiStore";
+import { recordOpts, useEditorUiStore } from "@/store/editorUiStore";
 import type { Clip, MediaClip, TextClip } from "@/lib/editor/types";
 import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
 import { clipBox, drawClip, getTransform, isVisualClip, placementPatch, placementPatchAt, pointInBox, type ClipBox } from "@/lib/editor/render";
-import { resolveClipAt } from "@/lib/editor/keyframes";
+import { isAnimated, keyTimes, resolveClipAt } from "@/lib/editor/keyframes";
 import { useCloseOnSurfaceSwitch } from "@/hooks/use-surface-switch";
 import { useEditorQuota } from "@/hooks/use-editor-quota";
 import { importFiles } from "@/lib/editor/importFiles";
@@ -506,10 +506,10 @@ export function Compositor() {
       setGuides({ v: sx ? [sx.line] : [], h: sy ? [sy.line] : [] });
       const dx = (cx - g.box.cx) / W;
       const dy = (cy - g.box.cy) / H;
-      s.patchClipLive(g.id, placementPatchAt(clip, { x: g.ax + dx, y: g.ay + dy }, s.currentTime));
+      s.patchClipLive(g.id, placementPatchAt(clip, { x: g.ax + dx, y: g.ay + dy }, s.currentTime, recordOpts()));
       for (const m of g.group) {
         const other = s.clips.find((c) => c.id === m.id);
-        if (other) s.patchClipLive(m.id, placementPatchAt(other, { x: m.ax + dx, y: m.ay + dy }, s.currentTime));
+        if (other) s.patchClipLive(m.id, placementPatchAt(other, { x: m.ax + dx, y: m.ay + dy }, s.currentTime, recordOpts()));
       }
       return;
     }
@@ -520,7 +520,7 @@ export function Compositor() {
       if (clip.kind === "text") {
         s.patchClipLive(g.id, { fontSize: Math.round(Math.max(6, Math.min(800, g.font * k))) });
       } else {
-        s.patchClipLive(g.id, placementPatchAt(clip, { scale: Math.max(0.05, Math.min(20, g.scale * k)) }, s.currentTime));
+        s.patchClipLive(g.id, placementPatchAt(clip, { scale: Math.max(0.05, Math.min(20, g.scale * k)) }, s.currentTime, recordOpts()));
       }
       return;
     }
@@ -547,7 +547,7 @@ export function Compositor() {
       const nearest = Math.round(rot / 45) * 45;
       if (Math.abs(rot - nearest) < 4) rot = nearest;
     }
-    s.patchClipLive(g.id, placementPatchAt(clip, { rotation: Math.round(rot * 10) / 10 }, s.currentTime));
+    s.patchClipLive(g.id, placementPatchAt(clip, { rotation: Math.round(rot * 10) / 10 }, s.currentTime, recordOpts()));
   }, [toCanvas, layersAt, scale, setMarquee]);
 
   const onGestureEnd = useCallback(() => {
@@ -788,6 +788,27 @@ export function Compositor() {
     return { left: x0 * scale, top: y0 * scale, width: (x1 - x0) * scale, height: (y1 - y0) * scale };
   })();
 
+  // Where the selected layer travels over its clip: a dashed path with a
+  // diamond at each keyframe, drawn only when its position is animated.
+  const recording = useEditorUiStore((s) => s.recordMotion);
+  const motionPath = useMemo(() => {
+    if (!selectedClip || !(isAnimated(selectedClip, "x") || isAnimated(selectedClip, "y"))) return null;
+    const ctx = canvasRef.current?.getContext("2d");
+    if (!ctx) return null;
+    const W = settings.width;
+    const H = settings.height;
+    const centreAt = (t: number): [number, number] => {
+      const c = resolveClipAt(selectedClip, t);
+      const b = clipBox(ctx, c, W, H, sources);
+      const tr = getTransform(c);
+      return b ? [b.cx, b.cy] : [tr.x * W, tr.y * H];
+    };
+    const N = 64;
+    const pts = Array.from({ length: N + 1 }, (_, i) => centreAt(selectedClip.start + (selectedClip.duration * i) / N));
+    const keys = keyTimes(selectedClip).filter((k) => k <= selectedClip.duration + 0.001).map((k) => centreAt(selectedClip.start + k));
+    return { pts, keys };
+  }, [selectedClip, settings.width, settings.height, sources]);
+
   const overlay = selBox && selectedClip && !selectedClip.locked && !editingTextId && scale > 0
     ? {
         left: (selBox.cx - selBox.w / 2) * scale,
@@ -818,6 +839,7 @@ export function Compositor() {
           }}
           className={cn(
             "relative col-start-1 row-start-1 rounded-lg shadow-2xl ring-1 ring-white/10 transition",
+            recording && "ring-2 ring-red-500/70",
             dropKind && "ring-2 ring-white/70",
           )}
         >
@@ -861,6 +883,30 @@ export function Compositor() {
                 strokeLinejoin="round"
               />
             </svg>
+          )}
+
+          {motionPath && !editingTextId && scale > 0 && (
+            <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+              <polyline
+                points={motionPath.pts.map(([x, y]) => `${x * scale},${y * scale}`).join(" ")}
+                fill="none"
+                stroke="#7dd3fc"
+                strokeOpacity={0.85}
+                strokeWidth={1.5}
+                strokeDasharray="4 4"
+              />
+              {motionPath.keys.map(([x, y], i) => (
+                <rect key={i} x={x * scale - 4} y={y * scale - 4} width={8} height={8}
+                  transform={`rotate(45 ${x * scale} ${y * scale})`} fill="#7dd3fc" stroke="#0c4a6e" />
+              ))}
+            </svg>
+          )}
+
+          {recording && (
+            <div className="pointer-events-none absolute left-2 top-2 flex items-center gap-1.5 rounded-full bg-red-500/90 px-2 py-0.5 text-[10px] font-semibold text-white shadow">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" aria-hidden />
+              {t("editor.motion.recording")}
+            </div>
           )}
 
           {/* Snapping guides */}

@@ -6330,7 +6330,8 @@
     "inspector": {
       "selectHint": "Zgjidhni një shtresë në kanavacë ose një klip në linjën kohore.",
       "textHint": "Zvarriteni në kanavacë për ta lëvizur, përdorni qoshet për ta ndryshuar madhësinë. Klikoni dy herë për të redaktuar fjalët.",
-      "selection": "Përzgjedhja"
+      "selection": "Përzgjedhja",
+      "title": "Inspektori"
     },
     "layer": {
       "alignToPage": "Rreshto me faqen",
@@ -6629,6 +6630,14 @@
       "noCurve": "Vendos kokën e luajtjes mbi një kornizë kyçe për të formuar kurbën e saj.",
       "applyAll": "Përdor këtë kurbë në të gjitha kornizat kyçe",
       "timelineKey": "Kornizë kyçe. Tërhiqe për ta lëvizur, kliko dy herë për ta fshirë.",
+      "tabLayer": "Shtresa",
+      "record": "Regjistro",
+      "recordHint": "Regjistrim: lëvizja, ndryshimi i madhësisë, rrotullimi ose zbehja e një shtrese nën kokën e luajtjes shton aty korniza kyçe.",
+      "recording": "Po regjistrohet lëvizja",
+      "lanes": "Korniza kyçe",
+      "scrub": "Tërhiq majtas ose djathtas për ta ndryshuar. Mbaj Shift për më shpejt.",
+      "addKeyShortcut": "Shto kornizë kyçe te koka e luajtjes (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Lineare",
         "ease": "E butë",

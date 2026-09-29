@@ -4,9 +4,9 @@
  */
 import { useEffect } from "react";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
-import { useEditorUiStore } from "@/store/editorUiStore";
+import { recordOpts, useEditorUiStore } from "@/store/editorUiStore";
 import { getTransform, isVisualClip, placementPatchAt } from "@/lib/editor/render";
-import { resolveClipAt } from "@/lib/editor/keyframes";
+import { keyAllAt, resolveClipAt } from "@/lib/editor/keyframes";
 
 function isTextInput(el: EventTarget | null): boolean {
   if (!(el instanceof HTMLElement)) return false;
@@ -29,6 +29,18 @@ export function ShortcutsLayer() {
         e.preventDefault();
         useEditorUiStore.getState().setPanel("agent");
         window.dispatchEvent(new Event("editor:focus-agent"));
+        return;
+      }
+
+      // K: keyframe the selected layer at the playhead, and show its motion.
+      if (!e.metaKey && !e.ctrlKey && !e.altKey && e.key.toLowerCase() === "k" && s.selectedClipIds.length === 1) {
+        const clip = s.clips.find((c) => c.id === s.selectedClipIds[0]);
+        if (clip && clip.kind !== "audio" && s.currentTime >= clip.start - 0.001 && s.currentTime <= clip.start + clip.duration + 0.001) {
+          e.preventDefault();
+          s.patchClip(clip.id, { keyframes: keyAllAt(clip, s.currentTime) });
+          useEditorUiStore.getState().setInspectorTab("motion");
+          window.dispatchEvent(new Event("editor:open-inspector"));
+        }
         return;
       }
 
@@ -73,7 +85,7 @@ export function ShortcutsLayer() {
               s.patchClip(clip.id, placementPatchAt(clip, {
                 x: tr.x + dx / s.settings.width,
                 y: tr.y + dy / s.settings.height,
-              }, s.currentTime));
+              }, s.currentTime, recordOpts()));
             }
           });
           return;

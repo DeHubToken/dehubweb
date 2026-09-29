@@ -6231,7 +6231,8 @@
     "inspector": {
       "selectHint": "Kanwadaky gatlagy ýa-da wagt çyzgysyndaky klipi saýlaň.",
       "textHint": "Süýşürmek üçin kanwada süýräň, ölçegini üýtgetmek üçin burçlary ulanyň. Sözleri üýtgetmek üçin iki gezek basyň.",
-      "selection": "Saýlaw"
+      "selection": "Saýlaw",
+      "title": "Gözegçi"
     },
     "layer": {
       "alignToPage": "Sahypa laýykla",
@@ -6530,6 +6531,14 @@
       "noCurve": "Egrisini düzmek üçin oýnatma belligini açar kadryň üstüne goýuň.",
       "applyAll": "Bu egrini ähli açar kadrlarda ulan",
       "timelineKey": "Açar kadr. Süýşürmek üçin çekiň, pozmak üçin iki gezek basyň.",
+      "tabLayer": "Gatlak",
+      "record": "Ýazga al",
+      "recordHint": "Ýazga alyş: oýnatma belliginiň aşagyndaky gatlagy süýşürmek, ölçegini üýtgetmek, aýlamak ýa-da solgunlatmak şol ýere açar kadr goşýar.",
+      "recording": "Hereket ýazga alynýar",
+      "lanes": "Açar kadrlar",
+      "scrub": "Üýtgetmek üçin çepe ýa-da saga çekiň. Has çalt üçin Shift-i basyp saklaň.",
+      "addKeyShortcut": "Oýnatma belligine açar kadr goş (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Çyzykly",
         "ease": "Ýumşak",

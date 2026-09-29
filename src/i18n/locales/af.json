@@ -6171,7 +6171,8 @@
     "inspector": {
       "selectHint": "Kies 'n laag op die doek of 'n snit op die tydlyn.",
       "textHint": "Sleep op die doek om te skuif, gebruik die hoeke om te verander. Dubbelklik om die woorde te wysig.",
-      "selection": "Seleksie"
+      "selection": "Seleksie",
+      "title": "Inspekteur"
     },
     "layer": {
       "alignToPage": "Belyn met bladsy",
@@ -6470,6 +6471,14 @@
       "noCurve": "Skuif die speelkop na ’n sleutelraam om sy kurwe te vorm.",
       "applyAll": "Gebruik hierdie kurwe op elke sleutelraam",
       "timelineKey": "Sleutelraam. Sleep om dit te skuif, dubbelklik om dit te skrap.",
+      "tabLayer": "Laag",
+      "record": "Neem op",
+      "recordHint": "Opname: as jy ’n laag onder die speelkop skuif, skaal, draai of laat vervaag, word sleutelrame daar bygevoeg.",
+      "recording": "Beweging word opgeneem",
+      "lanes": "Sleutelrame",
+      "scrub": "Sleep links of regs om te verander. Hou Shift in vir vinniger.",
+      "addKeyShortcut": "Voeg sleutelraam by die speelkop (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Lineêr",
         "ease": "Sag",

@@ -6293,7 +6293,8 @@
     "inspector": {
       "selectHint": "Kanvaasii irratti laayerii tokko ykn sarara yeroo irratti kilippii tokko fili.",
       "textHint": "Socho'uuf kanfaasi irratti harkisi, hammangaa jijjiiruuf golee fayyadami. Jechoota gulaaluuf lama cuqaasi.",
-      "selection": "Filannoo"
+      "selection": "Filannoo",
+      "title": "Sakatta’aa"
     },
     "layer": {
       "alignToPage": "Fuula irratti hiriirsi",
@@ -6592,6 +6593,14 @@
       "noCurve": "Goophuu isaa bocuuf mataa taphataa kiifireemii irra kaa’i.",
       "applyAll": "Goophuu kana kiifireemii hunda irratti fayyadami",
       "timelineKey": "Kiifireemii. Sochoosuuf harkisi, haquuf si’a lama cuqaasi.",
+      "tabLayer": "Gabatee",
+      "record": "Galmeessi",
+      "recordHint": "Galmeessuu: gabatee mataa taphataa jala jiru sochoosuun, guddina jijjiiruun, naannessuun ykn dhabamsiisuun achitti kiifireemii dabala.",
+      "recording": "Sochiin galmaa’aa jira",
+      "lanes": "Kiifireemota",
+      "scrub": "Jijjiiruuf gara bitaa ykn mirgaatti harkisi. Saffisaaf Shift qabadhu.",
+      "addKeyShortcut": "Mataa taphataa irratti kiifireemii dabali (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Sarara",
         "ease": "Laafaa",
