@@ -16,7 +16,7 @@ import { NAV_LABEL_KEYS } from './SidebarNavItem';
 /**
  * The mobile menu sheet's tile grid.
  *
- * Three columns of glossy 3D icons, the same per-theme artwork the feed tabs
+ * Four columns of glossy 3D icons, the same per-theme artwork the feed tabs
  * and empty states use (public/theme-icons/<theme>/<key>.webp), so the sheet
  * reskins with the theme for free. Every rail row maps to a piece of that set:
  * a flat glyph beside the glossy renders reads as a broken tile, so the glyph
@@ -37,11 +37,6 @@ const NAV_ICON_KEYS: Record<string, ThemeIconKey> = {
   Guide: 'pinned', Docs: 'posts', Blog: 'email',
 };
 
-// The curated first screen, in order. Everything else in NAV_ITEMS follows
-// under a divider. Home and its feed tabs stay off the resting sheet (the
-// bottom bar and the feed header already carry them); search still finds Home.
-const PINNED = ['Messages', 'Notifications', 'Bookmarks', 'Stores', 'Staking', 'Profile', 'Settings'];
-
 interface TileShellProps {
   label: string;
   iconKey?: ThemeIconKey;
@@ -57,12 +52,12 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
   useEffect(() => setArtFailed(false), [iconKey, theme]);
   return (
     <>
-      <span className="relative flex h-[52px] w-[52px] items-center justify-center">
+      <span className="relative flex h-[44px] w-[44px] items-center justify-center">
         {iconKey && !artFailed ? (
           <ThemedIcon
             icon={iconKey}
             alt=""
-            className="h-[52px] w-[52px] object-contain"
+            className="h-[44px] w-[44px] object-contain"
             loading="lazy"
             decoding="async"
             onError={() => setArtFailed(true)}
@@ -76,7 +71,7 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
           </span>
         )}
       </span>
-      <span className={cn('w-full truncate text-center text-[12.5px] leading-tight', active ? 'font-semibold text-white' : 'font-medium text-zinc-200')}>
+      <span className={cn('w-full truncate text-center text-[11.5px] leading-tight', active ? 'font-semibold text-white' : 'font-medium text-zinc-200')}>
         {label}
       </span>
     </>
@@ -84,7 +79,7 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
 }
 
 const tileClass = (active: boolean) => cn(
-  'flex flex-col items-center justify-center gap-2 rounded-[14px] p-3 min-h-[96px] border transition-colors',
+  'flex flex-col items-center justify-center gap-1.5 rounded-[14px] px-1 py-2.5 min-h-[84px] border transition-colors',
   active
     ? 'bg-white/[0.12] border-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]'
     : 'bg-white/[0.04] border-white/[0.08] active:bg-white/[0.08]',
@@ -94,13 +89,13 @@ interface MobileMenuGridProps {
   /** Rail rows to show, already filtered by the menu search. */
   items: NavItem[];
   /** True while a search query is typed: order is by rank. */
-  searching: boolean;
+  searching?: boolean;
   currentPath: string;
   notificationCount: number;
   onNavigate: () => void;
 }
 
-export function MobileMenuGrid({ items, searching, currentPath, notificationCount, onNavigate }: MobileMenuGridProps) {
+export function MobileMenuGrid({ items, currentPath, notificationCount, onNavigate }: MobileMenuGridProps) {
   const { t } = useTranslation();
   const onHome = isHomePath(currentPath);
 
@@ -166,25 +161,6 @@ export function MobileMenuGrid({ items, searching, currentPath, notificationCoun
     );
   };
 
-  if (searching) {
-    return <nav className="grid grid-cols-3 gap-2.5">{items.map(renderNavTile)}</nav>;
-  }
-
-  const byLabel = new Map(items.map(item => [item.label, item]));
-  const pinned = PINNED.map(label => byLabel.get(label)).filter((item): item is NavItem => !!item);
-  const pinnedSet = new Set<NavItem>(pinned);
-  const rest = items.filter(item => !pinnedSet.has(item) && item.label !== 'Home');
-
-  return (
-    <nav>
-      <div className="grid grid-cols-3 gap-2.5">
-        {pinned.map(renderNavTile)}
-      </div>
-      {rest.length > 0 && (
-        <div className="mt-2.5 grid grid-cols-3 gap-2.5 border-t border-white/10 pt-2.5">
-          {rest.map(renderNavTile)}
-        </div>
-      )}
-    </nav>
-  );
+  // Same order as the desktop rail, one continuous grid.
+  return <nav className="grid grid-cols-4 gap-2">{items.map(renderNavTile)}</nav>;
 }
