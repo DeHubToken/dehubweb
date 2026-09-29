@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: node scripts/docs-i18n-fill.mjs --prune-garbled --locales apd,bho,ctg,fa,hne,ko,lt,mn,ms,ne,no,pcm,skr | tee prune-docs.log
+      - run: node scripts/docs-i18n-fill.mjs --prune-garbled --locales ctg,fa,mn | tee prune-docs.log
       - uses: actions/upload-artifact@v4
         with:
           name: prune-logs
@@ -24,5 +24,5 @@ jobs:
           git config user.name maldoteth
           git config user.email dev@dehub.io
           git add src/i18n/*.ts
-          git commit -q -m "Delete the garbled docs values main brought back"
+          git commit -q -m "Keep three correct docs values"
           git push origin HEAD:i18n-prune-garbled
