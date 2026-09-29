@@ -75,7 +75,19 @@
     "images": "Onyonyo",
     "videos": "Vidio",
     "music": "Egwu",
-    "live": "Na ndụ"
+    "live": "Na ndụ",
+    "seoTitle": "Nyochaa DeHub — Ndị okike, vidio na obodo na-ewu ewu",
+    "seoDescription": "Chọpụta ihe na-ewu ewu na DeHub: ndị okike kacha mma, vidio, egwu, mgbasa ozi ndụ na obodo na ikpo okwu mmekọrịta nke isi mmalite mepere emepe nke ndị ọrụ nwere."
+  },
+  "videos": {
+    "seoTitle": "Usoro vidio — Lelee vidio on-chain na DeHub",
+    "seoDescription": "Lelee vidio on-chain ọhụrụ sitere n'aka ndị okike na DeHub: vidio ogologo nwere ịkwụ ụgwọ maka ikiri, ọdịnaya chọrọ token na ịkekọrịta ego mgbasa ozi na ikpo okwu vidio nke ndị ọrụ nwere.",
+    "heading": "Usoro vidio DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Vidio dị mkpụmkpụ — Shorts na DeHub",
+    "seoDescription": "Pịgharịa vidio dị mkpụmkpụ ọhụrụ na DeHub: usoro vidio kwụ ọtọ ị nwere ike ịkpụgharị na ikpo okwu mmekọrịta nke isi mmalite mepere emepe nke ndị ọrụ nwere, ebe ndị okike nwe ọdịnaya ha.",
+    "heading": "Vidio dị mkpụmkpụ DeHub"
   },
   "settings": {
     "showOnline": "Gosi mgbe m nọ n 'ịntanetị",
@@ -1367,7 +1379,9 @@
     "offerWorthNow": "Banyere {{amount}} tokens na ọnụego ugbu a",
     "offerNotePlaceholder": "Tinye ozi (nhọrọ)",
     "offerCommitsNothing": "Ime onyinye anaghị efu ihe ọ bụla ma na-ejideghị ihe ọ bụla. Ị na-akwụ ụgwọ naanị ma ọ bụrụ na onye nwe ya anabata ya.",
-    "offerNeedsHandle": "Akaụntụ a enweghị aha njirimara a ga-enye onyinye ọnụahịa."
+    "offerNeedsHandle": "Akaụntụ a enweghị aha njirimara a ga-enye onyinye ọnụahịa.",
+    "options": "Nhọrọ profaịlụ",
+    "translateBio": "Tụgharịa akụkọ ndụ"
   },
   "tv": {
     "seoTitle": "Live TV — Free Channels Site gburugburu ụwa",

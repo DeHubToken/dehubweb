@@ -1,4 +1,3 @@
-import SEO from '@/components/SEO';
 import { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { toast } from 'sonner';
@@ -27,11 +26,6 @@ export default function TokenBridge() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <SEO 
-        title="Bridge - DeHub Documentation"
-        description="Learn how to bridge DHB tokens between BASE and BNB chains with DeHub's cross-chain bridge solution."
-        url="/docs/token/bridge"
-      />
       
       <div className="space-y-8">
         <div>

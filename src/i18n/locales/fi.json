@@ -75,7 +75,19 @@
     "images": "Kuvat",
     "videos": "Videot",
     "music": "Musiikki",
-    "live": "Suora"
+    "live": "Suora",
+    "seoTitle": "Tutustu DeHubiin — Suositut tekijät, videot ja yhteisöt",
+    "seoDescription": "Katso, mikä on nyt suosittua DeHubissa: suosituimmat tekijät, videot, musiikki, suorat lähetykset ja yhteisöt avoimen lähdekoodin, käyttäjien omistamalla sosiaalisella alustalla."
+  },
+  "videos": {
+    "seoTitle": "Videosyöte — Katso lohkoketjuvideoita DeHubissa",
+    "seoDescription": "Katso tekijöiden uusimmat lohkoketjuun tallennetut videot DeHubissa: pitkät videot maksullisella katselulla, token-rajoitetulla sisällöllä ja mainostulojen jakamisella käyttäjien omistamalla videoalustalla.",
+    "heading": "DeHubin videosyöte"
+  },
+  "shorts": {
+    "seoTitle": "Lyhyet — Lyhytvideot DeHubissa",
+    "seoDescription": "Selaa DeHubin uusimpia lyhytvideoita: pystysuuntainen, pyyhkäistävä lyhytvideosyöte avoimen lähdekoodin, käyttäjien omistamalla sosiaalisella alustalla, jossa tekijät omistavat sisältönsä.",
+    "heading": "DeHub Lyhyet"
   },
   "settings": {
     "showOnline": "Näytä, kun olen online-tilassa",
@@ -1372,7 +1384,9 @@
     "offerWorthNow": "Noin {{amount}} rahakketta nykyisellä kurssilla",
     "offerNotePlaceholder": "Lisää viesti (valinnainen)",
     "offerCommitsNothing": "Tarjouksen tekeminen ei maksa mitään eikä sido rahakketteja. Maksat vain, jos omistaja hyväksyy sen.",
-    "offerNeedsHandle": "Tällä tilillä ei ole käyttäjänimeä, josta tarjota."
+    "offerNeedsHandle": "Tällä tilillä ei ole käyttäjänimeä, josta tarjota.",
+    "options": "Profiilin asetukset",
+    "translateBio": "Käännä esittely"
   },
   "tv": {
     "seoTitle": "Live TV — Ilmaiset kanavat ympäri maailmaa",

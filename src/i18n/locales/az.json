@@ -75,7 +75,19 @@
     "images": "Şəkillər",
     "videos": "Videolar",
     "music": "Musiqi",
-    "live": "Canlı"
+    "live": "Canlı",
+    "seoTitle": "DeHub-u kəşf edin — Trenddə olan yaradıcılar, videolar və icmalar",
+    "seoDescription": "DeHub-da trenddə olanları kəşf edin: açıq mənbəli, istifadəçilərə məxsus sosial platformada ən yaxşı yaradıcılar, videolar, musiqi, canlı yayımlar və icmalar."
+  },
+  "videos": {
+    "seoTitle": "Video lenti — DeHub-da on-chain videolara baxın",
+    "seoDescription": "DeHub-da yaradıcıların ən son on-chain videolarına baxın: istifadəçilərə məxsus video platformada Pay-Per-View, token ilə qorunan məzmun və reklam gəlirinin bölüşdürülməsi ilə uzun videolar.",
+    "heading": "DeHub video lenti"
+  },
+  "shorts": {
+    "seoTitle": "Qısalar — DeHub-da qısa videolar",
+    "seoDescription": "DeHub-da ən son qısa videoları sürüşdürün: yaradıcıların öz məzmununa sahib olduğu açıq mənbəli, istifadəçilərə məxsus sosial platformada şaquli, sürüşdürülən qısa video lenti.",
+    "heading": "DeHub Qısalar"
   },
   "settings": {
     "showOnline": "Onlayn olduğum vaxtı göstərin",
@@ -1370,7 +1382,9 @@
     "offerWorthNow": "Hazırkı məzənnə ilə təxminən {{amount}} token",
     "offerNotePlaceholder": "Qeyd əlavə et (istəyə bağlı)",
     "offerCommitsNothing": "Təklif vermək heç nəyə başa gəlmir və heç bir token saxlamır. Yalnız sahib qəbul edərsə ödəniş edirsiniz.",
-    "offerNeedsHandle": "Bu hesabın təklif veriləcək istifadəçi adı yoxdur."
+    "offerNeedsHandle": "Bu hesabın təklif veriləcək istifadəçi adı yoxdur.",
+    "options": "Profil seçimləri",
+    "translateBio": "Bioqrafiyanı tərcümə et"
   },
   "tv": {
     "seoTitle": "Live TV — Dünyanın Hər Yerindən Pulsuz Kanallar",

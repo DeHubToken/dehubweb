@@ -75,7 +75,19 @@
     "images": "Hotuna",
     "videos": "Bidiyo",
     "music": "Kiɗa",
-    "live": "Kai tsaye"
+    "live": "Kai tsaye",
+    "seoTitle": "Bincika DeHub — Fitattun masu ƙirƙira, bidiyo da al'ummomi",
+    "seoDescription": "Gano abin da ke tashe a DeHub: manyan masu ƙirƙira, bidiyo, kiɗa, watsa shirye-shirye kai tsaye da al'ummomi a dandalin sada zumunta na buɗaɗɗen tushe mallakar masu amfani."
+  },
+  "videos": {
+    "seoTitle": "Jerin bidiyo — Kalli bidiyon on-chain a DeHub",
+    "seoDescription": "Kalli sabbin bidiyon on-chain daga masu ƙirƙira a DeHub: dogayen bidiyo masu biyan kuɗin kallo, abun ciki da ke buƙatar token da raba kuɗin talla a dandalin bidiyo mallakar masu amfani.",
+    "heading": "Jerin bidiyon DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Gajerun bidiyo — Sabbin gajerun bidiyo a DeHub",
+    "seoDescription": "Gungura cikin sabbin gajerun bidiyo a DeHub: jerin gajerun bidiyo a tsaye da ake shafawa a dandalin sada zumunta na buɗaɗɗen tushe mallakar masu amfani, inda masu ƙirƙira suka mallaki abun cikinsu.",
+    "heading": "Gajerun bidiyon DeHub"
   },
   "settings": {
     "showOnline": "Nuna lokacin da nake kan layi",
@@ -1375,7 +1387,9 @@
     "offerWorthNow": "Kusan token {{amount}} a farashin yanzu",
     "offerNotePlaceholder": "Ƙara saƙo (na zaɓi)",
     "offerCommitsNothing": "Bayar da tayi ba ya tsada kuma ba ya riƙe wani token. Sai ka biya idan mai shi ya karɓa.",
-    "offerNeedsHandle": "Wannan asusun ba shi da sunan mai amfani da za a yi wa tayi."
+    "offerNeedsHandle": "Wannan asusun ba shi da sunan mai amfani da za a yi wa tayi.",
+    "options": "Zaɓuɓɓukan bayanan martaba",
+    "translateBio": "Fassara tarihin rayuwa"
   },
   "tv": {
     "seoTitle": "Live TV — Kyauta Channels Daga Ko'ina cikin Duniya",

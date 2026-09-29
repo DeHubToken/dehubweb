@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RotateCcw, Loader2, Languages } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage } from '@/hooks/use-user-language';
@@ -21,6 +22,7 @@ interface BioTranslateButtonProps {
 const CACHE_PREFIX = 'bio-translate-';
 
 export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTranslated }: BioTranslateButtonProps) {
+  const { t } = useTranslation();
   const { language: userLang } = useUserLanguage();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -65,12 +67,13 @@ export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTransl
         <TooltipTrigger asChild>
           <button
             onClick={onShowOriginal}
+            aria-label={t('common.showOriginal')}
             className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
         </TooltipTrigger>
-        <TooltipContent>Show original</TooltipContent>
+        <TooltipContent>{t('common.showOriginal')}</TooltipContent>
       </Tooltip>
     );
   }
@@ -80,12 +83,13 @@ export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTransl
       <TooltipTrigger asChild>
         <button
           onClick={handleTranslate}
+          aria-label={t('profile.translateBio')}
           className="text-zinc-500 hover:text-white transition-colors"
         >
           <Languages className="w-5 h-5" />
         </button>
       </TooltipTrigger>
-      <TooltipContent>Translate bio</TooltipContent>
+      <TooltipContent>{t('profile.translateBio')}</TooltipContent>
     </Tooltip>
   );
 }
