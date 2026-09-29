@@ -314,7 +314,7 @@ const HOME_INTRO_SLIDES = [
 // article links, so the home page spends none of its own equity on them.
 const HOME_INTRO_PRESS = ['US Weekly', 'Yahoo Finance', 'Entrepreneur', 'Investing.com'];
 
-const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left">
+const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left"><!--hl-body-->
 <h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
 <p>DeHub is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
@@ -325,7 +325,7 @@ ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${
     `<li style="margin:6px 0"><a href="${APP_URL}${href}">${label}</a></li>`
   ).join('')
 }</ul></nav>
-</section>`;
+<!--/hl-body--></section>`;
 
 // Standalone hand-built React guide pages under /guides/ that are NOT manifest
 // blog posts. Served meta directly at the edge — the deployed Supabase fn's
@@ -558,7 +558,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: canonicalUrl }])}
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › Docs</p>
 <h1>DeHub Documentation</h1>
-<ul style="list-style:none;padding:0">${items}</ul>
+<!--hl-body--><ul style="list-style:none;padding:0">${items}</ul><!--/hl-body-->
 <p><a href="${APP_URL}/docs/blog">DeHub Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
@@ -1598,7 +1598,7 @@ ${breadcrumbScript(trail)}
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
 <h1>${escHtml(meta.heading)}</h1>
-${meta.bodyHtml || `<p>${escHtml(meta.description)}</p>`}
+<!--hl-body-->${meta.bodyHtml || `<p>${escHtml(meta.description)}</p>`}<!--/hl-body-->
 ${primaryNavHtml()}
 <p style="margin-top:24px"><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open ${escHtml(meta.heading)} on DeHub</a></p>
 </body>
@@ -2172,23 +2172,20 @@ function enrichProfileMeta(html, username, displayName) {
  * Localised crawler pages — ?hl=<code> — and the hreflang cluster that ties
  * each one to its siblings.
  *
- * The site ships 110 UI locales and, until now, exactly one indexable
- * language: every page said lang="en", nothing carried hreflang, and there
- * was no localised URL at all. The translations already exist for the
- * pages whose SEOHead strings live in the locale files; public/seo-i18n.json
- * (built by scripts/build-seo-i18n.mjs, checked by seo-i18n-sync.test.ts)
- * collects them by route and language, and this serves them.
- *
  * ?hl= rather than a path prefix because four locale codes — de, ha, no, uk
  * — are registered usernames whose profiles live at /de, /ha, /no and /uk.
  * A query parameter is a distinct URL to a crawler, cannot collide with a
- * route, and needs nothing changed in the router. Google's own localised
- * pages use the same parameter.
+ * route, and needs nothing changed in the router.
  *
- * The body of these pages stays English: what is translated is the title,
- * description, heading and share card, which is what a search result shows
- * and what hreflang describes. Only ISO 639-1 codes are in the table, because
- * hreflang accepts nothing else; ?hl=en is the bare page and redirects to it.
+ * A language is served only where the page is translated through and
+ * through: title, description, heading AND body. The first version sent 17
+ * routes out in 44–83 languages with the body left in English — about 1,100
+ * URLs Google reads as English duplicates (it detects language from the
+ * visible text, not from lang= or hreflang), 95 of them with a "translated"
+ * title identical to the English one. public/seo-i18n.json
+ * (scripts/build-seo-i18n.mjs) now carries only the languages real visitors
+ * use, each with a body; any other ?hl= is not a page and 301s to the bare
+ * URL. ?hl=en is the bare page and redirects to it too.
  */
 let seoI18nPromise = null;
 function seoI18nTable(env, requestUrl) {
@@ -2213,12 +2210,27 @@ function localizedUrl(route, lang) {
   return lang && lang !== 'en' ? `${APP_URL}${route}?hl=${lang}` : `${APP_URL}${route}`;
 }
 
-/** One <link rel="alternate"> per language the route is translated into, plus x-default. */
+/**
+ * The languages besides English a route is really served in: a title that is
+ * not the English one, and a translated body to go under it. Anything short
+ * of that is the English page again under another URL.
+ */
+function servedLocales(route, table) {
+  const langs = (table && table[route]) || {};
+  const en = langs.en;
+  return Object.keys(langs)
+    .filter((l) => {
+      const t = langs[l];
+      return l !== 'en' && /^[a-z]{2}$/.test(l) && t && t.title && t.body && (!en || t.title !== en.title);
+    })
+    .sort();
+}
+
+/** One <link rel="alternate"> per served language, English as the bare URL, plus x-default. */
 function hreflangLinks(route, table) {
-  const langs = Object.keys((table && table[route]) || {});
+  const langs = servedLocales(route, table);
   if (!langs.length) return '';
-  const all = langs.includes('en') ? langs : [...langs, 'en'];
-  return all
+  return [...langs, 'en']
     .sort()
     .map((l) => `<link rel="alternate" hreflang="${l}" href="${localizedUrl(route, l)}">`)
     .concat(`<link rel="alternate" hreflang="x-default" href="${localizedUrl(route, 'en')}">`)
@@ -2226,25 +2238,86 @@ function hreflangLinks(route, table) {
 }
 
 /**
+ * Where a crawler asking for ?hl= goes instead, or null when the request is
+ * for a page that exists. hl=en, a language the route is not served in,
+ * anything that is not a language code, and every ?hl= on a noindex page all
+ * land on the bare URL — the one page they would otherwise duplicate.
+ */
+function unservedLocaleRedirect(url, route, table, noindex) {
+  if (!url.searchParams.has('hl')) return null;
+  const hl = requestedLocale(url);
+  if (hl && !noindex && servedLocales(route, table).includes(hl)) return null;
+  return localizedUrl(route, 'en');
+}
+
+/** og:locale values, in the territory form Facebook's own locale list uses. */
+const OG_LOCALES = { en: 'en_US', ar: 'ar_AR', es: 'es_ES', fr: 'fr_FR', nl: 'nl_NL', tr: 'tr_TR' };
+function ogLocale(lang) {
+  return OG_LOCALES[lang] || `${lang}_${lang.toUpperCase()}`;
+}
+const RTL_LOCALES = new Set(['ar', 'fa', 'he', 'ur']);
+
+/**
+ * og:locale for `lang` and og:locale:alternate for every other served
+ * language. Rewrites the og:locale the page already carries (ogLocaleTag)
+ * rather than adding a second one.
+ */
+function withOgLocale(html, lang, langs) {
+  const tags = [
+    ogLocaleTag(ogLocale(lang)),
+    ...langs.filter((l) => l !== lang).map((l) => `<meta property="og:locale:alternate" content="${ogLocale(l)}">`),
+  ].join('\n');
+  const out = html.replace(/<meta property="og:locale:alternate" content="[^"]*">\n?/g, '');
+  return /<meta property="og:locale" content="[^"]*">/.test(out)
+    ? out.replace(/<meta property="og:locale" content="[^"]*">/, () => tags)
+    : out.replace('</head>', () => `${tags}\n</head>`);
+}
+
+const NOINDEX_META = /<meta name="robots" content="[^"]*noindex/i;
+
+/** A string as it appears inside jsonLdScript output. */
+function jsonLdText(s) {
+  return JSON.stringify(String(s)).slice(1, -1).replace(/</g, '\\u003c');
+}
+
+/**
  * The page in `hl`, or the English page carrying its cluster.
  *
- * A route with no translations comes back untouched. The bare page gains the
- * cluster and keeps its own canonical; a translated page swaps the title,
- * description, heading and share-card text, declares its language, and is
- * canonical to its own ?hl= URL — every variant self-canonical, every variant
- * naming all the others, which is the only shape Google honours.
+ * A route served in no other language comes back untouched, and so does a
+ * noindex page — annotating a page Google is told to drop only spends the
+ * annotation. The bare page gains the cluster and keeps its own canonical. A
+ * translated page swaps the title, description, share-card text, heading,
+ * breadcrumb, JSON-LD name and description, and the body between the
+ * <!--hl-body--> markers its builder put around it; it declares its language
+ * (and direction) and is canonical to its own ?hl= URL — every variant
+ * self-canonical, every variant naming all the others, the only shape Google
+ * honours.
  */
 function localizePage(html, route, hl, table) {
-  const langs = table && table[route];
-  if (!langs) return html;
-  let out = html.replace('</head>', `${hreflangLinks(route, table)}\n</head>`);
-  const t = hl && hl !== 'en' ? langs[hl] : null;
+  const langs = servedLocales(route, table);
+  if (!langs.length || NOINDEX_META.test(html)) return html;
+  const t = hl && langs.includes(hl) ? table[route][hl] : null;
+  let out = html.replace('</head>', () => `${hreflangLinks(route, table)}\n</head>`);
+  out = withOgLocale(out, t ? hl : 'en', ['en', ...langs]);
   if (!t) return out;
+  const en = table[route].en || {};
   const title = escHtml(t.title);
   const description = escHtml(t.description);
+  const heading = escHtml(t.h1 || t.title);
   const self = localizedUrl(route, hl);
-  return out
-    .replace(/<html lang="[^"]*"/i, `<html lang="${hl}"`)
+  const englishHeading = (out.match(/<h1[^>]*>([^<]*)<\/h1>/i) || [])[1];
+  // JSON-LD names the page by the strings the page itself carried, which are
+  // not always the locale file's English row, so both are swapped.
+  const unescaped = (s) => String(s || '')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  const jsonLdSwaps = [
+    [en.title, t.title],
+    [unescaped((out.match(/<title>([^<]*)<\/title>/i) || [])[1]), t.title],
+    [en.description, t.description],
+    [unescaped((out.match(/<meta name="description" content="([^"]*)">/i) || [])[1]), t.description],
+  ].filter(([from]) => from);
+  out = out
+    .replace(/<html lang="[^"]*"(?: dir="[^"]*")?/i, `<html lang="${hl}"${RTL_LOCALES.has(hl) ? ' dir="rtl"' : ''}`)
     .replace(/(<title>)[^<]*(<\/title>)/i, (m, a, b) => `${a}${title}${b}`)
     .replace(/(<meta (?:property|name)="(?:og:title|twitter:title)" content=")[^"]*(">)/g, (m, a, b) => `${a}${title}${b}`)
     .replace(
@@ -2254,7 +2327,19 @@ function localizePage(html, route, hl, table) {
     .replace(/(<link rel="canonical" href=")[^"]*(">)/i, (m, a, b) => `${a}${self}${b}`)
     .replace(/(<meta property="og:url" content=")[^"]*(">)/i, (m, a, b) => `${a}${self}${b}`)
     .replace(/(<meta name="twitter:url" content=")[^"]*(">)/i, (m, a, b) => `${a}${self}${b}`)
-    .replace(/(<h1[^>]*>)[^<]*(<\/h1>)/i, (m, a, b) => `${a}${title}${b}`);
+    .replace(/(<h1[^>]*>)[^<]*(<\/h1>)/i, (m, a, b) => `${a}${heading}${b}`)
+    .replace(/<!--hl-body-->[\s\S]*?<!--\/hl-body-->/, () => `<!--hl-body-->${t.body}<!--/hl-body-->`)
+    .replace(/(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g, (m, a, json, b) => {
+      let next = json;
+      for (const [from, to] of jsonLdSwaps) next = next.split(`"${jsonLdText(from)}"`).join(`"${jsonLdText(to)}"`);
+      return `${a}${next}${b}`;
+    });
+  // The breadcrumb repeats the heading. A page whose opening paragraph is not
+  // its builder's own (the homepage's comes from the ssr-seo function) carries
+  // a translation of it as `lede`.
+  if (englishHeading) out = out.split(`› ${englishHeading}</p>`).join(`› ${heading}</p>`);
+  if (t.lede) out = out.replace(/(<\/h1>\s*)<p>[^<]*<\/p>/i, (m, a) => `${a}<p>${escHtml(t.lede)}</p>`);
+  return out;
 }
 
 const DEHUB_API = 'https://api.dehub.io/api';
@@ -4007,11 +4092,19 @@ export function profileSitemapXml(profiles, systemRoutes) {
     // a malformed lastmod invalidates the whole file for some parsers, and the
     // date is the least important thing in the entry.
     const lastmod = /^\d{4}-\d{2}-\d{2}$/.test(p?.lastmod ?? '') ? `<lastmod>${p.lastmod}</lastmod>` : '';
+    // The avatar, when the API row carries one. Today's rows are a username
+    // and a date, so this stays empty until the endpoint adds it — nothing is
+    // fetched per profile to find one.
+    const avatar = [p?.avatarUrl, p?.avatarImageUrl, p?.avatar].find((u) => typeof u === 'string' && u.trim());
+    const image = avatar
+      ? transformedImageUrl(/^https?:\/\//i.test(avatar.trim()) ? avatar.trim() : `${CDN_ORIGIN}/${avatar.trim().replace(/^\/+/, '')}`)
+      : '';
+    const img = image ? `<image:image><image:loc>${xmlText(image)}</image:loc></image:image>` : '';
     urls.push(
-      `  <url><loc>${APP_URL}/${encodeURIComponent(username)}</loc>${lastmod}<changefreq>weekly</changefreq><priority>0.5</priority></url>`,
+      `  <url><loc>${APP_URL}/${encodeURIComponent(username)}</loc>${lastmod}<changefreq>weekly</changefreq><priority>0.5</priority>${img}</url>`,
     );
   }
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join('\n')}\n</urlset>`;
 }
 
 /** Post ids are sequential, so a sitemap page is an id range. */
@@ -4080,17 +4173,33 @@ export function postSitemapXml(posts) {
     if (!Number.isFinite(id) || seen.has(id)) continue;
     if (!postQualifiesForSitemap(post)) continue;
     seen.add(id);
-    rows.push({ id, createdAt: post.createdAt });
+    rows.push({ id, createdAt: post.createdAt, image: postSitemapImage(post) });
   }
   rows.sort((a, b) => a.id - b.id);
-  const urls = rows.map(({ id, createdAt }) => {
+  const urls = rows.map(({ id, createdAt, image }) => {
     // Anything not an ISO date is dropped rather than passed through: a
     // malformed lastmod invalidates the whole file for some parsers.
     const day = /^\d{4}-\d{2}-\d{2}/.test(String(createdAt || '')) ? String(createdAt).slice(0, 10) : '';
     const lastmod = day ? `<lastmod>${day}</lastmod>` : '';
-    return `  <url><loc>${APP_URL}/app/post/${id}</loc>${lastmod}<changefreq>weekly</changefreq><priority>0.6</priority></url>`;
+    const img = image ? `<image:image><image:loc>${xmlText(image)}</image:loc></image:image>` : '';
+    return `  <url><loc>${APP_URL}/app/post/${id}</loc>${lastmod}<changefreq>weekly</changefreq><priority>0.6</priority>${img}</url>`;
   });
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join('\n')}\n</urlset>`;
+}
+
+/**
+ * The picture a post's page shows, served the way its share card serves it.
+ * The feed row already carries the path, so this costs nothing. The legacy
+ * nfts/images/ prefix is moved and a CDN copy goes through the same transform
+ * the og:image does (see repairProxiedImages) — a real image/jpeg rather than
+ * the octet-stream some originals answer with. Text posts have none.
+ */
+function postSitemapImage(post) {
+  const raw = [post && post.imageUrl, ...(post && Array.isArray(post.imageUrls) ? post.imageUrls : [])]
+    .find((u) => typeof u === 'string' && u.trim());
+  if (!raw) return '';
+  const url = /^https?:\/\//i.test(raw.trim()) ? raw.trim() : `${CDN_ORIGIN}/${raw.trim().replace(/^\/+/, '')}`;
+  return transformedImageUrl(url.split(`${CDN_ORIGIN}/nfts/images/`).join(`${CDN_ORIGIN}/images/`));
 }
 
 const postSitemapSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -4194,13 +4303,14 @@ async function unlistedPostSitemapResponse(raw) {
 }
 
 /**
- * Every minted post in this sitemap page's id range, or null if the feed could
- * not be walked to the end.
+ * Every minted post in this sitemap page's id range, or null if the feed
+ * failed partway.
  *
- * Null matters as much as the rows do. A truncated sitemap is a 200 the edge
- * caches for an hour that tells Google the posts it omits were removed, so the
- * caller falls back to the Supabase function rather than publishing a partial
- * file.
+ * Null matters as much as the rows do: a feed that errors mid-walk says
+ * nothing about the posts it did not return, so the caller keeps its cached
+ * copy or falls back to the Supabase function rather than publishing a file
+ * cut short by an outage. Running out of walk budget is different — see the
+ * end of the loop.
  *
  * Built here rather than left in that function for the usual reason: the
  * sitemap-* functions only move on a manual `supabase functions deploy` that
@@ -4231,7 +4341,14 @@ async function dehubPostSitemap(page) {
     if (smallest < minId) return posts;
     if (!(json.pagination && json.pagination.hasMore)) return posts;
   }
-  return null;
+  // Out of walk budget with the feed still going: the newest posts in the
+  // range, filtered. Returning null here used to hand the page to the
+  // Supabase fallback, which lists every minted post unfiltered — thousands of
+  // URLs Google has already declined — the moment the corpus outgrew the cap.
+  // The older tail stays reachable through profiles; it is simply not
+  // recommended, which is all a sitemap omission means.
+  console.warn(`[Edge] post sitemap ${page}: walk cap of ${POST_SITEMAP_MAX_FEED_PAGES} feed pages reached, publishing the newest ${posts.length}`);
+  return posts;
 }
 
 /**
@@ -4817,6 +4934,266 @@ export async function cachedSitemap(request, ctx, build) {
   return fresh || hit || null;
 }
 
+/** Text escaped for an XML element body or attribute. */
+function xmlText(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/** A YYYY-MM-DD from any date-ish value, or ''. */
+function sitemapDay(value) {
+  const s = String(value || '');
+  return /^\d{4}-\d{2}-\d{2}/.test(s) ? s.slice(0, 10) : '';
+}
+
+/** How many <url> rows a sitemap holds and the newest <lastmod> among them. */
+function sitemapSummary(xml) {
+  const count = (String(xml).match(/<url>/g) || []).length;
+  let lastmod = '';
+  for (const m of String(xml).matchAll(/<lastmod>([^<]+)<\/lastmod>/g)) {
+    const day = sitemapDay(m[1]);
+    if (day > lastmod) lastmod = day;
+  }
+  return { count, lastmod };
+}
+
+/** Letters and digits in a string — the same measure the post filter uses. */
+function substantiveLength(s) {
+  return String(s || '').replace(/[^\p{L}\p{N}]/gu, '').length;
+}
+
+/**
+ * One sitemap <url>. `image` becomes an image-sitemap entry, which is how a
+ * post's thumbnail or a store's banner gets into Google Images without the
+ * crawler having to find it on the page first.
+ */
+function sitemapUrl({ loc, lastmod, changefreq, priority, image }) {
+  const day = sitemapDay(lastmod);
+  return `  <url><loc>${xmlText(loc)}</loc>${day ? `<lastmod>${day}</lastmod>` : ''}`
+    + `${changefreq ? `<changefreq>${changefreq}</changefreq>` : ''}${priority ? `<priority>${priority}</priority>` : ''}`
+    + `${image ? `<image:image><image:loc>${xmlText(image)}</image:loc></image:image>` : ''}</url>`;
+}
+
+function urlsetXml(urls) {
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'
+    + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n'
+    + `${urls.join('\n')}\n</urlset>`;
+}
+
+/**
+ * Sitemaps for the entity pages the worker renders straight from PostgREST.
+ *
+ * Every one of these had a crawler page and no sitemap, so a community, a
+ * store or a proposal was findable only if something happened to link to it.
+ * Each part is one anon-readable select and a row → entry mapping that
+ * applies the same indexability rule the page builder does: a URL the builder
+ * would mark noindex is left out, because submitting a page we then ask
+ * Google to drop is a wasted crawl and a soft-404 signal. Where the builder
+ * has no rule, the entry needs a sentence of real text (or, for a community,
+ * some members) — the bar the post sitemap already uses.
+ *
+ * Stages are deliberately absent: a stage is noindex the moment it ends, so a
+ * sitemap of them would be a list of pages that are about to disappear.
+ */
+const ENTITY_SITEMAP_MIN_TEXT = 40;
+const ENTITY_SITEMAPS = {
+  bounties: [{
+    // Same rule as the page's own robots (status and deadline), so an open
+    // bounty past its deadline is left out as well.
+    query: () => 'work_jobs?status=in.(open,in_progress)&select=job_number,status,deadline,updated_at,cover_image_url&order=job_number.asc&limit=5000',
+    entry: (j) => (isBountyIndexable(j)
+      ? { loc: `${APP_URL}/bounty/${j.job_number}`, lastmod: j.updated_at, changefreq: 'daily', priority: '0.6', image: absolutize(j.cover_image_url) }
+      : null),
+  }],
+  communities: [{
+    query: () => 'communities?is_private=eq.false&select=slug,description,member_count,avatar_url,updated_at&order=created_at.asc&limit=5000',
+    entry: (c) => {
+      const slug = String(c.slug || '');
+      // `join` is the invite-link route, not a community.
+      if (!slug || slug === 'join' || slug.includes('/')) return null;
+      if (substantiveLength(c.description) < ENTITY_SITEMAP_MIN_TEXT && Number(c.member_count) < 3) return null;
+      return { loc: `${APP_URL}/app/communities/${encodeURIComponent(slug)}`, lastmod: c.updated_at, changefreq: 'daily', priority: '0.6', image: absolutize(c.avatar_url) };
+    },
+  }],
+  stores: [
+    {
+      query: () => 'stores?is_active=eq.true&select=id,name,banner_url,avatar_url,updated_at&order=created_at.asc&limit=5000',
+      entry: (s) => (s.name && String(s.name).trim()
+        ? { loc: `${APP_URL}/stores/${s.id}`, lastmod: s.updated_at, changefreq: 'weekly', priority: '0.5', image: absolutize(s.banner_url || s.avatar_url) }
+        : null),
+    },
+    {
+      // Items of live stores only. A sold or withdrawn item is noindex on its
+      // own page (buildListingHtml), and its store's page is gone with it.
+      query: () => 'store_listings?status=eq.active&select=id,store_id,images,updated_at,stores!inner(is_active)&stores.is_active=eq.true&order=created_at.asc&limit=5000',
+      entry: (l) => ({
+        loc: `${APP_URL}/stores/${l.store_id}?listing=${l.id}`,
+        lastmod: l.updated_at,
+        changefreq: 'weekly',
+        priority: '0.5',
+        image: absolutize(Array.isArray(l.images) ? l.images[0] : null),
+      }),
+    },
+  ],
+  events: [{
+    // Upcoming or still running. A past event is a dead listing even while
+    // its page stays up.
+    query: () => {
+      const now = new Date().toISOString();
+      return `community_events?is_private=eq.false&or=${encodeURIComponent(`(starts_at.gte."${now}",ends_at.gte."${now}")`)}`
+        + '&select=event_number,cover_image_url,created_at&order=starts_at.asc&limit=5000';
+    },
+    entry: (e) => ({ loc: `${APP_URL}/app/events/${e.event_number}`, lastmod: e.created_at, changefreq: 'daily', priority: '0.5', image: absolutize(e.cover_image_url) }),
+  }],
+  packs: [{
+    query: () => 'creator_packs?item_count=gt.0&select=slug,cover_url,updated_at&order=created_at.asc&limit=5000',
+    entry: (p) => (/^[a-z0-9][a-z0-9_-]{2,47}$/i.test(String(p.slug || ''))
+      ? { loc: `${APP_URL}/packs/${String(p.slug).toLowerCase()}`, lastmod: p.updated_at, changefreq: 'weekly', priority: '0.4', image: absolutize(p.cover_url) }
+      : null),
+  }],
+  flows: [{
+    query: () => 'creator_flows?is_public=eq.true&node_count=gt.0&select=id,cover_url,updated_at&order=created_at.asc&limit=5000',
+    entry: (f) => (/^[a-z0-9]{6,32}$/.test(String(f.id || ''))
+      ? { loc: `${APP_URL}/creator/flow/${f.id}`, lastmod: f.updated_at, changefreq: 'weekly', priority: '0.4', image: absolutize(f.cover_url) }
+      : null),
+  }],
+  proposals: [{
+    query: () => 'governance_proposals?select=id,title,description,updated_at&order=created_at.asc&limit=5000',
+    entry: (p) => (substantiveLength(`${p.title || ''} ${p.description || ''}`) >= ENTITY_SITEMAP_MIN_TEXT
+      ? { loc: `${APP_URL}/app/governance/${p.id}`, lastmod: p.updated_at, changefreq: 'weekly', priority: '0.5' }
+      : null),
+  }],
+  features: [{
+    query: () => 'feature_requests?status=neq.declined&select=id,title,description,status,image_url,updated_at&order=created_at.asc&limit=5000',
+    entry: (f) => (f.status !== 'declined' && substantiveLength(`${f.title || ''} ${f.description || ''}`) >= ENTITY_SITEMAP_MIN_TEXT
+      ? { loc: `${APP_URL}/features?feature=${f.id}`, lastmod: f.updated_at, changefreq: 'weekly', priority: '0.4', image: absolutize(f.image_url) }
+      : null),
+  }],
+};
+
+/**
+ * One entity sitemap from its rows, one array per part. Exported for its
+ * tests: the indexability rules are the point of the file and invisible in
+ * any single response.
+ */
+export function entitySitemapXml(kind, partRows) {
+  const parts = ENTITY_SITEMAPS[kind];
+  if (!parts) return null;
+  const seen = new Set();
+  const urls = [];
+  parts.forEach((part, i) => {
+    for (const row of (partRows && partRows[i]) || []) {
+      const entry = row && part.entry(row);
+      if (!entry || seen.has(entry.loc)) continue;
+      seen.add(entry.loc);
+      urls.push(sitemapUrl(entry));
+    }
+  });
+  return urlsetXml(urls);
+}
+
+/** An entity sitemap, or null when any of its selects failed — never a partial one. */
+async function buildEntitySitemap(kind) {
+  const parts = ENTITY_SITEMAPS[kind];
+  const partRows = await Promise.all(parts.map((p) => supabaseRows(p.query())));
+  if (partRows.some((rows) => rows === null)) return null;
+  return sitemapResponse(entitySitemapXml(kind, partRows));
+}
+
+/**
+ * The newest minted post's id, from one row of the feed, or null. Post ids
+ * are sequential, so this is what says how many sitemap-posts-N pages exist.
+ */
+async function newestPostId() {
+  try {
+    const res = await fetch(
+      `https://api.dehub.io/api/feed?limit=1&page=1&sortBy=createdAt&sortOrder=desc&status=minted`,
+      { signal: AbortSignal.timeout(8000) },
+    );
+    if (!res.ok) return null;
+    const json = await res.json();
+    const id = Number(json && Array.isArray(json.result) && json.result[0] && json.result[0].tokenId);
+    return Number.isFinite(id) && id > 0 ? id : null;
+  } catch {
+    return null;
+  }
+}
+
+/** The <lastmod> a cached sitemap earns: its newest row, else when it was built. '' when not cached. */
+async function cachedSitemapLastmod(url) {
+  const hit = await caches.default.match(new Request(url, { method: 'GET' }));
+  if (!hit) return '';
+  const { lastmod } = sitemapSummary(await hit.text());
+  if (lastmod) return lastmod;
+  const built = Number(hit.headers.get(SITEMAP_BUILT_HEADER));
+  return Number.isFinite(built) ? new Date(built).toISOString().slice(0, 10) : '';
+}
+
+/**
+ * The sitemap index, built here rather than by the sitemap-index function.
+ *
+ * That function stamped every child with the day of the request, so Google
+ * saw every sitemap on the site "change" daily and learned to ignore the
+ * dates; it never knew about bounties or any of the entity sitemaps either.
+ * Each child here carries a real date: sitemap-static.xml its newest row;
+ * posts the newest row of the cached copy (the index never pays for a posts
+ * walk); profiles the newest profile from the API; each entity sitemap its
+ * newest row, and an entity sitemap with no rows is left out altogether.
+ *
+ * Exported for its tests. `children` is [{ loc, lastmod }] in index order.
+ */
+export function sitemapIndexXml(children) {
+  const rows = children.map(({ loc, lastmod }) => {
+    const day = sitemapDay(lastmod);
+    return `  <sitemap><loc>${xmlText(loc)}</loc>${day ? `<lastmod>${day}</lastmod>` : ''}</sitemap>`;
+  });
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.join('\n')}\n</sitemapindex>`;
+}
+
+async function buildSitemapIndex(request, env, ctx) {
+  const staticXml = await env.ASSETS.fetch(new URL('/sitemap-static.xml', request.url))
+    .then((res) => (res.ok ? res.text() : ''))
+    .catch(() => '');
+  // The static file is the one child that must exist; without it this is not
+  // an index worth caching, and the caller falls back to the old one.
+  if (!staticXml.includes('</urlset>')) return null;
+
+  const [newestId, profileMeta, entities] = await Promise.all([
+    newestPostId(),
+    dehubProfileSitemap(1, 1),
+    Promise.all(Object.keys(ENTITY_SITEMAPS).map(async (kind) => {
+      const res = await cachedSitemap(new Request(`${APP_URL}/sitemap-${kind}.xml`), ctx, () => buildEntitySitemap(kind));
+      return { kind, summary: res ? sitemapSummary(await res.clone().text()) : null };
+    })),
+  ]);
+
+  const children = [{ loc: `${APP_URL}/sitemap-static.xml`, lastmod: sitemapSummary(staticXml).lastmod }];
+  const postPages = newestId ? Math.ceil(newestId / POST_SITEMAP_CHUNK_SIZE) : 1;
+  for (let page = 1; page <= postPages; page++) {
+    const loc = `${APP_URL}/sitemap-posts-${page}.xml`;
+    children.push({ loc, lastmod: await cachedSitemapLastmod(loc) });
+  }
+  const profileTotal = Number(profileMeta && profileMeta.total);
+  const profilePages = Number.isFinite(profileTotal) && profileTotal > 0 ? Math.ceil(profileTotal / PROFILE_SITEMAP_PAGE_SIZE) : 1;
+  for (let page = 1; page <= profilePages; page++) {
+    children.push({
+      loc: `${APP_URL}/sitemap-profiles-${page}.xml`,
+      lastmod: page === 1 && profileMeta ? profileMeta.lastmod : '',
+    });
+  }
+  for (const { kind, summary } of entities) {
+    // Unknown (the select failed and nothing is cached) stays listed; known
+    // empty is left out until there is something to submit.
+    if (summary && summary.count === 0) continue;
+    children.push({ loc: `${APP_URL}/sitemap-${kind}.xml`, lastmod: summary ? summary.lastmod : '' });
+  }
+  return sitemapResponse(sitemapIndexXml(children));
+}
+
+// The page tables, for src/test/sitemap-static.test.ts: every indexable page
+// the worker renders has to be in sitemap-static.xml, and that is only
+// checkable against the tables themselves.
+export { MARKETING_PAGES, SECTION_PAGES, DOCS_PAGES, GUIDE_PAGES };
+
 /**
  * Crawler renders proxied through the ssr-seo function, held for five minutes.
  *
@@ -5344,34 +5721,35 @@ async function handleRequest(request, env, ctx) {
   // (/sitemap-static.xml is a real file in public/ and intentionally falls
   // through.)
 
-  // Bounties, straight from PostgREST. Built here rather than as a fourth
-  // sitemap-* Supabase function for the usual reason: those only move on a
-  // manual `supabase functions deploy` that nobody runs, and this ships with
-  // the Cloudflare build. Only live bounties go in — a completed one is
-  // noindex, and submitting a URL we tell Google not to index is a wasted
-  // crawl and a soft-404 signal.
-  if (pathname === '/sitemap-bounties.xml') {
-    const rows = await supabaseRows(
-      'work_jobs?status=in.(open,in_progress)&select=job_number,updated_at,deadline&order=job_number.asc&limit=5000',
-    );
-    // Same bar as the page's own robots: an open bounty past its deadline is
-    // noindex, so it has no place in the sitemap either.
-    const urls = (rows || []).filter((j) => isBountyIndexable({ status: 'open', deadline: j.deadline })).map((j) => `  <url>
-    <loc>${APP_URL}/bounty/${j.job_number}</loc>${j.updated_at ? `
-    <lastmod>${new Date(j.updated_at).toISOString().split('T')[0]}</lastmod>` : ''}
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>`).join('\n');
-    return new Response(
-      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`,
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/xml; charset=utf-8',
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-        },
-      },
-    );
+  // Every sitemap below is cached under its bare URL: a query string would
+  // otherwise mint a fresh cache key, and with it a fresh build, per request.
+  const sitemapRequest = new Request(`${url.origin}${pathname}`);
+
+  // The index, built here with a real date on every child (see
+  // buildSitemapIndex). Falls through to the sitemap-index function below
+  // only when there is no cached copy and the build failed.
+  if (pathname === '/sitemap.xml') {
+    const cached = await cachedSitemap(sitemapRequest, ctx, () => buildSitemapIndex(request, env, ctx));
+    if (cached) return cached;
+    console.error('[Edge] sitemap index build failed, falling back');
+  }
+
+  // Bounties (/sitemap-bounties.xml), communities, stores, events, packs,
+  // creator flows, proposals and feature requests, straight from PostgREST —
+  // see ENTITY_SITEMAPS for what each one admits. Built here rather than as
+  // more sitemap-* Supabase functions for the usual reason: those only move on
+  // a manual `supabase functions deploy` that nobody runs, and this ships with
+  // the Cloudflare build. A failed select with nothing cached is a 503, never
+  // an empty file: an empty sitemap tells Google every URL it held is gone.
+  const entitySitemapMatch = pathname.match(/^\/sitemap-([a-z]+)\.xml$/);
+  if (entitySitemapMatch && Object.hasOwn(ENTITY_SITEMAPS, entitySitemapMatch[1])) {
+    const kind = entitySitemapMatch[1];
+    const cached = await cachedSitemap(sitemapRequest, ctx, () => buildEntitySitemap(kind));
+    if (cached) return cached;
+    return new Response('sitemap temporarily unavailable', {
+      status: 503,
+      headers: { 'Retry-After': '600' },
+    });
   }
 
   // Profiles, from the API that actually holds them. The Supabase function
@@ -5387,7 +5765,7 @@ async function handleRequest(request, env, ctx) {
   const profileSitemapMatch = pathname.match(/^\/sitemap-profiles-(\d+)\.xml$/);
   if (profileSitemapMatch) {
     const page = Number(profileSitemapMatch[1]) || 1;
-    const cached = await cachedSitemap(request, ctx, async () => {
+    const cached = await cachedSitemap(sitemapRequest, ctx, async () => {
       const meta = await dehubProfileSitemap(page, PROFILE_SITEMAP_PAGE_SIZE);
       return meta ? sitemapResponse(profileSitemapXml(meta.profiles, SYSTEM_ROUTES)) : null;
     });
@@ -5398,9 +5776,8 @@ async function handleRequest(request, env, ctx) {
   // Posts, enumerated and filtered here. The Supabase function this replaces
   // offered Google every minted post — 3,299 of them — and Google declined
   // 4,441 post URLs as not worth indexing. postQualifiesForSitemap explains
-  // the bar. Falls through to that function on an incomplete walk, so a slow
-  // or rate-limited API degrades to the unfiltered sitemap rather than to a
-  // partial one.
+  // the bar. Falls through to that function only when the feed fails partway
+  // and nothing is cached.
   const postSitemapMatch = pathname.match(/^\/sitemap-posts-(\d+)\.xml$/);
   if (postSitemapMatch) {
     const page = Number(postSitemapMatch[1]);
@@ -5409,7 +5786,7 @@ async function handleRequest(request, env, ctx) {
     // which made every made-up page number a free way to burn the API.
     const unlisted = await unlistedPostSitemapResponse(postSitemapMatch[1]);
     if (unlisted) return unlisted;
-    const cached = await cachedSitemap(request, ctx, async () => {
+    const cached = await cachedSitemap(sitemapRequest, ctx, async () => {
       const posts = await dehubPostSitemap(page);
       return posts ? sitemapResponse(postSitemapXml(posts)) : null;
     });
@@ -5427,8 +5804,9 @@ async function handleRequest(request, env, ctx) {
       const res = await fetch(target);
       if (res.ok) {
         let body = await res.text();
-        // The index itself is still built by the (undeployable) sitemap-index
-        // function, which will never learn about bounties. Splice the entry in
+        // Reached for the index only when the edge build above failed with
+        // nothing cached. The (undeployable) sitemap-index function that
+        // answers instead will never learn about bounties. Splice the entry in
         // on the way past — same trick the homepage branch uses to swap that
         // function's stale og:image. Guarded on the closing tag so a changed
         // upstream shape degrades to "no bounties listed", not to broken XML.
@@ -5750,12 +6128,14 @@ async function handleRequest(request, env, ctx) {
   // canonical) for every /docs URL — 11 sitemap entries presenting as
   // homepage duplicates. Serve real documentation text extracted at build.
   if (cleanPath === '/docs') {
-    if (requestedLocale(url) === 'en') return redirect301(`${APP_URL}/docs`);
+    const table = await seoI18nTable(env, request.url);
+    const localeRedirect = unservedLocaleRedirect(url, '/docs', table, false);
+    if (localeRedirect) return redirect301(localeRedirect);
     const docsHtml = localizePage(
       buildDocsIndexHtml(),
       '/docs',
       requestedLocale(url),
-      await seoI18nTable(env, request.url),
+      table,
     );
     return guard(new Response(docsHtml, { status: 200, headers: blogHeaders }));
   }
@@ -5893,10 +6273,13 @@ async function handleRequest(request, env, ctx) {
     if (sectionKey === 'music') {
       html = injectBeforeCta(html, await sectionLiveHtml('music'));
     }
-    // The localised variant when ?hl= names one, otherwise the English page
-    // with its hreflang cluster (see localizePage). ?hl=en is the bare page.
-    if (requestedLocale(url) === 'en') return redirect301(`${APP_URL}/${sectionKey}`);
-    html = localizePage(html, `/${sectionKey}`, requestedLocale(url), await seoI18nTable(env, request.url));
+    // The localised variant when ?hl= names a language this page is served
+    // in, otherwise the English page with its hreflang cluster (see
+    // localizePage). Every other ?hl= — en included — 301s to the bare page.
+    const table = await seoI18nTable(env, request.url);
+    const localeRedirect = unservedLocaleRedirect(url, `/${sectionKey}`, table, MARKETING_PAGES[sectionKey].noindex);
+    if (localeRedirect) return redirect301(localeRedirect);
+    html = localizePage(html, `/${sectionKey}`, requestedLocale(url), table);
     return guard(new Response(html, {
       status: 200,
       headers: MARKETING_PAGES[sectionKey].noindex
@@ -6471,8 +6854,10 @@ async function handleRequest(request, env, ctx) {
     // landing is noindex and gets no cluster — annotating a page we ask Google
     // to ignore just spends the annotation.
     if (pathname === '/' && !isReferral) {
-      if (requestedLocale(url) === 'en') return redirect301(`${APP_URL}/`);
-      html = localizePage(html, '/', requestedLocale(url), await seoI18nTable(env, request.url));
+      const table = await seoI18nTable(env, request.url);
+      const localeRedirect = unservedLocaleRedirect(url, '/', table, false);
+      if (localeRedirect) return redirect301(localeRedirect);
+      html = localizePage(html, '/', requestedLocale(url), table);
     }
 
     const rendered = await guard(new Response(html, {

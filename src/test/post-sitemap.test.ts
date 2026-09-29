@@ -128,15 +128,26 @@ describe('the posts sitemap is wired at the edge', () => {
     expect(handler.slice(0, handler.indexOf('const sitemapMatch'))).toContain('postSitemapXml(posts)');
   });
 
-  it('runs before the Supabase proxy, and falls back to it rather than publishing a partial file', () => {
-    // An incomplete walk returns null. A truncated sitemap is a 200 the edge
-    // caches for an hour that tells Google the posts it omits were removed.
+  it('runs before the Supabase proxy, and falls back to it only when the feed fails partway', () => {
     expect(WORKER.indexOf('const postSitemapMatch')).toBeLessThan(WORKER.indexOf('const sitemapMatch'));
-    // The builder hands cachedSitemap null on an incomplete walk, which is
+    // The builder hands cachedSitemap null when a feed page fails, which is
     // what makes the fall-through below reachable.
     expect(handler).toMatch(/posts \? sitemapResponse\(postSitemapXml\(posts\)\) : null/);
     expect(handler).toMatch(/if \(cached\) return cached;/);
-    expect(WORKER).toMatch(/async function dehubPostSitemap[\s\S]*?return complete \? posts : null;|async function dehubPostSitemap[\s\S]*?return null;\n\}/);
+    const walk = WORKER.slice(WORKER.indexOf('async function dehubPostSitemap'));
+    expect(walk.slice(0, walk.indexOf('\n}\n'))).toContain('if (!json) return null;');
+  });
+
+  /**
+   * Past the walk cap the page used to return null, and the fallback it fell
+   * to lists every minted post unfiltered — the list Google had already
+   * declined. The cap now publishes the newest posts, filtered.
+   */
+  it('keeps the quality filter when the walk runs out of budget', () => {
+    const walk = WORKER.slice(WORKER.indexOf('async function dehubPostSitemap'));
+    const body = walk.slice(0, walk.indexOf('\n}\n'));
+    expect(body.trimEnd().endsWith('return posts;')).toBe(true);
+    expect(body).toContain('POST_SITEMAP_MAX_FEED_PAGES');
   });
 
   it('asks the feed for a stable order, or pages shift under the walk', () => {

@@ -1,37 +1,83 @@
 # DeHub
 
-> Open source, user owned and censorship resistant social media. Web3 native, with built-in payments, staking, governance, communities, music, TV and live streams.
+> DeHub (dehub.io) is an open source, user-owned and censorship-resistant social network and mobile app, in development since 2021. Posts can be minted on-chain, creators keep their audience and up to 99% of their revenue, and the network runs on the DHB token (Base and BNB Chain) for tips, watch-to-earn rewards, staking and governance. Not to be confused with DePaul University's DeHUB portal or Rowan's DEHub.
 
-DeHub is a decentralized social platform where users own their content, identity and rewards. It combines feeds, messaging, communities, an AI assistant, a wallet, governance and creator monetization (PPV, W2E, tipping) in one app.
+Every link below is a public page that renders without an account. The app's signed-in screens (messages, wallet, notifications, settings) are private and not listed. Machine-readable API access for assistants is described in [skill.md](https://dehub.io/skill.md).
 
-## Pages
+## Start here
 
-- [Home](/app): Main feed of posts, videos and trending content.
-- [Explore](/app/explore): Trending creators, posts, topics and tokens.
-- [Communities](/app/communities): User-run communities and group chats.
-- [Messages](/app/messages): Direct messages and tipped chats.
-- [Assistant](/app/assistant): AI assistant for content, search and on-chain actions.
-- [Notifications](/app/notifications): Activity, follows, tips and mentions.
-- [Wallet](/app/wallet): Multi-chain wallet for DHB and supported tokens.
-- [Bridge](/app/bridge): Cross-chain transfers between Base and BNB.
-- [Buy](/app/buy): Buy DHB and other tokens with card or crypto.
-- [Staking](/app/stake): Stake DHB to earn rewards and unlock badges.
-- [Governance](/app/governance): Vote on proposals and shape the platform.
-- [Leaderboard](/app/leaderboard): Top stakers and contributors.
-- [Command Centre](/app/command-centre): Dashboard for personal stats and activity.
-- [Music](/app/music): Decentralized music and radio.
-- [TV](/app/tv): Live streams and on-demand video.
-- [Events](/app/events): Discover and RSVP to community events.
-- [Stores](/app/stores): Peer-to-peer marketplace paid in DHB.
-- [Bookmarks](/app/bookmarks): Saved posts and purchases.
-- [Top 100](/app/top-100): Top cryptocurrencies by market cap.
-- [Agents](/app/agents): Create and manage AI agents.
-- [Glossary](/app/glossary): Web3 and DeHub terminology.
-- [Creators](/creators): Creator program overview.
-- [Jobs](/jobs): Open roles at DeHub.
-- [Guide](/guide): Visual walkthrough of the app.
-- [Docs](/docs): Full documentation.
+- [DeHub home](https://dehub.io/): What DeHub is, the latest public posts and links into every section.
+- [What is DeHub?](https://dehub.io/guides/what-is-dehub): Plain-English explainer of the platform, the team and the DHB token.
+- [Documentation](https://dehub.io/docs): Index of the official docs — platform, dApps, token, staking, governance, roadmap and FAQ.
+- [DeHub overview](https://dehub.io/docs/overview): How the platform fits together.
+- [FAQ](https://dehub.io/docs/faq): Answers to the most common questions about DeHub and DHB.
+
+## Watch, listen and browse
+
+- [Explore](https://dehub.io/explore): Every public post in chronological order, filterable by format and hashtag.
+- [Videos](https://dehub.io/videos): The latest long-form videos from DeHub creators.
+- [Shorts](https://dehub.io/shorts): Vertical short-form video feed.
+- [Music](https://dehub.io/music): Tracks and audio from DeHub artists.
+- [DeHub TV](https://dehub.io/tv): Free live TV channels from around the world alongside creator live streams.
+- [Cinema](https://dehub.io/cinema): Where to stream, rent or buy any film or series, with live prices by country.
+- [Stages](https://dehub.io/stages): Live audio rooms, kept afterwards as recordings with transcripts.
+- [Communities](https://dehub.io/communities): Public groups around a topic, each with its own feed.
+- [Arcade](https://dehub.io/arcade): Browser games and worlds built and open sourced by DeHub.
+
+## Create and earn
+
+- [Become a creator](https://dehub.io/creators): Apply to the creator program and see how creators earn on DeHub.
+- [Creator Studio](https://dehub.io/creator): AI image, video, audio and 3D generation.
+- [Bounties](https://dehub.io/work): Paid tasks with an escrowed budget, open to anyone.
+- [Import a video](https://dehub.io/converter): Publish a video from YouTube, TikTok, Instagram, X and 17 other platforms.
+- [Migrate a whole profile](https://dehub.io/migrate-youtube): Bulk-import a channel or profile to DeHub.
+- [Builder](https://dehub.io/builder): Build and host a mini app by messaging the DeHub assistant.
+- [DeHub Extra](https://dehub.io/premium): Premium membership perks and pricing.
+- [Pricing](https://dehub.io/pricing): Creator Studio plans.
+
+## Token, trading and governance
+
+- [DHB currency overview](https://dehub.io/docs/token/overview): What DHB is and which chains it runs on.
+- [DHB token economics](https://dehub.io/docs/token/economics): Supply, emissions and allocation.
+- [Where to buy DHB](https://dehub.io/docs/token/where-to-buy): Exchanges and on-ramps that list DHB.
+- [Staking DHB](https://dehub.io/docs/token/stake): How staking works and what badges it unlocks.
+- [Governance](https://dehub.io/docs/token/governance): How proposals and voting work.
+- [DEX](https://dehub.io/dex): Trade DHB with limit orders on Base or BNB Chain.
+- [Bridge](https://dehub.io/bridge): Move DHB between Base and BNB Chain.
+
+## Guides
+
+- [Best decentralized social media 2026](https://dehub.io/guides/best-decentralized-social-media): DeHub, Mastodon, Bluesky, Farcaster and Lens compared.
+- [Best Web3 social media dapps 2026](https://dehub.io/guides/best-web3-social-media-dapps): Web3 social dapps scored on monetization, censorship resistance and UX.
+- [Best decentralized streaming apps 2026](https://dehub.io/guides/best-decentralized-streaming-apps): Decentralized streaming apps you can actually watch on, compared.
+- [What is watch-to-earn?](https://dehub.io/guides/what-is-watch-to-earn): How watch-to-earn works and how DeHub pays viewers on-chain.
+- [Is watch-to-earn legit?](https://dehub.io/guides/is-watch-to-earn-legit): Realistic earnings, red flags and a checklist for any platform.
+- [Best watch-to-earn platforms 2026](https://dehub.io/guides/best-watch-to-earn-platforms-2026): Which watch-to-earn apps pay real money.
+- [Tokenised subscriptions explained](https://dehub.io/guides/tokenized-subscriptions-explained): On-chain memberships you own and can resell.
+- [Best decentralised social media platforms 2026](https://dehub.io/guides/best-decentralised-social-media-platforms-2026): DeHub vs Bluesky, Farcaster, Lens and Mastodon.
+- [Web3 live streaming](https://dehub.io/guides/web3-live-streaming-decentralised-twitch-alternative): The decentralised Twitch alternative that pays creators.
+- [Leaving YouTube](https://dehub.io/guides/creators-guide-leaving-youtube): A creator's guide to moving to a platform you own.
+- [Leaving TikTok](https://dehub.io/guides/creators-guide-leaving-tiktok): What TikTok's Creator Rewards really pays, and the alternative.
+- [Leaving Instagram](https://dehub.io/guides/creators-guide-leaving-instagram): An Instagram alternative creators actually own.
+- [How monetization works on social media apps](https://dehub.io/guides/how-monetization-works-on-social-media-apps): Payout rules on Instagram, TikTok, YouTube, X and Twitch.
+- [DHB token explained and how to buy it in the UK](https://dehub.io/guides/how-to-buy-dhb-token-uk): Step-by-step for UK buyers.
+- [Open source end-to-end encryption on DeHub](https://dehub.io/guides/privacy-first-open-source-e2ee-dehub): How DeHub messaging is encrypted.
+- [DeHub vs DePaul DeHUB vs Rowan DEHub](https://dehub.io/guides/dehub-vs-depaul-dehub-vs-rowan-dehub): Telling the three apart.
+- [DeHub blog](https://dehub.io/docs/blog): All news, product updates and guides.
+
+## About
+
+- [Roadmap](https://dehub.io/docs/roadmap): What has shipped and what is next.
+- [Team](https://dehub.io/docs/team): The people building DeHub.
+- [DeHub in the press](https://dehub.io/docs/featured-in): Coverage in US Weekly, Yahoo Finance, Entrepreneur and Investing.com.
+- [Moderation handbook](https://dehub.io/admin-manual): The rules DeHub moderators work to, published in full.
+- [Download the Android app](https://dehub.io/apk): Direct APK download; also on Google Play.
+- [Connect DeHub to an AI assistant](https://dehub.io/connect): MCP connector for ChatGPT, Claude and other assistants.
+- [Contact](https://dehub.io/docs/contact): How to reach the team.
 
 ## Optional
 
-- [Delete Account](/delete-account): Account deletion request.
+- [Glossary](https://dehub.io/glossary): Icons, features and Web3 terms used across DeHub.
+- [Live site stats](https://dehub.io/stats): Visitors and members in real time.
+- [Privacy policy](https://dehub.io/docs/privacy): How DeHub handles personal data.
+- [Terms of service](https://dehub.io/docs/terms-of-service): The terms for using DeHub.
