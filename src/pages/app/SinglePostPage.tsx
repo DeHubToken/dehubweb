@@ -591,9 +591,14 @@ function ImmersiveVideoHeader({
 
   return (
     <div className="absolute top-2 left-2 z-50">
+      {/* Sits on the media, never on the page. data-on-media keeps the
+          baseline themes' control finish off it: on Light, System and Minimal
+          that finish made it a pale chip that vanished over bright photos.
+          Canvas themes still dress it in their own material. */}
       <button
         onClick={handleBack}
-        className="h-8 w-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
+        data-on-media
+        className="h-8 w-8 rounded-xl bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
         aria-label="Go back"
       >
         <ArrowLeft className="w-4 h-4 text-white" />
