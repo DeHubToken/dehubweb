@@ -1,24 +1,31 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { Button } from '@/components/ui/button';
 
 const THEMES = [
   'system', 'minimal', 'light', 'cosmic', 'hazy', 'swarms',
-  'lavalamp', 'winter', 'war', 'osaka', 'jungle',
+  'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror',
 ] as const;
 
 const ICONS: ThemeIconKey[] = [
-  'posts', 'images', 'videos', 'audio', 'messages', 'communities',
-  'subscriptions', 'events', 'bookmarks', 'search', 'notifications', 'lock',
-  'superpowers', 'dao', 'staking', 'bridge', 'buy',
+  'accounts', 'ads', 'arcade', 'assistant', 'audio', 'bookmarks', 'boost', 'bounties',
+  'bridge', 'buy', 'careers', 'command', 'comment-anchor', 'communities', 'dao', 'deep-current',
+  'email', 'events', 'features', 'flak-jacket', 'fractions', 'front-row', 'glossary', 'governance',
+  'harpoon', 'home', 'images', 'live', 'lock', 'messages', 'notifications', 'pinned',
+  'posts', 'precision-strike', 'profile', 'search', 'second-wind', 'settings', 'signal-flare', 'stages',
+  'staking', 'stats', 'stores', 'subscriptions', 'superpowers', 'team-up', 'timeline-bomber', 'trend-jacker',
+  'trophy', 'tv', 'usernames', 'videos', 'wand',
 ];
 
 export default function StateGalleryPage() {
   const { theme, setTheme } = useAppTheme();
   const [params, setParams] = useSearchParams();
   const requestedTheme = params.get('theme');
+  const [presses, setPresses] = useState(0);
+  const press = () => setPresses((count) => count + 1);
 
   useEffect(() => {
     if (requestedTheme && THEMES.includes(requestedTheme as typeof THEMES[number]) && requestedTheme !== theme) {
@@ -33,6 +40,8 @@ export default function StateGalleryPage() {
 
   return (
     <main
+      id="app-root"
+      data-theme-gallery={theme}
       data-glass-page
       className="relative z-10 min-h-screen px-5 py-8 text-white sm:px-8"
       style={theme === 'cosmic' ? {
@@ -67,7 +76,7 @@ export default function StateGalleryPage() {
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Semantic icon family</p>
-          <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
+          <div className="grid grid-cols-4 gap-3 sm:grid-cols-8" data-theme-icon-grid>
             {ICONS.map((icon) => (
               <div key={icon} className="flex min-w-0 flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-3">
                 <ThemedIcon icon={icon} alt="" className="h-12 w-12 object-contain" />
@@ -75,6 +84,24 @@ export default function StateGalleryPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+          <h2 className="mb-3 text-sm font-semibold">Theme controls</h2>
+          <div className="flex flex-wrap items-center gap-3" data-theme-control-grid>
+            <Button onClick={press}>Primary</Button>
+            <Button variant="secondary" onClick={press}>Secondary</Button>
+            <Button variant="outline" onClick={press}>Outline</Button>
+            <Button variant="glass" onClick={press}>Glass</Button>
+            <Button variant="ghost" onClick={press}>Ghost</Button>
+            <Button variant="destructive" onClick={press}>Destructive</Button>
+            <Button disabled>Disabled</Button>
+            <button className="rounded-xl bg-white px-4 py-2 text-black" onClick={press}>Neutral white</button>
+            <button className="rounded-xl bg-zinc-800 px-4 py-2 text-white" onClick={press}>Neutral zinc</button>
+            <button className="rounded-xl bg-red-600 px-4 py-2 text-white" onClick={press}>Semantic red</button>
+            <button className="rounded-xl px-4 py-2 hover:bg-white/10" onClick={press}>Bare action</button>
+          </div>
+          <output aria-live="polite" className="mt-3 block text-xs">Actions fired: {presses}</output>
         </section>
 
         <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

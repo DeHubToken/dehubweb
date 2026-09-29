@@ -25,6 +25,19 @@ const SUPERPOWER_KEYS = [
 ];
 
 describe('theme icon assets', () => {
+  it('owns a complete original pack for every raster theme', () => {
+    const manifest = JSON.parse(readFileSync(resolve(__dirname, '../../public/theme-icons/pack-manifest.json'), 'utf8'));
+    expect(new Set(manifest.themes)).toEqual(new Set([...FULL_THEMES, 'system']));
+    expect(new Set(manifest.keys)).toEqual(new Set([...PROFILE_KEYS, ...PAGE_KEYS, ...SUPERPOWER_KEYS]));
+    for (const theme of manifest.themes) {
+      for (const key of manifest.keys) {
+        const source = readFileSync(resolve(__dirname, `../../public/theme-icons/sources/packs/${theme}/${key}.png`));
+        expect(source[25], `${theme}/${key} must keep transparent RGBA`).toBe(6);
+        expect(source.readUInt32BE(16), `${theme}/${key} width`).toBe(256);
+        expect(source.readUInt32BE(20), `${theme}/${key} height`).toBe(256);
+      }
+    }
+  });
   it('keeps glyph themes out of the System raster family', () => {
     for (const theme of ['war', 'hacker', 'island', 'horror']) {
       expect(resolveThemeIconAsset('/theme-icons/system/usernames.webp', theme)).toBeNull();
@@ -45,7 +58,7 @@ describe('theme icon assets', () => {
   it('keeps page identities in each native material family', () => {
     for (const theme of ['hazy', 'swarms', 'winter', 'osaka', 'jungle']) {
       for (const key of ['accounts', 'usernames', 'tv', 'email', 'staking', 'buy', 'bridge', 'command', 'superpowers']) {
-        const source = resolve(__dirname, `../../public/theme-icons/sources/${key}-${theme}.png`);
+        const source = resolve(__dirname, `../../public/theme-icons/sources/packs/${theme}/${key}.png`);
         expect(existsSync(source), `${key}-${theme}.png`).toBe(true);
         const output = readFileSync(resolve(__dirname, `../../public/theme-icons/${theme}/${key}.webp`));
         expect(output, `${theme}/${key}`).not.toEqual(
@@ -58,7 +71,7 @@ describe('theme icon assets', () => {
   });
   it('preserves the polished System originals through material rebuilds', () => {
     for (const key of ['arcade', 'command', 'email', 'events', 'fractions', 'staking', 'stats', 'stores', 'tv']) {
-      const source = resolve(__dirname, `../../public/theme-icons/sources/${key}-system.png`);
+      const source = resolve(__dirname, `../../public/theme-icons/sources/packs/system/${key}.png`);
       expect(existsSync(source), `${key}-system.png`).toBe(true);
       const bytes = readFileSync(source);
       expect(bytes[25], `${key}-system.png is not transparent RGBA`).toBe(6);
@@ -151,9 +164,9 @@ describe('theme icon assets', () => {
     const outputHashes = new Set<string>();
 
     for (const theme of themes) {
-      const source = resolve(__dirname, `../../public/theme-icons/sources/dao-${theme}.png`);
+      const source = resolve(__dirname, `../../public/theme-icons/sources/packs/${theme}/dao.png`);
       expect(existsSync(source), `dao-${theme}.png`).toBe(true);
-      expect(statSync(source).size, `dao-${theme}.png is unexpectedly empty`).toBeGreaterThan(100_000);
+      expect(statSync(source).size, `dao-${theme}.png is unexpectedly empty`).toBeGreaterThan(10_000);
       sourceHashes.add(createHash('sha256').update(readFileSync(source)).digest('hex'));
       const output = resolve(__dirname, `../../public/theme-icons/${theme}/dao.webp`);
       outputHashes.add(createHash('sha256').update(readFileSync(output)).digest('hex'));

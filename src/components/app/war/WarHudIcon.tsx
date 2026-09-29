@@ -232,7 +232,7 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
 ]);
 
 /** Bump when a file is redrawn in place, or browsers and the app keep the old art. */
-export const THEME_ICON_REVISION = '6';
+export const THEME_ICON_REVISION = '7';
 const GLYPH_THEMES = new Set(['war', 'hacker', 'island', 'horror']);
 
 const TRANSPARENT_PNG_KEYS = new Set<ThemeIconKey>([
