@@ -9,3 +9,18 @@
  */
 export const isHomePath = (pathname: string): boolean =>
   pathname === '/app' || pathname === '/';
+
+/**
+ * True when the home feed is showing its Live tab. The tab shares the `/app`
+ * URL, so it's read from the sessionStorage entry HomePage writes on every tab
+ * change.
+ */
+export const isOnLiveFeed = (pathname: string): boolean => {
+  if (!isHomePath(pathname)) return false;
+  try {
+    const saved = sessionStorage.getItem('home-feed-state');
+    return !!saved && JSON.parse(saved)?.tab === 'live';
+  } catch {
+    return false;
+  }
+};

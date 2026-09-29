@@ -4,7 +4,7 @@ import { useStage } from '@/contexts/StageContext';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { isHomePath } from '@/lib/home-path';
+import { isHomePath, isOnLiveFeed } from '@/lib/home-path';
 import { disarmHomeNavIntent, resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Landmark, Scroll, Map, Wand2, Loader2, BarChart3, Gamepad2, Zap } from 'lucide-react';
@@ -157,6 +157,7 @@ export function MobileBottomNav() {
     location.pathname === '/app/messages' &&
     new URLSearchParams(location.search).get('chat') === '1';
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [postLiveMode, setPostLiveMode] = useState<'video' | undefined>();
   // Mount on first open, keep mounted afterwards (close animation).
   const [postModalMounted, setPostModalMounted] = useState(false);
   useEffect(() => {
@@ -233,6 +234,7 @@ export function MobileBottomNav() {
       setShowAuthPrompt(true);
       return;
     }
+    setPostLiveMode(isOnLiveFeed(location.pathname) ? 'video' : undefined);
     setIsPostModalOpen(true);
   };
 
@@ -439,7 +441,7 @@ export function MobileBottomNav() {
 
       {postModalMounted && (
         <Suspense fallback={null}>
-          <PostModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} />
+          <PostModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} initialLiveMode={postLiveMode} />
         </Suspense>
       )}
       <AuthPrompt isOpen={showAuthPrompt} onClose={() => setShowAuthPrompt(false)} />

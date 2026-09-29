@@ -16,6 +16,7 @@ import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { filterNavItems, exploreSearchHref } from './navigation/nav-search';
+import { isOnLiveFeed } from '@/lib/home-path';
 import { useSearchHistory } from '@/hooks/use-search-history';
 // Lazy: PostModal drags in usePostForm → minting/wallet contract code. A
 // static import here would pull the wallet stack into the entry bundle
@@ -77,6 +78,12 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
     closeMenu();
   }, [menuQuery, addToHistory, navigate, closeMenu]);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [postLiveMode, setPostLiveMode] = useState<'video' | undefined>();
+  // From the Live feed, the post button opens the composer on Livestream.
+  const openPostModal = useCallback(() => {
+    setPostLiveMode(isOnLiveFeed(location.pathname) ? 'video' : undefined);
+    setIsPostModalOpen(true);
+  }, [location.pathname]);
   // Mount on first open, keep mounted afterwards (close animation).
   const [postModalMounted, setPostModalMounted] = useState(false);
   useEffect(() => {
@@ -207,7 +214,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
             </button>
             <button
               type="button"
-              onClick={() => { closeMenu(); setIsPostModalOpen(true); }}
+              onClick={() => { closeMenu(); openPostModal(); }}
               aria-label={t('sidebar.post')}
               title={t('sidebar.post')}
               className="flex h-12 w-12 items-center justify-center text-white hover:text-zinc-300 transition-colors"
@@ -234,12 +241,12 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
           skips that work; the hook is live, so a rotation or resize past lg
           mounts it at that moment, exactly where the CSS would have revealed
           it. Same gate the right rail uses. */}
-      {isDesktop && <DesktopSidebar onPostClick={() => setIsPostModalOpen(true)} />}
+      {isDesktop && <DesktopSidebar onPostClick={openPostModal} />}
 
       {/* Post Modal */}
       {postModalMounted && (
         <Suspense fallback={null}>
-          <PostModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} />
+          <PostModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} initialLiveMode={postLiveMode} />
         </Suspense>
       )}
     </>
