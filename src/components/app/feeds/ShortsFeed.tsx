@@ -420,9 +420,6 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     return FALLBACK_CATEGORIES;
   }, [apiCategories]);
 
-  // All-time views would pin the same old clips on top forever; rank this month's.
-  const mostViewedRange = selectedSort.value === 'most-viewed' ? 'month' as const : undefined;
-
   // Fetch from DeHub API - pass sortMode based on selected filter (default source)
   const {
     data: apiData,
@@ -438,7 +435,6 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     sortMode: getApiSortMode(selectedSort.value),
     category: selectedCategory || undefined,
     postType: 'video',
-    range: mostViewedRange,
   });
 
   // Fetch from unified feed API (when following mode is active)
@@ -465,7 +461,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const photosFeed = useUnifiedFeed({
     postType: 'feed-images', search: 'soundtrack', limit: 12,
     sortBy: selectedSort.value === 'most-liked' ? 'likes' : selectedSort.value === 'most-viewed' ? 'views' : 'createdAt', sortOrder: 'desc',
-    status: 'all', category: selectedCategory || undefined, followingOnly: isFollowingMode, range: mostViewedRange,
+    status: 'all', category: selectedCategory || undefined, followingOnly: isFollowingMode,
   });
 
   // Select active data source

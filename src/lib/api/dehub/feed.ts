@@ -50,7 +50,6 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
     postType: params.postType,
     search: params.search,
     status: params.status || 'all',
-    range: params.range,
   };
 
   // requiresAuth when a token exists: it makes apiCall refresh a stale token
