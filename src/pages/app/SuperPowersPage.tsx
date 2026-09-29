@@ -137,9 +137,8 @@ export default function SuperPowersPage() {
             <p className="text-white text-sm">{t('superpowers.loadFailed')}</p>
           </section>
         ) : (
-          // No badge — the page's real audience. Say what it costs and where.
+          // Team up is available without buying tokens or holding a badge.
           <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
-            <p className="text-white text-sm">{t('superpowers.buyTokensToUnlock')}</p>
             <p className="text-[12px] text-zinc-400">{t('superpowers.teamUp.openToEveryone')}</p>
             <BadgeProgress variant="rail" />
             <Button variant="outline" className="self-start" onClick={() => setBuyOpen(true)}>{t('nav.buyDhb')}</Button>
