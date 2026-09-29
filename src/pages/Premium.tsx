@@ -132,7 +132,7 @@ export default function Premium() {
       </div>
 
       {/* Top nav */}
-      <header className="sticky top-0 z-20 backdrop-blur-xl bg-black/40 border-b border-white/5">
+      <header data-clear-top-bar className="sticky top-0 z-20 backdrop-blur-xl bg-black/40 border-b border-white/5">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <Link to="/" className="text-sm font-semibold tracking-tight text-white">DeHub</Link>
           <Link

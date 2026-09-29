@@ -913,6 +913,10 @@ export const ku = {
       'Steka reklamê ya taybet bi armanckirina pêşketî ya li ser bingeha berîkê',
     ],
     q2q4_2026: 'Q2–Q4 2026 û Pêşde',
+    q1_2021: 'Çêriya yekem a 2021an',
+    q2_2021: 'Çêriya duyem a 2021an',
+    q3_2021: 'Ç3 2021',
+    q3_2026: 'Ç3 2026',
   },
   brandAssets: {
     title: 'Malên Brandê',
