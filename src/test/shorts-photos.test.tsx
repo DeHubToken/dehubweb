@@ -35,6 +35,7 @@ it('buffers only a settled neighbour and immediately loads a selected clip', () 
 it('maps every photo and its single soundtrack without manufacturing a video', () => {
   const media = shortsPhotoMedia(post)!;
   expect(media.imageUrls).toHaveLength(2);
+  expect(media.imageUrls[0]).toContain('dehubcdn.ams3.cdn.digitaloceanspaces.com/feed-images/1.jpg');
   expect(media.videoUrl).toBe('');
   expect(media.soundtrackUrl).toContain('/feed-audio/5373-audio.mp3');
   expect(media.description).toBe('A walk');
