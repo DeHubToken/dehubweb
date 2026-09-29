@@ -671,6 +671,15 @@ export const wes = {
     altMusic: '"Music Hub" ya, wey cover a track, video, podcast, radio station, wey a go.',
     altWallet: 'Da built-in wallet, showin\' da token balance, an\' da action like Receive, Send, Buy, Stake, Bridge, an\' Cash Out.',
     altFeatures: '"Wetin wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey',
+    autoFrac2: 'Automatically split into 1,000 fractions',
+    autoFractionalisation: 'Automatic Fractionalisation',
+    badgeTortoise: 'Giant Tortoise Badge',
+    dehubTokenTitle: 'DeHub Token',
+    feedsTabs: 'Dedicated Tabs:',
+    messageTypes: 'Message Types & Features',
+    mon5: 'Creator monetization opportunities',
+    premiumContent: 'Premium Content',
+    privateByDesign: 'Private by Design',
   },
   games: {
     title: 'Games',
@@ -739,6 +748,9 @@ export const wes = {
     instantPaymentsDesc: 'Wia Stripe, you go buy token instantanly, smooth, and no stress, any time you log in any account. DeHub make token easy for everybody. If you need more help, just come up our 24/7 live community chat and ask for admin support.',
     secureGatewayDesc: 'All payment details wey you give, dem be encrypted and process safe by Stripe. We no go access or store any sensitive info or card details of you. So, you go enjoy ultimate peace of mind.',
     disclaimerText: 'DeHub token na use wey for utility purpose afo, like any in-game or in-app digital token or money, no be for investment. Because our token live on-chain, we go give extra utility, and also unprecedented level of transparency wey people go confirm. All data wey wey write up here, na for transparency, learn, and inform people only. DeHub and all people wey work for we, no go take responsibility for any money wey people lose when buy any token or NFT wey we release. Market na very risky. You go lose all your money because of unexpected things like mistake, technical problem, hack, and so on. So, you should only spend money wey you go afford to lose.',
+    cexs: 'CEXs',
+    dehubToken: 'DeHub Token',
+    dexs: 'DEXs',
   },
   tokenGovernance: {
     preventingWhalesDesc: 'Wetin we dey use for vote now, no make one person or company control protocol, but big investor still get big reward.',
@@ -746,6 +758,7 @@ export const wes = {
     solvingDesc: 'E no, two big reason wey token governance dey have bad name for dem be: whale dey manipulate (control) dem, and holder base no dey engage (join in) properly. Above voting logic and game theory wey wey present, dey offer solution fresh for dis global problem. Wey wey hope prove dem wey no believe in token governance wrong!',
     launchNote: 'DeHub’s governance protocol wey go dey now for platform — proposal wey go vote wey go dey for app today.',
     disclaimerText: 'DeHub token na use wey for utility purpose afo, like any in-game or in-app digital token or money, no be for investment. Because our token live on-chain, we go give extra utility, and also unprecedented level of transparency wey people go confirm. All data wey wey write up here, na for transparency, learn, and inform people only. DeHub and all people wey work for we, no go take responsibility for any money wey people lose when buy any token or NFT wey we release. Market na very risky. You go lose all your money because of unexpected things like mistake, technical problem, hack, and so on. So, you should only spend money wey you go afford to lose.',
+    preventingWhales: 'Preventing Whale Manipulation',
   },
   tokenStake: {
     introDesc: 'Won dee wey you go get access fi different club level, get all dem extra features fi all d\'apps, an use your computer power or storage space—even from a mobile—fi mine your own share of protocol money, start from as low as little.',
@@ -794,6 +807,7 @@ export const wes = {
     feeSource4: 'Advertising across video, lives & scroll feeds.',
     feeSource5: 'Pàtnə launç a dɔp aɪdɹɔp.',
     disclaimer: 'Disclaimer',
+    userFlow: 'Staking User Flow',
   },
   tokenBridge: {
     title: 'Bridge',
@@ -870,6 +884,7 @@ export const wes = {
     conclusionText1: 'DePIN wey propose go make infrastructure wey truly decentralise, no fit dey block, no limit wey can scale, and cost-efficient for DeHub. Na through share computing power, and reward miners direct from revenue, system no dey suffer inflation, and ensure sustainability long time.',
     conclusionText2: '"Dis model go give any person wey dey have spare computer power, from mobile phone dey, pass server dey, go join and get benefit from DeHub grow. For wey wey want go disrupt big big industry like dis, dem need billionaire support or true innovation, like dis DePIN dey do.',
     openSourceNote: 'Wetin wey wey full code go be open source naa after wey wey complete.',
+    sustainabilityDesc: 'Pota reward fo contributors di straight fo app revenue, no need fo token go up like inflation.',
   },
   e2ee: {
     zeroTrust: 'Zero-Trust Architecture',
@@ -952,6 +967,7 @@ export const wes = {
     globalTranslationDesc: 'Transeytin di wahin di global, na make sure di people no di same message, na no di same language, na make sure di conversation no be confuse for any one.',
     contentAnalysisDesc: 'Wetin you dey ask? Use AI wey go analyze na interpret post fo you, go give you context wey fit help you understand post better.',
     comingSoonDesc: 'DeHub AI toolkit na wey still dey make, na wey go fit inside platform direct. Keep follow we for update, for wey we go launch dis full AI assistant set soon.',
+    contentCreation: 'Content Creation',
   },
   advertising: {
     povrDesc1: 'Our ad-tech solution no fit like anytin else wey see cross legacy or blockchain market, and dey serve unique purpose inside our own app.',
@@ -1042,6 +1058,8 @@ export const wes = {
     q2q4_2026: 'Q4 2026 and Beyond',
     inProgress: 'In progress',
     latestUpdateDesc: 'Q3 2026 wey be our biggest quarter for shipping yet — more dan 1,500 changes wey wey merge across web app, mobile app, and backend. Instead of try explain twice, full write-up wey show every different work wey wey do, go along wit commit or pull request wey go next to it.',
+    q3_2021: 'Q3 2021',
+    title: 'DeHub Roadmap',
   },
   brandAssets: {
     title: 'Brand Assets',
@@ -1213,6 +1231,7 @@ export const wes = {
     thirdPartyItem10Prefix: 'Multi-posting:',
     dataSovereigntyItem5: 'Yu no dey allow AI system train on yu work, unless yu switch am off for Settings, and yu choice dey publish to crawlers for paja we control.',
     dataSovereigntyItem6: 'Yu go delete account yu self from Settings; yu profile, uploads na stored media, including bakup kopi, dey go wipe out.',
+    thirdPartyItem3Prefix: 'IPFS/Decentralized Storage:',
   },
   contact: {
     title: 'Contact Us',
@@ -1230,6 +1249,7 @@ export const wes = {
     whalesDesc: 'For dem people who have more dan 10,000,000 DeHub token',
     joinTelegram: 'Join Telegram',
     joinDiscord: 'Join Discord',
+    hindiDesc: 'Hindi speaking community',
   },
   faq: {
     title: 'Frequently Asked Questions',

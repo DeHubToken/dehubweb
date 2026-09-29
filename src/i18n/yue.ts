@@ -907,6 +907,8 @@ export const yue = {
     altAds: '用嚟建立同埋資助廣告系列嘅自助廣告入口網站。',
     altFeatures: '社區提議板，讓大家提交及投票支持想法。',
     altConnect: '連結頁面，用以將 DeHub 與 ChatGPT 或 Claude 透過 MCP 連接。',
+    badgeDelegationB7: '另一方有話說：',
+    commCreator4: '喺付費牆後面分享高級內容',
   },
   games: {
     title: '遊戲',
