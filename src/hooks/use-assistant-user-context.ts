@@ -58,7 +58,8 @@ export function useAssistantUserContext(): AssistantUserContext | null {
     refetchOnWindowFocus: false,
   });
 
-  // Fetch tip totals from leaderboard cache
+  // Fallback tip totals. tip_leaderboard_cache stopped updating in February,
+  // so the live profile totals above win whenever the API returns them.
   const { data: tipData } = useQuery({
     queryKey: ['assistant-tip-context', walletAddress],
     queryFn: async () => {
@@ -154,8 +155,8 @@ export function useAssistantUserContext(): AssistantUserContext | null {
       postsCount: profile?.uploads ?? profile?.post_count ?? undefined,
       likesReceived: likes,
       badgeBalance: profile?.badgeBalance ?? undefined,
-      tipsReceived: tipData?.received_total ? Number(tipData.received_total) : undefined,
-      tipsSent: tipData?.sent_total ? Number(tipData.sent_total) : undefined,
+      tipsReceived: profile?.receivedTips ?? (tipData?.received_total ? Number(tipData.received_total) : undefined),
+      tipsSent: profile?.sentTips ?? (tipData?.sent_total ? Number(tipData.sent_total) : undefined),
       staked: profile?.staked ?? undefined,
       leaderboardRank: leaderboardData?.rank ?? undefined,
       leaderboardBalance: leaderboardData?.balance ?? undefined,
