@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /_api/
+Disallow: /_sb/
 Disallow: /api/
 
 Sitemap: https://dehub.io/sitemap.xml
