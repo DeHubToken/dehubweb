@@ -266,7 +266,8 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
     // The Assistant page gained a version of the same problem with the source
     // tools — search, then read what the search found, before it has learned
     // anything — and the final round withholds tools, so five left it four.
-    maxRounds = surface === 'chat' ? 3 : surface === 'admin' ? 9 : 6,
+    // The live code map adds a step in front (map, search, read), hence eight.
+    maxRounds = surface === 'chat' ? 3 : surface === 'admin' ? 9 : 8,
     maxTokens = surface === 'chat' ? 700 : 3000,
     // A hundred seconds on the Assistant page rather than sixty. A source
     // question is the heaviest thing it does — a search, then a file, each one
