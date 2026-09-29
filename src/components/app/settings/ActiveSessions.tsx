@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { fetchSessions, revokeSession, revokeOtherSessions, type Session } from '@/lib/api/dehub';
+import { AppState } from '@/components/app/AppState';
 
 function formatRelativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
@@ -60,12 +61,17 @@ export function ActiveSessions() {
   const [revokingAll, setRevokingAll] = useState(false);
   const [confirmTarget, setConfirmTarget] = useState<Session | null>(null);
   const [confirmAll, setConfirmAll] = useState(false);
+  // Kept apart from an empty list: at least this device is always signed in,
+  // so "no sessions" after a failed read is never true.
+  const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(async (showSpinner = false) => {
     if (showSpinner) setLoading(true);
     try {
       setSessions(await fetchSessions());
+      setLoadError(false);
     } catch {
+      setLoadError(true);
       toast.error(t('settings.sessionsLoadFailed', 'Failed to load sessions'));
     } finally {
       setLoading(false);
@@ -131,6 +137,15 @@ export function ActiveSessions() {
       {loading ? (
         <div className="flex items-center justify-center py-8">
           <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+        </div>
+      ) : sessions.length === 0 && loadError ? (
+        <div className="bg-zinc-800/50 rounded-xl border border-zinc-700/50">
+          <AppState
+            kind="error"
+            size="compact"
+            title={t('common.failedToLoad')}
+            primaryAction={{ label: t('common.retry'), onClick: () => void load(true) }}
+          />
         </div>
       ) : sessions.length === 0 ? (
         <div className="bg-zinc-800/50 rounded-xl border border-zinc-700/50 px-4 py-6 text-center">

@@ -523,6 +523,9 @@
     "edit": "편집",
     "loading": "로딩 중...",
     "tryAgain": "다시 시도",
+    "retry": "다시 시도",
+    "failedToLoad": "로드 실패",
+    "somethingWentWrong": "문제가 발생했습니다",
     "search": "검색",
     "goBack": "뒤로",
     "showOriginal": "원문 보기",
@@ -6642,6 +6645,10 @@
     "desc": "정글의 화창한 낮 또는 푸른 황혼",
     "day": "낮",
     "evening": "저녁"
+  },
+  "affiliate": {
+    "loadFailed": "제휴 통계를 불러오지 못했습니다",
+    "checkingForUpdates": "업데이트 확인 중…"
   },
   "affiliateLanding": {
     "title": "초대 페이지 맞춤 설정",

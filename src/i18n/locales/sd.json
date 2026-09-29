@@ -523,6 +523,9 @@
     "edit": "تدوين",
     "loading": "لوڊ ٿي رهيو آهي...",
     "tryAgain": "ٻيهر ڪوشش ڪريو",
+    "retry": "ٻيهر ڪوشش ڪريو",
+    "failedToLoad": "لوڊ ڪرڻ ۾ ناڪام",
+    "somethingWentWrong": "ڪجهه غلط ٿي ويو",
     "search": "ڳولهيو",
     "goBack": "واپس وڃو",
     "showOriginal": "اصل ڏيکاريو",
@@ -6578,6 +6581,10 @@
     "desc": "جهنگل ۾ روشن ڏينهن يا نيري شام",
     "day": "ڏينهن",
     "evening": "شام"
+  },
+  "affiliate": {
+    "loadFailed": "الحاقي انگ اکر لوڊ نه ٿي سگهيا",
+    "checkingForUpdates": "اپڊيٽس چيڪ ٿي رهيون آهن…"
   },
   "affiliateLanding": {
     "title": "پنهنجو دعوت وارو صفحو ترتيب ڏيو",

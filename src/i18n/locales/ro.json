@@ -523,6 +523,9 @@
     "edit": "Editează",
     "loading": "Se încarcă...",
     "tryAgain": "Încearcă din nou",
+    "retry": "Încearcă din nou",
+    "failedToLoad": "Eroare la încărcare",
+    "somethingWentWrong": "Ceva nu a funcționat",
     "search": "Caută",
     "goBack": "Înapoi",
     "showOriginal": "Afișează originalul",
@@ -6417,6 +6420,10 @@
     "desc": "O zi luminoasă sau o seară albastră de amurg în junglă",
     "day": "Zi",
     "evening": "Seară"
+  },
+  "affiliate": {
+    "loadFailed": "Nu s-au putut încărca statisticile de afiliere",
+    "checkingForUpdates": "Se caută actualizări…"
   },
   "affiliateLanding": {
     "title": "Personalizează-ți pagina de invitație",

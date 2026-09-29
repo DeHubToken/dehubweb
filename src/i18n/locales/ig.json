@@ -521,6 +521,9 @@
     "edit": "Dezie",
     "loading": "Ọ na-ebu...",
     "tryAgain": "Nwaa Ọzọ",
+    "retry": "Nwaa ọzọ",
+    "failedToLoad": "Emeghị ka ọ budata",
+    "somethingWentWrong": "Ihe adịghị mma mere",
     "search": "Chọọ",
     "goBack": "Laghachi azụ",
     "showOriginal": "Gosi nke mbụ",
@@ -6491,6 +6494,10 @@
     "desc": "Ụbọchị na-enwu enwu ma ọ bụ mgbede na-acha anụnụ anụnụ n’ọhịa",
     "day": "Ehihie",
     "evening": "Mgbede"
+  },
+  "affiliate": {
+    "loadFailed": "E nweghị ike ibudata ọnụ ọgụgụ njikọ aka",
+    "checkingForUpdates": "Na-enyocha mmelite…"
   },
   "affiliateLanding": {
     "title": "Hazie peeji òkù gị",

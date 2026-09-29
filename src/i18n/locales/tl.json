@@ -523,6 +523,8 @@
     "edit": "I-edit",
     "loading": "Naglo-load...",
     "tryAgain": "Subukan Ulit",
+    "retry": "Subukan ulit",
+    "failedToLoad": "Nabigong i-load",
     "search": "Maghanap...",
     "goBack": "Bumalik",
     "showOriginal": "Ipakita ang orihinal",
@@ -6411,6 +6413,10 @@
     "desc": "Maliwanag na araw o bughaw na takipsilim sa gubat",
     "day": "Araw",
     "evening": "Takipsilim"
+  },
+  "affiliate": {
+    "loadFailed": "Hindi ma-load ang mga affiliate stats",
+    "checkingForUpdates": "Sinusuri ang mga update…"
   },
   "affiliateLanding": {
     "title": "I-customize ang iyong invite page",

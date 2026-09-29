@@ -507,6 +507,9 @@
     "edit": "ແກ້ໄຂ",
     "loading": "ກຳລັງໂຫຼດ...",
     "tryAgain": "ລອງໃໝ່",
+    "retry": "ລອງໃໝ່",
+    "failedToLoad": "ໂຫຼດບໍ່ສຳເລັດ",
+    "somethingWentWrong": "ມີບາງຢ່າງຜິດພາດ",
     "search": "ຄົ້ນຫາ",
     "goBack": "ກັບຄືນ",
     "showOriginal": "ສະແດງຕົ້ນສະບັບ",
@@ -6257,6 +6260,10 @@
     "desc": "ກາງເວັນທີ່ສົດໃສ ຫຼື ຕອນແລງສີຟ້າໃນປ່າ",
     "day": "ກາງເວັນ",
     "evening": "ຕອນແລງ"
+  },
+  "affiliate": {
+    "loadFailed": "ບໍ່​ສາມາດ​ໂຫຼດ​ສະຖິຕິ​ພັນທະ​ໄດ້",
+    "checkingForUpdates": "ກຳລັງກວດສອບການອັບເດດ…"
   },
   "affiliateLanding": {
     "title": "ປັບແຕ່ງໜ້າເຊີນຂອງທ່ານ",

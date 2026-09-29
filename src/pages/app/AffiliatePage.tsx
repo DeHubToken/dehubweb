@@ -101,15 +101,20 @@ export default function AffiliatePage() {
         try { window.localStorage.setItem(`affiliate-img-v:${s.code}`, next); } catch { /* ignore */ }
       }
     } catch (e) {
-      toast.error("Could not load affiliate stats");
+      toast.error(t("affiliate.loadFailed"));
       // eslint-disable-next-line no-console
       console.error(e);
     } finally {
       setLoading(false);
     }
-  }, [displayName, wallet]);
+  }, [displayName, t, wallet]);
 
   useEffect(() => { void load(); }, [load]);
+
+  const retry = () => {
+    setRefreshing(true);
+    void load().finally(() => setRefreshing(false));
+  };
 
   const shareUrl = useMemo(
     () => (stats?.code ? `${SITE}/r/${stats.code}` : ""),
@@ -177,16 +182,27 @@ export default function AffiliatePage() {
                 className={`absolute inset-0 w-full h-full block transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
               />
             ) : null}
-            {(!stats?.code || !imgLoaded) && (
+            {loading || (stats?.code && !imgLoaded) ? (
               <div className="absolute inset-0 overflow-hidden flex items-center justify-center">
                 <div className="absolute inset-0 bg-white/[0.04] animate-pulse" />
                 <div
                   className="absolute inset-y-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent"
                   style={{ animation: "shimmer-sweep 1.6s linear infinite" }}
                 />
-                <span className="relative text-sm md:text-base text-white/80 font-medium tracking-wide">Checking for updates…</span>
+                <span className="relative text-sm md:text-base text-white/80 font-medium tracking-wide">{t("affiliate.checkingForUpdates")}</span>
               </div>
-            )}
+            ) : !stats?.code ? (
+              // Loading finished without a code: the load failed. Say so and
+              // offer a retry rather than shimmering forever.
+              <div className="absolute inset-0 flex items-center justify-center">
+                <AppState
+                  kind="error"
+                  size="compact"
+                  title={t("common.failedToLoad")}
+                  primaryAction={{ label: t("common.retry"), onClick: retry, loading: refreshing }}
+                />
+              </div>
+            ) : null}
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -205,13 +221,13 @@ export default function AffiliatePage() {
             <StatCard
               icon={<ExternalLink className="w-4 h-4" />}
               label={t('referral.stats.pageViews')}
-              value={loading ? null : String(stats?.totalViews ?? 0)}
+              value={loading ? null : stats ? String(stats.totalViews ?? 0) : "—"}
               hint={t('referral.stats.inLast30Days', { count: stats?.views30d ?? 0 })}
             />
             <StatCard
               icon={<Users className="w-4 h-4" />}
               label={t('referral.stats.uniqueVisitors')}
-              value={loading ? null : String(stats?.uniqueVisitors ?? 0)}
+              value={loading ? null : stats ? String(stats.uniqueVisitors ?? 0) : "—"}
               hint={stats?.uniqueVisitors
                 ? t('referral.stats.percentJoined', { pct: ((stats.referrals / stats.uniqueVisitors) * 100).toFixed(1) })
                 : t('referral.stats.noVisits')}
@@ -219,19 +235,19 @@ export default function AffiliatePage() {
             <StatCard
               icon={<Users className="w-4 h-4" />}
               label="Direct"
-              value={loading ? null : String(stats?.referrals ?? 0)}
+              value={loading ? null : stats ? String(stats.referrals ?? 0) : "—"}
               hint={`${AFFILIATE_L1_COMMISSION_PCT}%`}
             />
             <StatCard
               icon={<Users className="w-4 h-4" />}
               label="Secondary"
-              value={loading ? null : String(stats?.l2Referrals ?? 0)}
+              value={loading ? null : stats ? String(stats.l2Referrals ?? 0) : "—"}
               hint={`${AFFILIATE_L2_COMMISSION_PCT}%`}
             />
             <StatCard
               icon={<Wallet className="w-4 h-4" />}
               label="Total earned"
-              value={loading ? null : formatMoney(stats?.totalEarnedCents ?? 0, stats?.currency || "USD")}
+              value={loading ? null : stats ? formatMoney(stats.totalEarnedCents ?? 0, stats.currency || "USD") : "—"}
               hint={loading || !stats ? undefined : `T1 ${formatMoney(stats.l1EarnedCents, stats.currency || "USD")} · T2 ${formatMoney(stats.l2EarnedCents, stats.currency || "USD")}`}
             />
             <StatCard

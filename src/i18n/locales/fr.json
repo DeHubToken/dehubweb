@@ -523,6 +523,9 @@
     "edit": "Modifier",
     "loading": "Chargement...",
     "tryAgain": "Réessayer",
+    "retry": "Réessayer",
+    "failedToLoad": "Échec du chargement",
+    "somethingWentWrong": "Un problème est survenu",
     "search": "Rechercher",
     "goBack": "Retour",
     "showOriginal": "Afficher l'original",
@@ -6647,6 +6650,10 @@
     "desc": "Une journée lumineuse ou un crépuscule bleuté dans la jungle",
     "day": "Jour",
     "evening": "Soir"
+  },
+  "affiliate": {
+    "loadFailed": "Impossible de charger les statistiques d'affiliation",
+    "checkingForUpdates": "Recherche de mises à jour…"
   },
   "affiliateLanding": {
     "title": "Personnalisez votre page d'invitation",

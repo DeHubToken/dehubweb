@@ -478,6 +478,9 @@
     "edit": "Edit",
     "loading": "E dey load...",
     "tryAgain": "Try Again",
+    "retry": "Try again",
+    "failedToLoad": "E no gree load",
+    "somethingWentWrong": "Someting don spoil",
     "search": "Find",
     "goBack": "Go back",
     "showOriginal": "Show di original",
@@ -5795,6 +5798,10 @@
     "desc": "Bright day or blue evening for inside bush",
     "day": "Day",
     "evening": "Evening"
+  },
+  "affiliate": {
+    "loadFailed": "I no fit lod ya affiliate nomba dem",
+    "checkingForUpdates": "Di check for update…"
   },
   "affiliateLanding": {
     "title": "Arrange your invite page",

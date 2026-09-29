@@ -523,6 +523,9 @@
     "edit": "Muuda",
     "loading": "Laadimine...",
     "tryAgain": "Proovi uuesti",
+    "retry": "Proovi uuesti",
+    "failedToLoad": "Laadimine ebaõnnestus",
+    "somethingWentWrong": "Midagi läks valesti",
     "search": "Otsi",
     "goBack": "Mine tagasi",
     "showOriginal": "Näita originaali",
@@ -6535,6 +6538,10 @@
     "desc": "Helge päev või hämarsinine õhtu džunglis",
     "day": "Päev",
     "evening": "Õhtu"
+  },
+  "affiliate": {
+    "loadFailed": "Affiliate statistikat ei õnnestunud laadida",
+    "checkingForUpdates": "Uuenduste kontrollimine…"
   },
   "affiliateLanding": {
     "title": "Kohanda oma kutselehte",

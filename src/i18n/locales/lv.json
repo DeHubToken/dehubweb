@@ -509,6 +509,9 @@
     "edit": "Rediģēt",
     "loading": "Ielāde...",
     "tryAgain": "Mēģināt vēlreiz",
+    "retry": "Mēģināt vēlreiz",
+    "failedToLoad": "Neizdevās ielādēt",
+    "somethingWentWrong": "Kaut kas nogāja greizi",
     "search": "Meklēt",
     "goBack": "Atpakaļ",
     "showOriginal": "Rādīt oriģinālu",
@@ -6625,6 +6628,10 @@
     "desc": "Gaiša diena vai krēslaini zils vakars džungļos",
     "day": "Diena",
     "evening": "Vakars"
+  },
+  "affiliate": {
+    "loadFailed": "Neizdevās ielādēt filiāļu statistiku",
+    "checkingForUpdates": "Meklē atjauninājumus…"
   },
   "affiliateLanding": {
     "title": "Pielāgo savu uzaicinājuma lapu",
