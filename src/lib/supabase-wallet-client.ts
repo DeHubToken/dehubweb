@@ -7,6 +7,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/integrations/supabase/types';
+import { supabaseRelayFetch } from '@/integrations/supabase/relayFetch';
 
 // Same publishable pair the shared client uses — see the note there on why
 // hardcoding the fallbacks is safe.
@@ -63,7 +64,10 @@ export function withWalletHeader<T extends { setHeader?: (key: string, value: st
 export function walletScopedClient(walletAddress: string) {
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
-    global: { headers: { 'x-wallet-address': walletAddress.toLowerCase() } },
+    global: {
+      headers: { 'x-wallet-address': walletAddress.toLowerCase() },
+      fetch: supabaseRelayFetch,
+    },
   });
 }
 
