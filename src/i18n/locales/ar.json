@@ -65,7 +65,9 @@
     "loadFailed": "تعذر تحميل الموجز. يرجى المحاولة مرة أخرى.",
     "followingEmptyTitle": "لا توجد منشورات بعد",
     "followingEmptyDescription": "تابع بعض المبدعين لترى منشوراتهم هنا!",
-    "seeAll": "عرض الكل"
+    "seeAll": "عرض الكل",
+    "mostViewedThisMonth": "الأكثر مشاهدة هذا الشهر",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "الكل",

@@ -65,7 +65,9 @@
     "loadFailed": "Feedet kunne ikke indlæses. Prøv igen.",
     "followingEmptyTitle": "Ingen opslag endnu",
     "followingEmptyDescription": "Følg nogle skabere for at se deres opslag her!",
-    "seeAll": "Se alle"
+    "seeAll": "Se alle",
+    "mostViewedThisMonth": "Mest sete denne måned",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Alle",

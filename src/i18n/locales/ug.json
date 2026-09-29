@@ -65,7 +65,9 @@
     "loadFailed": "ئۇچۇر ئېقىمىنى يۈكلىگىلى بولمىدى. قايتا سىناڭ.",
     "followingEmptyTitle": "ھازىرچە يوللانما يوق",
     "followingEmptyDescription": "يوللانمىلىرىنى بۇ يەردە كۆرۈش ئۈچۈن بىر قانچە ئىجادكارغا ئەگىشىڭ!",
-    "seeAll": "ھەممىنى كۆرۈش"
+    "seeAll": "ھەممىنى كۆرۈش",
+    "mostViewedThisMonth": "بۇ ئاي ئەڭ كۆپ كۆرۈلگەن",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "ھەممە",

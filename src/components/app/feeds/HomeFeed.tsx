@@ -121,7 +121,7 @@ const LONG_FORM_MIN_SECONDS = 90;
 /** Tiles in the reel. */
 const SCROLL_REEL_SIZE = 10;
 /** The reel filters to long-form client-side, because /api/feed has no
- *  duration parameter. Long-form is roughly a fifth of the most-liked videos,
+ *  duration parameter. Long-form is roughly a fifth of the top videos,
  *  so this is what it takes to fill the reel. */
 const SCROLL_REEL_FETCH_LIMIT = 50;
 const RADIO_INSERT_AFTER = 8;
@@ -836,24 +836,24 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Classics feed no longer needed (trending removed)
   const classicsFeed = { data: undefined } as any;
 
-  // Feed the Scroll carousel the most-liked long-form videos.
-  // It used to be the ten newest videos, which filled it with whatever had just
-  // been posted — mostly seconds-long clips nobody had watched yet, and the
-  // same material the Shorts lane already carries.
+  // Feed the carousel this month's most-viewed long-form videos. All-time
+  // ranking pinned the same old clips on top forever; the newest-first order
+  // before that filled it with seconds-long clips nobody had watched yet.
   // Gated: this is a SECOND /api/feed that used to race the primary feed at boot
   // (LCP audit 7/14), and it's dead weight entirely when shorts are disabled.
   const scrollFeed = useUnifiedFeed({
     limit: SCROLL_REEL_FETCH_LIMIT,
     postType: 'video',
-    sortBy: 'likes',
+    sortBy: 'views',
     sortOrder: 'desc',
+    range: 'month',
     status: 'all',
     enabled: shortsEnabled && railsEnabled,
   });
 
   const scrollPhotosFeed = useUnifiedFeed({
     limit: SCROLL_REEL_SIZE, postType: 'feed-images', search: 'soundtrack',
-    sortBy: 'likes', sortOrder: 'desc', status: 'all', enabled: shortsEnabled && railsEnabled,
+    sortBy: 'views', sortOrder: 'desc', range: 'month', status: 'all', enabled: shortsEnabled && railsEnabled,
   });
 
   // Flip the rails gate once the primary feed's first page settles (data or error).
@@ -878,7 +878,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     const allItems = flattenFeedPages(scrollFeed.data?.pages || []);
     // Exclude PPV content from shorts carousels
     const nonPPV = allItems.filter(item => !item.streamInfo?.isPayPerView);
-    // Long-form first, then the rest, both already in most-liked order. Topping
+    // Long-form first, then the rest, both already in most-viewed order. Topping
     // up rather than truncating keeps the reel ten tiles wide on a thin day
     // instead of leaving a three-tile stub. A post with no videoDuration has
     // not finished transcoding, so it counts as the top-up, not as long-form.
@@ -1400,7 +1400,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         case 'image':
           return <ImageCard key={`image-${item.data.id}`} post={item.data} aboveFold={index < 3} />;
         case 'shorts':
-          return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
+          return <ShortsReel key={`shorts-${index}`} shorts={item.data} title={t('feed.mostViewedThisMonth')} />;
         case 'ad':
           return <SponsoredAdCard key={`ad-${item.data.serveId}`} ad={item.data} />;
         default:
@@ -1670,7 +1670,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           )}
           {shouldSplitForShorts && shorts.length > 0 && (
             <div className={cn('my-3', isCollapsed && 'mt-5')}>
-              <ShortsReel shorts={shorts} />
+              <ShortsReel shorts={shorts} title={t('feed.mostViewedThisMonth')} />
             </div>
           )}
           {segments.map((seg, segIdx) => {
@@ -1690,7 +1690,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 )}
                 {showShortsHere && (
                   <div className={cn('my-3', isCollapsed && 'mt-5')}>
-                    <ShortsReel shorts={shorts} />
+                    <ShortsReel shorts={shorts} title={t('feed.mostViewedThisMonth')} />
                   </div>
                 )}
                 {segIdx < fullWidthInserts.length && fullWidthInserts[segIdx]}
@@ -1739,7 +1739,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
 
       if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
-        addFullWidth(<div key={`shorts-carousel-${index}`}><ShortsReel shorts={shorts} /></div>);
+        addFullWidth(<div key={`shorts-carousel-${index}`}><ShortsReel shorts={shorts} title={t('feed.mostViewedThisMonth')} /></div>);
         shortsInserted = true;
       }
 
@@ -1781,7 +1781,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     });
 
     if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
-      currentCards.push(<div key="shorts-carousel-end"><ShortsReel shorts={shorts} /></div>);
+      currentCards.push(<div key="shorts-carousel-end"><ShortsReel shorts={shorts} title={t('feed.mostViewedThisMonth')} /></div>);
     }
 
     flushCards();

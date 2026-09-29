@@ -65,7 +65,9 @@
     "loadFailed": "بارگیری فید ممکن نشد. لطفاً دوباره تلاش کنید.",
     "followingEmptyTitle": "هنوز پستی وجود ندارد",
     "followingEmptyDescription": "چند سازنده را دنبال کنید تا پست‌هایشان را اینجا ببینید!",
-    "seeAll": "مشاهده همه"
+    "seeAll": "مشاهده همه",
+    "mostViewedThisMonth": "پربازدیدترین‌های این ماه",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "همه",

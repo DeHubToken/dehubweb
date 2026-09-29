@@ -65,7 +65,9 @@
     "loadFailed": "Не ўдалося загрузіць стужку. Паспрабуйце яшчэ раз.",
     "followingEmptyTitle": "Пакуль няма допісаў",
     "followingEmptyDescription": "Падпішыцеся на аўтараў, каб бачыць тут іх допісы!",
-    "seeAll": "Паказаць усе"
+    "seeAll": "Паказаць усе",
+    "mostViewedThisMonth": "Найбольш праглянутыя ў гэтым месяцы",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Усе",

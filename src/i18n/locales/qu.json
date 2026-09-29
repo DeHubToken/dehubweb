@@ -65,7 +65,9 @@
     "loadFailed": "Feed mana cargakuyta atinchu. Ama hina kaspa, huktawan kallpachakuy.",
     "followingEmptyTitle": "Manaraq qillqakuna kanchu",
     "followingEmptyDescription": "Wakin kamaqkunata qatiy, kaypi qillqankuna rikunaykipaq!",
-    "seeAll": "Llapanta qhaway"
+    "seeAll": "Llapanta qhaway",
+    "mostViewedThisMonth": "Kay killapi aswan rikuchisqa",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Llapan",

@@ -65,7 +65,9 @@
     "loadFailed": "සංග්‍රහය පූරණය කළ නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.",
     "followingEmptyTitle": "තවම පළ කිරීම් නැත",
     "followingEmptyDescription": "ඔවුන්ගේ පළ කිරීම් මෙහි දැකීමට නිර්මාණකරුවන් කිහිප දෙනෙකු අනුගමනය කරන්න!",
-    "seeAll": "සියල්ල බලන්න"
+    "seeAll": "සියල්ල බලන්න",
+    "mostViewedThisMonth": "මේ මාසයේ වැඩිපුරම නැරඹූ",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "සියල්ල",

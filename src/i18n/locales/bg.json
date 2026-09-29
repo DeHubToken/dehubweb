@@ -64,7 +64,9 @@
     "loadFailed": "Лентата не можа да се зареди. Моля, опитайте отново.",
     "followingEmptyTitle": "Все още няма публикации",
     "followingEmptyDescription": "Последвайте създатели, за да виждате публикациите им тук!",
-    "seeAll": "Виж всички"
+    "seeAll": "Виж всички",
+    "mostViewedThisMonth": "Най-гледани този месец",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Всички",

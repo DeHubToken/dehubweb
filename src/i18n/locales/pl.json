@@ -65,7 +65,9 @@
     "loadFailed": "Nie udało się załadować kanału. Spróbuj ponownie.",
     "followingEmptyTitle": "Brak postów",
     "followingEmptyDescription": "Obserwuj twórców, aby widzieć tutaj ich posty!",
-    "seeAll": "Zobacz wszystkie"
+    "seeAll": "Zobacz wszystkie",
+    "mostViewedThisMonth": "Najczęściej oglądane w tym miesiącu",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Wszystko",

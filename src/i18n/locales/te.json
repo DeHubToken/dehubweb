@@ -65,7 +65,9 @@
     "loadFailed": "ఫీడ్‌ను లోడ్ చేయడం సాధ్యం కాలేదు. దయచేసి మళ్లీ ప్రయత్నించండి.",
     "followingEmptyTitle": "ఇంకా పోస్ట్‌లు ఏవీ లేవు",
     "followingEmptyDescription": "వారి పోస్ట్‌లను ఇక్కడ చూడటానికి కొంతమంది క్రియేటర్‌లను ఫాలో చేయండి!",
-    "seeAll": "అన్నీ చూడండి"
+    "seeAll": "అన్నీ చూడండి",
+    "mostViewedThisMonth": "ఈ నెల ఎక్కువ చూసినవి",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "అన్నీ",

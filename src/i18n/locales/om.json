@@ -65,7 +65,9 @@
     "loadFailed": "Feed fe'uun hin danda'amne. Maaloo irra deebi'ii yaali.",
     "followingEmptyTitle": "Ammaaf maxxansi hin jiru",
     "followingEmptyDescription": "Maxxansa isaanii asitti arguuf uumtoota muraasa hordofi!",
-    "seeAll": "Hunda ilaali"
+    "seeAll": "Hunda ilaali",
+    "mostViewedThisMonth": "Ji'a kana baay'ee ilaalame",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Hundaa",

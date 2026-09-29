@@ -353,8 +353,6 @@ export interface SearchNFTsParams {
   creator_id?: string;
   postType?: string;
   search?: string;
-  /** Only posts created within this window (server-side). */
-  range?: 'day' | 'week' | 'month' | 'year';
   /** @deprecated Viewer context is now extracted from JWT Bearer token */
   address?: string;
   status?: "minted" | "signed" | "all" | "pending" | "failed";

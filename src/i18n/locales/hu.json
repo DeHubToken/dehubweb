@@ -65,7 +65,9 @@
     "loadFailed": "Nem sikerült betölteni a hírfolyamot. Kérjük, próbáld újra.",
     "followingEmptyTitle": "Még nincsenek bejegyzések",
     "followingEmptyDescription": "Kövess néhány alkotót, hogy itt lásd a bejegyzéseiket!",
-    "seeAll": "Összes megtekintése"
+    "seeAll": "Összes megtekintése",
+    "mostViewedThisMonth": "A hónap legnézettebbjei",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Összes",

@@ -65,7 +65,9 @@
     "loadFailed": "Не вдалося завантажити стрічку. Спробуйте ще раз.",
     "followingEmptyTitle": "Поки немає дописів",
     "followingEmptyDescription": "Підпишіться на авторів, щоб бачити тут їхні дописи!",
-    "seeAll": "Переглянути все"
+    "seeAll": "Переглянути все",
+    "mostViewedThisMonth": "Найпопулярніше цього місяця",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Все",

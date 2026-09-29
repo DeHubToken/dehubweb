@@ -65,7 +65,9 @@
     "loadFailed": "Lentani yuklab boʻlmadi. Iltimos, qayta urinib koʻring.",
     "followingEmptyTitle": "Hozircha postlar yoʻq",
     "followingEmptyDescription": "Ularning postlarini shu yerda koʻrish uchun bir nechta ijodkorni kuzating!",
-    "seeAll": "Hammasini koʻrish"
+    "seeAll": "Hammasini koʻrish",
+    "mostViewedThisMonth": "Bu oy eng koʻp koʻrilgan",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Hammasi",

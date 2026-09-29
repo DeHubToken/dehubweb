@@ -64,7 +64,9 @@
     "loadFailed": "フィードを読み込めませんでした。もう一度お試しください。",
     "followingEmptyTitle": "まだ投稿がありません",
     "followingEmptyDescription": "クリエイターをフォローすると、ここに投稿が表示されます！",
-    "seeAll": "すべて見る"
+    "seeAll": "すべて見る",
+    "mostViewedThisMonth": "今月の最多視聴",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "すべて",

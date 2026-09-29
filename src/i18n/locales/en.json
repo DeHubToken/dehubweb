@@ -65,7 +65,9 @@
     "loadFailed": "Unable to load feed. Please try again.",
     "followingEmptyTitle": "No Posts Yet",
     "followingEmptyDescription": "Follow some creators to see their posts here!",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "mostViewedThisMonth": "Most viewed this month",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "All",

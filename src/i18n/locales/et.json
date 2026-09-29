@@ -65,7 +65,9 @@
     "loadFailed": "Voogu ei õnnestunud laadida. Proovi uuesti.",
     "followingEmptyTitle": "Postitusi veel pole",
     "followingEmptyDescription": "Jälgi mõnda loojat, et nende postitusi siin näha!",
-    "seeAll": "Näita kõiki"
+    "seeAll": "Näita kõiki",
+    "mostViewedThisMonth": "Enim vaadatud sel kuul",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Kõik",

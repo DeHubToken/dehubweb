@@ -65,7 +65,9 @@
     "loadFailed": "ماقدرناش نحمّلو الموجز. عاود جرّب.",
     "followingEmptyTitle": "ماكاين حتى منشور دابا",
     "followingEmptyDescription": "تابع شي مبدعين باش تشوف المنشورات ديالهم هنا!",
-    "seeAll": "شوف كلشي"
+    "seeAll": "شوف كلشي",
+    "mostViewedThisMonth": "الأكثر مشاهدة هاد الشهر",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "كلشي",

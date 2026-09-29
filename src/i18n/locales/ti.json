@@ -65,7 +65,9 @@
     "loadFailed": "ፊድ ክጽዓን ኣይከኣለን። በጃኻ እንደገና ፈትን።",
     "followingEmptyTitle": "ክሳብ ሕጂ ልጥፋት የለዉን",
     "followingEmptyDescription": "ልጥፋቶም ኣብዚ ንምርኣይ ገለ ፈጠርቲ ተኸተል!",
-    "seeAll": "ኩሉ ርአ"
+    "seeAll": "ኩሉ ርአ",
+    "mostViewedThisMonth": "ኣብዚ ወርሒ ብዙሕ ዝተራእየ",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "ኩሉ",

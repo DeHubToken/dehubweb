@@ -65,7 +65,9 @@
     "loadFailed": "Nepavyko įkelti srauto. Bandykite dar kartą.",
     "followingEmptyTitle": "Įrašų dar nėra",
     "followingEmptyDescription": "Sek kelis kūrėjus, kad čia matytum jų įrašus!",
-    "seeAll": "Žiūrėti viską"
+    "seeAll": "Žiūrėti viską",
+    "mostViewedThisMonth": "Daugiausiai peržiūrėta šį mėnesį",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Visi",

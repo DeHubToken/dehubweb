@@ -65,7 +65,9 @@
     "loadFailed": "Tsy afaka nampiditra ny feed. Andramo indray azafady.",
     "followingEmptyTitle": "Mbola tsy misy lahatsoratra",
     "followingEmptyDescription": "Araho ireo mpamorona sasany mba hahitanao ny lahatsorany eto!",
-    "seeAll": "Jereo daholo"
+    "seeAll": "Jereo daholo",
+    "mostViewedThisMonth": "Nahitana indrindra tamin'ity volana ity",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Rehetra",

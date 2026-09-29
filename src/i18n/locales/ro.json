@@ -65,7 +65,9 @@
     "loadFailed": "Fluxul nu a putut fi încărcat. Încearcă din nou.",
     "followingEmptyTitle": "Încă nu există postări",
     "followingEmptyDescription": "Urmărește câțiva creatori ca să le vezi postările aici!",
-    "seeAll": "Vezi tot"
+    "seeAll": "Vezi tot",
+    "mostViewedThisMonth": "Cele mai vizionate luna aceasta",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "All",

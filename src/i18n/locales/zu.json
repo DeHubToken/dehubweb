@@ -65,7 +65,9 @@
     "loadFailed": "Ayikwazanga ukulayisha i-feed. Sicela uzame futhi.",
     "followingEmptyTitle": "Awekho okuthunyelwe okwamanje",
     "followingEmptyDescription": "Landela abadali abathile ukuze ubone okuthunyelwe kwabo lapha!",
-    "seeAll": "Buka konke"
+    "seeAll": "Buka konke",
+    "mostViewedThisMonth": "Okubukwe kakhulu kule nyanga",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Konke",

@@ -65,7 +65,9 @@
     "loadFailed": "Neizdevās ielādēt plūsmu. Lūdzu, mēģini vēlreiz.",
     "followingEmptyTitle": "Vēl nav ierakstu",
     "followingEmptyDescription": "Seko dažiem autoriem, lai šeit redzētu viņu ierakstus!",
-    "seeAll": "Skatīt visu"
+    "seeAll": "Skatīt visu",
+    "mostViewedThisMonth": "Visvairāk skatītie šomēnes",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Visi",

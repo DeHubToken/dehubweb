@@ -65,7 +65,9 @@
     "loadFailed": "ບໍ່ສາມາດໂຫຼດຟີດໄດ້. ກະລຸນາລອງໃໝ່.",
     "followingEmptyTitle": "ຍັງບໍ່ມີໂພສ",
     "followingEmptyDescription": "ຕິດຕາມຜູ້ສ້າງບາງຄົນເພື່ອເບິ່ງໂພສຂອງເຂົາເຈົ້າຢູ່ນີ້!",
-    "seeAll": "ເບິ່ງທັງໝົດ"
+    "seeAll": "ເບິ່ງທັງໝົດ",
+    "mostViewedThisMonth": "ເບິ່ງຫຼາຍສຸດເດືອນນີ້",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "ທັງໝົດ",

@@ -65,7 +65,9 @@
     "loadFailed": "Syötteen lataaminen epäonnistui. Yritä uudelleen.",
     "followingEmptyTitle": "Ei vielä julkaisuja",
     "followingEmptyDescription": "Seuraa joitakin sisällöntuottajia nähdäksesi heidän julkaisunsa täällä!",
-    "seeAll": "Näytä kaikki"
+    "seeAll": "Näytä kaikki",
+    "mostViewedThisMonth": "Katsotuimmat tässä kuussa",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Kaikki",

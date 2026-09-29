@@ -65,7 +65,9 @@
     "loadFailed": "Akış yüklenemedi. Lütfen tekrar deneyin.",
     "followingEmptyTitle": "Henüz Gönderi Yok",
     "followingEmptyDescription": "Gönderilerini burada görmek için birkaç içerik üreticisini takip et!",
-    "seeAll": "Tümünü gör"
+    "seeAll": "Tümünü gör",
+    "mostViewedThisMonth": "Bu ay en çok izlenen",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Tümü",

@@ -65,7 +65,9 @@
     "loadFailed": "Tidak dapat memuatkan suapan. Sila cuba lagi.",
     "followingEmptyTitle": "Belum Ada Hantaran",
     "followingEmptyDescription": "Ikuti beberapa pencipta untuk melihat hantaran mereka di sini!",
-    "seeAll": "Lihat semua"
+    "seeAll": "Lihat semua",
+    "mostViewedThisMonth": "Paling banyak ditonton bulan ini",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "All",

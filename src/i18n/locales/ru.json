@@ -65,7 +65,9 @@
     "loadFailed": "Не удалось загрузить ленту. Попробуйте ещё раз.",
     "followingEmptyTitle": "Пока нет публикаций",
     "followingEmptyDescription": "Подпишитесь на авторов, чтобы видеть здесь их публикации!",
-    "seeAll": "Смотреть все"
+    "seeAll": "Смотреть все",
+    "mostViewedThisMonth": "Самое просматриваемое в этом месяце",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Всё",

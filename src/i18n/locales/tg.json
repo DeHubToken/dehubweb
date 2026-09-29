@@ -65,7 +65,9 @@
     "loadFailed": "Лента бор нашуд. Лутфан бори дигар кӯшиш кунед.",
     "followingEmptyTitle": "Ҳоло нашрияҳо нестанд",
     "followingEmptyDescription": "Барои дидани нашрияҳояшон дар ин ҷо чанд эҷодкорро пайгирӣ кунед!",
-    "seeAll": "Ҳамаро дидан"
+    "seeAll": "Ҳамаро дидан",
+    "mostViewedThisMonth": "Бештар дидашуда дар ин моҳ",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Ҳама",

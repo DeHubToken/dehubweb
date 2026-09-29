@@ -65,7 +65,9 @@
     "loadFailed": "Тасманы жүктөө мүмкүн болбоду. Кайра аракет кылыңыз.",
     "followingEmptyTitle": "Азырынча жазуулар жок",
     "followingEmptyDescription": "Алардын жазууларын бул жерден көрүү үчүн бир нече авторго жазылыңыз!",
-    "seeAll": "Баарын көрүү"
+    "seeAll": "Баарын көрүү",
+    "mostViewedThisMonth": "Бул айда эң көп көрүлгөн",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Баары",

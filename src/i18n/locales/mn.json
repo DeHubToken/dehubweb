@@ -65,7 +65,9 @@
     "loadFailed": "Мэдээллийн урсгалыг ачаалж чадсангүй. Дахин оролдоно уу.",
     "followingEmptyTitle": "Одоогоор нийтлэл алга",
     "followingEmptyDescription": "Нийтлэлүүдийг нь энд харахын тулд хэдэн бүтээгчийг дагаарай!",
-    "seeAll": "Бүгдийг харах"
+    "seeAll": "Бүгдийг харах",
+    "mostViewedThisMonth": "Энэ сард хамгийн их үзсэн",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Бүгд",

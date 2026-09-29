@@ -65,7 +65,9 @@
     "loadFailed": "Kan de feed niet laden. Probeer het opnieuw.",
     "followingEmptyTitle": "Nog geen berichten",
     "followingEmptyDescription": "Volg een paar makers om hun berichten hier te zien!",
-    "seeAll": "Alles bekijken"
+    "seeAll": "Alles bekijken",
+    "mostViewedThisMonth": "Meest bekeken deze maand",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Alles",

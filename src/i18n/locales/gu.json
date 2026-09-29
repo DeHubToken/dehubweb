@@ -65,7 +65,9 @@
     "loadFailed": "ફીડ લોડ થઈ શક્યું નહીં. કૃપા કરીને ફરી પ્રયાસ કરો.",
     "followingEmptyTitle": "હજી કોઈ પોસ્ટ નથી",
     "followingEmptyDescription": "અહીં તેમની પોસ્ટ જોવા માટે કેટલાક ક્રિએટર્સને ફોલો કરો!",
-    "seeAll": "બધું જુઓ"
+    "seeAll": "બધું જુઓ",
+    "mostViewedThisMonth": "આ મહિને સૌથી વધુ જોવાયેલ",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "બધું",
