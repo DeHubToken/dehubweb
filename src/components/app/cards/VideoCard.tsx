@@ -155,9 +155,11 @@ const MAX_MEDIA_HEIGHT = 600;
 
 /**
  * Tallest the media may get on the post page. The clip is the page there, so
- * it grows to most of the screen instead of stopping at the feed's 600px.
+ * it grows to most of the screen instead of stopping at the feed's 600px. On
+ * phones it may also grow as tall as a full-width 9:16 clip, so a vertical
+ * video spans the screen edge to edge (index.css, --post-media-max-h).
  */
-const IMMERSIVE_MAX_MEDIA_HEIGHT = '80dvh';
+const IMMERSIVE_MAX_MEDIA_HEIGHT = 'var(--post-media-max-h, 80dvh)';
 
 /**
  * How long the player's controls stay up after the interaction that revealed

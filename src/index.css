@@ -5065,3 +5065,15 @@ html[data-theme="light"] .art-rim {
             drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
   }
 }
+
+/* Post page video height cap (VideoCard, immersive). Most of the screen on
+   desktop; on phones at least a full-width 9:16 clip, so vertical videos span
+   the screen edge to edge instead of stopping a few pixels short. */
+:root {
+  --post-media-max-h: 80dvh;
+}
+@media (max-width: 639px) {
+  :root {
+    --post-media-max-h: max(80dvh, calc(100vw * 16 / 9));
+  }
+}
