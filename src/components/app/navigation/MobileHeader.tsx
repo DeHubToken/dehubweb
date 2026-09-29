@@ -210,7 +210,10 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
                 pushed the top of the menu — the search field — off the top of
                 the screen, with no way to scroll it back into view. */}
             <DrawerContent glass className="max-h-[85dvh]">
-              <div className="p-4 pb-8 overflow-y-auto">
+              {/* Column, not a scroller: the menu pins its profile + search to
+                  the top and its account actions to the bottom, and scrolls
+                  only the tiles between them — same as the app. */}
+              <div className="flex min-h-0 flex-1 flex-col p-4 pb-[max(2rem,env(safe-area-inset-bottom))]">
                 {children}
               </div>
             </DrawerContent>

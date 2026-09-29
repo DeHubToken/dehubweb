@@ -92,6 +92,8 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
 
   const mobileNavContent = (
     <>
+      {/* Pinned top: identity + menu search */}
+      <div className="shrink-0">
       {/* Log in Button - shown at top when not authenticated */}
       {!isAuthenticated && (
         <div className="mb-4 pb-4 px-1">
@@ -163,6 +165,10 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
         )}
       </div>
 
+      </div>
+
+      {/* Only the tiles scroll */}
+      <div className="-mx-1 min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 [touch-action:pan-y]">
       {/* Navigation tiles */}
       <MobileMenuGrid
         items={visibleNavItems}
@@ -189,9 +195,11 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
         </>
       )}
 
-      {/* Account actions - only shown when authenticated */}
+      </div>
+
+      {/* Pinned bottom: account actions - only shown when authenticated */}
       {isAuthenticated && (
-        <div className="mt-4 pt-4 space-y-3 px-1">
+        <div className="shrink-0 mt-2 pt-3 space-y-3 px-1 border-t border-white/10">
           {/* Every other account saved on this device, one tap away. Settings
               → Profile used to be the only surface for this, which made
               multi-account invisible unless you already knew it existed. */}
