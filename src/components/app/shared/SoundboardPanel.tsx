@@ -20,6 +20,7 @@ import { AppState } from '@/components/app/AppState';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { synthBuiltInToWavBlob } from '@/lib/stage-built-in-synth';
@@ -177,7 +178,10 @@ export function SoundboardPanel({
   };
 
   const handleDelete = async (sound: CustomSound) => {
-    const { error } = await supabase.storage
+    if (!walletAddress) return;
+    // Storage has no per-call header, so the delete goes through a client
+    // pinned to this wallet for the bucket's delete policy to check.
+    const { error } = await walletScopedClient(walletAddress).storage
       .from('soundboard-sounds')
       .remove([sound.path]);
 

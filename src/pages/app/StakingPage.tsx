@@ -544,13 +544,16 @@ export default function StakingPage() {
       // use-staking-data: the on-chain position has already dropped, so
       // counting this row again would subtract the same DHB twice.
       try {
-        await supabase.from('staking_records').insert({
-          wallet_address: walletAddress.toLowerCase(),
-          amount,
-          chain: 'BNB',
-          action: 'unstake',
-          tx_hash: receipt.hash,
-        });
+        await withWalletHeader(
+          supabase.from('staking_records').insert({
+            wallet_address: walletAddress.toLowerCase(),
+            amount,
+            chain: 'BNB',
+            action: 'unstake',
+            tx_hash: receipt.hash,
+          }),
+          walletAddress,
+        );
       } catch (dbErr) {
         console.error('[Staking] Failed to record withdrawal in DB:', dbErr);
       }

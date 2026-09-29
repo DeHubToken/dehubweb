@@ -5,11 +5,12 @@ export const simpleCallCheck = async (userAddress: string) => {
   console.log('🔍 Simple call check for user:', userAddress);
   
   try {
-    // Check for any ringing calls for this user (case-insensitive)
+    // Check for any ringing calls for this user. Stored addresses are
+    // lower-case and the wallet can arrive checksummed, so lower it here.
     const { data: calls, error } = await supabase
       .from('call_sessions')
       .select('*')
-      .ilike('recipient_address', userAddress) // Use ilike for case-insensitive matching
+      .eq('recipient_address', userAddress.toLowerCase())
       .eq('status', 'ringing')
       .order('created_at', { ascending: false })
       .limit(1);

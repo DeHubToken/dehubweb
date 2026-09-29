@@ -34,6 +34,7 @@ import { Slider } from '@/components/ui/slider';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useStage } from '@/contexts/StageContext';
 import { useRadioPlayer } from '@/hooks/use-radio-player';
@@ -297,10 +298,12 @@ export function StageRadioPanel() {
   };
 
   const handleDelete = async (clip: MusicClip) => {
+    if (!walletAddress) return;
     // Deleting what is currently playing would leave the room on a URL that has
     // stopped existing, so take it off air first.
     if (radioStation?.id === clip.id) await stopRadio();
-    const { error } = await supabase.storage.from(MUSIC_BUCKET).remove([clip.path]);
+    // Wallet-scoped so the bucket's delete policy can see whose clip this is.
+    const { error } = await walletScopedClient(walletAddress).storage.from(MUSIC_BUCKET).remove([clip.path]);
     if (error) {
       toast.error(t('stages.couldNotDeleteClip'));
       return;
