@@ -23,8 +23,9 @@
  *      block, so a malformed response can never restructure the module.
  *
  * A translation carrying a quote, a newline or a backslash is escaped on the
- * way in; one that comes back empty or unchanged from the English is dropped,
- * because a missing key already falls back to English and does it cleanly.
+ * way in; one that comes back empty, unchanged from the English or looping is
+ * dropped, because a missing key already falls back to English and does it
+ * cleanly.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -68,13 +69,66 @@ function lineFor(key, source) {
   return m && { line: m[0], indent: m[1], quote: m[2], value: m[3] };
 }
 
+/**
+ * The free model tiers sometimes lose their place in a smaller locale and
+ * repeat one phrase until they run out of tokens — jv.ts's dapp intro shipped
+ * as "ngagumi aja" twenty-odd times over. Judged against the English, never
+ * alone: a source that repeats on purpose is allowed a translation that
+ * repeats with it. A line is dropped when a word of 4+ letters appears 4+
+ * times in 8 tokens and the English has nothing like it, or when it runs to
+ * more than three times the English's length.
+ *
+ * The same rule as looksLikeLoop in scripts/i18n-fanout.mjs and
+ * supabase/functions/translate-text; keep the three in step.
+ */
+const REPEAT_WINDOW = 8;
+const REPEAT_MIN_LETTERS = 4;
+/** Scripts with no spaces between words, where a token count says nothing about length. */
+const UNSPACED_SCRIPT =
+  /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}\p{Script=Tibetan}]/u;
+const repetitionTokens = (text) => text.toLowerCase().match(/[\p{L}\p{M}\p{N}]+/gu) ?? [];
+const letterCount = (token) => (token.match(/\p{L}/gu) ?? []).length;
+
+/** Most times one token of at least `minLetters` letters appears in any 8-token window. */
+function maxRepeat(tokens, minLetters) {
+  const counts = new Map();
+  let max = 0;
+  for (let i = 0; i < tokens.length; i++) {
+    if (i >= REPEAT_WINDOW) {
+      const leaving = tokens[i - REPEAT_WINDOW];
+      if (letterCount(leaving) >= minLetters) counts.set(leaving, (counts.get(leaving) ?? 1) - 1);
+    }
+    const token = tokens[i];
+    if (letterCount(token) < minLetters) continue;
+    const n = (counts.get(token) ?? 0) + 1;
+    counts.set(token, n);
+    if (n > max) max = n;
+  }
+  return max;
+}
+
+function looksLikeLoop(source, candidate) {
+  const src = repetitionTokens(source);
+  const out = repetitionTokens(candidate);
+  // The English side counts words of any length: "our" repeated can come back
+  // as "kita" repeated. The length rule needs characters to triple as well as
+  // words, so a target that spaces every syllable is not mistaken for a loop.
+  if (maxRepeat(out, REPEAT_MIN_LETTERS) >= 4 && maxRepeat(src, 0) < 3) return true;
+  if (UNSPACED_SCRIPT.test(source) || UNSPACED_SCRIPT.test(candidate)) return false;
+  return src.length >= 5
+    && out.length > src.length * 3
+    && out.join('').length > src.join('').length * 3
+    && maxRepeat(out, REPEAT_MIN_LETTERS) >= 3;
+}
+
 const unescape = (v) => v.replace(/\\(['"\\])/g, '$1').replace(/\\n/g, '\n');
 const escape = (v, q) =>
   v.replace(/\\/g, '\\\\').split(q).join('\\' + q).replace(/\n/g, '\\n');
 
 async function translateBatch(lines, targetLang, key) {
   // The app's own copy is public, so free tiers that train on input may take it.
-  const body = JSON.stringify({ text: lines.join('\n'), targetLang, sourceLang: 'en', public: true });
+  // purpose keeps this traffic out of the translation cache's read counters.
+  const body = JSON.stringify({ text: lines.join('\n'), targetLang, sourceLang: 'en', public: true, purpose: 'i18n' });
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
       const res = await fetch(FN_URL, {
@@ -156,7 +210,7 @@ for (const locale of locales) {
     if (got) {
       slice.forEach((k, n) => {
         const v = got[n]?.trim();
-        if (v && v !== english.get(k)) out.set(k, v);
+        if (v && v !== english.get(k) && !looksLikeLoop(english.get(k), v)) out.set(k, v);
       });
     }
     await sleep(PAUSE_MS);

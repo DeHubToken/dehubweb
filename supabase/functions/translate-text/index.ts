@@ -3,14 +3,20 @@
  * ============================
  * Uses free translation APIs (MyMemory) for translations with AI fallback.
  *
- * Two caches then four providers, cheapest first. Every provider returns null
+ * Two caches then five providers, cheapest first. Every provider returns null
  * rather than throwing, so a dead tier falls through to the next:
  *   L1  in-isolate Map      — free, but dies with the isolate and is not shared
  *   L2  post_translations   — one round trip, shared by every isolate, permanent
  *   P1  MyMemory            — free, capped, skipped above 500 chars
- *   P2  Gemini direct       — GEMINI_API_KEY
- *   P3  fal / OpenRouter    — FAL_KEY, routed to a non-Google model on purpose
- *   P4  Lovable gateway     — legacy route, currently 402 out of credits
+ *   P2  free model tiers    — Groq / Mistral / Cloudflare, see _shared/free-models.ts
+ *   P3  Gemini direct       — GEMINI_API_KEY, parked on 402/429
+ *   P4  fal / OpenRouter    — FAL_KEY, routed to a non-Google model on purpose,
+ *                             parked on 401/402/403/429
+ *   P5  AI gateway          — metered reseller, last resort
+ *
+ * Which paid account is out of credit changes from week to week, so it is not
+ * written down here: the breakers skip a dead tier on their own, and the
+ * provider column of post_translations shows which tier is actually answering.
  *
  * L2 is what makes translating a whole feed affordable: without it the bill
  * scales with viewers rather than with distinct (text, language) pairs.
@@ -74,18 +80,33 @@ const db = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
 );
 
+// A cached row is touched on its first hit and then at most once a day.
+//
+// Every touch rewrites the row and both of its indexes — last_used_at is
+// indexed, so none of them can be an in-place update — and it used to fire on
+// every hit of the busiest table in the database. The only readers of these
+// counters are the 30-day eviction and cost reporting, and neither needs more
+// than day precision. The first hit is always recorded, so a row read back on
+// the day it was written still stops reading as never used.
+const TOUCH_INTERVAL_MS = 24 * 60 * 60 * 1000;
+
 /**
  * L2 read. Never throws — a cache that is down should cost money, not requests,
  * so every failure here falls through to the providers.
+ *
+ * `countHit` is false for the locale fill scripts: their re-runs read the cache
+ * like anyone else, but a script re-asking for its own rows is not a reader and
+ * must not keep those rows alive past the eviction window.
  */
 async function readCachedTranslation(
   textHash: string,
-  targetLang: string
+  targetLang: string,
+  countHit: boolean,
 ): Promise<TranslateResponse | null> {
   try {
     const { data, error } = await db
       .from('post_translations')
-      .select('translated_text, source_lang')
+      .select('translated_text, source_lang, hit_count, last_used_at')
       .eq('text_hash', textHash)
       .eq('target_lang', targetLang)
       .maybeSingle();
@@ -94,9 +115,16 @@ async function readCachedTranslation(
 
     // Read counters are advisory (they drive eviction and cost reporting), so
     // they are not awaited — blocking a cache hit on a write would give away
-    // most of what the cache is for.
-    db.rpc('touch_post_translation', { p_text_hash: textHash, p_target_lang: targetLang })
-      .then(() => {}, () => {});
+    // most of what the cache is for. An unreadable timestamp counts as due, which
+    // is what every hit did before.
+    const lastUsedMs = Date.parse(String(data.last_used_at ?? ''));
+    const touchDue = data.hit_count === 0
+      || Number.isNaN(lastUsedMs)
+      || Date.now() - lastUsedMs >= TOUCH_INTERVAL_MS;
+    if (countHit && touchDue) {
+      db.rpc('touch_post_translation', { p_text_hash: textHash, p_target_lang: targetLang })
+        .then(() => {}, () => {});
+    }
 
     return {
       translatedText: data.translated_text,
@@ -182,6 +210,12 @@ interface TranslateRequest {
   sourceLang?: string;
   /** Sent by call sites whose text anyone can read. Absent means private. */
   public?: boolean;
+  /**
+   * 'i18n' from the locale fill scripts (scripts/i18n-fanout.mjs and
+   * scripts/docs-i18n-fanout.mjs). Answers are identical; only the cache's read
+   * counters leave that traffic out.
+   */
+  purpose?: string;
 }
 
 interface TranslateResponse {
@@ -248,6 +282,84 @@ function isSameLanguageRefusal(data: {
   return haystack.toUpperCase().includes('TWO DISTINCT LANGUAGES');
 }
 
+// Output that loops. The free model tiers sometimes lose their place in a
+// low-resource language and repeat one phrase until they run out of tokens —
+// a two-sentence Javanese intro came back as "ngagumi aja" twenty-odd times.
+// Fluent and confident, so every other guard here let it through, and it was
+// cached and shipped into the locale files.
+//
+// Judged against the source, never on the output alone. Posts repeat on
+// purpose — "LFG LFG LFG LFG", "really, really, really, really smart", "every
+// member, every message, every event and every invite" — and a faithful
+// translation repeats with them. An output-only rule fails every tier for those
+// posts: the reader gets a 503 and each attempt spends a paid slot. So output
+// is rejected only when it repeats a word while the source repeats none, or has
+// ballooned far past the source's length.
+//
+// scripts/i18n-fanout.mjs and scripts/docs-i18n-fanout.mjs apply the same rule
+// to each line they write; keep the three in step.
+const REPEAT_WINDOW = 8;
+const REPEAT_MIN_LETTERS = 4;
+
+// Scripts written without spaces between words. A whole clause is one token
+// there, so token counts say nothing about length and the ratio rule is skipped
+// whenever either side uses one of them.
+const UNSPACED_SCRIPT =
+  /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}\p{Script=Tibetan}]/u;
+
+function repetitionTokens(text: string): string[] {
+  return text.toLowerCase().match(/[\p{L}\p{M}\p{N}]+/gu) ?? [];
+}
+
+function letterCount(token: string): number {
+  return (token.match(/\p{L}/gu) ?? []).length;
+}
+
+/**
+ * The most times one token appears inside any 8-token window, counting only
+ * tokens of at least `minLetters` letters.
+ */
+function maxRepeat(tokens: string[], minLetters: number): number {
+  const counts = new Map<string, number>();
+  let max = 0;
+  for (let i = 0; i < tokens.length; i++) {
+    if (i >= REPEAT_WINDOW) {
+      const leaving = tokens[i - REPEAT_WINDOW];
+      if (letterCount(leaving) >= minLetters) {
+        counts.set(leaving, (counts.get(leaving) ?? 1) - 1);
+      }
+    }
+    const token = tokens[i];
+    if (letterCount(token) < minLetters) continue;
+    const n = (counts.get(token) ?? 0) + 1;
+    counts.set(token, n);
+    if (n > max) max = n;
+  }
+  return max;
+}
+
+function looksLikeLoop(input: string, output: string): boolean {
+  const source = repetitionTokens(input);
+  const translated = repetitionTokens(output);
+
+  // The source side counts words of any length. A short word the source
+  // repeats on purpose often comes out as a longer one: "no no no no" is
+  // "nein nein nein nein", and "our community, our rules, our future, our
+  // DeHub" is "komunitas kita, aturan kita, masa depan kita, DeHub kita".
+  if (maxRepeat(translated, REPEAT_MIN_LETTERS) >= 4 && maxRepeat(source, 0) < 3) return true;
+
+  // Word counts also mislead when a target that spaces every syllable
+  // (Vietnamese) renders a language that packs a phrase into one word
+  // (Turkish, Korean). A loop balloons the characters as well as the words,
+  // so both have to have tripled. It also repeats itself: a slang post a model
+  // spells out ("gm gn wagmi ngmi lfg") grows just as much but does not.
+  if (UNSPACED_SCRIPT.test(input) || UNSPACED_SCRIPT.test(output)) return false;
+  return source.length >= 5
+    && translated.length > source.length * 3
+    && translated.join('').length > source.join('').length * 3
+    && maxRepeat(translated, REPEAT_MIN_LETTERS) >= 3;
+}
+
 // Provider junk that arrives dressed as a successful translation.
 //
 // MyMemory's free tier answers some queries — short ones above all — out of its
@@ -258,12 +370,14 @@ function isSameLanguageRefusal(data: {
 // settled answer: permanent in the shared table, and re-persisted by every
 // client that saw it. Matched against provider output AND cache reads, so rows
 // poisoned before this guard existed are discarded on sight and overwritten by
-// the next honest generation instead of being served forever.
+// the next honest generation instead of being served forever. A looping row is
+// junk too, and regenerates the same way.
 const TRANSLATION_JUNK_PATTERN =
   /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID LANGUAGE PAIR|UNSUPPORTED LANGUAGE|API KEY|PLEASE CONTACT|INTERNAL SERVER|SERVICE UNAVAILABLE/i;
 
 function looksLikeTranslationJunk(input: string, output: string): boolean {
   if (TRANSLATION_JUNK_PATTERN.test(output)) return true;
+  if (looksLikeLoop(input, output)) return true;
 
   // The junk has more shapes than any list. A reply to a word or two that is
   // several times longer than its question and shouted in caps is an API
@@ -388,7 +502,7 @@ async function translateWithMyMemory(
     // memory answers short queries. Refuse it here and it can never reach
     // either cache.
     if (looksLikeTranslationJunk(text, translatedText)) {
-      console.log('MyMemory returned API boilerplate as the translation, falling back');
+      console.log('MyMemory returned API boilerplate or a loop as the translation, falling back');
       return null;
     }
     
@@ -458,6 +572,10 @@ async function translateWithFreeModels(
     const data = await res.json();
     const translatedText = data.choices?.[0]?.message?.content?.trim();
     if (!translatedText || looksLikeRefusal(translatedText)) return null;
+    if (looksLikeLoop(text, translatedText)) {
+      console.log('Free tier looped instead of translating, falling back');
+      return null;
+    }
     return {
       result: { translatedText, detectedLanguage: { language: 'auto', confidence: 0.9 } },
       provider: res.headers.get('x-free-provider') ?? 'unknown',
@@ -678,6 +796,11 @@ async function translateWithGemini(
         return null;
       }
 
+      if (looksLikeLoop(text, translatedText)) {
+        console.log(`Gemini looped instead of translating (model ${model})`);
+        return null;
+      }
+
       // Skip the dead ids on subsequent calls in this isolate.
       geminiModelIndex = i;
       console.log(`Translation successful from Gemini (direct), model ${model}`);
@@ -699,12 +822,21 @@ async function translateWithGemini(
   return null;
 }
 
+// Same idea as geminiQuotaUntil. fal reports an empty balance as 403, and
+// without a breaker every paid translation waited on that refusal before
+// reaching the gateway. An account problem (401/402/403) parks it for an hour;
+// a 429 is usually momentary, so it parks for five minutes and the cheaper tier
+// comes back by itself.
+let falParkedUntil = 0;
+
 /**
  * fal, via its OpenRouter router endpoint.
  *
- * Sits between Gemini and the Lovable gateway because FAL_KEY is already
- * provisioned for this project (generate-image, generate-video and generate-3d
- * all use it) and the gateway is currently returning 402.
+ * Sits between Gemini and the gateway because FAL_KEY is already provisioned
+ * for this project (generate-image, generate-video and generate-3d all use it).
+ * It was put here while the gateway was out of credit; from mid-September 2026
+ * it was the other way round — fal answering 403 with its balance gone and the
+ * gateway answering — which is why this tier now has a breaker of its own.
  *
  * Deliberately routed to a non-Google model. This tier only runs when the Gemini
  * call has already failed, and a fallback that asks a different vendor for the
@@ -721,6 +853,7 @@ async function translateWithFal(
 ): Promise<TranslateResponse | null> {
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) return null;
+  if (Date.now() < falParkedUntil) return null;
 
   try {
     console.log('Attempting translation with fal (openrouter/router)');
@@ -743,6 +876,8 @@ async function translateWithFal(
     });
 
     if (!response.ok) {
+      if ([401, 402, 403].includes(response.status)) falParkedUntil = Date.now() + 60 * 60 * 1000;
+      if (response.status === 429) falParkedUntil = Date.now() + 5 * 60 * 1000;
       const errorText = await response.text();
       console.log(`fal returned status: ${response.status}, error: ${errorText}`);
       return null;
@@ -758,6 +893,11 @@ async function translateWithFal(
 
     if (looksLikeRefusal(translatedText)) {
       console.log('fal answered with a refusal, not a translation');
+      return null;
+    }
+
+    if (looksLikeLoop(text, translatedText)) {
+      console.log('fal looped instead of translating');
       return null;
     }
 
@@ -828,6 +968,11 @@ async function translateWithAI(
       return null;
     }
 
+    if (looksLikeLoop(text, translatedText)) {
+      console.log('Gateway looped instead of translating');
+      return null;
+    }
+
     console.log('Translation successful from Lovable AI');
     
     return {
@@ -849,20 +994,10 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // 300/hour was sized for a button somebody pressed on one post at a time. The
-  // feed now asks for every post it renders, so a normal scrolling session is
-  // hundreds of requests — nearly all of them cache hits that cost nothing but
-  // still count here. At the old limit ordinary reading tripped the limiter and
-  // translation just stopped working part-way down the page.
-  //
-  // Raising this does not raise the spend: what costs money is a cache miss
-  // reaching a paid tier, and that is bounded separately by the daily cap.
-  const limited = await rateLimitByIp(req, 'translate-text', { limit: 3000, windowMs: 60 * 60 * 1000 });
-  if (limited) return limited;
-
   try {
-    const { text, targetLang, sourceLang: suppliedSource, public: isPublicRequest }: TranslateRequest = await req.json();
+    const { text, targetLang, sourceLang: suppliedSource, public: isPublicRequest, purpose }: TranslateRequest = await req.json();
     const isPublicText = isPublicRequest === true;
+    const isLocaleFill = purpose === 'i18n';
     // Legacy clients send the old short-caption guesses as authoritative.
     const sourceLang = typeof text === 'string' && text.replace(/[^\p{L}]/gu, '').length >= 60
       && suppliedSource && !['und', 'unknown'].includes(suppliedSource)
@@ -931,7 +1066,7 @@ serve(async (req) => {
     // error prose; serving it would re-poison every client cache on each hit.
     // Discard and fall through — the provider result upserts over the bad row.
     const textHash = await getTextHash(text);
-    const persisted = await readCachedTranslation(textHash, targetLang);
+    const persisted = await readCachedTranslation(textHash, targetLang, !isLocaleFill);
     if (persisted) {
       // A row written before the rewrite guard existed can hold a quiet edit of
       // the author's own words. Healing it on read is what retires that backlog
@@ -954,6 +1089,16 @@ serve(async (req) => {
         );
       }
     }
+
+    // Only a request about to reach a provider is counted. The limiter costs two
+    // DB round trips, and it used to run before everything above, so every
+    // cache hit paid for it and counted against the caller. The feed asks for
+    // every post it renders, which made a long scroll of answers that cost
+    // nothing enough to trip the limit and stop translation part-way down the
+    // page. What costs money is a miss reaching a paid tier, and that is
+    // bounded separately by the daily cap.
+    const limited = await rateLimitByIp(req, 'translate-text', { limit: 3000, windowMs: 60 * 60 * 1000 });
+    if (limited) return limited;
 
     // Try MyMemory first (most reliable free option)
     let result = await translateWithMyMemory(text, targetLang, sourceLang);
