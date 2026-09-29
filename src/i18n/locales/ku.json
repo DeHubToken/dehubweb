@@ -74,7 +74,19 @@
     "images": "Wêne",
     "videos": "Vîdyo",
     "music": "Muzîk",
-    "live": "Zindî"
+    "live": "Zindî",
+    "seoTitle": "DeHub Keşf Bike — Afirîner, Vîdyo û Civakên Populer",
+    "seoDescription": "Keşf bike ka çi li DeHub populer e: afirînerên herî baş, vîdyo, muzîk, weşanên zindî û civak li ser platforma civakî ya çavkaniya vekirî ya xwedîyê bikarhêneran."
+  },
+  "videos": {
+    "seoTitle": "Herika Vîdyoyan — Li DeHub Vîdyoyên On-Chain Temaşe Bike",
+    "seoDescription": "Li vîdyoyên on-chain ên herî nû yên afirînerên DeHub temaşe bike: barkirinên dirêj bi dayîna li ser her temaşekirinê, naveroka bi tokenê sînordar û parvekirina dahata reklaman li ser platforma vîdyoyê ya xwedîyê bikarhêneran.",
+    "heading": "Herika Vîdyoyan a DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Kurt — Vîdyoyên Kurt li DeHub",
+    "seoDescription": "Vîdyoyên kurt ên herî nû li DeHub bigerîne: herikeke vîdyoyên kurt a vertîkal û kaşbar li ser platforma civakî ya çavkaniya vekirî ya xwedîyê bikarhêneran, ku afirîner xwediyê naveroka xwe ne.",
+    "heading": "DeHub Kurt"
   },
   "settings": {
     "showOnline": "Dema ku ez serhêl im nîşan bide",
@@ -427,6 +439,9 @@
     "edit": "Biguherîne",
     "loading": "Tê barkirin...",
     "tryAgain": "Dîsa Biceribîne",
+    "retry": "Dîsa biceribîne",
+    "failedToLoad": "Barkirin neçû serî",
+    "somethingWentWrong": "Tiştek xelet çû",
     "search": "Lêgerîn",
     "goBack": "Vegere",
     "showOriginal": "Orîjînal nîşan bide",
@@ -1193,7 +1208,9 @@
     "offerWorthNow": "نزیکەی {{amount}} توکن بە نرخی ئێستا",
     "offerNotePlaceholder": "Notek zêde bike (bijarte)",
     "offerCommitsNothing": "دانانی ئۆفەر هیچ پارەیەکی ناوێت و هیچ توکنێک ناگرێت. تەنها ئەگەر خاوەنەکەی قبوڵی کرد ئەوا پارە دەدەیت.",
-    "offerNeedsHandle": "Ev hesab navê bikarhêner tune ku jê re pêşniyar bê kirin."
+    "offerNeedsHandle": "Ev hesab navê bikarhêner tune ku jê re pêşniyar bê kirin.",
+    "options": "Vebijarkên profîlê",
+    "translateBio": "Biyografiyê wergerîne"
   },
   "tv": {
     "seoTitle": "تەلەفزیۆنی ڕاستەوخۆ ـــ کەناڵی بێبەرامبەر لە سەرتاسەری جیهان",
@@ -2587,7 +2604,8 @@
     "countryPlaceholder": "ولایەتە یەکگرتووەکانی ئەمریکا",
     "defaultLabel": "ئەسڵ",
     "savedAddress": "پاشە کەوت کرا، پاشەکەوتکراو، ڕزگارکراو، ھەڵگیراو، دەستی گرتەوە، پاشەکەوتیکرد",
-    "shopAllowanceUsed": "{{allowance}} از {{allowance}} استفاده شد. توکن‌های DeHub بیشتری را استیک کنید تا نشان بالاتر و اسلات دیگر دریافت کنید."
+    "shopAllowanceUsed": "{{allowance}} از {{allowance}} استفاده شد. توکن‌های DeHub بیشتری را استیک کنید تا نشان بالاتر و اسلات دیگر دریافت کنید.",
+    "storeNotFound": "Firoşgeh nehat dîtin"
   },
   "stages": {
     "title": "ژوورە دەنگییەکان",
@@ -5632,6 +5650,10 @@
     "desc": "Rojeke ronî an êvareke şîn a tarî li daristanê",
     "day": "Roj",
     "evening": "Êvar"
+  },
+  "affiliate": {
+    "loadFailed": "Nikare statîstîkên hevkar bar bike",
+    "checkingForUpdates": "Nûkirin têne kontrolkirin…"
   },
   "affiliateLanding": {
     "title": "Rûpela vexwendina xwe kesane bike",

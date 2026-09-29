@@ -56,6 +56,8 @@ async function resolveBalances(
 ): Promise<PortfolioPosition[]> {
   const positions: PortfolioPosition[] = [];
   const BATCH = 8;
+  // A zero balance comes back as 0; null means the read itself failed.
+  let answered = 0;
 
   for (let i = 0; i < candidates.length; i += BATCH) {
     const batch = candidates.slice(i, i + BATCH);
@@ -66,6 +68,7 @@ async function resolveBalances(
       })),
     );
     for (const { candidate, balance } of results) {
+      if (balance !== null) answered++;
       if (!balance || balance <= 0) continue;
       positions.push({
         tokenId: candidate.tokenId,
@@ -78,6 +81,11 @@ async function resolveBalances(
         isCreator: candidate.isCreator,
       });
     }
+  }
+
+  // Every read failing is an outage, not an empty portfolio.
+  if (candidates.length > 0 && answered === 0) {
+    throw new Error('Fraction balances could not be read');
   }
 
   return positions.sort((a, b) => b.balance - a.balance);
@@ -137,6 +145,9 @@ export function useFractionPortfolio(address: string | null | undefined) {
           .select('token_id, chain_id, post_title, post_image_url, post_type')
           .limit(200),
       ]);
+      // Both candidate sources failing means nothing below can be trusted;
+      // surface it instead of reporting no positions.
+      if (trades.error && ownListings.error) throw trades.error;
 
       const snapshots = new Map<string, { title: string | null; imageUrl: string | null; type: string | null }>();
       for (const l of listings.data || []) {

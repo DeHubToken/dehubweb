@@ -304,6 +304,7 @@ export const DocsChatBot = () => {
             <Button
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
+              aria-label={t('nav.docsChatSend')}
               size="icon"
               className="rounded-xl bg-background border border-border text-foreground hover:bg-muted w-10 h-10 disabled:opacity-100 disabled:bg-background disabled:text-foreground"
             >

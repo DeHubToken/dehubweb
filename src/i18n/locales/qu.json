@@ -75,7 +75,19 @@
     "images": "Siqi",
     "videos": "Video",
     "music": "Takiy",
-    "live": "Kawsaq"
+    "live": "Kawsaq",
+    "seoTitle": "DeHub maskay — Riqsisqa ruraqkuna, videokuna, ayllukuna",
+    "seoDescription": "DeHub-pi imakunam riqsisqa kachkan tariy: allin ruraqkuna, videokuna, takikuna, kawsaq qatichikuykuna, ayllukunapas, kichasqa pukyu, ruraqkunapa kapuqnin willaywasipi."
+  },
+  "videos": {
+    "seoTitle": "Video qatina — DeHub-pi on-chain videokunata qaway",
+    "seoDescription": "DeHub-pi ruraqkunapa musuq on-chain videonkunata qaway: hatun videokuna sapa qawasqamanta paganapaq, tokenwan wichqasqa kaqkuna, willakuy qullqi rakinakuywanpas, ruraqkunapa kapuqnin video plataformapi.",
+    "heading": "DeHub Video qatina"
+  },
+  "shorts": {
+    "seoTitle": "Uchuy videokuna — DeHub-pi pisi pachalla videokuna",
+    "seoDescription": "DeHub-pi musuq uchuy videokunata muyuchiy: sayasqa, llapchiykuna uchuy video qatina, kichasqa pukyu, ruraqkunapa kapuqnin willaywasipi, maypim ruraqkuna kikin kaqninkunata kapuqninku.",
+    "heading": "DeHub Uchuy videokuna"
   },
   "settings": {
     "showOnline": "Internetpi kachkaptiy qawachiy",
@@ -523,6 +535,9 @@
     "edit": "Tikrachiy",
     "loading": "Churakunachkan...",
     "tryAgain": "Yapamanta ruway",
+    "retry": "Yapamanta ruway",
+    "failedToLoad": "Mana atisqachu lloqsimuyta",
+    "somethingWentWrong": "Imapas pantarqun",
     "search": "Maskay",
     "goBack": "Kutiy",
     "showOriginal": "Qallariy rikuchiy",
@@ -1374,7 +1389,9 @@
     "offerWorthNow": "Ayllupaq {{amount}} token kunan pacha chaninpi",
     "offerNotePlaceholder": "Huk willayta yapay (munaspayki)",
     "offerCommitsNothing": "Munayniy ruway mana imata pagaspa, mana tokenkunata hap'ispa. Rantikuq chaskiqtinllam paganki.",
-    "offerNeedsHandle": "Kay cuentaqa mana sutiyuqchu qukuy ruwanapaq."
+    "offerNeedsHandle": "Kay cuentaqa mana sutiyuqchu qukuy ruwanapaq.",
+    "options": "Perfil akllanakuna",
+    "translateBio": "Bio t'ikray"
   },
   "tv": {
     "seoTitle": "Kawsaq TV — Tukuy pachamanta mana qullqiyuq Canalkuna",
@@ -6659,6 +6676,10 @@
     "desc": "Sach’a ukhupi k’anchay punchaw utaq anqas sukhayay",
     "day": "Punchaw",
     "evening": "Sukhayay"
+  },
+  "affiliate": {
+    "loadFailed": "Mana atirqanchu afiliado estadísticas nisqakunata cargayta",
+    "checkingForUpdates": "Musuqyachiykunata qhawachkan…"
   },
   "affiliateLanding": {
     "title": "Invitación p'anqaykita allinchay",

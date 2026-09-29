@@ -75,7 +75,19 @@
     "images": "Attēli",
     "videos": "Video",
     "music": "Mūzika",
-    "live": "Tiešraide"
+    "live": "Tiešraide",
+    "seoTitle": "Izpēti DeHub — populāri autori, video un kopienas",
+    "seoDescription": "Atklājiet, kas ir populārs DeHub: labākie autori, video, mūzika, tiešraides un kopienas atvērtā pirmkoda, lietotājiem piederošā sociālajā platformā."
+  },
+  "videos": {
+    "seoTitle": "Video plūsma — skaties blokķēdes video DeHub",
+    "seoDescription": "Skatieties jaunākos autoru blokķēdes video DeHub: gari video ar samaksu par skatījumu, ar žetoniem ierobežots saturs un reklāmas ieņēmumu dalīšana lietotājiem piederošā video platformā.",
+    "heading": "DeHub video plūsma"
+  },
+  "shorts": {
+    "seoTitle": "Īsvideo — īsie video DeHub",
+    "seoDescription": "Ritiniet jaunākos īsos video DeHub: vertikāla, pārvelkama īsvideo plūsma atvērtā pirmkoda, lietotājiem piederošā sociālajā platformā, kur autoriem pieder viņu saturs.",
+    "heading": "DeHub Īsvideo"
   },
   "settings": {
     "showOnline": "Rādīt, kad esmu tiešsaistē",
@@ -509,6 +521,9 @@
     "edit": "Rediģēt",
     "loading": "Ielāde...",
     "tryAgain": "Mēģināt vēlreiz",
+    "retry": "Mēģināt vēlreiz",
+    "failedToLoad": "Neizdevās ielādēt",
+    "somethingWentWrong": "Kaut kas nogāja greizi",
     "search": "Meklēt",
     "goBack": "Atpakaļ",
     "showOriginal": "Rādīt oriģinālu",
@@ -1357,7 +1372,9 @@
     "offerWorthNow": "Aptuveni {{amount}} žetoni pašreizējā kursā",
     "offerNotePlaceholder": "Pievieno piezīmi (nav obligāti)",
     "offerCommitsNothing": "Piedāvājuma iesniegšana neko nemaksā un neaizņem žetonus. Jūs maksājat tikai tad, ja īpašnieks pieņem.",
-    "offerNeedsHandle": "Šim kontam nav lietotājvārda, par ko piedāvāt."
+    "offerNeedsHandle": "Šim kontam nav lietotājvārda, par ko piedāvāt.",
+    "options": "Profila opcijas",
+    "translateBio": "Tulkot biogrāfiju"
   },
   "tv": {
     "seoTitle": "Tiešraides TV — bezmaksas kanāli no visas pasaules",
@@ -6625,6 +6642,10 @@
     "desc": "Gaiša diena vai krēslaini zils vakars džungļos",
     "day": "Diena",
     "evening": "Vakars"
+  },
+  "affiliate": {
+    "loadFailed": "Neizdevās ielādēt filiāļu statistiku",
+    "checkingForUpdates": "Meklē atjauninājumus…"
   },
   "affiliateLanding": {
     "title": "Pielāgo savu uzaicinājuma lapu",

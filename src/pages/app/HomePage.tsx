@@ -32,6 +32,8 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { SORT_OPTIONS } from '@/lib/feed-utils';
 import { SEOHead } from '@/components/SEOHead';
+import { useTranslation } from 'react-i18next';
+import { HUB_ROUTE_META } from '@/lib/seo/route-meta';
 import { HomeIntro } from '@/components/app/HomeIntro';
 import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
 
@@ -103,6 +105,7 @@ const tabFromPathname = (pathname: string): string | null => FEED_ROUTE_TO_TAB[p
 const feedRouteForTab = (tab: string): string => TAB_TO_FEED_ROUTE[tab] ?? '/app';
 
 export default function HomePage() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isCollapsed } = useSidebarCollapse();
@@ -891,14 +894,25 @@ export default function HomePage() {
           sitemap URLs share one identity and the root canonicalizes away from
           itself. Titles match the worker's bot HTML for the same URLs so the
           two UA variants never diverge. */}
+      {/* Keys and URLs are HUB_ROUTE_META's (lib/seo/route-meta); the H1 is
+          per URL too, the worker's heading for it, so /videos and /shorts no
+          longer read as the home page. */}
       {tabFromPathname(location.pathname) === 'videos' ? (
-        <SEOHead title="Video Feed — Watch On-Chain Videos on DeHub" description="Watch the latest on-chain videos from DeHub creators: long-form uploads with pay-per-view, token-gated content and native monetization on the user-owned video platform." url="https://dehub.io/videos" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Video Feed', url: 'https://dehub.io/videos', description: 'The latest on-chain videos from DeHub creators.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+        <>
+          <SEOHead title={t('videos.seoTitle')} description={t('videos.seoDescription')} url={HUB_ROUTE_META.videos.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Video Feed', url: HUB_ROUTE_META.videos.url, description: t('videos.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+          <h1 className="sr-only">{t('videos.heading')}</h1>
+        </>
       ) : tabFromPathname(location.pathname) === 'shorts' ? (
-        <SEOHead title="Shorts — Short-Form Videos on DeHub" description="Scroll the latest short-form videos on DeHub: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content." url="https://dehub.io/shorts" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Shorts', url: 'https://dehub.io/shorts', description: 'Short-form videos from DeHub creators.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+        <>
+          <SEOHead title={t('shorts.seoTitle')} description={t('shorts.seoDescription')} url={HUB_ROUTE_META.shorts.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Shorts', url: HUB_ROUTE_META.shorts.url, description: t('shorts.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+          <h1 className="sr-only">{t('shorts.heading')}</h1>
+        </>
       ) : (
-        <SEOHead title="DeHub — Open Source, User Owned Social Media" description="Censorship resistant and chronological, with no shady algorithm. Your feed on DeHub — the open source, user owned social media platform." url="https://dehub.io/" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: 'https://dehub.io/', description: 'Censorship resistant, chronological social media feed with no algorithm.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+        <>
+          <SEOHead title={t('home.seoTitle')} description={t('home.seoDescription')} url={HUB_ROUTE_META.home.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: HUB_ROUTE_META.home.url, description: t('home.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+          <h1 className="sr-only">{t('home.seoTitle')}</h1>
+        </>
       )}
-      <h1 className="sr-only">Your Decentralized Social Feed</h1>
       {/* Tab Navigation */}
       <div
         data-feed-nav-outer

@@ -75,7 +75,19 @@
     "images": "Foto Dem",
     "videos": "Video Dem",
     "music": "Music",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "Explore DeHub — Creators, Videos & Communities Wey Dey Trend",
+    "seoDescription": "Check wetin dey trend for DeHub: top creators, videos, music, live streams and communities for di open-source social platform wey users own."
+  },
+  "videos": {
+    "seoTitle": "Video Feed — Watch On-Chain Videos for DeHub",
+    "seoDescription": "Watch di latest on-chain videos from creators for DeHub: long videos wey get pay-per-view, token-gated content and ad money sharing for di video platform wey users own.",
+    "heading": "Di DeHub Video Feed"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Short Videos for DeHub",
+    "seoDescription": "Scroll di latest short videos for DeHub: shorts feed wey stand up, wey you fit swipe, for di open-source social platform wey users own, where creators own dia content.",
+    "heading": "Di DeHub Shorts"
   },
   "settings": {
     "showOnline": "Wen yu dey online.",
@@ -466,6 +478,9 @@
     "edit": "Edit Am",
     "loading": "E dey load...",
     "tryAgain": "Try again",
+    "retry": "Try again",
+    "failedToLoad": "E no gree load",
+    "somethingWentWrong": "Something don spoil",
     "search": "Find Am",
     "goBack": "Go back",
     "showOriginal": "Show di original",
@@ -1265,7 +1280,9 @@
     "offerWorthNow": "Wia di current rate, {{amount}} tokens dey be.",
     "offerNotePlaceholder": "Add small note (if you want)",
     "offerCommitsNothing": "Maka offer dey free, no token dey involved. You go pay only when owner accept am.",
-    "offerNeedsHandle": "This account no get username wey you fit offer for."
+    "offerNeedsHandle": "This account no get username wey you fit offer for.",
+    "options": "Profile options dem",
+    "translateBio": "Translate di bio"
   },
   "tv": {
     "filterAll": "All",
@@ -2567,6 +2584,7 @@
     "digital": "Digital",
     "soldOut": "SOLD OUT",
     "unknownStore": "Unknown Store",
+    "storeNotFound": "We no fit find dis store",
     "goBack": "Go Back",
     "goBackLabel": "Go back",
     "shareStore": "Share store",
@@ -5489,6 +5507,10 @@
     "desc": "Bright afternoon or blue evening for inside bush",
     "day": "Afternoon",
     "evening": "Evening"
+  },
+  "affiliate": {
+    "loadFailed": "We no fit load affiliate stats",
+    "checkingForUpdates": "Dey check for update…"
   },
   "affiliateLanding": {
     "title": "Arrange your invite page",

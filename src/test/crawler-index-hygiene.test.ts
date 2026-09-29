@@ -187,6 +187,8 @@ describe('entity misses', () => {
     '/stores/0123456789abcdef',
     '/creator/flow/abcdef12',
     '/governance/0123456789abcdef',
+    '/packs/no-such-pack',
+    '/dex/base/0x0000000000000000000000000000000000000001',
   ];
 
   it('404s a row that does not exist, noindex', async () => {
@@ -221,6 +223,25 @@ describe('entity misses', () => {
     const res = await get('/apps/no-such-app');
     expect(res.status).toBe(404);
     expect(res.robots).toBe('noindex');
+  });
+
+  it('renders a pack and a DEX pool for crawlers instead of the noindexed shell', async () => {
+    upstream = (u) => {
+      if (!u.pathname.includes('/rest/v1/')) return undefined;
+      if (u.pathname.endsWith('/creator_packs')) {
+        return Response.json([{ slug: 'lofi-drums', name: 'Lofi Drums', kind: 'audio', cover_url: null, item_count: 12, created_at: '2026-09-01T00:00:00Z' }]);
+      }
+      if (u.pathname.endsWith('/dex_pools')) {
+        return Response.json([{ chain: 'base', token_address: '0x0000000000000000000000000000000000000001', name: 'Test Token', symbol: 'TST' }]);
+      }
+      return Response.json([]);
+    };
+    const pack = await get('/packs/lofi-drums');
+    expect(pack.status).toBe(200);
+    expect(canonicalOf(pack.body)).toBe('https://dehub.io/packs/lofi-drums');
+    const pool = await get('/dex/base/0x0000000000000000000000000000000000000001');
+    expect(pool.status).toBe(200);
+    expect(canonicalOf(pool.body)).toBe('https://dehub.io/dex/base/0x0000000000000000000000000000000000000001');
   });
 
   it('404s a store id that cannot be a store', async () => {
@@ -340,7 +361,7 @@ describe('URL-space redirects', () => {
 
 describe('noindexed SPA shell', () => {
   it('says noindex in the meta as well as the header', async () => {
-    for (const path of ['/app/messages', '/dex/base/0x0000000000000000000000000000000000000001', '/explore?app=1']) {
+    for (const path of ['/app/messages', '/dex/base/not-a-token', '/explore?app=1']) {
       const res = await get(path, CHROME);
       expect(res.robots, path).toBe('noindex, follow');
       expect(res.body, path).toContain('<meta name="robots" content="noindex, follow">');

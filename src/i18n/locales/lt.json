@@ -75,7 +75,19 @@
     "images": "Nuotraukos",
     "videos": "Vaizdo įrašai",
     "music": "Muzika",
-    "live": "Tiesiogiai"
+    "live": "Tiesiogiai",
+    "seoTitle": "Naršykite DeHub — populiarūs kūrėjai, vaizdo įrašai ir bendruomenės",
+    "seoDescription": "Sužinokite, kas populiaru DeHub: geriausi kūrėjai, vaizdo įrašai, muzika, tiesioginės transliacijos ir bendruomenės atvirojo kodo, naudotojams priklausančioje socialinėje platformoje."
+  },
+  "videos": {
+    "seoTitle": "Vaizdo įrašų srautas — on-chain vaizdo įrašai DeHub",
+    "seoDescription": "Žiūrėkite naujausius kūrėjų on-chain vaizdo įrašus DeHub: ilgi vaizdo įrašai su mokėjimu už peržiūrą, žetonais apribotas turinys ir dalijimasis reklamos pajamomis naudotojams priklausančioje vaizdo platformoje.",
+    "heading": "DeHub vaizdo įrašų srautas"
+  },
+  "shorts": {
+    "seoTitle": "Trumpieji — trumpi vaizdo įrašai DeHub",
+    "seoDescription": "Slinkite naujausius trumpus vaizdo įrašus DeHub: vertikalus, braukiamas trumpųjų vaizdo įrašų srautas atvirojo kodo, naudotojams priklausančioje socialinėje platformoje, kur kūrėjams priklauso jų turinys.",
+    "heading": "DeHub Trumpieji"
   },
   "settings": {
     "showOnline": "Rodyti, kada esu prisijungęs",
@@ -509,6 +521,9 @@
     "edit": "Redaguoti",
     "loading": "Kraunama...",
     "tryAgain": "Bandyti dar kartą",
+    "retry": "Bandyti dar kartą",
+    "failedToLoad": "Nepavyko įkelti",
+    "somethingWentWrong": "Kažkas nutiko ne taip",
     "search": "Ieškoti",
     "goBack": "Grįžti atgal",
     "showOriginal": "Rodyti originalą",
@@ -1357,7 +1372,9 @@
     "offerWorthNow": "Apie {{amount}} žetonų dabartiniu kursu",
     "offerNotePlaceholder": "Pridėk žinutę (neprivaloma)",
     "offerCommitsNothing": "Pasiūlymo pateikimas nieko nekainuoja ir neužima žetonų. Mokėsite tik tada, jei savininkas sutiks.",
-    "offerNeedsHandle": "Ši paskyra neturi naudotojo vardo, dėl kurio būtų galima siūlyti."
+    "offerNeedsHandle": "Ši paskyra neturi naudotojo vardo, dėl kurio būtų galima siūlyti.",
+    "options": "Profilio parinktys",
+    "translateBio": "Išversti biografiją"
   },
   "tv": {
     "seoTitle": "Tiesioginė televizija – nemokami kanalai iš viso pasaulio",
@@ -6625,6 +6642,10 @@
     "desc": "Šviesi diena arba prieblandos mėlynas vakaras džiunglėse",
     "day": "Diena",
     "evening": "Vakaras"
+  },
+  "affiliate": {
+    "loadFailed": "Nepavyko įkelti partnerių statistikos",
+    "checkingForUpdates": "Ieškoma atnaujinimų…"
   },
   "affiliateLanding": {
     "title": "Pritaikyk savo kvietimo puslapį",
