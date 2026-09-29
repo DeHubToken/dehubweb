@@ -423,16 +423,17 @@ const UNSPACED_SCRIPT =
 const repetitionTokens = (text) => text.toLowerCase().match(/[\p{L}\p{M}\p{N}]+/gu) ?? [];
 const letterCount = (token) => (token.match(/\p{L}/gu) ?? []).length;
 
-function maxRepeat(tokens) {
+/** Most times one token of at least `minLetters` letters appears in any 8-token window. */
+function maxRepeat(tokens, minLetters) {
   const counts = new Map();
   let max = 0;
   for (let i = 0; i < tokens.length; i++) {
     if (i >= REPEAT_WINDOW) {
       const leaving = tokens[i - REPEAT_WINDOW];
-      if (letterCount(leaving) >= REPEAT_MIN_LETTERS) counts.set(leaving, (counts.get(leaving) ?? 1) - 1);
+      if (letterCount(leaving) >= minLetters) counts.set(leaving, (counts.get(leaving) ?? 1) - 1);
     }
     const token = tokens[i];
-    if (letterCount(token) < REPEAT_MIN_LETTERS) continue;
+    if (letterCount(token) < minLetters) continue;
     const n = (counts.get(token) ?? 0) + 1;
     counts.set(token, n);
     if (n > max) max = n;
@@ -440,22 +441,17 @@ function maxRepeat(tokens) {
   return max;
 }
 
-function longestRun(tokens) {
-  let longest = 0;
-  let run = 0;
-  for (let i = 0; i < tokens.length; i++) {
-    run = i > 0 && tokens[i] === tokens[i - 1] ? run + 1 : 1;
-    if (run > longest) longest = run;
-  }
-  return longest;
-}
-
 function looksLikeLoop(source, candidate) {
   const src = repetitionTokens(source);
   const out = repetitionTokens(candidate);
-  if (maxRepeat(out) >= 4 && Math.max(maxRepeat(src), longestRun(src)) < 3) return true;
+  // The English side counts words of any length: "our" repeated can come back
+  // as "kita" repeated. The length rule needs characters to triple as well as
+  // words, so a target that spaces every syllable is not mistaken for a loop.
+  if (maxRepeat(out, REPEAT_MIN_LETTERS) >= 4 && maxRepeat(src, 0) < 3) return true;
   if (UNSPACED_SCRIPT.test(source) || UNSPACED_SCRIPT.test(candidate)) return false;
-  return src.length >= 5 && out.length > src.length * 3;
+  return src.length >= 5
+    && out.length > src.length * 3
+    && out.join('').length > src.join('').length * 3;
 }
 
 /* ---------- network ---------- */

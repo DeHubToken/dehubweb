@@ -293,8 +293,8 @@ function isSameLanguageRefusal(data: {
 // member, every message, every event and every invite" — and a faithful
 // translation repeats with them. An output-only rule fails every tier for those
 // posts: the reader gets a 503 and each attempt spends a paid slot. So output
-// is rejected only when it repeats a word the source did not, or has ballooned
-// far past the source's length.
+// is rejected only when it repeats a word while the source repeats none, or has
+// ballooned far past the source's length.
 //
 // scripts/i18n-fanout.mjs and scripts/docs-i18n-fanout.mjs apply the same rule
 // to each line they write; keep the three in step.
@@ -315,19 +315,22 @@ function letterCount(token: string): number {
   return (token.match(/\p{L}/gu) ?? []).length;
 }
 
-/** The most times one word of 4+ letters appears inside any 8-token window. */
-function maxRepeat(tokens: string[]): number {
+/**
+ * The most times one token appears inside any 8-token window, counting only
+ * tokens of at least `minLetters` letters.
+ */
+function maxRepeat(tokens: string[], minLetters: number): number {
   const counts = new Map<string, number>();
   let max = 0;
   for (let i = 0; i < tokens.length; i++) {
     if (i >= REPEAT_WINDOW) {
       const leaving = tokens[i - REPEAT_WINDOW];
-      if (letterCount(leaving) >= REPEAT_MIN_LETTERS) {
+      if (letterCount(leaving) >= minLetters) {
         counts.set(leaving, (counts.get(leaving) ?? 1) - 1);
       }
     }
     const token = tokens[i];
-    if (letterCount(token) < REPEAT_MIN_LETTERS) continue;
+    if (letterCount(token) < minLetters) continue;
     const n = (counts.get(token) ?? 0) + 1;
     counts.set(token, n);
     if (n > max) max = n;
@@ -335,29 +338,24 @@ function maxRepeat(tokens: string[]): number {
   return max;
 }
 
-/** Longest back-to-back run of one token of any length: "no no no no". */
-function longestRun(tokens: string[]): number {
-  let longest = 0;
-  let run = 0;
-  for (let i = 0; i < tokens.length; i++) {
-    run = i > 0 && tokens[i] === tokens[i - 1] ? run + 1 : 1;
-    if (run > longest) longest = run;
-  }
-  return longest;
-}
-
 function looksLikeLoop(input: string, output: string): boolean {
   const source = repetitionTokens(input);
   const translated = repetitionTokens(output);
 
-  // A short word the source chants ("no no no no") becomes a long one in the
-  // target ("nein nein nein nein"), so the source side also counts runs of
-  // words of any length.
-  const sourceRepeat = Math.max(maxRepeat(source), longestRun(source));
-  if (maxRepeat(translated) >= 4 && sourceRepeat < 3) return true;
+  // The source side counts words of any length. A short word the source
+  // repeats on purpose often comes out as a longer one: "no no no no" is
+  // "nein nein nein nein", and "our community, our rules, our future, our
+  // DeHub" is "komunitas kita, aturan kita, masa depan kita, DeHub kita".
+  if (maxRepeat(translated, REPEAT_MIN_LETTERS) >= 4 && maxRepeat(source, 0) < 3) return true;
 
+  // Word counts also mislead when a target that spaces every syllable
+  // (Vietnamese) renders a language that packs a phrase into one word
+  // (Turkish, Korean). A loop balloons the characters as well as the words,
+  // so both have to have tripled.
   if (UNSPACED_SCRIPT.test(input) || UNSPACED_SCRIPT.test(output)) return false;
-  return source.length >= 5 && translated.length > source.length * 3;
+  return source.length >= 5
+    && translated.length > source.length * 3
+    && translated.join('').length > source.join('').length * 3;
 }
 
 // Provider junk that arrives dressed as a successful translation.
