@@ -5,10 +5,11 @@
  * in Supabase so the UI shows it correctly.
  *
  * POST body: { tokenId: string, streamId?: string, address: string }
- * Requires: x-dehub-token header (DeHub JWT) for auth
+ * Requires: x-dehub-token header (x-wallet-address, if sent, must match it)
  */
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { requireDeHubAuth } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,31 +18,6 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Content-Type": "application/json",
 };
-
-/**
- * Check a token really belongs to `address`.
- *
- * This used to probe `GET /account_info/{address}` and accept any 200. That
- * route is a public profile endpoint with no guard — 200 for any token, and
- * for no token at all — so the check passed for everyone and any caller could
- * act as any address they knew. `/auth/verify` is guarded and answers with the
- * address the token actually belongs to, so the claim can be compared against
- * something the caller does not control.
- */
-async function validateDeHubToken(token: string, address: string): Promise<boolean> {
-  try {
-    const res = await fetch("https://api.dehub.io/api/auth/verify", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) return false;
-    const data = await res.json();
-    return typeof data?.address === "string"
-      && data.address.toLowerCase() === address.toLowerCase();
-  } catch {
-    // Fail closed: an unreachable auth service must not authenticate anyone.
-    return false;
-  }
-}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -55,23 +31,11 @@ Deno.serve(async (req) => {
     );
   }
 
-  const walletAddress = req.headers.get("x-wallet-address")?.toLowerCase() || "";
-  const dehubToken = req.headers.get("x-dehub-token") || "";
-
-  if (!walletAddress || !dehubToken) {
-    return new Response(
-      JSON.stringify({ error: "x-wallet-address and x-dehub-token headers required" }),
-      { status: 401, headers: corsHeaders }
-    );
-  }
-
-  const isValid = await validateDeHubToken(dehubToken, walletAddress);
-  if (!isValid) {
-    return new Response(
-      JSON.stringify({ error: "Invalid or expired DeHub token" }),
-      { status: 401, headers: corsHeaders }
-    );
-  }
+  // The session is written under the wallet the token belongs to; an
+  // x-wallet-address header that disagrees with the token is refused.
+  const auth = await requireDeHubAuth(req);
+  if (!auth.ok) return auth.response;
+  const walletAddress = auth.wallet;
 
   try {
     const body = await req.json();
