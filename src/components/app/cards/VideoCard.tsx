@@ -2276,8 +2276,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
         {/* Watched marker — the video is in this account's watch history, i.e.
             it was actually played, not merely scrolled past. Hidden the moment
-            playback starts, so it never sits over the picture being watched. */}
-        {isWatchedVideo && !isPlaying && !isFullscreen && (
+            playback starts, so it never sits over the picture being watched.
+            Also steps aside while the controls are up or the bounty button
+            holds the same corner, so it never covers a button. */}
+        {isWatchedVideo && !isPlaying && !isFullscreen && !controlsVisible && !video.isW2E && (
           <div className="absolute top-2 left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-1.5 py-0.5 rounded border border-white/10 text-[10px] font-medium text-white/80 pointer-events-none">
             <Eye className="w-3 h-3" />
             {t('feed.watched', 'Watched')}
