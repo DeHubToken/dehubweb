@@ -449,7 +449,7 @@ describe('robots.txt', () => {
   });
   it('keeps crawlers out of the API relays and nothing else', () => {
     const disallows = robots.match(/^Disallow: .*$/gm);
-    expect(disallows).toEqual(['Disallow: /_api/', 'Disallow: /api/']);
+    expect(disallows).toEqual(['Disallow: /_api/', 'Disallow: /_sb/', 'Disallow: /api/']);
     expect(robots).toContain('Sitemap: https://dehub.io/sitemap.xml');
   });
 });
