@@ -31,7 +31,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { useAuthPrompt, AuthPrompt } from '@/components/app/AuthPrompt';
-import { supabase } from '@/integrations/supabase/client';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { dehubAuthHeaders } from '@/lib/ai-invoke';
@@ -49,6 +48,9 @@ import {
   type RankedEntry,
 } from '@/lib/leaderboard-rules';
 
+// Same project URL and fallback as src/integrations/supabase/client.ts.
+const SUPABASE_URL =
+  import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co';
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers' | 'affiliates';
 
@@ -151,10 +153,8 @@ export default function LeaderboardPage() {
 
       setIsRefreshing(true);
       try {
-        const { data: { publicUrl } } = supabase.storage.from('stories').getPublicUrl('');
-        const baseUrl = publicUrl.replace('/storage/v1/object/public/stories/', '');
         // The function takes the wallet off the verified token, not a query param.
-        const fnUrl = `${baseUrl}/functions/v1/refresh-leaderboard-user`;
+        const fnUrl = `${SUPABASE_URL}/functions/v1/refresh-leaderboard-user`;
 
         const res = await fetch(fnUrl, { headers: dehubAuthHeaders() });
         const result = await res.json();

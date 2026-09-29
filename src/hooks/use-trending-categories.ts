@@ -26,7 +26,12 @@ export interface CategoryCount {
 
 const EXCLUDED_CATEGORIES = new Set(['general', '', '-', 'other']);
 const TOP_LIMIT = 10;
-const TRENDING_CACHE_MS = 60_000;
+/**
+ * category_post_log is rebuilt once a day (06:00 UTC), so a minute-long cache
+ * only meant the sidebar, which rotates through all five periods every 5 s,
+ * re-ran a full-table count for each of them about once a minute per open tab.
+ */
+const TRENDING_CACHE_MS = 30 * 60_000;
 
 function getPeriodCutoff(period: TopicPeriod): string {
   const now = new Date();
@@ -110,13 +115,6 @@ async function fetchCategoryCounts(period: TopicPeriod): Promise<CategoryCount[]
     .sort((a, b) => b.post_count - a.post_count);
 }
 
-async function fetchTrendingCategories(period: TopicPeriod, fetchAll = false): Promise<CategoryCount[]> {
-  const computed = await fetchCategoryCounts(period);
-
-  if (fetchAll) return computed;
-  return withTopTenPlaceholders(computed);
-}
-
 /**
  * Put the paid category first, keeping its real count.
  *
@@ -149,20 +147,25 @@ function withBoosted(items: CategoryCount[], boosted: string | null | undefined)
   return [{ name, post_count: existing?.post_count ?? 0, boosted: true }, ...rest];
 }
 
+/*
+ * The cache always holds the full sorted list for a period, and the top-ten
+ * cut happens in `select`. That lets the limited and unlimited hooks share one
+ * entry for 'all' instead of running the same count twice under two keys.
+ */
 export function useTrendingCategories(period: TopicPeriod = 'all') {
   const { data: jacked } = useTrendingTopic();
 
   return useQuery<CategoryCount[]>({
     queryKey: ['trending-categories', period],
-    queryFn: () => fetchTrendingCategories(period),
+    queryFn: () => fetchCategoryCounts(period),
     staleTime: TRENDING_CACHE_MS,
-    gcTime: 30 * 60_000,
+    gcTime: TRENDING_CACHE_MS,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     placeholderData: (prev) => prev,
     // `select` rather than a useMemo over `data`, so every consumer of this
     // hook gets the same spliced list without each having to remember.
-    select: (items) => withBoosted(items, jacked?.category),
+    select: (items) => withBoosted(withTopTenPlaceholders(items), jacked?.category),
   });
 }
 
@@ -173,10 +176,10 @@ export function useAllTrendingCategories() {
   const { data: jacked } = useTrendingTopic();
 
   return useQuery<CategoryCount[]>({
-    queryKey: ['trending-categories-all-unlimited'],
-    queryFn: () => fetchTrendingCategories('all', true),
+    queryKey: ['trending-categories', 'all'],
+    queryFn: () => fetchCategoryCounts('all'),
     staleTime: TRENDING_CACHE_MS,
-    gcTime: 30 * 60_000,
+    gcTime: TRENDING_CACHE_MS,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     select: (items) => withBoosted(items, jacked?.category),
