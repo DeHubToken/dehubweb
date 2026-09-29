@@ -1812,7 +1812,8 @@
     "copied": "Скопійовано",
     "visibilityUpdated": "Видимість оновлено",
     "visibilityFailed": "Не вдалося оновити видимість",
-    "copyFailed": "Не вдалося скопіювати"
+    "copyFailed": "Не вдалося скопіювати",
+    "creator": "Автор"
   },
   "profileOptions": {
     "copyProfileUrl": "Копіювати URL профілю",

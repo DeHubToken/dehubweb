@@ -1199,7 +1199,7 @@
     "replyingTo": "Replying to {{name}}",
     "requestAuthorChip": "Author",
     "commentEdited": "edited",
-    "showMoreReplies": "Show **{{count}}** **more** **reply** **dem**",
+    "showMoreReplies": "Show {{count}} more reply dem",
     "submitDrawerTitle": "Submit Feature Request",
     "titleLabel": "Title",
     "titlePlaceholder": "Short title for your idea...",
@@ -1215,7 +1215,8 @@
     "statusDeclined": "Declined",
     "shipping": "I di ship",
     "noShippingYet": "Notin di hapen nau",
-    "shippingAppearHere": "Request dem weh dem di build go show hia."
+    "shippingAppearHere": "Request dem weh dem di build go show hia.",
+    "showOneMoreReply": "Show 1 more reply"
   },
   "auth": {
     "loginRequired": "Log in required"
@@ -1631,7 +1632,8 @@
       "edited": "edited",
       "showMoreReplies": "Show **{{count}}** **more** **reply** **dem**",
       "deleteDescription": "Dis remove comment an a reply fo' everybody.",
-      "authorChip": "Proposal author"
+      "authorChip": "Proposal author",
+      "deleteTitle": "Delete dis comment?"
     },
     "notEnoughUnstakedTokens": "Na Base, no go have enough token wey no stak yet. You need {{needed}} liquid (no stak) DeHub token on Base, but you only have {{held}}. Token wey stak no go use for fee."
   },

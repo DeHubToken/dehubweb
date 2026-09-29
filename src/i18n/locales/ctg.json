@@ -1341,7 +1341,9 @@
     "statusDeclined": "বাতিল অইয়ে",
     "shipping": "চলতেছে",
     "noShippingYet": "কিছু চলের ন",
-    "shippingAppearHere": "যেগুন অনুরোধ বানানো অর হেগুন ইয়ানে দেখা যাইবো।"
+    "shippingAppearHere": "যেগুন অনুরোধ বানানো অর হেগুন ইয়ানে দেখা যাইবো।",
+    "showOneMoreReply": "আরো ১টা জবাব দেখাও",
+    "showMoreReplies": "আরো {{count}}টা জবাব দেখাও"
   },
   "auth": {
     "loginRequired": "লগইন দরকার"

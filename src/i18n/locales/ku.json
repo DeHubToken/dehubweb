@@ -1106,8 +1106,8 @@
     "replyingTo": "وەڵامدانەوە بۆ {{name}}",
     "requestAuthorChip": "نووسەر",
     "commentEdited": "دەستکاری کراوە",
-    "showOneMoreReply": "١ وەڵامدانەوەی تر ببینە",
-    "showMoreReplies": "{{count}} وەڵامدانەوەی تر ببینە",
+    "showOneMoreReply": "1 bersiva din nîşan bide",
+    "showMoreReplies": "{{count}} bersivên din nîşan bide",
     "submitDrawerTitle": "Daxwaza Taybetmendiyê Bişîne",
     "titleLabel": "Sernav",
     "titlePlaceholder": "Sernavek kurt ji bo ramana xwe...",
@@ -1529,7 +1529,11 @@
     "monthsAgo": "{{count}}m berê",
     "againstLabel": "دژ - بەرامبەر",
     "notEnoughUnstakedTokens": "توکنی لابراوی بەس نییە لەسەر Base. تۆ پێویستت بە {{needed}} توکنی DeHubی ئازاد (لابراو) هەیە لەسەر Base بەڵام {{held}}ت هەیە. توکنە دانراوەکان ناتوانرێت بۆ پارەدان بەکاربهێنرێت.",
-    "voteFailedHoldTokens": "دەنگدانەکە شکستی هێنا. دەبێت توکنی DeHubت هەبێت بۆ دەنگدان."
+    "voteFailedHoldTokens": "دەنگدانەکە شکستی هێنا. دەبێت توکنی DeHubت هەبێت بۆ دەنگدان.",
+    "discussion": {
+      "deleteTitle": "Vê şîroveyê jê bibe?",
+      "deleteDescription": "Ev yek şîroveyê û hemû bersivên wê ji bo her kesî radike."
+    }
   },
   "sidebar": {
     "talkOfTheTown": "Gotina Bajêr",

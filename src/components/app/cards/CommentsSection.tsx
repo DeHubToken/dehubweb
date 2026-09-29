@@ -36,6 +36,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { TranslatableText, useTranslation } from '../TranslatableText';
@@ -56,7 +66,7 @@ import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { BadgedName } from '@/components/app/BadgedName';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment } from '@/lib/api/dehub';
+import { getNFTCommentPage, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment, type ApiCommentResponse } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
   HAS_NEGATIVE_TRAY,
@@ -84,7 +94,7 @@ import { ReportModal } from '@/components/app/modals/ReportModal';
 import { CommentLikersDrawer } from './CommentLikersDrawer';
 import { FullscreenImageViewerLazy } from './FullscreenImageViewerLazy';
 import { toast } from 'sonner';
-import { emitCommentCreated } from '@/lib/comment-count-events';
+import { emitCommentCreated, emitCommentsDeleted } from '@/lib/comment-count-events';
 import { useMention } from '@/hooks/use-mention';
 import { useAssistantPendingReply } from '@/hooks/use-assistant-pending-reply';
 import { ASSISTANT_AVATAR, mentionsAssistant, isAssistantAddress } from '@/lib/assistant';
@@ -215,6 +225,7 @@ interface CommentItemProps {
   onReply: (id: string) => void;
   onShare: (id: string) => void;
   onEdit: (id: string, newContent: string) => void;
+  /** Ask to delete. The section confirms first — see its delete dialog. */
   onDelete: (id: string) => void;
   onTip: (id: string) => void;
   /** DHB already tipped to this comment, shown beside the gem when > 0. */
@@ -341,6 +352,12 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
   const i18n = useI18n();
   const translation = useTranslation(comment.text || '', true, undefined, true);
   const shownName = comment.displayName || comment.username;
+  // Still on its way to the server, under a placeholder id nothing else knows.
+  // Every action on the row was aimed at that id: a reply to it went out as
+  // parent Number('temp-…'), i.e. NaN, and posted as a top-level comment; a
+  // like, edit or delete was simply refused. The real row replaces it the
+  // moment the post lands, so until then it offers nothing.
+  const isPending = comment.id.startsWith('temp-');
 
   // Creator on one side, name-wearer on the other. Both chips are about the
   // same question a reader is asking — is this really them — so they live
@@ -407,7 +424,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
         not a tap.
       */
       onClick={(e) => {
-        if (isEditing) return;
+        if (isEditing || isPending) return;
         const target = e.target as HTMLElement;
         // `role="menuitem"` and the app's own `data-no-navigate` are here for
         // the same reason as the tags: they are interactive and they are not a
@@ -469,7 +486,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
           </button>
           {isCreator && (
             <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
-              Creator
+              {i18n.t('postInfo.creator')}
             </span>
           )}
           {/* Why this comment is at the top. Without it a pinned comment just
@@ -501,7 +518,7 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
               indistinguishable from a user who picked the handle. */}
           {isAssistantAddress(comment.address) && (
             <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
-              AI
+              {i18n.t('editor.rail.agent')}
             </span>
           )}
           {comment.displayName && (
@@ -517,7 +534,10 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
               className="flex-1 bg-zinc-800 text-white text-sm rounded-lg px-3 py-1.5 border border-zinc-700 focus:outline-none focus:border-zinc-500"
               autoFocus
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                // An IME confirms its candidate with Enter, and that keystroke
+                // is the composition ending, not the edit being saved — Safari
+                // reports it as keyCode 229 with isComposing already false.
+                if (e.key === 'Enter' && !e.nativeEvent.isComposing && e.keyCode !== 229) {
                   onEdit(comment.id, editText);
                   setIsEditing(false);
                 } else if (e.key === 'Escape') {
@@ -584,7 +604,12 @@ function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReac
             )}
           </>
         )}
-        <div className="flex items-center justify-between mt-2">
+        {/* Hidden rather than removed on a pending row, so the row keeps its
+            height and nothing jumps when the real one replaces it. */}
+        <div
+          className={cn("flex items-center justify-between mt-2", isPending && "invisible")}
+          aria-hidden={isPending || undefined}
+        >
           <div className="flex items-center gap-4">
             {/* You can't like your own comment — for the author this same
                 button opens the likers list instead, count included even at 0
@@ -974,16 +999,22 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
   // Optimistic delete/edit overlays — applied instantly in allComments below,
   // reverted if the server call fails.
+  //
+  // Every override below carries `base`: the API row it was made against. It
+  // only stands while that row is still the one the query holds — see
+  // `overrideStands` in allComments.
   const [deletedCommentIds, setDeletedCommentIds] = useState<Set<string>>(new Set());
-  const [editOverrides, setEditOverrides] = useState<Map<string, string>>(new Map());
+  const [editOverrides, setEditOverrides] = useState<
+    Map<string, { text: string; base?: ApiCommentResponse }>
+  >(new Map());
   /**
-   * Which comment the creator just pinned, before the refetch confirms it.
-   *
-   * `null` means "no override, read the server". An empty string means the pin
-   * was just taken off, which is why this cannot simply be `string | null` with
-   * null doing both jobs.
+   * Which comment the creator just pinned or unpinned, before the refetch
+   * confirms it. `null` means "no override, read the server". One per post,
+   * so a single target rather than a map.
    */
-  const [pinOverride, setPinOverride] = useState<string | null>(null);
+  const [pinOverride, setPinOverride] = useState<
+    { id: string; pinned: boolean; base?: ApiCommentResponse } | null
+  >(null);
   // Track reaction state overrides for optimistic updates. Every field is
   // optional so a like tap never clobbers a dislike count it didn't touch.
   const [likeOverrides, setLikeOverrides] = useState<
@@ -996,6 +1027,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         likes?: number;
         dislikes?: number;
         reactionCounts?: ReactionCounts;
+        base?: ApiCommentResponse;
       }
     >
   >(new Map());
@@ -1102,32 +1134,71 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isPlaceholderData,
   } = useInfiniteQuery({
-    // topTippedKey is in the key because it changes what the server returns
-    // on page 0. It arrives one tick after the comments on a thread that has
-    // tipped comments — the tip query has to resolve first — so those threads
-    // refetch once and settle. Threads with none (nearly all of them) keep
-    // the empty key they started with and never refetch.
+    // topTippedKey is in the key because it changes what the server returns.
+    // It arrives one tick after the comments on a thread that has tipped
+    // comments — the tip query has to resolve first — so those threads
+    // refetch once and settle, and again after a tip reorders the top five.
+    // Threads with none (nearly all of them) keep the empty key they started
+    // with and never refetch.
     queryKey: ['comments', tokenId, walletAddress, focusCommentId ?? null, topTippedKey],
     queryFn: ({ pageParam }) =>
-      getNFTComments(
+      getNFTCommentPage(
         tokenId,
         pageParam as number,
         COMMENTS_PAGE_SIZE,
         walletAddress?.toLowerCase(),
         // Only page 0: the server pins the comment there and backfills its
         // ancestors, so one request holds the linked row however deep in the
-        // thread it sits. Sending it again on page 1 would duplicate it.
+        // thread it sits.
         pageParam === 0 ? focusCommentId : undefined,
-        pageParam === 0 ? topTippedIds : undefined,
+        // Every page, unlike the link above. The server sorts by these ids on
+        // every page, not just the first, so a page 1 asked for without them
+        // was cut from a differently ordered list: comments at the seam
+        // between the two pages were skipped or shown twice.
+        topTippedIds,
       ),
     initialPageParam: 0,
-    // A short page is the last page — the API exposes no total.
+    // The server's own answer. Counting rows is not one: a deleted linked
+    // comment is dropped from page 0, so a full page came back one short and
+    // paging stopped for good.
     getNextPageParam: (lastPage, allPages) =>
-      lastPage.length >= COMMENTS_PAGE_SIZE ? allPages.length : undefined,
+      lastPage.hasMore ? allPages.length : undefined,
+    // A new key — tip data arriving, or any tip afterwards — used to blank the
+    // list to a spinner until the refetch landed. Keep what is on screen
+    // meanwhile, but only for this post: another post's thread is never a
+    // placeholder for this one.
+    placeholderData: (previous, previousQuery) =>
+      previousQuery?.queryKey[1] === tokenId ? previous : undefined,
     staleTime: 30000,
   });
-  const apiComments = useMemo(() => commentPages?.pages.flat(), [commentPages]);
+  /**
+   * Every loaded row once, in page order.
+   *
+   * The same comment can arrive twice: the API appends a linked comment's
+   * backfilled ancestors to page 0, and the linked comment itself comes round
+   * again on whichever later page it really sits. The first one wins, which
+   * is the one placed where the reader was sent.
+   */
+  const apiComments = useMemo(() => {
+    if (!commentPages) return undefined;
+    const seen = new Set<string>();
+    const rows: ApiCommentResponse[] = [];
+    for (const page of commentPages.pages) {
+      for (const row of page.items) {
+        const id = String(row.id);
+        if (seen.has(id)) continue;
+        seen.add(id);
+        rows.push(row);
+      }
+    }
+    return rows;
+  }, [commentPages]);
+  const apiRowsById = useMemo(
+    () => new Map((apiComments ?? []).map(row => [String(row.id), row])),
+    [apiComments],
+  );
 
   // Threads the creator answered, ranked as the API first delivered them.
   // Sticky per comment — see recordCreatorLifts for why a refetch can't move one.
@@ -1155,7 +1226,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
    */
   const MAX_AUTO_PAGES = 5;
   useEffect(() => {
-    if (!apiComments?.length || !hasNextPage || isFetchingNextPage) return;
+    // Not on a placeholder: those pages belong to the previous key, and
+    // paging past them would be asking the new one for page 2 before page 1.
+    if (!apiComments?.length || !hasNextPage || isFetchingNextPage || isPlaceholderData) return;
     // Nothing but the linked thread is on screen yet, and the server already
     // backfilled that thread's ancestors — so walking up to four more pages
     // here would be a hundred comments fetched to render one. It resumes the
@@ -1163,17 +1236,17 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     if (focusCommentId && !showAllThreads) return;
     if ((commentPages?.pages.length ?? 0) >= MAX_AUTO_PAGES) return;
     if (hasUnresolvedParent(apiComments)) fetchNextPage();
-  }, [apiComments, commentPages, hasNextPage, isFetchingNextPage, fetchNextPage, focusCommentId, showAllThreads]);
+  }, [apiComments, commentPages, hasNextPage, isFetchingNextPage, isPlaceholderData, fetchNextPage, focusCommentId, showAllThreads]);
 
   const loadMoreRow = !isLoading && !error && hasNextPage ? (
     <div className="flex justify-center py-3">
       <button
         type="button"
         onClick={() => fetchNextPage()}
-        disabled={isFetchingNextPage}
+        disabled={isFetchingNextPage || isPlaceholderData}
         className="px-4 py-1.5 text-xs text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors disabled:opacity-50"
       >
-        {isFetchingNextPage ? 'Loading…' : 'Load more comments'}
+        {isFetchingNextPage ? t('common.loading') : t('common.loadMore')}
       </button>
     </div>
   ) : null;
@@ -1204,24 +1277,43 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     const pending = optimisticComments.filter(c => !apiIds.has(c.id) && c.id.startsWith('temp-'));
     const combined = [...pending, ...mapped];
 
+    /**
+     * Does an override still speak for this row, or has the server since?
+     *
+     * They used to stand for the life of the section, so a liked comment kept
+     * the count from the moment of the tap while the real one moved on. React
+     * Query hands back the same row object when a refetch brings it back
+     * unchanged and a new one when anything on it moved, so a different
+     * object means fresh server data, and that wins. Comparing a timestamp
+     * with the query's `dataUpdatedAt` cannot tell this: "Load more" bumps it
+     * without refetching the page the row is on.
+     */
+    const overrideStands = (id: string, base: ApiCommentResponse | undefined) =>
+      base === apiRowsById.get(id);
+
     // Apply overrides: optimistic deletes hide rows instantly, optimistic
     // edits swap text instantly — both reconcile with the background refetch.
     return combined
       .filter(c => !deletedCommentIds.has(c.id))
       .map(c => {
-        const editedText = editOverrides.get(c.id);
-        const override = likeOverrides.get(c.id);
+        const edit = editOverrides.get(c.id);
+        const vote = likeOverrides.get(c.id);
         let result = c;
-        if (editedText !== undefined) result = { ...result, text: editedText };
-        if (override) result = { ...result, ...override };
+        if (edit && overrideStands(c.id, edit.base)) result = { ...result, text: edit.text };
+        if (vote && overrideStands(c.id, vote.base)) {
+          const { base: _base, ...fields } = vote;
+          result = { ...result, ...fields };
+        }
         // The pin moves instantly. It is one per post, so the override is a
         // single id rather than a map — and it has to clear the flag on every
         // OTHER row, not just set it on this one, or the comment that held
         // the pin a moment ago keeps its badge until the refetch lands.
-        if (pinOverride !== null) result = { ...result, isPinned: result.id === pinOverride };
+        if (pinOverride && overrideStands(pinOverride.id, pinOverride.base)) {
+          result = { ...result, isPinned: pinOverride.pinned && result.id === pinOverride.id };
+        }
         return result;
       });
-  }, [apiComments, optimisticComments, likeOverrides, deletedCommentIds, editOverrides, pinOverride]);
+  }, [apiComments, apiRowsById, optimisticComments, likeOverrides, deletedCommentIds, editOverrides, pinOverride]);
 
   // Tagging @assistant produces a real comment, but only once the model has
   // answered — several seconds after the post returns. This keeps a placeholder
@@ -1376,9 +1468,23 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     setExpandedThreads(prev => (prev.has(focusThreadId) ? prev : new Set(prev).add(focusThreadId)));
   }, [focusThreadId]);
 
+  /** Set on unmount, so a recorder that finishes afterwards touches no state. */
+  const unmountedRef = useRef(false);
   useEffect(() => {
+    unmountedRef.current = false;
     return () => {
+      unmountedRef.current = true;
       if (timerRef.current) clearInterval(timerRef.current);
+      // Closing the sheet mid-recording left the microphone live: the timer
+      // stopped, but nothing stopped the recorder or released its stream, so
+      // the browser kept recording — indicator and all — with no section left
+      // to stop it from.
+      const recorder = mediaRecorderRef.current;
+      mediaRecorderRef.current = null;
+      if (recorder) {
+        if (recorder.state !== 'inactive') recorder.stop();
+        recorder.stream.getTracks().forEach(track => track.stop());
+      }
       unregisterPreviewRef.current?.();
       unregisterPreviewRef.current = null;
       if (playbackAudioRef.current) {
@@ -1391,6 +1497,12 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Closed while the permission prompt was up: hand the microphone
+      // straight back rather than start a recording nothing can stop.
+      if (unmountedRef.current) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
@@ -1402,10 +1514,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       };
 
       mediaRecorder.onstop = () => {
+        stream.getTracks().forEach(track => track.stop());
+        // Stopped by the unmount cleanup: there is no composer left to take
+        // the note, and an object URL minted now would only leak.
+        if (unmountedRef.current) return;
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
         const url = URL.createObjectURL(blob);
         setVoiceNote({ url, duration: recordingTimeRef.current });
-        stream.getTracks().forEach(track => track.stop());
         setIsRecording(false);
         setRecordingTime(0);
         recordingTimeRef.current = 0;
@@ -1439,7 +1554,25 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     }
   };
 
+  /**
+   * Drop the composer's preview player.
+   *
+   * It is built once, on the first play, from whichever note was there at the
+   * time — so kept past that note, the next recording's play button replayed
+   * the old one. Called whenever the note leaves the composer.
+   */
+  const releasePreviewAudio = () => {
+    unregisterPreviewRef.current?.();
+    unregisterPreviewRef.current = null;
+    if (playbackAudioRef.current) {
+      playbackAudioRef.current.pause();
+      playbackAudioRef.current = null;
+    }
+    setIsPlayingPreview(false);
+  };
+
   const removeVoiceNote = () => {
+    releasePreviewAudio();
     if (voiceNote) {
       URL.revokeObjectURL(voiceNote.url);
       setVoiceNote(null);
@@ -1687,7 +1820,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const handlePinComment = async (commentId: string) => {
     const wasPinned = allComments.find(c => c.id === commentId)?.isPinned === true;
     const previous = pinOverride;
-    setPinOverride(wasPinned ? '' : commentId);
+    setPinOverride({ id: commentId, pinned: !wasPinned, base: apiRowsById.get(commentId) });
     try {
       const { pinned } = await pinComment(commentId);
       toast.success(
@@ -1764,7 +1897,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       dislikes,
       reactionCounts: applyReactionDelta(comment.reactionCounts, previous, next),
     };
-    setLikeOverrides(prev => new Map(prev).set(commentId, optimistic));
+    // The row this tap was made against. Both writes below carry it, so the
+    // first refetch that brings the row back changed replaces them both.
+    const base = apiRowsById.get(commentId);
+    setLikeOverrides(prev => new Map(prev).set(commentId, { ...optimistic, base }));
 
     try {
       const result = await reactToComment({ commentId, reaction });
@@ -1780,6 +1916,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             result.dislikes ?? optimistic.dislikes,
             (result.reactionCounts as ReactionCounts | undefined) ?? optimistic.reactionCounts,
           ),
+          base,
         }),
       );
     } catch (error) {
@@ -1825,6 +1962,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   };
 
   const handleReply = (commentId: string) => {
+    // A row still posting has no id the server knows — see CommentItem.
+    if (commentId.startsWith('temp-')) return;
     const found = allComments.find(c => c.id === commentId);
     if (found) {
       setReplyTo(found);
@@ -1854,16 +1993,41 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     if (found) setTipComment(found);
   };
 
+  /** The comment whose trash button was tapped, waiting on the confirmation. */
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+
   const handleDeleteComment = async (commentId: string) => {
-    // Optimistic: hide the row instantly, restore it if the server refuses.
-    setDeletedCommentIds(prev => new Set(prev).add(commentId));
+    // The server deletes the comment's whole reply subtree with it, so hide
+    // all of it now. Hiding the comment alone promoted its replies to
+    // top-level rows until the refetch, and the card's count has to come
+    // down by every row that went.
+    const childrenOf = new Map<string, string[]>();
+    for (const c of allComments) {
+      if (!c.replyToId) continue;
+      const siblings = childrenOf.get(c.replyToId);
+      if (siblings) siblings.push(c.id);
+      else childrenOf.set(c.replyToId, [c.id]);
+    }
+    const removed = new Set<string>();
+    const stack = [commentId];
+    while (stack.length) {
+      const id = stack.pop()!;
+      if (removed.has(id)) continue;
+      removed.add(id);
+      stack.push(...(childrenOf.get(id) ?? []));
+    }
+
+    // Optimistic: hide the rows instantly, restore them if the server refuses.
+    setDeletedCommentIds(prev => new Set([...prev, ...removed]));
     try {
       await deleteComment(commentId);
+      // Rows still posting were never counted, so they come off nothing.
+      emitCommentsDeleted(tokenId, [...removed].filter(id => !id.startsWith('temp-')).length);
       queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
     } catch (err) {
       setDeletedCommentIds(prev => {
         const next = new Set(prev);
-        next.delete(commentId);
+        removed.forEach(id => next.delete(id));
         return next;
       });
       console.error('Delete comment error:', err);
@@ -1874,7 +2038,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const handleEditComment = async (commentId: string, newContent: string) => {
     if (!newContent.trim()) return;
     // Optimistic: swap the text instantly, revert if the server refuses.
-    setEditOverrides(prev => new Map(prev).set(commentId, newContent));
+    setEditOverrides(prev =>
+      new Map(prev).set(commentId, { text: newContent, base: apiRowsById.get(commentId) }),
+    );
     try {
       await editComment({ commentId, content: newContent });
       queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
@@ -1941,6 +2107,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     setReplyTo(null);
     setNewComment('');
     setVoiceNote(null);
+    // Not removeVoiceNote: the URL has to outlive this, to be put back if the
+    // post fails. The player built on it goes now, though.
+    releasePreviewAudio();
     removeCommentImage();
     removeCommentGif();
     setIsInputExpanded(false);
@@ -1954,10 +2123,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       if (voiceNote) {
         // Voice note comment via /api/comment_audio
         const audioBlob = await fetch(voiceNote.url).then(r => r.blob());
+        // Thrown rather than returned: the refusal path below is what takes
+        // the optimistic row back off the list and puts the draft back in the
+        // composer. An early return here left both behind.
         if (audioBlob.size > 2 * 1024 * 1024) {
-          toast.error('Voice note must be under 2MB');
-          setIsSubmitting(false);
-          return;
+          throw new Error('Voice note must be under 2MB');
         }
         await addVoiceComment({
           tokenId: parseInt(tokenId, 10),
@@ -1999,6 +2169,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
       emitCommentCreated(tokenId);
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
+      // Posted, and the row that played it from here is gone with the line
+      // above: nothing reads the recording's object URL any more.
+      if (audioNote) URL.revokeObjectURL(audioNote.url);
       // The refetch above is always too early for a tagged assistant — it has
       // to call the model first — so hand off to the poller.
       if (mentionsAssistant(newComment)) armAssistantReply();
@@ -2105,7 +2278,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           onReply={handleReply}
           onShare={() => {}}
           onEdit={handleEditComment}
-          onDelete={handleDeleteComment}
+          onDelete={setPendingDeleteId}
           onTip={handleTip}
           tipTotal={commentTips.totals[comment.id]}
           viewerTipped={!!walletAddress && !!commentTips.tippers[comment.id]?.includes(walletAddress.toLowerCase())}
@@ -2132,7 +2305,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             onReply={handleReply}
             onShare={() => {}}
             onEdit={handleEditComment}
-            onDelete={handleDeleteComment}
+            onDelete={setPendingDeleteId}
             onTip={handleTip}
             tipTotal={commentTips.totals[reply.id]}
             viewerTipped={!!walletAddress && !!commentTips.tippers[reply.id]?.includes(walletAddress.toLowerCase())}
@@ -2157,7 +2330,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           >
             <span aria-hidden className="absolute left-4 -ml-px top-0 bottom-1/2 w-px bg-white/20" />
             <span aria-hidden className="absolute left-4 top-1/2 -mt-px w-5 h-px bg-white/20" />
-            {hiddenCount === 1 ? 'Show 1 more reply' : `Show ${hiddenCount} more replies`}
+            {hiddenCount === 1 ? t('features.showOneMoreReply') : t('features.showMoreReplies', { count: hiddenCount })}
           </button>
         )}
       </div>
@@ -2720,7 +2893,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         return;
                       }
                     }
-                    if (e.key === 'Enter' && !e.shiftKey && enterSends && !e.nativeEvent.isComposing) {
+                    // keyCode 229 as well as isComposing: Safari ends an IME
+                    // composition with an Enter whose isComposing is already
+                    // false, and that keystroke is picking a candidate.
+                    if (e.key === 'Enter' && !e.shiftKey && enterSends && !e.nativeEvent.isComposing && e.keyCode !== 229) {
                       e.preventDefault();
                       if (canPost) handlePostComment();
                     } else if (e.key === 'Escape') {
@@ -2926,6 +3102,35 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           commentId={reportCommentId ?? undefined}
           tokenId={tokenId}
         />
+
+        {/* Delete one of the viewer's own comments. Asked first because it is
+            permanent and takes every reply under the comment with it — the
+            trash icon sits right beside Edit and used to fire on one tap.
+            Lifted over the default z-50: the section lives inside the phone
+            sheet (z-[100]) and the shorts viewer (z-[60]), and the dialog
+            would open behind either. */}
+        <AlertDialog open={!!pendingDeleteId} onOpenChange={(open) => { if (!open) setPendingDeleteId(null); }}>
+          <AlertDialogContent className="z-[10000] bg-black/80 backdrop-blur-[24px] border-white/10">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-white">{t('governance.discussion.deleteTitle')}</AlertDialogTitle>
+              <AlertDialogDescription className="text-zinc-400">{t('governance.discussion.deleteDescription')}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-white/5 border-white/10 text-white hover:bg-white/10 hover:text-white">
+                {t('common.cancel')}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-red-500/80 text-white hover:bg-red-500"
+                onClick={() => {
+                  if (pendingDeleteId) void handleDeleteComment(pendingDeleteId);
+                  setPendingDeleteId(null);
+                }}
+              >
+                {t('common.delete')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
     </motion.div>
     </PostCreatorContext.Provider>
   );

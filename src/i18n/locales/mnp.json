@@ -1270,7 +1270,9 @@
     "statusDeclined": "已拒绝",
     "shipping": "发布中",
     "noShippingYet": "无物件正做",
-    "shippingAppearHere": "正做其请求会在只搭出现。"
+    "shippingAppearHere": "正做其请求会在只搭出现。",
+    "showOneMoreReply": "再显示1条回复",
+    "showMoreReplies": "再显示{{count}}条回复"
   },
   "auth": {
     "loginRequired": "须登录"

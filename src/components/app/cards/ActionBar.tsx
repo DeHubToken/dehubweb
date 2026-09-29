@@ -54,7 +54,7 @@ import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
 import { applyVoteStateToNFT, isVoteConfirmed } from '@/lib/engagement';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
-import { reconcileCommentCount, subscribeToCommentCreated } from '@/lib/comment-count-events';
+import { reconcileCommentCount, subscribeToCommentCount } from '@/lib/comment-count-events';
 import {
   DOUBLE_TAP_LIKE_EVENT,
   OPEN_REACTIONS_EVENT,
@@ -356,20 +356,30 @@ export function ActionBar({
   const voteWeight = voteWeightProp ?? selfWeight;
 
   const serverCommentCount = rawCommentCount ?? 0;
-  const [commentCount, setCommentCount] = useState(serverCommentCount);
+  // `pending` is the net change posted or deleted from this client that the
+  // server figure has not caught up with yet — it decides which way a stale
+  // server count is wrong. See reconcileCommentCount.
+  const [commentTally, setCommentTally] = useState({ count: serverCommentCount, pending: 0 });
+  const commentCount = commentTally.count;
   const commentCountPostRef = useRef(postId);
   useEffect(() => {
     if (commentCountPostRef.current !== postId) {
       commentCountPostRef.current = postId;
-      setCommentCount(serverCommentCount);
+      setCommentTally({ count: serverCommentCount, pending: 0 });
       return;
     }
-    setCommentCount((current) => reconcileCommentCount(current, serverCommentCount));
+    setCommentTally(({ count, pending }) => {
+      const next = reconcileCommentCount(count, serverCommentCount, pending);
+      return { count: next, pending: next === serverCommentCount ? 0 : pending };
+    });
   }, [postId, serverCommentCount]);
   useEffect(() => {
     if (!postId) return;
-    return subscribeToCommentCreated(postId, () => {
-      setCommentCount((current) => current + 1);
+    return subscribeToCommentCount(postId, (delta) => {
+      setCommentTally(({ count, pending }) => ({
+        count: Math.max(0, count + delta),
+        pending: pending + delta,
+      }));
     });
   }, [postId]);
   

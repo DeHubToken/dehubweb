@@ -1755,6 +1755,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       style={{ overscrollBehavior: 'contain' }}
                     >
                       <CommentsSection
+                        key={currentShort.id}
                         tokenId={currentShort.id}
                         onClose={() => setShowComments(false)}
                         initialTab={commentsInitialTab}
@@ -1995,6 +1996,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   style={{ touchAction: 'pan-y', overscrollBehavior: 'contain' }}
                 >
                   <CommentsSection
+                    key={currentShort.id}
                     tokenId={currentShort.id}
                     onClose={() => setShowComments(false)}
                     initialTab={commentsInitialTab}
@@ -2068,7 +2070,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-hidden"
             >
           <div className="flex-1 min-h-0 [&>div]:h-full [&>div]:min-h-0 [&>div]:max-h-none [&>div]:mt-0 [&>div]:p-0">
+                {/* Keyed on the short: this panel stays mounted while the reader
+                    scrolls, so without a fresh section the half-written reply,
+                    its target and every optimistic row from one short carried
+                    into the next — and a reply could post there under the
+                    previous short's parent. */}
                 <CommentsSection
+                  key={currentShort.id}
                   tokenId={currentShort.id}
                   onClose={() => {}}
                   initialTab={commentsInitialTab}
