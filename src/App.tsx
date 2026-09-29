@@ -128,7 +128,7 @@ const JungleBackground = React.lazy(() =>
 const JungleGameLauncher = React.lazy(() =>
   import("@/components/app/jungle/JungleGameLauncher").then(m => ({ default: m.JungleGameLauncher }))
 );
-const StateGalleryPage = import.meta.env.DEV
+const StateGalleryPage = (import.meta.env.DEV || window.location.hostname === 'staging.dehub.io')
   ? React.lazy(() => import("@/pages/app/StateGalleryPage"))
   : null;
 
