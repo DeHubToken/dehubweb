@@ -15,8 +15,6 @@
  * to Krio.
  */
 export const WIDGET_FALLBACK_LOCALES: readonly string[] = [
-  'acm', 'acw', 'aec', 'ajp', 'apd', 'arz', 'ayn', 'ctg', 'dcc', 'ha',
-  'jv', 'ku', 'mi', 'mnp', 'no', 'om', 'pcm', 'qu', 'rkt', 'sd',
-  'sk', 'skr', 'so', 'sq', 'syl', 'tg', 'th', 'uz', 'wes', 'wuu',
-  'yo', 'yue', 'zu',
+  'acm', 'acw', 'aec', 'ajp', 'apd', 'ayn', 'ctg', 'dcc', 'ku', 'mnp',
+  'pcm', 'rkt', 'skr', 'syl', 'th', 'wes', 'wuu',
 ];
