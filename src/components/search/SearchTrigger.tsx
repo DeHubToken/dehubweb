@@ -3,9 +3,11 @@ import React from 'react';
 import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useDocsSearch } from '@/hooks/useDocsSearch';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const SearchTrigger = () => {
   const { setIsOpen } = useDocsSearch();
+  const { t } = useLanguage();
 
   const handleClick = () => {
     setIsOpen(true);
@@ -18,8 +20,8 @@ export const SearchTrigger = () => {
       onClick={handleClick}
     >
       <Search className="mr-2 h-4 w-4" />
-      <span className="hidden lg:inline-flex">Search docs & blog...</span>
-      <span className="inline-flex lg:hidden">Search...</span>
+      <span className="hidden lg:inline-flex">{t('docsSearch.placeholder')}</span>
+      <span className="inline-flex lg:hidden">{t('docsSearch.placeholderShort')}</span>
       <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border border-border bg-background/60 px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 sm:flex">
         <span className="text-xs">⌘</span>K
       </kbd>

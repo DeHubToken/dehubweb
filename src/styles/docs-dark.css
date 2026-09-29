@@ -3,7 +3,9 @@
    Scoped to .docs-root so it never bleeds into the main app.
    ============================================================ */
 
-/* Light theme tokens for /docs (when .dark is NOT present) */
+/* Light theme tokens for /docs (when .dark is NOT present). The same two token
+   sets also scope [data-docs-dialog], the search dialog Radix portals out to
+   <body>, so it reads in the docs palette instead of the app's. */
 .docs-root {
   /* Own stacking context above any app-level fixed background canvas (the
      cosmic/hazy/swarms theme shaders mount at position:fixed; z-index:0). The
@@ -200,7 +202,10 @@ html.dark .docs-root svg {
   color: hsl(0 0% 85%);
 }
 
-html.dark .docs-root img[class*="brightness-0"] {
+/* Knock a coloured logo to white. An img that already carries its own
+   `brightness-0 invert` is white by its classes; replacing its filter with a
+   bare invert would colour-invert the original artwork instead. */
+html.dark .docs-root img[class*="brightness-0"]:not([class~="invert"]) {
   filter: invert(1) !important;
 }
 
@@ -248,4 +253,48 @@ html.dark .docs-root [class*="badge"],
 html.dark .docs-root [class*="Badge"] {
   background-color: hsl(0 0% 15%) !important;
   color: hsl(0 0% 100%) !important;
+}
+
+/* ========================================
+   SEARCH DIALOG — portalled outside .docs-root
+   ======================================== */
+
+/* Radix portals the search dialog to <body>, so none of the .docs-root tokens
+   above reach it and it painted in the app's palette instead: dark text on a
+   dark shell under paper docs, off-brand navy under dark ones. It carries
+   data-docs-dialog; give it the same two token sets. */
+[data-docs-dialog] {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 0%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 40%;
+  --accent: 0 0% 92%;
+  --accent-foreground: 0 0% 0%;
+  --border: 0 0% 88%;
+  --ring: 0 0% 66%;
+}
+html.dark [data-docs-dialog] {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --popover: 0 0% 8%;
+  --popover-foreground: 0 0% 100%;
+  --muted: 0 0% 14%;
+  --muted-foreground: 0 0% 70%;
+  --accent: 0 0% 18%;
+  --accent-foreground: 0 0% 100%;
+  --border: 0 0% 20%;
+  --ring: 0 0% 40%;
+}
+/* The shell's close button and mobile drag handle are drawn white for the
+   app's dark sheets; follow the docs ink instead. */
+[data-docs-dialog] > button[class*="text-white"] {
+  color: hsl(var(--muted-foreground));
+}
+[data-docs-dialog] > button[class*="text-white"]:hover {
+  background-color: hsl(var(--accent));
+}
+[data-docs-dialog] > .bg-white\/30 {
+  background-color: hsl(var(--foreground) / 0.25);
 }
