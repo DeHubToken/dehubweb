@@ -11,9 +11,9 @@ import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { useCallback, useEffect, useRef, useState, memo } from 'react';
+import { useCallback, useRef, memo } from 'react';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
-import { useScrollDirection, SCROLL_NAV_SOURCE_ATTR } from '@/hooks/use-scroll-direction';
+import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { WarLogo } from '@/components/app/war/WarLogoLazy';
 import { warmLoginSheet } from '@/components/app/LoginModal';
@@ -92,52 +92,6 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     }
   }, [navigate]);
 
-  // Canvas themes render the header transparent at the top of the page and
-  // frost it back to liquid glass once content scrolls underneath. The feed
-  // can scroll on window, <html>, <body> or #app-root depending on browser,
-  // so listen on all candidates (same approach as useScrollDirection) — an
-  // IntersectionObserver sentinel misses body-scroll here.
-  const [scrolled, setScrolled] = useState(false);
-  const scrolledRef = useRef(false);
-
-  // The post layer scrolls itself rather than the document, so its offset has
-  // to be read too or the header stays clear over a scrolled post. Resolved
-  // here, once per route, instead of inside the scroll handler: the layer
-  // mounts and unmounts with the route, and the old code ran a document-wide
-  // querySelector on every scroll event — six times over, once per listener.
-  const scrollSourceRef = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    scrollSourceRef.current = document.querySelector<HTMLElement>(`[${SCROLL_NAV_SOURCE_ATTR}]`);
-  }, [location.pathname]);
-
-  useEffect(() => {
-    const getY = () =>
-      window.scrollY || document.documentElement.scrollTop || document.body.scrollTop ||
-      document.getElementById('app-root')?.scrollTop || 0;
-    const getSourceY = () => {
-      const source = scrollSourceRef.current;
-      return Math.max(getY(), source?.isConnected ? source.scrollTop : 0);
-    };
-    const onScroll = () => {
-      const next = getSourceY() > 8;
-      if (next !== scrolledRef.current) {
-        scrolledRef.current = next;
-        setScrolled(next);
-      }
-    };
-    onScroll();
-    // Two listeners, not six. Scroll events do not bubble, but they do reach a
-    // capture listener on document whatever the target is — <html>, <body>,
-    // #app-root or the post layer — so the capture listener alone covers every
-    // element scroller, and `window` covers the viewport case.
-    window.addEventListener('scroll', onScroll, { passive: true });
-    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      document.removeEventListener('scroll', onScroll, { capture: true });
-    };
-  }, []);
-
   const isNotificationsActive = location.pathname === '/app/notifications' || location.pathname === '/notifications';
   // With or without the /app prefix — both spellings reach the same page.
   const isPostPage = /^\/(?:app\/)?(?:post|video)\//.test(location.pathname);
@@ -166,7 +120,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   }, [navType, navigate]);
 
   return (
-    <header data-mobile-header data-scrolled={scrolled ? 'true' : 'false'} className={`lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
+    <header data-mobile-header className={`lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
       {/* Profile — left slot.
           Direct post-page URL access: back button replaces the menu/settings toggle.
           When opened as an overlay from the feed, the feed's tab bar already hosts a back button,
