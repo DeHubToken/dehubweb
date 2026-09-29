@@ -75,7 +75,19 @@
     "images": "Afbeeldingen",
     "videos": "Video's",
     "music": "Muziek",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "Ontdek DeHub — Trending makers, video's & community's",
+    "seoDescription": "Ontdek wat er trending is op DeHub: topmakers, video's, muziek, livestreams en community's op het opensource sociale platform in handen van gebruikers."
+  },
+  "videos": {
+    "seoTitle": "Videofeed — Bekijk on-chain video's op DeHub",
+    "seoDescription": "Bekijk de nieuwste on-chain video's van makers op DeHub: lange uploads met pay-per-view, token-gated content en gedeelde advertentie-inkomsten op het videoplatform in handen van gebruikers.",
+    "heading": "DeHub Videofeed"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Korte video's op DeHub",
+    "seoDescription": "Scrol door de nieuwste korte video's op DeHub: een verticale, swipebare Shorts-feed op het opensource sociale platform in handen van gebruikers, waar makers hun eigen content bezitten.",
+    "heading": "DeHub Shorts"
   },
   "settings": {
     "showOnline": "Laat zien wanneer ik online ben",
@@ -1566,7 +1578,9 @@
     "offerWorthNow": "Ongeveer {{amount}} tokens tegen de huidige koers",
     "offerNotePlaceholder": "Voeg een notitie toe (optioneel)",
     "offerCommitsNothing": "Een aanbod doen kost niets en reserveert geen tokens. Je betaalt pas als de eigenaar accepteert.",
-    "offerNeedsHandle": "Dit account heeft geen gebruikersnaam om op te bieden."
+    "offerNeedsHandle": "Dit account heeft geen gebruikersnaam om op te bieden.",
+    "options": "Profielopties",
+    "translateBio": "Bio vertalen"
   },
   "tv": {
     "seoTitle": "Live TV — Gratis kanalen van over de hele wereld",

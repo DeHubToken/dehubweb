@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
 import { eraseAccount } from '@/lib/api/dehub/account-erasure';
 
@@ -25,6 +26,9 @@ export default function DeleteAccount() {
   };
   return (
     <main className="fixed inset-0 overflow-y-auto bg-background text-foreground">
+      {/* A utility page: the worker already answers it noindex for every UA;
+          without its own head the tab kept the previous route's title. */}
+      <SEOHead title={`${t('accountDeletion.title')} — DeHub`} description={t('accountDeletion.warning')} noindex />
       <div className="mx-auto max-w-xl px-6 py-12 space-y-6">
         <Link to="/app/settings" className="text-sm underline">{t('accountDeletion.back')}</Link>
         <h1 className="text-2xl font-semibold">{t(accepted ? 'accountDeletion.accepted' : 'accountDeletion.title')}</h1>

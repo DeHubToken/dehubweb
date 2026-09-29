@@ -75,7 +75,19 @@
     "images": "Fɔlɔw",
     "videos": "Video",
     "music": "Musikɛ",
-    "live": "Kɛnɛ"
+    "live": "Kɛnɛ",
+    "seoTitle": "DeHub lajɛ — Dilanbagaw, video ani jɛkulu tɔgɔmaw",
+    "seoDescription": "Min bɛ tɔgɔ la DeHub kan sisan, o lajɛ: dilanbaga ɲumanw, video, donkili, ɲɛnama jirali ani jɛkuluw, sosiyali yɔrɔ dayɛlɛnin min ye a baarakɛlaw yɛrɛ ta ye."
+  },
+  "videos": {
+    "seoTitle": "Video sira — On-chain video lajɛ DeHub kan",
+    "seoDescription": "Dilanbagaw ka on-chain video kuraw lajɛ DeHub kan: video janw ni PPV sara ye, tokɛn-dogolen fɛnw ani piblisite wari tilali, video yɔrɔ min ye a baarakɛlaw yɛrɛ ta ye.",
+    "heading": "DeHub Video sira"
+  },
+  "shorts": {
+    "seoTitle": "Video surunw — Shorts DeHub kan",
+    "seoDescription": "Video surun kuraw lajɛ DeHub kan: video surunw sira jɔlen, i bɛ se k'u yɛlɛma ni i bolokɔni ye, sosiyali yɔrɔ dayɛlɛnin kan, dilanbagaw ye u ka fɛnw tigiw ye yɔrɔ min na.",
+    "heading": "DeHub Video surunw"
   },
   "settings": {
     "showOnline": "N'i be n' ka site web kan, i ka n' ka site web yira",
@@ -1358,7 +1370,9 @@
     "offerWorthNow": "Aka {{amount}} jɔnɔw la kaan kaan",
     "offerNotePlaceholder": "Sɛbɛn dɔ fara a kan (i sago)",
     "offerCommitsNothing": "O tɛ wari di mɔgɔ ma, o tɛ wari di mɔgɔ ma. I ka kan ka wari di ni a tigi sɔnna.",
-    "offerNeedsHandle": "Nin jatebɔlan in tɛ tɔgɔ si sɔrɔ ka fɛɛrɛ kɛ a kan."
+    "offerNeedsHandle": "Nin jatebɔlan in tɛ tɔgɔ si sɔrɔ ka fɛɛrɛ kɛ a kan.",
+    "options": "Profil sugandiliw",
+    "translateBio": "Bio bayɛlɛma"
   },
   "tv": {
     "seoTitle": "Lɪv TV — Frɪ Chɛnɛl Frɔm ɔn dɔn Wɔld",

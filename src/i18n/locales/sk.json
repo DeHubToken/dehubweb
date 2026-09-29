@@ -79,7 +79,19 @@
     "search": "Hľadať",
     "searchPlaceholder": "Hľadať príspevky, ľudí a ďalšie...",
     "trending": "Trendy",
-    "recentSearches": "Nedávne vyhľadávania"
+    "recentSearches": "Nedávne vyhľadávania",
+    "seoTitle": "Objavujte DeHub — populárni tvorcovia, videá a komunity",
+    "seoDescription": "Zistite, čo je populárne na DeHub: najlepší tvorcovia, videá, hudba, živé prenosy a komunity na sociálnej platforme s otvoreným kódom, ktorú vlastnia používatelia."
+  },
+  "videos": {
+    "seoTitle": "Videofeed — pozerajte on-chain videá na DeHub",
+    "seoDescription": "Pozerajte najnovšie on-chain videá od tvorcov na DeHub: dlhé videá s platbou za zhliadnutie, obsahom prístupným cez tokeny a podielom na príjmoch z reklám na videoplatforme vlastnenej používateľmi.",
+    "heading": "Videofeed DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Krátke videá — krátky formát na DeHub",
+    "seoDescription": "Posúvajte sa najnovšími krátkymi videami na DeHub: vertikálny feed krátkych videí s potiahnutím prstom na sociálnej platforme s otvoreným kódom, ktorú vlastnia používatelia a kde tvorcovia vlastnia svoj obsah.",
+    "heading": "Krátke videá DeHub"
   },
   "settings": {
     "showOnline": "Zobraziť, keď som online",
@@ -1457,7 +1469,9 @@
     "muteUser": "Stlmiť",
     "subscribe": "Predplatiť",
     "subscribed": "Predplatené",
-    "tip": "Tip"
+    "tip": "Tip",
+    "options": "Možnosti profilu",
+    "translateBio": "Preložiť bio"
   },
   "tv": {
     "seoTitle": "Živé TV — Zdarma Kanály zo Celého Sveta",

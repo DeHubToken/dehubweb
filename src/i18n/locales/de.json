@@ -75,7 +75,19 @@
     "images": "Bilder",
     "videos": "Videos",
     "music": "Musik",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "DeHub entdecken — Angesagte Creator, Videos & Communitys",
+    "seoDescription": "Entdecken Sie, was auf DeHub gerade angesagt ist: Top-Creator, Videos, Musik, Livestreams und Communitys auf der quelloffenen Social-Plattform im Besitz der Nutzer."
+  },
+  "videos": {
+    "seoTitle": "Video-Feed — On-Chain-Videos auf DeHub ansehen",
+    "seoDescription": "Sehen Sie die neuesten On-Chain-Videos von Creatorn auf DeHub: lange Uploads mit Pay-per-View, Inhalten mit Token-Zugang und Beteiligung an Werbeeinnahmen auf der nutzereigenen Videoplattform.",
+    "heading": "DeHub Video-Feed"
+  },
+  "shorts": {
+    "seoTitle": "Kurzvideos — Vertikale Clips auf DeHub",
+    "seoDescription": "Scrollen Sie durch die neuesten Kurzvideos auf DeHub: ein vertikaler, wischbarer Feed auf der quelloffenen, nutzereigenen Social-Plattform, auf der Creator ihre Inhalte selbst besitzen.",
+    "heading": "DeHub Kurzvideos"
   },
   "settings": {
     "showOnline": "Anzeigen, wenn ich online bin",
@@ -1373,7 +1385,9 @@
     "offerWorthNow": "Ungefähr {{amount}} Token zum aktuellen Kurs",
     "offerNotePlaceholder": "Notiz hinzufügen (optional)",
     "offerCommitsNothing": "Ein Angebot zu machen kostet nichts und bindet keine Token. Sie zahlen nur, wenn der Eigentümer annimmt.",
-    "offerNeedsHandle": "Dieses Konto hat keinen Benutzernamen, für den man bieten könnte."
+    "offerNeedsHandle": "Dieses Konto hat keinen Benutzernamen, für den man bieten könnte.",
+    "options": "Profiloptionen",
+    "translateBio": "Bio übersetzen"
   },
   "tv": {
     "seoTitle": "Live TV — Kostenlose Kanäle aus der ganzen Welt",

@@ -75,7 +75,19 @@
     "images": "Suuraalee",
     "videos": "Viidiyoowwan",
     "music": "Muuziqaa",
-    "live": "Kallattii"
+    "live": "Kallattii",
+    "seoTitle": "DeHub Qoradhu — Uumtoota, Viidiyoowwan fi Hawaasa Beekamoo",
+    "seoDescription": "Waan DeHub irratti beekamaa jiru argadhu: uumtoota olaanoo, viidiyoowwan, muuziqaa, tamsaasa kallattii fi hawaasota waltajjii hawaasummaa madda banaa, kan fayyadamtoonni qaban irratti."
+  },
+  "videos": {
+    "seoTitle": "Feedii Viidiyoo — Viidiyoowwan On-Chain DeHub irratti Ilaali",
+    "seoDescription": "Viidiyoowwan on-chain haaraa uumtoota DeHub irraa ilaali: viidiyoowwan dheeraa kaffaltii ilaalcha tokkoon, qabiyyee tookeniin to'atamu fi galii beeksisaa qooddachuu waltajjii viidiyoo fayyadamtoonni qaban irratti.",
+    "heading": "Feedii Viidiyoo DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Gabaabduu — Viidiyoowwan Gabaabaa DeHub irratti",
+    "seoDescription": "Viidiyoowwan gabaabaa haaraa DeHub irratti sosochoosi: feedii gabaabduu dhaabbataa, harkaan sochoosamu waltajjii hawaasummaa madda banaa, kan fayyadamtoonni qaban, uumtoonni qabiyyee isaanii itti abbaa ta'an irratti.",
+    "heading": "DeHub Gabaabduu"
   },
   "settings": {
     "showOnline": "Yeroon toora interneetii irra jiru agarsiisi",
@@ -1386,7 +1398,9 @@
     "offerWorthNow": "Meeshaalee {{amount}} safara irra",
     "offerNotePlaceholder": "Yaadannoo dabali (filannoo)",
     "offerCommitsNothing": "Dhiheenni hin galchamu, meeshaaleen hin qabamu. Kan galchitu yoo abbaan isaa fudhate qofa.",
-    "offerNeedsHandle": "Herregni kun maqaa fayyadamaa dhiheessi irratti godhamu hin qabu."
+    "offerNeedsHandle": "Herregni kun maqaa fayyadamaa dhiheessi irratti godhamu hin qabu.",
+    "options": "Filannoowwan piroofaayilii",
+    "translateBio": "Seenaa dhuunfaa hiiki"
   },
   "tv": {
     "seoTitle": "Live TV — Chaanaalii Bilisaa Addunyaa Irraa",

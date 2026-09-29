@@ -75,7 +75,19 @@
     "images": "Images",
     "videos": "Vidéos",
     "music": "Musique",
-    "live": "En direct"
+    "live": "En direct",
+    "seoTitle": "Explorer DeHub — Créateurs, vidéos et communautés tendance",
+    "seoDescription": "Découvrez les tendances sur DeHub : meilleurs créateurs, vidéos, musique, lives et communautés sur la plateforme sociale open source détenue par ses utilisateurs."
+  },
+  "videos": {
+    "seoTitle": "Fil vidéo — Regardez des vidéos on-chain sur DeHub",
+    "seoDescription": "Regardez les dernières vidéos on-chain des créateurs sur DeHub : vidéos longues en pay-per-view, contenu réservé aux détenteurs de tokens et partage des revenus publicitaires sur la plateforme vidéo détenue par ses utilisateurs.",
+    "heading": "Fil vidéo DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Courts — Vidéos courtes sur DeHub",
+    "seoDescription": "Faites défiler les dernières vidéos courtes sur DeHub : un fil vertical à balayer sur la plateforme sociale open source détenue par ses utilisateurs, où les créateurs possèdent leur contenu.",
+    "heading": "Courts DeHub"
   },
   "settings": {
     "showOnline": "Montrer quand je suis en ligne",
@@ -1373,7 +1385,9 @@
     "offerWorthNow": "Environ {{amount}} jetons au taux actuel",
     "offerNotePlaceholder": "Ajoute une note (facultatif)",
     "offerCommitsNothing": "Faire une offre ne coûte rien et ne retient aucun jeton. Vous ne payez que si le propriétaire accepte.",
-    "offerNeedsHandle": "Ce compte n’a pas de nom d’utilisateur à proposer."
+    "offerNeedsHandle": "Ce compte n’a pas de nom d’utilisateur à proposer.",
+    "options": "Options du profil",
+    "translateBio": "Traduire la bio"
   },
   "tv": {
     "seoTitle": "Télévision en direct — Chaînes gratuites du monde entier",

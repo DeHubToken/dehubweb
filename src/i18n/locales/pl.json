@@ -75,7 +75,19 @@
     "images": "Zdjęcia",
     "videos": "Filmy",
     "music": "Muzyka",
-    "live": "Na żywo"
+    "live": "Na żywo",
+    "seoTitle": "Odkrywaj DeHub — popularni twórcy, filmy i społeczności",
+    "seoDescription": "Odkryj, co jest popularne na DeHub: najlepsi twórcy, filmy, muzyka, transmisje na żywo i społeczności na otwartoźródłowej platformie społecznościowej należącej do użytkowników."
+  },
+  "videos": {
+    "seoTitle": "Kanał wideo — oglądaj filmy on-chain na DeHub",
+    "seoDescription": "Oglądaj najnowsze filmy on-chain od twórców na DeHub: długie materiały z płatnością za wyświetlenie, treściami dostępnymi za tokeny i podziałem przychodów z reklam na platformie wideo należącej do użytkowników.",
+    "heading": "Kanał wideo DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Krótkie — krótkie filmy na DeHub",
+    "seoDescription": "Przewijaj najnowsze krótkie filmy na DeHub: pionowy kanał krótkich form do przesuwania palcem na otwartoźródłowej platformie społecznościowej należącej do użytkowników, gdzie twórcy są właścicielami swoich treści.",
+    "heading": "Krótkie filmy DeHub"
   },
   "settings": {
     "showOnline": "Pokaż, gdy jestem online",
@@ -1373,7 +1385,9 @@
     "offerWorthNow": "Około {{amount}} tokenów po obecnym kursie",
     "offerNotePlaceholder": "Dodaj notatkę (opcjonalnie)",
     "offerCommitsNothing": "Składanie oferty nic nie kosztuje i nie blokuje żadnych tokenów. Płacisz dopiero wtedy, gdy właściciel zaakceptuje.",
-    "offerNeedsHandle": "To konto nie ma nazwy użytkownika, na którą można złożyć ofertę."
+    "offerNeedsHandle": "To konto nie ma nazwy użytkownika, na którą można złożyć ofertę.",
+    "options": "Opcje profilu",
+    "translateBio": "Przetłumacz bio"
   },
   "tv": {
     "seoTitle": "Live TV — Bezpłatne kanały z całego świata",

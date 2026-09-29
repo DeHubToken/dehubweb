@@ -75,7 +75,19 @@
     "images": "图片",
     "videos": "视频",
     "music": "音乐",
-    "live": "直播"
+    "live": "直播",
+    "seoTitle": "探索 DeHub — 热门创作者、视频与社区",
+    "seoDescription": "发现 DeHub 上的热门内容：开源、用户所有的社交平台上的顶级创作者、视频、音乐、直播和社区。"
+  },
+  "videos": {
+    "seoTitle": "视频动态 — 在 DeHub 观看链上视频",
+    "seoDescription": "在 DeHub 观看创作者最新的链上视频：在用户所有的视频平台上，提供按次付费的长视频、代币门槛内容和广告收入分成。",
+    "heading": "DeHub 视频动态"
+  },
+  "shorts": {
+    "seoTitle": "短视频 — DeHub 上的竖屏短片",
+    "seoDescription": "在 DeHub 刷最新的短视频：开源、用户所有的社交平台上可滑动的竖屏短视频流，创作者拥有自己的内容。",
+    "heading": "DeHub 短视频"
   },
   "settings": {
     "showOnline": "顯示我線上",
@@ -1371,7 +1383,9 @@
     "offerWorthNow": "按当前汇率约 {{amount}} 个代币",
     "offerNotePlaceholder": "नोट जोड़ीं (वैकल्पिक)",
     "offerCommitsNothing": "出价不收费，也不占用代币。只有在所有者接受后才付款。",
-    "offerNeedsHandle": "這個帳戶沒有提供任何用戶名。"
+    "offerNeedsHandle": "這個帳戶沒有提供任何用戶名。",
+    "options": "个人资料选项",
+    "translateBio": "翻译简介"
   },
   "tv": {
     "srHeading": "DeHub Live TV — 分散化社交媒体，抗審查且言論自由",

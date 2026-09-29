@@ -1,6 +1,5 @@
 
 import React, { useRef, useEffect, useLayoutEffect } from 'react';
-import SEO from '@/components/SEO';
 import { BlogSEOHelper } from '@/components/blog/BlogSEOHelper';
 import { BlogHeader } from '@/components/blog/sections/BlogHeader';
 import { BlogFeaturedSection } from '@/components/blog/sections/BlogFeaturedSection';
@@ -52,11 +51,6 @@ const Blog = () => {
   // indexes every blog post — the old in-page search pill is gone.
   return (
     <>
-      <SEO
-        title="Community Blog"
-        description="Stay updated with the latest news, insights, and stories from the DeHub ecosystem. Join our community as we build the future of decentralized infrastructure."
-        url="/docs/blog"
-      />
       <BlogSEOHelper />
       <div className="space-y-12">
         <BlogHeader />

@@ -75,7 +75,19 @@
     "images": "Sawirrada",
     "videos": "Fiidiyowyada",
     "music": "Muusig",
-    "live": "Toos"
+    "live": "Toos",
+    "seoTitle": "Sahan DeHub — Abuurayaal, Fiidiyowyo iyo Bulshooyin Caan ah",
+    "seoDescription": "Ogow waxa caanka ka ah DeHub: abuurayaasha ugu sarreeya, fiidiyowyo, muusig, baahin toos ah iyo bulshooyin ku yaal barxadda bulshada ee il furan ee ay leeyihiin isticmaalayaashu."
+  },
+  "videos": {
+    "seoTitle": "Quudinta Fiidiyowga — Daawo Fiidiyowyo On-Chain ah DeHub",
+    "seoDescription": "Daawo fiidiyowyada on-chain ee ugu dambeeyay ee abuurayaasha DeHub: fiidiyowyo dhaadheer oo leh lacag-bixin daawasho kasta, nuxur ku xiran token iyo qaybsiga dakhliga xayeysiinta, barxadda fiidiyowga ee ay leeyihiin isticmaalayaashu.",
+    "heading": "Quudinta Fiidiyowga DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Gaagaaban — Fiidiyowyo Gaagaaban oo DeHub ah",
+    "seoDescription": "Rogrog fiidiyowyada gaagaaban ee ugu dambeeyay DeHub: quudin toosan oo la jiidi karo oo fiidiyowyo gaagaaban ah, barxadda bulshada ee il furan ee ay leeyihiin isticmaalayaashu, halkaas oo abuurayaashu ay iska leeyihiin nuxurkooda.",
+    "heading": "DeHub Gaagaaban"
   },
   "settings": {
     "showOnline": "Muuji marka aan ku jiro internetka",
@@ -1373,7 +1385,9 @@
     "offerWorthNow": "Ku dhawaad {{amount}} token qiimaha hadda jira",
     "offerNotePlaceholder": "Ku dar qoraal (ikhtiyaari)",
     "offerCommitsNothing": "Samaynta dalab waxba kuma kacayso mana hayso wax token ah. Waxaad bixinaysaa kaliya haddii milkiiluhu aqbalo.",
-    "offerNeedsHandle": "Akoonkan ma laha magac isticmaale oo dalab loo sameeyo."
+    "offerNeedsHandle": "Akoonkan ma laha magac isticmaale oo dalab loo sameeyo.",
+    "options": "Doorashooyinka profile-ka",
+    "translateBio": "Turjun taariikh nololeedka"
   },
   "tv": {
     "seoTitle": "Telefishanka tooska ah — Khaanadaha bilaashka ah ee ka imanaya adduunka oo dhan",

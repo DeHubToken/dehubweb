@@ -75,7 +75,19 @@
     "images": "Imej",
     "videos": "Video",
     "music": "Muzik",
-    "live": "Langsung"
+    "live": "Langsung",
+    "seoTitle": "Teroka DeHub — Pencipta, Video & Komuniti Sohor Kini",
+    "seoDescription": "Temui apa yang sohor kini di DeHub: pencipta teratas, video, muzik, strim langsung dan komuniti di platform sosial sumber terbuka milik pengguna."
+  },
+  "videos": {
+    "seoTitle": "Suapan Video — Tonton Video On-Chain di DeHub",
+    "seoDescription": "Tonton video on-chain terkini daripada pencipta di DeHub: muat naik bentuk panjang dengan bayar setiap tontonan, kandungan berpagar token dan perkongsian hasil iklan di platform video milik pengguna.",
+    "heading": "Suapan Video DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Video Pendek di DeHub",
+    "seoDescription": "Tatal video pendek terkini di DeHub: suapan Shorts menegak yang boleh dileret di platform sosial sumber terbuka milik pengguna, tempat pencipta memiliki kandungan mereka sendiri.",
+    "heading": "DeHub Shorts"
   },
   "settings": {
     "showOnline": "Tunjukkan apabila saya berada dalam talian",
@@ -1639,7 +1651,9 @@
     "offerWorthNow": "Kira-kira {{amount}} token pada kadar semasa",
     "offerNotePlaceholder": "Tambah nota (pilihan)",
     "offerCommitsNothing": "Membuat tawaran adalah percuma dan tidak menahan token. Anda hanya membayar jika pemilik menerima.",
-    "offerNeedsHandle": "Akaun ini tiada nama pengguna untuk ditawar."
+    "offerNeedsHandle": "Akaun ini tiada nama pengguna untuk ditawar.",
+    "options": "Pilihan profil",
+    "translateBio": "Terjemah bio"
   },
   "tv": {
     "seoTitle": "Live TV — Saluran Percuma Dari Seluruh Dunia",
