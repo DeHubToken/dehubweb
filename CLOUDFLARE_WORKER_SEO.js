@@ -4015,6 +4015,11 @@ function shouldServeSSR(pathname) {
   // ROUTE_SEGMENT, so without this rule the share link unfurls as the SPA
   // shell — the flow renderer below would never run.
   if (/^\/creator\/flow\/[a-z0-9]{6,32}\/?$/.test(pathname)) return true;
+  // One creator pack and one community DEX pool. Same story: `packs` and
+  // `dex` are reserved ROUTE_SEGMENTs, so both renderers below sat unreached
+  // and crawlers got the noindexed SPA shell.
+  if (/^\/(?:app\/)?packs\/[a-z0-9][a-z0-9_-]{2,47}\/?$/i.test(pathname)) return true;
+  if (/^\/dex\/(?:base|ethereum|robinhood|solana)\/(?:0x[0-9a-fA-F]{40}|[1-9A-HJ-NP-Za-km-z]{32,44})\/?$/.test(pathname)) return true;
   // One film or series. The renderer for these has existed since /cinema
   // shipped and had never run once: `cinema` is a reserved ROUTE_SEGMENT, so
   // the profile fall-through rejected the path and the SPA shell went out
@@ -5721,10 +5726,11 @@ async function handleRequest(request, env, ctx) {
   const dexPoolMatch = cleanPath.match(/^\/dex\/(base|ethereum|robinhood|solana)\/(0x[0-9a-fA-F]{40}|[1-9A-HJ-NP-Za-km-z]{32,44})$/);
   if (dexPoolMatch) {
     const address = dexPoolMatch[1] === 'solana' ? dexPoolMatch[2] : dexPoolMatch[2].toLowerCase();
-    const pool = await supabaseRow(`dex_pools?chain=eq.${dexPoolMatch[1]}&token_address=eq.${encodeURIComponent(address)}&select=*&limit=1`);
+    const pool = await supabaseLookup(`dex_pools?chain=eq.${dexPoolMatch[1]}&token_address=eq.${encodeURIComponent(address)}&select=*&limit=1`);
     if (pool) {
       return guard(new Response(buildDexPoolHtml(pool), { status: 200, headers: blogHeaders }));
     }
+    return entityMiss(pool);
   }
 
   // A single bounty. /work/<uuid> 301s onto this shape further up, so by the
