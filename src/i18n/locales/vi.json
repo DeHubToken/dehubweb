@@ -7514,7 +7514,8 @@
       "yourApps": "Các ứng dụng của bạn",
       "notificationsOn": "Thông báo về",
       "remove": "Thông báo đã bật",
-      "removed": "Xóa"
+      "removed": "Xóa",
+      "rising": "Mới và đang phát triển"
     },
     "dev": {
       "title": "Xây dựng một mini ứng dụng",
@@ -7565,7 +7566,14 @@
       "payTitle": "Nhận thanh toán",
       "payBody": "Nhận thanh toán",
       "notifyTitle": "pay() yêu cầu người dùng gửi DHB cho bạn, trực tiếp vào ví đã ký dehub.json của bạn. Kiểm tra hóa đơn trên máy chủ của bạn trước khi giao bất cứ thứ gì.",
-      "notifyBody": "Gửi thông báo"
+      "notifyBody": "Gửi thông báo",
+      "rankTitle": "Cách cửa hàng xếp hạng ứng dụng",
+      "rankBody": "Mỗi đêm, mỗi ứng dụng được liệt kê đều nhận được điểm số: 55% từ người dùng cũ (những người đã mở ứng dụng trong tuần này và tuần trước đó), 35% từ người dùng hàng tuần, cộng với mức tăng 10% trong 14 ngày đầu tiên. Chỉ tính số tài khoản DeHub đã đăng nhập, vì vậy bot và lượt tải lại trang không kiếm được gì.",
+      "rewardsBody": "Mỗi tháng {{pool}} DHB được chia sẻ giữa các ứng dụng bởi cùng một điểm số, được tính hàng tuần. Để đủ điều kiện, một ứng dụng cần có ví chủ sở hữu đã được xác minh và ít nhất 3 người dùng cũ. Phần thưởng được DeHub trả cho ví của chủ sở hữu.",
+      "rewardsWeek": "Tuần của {{date}}",
+      "rewardPaid": "Đã thanh toán",
+      "rewardPending": "Đang chờ xử lý",
+      "rewardsNone": "Chưa có phần thưởng nào được tính toán. Tuần đầu tiên kết thúc vào thứ Hai."
     },
     "card": {
       "open": "Mở"
@@ -7594,6 +7602,7 @@
       "noOwner": "Ứng dụng này chưa có ví được xác minh để thanh toán."
     },
     "add": {
+      "title": "Thêm {{name}}?",
       "body": "Nó sẽ xuất hiện trong danh sách Ứng dụng của bạn và có thể gửi thông báo cho bạn. Bạn có thể xóa nó bất kỳ lúc nào từ trang Ứng dụng.",
       "confirm": "Nó sẽ xuất hiện dưới mục Các ứng dụng của bạn và có thể gửi thông báo cho bạn. Bạn có thể xóa nó bất kỳ lúc nào từ trang Ứng dụng."
     }

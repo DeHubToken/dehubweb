@@ -7613,7 +7613,8 @@
       "yourApps": "Vaše aplikacije",
       "notificationsOn": "Oznake uključene",
       "remove": "Ukloni",
-      "removed": "Uklonjeno. Više nećete biti obaviješteni."
+      "removed": "Uklonjeno. Više nećete biti obaviješteni.",
+      "rising": "Nove i popularne"
     },
     "dev": {
       "title": "Izgradi mini aplikaciju",
@@ -7664,7 +7665,14 @@
       "payTitle": "Primite plaćanja",
       "payBody": "`pay()` traži od korisnika da vam pošalje DHB, direktno u novčanik koji je potpisao vaš dehub.json. Provjerite potvrdu na vašem serveru prije nego što isporučite nešto.",
       "notifyTitle": "Pošaljite obavijesti",
-      "notifyBody": "Korisnici koji dodaju vašu aplikaciju mogu biti obaviješteni s vašeg servera pomoću vašeg ključa za obavijest. Nema potrebe za čuvanjem pojedinačnih ključeva po korisniku."
+      "notifyBody": "Korisnici koji dodaju vašu aplikaciju mogu biti obaviješteni s vašeg servera pomoću vašeg ključa za obavijest. Nema potrebe za čuvanjem pojedinačnih ključeva po korisniku.",
+      "rankTitle": "Kako trgovina rangira aplikacije",
+      "rankBody": "Svake noći svaka navedena aplikacija dobiva ocjenu: 55% od korisnika koji se vraćaju (ljudi koji su je otvorili ovaj tjedan i tjedan prije), 35% od tjednih korisnika i povećanje od 10% u prvih 14 dana. Računaju se samo prijavljeni DeHub računi, tako da botovi i ponovna učitavanja stranice ne zarađuju ništa.",
+      "rewardsBody": "Svaki mjesec {{pool}} DHB dijeli se između aplikacija istim rezultatom, izračunatim tjedno. Da bi aplikacija ispunjavala uvjete, potreban joj je verificirani novčanik vlasnika i najmanje 3 korisnika koji se vraćaju. Nagrade DeHub isplaćuje vlasniku novčanika.",
+      "rewardsWeek": "Tjedan {{date}}",
+      "rewardPaid": "Plaćeno",
+      "rewardPending": "Planirano",
+      "rewardsNone": "Nagrade još nisu izračunate. Prvi tjedan završava u ponedjeljak."
     },
     "card": {
       "open": "Otvori"

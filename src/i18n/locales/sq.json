@@ -7712,7 +7712,8 @@
       "yourApps": "Apps tuaja.",
       "notificationsOn": "Përthimatimet në",
       "remove": "Ndërro",
-      "removed": "Ndërruar. Do të na lajmerosh më vonë."
+      "removed": "Ndërruar. Do të na lajmerosh më vonë.",
+      "rising": "Të reja dhe në rritje"
     },
     "dev": {
       "title": "Bëj një mini-aplikacion",
@@ -7763,7 +7764,14 @@
       "payTitle": "Përgjigjet pagese",
       "payBody": "pay() i kërkon përdoruesit t 'ju dërgojë DHB, direkt në portofolin që ka nënshkruar dehub.json. Kontrollo faturën në serverin tënd para se të dërgosh ndonjë gjë.",
       "notifyTitle": "Dërgo notifikime",
-      "notifyBody": "Përdoruesit që shtojnë aplikacionin tuaj mund të notifikohen nga shërbimi juaj me çlirën e notifikimeve (notify key). Asnjë token për përdorues të nevojshëm për ruajtur."
+      "notifyBody": "Përdoruesit që shtojnë aplikacionin tuaj mund të notifikohen nga shërbimi juaj me çlirën e notifikimeve (notify key). Asnjë token për përdorues të nevojshëm për ruajtur.",
+      "rankTitle": "Si i rendit dyqani aplikacionet",
+      "rankBody": "Çdo natë secili aplikacion i listuar merr një rezultat: 55% nga përdoruesit që kthehen (njerëzit që e hapën atë këtë javë dhe një javë më parë), 35% nga përdoruesit javorë, plus një rritje prej 10% në 14 ditët e para. Llogaritë e regjistruara në DeHub llogariten vetëm, kështu që botët dhe rimbushjet e faqeve nuk fitojnë asgjë.",
+      "rewardsBody": "Çdo muaj {{pool}} DHB ndahet midis aplikacioneve me të njëjtin rezultat, të llogaritur çdo javë. Për t 'u kualifikuar, një aplikacion ka nevojë për një portofol pronari të verifikuar dhe të paktën 3 përdorues që kthehen. Shpërblimet i paguhen nga DeHub portofolit të pronarit.",
+      "rewardsWeek": "Java e {{date}}",
+      "rewardPaid": "Paguar",
+      "rewardPending": "Në pritje",
+      "rewardsNone": "Nuk janë llogaritur ende shpërblime. Java e parë mbyllet të hënën."
     },
     "card": {
       "open": "Hap"

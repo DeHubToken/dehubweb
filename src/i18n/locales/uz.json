@@ -7732,8 +7732,10 @@
       "fromDehub": "DeHub&#39;dan",
       "noMatch": "Bu qidiruvga hech qanday ilova mos kelmadi.",
       "yourApps": "Ilovalaringiz",
+      "notificationsOn": "Bildirishnomalar yoqilgan",
       "remove": "Olib tashlash",
-      "removed": "Oʻchirilgan. Sizga yana xabar yuborilmaydi."
+      "removed": "Oʻchirilgan. Sizga yana xabar yuborilmaydi.",
+      "rising": "Yangi va yuksalib borayotgan"
     },
     "dev": {
       "title": "Mini ilova yarating",
@@ -7781,8 +7783,17 @@
       "copyLink": "Havolani nusxalash",
       "notifyKey": "Xabar bering, so‘nggi so‘rovlar uchun kalitni o‘zgartiring.",
       "notifyKeyOnce": "Yangi xabar tugmasi {{name}} uchun. Uning nusxasini hozirda oling: u faqat bir marta ko’rsatiladi, va yana birini yaratish uni almashtiradi.",
+      "payTitle": "To&#39;lovlarni qabul qilish",
+      "payBody": "pay() foydalanuvchidan sizga DHB ni to&#39;g&#39;ridan-to&#39;g&#39;ri dehub.json faylingizni imzolagan hamyonga yuborishni so&#39;raydi. Biror narsa yetkazib berishdan oldin serveringizdagi chekni tekshiring.",
       "notifyTitle": "Bildirishnomalarni yuborish",
-      "notifyBody": "Foydalanuvchilar sizning ilanganizni qo'shganida, sizning xabar berish kalitingiz bilan serverdan xabar qilinishi mumkin. Har bir foydalanuvchi uchun tokenlarni saqlash kerak emas."
+      "notifyBody": "Foydalanuvchilar sizning ilanganizni qo'shganida, sizning xabar berish kalitingiz bilan serverdan xabar qilinishi mumkin. Har bir foydalanuvchi uchun tokenlarni saqlash kerak emas.",
+      "rankTitle": "Do&#39;kon ilovalarni qanday reytinglaydi",
+      "rankBody": "Har kecha ro&#39;yxatdagi har bir ilova ball oladi: 55% qayta foydalanuvchilardan (uni shu hafta va undan oldingi haftada ochgan odamlar), 35% haftalik foydalanuvchilardan, shuningdek, dastlabki 14 kun ichida 10% o&#39;sish. Faqat tizimga kirgan DeHub akkauntlari hisobga olinadi, shuning uchun botlar va sahifani qayta yuklash hech qanday foyda keltirmaydi.",
+      "rewardsBody": "Har oy {{pool}} DHB ilovalar o&#39;rtasida bir xil ball bo&#39;yicha taqsimlanadi va haftalik hisoblanadi. Ilovaga egalik qilish uchun tasdiqlangan egasi hamyoni va kamida 3 ta qaytayotgan foydalanuvchi kerak. Mukofotlar DeHub tomonidan egasi hamyoniga o&#39;tkaziladi.",
+      "rewardsWeek": "{{date}} haftasi",
+      "rewardPaid": "To’langan",
+      "rewardPending": "Kutish jarayonida",
+      "rewardsNone": "Hali hech qanday mukofot hisoblanmagan. Birinchi hafta dushanba kuni yopiladi."
     },
     "card": {
       "open": "Ochiq"
@@ -7803,7 +7814,9 @@
       "art-creativity": "San&#39;at va ijodkorlik"
     },
     "pay": {
+      "title": "To&#39;lov {{name}}?",
       "body": "DHB toʻgʻridan-toʻgʻri ilovaning pul xazinasi (wallet) ga yetadi, {{wallet}}. Toʻlovlar qaytarib olinmaydi.",
+      "confirm": "To&#39;lov {{amount}} DHB",
       "sending": "Joylashuvni qabul qilmoqda…",
       "sent": "Tozalanmagan {{amount}} DHB ni {{name}}ga sotib oldim.",
       "noOwner": "Bu ilovalarda hali roʻyxatdan oʻtgan pul yuklamasi yoʻq."

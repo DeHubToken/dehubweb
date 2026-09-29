@@ -7607,7 +7607,11 @@
       "all": "Ehli",
       "fromDehub": "Dehub şäheriniň",
       "noMatch": "Men bu gözlegini görmedim.",
-      "yourApps": "Siziň ulaglaryňyz"
+      "yourApps": "Siziň ulaglaryňyz",
+      "notificationsOn": "Hoş habarlar",
+      "remove": "_Çykar",
+      "removed": "Çykaryldy. Ol size ýene-de habar bermez.",
+      "rising": "Täze we ösüp barýan"
     },
     "dev": {
       "title": "Mini App ýaratmak",
@@ -7653,9 +7657,19 @@
       "stateListed": "Dükanda",
       "stateSuspended": "Durmak",
       "copyLink": "Baglaýyşy nusgala",
+      "notifyKey": "Açary yglan et",
       "notifyKeyOnce": "Yeni bildirim anahtaryňy {{name}} için. Koplayňyz: oň bir maral gosterilip, ikinji birini ykaryňda ykaryňda deýiştirýar.",
+      "payTitle": "Ödeme",
       "payBody": "\"pay()\" gýzalyň DHBýný gýzalyň dehub.json tapýrdyň walletýne doýarýný soýgýr. Serverýňizde bilgiňi tekşirip, her neýseýýný berýp bermeýin.",
-      "notifyBody": "Kullanýçylar sizniň appýnýzý ekleýerlerde, sizniň notify anahtaryňyzla sizniň serverýnýzdan haberdar edile bilerler. Her bir kullanýçylyk tokenlar saklamak gerekmez."
+      "notifyTitle": "Habarlary iber",
+      "notifyBody": "Kullanýçylar sizniň appýnýzý ekleýerlerde, sizniň notify anahtaryňyzla sizniň serverýnýzdan haberdar edile bilerler. Her bir kullanýçylyk tokenlar saklamak gerekmez.",
+      "rankTitle": "Kalkülýutorlary nädip ulanmaly",
+      "rankBody": "Her gije her bir agzalýan ulag bir dereje alýar: 55% gaýdyp gelen ulaglar (bu hepde we öňki hepde açylýan adamlar), 35% hepdelik ulaglar, şol sanda ilkinji 14 günüň içinde 10% artyş. DeHub-da diňe bir ýazylan hasabatlar hasaplanýar, şonuň üçin botlar we sahypa gaýtargylary hiç zat gazanmaýar.",
+      "rewardsBody": "Her aý {{pool}} DHB birmeňzeş derejede, hepdede hasaplanýar. Maýdaly bolmak üçin, bir ulagda tassyklanan eýesi we iň az 3 yzyna dolanan ulagçy gerek. Öwrenmeler DeHub-dan eýesi pulçusyna tölenýär.",
+      "rewardsWeek": "{{date}}hepdesi",
+      "rewardPaid": "Ödeme",
+      "rewardPending": "Garaşmak",
+      "rewardsNone": "Öňki sylaglar henizem hasaplanmady. Birinji hepde duşenbe güni ýapylýar."
     },
     "card": {
       "open": "Aç"
@@ -7679,11 +7693,14 @@
       "title": "Pay {{name}}?",
       "body": "\"DHB\" direkt appýň pul gýzýna gider, {{wallet}}. Öýünler geri alýňmaz.",
       "confirm": "Pay {{amount}} DHB",
-      "sending": "Göndergiň ödenekini yollayýar..."
+      "sending": "Göndergiň ödenekini yollayýar...",
+      "sent": "{{amount}} DHB {{name}} üçin tölenýär.",
+      "noOwner": "Bu ulagda henizem tölemek üçin tassyklanan pul puly ýok."
     },
     "add": {
       "title": "{{name}}?",
-      "body": "Sizge \"Apps\" bölüginde görünecek ve bildirimler gönderir. Siz \"Apps\" saytasyndan her anýňý silip atabýlýrsýnýz."
+      "body": "Sizge \"Apps\" bölüginde görünecek ve bildirimler gönderir. Siz \"Apps\" saytasyndan her anýňý silip atabýlýrsýnýz.",
+      "confirm": "Ulyma goş"
     }
   },
   "aiStyles": {

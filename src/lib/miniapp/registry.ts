@@ -185,3 +185,60 @@ export async function fetchAddedApps(wallet: string | null): Promise<AddedApp[]>
   if (error) return [];
   return (data ?? []) as unknown as AddedApp[];
 }
+
+/** Count today's open for the ranking. Fire-and-forget: a failure costs one data point. */
+export function recordOpen(slug: string): void {
+  if (!getAuthToken()) return;
+  void userCall({ action: 'open', slug }).catch(() => {});
+}
+
+export interface AppScore {
+  app_id: string;
+  day: string;
+  weekly_users: number;
+  returning_users: number;
+  is_new: boolean;
+  score: number;
+  rank: number | null;
+}
+
+// The ranking and rewards tables post-date the generated Database types.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const untyped = supabase as any;
+
+/** The latest nightly scores, keyed by app id. Empty until the first run. */
+export async function fetchLatestScores(): Promise<Map<string, AppScore>> {
+  const { data: latest } = await untyped.from('miniapp_scores').select('day').order('day', { ascending: false }).limit(1);
+  const day = latest?.[0]?.day;
+  if (!day) return new Map();
+  const { data, error } = await untyped.from('miniapp_scores').select('*').eq('day', day);
+  if (error) return new Map();
+  return new Map((data as AppScore[]).map((row) => [row.app_id, row]));
+}
+
+export interface RewardRow {
+  week_start: string;
+  app_id: string;
+  share: number;
+  amount_dhb: number;
+  paid_tx: string | null;
+  paid_at: string | null;
+  miniapp_apps: { slug: string; name: string } | null;
+}
+
+/** The most recent week's rewards, largest first, and the monthly pool behind them. */
+export async function fetchLatestRewards(): Promise<{ weekStart: string | null; rows: RewardRow[]; monthlyPool: number }> {
+  const [{ data: pool }, { data: latest }] = await Promise.all([
+    untyped.from('miniapp_config').select('value').eq('key', 'monthly_reward_pool_dhb').maybeSingle(),
+    untyped.from('miniapp_rewards').select('week_start').order('week_start', { ascending: false }).limit(1),
+  ]);
+  const monthlyPool = Number(pool?.value ?? 0);
+  const weekStart = latest?.[0]?.week_start ?? null;
+  if (!weekStart) return { weekStart: null, rows: [], monthlyPool };
+  const { data } = await untyped
+    .from('miniapp_rewards')
+    .select('week_start, app_id, share, amount_dhb, paid_tx, paid_at, miniapp_apps(slug, name)')
+    .eq('week_start', weekStart)
+    .order('amount_dhb', { ascending: false });
+  return { weekStart, rows: (data ?? []) as RewardRow[], monthlyPool };
+}
