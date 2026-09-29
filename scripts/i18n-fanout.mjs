@@ -451,7 +451,8 @@ function looksLikeLoop(source, candidate) {
   if (UNSPACED_SCRIPT.test(source) || UNSPACED_SCRIPT.test(candidate)) return false;
   return src.length >= 5
     && out.length > src.length * 3
-    && out.join('').length > src.join('').length * 3;
+    && out.join('').length > src.join('').length * 3
+    && maxRepeat(out, REPEAT_MIN_LETTERS) >= 3;
 }
 
 /* ---------- network ---------- */

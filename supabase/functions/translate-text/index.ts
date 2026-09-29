@@ -351,11 +351,13 @@ function looksLikeLoop(input: string, output: string): boolean {
   // Word counts also mislead when a target that spaces every syllable
   // (Vietnamese) renders a language that packs a phrase into one word
   // (Turkish, Korean). A loop balloons the characters as well as the words,
-  // so both have to have tripled.
+  // so both have to have tripled. It also repeats itself: a slang post a model
+  // spells out ("gm gn wagmi ngmi lfg") grows just as much but does not.
   if (UNSPACED_SCRIPT.test(input) || UNSPACED_SCRIPT.test(output)) return false;
   return source.length >= 5
     && translated.length > source.length * 3
-    && translated.join('').length > source.join('').length * 3;
+    && translated.join('').length > source.join('').length * 3
+    && maxRepeat(translated, REPEAT_MIN_LETTERS) >= 3;
 }
 
 // Provider junk that arrives dressed as a successful translation.
