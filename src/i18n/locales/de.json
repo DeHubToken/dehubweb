@@ -7697,7 +7697,11 @@
       "search": "Apps suchen",
       "all": "Alle",
       "fromDehub": "Von DeHub",
-      "noMatch": "Keine Apps entsprechen dieser Suche."
+      "noMatch": "Keine Apps entsprechen dieser Suche.",
+      "yourApps": "Deine Apps",
+      "notificationsOn": "Benachrichtigungen aktiviert",
+      "remove": "Entfernen",
+      "removed": "Entfernt. Es wird dich nicht mehr benachrichtigen."
     },
     "dev": {
       "title": "Eine Mini-App erstellen",
@@ -7742,7 +7746,13 @@
       "stateUnlisted": "Live per Link · im Test für den Store",
       "stateListed": "Im Geschäft",
       "stateSuspended": "Ausgesetzt",
-      "copyLink": "Link kopieren"
+      "copyLink": "Link kopieren",
+      "notifyKey": "Benachrichtigungsschlüssel",
+      "notifyKeyOnce": "Neuer Benachrichtigungsschlüssel für {{name}}. Kopiere ihn jetzt: Er wird nur einmal angezeigt, und ein neuer ersetzt ihn.",
+      "payTitle": "Zahlungen erhalten",
+      "payBody": "`pay()` fragt den Nutzer auf, dir DHB zu senden, direkt in die Wallet, die deine `dehub.json` unterschrieben hat. Prüfe den Beleg auf deinem Server, bevor du etwas lieferst.",
+      "notifyTitle": "Benachrichtigungen senden",
+      "notifyBody": "Nutzer, die deine App hinzufügen, können von deinem Server mit deinem Benachrichtigungsschlüssel benachrichtigt werden. Keine individuellen Tokens, die du speichern musst."
     },
     "card": {
       "open": "Offen"
@@ -7761,6 +7771,19 @@
       "developer-tools": "Entwicklertools",
       "entertainment": "Unterhaltung",
       "art-creativity": "Kunst & Kreativität"
+    },
+    "pay": {
+      "title": "{{name}} bezahlen?",
+      "body": "Das DHB geht direkt auf das Wallet der App, {{wallet}}. Zahlungen können nicht rückgängig gemacht werden.",
+      "confirm": "{{amount}} DHB bezahlen",
+      "sending": "Deine Zahlung wird gesendet…",
+      "sent": "{{amount}} DHB an {{name}} bezahlt.",
+      "noOwner": "Diese App hat noch kein verifiziertes Wallet zum Bezahlen."
+    },
+    "add": {
+      "title": "App {{name}} hinzufügen?",
+      "body": "Sie wird unter Deine Apps erscheinen und kann dir Benachrichtigungen senden. Du kannst sie jederzeit von der Apps-Seite entfernen.",
+      "confirm": "App hinzufügen"
     }
   },
   "aiStyles": {

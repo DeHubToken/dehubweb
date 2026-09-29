@@ -7589,7 +7589,11 @@
       "search": "Pretraživanje aplikacija",
       "all": "Sve",
       "fromDehub": "Od DeHuba",
-      "noMatch": "Nema aplikacija koje odgovaraju pretraživanju."
+      "noMatch": "Nema aplikacija koje odgovaraju pretraživanju.",
+      "yourApps": "Vaše aplikacije",
+      "notificationsOn": "Oznake uključene",
+      "remove": "Ukloni",
+      "removed": "Uklonjeno. Više nećete biti obaviješteni."
     },
     "dev": {
       "title": "Izgradi mini aplikaciju",
@@ -7634,7 +7638,13 @@
       "stateUnlisted": "Živi linkom · u reviziji za trgovinu",
       "stateListed": "U trgovini",
       "stateSuspended": "Suspendirano",
-      "copyLink": "Kopiraj link"
+      "copyLink": "Kopiraj link",
+      "notifyKey": "Ključ za obavijest",
+      "notifyKeyOnce": "Novi ključ za obavijest za {{name}}. Kopirajte ga sada: prikazat će se samo jednom, a napraviti drugi zamjenjuje ga.",
+      "payTitle": "Primite plaćanja",
+      "payBody": "`pay()` traži od korisnika da vam pošalje DHB, direktno u novčanik koji je potpisao vaš dehub.json. Provjerite potvrdu na vašem serveru prije nego što isporučite nešto.",
+      "notifyTitle": "Pošaljite obavijesti",
+      "notifyBody": "Korisnici koji dodaju vašu aplikaciju mogu biti obaviješteni s vašeg servera pomoću vašeg ključa za obavijest. Nema potrebe za čuvanjem pojedinačnih ključeva po korisniku."
     },
     "card": {
       "open": "Otvori"
@@ -7653,6 +7663,19 @@
       "developer-tools": "Alati za razvoj",
       "entertainment": "Zabava",
       "art-creativity": "Umjetnost i kreativnost"
+    },
+    "pay": {
+      "title": "Plati {{name}}?",
+      "body": "DHB ide direktno u novčanik aplikacije, {{wallet}}. Plaćanja se ne mogu poništiti.",
+      "confirm": "Plati {{amount}} DHB",
+      "sending": "Pošaljete plaćanje…",
+      "sent": "Uplaćeno {{amount}} DHB na {{name}}.",
+      "noOwner": "Ova aplikacija još nema potvrđeni novčanik za plaćanja."
+    },
+    "add": {
+      "title": "Dodaj {{name}}?",
+      "body": "Bit će prikazana pod Vašim aplikacijama i može vam slati obavijesti. Možete je u svakom trenutku ukloniti s stranice Aplikacija.",
+      "confirm": "Dodaj aplikaciju"
     }
   },
   "aiStyles": {

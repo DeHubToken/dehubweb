@@ -7641,7 +7641,9 @@
       "search": "Tafuta programu",
       "all": "Zote",
       "fromDehub": "Kutoka DeHub",
-      "noMatch": "Hakuna programu zinazolingana na utafutaji huo."
+      "noMatch": "Hakuna programu zinazolingana na utafutaji huo.",
+      "yourApps": "Programu zako",
+      "removed": "Kulikaliwa. Hutumia wako hivi kwa mara moja tu."
     },
     "dev": {
       "title": "Jenga app ndogo",
@@ -7686,7 +7688,13 @@
       "stateUnlisted": "Moja kwa moja kupitia kiunganishi · katika tathmini ya duka",
       "stateListed": "Katika duka",
       "stateSuspended": "Imesimamishwa",
-      "copyLink": "Nakili kiunganishi"
+      "copyLink": "Nakili kiunganishi",
+      "notifyKey": "Funguo ya arifa",
+      "notifyKeyOnce": "Kibali mpya cha habari kwa {{name}}. Kopia hiyo sasa: inajulikana mara moja, na kuunda nyingine inabadilisha hiyo.",
+      "payTitle": "Kubali malipo",
+      "payBody": "Kutoka pay(), msaada huu unaomwona kuwa na msaada kutoka kwa mtu kuwapeleka dhb nayo, hata hadi gharama ya kwenye gharama ya dehub.json ambayo ilisainiwa. Kufikiria kwenye receipt yako ya server kabla ya kutoa kitucho chote.",
+      "notifyTitle": "Kutolea habari zaidi",
+      "notifyBody": "Watu wa kuongeza app yako wanapokabiliwa na kwenye server yako kwa kuhusu notify key yako. Hakuna token za kila mtu kuweka."
     },
     "card": {
       "open": "Fungua"
@@ -7705,6 +7713,17 @@
       "developer-tools": "Zana za msanidi programu",
       "entertainment": "Mchezo",
       "art-creativity": "Sanaa na ubunifu"
+    },
+    "pay": {
+      "body": "DHB inatoka nyuma kwenda gharama za akiba ya appi, {{wallet}}. Malipo hayasahibiwa.",
+      "confirm": "Baada ya kufikia {{amount}} DHB",
+      "sending": "Tunaondoa malipo yako…",
+      "sent": "Bajaji {{amount}} DHB kwa {{name}}.",
+      "noOwner": "Hivi app haina waleti mwelekeo wa kurejea kufikia kiasi cha kuzalisha malipo bado."
+    },
+    "add": {
+      "body": "Kutajwa chini ya Your apps na inaweza kusafiri habari zaidi. Unaweza kutumia kutangaza kila wakati kutoka kwa Apps page.",
+      "confirm": "Kujenga App"
     }
   },
   "aiStyles": {

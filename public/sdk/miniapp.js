@@ -128,6 +128,18 @@
       viewPost: function (options) { return request('actions.viewPost', options || {}); },
       /** Open an external https:// link outside the mini app. */
       openUrl: function (url) { return request('actions.openUrl', { url: url }); },
+      /**
+       * Ask the user to add your app. Once added, your server can notify them
+       * through the DeHub notify API with your app's notify key.
+       */
+      addApp: function () { return request('actions.addApp', {}, 600000); },
+      /**
+       * Ask the user to pay you in DHB. DeHub shows the amount, your app and
+       * your wallet; the DHB goes straight to the wallet that signed your
+       * dehub.json. Resolves to { txHash, chainId, amount, receipt } — send
+       * `receipt` (a JWT, typ 'payment') to your server and verify it there.
+       */
+      pay: function (options) { return request('actions.pay', options || {}, 600000); },
     },
 
     haptics: {

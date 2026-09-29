@@ -27,6 +27,7 @@ import {
   WEB_CAPABILITIES,
   cleanExternalUrl,
   cleanHandle,
+  cleanPayment,
   cleanPostId,
   composeText,
   parseRequest,
@@ -80,6 +81,21 @@ export interface MiniAppHostOptions {
   onCompose: (text: string) => void;
   /** Ask the user whether to share their identity with this domain. */
   requestSignIn: (domain: string) => Promise<boolean>;
+  /**
+   * Ask the person to add the app (and allow its notifications). Absent for a
+   * developer preview, which is not a registered app.
+   */
+  addApp?: () => Promise<{ added: boolean }>;
+  /** Show the payment sheet, send, and return the recorded payment. Absent for a preview. */
+  pay?: (request: { amount: number; memo: string | null }) => Promise<PaymentResult>;
+}
+
+export interface PaymentResult {
+  txHash: string;
+  chainId: number;
+  amount: number;
+  /** Signed receipt for the app's server: iss dehub.io, aud = its domain, typ 'payment'. */
+  receipt: string;
 }
 
 export function useMiniAppHost(frame: RefObject<HTMLIFrameElement>, options: MiniAppHostOptions): void {
@@ -89,6 +105,9 @@ export function useMiniAppHost(frame: RefObject<HTMLIFrameElement>, options: Min
   opts.current = options;
   const last = useRef<Record<string, number>>({});
   const signingIn = useRef(false);
+  // One sheet at a time: a second pay while the first is in the wallet is
+  // the classic double charge.
+  const busy = useRef(false);
 
   const origin = options.appUrl?.origin ?? null;
   const host = options.appUrl?.hostname ?? null;
@@ -166,6 +185,36 @@ export function useMiniAppHost(frame: RefObject<HTMLIFrameElement>, options: Min
           if (tooSoon('openUrl')) return fail('rate_limited', 'Slow down.');
           window.open(url, '_blank', 'noopener,noreferrer');
           return ok();
+        }
+        case 'actions.addApp': {
+          if (!o.addApp) return fail('unsupported', 'Only registered apps can be added.');
+          if (!o.context.user) return fail('signin', 'The user is not signed in to DeHub.');
+          if (busy.current) return fail('busy', 'Another request is already open.');
+          busy.current = true;
+          try {
+            const result = await o.addApp();
+            return result.added ? ok(result) : fail('rejected', 'The user declined.');
+          } catch (error) {
+            return fail('failed', (error as Error).message);
+          } finally {
+            busy.current = false;
+          }
+        }
+        case 'actions.pay': {
+          if (!o.pay) return fail('unsupported', 'Only registered apps can take payments.');
+          if (!o.context.user) return fail('signin', 'The user is not signed in to DeHub.');
+          const request = cleanPayment(req.params);
+          if (!request) return fail('invalid', 'amount must be a positive number of DHB.');
+          if (busy.current) return fail('busy', 'Another request is already open.');
+          busy.current = true;
+          try {
+            return ok(await o.pay(request));
+          } catch (error) {
+            const e = error as Error & { code?: string };
+            return fail(e.code || 'failed', e.message);
+          } finally {
+            busy.current = false;
+          }
         }
         case 'haptics.impact':
           navigator.vibrate?.(10);

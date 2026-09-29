@@ -14,6 +14,7 @@
  *
  *   POST { action: 'submit', url }   (x-dehub-token) register or update the app
  *   POST { action: 'mine' }          (x-dehub-token) the caller's apps
+ *   POST { action: 'notifyKey', slug } (x-dehub-token) a new key for miniapp-notify
  *
  * Promoting an app into the store (tier) and suspending one are staff writes.
  */
@@ -419,6 +420,31 @@ async function submit(req: Request, raw: string): Promise<Response> {
   return jsonResponse({ ok: true, app: data, updated: false });
 }
 
+/**
+ * A fresh notification key for an app the caller owns. Shown once; only its
+ * hash is kept, so a lost key is replaced, never recovered. Owning means the
+ * wallet that signed the domain's dehub.json, or the account that submitted
+ * that signed manifest.
+ */
+async function notifyKey(req: Request, slug: unknown): Promise<Response> {
+  const auth = await requireDeHubAuth(req);
+  if (!auth.ok) return auth.response;
+  if (typeof slug !== "string") return jsonResponse({ error: "slug is required." }, 400);
+  const db = serviceClient();
+  const { data: app } = await db.from("miniapp_apps").select("id, owner_wallet, submitted_by").eq("slug", slug).maybeSingle();
+  if (!app) return jsonResponse({ error: "No such app." }, 404);
+  if (!app.owner_wallet) return jsonResponse({ error: "Verify ownership with a signed dehub.json first." }, 403);
+  if (app.owner_wallet !== auth.wallet && app.submitted_by !== auth.wallet) return jsonResponse({ error: "Only the app's owner can do that." }, 403);
+  const raw = new Uint8Array(24);
+  crypto.getRandomValues(raw);
+  const key = `dhmk_${[...raw].map((b) => b.toString(16).padStart(2, "0")).join("")}`;
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(key));
+  const hash = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  const { error } = await db.from("miniapp_apps").update({ notify_key_hash: hash }).eq("id", app.id);
+  if (error) throw error;
+  return jsonResponse({ key });
+}
+
 async function mine(req: Request): Promise<Response> {
   const auth = await requireDeHubAuth(req);
   if (!auth.ok) return auth.response;
@@ -449,6 +475,7 @@ Deno.serve(async (req: Request) => {
     }
     if (body?.action === "submit" && url) return await submit(req, url);
     if (body?.action === "mine") return await mine(req);
+    if (body?.action === "notifyKey") return await notifyKey(req, body.slug);
     return jsonResponse({ error: "Unknown action." }, 400);
   } catch (error) {
     console.error("[miniapp-registry]", error);
