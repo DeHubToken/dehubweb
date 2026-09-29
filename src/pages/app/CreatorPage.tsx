@@ -393,22 +393,28 @@ export default function CreatorPage() {
                 >
                   {t('creator.editor')}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => isAuthenticated ? navigate('/app') : openLoginModal()}
-                  className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15"
-                  style={{ color: accent }}
-                >
-                  {isAuthenticated ? 'My account' : t('creator.login')}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => isAuthenticated ? navigate('/app') : openLoginModal()}
-                  className="rounded-lg px-4 py-2 text-sm font-bold text-black hover:brightness-95"
-                  style={metallicStyle}
-                >
-                  {isAuthenticated ? 'Open app' : t('creator.signUp')}
-                </button>
+                {/* Signed-in people get here from the app, so no "My account" /
+                    "Open app" buttons; the logo still goes back to /app. */}
+                {!isAuthenticated && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => openLoginModal()}
+                      className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15"
+                      style={{ color: accent }}
+                    >
+                      {t('creator.login')}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => openLoginModal()}
+                      className="rounded-lg px-4 py-2 text-sm font-bold text-black hover:brightness-95"
+                      style={metallicStyle}
+                    >
+                      {t('creator.signUp')}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </header>
