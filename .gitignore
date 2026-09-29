@@ -89,6 +89,8 @@ scripts/*
 !scripts/boot-path-baseline.json
 !scripts/i18n-coverage.mjs
 !scripts/i18n-fanout.mjs
+!scripts/i18n-guards.mjs
+!scripts/i18n-guards.test.mjs
 !scripts/i18n-script-check.mjs
 !scripts/docs-i18n-fanout.mjs
 !scripts/docs-i18n-fill.mjs
