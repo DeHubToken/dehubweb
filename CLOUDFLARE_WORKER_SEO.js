@@ -4984,6 +4984,33 @@ async function handleRequest(request, env, ctx) {
     '/.well-known/apple-app-site-association',
     '/apple-app-site-association',
   ]);
+  // Profiles (/mal, /mal.eth) open in the iOS app too, but a one-segment
+  // catch-all can only be said to iOS as "everything else": exclude each
+  // system route, then claim what is left. That exclusion list IS
+  // SYSTEM_ROUTES — the set this worker already uses to decide /docs is a page
+  // and /mal a person — so it is appended here rather than copied into the
+  // static file, where it would drift the first time a route was added. iOS
+  // takes the first component that matches, so the static, specific entries
+  // stay ahead of all of this. Any surprise in the file serves it unchanged.
+  const withProfileAppLinks = (text) => {
+    try {
+      const aasa = JSON.parse(text);
+      const details = aasa?.applinks?.details;
+      if (!Array.isArray(details) || !details.every((d) => Array.isArray(d.components))) return text;
+      const tail = [
+        ...[...SYSTEM_ROUTES].map((seg) => ({ '/': `/${seg}`, exclude: true, caseSensitive: false })),
+        { '/': '/', exclude: true, comment: 'Home stays on the web' },
+        { '/': '/*/*', exclude: true, comment: 'Deeper paths not claimed above' },
+        { '/': '/*.eth', caseSensitive: false, comment: 'Profile at a verified ENS name' },
+        { '/': '/*.*', exclude: true, comment: 'Files' },
+        { '/': '/*', comment: 'Profile, bare or @handle' },
+      ];
+      for (const d of details) d.components.push(...tail);
+      return JSON.stringify(aasa);
+    } catch {
+      return text;
+    }
+  };
   if (APP_LINK_FILES.has(pathname)) {
     const asset = await env.ASSETS.fetch(new Request(new URL('/.well-known/' + pathname.split('/').pop(), url), request));
     // Parse the BODY. Checking the Content-Type header cannot work here: the
@@ -5005,7 +5032,7 @@ async function handleRequest(request, env, ctx) {
         headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' },
       });
     }
-    const out = new Response(body, { status: 200 });
+    const out = new Response(pathname.endsWith('apple-app-site-association') ? withProfileAppLinks(body) : body, { status: 200 });
     out.headers.set('Content-Type', 'application/json');
     // Short, unlike the year-long caches above: a certificate fingerprint or
     // Team ID change has to reach Google's and Apple's fetchers quickly, and
