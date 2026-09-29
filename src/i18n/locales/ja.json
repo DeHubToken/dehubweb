@@ -522,6 +522,9 @@
     "edit": "編集",
     "loading": "読み込み中...",
     "tryAgain": "再試行",
+    "retry": "再試行",
+    "failedToLoad": "読み込みに失敗しました",
+    "somethingWentWrong": "問題が発生しました",
     "search": "検索",
     "goBack": "戻る",
     "showOriginal": "原文を表示",
@@ -6638,6 +6641,10 @@
     "desc": "ジャングルの明るい昼、または青く暮れる夕暮れ",
     "day": "昼",
     "evening": "夕暮れ"
+  },
+  "affiliate": {
+    "loadFailed": "アフィリエイトの統計を読み込めませんでした",
+    "checkingForUpdates": "更新を確認しています…"
   },
   "affiliateLanding": {
     "title": "招待ページをカスタマイズ",

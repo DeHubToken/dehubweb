@@ -514,6 +514,9 @@
     "edit": "ترمیم",
     "loading": "لوڈ ہو ریہا ہے...",
     "tryAgain": "ولدا کوشش کرو",
+    "retry": "ولدا کوشش کرو",
+    "failedToLoad": "لوڈ کرن وچ ناکام",
+    "somethingWentWrong": "کجھ غلط تھی گیا",
     "search": "ڳولو",
     "goBack": "واپس جاؤ",
     "showOriginal": "اصل ݙکھاؤ",
@@ -5813,6 +5816,10 @@
     "desc": "جنگل وچ روشن ڈینہہ یا نیلی شام",
     "day": "ڈینہہ",
     "evening": "شام"
+  },
+  "affiliate": {
+    "loadFailed": "افیلیٹ سٹیٹس لوڈ نہ ہو سکا",
+    "checkingForUpdates": "اپڈیٹس چیک تھیندے پئے ہن…"
   },
   "affiliateLanding": {
     "title": "اپنا دعوتی صفحہ حسبِ منشا بنائیں",

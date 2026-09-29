@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Tag, Wallet, ImageIcon, HandCoins, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AppState } from '@/components/app/AppState';
 import { cdnImage } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFractionPortfolio, type PortfolioPosition } from '@/hooks/use-fraction-portfolio';
@@ -92,7 +93,13 @@ export function PortfolioTab() {
   const navigate = useNavigate();
   const [selling, setSelling] = useState<PortfolioPosition | null>(null);
 
-  const { data: positions = [], isLoading } = useFractionPortfolio(walletAddress);
+  const {
+    data: positions = [],
+    isLoading,
+    isError: positionsFailed,
+    isFetching: positionsFetching,
+    refetch: refetchPositions,
+  } = useFractionPortfolio(walletAddress);
   const { data: listings = [] } = useMyListings(walletAddress);
   const { data: offers } = useMyOffers(walletAddress);
   const cancelListing = useCancelListing();
@@ -142,6 +149,15 @@ export function PortfolioTab() {
         {isLoading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="w-6 h-6 text-white/30 animate-spin" />
+          </div>
+        ) : positionsFailed && positions.length === 0 ? (
+          <div className="rounded-xl border border-white/10 bg-white/5">
+            <AppState
+              kind="error"
+              size="compact"
+              title={t('common.failedToLoad')}
+              primaryAction={{ label: t('common.retry'), onClick: () => void refetchPositions(), loading: positionsFetching }}
+            />
           </div>
         ) : positions.length === 0 ? (
           <div className="text-center py-12 rounded-xl border border-white/10 bg-white/5">

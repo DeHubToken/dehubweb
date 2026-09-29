@@ -523,6 +523,9 @@
     "edit": "Uredi",
     "loading": "Učitavanje...",
     "tryAgain": "Pokušaj ponovno",
+    "retry": "Pokušaj ponovno",
+    "failedToLoad": "Nije uspjelo učitavanje",
+    "somethingWentWrong": "Nešto je pošlo po zlu",
     "search": "Pretraži",
     "goBack": "Natrag",
     "showOriginal": "Prikaži izvornik",
@@ -6537,6 +6540,10 @@
     "desc": "Vedar dan ili sumračna plava večer u džungli",
     "day": "Dan",
     "evening": "Večer"
+  },
+  "affiliate": {
+    "loadFailed": "Nije moguće učitati statistiku podružnica",
+    "checkingForUpdates": "Provjera ažuriranja…"
   },
   "affiliateLanding": {
     "title": "Prilagodi svoju stranicu pozivnice",

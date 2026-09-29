@@ -17,13 +17,20 @@ import { Button } from '@/components/ui/button';
 import { SEOHead } from '@/components/SEOHead';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { storageImage, deviceWidth, isMdUp } from '@/lib/media-url';
+import { AppState } from '@/components/app/AppState';
 
 export default function StoreDetailPage() {
   const { storeId } = useParams<{ storeId: string }>();
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { data: store, isLoading: storeLoading } = useStoreById(storeId);
+  const {
+    data: store,
+    isLoading: storeLoading,
+    isError: storeFailed,
+    isFetching: storeFetching,
+    refetch: refetchStore,
+  } = useStoreById(storeId);
   const { data: listings = [], isLoading: listingsLoading } = useStoreListings(storeId);
   const [selectedListing, setSelectedListing] = useState<any>(null);
   const [shareOpen, setShareOpen] = useState(false);
@@ -56,12 +63,30 @@ export default function StoreDetailPage() {
     );
   }
 
+  // useStoreById reads a missing store as null, so an error here is the read
+  // failing -- not a deleted store.
+  if (!store && storeFailed) {
+    return (
+      <div className="p-4 py-12">
+        <SEOHead title={`${t('common.somethingWentWrong')} — DeHub Stores`} description={t('common.somethingWentWrong')} noindex />
+        <AppState
+          kind="error"
+          icon="stores"
+          title={t('common.somethingWentWrong')}
+          primaryAction={{ label: t('common.retry'), onClick: () => void refetchStore(), loading: storeFetching }}
+          secondaryAction={{ label: t('common.goBack'), onClick: () => navigate(-1) }}
+        />
+      </div>
+    );
+  }
+
   if (!store) {
     return (
       <div className="p-4 text-center py-20">
+        <SEOHead title={`${t('stores.storeNotFound')} — DeHub Stores`} description={t('stores.storeNotFound')} noindex />
         <ThemedIcon icon="stores" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-75" />
         <p className="text-muted-foreground">{t('stores.storeNotFound')}</p>
-        <Button variant="outline" onClick={() => navigate(-1)} className="mt-4">{t('stores.goBack')}</Button>
+        <Button variant="outline" onClick={() => navigate(-1)} className="mt-4">{t('common.goBack')}</Button>
       </div>
     );
   }

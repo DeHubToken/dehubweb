@@ -34,7 +34,13 @@
           { "/": "/premium", "comment": "Premium" },
           { "/": "/pricing", "comment": "AI plans" },
           { "/": "/work/history", "comment": "Bounty history" },
-          { "/": "/work/disputes", "comment": "Bounty disputes" }
+          { "/": "/work/disputes", "comment": "Bounty disputes" },
+          { "/": "/post/*", "comment": "One post" },
+          { "/": "/posts/*", "comment": "One post, short form, and its author thread" },
+          { "/": "/bounty/*", "comment": "One bounty" },
+          { "/": "/communities/*", "comment": "One community, or a community invite" },
+          { "/": "/stores/*", "comment": "One store or listing" },
+          { "/": "/events/*", "comment": "One event" }
         ]
       }
     ]

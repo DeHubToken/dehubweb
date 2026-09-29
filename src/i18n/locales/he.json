@@ -523,6 +523,9 @@
     "edit": "ערוך",
     "loading": "טוען...",
     "tryAgain": "נסו שוב",
+    "retry": "נסו שוב",
+    "failedToLoad": "נכשל בטעינה",
+    "somethingWentWrong": "משהו השתבש",
     "search": "חפש",
     "goBack": "חזור",
     "showOriginal": "הצג מקור",
@@ -6356,6 +6359,10 @@
     "desc": "יום בהיר או ערב כחלחל ודמדומי בג׳ונגל",
     "day": "יום",
     "evening": "ערב"
+  },
+  "affiliate": {
+    "loadFailed": "לא ניתן היה לטעון סטטיסטיקות שותפים",
+    "checkingForUpdates": "בודק עדכונים…"
   },
   "affiliateLanding": {
     "title": "התאם את דף ההזמנה שלך",

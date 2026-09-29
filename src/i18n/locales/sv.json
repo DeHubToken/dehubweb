@@ -523,6 +523,9 @@
     "edit": "Redigera",
     "loading": "Laddar...",
     "tryAgain": "Försök igen",
+    "retry": "Försök igen",
+    "failedToLoad": "Kunde inte laddas",
+    "somethingWentWrong": "Något gick fel",
     "search": "Sök",
     "goBack": "Gå tillbaka",
     "showOriginal": "Visa original",
@@ -6535,6 +6538,10 @@
     "desc": "En ljus dag eller en skymningsblå kväll i djungeln",
     "day": "Dag",
     "evening": "Kväll"
+  },
+  "affiliate": {
+    "loadFailed": "Kunde inte ladda affiliate-statistik",
+    "checkingForUpdates": "Söker efter uppdateringar…"
   },
   "affiliateLanding": {
     "title": "Anpassa din inbjudningssida",

@@ -523,6 +523,9 @@
     "edit": "编辑",
     "loading": "加载中...",
     "tryAgain": "再试",
+    "retry": "再试",
+    "failedToLoad": "加載失敗",
+    "somethingWentWrong": "出错了",
     "search": "搜索",
     "goBack": "返回",
     "showOriginal": "显示原文",
@@ -5647,6 +5650,10 @@
     "desc": "丛林里的明媚白天或幽蓝黄昏",
     "day": "白天",
     "evening": "傍晚"
+  },
+  "affiliate": {
+    "loadFailed": "无法加载推广数据",
+    "checkingForUpdates": "检查更新中…"
   },
   "affiliateLanding": {
     "title": "自定义你的邀请页面",

@@ -520,6 +520,9 @@
     "edit": "Ṣàtúnṣe",
     "loading": "Ó ń gbé...",
     "tryAgain": "Gbìyànjú lẹ́ẹ̀kansí",
+    "retry": "Gbìyànjú lẹ́ẹ̀kan sí i",
+    "failedToLoad": "Ìgbéwọlé kùnà",
+    "somethingWentWrong": "Nǹkan kan ṣàṣìṣe",
     "search": "Wá",
     "goBack": "Padà sẹ́yìn",
     "showOriginal": "Fi àkọ́kọ́ hàn",
@@ -6558,6 +6561,10 @@
     "desc": "Ọjọ́ tó mọ́lẹ̀ tàbí ìrọ̀lẹ́ aláwọ̀ búlúù nínú igbó",
     "day": "Ọ̀sán",
     "evening": "Ìrọ̀lẹ́"
+  },
+  "affiliate": {
+    "loadFailed": "Ko le ṣajọ awọn iṣiro alafaramo",
+    "checkingForUpdates": "Ń ṣàyẹ̀wò àwọn àtúnṣe…"
   },
   "affiliateLanding": {
     "title": "Ṣe àtúnṣe ojú-ìwé ìpè rẹ",

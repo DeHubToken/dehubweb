@@ -503,6 +503,9 @@
     "edit": "แก้ไข",
     "loading": "กำลังโหลด...",
     "tryAgain": "ลองใหม่",
+    "retry": "ลองใหม่",
+    "failedToLoad": "โหลดไม่สำเร็จ",
+    "somethingWentWrong": "มีบางอย่างผิดพลาด",
     "search": "ค้นหา",
     "goBack": "กลับ",
     "showOriginal": "สะแดงต้นฉบับ",
@@ -6018,6 +6021,10 @@
     "desc": "กลางเว็นแจ้งใสหรือยามแลงสีฟ้าในป่า",
     "day": "กลางเว็น",
     "evening": "ยามแลง"
+  },
+  "affiliate": {
+    "loadFailed": "โหลดสถิติผู้ร่วมแนะนำไม่สำเร็จ",
+    "checkingForUpdates": "กำลังเบิ่งการอัปเดต…"
   },
   "affiliateLanding": {
     "title": "ปรับแต่งหน้าคำเชิญของเจ้า",

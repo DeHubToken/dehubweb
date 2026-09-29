@@ -523,6 +523,9 @@
     "edit": "Edit",
     "loading": "Loading...",
     "tryAgain": "Try Again",
+    "retry": "Retry",
+    "failedToLoad": "Failed to load",
+    "somethingWentWrong": "Something went wrong",
     "search": "Search",
     "goBack": "Go back",
     "showOriginal": "Show original",
@@ -6651,6 +6654,10 @@
     "desc": "A bright day or a dusky blue evening in the jungle",
     "day": "Day",
     "evening": "Evening"
+  },
+  "affiliate": {
+    "loadFailed": "Could not load affiliate stats",
+    "checkingForUpdates": "Checking for updates…"
   },
   "affiliateLanding": {
     "title": "Customize your invite page",

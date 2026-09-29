@@ -504,6 +504,9 @@
     "edit": "Ovay",
     "loading": "Mampiditra...",
     "tryAgain": "Andramo indray",
+    "retry": "Andramo indray",
+    "failedToLoad": "Tsy nahavita nampiditra",
+    "somethingWentWrong": "Nisy tsy nety",
     "search": "Hikaroka",
     "goBack": "Miverina",
     "showOriginal": "Asehoy ny tany am-boalohany",
@@ -6326,6 +6329,10 @@
     "desc": "Andro mazava na hariva manga manjombona any anaty ala",
     "day": "Antoandro",
     "evening": "Hariva"
+  },
+  "affiliate": {
+    "loadFailed": "Tsy nahavita nampiditra antontan'isa momba ny mpiara-miombon'antoka",
+    "checkingForUpdates": "Mijery fanavaozana…"
   },
   "affiliateLanding": {
     "title": "Amboary ny pejin'ny fanasanao",

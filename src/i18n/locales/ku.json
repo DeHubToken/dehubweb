@@ -427,6 +427,9 @@
     "edit": "Biguherîne",
     "loading": "Tê barkirin...",
     "tryAgain": "Dîsa Biceribîne",
+    "retry": "Dîsa biceribîne",
+    "failedToLoad": "Barkirin neçû serî",
+    "somethingWentWrong": "Tiştek xelet çû",
     "search": "Lêgerîn",
     "goBack": "Vegere",
     "showOriginal": "Orîjînal nîşan bide",
@@ -2587,7 +2590,8 @@
     "countryPlaceholder": "ولایەتە یەکگرتووەکانی ئەمریکا",
     "defaultLabel": "ئەسڵ",
     "savedAddress": "پاشە کەوت کرا، پاشەکەوتکراو، ڕزگارکراو، ھەڵگیراو، دەستی گرتەوە، پاشەکەوتیکرد",
-    "shopAllowanceUsed": "{{allowance}} از {{allowance}} استفاده شد. توکن‌های DeHub بیشتری را استیک کنید تا نشان بالاتر و اسلات دیگر دریافت کنید."
+    "shopAllowanceUsed": "{{allowance}} از {{allowance}} استفاده شد. توکن‌های DeHub بیشتری را استیک کنید تا نشان بالاتر و اسلات دیگر دریافت کنید.",
+    "storeNotFound": "Firoşgeh nehat dîtin"
   },
   "stages": {
     "title": "ژوورە دەنگییەکان",
@@ -5632,6 +5636,10 @@
     "desc": "Rojeke ronî an êvareke şîn a tarî li daristanê",
     "day": "Roj",
     "evening": "Êvar"
+  },
+  "affiliate": {
+    "loadFailed": "Nikare statîstîkên hevkar bar bike",
+    "checkingForUpdates": "Nûkirin têne kontrolkirin…"
   },
   "affiliateLanding": {
     "title": "Rûpela vexwendina xwe kesane bike",

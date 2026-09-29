@@ -525,6 +525,9 @@
     "edit": "Wysig",
     "loading": "Laai tans...",
     "tryAgain": "Probeer weer",
+    "retry": "Probeer weer",
+    "failedToLoad": "Kon nie laai nie",
+    "somethingWentWrong": "Iets het verkeerd geloop",
     "search": "Soek",
     "goBack": "Gaan terug",
     "showOriginal": "Wys oorspronklike",
@@ -6476,6 +6479,10 @@
     "desc": "'n Helder dag of 'n skemerblou aand in die oerwoud",
     "day": "Dag",
     "evening": "Aand"
+  },
+  "affiliate": {
+    "loadFailed": "Kon nie affiliatiewe statistieke laai nie",
+    "checkingForUpdates": "Kyk vir opdaterings…"
   },
   "affiliateLanding": {
     "title": "Pas jou uitnodigingsblad aan",

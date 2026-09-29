@@ -1,8 +1,9 @@
 /**
  * Reads from the mini app registry. The table is public for live apps only
- * (RLS), so these go straight to Supabase with the anon key. Both reads
- * degrade to "nothing listed" if the table is not there yet — migrations are
- * applied by hand, and an empty store beats an error page.
+ * (RLS), so these go straight to Supabase with the anon key. A failed store
+ * read comes back as null, not an empty list, so the store can say it failed
+ * and offer a retry instead of claiming nothing is listed. Single-app lookups
+ * still read a failure as "no such app".
  */
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
@@ -30,14 +31,14 @@ export interface MiniAppListing {
 const COLUMNS =
   'id, slug, domain, home_url, name, subtitle, description, icon_url, splash_image_url, splash_background_color, category, tier, owner_wallet';
 
-export async function fetchListedApps(): Promise<MiniAppListing[]> {
+export async function fetchListedApps(): Promise<MiniAppListing[] | null> {
   const { data, error } = await supabase
     .from('miniapp_apps')
     .select(COLUMNS)
     .in('tier', ['listed', 'verified'])
     .order('name', { ascending: true })
     .limit(200);
-  if (error) return [];
+  if (error) return null;
   return (data ?? []) as MiniAppListing[];
 }
 

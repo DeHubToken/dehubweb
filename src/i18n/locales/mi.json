@@ -522,6 +522,9 @@
     "edit": "Whakatika",
     "loading": "Uta ana...",
     "tryAgain": "Ngana anō",
+    "retry": "Ngana anō",
+    "failedToLoad": "Kāore i taea te uta",
+    "somethingWentWrong": "I hē tētahi mea",
     "search": "Rapu",
     "goBack": "Hoki whakamuri",
     "showOriginal": "Whakaatu taketake",
@@ -6569,6 +6572,10 @@
     "desc": "He rā mārama, he ahiahi kikorangi rānei i te ngahere",
     "day": "Awatea",
     "evening": "Ahiahi"
+  },
+  "affiliate": {
+    "loadFailed": "Kāore i taea te uta ngā tatauranga hononga",
+    "checkingForUpdates": "Kei te tirotiro mō ngā whakahōunga…"
   },
   "affiliateLanding": {
     "title": "Whakaritea tō whārangi pōwhiri",

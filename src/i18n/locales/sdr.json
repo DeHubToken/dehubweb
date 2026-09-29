@@ -502,6 +502,9 @@
     "edit": "ایڈٹ",
     "loading": "لوڈ ہو رہا ہے...",
     "tryAgain": "پھر کوشش کرو",
+    "retry": "پھر کوشش کرو",
+    "failedToLoad": "بارگیری ناموفق بود",
+    "somethingWentWrong": "کچھ گڑبڑ ہو گئی",
     "search": "کھوجو",
     "goBack": "واپس جاؤ",
     "showOriginal": "اصل دکھاؤ",
@@ -5983,6 +5986,10 @@
     "desc": "جنگل میں اجلا دن یا نیلی سانجھ",
     "day": "دن",
     "evening": "سانجھ"
+  },
+  "affiliate": {
+    "loadFailed": "ایفلی ایٹ کے اعدادوشمار لوڈ نہیں ہو سکے",
+    "checkingForUpdates": "اپڈیٹس چیک ہو رہے ہیں…"
   },
   "affiliateLanding": {
     "title": "अपना आमंत्रण पेज कस्टमाइज़ करें",

@@ -523,6 +523,9 @@
     "edit": "Tahrirlash",
     "loading": "Yuklanmoqda...",
     "tryAgain": "Qayta urinish",
+    "retry": "Qayta urinish",
+    "failedToLoad": "Yuklab olishda xatolik",
+    "somethingWentWrong": "Nimadir xato ketdi",
     "search": "Qidirish",
     "goBack": "Orqaga qaytish",
     "showOriginal": "Aslini koʻrsatish",
@@ -6657,6 +6660,10 @@
     "desc": "Jangalda yorqin kun yoki moviy g‘ira-shira oqshom",
     "day": "Kunduz",
     "evening": "Oqshom"
+  },
+  "affiliate": {
+    "loadFailed": "Hamkorlik statistikasini yuklab bo'lmadi",
+    "checkingForUpdates": "Yangilanishlar tekshirilmoqda…"
   },
   "affiliateLanding": {
     "title": "Taklif sahifangizni sozlang",
