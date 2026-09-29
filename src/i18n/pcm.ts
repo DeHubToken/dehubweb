@@ -1584,6 +1584,9 @@ export const pcm = {
     whatHappensNextText: 'Reports wey go be review by moderators wey dey choose by community — na dem wey dey work as admin and holders of top badges — dem dey have power wey dey delegate for dem to act no wait for vote by governance.',
     appealsText: 'If you think a moderator make wrong decision, you can appeal through community governance. Governance dey set de policy dat moderator enforce, and dem can review or reverse individual decision. But enforcement dey fast—content stay down while you wait for appeal.',
     appeals: 'Appeals',
+    adultContent: 'Adult Content',
+    reporting: 'How to Report',
+    contact: 'Contact',
   },
   brandGuidelines: {
     title: 'Brand Guidelines',
@@ -1611,6 +1614,7 @@ export const pcm = {
     authentication: 'Authentication →',
     mostPopular: 'Most popular package manager',
     efficient: 'Efficient package manager',
+    authenticationDesc: 'Arrange API authentication',
   },
   quickStart: {
     title: 'Quick Start Guide',

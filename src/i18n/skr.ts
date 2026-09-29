@@ -1401,6 +1401,7 @@ export const skr = {
     whyPartnerNow: 'کیا اب پارٹنر بنیں؟',
     reason_brandAssociationDesc: 'اپنا برینڈ نئی نسل کے ویب3 انوویشن اور ٹیکنالوجی کے ساتھ جڑیں',
     limitedSlots: 'آفیشیل لانچ کے لیے محدود پارٹنرشپ کے سلاٹز دستیاب ہیں',
+    dayCountOne: '{count} دِی',
   },
   docsSearch: {
     title: 'دوکمنٹس میں سرچ کریں',
