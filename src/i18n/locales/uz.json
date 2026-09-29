@@ -3215,7 +3215,6 @@
     "continue": "Davom etish",
     "speechFailed": "Nutq yaratilmadi",
     "voiceCloningAccess": "Ovozni klonlash imkoniyati",
-    "voiceCloningFree": "&quot;Moviy kit&quot; va &quot;Megalodon&quot; nishoni egalari uchun ovozni klonlash bepul.",
     "voiceCloningByo": "Siz hali ham o&#39;zingizning ElevenLabs API kalitingizni taqdim etish orqali ovozlarni klonlashingiz mumkin. Bittasini bepul oling",
     "keyStoredLocally": "Kalitingiz mahalliy darajada saqlanadi va hech qachon ulashilmaydi. U faqat ovozni klonlash so&#39;rovlari uchun ishlatiladi.",
     "elevenLabsApiKey": "ElevenLabs API kaliti",

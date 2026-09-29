@@ -1656,7 +1656,6 @@
     "amountLabel": "Mukdar (ton)",
     "youHold": "{{amount}} ton saklaýarsyňyz",
     "irreversible": "Goşantlar zynjyrdaky geçirişlerdir. Olaryň yzyna dolanyp ýa-da çykarylyp bilinmeýär.",
-    "switchChain": "Çapagyňyzy {{chains}} -eüýtgetip, goşmaça goşmaçagoşmaça goşmaça goşmaça goşmaça goş",
     "sendAmount": "{{amount}} ton iberiň",
     "sentTitle": "Goşant iberildi",
     "sentDesc": "{{chain}}-da hazyna {{amount}} ton iberildi. Paýyňyz blok sanawdan geçenden soň täzelener.",
@@ -4346,7 +4345,6 @@
   },
   "accounts": {
     "seoTitle": "Şablon: DeHub",
-    "seoDescription": "DHB üçin döredilen DeHub hasabatlaryny satyn alyň. Ýagdaýlar, ýükler we ýaşlar arkaly hasabatlary barlaň - el, postlar, yzygiderli yzygiderli yzygiderli yzygiderli yzygiderli yzygiderli yzygiderli yzygiderli yzygiderli yzygiderli yzygiderli yzygiderli yzygiderli yzygiderli ýola düş",
     "title": "Hasaplar",
     "subtitle": "Ýeňilçilikler üçin tutuş hasaplar, DeHub nyşanlary bilen bahalandyrylan",
     "tabSell": "Sat",
@@ -4915,7 +4913,6 @@
     "diveAiTitle": "Sen hakykatdanam ynanyp bilersiň",
     "diveAiBody": "500 kömekçi habar, 150 AI suraty we her aý 20 saniyelik video ýaradylýar. Bu gurluşyk, gämiler we postlar üçin ýeterlikli — teaser däl.",
     "faqWhatIsAnAdQ": "DeHub-da reklama hökmünde näme hasaplanýar?",
-    "faqWhatIsAnAdA": "Siz öz iýmitinize ýaýratylýan postlary, baýraklary we Explore-da sponsorlanan ýerleri täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden täzeden Premium olaryň hemmesini aýyrýar.",
     "faqSwitchPlansQ": "Men ekstra we maşgala arasynda üýtgeşip bilerinmi?",
     "faqSwitchPlansA": "Hawa. Her wagt ýokary wezipä geçmek ýa-da aşak düşürmek — pullary avtomatik derejede tölemek.",
     "faqFamilySeatsQ": "Maşgala kürsüleri nädip işleýär?",
@@ -4987,7 +4984,6 @@
   },
   "depin": {
     "seoTitle": "Ýolbaşçylyk maslahatynyň (Ýolbaşçylyk maslahaty)",
-    "seoDescription": "DeHub DePin adamlara gorag, bandwidth we kompýuter goşmaça goşmaça goşmaça goşmaça goşmaça goşmaça goşmaça goşmaga mümkinçilik berýär.",
     "dehubHome": "DeHub öýi",
     "navHowItWorks": "Ol nähili işleýär",
     "navPrivacy": "Gizlinlik",
@@ -4995,7 +4991,6 @@
     "readTheDocs": "Doktorlar bilen gürrüňdeş boluň",
     "heroEyebrow": "Işgärlik bilen gurulýan gurluşyk",
     "heroTitle": "Siziň donanma. DeHub 'yň habar beriş tarapy.",
-    "heroBlurb": "DeHub-yň içgisini host etmäge, kodlamaga we bermäge kömek etmek üçin, goşmaça saklama, bandwidth we kompýuter goşmaça goşmaça goşmaça goşmaça goşmaça goşmaça goşmaça goşmaça goşmaça goş",
     "seeHowItWorks": "Gör, nähili işläp barýar",
     "heroImageAlt": "Öýler we ýaradýan stúdiýalar bilen baglanyşykly kompakt kenar-kompýuter node",
     "heroCaption": "DeHub asly nusgasyny saklaýar. Galyberse-de, bu ýerde ýerli serişdeler we serişdeler bar.",
@@ -6772,7 +6767,6 @@
     "intro": "Her bir haýwan dollara bir sany pul töleýär. Onuň ýanyndaky göçme manydaky surat $ 0.001 -iň esasy bahasy - ulag şol sany diri bahasy üçin talap edýär, hiç haçan ondan artyk däl, şonuň üçin düşen bahasy bary artdyryp ýa-da eýýäm gazanan derejä gaýtaryp bilmez."
   },
   "postingAllowance": {
-    "footnote": "BNB zähmet zähmet zähmet zähmet zähmet zähmet zähmet Mekdep dollar bilen satylýar, şonuň üçin ýokarda agzalan token sanlary her bir token satylýan $ 0.001 bahasy bilen satylýar we token bahasy artyp barýarka, talap düşýär; siz eýýäm gazanan token hiç haçan bahasy bilen yzyna alynmaýar. Bir goragçynyň size beren haty profilyňyzda görkezilýär, ýöne bu siziň postlaşmagyňyzy artdyrmaýar - bu özüňiziň saklaýan zatlaryňyzdan gelýändir. Çykyşlar 00:00 UTC-de gaýtarylýar we bu ýerde gigabyt 1 024 MB."
   },
   "postComposer": {
     "homeFeedRestrictedDescription": "Bu post siziň profilyňyzda we \"Follow\" da diridir, ýöne öýde görünmez. DeHub tokenlerini saklaň we her gün öýden-öýe iýmitlenmek üçin ýokary tagtlary açyň.",

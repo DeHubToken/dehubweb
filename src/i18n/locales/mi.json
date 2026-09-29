@@ -2536,7 +2536,6 @@
     "actsAccount": "Ka pā ki tō pūkete katoa. Patohia hei tīmata.",
     "actsOnAccount": "Ka pā tēnei ki tō pūkete katoa — kāore he mea hei kōwhiri.",
     "findMyPost": "Rapua āu pou, tēnā whakapiri atu he hononga",
-    "findTheirPost": "Whakapiri atu te hononga pou a tēnā, tēnā, tēnā rānei, tēnā rapua",
     "searchToGift": "Rapua tētahi pou, tēnā whakapiri atu he hononga ki tētahi.",
     "noRecentPosts": "Kāore he mea kei konei mai i te wiki whakamutunga. Ko ngā mea tawhito ka whiwhi i te Hāora Tuarua.",
     "noOlderPosts": "Kāore he mea kei konei tawhito atu i te wiki. Ko ngā mea hou ka whiwhi i te Whakanui.",
@@ -4996,7 +4995,6 @@
     "ambWant2": "Te hiahia mo Web3, crypto, petipeti, ahurea kaihanga ranei",
     "ambWant3": "Ngā pūkenga whakawhitiwhiti kaha me te kaha ki te whakamārama i ngā ariā matatini noa iho",
     "ambWant4": "Ko te kaiarahi ake e taea ana te whakamahere me te whakahaere i nga kaupapa motuhake",
-    "ambWant5": "**Tīmata mō te tino whakahaere i te whakahaere whakahaere, whakahaere whakahaere, me ngā whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere whakahaere",
     "ambassadorCompensation": "Ka whiwhi nga Kaitohutohu Brand i te utu <b>ka taea te whakawhitiwhitinga marama </b> ka utua tonu. Ka taea te whakawhiwhia atu i nga bonus taapiri i runga i te mahi kaupapa, nga hainatanga kaiwhakamahi, me nga tohu tipu hapori. Ka whiwhi hoki koe i ngā hua DeHub motuhake, te uru wawe ki ngā āhuatanga, me ngā tohatoha tohu i te tipu o te taiao.",
     "applyAsAmbassador": "Te tono hei karere tohu",
     "noRoleFits": "Kaore koe e kite i tetahi mahi e tika ana? Haere mai ki a matou i runga i <mail>dev@dehub.io</mail> — kei te rapu tonu matou i nga tangata whai talenia."

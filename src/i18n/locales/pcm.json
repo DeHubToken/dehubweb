@@ -4387,7 +4387,6 @@
     "desktopNodes": "Desktop nodes",
     "baseSettlement": "Base settlement",
     "faqHeading": "Questions, answered plainly.",
-    "faqCanOperatorSeeQ": "No dey like dat. Node operator no go see content dey host, na just like dey host for you like server. Like dey just dey carry your data, no dey read or see.",
     "faqHowMuchQ": "How much money go get a node operator dey get?",
     "faqHowMuchA": "No dey have fixed rate or foretell. Only na **verified** contribution dat go get share from revenue reward pool after epoch close. Reward no guarantee, and cost for electricity, bandwidth, and hardware might be more than any reward dey give.",
     "faqSoftwareAvailableA": "Lightweight, browser-based tier dey come now: sign in and choose yes on dis page, and your open tab go dey like a node while it stay open. Heavy, always-on desktop node dey talk about for future — no dey come yet.",
