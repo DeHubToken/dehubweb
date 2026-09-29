@@ -5,7 +5,8 @@
 import { useEffect } from "react";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
-import { getTransform, isVisualClip, placementPatch } from "@/lib/editor/render";
+import { getTransform, isVisualClip, placementPatchAt } from "@/lib/editor/render";
+import { resolveClipAt } from "@/lib/editor/keyframes";
 
 function isTextInput(el: EventTarget | null): boolean {
   if (!(el instanceof HTMLElement)) return false;
@@ -68,11 +69,11 @@ export function ShortcutsLayer() {
           // One undo step for the whole nudge, however many layers moved.
           void s.runAsOneStep(() => {
             for (const clip of targets) {
-              const tr = getTransform(clip);
-              s.patchClip(clip.id, placementPatch(clip, {
+              const tr = getTransform(resolveClipAt(clip, s.currentTime));
+              s.patchClip(clip.id, placementPatchAt(clip, {
                 x: tr.x + dx / s.settings.width,
                 y: tr.y + dy / s.settings.height,
-              }));
+              }, s.currentTime));
             }
           });
           return;
