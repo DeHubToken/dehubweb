@@ -325,7 +325,7 @@ html[data-theme='osaka'] [data-osaka-bead]::before {
    keeps the theme legible rather than falling back to a different look.
    ========================================================================== */
 
-/* Phones and touch devices: no blur (see the touch block in index.css), so
+/* Phones and touch devices: denser glass (see the touch block in index.css), so
    the slate gets denser to keep copy off the lit alley behind it. Declared
    before reduced transparency so that block's near-solid values still win. */
 @media (max-width: 767px), (pointer: coarse) {
@@ -333,8 +333,6 @@ html[data-theme='osaka'] [data-osaka-bead]::before {
     --glass-thin: 0.84;
     --glass-regular: 0.88;
     --glass-raised: 0.92;
-    --glass-blur: none;
-    --osaka-blur: none;
     /* The #app-root slab net in osaka-theme.css section 11. */
     --osaka-slab: 0.84;
   }
