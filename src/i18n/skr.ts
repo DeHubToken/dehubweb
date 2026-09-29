@@ -485,6 +485,7 @@ export const skr = {
     webStreamingDesc: 'اپنا کیمرا یا سکرین شیرنگ کے ذریعے براؤزر سے لائیو جاو، جس میں براڈکاسٹ کرتے ہوئے کیمرا لوکس اپلائی کی جائیں گے',
     realtime: 'ریل ٹائم',
     multiToken: 'ملٹی ٹوکن',
+    streamingMethods: 'سٹریمنگ طریقے',
   },
   games: {
     title: 'DeHub کھیڈاں',
@@ -719,6 +720,12 @@ export const skr = {
     openSourceNote: '*کامپیوٹر کا پوری کوڈ مکمل ہونے کے بعد عام ہوگا۔*',
     workflow1Desc: 'حصہ دار رجسٹرڈ تھیون اتے وسائل مختص کر سگدن۔',
     dedicatedServers: 'مخصوص سرورز',
+    revenuePoolDesc: 'ایک انعامی خزانہ جو شامل ہوتا ہے:',
+    scalabilityDesc: 'جسے ضرورت کے ساتھ ساتھ نیٹ ورک کو بڑھایا جا سکے۔',
+    softwareSetup2: 'موجودہ وسائل کی رپورٹ دیتا ہے۔',
+    softwareSetup3: 'نہایتہ مقررہ کاموں کو انجام دیتا ہے۔',
+    sustainabilityDesc: 'مستقیم طور پر اپ کی آمدنی سے انعام دیں، ٹوکن کی انفلیشن کے بغیر۔',
+    tokenFeesDesc: 'ٹرانزیکشن فیس کا ایک حصہ ڈیہب ٹوکنز میں۔',
   },
   e2ee: {
     title: 'E2E انکرپشن',
@@ -783,6 +790,13 @@ export const skr = {
     never2: 'آپ کی خصوصی کیز تک رسائی',
     never3: 'آپ کے کنورسیشن کو ڈیکریپٹ',
     evenIf: 'بہت سے صورتوں میں بھی:',
+    comingSoon: '🚧 آئندہ',
+    commitmentTitle: '🎯 ڈیہب کی محرمانہ کی تعهد',
+    decryption: '3. ڈیکریپشن',
+    dehubNever: 'ڈیہب کبھی نہیں کر سکتا:',
+    encryption: '2. انکریپشن',
+    evenIf2: '🚨 ہمیں ایک حکومت کا ورنٹ ملا ہے',
+    fetchDbDesc: 'ڈیہب حاصل کرتا ہے: انکریپٹڈ کانتینٹ + نانس + ورژن',
   },
   aiToolkits: {
     title: 'AI ٹول کٹ',
@@ -805,6 +819,7 @@ export const skr = {
     contentCreationDesc: 'AI کی مدد سے لکھائی، ایڈیٹنگ اور آپ کے پوسٹس کو آپٹیمائز کرنے میں مدد',
     globalTranslationDesc: 'گلوبل آڈینس کے لیے کنٹینٹ ٹرانسلٹ اور سافٹ کرے، زبانوں کے بارے میں بریک ڈاؤن',
     contentAnalysisDesc: 'AI کی مدد سے پوسٹس کی کنٹیکسٹ یا تفصیلات دے یا ان کی تفسیر',
+    globalTranslation: 'عالمی ترجمہ',
   },
   advertising: {
     title: 'اشتہار',
@@ -1328,5 +1343,8 @@ export const skr = {
     keyboardHint: '↑↓ داۓ لە ناوێنێن کەرێن، ↵ داۓ پەڻھێن کەرێن، ⎋ داۓ باندھێن کەرێن',
     resultOne: '1 نتيجه',
     resultMany: '{count} نتایج',
+    match: '{percent}% مطابقت',
+    noResultsHint: 'آپ مختلف کلیدی الفاظ کوشش کریں یا ٹائپنگ چیک کریں۔',
+    popular: 'مشہور سرچز',
   },
 };

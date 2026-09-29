@@ -674,6 +674,8 @@ export const pcm = {
     workB6: 'Disputes:',
     storesTitle: 'Stores',
     storesB1: 'Open a Store:',
+    advancedFeatures: 'Advanced Features',
+    priv3: 'Custom privacy settings per contact',
   },
   games: {
     title: 'DeHub Games',
@@ -943,6 +945,12 @@ export const pcm = {
     distributionMechanism: 'Distribution Mechanism',
     participationRequirements: 'Participation Requirements',
     minimumHardware: 'Minimum Hardware Requirements',
+    contributors: 'Contributors (Miners)',
+    inAppRevenue: 'In-App Revenue:',
+    revenuePool: 'Revenue Pool',
+    workflow1: 'Resource Sharing:',
+    workflow2: 'Task Assignment:',
+    workflow4: 'Verification:',
   },
   e2ee: {
     title: 'E2E Encryption',
@@ -1209,6 +1217,14 @@ export const pcm = {
     completeBrandPackageDesc: 'Wahin you need more format or full brand package?',
     requestFullBrandKit: 'Request Full Brand Kit',
     contactBrandTeam: 'Contact Brand Team',
+    swatchBlack: 'Black',
+    swatchGraphite: 'Graphite',
+    swatchGrey: 'Grey',
+    swatchLightGrey: 'Light Grey',
+    swatchOffWhite: 'Off White',
+    swatchSurface: 'Surface',
+    swatchSurfaceRaised: 'Surface +1',
+    swatchWhite: 'White',
   },
   legalDisclaimer: {
     title: 'Legal Disclaimer',
@@ -1550,6 +1566,7 @@ export const pcm = {
     reportingItem1: 'Any post, comment, stream or message you see, you can report it by click wey dey have for report on dat thing.',
     whatHappensNextText: 'Reports wey go be review by moderators wey dey choose by community — na dem wey dey work as admin and holders of top badges — dem dey have power wey dey delegate for dem to act no wait for vote by governance.',
     appealsText: 'If you think a moderator make wrong decision, you can appeal through community governance. Governance dey set de policy dat moderator enforce, and dem can review or reverse individual decision. But enforcement dey fast—content stay down while you wait for appeal.',
+    appeals: 'Appeals',
   },
   brandGuidelines: {
     title: 'Brand Guidelines',
@@ -1710,6 +1727,8 @@ export const pcm = {
     clicks: 'Clicks',
     campaignNamePlaceholder: 'Enter campaign name',
     estimatedPerformance: 'Estimated Performance',
+    budgetDistribution: 'Budget Distribution by Badge Tier',
+    campaignTypePlaceholder: 'Select campaign type',
   },
   docsSearch: {
     placeholder: 'Search docs & blog...',
