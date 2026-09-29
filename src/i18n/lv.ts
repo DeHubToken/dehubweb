@@ -2334,5 +2334,6 @@ export const lv = {
     reason_mutualGrowthDesc: 'Augiet kopā ar krustpromoģēšanu un kopīgo tērētāju bāzi',
     becomeLaunchPartner: 'Kļūstot par Palaišanas Partneru',
     limitedSlots: 'Apgrieztās partnera vietas ir ierobežotas mūsu oficiālajai palaišanai',
+    ctrRow: 'VKS:',
   },
 };
