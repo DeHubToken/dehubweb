@@ -325,7 +325,7 @@ export default function CreatorPage() {
           </div>
         )}
 
-          <header className="border-b border-white/10 px-3 py-3 backdrop-blur-xl sm:px-4" style={{ backgroundColor: 'rgba(9,10,11,0.95)' }}>
+          <header data-clear-top-bar className="border-b border-white/10 px-3 py-3 backdrop-blur-xl sm:px-4" style={{ backgroundColor: 'rgba(9,10,11,0.95)' }}>
             <div className="flex items-center gap-3">
               <button
                 type="button"
