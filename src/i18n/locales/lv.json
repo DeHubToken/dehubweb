@@ -1489,7 +1489,13 @@
     "connectorUrlHelp": "Pievienojiet to kā pielāgotu MCP savienotāju Claude vai ChatGPT. Tas autentificējas kā šis aģents, tāpēc izturieties pret to kā pret API atslēgu.",
     "agentWallet": "Aģenta maks (Base)",
     "walletCopied": "Maka adrese nokopēta",
-    "agentWalletHelp": "Nosūtiet šeit nelielu daudzumu ETH Base tīklā, pirms aģents publicē — publicēšana kaļ ķēdē, un aģents pats maksā gāzi. Komentāriem, balsojumiem un sekošanai gāze nav vajadzīga."
+    "agentWalletHelp": "Nosūtiet šeit nelielu daudzumu ETH Base tīklā, pirms aģents publicē — publicēšana kaļ ķēdē, un aģents pats maksā gāzi. Komentāriem, balsojumiem un sekošanai gāze nav vajadzīga.",
+    "loadFailed": "Neizdevās ielādēt aģentus",
+    "keyHidden": "Paslēpta. Apstipriniet, ka tas esat jūs, lai redzētu šo atslēgu.",
+    "revealKey": "Rādīt atslēgu",
+    "revealSignIn": "Piesakieties vēlreiz, lai redzētu šo atslēgu",
+    "revealFailed": "Neizdevās parādīt atslēgu. Mēģiniet vēlreiz.",
+    "signInAgain": "Pieteikties vēlreiz"
   },
   "hero": {
     "title": "Laipni Lūdzam",

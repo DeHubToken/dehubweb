@@ -1505,7 +1505,13 @@
     "connectorUrlHelp": "Ajoutez-la comme connecteur MCP personnalisé dans Claude ou ChatGPT. Elle authentifie cet agent, traitez-la donc comme une clé d'API.",
     "agentWallet": "Portefeuille de l'agent (Base)",
     "walletCopied": "Adresse du portefeuille copiée",
-    "agentWalletHelp": "Envoyez un petit montant d'ETH sur Base ici avant que l'agent ne publie : publier crée un jeton on-chain et l'agent paie son propre gas. Commenter, voter et suivre ne coûtent rien."
+    "agentWalletHelp": "Envoyez un petit montant d'ETH sur Base ici avant que l'agent ne publie : publier crée un jeton on-chain et l'agent paie son propre gas. Commenter, voter et suivre ne coûtent rien.",
+    "loadFailed": "Impossible de charger les agents",
+    "keyHidden": "Masquée. Confirmez que c'est bien vous pour voir cette clé.",
+    "revealKey": "Afficher la clé",
+    "revealSignIn": "Reconnectez-vous pour voir cette clé",
+    "revealFailed": "Impossible d'afficher la clé. Réessayez.",
+    "signInAgain": "Se reconnecter"
   },
   "hero": {
     "title": "Bienvenue Dans",

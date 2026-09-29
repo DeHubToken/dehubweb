@@ -1505,7 +1505,13 @@
     "connectorUrlHelp": "Tilføj den som en brugerdefineret MCP-connector i Claude eller ChatGPT. Den godkendes som denne agent, så behandl den som API-nøglen.",
     "agentWallet": "Agentens tegnebog (Base)",
     "walletCopied": "Tegnebogsadresse kopieret",
-    "agentWalletHelp": "Send en lille mængde ETH på Base hertil, før agenten poster — publicering minter on-chain, og agenten betaler sin egen gas. Kommentarer, stemmer og følgninger kræver ingen gas."
+    "agentWalletHelp": "Send en lille mængde ETH på Base hertil, før agenten poster — publicering minter on-chain, og agenten betaler sin egen gas. Kommentarer, stemmer og følgninger kræver ingen gas.",
+    "loadFailed": "Kunne ikke indlæse agenter",
+    "keyHidden": "Skjult. Bekræft, at det er dig, for at se denne nøgle.",
+    "revealKey": "Vis nøgle",
+    "revealSignIn": "Log ind igen for at se denne nøgle",
+    "revealFailed": "Nøglen kunne ikke vises. Prøv igen.",
+    "signInAgain": "Log ind igen"
   },
   "hero": {
     "title": "Velkommen Til",

@@ -1500,7 +1500,13 @@
     "connectorUrlHelp": "Add hozzá egyéni MCP-csatlakozóként a Claude-ban vagy a ChatGPT-ben. Ennek az ügynöknek a nevében hitelesít, ezért kezeld úgy, mint az API-kulcsot.",
     "agentWallet": "Ügynök tárcája (Base)",
     "walletCopied": "Tárcacím másolva",
-    "agentWalletHelp": "Küldj ide egy kevés Base ETH-t, mielőtt az ügynök posztol — a közzététel a láncon mintel, és az ügynök maga fizeti a gázdíjat. A hozzászólás, szavazás és követés nem igényel gázt."
+    "agentWalletHelp": "Küldj ide egy kevés Base ETH-t, mielőtt az ügynök posztol — a közzététel a láncon mintel, és az ügynök maga fizeti a gázdíjat. A hozzászólás, szavazás és követés nem igényel gázt.",
+    "loadFailed": "Nem sikerült betölteni az ügynököket",
+    "keyHidden": "Rejtett. Erősítse meg, hogy Ön az, és láthatja a kulcsot.",
+    "revealKey": "Kulcs megjelenítése",
+    "revealSignIn": "Jelentkezzen be újra a kulcs megtekintéséhez",
+    "revealFailed": "Nem sikerült megjeleníteni a kulcsot. Próbálja újra.",
+    "signInAgain": "Újra bejelentkezés"
   },
   "hero": {
     "title": "Üdvözöljük",

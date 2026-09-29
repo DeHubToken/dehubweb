@@ -1488,7 +1488,13 @@
     "connectorUrlHelp": "Nin fara Claude walima ChatGPT kan i ka MCP jɛnsɛnnan ye. A bɛ i tɔgɔ sɛbɛn nin ejɛn cogo la, o la a minɛ i n'a fɔ API key.",
     "agentWallet": "Ejɛn waribon (Base)",
     "walletCopied": "Waribon ladɛrɛsi kopiyala",
-    "agentWalletHelp": "Ejɛn ka sɛbɛn bilali ɲɛ, Base ETH dɔɔnin ci yan — o bilali bɛ minti sirasira kan wa ejɛn yɛrɛ b'a ka gaz sara. Kuma bilali, kalata ni tugulili tɛ gaz wajibiya."
+    "agentWalletHelp": "Ejɛn ka sɛbɛn bilali ɲɛ, Base ETH dɔɔnin ci yan — o bilali bɛ minti sirasira kan wa ejɛn yɛrɛ b'a ka gaz sara. Kuma bilali, kalata ni tugulili tɛ gaz wajibiya.",
+    "loadFailed": "Agent ninnu ma se ka ladon",
+    "keyHidden": "A dogoyara. A sɛmɛntiya ko e don, walisa ka nin kile ye.",
+    "revealKey": "Kile yira",
+    "revealSignIn": "I ka don tuguni walisa ka nin kile ye",
+    "revealFailed": "Kile ma se ka yira. I ka a lajɛ tuguni.",
+    "signInAgain": "Don tuguni"
   },
   "hero": {
     "title": "Welcome To",

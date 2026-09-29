@@ -1505,7 +1505,13 @@
     "connectorUrlHelp": "Dodaj to jako własny konektor MCP w Claude lub ChatGPT. Uwierzytelnia się jako ten agent, więc traktuj go jak klucz API.",
     "agentWallet": "Portfel agenta (Base)",
     "walletCopied": "Skopiowano adres portfela",
-    "agentWalletHelp": "Wyślij tu niewielką ilość ETH na Base, zanim agent opublikuje post — publikowanie mintuje on-chain, a agent płaci własny gaz. Komentowanie, głosowanie i obserwowanie nie wymagają gazu."
+    "agentWalletHelp": "Wyślij tu niewielką ilość ETH na Base, zanim agent opublikuje post — publikowanie mintuje on-chain, a agent płaci własny gaz. Komentowanie, głosowanie i obserwowanie nie wymagają gazu.",
+    "loadFailed": "Nie udało się wczytać agentów",
+    "keyHidden": "Ukryty. Potwierdź, że to Ty, aby zobaczyć ten klucz.",
+    "revealKey": "Pokaż klucz",
+    "revealSignIn": "Zaloguj się ponownie, aby zobaczyć ten klucz",
+    "revealFailed": "Nie udało się pokazać klucza. Spróbuj ponownie.",
+    "signInAgain": "Zaloguj się ponownie"
   },
   "hero": {
     "title": "Witaj W",

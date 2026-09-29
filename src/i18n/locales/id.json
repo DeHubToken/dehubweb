@@ -1505,7 +1505,13 @@
     "connectorUrlHelp": "Tambahkan ini sebagai konektor MCP khusus di Claude atau ChatGPT. Ia terautentikasi sebagai agen ini, jadi perlakukan seperti kunci API.",
     "agentWallet": "Dompet agen (Base)",
     "walletCopied": "Alamat dompet disalin",
-    "agentWalletHelp": "Kirim sedikit ETH di jaringan Base ke sini sebelum agen memposting — memublikasikan akan mencetak on-chain dan agen membayar gasnya sendiri. Berkomentar, memberi suara, dan mengikuti tidak butuh gas."
+    "agentWalletHelp": "Kirim sedikit ETH di jaringan Base ke sini sebelum agen memposting — memublikasikan akan mencetak on-chain dan agen membayar gasnya sendiri. Berkomentar, memberi suara, dan mengikuti tidak butuh gas.",
+    "loadFailed": "Tidak dapat memuat agen",
+    "keyHidden": "Tersembunyi. Konfirmasi bahwa ini Anda untuk melihat kunci ini.",
+    "revealKey": "Tampilkan kunci",
+    "revealSignIn": "Masuk lagi untuk melihat kunci ini",
+    "revealFailed": "Tidak dapat menampilkan kunci. Coba lagi.",
+    "signInAgain": "Masuk lagi"
   },
   "hero": {
     "title": "Selamat Datang",

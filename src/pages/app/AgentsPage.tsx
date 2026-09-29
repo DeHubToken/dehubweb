@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import { retryWalletSession } from '@/lib/wallet-session';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +20,8 @@ interface AIAgent {
   id: string;
   name: string;
   description: string;
-  api_key: string;
+  /** Null unless the request carried a signed wallet session. */
+  api_key: string | null;
   owner_wallet_address: string;
   is_active: boolean;
   last_active_at: string | null;
@@ -38,12 +40,13 @@ const connectorUrl = (apiKey: string) => `${MCP_BASE}/k/${apiKey}`;
 
 export default function AgentsPage() {
   const { t } = useTranslation();
-  const { walletAddress } = useAuth();
+  const { walletAddress, refreshSession, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
   const [isCreating, setIsCreating] = useState(false);
   const [newAgentName, setNewAgentName] = useState('');
   const [newAgentDescription, setNewAgentDescription] = useState('');
   const [visibleKeys, setVisibleKeys] = useState<Set<string>>(new Set());
+  const [revealing, setRevealing] = useState(false);
 
   const { data: agents, isLoading, isError, refetch } = useQuery({
     queryKey: ['ai-agents', walletAddress],
@@ -53,7 +56,9 @@ export default function AgentsPage() {
       // Not a table read. api_key is not selectable by client roles — with
       // agents publicly listable so the home-feed stories can resolve them, a
       // readable key column would be a public key dump. The RPC returns only
-      // the caller's own rows.
+      // the caller's own rows, and fills api_key only when the request carries
+      // a signed wallet session — the bare x-wallet-address header anyone can
+      // set is enough to list agents, never to read their keys.
       //
       // Cast until types.ts is regenerated, same as the community RPCs.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,6 +71,14 @@ export default function AgentsPage() {
     },
     enabled: !!walletAddress,
   });
+
+  // Keys registration just handed back. The list only carries a key for a
+  // signed request, so a new agent's key would otherwise vanish on refetch
+  // whenever this browser has no session yet. Kept for this visit only.
+  const [createdKeys, setCreatedKeys] = useState<Record<string, string>>({});
+  const listedAgents = agents?.map((agent) =>
+    agent.api_key || !createdKeys[agent.id] ? agent : { ...agent, api_key: createdKeys[agent.id] },
+  );
 
   const createAgentMutation = useMutation({
     mutationFn: async ({ name, description }: { name: string; description: string }) => {
@@ -97,6 +110,9 @@ export default function AgentsPage() {
       // Show the API key for the new agent
       if (data.agent?.id) {
         setVisibleKeys(prev => new Set([...prev, data.agent.id]));
+        if (data.agent.api_key) {
+          setCreatedKeys(prev => ({ ...prev, [data.agent.id]: data.agent.api_key }));
+        }
       }
     },
     onError: (error: Error) => {
@@ -126,6 +142,37 @@ export default function AgentsPage() {
       toast.error(t('agents.failedDelete'));
     },
   });
+
+  /**
+   * A missing key means this browser could not prove the wallet just now.
+   * Try to prove it before asking anyone to sign in: mint a session, and if
+   * the DeHub token has lapsed, refresh it and mint again. Only when that
+   * fails is signing in again the answer.
+   */
+  const revealKeys = async () => {
+    if (!walletAddress || revealing) return;
+    setRevealing(true);
+    try {
+      let reason = await retryWalletSession(walletAddress);
+      if (reason === 'no_token' && (await refreshSession(true))) {
+        reason = await retryWalletSession(walletAddress);
+      }
+      if (!reason) {
+        const { data } = await refetch();
+        if (data?.some((agent) => agent.api_key)) return;
+      }
+      if (reason === 'no_token') {
+        toast.error(t('agents.revealSignIn'), {
+          action: { label: t('agents.signInAgain'), onClick: () => openLoginModal() },
+          duration: 8000,
+        });
+      } else {
+        toast.error(t('agents.revealFailed'));
+      }
+    } finally {
+      setRevealing(false);
+    }
+  };
 
   const toggleKeyVisibility = (agentId: string) => {
     setVisibleKeys(prev => {
@@ -285,7 +332,7 @@ export default function AgentsPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {agents?.map((agent) => (
+            {listedAgents?.map((agent) => (
               <Card key={agent.id} className="bg-white/5 border-white/10">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-3">
@@ -304,36 +351,55 @@ export default function AgentsPage() {
                   </div>
 
                   {/* API Key */}
-                  <div className="bg-black/30 rounded-lg p-3 mb-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs text-white/40">{t('agents.apiKey')}</span>
-                      <div className="flex gap-1">
+                  {!agent.api_key ? (
+                    <div className="bg-black/30 rounded-lg p-3 mb-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs text-white/40">{t('agents.apiKey')}</span>
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="h-6 w-6 p-0 text-white/40 hover:text-white"
-                          onClick={() => toggleKeyVisibility(agent.id)}
+                          className="h-6 px-2 text-xs text-white/60 hover:text-white"
+                          onClick={revealKeys}
+                          disabled={revealing}
                         >
-                          {visibleKeys.has(agent.id) ? (
-                            <EyeOff className="w-3 h-3" />
-                          ) : (
-                            <Eye className="w-3 h-3" />
-                          )}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 w-6 p-0 text-white/40 hover:text-white"
-                          onClick={() => copyApiKey(agent.api_key)}
-                        >
-                          <Copy className="w-3 h-3" />
+                          <Eye className="w-3 h-3 mr-1" />
+                          {t('agents.revealKey')}
                         </Button>
                       </div>
+                      <p className="text-xs text-white/60">{t('agents.keyHidden')}</p>
                     </div>
-                    <code className="text-xs text-white/80 font-mono break-all">
-                      {visibleKeys.has(agent.id) ? agent.api_key : maskApiKey(agent.api_key)}
-                    </code>
-                  </div>
+                  ) : (
+                    <div className="bg-black/30 rounded-lg p-3 mb-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs text-white/40">{t('agents.apiKey')}</span>
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-6 w-6 p-0 text-white/40 hover:text-white"
+                            onClick={() => toggleKeyVisibility(agent.id)}
+                          >
+                            {visibleKeys.has(agent.id) ? (
+                              <EyeOff className="w-3 h-3" />
+                            ) : (
+                              <Eye className="w-3 h-3" />
+                            )}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-6 w-6 p-0 text-white/40 hover:text-white"
+                            onClick={() => copyApiKey(agent.api_key)}
+                          >
+                            <Copy className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                      <code className="text-xs text-white/80 font-mono break-all">
+                        {visibleKeys.has(agent.id) ? agent.api_key : maskApiKey(agent.api_key)}
+                      </code>
+                    </div>
+                  )}
 
                   {/* Connector URL — paste straight into Claude or ChatGPT */}
                   <div className="bg-black/30 rounded-lg p-3 mb-3">
@@ -342,24 +408,28 @@ export default function AgentsPage() {
                         <Link2 className="w-3 h-3" />
                         {t('agents.connectorUrl', 'Connector URL')}
                       </span>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-6 w-6 p-0 text-white/40 hover:text-white"
-                        onClick={() =>
-                          copyText(
-                            connectorUrl(agent.api_key),
-                            t('agents.connectorUrlCopied', 'Connector URL copied'),
-                          )
-                        }
-                      >
-                        <Copy className="w-3 h-3" />
-                      </Button>
+                      {agent.api_key && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-6 w-6 p-0 text-white/40 hover:text-white"
+                          onClick={() =>
+                            copyText(
+                              connectorUrl(agent.api_key),
+                              t('agents.connectorUrlCopied', 'Connector URL copied'),
+                            )
+                          }
+                        >
+                          <Copy className="w-3 h-3" />
+                        </Button>
+                      )}
                     </div>
                     <code className="text-xs text-white/80 font-mono break-all">
-                      {visibleKeys.has(agent.id)
-                        ? connectorUrl(agent.api_key)
-                        : maskConnectorUrl(agent.api_key)}
+                      {!agent.api_key
+                        ? `${MCP_BASE}/k/${'•'.repeat(16)}`
+                        : visibleKeys.has(agent.id)
+                          ? connectorUrl(agent.api_key)
+                          : maskConnectorUrl(agent.api_key)}
                     </code>
                     <p className="text-xs text-white/40 mt-2">
                       {t(

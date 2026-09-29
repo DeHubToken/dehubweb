@@ -1505,7 +1505,13 @@
     "connectorUrlHelp": "Yengeza lokhu njengesixhumanisi se-MCP esizenzakalelayo ku-Claude noma ku-ChatGPT. Sifakazela njengale ejenti, ngakho siphathe njengokhiye we-API.",
     "agentWallet": "Isikhwama se-ejenti (Base)",
     "walletCopied": "Ikheli lesikhwama likopishiwe",
-    "agentWalletHelp": "Thumela imali encane ye-ETH ku-Base lapha ngaphambi kokuba i-ejenti iposte — ukushicilela kwenza i-mint ku-chain futhi i-ejenti ikhokha igesi yayo. Ukuphawula, ukuvota nokulandela akudingi gesi."
+    "agentWalletHelp": "Thumela imali encane ye-ETH ku-Base lapha ngaphambi kokuba i-ejenti iposte — ukushicilela kwenza i-mint ku-chain futhi i-ejenti ikhokha igesi yayo. Ukuphawula, ukuvota nokulandela akudingi gesi.",
+    "loadFailed": "Ayikwazanga ukulayisha ama-ejenti",
+    "keyHidden": "Kufihliwe. Qinisekisa ukuthi nguwe ukuze ubone lo khiye.",
+    "revealKey": "Bonisa ukhiye",
+    "revealSignIn": "Ngena futhi ukuze ubone lo khiye",
+    "revealFailed": "Ayikwazanga ukubonisa ukhiye. Zama futhi.",
+    "signInAgain": "Ngena futhi"
   },
   "hero": {
     "title": "Siyakwamukela",

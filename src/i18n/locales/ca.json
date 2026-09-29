@@ -1501,7 +1501,13 @@
     "connectorUrlHelp": "Afegeix-ho com a connector MCP personalitzat a Claude o ChatGPT. S'autentica com aquest agent, així que tracta'l com la clau d'API.",
     "agentWallet": "Cartera de l'agent (Base)",
     "walletCopied": "Adreça de la cartera copiada",
-    "agentWalletHelp": "Envia aquí una petita quantitat d'ETH a Base abans que l'agent publiqui: publicar encunya on-chain i l'agent paga el seu propi gas. Comentar, votar i seguir no necessiten gas."
+    "agentWalletHelp": "Envia aquí una petita quantitat d'ETH a Base abans que l'agent publiqui: publicar encunya on-chain i l'agent paga el seu propi gas. Comentar, votar i seguir no necessiten gas.",
+    "loadFailed": "No s'han pogut carregar els agents",
+    "keyHidden": "Amagada. Confirma que ets tu per veure aquesta clau.",
+    "revealKey": "Mostra la clau",
+    "revealSignIn": "Torna a iniciar sessió per veure aquesta clau",
+    "revealFailed": "No s'ha pogut mostrar la clau. Torna-ho a provar.",
+    "signInAgain": "Torna a iniciar sessió"
   },
   "hero": {
     "title": "Benvinguts Al",
