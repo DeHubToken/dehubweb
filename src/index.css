@@ -2104,11 +2104,9 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
     --glass-raised: 0.90;
   }
   /* Chrome that ships its own thin tint instead of reading the tokens. The
-     pill changes material, not shape, so the swallow clip is untouched: the
-     feed is still cut at the pill's top edge, it just shows less behind it. */
-  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-feed-nav] {
-    background: rgb(var(--glass-tint) / 0.82) !important;
-  }
+     feed tab pill is left out on purpose: it keeps the desktop liquid glass
+     (thin smoke + blur) on phones too, so posts sliding under it blur through
+     instead of vanishing behind a near-solid slab. */
   html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-bottom-nav] > nav {
     background: rgb(var(--glass-tint) / 0.86) !important;
   }
