@@ -1729,20 +1729,28 @@ html[data-theme="system"] [data-feed-nav-outer] {
    the pill. On the canvas themes that flash lands over the animated canvas and
    is invisible; on system's solid-black background it reads as a stark colour
    flash. Cover the gap with a black strip anchored to the sticky (therefore
-   lag-free) nav wrapper: black-on-black so it's invisible at rest, tall enough
-   to cover the gap on every breakpoint, and sitting BEHIND the pill (z-index
-   -1) so the pill's see-through glass and the rounded swallow cut below it are
-   both untouched. Scoped to system — no other theme is affected. */
+   lag-free) nav wrapper: black-on-black so it's invisible at rest, and sitting
+   BEHIND the pill (z-index -1). The strip must end exactly at the pill's top
+   edge: the pill is see-through glass, so any strip that reaches into it
+   blacks out the top of the pill and the feed looks cut off partway down the
+   pill instead of at its top edge. Its height is the wrapper's top padding —
+   pt-1 below lg, lg:pt-2 above — and a wrapper with a different gap sets
+   --feed-nav-gap. Scoped to system — no other theme is affected. */
 html[data-theme="system"] [data-feed-nav-outer]::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 20px;
+  height: var(--feed-nav-gap, 0.25rem);
   background: #000;
   z-index: -1;
   pointer-events: none;
+}
+@media (min-width: 1024px) {
+  html[data-theme="system"] [data-feed-nav-outer]::before {
+    height: var(--feed-nav-gap, 0.5rem);
+  }
 }
 /* Docs-surface lag guard — FROSTED paper, not black, on every paper theme.
    The blog feed is hard-cut by the swallow-clip on all themes (Blog.tsx

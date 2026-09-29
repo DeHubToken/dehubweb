@@ -235,7 +235,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
         // Kept below the drawer scrim (z-100) so bottom sheets dim/blur the nav
         // along with the rest of the page instead of leaving it floating crisp.
         ? "top-11 lg:top-0 z-[90] px-2 sm:px-3 lg:px-3 pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2"
-        : "top-0 z-50 p-2 sm:p-3 pb-2 sm:pb-2",
+        : "top-0 z-50 p-2 sm:p-3 pb-2 sm:pb-2 [--feed-nav-gap:0.5rem] sm:[--feed-nav-gap:0.75rem]",
       (!navVisible || anyOverlayOpen) && "-translate-y-full lg:translate-y-0",
       anyOverlayOpen && "z-[40]"
     )}>
