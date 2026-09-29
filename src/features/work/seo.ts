@@ -50,7 +50,14 @@ export function bountyDescription(
  *
  * `noindex` is not "do not render" — a terminal bounty still gets full OG tags
  * so that a link somebody deliberately pastes into a chat unfurls properly.
+ * An open bounty past its deadline counts as expired. Mirrors the worker's
+ * isBountyIndexable, which decides the same thing for crawlers.
  */
-export function isBountyIndexable(job: Pick<WorkJob, 'status'>): boolean {
-  return job.status === 'open' || job.status === 'in_progress';
+export function isBountyIndexable(
+  job: Pick<WorkJob, 'status'> & Partial<Pick<WorkJob, 'deadline'>>,
+  now: number = Date.now(),
+): boolean {
+  if (job.status !== 'open' && job.status !== 'in_progress') return false;
+  const deadline = job.deadline ? Date.parse(job.deadline) : NaN;
+  return !(Number.isFinite(deadline) && deadline <= now);
 }

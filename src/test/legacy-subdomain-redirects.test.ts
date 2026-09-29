@@ -84,6 +84,15 @@ describe('the dehub.net branch it sits beside still behaves', () => {
     expect((await redirect('https://dehub.net/web/legal/terms')).to).toBe('https://dehub.io/docs/terms');
   });
 
+  it('sends the old dApp landers to their successors', async () => {
+    expect((await redirect('https://dehub.net/games')).to).toBe('https://dehub.io/arcade');
+    expect((await redirect('https://dehub.net/stream')).to).toBe('https://dehub.io/videos');
+    expect((await redirect('https://dehub.net/prediction/')).to).toBe('https://dehub.io/arcade');
+    expect((await redirect('https://dehub.net/ad-free')).to).toBe('https://dehub.io/premium');
+    // Only the exact paths: a stream id keeps its path.
+    expect((await redirect('https://dehub.net/stream/727')).to).toBe('https://dehub.io/stream/727');
+  });
+
   it('keeps www.dehub.io folding onto the apex', async () => {
     expect((await redirect('https://www.dehub.io/docs')).to).toBe('https://dehub.io/docs');
   });
