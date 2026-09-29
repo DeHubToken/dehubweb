@@ -7587,7 +7587,11 @@
       "search": "Sök appar",
       "all": "Alla",
       "fromDehub": "Från DeHub",
-      "noMatch": "Inga appar matchar den här sökningen."
+      "noMatch": "Inga appar matchar den här sökningen.",
+      "yourApps": "Dina appar",
+      "notificationsOn": "Notifikationer på",
+      "remove": "Ta bort",
+      "removed": "Tagen bort. Det kommer inte att notifiera dig igen."
     },
     "dev": {
       "title": "Bygg en mini-app",
@@ -7632,7 +7636,13 @@
       "stateUnlisted": "Live via länk · i granskning för butiken",
       "stateListed": "I butiken",
       "stateSuspended": "Upphävd",
-      "copyLink": "Kopiera länk"
+      "copyLink": "Kopiera länk",
+      "notifyKey": "Notifikationsnyckel",
+      "notifyKeyOnce": "Ny notifikationsnyckel för {{name}}. Kopiera den nu: den visas en gång, och att göra en ny ersätter den.",
+      "payTitle": "Ta emot betalningar",
+      "payBody": "pay() frågar användaren att skicka dig DHB, direkt till plånboken som signerade din dehub.json. Kontrollera kvittot på din server innan du levererar något.",
+      "notifyTitle": "Skicka notifikationer",
+      "notifyBody": "Användare som lägger till din app kan notifieras från din server med din notifikationsnyckel. Inga enskilda användartoken att spara."
     },
     "card": {
       "open": "Öppna"
@@ -7651,6 +7661,19 @@
       "developer-tools": "Utvecklarverktyg",
       "entertainment": "Underhållning",
       "art-creativity": "Konst & kreativitet"
+    },
+    "pay": {
+      "title": "Betal {{name}}?",
+      "body": "DHB:n går direkt till appens plånbok, {{wallet}}. Betalningar kan inte återkallas.",
+      "confirm": "Betal {{amount}} DHB",
+      "sending": "Skickar ditt betalning…",
+      "sent": "Betalat {{amount}} DHB till {{name}}.",
+      "noOwner": "Denna app har ingen verifierad plånbok för betalningar ännu."
+    },
+    "add": {
+      "title": "Lägg till {{name}}?",
+      "body": "Den kommer att visas under Dina appar och kunna skicka notifikationer till dig. Du kan ta bort den när som helst från Apps-sidan.",
+      "confirm": "Lägg till app"
     }
   },
   "aiStyles": {

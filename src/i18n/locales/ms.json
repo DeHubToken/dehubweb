@@ -7904,7 +7904,10 @@
       "search": "Aplikasi carian",
       "all": "Semua",
       "fromDehub": "Daripada DeHub",
-      "noMatch": "Tiada aplikasi yang sepadan dengan carian tersebut."
+      "noMatch": "Tiada aplikasi yang sepadan dengan carian tersebut.",
+      "yourApps": "Aplikasi anda",
+      "notificationsOn": "Pemberitahuan di",
+      "removed": "Dihapuskan. Ia tidak akan memberitahu anda lagi."
     },
     "dev": {
       "title": "Bina aplikasi mini",
@@ -7949,7 +7952,13 @@
       "stateUnlisted": "Tinggal mengikut pautan · sedang disemak untuk restoran",
       "stateListed": "Di kedai",
       "stateSuspended": "Digantung",
-      "copyLink": "Salin pautan"
+      "copyLink": "Salin pautan",
+      "notifyKey": "Pemberitahu kunci",
+      "notifyKeyOnce": "Kunci pemberitahuan baru untuk {{name}}. Salin sekarang: ia ditunjukkan sekali sahaja, dan membuat yang lain menggantikannya.",
+      "payTitle": "Terima pembayaran",
+      "payBody": "bayar() meminta pengguna untuk menghantar DHB langsung ke dompet yang menandatangani fail dehub.json anda. Sempurnakan resit pada pelayan anda sebelum anda menyerahkan apa-apa pun.",
+      "notifyTitle": "Kirim pemberitahuan",
+      "notifyBody": "Pengguna yang menambahkan aplikasi anda boleh diberitahu dari server anda menggunakan kunci notify anda. Tiada token per-pengguna untuk disimpan."
     },
     "card": {
       "open": "Buka"
@@ -7968,6 +7977,18 @@
       "developer-tools": "Alat pembangun",
       "entertainment": "Hiburan",
       "art-creativity": "Seni & kreativiti"
+    },
+    "pay": {
+      "title": "Bayar {{name}}?",
+      "body": "DHB langsung ke dompet aplikasi, {{wallet}}. Pembayaran tidak boleh dibatalkan.",
+      "confirm": "Bayar {{amount}} DHB",
+      "sending": "Mengirim pembayaran anda…",
+      "sent": "Bayar {{amount}} DHB kepada {{name}}.",
+      "noOwner": "Aplikasi ini belum mempunyai dompet yang disahkan untuk membayar."
+    },
+    "add": {
+      "title": "Tambah {{name}}?",
+      "body": "Ia akan muncul di bawah Aplikasi Anda dan boleh mengirimkan pemberitahuan kepada anda. Anda boleh menghapusnya sewaktu-waktu daripada halaman Aplikasi."
     }
   },
   "aiStyles": {

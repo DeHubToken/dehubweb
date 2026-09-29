@@ -7699,7 +7699,11 @@
       "search": "Recherche d'applications",
       "all": "Tout",
       "fromDehub": "De DeHub",
-      "noMatch": "Aucune application ne correspond à cette recherche."
+      "noMatch": "Aucune application ne correspond à cette recherche.",
+      "yourApps": "Vos applications",
+      "notificationsOn": "Notifications sur",
+      "remove": "Supprimer",
+      "removed": "Supprimé. Vous ne serez plus averti à nouveau."
     },
     "dev": {
       "title": "Créer une mini-application",
@@ -7744,7 +7748,13 @@
       "stateUnlisted": "En ligne par lien · en attente de la boutique",
       "stateListed": "Dans la boutique",
       "stateSuspended": "Suspendue",
-      "copyLink": "Copier le lien"
+      "copyLink": "Copier le lien",
+      "notifyKey": "Notifier la touche",
+      "notifyKeyOnce": "Nouvelle clé de notification pour {{name}}. Copiez-la maintenant : elle n’apparaît qu’une seule fois, et en en créant une autre, elle la remplace.",
+      "payTitle": "Prenez les paiements",
+      "payBody": "pay() demande à l'utilisateur d'envoyer des DHB directement dans le portefeuille qui a signé votre fichier dehub.json. Vérifiez le reçu sur votre serveur avant de livrer quoi que ce soit.",
+      "notifyTitle": "Envoyer des notifications",
+      "notifyBody": "Les utilisateurs qui ajoutent votre application peuvent être notifiés depuis votre serveur avec votre clé `notify`. Pas besoin de conserver de jetons par utilisateur."
     },
     "card": {
       "open": "Ouvrir"
@@ -7763,6 +7773,19 @@
       "developer-tools": "Outils pour les développeurs",
       "entertainment": "Divertissement",
       "art-creativity": "Art et créativité"
+    },
+    "pay": {
+      "title": "Payez {{name}} ?",
+      "body": "Le DHB va directement dans le portefeuille de l'application, {{wallet}}. Les paiements ne peuvent pas être annulés.",
+      "confirm": "Payez {{amount}} DHB",
+      "sending": "Envoyez votre paiement…",
+      "sent": "Paiement {{amount}} DHB à {{name}}.",
+      "noOwner": "Cette application n'a pas encore de portefeuille vérifié pour payer."
+    },
+    "add": {
+      "title": "Ajouter {{name}} ?",
+      "body": "Il apparaîtra sous Vos apps et pourra vous envoyer des notifications. Vous pouvez le supprimer à tout moment depuis la page Apps.",
+      "confirm": "Ajouter l'application"
     }
   },
   "aiStyles": {

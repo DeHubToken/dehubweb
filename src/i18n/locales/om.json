@@ -7653,7 +7653,9 @@
       "search": "Appilikeeshiniiwwan barbaadi",
       "all": "Hunda",
       "fromDehub": "DeHub irraa",
-      "noMatch": "Appilikeeshiniin barbaacha sanaan walsimu hin jiru."
+      "noMatch": "Appilikeeshiniin barbaacha sanaan walsimu hin jiru.",
+      "yourApps": "Appilikeeshiniiwwan keessan",
+      "remove": "Irraa kaasuu"
     },
     "dev": {
       "title": "Mini app ijaaraa",
@@ -7698,7 +7700,9 @@
       "stateUnlisted": "Live by link · in gamaaggama suuqichaaf",
       "stateListed": "Suuqii keessatti",
       "stateSuspended": "Rarraasuu",
-      "copyLink": "Link waraabuu"
+      "copyLink": "Link waraabuu",
+      "payTitle": "Qabbaa dhaabbaa",
+      "notifyTitle": "Qaballee dhaabataa"
     },
     "card": {
       "open": "Banaa"
@@ -7717,6 +7721,13 @@
       "developer-tools": "Meeshaalee developer",
       "entertainment": "Bohaaruu",
       "art-creativity": "Aartii & kalaqa"
+    },
+    "pay": {
+      "title": "Baasi {{name}}?"
+    },
+    "add": {
+      "body": "Gummaa *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa* *Gummaa*",
+      "confirm": "App itti dabali"
     }
   },
   "aiStyles": {

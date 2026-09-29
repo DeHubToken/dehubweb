@@ -7697,7 +7697,10 @@
       "search": "Cerca app",
       "all": "Tutti",
       "fromDehub": "Da DeHub",
-      "noMatch": "Nessuna app corrisponde alla ricerca."
+      "noMatch": "Nessuna app corrisponde alla ricerca.",
+      "yourApps": "Le tue app",
+      "notificationsOn": "Notifiche su",
+      "removed": "Rimosso. Non ti notificherà più."
     },
     "dev": {
       "title": "Crea una mini app",
@@ -7742,7 +7745,13 @@
       "stateUnlisted": "Vive con link · in attesa di valutazione per la store",
       "stateListed": "Nella store",
       "stateSuspended": "Sospesa",
-      "copyLink": "Copia link"
+      "copyLink": "Copia link",
+      "notifyKey": "Avvisa chiave",
+      "notifyKeyOnce": "Nuova chiave di notifica per {{name}}. Copiala ora: viene mostrata una sola volta e crearne un'altra la sostituisce.",
+      "payTitle": "Prenota pagamenti",
+      "payBody": "`pay()` chiede all'utente di inviarti DHB, direttamente nel portafoglio che ha firmato il tuo `dehub.json`. Controlla lo scontrino sul tuo server prima di consegnare qualcosa.",
+      "notifyTitle": "Invia notifiche",
+      "notifyBody": "Gli utenti che aggiungono la tua app possono essere notificati dal tuo server utilizzando la tua chiave `notify`. Nessun token personalizzato da memorizzare."
     },
     "card": {
       "open": "Apri"
@@ -7761,6 +7770,19 @@
       "developer-tools": "Strumenti per sviluppatori",
       "entertainment": "Divertimento",
       "art-creativity": "Arte e creatività"
+    },
+    "pay": {
+      "title": "Paga {{name}}?",
+      "body": "Il DHB va direttamente al portafoglio dell'app, {{wallet}}. I pagamenti non possono essere annullati.",
+      "confirm": "Paga {{amount}} DHB",
+      "sending": "Invia il tuo pagamento…",
+      "sent": "Pagato {{amount}} DHB a {{name}}.",
+      "noOwner": "Questa app non ha ancora un portafoglio verificato per i pagamenti."
+    },
+    "add": {
+      "title": "Aggiungi {{name}}?",
+      "body": "Verrà visualizzato sotto Le tue app e potrà inviarti notifiche. Puoi rimuoverlo in qualsiasi momento dalla pagina App.",
+      "confirm": "Aggiungi app"
     }
   },
   "aiStyles": {

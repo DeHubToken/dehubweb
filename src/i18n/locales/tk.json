@@ -7586,7 +7586,8 @@
       "search": "Ulymalary gözle",
       "all": "Ehli",
       "fromDehub": "Dehub şäheriniň",
-      "noMatch": "Men bu gözlegini görmedim."
+      "noMatch": "Men bu gözlegini görmedim.",
+      "yourApps": "Siziň ulaglaryňyz"
     },
     "dev": {
       "title": "Mini App ýaratmak",
@@ -7631,7 +7632,10 @@
       "stateUnlisted": "Live by link · dükäniň inceleýiňde",
       "stateListed": "Dükanda",
       "stateSuspended": "Durmak",
-      "copyLink": "Baglaýyşy nusgala"
+      "copyLink": "Baglaýyşy nusgala",
+      "notifyKeyOnce": "Yeni bildirim anahtaryňy {{name}} için. Koplayňyz: oň bir maral gosterilip, ikinji birini ykaryňda ykaryňda deýiştirýar.",
+      "payBody": "\"pay()\" gýzalyň DHBýný gýzalyň dehub.json tapýrdyň walletýne doýarýný soýgýr. Serverýňizde bilgiňi tekşirip, her neýseýýný berýp bermeýin.",
+      "notifyBody": "Kullanýçylar sizniň appýnýzý ekleýerlerde, sizniň notify anahtaryňyzla sizniň serverýnýzdan haberdar edile bilerler. Her bir kullanýçylyk tokenlar saklamak gerekmez."
     },
     "card": {
       "open": "Aç"
@@ -7650,6 +7654,16 @@
       "developer-tools": "Geliştirici esbaplary",
       "entertainment": "Göwün açma",
       "art-creativity": "Sanat we kreativitet"
+    },
+    "pay": {
+      "title": "Pay {{name}}?",
+      "body": "\"DHB\" direkt appýň pul gýzýna gider, {{wallet}}. Öýünler geri alýňmaz.",
+      "confirm": "Pay {{amount}} DHB",
+      "sending": "Göndergiň ödenekini yollayýar..."
+    },
+    "add": {
+      "title": "{{name}}?",
+      "body": "Sizge \"Apps\" bölüginde görünecek ve bildirimler gönderir. Siz \"Apps\" saytasyndan her anýňý silip atabýlýrsýnýz."
     }
   },
   "aiStyles": {

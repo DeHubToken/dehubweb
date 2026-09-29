@@ -7565,7 +7565,10 @@
       "search": "Search apps",
       "all": "All",
       "fromDehub": "From DeHub",
-      "noMatch": "O kama, a tun man nɔgɔ ka baara kɛ ni mɔgɔ wɛrɛw ye."
+      "noMatch": "O kama, a tun man nɔgɔ ka baara kɛ ni mɔgɔ wɛrɛw ye.",
+      "yourApps": "Your apps",
+      "notificationsOn": "Notifications on",
+      "remove": "Remove"
     },
     "dev": {
       "title": "I ka kan ka min kɛ, o ye ka baara kɛ",
@@ -7610,7 +7613,11 @@
       "stateUnlisted": "Live by Link · in review for the store angilikan",
       "stateListed": "In the store",
       "stateSuspended": "Suspended",
-      "copyLink": "Copy link"
+      "copyLink": "Copy link",
+      "notifyKey": "Notify key",
+      "payTitle": "Take payments",
+      "payBody": "pay() yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́",
+      "notifyTitle": "Send notifications"
     },
     "card": {
       "open": "Open"
@@ -7629,6 +7636,15 @@
       "developer-tools": "Developer tools",
       "entertainment": "Entertainment",
       "art-creativity": "Art & creativity"
+    },
+    "pay": {
+      "title": "Pay {{name}}?",
+      "confirm": "Pay {{amount}} DHB"
+    },
+    "add": {
+      "title": "Add {{name}}?",
+      "body": "Ndɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ́ kɨ́ɨ",
+      "confirm": "Add app"
     }
   },
   "aiStyles": {

@@ -7543,7 +7543,11 @@
       "search": "Maghanap ng mga app",
       "all": "Lahat",
       "fromDehub": "Mula sa DeHub",
-      "noMatch": "Walang apps na tumutugma sa paghahanap na iyon."
+      "noMatch": "Walang apps na tumutugma sa paghahanap na iyon.",
+      "yourApps": "Ang iyong mga app",
+      "notificationsOn": "Notifications on",
+      "remove": "Alisin",
+      "removed": "Alisin na. Hindi na ito magbabanggit sa iyo muli."
     },
     "dev": {
       "title": "Gumawa ng mini app",
@@ -7588,7 +7592,13 @@
       "stateUnlisted": "Live sa pamamagitan ng link · sa pagsusuri para sa tindahan",
       "stateListed": "Sa tindahan",
       "stateSuspended": "Nasuspinde",
-      "copyLink": "Kopyahin ang link"
+      "copyLink": "Kopyahin ang link",
+      "notifyKey": "Notify key",
+      "notifyKeyOnce": "Bagong notify key para sa {{name}}. Kopyahin mo na itong ngayon: ito ay nakikita lamang isang beses, at paggawa ng ibang bagay ay nagpapalit sa ito.",
+      "payTitle": "Tanggapin ang mga pagbabayad",
+      "payBody": "Ang pay() ay nagpapapayag sa user na ipadala sa iyo ang DHB, direktang sa wallet na nag-sign sa iyong dehub.json. Suriin ang receipt sa iyong server bago ibigay mo ang anumang bagay.",
+      "notifyTitle": "Ipadala ang mga babanggit",
+      "notifyBody": "Mga user na nagdaragdag ng iyong app ay maaaring babanggit mula sa iyong server gamit ang iyong notify key. Walang mga per-user tokens na kailangang ipatigil."
     },
     "card": {
       "open": "Buksan"
@@ -7597,6 +7607,7 @@
       "games": "Mga Laro",
       "social": "Panlipunan",
       "finance": "Pananalapi",
+      "utility": "Utility",
       "productivity": "Pagiging Produktibo",
       "health-fitness": "Kalusugan at fitness",
       "news-media": "Username or email address *",
@@ -7606,6 +7617,19 @@
       "developer-tools": "Mga tool ng developer",
       "entertainment": "Libangan",
       "art-creativity": "Sining at pagkamalikhain"
+    },
+    "pay": {
+      "title": "Bayaran ang {{name}}?",
+      "body": "Ang DHB ay direktang papunta sa wallet ng app, {{wallet}}. Hindi maaaring ibalik ang mga pagbabayad.",
+      "confirm": "Bayaran ang {{amount}} DHB",
+      "sending": "Nagsisend ng iyong pagbabayad…",
+      "sent": "Nabayaran ang {{amount}} DHB sa {{name}}.",
+      "noOwner": "Ang app na ito ay walang napatunayang wallet para sa pagbabayad pa rin."
+    },
+    "add": {
+      "title": "Daragdagin ang {{name}}?",
+      "body": "Ito ay magiging nasa ilalim ng Ang iyong mga app at maaaring ipadala sa iyo ang mga babanggit. Maaari mong alisin ito sa anumang oras mula sa Apps page.",
+      "confirm": "Daragdagin ang app"
     }
   },
   "aiStyles": {

@@ -7677,7 +7677,11 @@
       "search": "Mājas meklētāji",
       "all": "Visi",
       "fromDehub": "No DeHub",
-      "noMatch": "Nav atbilstošu rezultātu meklēšanai."
+      "noMatch": "Nav atbilstošu rezultātu meklēšanai.",
+      "yourApps": "Tavas programmas",
+      "notificationsOn": "Paziņojumi ienāktā",
+      "remove": "Noņemt",
+      "removed": "Noņemts. Tā jums vairāk nepiezīmēs."
     },
     "dev": {
       "title": "Izveidojiet mini aplikāciju",
@@ -7722,7 +7726,13 @@
       "stateUnlisted": "Publiskās saites · krātuvei pārbaudā",
       "stateListed": "Krātuve",
       "stateSuspended": "Aizliegta",
-      "copyLink": "Kopēt saiti"
+      "copyLink": "Kopēt saiti",
+      "notifyKey": "Paziņojumu atslēgs",
+      "notifyKeyOnce": "Jauns paziņojumu atslēgs {{name}}. Kopējiet to šim brīdim: tas parādās vienu reizi, un jaunais aizstāj to.",
+      "payTitle": "Saņemt maksas",
+      "payBody": "pay() pieprasa lietotāju sūtīt Jums DHB, tiesīgi uz portmonēju, kas parakstīja Jūsu dehub.json. Pārbaudiet kvitanci uz Jūsu serverī, pirms nododāt ko jebko.",
+      "notifyTitle": "Sūtīt paziņojumus",
+      "notifyBody": "Lietotāji, kas pievieno Jūsu programmu, var Jums paziņot no Jūsu servera ar Jūsu paziņojumu atslēgu. Nav jāglabā atsevišķi lietotāju tokeni."
     },
     "card": {
       "open": "Atvērt"
@@ -7741,6 +7751,19 @@
       "developer-tools": "Rīku izstrādes",
       "entertainment": "Entertainment",
       "art-creativity": "Māksla un izdoma"
+    },
+    "pay": {
+      "title": "Maksāt {{name}}?",
+      "body": "DHB tieši nonāk programmas portmonējā, {{wallet}}. Maksas nevar atcelgt.",
+      "confirm": "Maksāt {{amount}} DHB",
+      "sending": "Sūtīts Jūsu maksājumā…",
+      "sent": "Maksājums {{amount}} DHB sūtīts uz {{name}}.",
+      "noOwner": "Šī programma nav vēl apstiprinātu portmonēju, kurā varētu maksāt."
+    },
+    "add": {
+      "title": "Pievienot {{name}}?",
+      "body": "Tā parādīsies uzrindā \"Jūsu programmas\" un var sūtīt Jums paziņojumus. Šo var jebkad noņemt no \"Programmu\" lapas.",
+      "confirm": "Pievienot programmu"
     }
   },
   "aiStyles": {

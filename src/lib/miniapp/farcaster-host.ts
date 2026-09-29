@@ -36,6 +36,7 @@ const CAPABILITIES: MiniAppHostCapability[] = [
   'actions.viewProfile',
   'actions.viewCast',
   'actions.openMiniApp',
+  'actions.addMiniApp',
   'haptics.impactOccurred',
   'haptics.notificationOccurred',
   'haptics.selectionChanged',
@@ -47,6 +48,8 @@ export interface FarcasterHostOptions {
   onReady: () => void;
   onClose: () => void;
   onCompose: (text: string) => void;
+  /** DeHub's own add-app flow; absent for a developer preview. */
+  addApp?: () => Promise<{ added: boolean }>;
 }
 
 const unsupported = () => {
@@ -61,12 +64,22 @@ export function useFarcasterHost(frame: RefObject<HTMLIFrameElement>, options: F
   // The host library copies the handlers once, so context is a value, not a
   // getter: re-expose when the person in it changes (sign in, sign out).
   const who = options.context.user?.wallet ?? '';
+  const added = options.context.client.added;
 
   useEffect(() => {
     const iframe = frame.current;
     if (!iframe || !origin || !host) return;
     const vibrate = () => {
       navigator.vibrate?.(10);
+    };
+
+    // Adding goes through DeHub's sheet and notifications. No Farcaster
+    // notificationDetails come back: DeHub delivers them itself, so an app
+    // that needs them sends through dehub.io instead.
+    const addViaDehub = async () => {
+      const add = opts.current.addApp;
+      if (!add || !(await add()).added) throw new AddMiniApp.RejectedByUser();
+      return {};
     };
 
     const sdk = {
@@ -84,7 +97,7 @@ export function useFarcasterHost(frame: RefObject<HTMLIFrameElement>, options: F
           client: {
             platformType: 'web' as const,
             clientFid: 0,
-            added: false,
+            added: c.client.added,
             safeAreaInsets: c.client.safeAreaInsets,
           },
           location: { type: 'launcher' as const },
@@ -117,12 +130,8 @@ export function useFarcasterHost(frame: RefObject<HTMLIFrameElement>, options: F
       signIn: async () => {
         throw new SignIn.RejectedByUser();
       },
-      addFrame: async () => {
-        throw new AddMiniApp.RejectedByUser();
-      },
-      addMiniApp: async () => {
-        throw new AddMiniApp.RejectedByUser();
-      },
+      addFrame: addViaDehub,
+      addMiniApp: addViaDehub,
       impactOccurred: async () => vibrate(),
       notificationOccurred: async () => vibrate(),
       selectionChanged: async () => vibrate(),
@@ -141,5 +150,5 @@ export function useFarcasterHost(frame: RefObject<HTMLIFrameElement>, options: F
 
     const { cleanup } = exposeToIframe({ iframe, sdk, miniAppOrigin: origin });
     return cleanup;
-  }, [frame, origin, host, who]);
+  }, [frame, origin, host, who, added]);
 }

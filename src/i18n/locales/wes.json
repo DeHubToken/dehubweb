@@ -1201,6 +1201,7 @@
     "replyingTo": "Replying to {{name}}",
     "requestAuthorChip": "Author",
     "commentEdited": "edited",
+    "showOneMoreReply": "Show 1 more reply",
     "showMoreReplies": "Show {{count}} more reply dem",
     "submitDrawerTitle": "Submit Feature Request",
     "titleLabel": "Title",
@@ -1217,8 +1218,7 @@
     "statusDeclined": "Declined",
     "shipping": "I di ship",
     "noShippingYet": "Notin di hapen nau",
-    "shippingAppearHere": "Request dem weh dem di build go show hia.",
-    "showOneMoreReply": "Show 1 more reply"
+    "shippingAppearHere": "Request dem weh dem di build go show hia."
   },
   "auth": {
     "loginRequired": "Log in required"
@@ -1633,9 +1633,9 @@
       "writeReply": "Write a reply",
       "edited": "edited",
       "showMoreReplies": "Show **{{count}}** **more** **reply** **dem**",
+      "deleteTitle": "Delete dis comment?",
       "deleteDescription": "Dis remove comment an a reply fo' everybody.",
-      "authorChip": "Proposal author",
-      "deleteTitle": "Delete dis comment?"
+      "authorChip": "Proposal author"
     },
     "notEnoughUnstakedTokens": "Na Base, no go have enough token wey no stak yet. You need {{needed}} liquid (no stak) DeHub token on Base, but you only have {{held}}. Token wey stak no go use for fee."
   },
@@ -6760,7 +6760,11 @@
       "search": "Search apps",
       "all": "All",
       "fromDehub": "From DeHub",
-      "noMatch": "Wetin app no fit match dis search?"
+      "noMatch": "Wetin app no fit match dis search?",
+      "yourApps": "Your apps",
+      "notificationsOn": "Notifications on",
+      "remove": "Remove",
+      "removed": "Remove wey, no go notify you again."
     },
     "dev": {
       "backToStore": "Back to Apps",
@@ -6789,7 +6793,12 @@
       "yourAppsTitle": "Your apps",
       "stateListed": "In the store",
       "stateSuspended": "Suspended",
-      "copyLink": "Copy link"
+      "copyLink": "Copy link",
+      "notifyKey": "Notify key",
+      "notifyKeyOnce": "New notify key fo {{name}}. Copy wey na now: dem show only one time, na if you make another, dem replace de old one.",
+      "payTitle": "Take payments",
+      "notifyTitle": "Send notifications",
+      "notifyBody": "User wey add your app, you can send dem notification from your server wey use your notify key. No need for per-user token wey you go store."
     },
     "card": {
       "open": "Open"
@@ -6808,6 +6817,18 @@
       "developer-tools": "Developa tuul",
       "entertainment": "Entertaenment",
       "art-creativity": "Art & kreativiti"
+    },
+    "pay": {
+      "title": "Pay {{name}}?",
+      "body": "DHB go straight go wallet wey app dey, {{wallet}}. Payment no go reverse.",
+      "confirm": "Pay {{amount}} DHB",
+      "sent": "Paiti {{amount}} DHB fo {{name}}.",
+      "noOwner": "\"Dis app no have any wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey wey"
+    },
+    "add": {
+      "title": "Add {{name}}?",
+      "body": "Na go appear wey you see under Your apps na, go send you notification weh weh. You go remove im any time from Apps page.",
+      "confirm": "Add app"
     }
   },
   "aiStyles": {
