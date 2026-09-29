@@ -1389,6 +1389,7 @@
     "offerCommitsNothing": "出价不收取任何费用，也不会占用代币。只有在所有者接受后才付款。",
     "offerNeedsHandle": "该账号没有可供出价的用户名。",
     "options": "个人资料选项",
+    "links": "链接",
     "translateBio": "翻译简介"
   },
   "tv": {

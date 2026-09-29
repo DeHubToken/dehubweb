@@ -1,4 +1,9 @@
-import React from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ExternalLink } from 'lucide-react';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import { normalizeSocialUrl } from '@/lib/social-links';
 
 export const SOCIAL_CONFIGS = [
@@ -67,11 +72,25 @@ export const SOCIAL_CONFIGS = [
   },
 ] as const;
 
-interface ProfileSocialLinksProps {
+interface ProfileLinksPillProps {
   customs?: Record<string, unknown>;
+  className?: string;
 }
 
-export function ProfileSocialLinks({ customs }: ProfileSocialLinksProps) {
+/** What a link reads as in the list: the address without scheme or www. */
+function displayUrl(url: string) {
+  return url.replace(/^https?:\/\//i, '').replace(/^www\./i, '').replace(/\/+$/, '');
+}
+
+/**
+ * One "Links" pill in place of a row of social icons. The icons used to
+ * share the name's row, so every link a creator added took width from the
+ * name and a long display name got cut or crushed beside them. The pill sits
+ * at the bottom right of the header instead and opens the full list.
+ */
+export function ProfileLinksPill({ customs, className }: ProfileLinksPillProps) {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
   if (!customs) return null;
 
   const links = SOCIAL_CONFIGS.filter(s => {
@@ -82,22 +101,53 @@ export function ProfileSocialLinks({ customs }: ProfileSocialLinksProps) {
   if (links.length === 0) return null;
 
   return (
-    <div className="flex items-center gap-1.5">
-      {links.map(({ key, label, icon }) => {
-        const url = normalizeSocialUrl(key, customs[key] as string);
-        return (
-          <a
-            key={key}
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-xl border border-white/15 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/20 hover:border-white/30 transition-all"
-            aria-label={label}
-          >
-            {icon}
-          </a>
-        );
-      })}
-    </div>
+    <Drawer open={open} onOpenChange={setOpen}>
+      {/* The same glass button as Follow, so every theme already knows how
+          to draw it. */}
+      <DrawerTrigger asChild>
+        <Button
+          type="button"
+          variant="glass"
+          size="sm"
+          className={cn('rounded-full h-8 gap-2 pl-3 pr-3.5', className)}
+          aria-label={t('profile.links', 'Links')}
+        >
+          <span className="flex items-center gap-1 text-zinc-400 [&_svg]:w-3 [&_svg]:h-3">
+            {links.slice(0, 3).map(({ key, icon }) => (
+              <span key={key} className="contents">{icon}</span>
+            ))}
+          </span>
+          {t('profile.links', 'Links')}
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
+        <DrawerHeader className="px-1">
+          <DrawerTitle className="text-white text-left">{t('profile.links', 'Links')}</DrawerTitle>
+        </DrawerHeader>
+        <div className="flex flex-col gap-2">
+          {links.map(({ key, label, icon }) => {
+            const url = normalizeSocialUrl(key, customs[key] as string);
+            return (
+              <a
+                key={key}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-xl bg-white/[0.06] border border-white/10 px-3 py-2.5 hover:bg-white/[0.12] transition-colors"
+              >
+                <span className="w-9 h-9 shrink-0 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-zinc-300">
+                  {icon}
+                </span>
+                <span className="min-w-0 flex flex-col">
+                  <span className="text-sm font-semibold text-white">{label}</span>
+                  <span className="text-xs text-zinc-400 truncate">{displayUrl(url)}</span>
+                </span>
+                <ExternalLink className="ml-auto w-4 h-4 shrink-0 text-zinc-500" />
+              </a>
+            );
+          })}
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 }

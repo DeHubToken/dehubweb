@@ -1390,6 +1390,7 @@
     "offerCommitsNothing": "Making an offer costs nothing and holds no tokens. You only pay if the owner accepts.",
     "offerNeedsHandle": "This account has no username to offer for.",
     "options": "Profile options",
+    "links": "Links",
     "translateBio": "Translate bio"
   },
   "tv": {
