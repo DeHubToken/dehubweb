@@ -7,6 +7,7 @@
  *   node scripts/docs-i18n-fill.mjs --all --limit 8         # the 8 furthest behind
  *   node scripts/docs-i18n-fill.mjs --locales ar --keys 200 # cap the work per locale
  *   node scripts/docs-i18n-fill.mjs --all --paths @keys.json # only these dotted keys, every locale
+ *   node scripts/docs-i18n-fill.mjs --prune-garbled         # delete what the answer guards reject
  *
  * Everything under `src/pages/docs/` reads these bundles through useLanguage(),
  * which falls back to English one key at a time. Most bundles carried only part
@@ -31,6 +32,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
+import { garbled } from './i18n-guards.mjs';
 
 const I18N = 'src/i18n';
 const args = process.argv.slice(2);
@@ -204,6 +206,90 @@ async function writeBack(locale, have, add) {
   return { count, unplaced, failed: false };
 }
 
+/* ---------- deleting what the answer guards reject ---------- */
+
+/**
+ * Dotted paths whose value scripts/i18n-guards.mjs rejects against en.ts, with
+ * the reason and the value. An array goes whole when any element is rejected,
+ * since the fill only ever writes an array all at once.
+ */
+function garbledPaths(enNode, have, at = '', out = []) {
+  for (const [k, enV] of Object.entries(enNode)) {
+    const h = have?.[k];
+    const p = at ? `${at}.${k}` : k;
+    if (Array.isArray(enV)) {
+      if (!Array.isArray(h)) continue;
+      const i = enV.findIndex((e, j) => typeof e === 'string' && typeof h[j] === 'string' && garbled(e, h[j]));
+      if (i !== -1) out.push([p, garbled(enV[i], h[i]), h[i]]);
+    } else if (isObj(enV)) {
+      if (isObj(h)) garbledPaths(enV, h, p, out);
+    } else if (typeof enV === 'string' && typeof h === 'string') {
+      const why = garbled(enV, h);
+      if (why) out.push([p, why, h]);
+    }
+  }
+  return out;
+}
+
+/** A key with its value opening on the same line: a string, or an array written inline. */
+const LEAF_LINE = /^\s*(?:([A-Za-z_$][\w$]*)|'([^']*)'|"([^"]*)"):\s*['"[]/;
+
+/** First and last line of every property, by dotted path. */
+function spans(lines) {
+  const stack = [];
+  const found = new Map();
+  const child = (key) => {
+    const parent = stack.at(-1)?.p;
+    return parent == null || parent.includes('#') ? '#' : parent ? `${parent}.${key}` : key;
+  };
+  lines.forEach((line, i) => {
+    if (/^export const \w+(?:\s*:[^=]+)?\s*=\s*\{\s*$/.test(line)) { stack.push({ p: '' }); return; }
+    const open = KEY_LINE.exec(line);
+    if (open) { stack.push({ p: child(open[2] ?? open[3] ?? open[4]), from: i }); return; }
+    if (/^\s*[{[]\s*$/.test(line)) { stack.push({ p: '#' }); return; }
+    if (/^\s*[}\]],?;?\s*$/.test(line) && stack.length) {
+      const { p, from } = stack.pop();
+      if (from != null && !p.includes('#')) found.set(p, [from, i]);
+      return;
+    }
+    const leaf = LEAF_LINE.exec(line);
+    if (leaf) {
+      const p = child(leaf[1] ?? leaf[2] ?? leaf[3]);
+      if (!p.includes('#')) found.set(p, [i, i]);
+    }
+  });
+  return found;
+}
+
+/**
+ * Removes those paths' lines from the .ts as it stands, then imports it again.
+ * Anything other than exactly those paths gone and the file is restored.
+ */
+async function pruneBundle(locale, have, found) {
+  const file = path.join(I18N, `${locale}.ts`);
+  const original = fs.readFileSync(file, 'utf8');
+  const eol = original.includes('\r\n') ? '\r\n' : '\n';
+  const lines = original.split(/\r?\n/);
+  const at = spans(lines);
+  const drop = new Set();
+  const expected = structuredClone(have);
+  for (const [p] of found) {
+    const [from, to] = at.get(p) ?? [];
+    for (let i = from; i <= to; i++) drop.add(i);
+    const parts = p.split('.');
+    delete parts.slice(0, -1).reduce((o, k) => o[k], expected)[parts.at(-1)];
+  }
+  fs.writeFileSync(file, lines.filter((_, i) => !drop.has(i)).join(eol));
+  let ok = false;
+  try {
+    ok = sameShape(await load(locale), expected);
+  } catch {
+    ok = false;
+  }
+  if (!ok) fs.writeFileSync(file, original);
+  return ok;
+}
+
 /* ---------- main ---------- */
 
 /**
@@ -231,6 +317,31 @@ const en = paths ? pick(await load('en'), paths) : await load('en');
 const locales = value('locales') ? value('locales').split(',').map((s) => s.trim()).filter(Boolean) : bundleLocales();
 const have = new Map();
 for (const l of locales) have.set(l, await load(l));
+
+/**
+ * `--prune-garbled` deletes what the fill's answer guards now reject (loops, a
+ * sentence for a label, markdown the English lacks), printing each path and
+ * why, so a `--paths` refill can replace exactly those. `--dry-run` only reports.
+ * Values the guards flag that are right as they stand ("FAQ" spelled out) are
+ * listed by locale in scripts/docs-i18n-garbled-keep.json and left alone.
+ */
+if (flag('prune-garbled')) {
+  const keepFile = 'scripts/docs-i18n-garbled-keep.json';
+  const keep = fs.existsSync(keepFile) ? JSON.parse(fs.readFileSync(keepFile, 'utf8')) : {};
+  const clip = (v) => JSON.stringify([...v].length > 80 ? `${[...v].slice(0, 80).join('')}…` : v);
+  let total = 0;
+  for (const [l, obj] of have) {
+    const kept = new Set(keep[l] ?? []);
+    const found = garbledPaths(en, obj).filter(([p]) => !kept.has(p));
+    if (!found.length) continue;
+    const ok = flag('dry-run') || (await pruneBundle(l, obj, found));
+    console.log(ok ? `${l}.ts: pruned ${found.length} garbled value(s)` : `${l}.ts: removal did not round-trip, left untouched`);
+    for (const [p, why, v] of found) console.log(`  ${p} (${why}) ${clip(v)}`);
+    if (ok) total += found.length;
+  }
+  console.log(`\ndocs values pruned: ${total}`);
+  process.exit(0);
+}
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'docs-i18n-'));
 fs.writeFileSync(path.join(tmp, 'en.json'), JSON.stringify(toJson(en), null, 2));

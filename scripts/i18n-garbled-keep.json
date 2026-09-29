@@ -1,0 +1,18 @@
+{
+  "ar": ["emojiPicker.errors.invalid"],
+  "ary": ["emojiPicker.errors.invalid"],
+  "arz": ["emojiPicker.errors.invalid"],
+  "az": ["depin.navFaq"],
+  "bn": ["depin.navFaq", "videoLooks.vhs"],
+  "ctg": ["miniApps.store.seoDescription"],
+  "dcc": ["settings.streamKey.rotateConfirm"],
+  "dyu": ["guide.sections.buying-fractions.steps.3"],
+  "hr": ["depin.navFaq"],
+  "kn": ["depin.navFaq"],
+  "mg": ["creator.insideChatgptCopy", "guide.sections.profile.steps.7"],
+  "ne": ["common.undo", "depin.navFaq"],
+  "or": ["common.undo"],
+  "sw": ["depin.navFaq"],
+  "ta": ["depin.navFaq", "nav.dao"],
+  "th": ["explorePage.ppv", "filters.ppv"]
+}

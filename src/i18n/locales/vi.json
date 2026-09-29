@@ -1626,7 +1626,6 @@
     "bdmAbout": "Là một trong những Quản lý Phát triển Kinh doanh của chúng tôi tại DeHub, bạn sẽ là một phần của động lực đằng sau chiến lược hợp tác của chúng tôi. Nhiệm vụ của bạn là xác định, tham gia và chốt giao dịch với các công ty trên cả Web2 và Web3 — từ các studio trò chơi và nền tảng nội dung đến các dự án blockchain và giao thức DeFi. Đây là một vị thế dựa trên hoa hồng OTE (Thu nhập theo mục tiêu): bạn càng hối hả, bạn càng kiếm được nhiều tiền. Vai trò rất đơn giản, hãy đưa các công ty, dự án, cộng đồng hoặc bất kỳ tài khoản hồ sơ lớn nào lên DeHub và nhận thanh toán.",
     "keyResponsibilities": "Key Responsibilities",
     "bdmResp1": "Xác định và đảm bảo quan hệ đối tác chiến lược với các công ty Web2 và Web3 phù hợp với sứ mệnh của DeHub",
-    "bdmResp2": "Xây dựng và quản lý một loạt các đối tác, nhà tài trợ và cơ hội hội hội nhập tiềm năng",
     "bdmResp3": "Đại diện cho DeHub tại các sự kiện, hội nghị và hội nghị trực tuyến trong ngành",
     "bdmResp4": "Đàm phán các điều khoản hợp tác, mô hình chia sẻ doanh thu và thỏa thuận hợp tác tiếp thị",
     "bdmResp5": "Phối hợp với các nhóm sản phẩm và tiếp thị để phát triển các chiến dịch và tích hợp chung",
@@ -7877,7 +7876,7 @@
       "notifyKeyOnce": "Mã thông báo mới cho {{name}}. Sao chép ngay: nó chỉ hiển thị một lần, và tạo một lần nữa sẽ thay thế nó.",
       "payTitle": "Nhận thanh toán",
       "payBody": "Nhận thanh toán",
-      "notifyTitle": "pay() yêu cầu người dùng gửi DHB cho bạn, trực tiếp vào ví đã ký dehub.json của bạn. Kiểm tra hóa đơn trên máy chủ của bạn trước khi giao bất cứ thứ gì.",
+      "notifyTitle": "Gửi thông báo",
       "notifyBody": "Gửi thông báo",
       "rankTitle": "Cách cửa hàng xếp hạng ứng dụng",
       "rankBody": "Mỗi đêm, mỗi ứng dụng được liệt kê đều nhận được điểm số: 55% từ người dùng cũ (những người đã mở ứng dụng trong tuần này và tuần trước đó), 35% từ người dùng hàng tuần, cộng với mức tăng 10% trong 14 ngày đầu tiên. Chỉ tính số tài khoản DeHub đã đăng nhập, vì vậy bot và lượt tải lại trang không kiếm được gì.",
@@ -7916,7 +7915,7 @@
     "add": {
       "title": "Thêm {{name}}?",
       "body": "Nó sẽ xuất hiện trong danh sách Ứng dụng của bạn và có thể gửi thông báo cho bạn. Bạn có thể xóa nó bất kỳ lúc nào từ trang Ứng dụng.",
-      "confirm": "Nó sẽ xuất hiện dưới mục Các ứng dụng của bạn và có thể gửi thông báo cho bạn. Bạn có thể xóa nó bất kỳ lúc nào từ trang Ứng dụng."
+      "confirm": "Thêm ứng dụng"
     }
   },
   "aiStyles": {

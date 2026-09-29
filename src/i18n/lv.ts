@@ -2266,7 +2266,6 @@ export const lv = {
     estImpressionsRow: 'Prognozētās izrādīšanas:',
     estReachRow: 'Prognozētā sasniegamība:',
     estClicksRow: 'Prognozētās pazaudēšanas:',
-    ctrRow: 'Pazaudēšanas līmenis (CTR):',
     povrAdvantage: 'POVR Priekšrocības',
     povrAdvantageDesc: 'Mērķoties pārbaudītiem balvu ieguvējiem samazina apmāšanos par 85% un palielina konverzijas rādītājus līdz 3,2 reizes salīdzinājumā ar tradicionālajām reklāmas platformām.',
     realisticEstimates: 'Realisti prognozes',
