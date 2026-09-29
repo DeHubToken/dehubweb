@@ -80,6 +80,7 @@ doc.md
 scripts/*
 !scripts/edge-route-recovery.mjs
 !scripts/build-seo-i18n.mjs
+!scripts/seo-i18n-copy/
 !scripts/check-entry-bundle.mjs
 !scripts/generate-blog-manifest.mjs
 !scripts/generate-guide-content.mjs
