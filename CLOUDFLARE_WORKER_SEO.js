@@ -5737,7 +5737,7 @@ async function handleRequest(request, env, ctx) {
   // time anything reaches here the number is the only address in play.
   const miniAppMatch = cleanPath.match(/^\/apps\/([a-z0-9][a-z0-9-]{1,39})$/);
   if (miniAppMatch && miniAppMatch[1] !== 'dev') {
-    const app = await supabaseRow(
+    const app = await supabaseLookup(
       `miniapp_apps?slug=eq.${miniAppMatch[1]}&select=slug,domain,name,subtitle,description,icon_url,category,tier,manifest&limit=1`,
     );
     if (app) {
@@ -5746,6 +5746,9 @@ async function handleRequest(request, env, ctx) {
         headers: app.tier === 'unlisted' ? { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' } : blogHeaders,
       }));
     }
+    // A slug with no app fell through to the proxy and unfurled as the
+    // homepage, at 200. Answer it like every other missing entity.
+    return entityMiss(app);
   }
 
   // A shared Builder app. Rendered even when its file can't be read (still

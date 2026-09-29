@@ -218,6 +218,13 @@ describe('entity misses', () => {
     expect(res.body).toContain('og:image');
   });
 
+  it('404s a mini app slug with no app, instead of the homepage card', async () => {
+    upstream = (u) => (u.hostname.endsWith('supabase.co') && u.pathname.includes('/rest/v1/') ? Response.json([]) : undefined);
+    const res = await get('/apps/no-such-app');
+    expect(res.status).toBe(404);
+    expect(res.robots).toBe('noindex');
+  });
+
   it('renders a pack and a DEX pool for crawlers instead of the noindexed shell', async () => {
     upstream = (u) => {
       if (!u.pathname.includes('/rest/v1/')) return undefined;
