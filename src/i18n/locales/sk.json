@@ -538,6 +538,8 @@
     "undo": "Vrátiť späť",
     "error": "Chyba",
     "retry": "Skúsiť znova",
+    "failedToLoad": "Nepodarilo sa načítať",
+    "somethingWentWrong": "Niečo sa pokazilo",
     "confirm": "Potvrdiť",
     "back": "Späť",
     "next": "Ďalej",
@@ -6764,6 +6766,10 @@
     "desc": "Jasný deň alebo šerý modrý večer v džungli",
     "day": "Deň",
     "evening": "Večer"
+  },
+  "affiliate": {
+    "loadFailed": "Nepodarilo sa načítať štatistiky pridružených partnerov",
+    "checkingForUpdates": "Hľadajú sa aktualizácie…"
   },
   "affiliateLanding": {
     "title": "Prispôsobte si pozývaciu stránku",

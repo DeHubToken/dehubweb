@@ -523,6 +523,9 @@
     "edit": "سمون",
     "loading": "لوډ کیږي...",
     "tryAgain": "بیا هڅه وکړئ",
+    "retry": "بیا هڅه وکړئ",
+    "failedToLoad": "بارولو کې پاتې راغلی",
+    "somethingWentWrong": "څه غلط شول",
     "search": "لټون",
     "goBack": "بیرته لاړ شئ",
     "showOriginal": "اصلي ښکاره کړئ",
@@ -6433,6 +6436,10 @@
     "desc": "په ځنګل کې روښانه ورځ یا شین ماښام",
     "day": "ورځ",
     "evening": "ماښام"
+  },
+  "affiliate": {
+    "loadFailed": "د وابسته احصایو بارولو توان نه درلود",
+    "checkingForUpdates": "د تازه معلوماتو کتنه کیږي…"
   },
   "affiliateLanding": {
     "title": "د بلنې پاڼه مو خپله کړئ",

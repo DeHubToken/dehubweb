@@ -522,6 +522,9 @@
     "edit": "Gyara",
     "loading": "Ana ɗorawa...",
     "tryAgain": "Sake gwadawa",
+    "retry": "Sake gwadawa",
+    "failedToLoad": "Gaza loda",
+    "somethingWentWrong": "Wani abu ya ɓaci",
     "search": "Bincika",
     "goBack": "Koma baya",
     "showOriginal": "Nuna asali",
@@ -6458,6 +6461,10 @@
     "desc": "Rana mai haske ko maraice mai shuɗi a cikin daji",
     "day": "Rana",
     "evening": "Maraice"
+  },
+  "affiliate": {
+    "loadFailed": "An kasa loda kididdigar haɗin gwiwa",
+    "checkingForUpdates": "Ana duba sabuntawa…"
   },
   "affiliateLanding": {
     "title": "Keɓance shafin gayyatarka",

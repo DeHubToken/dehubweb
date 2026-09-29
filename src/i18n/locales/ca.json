@@ -523,6 +523,9 @@
     "edit": "Editar",
     "loading": "Carregant...",
     "tryAgain": "Torna-ho a provar",
+    "retry": "Torna-ho a provar",
+    "failedToLoad": "Error en carregar",
+    "somethingWentWrong": "Alguna cosa ha fallat",
     "search": "Cercar",
     "goBack": "Tornar enrere",
     "showOriginal": "Mostrar original",
@@ -6532,6 +6535,10 @@
     "desc": "Un dia lluminós o un capvespre blau a la jungla",
     "day": "Dia",
     "evening": "Capvespre"
+  },
+  "affiliate": {
+    "loadFailed": "No s'han pogut carregar les estadístiques d'afiliats",
+    "checkingForUpdates": "Comprovant si hi ha actualitzacions…"
   },
   "affiliateLanding": {
     "title": "Personalitza la teva pàgina d'invitació",

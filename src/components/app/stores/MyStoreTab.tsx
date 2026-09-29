@@ -37,7 +37,7 @@ interface MyStoreTabProps {
 export function MyStoreTab({ createListingOpen = false, onCreateListingClose, createStoreOpen = false, onCreateStoreClose }: MyStoreTabProps) {
   const { t } = useTranslation();
   const { isAuthenticated, openLoginModal } = useAuth();
-  const { data: stores = [], isLoading: loadingStores } = useMyStores();
+  const { data: stores = [], isLoading: loadingStores, isError: storesFailed, isFetching: storesFetching, refetch: refetchStores } = useMyStores();
   const { data: listings = [] } = useMyListings();
   const { data: sellerOrders = [] } = useMyOrders('seller');
   const { data: buyerOrders = [] } = useMyOrders('buyer');
@@ -77,6 +77,19 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
 
   if (loadingStores) {
     return <div className="py-16 text-center text-muted-foreground text-sm">{t('stores.loading')}</div>;
+  }
+
+  // A failed read with nothing cached must not look like "no store yet": that
+  // walks an existing seller into setting up a duplicate. Gated on the empty
+  // list so a failed background refresh keeps a working dashboard.
+  if (storesFailed && stores.length === 0 && !createStoreOpen && !showSetupFlow) {
+    return (
+      <AppState
+        kind="error"
+        title={t('common.failedToLoad')}
+        primaryAction={{ label: t('common.retry'), onClick: () => void refetchStores(), loading: storesFetching }}
+      />
+    );
   }
 
   // Show setup flow if no stores or explicitly requested

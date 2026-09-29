@@ -523,6 +523,9 @@
     "edit": "Bewerken",
     "loading": "Laden...",
     "tryAgain": "Opnieuw proberen",
+    "retry": "Opnieuw",
+    "failedToLoad": "Laden mislukt",
+    "somethingWentWrong": "Er is iets misgegaan",
     "search": "Zoeken",
     "goBack": "Terug",
     "showOriginal": "Origineel tonen",
@@ -6800,6 +6803,10 @@
     "desc": "Een zonnige dag of een schemerblauwe avond in de jungle",
     "day": "Dag",
     "evening": "Avond"
+  },
+  "affiliate": {
+    "loadFailed": "Affiliate-statistieken konden niet worden geladen",
+    "checkingForUpdates": "Controleren op updates…"
   },
   "affiliateLanding": {
     "title": "Pas je uitnodigingspagina aan",

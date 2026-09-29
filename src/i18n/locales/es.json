@@ -523,6 +523,9 @@
     "edit": "Editar",
     "loading": "Cargando...",
     "tryAgain": "Reintentar",
+    "retry": "Reintentar",
+    "failedToLoad": "Error al cargar",
+    "somethingWentWrong": "Algo salió mal",
     "search": "Buscar",
     "goBack": "Volver",
     "showOriginal": "Mostrar original",
@@ -6652,6 +6655,10 @@
     "desc": "Un día luminoso o un atardecer azul en la selva",
     "day": "Día",
     "evening": "Atardecer"
+  },
+  "affiliate": {
+    "loadFailed": "No se pudieron cargar las estadísticas de afiliados",
+    "checkingForUpdates": "Buscando actualizaciones…"
   },
   "affiliateLanding": {
     "title": "Personaliza tu página de invitación",

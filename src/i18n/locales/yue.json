@@ -523,6 +523,9 @@
     "edit": "編輯",
     "loading": "載入緊...",
     "tryAgain": "再試一次",
+    "retry": "再試",
+    "failedToLoad": "載入失敗",
+    "somethingWentWrong": "出咗問題",
     "search": "搜尋",
     "goBack": "返回",
     "showOriginal": "顯示原文",
@@ -6634,6 +6637,10 @@
     "desc": "森林入面嘅明媚白日或者幽藍黃昏",
     "day": "日頭",
     "evening": "黃昏"
+  },
+  "affiliate": {
+    "loadFailed": "無法載入推廣數據",
+    "checkingForUpdates": "檢查緊更新…"
   },
   "affiliateLanding": {
     "title": "自訂你嘅邀請頁面",

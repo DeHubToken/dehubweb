@@ -523,6 +523,9 @@
     "edit": "Gulaali",
     "loading": "Fe'aa jira...",
     "tryAgain": "Irra deebi'ii yaali",
+    "retry": "Irra deebi'ii yaali",
+    "failedToLoad": "Kaasuun dadhabame",
+    "somethingWentWrong": "Wanti tokko dogoggoreera",
     "search": "Barbaadi",
     "goBack": "Duuba deebi'i",
     "showOriginal": "Jalqaba agarsiisi",
@@ -6599,6 +6602,10 @@
     "desc": "Guyyaa ifaa ykn galgala cuquliisaa bosona keessatti",
     "day": "Guyyaa",
     "evening": "Galgala"
+  },
+  "affiliate": {
+    "loadFailed": "Dhimmoota walitti hidhamuu hin mul'anne",
+    "checkingForUpdates": "Haaromsa sakatta'aa jira…"
   },
   "affiliateLanding": {
     "title": "Fuula affeerraa kee qindeessi",
