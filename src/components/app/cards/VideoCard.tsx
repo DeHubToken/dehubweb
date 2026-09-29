@@ -76,7 +76,7 @@ const BoostModal = lazy(() =>
   import('../modals/BoostModal').then((m) => ({ default: m.BoostModal }))
 );
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
-import { QuotePostModal } from '../modals/QuotePostModal';
+import { QuotePostModalLazy } from '../modals/QuotePostModalLazy';
 import { TipModal } from '../modals/TipModal';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
@@ -127,7 +127,12 @@ import {
   wasDrawerJustDismissed,
 } from '@/components/ui/drawer';
 import type { VideoItem } from '@/types/feed.types';
-import { VideoSubtitleOverlay } from '@/components/app/video/VideoSubtitleOverlay';
+// The CC button and caption renderer, with the transcript, translation and
+// dubbing code behind it. Nothing in it is needed to paint the card, so it
+// arrives just after rather than riding the entry chunk.
+const VideoSubtitleOverlay = lazy(() =>
+  import('@/components/app/video/VideoSubtitleOverlay').then((m) => ({ default: m.VideoSubtitleOverlay })),
+);
 // Only shown inside the options sheet; not worth a place on the boot path.
 const DubMenuItem = lazy(() =>
   import('@/components/app/video/DubMenuItem').then((m) => ({ default: m.DubMenuItem })),
@@ -2055,14 +2060,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
         {/* Optional CC subtitle overlay */}
         {!isContentGated && video.videoUrl && (
-          <VideoSubtitleOverlay
-            tokenId={video.id}
-            videoRef={videoRef}
-            buttonPortalTarget={ccSlot}
-            buttonClassName={ccSlot ? undefined : 'absolute top-2 right-2 z-20'}
-            buttonVisible={showControls}
-            onMenuOpenChange={setSubsMenuOpen}
-          />
+          <Suspense fallback={null}>
+            <VideoSubtitleOverlay
+              tokenId={video.id}
+              videoRef={videoRef}
+              buttonPortalTarget={ccSlot}
+              buttonClassName={ccSlot ? undefined : 'absolute top-2 right-2 z-20'}
+              buttonVisible={showControls}
+              onMenuOpenChange={setSubsMenuOpen}
+            />
+          </Suspense>
         )}
         
         
@@ -2916,7 +2923,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       )}
 
       {/* Quote Post Modal */}
-      <QuotePostModal
+      <QuotePostModalLazy
         open={showQuoteModal}
         onOpenChange={setShowQuoteModal}
         quotedPost={videoAsNFT as any}

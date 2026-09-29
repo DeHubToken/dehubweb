@@ -209,6 +209,38 @@ export function mediaImageSrcSet(path: string | undefined, widths: number[]): st
   return widths.map((width) => `${mediaImage(path, { width })} ${width}w`).join(', ');
 }
 
+// ── Supabase Storage images ─────────────────────────────────────────────
+//
+// Community banners and avatars are uploaded to Supabase Storage and were
+// served as the uploaded originals: a profile with two pinned communities
+// pulled 3.9 MB + 3.7 MB of banner PNG and a 959 KB avatar PNG, for cards
+// 48 px tall. The dehub.io Cloudflare transform refuses this host (403, the
+// origin is not an allowed source), so these go through Supabase's own
+// resizer instead, which negotiates WebP from the Accept header:
+//
+//   dehub-debates/banner.png 3,784,726 B -> 31,750 B WebP @ w=736
+//   dehub-wave/avatar_….png    959 KB    ->  6,292 B WebP @ w=96
+//
+// `resize=contain` matters: the resizer's default is `cover` against the
+// ORIGINAL height, so a width-only request crops a 2412x1056 banner down to a
+// 480x1056 strip. `contain` with a width alone keeps the aspect ratio.
+const SUPABASE_PUBLIC_OBJECT = /^https:\/\/aigxuutjaqsywioxjefr\.supabase\.co\/storage\/v1\/object\/public\//;
+
+/**
+ * Resize a public Supabase Storage image to `width` device px. Anything that is
+ * not one of our public storage objects (a CDN URL, a blob: preview, SVG/GIF)
+ * is returned untouched.
+ */
+export function storageImage(url: string, width: number): string;
+export function storageImage(url: string | null | undefined, width: number): string | undefined;
+export function storageImage(url: string | null | undefined, width: number): string | undefined {
+  if (!url) return url ?? undefined;
+  if (!SUPABASE_PUBLIC_OBJECT.test(url) || NON_TRANSFORMABLE.test(url)) return url;
+  const rendered = url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/');
+  const sep = rendered.includes('?') ? '&' : '?';
+  return `${rendered}${sep}width=${width}&quality=80&resize=contain`;
+}
+
 // ── Sizing by what the element actually renders at ──────────────────────
 //
 // The first pass at this shipped one fixed width per media kind, each sized for

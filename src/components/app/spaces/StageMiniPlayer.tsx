@@ -11,7 +11,7 @@ import { motion, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useStage } from '@/contexts/StageContext';
-import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
+import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 
 export function StageMiniPlayer() {
   const { t } = useTranslation();

@@ -14,7 +14,7 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useTranslation } from 'react-i18next';
 import searchIcon from '@/assets/icons/search-icon.png';
-import search3dIcon from '@/assets/icons/search-3d-icon.png';
+import search3dIcon from '@/assets/icons/search-3d-icon.webp';
 import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';

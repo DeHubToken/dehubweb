@@ -36,15 +36,15 @@ import { mapToTextPost, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { QuotedPostMedia } from '@/components/app/cards/QuotedPostEmbed';
 
 import { ProfileFractionsPanel } from '@/components/app/fractions/ProfileFractionsPanel';
-import live3dIcon from '@/assets/icons/live-3d-icon.png';
-import audio3dIcon from '@/assets/icons/audio-3d-icon.png';
-import subs3dIcon from '@/assets/icons/subs-3d-icon.png';
-import star3dIcon from '@/assets/icons/star-3d-icon.png';
-import filmstrip3dIcon from '@/assets/icons/filmstrip-3d-icon.png';
-import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.png';
-import lock3dIcon from '@/assets/lock-3d.png';
-import home3dIcon from '@/assets/icons/home-3d-icon.png';
-import comment3dIcon from '@/assets/icons/comment-3d-icon.png';
+import live3dIcon from '@/assets/icons/live-3d-icon.webp';
+import audio3dIcon from '@/assets/icons/audio-3d-icon.webp';
+import subs3dIcon from '@/assets/icons/subs-3d-icon.webp';
+import star3dIcon from '@/assets/icons/star-3d-icon.webp';
+import filmstrip3dIcon from '@/assets/icons/filmstrip-3d-icon.webp';
+import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.webp';
+import lock3dIcon from '@/assets/lock-3d.webp';
+import home3dIcon from '@/assets/icons/home-3d-icon.webp';
+import comment3dIcon from '@/assets/icons/comment-3d-icon.webp';
 
 /** Empty-state copy when the channel toolbar's sort/search is what emptied the tab. */
 const NO_MATCHES_COPY = {

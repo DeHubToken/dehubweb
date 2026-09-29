@@ -29,8 +29,8 @@ import { scheduleDelete, undoDelete, usePendingDeletes, UNDO_WINDOW_MS } from '@
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
-import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
-import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
+import chatBubbleIcon from '@/assets/icons/chat-bubble.webp';
+import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.webp';
 import dehubLogo from '@/assets/dehub-logo.png';
 import { SEOHead } from '@/components/SEOHead';
 import { blockUser } from '@/lib/api/dehub/blocks';

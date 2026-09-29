@@ -17,6 +17,7 @@ import { useTokenPrices } from '@/hooks/use-token-prices';
 import { findDehubLinks } from '@/lib/dehub-links';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { storageImage, deviceWidth } from '@/lib/media-url';
 
 /**
  * @deprecated Use `findDehubLink` from `@/lib/dehub-links` — it is host-checked
@@ -132,7 +133,7 @@ function StoreEmbed({ storeId, fallback }: { storeId: string; fallback?: ReactNo
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: `url(${store.banner_url})`,
+            backgroundImage: `url(${storageImage(store.banner_url, deviceWidth(360))})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             opacity: 0.42,
@@ -143,7 +144,7 @@ function StoreEmbed({ storeId, fallback }: { storeId: string; fallback?: ReactNo
       )}
       <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
         {store.avatar_url ? (
-          <img src={store.avatar_url} alt="" className="w-full h-full object-cover" />
+          <img src={storageImage(store.avatar_url, deviceWidth(48))} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
         ) : (
           <ThemedIcon icon="stores" alt="" className="w-10 h-10 object-contain opacity-70" />
         )}

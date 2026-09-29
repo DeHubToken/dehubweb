@@ -1,6 +1,7 @@
 import { Users, Lock, Crown, Link as LinkIcon, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
+import { storageImage, deviceWidth } from '@/lib/media-url';
 
 function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString);
@@ -53,7 +54,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: `url(${community.banner_url})`,
+            backgroundImage: `url(${storageImage(community.banner_url, deviceWidth(360))})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             opacity: 0.42,
@@ -69,7 +70,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
       <div className="relative w-12 h-12 rounded-xl bg-white/[0.08] flex items-center justify-center flex-shrink-0">
        <div className="w-full h-full rounded-xl overflow-hidden flex items-center justify-center">
         {community.avatar_url ? (
-          <img src={community.avatar_url} alt={community.name} className="w-full h-full object-cover rounded-lg" />
+          <img src={storageImage(community.avatar_url, deviceWidth(48))} alt={community.name} className="w-full h-full object-cover rounded-lg" loading="lazy" decoding="async" />
         ) : (
           <Users className="w-5 h-5 text-zinc-500" />
         )}

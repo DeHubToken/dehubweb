@@ -14,41 +14,41 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 // ── Page header icons ──
 import aiStarIcon from '@/assets/icons/ai-star-icon.png';
 import aiSparkleIcon from '@/assets/icons/ai-sparkle-icon.png';
-import bookmarkIcon from '@/assets/icons/bookmark-icon.png';
-import bookmark3dIcon from '@/assets/icons/bookmark-3d-icon.png';
-import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
-import messagesIcon from '@/assets/icons/messages-icon.png';
-import messages3dIcon from '@/assets/icons/messages-3d-icon.png';
+import bookmarkIcon from '@/assets/icons/bookmark-icon.webp';
+import bookmark3dIcon from '@/assets/icons/bookmark-3d-icon.webp';
+import chatBubbleIcon from '@/assets/icons/chat-bubble.webp';
+import messagesIcon from '@/assets/icons/messages-icon.webp';
+import messages3dIcon from '@/assets/icons/messages-3d-icon.webp';
 import messagesBubbleIcon from '@/assets/icons/messages-bubble-icon.png';
-import notificationsIcon from '@/assets/icons/notifications-icon.png';
-import settingsIcon from '@/assets/icons/settings-icon.png';
+import notificationsIcon from '@/assets/icons/notifications-icon.webp';
+import settingsIcon from '@/assets/icons/settings-icon.webp';
 import searchIcon from '@/assets/icons/search-icon.png';
-import search3dIcon from '@/assets/icons/search-3d-icon.png';
+import search3dIcon from '@/assets/icons/search-3d-icon.webp';
 
 // ── Profile / content empty-state icons ──
-import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
-import live3dIcon from '@/assets/icons/live-3d-icon.png';
-import audio3dIcon from '@/assets/icons/audio-3d-icon.png';
-import subs3dIcon from '@/assets/icons/subs-3d-icon.png';
-import star3dIcon from '@/assets/icons/star-3d-icon.png';
-import filmstrip3dIcon from '@/assets/icons/filmstrip-3d-icon.png';
-import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.png';
-import home3dIcon from '@/assets/icons/home-3d-icon.png';
-import comment3dIcon from '@/assets/icons/comment-3d-icon.png';
-import communityPosts3dIcon from '@/assets/icons/community-posts-3d-icon.png';
-import communityChat3dIcon from '@/assets/icons/community-chat-3d-icon.png';
-import communityEvents3dIcon from '@/assets/icons/community-events-3d-icon.png';
-import communityMembers3dIcon from '@/assets/icons/community-members-3d-icon.png';
-import communityAbout3dIcon from '@/assets/icons/community-about-3d-icon.png';
+import fractions3dIcon from '@/assets/icons/fractions-3d-icon.webp';
+import live3dIcon from '@/assets/icons/live-3d-icon.webp';
+import audio3dIcon from '@/assets/icons/audio-3d-icon.webp';
+import subs3dIcon from '@/assets/icons/subs-3d-icon.webp';
+import star3dIcon from '@/assets/icons/star-3d-icon.webp';
+import filmstrip3dIcon from '@/assets/icons/filmstrip-3d-icon.webp';
+import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.webp';
+import home3dIcon from '@/assets/icons/home-3d-icon.webp';
+import comment3dIcon from '@/assets/icons/comment-3d-icon.webp';
+import communityPosts3dIcon from '@/assets/icons/community-posts-3d-icon.webp';
+import communityChat3dIcon from '@/assets/icons/community-chat-3d-icon.webp';
+import communityEvents3dIcon from '@/assets/icons/community-events-3d-icon.webp';
+import communityMembers3dIcon from '@/assets/icons/community-members-3d-icon.webp';
+import communityAbout3dIcon from '@/assets/icons/community-about-3d-icon.webp';
 
 // ── Feature icons ──
-import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
+import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
 import translateGlobeIcon from '@/assets/icons/translate-globe-icon.png';
 import nailIcon from '@/assets/icons/nail-icon.png';
 
 // ── Misc assets used as icons ──
-import lock3dIcon from '@/assets/lock-3d.png';
+import lock3dIcon from '@/assets/lock-3d.webp';
 
 // ── Medal assets (sidebar leaderboard) ──
 import medal1 from '@/assets/medal-1.png';

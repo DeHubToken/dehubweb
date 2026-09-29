@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { Users, Ticket, ShieldCheck } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useInvitePreview } from '@/hooks/use-community-admin';
+import { storageImage, deviceWidth } from '@/lib/media-url';
 
 interface CommunityInviteEmbedProps {
   code: string;
@@ -63,7 +64,7 @@ export function CommunityInviteEmbed({ code, fallback = null }: CommunityInviteE
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: `url(${preview.banner_url})`,
+            backgroundImage: `url(${storageImage(preview.banner_url, deviceWidth(360))})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             opacity: 0.42,
@@ -75,7 +76,7 @@ export function CommunityInviteEmbed({ code, fallback = null }: CommunityInviteE
 
       <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
         {isValid && preview.avatar_url ? (
-          <img src={preview.avatar_url} alt="" className="w-full h-full object-cover" />
+          <img src={storageImage(preview.avatar_url, deviceWidth(48))} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
         ) : (
           <Ticket className={`w-5 h-5 ${isValid ? 'text-zinc-400' : 'text-zinc-600'}`} />
         )}

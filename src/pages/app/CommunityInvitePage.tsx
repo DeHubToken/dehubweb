@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
 import { useInvitePreview, useJoinViaInvite } from '@/hooks/use-community-admin';
+import { storageImage, deviceWidth } from '@/lib/media-url';
 
 export default function CommunityInvitePage() {
   const { code } = useParams<{ code: string }>();
@@ -101,7 +102,7 @@ export default function CommunityInvitePage() {
       <div className="rounded-xl border border-white/10 bg-white/[0.04] overflow-hidden">
         <div className="h-24 bg-white/[0.06]">
           {preview.banner_url && (
-            <img src={preview.banner_url} alt="" className="w-full h-full object-cover" />
+            <img src={storageImage(preview.banner_url, deviceWidth(480))} alt="" className="w-full h-full object-cover" />
           )}
         </div>
 
@@ -109,7 +110,7 @@ export default function CommunityInvitePage() {
           <div className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-lg bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0 -mt-10 border border-white/10">
               {preview.avatar_url ? (
-                <img src={preview.avatar_url} alt="" className="w-full h-full object-cover" />
+                <img src={storageImage(preview.avatar_url, deviceWidth(56))} alt="" className="w-full h-full object-cover" />
               ) : (
                 <Users className="w-5 h-5 text-zinc-500" />
               )}
