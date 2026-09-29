@@ -485,10 +485,6 @@ html[data-theme='war']
 html[data-theme='war'] [data-mobile-header] {
   border-radius: 0 !important;
 }
-html[data-theme='war'] [data-mobile-header][data-scrolled='true'] {
-  background: rgb(var(--war-gunmetal) / 0.82) !important;
-  box-shadow: inset 0 -1px 0 rgb(var(--war-hud) / 0.28) !important;
-}
 
 /* Bottom nav is the entire chrome on phones. Chamfer the TOP two corners only
    - the bottom edge is flush to the physical screen edge, which is what makes
@@ -1462,16 +1458,13 @@ html[data-theme='war'] .docs-root :is(button, a):focus-visible {
   outline-offset: 2px;
 }
 
-/* Phones and touch devices: the nav plates and the scrolled header lose their
+/* Phones and touch devices: the nav plates lose their
    blur (index.css touch block), so their fills rise to match the panels.
    Declared before section 17 so the degradation fills still win. */
 @media (max-width: 767px), (pointer: coarse) {
   html[data-theme='war'] [data-feed-nav]::before,
   html[data-theme='war'] [data-bottom-nav] > nav::before {
     background: rgb(var(--war-gunmetal) / 0.9);
-  }
-  html[data-theme='war'] [data-mobile-header][data-scrolled='true'] {
-    background: rgb(var(--war-gunmetal) / 0.9) !important;
   }
 }
 
