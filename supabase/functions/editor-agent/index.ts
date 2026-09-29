@@ -43,6 +43,7 @@ Operations (only use fields you need):
 - crop: id, left, top, right, bottom (fractions 0..0.9).
 - style: id, radius (corner rounding px), shadow (true/false).
 - animate: id, in and/or out (one of: none, fade, slide-up, slide-down, slide-left, slide-right, zoom-in, zoom-out, pop, rise, blur).
+- keyframes: id, plus any of x, y, scale, rotation, opacity, each a list of keys [{"t": seconds from the layer's start, "v": value in the same units as place, "ease": curve from this key to the next}] or "none" to stop animating it. It replaces that property's keys; the layer's "keys" field shows its current ones. ease is one of: linear, ease, easeIn, easeOut, easeInOut, easeInCubic, easeOutCubic, easeInOutCubic, easeInExpo, easeOutExpo, easeInOutExpo, easeInBack, easeOutBack (overshoot and settle), easeInOutBack, hold (jump). Text layers have no scale. Use for custom motion: a title that flies in and settles, a logo that spins, a slow push-in on a photo, a layer that moves across the page. Prefer animate for a plain entrance or exit.
 - timing: id, start, duration.
 - audio: id, volume (0..2), speed (0.25..4).
 - order: id, direction ("front" | "back" | "forward" | "backward").
@@ -74,7 +75,7 @@ Example answer:
 `.trim();
 
 const OP_NAMES = [
-  "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "timing",
+  "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "keyframes", "timing",
   "audio", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "apply_brand", "add_logo", "use_template", "captions", "remove_background", "generate", "select",
 ];
 

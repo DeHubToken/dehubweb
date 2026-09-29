@@ -17,7 +17,9 @@ import {
   ContextMenuSubTrigger,
   ContextMenuSubContent,
 } from "@/components/ui/context-menu";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { keyTimes, removeKeysAt, retimeKeys } from "@/lib/editor/keyframes";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import type { Clip, Track } from "@/lib/editor/types";
 import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
@@ -655,11 +657,76 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
           <div className="absolute inset-0 flex items-center px-2.5">
             <span className="truncate font-medium">{label}</span>
           </div>
+          <KeyframeMarks clip={clip} zoom={zoom} onSelect={() => { if (!selected) onSelect(false); }} />
           <TransitionHandle clip={clip} />
         </div>
       </ContextMenuTrigger>
       <ClipContextMenu clipId={clip.id} trackId={clip.trackId} />
     </ContextMenu>
+  );
+}
+
+/**
+ * Keyframe diamonds along the bottom of a clip. Click jumps the playhead to
+ * the key, drag moves it (all properties keyed at that moment move together),
+ * double-click deletes it.
+ */
+function KeyframeMarks({ clip, zoom, onSelect }: { clip: Clip; zoom: number; onSelect: () => void }) {
+  const { t } = useTranslation();
+  const times = keyTimes(clip).filter((k) => k >= 0 && k <= clip.duration + 0.001);
+  if (!times.length) return null;
+
+  const onDown = (kt: number) => (e: React.PointerEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const s = useEditorStore.getState();
+    onSelect();
+    s.setIsPlaying(false);
+    s.setCurrentTime(clip.start + kt);
+    const x0 = e.clientX;
+    let from = kt;
+    let began = false;
+    const move = (ev: PointerEvent) => {
+      if (!began && Math.abs(ev.clientX - x0) < 3) return;
+      const st = useEditorStore.getState();
+      if (!began) { st.beginGesture(); began = true; }
+      const cur = st.clips.find((c) => c.id === clip.id);
+      if (!cur) return;
+      const to = Math.round(Math.max(0, Math.min(cur.duration, kt + (ev.clientX - x0) / zoom)) * 100) / 100;
+      if (Math.abs(to - from) < 0.005) return;
+      st.patchClipLive(clip.id, { keyframes: retimeKeys(cur, from, to) });
+      st.setCurrentTime(cur.start + to);
+      from = to;
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
+  const onDelete = (kt: number) => (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const s = useEditorStore.getState();
+    const cur = s.clips.find((c) => c.id === clip.id);
+    if (cur) s.patchClip(clip.id, { keyframes: removeKeysAt(cur, kt) });
+  };
+
+  return (
+    <>
+      {times.map((kt) => (
+        <div
+          key={kt}
+          data-handle="key"
+          onPointerDown={onDown(kt)}
+          onDoubleClick={onDelete(kt)}
+          title={t("editor.motion.timelineKey")}
+          className="absolute bottom-1 z-20 h-2.5 w-2.5 -translate-x-1/2 rotate-45 cursor-ew-resize touch-none rounded-[1px] border border-black/50 bg-white shadow hover:bg-sky-200"
+          style={{ left: kt * zoom }}
+        />
+      ))}
+    </>
   );
 }
 

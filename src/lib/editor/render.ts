@@ -10,8 +10,10 @@
  * testing and the pixels that get drawn can never disagree about where a clip
  * is.
  */
-import type { Clip, ClipTransform, MediaClip, ShapeClip, TextClip } from "./types";
+import type { Clip, ClipTransform, KeyframeProp, MediaClip, ShapeClip, TextClip } from "./types";
+import { KEYFRAME_PROPS } from "./types";
 import { computeClipAnimation } from "./animationPresets";
+import { isAnimated, resolveClipAt, setKey } from "./keyframes";
 
 export type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
@@ -55,6 +57,27 @@ export function placementPatch(clip: Clip, patch: Partial<ClipTransform>): Parti
     return out;
   }
   return { transform: next };
+}
+
+/**
+ * placementPatch at timeline time t. Properties that are keyframed get a key
+ * at t (added or updated) instead of a new static value, so dragging an
+ * animated layer on the canvas edits its motion rather than being ignored.
+ */
+export function placementPatchAt(clip: Clip, patch: Partial<ClipTransform>, t: number): Partial<Clip> {
+  if (!isAnimated(clip)) return placementPatch(clip, patch);
+  const local = t - clip.start;
+  let keyframes = clip.keyframes;
+  const rest: Partial<ClipTransform> = {};
+  for (const [k, v] of Object.entries(patch)) {
+    const prop = k as KeyframeProp;
+    if (typeof v === "number" && KEYFRAME_PROPS.includes(prop) && isAnimated(clip, prop)) {
+      keyframes = setKey({ ...clip, keyframes } as Clip, prop, local, v);
+    } else {
+      (rest as Record<string, unknown>)[k] = v;
+    }
+  }
+  return { ...(Object.keys(rest).length ? placementPatch(clip, rest) : {}), keyframes };
 }
 
 export function isVisualClip(clip: Clip): boolean {
@@ -220,8 +243,10 @@ export function roundRectPath(ctx: Ctx2D, x: number, y: number, w: number, h: nu
  * Draw one clip at timeline time `t`. The caller owns transition effects
  * (translate / clip rect / alpha) and wraps this in save/restore.
  */
-export function drawClip(ctx: Ctx2D, W: number, H: number, clip: Clip, t: number, src: RenderSources) {
-  if (!isVisualClip(clip) || clip.hidden) return;
+export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: number, src: RenderSources) {
+  if (!isVisualClip(keyed) || keyed.hidden) return;
+  // Keyframed placement is baked in first; everything below sees a plain clip.
+  const clip = resolveClipAt(keyed, t);
   const box = clipBox(ctx, clip, W, H, src);
   if (!box) return;
   const tr = getTransform(clip);

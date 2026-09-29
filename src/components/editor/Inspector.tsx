@@ -17,6 +17,7 @@ import { FontPicker } from "@/components/editor/FontPicker";
 import { findFontByCss, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
 import { LayerSection } from "@/components/editor/inspector/LayerSection";
 import { MultiSelectSection } from "@/components/editor/inspector/MultiSelectSection";
+import { MotionSection } from "@/components/editor/inspector/MotionSection";
 import { autoEnhanceEffects } from "@/lib/editor/autoEnhance";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { Captions, Loader2 } from "lucide-react";
@@ -134,6 +135,7 @@ export function Inspector() {
         )}
 
         {selected && selected.kind !== "audio" && <LayerSection clip={selected} />}
+        {selected && selected.kind !== "audio" && <MotionSection clip={selected} />}
 
         {visualMedia && (
           <div className="space-y-3">

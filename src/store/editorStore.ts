@@ -7,6 +7,7 @@ import { create } from "zustand";
 import { nanoid } from "nanoid";
 import type { MediaMeta, StoredMedia } from "@/lib/editor/mediaStore";
 import { getPages, pageAt } from "@/lib/editor/pages";
+import { shiftKeys } from "@/lib/editor/keyframes";
 import {
   DEFAULT_SETTINGS,
   type Clip,
@@ -527,6 +528,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const clip = s.clips.find((c) => c.id === id);
     if (!clip) return;
     let { start, duration, trimIn } = clip;
+    const oldStart = start;
     if (edge === "in") {
       const newStart = Math.max(0, start + deltaSeconds);
       const newDuration = duration - (newStart - start);
@@ -552,7 +554,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     set({
       past,
       future: [],
-      clips: s.clips.map((c) => (c.id === id ? ({ ...c, start, duration, trimIn } as Clip) : c)),
+      // Keys are clip-relative; trimming the head must not slide the motion along.
+      clips: s.clips.map((c) => (c.id === id
+        ? ({ ...c, start, duration, trimIn, keyframes: shiftKeys(c.keyframes, oldStart - start) } as Clip)
+        : c)),
     });
   },
 
@@ -574,6 +579,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         start: t,
         duration: c.duration - localOffset,
         trimIn: c.kind === "text" || c.kind === "image" ? c.trimIn : c.trimIn + localOffset,
+        keyframes: shiftKeys(c.keyframes, -localOffset),
       }) as Clip;
       newClips.push(left, right);
     }
