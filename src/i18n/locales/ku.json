@@ -1691,7 +1691,7 @@
     "streamInfo": "Stream Info",
     "currentlyLive": "Currently Live",
     "streamOffline": "Stream Offline",
-    "totalViews": "{{count}} total views",
+    "totalViews": "{{count}} نیشانەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکەکە",
     "public": "Giştî",
     "publicDesc": "Her kes dikare bibîne",
     "unlisted": "Unlisted",
@@ -2552,6 +2552,7 @@
     "price50to100": "50 dolar heta 100 dolar",
     "price100to500": "100 dolar heta 500 dolar",
     "price500plus": "$500+",
+    "storeNotFound": "Firoşgeh nehat dîtin",
     "loading": "ئامادەکردن...",
     "tabPurchases": "کڕراوەکان",
     "earned": "وەدەستھێنراو، دەسکەوتوو",
@@ -2604,8 +2605,7 @@
     "countryPlaceholder": "ولایەتە یەکگرتووەکانی ئەمریکا",
     "defaultLabel": "ئەسڵ",
     "savedAddress": "پاشە کەوت کرا، پاشەکەوتکراو، ڕزگارکراو، ھەڵگیراو، دەستی گرتەوە، پاشەکەوتیکرد",
-    "shopAllowanceUsed": "{{allowance}} از {{allowance}} استفاده شد. توکن‌های DeHub بیشتری را استیک کنید تا نشان بالاتر و اسلات دیگر دریافت کنید.",
-    "storeNotFound": "Firoşgeh nehat dîtin"
+    "shopAllowanceUsed": "{{allowance}} از {{allowance}} استفاده شد. توکن‌های DeHub بیشتری را استیک کنید تا نشان بالاتر و اسلات دیگر دریافت کنید."
   },
   "stages": {
     "title": "ژوورە دەنگییەکان",
@@ -5858,16 +5858,16 @@
   },
   "emojiPicker": {
     "tabEmoji": "Emojî",
-    "tabGif": "GIF",
-    "searchEmoji": "Emojiyan bigerin",
-    "searchGifs": "GIFan bigerin...",
+    "tabGif": "وێنەی جوڵاو",
+    "searchEmoji": "گەڕان بەدوای ئیمۆجی",
+    "searchGifs": "گەڕان بەدوای GIF...",
     "noEmoji": "Tu emojî nehat dîtin",
     "noGifs": "Tu GIF nehat dîtin",
     "trending": "Trend",
     "searchResults": "Encamên lêgerînê",
     "poweredByGiphy": "Bi hêza GIPHY",
     "skinTone": "Rengê çerm",
-    "moreReactions": "Bertekên zêdetir",
+    "moreReactions": "بۆچوونی زیاتر",
     "multiPickHint": "Ji bo çend hilbijartinê Shift-klîk bikin",
     "group": {
       "recent": "Dawî hatine bikaranîn",
@@ -6589,6 +6589,44 @@
   },
   "accountDeletion": {
     "title": "حیسابی بەکارهێنەر بسڕەوە"
+  },
+  "miniApps": {
+    "dev": {
+      "signFor": "نیشان بۆ {{domain}}",
+      "signNeedsUrl": "ناونیشانی بەرنامەکەت لەسەرەوە بنووسە",
+      "signInFirst": "لە DeHub بچۆ بۆ هەڵسەنگاندن.",
+      "signFailed": "هەڵسەنگاندن تەواو نەبوو.",
+      "quickstartTitle": "دەستپێکی خێرا",
+      "quickstartBody": "SDK ـەکە زیاد بکە بۆ لاپەڕەکەت و پاشان ready() بانگ بکە کاتێک یەکەم شاشەکەت پیشان دەدرێت.",
+      "manifestTitle": "مانفیست",
+      "manifestBody": "ئەمە لە /.well-known/dehub.json لەسەر دۆمەینی بەرنامەکەت خزمەت بکە. پێشتر farcaster.json هەیە؟ ئێمەش ئەوە بخوینین.",
+      "embedTitle": "کاردانی فید",
+      "embedBody": "ئەم تاگە لە هەر لاپەڕەیەک زیاد بکە، و بەستەرێک بۆ ئەو لاپەڕەیە وەک کاردێک پیشان دەدرێت کە دوگمەیەکی هەیە کە بەرنامەکەت لەو شوێنەدا دەکرێتەوە.",
+      "verifyTitle": "لە DeHub بچۆ بۆ هەڵسەنگاندن لە سێرڤەرەکەت",
+      "verifyBody": "auth.getToken() بۆ بەرنامەکەت توکێنێک دەدات کە لەلایەن DeHub ـەوە واژۆ کراوە. لە سێرڤەرەکەتدا بە هەر کتێبخانەیەکی JWT بپشکنە. ناونیشانی جیابەجێی بەکارهێنەر لە sub ـدا هەیە.",
+      "copy": "کۆپی",
+      "copied": "کۆپی کرا",
+      "submitBody": "مانفیستەکەت ڕێگەی پێدرا. پێشکەش بکە و بەرنامەکەت لە سەر لینکی DeHub بە شێوەیەکی ڕاستەوخۆ ژیانی دەبێت، نیشانکراوە بە \"Unreviewed\". دوای ئەوە کە پێداچونەوەی بۆ ماڵپەڕەکە تەواو بێت، لە ماڵپەڕەکەدا دەردەکەوێت.",
+      "submit": "پێشکەش بکە بۆ DeHub",
+      "submitSignIn": "لە DeHub بچۆ بۆ پێشکەشکردن.",
+      "submitDone": "پێشکەش کرا. بەرنامەکەت لە لینکی DeHub ـی خۆی ژیانی دەبێت.",
+      "submitUpdated": "نوێکرایەوە. DeHub وەشانە نوێی مانفیستەکەت هەیە.",
+      "yourAppsTitle": "بەرنامەکانت",
+      "stateUnlisted": "ژێر لینك ژیانی – لە پێداچونەوە بۆ ماڵپەڕ",
+      "stateListed": "لە ماڵپەڕەکەدا",
+      "stateSuspended": "ڕاگیراو",
+      "copyLink": "کۆپی لینك"
+    },
+    "card": {
+      "open": "کردنەوە"
+    },
+    "category": {
+      "games": "یارییەکان",
+      "social": "کۆمەڵایەتی",
+      "finance": "دارایی",
+      "utility": "ئامراز",
+      "productivity": "بەرهەمهێنانی کارا"
+    }
   },
   "aiStyles": {
     "normal": "Asayî",
