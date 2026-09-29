@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { resolveThemeIconAsset } from '@/components/app/war/WarHudIcon';
+import { resolveThemeIconAsset, resolveThemeIconKey, resolveWarGlyph } from '@/components/app/war/WarHudIcon';
 
 const FULL_THEMES = [
   'cosmic', 'hazy', 'swarms', 'lavalamp', 'winter',
@@ -25,6 +25,32 @@ const SUPERPOWER_KEYS = [
 ];
 
 describe('theme icon assets', () => {
+  it('resolves semantic page and power URLs without dropping to legacy artwork', () => {
+    for (const key of [...PROFILE_KEYS, ...PAGE_KEYS, ...SUPERPOWER_KEYS]) {
+      const extension = SUPERPOWER_KEYS.includes(key) ? 'png' : 'webp';
+      const src = `/theme-icons/system/${key}.${extension}?v=5`;
+      expect(resolveThemeIconKey(src), src).toBe(key);
+      expect(resolveWarGlyph(src), src).toBeTruthy();
+      expect(resolveThemeIconAsset(src, 'system')).toBe(`/theme-icons/system/${key}.${extension}`);
+      for (const theme of FULL_THEMES) {
+        expect(resolveThemeIconAsset(src, theme)).toBe(`/theme-icons/${theme}/${key}.${extension}`);
+      }
+    }
+  });
+  it('keeps page identities in each native material family', () => {
+    for (const theme of ['hazy', 'swarms', 'winter', 'osaka', 'jungle']) {
+      for (const key of ['accounts', 'usernames', 'tv', 'email', 'staking', 'buy', 'bridge']) {
+        const source = resolve(__dirname, `../../public/theme-icons/sources/${key}-${theme}.png`);
+        expect(existsSync(source), `${key}-${theme}.png`).toBe(true);
+        const output = readFileSync(resolve(__dirname, `../../public/theme-icons/${theme}/${key}.webp`));
+        expect(output, `${theme}/${key}`).not.toEqual(
+          readFileSync(resolve(__dirname, `../../public/theme-icons/system/${key}.webp`)),
+        );
+        expect(resolveThemeIconAsset(`/theme-icons/system/${key}.webp?v=4`, theme))
+          .toBe(`/theme-icons/${theme}/${key}.webp`);
+      }
+    }
+  });
   it('ships every profile and page icon for each full raster theme', () => {
     for (const theme of FULL_THEMES) {
       for (const key of [...PROFILE_KEYS, ...PAGE_KEYS]) {

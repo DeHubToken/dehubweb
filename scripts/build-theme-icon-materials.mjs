@@ -47,6 +47,14 @@ const identitySources = {
 };
 
 const themeIdentitySources = {
+  ...Object.fromEntries(
+    ['accounts', 'usernames', 'tv', 'email', 'staking', 'buy', 'bridge'].map((key) => [key,
+      Object.fromEntries(['hazy', 'swarms', 'winter', 'osaka', 'jungle'].map((theme) => [theme, {
+        path: path.join(iconRoot, 'sources', `${key}-${theme}.png`),
+        preserveCanvas: true,
+      }])),
+    ]),
+  ),
   dao: Object.fromEntries(
     ['system', 'light', 'minimal', 'cosmic', 'hazy', 'jungle', 'lavalamp', 'osaka', 'swarms', 'winter']
       .map((theme) => [theme, {
@@ -167,6 +175,7 @@ for (const [theme, treatment] of Object.entries(nativeThemeTreatments)) {
   const outputDir = path.join(iconRoot, theme);
   const material = path.join(outputDir, 'wand.webp');
   for (const key of Object.keys(identitySources)) {
+    if (themeIdentitySources[key]?.[theme]) continue;
     await applyTreatment(
       path.join(systemDir, `${key}.webp`),
       path.join(outputDir, `${key}.webp`),

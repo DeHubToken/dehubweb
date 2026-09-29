@@ -225,6 +225,7 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
   'email', 'accounts', 'usernames', 'tv', 'superpowers', 'boost',
+  'dao', 'staking', 'bridge', 'buy',
   'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
   'signal-flare', 'flak-jacket', 'precision-strike', 'harpoon',
   'team-up', 'front-row', 'deep-current',
@@ -233,8 +234,8 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
 /** Bump when a file is redrawn in place, or browsers and the app keep the old art. */
 const ICON_REVISIONS: Partial<Record<ThemeIconKey, string>> = {
   dao: '?v=4',
-  // Redrawn in the System chrome finish so the monochrome menus match.
-  accounts: '?v=4', tv: '?v=4', usernames: '?v=4', staking: '?v=4', buy: '?v=4', fractions: '?v=4',
+  accounts: '?v=5', tv: '?v=5', usernames: '?v=5', email: '?v=5',
+  staking: '?v=5', buy: '?v=5', bridge: '?v=5', fractions: '?v=4',
 };
 
 const TRANSPARENT_PNG_KEYS = new Set<ThemeIconKey>([
@@ -300,6 +301,9 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
 };
 
 export function resolveThemeIconKey(src: string): ThemeIconKey | null {
+  // Semantic URLs must resolve every key, including page identities and PNG powers.
+  const semanticKey = src.match(/\/theme-icons\/[^/]+\/([^/?]+)\.(?:webp|png)(?:\?|$)/)?.[1];
+  if (semanticKey && semanticKey in THEME_KEY_GLYPHS) return semanticKey as ThemeIconKey;
   for (const [stem, key] of THEME_ICON_KEYS) {
     if (src.includes(stem)) return key;
   }
@@ -340,6 +344,8 @@ export function resolveThemeIconAsset(src: string, requestedTheme: string): stri
 
 /** Resolve the glyph for an asset URL, or null when it is not one of ours. */
 export function resolveWarGlyph(src: string): LucideIcon | null {
+  const key = resolveThemeIconKey(src);
+  if (key) return THEME_KEY_GLYPHS[key];
   for (const [stem, Glyph] of GLYPHS) {
     if (src.includes(stem)) return Glyph;
   }
@@ -408,7 +414,9 @@ export function BrandIcon({ src, alt = '', className, ...imgProps }: BrandIconPr
     );
   }
 
-  const themedSrc = resolveThemeIconAsset(src, theme) ?? src;
+  const asset = resolveThemeIconAsset(src, theme);
+  const key = resolveThemeIconKey(src);
+  const themedSrc = asset ? `${asset}${key ? ICON_REVISIONS[key] ?? '' : ''}` : src;
   return <img src={themedSrc} alt={alt} className={className} data-theme-icon-family={theme} {...imgProps} />;
 }
 

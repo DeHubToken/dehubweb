@@ -1476,6 +1476,26 @@ html[data-theme="hacker"] :is([role="tab"][aria-selected="true"], [data-state="a
 html[data-theme="hacker"] :is([role="tab"][aria-selected="true"], [data-state="active"][role="tab"]) svg {
   color: rgb(57 255 136) !important;
 }
+/* Filled shared controls use the same material tokens as the active panels.
+   War, Osaka and Jungle apply their bespoke control recipes in their own sheets. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"])
+  [data-theme-button]:is([data-button-variant="default"], [data-button-variant="glass"], [data-button-variant="secondary"], [data-button-variant="outline"]) {
+  background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
+  border-color: transparent !important;
+  box-shadow: var(--glass-edge-flat) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"])
+  [data-theme-button]:is([data-button-variant="default"], [data-button-variant="glass"], [data-button-variant="secondary"], [data-button-variant="outline"]):hover {
+  background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-raised)) !important;
+}
+html[data-theme="hacker"] [data-theme-button] {
+  border-radius: 0 !important;
+  color: rgb(57 255 136);
+  font-family: ui-monospace, monospace;
+}
+
 html[data-theme="hacker"] ::selection {
   background: rgb(57 255 136 / 0.35);
   color: #fff;
