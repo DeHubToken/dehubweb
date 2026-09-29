@@ -542,6 +542,13 @@ function AppContent() {
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
           <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><PricingPage /></Suspense>} />
+          {/* Where the Android app sends a buyer to pay (?plan=, plus Play's
+              ?gpt= token). The app claims /premium and /pricing as verified
+              links, exact path only, so checking out on those URLs bounced
+              straight back into the app. These paths are not claimed and open
+              in the browser. Both pages already canonicalize to the bare URL. */}
+          <Route path="/premium/checkout" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
+          <Route path="/pricing/checkout" element={<Suspense fallback={<PageLoader />}><PricingPage /></Suspense>} />
           <Route path="/depin" element={<Suspense fallback={<PageLoader />}><DePinPage /></Suspense>} />
           {/* Prize draws. dehub.net/prize-draw and raffle.dehub.net both 301
               here (CLOUDFLARE_WORKER_SEO.js), so this route is the landing for
