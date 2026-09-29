@@ -105,12 +105,21 @@ function useIsTabletOrMobile() {
   return isTabletOrMobile;
 }
 
+/** Tallest a photo gets on the post page — the same cap the post page video uses. */
+const IMMERSIVE_IMAGE_MAX_HEIGHT = '80dvh';
+
 interface ImageCardProps {
   post: ImagePost;
   /** Dedicated pages own one shared comments window below the post card. */
   onOpenComments?: (tab?: 'replies' | 'quotes' | 'reposts' | 'search') => void;
   /** First few feed items — skip lazy loading so LCP image loads immediately */
   aboveFold?: boolean;
+  /**
+   * Phone/tablet post page: the image owns the top of the screen the way an
+   * immersive video does — edge to edge, square corners, centred on black —
+   * and the creator row moves under it, where the video post draws its own.
+   */
+  isImmersive?: boolean;
 }
 
 /**
@@ -154,6 +163,7 @@ function ImageSlide({
   postId,
   onImageClick,
   viewportRef,
+  immersive = false,
 }: {
   img: string;
   idx: number;
@@ -161,6 +171,7 @@ function ImageSlide({
   postId?: string;
   onImageClick: (index: number) => void;
   viewportRef: React.RefObject<HTMLDivElement>;
+  immersive?: boolean;
 }) {
   // Upgraded from the click-only double-tap to the shared ladder, so a photo
   // gets the same triple-tap ❤️ and hold-for-the-tray as every other surface.
@@ -216,7 +227,7 @@ function ImageSlide({
   return (
     <div
       ref={slideRef}
-      className="relative flex justify-start cursor-pointer select-none"
+      className={cn('relative flex cursor-pointer select-none', immersive ? 'justify-center' : 'justify-start')}
       style={{ minHeight: ratio ? undefined : '200px' }}
       // Still stops the click reaching the card's navigate handler; the ladder
       // itself now runs off pointer events, which embla's drag does not consume.
@@ -236,10 +247,15 @@ function ImageSlide({
         alt=""
         width={ratio ? Math.round(ratio * 1000) : undefined}
         height={ratio ? 1000 : undefined}
-        className="block w-auto h-auto max-w-full object-contain rounded-2xl"
+        className={cn('block w-auto h-auto max-w-full object-contain', immersive ? 'rounded-none' : 'rounded-2xl')}
         // Keep the slide's geometry when its offscreen bitmap is released.
         // An img without src otherwise collapses and changes the feed height.
-        style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT, width: ratio ? ratio * FEED_IMAGE_MAX_HEIGHT : undefined, aspectRatio: ratio }}
+        // On the post page (immersive) the photo follows the post page video
+        // rule: it grows until it fills the width or 80% of the screen height,
+        // whichever comes first, keeping its real shape.
+        style={immersive
+          ? { maxHeight: IMMERSIVE_IMAGE_MAX_HEIGHT, width: ratio ? `calc(${IMMERSIVE_IMAGE_MAX_HEIGHT} * ${ratio.toFixed(4)})` : undefined, aspectRatio: ratio }
+          : { maxHeight: FEED_IMAGE_MAX_HEIGHT, width: ratio ? ratio * FEED_IMAGE_MAX_HEIGHT : undefined, aspectRatio: ratio }}
         loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
         fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
         decoding="async"
@@ -272,12 +288,14 @@ function ImageCarousel({
   onIndexChange,
   aboveFold = false,
   postId,
+  immersive = false,
 }: {
   images: string[];
   onImageClick: (index: number) => void;
   onIndexChange?: (index: number) => void;
   aboveFold?: boolean;
   postId?: string;
+  immersive?: boolean;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -348,7 +366,7 @@ function ImageCarousel({
   const hasMultiple = images.length > 1;
   
   return (
-    <div data-media-full className="relative rounded-2xl overflow-hidden" onWheel={handleWheel} data-no-navigate data-no-swipe>
+    <div data-media-full className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe>
       {/* Carousel container */}
       <div
         ref={scrollRef}
@@ -370,6 +388,7 @@ function ImageCarousel({
               postId={postId}
               onImageClick={onImageClick}
               viewportRef={scrollRef}
+              immersive={immersive}
             />
           </div>
         ))}
@@ -538,7 +557,7 @@ function FeedDescription({
   );
 }
 
-export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments }: ImageCardProps) {
+export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments, post.id);
@@ -748,176 +767,180 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
   }, [navigate, post.id, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
-  return (
-    <div
-      ref={viewRef}
-      onClick={handleCardClick}
-      className="overflow-visible cursor-pointer isolate"
-    >
-      {/* Header with AI and menu buttons */}
-      <div className="flex items-start justify-between">
-        <CardHeader
-          username={post.username}
-          handle={post.creatorUsername}
-          avatarSeed={post.avatar}
-          verified={post.verified}
-          contentType="image"
-          creatorId={post.creatorId}
-          creatorUsername={post.creatorUsername}
-          badgeBalance={post.creatorBadgeBalance}
-        />
-        <div className="flex items-center gap-1">
-          {isOwnPost && (
-            <button
-              onClick={() => setShowBoostModal(true)}
-              disabled={!postTokenId}
-              className="mr-[1.6px] text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all disabled:opacity-40"
-              aria-label={t('postOptions.boostPost')}
-            >
-              <Zap className="w-[23.5px] h-[23.5px]" />
-            </button>
-          )}
+  const headerRow = (
+    <div className="flex items-start justify-between">
+      <CardHeader
+        username={post.username}
+        handle={post.creatorUsername}
+        avatarSeed={post.avatar}
+        verified={post.verified}
+        contentType="image"
+        creatorId={post.creatorId}
+        creatorUsername={post.creatorUsername}
+        badgeBalance={post.creatorBadgeBalance}
+      />
+      <div className="flex items-center gap-1">
+        {isOwnPost && (
           <button
-            onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-            className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
-            aria-label="Ask AI about this post"
+            onClick={() => setShowBoostModal(true)}
+            disabled={!postTokenId}
+            className="mr-[1.6px] text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all disabled:opacity-40"
+            aria-label={t('postOptions.boostPost')}
           >
-            <Sparkles className="w-[23.5px] h-[23.5px]" />
+            <Zap className="w-[23.5px] h-[23.5px]" />
           </button>
-          <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
-            {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
-                vaul's Root (and its window scroll listener) into every card. */}
-            <button
-              onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
-              aria-label="Post options"
-              className="text-zinc-400 hover:text-white transition-colors -mr-0.5"
-            >
-              <MoreVertical className="w-[23.5px] h-[23.5px]" />
-            </button>
-            <DrawerContent scrollable column glass className="px-4 pb-6">
-              <DrawerHeader className="pb-2">
-                <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
-              </DrawerHeader>
-              <div className="flex flex-col gap-1">
-                {/* Bookmark / pin / post info. Also on the action bar as icons
-                    on desktop — both surfaces read the same state, so the menu
-                    is a reliable place to find them at every width. */}
-                <PostUtilityMenuItems
-                  postId={post.id}
-                  tokenId={postTokenId}
-                  isOwnPost={isOwnPost}
-                  onBeforeNavigate={() => setShowOptionsDrawer(false)}
-                />
-                {!isOwnPost && (
+        )}
+        <button
+          onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+          className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
+          aria-label="Ask AI about this post"
+        >
+          <Sparkles className="w-[23.5px] h-[23.5px]" />
+        </button>
+        <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
+          {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
+              vaul's Root (and its window scroll listener) into every card. */}
+          <button
+            onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
+            aria-label="Post options"
+            className="text-zinc-400 hover:text-white transition-colors -mr-0.5"
+          >
+            <MoreVertical className="w-[23.5px] h-[23.5px]" />
+          </button>
+          <DrawerContent scrollable column glass className="px-4 pb-6">
+            <DrawerHeader className="pb-2">
+              <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-1">
+              {/* Bookmark / pin / post info. Also on the action bar as icons
+                  on desktop — both surfaces read the same state, so the menu
+                  is a reliable place to find them at every width. */}
+              <PostUtilityMenuItems
+                postId={post.id}
+                tokenId={postTokenId}
+                isOwnPost={isOwnPost}
+                onBeforeNavigate={() => setShowOptionsDrawer(false)}
+              />
+              {!isOwnPost && (
+                <button
+                  onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Gem className="w-5 h-5" /> {t('postOptions.sendTip')}
+                </button>
+              )}
+              <button
+                onClick={() => { setShowOptionsDrawer(false); setTimeout(() => handleTranslateImage(), 300); }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Languages className="w-5 h-5" /> {t('postOptions.translateImage')}
+              </button>
+              {!isPPV && !isW2E && !isLocked && (
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Download className="w-5 h-5" /> {t('postOptions.download')}
+                </button>
+              )}
+              <button
+                onClick={() => setShowReportModal(true)}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Flag className="w-5 h-5" /> {t('postOptions.report')}
+              </button>
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/app/post/${post.id}`;
+                  navigator.clipboard.writeText(url);
+                  toast.success(t('postOptions.postUrlCopied'));
+                  trackLinkCopy(post.id, walletAddress, linkCopyCount);
+                }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Link2 className="w-5 h-5" /> {t('postOptions.copyPostUrl')}
+              </button>
+              {!isOwnPost && (
+                <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <VolumeX className="w-5 h-5" /> {t('postOptions.muteCreator')}
+                </button>
+              )}
+              {!isOwnPost && (
+                <button onClick={handleBlockCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
+                </button>
+              )}
+              {!isOwnPost && canGiftBoost && (
+                <button
+                  onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
+                  disabled={!postTokenId}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
+                >
+                  <Gift className="w-5 h-5" /> {t('postOptions.giftBoost', { defaultValue: 'Gift a boost' })}
+                </button>
+              )}
+              <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <EyeOff className="w-5 h-5" /> {t('postOptions.seeLessLikeThis')}
+              </button>
+              {isOwnPost && (
+                <>
+                  <div className="border-t border-white/10 my-1" />
                   <button
-                    onClick={() => { setShowOptionsDrawer(false); setShowTipModal(true); }}
+                    onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowPollCreator(true), 300); }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
-                    <Gem className="w-5 h-5" /> {t('postOptions.sendTip')}
+                    <BarChart2 className="w-5 h-5" /> Create Poll
                   </button>
-                )}
-                <button
-                  onClick={() => { setShowOptionsDrawer(false); setTimeout(() => handleTranslateImage(), 300); }}
-                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                >
-                  <Languages className="w-5 h-5" /> {t('postOptions.translateImage')}
-                </button>
-                {!isPPV && !isW2E && !isLocked && (
-                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                    <Download className="w-5 h-5" /> {t('postOptions.download')}
+                  <button
+                    onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                   </button>
-                )}
-                <button
-                  onClick={() => setShowReportModal(true)}
-                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                >
-                  <Flag className="w-5 h-5" /> {t('postOptions.report')}
-                </button>
-                <button
-                  onClick={() => {
-                    const url = `${window.location.origin}/app/post/${post.id}`;
-                    navigator.clipboard.writeText(url);
-                    toast.success(t('postOptions.postUrlCopied'));
-                    trackLinkCopy(post.id, walletAddress, linkCopyCount);
-                  }}
-                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                >
-                  <Link2 className="w-5 h-5" /> {t('postOptions.copyPostUrl')}
-                </button>
-                {!isOwnPost && (
-                  <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                    <VolumeX className="w-5 h-5" /> {t('postOptions.muteCreator')}
-                  </button>
-                )}
-                {!isOwnPost && (
-                  <button onClick={handleBlockCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                    <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
-                  </button>
-                )}
-                {!isOwnPost && canGiftBoost && (
+                  {/* Boost. Offered to every owner rather than only to badge holders:
+                      the sheet explains what a badge buys and links to staking, which is
+                      worth more than hiding the row from the people who have not staked. */}
                   <button
                     onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
                     disabled={!postTokenId}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
                   >
-                    <Gift className="w-5 h-5" /> {t('postOptions.giftBoost', { defaultValue: 'Gift a boost' })}
+                    <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
                   </button>
-                )}
-                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <EyeOff className="w-5 h-5" /> {t('postOptions.seeLessLikeThis')}
-                </button>
-                {isOwnPost && (
-                  <>
-                    <div className="border-t border-white/10 my-1" />
-                    <button
-                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowPollCreator(true), 300); }}
-                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                    >
-                      <BarChart2 className="w-5 h-5" /> Create Poll
-                    </button>
-                    <button
-                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
-                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                    >
-                      <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
-                    </button>
-                    {/* Boost. Offered to every owner rather than only to badge holders:
-                        the sheet explains what a badge buys and links to staking, which is
-                        worth more than hiding the row from the people who have not staked. */}
-                    <button
-                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowBoostModal(true), 300); }}
-                      disabled={!postTokenId}
-                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
-                    >
-                      <ThemedIcon icon="superpowers" alt="" className="w-5 h-5 object-contain" /> {t('postOptions.boostPost')}
-                    </button>
-                    <button
-                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}
-                      className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
-                    >
-                      <Trash2 className="w-5 h-5" /> {t('postOptions.deletePost')}
-                    </button>
-                    <button
-                      onClick={async () => {
-                        const next: TokenVisibility = visibility === 'public' ? 'private' : 'public';
-                        try {
-                          await updateTokenVisibility(post.id, next);
-                          setVisibility(next);
-                          toast.success(`Post set to ${next}`);
-                        } catch { toast.error('Failed to update visibility'); }
-                      }}
-                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                    >
-                      {visibility === 'public' ? <EyeOff className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
-                      {visibility === 'public' ? 'Make Private' : 'Make Public'}
-                    </button>
-                  </>
-                )}
-              </div>
-            </DrawerContent>
-          </Drawer>
-        </div>
+                  <button
+                    onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}
+                    className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <Trash2 className="w-5 h-5" /> {t('postOptions.deletePost')}
+                  </button>
+                  <button
+                    onClick={async () => {
+                      const next: TokenVisibility = visibility === 'public' ? 'private' : 'public';
+                      try {
+                        await updateTokenVisibility(post.id, next);
+                        setVisibility(next);
+                        toast.success(`Post set to ${next}`);
+                      } catch { toast.error('Failed to update visibility'); }
+                    }}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    {visibility === 'public' ? <EyeOff className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
+                    {visibility === 'public' ? 'Make Private' : 'Make Public'}
+                  </button>
+                </>
+              )}
+            </div>
+          </DrawerContent>
+        </Drawer>
       </div>
+    </div>
+  );
+
+  return (
+    <div
+      ref={viewRef}
+      onClick={handleCardClick}
+      className={isImmersive ? 'overflow-hidden isolate' : 'overflow-visible cursor-pointer isolate'}
+    >
+      {/* Header with AI and menu buttons. Immersive draws it under the image. */}
+      {!isImmersive && headerRow}
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
       <div className="relative">
@@ -929,7 +952,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         ) : isComboLocked ? (
           <>
             {/* Combo PPV + Holdings Locked: blurred image with dual icons */}
-            <div data-media-full className="relative rounded-2xl overflow-hidden">
+            <div data-media-full className={cn('relative overflow-hidden', isImmersive ? 'rounded-none' : 'rounded-2xl')}>
               <img
                 src={images[0]}
                 alt=""
@@ -971,7 +994,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         ) : isPPV ? (
           <>
             {/* PPV only: blurred image with ticket overlay */}
-            <div data-media-full className="relative rounded-2xl overflow-hidden">
+            <div data-media-full className={cn('relative overflow-hidden', isImmersive ? 'rounded-none' : 'rounded-2xl')}>
               <img
                 src={images[0]}
                 alt=""
@@ -1009,7 +1032,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             {/* Subscriber gated: same blur, different ask. Ordered above the
                 holdings branch because a post carrying both is more likely to
                 be a creator's subscriber post than a token play. */}
-            <div data-media-full className="relative rounded-2xl overflow-hidden">
+            <div data-media-full className={cn('relative overflow-hidden', isImmersive ? 'rounded-none' : 'rounded-2xl')}>
               <img
                 src={images[0]}
                 alt=""
@@ -1050,7 +1073,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         ) : isLocked ? (
           <>
             {/* Holdings Locked: blurred image with lock icon overlay */}
-            <div data-media-full className="relative rounded-2xl overflow-hidden">
+            <div data-media-full className={cn('relative overflow-hidden', isImmersive ? 'rounded-none' : 'rounded-2xl')}>
               <img
                 src={images[0]}
                 alt=""
@@ -1084,7 +1107,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           </>
         ) : (
           <SwipeableCarousel>
-            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} aboveFold={aboveFold} postId={post.id} />
+            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} aboveFold={aboveFold} postId={post.id} immersive={isImmersive} />
           </SwipeableCarousel>
         )}
 
@@ -1097,7 +1120,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
         {/* Content Type Badges - Bounty only (PPV/Lock are shown via centered overlay) */}
         {hasBadges && (
-          <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
+          /* Immersive: the post page's back button owns the top-left corner. */
+          <div className={cn('absolute top-2 z-10 flex items-center gap-1.5', isImmersive ? 'left-12' : 'left-2')}>
             {/* Bounty Badge */}
             {isW2E && (
               <button 
@@ -1116,8 +1140,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         )}
       </div>
 
-      {/* Info & Actions */}
-      <div className="pt-3 space-y-2">
+      {/* Info & Actions. Immersive media runs edge to edge, so the copy under it
+          brings its own gutter — the same px-3 the immersive video card uses. */}
+      <div className={cn('pt-3 space-y-2', isImmersive && 'px-3')}>
+        {isImmersive && headerRow}
         {/* Title & Description */}
         <FeedDescription 
           postId={post.id}

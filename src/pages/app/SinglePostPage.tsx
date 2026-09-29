@@ -1007,14 +1007,17 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
    * shipped without asking for it.
    */
   const isFullBleedLive = contentType === 'live' && isMobileView;
+  // An image post opens the same way a video post does on phone and tablet:
+  // picture first, full width, the app's top chrome out of the way.
+  const isImmersiveImage = isImagePost && isMobileView;
   useEffect(() => {
-    const cls = isFullBleedLive ? 'immersive-live-mode' : isVideoPost ? 'immersive-video-mode' : null;
+    const cls = isFullBleedLive ? 'immersive-live-mode' : (isVideoPost || isImmersiveImage) ? 'immersive-video-mode' : null;
     if (cls) document.body.classList.add(cls);
     return () => {
       document.body.classList.remove('immersive-video-mode');
       document.body.classList.remove('immersive-live-mode');
     };
-  }, [isFullBleedLive, isVideoPost]);
+  }, [isFullBleedLive, isVideoPost, isImmersiveImage]);
 
 
   // (The `body { pointer-events: none }` guard that used to live here is gone
@@ -1065,7 +1068,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
       case 'video':
         return <VideoCard video={toVideoItem(post)} isImmersive={!isAudioPost} onOpenComments={handleOpenPageComments} />;
       case 'image':
-        return <ImageCard post={toImagePost(post)} aboveFold onOpenComments={handleOpenPageComments} />;
+        return <ImageCard post={toImagePost(post)} aboveFold isImmersive={isImmersiveImage} onOpenComments={handleOpenPageComments} />;
       case 'live': {
         if (!liveData) return <NotFoundState />;
         return (
@@ -1339,7 +1342,19 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   const isLivePost = contentType === 'live';
 
   const renderPostContent = () => (
-    isLivePost && isMobileView ? (
+    isImmersiveImage ? (
+      /* Same shape as the phone video post: media at the very top, edge to
+         edge, its own back button on it, comments and related under it. */
+      <div className={cn('flex flex-col', videoChromeClearance)}>
+        <div className="relative">
+          <ImmersiveVideoHeader onBack={goBack} />
+          {renderContent()}
+          {post && id && parseInt(id, 10) > 0 && <div className="px-3"><PollCard tokenId={parseInt(id, 10)} /></div>}
+        </div>
+        <div className="px-2 sm:px-3">{pageComments}</div>
+        {showRelated && id && <div className="px-2 sm:px-3"><RelatedImagesFeed currentPostId={id} /></div>}
+      </div>
+    ) : isLivePost && isMobileView ? (
       /* The viewer is `fixed inset-0` and owns the screen: wrapping it in
          the post bento would draw a card border around nothing, and the
          poll and shop rails below would sit under a layer they cannot be
@@ -1416,7 +1431,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
         ref={inOverlay ? undefined : postRootRef}
         data-post-page
         data-glass-page
-        className={cn('flex flex-col', isLivePost && 'bg-black min-h-screen')}
+        className={cn('flex flex-col', isLivePost && 'bg-black min-h-screen', isImmersiveImage && 'bg-black')}
       >
         {renderPostContent()}
       </div>
