@@ -1530,12 +1530,12 @@
     "daysAgo": "{{count}}r berê",
     "monthsAgo": "{{count}}m berê",
     "againstLabel": "دژ - بەرامبەر",
-    "notEnoughUnstakedTokens": "توکنی لابراوی بەس نییە لەسەر Base. تۆ پێویستت بە {{needed}} توکنی DeHubی ئازاد (لابراو) هەیە لەسەر Base بەڵام {{held}}ت هەیە. توکنە دانراوەکان ناتوانرێت بۆ پارەدان بەکاربهێنرێت.",
-    "voteFailedHoldTokens": "دەنگدانەکە شکستی هێنا. دەبێت توکنی DeHubت هەبێت بۆ دەنگدان.",
     "discussion": {
       "deleteTitle": "Vê şîroveyê jê bibe?",
       "deleteDescription": "Ev yek şîroveyê û hemû bersivên wê ji bo her kesî radike."
-    }
+    },
+    "notEnoughUnstakedTokens": "توکنی لابراوی بەس نییە لەسەر Base. تۆ پێویستت بە {{needed}} توکنی DeHubی ئازاد (لابراو) هەیە لەسەر Base بەڵام {{held}}ت هەیە. توکنە دانراوەکان ناتوانرێت بۆ پارەدان بەکاربهێنرێت.",
+    "voteFailedHoldTokens": "دەنگدانەکە شکستی هێنا. دەبێت توکنی DeHubت هەبێت بۆ دەنگدان."
   },
   "sidebar": {
     "talkOfTheTown": "Gotina Bajêr",

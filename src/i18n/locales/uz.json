@@ -7710,7 +7710,10 @@
       "search": "Ilovalarni qidirish",
       "all": "Hammasi",
       "fromDehub": "DeHub&#39;dan",
-      "noMatch": "Bu qidiruvga hech qanday ilova mos kelmadi."
+      "noMatch": "Bu qidiruvga hech qanday ilova mos kelmadi.",
+      "yourApps": "Ilovalaringiz",
+      "remove": "Olib tashlash",
+      "removed": "Oʻchirilgan. Sizga yana xabar yuborilmaydi."
     },
     "dev": {
       "title": "Mini ilova yarating",
@@ -7755,7 +7758,11 @@
       "stateUnlisted": "Havola orqali jonli efir · do&#39;kon uchun sharhda",
       "stateListed": "Do&#39;konda",
       "stateSuspended": "To&#39;xtatilgan",
-      "copyLink": "Havolani nusxalash"
+      "copyLink": "Havolani nusxalash",
+      "notifyKey": "Xabar bering, so‘nggi so‘rovlar uchun kalitni o‘zgartiring.",
+      "notifyKeyOnce": "Yangi xabar tugmasi {{name}} uchun. Uning nusxasini hozirda oling: u faqat bir marta ko’rsatiladi, va yana birini yaratish uni almashtiradi.",
+      "notifyTitle": "Bildirishnomalarni yuborish",
+      "notifyBody": "Foydalanuvchilar sizning ilanganizni qo'shganida, sizning xabar berish kalitingiz bilan serverdan xabar qilinishi mumkin. Har bir foydalanuvchi uchun tokenlarni saqlash kerak emas."
     },
     "card": {
       "open": "Ochiq"
@@ -7774,6 +7781,17 @@
       "developer-tools": "Dasturchi vositalari",
       "entertainment": "Ko&#39;ngilochar",
       "art-creativity": "San&#39;at va ijodkorlik"
+    },
+    "pay": {
+      "body": "DHB toʻgʻridan-toʻgʻri ilovaning pul xazinasi (wallet) ga yetadi, {{wallet}}. Toʻlovlar qaytarib olinmaydi.",
+      "sending": "Joylashuvni qabul qilmoqda…",
+      "sent": "Tozalanmagan {{amount}} DHB ni {{name}}ga sotib oldim.",
+      "noOwner": "Bu ilovalarda hali roʻyxatdan oʻtgan pul yuklamasi yoʻq."
+    },
+    "add": {
+      "title": "{{name}}?",
+      "body": "Sizning Ilovalaringizda paydo boʻladi va xabarlar yuborishi mumkin. Ilovalar sahifasidan har qanday vaqtda uni olib tashlash mumkin.",
+      "confirm": "Ushbu ilovani qo'shing"
     }
   },
   "aiStyles": {

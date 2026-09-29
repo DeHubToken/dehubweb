@@ -7617,7 +7617,9 @@
       "search": "Ngā taupānga rapu",
       "all": "Katoa",
       "fromDehub": "Mai i DeHub",
-      "noMatch": "Kaore he taupānga e rite ana ki taua rapu."
+      "noMatch": "Kaore he taupānga e rite ana ki taua rapu.",
+      "yourApps": "Ko o taupānga",
+      "remove": "Tangohia"
     },
     "dev": {
       "title": "Hangaia he taupānga iti",
@@ -7662,7 +7664,10 @@
       "stateUnlisted": "Live by link · i roto i te arotake mo te toa",
       "stateListed": "I roto i te toa",
       "stateSuspended": "Whakamutua",
-      "copyLink": "Tārua hono"
+      "copyLink": "Tārua hono",
+      "notifyKey": "Whakapūhutia te tino whakatau",
+      "notifyKeyOnce": "Kīanga hōhāngai hou mō {{name}}. Whakapā mai i te rāua: ka whakamātau ia i te tino rā, me te whakapā i te tino rā e whakamātau iā ia.",
+      "notifyTitle": "Whakapā mai i ngā whakapūmau"
     },
     "card": {
       "open": "Whakatuwherahia"
@@ -7681,6 +7686,15 @@
       "developer-tools": "Nga taputapu kaiwhakawhanake",
       "entertainment": "Te whakangahau",
       "art-creativity": "Toi me te auaha"
+    },
+    "pay": {
+      "title": "Tū mai ki te whakapā mai i te {{name}}?",
+      "sending": "E noho te whakapā mai i ō whakapā...",
+      "sent": "Tūhono whakapā mai te {{amount}} DHB ki te {{name}}."
+    },
+    "add": {
+      "body": "Ka taea e ia te whakamahia i te whakapakari me te whakapūmau i ngā whakapūmau mō ngā whakapūmau, me te whakapūmau i ngā whakapūmau i te wā e whakamahia ana e koe i te whakapakari whakapūmau. Ka taea e koe te whakamahia i te whakapūmau i te wā e whakamahia ana e koe i te whakapakari whakapūmau, i te whakapakari whakapūmau.",
+      "confirm": "Tāpiri taupānga"
     }
   },
   "aiStyles": {

@@ -7705,7 +7705,10 @@
       "search": "Pesquise aplicativos",
       "all": "Todos",
       "fromDehub": "De DeHub",
-      "noMatch": "Nenhum aplicativo corresponde à sua busca."
+      "noMatch": "Nenhum aplicativo corresponde à sua busca.",
+      "yourApps": "Seus apps",
+      "notificationsOn": "Notificações em",
+      "removed": "Removido. Não notificará mais você."
     },
     "dev": {
       "title": "Crie uma mini app",
@@ -7750,7 +7753,13 @@
       "stateUnlisted": "Público por link · em revisão para a loja",
       "stateListed": "Na loja",
       "stateSuspended": "Suspenso",
-      "copyLink": "Copiar link"
+      "copyLink": "Copiar link",
+      "notifyKey": "Avisar a chave",
+      "notifyKeyOnce": "Nova chave de notificação para {{name}}. Copie agora: ela é exibida uma vez, e fazer outra substitui-a.",
+      "payTitle": "Aceite pagamentos",
+      "payBody": "pagar() pede ao usuário para enviar DHB diretamente para a carteira que assinou seu arquivo dehub.json. Verifique o recibo no seu servidor antes de entregar qualquer coisa.",
+      "notifyTitle": "Envie notificações",
+      "notifyBody": "Usuários que adicionarem seu app podem ser notificados pelo seu servidor usando sua chave `notify`. Não é necessário armazenar tokens por usuário."
     },
     "card": {
       "open": "Abrir"
@@ -7769,6 +7778,18 @@
       "developer-tools": "Ferramentas do desenvolvedor",
       "entertainment": "Entretenimento",
       "art-creativity": "Arte e criatividade"
+    },
+    "pay": {
+      "title": "Pagar {{name}}?",
+      "body": "O DHB vai diretamente para a carteira do app, {{wallet}}. Pagamentos não podem ser reembolsados.",
+      "confirm": "Pagar {{amount}} DHB",
+      "sending": "Enviando seu pagamento…",
+      "sent": "Pago {{amount}} DHB a {{name}}.",
+      "noOwner": "Ainda não há carteira verificada nesta app para pagamento."
+    },
+    "add": {
+      "title": "Adicione {{name}}?",
+      "body": "Poderá aparecer sob Seus apps e poderá enviar notificações para você. Você pode removê-lo a qualquer momento na página Apps."
     }
   },
   "aiStyles": {

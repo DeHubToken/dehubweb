@@ -7625,7 +7625,11 @@
       "search": "Ҷустуҷӯи барномаҳо",
       "all": "Lahat",
       "fromDehub": "Аз DeHub",
-      "noMatch": "Walang mga application na tumutugma sa paghahanap na"
+      "noMatch": "Walang mga application na tumutugma sa paghahanap na",
+      "yourApps": "Sozandegiyangon",
+      "notificationsOn": "Xabarlar roshan",
+      "remove": "Oʻchirish",
+      "removed": "Oʻchirildi. Sizga yana xabar yuborilmaydi."
     },
     "dev": {
       "title": "Сохтани барномаи мини",
@@ -7640,6 +7644,7 @@
       "localNote": "Ang lokal na mga address ay hindi maaaring suriin mula sa aming mga server, ngunit maaari mong magsimulang ito dito up",
       "checkFailed": "Санҷиш иҷро нашуд. Бори дигар кӯшиш кунед.",
       "passed": "Манифест хуб ба назар мерасад",
+      "failed_one": "{{count}} muammosi",
       "failed_other": "{{count}}info: whatsthis",
       "farcasterImport": "Хонда шуд аз farcaster.json",
       "cardPreview": "Paano nakikita ang iyong link sa feed",
@@ -7669,7 +7674,13 @@
       "stateUnlisted": "Зиндагӣ бо пайванд · дар баррасии барои мағоза",
       "stateListed": "Дар мағоза",
       "stateSuspended": "Боздошта шуд",
-      "copyLink": "Нусха бардоштани истинод"
+      "copyLink": "Нусха бардоштани истинод",
+      "notifyKey": "Xabar kaliti",
+      "notifyKeyOnce": "Yangi xabar kaliti uchun {{name}}. Ushbu kalitni hozir kopirovka qiling: u faqat bir marta koʻrinadi va yana birini yaratish uni almashtiradi.",
+      "payTitle": "Toʻlovlarni qabul qilish",
+      "payBody": "pay() foydalanuvchidan sizga DHB yuborishni soʻraydi, toʻgʻridan-toʻgʻri dehub.json bilan imzolangan portfelingizga. Toʻlov kvitansiingizni serverda tekshiring, keyin faqatgina narsani yuboring.",
+      "notifyTitle": "Xabarlarni yuborish",
+      "notifyBody": "Sizning ilovangizni qoʻshgan foydalanuvchilar sizning serveringizdan xabar kalitingiz bilan xabar yuborishlari mumkin. Har bir foydalanuvchi uchun tokenlarni saqlash kerak emas."
     },
     "card": {
       "open": "Кушодан"
@@ -7688,6 +7699,19 @@
       "developer-tools": "Абзорҳои таҳиягар",
       "entertainment": "Вақтхушӣ",
       "art-creativity": "Санъат ва эҷодкорӣ"
+    },
+    "pay": {
+      "title": "{{name}}ga toʻlov qiling?",
+      "body": "DHB toʻgʻridan-toʻgʻri {{wallet}} ilovaning portfeliga boradi. Toʻlovlarni bekor qilish mumkin emas.",
+      "confirm": "{{amount}} DHBga toʻlov qiling",
+      "sending": "Toʻlovingiz yuborilmoqda…",
+      "sent": "{{amount}} DHBni {{name}}ga toʻlov qilingan.",
+      "noOwner": "Bu ilovada tasdiqlangan portfel yoʻq, toʻlov uchun."
+    },
+    "add": {
+      "title": "{{name}}ni qoʻshish?",
+      "body": "U \"Sozandegiyangon\" ostida koʻrinadi va sizga xabar yuborishi mumkin. Siz har qanday vaqtda Apps sahifasidan uni olib tashlashga tayyor boʻlsaniz.",
+      "confirm": "Ilovani qoʻshish"
     }
   },
   "aiStyles": {

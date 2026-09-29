@@ -7704,7 +7704,10 @@
       "search": "Buscar aplicaciones",
       "all": "Todos",
       "fromDehub": "De DeHub",
-      "noMatch": "Ninguna aplicación coincide con esa búsqueda."
+      "noMatch": "Ninguna aplicación coincide con esa búsqueda.",
+      "yourApps": "Tus aplicaciones",
+      "notificationsOn": "Notificaciones en",
+      "removed": "Eliminado. No te notificará nuevamente."
     },
     "dev": {
       "title": "Crea una mini aplicación",
@@ -7749,7 +7752,11 @@
       "stateUnlisted": "Vive por enlace · en revisión para la tienda",
       "stateListed": "En la tienda",
       "stateSuspended": "Suspendido",
-      "copyLink": "Copiar enlace"
+      "copyLink": "Copiar enlace",
+      "notifyKeyOnce": "Nueva clave de notificación para {{name}}. Copiala ahora: se muestra una sola vez, y hacer otra la reemplaza.",
+      "payBody": "pagar() pide al usuario que te envíe DHB, directamente a la billetera que firmó tu archivo dehub.json. Revisa el recibo en tu servidor antes de entregar algo.",
+      "notifyTitle": "Envía notificaciones",
+      "notifyBody": "Los usuarios que agreguen tu app pueden ser notificados desde tu servidor con tu clave `notify`. No es necesario almacenar tokens por usuario."
     },
     "card": {
       "open": "Abierto"
@@ -7767,6 +7774,17 @@
       "developer-tools": "Herramientas para desarrolladores",
       "entertainment": "Entretenimiento",
       "art-creativity": "Arte y creatividad"
+    },
+    "pay": {
+      "title": "Pagar {{name}}?",
+      "body": "El DHB va directamente a la billetera de la app, {{wallet}}. Los pagos no se pueden revertir.",
+      "confirm": "Paga {{amount}} DHB",
+      "sending": "Enviando tu pago…",
+      "sent": "Pagado {{amount}} DHB a {{name}}.",
+      "noOwner": "Esta app aún no tiene una billetera verificada para realizar pagos."
+    },
+    "add": {
+      "body": "Aparecerá bajo Tus apps y podrá enviarte notificaciones. Puedes eliminarlo en cualquier momento desde la página Apps."
     }
   },
   "aiStyles": {

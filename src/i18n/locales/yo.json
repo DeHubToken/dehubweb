@@ -7607,7 +7607,8 @@
       "search": "Ṣawari awọn ohun elo",
       "all": "Gbogbo",
       "fromDehub": "Láti DeHub",
-      "noMatch": "Kò sí àwọn ohun èlò tí ó bá àwárí yẹn mu."
+      "noMatch": "Kò sí àwọn ohun èlò tí ó bá àwárí yẹn mu.",
+      "yourApps": "Àwọn ohun-èlò rẹ"
     },
     "dev": {
       "title": "Kọ ohun-èlò kékeré kan",
@@ -7652,7 +7653,8 @@
       "stateUnlisted": "Gbe nipa ọna asopọ · ni atunyẹwo fun ile itaja",
       "stateListed": "Ninu ile itaja",
       "stateSuspended": "Wọ́n dáwọ́ iṣẹ́ dúró",
-      "copyLink": "Àdàkọ ìjápọ"
+      "copyLink": "Àdàkọ ìjápọ",
+      "payBody": "Páy() ti kò lẹ́ẹ́ jẹ́ ọmọ ẹni kò lẹ́ẹ́ pẹ̀lẹ̀ DHB mo, jẹ́ ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹni ẹ"
     },
     "card": {
       "open": "Ṣii"
@@ -7671,6 +7673,11 @@
       "developer-tools": "Awọn irinṣẹ Olùgbéejáde",
       "entertainment": "Idanilaraya",
       "art-creativity": "Art & àtinúdá"
+    },
+    "pay": {
+      "title": "Páàwón {{name}}?",
+      "body": "Dàgbàgbà DHB jẹ́ ni ẹ̀kọ́ àwọn ẹ̀kọ́ àpẹ́ẹ̀, {{wallet}}. Àwọn ẹ̀kọ́ ni ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti ti wá ni ti",
+      "noOwner": "Mo app de ti o jé óọ̀ǹkọ̀ǹ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ̀kẹ̀rẹ̀ tí òní ìlẹ"
     }
   },
   "aiStyles": {

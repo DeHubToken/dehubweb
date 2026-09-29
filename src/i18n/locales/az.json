@@ -7545,7 +7545,11 @@
       "search": "Araşdırma uygulamaları",
       "all": "Hər şey",
       "fromDehub": "DeHub-dən",
-      "noMatch": "Axtarışınızla uyğun gələn heç bir uygulamalar yoxdur."
+      "noMatch": "Axtarışınızla uyğun gələn heç bir uygulamalar yoxdur.",
+      "yourApps": "Sizin applarınız",
+      "notificationsOn": "Bildirimlər",
+      "remove": "Kaldır",
+      "removed": "Kaldırıldı. Artıq sizi daha bir bildirimləməyəcək."
     },
     "dev": {
       "title": "Kiçik tətbiq yaradın",
@@ -7590,7 +7594,13 @@
       "stateUnlisted": "Linklə yaşayanlar · mağazada təhlükəsizlikdən keçirilənlər",
       "stateListed": "Mağazada",
       "stateSuspended": "Qoyulmuş",
-      "copyLink": "Linki kopyala"
+      "copyLink": "Linki kopyala",
+      "notifyKey": "Bildirim anahtarı",
+      "notifyKeyOnce": "{{name}} üçün yeni bildirim anahtarı. Artıq göstərməyəcək, yenisi əvəzləyəcək.",
+      "payTitle": "Ödənişlər",
+      "payBody": "pay() istifadəçini sizin dehub.json-u imzalayan cibxaranıza DHB göndərməyə dəvət edir. Ödənişinizi serverdə təsdiq edin, sonra heç bir şeyi göndərməyin.",
+      "notifyTitle": "Bildirimlər göndər",
+      "notifyBody": "Sizin applarınızı əlavə edən istifadəçilərinizi serverdan bildirim anahtarı ilə bildirə bilərsiniz. Her istifadəçi üçün token saxlamaya ehtiyac yoxdur."
     },
     "card": {
       "open": "Aç"
@@ -7609,6 +7619,19 @@
       "developer-tools": "Proqram təminatı alətləri",
       "entertainment": "Məzmun",
       "art-creativity": "Sənət və yaradıcılıq"
+    },
+    "pay": {
+      "title": "{{name}}-ni ödə?",
+      "body": "DHB doğrudan appların cibxaranına gedir, {{wallet}}. Ödənişlər geri qaytarıla bilməz.",
+      "confirm": "{{amount}} DHB ödə",
+      "sending": "Ödənişiniz göndərilir…",
+      "sent": "{{amount}} DHB-ni {{name}}-ə ödədiniz.",
+      "noOwner": "Bu app hələ də təsdiqlənmiş bir cibxara ödəmək üçün yoxdur."
+    },
+    "add": {
+      "title": "{{name}}-ni əlavə et?",
+      "body": "O, Sizin applarınız altında görünəcək və sizin üçün bildirimlər göndərə bilər. Anytime Apps səhifəsindən onu silə bilərsiniz.",
+      "confirm": "App əlavə et"
     }
   },
   "aiStyles": {

@@ -7550,8 +7550,13 @@
       "emptyTitle": "Ei ole loetletud rakendusi veel",
       "emptyBody": "Esimesed rakendused on kontrollimisel. Loo üks ja see võiks siia ilmuda.",
       "search": "Otsi rakendusi",
+      "all": "Kõik",
       "fromDehub": "DeHubilt",
-      "noMatch": "Sellele otsingule ei vasta ükski rakendus."
+      "noMatch": "Sellele otsingule ei vasta ükski rakendus.",
+      "yourApps": "Sinu rakendused",
+      "notificationsOn": "Häälestused sisse",
+      "remove": "Eemalda",
+      "removed": "Eemaldatud. See ei teata enam sinule."
     },
     "dev": {
       "title": "Loo mini-rakendus",
@@ -7596,7 +7601,13 @@
       "stateUnlisted": "Reaalajas lingi järgi · toidukoha ülevaatamisel",
       "stateListed": "Poes",
       "stateSuspended": "Peatatud",
-      "copyLink": "Kopeeri link"
+      "copyLink": "Kopeeri link",
+      "notifyKey": "Häälestusavakuutlus",
+      "notifyKeyOnce": "Uus häälestusavakuutlus {{name}}-le. Kopia seda nüüd: see näidatakse üks kord, ja teine asendab selle.",
+      "payTitle": "Võtke makseid",
+      "payBody": "pay() palub kasutajat saadada sinule DHB, suora raamatule, mis allkirjastas sinu dehub.json. Kontrolli kvitse serveril enne kui saad midagi.",
+      "notifyTitle": "Saada häälestusi",
+      "notifyBody": "Kasutajad, kes lisavad sinu rakendust, võivad serverilt häälestada sinu häälestusavakuutlusega. Pole kasutaja kohta eraldi tokeniteid hoidmiseks."
     },
     "card": {
       "open": "Ava"
@@ -7615,6 +7626,19 @@
       "developer-tools": "Arendaja tööriistad",
       "entertainment": "Meelelahutus",
       "art-creativity": "Kunst ja loovus"
+    },
+    "pay": {
+      "title": "Maksta {{name}}?",
+      "body": "DHB läheb suora rakenduse raamatule, {{wallet}}. Makseid ei saa tagasi võtta.",
+      "confirm": "Maksta {{amount}} DHB",
+      "sending": "Saad makse…",
+      "sent": "Maksis {{amount}} DHB {{name}}-le.",
+      "noOwner": "See rakendus ei ole veel kinnitatud raamatuga maksmiseks."
+    },
+    "add": {
+      "title": "Lisa {{name}}?",
+      "body": "See ilmub alla \"Sinu rakendused\" ja võib saadada sinule häälestusi. Saad seda igal ajal eemaldada Rakenduste leheküljest.",
+      "confirm": "Lisa rakendus"
     }
   },
   "aiStyles": {

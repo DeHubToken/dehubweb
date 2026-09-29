@@ -7677,7 +7677,8 @@
       "search": "Ieškoti programėlių",
       "all": "Visi",
       "fromDehub": "Iš DeHub",
-      "noMatch": "Nėra programėlių, atitinkančių šią paiešką."
+      "noMatch": "Nėra programėlių, atitinkančių šią paiešką.",
+      "yourApps": "Jūsų programos"
     },
     "dev": {
       "title": "Sukurkite mažą prietaisą",
@@ -7722,7 +7723,13 @@
       "stateUnlisted": "Tiesioginė nuoroda · peržiūrima parduotuvėje",
       "stateListed": "Parduotuvėje",
       "stateSuspended": "Sustabdyta",
-      "copyLink": "Kopijuoti nuorodą"
+      "copyLink": "Kopijuoti nuorodą",
+      "notifyKey": "Praneškite raktą",
+      "notifyKeyOnce": "Naujas pranešimo raktas {{name}}. Kopijuokite jį dabar: jis rodomas tik vieną kartą, o kitas pakeičia jį.",
+      "payTitle": "Įmokėti mokėjimus",
+      "payBody": "Mokėti() prašo naudotoją siųsti DHB tiesiog į portfelį, kuris parašė jūsų dehub.json. Patikrinkite kvitą savo serveryje prieš nusiųsdami bet kokį turinį.",
+      "notifyTitle": "Siųsti pranešimus",
+      "notifyBody": "Naudotojai, kurie prideda jūsų prietaisą, gali būti pranešami iš jūsų serverio naudojant jūsų pranešimo raktą. Nereikia saugoti individualių naudotojo tokenų."
     },
     "card": {
       "open": "Atidaryti"
@@ -7741,6 +7748,19 @@
       "developer-tools": "Kūrėjo įrankiai",
       "entertainment": "Pramogos",
       "art-creativity": "Menas ir kūrybiškumas"
+    },
+    "pay": {
+      "title": "Mokėti {{name}}?",
+      "body": "DHB tiesiog eina į aplikacijos portmonę, {{wallet}}. Mokėjimai negali būti atšaukti.",
+      "confirm": "Mokėkite {{amount}} DHB",
+      "sending": "Siunčiama mokėjimo informacija…",
+      "sent": "Mokėta {{amount}} DHB {{name}}.",
+      "noOwner": "Šiame prietaisyje dar nėra patvirtinto portmono, kuriuo galima apmokėti."
+    },
+    "add": {
+      "title": "Pridėkite {{name}}?",
+      "body": "Jis pasirodys po Jūsų programos ir gali siųsti pranešimus. Jį galite bet kada pašalinti iš Programos puslapio.",
+      "confirm": "Pridėkite prietelį"
     }
   },
   "aiStyles": {

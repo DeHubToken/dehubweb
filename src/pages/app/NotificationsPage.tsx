@@ -10,7 +10,8 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { AtSign, Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase, Award
+import { AtSign, Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase, Award,
+  Blocks,
 } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
@@ -355,6 +356,8 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'stage_live':
     case 'stage_reminder':
       return <Radio className="w-4 h-4 text-white/70" />;
+    case 'miniapp':
+      return <Blocks className="w-4 h-4 text-white/70" />;
     case 'tip':
       return <Gem className="w-4 h-4 text-white/70" />;
     case 'subscription':
@@ -787,6 +790,14 @@ function customReferenceId(notification: DeHubNotification): string | undefined 
 }
 
 function getNavigationLink(notification: DeHubNotification): string | null {
+  // A mini app's notification opens the app, at the page it named when it
+  // named one (miniapp-notify only accepts pages on the app's own domain).
+  if ((notification.type as string) === 'miniapp') {
+    const slug = customReferenceId(notification);
+    if (!slug) return '/apps';
+    const target = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
+    return `/apps/${slug}?from=notification${target ? `&url=${encodeURIComponent(target)}` : ''}`;
+  }
   if ((notification.type as string) === 'trench_price_alert') {
     const symbol=(notification as DeHubNotification & {_customReferenceTitle?:string})._customReferenceTitle || 'BTC';
     return `/arcade/trenchstar?symbol=${encodeURIComponent(symbol)}`;
