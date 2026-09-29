@@ -1,9 +1,9 @@
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
-import postsIcon from '@/assets/icons/community-posts-3d-icon.png';
-import chatIcon from '@/assets/icons/community-chat-3d-icon.png';
-import eventsIcon from '@/assets/icons/community-events-3d-icon.png';
-import membersIcon from '@/assets/icons/community-members-3d-icon.png';
-import aboutIcon from '@/assets/icons/community-about-3d-icon.png';
+import postsIcon from '@/assets/icons/community-posts-3d-icon.webp';
+import chatIcon from '@/assets/icons/community-chat-3d-icon.webp';
+import eventsIcon from '@/assets/icons/community-events-3d-icon.webp';
+import membersIcon from '@/assets/icons/community-members-3d-icon.webp';
+import aboutIcon from '@/assets/icons/community-about-3d-icon.webp';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 export type CommunityTab = 'posts' | 'chat' | 'events' | 'members' | 'about';

@@ -925,10 +925,22 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     });
   }, [scrollFeed.data, scrollPhotosFeed.data, shortsEnabled]);
 
-  // Fetch curated radio stations for carousel
+  // Fetch curated radio stations for carousel. The carousel sits several posts
+  // down, so nobody sees it before scrolling; fetching at mount put a
+  // third-party request (radio-browser.info) into every first load. Wait for
+  // the first scroll anywhere — capture, because an inner scroller's scroll
+  // event does not bubble.
+  const [radioWanted, setRadioWanted] = useState(() => typeof window !== 'undefined' && window.scrollY > 0);
+  useEffect(() => {
+    if (radioWanted) return;
+    const want = () => setRadioWanted(true);
+    document.addEventListener('scroll', want, { capture: true, passive: true, once: true });
+    return () => document.removeEventListener('scroll', want, { capture: true });
+  }, [radioWanted]);
   const { data: radioStations = [] } = useQuery({
     queryKey: ['radio-stations-curated'],
     queryFn: () => getCuratedCarouselStations(),
+    enabled: radioWanted,
     // A fixed list of stations; there is nothing to refresh within a visit.
     staleTime: 60 * 60 * 1000,
   });

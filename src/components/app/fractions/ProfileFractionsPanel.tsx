@@ -19,7 +19,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useFractionPortfolio, type PortfolioPosition } from '@/hooks/use-fraction-portfolio';
 import { TOTAL_FRACTIONS } from '@/hooks/use-fraction-marketplace';
 import { SellFractionsDrawer } from './SellFractionsDrawer';
-import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
+import fractions3dIcon from '@/assets/icons/fractions-3d-icon.webp';
 
 interface ProfileFractionsPanelProps {
   profileAddress: string | undefined;

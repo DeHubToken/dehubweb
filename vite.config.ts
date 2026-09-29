@@ -406,6 +406,12 @@ export default defineConfig(({ mode }) => ({
     target: ['es2020', 'safari14'],
     // Gzip-size reporting over this many chunks exhausted the build heap.
     reportCompressedSize: false,
+    // Several WebP icons in src/assets/icons are under the 4 KB default and
+    // would be inlined as data: URIs. BrandIcon and WarHudIcon pick the themed
+    // replacement by matching the file name in the URL, which a data: URI no
+    // longer carries, so keep them as files. Everything else keeps the default.
+    assetsInlineLimit: (filePath: string) =>
+      /[\\/]src[\\/]assets[\\/]icons[\\/][^\\/]+\.webp$/.test(filePath) ? false : undefined,
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {

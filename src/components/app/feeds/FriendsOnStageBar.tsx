@@ -17,7 +17,7 @@ import { useStage, useLiveSpaces } from '@/contexts/StageContext';
 import { getFollowList } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 
-import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
+import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 import type { AudioSpace, SpaceParticipant } from '@/types/audio-spaces.types';
 
 interface FriendOnStage {

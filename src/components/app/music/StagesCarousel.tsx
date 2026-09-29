@@ -30,7 +30,7 @@ import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 // Import the 3D mic icon
-import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
+import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 
 interface StagesCarouselProps {
   onOpenStages: () => void;
