@@ -3096,6 +3096,7 @@
     "buySymbol": "Buy {{symbol}}",
     "sellSymbol": "Sell {{symbol}}",
     "createSeoTitle": "Create coin — Launchpad",
+    "createSeoDescription": "Make coin for DeHub launchpad.",
     "createTitle": "Create a coin",
     "stepOf": "Step {{step}} of 3",
     "close": "Close",
@@ -3607,6 +3608,7 @@
     "sso": "SSO",
     "adminSpendControl": "Admin spend control",
     "priorityQueue": "Priority queue",
+    "indemnification": "Indemnification",
     "soc2": "SOC 2 security (coming soon)",
     "aiEducator": "AI Educator & Slack support"
   },
@@ -3695,10 +3697,13 @@
     "filterAll": "All",
     "filterFeatured": "Featured",
     "noSkillsMatch": "No skill fit.",
-    "noneYet": "No skills yet."
+    "noneYet": "No skills yet.",
+    "raw": "Raw"
   },
   "usernames": {
     "title": "Username dem",
+    "tabBrowse": "Browse",
+    "tabSell": "Sell",
     "searchPlaceholder": "Search a handle…",
     "filter": "Filter",
     "filterCount": "Filter ({{count}})",
@@ -4161,6 +4166,7 @@
     "optional": "Optional",
     "location": "Location",
     "description": "Description",
+    "descriptionPlaceholder": "Make una hear about this event...",
     "privateEvent": "Private event",
     "chargeEntryFee": "Charge entry fee",
     "amount": "Amount",
@@ -4334,8 +4340,16 @@
     "deliver": "Deliver",
     "deliverBody": "Nearby people dey share video clips while de normal send path still stay ready as automatic backup.",
     "nodesLeaveTitle": "A network dat expect node go leave.",
+    "fallbackFigureAria": "Content delivery fallback path",
+    "origin": "DeHub origin",
+    "availableReplicas": "Available replicas",
+    "offlineNode": "Offline node",
+    "viewer": "Viewer",
     "privacyTitle": "Hosts dey store data, no access.",
+    "protectedContent": "Protected content",
+    "publicContent": "Public content",
     "publicContentBody": "Encryption stop casual people see cache file, but public media still dey watchable through public DeHub player. We no go lie say different.",
+    "operatorControls": "Operator controls",
     "operatorControlsBody": "Operators dey choose disk limit, bandwidth limit, working hours, and na which public content categories dey fit. Removal notice dey trigger cache clear-up.",
     "verifiedWorkTitle": "Useful work dey confirm, reward still dey change-change.",
     "verifiedWorkBody": "Contribution dey measure through sign receipt, health check, and output validation. Store alone no dey create reward.",
@@ -4534,12 +4548,22 @@
     "sameLanguage": "Dis video don already dey your language."
   },
   "support": {
+    "title": "Support",
+    "newTicket": "New ticket",
     "newTicketHint": "Tell us what go down and what you expect to happen instead.",
     "backToTickets": "Back to tickets",
+    "openHeading": "Open ({{n}})",
+    "closedHeading": "Closed ({{n}})",
     "loadFailed": "Wetin go load nawn for you ticket. Try again, please.",
+    "categoryLabel": "Category",
+    "severityLabel": "Priority",
     "descriptionPlaceholder": "Wetin you dey do, weyin you expect go happen, and weyin go happen instead.",
     "contactEmailPlaceholder": "Wa use your account email if you no fill dis blank, oga!",
     "filingFailed": "Wah no go fit dat ticket. Try again, please.",
+    "status": {
+      "in_progress": "In progress",
+      "resolved": "Resolved"
+    },
     "severity": {
       "normal": "Normal",
       "high": "High",
@@ -6461,12 +6485,14 @@
       "open": "Open"
     },
     "category": {
+      "games": "Games",
       "social": "Social (e.g., *Facebook*, *Twitter*)",
       "finance": "Finance (e.g., *Revolut*, *PayPal*)",
       "utility": "Utility (e.g., *Google Drive*, *Dropbox*)",
       "productivity": "Productivity (e.g., *Notion*, *Trello*)",
       "health-fitness": "Health & Fitness (e.g., *Nike Training Club*, *MyFitnessPal*)",
       "news-media": "News & Media (e.g., *BBC*, *CNN*)",
+      "music": "Music",
       "shopping": "Shopping (e.g., *Jumia*, *Konga*)",
       "education": "Education (e.g., *Khan Academy*, *Coursera*)",
       "developer-tools": "Developer Tools (e.g., *VS Code*, *GitHub*)",

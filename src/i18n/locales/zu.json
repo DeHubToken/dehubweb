@@ -2752,6 +2752,7 @@
     "browseBounties": "Bhrawuza ubumnandi",
     "escrowTx": "I-Escrow tx",
     "notEscrowedOnChain": "Akuxhunywanga kuxhaxha",
+    "untitledBounty": "Isibusiso esingenasihloko",
     "payoutTx": "I-tx yokukhokhelwa",
     "acceptedNotSent": "Kwamukelwe — inkokhelo ayikathunyelwa okwamanje.",
     "jobNotFound": "UJobe akatholakalanga.",
@@ -3402,6 +3403,7 @@
     "couldNotStartCheckout": "Ayikwazanga ukuqala ukuphuma.",
     "cardNeedsSignIn": "Izidingo zokuphuma zekhadi ungene ngemvume ku-DeHub.",
     "yourDhbOnBase": "Amathokheni akho e-DeHub ku-Base",
+    "stillNeeded": "Kusadingeka",
     "close": "Vala",
     "buyingDhb": "Kuthengwa amathokheni…",
     "payFromWallet": "Khokha ngesikhwama sakho semali",
@@ -3475,6 +3477,7 @@
     "noCoins": "Azikho izinhlamvu zemali okwamanje.",
     "beTheFirst": "Yiba ngowokuqala.",
     "trending": "Okuthandwayo",
+    "trendingHint": "Ezingu-20 ezihamba phambili · Ivolumu nomsebenzi womphakathi",
     "liveActivity": "Okwenziwayo bukhoma",
     "noTrades": "Akukho ukuhweba okwamanje.",
     "bought": "ithengiwe",
@@ -3834,6 +3837,7 @@
     "clearLibraryConfirm_other": "Susa {{count}} izizukulwane eziqediwe emtatsheni wakho wezincwadi? Noma yini engathunyelwanga kumhleli noma idawunilodiwe ilahlekile.",
     "generationsRunning_one": "{{count}} isizukulwane esisebenzayo.",
     "generationsRunning_other": "{{count}} generations running.",
+    "generationsFinished_one": "Zonke izizukulwane ziqedile. {{count}} result ready.",
     "generationsFinished_other": "Zonke izizukulwane ziqedile. {{count}} results ready.",
     "nothingGeneratedYet": "Akukho okwenziwe okwamanje",
     "nothingGeneratedHint": "Khetha kusethiwe kusengaphambili, thayipha isihloko, bese uchofoza okuthi Generate. Imiphumela iqoqa lapha futhi uhlale ngokuchofoza okukodwa kusukela ohlelweni lwesikhathi.",
@@ -4292,7 +4296,8 @@
     "noneYet": "Awekho amakhono okwamanje.",
     "createTheFirst": "Sungula eyokuqala",
     "docsSeoTitle": "Iziqondiso Zekhono le-AI — DeHub",
-    "docsSeoDescription": "Imibhalo yereferensi yamakhono omsizi we-AI we-DeHub kanye nomtapo wezincwadi osheshayo."
+    "docsSeoDescription": "Imibhalo yereferensi yamakhono omsizi we-AI we-DeHub kanye nomtapo wezincwadi osheshayo.",
+    "raw": "Okungavuthiwe"
   },
   "usernames": {
     "seoTitle": "Indawo Yemakethe Yegama Lomsebenzisi | I-DeHub",
@@ -4485,6 +4490,7 @@
     "shareTitle": "@{{handle}} iyathengiswa ku-DeHub"
   },
   "stories": {
+    "create": "Yakha",
     "createDescription": "Khetha lokho ofuna ukukusungula: ukusakaza bukhoma, indaba, noma iphosti.",
     "goLive": "Iya Bukhoma",
     "goLiveDescription": "Khetha phakathi kokuqala ukusakaza bukhoma kwevidiyo noma inkundla yokulalelwayo.",
@@ -4936,6 +4942,7 @@
     "freeForTop7": "Mahhala emabangeni angu-7 ahamba phambili",
     "getExtra": "Thola Okwengeziwe",
     "familyTagline": "I-Premium yakho nabantu abangafika kwabangu-5 obakhethayo.",
+    "freeForTop4": "Mahhala emabangeni ama-4 ahamba phambili",
     "familyIncludes": "Konke ku-Extra, kwamagama abasebenzisi angaba ngu-5 @. Isihlalo ngasinye sithola amanani aso.",
     "getFamily": "Thola Umndeni",
     "xlTagline": "Zonke izinzuzo ku-asidi. Ema-studio, ama-DAO nabasebenzisi bamandla.",
