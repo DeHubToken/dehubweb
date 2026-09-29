@@ -1,5 +1,5 @@
 {
-  "revision": 7,
+  "revision": 8,
   "themes": [
     "system",
     "minimal",
@@ -10,7 +10,11 @@
     "swarms",
     "winter",
     "osaka",
-    "jungle"
+    "jungle",
+    "war",
+    "hacker",
+    "island",
+    "horror"
   ],
   "keys": [
     "accounts",
