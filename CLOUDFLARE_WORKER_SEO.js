@@ -305,10 +305,10 @@ const DOCS_PAGES = {
   // These ten are in sitemap-static.xml but had no entry here, so bots got the
   // raw SPA shell — the homepage title/description with no canonical. Ten of
   // the twenty-eight docs URLs we submit were presenting to Google as homepage
-  // duplicates, which is what poisoned the /docs cluster. No docs-content JSON
-  // exists for them yet (public/dehub-docs-content.txt is gone), so they fall
-  // back to the description-only body in buildDocsHtml — thin, but correctly
-  // titled, described and self-canonical, which a homepage clone never was.
+  // duplicates, which is what poisoned the /docs cluster. Every entry here now
+  // has a hand-kept public/docs-content JSON mirroring its React page; the
+  // description-only body in buildDocsHtml is only the fallback for a failed
+  // fetch. docs-content-coverage.test.ts fails if an entry lands without one.
   'token/utility': { title: 'DHB Token Utility & Holder Benefits — DeHub Docs', description: 'What holding $DHB unlocks: governance rights, staking rewards, moderation power and marketplace perks across DeHub.' },
   'token/where-to-buy': { title: 'Where to Buy DHB — DeHub Docs', description: 'Where to buy the $DHB token: Uniswap on Base, PancakeSwap on BNB Chain, listed CEX venues and direct in-app purchase.' },
   'token/governance': { title: 'DeHub Governance — Voting & Proposals', description: 'How DeHub governance works: proposals, burn-to-vote mechanics, whale prevention and how holders steer the platform.' },
