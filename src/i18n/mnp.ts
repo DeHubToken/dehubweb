@@ -708,6 +708,8 @@ export const mnp = {
     limitedSlots: '官方啟動時有限的夥伴名額開放喔！',
     dayCountOne: '{count} 元/天',
     vsLastWeek: '{delta} vs 上週',
+    reason_firstMoverDesc: '做啥啥第一家用區塊鏈驗證的觀眾定位的品牌',
+    reason_brandAssociationDesc: '跟著新潮的Web3科技創新，把你的品牌拉高',
   },
   docsSearch: {
     title: '搜尋文件',
