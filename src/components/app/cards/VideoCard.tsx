@@ -19,6 +19,8 @@ import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
 import { useBootSettled, useFirstInteraction } from '@/hooks/use-boot-settled';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
+import { isBrainrotSwipe, isTouchPrimary, openBrainrotFeed } from '@/lib/brainrot-feed';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
@@ -1133,7 +1135,32 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Shared with the shorts viewer — see hooks/use-video-fullscreen for the iOS
   // and WebView fallbacks, which fail silently rather than throwing.
-  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
+  // On touch screens the page's own fullscreen, not the system player, so a
+  // swipe up inside it can open the shorts feed (see handleTouchEnd). Anyone
+  // who switched Shorts off keeps the system player and never gets the feed.
+  const { shortsEnabled } = useShortsEnabled();
+  const swipeToShorts = shortsEnabled && isTouchPrimary();
+  const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef, {
+    escapeAncestors: true,
+    preferContainer: swipeToShorts,
+  });
+
+  // Fullscreen on a phone is one swipe from the shorts feed: warm it up now so
+  // that swipe lands on a playing clip rather than a spinner.
+  useEffect(() => {
+    if (!isFullscreen || !swipeToShorts) return;
+    import('@/components/app/BrainrotFeedHost')
+      .then(m => m.prefetchBrainrotFeed(queryClient))
+      .catch(() => {});
+  }, [isFullscreen, swipeToShorts, queryClient]);
+
+  /** Swiped up out of fullscreen: stop here and carry on in the shorts feed. */
+  const swipeIntoShorts = useCallback(() => {
+    pauseVideo();
+    videoPlaybackManager.stop(instanceId);
+    toggleFullscreen();
+    openBrainrotFeed(video.id);
+  }, [pauseVideo, instanceId, toggleFullscreen, video.id]);
 
   const handleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1520,6 +1547,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     // this the touchend that ends a scroll landed as a tap and toggled playback.
     const start = touchStartRef.current;
     touchStartRef.current = null;
+    // Fullscreen is its own screen, so "scrolling down" there means the next
+    // video — the same gesture as every short-video app.
+    if (start && isFullscreen && swipeToShorts && !isControlTarget(e.target)
+      && isBrainrotSwipe(start, { x: touch.clientX, y: touch.clientY })) {
+      e.preventDefault();
+      swipeIntoShorts();
+      return;
+    }
     if (start && Math.hypot(touch.clientX - start.x, touch.clientY - start.y) > TAP_SLOP_PX) {
       e.preventDefault(); // no compatibility click either
       return;
@@ -1545,7 +1580,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     // compatibility click so touch cannot run a second playback action.
     e.preventDefault();
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -1714,7 +1749,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         tabIndex={0}
         data-no-navigate
         data-media-full
-        className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden transition-all duration-300 ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
+        className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden transition-all duration-300 ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
         /* Fills the card width when the clip is wide enough; a portrait clip
            caps at MAX_MEDIA_HEIGHT tall and shrinks its own width instead, so
            it sits hugged to the left like a portrait photo does in the feed.
