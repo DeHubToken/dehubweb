@@ -24,7 +24,7 @@ import { corsHeaders } from "../_shared/cors.ts";
 
 const MULTICALL3 = "0xcA11bde05977b3631167028862bE2a173976CA11";
 const TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
-/** Skip when the last snapshot is this fresh: the page opens this endpoint too, and a burst must cost nothing. */
+/** Skip when the last snapshot is this fresh, so an overlapping cron run or a stray public call costs nothing. No client opens this endpoint; the pages call dex-position-scan. */
 const FRESH_SECONDS = 45;
 /** Discovered rows beyond this are the oldest and the least likely to still hold liquidity. */
 const MAX_DISCOVERED = 500;

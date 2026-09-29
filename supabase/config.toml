@@ -328,7 +328,82 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.passkey-auth]
     verify_jwt = false
-  [functions.winter-wonderland-draw]
+  # ── Previously unlisted ────────────────────────────────────────────────────
+  # These already run without the platform JWT check in production; listing
+  # them keeps a redeploy that honours this file from 401ing every caller.
+
+  # Public read-only proxy; keeps the Alchemy key server-side.
+  [functions.alchemy-tokens]
+    verify_jwt = false
+  # Cron sweep and viewer requests are open; the worker callback checks DUB_WORKER_SECRET.
+  [functions.auto-dub]
+    verify_jwt = false
+  # Public read-only CoinMarketCap proxy; the CMC key stays server-side.
+  [functions.cmc-market-cap]
+    verify_jwt = false
+  # Public read-only CoinMarketCap proxy; the CMC key stays server-side.
+  [functions.cmc-top-100]
+    verify_jwt = false
+  # Public, IP rate-limited.
+  [functions.conversation-coach]
+    verify_jwt = false
+  [functions.create-checkout]
+    verify_jwt = false
+  # Public proxy to the 1Click cross-chain API.
+  [functions.cross-chain-quote]
+    verify_jwt = false
+  # Daily pg_cron cleanup; the function does no caller auth.
+  [functions.editor-assets-cleanup]
+    verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
+  [functions.end-stream-session]
+    verify_jwt = false
+  # Public, IP rate-limited.
+  [functions.generate-lyrics]
+    verify_jwt = false
+  # Mock launchpad trade with no chain interaction; no caller auth.
+  [functions.launchpad-mock-trade]
+    verify_jwt = false
+  # Public MCP endpoint that forwards tool calls to dehub-mcp.
+  [functions.mcp]
+    verify_jwt = false
+  # Daily pg_cron migration; the function does no caller auth.
+  [functions.migrate-ai-images-to-storage]
+    verify_jwt = false
+  # Stripe webhook; auth is the stripe-signature header, verified in-function.
+  [functions.payments-webhook]
+    verify_jwt = false
+  # Public sitemap for crawlers.
+  [functions.sitemap-index]
+    verify_jwt = false
+  # Public sitemap for crawlers.
+  [functions.sitemap-posts]
+    verify_jwt = false
+  # Public sitemap for crawlers.
+  [functions.sitemap-profiles]
+    verify_jwt = false
+  # Public, IP rate-limited.
+  [functions.suggest-replies]
+    verify_jwt = false
+  # Public read; only a service-key caller may force a regenerate.
+  [functions.summarize-transcript]
+    verify_jwt = false
+  # Auth is the Telegram login payload's HMAC, verified in-function; IP-limited.
+  [functions.telegram-auth]
+    verify_jwt = false
+  # Public read-only market quotes.
+  [functions.top-assets]
+    verify_jwt = false
+  # Public start and status; only a service-key caller may force a re-run.
+  [functions.transcribe]
+    verify_jwt = false
+  # Reads are public; writes are verified by requireDeHubAuth.
+  [functions.transcript-corrections]
+    verify_jwt = false
+  [functions.translate-transcript]
+    verify_jwt = false
+  # Reads are public; writes are verified by requireDeHubAuth.
+  [functions.video-segments]
     verify_jwt = false
   # verify_jwt = false because the caller holds a DeHub *admin* bearer token,
   # not a Supabase JWT. The function validates it against api.dehub.io itself.

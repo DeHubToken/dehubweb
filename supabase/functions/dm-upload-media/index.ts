@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { requireDeHubAuth } from "../_shared/auth.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,34 +14,6 @@ function jsonResponse(data: Record<string, unknown>, status = 200): Response {
   });
 }
 
-/**
- * Validate a DeHub JWT by calling the account_info endpoint.
- */
-/**
- * Check a token really belongs to `address`.
- *
- * This used to probe `GET /account_info/{address}` and accept any 200. That
- * route is a public profile endpoint with no guard — 200 for any token, and
- * for no token at all — so the check passed for everyone and any caller could
- * act as any address they knew. `/auth/verify` is guarded and answers with the
- * address the token actually belongs to, so the claim can be compared against
- * something the caller does not control.
- */
-async function validateDeHubToken(token: string, address: string): Promise<boolean> {
-  try {
-    const res = await fetch("https://api.dehub.io/api/auth/verify", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) return false;
-    const data = await res.json();
-    return typeof data?.address === "string"
-      && data.address.toLowerCase() === address.toLowerCase();
-  } catch {
-    // Fail closed: an unreachable auth service must not authenticate anyone.
-    return false;
-  }
-}
-
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -50,28 +23,17 @@ Deno.serve(async (req) => {
     return jsonResponse({ ok: false, error: 'Method not allowed' }, 405);
   }
 
+  // The upload path is keyed on the wallet the token belongs to, never on the
+  // x-wallet-address header; a header that disagrees with the token is refused.
+  const auth = await requireDeHubAuth(req);
+  if (!auth.ok) return auth.response;
+  const walletAddress = auth.wallet;
+
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-  const walletAddress = req.headers.get('x-wallet-address')?.toLowerCase() || '';
-  const dehubToken = req.headers.get('x-dehub-token') || '';
-
-  if (!walletAddress) {
-    return jsonResponse({ ok: false, error: 'x-wallet-address header is required' }, 401);
-  }
-
-  if (!dehubToken) {
-    return jsonResponse({ ok: false, error: 'x-dehub-token header is required' }, 401);
-  }
-
   try {
-    // Validate DeHub JWT
-    const isValid = await validateDeHubToken(dehubToken, walletAddress);
-    if (!isValid) {
-      return jsonResponse({ ok: false, error: 'Invalid or expired DeHub token' }, 401);
-    }
-
     // Parse multipart form data
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
