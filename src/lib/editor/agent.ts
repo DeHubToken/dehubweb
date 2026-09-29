@@ -13,8 +13,9 @@ import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
 import type { AspectPreset, BlendMode, Clip, ClipAnimationKind, ClipEffects, MediaClip, ShapeClip, ShapeKind, TextClip } from "./types";
 import { BLEND_MODES, SHAPE_KINDS, aspectToDims } from "./types";
-import { clipBox, getTransform, placementPatch } from "./render";
+import { clipBox, getTransform, placementPatchAt } from "./render";
 import { applyFilterPreset } from "./filterPresets";
+import { cleanKeys, keyframeProps } from "./keyframes";
 import { GOOGLE_FONTS, fontFamilyCss, loadGoogleFont } from "./googleFonts";
 import { downloadFreeAsset, provenanceForAsset, searchFreeAssets, type FreeAssetOrientation } from "./freeAssets";
 import { importOneFile } from "./importFiles";
@@ -105,6 +106,7 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
   if (c.hidden) base.hiddenLayer = true;
   if (c.animateIn) base.in = c.animateIn.kind;
   if (c.animateOut) base.out = c.animateOut.kind;
+  if (c.keyframes) base.keys = c.keyframes;
   if (c.kind === "text") {
     return {
       ...base,
@@ -337,7 +339,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       const v = bool(op[k]);
       if (v !== undefined) patch[k] = v;
     }
-    const out: Record<string, unknown> = Object.keys(patch).length ? { ...placementPatch(clip, patch) } : {};
+    const out: Record<string, unknown> = Object.keys(patch).length ? { ...placementPatchAt(clip, patch, store().currentTime) } : {};
     if ((op.fit === "cover" || op.fit === "contain") && (clip.kind === "image" || clip.kind === "video")) out.fit = op.fit;
     if (Object.keys(out).length) store().patchClip(clip.id, out);
   };
@@ -456,6 +458,29 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         if (a !== undefined) patch.animateIn = a ?? undefined;
         if (b !== undefined) patch.animateOut = b ?? undefined;
         s.patchClip(clip.id, patch);
+        return true;
+      }
+      case "keyframes": {
+        const clip = find(op.id);
+        if (!clip || clip.kind === "audio") return false;
+        const next = { ...(clip.keyframes ?? {}) };
+        let touched = false;
+        for (const p of keyframeProps(clip)) {
+          const raw = op[p];
+          if (raw === undefined) continue;
+          touched = true;
+          if (raw === "none" || (Array.isArray(raw) && !raw.length)) {
+            delete next[p];
+            continue;
+          }
+          const lim = p === "x" || p === "y" ? [-0.5, 1.5] : p === "scale" ? [0.02, 20] : p === "opacity" ? [0, 1] : [-3600, 3600];
+          const keys = cleanKeys(raw, (v) => clamp(v, lim[0], lim[1]))
+            .map((k) => ({ ...k, t: Math.min(k.t, clip.duration) }));
+          if (keys.length) next[p] = keys;
+          else delete next[p];
+        }
+        if (!touched) return false;
+        s.patchClip(clip.id, { keyframes: Object.keys(next).length ? next : undefined });
         return true;
       }
       case "timing": {
