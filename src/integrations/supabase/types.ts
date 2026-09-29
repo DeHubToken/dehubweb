@@ -3916,6 +3916,24 @@ export type Database = {
         }
         Relationships: []
       }
+      miniapp_config: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       miniapp_installs: {
         Row: {
           app_id: string
@@ -3974,6 +3992,32 @@ export type Database = {
           },
         ]
       }
+      miniapp_opens: {
+        Row: {
+          app_id: string
+          day: string
+          wallet: string
+        }
+        Insert: {
+          app_id: string
+          day?: string
+          wallet: string
+        }
+        Update: {
+          app_id?: string
+          day?: string
+          wallet?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "miniapp_opens_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "miniapp_apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       miniapp_payments: {
         Row: {
           amount_dhb: number
@@ -4014,6 +4058,88 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "miniapp_payments_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "miniapp_apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      miniapp_rewards: {
+        Row: {
+          amount_dhb: number
+          app_id: string
+          computed_at: string
+          owner_wallet: string
+          paid_at: string | null
+          paid_tx: string | null
+          share: number
+          week_start: string
+          weight: number
+        }
+        Insert: {
+          amount_dhb: number
+          app_id: string
+          computed_at?: string
+          owner_wallet: string
+          paid_at?: string | null
+          paid_tx?: string | null
+          share: number
+          week_start: string
+          weight: number
+        }
+        Update: {
+          amount_dhb?: number
+          app_id?: string
+          computed_at?: string
+          owner_wallet?: string
+          paid_at?: string | null
+          paid_tx?: string | null
+          share?: number
+          week_start?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "miniapp_rewards_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "miniapp_apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      miniapp_scores: {
+        Row: {
+          app_id: string
+          day: string
+          is_new: boolean
+          rank: number | null
+          returning_users: number
+          score: number
+          weekly_users: number
+        }
+        Insert: {
+          app_id: string
+          day: string
+          is_new?: boolean
+          rank?: number | null
+          returning_users?: number
+          score?: number
+          weekly_users?: number
+        }
+        Update: {
+          app_id?: string
+          day?: string
+          is_new?: boolean
+          rank?: number | null
+          returning_users?: number
+          score?: number
+          weekly_users?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "miniapp_scores_app_id_fkey"
             columns: ["app_id"]
             isOneToOne: false
             referencedRelation: "miniapp_apps"
@@ -7683,6 +7809,11 @@ export type Database = {
           total: number
         }[]
       }
+      miniapp_compute_rewards: {
+        Args: { p_week_start?: string }
+        Returns: number
+      }
+      miniapp_compute_scores: { Args: { p_day?: string }; Returns: number }
       pg_relpages:
         | {
             Args: { relname: unknown }
