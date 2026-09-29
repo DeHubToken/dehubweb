@@ -402,13 +402,70 @@ function addsEmoji(candidate, source) {
   return (candidate.match(EMOJI) ?? []).some((e) => !had.has(e));
 }
 
+/**
+ * The free model tiers sometimes lose their place in a smaller locale and
+ * repeat one phrase until they run out of tokens — jv's dapp intro shipped as
+ * "ngagumi aja" twenty-odd times over, and none of the guards above look at
+ * repetition. Judged against the English, never alone: a source that repeats
+ * on purpose ("every member, every message, every event and every invite") is
+ * allowed a translation that repeats with it. A line is dropped when a word of
+ * 4+ letters appears 4+ times in 8 tokens and the English has nothing like it,
+ * or when it runs to more than three times the English's length.
+ *
+ * The same rule as looksLikeLoop in supabase/functions/translate-text; keep
+ * the two in step.
+ */
+const REPEAT_WINDOW = 8;
+const REPEAT_MIN_LETTERS = 4;
+/** Scripts with no spaces between words, where a token count says nothing about length. */
+const UNSPACED_SCRIPT =
+  /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}\p{Script=Tibetan}]/u;
+const repetitionTokens = (text) => text.toLowerCase().match(/[\p{L}\p{M}\p{N}]+/gu) ?? [];
+const letterCount = (token) => (token.match(/\p{L}/gu) ?? []).length;
+
+function maxRepeat(tokens) {
+  const counts = new Map();
+  let max = 0;
+  for (let i = 0; i < tokens.length; i++) {
+    if (i >= REPEAT_WINDOW) {
+      const leaving = tokens[i - REPEAT_WINDOW];
+      if (letterCount(leaving) >= REPEAT_MIN_LETTERS) counts.set(leaving, (counts.get(leaving) ?? 1) - 1);
+    }
+    const token = tokens[i];
+    if (letterCount(token) < REPEAT_MIN_LETTERS) continue;
+    const n = (counts.get(token) ?? 0) + 1;
+    counts.set(token, n);
+    if (n > max) max = n;
+  }
+  return max;
+}
+
+function longestRun(tokens) {
+  let longest = 0;
+  let run = 0;
+  for (let i = 0; i < tokens.length; i++) {
+    run = i > 0 && tokens[i] === tokens[i - 1] ? run + 1 : 1;
+    if (run > longest) longest = run;
+  }
+  return longest;
+}
+
+function looksLikeLoop(source, candidate) {
+  const src = repetitionTokens(source);
+  const out = repetitionTokens(candidate);
+  if (maxRepeat(out) >= 4 && Math.max(maxRepeat(src), longestRun(src)) < 3) return true;
+  if (UNSPACED_SCRIPT.test(source) || UNSPACED_SCRIPT.test(candidate)) return false;
+  return src.length >= 5 && out.length > src.length * 3;
+}
+
 /* ---------- network ---------- */
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function translateBatch(lines, targetLang, key) {
   // The app's own copy is public, so free tiers that train on input may take it.
-  const body = JSON.stringify({ text: lines.join('\n'), targetLang, sourceLang: 'en', public: true });
+  // purpose keeps this traffic out of the translation cache's read counters.
+  const body = JSON.stringify({ text: lines.join('\n'), targetLang, sourceLang: 'en', public: true, purpose: 'i18n' });
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
       const res = await fetch(FN_URL, {
@@ -572,6 +629,7 @@ for (const locale of targets) {
       if (
         candidate == null ||
         addsEmoji(candidate, sources[j]) ||
+        looksLikeLoop(sources[j], candidate) ||
         looksUnfinished(candidate, sources[j]) ||
         isUntranslatedProse(sources[j], candidate, locale) ||
         !placeholdersMatch(sources[j], candidate) ||
