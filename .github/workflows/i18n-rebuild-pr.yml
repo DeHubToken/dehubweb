@@ -1,0 +1,64 @@
+name: i18n rebuild PR
+
+# Rebuilds a translation-fill PR (from i18n-fanout.yml or docs-i18n-fill.yml)
+# onto current main and force-pushes it back to the PR branch.
+#
+# Fill runs take hours and main moves underneath them, so their PRs conflict on
+# locale files other changes touched. scripts/i18n-rebuild-pr.mjs resolves that
+# key by key instead of by git hunks. Pushes made with GITHUB_TOKEN do not start
+# CI, so push an empty commit to the branch afterwards (or re-run CI by hand)
+# before merging.
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'PR branch, e.g. i18n-fanout-27 or docs-i18n-fill-14'
+        required: true
+      kind:
+        description: 'app (src/i18n/locales/*.json) or docs (src/i18n/*.ts)'
+        required: true
+        default: 'app'
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Rebuild onto main
+        run: |
+          git fetch origin "${{ inputs.branch }}"
+          node scripts/i18n-rebuild-pr.mjs --branch "${{ inputs.branch }}" --kind "${{ inputs.kind }}"
+
+      - name: Regenerate derived files
+        if: inputs.kind == 'app'
+        run: |
+          node scripts/i18n-fanout.mjs --emit-fallback-list
+          node scripts/build-seo-i18n.mjs
+
+      - name: Check
+        run: |
+          if [ "${{ inputs.kind }}" = app ]; then
+            node scripts/i18n-coverage.mjs --floor
+            node scripts/i18n-script-check.mjs
+          else
+            node scripts/docs-i18n-fill.mjs --check | tail -1
+          fi
+
+      - name: Push to the PR branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/i18n public/seo-i18n.json
+          git commit -m "Rebuild ${{ inputs.branch }} onto current main"
+          git push --force origin "HEAD:${{ inputs.branch }}"
