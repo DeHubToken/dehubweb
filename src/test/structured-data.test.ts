@@ -162,11 +162,11 @@ describe('edge-rendered pages', () => {
 
   it('gives a standalone guide an image, an author and a trail', async () => {
     network({});
-    const { body } = await crawl('/guides/best-decentralized-social-media');
+    const { body } = await crawl('/guides/best-decentralized-streaming-apps');
     const article = jsonLd(body).find((b) => b['@type'] === 'Article')!;
-    expect(article.image).toBe('https://dehub.io/og/guides-best-decentralized-social-media.jpg');
+    expect(article.image).toBe('https://dehub.io/og/guides-best-decentralized-streaming-apps.jpg');
     expect(article.author).toMatchObject({ '@type': 'Organization' });
-    expectValidTrail(body, 'https://dehub.io/guides/best-decentralized-social-media');
+    expectValidTrail(body, 'https://dehub.io/guides/best-decentralized-streaming-apps');
   });
 
   it('bylines blog posts to the organisation and serves the card as a transformed JPEG', async () => {
