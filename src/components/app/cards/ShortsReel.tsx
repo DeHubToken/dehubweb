@@ -61,10 +61,9 @@ function ShortAvatar({ avatar, username }: { avatar?: string; username?: string 
 
 interface ShortsReelProps {
   shorts: ShortVideo[];
-  title?: string;
 }
 
-export function ShortsReel({ shorts, title }: ShortsReelProps) {
+export function ShortsReel({ shorts }: ShortsReelProps) {
   const { t } = useTranslation();
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -95,7 +94,7 @@ export function ShortsReel({ shorts, title }: ShortsReelProps) {
         <div className="flex items-center justify-between mb-3 px-1">
           <h3 className="font-bold text-white flex items-center gap-2">
             <Play className="w-4 h-4 text-white" />
-            {title ?? t('feed.scroll')}
+            {t('feed.scroll')}
           </h3>
           <button className="text-zinc-400 text-sm hover:text-white flex items-center gap-1 transition-colors">
             {t('feed.seeAll')} <ChevronRight className="w-4 h-4" />
