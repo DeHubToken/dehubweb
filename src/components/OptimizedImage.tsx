@@ -10,6 +10,8 @@ interface OptimizedImageProps {
   sizes?: string;
   width?: number;
   height?: number;
+  /** 'high' for the page's LCP image, so it is not queued behind scripts and icons. */
+  fetchPriority?: 'high' | 'low' | 'auto';
 }
 
 export const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -21,6 +23,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   sizes,
   width,
   height,
+  fetchPriority,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(loading === 'eager');
@@ -81,6 +84,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           height={height}
           alt={alt}
           loading={loading}
+          fetchPriority={fetchPriority}
           onLoad={handleLoad}
           onError={handleError}
           decoding="async"

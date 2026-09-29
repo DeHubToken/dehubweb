@@ -39,7 +39,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { useStage, useStageVolumeLevel } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
+import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 import { StageSoundboard } from './StageSoundboard';
 import { StageRadioPanel } from './StageRadioPanel';
 import { StageRadioNowPlaying } from './StageRadioNowPlaying';

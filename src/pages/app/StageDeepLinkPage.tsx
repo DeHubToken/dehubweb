@@ -69,7 +69,7 @@ import {
   useStagePlayback,
 } from '@/lib/stage-playback';
 import { cn } from '@/lib/utils';
-import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
+import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
 import type { AudioSpace } from '@/types/audio-spaces.types';

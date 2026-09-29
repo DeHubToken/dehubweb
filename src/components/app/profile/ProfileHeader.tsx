@@ -35,7 +35,7 @@ import {
 } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { isBigBadgeUrl } from '@/lib/staking-badges';
-import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { buildAvatarCdnFallbackUrl, cdnImageSrcSet } from '@/lib/media-url';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { OnboardingCompleteChip } from '@/components/app/OnboardingCompleteChip';
@@ -181,10 +181,15 @@ export function ProfileHeader({
           className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
           onClick={() => setFullscreenImage(profile.coverUrl || getDefaultBanner(profile.walletAddress))}
         >
-          <img 
-            src={profile.coverUrl || getDefaultBanner(profile.walletAddress)} 
-            alt="Cover" 
+          {/* The cover is the profile's LCP element. It was always fetched at
+              1500 px wide; a phone renders it at ~375 CSS px. */}
+          <img
+            src={profile.coverUrl || getDefaultBanner(profile.walletAddress)}
+            srcSet={cdnImageSrcSet(profile.coverUrl, [480, 736, 1100, 1500])}
+            sizes="(min-width: 1024px) 700px, 100vw"
+            alt="Cover"
             className="w-full h-full object-cover"
+            fetchPriority="high"
           />
         </button>
       )}

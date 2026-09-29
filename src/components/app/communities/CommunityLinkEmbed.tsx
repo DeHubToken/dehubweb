@@ -10,6 +10,7 @@ import { Users } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useCommunity } from '@/hooks/use-communities';
 import { findDehubLinks, stripDehubLinks } from '@/lib/dehub-links';
+import { storageImage, deviceWidth } from '@/lib/media-url';
 
 // ── Legacy detection helpers ────────────────────────────────────────────────
 //
@@ -64,7 +65,7 @@ export function CommunityLinkEmbed({ slug, fallback = null }: CommunityLinkEmbed
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: `url(${community.banner_url})`,
+            backgroundImage: `url(${storageImage(community.banner_url, deviceWidth(360))})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             opacity: 0.42,
@@ -76,7 +77,7 @@ export function CommunityLinkEmbed({ slug, fallback = null }: CommunityLinkEmbed
       {/* Community avatar */}
       <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
         {community.avatar_url ? (
-          <img src={community.avatar_url} alt="" className="w-full h-full object-cover" />
+          <img src={storageImage(community.avatar_url, deviceWidth(48))} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
         ) : (
           <Users className="w-5 h-5 text-zinc-500" />
         )}

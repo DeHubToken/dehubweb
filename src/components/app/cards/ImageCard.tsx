@@ -53,7 +53,7 @@ const BoostModal = lazy(() =>
   import('../modals/BoostModal').then((m) => ({ default: m.BoostModal }))
 );
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
-import { QuotePostModal } from '../modals/QuotePostModal';
+import { QuotePostModalLazy } from '../modals/QuotePostModalLazy';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
@@ -1484,7 +1484,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       )}
 
       {/* Quote Post Modal */}
-      <QuotePostModal
+      <QuotePostModalLazy
         open={showQuoteModal}
         onOpenChange={setShowQuoteModal}
         quotedPost={postAsNFT as any}

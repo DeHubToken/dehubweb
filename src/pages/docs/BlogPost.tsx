@@ -160,6 +160,7 @@ const BlogPost = () => {
                   alt={post.bannerImageAlt}
                   className="w-full h-auto object-cover"
                   loading="eager"
+                  fetchPriority="high"
                 />
               </div>
               {bodyFailed ? (

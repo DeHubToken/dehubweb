@@ -52,9 +52,15 @@ import { PiPProvider } from '@/contexts/PiPContext';
 import { ChartPiPProvider } from '@/contexts/ChartPiPContext';
 import { FloatingPiPOverlay } from '@/components/app/tv/FloatingPiPOverlay';
 import { FloatingChartPiPOverlay } from '@/components/app/charts/FloatingChartPiPOverlay';
-import { UserFeedbackSurvey } from '@/components/app/UserFeedbackSurvey';
 import { NewMemberRegistrar } from '@/components/app/NewMemberRegistrar';
-import { ShippedFeatureNotificationModal } from '@/components/app/ShippedFeatureNotificationModal';
+// Lazy: both are self-timed prompts that open seconds after load at the
+// earliest, so they have no business in the entry chunk.
+const UserFeedbackSurvey = React.lazy(() =>
+  import('@/components/app/UserFeedbackSurvey').then(m => ({ default: m.UserFeedbackSurvey }))
+);
+const ShippedFeatureNotificationModal = React.lazy(() =>
+  import('@/components/app/ShippedFeatureNotificationModal').then(m => ({ default: m.ShippedFeatureNotificationModal }))
+);
 // Lazy: the post composer is heavy (media handling) and only needed when the
 // user opens it — kept out of the entry bundle, preloaded on idle below.
 const PostModal = React.lazy(() =>
@@ -62,7 +68,11 @@ const PostModal = React.lazy(() =>
 );
 // Direct import, not the radio barrel — the barrel would drag the whole radio
 // suite (fullscreen visualizer, station cards, …) into the always-mounted chunk.
-import { RadioMiniPlayer } from '@/components/app/radio/RadioMiniPlayer';
+// Lazy as well: it renders nothing until a station is playing, which takes a
+// tap, so there is no reason to parse it before first paint.
+const RadioMiniPlayer = React.lazy(() =>
+  import('@/components/app/radio/RadioMiniPlayer').then(m => ({ default: m.RadioMiniPlayer }))
+);
 import { StageMiniPlayer } from '@/components/app/spaces/StageMiniPlayer';
 import { StageRecordingMiniPlayer } from '@/components/app/stages/StageRecordingMiniPlayer';
 import { useAudioPostPoppedOut } from '@/lib/audio-post-popout';
@@ -492,7 +502,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           nav — one subscription for the whole app, applied in CSS. */}
       <StickyNavHideSync />
 
-      <RadioMiniPlayer />
+      <Suspense fallback={null}>
+        <RadioMiniPlayer />
+      </Suspense>
       <StageMiniPlayer />
       <StageRecordingMiniPlayer />
       {hasPoppedOutAudio && (
@@ -556,9 +568,13 @@ export function AppLayout({ children }: AppLayoutProps) {
                       </KidsModeGate>
                       <FloatingPiPOverlay />
                       <FloatingChartPiPOverlay />
-                      <UserFeedbackSurvey />
+                      <Suspense fallback={null}>
+                        <UserFeedbackSurvey />
+                      </Suspense>
                       <NewMemberRegistrar />
-                      <ShippedFeatureNotificationModal />
+                      <Suspense fallback={null}>
+                        <ShippedFeatureNotificationModal />
+                      </Suspense>
                      </OnboardingChecklistProvider>
                     </GlobalDropZoneProvider>
                   </CoinPlacementProvider>
