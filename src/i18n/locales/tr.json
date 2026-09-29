@@ -7587,7 +7587,11 @@
       "intro": "Herkes tarafından DeHub için oluşturulmuş mini uygulamalar. DeHub'da açılırlar, zaten oturum açmışsınızdır ve her uygulama gerçek web adresini gösterir.",
       "buildCta": "Bir uygulama oluşturun",
       "emptyTitle": "Henüz listelenen uygulama yok",
-      "emptyBody": "İlk uygulamalar inceleniyor. Bir tane inşa edersen burada olabilir."
+      "emptyBody": "İlk uygulamalar inceleniyor. Bir tane inşa edersen burada olabilir.",
+      "search": "Uygulama ara",
+      "all": "Tümü",
+      "fromDehub": "DeHub'dan",
+      "noMatch": "Bu aramayla eşleşen uygulama yok."
     },
     "dev": {
       "title": "Bir mini uygulama oluşturun",
@@ -7622,7 +7626,35 @@
       "verifyTitle": "Sunucunuzda DeHub ile oturum açın",
       "verifyBody": "auth.getToken() uygulamanıza DeHub tarafından imzalanmış bir token verir. Herhangi bir JWT kütüphanesiyle sunucunuzda kontrol edin. Kullanıcının cüzdan adresi altta.",
       "copy": "Kopyala",
-      "copied": "Kopyalandı"
+      "copied": "Kopyalandı",
+      "submitBody": "Manifestonuz geçer. Gönderin ve uygulamanız, İncelenmedi olarak işaretlenmiş bir DeHub bağlantısında hemen yayınlanmaya başlasın. Gözden geçirildikten sonra mağazada görünür.",
+      "submit": "DeHub'a gönder",
+      "submitSignIn": "Göndermek için DeHub'da oturum açın.",
+      "submitDone": "Gönderildi. Uygulamanız DeHub bağlantısında yayında.",
+      "submitUpdated": "Güncellendi. DeHub, manifestonuzun en son sürümüne sahiptir.",
+      "yourAppsTitle": "Uygulamalarınız",
+      "stateUnlisted": "Bağlantıya göre yaşa · mağaza için incelemede",
+      "stateListed": "Mağazada",
+      "stateSuspended": "Askıya alındı",
+      "copyLink": "Bağlantıyı kopyala"
+    },
+    "card": {
+      "open": "Açık"
+    },
+    "category": {
+      "games": "Oyunlar",
+      "social": "Sosyal",
+      "finance": "Finans",
+      "utility": "İşlevsellik",
+      "productivity": "Verimlilik",
+      "health-fitness": "Sağlık ve fitness",
+      "news-media": "Haberler ve medya",
+      "music": "Müzik",
+      "shopping": "Alışveriş",
+      "education": "Eğitim",
+      "developer-tools": "Geliştirici araçları",
+      "entertainment": "Eğlence",
+      "art-creativity": "Sanat ve yaratıcılık"
     }
   },
   "aiStyles": {

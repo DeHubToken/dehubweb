@@ -7428,7 +7428,11 @@
       "intro": "Hər kəs tərəfindən DeHub üçün hazırlanmış mini tətbiqlər. Onlar DeHub-un daxilində açılır, siz artıq daxil olmusunuz və hər bir tətbiqdə onun həqiqi veb ünvanı göstərilir.",
       "buildCta": "Tətbiq yaradın",
       "emptyTitle": "Hələ ki, heç bir tətbiq aktiv deyil",
-      "emptyBody": "İlk tətbiqlər nəzərdən keçirilir. Birini qurun və o, burada ola bilər."
+      "emptyBody": "İlk tətbiqlər nəzərdən keçirilir. Birini qurun və o, burada ola bilər.",
+      "search": "Araşdırma uygulamaları",
+      "all": "Hər şey",
+      "fromDehub": "DeHub-dən",
+      "noMatch": "Axtarışınızla uyğun gələn heç bir uygulamalar yoxdur."
     },
     "dev": {
       "title": "Kiçik tətbiq yaradın",
@@ -7463,7 +7467,35 @@
       "verifyTitle": "DeHub-a serverda giriş edin",
       "verifyBody": "auth.getToken() sizin təqviminizə DeHub tərəfindən imzalanmış bir token verir. Bu tokeni serverda hər hansı bir JWT kitabxanası ilə yoxlayın. Kullanıcının cib adresi sub-da yerləşir.",
       "copy": "Nüsxə",
-      "copied": "Nüsxə edilib"
+      "copied": "Nüsxə edilib",
+      "submitBody": "Manifestiniz qəbul edildi. Onu göndərin və uygulamanız DeHub linkində anında \"İnzibati Təhlükəsizlikdən Keçirilməmiş\" olaraq yaşayacaq və bu, məzmunun təhlükəsizlikdən keçiriləndən sonra mağazada görünəcək.",
+      "submit": "DeHub-a göndər",
+      "submitSignIn": "DeHub-a daxil olaraq göndərin.",
+      "submitDone": "Göndərildi. Uygulamanız DeHub linkində yaşayır.",
+      "submitUpdated": "Yeniləndi. DeHub, manifestinizin son versiyasını saxlayır.",
+      "yourAppsTitle": "Uygulamalarınız",
+      "stateUnlisted": "Linklə yaşayanlar · mağazada təhlükəsizlikdən keçirilənlər",
+      "stateListed": "Mağazada",
+      "stateSuspended": "Qoyulmuş",
+      "copyLink": "Linki kopyala"
+    },
+    "card": {
+      "open": "Aç"
+    },
+    "category": {
+      "games": "Oyunlar",
+      "social": "Sosial",
+      "finance": "Finans",
+      "utility": "İstifadə qabiliyyəti",
+      "productivity": "Verimlilik",
+      "health-fitness": "Səhət və fitnes",
+      "news-media": "Xəbərlər və media",
+      "music": "Musiqi",
+      "shopping": "Alış-veriş",
+      "education": "Təhsil",
+      "developer-tools": "Proqram təminatı alətləri",
+      "entertainment": "Məzmun",
+      "art-creativity": "Sənət və yaradıcılıq"
     }
   },
   "aiStyles": {

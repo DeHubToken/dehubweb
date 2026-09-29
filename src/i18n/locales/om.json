@@ -5432,7 +5432,7 @@
       "title": "{{name}} irratti galmaa&#39;aa?",
       "body": "Appiin kun teessoo boorsaa DeHub keessanii fi mallattoo seensaa kan appii kanaaf qofa hojjetu ni argata. Borsaa keessan, maallaqa keessan ykn herrega DeHub keessan hin argatu.",
       "cancel": "Amma miti",
-      "confirm": "🔒 **Qabdiin**"
+      "confirm": "Qabdiin"
     },
     "store": {
       "title": "Appilikeeshiniiwwan",
@@ -5441,7 +5441,11 @@
       "intro": "Mini apps nama kamiinuu DeHub&#39;f ijaarame. DeHub keessaa banamu, ati duraan galtee jirta, appiin hundi teessoo weeb isaa isa dhugaa agarsiisa.",
       "buildCta": "Appii ijaaraa",
       "emptyTitle": "Appilikeeshiniiwwan hanga ammaatti hin tarreeffamne",
-      "emptyBody": "Appilikeeshiniiwwan jalqabaa gamaaggama irra jiru. Tokko ijaaraa asitti ta&#39;uu danda&#39;a."
+      "emptyBody": "Appilikeeshiniiwwan jalqabaa gamaaggama irra jiru. Tokko ijaaraa asitti ta&#39;uu danda&#39;a.",
+      "search": "Appilikeeshiniiwwan barbaadi",
+      "all": "Hunda",
+      "fromDehub": "DeHub irraa",
+      "noMatch": "Appilikeeshiniin barbaacha sanaan walsimu hin jiru."
     },
     "dev": {
       "title": "Mini app ijaaraa",
@@ -5449,7 +5453,7 @@
       "seoDescription": "DeHub&#39;f appii xiqqaa ijaari: mallattoo iskiriiptii tokko, DeHub waliin galmaa&#39;i, gara nyaataatti qoodi. Manifest keessan ilaalaa app keessan host dhugaa keessatti dursitanii ilaalaa.",
       "intro": "Website kamiyyuu DeHub mini app kan script tag tokko qabu ta&#39;a. Manifest keessan ilaalaa, feed card keessan ilaalaa, app keessan osoo namni biraa hin argin DeHub keessa hojjedhaa. Farcaster mini apps akkuma jirutti hojjetu.",
       "backToStore": "Gara Apps tti deebi&#39;aa",
-      "checkTitle": "🔍 **Qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee** **qaballee**",
+      "checkTitle": "Qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee qaballee",
       "check": "Sakatta&#39;uu",
       "launch": "Jalqabsiisuu",
       "badUrl": "Teessoo https:// galchi, ykn http://localhost qorannoo naannoodhaaf.",
@@ -5476,34 +5480,36 @@
       "verifyTitle": "DeHub waliin galmaa&#39;i, sarvarii kee irratti",
       "verifyBody": "auth.getToken() appii kee mallattoo DeHub mallatteesse kenna. Mana kitaabaa JWT kamiyyuu waliin sarvarii keessan irratti ilaalaa. Teessoon boorsaa fayyadamaa sub keessa jira.",
       "copy": "Koppii godhaa",
-      "copied": "Koppii godhame"
+      "copied": "Koppii godhame",
+      "submitBody": "Manifest kee ni darba. Galchaa appiin keessan kallattiin link DeHub irratti live ta&#39;a, Unreviewed jedhamee mallatteeffama. Erga ilaalamee booda mana daldalaa keessatti mul&#39;ata.",
+      "submit": "DeHub tti galchaa",
+      "submitSignIn": "Galchuuf DeHub seena.",
+      "submitDone": "Kan dhiyaate. Appiin keessan live link isaa DeHub irratti argama.",
+      "submitUpdated": "Haaromfame. DeHub manifest keessanii isa haaraa qaba.",
+      "yourAppsTitle": "Appilikeeshiniiwwan keessan",
+      "stateUnlisted": "Live by link · in gamaaggama suuqichaaf",
+      "stateListed": "Suuqii keessatti",
+      "stateSuspended": "Rarraasuu",
+      "copyLink": "Link waraabuu"
+    },
+    "card": {
+      "open": "Banaa"
+    },
+    "category": {
+      "games": "Taphoota",
+      "social": "Kan hawaasaa",
+      "finance": "Maallaqa",
+      "utility": "Tajaajila",
+      "productivity": "Oomishtummaa",
+      "health-fitness": "Fayyaa fi dandeettii qaamaa",
+      "news-media": "Oduu & miidiyaa",
+      "music": "Muuziqaa",
+      "shopping": "Bittaa",
+      "education": "Barumsa",
+      "developer-tools": "Meeshaalee developer",
+      "entertainment": "Bohaaruu",
+      "art-creativity": "Aartii & kalaqa"
     }
-  },
-  "spaces": {
-    "title": "Bakkeewwan",
-    "live": "Kallattii",
-    "upcoming": "Dhufaa jiru",
-    "past": "Darbe",
-    "create": "Bakkee Uumi",
-    "join": "Makamsi",
-    "listeners": "Dhaggeeffattoota",
-    "speakers": "Dubbattoota",
-    "host": "Keessummeessaa",
-    "endSpace": "Bakkee Dhaabi",
-    "raiseHand": "Harka Ol Kaasi",
-    "lowerHand": "Harka Gadi Buusi",
-    "mute": "Callisuun",
-    "unmute": "Sagalee Bansi",
-    "leave": "Bakkee Gadi Dhiisi",
-    "noSpaces": "Ammallee bakkeewwan hin jiran",
-    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
-  },
-  "blog": {
-    "title": "Biloogii",
-    "readMore": "Dabalataa dubbisi",
-    "backToBlog": "Biloogiitti deebi'i",
-    "sharePost": "Barreeffama qoodi",
-    "relatedPosts": "Barreeffamoota Walqabatan"
   },
   "aiStyles": {
     "normal": "Idilee",
@@ -5535,5 +5541,31 @@
     "progressive": "Guddinaaf Hojjetaa",
     "nationalist": "Biyyaaf Qabdu",
     "communist": "Komunistii"
+  },
+  "spaces": {
+    "title": "Bakkeewwan",
+    "live": "Kallattii",
+    "upcoming": "Dhufaa jiru",
+    "past": "Darbe",
+    "create": "Bakkee Uumi",
+    "join": "Makamsi",
+    "listeners": "Dhaggeeffattoota",
+    "speakers": "Dubbattoota",
+    "host": "Keessummeessaa",
+    "endSpace": "Bakkee Dhaabi",
+    "raiseHand": "Harka Ol Kaasi",
+    "lowerHand": "Harka Gadi Buusi",
+    "mute": "Callisuun",
+    "unmute": "Sagalee Bansi",
+    "leave": "Bakkee Gadi Dhiisi",
+    "noSpaces": "Ammallee bakkeewwan hin jiran",
+    "loginDescription": "Bakkee sagalee uumuuf fi makamsuuf seeni."
+  },
+  "blog": {
+    "title": "Biloogii",
+    "readMore": "Dabalataa dubbisi",
+    "backToBlog": "Biloogiitti deebi'i",
+    "sharePost": "Barreeffama qoodi",
+    "relatedPosts": "Barreeffamoota Walqabatan"
   }
 }

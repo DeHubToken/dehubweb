@@ -7787,7 +7787,11 @@
       "intro": "Aplikasi mini yang dibina untuk DeHub oleh sesiapa sahaja. Ia dibuka di dalam DeHub, anda sudah log masuk, dan setiap aplikasi menunjukkan alamat web sebenar.",
       "buildCta": "Bina aplikasi",
       "emptyTitle": "Belum ada aplikasi yang disenaraikan",
-      "emptyBody": "Aplikasi pertama sedang disemak. Bina satu dan ia boleh berada di sini."
+      "emptyBody": "Aplikasi pertama sedang disemak. Bina satu dan ia boleh berada di sini.",
+      "search": "Aplikasi carian",
+      "all": "Semua",
+      "fromDehub": "Daripada DeHub",
+      "noMatch": "Tiada aplikasi yang sepadan dengan carian tersebut."
     },
     "dev": {
       "title": "Bina aplikasi mini",
@@ -7822,7 +7826,35 @@
       "verifyTitle": "Log masuk dengan DeHub, pada pelayan anda",
       "verifyBody": "auth.getToken() memberikan aplikasi anda token yang ditandatangani oleh DeHub. Semak pada pelayan anda dengan mana-mana pustaka JWT. Alamat dompet pengguna berada dalam sub.",
       "copy": "Salin",
-      "copied": "Disalin"
+      "copied": "Disalin",
+      "submitBody": "Andaman manifest anda diterima. Kirimkan dan aplikasi anda akan aktif secara langsung di pautan DeHub, ditandakan sebagai Tidak Diberi Ulasan. Ia akan muncul di kedai selepas diulas.",
+      "submit": "Hantar kepada DeHub",
+      "submitSignIn": "Log masuk ke DeHub untuk menghantar.",
+      "submitDone": "Dihantar. Aplikasi anda disiarkan secara langsung di pautan DeHubnya.",
+      "submitUpdated": "Dikemas kini. DeHub mempunyai versi terkini manifes anda.",
+      "yourAppsTitle": "Aplikasi anda",
+      "stateUnlisted": "Tinggal mengikut pautan · sedang disemak untuk restoran",
+      "stateListed": "Di kedai",
+      "stateSuspended": "Digantung",
+      "copyLink": "Salin pautan"
+    },
+    "card": {
+      "open": "Buka"
+    },
+    "category": {
+      "games": "Permainan",
+      "social": "Sosial",
+      "finance": "Kewangan",
+      "utility": "Utiliti",
+      "productivity": "Produktiviti",
+      "health-fitness": "Kesihatan & kecergasan",
+      "news-media": "Berita & media",
+      "music": "Muzik",
+      "shopping": "Membeli-belah",
+      "education": "Pendidikan",
+      "developer-tools": "Alat pembangun",
+      "entertainment": "Hiburan",
+      "art-creativity": "Seni & kreativiti"
     }
   },
   "aiStyles": {

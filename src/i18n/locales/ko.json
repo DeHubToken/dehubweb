@@ -7577,7 +7577,11 @@
       "intro": "누구나 만들 수 있는 DeHub용 미니 앱. DeHub 내부에서 열리고 이미 로그인되어 있으며 모든 앱에 실제 웹 주소가 표시됩니다.",
       "buildCta": "앱을 개발하세요.",
       "emptyTitle": "아직 등록된 앱이 없습니다",
-      "emptyBody": "첫 번째 앱을 검토 중입니다. 하나를 만들면 여기에 있을 수 있습니다."
+      "emptyBody": "첫 번째 앱을 검토 중입니다. 하나를 만들면 여기에 있을 수 있습니다.",
+      "search": "앱 검색",
+      "all": "전체",
+      "fromDehub": "DeHub에서",
+      "noMatch": "검색 조건에 일치하는 앱이 없습니다."
     },
     "dev": {
       "title": "미니 앱 만들기",
@@ -7612,7 +7616,35 @@
       "verifyTitle": "서버에서 DeHub로 로그인",
       "verifyBody": "auth.getToken () 은 DeHub가 서명한 토큰을 앱에 제공합니다. JWT 라이브러리로 서버에서 확인하십시오. 사용자의 지갑 주소가 SUB에 있습니다.",
       "copy": "복사",
-      "copied": "복사됨"
+      "copied": "복사됨",
+      "submitBody": "매니페스트가 통과되었습니다. 제출하시면 앱이 DeHub 링크 ('검토되지 않음' 으로 표시) 에 즉시 게시됩니다. 검토가 완료되면 상점에 표시됩니다.",
+      "submit": "DeHub에 제출",
+      "submitSignIn": "제출하려면 DeHub에 로그인하세요.",
+      "submitDone": "제출되었습니다. 앱이 DeHub 링크에 등록되어 있습니다.",
+      "submitUpdated": "업데이트되었습니다. DeHub에는 최신 버전의 매니페스트가 있습니다.",
+      "yourAppsTitle": "내 앱",
+      "stateUnlisted": "링크로 라이브 · 스토어 검토 중",
+      "stateListed": "매장 내",
+      "stateSuspended": "일시 중지됨",
+      "copyLink": "링크 복사"
+    },
+    "card": {
+      "open": "열기"
+    },
+    "category": {
+      "games": "게임",
+      "social": "소셜",
+      "finance": "재무",
+      "utility": "유틸리티",
+      "productivity": "생산성",
+      "health-fitness": "건강 및 피트니스",
+      "news-media": "뉴스 및 미디어",
+      "music": "음악",
+      "shopping": "쇼핑",
+      "education": "교육",
+      "developer-tools": "개발자 도구",
+      "entertainment": "엔터테인먼트",
+      "art-creativity": "예술과 창의성"
     }
   },
   "aiStyles": {

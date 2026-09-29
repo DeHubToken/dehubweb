@@ -5370,7 +5370,11 @@
       "intro": "DeHub uchun har qanday odam tomonidan qurilgan mini app'lardan. Ular DeHub ichida ochiladi, siz avvaldan kirish qilingan, va har bir appning haqiqiy web manzili ko'rsatiladi.",
       "buildCta": "App qur",
       "emptyTitle": "App'lardan yo'q",
-      "emptyBody": "App'lardan birinchi app'lardan tartibsiz. Birini qurib, u erda bo'lishi mumkin."
+      "emptyBody": "App'lardan birinchi app'lardan tartibsiz. Birini qurib, u erda bo'lishi mumkin.",
+      "search": "ئەپلەرنى ئىزدەش پروگراممىسى",
+      "all": "ھەممىسى",
+      "fromDehub": "DeHub دىن",
+      "noMatch": "بۇ ئىزدەشكە ماس كېلىدىغان ئەپلەر يوق."
     },
     "dev": {
       "title": "Mini app qur",
@@ -5405,7 +5409,34 @@
       "verifyTitle": "DeHub bilan serveringizda kirish",
       "verifyBody": "auth.getToken() sizning appingizga DeHub tomonidan imzolangan bir token beradi. Serveringizda ko'pchilik JWT kitobxonalaridan birini qo'llab, uni tekshiring. Foydalanuvchi waletingiz subda.",
       "copy": "Nashri qiling",
-      "copied": "Nashri qilingan"
+      "copied": "Nashri qilingan",
+      "submitBody": "سىزنىڭ كۆرسەتكۈچىڭىز ئۆتۈپ كېتىدۇ. ئۇنى تاپشۇرۇڭ، ئەپ بىۋاستە DeHub ئۇلانمىسىدا بىۋاستە كۆرۈنىدۇ، ئۇ بەلگىلەنمىگەن. ئۇ تەھلىل قىلىنغاندىن كېيىن دۇكاندا كۆرۈنىدۇ.",
+      "submit": "DeHub غا تاپشۇرۇش",
+      "submitSignIn": "(ئى مۇھەممەد!) سەن ئۇلارنىڭ اﷲ نىڭ قۇدرىتىنى كۆرۈپ تۇرۇپ، ئۆلگەندىن كېيىن تىرىلىشنى ئىنكار قىلغانلىقىدىن",
+      "submitDone": "يوللاندى. قوللىنىشچان پروگراممىڭىز ئۇنىڭ DeHub ئۇلانمىسىدا بىۋاستە كۆرۈنىدۇ.",
+      "submitUpdated": "يېڭىلىنىپ بولغان. DeHub دىتالىڭىزنىڭ ئەڭ يېڭى نەشىرى بار.",
+      "yourAppsTitle": "ئەپلىرىڭىز",
+      "stateUnlisted": "باغلىنىش ئارقىلىق ياشاش -- دۇكانغا قاراپ چىقىش",
+      "stateListed": "دۇكاندىكى",
+      "stateSuspended": "توختىتىلدى",
+      "copyLink": "ئۇلىنىشنى كۆچۈر"
+    },
+    "card": {
+      "open": "ئېچىش"
+    },
+    "category": {
+      "games": "ئويۇنلار",
+      "social": "ئىجتىمائىي",
+      "finance": "پۇل مۇئامىلە",
+      "productivity": "ھوسۇللۇق",
+      "health-fitness": "سالامەتلىك ۋە بەدەن چېنىقتۇرۇش",
+      "news-media": "خەۋەر ۋە ئاخبارات ۋاسىتىلىرى",
+      "music": "مۇزىكا",
+      "shopping": "سېتىۋېلىش",
+      "education": "مائارىپ",
+      "developer-tools": "دېتاللارنى ياساش پروگراممىسى",
+      "entertainment": "Ehtirof",
+      "art-creativity": "سەنئەت ۋە ئىجادىيەت"
     }
   },
   "aiStyles": {

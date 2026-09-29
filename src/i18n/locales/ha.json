@@ -5417,7 +5417,10 @@
       "intro": "Mini apps gina don DeHub da kowa. Suna buɗewa a ciki DeHub, kun riga kun sanya hannu a ciki, kuma kowane aikace-aikacen yana nuna ainihin adireshin yanar gizon sa.",
       "buildCta": "Gina wani app",
       "emptyTitle": "Babu apps da aka jera tukuna",
-      "emptyBody": "Aikace-aikacen farko suna cikin bita. Gina daya kuma zai iya zama a nan."
+      "emptyBody": "Aikace-aikacen farko suna cikin bita. Gina daya kuma zai iya zama a nan.",
+      "search": "Aikace-aikacen bincike",
+      "all": "Duka",
+      "noMatch": "Babu apps dace da cewa search."
     },
     "dev": {
       "title": "Gina mini app",
@@ -5451,7 +5454,33 @@
       "verifyTitle": "Shiga tare da DeHub, a kan uwar garken ku",
       "verifyBody": "auth.getToken() yana ba da aikace-aikacenku alamar da DeHub ya sanya hannu. Duba shi a kan uwar garkenka tare da kowane ɗakin karatu na JWT. Adireshin walat na mai amfani yana cikin sub.",
       "copy": "Juya",
-      "copied": "Kwafa"
+      "copied": "Kwafa",
+      "submitBody": "Your bayyanannu passes. Gabatar da shi da kuma your app tafi live a DeHub mahada nan da nan, alama Unreviewed. Ya bayyana a cikin shagon da zarar an sake duba shi.",
+      "submit": "Bayarwa zuwa DeHub",
+      "submitSignIn": "Shiga cikin DeHub don ƙaddamarwa.",
+      "submitDone": "An gabatar da shi. Aikace-aikacenku yana rayuwa a hanyar haɗin DeHub.",
+      "submitUpdated": "An sabunta. DeHub yana da sabon sigar bayyanarku.",
+      "yourAppsTitle": "Aikace-aikacen ku",
+      "stateUnlisted": "Live by link · a sake dubawa don shagon",
+      "stateListed": "A cikin shagon",
+      "stateSuspended": "Dakatarwa",
+      "copyLink": "Kwafi mahada"
+    },
+    "card": {
+      "open": "Bude"
+    },
+    "category": {
+      "games": "Wasanni",
+      "social": "Zamantakewa",
+      "productivity": "Yawan aiki",
+      "health-fitness": "Lafiya & dacewa",
+      "news-media": "Labarai & kafofin watsa labarai",
+      "music": "Waƙa",
+      "shopping": "Siyayya",
+      "education": "Ilimi",
+      "developer-tools": "Kayan aikin masu haɓakawa",
+      "entertainment": "Nishaɗi",
+      "art-creativity": "Art & kerawa"
     }
   },
   "aiStyles": {

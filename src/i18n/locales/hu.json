@@ -7470,7 +7470,11 @@
       "intro": "Bárki által a DeHub számára készített minialkalmazások. Megnyílnak a DeHubon belül, Ön már be van jelentkezve, és minden alkalmazás a valódi webcímét mutatja.",
       "buildCta": "Alkalmazás készítése",
       "emptyTitle": "Még nincsenek alkalmazások a listában",
-      "emptyBody": "Az első alkalmazások áttekintése folyamatban van. Építs egyet, és itt lehet."
+      "emptyBody": "Az első alkalmazások áttekintése folyamatban van. Építs egyet, és itt lehet.",
+      "search": "Keresőalkalmazások",
+      "all": "Minden",
+      "fromDehub": "DeHub-ból",
+      "noMatch": "Nincs olyan alkalmazás, amely megfelel a keresésnek."
     },
     "dev": {
       "title": "Minialkalmazás készítése",
@@ -7498,13 +7502,42 @@
       "signFailed": "Az aláírás nem fejeződött be.",
       "quickstartTitle": "Gyors kezdés",
       "quickstartBody": "Adja hozzá az SDK-t az oldalához, és hívja készenlétben(), amint megjelenik az első képernyő.",
+      "manifestTitle": "Manifest",
       "manifestBody": "Tálalja ezt a /.well known/dehub.json címen az alkalmazás domainjén. Már van farcaster.json fiókod? Ezt is olvastuk.",
       "embedTitle": "Takarmánykártya",
       "embedBody": "Add hozzá ezt a címkét bármelyik oldalhoz, és az oldalra mutató hivatkozás kártyaként jelenik meg, amelyen egy gomb megnyílik az alkalmazás.",
       "verifyTitle": "Jelentkezz be a DeHub használatával a szervereden",
       "verifyBody": "auth.getToken() egy DeHub által aláírt tokent ad az alkalmazásnak. Ellenőrizd a szervereden bármilyen JWT könyvtárban. A felhasználó pénztárcacíme az alkönyvtárban található.",
       "copy": "Másolás",
-      "copied": "Másoltam."
+      "copied": "Másoltam.",
+      "submitBody": "A manifestje elfogadott. Jelentesse, és az alkalmazás azonnal megjelenik a DeHub-ban, az Unreviewed címkével. A megjelenés után a store-ban megjelenik, miután áttekintették.",
+      "submit": "Jelentesse a DeHub-ba",
+      "submitSignIn": "Jelentkezzen be a DeHub-ba, hogy jelentesse.",
+      "submitDone": "Jelentesz. Az alkalmazás megjelenik a DeHub-ban.",
+      "submitUpdated": "Frissítve. A DeHub rendelkezik az alkalmazás legújabb manifestjével.",
+      "yourAppsTitle": "Alkalmazásai",
+      "stateUnlisted": "Aktuális hivatkozással · a store-ban várakozik",
+      "stateListed": "A store-ban",
+      "stateSuspended": "Felfüggesztve",
+      "copyLink": "Link másolása"
+    },
+    "card": {
+      "open": "Megnyitás"
+    },
+    "category": {
+      "games": "Játékok",
+      "social": "Társas",
+      "finance": "Pénzügy",
+      "utility": "Hasznos programok",
+      "productivity": "Termelékenység",
+      "health-fitness": "Egészség és fitnesz",
+      "news-media": "Hírek és média",
+      "music": "Zene",
+      "shopping": "Vásárlás",
+      "education": "Oktatás",
+      "developer-tools": "Fejlesztői eszközök",
+      "entertainment": "Szórakozás",
+      "art-creativity": "Művészet és kreativitás"
     }
   },
   "aiStyles": {

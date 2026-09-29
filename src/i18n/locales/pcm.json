@@ -4100,7 +4100,7 @@
       "close": "Close app",
       "backToStore": "Back to Apps",
       "notFound": "Dis app no dey in DeHub App Store, or dem remove it for now.",
-      "readyTimeout": "Dis app no call **\"dehub.ready()\"** for wey, for dat reason, splash screen go hide after 8 seconds."
+      "readyTimeout": "Dis app no call \"dehub.ready()\" for wey, for dat reason, splash screen go hide after 8 seconds."
     },
     "signIn": {
       "title": "Sign in to {{name}}?",
@@ -4112,29 +4112,57 @@
       "seoDescription": "Mini apps wey anybody build for DeHub: games, tools, and more wey open inside DeHub, na after you sign in, and you can share back to the feed.",
       "intro": "Mini apps wey people build for DeHub. Dem open inside DeHub, you no need to sign in again, and every app show its real website address.",
       "buildCta": "Build an app",
-      "emptyTitle": "No app wey fit for display yet 😕",
-      "emptyBody": "🚀 **First apps dey for review now.** Build one, maybe you get one here soon. 💻🔥"
+      "emptyTitle": "No app wey fit for display yet",
+      "emptyBody": "First apps dey for review now. Build one, maybe you get one here soon.",
+      "search": "Search apps",
+      "all": "All",
+      "fromDehub": "From DeHub",
+      "noMatch": "No app fit dem search."
     },
     "dev": {
       "backToStore": "Back to Apps",
       "check": "Check",
       "launch": "Launch",
-      "badUrl": "Enter **http://localhost** or any **https://** link for local test.",
+      "badUrl": "Enter http://localhost or any https:// link for local test.",
       "localNote": "\"Local address no dey check from our server, but you go try dem here for test.\"",
-      "checkFailed": "**Na dey no go run check dis time. Try again.** 😕",
+      "checkFailed": "Na dey no go run check dis time. Try again.",
       "passed": "Manifest looks good",
       "failed_one": "{{count}} problem wey need fix",
       "failed_other": "{{count}} problems wey need fix",
-      "cardPreview": "How your link dey look like inside de feed 👀",
+      "cardPreview": "How your link dey look like inside de feed",
       "open": "Open",
       "ownershipBody": "Sign wan once wey you dey use DeHub wallet, chop wey result for you dehub.json. Na for dis wey app go link for your account, so payout and review go reach you.",
-      "signNeedsUrl": "Enter your app's **weblink** or **URL** like dis above 👆",
+      "signNeedsUrl": "Enter your app's weblink or URL like dis above",
       "signFailed": "\"Signing no complete yet.\"",
       "quickstartTitle": "Quick start",
       "manifestTitle": "Manifest",
       "embedTitle": "Feed card",
       "copy": "Copy",
-      "copied": "Copied"
+      "copied": "Copied",
+      "submitBody": "Youse manifest pass. Submit it, and youse app go live on DeHub link right away, mark as \"No Review\". It show up in store only after dey review it.",
+      "submit": "Submit to DeHub",
+      "yourAppsTitle": "Your apps",
+      "stateListed": "In the store",
+      "stateSuspended": "Suspended",
+      "copyLink": "Copy link"
+    },
+    "card": {
+      "open": "Open"
+    },
+    "category": {
+      "games": "Game (e.g., *Candy Crush*, *PUBG*)",
+      "social": "Social (e.g., *Facebook*, *Twitter*)",
+      "finance": "Finance (e.g., *Revolut*, *PayPal*)",
+      "utility": "Utility (e.g., *Google Drive*, *Dropbox*)",
+      "productivity": "Productivity (e.g., *Notion*, *Trello*)",
+      "health-fitness": "Health & Fitness (e.g., *Nike Training Club*, *MyFitnessPal*)",
+      "news-media": "News & Media (e.g., *BBC*, *CNN*)",
+      "music": "Music (e.g., *Spotify*, *SoundCloud*)",
+      "shopping": "Shopping (e.g., *Jumia*, *Konga*)",
+      "education": "Education (e.g., *Khan Academy*, *Coursera*)",
+      "developer-tools": "Developer Tools (e.g., *VS Code*, *GitHub*)",
+      "entertainment": "Entertainment (e.g., *Netflix*, *YouTube*)",
+      "art-creativity": "Art & Creativity (e.g., *Canva*, *Procreate*)"
     }
   },
   "aiStyles": {

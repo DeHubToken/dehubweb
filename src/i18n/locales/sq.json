@@ -5421,11 +5421,11 @@
       "close": "Mbyll aplikacion",
       "backToStore": "Kthehu tek Aplikacionet",
       "notFound": "Ky aplikacion nuk është në DeHub App Store, ose është fshirë.",
-      "badUrl": "Ky adresë nuk mund të hapet si një mini-aplikacion. Ai duhet të fillojë me **https://**, ose të jetë një adresë localhost në modin e zhvillimit.",
-      "readyTimeout": "Ky aplikacion nuk ka thirrur **dehub.ready()**, për këtë arsye ekrani i fillimit u fshi pas 8 sekondave."
+      "badUrl": "Ky adresë nuk mund të hapet si një mini-aplikacion. Ai duhet të fillojë me https://, ose të jetë një adresë localhost në modin e zhvillimit.",
+      "readyTimeout": "Ky aplikacion nuk ka thirrur dehub.ready(), për këtë arsye ekrani i fillimit u fshi pas 8 sekondave."
     },
     "signIn": {
-      "title": "Regjistrohu në **{{name}}**?",
+      "title": "Regjistrohu në {{name}}?",
       "body": "Ky aplikacion do të marrë adresën e portofolit të DeHub-të dhe një token për hyrje që vepron vetëm për këtë aplikacion. Ai nuk do të marrë akses në portofolin tuaj, fondet tuaja ose kontot tuaj në DeHub.",
       "cancel": "Jo tani",
       "confirm": "Regjistrohu"
@@ -5437,7 +5437,11 @@
       "intro": "Mini-aplikacionet ndërtuar për DeHub nga çdo person. Ata hapen brenda DeHub-it, ju jeni të regjistruar me sukses, dhe çdo aplikacion shfaq adresën e tij të vërtetë të web-it.",
       "buildCta": "Bëj një aplikacion",
       "emptyTitle": "Nuk janë listuar aplikacionet ende",
-      "emptyBody": "Aplikacionet e para janë në procesin e revizimit. Bëj një tjetër dhe ai mund të përfshijë këtu."
+      "emptyBody": "Aplikacionet e para janë në procesin e revizimit. Bëj një tjetër dhe ai mund të përfshijë këtu.",
+      "search": "Kërko appje",
+      "all": "Të gjitha",
+      "fromDehub": "Nën DeHub",
+      "noMatch": "Asnjë app nuk përputhet me kërkimin tuaj."
     },
     "dev": {
       "title": "Bëj një mini-aplikacion",
@@ -5447,7 +5451,7 @@
       "backToStore": "Kontrolloj dhe hapi",
       "checkTitle": "Kontrolloj",
       "check": "Hapi",
-      "launch": "Shkruaj një adresë **https://**, ose **http://localhost** për testimin lokal.",
+      "launch": "Shkruaj një adresë https://, ose http://localhost për testimin lokal.",
       "badUrl": "Adresat lokale nuk mund të kontrollohen nga shërbimet tonë, por mund të hapet këtu për testim.",
       "localNote": "Kontrolli nuk mund të ekzekutohej. Provoni përsëri.",
       "checkFailed": "Çeku nuk mund të funksiononte. Provo përsëri.",
@@ -5472,7 +5476,35 @@
       "verifyTitle": "Hyr me DeHub, në serverin tënd",
       "verifyBody": "auth.getToken() i jep aplikacionit tuaj një shenjë të nënshkruar nga DeHub. Kontrolloje në serverin tënd me ndonjë bibliotekë JWT. Adresa e portofolit të përdoruesit është në nën.",
       "copy": "Kopjo",
-      "copied": "Kopjuar"
+      "copied": "Kopjuar",
+      "submitBody": "Manifesti juaj është i përputhshëm. Shënojeni atë dhe appi juaj do të bëhet live në një link të DeHub-it në të njëjtën kohë, i etiketuar si \"Unreviewed\". Ai do të shfaqet në dyqan pasi është i revizuar.",
+      "submit": "Përfshirë në DeHub",
+      "submitSignIn": "Logohuni në DeHub për të përfshirë.",
+      "submitDone": "Përfshirë. Appi juaj është live në linkun e DeHub-it të tij.",
+      "submitUpdated": "Përfshirë. DeHub ka versionin më të fundit të manifestit tuaj.",
+      "yourAppsTitle": "Appet tuaja",
+      "stateUnlisted": "Live në link · në revizion për dyqan",
+      "stateListed": "Në dyqan",
+      "stateSuspended": "Suspenduar",
+      "copyLink": "Kopjo link"
+    },
+    "card": {
+      "open": "Hap"
+    },
+    "category": {
+      "games": "Lojëra",
+      "social": "Social",
+      "finance": "Financë",
+      "utility": "Utilitet",
+      "productivity": "Përparim",
+      "health-fitness": "Shëndet dhe fitness",
+      "news-media": "Aktualitet dhe media",
+      "music": "Muzikë",
+      "shopping": "Shitje",
+      "education": "Arsim",
+      "developer-tools": "Ereza për zhvilluesit",
+      "entertainment": "Zhvillim i trimit",
+      "art-creativity": "Art dhe kreativitet"
     }
   },
   "aiStyles": {

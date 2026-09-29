@@ -7587,7 +7587,11 @@
       "intro": "Mini aplikasi yang dibangun untuk DeHub oleh siapa saja. Mereka dibuka di dalam DeHub, Anda sudah masuk, dan setiap aplikasi menampilkan alamat web aslinya.",
       "buildCta": "Bangun aplikasi",
       "emptyTitle": "Tidak ada aplikasi yang terdaftar saat ini",
-      "emptyBody": "Aplikasi pertama sedang dalam proses review. Bangun satu dan mungkin akan ada di sini."
+      "emptyBody": "Aplikasi pertama sedang dalam proses review. Bangun satu dan mungkin akan ada di sini.",
+      "search": "Cari aplikasi",
+      "all": "Semua",
+      "fromDehub": "Dari DeHub",
+      "noMatch": "Tidak ada aplikasi yang cocok dengan pencarian itu."
     },
     "dev": {
       "title": "Bangun mini aplikasi",
@@ -7622,7 +7626,35 @@
       "verifyTitle": "Masuk dengan DeHub, di servermu",
       "verifyBody": "auth.getToken() memberikan aplikasi kamu sebuah token yang ditandatangani oleh DeHub. Periksa di servermu dengan menggunakan library JWT apa pun. Alamat dompet pengguna ada di sub.",
       "copy": "Salin",
-      "copied": "Disalin"
+      "copied": "Disalin",
+      "submitBody": "Manifes Anda lolos. Kirimkan dan aplikasi Anda langsung ditayangkan di tautan DeHub, ditandai Belum ditinjau. Muncul di toko setelah ditinjau.",
+      "submit": "Kirim ke DeHub",
+      "submitSignIn": "Masuk ke DeHub untuk mengirimkan.",
+      "submitDone": "Terkirim. Aplikasi Anda ditayangkan di tautan DeHub - nya.",
+      "submitUpdated": "Diperbarui. DeHub memiliki versi terbaru manifes Anda.",
+      "yourAppsTitle": "Aplikasi Anda",
+      "stateUnlisted": "Live by link · sedang ditinjau untuk toko",
+      "stateListed": "Di toko",
+      "stateSuspended": "Ditangguhkan",
+      "copyLink": "Salin tautan"
+    },
+    "card": {
+      "open": "Buka"
+    },
+    "category": {
+      "games": "Permainan",
+      "social": "Sosial",
+      "finance": "Keuangan",
+      "utility": "Utilitas",
+      "productivity": "Produktivitas",
+      "health-fitness": "Kesehatan & kebugaran",
+      "news-media": "Berita & media",
+      "music": "Musik",
+      "shopping": "Belanja",
+      "education": "Pendidikan",
+      "developer-tools": "Alat pengembang",
+      "entertainment": "Hiburan",
+      "art-creativity": "Seni & kreativitas"
     }
   },
   "aiStyles": {
