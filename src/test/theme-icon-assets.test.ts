@@ -6,7 +6,7 @@ import { resolveThemeIconAsset, resolveThemeIconKey, resolveWarGlyph } from '@/c
 
 const FULL_THEMES = [
   'cosmic', 'hazy', 'swarms', 'lavalamp', 'winter',
-  'osaka', 'jungle', 'light', 'minimal',
+  'osaka', 'jungle', 'light', 'minimal', 'war', 'hacker', 'island', 'horror',
 ];
 const PROFILE_KEYS = [
   'home', 'posts', 'images', 'videos', 'subscriptions', 'audio', 'live',
@@ -38,9 +38,10 @@ describe('theme icon assets', () => {
       }
     }
   });
-  it('keeps glyph themes out of the System raster family', () => {
+  it('gives former glyph themes their own custom artwork', () => {
     for (const theme of ['war', 'hacker', 'island', 'horror']) {
-      expect(resolveThemeIconAsset('/theme-icons/system/usernames.webp', theme)).toBeNull();
+      expect(resolveThemeIconAsset('/theme-icons/system/usernames.webp', theme))
+        .toBe(`/theme-icons/${theme}/usernames.webp`);
     }
   });
   it('resolves semantic page and power URLs without dropping to legacy artwork', () => {

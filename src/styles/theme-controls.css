@@ -1,0 +1,38 @@
+/* Baseline themes share one polished control finish across component and
+   handwritten actions. Canvas themes use their existing material recipes. */
+html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) {
+  --control-fill: rgba(255,255,255,0.12);
+  --control-sheen: linear-gradient(160deg, rgba(255,255,255,0.20), rgba(255,255,255,0.05));
+  --control-edge: rgba(255,255,255,0.30);
+  --control-ink: #fff;
+  --control-shadow: inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(255,255,255,0.10);
+}
+html[data-theme='light'] {
+  --control-fill: #f3f3f3;
+  --control-sheen: linear-gradient(160deg, #fff, #e4e4e7);
+  --control-edge: rgba(0,0,0,0.20);
+  --control-ink: #1a1a1a;
+  --control-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,0.12);
+}
+html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
+  :is(#app-root, [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(
+    [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
+    :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'])
+  ):not([data-keep-dark]):not([data-keep-white]):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty) {
+  background: var(--control-sheen), var(--control-fill) !important;
+  border: 1px solid var(--control-edge) !important;
+  box-shadow: var(--control-shadow) !important;
+  color: var(--control-ink) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
+  :is(#app-root, [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(
+    [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
+    :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'])
+  ):not([data-keep-dark]):not([data-keep-white]):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty)
+  :is(.text-black, .text-white, .text-zinc-900, .text-zinc-800, .text-zinc-700, svg) {
+  color: var(--control-ink) !important;
+}

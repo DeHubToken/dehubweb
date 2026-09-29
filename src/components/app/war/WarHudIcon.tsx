@@ -216,7 +216,7 @@ const THEME_ICON_KEYS: ReadonlyArray<readonly [string, ThemeIconKey]> = [
 
 const FULL_RASTER_THEMES = new Set([
   'cosmic', 'hazy', 'swarms', 'lavalamp', 'winter',
-  'osaka', 'jungle', 'light', 'minimal',
+  'osaka', 'jungle', 'light', 'minimal', 'war', 'hacker', 'island', 'horror',
 ]);
 const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'home', 'posts', 'images', 'videos', 'subscriptions', 'audio', 'live',
@@ -232,8 +232,7 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
 ]);
 
 /** Bump when a file is redrawn in place, or browsers and the app keep the old art. */
-export const THEME_ICON_REVISION = '7';
-const GLYPH_THEMES = new Set(['war', 'hacker', 'island', 'horror']);
+export const THEME_ICON_REVISION = '8';
 
 const TRANSPARENT_PNG_KEYS = new Set<ThemeIconKey>([
   'boost', 'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
@@ -359,28 +358,21 @@ interface WarHudIconProps {
  * caller can fall back to its original image rather than showing a blank.
  */
 export function WarHudIcon({ src, alt, className }: WarHudIconProps) {
+  const asset = resolveThemeIconAsset(src, 'war');
   const Glyph = resolveWarGlyph(src);
-  if (!Glyph) return null;
+  if (!asset && !Glyph) return null;
 
   return (
     <span
       data-war-hud-icon
+      data-theme-icon-family="war"
       className={className}
-      role="img"
-      aria-label={alt}
+      role={alt ? 'img' : undefined}
+      aria-label={alt || undefined}
+      aria-hidden={alt ? undefined : true}
     >
-      <Glyph strokeWidth={1.5} aria-hidden="true" />
-    </span>
-  );
-}
-
-function SkinGlyph({ icon, theme, alt, className }: { icon: ThemeIconKey; theme: string; alt: string; className?: string }) {
-  const Glyph = THEME_KEY_GLYPHS[icon];
-  return (
-    <span data-theme-glyph={theme} data-theme-icon-family={theme}
-      className={className?.replace(/\bobject-(contain|cover)\b/g, '').trim()}
-      role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>
-      <Glyph strokeWidth={1.5} aria-hidden="true" />
+      {asset ? <img src={`${asset}?v=${THEME_ICON_REVISION}`} alt="" aria-hidden="true" />
+        : Glyph ? <Glyph strokeWidth={1.5} aria-hidden="true" /> : null}
     </span>
   );
 }
@@ -398,7 +390,7 @@ type BrandIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
  * thirty of these, and a rename cannot silently change layout the way
  * rewriting each one by hand could.
  *
- * Under War, when the asset has a mapped glyph, it renders the HUD icon and the
+ * Under War, mapped artwork renders inside the HUD frame and the
  * img-only attributes (loading, fetchPriority, width) are simply not relevant.
  * Everywhere else, and for any unmapped asset, it renders exactly the image the
  * call site asked for.
@@ -420,8 +412,6 @@ export function BrandIcon({ src, alt = '', className, ...imgProps }: BrandIconPr
   }
 
   const asset = resolveThemeIconAsset(src, theme);
-  const key = resolveThemeIconKey(src);
-  if (key && GLYPH_THEMES.has(theme)) return <SkinGlyph icon={key} theme={theme} alt={alt} className={className} />;
   const themedSrc = asset ? `${asset}?v=${THEME_ICON_REVISION}` : src;
   return <img src={themedSrc} alt={alt} className={className} data-theme-icon-family={theme} {...imgProps} />;
 }
@@ -434,29 +424,22 @@ type ThemedIconProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> & 
  * Semantic icon for empty, error and not-found states.
  *
  * Unlike BrandIcon, callers name the meaning instead of importing a legacy
- * source asset. Full raster themes receive their own artwork, the themes that
- * deliberately keep the normal icon set use the optimized System WebP, and
- * War keeps its tactical HUD glyph.
+ * source asset. Every supported theme receives its own complete artwork pack;
+ * War keeps its tactical HUD frame around its custom holograms.
  */
 export function ThemedIcon({ icon, alt = '', className, ...imgProps }: ThemedIconProps) {
   const { theme } = useAppTheme();
 
   if (theme === 'war') {
-    const Glyph = THEME_KEY_GLYPHS[icon];
     return (
-      <span
-        data-war-hud-icon
+      <WarHudIcon
+        src={`/theme-icons/war/${icon}.${TRANSPARENT_PNG_KEYS.has(icon) ? 'png' : 'webp'}`}
+        alt={alt}
         className={className?.replace(/\bobject-(contain|cover)\b/g, '').trim()}
-        role={alt ? 'img' : undefined}
-        aria-label={alt || undefined}
-        aria-hidden={alt ? undefined : true}
-      >
-        <Glyph strokeWidth={1.5} aria-hidden="true" />
-      </span>
+      />
     );
   }
 
-  if (GLYPH_THEMES.has(theme)) return <SkinGlyph icon={icon} theme={theme} alt={alt} className={className} />;
   const rasterTheme = FULL_RASTER_THEMES.has(theme) ? theme : 'system';
   const extension = TRANSPARENT_PNG_KEYS.has(icon) ? 'png' : 'webp';
   return (

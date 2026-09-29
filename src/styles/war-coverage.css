@@ -598,6 +598,12 @@ html[data-theme='war'] [data-war-hud-icon] > svg {
   filter: drop-shadow(0 0 5px rgb(var(--war-hud) / 0.6));
 }
 
+html[data-theme='war'] [data-war-hud-icon] > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 /* Bracket reticle. Two pseudo-elements, each drawing one diagonal pair of
    corners, so four ticks cost no extra DOM. */
 html[data-theme='war'] [data-war-hud-icon]::before,
