@@ -2421,50 +2421,6 @@ ${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
 }
 
 /**
- * A single mini app, /apps/<slug>.
- *
- * Only live apps are readable with the anon key (RLS), so a suspended or
- * rejected app falls through to the store card. Unlisted apps render but are
- * noindex, matching the SPA: they open from a link, they are not in the store.
- * Title and description mirror MiniAppPage's SEOHead.
- */
-function buildMiniAppHtml(app) {
-  const canonicalUrl = `${APP_URL}/apps/${app.slug}`;
-  const name = app.name || 'Mini app';
-  const description = truncate(
-    app.description || app.subtitle || `${name} is a mini app on DeHub. Open it inside DeHub, already signed in.`,
-    200,
-  );
-  const manifest = app.manifest && typeof app.manifest === 'object' ? app.manifest : {};
-  const image = absolutize(manifest.ogImageUrl) || shareImage('apps');
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name,
-    description,
-    url: canonicalUrl,
-    applicationCategory: app.category || 'WebApplication',
-    operatingSystem: 'Web, Android',
-    ...(app.icon_url ? { image: absolutize(app.icon_url) } : {}),
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  };
-  return entityHtml({
-    canonicalUrl,
-    title: `${name} — DeHub Apps`,
-    description,
-    image,
-    jsonLd,
-    ogType: 'website',
-    noindex: app.tier === 'unlisted',
-    heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/apps">Apps</a>`,
-    bodyHtml: `<p>${escHtml(description)}</p>
-<p>Runs at <strong>${escHtml(app.domain)}</strong>${app.category ? ` · ${escHtml(String(app.category).replace(/-/g, ' '))}` : ''}</p>
-<p><a href="${canonicalUrl}">Open ${escHtml(name)} in DeHub</a> or <a href="${APP_URL}/apps">browse the other apps</a>.</p>`,
-  });
-}
-
-/**
  * A single bounty, /bounty/<job_number>.
  *
  * Before this existed the whole space was invisible: `work` is a reserved
@@ -3438,9 +3394,6 @@ function shouldServeSSR(pathname) {
   // the foot of this function rejects it and the SPA shell would go out under
   // a noindex long before the renderer below is reached.
   if (/^\/bounty\/\d+\/?$/.test(pathname)) return true;
-  // One mini app, /apps/<slug>. `apps` is reserved too, and /apps/dev is a
-  // static card of its own, handled above.
-  if (/^\/apps\/(?!dev\/?$)[a-z0-9][a-z0-9-]{1,39}\/?$/.test(pathname)) return true;
   // Off-chain post slugs (/newpost/<n>) and the short post shapes (/posts/<n>,
   // /posts/<n>/b, /posts/<n>/b/<commentId>). Same trap a third time: `newpost`
   // and `posts` are both reserved ROUTE_SEGMENTS, so the profile fall-through
@@ -5020,19 +4973,6 @@ async function handleRequest(request, env, ctx) {
 
   // A single bounty. /work/<uuid> 301s onto this shape further up, so by the
   // time anything reaches here the number is the only address in play.
-  const miniAppMatch = cleanPath.match(/^\/apps\/([a-z0-9][a-z0-9-]{1,39})$/);
-  if (miniAppMatch && miniAppMatch[1] !== 'dev') {
-    const app = await supabaseRow(
-      `miniapp_apps?slug=eq.${miniAppMatch[1]}&select=slug,domain,name,subtitle,description,icon_url,category,tier,manifest&limit=1`,
-    );
-    if (app) {
-      return guard(new Response(buildMiniAppHtml(app), {
-        status: 200,
-        headers: app.tier === 'unlisted' ? { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' } : blogHeaders,
-      }));
-    }
-  }
-
   const bountyMatch = cleanPath.match(/^\/bounty\/(\d+)$/);
   if (bountyMatch) {
     const job = await supabaseRow(
