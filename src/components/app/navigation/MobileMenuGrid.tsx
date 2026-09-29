@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { LucideIcon } from 'lucide-react';
-import { Film, Image as ImageIcon, Mic, Radio } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
 import { isHomePath } from '@/lib/home-path';
@@ -38,28 +37,10 @@ const NAV_ICON_KEYS: Record<string, ThemeIconKey> = {
   Guide: 'pinned', Docs: 'posts', Blog: 'email',
 };
 
-const HOME_STATE_STORAGE_KEY = 'home-feed-state';
-const HOME_TAB_SWITCH_EVENT = 'switch-home-tab';
-
-/** A home-feed tab, reached from the sheet as if it were a page. */
-interface FeedTile {
-  tab: 'videos' | 'images' | 'music' | 'live';
-  labelKey: string;
-  iconKey: ThemeIconKey;
-  glyph: LucideIcon;
-  path: string;
-}
-
-const FEED_TILES: FeedTile[] = [
-  { tab: 'videos', labelKey: 'feed.videos', iconKey: 'videos', glyph: Film, path: '/videos' },
-  { tab: 'images', labelKey: 'feed.images', iconKey: 'images', glyph: ImageIcon, path: '/app' },
-  { tab: 'music', labelKey: 'feed.music', iconKey: 'audio', glyph: Mic, path: '/app' },
-  { tab: 'live', labelKey: 'feed.live', iconKey: 'live', glyph: Radio, path: '/app' },
-];
-
-// The curated first screen, in order. Home, then the four feed tabs, then
-// these rail rows. Everything else in NAV_ITEMS follows under a divider.
-const PINNED_AFTER_FEEDS = ['Messages', 'Notifications', 'Bookmarks', 'Stores', 'Staking', 'Profile', 'Settings'];
+// The curated first screen, in order. Everything else in NAV_ITEMS follows
+// under a divider. Home and its feed tabs stay off the resting sheet (the
+// bottom bar and the feed header already carry them); search still finds Home.
+const PINNED = ['Messages', 'Notifications', 'Bookmarks', 'Stores', 'Staking', 'Profile', 'Settings'];
 
 interface TileShellProps {
   label: string;
@@ -112,7 +93,7 @@ const tileClass = (active: boolean) => cn(
 interface MobileMenuGridProps {
   /** Rail rows to show, already filtered by the menu search. */
   items: NavItem[];
-  /** True while a search query is typed: feed tiles drop out and order is by rank. */
+  /** True while a search query is typed: order is by rank. */
   searching: boolean;
   currentPath: string;
   notificationCount: number;
@@ -127,15 +108,6 @@ export function MobileMenuGrid({ items, searching, currentPath, notificationCoun
     item.path === '/app'
       ? onHome
       : !item.external && !item.action && currentPath.startsWith(item.path);
-
-  const openFeedTab = (tile: FeedTile) => {
-    // HomePage reads the stored tab on mount and listens for the switch event
-    // while mounted, so whichever state it is in, it lands on this tab.
-    try { sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: tile.tab })); } catch { /* private mode */ }
-    window.dispatchEvent(new CustomEvent(HOME_TAB_SWITCH_EVENT, { detail: tile.tab }));
-    window.dispatchEvent(new CustomEvent('home-tab-changed'));
-    onNavigate();
-  };
 
   const renderNavTile = (item: NavItem) => {
     const label = t(NAV_LABEL_KEYS[item.label] || item.label);
@@ -194,39 +166,18 @@ export function MobileMenuGrid({ items, searching, currentPath, notificationCoun
     );
   };
 
-  const renderFeedTile = (tile: FeedTile) => {
-    const active = tile.path === '/videos' && currentPath === '/videos';
-    return (
-      <Link
-        key={tile.tab}
-        to={tile.path}
-        onClick={() => openFeedTab(tile)}
-        onTouchStart={() => preloadRoute(tile.path)}
-        data-menu-tile={active ? 'active' : 'idle'} className={tileClass(active)}
-      >
-        <TileBody label={t(tile.labelKey)} iconKey={tile.iconKey} glyph={tile.glyph} active={active} />
-      </Link>
-    );
-  };
-
   if (searching) {
     return <nav className="grid grid-cols-3 gap-2.5">{items.map(renderNavTile)}</nav>;
   }
 
   const byLabel = new Map(items.map(item => [item.label, item]));
-  const home = byLabel.get('Home');
-  const pinned = PINNED_AFTER_FEEDS.map(label => byLabel.get(label)).filter((item): item is NavItem => !!item);
-  const pinnedSet = new Set<NavItem>([...(home ? [home] : []), ...pinned]);
-  const rest = items.filter(item => !pinnedSet.has(item));
-  // Kids Mode strips the rail down to Home and Settings; the feed tabs are
-  // still the home feed, so they only show when the full menu does.
-  const showFeeds = pinned.length === PINNED_AFTER_FEEDS.length;
+  const pinned = PINNED.map(label => byLabel.get(label)).filter((item): item is NavItem => !!item);
+  const pinnedSet = new Set<NavItem>(pinned);
+  const rest = items.filter(item => !pinnedSet.has(item) && item.label !== 'Home');
 
   return (
     <nav>
       <div className="grid grid-cols-3 gap-2.5">
-        {home && renderNavTile(home)}
-        {showFeeds && FEED_TILES.map(renderFeedTile)}
         {pinned.map(renderNavTile)}
       </div>
       {rest.length > 0 && (
