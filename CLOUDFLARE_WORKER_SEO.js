@@ -107,10 +107,16 @@ async function noindexShell(resp) {
 
 const SUPABASE_FN_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1';
 const SUPABASE_FUNCTION_URL = `${SUPABASE_FN_BASE}/ssr-seo`;
-const DEHUB_LOGO = 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg';
 const APP_URL = 'https://dehub.io';
+// Organization.logo. Google wants a square mark of at least 112px, crawlable,
+// and uses it as-is in the knowledge panel. The old value was a 1200x630 JPEG
+// share banner on the Supabase host, which it had to crop into a square.
+const ORG_LOGO = { '@type': 'ImageObject', url: `${APP_URL}/icon-512.png`, width: 512, height: 512 };
 const BLOG_SHARE_IMAGE_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/blog-share-image';
-// Share card for every edge-rendered page. DEHUB_LOGO is a 200-square, so
+// og:locale for every edge-rendered page. One constant, emitted through
+// ogLocaleTag(), so a localised variant has exactly one tag to swap.
+const OG_LOCALE = 'en_US';
+// Share card for every edge-rendered page. The logo is a small square, so
 // `summary_large_image` cards rendered it as a thumbnail rather than a banner;
 // this is the 1200x630 the format actually wants. Served from public/ (and so
 // from the ASSETS binding) on purpose — the previous per-route cards pointed at
@@ -185,6 +191,56 @@ function shareMetaTags(key, alt) {
 <meta name="twitter:image" content="${img}">`;
 }
 
+/** The og:locale tag. Pages default to OG_LOCALE; a translated variant
+ *  replaces this one tag rather than adding a second. */
+function ogLocaleTag(locale = OG_LOCALE) {
+  return `<meta property="og:locale" content="${locale}">`;
+}
+
+/** twitter:title + twitter:description, the pair X reads before it falls back
+ *  to og:. Every page that emits og:title/og:description emits these too. */
+function twitterTextTags(title, description) {
+  return `<meta name="twitter:title" content="${escHtml(title)}">
+<meta name="twitter:description" content="${escHtml(description)}">`;
+}
+
+/**
+ * BreadcrumbList for a trail of `{ name, url }`, root first. The last entry is
+ * the page itself. Positions count from 1 and every `item` is absolute, which
+ * is what Google validates; the node carries no @context so it can sit inside
+ * an @graph as well as stand alone (breadcrumbScript).
+ */
+function breadcrumbLd(trail) {
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: trail.map((crumb, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: crumb.name,
+      item: absolutize(crumb.url),
+    })),
+  };
+}
+
+function breadcrumbScript(trail) {
+  return `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...breadcrumbLd(trail) })}</script>`;
+}
+
+const HOME_CRUMB = { name: 'DeHub', url: `${APP_URL}/` };
+
+/**
+ * The trail an entity page already draws as `<a>` links (`DeHub › Stores`),
+ * read back into crumbs so the visible breadcrumb and the BreadcrumbList can't
+ * disagree. The page itself is appended by the caller.
+ */
+function crumbsFromHtml(html) {
+  const decode = (s) => String(s).replace(/&(?:amp|quot|lt|gt|#39);/g, (e) => HTML_ENTITIES[e]);
+  return [...String(html || '').matchAll(/<a href="([^"]+)">([^<]*)<\/a>/g)].map((m) => {
+    const url = decode(m[1]);
+    return { name: decode(m[2]), url: url === APP_URL ? `${APP_URL}/` : url };
+  });
+}
+
 // One canonical brand identity. Keep in sync with the Organization JSON-LD in
 // index.html and src/pages/Index.tsx. The deployed Supabase fn still emits a
 // dead sameAs (@DeHubApp does not exist), so the homepage handler below
@@ -207,7 +263,7 @@ const ORG_JSONLD = {
   '@type': 'Organization',
   name: 'DeHub',
   url: APP_URL,
-  logo: DEHUB_LOGO,
+  logo: ORG_LOGO,
   description: 'DeHub is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to.',
   sameAs: ORG_SAME_AS,
 };
@@ -458,16 +514,21 @@ function buildDocsHtml(route, meta, contentHtml) {
 <link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="DeHub">
+${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
+${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(meta.og || `docs/${route}`, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'TechArticle',
   headline: meta.title, description: meta.description,
+  image: shareImage(meta.og || `docs/${route}`),
+  author: { '@type': 'Organization', name: 'DeHub', url: APP_URL },
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
 })}</script>${route === 'faq' ? faqJsonLd(contentHtml) : ''}
+${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: `${APP_URL}/docs` }, { name: meta.title.replace(/ — DeHub( Docs)?$/, ''), url: canonicalUrl }])}
 </head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs">Docs</a></p>
@@ -479,6 +540,8 @@ ${body}</article>
 </html>`;
 }
 
+const DOCS_INDEX_DESCRIPTION = 'Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more.';
+
 function buildDocsIndexHtml() {
   const canonicalUrl = `${APP_URL}/docs`;
   const items = Object.entries(DOCS_PAGES).map(([r, m]) =>
@@ -488,21 +551,26 @@ function buildDocsIndexHtml() {
 <head>
 <meta charset="UTF-8">
 <title>DeHub Documentation — Guides, Token, dApps &amp; FAQ</title>
-<meta name="description" content="Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more.">
+<meta name="description" content="${DOCS_INDEX_DESCRIPTION}">
 <link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DeHub">
+${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="DeHub Documentation">
+<meta property="og:description" content="${DOCS_INDEX_DESCRIPTION}">
+${twitterTextTags('DeHub Documentation', DOCS_INDEX_DESCRIPTION)}
 ${shareMetaTags('docs', 'DeHub Documentation')}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'CollectionPage',
   name: 'DeHub Documentation', url: canonicalUrl,
-  description: 'Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more.',
+  description: DOCS_INDEX_DESCRIPTION,
+  image: shareImage('docs'),
   publisher: ORG_JSONLD,
   hasPart: Object.entries(DOCS_PAGES).map(([r, m]) => ({ '@type': 'TechArticle', headline: m.title, url: `${APP_URL}/docs/${r}` })),
 })}</script>
+${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: canonicalUrl }])}
 </head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › Docs</p>
@@ -544,7 +612,21 @@ function absolutize(url) {
   return `${APP_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 
+/**
+ * A blog post's share card. The renderer answers a 0.5–0.85 MB PNG in up to
+ * 1.7 s on every uncached scrape, and scrapers time out on that. The card is
+ * served through the image transform instead — 1200x630 JPEG, cached at the
+ * edge — reading the render via the same-zone relay (ogSourceResponse), since
+ * the transform refuses the Supabase origin. The slug is the whole address:
+ * the relay rebuilds the renderer URL from the manifest, so the transform
+ * never has to carry a query string.
+ */
 function buildBlogShareImage(post) {
+  return `${IMAGE_TRANSFORM_BASE}${CARD_COVER}/${APP_URL}${OG_SOURCE_PREFIX}blog/${encodeURIComponent(post.slug)}`;
+}
+
+/** The renderer URL behind a post's card (see buildBlogShareImage). */
+function blogShareSourceUrl(post) {
   const p = new URLSearchParams();
   p.set('slug', post.slug);
   p.set('title', (post.title || '').slice(0, 240));
@@ -618,6 +700,20 @@ function relatedPostsHtml(manifest, currentSlug, limit = 4) {
   return `<nav aria-label="More from the DeHub blog"><h2>More from the DeHub Blog</h2><ul>${items}</ul></nav>`;
 }
 
+/**
+ * Article.author for a manifest post. Every post so far is bylined "DeHub
+ * Team" or "DeHub" — the company, not a person — and Google reads a Person
+ * named "DeHub Team" as a made-up author. A real name, when a post has one,
+ * stays a Person.
+ */
+const BRAND_BYLINES = new Set(['', 'dehub', 'dehub team']);
+function blogAuthorLd(author) {
+  const name = String(author || '').replace(/\s+/g, ' ').trim();
+  return BRAND_BYLINES.has(name.toLowerCase())
+    ? { '@type': 'Organization', name: 'DeHub', url: APP_URL }
+    : { '@type': 'Person', name };
+}
+
 function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
   const image = buildBlogShareImage(post);
   const title = post.seoTitle || `${post.title} — DeHub Blog`;
@@ -636,20 +732,12 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
         headline: post.title,
         description,
         image: banner ? [banner, image] : [image],
-        datePublished: published,
-        dateModified: modified,
-        author: { '@type': 'Person', name: post.author || 'DeHub Team' },
+        ...(published ? { datePublished: published, dateModified: modified } : {}),
+        author: blogAuthorLd(post.author),
         publisher: ORG_JSONLD,
         mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
       },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'DeHub', item: `${APP_URL}/` },
-          { '@type': 'ListItem', position: 2, name: 'Blog', item: `${APP_URL}/docs/blog` },
-          { '@type': 'ListItem', position: 3, name: post.title, item: canonicalUrl },
-        ],
-      },
+      breadcrumbLd([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, { name: post.title, url: canonicalUrl }]),
     ],
   };
   return `<!DOCTYPE html>
@@ -662,6 +750,7 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
 <link rel="alternate" type="application/rss+xml" title="DeHub Blog RSS Feed" href="${APP_URL}/rss.xml">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="DeHub">
+${ogLocaleTag()}
 <meta property="og:url" content="${escHtml(canonicalUrl)}">
 <meta property="og:title" content="${escHtml(title)}">
 <meta property="og:description" content="${escHtml(description)}">
@@ -705,12 +794,14 @@ function buildBlogIndexHtml(manifest) {
     const date = (p.publishedAt || '').slice(0, 10);
     return `<li style="margin:14px 0"><a href="${APP_URL}/guides/${encodeURIComponent(p.slug)}">${escHtml(p.title)}</a>${date ? ` <small>(${date})</small>` : ''}<br><small>${escHtml((p.excerpt || '').slice(0, 200))}</small></li>`;
   }).join('');
+  const blogDescription = 'News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     name: 'DeHub Blog',
-    description: 'News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.',
+    description: blogDescription,
     url: canonicalUrl,
+    image: shareImage('blog'),
     publisher: ORG_JSONLD,
   };
   return `<!DOCTYPE html>
@@ -718,16 +809,20 @@ function buildBlogIndexHtml(manifest) {
 <head>
 <meta charset="UTF-8">
 <title>DeHub Blog — News, Guides &amp; Product Updates</title>
-<meta name="description" content="News, product updates and Web3 guides from DeHub — the open source, user-owned social platform. ${posts.length} posts and counting.">
+<meta name="description" content="${escHtml(blogDescription)} ${posts.length} posts and counting.">
 <link rel="canonical" href="${canonicalUrl}">
 <link rel="alternate" type="application/rss+xml" title="DeHub Blog RSS Feed" href="${APP_URL}/rss.xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DeHub">
+${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="DeHub Blog — News, Guides &amp; Product Updates">
+<meta property="og:description" content="${escHtml(blogDescription)}">
+${twitterTextTags('DeHub Blog — News, Guides & Product Updates', blogDescription)}
 ${shareMetaTags('blog', 'DeHub Blog — news, guides and product updates')}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
+${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: canonicalUrl }])}
 </head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › Blog</p>
@@ -829,12 +924,15 @@ function buildSectionHtml(key, meta) {
 <link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DeHub">
+${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
+${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
+${breadcrumbScript([HOME_CRUMB, { name: meta.heading, url: canonicalUrl }])}
 </head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
@@ -848,7 +946,12 @@ ${primaryNavHtml(`/${key}`)}
 }
 
 /** The VideoGame JSON-LD ArcadeGamePage writes for the same URL, so the two
- *  UA variants describe one entity. `image` is the capture, as in the SPA. */
+ *  UA variants describe one entity. `image` is the capture, as in the SPA.
+ *  All six games carry it or none would: it used to be God's Eye alone.
+ *  VideoGame on its own is plain schema, not Google's Software App rich
+ *  result — that needs a SoftwareApplication co-type plus a rating or review,
+ *  which a free browser game with no reviews cannot honestly supply — so it
+ *  is never reported as an invalid item. Never co-type it. */
 function arcadeGameLd(art) {
   return {
     jsonLdType: 'VideoGame',
@@ -874,8 +977,6 @@ const MARKETING_PAGES = {
     title: 'DEX — Trade DHB at your price',
     description: 'Set your DHB buy or sell price with a Uniswap v4 limit order on Base or BNB Chain. Live order book, market depth and one shared USD price.',
     heading: 'DeHub DEX',
-    jsonLdType: 'WebApplication',
-    jsonLdExtra: { applicationCategory: 'FinanceApplication', operatingSystem: 'Web' },
     bodyHtml: `<p>Trade DHB at the price you choose. Place a buy or sell as a Uniswap v4 limit order on Base or BNB Chain and it fills when the market reaches it — no watching the chart, no slippage past your number.</p>
 <p>The terminal shows the live order book, market depth and one shared USD price.</p>
 <p><a href="${APP_URL}/dex">Open the DEX</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get DHB</a>.</p>`,
@@ -1039,6 +1140,7 @@ const MARKETING_PAGES = {
     title: "King's Gambit | DeHub Arcade",
     description: "Play King's Gambit on DeHub — cinematic 3D chess where three rigged civilisations march, strike and fall across a marble board. Free, in your browser, no install.",
     heading: "King's Gambit — Cinematic 3D Chess",
+    ...arcadeGameLd('/arcade/kings-gambit.webp'),
     bodyHtml: `<p>Chess with an army behind every piece. Three rigged civilisations — the Ivory Kingdom, the Sun Empire and the Grande Armée — march, strike and fall across a marble board in four battlegrounds.</p>
 <p>Full rules including castling, en passant and promotion; three engine strengths; a two-player hotseat; and an AI vs AI mode you can just sit and watch.</p>
 <p><a href="${APP_URL}/arcade/kings-gambit">Play King's Gambit</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
@@ -1047,6 +1149,7 @@ const MARKETING_PAGES = {
     title: 'Claude of Duty | DeHub Arcade',
     description: 'Play Claude of Duty on DeHub — a browser first-person shooter that ships no art at all and generates every mesh, texture and sound on your machine. Free, no install.',
     heading: 'Claude of Duty — A Browser FPS With No Assets',
+    ...arcadeGameLd('/arcade/claude-of-duty.webp'),
     bodyHtml: `<p>A first-person shooter that ships no art at all: every mesh, texture and sound is generated in JavaScript on your machine while the level loads.</p>
 <p>It is also hidden inside the War theme, where an arrow key offers to deploy you.</p>
 <p><a href="${APP_URL}/arcade/claude-of-duty">Play Claude of Duty</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
@@ -1055,6 +1158,7 @@ const MARKETING_PAGES = {
     title: 'Jungle Trail | DeHub Arcade',
     description: 'Walk Jungle Trail on DeHub — a first-person walk through a procedurally generated rainforest with weather and a day cycle. No score, no timer, no install.',
     heading: 'Jungle Trail — A Procedural Rainforest Walk',
+    ...arcadeGameLd('/arcade/jungle-trail.webp'),
     bodyHtml: `<p>A first-person walk through a procedurally generated rainforest — a hundred thousand plants, weather and a day cycle, all grown on your machine before the first frame. No score, no timer, nothing to beat.</p>
 <p>It is also hidden inside the Jungle theme, where the background you are already looking at pushes forward and becomes the game.</p>
 <p><a href="${APP_URL}/arcade/jungle-trail">Walk the trail</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
@@ -1063,6 +1167,7 @@ const MARKETING_PAGES = {
     title: 'Street Slayer | DeHub Arcade',
     description: "Play Street Slayer on DeHub — a side-scrolling beat 'em up down a neon-lit street, with three fighters and a boss. Free, in your browser, no install.",
     heading: "Street Slayer — A Neon-Street Beat 'Em Up",
+    ...arcadeGameLd('/arcade/street-slayer.webp'),
     bodyHtml: `<p>A side-scrolling beat 'em up down a neon-lit street: pick one of three fighters — Mike, Indi or Lerone — then punch, kick and throw your way through everything the block sends at you.</p>
 <p>The only game in the arcade that was not found: it was commissioned for DeHub and built by Studio Shook Pixel, so it exists nowhere else. Arrows or WASD to move, Z to jump, four attack keys, and a full set of on-screen controls on a touchscreen.</p>
 <p><a href="${APP_URL}/arcade/street-slayer">Play Street Slayer</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
@@ -1071,6 +1176,7 @@ const MARKETING_PAGES = {
     title: 'Chartopia | DeHub Arcade',
     description: 'The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.',
     heading: 'Chartopia — A Trading Floor Built Out Of Live Markets',
+    ...arcadeGameLd('/arcade/trenchstar.webp'),
     bodyHtml: `<p>The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.</p>
 <p>Drag any screen to move it, drop it on another to swap them, and put a chart, a heatmap, a live web page or your own tab on any panel. Pick a character and walk the floor, or stay at the desk and fly the camera.</p>
 <p><a href="${APP_URL}/arcade/trenchstar">Take the desk</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
@@ -1095,16 +1201,13 @@ const MARKETING_PAGES = {
     title: 'Download the DeHub APK — Latest Android Build',
     description: 'Skip the stores and get the latest version of DeHub right here. Direct APK download for Android — open source, user-owned social media, no store account needed.',
     heading: 'Download the DeHub APK',
-    jsonLdType: 'SoftwareApplication',
+    // A WebPage about the app, not a SoftwareApplication: Google's Software
+    // App result requires an aggregateRating or review, the APK has neither,
+    // and without one Search Console lists the page as an invalid item.
     jsonLdExtra: {
       alternateName: 'DeHub APK',
-      downloadUrl: 'https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk',
-      installUrl: `${APP_URL}/apk`,
-      softwareVersion: '1.14.0',
-      fileSize: '205 MB',
-      applicationCategory: 'SocialNetworkingApplication',
-      operatingSystem: 'Android 8.0 and up',
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      significantLink: 'https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk',
+      about: { '@type': 'Thing', name: 'DeHub for Android', sameAs: 'https://play.google.com/store/apps/details?id=io.dehub.mobile' },
     },
     bodyHtml: `<p>Skip the stores and get the latest version of DeHub right here — straight from us, no store account and no waiting on a review queue.</p>
 <p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk">Download the DeHub APK</a> — Android 8 and up. Allow installs from your browser when Android asks.</p>
@@ -1463,6 +1566,9 @@ function buildMarketingHtml(key, meta) {
   // schema type (`meta.jsonLdType` + `jsonLdExtra`); everything else stays a
   // plain WebPage. Must mirror the type the SPA writes for the same route, or
   // the two UA variants describe the same URL as two different entities.
+  // Never a SoftwareApplication/WebApplication/MobileApplication: Google
+  // reports those as invalid without a rating or review, and none of these
+  // pages has one to give (see arcadeGameLd for VideoGame).
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': meta.jsonLdType || 'WebPage',
@@ -1473,6 +1579,17 @@ function buildMarketingHtml(key, meta) {
     isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
     publisher: ORG_JSONLD,
   };
+  // Home › [parent section] › page. `arcade/gods-eye` sits under the arcade,
+  // `connect/claude` under /connect; a parent with no page of its own is
+  // skipped rather than linked to a URL that has nothing at it.
+  const shortName = (m) => m.heading.split(' — ')[0];
+  const parentKey = key.includes('/') ? key.slice(0, key.lastIndexOf('/')) : '';
+  const parent = parentKey && Object.hasOwn(MARKETING_PAGES, parentKey) ? MARKETING_PAGES[parentKey] : null;
+  const trail = [
+    HOME_CRUMB,
+    ...(parent ? [{ name: shortName(parent), url: `${APP_URL}${parent.path || `/${parentKey}`}` }] : []),
+    { name: shortName(meta), url: canonicalUrl },
+  ];
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1482,12 +1599,15 @@ function buildMarketingHtml(key, meta) {
 ${robots}<link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DeHub">
+${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
+${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
+${breadcrumbScript(trail)}
 </head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
@@ -1584,15 +1704,21 @@ async function supabaseRow(query) {
 /**
  * og:image for an entity that has a picture of its own.
  *
- * No width/height hints here, unlike shareMetaTags: those are only correct for
- * the 1200x630 cards in public/og, and a store banner or a photo of a jacket is
- * whatever shape the seller uploaded. Claiming 1200x630 for a square photo gets
- * it letterboxed or cropped by the scraper.
+ * A store banner or a photo of a jacket is whatever shape the seller uploaded,
+ * so its size can only be declared once it has been made 1200x630: pictures
+ * on the CDN or in Supabase storage go through the image transform
+ * (shareCardImage) and are declared at that size. Anything else — a token
+ * logo on somebody's own host — goes out undeclared, because claiming
+ * 1200x630 for a square photo gets it letterboxed or cropped by the scraper.
  */
 function entityImageMetaTags(imageUrl, alt) {
   if (!imageUrl) return shareMetaTags('fallback', alt);
-  const img = escHtml(imageUrl);
-  return `<meta property="og:image" content="${img}">
+  const card = shareCardImage(imageUrl);
+  const img = escHtml(card || imageUrl);
+  const size = card
+    ? `\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">`
+    : '';
+  return `<meta property="og:image" content="${img}">${size}
 <meta property="og:image:alt" content="${escHtml(alt)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="${img}">`;
@@ -1624,12 +1750,15 @@ ${noindex ? '<meta name="robots" content="noindex, follow">' : ''}
 <link rel="canonical" href="${escHtml(canonicalUrl)}">
 <meta property="og:type" content="${ogType}">
 <meta property="og:site_name" content="DeHub">
+${ogLocaleTag()}
 <meta property="og:url" content="${escHtml(canonicalUrl)}">
 <meta property="og:title" content="${escHtml(title)}">
 <meta property="og:description" content="${escHtml(description)}">
+${twitterTextTags(title, description)}
 ${entityImageMetaTags(image, title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
+${breadcrumbScript([...crumbsFromHtml(breadcrumb), { name: truncate(heading, 110), url: canonicalUrl }])}
 </head>
 <body>
 <p>${breadcrumb}</p>
@@ -2198,6 +2327,257 @@ function transformedImageUrl(url) {
   return `${IMAGE_TRANSFORM_BASE}${options}/${url}`;
 }
 
+/**
+ * Share cards made true 1200x630.
+ *
+ * A declared og:image size has to be the real one — communities declared
+ * 400x400 for avatars that are 500x500 or 1536x1024, and Facebook and X
+ * crop or letterbox by what they are told — and a card should not be a
+ * 2 MB PNG (the /stages/1 cover was 2.2 MB, two community avatars 1.9 MB).
+ * Routing the picture through the image transform fixes both at once: the
+ * output is 1200x630 JPEG whatever went in, cached at the edge. Avatars are
+ * padded onto black (as profileBannerCard does) so a face is not cropped
+ * to a strip; everything else is cover-cropped, which is what the platforms
+ * would do to it anyway.
+ *
+ * The transform accepts the CDN directly but refuses the Supabase origin, so
+ * Supabase-hosted pictures are read through the same-zone relay under
+ * OG_SOURCE_PREFIX (ogSourceResponse). Returns null for any other host: its
+ * size cannot be known without fetching it, so it goes out undeclared.
+ */
+const SUPABASE_STORAGE_PUBLIC = 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public';
+const OG_SOURCE_PREFIX = '/_og/';
+const CARD_COVER = 'fit=cover,width=1200,height=630,format=jpeg,quality=80';
+const CARD_PAD = 'fit=pad,width=1200,height=630,background=%23000000,format=jpeg,quality=80';
+
+function shareCardImage(url) {
+  if (!url) return null;
+  // Already a 1200x630 card: one of ours, or one this function made.
+  if (url.startsWith(`${APP_URL}/og/`) || url === SHARE_IMAGE) return url;
+  if (url.startsWith(`${IMAGE_TRANSFORM_BASE}fit=`)) return url;
+  // Undo an earlier transform (the fn's avatar crop, repairProxiedImages'
+  // scale-down) so the card is cut from the original.
+  const src = url.replace(/^https:\/\/dehub\.io\/cdn-cgi\/image\/[^/]+\//, '');
+  let source = null;
+  if (src.startsWith(`${CDN_ORIGIN}/`)) source = src;
+  else if (src.startsWith(`${SUPABASE_STORAGE_PUBLIC}/`)) {
+    source = `${APP_URL}${OG_SOURCE_PREFIX}storage/${src.slice(SUPABASE_STORAGE_PUBLIC.length + 1)}`;
+  }
+  if (!source) return null;
+  const options = /\/avatars?[/_.-]/i.test(src) ? CARD_PAD : CARD_COVER;
+  return `${IMAGE_TRANSFORM_BASE}${options}/${source}`;
+}
+
+/**
+ * Point a proxied page's og:image/twitter:image at its shareCardImage and
+ * declare what that now is. A picture on a host the transform can't reach
+ * keeps its URL and loses any size the fn claimed for it.
+ */
+function cardProxiedImage(html) {
+  const m = html.match(/<meta property="og:image" content="([^"]*)">/);
+  if (!m) return html;
+  const card = shareCardImage(m[1].replace(/&amp;/g, '&'));
+  if (!card) {
+    return html.replace(/<meta property="og:image:(?:width|height)" content="[^"]*">\s*/g, '');
+  }
+  const attr = card.replace(/&/g, '&amp;');
+  let out = html
+    .replace(/(<meta (?:property="og:image(?::secure_url)?"|name="twitter:image") content=")[^"]*(">)/g, (x, a, b) => `${a}${attr}${b}`)
+    .replace(/(<meta property="og:image:type" content=")[^"]*(">)/g, `$1${/\.png$/.test(card) ? 'image/png' : 'image/jpeg'}$2`)
+    .replace(/(<meta name="twitter:card" content=")[^"]*(">)/g, '$1summary_large_image$2');
+  if (/og:image:width/.test(out)) {
+    out = out
+      .replace(/(<meta property="og:image:width" content=")[^"]*(">)/g, '$11200$2')
+      .replace(/(<meta property="og:image:height" content=")[^"]*(">)/g, '$1630$2');
+  } else {
+    out = out.replace(/(<meta property="og:image" content="[^"]*">)/, '$1\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">');
+  }
+  if (!/name="twitter:image"/.test(out)) {
+    out = out.replace('</head>', `<meta name="twitter:image" content="${attr}"></head>`);
+  }
+  return out;
+}
+
+/**
+ * X's player card needs an HTTPS page that plays the video in an iframe; the
+ * fn pointed twitter:player (and :stream) at the raw MP4 — 112 MB for one
+ * post — which X rejects, so the card failed outright. There is no embeddable
+ * player route, so a video post shares as a large image card of its poster.
+ * og:video stays: Facebook and most other scrapers do play the file.
+ */
+function dropTwitterPlayer(html) {
+  return html
+    .replace(/<meta name="twitter:player(?::[a-z_:]+)?" content="[^"]*">\s*/g, '')
+    .replace(/(<meta name="twitter:card" content=")player(">)/g, '$1summary_large_image$2');
+}
+
+/**
+ * Structured data on the fn's pages, rewritten in place: each JSON-LD block is
+ * parsed, handed to `edit`, and re-serialised when `edit` returns a value. A
+ * block that does not parse, or that `edit` declines, is left byte-for-byte.
+ */
+function rewriteJsonLd(html, edit) {
+  return html.replace(/(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g, (m, open, body, close) => {
+    let value;
+    try {
+      value = JSON.parse(body);
+    } catch {
+      return m;
+    }
+    const next = value && typeof value === 'object' ? edit(value) : null;
+    return next ? `${open}${jsonLdScript(next)}${close}` : m;
+  });
+}
+
+/**
+ * A profile as ProfilePage { mainEntity: Person }, the shape Google reads for
+ * profile pages. The fn wrote a bare Person whose only sameAs was its own URL,
+ * which tells a consumer nothing; that link is dropped and any real external
+ * one kept. The @handle rides as alternateName, the site-unique identifier.
+ */
+function profilePageLd(value, handle) {
+  if (value['@type'] !== 'Person') return null;
+  const { '@context': _context, '@type': _type, sameAs, ...person } = value;
+  const external = [].concat(sameAs || []).filter(
+    (u) => typeof u === 'string' && u !== person.url && !u.startsWith(`${APP_URL}/`),
+  );
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    ...(person.url ? { url: person.url } : {}),
+    mainEntity: {
+      '@type': 'Person',
+      ...person,
+      ...(handle ? { alternateName: `@${handle}` } : {}),
+      ...(external.length ? { sameAs: external } : {}),
+    },
+  };
+}
+
+/**
+ * A post as SocialMediaPosting, Google's type for user posts on a social
+ * platform, in place of the fn's Article. Article fields carry over; the
+ * author gains the profile URL Google recommends; the post's own text, like
+ * and comment counts come off the record the post branch already fetched. A
+ * video's VideoObject is nested as `video` exactly as the fn wrote it.
+ */
+function socialPostingLd(value, record) {
+  const nodes = Array.isArray(value['@graph']) ? value['@graph'] : [value];
+  const article = nodes.find((n) => n && n['@type'] === 'Article');
+  if (!article) return null;
+  const videoNode = nodes.find((n) => n && n['@type'] === 'VideoObject');
+  const { '@context': _context, '@type': _type, author, ...fields } = article;
+  const username = String((record && record.username) || '').trim();
+  const text = String((record && record.description) || '').trim();
+  const posting = {
+    '@context': 'https://schema.org',
+    '@type': 'SocialMediaPosting',
+    ...fields,
+    ...(author ? { author: { ...author, ...(username ? { url: `${APP_URL}/${encodeURIComponent(username)}` } : {}) } } : {}),
+    ...(text ? { text } : {}),
+  };
+  if (record) {
+    const likes = Number(record.reactionCounts && record.reactionCounts.like) || (typeof record.like === 'number' ? record.like : 0);
+    const comments = Number(record.commentCount) || (Array.isArray(record.comments) ? record.comments.length : 0);
+    posting.commentCount = comments;
+    posting.interactionStatistic = [
+      { '@type': 'InteractionCounter', interactionType: 'https://schema.org/LikeAction', userInteractionCount: likes },
+      { '@type': 'InteractionCounter', interactionType: 'https://schema.org/CommentAction', userInteractionCount: comments },
+    ];
+  }
+  if (videoNode) {
+    const { '@context': _videoContext, ...video } = videoNode;
+    posting.video = video;
+  }
+  return posting;
+}
+
+/**
+ * A community as a CollectionPage — the page of its posts — rather than the
+ * fn's Organization. An Organization named after the community collided with
+ * the brand: the community called "dehub" was marked up as an Organization
+ * named "DeHub", a second, rival brand entity on dehub.io.
+ */
+function communityPageLd(value) {
+  if (value['@type'] !== 'Organization') return null;
+  const { '@context': _context, '@type': _type, name, sameAs: _sameAs, logo: _logo, ...fields } = value;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: name ? `${name} — community on DeHub` : 'Community on DeHub',
+    ...fields,
+    isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+  };
+}
+
+/**
+ * The homepage's WebSite and Organization nodes. The WebSite node's
+ * SearchAction (the sitelinks search box) is a feature Google retired in
+ * 2024, and it aimed at a noindex URL; the Organization's logo was the share
+ * banner. Name, url and alternateName are kept.
+ */
+function homeJsonLd(value) {
+  const nodes = Array.isArray(value['@graph']) ? value['@graph'] : [value];
+  let changed = false;
+  for (const node of nodes) {
+    if (!node || typeof node !== 'object') continue;
+    if (node['@type'] === 'WebSite' && node.potentialAction) {
+      delete node.potentialAction;
+      changed = true;
+    }
+    if (node['@type'] === 'Organization') {
+      node.logo = ORG_LOGO;
+      changed = true;
+    }
+  }
+  return changed ? value : null;
+}
+
+/**
+ * The same-zone relay shareCardImage and buildBlogShareImage read through:
+ *
+ *   /_og/storage/<bucket>/<path>  → a public Supabase storage object
+ *   /_og/blog/<slug>              → that post's blog-share-image render
+ *
+ * Only an image is passed on — never SVG, never HTML — with nosniff and a
+ * locked-down CSP, so a public bucket that holds pages (Builder apps live in
+ * one) can't be served as a document from dehub.io through here.
+ */
+async function ogSourceResponse(request, env, pathname) {
+  const notFound = () => new Response('Not found', {
+    status: 404,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8', 'X-Robots-Tag': 'noindex' },
+  });
+  const rest = pathname.slice(OG_SOURCE_PREFIX.length);
+  if (/\.\.|%2e|%2f|%5c|\\/i.test(rest)) return notFound();
+  let upstream = null;
+  const blog = rest.match(/^blog\/([^/]+)$/);
+  if (blog) {
+    const post = (await getBlogManifest(request, env)).get(decodeURIComponent(blog[1]));
+    if (post) upstream = blogShareSourceUrl(post);
+  } else if (/^storage\/[a-z0-9_-]+\/.+/i.test(rest)) {
+    upstream = `${SUPABASE_STORAGE_PUBLIC}/${rest.slice('storage/'.length)}`;
+  }
+  if (!upstream) return notFound();
+  try {
+    const res = await fetch(upstream, { signal: AbortSignal.timeout(10000) });
+    const type = (res.headers.get('Content-Type') || '').split(';')[0].trim().toLowerCase();
+    if (!res.ok || !type.startsWith('image/') || type.includes('svg')) return notFound();
+    return new Response(res.body, {
+      status: 200,
+      headers: {
+        'Content-Type': type,
+        'Cache-Control': 'public, max-age=86400',
+        'X-Content-Type-Options': 'nosniff',
+        'Content-Security-Policy': "default-src 'none'",
+        'X-Robots-Tag': 'noindex',
+      },
+    });
+  } catch {
+    return new Response('Upstream unavailable', { status: 502, headers: { 'X-Robots-Tag': 'noindex' } });
+  }
+}
+
 function repairProxiedImages(html) {
   let out = html.split(`${CDN_ORIGIN}/nfts/images/`).join(`${CDN_ORIGIN}/images/`);
 
@@ -2274,9 +2654,12 @@ function buildStoreHtml(store) {
     heading: name,
     breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/stores">Stores</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>`,
+    // OnlineStore, not Store: Store is a LocalBusiness, and Google reports a
+    // LocalBusiness without a street address as an error. These shops have no
+    // premises; OnlineStore is the Organization subtype for exactly that.
     jsonLd: {
       '@context': 'https://schema.org',
-      '@type': 'Store',
+      '@type': 'OnlineStore',
       name,
       description,
       url: canonicalUrl,
@@ -2338,6 +2721,14 @@ function buildListingHtml(listing) {
   });
 }
 
+/** The account that created an event, as the Person hosting it. */
+function eventOrganizerLd(event) {
+  const username = String(event.creator_username || '').trim();
+  if (username) return { '@type': 'Person', name: `@${username}`, url: `${APP_URL}/${encodeURIComponent(username)}` };
+  const wallet = String(event.creator_wallet_address || '');
+  return wallet ? { '@type': 'Person', name: `${wallet.slice(0, 6)}...${wallet.slice(-4)}` } : ORG_JSONLD;
+}
+
 function buildEventHtml(event) {
   const canonicalUrl = `${APP_URL}/app/events/${event.event_number}`;
   const name = event.title || 'Event';
@@ -2376,8 +2767,17 @@ ${event.location ? `<p>${escHtml(event.location)}</p>` : ''}
       eventAttendanceMode: event.location
         ? 'https://schema.org/OfflineEventAttendanceMode'
         : 'https://schema.org/OnlineEventAttendanceMode',
-      ...(event.location ? { location: { '@type': 'Place', name: event.location } } : {}),
-      organizer: ORG_JSONLD,
+      // No cancellation or postponement is recorded, so a listed event is a
+      // scheduled one.
+      eventStatus: 'https://schema.org/EventScheduled',
+      // location is required on every Event. An online one happens on its own
+      // DeHub page, which is what VirtualLocation names; a typed-in place is
+      // the only address there is, so it is the address.
+      location: event.location
+        ? { '@type': 'Place', name: event.location, address: event.location }
+        : { '@type': 'VirtualLocation', url: canonicalUrl },
+      // Whoever created the event hosts it; DeHub only lists it.
+      organizer: eventOrganizerLd(event),
     },
   });
 }
@@ -2415,15 +2815,17 @@ function buildDexPoolHtml(pool) {
     breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/dex">DEX</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p>Token contract: <code>${escHtml(pool.token_address)}</code></p>`,
+    // WebPage, not WebApplication: see buildMarketingHtml — an app type with
+    // no rating is an invalid Software App item.
     jsonLd: {
       '@context': 'https://schema.org',
-      '@type': 'WebApplication',
+      '@type': 'WebPage',
       name: title,
       description,
       url: canonicalUrl,
-      applicationCategory: 'FinanceApplication',
-      operatingSystem: 'Web',
       ...(pool.image_url ? { image: pool.image_url } : {}),
+      about: { '@type': 'Thing', name: `${pool.name} (${pool.symbol})`, identifier: pool.token_address },
+      isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
     },
   });
 }
@@ -2501,16 +2903,16 @@ function buildMiniAppHtml(app) {
   );
   const manifest = app.manifest && typeof app.manifest === 'object' ? app.manifest : {};
   const image = absolutize(manifest.ogImageUrl) || shareImage('apps');
+  // WebPage, not SoftwareApplication: a listed app has no ratings to give,
+  // and Google reports a Software App item without one as invalid.
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
+    '@type': 'WebPage',
     name,
     description,
     url: canonicalUrl,
-    applicationCategory: app.category || 'WebApplication',
-    operatingSystem: 'Web, Android',
     ...(app.icon_url ? { image: absolutize(app.icon_url) } : {}),
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
   };
   return entityHtml({
     canonicalUrl,
@@ -2525,6 +2927,60 @@ function buildMiniAppHtml(app) {
     bodyHtml: `<p>${escHtml(description)}</p>
 <p>Runs at <strong>${escHtml(app.domain)}</strong>${app.category ? ` · ${escHtml(String(app.category).replace(/-/g, ' '))}` : ''}</p>
 <p><a href="${canonicalUrl}">Open ${escHtml(name)} in DeHub</a> or <a href="${APP_URL}/apps">browse the other apps</a>.</p>`,
+  });
+}
+
+/**
+ * A shared Builder app, /builder/preview/<id>. The SPA renders the generated
+ * index.html from public storage in a sandboxed frame; there is no row with a
+ * name or a description, so the app's own <title> and meta description are
+ * the only words that say what it is. Always noindex, here and in the SPA
+ * (BuilderPreviewPage): a preview is somebody's generated app, not a page of
+ * ours to rank. It still needs a card of its own — it is a link people send.
+ */
+const BUILDER_PREVIEW_ID = /^\/builder\/preview\/([A-Za-z0-9_-]{6,64})\/?$/;
+
+async function fetchBuilderAppMeta(id) {
+  try {
+    const res = await fetch(`${SUPABASE_STORAGE_PUBLIC}/builder-apps/${id}/index.html`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return null;
+    const html = (await res.text()).slice(0, 65536);
+    const decode = (s) => String(s || '').replace(/&(?:amp|quot|lt|gt|#39);/g, (e) => HTML_ENTITIES[e]).replace(/\s+/g, ' ').trim();
+    const title = decode((html.match(/<title[^>]*>([^<]*)<\/title>/i) || [])[1]);
+    const description = decode((html.match(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i) || [])[1]);
+    return { title, description };
+  } catch {
+    return null;
+  }
+}
+
+function buildBuilderPreviewHtml(id, appMeta) {
+  const canonicalUrl = `${APP_URL}/builder/preview/${id}`;
+  const name = truncate((appMeta && appMeta.title) || '', 80);
+  const description = truncate(
+    (appMeta && appMeta.description) || (name ? `${name} — an app built on DeHub Builder.` : 'An app built on DeHub Builder.'),
+    200,
+  );
+  return entityHtml({
+    canonicalUrl,
+    title: name ? `${name} — Built with DeHub Builder` : 'Built with DeHub Builder',
+    description,
+    image: shareImage('builder'),
+    noindex: true,
+    heading: name || 'Built with DeHub Builder',
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/builder">Builder</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><a href="${APP_URL}/builder">Build your own with DeHub Builder</a>.</p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: name || 'Built with DeHub Builder',
+      description,
+      url: canonicalUrl,
+      isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+    },
   });
 }
 
@@ -2661,7 +3117,9 @@ function buildCreatorFlowHtml(flow) {
       url: canonicalUrl,
       ...(flow.created_at ? { dateCreated: flow.created_at } : {}),
       ...(flow.updated_at ? { dateModified: flow.updated_at } : {}),
-      isPartOf: { '@type': 'SoftwareApplication', name: 'DeHub Creator Flow', url: `${APP_URL}/creator/flow` },
+      // A WebPage: a nested SoftwareApplication is still a Software App item
+      // to Google, and invalid without a rating.
+      isPartOf: { '@type': 'WebPage', name: 'DeHub Creator Flow', url: `${APP_URL}/creator/flow` },
     },
   });
 }
@@ -2814,16 +3272,21 @@ function buildGuidePageHtml(slug, meta) {
 <link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="DeHub">
+${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
+${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(`guides/${slug}`, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'Article',
   headline: meta.title, description: meta.description,
+  image: shareImage(`guides/${slug}`),
+  author: { '@type': 'Organization', name: 'DeHub', url: APP_URL },
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
 })}</script>
+${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, { name: meta.title.replace(/ — DeHub Guide$/, ''), url: canonicalUrl }])}
 </head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
@@ -3592,6 +4055,9 @@ function shouldServeSSR(pathname) {
   // One mini app, /apps/<slug>. `apps` is reserved too, and /apps/dev is a
   // static card of its own, handled above.
   if (/^\/apps\/(?!dev\/?$)[a-z0-9][a-z0-9-]{1,39}\/?$/.test(pathname)) return true;
+  // A shared Builder app. `builder` is a MARKETING key, so the bare segment
+  // passes above and the preview path under it did not.
+  if (BUILDER_PREVIEW_ID.test(pathname)) return true;
   // Off-chain post slugs (/newpost/<n>) and the short post shapes (/posts/<n>,
   // /posts/<n>/b, /posts/<n>/b/<commentId>). Same trap a third time: `newpost`
   // and `posts` are both reserved ROUTE_SEGMENTS, so the profile fall-through
@@ -4731,6 +5197,10 @@ async function handleRequest(request, env, ctx) {
     return resp;
   }
 
+  // Share-card sources for the image transform (see shareCardImage). Ahead of
+  // the `/_` static-asset skip below, which would hand these to ASSETS.
+  if (pathname.startsWith(OG_SOURCE_PREFIX)) return ogSourceResponse(request, env, pathname);
+
   // Skip static assets immediately.
   //
   // This is the gate that actually decided `dehub.io/mal.eth` was a file: it
@@ -5245,6 +5715,17 @@ async function handleRequest(request, env, ctx) {
     }
   }
 
+  // A shared Builder app. Rendered even when its file can't be read (still
+  // building, or gone): the link was shared either way, and the Builder card
+  // beats the homepage one.
+  const builderPreview = cleanPath.match(BUILDER_PREVIEW_ID);
+  if (builderPreview) {
+    return guard(new Response(buildBuilderPreviewHtml(builderPreview[1], await fetchBuilderAppMeta(builderPreview[1])), {
+      status: 200,
+      headers: { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' },
+    }));
+  }
+
   const bountyMatch = cleanPath.match(/^\/bounty\/(\d+)$/);
   if (bountyMatch) {
     const job = await supabaseLookup(
@@ -5397,6 +5878,10 @@ async function handleRequest(request, env, ctx) {
       (m, href, attrs, label) => `<a class="dh-cta" href="${appHref(href)}" rel="nofollow">${label}</a>`,
     );
 
+    if (!html.includes('og:locale')) {
+      html = html.replace('</head>', `${ogLocaleTag()}</head>`);
+    }
+
     // Canonical: SSR pages historically had none, letting ?param URLs and
     // /app-prefixed twins index as duplicates. Referral landings (/r/<code>)
     // get noindex ONLY — Google ignores cross-URL canonicals on noindexed
@@ -5462,6 +5947,7 @@ async function handleRequest(request, env, ctx) {
       // a miss costs the sections, not the page.
       const record = await fetchPostRecord(proxiedPostId);
       html = enrichPostMeta(html, proxiedPostId, record);
+      html = rewriteJsonLd(html, (ld) => socialPostingLd(ld, record));
       const minter = String((record && record.minter) || '').toLowerCase();
       const byAuthor = minter ? await fetchFeedRows(`minter=${minter}`, 7) : [];
       const others = byAuthor.filter((r) => String(r.tokenId) !== String(proxiedPostId)).slice(0, 6);
@@ -5491,6 +5977,17 @@ async function handleRequest(request, env, ctx) {
     }
     if (proxiedHandle) {
       html = profileBannerCard(html);
+    }
+    // Structured data and cards on the rest of the fn's entity pages: a
+    // profile as ProfilePage, a community as a page rather than a rival brand
+    // Organization, and post/community images as true 1200x630 cards.
+    const proxiedCommunity = !proxiedPostId && /^\/app\/communities\/[^/?#]+/.test(ssrPath);
+    if (proxiedPostId) {
+      html = dropTwitterPlayer(cardProxiedImage(html));
+    } else if (proxiedHandle) {
+      html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle));
+    } else if (proxiedCommunity) {
+      html = cardProxiedImage(rewriteJsonLd(html, communityPageLd));
     }
 
 
@@ -5545,6 +6042,8 @@ async function handleRequest(request, env, ctx) {
         /("@type":"WebSite"[^}]*?"description":")[^"]*(")/,
         (m, a, b) => `${a}${escJsonText(HOME_DESCRIPTION)}${b}`,
       );
+      // Retired SearchAction off, square logo on (see homeJsonLd).
+      html = rewriteJsonLd(html, homeJsonLd);
       // Search Console ownership. The tag lives in index.html, which only
       // browsers ever receive — every bot UA gets this rendered HTML instead,
       // and it had no tag at all. Verification survives today purely because

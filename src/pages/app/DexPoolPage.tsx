@@ -381,7 +381,7 @@ function PoolTerminal({ pool }: { pool: DexPool }) {
 
   return <div className="dex-terminal">
     <SEOHead title={title} description={description} url={canonical} image={pool.image_url ?? stats?.imageUrl ?? undefined}
-      jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: title, url: canonical, applicationCategory: 'FinanceApplication', operatingSystem: 'Web', description }} />
+      jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: title, url: canonical, description }} />
     <header className="dex-top">
       <PoolPicker current={pool} />
       {isCreator && <><button type="button" className="dex-image-button" onClick={() => imageInput.current?.click()}><ImagePlus size={14} />{t('dex.pool.changeImage')}</button>
