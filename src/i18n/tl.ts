@@ -1611,6 +1611,7 @@ export const tl = {
     swatchLightGrey: 'Pula-Pula',
     swatchOffWhite: 'Off White',
     swatchWhite: 'Puti',
+    swatchGraphite: 'Instagram',
   },
   legalDisclaimer: {
     title: 'Disclaimer',
@@ -2031,6 +2032,7 @@ export const tl = {
     mostPopular: 'Ang pinakapopular na pakete manager',
     fastReliable: 'Mabilis at matatag na pakete manager',
     efficient: 'Epektibong pakete manager',
+    authentication: 'Pag - authenticate →',
   },
   quickStart: {
     title: 'Gabay sa Mabilisang Pagsisimula',
@@ -2075,6 +2077,7 @@ export const tl = {
     nextBadgesDesc: 'Ano ang ina - unlock ng bawat tier ng badge at kung ano ang nagkakahalaga nito',
     nextStakeDesc: 'Ikaw ay maaaring mag-stake ng mga token ng DeHub para sa mga parangal at isang mas mataas na badge.',
     nextFaqTitle: 'Mga Madalas Itanong',
+    nextFaqDesc: 'Mga sagot sa mga pinakakaraniwang tanong',
   },
   apiEndpoints: {
     title: 'Mga Endpoint ng API',

@@ -83,6 +83,7 @@ export const dyu = {
     featureDevSupportDesc: 'An bɛ jɛkuluw ka poroze ani dantigɛli waritigɛ.',
     featureCommunity: 'Jɛkulu',
     featureCommunityDesc: 'Jɛkulu gɛlɛnman ani dɛmɛbaa min bɛ yan kabini 2021.',
+    readyDescription: 'An ka ladiliw sira tagama walisa k\'an ka site web labɛn miniti damanin kɔnɔ.',
   },
   overview: {
     title: 'DeHub: Media app kɔrɔw ka jatebɔlen, baarakɛla-tigi sugandilen.',
@@ -965,6 +966,8 @@ export const dyu = {
     moreB7Desc: 'O la, a ka ɲi ka kɛ sababu ye ka baara kɛ ni mɔgɔ wɛrɛw ye.',
     moreB8: 'O sara ye nin ye:',
     moreB8Desc: 'DeHub ye sara sɔrɔ kabini a ye $ 1,000,000 sɔrɔ a ka soo saan 2022 la. A ka sisanba be sɔrɔ dehub.io/raffle kan.',
+    studioB4: 'Credits or a plan:',
+    tocDepin: 'DePIN',
   },
   games: {
     title: 'Talonw',
@@ -1015,6 +1018,7 @@ export const dyu = {
     feature2: 'Arcade mini-dɔnkiliw, ɲɔgɔndanw ani ɲɔgɔndanw',
     feature3: 'An ka videwow ka kan ka bɔ an ka site web kan',
     feature4: 'Ka jɛnkuluw ni e-dɔnni jɛnkuluw sigi sen kan ni kanbelew ni sunguruw ye',
+    dutyTitle: 'Claude of Duty',
   },
   tokenEconomics: {
     title: 'Token nafolo & bɔli',
@@ -1437,6 +1441,7 @@ export const dyu = {
     never1: 'Ka kumaɲɔgɔnya kɛ ni mɔgɔ dɔ ye',
     evenIfConclusion: 'I ka kuma sirinin tɛ se ka kalan. O lo be se ka kɛ sababu ye mɔgɔ be se ka sɛbɛri kɛ a laban na.',
     commitmentDesc: 'DeHub fɛ, an lanin b\'a la ko an ka ɲi ka to hɛɛrɛ la. Mɔgɔ minw be se ka kumaɲɔgɔnya kɛ ni mɔgɔ wɛrɛw ye, olu ka ɲi ka kumaɲɔgɔnya kɛ ni mɔgɔ wɛrɛw ye. Ni fɛɛn dɔ ma sɛbɛ fɔlɔ — fotow, videwow ani faliw, wala kumaɲɔgɔnya ni mɔgɔ dɔ ye min ma sɛbɛ fɔlɔ - an b\'o fɔ ka gwɛ.',
+    completeFlowTitle: '🔐 A be baara kɛ cogo di?',
   },
   aiToolkits: {
     title: 'AI Minanw',
@@ -2243,6 +2248,7 @@ export const dyu = {
     resultOne: '1 O kɛra sababu ye',
     resultMany: '{count} results',
     placeholder: 'Search docs & blog...',
+    popularDepin: 'DePIN',
   },
   tokenOverview: {
     useAiTitle: 'O ye kokɛcogo ɲuman ye.',

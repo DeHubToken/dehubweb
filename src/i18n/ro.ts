@@ -2612,6 +2612,7 @@ export const ro = {
     reason_mutualGrowthDesc: 'Creșteți împreună prin co-promovare și audiențe partajate',
     becomeLaunchPartner: 'Devino Partener de Lansare',
     limitedSlots: 'Slote limitate de parteneriat disponibile pentru lansarea oficială',
+    povrAudienceTargeting: 'Direcționarea publicului POVR',
   },
   docsSearch: {
     title: 'Caută în documente',

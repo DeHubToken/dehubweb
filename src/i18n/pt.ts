@@ -2623,6 +2623,7 @@ export const pt = {
     reason_mutualGrowthDesc: 'Crescer juntos por meio de promoção cruzada e públicos compartilhados',
     becomeLaunchPartner: 'Torne-se um parceiro de lançamento',
     limitedSlots: 'Slots de parceria limitada disponíveis para o nosso lançamento oficial',
+    benefit_holderBase: 'Promover para uma base de titulares que viu um pico de todos os tempos de mais de $ 500.000.000 FDV',
   },
   docsSearch: {
     title: 'Busque nos docs',

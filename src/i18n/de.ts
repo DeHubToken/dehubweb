@@ -1273,6 +1273,7 @@ export const de = {
     bugBounty: 'Bug Bounty',
     disclaimer: 'Haftungsausschluss',
     disclaimerText: 'DeHub-Token dienen ausschließlich zu Versorgungszwecken in der gleichen Weise wie alle digitalen In-Game- oder In-App-Token oder -Währungen und sind streng genommen keine Investition. Da unser Token in der Kette lebt, können wir zusätzlichen Nutzen sowie ein beispielloses Maß an nachprüfbarer Transparenz bieten. Die oben genannten Daten werden ausschließlich zu Transparenz-, Bildungs- und Informationszwecken erhoben. DeHub und alle verbundenen Unternehmen übernehmen keine Haftung für finanzielle Verluste, die durch den Kauf von Token oder NFTs entstehen, die wir freigeben. Die Märkte sind sehr volatil. Sie könnten auch Ihr gesamtes Geld durch unvorhergesehene Fehler wie Kompetenzfehler, technische Fehler, Hacks usw. verlieren. Daher sollten Sie immer nur das ausgeben, was Sie sich leisten können zu verlieren.',
+    audit: 'Audit',
   },
   depin: {
     title: 'DePIN (Dezentrale physische Infrastruktur)',
@@ -1769,6 +1770,13 @@ export const de = {
     q1q2_2026: 'Q1–Q2 2026',
     q3_2026: 'Q3 2026',
     q2q4_2026: 'Q4 2026 und darüber hinaus',
+    q4_2024_items: [
+      'Onchain handelbare Abonnements freigegeben',
+      'Teaser für "Last Chad Standing" (erste MMA-Battle-Royale) mit über 1M+ Aufrufen freigegeben',
+      'Agentur wuchs auf Platz 1 im UK mit 1.000 exklusiv unterzeichneten Livestreamern',
+      'DePIN Phase 1 freigegeben',
+      'Ende-zu-Ende verschlüsselte Privatchat-Funktionen ✅',
+    ],
   },
   brandAssets: {
     title: 'Marken-Assets',

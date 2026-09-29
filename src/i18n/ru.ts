@@ -2617,6 +2617,7 @@ export const ru = {
     reason_mutualGrowthDesc: 'Расти вместе через кросс-продвижение и общие аудитории',
     becomeLaunchPartner: 'Стать партнёром по запуску',
     limitedSlots: 'Ограниченное количество партнёрских мест для официального запуска',
+    povrAudienceTargeting: 'Таргетинг аудитории POVR',
   },
   docsSearch: {
     title: 'Ищите в документации',

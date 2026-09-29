@@ -41,6 +41,7 @@ export const yue = {
     blog: '博客',
     faq: '常見問題',
     donate: '捐贈',
+    docsChatAssistant: '助手',
   },
   common: {
     lightMode: '淺色模式',
@@ -895,6 +896,7 @@ export const yue = {
     altConnect: '連結頁面，用以將 DeHub 與 ChatGPT 或 Claude 透過 MCP 連接。',
     badgeDelegationB7: '另一方有話說：',
     commCreator4: '喺付費牆後面分享高級內容',
+    directTitle: '直接',
   },
   games: {
     title: '遊戲',
@@ -1006,6 +1008,8 @@ export const yue = {
     secureGatewayDesc: '全數付款資料均經 Stripe 加密處理，我哋無法存取或儲存你哋敏感資料或卡片資訊，為你帶來絕對安心。',
     disclaimer: '免責聲明',
     disclaimerText: 'DeHub 代幣嚴格嚟講係用嚟實用用途，就好似任何遊戲內或者應用程式內嘅數碼代幣或者貨幣一樣，而且嚴格嚟講唔係投資。由於我哋嘅代幣喺鏈上面，我哋可以提供額外嘅實用性同埋前所未有嘅可驗證透明度。以上資料只係為咗透明度、教育同資訊目的而編輯。 DeHub 同所有關係企業對於購買我哋發佈嘅任何代幣或 NFT 所造成嘅財務損失，都唔負責任。市場係高度波動嘅。你亦都可能會因為任何預期唔到嘅錯誤而失去所有錢，例如能力失敗、技術錯誤、黑客入侵等等。所以，你應該只係花你輸得起嘅嘢。',
+    dehubToken: '去中心代幣',
+    dehubTokenDesc: '憑證用嚟訂閱創作者、畀小費流媒體或者解鎖內容。你持有嘅次數越多，你嘅手續費就會越低，同埋你解鎖嘅超能力就會越多，例如時間軸趨勢提升同驗證徽章。',
   },
   tokenGovernance: {
     title: '治理',
@@ -1318,6 +1322,7 @@ export const yue = {
     never1: '讀你的加密訊息',
     evenIfConclusion: '你嘅加密訊息仍然係讀唔到嘅。呢個就係端對端加密嘅力量。',
     commitmentDesc: '喺 DeHub ，我哋相信私隱係一項基本權利。加密嘅訊息受到數學嘅保護，而唔單止係政策，佢哋會用經過審計、廣泛審查嘅密碼庫同算法。喺某啲嘢仲未加密嘅地方 — 相片、影片同檔案，或者同未解鎖加密嘅人嘅對話 — 我哋會好清楚噉講。',
+    xchacha1: '由經過審核嘅 @noble/ciphers 庫進行認證加密，每個訊息都有一個新鮮嘅隨機 24 字节隨機值',
   },
   aiToolkits: {
     title: '人工智能工具包',
@@ -1639,6 +1644,7 @@ export const yue = {
       '同現有嘅串流同家庭娛樂品牌進行商業整合',
       'V/AR 個人檔案中心同消費者數據指標',
     ],
+    y2026: '2026年 - 本年',
   },
   brandAssets: {
     title: '品牌資產',
@@ -1662,6 +1668,14 @@ export const yue = {
     requestFullBrandKit: '要求全品牌套裝',
     requestFullBrandKitDesc: '如果你想要 SVG 、 EPS 同埋其他向量格式，或者如果你需要呢度冇顯示嘅資產，請聯絡我哋嘅品牌團隊。',
     contactBrandTeam: '聯絡品牌團隊',
+    swatchBlack: '黑色',
+    swatchGraphite: '石墨',
+    swatchGrey: '灰色',
+    swatchLightGrey: '淺灰色',
+    swatchOffWhite: '淡白色',
+    swatchSurface: '表面',
+    swatchSurfaceRaised: '表面 +1',
+    swatchWhite: '白色',
   },
   legalDisclaimer: {
     title: '法律免責聲明',
@@ -2071,6 +2085,7 @@ export const yue = {
     postNotFoundDesc: '你搵緊嘅網誌文章唔存在。',
     backToBlog: '返去網誌',
     loadFailed: '咁樣嘅文章載唔到。',
+    retry: '重試',
   },
   installation: {
     title: '安裝',
@@ -2300,5 +2315,6 @@ export const yue = {
     noResultsHint: '嘗試不同關鍵詞或檢查拼寫。',
     keyboardHint: '按↑↓選擇，↵確認，⎋關閉',
     resultMany: '{count} 結果',
+    recent: '最近嘅搜尋',
   },
 };

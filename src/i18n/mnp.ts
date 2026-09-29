@@ -676,6 +676,7 @@ export const mnp = {
     benefit_holderBase: '針對一個持有量曾經達到過超過五億美金市值的高峰的持有者群體進行推廣',
     reason_mutualGrowthDesc: '透過跨平台推廣跟共享觀眾一起成長',
     limitedSlots: '官方啟動時有限的夥伴名額開放喔！',
+    dayCountOne: '{count} 元/天',
   },
   docsSearch: {
     title: '搜尋文件',
