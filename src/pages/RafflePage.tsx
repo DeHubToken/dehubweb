@@ -197,7 +197,7 @@ export default function RafflePage() {
       />
 
       <div data-glass-page className="min-h-[100dvh] overflow-x-clip bg-zinc-950 text-white">
-        <header className="sticky top-0 z-30 border-b border-white/10 bg-zinc-950/85 backdrop-blur-xl">
+        <header data-clear-top-bar className="sticky top-0 z-30 border-b border-white/10 bg-zinc-950/85 backdrop-blur-xl">
           <nav
             aria-label="Prize draws navigation"
             className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
