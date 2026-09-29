@@ -431,13 +431,22 @@ const DOCS_META_ONLY = [
   'faq', 'donate',
 ];
 const allDocsRoutes = [...new Set([...docsRoutes, ...DOCS_META_ONLY])];
+// Each docs row keeps the lastmod it already carries: the date that page's copy
+// last changed, which this script cannot see — a CI checkout dates every file
+// "now", and a sitemap stamping every page with today's date teaches Google to
+// ignore its lastmod.
+const docsLastmod = new Map(
+  [...sm.matchAll(/<loc>https:\/\/dehub\.io\/docs\/([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
+    .map(([, route, lastmod]) => [route.trim(), lastmod.trim()]),
+);
 sm = sm.replace(
   /\s*<url>\s*<loc>https:\/\/dehub\.io\/docs\/([^<]+)<\/loc>[\s\S]*?<\/url>/g,
   (block, sub) => (sub.trim() === 'blog' ? block : '')
 );
-const docsUrls = allDocsRoutes.map((r) =>
-  `  <url>\n    <loc>${APP_URL}/docs/${r}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`
-).join('\n');
+const docsUrls = allDocsRoutes.map((r) => {
+  const lastmod = docsLastmod.has(r) ? `\n    <lastmod>${xmlEsc(docsLastmod.get(r))}</lastmod>` : '';
+  return `  <url>\n    <loc>${APP_URL}/docs/${r}</loc>${lastmod}\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`;
+}).join('\n');
 sm = sm.replace(/\s*<\/urlset>\s*$/, `\n${docsUrls}\n</urlset>\n`);
 fs.writeFileSync(smPath, sm);
 
