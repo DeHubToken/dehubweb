@@ -28,7 +28,6 @@ import { EventLinkEmbed } from '@/components/app/events/EventLinkEmbed';
 import { StageLinkEmbed } from '@/components/app/stages/StageLinkEmbed';
 import { ProfileLinkEmbed } from '@/components/app/profile/ProfileLinkEmbed';
 import { SharedPostEmbed } from '@/components/app/chat/SharedPostEmbed';
-import { AppLinkEmbed } from '@/components/app/cards/AppLinkEmbed';
 
 /**
  * Lazy, unlike its siblings. This switchboard is on the boot path — every feed
@@ -187,8 +186,6 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
           <FilmLinkEmbed link={link} compact={compact} className={className} fallback={fallback} />
         </Suspense>
       );
-    case 'app':
-      return <AppLinkEmbed slug={link.appSlug!} path={link.path} fallback={fallback} />;
     default:
       return fallback;
   }

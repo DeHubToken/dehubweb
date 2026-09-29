@@ -6,14 +6,13 @@
  * appear here. Ranking arrives with miniapp-rank; until then the order is
  * alphabetical, which at least is not a secret.
  */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { BadgeCheck, Blocks, Code2, Search } from 'lucide-react';
+import { BadgeCheck, Blocks, Code2 } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { fetchListedApps, type MiniAppListing } from '@/lib/miniapp/registry';
-import { ARCADE_GAMES } from '@/config/arcade-games';
 
 function AppCard({ app }: { app: MiniAppListing }) {
   return (
@@ -43,20 +42,6 @@ function AppCard({ app }: { app: MiniAppListing }) {
 export default function AppsPage() {
   const { t } = useTranslation();
   const [apps, setApps] = useState<MiniAppListing[] | null>(null);
-  const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('all');
-  const categories = useMemo(
-    () => [...new Set((apps ?? []).map((a) => a.category).filter((c): c is string => Boolean(c)))].sort(),
-    [apps],
-  );
-  const visible = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return (apps ?? []).filter(
-      (a) =>
-        (category === 'all' || a.category === category) &&
-        (!q || [a.name, a.subtitle, a.description, a.domain].some((v) => v?.toLowerCase().includes(q))),
-    );
-  }, [apps, query, category]);
   const contentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
@@ -110,66 +95,7 @@ export default function AppsPage() {
         </div>
       </div>
 
-      <div ref={contentRef} className="mx-auto max-w-4xl space-y-3 px-2 pb-24 pt-2 sm:px-3">
-        <div data-feed-item className="space-y-2">
-          <div className="flex items-center gap-2 rounded-xl bg-zinc-900/60 px-3 ring-1 ring-white/[0.06]">
-            <Search className="h-4 w-4 shrink-0 text-zinc-500" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t('miniApps.store.search')}
-              aria-label={t('miniApps.store.search')}
-              className="h-10 min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none"
-            />
-          </div>
-          {categories.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5">
-              {['all', ...categories].map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setCategory(c)}
-                  aria-pressed={category === c}
-                  data-filter-chip
-                  data-active={category === c ? 'true' : 'false'}
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${
-                    category === c ? 'bg-white text-black' : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800'
-                  }`}
-                >
-                  {c === 'all' ? t('miniApps.store.all') : t(`miniApps.category.${c}`)}
-                </button>
-              ))}
-            </div>
-          ) : null}
-        </div>
-
-        {!query && category === 'all' ? (
-          <section data-feed-item>
-            <h2 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-              {t('miniApps.store.fromDehub')}
-            </h2>
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-              {ARCADE_GAMES.map((game) => (
-                <Link
-                  key={game.slug}
-                  to={`/arcade/${game.slug}`}
-                  className="flex items-center gap-3 rounded-2xl bg-zinc-900/60 p-3 ring-1 ring-white/[0.06] transition-colors hover:bg-zinc-900"
-                >
-                  <img src={game.art} alt="" loading="lazy" className="h-14 w-14 shrink-0 rounded-xl object-cover" />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-white">{game.title}</p>
-                    <p className="truncate text-xs text-zinc-400">{game.tagline}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        {apps !== null && apps.length > 0 && visible.length === 0 ? (
-          <p className="px-1 text-sm text-zinc-400">{t('miniApps.store.noMatch')}</p>
-        ) : null}
-
+      <div ref={contentRef} className="mx-auto max-w-4xl px-2 pb-24 pt-2 sm:px-3">
         {apps === null ? (
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
             {Array.from({ length: 6 }, (_, i) => (
@@ -186,7 +112,7 @@ export default function AppsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-            {visible.map((app) => (
+            {apps.map((app) => (
               <AppCard key={app.id} app={app} />
             ))}
           </div>

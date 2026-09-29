@@ -14,15 +14,14 @@ import { useRef, useState, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { verifyMessage } from 'ethers';
-import { AlertTriangle, CheckCircle2, Copy, Loader2, Play, Send, ShieldCheck } from 'lucide-react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { AlertTriangle, CheckCircle2, Copy, Loader2, Play, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { signEncryptionMessage } from '@/lib/dm-e2ee/signer';
 import { ownershipMessage, parseAppUrl } from '@/lib/miniapp/protocol';
-import { checkManifest, fetchMyApps, submitApp, type ManifestCheck } from '@/lib/miniapp/registry';
+import { checkManifest, type ManifestCheck } from '@/lib/miniapp/registry';
 
 const QUICKSTART = `<script src="https://dehub.io/sdk/miniapp.js"></script>
 <script>
@@ -109,34 +108,11 @@ export default function AppsDevPage() {
   const [result, setResult] = useState<ManifestCheck | null>(null);
   const [signing, setSigning] = useState(false);
   const [ownership, setOwnership] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const queryClient = useQueryClient();
-  const { data: myApps } = useQuery({
-    queryKey: ['miniapp-mine', walletAddress],
-    queryFn: fetchMyApps,
-    enabled: Boolean(walletAddress),
-    staleTime: 30_000,
-  });
   const contentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
   const parsed = parseAppUrl(url, { dev: true });
   const isLocal = parsed?.protocol === 'http:';
-
-  const submit = async () => {
-    if (!parsed) return;
-    setSubmitting(true);
-    try {
-      const { app, updated } = await submitApp(parsed.toString());
-      toast.success(updated ? t('miniApps.dev.submitUpdated') : t('miniApps.dev.submitDone'));
-      void queryClient.invalidateQueries({ queryKey: ['miniapp-mine'] });
-      navigate(`/apps/${app.slug}`);
-    } catch (error) {
-      toast.error((error as Error).message);
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   const check = async () => {
     if (!parsed) return;
@@ -284,68 +260,9 @@ export default function AppsDevPage() {
                   </div>
                 </div>
               ) : null}
-              {result.ok && parsed && !isLocal ? (
-                <div className="space-y-2 border-t border-white/10 pt-3">
-                  <p className="text-xs leading-relaxed text-zinc-400">{t('miniApps.dev.submitBody')}</p>
-                  <button
-                    type="button"
-                    onClick={() => void submit()}
-                    disabled={submitting || !walletAddress}
-                    className="flex items-center gap-1.5 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black disabled:opacity-40"
-                  >
-                    {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                    {t('miniApps.dev.submit')}
-                  </button>
-                  {!walletAddress ? <p className="text-xs text-zinc-500">{t('miniApps.dev.submitSignIn')}</p> : null}
-                </div>
-              ) : null}
             </div>
           ) : null}
         </Section>
-
-        {myApps && myApps.length > 0 ? (
-          <Section title={t('miniApps.dev.yourAppsTitle')}>
-            <div className="space-y-2">
-              {myApps.map((app) => (
-                <div key={app.slug} className="flex items-center gap-3 rounded-xl bg-black/40 p-2.5 ring-1 ring-white/10">
-                  {app.icon_url ? (
-                    <img src={app.icon_url} alt="" className="h-10 w-10 shrink-0 rounded-lg object-cover" />
-                  ) : (
-                    <div className="h-10 w-10 shrink-0 rounded-lg bg-zinc-800" />
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-white">{app.name}</p>
-                    <p className="truncate text-xs text-zinc-400">
-                      {app.status === 'suspended'
-                        ? t('miniApps.dev.stateSuspended')
-                        : app.tier === 'unlisted'
-                          ? t('miniApps.dev.stateUnlisted')
-                          : t('miniApps.dev.stateListed')}
-                      {app.review_note ? ` · ${app.review_note}` : ''}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      void navigator.clipboard?.writeText(`https://dehub.io/apps/${app.slug}`);
-                      toast.success(t('miniApps.dev.copied'));
-                    }}
-                    aria-label={t('miniApps.dev.copyLink')}
-                    className="rounded-md bg-zinc-800 p-2 text-zinc-300 hover:bg-zinc-700"
-                  >
-                    <Copy className="h-3.5 w-3.5" />
-                  </button>
-                  <Link
-                    to={`/apps/${app.slug}`}
-                    className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-700"
-                  >
-                    {t('miniApps.dev.open')}
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </Section>
-        ) : null}
 
         <Section title={t('miniApps.dev.ownershipTitle')}>
           <p className="text-xs leading-relaxed text-zinc-400">{t('miniApps.dev.ownershipBody')}</p>
