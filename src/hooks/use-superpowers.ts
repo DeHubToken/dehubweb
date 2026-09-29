@@ -24,6 +24,7 @@ import {
   bookBoost,
   cancelBoost,
   fetchBoostSlot,
+  fetchBoostQueue,
   fetchFrontRow,
   fetchMyTeamUp,
   fetchTeamUpTeams,
@@ -227,6 +228,19 @@ export function useBoostSlot(enabled = true) {
     gcTime: SLOT_ROTATION_MS,
     refetchOnWindowFocus: false,
     // The feed must not wait on this, and must not break without it.
+    retry: false,
+  });
+}
+
+/** Every live boost, oldest first — the home feed's boost queue. */
+export function useBoostQueue(enabled = true) {
+  return useQuery({
+    queryKey: ['superpowers', 'slots'],
+    queryFn: () => fetchBoostQueue(),
+    enabled,
+    staleTime: 60 * 1000,
+    refetchInterval: enabled ? 60 * 1000 : false,
+    refetchOnWindowFocus: false,
     retry: false,
   });
 }

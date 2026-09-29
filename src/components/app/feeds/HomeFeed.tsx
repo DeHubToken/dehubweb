@@ -14,7 +14,7 @@ import { createPortal } from 'react-dom';
 import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { flattenFeedPages } from '@/lib/feed-pages';
 import { isHomeFeedRoute } from '@/lib/home-routes';
@@ -72,7 +72,7 @@ import { useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal
 import { scrollDocumentTo } from '@/lib/document-scroll';
 import { usePersistedFeedFilter, usePersistedContentFilters, clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
-import { useBoostSlot } from '@/hooks/use-superpowers';
+import { useBoostQueue } from '@/hooks/use-superpowers';
 import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
@@ -395,6 +395,119 @@ function EmptyState({ isFollowing, failed, onRetry }: { isFollowing: boolean; fa
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
+
+function nftToFeedItem(pinnedPost: any): FeedItemType {
+    
+    const id = String(pinnedPost.tokenId);
+    const views = resolveViewCount(pinnedPost);
+    const timeAgo = pinnedPost.createdAt ? formatTimeAgo(pinnedPost.createdAt) : 'Just now';
+    
+    const nftPostType = pinnedPost.postType || 'video';
+    
+    if (nftPostType === 'image' || (pinnedPost.imageUrls && pinnedPost.imageUrls.length > 0 && !pinnedPost.videoUrl)) {
+      const imageUrls = buildFeedImageUrls(pinnedPost.imageUrls);
+      const image = imageUrls?.[0] || buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
+      const avatar = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
+        : 'user';
+      
+      const imagePost: ImagePost = {
+        id,
+        type: 'image',
+        // Load-bearing, not housekeeping. `ImageCard` gates an adult image
+        // behind `useMatureGate(post.contentRating)`, and an undefined rating
+        // reads as safe — so dropping it here paints a mature image unblurred
+        // at the top of the feed for a viewer who never opted in. The video
+        // and text branches below carry it; this one did not.
+        contentRating: pinnedPost.contentRating,
+        username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
+        verified: false,
+        avatar,
+        image,
+        imageUrls,
+        title: pinnedPost.name,
+        description: pinnedPost.description,
+        likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        dislikes: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
+        caption: pinnedPost.description || pinnedPost.name || '',
+        comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+        views: formatViews(views),
+        timeAgo,
+        creatorId: pinnedPost.minter,
+        creatorUsername: pinnedPost.mintername,
+        creatorBadgeBalance: (pinnedPost as any).minterUser?.hideBadgeAndBalance ? 0 : (pinnedPost as any).minterUser?.badgeBalance,
+        creatorPaymentsDisabled: (pinnedPost as any).minterUser?.hideBadgeAndBalance === true,
+        isLiked: pinnedPost.isLiked ?? false,
+      };
+      return { type: 'image', data: imagePost };
+    } else if (pinnedPost.videoUrl || pinnedPost.media_url) {
+      const thumbnail = buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
+      const videoUrl = buildVideoUrl(pinnedPost.tokenId);
+      const channelAvatar = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
+        : 'user';
+      
+      const videoItem: VideoItem = {
+        id,
+        type: 'video',
+        contentRating: pinnedPost.contentRating,
+        thumbnail,
+        videoUrl,
+        duration: formatDuration(pinnedPost.videoDuration || pinnedPost.duration || 0),
+        title: pinnedPost.name || pinnedPost.description?.split('\n')[0] || '',
+        channel: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown Creator',
+        channelAvatar,
+        verified: false,
+        views: formatViews(views),
+        uploadedAgo: timeAgo,
+        creatorId: pinnedPost.minter,
+        creatorUsername: pinnedPost.mintername,
+        creatorBadgeBalance: (pinnedPost as any).minterUser?.hideBadgeAndBalance ? 0 : (pinnedPost as any).minterUser?.badgeBalance,
+        creatorPaymentsDisabled: (pinnedPost as any).minterUser?.hideBadgeAndBalance === true,
+        isLiked: pinnedPost.isLiked ?? false,
+        likeCount: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        dislikeCount: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
+        commentCount: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+        isPPV: pinnedPost.is_ppv ?? false,
+        isW2E: pinnedPost.is_w2e ?? false,
+        isLocked: pinnedPost.is_locked ?? (pinnedPost as any).streamInfo?.isLockContent ?? false,
+        lockedPrice: (pinnedPost as any).locked_price ?? (pinnedPost as any).streamInfo?.lockContentAmount,
+        lockedCurrency: (pinnedPost as any).locked_currency ?? (pinnedPost as any).streamInfo?.lockContentTokenSymbol ?? 'DHB',
+        lockedTokenAddress: (pinnedPost as any).streamInfo?.lockContentContractAddress,
+        lockedChainId: (pinnedPost as any).streamInfo?.lockContentChainIds?.[0],
+      };
+      return { type: 'video', data: videoItem };
+    } else {
+      const avatarUrl = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || pinnedPost.minter
+        : pinnedPost.minter;
+      
+      const textPost: TextPost = {
+        id,
+        type: 'post',
+        contentRating: pinnedPost.contentRating,
+        author: {
+          id: pinnedPost.minter,
+          name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',
+          handle: pinnedPost.mintername || pinnedPost.minter,
+          avatarSeed: avatarUrl,
+          verified: false,
+          badgeBalance: (pinnedPost as any).minterUser?.hideBadgeAndBalance ? 0 : (pinnedPost as any).minterUser?.badgeBalance,
+          paymentsDisabled: (pinnedPost as any).minterUser?.hideBadgeAndBalance === true,
+        },
+        content: pinnedPost.description || pinnedPost.name || '',
+        createdAt: timeAgo,
+        views: formatViews(views),
+        stats: {
+          comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+          reposts: (pinnedPost.totalReposts || pinnedPost.reposts || 0) + (pinnedPost.quotes || 0),
+          likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+          dislikes: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
+        },
+      };
+      return { type: 'post', data: textPost };
+    }
+}
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId, filtersPortalRef, chipsPortalRef }: HomeFeedProps) {
   const navigate = useNavigate();
@@ -963,7 +1076,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     selectedPostType === 'all' &&
     selectedCategories.length === 0;
 
-  const { data: boostSlot } = useBoostSlot(isDefaultHomeView);
+  // Boosts queue in the order they were booked: the oldest holds the top
+  // slot, each later one sits three posts below the one before, and when the
+  // oldest ends everything moves up. A newer boost never pushes an older one out.
+  const { data: boostQueue = [] } = useBoostQueue(isDefaultHomeView);
+  const liveBoosts = useMemo(() => (isDefaultHomeView ? boostQueue : []), [isDefaultHomeView, boostQueue]);
+  const boostSlot = liveBoosts[0];
 
   // An explicit ?post= link always wins. Somebody following a shared link came
   // for that post, and quietly showing them an advert instead would be the
@@ -984,119 +1102,34 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   });
 
   // Convert pinned post (DeHubNFT) to feed item format
-  const pinnedItem = useMemo((): FeedItemType | null => {
-    if (!pinnedPost) return null;
-    
-    const id = String(pinnedPost.tokenId);
-    const views = resolveViewCount(pinnedPost);
-    const timeAgo = pinnedPost.createdAt ? formatTimeAgo(pinnedPost.createdAt) : 'Just now';
-    
-    const nftPostType = pinnedPost.postType || 'video';
-    
-    if (nftPostType === 'image' || (pinnedPost.imageUrls && pinnedPost.imageUrls.length > 0 && !pinnedPost.videoUrl)) {
-      const imageUrls = buildFeedImageUrls(pinnedPost.imageUrls);
-      const image = imageUrls?.[0] || buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
-      const avatar = pinnedPost.minterAvatarUrl 
-        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
-        : 'user';
-      
-      const imagePost: ImagePost = {
-        id,
-        type: 'image',
-        // Load-bearing, not housekeeping. `ImageCard` gates an adult image
-        // behind `useMatureGate(post.contentRating)`, and an undefined rating
-        // reads as safe — so dropping it here paints a mature image unblurred
-        // at the top of the feed for a viewer who never opted in. The video
-        // and text branches below carry it; this one did not.
-        contentRating: pinnedPost.contentRating,
-        username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
-        verified: false,
-        avatar,
-        image,
-        imageUrls,
-        title: pinnedPost.name,
-        description: pinnedPost.description,
-        likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
-        dislikes: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
-        caption: pinnedPost.description || pinnedPost.name || '',
-        comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
-        views: formatViews(views),
-        timeAgo,
-        creatorId: pinnedPost.minter,
-        creatorUsername: pinnedPost.mintername,
-        creatorBadgeBalance: (pinnedPost as any).minterUser?.hideBadgeAndBalance ? 0 : (pinnedPost as any).minterUser?.badgeBalance,
-        creatorPaymentsDisabled: (pinnedPost as any).minterUser?.hideBadgeAndBalance === true,
-        isLiked: pinnedPost.isLiked ?? false,
-      };
-      return { type: 'image', data: imagePost };
-    } else if (pinnedPost.videoUrl || pinnedPost.media_url) {
-      const thumbnail = buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
-      const videoUrl = buildVideoUrl(pinnedPost.tokenId);
-      const channelAvatar = pinnedPost.minterAvatarUrl 
-        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
-        : 'user';
-      
-      const videoItem: VideoItem = {
-        id,
-        type: 'video',
-        contentRating: pinnedPost.contentRating,
-        thumbnail,
-        videoUrl,
-        duration: formatDuration(pinnedPost.videoDuration || pinnedPost.duration || 0),
-        title: pinnedPost.name || pinnedPost.description?.split('\n')[0] || '',
-        channel: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown Creator',
-        channelAvatar,
-        verified: false,
-        views: formatViews(views),
-        uploadedAgo: timeAgo,
-        creatorId: pinnedPost.minter,
-        creatorUsername: pinnedPost.mintername,
-        creatorBadgeBalance: (pinnedPost as any).minterUser?.hideBadgeAndBalance ? 0 : (pinnedPost as any).minterUser?.badgeBalance,
-        creatorPaymentsDisabled: (pinnedPost as any).minterUser?.hideBadgeAndBalance === true,
-        isLiked: pinnedPost.isLiked ?? false,
-        likeCount: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
-        dislikeCount: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
-        commentCount: pinnedPost.commentCount || pinnedPost.comment_count || 0,
-        isPPV: pinnedPost.is_ppv ?? false,
-        isW2E: pinnedPost.is_w2e ?? false,
-        isLocked: pinnedPost.is_locked ?? (pinnedPost as any).streamInfo?.isLockContent ?? false,
-        lockedPrice: (pinnedPost as any).locked_price ?? (pinnedPost as any).streamInfo?.lockContentAmount,
-        lockedCurrency: (pinnedPost as any).locked_currency ?? (pinnedPost as any).streamInfo?.lockContentTokenSymbol ?? 'DHB',
-        lockedTokenAddress: (pinnedPost as any).streamInfo?.lockContentContractAddress,
-        lockedChainId: (pinnedPost as any).streamInfo?.lockContentChainIds?.[0],
-      };
-      return { type: 'video', data: videoItem };
-    } else {
-      const avatarUrl = pinnedPost.minterAvatarUrl 
-        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || pinnedPost.minter
-        : pinnedPost.minter;
-      
-      const textPost: TextPost = {
-        id,
-        type: 'post',
-        contentRating: pinnedPost.contentRating,
-        author: {
-          id: pinnedPost.minter,
-          name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',
-          handle: pinnedPost.mintername || pinnedPost.minter,
-          avatarSeed: avatarUrl,
-          verified: false,
-          badgeBalance: (pinnedPost as any).minterUser?.hideBadgeAndBalance ? 0 : (pinnedPost as any).minterUser?.badgeBalance,
-          paymentsDisabled: (pinnedPost as any).minterUser?.hideBadgeAndBalance === true,
-        },
-        content: pinnedPost.description || pinnedPost.name || '',
-        createdAt: timeAgo,
-        views: formatViews(views),
-        stats: {
-          comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
-          reposts: (pinnedPost.totalReposts || pinnedPost.reposts || 0) + (pinnedPost.quotes || 0),
-          likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
-          dislikes: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
-        },
-      };
-      return { type: 'post', data: textPost };
-    }
-  }, [pinnedPost]);
+  const pinnedItem = useMemo(
+    (): FeedItemType | null => (pinnedPost ? nftToFeedItem(pinnedPost) : null),
+    [pinnedPost],
+  );
+
+  // The rest of the queue, placed down the feed three posts apart.
+  const queuedBoostIds = useMemo(
+    () => liveBoosts.slice(1).map(b => String(b.tokenId)).filter(id => id !== String(pinnedPostId ?? '')),
+    [liveBoosts, pinnedPostId],
+  );
+  const queuedBoostPosts = useQueries({
+    queries: queuedBoostIds.map(id => ({
+      queryKey: ['pinned-post', id],
+      queryFn: () => getNFTInfo(id),
+      staleTime: 5 * 60 * 1000,
+    })),
+  });
+  const queuedBoostSignature = queuedBoostPosts.map(q => q.dataUpdatedAt).join(',');
+  const queuedBoostItems = useMemo(
+    () => queuedBoostPosts.map(q => (q.data ? nftToFeedItem(q.data) : null)).filter(Boolean) as FeedItemType[],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [queuedBoostSignature],
+  );
+  const boostedIds = useMemo(() => {
+    const ids = new Set(queuedBoostIds);
+    if (isBoosted && boostedPostId) ids.add(boostedPostId);
+    return ids;
+  }, [queuedBoostIds, isBoosted, boostedPostId]);
 
   // ============================================================================
   // INTERLEAVED ITEMS (from three separate feeds)
@@ -1255,7 +1288,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     // impression somebody is billed for.
     enabled: organicItems.length > 0 && !isKidsMode,
   });
-  const items = useMemo((): FeedItemType[] => {
+  const itemsWithAds = useMemo((): FeedItemType[] => {
     if (servedAds.length === 0 || organicItems.length < adInterval) return organicItems;
     const withAds: FeedItemType[] = [];
     let adIdx = 0;
@@ -1268,6 +1301,23 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     });
     return withAds;
   }, [organicItems, servedAds, adInterval]);
+
+  // Boost N (after the top one) goes after N×3 posts.
+  const BOOST_SPACING = 3;
+  const items = useMemo((): FeedItemType[] => {
+    const organic = boostedIds.size
+      ? itemsWithAds.filter(item => !boostedIds.has(String((item.data as any)?.id)))
+      : itemsWithAds;
+    if (!queuedBoostItems.length) return organic;
+    const out: FeedItemType[] = [];
+    let next = 0;
+    organic.forEach((item, i) => {
+      out.push(item);
+      if ((i + 1) % BOOST_SPACING === 0 && next < queuedBoostItems.length) out.push(queuedBoostItems[next++]);
+    });
+    while (next < queuedBoostItems.length) out.push(queuedBoostItems[next++]);
+    return out;
+  }, [itemsWithAds, boostedIds, queuedBoostItems]);
 
   // Auto-remove optimistic posts once their real counterpart appears in the feed
   useEffect(() => {
@@ -1440,6 +1490,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3"
         style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: `auto 0 auto ${intrinsicH}` } : undefined}
       >
+        {index >= 0 && queuedBoostIds.includes(String((item.data as any)?.id)) && (
+          <button
+            type="button"
+            onClick={() => navigate('/app/superpowers')}
+            className="flex items-center gap-1.5 pb-1.5 rounded-sm text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <ThemedIcon icon="superpowers" alt="" className="w-4 h-4 object-contain opacity-70" />
+            <span>{t('superpowers.boostedLabel')}</span>
+          </button>
+        )}
         {card}
       </div>
     );
