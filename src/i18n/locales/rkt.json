@@ -1312,7 +1312,9 @@
     "openSource": "ওপেন সোর্স",
     "community": "কমিউনিটি",
     "privacy": "প্রাইভেসি",
-    "freedom": "স্বাধীনতা"
+    "freedom": "স্বাধীনতা",
+    "showOneMoreReply": "আরো ১টা উত্তর দেখান",
+    "showMoreReplies": "আরো {{count}}টা উত্তর দেখান"
   },
   "auth": {
     "loginRequired": "লগ ইন করা নাগবে",
@@ -1768,7 +1770,8 @@
     "monthsAgo": "{{count}} মাস আগে",
     "discussion": {
       "intro": "ভোট দिइनु अघि प्रस्तावको बारेमा प्रश्न गर्नु होस् वा चर्चा गर्नु होस्।",
-      "deleteDescription": "এইটা সবার কমান্ট আর রিপ্লাই মুছে ফেলে।"
+      "deleteDescription": "এইটা সবার কমান্ট আর রিপ্লাই মুছে ফেলে।",
+      "deleteTitle": "এই মন্তব্যটা মুছবেন?"
     }
   },
   "sidebar": {

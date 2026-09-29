@@ -1265,7 +1265,9 @@
     "statusDeclined": "നിരസിച്ചു",
     "shipping": "നിർമ്മാണത്തിൽ",
     "noShippingYet": "ഒന്നും പുരോഗതിയിലില്ല",
-    "shippingAppearHere": "നിർമ്മാണത്തിലുള്ള അഭ്യർഥനകൾ ഇവിടെ കാണാം."
+    "shippingAppearHere": "നിർമ്മാണത്തിലുള്ള അഭ്യർഥനകൾ ഇവിടെ കാണാം.",
+    "showOneMoreReply": "1 മറുപടി കൂടി കാണിക്കുക",
+    "showMoreReplies": "{{count}} മറുപടികൾ കൂടി കാണിക്കുക"
   },
   "auth": {
     "loginRequired": "ലോഗ് ഇൻ ആവശ്യമാണ്"

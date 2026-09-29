@@ -379,7 +379,11 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
             data-vaul-no-drag
           >
             <Suspense fallback={null}>
+              {/* Keyed on the post, here and below: a host that swaps the post
+                  under a mounted wrapper would otherwise hand the section's
+                  draft, reply target and optimistic rows to the next post. */}
               <CommentsSection
+                key={tokenId}
                 tokenId={tokenId}
                 onClose={guard.requestClose}
                 initialTab={initialTab}
@@ -437,6 +441,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
           >
             <Suspense fallback={null}>
               <CommentsSection
+                key={tokenId}
                 tokenId={tokenId}
                 onClose={guard.requestClose}
                 initialTab={initialTab}
@@ -491,6 +496,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
           >
             <Suspense fallback={null}>
               <CommentsSection
+                key={tokenId}
                 tokenId={tokenId}
                 onClose={() => onOpenChange(false)}
                 initialTab={initialTab}

@@ -135,6 +135,27 @@ export async function getNFTComments(
   commentId?: string,
   topTipped?: string[],
 ): Promise<ApiCommentResponse[]> {
+  const { items } = await getNFTCommentPage(tokenId, page, limit, address, commentId, topTipped);
+  return items;
+}
+
+/**
+ * The same page as {@link getNFTComments}, plus whether the server has more.
+ *
+ * A paging caller needs `hasMore` rather than "a short page is the last page":
+ * a page's length says nothing reliable about what is left. The deleted
+ * deep-link placeholder is dropped from page 0 (so a full page comes back one
+ * short and paging stopped dead), and the backfilled ancestors of a linked
+ * comment are appended to it (so page 0 can come back long).
+ */
+export async function getNFTCommentPage(
+  tokenId: string,
+  page: number = 0,
+  limit: number = 20,
+  address?: string,
+  commentId?: string,
+  topTipped?: string[],
+): Promise<{ items: ApiCommentResponse[]; hasMore: boolean }> {
   const response = await apiCall<CommentsApiResponse>(`/api/nft/${tokenId}/comments`, {
     params: {
       page,
@@ -149,7 +170,13 @@ export async function getNFTComments(
       ...(topTipped?.length ? { topTipped: topTipped.slice(0, 5).join(',') } : {}),
     },
   });
-  return (response.result?.items || []).filter(item => !item.notFound);
+  const rows = response.result?.items || [];
+  return {
+    items: rows.filter(item => !item.notFound),
+    // Counted on the raw rows, placeholder included, for a response that
+    // predates the flag.
+    hasMore: response.result?.hasMore ?? rows.length >= limit,
+  };
 }
 
 /**
