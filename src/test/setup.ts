@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 
 // setupFiles runs for every test file, including any that opt out of jsdom
 // with `@vitest-environment node` — pure-logic suites do, because jsdom's
