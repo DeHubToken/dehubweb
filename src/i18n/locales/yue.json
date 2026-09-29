@@ -6328,7 +6328,8 @@
     "inspector": {
       "selectHint": "請在畫布上選擇圖層或時間軸上的片段。",
       "textHint": "在畫布上拖曳以移動，使用角落以調整大小。按兩下來編輯文字。",
-      "selection": "選取"
+      "selection": "選取",
+      "title": "檢查器"
     },
     "layer": {
       "alignToPage": "對齊頁面",
@@ -6627,6 +6628,14 @@
       "noCurve": "將播放頭放喺關鍵影格上面就可以調整佢嘅曲線。",
       "applyAll": "將呢條曲線用喺所有關鍵影格",
       "timelineKey": "關鍵影格。拖動可以移動，㩒兩下可以刪除。",
+      "tabLayer": "圖層",
+      "record": "錄製",
+      "recordHint": "錄製中：喺播放頭嗰度移動、縮放、旋轉或者淡化圖層，就會喺嗰度加關鍵影格。",
+      "recording": "錄緊動態",
+      "lanes": "關鍵影格",
+      "scrub": "向左或者向右拖就可以改，㩒住 Shift 會快啲。",
+      "addKeyShortcut": "喺播放頭加關鍵影格 (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "線性",
         "ease": "緩動",

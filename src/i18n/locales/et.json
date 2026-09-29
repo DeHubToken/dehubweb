@@ -6229,7 +6229,8 @@
     "inspector": {
       "selectHint": "Valige lõuendilt kiht või ajajoonelt klipp.",
       "textHint": "Liigutamiseks lohistage lõuendil, suuruse muutmiseks kasutage nurki. Sõnade muutmiseks topeltklõpsake.",
-      "selection": "Valik"
+      "selection": "Valik",
+      "title": "Inspektor"
     },
     "layer": {
       "alignToPage": "Joonda lehele",
@@ -6528,6 +6529,14 @@
       "noCurve": "Vii esitusjoon võtmekaadrile, et selle kõverat kujundada.",
       "applyAll": "Kasuta seda kõverat kõigil võtmekaadritel",
       "timelineKey": "Võtmekaader. Lohista liigutamiseks, topeltklõpsa kustutamiseks.",
+      "tabLayer": "Kiht",
+      "record": "Salvesta",
+      "recordHint": "Salvestamine: kihi liigutamine, suuruse muutmine, pööramine või hajutamine esitusjoone kohal lisab sinna võtmekaadreid.",
+      "recording": "Liikumist salvestatakse",
+      "lanes": "Võtmekaadrid",
+      "scrub": "Muutmiseks lohista vasakule või paremale. Kiiremaks hoia Shift all.",
+      "addKeyShortcut": "Lisa võtmekaader esitusjoone kohale (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Lineaarne",
         "ease": "Pehme",

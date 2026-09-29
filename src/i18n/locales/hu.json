@@ -6229,7 +6229,8 @@
     "inspector": {
       "selectHint": "Válassz ki egy réteget a vásznon vagy egy klipet az idővonalon.",
       "textHint": "Húzd a vásznon a mozgatáshoz, a sarkoknál átméretezheted. Kattints duplán a szöveg szerkesztéséhez.",
-      "selection": "Kijelölés"
+      "selection": "Kijelölés",
+      "title": "Vizsgáló"
     },
     "layer": {
       "alignToPage": "Igazítás az oldalhoz",
@@ -6528,6 +6529,14 @@
       "noCurve": "Vidd a lejátszófejet egy kulcskockára a görbéje alakításához.",
       "applyAll": "Ez a görbe minden kulcskockára",
       "timelineKey": "Kulcskocka. Húzd az áthelyezéshez, kattints duplán a törléshez.",
+      "tabLayer": "Réteg",
+      "record": "Rögzítés",
+      "recordHint": "Rögzítés: ha a lejátszófej alatt mozgatsz, méretezel, forgatsz vagy halványítasz egy réteget, ott kulcskockák jönnek létre.",
+      "recording": "Mozgás rögzítése",
+      "lanes": "Kulcskockák",
+      "scrub": "Húzd balra vagy jobbra a módosításhoz. Tartsd lenyomva a Shiftet a gyorsabb változáshoz.",
+      "addKeyShortcut": "Kulcskocka hozzáadása a lejátszófejnél (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Lineáris",
         "ease": "Lágy",

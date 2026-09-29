@@ -6347,7 +6347,8 @@
     "inspector": {
       "selectHint": "Selecione uma camada na tela ou um clipe na linha do tempo.",
       "textHint": "Arraste na tela para mover, use os cantos para redimensionar. Clique duas vezes para editar o texto.",
-      "selection": "Seleção"
+      "selection": "Seleção",
+      "title": "Inspetor"
     },
     "layer": {
       "alignToPage": "Alinhar à página",
@@ -6646,6 +6647,14 @@
       "noCurve": "Posicione o cursor de reprodução sobre um quadro-chave para ajustar a curva.",
       "applyAll": "Usar esta curva em todos os quadros-chave",
       "timelineKey": "Quadro-chave. Arraste para mover, clique duas vezes para excluir.",
+      "tabLayer": "Camada",
+      "record": "Gravar",
+      "recordHint": "Gravando: mover, redimensionar, girar ou esmaecer uma camada sob o cursor de reprodução adiciona quadros-chave ali.",
+      "recording": "Gravando movimento",
+      "lanes": "Quadros-chave",
+      "scrub": "Arraste para a esquerda ou direita para alterar. Segure Shift para ir mais rápido.",
+      "addKeyShortcut": "Adicionar quadro-chave no cursor de reprodução (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Linear",
         "ease": "Suave",

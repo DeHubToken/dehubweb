@@ -6298,7 +6298,8 @@
     "inspector": {
       "selectHint": "Zaznacz warstwę na płótnie lub klip na osi czasu.",
       "textHint": "Przeciągnij na płótnie, aby przesunąć, użyj rogów, aby zmienić rozmiar. Kliknij dwukrotnie, aby edytować tekst.",
-      "selection": "Zaznaczenie"
+      "selection": "Zaznaczenie",
+      "title": "Inspektor"
     },
     "layer": {
       "alignToPage": "Wyrównaj do strony",
@@ -6597,6 +6598,14 @@
       "noCurve": "Ustaw głowicę na klatce kluczowej, aby zmienić jej krzywą.",
       "applyAll": "Użyj tej krzywej dla wszystkich klatek kluczowych",
       "timelineKey": "Klatka kluczowa. Przeciągnij, aby przesunąć, kliknij dwukrotnie, aby usunąć.",
+      "tabLayer": "Warstwa",
+      "record": "Nagrywaj",
+      "recordHint": "Nagrywanie: przesunięcie, skalowanie, obrót lub wygaszenie warstwy pod głowicą dodaje tam klatki kluczowe.",
+      "recording": "Nagrywanie ruchu",
+      "lanes": "Klatki kluczowe",
+      "scrub": "Przeciągnij w lewo lub w prawo, aby zmienić. Przytrzymaj Shift, aby szybciej.",
+      "addKeyShortcut": "Dodaj klatkę kluczową przy głowicy (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Liniowa",
         "ease": "Płynna",

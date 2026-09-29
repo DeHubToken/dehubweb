@@ -6229,7 +6229,8 @@
     "inspector": {
       "selectHint": "Välj ett lager på arbetsytan eller ett klipp på tidslinjen.",
       "textHint": "Dra på arbetsytan för att flytta, använd hörnen för att ändra storlek. Dubbelklicka för att redigera texten.",
-      "selection": "Markering"
+      "selection": "Markering",
+      "title": "Inspektör"
     },
     "layer": {
       "alignToPage": "Justera till sida",
@@ -6528,6 +6529,14 @@
       "noCurve": "Placera uppspelningshuvudet på en nyckelbild för att forma dess kurva.",
       "applyAll": "Använd den här kurvan på alla nyckelbilder",
       "timelineKey": "Nyckelbild. Dra för att flytta den, dubbelklicka för att ta bort den.",
+      "tabLayer": "Lager",
+      "record": "Spela in",
+      "recordHint": "Inspelning: att flytta, skala, rotera eller tona ett lager under uppspelningshuvudet lägger till nyckelbilder där.",
+      "recording": "Spelar in rörelse",
+      "lanes": "Nyckelbilder",
+      "scrub": "Dra åt vänster eller höger för att ändra. Håll ned Skift för snabbare.",
+      "addKeyShortcut": "Lägg till nyckelbild vid uppspelningshuvudet (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Linjär",
         "ease": "Mjuk",

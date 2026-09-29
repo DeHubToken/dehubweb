@@ -6346,7 +6346,8 @@
     "inspector": {
       "selectHint": "Selecciona una capa en el lienzo o un clip en la línea de tiempo.",
       "textHint": "Arrastra en el lienzo para mover, usa las esquinas para cambiar el tamaño. Haz doble clic para editar el texto.",
-      "selection": "Selección"
+      "selection": "Selección",
+      "title": "Inspector"
     },
     "layer": {
       "alignToPage": "Alinear a la página",
@@ -6645,6 +6646,14 @@
       "noCurve": "Coloca el cabezal sobre un fotograma clave para ajustar su curva.",
       "applyAll": "Usar esta curva en todos los fotogramas clave",
       "timelineKey": "Fotograma clave. Arrástralo para moverlo, doble clic para eliminarlo.",
+      "tabLayer": "Capa",
+      "record": "Grabar",
+      "recordHint": "Grabando: mover, redimensionar, girar o desvanecer una capa bajo el cabezal añade fotogramas clave ahí.",
+      "recording": "Grabando movimiento",
+      "lanes": "Fotogramas clave",
+      "scrub": "Arrastra a la izquierda o a la derecha para cambiarlo. Mantén Mayús para ir más rápido.",
+      "addKeyShortcut": "Añadir fotograma clave en el cabezal (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Lineal",
         "ease": "Suave",

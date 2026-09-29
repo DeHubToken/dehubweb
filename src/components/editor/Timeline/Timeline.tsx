@@ -21,6 +21,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { keyTimes, removeKeysAt, retimeKeys } from "@/lib/editor/keyframes";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
+import { useEditorUiStore } from "@/store/editorUiStore";
 import type { Clip, Track } from "@/lib/editor/types";
 import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 import {
@@ -674,6 +675,8 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
 function KeyframeMarks({ clip, zoom, onSelect }: { clip: Clip; zoom: number; onSelect: () => void }) {
   const { t } = useTranslation();
   const times = keyTimes(clip).filter((k) => k >= 0 && k <= clip.duration + 0.001);
+  // Index of the key under the playhead, so it can be lit; a number keeps re-renders to real changes.
+  const hereIdx = useEditorStore((s) => times.findIndex((k) => Math.abs(s.currentTime - clip.start - k) < 1 / 60));
   if (!times.length) return null;
 
   const onDown = (kt: number) => (e: React.PointerEvent) => {
@@ -683,6 +686,9 @@ function KeyframeMarks({ clip, zoom, onSelect }: { clip: Clip; zoom: number; onS
     onSelect();
     s.setIsPlaying(false);
     s.setCurrentTime(clip.start + kt);
+    // A keyframe is a motion thing: bring up the Motion tab to work on it.
+    useEditorUiStore.getState().setInspectorTab("motion");
+    window.dispatchEvent(new Event("editor:open-inspector"));
     const x0 = e.clientX;
     let from = kt;
     let began = false;
@@ -715,15 +721,19 @@ function KeyframeMarks({ clip, zoom, onSelect }: { clip: Clip; zoom: number; onS
 
   return (
     <>
-      {times.map((kt) => (
+      {times.map((kt, i) => (
         <div
           key={kt}
           data-handle="key"
           onPointerDown={onDown(kt)}
           onDoubleClick={onDelete(kt)}
           title={t("editor.motion.timelineKey")}
-          className="absolute bottom-1 z-20 h-2.5 w-2.5 -translate-x-1/2 rotate-45 cursor-ew-resize touch-none rounded-[1px] border border-black/50 bg-white shadow hover:bg-sky-200"
-          style={{ left: kt * zoom }}
+          className={cn(
+            "absolute bottom-1 z-20 h-2.5 w-2.5 -translate-x-1/2 rotate-45 cursor-ew-resize touch-none rounded-[1px] border shadow",
+            i === hereIdx ? "border-sky-100 bg-sky-300" : "border-black/50 bg-white hover:bg-sky-200",
+          )}
+          // Kept clear of the clip's edges, where the trim handles sit and the block clips its content.
+          style={{ left: Math.max(6, Math.min(kt * zoom, clip.duration * zoom - 6)) }}
         />
       ))}
     </>

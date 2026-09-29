@@ -6059,7 +6059,8 @@
     "inspector": {
       "selectHint": "Chọn một lớp trên khung vẽ hoặc một clip trên dòng thời gian.",
       "textHint": "Kéo trên khung vẽ để di chuyển, sử dụng các góc để thay đổi kích thước. Nhấp đúp để chỉnh sửa văn bản.",
-      "selection": "Vùng chọn"
+      "selection": "Vùng chọn",
+      "title": "Trình kiểm tra"
     },
     "layer": {
       "alignToPage": "Căn theo trang",
@@ -6358,6 +6359,14 @@
       "noCurve": "Đặt đầu phát lên một khung hình chính để chỉnh đường cong của nó.",
       "applyAll": "Dùng đường cong này cho mọi khung hình chính",
       "timelineKey": "Khung hình chính. Kéo để di chuyển, nhấp đúp để xóa.",
+      "tabLayer": "Lớp",
+      "record": "Ghi",
+      "recordHint": "Đang ghi: di chuyển, đổi kích thước, xoay hoặc làm mờ một lớp tại đầu phát sẽ thêm khung hình chính ở đó.",
+      "recording": "Đang ghi chuyển động",
+      "lanes": "Khung hình chính",
+      "scrub": "Kéo sang trái hoặc phải để thay đổi. Giữ Shift để nhanh hơn.",
+      "addKeyShortcut": "Thêm khung hình chính tại đầu phát (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Tuyến tính",
         "ease": "Mượt",
