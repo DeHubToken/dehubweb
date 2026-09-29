@@ -250,6 +250,14 @@ export async function loadAffiliateStats(ownerAddress: string, shareName?: strin
       addr,
     ) as unknown as Promise<{ data: Array<{ destination: string; clicks: number; unique_visitors: number }> | null }>,
   ]);
+  // Supabase reports a failed read as { error } instead of throwing, so an
+  // outage used to come back as a real-looking result: no code and every
+  // count at zero. With no code and the reads failing, throw so the caller
+  // keeps the last good stats instead of saving zeros over them.
+  const failed = (res: unknown) => !!(res as { error?: unknown } | null)?.error;
+  if (!codeRes && [refRes, l2RefRes, earnRes, viewRes].some(failed)) {
+    throw new Error("Affiliate stats are unavailable");
+  }
   const code = codeRes?.code ?? null;
 
   const l1List = mapReferralRows(refRes.data);

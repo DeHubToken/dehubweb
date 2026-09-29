@@ -15,6 +15,7 @@ import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
 import { getGiveawayPrizeFor, formatPrizeAmount } from '@/lib/worldCupGiveaway';
 import { cn } from '@/lib/utils';
 import { isDhb } from '@/components/app/DhbAmount';
+import { AppState } from '@/components/app/AppState';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 const cardClass = "rounded-2xl p-5 max-h-[420px] overflow-y-auto bg-zinc-900 border border-zinc-800";
@@ -82,7 +83,7 @@ export function RecentTransactions() {
   // On-chain DHB transfers (Base chain)
   const { data: onchainTransfers = [], isLoading: onchainLoading } = useOnchainDHBTransfers(walletAddress);
 
-  const { data: ppvPurchases = [], isLoading: ppvLoading } = useQuery({
+  const { data: ppvData, isLoading: ppvLoading, isError: ppvFailed, isFetching: ppvFetching, refetch: refetchPpv } = useQuery({
     queryKey: ['ppv-purchases', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return [];
@@ -93,7 +94,8 @@ export function RecentTransactions() {
         .or(`buyer_address.ilike.${addr},creator_address.ilike.${addr}`)
         .order('created_at', { ascending: false })
         .limit(50);
-      if (error) { console.warn('[RecentTx] PPV query error:', error); return []; }
+      // Thrown, not swallowed: an empty list here would read as no activity.
+      if (error) { console.warn('[RecentTx] PPV query error:', error); throw error; }
       return data || [];
     },
     enabled: isAuthenticated && !!walletAddress,
@@ -101,7 +103,7 @@ export function RecentTransactions() {
   });
 
   // Fetch tip records (sent and received)
-  const { data: tipRecords = [], isLoading: tipsLoading } = useQuery({
+  const { data: tipData, isLoading: tipsLoading, isError: tipsFailed, isFetching: tipsFetching, refetch: refetchTips } = useQuery({
     queryKey: ['tip-records', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return [];
@@ -112,7 +114,7 @@ export function RecentTransactions() {
         .or(`sender_address.ilike.${addr},receiver_address.ilike.${addr}`)
         .order('created_at', { ascending: false })
         .limit(50);
-      if (error) { console.warn('[RecentTx] Tips query error:', error); return []; }
+      if (error) { console.warn('[RecentTx] Tips query error:', error); throw error; }
       return data || [];
     },
     enabled: isAuthenticated && !!walletAddress,
@@ -131,6 +133,13 @@ export function RecentTransactions() {
     enabled: isAuthenticated,
     staleTime: 30_000,
   });
+
+  const ppvPurchases = ppvData ?? [];
+  const tipRecords = tipData ?? [];
+  // Only when there is nothing cached for a source: a failed background
+  // refresh keeps the rows already on screen.
+  const loadFailed = (ppvFailed && !ppvData) || (tipsFailed && !tipData);
+  const retryFailed = () => { void refetchPpv(); void refetchTips(); };
 
   // Resolve usernames for counterparty addresses in tips
   const counterpartyAddresses = useMemo(() => {
@@ -352,6 +361,13 @@ export function RecentTransactions() {
         <div className="flex items-center justify-center py-8">
           <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
         </div>
+      ) : recent.length === 0 && loadFailed ? (
+        <AppState
+          kind="error"
+          size="compact"
+          title={t('commandCentre.failedLoadTransactions')}
+          primaryAction={{ label: t('commandCentre.tryAgain'), onClick: retryFailed, loading: ppvFetching || tipsFetching }}
+        />
       ) : recent.length === 0 ? (
         <div className="text-center py-8 text-zinc-500 text-sm">
           {t('commandCentre.noTransactionsYet')}
@@ -388,6 +404,14 @@ export function RecentTransactions() {
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
               {t('commandCentre.loadingMore', 'Loading on-chain activity…')}
             </div>
+          )}
+          {loadFailed && (
+            <AppState
+              kind="error"
+              size="compact"
+              title={t('commandCentre.failedLoadTransactions')}
+              primaryAction={{ label: t('commandCentre.tryAgain'), onClick: retryFailed, loading: ppvFetching || tipsFetching }}
+            />
           )}
         </div>
       )}

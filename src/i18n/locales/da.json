@@ -523,6 +523,9 @@
     "edit": "Rediger",
     "loading": "Indlæser...",
     "tryAgain": "Prøv igen",
+    "retry": "Prøv igen",
+    "failedToLoad": "Kunne ikke indlæses",
+    "somethingWentWrong": "Noget gik galt",
     "search": "Søg",
     "goBack": "Tilbage",
     "showOriginal": "Vis original",
@@ -6564,6 +6567,10 @@
     "desc": "En lys dag eller en dunkelblå aften i junglen",
     "day": "Dag",
     "evening": "Aften"
+  },
+  "affiliate": {
+    "loadFailed": "Kunne ikke indlæse affiliate-statistikker",
+    "checkingForUpdates": "Søger efter opdateringer…"
   },
   "affiliateLanding": {
     "title": "Tilpas din invitationsside",

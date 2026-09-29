@@ -21,7 +21,7 @@ export default function CommunityInvitePage() {
   const { isAuthenticated, openLoginModal } = useAuth();
   const { t } = useTranslation();
 
-  const { data: preview, isLoading } = useInvitePreview(code);
+  const { data: preview, isLoading, isError, isFetching, refetch } = useInvitePreview(code);
   const joinMutation = useJoinViaInvite();
 
   if (isLoading) {
@@ -29,6 +29,39 @@ export default function CommunityInvitePage() {
       <div className="max-w-2xl mx-auto px-3 py-4 space-y-4">
         <div className="h-32 rounded-xl bg-white/[0.04] animate-pulse" />
         <div className="h-16 rounded-xl bg-white/[0.04] animate-pulse" />
+      </div>
+    );
+  }
+
+  // The preview RPC answers a bad code with is_valid:false, so a thrown error
+  // is always the lookup failing (offline, timeout, server) -- never proof the
+  // link is dead. Offer a retry instead of calling the invite invalid.
+  if (isError && !preview) {
+    return (
+      <div className="max-w-2xl mx-auto px-3 py-4">
+        <SEOHead title={`${t('common.somethingWentWrong')} - DeHub Community`} description={t('common.somethingWentWrong')} noindex />
+        <div role="alert" className="rounded-xl border border-white/10 bg-white/[0.04] p-3.5 text-center space-y-3">
+          <p className="text-white font-medium text-sm">{t('common.somethingWentWrong')}</p>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Button
+              size="sm"
+              onClick={() => void refetch()}
+              disabled={isFetching}
+              className="rounded-xl h-9 px-3 bg-white text-black hover:bg-white/90"
+            >
+              {isFetching && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              {t('common.retry')}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate('/app/communities')}
+              className="rounded-xl h-9 px-3 border-white/10 text-white"
+            >
+              {t('communities.backButton')}
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }

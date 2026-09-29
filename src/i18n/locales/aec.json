@@ -486,6 +486,9 @@
     "edit": "عدّل",
     "loading": "بيحمّل...",
     "tryAgain": "جرب تاني",
+    "retry": "جرب تاني",
+    "failedToLoad": "فشل التحميل",
+    "somethingWentWrong": "حصل خطأ",
     "search": "دوّر",
     "goBack": "ارجع",
     "showOriginal": "وري الأصلي",
@@ -2686,7 +2689,8 @@
     "fillRequired": "يرجى ملء جميع الحقول المطلوبة",
     "viewStore": "راجع المتجر",
     "store": "المتجر",
-    "shopAllowanceUsed": "{{allowance}} من {{allowance}} اتستخدموا. اعمل ستاكينج لتوكنات DeHub أكتر عشان تاخد شارة أعلى وفتحة تانية."
+    "shopAllowanceUsed": "{{allowance}} من {{allowance}} اتستخدموا. اعمل ستاكينج لتوكنات DeHub أكتر عشان تاخد شارة أعلى وفتحة تانية.",
+    "storeNotFound": "المتجر مش موجود"
   },
   "stages": {
     "title": "الغرف الصوتية",
@@ -5416,6 +5420,10 @@
     "desc": "نهار منوّر أو مسا أزرق هادي في الغابة",
     "day": "نهار",
     "evening": "مسا"
+  },
+  "affiliate": {
+    "loadFailed": "تعذّر تحميل إحصاءات التسويق بالعمولة",
+    "checkingForUpdates": "بنشوف لو فيه تحديثات…"
   },
   "affiliateLanding": {
     "title": "ظبّط صفحة الدعوة بتاعتك",

@@ -517,6 +517,9 @@
     "edit": "Sɔrɔw",
     "loading": "Bɔ kɛ...",
     "tryAgain": "A lajɛ tuguni",
+    "retry": "A lajɛ tuguni",
+    "failedToLoad": "A ma se ka na",
+    "somethingWentWrong": "Fɛn dɔ ma ɲɛ",
     "search": "Fɛɛrɛ",
     "goBack": "Kɔrɔbɔ",
     "showOriginal": "Kɔrɔbɔ",
@@ -6518,6 +6521,10 @@
     "desc": "Tile yeelen walima wula bulaman kungo kɔnɔ",
     "day": "Tile",
     "evening": "Wula"
+  },
+  "affiliate": {
+    "loadFailed": "A ma se ka affiliate jatew labɔ",
+    "checkingForUpdates": "Kuraw lajɛli bɛ kɛ…"
   },
   "affiliateLanding": {
     "title": "I ka weelekan sɛbɛ labɛn",

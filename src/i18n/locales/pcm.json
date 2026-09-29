@@ -466,6 +466,9 @@
     "edit": "Edit Am",
     "loading": "E dey load...",
     "tryAgain": "Try again",
+    "retry": "Try again",
+    "failedToLoad": "E no gree load",
+    "somethingWentWrong": "Something don spoil",
     "search": "Find Am",
     "goBack": "Go back",
     "showOriginal": "Show di original",
@@ -2567,6 +2570,7 @@
     "digital": "Digital",
     "soldOut": "SOLD OUT",
     "unknownStore": "Unknown Store",
+    "storeNotFound": "We no fit find dis store",
     "goBack": "Go Back",
     "goBackLabel": "Go back",
     "shareStore": "Share store",
@@ -5489,6 +5493,10 @@
     "desc": "Bright afternoon or blue evening for inside bush",
     "day": "Afternoon",
     "evening": "Evening"
+  },
+  "affiliate": {
+    "loadFailed": "We no fit load affiliate stats",
+    "checkingForUpdates": "Dey check for update…"
   },
   "affiliateLanding": {
     "title": "Arrange your invite page",

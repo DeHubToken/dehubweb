@@ -519,6 +519,9 @@
     "edit": "ኣርም",
     "loading": "ይጽዓን ኣሎ...",
     "tryAgain": "እንደገና ፈትን",
+    "retry": "እንደገና ፈትን",
+    "failedToLoad": "ምጽዓን ኣይተኻእለን",
+    "somethingWentWrong": "ገለ ጌጋ ተፈጢሩ",
     "search": "ድለ",
     "goBack": "ተመለስ",
     "showOriginal": "ኦሪጅናል ኣርኢ",
@@ -6528,6 +6531,10 @@
     "desc": "ኣብ ጫካ ብሩህ መዓልቲ ወይ ሰማያዊ ምሸት",
     "day": "መዓልቲ",
     "evening": "ምሸት"
+  },
+  "affiliate": {
+    "loadFailed": "ኣብ ስታቲስቲክስ ኣፊሊየት ክረክብ ኣይከኣለን",
+    "checkingForUpdates": "ምምሕያሻት ይረጋገጽ ኣሎ…"
   },
   "affiliateLanding": {
     "title": "ናይ ዕድመ ገጽካ ኣዳልው",

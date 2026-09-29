@@ -480,6 +480,9 @@
     "edit": "Chỉnh sửa",
     "loading": "Đang tải...",
     "tryAgain": "Thử lại",
+    "retry": "Thử lại",
+    "failedToLoad": "Không tải được",
+    "somethingWentWrong": "Đã xảy ra lỗi",
     "search": "Tìm kiếm",
     "goBack": "Go back",
     "showOriginal": "Show original",
@@ -6364,6 +6367,10 @@
     "desc": "Ngày nắng rực rỡ hoặc hoàng hôn xanh thẫm giữa rừng",
     "day": "Ban ngày",
     "evening": "Chiều tối"
+  },
+  "affiliate": {
+    "loadFailed": "Không tải được thống kê tiếp thị liên kết",
+    "checkingForUpdates": "Đang kiểm tra cập nhật…"
   },
   "affiliateLanding": {
     "title": "Tùy chỉnh trang mời của bạn",

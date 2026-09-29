@@ -523,6 +523,9 @@
     "edit": "Tikrachiy",
     "loading": "Churakunachkan...",
     "tryAgain": "Yapamanta ruway",
+    "retry": "Yapamanta ruway",
+    "failedToLoad": "Mana atisqachu lloqsimuyta",
+    "somethingWentWrong": "Imapas pantarqun",
     "search": "Maskay",
     "goBack": "Kutiy",
     "showOriginal": "Qallariy rikuchiy",
@@ -6659,6 +6662,10 @@
     "desc": "Sach’a ukhupi k’anchay punchaw utaq anqas sukhayay",
     "day": "Punchaw",
     "evening": "Sukhayay"
+  },
+  "affiliate": {
+    "loadFailed": "Mana atirqanchu afiliado estadísticas nisqakunata cargayta",
+    "checkingForUpdates": "Musuqyachiykunata qhawachkan…"
   },
   "affiliateLanding": {
     "title": "Invitación p'anqaykita allinchay",

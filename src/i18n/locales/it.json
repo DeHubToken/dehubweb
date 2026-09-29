@@ -523,6 +523,9 @@
     "edit": "Modifica",
     "loading": "Caricamento...",
     "tryAgain": "Riprova",
+    "retry": "Riprova",
+    "failedToLoad": "Caricamento fallito",
+    "somethingWentWrong": "Qualcosa è andato storto",
     "search": "Cerca",
     "goBack": "Torna indietro",
     "showOriginal": "Mostra originale",
@@ -6645,6 +6648,10 @@
     "desc": "Una giornata luminosa o una sera blu al crepuscolo nella giungla",
     "day": "Giorno",
     "evening": "Sera"
+  },
+  "affiliate": {
+    "loadFailed": "Impossibile caricare le statistiche di affiliazione",
+    "checkingForUpdates": "Ricerca aggiornamenti…"
   },
   "affiliateLanding": {
     "title": "Personalizza la tua pagina di invito",

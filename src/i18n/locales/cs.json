@@ -523,6 +523,9 @@
     "edit": "Upravit",
     "loading": "Načítání...",
     "tryAgain": "Zkusit znovu",
+    "retry": "Zkusit znovu",
+    "failedToLoad": "Nepodařilo se načíst",
+    "somethingWentWrong": "Něco se pokazilo",
     "search": "Hledat",
     "goBack": "Zpět",
     "showOriginal": "Zobrazit originál",
@@ -6536,6 +6539,10 @@
     "desc": "Jasný den nebo šerý modrý večer v džungli",
     "day": "Den",
     "evening": "Večer"
+  },
+  "affiliate": {
+    "loadFailed": "Nepodařilo se načíst statistiky affiliate programů",
+    "checkingForUpdates": "Hledání aktualizací…"
   },
   "affiliateLanding": {
     "title": "Přizpůsobte svou pozvánkovou stránku",
