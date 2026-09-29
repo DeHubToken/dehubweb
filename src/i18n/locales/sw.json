@@ -7524,7 +7524,11 @@
       "intro": "Apps ndogo zilizojengwa kwa DeHub na kila mtu. Zinafungwa ndani ya DeHub, unaweza kujisajiliwa kabla, na kila app inajulikana na barua yake ya mtandao wa kawaida.",
       "buildCta": "Jenga app",
       "emptyTitle": "Hainajulikana app yoyote bado",
-      "emptyBody": "Apps ya kwanza zimekuwa katika ufuatiliaji. Jenga moja na hatawezi kuwa hapa."
+      "emptyBody": "Apps ya kwanza zimekuwa katika ufuatiliaji. Jenga moja na hatawezi kuwa hapa.",
+      "search": "Tafuta programu",
+      "all": "Zote",
+      "fromDehub": "Kutoka DeHub",
+      "noMatch": "Hakuna programu zinazolingana na utafutaji huo."
     },
     "dev": {
       "title": "Jenga app ndogo",
@@ -7559,7 +7563,35 @@
       "verifyTitle": "Ingia kwa kutumia DeHub, kwenye seva yako",
       "verifyBody": "auth.getToken() inaipa programu yako ishara iliyosainiwa na DeHub. Iangalie kwenye seva yako na maktaba yoyote ya JWT. Anwani ya mkoba wa mtumiaji iko katika sehemu ndogo.",
       "copy": "Nakili",
-      "copied": "Imenakiliwa"
+      "copied": "Imenakiliwa",
+      "submitBody": "Pasi zako zinazoonekana wazi. Ziwasilishe na programu yako itatumika moja kwa moja kwenye kiunganishi cha DeHub mara moja, kilichowekwa alama kuwa Haijakaguliwa. Inaonekana dukani mara baada ya kukaguliwa.",
+      "submit": "Wasilisha kwa DeHub",
+      "submitSignIn": "Ingia kwenye DeHub ili uwasilishe.",
+      "submitDone": "Imewasilishwa. Programu yako iko moja kwa moja kwenye kiunganishi chake cha DeHub.",
+      "submitUpdated": "Imesasishwa. DeHub ina toleo la hivi karibuni la mwonekano wako.",
+      "yourAppsTitle": "Programu zako",
+      "stateUnlisted": "Moja kwa moja kupitia kiunganishi · katika tathmini ya duka",
+      "stateListed": "Katika duka",
+      "stateSuspended": "Imesimamishwa",
+      "copyLink": "Nakili kiunganishi"
+    },
+    "card": {
+      "open": "Fungua"
+    },
+    "category": {
+      "games": "Michezo",
+      "social": "Kijamii",
+      "finance": "Fedha",
+      "utility": "Matumizi",
+      "productivity": "Uzalishaji",
+      "health-fitness": "Afya na fitness",
+      "news-media": "Habari na habari na mawazo",
+      "music": "Muziki",
+      "shopping": "Ununuzi",
+      "education": "Elimu",
+      "developer-tools": "Zana za msanidi programu",
+      "entertainment": "Mchezo",
+      "art-creativity": "Sanaa na ubunifu"
     }
   },
   "aiStyles": {

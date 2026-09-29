@@ -7470,7 +7470,11 @@
       "intro": "Mini-appar byggda för DeHub av vem som helst. De öppnas inom DeHub, du är redan inloggad, och varje app visar sin riktiga webbadress.",
       "buildCta": "Bygg en app",
       "emptyTitle": "Inga appar listade ännu",
-      "emptyBody": "De första apparna är under granskning. Bygg en och den kan vara här."
+      "emptyBody": "De första apparna är under granskning. Bygg en och den kan vara här.",
+      "search": "Sök appar",
+      "all": "Alla",
+      "fromDehub": "Från DeHub",
+      "noMatch": "Inga appar matchar den här sökningen."
     },
     "dev": {
       "title": "Bygg en mini-app",
@@ -7505,7 +7509,35 @@
       "verifyTitle": "Logga in med DeHub, på din server",
       "verifyBody": "auth.getToken() ger din app ett token som är signerat av DeHub. Kontrollera det på din server med någon JWT-bibliotek. Användarens plånboksadress finns i sub.",
       "copy": "Kopiera",
-      "copied": "Kopierat"
+      "copied": "Kopierat",
+      "submitBody": "Din manifest godkänns. Skicka in den och din app går live på en DeHub-länk direkt, märkt som \"Ogranskad\". Den visas i butiken när den har granskats.",
+      "submit": "Skicka in till DeHub",
+      "submitSignIn": "Logga in på DeHub för att skicka in.",
+      "submitDone": "Skickat in. Din app är live på dess DeHub-länk.",
+      "submitUpdated": "Uppdaterad. DeHub har den senaste versionen av din manifest.",
+      "yourAppsTitle": "Dina appar",
+      "stateUnlisted": "Live via länk · i granskning för butiken",
+      "stateListed": "I butiken",
+      "stateSuspended": "Upphävd",
+      "copyLink": "Kopiera länk"
+    },
+    "card": {
+      "open": "Öppna"
+    },
+    "category": {
+      "games": "Spel",
+      "social": "Sociala",
+      "finance": "Finans",
+      "utility": "Verktyg",
+      "productivity": "Produktivitet",
+      "health-fitness": "Hälsa & fitness",
+      "news-media": "Nyheter & media",
+      "music": "Musik",
+      "shopping": "Inköp",
+      "education": "Utbildning",
+      "developer-tools": "Utvecklarverktyg",
+      "entertainment": "Underhållning",
+      "art-creativity": "Konst & kreativitet"
     }
   },
   "aiStyles": {

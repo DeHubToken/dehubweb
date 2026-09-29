@@ -7580,7 +7580,11 @@
       "intro": "Mini app create per DeHub da chiunque. Si aprono all'interno di DeHub, hai già effettuato l'accesso e ogni app mostra il suo vero indirizzo web.",
       "buildCta": "Crea un'app",
       "emptyTitle": "Nessuna app ancora elencata",
-      "emptyBody": "Le prime app sono in fase di revisione. Costruiscine uno e potrebbe essere qui."
+      "emptyBody": "Le prime app sono in fase di revisione. Costruiscine uno e potrebbe essere qui.",
+      "search": "Cerca app",
+      "all": "Tutti",
+      "fromDehub": "Da DeHub",
+      "noMatch": "Nessuna app corrisponde alla ricerca."
     },
     "dev": {
       "title": "Crea una mini app",
@@ -7615,7 +7619,35 @@
       "verifyTitle": "Accedi con DeHub, sul tuo server",
       "verifyBody": "auth.getToken() dà alla tua app un token firmato da DeHub. Controllalo sul tuo server con qualsiasi libreria JWT. L'indirizzo del portafoglio dell'utente è in sub.",
       "copy": "Copia",
-      "copied": "Copiato"
+      "copied": "Copiato",
+      "submitBody": "Il tuo manifesto è stato accettato. Invia il tuo manifesto e la tua app sarà disponibile su DeHub con il link immediatamente, contrassegnata come Non valutata. Appare nella store una volta che è stata valutata.",
+      "submit": "Invia a DeHub",
+      "submitSignIn": "Accedi a DeHub per inviare.",
+      "submitDone": "Invio effettuato. La tua app è disponibile al link DeHub.",
+      "submitUpdated": "Aggiornato. DeHub ha la versione più recente del tuo manifesto.",
+      "yourAppsTitle": "Le tue app",
+      "stateUnlisted": "Vive con link · in attesa di valutazione per la store",
+      "stateListed": "Nella store",
+      "stateSuspended": "Sospesa",
+      "copyLink": "Copia link"
+    },
+    "card": {
+      "open": "Apri"
+    },
+    "category": {
+      "games": "Giochi",
+      "social": "Social",
+      "finance": "Finanza",
+      "utility": "Utilità",
+      "productivity": "Produttività",
+      "health-fitness": "Salute e fitness",
+      "news-media": "Notizie e media",
+      "music": "Musica",
+      "shopping": "Shopping",
+      "education": "Istruzione",
+      "developer-tools": "Strumenti per sviluppatori",
+      "entertainment": "Divertimento",
+      "art-creativity": "Arte e creatività"
     }
   },
   "aiStyles": {

@@ -6217,36 +6217,77 @@
   },
   "miniApps": {
     "badge": {
-      "verified": "🔍 **確認過**",
+      "verified": "確認過",
       "dev": "開發者預覽版"
     },
     "host": {
-      "close": "🔌📱 **關閉應用**",
+      "close": "關閉應用",
       "backToStore": "回到 App 囉",
-      "notFound": "😢 這個 App 咱家 DeHub App Store 咱家有，或者已經被刪除咧！",
-      "badUrl": "🚫 咱家這個地址無法開啟小程式，得是以 `https://` 開頭，或者開發模式下用本地地址。",
-      "readyTimeout": "😅 這個 app 好像都唔係用 `dehub.ready()` 咧，所以 splash screen 8 秒後就自動隱藏咧！"
+      "notFound": "這個 App 咱家 DeHub App Store 咱家有，或者已經被刪除咧！",
+      "badUrl": "咱家這個地址無法開啟小程式，得是以 `https://` 開頭，或者開發模式下用本地地址。",
+      "readyTimeout": "這個 app 好像都唔係用 `dehub.ready()` 咧，所以 splash screen 8 秒後就自動隱藏咧！"
     },
     "signIn": {
       "title": "登入 {{name}} 嗎？",
       "confirm": "登入"
     },
     "store": {
-      "emptyTitle": "😕 尚未有應用列出喔！",
-      "emptyBody": "🔥 先頭幾個 App 正在審核中！你也快點做一個，可能就會出來囉！"
+      "emptyTitle": "尚未有應用列出喔！",
+      "emptyBody": "先頭幾個 App 正在審核中！你也快點做一個，可能就會出來囉！",
+      "search": "搜尋應用程式"
     },
     "dev": {
       "backToStore": "回到 App 囉",
-      "checkTitle": "🔍 **檢查**🚀 **啓動**",
+      "checkTitle": "檢查 啓動",
       "badUrl": "進入一個 `https://` 網址，或是用 `http://localhost` 做本地測試。",
-      "localNote": "🔍 **本地網址無法從我哋伺服器檢查，但哋可以直接啟動測試喔！**",
-      "passed": "👍 好看喎！",
-      "signNeedsUrl": "你的應用網址寫上來就好👆🏼",
+      "localNote": "本地網址無法從我哋伺服器檢查，但哋可以直接啟動測試喔！",
+      "passed": "好看喎！",
+      "signNeedsUrl": "你的應用網址寫上來就好🏼",
       "signInFirst": "登入 DeHub 簽署。",
-      "embedBody": "🔗 你可以把這個標籤加到任何網頁上，那麼網頁上的連結就會變成一個卡片，上面有一個按鈕，可以直接開啟你的應用程式。",
+      "embedBody": "你可以把這個標籤加到任何網頁上，那麼網頁上的連結就會變成一個卡片，上面有一個按鈕，可以直接開啟你的應用程式。",
       "verifyTitle": "登入 DeHub，在你的伺候上",
-      "verifyBody": "`auth.getToken()` 你的 app 會得到一個由 DeHub 簽署的 token。你可以用任何 JWT 库在伺候端檢查它。用戶的錢包地址在 `sub` 裡頭。"
+      "verifyBody": "`auth.getToken()` 你的 app 會得到一個由 DeHub 簽署的 token。你可以用任何 JWT 库在伺候端檢查它。用戶的錢包地址在 `sub` 裡頭。",
+      "submitSignIn": "登入 DeHub 送交喔。",
+      "stateListed": "店仔里面"
+    },
+    "category": {
+      "health-fitness": "健康跟運動",
+      "news-media": "新聞跟傳媒",
+      "shopping": "買東西 / 逛街",
+      "developer-tools": "開發工具",
+      "entertainment": "娛樂"
     }
+  },
+  "aiStyles": {
+    "normal": "普通",
+    "old-english": "古英语",
+    "cockney": "伦敦腔",
+    "celtic": "凯尔特",
+    "scouse": "利物浦腔",
+    "wild-west": "狂野西部",
+    "asian-uncle": "亚洲大叔",
+    "russian-mafia": "俄罗斯黑手党",
+    "pirate": "海盗",
+    "alien": "外星人",
+    "e-girl": "E-Girl",
+    "chad": "猛男",
+    "hopeless-romantic": "无可救药的浪漫派",
+    "daddy": "老爸",
+    "mommy": "老妈",
+    "big-brother": "大哥",
+    "lil-bro": "小弟",
+    "big-sister": "大姐",
+    "little-sister": "小妹",
+    "conservative": "保守派",
+    "liberal": "自由派",
+    "antifa": "反法西斯",
+    "capitalist": "资本家",
+    "socialist": "社会主义者",
+    "neocon": "新保守派",
+    "feminist": "女权主义者",
+    "progressive": "进步派",
+    "nationalist": "民族主义者",
+    "communist": "共产主义者"
   },
   "post": {
     "like": "赞",
@@ -6285,36 +6326,5 @@
     "followers": "关注者",
     "subscribers": "订阅者",
     "mentioned": "提到其人"
-  },
-  "aiStyles": {
-    "normal": "普通",
-    "old-english": "古英语",
-    "cockney": "伦敦腔",
-    "celtic": "凯尔特",
-    "scouse": "利物浦腔",
-    "wild-west": "狂野西部",
-    "asian-uncle": "亚洲大叔",
-    "russian-mafia": "俄罗斯黑手党",
-    "pirate": "海盗",
-    "alien": "外星人",
-    "e-girl": "E-Girl",
-    "chad": "猛男",
-    "hopeless-romantic": "无可救药的浪漫派",
-    "daddy": "老爸",
-    "mommy": "老妈",
-    "big-brother": "大哥",
-    "lil-bro": "小弟",
-    "big-sister": "大姐",
-    "little-sister": "小妹",
-    "conservative": "保守派",
-    "liberal": "自由派",
-    "antifa": "反法西斯",
-    "capitalist": "资本家",
-    "socialist": "社会主义者",
-    "neocon": "新保守派",
-    "feminist": "女权主义者",
-    "progressive": "进步派",
-    "nationalist": "民族主义者",
-    "communist": "共产主义者"
   }
 }

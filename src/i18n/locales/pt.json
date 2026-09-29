@@ -7588,7 +7588,11 @@
       "intro": "Miniaplicativos criados para o DeHub por qualquer pessoa. Eles abrem dentro do DeHub, você já está conectado e cada aplicativo mostra o seu endereço real da web.",
       "buildCta": "Criar uma aplicação",
       "emptyTitle": "Ainda não há aplicações listadas",
-      "emptyBody": "As primeiras aplicações estão em análise. Construa um e pode estar aqui."
+      "emptyBody": "As primeiras aplicações estão em análise. Construa um e pode estar aqui.",
+      "search": "Pesquise aplicativos",
+      "all": "Todos",
+      "fromDehub": "De DeHub",
+      "noMatch": "Nenhum aplicativo corresponde à sua busca."
     },
     "dev": {
       "title": "Crie uma mini app",
@@ -7623,7 +7627,35 @@
       "verifyTitle": "Inicie sessão com o DeHub, no seu servidor",
       "verifyBody": "auth.getToken() dá ao seu aplicativo um token assinado pelo DeHub. Verifique no seu servidor com qualquer biblioteca JWT. O endereço da carteira do utilizador está em sub.",
       "copy": "Copiar",
-      "copied": "Copiado"
+      "copied": "Copiado",
+      "submitBody": "Seu manifesto passa. Submeta-o e seu aplicativo ficará disponível no DeHub com um link direto, marcado como Não revisado. Ele aparece na loja após a revisão.",
+      "submit": "Submeter ao DeHub",
+      "submitSignIn": "Entre no DeHub para submeter.",
+      "submitDone": "Submetido. Seu aplicativo está disponível no link do DeHub.",
+      "submitUpdated": "Atualizado. O DeHub tem a versão mais recente do seu manifesto.",
+      "yourAppsTitle": "Seus aplicativos",
+      "stateUnlisted": "Público por link · em revisão para a loja",
+      "stateListed": "Na loja",
+      "stateSuspended": "Suspenso",
+      "copyLink": "Copiar link"
+    },
+    "card": {
+      "open": "Abrir"
+    },
+    "category": {
+      "games": "Jogos",
+      "social": "Social",
+      "finance": "Financeiro",
+      "utility": "Utilitário",
+      "productivity": "Produtividade",
+      "health-fitness": "Saúde e fitness",
+      "news-media": "Notícias e mídia",
+      "music": "Música",
+      "shopping": "Compras",
+      "education": "Educação",
+      "developer-tools": "Ferramentas do desenvolvedor",
+      "entertainment": "Entretenimento",
+      "art-creativity": "Arte e criatividade"
     }
   },
   "aiStyles": {

@@ -7499,7 +7499,11 @@
       "intro": "Mini-apps bygget til DeHub af enhver. De åbnes inde i DeHub, du er allerede logget ind, og hver app viser sin rigtige webadresse.",
       "buildCta": "Byg en app",
       "emptyTitle": "Ingen apps listet endnu",
-      "emptyBody": "De første apps er under gennemgang. Byg en og den kunne være her."
+      "emptyBody": "De første apps er under gennemgang. Byg en og den kunne være her.",
+      "search": "Søg apps",
+      "all": "Alle",
+      "fromDehub": "Fra DeHub",
+      "noMatch": "Ingen apps matcher din søgning."
     },
     "dev": {
       "title": "Byg en mini-app",
@@ -7534,7 +7538,35 @@
       "verifyTitle": "Log ind med DeHub, på din server",
       "verifyBody": "`auth.getToken()` giver din app en token signeret af DeHub. Tjek den på din server med ethvert JWT-bibliotek. Brugernes lommebogsadresse er i `sub`.",
       "copy": "Kopier",
-      "copied": "Kopieret"
+      "copied": "Kopieret",
+      "submitBody": "Din manifest godkendes. Indsend den, og din app går live på en DeHub-link med det samme, mærket som \"Ureviewet\". Den vises i butikken, når den er blevet gennemgået.",
+      "submit": "Indsend til DeHub",
+      "submitSignIn": "Log ind på DeHub for at indsende.",
+      "submitDone": "Indsendt. Din app er live på dens DeHub-link.",
+      "submitUpdated": "Opdateret. DeHub har den nyeste version af din manifest.",
+      "yourAppsTitle": "Dine apps",
+      "stateUnlisted": "Live via link · i gennemgang for butikken",
+      "stateListed": "I butikken",
+      "stateSuspended": "Ophævet",
+      "copyLink": "Kopier link"
+    },
+    "card": {
+      "open": "Åbn"
+    },
+    "category": {
+      "games": "Spil",
+      "social": "Sociale",
+      "finance": "Finans",
+      "utility": "Værktøj",
+      "productivity": "Produktivitet",
+      "health-fitness": "Sundhed & fitness",
+      "news-media": "Nyheder & medier",
+      "music": "Musik",
+      "shopping": "Indkøb",
+      "education": "Uddannelse",
+      "developer-tools": "Udviklerværktøjer",
+      "entertainment": "Underholdning",
+      "art-creativity": "Kunst & kreativitet"
     }
   },
   "aiStyles": {

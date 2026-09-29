@@ -5414,7 +5414,11 @@
       "intro": "Barnaamijyada Mini ee loo dhisay DeHub qof kasta. Waxay u furan yihiin gudaha DeHub, horeyba waad u saxiixday, barnaamij kastana wuxuu muujinayaa cinwaankiisa dhabta ah ee webka.",
       "buildCta": "Samee app ah",
       "emptyTitle": "Ma jiro barnaamijyo weli la taxay",
-      "emptyBody": "Codsiyada ugu horreeya ayaa dib u eegis ku jira. Dhis mid ka mid ah iyo waxaa laga yaabaa in ay halkan."
+      "emptyBody": "Codsiyada ugu horreeya ayaa dib u eegis ku jira. Dhis mid ka mid ah iyo waxaa laga yaabaa in ay halkan.",
+      "search": "Barnaamijyada raadinta",
+      "all": "Dhammaan",
+      "fromDehub": "Laga soo bilaabo DeHub",
+      "noMatch": "Ma jiro barnaamijyo la jaan qaada raadintaas."
     },
     "dev": {
       "title": "Dhis app mini ah",
@@ -5449,7 +5453,35 @@
       "verifyTitle": "Ku qor DeHub, server-kaaga",
       "verifyBody": "auth.getToken() wuxuu siinayaa app-kaaga calaamad uu saxiixay DeHub. Ka hubi server-kaaga maktabad kasta oo JWT ah. Cinwaanka boorsada isticmaalaha ayaa ku jira sub.",
       "copy": "Nuqul Ka Samee",
-      "copied": "La koobiyay"
+      "copied": "La koobiyay",
+      "submitBody": "Your passes cad. Soo gudbiyaan iyo app aad si toos ah u tagaan xiriir DeHub ah, calaamad Unreviewed. Waxay ka muuqataa dukaanka marka dib loo eego.",
+      "submit": "U gudbi DeHub",
+      "submitSignIn": "Gal DeHub si aad u gudbiso.",
+      "submitDone": "Soo gudbiyey. App-kaaga wuxuu ku nool yahay xiriirkiisa DeHub.",
+      "submitUpdated": "La cusbooneysiiyay. DeHub wuxuu leeyahay nooca ugu dambeeya ee muuqaalkaaga.",
+      "yourAppsTitle": "Barnaamijyadaada",
+      "stateUnlisted": "Live by link · ee dib u eegista dukaanka",
+      "stateListed": "Dukaanka dhexdiisa",
+      "stateSuspended": "Joojiyay",
+      "copyLink": "LINK Nuqul"
+    },
+    "card": {
+      "open": "Furan"
+    },
+    "category": {
+      "games": "Ciyaaraha",
+      "social": "Bulsho",
+      "finance": "Maaliyadda",
+      "utility": "Waxtarka",
+      "productivity": "Wax soo saarka",
+      "health-fitness": "Caafimaadka & jimicsiga",
+      "news-media": "Wararka & Warbaahinta",
+      "music": "Muusikada",
+      "shopping": "Dukaamaysiga",
+      "education": "Waxbarashada",
+      "developer-tools": "Qalabka horumariyaha",
+      "entertainment": "Madadaalada",
+      "art-creativity": "Farshaxanka & Hal-abuurka"
     }
   },
   "aiStyles": {

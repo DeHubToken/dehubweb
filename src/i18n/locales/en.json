@@ -7588,7 +7588,11 @@
       "intro": "Mini apps built for DeHub by anyone. They open inside DeHub, you're already signed in, and every app shows its real web address.",
       "buildCta": "Build an app",
       "emptyTitle": "No apps listed yet",
-      "emptyBody": "The first apps are in review. Build one and it could be here."
+      "emptyBody": "The first apps are in review. Build one and it could be here.",
+      "search": "Search apps",
+      "all": "All",
+      "fromDehub": "From DeHub",
+      "noMatch": "No apps match that search."
     },
     "dev": {
       "title": "Build a mini app",
@@ -7623,7 +7627,35 @@
       "verifyTitle": "Sign in with DeHub, on your server",
       "verifyBody": "auth.getToken() gives your app a token signed by DeHub. Check it on your server with any JWT library. The user's wallet address is in sub.",
       "copy": "Copy",
-      "copied": "Copied"
+      "copied": "Copied",
+      "submitBody": "Your manifest passes. Submit it and your app goes live at a DeHub link straight away, marked Unreviewed. It appears in the store once it has been reviewed.",
+      "submit": "Submit to DeHub",
+      "submitSignIn": "Sign in to DeHub to submit.",
+      "submitDone": "Submitted. Your app is live at its DeHub link.",
+      "submitUpdated": "Updated. DeHub has the latest version of your manifest.",
+      "yourAppsTitle": "Your apps",
+      "stateUnlisted": "Live by link · in review for the store",
+      "stateListed": "In the store",
+      "stateSuspended": "Suspended",
+      "copyLink": "Copy link"
+    },
+    "card": {
+      "open": "Open"
+    },
+    "category": {
+      "games": "Games",
+      "social": "Social",
+      "finance": "Finance",
+      "utility": "Utility",
+      "productivity": "Productivity",
+      "health-fitness": "Health & fitness",
+      "news-media": "News & media",
+      "music": "Music",
+      "shopping": "Shopping",
+      "education": "Education",
+      "developer-tools": "Developer tools",
+      "entertainment": "Entertainment",
+      "art-creativity": "Art & creativity"
     }
   },
   "aiStyles": {

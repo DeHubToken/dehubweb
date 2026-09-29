@@ -7561,7 +7561,11 @@
       "intro": "ማንኛውም ሰው ለ DeHub የተገነቡ ሚኒ መተግበሪያዎች. እነሱ በ DeHub ውስጥ ይከፈታሉ ፣ ቀድሞውኑ ገብተዋል ፣ እና እያንዳንዱ መተግበሪያ እውነተኛ የድር አድራሻውን ያሳያል ።",
       "buildCta": "አንድ መተግበሪያ ይገንቡ",
       "emptyTitle": "እስካሁን የተዘረዘሩ መተግበሪያዎች የሉም",
-      "emptyBody": "የመጀመሪያዎቹ መተግበሪያዎች በግምገማ ላይ ናቸው ። አንዱን ይገንቡ እና እዚህ ሊሆን ይችላል ።"
+      "emptyBody": "የመጀመሪያዎቹ መተግበሪያዎች በግምገማ ላይ ናቸው ። አንዱን ይገንቡ እና እዚህ ሊሆን ይችላል ።",
+      "search": "መተግበሪያዎችን ይፈልጉ",
+      "all": "ሁሉም",
+      "fromDehub": "ከ DeHub",
+      "noMatch": "ምንም መተግበሪያዎች ያንን ፍለጋ አይዛመዱም ።"
     },
     "dev": {
       "title": "ሚኒ መተግበሪያ ይገንቡ",
@@ -7596,7 +7600,35 @@
       "verifyTitle": "ከ DeHub ጋር ይግቡ ፣ በአገልጋይዎ ላይ",
       "verifyBody": "auth.getToken() መተግበሪያዎ በ DeHub የተፈረመ ምልክት ይሰጣል. ከማንኛውም የ JWT ቤተ-መጽሐፍት ጋር በአገልጋይዎ ላይ ያረጋግጡ ። የተጠቃሚው የኪስ ቦርሳ አድራሻ ንዑስ ውስጥ ነው.",
       "copy": "ቅጂ",
-      "copied": "ተገለበጠ"
+      "copied": "ተገለበጠ",
+      "submitBody": "የእርስዎ ግልጽ ማለፊያዎች. ያስገቡት እና መተግበሪያዎ ወዲያውኑ በ DeHub አገናኝ በቀጥታ ይሄዳል, ምልክት ያልተደረገበት. አንዴ ከተገመገመ በኋላ በሱቁ ውስጥ ይታያል ።",
+      "submit": "ወደ DeHub ይግቡ",
+      "submitSignIn": "ለማስገባት ወደ DeHub ይግቡ ።",
+      "submitDone": "ተልኳል. የእርስዎ መተግበሪያ በውስጡ DeHub አገናኝ ላይ በቀጥታ ነው.",
+      "submitUpdated": "ተዘምኗል. DeHub የእርስዎ ይፋዊ የቅርብ ጊዜ ስሪት አለው.",
+      "yourAppsTitle": "የእርስዎ መተግበሪያዎች",
+      "stateUnlisted": "LIVE by አገናኝ · በግምገማ ውስጥ ለሱቁ",
+      "stateListed": "በሱቁ ውስጥ",
+      "stateSuspended": "የተከለከለ",
+      "copyLink": "አገናኝ ቅጂ"
+    },
+    "card": {
+      "open": "ክፈት"
+    },
+    "category": {
+      "games": "ጨዋታዎች",
+      "social": "ማህበራዊ",
+      "finance": "አገልግሎት",
+      "utility": "መገልገያ",
+      "productivity": "ምርታማነት",
+      "health-fitness": "ጤና እና የአካል ብቃት",
+      "news-media": "ዜና እና ሚዲያ",
+      "music": "ሙዚቃ",
+      "shopping": "ግዢ",
+      "education": "ትምህርት",
+      "developer-tools": "የገንቢ መሳሪያዎች",
+      "entertainment": "መዝናኛ",
+      "art-creativity": "አርት & የፈጠራ ችሎታ"
     }
   },
   "aiStyles": {

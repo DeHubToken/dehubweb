@@ -5412,7 +5412,11 @@
       "intro": "Mini-apper bygget for DeHub av alle. De åpnes inne i DeHub, du er allerede logget inn, og hver app viser sin sanne nettadresse.",
       "buildCta": "Bygg en app",
       "emptyTitle": "Ingen apps listet ennå",
-      "emptyBody": "De første appene er under vurdering. Bygg en og den kan være her."
+      "emptyBody": "De første appene er under vurdering. Bygg en og den kan være her.",
+      "search": "Søk i apper",
+      "all": "Alle",
+      "fromDehub": "Fra DeHub",
+      "noMatch": "Ingen apper samsvarer med det søket."
     },
     "dev": {
       "title": "Bygg en mini-app",
@@ -5447,7 +5451,35 @@
       "verifyTitle": "Logg inn med DeHub, på serveren",
       "verifyBody": "auth.getToken() gir appen en token signert av DeHub. Sjekk den på serveren med noen JWT-bibliotek. Brukerens lommeboksadresse er i sub.",
       "copy": "Kopier",
-      "copied": "Kopiert"
+      "copied": "Kopiert",
+      "submitBody": "Manifestet ditt er godkjent. Send det inn, så publiseres appen din umiddelbart på en DeHub-lenke, merket som Ikke vurdert. Den vises i butikken når den er vurdert.",
+      "submit": "Send inn til DeHub",
+      "submitSignIn": "Logg inn på DeHub for å sende inn.",
+      "submitDone": "Sendt inn. Appen din er publisert på DeHub-lenken.",
+      "submitUpdated": "Oppdatert. DeHub har den nyeste versjonen av manifestet ditt.",
+      "yourAppsTitle": "Appene dine",
+      "stateUnlisted": "Live via lenke · anmeldelse for butikken",
+      "stateListed": "I butikken",
+      "stateSuspended": "Suspendert",
+      "copyLink": "Kopier lenke"
+    },
+    "card": {
+      "open": "Åpne"
+    },
+    "category": {
+      "games": "Spill",
+      "social": "Sosial",
+      "finance": "Finansiere",
+      "utility": "Nytte",
+      "productivity": "Produktivitet",
+      "health-fitness": "Helse og trening",
+      "news-media": "Nyheter og media",
+      "music": "Musikk",
+      "shopping": "Kjøp",
+      "education": "Utdannelse",
+      "developer-tools": "Utviklerverktøy",
+      "entertainment": "Underholdning",
+      "art-creativity": "Kunst og kreativitet"
     }
   },
   "aiStyles": {
