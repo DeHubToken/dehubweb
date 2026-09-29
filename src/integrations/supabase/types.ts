@@ -3844,6 +3844,7 @@ export type Database = {
           id: string
           manifest: Json
           name: string
+          notify_key_hash: string | null
           owner_wallet: string | null
           permissions: string[]
           review_note: string | null
@@ -3870,6 +3871,7 @@ export type Database = {
           id?: string
           manifest?: Json
           name: string
+          notify_key_hash?: string | null
           owner_wallet?: string | null
           permissions?: string[]
           review_note?: string | null
@@ -3896,6 +3898,7 @@ export type Database = {
           id?: string
           manifest?: Json
           name?: string
+          notify_key_hash?: string | null
           owner_wallet?: string | null
           permissions?: string[]
           review_note?: string | null
@@ -3912,6 +3915,111 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      miniapp_installs: {
+        Row: {
+          app_id: string
+          created_at: string
+          notifications_on: boolean
+          wallet: string
+        }
+        Insert: {
+          app_id: string
+          created_at?: string
+          notifications_on?: boolean
+          wallet: string
+        }
+        Update: {
+          app_id?: string
+          created_at?: string
+          notifications_on?: boolean
+          wallet?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "miniapp_installs_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "miniapp_apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      miniapp_notification_log: {
+        Row: {
+          app_id: string
+          notification_id: string
+          sent_at: string
+          wallet: string
+        }
+        Insert: {
+          app_id: string
+          notification_id: string
+          sent_at?: string
+          wallet: string
+        }
+        Update: {
+          app_id?: string
+          notification_id?: string
+          sent_at?: string
+          wallet?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "miniapp_notification_log_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "miniapp_apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      miniapp_payments: {
+        Row: {
+          amount_dhb: number
+          app_id: string
+          chain_id: number
+          created_at: string
+          id: string
+          memo: string | null
+          payer_account: string | null
+          payer_wallet: string
+          recipient: string
+          tx_hash: string
+        }
+        Insert: {
+          amount_dhb: number
+          app_id: string
+          chain_id: number
+          created_at?: string
+          id?: string
+          memo?: string | null
+          payer_account?: string | null
+          payer_wallet: string
+          recipient: string
+          tx_hash: string
+        }
+        Update: {
+          amount_dhb?: number
+          app_id?: string
+          chain_id?: number
+          created_at?: string
+          id?: string
+          memo?: string | null
+          payer_account?: string | null
+          payer_wallet?: string
+          recipient?: string
+          tx_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "miniapp_payments_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "miniapp_apps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       miniapp_signing_keys: {
         Row: {
@@ -7465,6 +7573,7 @@ export type Database = {
         Args: { p_user_id?: string; p_wallet: string }
         Returns: undefined
       }
+      evict_stale_post_translations: { Args: never; Returns: number }
       get_affiliate_cta_stats: {
         Args: never
         Returns: {
