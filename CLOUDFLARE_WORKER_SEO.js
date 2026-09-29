@@ -22,7 +22,7 @@
 // esbuild can bundle it here and vite can bundle it there). SYSTEM_ROUTES below
 // is derived from it — see the comment there.
 import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
-import { MILESTONE_REDIRECTS, RETIRED_GUIDES } from './src/lib/blog-redirects.js';
+import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES } from './src/lib/blog-redirects.js';
 
 /**
  * `/mal.eth` — a verified ENS handle standing in for a username.
@@ -330,43 +330,26 @@ ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${
 // Standalone hand-built React guide pages under /guides/ that are NOT manifest
 // blog posts. Served meta directly at the edge — the deployed Supabase fn's
 // STATIC_ROUTES allowlist is stale and 404s the newer one.
+//
+// The article itself comes from public/guide-content/<slug>.json, rendered
+// from the React page by scripts/generate-guide-content.mjs (and held to it by
+// guide-crawler-content.test.ts). Crawlers used to get `bodyHtml` alone: a
+// 328-word summary of a ~1,500-word page, which is what Google ranked. It is
+// now only the fallback for a failed asset fetch.
+//
+// best-decentralized-social-media and best-web3-social-media-dapps used to live
+// here too. Both were thin rivals of the flagship blog post on the same query
+// and now 301 to it — see CONSOLIDATED_GUIDES in src/lib/blog-redirects.js.
 const GUIDE_PAGES = {
   // Titles/descriptions mirror the React pages' own SEOHead strings — the two
   // UA variants must never diverge, and body claims must not exceed what the
-  // human-visible page actually states.
-  'best-decentralized-social-media': {
-    title: 'Best Decentralized Social Media 2026 — DeHub Guide',
-    description: 'Comparison guide of the best decentralized and Web3 social media platforms in 2026. DeHub, Mastodon, Bluesky, Farcaster and Lens — features, monetization, ownership and who each is for.',
-    bodyHtml: `<p>Decentralized social media replaces the platform-owned model — where one company controls your account, reach and monetization — with protocols where users own their content and audience. This guide compares the leading options in 2026: <strong>DeHub, Mastodon, Bluesky, Farcaster and Lens Protocol</strong>, across ownership, censorship resistance, monetization and ease of use.</p>
-<h2>The short version</h2>
-<ul>
-<li><strong>Mastodon</strong> — federated (ActivityPub) microblogging. Strong communities, no crypto; your account still lives on an instance an admin controls, and there's no native creator monetization.</li>
-<li><strong>Bluesky</strong> — the AT Protocol successor to Twitter's decentralization effort. Familiar feel and portable identity, but content isn't on-chain and monetization is early.</li>
-<li><strong>Farcaster</strong> — on-chain identity with off-chain content ("hubs"). Great crypto-native community; primarily text, and most activity flows through one client.</li>
-<li><strong>Lens Protocol</strong> — social graph as on-chain primitives on Lens Chain. Powerful for developers building social apps; less a destination app for creators.</li>
-<li><strong>DeHub</strong> — a full media platform (video, live streaming, posts, messaging) where uploads can be minted on-chain and creators monetize natively via tips, pay-per-view, token-gated content, staking rewards and a 20% affiliate program, with an integrated AI creator studio.</li>
-</ul>
-<h2>How to choose</h2>
-<p>If you want a federated Twitter alternative, Mastodon or Bluesky fit. If you're building on a social graph, look at Lens or Farcaster. If you're a <strong>creator who wants YouTube/Twitch-style features with on-chain ownership and built-in monetization</strong>, that's the gap DeHub is built to fill.</p>
-<p><a href="${APP_URL}/guides/best-decentralized-social-media">Read the full interactive comparison</a> or <a href="${APP_URL}/">try DeHub free</a>.</p>`,
-  },
-  'best-web3-social-media-dapps': {
-    title: 'Best Web3 Social Media Dapps in 2026 — DeHub Guide',
-    description: 'Curated comparison of the best Web3 social media dapps in 2026 — DeHub, Farcaster, Lens, Friend.tech and Hive. Scored on monetization, censorship resistance and UX.',
-    bodyHtml: `<p>Web3 social dApps put content, identity and payments on-chain so creators — not platforms — own the upside. This guide ranks the leading Web3 social media dApps of 2026 by creator monetization, content ownership, user experience and momentum.</p>
-<h2>What separates the leaders</h2>
-<ul>
-<li><strong>Real on-chain ownership</strong> — content that can be minted to the creator's wallet, not just an on-chain username.</li>
-<li><strong>Native monetization</strong> — pay-per-view, token-gated posts, subscriptions and tips that settle on-chain without a payment processor.</li>
-<li><strong>Web2-grade UX</strong> — social/email sign-in, sponsored gas, no seed-phrase wall in front of the first post.</li>
-<li><strong>Media depth</strong> — long-form video, live streaming and audio, not just microblogging.</li>
-</ul>
-<p><strong>DeHub</strong> scores across all four: uploads mint on-chain across Base, BNB, Robinhood Chain and Solana, creators monetize natively through tips, pay-per-view and token-gated posts, and sign-up works with plain email or socials. The full guide compares DeHub with <strong>Farcaster, Lens, Friend.tech and Hive</strong> on monetization, censorship resistance and UX.</p>
-<p><a href="${APP_URL}/guides/best-web3-social-media-dapps">Read the full ranked comparison</a> or <a href="${APP_URL}/">explore DeHub</a>.</p>`,
-  },
+  // human-visible page actually states. Dates are the React page's first and
+  // latest commits.
   'best-decentralized-streaming-apps': {
     title: 'Best Decentralized Streaming Apps 2026 — DeHub Guide',
     description: 'The decentralized streaming apps you can actually watch on in 2026 — DeHub, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared.',
+    datePublished: '2026-09-13',
+    dateModified: '2026-09-29',
     bodyHtml: `<p>Most "decentralized streaming" lists open with Theta and Livepeer. Neither is a streaming app — they are decentralized delivery and transcoding networks that sit underneath other products, and you cannot open either one and watch anything. Most of those lists also still feature DLive, which <strong>shut down in April 2026</strong>. This guide covers six apps that have a front door, an audience and a pulse.</p>
 <h2>The six</h2>
 <ul>
@@ -379,7 +362,7 @@ const GUIDE_PAGES = {
 </ul>
 <h2>How to choose</h2>
 <p>If you want reach today, Odysee. If you already have a Bluesky following, Streamplace. If you want to be paid in Bitcoin, zap.stream. If you make music, Audius. If you want <strong>live streaming with ownership and monetization that works from your first viewer</strong>, that is the gap DeHub is built to fill — and it is the only one of the six that ships live production tools rather than leaving you to assemble them.</p>
-<p><a href="${APP_URL}/guides/best-decentralized-streaming-apps">Read the full comparison</a> or <a href="${APP_URL}/">try DeHub free</a>.</p>`,
+<p><a href="${APP_URL}/">Try DeHub free</a>.</p>`,
   },
 };
 
@@ -1096,8 +1079,11 @@ const MARKETING_PAGES = {
   // are what somebody actually searches for, and one shared page for all of
   // them would be a soft duplicate of every one.
   'arcade': {
-    title: 'Arcade | DeHub',
-    description: 'Play games in your browser on DeHub — cinematic 3D chess, a procedurally generated shooter, a rainforest walk, a neon-street brawler and a walkable trading floor. No install, no download.',
+    // Not the SPA's `Arcade | DeHub`: fourteen characters with no word anyone
+    // searches for, over a description Google cut at 160. The ?hl= variants
+    // keep their seo-i18n rows until the locale keys are rewritten to match.
+    title: 'DeHub Arcade — Free Browser Games, No Download',
+    description: 'Free browser games on DeHub: cinematic 3D chess, a procedurally generated shooter, a rainforest walk, a neon-street brawler and a walkable trading floor.',
     heading: 'DeHub Arcade',
     bodyHtml: `<p>A collection of DeHub built and open sourced games, worlds or experiences. They run in the browser tab — nothing to install, nothing to buy, all served from DeHub itself.</p>
 <ul>
@@ -1775,6 +1761,43 @@ function truncate(text, max) {
   return t.length > max ? `${t.slice(0, max - 1)}…` : t;
 }
 
+/**
+ * truncate() for text a person reads as a headline: cut at the last word
+ * boundary that fits, never inside a word, and never leave a separator
+ * hanging off the end. A single unbroken token longer than a third of the
+ * room is cut where it stands — dropping it would leave next to nothing.
+ */
+function clipAtWord(text, max) {
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  const room = t.slice(0, max - 1);
+  // `room` may already end exactly on a word; only back off when it does not.
+  const space = t[room.length] === ' ' ? room.length : room.lastIndexOf(' ');
+  const cut = space > max / 3 ? room.slice(0, space) : room;
+  return `${cut.replace(/[\s|—–\-:·,;&]+$/u, '')}…`;
+}
+
+/** A closing ` | DeHub`, ` — DeHub Guide`, ` - DeHub Docs`, ` | DeHub 2025 Roadmap` clause. */
+const BRAND_SUFFIX = /\s+[|—–-]\s+[^|—–]*\bDeHub\b[^|—–]*$/;
+
+/**
+ * Fit a <title> into `max` characters the way a person would shorten it.
+ *
+ * Titles here are written to rank and most end in a brand clause, so the old
+ * mid-word cut ate the suffix first and left the fragment on screen: the
+ * 2026-09-29 crawl found ~45 of 126 blog titles ending `| De…`, `| DeHub
+ * 2025…` or `Pla…`. The brand clause is the cheapest thing to lose — the
+ * result already says dehub.io — so it goes first; only a title still too
+ * long without it is cut, at a word boundary.
+ */
+function clampTitle(text, max) {
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  const bare = t.replace(BRAND_SUFFIX, '');
+  if (bare && bare.length <= max) return bare;
+  return clipAtWord(bare || t, max);
+}
+
 /** Longest <title> Google will render before it writes its own. Applied to
  *  post text, which is a snippet with no brand suffix to protect. */
 const TITLE_MAX = 70;
@@ -1791,12 +1814,12 @@ const DESCRIPTION_MAX = 200;
  * to cut safely, since slicing the escaped form can land inside a `&quot;` and
  * emit `&qu…`.
  */
-function reclamp(escaped, max) {
+function reclamp(escaped, max, cut = truncate) {
   const plain = String(escaped)
     .replace(/&quot;/g, '"')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>');
-  return truncate(plain, max)
+  return cut(plain, max)
     .replace(/"/g, '&quot;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
@@ -1817,10 +1840,10 @@ function reclamp(escaped, max) {
  */
 function normalizeProxiedMeta(html) {
   return html
-    .replace(/(<title>)([^<]*)(<\/title>)/i, (m, a, v, b) => `${a}${reclamp(v, TITLE_MAX)}${b}`)
+    .replace(/(<title>)([^<]*)(<\/title>)/i, (m, a, v, b) => `${a}${reclamp(v, TITLE_MAX, clampTitle)}${b}`)
     .replace(
       /(<meta (?:property|name)="(?:og:title|twitter:title|og:image:alt|twitter:image:alt)" content=")([^"]*)(">)/g,
-      (m, a, v, b) => `${a}${reclamp(v, TITLE_MAX)}${b}`,
+      (m, a, v, b) => `${a}${reclamp(v, TITLE_MAX, clampTitle)}${b}`,
     )
     .replace(
       /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")([^"]*)(">)/g,
@@ -1881,6 +1904,28 @@ function titleSaysNothing(title) {
   return letters.length < 3;
 }
 
+/** What the deployed fn titles a post that has no title of its own. */
+const FN_FALLBACK_TITLE = /^Post #\d+ by .+ on DeHub$/;
+/** A caption standing in for a title: long enough to say what the post is. */
+const POST_CAPTION_TITLE_MAX = 60;
+
+/**
+ * A post's caption, when it has one worth titling the page with. The record
+ * is the source; without one, the fn's meta description is the caption
+ * unless it is the fn's per-author template. Links are dropped (a URL is
+ * not a title) and a caption that is itself only emoji or a filename counts
+ * as none.
+ */
+function postCaption(html, nft, templated) {
+  let text = nft && typeof nft.description === 'string' ? nft.description : '';
+  if (!text && !nft && !templated) {
+    const meta = html.match(/<meta name="description" content="([^"]*)">/);
+    text = meta ? decodeFnText(meta[1]) : '';
+  }
+  text = text.replace(/https?:\/\/\S+/g, ' ').replace(/\s+/g, ' ').trim();
+  return titleSaysNothing(text) ? '' : text;
+}
+
 /** The fn escapes exactly `"`, `<`, `>` in attributes and JSON.stringifies
  *  its JSON-LD; both decode to the same plain text. */
 function decodeFnText(s) {
@@ -1917,7 +1962,11 @@ function postKind(nft, html) {
 function postAuthor(html, nft, templated) {
   const fromTemplate = templated ? decodeFnText(templated[1]).replace(/\s+/g, ' ').trim() : '';
   if (fromTemplate) return fromTemplate;
-  const fromRecord = String((nft && (nft.displayName || nft.username)) || '').replace(/\s+/g, ' ').trim();
+  // nft_info names its author minterDisplayName / mintername; the feed rows
+  // and older fixtures use displayName / username.
+  const fromRecord = String(
+    (nft && (nft.minterDisplayName || nft.displayName || nft.mintername || nft.username)) || '',
+  ).replace(/\s+/g, ' ').trim();
   if (fromRecord) return fromRecord;
   const ld = html.match(/"author":\{"@type":"Person","name":"((?:[^"\\]|\\.)*)"/);
   return ld ? decodeFnText(ld[1]).replace(/\s+/g, ' ').trim() : '';
@@ -1976,7 +2025,15 @@ function enrichPostMeta(html, postId, nft) {
     .map((c) => String(c || '').replace(/\s+/g, ' ').trim())
     .filter(Boolean)
     .slice(0, 5);
-  const untitled = titleSaysNothing(title);
+  // The fn's own stand-in for a post with no title — `Post #3419 by Sultan on
+  // DeHub` — is a title that says nothing too, it just has letters in it. When
+  // either kind sits on a post that does carry a caption, the caption's
+  // opening words are the better title: /app/post/3419 has 140 characters
+  // about a watercolour of a Royal Haveli and was indexed as a post number.
+  const placeholder = titleSaysNothing(title) || FN_FALLBACK_TITLE.test(title);
+  const caption = placeholder ? postCaption(html, nft, templated) : '';
+  const chosen = caption ? clipAtWord(caption, POST_CAPTION_TITLE_MAX) : title;
+  const untitled = placeholder && !caption;
   let out = html;
 
   if (untitled) {
@@ -1994,14 +2051,17 @@ function enrichPostMeta(html, postId, nft) {
     // TITLE_MAX: the suffix is only applied when the result still fits, and
     // the shorter form is tried before giving up.
     const article = `a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind}`;
-    const suffixed = [`${title} — ${article} by ${authorName} on DeHub`, `${title} — ${authorName} on DeHub`].find(
+    const suffixed = [`${chosen} — ${article} by ${authorName} on DeHub`, `${chosen} — ${authorName} on DeHub`].find(
       (candidate) => candidate.length <= TITLE_MAX,
     );
     // A title that already carries the brand needs no branding, and one that
     // already has an em-dash clause reads badly with a second one bolted on
     // (`A — B — davyJones on DeHub`). Both are distinctive enough as they are.
-    const alreadyShaped = /\bon DeHub\b/i.test(title) || title.includes(' — ');
-    if (suffixed && !alreadyShaped) out = replacePostTitle(out, title, suffixed);
+    const alreadyShaped = /\bon DeHub\b/i.test(chosen) || chosen.includes(' — ');
+    const next = suffixed && !alreadyShaped ? suffixed : chosen;
+    if (next !== title) out = replacePostTitle(out, title, next);
+  } else if (chosen !== title) {
+    out = replacePostTitle(out, title, chosen);
   }
 
   // The description rewrite below only has something to rewrite when the fn
@@ -2011,7 +2071,7 @@ function enrichPostMeta(html, postId, nft) {
 
   const lead = untitled
     ? `${verb} ${kind} #${postId} by ${author} on DeHub`
-    : `${verb} "${title}" — a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind} by ${author} on DeHub`;
+    : `${verb} "${chosen}" — a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind} by ${author} on DeHub`;
   const topicsText = topics.length ? ` Topics: ${topics.join(', ')}.` : '';
   const description = truncate(`${lead}, the open source, user-owned social network.${topicsText}`, DESCRIPTION_MAX);
   const attrDesc = escFnAttr(description);
@@ -2037,9 +2097,29 @@ function enrichPostMeta(html, postId, nft) {
     );
 }
 
-function enrichProfileMeta(html, username) {
+/**
+ * `Display Name (@handle) on DeHub` in place of the handle-only title.
+ *
+ * The title rewrite in the proxy branch turns the fn's CTA into `@handle on
+ * DeHub — posts, videos & profile`, which never contains the name people
+ * actually search for: /c0chraniz3r is Jesse Cochran, and nothing on the
+ * page's title, heading or card said so. The name comes off the fn's own
+ * Person JSON-LD, or the account record when the caller has it. A name that
+ * is just the handle again adds nothing and the old title stays.
+ */
+function profileTitle(html, handle, displayName) {
+  const ld = html.match(/"@type":"Person","name":"((?:[^"\\]|\\.)*)"/);
+  const name = String(displayName || (ld ? decodeFnText(ld[1]) : '')).replace(/\s+/g, ' ').trim();
+  if (!name || name.replace(/^@/, '').toLowerCase() === handle.toLowerCase()) return html;
+  const title = escFnAttr(clampTitle(`${name} (@${handle}) on DeHub`, TITLE_MAX));
+  const current = new RegExp(`@${handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} on DeHub — posts, videos &amp; profile`, 'gi');
+  return html.replace(current, title);
+}
+
+function enrichProfileMeta(html, username, displayName) {
   const handle = String(username || '').replace(/^@/, '').trim();
   if (!handle) return html;
+  html = profileTitle(html, handle, displayName);
   const templated = html.match(PROFILE_DESCRIPTION_TEMPLATE);
   let description;
   if (templated) {
@@ -2179,23 +2259,70 @@ function localizePage(html, route, hl, table) {
 
 const DEHUB_API = 'https://api.dehub.io/api';
 async function fetchFeedRows(query, limit = 12) {
+  return (await fetchFeedRowsOrNull(query, limit)) || [];
+}
+
+/** fetchFeedRows, but null when the API did not answer — so "no posts" and
+ *  "could not ask" stay two different things where that decides indexing. */
+async function fetchFeedRowsOrNull(query, limit = 12) {
   try {
     const res = await fetch(
       `${DEHUB_API}/feed?limit=${limit}&status=minted&sortBy=createdAt&sortOrder=desc&${query}`,
       { signal: AbortSignal.timeout(6000) },
     );
-    if (!res.ok) return [];
+    if (!res.ok) return null;
     const json = await res.json();
-    return Array.isArray(json?.result) ? json.result : [];
+    return Array.isArray(json?.result) ? json.result : null;
   } catch {
-    return [];
+    return null;
   }
 }
 
-/** What a feed row is called in a list: its title, or its id when the title says nothing. */
+/** The account behind a handle (address, displayName, uploads), or null on any failure. */
+async function fetchAccountInfo(handle) {
+  try {
+    const res = await fetch(`${DEHUB_API}/account_info/${encodeURIComponent(handle)}`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const account = data && typeof data.result === 'object' ? data.result : data;
+    return account && typeof account.address === 'string' ? account : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Adds (or tightens) a page's robots meta to `noindex, follow`. */
+function noindexPage(html) {
+  if (/<meta name="robots"[^>]*>/i.test(html)) {
+    return html.replace(/<meta name="robots"[^>]*>/i, '<meta name="robots" content="noindex, follow">');
+  }
+  return html.replace('</head>', '<meta name="robots" content="noindex, follow"></head>');
+}
+
+/**
+ * A profile with no post a signed-out visitor can see is a name and an
+ * avatar: in the 2026-09-29 sample those pages were 48–68 words of template,
+ * and they are what a thin-content judgement is made of. The profile
+ * sitemap already leaves them out (the API only lists accounts with a
+ * visible post); this keeps a crawler that arrives by a link from indexing
+ * one either. Only a definite zero counts — an API that did not answer
+ * leaves the page as it was.
+ */
+function profileHasNoPosts(account, rows) {
+  if (!account) return false;
+  if (Number(account.uploads) === 0) return true;
+  return Array.isArray(rows) && rows.length === 0;
+}
+
+/** What a feed row is called in a list: its title, else its caption's opening
+ *  words (same rule as the post page's own title), else its id. */
 function postLabel(row) {
   const name = String(row.name || '').replace(/\s+/g, ' ').trim();
-  return titleSaysNothing(name) ? `Post #${Number(row.tokenId)}` : truncate(name, 90);
+  if (!titleSaysNothing(name)) return truncate(name, 90);
+  const caption = postCaption('', row, false);
+  return caption ? clipAtWord(caption, POST_CAPTION_TITLE_MAX) : `Post #${Number(row.tokenId)}`;
 }
 
 function postListHtml(heading, rows, { author = true } = {}) {
@@ -2264,6 +2391,79 @@ function postFactsHtml(record) {
   const line = facts.length ? `<p>${escHtml(facts.join(' · '))}</p>` : '';
   const tags = topics.length ? `<p>Topics: ${topics.map((t) => escHtml(t)).join(', ')}</p>` : '';
   return line + tags;
+}
+
+/**
+ * A crawlable link from a post to its author. The fn's post page named the
+ * author only in text and JSON-LD, so no post linked to any profile: profiles
+ * were reachable by crawling only from the homepage's latest ten and from
+ * each other. `isProfile` is the router's own test, so a handle that is also
+ * a route (`admin`, `explore`) never becomes a link to the wrong page.
+ */
+function injectPostByline(html, record, isProfile) {
+  const username = String((record && (record.mintername || record.username)) || '').trim().replace(/^@+/, '');
+  if (!username || !isProfile(username.toLowerCase())) return html;
+  const name = String((record && (record.minterDisplayName || record.displayName)) || '').replace(/\s+/g, ' ').trim();
+  const label = name && name.toLowerCase() !== username.toLowerCase() ? `${name} (@${username})` : `@${username}`;
+  const byline = `<p class="dh-byline">By <a href="${APP_URL}/${encodeURIComponent(username)}">${escHtml(label)}</a></p>`;
+  return html.replace(/<\/h1>/i, `</h1>\n    ${byline}`);
+}
+
+/** Seconds as an ISO 8601 duration (`PT1H1M18S`), or '' when unknown. */
+function isoDuration(seconds) {
+  const total = Math.round(Number(seconds));
+  if (!(total > 0)) return '';
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  return `PT${h ? `${h}H` : ''}${m ? `${m}M` : ''}${s ? `${s}S` : ''}`;
+}
+
+/** The post's video file on the CDN: the record's own path, else the fn's og:video. */
+function postVideoUrl(html, record) {
+  const raw = String((record && record.videoUrl) || '').trim();
+  if (raw) return /^https?:\/\//i.test(raw) ? raw : `${CDN_ORIGIN}/${raw.replace(/^\/+/, '')}`;
+  const og = html.match(/<meta property="og:video(?::secure_url)?" content="([^"]+)">/);
+  return og ? decodeFnText(og[1]) : '';
+}
+
+/**
+ * A video post as a watch page. The fn rendered the thumbnail as an <img>
+ * and nothing else, so Google's video indexing found no video on the page;
+ * and its VideoObject pointed embedUrl at the post page itself (not a
+ * player) and fell back to "now" for uploadDate, so every crawl of an old
+ * video called it new. This puts a real <video> where the thumbnail was
+ * (the thumbnail stays inside it, for anything that cannot play video), and
+ * rewrites the VideoObject from the post record: the file, its real upload
+ * date, its length.
+ */
+function enrichVideoPost(html, record) {
+  if (postKind(record, html)[0] !== 'video') return html;
+  const media = postVideoUrl(html, record);
+  if (!media) return html;
+  const poster = (html.match(/<meta property="og:image" content="([^"]*)">/) || [])[1] || '';
+  const type = /\.webm(?:$|\?)/i.test(media) ? 'video/webm' : 'video/mp4';
+  const player = (fallback) =>
+    `<video controls preload="none"${poster ? ` poster="${poster}"` : ''}><source src="${escFnAttr(media)}" type="${type}">${fallback}</video>`;
+  let out = html.replace(/(<\/h1>[\s\S]*?)(<img\b[^>]*>)/i, (m, before, img) => `${before}${player(img)}`);
+  if (out === html) out = html.replace(/<\/h1>/i, `</h1>\n    ${player('')}`);
+
+  return rewriteJsonLd(out, (data) => {
+    const nodes = Array.isArray(data['@graph']) ? data['@graph'] : [data];
+    const video = nodes.find((n) => n && n['@type'] === 'VideoObject');
+    if (!video) return null;
+    const article = nodes.find((n) => n && n['@type'] === 'Article');
+    video.contentUrl = media;
+    delete video.embedUrl;
+    const uploaded = (record && record.createdAt) || (article && article.datePublished);
+    if (uploaded) video.uploadDate = uploaded;
+    if (!video.thumbnailUrl && poster) video.thumbnailUrl = decodeFnText(poster);
+    if (!video.name && article && article.headline) video.name = article.headline;
+    if (!video.description && video.name) video.description = video.name;
+    const duration = isoDuration(record && record.videoDuration);
+    if (duration) video.duration = duration;
+    return data;
+  });
 }
 
 /** Puts crawler content ahead of a page's "Open on DeHub" call to action, or at the end of the body. */
@@ -2467,7 +2667,8 @@ function socialPostingLd(value, record) {
   if (!article) return null;
   const videoNode = nodes.find((n) => n && n['@type'] === 'VideoObject');
   const { '@context': _context, '@type': _type, author, ...fields } = article;
-  const username = String((record && record.username) || '').trim();
+  // nft_info calls the author's handle `mintername`; `username` never arrives.
+  const username = String((record && (record.mintername || record.username)) || '').trim();
   const text = String((record && record.description) || '').trim();
   const posting = {
     '@context': 'https://schema.org',
@@ -2636,6 +2837,61 @@ function profileBannerCard(html) {
   return out;
 }
 
+/**
+ * A profile with no avatar gets the fn's fallback share image, the DeHub logo
+ * file, declared 200×200 with a `summary` card. The file is a 1200×630
+ * banner: scrapers that trust the hint crop it to a square thumbnail, and 7
+ * of 38 sampled profiles unfurled that way. Say what the file actually is.
+ * (Posts and communities go through cardProxiedImage, which re-cuts it.)
+ */
+const FN_FALLBACK_LOGO = `${SUPABASE_STORAGE_PUBLIC}/logo/new_logo_Dehub.jpg`;
+function logoCardDimensions(html) {
+  const m = html.match(/<meta property="og:image" content="([^"]*)">/);
+  if (!m || m[1] !== FN_FALLBACK_LOGO) return html;
+  let out = html
+    .replace(/(<meta property="og:image:width" content=")[^"]*(">)/g, '$11200$2')
+    .replace(/(<meta property="og:image:height" content=")[^"]*(">)/g, '$1630$2')
+    .replace(/(<meta name="twitter:card" content=")[^"]*(">)/g, '$1summary_large_image$2');
+  if (!/property="og:image:width"/.test(out)) {
+    out = out.replace('</head>', '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"></head>');
+  }
+  return out;
+}
+
+/**
+ * The fn titles a community `Join <name>'s community on DeHub today`, which
+ * reads `Join DeHub Whales's community` for any name ending in s. English
+ * drops the second s there.
+ */
+function fixCommunityPossessive(html) {
+  return html.replace(/Join ([^<"]+?)'s community on DeHub today/g, (m, name) =>
+    /s$/i.test(name) ? `Join ${name}' community on DeHub today` : m);
+}
+
+/**
+ * A name that is a test or a placeholder, not a thing anyone would search
+ * for: `Test Event For Aaron`, a store called `2L`. titleSaysNothing covers
+ * filenames and one-word placeholders; this adds the words people type when
+ * they are trying a feature out.
+ */
+const TEST_ENTITY_NAME = /\b(?:test(?:ing)?|asdf|lorem ipsum|placeholder|dummy)\b/i;
+/** Below this much description, an entity with no picture has nothing to index. */
+const ENTITY_MIN_DESCRIPTION = 40;
+
+/**
+ * Store, listing, event and community pages whose content is a test or next
+ * to nothing — `i sell dehub` at $50,000 with no image, a store described as
+ * `Create`. They stay shareable (the OG tags are untouched); they just are
+ * not offered to the index, where each one is a thin page counted against
+ * the site. Pass the raw columns, not the renderers' generated fallbacks.
+ */
+function entityLooksThin({ name, description, image }) {
+  const n = String(name || '').replace(/\s+/g, ' ').trim();
+  if (titleSaysNothing(n) || TEST_ENTITY_NAME.test(n)) return true;
+  const d = String(description || '').replace(/\s+/g, ' ').trim();
+  return d.length < ENTITY_MIN_DESCRIPTION && !image;
+}
+
 function buildStoreHtml(store) {
   const canonicalUrl = `${APP_URL}/stores/${store.id}`;
   const name = store.name || 'Store';
@@ -2651,6 +2907,7 @@ function buildStoreHtml(store) {
     description,
     image,
     ogType: 'profile',
+    noindex: entityLooksThin({ name: store.name, description: store.description, image }),
     heading: name,
     breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/stores">Stores</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>`,
@@ -2693,7 +2950,7 @@ function buildListingHtml(listing) {
     ogType: 'product',
     // A sold or withdrawn item is not something to leave in the index; the
     // link still unfurls for anyone who shares it.
-    noindex: listing.status !== 'active',
+    noindex: listing.status !== 'active' || entityLooksThin({ name: listing.title, description: listing.description, image }),
     heading: name,
     breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/stores/${escHtml(storeId)}">${escHtml(storeName)}</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
@@ -2748,7 +3005,7 @@ function buildEventHtml(event) {
     image,
     ogType: 'article',
     // A private event is shareable by whoever holds the link, not crawlable.
-    noindex: !!event.is_private,
+    noindex: !!event.is_private || entityLooksThin({ name: event.title, description: event.description, image }),
     heading: name,
     breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/events">Events</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
@@ -3261,8 +3518,27 @@ function buildFeatureRequestHtml(feature) {
   });
 }
 
-function buildGuidePageHtml(slug, meta) {
+/** The full guide article, pre-rendered from its React page into
+ *  public/guide-content/<slug>.json. Same caching rules as getDocsContent. */
+const _guideContentCache = new Map();
+async function getGuideContent(request, env, slug) {
+  if (_guideContentCache.has(slug)) return _guideContentCache.get(slug);
+  let content = null;
+  try {
+    const res = await env.ASSETS.fetch(new URL(`/guide-content/${slug}.json`, request.url), { headers: { Accept: 'application/json' } });
+    if (res.ok) content = await res.json();
+  } catch (e) {
+    console.error('[Edge] guide content fetch failed', slug, e);
+  }
+  if (content) _guideContentCache.set(slug, content); // never cache failures
+  return content;
+}
+
+function buildGuidePageHtml(slug, meta, contentHtml) {
   const canonicalUrl = `${APP_URL}/guides/${slug}`;
+  // The rendered article carries its own <h1>; the fallback summary does not.
+  const article = contentHtml || `<h1>${escHtml(meta.title)}</h1>
+${meta.bodyHtml || `<p>${escHtml(meta.description)}</p>`}`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -3282,7 +3558,11 @@ ${shareMetaTags(`guides/${slug}`, meta.title)}
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'Article',
   headline: meta.title, description: meta.description,
+  // The route's own share card, and the organisation as author: the guide
+  // has no byline, and inventing a Person for it would be a false claim.
   image: shareImage(`guides/${slug}`),
+  ...(meta.datePublished ? { datePublished: meta.datePublished } : {}),
+  ...(meta.dateModified || meta.datePublished ? { dateModified: meta.dateModified || meta.datePublished } : {}),
   author: { '@type': 'Organization', name: 'DeHub', url: APP_URL },
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
 })}</script>
@@ -3290,8 +3570,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, {
 </head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
-<article><h1>${escHtml(meta.title)}</h1>
-${meta.bodyHtml || `<p>${escHtml(meta.description)}</p>`}</article>
+<article>${article}</article>
 <p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
@@ -3528,7 +3807,7 @@ const HTML_ENTITIES = { '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>', '
 function clampEscapedTitle(escaped, max) {
   const plain = String(escaped).replace(/&(?:amp|quot|lt|gt|#39);/g, (e) => HTML_ENTITIES[e]);
   if (plain.length <= max) return escaped;
-  return escHtml(truncate(plain, max));
+  return escHtml(clampTitle(plain, max));
 }
 function normalizePrerenderedHead(html) {
   let out = html;
@@ -4852,7 +5131,17 @@ async function handleRequest(request, env, ctx) {
     // absolute app path — see RETIRED_GUIDES in src/lib/blog-redirects.js.
     const retiredTo = RETIRED_GUIDES[trimmedPath.slice('/guides/'.length)];
     if (retiredTo) return redirect301(`${APP_URL}${retiredTo}`);
+    // Thin standalone guides folded into the flagship post on the same query.
+    const consolidatedInto = CONSOLIDATED_GUIDES[trimmedPath.slice('/guides/'.length)];
+    if (consolidatedInto) return redirect301(`${APP_URL}/guides/${consolidatedInto}`);
   }
+
+  // /docs/blog/<slug> is a second address for every post: the SPA mounts it
+  // for the blog list's sake, but every link, the sitemap and the RSS use
+  // /guides/<slug>. It answered crawlers 200 with a canonical to the /guides
+  // twin, which still costs a crawl per post and splits links between the two.
+  const docsBlogPost = trimmedPath.match(/^\/docs\/blog\/([^/]+)$/);
+  if (docsBlogPost) return redirect301(`${APP_URL}/guides/${docsBlogPost[1]}`);
 
   // Routes the SPA answers with <Navigate> (App.tsx). Bots never run that JS,
   // so both resolved somewhere a human can never land: /radio is in
@@ -5407,7 +5696,8 @@ async function handleRequest(request, env, ctx) {
     // Object.hasOwn: a plain [slug] lookup made /guides/constructor et al.
     // return 200 pages via the prototype chain.
     if (slug && cleanPath.startsWith('/guides/') && Object.hasOwn(GUIDE_PAGES, slug)) {
-      return guard(new Response(buildGuidePageHtml(slug, GUIDE_PAGES[slug]), { status: 200, headers: blogHeaders }));
+      const guide = await getGuideContent(request, env, slug);
+      return guard(new Response(buildGuidePageHtml(slug, GUIDE_PAGES[slug], guide && guide.html), { status: 200, headers: blogHeaders }));
     }
     if (!slug) {
       return guard(new Response(buildFallbackHtml(pathname, request.url), {
@@ -5983,11 +6273,17 @@ async function handleRequest(request, env, ctx) {
       // a miss costs the sections, not the page.
       const record = await fetchPostRecord(proxiedPostId);
       html = enrichPostMeta(html, proxiedPostId, record);
+      // The VideoObject is repaired first, while it is still its own node;
+      // socialPostingLd then nests it under the post as it stands.
+      html = enrichVideoPost(html, record);
       html = rewriteJsonLd(html, (ld) => socialPostingLd(ld, record));
+      html = injectPostByline(html, record, (segment) => couldBeProfileSegment(segment, SYSTEM_ROUTES));
       const minter = String((record && record.minter) || '').toLowerCase();
       const byAuthor = minter ? await fetchFeedRows(`minter=${minter}`, 7) : [];
       const others = byAuthor.filter((r) => String(r.tokenId) !== String(proxiedPostId)).slice(0, 6);
-      const who = String((record && (record.displayName || record.username)) || '').replace(/\s+/g, ' ').trim();
+      const who = String(
+        (record && (record.minterDisplayName || record.displayName || record.mintername || record.username)) || '',
+      ).replace(/\s+/g, ' ').trim();
       html = injectBeforeCta(
         html,
         postFactsHtml(record) +
@@ -5995,15 +6291,39 @@ async function handleRequest(request, env, ctx) {
           postListHtml(who ? `More from ${who}` : 'More from this creator', others, { author: false }),
       );
     } else if (proxiedHandle) {
-      html = enrichProfileMeta(html, proxiedHandle);
-      // A profile page carried the bio and nothing the account had posted; the
-      // avatar URL names the wallet, and the feed lists its posts.
-      const address = profileAddressOf(html);
-      if (address) {
-        html = injectBeforeCta(
-          html,
-          postListHtml('Recent posts', await fetchFeedRows(`minter=${address}`), { author: false }),
-        );
+      // The account record is the authority on the wallet and the post count;
+      // the avatar URL is only a fallback for the wallet (a profile with no
+      // avatar has none, and its posts were never listed).
+      const account = await fetchAccountInfo(proxiedHandle);
+      html = enrichProfileMeta(html, proxiedHandle, account && account.displayName);
+      const address = String((account && account.address) || '').toLowerCase() || profileAddressOf(html);
+      const rows = address ? await fetchFeedRowsOrNull(`minter=${address}`) : null;
+      html = injectBeforeCta(html, postListHtml('Recent posts', rows || [], { author: false }));
+      if (profileHasNoPosts(account, rows)) html = noindexPage(html);
+    }
+
+    // Communities: private ones are shareable by link but not for the index,
+    // and test or empty ones are thin — the same gate as stores and events.
+    // The fn's HTML says neither, so one row read decides. A failed read
+    // leaves the page as it was.
+    const communitySlug = (ssrPath.match(/^\/app\/communities\/([^/?#]+)/) || [])[1];
+    if (communitySlug) {
+      html = fixCommunityPossessive(html);
+      let slug = communitySlug;
+      try { slug = decodeURIComponent(slug); } catch { /* keep raw */ }
+      const community = await supabaseRow(
+        `communities?slug=eq.${encodeURIComponent(slug)}&select=name,description,avatar_url,banner_url,is_private&limit=1`,
+      );
+      if (
+        community &&
+        (community.is_private ||
+          entityLooksThin({
+            name: community.name,
+            description: community.description,
+            image: community.avatar_url || community.banner_url,
+          }))
+      ) {
+        html = noindexPage(html);
       }
     }
     // Share images the fn points at that 403, carry no content type, or
@@ -6013,6 +6333,7 @@ async function handleRequest(request, env, ctx) {
     }
     if (proxiedHandle) {
       html = profileBannerCard(html);
+      html = logoCardDimensions(html);
     }
     // Structured data and cards on the rest of the fn's entity pages: a
     // profile as ProfilePage, a community as a page rather than a rival brand
