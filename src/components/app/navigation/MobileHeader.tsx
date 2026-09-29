@@ -213,7 +213,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
               {/* Column, not a scroller: the menu pins its profile + search to
                   the top and its account actions to the bottom, and scrolls
                   only the tiles between them — same as the app. */}
-              <div className="flex min-h-0 flex-1 flex-col p-4 pb-[max(2rem,env(safe-area-inset-bottom))]">
+              <div className="flex min-h-0 flex-1 flex-col px-4 pt-4 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
                 {children}
               </div>
             </DrawerContent>

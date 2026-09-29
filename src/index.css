@@ -3427,7 +3427,8 @@ html[data-theme="light"] [data-menu-tile="active"] {
 html[data-theme="light"] [data-menu-search] {
   color: var(--ink) !important;
 }
-html[data-theme="light"] [data-vaul-drawer] nav > .border-white\/10 {
+html[data-theme="light"] [data-vaul-drawer] nav > .border-white\/10,
+html[data-theme="light"] [data-menu-footer] {
   border-color: var(--hairline) !important;
 }
 /* The unread count keeps white on red. */
