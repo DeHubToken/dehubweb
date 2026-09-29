@@ -39,7 +39,7 @@ describe('sitemap-static.xml', () => {
   });
 
   it('lists every indexable page the worker renders', () => {
-    const missing = routes.filter((r) => !LOCS.has(`https://dehub.io${r}`) && !Object.hasOwn(NOT_IN_SITEMAP, r));
+    const missing = routes.filter((r) => !LOCS.has(`https://dehub.io${r}`) && !Object.prototype.hasOwnProperty.call(NOT_IN_SITEMAP, r));
     expect(missing).toEqual([]);
   });
 
