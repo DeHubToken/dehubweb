@@ -6,6 +6,9 @@ const root = process.cwd();
 const iconRoot = path.join(root, 'public', 'theme-icons');
 const systemDir = path.join(iconRoot, 'system');
 const materialDir = path.join(iconRoot, 'materials');
+// Optional comma-separated keys let an artwork refresh rebuild only its dependants.
+const selectedKeys = process.argv[2] ? new Set(process.argv[2].split(',')) : null;
+const selected = (key) => !selectedKeys || selectedKeys.has(key);
 
 const materialThemes = {
   cosmic: {
@@ -48,7 +51,7 @@ const identitySources = {
 
 const themeIdentitySources = {
   ...Object.fromEntries(
-    ['accounts', 'usernames', 'tv', 'email', 'staking', 'buy', 'bridge'].map((key) => [key,
+    ['accounts', 'usernames', 'tv', 'email', 'staking', 'buy', 'bridge', 'command', 'superpowers'].map((key) => [key,
       Object.fromEntries(['hazy', 'swarms', 'winter', 'osaka', 'jungle'].map((theme) => [theme, {
         path: path.join(iconRoot, 'sources', `${key}-${theme}.png`),
         preserveCanvas: true,
@@ -63,6 +66,12 @@ const themeIdentitySources = {
       }]),
   ),
 };
+for (const key of ['arcade', 'command', 'email', 'events', 'fractions', 'staking', 'stats', 'stores', 'tv']) {
+  themeIdentitySources[key] = {
+    ...themeIdentitySources[key],
+    system: { path: path.join(iconRoot, 'sources', `${key}-system.png`), preserveCanvas: true },
+  };
+}
 
 async function removeChromaBackdrop(input) {
   const { data, info } = await sharp(input)
@@ -111,6 +120,7 @@ async function normalizeIdentity(source) {
 
 async function writeThemeIdentitySources(theme, outputDir) {
   for (const [key, sources] of Object.entries(themeIdentitySources)) {
+    if (!selected(key)) continue;
     const source = sources[theme];
     if (!source) continue;
     const normalized = await normalizeIdentity(source);
@@ -154,12 +164,13 @@ async function applyTreatment(input, output, treatment) {
 
 await mkdir(systemDir, { recursive: true });
 for (const [key, source] of Object.entries(identitySources)) {
+  if (!selected(key) || themeIdentitySources[key]?.system) continue;
   const normalized = await normalizeIdentity(source);
   await sharp(normalized).webp({ quality: 94, alphaQuality: 100 }).toFile(path.join(systemDir, `${key}.webp`));
 }
 await writeThemeIdentitySources('system', systemDir);
 
-const icons = (await readdir(systemDir)).filter((name) => name.endsWith('.webp'));
+const icons = (await readdir(systemDir)).filter((name) => name.endsWith('.webp') && selected(path.parse(name).name));
 for (const [theme, treatment] of Object.entries(materialThemes)) {
   const outputDir = path.join(iconRoot, theme);
   await mkdir(outputDir, { recursive: true });
@@ -175,6 +186,7 @@ for (const [theme, treatment] of Object.entries(nativeThemeTreatments)) {
   const outputDir = path.join(iconRoot, theme);
   const material = path.join(outputDir, 'wand.webp');
   for (const key of Object.keys(identitySources)) {
+    if (!selected(key)) continue;
     if (themeIdentitySources[key]?.[theme]) continue;
     await applyTreatment(
       path.join(systemDir, `${key}.webp`),

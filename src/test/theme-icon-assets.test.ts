@@ -25,6 +25,11 @@ const SUPERPOWER_KEYS = [
 ];
 
 describe('theme icon assets', () => {
+  it('keeps glyph themes out of the System raster family', () => {
+    for (const theme of ['war', 'hacker', 'island', 'horror']) {
+      expect(resolveThemeIconAsset('/theme-icons/system/usernames.webp', theme)).toBeNull();
+    }
+  });
   it('resolves semantic page and power URLs without dropping to legacy artwork', () => {
     for (const key of [...PROFILE_KEYS, ...PAGE_KEYS, ...SUPERPOWER_KEYS]) {
       const extension = SUPERPOWER_KEYS.includes(key) ? 'png' : 'webp';
@@ -39,7 +44,7 @@ describe('theme icon assets', () => {
   });
   it('keeps page identities in each native material family', () => {
     for (const theme of ['hazy', 'swarms', 'winter', 'osaka', 'jungle']) {
-      for (const key of ['accounts', 'usernames', 'tv', 'email', 'staking', 'buy', 'bridge']) {
+      for (const key of ['accounts', 'usernames', 'tv', 'email', 'staking', 'buy', 'bridge', 'command', 'superpowers']) {
         const source = resolve(__dirname, `../../public/theme-icons/sources/${key}-${theme}.png`);
         expect(existsSync(source), `${key}-${theme}.png`).toBe(true);
         const output = readFileSync(resolve(__dirname, `../../public/theme-icons/${theme}/${key}.webp`));
@@ -49,6 +54,14 @@ describe('theme icon assets', () => {
         expect(resolveThemeIconAsset(`/theme-icons/system/${key}.webp?v=4`, theme))
           .toBe(`/theme-icons/${theme}/${key}.webp`);
       }
+    }
+  });
+  it('preserves the polished System originals through material rebuilds', () => {
+    for (const key of ['arcade', 'command', 'email', 'events', 'fractions', 'staking', 'stats', 'stores', 'tv']) {
+      const source = resolve(__dirname, `../../public/theme-icons/sources/${key}-system.png`);
+      expect(existsSync(source), `${key}-system.png`).toBe(true);
+      const bytes = readFileSync(source);
+      expect(bytes[25], `${key}-system.png is not transparent RGBA`).toBe(6);
     }
   });
   it('ships every profile and page icon for each full raster theme', () => {

@@ -232,11 +232,8 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
 ]);
 
 /** Bump when a file is redrawn in place, or browsers and the app keep the old art. */
-const ICON_REVISIONS: Partial<Record<ThemeIconKey, string>> = {
-  dao: '?v=4',
-  accounts: '?v=5', tv: '?v=5', usernames: '?v=5', email: '?v=5',
-  staking: '?v=5', buy: '?v=5', bridge: '?v=5', fractions: '?v=4',
-};
+export const THEME_ICON_REVISION = '6';
+const GLYPH_THEMES = new Set(['war', 'hacker', 'island', 'horror']);
 
 const TRANSPARENT_PNG_KEYS = new Set<ThemeIconKey>([
   'boost', 'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
@@ -311,11 +308,8 @@ export function resolveThemeIconKey(src: string): ThemeIconKey | null {
 }
 
 /** Return a public, cacheable WebP URL when this theme owns the icon. */
-/** Themes with no icon set of their own; they use the refreshed system icons. */
-const SYSTEM_ICON_THEMES = new Set(['island', 'hacker', 'horror']);
-
 export function resolveThemeIconAsset(src: string, requestedTheme: string): string | null {
-  const theme = SYSTEM_ICON_THEMES.has(requestedTheme) ? 'system' : requestedTheme;
+  const theme = requestedTheme;
   const key = resolveThemeIconKey(src);
   if (!key) return null;
   const extension = TRANSPARENT_PNG_KEYS.has(key) ? 'png' : 'webp';
@@ -380,6 +374,17 @@ export function WarHudIcon({ src, alt, className }: WarHudIconProps) {
   );
 }
 
+function SkinGlyph({ icon, theme, alt, className }: { icon: ThemeIconKey; theme: string; alt: string; className?: string }) {
+  const Glyph = THEME_KEY_GLYPHS[icon];
+  return (
+    <span data-theme-glyph={theme} data-theme-icon-family={theme}
+      className={className?.replace(/\bobject-(contain|cover)\b/g, '').trim()}
+      role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>
+      <Glyph strokeWidth={1.5} aria-hidden="true" />
+    </span>
+  );
+}
+
 type BrandIconProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   src: string;
 };
@@ -416,7 +421,8 @@ export function BrandIcon({ src, alt = '', className, ...imgProps }: BrandIconPr
 
   const asset = resolveThemeIconAsset(src, theme);
   const key = resolveThemeIconKey(src);
-  const themedSrc = asset ? `${asset}${key ? ICON_REVISIONS[key] ?? '' : ''}` : src;
+  if (key && GLYPH_THEMES.has(theme)) return <SkinGlyph icon={key} theme={theme} alt={alt} className={className} />;
+  const themedSrc = asset ? `${asset}?v=${THEME_ICON_REVISION}` : src;
   return <img src={themedSrc} alt={alt} className={className} data-theme-icon-family={theme} {...imgProps} />;
 }
 
@@ -450,12 +456,12 @@ export function ThemedIcon({ icon, alt = '', className, ...imgProps }: ThemedIco
     );
   }
 
+  if (GLYPH_THEMES.has(theme)) return <SkinGlyph icon={icon} theme={theme} alt={alt} className={className} />;
   const rasterTheme = FULL_RASTER_THEMES.has(theme) ? theme : 'system';
-  const assetRevision = ICON_REVISIONS[icon] ?? '';
   const extension = TRANSPARENT_PNG_KEYS.has(icon) ? 'png' : 'webp';
   return (
     <img
-      src={`/theme-icons/${rasterTheme}/${icon}.${extension}${assetRevision}`}
+      src={`/theme-icons/${rasterTheme}/${icon}.${extension}?v=${THEME_ICON_REVISION}`}
       alt={alt}
       className={className}
       data-theme-icon-family={theme}
