@@ -134,6 +134,8 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   qu: 'Quechua',
   rkt: 'Rangpuri',
   sa: 'Sanskrit',
+  sck: 'Sadri (Nagpuri, written in Devanagari script)',
+  ceb: 'Cebuano (Bisaya)',
   sd: 'Sindhi',
   sdr: 'Sadri',
   skr: 'Saraiki',
