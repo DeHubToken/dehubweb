@@ -5479,5 +5479,22 @@
     "progressive": "Onye ọganihu",
     "nationalist": "Onye mba",
     "communist": "Onye kọmunist"
+  },
+  "apk": {
+    "seoTitle": "Budata APK DeHub — Ụdị Android Kachasị Ọhụrụ",
+    "seoDescription": "Gafee ụlọ ahịa ngwa ma nweta ụdị DeHub kachasị ọhụrụ ebe a. Nbudata APK ozugbo maka Android — mgbasa ozi mmekọrịta nwere koodu mepere emepe, nke ndị ọrụ nwe, achọghị akaụntụ ụlọ ahịa.",
+    "ldDescription": "Ngwa Android DeHub dị ka nbudata APK ozugbo. Mgbasa ozi mmekọrịta nwere koodu mepere emepe, nke ndị ọrụ nwe — achọghị akaụntụ ụlọ ahịa.",
+    "back": "Laghachi na DeHub",
+    "title": "Gafee ụlọ ahịa.",
+    "subtitle": "Nweta ụdị DeHub kachasị ọhụrụ ebe a — ozugbo site n'aka anyị, na-enweghị akaụntụ ụlọ ahịa, na-echereghị ahịrị nyocha.",
+    "download": "Budata ugbu a",
+    "installHint": "Kwe ka ị wụnye site na ihe nchọgharị gị mgbe Android jụrụ. Ị na-emelite? Wụnye ya n'elu ngwa gị dị ugbu a n'ewepụghị ya.",
+    "useInBrowser": "Jiri DeHub na ihe nchọgharị gị",
+    "googlePlay": "Ị ka chọọ Google Play? Nweta ya n'ebe ahụ.",
+    "shareText": "Gafee ụlọ ahịa — nweta ụdị Android DeHub kachasị ọhụrụ ozugbo.",
+    "shareX": "Kekọrịta na X",
+    "shareFacebook": "Kekọrịta na Facebook",
+    "shareTelegram": "Kekọrịta na Telegram",
+    "copyLink": "Detuo njikọ"
   }
 }

@@ -7661,5 +7661,22 @@
     "progressive": "ተራማጅ",
     "nationalist": "ብሔርተኛ",
     "communist": "ኮሚኒስት"
+  },
+  "apk": {
+    "seoTitle": "የDeHub APK ያውርዱ — የቅርብ ጊዜው የAndroid ስሪት",
+    "seoDescription": "መደብሮችን ይዝለሉ እና የቅርብ ጊዜውን የDeHub ስሪት እዚሁ ያግኙ። ለAndroid ቀጥተኛ የAPK ማውረድ — ክፍት ምንጭ፣ በተጠቃሚዎች የተያዘ ማህበራዊ ሚዲያ፣ የመደብር መለያ አያስፈልግም።",
+    "ldDescription": "የDeHub Android መተግበሪያ በቀጥተኛ የAPK ማውረድ። ክፍት ምንጭ፣ በተጠቃሚዎች የተያዘ ማህበራዊ ሚዲያ — የመደብር መለያ አያስፈልግም።",
+    "back": "ወደ DeHub ተመለስ",
+    "title": "መደብሮችን ይዝለሉ።",
+    "subtitle": "የቅርብ ጊዜውን የDeHub ስሪት እዚሁ ያግኙ — በቀጥታ ከእኛ፣ ያለ መደብር መለያ፣ ግምገማ ሳይጠብቁ።",
+    "download": "አሁን አውርድ",
+    "installHint": "Android ሲጠይቅ ከአሳሽዎ መጫንን ይፍቀዱ። እያዘመኑ ነው? ያለውን መተግበሪያ ሳያራግፉ በላዩ ላይ ይጫኑ።",
+    "useInBrowser": "DeHubን በአሳሽዎ ይጠቀሙ",
+    "googlePlay": "Google Play ይመርጣሉ? እዚያ ያግኙት።",
+    "shareText": "መደብሮችን ይዝለሉ — የቅርብ ጊዜውን የDeHub Android ስሪት በቀጥታ ያግኙ።",
+    "shareX": "በX ላይ አጋራ",
+    "shareFacebook": "በFacebook ላይ አጋራ",
+    "shareTelegram": "በTelegram ላይ አጋራ",
+    "copyLink": "ማገናኛ ቅዳ"
   }
 }

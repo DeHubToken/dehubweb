@@ -7570,5 +7570,22 @@
     "progressive": "Progresszív",
     "nationalist": "Nacionalista",
     "communist": "Kommunista"
+  },
+  "apk": {
+    "seoTitle": "DeHub APK letöltése — a legújabb Android-verzió",
+    "seoDescription": "Hagyd ki az alkalmazásboltokat, és töltsd le a DeHub legújabb verzióját itt. Közvetlen APK-letöltés Androidra — nyílt forráskódú, felhasználói tulajdonú közösségi média, bolti fiók nélkül.",
+    "ldDescription": "A DeHub Android-alkalmazás közvetlen APK-letöltésként. Nyílt forráskódú, felhasználói tulajdonú közösségi média — nincs szükség bolti fiókra.",
+    "back": "Vissza a DeHubra",
+    "title": "Hagyd ki a boltokat.",
+    "subtitle": "Szerezd be a DeHub legújabb verzióját itt — közvetlenül tőlünk, bolti fiók és jóváhagyásra várás nélkül.",
+    "download": "Letöltés most",
+    "installHint": "Engedélyezd a böngészőből történő telepítést, amikor az Android kéri. Frissítesz? Telepítsd a meglévő alkalmazásra, eltávolítás nélkül.",
+    "useInBrowser": "A DeHub használata böngészőben",
+    "googlePlay": "Inkább a Google Playt választanád? Töltsd le onnan.",
+    "shareText": "Hagyd ki a boltokat — töltsd le közvetlenül a DeHub legújabb Android-verzióját.",
+    "shareX": "Megosztás X-en",
+    "shareFacebook": "Megosztás Facebookon",
+    "shareTelegram": "Megosztás Telegramon",
+    "copyLink": "Link másolása"
   }
 }

@@ -5537,5 +5537,22 @@
     "progressive": "Progresist",
     "nationalist": "Nacionalist",
     "communist": "Komunist"
+  },
+  "apk": {
+    "seoTitle": "Shkarko DeHub APK — Versioni më i ri për Android",
+    "seoDescription": "Anashkalo dyqanet e aplikacioneve dhe merr versionin më të ri të DeHub pikërisht këtu. Shkarkim i drejtpërdrejtë APK për Android — media sociale me burim të hapur, në pronësi të përdoruesve, pa nevojë për llogari dyqani.",
+    "ldDescription": "Aplikacioni DeHub për Android si shkarkim i drejtpërdrejtë APK. Media sociale me burim të hapur, në pronësi të përdoruesve — pa nevojë për llogari dyqani.",
+    "back": "Kthehu te DeHub",
+    "title": "Anashkalo dyqanet.",
+    "subtitle": "Merr versionin më të ri të DeHub pikërisht këtu — direkt nga ne, pa llogari dyqani, pa pritur në radhën e shqyrtimit.",
+    "download": "Shkarko tani",
+    "installHint": "Lejo instalimet nga shfletuesi yt kur ta kërkojë Android. Po përditëson? Instaloje mbi aplikacionin ekzistues pa e çinstaluar.",
+    "useInBrowser": "Përdor DeHub në shfletues",
+    "googlePlay": "Preferon Google Play? Merre atje.",
+    "shareText": "Anashkalo dyqanet — merr direkt versionin më të ri të DeHub për Android.",
+    "shareX": "Shpërndaj në X",
+    "shareFacebook": "Shpërndaj në Facebook",
+    "shareTelegram": "Shpërndaj në Telegram",
+    "copyLink": "Kopjo lidhjen"
   }
 }

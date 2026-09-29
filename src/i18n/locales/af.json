@@ -7565,5 +7565,22 @@
     "description": "Skep iets nuuts.",
     "newProject": "Nuwe projek",
     "newPost": "Nuwe plasing"
+  },
+  "apk": {
+    "seoTitle": "Laai die DeHub APK af — Nuutste Android-weergawe",
+    "seoDescription": "Slaan die winkels oor en kry die nuutste weergawe van DeHub hier. Direkte APK-aflaai vir Android — oopbron, gebruikers-besitte sosiale media, geen winkelrekening nodig nie.",
+    "ldDescription": "Die DeHub Android-toep as 'n direkte APK-aflaai. Oopbron, gebruikers-besitte sosiale media — geen winkelrekening nodig nie.",
+    "back": "Terug na DeHub",
+    "title": "Slaan die winkels oor.",
+    "subtitle": "Kry die nuutste weergawe van DeHub hier — reguit van ons af, geen winkelrekening nie, geen wag op 'n hersieningsry nie.",
+    "download": "Laai nou af",
+    "installHint": "Laat installasies vanaf jou blaaier toe wanneer Android vra. Dateer jy op? Installeer oor jou bestaande toep sonder om dit te deïnstalleer.",
+    "useInBrowser": "Gebruik DeHub in jou blaaier",
+    "googlePlay": "Verkies jy Google Play? Kry dit eerder daar.",
+    "shareText": "Slaan die winkels oor — kry die nuutste DeHub Android-weergawe direk.",
+    "shareX": "Deel op X",
+    "shareFacebook": "Deel op Facebook",
+    "shareTelegram": "Deel op Telegram",
+    "copyLink": "Kopieer skakel"
   }
 }

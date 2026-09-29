@@ -7660,5 +7660,22 @@
     "progressive": "Progresīvais",
     "nationalist": "Nacionālists",
     "communist": "Komunists"
+  },
+  "apk": {
+    "seoTitle": "Lejupielādē DeHub APK — jaunākā Android versija",
+    "seoDescription": "Apej lietotņu veikalus un iegūsti jaunāko DeHub versiju tieši šeit. Tieša APK lejupielāde Android ierīcēm — atvērtā koda, lietotājiem piederošs sociālais tīkls, veikala konts nav vajadzīgs.",
+    "ldDescription": "DeHub Android lietotne kā tieša APK lejupielāde. Atvērtā koda, lietotājiem piederošs sociālais tīkls — veikala konts nav vajadzīgs.",
+    "back": "Atpakaļ uz DeHub",
+    "title": "Apej veikalus.",
+    "subtitle": "Iegūsti jaunāko DeHub versiju tieši šeit — tieši no mums, bez veikala konta un bez gaidīšanas pārskatīšanas rindā.",
+    "download": "Lejupielādēt tagad",
+    "installHint": "Kad Android jautā, atļauj instalēšanu no pārlūka. Atjaunini? Instalē virs esošās lietotnes, to neatinstalējot.",
+    "useInBrowser": "Lietot DeHub pārlūkā",
+    "googlePlay": "Dod priekšroku Google Play? Iegūsti to tur.",
+    "shareText": "Apej veikalus — iegūsti jaunāko DeHub Android versiju tieši.",
+    "shareX": "Kopīgot vietnē X",
+    "shareFacebook": "Kopīgot vietnē Facebook",
+    "shareTelegram": "Kopīgot lietotnē Telegram",
+    "copyLink": "Kopēt saiti"
   }
 }

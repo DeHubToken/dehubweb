@@ -26,6 +26,7 @@ export const SEO_I18N_ROUTES = {
   // than by a React page with its own SEOHead, so nothing else reads them.
   home: '/',
   docs: '/docs',
+  apk: '/apk',
   arcade: '/arcade',
   converter: '/converter',
   depin: '/depin',

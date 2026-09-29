@@ -5481,5 +5481,22 @@
     "progressive": "تقدمي",
     "nationalist": "قومي",
     "communist": "شيوعي"
+  },
+  "apk": {
+    "seoTitle": "تحميل APK ديال DeHub — آخر نسخة Android",
+    "seoDescription": "خلّي المتاجر وجيب آخر نسخة ديال DeHub من هنا. تحميل APK مباشر لـ Android — مفتوح المصدر، سوشيال ميديا ديال المستخدمين، وما محتاجش حساب فالمتجر.",
+    "ldDescription": "تطبيق DeHub ديال Android كتحميل APK مباشر. مفتوح المصدر، سوشيال ميديا ديال المستخدمين — ما محتاجش حساب فالمتجر.",
+    "back": "رجع لـ DeHub",
+    "title": "خلّي المتاجر.",
+    "subtitle": "جيب آخر نسخة ديال DeHub من هنا — نيشان من عندنا، بلا حساب متجر، وبلا ما تسنى المراجعة.",
+    "download": "حمّل دابا",
+    "installHint": "ملي يسولك Android، سمح بالتثبيت من المتصفح. كتحدّث؟ ثبّت فوق التطبيق اللي عندك بلا ما تحيدو.",
+    "useInBrowser": "استعمل DeHub فالمتصفح",
+    "googlePlay": "كتفضّل Google Play؟ جيبو من تما.",
+    "shareText": "خلّي المتاجر — جيب آخر نسخة DeHub ديال Android نيشان.",
+    "shareX": "بارطاجي على X",
+    "shareFacebook": "بارطاجي على Facebook",
+    "shareTelegram": "بارطاجي على Telegram",
+    "copyLink": "نسخ الرابط"
   }
 }

@@ -7436,5 +7436,22 @@
     "txPpvSale": "Fivarotana PPV — {{amount}} DHB",
     "txTipSent": "Fanomezana ho an'i {{name}} — {{amount}} DHB",
     "txTipReceived": "{{name}} nanome fanomezana anao — {{amount}} DHB"
+  },
+  "apk": {
+    "seoTitle": "Alaivo ny APK DeHub — Dikan-teny Android farany",
+    "seoDescription": "Tsy mila mandalo amin'ny fivarotana fampiharana: alaivo eto mivantana ny dikan-teny farany an'i DeHub. APK alaina mivantana ho an'ny Android — open source, media sosialy fananan'ny mpampiasa, tsy mila kaonty fivarotana.",
+    "ldDescription": "Ny fampiharana Android DeHub ho APK alaina mivantana. Open source, media sosialy fananan'ny mpampiasa — tsy mila kaonty fivarotana.",
+    "back": "Hiverina any amin'ny DeHub",
+    "title": "Avelao ny fivarotana.",
+    "subtitle": "Alaivo eto ny dikan-teny farany an'i DeHub — mivantana avy aminay, tsy mila kaonty fivarotana, tsy miandry fanamarinana.",
+    "download": "Alaivo izao",
+    "installHint": "Avelao hametraka avy amin'ny navigateur-nao rehefa manontany ny Android. Manavao ve ianao? Apetraho eo ambonin'ny fampiharana efa misy fotsiny, tsy mila esorina.",
+    "useInBrowser": "Ampiasao ao amin'ny navigateur-nao ny DeHub",
+    "googlePlay": "Aleonao Google Play? Alaivo any kosa.",
+    "shareText": "Avelao ny fivarotana — alaivo mivantana ny dikan-teny Android farany an'i DeHub.",
+    "shareX": "Zarao amin'ny X",
+    "shareFacebook": "Zarao amin'ny Facebook",
+    "shareTelegram": "Zarao amin'ny Telegram",
+    "copyLink": "Adikao ny rohy"
   }
 }

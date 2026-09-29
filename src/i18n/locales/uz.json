@@ -5566,5 +5566,22 @@
     "backToBlog": "Blogga qaytish",
     "sharePost": "Postni ulashish",
     "relatedPosts": "Bogʻliq postlar"
+  },
+  "apk": {
+    "seoTitle": "DeHub APK'ni yuklab oling — eng so'nggi Android versiyasi",
+    "seoDescription": "Ilova do'konlarini chetlab o'ting va DeHub'ning eng so'nggi versiyasini shu yerdan oling. Android uchun to'g'ridan-to'g'ri APK yuklab olish — ochiq kodli, foydalanuvchilarga tegishli ijtimoiy tarmoq, do'kon hisobi kerak emas.",
+    "ldDescription": "DeHub Android ilovasi to'g'ridan-to'g'ri APK yuklab olish shaklida. Ochiq kodli, foydalanuvchilarga tegishli ijtimoiy tarmoq — do'kon hisobi kerak emas.",
+    "back": "DeHub'ga qaytish",
+    "title": "Do'konlarni chetlab o'ting.",
+    "subtitle": "DeHub'ning eng so'nggi versiyasini shu yerdan oling — to'g'ridan-to'g'ri bizdan, do'kon hisobisiz, ko'rib chiqish navbatini kutmasdan.",
+    "download": "Hozir yuklab olish",
+    "installHint": "Android so'raganda brauzeringizdan o'rnatishga ruxsat bering. Yangilayapsizmi? Mavjud ilovani o'chirmasdan ustidan o'rnating.",
+    "useInBrowser": "DeHub'dan brauzeringizda foydalaning",
+    "googlePlay": "Google Play qulayroqmi? Uni o'sha yerdan oling.",
+    "shareText": "Do'konlarni chetlab o'ting — DeHub'ning eng so'nggi Android versiyasini to'g'ridan-to'g'ri oling.",
+    "shareX": "X'da ulashish",
+    "shareFacebook": "Facebook'da ulashish",
+    "shareTelegram": "Telegram'da ulashish",
+    "copyLink": "Havolani nusxalash"
   }
 }

@@ -5549,5 +5549,22 @@
     "progressive": "Progresista",
     "nationalist": "Nacionalista",
     "communist": "Comunista"
+  },
+  "apk": {
+    "seoTitle": "DeHub APK-ta uraykachiy — Android-paq musuq kaq",
+    "seoDescription": "App qhatukunata saqispa, DeHub-pa musuq kaq versionninta kaypi hap'iy. Android-paq APK-ta chiqaqta uraykachiy — kichasqa pukyu, runakunaq kaqnin llika tinkinakuy, mana qhatu cuentata munanchu.",
+    "ldDescription": "DeHub Android app, APK hina chiqaqta uraykachinapaq. Kichasqa pukyu, runakunaq kaqnin llika tinkinakuy — mana qhatu cuentata munanchu.",
+    "back": "DeHub-man kutiy",
+    "title": "Qhatukunata saqiy.",
+    "subtitle": "DeHub-pa musuq kaq versionninta kaypi hap'iy — ñuqaykumanta chiqaqta, mana qhatu cuentayuq, mana qhawarinapaq suyaspa.",
+    "download": "Kunan uraykachiy",
+    "installHint": "Android tapuptinqa, browser-niykimanta churayta saqiy. Musuqyachichkankichu? Kachkaq app-niykiq hawanpi churay, mana urquspa.",
+    "useInBrowser": "DeHub-ta browser-niykipi llamk'achiy",
+    "googlePlay": "Google Play-ta astawan munankichu? Chaypi hap'iy.",
+    "shareText": "Qhatukunata saqiy — DeHub Android-pa musuq kaqninta chiqaqta hap'iy.",
+    "shareX": "X-pi rakiy",
+    "shareFacebook": "Facebook-pi rakiy",
+    "shareTelegram": "Telegram-pi rakiy",
+    "copyLink": "Linkta kopiay"
   }
 }

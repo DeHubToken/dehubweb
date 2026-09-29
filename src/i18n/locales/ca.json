@@ -7567,5 +7567,22 @@
     "progressive": "Progressista",
     "nationalist": "Nacionalista",
     "communist": "Comunista"
+  },
+  "apk": {
+    "seoTitle": "Descarrega l'APK de DeHub — Última versió per a Android",
+    "seoDescription": "Salta't les botigues i aconsegueix l'última versió de DeHub aquí mateix. Descàrrega directa de l'APK per a Android — codi obert, xarxa social propietat dels usuaris, sense compte de botiga.",
+    "ldDescription": "L'aplicació DeHub per a Android com a descàrrega directa d'APK. Codi obert, xarxa social propietat dels usuaris — sense compte de botiga.",
+    "back": "Tornar a DeHub",
+    "title": "Salta't les botigues.",
+    "subtitle": "Aconsegueix l'última versió de DeHub aquí mateix — directament de nosaltres, sense compte de botiga i sense esperar cap cua de revisió.",
+    "download": "Descarrega-la ara",
+    "installHint": "Permet les instal·lacions des del navegador quan Android t'ho demani. Actualitzes? Instal·la-la sobre l'aplicació actual sense desinstal·lar-la.",
+    "useInBrowser": "Utilitza DeHub al navegador",
+    "googlePlay": "Prefereixes Google Play? Aconsegueix-la allà.",
+    "shareText": "Salta't les botigues — descarrega directament l'última versió de DeHub per a Android.",
+    "shareX": "Comparteix a X",
+    "shareFacebook": "Comparteix a Facebook",
+    "shareTelegram": "Comparteix a Telegram",
+    "copyLink": "Copiar enllaç"
   }
 }

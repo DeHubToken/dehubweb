@@ -7548,5 +7548,22 @@
     "progressive": "Ɲɛtaa fɛ",
     "nationalist": "Jamana fɛ",
     "communist": "Kominisiti"
+  },
+  "apk": {
+    "seoTitle": "DeHub APK jigin — Android kura laban",
+    "seoDescription": "Butikiw to yen, DeHub kura laban sɔrɔ yan yɛrɛ. Android ka APK jigin ka bɔ yɔrɔ la — a sirilan bɛ yen, sosiyali mediya min ye baarakɛlaw ta ye, butiki kɔnti man kan.",
+    "ldDescription": "DeHub Android aplikasiyɔn, APK jigin tigitigi. A sirilan bɛ yen, sosiyali mediya min ye baarakɛlaw ta ye — butiki kɔnti man kan.",
+    "back": "Segin DeHub ma",
+    "title": "Butikiw to yen.",
+    "subtitle": "DeHub kura laban sɔrɔ yan yɛrɛ — ka bɔ an yɛrɛ fɛ, butiki kɔnti tɛ, i tɛ lajɛli makɔnɔ.",
+    "download": "A jigin sisan",
+    "installHint": "Ni Android y'a ɲininka, i ka bɔrizɛri to a ka don. I b'a kuraya wa? A don i ka aplikasiyɔn kɔrɔ kan, i kana o bɔ.",
+    "useInBrowser": "DeHub labaara i ka bɔrizɛri la",
+    "googlePlay": "I ka di Google Play ye wa? A sɔrɔ yen.",
+    "shareText": "Butikiw to yen — DeHub Android kura laban sɔrɔ tigitigi.",
+    "shareX": "A tila X kan",
+    "shareFacebook": "A tila Facebook kan",
+    "shareTelegram": "A tila Telegram kan",
+    "copyLink": "Lien kopi"
   }
 }

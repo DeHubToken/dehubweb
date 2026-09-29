@@ -5555,5 +5555,22 @@
     "progressive": "Oqhubekela phambili",
     "nationalist": "Owobuzwe",
     "communist": "UmKhomanisi"
+  },
+  "apk": {
+    "seoTitle": "Landa i-DeHub APK — Inguqulo Yakamuva ye-Android",
+    "seoDescription": "Yeqa izitolo zezinhlelo zokusebenza bese uthola inguqulo yakamuva ye-DeHub khona lapha. Ukulanda kwe-APK okuqondile kwe-Android — inkundla yezokuxhumana yomthombo ovulekile ephethwe abasebenzisi, akudingeki i-akhawunti yesitolo.",
+    "ldDescription": "I-app ye-DeHub ye-Android njengokulanda kwe-APK okuqondile. Inkundla yezokuxhumana yomthombo ovulekile ephethwe abasebenzisi — akudingeki i-akhawunti yesitolo.",
+    "back": "Buyela ku-DeHub",
+    "title": "Yeqa izitolo.",
+    "subtitle": "Thola inguqulo yakamuva ye-DeHub khona lapha — ngqo kithina, ayikho i-akhawunti yesitolo, akukho ukulinda ohlwini lokubuyekezwa.",
+    "download": "Landa manje",
+    "installHint": "Vumela ukufakwa kusuka kusiphequluli sakho uma i-Android ibuza. Uyabuyekeza? Faka phezu kwe-app osunayo ngaphandle kokuyikhipha.",
+    "useInBrowser": "Sebenzisa i-DeHub kusiphequluli sakho",
+    "googlePlay": "Ukhetha i-Google Play? Yithole lapho esikhundleni salokho.",
+    "shareText": "Yeqa izitolo — thola inguqulo yakamuva ye-DeHub ye-Android ngqo.",
+    "shareX": "Yabelana ku-X",
+    "shareFacebook": "Yabelana ku-Facebook",
+    "shareTelegram": "Yabelana ku-Telegram",
+    "copyLink": "Kopisha isixhumanisi"
   }
 }

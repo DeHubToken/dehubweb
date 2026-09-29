@@ -5711,5 +5711,22 @@
     "inProgress": "V realizácii",
     "completed": "Dokončené",
     "underReview": "V recenzii"
+  },
+  "apk": {
+    "seoTitle": "Stiahnite si DeHub APK — najnovšia verzia pre Android",
+    "seoDescription": "Obíďte obchody s aplikáciami a získajte najnovšiu verziu DeHub priamo tu. Priame stiahnutie APK pre Android — open source sociálna sieť vo vlastníctve používateľov, bez potreby účtu v obchode.",
+    "ldDescription": "Aplikácia DeHub pre Android ako priame stiahnutie APK. Open source sociálna sieť vo vlastníctve používateľov — bez potreby účtu v obchode.",
+    "back": "Späť na DeHub",
+    "title": "Obíďte obchody s aplikáciami.",
+    "subtitle": "Získajte najnovšiu verziu DeHub priamo tu — priamo od nás, bez účtu v obchode a bez čakania na schválenie.",
+    "download": "Stiahnuť teraz",
+    "installHint": "Keď sa Android opýta, povoľte inštaláciu z prehliadača. Aktualizujete? Nainštalujte novú verziu cez existujúcu aplikáciu bez odinštalovania.",
+    "useInBrowser": "Používajte DeHub v prehliadači",
+    "googlePlay": "Radšej Google Play? Stiahnite si ho tam.",
+    "shareText": "Obíďte obchody — stiahnite si najnovšiu verziu DeHub pre Android priamo.",
+    "shareX": "Zdieľať na X",
+    "shareFacebook": "Zdieľať na Facebooku",
+    "shareTelegram": "Zdieľať na Telegrame",
+    "copyLink": "Kopírovať odkaz"
   }
 }

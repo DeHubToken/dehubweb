@@ -7053,5 +7053,22 @@
     "inProgress": "جاری ہے",
     "completed": "مکمل",
     "underReview": "جائزے میں"
+  },
+  "apk": {
+    "seoTitle": "DeHub APK ڈاؤن لوڈ کرو — نوا Android بلڈ",
+    "seoDescription": "اسٹور چھوڑو آر DeHub کا نوا ورژن ایہیں سے لو۔ Android کے لیے سیدھا APK ڈاؤن لوڈ — اوپن سورس، یوزر کا اپنا سوشل میڈیا، کوئی اسٹور اکاؤنٹ نئیں لاگے۔",
+    "ldDescription": "DeHub Android ایپ سیدھا APK ڈاؤن لوڈ کے روپ میں۔ اوپن سورس، یوزر کا اپنا سوشل میڈیا — کوئی اسٹور اکاؤنٹ نئیں لاگے۔",
+    "back": "DeHub پر واپس جاؤ",
+    "title": "اسٹور چھوڑو۔",
+    "subtitle": "DeHub کا نوا ورژن ایہیں سے لو — سیدھا ہمرے سے، نہ اسٹور اکاؤنٹ، نہ ریویو کی لائن میں انتظار۔",
+    "download": "ابھی ڈاؤن لوڈ کرو",
+    "installHint": "جب Android پوچھے، اپنا براؤزر سے انسٹال کرے کی اجازت دیو۔ اپڈیٹ کرت ہو؟ پرانا ایپ ہٹائے بنا اوکر اوپر انسٹال کرو۔",
+    "useInBrowser": "اپنا براؤزر میں DeHub چلاؤ",
+    "googlePlay": "Google Play پسند ہے؟ اوہیں سے لو۔",
+    "shareText": "اسٹور چھوڑو — DeHub کا نوا Android بلڈ سیدھا لو۔",
+    "shareX": "X پر شیئر کرو",
+    "shareFacebook": "Facebook پر شیئر کرو",
+    "shareTelegram": "Telegram پر شیئر کرو",
+    "copyLink": "لنک کاپی کرو"
   }
 }

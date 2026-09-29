@@ -5513,5 +5513,22 @@
     "progressive": "Mai ci gaba",
     "nationalist": "Mai kishin ƙasa",
     "communist": "Ɗan kwaminisanci"
+  },
+  "apk": {
+    "seoTitle": "Sauke APK na DeHub — Sabon Sigar Android",
+    "seoDescription": "Ka tsallake shagunan manhajoji ka sami sabon sigar DeHub a nan. Saukewar APK kai tsaye don Android — kafar sada zumunta ta buɗaɗɗen tushe mallakar masu amfani, ba a buƙatar asusun shago.",
+    "ldDescription": "Manhajar DeHub ta Android a matsayin saukewar APK kai tsaye. Kafar sada zumunta ta buɗaɗɗen tushe mallakar masu amfani — ba a buƙatar asusun shago.",
+    "back": "Koma zuwa DeHub",
+    "title": "Ka tsallake shagunan.",
+    "subtitle": "Samu sabon sigar DeHub a nan — kai tsaye daga gare mu, ba tare da asusun shago ba, ba tare da jiran layin dubawa ba.",
+    "download": "Sauke yanzu",
+    "installHint": "Ka ba da izinin shigarwa daga burauzarka idan Android ya tambaya. Kana sabuntawa? Ka shigar a kan manhajarka ta yanzu ba tare da cire ta ba.",
+    "useInBrowser": "Yi amfani da DeHub a burauzarka",
+    "googlePlay": "Ka fi son Google Play? Samu ta can maimakon haka.",
+    "shareText": "Ka tsallake shagunan — samu sabon sigar DeHub ta Android kai tsaye.",
+    "shareX": "Raba a X",
+    "shareFacebook": "Raba a Facebook",
+    "shareTelegram": "Raba a Telegram",
+    "copyLink": "Kwafi hanyar haɗi"
   }
 }

@@ -7534,5 +7534,22 @@
     "progressive": "Progressiivne",
     "nationalist": "Rahvuslane",
     "communist": "Kommunist"
+  },
+  "apk": {
+    "seoTitle": "Laadi alla DeHub APK — uusim Android-versioon",
+    "seoDescription": "Jäta poed vahele ja hangi DeHubi uusim versioon otse siit. Otsene APK allalaadimine Androidile — avatud lähtekoodiga, kasutajatele kuuluv sotsiaalmeedia, poe kontot pole vaja.",
+    "ldDescription": "DeHubi Androidi rakendus otsese APK allalaadimisena. Avatud lähtekoodiga, kasutajatele kuuluv sotsiaalmeedia — poe kontot pole vaja.",
+    "back": "Tagasi DeHubi",
+    "title": "Jäta poed vahele.",
+    "subtitle": "Hangi DeHubi uusim versioon otse siit — otse meilt, ilma poe kontota ja ülevaatuse järjekorras ootamata.",
+    "download": "Laadi kohe alla",
+    "installHint": "Luba brauserist installimine, kui Android seda küsib. Uuendad? Installi olemasoleva rakenduse peale, seda eemaldamata.",
+    "useInBrowser": "Kasuta DeHubi brauseris",
+    "googlePlay": "Eelistad Google Playd? Hangi see sealt.",
+    "shareText": "Jäta poed vahele — hangi uusim DeHubi Androidi versioon otse.",
+    "shareX": "Jaga X-is",
+    "shareFacebook": "Jaga Facebookis",
+    "shareTelegram": "Jaga Telegramis",
+    "copyLink": "Kopeeri link"
   }
 }

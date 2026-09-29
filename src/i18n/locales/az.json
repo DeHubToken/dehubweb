@@ -7528,5 +7528,22 @@
     "progressive": "Proqressiv",
     "nationalist": "Millətçi",
     "communist": "Kommunist"
+  },
+  "apk": {
+    "seoTitle": "DeHub APK-nı endir — Ən son Android versiyası",
+    "seoDescription": "Mağazaları keçin və DeHub-ın ən son versiyasını elə buradan əldə edin. Android üçün birbaşa APK endirmə — açıq mənbəli, istifadəçilərə məxsus sosial media, mağaza hesabı lazım deyil.",
+    "ldDescription": "DeHub Android tətbiqi birbaşa APK endirməsi kimi. Açıq mənbəli, istifadəçilərə məxsus sosial media — mağaza hesabı lazım deyil.",
+    "back": "DeHub-a qayıt",
+    "title": "Mağazaları keçin.",
+    "subtitle": "DeHub-ın ən son versiyasını elə buradan əldə edin — birbaşa bizdən, mağaza hesabı olmadan, yoxlama növbəsini gözləmədən.",
+    "download": "İndi endir",
+    "installHint": "Android soruşduqda brauzerinizdən quraşdırmalara icazə verin. Yeniləyirsiniz? Mövcud tətbiqi silmədən onun üzərinə quraşdırın.",
+    "useInBrowser": "DeHub-dan brauzerinizdə istifadə edin",
+    "googlePlay": "Google Play-i üstün tutursunuz? Oradan əldə edin.",
+    "shareText": "Mağazaları keçin — ən son DeHub Android versiyasını birbaşa əldə edin.",
+    "shareX": "X-də paylaş",
+    "shareFacebook": "Facebook-da paylaş",
+    "shareTelegram": "Telegram-da paylaş",
+    "copyLink": "Keçidi kopyala"
   }
 }

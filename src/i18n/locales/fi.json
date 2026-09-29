@@ -7568,5 +7568,22 @@
     "progressive": "Edistysmielinen",
     "nationalist": "Nationalisti",
     "communist": "Kommunisti"
+  },
+  "apk": {
+    "seoTitle": "Lataa DeHub APK — uusin Android-versio",
+    "seoDescription": "Ohita sovelluskaupat ja hanki DeHubin uusin versio suoraan täältä. Suora APK-lataus Androidille — avoimen lähdekoodin, käyttäjien omistama sosiaalinen media, kauppatiliä ei tarvita.",
+    "ldDescription": "DeHubin Android-sovellus suorana APK-latauksena. Avoimen lähdekoodin, käyttäjien omistama sosiaalinen media — kauppatiliä ei tarvita.",
+    "back": "Takaisin DeHubiin",
+    "title": "Ohita sovelluskaupat.",
+    "subtitle": "Hanki DeHubin uusin versio suoraan täältä — suoraan meiltä, ilman kauppatiliä ja ilman odottelua tarkistusjonossa.",
+    "download": "Lataa nyt",
+    "installHint": "Salli asennukset selaimesta, kun Android kysyy. Päivitätkö? Asenna nykyisen sovelluksen päälle poistamatta sitä.",
+    "useInBrowser": "Käytä DeHubia selaimessa",
+    "googlePlay": "Suositko Google Playta? Hanki se sieltä.",
+    "shareText": "Ohita sovelluskaupat — nappaa DeHubin uusin Android-versio suoraan.",
+    "shareX": "Jaa X:ssä",
+    "shareFacebook": "Jaa Facebookissa",
+    "shareTelegram": "Jaa Telegramissa",
+    "copyLink": "Kopioi linkki"
   }
 }

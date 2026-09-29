@@ -5500,5 +5500,22 @@
     "progressive": "Progressiv",
     "nationalist": "Nationalist",
     "communist": "Kommunist"
+  },
+  "apk": {
+    "seoTitle": "DeHub-APK abelade — neuschti Android-Version",
+    "seoDescription": "Vergiss d App-Stores und hol dir di neuschti Version vo DeHub grad do. Direkte APK-Download für Android — Open Source, Social Media wo de Nutzer ghört, kei Store-Konto nötig.",
+    "ldDescription": "D DeHub-Android-App als direkte APK-Download. Open Source, Social Media wo de Nutzer ghört — kei Store-Konto nötig.",
+    "back": "Zrugg zu DeHub",
+    "title": "Vergiss d Stores.",
+    "subtitle": "Hol dir di neuschti Version vo DeHub grad do — direkt vo eus, ohni Store-Konto, ohni uf e Prüefig z warte.",
+    "download": "Jetzt abelade",
+    "installHint": "Erlaub Installatione us dim Browser, wenn Android fragt. Am Aktualisiere? Installier eifach über dini bestehendi App, ohni si z deinstalliere.",
+    "useInBrowser": "DeHub im Browser bruuche",
+    "googlePlay": "Lieber Google Play? Hol si dänn det.",
+    "shareText": "Vergiss d Stores — hol dir di neuschti DeHub-Android-Version direkt.",
+    "shareX": "Uf X teile",
+    "shareFacebook": "Uf Facebook teile",
+    "shareTelegram": "Uf Telegram teile",
+    "copyLink": "Link kopiere"
   }
 }

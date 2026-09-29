@@ -5506,5 +5506,22 @@
     "progressive": "Onítẹ̀síwájú",
     "nationalist": "Onífẹ̀ẹ́ orílẹ̀-èdè",
     "communist": "Kọ́múníìsì"
+  },
+  "apk": {
+    "seoTitle": "Gba DeHub APK sílẹ̀ — Ẹ̀dà Android Tuntun Jùlọ",
+    "seoDescription": "Fo àwọn ilé ìtajà app kọjá kí o sì gba ẹ̀dà DeHub tuntun jùlọ níbí gan-an. Ìgbàsílẹ̀ APK tààrà fún Android — ìkànnì àjọlò orísun ṣíṣí tí àwọn olùlò ní, kò sí ìdí fún àkọọ́lẹ̀ ilé ìtajà.",
+    "ldDescription": "App DeHub fún Android gẹ́gẹ́ bí ìgbàsílẹ̀ APK tààrà. Ìkànnì àjọlò orísun ṣíṣí tí àwọn olùlò ní — kò sí ìdí fún àkọọ́lẹ̀ ilé ìtajà.",
+    "back": "Padà sí DeHub",
+    "title": "Fo àwọn ilé ìtajà kọjá.",
+    "subtitle": "Gba ẹ̀dà DeHub tuntun jùlọ níbí gan-an — tààrà láti ọ̀dọ̀ wa, kò sí àkọọ́lẹ̀ ilé ìtajà, kò sí dídúró de àyẹ̀wò.",
+    "download": "Gbà sílẹ̀ báyìí",
+    "installHint": "Fàyè gba ìfisori láti inú aṣàwákiri rẹ nígbà tí Android bá béèrè. Ṣé o ń ṣe àtúnṣe? Fi sori app tí o ti ní láìyọ ọ́ kúrò.",
+    "useInBrowser": "Lo DeHub nínú aṣàwákiri rẹ",
+    "googlePlay": "Ṣé o fẹ́ràn Google Play jù? Gbà á níbẹ̀.",
+    "shareText": "Fo àwọn ilé ìtajà kọjá — gba ẹ̀dà DeHub Android tuntun jùlọ tààrà.",
+    "shareX": "Pín lórí X",
+    "shareFacebook": "Pín lórí Facebook",
+    "shareTelegram": "Pín lórí Telegram",
+    "copyLink": "Dàkọ ìjápọ̀"
   }
 }

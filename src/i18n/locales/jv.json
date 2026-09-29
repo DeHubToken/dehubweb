@@ -5505,5 +5505,22 @@
     "progressive": "Progresif",
     "nationalist": "Nasionalis",
     "communist": "Komunis"
+  },
+  "apk": {
+    "seoTitle": "Unduh APK DeHub — Build Android Paling Anyar",
+    "seoDescription": "Ora perlu toko aplikasi, entuk versi DeHub paling anyar langsung ing kene. Unduhan APK langsung kanggo Android — media sosial open source sing diduweni pangguna, ora perlu akun toko.",
+    "ldDescription": "Aplikasi Android DeHub minangka unduhan APK langsung. Media sosial open source sing diduweni pangguna — ora perlu akun toko.",
+    "back": "Bali menyang DeHub",
+    "title": "Ora usah liwat toko.",
+    "subtitle": "Entuk versi DeHub paling anyar ing kene — langsung saka kita, tanpa akun toko, tanpa ngenteni antrean review.",
+    "download": "Unduh saiki",
+    "installHint": "Idinake instalasi saka browser sampeyan nalika Android takon. Arep nganyari? Instal ing ndhuwur aplikasi sing wis ana tanpa kudu mbusak.",
+    "useInBrowser": "Gunakake DeHub ing browser sampeyan",
+    "googlePlay": "Luwih seneng Google Play? Entuk ing kana wae.",
+    "shareText": "Ora usah liwat toko — entuk build Android DeHub paling anyar langsung.",
+    "shareX": "Bagikake ing X",
+    "shareFacebook": "Bagikake ing Facebook",
+    "shareTelegram": "Bagikake ing Telegram",
+    "copyLink": "Kopi pranala"
   }
 }

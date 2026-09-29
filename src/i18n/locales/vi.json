@@ -7472,5 +7472,22 @@
     "progressive": "Cấp tiến",
     "nationalist": "Dân tộc chủ nghĩa",
     "communist": "Cộng sản"
+  },
+  "apk": {
+    "seoTitle": "Tải DeHub APK — Bản dựng Android mới nhất",
+    "seoDescription": "Bỏ qua các kho ứng dụng và tải phiên bản DeHub mới nhất ngay tại đây. Tải APK trực tiếp cho Android — mạng xã hội mã nguồn mở do người dùng sở hữu, không cần tài khoản cửa hàng.",
+    "ldDescription": "Ứng dụng DeHub cho Android dưới dạng tải APK trực tiếp. Mạng xã hội mã nguồn mở do người dùng sở hữu — không cần tài khoản cửa hàng.",
+    "back": "Quay lại DeHub",
+    "title": "Bỏ qua kho ứng dụng.",
+    "subtitle": "Tải phiên bản DeHub mới nhất ngay tại đây — trực tiếp từ chúng tôi, không cần tài khoản cửa hàng, không phải chờ duyệt.",
+    "download": "Tải xuống ngay",
+    "installHint": "Cho phép cài đặt từ trình duyệt khi Android hỏi. Đang cập nhật? Cài đè lên ứng dụng hiện có mà không cần gỡ cài đặt.",
+    "useInBrowser": "Dùng DeHub trên trình duyệt",
+    "googlePlay": "Thích Google Play hơn? Tải tại đó.",
+    "shareText": "Bỏ qua kho ứng dụng — tải trực tiếp bản DeHub Android mới nhất.",
+    "shareX": "Chia sẻ lên X",
+    "shareFacebook": "Chia sẻ lên Facebook",
+    "shareTelegram": "Chia sẻ lên Telegram",
+    "copyLink": "Sao chép liên kết"
   }
 }
