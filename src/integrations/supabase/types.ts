@@ -909,6 +909,30 @@ export type Database = {
         }
         Relationships: []
       }
+      app_min_versions: {
+        Row: {
+          min_version: string | null
+          platform: string
+          recommended_version: string | null
+          store_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          min_version?: string | null
+          platform: string
+          recommended_version?: string | null
+          store_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          min_version?: string | null
+          platform?: string
+          recommended_version?: string | null
+          store_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       arcade_map_presence: {
         Row: {
           avatar_url: string | null
@@ -7773,6 +7797,7 @@ export type Database = {
         }[]
       }
       get_request_wallet_address: { Args: never; Returns: string }
+      get_signed_request_wallet_address: { Args: never; Returns: string }
       get_user_id_by_email: { Args: { p_email: string }; Returns: string }
       get_user_id_by_phone: { Args: { p_phone: string }; Returns: string }
       increment_category_count: { Args: { p_name: string }; Returns: undefined }
