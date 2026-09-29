@@ -25,7 +25,7 @@ function constant(name: string): string {
   return line![0];
 }
 
-const { stylePrerendered, VIEWPORT_META, TITLE_MAX } = new Function(`
+const { stylePrerendered, clampEscapedTitle, VIEWPORT_META, TITLE_MAX } = new Function(`
   ${constant('TITLE_MAX')}
   ${constant('VIEWPORT_META')}
   ${constant('HTML_ENTITIES')}
@@ -34,12 +34,20 @@ const { stylePrerendered, VIEWPORT_META, TITLE_MAX } = new Function(`
   const PRERENDER_FOOTER = '</main>';
   function stripInlineStyles(h) { return h; }
   ${decl('function escHtml(s = \'\') {')}
+  ${constant('BRAND_SUFFIX')}
   ${decl('function truncate(text, max) {')}
+  ${decl('function clipAtWord(text, max) {')}
+  ${decl('function clampTitle(text, max) {')}
   ${decl('function clampEscapedTitle(escaped, max) {')}
   ${decl('function normalizePrerenderedHead(html) {')}
   ${decl('export function stylePrerendered(html) {').replace(/^export /, '')}
-  return { stylePrerendered, VIEWPORT_META, TITLE_MAX };
-`)() as { stylePrerendered: (html: string) => string; VIEWPORT_META: string; TITLE_MAX: number };
+  return { stylePrerendered, clampEscapedTitle, VIEWPORT_META, TITLE_MAX };
+`)() as {
+  stylePrerendered: (html: string) => string;
+  clampEscapedTitle: (escaped: string, max: number) => string;
+  VIEWPORT_META: string;
+  TITLE_MAX: number;
+};
 
 const LONG = "DeHub's Special Week: BNB Chain Recognition, First Class Partnership &amp; App Store Launch | DeHub Blog";
 const SHORT = 'Pricing — DeHub Creator Studio';
@@ -109,6 +117,59 @@ describe('title clamp', () => {
   it('does not touch a page that was already styled', () => {
     const html = page(LONG).replace('<body>', '<body><main class="dh-main">');
     expect(stylePrerendered(html)).toBe(html);
+  });
+});
+
+const decode = (t: string) =>
+  t.replace(/&(?:amp|quot|lt|gt|#39);/g, (e) => ({ '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>', '&#39;': "'" })[e]!);
+const clamp = (plain: string) => decode(clampEscapedTitle(plain.replace(/&/g, '&amp;'), TITLE_MAX));
+
+describe('title clamp shape', () => {
+  it('drops a brand suffix before cutting anything', () => {
+    // Was `Reliability Perfected: 99.99% Uptime for DeHub Streaming | DeHub 2025…`.
+    expect(clamp('Reliability Perfected: 99.99% Uptime for DeHub Streaming | DeHub 2025 Roadmap'))
+      .toBe('Reliability Perfected: 99.99% Uptime for DeHub Streaming');
+    expect(clamp('Best Watch-to-Earn Platforms 2026 (Honest, Tested for Real Payouts) — DeHub Blog'))
+      .toBe('Best Watch-to-Earn Platforms 2026 (Honest, Tested for Real Payouts)');
+    expect(clamp('A long docs page title that runs well past the seventy character limit - DeHub Docs'))
+      .toBe('A long docs page title that runs well past the seventy character limit');
+  });
+
+  it('cuts at a word boundary, never mid-word, and leaves no separator hanging', () => {
+    // Was `Watch this video give your honest thoughts it's four minutes — DeHub …`.
+    const out = clamp("Watch this video give your honest thoughts on it, all four minutes, then tell us — — what next");
+    expect(out.length).toBeLessThanOrEqual(TITLE_MAX);
+    expect(out).toMatch(/\w…$/);
+    expect(out).not.toMatch(/[|—–-]\s*…$/);
+  });
+
+  it('keeps a brand clause that is not a suffix', () => {
+    const title = 'DeHub — Open Source, User Owned & Censorship Resistant Media';
+    expect(clamp(title)).toBe(title);
+  });
+
+  it('ends every blog title cleanly', () => {
+    // Every post the blog serves, through the exact title buildBlogHtml writes.
+    const manifest = JSON.parse(readFileSync(resolve(ROOT, 'public/blog-manifest.json'), 'utf8')) as {
+      slug: string;
+      title: string;
+      seoTitle?: string;
+    }[];
+    expect(manifest.length).toBeGreaterThan(100);
+    for (const post of manifest) {
+      const title = post.seoTitle || `${post.title} — DeHub Blog`;
+      const out = clamp(title);
+      expect(out.length, post.slug).toBeLessThanOrEqual(TITLE_MAX);
+      expect(out, post.slug).not.toMatch(/(?:[|—–:,-]|\bDe|\bDeH|\bDeHu)\s*…?$/);
+      if (out.endsWith('…')) {
+        // A whole-word prefix of the title: the next character was a space.
+        const kept = out.slice(0, -1);
+        expect(title.startsWith(kept), post.slug).toBe(true);
+        expect(title[kept.length] === ' ' || /^[\s|—–:,-]/.test(title.slice(kept.length)), post.slug).toBe(true);
+      } else {
+        expect(title.startsWith(out), post.slug).toBe(true);
+      }
+    }
   });
 });
 

@@ -111,3 +111,22 @@ export const EXCLUDED_WITHOUT_COUNTERPART = [
 export const RETIRED_GUIDES = {
   'official-standing-delabs-ltd-incorporated---a-dehub-milestone-from-q3-2022': '/docs/token/governance',
 };
+
+/**
+ * Standalone guide pages folded into the blog post that covers the same query.
+ * ==========================================================================
+ * Both were hand-built React pages under /guides/ competing with the flagship
+ * "best decentralised social media platforms" post: same comparison, same
+ * platforms, a fraction of the text. Three pages on one query split the
+ * signal between them, and Google ranked the thin ones.
+ *
+ * Consumers:
+ *
+ *   CLOUDFLARE_WORKER_SEO.js            301s /guides/<from> -> /guides/<to>
+ *   src/App.tsx                         <Navigate>s the same paths in the SPA
+ *   scripts/generate-blog-manifest.mjs  asserts every <to> is still published
+ */
+export const CONSOLIDATED_GUIDES = {
+  'best-decentralized-social-media': 'best-decentralised-social-media-platforms-2026',
+  'best-web3-social-media-dapps': 'best-decentralised-social-media-platforms-2026',
+};

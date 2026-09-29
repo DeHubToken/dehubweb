@@ -37,6 +37,7 @@ import { DeHubPageLoader } from "@/components/app/DeHubLoader";
 import { ThemePreviewProvider, ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
+import { CONSOLIDATED_GUIDES } from "@/lib/blog-redirects.js";
 const DexPage = React.lazy(() => import("@/pages/app/DexPage"));
 const DexPoolPage = React.lazy(() => import("@/pages/app/DexPoolPage"));
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -186,8 +187,6 @@ const PairTestPage = React.lazy(() => import("./pages/app/PairTestPage"));
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
-const BestDecentralizedSocialMedia = React.lazy(() => import("./pages/BestDecentralizedSocialMedia"));
-const BestWeb3SocialMediaDapps = React.lazy(() => import("./pages/BestWeb3SocialMediaDapps"));
 const BestDecentralizedStreaming = React.lazy(() => import("./pages/BestDecentralizedStreaming"));
 const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
@@ -453,8 +452,11 @@ function AppContent() {
           <Route path="/guide" element={<GuidePage />} />
           {/* Hand-built static guide pages — higher route rank than the
               /guides/* splat below, so they always win. */}
-          <Route path="/guides/best-decentralized-social-media" element={<Suspense fallback={<PageLoader />}><BestDecentralizedSocialMedia /></Suspense>} />
-          <Route path="/guides/best-web3-social-media-dapps" element={<Suspense fallback={<PageLoader />}><BestWeb3SocialMediaDapps /></Suspense>} />
+          {/* Two older guides folded into the flagship post on the same query;
+              the worker 301s them too (CONSOLIDATED_GUIDES). */}
+          {Object.entries(CONSOLIDATED_GUIDES).map(([from, to]) => (
+            <Route key={from} path={`/guides/${from}`} element={<Navigate to={`/guides/${to}`} replace />} />
+          ))}
           <Route path="/guides/best-decentralized-streaming-apps" element={<Suspense fallback={<PageLoader />}><BestDecentralizedStreaming /></Suspense>} />
 
           {/* Unified docs/blog surface. This pathless parent stays mounted for
