@@ -423,6 +423,10 @@ export default function ProfilePage() {
     
     const notFoundContent = (
       <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-4 text-center">
+        {/* Any unknown top-level path lands here (/:username is the catch-all),
+            so this is the SPA's real 404: without its own head it kept the
+            home title, index,follow and a self canonical. */}
+        <SEOHead title={`${t('notFound.title')} — DeHub`} description={t('profile.notFound')} noindex noCanonical />
         {isUsernameRoute && !data.isProfileError ? (
           <>
             <ThemedIcon icon="profile" alt="" className="w-20 h-20 object-contain" />

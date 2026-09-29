@@ -75,7 +75,19 @@
     "images": "Slike",
     "videos": "Videozapisi",
     "music": "Glazba",
-    "live": "Uživo"
+    "live": "Uživo",
+    "seoTitle": "Istražite DeHub — Popularni kreatori, videozapisi i zajednice",
+    "seoDescription": "Otkrijte što je popularno na DeHub-u: najbolji kreatori, videozapisi, glazba, prijenosi uživo i zajednice na društvenoj platformi otvorenog koda u vlasništvu korisnika."
+  },
+  "videos": {
+    "seoTitle": "Feed videozapisa — Gledajte on-chain videozapise na DeHub-u",
+    "seoDescription": "Gledajte najnovije on-chain videozapise kreatora na DeHub-u: dugi videozapisi s plaćanjem po gledanju, sadržajem dostupnim uz tokene i dijeljenjem prihoda od oglasa na video platformi u vlasništvu korisnika.",
+    "heading": "DeHub feed videozapisa"
+  },
+  "shorts": {
+    "seoTitle": "Kratki — Kratki videozapisi na DeHub-u",
+    "seoDescription": "Listajte najnovije kratke videozapise na DeHub-u: okomiti feed kratkih videa za povlačenje prstom na društvenoj platformi otvorenog koda u vlasništvu korisnika, gdje su kreatori vlasnici svog sadržaja.",
+    "heading": "DeHub kratki videozapisi"
   },
   "settings": {
     "showOnline": "Prikaži kad sam na mreži",
@@ -1372,7 +1384,9 @@
     "offerWorthNow": "Oko {{amount}} tokena po trenutnoj cijeni",
     "offerNotePlaceholder": "Dodaj poruku (neobavezno)",
     "offerCommitsNothing": "Davanje ponude ništa ne košta i ne zadržava tokene. Plaćate samo ako vlasnik prihvati.",
-    "offerNeedsHandle": "Ovaj račun nema korisničko ime za koje bi se moglo ponuditi."
+    "offerNeedsHandle": "Ovaj račun nema korisničko ime za koje bi se moglo ponuditi.",
+    "options": "Opcije profila",
+    "translateBio": "Prevedi biografiju"
   },
   "tv": {
     "seoTitle": "Live TV — Besplatni kanali iz cijelog svijeta",

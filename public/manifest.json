@@ -27,5 +27,13 @@
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
-  "scope": "/"
+  "scope": "/",
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=io.dehub.mobile",
+      "id": "io.dehub.mobile"
+    }
+  ],
+  "prefer_related_applications": false
 }

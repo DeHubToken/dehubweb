@@ -75,7 +75,19 @@
     "images": "Images",
     "videos": "Videos",
     "music": "Music",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "Explore DeHub — Trending Creators, Videos & Communities",
+    "seoDescription": "Discover what’s trending on DeHub: top creators, videos, music, live streams and communities on the open-source, user-owned social platform."
+  },
+  "videos": {
+    "seoTitle": "Video Feed — Watch On-Chain Videos on DeHub",
+    "seoDescription": "Watch the latest on-chain videos from creators on DeHub: long-form uploads with pay-per-view, token-gated content and ad-revenue sharing on the user-owned video platform.",
+    "heading": "DeHub Video Feed"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Short-Form Videos on DeHub",
+    "seoDescription": "Scroll the latest short-form videos on DeHub: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content.",
+    "heading": "DeHub Shorts"
   },
   "settings": {
     "showOnline": "Show when I'm online",
@@ -1376,7 +1388,9 @@
     "offerWorthNow": "About {{amount}} tokens at the current rate",
     "offerNotePlaceholder": "Add a note (optional)",
     "offerCommitsNothing": "Making an offer costs nothing and holds no tokens. You only pay if the owner accepts.",
-    "offerNeedsHandle": "This account has no username to offer for."
+    "offerNeedsHandle": "This account has no username to offer for.",
+    "options": "Profile options",
+    "translateBio": "Translate bio"
   },
   "tv": {
     "seoTitle": "Live TV — Free Channels From Around the World",

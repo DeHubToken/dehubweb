@@ -75,7 +75,19 @@
     "images": "圖片",
     "videos": "影片",
     "music": "音樂",
-    "live": "直播"
+    "live": "直播",
+    "seoTitle": "探索 DeHub — 熱門創作者、影片同社群",
+    "seoDescription": "睇下 DeHub 而家有咩熱門：喺開源、用戶擁有嘅社交平台上面，有頂尖創作者、影片、音樂、直播同社群。"
+  },
+  "videos": {
+    "seoTitle": "影片動態 — 喺 DeHub 睇鏈上影片",
+    "seoDescription": "喺 DeHub 睇創作者最新嘅鏈上影片：喺用戶擁有嘅影片平台上面，有按次付費、代幣門檻內容同廣告收益分成嘅長片。",
+    "heading": "DeHub 影片動態"
+  },
+  "shorts": {
+    "seoTitle": "短片 — DeHub 上面嘅短影片",
+    "seoDescription": "喺 DeHub 碌最新嘅短影片：開源、用戶擁有嘅社交平台上面嘅直向、可以滑動嘅短片動態，創作者擁有自己嘅內容。",
+    "heading": "DeHub 短片"
   },
   "settings": {
     "showOnline": "當我上網嗰陣顯示",
@@ -1376,7 +1388,9 @@
     "offerWorthNow": "按目前匯率約 {{amount}} 個代幣",
     "offerNotePlaceholder": "加個備註（可以唔填）",
     "offerCommitsNothing": "出價免費，且不佔用代幣。只有在對方接受後才付款。",
-    "offerNeedsHandle": "呢個帳戶冇用戶名可以出價。"
+    "offerNeedsHandle": "呢個帳戶冇用戶名可以出價。",
+    "options": "個人檔案選項",
+    "translateBio": "翻譯簡介"
   },
   "tv": {
     "seoTitle": "直播電視 — 來自世界各地嘅免費頻道",

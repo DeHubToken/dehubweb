@@ -232,6 +232,8 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   }, []);
 
   const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Radio, tickers: Flame };
+  // Icon-only tabs need a spoken name.
+  const tabLabels: Record<Tab, string> = { posts: t('sidebar.posts'), stages: t('stages.title'), tickers: t('sidebar.tickers') };
 
   // Live stages for the stages tab — shared from StageProvider's single
   // fetch + realtime channel (was a duplicate query + 60s poll here).
@@ -251,6 +253,8 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               data-tab-active={activeTab === tab}
               key={tab}
               onClick={() => handleMainTabChange(tab)}
+              aria-label={tabLabels[tab]}
+              aria-pressed={activeTab === tab}
               className={`relative flex-1 py-2.5 flex flex-col items-center justify-center transition-colors ${
                 activeTab === tab
                   ? 'text-white'

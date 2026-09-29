@@ -76,6 +76,7 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
 import { FocusCommentProvider } from '@/lib/focus-comment';
+import { canonicalUrl } from '@/lib/seo/route-meta';
 
 /*
  * Only a live post ever renders this, and a live post is a small minority of
@@ -689,14 +690,13 @@ interface SinglePostPageProps {
 }
 
 /**
- * Canonical URL for a post page. The /posts/* short forms are first-class URLs
- * now, so a visitor on /posts/1/b gets that exact URL in the meta tags rather
- * than being forced back to /app/post/1.
+ * Canonical URL for a post page: always /app/post/<tokenId>, whichever shape
+ * the visitor arrived on (/posts/1/b, /post/1, /newpost/<n>). That is the URL
+ * the worker's crawler page declares and the post sitemap lists; a self
+ * canonical on /posts/* pointed the other way.
  */
-function postSeoUrl(pathname: string, id?: string): string {
-  return pathname.startsWith('/posts/')
-    ? `https://dehub.io${pathname}`
-    : `https://dehub.io/app/post/${id}`;
+function postSeoUrl(id?: string): string {
+  return canonicalUrl(`/app/post/${id}`);
 }
 
 /**
@@ -1140,7 +1140,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
         <SEOHead
           title={videoSeoTitle}
           description={videoSeoDesc.slice(0, 155)}
-          url={postSeoUrl(location.pathname, id)}
+          url={postSeoUrl(id)}
           type="article"
           aiScraping={getAiScrapingPreference((post as any).minterUser?.customs)}
           jsonLd={{
@@ -1148,7 +1148,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
             '@type': 'VideoObject',
             name: videoSeoTitle,
             description: videoSeoDesc,
-            url: postSeoUrl(location.pathname, id),
+            url: postSeoUrl(id),
             ...(videoData.thumbnail && { thumbnailUrl: videoData.thumbnail }),
             ...(post.createdAt && { uploadDate: post.createdAt }),
             publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
@@ -1393,7 +1393,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
         title={seoTitle}
         description={seoDesc}
         image={post?.socialImageUrl ? buildFeedImageUrls([post.socialImageUrl])?.[0] : post?.articleImageUrl ? buildFeedImageUrls([post.articleImageUrl])?.[0] : undefined}
-        url={postSeoUrl(location.pathname, id)}
+        url={postSeoUrl(id)}
         type="article"
         aiScraping={getAiScrapingPreference((post as any)?.minterUser?.customs)}
         jsonLd={{
@@ -1401,7 +1401,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           '@type': 'Article',
           headline: seoTitle,
           description: seoDesc,
-          url: postSeoUrl(location.pathname, id),
+          url: postSeoUrl(id),
           ...(post?.minterDisplayName && { author: { '@type': 'Person', name: post.minterDisplayName } }),
           ...(post?.createdAt && { datePublished: post.createdAt }),
           publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },

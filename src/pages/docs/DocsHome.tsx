@@ -5,7 +5,6 @@ import { toast } from 'sonner';
 import { usePerformance } from '@/hooks/usePerformance';
 import { getLatestPost } from '@/utils/blogUtils';
 import { mediaImage, mediaImageSrcSet } from '@/lib/media-url';
-import SEO from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 // Declare the global build time variable
@@ -114,7 +113,6 @@ const DocsHome = () => {
     description: t('home.featureCommunityDesc'),
   }];
   return <>
-      <SEO title="DeHub Documentation - Build on the Decentralized Future" description="Everything you need to use, integrate, build, and scale with DeHub platform. From quick start guides to advanced configurations for decentralized applications." image="/media/7668607f-3b0b-4512-ab17-e7ba5fce395f.png" url="/docs" type="website" tags={['DeHub', 'documentation', 'blockchain', 'decentralized', 'DHB token', 'developer tools']} />
       <div className="space-y-12">
         {/* Hero Section */}
         <div className="text-center space-y-6">
