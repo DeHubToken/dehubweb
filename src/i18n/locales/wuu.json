@@ -75,7 +75,19 @@
     "images": "图片",
     "videos": "视频",
     "music": "音乐",
-    "live": "直播"
+    "live": "直播",
+    "seoTitle": "探索 DeHub — 热门创作者、视频搭社区",
+    "seoDescription": "看看 DeHub 上头啥物事来得热门：开源、用户所有个社交平台上个顶流创作者、视频、音乐、直播搭社区。"
+  },
+  "videos": {
+    "seoTitle": "视频流 — 勒 DeHub 看链上视频",
+    "seoDescription": "勒 DeHub 看创作者最新个链上视频：用户所有个视频平台上个长视频，支持按次付费、代币门槛内容搭广告收益分成。",
+    "heading": "DeHub 视频流"
+  },
+  "shorts": {
+    "seoTitle": "短片 — DeHub 上个短视频",
+    "seoDescription": "勒 DeHub 刷最新个短视频：开源、用户所有个社交平台上竖屏、可以滑个短片流，创作者自家拥有自家个内容。",
+    "heading": "DeHub 短片"
   },
   "settings": {
     "showOnline": "显示我在线辰光",
@@ -510,6 +522,9 @@
     "edit": "编辑",
     "loading": "加载中...",
     "tryAgain": "再试一趟",
+    "retry": "再试",
+    "failedToLoad": "加载失败",
+    "somethingWentWrong": "出错了",
     "search": "搜索",
     "goBack": "返回",
     "showOriginal": "显示原文",
@@ -1357,7 +1372,9 @@
     "offerWorthNow": "大约 {{amount}} 个代币按当前汇率",
     "offerNotePlaceholder": "加条备注（好勿填）",
     "offerCommitsNothing": "出价是免费个，也勿占代币。只有勒主人接受了，侬才付费。",
-    "offerNeedsHandle": "该个账户呒没用户名好出价。"
+    "offerNeedsHandle": "该个账户呒没用户名好出价。",
+    "options": "个人资料选项",
+    "translateBio": "翻译简介"
   },
   "tv": {
     "seoTitle": "Live TV — 免費全球頻道",
@@ -5628,6 +5645,10 @@
     "desc": "丛林里个明媚日里或者幽蓝黄昏",
     "day": "日里",
     "evening": "夜快"
+  },
+  "affiliate": {
+    "loadFailed": "无法加载推广数据",
+    "checkingForUpdates": "正在检查更新…"
   },
   "affiliateLanding": {
     "title": "定制侬个邀请页面",

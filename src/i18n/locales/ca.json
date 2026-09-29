@@ -75,7 +75,19 @@
     "images": "Imatges",
     "videos": "Vídeos",
     "music": "Música",
-    "live": "En directe"
+    "live": "En directe",
+    "seoTitle": "Explora DeHub — Creadors, vídeos i comunitats en tendència",
+    "seoDescription": "Descobreix què és tendència a DeHub: els millors creadors, vídeos, música, directes i comunitats a la plataforma social de codi obert, propietat dels usuaris."
+  },
+  "videos": {
+    "seoTitle": "Feed de vídeos — Mira vídeos on-chain a DeHub",
+    "seoDescription": "Mira els vídeos on-chain més recents dels creadors a DeHub: vídeos llargs amb pagament per visualització, contingut restringit per tokens i ingressos publicitaris compartits a la plataforma de vídeo propietat dels usuaris.",
+    "heading": "Feed de vídeos de DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Curts — Vídeos curts a DeHub",
+    "seoDescription": "Desplaça't pels vídeos curts més recents a DeHub: un feed vertical de curts per lliscar a la plataforma social de codi obert, propietat dels usuaris, on els creadors són amos del seu contingut.",
+    "heading": "Curts de DeHub"
   },
   "settings": {
     "showOnline": "Mostra quan estic en línia",
@@ -523,6 +535,9 @@
     "edit": "Editar",
     "loading": "Carregant...",
     "tryAgain": "Torna-ho a provar",
+    "retry": "Torna-ho a provar",
+    "failedToLoad": "Error en carregar",
+    "somethingWentWrong": "Alguna cosa ha fallat",
     "search": "Cercar",
     "goBack": "Tornar enrere",
     "showOriginal": "Mostrar original",
@@ -1369,7 +1384,9 @@
     "offerWorthNow": "Aproximadament {{amount}} tokens al tipus actual",
     "offerNotePlaceholder": "Afegeix una nota (opcional)",
     "offerCommitsNothing": "Fer una oferta no costa res i no reserva tokens. Només pagues si el propietari accepta.",
-    "offerNeedsHandle": "Aquest compte no té cap nom d’usuari pel qual oferir."
+    "offerNeedsHandle": "Aquest compte no té cap nom d’usuari pel qual oferir.",
+    "options": "Opcions del perfil",
+    "translateBio": "Tradueix la biografia"
   },
   "tv": {
     "seoTitle": "TV en Directe — Canals Gratuïts de Tot el Món",
@@ -6532,6 +6549,10 @@
     "desc": "Un dia lluminós o un capvespre blau a la jungla",
     "day": "Dia",
     "evening": "Capvespre"
+  },
+  "affiliate": {
+    "loadFailed": "No s'han pogut carregar les estadístiques d'afiliats",
+    "checkingForUpdates": "Comprovant si hi ha actualitzacions…"
   },
   "affiliateLanding": {
     "title": "Personalitza la teva pàgina d'invitació",

@@ -75,7 +75,19 @@
     "images": "Zithombe",
     "videos": "Vidiyo",
     "music": "Umculo",
-    "live": "Bukhoma"
+    "live": "Bukhoma",
+    "seoTitle": "Hlola i-DeHub — Abadali, Amavidiyo Nemiphakathi Ethandwayo",
+    "seoDescription": "Thola okuthandwayo ku-DeHub: abadali abahamba phambili, amavidiyo, umculo, ukusakaza bukhoma nemiphakathi enkundleni yezokuxhumana yomthombo ovulekile ephethwe abasebenzisi."
+  },
+  "videos": {
+    "seoTitle": "Uhlu Lwamavidiyo — Buka amavidiyo e-on-chain ku-DeHub",
+    "seoDescription": "Buka amavidiyo amasha e-on-chain avela kubadali ku-DeHub: amavidiyo amade anokukhokha ngokubuka ngakunye, okuqukethwe okuvulwa ngamathokheni nokwabelana ngemali engenayo yezikhangiso enkundleni yamavidiyo ephethwe abasebenzisi.",
+    "heading": "Uhlu Lwamavidiyo lwe-DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Okufushane — Amavidiyo amafushane ku-DeHub",
+    "seoDescription": "Skrola amavidiyo amafushane amasha ku-DeHub: uhlu lwamavidiyo amafushane oluqondile, oluswayiphekayo enkundleni yezokuxhumana yomthombo ovulekile ephethwe abasebenzisi, lapho abadali bephethe okuqukethwe kwabo.",
+    "heading": "Okufushane kwe-DeHub"
   },
   "settings": {
     "showOnline": "Bonisa uma ngiku-inthanethi",
@@ -523,6 +535,9 @@
     "edit": "Hlela",
     "loading": "Iyalayisha...",
     "tryAgain": "Zama futhi",
+    "retry": "Zama futhi",
+    "failedToLoad": "Kuhlulekile ukulayisha",
+    "somethingWentWrong": "Kukhona okungahambanga kahle",
     "search": "Sesha",
     "goBack": "Buyela emuva",
     "showOriginal": "Bonisa okwangempela",
@@ -1374,7 +1389,9 @@
     "offerWorthNow": "Cishe izibhalwa ezingama-{{amount}} ngesilinganiso samanje",
     "offerNotePlaceholder": "Engeza inothi (ongakhetha)",
     "offerCommitsNothing": "Ukunikeza akubizi lutho futhi akubambi izibhalwa. Ukhokha kuphela uma umnikazi evuma.",
-    "offerNeedsHandle": "Le akhawunti ayinalo igama lomsebenzisi ongenza kulo isinikelo."
+    "offerNeedsHandle": "Le akhawunti ayinalo igama lomsebenzisi ongenza kulo isinikelo.",
+    "options": "Izinketho zephrofayela",
+    "translateBio": "Humusha i-bio"
   },
   "tv": {
     "seoTitle": "I-TV Ebukhoma — Amashaneli Wamahhala Avela Emhlabeni Wonke",
@@ -6656,6 +6673,10 @@
     "desc": "Usuku olukhanyayo noma kusihlwa okuluhlaza okwesibhakabhaka ehlathini",
     "day": "Emini",
     "evening": "Kusihlwa"
+  },
+  "affiliate": {
+    "loadFailed": "Ayikwazanga ukulayisha izibalo zokubambisana",
+    "checkingForUpdates": "Kuhlolwa izibuyekezo…"
   },
   "affiliateLanding": {
     "title": "Yenza ikhasi lakho lesimemo libe ngelakho",

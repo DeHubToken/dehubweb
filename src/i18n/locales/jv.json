@@ -75,7 +75,19 @@
     "images": "Gambar",
     "videos": "Video",
     "music": "Musik",
-    "live": "Langsung"
+    "live": "Langsung",
+    "seoTitle": "Jelajahi DeHub — Kreator, Video & Komunitas Sing Lagi Tren",
+    "seoDescription": "Temokake apa sing lagi tren ing DeHub: kreator paling top, video, musik, siaran langsung lan komunitas ing platform sosial sumber terbuka duweke panganggo."
+  },
+  "videos": {
+    "seoTitle": "Feed Video — Tonton Video On-Chain ing DeHub",
+    "seoDescription": "Tonton video on-chain paling anyar saka kreator ing DeHub: unggahan dawa kanthi bayar saben tonton, konten sing diwatesi token lan bagi asil iklan ing platform video duweke panganggo.",
+    "heading": "Feed Video DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Cekak — Video Cendhak ing DeHub",
+    "seoDescription": "Gulung video cendhak paling anyar ing DeHub: feed video cekak vertikal sing bisa digeser ing platform sosial sumber terbuka duweke panganggo, ing ngendi kreator nduweni kontene dhewe.",
+    "heading": "DeHub Cekak"
   },
   "settings": {
     "showOnline": "Tampilake kapan aku lagi online",
@@ -523,6 +535,9 @@
     "edit": "Sunting",
     "loading": "Ngemot...",
     "tryAgain": "Coba maneh",
+    "retry": "Coba maneh",
+    "failedToLoad": "Gagal dimuat",
+    "somethingWentWrong": "Ana sing salah",
     "search": "Goleki",
     "goBack": "Bali",
     "showOriginal": "Tampilake Asli",
@@ -1373,7 +1388,9 @@
     "offerWorthNow": "Kira-kira {{amount}} token kanthi tarif saiki",
     "offerNotePlaceholder": "Tambahi cathetan (opsional)",
     "offerCommitsNothing": "Nggawe tawaran ora nganggo biaya lan ora nahan token. Sampeyan mung mbayar yen pemilik nampa.",
-    "offerNeedsHandle": "Akun iki ora duwe jeneng panganggo kanggo ditawakake."
+    "offerNeedsHandle": "Akun iki ora duwe jeneng panganggo kanggo ditawakake.",
+    "options": "Pilihan profil",
+    "translateBio": "Terjemahake bio"
   },
   "tv": {
     "seoTitle": "Live TV — Saluran Gratis Dari Luar Negeri",
@@ -6288,6 +6305,10 @@
     "desc": "Awan sing padhang utawa sore biru surem ing alas",
     "day": "Awan",
     "evening": "Sore"
+  },
+  "affiliate": {
+    "loadFailed": "Ora bisa mbukak statistik afiliasi",
+    "checkingForUpdates": "Mriksa nganyaran…"
   },
   "affiliateLanding": {
     "title": "Atur kaca undanganmu",

@@ -75,7 +75,19 @@
     "images": "Görseller",
     "videos": "Videolar",
     "music": "Müzik",
-    "live": "Canlı"
+    "live": "Canlı",
+    "seoTitle": "DeHub'ı Keşfet — Trend İçerik Üreticileri, Videolar ve Topluluklar",
+    "seoDescription": "DeHub'da trend olanları keşfedin: açık kaynaklı, kullanıcıların sahibi olduğu sosyal platformda en iyi içerik üreticileri, videolar, müzik, canlı yayınlar ve topluluklar."
+  },
+  "videos": {
+    "seoTitle": "Video Akışı — DeHub'da Zincir Üstü Videolar İzleyin",
+    "seoDescription": "DeHub'daki içerik üreticilerinin en yeni zincir üstü videolarını izleyin: kullanıcıların sahibi olduğu video platformunda izleme başına ödeme, token korumalı içerik ve reklam geliri paylaşımıyla uzun videolar.",
+    "heading": "DeHub Video Akışı"
+  },
+  "shorts": {
+    "seoTitle": "Kısa Videolar — DeHub'da Kısa Formatlı İçerik",
+    "seoDescription": "DeHub'daki en yeni kısa videolarda gezinin: içerik üreticilerinin kendi içeriklerine sahip olduğu açık kaynaklı, kullanıcıların sahibi olduğu sosyal platformda dikey, kaydırılabilir kısa video akışı.",
+    "heading": "DeHub Kısa Videolar"
   },
   "settings": {
     "showOnline": "Çevrimiçi olduğumda göster",
@@ -523,6 +535,9 @@
     "edit": "Düzenle",
     "loading": "Yükleniyor...",
     "tryAgain": "Tekrar Dene",
+    "retry": "Tekrar Dene",
+    "failedToLoad": "Yüklenemedi",
+    "somethingWentWrong": "Bir şeyler ters gitti",
     "search": "Ara",
     "goBack": "Geri dön",
     "showOriginal": "Orijinali göster",
@@ -1373,7 +1388,9 @@
     "offerWorthNow": "Mevcut kurdan yaklaşık {{amount}} jeton",
     "offerNotePlaceholder": "Bir not ekle (isteğe bağlı)",
     "offerCommitsNothing": "Teklif vermenin bir maliyeti yoktur ve jeton tutmaz. Yalnızca sahip kabul ederse ödeme yaparsınız.",
-    "offerNeedsHandle": "Bu hesabın teklif verilecek bir kullanıcı adı yok."
+    "offerNeedsHandle": "Bu hesabın teklif verilecek bir kullanıcı adı yok.",
+    "options": "Profil seçenekleri",
+    "translateBio": "Biyografiyi çevir"
   },
   "tv": {
     "seoTitle": "Canlı TV — Dünyanın dört bir yanından ücretsiz kanallar",
@@ -6652,6 +6669,10 @@
     "desc": "Ormanda parlak bir gün ya da loş mavi bir akşam",
     "day": "Gündüz",
     "evening": "Akşam"
+  },
+  "affiliate": {
+    "loadFailed": "Ortaklık istatistikleri yüklenemedi",
+    "checkingForUpdates": "Güncellemeler kontrol ediliyor…"
   },
   "affiliateLanding": {
     "title": "Davet sayfanı özelleştir",

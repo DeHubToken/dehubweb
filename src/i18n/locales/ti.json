@@ -75,7 +75,19 @@
     "images": "ስእልታት",
     "videos": "ቪድዮታት",
     "music": "ሙዚቃ",
-    "live": "ቀጥታ"
+    "live": "ቀጥታ",
+    "seoTitle": "DeHub ዳህስስ — ፍሉጣት ፈጠርቲ፣ ቪድዮታትን ማሕበረሰባትን",
+    "seoDescription": "ኣብ DeHub እንታይ ከም ዝውዕውዕ ርከብ፦ ኣብቲ ክፉት ምንጪ፣ ብተጠቀምቲ ዝውነን ማሕበራዊ መድረኽ ዝበለጹ ፈጠርቲ፣ ቪድዮታት፣ ሙዚቃ፣ ቀጥታ ፈነወታትን ማሕበረሰባትን።"
+  },
+  "videos": {
+    "seoTitle": "መስመር ቪድዮ — ኦን-ቼይን ቪድዮታት ኣብ DeHub ተዓዘብ",
+    "seoDescription": "ካብ ፈጠርቲ ዝወጹ ሓደስቲ ኦን-ቼይን ቪድዮታት ኣብ DeHub ተዓዘብ፦ ነዊሕ ቪድዮታት ምስ ክፍሊት ንነፍሲ ወከፍ ምርኣይ፣ ብቶከን ዝተሓለወ ትሕዝቶን ምክፍፋል እቶት ምልክታን ኣብቲ ብተጠቀምቲ ዝውነን መድረኽ ቪድዮ።",
+    "heading": "መስመር ቪድዮ DeHub"
+  },
+  "shorts": {
+    "seoTitle": "ሓጺርቲ — ሓጺር ቪድዮታት ኣብ DeHub",
+    "seoDescription": "ሓደስቲ ሓጺር ቪድዮታት ኣብ DeHub ኣሰጋግር፦ ቀጥ ዝበለ፣ ብምስሓብ ዝቕየር መስመር ሓጺርቲ ኣብቲ ፈጠርቲ ንትሕዝቶኦም ዝውንኑሉ ክፉት ምንጪ፣ ብተጠቀምቲ ዝውነን ማሕበራዊ መድረኽ።",
+    "heading": "ሓጺርቲ DeHub"
   },
   "settings": {
     "showOnline": "ኣብ ኢንተርነት ከለኹ ኣርኢ",
@@ -519,6 +531,9 @@
     "edit": "ኣርም",
     "loading": "ይጽዓን ኣሎ...",
     "tryAgain": "እንደገና ፈትን",
+    "retry": "እንደገና ፈትን",
+    "failedToLoad": "ምጽዓን ኣይተኻእለን",
+    "somethingWentWrong": "ገለ ጌጋ ተፈጢሩ",
     "search": "ድለ",
     "goBack": "ተመለስ",
     "showOriginal": "ኦሪጅናል ኣርኢ",
@@ -1347,7 +1362,9 @@
     "offerWorthNow": "ብዛዕባ {{amount}} ቶክን ብዝሰዓብ ዋጋ",
     "offerNotePlaceholder": "መዘኻኸሪ ወስኽ (ኣማራጺ)",
     "offerCommitsNothing": "Offer ምቕራብ ምንም ኣይኮነን የብልን ቶክን ኣይጸቆጠረን። ተቐባልነት እንተረኺቡ ጥራይ እዩ ዝኽፈል።",
-    "offerNeedsHandle": "እዚ ሕሳብ እዚ ቅርቡት ዝቐርበሉ ተጠቃሚ ስም የብሉን።"
+    "offerNeedsHandle": "እዚ ሕሳብ እዚ ቅርቡት ዝቐርበሉ ተጠቃሚ ስም የብሉን።",
+    "options": "ኣማራጺታት ፕሮፋይል",
+    "translateBio": "ባዮ ተርጒም"
   },
   "tv": {
     "seoTitle": "Live TV — ካብ መላእ ዓለም ናጻ ቻነላት",
@@ -6528,6 +6545,10 @@
     "desc": "ኣብ ጫካ ብሩህ መዓልቲ ወይ ሰማያዊ ምሸት",
     "day": "መዓልቲ",
     "evening": "ምሸት"
+  },
+  "affiliate": {
+    "loadFailed": "ኣብ ስታቲስቲክስ ኣፊሊየት ክረክብ ኣይከኣለን",
+    "checkingForUpdates": "ምምሕያሻት ይረጋገጽ ኣሎ…"
   },
   "affiliateLanding": {
     "title": "ናይ ዕድመ ገጽካ ኣዳልው",

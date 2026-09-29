@@ -22,6 +22,7 @@ import { CommunityTabEmptyState, type CommunityTab } from '@/components/app/comm
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
+import { AppState } from '@/components/app/AppState';
 import { useTranslation } from 'react-i18next';
 
 type Tab = CommunityTab;
@@ -42,7 +43,7 @@ export default function CommunityPage() {
   };
   const { t } = useTranslation();
 
-  const { data: community, isLoading } = useCommunity(slug);
+  const { data: community, isLoading, isError, isFetching, refetch } = useCommunity(slug);
   const { data: members = [] } = useCommunityMembers(community?.id);
   const { data: membership } = useIsCommunityMember(community?.id);
   const joinMutation = useJoinCommunity();
@@ -69,9 +70,25 @@ export default function CommunityPage() {
     );
   }
 
+  // A failed read is not a missing community: say it failed and offer a retry.
+  if (!community && isError) {
+    return (
+      <div className="max-w-2xl mx-auto px-3 py-4">
+        <SEOHead title={`${t('common.failedToLoad')} - DeHub Community`} description={t('common.somethingWentWrong')} noindex />
+        <AppState
+          kind="error"
+          title={t('common.failedToLoad')}
+          primaryAction={{ label: t('common.retry'), onClick: () => void refetch(), loading: isFetching }}
+          secondaryAction={{ label: t('communities.backButton'), onClick: () => navigate('/app/communities') }}
+        />
+      </div>
+    );
+  }
+
   if (!community) {
     return (
       <div className="max-w-2xl mx-auto px-3 py-12 text-center">
+        <SEOHead title={`${t('communities.communityNotFound')} - DeHub Community`} description={t('communities.communityNotFound')} noindex />
         <p className="text-zinc-500">{t('communities.communityNotFound')}</p>
         <Button variant="outline" size="sm" className="mt-3 rounded-xl border-white/10 text-white" onClick={() => navigate('/app/communities')}>
           {t('communities.backButton')}

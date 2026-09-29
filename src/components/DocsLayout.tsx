@@ -352,7 +352,7 @@ const DocsLayoutContent = () => {
           <div className="flex items-center lg:hidden w-full">
             {/* Left: Hamburger Menu */}
             <div className="flex items-center">
-              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-md hover:bg-muted transition-colors">
+              <button onClick={() => setSidebarOpen(!sidebarOpen)} aria-label={t('nav.docsMenuOpen')} aria-expanded={sidebarOpen} className="p-2 rounded-md hover:bg-muted transition-colors">
                 <Menu className="w-5 h-5 text-foreground" />
               </button>
             </div>
@@ -369,6 +369,7 @@ const DocsLayoutContent = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(true)}
+              aria-label={t('common.search')}
               className="p-2"
             >
               <Search className="w-5 h-5 text-foreground" />
@@ -410,7 +411,7 @@ const DocsLayoutContent = () => {
               <div className="flex-1">
                 <SearchTrigger />
               </div>
-              <button onClick={closeSidebar} className="p-2 rounded-md hover:bg-muted transition-colors ml-2">
+              <button onClick={closeSidebar} aria-label={t('nav.docsMenuClose')} className="p-2 rounded-md hover:bg-muted transition-colors ml-2">
                 <X className="w-5 h-5 text-foreground" />
               </button>
             </div>

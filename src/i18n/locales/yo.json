@@ -75,7 +75,19 @@
     "images": "Àwòrán",
     "videos": "Fídíò",
     "music": "Orin",
-    "live": "Lásìkò"
+    "live": "Lásìkò",
+    "seoTitle": "Ṣàwárí DeHub — Àwọn olùdásílẹ̀, fídíò àti àwùjọ tó gbajúmọ̀",
+    "seoDescription": "Ṣàwárí ohun tó ń lọ lọ́wọ́ lórí DeHub: àwọn olùdásílẹ̀ tó gbajúmọ̀ jùlọ, fídíò, orin, ìgbéjáde tààrà àti àwùjọ lórí ìkànnì àjọlò orísun ṣíṣí tí àwọn olùlò ní."
+  },
+  "videos": {
+    "seoTitle": "Àkójọ Fídíò — Wo fídíò on-chain lórí DeHub",
+    "seoDescription": "Wo àwọn fídíò on-chain tuntun láti ọ̀dọ̀ àwọn olùdásílẹ̀ lórí DeHub: fídíò gígùn pẹ̀lú ìsanwó fún wíwò kọ̀ọ̀kan, àkóónú tí a fi token dáàbò bò àti pínpín owó-wiwọlé ìpolówó lórí pẹpẹ fídíò tí àwọn olùlò ní.",
+    "heading": "Àkójọ Fídíò DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Fídíò kúkúrú — Àwọn fídíò ṣókí lórí DeHub",
+    "seoDescription": "Yí àwọn fídíò kúkúrú tuntun lórí DeHub: àkójọ fídíò kúkúrú òró tí o lè fà, lórí ìkànnì àjọlò orísun ṣíṣí tí àwọn olùlò ní, níbi tí àwọn olùdásílẹ̀ ti ni àkóónú wọn.",
+    "heading": "Fídíò kúkúrú DeHub"
   },
   "settings": {
     "showOnline": "Fi hàn nígbà tí mo wà lórí ayélujára",
@@ -520,6 +532,9 @@
     "edit": "Ṣàtúnṣe",
     "loading": "Ó ń gbé...",
     "tryAgain": "Gbìyànjú lẹ́ẹ̀kansí",
+    "retry": "Gbìyànjú lẹ́ẹ̀kan sí i",
+    "failedToLoad": "Ìgbéwọlé kùnà",
+    "somethingWentWrong": "Nǹkan kan ṣàṣìṣe",
     "search": "Wá",
     "goBack": "Padà sẹ́yìn",
     "showOriginal": "Fi àkọ́kọ́ hàn",
@@ -1368,7 +1383,9 @@
     "offerWorthNow": "Nipa {{amount}} tokens ni oṣuwọn lọwọlọwọ",
     "offerNotePlaceholder": "Fi àkíyèsí kún un (àṣàyàn)",
     "offerCommitsNothing": "Ṣíṣe ìpèsè kò ná nǹkankan, kò sì ní àmì kankan. O kàn máa sanwó tí onílé bá gbà.",
-    "offerNeedsHandle": "Àkáǹtì yìí kò ní orúkọ olùmúlò tí a lè fi ìfilọ̀ sí."
+    "offerNeedsHandle": "Àkáǹtì yìí kò ní orúkọ olùmúlò tí a lè fi ìfilọ̀ sí.",
+    "options": "Àwọn àṣàyàn profaili",
+    "translateBio": "Túmọ̀ ìtàn-ara-ẹni"
   },
   "tv": {
     "seoTitle": "TV Live — Awọn ikanni ọfẹ lati kakiri agbaye",
@@ -6558,6 +6575,10 @@
     "desc": "Ọjọ́ tó mọ́lẹ̀ tàbí ìrọ̀lẹ́ aláwọ̀ búlúù nínú igbó",
     "day": "Ọ̀sán",
     "evening": "Ìrọ̀lẹ́"
+  },
+  "affiliate": {
+    "loadFailed": "Ko le ṣajọ awọn iṣiro alafaramo",
+    "checkingForUpdates": "Ń ṣàyẹ̀wò àwọn àtúnṣe…"
   },
   "affiliateLanding": {
     "title": "Ṣe àtúnṣe ojú-ìwé ìpè rẹ",

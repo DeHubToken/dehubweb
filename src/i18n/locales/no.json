@@ -75,7 +75,19 @@
     "images": "Bilder",
     "videos": "Videoer",
     "music": "Musikk",
-    "live": "Direkte"
+    "live": "Direkte",
+    "seoTitle": "Utforsk DeHub — Populære skapere, videoer og fellesskap",
+    "seoDescription": "Oppdag hva som trender på DeHub: toppskapere, videoer, musikk, direktesendinger og fellesskap på den brukereide sosiale plattformen med åpen kildekode."
+  },
+  "videos": {
+    "seoTitle": "Videofeed — Se on-chain-videoer på DeHub",
+    "seoDescription": "Se de nyeste on-chain-videoene fra skapere på DeHub: lange opplastinger med betaling per visning, tokenbegrenset innhold og deling av annonseinntekter på den brukereide videoplattformen.",
+    "heading": "DeHub Videofeed"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Korte videoer på DeHub",
+    "seoDescription": "Bla gjennom de nyeste korte videoene på DeHub: en vertikal Shorts-feed du kan sveipe i, på den brukereide sosiale plattformen med åpen kildekode der skaperne eier innholdet sitt.",
+    "heading": "DeHub Shorts"
   },
   "settings": {
     "showOnline": "Vis når jeg er pålogget",
@@ -523,6 +535,9 @@
     "edit": "Rediger",
     "loading": "Laster...",
     "tryAgain": "Prøv igjen",
+    "retry": "Prøv igjen",
+    "failedToLoad": "Kunne ikke laste inn",
+    "somethingWentWrong": "Noe gikk galt",
     "search": "Søk",
     "goBack": "Gå tilbake",
     "showOriginal": "Vis original",
@@ -1373,7 +1388,9 @@
     "offerWorthNow": "Omtrent {{amount}} tokens til gjeldende kurs",
     "offerNotePlaceholder": "Legg til et notat (valgfritt)",
     "offerCommitsNothing": "Å gi et tilbud koster ingenting og reserverer ingen tokens. Du betaler kun hvis eieren aksepterer.",
-    "offerNeedsHandle": "Denne kontoen har ikke noe brukernavn å by på."
+    "offerNeedsHandle": "Denne kontoen har ikke noe brukernavn å by på.",
+    "options": "Profilalternativer",
+    "translateBio": "Oversett bio"
   },
   "tv": {
     "seoTitle": "Live TV — Gratis Kanaler Fra Hele Verden",
@@ -6637,6 +6654,10 @@
     "desc": "En lys dag eller en skumringsblå kveld i jungelen",
     "day": "Dag",
     "evening": "Kveld"
+  },
+  "affiliate": {
+    "loadFailed": "Kunne ikke laste inn tilknyttet statistikk",
+    "checkingForUpdates": "Ser etter oppdateringer…"
   },
   "affiliateLanding": {
     "title": "Tilpass invitasjonssiden din",

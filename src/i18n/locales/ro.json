@@ -75,7 +75,19 @@
     "images": "Imagini",
     "videos": "Videoclipuri",
     "music": "Muzică",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "Explorează DeHub — Creatori, videoclipuri și comunități în trend",
+    "seoDescription": "Descoperă ce e în trend pe DeHub: creatori de top, videoclipuri, muzică, transmisiuni live și comunități pe rețeaua socială open source, deținută de utilizatori."
+  },
+  "videos": {
+    "seoTitle": "Feed video — Urmărește videoclipuri on-chain pe DeHub",
+    "seoDescription": "Urmărește cele mai noi videoclipuri on-chain de la creatori pe DeHub: materiale lungi cu plată per vizionare, conținut accesibil pe bază de token și împărțirea veniturilor din reclame pe platforma video deținută de utilizatori.",
+    "heading": "Feedul video DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Videoclipuri scurte pe DeHub",
+    "seoDescription": "Derulează cele mai noi videoclipuri scurte pe DeHub: un feed vertical de shorts, prin glisare, pe rețeaua socială open source, deținută de utilizatori, unde creatorii își dețin conținutul.",
+    "heading": "Shorts pe DeHub"
   },
   "settings": {
     "showOnline": "Afișează când sunt online",
@@ -523,6 +535,9 @@
     "edit": "Editează",
     "loading": "Se încarcă...",
     "tryAgain": "Încearcă din nou",
+    "retry": "Încearcă din nou",
+    "failedToLoad": "Eroare la încărcare",
+    "somethingWentWrong": "Ceva nu a funcționat",
     "search": "Caută",
     "goBack": "Înapoi",
     "showOriginal": "Afișează originalul",
@@ -1319,7 +1334,8 @@
     "newReleases": "New Releases"
   },
   "notFound": {
-    "returnHome": "Return Home"
+    "returnHome": "Return Home",
+    "title": "Pagina nu a fost găsită"
   },
   "profile": {
     "back": "Back",
@@ -1347,7 +1363,9 @@
     "offerWorthNow": "Aproximativ {{amount}} tokenuri la cursul actual",
     "offerNotePlaceholder": "Adaugă o notă (opțional)",
     "offerCommitsNothing": "Oferirea nu costă nimic și nu reține tokenuri. Plătești doar dacă proprietarul acceptă.",
-    "offerNeedsHandle": "Acest cont nu are un nume de utilizator pentru care să oferi."
+    "offerNeedsHandle": "Acest cont nu are un nume de utilizator pentru care să oferi.",
+    "options": "Opțiuni profil",
+    "translateBio": "Tradu biografia"
   },
   "tv": {
     "seoTitle": "TV Live — Canale Gratuite Din Întreaga Lume",
@@ -6417,6 +6435,10 @@
     "desc": "O zi luminoasă sau o seară albastră de amurg în junglă",
     "day": "Zi",
     "evening": "Seară"
+  },
+  "affiliate": {
+    "loadFailed": "Nu s-au putut încărca statisticile de afiliere",
+    "checkingForUpdates": "Se caută actualizări…"
   },
   "affiliateLanding": {
     "title": "Personalizează-ți pagina de invitație",

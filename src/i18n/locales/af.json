@@ -75,7 +75,19 @@
     "images": "Prente",
     "videos": "Video's",
     "music": "Musiek",
-    "live": "Regstreeks"
+    "live": "Regstreeks",
+    "seoTitle": "Verken DeHub — Gewilde skeppers, video's en gemeenskappe",
+    "seoDescription": "Ontdek wat gewild is op DeHub: topskeppers, video's, musiek, regstreekse uitsendings en gemeenskappe op die oopbron- sosiale platform wat aan sy gebruikers behoort."
+  },
+  "videos": {
+    "seoTitle": "Videostroom — Kyk video's op die ketting op DeHub",
+    "seoDescription": "Kyk die nuutste video's op die ketting van skeppers op DeHub: lang oplaaie met betaal-per-kyk, token-beperkte inhoud en gedeelde advertensie-inkomste op die videoplatform wat aan sy gebruikers behoort.",
+    "heading": "DeHub-videostroom"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Kort video's op DeHub",
+    "seoDescription": "Blaai deur die nuutste kort video's op DeHub: ’n vertikale Shorts-stroom waardeur jy kan swiep, op die oopbron- sosiale platform wat aan sy gebruikers behoort, waar skeppers hul eie inhoud besit.",
+    "heading": "DeHub Shorts"
   },
   "settings": {
     "showOnline": "Toon wanneer ik online kom",
@@ -525,6 +537,9 @@
     "edit": "Wysig",
     "loading": "Laai tans...",
     "tryAgain": "Probeer weer",
+    "retry": "Probeer weer",
+    "failedToLoad": "Kon nie laai nie",
+    "somethingWentWrong": "Iets het verkeerd geloop",
     "search": "Soek",
     "goBack": "Gaan terug",
     "showOriginal": "Wys oorspronklike",
@@ -1345,7 +1360,8 @@
     "newReleases": "New Releases"
   },
   "notFound": {
-    "returnHome": "Return Home"
+    "returnHome": "Return Home",
+    "title": "Bladsy nie gevind nie"
   },
   "profile": {
     "back": "Back",
@@ -1379,7 +1395,9 @@
     "accountSettings": "Rekeninginstellings",
     "securitySettings": "Sekuriteitinstellings",
     "preferences": "Voorkeure",
-    "logout": "Teken uit"
+    "logout": "Teken uit",
+    "options": "Profielopsies",
+    "translateBio": "Vertaal bio"
   },
   "tv": {
     "seoTitle": "Live TV — Gratis Kanale Uit Die Hele Wêreld",
@@ -6476,6 +6494,10 @@
     "desc": "'n Helder dag of 'n skemerblou aand in die oerwoud",
     "day": "Dag",
     "evening": "Aand"
+  },
+  "affiliate": {
+    "loadFailed": "Kon nie affiliatiewe statistieke laai nie",
+    "checkingForUpdates": "Kyk vir opdaterings…"
   },
   "affiliateLanding": {
     "title": "Pas jou uitnodigingsblad aan",
