@@ -73,7 +73,7 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
     // round withholds tools, so five left four to work in, and a question about
     // how something works spends two of them before it has read anything:
     // search, then read what the search found.
-    maxRounds = surface === 'admin' ? 9 : 6,
+    maxRounds = surface === 'admin' ? 9 : 8,
     maxTokens = 3000,
     // Same reason as the extra round: a source question carries a search and a
     // file into every round after it, so it is the heaviest chain this surface
