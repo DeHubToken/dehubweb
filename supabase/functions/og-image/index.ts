@@ -27,16 +27,26 @@ async function ensureResvg() {
 const DEHUB_API_BASE = "https://api.dehub.io";
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const DEHUB_LOGO = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg";
+// 1200x630 brand card, the same image the SEO worker serves when this function fails
+const FALLBACK_CARD = "https://dehub.io/og/dehub-social-share.png";
 
-// Inter font — cached in module scope (survives across requests in the same worker)
+// Inter font — cached in module scope (survives across requests in the same worker).
+// Must be TTF/OTF/WOFF: satori cannot parse WOFF2. Pinned so the file never changes under us.
+const FONT_BASE = "https://cdn.jsdelivr.net/fontsource/fonts/inter@5.2.5";
 let fontRegular: ArrayBuffer | null = null;
 let fontBold: ArrayBuffer | null = null;
+
+async function fetchFont(url: string): Promise<ArrayBuffer> {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`Font ${r.status} ${url}`);
+    return r.arrayBuffer();
+}
 
 async function loadFonts() {
     if (fontRegular && fontBold) return { fontRegular, fontBold };
     [fontRegular, fontBold] = await Promise.all([
-        fetch("https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.woff2").then(r => r.arrayBuffer()),
-        fetch("https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.woff2").then(r => r.arrayBuffer()),
+        fetchFont(`${FONT_BASE}/latin-400-normal.ttf`),
+        fetchFont(`${FONT_BASE}/latin-700-normal.ttf`),
     ]);
     return { fontRegular: fontRegular!, fontBold: fontBold! };
 }
@@ -77,7 +87,7 @@ serve(async (req) => {
         const post = postData.result || postData;
 
         const rawText = (post.title || post.name || "").trim();
-        if (!rawText) return Response.redirect(DEHUB_LOGO, 302);
+        if (!rawText) return Response.redirect(FALLBACK_CARD, 302);
 
         const authorName = post.minterDisplayName || post.mintername || post.minterUsername || "DeHub";
         const username = post.minterUsername || "";
@@ -301,7 +311,7 @@ serve(async (req) => {
 
     } catch (e) {
         console.error("[og-image]", e);
-        // Fallback: redirect to DeHub logo
-        return Response.redirect(DEHUB_LOGO, 302);
+        // Fallback: redirect to the 1200x630 brand card
+        return Response.redirect(FALLBACK_CARD, 302);
     }
 });
