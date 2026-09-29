@@ -75,7 +75,19 @@
     "images": "Suratlar",
     "videos": "Wideolar",
     "music": "Aýdym-saz",
-    "live": "Göni"
+    "live": "Göni",
+    "seoTitle": "DeHub-y öwren — Meşhur döredijiler, wideolar we jemgyýetler",
+    "seoDescription": "DeHub-da näme meşhurdygyny açyň: açyk çeşmeli, ulanyjylaryň eýeçiligindäki sosial platformada iň gowy döredijiler, wideolar, aýdym-saz, göni ýaýlymlar we jemgyýetler."
+  },
+  "videos": {
+    "seoTitle": "Wideo lentasy — DeHub-da blokçeýn wideolaryny görüň",
+    "seoDescription": "DeHub-da döredijileriň iň täze blokçeýndäki wideolaryny tomaşa ediň: ulanyjylaryň eýeçiligindäki wideo platformasynda her tomaşa üçin töleg, token bilen çäklendirilen mazmun we mahabat girdejisini paýlaşmak bilen uzyn wideolar.",
+    "heading": "DeHub wideo lentasy"
+  },
+  "shorts": {
+    "seoTitle": "Gysga wideolar — DeHub-da gysga formatly wideolar",
+    "seoDescription": "DeHub-da iň täze gysga wideolary aýlaň: döredijileriň öz mazmunyna eýelik edýän açyk çeşmeli, ulanyjylaryň eýeçiligindäki sosial platformasynda dik, süýşürip görülýän gysga wideo lentasy.",
+    "heading": "DeHub gysga wideolary"
   },
   "settings": {
     "showOnline": "Men onlayn bolanymda görkeziň",
@@ -1365,7 +1377,9 @@
     "offerWorthNow": "Häzirki nyrhdan {{amount}} ton töweregi",
     "offerNotePlaceholder": "Bellik goş (hökman däl)",
     "offerCommitsNothing": "Teklip etmek mugt we hiç hili token saklamaýar. Eýesi kabul etse, töleýärsiňiz.",
-    "offerNeedsHandle": "Bu hasapda teklip ediler ýaly ulanyjy ady ýok."
+    "offerNeedsHandle": "Bu hasapda teklip ediler ýaly ulanyjy ady ýok.",
+    "options": "Profil opsiýalary",
+    "translateBio": "Bio-ny terjime et"
   },
   "tv": {
     "seoTitle": "Telewizýa - Dünýäniň ähli künjeginden pulsuz kanallar",

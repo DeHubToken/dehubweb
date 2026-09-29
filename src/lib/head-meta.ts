@@ -29,11 +29,18 @@ export function upsertCanonical(href: string): void {
   link.href = href;
 }
 
+/** Drop the canonical (and og:url) — for a page that is not a real URL. */
+export function removeCanonical(): void {
+  document.head.querySelector('link[rel="canonical"]')?.remove();
+  document.head.querySelector('meta[property="og:url"]')?.remove();
+}
+
 /** Standard og:/twitter: set shared by every page. */
 export function upsertSocialMeta(opts: {
   title: string;
   description: string;
-  url: string;
+  /** null leaves og:url out (see removeCanonical). */
+  url: string | null;
   image: string;
   type: string;
 }): void {
@@ -41,7 +48,7 @@ export function upsertSocialMeta(opts: {
   upsertMeta('property', 'og:title', opts.title);
   upsertMeta('property', 'og:description', opts.description);
   upsertMeta('property', 'og:image', opts.image);
-  upsertMeta('property', 'og:url', opts.url);
+  if (opts.url) upsertMeta('property', 'og:url', opts.url);
   upsertMeta('name', 'twitter:card', 'summary_large_image');
   upsertMeta('name', 'twitter:title', opts.title);
   upsertMeta('name', 'twitter:description', opts.description);

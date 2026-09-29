@@ -75,7 +75,19 @@
     "images": "Obrázky",
     "videos": "Videa",
     "music": "Hudba",
-    "live": "Živě"
+    "live": "Živě",
+    "seoTitle": "Objevujte DeHub — Populární tvůrci, videa a komunity",
+    "seoDescription": "Zjistěte, co je populární na DeHub: nejlepší tvůrci, videa, hudba, živé přenosy a komunity na otevřené sociální platformě vlastněné uživateli."
+  },
+  "videos": {
+    "seoTitle": "Video feed — Sledujte on-chain videa na DeHub",
+    "seoDescription": "Sledujte nejnovější on-chain videa od tvůrců na DeHub: dlouhá videa s platbou za zhlédnutí, obsahem přístupným přes tokeny a sdílením příjmů z reklam na videoplatformě vlastněné uživateli.",
+    "heading": "Video feed DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Krátká videa na DeHub",
+    "seoDescription": "Projíždějte nejnovější krátká videa na DeHub: vertikální feed Shorts ovládaný swipem na otevřené sociální platformě vlastněné uživateli, kde tvůrci vlastní svůj obsah.",
+    "heading": "DeHub Shorts"
   },
   "settings": {
     "showOnline": "Zobrazit, když jsem online",
@@ -1371,7 +1383,9 @@
     "offerWorthNow": "Přibližně {{amount}} tokenů při aktuálním kurzu",
     "offerNotePlaceholder": "Přidej poznámku (nepovinné)",
     "offerCommitsNothing": "Podání nabídky nic nestojí a nedrží žádné tokeny. Platíte pouze v případě, že ji majitel přijme.",
-    "offerNeedsHandle": "Tento účet nemá uživatelské jméno, na které by šlo nabízet."
+    "offerNeedsHandle": "Tento účet nemá uživatelské jméno, na které by šlo nabízet.",
+    "options": "Možnosti profilu",
+    "translateBio": "Přeložit bio"
   },
   "tv": {
     "seoTitle": "Live TV — Bezplatné kanály z celého světa",

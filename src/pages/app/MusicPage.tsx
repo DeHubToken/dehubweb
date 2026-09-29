@@ -373,7 +373,7 @@ export default function MusicPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Music — Listen & Discover on DeHub" description="Stream music, discover new artists, listen to live radio and watch music videos on DeHub — the decentralized open source media platform." url="https://dehub.io/app/music" jsonLd={{ '@context': 'https://schema.org', '@type': 'MusicPlaylist', name: 'DeHub Music', url: 'https://dehub.io/app/music', description: 'Stream music, discover artists and listen to radio on DeHub.' }} />
+      <SEOHead title="Music — Listen & Discover on DeHub" description="Stream music, discover new artists, listen to live radio and watch music videos on DeHub — the decentralized open source media platform." url="https://dehub.io/music" jsonLd={{ '@context': 'https://schema.org', '@type': 'MusicPlaylist', name: 'DeHub Music', url: 'https://dehub.io/music', description: 'Stream music, discover artists and listen to radio on DeHub.' }} />
       <h1 className="sr-only">DeHub Music — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Tab Navigation */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">

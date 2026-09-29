@@ -75,7 +75,19 @@
     "images": "Picha",
     "videos": "Video",
     "music": "Muziki",
-    "live": "Moja kwa Moja"
+    "live": "Moja kwa Moja",
+    "seoTitle": "Gundua DeHub — Watayarishi, Video na Jumuiya Zinazovuma",
+    "seoDescription": "Gundua kinachovuma kwenye DeHub: watayarishi bora, video, muziki, matangazo ya moja kwa moja na jumuiya kwenye jukwaa la kijamii la chanzo huria linalomilikiwa na watumiaji."
+  },
+  "videos": {
+    "seoTitle": "Mlisho wa Video — Tazama Video za On-Chain kwenye DeHub",
+    "seoDescription": "Tazama video mpya za on-chain kutoka kwa watayarishi kwenye DeHub: video ndefu zenye malipo kwa kila utazamaji, maudhui yanayofikiwa kwa tokeni na ugavi wa mapato ya matangazo kwenye jukwaa la video linalomilikiwa na watumiaji.",
+    "heading": "Mlisho wa Video wa DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Fupi — Video Fupi kwenye DeHub",
+    "seoDescription": "Sogeza video fupi mpya kwenye DeHub: mlisho wima wa video fupi unaotelezeshwa, kwenye jukwaa la kijamii la chanzo huria linalomilikiwa na watumiaji, ambapo watayarishi wanamiliki maudhui yao.",
+    "heading": "Video Fupi za DeHub"
   },
   "settings": {
     "showOnline": "Onyesha wakati niko mtandaoni",
@@ -1377,7 +1389,9 @@
     "offerWorthNow": "Takriban tokeni {{amount}} kwa kiwango cha sasa",
     "offerNotePlaceholder": "Ongeza ujumbe (si lazima)",
     "offerCommitsNothing": "Kutoa ofa hakugharimu chochote na hakuna tokeni zinazoshikiliwa. Unalipa tu ikiwa mmiliki atakubali.",
-    "offerNeedsHandle": "Akaunti hii haina jina la mtumiaji la kutolea ofa."
+    "offerNeedsHandle": "Akaunti hii haina jina la mtumiaji la kutolea ofa.",
+    "options": "Chaguo za wasifu",
+    "translateBio": "Tafsiri wasifu"
   },
   "tv": {
     "seoTitle": "TV ya Moja kwa Moja — Vituo vya Bure Kutoka Ulimwenguni Pote",

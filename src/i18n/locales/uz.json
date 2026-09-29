@@ -75,7 +75,19 @@
     "images": "Rasmlar",
     "videos": "Videolar",
     "music": "Musiqa",
-    "live": "Jonli"
+    "live": "Jonli",
+    "seoTitle": "DeHub’ni kashf eting — Mashhur ijodkorlar, videolar va hamjamiyatlar",
+    "seoDescription": "DeHub’da nima trendda ekanini kashf eting: ochiq kodli, foydalanuvchilarga tegishli ijtimoiy platformadagi eng yaxshi ijodkorlar, videolar, musiqa, jonli efirlar va hamjamiyatlar."
+  },
+  "videos": {
+    "seoTitle": "Video lentasi — DeHub’da on-chain videolarni tomosha qiling",
+    "seoDescription": "DeHub’da ijodkorlarning eng soʻnggi on-chain videolarini tomosha qiling: foydalanuvchilarga tegishli video platformada har bir koʻrish uchun toʻlov, token bilan cheklangan kontent va reklama daromadini ulashish imkoniyati bor uzun videolar.",
+    "heading": "DeHub video lentasi"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — DeHub’dagi qisqa videolar",
+    "seoDescription": "DeHub’dagi eng soʻnggi qisqa videolarni aylantiring: ijodkorlar oʻz kontentiga egalik qiladigan ochiq kodli, foydalanuvchilarga tegishli ijtimoiy platformadagi vertikal, surib koʻriladigan qisqa videolar lentasi.",
+    "heading": "DeHub qisqa videolari"
   },
   "settings": {
     "showOnline": "Onlayn bo&#39;lganimda ko&#39;rsatilsin",
@@ -1394,7 +1406,9 @@
     "offerWorthNow": "Joriy kurs bo'yicha taxminan {{amount}} ta token",
     "offerNotePlaceholder": "Izoh qo‘sh (ixtiyoriy)",
     "offerCommitsNothing": "Taklif berish bepul va tokenlarni ushlab turmaydi. Faqat egalari qabul qilsagina to'laysiz.",
-    "offerNeedsHandle": "Bu hisobda taklif beriladigan foydalanuvchi nomi yo‘q."
+    "offerNeedsHandle": "Bu hisobda taklif beriladigan foydalanuvchi nomi yo‘q.",
+    "options": "Profil parametrlari",
+    "translateBio": "Bioni tarjima qilish"
   },
   "tv": {
     "seoTitle": "Jonli TV — Dunyo bo&#39;ylab bepul kanallar",

@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, mem
 import { getDocumentScrollTop } from '@/lib/document-scroll';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { SEOHead } from '@/components/SEOHead';
+import { HUB_ROUTE_META } from '@/lib/seo/route-meta';
 import { BadgedName } from '@/components/app/BadgedName';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { WhatsHappening } from '@/components/app/WhatsHappening';
@@ -761,7 +762,7 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen" data-explore-page>
-      <SEOHead title="Explore - Trending Creators, Posts & Topics" description="Discover trending posts, top creators and popular topics on DeHub — open source, user owned, censorship resistant social media." url="https://dehub.io/app/explore" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Explore DeHub', url: 'https://dehub.io/app/explore', description: 'Discover trending content, creators and topics on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <SEOHead title={t('explore.seoTitle')} description={t('explore.seoDescription')} url={HUB_ROUTE_META.explore.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Explore DeHub', url: HUB_ROUTE_META.explore.url, description: 'Discover trending content, creators and topics on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">Explore DeHub — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Search Header - Bento Style.
 
@@ -782,6 +783,8 @@ export default function ExplorePage() {
             />
             <button
               onClick={() => setShowFilters(!showFilters)}
+              aria-label={t('explorePage.filters')}
+              aria-expanded={showFilters}
               className={cn(
                 'relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-colors',
                 showFilters || activeFilterCount > 0
@@ -860,6 +863,8 @@ export default function ExplorePage() {
                         }
                         setActiveTab(tab.value);
                       }}
+                      aria-label={t(`explore.${tab.value}`)}
+                      aria-pressed={activeTab === tab.value}
                       className={cn(
                         'relative z-40 flex-1 flex items-center justify-center px-2 py-2.5 rounded-xl transition-colors',
                         activeTab === tab.value

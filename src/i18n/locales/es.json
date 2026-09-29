@@ -75,7 +75,19 @@
     "images": "Imágenes",
     "videos": "Vídeos",
     "music": "Música",
-    "live": "En vivo"
+    "live": "En vivo",
+    "seoTitle": "Explora DeHub — Creadores, vídeos y comunidades en tendencia",
+    "seoDescription": "Descubre lo que es tendencia en DeHub: los mejores creadores, vídeos, música, directos y comunidades en la plataforma social de código abierto y propiedad de sus usuarios."
+  },
+  "videos": {
+    "seoTitle": "Feed de vídeos — Mira vídeos on-chain en DeHub",
+    "seoDescription": "Mira los últimos vídeos on-chain de creadores en DeHub: vídeos largos con pago por visión, contenido con acceso por token y reparto de ingresos publicitarios en la plataforma de vídeo propiedad de sus usuarios.",
+    "heading": "Feed de vídeos de DeHub"
+  },
+  "shorts": {
+    "seoTitle": "Cortos — Vídeos cortos en DeHub",
+    "seoDescription": "Desliza por los últimos vídeos cortos de DeHub: un feed vertical de cortos en la plataforma social de código abierto y propiedad de sus usuarios, donde los creadores son dueños de su contenido.",
+    "heading": "Cortos de DeHub"
   },
   "settings": {
     "showOnline": "Mostrar cuando estoy conectado",
@@ -1376,7 +1388,9 @@
     "offerWorthNow": "Aproximadamente {{amount}} tokens a la tasa actual",
     "offerNotePlaceholder": "Añade una nota (opcional)",
     "offerCommitsNothing": "Hacer una oferta no cuesta nada y no retiene tokens. Solo pagas si el propietario acepta.",
-    "offerNeedsHandle": "Esta cuenta no tiene nombre de usuario por el que ofertar."
+    "offerNeedsHandle": "Esta cuenta no tiene nombre de usuario por el que ofertar.",
+    "options": "Opciones del perfil",
+    "translateBio": "Traducir biografía"
   },
   "tv": {
     "seoTitle": "TV en directo — Canales gratuitos de todo el mundo",

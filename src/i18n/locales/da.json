@@ -75,7 +75,19 @@
     "images": "Billeder",
     "videos": "Videoer",
     "music": "Musik",
-    "live": "Live"
+    "live": "Live",
+    "seoTitle": "Udforsk DeHub — Populære skabere, videoer og fællesskaber",
+    "seoDescription": "Opdag, hvad der trender på DeHub: topskabere, videoer, musik, livestreams og fællesskaber på den open source-sociale platform, der ejes af brugerne."
+  },
+  "videos": {
+    "seoTitle": "Videofeed — Se on-chain-videoer på DeHub",
+    "seoDescription": "Se de nyeste on-chain-videoer fra skabere på DeHub: lange videoer med pay-per-view, tokenbeskyttet indhold og deling af annonceindtægter på den brugerejede videoplatform.",
+    "heading": "DeHub-videofeed"
+  },
+  "shorts": {
+    "seoTitle": "Shorts — Korte videoer på DeHub",
+    "seoDescription": "Scroll gennem de nyeste korte videoer på DeHub: et lodret Shorts-feed, du kan swipe i, på den open source-sociale platform, der ejes af brugerne, hvor skabere ejer deres eget indhold.",
+    "heading": "DeHub Shorts"
   },
   "settings": {
     "showOnline": "Vis, når jeg er online",
@@ -1376,7 +1388,9 @@
     "offerWorthNow": "Cirka {{amount}} tokens til den aktuelle kurs",
     "offerNotePlaceholder": "Tilføj en note (valgfrit)",
     "offerCommitsNothing": "Det koster intet at give et tilbud, og det binder ingen tokens. Du betaler kun, hvis ejeren accepterer.",
-    "offerNeedsHandle": "Denne konto har intet brugernavn at byde på."
+    "offerNeedsHandle": "Denne konto har intet brugernavn at byde på.",
+    "options": "Profilindstillinger",
+    "translateBio": "Oversæt bio"
   },
   "tv": {
     "seoTitle": "Live TV — Gratis kanaler fra hele verden",
