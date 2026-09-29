@@ -30,7 +30,7 @@
  */
 
 import { createLogger } from './logger';
-import { getDocumentScrollTop } from './document-scroll';
+import { getDocumentScrollTop, scrollDocumentTo } from './document-scroll';
 
 const log = createLogger('ScrollFreeze');
 
@@ -380,6 +380,41 @@ function onWheel(e: WheelEvent) {
   }, SETTLE_MS);
 }
 
+// ---------------------------------------------------------------------------
+// 3. A sheet just closed: make sure it let go
+// ---------------------------------------------------------------------------
+
+/** Past vaul's 500ms exit animation, when Radix has removed its locks. */
+const AFTER_CLOSE_MS = 700;
+let settleAfterCloseTimer = 0;
+
+/**
+ * Run right after a sheet closes instead of waiting up to POLL_MS for the poll.
+ *
+ * Two things can be left behind (reported after closing the post composer):
+ *
+ * - A lock still on <body> (same set as case 1). Undone here at once, so the
+ *   reader never gets the five second dead page before the poll notices.
+ * - No lock at all, but iOS Safari no longer pans the page. Body is this app's
+ *   scroller, and flipping `overflow` on it off and back on (which Radix does
+ *   for every modal sheet) while the keyboard is up is a known way to leave
+ *   WebKit's touch scrolling detached from it until something scrolls it
+ *   programmatically. A one pixel nudge and back re-attaches it and is
+ *   invisible.
+ */
+export function settleAfterOverlayClose(): void {
+  if (typeof window === 'undefined') return;
+  window.clearTimeout(settleAfterCloseTimer);
+  settleAfterCloseTimer = window.setTimeout(() => {
+    if (overlayIsOpen() || coveringLayer()) return;
+    checkBodyState();
+    if (!pageIsTallerThanViewport()) return;
+    const top = getDocumentScrollTop();
+    scrollDocumentTo(top > 0 ? top - 1 : top + 1);
+    requestAnimationFrame(() => scrollDocumentTo(top));
+  }, AFTER_CLOSE_MS);
+}
+
 /** Desktop needs the same orphaned-lock recovery as touch devices. */
 export function installScrollFreezeWatchdog(): () => void {
   if (typeof window === 'undefined') return () => {};
@@ -404,6 +439,7 @@ export function installScrollFreezeWatchdog(): () => void {
     window.clearInterval(poll);
     window.clearTimeout(settleTimer);
     window.clearTimeout(wheelTimer);
+    window.clearTimeout(settleAfterCloseTimer);
     wheelTimer = 0;
     lastDocumentScrollAt = -Infinity;
     endDrag();
