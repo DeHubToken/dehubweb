@@ -7660,5 +7660,22 @@
     "progressive": "Progresyvus",
     "nationalist": "Nacionalistas",
     "communist": "Komunistas"
+  },
+  "apk": {
+    "seoTitle": "Atsisiųskite DeHub APK — naujausia Android versija",
+    "seoDescription": "Aplenkite programėlių parduotuves ir gaukite naujausią DeHub versiją čia pat. Tiesioginis APK atsisiuntimas Android įrenginiams — atvirojo kodo, naudotojams priklausantis socialinis tinklas, parduotuvės paskyros nereikia.",
+    "ldDescription": "DeHub Android programėlė kaip tiesioginis APK atsisiuntimas. Atvirojo kodo, naudotojams priklausantis socialinis tinklas — parduotuvės paskyros nereikia.",
+    "back": "Atgal į DeHub",
+    "title": "Aplenkite parduotuves.",
+    "subtitle": "Gaukite naujausią DeHub versiją čia pat — tiesiai iš mūsų, be parduotuvės paskyros ir be laukimo peržiūros eilėje.",
+    "download": "Atsisiųsti dabar",
+    "installHint": "Kai Android paklaus, leiskite diegti iš naršyklės. Atnaujinate? Įdiekite ant esamos programėlės jos nepašalinę.",
+    "useInBrowser": "Naudoti DeHub naršyklėje",
+    "googlePlay": "Mieliau naudojatės Google Play? Gaukite ją ten.",
+    "shareText": "Aplenkite parduotuves — gaukite naujausią DeHub Android versiją tiesiogiai.",
+    "shareX": "Bendrinti per X",
+    "shareFacebook": "Bendrinti per Facebook",
+    "shareTelegram": "Bendrinti per Telegram",
+    "copyLink": "Kopijuoti nuorodą"
   }
 }

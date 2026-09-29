@@ -7686,5 +7686,22 @@
     "progressive": "进步派",
     "nationalist": "民族主义者",
     "communist": "共产主义者"
+  },
+  "apk": {
+    "seoTitle": "下载 DeHub APK — 最新 Android 版本",
+    "seoDescription": "绕过应用商店，直接在这里获取最新版 DeHub。Android APK 直接下载 — 开源、归用户所有的社交媒体，无需商店账号。",
+    "ldDescription": "DeHub Android 应用，提供 APK 直接下载。开源、归用户所有的社交媒体 — 无需商店账号。",
+    "back": "返回 DeHub",
+    "title": "绕过应用商店。",
+    "subtitle": "直接在这里获取最新版 DeHub — 由我们直接提供，无需商店账号，无需排队等待审核。",
+    "download": "立即下载",
+    "installHint": "Android 询问时，请允许从浏览器安装。要更新？直接覆盖安装现有应用即可，无需卸载。",
+    "useInBrowser": "在浏览器中使用 DeHub",
+    "googlePlay": "更喜欢 Google Play？也可以去那里下载。",
+    "shareText": "绕过应用商店 — 直接获取最新版 DeHub Android。",
+    "shareX": "分享到 X",
+    "shareFacebook": "分享到 Facebook",
+    "shareTelegram": "分享到 Telegram",
+    "copyLink": "复制链接"
   }
 }

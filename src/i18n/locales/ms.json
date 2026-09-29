@@ -7887,5 +7887,22 @@
     "progressive": "Progresif",
     "nationalist": "Nasionalis",
     "communist": "Komunis"
+  },
+  "apk": {
+    "seoTitle": "Muat Turun APK DeHub — Binaan Android Terkini",
+    "seoDescription": "Langkau gedung aplikasi dan dapatkan versi terkini DeHub terus di sini. Muat turun APK terus untuk Android — sumber terbuka, media sosial milik pengguna, tiada akaun gedung diperlukan.",
+    "ldDescription": "Apl Android DeHub sebagai muat turun APK terus. Sumber terbuka, media sosial milik pengguna — tiada akaun gedung diperlukan.",
+    "back": "Kembali ke DeHub",
+    "title": "Langkau gedung aplikasi.",
+    "subtitle": "Dapatkan versi terkini DeHub terus di sini — terus daripada kami, tanpa akaun gedung, tanpa menunggu giliran semakan.",
+    "download": "Muat turun sekarang",
+    "installHint": "Benarkan pemasangan daripada pelayar anda apabila Android bertanya. Mengemas kini? Pasang terus di atas apl sedia ada tanpa menyahpasang.",
+    "useInBrowser": "Guna DeHub dalam pelayar anda",
+    "googlePlay": "Lebih suka Google Play? Dapatkannya di sana.",
+    "shareText": "Langkau gedung aplikasi — dapatkan binaan Android DeHub terkini secara terus.",
+    "shareX": "Kongsi di X",
+    "shareFacebook": "Kongsi di Facebook",
+    "shareTelegram": "Kongsi di Telegram",
+    "copyLink": "Salin pautan"
   }
 }

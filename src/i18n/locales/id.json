@@ -7687,5 +7687,22 @@
     "progressive": "Progresif",
     "nationalist": "Nasionalis",
     "communist": "Komunis"
+  },
+  "apk": {
+    "seoTitle": "Unduh APK DeHub — Build Android Terbaru",
+    "seoDescription": "Tak perlu toko aplikasi, dapatkan versi terbaru DeHub langsung di sini. Unduhan APK langsung untuk Android — media sosial sumber terbuka milik pengguna, tanpa perlu akun toko.",
+    "ldDescription": "Aplikasi Android DeHub sebagai unduhan APK langsung. Media sosial sumber terbuka milik pengguna — tanpa perlu akun toko.",
+    "back": "Kembali ke DeHub",
+    "title": "Lewati toko aplikasi.",
+    "subtitle": "Dapatkan versi terbaru DeHub di sini — langsung dari kami, tanpa akun toko, tanpa menunggu antrean peninjauan.",
+    "download": "Unduh sekarang",
+    "installHint": "Izinkan instalasi dari browser Anda saat Android meminta. Memperbarui? Instal di atas aplikasi yang sudah ada tanpa mencopotnya.",
+    "useInBrowser": "Gunakan DeHub di browser Anda",
+    "googlePlay": "Lebih suka Google Play? Dapatkan di sana.",
+    "shareText": "Lewati toko aplikasi — dapatkan build Android DeHub terbaru secara langsung.",
+    "shareX": "Bagikan di X",
+    "shareFacebook": "Bagikan di Facebook",
+    "shareTelegram": "Bagikan di Telegram",
+    "copyLink": "Salin tautan"
   }
 }

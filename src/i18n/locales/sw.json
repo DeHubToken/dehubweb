@@ -7624,5 +7624,22 @@
     "progressive": "Mwendelezaji",
     "nationalist": "Mzalendo",
     "communist": "Mkomunisti"
+  },
+  "apk": {
+    "seoTitle": "Pakua DeHub APK — Toleo Jipya la Android",
+    "seoDescription": "Ruka maduka ya programu na upate toleo jipya zaidi la DeHub hapa hapa. Upakuaji wa moja kwa moja wa APK kwa Android — mitandao ya kijamii ya chanzo huria inayomilikiwa na watumiaji, bila kuhitaji akaunti ya duka.",
+    "ldDescription": "Programu ya DeHub ya Android kama upakuaji wa moja kwa moja wa APK. Mitandao ya kijamii ya chanzo huria inayomilikiwa na watumiaji — bila kuhitaji akaunti ya duka.",
+    "back": "Rudi DeHub",
+    "title": "Ruka maduka ya programu.",
+    "subtitle": "Pata toleo jipya zaidi la DeHub hapa hapa — moja kwa moja kutoka kwetu, bila akaunti ya duka, bila kusubiri foleni ya ukaguzi.",
+    "download": "Pakua sasa",
+    "installHint": "Ruhusu usakinishaji kutoka kwa kivinjari chako Android inapouliza. Unasasisha? Sakinisha juu ya programu yako iliyopo bila kuiondoa.",
+    "useInBrowser": "Tumia DeHub kwenye kivinjari chako",
+    "googlePlay": "Unapendelea Google Play? Ipate huko badala yake.",
+    "shareText": "Ruka maduka — pata toleo jipya zaidi la DeHub la Android moja kwa moja.",
+    "shareX": "Shiriki kwenye X",
+    "shareFacebook": "Shiriki kwenye Facebook",
+    "shareTelegram": "Shiriki kwenye Telegram",
+    "copyLink": "Nakili kiungo"
   }
 }

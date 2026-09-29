@@ -7672,5 +7672,22 @@
     "progressive": "進歩派",
     "nationalist": "ナショナリスト",
     "communist": "共産主義者"
+  },
+  "apk": {
+    "seoTitle": "DeHub APK をダウンロード — 最新の Android ビルド",
+    "seoDescription": "アプリストアを通さずに、DeHub の最新バージョンをここから入手できます。Android 向け APK の直接ダウンロード — オープンソースでユーザーが所有するソーシャルメディア。ストアのアカウントは不要です。",
+    "ldDescription": "APK で直接ダウンロードできる DeHub の Android アプリ。オープンソースでユーザーが所有するソーシャルメディア — ストアのアカウントは不要です。",
+    "back": "DeHub に戻る",
+    "title": "ストアはもう不要。",
+    "subtitle": "DeHub の最新バージョンをここから入手 — 私たちから直接お届けします。ストアのアカウントも審査待ちも不要です。",
+    "download": "今すぐダウンロード",
+    "installHint": "Android から確認されたら、ブラウザからのインストールを許可してください。アップデートの場合は、既存のアプリをアンインストールせずにそのまま上書きインストールできます。",
+    "useInBrowser": "ブラウザで DeHub を使う",
+    "googlePlay": "Google Play がお好みですか？そちらからも入手できます。",
+    "shareText": "ストア不要 — DeHub の最新 Android ビルドを直接ゲットしよう。",
+    "shareX": "X で共有",
+    "shareFacebook": "Facebook で共有",
+    "shareTelegram": "Telegram で共有",
+    "copyLink": "リンクをコピー"
   }
 }

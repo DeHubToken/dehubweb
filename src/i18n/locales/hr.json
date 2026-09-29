@@ -7572,5 +7572,22 @@
     "progressive": "Progresivac",
     "nationalist": "Nacionalist",
     "communist": "Komunist"
+  },
+  "apk": {
+    "seoTitle": "Preuzmi DeHub APK — najnovija verzija za Android",
+    "seoDescription": "Zaobiđi trgovine aplikacija i preuzmi najnoviju verziju DeHuba upravo ovdje. Izravno preuzimanje APK-a za Android — društvena mreža otvorenog koda u vlasništvu korisnika, bez računa u trgovini.",
+    "ldDescription": "DeHub aplikacija za Android kao izravno preuzimanje APK-a. Društvena mreža otvorenog koda u vlasništvu korisnika — nije potreban račun u trgovini.",
+    "back": "Natrag na DeHub",
+    "title": "Zaobiđi trgovine.",
+    "subtitle": "Preuzmi najnoviju verziju DeHuba upravo ovdje — izravno od nas, bez računa u trgovini i bez čekanja u redu za pregled.",
+    "download": "Preuzmi sada",
+    "installHint": "Dopusti instalacije iz preglednika kad Android to zatraži. Ažuriraš? Instaliraj preko postojeće aplikacije bez deinstalacije.",
+    "useInBrowser": "Koristi DeHub u pregledniku",
+    "googlePlay": "Više voliš Google Play? Preuzmi je ondje.",
+    "shareText": "Zaobiđi trgovine — preuzmi najnoviju DeHub verziju za Android izravno.",
+    "shareX": "Podijeli na X-u",
+    "shareFacebook": "Podijeli na Facebooku",
+    "shareTelegram": "Podijeli na Telegramu",
+    "copyLink": "Kopiraj poveznicu"
   }
 }

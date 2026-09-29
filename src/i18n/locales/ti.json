@@ -5400,5 +5400,22 @@
     "progressive": "ተራማዲ",
     "nationalist": "ሃገራዊ",
     "communist": "ኮሚኒስት"
+  },
+  "apk": {
+    "seoTitle": "DeHub APK ኣውርድ — ሓድሽ ናይ Android ስሪት",
+    "seoDescription": "ድኳናት ኣፕሊኬሽን ሕለፍ፣ ሓድሽ ስሪት DeHub ኣብዚ ርከብ። ቀጥታዊ APK ምውራድ ን Android — ክፉት ምንጪ ዘለዎ፣ ብተጠቀምቲ ዝውነን ማሕበራዊ ሚድያ፣ ናይ ድኳን ሕሳብ ኣየድልን።",
+    "ldDescription": "ናይ DeHub Android ኣፕሊኬሽን ከም ቀጥታዊ APK ምውራድ። ክፉት ምንጪ ዘለዎ፣ ብተጠቀምቲ ዝውነን ማሕበራዊ ሚድያ — ናይ ድኳን ሕሳብ ኣየድልን።",
+    "back": "ናብ DeHub ተመለስ",
+    "title": "ድኳናት ሕለፍ።",
+    "subtitle": "ሓድሽ ስሪት DeHub ኣብዚ ርከብ — ቀጥታ ካባና፣ ናይ ድኳን ሕሳብ የለን፣ ንገምጋም ተሰሪዕካ ምጽባይ የለን።",
+    "download": "ሕጂ ኣውርድ",
+    "installHint": "Android ምስ ሓተተ ካብ መርበብ-ሓበሬታኻ ምትካል ፍቐድ። ተሐድስ ዶ ኣለኻ? ዘለካ ኣፕሊኬሽን ከይሰረዝካ ኣብ ልዕሊኡ ኣትክል።",
+    "useInBrowser": "DeHub ኣብ መርበብ-ሓበሬታኻ ተጠቐም",
+    "googlePlay": "Google Play ትመርጽ ዶ? ኣብኡ ርከቦ።",
+    "shareText": "ድኳናት ሕለፍ — ሓድሽ ናይ DeHub Android ስሪት ቀጥታ ውሰድ።",
+    "shareX": "ኣብ X ኣካፍል",
+    "shareFacebook": "ኣብ Facebook ኣካፍል",
+    "shareTelegram": "ኣብ Telegram ኣካፍል",
+    "copyLink": "ሊንክ ቅዳሕ"
   }
 }

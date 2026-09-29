@@ -5567,5 +5567,22 @@
     "backToBlog": "Biloogiitti deebi'i",
     "sharePost": "Barreeffama qoodi",
     "relatedPosts": "Barreeffamoota Walqabatan"
+  },
+  "apk": {
+    "seoTitle": "APK DeHub Buufi — Gulaallii Android Haaraa",
+    "seoDescription": "Mana gurgurtaa appii irra darbiitii gulaallii DeHub isa haaraa kallattiin asuma argadhu. APK Android-f kallattiin buufachuu — madda banaa, miidiyaa hawaasaa kan fayyadamtootaa, herrega mana gurgurtaa hin barbaachisu.",
+    "ldDescription": "Appiin Android DeHub akka APK kallattiin buufamutti. Madda banaa, miidiyaa hawaasaa kan fayyadamtootaa — herrega mana gurgurtaa hin barbaachisu.",
+    "back": "Gara DeHub-tti deebi'i",
+    "title": "Mana gurgurtaa irra darbi.",
+    "subtitle": "Gulaallii DeHub isa haaraa asuma argadhu — nurraa kallattiin, herrega mana gurgurtaa malee, sarara sakatta'iinsaa eeguu malee.",
+    "download": "Amma buufi",
+    "installHint": "Yeroo Android si gaafatu, brawuzarii kee irraa akka fe'amu hayyami. Haaromsaa jirtaa? Appii kee isa jiru osoo hin haqin irratti fe'i.",
+    "useInBrowser": "DeHub brawuzarii kee keessatti fayyadami",
+    "googlePlay": "Google Play ni filattaa? Achii argadhu.",
+    "shareText": "Mana gurgurtaa irra darbi — gulaallii Android DeHub isa haaraa kallattiin argadhu.",
+    "shareX": "X irratti qoodi",
+    "shareFacebook": "Facebook irratti qoodi",
+    "shareTelegram": "Telegram irratti qoodi",
+    "copyLink": "Liinkii garagalchi"
   }
 }

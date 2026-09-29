@@ -6727,5 +6727,22 @@
     "progressive": "Progressive",
     "nationalist": "Nationalist",
     "communist": "Communist"
+  },
+  "apk": {
+    "seoTitle": "Download DeHub APK — Di Latest Android Build",
+    "seoDescription": "Leave di app store dem, get di latest version for DeHub right here. Direct APK download for Android — open source social media weh na di users dem own am, you no need store account.",
+    "ldDescription": "Di DeHub Android app as direct APK download. Open source social media weh na di users dem own am — you no need store account.",
+    "back": "Go back for DeHub",
+    "title": "Leave di store dem.",
+    "subtitle": "Get di latest version for DeHub right here — direct from we, no store account, no wait for review line.",
+    "download": "Download am now",
+    "installHint": "Allow install from your browser when Android ask. You di update? Install am on top di app weh you get already, no need uninstall.",
+    "useInBrowser": "Use DeHub for your browser",
+    "googlePlay": "You like Google Play pass? Go get am for dey.",
+    "shareText": "Leave di store dem — grab di latest DeHub Android build direct.",
+    "shareX": "Share for X",
+    "shareFacebook": "Share for Facebook",
+    "shareTelegram": "Share for Telegram",
+    "copyLink": "Kopi link"
   }
 }

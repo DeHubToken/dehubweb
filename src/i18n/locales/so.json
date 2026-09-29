@@ -5514,5 +5514,22 @@
     "progressive": "Horumar-doon",
     "nationalist": "Waddani",
     "communist": "Shuuci"
+  },
+  "apk": {
+    "seoTitle": "Soo deji DeHub APK — Nooca ugu dambeeyay ee Android",
+    "seoDescription": "Ka bood dukaamada abka oo halkan ka hel nooca ugu dambeeyay ee DeHub. Soo dejin toos ah oo APK ah oo loogu talagalay Android — baraha bulshada il furan ah oo ay leeyihiin isticmaalayaashu, looma baahna akoon dukaan.",
+    "ldDescription": "Abka DeHub ee Android oo ah soo dejin APK toos ah. Baraha bulshada il furan ah oo ay leeyihiin isticmaalayaashu — looma baahna akoon dukaan.",
+    "back": "Ku noqo DeHub",
+    "title": "Ka bood dukaamada.",
+    "subtitle": "Halkan ka hel nooca ugu dambeeyay ee DeHub — toos nooga, akoon dukaan la'aan, sugitaan dib-u-eegis la'aan.",
+    "download": "Hadda soo deji",
+    "installHint": "U oggolow rakibidda browser-kaaga marka Android ku weydiiyo. Ma cusboonaysiinaysaa? Ku rakib abka aad hore u haysatay adigoon ka saarin.",
+    "useInBrowser": "Ku isticmaal DeHub browser-kaaga",
+    "googlePlay": "Ma doorbidaysaa Google Play? Halkaas ka hel.",
+    "shareText": "Ka bood dukaamada — si toos ah u qaado nooca ugu dambeeyay ee DeHub Android.",
+    "shareX": "Ku wadaag X",
+    "shareFacebook": "Ku wadaag Facebook",
+    "shareTelegram": "Ku wadaag Telegram",
+    "copyLink": "Koobi linkiga"
   }
 }

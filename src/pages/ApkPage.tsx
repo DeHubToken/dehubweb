@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowLeft, Check, Download, Link2, Send, Facebook } from "lucide-react";
 import { NebulaParticlesBg } from "@/components/ui/nebula-particles-bg";
 import { SEOHead } from "@/components/SEOHead";
@@ -103,9 +104,8 @@ function formatDate(iso: string): string | undefined {
   }).format(d);
 }
 
-const SHARE_TEXT = "Skip the stores — grab the latest DeHub Android build direct.";
-
 export default function ApkPage() {
+  const { t } = useTranslation();
   // Seeded from this browser's last successful lookup so a returning visitor
   // paints a real version immediately, with no flash and no network. Null means
   // "we do not know yet", which the meta line renders as no version rather than
@@ -162,7 +162,7 @@ export default function ApkPage() {
     window.open(url, "_blank", "noopener,noreferrer,width=600,height=460");
 
   const encodedUrl = encodeURIComponent(PAGE_URL);
-  const encodedText = encodeURIComponent(SHARE_TEXT);
+  const encodedText = encodeURIComponent(t("apk.shareText"));
 
   // Built from whatever is actually known. With no confirmed release this is
   // just "Android 8+" — the copy above already promises the latest version and
@@ -182,8 +182,7 @@ export default function ApkPage() {
     "@type": "SoftwareApplication",
     name: "DeHub for Android",
     alternateName: "DeHub APK",
-    description:
-      "The DeHub Android app as a direct APK download. Open source, user-owned social media — no store account needed.",
+    description: t("apk.ldDescription"),
     url: PAGE_URL,
     installUrl: PAGE_URL,
     downloadUrl: DOWNLOAD_URL,
@@ -223,8 +222,8 @@ export default function ApkPage() {
       className="relative h-[100dvh] w-full overflow-hidden bg-black text-white [@media(max-height:600px)]:h-auto [@media(max-height:600px)]:min-h-[100dvh] [@media(max-height:600px)]:overflow-y-auto"
     >
       <SEOHead
-        title="Download the DeHub APK — Latest Android Build"
-        description="Skip the stores and get the latest version of DeHub right here. Direct APK download for Android — open source, user-owned social media, no store account needed."
+        title={t("apk.seoTitle")}
+        description={t("apk.seoDescription")}
         url={PAGE_URL}
         image={OG_IMAGE}
         jsonLd={jsonLd}
@@ -243,7 +242,7 @@ export default function ApkPage() {
         className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 text-xs text-white/50 transition-colors hover:text-white sm:left-6 sm:top-6 sm:text-sm"
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to DeHub
+        {t("apk.back")}
       </Link>
 
       {/* Every vertical gap and the headline itself are clamped against vh, not
@@ -265,12 +264,11 @@ export default function ApkPage() {
         </div>
 
         <h1 className="mt-[clamp(0.75rem,3vh,1.75rem)] max-w-[15ch] text-[clamp(2.25rem,min(9vw,8vh),4.5rem)] font-black italic leading-[0.95] tracking-tight">
-          Skip the stores.
+          {t("apk.title")}
         </h1>
 
         <p className="mt-[clamp(0.75rem,2.2vh,1.25rem)] max-w-[38ch] text-balance text-sm leading-relaxed text-white/60 sm:max-w-[46ch] sm:text-base">
-          Get the latest version of DeHub right here — straight from us, no
-          store account, no waiting on a review queue.
+          {t("apk.subtitle")}
         </p>
 
         <a
@@ -278,22 +276,21 @@ export default function ApkPage() {
           className="group mt-[clamp(1.25rem,4vh,2.5rem)] inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-7 py-4 text-base font-bold backdrop-blur-xl transition-all duration-200 hover:scale-105 hover:border-white/40 hover:bg-white/20 hover:shadow-[0_0_28px_rgba(255,255,255,0.22)] sm:px-9 sm:py-5 sm:text-lg"
         >
           <Download className="h-5 w-5 transition-transform duration-200 group-hover:translate-y-0.5" />
-          Download now
+          {t("apk.download")}
         </a>
 
         <p className="mt-[clamp(0.75rem,2.2vh,1.25rem)] font-mono text-[11px] tracking-wider text-white/45 sm:text-xs">
           {metaLine}
         </p>
         <p className="mt-1.5 max-w-[40ch] text-[11px] leading-relaxed text-white/35 sm:text-xs">
-          Allow installs from your browser when Android asks. Updating? Install
-          over your existing app without uninstalling.
+          {t("apk.installHint")}
         </p>
 
         <Link
           to="/app"
           className="mt-3 text-xs text-white/60 underline underline-offset-4 transition-colors hover:text-white"
         >
-          Use DeHub in your browser
+          {t("apk.useInBrowser")}
         </Link>
 
         <a
@@ -302,7 +299,7 @@ export default function ApkPage() {
           rel="noopener noreferrer"
           className="mt-[clamp(1rem,3vh,1.75rem)] text-xs text-white/40 underline-offset-4 transition-colors hover:text-white/70 hover:underline"
         >
-          Prefer Google Play? Get it there instead.
+          {t("apk.googlePlay")}
         </a>
       </main>
 
@@ -317,7 +314,7 @@ export default function ApkPage() {
           onClick={() =>
             openShare(`https://x.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`)
           }
-          aria-label="Share on X"
+          aria-label={t("apk.shareX")}
           className="rounded-xl border border-white/15 bg-white/5 p-2.5 backdrop-blur-xl transition-all duration-200 hover:border-white/40 hover:bg-white/15"
         >
           {/* lucide ships the retired bird mark, so the X glyph is inline. */}
@@ -330,7 +327,7 @@ export default function ApkPage() {
           onClick={() =>
             openShare(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`)
           }
-          aria-label="Share on Facebook"
+          aria-label={t("apk.shareFacebook")}
           className="rounded-xl border border-white/15 bg-white/5 p-2.5 backdrop-blur-xl transition-all duration-200 hover:border-white/40 hover:bg-white/15"
         >
           <Facebook className="h-4 w-4" />
@@ -340,7 +337,7 @@ export default function ApkPage() {
           onClick={() =>
             openShare(`https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`)
           }
-          aria-label="Share on Telegram"
+          aria-label={t("apk.shareTelegram")}
           className="rounded-xl border border-white/15 bg-white/5 p-2.5 backdrop-blur-xl transition-all duration-200 hover:border-white/40 hover:bg-white/15"
         >
           <Send className="h-4 w-4" />
@@ -351,7 +348,7 @@ export default function ApkPage() {
             navigator.clipboard?.writeText(PAGE_URL);
             setCopied(true);
           }}
-          aria-label="Copy link"
+          aria-label={t("apk.copyLink")}
           className="rounded-xl border border-white/15 bg-white/5 p-2.5 backdrop-blur-xl transition-all duration-200 hover:border-white/40 hover:bg-white/15"
         >
           {copied ? <Check className="h-4 w-4" /> : <Link2 className="h-4 w-4" />}

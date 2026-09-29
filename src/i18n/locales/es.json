@@ -7686,5 +7686,22 @@
     "progressive": "Progresista",
     "nationalist": "Nacionalista",
     "communist": "Comunista"
+  },
+  "apk": {
+    "seoTitle": "Descarga el APK de DeHub — Última versión para Android",
+    "seoDescription": "Olvídate de las tiendas y consigue la última versión de DeHub aquí mismo. Descarga directa del APK para Android — código abierto, red social propiedad de sus usuarios, sin cuenta en ninguna tienda.",
+    "ldDescription": "La app de DeHub para Android como descarga directa de APK. Código abierto, red social propiedad de sus usuarios — sin cuenta en ninguna tienda.",
+    "back": "Volver a DeHub",
+    "title": "Olvídate de las tiendas.",
+    "subtitle": "Consigue la última versión de DeHub aquí mismo — directamente de nosotros, sin cuenta en la tienda y sin esperar a una cola de revisión.",
+    "download": "Descargar ahora",
+    "installHint": "Permite las instalaciones desde tu navegador cuando Android te lo pida. ¿Vas a actualizar? Instálala encima de la app actual sin desinstalarla.",
+    "useInBrowser": "Usa DeHub en tu navegador",
+    "googlePlay": "¿Prefieres Google Play? Consíguela allí.",
+    "shareText": "Olvídate de las tiendas — descarga directamente la última versión de DeHub para Android.",
+    "shareX": "Compartir en X",
+    "shareFacebook": "Compartir en Facebook",
+    "shareTelegram": "Compartir en Telegram",
+    "copyLink": "Copiar enlace"
   }
 }
