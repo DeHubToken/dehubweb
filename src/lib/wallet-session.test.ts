@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/integrations/supabase/client', () => ({ supabase: { functions: { invoke: mocks.invoke } } }));
 vi.mock('@/lib/api/dehub/core', () => ({ ensureFreshToken: mocks.ensureFreshToken }));
+vi.mock('@/integrations/supabase/relayFetch', () => ({ defaultRelayBase: () => 'https://dehub.io', SUPABASE_RELAY_PREFIX: '/_sb' }));
 vi.mock('@/lib/logger', () => ({ createLogger: () => ({ warn: mocks.warn, error: vi.fn(), info: vi.fn() }) }));
 
 const WALLET = '0x' + 'a'.repeat(40);
@@ -124,5 +125,17 @@ describe('wallet session fetch', () => {
     await setup();
     await window.fetch(REST, { headers: { 'x-wallet-address': WALLET } });
     expect(mocks.warn).not.toHaveBeenCalled();
+  });
+
+  it('signs a request sent through the same-origin relay', async () => {
+    await setup();
+    await window.fetch('https://dehub.io/_sb/rest/v1/ai_conversations?select=*', { headers: { 'x-wallet-address': WALLET } });
+    expect(sentHeaders().get('x-wallet-session')).toBe(`${WALLET}.9999999999.sig`);
+  });
+
+  it('leaves other paths on our own origin alone', async () => {
+    await setup();
+    await window.fetch('https://dehub.io/api/rest/v1/thing', { headers: { 'x-wallet-address': WALLET } });
+    expect(mocks.invoke).not.toHaveBeenCalled();
   });
 });

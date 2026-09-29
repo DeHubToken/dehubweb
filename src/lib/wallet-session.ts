@@ -18,6 +18,7 @@
  * once enforcement is on, nothing races ahead unsigned.
  */
 import { supabase } from '@/integrations/supabase/client';
+import { defaultRelayBase, SUPABASE_RELAY_PREFIX } from '@/integrations/supabase/relayFetch';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { createLogger } from '@/lib/logger';
 
@@ -165,8 +166,20 @@ function reportUnsigned(wallet: string, url: string, why: MintFailure) {
   });
 }
 
+/**
+ * A REST or storage call to our project, direct or through the same-origin
+ * relay (/_sb) that supabaseRelayFetch switches to when the project host is
+ * unreachable. The relay forwards headers untouched, so a relayed request
+ * needs its session just as much, and missing it would pass silently.
+ */
 function isRestOrStorage(url: string) {
-  return url.startsWith(SUPABASE_URL) && (url.includes('/rest/v1/') || url.includes('/storage/v1/'));
+  const relay = defaultRelayBase();
+  const path = url.startsWith(SUPABASE_URL)
+    ? url.slice(SUPABASE_URL.length)
+    : relay && url.startsWith(relay + SUPABASE_RELAY_PREFIX + '/')
+      ? url.slice(relay.length + SUPABASE_RELAY_PREFIX.length)
+      : null;
+  return !!path && (path.startsWith('/rest/v1/') || path.startsWith('/storage/v1/'));
 }
 
 let installed = false;
