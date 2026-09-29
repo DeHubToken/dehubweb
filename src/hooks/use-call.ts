@@ -281,6 +281,10 @@ export const useCall = (): UseCallReturn => {
     }
 
     const call = currentCallRef.current;
+    // Claimed up front: the hang-up ping, the caller's status poll and Agora's
+    // user-left can all land for the same call, and only the first may post
+    // the "call ended" line or write the row.
+    currentCallRef.current = null;
 
     // Log "call ended" message only if the call was actually connected
     if (call?.status === 'connected') {
@@ -516,59 +520,44 @@ export const useCall = (): UseCallReturn => {
     setIsIncoming(true);
   }, [userAddress, isCallActive, isIncoming, isConnecting]);
 
-  // ── Supabase realtime — listen for incoming calls ────────────────────────────
+  // ── Call pings — ring and hang up without waiting for the poll ───────────────
+  //
+  // A trigger on call_sessions sends { id, status, created_at } to the private
+  // `call:<wallet>` topic: the callee on every new call, both sides on every
+  // status change. call_sessions itself is deliberately not in the realtime
+  // publication — that would make every signed-in tab a postgres_changes
+  // subscriber and keep Realtime's change poller querying the database around
+  // the clock. The ping names nobody, so a ring is read back through the same
+  // guarded check the poll uses. Broadcast keeps no backlog; every (re)join
+  // checks once as well.
+
+  const checkForCallsRef = useRef(checkForCalls);
+  useEffect(() => { checkForCallsRef.current = checkForCalls; }, [checkForCalls]);
+  const endCallRef = useRef(endCall);
+  useEffect(() => { endCallRef.current = endCall; }, [endCall]);
 
   useEffect(() => {
     if (!userAddress) return;
-    const normalizedAddress = userAddress.toLowerCase();
 
     const channel = supabase
-      .channel(`incoming-calls-${normalizedAddress}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'call_sessions',
-          filter: `recipient_address=eq.${normalizedAddress}`,
-        },
-        (payload) => {
-          const call = payload.new as CallSession;
-          if (call.status !== 'ringing') return;
-
-          const age = Date.now() - new Date(call.created_at).getTime();
-          if (age > 45_000) return;
-
-          // Don't show if already in a call
-          if (isCallActive || isIncoming || isConnecting) return;
-
-          console.log('📞 Realtime incoming call:', call);
-          setCurrentCall(call);
-          currentCallRef.current = call;
-          setIsIncoming(true);
-        },
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'call_sessions',
-          filter: `recipient_address=eq.${normalizedAddress}`,
-        },
-        (payload) => {
-          const updated = payload.new as CallSession;
-          if (updated.status === 'ended' && currentCallRef.current?.id === updated.id) {
-            endCall();
-          }
-        },
-      )
-      .subscribe();
+      .channel(`call:${userAddress.toLowerCase()}`, { config: { private: true } })
+      .on('broadcast', { event: 'call' }, (message: { payload?: Pick<CallSession, 'id' | 'status'> }) => {
+        const ping = message.payload;
+        if (!ping?.id) return;
+        if (ping.status === 'ringing') {
+          void checkForCallsRef.current();
+        } else if (ping.status === 'ended' && currentCallRef.current?.id === ping.id) {
+          // Only the call on screen: another caller's ring timing out must not
+          // end the call in progress.
+          void endCallRef.current();
+        }
+      })
+      .subscribe((status) => { if (status === 'SUBSCRIBED') void checkForCallsRef.current(); });
 
     return () => {
-      supabase.removeChannel(channel);
+      void supabase.removeChannel(channel);
     };
-  }, [userAddress, isCallActive, isIncoming, isConnecting, endCall]);
+  }, [userAddress]);
 
   // ── Periodic polling fallback (every 5s) for missed realtime events ──────────
 
