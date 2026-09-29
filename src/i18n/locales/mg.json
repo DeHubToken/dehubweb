@@ -6020,7 +6020,8 @@
     "inspector": {
       "selectHint": "Mifidiana sosona eo amin'ny sary na clip eo amin'ny tsipika fotoana.",
       "textHint": "Sintona eo amin'ny sary mba hifindra, ampiasao ny zorony mba hanova ny habeny. Kilikioka indroa mba hanova ny teny.",
-      "selection": "Safidy"
+      "selection": "Safidy",
+      "title": "Mpanara-maso"
     },
     "layer": {
       "alignToPage": "Alaharo amin'ny pejy",
@@ -6319,6 +6320,14 @@
       "noCurve": "Apetraho eo amin’ny sary fototra ny loha-mpamaky mba hamolavola ny fiolahany.",
       "applyAll": "Ampiasao amin’ny sary fototra rehetra ity fiolahana ity",
       "timelineKey": "Sary fototra. Sintony raha hamindra azy, tsindrio indroa raha hamafa azy.",
+      "tabLayer": "Sosona",
+      "record": "Raketo",
+      "recordHint": "Mandraketo: ny famindrana, fanovana habe, fanodinana na fanalefahana sosona eo ambanin’ny loha-mpamaky dia manampy sary fototra eo.",
+      "recording": "Mandraketo fihetsehana",
+      "lanes": "Sary fototra",
+      "scrub": "Sintony miankavia na miankavanana raha hanova. Tazony ny Shift mba hahafaingana.",
+      "addKeyShortcut": "Hanampy sary fototra eo amin’ny loha-mpamaky (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Mahitsy",
         "ease": "Malefaka",

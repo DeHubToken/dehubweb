@@ -6345,7 +6345,8 @@
     "inspector": {
       "selectHint": "Select a layer on the canvas or a clip on the timeline.",
       "textHint": "Drag on the canvas to move, use the corners to resize. Double-click to edit the words.",
-      "selection": "Selection"
+      "selection": "Selection",
+      "title": "Inspector"
     },
     "layer": {
       "alignToPage": "Align to page",
@@ -6644,6 +6645,14 @@
       "noCurve": "Move the playhead onto a keyframe to shape its curve.",
       "applyAll": "Use this curve on every keyframe",
       "timelineKey": "Keyframe. Drag to move it, double-click to delete it.",
+      "tabLayer": "Layer",
+      "record": "Record",
+      "recordHint": "Recording: moving, resizing, rotating or fading a layer with the playhead inside it adds keyframes there.",
+      "recording": "Recording motion",
+      "lanes": "Keyframes",
+      "scrub": "Drag left or right to change. Hold Shift to go faster.",
+      "addKeyShortcut": "Add a keyframe at the playhead (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Linear",
         "ease": "Ease",

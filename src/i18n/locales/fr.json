@@ -6341,7 +6341,8 @@
     "inspector": {
       "selectHint": "Sélectionnez un calque sur la zone de dessin ou un clip sur la chronologie.",
       "textHint": "Faites glisser sur la zone de dessin pour déplacer, utilisez les coins pour redimensionner. Double-cliquez pour modifier le texte.",
-      "selection": "Sélection"
+      "selection": "Sélection",
+      "title": "Inspecteur"
     },
     "layer": {
       "alignToPage": "Aligner à la page",
@@ -6640,6 +6641,14 @@
       "noCurve": "Placez la tête de lecture sur une image clé pour modifier sa courbe.",
       "applyAll": "Appliquer cette courbe à toutes les images clés",
       "timelineKey": "Image clé. Faites-la glisser pour la déplacer, double-cliquez pour la supprimer.",
+      "tabLayer": "Calque",
+      "record": "Enregistrer",
+      "recordHint": "Enregistrement : déplacer, redimensionner, faire pivoter ou estomper un calque sous la tête de lecture y ajoute des images clés.",
+      "recording": "Enregistrement du mouvement",
+      "lanes": "Images clés",
+      "scrub": "Faites glisser à gauche ou à droite pour modifier. Maintenez Maj pour aller plus vite.",
+      "addKeyShortcut": "Ajouter une image clé à la tête de lecture (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Linéaire",
         "ease": "Douce",

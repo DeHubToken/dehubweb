@@ -6284,7 +6284,8 @@
     "inspector": {
       "selectHint": "Chagua safu kwenye turubai au kipande kwenye kalenda ya matukio.",
       "textHint": "Buruta kwenye turubai ili kusogeza, tumia pembe ili kurekebisha ukubwa. Bonyeza mara mbili ili kuhariri maneno.",
-      "selection": "Uteuzi"
+      "selection": "Uteuzi",
+      "title": "Mkaguzi"
     },
     "layer": {
       "alignToPage": "Linga na ukurasa",
@@ -6583,6 +6584,14 @@
       "noCurve": "Weka kichwa cha kucheza kwenye fremu muhimu ili kuunda mkunjo wake.",
       "applyAll": "Tumia mkunjo huu kwenye kila fremu muhimu",
       "timelineKey": "Fremu muhimu. Buruta ili kuisogeza, bofya mara mbili ili kuifuta.",
+      "tabLayer": "Safu",
+      "record": "Rekodi",
+      "recordHint": "Kurekodi: kusogeza, kubadilisha ukubwa, kuzungusha au kufifisha safu chini ya kichwa cha kucheza huongeza fremu muhimu hapo.",
+      "recording": "Inarekodi mwendo",
+      "lanes": "Fremu muhimu",
+      "scrub": "Buruta kushoto au kulia kubadilisha. Shikilia Shift kwenda haraka.",
+      "addKeyShortcut": "Ongeza fremu muhimu kwenye kichwa cha kucheza (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Mstari",
         "ease": "Laini",

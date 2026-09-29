@@ -6112,7 +6112,8 @@
     "inspector": {
       "selectHint": "Selectează un strat pe pânză sau un clip pe cronologie.",
       "textHint": "Trage pe pânză pentru a muta, folosește colțurile pentru a redimensiona. Dă dublu clic pentru a edita cuvintele.",
-      "selection": "Selecție"
+      "selection": "Selecție",
+      "title": "Inspector"
     },
     "layer": {
       "alignToPage": "Aliniere la pagină",
@@ -6411,6 +6412,14 @@
       "noCurve": "Pune capul de redare pe un cadru cheie pentru a-i modela curba.",
       "applyAll": "Folosește această curbă la toate cadrele cheie",
       "timelineKey": "Cadru cheie. Trage pentru a-l muta, dublu clic pentru a-l șterge.",
+      "tabLayer": "Strat",
+      "record": "Înregistrează",
+      "recordHint": "Înregistrare: mutarea, redimensionarea, rotirea sau estomparea unui strat sub capul de redare adaugă acolo cadre cheie.",
+      "recording": "Se înregistrează mișcarea",
+      "lanes": "Cadre cheie",
+      "scrub": "Trage la stânga sau la dreapta pentru a modifica. Ține Shift pentru mai repede.",
+      "addKeyShortcut": "Adaugă cadru cheie la capul de redare (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Liniară",
         "ease": "Lină",

@@ -6457,7 +6457,8 @@
     "inspector": {
       "selectHint": "Vyberte vrstvu na plátne alebo klip na časovej osi.",
       "textHint": "Potiahnite na plátne pre presunutie, použite rohy na zmenu veľkosti. Dvojkliknite pre úpravu textu.",
-      "selection": "Výber"
+      "selection": "Výber",
+      "title": "Inšpektor"
     },
     "layer": {
       "alignToPage": "Zarovnať na stránku",
@@ -6756,6 +6757,14 @@
       "noCurve": "Umiestnite prehrávaciu hlavu na kľúčový snímok a upravte jeho krivku.",
       "applyAll": "Použiť túto krivku na všetky kľúčové snímky",
       "timelineKey": "Kľúčový snímok. Ťahaním presuniete, dvojklikom odstránite.",
+      "tabLayer": "Vrstva",
+      "record": "Nahrávať",
+      "recordHint": "Nahrávanie: posunutie, zmena veľkosti, otočenie alebo zoslabenie vrstvy pod prehrávacou hlavou tam pridá kľúčové snímky.",
+      "recording": "Nahráva sa pohyb",
+      "lanes": "Kľúčové snímky",
+      "scrub": "Ťahajte doľava alebo doprava pre zmenu. Podržte Shift pre rýchlejšiu zmenu.",
+      "addKeyShortcut": "Pridať kľúčový snímok na prehrávaciu hlavu (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Lineárna",
         "ease": "Plynulá",

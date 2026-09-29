@@ -6285,7 +6285,8 @@
     "inspector": {
       "selectHint": "Xulo lakab ku yaal canvas-ka ama gows ku yaal jadwalka.",
       "textHint": "Ku jiid canvas-ka si aad u dhaqaajiso, isticmaal geesaha si aad u cabbirto. Laba jeer guji si aad u tafatirto ereyada.",
-      "selection": "Xulashada"
+      "selection": "Xulashada",
+      "title": "Kormeeraha"
     },
     "layer": {
       "alignToPage": "U dhig bogga",
@@ -6584,6 +6585,14 @@
       "noCurve": "Madaxa ciyaarta dul dhig fareem muhiim ah si aad u qaabayso qaloociisa.",
       "applyAll": "Qaloocan u isticmaal dhammaan fareemyada muhiimka ah",
       "timelineKey": "Fareem muhiim ah. Jiid si aad u dhaqaajiso, laba jeer guji si aad u tirtirto.",
+      "tabLayer": "Lakab",
+      "record": "Duub",
+      "recordHint": "Duubis: dhaqaajinta, beddelidda cabbirka, wareejinta ama qarinta lakab ka hooseeya madaxa ciyaarta waxay halkaas ku dartaa fareemyo muhiim ah.",
+      "recording": "Dhaqdhaqaaqa waa la duubayaa",
+      "lanes": "Fareemyada muhiimka ah",
+      "scrub": "Bidix ama midig u jiid si aad u beddesho. Qabo Shift si ay u degdegto.",
+      "addKeyShortcut": "Ku dar fareem muhiim ah madaxa ciyaarta (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Toosan",
         "ease": "Jilicsan",

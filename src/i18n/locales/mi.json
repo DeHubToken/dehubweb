@@ -6263,7 +6263,8 @@
     "inspector": {
       "selectHint": "Tīpakohia tētahi paparanga kei runga i te kānawehi, tētahi topenga rānei kei te raina wā.",
       "textHint": "Tōia ki runga i te kānawehi hei neke, whakamahia ngā kokonga hei whakarōrahi. Paohia kia rua hei whakatika i ngā kupu.",
-      "selection": "Tīpakonga"
+      "selection": "Tīpakonga",
+      "title": "Kaitirotiro"
     },
     "layer": {
       "alignToPage": "Whakararau ki te whārangi",
@@ -6562,6 +6563,14 @@
       "noCurve": "Whakatūngia te upoko pūrei ki tētahi anga matua hei hanga i tōna ānau.",
       "applyAll": "Whakamahia tēnei ānau ki ia anga matua",
       "timelineKey": "Anga matua. Tōia hei neke, pāwhiria rua hei muku.",
+      "tabLayer": "Paparanga",
+      "record": "Hopu",
+      "recordHint": "E hopu ana: mā te neke, te huri rahi, te whakahuri, te whakamēneti rānei i tētahi paparanga i raro i te upoko pūrei ka tāpirihia he anga matua ki reira.",
+      "recording": "E hopu ana i te nekehanga",
+      "lanes": "Ngā anga matua",
+      "scrub": "Tōia ki mauī, ki matau rānei hei huri. Puritia te Shift kia tere ake.",
+      "addKeyShortcut": "Tāpiri anga matua ki te upoko pūrei (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Rārangi",
         "ease": "Māmā",

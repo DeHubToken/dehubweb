@@ -6351,7 +6351,8 @@
     "inspector": {
       "selectHint": "Kanvasdagi qatlamni yoki vaqt shkalasidagi klipni tanlang.",
       "textHint": "Ko'chirish uchun kanvasda sudrab boring, o'lchamini o'zgartirish uchun burchaklardan foydalaning. Matnlarni tahrirlash uchun ikki marta bosing.",
-      "selection": "Tanlov"
+      "selection": "Tanlov",
+      "title": "Inspektor"
     },
     "layer": {
       "alignToPage": "Sahifaga tekislash",
@@ -6650,6 +6651,14 @@
       "noCurve": "Egri chizig‘ini sozlash uchun ijro chizig‘ini kalit kadr ustiga qo‘ying.",
       "applyAll": "Bu egri chiziqni barcha kalit kadrlarda ishlatish",
       "timelineKey": "Kalit kadr. Surish uchun torting, o‘chirish uchun ikki marta bosing.",
+      "tabLayer": "Qatlam",
+      "record": "Yozib olish",
+      "recordHint": "Yozib olish: ijro chizig‘i ostidagi qatlamni surish, o‘lchamini o‘zgartirish, aylantirish yoki xiralashtirish u yerga kalit kadr qo‘shadi.",
+      "recording": "Harakat yozib olinmoqda",
+      "lanes": "Kalit kadrlar",
+      "scrub": "O‘zgartirish uchun chapga yoki o‘ngga torting. Tezroq uchun Shift ni bosib turing.",
+      "addKeyShortcut": "Ijro chizig‘iga kalit kadr qo‘shish (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Chiziqli",
         "ease": "Yumshoq",

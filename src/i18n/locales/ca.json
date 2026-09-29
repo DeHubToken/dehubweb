@@ -6226,7 +6226,8 @@
     "inspector": {
       "selectHint": "Selecciona una capa al llenç o un clip a la línia de temps.",
       "textHint": "Arrossega al llenç per moure, utilitza les cantonades per canviar la mida. Fes doble clic per editar les paraules.",
-      "selection": "Selecció"
+      "selection": "Selecció",
+      "title": "Inspector"
     },
     "layer": {
       "alignToPage": "Alinea a la pàgina",
@@ -6525,6 +6526,14 @@
       "noCurve": "Posa el capçal sobre un fotograma clau per ajustar-ne la corba.",
       "applyAll": "Fes servir aquesta corba a tots els fotogrames clau",
       "timelineKey": "Fotograma clau. Arrossega’l per moure’l, fes-hi doble clic per eliminar-lo.",
+      "tabLayer": "Capa",
+      "record": "Enregistra",
+      "recordHint": "Enregistrant: moure, redimensionar, girar o esvair una capa sota el capçal hi afegeix fotogrames clau.",
+      "recording": "Enregistrant moviment",
+      "lanes": "Fotogrames clau",
+      "scrub": "Arrossega a l’esquerra o a la dreta per canviar-ho. Mantén Maj per anar més de pressa.",
+      "addKeyShortcut": "Afegeix un fotograma clau al capçal (K)",
+      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "Lineal",
         "ease": "Suau",

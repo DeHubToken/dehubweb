@@ -37,6 +37,15 @@ interface EditorUiState {
   /** Freehand drawing: while set, dragging on the canvas draws instead of selecting. */
   draw: { color: string; width: number } | null;
   setDraw: (draw: { color: string; width: number } | null) => void;
+  /** Which inspector tab shows for a selected layer. */
+  inspectorTab: 'layer' | 'motion';
+  setInspectorTab: (tab: 'layer' | 'motion') => void;
+  /**
+   * Record mode: while on, changing a layer's placement with the playhead
+   * inside it creates keyframes instead of a new static value.
+   */
+  recordMotion: boolean;
+  setRecordMotion: (on: boolean) => void;
 }
 
 export const useEditorUiStore = create<EditorUiState>((set) => ({
@@ -48,9 +57,16 @@ export const useEditorUiStore = create<EditorUiState>((set) => ({
   setCanvasFocus: (canvasFocus) => set({ canvasFocus }),
   draw: null,
   setDraw: (draw) => set({ draw }),
+  inspectorTab: 'layer',
+  setInspectorTab: (inspectorTab) => set({ inspectorTab }),
+  recordMotion: false,
+  setRecordMotion: (recordMotion) => set({ recordMotion }),
   generatePrefill: null,
   setGeneratePrefill: (generatePrefill) => set({ generatePrefill }),
   setPanel: (panel) => set({ panel }),
   togglePanel: (panel) => set((s) => ({ panel: s.panel === panel ? null : panel })),
   setInspectorOpen: (inspectorOpen) => set({ inspectorOpen }),
 }));
+
+/** Options for placementPatchAt that honour record mode. */
+export const recordOpts = () => ({ record: useEditorUiStore.getState().recordMotion });
