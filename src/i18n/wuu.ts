@@ -160,6 +160,9 @@ export const wuu = {
     labelPPV: 'PPV 事件：',
     labelNFT: 'NFT 珍藏品：',
     labelSubscribers: '訂閱者：',
+    leaderMV: '最多觀看（MV）',
+    leaderMS: '最多訂閱（MS）',
+    leaderBE: '最高賺家（BE）',
   },
   games: {
     intro4: '真正自強自立且可持續發展的生態系統。',
