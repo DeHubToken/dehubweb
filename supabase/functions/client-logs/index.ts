@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { rateLimitByIp } from "../_shared/auth.ts";
+import { isOwnOrigin } from "../_shared/own-origins.ts";
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -22,20 +23,27 @@ function capMetadata(metadata: Record<string, unknown> | undefined): Record<stri
     }
 }
 
-// Any site can load a copy of the web build, and its errors would land here
-// looking like ours. Browsers always send Origin, so drop web origins that are
-// not DeHub. Native apps send none and pass through.
-const OWN_HOSTS = /(^|\.)(dehub\.io|dehub\.net|lovable\.app|lovableproject\.com)$|^(localhost|127\.0\.0\.1)$/;
-function isForeignWebOrigin(req: Request): boolean {
-    const origin = req.headers.get("origin");
-    if (!origin) return false;
+function originHost(origin: string | null): string | null {
+    if (!origin) return null;
     try {
-        const url = new URL(origin);
-        if (url.protocol !== "http:" && url.protocol !== "https:") return false;
-        return !OWN_HOSTS.test(url.hostname);
+        return new URL(origin).hostname.slice(0, 253) || null;
     } catch {
-        return false;
+        return null;
     }
+}
+
+// Any site can load a copy of the web build, and its errors would land here
+// looking like ours. Browsers always send Origin, so those are dropped with a
+// quiet 204 (see _shared/own-origins.ts). The drop still leaves one warning per
+// host per isolate in the function logs, so a copy going live is noticed. The
+// cap matters: this runs before the rate limit, and a script can forge Origin.
+const FOREIGN_HOSTS_LOGGED_MAX = 100;
+const foreignHostsLogged = new Set<string>();
+function noteForeignHost(host: string | null) {
+    if (!host || foreignHostsLogged.has(host)) return;
+    if (foreignHostsLogged.size >= FOREIGN_HOSTS_LOGGED_MAX) return;
+    foreignHostsLogged.add(host);
+    console.warn(`[client-logs] foreign origin ${host}`);
 }
 
 Deno.serve(async (req) => {
@@ -43,7 +51,9 @@ Deno.serve(async (req) => {
         return new Response("ok", { headers: corsHeaders });
     }
 
-    if (isForeignWebOrigin(req)) {
+    const origin = req.headers.get("origin");
+    if (!isOwnOrigin(origin)) {
+        noteForeignHost(originHost(origin));
         return new Response(null, { status: 204, headers: corsHeaders });
     }
 
@@ -80,14 +90,22 @@ Deno.serve(async (req) => {
             Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
         );
 
-        const rows = valid.map((l) => ({
-            level: l.level || "error",
-            component: l.component ? String(l.component).slice(0, 200) : l.component,
-            message: String(l.message).slice(0, 2000),
-            stack_trace: l.stack_trace ? String(l.stack_trace).slice(0, 4000) : l.stack_trace,
-            metadata: capMetadata(l.metadata),
-            user_address: l.user_address,
-        }));
+        // Stamped here rather than trusted from the payload: page script cannot
+        // set Origin, so this is the one reliable record of which site a web row
+        // came from. Native requests carry no Origin and keep their metadata as is.
+        const host = originHost(origin);
+
+        const rows = valid.map((l) => {
+            const metadata = capMetadata(l.metadata);
+            return {
+                level: l.level || "error",
+                component: l.component ? String(l.component).slice(0, 200) : l.component,
+                message: String(l.message).slice(0, 2000),
+                stack_trace: l.stack_trace ? String(l.stack_trace).slice(0, 4000) : l.stack_trace,
+                metadata: host ? { ...(metadata ?? {}), origin_host: host } : metadata,
+                user_address: l.user_address,
+            };
+        });
 
         const { error } = await supabase
             .from("client_error_logs")
