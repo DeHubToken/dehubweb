@@ -413,6 +413,9 @@
     "edit": "ایڈٹ",
     "loading": "لوڈ ہو رئی ہے...",
     "tryAgain": "پھر کوشش کرو",
+    "retry": "پھر کوشش کرو",
+    "failedToLoad": "لوڈ کرنے میں ناکام",
+    "somethingWentWrong": "کچھ گڑبڑ ہو گئی",
     "search": "ڈھونڈو",
     "goBack": "واپس جاؤ",
     "showOriginal": "اصل دکھاؤ",
@@ -2215,7 +2218,8 @@
     "pricePlaceholder": "0.00",
     "digitalItem": "डिजिटल वस्तु",
     "statePlaceholder": "NY",
-    "postalPlaceholder": "10001"
+    "postalPlaceholder": "10001",
+    "storeNotFound": "دکان نئیں ملی"
   },
   "stages": {
     "title": "آڈیو روم",
@@ -4143,6 +4147,10 @@
     "desc": "جنگل میں روشن دن یا نیلی شام",
     "day": "دن",
     "evening": "شام"
+  },
+  "affiliate": {
+    "loadFailed": "ایفلی ایٹ کے اعدادوشمار لوڈ نہیں ہو سکے",
+    "checkingForUpdates": "اپڈیٹس چیک ہو رئے ہیں…"
   },
   "affiliateLanding": {
     "title": "اپنا دعوتی صفحہ حسبِ منشا بنائیں",

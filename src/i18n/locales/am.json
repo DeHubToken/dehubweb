@@ -523,6 +523,9 @@
     "edit": "አርትዕ",
     "loading": "እየጫነ...",
     "tryAgain": "እንደገና ሞክር",
+    "retry": "እንደገና ሞክር",
+    "failedToLoad": "ለመጫን አልተቻለም",
+    "somethingWentWrong": "የሆነ ስህተት ተከስቷል",
     "search": "ፈልግ",
     "goBack": "ተመለስ",
     "showOriginal": "ዋናውን አሳይ",
@@ -6635,6 +6638,10 @@
     "desc": "በጫካው ውስጥ ብሩህ ቀን ወይም ሰማያዊ ምሽት",
     "day": "ቀን",
     "evening": "ምሽት"
+  },
+  "affiliate": {
+    "loadFailed": "የአጋር ስታቲስቲክስ መጫን አልተቻለም",
+    "checkingForUpdates": "ዝማኔዎችን በመፈተሽ ላይ…"
   },
   "affiliateLanding": {
     "title": "የግብዣ ገጽዎን ያብጁ",

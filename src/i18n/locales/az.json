@@ -523,6 +523,9 @@
     "edit": "Redaktə et",
     "loading": "Yüklənir...",
     "tryAgain": "Yenidən cəhd et",
+    "retry": "Yenidən cəhd et",
+    "failedToLoad": "Yüklənmədi",
+    "somethingWentWrong": "Nəsə səhv getdi",
     "search": "Axtar",
     "goBack": "Geri qayıt",
     "showOriginal": "Orijinalı göstər",
@@ -6494,6 +6497,10 @@
     "desc": "Cəngəllikdə parlaq gün və ya alaqaranlıq mavi axşam",
     "day": "Gündüz",
     "evening": "Axşam"
+  },
+  "affiliate": {
+    "loadFailed": "Affiliate statistikası yüklənə bilmədi",
+    "checkingForUpdates": "Yeniləmələr yoxlanılır…"
   },
   "affiliateLanding": {
     "title": "Dəvət səhifəni fərdiləşdir",

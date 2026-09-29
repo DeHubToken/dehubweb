@@ -515,6 +515,9 @@
     "edit": "संपादित करीं",
     "loading": "लोड हो रहल बा...",
     "tryAgain": "फेर कोशिश करीं",
+    "retry": "फेर कोशिश करीं",
+    "failedToLoad": "लोड करने में विफल",
+    "somethingWentWrong": "कुछ गड़बड़ हो गइल",
     "search": "खोजीं",
     "goBack": "वापस जाईं",
     "showOriginal": "मूल दिखाईं",
@@ -6438,6 +6441,10 @@
     "desc": "जंगल में चमकत दिन भा नीला साँझ",
     "day": "दिन",
     "evening": "साँझ"
+  },
+  "affiliate": {
+    "loadFailed": "एफिलिएट आँकड़े लोड नहीं हो सके",
+    "checkingForUpdates": "अपडेट जाँचल जा रहल बा…"
   },
   "affiliateLanding": {
     "title": "आपन नेवता पेज अपना हिसाब से बनाईं",

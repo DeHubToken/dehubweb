@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader2, Activity, ArrowRight, Clock } from 'lucide-react';
 import { useRecentTrades, type FractionTrade } from '@/hooks/use-fraction-marketplace';
 import { truncateAddress } from '@/lib/api/token-holders';
+import { AppState } from '@/components/app/AppState';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { cn } from '@/lib/utils';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -83,7 +84,7 @@ function TradeRow({ trade, onOpen }: { trade: FractionTrade; onOpen: () => void 
 export function ActivityTab() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: trades = [], isLoading } = useRecentTrades(40);
+  const { data: trades = [], isLoading, isError, isFetching, refetch } = useRecentTrades(40);
   const { data: prices } = useTokenPrices();
   const dhbUsd = prices?.DHB ?? 0;
 
@@ -135,6 +136,14 @@ export function ActivityTab() {
         <div className="flex justify-center py-16">
           <Loader2 className="w-6 h-6 text-white/30 animate-spin" />
         </div>
+      ) : isError && trades.length === 0 ? (
+        // Cached trades stay on screen when a refresh fails; this is only for
+        // a first load that never arrived.
+        <AppState
+          kind="error"
+          title={t('common.failedToLoad')}
+          primaryAction={{ label: t('common.retry'), onClick: () => void refetch(), loading: isFetching }}
+        />
       ) : trades.length === 0 ? (
         <div className="text-center py-16">
           <Activity className="w-10 h-10 text-white/15 mx-auto mb-3" />

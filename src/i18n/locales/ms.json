@@ -554,6 +554,8 @@
     "loadingMessage": "Sila tunggu, memuatkan...",
     "noData": "Tiada data",
     "retry": "Cuba semula",
+    "failedToLoad": "Gagal dimuatkan",
+    "somethingWentWrong": "Sesuatu tidak kena",
     "submitSuccess": "Berjaya dihantar",
     "submitError": "Ralat semasa menghantar",
     "requiredField": "Medan ini diperlukan",
@@ -6852,6 +6854,10 @@
     "desc": "Siang yang cerah atau senja biru kelam di hutan",
     "day": "Siang",
     "evening": "Senja"
+  },
+  "affiliate": {
+    "loadFailed": "Gagal memuatkan statistik gabungan",
+    "checkingForUpdates": "Menyemak kemas kini…"
   },
   "affiliateLanding": {
     "title": "Sesuaikan halaman jemputan anda",

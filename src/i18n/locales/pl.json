@@ -523,6 +523,9 @@
     "edit": "Edytuj",
     "loading": "Ładowanie...",
     "tryAgain": "Spróbuj ponownie",
+    "retry": "Ponów",
+    "failedToLoad": "Nie udało się załadować",
+    "somethingWentWrong": "Coś poszło nie tak",
     "search": "Szukaj",
     "goBack": "Wróć",
     "showOriginal": "Pokaż oryginał",
@@ -6604,6 +6607,10 @@
     "desc": "Jasny dzień lub zmierzchowy niebieski wieczór w dżungli",
     "day": "Dzień",
     "evening": "Wieczór"
+  },
+  "affiliate": {
+    "loadFailed": "Nie udało się wczytać statystyk partnerskich",
+    "checkingForUpdates": "Sprawdzanie aktualizacji…"
   },
   "affiliateLanding": {
     "title": "Dostosuj swoją stronę zaproszenia",

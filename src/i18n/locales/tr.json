@@ -523,6 +523,9 @@
     "edit": "Düzenle",
     "loading": "Yükleniyor...",
     "tryAgain": "Tekrar Dene",
+    "retry": "Tekrar Dene",
+    "failedToLoad": "Yüklenemedi",
+    "somethingWentWrong": "Bir şeyler ters gitti",
     "search": "Ara",
     "goBack": "Geri dön",
     "showOriginal": "Orijinali göster",
@@ -6652,6 +6655,10 @@
     "desc": "Ormanda parlak bir gün ya da loş mavi bir akşam",
     "day": "Gündüz",
     "evening": "Akşam"
+  },
+  "affiliate": {
+    "loadFailed": "Ortaklık istatistikleri yüklenemedi",
+    "checkingForUpdates": "Güncellemeler kontrol ediliyor…"
   },
   "affiliateLanding": {
     "title": "Davet sayfanı özelleştir",

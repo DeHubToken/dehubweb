@@ -523,6 +523,9 @@
     "edit": "Rediger",
     "loading": "Laster...",
     "tryAgain": "Prøv igjen",
+    "retry": "Prøv igjen",
+    "failedToLoad": "Kunne ikke laste inn",
+    "somethingWentWrong": "Noe gikk galt",
     "search": "Søk",
     "goBack": "Gå tilbake",
     "showOriginal": "Vis original",
@@ -6637,6 +6640,10 @@
     "desc": "En lys dag eller en skumringsblå kveld i jungelen",
     "day": "Dag",
     "evening": "Kveld"
+  },
+  "affiliate": {
+    "loadFailed": "Kunne ikke laste inn tilknyttet statistikk",
+    "checkingForUpdates": "Ser etter oppdateringer…"
   },
   "affiliateLanding": {
     "title": "Tilpass invitasjonssiden din",

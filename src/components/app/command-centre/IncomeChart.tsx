@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
+import { AppState } from '@/components/app/AppState';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 const cardClass = "rounded-2xl p-5 bg-zinc-900 border border-zinc-800";
@@ -38,7 +39,7 @@ export function IncomeChart() {
   const { t } = useTranslation();
 
   // Fetch tips received
-  const { data: tipRecords = [], isLoading: tipsLoading } = useQuery({
+  const { data: tipData, isLoading: tipsLoading, isError: tipsFailed, isFetching: tipsFetching, refetch: refetchTips } = useQuery({
     queryKey: ['tip-records-received', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return [];
@@ -47,7 +48,8 @@ export function IncomeChart() {
         .select('amount, created_at, tx_hash')
         .eq('receiver_address', walletAddress.toLowerCase())
         .order('created_at', { ascending: false });
-      if (error) { console.error('[IncomeChart] tip_records error:', error); return []; }
+      // Thrown, not swallowed: an empty list here would read as no income.
+      if (error) { console.error('[IncomeChart] tip_records error:', error); throw error; }
       return data || [];
     },
     enabled: isAuthenticated && !!walletAddress,
@@ -55,7 +57,7 @@ export function IncomeChart() {
   });
 
   // Fetch PPV sales as creator
-  const { data: ppvRecords = [], isLoading: ppvLoading } = useQuery({
+  const { data: ppvData, isLoading: ppvLoading, isError: ppvFailed, isFetching: ppvFetching, refetch: refetchPpv } = useQuery({
     queryKey: ['ppv-sales-received', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return [];
@@ -64,7 +66,7 @@ export function IncomeChart() {
         .select('amount, created_at')
         .eq('creator_address', walletAddress.toLowerCase())
         .order('created_at', { ascending: false });
-      if (error) { console.error('[IncomeChart] ppv_purchases error:', error); return []; }
+      if (error) { console.error('[IncomeChart] ppv_purchases error:', error); throw error; }
       return data || [];
     },
     enabled: isAuthenticated && !!walletAddress,
@@ -74,7 +76,12 @@ export function IncomeChart() {
   // On-chain DHB transfers
   const { data: onchainTransfers = [], isLoading: onchainLoading } = useOnchainDHBTransfers(walletAddress);
 
+  const tipRecords = tipData ?? [];
+  const ppvRecords = ppvData ?? [];
   const isLoading = tipsLoading || ppvLoading || onchainLoading;
+  // Only when there is nothing cached to show: a failed background refresh
+  // keeps the last good numbers on screen.
+  const loadFailed = (tipsFailed && !tipData) || (ppvFailed && !ppvData);
 
   const { chartData, totalEarned } = useMemo(() => {
     const startDate = getFilterStartDate(activeFilter);
@@ -134,7 +141,7 @@ export function IncomeChart() {
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <div className="flex items-center gap-2 mr-auto">
           <span className="text-white font-semibold">{t('commandCentre.incomeChart')}</span>
-          {totalEarned > 0 && (
+          {totalEarned > 0 && !loadFailed && (
             <span className="text-emerald-400 text-sm font-semibold">{totalEarned.toLocaleString()} <DhbCoin /></span>
           )}
         </div>
@@ -149,6 +156,18 @@ export function IncomeChart() {
         <div className="flex items-center justify-center h-40">
           <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
         </div>
+      ) : loadFailed ? (
+        <AppState
+          kind="error"
+          size="compact"
+          className="h-40"
+          title={t('commandCentre.failedLoadTransactions')}
+          primaryAction={{
+            label: t('commandCentre.tryAgain'),
+            onClick: () => { void refetchTips(); void refetchPpv(); },
+            loading: tipsFetching || ppvFetching,
+          }}
+        />
       ) : chartData.length > 0 ? (
         <div className="flex flex-col items-center gap-3">
           <div className="w-36 h-36 flex-shrink-0">

@@ -141,9 +141,12 @@ export function useCommunity(slug: string | undefined) {
         .from('communities')
         .select('*')
         .eq(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug) ? 'id' : 'slug', slug)
-        .single();
+        // maybeSingle, not single: an unknown slug is a successful null, so
+        // only a failed read reaches the error state and not-found stays
+        // not-found.
+        .maybeSingle();
       if (error) throw error;
-      return data as Community;
+      return (data as Community | null) ?? null;
     },
     enabled: !!slug,
     // Instant open from any list: discover holds full rows and the user's

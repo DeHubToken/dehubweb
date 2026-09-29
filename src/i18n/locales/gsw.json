@@ -521,6 +521,9 @@
     "edit": "Bearbeite",
     "loading": "Am Lade...",
     "tryAgain": "Nomol probiere",
+    "retry": "Nomol probiere",
+    "failedToLoad": "Lade fehlgeschlage",
+    "somethingWentWrong": "Öppis isch schiefgloffe",
     "search": "Sueche",
     "goBack": "Zrugg",
     "showOriginal": "Original aazeige",
@@ -6488,6 +6491,10 @@
     "desc": "En helle Tag oder en dämmrig blaue Abig im Dschungel",
     "day": "Tag",
     "evening": "Abig"
+  },
+  "affiliate": {
+    "loadFailed": "Partner-Statistiken konnten nicht geladen werden",
+    "checkingForUpdates": "Am Sueche nach Updates…"
   },
   "affiliateLanding": {
     "title": "Pass dini Iiladigssite aa",

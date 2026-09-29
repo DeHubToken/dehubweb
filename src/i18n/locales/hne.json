@@ -519,6 +519,9 @@
     "edit": "संपादन करव",
     "loading": "लोड होवत हे...",
     "tryAgain": "फेर कोशिश करव",
+    "retry": "फेर कोशिश करव",
+    "failedToLoad": "लोड करने में विफल",
+    "somethingWentWrong": "कुछु गड़बड़ होगे",
     "search": "खोजव",
     "goBack": "पाछू जाव",
     "showOriginal": "मूल देखाव",
@@ -6501,6 +6504,10 @@
     "desc": "जंगल म उजियार दिन या नीला संझा",
     "day": "दिन",
     "evening": "संझा"
+  },
+  "affiliate": {
+    "loadFailed": "एफिलिएट आँकड़े लोड नहीं हो सके",
+    "checkingForUpdates": "अपडेट जाँचत हन…"
   },
   "affiliateLanding": {
     "title": "अपना आमंत्रण पेज कस्टमाइज़ करें",

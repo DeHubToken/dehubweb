@@ -508,6 +508,9 @@
     "edit": "تعديل",
     "loading": "يحمّل...",
     "tryAgain": "جرّب مرة ثانية",
+    "retry": "جرّب مرة ثانية",
+    "failedToLoad": "فشل التحميل",
+    "somethingWentWrong": "حصل خطأ",
     "search": "بحث",
     "goBack": "ارجع",
     "showOriginal": "عرض الأصل",
@@ -5948,6 +5951,10 @@
     "desc": "نهار مشرق أو مسا أزرق هادي في الغابة",
     "day": "نهار",
     "evening": "مسا"
+  },
+  "affiliate": {
+    "loadFailed": "تعذّر تحميل إحصاءات التسويق بالعمولة",
+    "checkingForUpdates": "جاري التحقق من التحديثات…"
   },
   "affiliateLanding": {
     "title": "خصّص صفحة الدعوة الخاصة بك",

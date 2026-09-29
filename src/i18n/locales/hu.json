@@ -523,6 +523,9 @@
     "edit": "Szerkesztés",
     "loading": "Betöltés...",
     "tryAgain": "Újra",
+    "retry": "Újra",
+    "failedToLoad": "Betöltés sikertelen",
+    "somethingWentWrong": "Valami hiba történt",
     "search": "Keresés",
     "goBack": "Vissza",
     "showOriginal": "Eredeti megjelenítése",
@@ -6535,6 +6538,10 @@
     "desc": "Ragyogó nappal vagy alkonyati kék este a dzsungelben",
     "day": "Nappal",
     "evening": "Este"
+  },
+  "affiliate": {
+    "loadFailed": "Nem sikerült betölteni az affiliate statisztikákat",
+    "checkingForUpdates": "Frissítések keresése…"
   },
   "affiliateLanding": {
     "title": "Szabd testre a meghívóoldaladat",

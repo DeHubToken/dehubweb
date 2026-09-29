@@ -523,6 +523,9 @@
     "edit": "Hlela",
     "loading": "Iyalayisha...",
     "tryAgain": "Zama futhi",
+    "retry": "Zama futhi",
+    "failedToLoad": "Kuhlulekile ukulayisha",
+    "somethingWentWrong": "Kukhona okungahambanga kahle",
     "search": "Sesha",
     "goBack": "Buyela emuva",
     "showOriginal": "Bonisa okwangempela",
@@ -6656,6 +6659,10 @@
     "desc": "Usuku olukhanyayo noma kusihlwa okuluhlaza okwesibhakabhaka ehlathini",
     "day": "Emini",
     "evening": "Kusihlwa"
+  },
+  "affiliate": {
+    "loadFailed": "Ayikwazanga ukulayisha izibalo zokubambisana",
+    "checkingForUpdates": "Kuhlolwa izibuyekezo…"
   },
   "affiliateLanding": {
     "title": "Yenza ikhasi lakho lesimemo libe ngelakho",

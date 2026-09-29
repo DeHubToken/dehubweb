@@ -510,6 +510,9 @@
     "edit": "编辑",
     "loading": "加载中...",
     "tryAgain": "再试一趟",
+    "retry": "再试",
+    "failedToLoad": "加载失败",
+    "somethingWentWrong": "出错了",
     "search": "搜索",
     "goBack": "返回",
     "showOriginal": "显示原文",
@@ -5628,6 +5631,10 @@
     "desc": "丛林里个明媚日里或者幽蓝黄昏",
     "day": "日里",
     "evening": "夜快"
+  },
+  "affiliate": {
+    "loadFailed": "无法加载推广数据",
+    "checkingForUpdates": "正在检查更新…"
   },
   "affiliateLanding": {
     "title": "定制侬个邀请页面",

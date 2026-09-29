@@ -523,6 +523,9 @@
     "edit": "Redakto",
     "loading": "Po ngarkohet...",
     "tryAgain": "Provo sërish",
+    "retry": "Provo sërish",
+    "failedToLoad": "Dështoi të ngarkohej",
+    "somethingWentWrong": "Diçka shkoi keq",
     "search": "Kërko",
     "goBack": "Kthehu",
     "showOriginal": "Shfaq origjinalin",
@@ -6636,6 +6639,10 @@
     "desc": "Një ditë e ndritshme ose një mbrëmje blu e muzgët në xhungël",
     "day": "Ditë",
     "evening": "Mbrëmje"
+  },
+  "affiliate": {
+    "loadFailed": "Nuk u ngarkuan statistikat e filiales",
+    "checkingForUpdates": "Duke kontrolluar për përditësime…"
   },
   "affiliateLanding": {
     "title": "Personalizo faqen tënde të ftesës",
