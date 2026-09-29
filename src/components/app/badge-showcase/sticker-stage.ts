@@ -171,8 +171,14 @@ float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
 vec3 ramp(float t) { return 0.5 + 0.5 * cos(6.2831853 * (t + vec3(0.0, 0.33, 0.67))); }
 
 void main() {
+  // The map is premultiplied so filtering never drags in the black of the
+  // empty canvas around the cut (a dark, jagged fringe); undo it here.
   vec4 tex = texture2D(uMap, vUv);
+  // Glitter grid, sized before any early exit so its derivatives are valid.
+  vec2 gUv = vUv * 260.0;
+  float gPx = max(fwidth(gUv.x), fwidth(gUv.y));
   if (tex.a < 0.03) discard;
+  tex.rgb /= tex.a;
   vec3 N = normalize(vNormal);
   vec3 V = normalize(cameraPosition - vWorld);
   vec3 L = normalize(uLight);
@@ -204,9 +210,14 @@ void main() {
   vec3 rainbow = mix(vec3(dot(hue, vec3(0.3333))), hue, 0.65);
 
   // Glitter: each cell is a tiny mirror with its own random normal.
-  vec2 cell = floor(vUv * 260.0);
+  // Flakes are soft round dots, not whole square cells, and fade out when a
+  // cell shrinks toward a single screen pixel so they never turn into grit.
+  vec2 cell = floor(gUv);
   vec3 gN = normalize(N + vec3(hash(cell) - 0.5, hash(cell + 7.31) - 0.5, 0.0) * 1.3);
-  float flake = step(0.45, hash(cell + 3.17));
+  vec2 fc = fract(gUv) - 0.5 - (vec2(hash(cell + 1.7), hash(cell + 9.2)) - 0.5) * 0.3;
+  float aa = clamp(gPx * 0.75, 0.05, 0.5);
+  float dotMask = 1.0 - smoothstep(0.32 - aa, 0.32 + aa, length(fc));
+  float flake = step(0.45, hash(cell + 3.17)) * dotMask * clamp(2.0 - gPx * 2.0, 0.0, 1.0);
   float sparkle = pow(max(dot(gN, H), 0.0), 90.0) * flake;
   float twinkle = 0.75 + 0.25 * sin(uTime * 3.0 + hash(cell) * 40.0);
 
@@ -360,7 +371,8 @@ function dieCut(sil: HTMLCanvasElement, w: number, h: number, cut: number): HTML
     const full = octx.getImageData(0, 0, w, h);
     const fp = full.data;
     for (let i = 3; i < fp.length; i += 4) {
-      const t = Math.min(1, Math.max(0, (fp[i] - 100) / 56));
+      // Wide enough to leave a pixel of anti-aliasing on the cut line.
+      const t = Math.min(1, Math.max(0, (fp[i] - 64) / 128));
       fp[i] = Math.round(t * t * (3 - 2 * t) * 255);
       fp[i - 1] = fp[i - 2] = fp[i - 3] = 255;
     }
@@ -393,12 +405,13 @@ async function prepare(src: string): Promise<Prepared> {
   octx.drawImage(cutLayer, 0, 0);
   octx.drawImage(img, pad, pad, aw, ah);
 
-  // Art mask: 1 where the art is, 0 on the cut border. Half size is plenty.
-  const mask = canvas(w / 2, h / 2);
+  // Art mask: 1 where the art is, 0 on the cut border. Full size, so the line
+  // between art and border stays as sharp as the art itself.
+  const mask = canvas(w, h);
   const mctx = mask.getContext("2d")!;
   mctx.fillStyle = "#000";
-  mctx.fillRect(0, 0, w / 2, h / 2);
-  mctx.drawImage(artSil, 0, 0, w / 2, h / 2);
+  mctx.fillRect(0, 0, w, h);
+  mctx.drawImage(artSil, 0, 0);
 
   // Soft cast shadow.
   const sw = 256;
@@ -427,6 +440,7 @@ async function prepare(src: string): Promise<Prepared> {
   color.anisotropy = 4;
   color.generateMipmaps = true;
   color.minFilter = THREE.LinearMipmapLinearFilter;
+  color.premultiplyAlpha = true;
   const maskTex = new THREE.CanvasTexture(mask);
   const shadow = new THREE.CanvasTexture(shadowCanvas);
 
