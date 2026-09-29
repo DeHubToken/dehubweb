@@ -43,6 +43,20 @@ const REAL_BROWSERS: Record<string, string> = {
     'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
   'Firefox desktop':
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0',
+  'Chrome desktop':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+  'Edge desktop':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0',
+  'Safari macOS':
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15',
+  'Samsung Internet':
+    'Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/25.0 Chrome/121.0.0.0 Mobile Safari/537.36',
+  // A Mastodon or Bluesky client's in-app browser is a person, even though its
+  // UA names the network the preview fetchers above are matched on.
+  'Mastodon app WebView':
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Mastodon/2.6',
+  'Bluesky app WebView':
+    'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/124.0.0.0 Mobile Safari/537.36 Bluesky',
 };
 
 /**
@@ -84,6 +98,28 @@ const CRAWLERS: Record<string, string> = {
   axios: 'axios/1.6.7',
   'node-fetch': 'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)',
   PostmanRuntime: 'PostmanRuntime/7.36.0',
+  // Link previewers and fetchers that name no bot. Each of these unfurled every
+  // DeHub link as the homepage card until it was listed.
+  'Bluesky Cardyb': 'Mozilla/5.0 (compatible; Bluesky Cardyb/1.1; +mailto:support@bsky.app)',
+  'Mastodon < 4.2': 'http.rb/5.1.1 (Mastodon/4.1.0; +https://mastodon.social/)',
+  SkypeUriPreview:
+    'Mozilla/5.0 (Windows NT 6.1; WOW64) SkypeUriPreview Preview/0.5 skype-url-preview@microsoft.com',
+  'SkypeUriPreview (WebKit)':
+    'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) SkypeUriPreview Preview/0.5 skype-url-preview@microsoft.com',
+  Embedly: 'Mozilla/5.0 (compatible; Embedly/0.2; +http://support.embed.ly/)',
+  Iframely: 'Iframely/1.3.1 (+https://iframely.com/docs/about)',
+  'Iframely (compatible)': 'Mozilla/5.0 (compatible; Iframely/1.3.1; +https://iframely.com/docs/about)',
+  vkShare: 'Mozilla/5.0 (compatible; vkShare; +http://vk.com/dev/Share)',
+  'Google Chat / snippet':
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.75 Safari/537.36 Google-PageRenderer Google (+https://developers.google.com/+/web/snippet/)',
+  'Claude-User':
+    'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Claude-User/1.0; +Claude-User@anthropic.com)',
+  'Claude-User (bare)': 'Claude-User/1.0',
+  'Perplexity-User':
+    'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Perplexity-User/1.0; +https://perplexity.ai/perplexity-user)',
+  'Perplexity-User (bare)': 'Perplexity-User/1.0',
+  'Naver Yeti': 'Mozilla/5.0 (compatible; Yeti/1.1; +http://naver.me/spd)',
+  'Yahoo! Slurp': 'Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)',
 };
 
 describe('in-app browsers are people, not crawlers', () => {
