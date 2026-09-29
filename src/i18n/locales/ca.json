@@ -65,7 +65,9 @@
     "loadFailed": "No s'ha pogut carregar el feed. Torna-ho a provar.",
     "followingEmptyTitle": "Encara no hi ha publicacions",
     "followingEmptyDescription": "Segueix alguns creadors per veure aquí les seves publicacions!",
-    "seeAll": "Mostra-ho tot"
+    "seeAll": "Mostra-ho tot",
+    "mostViewedThisMonth": "Més vist aquest mes",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Tot",

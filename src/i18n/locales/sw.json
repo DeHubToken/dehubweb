@@ -65,7 +65,9 @@
     "loadFailed": "Imeshindwa kupakia mlisho. Tafadhali jaribu tena.",
     "followingEmptyTitle": "Bado hakuna machapisho",
     "followingEmptyDescription": "Fuata baadhi ya waundaji ili kuona machapisho yao hapa!",
-    "seeAll": "Tazama yote"
+    "seeAll": "Tazama yote",
+    "mostViewedThisMonth": "Iliyotazamwa zaidi mwezi huu",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Zote",

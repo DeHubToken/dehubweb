@@ -65,7 +65,9 @@
     "loadFailed": "A ma se ka feed labɔ. I ka segin a kan.",
     "followingEmptyTitle": "Pɔsiti si tɛ yan fɔlɔ",
     "followingEmptyDescription": "I ka dabɔbaga dɔw nɔfɛ walisa k'u ka pɔsitiw ye yan!",
-    "seeAll": "A bɛɛ lajɛ"
+    "seeAll": "A bɛɛ lajɛ",
+    "mostViewedThisMonth": "Nin kalo in na, ka filɛli caman sɔrɔ",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Kɔrɔbɔ",

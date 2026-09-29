@@ -65,7 +65,9 @@
     "loadFailed": "載入唔到動態。請再試一次。",
     "followingEmptyTitle": "暫時未有帖子",
     "followingEmptyDescription": "追蹤幾個創作者，就可以喺呢度睇到佢哋嘅帖子！",
-    "seeAll": "睇晒全部"
+    "seeAll": "睇晒全部",
+    "mostViewedThisMonth": "今個月最多人睇",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "全部",

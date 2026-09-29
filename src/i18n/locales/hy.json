@@ -65,7 +65,9 @@
     "loadFailed": "Չհաջողվեց բեռնել լրահոսը: Խնդրում ենք կրկին փորձել:",
     "followingEmptyTitle": "Գրառումներ դեռ չկան",
     "followingEmptyDescription": "Հետևեք որոշ ստեղծողների՝ նրանց գրառումներն այստեղ տեսնելու համար:",
-    "seeAll": "Տեսնել բոլորը"
+    "seeAll": "Տեսնել բոլորը",
+    "mostViewedThisMonth": "Այս ամսվա ամենադիտվածները",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Bolaor",

@@ -69,7 +69,9 @@
     "loadFailed": "โหลดฟีดไม่ได้ โปรดลองอีกครั้ง",
     "followingEmptyTitle": "ยังไม่มีโพสต์",
     "followingEmptyDescription": "ติดตามครีเอเตอร์เพื่อดูโพสต์ของพวกเขาที่นี่!",
-    "seeAll": "ดูทั้งหมด"
+    "seeAll": "ดูทั้งหมด",
+    "mostViewedThisMonth": "ยอดดูสูงสุดเดือนนี้",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "ทั้งหมด",

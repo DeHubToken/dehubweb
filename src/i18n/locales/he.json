@@ -65,7 +65,9 @@
     "loadFailed": "לא ניתן לטעון את הפיד. נסו שוב.",
     "followingEmptyTitle": "אין עדיין פוסטים",
     "followingEmptyDescription": "עקבו אחרי כמה יוצרים כדי לראות כאן את הפוסטים שלהם!",
-    "seeAll": "הצג הכול"
+    "seeAll": "הצג הכול",
+    "mostViewedThisMonth": "הנצפים ביותר החודש",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "הכל",

@@ -65,7 +65,9 @@
     "loadFailed": "Feed konnte nicht geladen werden. Bitte versuche es erneut.",
     "followingEmptyTitle": "Noch keine Beiträge",
     "followingEmptyDescription": "Folge ein paar Creator:innen, um ihre Beiträge hier zu sehen!",
-    "seeAll": "Alle ansehen"
+    "seeAll": "Alle ansehen",
+    "mostViewedThisMonth": "Meistgesehen diesen Monat",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Alles",

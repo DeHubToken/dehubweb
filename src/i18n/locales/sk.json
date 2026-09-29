@@ -65,7 +65,9 @@
     "loadFailed": "Kanál sa nepodarilo načítať. Skúste to znova.",
     "followingEmptyTitle": "Zatiaľ žiadne príspevky",
     "followingEmptyDescription": "Sledujte tvorcov a ich príspevky uvidíte tu!",
-    "seeAll": "Zobraziť všetko"
+    "seeAll": "Zobraziť všetko",
+    "mostViewedThisMonth": "Najsledovanejšie tento mesiac",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Všetko",

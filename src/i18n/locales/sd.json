@@ -65,7 +65,9 @@
     "loadFailed": "فيڊ لوڊ نه ٿي سگهي. مهرباني ڪري ٻيهر ڪوشش ڪريو.",
     "followingEmptyTitle": "اڃا ڪا پوسٽ ناهي",
     "followingEmptyDescription": "هتي سندن پوسٽون ڏسڻ لاءِ ڪجهه ڪريئيٽرز کي فالو ڪريو!",
-    "seeAll": "سڀ ڏسو"
+    "seeAll": "سڀ ڏسو",
+    "mostViewedThisMonth": "هن مهيني سڀ کان وڌيڪ ڏٺل",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "سڀ",

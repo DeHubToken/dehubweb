@@ -65,7 +65,9 @@
     "loadFailed": "Lent yüklənmədi. Zəhmət olmasa yenidən cəhd edin.",
     "followingEmptyTitle": "Hələ paylaşım yoxdur",
     "followingEmptyDescription": "Paylaşımlarını burada görmək üçün bir neçə yaradıcını izləyin!",
-    "seeAll": "Hamısına bax"
+    "seeAll": "Hamısına bax",
+    "mostViewedThisMonth": "Bu ay ən çox baxılan",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Hamısı",

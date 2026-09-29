@@ -65,7 +65,9 @@
     "loadFailed": "ਫੀਡ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
     "followingEmptyTitle": "ਅਜੇ ਕੋਈ ਪੋਸਟ ਨਹੀਂ",
     "followingEmptyDescription": "ਇੱਥੇ ਉਨ੍ਹਾਂ ਦੀਆਂ ਪੋਸਟਾਂ ਦੇਖਣ ਲਈ ਕੁਝ ਕ੍ਰਿਏਟਰਾਂ ਨੂੰ ਫਾਲੋ ਕਰੋ!",
-    "seeAll": "ਸਾਰੇ ਵੇਖੋ"
+    "seeAll": "ਸਾਰੇ ਵੇਖੋ",
+    "mostViewedThisMonth": "ਇਸ ਮਹੀਨੇ ਸਭ ਤੋਂ ਵੱਧ ਦੇਖੇ ਗਏ",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "ਸਭ",

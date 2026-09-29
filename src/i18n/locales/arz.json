@@ -65,7 +65,9 @@
     "loadFailed": "مقدرناش نحمّل الموجز. جرّب تاني.",
     "followingEmptyTitle": "مفيش منشورات لسه",
     "followingEmptyDescription": "تابع شوية مبدعين علشان تشوف منشوراتهم هنا!",
-    "seeAll": "شوف الكل"
+    "seeAll": "شوف الكل",
+    "mostViewedThisMonth": "الأكتر مشاهدة الشهر ده",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "الكل",
