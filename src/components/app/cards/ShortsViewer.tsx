@@ -27,7 +27,7 @@ import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEngagementWeight } from '@/hooks/use-engagement-weight';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { voteOnPost, reactToPost, getNFTComments, postComment, isFollowing as checkIsFollowing, updateTokenVisibility, type TokenVisibility, type ApiCommentResponse } from '@/lib/api/dehub';
+import { voteOnPost, reactToPost, isFollowing as checkIsFollowing, updateTokenVisibility, type TokenVisibility } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
   HAS_NEGATIVE_TRAY,
@@ -58,9 +58,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ShortVideo } from '@/types/feed.types';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { buildAvatarUrl } from '@/lib/media-url';
-import { formatTimeAgo } from '@/lib/feed-utils';
+import { useQueryClient } from '@tanstack/react-query';
 import { VideoSlide } from './VideoSlide';
 import { pauseMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
@@ -69,7 +67,6 @@ import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlayba
 import { createWheelGesture } from '@/lib/wheel-gesture';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { UserMentionDropdown } from '@/components/app/mentions';
-import { useMention } from '@/hooks/use-mention';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import {
   DOUBLE_TAP_LIKE_EVENT,
@@ -271,33 +268,6 @@ function ShortCaption({
   );
 }
 
-/** Map API comment to display format */
-interface InlineComment {
-  id: string;
-  username: string;
-  avatar?: string;
-  text: string;
-  timeAgo: string;
-  address?: string;
-}
-
-function mapApiCommentToInline(apiComment: ApiCommentResponse): InlineComment {
-  const address = apiComment.address;
-  const rawAvatarPath = apiComment.writor?.avatarUrl;
-  const resolvedAvatar = address && rawAvatarPath 
-    ? buildAvatarUrl(address, rawAvatarPath) 
-    : undefined;
-  
-  return {
-    id: String(apiComment.id),
-    username: apiComment.writor?.username || 'Anonymous',
-    avatar: resolvedAvatar,
-    text: apiComment.content,
-    timeAgo: formatTimeAgo(apiComment.createdAt),
-    address,
-  };
-}
-
 // Smooth tween transition - eliminates spring overshoot for buttery landing
 const SMOOTH_TRANSITION = {
   type: 'tween',
@@ -355,8 +325,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
-  const [inlineCommentText, setInlineCommentText] = useState('');
-  const [isPostingComment, setIsPostingComment] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [overlaysHidden, setOverlaysHidden] = useState(false);
@@ -396,12 +364,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const openLikeTray = useRef<() => void>(() => {});
   const [reactionInfoOpen, setReactionInfoOpen] = useState(false);
 
-  const inlineCommentRef = useRef<HTMLInputElement>(null);
-  const mention = useMention({
-    inputRef: inlineCommentRef,
-    onMentionInsert: (_user, newText) => setInlineCommentText(newText),
-  });
-  
   // Follow state — shared cross-surface overrides win over the local session set
   const [followedCreators, setFollowedCreators] = useState<Set<string>>(new Set());
   const [followCheckingCreators, setFollowCheckingCreators] = useState<Set<string>>(new Set());
@@ -602,40 +564,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // Bookmark hook
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(currentShort?.id || '');
   
-  // Fetch inline comments
-  const { data: inlineComments = [] } = useQuery({
-    queryKey: ['shorts-inline-comments', currentShort?.id, walletAddress],
-    queryFn: async () => {
-      if (!currentShort?.id) return [];
-      const response = await getNFTComments(currentShort.id, 0, 50, walletAddress?.toLowerCase());
-      return response.map(mapApiCommentToInline);
-    },
-    enabled: !!currentShort?.id,
-    staleTime: 30000,
-  });
-  
-  // Handle posting inline comment
-  const handlePostInlineComment = useCallback(async () => {
-    if (!inlineCommentText.trim() || !currentShort?.id || isPostingComment) return;
-    
-    if (!isAuthenticated) {
-      openLoginModal();
-      return;
-    }
-    
-    setIsPostingComment(true);
-    try {
-      await postComment(currentShort.id, inlineCommentText.trim());
-      setInlineCommentText('');
-      queryClient.invalidateQueries({ queryKey: ['shorts-inline-comments', currentShort.id] });
-      toast.success('Comment posted!');
-    } catch (error) {
-      toast.error('Failed to post comment');
-    } finally {
-      setIsPostingComment(false);
-    }
-  }, [inlineCommentText, currentShort?.id, isPostingComment, isAuthenticated, queryClient]);
-  
   // Sync voting state from short data when changing videos
   // Check vote cache first to preserve optimistic updates across scroll
   useEffect(() => {
@@ -665,7 +593,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     closeTrays.current();
     setShowComments(false);
     setCommentsInitialTab(undefined);
-    setInlineCommentText('');
     setIsDescriptionExpanded(false);
     setIsPaused(false);
     setShareDelta(0);
