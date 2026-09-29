@@ -191,8 +191,8 @@ describe('wiring', () => {
 
   it('builds a posts page only when posts can be on it', () => {
     const posts = handler.slice(handler.indexOf('const postSitemapMatch'), proxy);
-    expect(posts).toContain('await newestPostId()');
-    expect(posts.indexOf('return sitemapNotFound();')).toBeLessThan(posts.indexOf('cachedSitemap('));
+    expect(posts).toContain('await unlistedPostSitemapResponse(postSitemapMatch[1])');
+    expect(posts.indexOf('if (unlisted) return unlisted;')).toBeLessThan(posts.indexOf('cachedSitemap('));
   });
 
   it('caches every sitemap under its bare URL, so a query string cannot force a rebuild', () => {

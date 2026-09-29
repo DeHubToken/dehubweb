@@ -56,7 +56,15 @@ const ASSET_FILES: Record<string, [string, string]> = {
   '/robots.txt': ['text/plain', 'User-agent: *'],
   '/sw.js': ['text/javascript', '//'],
   '/manual/guide.pdf': ['application/pdf', '%PDF'],
-  '/seo-i18n.json': ['application/json', JSON.stringify({ '/': { es: { title: 'DeHub ES', description: 'desc es' } } })],
+  '/seo-i18n.json': [
+    'application/json',
+    JSON.stringify({
+      '/': {
+        en: { title: 'DeHub — Open Source, User Owned Social Media', description: 'desc' },
+        es: { title: 'DeHub ES', description: 'desc es', h1: 'DeHub ES', body: '<p>cuerpo</p>' },
+      },
+    }),
+  ],
 };
 
 function makeEnv() {
@@ -126,7 +134,7 @@ describe('homepage canonical', () => {
     };
   });
 
-  for (const q of ['?utm_source=x&utm_medium=social', '?fbclid=XYZ', '?gclid=1', '?ref=abc', '?type=new', '?hl=xx', '?hl=zz']) {
+  for (const q of ['?utm_source=x&utm_medium=social', '?fbclid=XYZ', '?gclid=1', '?ref=abc', '?type=new']) {
     it(`does not self-canonicalise /${q}`, async () => {
       const { status, body } = await get(`/${q}`);
       expect(status).toBe(200);
@@ -134,6 +142,16 @@ describe('homepage canonical', () => {
       expect(ogUrlOf(body)).toBe('https://dehub.io/');
       expect(twitterUrlOf(body)).toBe('https://dehub.io/');
       expect(body.match(/rel="canonical"/g)).toHaveLength(1);
+    });
+  }
+
+  // A language the homepage is not translated into is not a page at all: the
+  // crawler is sent to the one it would duplicate (see localizePage).
+  for (const q of ['?hl=xx', '?hl=zz', '?hl=en']) {
+    it(`301s /${q} to the bare homepage`, async () => {
+      const { status, location } = await get(`/${q}`);
+      expect(status).toBe(301);
+      expect(location).toBe('https://dehub.io/');
     });
   }
 
