@@ -344,7 +344,7 @@ export default function DexPage() {
       // parseUnits throws its own wording for too many decimals; keep one message for every bad amount.
       const toUnits = (value: string) => { try { return parseUnits(value, decimals); } catch { return null; } };
       const amountUnits = /^\d+(\.\d+)?$/.test(amount) ? toUnits(amount) : null;
-      if (amountUnits == null || amountUnits <= 0n || amountUnits > (toUnits(balance) ?? 0n)) throw new Error(t('dex.checkAmount', { token: funded ? 'USD' : fundingToken }));
+      if (amountUnits == null || amountUnits <= 0n || amountUnits > (toUnits(balance) ?? 0n)) throw Object.assign(new Error(t('dex.checkAmount', { token: funded ? 'USD' : fundingToken })), { code: 'DEX_INPUT' });
       const input: SellInput = { walletAddress, chainId: chainId!, side, amount, minPrice, maxPrice };
       if (funded && fundingAsset) {
         // Price the swap first: a route that cannot cover the order is a cheaper failure than a pool read.
@@ -369,9 +369,12 @@ export default function DexPage() {
       const minted = await mintSellPosition(input, setStage, (txHash) => savePending({ input, txHash }));
       await register({ input, ...minted });
     } catch (error) {
-      if ((error as { code?: string }).code === 'DEX_REVERTED') { savePending(null); setReview(null); setFundingQuote(null); }
+      const code = (error as { code?: string }).code;
+      if (code === 'DEX_REVERTED') { savePending(null); setReview(null); setFundingQuote(null); }
       const message = dexActionError(error, t('dex.prepareFailed'));
-      setFormError(message); void logger.error('Position action failed', { chainId, side, path: '/dex', message });
+      setFormError(message);
+      // A bad amount is the form doing its job, not a failure worth a log row.
+      if (code !== 'DEX_INPUT') void logger.error('Position action failed', { chainId, side, path: '/dex', message });
     } finally { busyRef.current = false; setBusy(false); }
   }
   async function handleWithdraw(item: VerifiedPosition) {
