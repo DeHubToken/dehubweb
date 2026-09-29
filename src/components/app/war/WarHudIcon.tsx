@@ -230,6 +230,13 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'team-up', 'front-row', 'deep-current',
 ]);
 
+/** Bump when a file is redrawn in place, or browsers and the app keep the old art. */
+const ICON_REVISIONS: Partial<Record<ThemeIconKey, string>> = {
+  dao: '?v=4',
+  // Redrawn in the System chrome finish so the monochrome menus match.
+  accounts: '?v=4', tv: '?v=4', usernames: '?v=4', staking: '?v=4', buy: '?v=4', fractions: '?v=4',
+};
+
 const TRANSPARENT_PNG_KEYS = new Set<ThemeIconKey>([
   'boost', 'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
   'signal-flare', 'flak-jacket', 'precision-strike', 'harpoon',
@@ -436,7 +443,7 @@ export function ThemedIcon({ icon, alt = '', className, ...imgProps }: ThemedIco
   }
 
   const rasterTheme = FULL_RASTER_THEMES.has(theme) ? theme : 'system';
-  const assetRevision = icon === 'dao' ? '?v=3' : '';
+  const assetRevision = ICON_REVISIONS[icon] ?? '';
   const extension = TRANSPARENT_PNG_KEYS.has(icon) ? 'png' : 'webp';
   return (
     <img
