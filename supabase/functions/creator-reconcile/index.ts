@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
       } else if (job.status === 'succeeded' && job.result) {
         await retryGenerationSave(job);
       } else if (job.prediction_id && ['generate-video','generate-3d','fal-ai-tools'].includes(job.endpoint)) {
-        await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/${job.endpoint}`, {
+        const polled = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/${job.endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', apikey: Deno.env.get('SUPABASE_ANON_KEY')! },
           body: JSON.stringify(job.endpoint === 'fal-ai-tools'
@@ -40,6 +40,9 @@ Deno.serve(async (req) => {
             : { predictionId: job.prediction_id, provider: job.provider, falAppId: job.provider_app }),
           signal: AbortSignal.timeout(15000),
         });
+        // A poll that errored settled nothing, so it is not counted as handled.
+        const text = await polled.text();
+        if (!polled.ok) throw new Error(`re-poll ${polled.status}: ${text.slice(0, 300)}`);
       }
       processed++;
     } catch (error) { console.error('[creator-reconcile]', job.id, String(error)); }
