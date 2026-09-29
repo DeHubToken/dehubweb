@@ -101,7 +101,9 @@ export function useStreamProducts(tokenId: string | null, enabled: boolean = tru
           queryClient.invalidateQueries({ queryKey: ['stream-products', tokenId] });
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') queryClient.invalidateQueries({ queryKey: ['stream-products', tokenId] });
+      });
 
     return () => {
       supabase.removeChannel(channel);
@@ -205,7 +207,9 @@ export function useStreamOrders(tokenId: string | null, enabled: boolean) {
         { event: 'INSERT', schema: 'public', table: 'store_orders', filter: `stream_token_id=eq.${tokenId}` },
         () => queryClient.invalidateQueries({ queryKey: ['stream-orders', tokenId, walletAddress] }),
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') queryClient.invalidateQueries({ queryKey: ['stream-orders', tokenId, walletAddress] });
+      });
     return () => { supabase.removeChannel(channel); };
   }, [tokenId, enabled, walletAddress, queryClient]);
 

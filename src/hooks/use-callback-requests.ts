@@ -161,12 +161,14 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
           }
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') fetchRequests();
+      });
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [userAddress]);
+  }, [userAddress, fetchRequests]);
 
   useEffect(() => {
     fetchRequests();
