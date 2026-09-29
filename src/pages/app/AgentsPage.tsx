@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { retryWalletSession } from '@/lib/wallet-session';
+import { AuthenticationError, ensureFreshToken } from '@/lib/api/dehub/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -85,9 +86,20 @@ export default function AgentsPage() {
       // dehub-mcp is a Streamable HTTP MCP server, so a bare JSON-RPC envelope
       // posted at its root comes back 406 and no agent is ever created. It
       // exposes a plain REST route for this instead.
+      //
+      // The owner is whoever the DeHub token belongs to. The wallet is still
+      // sent so a token for a different wallet than the one on screen is
+      // refused instead of filing the agent somewhere this list cannot see.
+      let token: string;
+      try {
+        token = await ensureFreshToken();
+      } catch (error) {
+        throw error instanceof AuthenticationError ? error : new Error(t('agents.checkConnection'));
+      }
+
       const response = await fetch(`${MCP_BASE}/register`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-dehub-token': token },
         body: JSON.stringify({
           name,
           description,
@@ -95,6 +107,8 @@ export default function AgentsPage() {
         }),
       });
 
+      if (response.status === 401 || response.status === 403) throw new AuthenticationError();
+      if (response.status === 503) throw new Error(t('agents.checkConnection'));
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? 'Registration failed');
       return data;
@@ -116,6 +130,13 @@ export default function AgentsPage() {
       }
     },
     onError: (error: Error) => {
+      if (error instanceof AuthenticationError) {
+        toast.error(t('agents.createSignIn'), {
+          action: { label: t('agents.signInAgain'), onClick: () => openLoginModal() },
+          duration: 8000,
+        });
+        return;
+      }
       // The endpoint explains name clashes and per-wallet limits; passing that
       // through beats a generic failure the user cannot act on.
       toast.error(t('agents.failedCreate'), { description: error.message });
