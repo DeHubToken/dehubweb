@@ -424,13 +424,13 @@ export function ProfileHeader({
                     toast.success('ENS profile URL copied to clipboard');
                   }}
                   title={`Verified ENS name — dehub.io/${profile.ensName}`}
-                  className="rounded-md bg-zinc-800 px-2 py-0.5 text-xs text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-white"
+                  className="rounded-md bg-zinc-800/60 px-2 py-0.5 text-xs text-zinc-300 transition-colors hover:bg-zinc-700/50 hover:text-white"
                 >
                   {profile.ensName}
                 </button>
               )}
               {!isViewingOwnProfile && apiProfile?.followsYou && (
-                <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
+                <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800/60 text-zinc-400">
                   Follows you
                 </span>
               )}
