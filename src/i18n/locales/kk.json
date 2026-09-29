@@ -65,7 +65,9 @@
     "loadFailed": "Лентаны жүктеу мүмкін болмады. Қайталап көріңіз.",
     "followingEmptyTitle": "Әзірге жазбалар жоқ",
     "followingEmptyDescription": "Жазбаларын осында көру үшін бірнеше авторға жазылыңыз!",
-    "seeAll": "Барлығын көру"
+    "seeAll": "Барлығын көру",
+    "mostViewedThisMonth": "Осы айда ең көп қаралған",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Барлығы",

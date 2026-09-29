@@ -65,7 +65,9 @@
     "loadFailed": "Não foi possível carregar o feed. Tente novamente.",
     "followingEmptyTitle": "Ainda não há publicações",
     "followingEmptyDescription": "Siga alguns criadores para ver as publicações deles aqui!",
-    "seeAll": "Ver tudo"
+    "seeAll": "Ver tudo",
+    "mostViewedThisMonth": "Mais vistos este mês",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Tudo",

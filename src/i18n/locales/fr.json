@@ -65,7 +65,9 @@
     "loadFailed": "Impossible de charger le fil. Veuillez réessayer.",
     "followingEmptyTitle": "Pas encore de publications",
     "followingEmptyDescription": "Suivez quelques créateurs pour voir leurs publications ici !",
-    "seeAll": "Tout voir"
+    "seeAll": "Tout voir",
+    "mostViewedThisMonth": "Les plus vus ce mois-ci",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Tout",

@@ -65,7 +65,9 @@
     "loadFailed": "ଫିଡ୍ ଲୋଡ୍ ହୋଇପାରିଲା ନାହିଁ। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
     "followingEmptyTitle": "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ପୋଷ୍ଟ ନାହିଁ",
     "followingEmptyDescription": "ଏଠାରେ ସେମାନଙ୍କ ପୋଷ୍ଟ ଦେଖିବାକୁ କିଛି କ୍ରିଏଟରଙ୍କୁ ଫଲୋ କରନ୍ତୁ!",
-    "seeAll": "ସବୁ ଦେଖନ୍ତୁ"
+    "seeAll": "ସବୁ ଦେଖନ୍ତୁ",
+    "mostViewedThisMonth": "ଏହି ମାସରେ ସବୁଠାରୁ ଅଧିକ ଦେଖାଯାଇଥିବା",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "ସବୁ",

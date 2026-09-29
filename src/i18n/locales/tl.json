@@ -65,7 +65,9 @@
     "loadFailed": "Hindi ma-load ang feed. Pakisubukang muli.",
     "followingEmptyTitle": "Wala pang mga post",
     "followingEmptyDescription": "I-follow ang ilang creator para makita ang kanilang mga post dito!",
-    "seeAll": "Tingnan lahat"
+    "seeAll": "Tingnan lahat",
+    "mostViewedThisMonth": "Pinakapinanood ngayong buwan",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "All",

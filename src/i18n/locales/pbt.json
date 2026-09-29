@@ -65,7 +65,9 @@
     "loadFailed": "فیډ بار نه شو. مهرباني وکړئ بیا هڅه وکړئ.",
     "followingEmptyTitle": "لا تر اوسه پوسټونه نشته",
     "followingEmptyDescription": "یو شمیر جوړونکي تعقیب کړئ ترڅو دلته د هغوی پوسټونه ووینئ!",
-    "seeAll": "ټول وګورئ"
+    "seeAll": "ټول وګورئ",
+    "mostViewedThisMonth": "دا میاشت ډیر لیدل شوي",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "ټول",

@@ -14,6 +14,7 @@ import { useState, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { Play, ChevronRight, ThumbsUp, Eye } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 // Lazy for the same reason as the other call sites — see ShortsFeed.
 const ShortsViewer = lazy(() =>
   import('./ShortsViewer').then(m => ({ default: m.ShortsViewer })),
@@ -60,9 +61,11 @@ function ShortAvatar({ avatar, username }: { avatar?: string; username?: string 
 
 interface ShortsReelProps {
   shorts: ShortVideo[];
+  title?: string;
 }
 
-export function ShortsReel({ shorts }: ShortsReelProps) {
+export function ShortsReel({ shorts, title }: ShortsReelProps) {
+  const { t } = useTranslation();
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const posterWidth = tilePosterWidth();
@@ -92,10 +95,10 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
         <div className="flex items-center justify-between mb-3 px-1">
           <h3 className="font-bold text-white flex items-center gap-2">
             <Play className="w-4 h-4 text-white" />
-            Scroll
+            {title ?? t('feed.scroll')}
           </h3>
           <button className="text-zinc-400 text-sm hover:text-white flex items-center gap-1 transition-colors">
-            See all <ChevronRight className="w-4 h-4" />
+            {t('feed.seeAll')} <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 

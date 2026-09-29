@@ -60,7 +60,9 @@
     "loadFailed": "Δεν ήταν δυνατή η φόρτωση της ροής. Δοκίμασε ξανά.",
     "followingEmptyTitle": "Δεν υπάρχουν αναρτήσεις ακόμα",
     "followingEmptyDescription": "Ακολούθησε δημιουργούς για να βλέπεις τις αναρτήσεις τους εδώ!",
-    "seeAll": "Προβολή όλων"
+    "seeAll": "Προβολή όλων",
+    "mostViewedThisMonth": "Τα πιο δημοφιλή αυτόν τον μήνα",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Όλα",

@@ -65,7 +65,9 @@
     "loadFailed": "Feed ora bisa dimuat. Coba maneh.",
     "followingEmptyTitle": "Durung ana postingan",
     "followingEmptyDescription": "Tututi sawetara kreator supaya bisa ndeleng postingane ing kene!",
-    "seeAll": "Deleng kabeh"
+    "seeAll": "Deleng kabeh",
+    "mostViewedThisMonth": "Paling akeh ditonton sasi iki",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Kabeh",

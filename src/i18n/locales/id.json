@@ -65,7 +65,9 @@
     "loadFailed": "Gagal memuat feed. Silakan coba lagi.",
     "followingEmptyTitle": "Belum Ada Postingan",
     "followingEmptyDescription": "Ikuti beberapa kreator untuk melihat postingan mereka di sini!",
-    "seeAll": "Lihat semua"
+    "seeAll": "Lihat semua",
+    "mostViewedThisMonth": "Paling banyak dilihat bulan ini",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Semua",

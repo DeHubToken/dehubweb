@@ -65,7 +65,9 @@
     "loadFailed": "Kò ṣeé ṣe láti gbé feed wọlé. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i.",
     "followingEmptyTitle": "Kò sí ìfìwéránṣẹ́ síbẹ̀",
     "followingEmptyDescription": "Tẹ̀lé àwọn olùdásílẹ̀ díẹ̀ láti rí ìfìwéránṣẹ́ wọn níbí!",
-    "seeAll": "Wo gbogbo rẹ̀"
+    "seeAll": "Wo gbogbo rẹ̀",
+    "mostViewedThisMonth": "Tí a wò jù ní oṣù yìí",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Gbogbo",

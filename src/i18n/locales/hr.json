@@ -65,7 +65,9 @@
     "loadFailed": "Feed se nije mogao učitati. Pokušaj ponovno.",
     "followingEmptyTitle": "Još nema objava",
     "followingEmptyDescription": "Prati neke autore da bi ovdje vidio njihove objave!",
-    "seeAll": "Prikaži sve"
+    "seeAll": "Prikaži sve",
+    "mostViewedThisMonth": "Najgledanije ovaj mjesec",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "Sve",

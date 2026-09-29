@@ -65,7 +65,9 @@
     "loadFailed": "फीड लोड ना हो पाइल। फेर से कोशिश करीं।",
     "followingEmptyTitle": "अबहीं ले कवनो पोस्ट नइखे",
     "followingEmptyDescription": "इहाँ उनकर पोस्ट देखे खातिर कुछ क्रिएटर के फॉलो करीं!",
-    "seeAll": "सब देखीं"
+    "seeAll": "सब देखीं",
+    "mostViewedThisMonth": "ई महीना सबसे ज्यादा देखल",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "सभे",

@@ -65,7 +65,9 @@
     "loadFailed": "फिड लोड गर्न सकिएन। कृपया फेरि प्रयास गर्नुहोस्।",
     "followingEmptyTitle": "अहिलेसम्म कुनै पोस्ट छैन",
     "followingEmptyDescription": "उनीहरूका पोस्टहरू यहाँ हेर्न केही क्रिएटरहरूलाई फलो गर्नुहोस्!",
-    "seeAll": "सबै हेर्नुहोस्"
+    "seeAll": "सबै हेर्नुहोस्",
+    "mostViewedThisMonth": "यो महिना सबैभन्दा धेरै हेरिएको",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "सबै",

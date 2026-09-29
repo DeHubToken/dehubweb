@@ -65,7 +65,9 @@
     "loadFailed": "ምግቡን መጫን አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
     "followingEmptyTitle": "እስካሁን ምንም ልጥፎች የሉም",
     "followingEmptyDescription": "ልጥፎቻቸውን እዚህ ለማየት አንዳንድ ፈጣሪዎችን ይከተሉ!",
-    "seeAll": "ሁሉንም ይመልከቱ"
+    "seeAll": "ሁሉንም ይመልከቱ",
+    "mostViewedThisMonth": "በዚህ ወር ብዙ የታዩ",
+    "scroll": "Scroll"
   },
   "explore": {
     "all": "ሁሉም",
