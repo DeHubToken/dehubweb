@@ -5056,3 +5056,17 @@ html[data-theme="light"] .art-rim {
     --post-media-max-h: max(80dvh, calc(100vw * 16 / 9));
   }
 }
+
+/* Page top bars (the mobile app bar, and the sticky headers on docs,
+   premium, creator, DePIN and raffle) carry no fill, frost or hairline on
+   any theme: their logo and buttons sit straight on the page instead of in
+   a box that follows the scroll. Theme sheets paint some of these at high
+   specificity with !important, so the :not(#_) lifts this rule to id weight
+   and it wins wherever it is loaded in the cascade. */
+[data-clear-top-bar]:not(#_) {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}

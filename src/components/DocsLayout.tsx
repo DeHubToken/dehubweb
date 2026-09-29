@@ -376,7 +376,7 @@ const DocsLayoutContent = () => {
 
   return <div className="docs-root min-h-screen bg-background">
       {/* Header */}
-      <header data-docs-header className="bg-card/90 backdrop-blur-sm border-b border-border sticky top-0 z-40">
+      <header data-docs-header data-clear-top-bar className="bg-card/90 backdrop-blur-sm border-b border-border sticky top-0 z-40">
         <div className="flex items-center justify-between px-4 h-16">
           {/* Mobile Layout */}
           <div className="flex items-center lg:hidden w-full">

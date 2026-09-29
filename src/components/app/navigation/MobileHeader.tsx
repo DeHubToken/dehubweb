@@ -120,7 +120,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   }, [navType, navigate]);
 
   return (
-    <header data-mobile-header className={`lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
+    <header data-mobile-header data-clear-top-bar className={`lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
       {/* Profile — left slot.
           Direct post-page URL access: back button replaces the menu/settings toggle.
           When opened as an overlay from the feed, the feed's tab bar already hosts a back button,
