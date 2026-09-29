@@ -15,7 +15,15 @@
 // `{ backfill: true, page, pages }` walks further back through the feed for the
 // one-off catch-up on everything posted before this existed. It needs the
 // service key, because it is the only mode that can spend real money in bulk.
-import { admin, corsHeaders, DEHUB_API_BASE, isRetryable, json } from '../_shared/transcripts.ts';
+import {
+  admin,
+  corsHeaders,
+  DEHUB_API_BASE,
+  hasStoppedWaiting,
+  isRetryable,
+  json,
+  MAX_ATTEMPTS,
+} from '../_shared/transcripts.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -83,10 +91,14 @@ Deno.serve(async (req) => {
     const queued: Started[] = [];
 
     /* ── 1. retries ─────────────────────────────────────────────────────── */
+    // Rows already at the attempt ceiling are never retried, so they are left
+    // out of the window rather than crowding live retries off the end of it.
+    // A 'pending' row stays in at any count, so the pass below can close it.
     const { data: unfinished } = await db
       .from('transcripts')
       .select('source_kind, source_ref, status, attempts, last_attempt_at, created_at')
       .in('status', ['pending', 'processing', 'failed'])
+      .or(`status.eq.pending,attempts.lt.${MAX_ATTEMPTS}`)
       .order('last_attempt_at', { ascending: true, nullsFirst: true })
       .limit(budget * 3);
 
@@ -101,10 +113,36 @@ Deno.serve(async (req) => {
      */
     const retryBudget = Math.max(1, Math.floor(budget / 3));
 
+    const stoppedWaiting = new Map<string, string[]>();
     for (const row of unfinished ?? []) {
-      if (queued.length >= retryBudget) break;
+      if (hasStoppedWaiting(row as any)) {
+        const refs = stoppedWaiting.get(row.source_kind) ?? [];
+        refs.push(row.source_ref);
+        stoppedWaiting.set(row.source_kind, refs);
+        continue;
+      }
+      if (queued.length >= retryBudget) continue;
       if (!isRetryable(row as any)) continue;
       queued.push({ kind: row.source_kind, ref: row.source_ref, reason: `retry:${row.status}` });
+    }
+
+    /**
+     * Close out rows that have given up waiting on media.
+     *
+     * Nothing retries them, but as 'pending' every open player showed an
+     * endless "transcribing" spinner and polled the row every few seconds.
+     * 'failed' at the attempt ceiling is the state clients already render,
+     * with no retry button, and the sweeper and `transcribe` both leave it be.
+     * The status guard keeps a start that has just claimed the row intact.
+     */
+    for (const [kind, refs] of stoppedWaiting) {
+      const { error } = await db
+        .from('transcripts')
+        .update({ status: 'failed', attempts: MAX_ATTEMPTS })
+        .eq('source_kind', kind)
+        .in('source_ref', refs)
+        .eq('status', 'pending');
+      if (error) console.warn(`could not close ${refs.length} stalled ${kind} transcripts`, error.message);
     }
 
     /* ── 2. ended stages with a recording ───────────────────────────────── */
@@ -135,38 +173,51 @@ Deno.serve(async (req) => {
 
     /* ── 3. video and audio posts ───────────────────────────────────────── */
     const startPage = Math.max(1, Number(body?.page ?? 1));
+    const PAGE_SIZE = 100;
     /**
      * An ordinary sweep walks deeper when the front of the feed is already
      * covered, so the back catalogue drains on its own rather than needing
      * somebody to drive `backfill` by hand. The budget still caps the run —
      * these are extra pages to *look* at, not extra work to start.
+     *
+     * The front page is read on every sweep, since that is where new posts
+     * land. The pages behind it are walked once an hour: nearly every sweep
+     * found nothing back there and still paid for eighteen feed reads. A front
+     * page that comes back full and entirely unseen walks on regardless, since
+     * a burst that size has spilled past it.
      */
     const pages = backfill ? Math.max(1, Math.min(Number(body?.pages ?? 1), 10)) : 6;
+    const deepWalk = backfill || new Date().getUTCMinutes() < 15;
 
     for (const postType of ['video', 'audio', 'feed-audio']) {
       for (let p = startPage; p < startPage + pages; p++) {
         if (queued.length >= budget) break;
-        const posts = await feedPage(postType, p, 100);
+        const posts = await feedPage(postType, p, PAGE_SIZE);
         if (!posts.length) break;
 
         const kind = postType === 'video' ? 'video' : 'audio';
         const refs = posts
           .map((n: any) => String(n?.tokenId ?? ''))
           .filter((r: string) => r && r !== 'undefined');
-        if (!refs.length) continue;
 
-        const { data: known } = await db
-          .from('transcripts')
-          .select('source_ref')
-          .eq('source_kind', kind)
-          .in('source_ref', refs);
-        const seen = new Set((known ?? []).map((r: any) => r.source_ref));
+        let unseen: string[] = [];
+        if (refs.length) {
+          const { data: known } = await db
+            .from('transcripts')
+            .select('source_ref')
+            .eq('source_kind', kind)
+            .in('source_ref', refs);
+          const seen = new Set((known ?? []).map((r: any) => r.source_ref));
+          unseen = refs.filter((r: string) => !seen.has(r));
 
-        for (const ref of refs) {
-          if (queued.length >= budget) break;
-          if (seen.has(ref)) continue;
-          queued.push({ kind, ref, reason: `new ${postType}` });
+          for (const ref of unseen) {
+            if (queued.length >= budget) break;
+            queued.push({ kind, ref, reason: `new ${postType}` });
+          }
         }
+
+        const fullOfUnseen = posts.length >= PAGE_SIZE && refs.length > 0 && unseen.length === refs.length;
+        if (!deepWalk && !fullOfUnseen) break;
       }
     }
 

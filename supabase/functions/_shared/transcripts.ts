@@ -367,3 +367,21 @@ export function isRetryable(row: {
   if (row.status === 'failed') return since > retryDelayMs(row.attempts);
   return false;
 }
+
+/**
+ * A 'pending' row the policy above will never pick up again: it has waited a
+ * whole day for media, or it had already used every attempt before it went
+ * back to waiting. Left as 'pending' it reads as "transcribing" for good, and
+ * every open player keeps polling it. It belongs in 'failed' at the attempt
+ * ceiling, which is the state clients already show and nothing retries.
+ */
+export function hasStoppedWaiting(row: {
+  status: string;
+  attempts: number;
+  created_at?: string | null;
+}): boolean {
+  if (row.status !== 'pending') return false;
+  if (row.attempts >= MAX_ATTEMPTS) return true;
+  const born = row.created_at ? Date.parse(row.created_at) : Date.now();
+  return Date.now() - born > WAIT_GIVE_UP_MS;
+}
