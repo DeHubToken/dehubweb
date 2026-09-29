@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { OverlayOpenTracker } from "@/lib/overlay-open";
 import { guardOutsideDismiss } from "@/lib/overlay-dismiss";
 import { useWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
+import { settleAfterOverlayClose } from '@/lib/scroll-freeze-watchdog';
 
 // Shared guard against the vaul "ghost click": dismissing a sheet — tapping the
 // scrim, or an outside tap on a non-modal drawer — fires a synthesized click on
@@ -167,6 +168,14 @@ const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, war
       warmRequests.delete(warm);
     };
   }, [phase, warmable]);
+
+  // Every close, however it happened (scrim, swipe, a parent flipping `open`),
+  // checks the page was handed back scrollable. See settleAfterOverlayClose.
+  const wasOpenRef = React.useRef(false);
+  React.useEffect(() => {
+    if (wasOpenRef.current && !props.open) settleAfterOverlayClose();
+    wasOpenRef.current = !!props.open;
+  }, [props.open]);
 
   React.useEffect(() => {
     if (phase !== "mounting") return;
