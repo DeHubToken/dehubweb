@@ -87,7 +87,7 @@ const parseInlineMarkdown = (text: string): React.ReactNode[] => {
     if (codeMatch) {
       if (codeMatch[1]) parts.push(codeMatch[1]);
       parts.push(
-        <code key={`code-${key++}`} className="bg-slate-200 px-1 py-0.5 rounded text-xs font-mono">
+        <code key={`code-${key++}`} className="bg-foreground/10 text-foreground px-1 py-0.5 rounded text-xs font-mono">
           {codeMatch[2]}
         </code>
       );
@@ -260,7 +260,7 @@ export const DocsChatBot = () => {
                 </div>
               ) : (
                 <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
-                  <img src={robotAvatar} alt="Assistant" className="w-full h-full object-cover" />
+                  <img src={robotAvatar} alt={t('nav.docsChatAssistant')} className="w-full h-full object-cover" />
                 </div>
               )}
               <div
@@ -278,7 +278,7 @@ export const DocsChatBot = () => {
           {isLoading && messages[messages.length - 1]?.role === 'user' && (
             <div className="flex gap-3">
               <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
-                <img src={robotAvatar} alt="Assistant" className="w-full h-full object-cover" />
+                <img src={robotAvatar} alt={t('nav.docsChatAssistant')} className="w-full h-full object-cover" />
               </div>
               <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-2.5">
                 <Loader2 className="w-4 h-4 text-muted-foreground animate-spin" />

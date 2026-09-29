@@ -970,15 +970,39 @@ html[data-theme='jungle'] #app-root
    code style need binding, because docs ship their own.
    ========================================================================== */
 
-html[data-theme='jungle'] .docs-root a:not([data-keep-dark]) {
+/* PROSE links only — an anchor with a bg- utility is a button, and leaf on its
+   fill was the docs hero's "Get Started" at about 2:1 (same trap osaka-theme.css
+   documents in its section 15). */
+html[data-theme='jungle'] .docs-root a:not([data-keep-dark]):not([class*='bg-']) {
   color: rgb(var(--jungle-leaf-c)) !important;
+}
+
+/* Anchors and buttons that ARE the primary action take the gold plaque the app's
+   [data-primary-cta] wears, loam label on gold. Written after the link rule. */
+html[data-theme='jungle'] .docs-root
+  :is(a, button):is([class^='bg-primary'], [class*=' bg-primary']) {
+  background: rgb(var(--jungle-gold)) !important;
+  color: rgb(var(--jungle-loam)) !important;
+  border-radius: var(--jungle-r-chip) !important;
+  text-shadow: none !important;
+}
+html[data-theme='jungle'] .docs-root
+  :is(a, button):is([class^='bg-primary'], [class*=' bg-primary']) :is(span, svg) {
+  color: inherit !important;
+}
+html[data-theme='jungle'] .docs-root
+  :is(a, button):is([class^='bg-primary'], [class*=' bg-primary']):hover {
+  background: rgb(var(--jungle-gold) / 0.88) !important;
 }
 
 html[data-theme='jungle'] .docs-root :is(h1, h2, h3) {
   color: rgb(var(--jungle-bone)) !important;
 }
 
-html[data-theme='jungle'] .docs-root code:not(pre code) {
+/* `.dark` (and `body` on pre) lift these past docs-glass.css's own !important
+   (pre, code) rule on specificity; without them the gold chip and carved pre
+   never showed. Safe: jungle is in DOCS_CANVAS_THEMES, so docs is pinned dark. */
+html[data-theme='jungle'].dark .docs-root code:not(pre code) {
   font-family: var(--jungle-mono);
   background: rgb(var(--jungle-loam) / 0.8) !important;
   color: rgb(var(--jungle-gold)) !important;
@@ -986,13 +1010,14 @@ html[data-theme='jungle'] .docs-root code:not(pre code) {
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.45);
 }
 
-html[data-theme='jungle'] .docs-root pre {
+html[data-theme='jungle'].dark body .docs-root pre {
   background: rgb(var(--jungle-loam) / 0.9) !important;
   border-radius: var(--jungle-r-card) !important;
   box-shadow: var(--jungle-edge-carved) !important;
 }
 
-html[data-theme='jungle'] .docs-root blockquote {
+html[data-theme='jungle'] .docs-root blockquote,
+html[data-theme='jungle'] .docs-root blockquote p {
   border-left-color: rgb(var(--jungle-leaf-c) / 0.6) !important;
   color: rgb(var(--jungle-sand)) !important;
 }

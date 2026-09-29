@@ -3,22 +3,37 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { ChartContainer } from '@/components/ui/chart';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useTheme } from 'next-themes';
+
+// Recharts writes fills as SVG attributes, which cannot read CSS variables, so
+// the ramp is picked per docs mode. Largest share gets the strongest contrast
+// against the card it sits on: near-black on paper, near-white on dark/glass.
+const RAMP = {
+  light: ['#1a1a1a', '#4a4a4a', '#7a7a7a', '#a3a3a3'],
+  dark: ['#f2f2f2', '#b8b8b8', '#808080', '#595959'],
+} as const;
 
 const TokenEconomics = () => {
   const { t } = useLanguage();
+  const { resolvedTheme, forcedTheme } = useTheme();
+  const isDark = (forcedTheme ?? resolvedTheme) !== 'light';
+  const ramp = isDark ? RAMP.dark : RAMP.light;
+  // Slice labels sit outside the pie on the card, so they take the page ink,
+  // not their slice's fill (Recharts' default, which vanished on dark).
+  const labelInk = isDark ? '#ffffff' : '#0a0a0a';
 
   const supplyData = [
-    { name: t('tokenEconomics.communitySales'), value: 42, fill: '#1a1a1a' },
-    { name: t('tokenEconomics.burn'), value: 42, fill: '#4a4a4a' },
-    { name: t('tokenEconomics.team'), value: 8, fill: '#7a7a7a' },
-    { name: t('tokenEconomics.operations'), value: 8, fill: '#b0b0b0' },
+    { name: t('tokenEconomics.communitySales'), value: 42, fill: ramp[0] },
+    { name: t('tokenEconomics.burn'), value: 42, fill: ramp[1] },
+    { name: t('tokenEconomics.team'), value: 8, fill: ramp[2] },
+    { name: t('tokenEconomics.operations'), value: 8, fill: ramp[3] },
   ];
 
   const chartConfig = {
-    community: { label: t('tokenEconomics.communitySales'), color: "#1a1a1a" },
-    burn: { label: t('tokenEconomics.burn'), color: "#4a4a4a" },
-    team: { label: t('tokenEconomics.team'), color: "#7a7a7a" },
-    operations: { label: t('tokenEconomics.operations'), color: "#b0b0b0" },
+    community: { label: t('tokenEconomics.communitySales'), color: ramp[0] },
+    burn: { label: t('tokenEconomics.burn'), color: ramp[1] },
+    team: { label: t('tokenEconomics.team'), color: ramp[2] },
+    operations: { label: t('tokenEconomics.operations'), color: ramp[3] },
   };
 
   return (
@@ -37,7 +52,9 @@ const TokenEconomics = () => {
             <ChartContainer config={chartConfig} className="h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={supplyData} cx="50%" cy="50%" labelLine={false} label={({ value }) => `${value}%`} outerRadius={120} fill="#8884d8" dataKey="value">
+                  <Pie data={supplyData} cx="50%" cy="50%" labelLine={false} label={({ value, x, y, textAnchor }) => (
+                    <text x={x} y={y} textAnchor={textAnchor} dominantBaseline="central" fill={labelInk} fontSize={14} fontWeight={600}>{`${value}%`}</text>
+                  )} outerRadius={120} fill="#8884d8" dataKey="value">
                     {supplyData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                   </Pie>
                   <Tooltip content={({ active, payload }) => {

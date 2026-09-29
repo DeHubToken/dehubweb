@@ -150,6 +150,9 @@ function LauncherInner() {
       }
 
       if (!ARROW_KEYS.has(e.key)) return;
+      // Docs is a reading surface: an arrow there is scrolling the article, not a
+      // call to deploy (DocsSurface stamps data-docs-open on <html> while open).
+      if (document.documentElement.dataset.docsOpen) return;
       // Never react to a shortcut, only to a bare arrow press.
       if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
       if (e.repeat) return;

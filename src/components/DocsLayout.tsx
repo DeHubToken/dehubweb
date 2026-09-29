@@ -48,11 +48,20 @@ const getMenuItems = (t: (key: string) => string) => [{
       title: t('dapp.tocUploading'),
       path: '/docs/dapps#uploading'
     }, {
+      title: t('dapp.tocArticles'),
+      path: '/docs/dapps#articles'
+    }, {
+      title: t('dapp.tocMultipost'),
+      path: '/docs/dapps#multi-posting'
+    }, {
       title: t('dapp.tocAllowance'),
       path: '/docs/dapps#posting-allowance'
     }, {
       title: t('dapp.tocTokenised'),
       path: '/docs/dapps#tokenised-uploads'
+    }, {
+      title: t('dapp.tocDao'),
+      path: '/docs/dapps#dao-treasury'
     }, {
       title: t('dapp.liveStreamingTitle'),
       path: '/docs/dapps#live-streaming'
@@ -66,14 +75,26 @@ const getMenuItems = (t: (key: string) => string) => [{
       title: t('dapp.communitiesTitle'),
       path: '/docs/dapps#communities'
     }, {
+      title: t('dapp.tocPacks'),
+      path: '/docs/dapps#packs'
+    }, {
       title: t('dapp.stagesTitle'),
       path: '/docs/dapps#stages'
     }, {
       title: t('dapp.tvRadioTitle'),
       path: '/docs/dapps#tv-radio'
     }, {
+      title: t('dapp.tocCinema'),
+      path: '/docs/dapps#cinema'
+    }, {
       title: t('dapp.tocWallet'),
       path: '/docs/dapps#wallet'
+    }, {
+      title: t('dapp.tocExchange'),
+      path: '/docs/dapps#exchange'
+    }, {
+      title: t('dapp.tocMarkets'),
+      path: '/docs/dapps#marketplaces'
     }, {
       title: t('dapp.tocBounties'),
       path: '/docs/dapps#work'
@@ -89,6 +110,12 @@ const getMenuItems = (t: (key: string) => string) => [{
     }, {
       title: t('dapp.tocStudio'),
       path: '/docs/dapps#creator-studio'
+    }, {
+      title: t('dapp.tocConverter'),
+      path: '/docs/dapps#converter'
+    }, {
+      title: t('dapp.tocMiniApps'),
+      path: '/docs/dapps#mini-apps'
     }, {
       title: t('dapp.tocArcade'),
       path: '/docs/dapps#arcade'
@@ -113,6 +140,9 @@ const getMenuItems = (t: (key: string) => string) => [{
     }, {
       title: t('dapp.tocNotifications'),
       path: '/docs/dapps#notifications'
+    }, {
+      title: t('dapp.tocKids'),
+      path: '/docs/dapps#kids-mode'
     }, {
       title: t('dapp.tocThemes'),
       path: '/docs/dapps#themes'

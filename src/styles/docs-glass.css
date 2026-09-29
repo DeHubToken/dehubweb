@@ -1,6 +1,8 @@
 /* ============================================================================
    DOCS GLASS — appearance themes with a live animated canvas
-   (cosmic / hazy / swarms / lavalamp / winter).
+   (cosmic / hazy / swarms / lavalamp / winter / war / osaka / jungle / island /
+   hacker / horror — the same list as DOCS_CANVAS_THEMES in lib/docs-theme.ts,
+   which src/test/docs-theme-lists.test.ts keeps in step).
 
    On these themes the docs surface goes transparent so the app's shader canvas
    shows through, and the docs chrome + content sit on it as liquid-glass bentos
@@ -44,14 +46,15 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    directly on the canvas (pages without a card wrapper) where a bright patch of
    nebula would otherwise wash out white text. Cheap (no compositing layer). */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]).dark .docs-root
-  :is(h1, h2, h3, h4, h5, h6, p, li, a, span, strong, em, blockquote, td, th, label) {
+  :is(h1, h2, h3, h4, h5, h6, p, li, a, span, strong, em, blockquote, td, th, label):not(.text-transparent) {
   text-shadow: 0 1px 2px rgb(0 0 0 / 0.55);
 }
 
 /* 3. Liquid-glass surfaces — the propagating core. Every existing card / muted
    panel / shadcn <Card> plus the tagged header, sidebar and blog reading panel
    become one frosted-glass bento. Guarded so nothing nested inside the reading
-   panel (or opted out via data-docs-solid) gets a second stacked blur. */
+   panel (or opted out via data-docs-solid) gets a second stacked blur. Panels
+   nested inside another glass card are flattened by the rule after this. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]).dark .docs-root
   :is(.bg-card, .bg-muted, .bg-secondary, .docs-glass, [class*="Card"], [data-docs-header], [data-docs-sidebar], [data-docs-reading-panel]):not([data-docs-reading-panel] *):not([data-docs-solid]):not([data-docs-header] *):not([data-docs-sidebar] *) {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
@@ -59,6 +62,24 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   backdrop-filter: var(--glass-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--glass-edge) !important;
+}
+
+/* A panel nested inside a glass card (a stat tile in a Card, a docs-glass row
+   inside a docs-glass section) is a flat tint riding on its parent's glass, not
+   a second backdrop-filter layer. /docs/dapps alone nests dozens of these, and
+   every stacked blur re-samples the animated canvas each frame.
+
+   It restates the surface rule's guards plus one more compound, so it outranks
+   that rule on nested panels. War is left out: war-theme.css paints its own
+   olive plates on every docs panel, nested or not, and those must keep
+   winning. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]):not([data-theme="war"]).dark .docs-root
+  :is(.bg-card, .docs-glass, [class*="Card"]) :is(.bg-card, .bg-muted, .bg-secondary, .docs-glass, [class*="Card"]):not([data-docs-reading-panel] *):not([data-docs-solid]):not([data-docs-header] *):not([data-docs-sidebar] *) {
+  background: rgb(var(--glass-tint) / 0.28) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border-color: rgb(255 255 255 / 0.08) !important;
+  box-shadow: none !important;
 }
 
 /* Header + sidebar are thinner glass so page content reads as the primary

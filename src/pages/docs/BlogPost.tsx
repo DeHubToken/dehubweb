@@ -165,14 +165,14 @@ const BlogPost = () => {
               </div>
               {bodyFailed ? (
                 <div className="mb-12 rounded-2xl border border-border bg-muted/30 px-6 py-10 text-center">
-                  <p className="mb-4 text-royal-blue/70 font-exo">Couldn't load this article.</p>
+                  <p className="mb-4 text-royal-blue/70 font-exo">{t('blog.loadFailed')}</p>
                   <button
                     type="button"
                     onClick={() => refetchBody()}
                     className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-royal-blue to-middle-blue text-plain-white font-semibold rounded-lg hover:from-royal-blue/90 hover:to-middle-blue/90 transition-all duration-200 font-exo"
                   >
                     <RotateCw className="w-4 h-4 mr-2" />
-                    Retry
+                    {t('blog.retry')}
                   </button>
                 </div>
               ) : (

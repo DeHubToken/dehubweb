@@ -44,7 +44,7 @@ const PrivacyPolicy = () => {
       <Section title={t('privacyPolicy.dataCollection')}>
         <div className="space-y-3">
           <h3 className="font-semibold text-foreground">{t('privacyPolicy.whatWeDoCollect')}</h3>
-          <ItemList items={Array.from({ length: 6 }, (_, i) => t(`privacyPolicy.doCollectItem${i + 1}`))} />
+          <ItemList items={Array.from({ length: 8 }, (_, i) => t(`privacyPolicy.doCollectItem${i + 1}`))} />
         </div>
         <div className="space-y-3">
           <h3 className="font-semibold text-foreground">{t('privacyPolicy.whatWeDontCollect')}</h3>
@@ -86,6 +86,8 @@ const PrivacyPolicy = () => {
           <li><strong>{t('privacyPolicy.thirdPartyItem6Prefix')}</strong> {t('privacyPolicy.thirdPartyItem6')}</li>
           <li><strong>{t('privacyPolicy.thirdPartyItem7Prefix')}</strong> {t('privacyPolicy.thirdPartyItem7')}</li>
           <li><strong>{t('privacyPolicy.thirdPartyItem8Prefix')}</strong> {t('privacyPolicy.thirdPartyItem8')}</li>
+          <li><strong>{t('privacyPolicy.thirdPartyItem9Prefix')}</strong> {t('privacyPolicy.thirdPartyItem9')}</li>
+          <li><strong>{t('privacyPolicy.thirdPartyItem10Prefix')}</strong> {t('privacyPolicy.thirdPartyItem10')}</li>
         </ul>
         <p className="mt-3">{t('privacyPolicy.thirdPartyNote')}</p>
       </Section>
@@ -93,7 +95,7 @@ const PrivacyPolicy = () => {
       <Section title={t('privacyPolicy.yourRights')} icon={<Key className="w-5 h-5" />}>
         <div className="space-y-3">
           <h3 className="font-semibold text-foreground">{t('privacyPolicy.dataSovereignty')}</h3>
-          <ItemList items={Array.from({ length: 4 }, (_, i) => t(`privacyPolicy.dataSovereigntyItem${i + 1}`))} />
+          <ItemList items={Array.from({ length: 6 }, (_, i) => t(`privacyPolicy.dataSovereigntyItem${i + 1}`))} />
         </div>
         <div className="space-y-3">
           <h3 className="font-semibold text-foreground">{t('privacyPolicy.blockchainConsiderations')}</h3>
