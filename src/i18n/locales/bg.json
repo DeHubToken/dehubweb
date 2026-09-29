@@ -3807,7 +3807,6 @@
     "audioTaskVoiceDesignPlaceholder": "Опишете гласа, например „гробен стар моряк, бавен, топъл, слаб ирландски лифт“",
     "audioTaskVoiceChangerLabel": "Промяна на гласа",
     "audioTaskVoiceChangerDesc": "Повторно изпълнение на записа с друг глас",
-    "audioTaskDubbingLabel": "Озвучаване на филми, радио и телевизионни програми.......................................................",
     "audioTaskDubbingDesc": "Преведете клип, като запазите гласа на високоговорителя",
     "audioTaskTranscribeLabel": "Транскрибиране",
     "audioTaskTranscribeDesc": "Реч към текст с етикети на високоговорителите",
