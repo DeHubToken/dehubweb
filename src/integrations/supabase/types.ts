@@ -7573,6 +7573,7 @@ export type Database = {
         Args: { p_user_id?: string; p_wallet: string }
         Returns: undefined
       }
+      evict_stale_post_translations: { Args: never; Returns: number }
       get_affiliate_cta_stats: {
         Args: never
         Returns: {
