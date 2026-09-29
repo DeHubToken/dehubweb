@@ -92,8 +92,9 @@ export default function StreamerShowcase({ badgeId, address, canSelect, anchor, 
       dialogLabel={(i) => t('badgeShowcase.dialogLabel', { tier: t(`live.progress.card.${STREAMER_BADGE_IDS[i]}.name`) })}
       dockLabel={t('live.progress.cardsTitle')}
       owned={(i) => !!earnedAt(i)}
+      footer={(api) => <StreamerActions api={api} progress={progress} address={address} canSelect={canSelect} />}
     >
-      {(api) => <StreamerDetails api={api} progress={progress} address={address} canSelect={canSelect} />}
+      {(api) => <StreamerDetails api={api} progress={progress} />}
     </ShowcaseShell>
   );
 }
@@ -101,16 +102,11 @@ export default function StreamerShowcase({ badgeId, address, canSelect, anchor, 
 function StreamerDetails({
   api,
   progress,
-  address,
-  canSelect,
 }: {
   api: ShowcaseApi;
   progress: StreamerProgress | undefined;
-  address: string;
-  canSelect: boolean;
 }) {
   const { t, i18n } = useTranslation();
-  const selection = useSelectStreamerBadge();
   const nf = useMemo(() => new Intl.NumberFormat(i18n.language), [i18n.language]);
 
   const id = STREAMER_BADGE_IDS[api.index];
@@ -127,7 +123,6 @@ function StreamerDetails({
   const goalText = goal
     ? t(`streamerShowcase.goal.${goal.metric}`, { current, target: nf.format(goal.target) })
     : t('streamerShowcase.onStream');
-  const selected = progress?.selectedBadgeId === id;
   const name = t(`live.progress.card.${id}.name`);
 
   const stats: { key: string; icon: LucideIcon; label: string; value: string; metric?: StreamerCardMetric }[] = [
@@ -150,11 +145,6 @@ function StreamerDetails({
       metric: 'streak',
     },
   ];
-
-  const useBadge = () => {
-    if (!earned || selected || selection.isPending) return;
-    selection.mutate({ address, badgeId: id });
-  };
 
   return (
     <>
@@ -238,8 +228,34 @@ function StreamerDetails({
           );
         })}
       </ul>
+    </>
+  );
+}
 
-      <div className="mt-2 grid grid-cols-2 gap-2">
+/** Use this card and close: under the dock on phones. */
+function StreamerActions({
+  api,
+  progress,
+  address,
+  canSelect,
+}: {
+  api: ShowcaseApi;
+  progress: StreamerProgress | undefined;
+  address: string;
+  canSelect: boolean;
+}) {
+  const { t } = useTranslation();
+  const selection = useSelectStreamerBadge();
+  const id = STREAMER_BADGE_IDS[api.index];
+  const earned = !!progress?.cards.find((c) => c.id === id)?.earnedAt;
+  const selected = progress?.selectedBadgeId === id;
+  const useBadge = () => {
+    if (!earned || selected || selection.isPending) return;
+    selection.mutate({ address, badgeId: id });
+  };
+  return (
+    <>
+      <div className="grid grid-cols-2 gap-2">
         {canSelect ? (
           <button
             type="button"
