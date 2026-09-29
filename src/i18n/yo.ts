@@ -869,6 +869,8 @@ export const yo = {
     packsTitle: 'Emoji, Awọn ohun ilẹmọ & Awọn akopọ',
     ppvBounties: 'PPV & Awọn ẹsan',
     premiumPerks: 'Awọn anfani Ere',
+    commCreator1: 'Ṣe owó fún ìbáṣepọ̀ taara pẹ̀lú àwọn olùfẹ́',
+    adsPortalLink: 'Ka ìwé ìpolówó ọjà kíkún.',
   },
   games: {
     title: 'Eré-ìdárayá',
@@ -1244,6 +1246,8 @@ export const yo = {
     storedDeviceDesc: 'Bọtini bata rẹ ti o wa, ti a fi pamọ sinu ibi ipamọ aṣawakiri fun adirẹsi rẹ.',
     xchacha1: 'Ìkópamọ́ tí a fìdí múlẹ̀ láti inú ilé ìkówèésí @ noble/ciphers tí a ṣe àyẹ̀wò rẹ̀, pẹ̀lú àtẹ̀jíṣẹ́ àtẹ̀jíṣẹ́ tuntun 24-byte fún gbogbo àtẹ̀jíṣẹ́.',
     phase2Title: 'Ìgbésẹ̀ 2: Bẹrẹ Ìjíròrò',
+    storedServer: 'Lori Awọn olupin DeHub:',
+    coming2: 'Ìfipamọ́ ẹ̀rọ-ayélujára - Àwòrán, GIFs, àwọn ọ̀rọ̀ ohùn',
   },
   aiToolkits: {
     title: 'Àwọn ohun-èlò-èlò ni',
@@ -1482,6 +1486,10 @@ export const yo = {
     ],
     q2q4_2026: 'Q4 2026 àti síwájú',
     inProgress: 'Ní ìlọsíwájú',
+    q1_2024: 'Q1 2024',
+    q2_2024: 'Q2 2024',
+    q1q2_2026: 'Q1–Q2 2026',
+    q3_2026: 'Q3 2026',
   },
   brandAssets: {
     title: 'Awọn dukia Brand',
@@ -1790,6 +1798,8 @@ export const yo = {
     telegramDesc: 'Darapọ̀ mọ́ àwọn ènìyàn wa lórí Telegram',
     turkishDesc: 'Àwọn ènìyàn tó sọ èdè Turkish',
     vietnamDesc: 'Àwọn ènìyàn tó sọ èdè Vietnamese',
+    communityChannels: 'Awọn ikanni Agbegbe',
+    turkish: 'Tọki',
   },
   faq: {
     title: 'Àwọn Ìbéèrè Tí Wọ́n Ń Béèrè Lọ́pọ̀ Ìgbà',
@@ -1847,6 +1857,8 @@ export const yo = {
     a29: 'Àwọn olùṣẹ̀dá máa ń ṣàmì ibi tí ó ti dàgbà nígbà tí wọ́n bá ń kọ ọ́, àwọn ibi wọ̀nyẹn sì máa ń dúró kúrò nínú oúnjẹ ilé gbogbo ènìyàn àti kúrò nínú àwárí àyàfi tí o bá tan "Ṣàfihàn àwọn ohun tí ó ti dàgbà" nínú àwọn ètò. O lè dẹ́kun tàbí dènà òǹkọ̀wé láti inú àtòjọ-ẹ̀yàn lórí ìtàgé èyíkéyìí, yan ẹ̀ka kọ̀ọ̀kan tí àwọn ìkéde bá dé ọ̀dọ̀ rẹ, kí o sì tan Mọ́tò Àwọn Ọmọdé, tí PIN ń dáàbò bò, nítorí náà ohun èlò kan máa ń fi àwọn ìtàgé tí a ṣe fún àwọn ọmọdé hàn.',
     a10: 'DeHub nfunni ni pẹpẹ ipolowo ti a pin, nibiti awọn olutaja le ṣẹda awọn ipolongo, tọ́jú awọn olugbo pato, ki o si sanwo pẹlu awọn token DeHub. Awọn olùkọ́kọ́ akoonu le gba awọn ẹbun fun ifihan awọn ipolowo to baamu.',
     a22: 'Rárá. O lè wọlé pẹ̀lú Google, Apple tàbí Telegram, pẹ̀lú kọ́ọ̀ṣì tí a fi ránṣẹ́ sí àdírẹ́sì imeeli rẹ tàbí nípa SMS, tàbí pẹ̀lú àpótí ìrìn-àjò, a sì ṣẹ̀dá àpamọ́ tí kì í ṣe ìṣọ́jú fún ọ ní àtẹ̀yìnwá — o mú àwọn kọ́kọ́rọ́ náà àti pé a kì í pa á mọ́ láéláé. Bí o bá ti ní àpò-owó o lè so ó pọ̀ tàbí kí o gbé àwọn kọ́kọ́rọ́ rẹ̀ wọlé dípò. Àwọn ìforúkọsílẹ̀ tí kò dá lórí àpò-ìfowópamọ́ tún ní àwọn owó gáàsì wọn tí wọ́n ṣe àtìlẹyìn fún, nítorí náà o lè fi àtẹ̀jíṣẹ́ ránṣẹ́, gbólóhùn àti kó àwọn nǹkan jọ láì ra àmì-ìfowópamọ́ abínibí.',
+    q9: 'Kínni àwọn ohun èlò AI ti DeHub?',
+    q21: 'Báwo ni ìmúratán àkóónú ṣe ń ṣiṣẹ́ lórí DeHub?',
   },
   donate: {
     title: 'Ṣètọrẹ',
@@ -1974,6 +1986,7 @@ export const yo = {
     notFound: 'A kò rí i',
     rateLimited: 'Oṣuwọn Lopin',
     serverError: 'Àṣìṣe Olùpèsè',
+    title: 'Awọn ipari API',
   },
   advertiserDashboard: {
     subtitle: 'Ṣakoso awọn ipolongo ipolongo agbara POVR rẹ',
@@ -2080,6 +2093,7 @@ export const yo = {
     dayCountOne: '{count} ọjọ́',
     estImpressionsRow: 'Ìfihàn tí a fìyẹ́lẹ̀:',
     roas: 'ROAS',
+    clickThroughRate: 'Tẹ-nipasẹ Oṣuwọn',
   },
   docsSearch: {
     title: 'Ṣàwárí àwọn ìwé àkọ́ọlẹ̀',
