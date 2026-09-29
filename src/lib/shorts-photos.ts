@@ -13,7 +13,8 @@ export function shortsPhotoMedia(post: PhotoPost) {
   const sound = parseSoundtrackTag(post.description);
   // Photo files live under feed-images/{filename}; the API's nfts/images/... path 403s on the CDN.
   const imageUrls = buildFeedImageUrls((post.imageUrls?.length ? post.imageUrls : [post.imageUrl])
-    .filter((url): url is string => typeof url === 'string' && !!url.trim())) || [];
+    .filter((url): url is string => typeof url === 'string' && !!url.trim() &&
+      (/^https?:/i.test(url) || !/^[a-z][a-z\d+.-]*:/i.test(url)))) || [];
   if (!sound.soundtrackUrl || !imageUrls.length) return undefined;
   return { ...sound, imageUrls, videoUrl: '', thumbnail: imageUrls[0],
     transcodingStatus: undefined,
