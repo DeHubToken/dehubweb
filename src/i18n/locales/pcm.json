@@ -1121,7 +1121,9 @@
     "statusDeclined": "Declined",
     "shipping": "Dey ship",
     "noShippingYet": "Nothing dey happen now",
-    "shippingAppearHere": "Requests wey dem dey build go show here."
+    "shippingAppearHere": "Requests wey dem dey build go show here.",
+    "showOneMoreReply": "Show anoda 1 reply",
+    "showMoreReplies": "Show anoda {{count}} reply dem"
   },
   "auth": {
     "loginRequired": "Login dey required"
@@ -1487,7 +1489,9 @@
       "replyingTo": "Replying to {{name}}",
       "writeReply": "Write a reply",
       "edited": "edited",
-      "authorChip": "Proposal author"
+      "authorChip": "Proposal author",
+      "deleteTitle": "Delete dis comment?",
+      "deleteDescription": "Dis one go comot di comment and all di reply wey dey under am for everybody."
     }
   },
   "sidebar": {

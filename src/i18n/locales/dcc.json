@@ -1021,7 +1021,9 @@
     "statusDeclined": "مسترد",
     "shipping": "بن رہا",
     "noShippingYet": "کچھ نکو چل رہا",
-    "shippingAppearHere": "جو درخواستیں بن رہی ہیں وہ یہاں دکھیں گی۔"
+    "shippingAppearHere": "جو درخواستیں بن رہی ہیں وہ یہاں دکھیں گی۔",
+    "showOneMoreReply": "ایک اور جواب دکھاؤ",
+    "showMoreReplies": "{{count}} اور جواب دکھاؤ"
   },
   "auth": {
     "loginRequired": "لاگ ان ضروری ہے"
@@ -1350,7 +1352,11 @@
     "minutesAgo": "{{count}} منٹ پہلے",
     "hoursAgo": "{{count}} گھنٹے پہلے",
     "daysAgo": "{{count}} دن پہلے",
-    "monthsAgo": "{{count}} مہینے پہلے"
+    "monthsAgo": "{{count}} مہینے پہلے",
+    "discussion": {
+      "deleteTitle": "یہ تبصرہ مٹانا ہے؟",
+      "deleteDescription": "اس سے تبصرہ اور اس کے سارے جواب سب کے واسطے مٹ جاتیں۔"
+    }
   },
   "sidebar": {
     "talkOfTheTown": "شہر کی بات",

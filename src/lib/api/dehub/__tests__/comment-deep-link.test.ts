@@ -79,3 +79,34 @@ describe('getNFTComments', () => {
     expect(items.map(c => c.id)).toEqual(['54']);
   });
 });
+
+describe('getNFTCommentPage', () => {
+  it("takes the server's hasMore, not the row count, after dropping a placeholder", async () => {
+    // A full page of two whose first row is a deleted linked comment: one row
+    // survives, which a length check would read as the last page.
+    mockFetch({
+      result: {
+        items: [{ id: '55', tokenId: 1, content: null, address: null, notFound: true }, comment('54')],
+        totalCount: 40,
+        skip: 0,
+        limit: 2,
+        hasMore: true,
+      },
+    });
+    const { getNFTCommentPage } = await import('@/lib/api/dehub/comments');
+
+    const page = await getNFTCommentPage('1', 0, 2, undefined, '55');
+
+    expect(page.items.map(c => c.id)).toEqual(['54']);
+    expect(page.hasMore).toBe(true);
+  });
+
+  it('sends topTipped on later pages too, since the server sorts by it on every page', async () => {
+    mockFetch({ result: { items: [], totalCount: 0, skip: 20, limit: 20, hasMore: false } });
+    const { getNFTCommentPage } = await import('@/lib/api/dehub/comments');
+
+    await getNFTCommentPage('1', 1, 20, undefined, undefined, ['9', '8']);
+
+    expect(decodeURIComponent(fetchUrl())).toContain('topTipped=9,8');
+  });
+});

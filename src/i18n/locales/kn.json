@@ -1268,7 +1268,9 @@
     "statusDeclined": "ನಿರಾಕರಿಸಲಾಗಿದೆ",
     "shipping": "ರವಾನೆಯಾಗುತ್ತಿದೆ",
     "noShippingYet": "ಪ್ರಗತಿಯಲ್ಲಿ ಏನೂ ಇಲ್ಲ",
-    "shippingAppearHere": "ನಿರ್ಮಾಣದಲ್ಲಿರುವ ವಿನಂತಿಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ."
+    "shippingAppearHere": "ನಿರ್ಮಾಣದಲ್ಲಿರುವ ವಿನಂತಿಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
+    "showOneMoreReply": "ಇನ್ನೂ 1 ಉತ್ತರ ತೋರಿಸಿ",
+    "showMoreReplies": "ಇನ್ನೂ {{count}} ಉತ್ತರಗಳನ್ನು ತೋರಿಸಿ"
   },
   "auth": {
     "loginRequired": "ಲಾಗಿನ್ ಅಗತ್ಯ"

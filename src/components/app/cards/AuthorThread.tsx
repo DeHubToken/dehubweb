@@ -14,11 +14,23 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { ThumbsUp, ThumbsDown, Share2, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { emitCommentsDeleted } from '@/lib/comment-count-events';
 import { BadgedName } from '@/components/app/BadgedName';
 import { TranslatableText } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from './DehubLinkEmbedsLazy';
@@ -83,7 +95,9 @@ function ThreadEntry({
   const { walletAddress, isAuthenticated } = useAuth();
   const [votes, setVotes] = useState<VoteOverride>({});
   const [removed, setRemoved] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   const state = { ...entry, ...votes };
   const bodyText = state.text || '';
@@ -188,6 +202,9 @@ function ThreadEntry({
     setRemoved(true);
     try {
       await deleteComment(entry.id);
+      // An entry is by definition a comment nobody has replied to, so the
+      // delete takes exactly one row off the post's count.
+      emitCommentsDeleted(tokenId, 1);
       queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
     } catch {
       setRemoved(false);
@@ -196,6 +213,7 @@ function ThreadEntry({
   };
 
   return (
+    <>
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
@@ -351,7 +369,7 @@ function ThreadEntry({
           </button>
           {isOwn && (
             <button
-              onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+              onClick={(e) => { e.stopPropagation(); setConfirmingDelete(true); }}
               className="text-white/70 hover:text-red-400 transition-colors"
               aria-label="Delete"
             >
@@ -361,6 +379,31 @@ function ThreadEntry({
         </div>
       </div>
     </motion.div>
+    {/* A delete is permanent, so it is asked first. A sibling of the row
+        rather than inside it: the dialog portals out, but React events still
+        bubble through the portal, and the row's own click opens the entry. */}
+    {isOwn && (
+      <AlertDialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
+        <AlertDialogContent className="z-[10000] bg-black/80 backdrop-blur-[24px] border-white/10">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">{t('governance.discussion.deleteTitle')}</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400">{t('governance.discussion.deleteDescription')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-white/5 border-white/10 text-white hover:bg-white/10 hover:text-white">
+              {t('common.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-500/80 text-white hover:bg-red-500"
+              onClick={() => { void handleDelete(); }}
+            >
+              {t('common.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    )}
+    </>
   );
 }
 
