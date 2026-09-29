@@ -5440,7 +5440,11 @@
       "intro": "DeHub uchun har kim tomonidan yaratilgan mini-ilovalar. Ular DeHub ichida ochiladi, siz allaqachon tizimga kirgansiz va har bir ilova o&#39;zining haqiqiy veb-manzilini ko&#39;rsatadi.",
       "buildCta": "Ilova yarating",
       "emptyTitle": "Hali hech qanday ilova ro&#39;yxatda yo&#39;q",
-      "emptyBody": "Birinchi ilovalar ko&#39;rib chiqilmoqda. Bittasini yarating, shunda u shu yerda bo&#39;lishi mumkin."
+      "emptyBody": "Birinchi ilovalar ko&#39;rib chiqilmoqda. Bittasini yarating, shunda u shu yerda bo&#39;lishi mumkin.",
+      "search": "Ilovalarni qidirish",
+      "all": "Hammasi",
+      "fromDehub": "DeHub&#39;dan",
+      "noMatch": "Bu qidiruvga hech qanday ilova mos kelmadi."
     },
     "dev": {
       "title": "Mini ilova yarating",
@@ -5475,34 +5479,36 @@
       "verifyTitle": "DeHub bilan serveringizda kirishingiz kerak",
       "verifyBody": "auth.getToken() ilovangizga DeHub tomonidan imzolangan token beradi. Serveringizda har qanday JWT kitobxonligi bilan uni tekshiring. Foydalanuvchi walet manzili sub da boʻladi.",
       "copy": "Nashriyot",
-      "copied": "Nashriyot qilingan"
+      "copied": "Nashriyot qilingan",
+      "submitBody": "Manifestingiz qabul qilindi. Uni yuboring va ilovangiz darhol DeHub havolasida ishga tushadi va &quot;Ko&#39;rib chiqilmagan&quot; deb belgilanadi. Ko&#39;rib chiqilgandan so&#39;ng, u do&#39;konda paydo bo&#39;ladi.",
+      "submit": "DeHub’ga yuborish",
+      "submitSignIn": "Yuborish uchun DeHub’ga kiring.",
+      "submitDone": "Yuborildi. Ilovangiz DeHub havolasi orqali ishga tushirildi.",
+      "submitUpdated": "Yangilandi. DeHub sizning manifestingizning eng so&#39;nggi versiyasiga ega.",
+      "yourAppsTitle": "Ilovalaringiz",
+      "stateUnlisted": "Havola orqali jonli efir · do&#39;kon uchun sharhda",
+      "stateListed": "Do&#39;konda",
+      "stateSuspended": "To&#39;xtatilgan",
+      "copyLink": "Havolani nusxalash"
+    },
+    "card": {
+      "open": "Ochiq"
+    },
+    "category": {
+      "games": "O&#39;yinlar",
+      "social": "Ijtimoiy",
+      "finance": "Moliya",
+      "utility": "Kommunal xizmatlar",
+      "productivity": "Hosildorlik",
+      "health-fitness": "Salomatlik va fitnes",
+      "news-media": "Yangiliklar va ommaviy axborot vositalari",
+      "music": "Musiqa",
+      "shopping": "Xarid qilish",
+      "education": "Ta&#39;lim",
+      "developer-tools": "Dasturchi vositalari",
+      "entertainment": "Ko&#39;ngilochar",
+      "art-creativity": "San&#39;at va ijodkorlik"
     }
-  },
-  "spaces": {
-    "title": "Boʻlimlar",
-    "live": "Jonli",
-    "upcoming": "Kelgusi",
-    "past": "Oʻtgan",
-    "create": "Boʻlim yaratish",
-    "join": "Qoʻshilish",
-    "listeners": "Tinglovchilar",
-    "speakers": "Nutqchilar",
-    "host": "Boshlovchi",
-    "endSpace": "Boʻlimni tugatish",
-    "raiseHand": "Qoʻl koʻtarish",
-    "lowerHand": "Qoʻlni tushirish",
-    "mute": "Ovozni oʻchirish",
-    "unmute": "Ovozni yoqish",
-    "leave": "Boʻlimni tark etish",
-    "noSpaces": "Hali boʻlimlar yoʻq",
-    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
-  },
-  "blog": {
-    "title": "Blog",
-    "readMore": "Koʻproq oʻqish",
-    "backToBlog": "Blogga qaytish",
-    "sharePost": "Postni ulashish",
-    "relatedPosts": "Bogʻliq postlar"
   },
   "aiStyles": {
     "normal": "Oddiy",
@@ -5534,5 +5540,31 @@
     "progressive": "Progressiv",
     "nationalist": "Millatchi",
     "communist": "Kommunist"
+  },
+  "spaces": {
+    "title": "Boʻlimlar",
+    "live": "Jonli",
+    "upcoming": "Kelgusi",
+    "past": "Oʻtgan",
+    "create": "Boʻlim yaratish",
+    "join": "Qoʻshilish",
+    "listeners": "Tinglovchilar",
+    "speakers": "Nutqchilar",
+    "host": "Boshlovchi",
+    "endSpace": "Boʻlimni tugatish",
+    "raiseHand": "Qoʻl koʻtarish",
+    "lowerHand": "Qoʻlni tushirish",
+    "mute": "Ovozni oʻchirish",
+    "unmute": "Ovozni yoqish",
+    "leave": "Boʻlimni tark etish",
+    "noSpaces": "Hali boʻlimlar yoʻq",
+    "loginDescription": "Audio boʻlimlar yaratish va qoʻshilish uchun kiring."
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Koʻproq oʻqish",
+    "backToBlog": "Blogga qaytish",
+    "sharePost": "Postni ulashish",
+    "relatedPosts": "Bogʻliq postlar"
   }
 }

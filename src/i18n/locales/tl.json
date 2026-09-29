@@ -7410,8 +7410,8 @@
       "close": "I-close ang app",
       "backToStore": "Bumalik sa mga App",
       "notFound": "Ang app na ito ay hindi sa DeHub App Store, o ito ay inalis na.",
-      "badUrl": "Ang address na ito ay hindi maaaring buksan bilang isang mini app. Dapat itong simula sa **https://**, o isang localhost address sa mode ng tagagawa.",
-      "readyTimeout": "Ang app na ito ay hindi nagkita ng **dehub.ready()**, kaya itinago ang splash screen pagkatapos ng 8 segundo."
+      "badUrl": "Ang address na ito ay hindi maaaring buksan bilang isang mini app. Dapat itong simula sa https://, o isang localhost address sa mode ng tagagawa.",
+      "readyTimeout": "Ang app na ito ay hindi nagkita ng dehub.ready(), kaya itinago ang splash screen pagkatapos ng 8 segundo."
     },
     "signIn": {
       "title": "Mag-sign in sa {{name}}?",
@@ -7426,7 +7426,11 @@
       "intro": "Mga mini app na ginawa para sa DeHub ng sinuman. Silang lahat ay bukas sa loob ng DeHub, na may sign-in na nakapagtatagumpay, at bawat app ay nagpapakita ng tunay na web address nito.",
       "buildCta": "Gumawa ng app",
       "emptyTitle": "Walang mga app na nakalista pa.",
-      "emptyBody": "Ang unang mga app ay nasa pag-aaral. Gumawa ng isang app at maaari itong makita rito."
+      "emptyBody": "Ang unang mga app ay nasa pag-aaral. Gumawa ng isang app at maaari itong makita rito.",
+      "search": "Maghanap ng mga app",
+      "all": "Lahat",
+      "fromDehub": "Mula sa DeHub",
+      "noMatch": "Walang apps na tumutugma sa paghahanap na iyon."
     },
     "dev": {
       "title": "Gumawa ng mini app",
@@ -7437,7 +7441,7 @@
       "checkTitle": "Suriin at palakasin",
       "check": "Suriin",
       "launch": "Palakasin",
-      "badUrl": "Ipasok ang isang address na **https://**, o **http://localhost** para sa pagsubok sa lokal.",
+      "badUrl": "Ipasok ang isang address na https://, o http://localhost para sa pagsubok sa lokal.",
       "localNote": "Ang mga address sa lokal ay hindi maaaring suriin mula sa aming mga server, ngunit maaari kang palakasin sila rito para sa pagsubok.",
       "checkFailed": "Hindi maaaring gumana ang pagsubok. Subukan muli.",
       "passed": "Mangyaring i-check ang manifest, maganda na.",
@@ -7461,8 +7465,66 @@
       "verifyTitle": "I-sign sa DeHub, sa iyong server",
       "verifyBody": "Ang auth.getToken() ay ibibigay sa iyong app ang isang token na may-isa sa DeHub. Tingnan ito sa iyong server gamit ang anumang JWT library. Ang address ng wallet ng user ay nasa sub.",
       "copy": "Kopya",
-      "copied": "Nakopya"
+      "copied": "Nakopya",
+      "submitBody": "Ang iyong manifest pass. Isumite ito at ang iyong app napupunta live sa isang DeHub link kaagad, minarkahan Unreviewed. Lumilitaw ito sa tindahan kapag nasuri na ito.",
+      "submit": "Isumite sa DeHub",
+      "submitSignIn": "Mag - sign in sa DeHub para magsumite.",
+      "submitDone": "Isinumite. Ang iyong app ay live sa kanyang DeHub link.",
+      "submitUpdated": "Na - update. Ang DeHub ay may pinakabagong bersyon ng iyong manifest.",
+      "yourAppsTitle": "Ang iyong mga app",
+      "stateUnlisted": "Live sa pamamagitan ng link · sa pagsusuri para sa tindahan",
+      "stateListed": "Sa tindahan",
+      "stateSuspended": "Nasuspinde",
+      "copyLink": "Kopyahin ang link"
+    },
+    "card": {
+      "open": "Buksan"
+    },
+    "category": {
+      "games": "Mga Laro",
+      "social": "Panlipunan",
+      "finance": "Pananalapi",
+      "productivity": "Pagiging Produktibo",
+      "health-fitness": "Kalusugan at fitness",
+      "news-media": "Username or email address *",
+      "music": "Musika",
+      "shopping": "Pamimili",
+      "education": "Edukasyon",
+      "developer-tools": "Mga tool ng developer",
+      "entertainment": "Libangan",
+      "art-creativity": "Sining at pagkamalikhain"
     }
+  },
+  "aiStyles": {
+    "normal": "Normal",
+    "old-english": "Lumang Ingles",
+    "cockney": "Cockney",
+    "celtic": "Celtic",
+    "scouse": "Scouse",
+    "wild-west": "Wild West",
+    "asian-uncle": "Asyanong Tito",
+    "russian-mafia": "Russian Mafia",
+    "pirate": "Pirata",
+    "alien": "Alien",
+    "e-girl": "E-Girl",
+    "chad": "Chad",
+    "hopeless-romantic": "Hopeless Romantic",
+    "daddy": "Tatay",
+    "mommy": "Nanay",
+    "big-brother": "Kuya",
+    "lil-bro": "Bunsong Kapatid na Lalaki",
+    "big-sister": "Ate",
+    "little-sister": "Bunsong Kapatid na Babae",
+    "conservative": "Konserbatibo",
+    "liberal": "Liberal",
+    "antifa": "ANTIFA",
+    "capitalist": "Kapitalista",
+    "socialist": "Sosyalista",
+    "neocon": "Neocon",
+    "feminist": "Peminista",
+    "progressive": "Progresibo",
+    "nationalist": "Nasyonalista",
+    "communist": "Komunista"
   },
   "walletSelector": {
     "title": "Piliin ang Wallet",
@@ -7515,36 +7577,5 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
-  },
-  "aiStyles": {
-    "normal": "Normal",
-    "old-english": "Lumang Ingles",
-    "cockney": "Cockney",
-    "celtic": "Celtic",
-    "scouse": "Scouse",
-    "wild-west": "Wild West",
-    "asian-uncle": "Asyanong Tito",
-    "russian-mafia": "Russian Mafia",
-    "pirate": "Pirata",
-    "alien": "Alien",
-    "e-girl": "E-Girl",
-    "chad": "Chad",
-    "hopeless-romantic": "Hopeless Romantic",
-    "daddy": "Tatay",
-    "mommy": "Nanay",
-    "big-brother": "Kuya",
-    "lil-bro": "Bunsong Kapatid na Lalaki",
-    "big-sister": "Ate",
-    "little-sister": "Bunsong Kapatid na Babae",
-    "conservative": "Konserbatibo",
-    "liberal": "Liberal",
-    "antifa": "ANTIFA",
-    "capitalist": "Kapitalista",
-    "socialist": "Sosyalista",
-    "neocon": "Neocon",
-    "feminist": "Peminista",
-    "progressive": "Progresibo",
-    "nationalist": "Nasyonalista",
-    "communist": "Komunista"
   }
 }

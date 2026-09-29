@@ -7391,7 +7391,11 @@
       "intro": "Մինի հավելվածներ, որոնք ստեղծվել են DeHub-ի համար ցանկացած կողմից։ Նրանք բացվում են DeHub-ի ներսում, դու արդեն մուտք գործած ես, և յուրաքանչյուր հավելված ցուցադրում է իր իրական վեբ հասցեն։",
       "buildCta": "Ստեղծել հավելված",
       "emptyTitle": "Չկա հավելվածներ ցուցադրված դեռ։",
-      "emptyBody": "Առաջին հավելվածները վերահսկվում են։ Ստեղծել մեկը և այն կարող է այստեղ լինել։"
+      "emptyBody": "Առաջին հավելվածները վերահսկվում են։ Ստեղծել մեկը և այն կարող է այստեղ լինել։",
+      "search": "Search apps",
+      "all": "All",
+      "fromDehub": "From DeHub",
+      "noMatch": "Ոչ մի հավելված չի համապատասխանում որոնման արդյունքներին ։"
     },
     "dev": {
       "title": "Ստեղծել մինի հավելված",
@@ -7426,7 +7430,35 @@
       "verifyTitle": "Մուտք գործեք DeHub - ով ՝ ձեր սերվերում",
       "verifyBody": "auth.getToken()- ը ձեր հավելվածին տալիս է DeHub - ի կողմից ստորագրված նշան: Ստուգեք այն ձեր սերվերում ցանկացած JWT գրադարանում: Օգտատիրոջ դրամապանակի հասցեն նշված է ենթակետում ։",
       "copy": "Պատճեն՝",
-      "copied": "Պատճենված է"
+      "copied": "Պատճենված է",
+      "submitBody": "Ձեր հայտը փոխանցվում է ։ Ներկայացրեք այն, և ձեր հավելվածը անմիջապես կհրապարակվի DeHub հղումով, որը նշված է Չվերանայված ։ Այն հայտնվում է խանութում, երբ այն վերանայվել է:",
+      "submit": "Submit to DeHub",
+      "submitSignIn": "Ներկայացնելու համար մուտք գործեք DeHub ։",
+      "submitDone": "Ներկայացված է ։ Ձեր հավելվածը հասանելի է DeHub - ի հղումով ։",
+      "submitUpdated": "Թարմացվել է ։ DeHub - ն ունի ձեր դրսևորման վերջին տարբերակը ։",
+      "yourAppsTitle": "Your apps",
+      "stateUnlisted": "Ուղիղ հեռարձակումը ՝ հղումով · ուսումնասիրվում է խանութի համար",
+      "stateListed": "In the store",
+      "stateSuspended": "Suspended",
+      "copyLink": "Copy link"
+    },
+    "card": {
+      "open": "Open"
+    },
+    "category": {
+      "games": "Games",
+      "social": "Social",
+      "finance": "Finance",
+      "utility": "Utility",
+      "productivity": "Productivity",
+      "health-fitness": "Health & fitness",
+      "news-media": "News & media",
+      "music": "Music",
+      "shopping": "Shopping",
+      "education": "Education",
+      "developer-tools": "Developer tools",
+      "entertainment": "Entertainment",
+      "art-creativity": "Art & creativity"
     }
   },
   "aiStyles": {

@@ -7586,7 +7586,11 @@
       "intro": "任何人都可以为DeHub构建迷你应用程序。它们在DeHub中打开，您已经登录，每个应用都会显示其真实网址。",
       "buildCta": "构建应用",
       "emptyTitle": "尚未列出任何应用程序",
-      "emptyBody": "首批应用正在审核中。建造一个，它可能就在这里。"
+      "emptyBody": "首批应用正在审核中。建造一个，它可能就在这里。",
+      "search": "搜索应用",
+      "all": "全部",
+      "fromDehub": "来自DeHub",
+      "noMatch": "没有与该搜索匹配的应用。"
     },
     "dev": {
       "title": "构建迷你应用",
@@ -7621,7 +7625,35 @@
       "verifyTitle": "在您的服务器上使用DeHub登录",
       "verifyBody": "auth.getToken ()为您的应用程序提供由DeHub签名的令牌。使用任何JWT库在您的服务器上检查它。用户的钱包地址在SUB中。",
       "copy": "复制",
-      "copied": "已复制"
+      "copied": "已复制",
+      "submitBody": "您的清单通过。提交它，您的应用程序立即在DeHub链接上线，标记为未审阅。通过审核后，它会显示在商店中。",
+      "submit": "提交到DeHub",
+      "submitSignIn": "登录DeHub以提交。",
+      "submitDone": "已提交。您的应用程序已在其DeHub链接上线。",
+      "submitUpdated": "已更新。DeHub有最新版本的清单。",
+      "yourAppsTitle": "您的应用",
+      "stateUnlisted": "LIVE BY LINK ·商店审核中",
+      "stateListed": "在商店里",
+      "stateSuspended": "已下架",
+      "copyLink": "复制链接"
+    },
+    "card": {
+      "open": "打开"
+    },
+    "category": {
+      "games": "游戏",
+      "social": "社交",
+      "finance": "财务",
+      "utility": "公用事业",
+      "productivity": "生产力",
+      "health-fitness": "健康与健身",
+      "news-media": "新闻与媒体",
+      "music": "音乐",
+      "shopping": "购物",
+      "education": "教育",
+      "developer-tools": "开发者工具",
+      "entertainment": "娱乐",
+      "art-creativity": "艺术与创意"
     }
   },
   "aiStyles": {

@@ -7587,7 +7587,11 @@
       "intro": "Mini aplicaciones creadas para DeHub por cualquier persona. Se abren dentro de DeHub, ya has iniciado sesión y cada aplicación muestra su dirección web real.",
       "buildCta": "Crea una aplicación",
       "emptyTitle": "Todavía no hay aplicaciones en la lista",
-      "emptyBody": "Las primeras aplicaciones están en revisión. Construye uno y podría estar aquí."
+      "emptyBody": "Las primeras aplicaciones están en revisión. Construye uno y podría estar aquí.",
+      "search": "Buscar aplicaciones",
+      "all": "Todos",
+      "fromDehub": "De DeHub",
+      "noMatch": "Ninguna aplicación coincide con esa búsqueda."
     },
     "dev": {
       "title": "Crea una mini aplicación",
@@ -7622,7 +7626,34 @@
       "verifyTitle": "Inicia sesión con DeHub, en tu servidor",
       "verifyBody": "auth.getToken() te da a tu app un token firmado por DeHub. Verifícalo en tu servidor con cualquier biblioteca JWT. La dirección de la billetera del usuario está en sub.",
       "copy": "Copiar",
-      "copied": "¡Copiado!"
+      "copied": "¡Copiado!",
+      "submitBody": "Tu manifiesto pasa. Envíalo y tu aplicación se publicará en un enlace de DeHub de inmediato, marcado como Sin revisar. Aparece en la tienda una vez que se ha revisado.",
+      "submit": "Enviar a DeHub",
+      "submitSignIn": "Inicia sesión en DeHub para enviar.",
+      "submitDone": "Enviado. Tu aplicación está activa en su enlace de DeHub.",
+      "submitUpdated": "Actualizado. DeHub tiene la última versión de tu manifiesto.",
+      "yourAppsTitle": "Tus aplicaciones",
+      "stateUnlisted": "Vive por enlace · en revisión para la tienda",
+      "stateListed": "En la tienda",
+      "stateSuspended": "Suspendido",
+      "copyLink": "Copiar enlace"
+    },
+    "card": {
+      "open": "Abierto"
+    },
+    "category": {
+      "games": "Juegos",
+      "finance": "Finanzas",
+      "utility": "Utilidad",
+      "productivity": "Productividad",
+      "health-fitness": "Salud y estado físico",
+      "news-media": "Noticias y medios de comunicación",
+      "music": "Música",
+      "shopping": "Compras",
+      "education": "Educación",
+      "developer-tools": "Herramientas para desarrolladores",
+      "entertainment": "Entretenimiento",
+      "art-creativity": "Arte y creatividad"
     }
   },
   "aiStyles": {

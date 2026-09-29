@@ -5300,7 +5300,11 @@
       "intro": "ናይ ሚኒ ኣፕሊኬሽናት ንዴሆብ ብገለ ሰብ ዝተሃንጹ እዮም ። ኣብ ውሽጢ DeHub ይኽፈቱ ፡ ድሮ ተመዝጊብካ ኣለኻ ፡ ነፍሲ ወከፍ መተግበሪ ድማ ናይ ሓቂ ኣድራሻኡ የርኢ ።",
       "buildCta": "ኣፕሊኬሽን ምህናጽ",
       "emptyTitle": "ክሳብ ሕጂ ዝተዘርዘሩ መተግበሪታት የብሎምን ።",
-      "emptyBody": "እቶም ቀዳሞት መተግበሪታት ኣብ ምግምጋም እዮም ዘለዉ ። ሓደ ሰብ ክሃንጽ ይኽእል እዩ ፣ እዚ ድማ ኣብዚ ክኸውን ይኽእል እዩ ።"
+      "emptyBody": "እቶም ቀዳሞት መተግበሪታት ኣብ ምግምጋም እዮም ዘለዉ ። ሓደ ሰብ ክሃንጽ ይኽእል እዩ ፣ እዚ ድማ ኣብዚ ክኸውን ይኽእል እዩ ።",
+      "search": "ኣፕሊኬሽናት ድለዩ",
+      "all": "ኩሉ",
+      "fromDehub": "ካብ ደሆብ",
+      "noMatch": "ነዚ ፍለጋ እዚ ዝሰማማዕ ኣፕሊኬሽናት የለን ።"
     },
     "dev": {
       "title": "ናይ ሚኒ ኣፕሊኬሽን ምህናጽ",
@@ -5335,7 +5339,35 @@
       "verifyTitle": "ምስ DeHub ኣብ ኣገልጋሊኻ ትኣቱ",
       "verifyBody": "auth.getToken() ነቲ መተግበሪኻ ብ DeHub ዝተፈረመ ምልክት ይህቦ ። ምስ ዝኾነ JWT ቤተ-መጽሓፍቲ ኣብ ኣገልጋሊኻ ርኣዮ ። ናይ ተጠቃሚ ናይ ቦርሳ ኣድራሻ ኣብ ትሕቲ እዩ ።",
       "copy": "ቅዳሕ",
-      "copied": "ቅዳሕ"
+      "copied": "ቅዳሕ",
+      "submitBody": "እቲ ንጹር ፓስፖርትካ ። ኣመልኪቱ ፡ እቲ መተግበሪኻ ድማ ብቐጥታ ኣብ DeHub ሊንክ ይነብር ፡ ምልክት ዘይተገብረሉ እዩ ። ድሕሪ ምግምጋም ኣብ መደበር ይርአ ።",
+      "submit": "ናብ ደሆብ እተላእከት",
+      "submitSignIn": "ንምእታው ናብ DeHub ኣቲኻ ።",
+      "submitDone": "እቲ መተግበሪኻ ኣብ DeHub ሊንክኡ ህያው እዩ ።",
+      "submitUpdated": "Updated. DeHub ናይ መወዳእታ ናይ መገለጺኻ ስሪት ኣለዎ ።",
+      "yourAppsTitle": "ኣፕሊኬሽናትካ",
+      "stateUnlisted": "Live by link · ኣብ ናይ መደበር ግምገማ",
+      "stateListed": "ኣብ መደበር",
+      "stateSuspended": "ተቛሪጹ",
+      "copyLink": "ሊንክ ቅዳሕ"
+    },
+    "card": {
+      "open": "ክፉት"
+    },
+    "category": {
+      "games": "ጸወታታት",
+      "social": "ማሕበራዊ",
+      "finance": "ፋይናንስ",
+      "utility": "ጥቕሚ",
+      "productivity": "ምርታማነት",
+      "health-fitness": "ጥዕናን ጥዕናን",
+      "news-media": "ዜናታትን መራኸቢ ብዙሓን",
+      "music": "ሙዚቃ",
+      "shopping": "መግዛእቲ",
+      "education": "ትምህርቲ",
+      "developer-tools": "መሳርሒታት ገንቢ",
+      "entertainment": "መዘናግዒ",
+      "art-creativity": "ስነጥበብን ፍጥረት"
     }
   },
   "aiStyles": {

@@ -5450,7 +5450,11 @@
       "intro": "Mini apps DeHubpaq pillapas ruwasqa. DeHub ukhupi kicharikunku, yaykusqaña kanki, chaymanta sapa app chiqa web direccionninta rikuchin.",
       "buildCta": "Huk app nisqa ruway",
       "emptyTitle": "Manaraqmi appkuna listasqachu kachkan",
-      "emptyBody": "Ñawpaq kaq appkuna qhawaypi kachkanku. Hukninta ruway hinaspa kaypi kanman."
+      "emptyBody": "Ñawpaq kaq appkuna qhawaypi kachkanku. Hukninta ruway hinaspa kaypi kanman.",
+      "search": "Maskay apps nisqakunata",
+      "all": "Llapan",
+      "fromDehub": "DeHub nisqamanta",
+      "noMatch": "Mana ima appkuna chay maskaywan tupanchu."
     },
     "dev": {
       "title": "Huk mini app nisqa ruway",
@@ -5484,7 +5488,35 @@
       "verifyTitle": "DeHub kaqwan yaykuy, servidorniykipi",
       "verifyBody": "auth.getToken() appniykiman huk tokenta qun DeHub firmasqa. Chayta qhaway servidorniykipi mayqin JWT bibliotecawanpas. Ruwaqpa billetera direccionninqa sub nisqapi kachkan.",
       "copy": "Copia",
-      "copied": "Copiasqa"
+      "copied": "Copiasqa",
+      "submitBody": "Manifiestoykiqa pasanmi. Chayta apachiy chaymanta appniyki huk DeHub t&#39;inkipi chaylla kawsan, Mana Revisasqa sutiyuq. Chayqa tiendapi rikurin huk kuti qawasqaña kaptin.",
+      "submit": "DeHub nisqaman apachiy",
+      "submitSignIn": "DeHub nisqaman yaykuy apachinaykipaq.",
+      "submitDone": "Enviado. Appniykiqa DeHub link nisqapi kawsachkan.",
+      "submitUpdated": "Kunanchasqa. DeHubqa manifiestoykimanta qhipa kaq layayuq kachkan.",
+      "yourAppsTitle": "Apps nisqaykikuna",
+      "stateUnlisted": "Kawsay link · tiendapaq qhawaypi",
+      "stateListed": "Tiendapi",
+      "stateSuspended": "Sayachisqa",
+      "copyLink": "Copia link nisqa"
+    },
+    "card": {
+      "open": "Kichasqa"
+    },
+    "category": {
+      "games": "Pukllaykuna",
+      "social": "Llapa una",
+      "finance": "Wakiy",
+      "utility": "Utilidad",
+      "productivity": "Productividad nisqa",
+      "health-fitness": "Salud & fitness nisqa",
+      "news-media": "Willakuykuna & willay mast’ariqkuna",
+      "music": "Taki",
+      "shopping": "Rantiy",
+      "education": "Yachay",
+      "developer-tools": "Paqarichiqpa yanapakuyninkuna",
+      "entertainment": "Kusirikuy",
+      "art-creativity": "Arte & creatividad nisqa"
     }
   },
   "aiStyles": {

@@ -7468,7 +7468,11 @@
       "intro": "Mini-sovellukset, jotka on rakennettu DeHubille kuka tahansa. Ne avautuvat DeHubin sisällä, olet jo kirjautunut sisään, ja jokainen sovellus näyttää sen todellisen verkkosivun osoitteen.",
       "buildCta": "Rakennetaan sovellus",
       "emptyTitle": "Ei sovelluksia vielä lueteltuina",
-      "emptyBody": "Ensimmäiset sovellukset ovat tarkastuksessa. Rakennathan yhden ja se saattaa tulla tänne."
+      "emptyBody": "Ensimmäiset sovellukset ovat tarkastuksessa. Rakennathan yhden ja se saattaa tulla tänne.",
+      "search": "Hae sovelluksia",
+      "all": "Kaikki",
+      "fromDehub": "DeHubilta",
+      "noMatch": "Mikään sovellus ei vastaa tätä hakua."
     },
     "dev": {
       "title": "Rakennetaan mini-sovellus",
@@ -7503,7 +7507,35 @@
       "verifyTitle": "Kirjaudu sisään DeHubilla palvelimellasi",
       "verifyBody": "auth.getToken() antaa sovelluksellesi DeHubin allekirjoittaman tunnuksen. Tarkista se palvelimeltasi mistä tahansa JWT-kirjastosta. Käyttäjän lompakon osoite on alaosassa.",
       "copy": "Kopio",
-      "copied": "Kopioitu"
+      "copied": "Kopioitu",
+      "submitBody": "Lastiluettelosi hyväksytään. Lähetä se, niin sovelluksesi julkaistaan välittömästi DeHub-linkissä, jossa on merkintä Unreviewed (tarkistamaton). Se näkyy kaupassa, kun se on tarkistettu.",
+      "submit": "Lähetä DeHubiin",
+      "submitSignIn": "Lähetä kirjautumalla DeHubiin.",
+      "submitDone": "Lähetetty. Sovelluksesi on DeHub-linkissä.",
+      "submitUpdated": "Päivitetty. DeHubilla on uusin versio luettelostasi.",
+      "yourAppsTitle": "Sovelluksesi",
+      "stateUnlisted": "Live by LINK · arvioitavana toimipaikalle",
+      "stateListed": "Myymälässä",
+      "stateSuspended": "Suljettu",
+      "copyLink": "Kopioi linkki"
+    },
+    "card": {
+      "open": "Avaa"
+    },
+    "category": {
+      "games": "Pelit",
+      "social": "Sosiaalinen",
+      "finance": "Rahoitus",
+      "utility": "Hyöty",
+      "productivity": "Tuottavuus",
+      "health-fitness": "Terveys ja kuntoilu",
+      "news-media": "Uutiset ja media",
+      "music": "Musiikki",
+      "shopping": "Shoppailu",
+      "education": "Koulutus",
+      "developer-tools": "Kehittäjän työkalut",
+      "entertainment": "Viihde",
+      "art-creativity": "Taide ja luovuus"
     }
   },
   "aiStyles": {

@@ -7793,7 +7793,11 @@
       "intro": "Mini-apps gebouwd voor DeHub door iedereen. Ze openen binnen DeHub, je bent al ingelogd, en elke app toont zijn echte webadres.",
       "buildCta": "Een app bouwen",
       "emptyTitle": "Geen apps gelijst",
-      "emptyBody": "De eerste apps zijn in review. Bouw er een en die kan hier staan."
+      "emptyBody": "De eerste apps zijn in review. Bouw er een en die kan hier staan.",
+      "search": "Apps zoeken",
+      "all": "Alle",
+      "fromDehub": "Van DeHub",
+      "noMatch": "Er komen geen apps overeen met die zoekopdracht."
     },
     "dev": {
       "title": "Een mini-app bouwen",
@@ -7821,13 +7825,42 @@
       "signFailed": "Het ondertekenen is niet voltooid.",
       "quickstartTitle": "Snelle start",
       "quickstartBody": "Voeg de SDK toe aan je pagina en bel ready() zodra je eerste scherm verschijnt.",
+      "manifestTitle": "Manifest",
       "manifestBody": "Serveer dit op /.well-known/dehub.json op het domein van je app. Heb je al een farcaster.json? Dat hebben we ook gelezen.",
       "embedTitle": "Toevoerkaart",
       "embedBody": "Voeg deze tag toe aan elke pagina en een link naar die pagina wordt weergegeven als een kaart met een knop die je app daar opent.",
       "verifyTitle": "Meld u aan met DeHub, op uw server",
       "verifyBody": "auth.getToken() geeft je app een token dat is ondertekend door DeHub. Controleer het op uw server met een JWT-bibliotheek. Het wallet-adres van de gebruiker staat in sub.",
       "copy": "Kopiëren",
-      "copied": "Gekopieerd"
+      "copied": "Gekopieerd",
+      "submitBody": "Je manifest is geslaagd. Dien het in en je app gaat meteen live via een DeHub-link, gemarkeerd als Niet beoordeeld. Het verschijnt in de winkel nadat het is beoordeeld.",
+      "submit": "Verzenden naar DeHub",
+      "submitSignIn": "Meld je aan bij DeHub om in te dienen.",
+      "submitDone": "Ingediend. Je app is live via de DeHub-link.",
+      "submitUpdated": "Bijgewerkt. DeHub heeft de nieuwste versie van je manifest.",
+      "yourAppsTitle": "Uw apps",
+      "stateUnlisted": "Live via link · in beoordeling voor de winkel",
+      "stateListed": "In de winkel",
+      "stateSuspended": "Opgeschort",
+      "copyLink": "Link kopiëren"
+    },
+    "card": {
+      "open": "Open"
+    },
+    "category": {
+      "games": "Spellen",
+      "social": "Sociaal",
+      "finance": "Financiën",
+      "utility": "Nut",
+      "productivity": "Productiviteit",
+      "health-fitness": "Gezondheid en fitness",
+      "news-media": "Nieuws & media",
+      "music": "Muziek",
+      "shopping": "Winkelen",
+      "education": "Opleiding",
+      "developer-tools": "Tools voor ontwikkelaars",
+      "entertainment": "Onderhouding",
+      "art-creativity": "Kunst & creativiteit"
     }
   },
   "aiStyles": {

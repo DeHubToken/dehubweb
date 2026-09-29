@@ -7572,7 +7572,11 @@
       "intro": "誰でもDeHub用に構築されたミニアプリ。DeHub内で開き、すでにサインインしており、すべてのアプリに実際のWebアドレスが表示されます。",
       "buildCta": "アプリを構築する",
       "emptyTitle": "まだアプリがリストされていません",
-      "emptyBody": "最初のアプリは審査中です。1つ建てれば、ここにあるかもしれません。"
+      "emptyBody": "最初のアプリは審査中です。1つ建てれば、ここにあるかもしれません。",
+      "search": "アプリを検索",
+      "all": "すべて",
+      "fromDehub": "DeHubから",
+      "noMatch": "その検索に一致するアプリはありません。"
     },
     "dev": {
       "title": "ミニアプリを構築する",
@@ -7607,7 +7611,35 @@
       "verifyTitle": "サーバー上のDeHubでサインイン",
       "verifyBody": "auth.getToken ()は、DeHubによって署名されたトークンをアプリに提供します。JWTライブラリを使用してサーバーで確認してください。ユーザーのウォレットアドレスはSUBにあります。",
       "copy": "コピー",
-      "copied": "コピーしました"
+      "copied": "コピーしました",
+      "submitBody": "マニフェストが通過します。送信すると、アプリはすぐにDeHubリンクで公開され、[未審査]とマークされます。レビューが完了すると、店舗に表示されます。",
+      "submit": "DeHubに送信",
+      "submitSignIn": "DeHubにサインインして送信します。",
+      "submitDone": "送信しました。アプリはDeHubリンクで公開されています。",
+      "submitUpdated": "更新されました。DeHubにはマニフェストの最新バージョンがあります。",
+      "yourAppsTitle": "あなたのアプリ",
+      "stateUnlisted": "リンクでライブ・店舗のレビュー中",
+      "stateListed": "店舗内",
+      "stateSuspended": "一時停止中",
+      "copyLink": "リンクをコピー"
+    },
+    "card": {
+      "open": "開く"
+    },
+    "category": {
+      "games": "ゲーム",
+      "social": "ソーシャル",
+      "finance": "財務",
+      "utility": "ユーティリティ",
+      "productivity": "生産性",
+      "health-fitness": "健康とフィットネス",
+      "news-media": "ニュースとメディア",
+      "music": "音楽",
+      "shopping": "ショッピング",
+      "education": "教育",
+      "developer-tools": "デベロッパーツール",
+      "entertainment": "エンターテインメント",
+      "art-creativity": "アート＆クリエイティビティ"
     }
   },
   "aiStyles": {

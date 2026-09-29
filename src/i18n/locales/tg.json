@@ -5398,7 +5398,11 @@
       "intro": "Барномаҳои хурд барои DeHub аз ҷониби касе сохта шудаанд. Онҳо дар дохили DeHub кушода мешаванд, шумо аллакай ворид шудаед ва ҳар як барнома суроғаи воқеии вебро нишон медиҳад.",
       "buildCta": "Сохтани барнома",
       "emptyTitle": "Ягон барномаҳо ҳанӯз номбар нашудаанд",
-      "emptyBody": "Ang unang mga aplikasyon ay nakalista. Сохтани як ва он метавонад дар ин ҷо бошад."
+      "emptyBody": "Ang unang mga aplikasyon ay nakalista. Сохтани як ва он метавонад дар ин ҷо бошад.",
+      "search": "Ҷустуҷӯи барномаҳо",
+      "all": "Lahat",
+      "fromDehub": "Аз DeHub",
+      "noMatch": "Walang mga application na tumutugma sa paghahanap na"
     },
     "dev": {
       "title": "Сохтани барномаи мини",
@@ -5432,7 +5436,35 @@
       "verifyTitle": "Mag-sign in sa DeHub, sa iyong server",
       "verifyBody": "auth.getToken() auth.getToken () ay nagbibigay ng iyong app ay nagbibigay ng isang token na Онро дар сервери худ бо ягон китобхонаи JWT санҷед. Адреси ҳамёни корбар дар зер аст.",
       "copy": "Нусха бардоштан",
-      "copied": "Нусхабардорӣ"
+      "copied": "Нусхабардорӣ",
+      "submitBody": "Ipasok ang iyong pagpapakita. Magsumite ito at ang iyong app ay lamang sa isang link na DeHub ay nangayon, na naka-talk na hindi nag Ito ay lilitaw sa store sa sandaling nag-edit na ito.",
+      "submit": "Фиристодан ба DeHub",
+      "submitSignIn": "Mag-sign in sa DeHub upang magsubaybay.",
+      "submitDone": "Ipinapadala. Ang iyong app ay live sa ito na DeHub link.",
+      "submitUpdated": "Навсозӣ шудааст. DeHub версияи охирини зуҳуроти шуморо дорад.",
+      "yourAppsTitle": "Ang iyong mga application",
+      "stateUnlisted": "Зиндагӣ бо пайванд · дар баррасии барои мағоза",
+      "stateListed": "Дар мағоза",
+      "stateSuspended": "Боздошта шуд",
+      "copyLink": "Нусха бардоштани истинод"
+    },
+    "card": {
+      "open": "Кушодан"
+    },
+    "category": {
+      "games": "Бозиҳо",
+      "social": "Иҷтимоӣ",
+      "finance": "Молия",
+      "utility": "Хизматрасонӣ",
+      "productivity": "Производительность",
+      "health-fitness": "Саломатӣ ва фитнес",
+      "news-media": "Ахборот & медиа",
+      "music": "Мусиқӣ",
+      "shopping": "Харидорӣ",
+      "education": "Маориф",
+      "developer-tools": "Абзорҳои таҳиягар",
+      "entertainment": "Вақтхушӣ",
+      "art-creativity": "Санъат ва эҷодкорӣ"
     }
   },
   "aiStyles": {
