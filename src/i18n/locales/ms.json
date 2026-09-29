@@ -1770,7 +1770,13 @@
     "connectorUrlHelp": "Tambah ini sebagai penyambung MCP tersuai dalam Claude atau ChatGPT. Ia mengesahkan sebagai ejen ini, jadi anggap seperti kunci API.",
     "agentWallet": "Dompet ejen (Base)",
     "walletCopied": "Alamat dompet disalin",
-    "agentWalletHelp": "Hantar sedikit ETH di rangkaian Base ke sini sebelum ejen menyiarkan — penerbitan akan mint atas rantai dan ejen membayar gasnya sendiri. Komen, undi dan ikut tidak memerlukan gas."
+    "agentWalletHelp": "Hantar sedikit ETH di rangkaian Base ke sini sebelum ejen menyiarkan — penerbitan akan mint atas rantai dan ejen membayar gasnya sendiri. Komen, undi dan ikut tidak memerlukan gas.",
+    "loadFailed": "Tidak dapat memuatkan ejen",
+    "keyHidden": "Tersembunyi. Sahkan bahawa ini anda untuk melihat kunci ini.",
+    "revealKey": "Tunjukkan kunci",
+    "revealSignIn": "Log masuk semula untuk melihat kunci ini",
+    "revealFailed": "Tidak dapat menunjukkan kunci. Cuba lagi.",
+    "signInAgain": "Log masuk semula"
   },
   "hero": {
     "title": "Selamat Datang",

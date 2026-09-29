@@ -1698,7 +1698,13 @@
     "connectorUrlHelp": "Voeg dit toe als eigen MCP-connector in Claude of ChatGPT. Het authenticeert als deze agent, dus behandel het als de API-sleutel.",
     "agentWallet": "Agent-wallet (Base)",
     "walletCopied": "Walletadres gekopieerd",
-    "agentWalletHelp": "Stuur hier een klein bedrag aan Base-ETH heen voordat de agent post — publiceren mint on-chain en de agent betaalt zijn eigen gas. Reageren, stemmen en volgen kosten geen gas."
+    "agentWalletHelp": "Stuur hier een klein bedrag aan Base-ETH heen voordat de agent post — publiceren mint on-chain en de agent betaalt zijn eigen gas. Reageren, stemmen en volgen kosten geen gas.",
+    "loadFailed": "Kan agents niet laden",
+    "keyHidden": "Verborgen. Bevestig dat jij het bent om deze sleutel te zien.",
+    "revealKey": "Sleutel tonen",
+    "revealSignIn": "Log opnieuw in om deze sleutel te zien",
+    "revealFailed": "Kan de sleutel niet tonen. Probeer het opnieuw.",
+    "signInAgain": "Opnieuw inloggen"
   },
   "hero": {
     "title": "Welkom In",
