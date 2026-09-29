@@ -22,9 +22,29 @@ function capMetadata(metadata: Record<string, unknown> | undefined): Record<stri
     }
 }
 
+// Any site can load a copy of the web build, and its errors would land here
+// looking like ours. Browsers always send Origin, so drop web origins that are
+// not DeHub. Native apps send none and pass through.
+const OWN_HOSTS = /(^|\.)(dehub\.io|dehub\.net|lovable\.app|lovableproject\.com)$|^(localhost|127\.0\.0\.1)$/;
+function isForeignWebOrigin(req: Request): boolean {
+    const origin = req.headers.get("origin");
+    if (!origin) return false;
+    try {
+        const url = new URL(origin);
+        if (url.protocol !== "http:" && url.protocol !== "https:") return false;
+        return !OWN_HOSTS.test(url.hostname);
+    } catch {
+        return false;
+    }
+}
+
 Deno.serve(async (req) => {
     if (req.method === "OPTIONS") {
         return new Response("ok", { headers: corsHeaders });
+    }
+
+    if (isForeignWebOrigin(req)) {
+        return new Response(null, { status: 204, headers: corsHeaders });
     }
 
     const limited = await rateLimitByIp(req, "client-logs", { limit: 300, windowMs: 60 * 60 * 1000 });
