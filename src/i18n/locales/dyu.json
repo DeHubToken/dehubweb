@@ -7588,7 +7588,9 @@
       "noMatch": "O kama, a tun man nɔgɔ ka baara kɛ ni mɔgɔ wɛrɛw ye.",
       "yourApps": "Your apps",
       "notificationsOn": "Notifications on",
-      "remove": "Remove"
+      "remove": "Remove",
+      "removed": "Ne tɛna o fɔ i ye tugun, ne tɛna o fɔ i ye tugun",
+      "rising": "O kɔ, a ye dɔ fara a ka fanga kan"
     },
     "dev": {
       "title": "I ka kan ka min kɛ, o ye ka baara kɛ",
@@ -7635,9 +7637,18 @@
       "stateSuspended": "Suspended",
       "copyLink": "Copy link",
       "notifyKey": "Notify key",
+      "notifyKeyOnce": "O ye kunnafoni kura ye min be se k'an dɛmɛ ka {{name}} I ka sɛbɛ nin kopi sisan: a yirala siɲɛ kelen, ka dɔ wɛrɛ ta k'a nɔɔ ta.",
       "payTitle": "Take payments",
       "payBody": "pay() yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́ yɛ́",
-      "notifyTitle": "Send notifications"
+      "notifyTitle": "Send notifications",
+      "notifyBody": "Mɔgɔ minw b'i ka porogramu dɔ fara a kan, olu be se ka kunnafoni sɔrɔ i ka baarada fɛ i ka kunnafoni jɔnjɔn fɛ. O kama, a tun man kan ka to ka taga n'a ye.",
+      "rankTitle": "I be se ka baara kɛ cogo di ni layisenw ye?",
+      "rankBody": "Lɔgɔkun o lɔgɔkun, mɔgɔ 55 lo be segin ka na a ka baara la (mɔgɔ minw y'a yɛlɛ lɔgɔkun nin na ani lɔgɔkun tɛmɛnin na), mɔgɔ 35 lo be na a ka baara la lɔgɔkun o lɔgɔkun, ani mɔgɔ 10 lo be fara a ka baara kan tile 14 kɔnɔ. DeHub ka ladɛrɛsiw dɔrɔn lo be jati, o la, botw ni ɲɛɛw ka ladɛrɛsiw tɛ foyi sɔrɔ.",
+      "rewardsBody": "Kalo o kalo, {{pool}} DHB be tilan ɲɔgɔn cɛ ka kɛɲɛ ni a ka hakɛ ye, min be jati lɔgɔkun o lɔgɔkun. Walisa ka se ka baara kɛ, a ka ɲi ka kɛ ni sɛbɛ dɔ ye min be se ka kɛ a tigi ka sɛbɛ ye ani a ka ɲi ka kɛ ni mɔgɔ 3 ye minw be segi ka na. DeHub ye wari min di a tigi ma, a b'o di a tigi ma.",
+      "rewardsWeek": "Dɔgɔkun hakilila-nyuma: {{date}}",
+      "rewardPaid": "A sara",
+      "rewardPending": "Ka kɔnɔni kɛ",
+      "rewardsNone": "O la, a tɛ se ka kɛ ko a ye fɛɛrɛ dɔ sɔrɔ min be se ka kɛ. Lɔgɔkun fɔlɔ tun tɛmɛna."
     },
     "card": {
       "open": "Open"
@@ -7659,7 +7670,11 @@
     },
     "pay": {
       "title": "Pay {{name}}?",
-      "confirm": "Pay {{amount}} DHB"
+      "body": "DHB be taga a ka baara kɛyɔrɔ la, {{wallet}}. O kama, wari tɛ sɔrɔ o baaraw la.",
+      "confirm": "Pay {{amount}} DHB",
+      "sending": "An wolola walisa ka wari sara.",
+      "sent": "Ddddd {{amount}}DHB to {{name}}.",
+      "noOwner": "O app ma wari sɔrɔ fɔlɔ."
     },
     "add": {
       "title": "Add {{name}}?",

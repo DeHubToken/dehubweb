@@ -7727,7 +7727,8 @@
       "noMatch": "Ninguna aplicación coincide con esa búsqueda.",
       "yourApps": "Tus aplicaciones",
       "notificationsOn": "Notificaciones en",
-      "removed": "Eliminado. No te notificará nuevamente."
+      "removed": "Eliminado. No te notificará nuevamente.",
+      "rising": "Nuevo y en ascenso"
     },
     "dev": {
       "title": "Crea una mini aplicación",
@@ -7776,7 +7777,14 @@
       "notifyKeyOnce": "Nueva clave de notificación para {{name}}. Copiala ahora: se muestra una sola vez, y hacer otra la reemplaza.",
       "payBody": "pagar() pide al usuario que te envíe DHB, directamente a la billetera que firmó tu archivo dehub.json. Revisa el recibo en tu servidor antes de entregar algo.",
       "notifyTitle": "Envía notificaciones",
-      "notifyBody": "Los usuarios que agreguen tu app pueden ser notificados desde tu servidor con tu clave `notify`. No es necesario almacenar tokens por usuario."
+      "notifyBody": "Los usuarios que agreguen tu app pueden ser notificados desde tu servidor con tu clave `notify`. No es necesario almacenar tokens por usuario.",
+      "rankTitle": "Cómo clasifica la tienda las aplicaciones",
+      "rankBody": "Cada noche, cada aplicación listada obtiene una puntuación: 55% de los usuarios que regresan (personas que la abrieron esta semana y la semana anterior), 35% de los usuarios semanales, más un aumento del 10% en sus primeros 14 días. Solo cuentan las cuentas de DeHub que han iniciado sesión, por lo que los bots y las recargas de páginas no ganan nada.",
+      "rewardsBody": "Cada mes, {{pool}} DHB se comparte entre las aplicaciones por la misma puntuación, calculada semanalmente. Para cumplir con los requisitos, una aplicación necesita un monedero de propietario verificado y al menos 3 usuarios recurrentes. DeHub paga las recompensas al monedero del propietario.",
+      "rewardsWeek": "Semana de {{date}}",
+      "rewardPaid": "Pagado",
+      "rewardPending": "Pendiente",
+      "rewardsNone": "Aún no se han calculado las recompensas. La primera semana cierra el lunes."
     },
     "card": {
       "open": "Abierto"

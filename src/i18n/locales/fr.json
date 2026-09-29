@@ -7723,7 +7723,8 @@
       "yourApps": "Vos applications",
       "notificationsOn": "Notifications sur",
       "remove": "Supprimer",
-      "removed": "Supprimé. Vous ne serez plus averti à nouveau."
+      "removed": "Supprimé. Vous ne serez plus averti à nouveau.",
+      "rising": "Nouveautés et tendances"
     },
     "dev": {
       "title": "Créer une mini-application",
@@ -7774,7 +7775,14 @@
       "payTitle": "Prenez les paiements",
       "payBody": "pay() demande à l'utilisateur d'envoyer des DHB directement dans le portefeuille qui a signé votre fichier dehub.json. Vérifiez le reçu sur votre serveur avant de livrer quoi que ce soit.",
       "notifyTitle": "Envoyer des notifications",
-      "notifyBody": "Les utilisateurs qui ajoutent votre application peuvent être notifiés depuis votre serveur avec votre clé `notify`. Pas besoin de conserver de jetons par utilisateur."
+      "notifyBody": "Les utilisateurs qui ajoutent votre application peuvent être notifiés depuis votre serveur avec votre clé `notify`. Pas besoin de conserver de jetons par utilisateur.",
+      "rankTitle": "Comment le magasin classe les applications",
+      "rankBody": "Chaque nuit, chaque application répertoriée obtient un score : 55 % des utilisateurs récurrents (personnes qui l'ont ouverte cette semaine et la semaine précédente), 35 % des utilisateurs hebdomadaires, plus une augmentation de 10 % au cours de ses 14 premiers jours. Seuls les comptes DeHub connectés comptent, donc les robots et les rechargements de page ne gagnent rien.",
+      "rewardsBody": "Chaque mois, {{pool}} DHB est partagé entre les applications par le même score, calculé chaque semaine. Pour être admissible, une app a besoin d'un portefeuille de propriétaire vérifié et d'au moins 3 utilisateurs récurrents. Les récompenses sont payées par DeHub au portefeuille du propriétaire.",
+      "rewardsWeek": "Semaine du {{date}}",
+      "rewardPaid": "Payant",
+      "rewardPending": "En attente",
+      "rewardsNone": "Aucune récompense n'a encore été calculée. La première semaine se termine le lundi."
     },
     "card": {
       "open": "Ouvrir"

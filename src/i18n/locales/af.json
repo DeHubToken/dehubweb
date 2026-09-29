@@ -7575,7 +7575,8 @@
       "noMatch": "Geen programme pas by daardie soektog nie.",
       "yourApps": "Jou programme",
       "notificationsOn": "Berigte op",
-      "removed": "Verwyder. Dit sal jou nie weer waarsku nie."
+      "removed": "Verwyder. Dit sal jou nie weer waarsku nie.",
+      "rising": "Nuwe en groeiende"
     },
     "dev": {
       "title": "Maak 'n mini-app",
@@ -7626,7 +7627,14 @@
       "payTitle": "Neem betalings aan.",
       "payBody": "betaal() vra die gebruiker om jou DHB te stuur, regstreeks na die portemonnee wat jou dehub.json onderteken het. Kontroleer die ontvangstbewys op jou server voor jy iets lewer.",
       "notifyTitle": "Stuur kennisgewings",
-      "notifyBody": "Gebruikers wat jou toepassing byvoeg, kan deur jou diens met jou notify sleutel genootifiseer word. Geen per-gebruiker-tokens om te berg."
+      "notifyBody": "Gebruikers wat jou toepassing byvoeg, kan deur jou diens met jou notify sleutel genootifiseer word. Geen per-gebruiker-tokens om te berg.",
+      "rankTitle": "Hoe die winkel rangskik programme",
+      "rankBody": "Elke aand kry elke genoteerde app 'n telling: 55% van terugkerende gebruikers (mense wat dit hierdie week en die week voorheen oopgemaak het), 35% van weeklikse gebruikers, plus 'n hupstoot van 10% in die eerste 14 dae. Slegs aangemeld DeHub-rekeninge tel, so bots en bladsy herlaai verdien niks.",
+      "rewardsBody": "Elke maand {{pool}} DHB word tussen programme gedeel deur dieselfde telling, weekliks bereken. Om te kwalifiseer, benodig 'n app 'n geverifieerde eienaar beursie en ten minste 3 terugkerende gebruikers. Belonings word deur DeHub aan die eienaar se beursie betaal.",
+      "rewardsWeek": "Week van {{date}}",
+      "rewardPaid": "Betaal",
+      "rewardPending": "Hangende",
+      "rewardsNone": "Geen belonings is nog bereken nie. Die eerste week sluit Maandag."
     },
     "category": {
       "games": "Speletjies",

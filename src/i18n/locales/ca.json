@@ -7608,7 +7608,8 @@
       "yourApps": "Les teves apps",
       "notificationsOn": "Notificacions activades",
       "remove": "Treure",
-      "removed": "Treut. Ja no et notificarà més."
+      "removed": "Treut. Ja no et notificarà més.",
+      "rising": "Novetat i creixement"
     },
     "dev": {
       "title": "Construeix una miniaplicació",
@@ -7659,7 +7660,14 @@
       "payTitle": "Rebre pagaments",
       "payBody": "`pay()` demana a l'usuari que et enviï DHB, directament a la cartera que va signar el teu `dehub.json`. Verifica el recepté al teu servidor abans de lliurar res.",
       "notifyTitle": "Enviar notificacions",
-      "notifyBody": "Els usuaris que afegis la teva app poden ser notificats des del teu servidor amb la teva clau de notificació. No cal emmagatzemar tokens per usuari."
+      "notifyBody": "Els usuaris que afegis la teva app poden ser notificats des del teu servidor amb la teva clau de notificació. No cal emmagatzemar tokens per usuari.",
+      "rankTitle": "Com classifica la botiga les aplicacions",
+      "rankBody": "Cada nit, cada aplicació de la llista obté una puntuació: el 55% dels usuaris que tornen (persones que la van obrir aquesta setmana i la setmana anterior), el 35% dels usuaris setmanals i un 10% més en els primers 14 dies. Només compten els comptes DeHub iniciats, de manera que els bots i les recarregues de pàgines no guanyen res.",
+      "rewardsBody": "Cada mes, {{pool}} DHB es reparteix entre les aplicacions amb la mateixa puntuació, calculada setmanalment. Per complir els requisits, una aplicació necessita un moneder de propietari verificat i almenys 3 usuaris recurrents. DeHub paga les recompenses al moneder del propietari.",
+      "rewardsWeek": "Setmana de {{date}}",
+      "rewardPaid": "Pagament",
+      "rewardPending": "En tràmit",
+      "rewardsNone": "Encara no s'ha calculat cap recompensa. La primera setmana tanca el dilluns."
     },
     "card": {
       "open": "Obre"

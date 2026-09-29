@@ -7609,7 +7609,8 @@
       "yourApps": "Sovelluksesi",
       "notificationsOn": "Ilmoitukset",
       "remove": "Poista",
-      "removed": "Poistettu. Se ei enää ilmoita sinulle uudelleen."
+      "removed": "Poistettu. Se ei enää ilmoita sinulle uudelleen.",
+      "rising": "Uusi ja nouseva"
     },
     "dev": {
       "title": "Rakennetaan mini-sovellus",
@@ -7660,7 +7661,14 @@
       "payTitle": "Vastaanota maksut",
       "payBody": "maksa() pyytää käyttäjää lähettämään sinulle DHB:tä suoraan sinun dehub.json-tiedoston allekirjoittamaan lompakkoon. Tarkista kuitti palvelimellasi ennen kuin toimit mitään.",
       "notifyTitle": "Lähetä ilmoitukset",
-      "notifyBody": "Käyttäjät, jotka lisäävät sovelluksesi, voivat saada ilmoituksia palvelimeltasi avaimesi avulla. Ei tarvitse tallentaa käyttäjätasoisia token-eleitä."
+      "notifyBody": "Käyttäjät, jotka lisäävät sovelluksesi, voivat saada ilmoituksia palvelimeltasi avaimesi avulla. Ei tarvitse tallentaa käyttäjätasoisia token-eleitä.",
+      "rankTitle": "Näin toimipaikka sijoittaa sovellukset paremmuusjärjestykseen",
+      "rankBody": "Joka ilta jokainen listattu sovellus saa pisteitä: 55% palaavilta käyttäjiltä (ihmisiltä, jotka avasivat sovelluksen tällä viikolla ja sitä edeltävällä viikolla), 35% viikoittaisilta käyttäjiltä sekä 10%: n lisäyksen sovelluksen ensimmäisten 14 päivän aikana. Vain kirjautuneet DeHub-tilit lasketaan, joten botit ja sivun uudelleenlataukset eivät tuota mitään.",
+      "rewardsBody": "Joka kuukausi {{pool}} DHB jaetaan sovellusten kesken samalla pistemäärällä, joka lasketaan viikoittain. Sovelluksen kelpoisuus edellyttää vahvistetun omistajan lompakkoa ja vähintään kolmea palaavaa käyttäjää. DeHub maksaa palkkiot omistajan lompakkoon.",
+      "rewardsWeek": "Viikko {{date}}",
+      "rewardPaid": "Maksettu",
+      "rewardPending": "Odottaa",
+      "rewardsNone": "Palkintoja ei ole vielä laskettu. Ensimmäinen viikko sulkeutuu maanantaina."
     },
     "card": {
       "open": "Avaa"

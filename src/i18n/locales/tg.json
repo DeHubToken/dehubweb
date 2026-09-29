@@ -7649,7 +7649,8 @@
       "yourApps": "Sozandegiyangon",
       "notificationsOn": "Xabarlar roshan",
       "remove": "Oʻchirish",
-      "removed": "Oʻchirildi. Sizga yana xabar yuborilmaydi."
+      "removed": "Oʻchirildi. Sizga yana xabar yuborilmaydi.",
+      "rising": "Нав ва бархоста"
     },
     "dev": {
       "title": "Сохтани барномаи мини",
@@ -7700,7 +7701,14 @@
       "payTitle": "Toʻlovlarni qabul qilish",
       "payBody": "pay() foydalanuvchidan sizga DHB yuborishni soʻraydi, toʻgʻridan-toʻgʻri dehub.json bilan imzolangan portfelingizga. Toʻlov kvitansiingizni serverda tekshiring, keyin faqatgina narsani yuboring.",
       "notifyTitle": "Xabarlarni yuborish",
-      "notifyBody": "Sizning ilovangizni qoʻshgan foydalanuvchilar sizning serveringizdan xabar kalitingiz bilan xabar yuborishlari mumkin. Har bir foydalanuvchi uchun tokenlarni saqlash kerak emas."
+      "notifyBody": "Sizning ilovangizni qoʻshgan foydalanuvchilar sizning serveringizdan xabar kalitingiz bilan xabar yuborishlari mumkin. Har bir foydalanuvchi uchun tokenlarni saqlash kerak emas.",
+      "rankTitle": "Чӣ тавр мағоза барномаҳои рейтинги",
+      "rankBody": "Ҳар шаб ҳар як барномаи номбаршуда хол мегирад: 55% аз корбарони баргашта (одамоне, ки ин ҳафта ва ҳафта пеш аз он кушодаанд), 35% аз корбарони ҳафта, илова бар 10% афзоиш дар 14 рӯзи аввали он. Ang lamang na naka-sign-in na mga account sa DeHub, kaya ang mga bots at reload ng pahina ay hindi makakuha.",
+      "rewardsBody": "Ҳар моҳ {{pool}} DHB is shared between apps by the same score, њисоб ҳафта. Upang makatanggap, kailangan ng isang app ng isang verified na wallet ng may-ari at hindi bababa sa 3 mga gumagamit na bumalik Мукофотҳо аз ҷониби DeHub ба ҳамёни соҳиб пардохт карда мешаванд.",
+      "rewardsWeek": "Ҳафтаи {{date}}",
+      "rewardPaid": "Пардохтшуда",
+      "rewardPending": "No preview available",
+      "rewardsNone": "То ҳол ҳеҷ подоше ҳисоб нашудааст. Ҳафтаи аввал рӯзи душанбе баста мешавад."
     },
     "card": {
       "open": "Кушодан"

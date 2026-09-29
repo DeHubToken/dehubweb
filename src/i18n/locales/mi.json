@@ -7639,7 +7639,10 @@
       "fromDehub": "Mai i DeHub",
       "noMatch": "Kaore he taupānga e rite ana ki taua rapu.",
       "yourApps": "Ko o taupānga",
-      "remove": "Tangohia"
+      "notificationsOn": "Ngā kōrero mō",
+      "remove": "Tangohia",
+      "removed": "Whakakorea. e kore e whakamōhio atu ki a koutou ano.",
+      "rising": "Hou me te piki ake"
     },
     "dev": {
       "title": "Hangaia he taupānga iti",
@@ -7687,7 +7690,17 @@
       "copyLink": "Tārua hono",
       "notifyKey": "Whakapūhutia te tino whakatau",
       "notifyKeyOnce": "Kīanga hōhāngai hou mō {{name}}. Whakapā mai i te rāua: ka whakamātau ia i te tino rā, me te whakapā i te tino rā e whakamātau iā ia.",
-      "notifyTitle": "Whakapā mai i ngā whakapūmau"
+      "payTitle": "Tangohia nga utu",
+      "payBody": "utu() tono ki te kaiwhakamahi ki te tuku koe DHB, tika ki te putea i haina koutou dehub.json. Tirohia te whiwhinga i runga i to tūmau i mua i te tuku i tetahi mea.",
+      "notifyTitle": "Whakapā mai i ngā whakapūmau",
+      "notifyBody": "Ka taea e ngā kaiwhakamahi e tāpiri ana i tō taupānga te whakamōhio mai i tō tūmau ki tō kī whakamōhio. Kaore he tohu mo ia kaiwhakamahi ki te penapena.",
+      "rankTitle": "Me pehea te whakariterite i nga taupānga a te toa",
+      "rankBody": "I ia po ka whiwhi ia taupānga kua whakarārangitia i te tohu: 55% mai i nga kaiwhakamahi hoki (nga tangata i whakatuwherahia i tenei wiki me te wiki i mua), 35% mai i nga kaiwhakamahi wiki, me te 10% te kaha i roto i ona ra 14 tuatahi. Ko nga kaute DeHub anake i hainahia, na reira kaore he hua o nga bots me nga reload o te whaarangi.",
+      "rewardsBody": "Ia marama {{pool}} DHB ka tohaina i waenga i nga taupānga ma te tohu kotahi, ka tatauhia ia wiki. Hei tohu, e hiahia ana te taupānga ki te putea rangatira kua whakamanahia, me te iti rawa 3 kaiwhakamahi hoki. Ka utua e DeHub nga utu ki te putea rangatira.",
+      "rewardsWeek": "Wiki o {{date}}",
+      "rewardPaid": "Kua utua",
+      "rewardPending": "Te tuku",
+      "rewardsNone": "Kaore ano kia whakaarohia he utu. Ka kati te wiki tuatahi i te Mane."
     },
     "card": {
       "open": "Whakatuwherahia"
@@ -7709,8 +7722,11 @@
     },
     "pay": {
       "title": "Tū mai ki te whakapā mai i te {{name}}?",
+      "body": "Ka haere te DHB tika ki te putea o te taupānga, {{wallet}}. Kaore e taea te whakahoki mai i nga utu.",
+      "confirm": "Utu {{amount}} DHB",
       "sending": "E noho te whakapā mai i ō whakapā...",
-      "sent": "Tūhono whakapā mai te {{amount}} DHB ki te {{name}}."
+      "sent": "Tūhono whakapā mai te {{amount}} DHB ki te {{name}}.",
+      "noOwner": "Kaore ano tenei taupānga i te putea kua whakamanahia hei utu."
     },
     "add": {
       "body": "Ka taea e ia te whakamahia i te whakapakari me te whakapūmau i ngā whakapūmau mō ngā whakapūmau, me te whakapūmau i ngā whakapūmau i te wā e whakamahia ana e koe i te whakapakari whakapūmau. Ka taea e koe te whakamahia i te whakapūmau i te wā e whakamahia ana e koe i te whakapakari whakapūmau, i te whakapakari whakapūmau.",

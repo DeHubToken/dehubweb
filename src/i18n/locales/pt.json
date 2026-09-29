@@ -7728,7 +7728,9 @@
       "noMatch": "Nenhum aplicativo corresponde à sua busca.",
       "yourApps": "Seus apps",
       "notificationsOn": "Notificações em",
-      "removed": "Removido. Não notificará mais você."
+      "remove": "Remover",
+      "removed": "Removido. Não notificará mais você.",
+      "rising": "Novo e em ascensão"
     },
     "dev": {
       "title": "Crie uma mini app",
@@ -7779,7 +7781,14 @@
       "payTitle": "Aceite pagamentos",
       "payBody": "pagar() pede ao usuário para enviar DHB diretamente para a carteira que assinou seu arquivo dehub.json. Verifique o recibo no seu servidor antes de entregar qualquer coisa.",
       "notifyTitle": "Envie notificações",
-      "notifyBody": "Usuários que adicionarem seu app podem ser notificados pelo seu servidor usando sua chave `notify`. Não é necessário armazenar tokens por usuário."
+      "notifyBody": "Usuários que adicionarem seu app podem ser notificados pelo seu servidor usando sua chave `notify`. Não é necessário armazenar tokens por usuário.",
+      "rankTitle": "Como a loja classifica as aplicações",
+      "rankBody": "Todas as noites, cada aplicação listada recebe uma pontuação: 55% de utilizadores recorrentes (pessoas que a abriram esta semana e na semana anterior), 35% de utilizadores semanais, além de um aumento de 10% nos primeiros 14 dias. Apenas contas DeHub conectadas contam, então bots e recargas de página não ganham nada.",
+      "rewardsBody": "Todos os meses, {{pool}} DHB é partilhado entre aplicações pela mesma pontuação, calculada semanalmente. Para ser elegível, uma aplicação precisa de uma carteira de proprietário verificada e de pelo menos 3 utilizadores recorrentes. As recompensas são pagas pela DeHub à carteira do proprietário.",
+      "rewardsWeek": "Semana de {{date}}",
+      "rewardPaid": "Pago",
+      "rewardPending": "Pendente",
+      "rewardsNone": "Nenhuma recompensa foi calculada ainda. A primeira semana termina na segunda-feira."
     },
     "card": {
       "open": "Abrir"
@@ -7809,7 +7818,8 @@
     },
     "add": {
       "title": "Adicione {{name}}?",
-      "body": "Poderá aparecer sob Seus apps e poderá enviar notificações para você. Você pode removê-lo a qualquer momento na página Apps."
+      "body": "Poderá aparecer sob Seus apps e poderá enviar notificações para você. Você pode removê-lo a qualquer momento na página Apps.",
+      "confirm": "Adicionar aplicativo"
     }
   },
   "aiStyles": {

@@ -6,6 +6,7 @@
  *
  *   POST { action: 'add', slug }          add the app and allow its notifications
  *   POST { action: 'remove', slug }       remove it and stop its notifications
+ *   POST { action: 'open', slug }         count today's open for the ranking
  *   POST { action: 'payment', slug, txHash, chainId, amount, memo? }
  *        record a DHB payment the host just sent to the app's owner wallet,
  *        after checking the transfer on chain, and answer with a signed
@@ -138,6 +139,13 @@ Deno.serve(async (req: Request) => {
       if (error) throw error;
       await notifyWebhook(app, auth.wallet, "app_added");
       return jsonResponse({ added: true, notificationsEnabled: true });
+    }
+
+    // One row per person per app per day: what the nightly ranking counts.
+    // Signed-in people only, so the store ranks on accounts, not page loads.
+    if (body.action === "open") {
+      await db.from("miniapp_opens").upsert({ app_id: app.id, wallet: auth.wallet }, { onConflict: "app_id,wallet,day", ignoreDuplicates: true });
+      return jsonResponse({ ok: true });
     }
 
     if (body.action === "remove") {

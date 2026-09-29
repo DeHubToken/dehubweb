@@ -7715,7 +7715,8 @@
       "yourApps": "Dine apps",
       "notificationsOn": "Varsler på",
       "remove": "Fjern",
-      "removed": "Fjernet. Det vil ikke varsle deg igjen."
+      "removed": "Fjernet. Det vil ikke varsle deg igjen.",
+      "rising": "Nytt og stigende"
     },
     "dev": {
       "title": "Bygg en mini-app",
@@ -7766,7 +7767,14 @@
       "payTitle": "Ta imot betalinger",
       "payBody": "`pay()` ber brukeren sende deg DHB, direkte til lommeboken som signerte din dehub.json. Sjekk kvitteringen på din server før du leverer noe.",
       "notifyTitle": "Send varsler",
-      "notifyBody": "Brukere som legger til din app kan varsles fra din server med din varsler nøkkel. Ingen bruker-spesifikke token å lagre."
+      "notifyBody": "Brukere som legger til din app kan varsles fra din server med din varsler nøkkel. Ingen bruker-spesifikke token å lagre.",
+      "rankTitle": "Hvordan butikken rangerer apper",
+      "rankBody": "Hver kveld får hver listede app en poengsum: 55 % fra tilbakevendende brukere (folk som åpnet den denne uken og uken før), 35 % fra ukentlige brukere, pluss en økning på 10 % i løpet av de første 14 dagene. Bare påloggede DeHub-kontoer teller, så roboter og sideinnlastinger tjener ingenting.",
+      "rewardsBody": "Hver måned {{pool}} deles DHB mellom apper med samme poengsum, beregnet ukentlig. For å kvalifisere trenger en app en verifisert eierlommebok og minst 3 tilbakevendende brukere. Belønninger utbetales av DeHub til eierlommeboken.",
+      "rewardsWeek": "Uken med {{date}}",
+      "rewardPaid": "Betalt",
+      "rewardPending": "Venter",
+      "rewardsNone": "Ingen belønninger er beregnet ennå. Den første uken avsluttes på mandag."
     },
     "card": {
       "open": "Åpne"

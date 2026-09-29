@@ -7569,7 +7569,8 @@
       "yourApps": "Sizin applarınız",
       "notificationsOn": "Bildirimlər",
       "remove": "Kaldır",
-      "removed": "Kaldırıldı. Artıq sizi daha bir bildirimləməyəcək."
+      "removed": "Kaldırıldı. Artıq sizi daha bir bildirimləməyəcək.",
+      "rising": "Yeni və yüksələn"
     },
     "dev": {
       "title": "Kiçik tətbiq yaradın",
@@ -7620,7 +7621,13 @@
       "payTitle": "Ödənişlər",
       "payBody": "pay() istifadəçini sizin dehub.json-u imzalayan cibxaranıza DHB göndərməyə dəvət edir. Ödənişinizi serverdə təsdiq edin, sonra heç bir şeyi göndərməyin.",
       "notifyTitle": "Bildirimlər göndər",
-      "notifyBody": "Sizin applarınızı əlavə edən istifadəçilərinizi serverdan bildirim anahtarı ilə bildirə bilərsiniz. Her istifadəçi üçün token saxlamaya ehtiyac yoxdur."
+      "notifyBody": "Sizin applarınızı əlavə edən istifadəçilərinizi serverdan bildirim anahtarı ilə bildirə bilərsiniz. Her istifadəçi üçün token saxlamaya ehtiyac yoxdur.",
+      "rankTitle": "Mağaza tətbiqləri necə sıralayır",
+      "rankBody": "Hər gecə elanı yerləşdirilmiş tətbiqdən bir xal əldə edilir: geri qayıdan istifadəçilərdən (bu həftə və bir həftə əvvəl açılmış şəxslər) 55%, həftəlik istifadəçilərdən 35% və üstəgəl ilk 14 gündə 10% artım. Yalnız imzalanmış DeHub hesabları nəzərə alınır, buna görə də botlar və səhifənin yenidən yüklənməsi heç bir şey qazanmır.",
+      "rewardsBody": "Hər ay {{pool}} DHB tətbiqlər arasında həftəlik hesablanan eyni hesabla paylaşılır. Uyğun olmaq üçün tətbiqin təsdiqlənmiş sahib cüzdanına və ən azı 3 geri qayıdan istifadəçiyə ehtiyacı var. Mükafatlar sahibinin cüzdanına DeHub tərəfindən ödənilir.",
+      "rewardsWeek": "{{date}} həftəsi",
+      "rewardPaid": "Ödənilib",
+      "rewardPending": "Gözləmədədir"
     },
     "card": {
       "open": "Aç"

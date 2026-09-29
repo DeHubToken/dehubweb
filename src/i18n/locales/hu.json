@@ -7610,7 +7610,9 @@
       "noMatch": "Nincs olyan alkalmazás, amely megfelel a keresésnek.",
       "yourApps": "Aldodásod",
       "notificationsOn": "Üzenetek a(z)",
-      "removed": "Tiltott. Nem fogja többé értesíteni."
+      "remove": "bőrkeményedés",
+      "removed": "Tiltott. Nem fogja többé értesíteni.",
+      "rising": "Új és növekvő"
     },
     "dev": {
       "title": "Minialkalmazás készítése",
@@ -7661,7 +7663,14 @@
       "payTitle": "Fizetéseket fogadunk el.",
       "payBody": "Fizetés() kér a felhasználótól, hogy küldje el a DHB-t közvetlenül az önéletrajzfájlban (dehub.json) megjelölt péntevési zsebnek. Ellenőrizd a számlát a szerveren, mielőtt bármit is kiszállítasz.",
       "notifyTitle": "Üzeneteket küldj el",
-      "notifyBody": "Felhasználók, akik hozzáadják a programodat, értesítést kaphatnak a szerveredről a notify kulccsal. Nincs szükség egyéni tokenok tárolására."
+      "notifyBody": "Felhasználók, akik hozzáadják a programodat, értesítést kaphatnak a szerveredről a notify kulccsal. Nincs szükség egyéni tokenok tárolására.",
+      "rankTitle": "Hogyan rangsorolja a vendéglátóhely/üzlet az alkalmazásokat",
+      "rankBody": "Minden meghirdetett alkalmazás minden este pontszámot kap: 55% -ot a visszatérő felhasználóktól (akik ezen a héten és az azt megelőző héten nyitották meg), 35% -ot a heti felhasználóktól, plusz 10% -os növekedést az első 14 napban. Csak a bejelentkezett DeHub-fiókok számítanak, így a botok és az oldalújratöltések nem keresnek semmit.",
+      "rewardsBody": "Minden hónapban {{pool}} DHB-t osztanak meg az alkalmazások között azonos pontszámmal, hetente számítva. A jogosultsághoz egy alkalmazásnak ellenőrzött tulajdonosi pénztárcára és legalább 3 visszatérő felhasználóra van szüksége. A jutalmakat a DeHub fizeti ki a tulajdonos pénztárcájába.",
+      "rewardsWeek": "{{date}} hete",
+      "rewardPaid": "Fizetve",
+      "rewardPending": "Függőben",
+      "rewardsNone": "Még nem kalkuláltunk jutalmakat. Az első hét hétfőn zárul."
     },
     "card": {
       "open": "Megnyitás"
