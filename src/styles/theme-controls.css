@@ -19,7 +19,7 @@ html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
   :is(
     [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
     :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'])
-  ):not([data-keep-dark]):not([data-keep-white]):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty) {
+  ):not([data-keep-dark]):not([data-keep-white]):not([data-on-media]):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty) {
   background: var(--control-sheen), var(--control-fill) !important;
   border: 1px solid var(--control-edge) !important;
   box-shadow: var(--control-shadow) !important;
@@ -32,7 +32,7 @@ html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
   :is(
     [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
     :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'])
-  ):not([data-keep-dark]):not([data-keep-white]):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty)
+  ):not([data-keep-dark]):not([data-keep-white]):not([data-on-media]):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty)
   :is(.text-black, .text-white, .text-zinc-900, .text-zinc-800, .text-zinc-700, svg) {
   color: var(--control-ink) !important;
 }
