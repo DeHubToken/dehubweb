@@ -47,6 +47,13 @@ function blogManifestPlugin() {
       } catch (e) {
         console.warn('[blog-manifest] generation failed', e);
       }
+      // The crawler copy of the standalone /guides/ pages, rendered from the
+      // React components so the two cannot drift (see the script's header).
+      try {
+        execSync('node scripts/generate-guide-content.mjs', { stdio: 'inherit' });
+      } catch (e) {
+        console.warn('[guide-content] generation failed', e);
+      }
     },
   };
 }

@@ -82,6 +82,7 @@ scripts/*
 !scripts/build-seo-i18n.mjs
 !scripts/check-entry-bundle.mjs
 !scripts/generate-blog-manifest.mjs
+!scripts/generate-guide-content.mjs
 !scripts/build-home-intro-html.mjs
 !scripts/boot-path-report.mjs
 !scripts/boot-path-baseline.json

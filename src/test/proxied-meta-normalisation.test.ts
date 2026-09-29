@@ -42,8 +42,11 @@ function constant(name: string): string {
 const { normalizeProxiedMeta, reclamp } = new Function(`
   ${constant('TITLE_MAX')}
   ${constant('DESCRIPTION_MAX')}
+  ${constant('BRAND_SUFFIX')}
   ${decl('function truncate(text, max) {')}
-  ${decl('function reclamp(escaped, max) {')}
+  ${decl('function clipAtWord(text, max) {')}
+  ${decl('function clampTitle(text, max) {')}
+  ${decl('function reclamp(escaped, max, cut = truncate) {')}
   ${decl('function normalizeProxiedMeta(html) {')}
   return { normalizeProxiedMeta, reclamp };
 `)() as {
@@ -84,8 +87,9 @@ describe('proxied meta normalisation', () => {
     const long = 'MESSI HAT-TRICK! Argentina (3-0) Algeria FIFA WORLD CUP 2026 and then some more';
     const out = normalizeProxiedMeta(page(long, 'short'));
     for (const tag of TITLE_TAGS) {
-      expect(valueOf(out, tag).length).toBe(TITLE_MAX);
-      expect(valueOf(out, tag).endsWith('…')).toBe(true);
+      expect(valueOf(out, tag).length).toBeLessThanOrEqual(TITLE_MAX);
+      // At a word boundary: what is left is a whole-word prefix of the original.
+      expect(valueOf(out, tag)).toBe('MESSI HAT-TRICK! Argentina (3-0) Algeria FIFA WORLD CUP 2026 and then…');
     }
   });
 

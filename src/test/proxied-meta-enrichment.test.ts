@@ -32,7 +32,15 @@ function constant(name: string): string {
   return line![0];
 }
 
-type Nft = { postType?: string; category?: string[]; displayName?: string; username?: string } | null;
+type Nft = {
+  postType?: string;
+  category?: string[];
+  displayName?: string;
+  username?: string;
+  description?: string;
+  minterDisplayName?: string;
+  mintername?: string;
+} | null;
 
 const { enrichPostMeta, enrichProfileMeta, DESCRIPTION_MAX, HOME_DESCRIPTION, PROFILE_DESCRIPTION_MIN } = new Function(`
   ${constant('TITLE_MAX')}
@@ -44,20 +52,27 @@ const { enrichPostMeta, enrichProfileMeta, DESCRIPTION_MAX, HOME_DESCRIPTION, PR
   ${constant('FILENAME_TITLE')}
   ${constant('PLACEHOLDER_TITLE')}
   ${constant('HOME_DESCRIPTION')}
+  ${constant('FN_FALLBACK_TITLE')}
+  ${constant('POST_CAPTION_TITLE_MAX')}
+  ${constant('BRAND_SUFFIX')}
   ${decl('function truncate(text, max) {')}
+  ${decl('function clipAtWord(text, max) {')}
+  ${decl('function clampTitle(text, max) {')}
   ${decl('function decodeFnText(s) {')}
   ${decl('function escFnAttr(s) {')}
   ${decl('function escJsonText(s) {')}
   ${decl('function postKind(nft, html) {')}
   ${decl('function titleSaysNothing(title) {')}
+  ${decl('function postCaption(html, nft, templated) {')}
   ${decl('function postAuthor(html, nft, templated) {')}
   ${decl('function replacePostTitle(html, oldTitle, newTitle) {')}
   ${decl('function enrichPostMeta(html, postId, nft) {')}
-  ${decl('function enrichProfileMeta(html, username) {')}
+  ${decl('function profileTitle(html, handle, displayName) {')}
+  ${decl('function enrichProfileMeta(html, username, displayName) {')}
   return { enrichPostMeta, enrichProfileMeta, DESCRIPTION_MAX, HOME_DESCRIPTION, PROFILE_DESCRIPTION_MIN };
 `)() as {
   enrichPostMeta: (html: string, postId: string, nft: Nft) => string;
-  enrichProfileMeta: (html: string, username: string) => string;
+  enrichProfileMeta: (html: string, username: string, displayName?: string) => string;
   DESCRIPTION_MAX: number;
   HOME_DESCRIPTION: string;
   PROFILE_DESCRIPTION_MIN: number;
@@ -246,7 +261,8 @@ describe('post titles that say nothing', () => {
   });
 
   it('reads the author off the JSON-LD when there is no record and no template', () => {
-    const out = enrichPostMeta(postPage('122', '😂', 'a real caption', true, 'Mart Vader'), '122', null);
+    // The description is an emoji too, so there is no caption to fall back on.
+    const out = enrichPostMeta(postPage('122', '😂', '🔥🔥', true, 'Mart Vader'), '122', null);
     expect(valueOf(out, 'title')).toBe('Video #122 by Mart Vader on DeHub');
   });
 
@@ -254,6 +270,45 @@ describe('post titles that say nothing', () => {
     const title = 'How we shipped v2.0';
     const out = enrichPostMeta(postPage('900', title, 'a real caption'), '900', AUTHORED);
     expect(valueOf(out, 'title')).toBe(attr(`${title} — a video by davyJones on DeHub`));
+  });
+
+  // Live /app/post/3419 on 2026-09-29: the fn titled it with its own
+  // fallback while the post carries a 140-character caption.
+  const CAPTION =
+    'Exquisite watercolor of a Royal Haveli. A noble couple shares a quiet moment in a sun-drenched courtyard, reflecting on an ancient manuscrip';
+  const SULTAN: Nft = { postType: 'feed-images', minterDisplayName: 'Sultan', mintername: 'umerkhan', description: CAPTION };
+
+  it("titles the fn's `Post #N by X` stand-in with the caption's opening words", () => {
+    const out = enrichPostMeta(postPage('3419', 'Post #3419 by Sultan on DeHub', CAPTION, false, 'Sultan'), '3419', SULTAN);
+    const expected = 'Exquisite watercolor of a Royal Haveli. A noble couple…';
+    for (const tag of TITLE_TAGS) expect(valueOf(out, tag)).toBe(expected);
+    expect(out).toContain(`<h1>${expected}</h1>`);
+    expect(jsonLd(out)['@graph'][0].headline).toBe(expected);
+    expect(out).not.toContain('Post #3419');
+  });
+
+  it('uses the caption for a junk title too, with the author when it fits', () => {
+    const out = enrichPostMeta(postPage('7', 'IMG_2231.jpg', 'Sunset at the pier', false, 'Sultan'), '7', {
+      ...SULTAN,
+      description: 'Sunset at the pier',
+    });
+    expect(valueOf(out, 'title')).toBe('Sunset at the pier — a photo post by Sultan on DeHub');
+  });
+
+  it('reads the caption off the meta description when there is no record', () => {
+    const out = enrichPostMeta(postPage('3419', 'Post #3419 by Sultan on DeHub', CAPTION, false, 'Sultan'), '3419', null);
+    expect(valueOf(out, 'title')).toBe('Exquisite watercolor of a Royal Haveli. A noble couple…');
+  });
+
+  it("falls back to the format and id when the fn's stand-in has no caption behind it", () => {
+    const out = enrichPostMeta(
+      postPage('5373', 'Post #5373 by akcil on DeHub', POST_TEMPLATE('akcil'), false, 'akcil'),
+      '5373',
+      { postType: 'feed-audio', minterDisplayName: 'akcil', mintername: 'akcil', description: '' },
+    );
+    expect(valueOf(out, 'title')).toBe('Audio post #5373 by akcil on DeHub');
+    // …and the description no longer quotes the stand-in back at itself.
+    expect(valueOf(out, 'description')).not.toContain('Post #5373 by akcil');
   });
 });
 
@@ -302,7 +357,7 @@ describe('short post titles that collide', () => {
   });
 
   it('titles an untitled post by id alone when nobody is named', () => {
-    const anonymous = postPage('2376', '😂', 'body', false).replace(/,"author":\{[^}]*\}/, '');
+    const anonymous = postPage('2376', '😂', '👍', false).replace(/,"author":\{[^}]*\}/, '');
     const out = enrichPostMeta(anonymous, '2376', null);
     expect(valueOf(out, 'title')).toBe('Post #2376 on DeHub');
     expect(out).not.toContain('someone');
@@ -362,6 +417,44 @@ describe('profile description enrichment', () => {
   });
 });
 
+describe('profile titles', () => {
+  const withPerson = (handle: string, name: string) =>
+    profilePage(handle, 'A bio long enough to be left exactly as it was written, thanks.')
+      .replace('</head>', `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Person', name, url: `https://dehub.io/${handle}` })}</script>\n</head>`)
+      .replace('</html>', `<body><h1>@${handle} on DeHub — posts, videos &amp; profile</h1></body></html>`);
+
+  it('leads with the display name people search for, from the Person JSON-LD', () => {
+    // /c0chraniz3r is Jesse Cochran; nothing in the title said so.
+    const out = enrichProfileMeta(withPerson('c0chraniz3r', 'Jesse Cochran'), 'c0chraniz3r');
+    expect(valueOf(out, 'title')).toBe('Jesse Cochran (@c0chraniz3r) on DeHub');
+    expect(out).toContain('<h1>Jesse Cochran (@c0chraniz3r) on DeHub</h1>');
+  });
+
+  it('prefers the account record the caller passes', () => {
+    const out = enrichProfileMeta(withPerson('almondbloom', 'x'), 'almondbloom', 'Ahmad Rasheed');
+    expect(valueOf(out, 'title')).toBe('Ahmad Rasheed (@almondbloom) on DeHub');
+  });
+
+  it('keeps the handle title when the name is just the handle, or missing', () => {
+    expect(valueOf(enrichProfileMeta(withPerson('akcil', 'akcil'), 'akcil'), 'title'))
+      .toBe('@akcil on DeHub — posts, videos &amp; profile');
+    expect(valueOf(enrichProfileMeta(profilePage('lcfc', 'DHB ❤'), 'lcfc'), 'title'))
+      .toBe('@lcfc on DeHub — posts, videos &amp; profile');
+  });
+
+  it('keeps a very long name inside the title limit, cut at a word', () => {
+    const out = enrichProfileMeta(withPerson('dao', 'The Very Long Official Name Of A Decentralised Autonomous Organisation'), 'dao');
+    const title = valueOf(out, 'title');
+    expect(title.length).toBeLessThanOrEqual(70);
+    expect(title).toMatch(/\w…$/);
+  });
+
+  it('escapes a name the fn would have escaped', () => {
+    const out = enrichProfileMeta(withPerson('q', 'Q "the" <Seller>'), 'q');
+    expect(valueOf(out, 'title')).toBe('Q &quot;the&quot; &lt;Seller&gt; (@q) on DeHub');
+  });
+});
+
 describe('homepage description', () => {
   it('is the sentence index.html carries, so the bot and browser variants agree', () => {
     const browser = INDEX_HTML.match(/<meta name="description" content="([^"]*)">/)![1];
@@ -408,11 +501,11 @@ describe('wiring', () => {
   it('does not reinstate the early return that made the title work unreachable', () => {
     const fn = WORKER.slice(
       WORKER.indexOf('function enrichPostMeta(html, postId, nft) {'),
-      WORKER.indexOf('function enrichProfileMeta(html, username) {'),
+      WORKER.indexOf('function profileTitle(html, handle, displayName) {'),
     );
     // The description half still needs a template; the title half must not.
     const earlyReturn = fn.indexOf('if (!templated) return out;');
-    const titleWork = fn.indexOf('const untitled = titleSaysNothing(title);');
+    const titleWork = fn.indexOf('const untitled = placeholder && !caption;');
     expect(titleWork).toBeGreaterThan(-1);
     expect(earlyReturn).toBeGreaterThan(titleWork);
   });

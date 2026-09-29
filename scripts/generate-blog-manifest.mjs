@@ -27,16 +27,16 @@ import { build } from 'esbuild';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs';
-import { MILESTONE_REDIRECTS, RETIRED_GUIDES } from '../src/lib/blog-redirects.js';
+import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES } from '../src/lib/blog-redirects.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = path.join(ROOT, 'public');
 const APP_URL = 'https://dehub.io';
 // Hand-built React guide pages that also live under /guides/ — never touch
-// their sitemap entries and never treat them as manifest posts.
+// their sitemap entries and never treat them as manifest posts. The two older
+// ones now 301 into a post (CONSOLIDATED_GUIDES), so their rows are dropped.
 const STANDALONE_GUIDES = new Set([
-  'best-decentralized-social-media',
-  'best-web3-social-media-dapps',
+  'best-decentralized-streaming-apps',
 ]);
 
 // ---------------------------------------------------------------- load posts
@@ -125,6 +125,18 @@ function mdToHtml(md) {
     .replace(/\r\n/g, '\n')
     .replace(/\[TEAM_SECTION_START\]|\[TEAM_SECTION_END\]/g, '');
   const lines = src.split('\n');
+  // The page's <h1> is the post title, so the body's outermost heading level
+  // becomes h2 and every deeper one keeps its distance from it. Shifting every
+  // level down by one, as this used to, made the posts' `##` sections h3 —
+  // 124 of 126 posts jumped h1 → h3 with no h2 at all. The docs sections use
+  // `#` and render exactly as before.
+  let fenced = false;
+  let top = 6;
+  for (const l of lines) {
+    if (l.trim().startsWith('```')) fenced = !fenced;
+    const m = !fenced && l.match(/^(#{1,6})\s+\S/);
+    if (m) top = Math.min(top, m[1].length);
+  }
   const out = [];
   let para = [];
   let list = null; // 'ul' | 'ol'
@@ -162,7 +174,7 @@ function mdToHtml(md) {
     const h = line.match(/^(#{1,6})\s+(.*)$/);
     if (h) {
       flushPara(); flushList();
-      const level = Math.min(h[1].length + 1, 6); // page h1 is the post title
+      const level = Math.min(Math.max(h[1].length - top + 2, 2), 6);
       out.push(`<h${level}>${inlineMd(h[2])}</h${level}>`);
       continue;
     }
@@ -223,6 +235,14 @@ for (const [from, to] of Object.entries(MILESTONE_REDIRECTS)) {
 for (const from of Object.keys(RETIRED_GUIDES)) {
   if (blogData.posts.some((p) => p.slug === from)) {
     throw new Error(`[blog-manifest] retired guide is published again: ${from}`);
+  }
+}
+
+// Standalone guides folded into a post: the post has to exist, or the 301
+// lands on a 404.
+for (const [from, to] of Object.entries(CONSOLIDATED_GUIDES)) {
+  if (!kept.some((p) => p.slug === to)) {
+    throw new Error(`[blog-manifest] consolidation target missing: ${from} -> ${to}`);
   }
 }
 
@@ -406,7 +426,7 @@ const DOCS_META_ONLY = [
   'token/overview', 'token/economics', 'token/utility', 'token/where-to-buy',
   'token/governance', 'token/stake', 'token/bridge',
   'advertising', 'team', 'security', 'roadmap', 'contact',
-  'terms', 'terms-of-service', 'privacy',
+  'terms', 'terms-of-service', 'privacy', 'guidelines',
   'brand-assets', 'brand-guidelines', 'featured-in',
   'faq', 'donate',
 ];

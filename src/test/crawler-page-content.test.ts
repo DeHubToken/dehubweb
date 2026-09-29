@@ -32,9 +32,13 @@ const api = new Function(`
   ${constant('UNTITLED_POST_TITLES')}
   ${constant('FILENAME_TITLE')}
   ${constant('PLACEHOLDER_TITLE')}
+  ${constant('POST_CAPTION_TITLE_MAX')}
   ${decl('function escHtml(s = \'\') {')}
   ${decl('function truncate(text, max) {')}
+  ${decl('function clipAtWord(text, max) {')}
   ${decl('function titleSaysNothing(title) {')}
+  ${decl('function decodeFnText(s) {')}
+  ${decl('function postCaption(html, nft, templated) {')}
   ${decl('function postLabel(row) {')}
   ${decl('function postListHtml(heading, rows, { author = true } = {}) {')}
   ${decl('function shortsOf(rows, max = 12) {')}
@@ -75,6 +79,20 @@ describe('post lists', () => {
     expect(out).toContain('>Post #122</a>');
     expect(out).toContain('>Post #3674</a>');
     expect(out).not.toContain('VID-2022');
+  });
+
+  it("names an untitled post by its caption's opening words, cut at a word", () => {
+    // /app/post/3419's "More from this creator" read `Post #3723`, `Post #3722`…
+    // for posts that each carry a caption.
+    const out = api.postListHtml('x', [
+      video(3419, '', {
+        description:
+          'Exquisite watercolor of a Royal Haveli. A noble couple shares a quiet moment in a sun-drenched courtyard',
+      }),
+      video(5, '', { description: 'gm https://example.com/x' }),
+    ]);
+    expect(out).toContain('>Exquisite watercolor of a Royal Haveli. A noble couple…</a>');
+    expect(out).toContain('>Post #5</a>');
   });
 
   it("can leave the author off, for a page that is already the author's", () => {
@@ -172,7 +190,7 @@ describe('wiring', () => {
   it('feeds the section pages, the music page, the post page and the profile page', () => {
     expect(WORKER).toContain('await sectionLiveHtml(sectionKey)');
     expect(WORKER).toContain("await sectionLiveHtml('music')");
-    expect(WORKER).toContain('postListHtml(\'Recent posts\', await fetchFeedRows(`minter=${address}`)');
+    expect(WORKER).toContain('postListHtml(\'Recent posts\', rows || []');
     expect(WORKER).toContain('commentsHtml(record)');
   });
 });

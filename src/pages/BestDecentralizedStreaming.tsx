@@ -171,7 +171,7 @@ export default function BestDecentralizedStreaming() {
         description:
           'The decentralized and Web3 streaming apps you can actually watch on in 2026 — DeHub, Streamplace, Odysee, 3Speak, zap.stream and Audius — with monetization, audience size and who each is for.',
         datePublished: '2026-09-13',
-        dateModified: '2026-09-13',
+        dateModified: '2026-09-29',
         author: { '@type': 'Organization', name: 'DeHub' },
         publisher: {
           '@type': 'Organization',
@@ -379,13 +379,8 @@ export default function BestDecentralizedStreaming() {
             <h2 className="text-2xl font-semibold mb-4">Related guides</h2>
             <ul className="space-y-2 text-zinc-300">
               <li>
-                <Link to="/guides/best-decentralized-social-media" className="underline hover:text-white">
+                <Link to="/guides/best-decentralised-social-media-platforms-2026" className="underline hover:text-white">
                   Best decentralized social media platforms in 2026
-                </Link>
-              </li>
-              <li>
-                <Link to="/guides/best-web3-social-media-dapps" className="underline hover:text-white">
-                  Best Web3 social media dapps in 2026
                 </Link>
               </li>
             </ul>
