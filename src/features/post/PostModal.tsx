@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useState, useCallback, useRef } from 'react';
-import { BASE_POST_TEXT_CHARS, postTextLimit } from '@/lib/post-text-limit';
-import ReactMarkdown from 'react-markdown';
+import { postTextLimit } from '@/lib/post-text-limit';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
@@ -10,6 +9,7 @@ import type { PollData, LiveStreamHandoff } from './types';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
+import { ArticleComposer } from './components/ArticleComposer';
 import { CrossPostPicker } from './components/CrossPostPicker';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
@@ -53,21 +53,12 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   const [articleBody, setArticleBody] = useState('');
   const [articleImage, setArticleImage] = useState<File | null>(null);
   const [articleImagePreview, setArticleImagePreview] = useState('');
-  const articleEditorRef = useRef<HTMLTextAreaElement>(null);
-  const [articlePreview, setArticlePreview] = useState(false);
-  const formatArticle = (before: string, after = '', placeholder = 'text', block = false) => {
-    const editor = articleEditorRef.current;
-    if (!editor) return;
-    const start = editor.selectionStart;
-    const end = editor.selectionEnd;
-    const selected = articleBody.slice(start, end) || placeholder;
-    const prefix = block && start > 0 && articleBody[start - 1] !== '\n' ? '\n' : '';
-    const next = `${articleBody.slice(0, start)}${prefix}${before}${selected}${after}${articleBody.slice(end)}`.slice(0, 20000);
-    setArticleBody(next);
-    requestAnimationFrame(() => {
-      editor.focus();
-      editor.setSelectionRange(start + prefix.length + before.length, start + prefix.length + before.length + selected.length);
-    });
+  const saveArticleDraft = () => {
+    const done = () => { actions.resetForm(); handleClose(); };
+    draftImageData(articleImage)
+      .then(imageData => actions.saveDraft({ body: articleBody, title: state.titleText, imageData, socialData: imageData }))
+      .catch(() => actions.saveDraft({ body: articleBody, title: state.titleText }))
+      .finally(done);
   };
   const draftImageData = async (file: File | null): Promise<string | undefined> => {
     if (!file) return undefined;
@@ -209,9 +200,29 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         <button type="button" aria-pressed={articleMode} onClick={selectArticleMode} className={cn('transition-colors', articleMode ? 'text-white' : 'text-white/55 hover:text-white')}>Article</button>
       </div>
 
+      {articleMode ? (
+        <ArticleComposer
+          title={state.titleText}
+          setTitle={actions.setTitleText}
+          summary={state.text}
+          setSummary={actions.setText}
+          body={articleBody}
+          setBody={setArticleBody}
+          coverPreview={articleImagePreview}
+          onCoverChange={setArticleImage}
+          onSaveDraft={saveArticleDraft}
+          onPublish={() => actions.handlePost({ articleBody: articleBody.trim(), articleImage: articleImage || undefined, socialImage: articleImage || undefined })}
+          formReady={computed.canPost && !computed.hasVideo && !computed.hasImage && !computed.hasAudio}
+          isPosting={state.isPosting}
+          uploadProgress={state.uploadProgress ?? 0}
+          mintAwaitingWallet={!!state.mintAwaitingWallet}
+          onAbandonMint={actions.abandonMint}
+        />
+      ) : (
+      <>
       <PostContentArea
         text={state.text}
-        maxChars={articleMode ? BASE_POST_TEXT_CHARS : postTextLimit(computed.postQuota)}
+        maxChars={postTextLimit(computed.postQuota)}
         setText={actions.setText}
         editorRef={refs.editorRef}
         media={state.media}
@@ -244,12 +255,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
           // content — and because the composer is mounted behind a one-way
           // latch, that content was still sitting there on the next open,
           // one Post away from being published or saved twice.
-          const done = () => { actions.resetForm(); handleClose(); };
-          if (!articleMode) { actions.saveDraft(); done(); return; }
-          draftImageData(articleImage)
-            .then(imageData => actions.saveDraft({ body: articleBody, title: state.titleText, imageData, socialData: imageData }))
-            .catch(() => actions.saveDraft({ body: articleBody, title: state.titleText }))
-            .finally(done);
+          actions.saveDraft();
+          actions.resetForm();
+          handleClose();
         }}
         onLoadDraft={draft => {
           actions.loadDraft(draft);
@@ -282,48 +290,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onPollChange={actions.setPoll}
         onMediaFullscreenChange={setMediaFullscreenOpen}
       />
-      {articleMode && (
-        <div className="px-4 pb-4 space-y-2">
-          <div className="space-y-2 pb-2">
-            <label className="block text-sm text-white/80">Social share image</label>
-            <label className="block cursor-pointer overflow-hidden rounded-xl border border-white/20 bg-white/5 transition-colors hover:border-white/40">
-              {articleImagePreview ? (
-                <div>
-                  <img src={articleImagePreview} alt="Social share preview" className="aspect-[1.91/1] w-full object-cover" />
-                  <div className="space-y-1 p-3">
-                    <p className="line-clamp-1 text-sm font-semibold text-white">{state.titleText.trim() || 'Your article title'}</p>
-                    <p className="line-clamp-2 text-xs text-white/60">{state.text.trim() || 'Your article summary will appear here when this is shared.'}</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex aspect-[1.91/1] items-center justify-center px-4 text-center text-xs text-white/60">
-                  Add the image shown at the top of your article and in social previews
-                </div>
-              )}
-              <input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={e => setArticleImage(e.target.files?.[0] || null)} />
-            </label>
-            {articleImage && <button type="button" className="text-xs text-white/60 underline" onClick={() => setArticleImage(null)}>Remove image</button>}
-          </div>
-          <label htmlFor="article-body" className="block text-sm text-white/80">Article body</label>
-          <div className="flex flex-wrap items-center gap-1 text-xs" aria-label="Article formatting">
-            {([
-              ['Large', '# ', '', 'Heading', true], ['Heading', '## ', '', 'Heading', true],
-              ['Bold', '**', '**', 'bold text', false], ['Italic', '*', '*', 'italic text', false],
-              ['Quote', '> ', '', 'Quote', true], ['Bullets', '- ', '', 'List item', true],
-              ['Numbers', '1. ', '', 'List item', true], ['Link', '[', '](https://example.com)', 'link text', false],
-            ] as const).map(([label, before, after, placeholder, block]) => (
-              <button key={label} type="button" onClick={() => formatArticle(before, after, placeholder, block)} className="rounded-md px-2 py-1 text-white/70 hover:bg-white/10 hover:text-white">{label}</button>
-            ))}
-            <button type="button" aria-pressed={articlePreview} onClick={() => setArticlePreview(!articlePreview)} className="ml-auto rounded-md px-2 py-1 text-white/70 hover:bg-white/10 hover:text-white">{articlePreview ? 'Edit' : 'Preview'}</button>
-          </div>
-          {articlePreview ? <div className="prose prose-invert min-h-64 max-w-none rounded-xl border border-white/20 bg-white/5 p-4 text-white"><ReactMarkdown>{articleBody}</ReactMarkdown></div> : <textarea ref={articleEditorRef} id="article-body" value={articleBody} onChange={e => setArticleBody(e.target.value.slice(0, 20000))}
-            placeholder="Write your article here. Use blank lines between paragraphs."
-            className="w-full min-h-64 rounded-xl border border-white/20 bg-white/5 p-4 text-white outline-none focus:border-white/50" />}
-          <p className="text-xs text-white/60">{articleBody.length}/20,000 · minimum 100 characters. The post text above is the summary.</p>
-        </div>
-      )}
-
-      {!articleMode && <PostAccessToggles
+      <PostAccessToggles
         isSubscribersOnly={state.isSubscribersOnly}
         setIsSubscribersOnly={actions.setIsSubscribersOnly}
         isPPV={state.isPPV}
@@ -372,10 +339,10 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         mintFeeLabel={computed.mintFeeLabel}
         mintRequired={computed.mintRequired}
         onCreatePlan={() => setPlanDrawerOpen(true)}
-      />}
+      />
 
       <PostActionBar
-        extraTool={!articleMode && !state.liveMode ? <CrossPostPicker onNavigateAway={handleClose} /> : undefined}
+        extraTool={!state.liveMode ? <CrossPostPicker onNavigateAway={handleClose} /> : undefined}
         imageInputRef={refs.imageInputRef}
         videoInputRef={refs.videoInputRef}
         audioInputRef={refs.audioInputRef}
@@ -393,9 +360,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onEnhanceWithAI={actions.handleEnhanceWithAI}
         onPost={() => {
           const soundtrackTag = attachedSound ? buildSoundtrackTag(attachedSound) : undefined;
-          actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}), ...(articleMode ? { articleBody: articleBody.trim(), articleImage: articleImage || undefined, socialImage: articleImage || undefined } : {}) });
+          actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}) });
         }}
-        canPost={computed.canPost && (!articleMode || (state.titleText.trim().length > 0 && state.text.trim().length > 0 && articleBody.trim().length >= 100 && !computed.hasVideo && !computed.hasImage && !computed.hasAudio))}
+        canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
         uploadProgress={state.uploadProgress}
@@ -414,6 +381,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onTogglePoll={handleTogglePoll}
         hasPoll={!!state.poll}
       />
+      </>
+      )}
     </>
   );
 
@@ -443,6 +412,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
           column
           className={cn(
             "max-h-[90dvh]",
+            // The article writer is its own page, so it takes the full sheet.
+            articleMode && "h-[92dvh] max-h-[92dvh] flex flex-col",
             state.isCameraModalOpen && "invisible pointer-events-none"
           )}
         >
