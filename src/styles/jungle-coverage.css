@@ -111,7 +111,6 @@ html[data-theme='jungle'] [data-ai-chat] {
   border-color: transparent !important;
   background: var(--jungle-grain), rgb(var(--jungle-bark) / var(--glass-regular)) !important;
   backdrop-filter: var(--jungle-blur) !important;
-  -webkit-backdrop-filter: var(--jungle-blur) !important;
   box-shadow: var(--jungle-edge-lift) !important;
 }
 
@@ -131,7 +130,6 @@ html[data-theme='jungle'] [data-feed-filter-panel] {
   border-color: transparent !important;
   background: var(--jungle-grain), rgb(var(--jungle-bark) / var(--glass-regular)) !important;
   backdrop-filter: var(--jungle-blur) !important;
-  -webkit-backdrop-filter: var(--jungle-blur) !important;
   box-shadow: var(--jungle-edge-lift) !important;
 }
 

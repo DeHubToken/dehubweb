@@ -25,7 +25,6 @@ html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
   box-shadow: var(--control-shadow) !important;
   color: var(--control-ink) !important;
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
   :is(#app-root, [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
