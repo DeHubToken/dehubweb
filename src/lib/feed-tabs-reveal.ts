@@ -3,7 +3,7 @@ import { useSyncExternalStore } from 'react';
 /**
  * System theme on phones: the home feed has no top bar or tab pill at rest,
  * only the island capsule (FeedIslandCapsule). Tapping the capsule's tab name
- * drops the tab pill in under it; the next scroll of the feed puts it away.
+ * opens its feed dropdown; picking one, or the next scroll, closes it.
  */
 let open = false;
 const subscribers = new Set<() => void>();
