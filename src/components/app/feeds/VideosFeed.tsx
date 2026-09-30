@@ -879,6 +879,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                 <div
                   key={video.id}
                   data-feed-item
+                  data-cinematic="video"
                   className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3"
                   style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: 'auto 0 auto 520px' } : undefined}
                 >

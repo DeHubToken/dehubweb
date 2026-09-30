@@ -363,13 +363,14 @@ function EndlessScrollView({
         <Fragment key={post.id}>
           <div
             data-feed-item
+            data-cinematic="image"
             className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
             style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: 'auto 0 auto 640px' } : undefined}
           >
             <ImageCard post={post} />
           </div>
           {index === 0 && servedAd && (
-            <div data-feed-item className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+            <div data-feed-item data-cinematic="ad" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
               <SponsoredAdCard ad={servedAd} />
             </div>
           )}

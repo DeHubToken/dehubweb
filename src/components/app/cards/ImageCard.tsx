@@ -529,7 +529,7 @@ function FeedDescription({
   if (!title && !description && dehubLinks.length === 0) return null;
 
   return (
-    <div className="relative space-y-1" data-no-navigate {...tapGestures} onClick={(event) => event.stopPropagation()}>
+    <div className="relative space-y-1" data-card-caption={(linkFreeTitle || shownDescription) && dehubLinks.length === 0 && assetRefs.length === 0 && !/https?:\/\//.test(linkSource ?? '') ? '' : undefined} data-no-navigate {...tapGestures} onClick={(event) => event.stopPropagation()}>
       {!disabled && <TapReactionBurst postId={postId} />}
       {linkFreeTitle && (
         <h3 className="text-white text-[14px] leading-tight">
@@ -773,7 +773,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   }, [navigate, post.id, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   const headerRow = (
-    <div className="flex items-start justify-between">
+    <div data-card-head className="flex items-start justify-between">
       <CardHeader
         username={post.username}
         handle={post.creatorUsername}
@@ -1147,7 +1147,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
       {/* Info & Actions. Immersive media runs edge to edge, so the copy under it
           brings its own gutter — the same px-3 the immersive video card uses. */}
-      <div className={cn('pt-3 space-y-2', isImmersive && 'px-3')}>
+      <div data-card-info className={cn('pt-3 space-y-2', isImmersive && 'px-3')}>
         {isImmersive && headerRow}
         {/* Title & Description */}
         <FeedDescription 

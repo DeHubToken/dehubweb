@@ -25,6 +25,7 @@ import { warmLoginSheet } from '@/components/app/LoginModal';
 // or light mode would invert a black mark back to white.
 import dehubMark from '@/assets/dehub-logo-compact.png';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
+import { FeedIslandCapsule } from './FeedIslandCapsule';
 
 const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
   const { theme } = useAppTheme();
@@ -71,6 +72,10 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   const anyOverlayOpen = useAnyOverlayOpen();
   // Same hide-on-scroll-down / show-on-scroll-up behaviour as the mobile nav bars.
   const navVisible = useScrollDirection();
+  const { theme } = useAppTheme();
+  // System theme: avatar and mark share the left slot, and while the feed
+  // scrolls down the bar gives way to the island capsule (FeedIslandCapsule).
+  const islandBar = theme === 'system';
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
@@ -134,6 +139,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   }, [navType, navigate]);
 
   return (
+    <>
     <header data-mobile-header data-clear-top-bar className={`${showBar ? '' : 'hidden '}lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
       {/* Profile — left slot.
           Direct post-page URL access: back button replaces the menu/settings toggle.
@@ -196,14 +202,21 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
             <Menu className="w-[31px] h-[31px] text-white" />
           </button>
         )}
+        {islandBar && (
+          <div className="ml-3 flex items-center">
+            <HeaderLogo onClick={handleLogoClick} />
+          </div>
+        )}
       </div>
 
       {/* dehub mark — centred on the bar itself, not between the side slots, so
           it stays put whether or not the notification bell is rendered (it is
           signed-in only) and whichever left control is showing. */}
-      <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
-        <HeaderLogo onClick={handleLogoClick} />
-      </div>
+      {!islandBar && (
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
+          <HeaderLogo onClick={handleLogoClick} />
+        </div>
+      )}
 
       {/* Notifications — right slot, only visible when logged in.
           When the post overlay is opened from the feed, keep the DEHUB header exactly as it was. */}
@@ -224,5 +237,31 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
         )}
       </div>
     </header>
+    {islandBar && showBar && (
+      <FeedIslandCapsule
+        visible={!navVisible && !isOpen && !anyOverlayOpen && !isPostPage}
+        avatar={isAuthenticated && user ? (
+          <Avatar className="w-[28px] h-[28px]">
+            {user.avatarImageUrl && user.address && (
+              <AvatarImage
+                src={buildAvatarUrl(user.address, user.avatarImageUrl)}
+                alt=""
+                className="object-cover"
+              />
+            )}
+            <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+              {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
+            </AvatarFallback>
+          </Avatar>
+        ) : null}
+        onAvatarClick={() => (isAuthenticated ? onOpenChange(true) : openLoginModal())}
+        logoSrc={dehubMark}
+        onLogoClick={handleLogoClick}
+        showBell={isAuthenticated}
+        unread={totalNotifUnread}
+        onBellClick={() => navigate('/app/notifications')}
+      />
+    )}
+    </>
   );
 }

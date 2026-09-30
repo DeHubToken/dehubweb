@@ -195,6 +195,12 @@ function subscribeStickyNav(cb: () => void): () => void {
   };
 }
 
+/** Bring the hidden top and bottom bars back without a scroll (the feed's
+ *  island capsule opens the full bar this way). The next scroll decides again. */
+export function revealNav() {
+  setVisible(true);
+}
+
 const getSnapshot = () => visible;
 const getServerSnapshot = () => true;
 
