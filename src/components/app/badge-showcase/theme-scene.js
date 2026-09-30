@@ -11,6 +11,7 @@ if(!selected) throw new Error('Unknown badge world');
 let frameTime=0;
 let mode='click',active=true,W=1,H=1,D=1,CX=0,CY=0,sourceBox=null;
 let shardCells=[],glintCanvas=null,frostCanvas=null,bloodArt=[],tideArt=[];
+let lavaSurface=null,lavaPixels=null;
 let art=[],planets=[],ice=null,mask=[],fractures=[],frozen=[],pixels=[];
 const TAU=Math.PI*2;
 const sat=x=>Math.max(0,Math.min(1,x)),lerp=(a,b,t)=>a+(b-a)*t,out=x=>1-Math.pow(1-sat(x),3),smooth=x=>{x=sat(x);return x*x*(3-2*x)},inout=x=>{x=sat(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2},range=(t,a,b)=>sat((t-a)/(b-a)),rnd=i=>{const n=Math.sin(i*127.1+311.7)*43758.5453;return n-Math.floor(n)},world=()=>selected,duration=()=>mode==='click'?3.3:6.5;
@@ -49,7 +50,70 @@ function hazy(t){if(mode==='click'){lift(1,t,-.08*Math.sin(t)*Math.exp(-t*.6));s
 function flock(t,p){const old=pixels[0],next=pixels[1];if(!old.length||!next.length){badge(1);return;}const m=inout(p),swirl=Math.pow(Math.sin(p*Math.PI),2);c.save();const parentAlpha=c.globalAlpha;for(let i=0;i<Math.max(old.length,next.length);i++){const a=old[i%old.length],b=next[(i*37)%next.length],ang=i*2.399+t*.8,r=swirl*(.15+rnd(i)*.7);const x=CX+(lerp(a.x,b.x,m)+Math.cos(ang)*r)*D,y=CY+(lerp(a.y,b.y,m)+Math.sin(ang)*r*.65)*D;const red=Math.round(lerp(a.r,b.r,m)),green=Math.round(lerp(a.g,b.g,m)),blue=Math.round(lerp(a.b,b.b,m));c.fillStyle=`rgb(${red},${green},${blue})`;c.globalAlpha=parentAlpha*.9;const size=1.1+(1-swirl)*2.8;c.fillRect(x-size/2,y-size/2,size,size);if(swirl>.1&&i%3===0){c.globalAlpha=parentAlpha*swirl*.2;stroke([[x,y],[x-Math.cos(ang)*10*swirl,y-Math.sin(ang)*10*swirl]],'#c1f4ff',.7);}}c.restore();}
 function swarms(t){if(mode==='click'){if(t<1)lift(1,t);else{const p=Math.sin(range(t,1,3.2)*Math.PI)*.18;badge(1,CX,CY,D,0,1-p*3);c.save();c.globalAlpha=p*3;flock(t,1-p*.2);c.restore();}return;}if(t<1.2){lift(0,t);}else if(t<4.9){const p=range(t,1.2,4.9);badge(0,CX,CY,D,0,1-range(p,0,.15));c.save();c.globalAlpha=smooth(range(p,0,.13))*(1-smooth(range(p,.88,1)));flock(t,p);c.restore();badge(1,CX,CY,D,0,range(p,.85,1));}else badge(1);}
 function wax(x,y,rx,ry,alpha=1){c.save();c.globalAlpha*=alpha;const g=c.createRadialGradient(x-rx*.2,y-ry*.3,1,x,y,Math.max(rx,ry));g.addColorStop(0,'#ffdc97');g.addColorStop(.25,'#ff9a46');g.addColorStop(.8,'#bc431f');g.addColorStop(1,'#632415');c.fillStyle=g;c.beginPath();c.ellipse(x,y,Math.max(.1,rx),Math.max(.1,ry),0,0,TAU);c.fill();c.restore();}
-function lava(t){if(mode==='click'){const p=out(t/1.2),o=origin(),w=Math.sin(t*7)*Math.exp(-t*2);badge(1,lerp(o.x,CX,p),lerp(o.y,CY,p),lerp(origin().size,D,p),0,1,1-w*.12,1+w*.18);return;}if(t<1.1){lift(0,t);}else if(t<3.2){const p=inout(range(t,1.1,3.2));badge(0,CX,CY+p*90,D,0,1-range(p,.4,1),1+p*.3,1-p*.8);wax(CX,CY+D*.43,D*.48*out(p),D*.09*out(p));for(let i=0;i<5;i++){const q=range(p,i*.09,.65+i*.08);wax(CX+(i-2)*D*.1,CY+q*100,6*(1-q),15*(1-q),(1-q)*p);}}else{const p=out(range(t,3.2,5.65));wax(CX,CY+D*.43,D*.48*(1-p*.5),D*.09*(1-p));const wobble=Math.sin((t-3.2)*8)*Math.exp(-(t-3.2)*1.8);c.save();c.beginPath();c.rect(0,0,W,CY+D*.44);c.clip();badge(1,CX,CY+110*(1-p),D,.015*wobble,p,1-wobble*.07,1+wobble*.1);c.restore();for(let i=0;i<8;i++){const q=range(t,3.6+i*.03,5.5+i*.02);wax(CX+(rnd(i)-.5)*D*1.2*q,CY+80-140*Math.sin(q*Math.PI)+q*q*80,3*(1-q),6*(1-q),(1-q)*p);}}glow(CX,CY+100,160,'#ff8c31',Math.sin(range(t,.8,6)*Math.PI)*.08);}
+function moltenLiquid(t) {
+  const born=smooth(range(t,.65,1.45)),drain=smooth(range(t,3.45,5.8));
+  const cover=smooth(range(t,1.05,2.75))*(1-drain);
+  const life=born*(1-smooth(range(t,5.5,6.25)));
+  if(life<=0)return;
+  // An implicit liquid surface joins lobes into necks and separates droplets.
+  // A reused low-resolution material keeps the same motion affordable on phones.
+  const blobs=[
+    [0,.65,.46,.13],
+    [Math.sin(t*1.1)*.045,.66-cover*.7,.045+cover*.54,.045+cover*.59],
+    [-.29+Math.sin(t*.9)*.045,.54-cover*.86,.065+cover*.17,.075+cover*.24],
+    [.3+Math.cos(t*.8)*.05,.5-cover*.6,.055+cover*.17,.065+cover*.22],
+  ];
+  for(let i=0;i<4;i++){
+    const u=range(t,1.05+i*.15,4.9+i*.16),pulse=Math.sin(u*Math.PI);
+    blobs.push([Math.sin(i*2.4+t*.5)*(.66+drain*.18),.65-u*1.4+drain*.8,
+      .035+pulse*.075,.045+pulse*.105]);
+  }
+  const n=lavaSurface.width,data=lavaPixels.data;
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){
+    const px=(x+.5)/n*2.6-1.3,py=(y+.5)/n*2.6-1.3;
+    let field=0,gx=0,gy=0;
+    for(const b of blobs){
+      const dx=(px-b[0])/b[2],dy=(py-b[1])/b[3],den=.015+dx*dx+dy*dy,v=1/den;
+      field+=v;gx+=dx*v*v/b[2];gy+=dy*v*v/b[3];
+    }
+    const k=(y*n+x)*4,alpha=sat((field-.98)/.085);
+    data[k+3]=255*alpha;
+    if(!alpha)continue;
+    const length=Math.sqrt(gx*gx+gy*gy)+.001,nx=gx/length,ny=gy/length;
+    const rim=1-smooth(range(field,1,2.1));
+    const light=sat(.65-py*.18+rim*(-nx*.2-ny*.3));
+    const shine=Math.pow(Math.max(0,-nx*.55-ny*.83),7)*rim;
+    const heat=(.5+.5*Math.sin(py*4.5-t*.8+Math.sin(px*5+t*.65)))*(1-rim);
+    data[k]=224+light*26+shine*20;
+    data[k+1]=48+light*62+heat*20+shine*95;
+    data[k+2]=12+light*16+heat*7+shine*50;
+  }
+  lavaSurface.getContext('2d').putImageData(lavaPixels,0,0);
+  c.save();c.globalAlpha=life;c.imageSmoothingEnabled=true;
+  c.drawImage(lavaSurface,CX-D*1.3,CY-D*1.3,D*2.6,D*2.6);c.restore();
+}
+function meltingBadge(t) {
+  const melt=smooth(range(t,1.8,3.15));
+  if(!melt){badge(0);return;}
+  c.save();c.globalAlpha=1-smooth(range(t,2.85,3.2));
+  // Stretch the actual artwork downward as the hot liquid envelops it.
+  for(let row=0;row<512;row+=8){
+    const y=row/512,pull=melt*y*y;
+    const width=D*(1+pull*.22),x=CX-width/2+Math.sin(y*8+t*2)*D*.018*melt;
+    c.drawImage(art[0],0,row,512,8,x,CY-D/2+y*D+pull*D*.36,width,D/64*(1+melt*y*.75)+.5);
+  }
+  c.restore();
+}
+function lava(t) {
+  if(t<1.05)lift(0,t);
+  else if(t<3.2)meltingBadge(t);
+  else{
+    const p=smooth(range(t,3.2,5.8)),wobble=Math.sin(p*TAU)*Math.sin(p*Math.PI)*.025;
+    badge(1,CX,CY+D*.1*(1-p),D*(.96+.04*p),0,1,1+wobble,1-wobble);
+  }
+  glow(CX,CY+D*.45,D*.85,'#f58024',Math.sin(range(t,.65,6.25)*Math.PI)*.1);
+  moltenLiquid(t);
+}
 function underwater(t) {
   const life=smooth(range(t,.55,1.6))*(1-smooth(range(t,5.3,6.3)));
   if(life<=0)return;
@@ -164,6 +228,7 @@ const renderers={cosmic,winter,jungle,hazy,swarms,lavalamp:lava,island,horror,wa
 function prepare(oldArt,newArt) {
   art=[oldArt,newArt]; mask=[]; frozen=[]; pixels=[]; bloodArt=[]; tideArt=[];
   glintCanvas=glintCanvas||off(256);
+  if(theme==='lavalamp'&&!lavaSurface){lavaSurface=off(192);lavaPixels=lavaSurface.getContext('2d').createImageData(192,192);}
   if(theme==='cosmic'&&!planets.length) planets=[makePlanet(0),makePlanet(1)];
   if(theme==='winter') {
     frostCanvas=frostCanvas||off(); shardCells=shardCells.length?shardCells:makeShards();
@@ -209,6 +274,6 @@ return {
   },
   still(box){c.clearRect(0,0,W,H);if(art[1])badge(1,box?box.x+box.size/2:CX,box?box.y+box.size/2:CY,box?box.size:D);},
   clear(){c.clearRect(0,0,W,H);},
-  dispose(){art=[];mask=[];frozen=[];pixels=[];bloodArt=[];tideArt=[];planets=[];ice=null;glintCanvas=null;frostCanvas=null;},
+  dispose(){art=[];mask=[];frozen=[];pixels=[];bloodArt=[];tideArt=[];planets=[];ice=null;glintCanvas=null;frostCanvas=null;lavaSurface=null;lavaPixels=null;},
 };
 }
