@@ -4990,7 +4990,8 @@
     "newGroupName": "اسم مجموعة جديدة",
     "groupLimitReached": "تم الوصول للحد الأقصى للمجموعات",
     "createGroup": "إنشاء",
-    "groupsHint": "المجموعات بتفلترلك الـ Following feed تبعك. بس أنت بتقدر تشوفهم."
+    "groupsHint": "المجموعات بتفلترلك الـ Following feed تبعك. بس أنت بتقدر تشوفهم.",
+    "new": "جديد"
   },
   "reactionInfo": {
     "title": "التفاعلات",

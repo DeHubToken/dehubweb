@@ -5727,7 +5727,8 @@
     "newGroupName": "Nieuwe groepsnaam",
     "groupLimitReached": "Groepslimiet bereikt",
     "createGroup": "Aanmaken",
-    "groupsHint": "Groepen filteren uw volgende feed. Alleen jij kunt ze zien."
+    "groupsHint": "Groepen filteren uw volgende feed. Alleen jij kunt ze zien.",
+    "new": "Nieuw"
   },
   "reactionInfo": {
     "title": "Reacties",

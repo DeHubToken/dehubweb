@@ -4651,7 +4651,8 @@
     "noResults": "No results found",
     "noFollowersYet": "No followers yet",
     "groupLimitReached": "Group limit reached",
-    "createGroup": "Create"
+    "createGroup": "Create",
+    "new": "New"
   },
   "reactionInfo": {
     "title": "Reactions",

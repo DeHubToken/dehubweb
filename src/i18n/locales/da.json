@@ -5490,7 +5490,8 @@
     "newGroupName": "Nyt gruppenavn",
     "groupLimitReached": "Gruppegrænsen er nået",
     "createGroup": "Opret",
-    "groupsHint": "Grupper filtrerer dit følgende feed. Kun du kan se dem."
+    "groupsHint": "Grupper filtrerer dit følgende feed. Kun du kan se dem.",
+    "new": "Ny"
   },
   "reactionInfo": {
     "title": "Reaktioner",

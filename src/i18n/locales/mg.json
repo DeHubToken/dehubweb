@@ -5579,7 +5579,8 @@
     "newGroupName": "Anaran-Vondrona Vaovao",
     "groupLimitReached": "Tratra ny fetran'ny vondrona",
     "createGroup": "Mamorona",
-    "groupsHint": "Vondrona hanivana ny sakafo manaraka. Sahady, tsy mahita azy akory aza ianareo."
+    "groupsHint": "Vondrona hanivana ny sakafo manaraka. Sahady, tsy mahita azy akory aza ianareo.",
+    "new": "Vaovao"
   },
   "reactionInfo": {
     "title": "Fanehoan-kevitra",

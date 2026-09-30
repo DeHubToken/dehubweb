@@ -5572,7 +5572,8 @@
     "newGroupName": "新群組名稱",
     "groupLimitReached": "達到咗群組限制",
     "createGroup": "創造",
-    "groupsHint": "群組會篩選你嘅以下資訊提供。只有你可以睇到佢哋。"
+    "groupsHint": "群組會篩選你嘅以下資訊提供。只有你可以睇到佢哋。",
+    "new": "新"
   },
   "reactionInfo": {
     "title": "反應",

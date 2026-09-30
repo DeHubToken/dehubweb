@@ -5610,7 +5610,8 @@
     "newGroupName": "Nuwe groepnaam",
     "groupLimitReached": "Groeplimiet bereik",
     "createGroup": "Skep",
-    "groupsHint": "Groepe filter jou volgende voer. Net jy kan hulle sien."
+    "groupsHint": "Groepe filter jou volgende voer. Net jy kan hulle sien.",
+    "new": "Nuut"
   },
   "reactionInfo": {
     "title": "Reaksies",

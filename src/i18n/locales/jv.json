@@ -5327,7 +5327,8 @@
     "newGroupName": "Jeneng grup anyar",
     "groupLimitReached": "Wates grup wis tekan",
     "createGroup": "Gawe",
-    "groupsHint": "Grup nyaringake umpan \"Ngetutake\". Mung kowe sing bisa ndeleng."
+    "groupsHint": "Grup nyaringake umpan \"Ngetutake\". Mung kowe sing bisa ndeleng.",
+    "new": "Anyar"
   },
   "reactionInfo": {
     "title": "Reaksi",

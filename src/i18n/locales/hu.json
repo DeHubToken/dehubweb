@@ -5463,7 +5463,8 @@
     "newGroupName": "Új csoportnév",
     "groupLimitReached": "Elérte a csoportkorlátot",
     "createGroup": "Létrehozás",
-    "groupsHint": "Csoportok szűrik a következő hírcsatornát. Csak te láthatod őket."
+    "groupsHint": "Csoportok szűrik a következő hírcsatornát. Csak te láthatod őket.",
+    "new": "Új"
   },
   "reactionInfo": {
     "title": "Reakciók",

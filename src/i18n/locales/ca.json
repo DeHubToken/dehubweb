@@ -5461,7 +5461,8 @@
     "newGroupName": "Nom del grup nou",
     "groupLimitReached": "S'ha assolit el límit de",
     "createGroup": "Crea",
-    "groupsHint": "Els grups filtren el teu feed Següent. Només tu pots veure'ls."
+    "groupsHint": "Els grups filtren el teu feed Següent. Només tu pots veure'ls.",
+    "new": "Nou"
   },
   "reactionInfo": {
     "title": "Reaccions",

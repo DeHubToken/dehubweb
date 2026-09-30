@@ -5588,7 +5588,8 @@
     "newGroupName": "Musuq huñu suti",
     "groupLimitReached": "Grupo límite chayasqa",
     "createGroup": "Paqarichiy",
-    "groupsHint": "Huñukuna Qatiq mikhuyniykita filtranku. Qamllam chaykunataqa qawawaq."
+    "groupsHint": "Huñukuna Qatiq mikhuyniykita filtranku. Qamllam chaykunataqa qawawaq.",
+    "new": "Musuq"
   },
   "reactionInfo": {
     "title": "Reacciones nisqakuna",

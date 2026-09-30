@@ -5582,7 +5582,8 @@
     "newGroupName": "Nome do novo grupo",
     "groupLimitReached": "Limite de grupo atingido",
     "createGroup": "Criar",
-    "groupsHint": "Os grupos filtram o feed a seguir. Só vocês podem vê-los."
+    "groupsHint": "Os grupos filtram o feed a seguir. Só vocês podem vê-los.",
+    "new": "Novo"
   },
   "reactionInfo": {
     "title": "Reacções",

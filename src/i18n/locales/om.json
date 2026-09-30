@@ -5526,7 +5526,8 @@
     "newGroupName": "Garee haaraa",
     "groupLimitReached": "Daangaan garee irra gahe",
     "createGroup": "Uumuu",
-    "groupsHint": "Gareen nyaata Hordofaa kee calalu. Isaan arguu kan dandeessu si qofa."
+    "groupsHint": "Gareen nyaata Hordofaa kee calalu. Isaan arguu kan dandeessu si qofa.",
+    "new": "Haaraa"
   },
   "reactionInfo": {
     "title": "deebii kennuu",

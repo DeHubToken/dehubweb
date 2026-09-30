@@ -5694,7 +5694,8 @@
     "newGroupName": "Názov novej skupiny",
     "groupLimitReached": "Bol dosiahnutý limit skupiny",
     "createGroup": "Vytvoriť",
-    "groupsHint": "Skupiny filtrujú váš nasledujúci informačný kanál. Len vy ich môžete vidieť."
+    "groupsHint": "Skupiny filtrujú váš nasledujúci informačný kanál. Len vy ich môžete vidieť.",
+    "new": "Nové"
   },
   "reactionInfo": {
     "title": "Reakcie",

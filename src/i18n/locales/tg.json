@@ -5513,7 +5513,8 @@
     "newGroupName": "Номи нави гурӯҳ",
     "groupLimitReached": "Маҳдудияти гурӯҳ ба итмом расид",
     "createGroup": "Эҷод кардан",
-    "groupsHint": "Ang mga grupo ay nag-filter ang iyong pags Ва шумо танҳо онҳоро дида метавонед."
+    "groupsHint": "Ang mga grupo ay nag-filter ang iyong pags Ва шумо танҳо онҳоро дида метавонед.",
+    "new": "Нав"
   },
   "reactionInfo": {
     "title": "Вокунишҳо",

@@ -5469,7 +5469,8 @@
     "newGroupName": "Orúkọ ẹgbẹ́ tuntun",
     "groupLimitReached": "Ìdènà àwùjọ ti dé",
     "createGroup": "Ṣẹ̀dá",
-    "groupsHint": "Àwọn ẹgbẹ́ máa ń ṣe àlẹmọ oúnjẹ tó ń tẹ̀lé ẹ. Ìwọ nìkan ni o lè rí wọn."
+    "groupsHint": "Àwọn ẹgbẹ́ máa ń ṣe àlẹmọ oúnjẹ tó ń tẹ̀lé ẹ. Ìwọ nìkan ni o lè rí wọn.",
+    "new": "Tuntun"
   },
   "reactionInfo": {
     "title": "Ìdáhùn",

@@ -5425,7 +5425,8 @@
     "newGroupName": "Yeni qrup adı",
     "groupLimitReached": "Qrup limiti çatdı",
     "createGroup": "Yarat",
-    "groupsHint": "Qruplar aşağıdakı lentlərinizi filtrləyir. Onları yalnız siz görə bilərsiniz."
+    "groupsHint": "Qruplar aşağıdakı lentlərinizi filtrləyir. Onları yalnız siz görə bilərsiniz.",
+    "new": "Yeni"
   },
   "reactionInfo": {
     "title": "Reaksiyalar",

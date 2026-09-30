@@ -5483,7 +5483,8 @@
     "newGroupName": "Magaca kooxda cusub",
     "groupLimitReached": "Xadka kooxda oo la gaaray",
     "createGroup": "Samee",
-    "groupsHint": "Kooxuhu waxay shaandheeyaan cuntadaada soo socota. Kaliya waad arki kartaa iyaga."
+    "groupsHint": "Kooxuhu waxay shaandheeyaan cuntadaada soo socota. Kaliya waad arki kartaa iyaga.",
+    "new": "Cusub"
   },
   "reactionInfo": {
     "title": "Falcelinta",

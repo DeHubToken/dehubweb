@@ -5581,7 +5581,8 @@
     "newGroupName": "Yeni grup adı",
     "groupLimitReached": "Grup sınırına ulaşıldı",
     "createGroup": "Oluştur",
-    "groupsHint": "Gruplar, Takip edilenler akışınızı filtreler. Onları sadece sen görebilirsin."
+    "groupsHint": "Gruplar, Takip edilenler akışınızı filtreler. Onları sadece sen görebilirsin.",
+    "new": "Yeni"
   },
   "reactionInfo": {
     "title": "Tepkiler",

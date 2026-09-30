@@ -4707,7 +4707,8 @@
     "followersAppearHere": "شوێنکەوتووان لێرە دەردەکەون",
     "followToSeeThem": "خەڵک شوێن بکە بۆ ئەوەی لێرە بیانبینیت",
     "addToGroup": "{{name}} بخەرە گرووپێکەوە",
-    "newGroupName": "ناوی گرووپی نوێ"
+    "newGroupName": "ناوی گرووپی نوێ",
+    "new": "نوێ"
   },
   "reactionInfo": {
     "seeWhoReacted": "Binêre kê bertek nîşan da",
