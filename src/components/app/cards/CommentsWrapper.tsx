@@ -302,15 +302,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
   const phoneSheet = !forceInline && isPhone && !immersive;
   // Below `md` the section lays itself out as `h-full` around an absolutely
   // positioned list, so it needs a definite height here or the list collapses.
-  // At `md` and up it sizes itself (`min-h-[400px] max-h-[600px]`) and scrolls
-  // internally, so a fixed height on this wrapper is dead space: the panel
-  // stood at 70dvh while the section inside it stopped at 400px, leaving an
-  // empty band under the reply box that grew with the viewport. Hug the
-  // section instead, the way the feed card's own comments already do, and keep
-  // 70dvh as a ceiling for short windows.
-  const inlineWindowClass = forceInline
-    ? 'h-[60dvh] min-h-[360px] max-h-[600px] overflow-hidden md:h-auto md:min-h-0 md:max-h-[70dvh] md:overflow-y-auto'
-    : 'h-[60vh] overflow-hidden md:h-auto md:overflow-y-auto';
+  const inlineWindowClass = 'h-[60vh] overflow-hidden md:h-auto md:overflow-y-auto';
   useEffect(() => {
     if (!immersiveSheet || !open) return;
     return lockBodyScroll();
@@ -463,6 +455,29 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
   // When sidebar is collapsed (multi-column feed), use compact sizing
   const isCompact = isCollapsed;
 
+  // The dedicated post page: no box, no window of its own. The comments lie on
+  // the page in its own scroll, full width, the way the app's post screen has
+  // them — and nothing here may clip, or the pinned tab row and reply bar in
+  // CommentsSection lose their sticky containing block.
+  if (forceInline) {
+    return open ? (
+      <div data-comments-wrapper data-no-navigate className="mt-3" onClick={(e) => e.stopPropagation()}>
+        <Suspense fallback={null}>
+          <CommentsSection
+            key={tokenId}
+            tokenId={tokenId}
+            onClose={() => onOpenChange(false)}
+            initialTab={initialTab}
+            commentsDisabled={commentsDisabled}
+            forKids={forKids}
+            postAuthorAddress={postAuthorAddress}
+            page
+          />
+        </Suspense>
+      </div>
+    ) : null;
+  }
+
   return (
     <AnimatePresence>
       {open && (
@@ -491,7 +506,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
             // keeps the grow-to-content behaviour (CommentsSection carries its
             // own min-h-[400px]).
             className={`bg-black/60 backdrop-blur-2xl rounded-2xl border border-white/10 mt-3 ${inlineWindowClass} ${
-              isCompact && !forceInline ? 'px-2 pb-2 pt-1 md:max-h-[40vh] text-sm' : 'px-4 pb-4 pt-2'
+              isCompact ? 'px-2 pb-2 pt-1 md:max-h-[40vh] text-sm' : 'px-4 pb-4 pt-2'
             }`}
           >
             <Suspense fallback={null}>

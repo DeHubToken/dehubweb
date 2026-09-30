@@ -1163,6 +1163,65 @@ button.cursor-square-item:hover {
 }
 
 /* ==========================================================================
+   Post page comments — the pinned tab row and reply bar clear the chrome.
+   ==========================================================================
+   On the dedicated post page the comments lie in the page's own scroll
+   (CommentsSection `page`): the tab row sticks to the top and the reply bar
+   to the bottom. On mobile the fixed header (2.75rem) and the sticky nav pill
+   under it (to 5.75rem) sit over the top edge, and the bottom nav (4.125rem)
+   over the bottom one, whenever the chrome is showing. Both pins follow
+   `data-nav-hidden` so they move with it instead of disappearing under it.
+
+   A video post hides that chrome outright (immersive-video-mode), so the tab
+   row keeps to the very top there. The reply bar drops to the bottom edge
+   while it is being typed in: the keyboard takes the bottom nav away. */
+[data-comment-tabs-pin],
+[data-comment-composer-pin] {
+  /* Near-solid, like the app's bars: the list scrolls underneath both, and a
+     see-through bar let the comment under it read through the reply box. */
+  background: rgb(0 0 0 / 0.9);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  border-color: rgb(255 255 255 / 0.08);
+}
+[data-comment-tabs-pin] {
+  border-bottom-width: 1px;
+}
+[data-comment-composer-pin] {
+  border-top-width: 1px;
+}
+html[data-theme='light'] :is([data-comment-tabs-pin], [data-comment-composer-pin]) {
+  background: rgb(250 250 249 / 0.94);
+  border-color: rgb(0 0 0 / 0.08);
+}
+html[data-theme='minimal'] :is([data-comment-tabs-pin], [data-comment-composer-pin]) {
+  background: #000;
+  border-color: rgb(255 255 255 / 0.1);
+}
+/* Desktop keeps its top bar (GlobalFeedNav, sticky, 3.5rem with its padding)
+   on screen for good, so the tab row always pins under it. */
+@media (min-width: 1024px) {
+  [data-comment-tabs-pin] {
+    top: 3.5rem;
+  }
+}
+
+@media (max-width: 1023.98px) {
+  [data-comment-tabs-pin] {
+    transition: top 300ms ease-in-out;
+  }
+  [data-comment-composer-pin] {
+    transition: bottom 300ms ease-in-out;
+  }
+  html:not([data-nav-hidden='true']) body:not(.immersive-video-mode) [data-comment-tabs-pin] {
+    top: 5.75rem;
+  }
+  html:not([data-nav-hidden='true']) [data-comment-composer-pin]:not(:focus-within) {
+    bottom: 4.125rem;
+  }
+}
+
+/* ==========================================================================
    Mobile chrome — the sticky page pill rides with the header and bottom nav.
    ==========================================================================
    On mobile the top header and the bottom nav already slide away on a
