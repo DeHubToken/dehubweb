@@ -5254,7 +5254,16 @@ html[data-theme="light"] [data-creator-page] .text-white {
   html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child {
     padding: 0;
     color: #fff;
-    text-shadow: 0 1px 3px rgb(0 0 0 / 0.7);
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.75), 0 0 8px rgb(0 0 0 / 0.45);
+  }
+  /* The New pill beside the name reads on a bright frame too. */
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) [data-new-member-chip] {
+    background: rgb(0 0 0 / 0.38);
+    color: #fff;
+    border-color: rgb(255 255 255 / 0.22);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 6px rgb(0 0 0 / 0.35);
+    text-shadow: none;
   }
   html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
     color: #fff !important;
