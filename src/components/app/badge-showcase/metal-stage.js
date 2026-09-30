@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { traceMetalOutline } from './metal-outline';
+import { flightClock } from './flight-clock';
 
 /** The same renderer runs in the web showcase and the bundled mobile WebView. */
 export class MetalStage {
@@ -7,7 +8,7 @@ export class MetalStage {
     const state = { index: 0, metal: true, finish: 'Chrome', thickness: .18 };
     const items = [], textures = [], outlines = [], loads = new Map();
     let renderer, scene, camera, group, oldMesh=null, shards=null, env, width=1, height=1;
-    let held=false, disposed=false, serial=0, raf=0, flowActive=false, flowKind='', flowStart=0, flowSource, flowTarget, done=null;
+    let held=false, disposed=false, serial=0, raf=0, flowActive=false, flowKind='', flowTime=flightClock(), flowSource, flowTarget, done=null;
     let oldIndex=-1, rotX=.04, rotY=-.3, targetX=.04, targetY=-.3, spinStart=0, spinDuration=0, drag=null;
     const reduce = () => !!options.reducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const clamp=t=>Math.max(0,Math.min(1,t)),ease=t=>1-Math.pow(1-t,3),lerp=(a,b,t)=>a+(b-a)*t;
@@ -25,7 +26,7 @@ export class MetalStage {
     const studio=new THREE.Scene();studio.background=new THREE.Color('#303339');
     const panel=(w,h,x,y,z,rx,ry,intensity)=>{const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:new THREE.Color(intensity,intensity,intensity),side:THREE.DoubleSide}));p.position.set(x,y,z);p.rotation.set(rx,ry,0);studio.add(p);};
     panel(3,8,-4,2,3,0,.65,5);panel(2,9,4,1,0,0,-1.1,3);panel(7,2,0,5,1,1.2,0,4);panel(1,7,.5,1,-4,0,0,2);panel(6,2,0,-4,2,1.2,0,.8);
-    const pm=new THREE.PMREMGenerator(renderer);env=pm.fromScene(studio,.03);pm.dispose();
+    const pm=new THREE.PMREMGenerator(renderer);env=pm.fromScene(studio,.03,.1,100,{size:64});pm.dispose();
     studio.traverse(n=>{n.geometry?.dispose();n.material?.dispose();});scene.environment=env.texture;
     scene.add(new THREE.AmbientLight(0xffffff,.5));const light=new THREE.DirectionalLight(0xffffff,3);light.position.set(-3,5,5);scene.add(light);
     canvas.parentElement.append(fx);
@@ -54,7 +55,7 @@ export class MetalStage {
         return true;
       })().catch(()=>false).finally(()=>loads.delete(index));loads.set(index,pending);return pending;
     }
-function makeBadge(index){const result=new THREE.Group();
+function makeBadge(index){const result=new THREE.Group();result.userData.src=items[index].src;
 const b=items[index],tex=textures[index],shape=new THREE.Shape(),smooth=outlines[index].map((p,i,a)=>{let x=0,y=0;for(let k=-3;k<=3;k++){const q=a[(i+k+a.length)%a.length];x+=q[0];y+=q[1];}return [x/7,y/7];}),points=smooth.filter((_,i)=>i%2===0).map(p=>new THREE.Vector2((p[0]/96-.5)*2.4,(.5-p[1]/96)*2.4));shape.setFromPoints(points);
 const gold=state.finish==='Gold',enamel=state.finish==='Original enamel';const color=gold?0xd8b96f:0xc8d0d6;
 if(state.metal){const geo=new THREE.ExtrudeGeometry(shape,{depth:state.thickness,bevelEnabled:true,bevelSegments:4,steps:1,bevelSize:.035,bevelThickness:.06,curveSegments:8});geo.translate(0,0,-state.thickness/2);const metal=new THREE.MeshStandardMaterial({color,metalness:1,roughness:.18,envMapIntensity:1.4});result.add(new THREE.Mesh(geo,metal));
@@ -62,7 +63,7 @@ const face=new THREE.ShapeGeometry(shape);const pos=face.attributes.position,uv=
 const backCanvas=document.createElement('canvas');backCanvas.width=backCanvas.height=256;const bc=backCanvas.getContext('2d');bc.fillStyle=gold?'#baa270':'#929ca4';bc.fillRect(0,0,256,256);bc.fillStyle='#565d64';bc.textAlign='center';bc.font='bold 26px Arial';bc.fillText('DeHub',128,126);bc.font='12px Arial';bc.fillText(b.label || '',128,147);const backTex=new THREE.CanvasTexture(backCanvas);backTex.colorSpace=THREE.SRGBColorSpace;const backGeo=face.clone();const backMat=new THREE.MeshStandardMaterial({map:backTex,metalness:.85,roughness:.25,side:THREE.BackSide});const back=new THREE.Mesh(backGeo,backMat);back.position.z=-state.thickness/2-.061;result.add(back);
 }else{const edge=new THREE.Mesh(new THREE.ShapeGeometry(shape),new THREE.MeshBasicMaterial({color:0xffffff,side:THREE.DoubleSide}));edge.scale.setScalar(1.035);result.add(edge);const front=new THREE.Mesh(new THREE.PlaneGeometry(2.4,2.4),new THREE.MeshBasicMaterial({map:tex.color,transparent:true,side:THREE.DoubleSide}));front.position.z=.01;result.add(front);}
 return result;}
-function disposeBadge(item){if(!item)return;scene.remove(item);item.traverse(child=>{child.geometry?.dispose();if(child.material){const materials=Array.isArray(child.material)?child.material:[child.material];materials.forEach(m=>{if(m.map&&!textures.some(t=>t.gray===m.map||t.color===m.map))m.map.dispose();m.dispose();});}});}
+function disposeBadge(item){if(!item)return;scene.remove(item);item.traverse(child=>{child.geometry?.dispose();if(child.material){const materials=Array.isArray(child.material)?child.material:[child.material];materials.forEach(m=>{if(m.map&&!textures.some(t=>t && (t.gray===m.map||t.color===m.map)))m.map.dispose();m.dispose();});}});}
 function pose(mesh,box,ry=-.3,rx=.04,rz=0){const worldPerPixel=2*camera.position.z*Math.tan(camera.fov*Math.PI/360)/height;mesh.position.set((box.x+box.size/2-width/2)*worldPerPixel,(height/2-box.y-box.size/2)*worldPerPixel,0);mesh.scale.setScalar(Math.max(.0001,box.size*worldPerPixel/2.4));mesh.rotation.set(rx,ry,rz);}
 function drawMesh(mesh,box,ry=-.3,rx=.04,rz=0){group.visible=mesh===group;if(oldMesh)oldMesh.visible=mesh===oldMesh;if(mesh){mesh.visible=true;pose(mesh,box,ry,rx,rz);}renderer.render(scene,camera);}
 
@@ -134,10 +135,10 @@ function promotionFrame(ms){
     function settle(){const callback=done;cancel();spinDuration=0;targetY=rotY=-.3;targetX=rotX=.04;if(group)drawMesh(group,hero());callback?.();}
     function frame(now){raf=0;if(disposed||!group||held)return;clearFx();
       if(flowActive){
-        const ms=now-flowStart;flowTarget=hero();
+        const ms=flowTime(now);flowTarget=hero();
         if(flowKind==='promotion'){if(!promotionFrame(ms))return;}
         else if(flowKind==='close'){const t=clamp(ms/580);drawMesh(group,blend(flowTarget,flowSource,ease(t),-20),-.3+t*.3,.04*(1-t));if(t===1){const callback=done;cancel();group.visible=false;renderer.render(scene,camera);callback?.();return;}}
-        else{const t=clamp(ms/1400);drawMesh(group,blend(flowSource,flowTarget,ease(clamp(ms/1050))),-.3-Math.PI*2*(1-ease(t)),.04+.2*Math.sin(t*Math.PI),-.1*Math.sin(t*Math.PI));if(t===1){settle();return;}}
+        else{const t=clamp(ms/1400);drawMesh(group,blend(flowSource,flowTarget,ease(t)),-.3-Math.PI*2*(1-ease(t)),.04+.2*Math.sin(t*Math.PI),-.1*Math.sin(t*Math.PI));if(t===1){settle();return;}}
         wake();return;
       }
       const active=spinDuration&&now-spinStart<spinDuration,t=active?(now-spinStart)/spinDuration:1;
@@ -145,28 +146,59 @@ function promotionFrame(ms){
       drawMesh(group,hero(),rotY+(active?(1-ease(t))*Math.PI*2:0),rotX);
       if(active||Math.abs(targetX-rotX)+Math.abs(targetY-rotY)>.001)wake();
     }
-    this.setItems=values=>{items.splice(0,items.length,...values);};
+    this.setItems=values=>{
+      const cache=new Map(items.map((item,i)=>[item.src,{texture:textures[i],outline:outlines[i]}]));
+      items.splice(0,items.length,...values);textures.length=outlines.length=0;
+      items.forEach((item,i)=>{const hit=cache.get(item.src);if(hit){textures[i]=hit.texture;outlines[i]=hit.outline;cache.delete(item.src);}});
+      cache.forEach(({texture})=>{texture?.gray.dispose();texture?.color.dispose();});
+    };
     this.preload=index=>{void prepare(index);};
-    this.show=async(index,config={})=>{const id=++serial;cancel();held=!!config.hold;state.index=index;if(!await prepare(index)||disposed||id!==serial)return false;disposeBadge(group);group=makeBadge(index);scene.add(group);targetX=rotX=.04;targetY=rotY=-.3;spinStart=performance.now();spinDuration=config.hold||config.instant||reduce()?0:900;if(config.hold){group.visible=false;renderer.clear();}else{drawMesh(group,hero());if(spinDuration)wake();}return true;};
+    this.show=async(index,config={})=>{
+      const id=++serial;cancel();held=!!config.hold;state.index=index;
+      if(!await prepare(index)||disposed||id!==serial)return false;
+      if(group?.userData.src!==items[index].src){
+        const previous=group;group=makeBadge(index);scene.add(group);
+        // Keep the previous programs alive while preparing the replacement.
+        pose(group,hero());
+        await renderer.compileAsync(scene,camera);
+        if(disposed||id!==serial)return false;
+        group.traverse(child=>{if(child.material?.map)renderer.initTexture(child.material.map);});
+        disposeBadge(previous);
+      }
+      targetX=rotX=.04;targetY=rotY=-.3;spinDuration=config.hold||config.instant||reduce()?0:900;
+      // Upload geometry and finish the first render before any flight clock runs.
+      drawMesh(group,hero());
+      spinStart=performance.now();
+      if(config.hold){group.visible=false;renderer.clear();}else if(spinDuration)wake();
+      return true;
+    };
     this.reveal=()=>{};
     this.layout=()=>wake();
-    this.open=async({from,fromArt,promote,onLanded})=>{
+    this.open=async({from,fromArt,promote,onStarted,onLanded})=>{
       const id=++serial;cancel();spinDuration=0;
       if(promote&&fromArt&&!reduce()){oldIndex=items.findIndex(i=>i.src===fromArt);if(oldIndex<0){oldIndex=items.length;items.push({src:fromArt});}
         if(await prepare(oldIndex)&&!disposed&&id===serial){oldMesh=makeBadge(oldIndex);scene.add(oldMesh);shards=buildShards(oldMesh);}}
       if(disposed||id!==serial)return;
-      held=false;done=onLanded;flowTarget=hero();flowSource=from?local(from):{...flowTarget,size:flowTarget.size*.15,x:flowTarget.x+flowTarget.size*.425,y:flowTarget.y+flowTarget.size*.425};flowKind=promote?'promotion':'details';flowActive=true;flowStart=performance.now()-(promote&&!oldMesh?1970:0);
-      if(reduce()){settle();return;}
-      drawMesh(promote?oldMesh:group,flowSource,-.3);wake();
+      held=false;done=onLanded;flowTarget=hero();flowSource=from?local(from):{...flowTarget,size:flowTarget.size*.15,x:flowTarget.x+flowTarget.size*.425,y:flowTarget.y+flowTarget.size*.425};flowKind=promote?'promotion':'details';flowActive=true;flowTime=flightClock(promote&&!oldMesh?1970:0);
+      if(reduce()){onStarted?.();settle();return;}
+      drawMesh(promote?oldMesh:group,flowSource,-.3);onStarted?.();wake();
     };
     this.skip=()=>{if(flowActive)settle();};
-    this.close=(home,onClosed)=>{++serial;cancel();held=false;if(!group||reduce()){onClosed();return;}spinDuration=0;flowSource=local(home);flowTarget=hero();flowKind='close';done=onClosed;flowActive=true;flowStart=performance.now();wake();};
-    const interaction=options.interactionElement||canvas;
+    this.close=(home,onClosed)=>{++serial;cancel();held=false;if(!group||reduce()){onClosed();return;}spinDuration=0;flowSource=local(home);flowTarget=hero();flowKind='close';done=onClosed;flowActive=true;flowTime=flightClock();wake();};
+    let interaction=options.interactionElement||canvas;
     const down=e=>{if(flowActive){this.skip();return;}if(!group)return;const r=interaction.getBoundingClientRect();drag={x:e.clientX,y:e.clientY,angle:targetY,moved:false};interaction.setPointerCapture?.(e.pointerId);spinDuration=0;options.onInteract?.();};
     const move=e=>{if(reduce()||flowActive||!group)return;if(drag){drag.moved ||= Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>5;targetY=drag.angle+(e.clientX-drag.x)*.012;targetX=Math.max(-.45,Math.min(.45,(e.clientY-drag.y)*.005));}else if(e.pointerType==='mouse'){const r=interaction.getBoundingClientRect();targetY=(e.clientX-r.left-r.width/2)/r.width*.8;targetX=(e.clientY-r.top-r.height/2)/r.height*.3;}wake();};
     const up=e=>{if(drag&&!drag.moved){const r=canvas.getBoundingClientRect(),b=hero(),x=e.clientX-r.left,y=e.clientY-r.top;const hit=x>=b.x&&x<=b.x+b.size&&y>=b.y&&y<=b.y+b.size;if(hit)options.onTap?.();else options.onMiss?.();}drag=null;};
     const reset=()=>{drag=null;targetY=-.3;targetX=.04;wake();};
     interaction.addEventListener('pointerdown',down);interaction.addEventListener('pointermove',move);interaction.addEventListener('pointerup',up);interaction.addEventListener('pointercancel',reset);interaction.addEventListener('pointerleave',reset);
+    this.attach=(placeholder,nextOptions)=>{
+      interaction.removeEventListener('pointerdown',down);interaction.removeEventListener('pointermove',move);interaction.removeEventListener('pointerup',up);interaction.removeEventListener('pointercancel',reset);interaction.removeEventListener('pointerleave',reset);
+      observer.disconnect();options=nextOptions;interaction=options.interactionElement||canvas;
+      placeholder.style.display='none';placeholder.parentElement.append(canvas,fx);
+      Object.assign(canvas.style,{position:'absolute',inset:'0',width:'100%',height:'100%'});
+      interaction.addEventListener('pointerdown',down);interaction.addEventListener('pointermove',move);interaction.addEventListener('pointerup',up);interaction.addEventListener('pointercancel',reset);interaction.addEventListener('pointerleave',reset);
+      observer.observe(canvas);if(options.interactionElement)observer.observe(options.interactionElement);resize();
+    };
     const visibility=()=>{if(document.hidden){cancelAnimationFrame(raf);raf=0;if(flowActive)settle();}else wake();};
     const lost=e=>{e.preventDefault();cancelAnimationFrame(raf);raf=0;options.onError?.();};
     document.addEventListener('visibilitychange',visibility);canvas.addEventListener('webglcontextlost',lost);
