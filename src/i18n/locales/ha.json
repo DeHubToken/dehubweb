@@ -5470,7 +5470,8 @@
     "newGroupName": "Sabon sunan rukuni",
     "groupLimitReached": "Ƙuntatawa na rukuni ya kai",
     "createGroup": "Ƙirƙiri",
-    "groupsHint": "Ƙungiyoyi suna tace abincin da kuka biyo baya. Sai kawai zaka iya ganin su."
+    "groupsHint": "Ƙungiyoyi suna tace abincin da kuka biyo baya. Sai kawai zaka iya ganin su.",
+    "new": "Sabo"
   },
   "reactionInfo": {
     "title": "Ra'ayoyi",

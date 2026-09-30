@@ -5626,7 +5626,8 @@
     "newGroupName": "Bagong pangalan ng grupo",
     "groupLimitReached": "Naabot na ang limitasyon ng grupo",
     "createGroup": "Gumawa",
-    "groupsHint": "I - filter ng mga grupo ang iyong Sumusunod na feed. Ikaw lamang ang makakakita ng mga ito."
+    "groupsHint": "I - filter ng mga grupo ang iyong Sumusunod na feed. Ikaw lamang ang makakakita ng mga ito.",
+    "new": "Bago"
   },
   "reactionInfo": {
     "title": "Mga Reaksyon",

@@ -5562,7 +5562,8 @@
     "newGroupName": "የቡድን ስም",
     "groupLimitReached": "የቡድን ገደብ ደርሷል",
     "createGroup": "ፍጠር",
-    "groupsHint": "ቡድኖች የሚከተለውን ምግብዎን ያጣሩ ። እነሱን ማየት የሚችሉት እርስዎ ብቻ ነዎት ።"
+    "groupsHint": "ቡድኖች የሚከተለውን ምግብዎን ያጣሩ ። እነሱን ማየት የሚችሉት እርስዎ ብቻ ነዎት ።",
+    "new": "አዲስ"
   },
   "reactionInfo": {
     "title": "ምላሾች",

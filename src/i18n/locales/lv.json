@@ -5554,7 +5554,8 @@
     "newGroupName": "Jauns grupas nosaukums",
     "groupLimitReached": "Sasniegts grupas ierobežojums",
     "createGroup": "Izveidot",
-    "groupsHint": "Grupas filtrē jūsu sekojošo plūsmu. Tikai jūs varat tos redzēt."
+    "groupsHint": "Grupas filtrē jūsu sekojošo plūsmu. Tikai jūs varat tos redzēt.",
+    "new": "Jauns"
   },
   "reactionInfo": {
     "title": "Reakcijas",

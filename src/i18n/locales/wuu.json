@@ -4972,7 +4972,8 @@
     "newGroupName": "新群组名称",
     "groupLimitReached": "群组人数已达上限",
     "createGroup": "创建",
-    "groupsHint": "群组可以过滤“关注”动态。只有你自己能看到它们。"
+    "groupsHint": "群组可以过滤“关注”动态。只有你自己能看到它们。",
+    "new": "新品"
   },
   "reactionInfo": {
     "title": "反应",

@@ -5580,7 +5580,8 @@
     "newGroupName": "Nama grup baru",
     "groupLimitReached": "Batas grup tercapai",
     "createGroup": "Buat",
-    "groupsHint": "Grup memfilter umpan Mengikuti Anda. Hanya Anda yang bisa melihatnya."
+    "groupsHint": "Grup memfilter umpan Mengikuti Anda. Hanya Anda yang bisa melihatnya.",
+    "new": "Baru"
   },
   "reactionInfo": {
     "title": "Reaksi",

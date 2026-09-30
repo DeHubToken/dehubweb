@@ -5602,7 +5602,8 @@
     "newGroupName": "Yangi guruh nomi",
     "groupLimitReached": "Guruh limitiga yetdi",
     "createGroup": "Yaratish",
-    "groupsHint": "Guruhlar sizning kuzatuv tasmangizni filtrlaydi. Ularni faqat siz ko&#39;rishingiz mumkin."
+    "groupsHint": "Guruhlar sizning kuzatuv tasmangizni filtrlaydi. Ularni faqat siz ko&#39;rishingiz mumkin.",
+    "new": "Yangi"
   },
   "reactionInfo": {
     "title": "Reaksiyalar",

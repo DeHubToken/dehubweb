@@ -5466,7 +5466,8 @@
     "newGroupName": "Naziv nove grupe",
     "groupLimitReached": "Dosegnuto je ograničenje grupe",
     "createGroup": "Kreiraj",
-    "groupsHint": "Grupe filtriraju vaš feed za praćenje. Samo ih vi možete vidjeti."
+    "groupsHint": "Grupe filtriraju vaš feed za praćenje. Samo ih vi možete vidjeti.",
+    "new": "Novo"
   },
   "reactionInfo": {
     "title": "Reakcije",

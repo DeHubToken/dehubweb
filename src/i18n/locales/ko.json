@@ -5573,7 +5573,8 @@
     "newGroupName": "새 그룹 이름",
     "groupLimitReached": "그룹 한도 도달",
     "createGroup": "생성",
-    "groupsHint": "그룹이 팔로잉 피드를 필터링합니다. 나만 볼 수 있습니다."
+    "groupsHint": "그룹이 팔로잉 피드를 필터링합니다. 나만 볼 수 있습니다.",
+    "new": "NEW"
   },
   "reactionInfo": {
     "title": "반응",

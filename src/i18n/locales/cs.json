@@ -5463,7 +5463,8 @@
     "newGroupName": "Název nové skupiny",
     "groupLimitReached": "Bylo dosaženo limitu skupiny",
     "createGroup": "Vytvořit",
-    "groupsHint": "Skupiny filtrují váš sledovací kanál. Jen vy je můžete vidět."
+    "groupsHint": "Skupiny filtrují váš sledovací kanál. Jen vy je můžete vidět.",
+    "new": "Novinka"
   },
   "reactionInfo": {
     "title": "Reakce",

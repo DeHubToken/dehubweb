@@ -5564,7 +5564,8 @@
     "newGroupName": "Nytt gruppenavn",
     "groupLimitReached": "Gruppegrensen er nådd",
     "createGroup": "Opprett",
-    "groupsHint": "Grupper filtrerer følgerfeeden din. Bare du kan se dem."
+    "groupsHint": "Grupper filtrerer følgerfeeden din. Bare du kan se dem.",
+    "new": "Ny"
   },
   "reactionInfo": {
     "title": "Reaksjon",

@@ -5547,7 +5547,8 @@
     "newGroupName": "Ingoa rōpū hou",
     "groupLimitReached": "Kua tae mai te rohe o te rōpū",
     "createGroup": "Hangaia",
-    "groupsHint": "Ka whakaūhia e ngā rōpū tō kai e whai ake nei. Ka taea e koe anake te kite i a ratou."
+    "groupsHint": "Ka whakaūhia e ngā rōpū tō kai e whai ake nei. Ka taea e koe anake te kite i a ratou.",
+    "new": "Hou"
   },
   "reactionInfo": {
     "title": "Ngā urupare",

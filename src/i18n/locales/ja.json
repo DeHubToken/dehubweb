@@ -5568,7 +5568,8 @@
     "newGroupName": "新しいグループ名",
     "groupLimitReached": "グループの上限に達しました",
     "createGroup": "作成",
-    "groupsHint": "グループは、フォロー中のフィードをフィルタリングします。 あなただけがそれらを見ることができます。"
+    "groupsHint": "グループは、フォロー中のフィードをフィルタリングします。 あなただけがそれらを見ることができます。",
+    "new": "NEW"
   },
   "reactionInfo": {
     "title": "リアクション",

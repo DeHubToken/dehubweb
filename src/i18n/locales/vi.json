@@ -5589,7 +5589,8 @@
     "newGroupName": "Tên nhóm mới",
     "groupLimitReached": "Đã đạt đến giới hạn nhóm",
     "createGroup": "Tạo",
-    "groupsHint": "Các nhóm lọc nguồn cấp dữ liệu Đang theo dõi của bạn. Chỉ có bạn mới có thể nhìn thấy chúng."
+    "groupsHint": "Các nhóm lọc nguồn cấp dữ liệu Đang theo dõi của bạn. Chỉ có bạn mới có thể nhìn thấy chúng.",
+    "new": "Mới"
   },
   "reactionInfo": {
     "title": "Phản ứng",
