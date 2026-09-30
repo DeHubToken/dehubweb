@@ -384,7 +384,7 @@ export default function SettingsPage() {
               <p className="text-zinc-500 text-sm">{t('settings.manageAccount')}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2">
             <button
               onClick={() => void runLogout()}
               disabled={isLoggingOut}
