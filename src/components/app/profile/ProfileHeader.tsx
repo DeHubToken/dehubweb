@@ -536,7 +536,7 @@ export function ProfileHeader({
             </div>
           ) : null}
 
-          {/* The bottom row: "Followed by …" on the left, the creator's
+          {/* The bottom row: mutual followers on the left, the creator's
               social icons tucked into the right-hand corner. The icons still
               take this row when there are no mutuals to show. Each side
               carries its own top margin, so an empty row takes no space. */}
