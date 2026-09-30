@@ -1201,10 +1201,17 @@ const NotificationItem = memo(function NotificationItem({
       return;
     }
 
-    // Aggregated follow notifications → open followers drawer inline
-    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 2;
+    // Several new followers in one row open your followers list with the new
+    // ones marked, rather than the latest follower's profile. Two counts too:
+    // "Ada and 1 other" used to land on Ada alone.
+    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 1;
     if (isAggregatedFollow && walletAddress) {
-      window.dispatchEvent(new CustomEvent('open-followers-drawer'));
+      window.dispatchEvent(new CustomEvent('open-followers-drawer', {
+        detail: {
+          count: (notification as any).aggregatedCount,
+          usernames: (notification as any).latestActorNames,
+        },
+      }));
       return;
     }
     
@@ -1618,10 +1625,14 @@ export default function NotificationsPage() {
   
   // Followers drawer state (opened inline from aggregated follow notifications)
   const [followDrawerOpen, setFollowDrawerOpen] = useState(false);
+  const [newFollowers, setNewFollowers] = useState<{ count?: number; usernames?: string[] }>({});
   
   // Listen for open-followers-drawer events from notification items
   useEffect(() => {
-    const handler = () => setFollowDrawerOpen(true);
+    const handler = (e: Event) => {
+      setNewFollowers((e as CustomEvent).detail || {});
+      setFollowDrawerOpen(true);
+    };
     window.addEventListener('open-followers-drawer', handler);
     return () => window.removeEventListener('open-followers-drawer', handler);
   }, []);
@@ -2399,6 +2410,8 @@ export default function NotificationsPage() {
           onOpenChange={setFollowDrawerOpen}
           profileAddress={pageWalletAddress}
           title="Followers"
+          newCount={newFollowers.count}
+          newUsernames={newFollowers.usernames}
         />
       )}
     </div>
