@@ -20,6 +20,7 @@ import { Settings2, ArrowLeft } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { useFeedTabsOpen, setFeedTabsOpen } from '@/lib/feed-tabs-reveal';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
@@ -111,6 +112,10 @@ export default function HomePage() {
   const { isCollapsed } = useSidebarCollapse();
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
+  // System theme on phones: the tab pill rests hidden and the island capsule
+  // (FeedIslandCapsule) opens it.
+  const islandTopBar = theme === 'system';
+  const feedTabsOpen = useFeedTabsOpen();
   const navVisible = useScrollDirection();
   // While any overlay (share/options drawers, dialogs — bottom sheets on
   // mobile — side sheets, story viewer, …) is open, the tab bar must get out
@@ -495,6 +500,8 @@ export default function HomePage() {
   const [enableHomeTransition, setEnableHomeTransition] = useState(false);
 
   const handleTabClick = useCallback((tabValue: string) => {
+    // Island mode: picking a tab puts the dropped-in pill away again.
+    if (document.documentElement.dataset.theme === 'system') setTimeout(() => setFeedTabsOpen(false), 350);
     // If a post overlay is currently covering the feed, tapping any tab should
     // dismiss the overlay and take the user back to the feed on that tab —
     // otherwise the tab change happens underneath the overlay and looks broken.
@@ -918,7 +925,12 @@ export default function HomePage() {
         data-feed-nav-outer
         data-home-tabs
         className={cn("sticky top-11 lg:top-0 bg-black px-2 sm:px-3 pt-1 pb-3 sm:pt-1 sm:pb-3 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", anyOverlayOpen ? "z-[40]" : "z-[110]", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
-        style={{ transform: (isMobile && (anyOverlayOpen || (!navVisible && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')))) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)', willChange: 'transform' }}
+        style={{
+          transform: (isMobile && (anyOverlayOpen || ((islandTopBar ? !feedTabsOpen : !navVisible) && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')))) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)',
+          willChange: 'transform',
+          // Island mode: the pill drops in under the capsule rather than at the very top.
+          ...(islandTopBar && isMobile && !isPostOverlayActive ? { top: 'calc(env(safe-area-inset-top, 0px) + 3rem)' } : null),
+        }}
       >
         <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl">
 

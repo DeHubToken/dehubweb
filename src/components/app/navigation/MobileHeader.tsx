@@ -73,8 +73,9 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   // Same hide-on-scroll-down / show-on-scroll-up behaviour as the mobile nav bars.
   const navVisible = useScrollDirection();
   const { theme } = useAppTheme();
-  // System theme: avatar and mark share the left slot, and while the feed
-  // scrolls down the bar gives way to the island capsule (FeedIslandCapsule).
+  // System theme: no bar at all. The island capsule (FeedIslandCapsule) is the
+  // home feed's only top chrome; the header stays mounted, hidden, for its menu
+  // drawer.
   const islandBar = theme === 'system';
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
@@ -114,8 +115,8 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   const showBar = isHomeFeedRoute(location.pathname) || isOverlayFromFeed;
   // Pages read this to drop the bar's 2.75rem clearance (index.css).
   useLayoutEffect(() => {
-    document.documentElement.toggleAttribute('data-no-top-bar', !showBar);
-  }, [showBar]);
+    document.documentElement.toggleAttribute('data-no-top-bar', !showBar || islandBar);
+  }, [showBar, islandBar]);
 
   const handleMenuClick = useCallback(() => {
     if (!isAuthenticated) {
@@ -140,7 +141,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
 
   return (
     <>
-    <header data-mobile-header data-clear-top-bar className={`${showBar ? '' : 'hidden '}lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
+    <header data-mobile-header data-clear-top-bar className={`${showBar && !islandBar ? '' : 'hidden '}lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
       {/* Profile — left slot.
           Direct post-page URL access: back button replaces the menu/settings toggle.
           When opened as an overlay from the feed, the feed's tab bar already hosts a back button,
@@ -202,21 +203,14 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
             <Menu className="w-[31px] h-[31px] text-white" />
           </button>
         )}
-        {islandBar && (
-          <div className="ml-3 flex items-center">
-            <HeaderLogo onClick={handleLogoClick} />
-          </div>
-        )}
       </div>
 
       {/* dehub mark — centred on the bar itself, not between the side slots, so
           it stays put whether or not the notification bell is rendered (it is
           signed-in only) and whichever left control is showing. */}
-      {!islandBar && (
-        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
-          <HeaderLogo onClick={handleLogoClick} />
-        </div>
-      )}
+      <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
+        <HeaderLogo onClick={handleLogoClick} />
+      </div>
 
       {/* Notifications — right slot, only visible when logged in.
           When the post overlay is opened from the feed, keep the DEHUB header exactly as it was. */}
@@ -239,17 +233,17 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     </header>
     {islandBar && showBar && (
       <FeedIslandCapsule
-        visible={!navVisible && !isOpen && !anyOverlayOpen && !isPostPage}
+        visible={navVisible && !isOpen && !anyOverlayOpen && !isPostPage}
         avatar={isAuthenticated && user ? (
-          <Avatar className="w-[28px] h-[28px]">
+          <Avatar className="w-[28px] h-[28px] rounded-lg">
             {user.avatarImageUrl && user.address && (
               <AvatarImage
                 src={buildAvatarUrl(user.address, user.avatarImageUrl)}
                 alt=""
-                className="object-cover"
+                className="object-cover rounded-lg"
               />
             )}
-            <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+            <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium rounded-lg">
               {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
