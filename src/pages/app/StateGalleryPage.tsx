@@ -6,12 +6,73 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { SeedPhraseBackup } from '@/components/app/wallet-setup/SeedPhraseBackup';
 import { BackupReminderCard } from '@/components/app/wallet/BackupReminderBanner';
+import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCover';
+import { ArticleReader } from '@/components/app/article/ArticleReader';
+import { ArticleComposer } from '@/features/post/components/ArticleComposer';
 import { badgeImage } from '@/lib/staking-badges';
 
 const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeShowcase'));
 
 // The standard public BIP-39 test vector: owns nothing, safe to show.
 const SAMPLE_PHRASE = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+
+const SAMPLE_ARTICLE = {
+  title: 'Why we moved our streams on-chain',
+  summary: 'After two years of takedowns and payout freezes, here is what changed when our audience started paying us directly.',
+  cover: '/media/ai-creator-studio-banner.jpg',
+  body: [
+    'The first time a platform froze our payouts, we lost three weeks of income over a copyright claim that turned out to be wrong.',
+    'Moving to DeHub was not about crypto. It was about owning the relationship with the people who watch us every night.',
+    '# What actually changed',
+    'Tips land in our wallet the moment they are sent. **Subscribers unlock posts with a tier**, not an algorithm.',
+    '> We stopped asking permission to get paid.',
+    '# The numbers after 90 days',
+    '- Revenue per viewer up 34%\n- Churn down for the first time in a year\n- Zero frozen payouts',
+    '# What we would do differently',
+    'We would have moved our [back catalogue](https://dehub.io) on day one, instead of waiting to see if the audience followed.',
+  ].join('\n\n'),
+};
+
+function ArticleGallery({ onAction }: { onAction: () => void }) {
+  const [title, setTitle] = useState(SAMPLE_ARTICLE.title);
+  const [summary, setSummary] = useState('');
+  const [body, setBody] = useState(SAMPLE_ARTICLE.body);
+  return (
+    <section data-article-gallery className="mb-5 grid gap-5 lg:grid-cols-2">
+      <div className="space-y-5">
+        <div data-feed-item className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Article in the feed</p>
+          <ArticleFeedCover title={SAMPLE_ARTICLE.title} body={SAMPLE_ARTICLE.body} coverUrl={SAMPLE_ARTICLE.cover} onOpen={onAction}>
+            <p className="article-ink-2 text-[15.25px] leading-[22.5px]">{SAMPLE_ARTICLE.summary}</p>
+          </ArticleFeedCover>
+        </div>
+        <div data-feed-item className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Article without a cover</p>
+          <ArticleFeedCover title={SAMPLE_ARTICLE.title} body={SAMPLE_ARTICLE.body} onOpen={onAction}>
+            <p className="article-ink-2 text-[15.25px] leading-[22.5px]">{SAMPLE_ARTICLE.summary}</p>
+          </ArticleFeedCover>
+        </div>
+        <div data-feed-item className="flex h-[720px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
+          <p className="px-4 pt-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Writing an article</p>
+          <ArticleComposer
+            title={title} setTitle={setTitle} summary={summary} setSummary={setSummary} body={body} setBody={setBody}
+            coverPreview={SAMPLE_ARTICLE.cover} onCoverChange={onAction} onSaveDraft={onAction} onPublish={onAction}
+            formReady isPosting={false} uploadProgress={0} mintAwaitingWallet={false} onAbandonMint={onAction}
+          />
+        </div>
+      </div>
+      <div data-feed-item className="rounded-2xl border border-white/10 bg-white/[0.04] p-3" data-article-reader-sample>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Reading an article</p>
+        <ArticleReader
+          title={SAMPLE_ARTICLE.title} body={SAMPLE_ARTICLE.body} coverUrl={SAMPLE_ARTICLE.cover}
+          createdAt="2026-09-28T12:00:00Z" shareUrl="https://dehub.io/app/post/1" onComment={onAction} onTip={onAction}
+        >
+          <p>{SAMPLE_ARTICLE.summary}</p>
+        </ArticleReader>
+      </div>
+    </section>
+  );
+}
 
 const THEMES = [
   'system', 'minimal', 'light', 'cosmic', 'hazy', 'swarms',
@@ -147,6 +208,8 @@ export default function StateGalleryPage() {
             <BackupReminderCard onBackUp={press} onLater={press} />
           </div>
         </section>
+
+        <ArticleGallery onAction={press} />
 
         <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <div data-page-bento className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl">
