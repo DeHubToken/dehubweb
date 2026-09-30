@@ -33,11 +33,14 @@ interface PresetStripProps {
  */
 const GROUP_KEYS: Record<string, string> = {
   Abstract: 'creator.presetGroupAbstract',
+  Ads: 'creator.presetGroupAds',
+  Brand: 'creator.presetGroupBrand',
   Camera: 'creator.presetGroupCamera',
   Characters: 'creator.presetGroupCharacters',
   Commercial: 'creator.presetGroupCommercial',
   Design: 'creator.presetGroupDesign',
   Drafts: 'creator.presetGroupDrafts',
+  Effects: 'creator.presetGroupEffects',
   Environments: 'creator.presetGroupEnvironments',
   Film: 'creator.presetGroupFilm',
   Games: 'creator.presetGroupGames',
