@@ -5579,7 +5579,8 @@
     "newGroupName": "Igama leqembu elisha",
     "groupLimitReached": "Umkhawulo weqembu ufinyelelwe",
     "createGroup": "Yakha",
-    "groupsHint": "Amaqembu ahlunga i-feed yakho elandelayo. Nguwe kuphela ongababona."
+    "groupsHint": "Amaqembu ahlunga i-feed yakho elandelayo. Nguwe kuphela ongababona.",
+    "new": "Okusha"
   },
   "reactionInfo": {
     "title": "Ukusabela",

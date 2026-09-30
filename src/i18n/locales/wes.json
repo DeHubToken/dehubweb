@@ -5003,7 +5003,8 @@
     "notFollowingAnyone": "No follow nobody.",
     "groupLimitReached": "Group limit reached",
     "createGroup": "Create",
-    "groupsHint": "Grup filter yu followin feed. Only yu see dem."
+    "groupsHint": "Grup filter yu followin feed. Only yu see dem.",
+    "new": "New"
   },
   "reactionInfo": {
     "title": "Reactions",

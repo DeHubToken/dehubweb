@@ -5507,7 +5507,8 @@
     "newGroupName": "Aha otu ọhụrụ",
     "groupLimitReached": "Oke òtù ruru",
     "createGroup": "Kewapụta",
-    "groupsHint": "Otu dị iche iche na-enyocha ndepụta na-eso gị. Naanị gị ga-ahụ ha."
+    "groupsHint": "Otu dị iche iche na-enyocha ndepụta na-eso gị. Naanị gị ga-ahụ ha.",
+    "new": "Ọhụrụ"
   },
   "reactionInfo": {
     "title": "Mmetụta",

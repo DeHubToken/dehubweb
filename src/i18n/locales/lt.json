@@ -5574,7 +5574,8 @@
     "newGroupName": "Naujas grupės pavadinimas",
     "groupLimitReached": "Pasiektas grupės limitas",
     "createGroup": "Sukurti",
-    "groupsHint": "Grupės filtruoja tavo sekamą sklaidos kanalą. Tik jūs galite juos matyti."
+    "groupsHint": "Grupės filtruoja tavo sekamą sklaidos kanalą. Tik jūs galite juos matyti.",
+    "new": "Nauja"
   },
   "reactionInfo": {
     "title": "Reakcijos",

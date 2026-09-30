@@ -5487,7 +5487,8 @@
     "newGroupName": "Täze topar ady",
     "groupLimitReached": "Gurama çägi ýetildi",
     "createGroup": "Ýarady",
-    "groupsHint": "Grupalar siziň indiki iýmitleriňizi filtreleýärler. Siz olary diňe görersiňiz."
+    "groupsHint": "Grupalar siziň indiki iýmitleriňizi filtreleýärler. Siz olary diňe görersiňiz.",
+    "new": "Täze"
   },
   "reactionInfo": {
     "title": "Reaksiýalar",

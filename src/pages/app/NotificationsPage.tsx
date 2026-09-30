@@ -667,7 +667,7 @@ function getNotificationContent(
   }
 
   // Backend-aggregated follow
-  if (notification.type === 'following' && (notification as any).aggregatedCount > 2) {
+  if (notification.type === 'following' && (notification as any).aggregatedCount > 1) {
     const othersCount = (notification as any).aggregatedCount - 1;
     const othersText = othersCount === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: othersCount });
     return tr('notifications.andOthersFollowing', { name: actorName, others: othersText });
@@ -692,7 +692,7 @@ function getNotificationContent(
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
   const typeStr = notification.type as string;
-  if (aggCount > 2 && ['like', 'comment', 'repost'].includes(typeStr)) {
+  if (aggCount > 1 && ['like', 'comment', 'repost'].includes(typeStr)) {
     const canonical = (canonicalActors && canonicalActors.length > 0)
       ? canonicalActors
       : buildCanonicalActors(aggNames, undefined, undefined);
@@ -1130,7 +1130,7 @@ const NotificationItem = memo(function NotificationItem({
   const aggregatedCount = (notification as any).aggregatedCount || 1;
   const isBackendAggregatedMultiActor =
     canonicalActors.length >= 2 &&
-    aggregatedCount > 2 &&
+    aggregatedCount > 1 &&
     ['like', 'comment', 'repost', 'following'].includes(notification.type as string) &&
     bundle.bundleType !== 'same-actor';
 
@@ -1201,10 +1201,17 @@ const NotificationItem = memo(function NotificationItem({
       return;
     }
 
-    // Aggregated follow notifications → open followers drawer inline
-    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 2;
+    // Several new followers in one row open your followers list with the new
+    // ones marked, rather than the latest follower's profile. Two counts too:
+    // "Ada and 1 other" used to land on Ada alone.
+    const isAggregatedFollow = notification.type === 'following' && (notification as any).aggregatedCount > 1;
     if (isAggregatedFollow && walletAddress) {
-      window.dispatchEvent(new CustomEvent('open-followers-drawer'));
+      window.dispatchEvent(new CustomEvent('open-followers-drawer', {
+        detail: {
+          count: (notification as any).aggregatedCount,
+          usernames: (notification as any).latestActorNames,
+        },
+      }));
       return;
     }
     
@@ -1294,7 +1301,7 @@ const NotificationItem = memo(function NotificationItem({
                 {actor3 ? (
                   renderGridAvatar(avatar3Url, actor3.display, resolveActorProfileLink(actor3, enrichedAvatars), 'w-[23px] h-[23px]')
                 ) : (
-                  renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
+                  <span className="invisible w-[23px] h-[23px]" aria-hidden />
                 )}
                 <button
                   className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition-colors cursor-pointer"
@@ -1398,7 +1405,7 @@ const NotificationItem = memo(function NotificationItem({
         })()}
         
         {/* Show individual actor names below backend-aggregated follows */}
-        {notification.type === 'following' && (notification as any).aggregatedCount > 2 && (notification as any).latestActorNames?.length > 1 && (
+        {notification.type === 'following' && (notification as any).aggregatedCount > 1 && (notification as any).latestActorNames?.length > 1 && (
           <p className="text-xs text-zinc-500 mt-0.5">
             {(notification as any).latestActorNames.join(', ')}
           </p>
@@ -1618,10 +1625,14 @@ export default function NotificationsPage() {
   
   // Followers drawer state (opened inline from aggregated follow notifications)
   const [followDrawerOpen, setFollowDrawerOpen] = useState(false);
+  const [newFollowers, setNewFollowers] = useState<{ count?: number; usernames?: string[] }>({});
   
   // Listen for open-followers-drawer events from notification items
   useEffect(() => {
-    const handler = () => setFollowDrawerOpen(true);
+    const handler = (e: Event) => {
+      setNewFollowers((e as CustomEvent).detail || {});
+      setFollowDrawerOpen(true);
+    };
     window.addEventListener('open-followers-drawer', handler);
     return () => window.removeEventListener('open-followers-drawer', handler);
   }, []);
@@ -2399,6 +2410,8 @@ export default function NotificationsPage() {
           onOpenChange={setFollowDrawerOpen}
           profileAddress={pageWalletAddress}
           title="Followers"
+          newCount={newFollowers.count}
+          newUsernames={newFollowers.usernames}
         />
       )}
     </div>

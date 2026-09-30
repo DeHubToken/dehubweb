@@ -5462,7 +5462,8 @@
     "newGroupName": "Uusi ryhmän nimi",
     "groupLimitReached": "Ryhmäraja saavutettu",
     "createGroup": "Luo",
-    "groupsHint": "Ryhmät suodattavat Seuraava-syötteesi. Vain sinä voit nähdä ne."
+    "groupsHint": "Ryhmät suodattavat Seuraava-syötteesi. Vain sinä voit nähdä ne.",
+    "new": "Uusi"
   },
   "reactionInfo": {
     "title": "Reaktiot",

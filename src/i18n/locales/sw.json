@@ -5555,7 +5555,8 @@
     "newGroupName": "Jina jipya la kikundi",
     "groupLimitReached": "Kikomo cha kundi kimefikiwa",
     "createGroup": "Unda",
-    "groupsHint": "Vikundi huchuja malisho yako ya Kufuata. Ni wewe tu unayeweza kuwaona."
+    "groupsHint": "Vikundi huchuja malisho yako ya Kufuata. Ni wewe tu unayeweza kuwaona.",
+    "new": "Mpya"
   },
   "reactionInfo": {
     "title": "Miitikio",

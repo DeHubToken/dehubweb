@@ -5816,7 +5816,8 @@
     "newGroupName": "Nama kumpulan baharu",
     "groupLimitReached": "Had kumpulan dicapai",
     "createGroup": "Cipta",
-    "groupsHint": "Kumpulan menapis suapan Mengikuti anda. Hanya anda yang boleh melihatnya."
+    "groupsHint": "Kumpulan menapis suapan Mengikuti anda. Hanya anda yang boleh melihatnya.",
+    "new": "Baharu"
   },
   "reactionInfo": {
     "title": "Tindak balas",

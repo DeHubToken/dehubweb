@@ -5580,7 +5580,8 @@
     "newGroupName": "New group name",
     "groupLimitReached": "Group limit reached",
     "createGroup": "Create",
-    "groupsHint": "Groups filter your Following feed. Only you can see them."
+    "groupsHint": "Groups filter your Following feed. Only you can see them.",
+    "new": "New"
   },
   "reactionInfo": {
     "title": "Reactions",
