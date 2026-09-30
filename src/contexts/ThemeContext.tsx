@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from 'react';
 import { loadThemeCss } from '@/lib/theme-css';
 import { badgeLightArtworkCss } from '@/lib/badge-light-artwork';
-import { THEME_COLOR } from '@/lib/theme-color';
+import { THEME_COLOR, themeTintAccent } from '@/lib/theme-color';
 import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 
 const THEME_STORAGE_KEY = 'dehub.theme';
@@ -255,6 +255,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [dimStrength]);
 
   const themeHues = useMemo(() => ({ ...DEFAULT_THEME_HUES, ...hueOverrides }), [hueOverrides]);
+
+  // Glass on the customisable themes is tinted with the picked Theme Color
+  // (glass-surfaces.css). Every other theme keeps the fixed tint its sheet sets.
+  const tintValue = theme in DEFAULT_THEME_HUES ? themeHues[theme] ?? DEFAULT_THEME_HUES[theme] : null;
+  useEffect(() => {
+    const root = document.documentElement.style;
+    if (tintValue === null) root.removeProperty('--tint-accent');
+    else root.setProperty('--tint-accent', themeTintAccent(tintValue, brandColors));
+  }, [tintValue, brandColors]);
 
   // Memoized: ThemeProvider wraps the whole app and its consumers include the
   // feed and every themed component — a fresh value literal re-renders them all.

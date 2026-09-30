@@ -159,3 +159,32 @@ export function hslToRgb(h: number, s: number, l: number): [number, number, numb
   const p = 2 * l - q;
   return [hue2rgb(p, q, h + 1 / 3), hue2rgb(p, q, h), hue2rgb(p, q, h - 1 / 3)];
 }
+
+/**
+ * The colour the glass on a customisable theme is tinted with: the nav pill,
+ * page bentos, side panels and post cards pick it up (glass-surfaces.css reads
+ * it as --tint-accent). Follows the Theme Color the user picked, so changing it
+ * in Settings re-tints the glass along with the backdrop. Rainbow has no one
+ * colour, so its glass takes a soft neutral.
+ */
+export function themeTintAccent(value: number, brandColors: string[] = []): string {
+  switch (value) {
+    case THEME_COLOR.WHITE:
+      return 'rgb(220 220 232)';
+    case THEME_COLOR.BLACK:
+      return 'rgb(40 40 46)';
+    case THEME_COLOR.RAINBOW:
+      return 'rgb(200 196 220)';
+    case THEME_COLOR.BRAND: {
+      const first = brandColors.map(hexToRgb).find((c): c is Rgb => c !== null);
+      if (!first) return 'rgb(200 196 220)';
+      const [r, g, b] = first.map((c) => Math.round(c * 255));
+      return `rgb(${r} ${g} ${b})`;
+    }
+    default: {
+      const hue = ((Math.round(value) % 360) + 360) % 360;
+      const [r, g, b] = hslToRgb(hue / 360, 0.7, 0.55).map((c) => Math.round(c * 255));
+      return `rgb(${r} ${g} ${b})`;
+    }
+  }
+}
