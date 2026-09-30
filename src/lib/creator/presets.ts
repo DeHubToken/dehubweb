@@ -9,7 +9,13 @@
  *
  * The product-shoot, UGC/ad and illustration-style presets follow the mode
  * taxonomy in higgsfield-ai/skills (MIT, see LICENSE-HiggsfieldSkills); the
- * prompt scaffolds themselves are ours.
+ * prompt scaffolds themselves are ours. The ad formats (headline, benefit
+ * bullets, us vs them) and brand deliverables (merch, packaging, signage, logo)
+ * follow the same repo's DTC-ads and brandkit references.
+ *
+ * Video effects lead the video list and run on the cheapest models that do
+ * them well (Kling 2.5 Turbo, PixVerse V5, MiniMax), so the most tempting
+ * tiles are also the cheapest to try.
  */
 
 import type { AudioTask } from '@/constants/audio-models.constants';
@@ -284,9 +290,312 @@ export const IMAGE_PRESETS: CreatorPreset[] = [
     model: 'gemini-3.1-flash-image',
     aspect: '4:3',
   },
+  {
+    id: 'yt-split',
+    nameKey: 'creator.presetYtSplitName',
+    kind: 'image',
+    group: 'Social',
+    template:
+      '{subject}, split-screen video thumbnail, left half shows the before and right half the after, hard vertical divide, expressive face on one side, bold contrast and saturation, readable at small size, no small text',
+    sample: 'a messy desk vs the same desk perfectly organised',
+    hintKey: 'creator.presetYtSplitHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '16:9',
+  },
+  {
+    id: 'social-carousel',
+    nameKey: 'creator.presetSocialCarouselName',
+    kind: 'image',
+    group: 'Social',
+    template:
+      '{subject}, single slide of an Instagram carousel, clean editorial layout, one short headline in large legible type, consistent brand colours, strong visual anchor, room at the edge for the next slide to continue',
+    sample: 'slide one of "5 habits of focused people"',
+    hintKey: 'creator.presetSocialCarouselHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '4:5',
+  },
+  {
+    id: 'ad-headline',
+    nameKey: 'creator.presetAdHeadlineName',
+    kind: 'image',
+    group: 'Ads',
+    template:
+      '{subject}, direct-to-consumer static ad, one bold headline in large correctly spelled type across the top, product hero shot in the centre, clean brand-colour background, small call to action button at the bottom',
+    sample: 'a vitamin gummy jar with the headline "Sleep better tonight"',
+    hintKey: 'creator.presetAdHeadlineHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '1:1',
+  },
+  {
+    id: 'ad-bullets',
+    nameKey: 'creator.presetAdBulletsName',
+    kind: 'image',
+    group: 'Ads',
+    template:
+      '{subject}, direct-to-consumer static ad, product on one side and three short benefit bullet points with simple icons on the other, correctly spelled legible type, tidy grid, brand colours',
+    sample: 'a reusable water bottle: "Keeps cold 24h", "Leak-proof", "Fits cupholders"',
+    hintKey: 'creator.presetAdBulletsHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '4:5',
+  },
+  {
+    id: 'ad-us-vs-them',
+    nameKey: 'creator.presetAdUsVsThemName',
+    kind: 'image',
+    group: 'Ads',
+    template:
+      '{subject}, comparison ad, two columns labelled "Us" and "Them", our product bright and appealing on the left with ticks, a generic dull alternative on the right with crosses, correctly spelled short labels, clean layout',
+    sample: 'our natural deodorant vs a generic spray can',
+    hintKey: 'creator.presetAdUsVsThemHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '1:1',
+  },
+  {
+    id: 'merch-mockup',
+    nameKey: 'creator.presetMerchMockupName',
+    kind: 'image',
+    group: 'Brand',
+    template:
+      '{subject}, realistic merchandise mockup, the design printed cleanly on the garment with natural fabric folds and lighting, shot flat-lay or on a model, neutral backdrop, colour-accurate print',
+    sample: 'a black hoodie with a minimal gold lion logo',
+    hintKey: 'creator.presetMerchMockupHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '4:5',
+  },
+  {
+    id: 'packaging',
+    nameKey: 'creator.presetPackagingName',
+    kind: 'image',
+    group: 'Brand',
+    template:
+      '{subject}, premium packaging design shot in a studio, crisp print detail, legible correctly spelled label, soft shadows, material texture visible, shelf-ready look',
+    sample: 'a coffee bag called "Night Shift Roast"',
+    hintKey: 'creator.presetPackagingHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '1:1',
+  },
+  {
+    id: 'storefront-sign',
+    nameKey: 'creator.presetStorefrontSignName',
+    kind: 'image',
+    group: 'Brand',
+    template:
+      '{subject}, brand signage mockup on a real storefront, dimensional letters with realistic lighting and reflections, correctly spelled name, street context, evening glow',
+    sample: 'a neon sign reading "DeHub Cafe"',
+    hintKey: 'creator.presetStorefrontSignHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '4:5',
+  },
+  {
+    id: 'logo-mark',
+    nameKey: 'creator.presetLogoMarkName',
+    kind: 'image',
+    group: 'Brand',
+    template:
+      '{subject}, minimal logo mark, simple bold geometric shape, flat solid colours, centred on a plain background, works at small sizes, no mockup, no extra text unless asked',
+    sample: 'a logo for a running club called "Pace"',
+    hintKey: 'creator.presetLogoMarkHint',
+    model: 'gemini-3.1-flash-image',
+    aspect: '1:1',
+  },
+  {
+    id: 'clay-3d',
+    nameKey: 'creator.presetClay3dName',
+    kind: 'image',
+    group: 'Abstract',
+    template:
+      '{subject}, soft 3D clay render, rounded chunky shapes, pastel colours, subtle fingerprint texture, soft studio light, toy-like and cute',
+    sample: 'a small robot watering a plant',
+    hintKey: 'creator.presetClay3dHint',
+    model: 'z-image-turbo',
+    aspect: '1:1',
+    negative: 'photorealistic, harsh shadows',
+  },
+  {
+    id: 'anime-still',
+    nameKey: 'creator.presetAnimeStillName',
+    kind: 'image',
+    group: 'Film',
+    template:
+      '{subject}, anime film still, hand-painted backgrounds, clean cel shading, soft light and lens glow, detailed sky, cinematic composition',
+    sample: 'a girl on a bike at sunset by the sea',
+    hintKey: 'creator.presetAnimeStillHint',
+    model: 'z-image-turbo',
+    aspect: '16:9',
+    negative: 'photorealistic, 3d render',
+  },
+  {
+    id: 'pixel-art',
+    nameKey: 'creator.presetPixelArtName',
+    kind: 'image',
+    group: 'Design',
+    template:
+      '{subject}, 16-bit pixel art, limited palette, crisp square pixels, no anti-aliasing, retro video game scene',
+    sample: 'a wizard shop in a snowy village',
+    hintKey: 'creator.presetPixelArtHint',
+    model: 'z-image-turbo',
+    aspect: '1:1',
+    negative: 'blurry, smooth gradients, photorealistic',
+  },
 ];
 
 export const VIDEO_PRESETS: CreatorPreset[] = [
+  {
+    id: 'crash-zoom',
+    nameKey: 'creator.presetCrashZoomName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. The shot opens wide, then the camera snaps into a sudden, fast zoom straight onto the subject\'s face, stopping hard on a tight close-up. Punchy and dramatic, one continuous take.',
+    sample: 'A streamer realising they just won',
+    hintKey: 'creator.presetCrashZoomHint',
+    model: 'kling-2.5-turbo',
+    aspect: '9:16',
+    negative: 'slow zoom, jump cut, warping face',
+  },
+  {
+    id: 'dolly-zoom',
+    nameKey: 'creator.presetDollyZoomName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. Vertigo dolly zoom: the camera tracks backward while zooming in, so the subject stays the same size in frame as the background visibly stretches and warps away behind them. Unsettling, cinematic, one continuous move.',
+    sample: 'A man frozen in a long hotel corridor',
+    hintKey: 'creator.presetDollyZoomHint',
+    model: 'kling-2.5-turbo',
+    aspect: '16:9',
+    negative: 'jump cut, subject changing size, flicker',
+  },
+  {
+    id: 'bullet-time',
+    nameKey: 'creator.presetBulletTimeName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. Bullet time: the action is frozen mid-motion, debris and droplets suspended in the air, while the camera sweeps in a smooth half circle around the subject. Crisp detail, high-speed look.',
+    sample: 'A dancer mid-leap with water splashing around her',
+    hintKey: 'creator.presetBulletTimeHint',
+    model: 'kling-2.5-turbo',
+    aspect: '16:9',
+    negative: 'jump cut, motion blur smear, morphing body',
+  },
+  {
+    id: 'fpv-dive',
+    nameKey: 'creator.presetFpvDiveName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. FPV drone shot: the camera dives steeply, banks hard and weaves close past obstacles at high speed before levelling out, fast and immersive, one continuous flight.',
+    sample: 'A waterfall in a jungle canyon',
+    hintKey: 'creator.presetFpvDiveHint',
+    model: 'kling-2.5-turbo',
+    aspect: '16:9',
+    negative: 'jump cut, frozen frame, warping terrain',
+  },
+  {
+    id: 'earth-zoom-out',
+    nameKey: 'creator.presetEarthZoomOutName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. The camera starts close on the subject and pulls straight up and out in one continuous move, through rooftops, the city, clouds and the curve of the Earth, until the planet hangs in space.',
+    sample: 'A person waving from a rooftop',
+    hintKey: 'creator.presetEarthZoomOutHint',
+    model: 'kling-2.5-turbo',
+    aspect: '9:16',
+    negative: 'jump cut, cut to black, flicker',
+  },
+  {
+    id: 'whip-pan',
+    nameKey: 'creator.presetWhipPanName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. The camera whips sideways in a fast, motion-blurred pan and lands sharply on the subject, revealing them with energy. Snappy transition feel.',
+    sample: 'A skater landing a trick',
+    hintKey: 'creator.presetWhipPanHint',
+    model: 'pixverse-v5',
+    aspect: '9:16',
+    negative: 'slow pan, jump cut, warping',
+  },
+  {
+    id: 'disintegrate',
+    nameKey: 'creator.presetDisintegrateName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. The subject begins to disintegrate from the edges inward, breaking into fine glowing particles and ash that drift away on the wind until nothing is left. Locked-off camera, dramatic lighting.',
+    sample: 'A statue of a king in a desert',
+    hintKey: 'creator.presetDisintegrateHint',
+    model: 'pixverse-v5',
+    aspect: '9:16',
+    negative: 'jump cut, sudden disappearance, flicker',
+  },
+  {
+    id: 'levitate',
+    nameKey: 'creator.presetLevitateName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. The subject slowly lifts off the ground and floats upward, dust and small objects rising around them, soft light catching the air. Calm, magical, one continuous take.',
+    sample: 'A girl meditating in an empty warehouse',
+    hintKey: 'creator.presetLevitateHint',
+    model: 'pixverse-v5',
+    aspect: '9:16',
+    negative: 'jump cut, falling, morphing body',
+  },
+  {
+    id: 'exploded-view',
+    nameKey: 'creator.presetExplodedViewName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. The product smoothly separates into its individual components, each part floating outward in precise alignment to form a clean exploded view, then holds. Studio backdrop, crisp lighting.',
+    sample: 'A pair of wireless headphones',
+    hintKey: 'creator.presetExplodedViewHint',
+    model: 'pixverse-v5',
+    aspect: '1:1',
+    negative: 'chaotic explosion, warping parts, text artifacts',
+  },
+  {
+    id: 'melt',
+    nameKey: 'creator.presetMeltName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. The subject slowly softens and melts, running down in thick glossy drips and pooling on the ground. Surreal, locked-off camera, rich colour.',
+    sample: 'A chrome smiley-face sculpture on a pedestal',
+    hintKey: 'creator.presetMeltHint',
+    model: 'pixverse-v5',
+    aspect: '9:16',
+    negative: 'jump cut, flicker, sudden disappearance',
+  },
+  {
+    id: 'set-ablaze',
+    nameKey: 'creator.presetSetAblazeName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. Flames catch at the base and quickly climb until the subject is wreathed in bright, roaring fire, embers spiralling upward against a dark background.',
+    sample: 'A guitar standing on a stage',
+    hintKey: 'creator.presetSetAblazeHint',
+    model: 'pixverse-v5',
+    aspect: '9:16',
+    negative: 'smoke only, jump cut, flicker',
+  },
+  {
+    id: 'vhs-glitch',
+    nameKey: 'creator.presetVhsGlitchName',
+    kind: 'video',
+    group: 'Effects',
+    template:
+      '{subject}. Shot as worn VHS footage: scan lines, colour bleed, tracking jitter and brief digital glitches tearing across the frame, 90s camcorder look.',
+    sample: 'Friends dancing at a house party',
+    hintKey: 'creator.presetVhsGlitchHint',
+    model: 'minimax-video',
+    aspect: '9:16',
+    negative: 'clean digital look, jump cut',
+  },
   {
     id: 'slow-push',
     nameKey: 'creator.presetSlowPushName',
@@ -452,6 +761,33 @@ export const VIDEO_PRESETS: CreatorPreset[] = [
     model: 'kling-2.6-pro',
     aspect: '16:9',
     negative: 'shaky camera, warping, distorted text, jump cut',
+  },
+  {
+    id: 'product-showcase',
+    nameKey: 'creator.presetProductShowcaseName',
+    kind: 'video',
+    group: 'Commercial',
+    template:
+      '{subject}. Polished product showcase: the product sits centred on a sculpted set, the camera glides in a slow arc as a light sweep travels across its surface, finishing on a clean hero frame. Premium, no people.',
+    sample: 'A smartwatch with a steel strap',
+    hintKey: 'creator.presetProductShowcaseHint',
+    model: 'kling-2.5-turbo',
+    aspect: '9:16',
+    negative: 'text artifacts, warped label, shaky camera',
+  },
+  {
+    id: 'try-on',
+    nameKey: 'creator.presetTryOnName',
+    kind: 'video',
+    group: 'Commercial',
+    template:
+      '{subject}. A model wears the item from the attached image and turns naturally to show fit and fabric from several angles, soft daylight, clean backdrop. Keep the item\'s design, colour and details exactly as attached.',
+    sample: 'The jacket in the attached photo',
+    hintKey: 'creator.presetTryOnHint',
+    model: 'kling-2.5-turbo',
+    aspect: '9:16',
+    negative: 'changing the garment, extra limbs, morphing face',
+    requiresImage: true,
   },
 ];
 
