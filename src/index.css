@@ -5158,15 +5158,16 @@ html[data-theme="light"] [data-creator-page] .text-white {
 /* ==========================================================================
    System theme, phones: cinematic feed.
    The main feeds (home, videos, images) drop the bento on phones. Photos and
-   videos run the full screen width, the author rides on a small dark glass
-   chip over the top of the media with the AI and options buttons as glass
-   circles opposite, and a short caption sits on a dark fade at the bottom of
-   the media. The action row stays under the media. Text posts and ads just
-   lose the box. Tall media uses the post page's height cap, so a vertical clip
-   fills the width here exactly as it does on its own page.
+   videos run the full screen width. On videos the avatar and name sit straight
+   on the top of the media with the AI, tools and options buttons as glass
+   squares opposite; photos keep a plain author row above, Instagram style.
+   The caption, meta row and actions sit under the media. Text posts and ads
+   just lose the box. Tall media uses the post page's height cap, so a
+   vertical clip fills the width here exactly as it does on its own page.
    Feeds opt in with [data-cinematic] on the feed item; cards mark their
    header row, info block and caption ([data-card-head], [data-card-info],
-   [data-card-caption]). Desktop, tablets and every other theme are untouched.
+   [data-card-caption]); a photo's header is [data-card-head="plain"].
+   Desktop, tablets and every other theme are untouched.
    ========================================================================== */
 @media (max-width: 639px) {
   html[data-theme="system"] [data-feed-root] [data-cinematic] {
@@ -5178,6 +5179,10 @@ html[data-theme="light"] [data-creator-page] .text-white {
     background: transparent !important;
     backdrop-filter: none !important;
     box-shadow: none !important;
+  }
+  /* Air between posts now there is no box to separate them. */
+  html[data-theme="system"] [data-feed-root] [data-cinematic] {
+    margin-bottom: 1.25rem !important;
   }
   html[data-theme="system"] [data-feed-root] [data-cinematic]:is([data-cinematic="post"], [data-cinematic="ad"]) {
     padding: 0.75rem 0.875rem 0.25rem !important;
@@ -5203,8 +5208,13 @@ html[data-theme="light"] [data-creator-page] .text-white {
     object-fit: cover;
   }
 
-  /* Author chip and buttons over the media. */
-  html[data-theme="system"] [data-cinematic] [data-card-head] {
+  /* Photos keep a plain author row above the picture, Instagram style. */
+  html[data-theme="system"] [data-cinematic] [data-card-head="plain"] {
+    padding: 0 0.875rem 0.625rem;
+  }
+
+  /* Videos, audio and live: author chip and buttons over the media. */
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) {
     position: absolute;
     top: 0.75rem;
     left: 0.75rem;
@@ -5213,103 +5223,75 @@ html[data-theme="light"] [data-creator-page] .text-white {
     align-items: center;
     pointer-events: none;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > * {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > * {
     pointer-events: auto;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :first-child {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child {
     flex: 0 1 auto;
     gap: 0.5rem;
-    padding: 0.25rem 0.875rem 0.25rem 0.25rem;
     margin-right: 0.5rem;
-    border-radius: 9999px;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :first-child .w-9 {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .w-9 {
     width: 1.875rem;
     height: 1.875rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :first-child :is(.w-9, .w-9 img, .w-9 > span) {
-    border-radius: 9999px;
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.w-9, .w-9 img, .w-9 > span) {
+    border-radius: 0.5rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :first-child .text-base {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
     font-size: 0.875rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :first-child :is(.text-sm, .text-\[13px\]) {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.text-sm, .text-\[13px\]) {
     font-size: 0.75rem;
     line-height: 1rem;
     color: rgb(228 228 231 / 0.85);
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :last-child {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child {
     gap: 0.5rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :last-child > button {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button {
     width: 2.25rem;
     height: 2.25rem;
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 9999px;
+    border-radius: 0.625rem;
     color: #fff;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :last-child > button svg {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button svg {
     width: 1.25rem;
     height: 1.25rem;
   }
-  html[data-theme="system"] [data-cinematic] :is([data-card-head] > :first-child, [data-card-head] > :last-child > button) {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child {
+    padding: 0;
+    color: #fff;
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.7);
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
+    color: #fff !important;
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.w-9, img) {
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.45);
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button {
     background: rgb(10 10 12 / 0.42);
     backdrop-filter: blur(16px) saturate(150%);
     box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16);
   }
   /* Badges and player buttons that sat in the media's top corners move below the chip. */
-  html[data-theme="system"] [data-cinematic] [data-media-full] > .absolute.top-2 {
+  html[data-theme="system"] [data-cinematic] [data-video-card] [data-media-full] > .absolute.top-2 {
     top: 3.75rem;
   }
 
-  /* Caption on a dark fade at the foot of the media. The info block starts
-     exactly where the media ends, so the caption hangs off its top edge. */
+  /* Caption, then the meta row, under the media. */
   html[data-theme="system"] [data-cinematic] [data-card-info] {
-    position: relative;
     padding-top: 0.625rem;
     padding-left: 0.875rem;
     padding-right: 0.875rem;
   }
   html[data-theme="system"] [data-cinematic] [data-card-info]:has([data-card-caption]) .\!mt-3 {
-    margin-top: 0 !important;
-  }
-  html[data-theme="system"] [data-cinematic] [data-card-caption] {
-    position: absolute !important;
-    left: 0;
-    right: 0;
-    bottom: 100%;
-    z-index: 15;
-    margin: 0 !important;
-    padding: 3rem 0.875rem 0.75rem;
-    background: linear-gradient(0deg, rgb(0 0 0 / 0.78), rgb(0 0 0 / 0));
-    pointer-events: none;
-  }
-  html[data-theme="system"] [data-cinematic] [data-card-caption] > * {
-    pointer-events: auto;
-  }
-  html[data-theme="system"] [data-cinematic] [data-card-caption] :is(h3, p) {
-    color: #fff !important;
-    font-weight: 500;
-    text-shadow: 0 1px 2px rgb(0 0 0 / 0.5);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-bottom: 0;
-  }
-  html[data-theme="system"] [data-cinematic] [data-card-caption] p {
-    color: rgb(228 228 231) !important;
-    -webkit-line-clamp: 1;
-  }
-  html[data-theme="system"] [data-cinematic] [data-card-caption] button {
-    display: none;
-  }
-  /* The player's own transport bar takes the foot of the video while it shows. */
-  html[data-theme="system"] [data-cinematic] [data-video-card]:has([data-media-full] [data-video-controls]) [data-card-caption] {
-    opacity: 0;
+    margin-top: 0.375rem !important;
   }
   html[data-theme="system"] [data-cinematic] [data-card-info] > .mb-3 {
     margin-bottom: 0.5rem;
