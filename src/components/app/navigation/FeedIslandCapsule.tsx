@@ -115,7 +115,7 @@ export function FeedIslandCapsule({
               role="menuitem"
               onClick={() => {
                 setFeedTabsOpen(false);
-                window.dispatchEvent(new CustomEvent('feed-island-select', { detail: value }));
+                window.dispatchEvent(new CustomEvent('home-feed-select', { detail: value }));
               }}
               className={`flex h-10 w-full items-center gap-2.5 rounded-lg px-2.5 text-[14px] font-semibold ${value === tabValue ? 'bg-white/15' : 'hover:bg-white/10'}`}
             >
