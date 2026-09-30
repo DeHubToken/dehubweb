@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { BASE_POST_TEXT_CHARS } from '@/lib/post-text-limit';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PostMediaPreview } from './PostMediaPreview';
@@ -23,6 +24,8 @@ import { ChainSelector, type PostChainId } from '@/components/app/ChainSelector'
 
 interface PostContentAreaProps {
   text: string;
+  /** Longest text this author may post — scales with their badge tier. */
+  maxChars?: number;
   setText: (text: string) => void;
   editorRef: React.RefObject<HTMLDivElement>;
   media: MediaFile[];
@@ -108,6 +111,7 @@ function createCashtagChip(tag: string): HTMLSpanElement {
 }
 
 export function PostContentArea({
+  maxChars = BASE_POST_TEXT_CHARS,
   text,
   setText,
   editorRef,
@@ -412,9 +416,9 @@ export function PostContentArea({
       first = false;
     }
     
-    // Enforce 500 character limit on description
-    if (plainText.length > 500) {
-      plainText = plainText.slice(0, 500);
+    // Enforce the tier's character limit on the post text
+    if (plainText.length > maxChars) {
+      plainText = plainText.slice(0, maxChars);
       if (editor) {
         editor.textContent = plainText;
         // Move cursor to end
@@ -436,7 +440,7 @@ export function PostContentArea({
     // Only process links after user stops typing for 1.5s to avoid cursor jumps
     if (linkDebounceRef.current) clearTimeout(linkDebounceRef.current);
     linkDebounceRef.current = setTimeout(processLinks, 1500);
-  }, [editorRef, setText, processLinks, mention, assetPicker]);
+  }, [editorRef, setText, processLinks, mention, assetPicker, maxChars]);
 
   // Handle paste - process links immediately
   const handlePaste = useCallback((e: React.ClipboardEvent) => {
@@ -836,8 +840,8 @@ export function PostContentArea({
                 </button>
               )}
             </div>
-            <span className={cn("text-xs ml-auto", charCount > 500 ? "text-amber-400" : "text-white/60")}>
-              {charCount}/500
+            <span className={cn("text-xs ml-auto", charCount >= maxChars ? "text-amber-400" : "text-white/60")}>
+              {charCount.toLocaleString('en-US')}/{maxChars.toLocaleString('en-US')}
             </span>
           </div>
         </div>

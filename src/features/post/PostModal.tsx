@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState, useCallback, useRef } from 'react';
+import { BASE_POST_TEXT_CHARS, postTextLimit } from '@/lib/post-text-limit';
 import ReactMarkdown from 'react-markdown';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
@@ -210,6 +211,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
 
       <PostContentArea
         text={state.text}
+        maxChars={articleMode ? BASE_POST_TEXT_CHARS : postTextLimit(computed.postQuota)}
         setText={actions.setText}
         editorRef={refs.editorRef}
         media={state.media}
