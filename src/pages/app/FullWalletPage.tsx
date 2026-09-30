@@ -10,6 +10,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
+import { BackupReminderBanner } from '@/components/app/wallet/BackupReminderBanner';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
@@ -314,6 +315,8 @@ export default function FullWalletPage() {
           <h1 className="text-lg font-bold text-white">{t('wallet.title')}</h1>
         </div>
       )}
+
+      <BackupReminderBanner />
 
       {/* Wallet balance bar */}
       <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">

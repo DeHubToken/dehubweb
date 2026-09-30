@@ -1561,7 +1561,7 @@
     "setUpNewAccount": "Loo uus konto",
     "createNewInstead": "Loo selle asemel uus konto",
     "migrateAccount": "Kanna konto üle",
-    "importExternalWallet": "Impordi võtmed",
+    "importExternalWallet": "Impordi",
     "migrateIntentHint": "Logi sisse mis tahes alloleva valikuga. Kui see ühtib varasema DeHubi kontoga, võta kaasa selle rahakott, kasutajanimi ja saldo.",
     "importIntentHint": "Logi sisse mis tahes alloleva valikuga, seejärel kleebi kasutatava rahakoti taastefraas või privaatvõti.",
     "title": "Logi sisse",

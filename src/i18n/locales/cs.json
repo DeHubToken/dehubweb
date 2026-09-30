@@ -1557,7 +1557,7 @@
     "setUpNewAccount": "Založ si nový účet",
     "createNewInstead": "Místo toho si vytvoř nový účet",
     "migrateAccount": "Migrovat účet",
-    "importExternalWallet": "Importovat klíče",
+    "importExternalWallet": "Importovat",
     "migrateIntentHint": "Přihlas se libovolnou možností dole. Pokud se shoduje s dřívějším účtem DeHub, přinesete jeho peněženku, uživatelské jméno a zůstatek.",
     "importIntentHint": "Přihlaste se pomocí libovolné možnosti níže a vložte frázi pro obnovení nebo soukromý klíč peněženky, kterou chcete použít.",
     "title": "Přihlásit se",

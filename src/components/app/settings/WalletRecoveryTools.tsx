@@ -1,14 +1,15 @@
 /**
  * Wallet recovery tools (Settings → Account Security):
- *  - Export Private Key: the supported backup path — we don't generate
- *    recovery phrases/codes for new wallets anymore.
+ *  - Back up wallet: after a fresh unlock, the wallet's 12 words (when it was
+ *    made from them) and, under Advanced, its private key.
  *  - Switch to a different old account: Supabase links Google/Email logins
  *    that share a verified email into ONE identity, so a person who had two
  *    separate old Web3Auth-era accounts (one per login method) can only
  *    ever have one of them "active" here. This lets them retrieve the OTHER
  *    old account's key and swap to it — self-service, no support/SQL needed.
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Loader2, AlertTriangle, Copy, KeyRound, Repeat, ArrowDownToLine, Fingerprint } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,24 +31,29 @@ import { getWalletProtection } from '@/lib/wallet-core/protection';
 import { PasskeyCancelledError } from '@/lib/wallet-core/biometric-unlock';
 import { SettingsRow } from '@/components/app/settings/SettingsRow';
 import { DhbAmount } from '@/components/app/DhbAmount';
+import { SeedPhraseBackup } from '@/components/app/wallet-setup/SeedPhraseBackup';
+import { getBackupStatus, markBackedUp } from '@/lib/wallet-core/backup-status';
+import type { WalletBackup } from '@/lib/wallet-core/export';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
-// ── Export Private Key ──────────────────────────────────────────────────────
+// ── Back up wallet (12 words, private key under Advanced) ─────────────────
 
-function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean; onOpenChange: (v: boolean) => void; onBackedUp: () => void }) {
   const { exportPrivateKey, exportPrivateKeyWithBiometrics, supabaseUserId } = useAuth();
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [revealedKey, setRevealedKey] = useState<string | null>(null);
+  const [backup, setBackup] = useState<WalletBackup | null>(null);
+  const [showKey, setShowKey] = useState(false);
+  const revealedKey = backup && (showKey || !backup.phrase) ? backup.privateKey : null;
   // Which unlock methods this wallet + device actually support. A wallet with
   // no password can only be exported with biometrics, so the dialog must not
   // show a password box that cannot work.
   const [hasPassword, setHasPassword] = useState(true);
   const [canUseBiometrics, setCanUseBiometrics] = useState(false);
 
-  const reset = () => { setPassword(''); setError(null); setRevealedKey(null); setBusy(false); };
+  const reset = () => { setPassword(''); setError(null); setBackup(null); setShowKey(false); setBusy(false); };
   const close = (v: boolean) => { if (!v) reset(); onOpenChange(v); };
 
   useEffect(() => {
@@ -61,11 +67,20 @@ function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenC
     return () => { cancelled = true; };
   }, [open, supabaseUserId]);
 
-  const runExport = async (fn: () => Promise<string>) => {
+  const recordBackup = async (result: WalletBackup) => {
+    if (!supabaseUserId) return;
+    await markBackedUp(supabaseUserId, result.ethAddress);
+    onBackedUp();
+  };
+
+  const runExport = async (fn: () => Promise<WalletBackup>) => {
     setBusy(true);
     setError(null);
     try {
-      setRevealedKey(await fn());
+      const result = await fn();
+      setBackup(result);
+      // A wallet with no words is backed up the moment its key is shown.
+      if (!result.phrase) void recordBackup(result);
     } catch (err) {
       if (err instanceof PasskeyCancelledError) return;
       setError(err instanceof Error ? err.message : 'Failed to export key');
@@ -81,10 +96,25 @@ function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenC
     <Drawer open={open} onOpenChange={close}>
       <DrawerContent column className="bg-black/95 border-white/10">
         <DrawerHeader>
-          <DrawerTitle className="text-white text-center">Export Private Key</DrawerTitle>
+          <DrawerTitle className="text-white text-center">Back up wallet</DrawerTitle>
         </DrawerHeader>
         <div className="px-6 pb-8 space-y-4">
-          {revealedKey ? (
+          {backup?.phrase && !showKey ? (
+            <>
+              <SeedPhraseBackup
+                phrase={backup.phrase}
+                variant="settings"
+                onFinished={() => { void recordBackup(backup); close(false); }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowKey(true)}
+                className="w-full py-1 text-xs text-white/40 hover:text-white/70 transition-colors"
+              >
+                Advanced: show private key instead
+              </button>
+            </>
+          ) : revealedKey ? (
             <>
               <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-white">
                 <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
@@ -100,7 +130,10 @@ function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenC
               >
                 <Copy className="w-4 h-4 mr-2" /> Copy private key
               </Button>
-              <Button onClick={() => close(false)} className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl">
+              <Button
+                onClick={() => { if (backup?.phrase) void recordBackup(backup); close(false); }}
+                className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+              >
                 Done
               </Button>
             </>
@@ -108,8 +141,8 @@ function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenC
             <>
               <p className="text-white/60 text-sm flex items-center gap-2">
                 {canUseBiometrics && !hasPassword
-                  ? <><Fingerprint className="w-4 h-4 shrink-0" /> Confirm with your fingerprint or face to reveal your private key.</>
-                  : <><KeyRound className="w-4 h-4 shrink-0" /> Enter your wallet password to reveal your private key.</>}
+                  ? <><Fingerprint className="w-4 h-4 shrink-0" /> Confirm with your fingerprint or face to see your backup.</>
+                  : <><KeyRound className="w-4 h-4 shrink-0" /> Enter your wallet password to see your backup.</>}
               </p>
               {hasPassword && (
                 <Input
@@ -128,7 +161,7 @@ function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenC
                   disabled={busy || !password}
                   className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
                 >
-                  {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Decrypting…</span> : 'Reveal private key'}
+                  {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Decrypting…</span> : 'Show backup'}
                 </Button>
               )}
               {canUseBiometrics && (
@@ -145,7 +178,7 @@ function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenC
                     : (
                       <span className="flex items-center gap-2">
                         <Fingerprint className="w-4 h-4" />
-                        {hasPassword ? 'Use biometrics instead' : 'Reveal private key'}
+                        {hasPassword ? 'Use biometrics instead' : 'Show backup'}
                       </span>
                     )}
                 </Button>
@@ -153,7 +186,7 @@ function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenC
               {!hasPassword && !canUseBiometrics && (
                 <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
                   <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-                  <p>This wallet unlocks with biometrics, which aren’t available in this browser. Export it from the device you set it up on.</p>
+                  <p>This wallet unlocks with biometrics, which aren’t available in this browser. Back it up from the device you set it up on.</p>
                 </div>
               )}
             </>
@@ -470,7 +503,26 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
 // ── Settings entry points ───────────────────────────────────────────────────
 
 export function WalletRecoveryTools() {
+  const { supabaseUserId } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [exportOpen, setExportOpen] = useState(false);
+  // null = unknown (still loading, or the lookup failed): show no badge.
+  const [backedUpAt, setBackedUpAt] = useState<string | null | undefined>(undefined);
+
+  const loadBackupStatus = useCallback(() => {
+    if (!supabaseUserId) return;
+    getBackupStatus(supabaseUserId).then((status) => setBackedUpAt(status ? status.backedUpAt : undefined));
+  }, [supabaseUserId]);
+  useEffect(loadBackupStatus, [loadBackupStatus]);
+
+  // The wallet page's reminder links here with ?backup=1 to open the dialog.
+  useEffect(() => {
+    if (searchParams.get('backup') !== '1') return;
+    setExportOpen(true);
+    const next = new URLSearchParams(searchParams);
+    next.delete('backup');
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
   const [switchOpen, setSwitchOpen] = useState(false);
   // "Switch to a different old account" only matters — and only shows — for
   // the minority of users who genuinely have 2+ old Web3Auth-era accounts
@@ -491,10 +543,18 @@ export function WalletRecoveryTools() {
     <>
       <SettingsRow
         icon={<KeyRound />}
-        title="Export Private Key"
-        description={<>Back up your wallet{hasMultipleOldAccounts ? ' — required to keep access if you switch accounts below' : ''}</>}
+        title={<span className="inline-flex items-center gap-2">
+          Back up wallet
+          {backedUpAt === null && <span className="w-2 h-2 rounded-full bg-amber-400" aria-label="Not backed up yet" />}
+        </span>}
+        description={<>
+          {backedUpAt
+            ? `Backed up ${new Date(backedUpAt).toLocaleDateString()}. See your 12 words or private key any time`
+            : 'See your 12 backup words or private key'}
+          {hasMultipleOldAccounts ? ' — required to keep access if you switch accounts below' : ''}
+        </>}
         action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => setExportOpen(true)}>
-          Export
+          Back up
         </Button>}
       />
       {hasMultipleOldAccounts && (
@@ -507,7 +567,7 @@ export function WalletRecoveryTools() {
         </Button>}
       />
       )}
-      <ExportPrivateKeyDialog open={exportOpen} onOpenChange={setExportOpen} />
+      <BackUpWalletDialog open={exportOpen} onOpenChange={setExportOpen} onBackedUp={loadBackupStatus} />
       {hasMultipleOldAccounts && <SwitchOldAccountDialog open={switchOpen} onOpenChange={setSwitchOpen} />}
     </>
   );
