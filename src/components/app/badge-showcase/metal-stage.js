@@ -122,7 +122,7 @@ function promotionFrame(ms){
     if(oldMesh)oldMesh.visible=false;group.visible=true;
     const reveal=ease(clamp(t/.68)),size=flowTarget.size*(.88+.12*reveal),shake=Math.max(0,1-t/.16)*5;
     pose(group,{x:flowTarget.x+(flowTarget.size-size)/2+Math.sin(ms*.13)*shake,y:flowTarget.y+(flowTarget.size-size)/2,size},-.3+.9*(1-reveal),.04+.09*(1-reveal));group.position.z=-.08*(1-reveal);
-    if(shards){shards.visible=true;pose(shards,hero,-.12,.035);crackProgress.value=1;crackWidth.value=.058;for(const piece of shards.children){const d=piece.userData,v=d.velocity,travel=Math.max(0,progress-d.release),initial=clamp(travel/.12);piece.position.set(d.seed.x+v.x*travel,d.seed.y+v.y*travel-.28*travel*travel,v.z*travel);piece.rotation.set(d.spin.x*travel+(1-initial)*Math.sin(d.seed.y*9)*.025,d.spin.y*travel+(1-initial)*Math.cos(d.seed.x*7)*.025,d.spin.z*travel);piece.scale.setScalar(1);}}
+    if(shards){shards.visible=true;pose(shards,hero,-.12,.035);crackProgress.value=1;crackWidth.value=.058;for(const piece of shards.children){const d=piece.userData,v=d.velocity,travel=Math.max(0,progress-d.release),initial=clamp(travel/.12);piece.position.set(d.seed.x+v.x*travel,d.seed.y+v.y*travel-.28*travel*travel,v.z*travel*.55/Math.max(.001,shards.scale.x));piece.rotation.set(d.spin.x*travel+(1-initial)*Math.sin(d.seed.y*9)*.025,d.spin.y*travel+(1-initial)*Math.cos(d.seed.x*7)*.025,d.spin.z*travel);piece.scale.setScalar(1);}}
     renderer.toneMappingExposure=1.25+Math.max(0,1-t/.18)*.55;renderer.render(scene,camera);smashFX(t);
     
   }else{settle();return false;}
@@ -152,7 +152,7 @@ function promotionFrame(ms){
     this.layout=()=>wake();
     this.open=async({from,fromArt,promote,onLanded})=>{
       const id=++serial;cancel();spinDuration=0;
-      if(promote&&fromArt){oldIndex=items.findIndex(i=>i.src===fromArt);if(oldIndex<0){oldIndex=items.length;items.push({src:fromArt});}
+      if(promote&&fromArt&&!reduce()){oldIndex=items.findIndex(i=>i.src===fromArt);if(oldIndex<0){oldIndex=items.length;items.push({src:fromArt});}
         if(await prepare(oldIndex)&&!disposed&&id===serial){oldMesh=makeBadge(oldIndex);scene.add(oldMesh);shards=buildShards(oldMesh);}}
       if(disposed||id!==serial)return;
       held=false;done=onLanded;flowTarget=hero();flowSource=from?local(from):{...flowTarget,size:flowTarget.size*.15,x:flowTarget.x+flowTarget.size*.425,y:flowTarget.y+flowTarget.size*.425};flowKind=promote?'promotion':'details';flowActive=true;flowStart=performance.now()-(promote&&!oldMesh?1970:0);

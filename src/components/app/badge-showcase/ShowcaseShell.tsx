@@ -1,16 +1,7 @@
 /**
- * ShowcaseShell — the stage every badge showcase shares.
- *
- * The badge lifts out of where it was clicked and flies to the middle of a
- * darkened screen, then wakes up as a die-cut holographic sticker you can
- * tilt, bend and peel. A dock plays through the whole set like a sticker
- * pack. Everything that says what a badge *means* (tokens and perks for a
- * holder tier, a milestone for a streamer card) is the caller's details
- * column, rendered through `children`.
- *
- * With an `intro` the opening is a promotion instead: the old badge flies
- * out, bursts into glitter and comes back together as the new one before the
- * sticker takes over (see `ascension.ts`).
+ * Shared badge details, dock, and promotion shell. The active theme chooses
+ * metallic lift/shatter or the existing holographic sticker/glitter flow.
+ * Inline artwork, badge eligibility, and the caller's tier details are shared.
  */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
