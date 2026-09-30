@@ -22,6 +22,9 @@ import { StickerStage, stickerArtRect, type StickerFinish, type StickerItem } fr
 import { SHOWCASE_CSS } from './showcase-ui';
 import { playAscension, type AscensionHandle } from './ascension';
 import type { BadgeMotion } from '@/lib/badge-motion';
+import { useTheme } from '@/contexts/ThemeContext';
+import { badgeAnimationStyle } from '@/lib/badge-animation-style';
+import { MetalStage } from './metal-stage';
 
 export interface ShowcaseEntry {
   key: string;
@@ -104,6 +107,8 @@ export function ShowcaseShell({
   intro,
 }: ShowcaseShellProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
+  const [metallic] = useState(() => badgeAnimationStyle(theme) === 'metallic');
   const reduceMotion = !!useReducedMotion();
   const count = entries.length;
 
@@ -127,14 +132,15 @@ export function ShowcaseShell({
   const flyerRef = useRef<HTMLImageElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const stageRef = useRef<StickerStage | null>(null);
+  const stageRef = useRef<StickerStage | MetalStage | null>(null);
+  const closingRef = useRef(false);
   const shownIndex = useRef(originIndex);
   const flightRaf = useRef(0);
   const introCanvasRef = useRef<HTMLCanvasElement>(null);
   const introRef = useRef<AscensionHandle | null>(null);
 
   const items = useMemo<StickerItem[]>(
-    () => entries.map((entry) => ({ src: entry.art, finish: entry.finish, tilt: entry.tilt * 0.5 })),
+    () => entries.map((entry) => ({ src: entry.art, label: entry.label, finish: entry.finish, tilt: entry.tilt * 0.5 })),
     [entries],
   );
 
@@ -189,6 +195,12 @@ export function ShowcaseShell({
   /* ---------- open ---------- */
 
   useLayoutEffect(() => {
+    if (metallic) {
+      const previous = anchor?.style.visibility ?? '';
+      if (anchor) anchor.style.visibility = 'hidden';
+      setShown(true);
+      return () => { if (anchor) anchor.style.visibility = previous; };
+    }
     const hero = heroBox();
     const from = anchorBox();
     if (anchor) anchor.style.visibility = 'hidden';
@@ -264,29 +276,54 @@ export function ShowcaseShell({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    let stage: StickerStage;
+    let live = true;
+    const fail = () => {
+      if (!live || closingRef.current) return;
+      setGlFailed(true);
+      setStickerOn(false);
+      setStickerReady(false);
+      setShowOld(false);
+      setLanded(true);
+    };
+    let stage: StickerStage | MetalStage;
     try {
-      stage = new StickerStage(canvas, {
+      const handlersForStage = {
         onTap: () => handlers.current.next(),
         onMiss: () => handlers.current.close(),
         onInteract: () => handlers.current.interact(),
-      });
+      };
+      stage = metallic ? new MetalStage(canvas, {
+        ...handlersForStage,
+        hero: () => heroBox() ?? { x: 0, y: 0, size: 1 },
+        interactionElement: stageBoxRef.current!,
+        reducedMotion: reduceMotion,
+        onError: fail,
+      }) : new StickerStage(canvas, handlersForStage);
     } catch {
-      setGlFailed(true);
+      fail();
       return;
     }
     stage.setItems(items);
     stageRef.current = stage;
     stage.show(originIndex, { instant: true, hold: true }).then((ok) => {
-      if (stageRef.current !== stage) return;
-      if (ok) setStickerReady(true);
-      else setGlFailed(true);
-    });
+      if (!live || closingRef.current || stageRef.current !== stage) return;
+      if (!ok) return fail();
+      setStickerReady(true);
+      if (stage instanceof MetalStage) {
+        setStickerOn(true);
+        void stage.open({ from: anchorBox(), fromArt: intro?.fromArt, promote: !!intro,
+          onLanded: () => { if (live && !closingRef.current) setLanded(true); },
+        }).catch(fail);
+      }
+    }).catch(fail);
     return () => {
+      live = false;
       stage.dispose();
       if (stageRef.current === stage) stageRef.current = null;
     };
-  }, [items, originIndex]);
+  // The material and opening geometry belong to this presentation's initial theme.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, originIndex, metallic]);
 
   useEffect(() => {
     if (!stickerOn) return;
@@ -316,7 +353,8 @@ export function ShowcaseShell({
   /* ---------- close ---------- */
 
   const requestClose = useCallback(() => {
-    if (phase === 'exit') return;
+    if (closingRef.current) return;
+    closingRef.current = true;
     setPhase('exit');
     setPlaying(false);
     introRef.current?.cancel();
@@ -325,6 +363,11 @@ export function ShowcaseShell({
     const home = anchorBox();
     const hero = heroBox();
     const flyHome = !!home && !!hero && !reduceMotion && index === originIndex;
+    if (metallic && !glFailed) {
+      if (flyHome && home && stageRef.current instanceof MetalStage) stageRef.current.close(home, onClose);
+      else { setFading(true); window.setTimeout(onClose, reduceMotion ? 0 : 240); }
+      return;
+    }
     if (flyHome && hero && home) {
       placeFlyer(hero, restTilt);
       setStickerOn(false);
@@ -335,7 +378,7 @@ export function ShowcaseShell({
     }
     // fly and restTilt only touch refs and the fixed origin entry.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, anchorBox, heroBox, reduceMotion, index, originIndex, onClose]);
+  }, [phase, anchorBox, heroBox, reduceMotion, index, originIndex, onClose, metallic, glFailed]);
 
   handlers.current = { next: () => goTo(index + 1), close: requestClose, interact: pause };
 
@@ -533,7 +576,7 @@ export function ShowcaseShell({
 
       {/* The promotion's glitter. Catches taps while it plays, so a tap
           skips to the new badge instead of closing the showcase. */}
-      {intro && (
+      {intro && !metallic && (
         <canvas
           ref={introCanvasRef}
           aria-hidden
@@ -550,6 +593,10 @@ export function ShowcaseShell({
         className="absolute inset-0 bg-black/85 backdrop-blur-md transition-opacity duration-500 ease-out"
         style={{ opacity: open ? 1 : 0 }}
       />
+
+      {metallic && <div className="pointer-events-none absolute inset-0 z-[15]" style={{ opacity: glFailed ? 0 : 1 }}>
+        <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
+      </div>}
 
       {/* Positioned by a wrapper: the chrome finish sets position: relative on
           the button itself, which would override an absolute class there and
@@ -574,7 +621,7 @@ export function ShowcaseShell({
       <div className="relative z-10 flex min-h-0 flex-1 flex-col lg:mx-auto lg:w-full lg:max-w-[1180px] lg:flex-row">
         {/* Stage, with the dock centred under the sticker on desktop. */}
         <div className="relative flex min-h-0 flex-1 flex-col lg:pb-6">
-          <div ref={stageBoxRef} className="relative min-h-[160px] flex-1">
+          <div ref={stageBoxRef} className="relative min-h-[160px] flex-1" style={{ touchAction: metallic ? 'none' : undefined }}>
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 transition-opacity duration-700"
@@ -583,12 +630,12 @@ export function ShowcaseShell({
                 background: 'radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,0.08), transparent 70%)',
               }}
             />
-            <canvas
+            {!metallic && <canvas
               ref={canvasRef}
               aria-hidden
               className="absolute inset-0 h-full w-full transition-opacity duration-200"
               style={{ opacity: stickerOn ? 1 : 0, touchAction: 'none' }}
-            />
+            />}
             <p
               className="pointer-events-none absolute inset-x-0 bottom-1 hidden text-center text-[11px] text-white/35 transition-opacity duration-500 sm:block"
               style={{ opacity: panelIn && !touched && !glFailed ? 1 : 0 }}
@@ -640,7 +687,7 @@ export function ShowcaseShell({
         aria-hidden
         className="pointer-events-none fixed left-0 top-0 z-20 object-contain will-change-transform"
         style={{
-          opacity: stickerOn ? 0 : phase === 'exit' && index !== originIndex ? 0 : 1,
+          opacity: metallic && !glFailed ? 0 : stickerOn ? 0 : phase === 'exit' && index !== originIndex ? 0 : 1,
           transition: 'opacity 0.2s',
           filter: FLYER_FILTER,
           animation: glFailed && phase === 'open' ? 'badge-showcase-float 4s ease-in-out infinite' : undefined,

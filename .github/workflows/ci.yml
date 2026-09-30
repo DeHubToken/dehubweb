@@ -114,6 +114,15 @@ jobs:
       - name: Edge function imports resolve
         run: node scripts/edge-imports-check.mjs
 
+      - name: Bundle shared mobile badge renderer
+        run: node scripts/build-badge-runtime.mjs
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: badge-runtime
+          path: badge-runtime/index.html
+          retention-days: 7
+
   tests:
     name: Tests
     runs-on: ubuntu-latest
