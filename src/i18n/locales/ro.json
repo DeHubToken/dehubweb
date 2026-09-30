@@ -5575,7 +5575,8 @@
     "newGroupName": "Nume grup nou",
     "groupLimitReached": "Limita grupului a fost atinsă",
     "createGroup": "Creare",
-    "groupsHint": "Grupurile filtrează următorul flux. Doar tu le poți vedea."
+    "groupsHint": "Grupurile filtrează următorul flux. Doar tu le poți vedea.",
+    "new": "Nou"
   },
   "reactionInfo": {
     "title": "Reacții",

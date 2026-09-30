@@ -5464,7 +5464,8 @@
     "newGroupName": "Nytt gruppnamn",
     "groupLimitReached": "Gruppgräns uppnådd",
     "createGroup": "Skapa",
-    "groupsHint": "Grupper filtrerar ditt följande flöde. Bara du kan se dem."
+    "groupsHint": "Grupper filtrerar ditt följande flöde. Bara du kan se dem.",
+    "new": "Ny"
   },
   "reactionInfo": {
     "title": "Reaktioner",

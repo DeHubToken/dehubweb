@@ -5580,7 +5580,8 @@
     "newGroupName": "Nouveau nom de groupe",
     "groupLimitReached": "Limite de groupe atteinte",
     "createGroup": "Créer",
-    "groupsHint": "Les groupes filtrent votre flux suivant. Vous seul pouvez les voir."
+    "groupsHint": "Les groupes filtrent votre flux suivant. Vous seul pouvez les voir.",
+    "new": "Nouveau"
   },
   "reactionInfo": {
     "title": "Réactions",

@@ -5541,7 +5541,8 @@
     "newGroupName": "Uue grupi nimi",
     "groupLimitReached": "Grupi limiit on täis",
     "createGroup": "Loo",
-    "groupsHint": "Rühmad filtreerivad teie järgmist voogu. Ainult sina näed neid."
+    "groupsHint": "Rühmad filtreerivad teie järgmist voogu. Ainult sina näed neid.",
+    "new": "Uus"
   },
   "reactionInfo": {
     "title": "Reaktsioonid",

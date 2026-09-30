@@ -5533,7 +5533,8 @@
     "newGroupName": "Nowa nazwa grupy",
     "groupLimitReached": "Osiągnięto limit grupowy",
     "createGroup": "Utwórz",
-    "groupsHint": "Grupy filtrują Twój kanał obserwowania. Tylko Ty je widzisz."
+    "groupsHint": "Grupy filtrują Twój kanał obserwowania. Tylko Ty je widzisz.",
+    "new": "Nowość"
   },
   "reactionInfo": {
     "title": "Reakcje",

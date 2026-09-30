@@ -5534,7 +5534,8 @@
     "newGroupName": "Neuer Gruppä Name",
     "groupLimitReached": "Gruppelimit erreicht",
     "createGroup": "Erstelle",
-    "groupsHint": "Gruppene filtere din Following-Feed. Nur du chasch sie gseh."
+    "groupsHint": "Gruppene filtere din Following-Feed. Nur du chasch sie gseh.",
+    "new": "Neu"
   },
   "reactionInfo": {
     "title": "Reaktione",
