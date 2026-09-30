@@ -1,6 +1,6 @@
 /**
  * Shared badge details, dock, and promotion shell. The active theme chooses
- * metallic lift/shatter or the existing holographic sticker/glitter flow.
+ * themed scenes, metallic lift/shatter, or holographic stickers and glitter.
  * Inline artwork, badge eligibility, and the caller's tier details are shared.
  */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -16,6 +16,8 @@ import type { BadgeMotion } from '@/lib/badge-motion';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { MetalStage } from './metal-stage';
+import { ThemeStage } from './theme-stage';
+import { badgeWorld } from '@/lib/badge-world';
 
 export interface ShowcaseEntry {
   key: string;
@@ -100,6 +102,8 @@ export function ShowcaseShell({
   const { t } = useTranslation();
   const { theme } = useAppTheme();
   const [metallic] = useState(() => badgeAnimationStyle(theme) === 'metallic');
+  const [world] = useState(() => badgeWorld(theme));
+  const cinematic = metallic || !!world;
   const reduceMotion = !!useReducedMotion();
   const count = entries.length;
 
@@ -123,7 +127,7 @@ export function ShowcaseShell({
   const flyerRef = useRef<HTMLImageElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const stageRef = useRef<StickerStage | MetalStage | null>(null);
+  const stageRef = useRef<StickerStage | MetalStage | ThemeStage | null>(null);
   const closingRef = useRef(false);
   const shownIndex = useRef(originIndex);
   const flightRaf = useRef(0);
@@ -186,7 +190,7 @@ export function ShowcaseShell({
   /* ---------- open ---------- */
 
   useLayoutEffect(() => {
-    if (metallic) {
+    if (cinematic) {
       const previous = anchor?.style.visibility ?? '';
       if (anchor) anchor.style.visibility = 'hidden';
       setShown(true);
@@ -277,14 +281,21 @@ export function ShowcaseShell({
       setShowOld(false);
       setLanded(true);
     };
-    let stage: StickerStage | MetalStage;
+    let stage: StickerStage | MetalStage | ThemeStage;
     try {
       const handlersForStage = {
         onTap: () => handlers.current.next(),
         onMiss: () => handlers.current.close(),
         onInteract: () => handlers.current.interact(),
       };
-      stage = metallic ? new MetalStage(canvas, {
+      stage = world ? new ThemeStage(canvas, {
+        ...handlersForStage,
+        theme: world,
+        hero: () => heroBox() ?? { x: 0, y: 0, size: 1 },
+        interactionElement: stageBoxRef.current!,
+        reducedMotion: reduceMotion,
+        onError: fail,
+      }) : metallic ? new MetalStage(canvas, {
         ...handlersForStage,
         hero: () => heroBox() ?? { x: 0, y: 0, size: 1 },
         interactionElement: stageBoxRef.current!,
@@ -301,7 +312,7 @@ export function ShowcaseShell({
       if (!live || closingRef.current || stageRef.current !== stage) return;
       if (!ok) return fail();
       setStickerReady(true);
-      if (stage instanceof MetalStage) {
+      if ((stage instanceof MetalStage || stage instanceof ThemeStage)) {
         setStickerOn(true);
         void stage.open({ from: anchorBox(), fromArt: intro?.fromArt, promote: !!intro,
           onLanded: () => { if (live && !closingRef.current) setLanded(true); },
@@ -315,7 +326,7 @@ export function ShowcaseShell({
     };
   // The material and opening geometry belong to this presentation's initial theme.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, originIndex, metallic]);
+  }, [items, originIndex, cinematic, metallic, world]);
 
   useEffect(() => {
     if (!stickerOn) return;
@@ -356,8 +367,8 @@ export function ShowcaseShell({
     const home = anchorBox();
     const hero = heroBox();
     const flyHome = !!home && !!hero && !reduceMotion && index === originIndex;
-    if (metallic && !glFailed) {
-      if (flyHome && home && stageRef.current instanceof MetalStage) stageRef.current.close(home, onClose);
+    if (cinematic && !glFailed) {
+      if (flyHome && home && (stageRef.current instanceof MetalStage || stageRef.current instanceof ThemeStage)) stageRef.current.close(home, onClose);
       else { setFading(true); window.setTimeout(onClose, reduceMotion ? 0 : 240); }
       return;
     }
@@ -371,7 +382,7 @@ export function ShowcaseShell({
     }
     // fly and restTilt only touch refs and the fixed origin entry.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, anchorBox, heroBox, reduceMotion, index, originIndex, onClose, metallic, glFailed]);
+  }, [phase, anchorBox, heroBox, reduceMotion, index, originIndex, onClose, cinematic, glFailed]);
 
   handlers.current = { next: () => goTo(index + 1), close: requestClose, interact: pause };
 
@@ -560,6 +571,8 @@ export function ShowcaseShell({
       ref={rootRef}
       role="dialog"
       aria-modal="true"
+      data-badge-world={world ?? undefined}
+      data-badge-phase={phase}
       aria-label={dialogLabel(index)}
       tabIndex={-1}
       className="fixed inset-0 z-[120] flex flex-col overflow-hidden text-white outline-none transition-[opacity,transform] duration-200"
@@ -569,7 +582,7 @@ export function ShowcaseShell({
 
       {/* The promotion's glitter. Catches taps while it plays, so a tap
           skips to the new badge instead of closing the showcase. */}
-      {intro && !metallic && (
+      {intro && !cinematic && (
         <canvas
           ref={introCanvasRef}
           aria-hidden
@@ -587,7 +600,7 @@ export function ShowcaseShell({
         style={{ opacity: open ? 1 : 0 }}
       />
 
-      {metallic && <div className="pointer-events-none absolute inset-0 z-[15]" style={{ opacity: glFailed ? 0 : 1 }}>
+      {cinematic && <div className={`pointer-events-none absolute inset-0 ${world ? 'z-[5]' : 'z-[15]'}`} style={{ opacity: glFailed ? 0 : 1 }}>
         <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
       </div>}
 
@@ -614,7 +627,7 @@ export function ShowcaseShell({
       <div className="relative z-10 flex min-h-0 flex-1 flex-col lg:mx-auto lg:w-full lg:max-w-[1180px] lg:flex-row">
         {/* Stage, with the dock centred under the sticker on desktop. */}
         <div className="relative flex min-h-0 flex-1 flex-col lg:pb-6">
-          <div ref={stageBoxRef} className="relative min-h-[160px] flex-1" style={{ touchAction: metallic ? 'none' : undefined }}>
+          <div ref={stageBoxRef} className="relative min-h-[160px] flex-1" style={{ touchAction: cinematic ? 'none' : undefined }}>
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 transition-opacity duration-700"
@@ -623,7 +636,7 @@ export function ShowcaseShell({
                 background: 'radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,0.08), transparent 70%)',
               }}
             />
-            {!metallic && <canvas
+            {!cinematic && <canvas
               ref={canvasRef}
               aria-hidden
               className="absolute inset-0 h-full w-full transition-opacity duration-200"
@@ -631,7 +644,7 @@ export function ShowcaseShell({
             />}
             <p
               className="pointer-events-none absolute inset-x-0 bottom-1 hidden text-center text-[11px] text-white/35 transition-opacity duration-500 sm:block"
-              style={{ opacity: panelIn && !touched && !glFailed && !metallic ? 1 : 0 }}
+              style={{ opacity: panelIn && !touched && !glFailed && !cinematic ? 1 : 0 }}
             >
               {t('badgeShowcase.hint')}
             </p>
@@ -680,7 +693,7 @@ export function ShowcaseShell({
         aria-hidden
         className="pointer-events-none fixed left-0 top-0 z-20 object-contain will-change-transform"
         style={{
-          opacity: metallic && !glFailed ? 0 : stickerOn ? 0 : phase === 'exit' && index !== originIndex ? 0 : 1,
+          opacity: cinematic && !glFailed ? 0 : stickerOn ? 0 : phase === 'exit' && index !== originIndex ? 0 : 1,
           transition: 'opacity 0.2s',
           filter: FLYER_FILTER,
           animation: glFailed && phase === 'open' ? 'badge-showcase-float 4s ease-in-out infinite' : undefined,
