@@ -1561,7 +1561,7 @@
     "setUpNewAccount": "設定新帳戶",
     "createNewInstead": "開過個新acc啦",
     "migrateAccount": "轉移帳戶",
-    "importExternalWallet": "匯入密鑰",
+    "importExternalWallet": "匯入",
     "migrateIntentHint": "用下面任何選項登入。如果佢同早期嘅 DeHub 帳戶相符，你會帶埋佢嘅銀包、用戶名同餘額。",
     "importIntentHint": "用下面任何選項登入，然後貼上你想用嘅錢包嘅恢復短語或者私人密鑰。",
     "title": "登入",

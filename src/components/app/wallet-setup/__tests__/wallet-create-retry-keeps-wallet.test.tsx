@@ -90,12 +90,16 @@ vi.mock('@/lib/wallet-core/legacy-detect', () => ({
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
+const markBackedUp = vi.hoisted(() => vi.fn(async (_userId: string, _ethAddress: string) => {}));
+vi.mock('@/lib/wallet-core/backup-status', () => ({ markBackedUp }));
+
 import { WalletCreateStep } from '../WalletCreateStep';
 
 let container: HTMLDivElement;
 let root: Root;
 
 beforeEach(() => {
+  markBackedUp.mockClear();
   mocks.saveWallet.mockClear();
   mocks.fetchWallet.mockClear();
   mocks.generateMnemonic12.mockClear();
@@ -116,6 +120,15 @@ function createButton(): HTMLButtonElement {
     /secure account/i.test(b.textContent ?? ''),
   );
   if (!button) throw new Error('Secure account button not rendered');
+  return button;
+}
+
+/** A button on the optional backup screen, by its label. */
+function backupButton(label: RegExp): HTMLButtonElement {
+  const button = Array.from(container.querySelectorAll('button')).find((b) =>
+    label.test(b.textContent ?? ''),
+  );
+  if (!button) throw new Error(`Backup button ${label} not rendered`);
   return button;
 }
 
@@ -151,19 +164,70 @@ describe('wallet setup retry', () => {
     });
     await flush();
 
+    // The wallet is saved before the optional backup screen, then skipping
+    // signs in. The first sign-in fails; the retry must reuse that wallet.
+    await act(async () => {
+      backupButton(/skip for now/i).click();
+    });
+    await flush();
+    expect(container.textContent).toMatch(/authentication failed/i);
+
+    await act(async () => {
+      backupButton(/skip for now/i).click();
+    });
+    await flush();
+
+    expect(mocks.saveWallet).toHaveBeenCalledTimes(1);
+    expect(mocks.saveWallet.mock.calls[0][1]).toMatch(/^0x[0-9a-fA-F]{40}$/);
+    // The generator is the thing that must not run twice.
+    expect(mocks.generateMnemonic12).toHaveBeenCalledTimes(1);
+    // And the key handed to the sign-in is that same wallet's, both times.
+    expect(onComplete).toHaveBeenCalledTimes(2);
+    expect(onComplete.mock.calls[1][0]).toBe(onComplete.mock.calls[0][0]);
+    expect(markBackedUp).not.toHaveBeenCalled();
+  });
+
+  it('saves the wallet before offering the backup, and skipping never blocks sign-in', async () => {
+    const onComplete = vi.fn(async (_privKeyHex: string) => {});
+    await mount(onComplete);
+
     await act(async () => {
       createButton().click();
     });
     await flush();
 
-    expect(mocks.saveWallet).toHaveBeenCalledTimes(2);
-    const addresses = mocks.saveWallet.mock.calls.map((call) => call[1]);
-    expect(addresses[0]).toMatch(/^0x[0-9a-fA-F]{40}$/);
-    expect(addresses[1]).toBe(addresses[0]);
-    // The generator is the thing that must not run twice.
-    expect(mocks.generateMnemonic12).toHaveBeenCalledTimes(1);
-    // And the key handed to the sign-in is that same wallet's, both times.
-    expect(onComplete.mock.calls[1][0]).toBe(onComplete.mock.calls[0][0]);
+    expect(mocks.saveWallet).toHaveBeenCalledTimes(1);
+    expect(onComplete).not.toHaveBeenCalled();
+    expect(container.textContent).toMatch(/back up your wallet\?/i);
+
+    await act(async () => {
+      backupButton(/skip for now/i).click();
+    });
+    await flush();
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it('records the backup when the words are saved', async () => {
+    const onComplete = vi.fn(async (_privKeyHex: string) => {});
+    await mount(onComplete);
+
+    await act(async () => {
+      createButton().click();
+    });
+    await flush();
+    await act(async () => {
+      backupButton(/save now/i).click();
+    });
+    await act(async () => {
+      backupButton(/i've saved them/i).click();
+    });
+    await act(async () => {
+      backupButton(/skip check/i).click();
+    });
+    await flush();
+
+    expect(markBackedUp).toHaveBeenCalledWith('user-1', mocks.saveWallet.mock.calls[0][1]);
+    expect(onComplete).toHaveBeenCalledTimes(1);
   });
 
   it('refuses to overwrite a wallet that appeared underneath it', async () => {

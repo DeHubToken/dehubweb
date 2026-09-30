@@ -1561,7 +1561,7 @@
     "setUpNewAccount": "Fungua akaunti mpya",
     "createNewInstead": "Fungua akaunti mpya badala yake",
     "migrateAccount": "Hamisha akaunti",
-    "importExternalWallet": "Ingiza funguo",
+    "importExternalWallet": "Ingiza",
     "migrateIntentHint": "Ingia ukitumia chaguo lolote hapa chini. Ikiwa inalingana na akaunti ya awali ya DeHub utaleta pochi yake, jina la mtumiaji na salio.",
     "importIntentHint": "Ingia ukitumia chaguo lolote hapa chini, kisha ubandike kirai cha kurejesha au ufunguo wa faragha wa pochi unayotaka kutumia.",
     "title": "Ingia",

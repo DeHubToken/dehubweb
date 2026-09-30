@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { exportWalletPrivateKey } from '../export';
+import { exportWalletBackup, exportWalletPrivateKey } from '../export';
 import { fetchWallet, getCachedWallet } from '../store';
 import { decryptString } from '../crypto';
 import { assertWalletAddress } from '../assert-wallet-address';
@@ -10,7 +10,10 @@ vi.mock('@/integrations/supabase/client', () => ({ supabase: { auth: {
 } } }));
 vi.mock('../store', () => ({ fetchWallet: vi.fn(), getCachedWallet: vi.fn() }));
 vi.mock('../crypto', () => ({ decryptString: vi.fn(), classifyPayloadKind: () => 'password' }));
-vi.mock('../derive', () => ({ deriveFromSecret: () => ({ ethAddress: 'owner', ethPrivateKey: 'test-key' }) }));
+vi.mock('../derive', () => ({
+  deriveFromSecret: () => ({ ethAddress: 'owner', ethPrivateKey: 'test-key' }),
+  isValidMnemonic: (s: string) => s.trim().split(/\s+/).length === 12,
+}));
 vi.mock('../assert-wallet-address', () => ({ assertWalletAddress: vi.fn() }));
 vi.mock('../passkey', () => ({ isBiometricUnlockAvailable: async () => true }));
 vi.mock('../passkey-store', () => ({ loadPasskeyWraps: async () => [], getCachedPasskeyWraps: () => [{ credentialId: 'cached' }] }));
@@ -55,5 +58,18 @@ describe('private key export', () => {
   it('explains unavailable backups without claiming the wallet is gone', async () => {
     vi.mocked(getCachedWallet).mockReturnValue(null);
     await expect(exportWalletPrivateKey('user', 'active-safe', 'password')).rejects.toThrow('encrypted wallet backup is unavailable');
+  });
+  it('returns the 12 words when the wallet was made from them', async () => {
+    const words = 'Abandon ability able about above absent absorb abstract absurd abuse access accident';
+    vi.mocked(decryptString).mockResolvedValue(`  ${words}  `);
+    await expect(exportWalletBackup('user', 'active-safe', 'password')).resolves.toEqual({
+      privateKey: 'test-key',
+      ethAddress: 'owner',
+      phrase: words.toLowerCase(),
+    });
+  });
+  it('has no words for a wallet imported as a raw private key', async () => {
+    vi.mocked(decryptString).mockResolvedValue('0xabc');
+    await expect(exportWalletBackup('user', 'active-safe', 'password')).resolves.toEqual({ privateKey: 'test-key', ethAddress: 'owner', phrase: null });
   });
 });

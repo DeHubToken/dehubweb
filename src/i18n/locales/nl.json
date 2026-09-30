@@ -1754,7 +1754,7 @@
     "setUpNewAccount": "Een nieuw account aanmaken",
     "createNewInstead": "Maak in plaats daarvan een nieuw account aan",
     "migrateAccount": "Account migreren",
-    "importExternalWallet": "Sleutels importeren",
+    "importExternalWallet": "Importeren",
     "migrateIntentHint": "Meld je aan met een van de onderstaande opties. Als het overeenkomt met een eerder DeHub-account, breng je de portemonnee, gebruikersnaam en het saldo over.",
     "importIntentHint": "Meld je aan met een van de onderstaande opties en plak vervolgens de herstelzin of privésleutel van de portefeuille die je wilt gebruiken.",
     "title": "Inloggen",

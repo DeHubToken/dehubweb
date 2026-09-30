@@ -1561,7 +1561,7 @@
     "setUpNewAccount": "Krijo një llogari të re",
     "createNewInstead": "Më mirë krijo një llogari të re",
     "migrateAccount": "Migro llogarinë",
-    "importExternalWallet": "Importo çelësat",
+    "importExternalWallet": "Importo",
     "migrateIntentHint": "Hyr me çdo opsion më poshtë. Nëse përputhet me një llogari të mëparshme DeHub, do të marrësh me vete portofolin, emrin e përdoruesit dhe balancën e saj.",
     "importIntentHint": "Hyr me çdo opsion më poshtë, pastaj ngjit frazën e rimëkëmbjes ose çelësin privat të portofolit që dëshiron të përdorësh.",
     "title": "Hyr",

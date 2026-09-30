@@ -1591,7 +1591,7 @@
     "setUpNewAccount": "Stel 'n nuwe rekening op",
     "createNewInstead": "Skep eerder 'n nuwe rekening",
     "migrateAccount": "Migreer rekening",
-    "importExternalWallet": "Voer sleutels in",
+    "importExternalWallet": "Voer in",
     "migrateIntentHint": "Teken hieronder aan met enige opsie. As dit ooreenstem met 'n vroeëre DeHub-rekening, sal jy sy beursie, gebruikersnaam en balans oorbring.",
     "importIntentHint": "Teken hieronder aan met enige opsie, plak dan die herstel-frase of private sleutel van die beursie wat jy wil gebruik.",
     "title": "Log in",

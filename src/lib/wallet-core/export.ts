@@ -1,8 +1,17 @@
 import { getWalletProtection } from './protection';
 import { decryptString } from './crypto';
-import { deriveFromSecret } from './derive';
+import { deriveFromSecret, isValidMnemonic } from './derive';
 import { unlockWithBiometrics } from './biometric-unlock';
 import { assertWalletAddress } from './assert-wallet-address';
+
+/** What Settings can show as a backup: the private key, plus the 12 words when the wallet has them. */
+export interface WalletBackup {
+  privateKey: string;
+  /** The owner address the key derives (what user_wallets stores). */
+  ethAddress: string;
+  /** Null for wallets that were imported or migrated as a raw private key. */
+  phrase: string | null;
+}
 
 /** Export uses the same encrypted backups as unlock, with fresh verification. */
 export async function exportWalletPrivateKey(
@@ -10,6 +19,14 @@ export async function exportWalletPrivateKey(
   accountAddress: string,
   password?: string,
 ): Promise<string> {
+  return (await exportWalletBackup(userId, accountAddress, password)).privateKey;
+}
+
+export async function exportWalletBackup(
+  userId: string,
+  accountAddress: string,
+  password?: string,
+): Promise<WalletBackup> {
   if (!accountAddress) throw new Error('The active wallet could not be verified. Please reopen your account.');
   const protection = await getWalletProtection(userId);
   const wallet = protection.wallet;
@@ -32,5 +49,10 @@ export async function exportWalletPrivateKey(
   // The local cache can outlive a profile switch. Never reveal another
   // wallet's key just because its cached ciphertext decrypts successfully.
   await assertWalletAddress(derived.ethAddress, accountAddress);
-  return derived.ethPrivateKey;
+  const trimmed = secret.trim();
+  return {
+    privateKey: derived.ethPrivateKey,
+    ethAddress: derived.ethAddress,
+    phrase: isValidMnemonic(trimmed) ? trimmed.toLowerCase().split(/\s+/).join(' ') : null,
+  };
 }

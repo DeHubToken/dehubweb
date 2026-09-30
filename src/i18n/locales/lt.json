@@ -1559,7 +1559,7 @@
     "setUpNewAccount": "Sukurti naują paskyrą",
     "createNewInstead": "Geriau sukurkite naują paskyrą",
     "migrateAccount": "Perkelti paskyrą",
-    "importExternalWallet": "Importuoti raktus",
+    "importExternalWallet": "Importuoti",
     "migrateIntentHint": "Prisijunkite naudodami bet kurią toliau pateiktą parinktį. Jei jis sutampa su ankstesne „DeHub“ paskyra, atsinešite jo piniginę, naudotojo vardą ir likutį.",
     "importIntentHint": "Prisijunkite naudodami bet kurią toliau pateiktą parinktį, tada įklijuokite norimos naudoti piniginės atkūrimo frazę arba privatų raktą.",
     "title": "Prisijungti",

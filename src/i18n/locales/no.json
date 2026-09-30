@@ -1561,7 +1561,7 @@
     "setUpNewAccount": "Opprett en ny konto",
     "createNewInstead": "Opprett en ny konto i stedet",
     "migrateAccount": "Migrer konto",
-    "importExternalWallet": "Importer nøkler",
+    "importExternalWallet": "Importer",
     "migrateIntentHint": "Logg inn med et hvilket som helst alternativ nedenfor. Hvis det samsvarer med en tidligere DeHub-konto, vil du ta med deg lommeboken, brukernavnet og saldoen.",
     "importIntentHint": "Logg inn med et hvilket som helst alternativ nedenfor, og lim deretter inn gjenopprettingsfrasen eller den private nøkkelen til lommeboken du vil bruke.",
     "title": "Logg inn",

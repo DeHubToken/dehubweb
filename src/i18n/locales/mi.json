@@ -1560,7 +1560,7 @@
     "setUpNewAccount": "Whakaritea he pūkete hou",
     "createNewInstead": "Hangaia he pūkete hou hei utu",
     "migrateAccount": "Nekehia te pūkete",
-    "importExternalWallet": "Kawemai kī",
+    "importExternalWallet": "Kawemai",
     "migrateIntentHint": "Takiuru mā te kōwhiri i tētahi o ngā kōwhiringa i raro nei. Ki te rite tēnei ki tētahi pūkete DeHub o mua, ka kawea mai tōna pēke, ingoa kaiwhakamahi, me te toenga.",
     "importIntentHint": "Takiuru mā te kōwhiri i tētahi o ngā kōwhiringa i raro nei, kātahi ka whakapiri i te rerenga whakaora, i te kī tūmataiti rānei o te pēke e hiahia ana koe ki te whakamahi.",
     "title": "Takiuru",

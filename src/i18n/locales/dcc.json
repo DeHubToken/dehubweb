@@ -1472,7 +1472,7 @@
     "setUpNewAccount": "Set up a new account",
     "createNewInstead": "Create a new account instead",
     "migrateAccount": "Migrate account",
-    "importExternalWallet": "کیز امپورٹ کریں",
+    "importExternalWallet": "امپورٹ",
     "migrateIntentHint": "Sign in with any option below. If it matches an earlier DeHub account you will bring over its wallet, username and balance.",
     "title": "لاگ ان",
     "addProfileTitle": "پروفائل ڈالو",

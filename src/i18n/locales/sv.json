@@ -1564,7 +1564,7 @@
     "setUpNewAccount": "Skapa ett nytt konto",
     "createNewInstead": "Skapa ett nytt konto istället",
     "migrateAccount": "Migrera konto",
-    "importExternalWallet": "Importera nycklar",
+    "importExternalWallet": "Importera",
     "migrateIntentHint": "Logga in med valfritt alternativ nedan. Om det matchar ett tidigare DeHub-konto kommer du att ta över dess plånbok, användarnamn och saldo.",
     "importIntentHint": "Logga in med valfritt alternativ nedan och klistra sedan in återställningsfrasen eller den privata nyckeln för den plånbok du vill använda.",
     "title": "Logga in",

@@ -1578,7 +1578,7 @@
     "setUpNewAccount": "Yangi hisob yaratish",
     "createNewInstead": "Ro`yxatdan o`tish",
     "migrateAccount": "Hisobni ko'chirish",
-    "importExternalWallet": "Kalitlarni import qilish",
+    "importExternalWallet": "Import",
     "migrateIntentHint": "Quyidagi istalgan variant bilan tizimga kiring. Agar u avvalgi DeHub hisobiga mos kelsa, siz uning hamyonini, foydalanuvchi nomini va balansini olib kelasiz.",
     "importIntentHint": "Quyidagi istalgan variant bilan tizimga kiring, so&#39;ngra foydalanmoqchi bo&#39;lgan hamyonning tiklash iborasini yoki shaxsiy kalitini joylashtiring.",
     "title": "Kirish",

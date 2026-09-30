@@ -1482,7 +1482,7 @@
     "setUpNewAccount": "Set up a new account",
     "createNewInstead": "Create a new account instead",
     "migrateAccount": "Migrate account",
-    "importExternalWallet": "Import keys",
+    "importExternalWallet": "Import",
     "migrateIntentHint": "\"Sign in\" wey you go use any option wey you dey see down here. If it match any old DeHub account you dey have, dem go bring over wallet, username, balance wey you dey have for you.",
     "importIntentHint": "Sign in wey you like fi any option down, den copy-paste di recovery phrase or private key fi di wallet you wan use.",
     "title": "Log in",

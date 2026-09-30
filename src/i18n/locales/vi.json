@@ -1574,7 +1574,7 @@
     "setUpNewAccount": "Thiết lập tài khoản mới",
     "createNewInstead": "Tạo tài khoản mới thay thế",
     "migrateAccount": "Di chuyển tài khoản",
-    "importExternalWallet": "Nhập khóa",
+    "importExternalWallet": "Nhập",
     "migrateIntentHint": "Đăng nhập bằng bất kỳ tùy chọn nào bên dưới. Nếu nó khớp với tài khoản DeHub trước đó, bạn sẽ chuyển ví, tên người dùng và số dư của tài khoản đó.",
     "importIntentHint": "Đăng nhập bằng bất kỳ tùy chọn nào bên dưới, sau đó dán cụm khôi phục hoặc khóa riêng tư của ví bạn muốn sử dụng.",
     "title": "Log in",

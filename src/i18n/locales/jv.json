@@ -1561,7 +1561,7 @@
     "setUpNewAccount": "Gawe akun anyar",
     "createNewInstead": "Gawe akun anyar wae",
     "migrateAccount": "Migrasi akun",
-    "importExternalWallet": "Impor kunci",
+    "importExternalWallet": "Impor",
     "migrateIntentHint": "Mlebet nganggo pilihan apa wae ing ngisor iki. Yen cocog karo akun DeHub sadurunge, panjenengan bakal nggawa dompet, jeneng pangguna, lan imbangan.",
     "importIntentHint": "Mlebet nganggo pilihan apa wae ing ngisor iki, banjur tempel frasa pemulihan utawa kunci pribadi dompet sing pengin digunakake.",
     "title": "Mlebu",

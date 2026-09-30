@@ -1560,7 +1560,7 @@
     "setUpNewAccount": "新しいアカウントを設定する",
     "createNewInstead": "代わりに新しいアカウントを作成する",
     "migrateAccount": "アカウントを移行する",
-    "importExternalWallet": "キーをインポート",
+    "importExternalWallet": "インポート",
     "migrateIntentHint": "以下のいずれかの方法でサインインしてください。以前のDeHubアカウントと一致する場合、そのウォレット、ユーザー名、残高を引き継ぎます。",
     "importIntentHint": "以下のいずれかの方法でサインインし、使用したいウォレットのリカバリーフレーズまたは秘密鍵を貼り付けてください。",
     "title": "ログイン",

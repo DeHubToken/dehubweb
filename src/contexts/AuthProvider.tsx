@@ -85,7 +85,7 @@ import {
 } from '@/hooks/use-wallet-unlock-interval';
 import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
 import { deriveFromSecret, generateMnemonic12 } from '@/lib/wallet-core/derive';
-import { exportWalletPrivateKey } from '@/lib/wallet-core/export';
+import { exportWalletBackup, type WalletBackup } from '@/lib/wallet-core/export';
 import { encryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { isUserRejection, isRequestAlreadyPending, isRequestTimeout, describeWalletError, WalletRequestTimeoutError } from '@/lib/wallet-errors';
@@ -2215,15 +2215,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Decrypt and return the raw private key for the CURRENT wallet — the
-   * supported backup path (we don't generate recovery phrases/codes for new
-   * wallets anymore). Always re-asks the wallet password, even if already
+   * Decrypt the CURRENT wallet's backup: its private key, plus its 12 words
+   * when it was made from them (Settings → Back up wallet). Always re-asks the wallet password, even if already
    * unlocked in this tab — exporting the key is sensitive enough to
    * re-verify, and it works whether or not a live session exists yet.
    */
-  const exportPrivateKey = async (password: string): Promise<string> => {
+  const exportPrivateKey = async (password: string): Promise<WalletBackup> => {
     if (!supabaseUserId) throw new Error('Not signed in');
-    return exportWalletPrivateKey(supabaseUserId, walletAddress ?? '', password);
+    return exportWalletBackup(supabaseUserId, walletAddress ?? '', password);
   };
 
   /**
@@ -2232,9 +2231,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * sensitive enough to demand a fresh user-presence check, matching how the
    * password path always re-asks.
    */
-  const exportPrivateKeyWithBiometrics = async (): Promise<string> => {
+  const exportPrivateKeyWithBiometrics = async (): Promise<WalletBackup> => {
     if (!supabaseUserId) throw new Error('Not signed in');
-    return exportWalletPrivateKey(supabaseUserId, walletAddress ?? '');
+    return exportWalletBackup(supabaseUserId, walletAddress ?? '');
   };
 
   /**

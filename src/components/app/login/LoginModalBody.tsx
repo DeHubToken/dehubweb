@@ -665,7 +665,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
             className="h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-2 border-white/10 px-2"
           >
             <KeyRound className="w-5 h-5 shrink-0" />
-            <span className="truncate">{t('loginModal.importExternalWallet', 'Import keys')}</span>
+            <span className="truncate">{t('loginModal.importExternalWallet', 'Import')}</span>
           </Button>
         </div>
       )}
