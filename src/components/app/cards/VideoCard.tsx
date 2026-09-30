@@ -1761,7 +1761,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <Wrench className="w-[21px] h-[21px]" />
               </button>
             )}
-            <motion.button
+            {/* On phones Ask AI lives in the options menu instead. */}
+            {!isPhone && <motion.button
               onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
               className="text-zinc-400 hover:text-white transition-colors"
               whileHover={{ scale: 1.1 }}
@@ -1769,7 +1770,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               aria-label="Ask AI about this video"
             >
               <Sparkles className="w-[23.5px] h-[23.5px]" />
-            </motion.button>
+            </motion.button>}
             {/* Plain button, not DrawerTrigger — see PostCard: a trigger pins
                 vaul's Root (and its window scroll listener) into every card.
                 The sheet itself is mounted once at the card root and shared
@@ -2698,6 +2699,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             {/* Bookmark / pin / post info. Also on the action bar as icons on
                 desktop — both surfaces read the same state, so the menu is a
                 reliable place to find them at every width. */}
+            <button
+              onClick={() => { setShowOptionsDrawer(false); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+              className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+            >
+              <Sparkles className="w-5 h-5" /> {t('postOptions.askAI', 'Ask AI')}
+            </button>
             <PostUtilityMenuItems
               postId={video.id}
               tokenId={videoTokenId}
