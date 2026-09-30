@@ -174,11 +174,11 @@ export function ArticleComposer(props: ArticleComposerProps) {
           <div className="article-cover aspect-[1.91/1]">
             <img src={coverPreview} alt="" />
             <div className="absolute bottom-3 left-3 right-3 z-[1] flex items-center gap-2">
-              <label className="article-pill flex cursor-pointer items-center gap-1.5 px-3 py-1.5 text-xs text-white">
+              <label className="article-pill flex cursor-pointer items-center gap-1.5 px-3 py-1.5 text-xs" style={{ color: "#fff" }}>
                 <ImagePlus className="h-3.5 w-3.5" aria-hidden />{t('articles.changeCover', 'Change cover')}
                 <input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={e => onCoverChange(e.target.files?.[0] || null)} />
               </label>
-              <button type="button" onClick={() => onCoverChange(null)} className="article-pill ml-auto flex h-8 w-8 items-center justify-center text-white" aria-label={t('articles.removeCover', 'Remove cover')}><X className="h-4 w-4" /></button>
+              <button type="button" onClick={() => onCoverChange(null)} className="article-pill ml-auto flex h-8 w-8 items-center justify-center" style={{ color: "#fff" }} aria-label={t('articles.removeCover', 'Remove cover')}><X className="h-4 w-4" /></button>
             </div>
           </div>
         ) : (
