@@ -31,7 +31,17 @@ jobs:
           cache: pnpm
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm build
-      - run: pnpm exec wrangler deploy --config wrangler.staging.jsonc
+      - name: Deploy staging
+        run: |
+          node --input-type=module -e '
+            import { execFileSync } from "node:child_process";
+            const account = process.env.CLOUDFLARE_ACCOUNT_ID.trim();
+            const token = process.env.CLOUDFLARE_API_TOKEN.trim();
+            execFileSync(process.execPath, ["node_modules/wrangler/bin/wrangler.js", "deploy", "--config", "wrangler.staging.jsonc"], {
+              stdio: "inherit",
+              env: { ...process.env, CLOUDFLARE_ACCOUNT_ID: account, CLOUDFLARE_API_TOKEN: token },
+            });
+          '
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ID }}
