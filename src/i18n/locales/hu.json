@@ -1557,7 +1557,7 @@
     "setUpNewAccount": "Új fiók létrehozása",
     "createNewInstead": "Hozz létre inkább egy új fiókot",
     "migrateAccount": "Fiók áttelepítése",
-    "importExternalWallet": "Kulcsok importálása",
+    "importExternalWallet": "Importálás",
     "migrateIntentHint": "Jelentkezz be az alábbi lehetőségek bármelyikével. Ha egyezik egy korábbi DeHub fiókkal, akkor áthozod a pénztárcáját, a felhasználónevét és az egyenlegét.",
     "importIntentHint": "Jelentkezzen be az alábbi lehetőségek bármelyikével, majd illessze be a használni kívánt pénztárca helyreállítási kifejezését vagy privát kulcsát.",
     "title": "Bejelentkezés",

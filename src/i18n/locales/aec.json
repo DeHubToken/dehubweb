@@ -1514,7 +1514,7 @@
     "setUpNewAccount": "جهّز حساب جديد",
     "createNewInstead": "اعمل حساب جديد بدل كده",
     "migrateAccount": "انقل الحساب",
-    "importExternalWallet": "استورد المفاتيح",
+    "importExternalWallet": "استورد",
     "migrateIntentHint": "سجل دخولك بأي اختيار تحت. لو مطابق لحساب DeHub قديم هترجع المحفظة واسم المستخدم والرصيد بتاعه.",
     "importIntentHint": "سجل دخولك بأي اختيار تحت، وبعدين الصق عبارة الاسترداد أو المفتاح الخاص للمحفظة اللي عايز تستخدمها.",
     "title": "سجّل دخول",

@@ -173,7 +173,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // account only usable by them — is also the more accurate description.
     : step === 'wallet-create' ? (
         getWalletSetupIntent() === 'migrate' ? t('loginModal.migrateAccount', 'Migrate account')
-        : getWalletSetupIntent() === 'import' ? t('loginModal.importExternalWallet', 'Import keys')
+        : getWalletSetupIntent() === 'import' ? t('loginModal.importExternalWallet', 'Import')
         : t('loginModal.secureAccount', 'Secure account')
       )
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')

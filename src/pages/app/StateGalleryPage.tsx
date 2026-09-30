@@ -4,6 +4,11 @@ import { AppState } from '@/components/app/AppState';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
+import { SeedPhraseBackup } from '@/components/app/wallet-setup/SeedPhraseBackup';
+import { BackupReminderCard } from '@/components/app/wallet/BackupReminderBanner';
+
+// The standard public BIP-39 test vector: owns nothing, safe to show.
+const SAMPLE_PHRASE = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
 
 const THEMES = [
   'system', 'minimal', 'light', 'cosmic', 'hazy', 'swarms',
@@ -102,6 +107,24 @@ export default function StateGalleryPage() {
             <button className="rounded-xl px-4 py-2 hover:bg-white/10" onClick={press}>Bare action</button>
           </div>
           <output aria-live="polite" className="mt-3 block text-xs">Actions fired: {presses}</output>
+        </section>
+
+        <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-wallet-backup-gallery>
+          <h2 className="mb-3 text-sm font-semibold">Wallet backup</h2>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+              <SeedPhraseBackup phrase={SAMPLE_PHRASE} variant="signup" onFinished={press} />
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+              <SeedPhraseBackup phrase={SAMPLE_PHRASE} variant="settings" onFinished={press} />
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+              <SeedPhraseBackup phrase={SAMPLE_PHRASE} variant="signup" initialStage="check" onFinished={press} />
+            </div>
+          </div>
+          <div className="mt-5 max-w-xl">
+            <BackupReminderCard onBackUp={press} onLater={press} />
+          </div>
         </section>
 
         <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

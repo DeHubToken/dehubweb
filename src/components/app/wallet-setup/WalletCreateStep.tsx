@@ -1,8 +1,8 @@
 /**
  * Wallet creation flow (embedded in the LoginModal drawer).
- * protect → persist → signed in. No recovery-phrase/recovery-code step —
- * export-private-key from Settings is the supported backup path, so signup
- * is a single step instead of a three-screen flow.
+ * protect → persist → optional 12-word backup → signed in. The backup is one
+ * screen with "Skip for now": the wallet is already saved by then, so skipping
+ * loses nothing, and Settings → Back up wallet shows the words any time.
  *
  * Two ways to protect the new wallet:
  *  - biometrics (default wherever WebAuthn PRF works) — one Face ID / Touch ID
@@ -42,6 +42,8 @@ import {
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
+import { SeedPhraseBackup } from './SeedPhraseBackup';
+import { markBackedUp } from '@/lib/wallet-core/backup-status';
 import type { WalletSetupIntent } from '@/lib/wallet-setup-intent';
 
 interface WalletCreateStepProps {
@@ -149,6 +151,9 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
   //
   // A retry now re-derives the same wallet, so the write is idempotent.
   const newWalletSecretRef = useRef<string | null>(null);
+  // A brand-new wallet that is saved but not yet signed in: the optional
+  // backup screen shows its words, then either choice finishes sign-in.
+  const [pendingBackup, setPendingBackup] = useState<{ phrase: string; ethAddress: string; privKey: string } | null>(null);
   // null while probing — the protection UI waits rather than flashing the
   // password form and then swapping it for the biometric button.
   const [biometricAvailable, setBiometricAvailable] = useState<boolean | null>(null);
@@ -414,6 +419,30 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
     }
   };
 
+  /**
+   * Only wallets minted here have words the person has never seen. Imported
+   * and migrated wallets came from a phrase or key they already hold.
+   */
+  const offerBackup = (derived: { secret: string; ethAddress: string; ethPrivateKey: string }) => {
+    if (mode !== 'new' || !isValidMnemonic(derived.secret)) return false;
+    setPendingBackup({ phrase: derived.secret, ethAddress: derived.ethAddress, privKey: derived.ethPrivateKey });
+    return true;
+  };
+
+  const finishAfterBackup = async (saved: boolean) => {
+    if (!pendingBackup) return;
+    setBusy(true);
+    setError(null);
+    try {
+      if (saved) await markBackedUp(userId, pendingBackup.ethAddress);
+      await onComplete(pendingBackup.privKey);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not secure your account');
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const persist = async (secret: string) => {
     setBusy(true);
     setError(null);
@@ -423,6 +452,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
       const encrypted = await encryptString(derived.secret, password);
       await assertNotReplacingWallet(derived.ethAddress);
       await saveWallet(userId, derived.ethAddress, encrypted);
+      if (offerBackup(derived)) return;
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not secure your account');
@@ -464,6 +494,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
       }
       await assertNotReplacingWallet(derived.ethAddress);
       await saveWallet(userId, derived.ethAddress, null);
+      if (offerBackup(derived)) return;
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
       if (err instanceof PasskeyCancelledError) {
@@ -594,6 +625,20 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
   const showPasswordFields = showProtectionStep && protection === 'password';
   const showBiometricStep = showProtectionStep && protection === 'biometric';
 
+  if (pendingBackup) {
+    return (
+      <div className="space-y-4">
+        <SeedPhraseBackup
+          phrase={pendingBackup.phrase}
+          variant="signup"
+          busy={busy}
+          onFinished={(saved) => { void finishAfterBackup(saved); }}
+        />
+        {error && <p className="text-sm text-red-400 text-center">{error}</p>}
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {/* Returning-user detection banners (hidden once the old key is retrieved) */}
@@ -701,8 +746,8 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
           </p>
           <p className="text-white/40 text-xs">
             {protection === 'biometric'
-              ? 'Encrypted on this device before anything leaves it, and unlocked with your fingerprint or face — nothing to remember. You can export a backup key anytime from Settings.'
-              : 'Encrypted on this device before anything leaves it. You can export a backup key anytime from Settings.'}
+              ? 'Encrypted on this device before anything leaves it, and unlocked with your fingerprint or face — nothing to remember. You can back up your wallet any time from Settings.'
+              : 'Encrypted on this device before anything leaves it. You can back up your wallet any time from Settings.'}
           </p>
         </div>
       )}

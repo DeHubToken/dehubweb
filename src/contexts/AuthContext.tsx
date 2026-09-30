@@ -14,6 +14,7 @@
 
 import { createContext, useContext } from 'react';
 import type { DeHubUser } from '@/lib/api/dehub';
+import type { WalletBackup } from '@/lib/wallet-core/export';
 
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
 export type WalletProvider = 'metamask' | 'phantom' | 'trust';
@@ -73,13 +74,13 @@ export interface AuthContextType {
    * establishes the DeHub session.
    */
   completeSmartWalletLogin: (privKeyHex: string) => Promise<void>;
-  /** Decrypt and return the current wallet's raw private key (Settings export). */
-  exportPrivateKey: (password: string) => Promise<string>;
+  /** Decrypt the current wallet's backup: private key, plus its 12 words when it has them (Settings). */
+  exportPrivateKey: (password: string) => Promise<WalletBackup>;
   /**
    * Same export, unlocked with biometrics — the only backup path available to
    * a wallet created with biometrics and no password.
    */
-  exportPrivateKeyWithBiometrics: () => Promise<string>;
+  exportPrivateKeyWithBiometrics: () => Promise<WalletBackup>;
   /** Replace the active wallet with a different old account's key. */
   switchActiveWallet: (secret: string, password: string, expectedProfileAddress?: string) => Promise<void>;
   /**

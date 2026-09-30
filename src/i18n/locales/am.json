@@ -1558,7 +1558,7 @@
     "setUpNewAccount": "አዲስ መለያ ያዋቅሩ",
     "createNewInstead": "በምትኩ አዲስ መለያ ይፍጠሩ",
     "migrateAccount": "የስደተኞች መለያ",
-    "importExternalWallet": "ቁልፎችን አስገባ",
+    "importExternalWallet": "አስገባ",
     "migrateIntentHint": "ከዚህ በታች ከማንኛውም አማራጭ ጋር ይግቡ ። ከቀድሞ DeHub መለያ ጋር የሚስማማ ከሆነ የኪስ ቦርሳውን ፣ የተጠቃሚ ስሙን እና ሚዛኑን ያመጣል ።",
     "importIntentHint": "ከዚህ በታች ከማንኛውም አማራጭ ጋር ይግቡ ፣ ከዚያ መጠቀም የሚፈልጉትን የመልሶ ማግኛ ሐረግ ወይም የግል ቁልፍን ይለጥፉ ።",
     "title": "ግባ",

@@ -1540,7 +1540,7 @@
     "setUpNewAccount": "设新账号",
     "createNewInstead": "改设新账号",
     "migrateAccount": "迁移账号",
-    "importExternalWallet": "导入密钥",
+    "importExternalWallet": "导入",
     "migrateIntentHint": "使用下面的任意选项登录。如果它匹配一个更早的 DeHub 账号，你将迁移其钱包、用户名和余额。",
     "importIntentHint": "使用下面的任意选项登录，然后粘贴你想要使用的钱包的恢复短语或私钥。",
     "title": "登录",
