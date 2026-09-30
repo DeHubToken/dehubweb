@@ -29,6 +29,22 @@ function canvas() {
 
 afterEach(() => vi.restoreAllMocks());
 describe('themed badge timelines', () => {
+  it('keeps the highest Swarms formations inside a phone viewport', () => {
+    vi.spyOn(document, 'createElement').mockImplementation(() => canvas() as unknown as HTMLElement);
+    const surface = canvas(), context = surface.getContext();
+    const scene = createBadgeScene(surface as unknown as HTMLCanvasElement, 'swarms');
+    const art = canvas() as unknown as HTMLCanvasElement;
+    scene.prepare(art, art, 12); scene.geometry(390, 844, { x: 65, y: 150, size: 260 }); scene.start(null, true);
+    const ellipses = vi.spyOn(context, 'ellipse');
+    for (const progress of [.2, .32, .45, .58, .7]) {
+      ellipses.mockClear(); scene.draw(scene.duration() * progress);
+      expect(ellipses.mock.calls.length).toBeGreaterThan(500);
+      for (const [x, y] of ellipses.mock.calls) {
+        if (x < 0 || x > 390 || y < 0 || y > 844) throw new Error('Flock escaped the viewport');
+      }
+    }
+    scene.dispose();
+  });
   it('Tide lets the old badge disappear before the new badge approaches from depth', () => {
     vi.spyOn(document, 'createElement').mockImplementation(() => canvas() as unknown as HTMLElement);
     const surface = canvas(), context = surface.getContext();
