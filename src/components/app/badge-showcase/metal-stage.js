@@ -7,7 +7,7 @@ export class MetalStage {
     const state = { index: 0, metal: true, finish: 'Chrome', thickness: .18 };
     const items = [], textures = [], outlines = [], loads = new Map();
     let renderer, scene, camera, group, oldMesh=null, shards=null, env, width=1, height=1;
-    let disposed=false, serial=0, raf=0, flowActive=false, flowKind='', flowStart=0, flowSource, flowTarget, done=null;
+    let held=false, disposed=false, serial=0, raf=0, flowActive=false, flowKind='', flowStart=0, flowSource, flowTarget, done=null;
     let oldIndex=-1, rotX=.04, rotY=-.3, targetX=.04, targetY=-.3, spinStart=0, spinDuration=0, drag=null;
     const reduce = () => !!options.reducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const clamp=t=>Math.max(0,Math.min(1,t)),ease=t=>1-Math.pow(1-t,3),lerp=(a,b,t)=>a+(b-a)*t;
@@ -35,7 +35,7 @@ export class MetalStage {
     function blend(a,b,t,arc=35){return {x:lerp(a.x,b.x,t),y:lerp(a.y,b.y,t)-Math.sin(t*Math.PI)*arc,size:lerp(a.size,b.size,t)};}
     function wake(){if(!disposed&&!raf&&!document.hidden)raf=requestAnimationFrame(frame);}
     function resize(){width=Math.max(1,canvas.clientWidth);height=Math.max(1,canvas.clientHeight);renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();const dpr=renderer.getPixelRatio();fx.width=Math.round(width*dpr);fx.height=Math.round(height*dpr);fc.setTransform(dpr,0,0,dpr,0,0);wake();}
-    const observer=new ResizeObserver(resize);observer.observe(canvas);resize();
+    const observer=new ResizeObserver(resize);observer.observe(canvas);if(options.interactionElement)observer.observe(options.interactionElement);resize();
     async function prepare(index){
       if(textures[index])return true;
       if(loads.has(index))return loads.get(index);
@@ -132,7 +132,7 @@ function promotionFrame(ms){
 
     function cancel(){flowActive=false;done=null;clearFx();disposeBadge(oldMesh);disposeBadge(shards);oldMesh=shards=null;oldIndex=-1;renderer.toneMappingExposure=1.25;if(group)group.visible=true;}
     function settle(){const callback=done;cancel();spinDuration=0;targetY=rotY=-.3;targetX=rotX=.04;if(group)drawMesh(group,hero());callback?.();}
-    function frame(now){raf=0;if(disposed||!group)return;clearFx();
+    function frame(now){raf=0;if(disposed||!group||held)return;clearFx();
       if(flowActive){
         const ms=now-flowStart;flowTarget=hero();
         if(flowKind==='promotion'){if(!promotionFrame(ms))return;}
@@ -147,7 +147,7 @@ function promotionFrame(ms){
     }
     this.setItems=values=>{items.splice(0,items.length,...values);};
     this.preload=index=>{void prepare(index);};
-    this.show=async(index,config={})=>{const id=++serial;cancel();state.index=index;if(!await prepare(index)||disposed||id!==serial)return false;disposeBadge(group);group=makeBadge(index);scene.add(group);targetX=rotX=.04;targetY=rotY=-.3;spinStart=performance.now();spinDuration=config.hold||config.instant||reduce()?0:900;if(config.hold){group.visible=false;renderer.clear();}else{drawMesh(group,hero());if(spinDuration)wake();}return true;};
+    this.show=async(index,config={})=>{const id=++serial;cancel();held=!!config.hold;state.index=index;if(!await prepare(index)||disposed||id!==serial)return false;disposeBadge(group);group=makeBadge(index);scene.add(group);targetX=rotX=.04;targetY=rotY=-.3;spinStart=performance.now();spinDuration=config.hold||config.instant||reduce()?0:900;if(config.hold){group.visible=false;renderer.clear();}else{drawMesh(group,hero());if(spinDuration)wake();}return true;};
     this.reveal=()=>{};
     this.layout=()=>wake();
     this.open=async({from,fromArt,promote,onLanded})=>{
@@ -155,12 +155,12 @@ function promotionFrame(ms){
       if(promote&&fromArt){oldIndex=items.findIndex(i=>i.src===fromArt);if(oldIndex<0){oldIndex=items.length;items.push({src:fromArt});}
         if(await prepare(oldIndex)&&!disposed&&id===serial){oldMesh=makeBadge(oldIndex);scene.add(oldMesh);shards=buildShards(oldMesh);}}
       if(disposed||id!==serial)return;
-      done=onLanded;flowTarget=hero();flowSource=from?local(from):{...flowTarget,size:flowTarget.size*.15,x:flowTarget.x+flowTarget.size*.425,y:flowTarget.y+flowTarget.size*.425};flowKind=promote?'promotion':'details';flowActive=true;flowStart=performance.now()-(promote&&!oldMesh?1970:0);
+      held=false;done=onLanded;flowTarget=hero();flowSource=from?local(from):{...flowTarget,size:flowTarget.size*.15,x:flowTarget.x+flowTarget.size*.425,y:flowTarget.y+flowTarget.size*.425};flowKind=promote?'promotion':'details';flowActive=true;flowStart=performance.now()-(promote&&!oldMesh?1970:0);
       if(reduce()){settle();return;}
       drawMesh(promote?oldMesh:group,flowSource,-.3);wake();
     };
     this.skip=()=>{if(flowActive)settle();};
-    this.close=(home,onClosed)=>{++serial;cancel();if(!group||reduce()){onClosed();return;}spinDuration=0;flowSource=local(home);flowTarget=hero();flowKind='close';done=onClosed;flowActive=true;flowStart=performance.now();wake();};
+    this.close=(home,onClosed)=>{++serial;cancel();held=false;if(!group||reduce()){onClosed();return;}spinDuration=0;flowSource=local(home);flowTarget=hero();flowKind='close';done=onClosed;flowActive=true;flowStart=performance.now();wake();};
     const interaction=options.interactionElement||canvas;
     const down=e=>{if(flowActive){this.skip();return;}if(!group)return;const r=interaction.getBoundingClientRect();drag={x:e.clientX,y:e.clientY,angle:targetY,moved:false};interaction.setPointerCapture?.(e.pointerId);spinDuration=0;options.onInteract?.();};
     const move=e=>{if(reduce()||flowActive||!group)return;if(drag){drag.moved ||= Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>5;targetY=drag.angle+(e.clientX-drag.x)*.012;targetX=Math.max(-.45,Math.min(.45,(e.clientY-drag.y)*.005));}else if(e.pointerType==='mouse'){const r=interaction.getBoundingClientRect();targetY=(e.clientX-r.left-r.width/2)/r.width*.8;targetX=(e.clientY-r.top-r.height/2)/r.height*.3;}wake();};

@@ -278,7 +278,8 @@ export function ShowcaseShell({
     if (!canvas) return;
     let live = true;
     const fail = () => {
-      if (!live || closingRef.current) return;
+      if (!live) return;
+      if (closingRef.current) { onClose(); return; }
       setGlFailed(true);
       setStickerOn(false);
       setStickerReady(false);
@@ -337,7 +338,8 @@ export function ShowcaseShell({
     if (!stage || index === shownIndex.current) return;
     const forward = (index - shownIndex.current + count) % count <= count / 2;
     shownIndex.current = index;
-    stage.show(index, { direction: forward ? 1 : -1 });
+    const fail = () => { setGlFailed(true); setStickerOn(false); setStickerReady(false); };
+    void stage.show(index, { direction: forward ? 1 : -1 }).then(ok => { if (!ok) fail(); }).catch(fail);
     stage.preload((index + (forward ? 1 : -1) + count) % count);
   }, [index, count]);
 
