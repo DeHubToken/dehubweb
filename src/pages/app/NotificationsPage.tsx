@@ -1301,7 +1301,7 @@ const NotificationItem = memo(function NotificationItem({
                 {actor3 ? (
                   renderGridAvatar(avatar3Url, actor3.display, resolveActorProfileLink(actor3, enrichedAvatars), 'w-[23px] h-[23px]')
                 ) : (
-                  renderGridAvatar(undefined, null, null, 'w-[23px] h-[23px]')
+                  <span className="invisible w-[23px] h-[23px]" aria-hidden />
                 )}
                 <button
                   className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition-colors cursor-pointer"
