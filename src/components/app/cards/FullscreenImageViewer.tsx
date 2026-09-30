@@ -1,3 +1,4 @@
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Fullscreen Image Viewer Component
  * ==================================
@@ -159,16 +160,19 @@ export function FullscreenImageViewer({
       if (e.key === 'ArrowRight') scrollNext();
     };
 
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-    }
+    if (!isOpen) return;
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
     };
   }, [isOpen, onClose, scrollPrev, scrollNext]);
+
+  // Callback changes and closed feed cards do not own the page's scroll lock.
+  useEffect(() => {
+    if (!isOpen) return;
+    return lockBodyScroll('image-fullscreen');
+  }, [isOpen]);
 
   // Touch handlers for swipe-down-to-close. A zoomed slide stops the stream
   // before it reaches here; these guards cover a gesture that zoomed mid-drag.

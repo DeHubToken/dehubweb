@@ -1,3 +1,4 @@
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -878,9 +879,8 @@ function CommunityGallery() {
     if (!lightbox) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightbox(null); };
     window.addEventListener('keydown', onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+    const releaseScroll = lockBodyScroll('CreatorPage');
+    return () => { window.removeEventListener('keydown', onKey); releaseScroll(); };
   }, [lightbox]);
 
   const shown = items.slice(0, visibleCount);

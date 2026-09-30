@@ -1,3 +1,4 @@
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
@@ -401,10 +402,9 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
 
   useEffect(() => {
     // The game takes over the viewport, so stop the feed scrolling behind it.
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const releaseScroll = lockBodyScroll('WarGameLauncher');
     return () => {
-      document.body.style.overflow = previous;
+      releaseScroll();
     };
   }, []);
 

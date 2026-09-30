@@ -1,3 +1,4 @@
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Arcade game player
  * ==================
@@ -244,10 +245,9 @@ export default function ArcadeGamePage() {
 
   useEffect(() => {
     // The game owns the viewport; stop the document scrolling behind it.
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const releaseScroll = lockBodyScroll('ArcadeGamePage');
     return () => {
-      document.body.style.overflow = previous;
+      releaseScroll();
     };
   }, []);
 

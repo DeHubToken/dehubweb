@@ -6,8 +6,14 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { OverlayOpenTracker } from "@/lib/overlay-open";
 import { guardOutsideDismiss } from "@/lib/overlay-dismiss";
+import { OverlayContentPresent, useOverlayLifetime } from '@/hooks/use-overlay-lifetime';
 
-const Sheet = SheetPrimitive.Root;
+const Sheet = ({ onOpenChange, ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) => {
+  const lifetime = useOverlayLifetime(props.open, props.defaultOpen, onOpenChange);
+  return <OverlayContentPresent.Provider value={lifetime.present}>
+    <SheetPrimitive.Root {...props} open={lifetime.open} onOpenChange={lifetime.onChange} />
+  </OverlayContentPresent.Provider>;
+};
 
 const SheetTrigger = SheetPrimitive.Trigger;
 
@@ -57,7 +63,10 @@ interface SheetContentProps
     VariantProps<typeof sheetVariants> {}
 
 const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Content>, SheetContentProps>(
-  ({ side = "right", className, children, onPointerDownOutside, ...props }, ref) => (
+  ({ side = "right", className, children, onPointerDownOutside, ...props }, ref) => {
+    const present = React.useContext(OverlayContentPresent);
+    if (!present) return null;
+    return (
     <SheetPortal>
       {/* Register in the global overlay count so sticky navs hide (lib/overlay-open). */}
       <OverlayOpenTracker />
@@ -77,7 +86,8 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Con
         </SheetPrimitive.Close>
       </SheetPrimitive.Content>
     </SheetPortal>
-  ),
+    );
+  },
 );
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 

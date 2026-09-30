@@ -6,13 +6,15 @@ import { cn } from "@/lib/utils";
 import { OverlayOpenTracker } from "@/lib/overlay-open";
 import { guardOutsideDismiss } from "@/lib/overlay-dismiss";
 import { useWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
+import { OverlayContentPresent, useOverlayLifetime } from '@/hooks/use-overlay-lifetime';
 
 const Dialog = ({ modal = true, onOpenChange, ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) => {
   const unlockOpen = useWalletUnlockPrompt();
-  return <DialogPrimitive.Root {...props} modal={modal} onOpenChange={open => {
+  const lifetime = useOverlayLifetime(props.open, props.defaultOpen, onOpenChange);
+  return <OverlayContentPresent.Provider value={lifetime.present}><DialogPrimitive.Root {...props} open={lifetime.open} modal={modal} onOpenChange={open => {
     if (!open && unlockOpen) return;
-    onOpenChange?.(open);
-  }} />;
+    lifetime.onChange(open);
+  }} /></OverlayContentPresent.Provider>;
 };
 
 const DialogTrigger = DialogPrimitive.Trigger;
@@ -47,7 +49,10 @@ interface DialogContentProps extends React.ComponentPropsWithoutRef<typeof Dialo
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ className, children, hideCloseButton, overlayClassName, onPointerDownOutside, ...props }, ref) => (
+>(({ className, children, hideCloseButton, overlayClassName, onPointerDownOutside, ...props }, ref) => {
+  const present = React.useContext(OverlayContentPresent);
+  if (!present) return null;
+  return (
   <DialogPortal>
     {/* Dialogs render as bottom sheets on mobile at z-50 — below the sticky
         feed navs (z-110) and mobile header (z-60). Registering here lets that
@@ -94,7 +99,8 @@ const DialogContent = React.forwardRef<
       )}
     </DialogPrimitive.Content>
   </DialogPortal>
-));
+  );
+});
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (

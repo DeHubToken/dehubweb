@@ -31,6 +31,7 @@
 
 import { createLogger } from './logger';
 import { getDocumentScrollTop, scrollDocumentTo } from './document-scroll';
+import { bodyScrollLockDepth, bodyScrollLockOwners } from './body-scroll-lock';
 
 const log = createLogger('ScrollFreeze');
 
@@ -69,6 +70,7 @@ let lastReportAt = 0;
 /** An overlay that is meant to be holding the page still. */
 function overlayIsOpen(): boolean {
   return (
+    bodyScrollLockDepth() > 0 ||
     !!document.fullscreenElement ||
     !!document.querySelector(OPEN_OVERLAY_SELECTOR) ||
     document.body.classList.contains('shorts-viewer-open')
@@ -128,6 +130,14 @@ function snapshot(covering: { el: Element; position: string } | null) {
     // Overlay roots still in the DOM but closed — a sheet mid-exit-animation vs
     // one that unmounted while open reads very differently here.
     overlayNodes: document.querySelectorAll('[data-vaul-drawer],[role="dialog"],[role="alertdialog"]').length,
+    lockOwners: bodyScrollLockOwners(),
+    overlays: Array.from(document.querySelectorAll('[data-vaul-drawer],[role="dialog"],[role="alertdialog"]'))
+      .slice(0, 8).map((el) => ({
+        element: describe(el),
+        state: el.getAttribute('data-state'),
+        hidden: el.getAttribute('aria-hidden'),
+        connected: el.isConnected,
+      })),
     userAgent: navigator.userAgent.slice(0, 180),
   };
 }

@@ -305,7 +305,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
   const inlineWindowClass = 'h-[60vh] overflow-hidden md:h-auto md:overflow-y-auto';
   useEffect(() => {
     if (!immersiveSheet || !open) return;
-    return lockBodyScroll();
+    return lockBodyScroll('immersive-comments');
   }, [immersiveSheet, open]);
 
   // Both sheets put the composer at their bottom edge, which on iOS is behind
