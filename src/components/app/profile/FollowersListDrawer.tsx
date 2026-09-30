@@ -72,6 +72,10 @@ interface FollowersListDrawerProps {
   onOpenChange: (open: boolean) => void;
   profileAddress: string;
   title: 'Followers' | 'Following';
+  /** Opened from a grouped follow notification: how many followers are new. */
+  newCount?: number;
+  /** Usernames the notification named, so they are marked wherever they sort. */
+  newUsernames?: string[];
 }
 
 /**
@@ -97,6 +101,8 @@ export function FollowersListDrawer({
   onOpenChange,
   profileAddress,
   title,
+  newCount = 0,
+  newUsernames,
 }: FollowersListDrawerProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -474,6 +480,16 @@ export function FollowersListDrawer({
     return override === undefined ? u : { ...u, isFollowing: override };
   }), [users, followOverrides]);
 
+  // Followers a grouped notification was about. The list is newest first by
+  // default, so the top rows are the new ones; named usernames are marked
+  // wherever a search or the other sort puts them.
+  const newUsernameSet = useMemo(
+    () => new Set((newUsernames || []).map(name => name.replace('@', '').toLowerCase())),
+    [newUsernames],
+  );
+  const marksNew = canFollowBackAll && (newCount > 0 || newUsernameSet.size > 0);
+  const topRowsAreNew = marksNew && sortOption === 'newest' && !debouncedSearch;
+
   const hasVisibleFollowBacks = displayUsers.some(user =>
     !isCurrentUser(user.address) && user.followsYou && !user.isFollowing && !user.isPending
   );
@@ -723,11 +739,19 @@ export function FollowersListDrawer({
             />
           ) : (
             <div className="space-y-2">
-              {displayUsers.map((user) => (
+              {displayUsers.map((user, index) => {
+                const isNew = marksNew && (
+                  newUsernameSet.has((user.username || '').replace('@', '').toLowerCase()) ||
+                  (topRowsAreNew && index < newCount)
+                );
+                return (
                 <div key={user.address}>
                 <button
                   onClick={() => handleUserClick(user)}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+                  className={cn(
+                    'w-full flex items-center gap-3 p-3 rounded-xl backdrop-blur-md border hover:bg-white/10 transition-colors text-left',
+                    isNew ? 'bg-white/10 border-white/30 ring-1 ring-white/40' : 'bg-white/5 border-white/10',
+                  )}
                 >
                   <Avatar className="w-[4.25rem] h-[4.25rem] rounded-xl shrink-0 self-start">
                     {user.avatarUrl ? (
@@ -758,11 +782,18 @@ export function FollowersListDrawer({
                     ) : (
                       <div className="text-zinc-600 text-sm break-all font-mono">{truncateAddress(user.address)}</div>
                     )}
-                    {user.followsYou && !isCurrentUser(user.address) && (
-                      <div className="mt-1">
-                        <span className="text-xs px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
-                          {t('follow.followsYou')}
-                        </span>
+                    {(isNew || (user.followsYou && !isCurrentUser(user.address))) && (
+                      <div className="mt-1 flex items-center gap-1.5">
+                        {isNew && (
+                          <span className="whitespace-nowrap text-xs px-1.5 py-0.5 rounded border border-current text-white font-semibold">
+                            {t('follow.new')}
+                          </span>
+                        )}
+                        {user.followsYou && !isCurrentUser(user.address) && (
+                          <span className="whitespace-nowrap text-xs px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
+                            {t('follow.followsYou')}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>
@@ -888,7 +919,8 @@ export function FollowersListDrawer({
                   </div>
                 )}
                 </div>
-              ))}
+                );
+              })}
 
               {/* Loading more spinner */}
               {isLoadingMore && (
