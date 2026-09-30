@@ -67,11 +67,7 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
             {i === displayed.length - 2 && remaining === 0 && ' and '}
           </span>
         ))}
-        {remaining > 0 && (
-          <span>
-            {' '}and {remaining} other{remaining > 1 ? 's' : ''}
-          </span>
-        )}
+        {remaining > 0 && <span> +{remaining}</span>}
       </p>
     </div>
   );
