@@ -1,0 +1,252 @@
+/* Articles: feed cover, reader and composer.
+   Every colour comes from these tokens so each theme (paper included) reads
+   without per-component overrides. Cover titles sit on a dark scrim over the
+   photo, so they stay white on every theme on purpose. */
+
+[data-article] {
+  --art-ink: #fff;
+  --art-ink-2: rgba(255, 255, 255, 0.84);
+  --art-ink-3: rgba(255, 255, 255, 0.56);
+  --art-line: rgba(255, 255, 255, 0.14);
+  --art-wash: rgba(255, 255, 255, 0.06);
+  --art-accent: #e4e4e7;
+  --art-on-accent: #09090b;
+  --art-glass: rgba(14, 12, 20, 0.5);
+  --art-glass-line: rgba(255, 255, 255, 0.16);
+  --art-radius: 16px;
+  --art-serif: ui-serif, "Iowan Old Style", Charter, "Palatino Linotype", Georgia, serif;
+  --art-title: var(--art-serif);
+  --art-size: 17px;
+}
+[data-article][data-size="s"] { --art-size: 15px; }
+[data-article][data-size="l"] { --art-size: 20px; }
+
+html[data-theme="cosmic"] [data-article] { --art-accent: #a5b4fc; }
+html[data-theme="hazy"] [data-article] { --art-accent: #d8b4fe; --art-glass: rgba(20, 14, 32, 0.5); }
+html[data-theme="swarms"] [data-article] { --art-accent: #fcd34d; }
+html[data-theme="lavalamp"] [data-article] { --art-accent: #fdba74; --art-glass: rgba(26, 12, 8, 0.5); }
+html[data-theme="winter"] [data-article] { --art-accent: #bae6fd; }
+html[data-theme="island"] [data-article] { --art-accent: #7dd3fc; --art-glass: rgba(18, 30, 54, 0.5); }
+html[data-theme="horror"] [data-article] { --art-accent: #f87171; }
+html[data-theme="osaka"] [data-article] {
+  --art-accent: #ff6fb5; --art-on-accent: #2a0718;
+  --art-glass: rgba(24, 14, 34, 0.5); --art-glass-line: rgba(255, 111, 181, 0.28);
+}
+html[data-theme="war"] [data-article] {
+  --art-accent: #4fe3e0; --art-on-accent: #031514; --art-radius: 0px;
+  --art-glass: rgba(10, 20, 18, 0.55); --art-glass-line: rgba(79, 227, 224, 0.35);
+  --art-serif: ui-monospace, SFMono-Regular, Menlo, monospace; --art-size: 15px;
+}
+html[data-theme="war"] [data-article][data-size="l"] { --art-size: 18px; }
+html[data-theme="hacker"] [data-article] {
+  --art-ink: #d6ffe4; --art-ink-2: rgba(214, 255, 228, 0.82); --art-ink-3: rgba(214, 255, 228, 0.52);
+  --art-accent: #39ff88; --art-on-accent: #001a0a; --art-line: rgba(57, 255, 136, 0.22);
+  --art-glass: rgba(0, 12, 4, 0.55); --art-glass-line: rgba(57, 255, 136, 0.3);
+  --art-serif: ui-monospace, SFMono-Regular, Menlo, monospace; --art-size: 15px;
+}
+html[data-theme="hacker"] [data-article][data-size="l"] { --art-size: 18px; }
+html[data-theme="jungle"] [data-article] {
+  --art-ink: #f6f0e3; --art-ink-2: rgba(246, 240, 227, 0.84); --art-ink-3: rgba(246, 240, 227, 0.56);
+  --art-line: rgba(246, 240, 227, 0.16); --art-accent: #b9d38a; --art-on-accent: #1a2410;
+  --art-glass: rgba(38, 28, 19, 0.55); --art-glass-line: rgba(246, 240, 227, 0.2);
+}
+html[data-theme="minimal"] [data-article] { --art-accent: #fff; --art-radius: 8px; --art-glass: rgba(0, 0, 0, 0.55); }
+html[data-theme="light"] [data-article] {
+  --art-ink: var(--ink, #111114); --art-ink-2: rgba(17, 17, 20, 0.8); --art-ink-3: rgba(17, 17, 20, 0.55);
+  --art-line: rgba(0, 0, 0, 0.1); --art-wash: rgba(0, 0, 0, 0.04);
+  --art-accent: var(--ink, #111114); --art-on-accent: #fff;
+  --art-glass: rgba(255, 255, 255, 0.62); --art-glass-line: rgba(0, 0, 0, 0.1);
+}
+
+/* ---- Body copy ---- */
+.article-body {
+  font-family: var(--art-serif);
+  font-size: var(--art-size);
+  line-height: 1.7;
+  color: var(--art-ink-2);
+  overflow-wrap: anywhere;
+}
+.article-body > * + * { margin-top: 1.05em; }
+/* The app sets its UI face on every element (index.css `*`), so the reading
+   face has to be set on the descendants too, not only inherited. */
+.article-body :where(p, li, blockquote, strong, em, a, span, ul, ol) { font-family: var(--art-serif); }
+.article-serif, .article-serif * { font-family: var(--art-serif); }
+.article-body .article-heading {
+  font-family: var(--art-title);
+  color: var(--art-ink);
+  font-weight: 650;
+  line-height: 1.25;
+  text-wrap: balance;
+  margin-top: 1.7em;
+  scroll-margin-top: 96px;
+}
+.article-body h2.article-heading { font-size: 1.55em; }
+.article-body h3.article-heading { font-size: 1.3em; }
+.article-body h4.article-heading { font-size: 1.12em; }
+.article-body strong { color: var(--art-ink); font-weight: 650; }
+.article-body a {
+  color: var(--art-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--art-accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+.article-body blockquote {
+  border-left: 3px solid var(--art-accent);
+  padding: 0.1em 0 0.1em 1em;
+  color: var(--art-ink);
+  font-style: italic;
+  font-size: 1.08em;
+}
+.article-body ul, .article-body ol { padding-left: 1.3em; }
+.article-body ul { list-style: disc; }
+.article-body ol { list-style: decimal; }
+.article-body li + li { margin-top: 0.35em; }
+.article-body li::marker { color: var(--art-accent); }
+.article-body img { border-radius: calc(var(--art-radius) * 0.75); width: 100%; height: auto; }
+.article-body hr { border: 0; border-top: 1px solid var(--art-line); margin: 2em 0; }
+.article-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.86em;
+  background: var(--art-wash);
+  border: 1px solid var(--art-line);
+  border-radius: 6px;
+  padding: 0.05em 0.35em;
+}
+.article-body pre { background: var(--art-wash); border: 1px solid var(--art-line); border-radius: 10px; padding: 0.9em; overflow-x: auto; }
+.article-body pre code { background: none; border: 0; padding: 0; }
+
+/* ---- Shared pieces ---- */
+.article-label {
+  font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--art-accent);
+}
+.article-meta { color: var(--art-ink-3); }
+.article-ink { color: var(--art-ink); }
+.article-ink-2 { color: var(--art-ink-2); }
+.article-title {
+  font-family: var(--art-title);
+  font-weight: 650;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+html:is([data-theme="war"], [data-theme="hacker"]) .article-title { text-transform: uppercase; letter-spacing: 0.03em; }
+.article-cover {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--art-radius);
+  background: var(--art-wash);
+  isolation: isolate;
+}
+.article-cover > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.article-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.45) 38%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+.article-cover-text { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: 16px 18px; }
+.article-cover-text .article-title { color: #fff; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45); }
+.article-cover-text .article-cover-meta { color: rgba(255, 255, 255, 0.78); }
+html[data-theme="war"] .article-cover { outline: 1px solid var(--art-glass-line); }
+
+.article-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--art-line);
+  border-radius: 999px;
+  padding: 6px 12px;
+  color: var(--art-ink-2);
+  font-size: 13px;
+  transition: background-color 0.15s, color 0.15s;
+}
+.article-chip:hover { background: var(--art-wash); color: var(--art-ink); }
+.article-chip[aria-pressed="true"] { background: var(--art-accent); border-color: var(--art-accent); color: var(--art-on-accent); }
+.article-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  background: var(--art-accent);
+  color: var(--art-on-accent);
+  transition: opacity 0.15s;
+}
+.article-cta:disabled { opacity: 0.4; cursor: not-allowed; }
+html[data-theme="war"] :is(.article-chip, .article-cta, .article-pill) { border-radius: 0; }
+
+/* Liquid glass, like every web floating surface. */
+.article-pill {
+  background: var(--art-glass);
+  border: 1px solid var(--art-glass-line);
+  border-radius: 999px;
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .article-pill { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--art-glass) 100%, #000 0%); }
+}
+.article-pill button { color: var(--art-ink-2); }
+.article-pill button:hover { color: var(--art-ink); }
+.article-pill svg { width: 18px; height: 18px; }
+html[data-theme="osaka"] .article-pill svg { filter: drop-shadow(0 0 4px rgba(255, 111, 181, 0.6)); }
+html[data-theme="war"] .article-pill svg { color: var(--art-accent); filter: drop-shadow(0 0 3px rgba(79, 227, 224, 0.7)); }
+html[data-theme="hacker"] .article-pill svg { color: var(--art-accent); filter: drop-shadow(0 0 3px rgba(57, 255, 136, 0.7)); }
+
+.article-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 70;
+  background: var(--art-accent);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+.article-toc a { color: var(--art-ink-3); display: block; padding: 4px 0 4px 10px; border-left: 2px solid var(--art-line); font-size: 14px; }
+.article-toc a:hover { color: var(--art-ink); }
+.article-toc a[data-active="true"] { color: var(--art-ink); border-left-color: var(--art-accent); }
+
+/* ---- Composer ---- */
+.article-input {
+  width: 100%;
+  background: transparent;
+  outline: none;
+  resize: none;
+  color: var(--art-ink);
+}
+.article-input::placeholder { color: var(--art-ink-3); }
+.article-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: var(--art-ink-2);
+}
+.article-tool:hover { background: var(--art-wash); color: var(--art-ink); }
+.article-tool svg { width: 17px; height: 17px; }
+.article-drop {
+  border: 1.5px dashed var(--art-line);
+  border-radius: var(--art-radius);
+  color: var(--art-ink-3);
+}
+.article-drop:hover { border-color: var(--art-accent); color: var(--art-ink-2); }
+
+/* Controls on a cover sit on the photo, so they keep a dark glass on every theme. */
+.article-cover .article-pill { --art-glass: rgba(0, 0, 0, 0.45); --art-glass-line: rgba(255, 255, 255, 0.22); color: #fff; }
+/* Paper's accent is ink, which vanishes on a dark photo. */
+html[data-theme="light"] .article-cover-text .article-label { color: rgba(255, 255, 255, 0.92); }
