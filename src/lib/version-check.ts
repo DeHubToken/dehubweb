@@ -49,6 +49,15 @@ const POLL_MS = 3 * 60_000;
 /** Floor between two network checks, so tab-switching can't turn into a spam loop. */
 const MIN_GAP_MS = 60_000;
 const NOTIFIED_KEY = 'version-notified-id';
+/** The deploy id this session already reloaded itself onto, so it never loops. */
+const RELOADED_KEY = 'version-reloaded-id';
+
+/**
+ * The newer deploy the watcher has seen, if any. Kept apart from the toast's
+ * one-shot: the toast can be dismissed or never noticed on a phone, and a tab
+ * that lives for days in a mobile browser then keeps drawing last week's pages.
+ */
+let newerDeployId: string | null = null;
 
 async function fetchDeployedVersion(): Promise<BuildVersion | null> {
   try {
@@ -128,6 +137,7 @@ export function startVersionWatch(onUpdate: (version: BuildVersion) => void): ()
 
     const deployed = await fetchDeployedVersion();
     if (stopped || !deployed || deployed.id === RUNNING_ID) return;
+    newerDeployId = deployed.id;
 
     // Stop before notifying: this is a one-shot, and the caller shows a toast
     // that stays up until it's acted on.
@@ -152,4 +162,25 @@ export function startVersionWatch(onUpdate: (version: BuildVersion) => void): ()
   document.addEventListener('visibilitychange', onVisibilityChange);
 
   return stop;
+}
+
+/**
+ * Should this navigation load the page fresh instead of rendering it with the
+ * old build? True once per newer deploy the watcher has seen. Moving between
+ * pages is the moment a reload costs nothing: the old page is going away anyway
+ * and nothing typed on it survives the route change either. Returns false after
+ * the first time for a given deploy, so an edge that still serves the old HTML
+ * cannot turn every tap into a reload.
+ */
+export function takeStaleReload(): boolean {
+  if (!newerDeployId) return false;
+  try {
+    if (sessionStorage.getItem(RELOADED_KEY) === newerDeployId) return false;
+    sessionStorage.setItem(RELOADED_KEY, newerDeployId);
+  } catch {
+    // No storage means no loop guard across the reload: skip it, the toast
+    // still offers the refresh.
+    return false;
+  }
+  return true;
 }
