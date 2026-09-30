@@ -188,13 +188,6 @@ export default function ProfilePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1024);
-    window.addEventListener('resize', check, { passive: true });
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
   // UI-only state managed in orchestrator
   const [activeTab, setActiveTab] = useState<TabValue>('home');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
@@ -257,14 +250,15 @@ export default function ProfilePage() {
   useEffect(() => {
     const el = stuckSentinelRef.current;
     if (!el) return;
-    const topOffset = isMobile ? 44 : 0; // matches sticky top-11 / lg:top-0
+    // The pill pins at the very top at every width: phones have no top bar
+    // off the home feed (index.css, data-no-top-bar).
     const obs = new IntersectionObserver(
       ([entry]) => setIsTabsStuck(!entry.isIntersecting),
-      { rootMargin: `-${topOffset + 1}px 0px 0px 0px`, threshold: 0 }
+      { rootMargin: '-1px 0px 0px 0px', threshold: 0 }
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, [isMobile]);
+  }, []);
 
   const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab);
   // Still dropped while stuck, matching the painted strip this replaced. The
