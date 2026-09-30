@@ -1860,6 +1860,13 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   background-color: transparent !important;
 }
 
+/* /creator's composer carries a strip of the page's own #090a0b behind it
+   (a scroll-lag guard). With the canvas showing through, that strip is a
+   black bar under the header, so drop it on these themes. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-creator-lag-guard] {
+  display: none !important;
+}
+
 /* Dedicated post page (home → post overlay). The wrapper ships opaque black
    because it must hide the still-mounted home feed beneath it; on canvas
    themes that paints a solid black column through the glass layout. Let the
@@ -5067,4 +5074,11 @@ html[data-theme="light"] .art-rim {
   -webkit-backdrop-filter: none !important;
   border-bottom-color: transparent !important;
   box-shadow: none !important;
+}
+
+/* /creator is a dark page on every theme (its surfaces are hard-coded near
+   black), but the light theme's global .text-white -> ink remap turned its
+   headings and card titles black-on-black. Keep them white there. */
+html[data-theme="light"] [data-creator-page] .text-white {
+  color: #ffffff !important;
 }

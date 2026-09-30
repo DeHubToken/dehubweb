@@ -307,7 +307,11 @@ export default function CreatorPage() {
           react to and simply rode the content off the top of the screen, the
           header included. `clip` contains the same horizontal overflow while
           leaving overflow-y `visible`, so sticky resolves against `body`. */}
-      <main className="min-h-screen overflow-x-clip text-white" style={{ backgroundColor: '#090a0b' }}>
+      {/* relative z-[1]: the theme canvases (Hazy, Cosmic, ...) are fixed
+          layers at z-0, so a static <main> painted UNDER them and every
+          unpositioned heading and label vanished, leaving big empty gaps.
+          data-glass-page lets the canvas through on those themes. */}
+      <main data-creator-page data-glass-page className="relative z-[1] min-h-screen overflow-x-clip text-white" style={{ backgroundColor: '#090a0b' }}>
         <h1 className="sr-only">{t('creator.srHeading')}</h1>
 
         <div ref={headerRef} className="sticky top-0 z-50">
