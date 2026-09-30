@@ -278,7 +278,6 @@ All colors MUST be HSL.
     background:
       linear-gradient(135deg, hsl(var(--foreground) / 0.045), hsl(var(--foreground) / 0.015)),
       hsl(var(--card) / 0.6);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
     backdrop-filter: blur(16px) saturate(140%);
     border: 1px solid hsl(var(--border));
     box-shadow:
@@ -288,7 +287,6 @@ All colors MUST be HSL.
   @media (prefers-reduced-transparency: reduce) {
     .docs-glass {
       background: hsl(var(--card));
-      -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
   }
@@ -711,7 +709,6 @@ html[data-feed-loading] #root::after {
   z-index: 120;
   pointer-events: none; /* never swallow a click on the app underneath */
   backdrop-filter: blur(20px) saturate(130%);
-  -webkit-backdrop-filter: blur(20px) saturate(130%);
   opacity: 1;
   /* 1.2s, not 700ms: the unblur is the moment the app resolves, and at 700ms it
      read as a snap rather than a focus pull. Paired with the 3s hold in
@@ -722,7 +719,6 @@ html[data-feed-loading] #root::after {
    opacity fade covers browsers that decline to interpolate backdrop-filter. */
 html[data-feed-loading="off"] #root::after {
   backdrop-filter: blur(0px) saturate(100%);
-  -webkit-backdrop-filter: blur(0px) saturate(100%);
   opacity: 0;
 }
 /* Lift the welcome panel out of the sheet's backdrop so it alone stays sharp —
@@ -803,7 +799,6 @@ html[data-feed-loading] .dehub-intro { z-index: 121; }
 .w3a-modal__card {
   background: rgba(10, 10, 10, 0.95) !important;
   backdrop-filter: blur(24px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 24px !important;
   box-shadow: 
@@ -1080,7 +1075,6 @@ html.reduce-motion .hover-scale {
 /* Glass morph-in transition for hero buttons */
 .glass-morph-in > div {
   backdrop-filter: blur(0px) !important;
-  -webkit-backdrop-filter: blur(0px) !important;
   background: transparent !important;
   border-color: rgba(255, 255, 255, 0) !important;
   box-shadow: none !important;
@@ -1093,7 +1087,6 @@ html.reduce-motion .hover-scale {
 
 .glass-morph-in.morphed > div {
   backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
   background: linear-gradient(to bottom right, rgba(255,255,255,0.04), rgba(255,255,255,0.02), transparent) !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
   box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
@@ -1180,7 +1173,6 @@ button.cursor-square-item:hover {
   /* Near-solid, like the app's bars: the list scrolls underneath both, and a
      see-through bar let the comment under it read through the reply box. */
   background: rgb(0 0 0 / 0.9);
-  -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
   border-color: rgb(255 255 255 / 0.08);
 }
@@ -1578,7 +1570,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   border-color: transparent !important;
   box-shadow: var(--glass-edge-flat) !important;
   backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
 }
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"])
   [data-theme-button]:is([data-button-variant="default"], [data-button-variant="glass"], [data-button-variant="secondary"], [data-button-variant="outline"]):hover {
@@ -1602,7 +1593,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   border-color: transparent !important;
   box-shadow: var(--glass-edge-flat) !important;
   backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
   color: var(--theme-control-foreground, #fff) !important;
 }
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"])
@@ -1642,7 +1632,6 @@ html[data-theme="hacker"] ::selection {
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-feed-item] {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-thin)) !important;
   backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
   border-color: transparent !important; /* the --glass-edge ring replaces border-white/[0.12] */
   box-shadow: var(--glass-edge-flat) !important; /* no ambient drop shadow — see --glass-edge-flat */
 }
@@ -1659,7 +1648,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) :is([data-side-panel], [data-page-bento]:not([data-bento-flat])) {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
   backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--glass-edge) !important;
 }
@@ -1718,7 +1706,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-bento-flat] {
   background: none !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
@@ -1774,7 +1761,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   :is([data-feed-item], [data-page-bento]):has([data-page-bento]) {
   background: none !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
   border-color: transparent !important;
 }
@@ -1801,7 +1787,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-feed-nav] {
   background: rgb(var(--glass-tint) / 0.40) !important;
   backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
   /* Same ambient drop shadow the desktop glass panels cast below the logo,
      so the pill reads as the one lifted surface on mobile too. */
   box-shadow:
@@ -1871,14 +1856,12 @@ html[data-docs-open]:not([data-theme="cosmic"]):not([data-theme="hazy"]):not([da
   height: calc(0.5rem + 18px);
   background: hsl(var(--card) / 0.9);
   backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   z-index: -1;
   pointer-events: none;
 }
 html[data-theme="system"] [data-feed-nav] {
   background: rgb(9 9 11 / 0.40) !important;
   backdrop-filter: blur(20px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
   box-shadow:
     inset 0 0 0 1px rgb(255 255 255 / 0.08),
     0 8px 32px rgb(0 0 0 / 0.30) !important;
@@ -1898,7 +1881,6 @@ html[data-theme="system"] [data-feed-nav] {
 html[data-theme="system"] [data-mobile-header] {
   background: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
   transition: background-color 0.25s ease;
 }
@@ -1928,7 +1910,6 @@ html[data-theme="system"] [data-mobile-header] :is(img, svg) {
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-mobile-header] {
   background: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
   transition: background-color 0.25s ease;
 }
@@ -1960,7 +1941,6 @@ html:is([data-theme="system"], [data-theme="cosmic"], [data-theme="hazy"], [data
      so the fallback is what actually paints there. Both resolve to zinc-950. */
   background: rgb(var(--glass-tint, 9 9 11) / 0.55) !important;
   backdrop-filter: blur(20px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
 }
 
 /* Full-screen page wrappers that shipped opaque black (creators application,
@@ -2252,12 +2232,10 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) :is([data-feed-item], [data-side-panel], [data-page-bento], [data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
     background: rgb(24 24 27) !important;
     backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
   }
   html[data-theme="system"] :is([data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
     background: rgb(24 24 27) !important;
     backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
   }
 }
 
@@ -2436,7 +2414,6 @@ html[data-theme="light"] [data-comments-wrapper] > div {
 html[data-theme="light"] [data-comments-wrapper] {
   background-color: hsl(var(--card)) !important;
   border-color: var(--hairline) !important;
-  -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
 
@@ -2449,7 +2426,6 @@ html[data-theme="light"] [data-glass-indicator] {
   background-image: none !important;
   background-color: rgba(0, 0, 0, 0.06) !important;
   border-color: var(--hairline-strong) !important;
-  -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
 
@@ -3053,7 +3029,6 @@ html[data-theme="light"] [data-country-block-drawer] {
   border-top: 1px solid var(--hairline-strong) !important;
   box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.12) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 html[data-theme="light"] [data-country-block-drawer] .text-white {
   color: var(--ink) !important;
@@ -3253,7 +3228,6 @@ html[data-theme="light"] .hover\:bg-zinc-800\/90:hover {
 html[data-theme="light"] .login-modal-overlay {
   background-color: rgba(255, 255, 255, 0.35) !important;
   backdrop-filter: blur(24px) saturate(120%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(120%) !important;
 }
 
 html[data-theme="light"] [data-login-modal] {
@@ -3264,7 +3238,6 @@ html[data-theme="light"] [data-login-modal] {
   border-color: var(--hairline-strong) !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* All text inside the modal reads as ink instead of white. */
@@ -3464,7 +3437,6 @@ html[data-theme="light"] [data-reaction-tray] [data-reaction-count][data-zero="t
   [data-reaction-tray] {
     background: rgba(9, 9, 11, 0.96) !important;
     backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
   }
   html[data-theme="light"] [data-reaction-tray] {
     background: rgba(255, 255, 255, 0.96) !important;
@@ -3645,7 +3617,6 @@ html[data-theme="light"] [data-post-drawer] {
 html[data-theme="light"] [data-bottom-nav] > nav {
   background-color: var(--paper) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   border-color: var(--hairline-strong) !important;
 }
 /* The centre create button hardcodes a white + on white glass via inline
@@ -4222,7 +4193,6 @@ html[data-theme="light"] [data-poll-card] .hover\:bg-white\/20:hover {
 html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([role="dialog"]):not([data-vaul-drawer]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *):not(.login-modal-overlay):not([data-radix-popper-content-wrapper] *):not([data-comments-wrapper]):not([data-ai-chat]):not([data-ai-chat] *) {
   background-color: rgba(0, 0, 0, 0.05) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 html[data-theme="light"] [class*="hover\:bg-black\/"]:hover:not(button):not([role="button"]):not([data-keep-dark]) {
   background-color: rgba(0, 0, 0, 0.08) !important;
@@ -4297,7 +4267,6 @@ html[data-theme="light"] [data-assistant-page] .bg-black\/60 {
   background-color: var(--paper) !important;
   border-color: var(--hairline-strong) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* ==========================================================================
@@ -4366,7 +4335,6 @@ html[data-theme="light"] [data-comments-dropdown] {
   color: var(--ink) !important;
   border-color: var(--hairline-strong) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 html[data-theme="light"] [data-comments-dropdown] .text-white,
 html[data-theme="light"] [data-comments-dropdown] .text-zinc-300,
@@ -4395,7 +4363,6 @@ html[data-theme="light"] [data-radix-popper-content-wrapper] > :not([data-profil
   border: 1px solid var(--hairline-strong) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 /* Item hover/selection highlight (Radix sets data-highlighted on focus). */
 html[data-theme="light"] [data-radix-popper-content-wrapper] [data-highlighted],
@@ -4415,7 +4382,6 @@ html[data-theme="light"] [data-ai-chat] {
   border-color: var(--hairline-strong) !important;
   color: var(--ink) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 html[data-theme="light"] [data-ai-chat] [class*="bg-white/"] {
   background-color: rgba(0, 0, 0, 0.06) !important;
@@ -4480,7 +4446,6 @@ html[data-theme="light"] [data-notifications-page][class*="bg-black/"],
 html[data-theme="light"] [data-notifications-page].bg-zinc-950 {
   background-color: var(--paper) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 html[data-theme="light"] [data-notifications-page] .text-white\/50 {
   color: var(--ink-muted) !important;
@@ -4793,7 +4758,6 @@ html:not(.dark) .docs-root [class*="from-white/20"] svg {
    docs bentos use. Canvas themes pin docs to .dark and keep their glass. */
 html:not(.dark) .docs-root .docs-glass {
   background: hsl(var(--card));
-  -webkit-backdrop-filter: none;
   backdrop-filter: none;
   box-shadow: 0 1px 2px rgba(40, 34, 20, 0.05), 0 8px 24px -12px rgba(40, 34, 20, 0.14);
 }
@@ -4802,7 +4766,6 @@ html:not(.dark) .docs-root .docs-glass {
    black too, so the blur has nothing to sample there either. The canvas
    themes keep theirs: docs-glass.css restates it with !important. */
 html.dark .docs-root .docs-glass {
-  -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
 
@@ -5181,7 +5144,6 @@ html[data-theme="light"] .art-rim {
 [data-clear-top-bar]:not(#_) {
   background: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   border-bottom-color: transparent !important;
   box-shadow: none !important;
 }

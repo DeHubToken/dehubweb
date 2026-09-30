@@ -99,7 +99,6 @@ html[data-theme='war'] :is([data-side-panel], [data-page-bento], [data-search-be
     ),
     rgb(var(--war-gunmetal) / var(--glass-regular)) !important;
   backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--war-edge) !important;
 }
@@ -117,7 +116,6 @@ html[data-theme='war'] [data-feed-item] {
     ),
     rgb(var(--war-gunmetal) / var(--glass-thin)) !important;
   backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
   border-color: transparent !important;
   /* No left-edge rail — removed across every theme. A coloured bar on a card's
      edge is the language of "selected / unread / errored"; spending it as
@@ -254,7 +252,6 @@ html[data-theme='war'] [data-feed-nav] {
   border-radius: 0 !important;
   background: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
 }
 
@@ -281,7 +278,6 @@ html[data-theme='war'] [data-feed-nav]::before {
   pointer-events: none;
   background: rgb(var(--war-gunmetal) / 0.82);
   backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
   clip-path: polygon(
     0 0,
     100% 0,
@@ -361,7 +357,6 @@ html[data-theme='war'] [data-feed-nav] [class*="from-white/20"] {
   background-image: none !important;
   border-color: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   box-shadow:
     inset 0 0 0 1px rgb(var(--war-hud) / 0.4),
     inset 0 -2px 0 rgb(var(--war-hud) / 0.85) !important;
@@ -496,7 +491,6 @@ html[data-theme='war'] [data-bottom-nav] > nav {
   border-radius: 0 !important;
   background: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   border-color: transparent !important;
   box-shadow: none !important;
 }
@@ -508,7 +502,6 @@ html[data-theme='war'] [data-bottom-nav] > nav::before {
   pointer-events: none;
   background: rgb(var(--war-gunmetal) / 0.86);
   backdrop-filter: blur(16px) saturate(120%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
   box-shadow: 0 -6px 22px rgb(0 0 0 / 0.5);
   clip-path: polygon(
     10px 0,
@@ -565,7 +558,6 @@ html[data-theme='war'] [data-bottom-nav] [class*="border-white/30"] {
   border-color: rgb(var(--war-hud) / 0.6) !important;
   background-color: rgb(var(--war-hud) / 0.14) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   box-shadow: inset 0 -2px 0 rgb(var(--war-hud) / 0.7) !important;
 }
 html[data-theme='war'] [data-bottom-nav] a[aria-current='page'] svg,
@@ -610,7 +602,6 @@ html[data-theme='war'] [data-sonner-toaster] .toast {
     ),
     rgb(var(--war-gunmetal) / 0.95) !important;
   backdrop-filter: blur(12px) saturate(115%) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(115%) !important;
   border-color: transparent !important;
   box-shadow:
     inset 0 0 0 1px rgb(var(--war-hud) / 0.3),
@@ -791,7 +782,6 @@ html[data-theme='war']
   border-color: transparent !important;
   box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.7) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   font-family: var(--war-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -827,7 +817,6 @@ html[data-theme='war'] #app-root
   border-color: transparent !important;
   box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.28) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   color: rgb(var(--war-sand) / 0.94) !important;
   transition: background-color 60ms linear, box-shadow 60ms linear;
 }
@@ -870,7 +859,6 @@ html[data-theme='war'] [data-filter-chip] {
   border-color: transparent !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   color: rgb(var(--war-hud)) !important;
   font-family: var(--war-mono);
   letter-spacing: 0.08em;
@@ -1505,13 +1493,11 @@ html[data-theme='war'] .docs-root :is(button, a):focus-visible {
     ) {
     background: rgb(var(--war-gunmetal)) !important;
     backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
   }
   html[data-theme='war'] [data-feed-nav]::before,
   html[data-theme='war'] [data-bottom-nav] > nav::before {
     background: rgb(var(--war-gunmetal));
     backdrop-filter: none;
-    -webkit-backdrop-filter: none;
   }
   /* Glow is transparency-adjacent - drop every bloom. */
   html[data-theme='war'] *::before,
@@ -1524,7 +1510,6 @@ html[data-theme='war'] .docs-root :is(button, a):focus-visible {
   html[data-theme='war']
     :is([role='dialog'], [data-vaul-drawer], [data-radix-popper-content-wrapper] > *) {
     backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
     background: rgb(var(--war-gunmetal)) !important;
   }
 }

@@ -58,7 +58,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]).dark .docs-root
   :is(.bg-card, .bg-muted, .bg-secondary, .docs-glass, [class*="Card"], [data-docs-header], [data-docs-sidebar], [data-docs-reading-panel]):not([data-docs-reading-panel] *):not([data-docs-solid]):not([data-docs-header] *):not([data-docs-sidebar] *) {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
   backdrop-filter: var(--glass-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--glass-edge) !important;
@@ -76,7 +75,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]):not([data-theme="war"]).dark .docs-root
   :is(.bg-card, .docs-glass, [class*="Card"]) :is(.bg-card, .bg-muted, .bg-secondary, .docs-glass, [class*="Card"]):not([data-docs-reading-panel] *):not([data-docs-solid]):not([data-docs-header] *):not([data-docs-sidebar] *) {
   background: rgb(var(--glass-tint) / 0.28) !important;
-  -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   border-color: rgb(255 255 255 / 0.08) !important;
   box-shadow: none !important;
@@ -93,7 +91,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 /* The on-this-page sub-nav stacks directly under the header, so it takes the
    same thin glass above and only a hairline to separate the two. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]).dark .docs-root [data-docs-subnav] {
-  -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border-bottom-color: rgb(255 255 255 / 0.12) !important;
 }
@@ -121,7 +118,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    simultaneous backdrop-filters. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]).dark .docs-root :is(pre, code) {
   background: rgb(0 0 0 / 0.34) !important;
-  -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   border: 1px solid rgb(255 255 255 / 0.08) !important;
   color: hsl(0 0% 90%) !important;
