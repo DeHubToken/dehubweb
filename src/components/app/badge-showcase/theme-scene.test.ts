@@ -20,6 +20,7 @@ function canvas() {
     arc: (_x: number, _y: number, r: number, ...args: number[]) => { check(_x, _y, r, ...args); if (r < 0) throw new Error('Negative arc radius'); },
     ellipse: (_x: number, _y: number, rx: number, ry: number, ...args: number[]) => { check(_x, _y, rx, ry, ...args); if (rx < 0 || ry < 0) throw new Error('Negative ellipse radius'); },
     drawImage: (_source: unknown, ...args: number[]) => check(...args),
+    translate: (x: number, y: number) => check(x, y),
     globalAlpha: 1,
   }, {
     get: (object, key) => key in object ? Reflect.get(object, key) : check,
@@ -81,6 +82,28 @@ describe('themed badge timelines', () => {
     scene.dispose();
   });
   for (const { id } of BADGE_WORLDS) {
+    it(`${id}: a top-tier click flies the existing badge from its username to the hero`, () => {
+      vi.spyOn(document, 'createElement').mockImplementation(() => canvas() as unknown as HTMLElement);
+      const surface = canvas(), context = surface.getContext();
+      const scene = createBadgeScene(surface as unknown as HTMLCanvasElement, id);
+      const oldArt = canvas() as unknown as HTMLCanvasElement, art = canvas() as unknown as HTMLCanvasElement;
+      scene.setIce(art); scene.prepare(oldArt, art, 12);
+      scene.geometry(390, 844, { x: 80, y: 100, size: 230 });
+      scene.start({ x: 25, y: 40, size: 32 }, false);
+      const positions = vi.spyOn(context, 'translate');
+      const draws = vi.spyOn(context, 'drawImage');
+      scene.draw(0);
+      expect(positions).toHaveBeenCalledWith(41, 56);
+      expect(draws).toHaveBeenCalledWith(art, -16, -16, 32, 32);
+      expect(draws.mock.calls.some(([source]) => source === oldArt)).toBe(false);
+      positions.mockClear(); draws.mockClear();
+      scene.draw(scene.duration());
+      expect(positions).toHaveBeenCalledWith(195, 215);
+      expect(draws).toHaveBeenCalledWith(art, -115, -115, 230, 230);
+      expect(draws.mock.calls.some(([source]) => source === oldArt)).toBe(false);
+      expect(surface.depth()).toBe(0);
+      scene.dispose();
+    });
     it(`${id}: click, promotion, resize, and final frame keep valid geometry`, () => {
       vi.spyOn(document, 'createElement').mockImplementation(() => canvas() as unknown as HTMLElement);
       const surface = canvas();
@@ -93,7 +116,9 @@ describe('themed badge timelines', () => {
         for (const promote of [false, true]) {
         scene.start({ x: 25, y: 40, size: 32 }, promote);
         const total = scene.duration(), mode = Number(promote);
-        expect(total).toBeGreaterThan(lastDuration[mode]); lastDuration[mode] = total;
+        if (!promote || tier === 0) expect(total).toBeCloseTo(1.65);
+        else expect(total).toBeGreaterThan(lastDuration[mode]);
+        lastDuration[mode] = total;
         scene.geometry(390, 844, { x: 80, y: 100, size: 230 });
         const times = new Set([0, .75, 1.05, 1.4, 2.75, ...[.2, .35, .5, .65, .8, .95, 1].map(p => p * total)]);
         for (const time of times) if (time <= scene.duration()) { scene.draw(time); expect(surface.depth()).toBe(0); }
