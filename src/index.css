@@ -1306,6 +1306,41 @@ html[data-theme='minimal'] :is([data-comment-tabs-pin], [data-comment-composer-p
 }
 
 /* ==========================================================================
+   No top bar off the home feed (phone width).
+   ==========================================================================
+   MobileHeader shows its bar (menu, dehub mark, bell) on the home feed only and
+   sets `data-no-top-bar` on <html> everywhere else. Pages were laid out to
+   clear that 2.75rem bar — <main>'s pt-11 and every sticky `top-11` pill — so
+   without it they would open on an empty band. These take the clearance away
+   and let the page's own pill sit at the top.
+
+   `--app-top-bar` is the same height for the few pages that size themselves to
+   the viewport (Assistant, Messages). */
+:root {
+  --app-top-bar: 2.75rem;
+}
+@media (max-width: 1023.98px) {
+  html[data-no-top-bar] {
+    --app-top-bar: 0px;
+  }
+  html[data-no-top-bar] [data-main-panel] {
+    padding-top: 0;
+  }
+  html[data-no-top-bar] .top-11 {
+    top: 0;
+  }
+  /* Explore's pinned pill rode up by the bar's height when it left. No bar,
+     nothing to close. */
+  html[data-no-top-bar][data-scroll-hidden='true']:not([data-overlay-open='true'])
+    [data-feed-nav-outer][data-nav-hide='pin'] {
+    transform: none;
+  }
+  html[data-no-top-bar]:not([data-nav-hidden='true']) body:not(.immersive-video-mode) [data-comment-tabs-pin] {
+    top: 3rem;
+  }
+}
+
+/* ==========================================================================
    Desktop chrome — opt-in, for pills too tall to keep pinned on a laptop.
    ==========================================================================
    The block above stops at `lg` because most pages' pills are a single row of
