@@ -18,7 +18,8 @@ import {
   DrawerTitle,
   DrawerDescription,
 } from '@/components/ui/drawer';
-import { editPost, replaceVideoFile } from '@/lib/api/dehub';
+import { editPost, replaceVideoFile, getPostQuota } from '@/lib/api/dehub';
+import { BASE_POST_TEXT_CHARS, postTextLimit } from '@/lib/post-text-limit';
 import type { ContentRating, ShopLink } from '@/lib/api/dehub/types';
 import { ShopSheetLazy, type ShopBoardDraft } from '@/features/post/components/ShopSheetLazy';
 import { useStreamProducts, useStreamProductActions } from '@/hooks/use-stream-shopping';
@@ -85,6 +86,16 @@ export function EditPostModal({
   const [name, setName] = useState(currentTitle);
   const [description, setDescription] = useState(currentDescription);
   const [articleBody, setArticleBody] = useState(currentArticleBody ?? '');
+  // Text cap scales with the badge tier; only read once the modal opens,
+  // because every feed card mounts this component.
+  const [tierTextMax, setTierTextMax] = useState(BASE_POST_TEXT_CHARS);
+  useEffect(() => {
+    if (!open || currentArticleBody !== undefined) return;
+    let cancelled = false;
+    getPostQuota().then(q => { if (!cancelled) setTierTextMax(postTextLimit(q)); });
+    return () => { cancelled = true; };
+  }, [open, currentArticleBody]);
+  const descriptionMax = currentArticleBody !== undefined ? BASE_POST_TEXT_CHARS : tierTextMax;
   const [categoryInput, setCategoryInput] = useState('');
   const [categories, setCategories] = useState<string[]>(currentCategories);
   const [commentsDisabled, setCommentsDisabled] = useState(currentCommentsDisabled);
@@ -224,8 +235,8 @@ export function EditPostModal({
       toast.error('Title must be 140 characters or less');
       return;
     }
-    if (params.description && (params.description as string).length > 500) {
-      toast.error('Description must be 500 characters or less');
+    if (params.description && (params.description as string).length > descriptionMax) {
+      toast.error(`Description must be ${descriptionMax.toLocaleString('en-US')} characters or less`);
       return;
     }
     if (currentArticleBody !== undefined && articleBody.trim().length < 100) {
@@ -310,10 +321,10 @@ export function EditPostModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="bg-white/5 border-white/10 text-white min-h-[100px] rounded-xl resize-none"
-              maxLength={500}
+              maxLength={descriptionMax}
               placeholder="Post description"
             />
-            <p className="text-xs text-zinc-500 text-right">{description.length}/500</p>
+            <p className="text-xs text-zinc-500 text-right">{description.length.toLocaleString('en-US')}/{descriptionMax.toLocaleString('en-US')}</p>
           </div>
 
           {/* Categories */}
