@@ -1,0 +1,61 @@
+/* Floating surfaces are liquid glass on every theme.
+
+   Toasts, dialogs, drawers, sheets and popovers float over the page and stay
+   frosted glass on the web, desktop and phone alike. What sits behind them is
+   blurred hard enough that it cannot compete with their text, and the tint has
+   a floor so a white photo or a light post under a toast still leaves its copy
+   readable. (The Android app paints these solid instead, since it cannot blur;
+   that lives in the app, not here.)
+
+   Only the colour layer and the blur are set. Each theme's grain, gradient and
+   edge light are background-image layers and stay as they were.
+
+   The theme sheets for war, osaka and jungle load after this file (see
+   lib/theme-css), so these rules win on specificity, not order: the doubled
+   [data-theme] is there to outrank them. */
+
+html {
+  --float-glass: rgb(var(--glass-tint, 9 9 11) / 0.72);
+  --float-glass-blur: blur(24px) saturate(160%);
+}
+html[data-theme='light'] {
+  --float-glass: rgb(249 248 244 / 0.78);
+}
+html[data-theme='war'] {
+  --float-glass: rgb(var(--war-gunmetal, 14 20 18) / 0.76);
+}
+html[data-theme='osaka'] {
+  --float-glass: rgb(var(--osaka-slate, 17 14 28) / 0.76);
+}
+html[data-theme='jungle'] {
+  --float-glass: rgb(var(--jungle-bark, 38 28 19) / 0.8);
+}
+
+html[data-theme][data-theme] [data-sonner-toaster] [data-sonner-toast],
+html[data-theme][data-theme] [data-vaul-drawer]:not([data-keep-dark]):not(.bg-transparent) {
+  background-color: var(--float-glass) !important;
+  backdrop-filter: var(--float-glass-blur) !important;
+  -webkit-backdrop-filter: var(--float-glass-blur) !important;
+}
+
+/* Dialogs, sheets and popover/menu/select content. Only ones that paint a
+   background already: a transparent wrapper (a media viewer, a bare popper
+   around a custom card) stays transparent, and [data-keep-dark] media shells
+   keep their own dark scrim. On light, index.css leaves dialogs and drawers
+   out of its bg-black wash so this can reach them. */
+html[data-theme][data-theme]
+  :is([role='dialog'], [role='alertdialog'], [data-radix-popper-content-wrapper] > *)[class*='bg-']:not(.bg-transparent):not([data-keep-dark]):not([data-vaul-drawer]) {
+  background-color: var(--float-glass) !important;
+  backdrop-filter: var(--float-glass-blur) !important;
+  -webkit-backdrop-filter: var(--float-glass-blur) !important;
+}
+
+/* Reduced transparency asked for: fall back to solid. */
+@media (prefers-reduced-transparency: reduce) {
+  html {
+    --float-glass: rgb(var(--glass-tint, 9 9 11));
+  }
+  html[data-theme='light'] {
+    --float-glass: rgb(249 248 244);
+  }
+}
