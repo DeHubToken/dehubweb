@@ -24,6 +24,8 @@ import { cn } from '@/lib/utils';
 // canvas visualizer module onto the boot path.
 import { RadioSection } from '@/components/app/radio/RadioSection';
 import { StagesCarousel } from '@/components/app/music/StagesCarousel';
+import { CinematicMusic } from '@/components/app/music/CinematicMusic';
+import { useCinematicPhone } from '@/hooks/use-cinematic-phone';
 import { openStageModal } from '@/contexts/StageContext';
 
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
@@ -36,9 +38,7 @@ import {
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { searchNFTs, getNFTInfo, getBlockList, type DeHubNFT } from '@/lib/api/dehub';
 import { MANUAL_MUSIC_TOKEN_IDS } from '@/constants/music.constants';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, extractAvatarPath } from '@/lib/media-url';
-import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
-import { resolveViewCount } from '@/lib/engagement';
+import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -69,82 +69,7 @@ const CAROUSEL_PAGE_SIZE = 12;
 
 // ============================================================================
 // HELPERS
-/** Hardcoded fallback usernames/display names to filter out from feeds */
-const BLOCKED_CREATORS_FALLBACK = [
-  'monkey d luffy',
-  'monkey d. luffy',
-  'monkeydluffy',
-  'monkey_d_luffy',
-];
-
-function isBlockedCreator(nft: DeHubNFT, dynamicBlockedAddresses?: Set<string>): boolean {
-  if (dynamicBlockedAddresses) {
-    const minter = (nft.minter || '').toLowerCase();
-    if (minter && dynamicBlockedAddresses.has(minter)) return true;
-  }
-  const displayName = (nft.minterDisplayName || nft.mintername || '').toLowerCase();
-  const username = (nft.creator?.username || '').toLowerCase();
-  return BLOCKED_CREATORS_FALLBACK.some(blocked => 
-    displayName.includes(blocked) || username.includes(blocked)
-  );
-}
-
-// Helper functions (formatDuration, formatViews, formatTimeAgo) are now imported from @/lib/feed-utils
-function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
-  const minterAddress = nft.minter || nft.creator?.id || '';
-  // Use centralized utility for avatar extraction
-  const rawAvatarUrl = extractAvatarPath(nft) || extractAvatarPath(nft.creator);
-  const avatarUrl = minterAddress && rawAvatarUrl 
-    ? buildAvatarUrl(minterAddress, rawAvatarUrl) 
-    : undefined;
-
-  const tokenId = nft.tokenId || nft.id || nft.token_id || index;
-  
-  // Detect audio posts
-  const postType = (nft as any).postType as string | undefined;
-  const isAudioPost = postType === 'audio' || postType === 'feed-audio';
-  
-  // Get duration from various possible fields
-  const duration = isAudioPost 
-    ? ((nft as any).audioDuration || nft.videoDuration || nft.duration)
-    : (nft.videoDuration || nft.duration);
-  
-  // Build audio URL for audio posts
-  const rawAudioUrl = (nft as any).audioUrl as string | undefined;
-  const audioUrl = isAudioPost && rawAudioUrl
-    ? (rawAudioUrl.startsWith('http') ? rawAudioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioUrl}`)
-    : undefined;
-  
-  return {
-    id: String(tokenId),
-    type: 'video',
-    thumbnail: buildImageUrl(tokenId, nft.imageUrl) || buildImageUrl(tokenId, nft.thumbnail_url) || '',
-    title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
-    channel: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'Anonymous',
-    verified: nft.creator?.is_verified || false,
-    channelAvatar: avatarUrl || undefined,
-    views: formatViews(resolveViewCount(nft)),
-    uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
-    duration: formatDuration(duration),
-    videoUrl: isAudioPost ? undefined : buildVideoUrl(tokenId),
-    audioUrl,
-    audioDuration: isAudioPost ? (typeof duration === 'number' ? duration : 0) : undefined,
-    isAudio: isAudioPost,
-    isPPV: nft.is_ppv,
-    ppvPrice: nft.ppv_price,
-    ppvCurrency: nft.ppv_currency,
-    isW2E: nft.is_w2e,
-    isLocked: nft.is_locked || nft.streamInfo?.isLockContent,
-    lockedPrice: nft.locked_price || nft.streamInfo?.lockContentAmount,
-    lockedCurrency: nft.locked_currency || nft.streamInfo?.lockContentTokenSymbol || 'DHB',
-    lockedTokenAddress: nft.streamInfo?.lockContentContractAddress,
-    lockedChainId: nft.streamInfo?.lockContentChainIds?.[0],
-    creatorUsername: nft.mintername || nft.creator?.username,
-    creatorId: minterAddress,
-    chainId: nft.chainId,
-    totalTips: nft.totalTips ?? 0,
-  };
-}
+// ============================================================================
 
 // ============================================================================
 // SUB-COMPONENTS
@@ -710,6 +635,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   const { layerRef: musicSubTabLayerRef, setRef: setMusicSubTabRef, rect: musicSubTabRect, onScroll: onMusicSubTabScroll } = useTabIndicator(activeSubTab, undefined, musicSubIsDraggingRef);
 
   const { walletAddress, isAuthenticated } = useAuth();
+  const cinematic = useCinematicPhone();
 
   // Fetch dynamic block list for authenticated users
   const { data: blockList } = useQuery({
@@ -829,6 +755,15 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     onTabChange: setActiveSubTab,
     isDraggingRef: musicSubIsDraggingRef,
   });
+
+  // System theme on phones: radio hero and a chart instead of carousels.
+  if (cinematic && !isRefreshing) {
+    return (
+      <div className="px-2">
+        <CinematicMusic radioStations={radioStations} blockedAddresses={blockedAddresses} />
+      </div>
+    );
+  }
 
   if (isRefreshing) {
     return (
