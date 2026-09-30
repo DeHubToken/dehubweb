@@ -230,7 +230,11 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
         ) : null}
         onAvatarClick={() => (isAuthenticated ? onOpenChange(true) : openLoginModal())}
         logoSrc={dehubMark}
-        onLogoClick={handleLogoClick}
+        onLogoClick={(e: React.MouseEvent) => {
+          e.preventDefault();
+          if (isAuthenticated) onOpenChange(true);
+          else openLoginModal();
+        }}
         showBell={isAuthenticated}
         unread={totalNotifUnread}
         onBellClick={() => navigate('/app/notifications')}
