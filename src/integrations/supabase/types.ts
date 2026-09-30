@@ -6844,6 +6844,33 @@ export type Database = {
         }
         Relationships: []
       }
+      wallet_backup_status: {
+        Row: {
+          backed_up_at: string | null
+          eth_address: string
+          last_dismissed_at: string | null
+          reminders_dismissed: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          backed_up_at?: string | null
+          eth_address: string
+          last_dismissed_at?: string | null
+          reminders_dismissed?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          backed_up_at?: string | null
+          eth_address?: string
+          last_dismissed_at?: string | null
+          reminders_dismissed?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       winter_wonderland_results: {
         Row: {
           created_at: string
