@@ -1,15 +1,12 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
-import { useHistoryNavType } from '@/hooks/use-history-nav-type';
-import { Menu, Bell, ArrowLeft } from 'lucide-react';
+import { Menu, Bell } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
-import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
-import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useCallback, useLayoutEffect, useRef, memo } from 'react';
@@ -60,10 +57,6 @@ interface MobileHeaderProps {
 export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  // NOT useNavigationType() — see use-history-nav-type: react-router reports
-  // POP for everything under App.tsx's `<Routes location>`, which would make the
-  // back button always jump to /app instead of stepping back through history.
-  const navType = useHistoryNavType();
   const { isAuthenticated, user, openLoginModal } = useAuth();
   
   // Drop below every overlay scrim (dialog/sheet z-50, drawer z-100) while a
@@ -80,11 +73,6 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
-
-  // The whole DHB position — held plus staked, across both chains. Was
-  // hardcoded to 0, so the coin in the header read 0 for everyone. Free to
-  // read: SelfBadgeSync owns the fetch, this only observes its answer.
-  const coinBalance = useSelfBadge().balance ?? 0;
 
   // Use ref for pathname so handleLogoClick is stable across renders
   const pathnameRef = useRef(location.pathname);
@@ -130,14 +118,6 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   const warmSheetForLogin = useCallback(() => {
     if (!isAuthenticated) warmLoginSheet();
   }, [isAuthenticated]);
-
-  const handleBackClick = useCallback(() => {
-    if (navType === 'POP') {
-      navigate('/app');
-    } else {
-      navigate(-1);
-    }
-  }, [navType, navigate]);
 
   return (
     <>

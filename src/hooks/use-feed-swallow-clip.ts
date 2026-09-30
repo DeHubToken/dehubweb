@@ -31,12 +31,14 @@ const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war
  *                      it on the opaque/paper themes too (e.g. the docs blog
  *                      pill pins below the docs header), where content would
  *                      otherwise re-emerge above the nav
+ *                      off: skip the clip entirely (the system theme's phone
+ *                      feed has no resting pill to cut at)
  */
 export function useFeedSwallowClip(
   containerRef: RefObject<HTMLElement | null>,
   cutSelector: string,
   deps: unknown[] = [],
-  opts: { allThemes?: boolean } = {},
+  opts: { allThemes?: boolean; off?: boolean } = {},
 ) {
   // False while this page sits in PersistentPageCache but is not the route on
   // screen. Those pages are never unmounted, so without this gate every page
@@ -48,7 +50,7 @@ export function useFeedSwallowClip(
   const isActivePage = useContext(CachedPageActiveContext);
 
   useEffect(() => {
-    if (!isActivePage) return;
+    if (!isActivePage || opts.off) return;
     const el = containerRef.current;
     if (!el) return;
     const pageScope = el.closest<HTMLElement>('[data-cached-page]');
@@ -149,5 +151,5 @@ export function useFeedSwallowClip(
       el.style.clipPath = '';
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [containerRef, cutSelector, opts.allThemes, isActivePage, ...deps]);
+  }, [containerRef, cutSelector, opts.allThemes, opts.off, isActivePage, ...deps]);
 }
