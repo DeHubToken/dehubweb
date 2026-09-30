@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { ExternalLink } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { normalizeSocialUrl } from '@/lib/social-links';
 
 export const SOCIAL_CONFIGS = [
@@ -83,10 +82,10 @@ function displayUrl(url: string) {
 }
 
 /**
- * One "Links" pill in place of a row of social icons. The icons used to
- * share the name's row, so every link a creator added took width from the
- * name and a long display name got cut or crushed beside them. The pill sits
- * at the bottom right of the header instead and opens the full list.
+ * A few bare social icons in the header's bottom right corner. The icons
+ * used to share the name's row, so every link a creator added took width
+ * from the name and a long display name got cut or crushed beside them.
+ * Tapping them opens the full list.
  */
 export function ProfileLinksPill({ customs, className }: ProfileLinksPillProps) {
   const { t } = useTranslation();
@@ -102,23 +101,21 @@ export function ProfileLinksPill({ customs, className }: ProfileLinksPillProps) 
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      {/* The same glass button as Follow, so every theme already knows how
-          to draw it. */}
+      {/* Just the icons, no pill and no label, so it sits quietly in the
+          corner. The drawer still opens the full list. */}
       <DrawerTrigger asChild>
-        <Button
+        <button
           type="button"
-          variant="glass"
-          size="sm"
-          className={cn('rounded-full h-8 gap-2 pl-3 pr-3.5', className)}
+          className={cn(
+            'flex items-center gap-1.5 -m-1.5 p-1.5 text-zinc-400 hover:text-zinc-200 transition-colors [&_svg]:w-3 [&_svg]:h-3',
+            className,
+          )}
           aria-label={t('profile.links', 'Links')}
         >
-          <span className="flex items-center gap-1 text-zinc-400 [&_svg]:w-3 [&_svg]:h-3">
-            {links.slice(0, 3).map(({ key, icon }) => (
-              <span key={key} className="contents">{icon}</span>
-            ))}
-          </span>
-          {t('profile.links', 'Links')}
-        </Button>
+          {links.slice(0, 3).map(({ key, icon }) => (
+            <span key={key} className="contents">{icon}</span>
+          ))}
+        </button>
       </DrawerTrigger>
       <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
         <DrawerHeader className="px-1">
