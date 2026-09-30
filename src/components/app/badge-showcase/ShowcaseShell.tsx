@@ -600,7 +600,7 @@ export function ShowcaseShell({
         style={{ opacity: open ? 1 : 0 }}
       />
 
-      {cinematic && <div className="pointer-events-none absolute inset-0 z-[15]" style={{ opacity: glFailed ? 0 : 1 }}>
+      {cinematic && <div className={`pointer-events-none absolute inset-0 ${world ? 'z-[5]' : 'z-[15]'}`} style={{ opacity: glFailed ? 0 : 1 }}>
         <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
       </div>}
 
