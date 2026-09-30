@@ -5181,8 +5181,25 @@ html[data-theme="light"] [data-creator-page] .text-white {
   html[data-theme="system"] [data-feed-root] [data-cinematic-first]:not(:has([data-video-card] [data-card-head]:not([data-card-head="plain"]))) {
     padding-top: calc(env(safe-area-inset-top, 0px) + 3.25rem) !important;
   }
-  html[data-theme="system"] [data-cinematic-first] [data-card-head]:not([data-card-head="plain"]) {
-    top: calc(env(safe-area-inset-top, 0px) + 3.5rem) !important;
+  /* On the first video the author chip and buttons sit at the bottom of the
+     picture, just above the caption, so the top stays clear under the capsule.
+     The card becomes a one-cell grid so the chip can sit on the media without
+     knowing its height. */
+  html[data-theme="system"] [data-cinematic-first] [data-video-card]:has(> [data-card-head]:not([data-card-head="plain"])) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] > :is([data-card-head], [data-media-full]) {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    align-self: end;
+    margin: 0 0.75rem 2.75rem;
   }
   html[data-theme="system"] [data-feed-root] [data-cinematic]:is([data-cinematic="post"], [data-cinematic="ad"]) {
     padding-left: 0.875rem !important;
@@ -5302,9 +5319,14 @@ html[data-theme="light"] [data-creator-page] .text-white {
   html[data-theme="system"] [data-cinematic] [data-video-card] [data-media-full] > .absolute.top-2 {
     top: 3.75rem;
   }
-  /* On the first post the badges and tools menu sit one capsule lower. */
+  /* On the first post the badges sit just under the capsule, and the tools
+     menu opens upward from its button at the bottom. */
   html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2 {
-    top: calc(env(safe-area-inset-top, 0px) + 6.5rem);
+    top: calc(env(safe-area-inset-top, 0px) + 3.75rem);
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2[data-video-tools] {
+    top: auto;
+    bottom: 5.5rem;
   }
 
   /* Caption, then the meta row, under the media. */
