@@ -97,7 +97,6 @@ html[data-theme='osaka'] [data-page-bento].cursor-pointer:hover {
 html[data-theme='osaka'] [data-feed-nav-outer] {
   background-color: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 html[data-theme='osaka'] [data-feed-nav] {
@@ -106,7 +105,6 @@ html[data-theme='osaka'] [data-feed-nav] {
     var(--osaka-bleed),
     rgb(var(--osaka-slate) / 0.52) !important;
   backdrop-filter: blur(22px) saturate(170%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
   box-shadow:
     inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1),
     inset 0 1.5px 0 rgb(var(--osaka-mist) / 0.2),
@@ -290,7 +288,6 @@ html[data-theme='osaka'] #app-root [data-sidebar-active-indicator] {
     inset 0 1px 0 rgb(var(--osaka-mist) / 0.18),
     0 0 12px rgb(var(--osaka-neon) / 0.16) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* Unread counters are a COUNT, not an alert, so they resolve to the accent
@@ -327,7 +324,6 @@ html[data-theme='osaka'] #app-root
 html[data-theme='osaka'] [data-mobile-header] {
   background: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   border-color: transparent !important;
   box-shadow: none !important;
 }
@@ -342,7 +338,6 @@ html[data-theme='osaka'] [data-mobile-header] {
 html[data-theme='osaka'] [data-bottom-nav] {
   background: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
   border-color: transparent !important;
 }
@@ -353,7 +348,6 @@ html[data-theme='osaka'] [data-bottom-nav] > nav {
     var(--osaka-bleed),
     rgb(var(--osaka-slate) / 0.72) !important;
   backdrop-filter: var(--osaka-blur) !important;
-  -webkit-backdrop-filter: var(--osaka-blur) !important;
   border-color: transparent !important;
   box-shadow:
     inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1),
@@ -426,7 +420,6 @@ html[data-theme='osaka'] [data-radix-popper-content-wrapper] > * {
     var(--osaka-bleed),
     rgb(var(--osaka-slate) / 0.94) !important;
   backdrop-filter: var(--osaka-blur) !important;
-  -webkit-backdrop-filter: var(--osaka-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--osaka-edge-lift) !important;
   color: rgb(var(--osaka-mist)) !important;
@@ -459,7 +452,6 @@ html[data-theme='osaka'] [data-vaul-drawer]:not([data-post-drawer]) {
     var(--osaka-bleed),
     rgb(var(--osaka-slate) / 0.96) !important;
   backdrop-filter: var(--osaka-blur) !important;
-  -webkit-backdrop-filter: var(--osaka-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--osaka-edge-lift) !important;
 }
@@ -481,7 +473,6 @@ html[data-theme='osaka']
     var(--osaka-bleed),
     rgb(var(--osaka-slate) / 0.95) !important;
   backdrop-filter: var(--osaka-blur) !important;
-  -webkit-backdrop-filter: var(--osaka-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--osaka-edge-lift) !important;
 }
@@ -499,7 +490,6 @@ html[data-theme='osaka']
     var(--osaka-bleed),
     rgb(var(--osaka-slate) / 0.95) !important;
   backdrop-filter: var(--osaka-blur) !important;
-  -webkit-backdrop-filter: var(--osaka-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--osaka-edge-lift) !important;
 }
@@ -518,7 +508,6 @@ html[data-theme='osaka'] [data-sonner-toast] {
     var(--osaka-bleed),
     rgb(var(--osaka-slate) / 0.95) !important;
   backdrop-filter: var(--osaka-blur) !important;
-  -webkit-backdrop-filter: var(--osaka-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--osaka-edge-lift) !important;
   color: rgb(var(--osaka-mist)) !important;
@@ -530,7 +519,6 @@ html[data-theme='osaka'] [data-radix-dialog-overlay],
 html[data-theme='osaka'] [data-vaul-overlay] {
   background: rgb(var(--osaka-void) / 0.66) !important;
   backdrop-filter: blur(6px) !important;
-  -webkit-backdrop-filter: blur(6px) !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -847,7 +835,6 @@ html[data-theme='osaka'] [data-primary-cta] {
   overflow: hidden;
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
   backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
   color: rgb(var(--osaka-mist)) !important;
   border-color: color-mix(in srgb, var(--osaka-cta-edge) 82%, transparent) !important;
   box-shadow:
@@ -971,7 +958,6 @@ html[data-theme='osaka'] #app-root
      leaves a blur(26px) on every input, so a nine-field form nests nine
      compositing layers inside an already-frosted card and each one flattens. */
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* Text fields retain their resting bento edge while focused. The active neon
@@ -1291,7 +1277,6 @@ html[data-theme='osaka'] #app-root
   ) {
   background-color: rgb(var(--osaka-mist) / 0.12) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 @keyframes osaka-shimmer {
@@ -1331,7 +1316,6 @@ html[data-theme='osaka']
   filter: none !important;
   mix-blend-mode: normal !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* Only a MEDIA FRAME gets the opaque backing. [data-keep-dark] used to be in
@@ -1481,7 +1465,6 @@ html[data-theme='osaka'] #app-root
   /* --osaka-slab is only set on phones, where the blur is off (osaka-frame.css). */
   background-color: rgb(var(--osaka-slate) / var(--osaka-slab, 0.6)) !important;
   backdrop-filter: var(--osaka-blur);
-  -webkit-backdrop-filter: var(--osaka-blur);
 }
 
 /* House rule 3 applied to the same set: a converted slab that shipped no
@@ -1558,7 +1541,6 @@ html[data-theme='osaka'] #app-root
   ) {
   background-color: rgb(var(--osaka-mist) / 0.06) !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* `bg-black/*` inside a card is a different animal and must NOT get the light
@@ -1587,7 +1569,6 @@ html[data-theme='osaka'] #app-root [data-inline-popover] {
     var(--osaka-bleed),
     rgb(var(--osaka-slate) / 0.96) !important;
   backdrop-filter: var(--osaka-blur) !important;
-  -webkit-backdrop-filter: var(--osaka-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--osaka-edge-lift) !important;
 }
@@ -1602,7 +1583,6 @@ html[data-theme='osaka'] #app-root [data-reaction-tray] {
     var(--osaka-bleed),
     rgb(var(--osaka-slate) / 0.95) !important;
   backdrop-filter: var(--osaka-blur) !important;
-  -webkit-backdrop-filter: var(--osaka-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--osaka-edge-lift) !important;
 }
@@ -1684,7 +1664,6 @@ html[data-theme='osaka'] #app-root
 html[data-theme='osaka'] #app-root > div > main.bg-black.bg-black {
   background-color: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* Direct post routes must clear the middle column itself. The post-page marker
@@ -1693,7 +1672,6 @@ html[data-theme='osaka'] #app-root > div > main.bg-black.bg-black {
 html[data-theme='osaka'] #app-root main[data-main-panel][data-post-route] {
   background: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* A post can arrive through the feed overlay or as a direct route. Keep the

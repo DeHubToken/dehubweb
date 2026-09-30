@@ -35,7 +35,6 @@ html[data-theme][data-theme] [data-sonner-toaster] [data-sonner-toast],
 html[data-theme][data-theme] [data-vaul-drawer]:not([data-keep-dark]):not(.bg-transparent) {
   background-color: var(--float-glass) !important;
   backdrop-filter: var(--float-glass-blur) !important;
-  -webkit-backdrop-filter: var(--float-glass-blur) !important;
 }
 
 /* Dialogs, sheets and popover/menu/select content. Only ones that paint a
@@ -47,7 +46,6 @@ html[data-theme][data-theme]
   :is([role='dialog'], [role='alertdialog'], [data-radix-popper-content-wrapper] > *)[class*='bg-']:not(.bg-transparent):not([data-keep-dark]):not([data-vaul-drawer]) {
   background-color: var(--float-glass) !important;
   backdrop-filter: var(--float-glass-blur) !important;
-  -webkit-backdrop-filter: var(--float-glass-blur) !important;
 }
 
 /* Reduced transparency asked for: fall back to solid. */
@@ -90,14 +88,12 @@ html[data-theme][data-theme]:is([data-theme='system'], [data-theme='cosmic'], [d
   :is([data-feed-nav], [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]), [data-bottom-nav] > nav):not(#_):not(#_) {
   background-color: var(--nav-glass) !important;
   backdrop-filter: var(--nav-glass-blur) !important;
-  -webkit-backdrop-filter: var(--nav-glass-blur) !important;
 }
 html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_)::before,
 html[data-theme][data-theme='war'] [data-bottom-nav] > nav:not(#_):not(#_)::before,
 html[data-theme][data-theme='war'] [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]):not(#_):not(#_) {
   background-color: var(--nav-glass) !important;
   backdrop-filter: var(--nav-glass-blur) !important;
-  -webkit-backdrop-filter: var(--nav-glass-blur) !important;
 }
 
 /* War's tab row itself stays clear so only the chamfered plate paints; the
@@ -105,7 +101,6 @@ html[data-theme][data-theme='war'] [data-feed-nav-outer] > [data-page-bento]:not
 html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_) {
   background-color: transparent !important;
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 @media (prefers-reduced-transparency: reduce) {

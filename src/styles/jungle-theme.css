@@ -174,7 +174,6 @@ html[data-theme='jungle'] [data-feed-nav] {
   border-radius: var(--jungle-r-panel) !important;
   background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.88) !important;
   backdrop-filter: var(--jungle-blur) !important;
-  -webkit-backdrop-filter: var(--jungle-blur) !important;
   box-shadow:
     inset 0 1.5px 0 rgb(var(--jungle-glint) / 0.2),
     inset 0 0 0 1px rgb(0 0 0 / 0.6),
@@ -284,7 +283,6 @@ html[data-theme='jungle'] [data-side-panel-tabs] {
 html[data-theme='jungle'] [data-bottom-nav] {
   background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.9) !important;
   backdrop-filter: var(--jungle-blur) !important;
-  -webkit-backdrop-filter: var(--jungle-blur) !important;
   border-color: transparent !important;
   box-shadow:
     inset 0 1.5px 0 rgb(var(--jungle-glint) / 0.18),
@@ -368,7 +366,6 @@ html[data-theme='jungle'] [data-radix-dialog-overlay],
 html[data-theme='jungle'] [data-vaul-overlay] {
   background: rgb(var(--jungle-loam) / 0.76) !important;
   backdrop-filter: blur(5px) !important;
-  -webkit-backdrop-filter: blur(5px) !important;
 }
 
 /* ==========================================================================
@@ -490,7 +487,6 @@ html[data-theme='jungle'] #app-root [class*='bg-white/[0.03]'][class*='backdrop-
   border-color: transparent !important;
   box-shadow: var(--jungle-edge) !important;
   backdrop-filter: var(--jungle-blur) !important;
-  -webkit-backdrop-filter: var(--jungle-blur) !important;
 }
 
 html[data-theme='jungle'] [data-follow-btn] {
@@ -668,7 +664,6 @@ html[data-theme='jungle'] :is([data-media-full], [data-video-controls], [data-ke
 html[data-theme='jungle'] :is([data-media-full], [data-video-controls], [data-keep-dark]):not([class*='backdrop-blur']),
 html[data-theme='jungle'] :is([data-media-full], [data-video-controls], [data-keep-dark]) *:not([class*='backdrop-blur']) {
   backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 html[data-theme='jungle'] [data-keep-dark] {
