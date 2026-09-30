@@ -667,7 +667,7 @@ function getNotificationContent(
   }
 
   // Backend-aggregated follow
-  if (notification.type === 'following' && (notification as any).aggregatedCount > 2) {
+  if (notification.type === 'following' && (notification as any).aggregatedCount > 1) {
     const othersCount = (notification as any).aggregatedCount - 1;
     const othersText = othersCount === 1 ? tr('notifications.oneOther') : tr('notifications.nOthers', { count: othersCount });
     return tr('notifications.andOthersFollowing', { name: actorName, others: othersText });
@@ -692,7 +692,7 @@ function getNotificationContent(
   const aggCount = (notification as any).aggregatedCount || 1;
   const aggNames = (notification as any).latestActorNames as string[] | undefined;
   const typeStr = notification.type as string;
-  if (aggCount > 2 && ['like', 'comment', 'repost'].includes(typeStr)) {
+  if (aggCount > 1 && ['like', 'comment', 'repost'].includes(typeStr)) {
     const canonical = (canonicalActors && canonicalActors.length > 0)
       ? canonicalActors
       : buildCanonicalActors(aggNames, undefined, undefined);
@@ -1130,7 +1130,7 @@ const NotificationItem = memo(function NotificationItem({
   const aggregatedCount = (notification as any).aggregatedCount || 1;
   const isBackendAggregatedMultiActor =
     canonicalActors.length >= 2 &&
-    aggregatedCount > 2 &&
+    aggregatedCount > 1 &&
     ['like', 'comment', 'repost', 'following'].includes(notification.type as string) &&
     bundle.bundleType !== 'same-actor';
 
@@ -1405,7 +1405,7 @@ const NotificationItem = memo(function NotificationItem({
         })()}
         
         {/* Show individual actor names below backend-aggregated follows */}
-        {notification.type === 'following' && (notification as any).aggregatedCount > 2 && (notification as any).latestActorNames?.length > 1 && (
+        {notification.type === 'following' && (notification as any).aggregatedCount > 1 && (notification as any).latestActorNames?.length > 1 && (
           <p className="text-xs text-zinc-500 mt-0.5">
             {(notification as any).latestActorNames.join(', ')}
           </p>
