@@ -40,6 +40,7 @@ if (boot && canvas) {
   } catch { post('ready', false); }
 } else { post('ready', false); }
 w.dehubSticker = {
+  items: (items: Boot['items']) => stage?.setItems(items),
   reveal: () => stage?.reveal(),
   show: (index: number, direction: 1 | -1) => {
     void stage?.show(index, { direction }).then(ok => { if (!ok) post('failed'); }).catch(() => post('failed'));
@@ -47,7 +48,7 @@ w.dehubSticker = {
   preload: (index: number) => stage?.preload(index),
   geometry: (box: MetalBox) => { hero = box; if ((stage instanceof MetalStage || stage instanceof ThemeStage)) stage.layout(); },
   open: (from: MetalBox | null, fromArt: string | null, promote: boolean) => {
-    if ((stage instanceof MetalStage || stage instanceof ThemeStage)) void stage.open({ from, fromArt, promote, onLanded: () => post('landed') }).catch(() => post('failed'));
+    if ((stage instanceof MetalStage || stage instanceof ThemeStage)) void stage.open({ from, fromArt, promote, ...(stage instanceof MetalStage ? { onStarted: () => post('started') } : {}), onLanded: () => post('landed') }).catch(() => post('failed'));
   },
   close: (home: MetalBox) => { if ((stage instanceof MetalStage || stage instanceof ThemeStage)) stage.close(home, () => post('closed')); },
   skip: () => { if ((stage instanceof MetalStage || stage instanceof ThemeStage)) stage.skip(); },

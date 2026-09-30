@@ -46,6 +46,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { ShowcaseShell, type ShowcaseApi, type ShowcaseEntry, type ShowcaseIntro } from './ShowcaseShell';
 import { BENTO, BENTO_IDLE, BENTO_LIT, tiltAt } from './showcase-ui';
 import type { StickerFinish } from './sticker-stage';
+import { warmMetalBadge } from './metal-warmup';
 
 interface BadgeShowcaseProps {
   /** Tier that was clicked; the showcase opens on it. */
@@ -68,6 +69,11 @@ const LIGHT_ART = import.meta.glob<string>('../../../assets/badges/light/*.webp'
 });
 const artFor = (tier: string) =>
   LIGHT_ART[`../../../assets/badges/light/${tier}.webp`] ?? badgeImage(tier) ?? '';
+
+export function warmHolderBadge(tier: string, replace = true) {
+  const name = canonicalTierName(tier);
+  if (name) warmMetalBadge({ src: artFor(name), label: name, finish: 'glitter', tilt: 0 }, replace);
+}
 
 /** Finishes get fancier up the ladder. */
 const finishFor = (i: number): StickerFinish => (i < 4 ? 'glitter' : i < 8 ? 'holo' : 'foil');

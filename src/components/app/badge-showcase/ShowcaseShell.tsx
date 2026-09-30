@@ -17,6 +17,7 @@ import type { BadgeMotion } from '@/lib/badge-motion';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { MetalStage } from './metal-stage';
+import { acquireMetalStage } from './metal-warmup';
 import { ThemeStage } from './theme-stage';
 import { badgeWorld } from '@/lib/badge-world';
 
@@ -193,8 +194,10 @@ export function ShowcaseShell({
   useLayoutEffect(() => {
     if (cinematic) {
       const previous = anchor?.style.visibility ?? '';
-      if (anchor) anchor.style.visibility = 'hidden';
-      setShown(true);
+      if (!metallic) {
+        if (anchor) anchor.style.visibility = 'hidden';
+        setShown(true);
+      }
       return () => { if (anchor) anchor.style.visibility = previous; };
     }
     const hero = heroBox();
@@ -276,13 +279,16 @@ export function ShowcaseShell({
     const fail = () => {
       if (!live) return;
       if (closingRef.current) { onClose(); return; }
+      setShown(true);
+      if (anchor) anchor.style.visibility = 'hidden';
       setGlFailed(true);
       setStickerOn(false);
       setStickerReady(false);
       setShowOld(false);
       setLanded(true);
     };
-    let stage: StickerStage | MetalStage | ThemeStage;
+    let stage: StickerStage | MetalStage | ThemeStage | undefined;
+    const start = async () => {
     try {
       const handlersForStage = {
         onTap: () => handlers.current.next(),
@@ -296,33 +302,42 @@ export function ShowcaseShell({
         interactionElement: stageBoxRef.current!,
         reducedMotion: reduceMotion,
         onError: fail,
-      }) : metallic ? new MetalStage(canvas, {
+      }) : metallic ? await acquireMetalStage(canvas, {
         ...handlersForStage,
         hero: () => heroBox() ?? { x: 0, y: 0, size: 1 },
         interactionElement: stageBoxRef.current!,
         reducedMotion: reduceMotion,
         onError: fail,
-      }) : new StickerStage(canvas, handlersForStage);
+      }, items[originIndex].src) : new StickerStage(canvas, handlersForStage);
     } catch {
       fail();
       return;
     }
-    stage.setItems(items);
-    stageRef.current = stage;
-    stage.show(originIndex, { instant: true, hold: true }).then((ok) => {
-      if (!live || closingRef.current || stageRef.current !== stage) return;
+    if (!live || closingRef.current) { stage.dispose(); return; }
+    const activeStage = stage;
+    activeStage.setItems(items);
+    stageRef.current = activeStage;
+    activeStage.show(originIndex, { instant: true, hold: true }).then((ok) => {
+      if (!live || closingRef.current || stageRef.current !== activeStage) return;
       if (!ok) return fail();
       setStickerReady(true);
-      if ((stage instanceof MetalStage || stage instanceof ThemeStage)) {
+      if ((activeStage instanceof MetalStage || activeStage instanceof ThemeStage)) {
         setStickerOn(true);
-        void stage.open({ from: anchorBox(), fromArt: intro?.fromArt, promote: !!intro,
+        void activeStage.open({ from: anchorBox(), fromArt: intro?.fromArt, promote: !!intro,
+          ...(activeStage instanceof MetalStage ? { onStarted: () => {
+            if (!live || closingRef.current) return;
+            if (anchor) anchor.style.visibility = 'hidden';
+            setShown(true);
+          } } : {}),
           onLanded: () => { if (live && !closingRef.current) setLanded(true); },
         }).catch(fail);
       }
     }).catch(fail);
+    };
+    void start().catch(fail);
     return () => {
       live = false;
-      stage.dispose();
+      stage?.dispose();
       if (stageRef.current === stage) stageRef.current = null;
     };
   // The material and opening geometry belong to this presentation's initial theme.
@@ -330,11 +345,11 @@ export function ShowcaseShell({
   }, [items, originIndex, cinematic, metallic, world]);
 
   useEffect(() => {
-    if (!stickerOn) return;
+    if (!stickerOn || phase !== 'open') return;
     const stage = stageRef.current;
     stage?.preload((originIndex + 1) % count);
     stage?.preload((originIndex - 1 + count) % count);
-  }, [stickerOn, originIndex, count]);
+  }, [stickerOn, phase, originIndex, count]);
 
   useEffect(() => {
     const stage = stageRef.current;
