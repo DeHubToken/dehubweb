@@ -477,7 +477,9 @@ export default function HomePage() {
 
   // Clip the feed at the visible nav pill's top edge under the glass themes.
   // Two variants match: this page's pill and the collapsed GlobalFeedNav's.
-  useFeedSwallowClip(feedContainerRef, '[data-feed-nav]');
+  // Not on system phones: the pill only drops in on demand under the capsule,
+  // and posts run under it to the top of the screen.
+  useFeedSwallowClip(feedContainerRef, '[data-feed-nav]', [], { off: islandTopBar && isMobile });
 
   // --------------------------------------------------------------------------
   // PULL-TO-REFRESH HOOK
@@ -929,7 +931,9 @@ export default function HomePage() {
           transform: (isMobile && (anyOverlayOpen || ((islandTopBar ? !feedTabsOpen : !navVisible) && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')))) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)',
           willChange: 'transform',
           // Island mode: the pill drops in under the capsule rather than at the very top.
-          ...(islandTopBar && isMobile && !isPostOverlayActive ? { top: 'calc(env(safe-area-inset-top, 0px) + 3rem)' } : null),
+          // Fixed, not sticky, so it takes no room in the page: posts run to
+          // the very top of the screen with no band above the first one.
+          ...(islandTopBar && isMobile && !isPostOverlayActive ? { position: 'fixed', left: 0, right: 0, top: 'calc(env(safe-area-inset-top, 0px) + 3rem)' } : null),
         }}
       >
         <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl">

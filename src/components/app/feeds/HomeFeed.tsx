@@ -1488,6 +1488,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         key={key}
         data-feed-item
         data-cinematic={item.type}
+        data-cinematic-first={index === 0 ? '' : undefined}
         className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3"
         style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: `auto 0 auto ${intrinsicH}` } : undefined}
       >
