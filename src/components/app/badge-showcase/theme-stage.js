@@ -24,6 +24,7 @@ export class ThemeStage {
       pending = null;
       stop();
       if (!disposed && hasArt) scene.still();
+      canvas.dataset.badgePhase = 'settled';
       callback?.();
     }
     function fail() {
@@ -75,8 +76,8 @@ export class ThemeStage {
           image.onload = () => {
             clearTimeout(timer);
             if (!normalize) return resolve(image);
-            const art = document.createElement('canvas'); art.width = art.height = 256;
-            art.getContext('2d').drawImage(image, 0, 0, 256, 256);
+            const art = document.createElement('canvas'); art.width = art.height = 512;
+            art.getContext('2d').drawImage(image, 0, 0, 512, 512);
             resolve(art);
           };
           image.src = src;
@@ -96,12 +97,14 @@ export class ThemeStage {
       if (disposed || version !== serial) return false;
       if (ice) scene.setIce(ice);
       scene.prepare(old, next); hasArt = true; index = nextIndex;
+      canvas.dataset.badgeIndex = String(nextIndex);
       layout();
       return true;
     }
     function play(from, promote, callback) {
       stop(); closing = null; held = false; elapsed = 0;
       scene.start(local(from), promote); pending = callback || (() => {});
+      canvas.dataset.badgePhase = promote ? 'promotion' : 'click';
       layout();
       if (reduce()) settle();
       else { scene.draw(0); wake(); }
@@ -133,6 +136,7 @@ export class ThemeStage {
       ++serial; stop(); pending = null; held = false;
       if (reduce() || !hasArt) { onClosed(); return; }
       elapsed = 0; closing = { home: local(home), done: onClosed }; wake();
+      canvas.dataset.badgePhase = 'closing';
     };
     const pointer = event => {
       if (held || closing) return;
@@ -149,6 +153,7 @@ export class ThemeStage {
     document.addEventListener('visibilitychange', visibility);
     motion.addEventListener('change', motionChanged);
     const observer = new ResizeObserver(layout); observer.observe(canvas);
+    canvas.dataset.badgeWorld = options.theme;
     this.dispose = () => {
       disposed = true; ++serial; stop(); pending = null; closing = null;
       observer.disconnect(); target.removeEventListener('pointerup', pointer);
