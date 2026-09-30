@@ -49,6 +49,18 @@ import {
   resetOrb,
   resetStatic,
 } from './visualizer-styles';
+import {
+  AudioListener,
+  EXTRA_STYLES,
+  defaultStyleForTheme,
+  drawExtra,
+  isExtraStyle,
+  makePalette,
+  type ExtraStyle,
+} from './visualizer-extra';
+
+/** The original ten plus the extras. */
+type AnyStyle = VisualizerStyle | ExtraStyle;
 
 interface AudioVisualizerProps {
   audioUrl: string;
@@ -117,7 +129,7 @@ interface AudioVisualizerProps {
   onPlaybackAdopted?: (playing: boolean) => void;
 }
 
-const STYLES: { value: VisualizerStyle; label: string }[] = [
+const STYLES: { value: AnyStyle; label: string }[] = [
   { value: 'static', label: 'Default' },
   { value: 'bars', label: 'Bars' },
   { value: 'waveform', label: 'Wave' },
@@ -128,6 +140,7 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
   { value: 'pulse', label: 'Pulse' },
   { value: 'terrain', label: 'Terrain' },
   { value: 'orb', label: 'Orb' },
+  ...EXTRA_STYLES,
 ];
 
 /** One height for every control in the bottom row, so they line up. */
@@ -249,7 +262,12 @@ export function AudioVisualizer({
   // the artwork behind it, which is why they are banned repo-wide.
   const { ref: chipScrollRef, style: chipFadeStyle } = useScrollFadeMask<HTMLDivElement>();
 
-  const [style, setStyle] = useState<VisualizerStyle>('static');
+  // An untouched card plays its theme's own style; picking one sticks for
+  // this card until it unmounts.
+  const [pickedStyle, setStyle] = useState<AnyStyle | null>(null);
+  const style = pickedStyle ?? (defaultStyleForTheme(theme) as AnyStyle);
+  const listenerRef = useRef<AudioListener | null>(null);
+  const extraStateRef = useRef<Record<string, unknown>>({});
   const [hue, setHue] = useState(0);
   const [waveformPeaks, setWaveformPeaks] = useState<number[] | null>(null);
   const [duration, setDuration] = useState(durationHint);
@@ -558,6 +576,24 @@ export function AudioVisualizer({
       timeData = time;
     }
 
+    if (isExtraStyle(style)) {
+      const listener = (listenerRef.current ||= new AudioListener());
+      const audio = audioRef.current;
+      const played = audio && audio.duration ? audio.currentTime / audio.duration : 0;
+      const progress = scrubRatioRef.current ?? played;
+      const now = performance.now() / 1000;
+      if (analyser && isPlayingRef.current) listener.fromAnalyser(frequencyData, timeData, now, progress, idleShape);
+      else listener.hold(now, progress, idleShape);
+      const cssW = canvas.clientWidth || width;
+      const scale = width / cssW;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+      ctx.setTransform(scale, 0, 0, scale, 0, 0);
+      drawExtra(style, ctx as never, width / scale, height / scale, listener.frame, makePalette(hue, isLightTheme, theme), extraStateRef.current as never);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      return;
+    }
+
     switch (style) {
       case 'bars':
         drawBars(ctx, frequencyData, width, height, hue);
@@ -587,7 +623,7 @@ export function AudioVisualizer({
         drawOrb(ctx, frequencyData, width, height, hue);
         break;
     }
-  }, [style, hue, seed, idleFrequency, idleTime, isLightTheme]);
+  }, [style, hue, seed, idleFrequency, idleTime, idleShape, isLightTheme, theme]);
 
   const drawFrameRef = useRef(drawFrame);
   drawFrameRef.current = drawFrame;
@@ -631,7 +667,19 @@ export function AudioVisualizer({
     resetTerrain();
     resetOrb();
     resetStatic();
+    extraStateRef.current = {};
   }, [style]);
+
+  // With fifty-odd styles the theme's own default can sit far down the strip.
+  // Slide the strip (never the page) so the active chip is in view.
+  useEffect(() => {
+    const strip = chipScrollRef.current;
+    const chip = strip?.querySelector<HTMLElement>('[data-active]');
+    if (!strip || !chip) return;
+    const sr = strip.getBoundingClientRect(), cr = chip.getBoundingClientRect();
+    const left = cr.left - sr.left + strip.scrollLeft - (sr.width - cr.width) / 2;
+    strip.scrollLeft = Math.max(0, left);
+  }, [style, showStylePicker, chipScrollRef]);
 
   /* ─── Playback ────────────────────────────────────────────────────────── */
 
@@ -1111,6 +1159,7 @@ export function AudioVisualizer({
                     <button
                       key={s.value}
                       type="button"
+                      data-active={style === s.value || undefined}
                       onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
