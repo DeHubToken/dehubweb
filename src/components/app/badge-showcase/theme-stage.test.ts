@@ -30,7 +30,7 @@ beforeEach(() => {
     onload = () => {}; onerror = () => {}; crossOrigin = '';
     set src(_src: string) { imageLoads.push(() => this.onload()); }
   });
-  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ setTransform() {}, drawImage() {} } as unknown as CanvasRenderingContext2D);
+  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ setTransform() {}, drawImage() {} } as unknown as ReturnType<HTMLCanvasElement['getContext']>);
 });
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); imageLoads.length = 0; });
 describe('badge stage lifecycle', () => {
