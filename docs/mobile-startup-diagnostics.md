@@ -31,3 +31,24 @@ Verify a startup repair on the affected installed binary: confirm the applied
 update, reach sign-in or the feed, background and reopen, then force-stop and
 launch again. Preserve app data and login state while diagnosing; clearing
 storage can hide the original failure.
+
+## Audio visualizer compatibility
+
+`FatalJS: RNSkiaModule could not be found` followed by `createPicture of
+undefined` on Home or Explore identifies a native graphics compatibility
+failure. The audio card's extra visualizers need Skia, but older Android
+binaries on runtime `1.18.0` do not contain that module. An OTA can deliver
+the JavaScript that calls it without adding the native module. Reinstalling
+the same binary can work briefly before it downloads the incompatible update.
+
+Mobile loads both Skia and its canvas adapter through `optionalSkia` and uses
+the default waveform when unavailable, preserving playback, seeking, colour,
+and the selected style. Web uses browser Canvas 2D and keeps the same style
+keys and painters; it does not require the mobile native module. Do not remove
+shared styles or rewrite stored preferences to work around an older binary.
+
+Verify the mobile fallback with an extra style on a binary without Skia, both
+paused and playing, on Home and Explore. Also check a Skia-enabled binary and
+the matching web style on `staging.dehub.io`. Keep the recovery OTA on the
+affected runtime so existing installs can receive it. Confirm its update ID
+on the affected phone before treating the blackout as resolved.
