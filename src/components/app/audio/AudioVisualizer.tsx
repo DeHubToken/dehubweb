@@ -939,53 +939,40 @@ export function AudioVisualizer({
         onPointerCancel={cancelScrub}
       />
 
-      {/* Top chrome: volume immediately before fullscreen on the right. Always drawn, never on
+      {/* Top chrome: colour immediately before fullscreen on the right. Always drawn, never on
           hover — the whole point of the last pass was that chrome appearing
           under the cursor is what made this card unusable. */}
       <div className="absolute inset-x-0 top-0 z-20 flex items-start justify-end gap-2 px-2 pt-2 pointer-events-none">
-        {showVolume && (
-        <div
-          className={cn('pointer-events-auto shrink-0 flex items-center gap-1.5 pl-1.5 pr-2.5', CONTROL_H, GLASS_PILL, glassShadow)}
+        {/* Colour slider - liquid glass bubble style */}
+        {showStylePicker && (
+                <div
+          className={cn('pointer-events-auto shrink-0 flex items-center px-2.5', CONTROL_H, GLASS_PILL, glassShadow)}
+          style={{ '--hue-thumb': hue === 0 ? 'hsl(0, 0%, 100%)' : `hsl(${hue}, 80%, 60%)` } as React.CSSProperties}
           onClick={stopBubble}
           onPointerDown={stopBubble}
         >
-          <button
-            type="button"
-            aria-label={isEffectivelyMuted ? 'Unmute' : 'Mute'}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!isEffectivelyMuted) { setSelfMuted(true); return; }
-              setSelfMuted(false);
-              // Unmuting a slider dragged to zero has to put the level back,
-              // or the icon flips and the track stays silent.
-              if (volume === 0) setVolume(1);
-            }}
-            className="shrink-0 w-5 h-5 flex items-center justify-center text-white/80 hover:text-white transition-colors"
-          >
-            {isEffectivelyMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
-          </button>
-          {/* The fill is Slider's own Range, not a div sized to the value:
-              Radix insets the thumb by half its width so it never overhangs the
-              track, so a hand-painted fill and the thumb drift apart at both
-              ends. The Track clips the Range for us and leaves the thumb alone
-              — it is a sibling, not a child. */}
-          <div className="relative w-12 h-1.5">
+          {/* No overflow-hidden: the 12px thumb lives in a 6px track, so
+              clipping to the track cut the grab handle in half — which is
+              exactly what you see the moment you drag it. The gradient is
+              a background, and border-radius clips that on its own. */}
+          <div className="relative w-14 h-1.5 rounded-full" style={{ background: HUE_GRADIENT }}>
             <Slider
-              value={[isEffectivelyMuted ? 0 : Math.round(volume * 100)]}
+              value={[hue]}
               min={0}
-              max={100}
+              max={360}
               step={1}
-              aria-label="Volume"
-              onValueChange={(value) => {
-                setVolume(value[0] / 100);
-                if (value[0] > 0) setSelfMuted(false);
-              }}
+              onValueChange={(value) => setHue(value[0])}
+              aria-label="Visualizer colour"
+              /* Root overflows the track vertically so the grab area is
+                 26px rather than 6px. Targets Slider's own data-* hooks —
+                 the old [class*=Track] selectors matched nothing, since
+                 those are utility classes, not component names. */
               className={cn(
                 'absolute -inset-y-2.5 inset-x-0 w-full py-0',
-                '[&_[data-slider-track]]:bg-white/25 [&_[data-slider-range]]:bg-white/85',
+                '[&_[data-slider-track]]:bg-transparent [&_[data-slider-range]]:bg-transparent',
                 '[&_[data-slider-thumb]]:h-3 [&_[data-slider-thumb]]:w-3',
                 '[&_[data-slider-thumb]]:border-2 [&_[data-slider-thumb]]:border-white',
-                '[&_[data-slider-thumb]]:bg-white',
+                '[&_[data-slider-thumb]]:bg-[var(--hue-thumb)]',
                 '[&_[data-slider-thumb]]:shadow-[0_1px_4px_rgba(0,0,0,0.45)]',
               )}
             />
@@ -1080,7 +1067,7 @@ export function AudioVisualizer({
           </span>
         </div>
 
-        {/* Play, colour and style, bottom left. Every control is CONTROL_H tall
+        {/* Play, volume and style, bottom left. Every control is CONTROL_H tall
             and centred on one line — the play button used to be 32px against a
             22px colour bubble and 24px chips, which read as three sizes dropped
             on a baseline rather than one strip. */}
@@ -1109,52 +1096,68 @@ export function AudioVisualizer({
             )}
           </button>
 
-          {showStylePicker && (
+          {(showStylePicker || showVolume) && (
             <>
-              {/* Colour slider - liquid glass bubble style */}
+              {showVolume && (
               <div
-                className={cn('shrink-0 flex items-center px-2.5', CONTROL_H, GLASS_PILL, glassShadow)}
-                style={{ '--hue-thumb': hue === 0 ? 'hsl(0, 0%, 100%)' : `hsl(${hue}, 80%, 60%)` } as React.CSSProperties}
+                className={cn('shrink-0 flex items-center gap-1.5 pl-1.5 pr-2.5', CONTROL_H, GLASS_PILL, glassShadow)}
                 onClick={stopBubble}
                 onPointerDown={stopBubble}
               >
-                {/* No overflow-hidden: the 12px thumb lives in a 6px track, so
-                    clipping to the track cut the grab handle in half — which is
-                    exactly what you see the moment you drag it. The gradient is
-                    a background, and border-radius clips that on its own. */}
-                <div className="relative w-14 h-1.5 rounded-full" style={{ background: HUE_GRADIENT }}>
+                <button
+                  type="button"
+                  aria-label={isEffectivelyMuted ? 'Unmute' : 'Mute'}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!isEffectivelyMuted) { setSelfMuted(true); return; }
+                    setSelfMuted(false);
+                    // Unmuting a slider dragged to zero has to put the level back,
+                    // or the icon flips and the track stays silent.
+                    if (volume === 0) setVolume(1);
+                  }}
+                  className="shrink-0 w-5 h-5 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+                >
+                  {isEffectivelyMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                </button>
+                {/* The fill is Slider's own Range, not a div sized to the value:
+                    Radix insets the thumb by half its width so it never overhangs the
+                    track, so a hand-painted fill and the thumb drift apart at both
+                    ends. The Track clips the Range for us and leaves the thumb alone
+                    — it is a sibling, not a child. */}
+                <div className="relative w-12 h-1.5">
                   <Slider
-                    value={[hue]}
+                    value={[isEffectivelyMuted ? 0 : Math.round(volume * 100)]}
                     min={0}
-                    max={360}
+                    max={100}
                     step={1}
-                    onValueChange={(value) => setHue(value[0])}
-                    aria-label="Visualizer colour"
-                    /* Root overflows the track vertically so the grab area is
-                       26px rather than 6px. Targets Slider's own data-* hooks —
-                       the old [class*=Track] selectors matched nothing, since
-                       those are utility classes, not component names. */
+                    aria-label="Volume"
+                    onValueChange={(value) => {
+                      setVolume(value[0] / 100);
+                      if (value[0] > 0) setSelfMuted(false);
+                    }}
                     className={cn(
                       'absolute -inset-y-2.5 inset-x-0 w-full py-0',
-                      '[&_[data-slider-track]]:bg-transparent [&_[data-slider-range]]:bg-transparent',
+                      '[&_[data-slider-track]]:bg-white/25 [&_[data-slider-range]]:bg-white/85',
                       '[&_[data-slider-thumb]]:h-3 [&_[data-slider-thumb]]:w-3',
                       '[&_[data-slider-thumb]]:border-2 [&_[data-slider-thumb]]:border-white',
-                      '[&_[data-slider-thumb]]:bg-[var(--hue-thumb)]',
+                      '[&_[data-slider-thumb]]:bg-white',
                       '[&_[data-slider-thumb]]:shadow-[0_1px_4px_rgba(0,0,0,0.45)]',
                     )}
                   />
                 </div>
               </div>
+              )}
 
               {/* Style picker - scrolls when the card is too narrow for all
                   nine, masked at whichever edge is actually hiding one so a
                   half-chip dissolves instead of being sliced. */}
+              {showStylePicker && (
               <div
                 ref={chipScrollRef}
                 className="flex-1 min-w-0 overflow-x-auto scrollbar-none"
                 style={chipFadeStyle}
               >
-                <div className="flex gap-0.5 w-max">
+                <div className="flex gap-1 w-max">
                   {STYLES.map((s) => (
                     <button
                       key={s.value}
@@ -1168,7 +1171,8 @@ export function AudioVisualizer({
                       onPointerDown={stopBubble}
                       onTouchStart={stopBubble}
                       className={cn(
-                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-lg whitespace-nowrap transition-colors text-white/60 hover:text-white/80',
+                        // Faint dark backing so labels stay readable over white-heavy themes.
+                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-lg whitespace-nowrap transition-colors text-white/75 hover:text-white bg-black/25 backdrop-blur-[12px]',
                         CONTROL_H,
                       )}
                     >
@@ -1184,6 +1188,7 @@ export function AudioVisualizer({
                   ))}
                 </div>
               </div>
+              )}
             </>
           )}
         </div>
