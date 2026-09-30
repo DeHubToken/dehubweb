@@ -138,7 +138,7 @@ function promotionFrame(ms){
         const ms=flowTime(now);flowTarget=hero();
         if(flowKind==='promotion'){if(!promotionFrame(ms))return;}
         else if(flowKind==='close'){const t=clamp(ms/580);drawMesh(group,blend(flowTarget,flowSource,ease(t),-20),-.3+t*.3,.04*(1-t));if(t===1){const callback=done;cancel();group.visible=false;renderer.render(scene,camera);callback?.();return;}}
-        else{const t=clamp(ms/1400);drawMesh(group,blend(flowSource,flowTarget,ease(t)),-.3-Math.PI*2*(1-ease(t)),.04+.2*Math.sin(t*Math.PI),-.1*Math.sin(t*Math.PI));if(t===1){settle();return;}}
+        else{const t=clamp(ms/900);drawMesh(group,blend(flowSource,flowTarget,ease(t)),-.3-Math.PI*2*(1-ease(t)),.04+.2*Math.sin(t*Math.PI),-.1*Math.sin(t*Math.PI));if(t===1){settle();return;}}
         wake();return;
       }
       const active=spinDuration&&now-spinStart<spinDuration,t=active?(now-spinStart)/spinDuration:1;
@@ -202,6 +202,6 @@ function promotionFrame(ms){
     const visibility=()=>{if(document.hidden){cancelAnimationFrame(raf);raf=0;if(flowActive)settle();}else wake();};
     const lost=e=>{e.preventDefault();cancelAnimationFrame(raf);raf=0;options.onError?.();};
     document.addEventListener('visibilitychange',visibility);canvas.addEventListener('webglcontextlost',lost);
-    this.dispose=()=>{disposed=true;++serial;cancelAnimationFrame(raf);cancel();disposeBadge(group);textures.forEach(t=>{t?.gray.dispose();t?.color.dispose();});env.dispose();renderer.dispose();observer.disconnect();fx.remove();document.removeEventListener('visibilitychange',visibility);canvas.removeEventListener('webglcontextlost',lost);interaction.removeEventListener('pointerdown',down);interaction.removeEventListener('pointermove',move);interaction.removeEventListener('pointerup',up);interaction.removeEventListener('pointercancel',reset);interaction.removeEventListener('pointerleave',reset);};
+    this.dispose=()=>{if(disposed)return;disposed=true;++serial;cancelAnimationFrame(raf);cancel();disposeBadge(group);textures.forEach(t=>{t?.gray.dispose();t?.color.dispose();});env.dispose();renderer.dispose();observer.disconnect();fx.remove();document.removeEventListener('visibilitychange',visibility);canvas.removeEventListener('webglcontextlost',lost);interaction.removeEventListener('pointerdown',down);interaction.removeEventListener('pointermove',move);interaction.removeEventListener('pointerup',up);interaction.removeEventListener('pointercancel',reset);interaction.removeEventListener('pointerleave',reset);renderer.forceContextLoss();};
   }
 }

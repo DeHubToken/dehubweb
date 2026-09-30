@@ -2,13 +2,27 @@ import { MetalStage, type MetalOptions } from './metal-stage';
 import type { StickerItem } from './sticker-stage';
 
 type Item = StickerItem & { label?: string };
-type Prepared = { stage: MetalStage; host: HTMLDivElement; ready: Promise<boolean>; timer: number; src: string };
+type Prepared = { stage: MetalStage; host: HTMLDivElement; ready: Promise<boolean>; timer: number; src: string; released: boolean };
 let prepared: Prepared | undefined;
 
 /** One held context, prepared before a click, rather than a renderer per feed badge. */
 export function warmMetalBadge(item: Item, replace = true) {
-  if (document.hidden || (prepared && (!replace || prepared.src === item.src))) return;
-  if (prepared) release(prepared);
+  if (document.hidden) return;
+  if (prepared) {
+    const entry = prepared;
+    if (replace && entry.src !== item.src) {
+      entry.src = item.src;
+      // Reuse the lighting and shader programs as the pointer crosses badges.
+      entry.ready = entry.ready.then(() => {
+        if (entry.released) return false;
+        entry.stage.setItems([item]);
+        return entry.stage.show(0, { hold: true, instant: true });
+      }).catch(() => false);
+    }
+    clearTimeout(entry.timer);
+    entry.timer = window.setTimeout(() => release(entry), 60_000);
+    return;
+  }
   const host = document.createElement('div');
   host.setAttribute('aria-hidden', 'true');
   Object.assign(host.style, { position: 'fixed', width: '256px', height: '256px', left: '-512px', top: '0', visibility: 'hidden', pointerEvents: 'none' });
@@ -19,14 +33,15 @@ export function warmMetalBadge(item: Item, replace = true) {
   try {
     const stage = new MetalStage(canvas, { hero: () => ({ x: -512, y: 0, size: 256 }) });
     stage.setItems([item]);
-    const entry: Prepared = { stage, host, src: item.src, timer: 0, ready: stage.show(0, { hold: true, instant: true }) };
+    const entry: Prepared = { stage, host, src: item.src, timer: 0, released: false, ready: stage.show(0, { hold: true, instant: true }).catch(() => false) };
     prepared = entry;
-    entry.timer = window.setTimeout(() => release(entry), 30_000);
+    entry.timer = window.setTimeout(() => release(entry), 60_000);
     void entry.ready.then(ok => { if (!ok && prepared === entry) release(entry); }).catch(() => { if (prepared === entry) release(entry); });
   } catch { host.remove(); }
 }
 
 function release(entry: Prepared) {
+  entry.released = true;
   clearTimeout(entry.timer);
   entry.stage.dispose();
   entry.host.remove();
