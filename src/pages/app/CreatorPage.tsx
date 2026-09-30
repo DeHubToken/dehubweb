@@ -1,32 +1,22 @@
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
 import { SubscriptionCreditsPill } from '@/components/app/credits/SubscriptionCreditsWidget';
-import SwipeableCarousel from '@/components/app/SwipeableCarousel';
 import { CreatorStudio } from '@/components/app/creator/studio/CreatorStudio';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
-import anthropicLogo from '@/assets/ai-logos/anthropic.png';
 import dehubIcon from '@/assets/dehub-logo-compact.png';
-import dehubLogo from '@/assets/dehub-logo-white.png';
-import openaiLogo from '@/assets/ai-logos/openai.png';
-import showcaseImage from '@/assets/creator-studio-showcase.jpg';
-import dehubOriginals from '@/assets/dehub-originals.webp';
 import {
   ArrowUpRight,
   Blocks,
   Bot,
   Clapperboard,
-  Crown,
   Film,
   ImageIcon,
-  Languages,
   Megaphone,
   Mic2,
   Music2,
@@ -38,6 +28,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MountOnVisible } from '@/components/util/MountOnVisible';
+import { CreatorBento, CreatorHeroWall, MediumDoors, loadCreatorGallery, thumbUrl, type GalleryItem } from '@/components/app/creator/CreatorStage';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 
 const accent = '#e5e7eb';
@@ -87,37 +78,6 @@ const NAV_KEYS: Record<string, string> = {
   Apps: 'creator.navApps',
   All: 'creator.navAll',
 };
-
-const heroCards = [
-  {
-    id: 'dehub-originals',
-    titleKey: 'creator.heroOriginalsTitle',
-    subtitleKey: 'creator.heroOriginalsSubtitle',
-    kind: 'originals',
-    action: { kind: 'navigate', to: 'https://dehub.io/originals' } satisfies ToolAction,
-  },
-  {
-    id: 'video-timeline',
-    titleKey: 'creator.heroHollywoodTitle',
-    subtitleKey: 'creator.heroHollywoodSubtitle',
-    kind: 'timeline',
-    action: { kind: 'navigate', to: '/editor' } satisfies ToolAction,
-  },
-  {
-    id: 'skill-library',
-    titleKey: 'creator.heroSkillsTitle',
-    subtitleKey: 'creator.heroSkillsSubtitle',
-    kind: 'poster',
-    action: { kind: 'assistant', preset: 'skills' } satisfies ToolAction,
-  },
-  {
-    id: 'agents',
-    titleKey: 'creator.heroAgentsTitle',
-    subtitleKey: 'creator.heroAgentsSubtitle',
-    kind: 'mist',
-    action: { kind: 'assistant', preset: 'chat' } satisfies ToolAction,
-  },
-];
 
 const tools: Tool[] = [
   {
@@ -425,90 +385,43 @@ export default function CreatorPage() {
           </header>
         </div>
 
+        {/* The hero's wall of community work sits behind the studio's headline and composer. */}
+        <CreatorHeroWall />
         <CreatorStudio onOpenEditor={() => navigate('/editor')} stickyTop={headerHeight} />
         <div ref={belowComposerRef}>
-        <section className="px-3 py-4 sm:px-4">
-          <SwipeableCarousel className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory scroll-pl-3 scroll-pr-3">
-            {heroCards.map((card) => (
-              <button
-                key={card.id}
-                type="button"
-                onClick={() => runAction(card.action)}
-                className="group snap-start shrink-0 overflow-hidden rounded-lg text-left w-[72%] md:w-[45%] xl:w-[28%]"
-              >
-                <MediaCardVisual kind={card.kind} />
-                <div className="pt-3">
-                  <h2 className="text-sm font-black uppercase leading-tight text-white">{t(card.titleKey)}</h2>
-                  <p className="mt-1 truncate text-sm text-white/45">{t(card.subtitleKey)}</p>
-                </div>
-              </button>
-            ))}
-          </SwipeableCarousel>
-        </section>
+        <MediumDoors />
+
+        <MountOnVisible minHeight={520} rootMargin="800px">
+          <CommunityGallery />
+        </MountOnVisible>
+
+        <CreatorBento />
 
         <section className="px-3 pb-4 sm:px-4">
           <ModelMarquee />
         </section>
 
-        <MountOnVisible minHeight={240} rootMargin="800px">
-        <section className="grid gap-3 px-3 pb-4 sm:px-4 md:grid-cols-2">
-
-          <Link
-            to="/connect/chatgpt"
-            className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5 hover:bg-black/70"
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/95 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.14)]">
-                <img src={openaiLogo} alt={t('creator.logoAlt', { brand: 'OpenAI' })} className="h-full w-full object-contain" loading="lazy" draggable={false} />
-              </span>
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.12)]">
-                <img src={dehubIcon} alt={t('creator.logoAlt', { brand: 'DeHub' })} className="h-full w-full object-contain" loading="lazy" draggable={false} />
-              </span>
-              <span className="inline-flex rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black italic tracking-wider text-white">MCP LIVE</span>
-            </div>
-            <div className="mt-4 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
-              {t('creator.insideChatgpt')}
-            </div>
-            <p className="mt-3 max-w-[380px] text-sm text-white/70">
-              {t('creator.insideChatgptCopy')}
-            </p>
-            <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-white/10">
-              {t('creator.readChatgptGuide')}
-              <ArrowUpRight className="h-4 w-4 text-white/60 transition-colors group-hover:text-white" />
-            </div>
-            <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
-          </Link>
-
-          <Link
-            to="/connect/claude"
-            className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5 hover:bg-black/70"
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/95 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.14)]">
-                <img src={anthropicLogo} alt={t('creator.logoAlt', { brand: 'Anthropic' })} className="h-full w-full object-contain" loading="lazy" draggable={false} />
-              </span>
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.12)]">
-                <img src={dehubIcon} alt={t('creator.logoAlt', { brand: 'DeHub' })} className="h-full w-full object-contain" loading="lazy" draggable={false} />
-              </span>
-              <span className="inline-flex rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black italic tracking-wider text-white">MCP LIVE</span>
-            </div>
-            <div className="mt-4 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
-              {t('creator.insideClaude')}
-            </div>
-            <p className="mt-3 max-w-[380px] text-sm text-white/70">
-              {t('creator.insideClaudeCopy')}
-            </p>
-            <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-white/10">
-              {t('creator.readClaudeGuide')}
-              <ArrowUpRight className="h-4 w-4 text-white/60 transition-colors group-hover:text-white" />
-            </div>
-            <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
-          </Link>
-        </section>
-        </MountOnVisible>
-
         <MountOnVisible minHeight={320} rootMargin="800px">
         <section className="px-3 pb-6 sm:px-4">
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+            <h2 className="font-exo text-[22px] font-black tracking-tight text-white sm:text-[28px]">{t('creator.moreTools')}</h2>
+            <div className="flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => setActiveCategory(category)}
+                  aria-pressed={activeCategory === category}
+                  className={cn(
+                    'shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold transition-colors backdrop-blur-xl',
+                    activeCategory === category ? 'border-white/70 bg-white/20 text-white' : 'border-white/12 bg-white/[0.06] text-white/60 hover:text-white'
+                  )}
+                >
+                  {t(NAV_KEYS[category])}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
             {visibleTools.map((tool) => {
@@ -518,8 +431,7 @@ export default function CreatorPage() {
                   key={tool.id}
                   type="button"
                   onClick={() => runAction(tool.action)}
-                  className="group relative min-h-[128px] rounded-2xl border border-white/10 p-5 text-left transition-colors hover:brightness-110"
-                  style={{ backgroundColor: '#1b1c1f' }}
+                  className="group relative min-h-[128px] rounded-[22px] border border-white/12 bg-white/[0.06] p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-2xl backdrop-saturate-150 transition hover:-translate-y-0.5 hover:bg-white/[0.1]"
                 >
                   {tool.badge && (
                     <span
@@ -545,186 +457,14 @@ export default function CreatorPage() {
         </section>
         </MountOnVisible>
 
-        <MountOnVisible minHeight={480} rootMargin="800px">
-        <section className="px-3 pb-4 sm:px-4">
-          <div className="mb-4 flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {categories.map((category) => (
-              <button
-                key={category}
-                type="button"
-                onClick={() => setActiveCategory(category)}
-                className={cn(
-                  'shrink-0 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wide transition-colors',
-                  activeCategory === category ? 'bg-white text-black' : 'bg-white/[0.08] text-white/55 hover:text-white'
-                )}
-              >
-                {t(NAV_KEYS[category])}
-              </button>
-            ))}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => navigate('/editor')}
-            className="group relative block w-full overflow-hidden rounded-[28px] border border-white/10 bg-black text-left shadow-[0_-20px_80px_rgba(255,255,255,0.05)]"
-          >
-            <img
-              src={showcaseImage}
-              alt={t('creator.showcaseAlt')}
-              width={1920}
-              height={1080}
-              loading="lazy"
-              decoding="async"
-              className="h-[420px] w-full object-cover object-center opacity-90 transition-transform duration-500 group-hover:scale-[1.015] sm:h-[560px] lg:h-[680px]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
-            <div className="absolute left-5 top-5 rounded px-4 py-2 text-4xl font-black italic leading-none text-black sm:right-8 sm:left-auto sm:text-6xl" style={metallicStyle}>4K</div>
-            <div className="absolute bottom-6 left-5 max-w-3xl sm:bottom-10 sm:left-8">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white/80 backdrop-blur-xl">
-                <PanelsTopLeft className="h-4 w-4" /> {t('creator.workspaceBadge')}
-              </div>
-              <p className="text-5xl font-black uppercase leading-[0.92] tracking-tight text-white sm:text-7xl lg:text-8xl">
-                {t('creator.oneStudioHeadline')}
-              </p>
-            </div>
-          </button>
-        </section>
-        </MountOnVisible>
-
-        <MountOnVisible minHeight={520} rootMargin="800px">
-          <CommunityGallery />
-        </MountOnVisible>
-
         <MountOnVisible minHeight={600} rootMargin="800px">
           <PricingSection />
         </MountOnVisible>
 
-        <MountOnVisible minHeight={200} rootMargin="600px">
-        <section className="grid gap-3 px-3 pb-10 sm:px-4 lg:grid-cols-3">
-          <FeatureStrip icon={Crown} title={t('creator.featurePremiumTitle')} copy={t('creator.featurePremiumCopy')} />
-          <FeatureStrip icon={Sparkles} title={t('creator.featureMemoryTitle')} copy={t('creator.featureMemoryCopy')} />
-          <FeatureStrip icon={ArrowUpRight} title={t('creator.featureConnectedTitle')} copy={t('creator.featureConnectedCopy')} />
-        </section>
-        </MountOnVisible>
         </div>
       </main>
     </>
   );
-}
-
-function MediaCardVisual({ kind }: { kind: string }) {
-  const { t } = useTranslation();
-  if (kind === 'originals') {
-    return (
-      <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10 bg-black">
-        <BrandIcon
-          src={dehubOriginals}
-          alt={t('creator.originalsAlt')}
-          className="h-full w-full object-cover object-center"
-          loading="lazy"
-          decoding="async"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
-        <span className="absolute left-3 top-3 rounded px-2 py-1 text-[10px] font-black uppercase italic tracking-wide text-black" style={metallicStyle}>
-          {t('creator.originalsBadge')}
-        </span>
-      </div>
-    );
-  }
-
-  if (kind === 'timeline') {
-    return (
-      <div className="relative h-[288px] overflow-hidden rounded-lg p-4 text-black" style={{ backgroundColor: '#f7f7f2' }}>
-        <div className="h-36 rounded-lg" style={{ background: 'radial-gradient(circle at 70% 30%, rgba(255,255,255,0.8), transparent 18%), linear-gradient(135deg, #171717, #5d5246 45%, #161616)' }} />
-        <div className="mt-3 grid h-24 grid-cols-12 gap-px overflow-hidden rounded bg-black/5">
-          {Array.from({ length: 48 }).map((_, i) => <span key={i} className="bg-black/[0.045]" />)}
-        </div>
-        <div className="absolute bottom-10 left-1/2 w-56 -translate-x-1/2 rounded-xl bg-white/60 p-4 shadow-xl backdrop-blur-xl">
-          <div className="mb-3 h-2 w-28 rounded-full bg-black/20" />
-          <div className="flex items-center justify-between">
-            <span className="h-5 w-5 rounded bg-black/10" />
-            <span className="h-6 w-6 rounded-full" style={{ backgroundColor: '#ff6b3d' }} />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (kind === 'poster') {
-    return (
-      <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10" style={{ background: 'linear-gradient(135deg, #2a2a2a, #5b5b5b 42%, #101010)' }}>
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.42), transparent 28%)' }} />
-        <div className="absolute left-8 top-8 h-28 w-24 -rotate-6 rounded-xl border border-white/20 bg-white/15 shadow-2xl" />
-        <div className="absolute right-16 bottom-7 h-40 w-28 rotate-6 rounded-xl border border-white/20 bg-black/55 p-3 shadow-2xl">
-          <div className="h-3 w-16 rounded-full" style={metallicStyle} />
-          <div className="mt-4 h-16 rounded-lg bg-white/20" />
-          <div className="mt-4 h-2 w-full rounded-full bg-white/35" />
-          <div className="mt-2 h-2 w-2/3 rounded-full bg-white/20" />
-        </div>
-        <div className="absolute bottom-10 left-10 text-[46px] font-black uppercase leading-none tracking-tighter text-white">Creator<br />Drop</div>
-        <div className="absolute right-6 top-8 rounded px-2 py-1 text-xl font-black text-black" style={metallicStyle}>4K</div>
-      </div>
-    );
-  }
-
-  if (kind === 'mist') {
-    return (
-      <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10" style={{ background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.45), transparent 28%), linear-gradient(135deg, #b6c1c8, #30383d 42%, #020303)' }}>
-        <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-black to-transparent" />
-        <div className="absolute left-6 top-6 grid grid-cols-3 gap-2">
-          {Array.from({ length: 9 }).map((_, index) => (
-            <span key={index} className="h-12 w-12 rounded-lg bg-white/20 shadow-lg" />
-          ))}
-        </div>
-        <div className="absolute bottom-9 right-8 text-right text-3xl font-black uppercase leading-none text-white">Agent<br />Flow</div>
-        <img src={dehubLogo} alt="DeHub" className="absolute bottom-12 left-10 h-12 w-auto opacity-90" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10" style={{ background: 'radial-gradient(circle at 68% 18%, rgba(255,255,255,0.85), transparent 16%), linear-gradient(135deg, #e9e6df, #8a8278 45%, #111)' }}>
-      <div className="absolute inset-0 bg-gradient-to-r from-black/5 via-transparent to-black/65" />
-      <div className="absolute bottom-0 left-0 h-52 w-40 rounded-tr-[80px] bg-black/25" />
-      <div className="absolute right-8 top-8 h-28 w-28 rounded-full bg-white/25 blur-xl" />
-      <div className="absolute bottom-11 left-1/2 w-[245px] -translate-x-1/2 rounded-2xl border border-white/20 bg-black/55 p-4 shadow-2xl backdrop-blur-xl">
-        <div className="mb-4 h-2 w-32 rounded-full bg-white/80" />
-        <div className="flex items-center justify-between">
-          <span className="text-lg font-light text-white">＋</span>
-          <span className="text-[10px] font-semibold text-white/70">DeHub AI</span>
-          <span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-black text-black" style={metallicStyle}>↑</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FeatureStrip({ icon: Icon, title, copy }: { icon: React.ComponentType<{ className?: string }>; title: string; copy: string }) {
-  return (
-    <div className="rounded-2xl border border-white/10 p-5" style={{ backgroundColor: '#1b1c1f' }}>
-      <Icon className="mb-5 h-6 w-6 text-white" />
-      <h3 className="text-lg font-black text-white">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-white/45">{copy}</p>
-    </div>
-  );
-}
-
-type GalleryItem = { id: string; image_url: string | null; video_url: string | null; created_at: string };
-
-// Rewrite Supabase Storage public-object URLs to the on-the-fly image resizer
-// so the gallery grid downloads ~400px thumbs instead of full-res originals.
-function thumbUrl(url: string, width = 480): string {
-  if (!url) return url;
-  try {
-    if (url.includes('/storage/v1/object/public/')) {
-      const resized = url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/');
-      const sep = resized.includes('?') ? '&' : '?';
-      return `${resized}${sep}width=${width}&quality=65&resize=cover`;
-    }
-  } catch {
-    /* malformed URL: fall through and use it unchanged */
-  }
-  return url;
 }
 
 const PAGE_SIZE = 18;
@@ -763,7 +503,7 @@ function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryI
       ref={ref}
       type="button"
       onClick={() => onOpen(item)}
-      className="group relative block aspect-square overflow-hidden rounded-lg border border-white/10 bg-white/5"
+      className="group relative block aspect-square overflow-hidden rounded-xl border border-white/10 bg-white/5"
     >
       {visible && (isVideo ? (
         <video
@@ -826,14 +566,9 @@ function CommunityGallery() {
     setLoading(true);
     (async () => {
       try {
-        const { data, error } = await supabase.rpc('get_creator_gallery', { p_limit: 90 });
+        const data = await loadCreatorGallery();
         if (cancelled) return;
-        if (error) {
-          console.error('[creator gallery] rpc error', error);
-          setItems([]);
-        } else {
-          setItems((data ?? []) as GalleryItem[]);
-        }
+        setItems(data);
       } finally {
         if (!cancelled) { setLoading(false); setLoaded(true); }
       }
@@ -896,8 +631,8 @@ function CommunityGallery() {
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <div className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">{t('creator.communityFeed')}</div>
-          <h2 className="mt-1 text-2xl font-black uppercase tracking-tight text-white sm:text-3xl">
-            {t('creator.userCreations')}
+          <h2 className="mt-1 font-exo text-[22px] font-black tracking-tight text-white sm:text-[28px]">
+            {t('creator.madeOnDehub')}
           </h2>
           <p className="mt-1 max-w-xl text-sm text-white/50">
             {t('creator.userCreationsCopy')}
@@ -915,7 +650,7 @@ function CommunityGallery() {
           ))}
         </div>
       ) : items.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 p-10 text-center text-sm text-white/50" style={{ backgroundColor: '#1b1c1f' }}>
+        <div className="rounded-[22px] border border-white/12 bg-white/[0.06] p-10 text-center text-sm text-white/50 backdrop-blur-2xl">
           {t('creator.noCreationsYet')}
         </div>
       ) : (
