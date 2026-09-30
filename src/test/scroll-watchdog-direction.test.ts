@@ -193,6 +193,22 @@ describe('scroll freeze watchdog', () => {
     expect(messages()).toEqual([]);
   });
 
+  it('does not tear a live custom viewer lock off between overlay DOM transitions', async () => {
+    const { lockBodyScroll } = await import('@/lib/body-scroll-lock');
+    const release = lockBodyScroll('image-fullscreen');
+    document.body.style.overflowY = 'hidden';
+    try {
+      vi.advanceTimersByTime(6000);
+      expect(document.body.style.overflow).toBe('hidden');
+      expect(messages()).toEqual([]);
+    } finally {
+      release();
+    }
+    vi.advanceTimersByTime(5000);
+    expect(document.body.style.overflowY).not.toBe('hidden');
+    expect(REPORTS[0].meta.recovered).toBe(true);
+  });
+
   it('reports a swallowed desktop wheel without unlocking unknown content', () => {
     scrollTop = 900;
     const event = new WheelEvent('wheel', { deltaY: 120, cancelable: true });

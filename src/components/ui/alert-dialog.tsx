@@ -4,8 +4,14 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { OverlayOpenTracker } from "@/lib/overlay-open";
+import { OverlayContentPresent, useOverlayLifetime } from '@/hooks/use-overlay-lifetime';
 
-const AlertDialog = AlertDialogPrimitive.Root;
+const AlertDialog = ({ onOpenChange, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) => {
+  const lifetime = useOverlayLifetime(props.open, props.defaultOpen, onOpenChange);
+  return <OverlayContentPresent.Provider value={lifetime.present}>
+    <AlertDialogPrimitive.Root {...props} open={lifetime.open} onOpenChange={lifetime.onChange} />
+  </OverlayContentPresent.Provider>;
+};
 
 const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
 
@@ -30,7 +36,10 @@ AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
 const AlertDialogContent = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, ref) => {
+  const present = React.useContext(OverlayContentPresent);
+  if (!present) return null;
+  return (
   <AlertDialogPortal>
     {/* Register in the global overlay count so sticky navs hide (lib/overlay-open). */}
     <OverlayOpenTracker />
@@ -44,7 +53,8 @@ const AlertDialogContent = React.forwardRef<
       {...props}
     />
   </AlertDialogPortal>
-));
+  );
+});
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 
 const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (

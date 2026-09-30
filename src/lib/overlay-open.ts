@@ -17,6 +17,7 @@
  */
 
 import * as React from 'react';
+import { settleAfterOverlayClose } from './scroll-freeze-watchdog';
 
 let openOverlayCount = 0;
 const listeners = new Set<() => void>();
@@ -46,6 +47,9 @@ export function OverlayOpenTracker(): null {
     return () => {
       openOverlayCount--;
       notifyListeners();
+      // Also covers uncontrolled dialogs and route unmounts, where the
+      // drawer's onOpenChange callback never runs.
+      settleAfterOverlayClose();
     };
   }, []);
   return null;

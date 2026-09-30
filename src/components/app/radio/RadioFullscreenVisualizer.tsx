@@ -1,3 +1,4 @@
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Radio Fullscreen Visualizer
  * ============================
@@ -234,15 +235,9 @@ export function RadioFullscreenVisualizer({
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
+    if (!isOpen || !currentStation) return;
+    return lockBodyScroll('radio-fullscreen');
+  }, [isOpen, currentStation]);
 
   if (!currentStation) return null;
 

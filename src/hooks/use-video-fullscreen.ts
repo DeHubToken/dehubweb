@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { RefObject } from 'react';
+import { lockDocumentScroll } from '@/lib/body-scroll-lock';
 
 export function canNativeFullscreen(): boolean {
   if (typeof document === 'undefined') return false;
@@ -22,8 +23,7 @@ export function liftFullscreenElement(element: HTMLElement): () => void {
   const parent = element.parentNode;
   if (!parent) return () => {};
   const placeholder = document.createElement('div');
-  const bodyOverflow = document.body.style.overflow;
-  const rootOverflow = document.documentElement.style.overflow;
+  const releaseScroll = lockDocumentScroll('video-fullscreen');
   const previousFullscreen = element.getAttribute('data-media-fullscreen');
   placeholder.style.height = `${element.getBoundingClientRect().height}px`;
   placeholder.setAttribute('aria-hidden', 'true');
@@ -32,15 +32,15 @@ export function liftFullscreenElement(element: HTMLElement): () => void {
   const fullscreenHost = element.closest('#root') || document.body;
   fullscreenHost.appendChild(element);
   element.setAttribute('data-media-fullscreen', 'true');
-  document.body.style.overflow = 'hidden';
-  document.documentElement.style.overflow = 'hidden';
+  let restored = false;
   return () => {
+    if (restored) return;
+    restored = true;
     if (placeholder.parentNode) placeholder.parentNode.insertBefore(element, placeholder);
     placeholder.remove();
     if (previousFullscreen === null) element.removeAttribute('data-media-fullscreen');
     else element.setAttribute('data-media-fullscreen', previousFullscreen);
-    document.body.style.overflow = bodyOverflow;
-    document.documentElement.style.overflow = rootOverflow;
+    releaseScroll();
   };
 }
 export function useVideoFullscreen(
