@@ -147,6 +147,14 @@ interface CommentsSectionProps {
    * CommentsWrapper. Must be stable; it is an effect dependency.
    */
   onDirtyChange?: (dirty: boolean) => void;
+  /**
+   * Laid out on the dedicated post page: no box and no scroll of its own. The
+   * list runs full width in the page's own scroll, the tab row pins under the
+   * chrome and the composer pins to the bottom of the screen, the way the app's
+   * post screen lays out its comments. See the "Post page comments" block in
+   * index.css for the pin offsets.
+   */
+  page?: boolean;
 }
 
 /**
@@ -940,7 +948,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange }: CommentsSectionProps) {
+export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false }: CommentsSectionProps) {
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
   // it, so there is nothing to show them here.
@@ -2417,8 +2425,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
+      data-comments-page={page || undefined}
       className={cn(
-        isMobile
+        page
+          ? "flex flex-col relative"
+          : isMobile
           ? "flex flex-col h-full px-2 pt-2 pb-2 relative"
           : embedded
             ? "flex flex-col h-full min-h-0 p-0 mt-0 relative"
@@ -2427,7 +2438,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     >
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
-      <div data-comment-tabs className={cn("flex justify-between items-center gap-1", isMobile ? "mb-3" : "mb-3")}>
+      <div
+        data-comment-tabs
+        data-comment-tabs-pin={page || undefined}
+        className={cn(
+          "flex justify-between items-center gap-1",
+          page ? "sticky top-0 z-20 -mx-2 sm:-mx-3 px-2 sm:px-3 py-2" : "mb-3"
+        )}
+      >
         {/* Mobile close button removed — drawer dismisses via drag-down or tapping overlay */}
         {false && (
           <button
@@ -2515,7 +2533,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           </Tooltip>
           {/* Collapse control for the inline expansion on feed cards. The
               embedded shorts side panel has nothing to close, so no X there. */}
-          {!embedded && (
+          {!embedded && !page && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -2551,7 +2569,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       <div className={`relative flex-1 min-h-0 ${!isMobile && activeTab === 'search' ? 'max-h-[272px]' : ''}`}>
         {/* Replies Tab */}
         {activeTab === 'replies' && (
-          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
+          <div className={page ? "pb-2" : "absolute inset-0 overflow-y-auto pt-2 pb-2"}>
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -2585,7 +2603,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
         {/* Quotes Tab (#13) */}
         {activeTab === 'quotes' && (
-          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
+          <div className={page ? "pb-2" : "absolute inset-0 overflow-y-auto pt-2 pb-2"}>
             {isLoadingQuotes ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -2649,7 +2667,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
         {/* Reposts Tab */}
         {activeTab === 'reposts' && (
-          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
+          <div className={page ? "pb-2" : "absolute inset-0 overflow-y-auto pt-2 pb-2"}>
             {isLoadingReposters ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -2730,7 +2748,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
         {/* Search Tab */}
         {activeTab === 'search' && (
-          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
+          <div className={page ? "pb-2" : "absolute inset-0 overflow-y-auto pt-2 pb-2"}>
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -2778,10 +2796,18 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             </div>
           </div>
         ) : (
-        <div data-comment-composer className={cn(
-          "mt-auto",
-          isMobile ? "pt-2 pb-1" : "pt-3"
-        )}>
+        <div
+          data-comment-composer
+          data-comment-composer-pin={page || undefined}
+          className={cn(
+            page
+              // The app's reply bar: full width, pinned to the bottom of the
+              // screen while the thread is in view, released at its end.
+              ? "sticky bottom-0 z-20 -mx-2 sm:-mx-3 px-2 sm:px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+              : "mt-auto",
+            !page && (isMobile ? "pt-2 pb-1" : "pt-3")
+          )}
+        >
           {/* Common Ground: say up front that the first reply goes through the
               steps, so the sheet is not a surprise when Post is tapped. */}
           {commonGround && !isOwnThread && (
@@ -2890,7 +2916,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
           <BannedAccountNotice variant="line" className="mt-2" />
 
-          <div className={cn("flex flex-col gap-1.5", isMobile ? "pb-0 mt-1" : "pb-1 mt-[18px]")}>
+          <div className={cn("flex flex-col gap-1.5", page ? "pb-0 mt-0" : isMobile ? "pb-0 mt-1" : "pb-1 mt-[18px]")}>
             {/* The coach's cards sit above the field. Advice only — Post stays
                 live underneath, and "Post anyway" is the same call. */}
             <CoachSuggestions
