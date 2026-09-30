@@ -5,6 +5,7 @@ import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath, isOnLiveFeed } from '@/lib/home-path';
+import { isHomeFeedRoute } from '@/lib/home-routes';
 import { disarmHomeNavIntent, resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Landmark, Scroll, Map, Wand2, Loader2, BarChart3, Gamepad2, Zap } from 'lucide-react';
@@ -192,6 +193,17 @@ export function MobileBottomNav() {
 
 
   const handleNavClick = (e: React.MouseEvent, path: string) => {
+    // On another feed (Videos, Shorts, Music...) Home goes back to the Home feed.
+    if (path === '/app' && isHomeFeedRoute(location.pathname)) {
+      let tab = 'home';
+      try { tab = JSON.parse(sessionStorage.getItem('home-feed-state') || '{}')?.tab || 'home'; } catch { /* ignore */ }
+      if (tab !== 'home' || !isHomePath(location.pathname)) {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent('home-feed-select', { detail: 'home' }));
+        scrollDocumentToSmooth();
+        return;
+      }
+    }
     if (path === '/app' && isHomePath(location.pathname)) {
       e.preventDefault();
       // First click on Home while already on Home just returns to the top —
