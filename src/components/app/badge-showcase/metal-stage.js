@@ -147,7 +147,7 @@ function promotionFrame(ms){
     }
     this.setItems=values=>{items.splice(0,items.length,...values);};
     this.preload=index=>{void prepare(index);};
-    this.show=async(index,config={})=>{const id=++serial;cancel();state.index=index;if(!await prepare(index)||disposed||id!==serial)return false;disposeBadge(group);group=makeBadge(index);scene.add(group);targetX=rotX=.04;targetY=rotY=-.3;spinStart=performance.now();spinDuration=config.hold||config.instant||reduce()?0:900;drawMesh(group,hero());if(spinDuration)wake();return true;};
+    this.show=async(index,config={})=>{const id=++serial;cancel();state.index=index;if(!await prepare(index)||disposed||id!==serial)return false;disposeBadge(group);group=makeBadge(index);scene.add(group);targetX=rotX=.04;targetY=rotY=-.3;spinStart=performance.now();spinDuration=config.hold||config.instant||reduce()?0:900;if(config.hold){group.visible=false;renderer.clear();}else{drawMesh(group,hero());if(spinDuration)wake();}return true;};
     this.reveal=()=>{};
     this.layout=()=>wake();
     this.open=async({from,fromArt,promote,onLanded})=>{
@@ -155,7 +155,7 @@ function promotionFrame(ms){
       if(promote&&fromArt){oldIndex=items.findIndex(i=>i.src===fromArt);if(oldIndex<0){oldIndex=items.length;items.push({src:fromArt});}
         if(await prepare(oldIndex)&&!disposed&&id===serial){oldMesh=makeBadge(oldIndex);scene.add(oldMesh);shards=buildShards(oldMesh);}}
       if(disposed||id!==serial)return;
-      done=onLanded;flowTarget=hero();flowSource=from?local(from):{...flowTarget,size:flowTarget.size*.15,x:flowTarget.x+flowTarget.size*.425,y:flowTarget.y+flowTarget.size*.425};flowKind=promote?'promotion':'details';flowActive=true;flowStart=performance.now();
+      done=onLanded;flowTarget=hero();flowSource=from?local(from):{...flowTarget,size:flowTarget.size*.15,x:flowTarget.x+flowTarget.size*.425,y:flowTarget.y+flowTarget.size*.425};flowKind=promote?'promotion':'details';flowActive=true;flowStart=performance.now()-(promote&&!oldMesh?1970:0);
       if(reduce()){settle();return;}
       drawMesh(promote?oldMesh:group,flowSource,-.3);wake();
     };
