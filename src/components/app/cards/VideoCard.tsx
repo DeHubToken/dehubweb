@@ -35,7 +35,8 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2, Wrench } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -719,6 +720,33 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [ccSlot, setCcSlot] = useState<HTMLDivElement | null>(null);
   /** The subtitle language menu holds the controls up while it is open. */
   const [subsMenuOpen, setSubsMenuOpen] = useState(false);
+  // Phones, in a feed: the player's speed, loop, PiP, sound, subtitles and
+  // fullscreen buttons fold into one tools button beside AI and the options
+  // menu, and drop down from there. The post page has the room and keeps the row.
+  const isPhone = useIsMobile();
+  const compactTools = isPhone && !isImmersive && !hideActions && !onOpenComments && !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const toolsButtonRef = useRef<HTMLButtonElement>(null);
+  const toolsPanelRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!toolsOpen) return;
+    const close = (e: PointerEvent) => {
+      const target = e.target as Node;
+      if (toolsPanelRef.current?.contains(target) || toolsButtonRef.current?.contains(target)) return;
+      // The subtitle language menu portals out of the panel; leave it be.
+      if ((target as Element).closest?.('[data-radix-popper-content-wrapper], [role="menu"], [role="dialog"]')) return;
+      setToolsOpen(false);
+    };
+    const onScroll = () => setToolsOpen(false);
+    document.addEventListener('pointerdown', close, true);
+    document.body.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      document.removeEventListener('pointerdown', close, true);
+      document.body.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [toolsOpen]);
   /** Hovering the mute button drops a volume slider under it. */
   const [volumeOpen, setVolumeOpen] = useState(false);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
@@ -1722,6 +1750,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <Zap className="w-[23.5px] h-[23.5px]" />
               </motion.button>
             )}
+            {compactTools && !isContentGated && (
+              <button
+                ref={toolsButtonRef}
+                onClick={() => setToolsOpen((o) => !o)}
+                aria-label={t('videoPlayer.tools', 'Player tools')}
+                aria-expanded={toolsOpen}
+                className={cn("transition-colors", toolsOpen ? "text-white" : "text-zinc-400 hover:text-white")}
+              >
+                <Wrench className="w-[21px] h-[21px]" />
+              </button>
+            )}
             <motion.button
               onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
               className="text-zinc-400 hover:text-white transition-colors"
@@ -2124,7 +2163,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               videoRef={videoRef}
               buttonPortalTarget={ccSlot}
               buttonClassName={ccSlot ? undefined : 'absolute top-2 right-2 z-20'}
-              buttonVisible={showControls}
+              buttonVisible={compactTools ? toolsOpen : showControls}
               onMenuOpenChange={setSubsMenuOpen}
             />
           </Suspense>
@@ -2150,11 +2189,47 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             Never for audio posts: speed, loop, PiP and fullscreen have nothing
             to act on there, and the row appeared on hover over a visualizer
             that already carries its own transport. */}
-        {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
+        {compactTools && toolsOpen && (
+          <div
+            ref={toolsPanelRef}
+            data-video-tools
+            onClick={(e) => e.stopPropagation()}
+            className="absolute top-2 right-2 z-30 flex w-44 flex-col gap-0.5 rounded-xl border border-white/10 bg-black/55 p-1.5 text-[13px] font-medium text-white backdrop-blur-[24px] saturate-[180%]"
+          >
+            <button onClick={cyclePlaybackRate} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
+              <span className="w-8 text-center text-[11px] font-semibold">{formatRate(playbackRate)}x</span>
+              {t('videoPlayer.speed', 'Speed')}
+            </button>
+            <button onClick={toggleLoop} className={cn("flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10", isLooping && "bg-white/15")}>
+              <Repeat className="h-4 w-8" />
+              {isLooping ? 'Loop on' : 'Loop off'}
+            </button>
+            <button onClick={toggleMute} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
+              {isMuted ? <VolumeX className="h-4 w-8" /> : <Volume2 className="h-4 w-8" />}
+              {isMuted ? t('videoPlayer.unmute', 'Unmute') : t('videoPlayer.mute', 'Mute')}
+            </button>
+            {document.pictureInPictureEnabled && (
+              <button onClick={handlePictureInPicture} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
+                <PictureInPicture2 className="h-4 w-8" />
+                {t('videoPlayer.pip', 'Picture in picture')}
+              </button>
+            )}
+            <button onClick={(e) => { setToolsOpen(false); handleFullscreen(e); }} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
+              {isFullscreen ? <Minimize className="h-4 w-8" /> : <Maximize className="h-4 w-8" />}
+              {t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
+            </button>
+            <div className="flex h-9 items-center gap-2.5 px-2">
+              <div ref={setCcSlot} className="contents" />
+              <span>{t('videoPlayer.subtitles', 'Subtitles')}</span>
+            </div>
+          </div>
+        )}
+
+        {controlsVisible && !compactTools && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls className="absolute top-2 right-2 flex items-center gap-2 z-10">
             {/* Subtitles mount here — display:contents keeps the button a direct
                 flex item, so it sits in the row's gap like everything else. */}
-            <div ref={setCcSlot} className="contents" />
+            <div ref={compactTools ? undefined : setCcSlot} className="contents" />
 
             <button
               className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
@@ -2331,18 +2406,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {/* Error state - show thumbnail naturally, toast on click */}
         </>}
 
-        {/* Watched marker — the video is in this account's watch history, i.e.
-            it was actually played, not merely scrolled past. Hidden the moment
-            playback starts, so it never sits over the picture being watched.
-            Also steps aside while the controls are up or the bounty button
-            holds the same corner, so it never covers a button. */}
-        {isWatchedVideo && !isPlaying && !isFullscreen && !controlsVisible && !video.isW2E && (
-          <div className="absolute top-2 left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-1.5 py-0.5 rounded border border-white/10 text-[10px] font-medium text-white/80 pointer-events-none">
-            <Eye className="w-3 h-3" />
-            {t('feed.watched', 'Watched')}
-          </div>
-        )}
-
         {/* Duration badge for gated content - always visible on locked thumbnails */}
         {isContentGated && video.duration && (
           <div className={`absolute bottom-2 right-2 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-1.5 py-0.5 rounded border border-white/10 text-xs text-white font-medium z-10`}>
@@ -2501,6 +2564,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onShowOriginal: handleVideoShowOriginal,
               sourceLang: videoSourceLang,
             }}
+            watched={isWatchedVideo && !video.isW2E}
           />
         </div>
         {!hideActions && (
