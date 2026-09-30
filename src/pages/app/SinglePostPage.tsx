@@ -1376,7 +1376,15 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               It wraps the post and its poll and nothing else: the related feeds
               and the live chat below are siblings, not children, so this is one
               card's bento and not a full-height slab down the column. */}
-          <div data-feed-item className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
+          {/* Phone and tablet draw no bento: the post lies flat on the page,
+              full width, the same as the immersive video and image posts and
+              the flat comments under it. No [data-feed-item] either, or the
+              canvas themes' glass would paint the box straight back. */}
+          <div
+            data-feed-item={isMobileView ? undefined : true}
+            data-post-flat={isMobileView || undefined}
+            className={isMobileView ? 'px-1 sm:px-0 pt-1' : 'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3'}
+          >
             {renderContent()}
             {!isTextPost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
           </div>
