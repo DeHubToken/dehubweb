@@ -62,6 +62,7 @@ describe('badge stage lifecycle', () => {
     const first = stage.show(0), second = stage.show(1);
     await flushImages(); await Promise.all([first, second]);
     expect(scene.prepare).toHaveBeenCalledTimes(1); expect(failed).not.toHaveBeenCalled();
+    expect(scene.prepare.mock.calls[0][2]).toBe(1);
     stage.dispose();
   });
   it('closing cancels the opening callback and disposal removes interaction handlers', async () => {
