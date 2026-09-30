@@ -650,12 +650,13 @@ function hypnoticSwarm(){
   const journey=range(q,.1,.79)*stages,stage=Math.min(stages-1,Math.floor(journey)),blend=stage===stages-1?0:smooth(range(journey-stage,.58,1));
   const shapeOrder=[0,1,2,3,4],shapeNames=['Braided infinity','The impossible knot','Counter-rotating petals','Into the spiral tunnel','An orbital illusion'];
   const n=Math.min(tierIndex===12?3000:Math.round(700+rank()*1800),Math.max(old.length,next.length));
+  const formationScale=Math.max(.1,Math.min(1,(Math.min(CX,W-CX)-16)/(D*1.5),(Math.min(CY,H-CY)-24)/(D*1.3)));
   const points=[];
   for(let i=0;i<n;i++){
     const lane=i%9-4,u=Math.floor(i/9)/Math.ceil(n/9),a=old[Math.floor(i/n*old.length)],b=next[Math.floor(i/n*next.length)];
     const one=swarmShape(shapeOrder[stage],u,lane,t),two=swarmShape(shapeOrder[Math.min(stages-1,stage+1)],u,lane,t);
     const z=lerp(one.z,two.z,blend),perspective=1/(1-z*.24),spread=promote?1:.78;
-    const sx=lerp(one.x,two.x,blend)*perspective*spread,sy=lerp(one.y,two.y,blend)*perspective*spread;
+    const sx=lerp(one.x,two.x,blend)*perspective*spread*formationScale,sy=lerp(one.y,two.y,blend)*perspective*spread*formationScale;
     const x=lerp(lerp(a.x,sx,depart),b.x,assemble),y=lerp(lerp(a.y,sy,depart),b.y,assemble);
     points.push({x,y,z,i,a,b});
   }
