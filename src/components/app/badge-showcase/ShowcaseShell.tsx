@@ -22,7 +22,7 @@ import { StickerStage, stickerArtRect, type StickerFinish, type StickerItem } fr
 import { SHOWCASE_CSS } from './showcase-ui';
 import { playAscension, type AscensionHandle } from './ascension';
 import type { BadgeMotion } from '@/lib/badge-motion';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { MetalStage } from './metal-stage';
 
@@ -107,7 +107,7 @@ export function ShowcaseShell({
   intro,
 }: ShowcaseShellProps) {
   const { t } = useTranslation();
-  const { theme } = useTheme();
+  const { theme } = useAppTheme();
   const [metallic] = useState(() => badgeAnimationStyle(theme) === 'metallic');
   const reduceMotion = !!useReducedMotion();
   const count = entries.length;
@@ -638,7 +638,7 @@ export function ShowcaseShell({
             />}
             <p
               className="pointer-events-none absolute inset-x-0 bottom-1 hidden text-center text-[11px] text-white/35 transition-opacity duration-500 sm:block"
-              style={{ opacity: panelIn && !touched && !glFailed ? 1 : 0 }}
+              style={{ opacity: panelIn && !touched && !glFailed && !metallic ? 1 : 0 }}
             >
               {t('badgeShowcase.hint')}
             </p>
