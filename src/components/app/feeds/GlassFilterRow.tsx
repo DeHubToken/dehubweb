@@ -85,12 +85,14 @@ export function GlassFilterRow<T extends string>({
       </div>
       {/* Scrollable button row. data-no-swipe so dragging the chips sideways
           scrolls the row instead of flicking the page to the next tab — the
-          filter panels already opt out this way, this row was missed. */}
+          filter panels already opt out this way, this row was missed.
+          Allow both native pan axes so a vertical swipe starting on a chip
+          still scrolls the page. */}
       <div
         ref={scrollRef}
         data-no-swipe
         className="relative z-40 flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap px-2 py-1"
-        style={{ touchAction: 'pan-x', ...fadeStyle }}
+        style={{ touchAction: 'manipulation', ...fadeStyle }}
       >
         {leadingContent}
         {items.map((item) => {

@@ -3,8 +3,14 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, ChevronRight, Circle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { OverlayContentPresent, useOverlayLifetime } from "@/hooks/use-overlay-lifetime";
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
+const DropdownMenu = ({ onOpenChange, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) => {
+  const lifetime = useOverlayLifetime(props.open, props.defaultOpen, onOpenChange);
+  return <OverlayContentPresent.Provider value={lifetime.present}>
+    <DropdownMenuPrimitive.Root {...props} open={lifetime.open} onOpenChange={lifetime.onChange} />
+  </OverlayContentPresent.Provider>;
+};
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
@@ -56,7 +62,10 @@ DropdownMenuSubContent.displayName = DropdownMenuPrimitive.SubContent.displayNam
 const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
+>(({ className, sideOffset = 4, ...props }, ref) => {
+  const present = React.useContext(OverlayContentPresent);
+  if (!present) return null;
+  return (
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       ref={ref}
@@ -69,7 +78,8 @@ const DropdownMenuContent = React.forwardRef<
       {...props}
     />
   </DropdownMenuPrimitive.Portal>
-));
+  );
+});
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 
 const DropdownMenuItem = React.forwardRef<
