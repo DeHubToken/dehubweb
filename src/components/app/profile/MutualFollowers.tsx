@@ -54,7 +54,8 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
 
       {/* Text */}
       <p className="text-zinc-500 text-xs leading-tight">
-        Followed by{' '}
+        {/* Shown without the words: the faces and names already say it. */}
+        <span className="sr-only">Followed by </span>
         {displayed.map((item, i) => (
           <span key={item.address}>
             <button
