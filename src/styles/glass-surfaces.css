@@ -59,3 +59,57 @@ html[data-theme][data-theme]
     --float-glass: rgb(249 248 244);
   }
 }
+
+/* Nav pills: the feed tab pill, every page's sticky tab pill and the phone
+   bottom nav are liquid glass on the web, desktop and phone alike. One thin
+   tint over a strong
+   blur, so posts scrolling under the pill show through it blurred instead of
+   vanishing behind a near-solid slab. The phone block in index.css thickens
+   the page-bento tokens to 0.86 and osaka paints its pill at 0.84 on phones;
+   this sits above both on specificity. The two :not(#_) lift it over the
+   osaka, jungle and war #app-root nets, which repaint these at 0.8-0.9.
+
+   System and every canvas theme. Light and minimal are left alone: their nav
+   is a flat file-tab strip, not a floating pill. War paints its chamfered
+   plate on ::before, so it gets the same tint there instead. */
+html {
+  --nav-glass: rgb(var(--glass-tint, 9 9 11) / 0.45);
+  --nav-glass-blur: blur(20px) saturate(160%);
+}
+html[data-theme='osaka'] {
+  --nav-glass: rgb(var(--osaka-slate, 17 14 28) / 0.5);
+}
+html[data-theme='jungle'] {
+  --nav-glass: rgb(var(--jungle-bark, 38 28 19) / 0.55);
+}
+html[data-theme='war'] {
+  --nav-glass: rgb(var(--war-gunmetal, 14 20 18) / 0.5);
+}
+
+html[data-theme][data-theme]:is([data-theme='system'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  :is([data-feed-nav], [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]), [data-bottom-nav] > nav):not(#_):not(#_) {
+  background-color: var(--nav-glass) !important;
+  backdrop-filter: var(--nav-glass-blur) !important;
+  -webkit-backdrop-filter: var(--nav-glass-blur) !important;
+}
+html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_)::before,
+html[data-theme][data-theme='war'] [data-bottom-nav] > nav:not(#_):not(#_)::before,
+html[data-theme][data-theme='war'] [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]):not(#_):not(#_) {
+  background-color: var(--nav-glass) !important;
+  backdrop-filter: var(--nav-glass-blur) !important;
+  -webkit-backdrop-filter: var(--nav-glass-blur) !important;
+}
+
+/* War's tab row itself stays clear so only the chamfered plate paints; the
+   #app-root net was filling the row's rectangle at 0.8 over the chamfer. */
+html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_) {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html {
+    --nav-glass: rgb(var(--glass-tint, 9 9 11) / 0.94);
+  }
+}
