@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import i18n from '@/i18n';
 import { supabase } from '@/integrations/supabase/client';
 import { autoTranslateEnabled } from '@/lib/auto-translate-setting';
-import { startVersionWatch, type BuildVersion } from '@/lib/version-check';
+import { startVersionWatch, takeStaleReload, type BuildVersion } from '@/lib/version-check';
 import { BUTTON_CLASSES } from '@/components/ui/toast-classes';
 
 /**
@@ -134,6 +135,17 @@ export function NewVersionToast() {
       }),
     []
   );
+
+  // Once a newer deploy is live, the next page change loads it for real
+  // instead of drawing the new page with the old code. The URL has already
+  // moved, so a reload lands on the page that was asked for.
+  const { pathname } = useLocation();
+  const firstPath = useRef(pathname);
+  useEffect(() => {
+    if (pathname === firstPath.current) return;
+    firstPath.current = pathname;
+    if (takeStaleReload()) window.location.reload();
+  }, [pathname]);
 
   return null;
 }

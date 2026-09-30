@@ -105,8 +105,13 @@ function useIsTabletOrMobile() {
   return isTabletOrMobile;
 }
 
-/** Tallest a photo gets on the post page — the same cap the post page video uses. */
-const IMMERSIVE_IMAGE_MAX_HEIGHT = '80dvh';
+/**
+ * Tallest a photo gets on the post page — the same cap the post page video
+ * uses (index.css, --post-media-max-h). On phones that is at least a
+ * full-width 9:16 frame, so a tall photo runs edge to edge like a vertical
+ * video instead of stopping a few pixels short of both sides.
+ */
+const IMMERSIVE_IMAGE_MAX_HEIGHT = 'var(--post-media-max-h, 80dvh)';
 
 interface ImageCardProps {
   post: ImagePost;
