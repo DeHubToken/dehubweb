@@ -1566,11 +1566,12 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
             anchored to the sticky wrapper, which never lags, and is painted the
             page's own background — invisible at rest, and it swallows the
             flash. Flat paint is only safe here because /creator's backdrop is a
-            known solid colour; over a textured surface this would have to be
-            frost instead. It sits BEHIND the pill so the glass and the rounded
+            known solid colour. On the canvas themes the page is see-through, so
+            index.css hides it there (it read as a black bar under the header). It sits BEHIND the pill so the glass and the rounded
             cut are untouched. */}
         <div
           aria-hidden
+          data-creator-lag-guard
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-6 bg-[#090a0b]"
         />
 
