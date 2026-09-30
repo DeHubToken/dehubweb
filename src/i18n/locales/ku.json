@@ -3519,7 +3519,8 @@
     "presetProductReviewHint": "پێشکەشکارێک بۆچوونی ڕاشکاوانە دەدات",
     "presetTvSpotName": "ڕیکلامی تەلەفزیۆنی",
     "presetTvSpotHint": "ڕیکلامێکی ڕێکوپێک بە شێوازی پەخشی تەلەفزیۆن",
-    "priceTokensUsd": "{{amount}} توکن DeHub · USD {{usd}}"
+    "priceTokensUsd": "{{amount}} توکن DeHub · USD {{usd}}",
+    "presetDollyZoomName": "دۆلی زۆم"
   },
   "pricing": {
     "plansForEveryWorkflow": "پلان بۆ هەموو ڕەوتێک",
