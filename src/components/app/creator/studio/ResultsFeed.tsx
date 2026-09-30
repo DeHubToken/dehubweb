@@ -1,3 +1,4 @@
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Results feed and viewer.
  * ========================
@@ -393,11 +394,10 @@ function ResultViewer({
     };
 
     window.addEventListener('keydown', onKey);
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const releaseScroll = lockBodyScroll('ResultsFeed');
     return () => {
       window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = previous;
+      releaseScroll();
       opener?.focus?.();
     };
   }, [onClose]);

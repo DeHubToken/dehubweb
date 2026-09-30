@@ -1,3 +1,4 @@
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Mini app player
  * ===============
@@ -91,10 +92,9 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
   };
 
   useEffect(() => {
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const releaseScroll = lockBodyScroll('MiniAppPage');
     return () => {
-      document.body.style.overflow = previous;
+      releaseScroll();
     };
   }, []);
 

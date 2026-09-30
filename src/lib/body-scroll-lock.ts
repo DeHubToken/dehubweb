@@ -31,14 +31,19 @@
 let depth = 0;
 /** What `body.style.overflow` was before the first lock. Restored by the last release. */
 let original: string | null = null;
+const owners = new Map<symbol, string>();
+let rootDepth = 0;
+let rootOriginal = '';
 
 /**
  * Take a lock. Returns the matching release, which is safe to call twice —
  * a component that releases in both an effect cleanup and an unmount handler
  * must not decrement the count twice, or a sibling lock is dropped early.
  */
-export function lockBodyScroll(): () => void {
+export function lockBodyScroll(owner = 'overlay'): () => void {
   if (typeof document === 'undefined') return () => {};
+  const token = Symbol(owner);
+  owners.set(token, owner);
 
   if (depth === 0) {
     original = document.body.style.overflow;
@@ -50,6 +55,7 @@ export function lockBodyScroll(): () => void {
   return () => {
     if (released) return;
     released = true;
+    owners.delete(token);
     depth = Math.max(0, depth - 1);
     if (depth === 0) {
       // Back to whatever it was, which is usually '' but is not always: a
@@ -63,4 +69,25 @@ export function lockBodyScroll(): () => void {
 /** How many locks are held. For tests and for the freeze watchdog's reporting. */
 export function bodyScrollLockDepth(): number {
   return depth;
+}
+
+export function bodyScrollLockOwners(): string[] {
+  return [...owners.values()];
+}
+
+/** Fullscreen players also hold the root; releases may arrive in any order. */
+export function lockDocumentScroll(owner: string): () => void {
+  if (typeof document === 'undefined') return () => {};
+  const releaseBody = lockBodyScroll(owner);
+  if (rootDepth++ === 0) {
+    rootOriginal = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+  }
+  let released = false;
+  return () => {
+    if (released) return;
+    released = true;
+    releaseBody();
+    if (--rootDepth === 0) document.documentElement.style.overflow = rootOriginal;
+  };
 }

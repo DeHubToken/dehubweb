@@ -1,3 +1,4 @@
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Online King's Gambit
  * ====================
@@ -390,11 +391,10 @@ export default function ArcadeChessOnlinePage() {
   // The game owns the viewport while a match is up, same as ArcadeGamePage.
   useEffect(() => {
     if (!inMatch) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const releaseScroll = lockBodyScroll('ArcadeChessOnlinePage');
     setBackgroundPaused(true);
     return () => {
-      document.body.style.overflow = previous;
+      releaseScroll();
       scheduleBackgroundResume();
     };
   }, [inMatch]);

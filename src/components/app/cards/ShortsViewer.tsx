@@ -812,7 +812,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // viewer and get frosted by its backdrop-blur instead of poking through sharp.
   // See the `body.shorts-viewer-open` rules in index.css.
   useEffect(() => {
-    const releaseScrollLock = lockBodyScroll();
+    const releaseScrollLock = lockBodyScroll('shorts-viewer');
     // NB: do NOT set `touch-action: none` on <body>. It cascades to the whole
     // subtree and kills touch-scrolling inside the inline comments panel
     // (which is a descendant, not a portalled drawer), leaving the sheet
