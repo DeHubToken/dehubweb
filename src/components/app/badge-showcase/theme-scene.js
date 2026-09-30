@@ -298,9 +298,60 @@ const impact=()=>.55+rank()*1.65;
 const isMegaWar=()=>tierIndex===12&&world().id==='war'&&mode==='promotion';
 const isVolcanic=()=>tierIndex>=4&&world().id==='lavalamp'&&mode==='promotion';
 const isCustomSequence=()=>isMegaWar()||isVolcanic()||world().id==='swarms'||(world().id==='island'&&mode==='promotion'&&tierIndex>0);
-const targetDuration=()=>mode==='click'||tierIndex===0?4.5+rank()*2.7:9+rank()*(world().id==='lavalamp'?13:world().id==='war'?11:9);
+const targetDuration=()=>mode==='click'?1.65:9+rank()*(world().id==='lavalamp'?13:world().id==='war'?11:9);
 const tempo=()=>targetDuration()/duration();
 const playDuration=()=>duration()*tempo();
+// Opening a badge is a short flight, independent of its promotion rank.
+function quickArrival(t){
+  const o=origin(),p=out(t/.72),arc=Math.sin(p*Math.PI);
+  const settle=Math.sin(range(t,.72,1.08)*Math.PI)*.018;
+  const x=lerp(o.x,CX,p),y=lerp(o.y,CY,p)-arc*Math.min(32,D*.1);
+  const size=lerp(o.size,D,p)*(1+settle),angle=-.045*arc;
+  const life=smooth(range(t,0,.14))*(1-smooth(range(t,.85,1.5)));
+  const id=world().id;
+  glow(x,y,size*.65,world().color,life*.045);
+  if(id==='hazy')for(let i=0;i<3;i++){
+    layer(smokeClouds[i],x+(i-1)*size*.26,y+size*(.1-Math.sin(t*1.7+i)*.12),size*(.9+i*.12),life*.32,i+t*.18);
+  }
+  for(let i=0;i<18;i++){
+    const a=i*2.399,r=size*(.42+rnd(i+20)*.2),drift=range(t,.5,1.5);
+    const px=x+Math.cos(a)*r+Math.sin(a)*drift*16,py=y+Math.sin(a)*r-drift*10;
+    const alpha=life*(.25+rnd(i+30)*.5);
+    if(id==='cosmic')sparkle(px,py,1+rnd(i)*1.8,alpha,'#b8ddff');
+    else if(id==='winter')sparkle(px,py,1.5+rnd(i)*2,alpha*.7,'#d5f7ff');
+    else if(id==='jungle'&&i<6)leaf(px,py,3+rnd(i)*3,a+t*.8,alpha);
+    else if(id==='swarms'){
+      c.save();c.globalAlpha=alpha;c.fillStyle='#a7e6ee';
+      c.beginPath();c.ellipse(px,py,2.2,.6+Math.abs(Math.sin(t*22+i))*1.5,a,0,TAU);c.fill();c.restore();
+    }else if(id==='lavalamp'&&i<6)wax(px,py,2+rnd(i)*3,4+rnd(i)*5,alpha*.7);
+    else if(id==='hacker'&&i<12){
+      c.save();c.globalAlpha=alpha*.6;stroke([[px-3,py],[px+3,py]],'#84ffb1',1);c.restore();
+    }
+  }
+  if(id==='island'&&t>=.72){
+    const q=range(t,.72,1.5),fade=Math.sin(q*Math.PI)*(1-q),bottom=CY+D*.41;
+    c.save();c.lineCap='round';
+    for(let i=0;i<14;i++){
+      const side=i%2?1:-1,v=.2+rnd(i+96)*.8;
+      const px=CX+side*D*(.12+q*v*.5),py=bottom-D*Math.sin(q*Math.PI)*v*.22;
+      c.globalAlpha=fade*(.4+v*.4);
+      stroke([[px-side*D*.025*(1-q),py+D*.04*(1-q)],[px,py]],'#b9f5ec',1+v*1.5);
+      glow(px,py,2.5,'#e2fffa',fade*.3);
+    }
+    c.restore();
+  }
+  badge(1,x,y,size,angle);
+  if(id==='horror'){
+    layer(bloodArt[1],x,y,size,life*.16,angle);
+    for(let i=0;i<3;i++)bloodDrop(x+(i-1)*size*.16,y+size*.31+range(t,.55,1.4)*18,life*2,1.3,life*.7);
+  }
+  if(id==='war')for(let i=0;i<3;i++){
+    const a=i*TAU/3+t*.3,px=x+Math.cos(a)*size*.22,py=y+Math.sin(a)*size*.2;
+    c.save();c.globalAlpha=life*.13;stroke([[px-Math.cos(a)*size*.23,py-Math.sin(a)*size*.23],[px,py]],'#ff616b',.7);c.restore();
+    glow(px,py,5,'#ff3449',life*.65);glow(px,py,1.8,'#ffe1e4',life*.9);
+  }
+  if(t>=1.08)finishingLight(lerp(2.45,3.25,range(t,1.08,1.6)));
+}
 function sceneTime(clock){
   const arrival=mode==='click'||tierIndex===0;
   const base=duration(),total=playDuration(),entry=arrival ? .8 : 1.15,exit=arrival ? 1.05 : 1.5;
@@ -800,6 +851,7 @@ return {
   duration:playDuration,
   draw(t){
     movieClock=Math.max(0,Math.min(playDuration(),t));
+    if(mode==='click'){c.clearRect(0,0,W,H);quickArrival(movieClock);return;}
     t=sceneTime(movieClock);frameTime=t;
     c.clearRect(0,0,W,H);
     c.save();c.globalAlpha=out(t/.35)*(1-smooth(range(t,duration()-.8,duration())));bg(t);c.restore();

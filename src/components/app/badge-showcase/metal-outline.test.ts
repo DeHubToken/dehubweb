@@ -17,10 +17,10 @@ describe('metal badge silhouette', () => {
   it('rejects empty artwork so the showcase can fall back', () => {
     expect(() => traceMetalOutline(new Uint8ClampedArray(16 * 16 * 4), 16)).toThrow();
   });
-  it('uses metal for Light and Minimal and preserves Osaka glitter', () => {
+  it('uses metal for System, Light and Minimal and preserves Osaka glitter', () => {
     expect(badgeAnimationStyle('light')).toBe('metallic');
     expect(badgeAnimationStyle('minimal')).toBe('metallic');
     expect(badgeAnimationStyle('osaka')).toBe('sticker');
-    expect(badgeAnimationStyle('system')).toBe('sticker');
+    expect(badgeAnimationStyle('system')).toBe('metallic');
   });
 });
