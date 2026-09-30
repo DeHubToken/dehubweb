@@ -96,7 +96,7 @@ export class ThemeStage {
       ]);
       if (disposed || version !== serial) return false;
       if (ice) scene.setIce(ice);
-      scene.prepare(old, next); hasArt = true; index = nextIndex;
+      scene.prepare(old, next, nextIndex); hasArt = true; index = nextIndex;
       canvas.dataset.badgeIndex = String(nextIndex);
       layout();
       return true;

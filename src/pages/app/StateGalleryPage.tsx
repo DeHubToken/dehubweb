@@ -9,7 +9,7 @@ import { BackupReminderCard } from '@/components/app/wallet/BackupReminderBanner
 import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCover';
 import { ArticleReader } from '@/components/app/article/ArticleReader';
 import { ArticleComposer } from '@/features/post/components/ArticleComposer';
-import { badgeImage } from '@/lib/staking-badges';
+import { BADGE_ORDER, badgeImage } from '@/lib/staking-badges';
 
 const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeShowcase'));
 
@@ -95,6 +95,7 @@ export default function StateGalleryPage() {
   const requestedTheme = params.get('theme');
   const [presses, setPresses] = useState(0);
   const [badge, setBadge] = useState<{ anchor: HTMLElement | null; promote: boolean; first?: boolean } | null>(null);
+  const [badgeTier, setBadgeTier] = useState(1);
   const press = () => setPresses((count) => count + 1);
 
   useEffect(() => {
@@ -147,18 +148,22 @@ export default function StateGalleryPage() {
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">Badge animations</h2>
           <div className="flex flex-wrap items-center gap-3">
+            <select aria-label="Badge tier" value={badgeTier} onChange={event => setBadgeTier(Number(event.target.value))}
+              className="rounded-lg border border-white/15 bg-background p-2 text-sm">
+              {BADGE_ORDER.map((tier, index) => <option key={tier} value={index}>{index + 1}. {tier}</option>)}
+            </select>
             <button className="flex items-center gap-2 p-2" onClick={event => setBadge({ anchor: event.currentTarget.querySelector('img'), promote: false })}>
-              <img src={badgeImage('Ghost Lobster') ?? ''} alt="" className="h-10 w-10" /> Open badge
+              <img src={badgeImage(BADGE_ORDER[badgeTier]) ?? ''} alt="" className="h-10 w-10" /> Open badge
             </button>
             <button className="flex items-center gap-2 p-2" onClick={event => setBadge({ anchor: event.currentTarget.querySelector('img'), promote: true })}>
-              <img src={badgeImage('Crab') ?? ''} alt="" className="h-10 w-10" /> Promote badge
+              <img src={badgeImage(BADGE_ORDER[Math.max(0, badgeTier - 1)]) ?? ''} alt="" className="h-10 w-10" /> Promote badge
             </button>
             <button className="p-2" onClick={() => setBadge({ anchor: null, promote: true, first: true })}>First badge</button>
           </div>
         </section>
         {badge && <Suspense fallback={null}>
-          <BadgeShowcase tier={badge.first ? 'Crab' : 'Ghost Lobster'} anchor={badge.anchor}
-            promotedFrom={badge.promote ? badge.first ? null : 'Crab' : undefined} onClose={() => setBadge(null)} />
+          <BadgeShowcase tier={badge.first ? 'Crab' : BADGE_ORDER[badgeTier]} anchor={badge.anchor}
+            promotedFrom={badge.promote ? badge.first || badgeTier === 0 ? null : BADGE_ORDER[badgeTier - 1] : undefined} onClose={() => setBadge(null)} />
         </Suspense>}
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl">
