@@ -1699,7 +1699,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     >
       {/* Header with AI and menu buttons - hidden in immersive mode and carousel (hideActions) mode */}
       {!isImmersive && !hideActions && (
-        <div className="flex items-start justify-between">
+        <div data-card-head className="flex items-start justify-between">
           <CardHeader
             username={video.channel}
             handle={video.creatorUsername}
@@ -2407,7 +2407,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           padding, so keeping px-3 there indented the title and action bar 12px
           further than the video above them — the one place this layout didn't
           line up with the home feed card. Drop it back to the bento's gutter. */}
-      <div className={`pt-3${isImmersive ? ' px-3 lg:px-0' : ''}`}>
+      <div data-card-info className={`pt-3${isImmersive ? ' px-3 lg:px-0' : ''}`}>
         {/* Creator info with action buttons - mobile/tablet immersive view only (hidden on desktop where SinglePostPage renders DesktopCreatorInfo) */}
         {isImmersive && (
           <div className="lg:hidden">
@@ -2446,7 +2446,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           />
           </div>
         )}
-        <div className="relative" data-no-navigate {...captionTapGestures} onClick={(event) => event.stopPropagation()}>
+        <div className="relative" data-card-caption={(video.title || ownDescription) && !/https?:\/\/|0x[0-9a-fA-F]{40}/.test(`${video.title ?? ''} ${ownDescription ?? ''}`) ? '' : undefined} data-no-navigate {...captionTapGestures} onClick={(event) => event.stopPropagation()}>
         {!hideActions && !isContentGated && <TapReactionBurst postId={video.id} />}
         <SharedTranslationProvider>
           {(() => {
