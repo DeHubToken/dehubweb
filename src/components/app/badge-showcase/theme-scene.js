@@ -68,18 +68,20 @@ function moltenLiquid(t) {
     blobs.push([Math.sin(i*2.4+t*.5)*(.66+drain*.18),.65-u*1.4+drain*.8,
       .035+pulse*.075,.045+pulse*.105]);
   }
+  for(const b of blobs){b[2]=1/b[2];b[3]=1/b[3];}
   const n=lavaSurface.width,data=lavaPixels.data;
   for(let y=0;y<n;y++)for(let x=0;x<n;x++){
-    const px=(x+.5)/n*2.6-1.3,py=(y+.5)/n*2.6-1.3;
+    const px=(x+.5)/n*2.4-1.2,py=(y+.5)/n*2.4-1.2;
     let field=0,gx=0,gy=0;
     for(const b of blobs){
-      const dx=(px-b[0])/b[2],dy=(py-b[1])/b[3],den=.015+dx*dx+dy*dy,v=1/den;
-      field+=v;gx+=dx*v*v/b[2];gy+=dy*v*v/b[3];
+      const dx=(px-b[0])*b[2],dy=(py-b[1])*b[3],den=.015+dx*dx+dy*dy,v=1/den;
+      field+=v;gx+=dx*v*v*b[2];gy+=dy*v*v*b[3];
     }
-    const k=(y*n+x)*4,alpha=sat((field-.98)/.085);
+    const length=Math.sqrt(gx*gx+gy*gy)+.001;
+    const k=(y*n+x)*4,alpha=sat(.5+(field-1)/Math.max(.04,length*4.8/n));
     data[k+3]=255*alpha;
     if(!alpha)continue;
-    const length=Math.sqrt(gx*gx+gy*gy)+.001,nx=gx/length,ny=gy/length;
+    const nx=gx/length,ny=gy/length;
     const rim=1-smooth(range(field,1,2.1));
     const light=sat(.65-py*.18+rim*(-nx*.2-ny*.3));
     const shine=Math.pow(Math.max(0,-nx*.55-ny*.83),7)*rim;
@@ -90,7 +92,7 @@ function moltenLiquid(t) {
   }
   lavaSurface.getContext('2d').putImageData(lavaPixels,0,0);
   c.save();c.globalAlpha=life;c.imageSmoothingEnabled=true;
-  c.drawImage(lavaSurface,CX-D*1.3,CY-D*1.3,D*2.6,D*2.6);c.restore();
+  c.drawImage(lavaSurface,CX-D*1.2,CY-D*1.2,D*2.4,D*2.4);c.restore();
 }
 function meltingBadge(t) {
   const melt=smooth(range(t,1.8,3.15));
@@ -228,7 +230,7 @@ const renderers={cosmic,winter,jungle,hazy,swarms,lavalamp:lava,island,horror,wa
 function prepare(oldArt,newArt) {
   art=[oldArt,newArt]; mask=[]; frozen=[]; pixels=[]; bloodArt=[]; tideArt=[];
   glintCanvas=glintCanvas||off(256);
-  if(theme==='lavalamp'&&!lavaSurface){lavaSurface=off(192);lavaPixels=lavaSurface.getContext('2d').createImageData(192,192);}
+  if(theme==='lavalamp'&&!lavaSurface){lavaSurface=off(224);lavaPixels=lavaSurface.getContext('2d').createImageData(224,224);}
   if(theme==='cosmic'&&!planets.length) planets=[makePlanet(0),makePlanet(1)];
   if(theme==='winter') {
     frostCanvas=frostCanvas||off(); shardCells=shardCells.length?shardCells:makeShards();
