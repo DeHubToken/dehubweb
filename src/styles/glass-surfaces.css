@@ -58,53 +58,121 @@ html[data-theme][data-theme]
   }
 }
 
+/* Theme tint glass: the nav pills and the bentos take on the theme's own
+   colour instead of a grey smoke, over a thinner dark base, so they read as
+   lit glass rather than dark slabs. --tint-accent is each theme's colour; on
+   Cosmic, Hazy, Swarms and Lava Lamp ThemeContext overwrites it inline with
+   the Theme Color picked in Settings, so the glass follows that pick. */
+html {
+  --tint-accent: rgb(161 161 170);
+  --tint-glass-blur: blur(24px) saturate(200%);
+}
+html[data-theme='cosmic'] { --tint-accent: rgb(220 220 232); }
+html[data-theme='hazy'] { --tint-accent: rgb(140 76 222); }
+html[data-theme='swarms'] { --tint-accent: rgb(60 167 222); }
+html[data-theme='lavalamp'] { --tint-accent: rgb(222 103 60); }
+html[data-theme='winter'] { --tint-accent: rgb(150 190 230); }
+html[data-theme='war'] { --tint-accent: rgb(79 227 224); }
+html[data-theme='osaka'] { --tint-accent: rgb(255 111 181); }
+html[data-theme='jungle'] { --tint-accent: rgb(132 190 60); }
+html[data-theme='island'] { --tint-accent: rgb(34 170 200); }
+html[data-theme='hacker'] { --tint-accent: rgb(57 255 136); }
+html[data-theme='horror'] { --tint-accent: rgb(214 190 150); }
+
 /* Nav pills: the feed tab pill, every page's sticky tab pill and the phone
-   bottom nav are liquid glass on the web, desktop and phone alike. One thin
-   tint over a strong
-   blur, so posts scrolling under the pill show through it blurred instead of
-   vanishing behind a near-solid slab. The phone block in index.css thickens
-   the page-bento tokens to 0.86 and osaka paints its pill at 0.84 on phones;
-   this sits above both on specificity. The two :not(#_) lift it over the
-   osaka, jungle and war #app-root nets, which repaint these at 0.8-0.9.
+   bottom nav are liquid glass on the web, desktop and phone alike: 20% of the
+   theme colour over 20% of its dark tint, a soft top sheen and a bright rim,
+   over a strong blur, so posts scrolling under the pill show through it. The
+   phone block in index.css thickens the page-bento tokens to 0.86 and osaka
+   paints its pill at 0.84 on phones; this sits above both on specificity. The
+   two :not(#_) lift it over the osaka, jungle and war #app-root nets, which
+   repaint these at 0.8-0.9.
 
    System and every canvas theme. Light and minimal are left alone: their nav
    is a flat file-tab strip, not a floating pill. War paints its chamfered
    plate on ::before, so it gets the same tint there instead. */
 html {
-  --nav-glass: rgb(var(--glass-tint, 9 9 11) / 0.45);
-  --nav-glass-blur: blur(20px) saturate(160%);
+  --nav-glass-base: rgb(var(--glass-tint, 9 9 11) / 0.2);
 }
 html[data-theme='osaka'] {
-  --nav-glass: rgb(var(--osaka-slate, 17 14 28) / 0.5);
+  --nav-glass-base: rgb(var(--osaka-slate, 17 14 28) / 0.24);
 }
 html[data-theme='jungle'] {
-  --nav-glass: rgb(var(--jungle-bark, 38 28 19) / 0.55);
+  --nav-glass-base: rgb(var(--jungle-bark, 38 28 19) / 0.3);
 }
 html[data-theme='war'] {
-  --nav-glass: rgb(var(--war-gunmetal, 14 20 18) / 0.5);
+  --nav-glass-base: rgb(var(--war-gunmetal, 14 20 18) / 0.24);
+}
+html {
+  --nav-glass: color-mix(in srgb, var(--tint-accent) 20%, transparent);
+  --nav-glass-blur: var(--tint-glass-blur);
 }
 
 html[data-theme][data-theme]:is([data-theme='system'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   :is([data-feed-nav], [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]), [data-bottom-nav] > nav):not(#_):not(#_) {
-  background-color: var(--nav-glass) !important;
+  background: linear-gradient(rgb(255 255 255 / 0.1), rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base) !important;
   backdrop-filter: var(--nav-glass-blur) !important;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16), inset 0 1.5px 0 rgb(255 255 255 / 0.3) !important;
 }
 html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_)::before,
 html[data-theme][data-theme='war'] [data-bottom-nav] > nav:not(#_):not(#_)::before,
 html[data-theme][data-theme='war'] [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]):not(#_):not(#_) {
-  background-color: var(--nav-glass) !important;
+  background: linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base) !important;
   backdrop-filter: var(--nav-glass-blur) !important;
 }
 
 /* War's tab row itself stays clear so only the chamfered plate paints; the
    #app-root net was filling the row's rectangle at 0.8 over the chamfer. */
 html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_) {
-  background-color: transparent !important;
+  background: transparent !important;
   backdrop-filter: none !important;
+}
+
+/* Bentos: page bentos, side panels and post cards on every canvas theme. Only
+   the fill colour changes (the theme colour mixed into a thinner smoke), so
+   each theme's own texture layers, sheen, rings and radii stay as they are.
+   Phones get a little more smoke than desktop for copy over the moving canvas.
+   Nested wrappers ([data-page-bento] holding more bentos) stay clear, as the
+   nested-surface rule in index.css asks, and the page tab pill is painted by
+   the nav block above. */
+html {
+  --tint-bento: 0.36;
+  --tint-card: 0.32;
+  --tint-bento-raised: 0.46;
+}
+@media (max-width: 767px), (pointer: coarse) {
+  html {
+    --tint-bento: 0.48;
+    --tint-card: 0.44;
+    --tint-bento-raised: 0.58;
+  }
+}
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  html[data-theme][data-theme]:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']) {
+    --tint-mix: color-mix(in srgb, var(--tint-accent) 28%, rgb(var(--glass-tint, 9 9 11)));
+  }
+  html[data-theme][data-theme]:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+    :is([data-side-panel], [data-page-bento]:not([data-bento-flat]):not([data-feed-nav-outer] > *):not(:has([data-page-bento]))):not(#_):not(#_) {
+    background-color: color-mix(in srgb, var(--tint-mix) calc(var(--tint-bento) * 100%), transparent) !important;
+    backdrop-filter: var(--tint-glass-blur) !important;
+  }
+  html[data-theme][data-theme]:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+    [data-feed-item]:not(:has([data-page-bento])):not(#_):not(#_) {
+    background-color: color-mix(in srgb, var(--tint-mix) calc(var(--tint-card) * 100%), transparent) !important;
+    backdrop-filter: var(--tint-glass-blur) !important;
+  }
+  html[data-theme][data-theme]:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+    [data-page-bento].cursor-pointer:not([data-bento-flat]):not(:has([data-page-bento])):hover:not(#_):not(#_) {
+    background-color: color-mix(in srgb, var(--tint-mix) calc(var(--tint-bento-raised) * 100%), transparent) !important;
+  }
 }
 
 @media (prefers-reduced-transparency: reduce) {
   html {
     --nav-glass: rgb(var(--glass-tint, 9 9 11) / 0.94);
+    --nav-glass-base: rgb(var(--glass-tint, 9 9 11) / 0.94);
+    --tint-bento: 1;
+    --tint-card: 1;
+    --tint-bento-raised: 1;
   }
 }
