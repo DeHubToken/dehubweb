@@ -5150,8 +5150,17 @@ html[data-theme="light"] [data-creator-page] .text-white {
     box-shadow: none !important;
   }
   /* Air between posts now there is no box to separate them. */
-  html[data-theme="system"] [data-feed-root] [data-cinematic] {
-    margin-bottom: 1.25rem !important;
+  /* Posts are separated the way X does it: a little air above and below
+     each one and a thin full-width hairline between them. */
+  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic] {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0.875rem !important;
+    padding-bottom: 0.875rem !important;
+    border-bottom: 1px solid rgb(255 255 255 / 0.12) !important;
+  }
+  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first]:has([data-video-card] [data-card-head]:not([data-card-head="plain"])) {
+    padding-top: 0 !important;
   }
   /* No band above the feed: the first post starts at the top of the screen
      under the floating capsule. A video runs its picture up behind it and
@@ -5163,7 +5172,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
     top: calc(env(safe-area-inset-top, 0px) + 3.5rem) !important;
   }
   html[data-theme="system"] [data-feed-root] [data-cinematic]:is([data-cinematic="post"], [data-cinematic="ad"]) {
-    padding: 0.75rem 0.875rem 0.25rem !important;
+    padding-left: 0.875rem !important;
+    padding-right: 0.875rem !important;
   }
   html[data-theme="system"] [data-feed-root] [data-cinematic] > * {
     position: relative;
