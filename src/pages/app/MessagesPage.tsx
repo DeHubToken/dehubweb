@@ -193,11 +193,12 @@ export default function MessagesPage() {
   // band until the composer takes focus and the keyboard takes it instead.
   const chatOpen = !!selectedConversation || showPublicChat;
   // While the on-screen keyboard is up the mobile bottom nav hides, so chat
-  // surfaces reclaim its reserved 76px — only the 44px top bar remains and
+  // surfaces reclaim its reserved 76px (the top bar only ever shows on the
+  // home feed, so --app-top-bar is 0 here on a phone) and
   // the screen splits between messages and composer.
   const keyboardOpen = useKeyboardOpen();
   const mobileChatHeight =
-    keyboardOpen || chatOpen ? 'h-[calc(100dvh-44px)]' : 'h-[calc(100dvh-120px)]';
+    keyboardOpen || chatOpen ? 'h-[calc(100dvh_-_var(--app-top-bar))]' : 'h-[calc(100dvh_-_76px_-_var(--app-top-bar))]';
   // dvh only tracks the keyboard on Android (interactive-widget) — iOS keeps
   // the layout viewport full-size and just covers it. Sizing to the measured
   // visual viewport keeps the composer above the keyboard on both. On iOS,

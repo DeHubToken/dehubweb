@@ -1978,9 +1978,9 @@ export default function AssistantPage() {
       // h-full can't resolve against <main>, which only has a min-height
       // floor — so it computed as auto and let the shell grow past the
       // viewport, scrolling into dead space below short content. dvh is
-      // viewport-relative instead, sized to clear <main>'s pt-11+pb-16
+      // viewport-relative instead, sized to clear <main>'s pt-11 (the top bar, --app-top-bar) + pb-16
       // (dropped at the same lg breakpoint this switches to h-screen).
-      className="flex flex-col h-[calc(100dvh-108px)] lg:h-screen relative overflow-hidden"
+      className="flex flex-col h-[calc(100dvh_-_64px_-_var(--app-top-bar))] lg:h-screen relative overflow-hidden"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}

@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
+import { isHomeFeedRoute } from '@/lib/home-routes';
 import { useHistoryNavType } from '@/hooks/use-history-nav-type';
 import { Menu, Bell, ArrowLeft } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
@@ -11,7 +12,7 @@ import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { useCallback, useRef, memo } from 'react';
+import { useCallback, useLayoutEffect, useRef, memo } from 'react';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -98,6 +99,19 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   // When the post overlay is opened from the feed, the home page's sticky tab bar hosts
   // the back button (settings-toggle slot). The top DEHUB bar stays exactly as it was on the feed.
   const isOverlayFromFeed = isPostPage && !!(location.state as any)?.fromFeed;
+  // The bar (menu, dehub mark, bell) belongs to the home feed only. Every
+  // other page already names itself in its own pill, so the bar there was a
+  // second banner over it. It stays over the post overlay opened from the
+  // feed, which is still the home feed underneath.
+  //
+  // Hidden, not unmounted: the menu drawer lives inside, and a menu item
+  // navigates away while the sheet is still sliding shut.
+  const showBar = isHomeFeedRoute(location.pathname) || isOverlayFromFeed;
+  // Pages read this to drop the bar's 2.75rem clearance (index.css).
+  useLayoutEffect(() => {
+    document.documentElement.toggleAttribute('data-no-top-bar', !showBar);
+  }, [showBar]);
+
   const handleMenuClick = useCallback(() => {
     if (!isAuthenticated) {
       openLoginModal();
@@ -120,7 +134,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   }, [navType, navigate]);
 
   return (
-    <header data-mobile-header data-clear-top-bar className={`lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
+    <header data-mobile-header data-clear-top-bar className={`${showBar ? '' : 'hidden '}lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
       {/* Profile — left slot.
           Direct post-page URL access: back button replaces the menu/settings toggle.
           When opened as an overlay from the feed, the feed's tab bar already hosts a back button,
