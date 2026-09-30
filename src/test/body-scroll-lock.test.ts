@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { bodyScrollLockDepth, lockBodyScroll } from '@/lib/body-scroll-lock';
+import { bodyScrollLockDepth, bodyScrollLockOwners, lockBodyScroll, lockDocumentScroll } from '@/lib/body-scroll-lock';
 
 /**
  * The nesting cases are the whole point. Before this existed, two habits shared
@@ -11,8 +11,8 @@ import { bodyScrollLockDepth, lockBodyScroll } from '@/lib/body-scroll-lock';
  */
 describe('body scroll lock', () => {
   beforeEach(() => {
-    // Drain any depth a previous test left behind.
-    while (bodyScrollLockDepth() > 0) lockBodyScroll()();
+    // Acquiring and immediately releasing cannot drain someone else's lock.
+    expect(bodyScrollLockDepth()).toBe(0);
     document.body.style.overflow = '';
   });
 
@@ -62,5 +62,29 @@ describe('body scroll lock', () => {
     release();
     release();
     expect(bodyScrollLockDepth()).toBe(0);
+  });
+
+  it('releases overlapping viewers in opening order without restoring a stale hidden value', () => {
+    const image = lockBodyScroll('image');
+    const comments = lockBodyScroll('comments');
+    const fullscreen = lockDocumentScroll('video');
+    image();
+    fullscreen();
+    fullscreen();
+    expect(document.body.style.overflow).toBe('hidden');
+    expect(bodyScrollLockOwners()).toEqual(['comments']);
+    comments();
+    expect(document.body.style.overflow).toBe('');
+    expect(document.documentElement.style.overflow).toBe('');
+  });
+
+  it('holds the root until the last overlapping fullscreen player releases', () => {
+    const first = lockDocumentScroll('first-video');
+    const second = lockDocumentScroll('second-video');
+    first();
+    expect(document.documentElement.style.overflow).toBe('hidden');
+    second();
+    expect(document.documentElement.style.overflow).toBe('');
+    expect(document.body.style.overflow).toBe('');
   });
 });

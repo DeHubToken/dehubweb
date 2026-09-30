@@ -6,6 +6,7 @@ import { OverlayOpenTracker } from "@/lib/overlay-open";
 import { guardOutsideDismiss } from "@/lib/overlay-dismiss";
 import { useWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
 import { settleAfterOverlayClose } from '@/lib/scroll-freeze-watchdog';
+import { OverlayContentPresent, useOverlayLifetime } from '@/hooks/use-overlay-lifetime';
 
 // Shared guard against the vaul "ghost click": dismissing a sheet — tapping the
 // scrim, or an outside tap on a non-modal drawer — fires a synthesized click on
@@ -143,6 +144,7 @@ type CustomDrawerProps = React.ComponentProps<typeof DrawerPrimitive.Root> & {
 
 const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, warmable = false, walletPrompt = false, children, ...props }: CustomDrawerProps) => {
   const unlockOpen = useWalletUnlockPrompt();
+  const lifetime = useOverlayLifetime(props.open, props.defaultOpen, onOpenChange);
   const canDeferRef = React.useRef<boolean | null>(null);
   if (canDeferRef.current === null) {
     canDeferRef.current =
@@ -154,8 +156,8 @@ const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, war
   );
 
   React.useEffect(() => {
-    if (phase === "dormant" && props.open) setPhase("mounting");
-  }, [phase, props.open]);
+    if (phase === "dormant" && lifetime.open) setPhase("mounting");
+  }, [phase, lifetime.open]);
 
   // Same transition the open path runs, just early: a warm request mounts the
   // Root closed now so the real `open` flip later is same-frame. Once live the
@@ -173,9 +175,9 @@ const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, war
   // checks the page was handed back scrollable. See settleAfterOverlayClose.
   const wasOpenRef = React.useRef(false);
   React.useEffect(() => {
-    if (wasOpenRef.current && !props.open) settleAfterOverlayClose();
-    wasOpenRef.current = !!props.open;
-  }, [props.open]);
+    if (wasOpenRef.current && !lifetime.open) settleAfterOverlayClose();
+    wasOpenRef.current = lifetime.open;
+  }, [lifetime.open]);
 
   React.useEffect(() => {
     if (phase !== "mounting") return;
@@ -194,6 +196,7 @@ const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, war
   }
 
   return (
+    <OverlayContentPresent.Provider value={lifetime.present}>
     <DrawerPrimitive.Root
       shouldScaleBackground={shouldScaleBackground}
       modal={modal}
@@ -228,15 +231,16 @@ const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, war
       onOpenChange={(open) => {
         if (!open && unlockOpen && !walletPrompt) return;
         if (!open) lastDrawerDismissAt = Date.now();
-        onOpenChange?.(open);
+        lifetime.onChange(open);
       }}
       {...props}
-      open={phase === "mounting" ? false : props.open}
+      open={phase === "mounting" ? false : lifetime.open}
     >
       <DrawerRootMounted.Provider value={true}>
         {children}
       </DrawerRootMounted.Provider>
     </DrawerPrimitive.Root>
+    </OverlayContentPresent.Provider>
   );
 };
 Drawer.displayName = "Drawer";
@@ -284,9 +288,10 @@ const DrawerContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string; column?: boolean; scrollable?: boolean }
 >(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, column = false, scrollable = false, onPointerDownOutside, ...props }, ref) => {
   const rootMounted = React.useContext(DrawerRootMounted);
+  const present = React.useContext(OverlayContentPresent);
   // No Root above us — this sheet is dormant (or the content escaped its
   // Drawer entirely). Render nothing rather than portalling into no Dialog.
-  if (!rootMounted) return null;
+  if (!rootMounted || !present) return null;
 
   return (
   <DrawerPortal>

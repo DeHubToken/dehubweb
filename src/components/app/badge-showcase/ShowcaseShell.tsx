@@ -1,3 +1,4 @@
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Shared badge details, dock, and promotion shell. The active theme chooses
  * themed scenes, metallic lift/shatter, or holographic stickers and glitter.
@@ -396,12 +397,10 @@ export function ShowcaseShell({
   /* ---------- page plumbing ---------- */
 
   useEffect(() => {
-    const body = document.body;
-    const previous = body.style.overflow;
-    body.style.overflow = 'hidden';
+    const releaseScroll = lockBodyScroll('ShowcaseShell');
     closeRef.current?.focus({ preventScroll: true });
     return () => {
-      body.style.overflow = previous;
+      releaseScroll();
     };
   }, []);
 

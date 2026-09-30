@@ -1,3 +1,4 @@
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * AI Assistant Page
  * =================
@@ -391,9 +392,8 @@ export default function AssistantPage() {
     if (!lightboxImage) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightboxImage(null); };
     window.addEventListener('keydown', onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prevOverflow; };
+    const releaseScroll = lockBodyScroll('AssistantPage');
+    return () => { window.removeEventListener('keydown', onKey); releaseScroll(); };
   }, [lightboxImage]);
   const { data: userSkills = [] } = useUserSkills();
   const { data: userCharacters = [] } = useUserCharacters();

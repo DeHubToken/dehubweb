@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { DocsSEO } from '@/components/DocsSEO';
@@ -322,19 +323,11 @@ const DocsLayoutContent = () => {
   // Initialize text highlighting
   useTextHighlight();
 
-  // Prevent body scroll when sidebar is open on mobile
+  // Closed sidebars must not release another overlay's lock.
   useEffect(() => {
-    if (sidebarOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    
-    // Cleanup on unmount
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [sidebarOpen]);
+    if (!sidebarOpen || isDesktop) return;
+    return lockBodyScroll('docs-sidebar');
+  }, [sidebarOpen, isDesktop]);
 
   useEffect(() => {
     if (window.parent !== window) {
