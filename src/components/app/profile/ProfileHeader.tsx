@@ -373,7 +373,7 @@ export function ProfileHeader({
           <div className="flex flex-col">
             {/* The name owns the full width and may take two lines. Social
                 links used to share this row, so a long name was cut or
-                crushed beside them; they now live in the Links pill at the
+                crushed beside them; they now sit as small icons at the
                 bottom of the header. The badge stays glued to the last word. */}
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
               <span className="group min-w-0 inline-flex items-baseline gap-1">
@@ -533,7 +533,7 @@ export function ProfileHeader({
               {/* DeHub followers plus the creator's own figures for their
                   linked socials. Absent until a social carries a count. */}
               <TotalReachPill customs={profile.customs} followers={profile.followers} />
-              <ProfileLinksPill customs={profile.customs} className="ml-auto" />
+              <ProfileLinksPill customs={profile.customs} className="ml-auto self-end" />
             </div>
           ) : (
             profile.customs && (
