@@ -5159,6 +5159,19 @@ html[data-theme="light"] [data-creator-page] .text-white {
     padding-bottom: 0.875rem !important;
     border-bottom: 1px solid rgb(255 255 255 / 0.12) !important;
   }
+  /* No line above the follow carousel (neither its own nor the post
+     above's); one full-width line under it. */
+  html[data-theme="system"] [data-feed-root] :has(+ * [data-who-to-follow]) [data-feed-item][data-cinematic]:not(:has(~ [data-feed-item])) {
+    border-bottom: 0 !important;
+  }
+  html[data-theme="system"] [data-feed-root] [data-who-to-follow] {
+    border-top: 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.12);
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
   html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first]:has([data-video-card] [data-card-head]:not([data-card-head="plain"])) {
     padding-top: 0 !important;
   }
