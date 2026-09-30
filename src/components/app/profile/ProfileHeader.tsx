@@ -533,20 +533,21 @@ export function ProfileHeader({
               {/* DeHub followers plus the creator's own figures for their
                   linked socials. Absent until a social carries a count. */}
               <TotalReachPill customs={profile.customs} followers={profile.followers} />
-              <ProfileLinksPill customs={profile.customs} className="ml-auto self-end" />
             </div>
-          ) : (
-            profile.customs && (
-              <div className="flex justify-end mt-3">
-                <ProfileLinksPill customs={profile.customs} />
-              </div>
-            )
-          )}
+          ) : null}
 
-          {/* Mutual followers */}
-          {!isViewingOwnProfile && (
-            <MutualFollowers profileAddress={apiProfile?.walletAddress} />
-          )}
+          {/* The bottom row: "Followed by …" on the left, the creator's
+              social icons tucked into the right-hand corner. The icons still
+              take this row when there are no mutuals to show. Each side
+              carries its own top margin, so an empty row takes no space. */}
+          <div className="flex items-center gap-3">
+            <div className="min-w-0 flex-1">
+              {!isViewingOwnProfile && (
+                <MutualFollowers profileAddress={apiProfile?.walletAddress} />
+              )}
+            </div>
+            <ProfileLinksPill customs={profile.customs} className="shrink-0 mt-2" />
+          </div>
 
           {/* The streamer ladder. Renders nothing for a profile that has
               never ended a stream, so a non-streamer's page is unchanged. */}
