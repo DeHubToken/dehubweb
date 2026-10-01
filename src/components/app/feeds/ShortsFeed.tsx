@@ -522,7 +522,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   if (isLoading || isAutoRetrying) {
     return (
-      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
+      <div className="p-2 sm:p-3">
         <ShortsFeedSkeleton />
       </div>
     );
@@ -530,7 +530,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   return (
     <>
-      <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0">
+      <div data-feed-root className="p-2 sm:p-3">
         {/* Filters */}
         <AnimatePresence mode="wait">
           {showFilters && (
