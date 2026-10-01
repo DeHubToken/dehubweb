@@ -8,7 +8,7 @@
  * @module pages/app/HomePage
  */
 
-import { useState, useEffect, useRef, useCallback, useDeferredValue, memo, lazy, Suspense } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, useDeferredValue, memo, lazy, Suspense } from 'react';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -676,18 +676,19 @@ export default function HomePage() {
   const handleNavBack = isPostOverlayActive ? handleOverlayBack : handleBackToCollage;
 
   /**
-   * Reset scroll position when tab changes (but not when returning from post page).
+   * Reset scroll only after the displayed feed changes, before the browser paints.
+   * activeTab can lead deferredTab; resetting on it flashes the outgoing feed at the top.
    */
   const prevTabRef = useRef<string | null>(null);
   const hasInitializedRef = useRef(false);
   
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Skip scroll-to-top if:
     // 1. First mount AND we're returning via back navigation (browser back button)
     // 2. Tab hasn't actually changed
     if (!hasInitializedRef.current) {
       hasInitializedRef.current = true;
-      prevTabRef.current = activeTab;
+      prevTabRef.current = deferredTab;
       
       // On back navigation, don't scroll to top - let scroll restoration handle it
       if (isBackNavigation) {
@@ -695,11 +696,11 @@ export default function HomePage() {
       }
     }
     
-    if (prevTabRef.current === activeTab) {
+    if (prevTabRef.current === deferredTab) {
       return;
     }
     
-    prevTabRef.current = activeTab;
+    prevTabRef.current = deferredTab;
 
     // Skip scroll-to-top during drag — scrolling mid-drag causes layout reflow
     // which is the biggest source of lag on the home page.
@@ -714,7 +715,7 @@ export default function HomePage() {
     if (mainContent) {
       mainContent.scrollTop = 0;
     }
-  }, [activeTab, isBackNavigation]);
+  }, [deferredTab, isBackNavigation]);
 
   // --------------------------------------------------------------------------
   // SWIPE GESTURE HANDLERS
@@ -765,8 +766,8 @@ export default function HomePage() {
     }
     
     // Handle horizontal swipe for tab switching
-    if (!touchStartX.current || !touchEndX.current || 
-        !touchStartY.current || !touchEndY.current) {
+    if (touchStartX.current === null || touchEndX.current === null || 
+        touchStartY.current === null || touchEndY.current === null) {
       touchStartX.current = null;
       touchEndX.current = null;
       touchStartY.current = null;
