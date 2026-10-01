@@ -4,6 +4,8 @@ import { Bell, Check, Menu, SlidersHorizontal } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { setFeedTabsOpen, toggleFeedTabs, useFeedTabsOpen } from '@/lib/feed-tabs-reveal';
 
+import { setFeedIslandPortal } from '@/lib/feed-island-portal';
+
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
 
 function readActiveTab(): string {
@@ -109,6 +111,7 @@ export function FeedIslandCapsule({
           </button>
         </div>
       </div>
+      <div ref={setFeedIslandPortal} className="w-0 min-w-full overflow-hidden" />
       <AnimatePresence>
       {tabsOpen && visible && (
         <motion.div
