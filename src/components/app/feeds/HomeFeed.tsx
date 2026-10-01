@@ -25,7 +25,9 @@ import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useFeedIslandPortal } from '@/lib/feed-island-portal';
+import { useMediaQuery } from '@/hooks/use-media-query';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
@@ -515,6 +517,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
   const portalTarget = resolvePortalTarget(filtersPortalRef);
+  const islandPortal = useFeedIslandPortal();
+  const isIslandViewport = useMediaQuery('(max-width: 1023px)');
+  const newPostsTarget = isIslandViewport ? islandPortal : null;
+  const reduceMotion = useReducedMotion();
   const chipsTarget = resolvePortalTarget(chipsPortalRef) ?? portalTarget;
   const { isCollapsed } = useSidebarCollapse();
   const { shortsEnabled } = useShortsEnabled();
@@ -2099,6 +2105,32 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           (the nearest positioned ancestor), so it never adds height to the nav
           pill itself and still slides away with the nav on scroll. */}
       {(() => {
+        if (newPostsTarget) {
+          return createPortal(
+            <AnimatePresence initial={false}>
+              {isHomeActive && newPostCount > 0 && (
+                <motion.div
+                  key="new-posts-drawer"
+                  initial={{ height: 0, opacity: 0, y: -8 }}
+                  animate={{ height: 'auto', opacity: 1, y: 0 }}
+                  exit={{ height: 0, opacity: 0, y: -8, pointerEvents: 'none' }}
+                  transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
+                  className="overflow-hidden"
+                >
+                  <button
+                    type="button"
+                    onClick={showNewPosts}
+                    className="flex w-full items-center justify-center gap-1.5 px-2 py-2 text-xs font-semibold text-white hover:bg-white/10"
+                  >
+                    <ArrowUp className="h-3.5 w-3.5 shrink-0" />
+                    <span>{t('feed.newPosts', { defaultValue: '{{count}} new posts', count: newPostCount })}{newPostsAtCap ? '+' : ''}</span>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>,
+            newPostsTarget,
+          );
+        }
         if (newPostCount <= 0) return null;
 
         const pill = (
