@@ -307,6 +307,7 @@ function ImageCarousel({
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeHeight, setActiveHeight] = useState<number>();
   const [currentSlideFillsViewport, setCurrentSlideFillsViewport] = useState(false);
 
   useEffect(() => {
@@ -332,6 +333,8 @@ function ImageCarousel({
         : nearest;
     }, 0);
     setCurrentIndex(idx);
+    const height = slides[idx].querySelector("img")?.getBoundingClientRect().height;
+    setActiveHeight(height && height > 0 ? height : undefined);
     // A narrower/tall image already reveals the next image, which is the best
     // possible scroll affordance. Keep the buttons for edge-to-edge slides,
     // where the rest of the gallery would otherwise be completely hidden.
@@ -348,7 +351,11 @@ function ImageCarousel({
 
     const observer = new ResizeObserver(updateCurrentIndex);
     observer.observe(viewport);
-    Array.from(viewport.children).forEach((slide) => observer.observe(slide));
+    Array.from(viewport.children).forEach((slide) => {
+      observer.observe(slide);
+      const image = slide.querySelector("img");
+      if (image) observer.observe(image);
+    });
     return () => observer.disconnect();
   }, [images, updateCurrentIndex]);
 
@@ -379,7 +386,8 @@ function ImageCarousel({
       <div
         ref={scrollRef}
         onScroll={updateCurrentIndex}
-        className={cn("flex gap-2 scrollbar-hide", hasMultiple ? "overflow-x-auto overscroll-x-contain touch-auto" : "overflow-x-hidden touch-pan-y")}
+        style={{ height: immersive ? activeHeight : undefined }}
+        className={cn("flex items-start gap-2 scrollbar-hide", hasMultiple ? "overflow-x-auto overscroll-x-contain touch-auto" : "overflow-x-hidden touch-pan-y")}
       >
         {images.map((img, idx) => (
           <div
