@@ -67,7 +67,7 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
     // slider the pointer is currently inside, so it only ever holds the bar up
     // for longer.
     const bar = VIDEO_CARD.match(
-      /\{controlsVisible && !video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls className="absolute bottom-0([\s\S]*?)\n {8}\)\}/
+      /\{controlsVisible && !video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls[^\n]*?"absolute bottom-0([\s\S]*?)\n {8}\)\}/
     );
     expect(bar, 'transport bar is not gated on controls visibility alone').not.toBeNull();
     expect(bar![1]).toContain('handlePlayClick()');
