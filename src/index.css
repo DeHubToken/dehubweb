@@ -5214,6 +5214,13 @@ html[data-theme="light"] [data-creator-page] .text-white {
   html[data-theme="system"] [data-cinematic] [data-media-full] img {
     border-radius: 0 !important;
   }
+  /* Layers that fill the media (live and ended-stream screens, the audio
+     visualiser, gates, the player) lose their own rounded frame too, or they
+     draw a curved outline inside the full-width picture. */
+  html[data-theme="system"] [data-cinematic] [data-media-full] :is(.absolute.inset-0, .w-full.h-full, video, canvas) {
+    border-radius: 0 !important;
+    border-width: 0 !important;
+  }
   html[data-theme="system"] [data-cinematic] [data-video-card] > [data-media-full] {
     width: 100% !important;
     max-width: none !important;
