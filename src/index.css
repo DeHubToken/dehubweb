@@ -5209,8 +5209,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
      bottom of the name in the bottom-right corner. */
   html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
     align-items: flex-end;
-    margin: 0 0.375rem 0.75rem 0.75rem;
-    transition: margin-bottom 0.2s ease;
+    /* Reserve player-bar clearance even while controls are hidden. */
+    margin: 0 0.375rem 2.75rem 0.75rem;
   }
   /* Options (⋮) leave the media for the top right of the caption, inset like
      the left edge; the caption text stops just short of it. */
@@ -5234,10 +5234,6 @@ html[data-theme="light"] [data-creator-page] .text-white {
   }
   html[data-theme="system"] [data-cinematic] [data-card-info] > [data-caption-options] + .relative {
     padding-right: 1.75rem;
-  }
-  /* While the player bar is up, the row lifts above it. */
-  html[data-theme="system"] [data-cinematic-first] [data-video-card]:has([data-media-full] [data-video-controls].bottom-0) > [data-card-head]:not([data-card-head="plain"]) {
-    margin-bottom: 2.75rem;
   }
   html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) > :last-child {
     gap: 0.125rem;
