@@ -1825,11 +1825,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
               onTouchEnd={(e) => {
-                e.stopPropagation();
                 const start = (e.currentTarget as any)._touchStart;
+                (e.currentTarget as any)._touchStart = null;
                 if (!start) return;
                 const touch = e.changedTouches[0];
-                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowPPVDrawer(true); }
+                if (!touch) return;
+                // Only consume taps; swipes must reach the feed's tab navigation.
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowPPVDrawer(true); }
               }}
             >
               <div className="flex items-center gap-3 mb-3">
@@ -1856,11 +1858,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
               onTouchEnd={(e) => {
-                e.stopPropagation();
                 const start = (e.currentTarget as any)._touchStart;
+                (e.currentTarget as any)._touchStart = null;
                 if (!start) return;
                 const touch = e.changedTouches[0];
-                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowPPVDrawer(true); }
+                if (!touch) return;
+                // Only consume taps; swipes must reach the feed's tab navigation.
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowPPVDrawer(true); }
               }}
             >
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
@@ -1883,11 +1887,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onClick={(e) => { e.stopPropagation(); setShowSubDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
               onTouchEnd={(e) => {
-                e.stopPropagation();
                 const start = (e.currentTarget as any)._touchStart;
+                (e.currentTarget as any)._touchStart = null;
                 if (!start) return;
                 const touch = e.changedTouches[0];
-                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowSubDrawer(true); }
+                if (!touch) return;
+                // Only consume taps; swipes must reach the feed's tab navigation.
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowSubDrawer(true); }
               }}
             >
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
@@ -1913,11 +1919,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
               onTouchEnd={(e) => {
-                e.stopPropagation();
                 const start = (e.currentTarget as any)._touchStart;
+                (e.currentTarget as any)._touchStart = null;
                 if (!start) return;
                 const touch = e.changedTouches[0];
-                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowLockedDrawer(true); }
+                if (!touch) return;
+                // Only consume taps; swipes must reach the feed's tab navigation.
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowLockedDrawer(true); }
               }}
             >
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
@@ -1937,11 +1945,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
               onTouchEnd={(e) => {
-                e.stopPropagation();
                 const start = (e.currentTarget as any)._touchStart;
+                (e.currentTarget as any)._touchStart = null;
                 if (!start) return;
                 const touch = e.changedTouches[0];
-                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowBountyDrawer(true); }
+                if (!touch) return;
+                // Only consume taps; swipes must reach the feed's tab navigation.
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowBountyDrawer(true); }
               }}
             >
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
