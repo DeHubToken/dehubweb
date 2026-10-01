@@ -2,7 +2,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Repeat2 } from 'lucide-react';
-import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, Image, Pencil, Trash2, Pin, ListVideo, ChevronLeft } from 'lucide-react';
+import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, MessageSquare, Share2, Bookmark, Info, Image, Pencil, Trash2, Pin, ListVideo, ChevronLeft } from 'lucide-react';
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -1273,10 +1273,6 @@ function CommentCard({ comment, parentPost, parentPostFailed, isOwnComment, onCl
               <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
                 <ThumbsUp className="w-4 h-4" />
                 {comment.likeCount ?? 0}
-              </span>
-              <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
-                <ThumbsDown className="w-4 h-4" />
-                {comment.dislikeCount ?? 0}
               </span>
               <span className="flex items-center gap-1.5 text-zinc-400 text-xs px-2 py-1.5 rounded-xl">
                 <MessageSquare className="w-4 h-4" />

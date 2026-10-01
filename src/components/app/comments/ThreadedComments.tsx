@@ -18,7 +18,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation as useI18n } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Loader2, MessageSquare, Pencil, Send, ThumbsDown, ThumbsUp, Trash2, X } from 'lucide-react';
+import { Check, Loader2, MessageSquare, Pencil, Send, ThumbsUp, Trash2, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import {
@@ -40,13 +40,9 @@ import { useMention } from '@/hooks/use-mention';
 import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { ReactionEmoji } from '@/components/app/cards/ReactionEmoji';
 import {
-  reactionForTap,
+  reactionForThumbTap,
   reactionMeta,
-  resolveLeadReaction,
-  resolveNegativeLeadReaction,
-  isPositiveReaction,
-  negativeThumbLabel,
-  HAS_NEGATIVE_TRAY,
+  resolveThumbReaction,
   type PostReaction,
 } from '@/lib/reactions';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -120,20 +116,12 @@ function CommentRow<C extends ThreadedComment>({
 
   // No tray on your own comment: every reaction it could cast is one you are
   // not allowed to cast on yourself, so the button would open onto refusals.
+  // On anyone else's, the one tray holds every reaction with 👎 last — there
+  // is no separate thumbs-down.
   const likeTray = useReactionTray(!isOwn);
-  // With one negative reaction left, a hold-to-open menu of one option is worse
-  // than no menu — the hold swallows the press that would have cast the
-  // downvote. Same guard the post comment section applies; it comes back on its
-  // own the day a second negative reaction exists.
-  const dislikeTray = useReactionTray(!isOwn && HAS_NEGATIVE_TRAY);
 
-  const leadReaction = isOwn ? null : resolveLeadReaction(comment.reactionCounts, comment.myReaction);
-  const negativeLead = resolveNegativeLeadReaction(comment.myReaction);
-  const myPositive = comment.myReaction && isPositiveReaction(comment.myReaction) ? comment.myReaction : null;
-  // Which side the viewer's reaction fell on, read through the shared predicate
-  // rather than compared against 'dislike' — reactions move between the two
-  // sides (poo just did), and a literal here would quietly stop lighting up.
-  const myNegative = !!comment.myReaction && !isPositiveReaction(comment.myReaction);
+  const leadReaction = isOwn ? null : resolveThumbReaction(comment.reactionCounts, comment.myReaction);
+  const held = isOwn ? null : comment.myReaction ?? null;
 
   const avatarUrl = comment.avatar ? buildAvatarUrl(comment.wallet_address, comment.avatar) : null;
   const handle = comment.username || `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
@@ -246,13 +234,13 @@ function CommentRow<C extends ThreadedComment>({
                 disabled={isOwn || busy}
                 onClick={() => {
                   if (likeTray.consumePress()) return;
-                  onReact(comment, reactionForTap(true, comment.myReaction, comment.reactionCounts));
+                  onReact(comment, reactionForThumbTap(comment.myReaction, comment.reactionCounts));
                 }}
                 {...likeTray.buttonProps}
                 className={cn(
                   ACTION_HIT,
                   'flex items-center gap-1 transition-colors select-none touch-none disabled:opacity-60',
-                  myPositive ? 'text-white' : 'text-white/70 hover:text-white',
+                  held ? 'text-white' : 'text-white/70 hover:text-white',
                 )}
                 aria-label={reactionMeta(leadReaction ?? 'like').label}
                 aria-haspopup={isOwn ? undefined : 'menu'}
@@ -260,50 +248,12 @@ function CommentRow<C extends ThreadedComment>({
               >
                 {leadReaction ? (
                   <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
-                    <ReactionEmoji reaction={leadReaction} animate={leadReaction === (isOwn ? null : myPositive)} />
+                    <ReactionEmoji reaction={leadReaction} animate={leadReaction === held} />
                   </span>
                 ) : (
-                  <ThumbsUp className={cn('w-4 h-4', myPositive && 'fill-current')} />
+                  <ThumbsUp className={cn('w-4 h-4', held && 'fill-current')} />
                 )}
                 {comment.likes > 0 && <span className="text-xs">{comment.likes}</span>}
-              </button>
-            </span>
-
-            <span className="relative flex items-center gap-1" {...dislikeTray.areaProps}>
-              <ReactionPicker
-                open={dislikeTray.open}
-                polarity="negative"
-                current={comment.myReaction}
-                counts={comment.reactionCounts}
-                onSelect={(reaction) => { dislikeTray.close(); onReact(comment, reaction); }}
-                onClose={dislikeTray.close}
-                align="left"
-              />
-              <button
-                type="button"
-                disabled={isOwn || busy}
-                onClick={() => {
-                  if (dislikeTray.consumePress()) return;
-                  onReact(comment, reactionForTap(false, comment.myReaction, comment.reactionCounts));
-                }}
-                {...dislikeTray.buttonProps}
-                className={cn(
-                  ACTION_HIT,
-                  'flex items-center gap-1 transition-colors select-none touch-none disabled:opacity-60',
-                  myNegative ? 'text-white' : 'text-white/70 hover:text-white',
-                )}
-                aria-label={negativeThumbLabel(comment.myReaction)}
-                aria-haspopup={!isOwn && HAS_NEGATIVE_TRAY ? 'menu' : undefined}
-                aria-expanded={!isOwn && HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
-              >
-                {negativeLead ? (
-                  <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
-                    <ReactionEmoji reaction={negativeLead} animate />
-                  </span>
-                ) : (
-                  <ThumbsDown className={cn('w-4 h-4', myNegative && 'fill-current')} />
-                )}
-                {comment.dislikes > 0 && <span className="text-xs">{comment.dislikes}</span>}
               </button>
             </span>
 
