@@ -1759,7 +1759,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         tabIndex={0}
         data-no-navigate
         data-media-full
-        className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden transition-all duration-300 ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
+        className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
         /* Fills the card width when the clip is wide enough; a portrait clip
            caps at MAX_MEDIA_HEIGHT tall and shrinks its own width instead, so
            it sits hugged to the left like a portrait photo does in the feed.

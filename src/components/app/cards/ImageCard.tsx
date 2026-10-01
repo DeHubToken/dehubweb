@@ -126,6 +126,8 @@ interface ImageCardProps {
    * and the creator row moves under it, where the video post draws its own.
    */
   isImmersive?: boolean;
+  /** Photo taps open the viewer only on the dedicated post page. */
+  postPage?: boolean;
 }
 
 /**
@@ -563,7 +565,7 @@ function FeedDescription({
   );
 }
 
-export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false }: ImageCardProps) {
+export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false, postPage = false }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments, post.id);
@@ -699,6 +701,12 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     : [post.image];
 
   const handleImageClick = (index: number) => {
+    if (wasDrawerJustDismissed()) return;
+    if (!postPage) {
+      cacheImageForNavigation(queryClient, post);
+      navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+      return;
+    }
     setFullscreenIndex(index);
     setFullscreenOpen(true);
   };
