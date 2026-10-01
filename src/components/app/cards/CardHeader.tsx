@@ -135,7 +135,7 @@ export function CardHeader({
   };
 
   return (
-    <div className="flex items-center gap-3 pb-3 pr-3 flex-1 min-w-0">
+    <div className={`flex items-end gap-3 pr-3 flex-1 min-w-0 ${contentType === 'image' ? 'pb-2' : 'pb-3'}`}>
       <ProfileHoverCard
         creatorId={creatorId}
         creatorUsername={creatorUsername}
@@ -167,7 +167,7 @@ export function CardHeader({
         className={`flex flex-col min-w-0 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
       >
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="inline-flex items-baseline gap-1 shrink min-w-0 text-base">
+          <span className="inline-flex items-baseline gap-1 shrink min-w-0 text-base leading-5">
             <span className="font-semibold text-white truncate max-w-[160px] sm:max-w-none leading-5">{username}</span>
             <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} badgeLock={badgeLock} className="w-[1em] h-[1em]" />
             <NewMemberChip address={creatorId} className="shrink-0 ml-0.5" />
@@ -177,12 +177,12 @@ export function CardHeader({
         {(formattedHandle || timestamp) && (
           <div className="flex items-center gap-1 min-w-0">
             {formattedHandle && (
-              <span className="text-zinc-500 text-sm truncate max-w-[160px] sm:max-w-none leading-5">{formattedHandle}</span>
+              <span className="text-zinc-500 text-sm truncate max-w-[160px] sm:max-w-none leading-4">{formattedHandle}</span>
             )}
             {timestamp && (
               <>
                 <span className="text-zinc-600 text-[13px]">·</span>
-                <span className="text-zinc-500 text-[13px] leading-5 shrink-0">{timestamp}</span>
+                <span className="text-zinc-500 text-[13px] leading-4 shrink-0">{timestamp}</span>
               </>
             )}
           </div>
