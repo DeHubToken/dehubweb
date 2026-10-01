@@ -775,7 +775,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   }, [navigate, post.id, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   const headerRow = (
-    <div data-card-head="plain" className="flex items-start justify-between">
+    <div data-card-head="plain" className="flex items-end justify-between" style={{ paddingBottom: 0 }}>
       <CardHeader
         username={post.username}
         handle={post.creatorUsername}
@@ -786,7 +786,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         creatorUsername={post.creatorUsername}
         badgeBalance={post.creatorBadgeBalance}
       />
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 pb-2">
         {isOwnPost && (
           <button
             onClick={() => setShowBoostModal(true)}
