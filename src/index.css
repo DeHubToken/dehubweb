@@ -5435,6 +5435,44 @@ html[data-theme="light"] [data-creator-page] .text-white {
   filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.7)) drop-shadow(0 0 6px rgb(0 0 0 / 0.35));
   text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
 }
+/* The scrubber is a thin white line along the media's bottom edge, with no
+   bar behind it. The input stays 14px tall so it is easy to grab; only its
+   bottom 3px is painted. */
+[data-video-scrubber="line"] [data-scrubber-line] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 14px !important;
+  margin: 0;
+  border-radius: 0 !important;
+  background-size: 100% 3px !important;
+  background-position: bottom !important;
+}
+[data-video-scrubber="line"] [data-scrubber-line]::-webkit-slider-thumb {
+  width: 10px !important;
+  height: 14px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+[data-video-scrubber="line"] [data-scrubber-line]::-moz-range-thumb {
+  width: 10px !important;
+  height: 14px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+[data-video-scrubber="line"] > div > :is(span, button[data-video-bare]):not(:first-child) {
+  margin-left: auto;
+}
+[data-video-scrubber="line"] > div > span + button {
+  margin-left: 0 !important;
+}
+[data-video-scrubber="line"] button[data-video-bare]:first-child svg {
+  width: 1rem;
+  height: 1rem;
+}
 /* Loop reads as off until it is on. */
 [data-video-topbar="bare"] button:not(.bg-white\/20) .lucide-repeat {
   opacity: 0.55;

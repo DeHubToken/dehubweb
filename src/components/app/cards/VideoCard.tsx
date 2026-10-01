@@ -2276,13 +2276,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             non-functional play button on top of the audio controls — the
             "hovering brings up a play/pause button" complaint. */}
         {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
+          <div data-video-controls data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
-            <div className="flex items-center gap-2">
+            <div className={cn("flex items-center gap-2", bareControls && "px-1.5")}>
               <button
                 onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
                 aria-label={isPlaying ? 'Pause' : 'Play'}
-                className="h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 flex items-center justify-center shrink-0"
+                data-video-bare={bareControls ? '' : undefined}
+                className={cn("flex items-center justify-center shrink-0", bareControls ? "h-8 w-8" : "h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10")}
               >
                 {isPlaying ? <Pause className="h-3 w-3 text-white fill-current" /> : <Play className="h-3 w-3 text-white fill-current ml-0.5" />}
               </button>
@@ -2298,6 +2299,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 onClick={(e) => e.stopPropagation()}
                 disabled={duration <= 0}
                 aria-label="Video progress"
+                data-scrubber-line={bareControls ? '' : undefined}
                 className="flex-1 h-6 bg-transparent rounded-full appearance-none cursor-pointer touch-pan-y
                   [&::-webkit-slider-thumb]:appearance-none 
                   [&::-webkit-slider-thumb]:w-3 
