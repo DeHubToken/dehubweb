@@ -41,35 +41,22 @@ interface BadgeIconProps {
   className?: string;
 }
 
-/**
- * The artwork is intentionally irregular, so its visible check mark does not
- * share the PNG/WebP box's centre or scale. These per-tier corrections align
- * the check itself with the adjacent text rather than aligning transparent
- * pixels around it. Ghost Lobster is the neutral reference; darker wide marks get a
- * little more optical size so they do not recede at compact rendering sizes.
- */
-const BADGE_OPTICS: Record<string, { scale: number; bottomInset: number }> = {
-  Crab: { scale: 1, bottomInset: 8 },
-  "Ghost Lobster": { scale: 1.04, bottomInset: 7 },
-  Piranha: { scale: 1, bottomInset: 8 },
-  "Giant Tortoise": { scale: 1, bottomInset: 11 },
-  "King Cobra": { scale: 1, bottomInset: 6 },
-  Octopus: { scale: 1.02, bottomInset: 7 },
-  Crocodile: { scale: 1, bottomInset: 11 },
-  Dolphin: { scale: 1.03, bottomInset: 7 },
-  'Tiger Shark': { scale: 1.03, bottomInset: 6 },
-  'Killer Whale': { scale: 1.04, bottomInset: 6 },
-  'Great White Shark': { scale: 1.04, bottomInset: 8 },
-  'Blue Whale': { scale: 1.1, bottomInset: 6 },
-  Megalodon: { scale: 1.08, bottomInset: 10 },
+// Visible artwork bounds on the 128px canvas, measured at alpha > 16.
+const BADGE_OPTICS: Record<string, { left: number; top: number; right: number; bottom: number }> = {
+  "Crab": { left: 9, top: 16, right: 120, bottom: 118 },
+  "Ghost Lobster": { left: 16, top: 14, right: 112, bottom: 111 },
+  "Piranha": { left: 7, top: 11, right: 120, bottom: 119 },
+  "Giant Tortoise": { left: 8, top: 16, right: 119, bottom: 114 },
+  "King Cobra": { left: 15, top: 8, right: 111, bottom: 119 },
+  "Octopus": { left: 10, top: 14, right: 118, bottom: 120 },
+  "Crocodile": { left: 8, top: 12, right: 121, bottom: 117 },
+  "Dolphin": { left: 15, top: 12, right: 111, bottom: 120 },
+  "Tiger Shark": { left: 8, top: 15, right: 120, bottom: 120 },
+  "Killer Whale": { left: 19, top: 17, right: 109, bottom: 121 },
+  "Great White Shark": { left: 8, top: 13, right: 121, bottom: 120 },
+  "Blue Whale": { left: 7, top: 13, right: 119, bottom: 121 },
+  "Megalodon": { left: 8, top: 15, right: 120, bottom: 117 },
 };
-
-// At compact sizes the source artwork's narrowest transparent edge is less
-// than one rendered pixel. Give every badge a full CSS pixel of protected
-// internal space so anti-aliased details cannot be sampled against the image
-// boundary. The content box remains the same size, so this does not shrink the
-// artwork users see.
-const ARTWORK_GUTTER_PX = 1;
 
 function badgeNameFromAssetUrl(url: string | null): string | undefined {
   if (!url) return undefined;
@@ -88,23 +75,25 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // size and measured artwork inset still apply there as everywhere else.
   const visualName = name ?? badgeNameFromAssetUrl(url);
   const optics = visualName ? BADGE_OPTICS[visualName] : undefined;
-  const renderedSize = 1.2 * (optics?.scale ?? 1);
-  // The artwork uses a 128px transparent canvas with a measured transparent
-  // margin of six to eleven pixels on every side. The base size is a touch
-  // larger than the previous edge-tight exports needed, so the visible mark
-  // keeps the same footprint beside a name. Baseline-align the image box,
-  // then lower it only by its measured transparent bottom inset so the badge's
-  // visible mark — not the canvas edge — finishes exactly on the text baseline.
-  const artworkBaselineOffset = ((optics?.bottomInset ?? 0) / 128) * renderedSize;
+  const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
+  const artworkHeight = bounds.bottom - bounds.top;
+  // CSS cap follows the actual adjacent font; use 0.72em on older engines.
+  const cap = typeof CSS !== 'undefined' && CSS.supports('height', '1cap') ? '1cap' : '0.72em';
   const opticalStyle: CSSProperties = {
-    width: `calc(${renderedSize}em + ${ARTWORK_GUTTER_PX * 2}px)`,
-    height: `calc(${renderedSize}em + ${ARTWORK_GUTTER_PX * 2}px)`,
-    padding: `${ARTWORK_GUTTER_PX}px`,
-    boxSizing: 'border-box',
-    marginInlineStart: '0.125em',
+    width: `calc(${(bounds.right - bounds.left) / artworkHeight} * ${cap})`,
+    height: cap,
     position: 'relative',
     display: 'inline-block',
-    top: `calc(${artworkBaselineOffset}em + ${ARTWORK_GUTTER_PX}px)`,
+    marginInlineStart: 0,
+    overflow: 'visible',
+  };
+  const imageStyle: CSSProperties = {
+    position: 'absolute',
+    maxWidth: 'none',
+    width: `calc(${128 / artworkHeight} * ${cap})`,
+    height: `calc(${128 / artworkHeight} * ${cap})`,
+    left: `calc(${-bounds.left / artworkHeight} * ${cap})`,
+    top: `calc(${-bounds.top / artworkHeight} * ${cap})`,
   };
 
   if (!url) return null;
@@ -124,6 +113,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
           }}
         >
           <img
+            style={imageStyle}
             data-badge-icon
             src={url}
             alt={visualName || 'Badge'}
