@@ -700,11 +700,16 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     ? post.imageUrls 
     : [post.image];
 
+  const openPost = useCallback(() => {
+    if (wasDrawerJustDismissed() || showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
+    cacheImageForNavigation(queryClient, post);
+    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+  }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
+
   const handleImageClick = (index: number) => {
     if (wasDrawerJustDismissed()) return;
     if (!postPage) {
-      cacheImageForNavigation(queryClient, post);
-      navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+      openPost();
       return;
     }
     setFullscreenIndex(index);
@@ -777,10 +782,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     const selection = window.getSelection();
     if (selection && selection.toString().length > 0) return;
     
-    // Cache the post data before navigation for instant display
-    cacheImageForNavigation(queryClient, post);
-    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
-  }, [navigate, post.id, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
+    openPost();
+  }, [openPost, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   const headerRow = (
     <div data-card-head="plain" className="flex items-end justify-between" style={{ paddingBottom: 0 }}>
@@ -1171,12 +1174,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         {/* Title & Description */}
         <FeedDescription 
           postId={post.id}
-          onOpen={() => {
-            if (wasDrawerJustDismissed()) return;
-            if (showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
-            cacheImageForNavigation(queryClient, post);
-            navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
-          }}
+          onOpen={openPost}
           disabled={matureGate.isGated || isPPV || isW2E || isLocked || isSubGated}
           title={post.title} 
           description={post.description}
