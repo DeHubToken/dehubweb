@@ -10,6 +10,18 @@ import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCover';
 import { ArticleReader } from '@/components/app/article/ArticleReader';
 import { ArticleComposer } from '@/features/post/components/ArticleComposer';
 import { BADGE_ORDER, badgeImage } from '@/lib/staking-badges';
+import { ActionBar } from '@/components/app/cards/ActionBar';
+import type { ReactionCounts } from '@/lib/reactions';
+import { AuthContext, type AuthContextType } from '@/contexts/AuthContext';
+
+// The gallery sits outside the wallet providers; a signed-out stub is all the
+// action row needs to render.
+const GALLERY_AUTH = {
+  isAuthenticated: false,
+  walletAddress: null,
+  user: null,
+  openLoginModal: () => {},
+} as unknown as AuthContextType;
 
 const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeShowcase'));
 
@@ -71,6 +83,45 @@ function ArticleGallery({ onAction }: { onAction: () => void }) {
         </ArticleReader>
       </div>
     </section>
+  );
+}
+
+const SAMPLE_REACTIONS: ReactionCounts = { like: 19, love: 4, hot: 2, lol: 1, dislike: 3 };
+
+/**
+ * A post's action row with its reaction tray: hover (desktop) or hold (touch)
+ * the thumbs-up. One row as a stranger sees it, one as somebody who disliked
+ * the post — the thumb wears their 👎, since there is no thumbs-down button.
+ */
+function ReactionsGallery() {
+  const rows = [
+    { id: '990001', label: 'No reaction yet', myReaction: null },
+    { id: '990002', label: 'You disliked it', myReaction: 'dislike' as const },
+  ];
+  return (
+    <AuthContext.Provider value={GALLERY_AUTH}>
+    <section data-page-bento data-reactions-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Reactions</h2>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {rows.map((row) => (
+          <div key={row.id} data-reactions-row={row.id} className="rounded-2xl border border-white/10 bg-black/30 pt-3">
+            <p className="px-3 text-xs text-zinc-500">{row.label}</p>
+            <ActionBar
+              postId={row.id}
+              likeCount={26}
+              dislikeCount={3}
+              commentCount={5}
+              repostCount={2}
+              reactionCounts={SAMPLE_REACTIONS}
+              myReaction={row.myReaction}
+              isDisliked={row.myReaction === 'dislike'}
+              hideUtility
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+    </AuthContext.Provider>
   );
 }
 
@@ -213,6 +264,8 @@ export default function StateGalleryPage() {
             <BackupReminderCard onBackUp={press} onLater={press} />
           </div>
         </section>
+
+        <ReactionsGallery />
 
         <ArticleGallery onAction={press} />
 
