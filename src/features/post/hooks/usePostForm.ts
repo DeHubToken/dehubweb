@@ -1702,7 +1702,10 @@ export function usePostForm(
       const baseCategories = normalizeCategoryList(selectedCategory ? [selectedCategory] : []);
       if (baseCategories.length === 0) baseCategories.push('General');
       const hashtagCategories = Array.from(extractedTags).map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
-      const mergedCategories = normalizeCategoryList([...baseCategories, ...hashtagCategories]);
+      const mergedCategories = normalizeCategoryList([
+        ...baseCategories, ...hashtagCategories,
+        ...(hasMusicVideo ? ['Music', 'Music Video'] : []),
+      ]);
 
       /**
        * Can this account actually pay for the mint?
