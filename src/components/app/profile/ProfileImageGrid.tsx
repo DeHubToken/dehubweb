@@ -7,7 +7,7 @@
  */
 
 import { useState, memo } from 'react';
-import { X, ThumbsUp, ThumbsDown, MessageSquare, Ticket } from 'lucide-react';
+import { X, ThumbsUp, MessageSquare, Ticket } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { ImagePost } from '@/types/feed.types';
@@ -61,9 +61,6 @@ export const ProfileImageGrid = memo(function ProfileImageGrid({ images }: Profi
                 <div className="flex items-center gap-1 sm:gap-1.5 text-white">
                   <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="font-semibold text-xs sm:text-sm">{post.likes.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
-                  <ThumbsDown className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div className="flex items-center gap-1 sm:gap-1.5 text-white">
                   <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
