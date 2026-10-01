@@ -20,6 +20,8 @@ const BLOCKED_CREATORS_FALLBACK = [
 ];
 
 export function isBlockedCreator(nft: DeHubNFT, dynamicBlockedAddresses?: Set<string>): boolean {
+  // Manual Music-only curation: Eljaboom photo, Gas Mask Beats, Craig David lol.
+  if (['2800', '2755', '2750'].includes(String(nft.tokenId ?? nft.id ?? nft.token_id))) return true;
   if (dynamicBlockedAddresses) {
     const minter = (nft.minter || '').toLowerCase();
     if (minter && dynamicBlockedAddresses.has(minter)) return true;
