@@ -86,7 +86,7 @@ export function FeedIslandCapsule({
           aria-label={`Feeds, now on ${tab.label}`}
           className="flex shrink-0 items-center justify-center px-5"
         >
-          <img src={logoSrc} alt="dehub" className="block h-[26px] w-[30px] max-w-none object-contain" width={192} height={164} />
+          <img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} />
         </button>
         <div className="flex min-w-[28px] items-center justify-end">
           <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label="Notifications" className="relative flex h-7 w-7 shrink-0 items-center justify-center">
