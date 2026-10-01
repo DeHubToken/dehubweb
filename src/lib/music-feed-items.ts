@@ -91,3 +91,14 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   };
 }
 
+
+/** Music charts accept audio tracks and explicitly classified music videos. */
+export function isMusicFeedItem(nft: DeHubNFT): boolean {
+  const type = String(nft.postType ?? '').toLowerCase();
+  if (type === 'audio' || type === 'feed-audio') return true;
+  if (type !== 'video' && type !== 'feed-video') return false;
+  const categories = Array.isArray(nft.category) ? nft.category : [nft.category ?? ''];
+  return categories.some(value => String(value).split(/\|\|\||,/).some(
+    category => category.trim().replace(/^#/, '').toLowerCase().replace(/[\s_-]+/g, '') === 'musicvideo',
+  ));
+}
