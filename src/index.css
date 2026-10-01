@@ -5208,6 +5208,29 @@ html[data-theme="light"] [data-creator-page] .text-white {
     margin: 0 0.375rem 0.75rem 0.75rem;
     transition: margin-bottom 0.2s ease;
   }
+  /* Options (⋮) leave the media for the top right of the caption, inset like
+     the left edge; the caption text stops just short of it. */
+  html[data-theme="system"] [data-cinematic] [data-card-head] [data-head-options] {
+    display: none !important;
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-info]:has(> [data-caption-options]) {
+    position: relative;
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-info] > [data-caption-options] {
+    position: absolute;
+    top: 0.375rem;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-info] > [data-caption-options] + .relative {
+    padding-right: 1.75rem;
+  }
   /* While the player bar is up, the row lifts above it. */
   html[data-theme="system"] [data-cinematic-first] [data-video-card]:has([data-media-full] [data-video-controls].bottom-0) > [data-card-head]:not([data-card-head="plain"]) {
     margin-bottom: 2.75rem;

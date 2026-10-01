@@ -1776,7 +1776,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 The sheet itself is mounted once at the card root and shared
                 with the carousel and immersive openers further down; a second
                 <Drawer> here bound to the same state opened a duplicate. */}
-            <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+            <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" data-head-options className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
               <MoreVertical className="w-[23.5px] h-[23.5px]" />
             </button>
           </div>
@@ -2472,6 +2472,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           further than the video above them — the one place this layout didn't
           line up with the home feed card. Drop it back to the bento's gutter. */}
       <div data-card-info className={`pt-3${isImmersive ? ' px-3 lg:px-0' : ''}`}>
+        {/* System theme phone feed only (index.css): the options button sits
+            here, top right of the caption, instead of on the media. */}
+        {!isImmersive && !hideActions && (
+          <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" data-caption-options className="hidden">
+            <MoreVertical className="w-5 h-5" />
+          </button>
+        )}
         {/* Creator info with action buttons - mobile/tablet immersive view only (hidden on desktop where SinglePostPage renders DesktopCreatorInfo) */}
         {isImmersive && (
           <div className="lg:hidden">
