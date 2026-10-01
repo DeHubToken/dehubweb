@@ -2111,11 +2111,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               {isHomeActive && newPostCount > 0 && (
                 <motion.div
                   key="new-posts-drawer"
-                  initial={{ height: 0, opacity: 0, y: -8 }}
-                  animate={{ height: 'auto', opacity: 1, y: 0 }}
-                  exit={{ height: 0, opacity: 0, y: -8, pointerEvents: 'none' }}
+                  data-feed-island-surface
+                  initial={{ opacity: 0, y: '-100%' }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: '-100%', pointerEvents: 'none' }}
                   transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
-                  className="overflow-hidden"
+                  className="overflow-hidden rounded-b-[15px]"
                 >
                   <button
                     type="button"
