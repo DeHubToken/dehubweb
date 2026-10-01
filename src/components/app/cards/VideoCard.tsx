@@ -2172,7 +2172,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             that already carries its own transport. */}
 
         {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-video-topbar="bare" className={cn("absolute top-2 right-2 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
+          <div data-video-controls data-video-topbar="bare" className={cn("absolute top-3 right-2 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
                 mixer. The wrapper keeps the pointer inside while the cursor
