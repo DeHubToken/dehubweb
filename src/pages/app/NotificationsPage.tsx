@@ -2285,7 +2285,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
               )}
               <div 
                 className="relative z-20 flex gap-1 sm:gap-1.5 overflow-x-auto sm:overflow-x-visible overflow-y-visible scrollbar-hide whitespace-nowrap px-1 py-1"
-                style={{ touchAction: 'pan-x' }}
+                style={{ touchAction: 'manipulation' }}
                 onScroll={onNotifTabScroll}
               >
                 {orderedTabKeys.map((tabKey) => {

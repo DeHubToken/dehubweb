@@ -321,7 +321,7 @@ function ContentTypeFilterSection({
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
       <div className="relative">
-        <div ref={fadeRef} className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x', ...fadeStyle }}>
+        <div ref={fadeRef} className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'manipulation', ...fadeStyle }}>
           {CONTENT_TYPE_FILTERS.map((filter) => (
             <button
               key={filter.value}
@@ -402,7 +402,7 @@ function CategoryFilterSection({
         className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
       />
       <div className="relative">
-        <div ref={fadeRef} className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x', ...fadeStyle }}>
+        <div ref={fadeRef} className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'manipulation', ...fadeStyle }}>
           {selectedObj && (
             <button
               data-feed-filter-button
@@ -825,7 +825,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               <div className="flex flex-col gap-2">
                 <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
                 <div className="relative">
-                  <div ref={fadeRef} className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x', ...fadeStyle }}>
+                  <div ref={fadeRef} className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'manipulation', ...fadeStyle }}>
                     {CONTENT_TYPE_FILTERS.map((filter) => (
                       <button
                         key={filter.value}
