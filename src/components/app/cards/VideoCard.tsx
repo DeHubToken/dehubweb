@@ -35,7 +35,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2, Wrench } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
@@ -724,29 +724,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // fullscreen buttons fold into one tools button beside AI and the options
   // menu, and drop down from there. The post page has the room and keeps the row.
   const isPhone = useIsMobile();
-  const compactTools = isPhone && !isImmersive && !hideActions && !onOpenComments && !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
-  const [toolsOpen, setToolsOpen] = useState(false);
-  const toolsButtonRef = useRef<HTMLButtonElement>(null);
-  const toolsPanelRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!toolsOpen) return;
-    const close = (e: PointerEvent) => {
-      const target = e.target as Node;
-      if (toolsPanelRef.current?.contains(target) || toolsButtonRef.current?.contains(target)) return;
-      // The subtitle language menu portals out of the panel; leave it be.
-      if ((target as Element).closest?.('[data-radix-popper-content-wrapper], [role="menu"], [role="dialog"]')) return;
-      setToolsOpen(false);
-    };
-    const onScroll = () => setToolsOpen(false);
-    document.addEventListener('pointerdown', close, true);
-    document.body.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      document.removeEventListener('pointerdown', close, true);
-      document.body.removeEventListener('scroll', onScroll);
-      window.removeEventListener('scroll', onScroll);
-    };
-  }, [toolsOpen]);
+  // Phone feeds: the player's buttons are bare icons with a soft shadow,
+  // speed, loop, PiP and subtitles top right with mute in the corner, and
+  // one time counter with fullscreen after it on the scrubber row.
+  const bareControls = isPhone && !isImmersive && !hideActions && !onOpenComments && !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
   /** Hovering the mute button drops a volume slider under it. */
   const [volumeOpen, setVolumeOpen] = useState(false);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
@@ -1750,17 +1731,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <Zap className="w-[23.5px] h-[23.5px]" />
               </motion.button>
             )}
-            {compactTools && !isContentGated && (
-              <button
-                ref={toolsButtonRef}
-                onClick={() => setToolsOpen((o) => !o)}
-                aria-label={t('videoPlayer.tools', 'Player tools')}
-                aria-expanded={toolsOpen}
-                className={cn("transition-colors", toolsOpen ? "text-white" : "text-zinc-400 hover:text-white")}
-              >
-                <Wrench className="w-[21px] h-[21px]" />
-              </button>
-            )}
             {/* On phones Ask AI lives in the options menu instead. */}
             {!isPhone && <motion.button
               onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
@@ -2164,7 +2134,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               videoRef={videoRef}
               buttonPortalTarget={ccSlot}
               buttonClassName={ccSlot ? undefined : 'absolute top-2 right-2 z-20'}
-              buttonVisible={compactTools ? toolsOpen : showControls}
+              buttonVisible={showControls}
               onMenuOpenChange={setSubsMenuOpen}
             />
           </Suspense>
@@ -2190,47 +2160,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             Never for audio posts: speed, loop, PiP and fullscreen have nothing
             to act on there, and the row appeared on hover over a visualizer
             that already carries its own transport. */}
-        {compactTools && toolsOpen && (
-          <div
-            ref={toolsPanelRef}
-            data-video-tools
-            onClick={(e) => e.stopPropagation()}
-            className="absolute top-2 right-2 z-30 flex w-44 flex-col gap-0.5 rounded-xl border border-white/10 bg-black/55 p-1.5 text-[13px] font-medium text-white backdrop-blur-[24px] saturate-[180%]"
-          >
-            <button onClick={cyclePlaybackRate} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
-              <span className="w-8 text-center text-[11px] font-semibold">{formatRate(playbackRate)}x</span>
-              {t('videoPlayer.speed', 'Speed')}
-            </button>
-            <button onClick={toggleLoop} className={cn("flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10", isLooping && "bg-white/15")}>
-              <Repeat className="h-4 w-8" />
-              {isLooping ? 'Loop on' : 'Loop off'}
-            </button>
-            <button onClick={toggleMute} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
-              {isMuted ? <VolumeX className="h-4 w-8" /> : <Volume2 className="h-4 w-8" />}
-              {isMuted ? t('videoPlayer.unmute', 'Unmute') : t('videoPlayer.mute', 'Mute')}
-            </button>
-            {document.pictureInPictureEnabled && (
-              <button onClick={handlePictureInPicture} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
-                <PictureInPicture2 className="h-4 w-8" />
-                {t('videoPlayer.pip', 'Picture in picture')}
-              </button>
-            )}
-            <button onClick={(e) => { setToolsOpen(false); handleFullscreen(e); }} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
-              {isFullscreen ? <Minimize className="h-4 w-8" /> : <Maximize className="h-4 w-8" />}
-              {t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
-            </button>
-            <div className="flex h-9 items-center gap-2.5 px-2">
-              <div ref={setCcSlot} className="contents" />
-              <span>{t('videoPlayer.subtitles', 'Subtitles')}</span>
-            </div>
-          </div>
-        )}
 
-        {controlsVisible && !compactTools && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls className="absolute top-2 right-2 flex items-center gap-2 z-10">
+        {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
+          <div data-video-controls data-video-topbar={bareControls ? 'bare' : undefined} className={cn("absolute top-2 right-2 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
             {/* Subtitles mount here — display:contents keeps the button a direct
                 flex item, so it sits in the row's gap like everything else. */}
-            <div ref={compactTools ? undefined : setCcSlot} className="contents" />
+            <div ref={setCcSlot} className="contents" />
 
             <button
               className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
@@ -2317,13 +2252,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 </div>
               )}
             </div>
-            <button 
-              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-              onClick={handleFullscreen}
-              aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
-            >
-              {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
-            </button>
+            {!bareControls && (
+              <button
+                className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                onClick={handleFullscreen}
+                aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
+              >
+                {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+              </button>
+            )}
           </div>
         )}
 
@@ -2349,7 +2286,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               >
                 {isPlaying ? <Pause className="h-3 w-3 text-white fill-current" /> : <Play className="h-3 w-3 text-white fill-current ml-0.5" />}
               </button>
-              <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
+              {!bareControls && (
+                <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
+              )}
               <input
                 type="range"
                 min={0}
@@ -2378,7 +2317,21 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   backgroundSize: '100% 4px',
                 }}
               />
-              <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(duration)}</span>
+              {bareControls ? (
+                <>
+                  <span data-video-bare className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(duration)}</span>
+                  <button
+                    data-video-bare
+                    onClick={handleFullscreen}
+                    aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
+                    className="-mr-1 flex h-8 w-8 shrink-0 items-center justify-center text-white"
+                  >
+                    {isFullscreen ? <Minimize className="h-[18px] w-[18px]" /> : <Maximize className="h-[18px] w-[18px]" />}
+                  </button>
+                </>
+              ) : (
+                <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(duration)}</span>
+              )}
             </div>
           </div>
         )}
