@@ -230,9 +230,8 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
         ) : null}
         onAvatarClick={() => (isAuthenticated ? onOpenChange(true) : openLoginModal())}
         logoSrc={dehubMark}
-        showBell={isAuthenticated}
-        unread={totalNotifUnread}
-        onBellClick={() => navigate('/app/notifications')}
+        unread={isAuthenticated ? totalNotifUnread : 0}
+        onBellClick={() => (isAuthenticated ? navigate('/app/notifications') : openLoginModal())}
       />
     )}
     </>

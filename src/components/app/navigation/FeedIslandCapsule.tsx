@@ -21,7 +21,6 @@ interface FeedIslandCapsuleProps {
   avatar: React.ReactNode;
   onAvatarClick: () => void;
   logoSrc: string;
-  showBell: boolean;
   unread: number;
   onBellClick: () => void;
 }
@@ -30,8 +29,8 @@ interface FeedIslandCapsuleProps {
  * System theme, phones: the home feed's only top chrome. There is no logo bar
  * or resting tab pill; this small glass capsule floats over the feed so media
  * runs to the top of the screen. The DeHub mark sits dead centre and opens a
- * dropdown of the feeds (same glass); the bell is to its left and your avatar,
- * which opens the menu, to its right. Like the old bar it slides away as
+ * dropdown of the feeds (same glass); your avatar (a burger when signed out),
+ * which opens the menu, is to its left and the bell to its right. Like the old bar it slides away as
  * you scroll down and comes back as you scroll up. Sideways swipes between tabs are the feed's own and pass under
  * it untouched.
  */
@@ -40,7 +39,6 @@ export function FeedIslandCapsule({
   avatar,
   onAvatarClick,
   logoSrc,
-  showBell,
   unread,
   onBellClick,
 }: FeedIslandCapsuleProps) {
@@ -71,22 +69,15 @@ export function FeedIslandCapsule({
       className={`lg:hidden fixed left-1/2 z-[120] w-max transition-[opacity,transform] duration-300 ease-out ${visible ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
       style={{ top: 'calc(env(safe-area-inset-top, 0px) + 0.375rem)' }}
     >
-      {/* Centre crest: the bell left, you right, the mark dead centre. The
-          mark opens the feed list under it. The pill hugs its contents and
-          the two side columns share one width, so the mark sits in the true
-          middle even when there is no bell. */}
+      {/* Centre crest: you (or a burger when signed out) left, the bell
+          right, the mark dead centre. The mark opens the feed list under it.
+          The pill hugs its contents and the two side columns share one
+          width, so the mark sits in the true middle. */}
       <div className="grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-[15px] px-[10px] text-white">
         <div className="flex min-w-[28px] items-center justify-start">
-          {showBell && (
-            <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label="Notifications" className="relative flex h-7 w-7 shrink-0 items-center justify-center">
-              <Bell className="w-[21px] h-[21px]" strokeWidth={1.9} />
-              {unread > 0 && (
-                <span className="absolute -top-0.5 -right-1.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-[6px] flex items-center justify-center leading-none">
-                  {unread > 99 ? '99+' : unread}
-                </span>
-              )}
-            </button>
-          )}
+          <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label="Toggle menu" className="flex shrink-0 items-center justify-center">
+            {avatar ?? <Menu className="w-6 h-6" />}
+          </button>
         </div>
         <button
           onClick={toggleFeedTabs}
@@ -98,8 +89,13 @@ export function FeedIslandCapsule({
           <img src={logoSrc} alt="dehub" className="block h-[26px] w-[30px] max-w-none object-contain" width={192} height={164} />
         </button>
         <div className="flex min-w-[28px] items-center justify-end">
-          <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label="Toggle menu" className="flex shrink-0 items-center justify-center">
-            {avatar ?? <Menu className="w-6 h-6" />}
+          <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label="Notifications" className="relative flex h-7 w-7 shrink-0 items-center justify-center">
+            <Bell className="w-[21px] h-[21px]" strokeWidth={1.9} />
+            {unread > 0 && (
+              <span className="absolute -top-0.5 -right-1.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-[6px] flex items-center justify-center leading-none">
+                {unread > 99 ? '99+' : unread}
+              </span>
+            )}
           </button>
         </div>
       </div>
