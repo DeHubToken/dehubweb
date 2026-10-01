@@ -26,10 +26,10 @@ async function fetchTokenPrices(extraTokens?: { address: string; symbol: string 
   const res = await fetch(url, { headers: { apikey: anonKey } });
   if (!res.ok) throw new Error('Failed to fetch prices');
   const data = await res.json();
-  return data?.prices ?? {};
+  return { ...(data?.prices ?? {}), DHB: 0.001 };
 }
 
-const STATIC_PRICE_DEFAULTS: TokenPrices = { DHB: 0, ETH: 0, BNB: 0, USDT: 1, USDC: 1, BTC: 0, WETH: 0, WBNB: 0 };
+const STATIC_PRICE_DEFAULTS: TokenPrices = { DHB: 0.001, ETH: 0, BNB: 0, USDT: 1, USDC: 1, BTC: 0, WETH: 0, WBNB: 0 };
 
 /** Routes that actually display live token prices (wallet, staking, buy, stores). */
 const PRICE_SURFACES = new Set([
@@ -67,6 +67,8 @@ export function useTokenPrices(extraTokens?: { address: string; symbol: string }
   return useQuery<TokenPrices>({
     queryKey: ['token-prices', extraKey],
     queryFn: () => fetchTokenPrices(extraTokens),
+    // Keep the temporary DHB valuation stable even with an older cached quote.
+    select: (prices) => ({ ...prices, DHB: 0.001 }),
     staleTime: 60_000,
     refetchInterval: isPriceSurfaceActive ? 120_000 : false,
     // When the extras list changes (balances resolve after prices), reuse the
