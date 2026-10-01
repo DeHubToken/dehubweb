@@ -76,7 +76,7 @@ export function FeedIslandCapsule({
       ref={rootRef}
       data-feed-island
       aria-hidden={!visible}
-      className={`lg:hidden fixed left-1/2 z-[120] w-max transition-[opacity,transform] duration-300 ease-out ${visible ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
+      className={`lg:hidden fixed left-1/2 z-[120] w-max overflow-hidden rounded-[15px] transition-[opacity,transform] duration-300 ease-out ${visible ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
       style={{ top: 'calc(env(safe-area-inset-top, 0px) + 0.375rem)' }}
     >
       {/* Centre crest: you (or a burger when signed out) left, the bell
@@ -119,7 +119,7 @@ export function FeedIslandCapsule({
           animate={{ height: 'auto', opacity: 1, y: 0 }}
           exit={{ height: 0, opacity: 0, y: -8, pointerEvents: 'none' }}
           transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
-          className="absolute left-0 top-full w-full overflow-hidden rounded-b-[15px] text-white"
+          className="w-0 min-w-full overflow-hidden text-white"
         >
         <div className="p-1.5">
           {FEED_TABS.map(({ value, label, icon: Icon }) => (
