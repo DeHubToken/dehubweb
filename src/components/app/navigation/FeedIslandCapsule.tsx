@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Bell, Check, Menu, SlidersHorizontal } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { setFeedTabsOpen, toggleFeedTabs, useFeedTabsOpen } from '@/lib/feed-tabs-reveal';
@@ -49,6 +50,15 @@ export function FeedIslandCapsule({
     return () => window.removeEventListener('home-tab-changed', sync);
   }, []);
   const tabsOpen = useFeedTabsOpen();
+  const reduceMotion = useReducedMotion();
+  useEffect(() => {
+    if (!tabsOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setFeedTabsOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [tabsOpen]);
   const rootRef = useRef<HTMLDivElement>(null);
   // A tap anywhere outside the capsule closes its dropdown.
   useEffect(() => {
@@ -73,7 +83,7 @@ export function FeedIslandCapsule({
           right, the mark dead centre. The mark opens the feed list under it.
           The pill hugs its contents and the two side columns share one
           width, so the mark sits in the true middle. */}
-      <div className="grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-[15px] px-[10px] text-white">
+      <div className="relative z-10 grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-[15px] px-[10px] text-white">
         <div className="flex min-w-[28px] items-center justify-start">
           <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label="Toggle menu" className="flex shrink-0 items-center justify-center">
             {avatar ?? <Menu className="w-6 h-6" />}
@@ -99,8 +109,19 @@ export function FeedIslandCapsule({
           </button>
         </div>
       </div>
+      <AnimatePresence>
       {tabsOpen && visible && (
-        <div data-feed-island-menu role="menu" className="absolute left-1/2 top-full mt-2 w-48 -translate-x-1/2 rounded-xl p-1.5 text-white">
+        <motion.div
+          key="feed-drawer"
+          data-feed-island-menu
+          role="menu"
+          initial={{ height: 0, opacity: 0, y: -8 }}
+          animate={{ height: 'auto', opacity: 1, y: 0 }}
+          exit={{ height: 0, opacity: 0, y: -8, pointerEvents: 'none' }}
+          transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
+          className="absolute left-0 top-full w-full overflow-hidden rounded-b-[15px] text-white"
+        >
+        <div className="p-1.5">
           {FEED_TABS.map(({ value, label, icon: Icon }) => (
             <button
               key={value}
@@ -129,7 +150,9 @@ export function FeedIslandCapsule({
             Filters
           </button>
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   );
 }
