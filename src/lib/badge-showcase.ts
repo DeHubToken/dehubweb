@@ -86,8 +86,11 @@ export function useBadgeShowcaseRequest(): BadgeShowcaseRequest | null {
 }
 
 /** Start fetching the holder showcase chunk, so a click opens it without a wait. */
-export function preloadBadgeShowcase() {
-  return import('@/components/app/badge-showcase/BadgeShowcase');
+export function preloadBadgeShowcase(tier?: string, replace = true) {
+  return import('@/components/app/badge-showcase/BadgeShowcase').then(module => {
+    if (tier) module.warmHolderBadge(tier, replace);
+    return module;
+  });
 }
 
 /** Start fetching the streamer showcase chunk. */

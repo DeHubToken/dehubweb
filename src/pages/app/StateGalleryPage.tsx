@@ -10,6 +10,8 @@ import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCover';
 import { ArticleReader } from '@/components/app/article/ArticleReader';
 import { ArticleComposer } from '@/features/post/components/ArticleComposer';
 import { BADGE_ORDER, badgeImage } from '@/lib/staking-badges';
+import { preloadBadgeShowcase } from '@/lib/badge-showcase';
+import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import type { ReactionCounts } from '@/lib/reactions';
 import { AuthContext, type AuthContextType } from '@/contexts/AuthContext';
@@ -147,6 +149,7 @@ export default function StateGalleryPage() {
   const [presses, setPresses] = useState(0);
   const [badge, setBadge] = useState<{ anchor: HTMLElement | null; promote: boolean; first?: boolean } | null>(null);
   const [badgeTier, setBadgeTier] = useState(1);
+  const warmBadge = () => { void preloadBadgeShowcase(badgeAnimationStyle(theme) === 'metallic' ? BADGE_ORDER[badgeTier] : undefined).catch(() => {}); };
   const press = () => setPresses((count) => count + 1);
 
   useEffect(() => {
@@ -203,7 +206,7 @@ export default function StateGalleryPage() {
               className="rounded-lg border border-white/15 bg-background p-2 text-sm">
               {BADGE_ORDER.map((tier, index) => <option key={tier} value={index}>{index + 1}. {tier}</option>)}
             </select>
-            <button className="flex items-center gap-2 p-2" onClick={event => setBadge({ anchor: event.currentTarget.querySelector('img'), promote: false })}>
+            <button className="flex items-center gap-2 p-2" onPointerEnter={warmBadge} onFocus={warmBadge} onTouchStart={warmBadge} onClick={event => setBadge({ anchor: event.currentTarget.querySelector('img'), promote: false })}>
               <img src={badgeImage(BADGE_ORDER[badgeTier]) ?? ''} alt="" className="h-10 w-10" /> Open badge
             </button>
             <button className="flex items-center gap-2 p-2" onClick={event => setBadge({ anchor: event.currentTarget.querySelector('img'), promote: true })}>

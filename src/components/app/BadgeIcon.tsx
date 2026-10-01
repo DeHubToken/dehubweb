@@ -2,21 +2,15 @@
  * BadgeIcon — Reusable staking badge image with tooltip. A click opens the
  * badge showcase, flying the badge out of this spot.
  */
-import type { CSSProperties } from 'react';
+import { useEffect, type CSSProperties } from 'react';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
 import { type BadgeLock } from '@/lib/staking-badges';
 import { openBadgeShowcase, preloadBadgeShowcase } from '@/lib/badge-showcase';
 
-/** Fetch the showcase chunk on the first sign of intent, once per page. */
-let preloaded = false;
-function warmShowcase() {
-  if (preloaded) return;
-  preloaded = true;
-  preloadBadgeShowcase().catch(() => {
-    preloaded = false;
-  });
-}
+let idleWarmupScheduled = false;
 
 interface BadgeIconProps {
   /** Pass badgeBalance to resolve badge from balance */
@@ -74,6 +68,17 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // Profiles already hold a resolved asset URL. Recover its tier so the same
   // size and measured artwork inset still apply there as everywhere else.
   const visualName = name ?? badgeNameFromAssetUrl(url);
+  const { theme } = useAppTheme();
+  const metallic = badgeAnimationStyle(theme) === 'metallic';
+  const warmShowcase = () => { void preloadBadgeShowcase(metallic ? visualName : undefined).catch(() => {}); };
+  useEffect(() => {
+    if (!metallic || !visualName || idleWarmupScheduled) return;
+    idleWarmupScheduled = true;
+    // The first inline badge primes one renderer while the feed is idle.
+    const warm = () => { void preloadBadgeShowcase(visualName, false).catch(() => { idleWarmupScheduled = false; }); };
+    if ('requestIdleCallback' in window) window.requestIdleCallback(warm, { timeout: 1800 });
+    else setTimeout(warm, 800);
+  }, [metallic, visualName]);
   const optics = visualName ? BADGE_OPTICS[visualName] : undefined;
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
@@ -106,6 +111,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
           className={`shrink-0 self-baseline align-baseline cursor-pointer ${className}`}
           onPointerEnter={warmShowcase}
           onTouchStart={warmShowcase}
+          onFocus={warmShowcase}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
