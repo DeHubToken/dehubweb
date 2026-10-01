@@ -19,7 +19,7 @@ import { StagesCarousel } from '@/components/app/music/StagesCarousel';
 import { openStageModal } from '@/contexts/StageContext';
 import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
 import { formatViews } from '@/lib/feed-utils';
-import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
+import { isBlockedCreator, isMusicFeedItem, mapNFTToVideoItem } from '@/lib/music-feed-items';
 import type { VideoItem } from '@/types/feed.types';
 
 type Chip = 'top' | 'radio' | 'stages' | 'new';
@@ -221,7 +221,7 @@ function useMusicChart(mode: 'trending' | 'new', blockedAddresses?: Set<string>,
     staleTime: 5 * 60 * 1000,
   });
   const items = useMemo<VideoItem[]>(
-    () => (data || []).filter((nft) => !isBlockedCreator(nft, blockedAddresses)).map((nft, i) => mapNFTToVideoItem(nft, i)),
+    () => (data || []).filter((nft) => isMusicFeedItem(nft) && !isBlockedCreator(nft, blockedAddresses)).map((nft, i) => mapNFTToVideoItem(nft, i)),
     [data, blockedAddresses],
   );
   return { items, isLoading };
