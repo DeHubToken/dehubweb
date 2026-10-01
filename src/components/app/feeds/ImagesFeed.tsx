@@ -201,7 +201,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
   return (
-    <div className="p-1 sm:p-2 pt-0 sm:pt-0">
+    <div className="p-1 sm:p-2">
       <div 
         className={cn(
           "grid gap-0.5 sm:gap-1 overflow-hidden rounded-t-2xl",
