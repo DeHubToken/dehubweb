@@ -5486,8 +5486,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
 /* The island capsule that stands in for the top bar while the system feed
    scrolls down on phones (FeedIslandCapsule). Same dark glass as the
    cinematic author chips, so it reads over bright photos. */
-html[data-theme="system"] [data-feed-island] > div,
-html[data-theme="system"] [data-feed-island-menu] {
+/* One shared surface keeps the expanding drawer joined to the capsule. */
+html[data-theme="system"] [data-feed-island] {
   background: rgb(10 10 12 / 0.45);
   backdrop-filter: blur(20px) saturate(160%);
   box-shadow:
