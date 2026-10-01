@@ -126,6 +126,8 @@ interface ImageCardProps {
    * and the creator row moves under it, where the video post draws its own.
    */
   isImmersive?: boolean;
+  /** Photo taps open the viewer only on the dedicated post page. */
+  postPage?: boolean;
 }
 
 /**
@@ -305,6 +307,7 @@ function ImageCarousel({
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeHeight, setActiveHeight] = useState<number>();
   const [currentSlideFillsViewport, setCurrentSlideFillsViewport] = useState(false);
 
   useEffect(() => {
@@ -330,6 +333,8 @@ function ImageCarousel({
         : nearest;
     }, 0);
     setCurrentIndex(idx);
+    const height = slides[idx].querySelector("img")?.getBoundingClientRect().height;
+    setActiveHeight(height && height > 0 ? height : undefined);
     // A narrower/tall image already reveals the next image, which is the best
     // possible scroll affordance. Keep the buttons for edge-to-edge slides,
     // where the rest of the gallery would otherwise be completely hidden.
@@ -346,7 +351,11 @@ function ImageCarousel({
 
     const observer = new ResizeObserver(updateCurrentIndex);
     observer.observe(viewport);
-    Array.from(viewport.children).forEach((slide) => observer.observe(slide));
+    Array.from(viewport.children).forEach((slide) => {
+      observer.observe(slide);
+      const image = slide.querySelector("img");
+      if (image) observer.observe(image);
+    });
     return () => observer.disconnect();
   }, [images, updateCurrentIndex]);
 
@@ -377,7 +386,8 @@ function ImageCarousel({
       <div
         ref={scrollRef}
         onScroll={updateCurrentIndex}
-        className={cn("flex gap-2 scrollbar-hide", hasMultiple ? "overflow-x-auto overscroll-x-contain touch-auto" : "overflow-x-hidden touch-pan-y")}
+        style={{ height: immersive ? activeHeight : undefined }}
+        className={cn("flex items-start gap-2 scrollbar-hide", hasMultiple ? "overflow-x-auto overscroll-x-contain touch-auto" : "overflow-x-hidden touch-pan-y")}
       >
         {images.map((img, idx) => (
           <div
@@ -563,7 +573,7 @@ function FeedDescription({
   );
 }
 
-export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false }: ImageCardProps) {
+export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false, postPage = false }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments, post.id);
@@ -698,7 +708,18 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     ? post.imageUrls 
     : [post.image];
 
+  const openPost = useCallback(() => {
+    if (wasDrawerJustDismissed() || showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
+    cacheImageForNavigation(queryClient, post);
+    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+  }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
+
   const handleImageClick = (index: number) => {
+    if (wasDrawerJustDismissed()) return;
+    if (!postPage) {
+      openPost();
+      return;
+    }
     setFullscreenIndex(index);
     setFullscreenOpen(true);
   };
@@ -769,10 +790,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     const selection = window.getSelection();
     if (selection && selection.toString().length > 0) return;
     
-    // Cache the post data before navigation for instant display
-    cacheImageForNavigation(queryClient, post);
-    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
-  }, [navigate, post.id, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
+    openPost();
+  }, [openPost, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   const headerRow = (
     <div data-card-head="plain" className="flex items-end justify-between" style={{ paddingBottom: 0 }}>
@@ -1163,12 +1182,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         {/* Title & Description */}
         <FeedDescription 
           postId={post.id}
-          onOpen={() => {
-            if (wasDrawerJustDismissed()) return;
-            if (showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
-            cacheImageForNavigation(queryClient, post);
-            navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
-          }}
+          onOpen={openPost}
           disabled={matureGate.isGated || isPPV || isW2E || isLocked || isSubGated}
           title={post.title} 
           description={post.description}
