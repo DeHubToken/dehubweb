@@ -158,8 +158,18 @@ export function SeedPhraseBackup({ phrase, variant, onFinished, busy = false, in
           ))}
         </ol>
         {!revealed && (
-          <span className="absolute inset-0 flex items-center justify-center gap-2 text-sm font-medium text-white">
-            <Eye className="w-4 h-4" /> {t('walletBackup.revealWords', 'Tap to reveal')}
+          // Inline colours on purpose: theme remaps (light, glass) must not
+          // turn the scrim or pill pale, or the label stops being readable.
+          <span
+            className="absolute inset-0 flex items-center justify-center rounded-xl"
+            style={{ background: 'rgba(0, 0, 0, 0.45)' }}
+          >
+            <span
+              className="flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-lg"
+              style={{ background: 'rgba(12, 12, 16, 0.88)', borderColor: 'rgba(255, 255, 255, 0.18)', borderRadius: 9999, color: '#fff' }}
+            >
+              <Eye className="w-4 h-4" stroke="#fff" style={{ color: '#fff' }} /> {t('walletBackup.revealWords', 'Tap to reveal')}
+            </span>
           </span>
         )}
       </button>
