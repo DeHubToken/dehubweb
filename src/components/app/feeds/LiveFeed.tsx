@@ -31,6 +31,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toggleStageRecording, useStagePlayback } from '@/lib/stage-playback';
 import { StageRateButton } from '@/components/app/stages/StageRateButton';
 import type { AudioSpace } from '@/types/audio-spaces.types';
+import { CinematicLive } from '@/components/app/feeds/CinematicLive';
+import { useCinematicPhone } from '@/hooks/use-cinematic-phone';
 
 // Category images
 import apexCategory from '@/assets/apex-category.png';
@@ -65,6 +67,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const navigate = useNavigate();
+  const cinematic = useCinematicPhone();
 
 
   // Fetch 5 TV channels for the carousel preview
@@ -127,6 +130,15 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
     { key: 'all', label: 'All' },
     ...MOCK_CATEGORIES.map(c => ({ key: c.id, label: c.name })),
   ], []);
+
+  // System theme on phones: who's live, top games and a grid of streams.
+  if (cinematic) {
+    return (
+      <div className="px-2">
+        <CinematicLive streams={streams} isLoading={isLoading} tvChannels={tvChannels} emptyState={<EmptyState />} />
+      </div>
+    );
+  }
 
   return (
     <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-4">

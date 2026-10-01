@@ -22,14 +22,14 @@ import { motion } from 'framer-motion';
 import { voteOnPost, reactToPost } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
-  HAS_NEGATIVE_TRAY,
   isPositiveReaction,
   negativeThumbLabel,
   reactionForTap,
+  reactionForThumbTap,
   reactionMeta,
   reconcileReactionCounts,
   resolveLeadReaction,
-  resolveNegativeLeadReaction,
+  resolveThumbReaction,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -679,11 +679,15 @@ export function ActionBar({
    * same way it clears a 👍, instead of downgrading it to a plain like.
    */
   const handleVote = useCallback((vote: boolean) => {
-    // A first plain like is when the viewer has found the button but not the
-    // tray behind it — point them at it, once.
-    if (vote && !isLiked && isAuthenticated && reactionsEnabledRef.current) maybeShowReactionTip();
+    // With reactions on there is no thumbs-down: 👎 lives in the thumbs-up's
+    // tray, and the thumb wears it while it is yours. A tap then takes it back
+    // rather than casting a like over it — see reactionForThumbTap.
+    if (vote && reactionsEnabledRef.current) {
+      if (!isLiked && !isDisliked && isAuthenticated) maybeShowReactionTip();
+      return handleReaction(reactionForThumbTap(myReaction, localReactionCounts));
+    }
     return handleReaction(reactionForTap(vote, myReaction, localReactionCounts));
-  }, [handleReaction, myReaction, localReactionCounts, isLiked, isAuthenticated]);
+  }, [handleReaction, myReaction, localReactionCounts, isLiked, isDisliked, isAuthenticated]);
 
   // Listen for double-tap-to-like events dispatched by photo thumbnails / fullscreen viewer.
   // Instagram-style: double-tap always likes (never unlikes) and only for this post's ID.
@@ -730,11 +734,10 @@ export function ActionBar({
   const reactionInfoTokenId = tokenId ?? (isNaN(numericPostId) ? undefined : numericPostId);
   const canViewReactionInfo = isOwnPost && reactionInfoTokenId !== undefined;
 
-  // One tray per thumb in principle: every positive face hangs off the
-  // thumbs-up, and whatever counts against off the thumbs-down. Only the first
-  // opens today — 👎 is alone on its side — see HAS_NEGATIVE_TRAY.
+  // One tray, on the thumbs-up, holding every reaction — 👎 included, after a
+  // divider. The thumbs-down button only exists where reactions are off
+  // (governance, feature requests), and it never opens a tray of its own.
   const likeTray = useReactionTray(reactionsEnabled);
-  const dislikeTray = useReactionTray(reactionsEnabled && HAS_NEGATIVE_TRAY);
   reactionsEnabledRef.current = reactionsEnabled;
   // Opening the tray means they already know it is there.
   useEffect(() => { if (likeTray.open) markReactionTipSeen(); }, [likeTray.open]);
@@ -748,20 +751,9 @@ export function ActionBar({
     return subscribePostTipped((id) => { if (ids.includes(id)) setTipBurst((n) => n + 1); });
   }, [postId, tokenId]);
 
-  // Only ever one open. They sit inches apart on the same row, and two trays
-  // stacked over each other is unreadable however they are anchored.
-  // Deps are the tray's OWN `open` plus the sibling's `close`, which the hook
-  // keeps stable — not the tray objects, which are new on every render. With
-  // the objects in there both effects ran on every render, so a moment where
-  // both were open (a hold landing inside the other's 220ms hover grace) had
-  // each of them closing the other and the tray the reader just asked for shut
-  // with the one they were leaving. Keyed on `open`, only the newly opened one
-  // runs, and it wins.
-  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray.close]);
-  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray.close]);
   useEffect(() => {
-    closeTrays.current = () => { likeTray.close(); dislikeTray.close(); };
-  }, [likeTray.close, dislikeTray.close]);
+    closeTrays.current = () => { likeTray.close(); };
+  }, [likeTray.close]);
 
   // A hold on the post's media opens the positive tray. Declared down here
   // rather than beside the other gesture listener because `reactionsEnabled`
@@ -778,23 +770,17 @@ export function ActionBar({
   }, [postId, enableDoubleTapLike, reactionsEnabled, likeTray.openNow]);
 
   /**
-   * The one glyph the thumbs-up wears: the viewer's own positive reaction, else
-   * the post's most-used, else null for the plain thumbs-up icon.
+   * The one glyph the thumbs-up wears: the viewer's own reaction (a 👎
+   * included, since there is no thumbs-down beside it), else the post's
+   * most-used positive one, else null for the plain thumbs-up icon. Where
+   * reactions are off the thumbs-down is still there and keeps its own vote.
    */
-  const leadReaction = resolveLeadReaction(localReactionCounts, myReaction);
-  /**
-   * The viewer's own reaction, but only when it is a positive one — a downvote
-   * is the thumbs-DOWN button's business, so this button must not announce it.
-   */
+  const leadReaction = reactionsEnabled
+    ? resolveThumbReaction(localReactionCounts, myReaction)
+    : resolveLeadReaction(localReactionCounts, myReaction);
+  /** The viewer's own reaction, split by side. */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
-  /** …and its counterpart, which lights the thumbs-down instead. */
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
-  /**
-   * The glyph the thumbs-DOWN wears — your own negative reaction and nothing
-   * else, so nothing at all while 👎 is the only one and the button is already
-   * that glyph. See resolveNegativeLeadReaction.
-   */
-  const negativeLeadReaction = resolveNegativeLeadReaction(myReaction);
 
   // An off-chain post shares as its own slug, never as an NFT-style URL.
   const shareUrlForPost = () =>
@@ -938,7 +924,8 @@ export function ActionBar({
     </>
   );
 
-  // Engagement actions — order left → right: tip · dislike · share · comment · like
+  // Engagement actions — order left → right: tip · share · comment · like
+  // (plus a dislike before share where reactions are off)
   const engagementButtons = (
     <>
       {/* A private-balance creator has no DeHub payment entry point. */}
@@ -957,33 +944,14 @@ export function ActionBar({
         </button>
       ) : null}
 
-      {/* Downvotes — one tap, no tray: 👎 is the only reaction on this side,
-          and a hold-to-open menu of one would only swallow the press that
-          already casts it. The tray and its wrapper stay wired for the day a
-          second negative reaction arrives: `relative` so the tray anchors
-          here, and `align="left"` because the dislike sits at the left of the
-          row where a right-anchored tray would run off the card. */}
-      {!hideDislike && !compact && (
-        <span
-          className={cn("relative flex items-center gap-0.5", isVoting && "opacity-50")}
-          {...dislikeTray.areaProps}
-        >
-          <ReactionPicker
-            open={dislikeTray.open}
-            polarity="negative"
-            current={myReaction}
-            counts={localReactionCounts}
-            onSelect={(reaction) => { dislikeTray.close(); handleReaction(reaction); }}
-            onClose={dislikeTray.close}
-            align={leftHanded ? "right" : "left"}
-          />
+      {/* Downvotes as their own button only where reactions are off —
+          governance proposals and feature requests vote through their own
+          onLike/onDislike. On a post, 👎 is the last item of the thumbs-up's
+          tray instead. */}
+      {!hideDislike && !compact && !reactionsEnabled && (
+        <span className={cn("relative flex items-center gap-0.5", isVoting && "opacity-50")}>
           <motion.button
-            onClick={() => {
-              // The click that ends a hold must not also cast a plain dislike.
-              if (dislikeTray.consumePress()) return;
-              handleVote(false);
-            }}
-            {...dislikeTray.buttonProps}
+            onClick={() => handleVote(false)}
             /* Theme hook for the engaged state. `fill-current` on the glyph is the
                only other signal, and it can't cover repost (which changes stroke
                weight instead) — so every engagement button carries the same
@@ -991,23 +959,11 @@ export function ActionBar({
             data-engaged={isDisliked ? 'dislike' : undefined}
             className={THUMB_BUTTON_CLASS}
             aria-label={negativeThumbLabel(myNegativeReaction)}
-            aria-haspopup={reactionsEnabled && HAS_NEGATIVE_TRAY ? 'menu' : undefined}
-            aria-expanded={reactionsEnabled && HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
             disabled={isVoting && !onLiveReaction}
             animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
-            {negativeLeadReaction ? (
-              <span
-                data-engaged-glyph
-                className="text-[1.05rem] leading-none w-5 h-5 flex items-center justify-center"
-                aria-hidden="true"
-              >
-                <ReactionEmoji reaction={negativeLeadReaction} animate />
-              </span>
-            ) : (
-              <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
-            )}
+            <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
             <span className="text-xs text-zinc-400">{formatCount(localDislikeCount)}</span>
           </motion.button>
         </span>
@@ -1085,19 +1041,26 @@ export function ActionBar({
             handleVote(true);
           }}
           {...likeTray.buttonProps}
-          /* Engaged whenever the viewer holds a POSITIVE reaction, not only a
-             plain 👍 — a post the viewer loved is still a post they liked. */
-          data-engaged={isLiked ? (myReaction && myReaction !== 'like' ? 'reaction' : 'like') : undefined}
+          /* Engaged whenever the viewer holds a reaction, not only a plain
+             👍 — a post the viewer loved is still a post they liked, and a 👎
+             they cast shows here now that there is no thumbs-down beside it. */
+          data-engaged={
+            isLiked
+              ? (myReaction && myReaction !== 'like' ? 'reaction' : 'like')
+              : reactionsEnabled && isDisliked
+                ? 'dislike'
+                : undefined
+          }
           className={cn(THUMB_BUTTON_CLASS, compact && COMPACT_BUTTON_CLASS)}
           aria-label={
-            myPositiveReaction
-              ? `${reactionMeta(myPositiveReaction).label} — hold to change your reaction`
+            myPositiveReaction || (reactionsEnabled && myNegativeReaction)
+              ? `${reactionMeta((myPositiveReaction ?? myNegativeReaction)!).label} — hold to change your reaction`
               : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`
           }
           aria-haspopup={reactionsEnabled ? 'menu' : undefined}
           aria-expanded={reactionsEnabled ? likeTray.open : undefined}
           disabled={isVoting && !onLiveReaction}
-          animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+          animate={justVoted === 'like' || (reactionsEnabled && justVoted === 'dislike') ? { scale: [1, 1.3, 1] } : {}}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
           {leadReaction ? (
@@ -1110,7 +1073,7 @@ export function ActionBar({
               className="text-[1.05rem] leading-none w-5 h-5 flex items-center justify-center"
               aria-hidden="true"
             >
-              <ReactionEmoji reaction={leadReaction} animate={leadReaction === myPositiveReaction} />
+              <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
             </span>
           ) : (
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />

@@ -1589,7 +1589,7 @@ const NotificationItem = memo(function NotificationItem({
   );
 });
 
-export default function NotificationsPage() {
+export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boolean } = {}) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
   const [notifTabTransition, setNotifTabTransition] = useState(false);
@@ -2045,11 +2045,11 @@ export default function NotificationsPage() {
     // data-notifications-page scopes the light-mode remaps in index.css; the
     // portaled settings sheet / actors drawer carry the same attribute
     // (portals escape this subtree).
-    <div data-notifications-page className="min-h-screen">
-      <SEOHead title="Notifications - Stay Updated" description="Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." url="https://dehub.io/app/notifications" />
+    <div data-notifications-page className={inDrawer ? "min-h-full" : "min-h-screen"}>
+      {!inDrawer && <SEOHead title="Notifications - Stay Updated" description="Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." url="https://dehub.io/app/notifications" />}
       <h1 className="sr-only">DeHub Notifications - Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
+      <div data-feed-nav-outer className={`sticky ${inDrawer ? "top-0" : "top-11 lg:top-0"} bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2`}>
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -2285,7 +2285,7 @@ export default function NotificationsPage() {
               )}
               <div 
                 className="relative z-20 flex gap-1 sm:gap-1.5 overflow-x-auto sm:overflow-x-visible overflow-y-visible scrollbar-hide whitespace-nowrap px-1 py-1"
-                style={{ touchAction: 'pan-x' }}
+                style={{ touchAction: 'manipulation' }}
                 onScroll={onNotifTabScroll}
               >
                 {orderedTabKeys.map((tabKey) => {

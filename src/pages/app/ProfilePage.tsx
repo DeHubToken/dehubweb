@@ -637,7 +637,7 @@ export default function ProfilePage() {
             <div
               ref={tabsFadeRef}
               className="relative z-20 flex overflow-x-auto scrollbar-hide"
-              style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch', willChange: 'scroll-position', ...tabsFadeStyle } as React.CSSProperties}
+              style={{ touchAction: 'manipulation', WebkitOverflowScrolling: 'touch', willChange: 'scroll-position', ...tabsFadeStyle } as React.CSSProperties}
               onScroll={handleTabsScroll}
             >
               {data.PROFILE_TABS.map((tab) => {

@@ -262,7 +262,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
               onPointerCancel={handleDragEnd}
             />
           )}
-          <div className="relative z-20 flex scrollbar-hide" style={{ touchAction: 'pan-x' }}>
+          <div className="relative z-20 flex scrollbar-hide" style={{ touchAction: 'manipulation' }}>
             {/* Back button on a directly-loaded post page (mirrors the from-feed
                 overlay, whose home pill turns its settings slot into a back
                 button). On the home feed this slot toggles the tab's filters. */}

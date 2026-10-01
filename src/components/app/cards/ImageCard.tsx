@@ -23,6 +23,7 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
@@ -371,12 +372,12 @@ function ImageCarousel({
   const hasMultiple = images.length > 1;
   
   return (
-    <div data-media-full className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe>
+    <div data-media-full className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
       {/* Carousel container */}
       <div
         ref={scrollRef}
         onScroll={updateCurrentIndex}
-        className="flex gap-2 overflow-x-auto overscroll-x-contain scrollbar-hide touch-auto"
+        className={cn("flex gap-2 scrollbar-hide", hasMultiple ? "overflow-x-auto overscroll-x-contain touch-auto" : "overflow-x-hidden touch-pan-y")}
       >
         {images.map((img, idx) => (
           <div
@@ -590,6 +591,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
+  const isPhone = useIsMobile();
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showPollCreator, setShowPollCreator] = useState(false);
@@ -773,7 +775,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   }, [navigate, post.id, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   const headerRow = (
-    <div data-card-head className="flex items-start justify-between">
+    <div data-card-head="plain" className="flex items-end justify-between" style={{ paddingBottom: 0 }}>
       <CardHeader
         username={post.username}
         handle={post.creatorUsername}
@@ -784,7 +786,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         creatorUsername={post.creatorUsername}
         badgeBalance={post.creatorBadgeBalance}
       />
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 pb-2">
         {isOwnPost && (
           <button
             onClick={() => setShowBoostModal(true)}
@@ -795,13 +797,16 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             <Zap className="w-[23.5px] h-[23.5px]" />
           </button>
         )}
-        <button
-          onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-          className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
-          aria-label="Ask AI about this post"
-        >
-          <Sparkles className="w-[23.5px] h-[23.5px]" />
-        </button>
+        {/* On phones Ask AI lives in the options menu instead. */}
+        {!isPhone && (
+          <button
+            onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+            className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
+            aria-label="Ask AI about this post"
+          >
+            <Sparkles className="w-[23.5px] h-[23.5px]" />
+          </button>
+        )}
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
               vaul's Root (and its window scroll listener) into every card. */}
@@ -820,6 +825,12 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
               {/* Bookmark / pin / post info. Also on the action bar as icons
                   on desktop — both surfaces read the same state, so the menu
                   is a reliable place to find them at every width. */}
+              <button
+                onClick={() => { setShowOptionsDrawer(false); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Sparkles className="w-5 h-5" /> {t('postOptions.askAI', 'Ask AI')}
+              </button>
               <PostUtilityMenuItems
                 postId={post.id}
                 tokenId={postTokenId}

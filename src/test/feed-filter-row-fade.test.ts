@@ -21,7 +21,7 @@ describe('feed filter row edge fade', () => {
   it('fades overflowing edges by masking the scrolling row', () => {
     const row = read('../components/app/feeds/GlassFilterRow.tsx');
     expect(row).toContain('useScrollFadeMask');
-    expect(row).toContain("style={{ touchAction: 'pan-x', ...fadeStyle }}");
+    expect(row).toContain("style={{ touchAction: 'manipulation', ...fadeStyle }}");
 
     const hook = read('../components/app/feeds/useScrollFadeMask.ts');
     // Only the side with hidden content is faded, so a row that fits — or one

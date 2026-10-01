@@ -25,13 +25,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import {
+  ArrowRight,
   Box,
   Film,
   ImageIcon,
   Loader2,
   Music2,
   Paperclip,
-  Sparkles,
   Wand2,
   X,
 } from 'lucide-react';
@@ -39,6 +39,8 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useJobQuote, formatDhb, useFreeImages } from '@/hooks/use-ai-quote';
+import dehubCoin from '@/assets/dehub-coin.png';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AuthenticationError, apiCall } from '@/lib/api/dehub/core';
 import {
   IMAGE_MODELS,
@@ -896,6 +898,33 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     requestAnimationFrame(() => textareaRef.current?.focus());
   }, []);
 
+  /**
+   * The page's "Pick a medium" tiles live outside the studio. They ask for a
+   * mode with a `creator:mode` event, and the composer switches and takes focus.
+   */
+  useEffect(() => {
+    const onPick = (e: Event) => {
+      const next = (e as CustomEvent<Mode>).detail;
+      if (next === 'image' || next === 'video' || next === 'audio' || next === '3d') {
+        setMode(next);
+        focusComposer();
+      }
+    };
+    window.addEventListener('creator:mode', onPick);
+    return () => window.removeEventListener('creator:mode', onPick);
+  }, [focusComposer]);
+
+  // `/creator?mode=video` (the app's medium tiles link here) opens on that mode.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('mode');
+    if (requested === 'image' || requested === 'video' || requested === 'audio' || requested === '3d') setMode(requested);
+  }, []);
+
+  // Tell the page's medium tiles which one is live.
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('creator:mode-changed', { detail: mode }));
+  }, [mode]);
+
   /** "Animate this" on an image result, and "load into composer" on a failure. */
   const loadJob = useCallback((job: GenerationJob) => {
     const target: Mode =
@@ -1062,11 +1091,28 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     ? freeImages.models.find((m) => m in IMAGE_MODELS && m === 'gemini-3.1-flash-image') ?? freeImages.models.find((m) => m in IMAGE_MODELS)
     : undefined;
   const usd = generationQuote.priceUsd;
+  /**
+   * The price lives inside the Create button. `priceMain` is the headline on
+   * the button (DHB, or Free), `priceSub` the dollar estimate beside it, and
+   * `priceLabel` the whole sentence for screen readers and the parked pill's
+   * tooltip. `priceLoading` draws a shimmer in place of the number.
+   */
+  const priceIsFree = freeImageEligible || (mode === 'audio' && !activeAudioTask.paid);
+  const priceLoading = !priceIsFree && generationQuote.isLoading;
+  const priceFailed = !priceIsFree && !priceLoading && !!generationQuote.error;
+  const usdText = usd < 0.1 ? usd.toFixed(3) : usd.toFixed(2);
+  const priceMain = freeImageEligible ? t('creator.createFreeLeft', { count: freeImages.remaining })
+    : priceIsFree ? t('creator.priceFree')
+    : priceFailed ? t('creator.priceRetry')
+    // Whole tokens with separators up to 100K ("2,150 DHB"), the short form above.
+    : t('creator.priceDhbShort', { amount: generationQuote.priceDhb < 100_000 ? Math.round(generationQuote.priceDhb).toLocaleString() : formatDhb(generationQuote.priceDhb) });
+  const priceSub = priceIsFree || priceFailed || priceLoading ? null
+    : `≈ $${usdText}${mode === '3d' ? ` · ${t('creator.priceStandardTexture')}` : ''}`;
   const priceLabel = freeImageEligible ? t('creator.freeImagesLeft', { count: freeImages.remaining })
     : mode === 'audio' && !activeAudioTask.paid ? t('creator.priceFreeRateLimited')
     : generationQuote.isLoading ? t('creator.priceChecking')
     : generationQuote.error ? t('creator.priceUnavailable')
-    : `${t('creator.priceTokensUsd', { amount: formatDhb(generationQuote.priceDhb), usd: usd < 0.1 ? usd.toFixed(3) : usd.toFixed(2) })}${mode === '3d' ? ` · ${t('creator.priceStandardTexture')}` : ''}`;
+    : `${t('creator.priceTokensUsd', { amount: formatDhb(generationQuote.priceDhb), usd: usdText })}${mode === '3d' ? ` · ${t('creator.priceStandardTexture')}` : ''}`;
 
   const audioQuantityLabel = useMemo(() => {
     if (audioTask === 'music') return `${musicSeconds}s track`;
@@ -1489,13 +1535,18 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       title={t('creator.expandPrompt')}
       className={cn(
         'shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white/70 backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-40',
-        compact ? 'hidden h-8 w-8 sm:inline-flex' : 'inline-flex p-2.5',
+        compact ? 'hidden h-8 w-8 sm:inline-flex' : 'inline-flex h-[64px] w-14 rounded-[20px]',
       )}
     >
       {enhancing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
     </button>
   );
 
+  /**
+   * Create, with the price built in. The full button carries a shining DHB
+   * coin, the word Create and the price under it; the parked pill keeps the
+   * coin and the DHB figure so the cost is never out of sight.
+   */
   const generateButton = (compact?: boolean) => (
     // Kept focusable rather than disabled: a disabled button leaves the tab
     // order, so its aria-describedby reason could never be read and a keyboard
@@ -1506,20 +1557,54 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       onClick={() => void openPaywall()}
       aria-disabled={generateDisabled}
       aria-describedby={blockingIssue && !compact ? 'studio-blocking-reason' : undefined}
-      aria-label={compact ? t('creator.generate') : undefined}
-      title={compact ? (blockingIssue ?? t('creator.generate')) : undefined}
+      aria-label={`${t(staging ? 'creator.preparing' : 'creator.create')}, ${priceLabel}`}
+      title={compact ? (blockingIssue ?? priceLabel) : undefined}
+      data-creator-create
       className={cn(
-        'inline-flex shrink-0 items-center gap-2 rounded-xl border text-[13px] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
-        compact ? 'px-3 py-2 sm:px-4' : 'px-5 py-2.5',
-        generateDisabled
-          ? 'cursor-not-allowed border-white/20 bg-white/10 text-white/70'
-          : 'border-white/25 bg-white text-black hover:bg-white/90',
+        'relative inline-flex shrink-0 items-center font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70',
+        compact ? 'h-9 gap-1.5 rounded-xl pl-1.5 pr-3' : 'h-[64px] min-w-0 flex-1 gap-3 rounded-[20px] pl-2 pr-2 sm:min-w-[300px] sm:flex-none',
+        generateDisabled ? 'cursor-not-allowed opacity-55 saturate-50' : 'hover:brightness-110 active:scale-[0.99]',
       )}
+      style={{
+        backgroundImage: 'var(--cr-accent)',
+        color: 'var(--cr-accent-ink)',
+        boxShadow: generateDisabled ? 'inset 0 1px 0 rgba(255,255,255,0.45)' : '0 10px 34px -10px var(--cr-glow), inset 0 1px 0 rgba(255,255,255,0.45)',
+      }}
     >
-      {staging ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-      <span className={compact ? 'hidden sm:inline' : undefined}>
-        {t(staging ? 'creator.preparing' : 'creator.generate')}
+      <span
+        data-creator-coin={generateDisabled ? undefined : ''}
+        className={cn(
+          'relative flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-black/15 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35)]',
+          compact ? 'h-6 w-6' : 'h-12 w-12',
+        )}
+      >
+        {staging ? (
+          <Loader2 className={cn('animate-spin', compact ? 'h-3.5 w-3.5' : 'h-5 w-5')} />
+        ) : (
+          <img src={dehubCoin} alt="" className={compact ? 'h-6 w-6' : 'h-10 w-10'} draggable={false} />
+        )}
       </span>
+      {compact ? (
+        <span className="text-[13px] tabular-nums">
+          {priceLoading ? <span className="inline-block h-3 w-10 animate-pulse rounded bg-black/20 align-middle" /> : priceMain}
+        </span>
+      ) : (
+        <>
+          <span className="grid min-w-0 text-left leading-none">
+            <span className="font-exo text-[19px] font-black tracking-tight">
+              {t(staging ? 'creator.preparing' : 'creator.create')}
+            </span>
+            <span aria-hidden className="mt-1.5 truncate text-[12px] font-semibold tabular-nums opacity-80 sm:text-[12.5px]">
+              {priceLoading
+                ? <span className="inline-block h-2.5 w-24 animate-pulse rounded bg-black/20 align-middle" />
+                : priceSub ? `${priceMain} · ${priceSub}` : priceMain}
+            </span>
+          </span>
+          <span aria-hidden className="ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black/10 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3)]">
+            <ArrowRight className="h-5 w-5" />
+          </span>
+        </>
+      )}
     </button>
   );
 
@@ -1533,24 +1618,25 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
      * composer's parent, so it stays parked for the length of the page.
      */
     <>
-      <section className="px-3 pb-4 pt-5 sm:px-4">
-        <div className="flex items-end justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className="text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
-              {t('creator.startCreatingWith', { model: currentModelName })}
-            </h2>
-            <p className="mt-1.5 max-w-xl text-sm text-white/45">
-              {t('creator.studioSubtitle')}
-            </p>
-          </div>
-
-          {runningCount > 0 && (
-            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-[12px] font-medium text-white/75 backdrop-blur-xl">
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              {t('creator.countRunning', { count: runningCount })}
-            </span>
-          )}
-        </div>
+      {/* Token Stage hero: a centred headline over the page's wall of
+          community work (drawn by CreatorPage behind this section). */}
+      <section className="relative px-3 pb-6 pt-10 text-center sm:px-4 sm:pt-16">
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] py-1 pl-1 pr-3 text-[12.5px] font-semibold text-white/85 backdrop-blur-xl">
+          <ThemedIcon icon="features" className="h-6 w-6 object-contain" />
+          {t('creator.heroKicker', { model: currentModelName })}
+        </span>
+        <h2 className="mx-auto mt-4 max-w-3xl text-balance font-exo text-[34px] font-black leading-[1.02] tracking-tight text-white sm:text-[56px]">
+          {t('creator.heroTitle')}
+        </h2>
+        <p className="mx-auto mt-3 max-w-xl text-[14px] text-white/60 sm:text-base">
+          {t('creator.heroSubtitle')}
+        </p>
+        {runningCount > 0 && (
+          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-[12px] font-medium text-white/75 backdrop-blur-xl">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            {t('creator.countRunning', { count: runningCount })}
+          </span>
+        )}
       </section>
 
       {/* Marks where the composer sits in normal flow — see the observer above. */}
@@ -1583,12 +1669,13 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           ref={composerRef}
           data-creator-composer
           className={cn(
-            'rounded-2xl border transition-[padding,background-color,box-shadow] duration-200',
+            // Centred and capped so it floats as one glass card under the hero.
+            'mx-auto max-w-[1040px] border backdrop-saturate-150 transition-[padding,background-color,box-shadow] duration-200',
             collapsed
-              ? 'border-white/15 bg-[#141518]/95 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-2xl'
+              ? 'rounded-2xl border-white/15 bg-black/45 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-2xl'
               : stuck
-                ? 'border-white/15 bg-[#141518]/95 p-2.5 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-2xl'
-                : 'border-white/12 bg-white/[0.04] p-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl',
+                ? 'rounded-[24px] border-white/15 bg-black/45 p-3 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-2xl'
+                : 'rounded-[26px] border-white/15 bg-white/[0.06] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_18px_50px_-18px_rgba(0,0,0,0.6)] backdrop-blur-2xl',
           )}
         >
           {collapsed ? (
@@ -1786,7 +1873,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
               {/* Settings rail. The mode toggle sits outside the scrolling part
                   so it never slides out of reach on a narrow screen. */}
-              <div className="mt-1.5 flex items-end gap-2">
+              <div className="mt-1.5 flex flex-wrap items-center gap-2">
                 <ModeToggle mode={mode} onChange={switchMode} />
 
                 <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -2069,11 +2156,16 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                   )}
                 </div>
 
-                {enhanceButton()}
-                {generateButton()}
+                {/* Its own row on a phone, so Create and its price get the full width. */}
+                <div className="flex w-full items-center gap-2 sm:w-auto">
+                  {enhanceButton()}
+                  {generateButton()}
+                </div>
               </div>
 
-              <p aria-live="polite" className="mt-2 px-1 text-[12px] text-white/65">{priceLabel}{estimatedTime ? ` · ${t('creator.priceUsually', { time: estimatedTime })}` : ''}</p>
+              {/* The price itself is on the Create button. This line only reads
+                  it out when it changes, and adds how long the job usually takes. */}
+              <p aria-live="polite" className={cn('mt-2 px-1 text-[12px] text-white/65', !estimatedTime && 'sr-only')}>{estimatedTime ? t('creator.priceUsually', { time: estimatedTime }) : priceLabel}</p>
               {freeModelSuggestion && (
                 <button
                   type="button"

@@ -2,15 +2,24 @@ import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 
 import { cn } from "@/lib/utils";
+import { OverlayContentPresent, useOverlayLifetime } from "@/hooks/use-overlay-lifetime";
 
-const Popover = PopoverPrimitive.Root;
+const Popover = ({ onOpenChange, ...props }: React.ComponentProps<typeof PopoverPrimitive.Root>) => {
+  const lifetime = useOverlayLifetime(props.open, props.defaultOpen, onOpenChange);
+  return <OverlayContentPresent.Provider value={lifetime.present}>
+    <PopoverPrimitive.Root {...props} open={lifetime.open} onOpenChange={lifetime.onChange} />
+  </OverlayContentPresent.Provider>;
+};
 
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
->(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => {
+  const present = React.useContext(OverlayContentPresent);
+  if (!present) return null;
+  return (
   <PopoverPrimitive.Portal>
     <PopoverPrimitive.Content
       ref={ref}
@@ -24,7 +33,8 @@ const PopoverContent = React.forwardRef<
       {...props}
     />
   </PopoverPrimitive.Portal>
-));
+  );
+});
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
 export { Popover, PopoverTrigger, PopoverContent };

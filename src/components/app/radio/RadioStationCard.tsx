@@ -30,7 +30,7 @@ const CUSTOM_LOGOS: Record<string, string> = {
   'nightwave': '/radio/nightwave-plaza-logo.jpg',
 };
 
-function getCustomLogo(stationName: string): string | null {
+export function getCustomLogo(stationName: string): string | null {
   const nameLower = stationName.toLowerCase();
   for (const [pattern, logo] of Object.entries(CUSTOM_LOGOS)) {
     if (nameLower.includes(pattern)) {
