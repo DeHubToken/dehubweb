@@ -372,12 +372,12 @@ function ImageCarousel({
   const hasMultiple = images.length > 1;
   
   return (
-    <div data-media-full className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe>
+    <div data-media-full className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
       {/* Carousel container */}
       <div
         ref={scrollRef}
         onScroll={updateCurrentIndex}
-        className="flex gap-2 overflow-x-auto overscroll-x-contain scrollbar-hide touch-auto"
+        className={cn("flex gap-2 scrollbar-hide", hasMultiple ? "overflow-x-auto overscroll-x-contain touch-auto" : "overflow-x-hidden touch-pan-y")}
       >
         {images.map((img, idx) => (
           <div
