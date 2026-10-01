@@ -5359,7 +5359,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
   html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
     color: #fff !important;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.w-9, img) {
+  /* Shadow only the avatar; transparent badges must not gain a square box. */
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.w-9, .w-9 img) {
     box-shadow: 0 1px 4px rgb(0 0 0 / 0.45);
   }
   /* The buttons on the media and the tools menu are the same lit glass as the
