@@ -38,7 +38,7 @@ import {
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { searchNFTs, getNFTInfo, getBlockList, type DeHubNFT } from '@/lib/api/dehub';
 import { MANUAL_MUSIC_TOKEN_IDS } from '@/constants/music.constants';
-import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
+import { isBlockedCreator, isMusicFeedItem, mapNFTToVideoItem } from '@/lib/music-feed-items';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -539,7 +539,7 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
         sortMode: 'new',
       });
       // Filter out blocked creators
-      const filteredData = (response.data || []).filter((nft: DeHubNFT) => !isBlockedCreator(nft));
+      const filteredData = (response.data || []).filter((nft: DeHubNFT) => isMusicFeedItem(nft) && !isBlockedCreator(nft));
       return {
         items: filteredData,
         nextPage: (response.data?.length ?? 0) >= VIDEOS_PAGE_SIZE ? pageParam + 1 : undefined,
@@ -726,7 +726,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   const carouselVideos = useMemo(() => {
     if (!carouselVideosData) return [];
     // Fisher-Yates shuffle
-    const shuffled = carouselVideosData.filter(nft => !isBlockedCreator(nft, blockedAddresses));
+    const shuffled = carouselVideosData.filter(nft => isMusicFeedItem(nft) && !isBlockedCreator(nft, blockedAddresses));
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
