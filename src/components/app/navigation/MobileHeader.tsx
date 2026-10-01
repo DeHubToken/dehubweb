@@ -1,3 +1,4 @@
+import { openNotificationsDrawer } from '../NotificationsDrawer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
@@ -197,7 +198,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
       <div className="flex items-center">
         {isAuthenticated && (
           <button
-            onClick={() => navigate('/app/notifications')}
+            onClick={() => openNotificationsDrawer()}
             className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
             aria-label="Notifications"
           >
@@ -231,7 +232,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
         onAvatarClick={() => (isAuthenticated ? onOpenChange(true) : openLoginModal())}
         logoSrc={dehubMark}
         unread={isAuthenticated ? totalNotifUnread : 0}
-        onBellClick={() => (isAuthenticated ? navigate('/app/notifications') : openLoginModal())}
+        onBellClick={() => (isAuthenticated ? openNotificationsDrawer() : openLoginModal())}
       />
     )}
     </>

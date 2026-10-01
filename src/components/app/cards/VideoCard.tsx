@@ -2172,44 +2172,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             that already carries its own transport. */}
 
         {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-video-topbar={bareControls ? 'bare' : undefined} className={cn("absolute top-2 right-2 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
-            {/* Subtitles mount here — display:contents keeps the button a direct
-                flex item, so it sits in the row's gap like everything else. */}
-            <div ref={setCcSlot} className="contents" />
-
-            <button
-              className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
-              onClick={cyclePlaybackRate}
-            >
-              {formatRate(playbackRate)}x
-            </button>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  className={cn(
-                    "h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10",
-                    isLooping && "bg-white/20"
-                  )}
-                  onClick={toggleLoop}
-                >
-                  <Repeat className="h-4 w-4" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
-            </Tooltip>
-            {document.pictureInPictureEnabled && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-                    onClick={handlePictureInPicture}
-                  >
-                    <PictureInPicture2 className="h-4 w-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Picture in Picture (P)</TooltipContent>
-              </Tooltip>
-            )}
+          <div data-video-controls data-video-topbar="bare" className={cn("absolute top-2 right-2 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
                 mixer. The wrapper keeps the pointer inside while the cursor
@@ -2262,6 +2225,69 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 </div>
               )}
             </div>
+            <details
+              className="group relative"
+              onClick={(event) => event.stopPropagation()}
+              onKeyDown={(event) => {
+                if (event.key === 'Escape') {
+                  event.currentTarget.open = false;
+                  event.currentTarget.querySelector('summary')?.focus();
+                }
+              }}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  event.currentTarget.open = false;
+                }
+              }}
+            >
+              <summary
+                aria-label="Video controls"
+                className="flex h-8 w-8 cursor-pointer list-none items-center justify-center text-white [&::-webkit-details-marker]:hidden"
+              >
+                <MoreVertical className="h-4 w-4" />
+              </summary>
+              <div className="absolute right-0 top-full mt-1 flex w-48 max-w-[calc(100vw-2rem)] flex-wrap items-center gap-1 rounded-lg bg-zinc-900 p-2 text-white shadow-lg">
+            {/* Subtitles mount here — display:contents keeps the button a direct
+                flex item, so it sits in the row's gap like everything else. */}
+            <div ref={setCcSlot} className="contents" />
+
+            <button
+              className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
+              onClick={cyclePlaybackRate}
+              aria-label="Playback speed"
+            >
+              {formatRate(playbackRate)}x
+            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={cn(
+                    "h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10",
+                    isLooping && "bg-white/20"
+                  )}
+                  onClick={toggleLoop}
+                  aria-label={isLooping ? 'Disable loop' : 'Enable loop'}
+                  aria-pressed={isLooping}
+                >
+                  <Repeat className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
+            </Tooltip>
+            {document.pictureInPictureEnabled && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                    onClick={handlePictureInPicture}
+                    aria-label="Picture in picture"
+                  >
+                    <PictureInPicture2 className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Picture in Picture (P)</TooltipContent>
+              </Tooltip>
+            )}
             {!bareControls && (
               <button
                 className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
@@ -2271,6 +2297,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
               </button>
             )}
+              </div>
+            </details>
           </div>
         )}
 

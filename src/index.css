@@ -5159,8 +5159,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
   html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic] {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    padding-top: 0.875rem !important;
-    padding-bottom: 0.875rem !important;
+    padding-top: 1.375rem !important;
+    padding-bottom: 1.375rem !important;
     border-bottom: 1px solid rgb(255 255 255 / 0.12) !important;
   }
   /* No line above the follow carousel (neither its own nor the post
@@ -5606,3 +5606,6 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
     background: #111114 !important; color: #fff !important; border-color: transparent !important;
   }
 }
+
+/* Centre the smaller video avatar against its two-line identity. */
+html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:not([data-card-head="plain"]) > :first-child { align-items: center; }

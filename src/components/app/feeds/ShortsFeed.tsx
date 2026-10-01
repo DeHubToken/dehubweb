@@ -604,7 +604,6 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                   {/* Bottom Info */}
-                  {short.imageUrls?.length ? <span className="absolute top-2 right-2 rounded-full bg-black/60 px-2 py-1 text-xs text-white">♫{short.imageUrls.length > 1 ? ` · ${short.imageUrls.length}` : ''}</span> : null}
                   <div className="absolute bottom-2 left-2 right-2">
                     <div className="flex min-w-0 items-end gap-2">
                       {/* Creator Avatar */}
