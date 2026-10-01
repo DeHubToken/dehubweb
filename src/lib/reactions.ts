@@ -92,14 +92,14 @@ export const REACTION_LIST: ReactionMeta[] = POST_REACTIONS.map((key) => META[ke
 /**
  * The picker's two halves.
  *
- * There is one tray per thumb, not one tray of everything hanging off the
- * thumbs-UP: the faces that count as a like belong to the button that already
- * counts them, and the thumbs-DOWN carries whatever counts against. A single
- * tray on the like button meant the only way to downvote through a face was
- * the button labelled "like".
+ * Posts and comments carry a single thumbs-up whose tray holds every reaction:
+ * the positive faces first, then a divider, then the ones that count against.
+ * The split is what draws that divider, so a vote against never reads as one
+ * more face that counts as a like. Surfaces that keep a plain up/down pair
+ * (governance, feature requests) have no tray at all.
  *
  * Derived from POST_REACTIONS so both halves keep the canonical order and a
- * new reaction lands in the right tray without a second edit.
+ * new reaction lands on the right side of the divider without a second edit.
  */
 export const POSITIVE_REACTION_LIST: ReactionMeta[] = REACTION_LIST.filter((r) => r.positive);
 export const NEGATIVE_REACTION_LIST: ReactionMeta[] = REACTION_LIST.filter((r) => !r.positive);
@@ -271,6 +271,39 @@ export function reactionForTap(
   if (held && isPositiveReaction(held) === positive) return held;
   if (!positive) return DEFAULT_NEGATIVE_REACTION;
   return resolveLeadReaction(counts, held) ?? DEFAULT_POSITIVE_REACTION;
+}
+
+/**
+ * The glyph a thumbs-up wears when it is the only vote control on the row.
+ *
+ * Posts and comments no longer carry a separate thumbs-DOWN: 👎 sits at the
+ * end of the thumbs-up's tray. So a viewer who disliked something has to see
+ * that on the one thumb left, or the vote would be invisible and impossible to
+ * take back. A negative reaction of your own wins; otherwise it is the same
+ * pick as `resolveLeadReaction` (and still never the crowd's 👎).
+ */
+export function resolveThumbReaction(
+  counts: ReactionCounts | null | undefined,
+  myReaction?: PostReaction | null,
+): PostReaction | null {
+  if (myReaction && !isPositiveReaction(myReaction)) return myReaction;
+  return resolveLeadReaction(counts, myReaction);
+}
+
+/**
+ * What a plain tap on that lone thumbs-up casts.
+ *
+ * Holding a 👎, the thumb is wearing it, so a tap re-sends it — which the
+ * server reads as "remove it". It never flips a dislike straight into a like:
+ * the glyph and the vote stay one promise, and changing your mind to a
+ * positive reaction is what holding the thumb is for.
+ */
+export function reactionForThumbTap(
+  myReaction: PostReaction | null | undefined,
+  counts?: ReactionCounts | null,
+): PostReaction {
+  if (myReaction && !isPositiveReaction(myReaction)) return myReaction;
+  return reactionForTap(true, myReaction, counts);
 }
 
 /**

@@ -35,7 +35,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2, Wrench } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
@@ -724,29 +724,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // fullscreen buttons fold into one tools button beside AI and the options
   // menu, and drop down from there. The post page has the room and keeps the row.
   const isPhone = useIsMobile();
-  const compactTools = isPhone && !isImmersive && !hideActions && !onOpenComments && !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
-  const [toolsOpen, setToolsOpen] = useState(false);
-  const toolsButtonRef = useRef<HTMLButtonElement>(null);
-  const toolsPanelRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!toolsOpen) return;
-    const close = (e: PointerEvent) => {
-      const target = e.target as Node;
-      if (toolsPanelRef.current?.contains(target) || toolsButtonRef.current?.contains(target)) return;
-      // The subtitle language menu portals out of the panel; leave it be.
-      if ((target as Element).closest?.('[data-radix-popper-content-wrapper], [role="menu"], [role="dialog"]')) return;
-      setToolsOpen(false);
-    };
-    const onScroll = () => setToolsOpen(false);
-    document.addEventListener('pointerdown', close, true);
-    document.body.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      document.removeEventListener('pointerdown', close, true);
-      document.body.removeEventListener('scroll', onScroll);
-      window.removeEventListener('scroll', onScroll);
-    };
-  }, [toolsOpen]);
+  // Phone feeds: the player's buttons are bare icons with a soft shadow,
+  // speed, loop, PiP and subtitles top right with mute in the corner, and
+  // one time counter with fullscreen after it on the scrubber row.
+  const bareControls = isPhone && !isImmersive && !hideActions && !onOpenComments && !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
   /** Hovering the mute button drops a volume slider under it. */
   const [volumeOpen, setVolumeOpen] = useState(false);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
@@ -1750,17 +1731,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <Zap className="w-[23.5px] h-[23.5px]" />
               </motion.button>
             )}
-            {compactTools && !isContentGated && (
-              <button
-                ref={toolsButtonRef}
-                onClick={() => setToolsOpen((o) => !o)}
-                aria-label={t('videoPlayer.tools', 'Player tools')}
-                aria-expanded={toolsOpen}
-                className={cn("transition-colors", toolsOpen ? "text-white" : "text-zinc-400 hover:text-white")}
-              >
-                <Wrench className="w-[21px] h-[21px]" />
-              </button>
-            )}
             {/* On phones Ask AI lives in the options menu instead. */}
             {!isPhone && <motion.button
               onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
@@ -1776,7 +1746,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 The sheet itself is mounted once at the card root and shared
                 with the carousel and immersive openers further down; a second
                 <Drawer> here bound to the same state opened a duplicate. */}
-            <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+            <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" data-head-options className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
               <MoreVertical className="w-[23.5px] h-[23.5px]" />
             </button>
           </div>
@@ -1855,11 +1825,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
               onTouchEnd={(e) => {
-                e.stopPropagation();
                 const start = (e.currentTarget as any)._touchStart;
+                (e.currentTarget as any)._touchStart = null;
                 if (!start) return;
                 const touch = e.changedTouches[0];
-                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowPPVDrawer(true); }
+                if (!touch) return;
+                // Only consume taps; swipes must reach the feed's tab navigation.
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowPPVDrawer(true); }
               }}
             >
               <div className="flex items-center gap-3 mb-3">
@@ -1886,11 +1858,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
               onTouchEnd={(e) => {
-                e.stopPropagation();
                 const start = (e.currentTarget as any)._touchStart;
+                (e.currentTarget as any)._touchStart = null;
                 if (!start) return;
                 const touch = e.changedTouches[0];
-                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowPPVDrawer(true); }
+                if (!touch) return;
+                // Only consume taps; swipes must reach the feed's tab navigation.
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowPPVDrawer(true); }
               }}
             >
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
@@ -1913,11 +1887,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onClick={(e) => { e.stopPropagation(); setShowSubDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
               onTouchEnd={(e) => {
-                e.stopPropagation();
                 const start = (e.currentTarget as any)._touchStart;
+                (e.currentTarget as any)._touchStart = null;
                 if (!start) return;
                 const touch = e.changedTouches[0];
-                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowSubDrawer(true); }
+                if (!touch) return;
+                // Only consume taps; swipes must reach the feed's tab navigation.
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowSubDrawer(true); }
               }}
             >
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
@@ -1943,11 +1919,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
               onTouchEnd={(e) => {
-                e.stopPropagation();
                 const start = (e.currentTarget as any)._touchStart;
+                (e.currentTarget as any)._touchStart = null;
                 if (!start) return;
                 const touch = e.changedTouches[0];
-                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowLockedDrawer(true); }
+                if (!touch) return;
+                // Only consume taps; swipes must reach the feed's tab navigation.
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowLockedDrawer(true); }
               }}
             >
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
@@ -1967,11 +1945,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
               onTouchStart={(e) => { (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
               onTouchEnd={(e) => {
-                e.stopPropagation();
                 const start = (e.currentTarget as any)._touchStart;
+                (e.currentTarget as any)._touchStart = null;
                 if (!start) return;
                 const touch = e.changedTouches[0];
-                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowBountyDrawer(true); }
+                if (!touch) return;
+                // Only consume taps; swipes must reach the feed's tab navigation.
+                if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowBountyDrawer(true); }
               }}
             >
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
@@ -2164,7 +2144,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               videoRef={videoRef}
               buttonPortalTarget={ccSlot}
               buttonClassName={ccSlot ? undefined : 'absolute top-2 right-2 z-20'}
-              buttonVisible={compactTools ? toolsOpen : showControls}
+              buttonVisible={showControls}
               onMenuOpenChange={setSubsMenuOpen}
             />
           </Suspense>
@@ -2190,81 +2170,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             Never for audio posts: speed, loop, PiP and fullscreen have nothing
             to act on there, and the row appeared on hover over a visualizer
             that already carries its own transport. */}
-        {compactTools && toolsOpen && (
-          <div
-            ref={toolsPanelRef}
-            data-video-tools
-            onClick={(e) => e.stopPropagation()}
-            className="absolute top-2 right-2 z-30 flex w-44 flex-col gap-0.5 rounded-xl border border-white/10 bg-black/55 p-1.5 text-[13px] font-medium text-white backdrop-blur-[24px] saturate-[180%]"
-          >
-            <button onClick={cyclePlaybackRate} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
-              <span className="w-8 text-center text-[11px] font-semibold">{formatRate(playbackRate)}x</span>
-              {t('videoPlayer.speed', 'Speed')}
-            </button>
-            <button onClick={toggleLoop} className={cn("flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10", isLooping && "bg-white/15")}>
-              <Repeat className="h-4 w-8" />
-              {isLooping ? 'Loop on' : 'Loop off'}
-            </button>
-            <button onClick={toggleMute} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
-              {isMuted ? <VolumeX className="h-4 w-8" /> : <Volume2 className="h-4 w-8" />}
-              {isMuted ? t('videoPlayer.unmute', 'Unmute') : t('videoPlayer.mute', 'Mute')}
-            </button>
-            {document.pictureInPictureEnabled && (
-              <button onClick={handlePictureInPicture} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
-                <PictureInPicture2 className="h-4 w-8" />
-                {t('videoPlayer.pip', 'Picture in picture')}
-              </button>
-            )}
-            <button onClick={(e) => { setToolsOpen(false); handleFullscreen(e); }} className="flex h-9 items-center gap-2.5 rounded-lg px-2 hover:bg-white/10">
-              {isFullscreen ? <Minimize className="h-4 w-8" /> : <Maximize className="h-4 w-8" />}
-              {t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
-            </button>
-            <div className="flex h-9 items-center gap-2.5 px-2">
-              <div ref={setCcSlot} className="contents" />
-              <span>{t('videoPlayer.subtitles', 'Subtitles')}</span>
-            </div>
-          </div>
-        )}
 
-        {controlsVisible && !compactTools && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls className="absolute top-2 right-2 flex items-center gap-2 z-10">
-            {/* Subtitles mount here — display:contents keeps the button a direct
-                flex item, so it sits in the row's gap like everything else. */}
-            <div ref={compactTools ? undefined : setCcSlot} className="contents" />
-
-            <button
-              className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
-              onClick={cyclePlaybackRate}
-            >
-              {formatRate(playbackRate)}x
-            </button>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  className={cn(
-                    "h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10",
-                    isLooping && "bg-white/20"
-                  )}
-                  onClick={toggleLoop}
-                >
-                  <Repeat className="h-4 w-4" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
-            </Tooltip>
-            {document.pictureInPictureEnabled && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-                    onClick={handlePictureInPicture}
-                  >
-                    <PictureInPicture2 className="h-4 w-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Picture in Picture (P)</TooltipContent>
-              </Tooltip>
-            )}
+        {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
+          <div data-video-controls data-video-topbar="bare" className={cn("absolute top-2 right-2 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
                 mixer. The wrapper keeps the pointer inside while the cursor
@@ -2317,13 +2225,80 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 </div>
               )}
             </div>
-            <button 
-              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-              onClick={handleFullscreen}
-              aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
+            <details
+              className="group relative"
+              onClick={(event) => event.stopPropagation()}
+              onKeyDown={(event) => {
+                if (event.key === 'Escape') {
+                  event.currentTarget.open = false;
+                  event.currentTarget.querySelector('summary')?.focus();
+                }
+              }}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  event.currentTarget.open = false;
+                }
+              }}
             >
-              {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+              <summary
+                aria-label="Video controls"
+                className="flex h-8 w-8 cursor-pointer list-none items-center justify-center text-white [&::-webkit-details-marker]:hidden"
+              >
+                <MoreVertical className="h-4 w-4" />
+              </summary>
+              <div className="absolute right-0 top-full mt-1 flex w-48 max-w-[calc(100vw-2rem)] flex-wrap items-center gap-1 rounded-lg bg-zinc-900 p-2 text-white shadow-lg">
+            {/* Subtitles mount here — display:contents keeps the button a direct
+                flex item, so it sits in the row's gap like everything else. */}
+            <div ref={setCcSlot} className="contents" />
+
+            <button
+              className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
+              onClick={cyclePlaybackRate}
+              aria-label="Playback speed"
+            >
+              {formatRate(playbackRate)}x
             </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={cn(
+                    "h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10",
+                    isLooping && "bg-white/20"
+                  )}
+                  onClick={toggleLoop}
+                  aria-label={isLooping ? 'Disable loop' : 'Enable loop'}
+                  aria-pressed={isLooping}
+                >
+                  <Repeat className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
+            </Tooltip>
+            {document.pictureInPictureEnabled && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                    onClick={handlePictureInPicture}
+                    aria-label="Picture in picture"
+                  >
+                    <PictureInPicture2 className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Picture in Picture (P)</TooltipContent>
+              </Tooltip>
+            )}
+            {!bareControls && (
+              <button
+                className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                onClick={handleFullscreen}
+                aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
+              >
+                {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+              </button>
+            )}
+              </div>
+            </details>
           </div>
         )}
 
@@ -2339,17 +2314,20 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             non-functional play button on top of the audio controls — the
             "hovering brings up a play/pause button" complaint. */}
         {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
+          <div data-video-controls data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
-            <div className="flex items-center gap-2">
+            <div className={cn("flex items-center gap-2", bareControls && "px-1.5")}>
               <button
                 onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
                 aria-label={isPlaying ? 'Pause' : 'Play'}
-                className="h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 flex items-center justify-center shrink-0"
+                data-video-bare={bareControls ? '' : undefined}
+                className={cn("flex items-center justify-center shrink-0", bareControls ? "h-8 w-8" : "h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10")}
               >
                 {isPlaying ? <Pause className="h-3 w-3 text-white fill-current" /> : <Play className="h-3 w-3 text-white fill-current ml-0.5" />}
               </button>
-              <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
+              {!bareControls && (
+                <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
+              )}
               <input
                 type="range"
                 min={0}
@@ -2359,6 +2337,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 onClick={(e) => e.stopPropagation()}
                 disabled={duration <= 0}
                 aria-label="Video progress"
+                data-scrubber-line={bareControls ? '' : undefined}
                 className="flex-1 h-6 bg-transparent rounded-full appearance-none cursor-pointer touch-pan-y
                   [&::-webkit-slider-thumb]:appearance-none 
                   [&::-webkit-slider-thumb]:w-3 
@@ -2378,7 +2357,21 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   backgroundSize: '100% 4px',
                 }}
               />
-              <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(duration)}</span>
+              {bareControls ? (
+                <>
+                  <span data-video-bare className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(duration)}</span>
+                  <button
+                    data-video-bare
+                    onClick={handleFullscreen}
+                    aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
+                    className="-mr-1 flex h-8 w-8 shrink-0 items-center justify-center text-white"
+                  >
+                    {isFullscreen ? <Minimize className="h-[18px] w-[18px]" /> : <Maximize className="h-[18px] w-[18px]" />}
+                  </button>
+                </>
+              ) : (
+                <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(duration)}</span>
+              )}
             </div>
           </div>
         )}
@@ -2472,6 +2465,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           further than the video above them — the one place this layout didn't
           line up with the home feed card. Drop it back to the bento's gutter. */}
       <div data-card-info className={`pt-3${isImmersive ? ' px-3 lg:px-0' : ''}`}>
+        {/* System theme phone feed only (index.css): the options button sits
+            here, top right of the caption, instead of on the media. */}
+        {!isImmersive && !hideActions && (
+          <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" data-caption-options className="hidden">
+            <MoreVertical className="w-5 h-5" />
+          </button>
+        )}
         {/* Creator info with action buttons - mobile/tablet immersive view only (hidden on desktop where SinglePostPage renders DesktopCreatorInfo) */}
         {isImmersive && (
           <div className="lg:hidden">

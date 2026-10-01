@@ -42,12 +42,12 @@ describe('reaction picker material', () => {
     expect(CSS).not.toMatch(/\[data-reaction-option\]\[data-active="true"\] \{\s*background-color/);
   });
 
-  it('prints each reaction total in the corner, zero included', () => {
+  it('prints each reaction total under its emoji, zero included', () => {
     expect(PICKER).toContain('const tally = counts ? (counts[reaction.key] ?? 0) : null;');
     expect(PICKER).toContain("data-zero={tally === 0 ? 'true' : undefined}");
-    // Absolutely positioned: nine four-character totals must not be able to
-    // widen the tray past a phone screen.
-    expect(PICKER).toMatch(/absolute right-0\.5 top-0 text-\[9px\]/);
+    // A fixed-width, truncated line: ten four-character totals must not be
+    // able to widen the tray past a phone screen.
+    expect(PICKER).toMatch(/w-full truncate text-center text-\[10px\]/);
   });
 
   it('flips the totals to ink on the paper theme', () => {

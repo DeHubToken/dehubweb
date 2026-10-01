@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
-import { RefreshCw, Play, Eye, Loader2 } from 'lucide-react';
+import { RefreshCw, Play, Eye, ThumbsUp, Loader2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { ShortsFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -522,7 +522,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   if (isLoading || isAutoRetrying) {
     return (
-      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
+      <div className="p-1 sm:p-2">
         <ShortsFeedSkeleton />
       </div>
     );
@@ -530,7 +530,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   return (
     <>
-      <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0">
+      <div data-feed-root className="p-1 sm:p-2">
         {/* Filters */}
         <AnimatePresence mode="wait">
           {showFilters && (
@@ -604,9 +604,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                   {/* Bottom Info */}
-                  {short.imageUrls?.length ? <span className="absolute top-2 right-2 rounded-full bg-black/60 px-2 py-1 text-xs text-white">♫{short.imageUrls.length > 1 ? ` · ${short.imageUrls.length}` : ''}</span> : null}
-                  <div className="absolute bottom-2 left-2 right-2 flex items-end justify-between">
-                    <div className="flex items-center gap-2">
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <div className="flex min-w-0 items-end gap-2">
                       {/* Creator Avatar */}
                       <div className="w-7 h-7 rounded-md bg-zinc-700 flex-shrink-0 overflow-hidden">
                         {short.avatar ? (
@@ -624,22 +623,26 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                           {short.username?.[0]?.toUpperCase()}
                         </span>
                       </div>
-                      <div>
-                        <div className="flex items-center gap-1">
-                          <span className="font-semibold text-white text-sm">@{(short as any).handle || short.creatorUsername || short.username}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex min-w-0 items-center gap-1">
+                          <span className="min-w-0 truncate font-semibold text-white text-sm">@{(short as any).handle || short.creatorUsername || short.username}</span>
                           {short.verified && (
-                            <svg className="w-4 h-4 text-white self-end" fill="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 shrink-0 text-white self-end" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                             </svg>
                           )}
                         </div>
-                        <p className="text-white text-xs">{short.likes} {short.likes === '1' ? 'like' : 'likes'}</p>
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-white text-xs">
+                          <span className="inline-flex items-center gap-1" aria-label={`${short.likes} likes`}>
+                            <ThumbsUp className="w-3 h-3 shrink-0" aria-hidden="true" />
+                            <span>{short.likes}</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1">
+                            <Eye className="w-3 h-3 shrink-0" />
+                            <span>{short.views || '0'}</span>
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    {/* View count - bottom right */}
-                    <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-md px-1.5 py-0.5">
-                      <Eye className="w-3 h-3 text-white" />
-                      <span className="text-white text-xs font-medium">{short.views || '0'}</span>
                     </div>
                   </div>
 

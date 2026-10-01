@@ -178,16 +178,16 @@ export function HomeIntroPanel({
       {/* --- plate: silk texture, vignette, dot grid, marks, scrim, grain --- */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-90"
+        className="dehub-intro-plate pointer-events-none absolute inset-0 bg-cover bg-center opacity-90"
         style={{ backgroundImage: 'url(/brand-kit/bg/bg-16.jpg)' }}
       />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: VIGNETTE }} />
+      <div aria-hidden="true" className="dehub-intro-plate pointer-events-none absolute inset-0" style={{ background: VIGNETTE }} />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-70"
+        className="dehub-intro-plate pointer-events-none absolute inset-0 opacity-70"
         style={{ backgroundImage: DOTS, backgroundSize: '26px 26px' }}
       />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ fontFamily: MONO, fontSize: 13, color: 'rgba(255,255,255,.28)' }}>
+      <div aria-hidden="true" className="dehub-intro-plate pointer-events-none absolute inset-0" style={{ fontFamily: MONO, fontSize: 13, color: 'rgba(255,255,255,.28)' }}>
         {MARKS.map(([x, y], i) => (
           <span
             key={`${x}-${y}`}
@@ -237,17 +237,17 @@ export function HomeIntroPanel({
           fade so the art never competes with the entity paragraph. Now at every
           width, because the art is at every width — this is what stops the
           headline fighting the globe in a squeezed column. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: SCRIM }} />
+      <div aria-hidden="true" className="dehub-intro-plate pointer-events-none absolute inset-0" style={{ background: SCRIM }} />
       {/* All breakpoints, not just desktop: the body copy sits over the
           brightest part of the silk plate and needs the falloff to stay legible. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2"
+        className="dehub-intro-plate pointer-events-none absolute inset-x-0 bottom-0 h-1/2"
         style={{ background: 'linear-gradient(180deg, transparent, rgba(0,0,0,.82) 58%, #000 100%)' }}
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.16] mix-blend-overlay"
+        className="dehub-intro-plate pointer-events-none absolute inset-0 opacity-[0.16] mix-blend-overlay"
         /* -web.webp, not the kit's grain.png: that one is a 240x240 32-bit PNG
            of pure noise — the worst case for any codec — at 43 KB, for a
            texture drawn at 0.16 opacity under mix-blend-overlay. A 120 tile in
@@ -257,14 +257,14 @@ export function HomeIntroPanel({
         style={{ backgroundImage: 'url(/brand-kit/brand/grain-web.webp)', backgroundSize: '120px 120px' }}
       />
       {/* Card inset frame — ~14px, faint 1px white border. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-[10px] rounded-[14px] border border-white/[0.10] sm:inset-[14px]" />
+      <div aria-hidden="true" className="dehub-intro-plate pointer-events-none absolute inset-[10px] rounded-[14px] border border-white/[0.10] sm:inset-[14px]" />
 
       {/* --- HUD chrome ---------------------------------------------------- */}
       <div className="relative z-10 px-5 py-5 sm:px-8 sm:py-7">
-        <div className="mb-5 flex items-start justify-between gap-3">
+        <div className="dehub-intro-top mb-5 flex items-start justify-between gap-3">
           {/* White DEHUB pill, ALWAYS top-left (blog cards crop object-bottom). */}
           <span
-            className="inline-flex items-center rounded-[14px] bg-[#f4f4f2] px-4 py-2"
+            className="dehub-intro-brand inline-flex items-center rounded-[14px] bg-[#f4f4f2] px-4 py-2"
             style={{ boxShadow: '0 0 34px rgba(255,255,255,.38), 0 0 90px rgba(255,255,255,.14)' }}
           >
             {/* -web.webp: the kit's wordmark-black.png is 1752x417 for a logo
@@ -297,7 +297,7 @@ export function HomeIntroPanel({
         </h2>
 
         {/* Progress pills — 47x8, white on white/25 (mobile ProgressPill). */}
-        <div className="mb-4 flex gap-1.5">
+        <div className="dehub-intro-pills mb-4 flex gap-1.5">
           {SLIDES.map((s, i) => (
             <button
               key={s.title}
@@ -339,7 +339,7 @@ export function HomeIntroPanel({
               </p>
 
               {/* Sub row: //snake_case + mono extra + ✕. */}
-              <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1 sm:gap-x-8">
+              <div className="dehub-intro-sub mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1 sm:gap-x-8">
                 <span
                   className="font-exo text-base font-semibold uppercase tracking-[0.01em] sm:text-xl"
                   style={clipText(SUB_FILL)}
@@ -353,7 +353,7 @@ export function HomeIntroPanel({
                 <span className="text-sm font-light" style={{ color: 'rgba(255,255,255,.55)' }}>✕</span>
               </div>
 
-              <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/55">{s.description}</p>
+              <p className="dehub-intro-desc mt-3 max-w-lg text-sm leading-relaxed text-white/55">{s.description}</p>
             </div>
           ))}
         </div>
@@ -361,11 +361,12 @@ export function HomeIntroPanel({
         {/* The app's own liquid-glass buttons — monochrome, and consistent with
             every other CTA in the product. The earlier solid white/black pair
             was invented here and matched nothing else. */}
-        <div className="mt-6 flex flex-wrap items-center gap-2">
+        <div className="dehub-intro-ctas mt-6 flex flex-wrap items-center gap-2">
           <Button
             type="button"
             variant="glass"
             size="lg"
+            className="dehub-intro-join"
             onClick={onJoin}
             onPointerDown={onWarmLogin}
             onMouseEnter={onWarmLogin}
@@ -395,7 +396,7 @@ export function HomeIntroPanel({
             to protect. Removing it also drops the panel's last piece of local
             state. If the truncation ever needs undoing, unclamp — don't
             reintroduce a toggle. */}
-        <div className="mt-6 border-t border-white/10 pt-4">
+        <div className="dehub-intro-about mt-6 border-t border-white/10 pt-4">
           {/* line-clamp, not a height clamp with a fade: the plate is a silk
               texture, so a to-black fade rendered as a grey bar across it.
               Clamping to whole lines cuts cleanly and needs no scrim. */}
@@ -456,7 +457,7 @@ export function HomeIntroPanel({
           </nav>
         </div>
 
-        <nav aria-label="Learn more about DeHub" className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[13px]">
+        <nav aria-label="Learn more about DeHub" className="dehub-intro-links mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[13px]">
           {LINKS.map((l) => (
             <Link key={l.to} to={l.to} className="text-zinc-400 underline underline-offset-2 hover:text-white">
               {l.label}
@@ -465,7 +466,7 @@ export function HomeIntroPanel({
         </nav>
 
         {/* Footer HUD: //dehub.io box bottom-left, QR bottom-right. */}
-        <div className="mt-5 flex items-end justify-between gap-4">
+        <div className="dehub-intro-foot mt-5 flex items-end justify-between gap-4">
           <span
             className="rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em]"
             style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}

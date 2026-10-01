@@ -14,7 +14,6 @@ import { useState, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { Play, ChevronRight, ThumbsUp, Eye } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 // Lazy for the same reason as the other call sites — see ShortsFeed.
 const ShortsViewer = lazy(() =>
   import('./ShortsViewer').then(m => ({ default: m.ShortsViewer })),
@@ -64,7 +63,6 @@ interface ShortsReelProps {
 }
 
 export function ShortsReel({ shorts }: ShortsReelProps) {
-  const { t } = useTranslation();
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const posterWidth = tilePosterWidth();
@@ -90,16 +88,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
   return (
     <>
       <div>
-        {/* Header */}
-        <div className="flex items-center justify-between mb-3 px-1">
-          <h3 className="font-bold text-white flex items-center gap-2">
-            <Play className="w-4 h-4 text-white" />
-            {t('feed.scroll')}
-          </h3>
-          <button className="text-zinc-400 text-sm hover:text-white flex items-center gap-1 transition-colors">
-            {t('feed.seeAll')} <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
+
 
         {/* Horizontal scroll */}
         <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
@@ -137,7 +126,6 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                   />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
-                {short.imageUrls?.length ? <span className="absolute top-2 right-2 rounded-full bg-black/60 px-2 py-1 text-xs text-white">♫{short.imageUrls.length > 1 ? ` · ${short.imageUrls.length}` : ''}</span> : null}
                 
                 {/* Stats at bottom - using real views from API */}
                 <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
