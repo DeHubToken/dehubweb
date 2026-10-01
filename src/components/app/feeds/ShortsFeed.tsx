@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
-import { RefreshCw, Play, Eye, Loader2 } from 'lucide-react';
+import { RefreshCw, Play, Eye, ThumbsUp, Loader2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { ShortsFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -634,7 +634,10 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                           )}
                         </div>
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-white text-xs">
-                          <span>{short.likes} {short.likes === '1' ? 'like' : 'likes'}</span>
+                          <span className="inline-flex items-center gap-1" aria-label={`${short.likes} likes`}>
+                            <ThumbsUp className="w-3 h-3 shrink-0" aria-hidden="true" />
+                            <span>{short.likes}</span>
+                          </span>
                           <span className="inline-flex items-center gap-1">
                             <Eye className="w-3 h-3 shrink-0" />
                             <span>{short.views || '0'}</span>
