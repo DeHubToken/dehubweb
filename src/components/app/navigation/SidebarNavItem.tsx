@@ -1,3 +1,4 @@
+import { openNotificationsDrawer } from '../NotificationsDrawer';
 import { useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -107,6 +108,12 @@ export function SidebarNavItem({
   const handleClick = (e: React.MouseEvent) => {
     onClick?.(e);
     if (e.defaultPrevented) return;
+    if (item.path === '/app/notifications' || item.path === '/notifications') {
+      e.preventDefault();
+      openNotificationsDrawer();
+      onNavigate?.();
+      return;
+    }
     
     if (isHome) {
       e.preventDefault();
