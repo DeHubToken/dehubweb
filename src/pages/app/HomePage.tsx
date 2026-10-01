@@ -8,7 +8,7 @@
  * @module pages/app/HomePage
  */
 
-import { useState, useEffect, useRef, useCallback, useDeferredValue, memo, lazy, Suspense } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, useDeferredValue, memo, lazy, Suspense } from 'react';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -20,6 +20,7 @@ import { Settings2, ArrowLeft } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { setFeedTabsOpen } from '@/lib/feed-tabs-reveal';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
@@ -111,6 +112,9 @@ export default function HomePage() {
   const { isCollapsed } = useSidebarCollapse();
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
+  // System theme on phones: the tab pill rests hidden and the island capsule
+  // (FeedIslandCapsule) opens it.
+  const islandTopBar = theme === 'system';
   const navVisible = useScrollDirection();
   // While any overlay (share/options drawers, dialogs — bottom sheets on
   // mobile — side sheets, story viewer, …) is open, the tab bar must get out
@@ -472,7 +476,9 @@ export default function HomePage() {
 
   // Clip the feed at the visible nav pill's top edge under the glass themes.
   // Two variants match: this page's pill and the collapsed GlobalFeedNav's.
-  useFeedSwallowClip(feedContainerRef, '[data-feed-nav]');
+  // Not on system phones: the pill only drops in on demand under the capsule,
+  // and posts run under it to the top of the screen.
+  useFeedSwallowClip(feedContainerRef, '[data-feed-nav]', [], { off: islandTopBar && isMobile });
 
   // --------------------------------------------------------------------------
   // PULL-TO-REFRESH HOOK
@@ -494,7 +500,13 @@ export default function HomePage() {
    */
   const [enableHomeTransition, setEnableHomeTransition] = useState(false);
 
+  // Island mode keeps the tab pill out of sight; the capsule's dropdown picks
+  // the feed. The pill only comes down to hold an open filter panel.
+  const islandFiltersOpen = ({ home: showHomeFilters, live: showLiveFilters, shorts: showShortsFilters, images: showImagesFilters, videos: showVideosFilters, music: showMusicFilters } as Record<string, boolean>)[activeTab] ?? false;
+
   const handleTabClick = useCallback((tabValue: string) => {
+    // Island mode: picking a feed closes the capsule's dropdown.
+    if (document.documentElement.dataset.theme === 'system') setTimeout(() => setFeedTabsOpen(false), 350);
     // If a post overlay is currently covering the feed, tapping any tab should
     // dismiss the overlay and take the user back to the feed on that tab —
     // otherwise the tab change happens underneath the overlay and looks broken.
@@ -577,11 +589,14 @@ export default function HomePage() {
     window.addEventListener('home-refresh', handleHomeRefresh);
     window.addEventListener('category-filter-changed', handleCategoryFilter);
     window.addEventListener('switch-home-tab', handleSwitchTab);
+    const handleIslandSelect = (e: Event) => { const tab = (e as CustomEvent).detail; if (tab) handleTabClick(tab); };
+    window.addEventListener('home-feed-select', handleIslandSelect);
     window.addEventListener('home-tab-reclick', handleTabReclick);
     return () => {
       window.removeEventListener('home-refresh', handleHomeRefresh);
       window.removeEventListener('category-filter-changed', handleCategoryFilter);
       window.removeEventListener('switch-home-tab', handleSwitchTab);
+      window.removeEventListener('home-feed-select', handleIslandSelect);
       window.removeEventListener('home-tab-reclick', handleTabReclick);
     };
   }, [triggerRefresh, handleTabClick]);
@@ -661,18 +676,19 @@ export default function HomePage() {
   const handleNavBack = isPostOverlayActive ? handleOverlayBack : handleBackToCollage;
 
   /**
-   * Reset scroll position when tab changes (but not when returning from post page).
+   * Reset scroll only after the displayed feed changes, before the browser paints.
+   * activeTab can lead deferredTab; resetting on it flashes the outgoing feed at the top.
    */
   const prevTabRef = useRef<string | null>(null);
   const hasInitializedRef = useRef(false);
   
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Skip scroll-to-top if:
     // 1. First mount AND we're returning via back navigation (browser back button)
     // 2. Tab hasn't actually changed
     if (!hasInitializedRef.current) {
       hasInitializedRef.current = true;
-      prevTabRef.current = activeTab;
+      prevTabRef.current = deferredTab;
       
       // On back navigation, don't scroll to top - let scroll restoration handle it
       if (isBackNavigation) {
@@ -680,11 +696,11 @@ export default function HomePage() {
       }
     }
     
-    if (prevTabRef.current === activeTab) {
+    if (prevTabRef.current === deferredTab) {
       return;
     }
     
-    prevTabRef.current = activeTab;
+    prevTabRef.current = deferredTab;
 
     // Skip scroll-to-top during drag — scrolling mid-drag causes layout reflow
     // which is the biggest source of lag on the home page.
@@ -699,7 +715,7 @@ export default function HomePage() {
     if (mainContent) {
       mainContent.scrollTop = 0;
     }
-  }, [activeTab, isBackNavigation]);
+  }, [deferredTab, isBackNavigation]);
 
   // --------------------------------------------------------------------------
   // SWIPE GESTURE HANDLERS
@@ -750,8 +766,8 @@ export default function HomePage() {
     }
     
     // Handle horizontal swipe for tab switching
-    if (!touchStartX.current || !touchEndX.current || 
-        !touchStartY.current || !touchEndY.current) {
+    if (touchStartX.current === null || touchEndX.current === null || 
+        touchStartY.current === null || touchEndY.current === null) {
       touchStartX.current = null;
       touchEndX.current = null;
       touchStartY.current = null;
@@ -918,7 +934,14 @@ export default function HomePage() {
         data-feed-nav-outer
         data-home-tabs
         className={cn("sticky top-11 lg:top-0 bg-black px-2 sm:px-3 pt-1 pb-3 sm:pt-1 sm:pb-3 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", anyOverlayOpen ? "z-[40]" : "z-[110]", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
-        style={{ transform: (isMobile && (anyOverlayOpen || (!navVisible && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')))) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)', willChange: 'transform' }}
+        style={{
+          transform: (isMobile && (anyOverlayOpen || ((islandTopBar ? !islandFiltersOpen : !navVisible) && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')))) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)',
+          willChange: 'transform',
+          // Island mode: the pill drops in under the capsule rather than at the very top.
+          // Fixed, not sticky, so it takes no room in the page: posts run to
+          // the very top of the screen with no band above the first one.
+          ...(islandTopBar && isMobile && !isPostOverlayActive ? { position: 'fixed', left: 0, right: 0, top: 'calc(env(safe-area-inset-top, 0px) + 3rem)' } : null),
+        }}
       >
         <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl">
 

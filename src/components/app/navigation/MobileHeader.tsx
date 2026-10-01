@@ -1,15 +1,13 @@
+import { openNotificationsDrawer } from '../NotificationsDrawer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
-import { useHistoryNavType } from '@/hooks/use-history-nav-type';
-import { Menu, Bell, ArrowLeft } from 'lucide-react';
+import { Menu, Bell } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
-import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
-import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useCallback, useLayoutEffect, useRef, memo } from 'react';
@@ -60,10 +58,6 @@ interface MobileHeaderProps {
 export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  // NOT useNavigationType() — see use-history-nav-type: react-router reports
-  // POP for everything under App.tsx's `<Routes location>`, which would make the
-  // back button always jump to /app instead of stepping back through history.
-  const navType = useHistoryNavType();
   const { isAuthenticated, user, openLoginModal } = useAuth();
   
   // Drop below every overlay scrim (dialog/sheet z-50, drawer z-100) while a
@@ -73,17 +67,13 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   // Same hide-on-scroll-down / show-on-scroll-up behaviour as the mobile nav bars.
   const navVisible = useScrollDirection();
   const { theme } = useAppTheme();
-  // System theme: avatar and mark share the left slot, and while the feed
-  // scrolls down the bar gives way to the island capsule (FeedIslandCapsule).
+  // System theme: no bar at all. The island capsule (FeedIslandCapsule) is the
+  // home feed's only top chrome; the header stays mounted, hidden, for its menu
+  // drawer.
   const islandBar = theme === 'system';
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
-
-  // The whole DHB position — held plus staked, across both chains. Was
-  // hardcoded to 0, so the coin in the header read 0 for everyone. Free to
-  // read: SelfBadgeSync owns the fetch, this only observes its answer.
-  const coinBalance = useSelfBadge().balance ?? 0;
 
   // Use ref for pathname so handleLogoClick is stable across renders
   const pathnameRef = useRef(location.pathname);
@@ -114,8 +104,8 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   const showBar = isHomeFeedRoute(location.pathname) || isOverlayFromFeed;
   // Pages read this to drop the bar's 2.75rem clearance (index.css).
   useLayoutEffect(() => {
-    document.documentElement.toggleAttribute('data-no-top-bar', !showBar);
-  }, [showBar]);
+    document.documentElement.toggleAttribute('data-no-top-bar', !showBar || islandBar);
+  }, [showBar, islandBar]);
 
   const handleMenuClick = useCallback(() => {
     if (!isAuthenticated) {
@@ -130,17 +120,9 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     if (!isAuthenticated) warmLoginSheet();
   }, [isAuthenticated]);
 
-  const handleBackClick = useCallback(() => {
-    if (navType === 'POP') {
-      navigate('/app');
-    } else {
-      navigate(-1);
-    }
-  }, [navType, navigate]);
-
   return (
     <>
-    <header data-mobile-header data-clear-top-bar className={`${showBar ? '' : 'hidden '}lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
+    <header data-mobile-header data-clear-top-bar className={`${showBar && !islandBar ? '' : 'hidden '}lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
       {/* Profile — left slot.
           Direct post-page URL access: back button replaces the menu/settings toggle.
           When opened as an overlay from the feed, the feed's tab bar already hosts a back button,
@@ -202,28 +184,21 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
             <Menu className="w-[31px] h-[31px] text-white" />
           </button>
         )}
-        {islandBar && (
-          <div className="ml-3 flex items-center">
-            <HeaderLogo onClick={handleLogoClick} />
-          </div>
-        )}
       </div>
 
       {/* dehub mark — centred on the bar itself, not between the side slots, so
           it stays put whether or not the notification bell is rendered (it is
           signed-in only) and whichever left control is showing. */}
-      {!islandBar && (
-        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
-          <HeaderLogo onClick={handleLogoClick} />
-        </div>
-      )}
+      <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
+        <HeaderLogo onClick={handleLogoClick} />
+      </div>
 
       {/* Notifications — right slot, only visible when logged in.
           When the post overlay is opened from the feed, keep the DEHUB header exactly as it was. */}
       <div className="flex items-center">
         {isAuthenticated && (
           <button
-            onClick={() => navigate('/app/notifications')}
+            onClick={() => openNotificationsDrawer()}
             className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
             aria-label="Notifications"
           >
@@ -239,27 +214,25 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     </header>
     {islandBar && showBar && (
       <FeedIslandCapsule
-        visible={!navVisible && !isOpen && !anyOverlayOpen && !isPostPage}
+        visible={navVisible && !isOpen && !anyOverlayOpen && !isPostPage}
         avatar={isAuthenticated && user ? (
-          <Avatar className="w-[28px] h-[28px]">
+          <Avatar className="w-[28px] h-[28px] rounded-lg">
             {user.avatarImageUrl && user.address && (
               <AvatarImage
                 src={buildAvatarUrl(user.address, user.avatarImageUrl)}
                 alt=""
-                className="object-cover"
+                className="object-cover rounded-lg"
               />
             )}
-            <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+            <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium rounded-lg">
               {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
         ) : null}
         onAvatarClick={() => (isAuthenticated ? onOpenChange(true) : openLoginModal())}
         logoSrc={dehubMark}
-        onLogoClick={handleLogoClick}
-        showBell={isAuthenticated}
-        unread={totalNotifUnread}
-        onBellClick={() => navigate('/app/notifications')}
+        unread={isAuthenticated ? totalNotifUnread : 0}
+        onBellClick={() => (isAuthenticated ? openNotificationsDrawer() : openLoginModal())}
       />
     )}
     </>

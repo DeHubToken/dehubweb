@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Anchor, Eye, Baby, Pin, PinOff, Flag, Sparkles, Handshake, SpellCheck, Palette, Gauge, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Search, ThumbsUp, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Anchor, Eye, Baby, Pin, PinOff, Flag, Sparkles, Handshake, SpellCheck, Palette, Gauge, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
@@ -69,14 +69,11 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { getNFTCommentPage, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment, type ApiCommentResponse } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
-  HAS_NEGATIVE_TRAY,
   isPositiveReaction,
-  negativeThumbLabel,
-  reactionForTap,
+  reactionForThumbTap,
   reactionMeta,
   reconcileReactionCounts,
-  resolveLeadReaction,
-  resolveNegativeLeadReaction,
+  resolveThumbReaction,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -271,7 +268,6 @@ interface CommentItemProps {
   onLike: (id: string) => void;
   /** Own comments only: the like button opens the likers list instead. */
   onShowLikers: (id: string) => void;
-  onDislike: (id: string) => void;
   /** Cast a specific one of the ten — what the hold-open trays route to. */
   onReact: (id: string, reaction: PostReaction) => void;
   onReply: (id: string) => void;
@@ -399,7 +395,7 @@ const PostCreatorContext = createContext<{
  * module constant, and the per-row figures (tip total, tipped, highlighted) as
  * primitives. A new inline function here would quietly undo all of it.
  */
-const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShowLikers, onDislike, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
+const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShowLikers, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   // Bumps each time this viewer tips this comment, replaying the gem swirl.
   const [tipBurst, setTipBurst] = useState(0);
@@ -436,31 +432,19 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
   const { refs: commentAssetRefs, displayText: commentDisplayText } =
     useAssetRefsInText(commentLinkFreeText);
 
-  // One tray per thumb, the same pair a feed card's action bar has. The like
-  // side is off on your own comment: its button is the door to the likers
-  // list, and every reaction the tray could cast there would be refused.
+  // One tray on the thumbs-up, holding every reaction with 👎 last — the same
+  // tray a feed card's action bar has. Off on your own comment: its button is
+  // the door to the likers list, and every reaction the tray could cast there
+  // would be refused.
   const likeTray = useReactionTray(!isOwnComment);
-  const dislikeTray = useReactionTray(HAS_NEGATIVE_TRAY);
-  // Deps are the tray's OWN `open` plus the sibling's `close`, which the hook
-  // keeps stable — not the tray objects, which are new on every render. With
-  // the objects in there both effects ran on every render, so a moment where
-  // both were open (a hold landing inside the other's 220ms hover grace) had
-  // each of them closing the other and the tray the reader just asked for shut
-  // with the one they were leaving. Keyed on `open`, only the newly opened one
-  // runs, and it wins.
-  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray.close]);
-  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray.close]);
 
-  /** The glyph the thumbs-up wears — yours, else the thread's most-used. */
+  /** The glyph the thumbs-up wears — yours (a 👎 included), else the thread's most-used. */
+  const myHeldReaction = isOwnComment
+    ? null
+    : comment.myReaction ?? (comment.isDisliked ? 'dislike' : null);
   const leadReaction = isOwnComment
     ? null
-    : resolveLeadReaction(comment.reactionCounts, comment.myReaction);
-  const myPositiveReaction =
-    comment.myReaction && isPositiveReaction(comment.myReaction) ? comment.myReaction : null;
-  const myNegativeReaction =
-    comment.myReaction && !isPositiveReaction(comment.myReaction) ? comment.myReaction : null;
-  /** …and the one the thumbs-DOWN would wear, though 👎 is its own glyph. */
-  const negativeLeadReaction = resolveNegativeLeadReaction(comment.myReaction);
+    : resolveThumbReaction(comment.reactionCounts, myHeldReaction);
 
   return (
     <motion.div
@@ -683,8 +667,8 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
             {/* You can't like your own comment — for the author this same
                 button opens the likers list instead, count included even at 0
                 so the door is visible. On anyone else's, hold it (or hover on
-                desktop) for the positive faces, and a tap casts whichever
-                one the thumb is wearing. No tray on your own comment, because
+                desktop) for every reaction, 👎 last, and a tap casts whichever
+                one the thumb is wearing — or takes back a 👎 it is wearing. No tray on your own comment, because
                 every reaction it could cast would be refused. */}
             <span className="relative flex items-center gap-1" {...likeTray.areaProps}>
               <ReactionPicker
@@ -705,7 +689,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
                 className={cn(
                   COMMENT_ACTION_HIT,
                   "flex items-center gap-1 transition-colors select-none touch-none",
-                  !isOwnComment && comment.isLiked ? "text-white" : "text-white/70 hover:text-white"
+                  !isOwnComment && (comment.isLiked || comment.isDisliked) ? "text-white" : "text-white/70 hover:text-white"
                 )}
                 aria-label={isOwnComment
                   ? i18n.t('comments.seeWhoLiked')
@@ -715,51 +699,12 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
               >
                 {leadReaction ? (
                   <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
-                    <ReactionEmoji reaction={leadReaction} animate={leadReaction === (isOwnComment ? null : myPositiveReaction)} />
+                    <ReactionEmoji reaction={leadReaction} animate={leadReaction === myHeldReaction} />
                   </span>
                 ) : (
                   <ThumbsUp className={cn("w-4 h-4", !isOwnComment && comment.isLiked && "fill-current")} />
                 )}
                 {(comment.likes > 0 || isOwnComment) && <span className="text-xs">{comment.likes}</span>}
-              </button>
-            </span>
-            {/* Downvote a comment — the count shows once someone has actually
-                disliked. The server swaps polarity with like, one vote per
-                viewer. No tray on this one: 👎 is the only reaction that moves
-                THIS count, so a hold would open a menu of one. */}
-            <span className="relative flex items-center gap-1" {...dislikeTray.areaProps}>
-              <ReactionPicker
-                open={dislikeTray.open}
-                polarity="negative"
-                current={comment.myReaction ?? null}
-                counts={comment.reactionCounts}
-                onSelect={(reaction) => { dislikeTray.close(); onReact(comment.id, reaction); }}
-                onClose={dislikeTray.close}
-                align="left"
-              />
-              <button
-                onClick={() => {
-                  if (dislikeTray.consumePress()) return;
-                  onDislike(comment.id);
-                }}
-                {...dislikeTray.buttonProps}
-                className={cn(
-                  COMMENT_ACTION_HIT,
-                  "flex items-center gap-1 transition-colors select-none touch-none",
-                  comment.isDisliked ? "text-white" : "text-white/70 hover:text-white"
-                )}
-                aria-label={negativeThumbLabel(myNegativeReaction)}
-                aria-haspopup={HAS_NEGATIVE_TRAY ? 'menu' : undefined}
-                aria-expanded={HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
-              >
-                {negativeLeadReaction ? (
-                  <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
-                    <ReactionEmoji reaction={negativeLeadReaction} animate />
-                  </span>
-                ) : (
-                  <ThumbsDown className={cn("w-4 h-4", comment.isDisliked && "fill-current")} />
-                )}
-                {comment.dislikes > 0 && <span className="text-xs">{comment.dislikes}</span>}
               </button>
             </span>
             {/* Every comment is replyable, replies included — threads nest without limit. */}
@@ -2017,6 +1962,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
    * Casts whatever the thumb is WEARING, not always a 👍 — a comment leading
    * with 🔥 draws a 🔥 thumb, and tapping it has to mean that, or the button
    * lies about what it does. Same promise `reactionForTap` keeps on a post.
+   * There is no thumbs-down beside it, so while the viewer holds a 👎 the
+   * thumb wears that, and a tap takes it back.
    */
   const handleLike = useStableCallback((commentId: string) => {
     const comment = allComments.find(c => c.id === commentId);
@@ -2027,17 +1974,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       setLikersCommentId(comment.id);
       return;
     }
-    return handleReact(
-      commentId,
-      reactionForTap(true, comment.myReaction, comment.reactionCounts),
-    );
-  });
-
-  /** …and on the thumbs-down: a plain 👎, cast or toggled off. */
-  const handleDislike = useStableCallback((commentId: string) => {
-    const comment = allComments.find(c => c.id === commentId);
-    if (!comment) return;
-    return handleReact(commentId, reactionForTap(false, comment.myReaction));
+    const held = comment.myReaction ?? (comment.isDisliked ? 'dislike' : null);
+    return handleReact(commentId, reactionForThumbTap(held, comment.reactionCounts));
   });
 
   const handleReply = useStableCallback((commentId: string) => {
@@ -2353,7 +2291,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           onLike={handleLike}
           onReact={handleReact}
           onShowLikers={setLikersCommentId}
-          onDislike={handleDislike}
           onReply={handleReply}
           onShare={NOOP_SHARE}
           onEdit={handleEditComment}
@@ -2380,8 +2317,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             onLike={handleLike}
             onReact={handleReact}
             onShowLikers={setLikersCommentId}
-            onDislike={handleDislike}
-            onReply={handleReply}
+              onReply={handleReply}
             onShare={NOOP_SHARE}
             onEdit={handleEditComment}
             onDelete={setPendingDeleteId}

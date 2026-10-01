@@ -1839,9 +1839,8 @@ html[data-theme="system"] [data-feed-nav-outer]::before {
    (paper-texture image), so any flat painted cover reads as a mismatched
    band — instead mirror the docs header's own frost (bg-card/90 +
    backdrop-blur-sm): over the texture at rest the blur merely softens the
-   grain, and a transient flash behind it dissolves into the frost, same
-   trick as the system mobile header below. Anchored to the sticky wrapper,
-   so it can never lag the compositor. Extends 18px behind the opaque pill
+   grain, and a transient flash behind it dissolves into the frost.
+   Anchored to the sticky wrapper, so it can never lag the compositor. Extends 18px behind the opaque pill
    to also frost the corner notches on themes that keep the pill rounded.
    Canvas themes excluded — there the docs bg is the live shader canvas
    (glass pill + canvas camouflage handle the flash) and this frost would
@@ -1873,36 +1872,6 @@ html[data-theme="system"] [data-feed-nav] {
    sheets loaded after this file — one surface, two materials. The touch block
    goes through the tokens plus an #app-root-scoped rule those sheets cannot
    outrank, so every canvas theme flattens the same way. System keeps its blur. */
-
-/* Mobile top bar — no fill at all, same as the canvas themes: the logo and
-   icons sit straight on the page. It used to frost to a dark band once the
-   page scrolled, which read as a box laid over the logo every time the bar
-   slid back in on a scroll up. */
-html[data-theme="system"] [data-mobile-header] {
-  background: transparent !important;
-  backdrop-filter: none !important;
-  box-shadow: none !important;
-  transition: background-color 0.25s ease;
-}
-/* Lag-free guard above the pill, the header half of the strip on
-   [data-feed-nav-outer]::before. On a page with a sticky pill the feed is cut
-   at the pill's top by the rAF swallow-clip, which trails a quick flick on iOS
-   Safari: as the header and pill slide back in, a sliver of post showed above
-   the pill for a few frames. A black backing on the header moves on the
-   compositor with it and covers that zone. Black on system's black page, and
-   only while the active page has a pill (the clip hides everything there
-   anyway), so at rest nothing changes and no box appears over the logo. */
-html[data-theme="system"]:has([data-cached-page]:not([style]) [data-feed-nav-outer]) [data-mobile-header]::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: #000;
-  z-index: -1;
-  pointer-events: none;
-}
-html[data-theme="system"] [data-mobile-header] :is(img, svg) {
-  filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.9)) drop-shadow(0 2px 5px rgb(0 0 0 / 0.75));
-}
 
 /* Mobile top bar — invisible at every scroll position: the wordmark and
    icons float directly over the canvas, matching the desktop logo zone. The
@@ -3425,12 +3394,16 @@ html[data-theme="light"] [data-reaction-tray] [data-reaction-option]:focus-visib
 }
 /* Per-reaction totals: white-on-white once the tray turns to paper. The global
    `.text-white → ink` remap only catches the bare utility, not `text-white/70`,
-   so the corner numbers need their own flip. */
+   so the numbers under each emoji need their own flip. */
 html[data-theme="light"] [data-reaction-tray] [data-reaction-count] {
   color: rgba(0, 0, 0, 0.62) !important;
 }
 html[data-theme="light"] [data-reaction-tray] [data-reaction-count][data-zero="true"] {
   color: rgba(0, 0, 0, 0.28) !important;
+}
+/* The hairline between the faces and 👎: white-on-white on paper too. */
+html[data-theme="light"] [data-reaction-tray] [data-reaction-divider] {
+  background-color: rgba(0, 0, 0, 0.14) !important;
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -5158,15 +5131,16 @@ html[data-theme="light"] [data-creator-page] .text-white {
 /* ==========================================================================
    System theme, phones: cinematic feed.
    The main feeds (home, videos, images) drop the bento on phones. Photos and
-   videos run the full screen width, the author rides on a small dark glass
-   chip over the top of the media with the AI and options buttons as glass
-   circles opposite, and a short caption sits on a dark fade at the bottom of
-   the media. The action row stays under the media. Text posts and ads just
-   lose the box. Tall media uses the post page's height cap, so a vertical clip
-   fills the width here exactly as it does on its own page.
+   videos run the full screen width. On videos the avatar and name sit straight
+   on the top of the media with the AI, tools and options buttons as glass
+   squares opposite; photos keep a plain author row above, Instagram style.
+   The caption, meta row and actions sit under the media. Text posts and ads
+   just lose the box. Tall media uses the post page's height cap, so a
+   vertical clip fills the width here exactly as it does on its own page.
    Feeds opt in with [data-cinematic] on the feed item; cards mark their
    header row, info block and caption ([data-card-head], [data-card-info],
-   [data-card-caption]). Desktop, tablets and every other theme are untouched.
+   [data-card-caption]); a photo's header is [data-card-head="plain"].
+   Desktop, tablets and every other theme are untouched.
    ========================================================================== */
 @media (max-width: 639px) {
   html[data-theme="system"] [data-feed-root] [data-cinematic] {
@@ -5179,8 +5153,111 @@ html[data-theme="light"] [data-creator-page] .text-white {
     backdrop-filter: none !important;
     box-shadow: none !important;
   }
+  /* Air between posts now there is no box to separate them. */
+  /* Posts are separated the way X does it: a little air above and below
+     each one and a thin full-width hairline between them. */
+  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic] {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 1.375rem !important;
+    padding-bottom: 1.375rem !important;
+    border-bottom: 1px solid rgb(255 255 255 / 0.12) !important;
+  }
+  /* No line above the follow carousel (neither its own nor the post
+     above's); one full-width line under it. */
+  html[data-theme="system"] [data-feed-root] :has(+ * [data-who-to-follow]) [data-feed-item][data-cinematic]:not(:has(~ [data-feed-item])) {
+    border-bottom: 0 !important;
+  }
+  html[data-theme="system"] [data-feed-root] [data-who-to-follow] {
+    border-top: 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.12);
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first]:has([data-video-card] [data-card-head]:not([data-card-head="plain"])) {
+    padding-top: 0 !important;
+  }
+  /* No band above the feed: the first post starts at the top of the screen
+     under the floating capsule. A video runs its picture up behind it and
+     drops its author row below it; anything else starts below it. */
+  html[data-theme="system"] [data-feed-root] [data-cinematic-first]:not(:has([data-video-card] [data-card-head]:not([data-card-head="plain"]))) {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 3.25rem) !important;
+  }
+  /* On the first video the author chip and buttons sit at the bottom of the
+     picture, just above the caption, so the top stays clear under the capsule.
+     The card becomes a one-cell grid so the chip can sit on the media without
+     knowing its height. */
+  html[data-theme="system"] [data-cinematic-first] [data-video-card]:has(> [data-card-head]:not([data-card-head="plain"])) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] > :is([data-card-head], [data-media-full]) {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    align-self: end;
+    margin: 0 0.75rem 2.75rem;
+  }
+  /* Its buttons are bare icons with a soft shadow, sitting level with the
+     bottom of the name in the bottom-right corner. */
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
+    align-items: flex-end;
+    margin: 0 0.375rem 0.75rem 0.75rem;
+    transition: margin-bottom 0.2s ease;
+  }
+  /* Options (⋮) leave the media for the top right of the caption, inset like
+     the left edge; the caption text stops just short of it. */
+  html[data-theme="system"] [data-cinematic] [data-card-head] [data-head-options] {
+    display: none !important;
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-info]:has(> [data-caption-options]) {
+    position: relative;
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-info] > [data-caption-options] {
+    position: absolute;
+    top: 0.375rem;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-info] > [data-caption-options] + .relative {
+    padding-right: 1.75rem;
+  }
+  /* While the player bar is up, the row lifts above it. */
+  html[data-theme="system"] [data-cinematic-first] [data-video-card]:has([data-media-full] [data-video-controls].bottom-0) > [data-card-head]:not([data-card-head="plain"]) {
+    margin-bottom: 2.75rem;
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) > :last-child {
+    gap: 0.125rem;
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) > :last-child > button {
+    width: 2rem;
+    height: 2rem;
+    background: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) > :last-child > button svg {
+    width: 1.375rem;
+    height: 1.375rem;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.7)) drop-shadow(0 0 6px rgb(0 0 0 / 0.4));
+  }
   html[data-theme="system"] [data-feed-root] [data-cinematic]:is([data-cinematic="post"], [data-cinematic="ad"]) {
-    padding: 0.75rem 0.875rem 0.25rem !important;
+    padding-left: 0.875rem !important;
+    padding-right: 0.875rem !important;
   }
   html[data-theme="system"] [data-feed-root] [data-cinematic] > * {
     position: relative;
@@ -5190,6 +5267,13 @@ html[data-theme="light"] [data-creator-page] .text-white {
   html[data-theme="system"] [data-cinematic] [data-media-full],
   html[data-theme="system"] [data-cinematic] [data-media-full] img {
     border-radius: 0 !important;
+  }
+  /* Layers that fill the media (live and ended-stream screens, the audio
+     visualiser, gates, the player) lose their own rounded frame too, or they
+     draw a curved outline inside the full-width picture. */
+  html[data-theme="system"] [data-cinematic] [data-media-full] :is(.absolute.inset-0, .w-full.h-full, video, canvas) {
+    border-radius: 0 !important;
+    border-width: 0 !important;
   }
   html[data-theme="system"] [data-cinematic] [data-video-card] > [data-media-full] {
     width: 100% !important;
@@ -5203,8 +5287,13 @@ html[data-theme="light"] [data-creator-page] .text-white {
     object-fit: cover;
   }
 
-  /* Author chip and buttons over the media. */
-  html[data-theme="system"] [data-cinematic] [data-card-head] {
+  /* Photos keep a plain author row above the picture, Instagram style. */
+  html[data-theme="system"] [data-cinematic] [data-card-head="plain"] {
+    padding: 0 0.875rem 0.625rem;
+  }
+
+  /* Videos, audio and live: author chip and buttons over the media. */
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) {
     position: absolute;
     top: 0.75rem;
     left: 0.75rem;
@@ -5213,116 +5302,310 @@ html[data-theme="light"] [data-creator-page] .text-white {
     align-items: center;
     pointer-events: none;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > * {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > * {
     pointer-events: auto;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :first-child {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child {
     flex: 0 1 auto;
     gap: 0.5rem;
-    padding: 0.25rem 0.875rem 0.25rem 0.25rem;
     margin-right: 0.5rem;
-    border-radius: 9999px;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :first-child .w-9 {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .w-9 {
     width: 1.875rem;
     height: 1.875rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :first-child :is(.w-9, .w-9 img, .w-9 > span) {
-    border-radius: 9999px;
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.w-9, .w-9 img, .w-9 > span) {
+    border-radius: 0.5rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :first-child .text-base {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
     font-size: 0.875rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :first-child :is(.text-sm, .text-\[13px\]) {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.text-sm, .text-\[13px\]) {
     font-size: 0.75rem;
     line-height: 1rem;
     color: rgb(228 228 231 / 0.85);
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :last-child {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child {
     gap: 0.5rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :last-child > button {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button {
     width: 2.25rem;
     height: 2.25rem;
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 9999px;
+    border-radius: 0.625rem;
     color: #fff;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head] > :last-child > button svg {
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button svg {
     width: 1.25rem;
     height: 1.25rem;
   }
-  html[data-theme="system"] [data-cinematic] :is([data-card-head] > :first-child, [data-card-head] > :last-child > button) {
-    background: rgb(10 10 12 / 0.42);
-    backdrop-filter: blur(16px) saturate(150%);
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16);
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child {
+    padding: 0;
+    color: #fff;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.75), 0 0 8px rgb(0 0 0 / 0.45);
+  }
+  /* The New pill beside the name reads on a bright frame too. */
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) [data-new-member-chip] {
+    background: rgb(0 0 0 / 0.38);
+    color: #fff;
+    border-color: rgb(255 255 255 / 0.22);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 6px rgb(0 0 0 / 0.35);
+    text-shadow: none;
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
+    color: #fff !important;
+  }
+  /* Shadow only the avatar; transparent badges must not gain a square box. */
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.w-9, .w-9 img) {
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.45);
+  }
+  /* The buttons on the media and the tools menu are the same lit glass as the
+     nav pills (glass-surfaces.css): the theme colour over a thin base with a
+     top sheen and a bright rim, so they read light rather than as dark slabs. */
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button,
+  html[data-theme]:not([data-theme="light"]):not([data-theme="minimal"]) [data-video-tools] {
+    background: linear-gradient(rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.02)), linear-gradient(var(--nav-glass), var(--nav-glass)), rgb(var(--glass-tint, 9 9 11) / 0.12) !important;
+    backdrop-filter: var(--nav-glass-blur) !important;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22), inset 0 1.5px 0 rgb(255 255 255 / 0.32) !important;
+    border-color: transparent !important;
+  }
+  /* Glass buttons and chips on the phone Music and Live pages. */
+  html[data-theme="system"] [data-cinematic-glass] {
+    background: linear-gradient(rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.02)), linear-gradient(var(--nav-glass), var(--nav-glass)), rgb(var(--glass-tint, 9 9 11) / 0.12);
+    backdrop-filter: var(--nav-glass-blur);
+    -webkit-backdrop-filter: var(--nav-glass-blur);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22), inset 0 1.5px 0 rgb(255 255 255 / 0.32);
+  }
+  /* The menu carries text, so its base is thicker than the buttons'. */
+  html[data-theme]:not([data-theme="light"]):not([data-theme="minimal"]) [data-video-tools] {
+    background: linear-gradient(rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.02)), linear-gradient(var(--nav-glass), var(--nav-glass)), rgb(var(--glass-tint, 9 9 11) / 0.55) !important;
   }
   /* Badges and player buttons that sat in the media's top corners move below the chip. */
-  html[data-theme="system"] [data-cinematic] [data-media-full] > .absolute.top-2 {
+  html[data-theme="system"] [data-cinematic] [data-video-card] [data-media-full] > .absolute.top-2 {
     top: 3.75rem;
   }
+  /* The player's icons share the top row with the author chip. */
+  html[data-theme="system"] [data-cinematic] [data-video-card] [data-media-full] > [data-video-topbar] {
+    top: 0.75rem;
+    right: 0.5rem;
+  }
+  /* On the first post the badges sit just under the capsule, and the tools
+     menu opens upward from its button at the bottom. */
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2 {
+    top: calc(env(safe-area-inset-top, 0px) + 3.75rem);
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2[data-video-tools] {
+    top: auto;
+    bottom: 5.5rem;
+  }
 
-  /* Caption on a dark fade at the foot of the media. The info block starts
-     exactly where the media ends, so the caption hangs off its top edge. */
+  /* Caption, then the meta row, under the media. */
   html[data-theme="system"] [data-cinematic] [data-card-info] {
-    position: relative;
     padding-top: 0.625rem;
     padding-left: 0.875rem;
     padding-right: 0.875rem;
   }
   html[data-theme="system"] [data-cinematic] [data-card-info]:has([data-card-caption]) .\!mt-3 {
-    margin-top: 0 !important;
-  }
-  html[data-theme="system"] [data-cinematic] [data-card-caption] {
-    position: absolute !important;
-    left: 0;
-    right: 0;
-    bottom: 100%;
-    z-index: 15;
-    margin: 0 !important;
-    padding: 3rem 0.875rem 0.75rem;
-    background: linear-gradient(0deg, rgb(0 0 0 / 0.78), rgb(0 0 0 / 0));
-    pointer-events: none;
-  }
-  html[data-theme="system"] [data-cinematic] [data-card-caption] > * {
-    pointer-events: auto;
-  }
-  html[data-theme="system"] [data-cinematic] [data-card-caption] :is(h3, p) {
-    color: #fff !important;
-    font-weight: 500;
-    text-shadow: 0 1px 2px rgb(0 0 0 / 0.5);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-bottom: 0;
-  }
-  html[data-theme="system"] [data-cinematic] [data-card-caption] p {
-    color: rgb(228 228 231) !important;
-    -webkit-line-clamp: 1;
-  }
-  html[data-theme="system"] [data-cinematic] [data-card-caption] button {
-    display: none;
-  }
-  /* The player's own transport bar takes the foot of the video while it shows. */
-  html[data-theme="system"] [data-cinematic] [data-video-card]:has([data-media-full] [data-video-controls]) [data-card-caption] {
-    opacity: 0;
+    margin-top: 0.375rem !important;
   }
   html[data-theme="system"] [data-cinematic] [data-card-info] > .mb-3 {
     margin-bottom: 0.5rem;
   }
 }
 
+/* Phone feed player: bare icons with a soft shadow instead of glass buttons
+   (VideoCard bareControls). Speed, loop, PiP and subtitles sit top right with
+   mute in the corner; the scrubber row keeps one counter and fullscreen. */
+[data-video-topbar="bare"] :is(button, [role="button"]) {
+  width: 2rem !important;
+  min-width: 2rem !important;
+  height: 2rem !important;
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: #fff !important;
+}
+[data-video-topbar="bare"] :is(button, [role="button"]) svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+[data-video-topbar="bare"] :is(button, [role="button"]),
+[data-video-bare] {
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.7)) drop-shadow(0 0 6px rgb(0 0 0 / 0.35));
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+}
+/* The scrubber is a thin white line along the media's bottom edge, with no
+   bar behind it. The input stays 14px tall so it is easy to grab; only its
+   bottom 3px is painted. */
+[data-video-scrubber="line"] [data-scrubber-line] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 14px !important;
+  margin: 0;
+  border-radius: 0 !important;
+  background-size: 100% 3px !important;
+  background-position: bottom !important;
+}
+[data-video-scrubber="line"] [data-scrubber-line]::-webkit-slider-thumb {
+  width: 10px !important;
+  height: 14px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+[data-video-scrubber="line"] [data-scrubber-line]::-moz-range-thumb {
+  width: 10px !important;
+  height: 14px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+[data-video-scrubber="line"] > div > :is(span, button[data-video-bare]):not(:first-child) {
+  margin-left: auto;
+}
+[data-video-scrubber="line"] > div > span + button {
+  margin-left: 0 !important;
+}
+[data-video-scrubber="line"] button[data-video-bare]:first-child svg {
+  width: 1rem;
+  height: 1rem;
+}
+/* Loop reads as off until it is on. */
+[data-video-topbar="bare"] button:not(.bg-white\/20) .lucide-repeat {
+  opacity: 0.55;
+}
+
 /* The island capsule that stands in for the top bar while the system feed
    scrolls down on phones (FeedIslandCapsule). Same dark glass as the
    cinematic author chips, so it reads over bright photos. */
-html[data-theme="system"] [data-feed-island] > div {
+/* One shared surface keeps the expanding drawer joined to the capsule. */
+html[data-theme="system"] [data-feed-island] {
   background: rgb(10 10 12 / 0.45);
   backdrop-filter: blur(20px) saturate(160%);
   box-shadow:
     inset 0 0 0 1px rgb(255 255 255 / 0.16),
     0 8px 24px rgb(0 0 0 / 0.35);
 }
+
+/* /creator accent. The priced Create button and the active medium tile take
+   the active theme's own colour, so the page reads as part of that theme. */
+[data-creator-page] {
+  --cr-accent: linear-gradient(135deg, #ffffff 0%, #e4e4e7 30%, #a1a1aa 60%, #f4f4f5 100%);
+  --cr-accent-ink: #0b0b0c;
+  --cr-glow: rgba(255, 255, 255, 0.32);
+}
+html[data-theme="light"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #ffffff 0%, #e4e4e7 30%, #a1a1aa 60%, #f4f4f5 100%); }
+html[data-theme="hazy"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #e879f9 0%, #a855f7 45%, #6366f1 100%); --cr-accent-ink: #ffffff; --cr-glow: rgba(168, 85, 247, 0.7); }
+html[data-theme="cosmic"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #93c5fd 0%, #6366f1 50%, #a855f7 100%); --cr-accent-ink: #ffffff; --cr-glow: rgba(99, 102, 241, 0.65); }
+html[data-theme="swarms"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #fde68a 0%, #f59e0b 55%, #d97706 100%); --cr-accent-ink: #1c1003; --cr-glow: rgba(245, 158, 11, 0.6); }
+html[data-theme="lavalamp"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #ffb347 0%, #ff7a1a 45%, #ff3d5a 100%); --cr-accent-ink: #2a0604; --cr-glow: rgba(255, 100, 40, 0.7); }
+html[data-theme="winter"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #f0f9ff 0%, #bae6fd 45%, #7dd3fc 100%); --cr-accent-ink: #082f49; --cr-glow: rgba(125, 211, 252, 0.6); }
+html[data-theme="osaka"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #ff4fa3 0%, #ff7a59 55%, #ffb45c 100%); --cr-accent-ink: #2a0715; --cr-glow: rgba(255, 90, 140, 0.65); }
+html[data-theme="jungle"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #d4f58a 0%, #8fd14f 55%, #4fae3a 100%); --cr-accent-ink: #102004; --cr-glow: rgba(160, 220, 90, 0.6); }
+html[data-theme="war"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #5ff5dc 0%, #1fb8a2 100%); --cr-accent-ink: #03120f; --cr-glow: rgba(55, 226, 201, 0.6); }
+html[data-theme="island"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #a7f3d0 0%, #2dd4bf 50%, #0ea5e9 100%); --cr-accent-ink: #042f2e; --cr-glow: rgba(45, 212, 191, 0.6); }
+html[data-theme="hacker"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #86efac 0%, #22c55e 100%); --cr-accent-ink: #03170a; --cr-glow: rgba(34, 197, 94, 0.6); }
+html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #fca5a5 0%, #dc2626 55%, #7f1d1d 100%); --cr-accent-ink: #ffffff; --cr-glow: rgba(220, 38, 38, 0.6); }
+
+/* The Create button's coin catches the light every few seconds. */
+@keyframes creator-coin-shine { 0%, 55% { background-position: 130% 0; } 100% { background-position: -130% 0; } }
+[data-creator-coin]::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%);
+  background-size: 300% 100%; animation: creator-coin-shine 3.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) { [data-creator-coin]::after { animation: none; } }
+
+/* Welcome panel on phones (HomeIntro). A compact glass card in the same lit
+   glass as the nav pills: the globe centred on top, then the story bars, the
+   headline, both buttons side by side and the about copy, press and links
+   underneath. The poster plate, the //snake_case row and the QR footer are the
+   desktop banner's and stay there. Everything is still in the DOM, so the
+   crawlable copy is unchanged. On System the island capsule floats over the
+   top of the feed, so the card starts below it. */
+@media (max-width: 1023px) {
+  html[data-theme="system"] .dehub-intro {
+    margin-top: calc(env(safe-area-inset-top, 0px) + 3.5rem);
+  }
+}
+@media (max-width: 639px) {
+  html[data-theme] .dehub-intro.dehub-intro {
+    background: linear-gradient(rgb(255 255 255 / 0.1), rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), rgb(var(--glass-tint, 9 9 11) / 0.55);
+    backdrop-filter: var(--tint-glass-blur);
+    -webkit-backdrop-filter: var(--tint-glass-blur);
+    border-color: transparent;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16), inset 0 1.5px 0 rgb(255 255 255 / 0.22), 0 10px 30px rgb(0 0 0 / 0.28);
+  }
+  html[data-theme="minimal"] .dehub-intro.dehub-intro {
+    background: #000;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22);
+  }
+  .dehub-intro .dehub-intro-plate,
+  .dehub-intro .dehub-intro-sub,
+  .dehub-intro .dehub-intro-foot { display: none; }
+  .dehub-intro .dehub-intro-hero {
+    top: 54px; left: 50%; right: auto; width: 120px; height: 118px; opacity: 1;
+    transform: translateX(-50%);
+  }
+  .dehub-intro .dehub-intro-top { margin-bottom: 0; align-items: center; }
+  .dehub-intro .dehub-intro-brand { padding: 6px 12px; border-radius: 10px; }
+  .dehub-intro .dehub-intro-brand img { height: 15px; }
+  .dehub-intro .dehub-intro-pills { margin-top: 140px; margin-bottom: 14px; justify-content: center; }
+  .dehub-intro .dehub-intro-pills > button { width: 36px; height: 4px; }
+  .dehub-intro .dehub-intro-stage { padding-right: 0; text-align: center; }
+  .dehub-intro .dehub-intro-head { font-size: 26px; }
+  .dehub-intro .dehub-intro-desc { margin-left: auto; margin-right: auto; margin-top: 8px; font-size: 13.5px; }
+  .dehub-intro .dehub-intro-ctas { flex-wrap: nowrap; margin-top: 16px; }
+  .dehub-intro .dehub-intro-ctas > * { flex: 1 1 0; min-width: 0; height: 42px; border-radius: 10px; }
+  .dehub-intro .dehub-intro-ctas > .dehub-intro-join:not(#_):not(#_) {
+    background: #fff !important; color: #0b0b0c !important; border-color: transparent !important; box-shadow: none !important;
+  }
+  .dehub-intro .dehub-intro-about { margin-top: 14px; padding-top: 12px; text-align: center; }
+  .dehub-intro .dehub-intro-about .dehub-intro-clamp { -webkit-line-clamp: 2; font-size: 12.5px; }
+  .dehub-intro .dehub-press { margin-top: 10px; text-align: center; }
+  .dehub-intro .dehub-intro-links { justify-content: center; margin-top: 10px; gap: 4px 12px; font-size: 12px; }
+
+  /* Join takes the theme's own colour. The two :not(#_) lift these over the
+     theme sheets that repaint glass buttons. */
+  html:is([data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="island"]) .dehub-intro .dehub-intro-ctas > .dehub-intro-join:not(#_):not(#_) {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--tint-accent) 70%, #fff), var(--tint-accent)) !important;
+    color: #fff !important;
+  }
+  html:is([data-theme="cosmic"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="hacker"], [data-theme="horror"]) .dehub-intro .dehub-intro-ctas > .dehub-intro-join:not(#_):not(#_) {
+    background: var(--tint-accent) !important;
+    color: #0b0b0c !important;
+  }
+
+  /* Light: white glass and dark ink, over the light theme's white-on-dark
+     panel rules. */
+  html[data-theme="light"] .dehub-intro.dehub-intro {
+    background: rgb(255 255 255 / 0.8);
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.09), 0 10px 30px rgb(0 0 0 / 0.08);
+  }
+  html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-brand { background: #111114 !important; box-shadow: none !important; }
+  html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-brand img { filter: invert(1); }
+  html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-head { background-image: linear-gradient(180deg, #111114 30%, #6b6b72 100%) !important; filter: none !important; }
+  html[data-theme="light"] .dehub-intro.dehub-intro :is(.text-white, .dehub-intro-desc, [class~="text-zinc-300"], [class~="text-zinc-400"], [class~="text-zinc-500"], [class~="text-white/50"], button, button svg) {
+    color: rgb(0 0 0 / 0.6) !important;
+  }
+  html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-about { border-color: rgb(0 0 0 / 0.08); }
+  html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-pills > button { background: rgb(0 0 0 / 0.1); }
+  html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-pills > button > span { background: #111114; }
+  html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-ctas > *:not(#_):not(#_) {
+    background: rgb(0 0 0 / 0.05) !important; color: #111114 !important; border-color: rgb(0 0 0 / 0.1) !important;
+  }
+  html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-ctas > .dehub-intro-join:not(#_):not(#_) {
+    background: #111114 !important; color: #fff !important; border-color: transparent !important;
+  }
+}
+
+/* Centre the smaller video avatar against its two-line identity. */
+html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:not([data-card-head="plain"]) > :first-child { align-items: center; }

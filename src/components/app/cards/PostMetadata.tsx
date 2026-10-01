@@ -31,9 +31,11 @@ interface PostMetadataProps {
     /** ISO code the post was detected as, known once a translation came back. */
     sourceLang?: string | null;
   };
+  /** The viewer has played this video before: a small pill at the row's right end. */
+  watched?: boolean;
 }
 
-export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, isAudio, translateControl }: PostMetadataProps) {
+export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, isAudio, translateControl, watched }: PostMetadataProps) {
   const { t } = useTranslation();
 
   // Format timestamp - if it's an ISO string, convert to relative time
@@ -99,7 +101,7 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
     );
   };
 
-  if (!hasMetadata && !translateControl && !isAd) return null;
+  if (!hasMetadata && !translateControl && !isAd && !watched) return null;
 
   return (
     <div className={cn("flex items-center gap-2 text-zinc-500 text-xs flex-wrap", className)}>
@@ -119,6 +121,12 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
       )}
       {hasMetadata && translateControl && <span>•</span>}
       {renderTranslateControl()}
+      {watched && (
+        <span className="ml-auto flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] font-medium text-zinc-300">
+          <Eye className="w-3 h-3" />
+          {t('feed.watched', 'Watched')}
+        </span>
+      )}
     </div>
   );
 }

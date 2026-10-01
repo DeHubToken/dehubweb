@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Bell, ChevronDown, Menu } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { Bell, Check, Menu, SlidersHorizontal } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
-import { revealNav } from '@/hooks/use-scroll-direction';
+import { setFeedTabsOpen, toggleFeedTabs, useFeedTabsOpen } from '@/lib/feed-tabs-reveal';
+
+import { setFeedIslandPortal } from '@/lib/feed-island-portal';
 
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
 
@@ -21,27 +24,24 @@ interface FeedIslandCapsuleProps {
   avatar: React.ReactNode;
   onAvatarClick: () => void;
   logoSrc: string;
-  onLogoClick: (e: React.MouseEvent) => void;
-  showBell: boolean;
   unread: number;
   onBellClick: () => void;
 }
 
 /**
- * System theme, phones: while the feed scrolls down the top bar and tab pill
- * slide away and this small glass capsule takes their place, so the media runs
- * to the top of the screen and you still see where you are. Avatar and mark on
- * the left, the tab you are on in the middle (tap it for the full bar back),
- * the bell on the right. Sideways swipes between tabs are the feed's own and
- * pass under it untouched.
+ * System theme, phones: the home feed's only top chrome. There is no logo bar
+ * or resting tab pill; this small glass capsule floats over the feed so media
+ * runs to the top of the screen. The DeHub mark sits dead centre and opens a
+ * dropdown of the feeds (same glass); your avatar (a burger when signed out),
+ * which opens the menu, is to its left and the bell to its right. Like the old bar it slides away as
+ * you scroll down and comes back as you scroll up. Sideways swipes between tabs are the feed's own and pass under
+ * it untouched.
  */
 export function FeedIslandCapsule({
   visible,
   avatar,
   onAvatarClick,
   logoSrc,
-  onLogoClick,
-  showBell,
   unread,
   onBellClick,
 }: FeedIslandCapsuleProps) {
@@ -51,48 +51,111 @@ export function FeedIslandCapsule({
     window.addEventListener('home-tab-changed', sync);
     return () => window.removeEventListener('home-tab-changed', sync);
   }, []);
+  const tabsOpen = useFeedTabsOpen();
+  const reduceMotion = useReducedMotion();
+  useEffect(() => {
+    if (!tabsOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setFeedTabsOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [tabsOpen]);
+  const rootRef = useRef<HTMLDivElement>(null);
+  // A tap anywhere outside the capsule closes its dropdown.
+  useEffect(() => {
+    if (!tabsOpen) return;
+    const close = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setFeedTabsOpen(false);
+    };
+    document.addEventListener('pointerdown', close, true);
+    return () => document.removeEventListener('pointerdown', close, true);
+  }, [tabsOpen]);
   const tab = FEED_TABS.find((t) => t.value === tabValue) ?? FEED_TABS[0];
-  const TabIcon = tab.icon;
 
   return (
     <div
+      ref={rootRef}
       data-feed-island
       aria-hidden={!visible}
-      className={`lg:hidden fixed left-1/2 z-[60] transition-[opacity,transform] duration-300 ease-out ${visible ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
+      className={`lg:hidden fixed left-1/2 z-[120] w-max overflow-hidden rounded-[15px] transition-[opacity,transform] duration-300 ease-out ${visible ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
       style={{ top: 'calc(env(safe-area-inset-top, 0px) + 0.375rem)' }}
     >
-      <div className="flex h-10 items-center gap-2 rounded-full pl-1.5 pr-2.5 text-white">
-        <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label="Toggle menu" className="flex items-center justify-center">
-          {avatar ?? <Menu className="w-6 h-6" />}
-        </button>
-        <button onClick={onLogoClick} tabIndex={visible ? 0 : -1} aria-label="dehub home" className="flex items-center">
-          <img src={logoSrc} alt="dehub" className="h-5 w-auto" width={24} height={20} />
-        </button>
-        <span className="h-5 w-px bg-white/20" />
+      {/* Centre crest: you (or a burger when signed out) left, the bell
+          right, the mark dead centre. The mark opens the feed list under it.
+          The pill hugs its contents and the two side columns share one
+          width, so the mark sits in the true middle. */}
+      <div className="relative z-10 grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-[15px] px-[10px] text-white">
+        <div className="flex min-w-[28px] items-center justify-start">
+          <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label="Toggle menu" className="flex shrink-0 items-center justify-center">
+            {avatar ?? <Menu className="w-6 h-6" />}
+          </button>
+        </div>
         <button
-          onClick={revealNav}
+          onClick={toggleFeedTabs}
           tabIndex={visible ? 0 : -1}
-          aria-label={`Show feed tabs, now on ${tab.label}`}
-          className="flex items-center gap-1.5 text-[13px] font-semibold"
+          aria-expanded={tabsOpen}
+          aria-label={`Feeds, now on ${tab.label}`}
+          className="flex shrink-0 items-center justify-center px-5"
         >
-          <TabIcon className="w-4 h-4" />
-          {tab.label}
-          <ChevronDown className="w-3.5 h-3.5 text-zinc-300" />
+          <img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} />
         </button>
-        {showBell && (
-          <>
-            <span className="h-5 w-px bg-white/20" />
-            <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label="Notifications" className="relative flex items-center justify-center">
-              <Bell className="w-5 h-5" />
-              {unread > 0 && (
-                <span className="absolute -top-1.5 -right-2 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-[5px] flex items-center justify-center leading-none">
-                  {unread > 99 ? '99+' : unread}
-                </span>
-              )}
-            </button>
-          </>
-        )}
+        <div className="flex min-w-[28px] items-center justify-end">
+          <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label="Notifications" className="relative flex h-7 w-7 shrink-0 items-center justify-center">
+            <Bell className="w-[21px] h-[21px]" strokeWidth={1.9} />
+            {unread > 0 && (
+              <span className="absolute -top-0.5 -right-1.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-[6px] flex items-center justify-center leading-none">
+                {unread > 99 ? '99+' : unread}
+              </span>
+            )}
+          </button>
+        </div>
       </div>
+      <div ref={setFeedIslandPortal} className="w-0 min-w-full overflow-hidden" />
+      <AnimatePresence>
+      {tabsOpen && visible && (
+        <motion.div
+          key="feed-drawer"
+          data-feed-island-menu
+          role="menu"
+          initial={{ height: 0, opacity: 0, y: -8 }}
+          animate={{ height: 'auto', opacity: 1, y: 0 }}
+          exit={{ height: 0, opacity: 0, y: -8, pointerEvents: 'none' }}
+          transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
+          className="w-0 min-w-full overflow-hidden text-white"
+        >
+        <div className="p-1.5">
+          {FEED_TABS.map(({ value, label, icon: Icon }) => (
+            <button
+              key={value}
+              role="menuitem"
+              onClick={() => {
+                setFeedTabsOpen(false);
+                window.dispatchEvent(new CustomEvent('home-feed-select', { detail: value }));
+              }}
+              className={`flex h-10 w-full items-center gap-2.5 rounded-lg px-2.5 text-[14px] font-semibold ${value === tabValue ? 'bg-white/15' : 'hover:bg-white/10'}`}
+            >
+              <Icon className="w-4 h-4" />
+              <span className="flex-1 text-left">{label}</span>
+              {value === tabValue && <Check className="w-4 h-4 text-white/80" />}
+            </button>
+          ))}
+          <div className="mx-2 my-1 h-px bg-white/15" />
+          <button
+            role="menuitem"
+            onClick={() => {
+              setFeedTabsOpen(false);
+              window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue }));
+            }}
+            className="flex h-10 w-full items-center gap-2.5 rounded-lg px-2.5 text-[14px] font-semibold text-zinc-200 hover:bg-white/10"
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            Filters
+          </button>
+        </div>
+        </motion.div>
+      )}
+      </AnimatePresence>
     </div>
   );
 }

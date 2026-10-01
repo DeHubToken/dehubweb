@@ -4,13 +4,10 @@ import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { useReactionTray, type ReactionTray } from '@/hooks/use-reaction-tray';
 
 /**
- * Two trays on one row — the thumbs-up's faces and whatever the thumbs-down
- * has to offer — and the rule that only one of them is ever up. The negative
- * side holds a single 👎 today and so opens nothing, but the exclusion rule is
- * what breaks the moment it has a second, so it is tested on its own here.
- *
- * Every surface that carries the pair (ActionBar, ShortsViewer, a comment row,
- * an author-thread entry) writes that rule the same way:
+ * Two trays on one row, and the rule that only one of them is ever up. Posts
+ * and comments now carry a single tray (👎 sits at the end of the thumbs-up's),
+ * but the hook still has to support a pair, and a surface that carries one
+ * writes the exclusion rule like this:
  *
  *   useEffect(() => { if (a.open) b.close(); }, [a.open, b.close]);
  *   useEffect(() => { if (b.open) a.close(); }, [b.open, a.close]);
