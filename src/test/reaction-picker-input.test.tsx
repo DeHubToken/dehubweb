@@ -66,3 +66,59 @@ describe('reaction drawer on a phone', () => {
     expect(onClose).toHaveBeenCalled();
   });
 });
+
+describe('one tray for every reaction', () => {
+  it('puts 👎 last, after a divider, on the desktop tray', () => {
+    render(<ReactionPicker open current={null} onSelect={() => {}} onClose={() => {}} />);
+    const options = screen.getAllByRole('menuitemradio');
+    expect(options).toHaveLength(10);
+    expect(options[0]).toHaveAccessibleName('Like');
+    expect(options[9]).toHaveAccessibleName('Dislike');
+    const divider = document.querySelector('[data-reaction-divider]');
+    expect(divider).not.toBeNull();
+    expect(divider!.nextElementSibling).toBe(options[9]);
+  });
+
+  it('casts a dislike from the tray', () => {
+    const onSelect = vi.fn();
+    render(<ReactionPicker open current={null} onSelect={onSelect} onClose={() => {}} />);
+    fireEvent.pointerUp(screen.getByRole('menuitemradio', { name: 'Dislike' }));
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('dislike');
+  });
+
+  it('prints each total under its emoji, zero dimmed', () => {
+    render(
+      <ReactionPicker open current="dislike" counts={{ like: 19, love: 1, dislike: 2 }} onSelect={() => {}} onClose={() => {}} />,
+    );
+    const dislike = screen.getByRole('menuitemradio', { name: 'Dislike — 2 reactions' });
+    expect(dislike).toHaveAttribute('aria-checked', 'true');
+    const count = dislike.querySelector('[data-reaction-count]')!;
+    expect(count.textContent).toBe('2');
+    // Under the emoji, in the flow of the button — not pinned to a corner.
+    expect(count.className).not.toMatch(/\babsolute\b/);
+    const hot = screen.getByRole('menuitemradio', { name: 'Hot — 0 reactions' });
+    expect(hot.querySelector('[data-reaction-count]')).toHaveAttribute('data-zero', 'true');
+  });
+
+  it('can still show one side alone', () => {
+    render(<ReactionPicker open polarity="positive" current={null} onSelect={() => {}} onClose={() => {}} />);
+    expect(screen.queryByRole('menuitemradio', { name: 'Dislike' })).toBeNull();
+    expect(document.querySelector('[data-reaction-divider]')).toBeNull();
+  });
+
+  it('includes 👎 and its total in the phone drawer', () => {
+    window.innerWidth = 390;
+    const onSelect = vi.fn();
+    render(
+      <ReactionPicker open current={null} counts={{ like: 4, dislike: 3 }} onSelect={onSelect} onClose={() => {}} />,
+    );
+    expect(document.querySelector('[data-reaction-drawer]')).not.toBeNull();
+    const options = screen.getAllByRole('menuitemradio');
+    expect(options).toHaveLength(10);
+    const dislike = screen.getByRole('menuitemradio', { name: 'Dislike' });
+    expect(options[9]).toBe(dislike);
+    expect(dislike.querySelector('[data-reaction-count]')!.textContent).toBe('3');
+    fireEvent.click(dislike);
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('dislike');
+  });
+});

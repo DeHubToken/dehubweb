@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { ThumbsUp, ThumbsDown, Share2, Trash2 } from 'lucide-react';
+import { ThumbsUp, Share2, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -38,14 +38,11 @@ import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { reactToComment, deleteComment } from '@/lib/api/dehub';
 import {
   applyReactionDelta,
-  HAS_NEGATIVE_TRAY,
   isPositiveReaction,
-  negativeThumbLabel,
-  reactionForTap,
+  reactionForThumbTap,
   reactionMeta,
   reconcileReactionCounts,
-  resolveLeadReaction,
-  resolveNegativeLeadReaction,
+  resolveThumbReaction,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -103,26 +100,15 @@ function ThreadEntry({
   const bodyText = state.text || '';
   const { links, displayText } = useDehubLinks(bodyText);
 
-  // One tray per thumb, as on a feed card. Off entirely on your own entry —
-  // the like button there is a readout, not a vote.
+  // One tray on the thumbs-up, as on a feed card, holding every reaction
+  // with 👎 last. Off entirely on your own entry — the like button there is a
+  // readout, not a vote.
   const likeTray = useReactionTray(!isOwn);
-  const dislikeTray = useReactionTray(!isOwn && HAS_NEGATIVE_TRAY);
-  // Deps are the tray's OWN `open` plus the sibling's `close`, which the hook
-  // keeps stable — not the tray objects, which are new on every render. With
-  // the objects in there both effects ran on every render, so a moment where
-  // both were open (a hold landing inside the other's 220ms hover grace) had
-  // each of them closing the other and the tray the reader just asked for shut
-  // with the one they were leaving. Keyed on `open`, only the newly opened one
-  // runs, and it wins.
-  useEffect(() => { if (likeTray.open) dislikeTray.close(); }, [likeTray.open, dislikeTray.close]);
-  useEffect(() => { if (dislikeTray.open) likeTray.close(); }, [dislikeTray.open, likeTray.close]);
 
-  const leadReaction = isOwn ? null : resolveLeadReaction(state.reactionCounts, state.myReaction);
-  const myPositiveReaction =
-    state.myReaction && isPositiveReaction(state.myReaction) ? state.myReaction : null;
-  const myNegativeReaction =
-    state.myReaction && !isPositiveReaction(state.myReaction) ? state.myReaction : null;
-  const negativeLeadReaction = resolveNegativeLeadReaction(state.myReaction);
+  const heldReaction = isOwn
+    ? null
+    : state.myReaction ?? (state.isDisliked ? 'dislike' : null);
+  const leadReaction = isOwn ? null : resolveThumbReaction(state.reactionCounts, heldReaction);
 
   if (removed) return null;
 
@@ -184,10 +170,8 @@ function ThreadEntry({
     }
   };
 
-  /** A plain tap casts whatever the thumb is wearing — see reactionForTap. */
-  const handleLike = () =>
-    handleReact(reactionForTap(true, state.myReaction, state.reactionCounts));
-  const handleDislike = () => handleReact(reactionForTap(false, state.myReaction));
+  /** A plain tap casts whatever the thumb is wearing — see reactionForThumbTap. */
+  const handleLike = () => handleReact(reactionForThumbTap(heldReaction, state.reactionCounts));
 
   const handleShare = () => {
     navigator.clipboard
@@ -312,7 +296,7 @@ function ThreadEntry({
               {...likeTray.buttonProps}
               className={cn(
                 'flex items-center gap-1 transition-colors select-none touch-none',
-                !isOwn && state.isLiked ? 'text-white' : 'text-white/70 hover:text-white',
+                heldReaction ? 'text-white' : 'text-white/70 hover:text-white',
               )}
               aria-label={isOwn
                 ? t('postInfo.likes')
@@ -322,47 +306,12 @@ function ThreadEntry({
             >
               {leadReaction ? (
                 <span data-engaged-glyph className="w-3.5 h-3.5 flex items-center justify-center text-[0.8rem] leading-none" aria-hidden="true">
-                  <ReactionEmoji reaction={leadReaction} animate={leadReaction === (isOwn ? null : myPositiveReaction)} />
+                  <ReactionEmoji reaction={leadReaction} animate={leadReaction === heldReaction} />
                 </span>
               ) : (
                 <ThumbsUp className={cn('w-3.5 h-3.5', !isOwn && state.isLiked && 'fill-current')} />
               )}
               {(state.likes > 0 || isOwn) && <span className="text-xs">{state.likes}</span>}
-            </button>
-          </span>
-          <span className="relative flex items-center gap-1" {...dislikeTray.areaProps}>
-            <ReactionPicker
-              open={dislikeTray.open}
-              polarity="negative"
-              current={state.myReaction ?? null}
-              counts={state.reactionCounts}
-              onSelect={(reaction) => { dislikeTray.close(); handleReact(reaction); }}
-              onClose={dislikeTray.close}
-              align="left"
-            />
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (dislikeTray.consumePress()) return;
-                if (!isOwn) handleDislike();
-              }}
-              {...dislikeTray.buttonProps}
-              className={cn(
-                'flex items-center gap-1 transition-colors select-none touch-none',
-                state.isDisliked ? 'text-white' : 'text-white/70 hover:text-white',
-              )}
-              aria-label={negativeThumbLabel(myNegativeReaction)}
-              aria-haspopup={!isOwn && HAS_NEGATIVE_TRAY ? 'menu' : undefined}
-              aria-expanded={!isOwn && HAS_NEGATIVE_TRAY ? dislikeTray.open : undefined}
-            >
-              {negativeLeadReaction ? (
-                <span data-engaged-glyph className="w-3.5 h-3.5 flex items-center justify-center text-[0.8rem] leading-none" aria-hidden="true">
-                  <ReactionEmoji reaction={negativeLeadReaction} animate />
-                </span>
-              ) : (
-                <ThumbsDown className={cn('w-3.5 h-3.5', state.isDisliked && 'fill-current')} />
-              )}
-              {state.dislikes > 0 && <span className="text-xs">{state.dislikes}</span>}
             </button>
           </span>
           <button

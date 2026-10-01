@@ -12,7 +12,7 @@ import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
-import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, Loader2, Ticket } from 'lucide-react';
+import { ThumbsUp, MessageSquare, RefreshCw, Loader2, Ticket } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -201,7 +201,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
   return (
-    <div className="p-1 sm:p-2 pt-0 sm:pt-0">
+    <div className="p-1 sm:p-2">
       <div 
         className={cn(
           "grid gap-0.5 sm:gap-1 overflow-hidden rounded-t-2xl",
@@ -242,9 +242,6 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
                 <div className="flex items-center gap-1 sm:gap-1.5 text-white">
                   <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="font-semibold text-xs sm:text-sm">{post.likes.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
-                  <ThumbsDown className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div className="flex items-center gap-1 sm:gap-1.5 text-white">
                   <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
