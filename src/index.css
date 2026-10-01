@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 66602)
-Total output lines: 5607
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -2645,7 +2642,192 @@ html[data-theme="minimal"] [data-feed-root] [data-feed-item]:last-child::after {
 /* Minimal theme: restore hover states for side panel menu items.
    The zinc-removal rules above strip the default grey hover backgrounds;
    replace them with a subtle white wash so rows/tabs feel interactive. */
-html[data-theme="minimal"] [data-side-panel] [class*="hover:…1602 tokens truncated…r(--ink) !important;
+html[data-theme="minimal"] [data-side-panel] [class*="hover:bg-zinc-"]:hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+html[data-theme="minimal"] [data-side-panel] [class*="hover:text-zinc-"]:hover {
+  color: #ffffff !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+ * Minimal theme: file-system style feed tab nav
+ * ==========================================================================
+ * In minimal mode the top feed nav (GlobalFeedNav + HomePage in-page tabs)
+ * behaves like an OS file tab strip: a single white baseline runs across the
+ * bar, the active tab lifts off that line with a top + side border, and the
+ * active tab's black background masks the baseline so the line breaks cleanly.
+ */
+html[data-theme="minimal"] [data-feed-nav] {
+  position: relative;
+  background-color: #000 !important;
+}
+
+/* One continuous white baseline across the whole nav bar */
+/* Baseline sits under the tabs row only, not under expanded filter menu */
+html[data-theme="minimal"] [data-feed-nav] > div:first-child::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.69);
+  pointer-events: none;
+  z-index: 1;
+}
+
+html[data-theme="minimal"] [data-feed-nav] [data-glass-indicator] {
+  display: none !important;
+}
+
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn] {
+  transition: color 220ms ease;
+  background-color: transparent !important;
+  position: relative;
+  border-radius: 0 !important;
+  color: rgb(161 161 170); /* zinc-400 */
+}
+
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn]:hover {
+  background-color: transparent !important;
+  color: #fff;
+}
+
+/* Active tab: black fill so the shared baseline is hidden behind it */
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true"] {
+  background-color: #000 !important;
+  color: #fff;
+}
+
+/* Folder-tab border on every tab; fades in only when active for smooth toggling */
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.69),
+    inset 1px 0 0 0 rgba(255, 255, 255, 0.69),
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.69);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true"]::before {
+  opacity: 1;
+}
+
+/* ==========================================================================
+ * Minimal theme: file-system style tabs on the right side panels
+ * (TabbedSidePanel + WhatsHappening icon switchers; WhatsHappening also
+ * renders on the Explore page). Same treatment as the feed nav above: one
+ * shared baseline, the active tab lifts off with a top+side outline and
+ * masks the baseline with a fill matching the page background.
+ * ========================================================================== */
+html[data-theme="minimal"] [data-side-panel-tabs] {
+  position: relative;
+}
+html[data-theme="minimal"] [data-side-panel-tabs]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.69);
+  pointer-events: none;
+  z-index: 1;
+}
+/* The gradient active/hover washes are replaced by the file-tab treatment */
+html[data-theme="minimal"] [data-side-panel-tabs] [data-active-tab-indicator],
+html[data-theme="minimal"] [data-side-panel-tabs] .tab-hover-bg {
+  display: none !important;
+}
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn] {
+  position: relative;
+  z-index: 2; /* above the baseline so the active fill can break it */
+  border-radius: 0 !important;
+  background-color: transparent !important;
+}
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn][data-tab-active="true"] {
+  background-color: #000 !important; /* masks the baseline segment */
+}
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.69),
+    inset 1px 0 0 0 rgba(255, 255, 255, 0.69),
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.69);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn][data-tab-active="true"]::before {
+  opacity: 1;
+}
+/* Edge tabs sit flush against the panel wall — drop the outline edge on the
+   outer side so the tab flows off the panel instead of drawing a double wall */
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn]:first-child::before {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.69),
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.69);
+}
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn]:last-child::before {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.69),
+    inset 1px 0 0 0 rgba(255, 255, 255, 0.69);
+}
+
+/* ==========================================================================
+ * Light theme — minimal aesthetic inverted onto a soft paper surface.
+ * Buttons keep their dark grey / white styling unchanged.
+ * ========================================================================== */
+html[data-theme="light"] {
+  --paper: #f9f8f4;
+  --zinc-500: 113 113 122; /* stock zinc-500 (#71717a): 4.9:1 on paper; the dark-surface value in :root would drop to 3.9:1 here */
+  --paper-deep: #ece8df;
+  --ink: #1a1a1a;
+  --ink-muted: #5a5a5a;
+  --hairline: rgba(0, 0, 0, 0.08);
+  --hairline-strong: rgba(0, 0, 0, 0.12);
+  --hover-wash: rgba(0, 0, 0, 0.05);
+  --tab-hover-wash: rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme="light"] body {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
+  background-size: 256px 256px !important;
+  color: var(--ink) !important;
+}
+/* Note: #app-root > div also matches floating direct children (the mobile
+   bottom nav wrapper), which must stay transparent — hence the
+   [data-bottom-nav] exclusion; only the glass pill inside it paints. */
+html[data-theme="light"] #app-root,
+html[data-theme="light"] #app-root > div:not([data-bottom-nav]),
+html[data-theme="light"] #app-root > div > main,
+html[data-theme="light"] #app-root > div > main > div {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
 }
 
 /* <html> and #root are forced #000 by the Web3Auth gap fallbacks (~L576);
