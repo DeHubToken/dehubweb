@@ -28,15 +28,7 @@ interface FeedIslandCapsuleProps {
   onBellClick: () => void;
 }
 
-/**
- * System theme, phones: the home feed's only top chrome. There is no logo bar
- * or resting tab pill; this small glass capsule floats over the feed so media
- * runs to the top of the screen. The DeHub mark sits dead centre and opens a
- * dropdown of the feeds (same glass); your avatar (a burger when signed out),
- * which opens the menu, is to its left and the bell to its right. Like the old bar it slides away as
- * you scroll down and comes back as you scroll up. Sideways swipes between tabs are the feed's own and pass under
- * it untouched.
- */
+/** Fixed phone navigation capsule with separate sheets behind it. */
 export function FeedIslandCapsule({
   visible,
   avatar,
@@ -78,14 +70,14 @@ export function FeedIslandCapsule({
       ref={rootRef}
       data-feed-island
       aria-hidden={!visible}
-      className={`lg:hidden fixed left-1/2 z-[120] w-max overflow-hidden rounded-[15px] transition-[opacity,transform] duration-300 ease-out ${visible ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
+      className={`lg:hidden fixed left-1/2 z-[120] w-max h-11 isolate overflow-visible rounded-[15px] transition-[opacity,transform] duration-300 ease-out ${visible ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
       style={{ top: 'calc(env(safe-area-inset-top, 0px) + 0.375rem)' }}
     >
       {/* Centre crest: you (or a burger when signed out) left, the bell
           right, the mark dead centre. The mark opens the feed list under it.
           The pill hugs its contents and the two side columns share one
           width, so the mark sits in the true middle. */}
-      <div className="relative z-10 grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-[15px] px-[10px] text-white">
+      <div data-feed-island-surface className="relative z-10 grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-[15px] px-[10px] text-white">
         <div className="flex min-w-[28px] items-center justify-start">
           <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label="Toggle menu" className="flex shrink-0 items-center justify-center">
             {avatar ?? <Menu className="w-6 h-6" />}
@@ -111,7 +103,8 @@ export function FeedIslandCapsule({
           </button>
         </div>
       </div>
-      <div ref={setFeedIslandPortal} className="w-0 min-w-full overflow-hidden" />
+      <div className="absolute inset-x-0 top-0 z-0 overflow-hidden pt-11 pointer-events-none">
+      <div ref={setFeedIslandPortal} className="w-full pointer-events-auto" />
       <AnimatePresence>
       {tabsOpen && visible && (
         <motion.div
@@ -122,7 +115,8 @@ export function FeedIslandCapsule({
           animate={{ height: 'auto', opacity: 1, y: 0 }}
           exit={{ height: 0, opacity: 0, y: -8, pointerEvents: 'none' }}
           transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
-          className="w-0 min-w-full overflow-hidden text-white"
+          data-feed-island-surface
+          className="w-full overflow-hidden rounded-b-[15px] text-white pointer-events-auto"
         >
         <div className="p-1.5">
           {FEED_TABS.map(({ value, label, icon: Icon }) => (
@@ -156,6 +150,7 @@ export function FeedIslandCapsule({
         </motion.div>
       )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }
