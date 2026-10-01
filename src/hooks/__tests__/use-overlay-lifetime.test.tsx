@@ -6,13 +6,11 @@ import { useOverlayLifetime } from '../use-overlay-lifetime';
 beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
-it('bounds an interrupted exit without hiding a reopened overlay', () => {
+it('releases the portal immediately on close and preserves a rapid reopen', () => {
   const { result, rerender } = renderHook(({ open }) => useOverlayLifetime(open, false, undefined), {
     initialProps: { open: true },
   });
   rerender({ open: false });
-  expect(result.current.present).toBe(true);
-  act(() => vi.advanceTimersByTime(700));
   expect(result.current.present).toBe(false);
   rerender({ open: true });
   rerender({ open: false });
@@ -28,7 +26,6 @@ it('tracks trigger-controlled opens and closes', () => {
   act(() => result.current.onChange(true));
   expect(result.current.open).toBe(true);
   act(() => result.current.onChange(false));
-  act(() => vi.advanceTimersByTime(700));
   expect(result.current.present).toBe(false);
   expect(onChange.mock.calls).toEqual([[true], [false]]);
 });

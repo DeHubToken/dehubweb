@@ -1,9 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
-/** Stop waiting for animationend after an interrupted drawer/dialog exit. */
+/** Interactive portals exist only while their owner is open. */
 export const OverlayContentPresent = createContext(true);
-export const OVERLAY_EXIT_DEADLINE_MS = 700;
 
 export function useOverlayLifetime(
   controlledOpen: boolean | undefined,
@@ -13,19 +12,8 @@ export function useOverlayLifetime(
   const pageActive = useContext(CachedPageActiveContext);
   const [internalOpen, setInternalOpen] = useState(defaultOpen ?? false);
   const open = pageActive && (controlledOpen ?? internalOpen);
-  const [exiting, setExiting] = useState(open);
   const changeRef = useRef(onOpenChange);
   changeRef.current = onOpenChange;
-
-  useEffect(() => {
-    if (open) {
-      setExiting(true);
-      return;
-    }
-    if (!exiting) return;
-    const timer = window.setTimeout(() => setExiting(false), OVERLAY_EXIT_DEADLINE_MS);
-    return () => window.clearTimeout(timer);
-  }, [open, exiting]);
 
   useEffect(() => {
     if (!pageActive && (controlledOpen ?? internalOpen)) {
@@ -39,6 +27,9 @@ export function useOverlayLifetime(
     changeRef.current?.(next);
   }, []);
 
-  // Cached pages stay mounted, but their portals must relinquish the new page.
-  return { open, onChange, present: pageActive && (open || exiting) };
+  // Radix's exiting content still owns RemoveScroll and DismissableLayer.
+  // Even a bounded exit swallows the next touch gesture on the feed, and an
+  // interrupted animation can keep the invisible backdrop around indefinitely.
+  // Release the portal with the close state, not an animation or timer callback.
+  return { open, onChange, present: open };
 }
