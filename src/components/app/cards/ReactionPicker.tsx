@@ -17,9 +17,15 @@
  * previews what you are about to cast. The card's button plays the same
  * animation once the reaction is yours — see `ReactionEmoji`.
  *
- * Each emoji carries its own total in the corner, so the tray doubles as the
+ * Each emoji carries its own total underneath it, so the tray doubles as the
  * public breakdown of a post — a post with 19 👍 and one ❤️ reads as exactly
  * that, where the row's single count only ever said "20 positive".
+ *
+ * ONE TRAY, EVERY REACTION
+ * Posts and comments have no separate thumbs-down any more. The thumbs-up's
+ * tray holds the positive faces, a thin divider, and then 👎 last — so the
+ * downvote is one hold away instead of a second button on every row, and it
+ * still reads as apart from the faces that count as a like.
  *
  * WHY IT MEASURES ITSELF AND SCROLLS
  * Seven emoji plus the author's info button is ~320px of tray, hung off a
@@ -61,7 +67,7 @@ const EDGE_MARGIN = 8;
 /** Travel, in px, past which a press on the tray is a scroll and not a pick. */
 const DRAG_SLOP = 10;
 
-/** Compact tally for the corner of a 36px tray button (1500 → 1.5K). */
+/** Compact tally for under a 36px tray button's emoji (1500 → 1.5K). */
 function formatTally(count: number): string {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
   if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
@@ -73,9 +79,9 @@ interface ReactionPickerProps {
   /** The reaction the viewer currently holds, highlighted in the tray. */
   current: PostReaction | null;
   /**
-   * How many people hold each reaction, drawn in the corner of its emoji.
-   * Reactions nobody has picked show a dimmed 0 rather than nothing, so the
-   * corners stay a readable row of numbers instead of a ragged few.
+   * How many people hold each reaction, drawn under its emoji. Reactions
+   * nobody has picked show a dimmed 0 rather than nothing, so the totals stay
+   * a readable row of numbers instead of a ragged few.
    * Omit to render the tray bare, as it was before totals existed.
    */
   counts?: ReactionCounts | null;
@@ -93,11 +99,11 @@ interface ReactionPickerProps {
    */
   onShowInfo?: () => void;
   /**
-   * Which thumb this tray hangs off. The positive one wears the seven faces
-   * that count as a like; the negative one wears the downvote — see the note on
-   * POSITIVE_REACTION_LIST for why they are not one tray.
+   * Which reactions the tray offers. `all` (the default) is the thumbs-up's
+   * tray: every positive face, a divider, then the ones that count against.
+   * `positive` and `negative` show one side only.
    */
-  polarity?: 'positive' | 'negative';
+  polarity?: 'all' | 'positive' | 'negative';
 }
 
 export function ReactionPicker({
@@ -108,10 +114,12 @@ export function ReactionPicker({
   onClose,
   align = 'right',
   onShowInfo,
-  polarity = 'positive',
+  polarity = 'all',
 }: ReactionPickerProps) {
   const { t } = useTranslation();
-  const reactions = polarity === 'negative' ? NEGATIVE_REACTION_LIST : POSITIVE_REACTION_LIST;
+  const positives = polarity === 'negative' ? [] : POSITIVE_REACTION_LIST;
+  const negatives = polarity === 'positive' ? [] : NEGATIVE_REACTION_LIST;
+  const reactions = [...positives, ...negatives];
   const isDrawer = useIsMobile();
   const trayRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
@@ -258,7 +266,7 @@ export function ReactionPicker({
                 <span aria-hidden="true" className="mb-3 h-1 w-10 rounded-full bg-white/25" />
                 <span className="text-[15px] font-semibold text-white">{t('reactionInfo.title')}</span>
               </div>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-5 gap-2">
                 {reactions.map((reaction) => {
                   const isCurrent = current === reaction.key;
                   const tally = counts ? (counts[reaction.key] ?? 0) : null;
@@ -272,6 +280,7 @@ export function ReactionPicker({
                       data-reaction-option
                       data-keep-round
                       data-active={isCurrent ? 'true' : undefined}
+                      data-negative={reaction.positive ? undefined : 'true'}
                       onClick={() => onSelect(reaction.key)}
                       className={cn(
                         'relative flex aspect-square flex-col items-center justify-center gap-1 rounded-2xl border',
@@ -280,7 +289,7 @@ export function ReactionPicker({
                         isCurrent ? 'border-white/30 bg-white/[0.09]' : 'border-transparent bg-white/[0.03]',
                       )}
                     >
-                      <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center text-[34px] leading-none">
+                      <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center text-[30px] leading-none">
                         <ReactionEmoji reaction={reaction.key} animate={isCurrent} />
                       </span>
                       {tally !== null && (
@@ -323,6 +332,91 @@ export function ReactionPicker({
     );
   }
 
+  const renderOption = (reaction: (typeof reactions)[number]) => {
+    const isCurrent = current === reaction.key;
+    const tally = counts ? (counts[reaction.key] ?? 0) : null;
+    const withTally =
+      tally === null
+        ? reaction.label
+        : `${reaction.label} — ${tally} ${tally === 1 ? 'reaction' : 'reactions'}`;
+    return (
+      <button
+        key={reaction.key}
+        role="menuitemradio"
+        aria-checked={isCurrent}
+        type="button"
+        aria-label={withTally}
+        title={withTally}
+        data-reaction-option
+        data-keep-round
+        data-active={isCurrent ? 'true' : undefined}
+        data-negative={reaction.positive ? undefined : 'true'}
+        onPointerEnter={() => setHovered(reaction.key)}
+        onPointerLeave={() => setHovered((h) => (h === reaction.key ? null : h))}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (e.detail === 0) onSelect(reaction.key);
+        }}
+        // Fires when a hold-and-slide gesture releases over this item.
+        onPointerUp={(e) => {
+          e.stopPropagation();
+          if (endGesture()) return;
+          onSelect(reaction.key);
+        }}
+        /* No disc behind the emoji on hover. The lift and the 10% grow
+           already say which one the pointer is on, and a grey circle
+           under one glyph in a row of them was the only chrome in a
+           tray whose whole point is that the emoji are the interface.
+           With totals the button grows a line taller rather than wider,
+           so the number sits under its emoji without pushing the row
+           any further across a phone held sideways. */
+        className={cn(
+          'group relative flex w-9 shrink-0 flex-col items-center justify-center rounded-full',
+          tally === null ? 'h-9' : 'h-12 gap-1',
+          'text-lg leading-none transition-[transform,box-shadow] duration-150 ease-out',
+          'hover:-translate-y-0.5 hover:scale-110 active:translate-y-0 active:scale-95',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
+        )}
+      >
+        <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center">
+          <ReactionEmoji
+            reaction={reaction.key}
+            animate={isCurrent || hovered === reaction.key}
+          />
+        </span>
+        {/* Total for this reaction, under its emoji. A fixed-width box
+            and `truncate` so a four-character "1.2K" can never widen
+            the tray. */}
+        {tally !== null && (
+          <span
+            aria-hidden="true"
+            data-reaction-count
+            data-zero={tally === 0 ? 'true' : undefined}
+            className={cn(
+              'pointer-events-none w-full truncate text-center text-[10px] font-semibold leading-none tabular-nums',
+              tally > 0 ? 'text-white/70' : 'text-white/30',
+            )}
+          >
+            {formatTally(tally)}
+          </span>
+        )}
+        {/* Yours, as a dot — the animation already says it, but a still
+            frame of a moving emoji does not. Under the emoji on a bare
+            tray; above it when the total has taken the space below. */}
+        {isCurrent && (
+          <span
+            aria-hidden="true"
+            data-reaction-current
+            className={cn(
+              'pointer-events-none absolute left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-white/80',
+              tally === null ? 'bottom-0' : 'top-0',
+            )}
+          />
+        )}
+      </button>
+    );
+  };
+
   return (
     <AnimatePresence>
       {open && (
@@ -349,6 +443,7 @@ export function ReactionPicker({
         <motion.div
           role="menu"
           aria-label={polarity === 'negative' ? 'Pick a downvote reaction' : 'Pick a reaction'}
+          data-with-counts={counts ? 'true' : undefined}
           initial={reduceMotion ? false : { opacity: 0, y: 6, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 6, scale: 0.96 }}
@@ -384,83 +479,12 @@ export function ReactionPicker({
             'shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_8px_32px_rgba(0,0,0,0.45)]',
           )}
         >
-          {reactions.map((reaction) => {
-            const isCurrent = current === reaction.key;
-            const tally = counts ? (counts[reaction.key] ?? 0) : null;
-            const withTally =
-              tally === null
-                ? reaction.label
-                : `${reaction.label} — ${tally} ${tally === 1 ? 'reaction' : 'reactions'}`;
-            return (
-              <button
-                key={reaction.key}
-                role="menuitemradio"
-                aria-checked={isCurrent}
-                type="button"
-                aria-label={withTally}
-                title={withTally}
-                data-reaction-option
-                data-keep-round
-                data-active={isCurrent ? 'true' : undefined}
-                onPointerEnter={() => setHovered(reaction.key)}
-                onPointerLeave={() => setHovered((h) => (h === reaction.key ? null : h))}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (e.detail === 0) onSelect(reaction.key);
-                }}
-                // Fires when a hold-and-slide gesture releases over this item.
-                onPointerUp={(e) => {
-                  e.stopPropagation();
-                  if (endGesture()) return;
-                  onSelect(reaction.key);
-                }}
-                /* No disc behind the emoji on hover. The lift and the 10% grow
-                   already say which one the pointer is on, and a grey circle
-                   under one glyph in a row of them was the only chrome in a
-                   tray whose whole point is that the emoji are the interface. */
-                className={cn(
-                  'group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
-                  'text-lg leading-none transition-[transform,box-shadow] duration-150 ease-out',
-                  'hover:-translate-y-0.5 hover:scale-110 active:translate-y-0 active:scale-95',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
-                )}
-              >
-                <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center">
-                  <ReactionEmoji
-                    reaction={reaction.key}
-                    animate={isCurrent || hovered === reaction.key}
-                  />
-                </span>
-                {/* Yours, as a dot under the emoji — the animation already
-                    says it, but a still frame of a moving emoji does not. */}
-                {isCurrent && (
-                  <span
-                    aria-hidden="true"
-                    data-reaction-current
-                    className="pointer-events-none absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-white/80"
-                  />
-                )}
-                {/* Total for this reaction, tucked into the corner above the
-                    emoji. Absolutely positioned so a four-character "1.2K"
-                    can never widen the tray — a row of those would push it off
-                    a phone screen. The emoji sits in the middle 18px of a
-                    36px box, so the top strip is free. */}
-                {tally !== null && (
-                  <span
-                    aria-hidden="true"
-                    data-reaction-count
-                    data-zero={tally === 0 ? 'true' : undefined}
-                    className={cn(
-                      'pointer-events-none absolute right-0.5 top-0 text-[9px] font-semibold leading-none tabular-nums',
-                      tally > 0 ? 'text-white/70' : 'text-white/30',
-                    )}
-                  >
-                    {formatTally(tally)}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+          {positives.map(renderOption)}
+          {/* The votes against sit apart from the faces that count as a like. */}
+          {positives.length > 0 && negatives.length > 0 && (
+            <span aria-hidden="true" data-reaction-divider className="mx-0.5 h-6 w-px shrink-0 self-center bg-white/15" />
+          )}
+          {negatives.map(renderOption)}
 
           {/* Author-only breakdown. Same pointerup handling as the reactions
               above so a single hold-and-slide can land on it. */}

@@ -9,6 +9,8 @@ import {
   resolveNegativeLeadReaction,
   seedReactionCounts,
   negativeThumbLabel,
+  reactionForThumbTap,
+  resolveThumbReaction,
   HAS_NEGATIVE_TRAY,
   NEGATIVE_REACTION_LIST,
   POSITIVE_REACTION_LIST,
@@ -371,5 +373,31 @@ describe('resolveNegativeLeadReaction', () => {
     expect(resolveNegativeLeadReaction('love')).toBeNull();
     expect(resolveNegativeLeadReaction(null)).toBeNull();
     expect(resolveNegativeLeadReaction(undefined)).toBeNull();
+  });
+});
+
+describe('the lone thumbs-up', () => {
+  it('wears your own 👎 so a dislike stays visible with no thumbs-down button', () => {
+    expect(resolveThumbReaction({ like: 3, dislike: 1 }, 'dislike')).toBe('dislike');
+  });
+
+  it('never wears the crowd\'s 👎', () => {
+    expect(resolveThumbReaction({ dislike: 9 }, null)).toBeNull();
+    expect(resolveThumbReaction({ hot: 2, dislike: 9 }, null)).toBe('hot');
+  });
+
+  it('falls back to the positive lead otherwise', () => {
+    expect(resolveThumbReaction({ like: 1, love: 4 }, 'like')).toBeNull();
+    expect(resolveThumbReaction({ like: 1 }, 'lol')).toBe('lol');
+  });
+
+  it('removes a held dislike on a tap rather than casting a like', () => {
+    expect(reactionForThumbTap('dislike', { love: 5 })).toBe('dislike');
+  });
+
+  it('casts what the thumb wears when no dislike is held', () => {
+    expect(reactionForThumbTap(null, { love: 5 })).toBe('love');
+    expect(reactionForThumbTap('hot', { love: 5 })).toBe('hot');
+    expect(reactionForThumbTap(null, null)).toBe('like');
   });
 });
