@@ -106,20 +106,13 @@ export function useBadgeScale(): number {
 }
 
 /**
- * The DHB price the ladder is currently using, when one has been read.
- *
- * Only for surfaces that show the peg itself — the badge progress panel says
- * what a tier costs in dollars, and that sentence is a lie if the price it was
- * derived from is not the one on screen.
+ * Temporary valuation for badge previews while DHB liquidity is unavailable.
+ * Keep independent of the shared market-price cache: a stale pool quote must
+ * not change either the tier estimate or the slider's dollar value.
+ * Restore live pricing here only when the fixed-price policy is lifted.
  */
-export function useBadgeLadderPrice(): number | undefined {
-  const { data } = useQuery<TokenPrices>({
-    queryKey: TOKEN_PRICES_QUERY_KEY,
-    queryFn: fetchTokenPrices,
-    enabled: false,
-    staleTime: Infinity,
-  });
+export const BADGE_PREVIEW_DHB_PRICE_USD = 0.0001;
 
-  const price = data?.DHB;
-  return typeof price === 'number' && Number.isFinite(price) && price > 0 ? price : undefined;
+export function useBadgeLadderPrice(): number {
+  return BADGE_PREVIEW_DHB_PRICE_USD;
 }
