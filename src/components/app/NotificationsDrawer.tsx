@@ -1,0 +1,34 @@
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { X } from 'lucide-react';
+import { Drawer, DrawerContent, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
+
+const NotificationsPage = lazy(() => import('@/pages/app/NotificationsPage'));
+export const openNotificationsDrawer = () => window.dispatchEvent(new Event('open-notifications-drawer'));
+
+export function NotificationsDrawer() {
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+  useEffect(() => {
+    const show = () => setOpen(true);
+    window.addEventListener('open-notifications-drawer', show);
+    return () => window.removeEventListener('open-notifications-drawer', show);
+  }, []);
+  useEffect(() => { setOpen(false); }, [location.pathname, location.search]);
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerContent className="!mt-0 !h-[100dvh] !max-h-[100dvh] !rounded-none flex flex-col" style={{ paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+        <DrawerTitle className="sr-only">Notifications</DrawerTitle>
+        <DrawerDescription className="sr-only">Your notifications</DrawerDescription>
+        <div className="flex shrink-0 justify-end px-3">
+          <button onClick={() => setOpen(false)} aria-label="Close notifications" className="flex h-11 w-11 items-center justify-center"><X className="h-5 w-5" /></button>
+        </div>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          <Suspense fallback={<div role="status" className="p-4">Loading notifications…</div>}>
+            {open && <NotificationsPage inDrawer />}
+          </Suspense>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+}
