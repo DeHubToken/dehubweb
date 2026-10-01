@@ -78,7 +78,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
   // CSS cap follows the actual adjacent font; use 0.72em on older engines.
-  const cap = typeof CSS !== 'undefined' && CSS.supports('height', '1cap') ? '1cap' : '0.72em';
+  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1cap' : '0.72em';
   const opticalStyle: CSSProperties = {
     width: `calc(${(bounds.right - bounds.left) / artworkHeight} * ${cap})`,
     height: cap,
