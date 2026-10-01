@@ -111,7 +111,7 @@ export function useBadgeScale(): number {
  * not change either the tier estimate or the slider's dollar value.
  * Restore live pricing here only when the fixed-price policy is lifted.
  */
-export const BADGE_PREVIEW_DHB_PRICE_USD = 0.0001;
+export const BADGE_PREVIEW_DHB_PRICE_USD = 0.001;
 
 export function useBadgeLadderPrice(): number {
   return BADGE_PREVIEW_DHB_PRICE_USD;
