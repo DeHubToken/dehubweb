@@ -96,7 +96,7 @@ interface AudioVisualizerProps {
   onFullscreen?: (e: React.MouseEvent) => void;
   isFullscreen?: boolean;
   /**
-   * Off for a caller that already draws its own top-left overlay — the
+   * Off for a caller that already draws its own media overlay — the
    * composer preview puts the file name and a Music badge exactly there, and
    * two things in one corner is worse than no volume control.
    */
@@ -917,7 +917,6 @@ export function AudioVisualizer({
   const playedRatio = duration > 0 ? clamp01(currentTime / duration) : 0;
   const displayRatio = scrubRatio ?? playedRatio;
   const displayTime = scrubRatio !== null ? scrubRatio * duration : currentTime;
-  const accent = hue === 0 ? 'hsla(0, 0%, 100%, 0.9)' : `hsla(${hue}, 85%, 65%, 0.95)`;
   const isEffectivelyMuted = muted || selfMuted || volume === 0;
   const glassShadow = isLightTheme
     ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.15)]'
@@ -926,7 +925,7 @@ export function AudioVisualizer({
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
   return (
-    <div data-no-swipe className={`relative ${className}`}>
+    <div data-no-swipe data-video-controls data-audio-player className={`relative ${className}`}>
       <canvas
         ref={canvasRef}
         width={canvasSize.w}
@@ -939,14 +938,12 @@ export function AudioVisualizer({
         onPointerCancel={cancelScrub}
       />
 
-      {/* Top chrome: colour immediately before fullscreen on the right. Always drawn, never on
-          hover — the whole point of the last pass was that chrome appearing
-          under the cursor is what made this card unusable. */}
-      <div className="absolute inset-x-0 top-0 z-20 flex items-start justify-end gap-2 px-2 pt-2 pointer-events-none">
-        {/* Colour slider - liquid glass bubble style */}
+      {/* Colour stays clear of the central navigation pill. */}
+      <div className="absolute left-1 top-2 z-20 pointer-events-none">
+        {/* Colour slider matches the unframed volume slider. */}
         {showStylePicker && (
                 <div
-          className={cn('pointer-events-auto shrink-0 flex items-center px-2.5', CONTROL_H, GLASS_PILL, glassShadow)}
+          className={cn('pointer-events-auto shrink-0 flex items-center px-1', CONTROL_H)}
           style={{ '--hue-thumb': hue === 0 ? 'hsl(0, 0%, 100%)' : `hsl(${hue}, 80%, 60%)` } as React.CSSProperties}
           onClick={stopBubble}
           onPointerDown={stopBubble}
@@ -980,132 +977,19 @@ export function AudioVisualizer({
         </div>
         )}
 
-        {popoutTrack && (
-          <button
-            type="button"
-            aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')}
-            title={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')}
-            aria-pressed={isPoppedOut}
-            onClick={handlePopOut}
-            onPointerDown={stopBubble}
-            className={cn(
-              'pointer-events-auto shrink-0 w-7 flex items-center justify-center transition-colors',
-              CONTROL_H,
-              GLASS_PILL,
-              glassShadow,
-              isPoppedOut
-                ? 'from-white/45 via-white/35 to-white/25'
-                : 'hover:from-white/35 hover:via-white/25 hover:to-white/15',
-            )}
-          >
-            <PictureInPicture2 className="w-3.5 h-3.5 text-white" />
-          </button>
-        )}
 
-        {onFullscreen && (
-          <button
-            type="button"
-            aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-            onClick={(e) => { e.stopPropagation(); onFullscreen(e); }}
-            onPointerDown={stopBubble}
-            className={cn(
-              'pointer-events-auto shrink-0 w-7 flex items-center justify-center transition-colors',
-              CONTROL_H,
-              GLASS_PILL,
-              glassShadow,
-              'hover:from-white/35 hover:via-white/25 hover:to-white/15',
-            )}
-          >
-            {isFullscreen ? (
-              <Minimize className="w-3.5 h-3.5 text-white" />
-            ) : (
-              <Maximize className="w-3.5 h-3.5 text-white" />
-            )}
-          </button>
-        )}
       </div>
 
-      {/* Controls. There is no centre overlay any more: the play button used to
-          sit invisibly in the middle of the canvas and appear on hover, so a
-          mouse anywhere near the card flashed a pause button, and the
-          invisible-but-clickable box swallowed every press aimed at the
-          waveform underneath it. */}
-      <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-1.5 px-2 pb-2 pointer-events-none">
-        {/* Scrubber */}
-        <div className="flex items-center gap-2 pointer-events-auto" onClick={stopBubble}>
-          <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center shrink-0">
-            {formatTime(displayTime)}
-          </span>
-          <div
-            role="slider"
-            tabIndex={0}
-            aria-label="Seek"
-            aria-valuemin={0}
-            aria-valuemax={Math.max(0, Math.round(duration))}
-            aria-valuenow={Math.max(0, Math.round(displayTime))}
-            aria-valuetext={`${formatTime(displayTime)} of ${formatTime(duration)}`}
-            className="relative flex-1 h-4 flex items-center cursor-pointer outline-none"
-            style={{ touchAction: 'none' }}
-            onPointerDown={(e) => { e.stopPropagation(); beginScrub(e.currentTarget, e, true); }}
-            onPointerMove={(e) => moveScrub(e.currentTarget, e)}
-            onPointerUp={(e) => { e.stopPropagation(); endScrub(e.currentTarget, e); }}
-            onPointerCancel={cancelScrub}
-            onKeyDown={handleSeekKeyDown}
-          >
-            <div className="absolute inset-x-0 h-[3px] rounded-full bg-white/25" />
-            <div
-              className="absolute left-0 h-[3px] rounded-full"
-              style={{ width: `${displayRatio * 100}%`, background: accent }}
-            />
-            <div
-              className="absolute w-2.5 h-2.5 rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,0.45)]"
-              style={{ left: `${displayRatio * 100}%`, transform: 'translateX(-50%)' }}
-            />
-          </div>
-          <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center shrink-0">
-            {formatTime(duration)}
-          </span>
-        </div>
-
-        {/* Play, volume and style, bottom left. Every control is CONTROL_H tall
-            and centred on one line — the play button used to be 32px against a
-            22px colour bubble and 24px chips, which read as three sizes dropped
-            on a baseline rather than one strip. */}
-        <div
-          className="flex items-center gap-1.5 pointer-events-auto"
-          style={{ touchAction: 'pan-x' }}
-          onClick={stopBubble}
-          onPointerDown={stopBubble}
-        >
-          <button
-            type="button"
-            aria-label={isPlaying ? 'Pause' : 'Play'}
-            onClick={(e) => { e.stopPropagation(); handlePlayPause(); }}
-            className={cn(
-              'shrink-0 w-7 flex items-center justify-center transition-colors',
-              CONTROL_H,
-              GLASS_PILL,
-              glassShadow,
-              'hover:from-white/35 hover:via-white/25 hover:to-white/15',
-            )}
-          >
-            {isPlaying ? (
-              <Pause className="w-3.5 h-3.5 text-white fill-white" />
-            ) : (
-              <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5" />
-            )}
-          </button>
-
-          {(showStylePicker || showVolume) && (
-            <>
+      <div className="absolute right-2 top-2 z-20 pointer-events-auto">
               {showVolume && (
               <div
-                className={cn('shrink-0 flex items-center gap-1.5 pl-1.5 pr-2.5', CONTROL_H, GLASS_PILL, glassShadow)}
+                className={cn('shrink-0 flex items-center gap-1.5 px-1', CONTROL_H)}
                 onClick={stopBubble}
                 onPointerDown={stopBubble}
               >
                 <button
                   type="button"
+                  data-on-media
                   aria-label={isEffectivelyMuted ? 'Unmute' : 'Mute'}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -1147,7 +1031,45 @@ export function AudioVisualizer({
                 </div>
               </div>
               )}
+      </div>
 
+      {/* Controls. There is no centre overlay any more: the play button used to
+          sit invisibly in the middle of the canvas and appear on hover, so a
+          mouse anywhere near the card flashed a pause button, and the
+          invisible-but-clickable box swallowed every press aimed at the
+          waveform underneath it. */}
+      <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col pointer-events-none">
+        {/* Video-style play/countdown and tools above the edge scrubber.
+            The style picker gives up width and scrolls before buttons clip. */}
+        <div
+          className="flex items-center gap-1 px-1.5 pointer-events-auto"
+          style={{ touchAction: 'pan-x' }}
+          onClick={stopBubble}
+          onPointerDown={stopBubble}
+        >
+          <button
+            type="button"
+            data-on-media
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+            onClick={(e) => { e.stopPropagation(); handlePlayPause(); }}
+            className={cn(
+              'shrink-0 w-7 flex items-center justify-center transition-colors',
+              CONTROL_H,
+              'text-white hover:opacity-80',
+            )}
+          >
+            {isPlaying ? (
+              <Pause className="w-3.5 h-3.5 text-white fill-white" />
+            ) : (
+              <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5" />
+            )}
+          </button>
+
+          <span className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">
+            {formatTime(Math.max(0, Math.ceil(duration - displayTime)))}
+          </span>
+          {showStylePicker && (
+            <>
               {/* Style picker - scrolls when the card is too narrow for all
                   nine, masked at whichever edge is actually hiding one so a
                   half-chip dissolves instead of being sliced. */}
@@ -1162,6 +1084,7 @@ export function AudioVisualizer({
                     <button
                       key={s.value}
                       type="button"
+                      data-on-media
                       data-active={style === s.value || undefined}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1191,7 +1114,70 @@ export function AudioVisualizer({
               )}
             </>
           )}
+        {popoutTrack && (
+          <button
+            type="button"
+            data-on-media
+            aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')}
+            title={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')}
+            aria-pressed={isPoppedOut}
+            onClick={handlePopOut}
+            onPointerDown={stopBubble}
+            className={cn(
+              'pointer-events-auto shrink-0 w-7 flex items-center justify-center transition-colors',
+              CONTROL_H,
+              isPoppedOut
+                ? 'opacity-100'
+                : 'opacity-80 hover:opacity-100',
+            )}
+          >
+            <PictureInPicture2 className="w-3.5 h-3.5 text-white" />
+          </button>
+        )}
+
+        {onFullscreen && (
+          <button
+            type="button"
+            data-on-media
+            aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+            onClick={(e) => { e.stopPropagation(); onFullscreen(e); }}
+            onPointerDown={stopBubble}
+            className={cn(
+              'pointer-events-auto shrink-0 w-7 flex items-center justify-center transition-colors',
+              CONTROL_H,
+              'text-white hover:opacity-80',
+            )}
+          >
+            {isFullscreen ? (
+              <Minimize className="w-3.5 h-3.5 text-white" />
+            ) : (
+              <Maximize className="w-3.5 h-3.5 text-white" />
+            )}
+          </button>
+        )}
         </div>
+          <div
+            role="slider"
+            tabIndex={0}
+            aria-label="Seek"
+            aria-valuemin={0}
+            aria-valuemax={Math.max(0, Math.round(duration))}
+            aria-valuenow={Math.max(0, Math.round(displayTime))}
+            aria-valuetext={`${formatTime(displayTime)} of ${formatTime(duration)}`}
+            className="relative w-full h-[14px] flex items-end cursor-pointer outline-none pointer-events-auto focus-visible:ring-2 focus-visible:ring-white"
+            style={{ touchAction: 'none' }}
+            onPointerDown={(e) => { e.stopPropagation(); beginScrub(e.currentTarget, e, true); }}
+            onPointerMove={(e) => moveScrub(e.currentTarget, e)}
+            onPointerUp={(e) => { e.stopPropagation(); endScrub(e.currentTarget, e); }}
+            onPointerCancel={cancelScrub}
+            onKeyDown={handleSeekKeyDown}
+          >
+            <div className="absolute inset-x-0 bottom-0 h-[3px] bg-white/30" />
+            <div
+              className="absolute bottom-0 left-0 h-[3px] bg-white"
+              style={{ width: `${displayRatio * 100}%` }}
+            />
+          </div>
       </div>
     </div>
   );
