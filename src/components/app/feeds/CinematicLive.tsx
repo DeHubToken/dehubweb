@@ -174,7 +174,7 @@ export function CinematicLive({ streams, isLoading, tvChannels, emptyState }: {
       </SwipeableCarousel>
 
       <SectionTitle
-        title={game ? game.name : 'Live now'}
+        title={game ? game.name : 'Live streams'}
         meta={game ? 'Show all' : liveCount > 0 ? `${liveCount} ${liveCount === 1 ? 'stream' : 'streams'}` : undefined}
         onMeta={game ? () => setGameId(null) : undefined}
       />

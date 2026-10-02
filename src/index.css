@@ -5185,10 +5185,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
   html[data-theme="system"] [data-feed-root] [data-cinematic-first]:not(:has([data-video-card] [data-card-head]:not([data-card-head="plain"]))) {
     padding-top: calc(env(safe-area-inset-top, 0px) + 3.25rem) !important;
   }
-  /* On the first video the author chip and buttons sit at the bottom of the
-     picture, just above the caption, so the top stays clear under the capsule.
-     The card becomes a one-cell grid so the chip can sit on the media without
-     knowing its height. */
+  /* The first video uses explicit grid rows for picture then identity;
+     the caption auto-places after them. */
   html[data-theme="system"] [data-cinematic-first] [data-video-card]:has(> [data-card-head]:not([data-card-head="plain"])) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -5389,14 +5387,13 @@ html[data-theme="light"] [data-creator-page] .text-white {
     top: 0.75rem;
     right: 0.5rem;
   }
-  /* On the first post the badges sit just under the capsule, and the tools
-     menu opens upward from its button at the bottom. */
+  /* On the first post, video overlays clear the floating capsule. */
   html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2 {
     top: calc(env(safe-area-inset-top, 0px) + 3.75rem);
   }
   html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2[data-video-tools] {
-    top: auto;
-    bottom: 5.5rem;
+    top: calc(env(safe-area-inset-top, 0px) + 3.75rem);
+    bottom: auto;
   }
 
   /* Caption, then the meta row, under the media. */
@@ -5464,11 +5461,11 @@ html[data-theme="light"] [data-creator-page] .text-white {
   border-radius: 0 !important;
   background: transparent !important;
 }
-[data-video-scrubber="line"] > div > :is(span, button[data-video-bare]):not(:first-child) {
+[data-video-scrubber="line"] > div > button[data-video-bare]:last-child {
   margin-left: auto;
 }
-[data-video-scrubber="line"] > div > span + button {
-  margin-left: 0 !important;
+[data-video-scrubber="line"] > div > span {
+  margin-left: 0;
 }
 [data-video-scrubber="line"] button[data-video-bare]:first-child svg {
   width: 1rem;
@@ -5605,3 +5602,24 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
 
 /* Centre the smaller video avatar against its two-line identity. */
 html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:not([data-card-head="plain"]) > :first-child { align-items: center; }
+
+/* Keep the landing video's identity below its picture; other videos retain
+   their overlay with a soft, non-interactive contrast scrim. */
+@media (max-width: 767px) {
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
+    grid-row: 2;
+    margin: 0.625rem 0.875rem 0;
+  }
+  html[data-theme="system"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] > [data-media-full]::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 7rem;
+    background: linear-gradient(to bottom, rgb(0 0 0 / 0.38), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > [data-video-topbar="bare"] {
+    top: calc(env(safe-area-inset-top, 0px) + 3.75rem);
+  }
+}

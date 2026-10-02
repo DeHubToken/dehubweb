@@ -669,7 +669,7 @@ export function ShowcaseShell({
         {/* Details: one 8px gap, 16px radius and 12px padding throughout. */}
         <div
           data-badge-details
-          className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 transition-[opacity,transform] duration-500 ease-out scrollbar-hide lg:flex lg:w-[400px] lg:flex-none lg:flex-col lg:py-6 lg:pl-0 lg:pr-8"
+          className="relative flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-4 transition-[opacity,transform] duration-500 ease-out scrollbar-hide lg:flex lg:w-[400px] lg:flex-none lg:flex-col lg:py-6 lg:pl-0 lg:pr-8"
           style={{
             opacity: panelIn ? 1 : 0,
             transform: panelIn ? 'none' : 'translateY(14px)',
@@ -678,7 +678,7 @@ export function ShowcaseShell({
         >
           {/* my-auto rather than justify-center: centred while it fits, and
               scrolling from the top instead of clipping when it does not. */}
-          <div className="mx-auto w-full max-w-[480px] lg:my-auto">
+          <div className="mx-auto my-auto w-full max-w-[480px]">
             {children(api)}
             {isDesktop && footer ? <div className="mt-2">{footer(api)}</div> : null}
           </div>

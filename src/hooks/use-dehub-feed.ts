@@ -558,7 +558,7 @@ export function useDeHubImages(options: Omit<UseDeHubFeedOptions, 'postType'> = 
 
 /** Default params — Home, Live tab, and prefetch must match so React Query dedupes to one cache entry. */
 export const DEFAULT_DEHUB_LIVE_QUERY_OPTIONS = {
-  unit: 15,
+  unit: 200,
   sortMode: 'recent' as const,
 };
 
@@ -587,7 +587,10 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
         const streams = Array.isArray(response) ? response : (response.result || []);
 
         return {
-          data: streams,
+          data: merged.sortMode === 'recent' ? [...streams].sort((a, b) =>
+            (Date.parse(b.startedAt || b.createdAt || '') || 0) -
+            (Date.parse(a.startedAt || a.createdAt || '') || 0)
+          ) : streams,
           page: pageParam,
           has_more: streams.length >= merged.unit,
           total: streams.length,
@@ -615,11 +618,10 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
     /** Avoid hammering /api/live; list is still refreshed on pull-to-refresh and after stale window. */
     staleTime: 60 * 1000,
     gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-    // Prefetch already populates the cache on app load; don't fire a second
-    // /api/live call every time the Live tab mounts. Pull-to-refresh and the
-    // 60-second staleTime window will trigger genuine refetches when needed.
-    refetchOnMount: false,
+    refetchOnWindowFocus: true,
+    refetchInterval: enabled ? 60_000 : false,
+    // Re-entering the tab refreshes stale results; staleTime alone does not fetch.
+    refetchOnMount: true,
     retry: 1,
   });
 }
