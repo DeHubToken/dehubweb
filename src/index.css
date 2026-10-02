@@ -5672,3 +5672,9 @@ html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:no
 /* Keep only the narrow seek input interactive when playback chrome fades. */
 [data-video-controls][data-controls-hidden="true"] { opacity: 0; pointer-events: none; }
 [data-video-controls][data-controls-hidden="true"] input[type="range"] { pointer-events: auto; }
+
+/* Let video identities use the available width, reserving the mute target. */
+[data-video-card] [data-card-head] .truncate { max-width: 100%; }
+@media (max-width: 767px) {
+  html[data-theme="system"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-card-head]:not([data-card-head="plain"]) { right: 3.5rem; }
+}
