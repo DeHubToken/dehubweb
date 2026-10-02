@@ -1466,7 +1466,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (ownsVideoElement && videoRef.current) videoRef.current.playbackRate = playbackRate;
   }, [ownsVideoElement, playbackRate]);
 
+  const hiddenScrubStart = useRef<{ x: number; y: number } | null>(null);
+
   const handleSeek = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (hiddenScrubStart.current) return;
     const time = parseFloat(e.target.value);
     if (videoRef.current) {
       videoRef.current.currentTime = time;
@@ -2241,8 +2244,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             so over a visualizer it painted a black gradient and a second,
             non-functional play button on top of the audio controls — the
             "hovering brings up a play/pause button" complaint. */}
-        {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
+        {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
+          <div data-video-controls data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
             <div className={cn("flex items-center gap-2", bareControls && "px-1.5")}>
               <button
@@ -2265,6 +2268,32 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 max={duration || 100}
                 value={currentTime}
                 onChange={handleSeek}
+                onTouchStart={(event) => event.stopPropagation()}
+                onTouchEnd={(event) => event.stopPropagation()}
+                onPointerDown={(event) => {
+                  event.stopPropagation();
+                  hiddenScrubStart.current = controlsVisible ? null : { x: event.clientX, y: event.clientY };
+                  if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+                }}
+                onPointerMove={(event) => {
+                  const start = hiddenScrubStart.current;
+                  if (!start) return;
+                  const dx = Math.abs(event.clientX - start.x);
+                  const dy = Math.abs(event.clientY - start.y);
+                  if (dx > 6 && dx > dy) {
+                    hiddenScrubStart.current = null;
+                    setShowControls(true);
+                    const time = Number(event.currentTarget.value);
+                    if (videoRef.current) videoRef.current.currentTime = time;
+                    setCurrentTime(time);
+                  }
+                }}
+                onPointerUp={() => {
+                  controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
+                }}
+                onPointerCancel={() => {
+                  controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
+                }}
                 onClick={(e) => e.stopPropagation()}
                 disabled={duration <= 0}
                 aria-label="Video progress"

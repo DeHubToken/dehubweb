@@ -116,7 +116,6 @@ export default function DexPage() {
   const [period, setPeriod] = useState<CandleInterval>('1m');
   const [snapshot, setSnapshot] = useState<SharedMarket<CachedPosition> | null>(null);
   const snapshotTime = useRef(0);
-  const candles = snapshot?.candles[period] || [];
   const [depth, setDepth] = useState(false);
   const [convertOpen, setConvertOpen] = useState(false);
   const [increment, setIncrement] = useState<number>(DEFAULT_INCREMENT);
@@ -401,9 +400,7 @@ export default function DexPage() {
         description: t('dex.seoDescription') }} />
     <header className="dex-top">
       <PoolPicker current={null} />
-      <div className="dex-stat"><small>{t('dex.marketPrice')}</small><strong className="dex-reference">{usdPrice != null ? `$${formatPrice(usdPrice)}` : '—'}</strong></div>
-      <div className="dex-stat"><small>{t('dex.bookPrice', { chain: venueName })}</small><strong>{poolPrice != null ? `$${formatPrice(poolPrice)}` : '—'}</strong></div>
-      <div className="dex-stat"><small>{t('dex.change24')}</small><strong className={(snapshot?.change24h || 0) >= 0 ? 'dex-buy' : 'dex-sell'}>{snapshot?.change24h != null ? `${snapshot.change24h >= 0 ? '+' : ''}${snapshot.change24h.toFixed(2)}%` : '—'}</strong></div>
+      <div className="dex-stat"><small>{t('dex.fixedReferencePrice', { defaultValue: 'Fixed reference price' })}</small><strong className="dex-reference">$0.0001</strong></div>
       <div className="dex-stat"><small>{t('dex.totalLiquidity')}</small><strong>{liquidityUsd != null ? `$${formatSize(liquidityUsd)}` : '—'}</strong></div>
       <div className="dex-stat"><small>{t('dex.listedDhb', { chain: venueName })}</small><strong>{formatSize(totalDhb)}</strong></div>
       <div className="dex-stat"><small>{t('dex.listedUsd', { chain: venueName })}</small><strong>{formatSize(totalUsdc)}</strong></div>
@@ -414,7 +411,7 @@ export default function DexPage() {
     <div className="dex-workspace">
       <section className={`dex-panel dex-chart-panel dex-pane ${mobileView === 'chart' ? 'dex-pane-active' : ''}`}>
         <div className="dex-panel-head"><div className="dex-tabs" role="tablist" aria-label={t('dex.chartType')}><button role="tab" aria-selected={!depth} onClick={() => setDepth(false)}>{t('dex.price')}</button><button role="tab" aria-selected={depth} onClick={() => setDepth(true)}>{t('dex.depth')}</button></div>{!depth && <div className="dex-tabs" role="tablist" aria-label={t('dex.chartTimeframe')}>{CANDLE_INTERVALS.map((value) => <button role="tab" key={value} aria-selected={period === value} onClick={() => setPeriod(value)}>{value}</button>)}</div>}</div>
-        {!depth && loading && !updated ? <div className="dex-chart-empty" role="status">{t('dex.loadingMarket')}</div> : <MarketChart candles={candles} bids={bids} asks={asks} depth={depth} />}
+        {depth ? <MarketChart candles={[]} bids={bids} asks={asks} depth /> : <div className="dex-chart-empty" role="status">{t('dex.priceChartCleared', { defaultValue: 'Price chart cleared. Fixed reference price: $0.0001. Execution prices depend on available orders.' })}</div>}
         <div className="dex-transactions"><div className="dex-transactions-head"><span>{t('dex.latestTransactions')}</span><span>{t('dex.time')}</span></div>{transactions.length ? transactions.map((item) => <a key={`${item.chain_id}:${item.token_id}`} className="dex-transaction" href={`${DEX_CHAINS[item.chain_id as DexChainId].explorer}/tx/${item.mint_tx_hash}`} target="_blank" rel="noreferrer"><span className={item.side === 'buy' ? 'dex-buy' : 'dex-sell'}>{t(item.side === 'buy' ? 'dex.buyLabel' : 'dex.sellLabel')} <b>{listingSize(item)}</b><small>${formatPrice(listingPrice(item))} · {DEX_CHAINS[item.chain_id as DexChainId].name}</small></span><time dateTime={item.created_at}>{formatWhen(item.created_at)}</time></a>) : <div className="dex-transactions-empty">{t('dex.noTransactions')}</div>}</div>
       </section>
       <section className={`dex-panel dex-book-panel dex-pane ${mobileView === 'book' ? 'dex-pane-active' : ''}`}>
