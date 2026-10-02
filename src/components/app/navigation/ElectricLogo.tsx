@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { createElectricity, idleFrame } from './logo-electricity';
+import type { ElectricFrame } from './logo-electricity';
+const idleFrame: ElectricFrame = { bolts: [], x: 0, y: 0, charged: false, held: false };
 
 /** Idle costs no animation frames. Normal taps keep the existing action. */
 export function ElectricLogo({ children, active = true }: { children: ReactNode; active?: boolean }) {
@@ -18,10 +19,14 @@ export function ElectricLogo({ children, active = true }: { children: ReactNode;
   useEffect(() => { if (!active) stop(); }, [active]);
   const begin = () => {
     if (!active || start.current !== null) return;
-    suppress.current = false; start.current = performance.now(); const electricity = createElectricity();
+    suppress.current = false; start.current = performance.now(); const pressStart = start.current;
     setFrame({ ...idleFrame, held: true });
-    const tick = (now: number) => { if (start.current === null) return; setFrame(electricity(now - start.current, reduced.current)); raf.current = requestAnimationFrame(tick); };
-    raf.current = requestAnimationFrame(tick);
+    void import('./logo-electricity').then(({ createElectricity }) => {
+      if (start.current !== pressStart) return;
+      const electricity = createElectricity();
+      const tick = (now: number) => { if (start.current !== pressStart) return; setFrame(electricity(now - pressStart, reduced.current)); raf.current = requestAnimationFrame(tick); };
+      raf.current = requestAnimationFrame(tick);
+    }).catch(() => { /* A failed optional chunk leaves the tap action usable. */ });
   };
   useEffect(() => {
     const button = root.current?.closest('button');
