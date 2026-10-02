@@ -35,7 +35,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
+import { Eye, MoreVertical, Plus, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
@@ -727,7 +727,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Phone feeds: the player's buttons are bare icons with a soft shadow,
   // speed, loop, PiP and subtitles top right with mute in the corner, and
   // one time counter with fullscreen after it on the scrubber row.
-  const bareControls = isPhone && !isImmersive && !hideActions && !onOpenComments && !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
+  const bareControls = isPhone && !hideActions && !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
   /** Hovering the mute button drops a volume slider under it. */
   const [volumeOpen, setVolumeOpen] = useState(false);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
@@ -2244,7 +2244,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 aria-label="Video controls"
                 className="flex h-8 w-8 cursor-pointer list-none items-center justify-center text-white [&::-webkit-details-marker]:hidden"
               >
-                <MoreVertical className="h-4 w-4" />
+                <Plus className="h-4 w-4" />
               </summary>
               <div className="absolute right-0 top-full mt-1 flex w-48 max-w-[calc(100vw-2rem)] flex-wrap items-center gap-1 rounded-lg bg-zinc-900 p-2 text-white shadow-lg">
             {/* Subtitles mount here — display:contents keeps the button a direct
@@ -2325,6 +2325,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               >
                 {isPlaying ? <Pause className="h-3 w-3 text-white fill-current" /> : <Play className="h-3 w-3 text-white fill-current ml-0.5" />}
               </button>
+              {bareControls && (
+                <span data-video-bare className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
+              )}
               {!bareControls && (
                 <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
               )}
@@ -2359,7 +2362,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               />
               {bareControls ? (
                 <>
-                  <span data-video-bare className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(duration)}</span>
                   <button
                     data-video-bare
                     onClick={handleFullscreen}
