@@ -1,3 +1,4 @@
+import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { openNotificationsDrawer } from '../NotificationsDrawer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
@@ -56,6 +57,7 @@ interface MobileHeaderProps {
 }
 
 export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderProps) {
+  const { openPostModal } = useGlobalDropZone();
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user, openLoginModal } = useAuth();
@@ -230,6 +232,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
           </Avatar>
         ) : null}
         onAvatarClick={() => (isAuthenticated ? onOpenChange(true) : openLoginModal())}
+        onCreatePost={() => (isAuthenticated ? openPostModal() : openLoginModal())}
         logoSrc={dehubMark}
         unread={isAuthenticated ? totalNotifUnread : 0}
         onBellClick={() => (isAuthenticated ? openNotificationsDrawer() : openLoginModal())}

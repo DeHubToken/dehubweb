@@ -17,7 +17,7 @@ export function NotificationsDrawer() {
   useEffect(() => { setOpen(false); }, [location.pathname, location.search]);
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerContent className="!mt-0 !h-[100dvh] !max-h-[100dvh] !rounded-none flex flex-col" style={{ paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+      <DrawerContent className="!mt-0 !h-[100dvh] !max-h-[100dvh] !rounded-none !border-0 !shadow-none flex flex-col" style={{ paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         <DrawerTitle className="sr-only">Notifications</DrawerTitle>
         <DrawerDescription className="sr-only">Your notifications</DrawerDescription>
         <div className="flex shrink-0 justify-end px-3">
