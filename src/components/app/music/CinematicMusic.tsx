@@ -288,7 +288,7 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
   return (
     <div data-cinematic-music className="pb-32">
       {showFilters && <div data-no-swipe data-feed-filter-panel className="mb-3 rounded-[15px] px-2 py-3">
-        <GlassFilterRow items={CHIPS} activeKey={chip} onSelect={setChip} />
+        <GlassFilterRow<Chip> items={CHIPS} activeKey={chip} onSelect={setChip} />
       </div>}
       {heroStation ? (
         <RadioHero key={heroStation.stationuuid} station={heroStation} />
