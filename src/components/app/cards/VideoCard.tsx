@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
+import { handoffVideoHolder } from '@/lib/video-handoff';
 import { useBootSettled, useFirstInteraction } from '@/hooks/use-boot-settled';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { isBrainrotSwipe, isTouchPrimary, openBrainrotFeed } from '@/lib/brainrot-feed';
@@ -172,6 +173,13 @@ const IMMERSIVE_MAX_MEDIA_HEIGHT = 'var(--post-media-max-h, 80dvh)';
 const CONTROLS_HIDE_MS = 2000;
 
 /** A tap that landed on a real control, which owns it rather than the player. */
+/** Whether any of `slot` is inside the viewport. */
+function slotOnScreen(slot: HTMLElement | null): boolean {
+  if (!slot || !slot.isConnected) return false;
+  const r = slot.getBoundingClientRect();
+  return r.width > 0 && r.height > 0 && r.bottom > 0 && r.right > 0 && r.top < window.innerHeight && r.left < window.innerWidth;
+}
+
 function isControlTarget(target: EventTarget | null) {
   return !!(target as HTMLElement | null)?.closest?.(
     'button, a, input, textarea, [role="button"], [data-video-controls]',
@@ -666,6 +674,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Tracks the latest IntersectionObserver visibility so an async play() that
   // resolves after the card has scrolled away can bail instead of playing off-screen.
   const isIntersectingRef = useRef(false);
+  // Takes the shared <video> back from another card showing this same post.
+  // Filled in once useHandoffVideo has run, further down.
+  const takeVideoRef = useRef<() => HTMLVideoElement | null>(() => null);
+  // The soundtrack <audio>'s ref, for the off-screen hard stop below.
+  const syncedAudioElRef = useRef<React.RefObject<HTMLAudioElement> | null>(null);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -770,15 +783,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     BLANK_PROBE_WIDTH,
   );
   const posterBlank = useBlankPoster(posterProbe);
-
-  // Synced audio overlay — plays a soundtrack over the video
-  const { audioRef: syncedAudioRef, hasSoundtrack } = useSyncedAudio({
-    soundtrackUrl: video.soundtrackUrl,
-    isPlaying,
-    isMuted,
-    volume,
-    videoRef: videoRef as React.RefObject<HTMLVideoElement>,
-  });
 
   // Translation hook for video text content.
   //
@@ -960,7 +964,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
           } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || isSubscriberGated(video.subscriberPlans, false)) && !video.isAudio && video.videoUrl && !hasErrorRef.current && !isVideoNotReady) {
-            const vid = videoRef.current;
+            let vid = videoRef.current;
+            // Another copy of this post holds the element. Take it back unless
+            // that copy is on screen — the post page open over the feed.
+            if (!vid && !slotOnScreen(handoffVideoHolder(video.id))) vid = takeVideoRef.current();
             if (vid) {
               // Fast fling race: the media-attach state may not have
               // re-rendered yet — attach the src imperatively before play()
@@ -997,13 +1004,35 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       { threshold: 0.5 }
     );
 
+    // Hard stop once no pixel of the card is left on screen, whatever this
+    // card's own state says. The pause above trusts isPlayingRef, and the
+    // element can be playing without it: handed over from another card, or
+    // resumed by the page cache. A playing clip nobody can see is the
+    // "old video's audio keeps going" bug.
+    const offscreenObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) return;
+        const vid = videoRef.current;
+        if (vid && isVideoOutsideFeed(vid)) return;
+        if (vid && !vid.paused) {
+          pauseVideo();
+          videoPlaybackManager.stop(instanceId);
+        }
+        const soundtrack = syncedAudioElRef.current?.current;
+        if (soundtrack && !soundtrack.paused) soundtrack.pause();
+      },
+      { threshold: 0 }
+    );
+
     if (containerRef.current) {
       observer.observe(containerRef.current);
+      offscreenObserver.observe(containerRef.current);
     }
 
     return () => {
       videoPlaybackManager.unregister(instanceId);
       observer.disconnect();
+      offscreenObserver.disconnect();
     };
   }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.subscriberPlans, video.videoUrl, isVideoNotReady]);
 
@@ -1098,6 +1127,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       videoPlaybackManager.stop(instanceId);
       showControlsBriefly();
     } else {
+      // A tap means this card: take the element back if another copy of
+      // the post is holding it.
+      if (!videoRef.current) takeVideoRef.current();
       // Claim audio ownership for this video (user-initiated play)
       videoPlaybackManager.claimAudio(instanceId);
       const shouldMute = videoPlaybackManager.globalMuted;
@@ -1437,7 +1469,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
-  const { attachSlot: attachVideoSlot, isActive: ownsVideoElement } = useHandoffVideo({
+  const { attachSlot: attachVideoSlot, isActive: ownsVideoElement, takeOver: takeVideoElement } = useHandoffVideo({
     videoRef,
     handoffKey: video.id,
     src: mediaAttached ? video.videoUrl : undefined,
@@ -1459,6 +1491,42 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   useEffect(() => {
     if (!ownsVideoElement) videoPlaybackManager.stop(instanceId);
   }, [ownsVideoElement, instanceId]);
+
+  takeVideoRef.current = takeVideoElement;
+
+  // Play state follows the element itself while this card holds it, and is
+  // off while it doesn't. The element changes hands and gets paused or resumed
+  // from outside this card (the page cache, another card taking it), and a
+  // stale "playing" here is what kept the scroll-away pause from firing.
+  useEffect(() => {
+    if (video.isAudio) return;
+    const el = ownsVideoElement ? videoRef.current : null;
+    const sync = () => {
+      const playing = !!el && !el.paused;
+      if (isPlayingRef.current === playing) return;
+      isPlayingRef.current = playing;
+      setIsPlaying(playing);
+    };
+    sync();
+    if (!el) return;
+    el.addEventListener('play', sync);
+    el.addEventListener('pause', sync);
+    return () => {
+      el.removeEventListener('play', sync);
+      el.removeEventListener('pause', sync);
+    };
+  }, [ownsVideoElement, video.isAudio]);
+
+  // Synced audio overlay — plays a soundtrack over the video
+  const { audioRef: syncedAudioRef, hasSoundtrack } = useSyncedAudio({
+    soundtrackUrl: video.soundtrackUrl,
+    isPlaying,
+    isMuted,
+    volume,
+    videoRef: videoRef as React.RefObject<HTMLVideoElement>,
+    videoEl: ownsVideoElement ? videoRef.current : null,
+  });
+  syncedAudioElRef.current = syncedAudioRef;
 
   // The <video> element is shared between cards, so it arrives carrying
   // whatever rate the last card left on it. Re-stamp this card's rate on every
