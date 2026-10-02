@@ -5183,7 +5183,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
      under the floating capsule. A video runs its picture up behind it and
      drops its author row below it; anything else starts below it. */
   html[data-theme="system"] [data-feed-root] [data-cinematic-first]:not(:has([data-video-card] [data-card-head]:not([data-card-head="plain"]))) {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 3.25rem + var(--landing-image-gap, 0px)) !important;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 3.75rem + var(--landing-image-gap, 0px)) !important;
   }
   /* Give only the landing image an extra 3px below the floating capsule. */
   html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] {
@@ -5397,10 +5397,10 @@ html[data-theme="light"] [data-creator-page] .text-white {
   }
   /* On the first post, video overlays clear the floating capsule. */
   html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2 {
-    top: calc(env(safe-area-inset-top, 0px) + 3.75rem);
+    top: calc(env(safe-area-inset-top, 0px) + 4.25rem);
   }
   html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2[data-video-tools] {
-    top: calc(env(safe-area-inset-top, 0px) + 3.75rem);
+    top: calc(env(safe-area-inset-top, 0px) + 4.25rem);
     bottom: auto;
   }
 
