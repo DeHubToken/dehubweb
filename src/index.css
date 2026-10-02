@@ -5183,7 +5183,11 @@ html[data-theme="light"] [data-creator-page] .text-white {
      under the floating capsule. A video runs its picture up behind it and
      drops its author row below it; anything else starts below it. */
   html[data-theme="system"] [data-feed-root] [data-cinematic-first]:not(:has([data-video-card] [data-card-head]:not([data-card-head="plain"]))) {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 3.25rem) !important;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 3.25rem + var(--landing-image-gap, 0px)) !important;
+  }
+  /* Give only the landing image an extra 3px below the floating capsule. */
+  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] {
+    --landing-image-gap: 3px;
   }
   /* The first video uses explicit grid rows for picture then identity;
      the caption auto-places after them. */
@@ -5313,6 +5317,10 @@ html[data-theme="light"] [data-creator-page] .text-white {
   }
   html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
     font-size: 0.875rem;
+    line-height: 17px;
+  }
+  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base > .leading-5 {
+    line-height: inherit;
   }
   html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.text-sm, .text-\[13px\]) {
     font-size: 0.75rem;
@@ -5462,7 +5470,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
   background: transparent !important;
 }
 [data-video-scrubber="line"] > div > button[data-video-bare]:last-child {
-  margin-left: auto;
+  margin-left: 0;
 }
 [data-video-scrubber="line"] > div > span {
   margin-left: 0;
@@ -5620,6 +5628,43 @@ html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:no
     z-index: 1;
   }
   html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > [data-video-topbar="bare"] {
-    top: calc(env(safe-area-inset-top, 0px) + 3.75rem);
+    top: 0.75rem;
   }
+}
+
+@media (max-width: 767px) {
+  /* The landing video's identity and post actions form one row below media. */
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
+    align-items: center;
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-card-head] [data-head-options] {
+    display: flex !important;
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-card-info] > [data-caption-options] {
+    display: none;
+  }
+  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-card-info] > [data-caption-options] + .relative {
+    padding-right: 0;
+  }
+}
+
+/* Inline player actions use bare icons and fit alongside play/time at 320px. */
+[data-video-scrubber="line"] > div { gap: 0.125rem; }
+[data-video-scrubber="line"] [data-video-inline-tools] button {
+  background: transparent !important;
+  border: 0 !important;
+  backdrop-filter: none !important;
+  width: 2rem;
+  min-width: 2rem;
+  padding-left: 0;
+  padding-right: 0;
+}
+[data-video-scrubber="line"] [data-video-inline-tools] button[aria-label="Playback speed"] {
+  width: 2.75rem;
+}
+
+@media (max-width: 767px) {
+  html[data-theme="system"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-head-boost] { display: none; }
+  html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-info] > [data-video-caption-actions] { width: auto; }
+  html[data-theme="system"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-video-caption-actions]:has([data-caption-boost]) + .relative { padding-right: 4rem; }
 }
