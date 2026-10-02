@@ -724,10 +724,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // fullscreen buttons fold into one tools button beside AI and the options
   // menu, and drop down from there. The post page has the room and keeps the row.
   const isPhone = useIsMobile();
-  // Phone feeds: the player's buttons are bare icons with a soft shadow,
+  // Video posts use the same bare glyph controls at every viewport size,
   // mute in the top corner, and playback actions beside fullscreen on the
   // bottom row with play and remaining time.
-  const bareControls = isPhone && !hideActions && !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
+  const bareControls = !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
   /** Hovering the mute button drops a volume slider under it. */
   const [volumeOpen, setVolumeOpen] = useState(false);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
@@ -2257,12 +2257,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               >
                 {isPlaying ? <Pause className={bareControls ? "h-[18px] w-[18px] text-white" : "h-3 w-3 text-white fill-current"} /> : <Play className={bareControls ? "h-[18px] w-[18px] text-white ml-0.5" : "h-3 w-3 text-white fill-current ml-0.5"} />}
               </button>
-              {bareControls && (
-                <span data-video-bare className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
-              )}
-              {!bareControls && (
-                <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
-              )}
+              <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
               <input
                 type="range"
                 min={0}
@@ -2312,7 +2307,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   [&::-moz-range-thumb]:rounded-full
                   [&::-moz-range-thumb]:border-0"
                 style={{
-                  backgroundImage: `linear-gradient(to right, white ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.3) ${(currentTime / (duration || 1)) * 100}%)`,
+                  backgroundImage: `linear-gradient(to right, white ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.3) ${(currentTime / (duration || 1)) * 100}%), linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65))`,
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat',
                   backgroundSize: '100% 4px',
@@ -2338,7 +2333,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               data-on-media
                   className={cn(
                     "h-8 w-8 text-white flex items-center justify-center ",
-                    !isLooping && "opacity-55"
                   )}
                   onClick={toggleLoop}
                   aria-label={isLooping ? 'Disable loop' : 'Enable loop'}
@@ -2386,9 +2380,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     {isFullscreen ? <Minimize className="h-[18px] w-[18px]" /> : <Maximize className="h-[18px] w-[18px]" />}
                   </button>
                 </>
-              ) : (
-                <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(duration)}</span>
-              )}
+              ) : null}
             </div>
           </div>
         )}
