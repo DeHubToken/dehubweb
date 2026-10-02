@@ -938,8 +938,12 @@ export function AudioVisualizer({
         onPointerCancel={cancelScrub}
       />
 
-      {/* Colour stays clear of the central navigation pill. */}
-      <div className="absolute left-1 top-2 z-20 pointer-events-none">
+      {/* Normally beside volume; the first feed post clears the nav capsule. */}
+      <div
+        data-audio-colour
+        data-audio-fullscreen={isFullscreen || undefined}
+        className={cn('absolute top-2 z-20 pointer-events-none', showVolume ? 'right-[98px]' : 'right-2')}
+      >
         {/* Colour slider matches the unframed volume slider. */}
         {showStylePicker && (
                 <div
@@ -1085,6 +1089,8 @@ export function AudioVisualizer({
                       key={s.value}
                       type="button"
                       data-on-media
+                      data-audio-style
+                      data-keep-round
                       data-active={style === s.value || undefined}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1095,14 +1101,16 @@ export function AudioVisualizer({
                       onTouchStart={stopBubble}
                       className={cn(
                         // Faint dark backing so labels stay readable over white-heavy themes.
-                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-lg whitespace-nowrap transition-colors text-white/75 hover:text-white bg-black/25 backdrop-blur-[12px]',
+                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-full overflow-hidden whitespace-nowrap transition-colors text-white/75 hover:text-white bg-black/25 backdrop-blur-[12px]',
                         CONTROL_H,
                       )}
                     >
                       {style === s.value && (
                         <motion.div
+                          data-audio-style-active
+                          data-keep-round
                           layoutId={`audio-style-indicator-${instanceId}`}
-                          className={cn('absolute inset-0', GLASS_PILL, glassShadow)}
+                          className={cn('absolute inset-0 rounded-full', GLASS_PILL, glassShadow)}
                           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                         />
                       )}

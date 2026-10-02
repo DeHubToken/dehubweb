@@ -1,0 +1,17 @@
+/* Only the first feed audio card needs to clear the floating navigation pill. */
+@media (max-width: 1023px) {
+  [data-cinematic-first] [data-audio-colour]:not([data-audio-fullscreen]) {
+    left: 0.25rem;
+    right: auto;
+  }
+}
+/* Keep style selection pills round even in themes with square surface rules. */
+html[data-theme][data-theme] [data-audio-player] :is([data-audio-style], [data-audio-style-active]) {
+  border-radius: 9999px !important;
+}
+
+/* White video actions must retain contrast without gaining theme button frames. */
+html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inline-tools]) button {
+  color: #fff !important;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.7));
+}

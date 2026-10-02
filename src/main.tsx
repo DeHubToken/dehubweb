@@ -18,6 +18,7 @@ import { loadThemeCss } from "./lib/theme-css";
 import "./i18n";
 import "./index.css";
 import "./styles/theme-controls.css";
+import "./styles/media-controls.css";
 import "./styles/glass-surfaces.css";
 import "./styles/article.css";
 // Canvas-theme chrome (war / osaka / jungle) is NOT imported here: each theme

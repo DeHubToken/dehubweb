@@ -1216,7 +1216,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // A menu or slider open over the player counts as activity: the row must not
   // vanish out from under the thing the pointer is already inside.
-  const controlsVisible = showControls || subsMenuOpen || volumeOpen;
+  // Phone-feed controls must not disappear after autoplay or a hide timer.
+  const controlsVisible = bareControls || !isPlaying || showControls || subsMenuOpen || volumeOpen;
 
   // Revealing the controls has to be able to fill in the timeline. A card that
   // never autoplayed - every video on a profile, and anything in Lite mode -
@@ -1225,14 +1226,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // profile had none. Asking for the media as soon as the controls come up
   // costs one small range request and only for the card being looked at.
   useEffect(() => {
-    if (!controlsVisible || duration > 0 || video.isAudio || !video.videoUrl) return;
+    if (!controlsVisible || (!nearViewport && !showControls) || duration > 0 || video.isAudio || !video.videoUrl) return;
     setNearViewport(true);
     const vid = videoRef.current;
     if (!vid) return;
     if (!vid.getAttribute('src')) vid.src = video.videoUrl;
     if (vid.preload === 'none') vid.preload = 'metadata';
     try { vid.load(); } catch { /* noop */ }
-  }, [controlsVisible, duration, video.isAudio, video.videoUrl]);
+  }, [controlsVisible, nearViewport, showControls, duration, video.isAudio, video.videoUrl]);
 
   // The saved volume only ever reached the element through an explicit
   // adjustment, so a viewer who had turned a video down got full volume back on
@@ -2148,7 +2149,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               videoRef={videoRef}
               buttonPortalTarget={ccSlot}
               buttonClassName={ccSlot ? undefined : 'absolute top-2 right-2 z-20'}
-              buttonVisible={showControls}
+              buttonVisible={controlsVisible}
               onMenuOpenChange={setSubsMenuOpen}
             />
           </Suspense>
@@ -2323,7 +2324,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             <div ref={setCcSlot} className="contents" />
 
             <button
-              className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
+              data-on-media
+              className="h-8 w-[52px] text-white flex items-center justify-center  text-xs font-medium"
               onClick={cyclePlaybackRate}
               style={{ touchAction: 'manipulation' }}
               aria-label="Playback speed"
@@ -2333,9 +2335,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
+              data-on-media
                   className={cn(
-                    "h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10",
-                    isLooping && "bg-white/20"
+                    "h-8 w-8 text-white flex items-center justify-center ",
+                    !isLooping && "opacity-55"
                   )}
                   onClick={toggleLoop}
                   aria-label={isLooping ? 'Disable loop' : 'Enable loop'}
@@ -2350,7 +2353,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
-                    className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+              data-on-media
+                    className="h-8 w-8 text-white flex items-center justify-center "
                     onClick={handlePictureInPicture}
                     aria-label="Picture in picture"
                   >
@@ -2362,7 +2366,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             )}
             {!bareControls && (
               <button
-                className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+              data-on-media
+                className="h-8 w-8 text-white flex items-center justify-center "
                 onClick={handleFullscreen}
                 aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
               >
