@@ -1,3 +1,4 @@
+import { useFeedRefresh } from '@/lib/feed-refresh';
 import { ElectricLogo } from './ElectricLogo';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
@@ -40,6 +41,8 @@ export function FeedIslandCapsule({
   onBellClick,
   onCreatePost,
 }: FeedIslandCapsuleProps) {
+  const refresh = useFeedRefresh();
+  const show = visible || refresh.refreshing || refresh.progress > 0;
   const [tabValue, setTabValue] = useState(readActiveTab);
   useEffect(() => {
     const sync = () => setTabValue(readActiveTab());
@@ -72,8 +75,8 @@ export function FeedIslandCapsule({
     <div
       ref={rootRef}
       data-feed-island
-      aria-hidden={!visible}
-      className={`lg:hidden fixed left-1/2 z-[120] w-max h-11 isolate overflow-visible rounded-[15px] transition-[opacity,transform] duration-300 ease-out ${visible ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
+      aria-hidden={!show}
+      className={`lg:hidden fixed left-1/2 z-[120] w-max h-11 isolate overflow-visible rounded-[15px] transition-[opacity,transform] duration-300 ease-out ${show ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
       style={{ top: 'calc(env(safe-area-inset-top, 0px) + 0.375rem)' }}
     >
       {/* Centre crest: you (or a burger when signed out) left, the bell
@@ -93,7 +96,17 @@ export function FeedIslandCapsule({
           aria-label={`Feeds, now on ${tab.label}`}
           className="flex shrink-0 items-center justify-center px-5"
         >
-          <ElectricLogo active={visible}><img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} /></ElectricLogo>
+          <span className="relative inline-flex" data-feed-refresh-logo aria-busy={refresh.refreshing}>
+            <ElectricLogo active={show}><img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} /></ElectricLogo>
+            {(refresh.refreshing || refresh.progress > 0) && (
+              <svg data-feed-refresh-ring aria-hidden="true" width="36" height="36" viewBox="0 0 36 36" className="absolute left-1/2 top-1/2 pointer-events-none" style={{ transform: 'translate(-50%, -50%)' }}>
+                <g className={refresh.refreshing ? 'animate-spin motion-reduce:animate-none' : undefined} style={{ transformOrigin: '18px 18px' }}>
+                  <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeOpacity="0.2" strokeWidth="1.5" />
+                  <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="100.531" strokeDashoffset={100.531 * (1 - (refresh.refreshing ? 0.72 : refresh.progress))} transform="rotate(-90 18 18)" />
+                </g>
+              </svg>
+            )}
+          </span>
         </button>
         <div className="flex min-w-[28px] items-center justify-end">
           <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label="Notifications" className="relative flex h-7 w-7 shrink-0 items-center justify-center">
