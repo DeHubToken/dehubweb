@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -6,6 +6,7 @@ import i18n from '@/i18n';
 import { supabase } from '@/integrations/supabase/client';
 import { autoTranslateEnabled } from '@/lib/auto-translate-setting';
 import { startVersionWatch, takeStaleReload, type BuildVersion } from '@/lib/version-check';
+import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { BUTTON_CLASSES } from '@/components/ui/toast-classes';
 
 /**
@@ -70,14 +71,10 @@ async function translateNote(note: string, lang: string): Promise<string> {
  * The description is a React element, which that interceptor skips by design, so
  * everything inside it is resolved here instead.
  */
-async function showUpdateToast(version: BuildVersion, isMobile: boolean): Promise<void> {
-  const note = version.note
-    ? await translateNote(version.note, i18n.language)
-    : // No note on the manifest, so there is nothing dynamic to translate and
-      // the static fallback is already in the reader's language.
-      i18n.t('toasts.refresh_to_pick_up_the_latest_changes');
-
-  toast.message('New version available', {
+function showUpdateToast(version: BuildVersion, note: string, isMobile: boolean, onDismiss: () => void) {
+  return toast.message('New version available', {
+    id: 'app-new-version',
+    onDismiss,
     // Never auto-dismiss. The whole point is that it is still there when the
     // user next looks at the tab.
     duration: Infinity,
@@ -123,18 +120,30 @@ async function showUpdateToast(version: BuildVersion, isMobile: boolean): Promis
  */
 export function NewVersionToast() {
   const isMobile = useIsMobile();
-  // The watch is armed once and fires minutes later, so the callback cannot
-  // close over `isMobile` — by then the render that produced it is long gone.
-  const isMobileRef = useRef(isMobile);
-  isMobileRef.current = isMobile;
+  const overlayOpen = useAnyOverlayOpen();
+  const [pending, setPending] = useState<{ version: BuildVersion; note: string } | null>(null);
 
-  useEffect(
-    () =>
-      startVersionWatch((version) => {
-        void showUpdateToast(version, isMobileRef.current);
-      }),
-    []
-  );
+  useEffect(() => {
+    let cancelled = false;
+    const stop = startVersionWatch((version) => {
+      void (async () => {
+        const note = version.note
+          ? await translateNote(version.note, i18n.language)
+          : i18n.t('toasts.refresh_to_pick_up_the_latest_changes');
+        if (!cancelled) setPending({ version, note });
+      })();
+    });
+    return () => { cancelled = true; stop(); };
+  }, []);
+
+  // A persistent actionable toast is outside a modal's focus/pointer scope.
+  // Do not put it above the menu while the menu owns those interactions.
+  // Keep the prepared update queued, including when a menu opens after it.
+  useEffect(() => {
+    if (!pending || overlayOpen) return;
+    const id = showUpdateToast(pending.version, pending.note, isMobile, () => setPending(null));
+    return () => { toast.dismiss(id); };
+  }, [pending, overlayOpen, isMobile]);
 
   // Once a newer deploy is live, the next page change loads it for real
   // instead of drawing the new page with the old code. The URL has already
