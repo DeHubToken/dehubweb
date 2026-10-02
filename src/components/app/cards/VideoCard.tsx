@@ -35,7 +35,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, Plus, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
@@ -725,8 +725,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // menu, and drop down from there. The post page has the room and keeps the row.
   const isPhone = useIsMobile();
   // Phone feeds: the player's buttons are bare icons with a soft shadow,
-  // speed, loop, PiP and subtitles top right with mute in the corner, and
-  // one time counter with fullscreen after it on the scrubber row.
+  // mute in the top corner, and playback actions beside fullscreen on the
+  // bottom row with play and remaining time.
   const bareControls = isPhone && !hideActions && !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
   /** Hovering the mute button drops a volume slider under it. */
   const [volumeOpen, setVolumeOpen] = useState(false);
@@ -1722,6 +1722,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <div className="flex items-center gap-1">
             {isOwnPost && (
               <motion.button
+                data-head-boost
                 onClick={() => setShowBoostModal(true)}
                 className="mr-[1.6px] text-zinc-400 hover:text-white transition-colors"
                 whileHover={{ scale: 1.1 }}
@@ -2184,7 +2185,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onTouchStart={() => setVolumeOpen(false)}
             >
               <button
-                className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                className="h-8 w-8 text-white flex items-center justify-center"
                 onClick={toggleMute}
                 aria-label={t('videoPlayer.volume')}
               >
@@ -2225,80 +2226,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 </div>
               )}
             </div>
-            <details
-              className="group relative"
-              onClick={(event) => event.stopPropagation()}
-              onKeyDown={(event) => {
-                if (event.key === 'Escape') {
-                  event.currentTarget.open = false;
-                  event.currentTarget.querySelector('summary')?.focus();
-                }
-              }}
-              onBlur={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-                  event.currentTarget.open = false;
-                }
-              }}
-            >
-              <summary
-                aria-label="Video controls"
-                className="flex h-8 w-8 cursor-pointer list-none items-center justify-center text-white [&::-webkit-details-marker]:hidden"
-              >
-                <Plus className="h-4 w-4" />
-              </summary>
-              <div className="absolute right-0 top-full mt-1 flex w-48 max-w-[calc(100vw-2rem)] flex-wrap items-center gap-1 rounded-lg bg-zinc-900 p-2 text-white shadow-lg">
-            {/* Subtitles mount here — display:contents keeps the button a direct
-                flex item, so it sits in the row's gap like everything else. */}
-            <div ref={setCcSlot} className="contents" />
 
-            <button
-              className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
-              onClick={cyclePlaybackRate}
-              aria-label="Playback speed"
-            >
-              {formatRate(playbackRate)}x
-            </button>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  className={cn(
-                    "h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10",
-                    isLooping && "bg-white/20"
-                  )}
-                  onClick={toggleLoop}
-                  aria-label={isLooping ? 'Disable loop' : 'Enable loop'}
-                  aria-pressed={isLooping}
-                >
-                  <Repeat className="h-4 w-4" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
-            </Tooltip>
-            {document.pictureInPictureEnabled && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-                    onClick={handlePictureInPicture}
-                    aria-label="Picture in picture"
-                  >
-                    <PictureInPicture2 className="h-4 w-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Picture in Picture (P)</TooltipContent>
-              </Tooltip>
-            )}
-            {!bareControls && (
-              <button
-                className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-                onClick={handleFullscreen}
-                aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
-              >
-                {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
-              </button>
-            )}
-              </div>
-            </details>
           </div>
         )}
 
@@ -2360,6 +2288,58 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   backgroundSize: '100% 4px',
                 }}
               />
+              <div data-video-inline-tools className="ml-auto flex shrink-0 items-center gap-1">
+            {/* Subtitles mount here — display:contents keeps the button a direct
+                flex item, so it sits in the row's gap like everything else. */}
+            <div ref={setCcSlot} className="contents" />
+
+            <button
+              className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
+              onClick={cyclePlaybackRate}
+              aria-label="Playback speed"
+            >
+              {formatRate(playbackRate)}x
+            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={cn(
+                    "h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10",
+                    isLooping && "bg-white/20"
+                  )}
+                  onClick={toggleLoop}
+                  aria-label={isLooping ? 'Disable loop' : 'Enable loop'}
+                  aria-pressed={isLooping}
+                >
+                  <Repeat className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
+            </Tooltip>
+            {document.pictureInPictureEnabled && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                    onClick={handlePictureInPicture}
+                    aria-label="Picture in picture"
+                  >
+                    <PictureInPicture2 className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Picture in Picture (P)</TooltipContent>
+              </Tooltip>
+            )}
+            {!bareControls && (
+              <button
+                className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                onClick={handleFullscreen}
+                aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
+              >
+                {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+              </button>
+            )}
+              </div>
               {bareControls ? (
                 <>
                   <button
@@ -2470,9 +2450,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {/* System theme phone feed only (index.css): the options button sits
             here, top right of the caption, instead of on the media. */}
         {!isImmersive && !hideActions && (
-          <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" data-caption-options className="hidden">
-            <MoreVertical className="w-5 h-5" />
-          </button>
+          <div data-caption-options data-video-caption-actions className="hidden">
+            {isOwnPost && (
+              <button data-caption-boost onClick={() => setShowBoostModal(true)} aria-label={t('postOptions.boostPost')} className="flex h-8 w-8 items-center justify-center">
+                <Zap className="w-5 h-5" />
+              </button>
+            )}
+            <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" className="flex h-8 w-8 items-center justify-center">
+              <MoreVertical className="w-5 h-5" />
+            </button>
+          </div>
         )}
         {/* Creator info with action buttons - mobile/tablet immersive view only (hidden on desktop where SinglePostPage renders DesktopCreatorInfo) */}
         {isImmersive && (
