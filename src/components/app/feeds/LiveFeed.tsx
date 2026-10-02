@@ -135,7 +135,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
   if (cinematic) {
     return (
       <div className="px-2">
-        <CinematicLive streams={streams} isLoading={isLoading} tvChannels={tvChannels} emptyState={<EmptyState />} />
+        <CinematicLive streams={streams} isLoading={isLoading} tvChannels={tvChannels} emptyState={<EmptyState />} showFilters={showFilters} />
       </div>
     );
   }
@@ -152,7 +152,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <div data-no-swipe className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3">
+            <div data-no-swipe data-feed-filter-panel className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3">
               <span className="text-xs text-zinc-500 uppercase tracking-wider mb-2 block">Categories</span>
               <GlassFilterRow
                 items={categoryItems}

@@ -520,7 +520,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     refetch,
   });
 
-  if (isLoading || isAutoRetrying) {
+  if ((isLoading || isAutoRetrying) && !showFilters) {
     return (
       <div className="p-1 sm:p-2">
         <ShortsFeedSkeleton />
@@ -567,7 +567,9 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
         {/* Shorts Grid, filter loader or Empty State. The loader sits BELOW the
             filter panel, not in place of the whole feed, so the chips the user
             is working with stay on screen and clickable while the request runs. */}
-        {filterTransition.active ? (
+        {isLoading || isAutoRetrying ? (
+          <ShortsFeedSkeleton />
+        ) : filterTransition.active ? (
           <FeedFilterLoader className="mt-3" />
         ) : allShorts.length === 0 ? (
           <EmptyState />
