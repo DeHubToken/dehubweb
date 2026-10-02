@@ -539,8 +539,8 @@ export function ShowcaseShell({
                 className="block h-8 w-8 object-contain lg:h-10 lg:w-10"
                 style={{
                   transform: `rotate(${entry.tilt}deg) scale(${active ? 1.08 : 0.84})`,
-                  filter: active ? 'drop-shadow(0 3px 6px rgba(0,0,0,0.5))' : 'saturate(0.35)',
-                  opacity: active ? 1 : 0.5,
+                  filter: active ? 'drop-shadow(0 3px 6px rgba(0,0,0,0.5))' : 'none',
+                  opacity: 1,
                   transition: 'opacity 0.35s, filter 0.35s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 }}
               />
