@@ -1,3 +1,4 @@
+import { setFeedRefresh } from '@/lib/feed-refresh';
 /**
  * Home Page
  * =========
@@ -485,11 +486,17 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   const { pullDistance, isPulling, isHoldingAtThreshold, holdProgress, handlers: pullHandlers } = usePullToRefresh({
+    enabled: isMobile,
     pullThreshold: PULL_THRESHOLD,
     onRefresh: triggerRefresh,
     isRefreshing,
     containerRef: feedContainerRef,
   });
+
+  useEffect(() => {
+    setFeedRefresh({ refreshing: isRefreshing, progress: isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1) });
+  }, [isRefreshing, isHoldingAtThreshold, holdProgress, pullDistance]);
+  useEffect(() => () => setFeedRefresh({ refreshing: false, progress: 0 }), []);
 
   // --------------------------------------------------------------------------
   // EVENT HANDLERS
@@ -1066,6 +1073,7 @@ export default function HomePage() {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onTouchCancel={pullHandlers.onTouchCancel}
         onWheel={handleWheel}
         onMouseDown={pullHandlers.onMouseDown}
         onMouseMove={pullHandlers.onMouseMove}
@@ -1073,7 +1081,7 @@ export default function HomePage() {
         onMouseLeave={pullHandlers.onMouseLeave}
       >
         {/* Pull-to-refresh indicator with hold progress */}
-        {pullDistance > 0 && (
+        {pullDistance > 0 && !(islandTopBar && isMobile) && (
           <div 
             className="flex items-center justify-center transition-all duration-150"
             style={{ height: pullDistance, minHeight: pullDistance > 0 ? 20 : 0 }}

@@ -557,26 +557,27 @@ function SubtitleMenu(props: SubtitleMenuProps) {
         e.stopPropagation();
         setOpen(true);
       }}
+      data-video-caption-control
+      data-on-media
       aria-label={enabled ? 'Subtitles on' : 'Subtitles off'}
       className={cn(
-        'z-20 h-8 w-8 flex items-center justify-center border border-white/10',
+        'z-20 h-8 w-8 flex items-center justify-center',
         inRow
-          ? 'relative rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white'
+          ? 'relative text-white'
           : [
-              'rounded-lg bg-black/60 backdrop-blur-[24px] transition-opacity duration-200',
+              'text-white transition-opacity duration-200',
               buttonVisible || open ? 'opacity-80 hover:opacity-100' : 'opacity-0 pointer-events-none',
               buttonState === 'off' && 'text-white/60',
               buttonState === 'on' && 'text-white',
               buttonState === 'working' && 'text-white/80',
             ],
-        inRow && enabled && 'bg-white/20',
         buttonClassName ?? (inRow ? undefined : 'absolute bottom-12 left-2'),
       )}
     >
       {buttonState === 'working' ? (
         <Loader2 className="w-4 h-4 animate-spin" />
       ) : (
-        <Captions className={cn('w-4 h-4', enabled && 'fill-white/20')} />
+        <Captions className="w-[18px] h-[18px]" />
       )}
       {enabled && (
         <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-white" />
