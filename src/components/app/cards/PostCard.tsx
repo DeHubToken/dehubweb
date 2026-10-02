@@ -26,7 +26,10 @@ import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCover';
-import { ArticleReader } from '@/components/app/article/ArticleReader';
+// The full reader is only needed after opening an article, never for feed previews.
+const ArticleReader = lazy(() =>
+  import('@/components/app/article/ArticleReader').then((m) => ({ default: m.ArticleReader }))
+);
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
@@ -686,6 +689,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             ? <TranslatableText publicContent text={displayBody} className="" as="p" auto={false} flagged={post.communityAlertPending} />
             : null;
           return isPostPage ? (
+            <Suspense fallback={<ArticleFeedCover title={post.title} body={post.articleBody} coverUrl={post.articleImageUrl} onOpen={openArticle}>{summary}</ArticleFeedCover>}>
             <ArticleReader
               title={post.title}
               body={post.articleBody}
@@ -701,6 +705,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             >
               {summary}
             </ArticleReader>
+            </Suspense>
           ) : (
             <ArticleFeedCover title={post.title} body={post.articleBody} coverUrl={post.articleImageUrl} onOpen={openArticle}>
               {summary && <div className="article-ink-2 text-[15.25px] leading-[22.5px]">{summary}</div>}
