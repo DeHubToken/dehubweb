@@ -1,3 +1,4 @@
+import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
 import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-photos';
 /**
  * Home Feed Component
@@ -1458,7 +1459,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // RENDER HELPERS
   // ============================================================================
 
-  const renderFeedItem = (item: FeedItemType, index: number) => {
+  const visibleOptimisticPosts = optimisticPosts.filter(op => !getDeletedPostIds().has(op.id));
+
+  const renderFeedItem = (item: FeedItemType, index: number, section: 'optimistic' | 'pinned' | 'feed' = 'feed') => {
     const card = (() => {
       switch (item.type) {
         case 'post':
@@ -1494,7 +1497,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         key={key}
         data-feed-item
         data-cinematic={item.type}
-        data-cinematic-first={index === 0 ? '' : undefined}
+        data-cinematic-first={isFirstVisibleFeedCard(section, index, visibleOptimisticPosts.length, !!pinnedItem) ? '' : undefined}
         className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3"
         style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: `auto 0 auto ${intrinsicH}` } : undefined}
       >
@@ -1900,22 +1903,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     refetch,
   });
 
-  // Show a non-blocking top progress bar whenever something is loading in the background
-  // (filter switches, pagination, refetch). Filters stay clickable; existing items remain visible.
-  // Suppressed while the filter loader is up: it already says "working", and
-  // two loading affordances for one request read as two separate requests.
-  const showTopProgress = (isFetching || isAutoRetrying) && !isLoadingState && !showFilterLoader;
-
   return (
     <div data-feed-root className={cn("relative p-2 sm:p-3 pt-0 sm:pt-0 space-y-3", isCollapsed && "pt-2 sm:pt-2")}>
-      {showTopProgress && (
-        <div
-          aria-hidden
-          className="pointer-events-none sticky top-0 z-30 -mx-2 sm:-mx-3 h-[2px] overflow-hidden"
-        >
-          <div className="h-full w-1/3 bg-gradient-to-r from-transparent via-white/70 to-transparent animate-[shimmer-sweep_1.2s_linear_infinite]" />
-        </div>
-      )}
       {/* Filters - ALWAYS accessible so users can change settings even when feed is empty/retrying.
           When a portal target is provided, render the panel into the sticky tab bar so it stays
           visible while scrolling; otherwise fall back to the in-flow panel. */}
@@ -2206,12 +2195,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           ) : (
             <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`}>
               {/* Render optimistic posts */}
-              {optimisticPosts.filter(op => !getDeletedPostIds().has(op.id)).length > 0 && (
+              {visibleOptimisticPosts.length > 0 && (
                 <div className="mb-3">
-                  {renderMasonryGrid(optimisticPosts.filter(op => !getDeletedPostIds().has(op.id)).map((op) => {
+                  {renderMasonryGrid(visibleOptimisticPosts.map((op, index) => {
                     const feedItem: FeedItemType = { type: op.type, data: op.data as any };
-                    return renderFeedItem(feedItem, -999);
-                  }), optimisticPosts.filter(op => !getDeletedPostIds().has(op.id)).map((op) => ({ type: op.type, data: op.data as any })))}
+                    return renderFeedItem(feedItem, index, 'optimistic');
+                  }), visibleOptimisticPosts.map((op) => ({ type: op.type, data: op.data as any })))}
                 </div>
               )}
               
@@ -2237,7 +2226,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                       </button>
                     </div>
                   )}
-                  {renderMasonryGrid([renderFeedItem(pinnedItem, -1)], [pinnedItem])}
+                  {renderMasonryGrid([renderFeedItem(pinnedItem, 0, 'pinned')], [pinnedItem])}
                 </div>
               )}
               
