@@ -2255,7 +2255,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 data-video-bare={bareControls ? '' : undefined}
                 className={cn("flex items-center justify-center shrink-0", bareControls ? "h-8 w-8" : "h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10")}
               >
-                {isPlaying ? <Pause className="h-3 w-3 text-white fill-current" /> : <Play className="h-3 w-3 text-white fill-current ml-0.5" />}
+                {isPlaying ? <Pause className={bareControls ? "h-[18px] w-[18px] text-white" : "h-3 w-3 text-white fill-current"} /> : <Play className={bareControls ? "h-[18px] w-[18px] text-white ml-0.5" : "h-3 w-3 text-white fill-current ml-0.5"} />}
               </button>
               {bareControls && (
                 <span data-video-bare className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
