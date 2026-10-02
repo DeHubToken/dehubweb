@@ -18,6 +18,13 @@ interface UseSyncedAudioOptions {
   volume: number;
   /** Reference to the video element */
   videoRef: React.RefObject<HTMLVideoElement>;
+  /**
+   * The element itself, when the caller can say which one it is. The feed's
+   * <video> is shared between cards and changes hands, so the listeners below
+   * re-bind whenever this changes instead of staying on whatever the ref held
+   * at mount.
+   */
+  videoEl?: HTMLVideoElement | null;
 }
 
 interface UseSyncedAudioReturn {
@@ -33,6 +40,7 @@ export function useSyncedAudio({
   isMuted,
   volume,
   videoRef,
+  videoEl,
 }: UseSyncedAudioOptions): UseSyncedAudioReturn {
   const audioRef = useRef<HTMLAudioElement>(null);
   const hasSoundtrack = !!soundtrackUrl;
@@ -86,6 +94,14 @@ export function useSyncedAudio({
       audio.pause();
     };
 
+    // Any pause of the video stops the soundtrack, whoever caused it. Only
+    // following isPlaying missed pauses from outside the card (a play() that
+    // was cancelled on scroll-away, the element moving to another card), and
+    // the soundtrack played on over a stopped video.
+    const handlePause = () => {
+      audio.pause();
+    };
+
     const handlePlaying = () => {
       if (!video.paused) {
         audio.play().catch(() => {});
@@ -97,6 +113,10 @@ export function useSyncedAudio({
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('waiting', handleWaiting);
     video.addEventListener('playing', handlePlaying);
+    video.addEventListener('pause', handlePause);
+    // Detaching the source (the feed does this to cards it scrolls far past)
+    // stops the video without a pause event.
+    video.addEventListener('emptied', handlePause);
 
     return () => {
       video.removeEventListener('seeked', handleSeeked);
@@ -104,8 +124,12 @@ export function useSyncedAudio({
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('waiting', handleWaiting);
       video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('pause', handlePause);
+      video.removeEventListener('emptied', handlePause);
+      // The element is going to another card, or this card is going away.
+      audio.pause();
     };
-  }, [soundtrackUrl]);
+  }, [soundtrackUrl, videoEl]);
 
   // Mute video's native audio when soundtrack is active
   useEffect(() => {
@@ -117,7 +141,7 @@ export function useSyncedAudio({
     return () => {
       // Restore — let the caller handle muted state
     };
-  }, [soundtrackUrl]);
+  }, [soundtrackUrl, videoEl]);
 
   return { audioRef, hasSoundtrack };
 }

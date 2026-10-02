@@ -5,6 +5,7 @@ import {
   isHandoffVideoActive,
   releaseHandoffVideo,
   subscribeHandoffVideo,
+  takeHandoffVideo,
 } from '@/lib/video-handoff';
 
 /**
@@ -173,5 +174,18 @@ export function useHandoffVideo({
     }
   }, [videoRef, handoffKey, className, muted, loop, preload, poster, src, claimVersion]);
 
-  return { attachSlot, isActive };
+  /**
+   * Take the element back from another card showing the same post. Points the
+   * caller's ref at it straight away, so a play() in the same handler reaches
+   * it; the sync effect re-applies this card's attributes on the next render.
+   */
+  const takeOver = useCallback((): HTMLVideoElement | null => {
+    const held = claimRef.current;
+    if (!held) return null;
+    const el = takeHandoffVideo(held.key, held.token);
+    if (el) videoRef.current = el;
+    return el;
+  }, [videoRef]);
+
+  return { attachSlot, isActive, takeOver };
 }
