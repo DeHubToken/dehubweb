@@ -33,6 +33,7 @@ let scrollTop = 0;
 let uninstall: () => void;
 vi.mock('@/lib/document-scroll', () => ({
   getDocumentScrollTop: () => scrollTop,
+  scrollDocumentTo: (top: number) => { scrollTop = top; },
 }));
 
 /** A page three viewports tall, so the watchdog's height gate passes. */
@@ -44,13 +45,14 @@ function makePageScrollable() {
 let dragTarget: Element = document.body;
 
 function touch(type: string, clientY: number) {
-  const event = new Event(type, { bubbles: true }) as TouchEvent & { touches: unknown };
+  const event = new Event(type, { bubbles: true, cancelable: true }) as TouchEvent & { touches: unknown };
   Object.defineProperty(event, 'touches', {
     value: type === 'touchend' ? [] : [{ clientX: 100, clientY }],
     configurable: true,
   });
   Object.defineProperty(event, 'target', { value: dragTarget, configurable: true });
   window.dispatchEvent(event);
+  return event;
 }
 
 /** A drag of `dy` px: positive is downward, which asks the page to scroll up. */
@@ -101,6 +103,7 @@ describe('scroll freeze watchdog', () => {
     vi.useRealTimers();
     document.body.style.cssText = '';
     document.body.innerHTML = '';
+    window.history.replaceState({}, '', '/');
   });
 
   it('says nothing when a downward drag happens at the top of the page', () => {
@@ -282,6 +285,90 @@ describe('scroll freeze watchdog', () => {
       vi.advanceTimersByTime(10000);
       expect(document.body.style.overflowY).not.toBe('hidden');
     }
+    expect(REPORTS).toHaveLength(3);
+  });
+
+  function samsungFeed() {
+    vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('SamsungBrowser/30.0 Chrome/143');
+    window.history.replaceState({}, '', '/app');
+  }
+
+  it('keeps normal Samsung scrolling native until an unlocked feed drag has failed', () => {
+    samsungFeed();
+    touch('touchstart', 500);
+    const move = touch('touchmove', 450);
+    expect(move.defaultPrevented).toBe(false);
+    expect(scrollTop).toBe(0);
+  });
+
+  it('lets the next vertical feed drag scroll after a confirmed Samsung stall', () => {
+    samsungFeed();
+    drag(-120); settle();
+    expect(REPORTS[0].meta.samsungFeedScrollFallback).toBe(true);
+    touch('touchstart', 500);
+    const move = touch('touchmove', 400);
+    expect(move.defaultPrevented).toBe(true);
+    expect(scrollTop).toBe(100);
+    touch('touchmove', 300);
+    expect(scrollTop).toBe(200);
+  });
+
+  it('never takes a button drag or an open modal from Samsung after recovery is enabled', () => {
+    samsungFeed();
+    drag(-120); settle();
+    document.body.innerHTML = '<button>Volume</button>';
+    dragTarget = document.querySelector('button')!;
+    touch('touchstart', 500);
+    expect(touch('touchmove', 400).defaultPrevented).toBe(false);
+    expect(scrollTop).toBe(0);
+    document.body.innerHTML = '<div role="dialog" data-state="open"></div>';
+    dragTarget = document.body;
+    touch('touchstart', 500);
+    expect(touch('touchmove', 400).defaultPrevented).toBe(false);
+    expect(scrollTop).toBe(0);
+  });
+
+  it('does not activate Samsung feed recovery on a post overlay or another browser', () => {
+    samsungFeed();
+    window.history.replaceState({}, '', '/app/post/6237');
+    drag(-120); settle();
+    expect(REPORTS[0].meta.samsungFeedScrollFallback).toBe(false);
+    window.history.replaceState({}, '', '/app');
+    vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Chrome/143');
+    touch('touchstart', 500);
+    expect(touch('touchmove', 400).defaultPrevented).toBe(false);
+  });
+
+  it('leaves horizontal feed swipes and nested scrolling native after a Samsung stall', () => {
+    samsungFeed();
+    drag(-120); settle();
+    touch('touchstart', 500);
+    const sideways = new Event('touchmove', { bubbles: true, cancelable: true });
+    Object.defineProperty(sideways, 'touches', { value: [{ clientX: 250, clientY: 480 }] });
+    window.dispatchEvent(sideways);
+    expect(sideways.defaultPrevented).toBe(false);
+    expect(scrollTop).toBe(0);
+    document.body.innerHTML = '<div style="overflow-y:auto"><span>Comments</span></div>';
+    const list = document.body.firstElementChild!;
+    Object.defineProperty(list, 'scrollHeight', { value: 1000 });
+    Object.defineProperty(list, 'clientHeight', { value: 300 });
+    dragTarget = list.firstElementChild!;
+    touch('touchstart', 500);
+    expect(touch('touchmove', 400).defaultPrevented).toBe(false);
+    expect(scrollTop).toBe(0);
+  });
+
+  it('keeps Samsung recovery available after the three-report telemetry limit', () => {
+    samsungFeed();
+    for (let i = 0; i < 3; i++) {
+      document.body.style.overflowY = 'hidden';
+      vi.advanceTimersByTime(10000);
+    }
+    expect(REPORTS).toHaveLength(3);
+    drag(-120); settle();
+    touch('touchstart', 500);
+    expect(touch('touchmove', 400).defaultPrevented).toBe(true);
+    expect(scrollTop).toBe(100);
     expect(REPORTS).toHaveLength(3);
   });
 });
