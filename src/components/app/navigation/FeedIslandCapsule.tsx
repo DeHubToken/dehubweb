@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Bell, Check, Menu, SlidersHorizontal } from 'lucide-react';
+import { Bell, Check, Menu, SlidersHorizontal, LayoutGrid, Plus } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { setFeedTabsOpen, toggleFeedTabs, useFeedTabsOpen } from '@/lib/feed-tabs-reveal';
 
@@ -26,6 +26,7 @@ interface FeedIslandCapsuleProps {
   logoSrc: string;
   unread: number;
   onBellClick: () => void;
+  onCreatePost: () => void;
 }
 
 /** Fixed phone navigation capsule with separate sheets behind it. */
@@ -36,6 +37,7 @@ export function FeedIslandCapsule({
   logoSrc,
   unread,
   onBellClick,
+  onCreatePost,
 }: FeedIslandCapsuleProps) {
   const [tabValue, setTabValue] = useState(readActiveTab);
   useEffect(() => {
@@ -103,8 +105,8 @@ export function FeedIslandCapsule({
           </button>
         </div>
       </div>
-      <div className="absolute inset-x-0 top-0 z-0 overflow-hidden pt-11 pointer-events-none">
-      <div ref={setFeedIslandPortal} className="w-full pointer-events-auto" />
+      <div className="absolute inset-x-0 top-0 z-0 overflow-visible pointer-events-none">
+      <div ref={setFeedIslandPortal} className="w-full pointer-events-auto" hidden={tabsOpen} />
       <AnimatePresence>
       {tabsOpen && visible && (
         <motion.div
@@ -116,7 +118,7 @@ export function FeedIslandCapsule({
           exit={{ height: 0, opacity: 0, y: -8, pointerEvents: 'none' }}
           transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
           data-feed-island-surface
-          className="w-full overflow-hidden rounded-b-[15px] text-white pointer-events-auto"
+          className="w-full overflow-hidden rounded-[15px] pt-11 text-white pointer-events-auto"
         >
         <div className="p-1.5">
           {FEED_TABS.map(({ value, label, icon: Icon }) => (
@@ -135,17 +137,23 @@ export function FeedIslandCapsule({
             </button>
           ))}
           <div className="mx-2 my-1 h-px bg-white/15" />
-          <button
-            role="menuitem"
-            onClick={() => {
-              setFeedTabsOpen(false);
-              window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue }));
-            }}
-            className="flex h-10 w-full items-center gap-2.5 rounded-lg px-2.5 text-[14px] font-semibold text-zinc-200 hover:bg-white/10"
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-            Filters
-          </button>
+          <div className="flex items-center">
+            <button role="menuitem" aria-label="Filters" title="Filters"
+              onClick={() => { setFeedTabsOpen(false); window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue })); }}
+              className="flex h-10 flex-1 items-center justify-center rounded-lg hover:bg-white/10">
+              <SlidersHorizontal className="h-4 w-4" />
+            </button>
+            <button role="menuitem" aria-label="Open menu" title="Menu"
+              onClick={() => { setFeedTabsOpen(false); onAvatarClick(); }}
+              className="flex h-10 flex-1 items-center justify-center rounded-lg hover:bg-white/10">
+              <LayoutGrid className="h-4 w-4" />
+            </button>
+            <button role="menuitem" aria-label="Create post" title="Create post"
+              onClick={() => { setFeedTabsOpen(false); onCreatePost(); }}
+              className="flex h-10 flex-1 items-center justify-center rounded-lg hover:bg-white/10">
+              <Plus className="h-4 w-4" />
+            </button>
+          </div>
         </div>
         </motion.div>
       )}
