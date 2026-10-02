@@ -1,3 +1,4 @@
+import { getVideoPreferences, setMediaMuted } from './video-preferences';
 /**
  * Video Playback Manager
  * ======================
@@ -18,7 +19,7 @@ class VideoPlaybackManager {
   private activeVideos: Set<string> = new Set(); // currently playing video IDs
   private audioOwnerId: string | null = null;    // the one video allowed to have audio
   private registeredVideos: Map<string, VideoInstance> = new Map();
-  private _globalMuted: boolean = true; // Start muted by default
+  private _globalMuted: boolean = getVideoPreferences().mediaMuted ?? true;
 
   private constructor() {}
 
@@ -35,6 +36,7 @@ class VideoPlaybackManager {
 
   set globalMuted(muted: boolean) {
     this._globalMuted = muted;
+    setMediaMuted(muted);
   }
 
   /**
