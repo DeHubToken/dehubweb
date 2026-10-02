@@ -862,15 +862,6 @@ export function ActionBar({
 
   const ShareOptions = () => (
     <>
-      {canSendInDm && (
-        <button
-          onClick={(e) => { e.stopPropagation(); handleSendInDm(); }}
-          className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
-        >
-          <Send className="w-5 h-5" />
-          <span className="font-medium">Send in a message</span>
-        </button>
-      )}
       {isReposted ? (
         <button
           onClick={(e) => { e.stopPropagation(); handleUndoRepost(); }}
@@ -895,13 +886,6 @@ export function ActionBar({
         <Quote className="w-5 h-5" />
         <span className="font-medium">Quote</span>
       </button>
-      <button
-        onClick={(e) => { e.stopPropagation(); handleCopyLink(); }}
-        className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
-      >
-        <Link className="w-5 h-5" />
-        <span className="font-medium">Copy Link</span>
-      </button>
       {onShareAsImage && (
         <button
           onClick={handleShareAsImage}
@@ -921,6 +905,22 @@ export function ActionBar({
           <span className="font-medium">See Engagements</span>
         </button>
       )}
+      {canSendInDm && (
+        <button
+          onClick={(e) => { e.stopPropagation(); handleSendInDm(); }}
+          className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+        >
+          <Send className="w-5 h-5" />
+          <span className="font-medium">Send in a message</span>
+        </button>
+      )}
+      <button
+        onClick={(e) => { e.stopPropagation(); handleCopyLink(); }}
+        className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+      >
+        <Link className="w-5 h-5" />
+        <span className="font-medium">Copy Link</span>
+      </button>
     </>
   );
 
