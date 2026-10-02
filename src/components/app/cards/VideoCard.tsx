@@ -1305,14 +1305,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   const cyclePlaybackRate = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
+    const currentIdx = PLAYBACK_RATES.indexOf(getPlaybackRateFor(video.creatorId) as any);
     const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
+    if (videoRef.current) videoRef.current.playbackRate = nextRate;
     setPlaybackRate(nextRate);
     // Pins the rate to this creator as well as moving the global default, so
     // the next video of theirs starts here without freezing everyone else.
     vpSetPlaybackRate(nextRate, video.creatorId);
-    if (videoRef.current) videoRef.current.playbackRate = nextRate;
-  }, [playbackRate, video.creatorId]);
+  }, [video.creatorId]);
 
   const toggleLoop = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -2325,6 +2325,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             <button
               className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
               onClick={cyclePlaybackRate}
+              style={{ touchAction: 'manipulation' }}
               aria-label="Playback speed"
             >
               {formatRate(playbackRate)}x

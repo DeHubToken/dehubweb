@@ -594,11 +594,11 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
+                const currentIdx = PLAYBACK_RATES.indexOf(getVideoPreferences().playbackRate as any);
                 const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
+                if (videoRef.current) videoRef.current.playbackRate = nextRate;
                 setPlaybackRate(nextRate);
                 vpSetPlaybackRate(nextRate);
-                if (videoRef.current) videoRef.current.playbackRate = nextRate;
               }}
               className="h-10 w-[58px] rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors text-white text-sm font-medium"
             >
