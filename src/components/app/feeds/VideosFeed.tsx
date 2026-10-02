@@ -792,7 +792,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   });
 
   // Show loading during initial load or while auto-fetching for duration filter
-  if (isRefreshing || isApiLoading || isAutoFetching || isAutoRetrying) {
+  if ((isRefreshing || isApiLoading || isAutoFetching || isAutoRetrying) && !showFilters) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <VideosFeedSkeleton />
@@ -861,7 +861,9 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       {/* Video Grid, filter loader or Empty State. The loader sits BELOW the
           filter panel, not in place of the whole feed, so the chips the user is
           working with stay on screen and clickable while the request runs. */}
-      {filterTransition.active ? (
+      {isRefreshing || isApiLoading || isAutoFetching || isAutoRetrying ? (
+        <VideosFeedSkeleton />
+      ) : filterTransition.active ? (
         <FeedFilterLoader className="mt-3" />
       ) : allVideos.length === 0 ? (
         <EmptyState />

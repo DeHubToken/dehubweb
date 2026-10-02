@@ -5488,7 +5488,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
    scrolls down on phones (FeedIslandCapsule). Same dark glass as the
    cinematic author chips, so it reads over bright photos. */
 /* The fixed capsule and the sheet behind it have separate glass surfaces. */
-html[data-theme="system"] [data-feed-island-surface] {
+html[data-theme="system"] [data-feed-island-surface],
+html[data-theme="system"] [data-feed-filter-panel] {
   background: rgb(10 10 12 / 0.45);
   backdrop-filter: blur(20px) saturate(160%);
   box-shadow:
@@ -5687,4 +5688,16 @@ html body [data-video-card] [data-video-inline-tools] button {
 html body [data-video-card] [data-video-inline-tools] button::before,
 html body [data-video-card] [data-video-inline-tools] button::after {
   display: none !important;
+}
+
+/* Filters use the capsule material and clear its fixed controls on phones. */
+html[data-theme="system"] [data-feed-filter-panel] {
+  border: 0;
+  border-radius: 15px;
+}
+@media (max-width: 1023px) {
+  html[data-theme="system"] [data-feed-root] [data-feed-filter-panel],
+  html[data-theme="system"] [data-cinematic-music] > [data-feed-filter-panel] {
+    margin-top: calc(env(safe-area-inset-top, 0px) + 5.75rem);
+  }
 }

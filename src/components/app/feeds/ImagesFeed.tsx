@@ -588,7 +588,7 @@ export function ImagesFeed({
     refetch,
   });
 
-  if (isLoading || isAutoRetrying) {
+  if ((isLoading || isAutoRetrying) && !showFilters) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <ImagesFeedSkeleton />
@@ -598,12 +598,12 @@ export function ImagesFeed({
 
   // An in-flight filter switch outranks "empty": bailing here would drop the
   // filter panel and the loader both, and read as the feed vanishing.
-  if (imagePosts.length === 0 && !filterTransition.active) {
+  if (imagePosts.length === 0 && !filterTransition.active && !showFilters) {
     return <EmptyState />;
   }
 
   return (
-    <div>
+    <div data-feed-root>
       {/* Filter Section */}
       <AnimatePresence mode="wait">
         {showFilters && (
@@ -614,7 +614,7 @@ export function ImagesFeed({
             transition={{ duration: 0.2 }}
             className="overflow-y-clip overflow-x-visible"
           >
-            <div data-feed-filter-panel className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4">
+            <div data-no-swipe data-feed-filter-panel className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4">
               <SortFilterSection 
                 selected={selectedSort} 
                 onSelect={handleSortSelect} 
@@ -665,8 +665,12 @@ export function ImagesFeed({
       {/* Content. The filter loader sits BELOW the filter panel, not in place of
           the whole feed, so the chips the user is working with stay on screen
           and clickable while the request runs. */}
-      {filterTransition.active ? (
+      {isLoading || isAutoRetrying ? (
+        <ImagesFeedSkeleton />
+      ) : filterTransition.active ? (
         <FeedFilterLoader className="mt-3" />
+      ) : imagePosts.length === 0 ? (
+        <EmptyState />
       ) : (
         <>
           {feedEverOpened && (

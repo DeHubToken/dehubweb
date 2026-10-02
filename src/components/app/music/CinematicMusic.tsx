@@ -7,6 +7,7 @@
  */
 
 import { useMemo, useState } from 'react';
+import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Heart, Headphones, Loader2, Pause, Play, Radio, Share2 } from 'lucide-react';
@@ -242,9 +243,10 @@ function SectionTitle({ title, action, onAction }: { title: string; action?: str
 // MAIN
 // ============================================================================
 
-export function CinematicMusic({ radioStations, blockedAddresses }: {
+export function CinematicMusic({ radioStations, blockedAddresses, showFilters = false }: {
   radioStations: RadioStation[];
   blockedAddresses?: Set<string>;
+  showFilters?: boolean;
 }) {
   const navigate = useNavigate();
   const [chip, setChip] = useState<Chip>('top');
@@ -285,13 +287,16 @@ export function CinematicMusic({ radioStations, blockedAddresses }: {
 
   return (
     <div data-cinematic-music className="pb-32">
+      {showFilters && <div data-no-swipe data-feed-filter-panel className="mb-3 rounded-[15px] px-2 py-3">
+        <GlassFilterRow items={CHIPS} activeKey={chip} onSelect={setChip} />
+      </div>}
       {heroStation ? (
         <RadioHero key={heroStation.stationuuid} station={heroStation} />
       ) : (
         <div className="-mx-2 animate-pulse bg-zinc-900" style={{ height: 'min(118vw, 460px)' }} />
       )}
 
-      <div data-no-swipe className="-mx-2 mt-3.5 flex gap-2 overflow-x-auto px-3.5 scrollbar-hide">
+      {!showFilters && <div data-no-swipe className="-mx-2 mt-3.5 flex gap-2 overflow-x-auto px-3.5 scrollbar-hide">
         {CHIPS.map((c) => (
           <button
             key={c.key}
@@ -304,7 +309,7 @@ export function CinematicMusic({ radioStations, blockedAddresses }: {
             {c.label}
           </button>
         ))}
-      </div>
+      </div>}
 
       {chip === 'top' && renderTracks(top, 'Top 50')}
       {chip === 'new' && renderTracks(fresh, 'New releases')}

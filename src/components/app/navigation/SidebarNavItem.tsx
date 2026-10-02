@@ -108,7 +108,8 @@ export function SidebarNavItem({
   const handleClick = (e: React.MouseEvent) => {
     onClick?.(e);
     if (e.defaultPrevented) return;
-    if (item.path === '/app/notifications' || item.path === '/notifications') {
+    // Desktop keeps its original Notifications route; only phones use the sheet.
+    if (!isDesktop && (item.path === '/app/notifications' || item.path === '/notifications')) {
       e.preventDefault();
       openNotificationsDrawer();
       onNavigate?.();
