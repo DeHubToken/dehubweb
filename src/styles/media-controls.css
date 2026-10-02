@@ -12,19 +12,37 @@ html[data-theme][data-theme] [data-audio-player] :is([data-audio-style], [data-a
 
 /* Match the APK's bare white glyphs, including a dark outline on bright frames. */
 html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inline-tools]) button,
-html[data-theme] body [data-video-card] button[data-video-bare] {
+html[data-theme] body [data-video-card] button[data-video-bare],
+html[data-theme] body [data-video-caption-control] {
   color: #fff !important;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
 }
-html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inline-tools], [data-video-bare]) svg {
+html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inline-tools], [data-video-bare], [data-video-caption-control]) svg {
+  color: #fff !important;
+  width: 18px;
+  height: 18px;
+  opacity: 1;
   filter: drop-shadow(1px 0 0 rgb(0 0 0 / 0.45))
     drop-shadow(-1px 0 0 rgb(0 0 0 / 0.45))
     drop-shadow(0 1px 0 rgb(0 0 0 / 0.45))
     drop-shadow(0 -1px 0 rgb(0 0 0 / 0.45));
 }
 html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-inline-tools] button) {
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.8);
+  filter: none !important;
+  color: #fff !important;
+  font-size: 12px;
+  font-weight: 600;
+  text-shadow: 0.7px 0 0 rgb(0 0 0 / 0.45), -0.7px 0 0 rgb(0 0 0 / 0.45),
+    0 0.7px 0 rgb(0 0 0 / 0.45), 0 -0.7px 0 rgb(0 0 0 / 0.45);
+}
+
+/* Outline only the 3px line; the 14px seek target stays clear. */
+[data-video-card] [data-video-scrubber="line"] [data-scrubber-line] {
+  background-size: calc(100% - 1px) 2px, 100% 3px !important;
+  background-position: center calc(100% - 0.5px), center bottom !important;
 }
