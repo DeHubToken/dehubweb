@@ -52,14 +52,24 @@ export function getVideoPreferences(): VideoPreferences {
   return cached;
 }
 
-function save(prefs: VideoPreferences) {
-  cached = prefs;
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-  } catch {}
-  // Notify other components via storage event workaround
+let saveTimer: ReturnType<typeof setTimeout> | null = null;
+let pendingSave: VideoPreferences | null = null;
+function flushSave() {
+  if (saveTimer !== null) clearTimeout(saveTimer);
+  saveTimer = null;
+  const prefs = pendingSave; pendingSave = null;
+  if (!prefs) return;
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch {}
   window.dispatchEvent(new CustomEvent('video-prefs-changed', { detail: prefs }));
 }
+function save(prefs: VideoPreferences) {
+  // The next tap reads the new rate immediately; storage and every mounted
+  // player's preference listener must not run in the control's input event.
+  cached = prefs; pendingSave = prefs;
+  if (saveTimer !== null) clearTimeout(saveTimer);
+  saveTimer = setTimeout(flushSave, 0);
+}
+if (typeof window !== 'undefined') window.addEventListener('pagehide', flushSave);
 
 /**
  * Set the playback rate. Passing the creator whose video is playing also

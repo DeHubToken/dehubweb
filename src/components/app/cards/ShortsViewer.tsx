@@ -2018,13 +2018,18 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
             {/* Playback speed */}
             <button
-              onClick={() => {
-                const currentIdx = PLAYBACK_RATES.indexOf(playbackRate as any);
+              onClick={(event) => {
+                event.stopPropagation();
+                const currentIdx = PLAYBACK_RATES.indexOf(getPlaybackRateFor(currentShort?.creatorId) as any);
                 const nextRate = PLAYBACK_RATES[(currentIdx + 1) % PLAYBACK_RATES.length];
+                // Apply to the current slide before rerendering its neighbours.
+                const player = containerRef.current?.querySelector<HTMLVideoElement>(`[data-shorts-slide="${currentIndex}"] video`);
+                if (player) player.playbackRate = nextRate;
                 setPlaybackRate(nextRate);
                 vpSetPlaybackRate(nextRate, currentShort?.creatorId);
               }}
               className="h-10 min-w-[40px] px-1.5 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
+              style={{ touchAction: 'manipulation' }}
               aria-label="Playback speed"
             >
               <span className="text-white text-[11px] font-bold leading-none">{formatRate(playbackRate)}x</span>
