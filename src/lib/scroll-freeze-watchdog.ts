@@ -236,6 +236,7 @@ let dragStartY = 0;
 let dragStartScroll = 0;
 let dragTarget: Element | null = null;
 let dragArmed = false;
+let touchActive = false;
 let settleTimer = 0;
 let wheelTimer = 0;
 let lastDocumentScrollAt = -Infinity;
@@ -283,11 +284,13 @@ function blockingTouchActions(start: Element | null): string[] {
 }
 
 function endDrag() {
+  touchActive = false;
   dragArmed = false;
   dragTarget = null;
 }
 
 function onTouchStart(e: TouchEvent) {
+  touchActive = true;
   dragArmed = e.touches.length === 1;
   if (!dragArmed) return;
   dragStartY = e.touches[0].clientY;
@@ -343,6 +346,8 @@ function onTouchMove(e: TouchEvent) {
     const evidence = {
       target: describeMaybe(target),
       blockedBy: blockingTouchActions(target),
+      touchDefaultPrevented: e.defaultPrevented,
+      targetConnected: target?.isConnected ?? false,
       atFinger: describeMaybe(document.elementFromPoint(clientX, clientY)),
     };
 
@@ -357,7 +362,12 @@ function onTouchMove(e: TouchEvent) {
     // on <body>, so there is nothing here to undo, and stripping body's styles on
     // a guess tears the lock off a fullscreen viewer that is legitimately holding
     // the page. The body-state check above is the path that recovers.
-    report('A drag moved the finger but not the page', evidence, false);
+    // Never reset during a continuing gesture, on a deliberate touch-action
+    // region, or for an event cancelled by an interactive control.
+    const recoveryAttempted = !touchActive &&
+      target?.isConnected && !e.defaultPrevented && evidence.blockedBy.length === 0
+      ? restoreDocumentTouchScroll() : false;
+    report('A drag moved the finger but not the page', { ...evidence, recoveryAttempted }, false);
   }, SETTLE_MS);
 }
 
@@ -412,6 +422,30 @@ let settleAfterCloseTimer = 0;
  *   programmatically. A one pixel nudge and back re-attaches it and is
  *   invisible.
  */
+/** Recreate Samsung's body scrolling layer after the modal releases it.
+ * A scrollTop nudge alone leaves the same compositor scroll node in place.
+ * Preserve both inline priority and offset; never release an owned lock.
+ * This is a recovery for the recorded unlocked-body stall, not evidence of
+ * which browser/gesture handler originally stalled it.
+ */
+export function restoreDocumentTouchScroll(): boolean {
+  if (!/SamsungBrowser\//.test(navigator.userAgent)) return false;
+  if (touchActive || overlayIsOpen() || coveringLayer() || !pageIsTallerThanViewport()) return false;
+  const body = document.body;
+  const computed = getComputedStyle(body);
+  if (computed.overflowY === 'hidden' || computed.overflowY === 'clip' || computed.pointerEvents === 'none') return false;
+  const top = getDocumentScrollTop();
+  const value = body.style.getPropertyValue('overflow-y');
+  const priority = body.style.getPropertyPriority('overflow-y');
+  body.style.setProperty('overflow-y', 'hidden', 'important');
+  void body.offsetHeight;
+  if (value) body.style.setProperty('overflow-y', value, priority);
+  else body.style.removeProperty('overflow-y');
+  void body.offsetHeight;
+  scrollDocumentTo(top);
+  return true;
+}
+
 export function settleAfterOverlayClose(): void {
   if (typeof window === 'undefined') return;
   window.clearTimeout(settleAfterCloseTimer);
@@ -419,6 +453,7 @@ export function settleAfterOverlayClose(): void {
     if (overlayIsOpen() || coveringLayer()) return;
     checkBodyState();
     if (!pageIsTallerThanViewport()) return;
+    if (restoreDocumentTouchScroll()) return;
     const top = getDocumentScrollTop();
     scrollDocumentTo(top > 0 ? top - 1 : top + 1);
     requestAnimationFrame(() => scrollDocumentTo(top));
