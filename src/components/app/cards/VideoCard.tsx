@@ -1,3 +1,4 @@
+import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
 import { isVideoOutsideFeed } from '@/lib/video-background-playback';
 /**
  * Video Card Component
@@ -89,7 +90,7 @@ const LiveFeedPreview = lazy(() => import('./LiveFeedPreview').then(m => ({ defa
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
+import { getVideoPreferences, useMediaVolume, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
@@ -712,7 +713,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [intrinsicAspect, setIntrinsicAspect] = useState<number | null>(null);
-  const [volume, setVolume] = useState(() => getVideoPreferences().volume);
+  const volume = useMediaVolume();
   /**
    * The control row mounts the subtitle button through this node, so it shares
    * the row's mount instead of fading in on a timer of its own.
@@ -1070,6 +1071,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     // Audio posts use AudioVisualizer which handles its own playback
     if (video.isAudio) {
       if (isContentGated) return;
+      setIsMuted(getVideoPreferences().mediaMuted === true);
       const willPlay = !isPlayingRef.current;
       setIsPlaying(willPlay);
       isPlayingRef.current = willPlay;
@@ -1195,7 +1197,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
    */
   const setVolumeTo = useCallback((next: number) => {
     const newVolume = Math.max(0, Math.min(1, next));
-    setVolume(newVolume);
     vpSetVolume(newVolume);
     if (videoRef.current) videoRef.current.volume = newVolume;
     const shouldMute = newVolume === 0;
@@ -1985,6 +1986,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                       className="w-full h-full"
                       showStylePicker={true}
                       muted={isMuted}
+                      onMuteChange={setIsMuted}
                       seed={video.id}
                       decodeEnabled={nearViewport}
                       durationHint={video.audioDuration || video.durationSeconds || 0}
@@ -2193,7 +2195,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 onClick={toggleMute}
                 aria-label={t('videoPlayer.volume')}
               >
-                {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                {isMuted ? <MediaControlIcon icon={VolumeX} /> : <MediaControlIcon icon={Volume2} />}
               </button>
               {volumeOpen && (
                 <div className="absolute top-full right-0 pt-1.5" onClick={(e) => e.stopPropagation()}>
@@ -2255,7 +2257,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 data-video-bare={bareControls ? '' : undefined}
                 className={cn("flex items-center justify-center shrink-0", bareControls ? "h-8 w-8" : "h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10")}
               >
-                {isPlaying ? <Pause className={bareControls ? "h-[18px] w-[18px] text-white" : "h-3 w-3 text-white fill-current"} /> : <Play className={bareControls ? "h-[18px] w-[18px] text-white ml-0.5" : "h-3 w-3 text-white fill-current ml-0.5"} />}
+                {isPlaying ? <MediaControlIcon icon={Pause} /> : <MediaControlIcon icon={Play} />}
               </button>
               <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
               <input
@@ -2338,7 +2340,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   aria-label={isLooping ? 'Disable loop' : 'Enable loop'}
                   aria-pressed={isLooping}
                 >
-                  <Repeat className="h-4 w-4" />
+                  <MediaControlIcon icon={Repeat} />
                 </button>
               </TooltipTrigger>
               <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
@@ -2352,7 +2354,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     onClick={handlePictureInPicture}
                     aria-label="Picture in picture"
                   >
-                    <PictureInPicture2 className="h-4 w-4" />
+                    <MediaControlIcon icon={PictureInPicture2} />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Picture in Picture (P)</TooltipContent>
@@ -2365,7 +2367,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 onClick={handleFullscreen}
                 aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
               >
-                {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+                {isFullscreen ? <MediaControlIcon icon={Minimize} /> : <MediaControlIcon icon={Maximize} />}
               </button>
             )}
               </div>
@@ -2377,7 +2379,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
                     className="-mr-1 flex h-8 w-8 shrink-0 items-center justify-center text-white"
                   >
-                    {isFullscreen ? <Minimize className="h-[18px] w-[18px]" /> : <Maximize className="h-[18px] w-[18px]" />}
+                    {isFullscreen ? <MediaControlIcon icon={Minimize} /> : <MediaControlIcon icon={Maximize} />}
                   </button>
                 </>
               ) : null}

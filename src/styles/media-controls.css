@@ -27,18 +27,17 @@ html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inl
   width: 18px;
   height: 18px;
   opacity: 1;
-  filter: drop-shadow(1px 0 0 rgb(0 0 0 / 0.45))
-    drop-shadow(-1px 0 0 rgb(0 0 0 / 0.45))
-    drop-shadow(0 1px 0 rgb(0 0 0 / 0.45))
-    drop-shadow(0 -1px 0 rgb(0 0 0 / 0.45));
+  filter: none !important;
+  box-shadow: none !important;
 }
 html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-inline-tools] button) {
   filter: none !important;
   color: #fff !important;
   font-size: 12px;
   font-weight: 600;
-  text-shadow: 0.7px 0 0 rgb(0 0 0 / 0.45), -0.7px 0 0 rgb(0 0 0 / 0.45),
-    0 0.7px 0 rgb(0 0 0 / 0.45), 0 -0.7px 0 rgb(0 0 0 / 0.45);
+  text-shadow: none !important;
+  -webkit-text-stroke: 1px rgb(0 0 0 / 0.8);
+  paint-order: stroke fill;
 }
 
 /* Outline only the 3px line; the 14px seek target stays clear. */

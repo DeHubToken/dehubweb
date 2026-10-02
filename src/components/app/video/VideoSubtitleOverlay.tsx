@@ -1,3 +1,4 @@
+import { MediaControlIcon } from './MediaControlIcon';
 /**
  * VideoSubtitleOverlay
  * ====================
@@ -17,7 +18,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { Captions, Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
+import { Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
@@ -575,9 +576,9 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       )}
     >
       {buttonState === 'working' ? (
-        <Loader2 className="w-4 h-4 animate-spin" />
+        <MediaControlIcon icon={Loader2} spinning />
       ) : (
-        <Captions className="w-[18px] h-[18px]" />
+        <MediaControlIcon captions />
       )}
       {enabled && (
         <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-white" />
