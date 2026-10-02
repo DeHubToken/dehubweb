@@ -10,8 +10,21 @@ html[data-theme][data-theme] [data-audio-player] :is([data-audio-style], [data-a
   border-radius: 9999px !important;
 }
 
-/* White video actions must retain contrast without gaining theme button frames. */
-html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inline-tools]) button {
+/* Match the APK's bare white glyphs, including a dark outline on bright frames. */
+html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inline-tools]) button,
+html[data-theme] body [data-video-card] button[data-video-bare] {
   color: #fff !important;
-  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.7));
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inline-tools], [data-video-bare]) svg {
+  filter: drop-shadow(1px 0 0 rgb(0 0 0 / 0.45))
+    drop-shadow(-1px 0 0 rgb(0 0 0 / 0.45))
+    drop-shadow(0 1px 0 rgb(0 0 0 / 0.45))
+    drop-shadow(0 -1px 0 rgb(0 0 0 / 0.45));
+}
+html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-inline-tools] button) {
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.8);
 }
