@@ -7,6 +7,7 @@
  */
 
 import { useMemo, useState } from 'react';
+import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Eye, Radio } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -112,11 +113,12 @@ function StreamTile({ stream, onClick }: { stream: LiveStream; onClick: () => vo
   );
 }
 
-export function CinematicLive({ streams, isLoading, tvChannels, emptyState }: {
+export function CinematicLive({ streams, isLoading, tvChannels, emptyState, showFilters = false }: {
   streams: LiveStream[];
   isLoading: boolean;
   tvChannels: TVChannel[];
   emptyState: React.ReactNode;
+  showFilters?: boolean;
 }) {
   const navigate = useNavigate();
   const [gameId, setGameId] = useState<string | null>(null);
@@ -141,7 +143,12 @@ export function CinematicLive({ streams, isLoading, tvChannels, emptyState }: {
   const liveCount = streams.filter((s) => s.isLive).length;
 
   return (
-    <div data-cinematic-live className="pb-32 pt-[calc(env(safe-area-inset-top,0px)+3.75rem)]">
+    <div data-cinematic-live className={cn('pb-32', showFilters ? 'pt-[calc(env(safe-area-inset-top,0px)+5.75rem)]' : 'pt-[calc(env(safe-area-inset-top,0px)+3.75rem)]')}>
+      {showFilters && <div data-no-swipe data-feed-filter-panel className="mb-3 rounded-[15px] px-2 py-3">
+        <GlassFilterRow<string>
+          items={[{ key: 'all', label: 'All' }, ...LIVE_GAMES.map(g => ({ key: g.id, label: g.name }))]}
+          activeKey={gameId ?? 'all'} onSelect={key => setGameId(key === 'all' ? null : key)} />
+      </div>}
       {liveCreators.length > 0 && (
         <SwipeableCarousel>
           <div data-no-swipe className="-mx-2 flex gap-3 overflow-x-auto px-3.5 pb-1 scrollbar-hide">

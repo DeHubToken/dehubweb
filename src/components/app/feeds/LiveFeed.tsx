@@ -135,7 +135,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
   if (cinematic) {
     return (
       <div className="px-2">
-        <CinematicLive streams={streams} isLoading={isLoading} tvChannels={tvChannels} emptyState={<EmptyState />} />
+        <CinematicLive streams={streams} isLoading={isLoading} tvChannels={tvChannels} emptyState={<EmptyState />} showFilters={showFilters} />
       </div>
     );
   }
