@@ -1,5 +1,5 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import en from '@/i18n/locales/en.json';
 import { ReactionPicker } from '@/components/app/cards/ReactionPicker';
 
@@ -9,7 +9,22 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+beforeEach(() => {
+  // Match the browser's breakpoint result to the viewport used by each case.
+  vi.spyOn(window, 'matchMedia').mockImplementation((query) => ({
+    matches: query === '(max-width: 767px)' && window.innerWidth < 768,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));
+});
+
 afterEach(() => {
+  vi.restoreAllMocks();
   cleanup();
   window.innerWidth = 1024;
 });

@@ -63,13 +63,13 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
     // the slider is disabled until the length is known.
     // Audio and on-air posts have their own player and transport. Recorded
     // video still exposes its play button before metadata arrives.
-    // `controlsVisible` is hover plus whatever menu or
-    // slider the pointer is currently inside, so it only ever holds the bar up
-    // for longer.
+    // Keep the bar mounted while visually hidden so the invisible seek target
+    // remains available; visibility must not gate metadata-free playback.
     const bar = VIDEO_CARD.match(
-      /\{controlsVisible && !video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls[^\n]*?"absolute bottom-0([\s\S]*?)\n {8}\)\}/
+      /\{!video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls[^\n]*?"absolute bottom-0([\s\S]*?)\n {8}\)\}/
     );
-    expect(bar, 'transport bar is not gated on controls visibility alone').not.toBeNull();
+    expect(bar, 'transport bar must remain mounted before metadata and while controls are hidden').not.toBeNull();
+    expect(VIDEO_CARD).toContain('data-controls-hidden={!controlsVisible');
     expect(bar![1]).toContain('handlePlayClick()');
     // Nothing inside the bar waits on the clip's length any more: a profile
     // card that never autoplayed used to render no timeline at all.
