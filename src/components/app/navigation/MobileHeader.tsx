@@ -1,3 +1,4 @@
+import { ElectricLogo } from './ElectricLogo';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { openNotificationsDrawer } from '../NotificationsDrawer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -30,7 +31,7 @@ const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.Mo
   const { theme } = useAppTheme();
   return (
     <button onClick={onClick} className="block cursor-pointer" aria-label="dehub home">
-      {theme === 'war' ? (
+      <ElectricLogo>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
         <WarLogo src={dehubMark} alt="dehub" className="h-7 w-[33px]" />
@@ -45,7 +46,7 @@ const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.Mo
           width={33}
           height={28}
         />
-      )}
+      )}</ElectricLogo>
     </button>
   );
 });
