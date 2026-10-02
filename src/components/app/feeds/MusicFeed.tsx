@@ -760,7 +760,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   if (cinematic && !isRefreshing) {
     return (
       <div className="px-2">
-        <CinematicMusic radioStations={radioStations} blockedAddresses={blockedAddresses} />
+        <CinematicMusic radioStations={radioStations} blockedAddresses={blockedAddresses} showFilters={showFilters} />
       </div>
     );
   }

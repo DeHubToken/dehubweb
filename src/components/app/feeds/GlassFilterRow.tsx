@@ -29,7 +29,7 @@ export function GlassFilterRow<T extends string>({
   onSelect,
   className,
   buttonClassName,
-  borderRadius = '0.5rem',
+  borderRadius = '0.9375rem',
   leadingContent,
   trailingContent,
 }: GlassFilterRowProps<T>) {
@@ -81,7 +81,7 @@ export function GlassFilterRow<T extends string>({
           Carries the same edge fade as the row so the pill of a half-scrolled
           chip dissolves with its label instead of spilling out of the panel. */}
       <div ref={layerRef} className="absolute inset-0 overflow-visible pointer-events-none z-30" style={fadeStyle}>
-        <GlassIndicator rect={rect} borderRadius={borderRadius} />
+        <GlassIndicator rect={rect} borderRadius={borderRadius} variant="nav" />
       </div>
       {/* Scrollable button row. data-no-swipe so dragging the chips sideways
           scrolls the row instead of flicking the page to the next tab — the
@@ -102,10 +102,11 @@ export function GlassFilterRow<T extends string>({
               key={item.key}
               data-glass-toggle-button
               data-active={isActive ? 'true' : undefined}
+              aria-pressed={isActive}
               ref={(el) => { btnRefs.current[item.key] = el; }}
               onClick={() => onSelect(item.key)}
               className={cn(
-                'relative flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                'relative flex-shrink-0 px-3 py-1.5 rounded-[15px] text-xs font-medium transition-colors',
                 isActive ? 'text-white' : 'bg-transparent text-zinc-400 hover:text-white',
                 buttonClassName,
               )}
