@@ -41,6 +41,12 @@ html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-i
 }
 
 /* Outline only the 3px line; the 14px seek target stays clear. */
+[data-video-card] [data-video-controls] {
+  transition: opacity 150ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-video-card] [data-video-controls] { transition: none; }
+}
 [data-video-card] [data-video-scrubber="line"] [data-scrubber-line] {
   background-size: calc(100% - 1px) 2px, 100% 3px !important;
   background-position: center calc(100% - 0.5px), center bottom !important;
