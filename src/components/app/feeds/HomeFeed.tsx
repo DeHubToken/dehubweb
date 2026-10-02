@@ -2116,7 +2116,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: '-100%', pointerEvents: 'none' }}
                   transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
-                  className="overflow-hidden rounded-b-[15px]"
+                  className="overflow-hidden rounded-[15px] pt-11"
                 >
                   <button
                     type="button"

@@ -2049,7 +2049,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
       {!inDrawer && <SEOHead title="Notifications - Stay Updated" description="Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." url="https://dehub.io/app/notifications" />}
       <h1 className="sr-only">DeHub Notifications - Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
-      <div data-feed-nav-outer className={`sticky ${inDrawer ? "top-0" : "top-11 lg:top-0"} bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2`}>
+      <div data-feed-nav-outer data-nav-hide={inDrawer ? "off" : undefined} className={`sticky ${inDrawer ? "top-0" : "top-11 lg:top-0"} bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2`}>
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
