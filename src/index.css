@@ -5418,7 +5418,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
   }
 }
 
-/* Phone feed player: bare icons with a soft shadow instead of glass buttons
+/* Feed player: outlined glyphs instead of glass buttons
    (VideoCard bareControls). Speed, loop, PiP and subtitles sit top right with
    mute in the corner; the scrubber row keeps one counter and fullscreen. */
 [data-video-topbar="bare"] :is(button, [role="button"]) {
@@ -5438,8 +5438,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
 }
 [data-video-topbar="bare"] :is(button, [role="button"]),
 [data-video-bare] {
-  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.7)) drop-shadow(0 0 6px rgb(0 0 0 / 0.35));
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+  filter: none;
+  text-shadow: none;
 }
 /* The scrubber is a thin white line along the media's bottom edge, with no
    bar behind it. The input stays 14px tall so it is easy to grab; only its

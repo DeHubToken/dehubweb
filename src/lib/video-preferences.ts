@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from 'react';
 /**
  * Video Preferences
  * =================
@@ -16,6 +17,7 @@ interface VideoPreferences {
   playbackRate: number;
   isLooping: boolean;
   volume: number;
+  mediaMuted: boolean | null;
   /** Lowercased creator address → the rate chosen while watching them. */
   ratesByCreator: Record<string, number>;
 }
@@ -24,6 +26,7 @@ const DEFAULTS: VideoPreferences = {
   playbackRate: 1,
   isLooping: false,
   volume: 0.8,
+  mediaMuted: null,
   ratesByCreator: {},
 };
 
@@ -62,10 +65,14 @@ function flushSave() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch {}
   window.dispatchEvent(new CustomEvent('video-prefs-changed', { detail: prefs }));
 }
+const mediaListeners = new Set<() => void>();
 function save(prefs: VideoPreferences) {
+  const before = getVideoPreferences();
+  const mediaChanged = before.volume !== prefs.volume || before.mediaMuted !== prefs.mediaMuted;
   // The next tap reads the new rate immediately; storage and every mounted
   // player's preference listener must not run in the control's input event.
   cached = prefs; pendingSave = prefs;
+  if (mediaChanged) mediaListeners.forEach(fn => fn());
   if (saveTimer !== null) clearTimeout(saveTimer);
   saveTimer = setTimeout(flushSave, 0);
 }
@@ -152,3 +159,12 @@ export function formatRate(rate: number): string {
 }
 
 export const PLAYBACK_RATES = [0.5, 1, 1.25, 1.5, 2] as const;
+
+const subscribeMedia = (fn: () => void) => { mediaListeners.add(fn); return () => mediaListeners.delete(fn); };
+export function getMediaVolume(): number {
+  const v = getVideoPreferences().volume;
+  return typeof v === 'number' && Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : DEFAULTS.volume;
+}
+export const useMediaVolume = () => useSyncExternalStore(subscribeMedia, getMediaVolume, () => DEFAULTS.volume);
+export const useMediaMuted = () => useSyncExternalStore(subscribeMedia, () => getVideoPreferences().mediaMuted === true, () => false);
+export function setMediaMuted(muted: boolean) { save({ ...getVideoPreferences(), mediaMuted: muted }); }

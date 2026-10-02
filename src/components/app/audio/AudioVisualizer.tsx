@@ -1,3 +1,5 @@
+import { useMediaVolume, useMediaMuted, setVolume, setMediaMuted as setSelfMuted } from '@/lib/video-preferences';
+import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import * as React from 'react';
 import { useRef, useEffect, useState, useCallback, useMemo, useId } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -101,6 +103,7 @@ interface AudioVisualizerProps {
    * two things in one corner is worse than no volume control.
    */
   showVolume?: boolean;
+  onMuteChange?: (muted: boolean) => void;
   /**
    * What the corner player shows for this post. When given, a pop-out control
    * is drawn beside fullscreen; without it there is nothing to pop out to.
@@ -183,6 +186,7 @@ export function AudioVisualizer({
   onFullscreen,
   isFullscreen = false,
   showVolume = true,
+  onMuteChange,
   popoutTrack,
   onPopOutChange,
   handoffKey,
@@ -273,8 +277,8 @@ export function AudioVisualizer({
   const [duration, setDuration] = useState(durationHint);
   const [currentTime, setCurrentTime] = useState(0);
   const [scrubRatio, setScrubRatio] = useState<number | null>(null);
-  const [volume, setVolume] = useState(1);
-  const [selfMuted, setSelfMuted] = useState(false);
+  const volume = useMediaVolume();
+  const selfMuted = useMediaMuted();
   // Bumped when the <audio> element is created, so the listener effect below
   // attaches no matter which path built it (near-viewport, play, or a seek).
   const [audioElVersion, setAudioElVersion] = useState(0);
@@ -997,11 +1001,13 @@ export function AudioVisualizer({
                   aria-label={isEffectivelyMuted ? 'Unmute' : 'Mute'}
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (!isEffectivelyMuted) { setSelfMuted(true); return; }
+                    if (!isEffectivelyMuted) { setSelfMuted(true); videoPlaybackManager.globalMuted = true; onMuteChange?.(true); return; }
                     setSelfMuted(false);
+                    videoPlaybackManager.globalMuted = false;
+                    onMuteChange?.(false);
                     // Unmuting a slider dragged to zero has to put the level back,
                     // or the icon flips and the track stays silent.
-                    if (volume === 0) setVolume(1);
+                    if (volume === 0) setVolume(0.8);
                   }}
                   className="shrink-0 w-5 h-5 flex items-center justify-center text-white/80 hover:text-white transition-colors"
                 >
@@ -1021,7 +1027,9 @@ export function AudioVisualizer({
                     aria-label="Volume"
                     onValueChange={(value) => {
                       setVolume(value[0] / 100);
-                      if (value[0] > 0) setSelfMuted(false);
+                      setSelfMuted(value[0] === 0);
+                      videoPlaybackManager.globalMuted = value[0] === 0;
+                      onMuteChange?.(value[0] === 0);
                     }}
                     className={cn(
                       'absolute -inset-y-2.5 inset-x-0 w-full py-0',
