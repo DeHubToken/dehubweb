@@ -5650,10 +5650,14 @@ html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:no
 
 /* Inline player actions use bare icons and fit alongside play/time at 320px. */
 [data-video-scrubber="line"] > div { gap: 0.125rem; }
-[data-video-scrubber="line"] [data-video-inline-tools] button {
+/* Match inline tools, including portal captions, to bare fullscreen. */
+html body [data-video-card] [data-video-inline-tools] button {
   background: transparent !important;
+  background-image: none !important;
   border: 0 !important;
+  box-shadow: none !important;
   backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   width: 2rem;
   min-width: 2rem;
   padding-left: 0;
@@ -5677,4 +5681,10 @@ html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:no
 [data-video-card] [data-card-head] .truncate { max-width: 100%; }
 @media (max-width: 767px) {
   html[data-theme="system"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-card-head]:not([data-card-head="plain"]) { right: 3.5rem; }
+}
+
+/* Suppress theme glass frames while preserving keyboard focus outlines. */
+html body [data-video-card] [data-video-inline-tools] button::before,
+html body [data-video-card] [data-video-inline-tools] button::after {
+  display: none !important;
 }
