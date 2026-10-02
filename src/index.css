@@ -5668,3 +5668,7 @@ html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:no
   html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-info] > [data-video-caption-actions] { width: auto; }
   html[data-theme="system"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-video-caption-actions]:has([data-caption-boost]) + .relative { padding-right: 4rem; }
 }
+
+/* Keep only the narrow seek input interactive when playback chrome fades. */
+[data-video-controls][data-controls-hidden="true"] { opacity: 0; pointer-events: none; }
+[data-video-controls][data-controls-hidden="true"] input[type="range"] { pointer-events: auto; }
