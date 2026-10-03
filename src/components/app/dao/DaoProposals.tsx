@@ -470,7 +470,7 @@ export function DaoProposalExperience({ proposeOpen, onProposeOpenChange }: {
 
   return (
     <>
-      <section className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+      <section data-kit-section className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-end justify-between gap-3 mb-4">
           <div>
             <h2 className="text-lg font-semibold text-white">DAO proposals</h2>
