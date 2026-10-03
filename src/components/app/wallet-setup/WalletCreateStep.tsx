@@ -45,6 +45,9 @@ import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 import { SeedPhraseBackup } from './SeedPhraseBackup';
 import { markBackedUp } from '@/lib/wallet-core/backup-status';
 import type { WalletSetupIntent } from '@/lib/wallet-setup-intent';
+import { createLogger } from '@/lib/logger';
+
+const signupLog = createLogger('WalletCreateStep');
 
 interface WalletCreateStepProps {
   userId: string;
@@ -437,6 +440,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
       if (saved) await markBackedUp(userId, pendingBackup.ethAddress);
       await onComplete(pendingBackup.privKey);
     } catch (err) {
+      signupLog.trace?.('wallet-signin-error', { reason: err instanceof Error ? err.message : String(err) });
       setError(err instanceof Error ? err.message : 'Could not secure your account');
     } finally {
       setBusy(false);
@@ -444,6 +448,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
   };
 
   const persist = async (secret: string) => {
+    signupLog.trace?.('wallet-protection-start', { protection: 'password' });
     setBusy(true);
     setError(null);
     try {
@@ -455,6 +460,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
       if (offerBackup(derived)) return;
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
+      signupLog.trace?.('wallet-setup-error', { reason: err instanceof Error ? err.message : String(err) });
       setError(err instanceof Error ? err.message : 'Could not secure your account');
     } finally {
       setBusy(false);
@@ -471,6 +477,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
    * way at all to reach its seed.
    */
   const handleBiometricCreate = async () => {
+    signupLog.trace?.('wallet-protection-start', { protection: 'biometric' });
     setError(null);
     const secret = resolveSecret();
     if (!secret) return;
@@ -498,10 +505,12 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
       if (err instanceof PasskeyCancelledError) {
+        signupLog.trace?.('wallet-protection-cancelled');
         // Dismissing the OS sheet isn't a failure — no message, no state change.
         return;
       }
       if (err instanceof PasskeyUnsupportedError) {
+        signupLog.trace?.('wallet-protection-unsupported');
         setBiometricAvailable(false);
         setProtection('password');
         setError(`${err.message} Set a password instead.`);
