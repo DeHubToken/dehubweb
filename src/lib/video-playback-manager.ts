@@ -1,5 +1,6 @@
 import { getVideoPreferences, setMediaMuted } from './video-preferences';
 import { visualActivity } from './visual-activity';
+import { isVideoInPictureInPicture } from './picture-in-picture';
 /**
  * Video Playback Manager
  * ======================
@@ -13,6 +14,7 @@ type VideoInstance = {
   pause: () => void;
   mute: (muted: boolean) => void;
   id: string;
+  element?: () => HTMLVideoElement | null;
 };
 
 class VideoPlaybackManager {
@@ -44,8 +46,8 @@ class VideoPlaybackManager {
    * Register a video instance with the manager.
    * Now requires a mute callback so the manager can force-mute non-owners.
    */
-  register(id: string, pause: () => void, mute?: (muted: boolean) => void): void {
-    this.registeredVideos.set(id, { id, pause, mute: mute ?? (() => {}) });
+  register(id: string, pause: () => void, mute?: (muted: boolean) => void, element?: () => HTMLVideoElement | null): void {
+    this.registeredVideos.set(id, { id, pause, mute: mute ?? (() => {}), element });
   }
 
   unregister(id: string): void {
@@ -117,9 +119,13 @@ class VideoPlaybackManager {
 
   pauseAll(): void {
     const videos = [...this.registeredVideos.values()];
-    this.activeVideos.clear();
-    this.audioOwnerId = null;
-    videos.forEach(video => { try { video.pause(); } catch {} });
+    videos.forEach(video => {
+      if (!visualActivity.isCallBusy() && isVideoInPictureInPicture(video.element?.() ?? null)) return;
+      this.activeVideos.delete(video.id);
+      if (this.audioOwnerId === video.id) this.audioOwnerId = null;
+      try { video.pause(); } catch {}
+    });
+    if (!this.audioOwnerId) this.promoteNextAudioOwner();
   }
 
   /** Promote the next active video to audio owner and unmute it */
