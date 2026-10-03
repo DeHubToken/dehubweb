@@ -155,6 +155,11 @@ function wordsToSegments(words: ScribeWord[]): Segment[] {
   let cur: Segment | null = null;
   for (const w of words) {
     if (w.type && w.type !== 'word' && w.type !== 'spacing') continue;
+    // Spacing has no speaker or reliable timestamp; attach it to the word.
+    if (w.type === 'spacing') {
+      if (cur) cur.text += w.text || '';
+      continue;
+    }
     const speaker = w.speaker_id || w.speaker || 'speaker_1';
     if (!cur || cur.speaker !== speaker || w.end - cur.start > 6 || w.start - cur.end > 1) {
       if (cur) segs.push(cur);
