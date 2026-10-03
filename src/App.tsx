@@ -179,7 +179,7 @@ const NotFound = React.lazy(() => import("./pages/NotFound"));
 const DocsSurface = React.lazy(() => import("./pages/DocsSurface"));
 const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
-const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
+const SinglePostPage = React.lazy(() => import('@/lib/preload-post-page').then(module => module.loadPostPage()));
 const NewPostPage = React.lazy(() => import("./pages/app/NewPostPage"));
 const UploadPage = React.lazy(() => import("./pages/app/UploadPage"));
 const YoutubeMigratePage = React.lazy(() => import("./pages/app/YoutubeMigratePage"));
