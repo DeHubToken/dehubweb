@@ -27,6 +27,8 @@
  */
 
 /** A card currently asking to display the element, innermost claim last. */
+import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from './picture-in-picture';
+
 interface Claim {
   token: object;
   slot: HTMLElement;
@@ -100,6 +102,12 @@ export function handoffVideoFor(key: string | null | undefined): HTMLVideoElemen
 function dispose(key: string) {
   const entry = pool.get(key);
   if (!entry) return;
+  if (isVideoInPictureInPicture(entry.el)) {
+    releaseAfterPictureInPicture(entry.el, () => {
+      if (!entry.claims.length) dispose(key);
+    });
+    return;
+  }
   if (entry.parkTimer) clearTimeout(entry.parkTimer);
   pool.delete(key);
   const i = parked.indexOf(key);
@@ -118,6 +126,20 @@ function dispose(key: string) {
 function park(key: string) {
   const entry = pool.get(key);
   if (!entry) return;
+  if (isVideoInPictureInPicture(entry.el)) {
+    // The slot can be hidden or removed with its page; PiP owns the element
+    // until its leave event, rather than the normal two-second handoff grace.
+    const parking = document.createElement('div');
+    parking.dataset.pipParking = 'true';
+    parking.style.cssText = 'position:fixed;left:-2px;top:-2px;width:1px;height:1px;overflow:hidden;pointer-events:none';
+    document.body.appendChild(parking);
+    parking.appendChild(entry.el);
+    releaseAfterPictureInPicture(entry.el, () => {
+      if (!entry.claims.length) dispose(key);
+      parking.remove();
+    });
+    return;
+  }
   // Detached, not destroyed: currentTime and the buffered ranges survive, so a
   // reclaim inside PARK_MS resumes where it left off instead of refetching.
   entry.el.remove();
