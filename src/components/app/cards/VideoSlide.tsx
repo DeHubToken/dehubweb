@@ -9,6 +9,9 @@
 
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
 import { useFeedPlaybackAllowed } from '@/lib/visual-activity';
+import { visualActivity } from '@/lib/visual-activity';
+import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
+import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 import { ShortsPhotoPager } from './ShortsPhotoPager';
 import { createPortal } from 'react-dom';
 import { Play, Pause, Loader2 } from 'lucide-react';
@@ -88,9 +91,10 @@ export const VideoSlide = memo(function VideoSlide({
   progressLayer = null,
 }: VideoSlideProps) {
   const playbackAllowed = useFeedPlaybackAllowed();
-  const isActive = activeSlide && playbackAllowed;
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const inPiP = usePictureInPicture(videoRef);
+  const isActive = (activeSlide && playbackAllowed) || (inPiP && !visualActivity.isCallBusy());
   // Native media play requests may settle after React has already advanced the
   // carousel. Keep the latest ownership state available to those callbacks so
   // a slide that has left the active position can never restart itself.
@@ -190,7 +194,7 @@ export const VideoSlide = memo(function VideoSlide({
         clearTimeout(timer);
         // Pausing in cleanup closes the hand-off gap before the next render's
         // inactive effect runs, including when the viewer itself unmounts.
-        video.pause();
+        releaseAfterPictureInPicture(video, () => video.pause());
       };
     } else {
       video.pause();
@@ -200,7 +204,7 @@ export const VideoSlide = memo(function VideoSlide({
   const handlePlay = useCallback(() => {
     // Safari can complete an older play() request after pause(). Treat React's
     // active slide as the authority and immediately silence that stale start.
-    if (!isActiveRef.current) videoRef.current?.pause();
+    if (!isActiveRef.current && !isVideoInPictureInPicture(videoRef.current)) videoRef.current?.pause();
   }, []);
 
   // Update muted state
@@ -468,7 +472,6 @@ export const VideoSlide = memo(function VideoSlide({
             playsInline
             controls={false}
             controlsList="nofullscreen noremoteplayback nodownload"
-            disablePictureInPicture
             disableRemotePlayback
             {...{"webkit-playsinline": ""}}
             muted={isMuted}

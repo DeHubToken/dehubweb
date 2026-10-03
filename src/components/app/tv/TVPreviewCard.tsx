@@ -10,6 +10,8 @@
 import { useTranslation } from 'react-i18next';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
+import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
+import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
 import { Volume2, VolumeX, Maximize, Minimize, Play, Pause, PictureInPicture2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { usePiP } from '@/contexts/PiPContext';
@@ -45,7 +47,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isInPiP, setIsInPiP] = useState(false);
+  const isInPiP = usePictureInPicture(videoRef);
   const isMutedRef = useRef(isMuted);
   isMutedRef.current = isMuted;
 
@@ -78,6 +80,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
 
   // Register with playback manager so other videos can stop this one
   useEffect(() => {
+    const video = videoRef.current;
     videoPlaybackManager.register(cardId, () => {
       if (videoRef.current) {
         videoRef.current.pause();
@@ -85,10 +88,12 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
         setIsMuted(true);
         setIsPlaying(false);
       }
-    });
+    }, undefined, () => videoRef.current);
     return () => {
       videoPlaybackManager.unregister(cardId);
-      destroyHls();
+      const hls = hlsRef.current;
+      if (video) releaseAfterPictureInPicture(video, () => hls?.destroy());
+      else hls?.destroy();
     };
   }, [cardId, destroyHls]);
 
@@ -127,7 +132,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
       video.src = channel.streamUrl;
       video.play().catch(() => {});
       return () => {
-        if (!isInPiP) {
+        if (!isVideoInPictureInPicture(video)) {
           video.pause();
         }
       };
@@ -183,13 +188,13 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
       // Only mark the in-flight hls import stale when we're actually tearing
       // down — during a PiP handoff the pending attach must still complete,
       // otherwise the PiP window gets a dead video.
-      if (!isInPiP) {
+      if (!isVideoInPictureInPicture(video)) {
         disposed = true;
         video.pause();
         destroyHls();
       }
     };
-  }, [isPlaying, channel.name, channel.streamUrl, isInPiP, destroyHls]);
+  }, [isPlaying, channel.name, channel.streamUrl, destroyHls]);
 
   // Fullscreen tracking
   useEffect(() => {
@@ -268,12 +273,10 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     };
 
     const onEnterPiP = () => {
-      setIsInPiP(true);
       claimForPiP(muteHandler);
     };
 
     const onLeavePiP = () => {
-      setIsInPiP(false);
       releaseMediaSession(cardId);
     };
 

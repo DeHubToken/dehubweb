@@ -7,6 +7,7 @@
 
 import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
+import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
 import { AppState } from '@/components/app/AppState';
@@ -243,7 +244,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const videoRef = useRef<HTMLVideoElement>(null);
   const playbackAllowed = useFeedPlaybackAllowed();
   useEffect(() => {
-    if (!playbackAllowed) videoRef.current?.pause();
+    if (!playbackAllowed && (!isVideoInPictureInPicture(videoRef.current) || visualActivity.isCallBusy())) videoRef.current?.pause();
   }, [playbackAllowed]);
   // Full-bleed only. The chevron drops the chrome and leaves the picture;
   // it means nothing in the card, where the chrome IS the card.
@@ -258,7 +259,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    */
   const replayRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
-    if (!playbackAllowed) replayRef.current?.pause();
+    if (!playbackAllowed && (!isVideoInPictureInPicture(replayRef.current) || visualActivity.isCallBusy())) replayRef.current?.pause();
   }, [playbackAllowed]);
   const [replayProgress, setReplayProgress] = useState<number | undefined>(undefined);
   const [replayPlaying, setReplayPlaying] = useState(false);
@@ -530,7 +531,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           playbackRequestedRef.current = false;
           video.pause();
           setIsPlaying(false);
-        });
+        }, undefined, () => video);
       } catch (e) {
         void failOver((e as Error)?.message || 'subscribe failed');
       }
@@ -542,10 +543,12 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       cancelled = true;
       clearTimeout(timer);
       videoPlaybackManager.unregister(videoId);
-      void session?.stop();
-      // Leaving a dead srcObject attached stops the HLS path from ever
-      // getting a picture onto this element.
-      if (video.srcObject) video.srcObject = null;
+      releaseAfterPictureInPicture(video, () => {
+        void session?.stop();
+        // Leaving a dead srcObject attached stops the HLS path from ever
+        // getting a picture onto this element.
+        if (video.srcObject) video.srcObject = null;
+      });
     };
   }, [transport, whepPlaybackId, whepSource?.provider, streamEnded, videoId, stream.id]);
 
@@ -749,13 +752,14 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       playbackRequestedRef.current = false;
       video.pause();
       setIsPlaying(false);
-    });
+    }, undefined, () => video);
 
     return () => {
       disposed = true;
       retryTimeouts.forEach(clearTimeout);
       retryTimeouts.clear();
-      hlsRef.current?.destroy();
+      const hls = hlsRef.current;
+      releaseAfterPictureInPicture(video, () => hls?.destroy());
       videoPlaybackManager.unregister(videoId);
     };
     // streamEnded is a dependency on purpose: the <video> only mounts when it
@@ -1206,7 +1210,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 setReplayProgress(el.currentTime / el.duration);
               } : undefined}
               onPlay={(e) => {
-                if (!visualActivity.isFeedPlaybackAllowed()) { e.currentTarget.pause(); return; }
+                if (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
                 setReplayPlaying(true);
                 setReplayBuffering(e.currentTarget.readyState < 3);
               }}
@@ -1285,11 +1289,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               muted={isMuted}
               poster={handoff?.poster || stream.thumbnail || undefined}
               onPlay={(e) => {
-                if (!visualActivity.isFeedPlaybackAllowed()) { e.currentTarget.pause(); return; }
+                if (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
                 setIsPlaying(true); setIsBuffering(true);
               }}
               onPlaying={(e) => {
-                if (!visualActivity.isFeedPlaybackAllowed()) { e.currentTarget.pause(); return; }
+                if (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
                 setIsPlaying(true); setIsBuffering(false); setError(null);
               }}
               onWaiting={() => setIsBuffering(true)}
