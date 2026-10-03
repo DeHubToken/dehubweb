@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import type { MutableRefObject } from 'react';
 import {
   claimHandoffVideo,
@@ -53,6 +54,7 @@ export function useHandoffVideo({
   onAdopt,
   onPlaybackChange,
 }: UseHandoffVideoOptions) {
+  const surfaceActive = useContext(CachedPageActiveContext);
   const slotRef = useRef<HTMLDivElement | null>(null);
   const claimRef = useRef<{ key: string; token: object } | null>(null);
 
@@ -98,7 +100,7 @@ export function useHandoffVideo({
         releaseHandoffVideo(previous.key, previous.token);
       }
       slotRef.current = node;
-      if (!node) return;
+      if (!node || !surfaceActive) return;
 
       const { el, token } = claimHandoffVideo(handoffKey, node);
       claimRef.current = { key: handoffKey, token };
@@ -133,7 +135,7 @@ export function useHandoffVideo({
         el.removeEventListener('pause', playback);
       };
     },
-    [handoffKey, videoRef],
+    [handoffKey, videoRef, surfaceActive],
   );
 
   // React nulls a callback ref on unmount, so `attachSlot(null)` already releases

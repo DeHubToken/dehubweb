@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useImageSoundtrack } from '@/hooks/use-image-soundtrack';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { getHandoffAudio } from '@/lib/audio-handoff';
+import { handoffAudioFor } from '@/lib/audio-handoff';
 
 let intersect: (entries: { isIntersecting: boolean }[]) => void;
 let rejectPlay: ((reason: Error) => void) | undefined;
@@ -41,7 +41,7 @@ beforeEach(() => {
 });
 
 afterEach(() => { cleanup(); vi.runOnlyPendingTimers(); vi.useRealTimers(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
-const audio = (url = 'https://example.com/music.mp3') => getHandoffAudio(`soundtrack:${url}`)!.el;
+const audio = (url = 'https://example.com/music.mp3') => handoffAudioFor(`soundtrack:${url}`)!;
 
 it('loads only on tap, and never autoplays on entering the viewport', () => {
   const { container } = render(<Player />);

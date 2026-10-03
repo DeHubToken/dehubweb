@@ -105,7 +105,7 @@ import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { warmPostPage } from '@/lib/preload-post-page';
 import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
-import { getHandoffAudio } from '@/lib/audio-handoff';
+import { handoffAudioFor } from '@/lib/audio-handoff';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
@@ -1473,7 +1473,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       setNearViewport(true);
       isPlayingRef.current = !el.paused;
       setIsPlaying(!el.paused);
-      setIsMuted(video.soundtrackUrl ? getHandoffAudio(`synced:${video.id}:${video.soundtrackUrl}`)?.el.muted ?? el.muted : el.muted);
+      setIsMuted(video.soundtrackUrl ? handoffAudioFor(`synced:${video.id}:${video.soundtrackUrl}`)?.muted ?? el.muted : el.muted);
       setPlaybackRate(el.playbackRate);
       setIsLooping(el.loop);
       setCurrentTime(el.currentTime);

@@ -1,4 +1,5 @@
-import { useCallback, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type MutableRefObject } from 'react';
+import { useCallback, useContext, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type MutableRefObject } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
 type Claim = { slot: HTMLSpanElement; priority: number; props: ImageProps };
 type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout> };
@@ -59,6 +60,7 @@ function show(entry: Entry) {
 
 /** Move the decoded image into the post/viewer slot and return it on close. */
 export function HandoffImage(props: ImageProps) {
+  const surfaceActive = useContext(CachedPageActiveContext);
   const propsRef = useRef(props);
   propsRef.current = props;
   const held = useRef<{ entry: Entry; claim: Claim } | null>(null);
@@ -78,7 +80,7 @@ export function HandoffImage(props: ImageProps) {
         }, 2000);
       }
     }
-    if (!slot) return;
+    if (!slot || !surfaceActive) return;
     let entry = images.get(props.mediaKey);
     if (!entry) {
       const image = document.createElement('img');
@@ -93,7 +95,7 @@ export function HandoffImage(props: ImageProps) {
     entry.claims.push(claim);
     held.current = { entry, claim };
     show(entry);
-  }, [props.mediaKey]);
+  }, [props.mediaKey, surfaceActive]);
   useLayoutEffect(() => {
     if (!held.current) return;
     held.current.claim.props = props;

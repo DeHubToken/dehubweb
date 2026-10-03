@@ -9,7 +9,8 @@ import { setFeedRefresh } from '@/lib/feed-refresh';
  * @module pages/app/HomePage
  */
 
-import { useState, useEffect, useLayoutEffect, useRef, useCallback, useDeferredValue, memo, lazy, Suspense } from 'react';
+import { useState, useContext, useEffect, useLayoutEffect, useRef, useCallback, useDeferredValue, memo, lazy, Suspense } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -107,6 +108,7 @@ const tabFromPathname = (pathname: string): string | null => FEED_ROUTE_TO_TAB[p
 const feedRouteForTab = (tab: string): string => TAB_TO_FEED_ROUTE[tab] ?? '/app';
 
 export default function HomePage() {
+  const pageActive = useContext(CachedPageActiveContext);
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -1128,7 +1130,9 @@ export default function HomePage() {
             their own props change, not when activeTab/deferredTab changes. */}
         {visitedTabs.has('home') && (
           <div style={{ display: deferredTab === 'home' ? 'block' : 'none' }}>
+            <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'home'}>
             <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef} chipsPortalRef={isCollapsed && globalFeedNav?.chipsPortalElement ? globalFeedNav.chipsPortalElement : homeChipsRef} />
+            </CachedPageActiveContext.Provider>
           </div>
         )}
         {/* Every tab but home is a lazy chunk (see the imports): the Suspense
@@ -1137,13 +1141,16 @@ export default function HomePage() {
             as an empty tab. */}
         {visitedTabs.has('videos') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'videos' ? 'block' : 'none' }}>
+            <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'videos'}>
             <Suspense fallback={<FeedSkeleton />}>
               <MemoVideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
             </Suspense>
+            </CachedPageActiveContext.Provider>
           </div>
         )}
         {visitedTabs.has('images') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'images' ? 'block' : 'none' }}>
+            <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'images'}>
             <Suspense fallback={<FeedSkeleton />}>
               <MemoImagesFeed
                 showCollage={showImagesCollage}
@@ -1154,41 +1161,52 @@ export default function HomePage() {
                 onPostSelected={handleImageSelected}
               />
             </Suspense>
+            </CachedPageActiveContext.Provider>
           </div>
         )}
         {visitedTabs.has('shorts') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'shorts' ? 'block' : 'none' }}>
+            <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'shorts'}>
             <Suspense fallback={<FeedSkeleton />}>
               <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
             </Suspense>
+            </CachedPageActiveContext.Provider>
           </div>
         )}
         {visitedTabs.has('live') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'live' ? 'block' : 'none' }}>
+            <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'live'}>
             <Suspense fallback={<FeedSkeleton />}>
               <MemoLiveFeed key={refreshKey} isRefreshing={isRefreshing} showFilters={showLiveFilters} />
             </Suspense>
+            </CachedPageActiveContext.Provider>
           </div>
         )}
         {visitedTabs.has('music') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'music' ? 'block' : 'none' }}>
+            <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'music'}>
             <Suspense fallback={<FeedSkeleton />}>
               <MemoMusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
             </Suspense>
+            </CachedPageActiveContext.Provider>
           </div>
         )}
         {visitedTabs.has('ppv') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'ppv' ? 'block' : 'none' }}>
+            <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'ppv'}>
             <Suspense fallback={<FeedSkeleton />}>
               <MemoPPVFeed />
             </Suspense>
+            </CachedPageActiveContext.Provider>
           </div>
         )}
         {visitedTabs.has('w2e') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'w2e' ? 'block' : 'none' }}>
+            <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'w2e'}>
             <Suspense fallback={<FeedSkeleton />}>
               <MemoW2EFeed />
             </Suspense>
+            </CachedPageActiveContext.Provider>
           </div>
         )}
         {/* end feed tabs */}

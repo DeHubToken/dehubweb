@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
 import { HandoffImage } from '@/components/app/cards/HandoffImage';
 import { galleryIndex, rememberGalleryIndex } from '@/lib/media-presentation';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
@@ -20,6 +21,19 @@ function VideoSlot({ detail = false }: { detail?: boolean }) {
 }
 
 describe('media navigation continuity', () => {
+  it('keeps a hidden cached feed from stealing the visible video or image', () => {
+    const slot = (active: boolean) => <CachedPageActiveContext.Provider value={active}><VideoSlot /><HandoffImage mediaKey="hidden-tab-photo" src="/photo.jpg" /></CachedPageActiveContext.Provider>;
+    const view = render(<><div data-testid="visible-tab">{slot(true)}</div><div data-testid="hidden-tab">{slot(false)}</div></>);
+    const video = view.getByTestId('visible-tab').querySelector('video');
+    const image = view.getByTestId('visible-tab').querySelector('img');
+    expect(video).toBeTruthy();
+    expect(image).toBeTruthy();
+    expect(view.getByTestId('hidden-tab').querySelector('video')).toBeNull();
+    expect(view.getByTestId('hidden-tab').querySelector('img')).toBeNull();
+    view.rerender(<><div data-testid="visible-tab">{slot(false)}</div><div data-testid="hidden-tab">{slot(true)}</div></>);
+    expect(view.getByTestId('hidden-tab').querySelector('video')).toBe(video);
+    expect(view.getByTestId('hidden-tab').querySelector('img')).toBe(image);
+  });
   it('keeps the loaded video, playhead and sound through an initially cold detail slot and back', () => {
     const load = vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => {});
     const view = render(<><VideoSlot /><span /></>);

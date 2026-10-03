@@ -1,7 +1,8 @@
 import { useMediaVolume, useMediaMuted, setVolume, setMediaMuted as setSelfMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import * as React from 'react';
-import { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, useId } from 'react';
+import { useRef, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo, useId } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useTranslation } from 'react-i18next';
 import {
   popOutAudioPost,
@@ -192,6 +193,7 @@ export function AudioVisualizer({
   handoffKey,
   onPlaybackAdopted,
 }: AudioVisualizerProps) {
+  const surfaceActive = useContext(CachedPageActiveContext);
   const { t } = useTranslation();
   /* ─── The corner player ──────────────────────────────────────────────
      While this post is popped out the track lives in lib/audio-post-playback
@@ -246,7 +248,7 @@ export function AudioVisualizer({
   handoffKeyRef.current = handoffKey;
   // Bumped whenever the player changes hands, so everything below re-reads it.
   const [claimVersion, setClaimVersion] = useState(0);
-  const isActiveClaim = !handoffKey || isHandoffAudioActive(handoffKey, claimRef.current);
+  const isActiveClaim = surfaceActive && (!handoffKey || isHandoffAudioActive(handoffKey, claimRef.current));
   const isActiveClaimRef = useRef(isActiveClaim);
   isActiveClaimRef.current = isActiveClaim;
   const onPlaybackAdoptedRef = useRef(onPlaybackAdopted);
@@ -375,7 +377,7 @@ export function AudioVisualizer({
    * hand-over's.
    */
   useEffect(() => {
-    if (!handoffKey) return;
+    if (!handoffKey || !surfaceActive) return;
     claimRef.current = claimHandoffAudio(handoffKey, () => canvasRef.current);
     const unsubscribe = subscribeHandoffAudio(handoffKey, () => setClaimVersion((v) => v + 1));
     setClaimVersion((v) => v + 1);
@@ -389,7 +391,7 @@ export function AudioVisualizer({
       isConnectedRef.current = false;
       if (token) releaseHandoffAudio(handoffKey, token);
     };
-  }, [handoffKey]);
+  }, [handoffKey, surfaceActive]);
 
   // Taking the player over: pick the chain up, and tell the card that owns
   // `isPlaying` what it actually walked into.
