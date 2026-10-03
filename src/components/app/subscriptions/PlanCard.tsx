@@ -70,13 +70,12 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   const chainEntry = primaryPlanChain(plan);
   const chainId = (chainEntry?.chainId || BASE_CHAIN_ID) as ChainId;
   const currency = (chainEntry?.currency || plan.currency || 'DHB').toUpperCase();
-  const settlementCurrency = currency === 'USD' ? 'USDT' : currency;
   const isUsdPriced = currency === 'USDT' || currency === 'USDC' || currency === 'USD';
   const numericPrice = Number(price || 0);
   const dhbUsd = DHB_PRELISTING_USD;
   const dhbEstimate = isUsdPriced ? dhbForUsd(numericPrice, dhbUsd) : numericPrice;
   const formattedPrice = isUsdPriced
-    ? `${formatAmount(price, 2)} ${settlementCurrency}`
+    ? `${formatAmount(price, 2)} USD`
     : t('subscriptions.tokenAmount', { amount: formatAmount(price) });
   const published = isPlanPublished(plan);
   // 999 is what lifetime plans were stored as before the contract's 0–12 range
@@ -130,8 +129,8 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
       <div className="mb-4">
         <div className="flex items-baseline gap-2">
           <div className="flex items-center gap-1.5">
-            {!isUsdPriced && <img src={dehubCoin} alt="DHB" className="w-5 h-5" />}
-            <span className="text-2xl font-bold text-white">{formattedPrice}</span>
+            <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+            <span className="text-2xl font-bold text-white">{formatDhbPayment(dhbEstimate)}</span>
           </div>
           <span className="text-zinc-500">/</span>
           <div className="flex items-center gap-1 text-zinc-400">
@@ -139,12 +138,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
             <span className="text-sm">{formatDuration(plan.duration, t)}</span>
           </div>
         </div>
-        {isUsdPriced && (
-          <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-400">
-            <img src={dehubCoin} alt="" className="w-3.5 h-3.5" />
-            <span>{t('subscriptions.atPreListingRate', { amount: formatDhbPayment(dhbEstimate) })}</span>
-          </div>
-        )}
+        <p className="mt-1 text-xs text-zinc-400">≈ {total.toLocaleString(undefined, { style: 'currency', currency: 'USD' })} USD</p>
       </div>
 
       {/* Benefits */}
