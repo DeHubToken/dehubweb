@@ -175,7 +175,7 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
               >
                 {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {stage === 'paying'
-                  ? t('usernames.confirmInWallet')
+                  ? t('upload.stageConfirming', 'Confirming')
                   : stage === 'confirming'
                     ? t('usernames.confirmingOnChain')
                     : !isAuthenticated
