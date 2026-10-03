@@ -9,9 +9,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAccount, useConnectors, useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
-import { Phone, Wallet, Loader2, Fingerprint, ArrowDownToLine, KeyRound, X } from 'lucide-react';
+import { Mail, Phone, Wallet, Loader2, Fingerprint, ArrowDownToLine, KeyRound, X } from 'lucide-react';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -561,7 +560,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
           disabled={isConnecting}
           className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
-          <ThemedIcon icon="email" alt="" className="w-5 h-5 object-contain" />
+          <Mail className="w-5 h-5" aria-hidden="true" />
           <span>{t('loginModal.continueEmail')}</span>
         </Button>
 
@@ -756,7 +755,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   const renderEmailWaitingStep = () => (
     <div className="space-y-5">
       <div className="mx-auto w-14 h-14 rounded-full bg-white/10 border border-white/10 flex items-center justify-center">
-        <ThemedIcon icon="email" alt="" className="w-8 h-8 object-contain" />
+        <Mail className="w-8 h-8" aria-hidden="true" />
       </div>
       <div className="space-y-2 text-center">
         <p className="text-white text-sm">
