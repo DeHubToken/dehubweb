@@ -5,7 +5,7 @@ import { badgeHoverArt } from '@/lib/badge-hover-art';
 import { openBadgeShowcase } from '@/lib/badge-showcase';
 
 vi.mock('@/hooks/use-badge-balance', () => ({
-  useBadgeVisual: () => ({ url: '/assets/Octopus.webp', name: 'Octopus', big: false }),
+  useBadgeVisual: () => ({ url: '/assets/' + badgeTier + '.webp', name: badgeTier, big: false }),
 }));
 vi.mock('@/contexts/ThemeContext', () => ({ useAppTheme: () => ({ theme: 'system' }) }));
 vi.mock('@/lib/badge-showcase', () => ({
@@ -18,8 +18,10 @@ vi.mock('@/components/ui/tooltip', () => ({
 }));
 
 let reducedMotion = false;
+let badgeTier = 'Octopus';
 beforeEach(() => {
   reducedMotion = false;
+  badgeTier = 'Octopus';
   vi.clearAllMocks();
   window.matchMedia = vi.fn().mockImplementation(() => ({
     matches: reducedMotion, addEventListener: vi.fn(), removeEventListener: vi.fn(),
@@ -28,6 +30,24 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('badge hover playback', () => {
+  it('keeps the original orca image and sizing while idle and restores it after hover', () => {
+    badgeTier = 'Killer Whale';
+    render(<BadgeIcon />);
+    const badge = screen.getByRole('button', { name: 'Killer Whale' });
+    const original = '/assets/Killer Whale.webp';
+    expect(screen.getByRole('img').getAttribute('src')).toBe(original);
+    const style = screen.getByRole('img').getAttribute('style');
+    expect(style).toContain(String(128 / 104));
+    fireEvent.pointerEnter(badge);
+    expect(screen.getByRole('img').getAttribute('src')).toBe(badgeHoverArt(badgeTier)!.animation);
+    expect(screen.getByRole('img').getAttribute('style')).toBe(style);
+    fireEvent.pointerLeave(badge);
+    expect(screen.getByRole('img').getAttribute('src')).toBe(original);
+    fireEvent.pointerEnter(badge);
+    fireEvent.error(screen.getByRole('img'));
+    expect(screen.getByRole('img').getAttribute('src')).toBe(original);
+  });
+
   it('loads a still while idle, plays with the glow on hover, and restores the same still on leave', () => {
     render(<BadgeIcon badgeBalance={500000} />);
     const art = badgeHoverArt('Octopus')!;
