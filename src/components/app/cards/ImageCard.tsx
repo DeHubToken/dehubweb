@@ -971,6 +971,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   return (
     <div
       ref={viewRef}
+      data-image-card
       onClick={handleCardClick}
       className={isImmersive ? 'overflow-hidden isolate' : 'overflow-visible cursor-pointer isolate'}
     >
@@ -978,7 +979,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       {!isImmersive && headerRow}
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
-      <div className="relative">
+      <div data-image-media className="relative">
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has (PPV, holdings), rather than
             replacing it. */}
@@ -1618,3 +1619,4 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     </div>
   );
 });
+
