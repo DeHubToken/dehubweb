@@ -301,16 +301,71 @@ describe('scroll freeze watchdog', () => {
     expect(scrollTop).toBe(0);
   });
 
-  it('lets the next vertical feed drag scroll after a confirmed Samsung stall', () => {
+  it('keeps later swipes native after a confirmed Samsung stall, including on a profile', () => {
     samsungFeed();
     drag(-120); settle();
-    expect(REPORTS[0].meta.samsungFeedScrollFallback).toBe(true);
+    expect(REPORTS[0].meta.recoveryQueued).toBe(true);
     touch('touchstart', 500);
     const move = touch('touchmove', 400);
-    expect(move.defaultPrevented).toBe(true);
-    expect(scrollTop).toBe(100);
-    touch('touchmove', 300);
-    expect(scrollTop).toBe(200);
+    expect(move.defaultPrevented).toBe(false);
+    expect(scrollTop).toBe(0);
+    window.history.replaceState({}, '', '/ken210');
+    expect(touch('touchmove', 300).defaultPrevented).toBe(false);
+    expect(scrollTop).toBe(0);
+  });
+
+  it('does not nudge or rebuild the scroller during a continuing gesture', async () => {
+    samsungFeed();
+    const { settleAfterOverlayClose } = await import('@/lib/scroll-freeze-watchdog');
+    touch('touchstart', 500);
+    settleAfterOverlayClose();
+    vi.advanceTimersByTime(800);
+    expect(scrollTop).toBe(0);
+    touch('touchend', 400);
+    vi.advanceTimersByTime(800);
+    expect(scrollTop).toBe(0);
+  });
+
+  it('notices touch release even when a horizontal carousel stops bubbling', async () => {
+    samsungFeed();
+    const { restoreDocumentTouchScroll } = await import('@/lib/scroll-freeze-watchdog');
+    const carousel = document.createElement('div'); document.body.appendChild(carousel);
+    carousel.addEventListener('touchend', e => e.stopPropagation());
+    const start = new Event('touchstart', { bubbles: true });
+    Object.defineProperty(start, 'touches', { value: [{ clientX: 100, clientY: 500 }] });
+    carousel.dispatchEvent(start);
+    expect(restoreDocumentTouchScroll()).toBe(false);
+    const end = new Event('touchend', { bubbles: true });
+    Object.defineProperty(end, 'touches', { value: [] }); carousel.dispatchEvent(end);
+    expect(restoreDocumentTouchScroll()).toBe(true);
+  });
+
+  it('waits for native momentum before post-overlay recovery', async () => {
+    samsungFeed();
+    const { settleAfterOverlayClose } = await import('@/lib/scroll-freeze-watchdog');
+    settleAfterOverlayClose();
+    vi.advanceTimersByTime(600);
+    scrollTop = 140;
+    document.dispatchEvent(new Event('scroll'));
+    vi.advanceTimersByTime(100);
+    expect(scrollTop).toBe(140);
+    vi.advanceTimersByTime(700);
+    expect(scrollTop).toBe(140);
+  });
+
+  it('never rewinds a new swipe between a recovery nudge and its next frame', async () => {
+    vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Safari/18');
+    const { settleAfterOverlayClose } = await import('@/lib/scroll-freeze-watchdog');
+    let frame!: FrameRequestCallback;
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => { frame = cb; return 1; });
+    scrollTop = 900;
+    settleAfterOverlayClose();
+    vi.advanceTimersByTime(700);
+    expect(scrollTop).toBe(899);
+    touch('touchstart', 500);
+    scrollTop = 1000;
+    frame(0);
+    expect(scrollTop).toBe(1000);
   });
 
   it('never takes a button drag or an open modal from Samsung after recovery is enabled', () => {
@@ -330,9 +385,10 @@ describe('scroll freeze watchdog', () => {
 
   it('does not activate Samsung feed recovery on a post overlay or another browser', () => {
     samsungFeed();
-    window.history.replaceState({}, '', '/app/post/6237');
+    document.body.innerHTML = '<div data-media-fullscreen="true"></div>';
     drag(-120); settle();
-    expect(REPORTS[0].meta.samsungFeedScrollFallback).toBe(false);
+    expect(REPORTS).toHaveLength(0);
+    document.body.innerHTML = '';
     window.history.replaceState({}, '', '/app');
     vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Chrome/143');
     touch('touchstart', 500);
@@ -367,8 +423,8 @@ describe('scroll freeze watchdog', () => {
     expect(REPORTS).toHaveLength(3);
     drag(-120); settle();
     touch('touchstart', 500);
-    expect(touch('touchmove', 400).defaultPrevented).toBe(true);
-    expect(scrollTop).toBe(100);
+    expect(touch('touchmove', 400).defaultPrevented).toBe(false);
+    expect(scrollTop).toBe(0);
     expect(REPORTS).toHaveLength(3);
   });
 });

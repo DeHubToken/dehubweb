@@ -11,11 +11,9 @@
  * and its GitHub link, which is why the toast can say what changed — those
  * fields describe the NEW build, so they have to come off the wire.
  *
- * Deliberately quiet:
- *   - hidden tabs never poll, and the first check is a full interval after boot
- *     (a tab that just loaded is by definition running what was live).
- *   - one notification per session. Having been told once, a user who keeps
- *     browsing has made their choice; a second deploy will not re-nag them.
+ * Hidden tabs do not poll. Check at boot and on return, then keep watching
+ * for later deploys. Only an explicit dismissal suppresses that deploy's notice;
+ * mounting a toast is not proof that the user saw it.
  *   - a build with no id disables the whole thing rather than prompting for a
  *     refresh that could never satisfy the comparison.
  *
@@ -38,23 +36,17 @@ export type BuildVersion = {
 const RUNNING_ID = typeof __BUILD_ID__ === 'string' ? __BUILD_ID__ : '';
 
 const MANIFEST_URL = '/version.json';
-/**
- * Gap between polls in a visible tab, and — since the first tick is a full
- * interval after boot — the worst-case delay before a desktop tab hears about a
- * deploy. A tab that is switched away from and back finds out sooner, because
- * the visibility check fires immediately; at 15 minutes a desktop tab nobody
- * touches was effectively waiting on that tab switch instead.
- */
-const POLL_MS = 3 * 60_000;
+/** Poll visible pages once a minute; boot and foreground return check sooner. */
+const POLL_MS = 60_000;
 /** Floor between two network checks, so tab-switching can't turn into a spam loop. */
-const MIN_GAP_MS = 60_000;
-const NOTIFIED_KEY = 'version-notified-id';
+const MIN_GAP_MS = 15_000;
+const DISMISSED_KEY = 'version-dismissed-id';
 /** The deploy id this session already reloaded itself onto, so it never loops. */
 const RELOADED_KEY = 'version-reloaded-id';
 
 /**
  * The newer deploy the watcher has seen, if any. Kept apart from the toast's
- * one-shot: the toast can be dismissed or never noticed on a phone, and a tab
+ * presentation: the toast can be dismissed or never noticed on a phone, and a tab
  * that lives for days in a mobile browser then keeps drawing last week's pages.
  */
 let newerDeployId: string | null = null;
@@ -86,6 +78,11 @@ export function getRunningBuildId(): string {
   return RUNNING_ID;
 }
 
+/** Only the user's close action dismisses a notice, never a temporary unmount. */
+export function dismissVersionUpdate(id: string): void {
+  try { sessionStorage.setItem(DISMISSED_KEY, id); } catch { /* Storage is optional. */ }
+}
+
 /**
  * Is this tab running a build the deploy has already moved past?
  *
@@ -94,8 +91,7 @@ export function getRunningBuildId(): string {
  * above asks the same question on a timer to nag about updates; this asks it on
  * demand, at the moment something has just failed, so that a failure caused by
  * week-old code in a long-lived tab can be named as such instead of blamed on
- * the user. The two are deliberately independent: the watcher is one-shot per
- * session and may have already fired and stopped.
+ * the user. This check is independent of notice delivery and dismissal.
  */
 export async function isRunningStaleBuild(): Promise<boolean | null> {
   if (typeof window === 'undefined') return null;
@@ -109,8 +105,8 @@ export async function isRunningStaleBuild(): Promise<boolean | null> {
 }
 
 /**
- * Starts watching for a newer deploy. `onUpdate` fires at most once, with the
- * newly deployed build's details. Returns a cleanup that stops the watch.
+ * Starts watching for newer deploys. Notify once per observed id in this mount,
+ * and keep watching for subsequent deploys. Returns a cleanup that stops it.
  */
 export function startVersionWatch(onUpdate: (version: BuildVersion) => void): () => void {
   const noop = () => {};
@@ -120,37 +116,37 @@ export function startVersionWatch(onUpdate: (version: BuildVersion) => void): ()
   if (!RUNNING_ID) return noop;
 
   let stopped = false;
-  let lastCheck = 0;
+  let lastCheck = -Infinity;
+  let inFlight = false;
+  let notifiedId = '';
   let timer = 0;
 
   function stop() {
     stopped = true;
     window.clearInterval(timer);
     document.removeEventListener('visibilitychange', onVisibilityChange);
+    window.removeEventListener('pageshow', onVisibilityChange);
+    window.removeEventListener('online', onVisibilityChange);
   }
 
   async function check() {
-    if (stopped) return;
+    if (stopped || inFlight) return;
     if (document.visibilityState !== 'visible') return;
     if (Date.now() - lastCheck < MIN_GAP_MS) return;
     lastCheck = Date.now();
-
+    inFlight = true;
     const deployed = await fetchDeployedVersion();
+    inFlight = false;
     if (stopped || !deployed || deployed.id === RUNNING_ID) return;
     newerDeployId = deployed.id;
 
-    // Stop before notifying: this is a one-shot, and the caller shows a toast
-    // that stays up until it's acted on.
-    stop();
-
+    if (notifiedId === deployed.id) return;
     try {
-      // Survives an SPA-level remount of the watcher within the same session.
-      if (sessionStorage.getItem(NOTIFIED_KEY) === deployed.id) return;
-      sessionStorage.setItem(NOTIFIED_KEY, deployed.id);
+      if (sessionStorage.getItem(DISMISSED_KEY) === deployed.id) return;
     } catch {
-      // Private mode / storage disabled — notify anyway, the watch has stopped.
+      // Private mode / storage disabled — notify anyway.
     }
-
+    notifiedId = deployed.id;
     onUpdate(deployed);
   }
 
@@ -160,6 +156,9 @@ export function startVersionWatch(onUpdate: (version: BuildVersion) => void): ()
 
   timer = window.setInterval(() => void check(), POLL_MS);
   document.addEventListener('visibilitychange', onVisibilityChange);
+  window.addEventListener('pageshow', onVisibilityChange);
+  window.addEventListener('online', onVisibilityChange);
+  void check();
 
   return stop;
 }

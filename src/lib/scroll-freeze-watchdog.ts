@@ -212,7 +212,7 @@ function report(message: string, extra: Record<string, unknown>, recover: boolea
 // ---------------------------------------------------------------------------
 
 function checkBodyState() {
-  if (document.visibilityState !== 'visible') return;
+  if (document.visibilityState !== 'visible' || touchActive) return;
   if (!pageIsTallerThanViewport()) return;
   if (overlayIsOpen()) return;
   if (coveringLayer()) return;
@@ -241,19 +241,6 @@ let touchActive = false;
 let settleTimer = 0;
 let wheelTimer = 0;
 let lastDocumentScrollAt = -Infinity;
-// Samsung can retain a stalled body scrolling layer after a modal closes.
-// Only enable this after an observed, otherwise-unblocked feed drag fails.
-let samsungFeedScrollFallback = false;
-
-function canAssistFeedDrag(target: Element | null): boolean {
-  const body = getComputedStyle(document.body);
-  if (body.position === 'fixed' || body.overflowY === 'hidden' || body.overflowY === 'clip' || body.pointerEvents === 'none') return false;
-  return /SamsungBrowser\//.test(navigator.userAgent) && location.pathname === '/app' &&
-    !!target?.isConnected && !overlayIsOpen() && !coveringLayer() &&
-    !hasOwnScroller(target) && blockingTouchActions(target).length === 0 &&
-    !target.closest('button, a, input, textarea, select, [role="button"], [role="slider"], [data-no-swipe]');
-}
-
 function onDocumentScroll(e: Event) {
   if (e.target !== document && e.target !== document.body && e.target !== document.documentElement) return;
   lastDocumentScrollAt = Date.now();
@@ -296,8 +283,8 @@ function blockingTouchActions(start: Element | null): string[] {
   return out;
 }
 
-function endDrag() {
-  touchActive = false;
+function endDrag(e?: TouchEvent) {
+  touchActive = (e?.touches.length ?? 0) > 0;
   dragArmed = false;
   dragTarget = null;
 }
@@ -336,15 +323,6 @@ function onTouchMove(e: TouchEvent) {
   if (!dragArmed || e.touches.length !== 1) return;
   const dy = e.touches[0].clientY - dragStartY;
   const dx = e.touches[0].clientX - dragStartX;
-  if (samsungFeedScrollFallback && canAssistFeedDrag(dragTarget) &&
-    !e.defaultPrevented && e.cancelable && Math.abs(dy) >= 12 && Math.abs(dy) > Math.abs(dx) * 1.5 &&
-    couldHaveScrolled(dy)) {
-    e.preventDefault();
-    // Use the drag's starting offset, avoiding duplicate native movement.
-    const max = Math.max(0, document.body.scrollHeight - window.innerHeight);
-    scrollDocumentTo(Math.max(0, Math.min(max, dragStartScroll - dy)));
-    return;
-  }
   if (Math.abs(dy) < DRAG_PX) return;
   if (Math.abs(dx) >= Math.abs(dy)) return; // a tab swipe is not a failed vertical scroll
   dragArmed = false; // one verdict per gesture
@@ -388,13 +366,12 @@ function onTouchMove(e: TouchEvent) {
     // the page. The body-state check above is the path that recovers.
     // Never reset during a continuing gesture, on a deliberate touch-action
     // region, or for an event cancelled by an interactive control.
-    const recoveryAttempted = !touchActive &&
-      target?.isConnected && !e.defaultPrevented && evidence.blockedBy.length === 0
-      ? restoreDocumentTouchScroll() : false;
-    if (!e.defaultPrevented && canAssistFeedDrag(target)) samsungFeedScrollFallback = true;
+    const recoveryQueued = target?.isConnected && !e.defaultPrevented &&
+      !target.closest('button, a, input, textarea, select, [role="button"], [role="slider"], [data-no-swipe]') &&
+      evidence.blockedBy.length === 0 && /SamsungBrowser\//.test(navigator.userAgent);
+    if (recoveryQueued) queueTouchScrollRecovery();
     report('A drag moved the finger but not the page', {
-      ...evidence, recoveryAttempted,
-      samsungFeedScrollFallback,
+      ...evidence, recoveryQueued,
     }, false);
   }, SETTLE_MS);
 }
@@ -461,7 +438,7 @@ export function restoreDocumentTouchScroll(): boolean {
   if (touchActive || overlayIsOpen() || coveringLayer() || !pageIsTallerThanViewport()) return false;
   const body = document.body;
   const computed = getComputedStyle(body);
-  if (computed.overflowY === 'hidden' || computed.overflowY === 'clip' || computed.pointerEvents === 'none') return false;
+  if (computed.position === 'fixed' || computed.overflowY === 'hidden' || computed.overflowY === 'clip' || computed.pointerEvents === 'none') return false;
   const top = getDocumentScrollTop();
   const value = body.style.getPropertyValue('overflow-y');
   const priority = body.style.getPropertyPriority('overflow-y');
@@ -474,42 +451,57 @@ export function restoreDocumentTouchScroll(): boolean {
   return true;
 }
 
-export function settleAfterOverlayClose(): void {
+/** Rebuild only after both the touch and its native momentum have settled. */
+function queueTouchScrollRecovery(): void {
   if (typeof window === 'undefined') return;
   window.clearTimeout(settleAfterCloseTimer);
   settleAfterCloseTimer = window.setTimeout(() => {
+    if (document.visibilityState !== 'visible') return;
+    if (touchActive || Date.now() - lastDocumentScrollAt < SETTLE_MS) {
+      queueTouchScrollRecovery();
+      return;
+    }
     if (overlayIsOpen() || coveringLayer()) return;
     checkBodyState();
     if (!pageIsTallerThanViewport()) return;
     if (restoreDocumentTouchScroll()) return;
     const top = getDocumentScrollTop();
-    scrollDocumentTo(top > 0 ? top - 1 : top + 1);
-    requestAnimationFrame(() => scrollDocumentTo(top));
+    const nudge = top > 0 ? top - 1 : top + 1;
+    scrollDocumentTo(nudge);
+    requestAnimationFrame(() => {
+      // A new swipe may have started between frames. Never rewind it.
+      if (!touchActive && getDocumentScrollTop() === nudge) scrollDocumentTo(top);
+    });
   }, AFTER_CLOSE_MS);
+}
+
+export function settleAfterOverlayClose(): void {
+  queueTouchScrollRecovery();
 }
 
 /** Desktop needs the same orphaned-lock recovery as touch devices. */
 export function installScrollFreezeWatchdog(): () => void {
   if (typeof window === 'undefined') return () => {};
 
-  window.addEventListener('touchstart', onTouchStart, { passive: true });
-  // Cancelling is reserved for the diagnosed Samsung fallback; ordinary
-  // scrolling and all other browsers stay native.
-  window.addEventListener('touchmove', onTouchMove, { passive: false });
+  // Capture start/end too: horizontal carousels intentionally stop bubbling,
+  // which must not leave the watchdog thinking a finger is down forever.
+  window.addEventListener('touchstart', onTouchStart, { passive: true, capture: true });
+  // Observe only: a global cancellable handler blocks compositor scrolling
+  // on every page. Recovery runs after the gesture, never by owning the swipe.
+  window.addEventListener('touchmove', onTouchMove, { passive: true, capture: true });
   // Drop the target when the gesture ends. Feed video elements are pooled and
   // reused across cards, so a retained node makes the next report name whichever
   // card happens to own it now — which is why these logs read as video-heavy.
-  window.addEventListener('touchend', endDrag, { passive: true });
-  window.addEventListener('touchcancel', endDrag, { passive: true });
+  window.addEventListener('touchend', endDrag, { passive: true, capture: true });
+  window.addEventListener('touchcancel', endDrag, { passive: true, capture: true });
   window.addEventListener('wheel', onWheel, { passive: true, capture: true });
   window.addEventListener('scroll', onDocumentScroll, { passive: true, capture: true });
   const poll = window.setInterval(checkBodyState, POLL_MS);
   return () => {
-    samsungFeedScrollFallback = false;
-    window.removeEventListener('touchstart', onTouchStart);
-    window.removeEventListener('touchmove', onTouchMove);
-    window.removeEventListener('touchend', endDrag);
-    window.removeEventListener('touchcancel', endDrag);
+    window.removeEventListener('touchstart', onTouchStart, true);
+    window.removeEventListener('touchmove', onTouchMove, true);
+    window.removeEventListener('touchend', endDrag, true);
+    window.removeEventListener('touchcancel', endDrag, true);
     window.removeEventListener('wheel', onWheel, { capture: true });
     window.removeEventListener('scroll', onDocumentScroll, { capture: true });
     window.clearInterval(poll);
