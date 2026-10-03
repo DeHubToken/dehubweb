@@ -1261,7 +1261,30 @@ export default function AssistantPage() {
       toast.success(t('assistant.paymentSuccessGenerating'));
     } catch (err) {
       console.error('Video generation error:', err);
-      toast.error(t('assistant.errorVideoGenStart'));
+      // The function says why it could not start and whether the payment went
+      // back on the transfer. Without that, a refused start read as "paid and
+      // got nothing" even though the next generation would have been free.
+      const context = (err as { context?: unknown })?.context;
+      let reason = '';
+      let restoredDhb = 0;
+      if (context instanceof Response) {
+        try {
+          const body = await context.clone().json() as { error?: string; paymentRestored?: boolean; restoredDhb?: number };
+          reason = body.error || '';
+          if (body.paymentRestored) restoredDhb = Number(body.restoredDhb) || 0;
+        } catch {
+          // Not JSON. Keep the generic message.
+        }
+      }
+      const kept = restoredDhb > 0
+        ? t('assistant.videoGenPaymentKept', { amount: restoredDhb.toLocaleString() })
+        : '';
+      setMessages(prev => [...prev, {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: [t('assistant.videoGenFailedDetail', { error: reason || t('assistant.errorVideoGenStart') }), kept].filter(Boolean).join('\n\n'),
+      }]);
+      toast.error(kept || t('assistant.errorVideoGenStart'));
       setIsVideoLoading(false);
     }
 
