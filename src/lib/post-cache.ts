@@ -14,6 +14,7 @@ import { getVoteCache } from '@/lib/vote-cache';
 import { parseFormattedCount } from '@/lib/feed-utils';
 import { liveSourceFromHlsUrl } from '@/lib/live-ingest';
 import { warmPostPage } from '@/lib/preload-post-page';
+import { buildSoundtrackTag } from '@/lib/soundtrack';
 
 /**
  * Parse a duration string (e.g., "1:23" or "1:02:34") back to seconds
@@ -40,12 +41,14 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
 
   return {
     tokenId: parseInt(video.id) || 0,
-    postType: (isLivePost ? 'live' : 'video') as any,
+    postType: (isLivePost ? 'live' : video.isAudio ? 'feed-audio' : 'video') as any,
     title: video.title,
     name: video.title,
     description: video.description || video.title,
     imageUrl: video.thumbnail || undefined,
     videoUrl: isLivePost ? undefined : video.videoUrl,
+    audioUrl: video.audioUrl,
+    audioDuration: video.audioDuration,
     videoDuration: video.durationSeconds || parseDurationToSeconds(video.duration),
     duration: video.durationSeconds || parseDurationToSeconds(video.duration),
     minterDisplayName: video.channel,
@@ -102,12 +105,16 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
  * Convert ImagePost back to partial DeHubNFT format for caching
  */
 function imagePostToNFT(post: ImagePost): Partial<DeHubNFT> {
+  const description = post.description || post.caption || '';
+  const soundtrack = post.soundtrackUrl && !description.includes('[soundtrack:')
+    ? buildSoundtrackTag({ tokenId: post.id, title: post.soundtrackTitle || 'Sound', creator: post.soundtrackCreator || '', url: post.soundtrackUrl })
+    : '';
   return {
     tokenId: parseInt(post.id) || 0,
     postType: 'image',
     title: post.title,
     name: post.title,
-    description: post.description || post.caption,
+    description: soundtrack ? `${description}\n${soundtrack}` : description,
     imageUrl: post.image,
     imageUrls: post.imageUrls,
     minterDisplayName: post.username,
