@@ -21,6 +21,12 @@ afterEach(() => {
 });
 
 describe('picture-in-picture navigation', () => {
+  it('releases ordinary videos immediately when their source page is removed', () => {
+    const release = vi.fn();
+    releaseAfterPictureInPicture(document.createElement('video'), release);
+    expect(release).toHaveBeenCalledTimes(1);
+    expect(document.querySelector('[data-pip-parking]')).toBeNull();
+  });
   it('keeps the same video connected past the normal navigation grace, then disposes on close', () => {
     const slot = document.createElement('div');
     document.body.appendChild(slot);
