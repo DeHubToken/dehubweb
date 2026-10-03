@@ -259,6 +259,15 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    */
   const replayRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
+    const video = replayRef.current;
+    if (!video) return;
+    return () => releaseAfterPictureInPicture(video, () => {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+    });
+  }, [streamEnded, stream.replayUrl]);
+  useEffect(() => {
     if (!playbackAllowed && (!isVideoInPictureInPicture(replayRef.current) || visualActivity.isCallBusy())) replayRef.current?.pause();
   }, [playbackAllowed]);
   const [replayProgress, setReplayProgress] = useState<number | undefined>(undefined);

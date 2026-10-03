@@ -151,7 +151,7 @@ class VideoPlaybackManager {
       if (this.audioOwnerId === video.id) this.audioOwnerId = null;
       try { video.pause(); } catch {}
     });
-    this.promoteNextAudioOwner();
+    if (!this.audioOwnerId) this.promoteNextAudioOwner();
   }
 
   /** Promote the next active video to audio owner and unmute it */
