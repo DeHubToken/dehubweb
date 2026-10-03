@@ -22,8 +22,8 @@ export function badgeHoverArt(tier: string | null | undefined) {
   const slug = tier.toLowerCase().replaceAll(' ', '-');
   const [left, top, right, bottom] = bounds[tier];
   return {
-    poster: posters[../assets/badges/hover/.png],
-    animation: animations[../assets/badges/hover/.webp],
+    poster: posters['../assets/badges/hover/' + slug + '.png'],
+    animation: animations['../assets/badges/hover/' + slug + '.webp'],
     bounds: { left, top, right, bottom },
   };
 }
