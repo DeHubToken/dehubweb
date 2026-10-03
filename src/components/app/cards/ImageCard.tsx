@@ -1169,8 +1169,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         {soundtrackControl && !fullscreenOpen && (
           <div className="absolute bottom-2 left-2 z-10 max-w-[calc(100%-1rem)]">{soundtrackControl}</div>
         )}
-        {post.soundtrackUrl && soundtrackEnabled && (
-        )}
 
         {/* Content Type Badges - Bounty only (PPV/Lock are shown via centered overlay) */}
         {hasBadges && (
