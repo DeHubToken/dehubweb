@@ -860,6 +860,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Pause callback for the playback manager
   const pauseVideo = useCallback(() => {
+    if (videoRef.current && document.pictureInPictureElement === videoRef.current && !visualActivity.isCallBusy()) return;
     videoRef.current?.pause();
     isPlayingRef.current = false;
     setIsPlaying(false);
@@ -958,6 +959,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       (entries) => {
         entries.forEach((entry) => {
           isIntersectingRef.current = entry.isIntersecting;
+          if (videoRef.current && document.pictureInPictureElement === videoRef.current && !visualActivity.isCallBusy()) return;
           if (!visualActivity.isFeedPlaybackAllowed()) { pauseVideo(); return; }
           // Backgrounding is not a scroll-away; PiP owns its own visible surface.
           if (isVideoOutsideFeed(videoRef.current)) return;

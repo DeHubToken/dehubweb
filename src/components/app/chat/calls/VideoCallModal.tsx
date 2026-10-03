@@ -23,8 +23,8 @@ const VideoCallModal: React.FC = () => {
     isConnecting,
     isMuted,
     isCameraOff,
-    localVideoRef,
-    remoteVideoRef,
+    attachLocalVideo,
+    attachRemoteVideo,
     endCall,
     acceptCall,
     rejectCall,
@@ -59,7 +59,7 @@ const VideoCallModal: React.FC = () => {
           the ringing screen and shows who is on the other end. */}
       {isCallActive ? (
         <div
-          ref={remoteVideoRef}
+          ref={attachRemoteVideo}
           className="absolute inset-0 h-full w-full object-cover"
         />
       ) : (
@@ -82,7 +82,7 @@ const VideoCallModal: React.FC = () => {
         )}
       >
         <div
-          ref={localVideoRef}
+            ref={attachLocalVideo}
           className={cn('h-full w-full object-cover', isCameraOff && 'hidden')}
         />
         {isCameraOff && (

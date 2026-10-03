@@ -114,6 +114,16 @@ describe('call media lifecycle', () => {
     expect(remote.play).toHaveBeenLastCalledWith(restored);
     expect(local.play).toHaveBeenLastCalledWith(restored);
   });
+
+  it('attaches a call video surface that mounts after the remote publication', async () => {
+    const remote = track();
+    const { result } = renderHook(useCall);
+    await act(async () => { await result.current.startCall('bob', 'video'); });
+    await act(async () => { await mocks.handlers['user-published']({ videoTrack: remote }, 'video'); });
+    const lateSurface = document.createElement('div');
+    result.current.attachRemoteVideo(lateSurface);
+    expect(remote.play).toHaveBeenLastCalledWith(lateSurface);
+  });
 });
 
 it('suspends immediately and resumes only after focus settles, keeping feed paused for minimized calls', () => {
