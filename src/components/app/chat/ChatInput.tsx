@@ -82,9 +82,15 @@ interface ChatInputProps {
    * lib/conversation-identity). Omit it and the composer behaves as before.
    */
   draftKey?: string | null;
+  /**
+   * Show the document picker (PDF, Office files, archives…). Documents are a
+   * DM-only feature on the backend, so a room that cannot post them should
+   * pass false rather than offer a file that will be refused on send.
+   */
+  allowDocuments?: boolean;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true }: ChatInputProps) {
   const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
   // initialText can arrive a tick after mount (MessagesPage sets the prefill
@@ -656,27 +662,31 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             className="hidden"
           />
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
-                onClick={() => docInputRef.current?.click()}
-              >
-                <Paperclip className="w-5 h-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Attach a file</TooltipContent>
-          </Tooltip>
-          <input
-            ref={docInputRef}
-            type="file"
-            accept={ATTACHMENT_ACCEPT}
-            onChange={handleDocUpload}
-            className="hidden"
-          />
+          {allowDocuments && (
+            <>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
+                    onClick={() => docInputRef.current?.click()}
+                  >
+                    <Paperclip className="w-5 h-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Attach a file</TooltipContent>
+              </Tooltip>
+              <input
+                ref={docInputRef}
+                type="file"
+                accept={ATTACHMENT_ACCEPT}
+                onChange={handleDocUpload}
+                className="hidden"
+              />
+            </>
+          )}
 
           <VoiceRecorder
             onRecordingComplete={handleVoiceRecordingComplete}

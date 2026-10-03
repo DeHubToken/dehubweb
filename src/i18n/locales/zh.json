@@ -728,6 +728,7 @@
     "errorUnknown": "❌ 出了点问题：{{message}}。请重试。",
     "errorVideoGenFailed": "视频生成失败",
     "errorVideoGenStart": "无法开始生成视频",
+    "videoGenPaymentKept": "你的 {{amount}} DHB 尚未扣除。它会保留在你的账户中，并自动用于下一次费用不超过该金额的生成，因此重试不会重复收费。",
     "errorImageGenFailed": "无法生成图片",
     "fallbackGrokNotConfigured": "使用 DeHub AI - Grok API 密钥未配置",
     "paymentSuccessGenerating": "支付成功！正在生成您的视频...",

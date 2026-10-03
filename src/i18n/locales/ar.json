@@ -726,6 +726,7 @@
     "errorUnknown": "❌ حدث خطأ ما: {{message}}. يرجى المحاولة مرة أخرى.",
     "errorVideoGenFailed": "فشل إنشاء الفيديو",
     "errorVideoGenStart": "تعذر بدء إنشاء الفيديو",
+    "videoGenPaymentKept": "لم يتم إنفاق {{amount}} DHB الخاصة بك. ستبقى في حسابك وتُستخدم تلقائيًا في عملية الإنشاء التالية التي تكلف حتى هذا المبلغ، لذا لن تدفع مرتين عند إعادة المحاولة.",
     "errorImageGenFailed": "تعذر إنشاء الصورة",
     "fallbackGrokNotConfigured": "استخدام DeHub AI — مفتاح Grok API غير مهيأ",
     "paymentSuccessGenerating": "تم الدفع بنجاح! جارٍ إنشاء الفيديو...",

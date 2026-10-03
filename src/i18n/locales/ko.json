@@ -728,6 +728,7 @@
     "errorUnknown": "❌ 문제가 발생했습니다: {{message}}. 다시 시도하세요.",
     "errorVideoGenFailed": "비디오 생성 실패",
     "errorVideoGenStart": "비디오 생성을 시작할 수 없습니다",
+    "videoGenPaymentKept": "{{amount}} DHB는 사용되지 않았습니다. 계정에 남아 있으며 해당 금액 이하의 다음 생성에 자동으로 사용되므로 다시 시도해도 두 번 결제되지 않습니다.",
     "errorImageGenFailed": "이미지를 생성할 수 없습니다",
     "fallbackGrokNotConfigured": "DeHub AI 사용 중 - Grok API 키 미설정",
     "paymentSuccessGenerating": "결제 완료! 비디오 생성 중...",

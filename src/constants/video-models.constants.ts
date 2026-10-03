@@ -155,6 +155,8 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     hasAudio: true,
     minDuration: 5,
     maxDuration: 10,
+    // Replicate takes 5 or 10 only and rejects anything between.
+    allowedDurations: [5, 10],
     defaultDuration: 5,
     supportsNegativePrompt: true,
     supportsSeed: true,
@@ -195,6 +197,8 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     baseCostUsd: 0.50,
     minDuration: 5,
     maxDuration: 10,
+    // Replicate takes 5 or 10 only and rejects anything between.
+    allowedDurations: [5, 10],
     defaultDuration: 10,
     aspectRatios: ['16:9', '9:16', '1:1'],
     tips: [
