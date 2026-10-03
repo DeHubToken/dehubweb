@@ -25,14 +25,12 @@ export const WORLD_CUP_GIVEAWAY = {
   statusLabel: 'Not spendable yet',
 } as const;
 
-/** Winner wallet addresses (lowercased) → handle, for friendly display. */
-const WINNERS: Record<string, { handle: string }> = {
-  '0x71555aa7b368b0319ed6fa9d1ef6c387433cb433': { handle: 'mrnovocryto' },
-  '0x759ffef43115805def2d64be71497cd0f83c01a6': { handle: 'skyler_adams' },
-  '0x684012bc9bfbfc987d8d0e1b13a2fdb31caba3b6': { handle: 'martvader' },
-  '0xd627ad6a37e91985b9413a721a000feed9d9125f': { handle: 'dehu_b' },
-  '0xfe8db009274c251765431e2b7464868c73672b81': { handle: 'raw' },
-};
+/** Winner wallet addresses (lowercased) → handle, for friendly display.
+ *
+ *  Empty since the prizes were sent on-chain on 2026-10-03: each winner's real
+ *  balance now holds the 200,000 DHB, so the pending credit is no longer shown
+ *  (keeping it would count the prize twice). */
+const WINNERS: Record<string, { handle: string }> = {};
 
 export interface GiveawayPrize {
   amount: number;
