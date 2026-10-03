@@ -6816,11 +6816,12 @@
     "tokenNotConfigured": "A kò ṣètò tóka DeHub lórí {{chain}}.",
     "notEnoughTokens": "Tóka kò tó",
     "onChainBalanceTooLow": "Iwọntúnwọnsi tóka DeHub rẹ lórí ilé-iṣẹ́ lórí {{chain}} kéré jù. Iwọntúnwọnsi tí a fihàn le má tii ṣàṣepé.",
-    "sentDesc": "A fi tóka {{amount}} rán láti {{from}} sí {{to}}. Wọn yóò dé láìpẹ́.",
+    "sentDesc": "A ti fi token {{amount}} ránṣẹ́ láti {{from}} sí {{to}}. Ẹgbẹ́ náà máa ń fi àwọn token ránṣẹ́ lórí chain tí wọ́n ń lọ, nígbà gbogbo láàrín ọjọ́ iṣẹ́ 1-5.",
     "subtitle": "Gbé tóka DeHub láàárín àwọn ilé-iṣẹ́",
     "tokensOnBase": "Tóka lórí Base",
     "tokensOnBnb": "Tóka lórí BNB Chain",
-    "step3": "Àwọn tóka DeHub rẹ yóò dé ilé-iṣẹ́ tí wọ́n ń lọ sí láìpẹ́."
+    "step3": "Ẹgbẹ́ náà máa ń fi àwọn token ránṣẹ́ lórí chain tí wọ́n ń lọ, nígbà gbogbo láàrín ọjọ́ iṣẹ́ 1-5.",
+    "statusReceived": "Ó ti dé"
   },
   "builder": {
     "stakeForAllowance": "Fi tóka DeHub pamọ́ láti mú ìyọ̀ọ̀da ìkógun rẹ ojoojúmọ́ gbòòrò",
@@ -7381,11 +7382,11 @@
           "4": "Tẹ nọmba awọn ami ti o fẹ fi ranṣẹ.",
           "5": "Ṣayẹwo idiyele afara ati akoko ti a nṣe iṣiro de.",
           "6": "Jẹrisi iṣowo afara.",
-          "7": "Duro fun iṣowo lati pari — afara le gba iṣẹju diẹ."
+          "7": "Ẹgbẹ́ náà máa ń fi àwọn token ránṣẹ́ lórí chain tí wọ́n ń lọ, nígbà gbogbo láàrín ọjọ́ iṣẹ́ 1-5."
         },
         "tips": {
           "1": "Awọn idiyele afara yatọ nipasẹ pq.",
-          "2": "Afara maa n gba iṣẹju 1-5 da lori awọn pq ti o wa ninu rẹ.",
+          "2": "Fún báyìí, a ń san owó afárá pẹ̀lú ọwọ́.",
           "3": "Nigbagbogbo ṣayẹwo pq ibi ti o nlo ṣaaju ki o to jẹrisi."
         }
       },

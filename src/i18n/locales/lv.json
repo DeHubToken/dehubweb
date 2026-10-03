@@ -6902,11 +6902,12 @@
     "tokenNotConfigured": "DeHub žetoni nav iestatīti uz {{chain}}.",
     "notEnoughTokens": "Nepietiek žetonu",
     "onChainBalanceTooLow": "Jūsu DeHub žetonu atlikums ķēdē {{chain}} ir pārāk zems. Parādītais atlikums, iespējams, vēl nav sinhronizēts.",
-    "sentDesc": "{{amount}} žetoni nosūtīti no {{from}} uz {{to}}. Tie drīzumā ieradīsies.",
+    "sentDesc": "{{amount}} marķieri nosūtīti no {{from}} uz {{to}}. Komanda nosūta marķierus mērķa ķēdē, parasti 1-5 darba dienu laikā.",
     "subtitle": "Pārvietojiet DeHub žetonus starp ķēdēm",
     "tokensOnBase": "Žetoni uz Base",
     "tokensOnBnb": "Žetoni uz BNB Chain",
-    "step3": "Jūsu DeHub žetoni drīzumā tiks piegādāti galamērķa ķēdē."
+    "step3": "Komanda nosūta marķierus mērķa ķēdē, parasti 1-5 darba dienu laikā.",
+    "statusReceived": "Saņemts"
   },
   "builder": {
     "stakeForAllowance": "Iemaksājiet DeHub žetonus, lai palielinātu savu ikdienas izveides atļauju",
@@ -7473,11 +7474,11 @@
           "4": "Ievadiet marķieru skaitu, ko vēlaties pārsūtīt.",
           "5": "Pārskatiet pārsūtīšanas maksu un paredzamo ierašanās laiku.",
           "6": "Apstipriniet pārsūtīšanas darījumu.",
-          "7": "Uzgaidiet, līdz darījums tiek pabeigts — pārsūtīšana var ilgt dažas minūtes."
+          "7": "Komanda nosūta marķierus mērķa ķēdē, parasti 1-5 darba dienu laikā."
         },
         "tips": {
           "1": "Pārsūtīšanas maksas atšķiras atkarībā no ķēžu pāra.",
-          "2": "Pārsūtīšana parasti aizņem 1–5 minūtes atkarībā no iesaistītajām ķēdēm.",
+          "2": "Pagaidām tilta izmaksas tiek veiktas manuāli.",
           "3": "Pirms apstiprināšanas vienmēr vēlreiz pārbaudiet mērķa ķēdi."
         }
       },

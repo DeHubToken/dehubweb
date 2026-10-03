@@ -508,7 +508,8 @@ export const sck = {
     bridgeStep3: 'ट्रांसफर के राशि डालो',
     bridgeStep4: 'लेनदेन पक्का करो',
     bridgeToBase: 'बीएनबी से बेस तक का ब्रिज',
-    processingTimeDesc: 'सब ब्रिज रिक्वेस्ट १-५ बिजनेस दिनों के अंदर वितरित किये जाते है।',
+    processingTimeDesc: 'टीम टोकन के गंतव्य चेन में भेजेला, आमतौर में 1-5 काम कर दिन में।',
+    automatedBridge: 'अभी ब्रिज कर भुगतान हाथ से करल जायला।',
   },
   depin: {
     title: 'DePIN',

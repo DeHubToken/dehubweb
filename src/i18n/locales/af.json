@@ -7010,11 +7010,12 @@
     "tokenNotConfigured": "DeHub-tokens is nie op {{chain}} opgestel nie.",
     "notEnoughTokens": "Nie genoeg tokens nie",
     "onChainBalanceTooLow": "Jou DeHub-tokenbalans op die ketting op {{chain}} is te laag. Die vertoonde balans mag nog nie gesinkroniseer het nie.",
-    "sentDesc": "{{amount}} tokens gestuur van {{from}} na {{to}}. Hulle sal binnekort arriveer.",
+    "sentDesc": "{{amount}} tokens gestuur van {{from}} na {{to}}. Die span stuur die tokens op die bestemmingsketting uit, gewoonlik binne 1-5 werksdae.",
     "subtitle": "Beweeg DeHub-tokens tussen kettings",
     "tokensOnBase": "Tokens op Base",
     "tokensOnBnb": "Tokens op BNB Chain",
-    "step3": "Jou DeHub-tokens sal binnekort op die bestemmingsketting afgelewer word."
+    "step3": "Die span stuur die tokens op die bestemmingsketting uit, gewoonlik binne 1-5 werksdae.",
+    "statusReceived": "Ontvang"
   },
   "builder": {
     "stakeForAllowance": "Stel DeHub-tokens in om jou daaglikse bou-toelae te verhoog",
@@ -7581,11 +7582,11 @@
           "4": "Voer die aantal tokens in om te bridge.",
           "5": "Hersien die bridge-fooi en geskatte aankomstyd.",
           "6": "Bevestig die bridge-transaksie.",
-          "7": "Wag vir die transaksie om te voltooi — bridging kan 'n paar minute neem."
+          "7": "Die span stuur die tokens op die bestemmingsketting uit, gewoonlik binne 1-5 werksdae."
         },
         "tips": {
           "1": "Bridge-fooie wissel per kettingpaar.",
-          "2": "Bridging neem tipies 1-5 minute, afhangende van die betrokke kettings.",
+          "2": "Brugbetalings word vir eers met die hand gedoen.",
           "3": "Dubbelkeur altyd die bestemmingsketting voordat jy bevestig."
         }
       },

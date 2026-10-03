@@ -7164,11 +7164,12 @@
     "tokenNotConfigured": "Token DeHub tidak disediakan pada {{chain}}.",
     "notEnoughTokens": "Token tidak mencukupi",
     "onChainBalanceTooLow": "Baki token DeHub anda di rantaian pada {{chain}} terlalu rendah. Baki yang dipaparkan mungkin belum disegerakkan.",
-    "sentDesc": "{{amount}} token dihantar daripada {{from}} ke {{to}}. Ia akan tiba sebentar lagi.",
+    "sentDesc": "{{amount}} token dihantar daripada {{from}} ke {{to}}. Pasukan menghantar token di rantaian destinasi, biasanya dalam masa 1-5 hari bekerja.",
     "subtitle": "Alihkan token DeHub antara rantaian",
     "tokensOnBase": "Token pada Base",
     "tokensOnBnb": "Token pada Rantaian BNB",
-    "step3": "Token DeHub anda akan dihantar di rantaian destinasi sebentar lagi."
+    "step3": "Pasukan menghantar token di rantaian destinasi, biasanya dalam masa 1-5 hari bekerja.",
+    "statusReceived": "Diterima"
   },
   "builder": {
     "stakeForAllowance": "Pertaruhkan token DeHub untuk meningkatkan elaun binaan harian anda",
@@ -7735,11 +7736,11 @@
           "4": "Masukkan jumlah token untuk dijambatan.",
           "5": "Semak yuran jambatan dan anggaran masa ketibaan.",
           "6": "Sahkan transaksi jambatan.",
-          "7": "Tunggu sehingga transaksi selesai — jambatan mungkin mengambil masa beberapa minit."
+          "7": "Pasukan menghantar token di rantaian destinasi, biasanya dalam masa 1-5 hari bekerja."
         },
         "tips": {
           "1": "Yuran jambatan berbeza mengikut pasangan rantai.",
-          "2": "Jambatan biasanya mengambil masa 1-5 minit bergantung pada rantai yang terlibat.",
+          "2": "Buat masa ini, pembayaran bridge dibuat secara manual.",
           "3": "Sentiasa periksa semula rantai tujuan sebelum mengesahkan."
         }
       },

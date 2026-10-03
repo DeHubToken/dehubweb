@@ -6874,11 +6874,12 @@
     "tokenNotConfigured": "Tokens DeHub {{chain}} irratti hin qindaa&#39;an.",
     "notEnoughTokens": "Token gahaa miti",
     "onChainBalanceTooLow": "Hafnaan mallattoo DeHub on-chain keessan {{chain}} irratti baayyee gadi aanaadha. Madaalliin agarsiifame ammallee walsimsiisuu dhiisuu danda&#39;a.",
-    "sentDesc": "{{amount}} tokens {{from}} irraa gara {{to}} tti ergamu. Yeroo gabaabaa keessatti ni dhufu.",
+    "sentDesc": "Tokens {{amount}} {{from}} irraa gara {{to}}tti ergameera. Gareen tokens kana sansalata gahumsaa irratti erga, yeroo baay'ee guyyoota hojii 1-5 keessatti.",
     "subtitle": "Mallattoolee DeHub sansalata gidduutti sochoosi",
     "tokensOnBase": "Tokens on Base irratti",
     "tokensOnBnb": "Tokens on BNB Chain irratti",
-    "step3": "Tookiin DeHub keessan yeroo gabaabaa keessatti sansalata bakka itti geessan irratti ni dhiyaatu."
+    "step3": "Gareen tokens kana sansalata gahumsaa irratti erga, yeroo baay'ee guyyoota hojii 1-5 keessatti.",
+    "statusReceived": "Fudhatameera"
   },
   "builder": {
     "stakeForAllowance": "Tokens DeHub stake gochuun kaffaltii ijaarsaa guyyaa guyyaa keessanii ol kaasaa",
@@ -7447,11 +7448,11 @@
           "4": "Lakkoofsa mallattoolee riqicha gochuuf galchi.",
           "5": "Kaffaltii riqichaa fi tilmaama yeroo dhufaatii ilaali.",
           "6": "Daldala riqicha mirkaneessuu.",
-          "7": "Daldalli akka xumuramu eegaa — riqicha gochuun daqiiqaa muraasa fudhachuu danda&#39;a."
+          "7": "Gareen tokens kana sansalata gahumsaa irratti erga, yeroo baay'ee guyyoota hojii 1-5 keessatti."
         },
         "tips": {
           "1": "Kaffaltiin riqicha sansalataa lamaatiin garaagarummaa qaba.",
-          "2": "Riqicha hojjechuun akkaataa idileetti sansalata hirmaatan irratti hundaa’uun daqiiqaa 1-5 fudhata.",
+          "2": "Ammaaf kaffaltiin riqichaa harkaan raawwatama.",
           "3": "Yeroo hunda osoo hin mirkaneessiin dura sansalata bakka itti geessu lama ilaali."
         }
       },

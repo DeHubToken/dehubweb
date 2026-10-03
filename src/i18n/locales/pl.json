@@ -6948,11 +6948,12 @@
     "tokenNotConfigured": "Tokeny DeHub nie są skonfigurowane na {{chain}}.",
     "notEnoughTokens": "Za mało tokenów",
     "onChainBalanceTooLow": "Twój bilans tokenów DeHub w sieci {{chain}} jest zbyt niski. Wyświetlany bilans może jeszcze nie zostać zsynchronizowany.",
-    "sentDesc": "{{amount}} tokenów wysłanych z {{from}} do {{to}}. Dotrą wkrótce.",
+    "sentDesc": "Wysłano {{amount}} tokenów z {{from}} do {{to}}. Zespół wysyła tokeny w łańcuchu docelowym, zwykle w ciągu 1-5 dni roboczych.",
     "subtitle": "Przenieś tokeny DeHub między sieciami",
     "tokensOnBase": "Tokeny na Base",
     "tokensOnBnb": "Tokeny na BNB Chain",
-    "step3": "Twoje tokeny DeHub zostaną wkrótce dostarczone w docelowej sieci."
+    "step3": "Zespół wysyła tokeny w łańcuchu docelowym, zwykle w ciągu 1-5 dni roboczych.",
+    "statusReceived": "Odebrano"
   },
   "builder": {
     "stakeForAllowance": "Stakuj tokeny DeHub, aby zwiększyć swój dzienny limit budowania",
@@ -7519,11 +7520,11 @@
           "4": "Wprowadź liczbę tokenów do przesłania.",
           "5": "Sprawdź opłatę za przesłanie i szacowany czas przybycia.",
           "6": "Potwierdź transakcję przesłania.",
-          "7": "Poczekaj na zakończenie transakcji — przesłanie może potrwać kilka minut."
+          "7": "Zespół wysyła tokeny w łańcuchu docelowym, zwykle w ciągu 1-5 dni roboczych."
         },
         "tips": {
           "1": "Opłaty za przesłanie różnią się w zależności od pary łańcuchów.",
-          "2": "Przesyłanie zazwyczaj trwa 1-5 minut, w zależności od zaangażowanych łańcuchów.",
+          "2": "Na razie wypłaty przez most są realizowane ręcznie.",
           "3": "Zawsze dokładnie sprawdzaj łańcuch docelowy przed potwierdzeniem."
         }
       },

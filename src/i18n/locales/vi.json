@@ -7010,11 +7010,12 @@
     "tokenNotConfigured": "Token DeHub chưa được thiết lập trên {{chain}}.",
     "notEnoughTokens": "Không đủ token",
     "onChainBalanceTooLow": "Số dư token DeHub trên chuỗi của bạn trên {{chain}} quá thấp. Số dư hiển thị có thể chưa được đồng bộ hóa.",
-    "sentDesc": "{{amount}} token đã được gửi từ {{from}} đến {{to}}. Chúng sẽ đến sớm.",
+    "sentDesc": "Đã gửi {{amount}} token từ {{from}} đến {{to}}. Đội ngũ sẽ gửi token trên chuỗi đích, thường trong vòng 1-5 ngày làm việc.",
     "subtitle": "Di chuyển token DeHub giữa các chuỗi",
     "tokensOnBase": "Token trên Base",
     "tokensOnBnb": "Token trên BNB Chain",
-    "step3": "Token DeHub của bạn sẽ sớm được gửi đến chuỗi đích."
+    "step3": "Đội ngũ sẽ gửi token trên chuỗi đích, thường trong vòng 1-5 ngày làm việc.",
+    "statusReceived": "Đã nhận"
   },
   "builder": {
     "stakeForAllowance": "Đặt cược token DeHub để tăng hạn mức xây dựng hàng ngày của bạn",
@@ -7581,11 +7582,11 @@
           "4": "Nhập số lượng token để chuyển.",
           "5": "Xem lại phí chuyển và thời gian đến ước tính.",
           "6": "Xác nhận giao dịch chuyển.",
-          "7": "Chờ giao dịch hoàn tất — việc chuyển có thể mất vài phút."
+          "7": "Đội ngũ sẽ gửi token trên chuỗi đích, thường trong vòng 1-5 ngày làm việc."
         },
         "tips": {
           "1": "Phí chuyển khác nhau tùy thuộc vào cặp chuỗi.",
-          "2": "Việc chuyển thường mất 1-5 phút tùy thuộc vào các chuỗi liên quan.",
+          "2": "Hiện tại, các khoản chi trả qua cầu được thực hiện thủ công.",
           "3": "Luôn kiểm tra kỹ chuỗi đích trước khi xác nhận."
         }
       },
