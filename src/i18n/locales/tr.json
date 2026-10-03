@@ -6930,11 +6930,12 @@
     "tokenNotConfigured": "DeHub jetonları {{chain}} üzerinde ayarlanmamış.",
     "notEnoughTokens": "Yetersiz jeton",
     "onChainBalanceTooLow": "{{chain}} üzerindeki zincir içi DeHub jeton bakiyeniz çok düşük. Görüntülenen bakiye henüz senkronize olmamış olabilir.",
-    "sentDesc": "{{from}}'den {{to}}'ye {{amount}} jeton gönderildi. Kısa süre içinde ulaşacaklar.",
+    "sentDesc": "{{amount}} jeton {{from}} ağından {{to}} ağına gönderildi. Ekip, jetonları hedef zincirde gönderir; bu genellikle 1-5 iş günü sürer.",
     "subtitle": "DeHub jetonlarını zincirler arasında taşıyın",
     "tokensOnBase": "Base üzerindeki jetonlar",
     "tokensOnBnb": "BNB Chain üzerindeki jetonlar",
-    "step3": "DeHub jetonlarınız hedef zincirde kısa süre içinde teslim edilecektir."
+    "step3": "Ekip, jetonları hedef zincirde gönderir; bu genellikle 1-5 iş günü sürer.",
+    "statusReceived": "Alındı"
   },
   "builder": {
     "stakeForAllowance": "Günlük oluşturma limitinizi artırmak için DeHub jetonlarını stake edin",
@@ -7501,11 +7502,11 @@
           "4": "Köprülemek istediğiniz token miktarını girin.",
           "5": "Köprü ücretini ve tahmini varış süresini gözden geçirin.",
           "6": "Köprü işlemini onaylayın.",
-          "7": "İşlemin tamamlanmasını bekleyin — köprüleme birkaç dakika sürebilir."
+          "7": "Ekip, jetonları hedef zincirde gönderir; bu genellikle 1-5 iş günü sürer."
         },
         "tips": {
           "1": "Köprü ücretleri zincir çiftine göre değişiklik gösterir.",
-          "2": "Köprüleme, ilgili zincirlere bağlı olarak genellikle 1-5 dakika sürer.",
+          "2": "Köprü ödemeleri şimdilik elle yapılıyor.",
           "3": "Onaylamadan önce her zaman hedef zincirini iki kez kontrol edin."
         }
       },

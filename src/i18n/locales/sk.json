@@ -7042,11 +7042,12 @@
     "tokenNotConfigured": "Tokeny DeHub nie sú nastavené na {{chain}}.",
     "notEnoughTokens": "Nedostatok tokenov",
     "onChainBalanceTooLow": "Váš zostatok tokenov DeHub na reťazci {{chain}} je príliš nízky. Zobrazený zostatok sa ešte nemusel synchronizovať.",
-    "sentDesc": "Tokeny {{amount}} odoslané z {{from}} do {{to}}. Dorazia čoskoro.",
+    "sentDesc": "{{amount}} tokenov odoslaných z {{from}} do {{to}}. Tím odošle tokeny na cieľovom reťazci, zvyčajne do 1-5 pracovných dní.",
     "subtitle": "Presúvajte tokeny DeHub medzi reťazcami",
     "tokensOnBase": "Tokeny na Base",
     "tokensOnBnb": "Tokeny na BNB Chain",
-    "step3": "Vaše tokeny DeHub budú doručené na cieľový reťazec čoskoro."
+    "step3": "Tím odošle tokeny na cieľovom reťazci, zvyčajne do 1-5 pracovných dní.",
+    "statusReceived": "Prijaté"
   },
   "builder": {
     "stakeForAllowance": "Stavte tokeny DeHub, aby ste zvýšili svoje denné povolenie na tvorbu",
@@ -7613,11 +7614,11 @@
           "4": "Zadajte počet tokenov na premostenie.",
           "5": "Skontrolujte poplatok za premostenie a odhadovaný čas príchodu.",
           "6": "Potvrďte transakciu premostenia.",
-          "7": "Počkajte na dokončenie transakcie — premostenie môže trvať niekoľko minút."
+          "7": "Tím odošle tokeny na cieľovom reťazci, zvyčajne do 1-5 pracovných dní."
         },
         "tips": {
           "1": "Poplatky za premostenie sa líšia v závislosti od páru reťazcov.",
-          "2": "Premostenie zvyčajne trvá 1-5 minút v závislosti od zapojených reťazcov.",
+          "2": "Výplaty cez most sa zatiaľ robia ručne.",
           "3": "Pred potvrdením si vždy dvakrát skontrolujte cieľový reťazec."
         }
       },

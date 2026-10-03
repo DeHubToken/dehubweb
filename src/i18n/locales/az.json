@@ -6770,11 +6770,12 @@
     "tokenNotConfigured": "DeHub tokenləri {{chain}}-də qurulmayıb.",
     "notEnoughTokens": "Kifayət qədər token yoxdur",
     "onChainBalanceTooLow": "{{chain}}-dəki DeHub token balansınız çox aşağıdır. Göstərilən balans hələ də sinxronlaşmamış ola bilər.",
-    "sentDesc": "{{from}}-dən {{to}}-ə {{amount}} token göndərildi. Onlar qısa müddətdə gələcək.",
+    "sentDesc": "{{amount}} token {{from}} şəbəkəsindən {{to}} şəbəkəsinə göndərildi. Komanda tokenləri təyinat zəncirində göndərir, adətən 1-5 iş günü ərzində.",
     "subtitle": "DeHub tokenlərini zəncirlər arasında köçürün",
     "tokensOnBase": "Base-dəki tokenlər",
     "tokensOnBnb": "BNB Chain-dəki tokenlər",
-    "step3": "Sizin DeHub tokenləriniz təyinat zəncirində qısa müddətdə çatdırılacaq."
+    "step3": "Komanda tokenləri təyinat zəncirində göndərir, adətən 1-5 iş günü ərzində.",
+    "statusReceived": "Qəbul edildi"
   },
   "builder": {
     "stakeForAllowance": "Gündəlik tikinti limitinizi artırmaq üçün DeHub tokenlərini steykinq edin",
@@ -7341,11 +7342,11 @@
           "4": "Körpü üçün tokenlərin sayını daxil edin.",
           "5": "Körpü haqqını və təxmin edilən gəliş vaxtını nəzərdən keçirin.",
           "6": "Körpü əməliyyatını təsdiqləyin.",
-          "7": "Əməliyyatın tamamlanmasını gözləyin — körpü bir neçə dəqiqə çəkə bilər."
+          "7": "Komanda tokenləri təyinat zəncirində göndərir, adətən 1-5 iş günü ərzində."
         },
         "tips": {
           "1": "Körpü haqqı zəncir cütlüyünə görə dəyişir.",
-          "2": "Körpü, iştirak edən zəncirlərdən asılı olaraq, adətən 1-5 dəqiqə çəkir.",
+          "2": "Körpü ödənişləri hələlik əl ilə edilir.",
           "3": "Təsdiqləmədən əvvəl həmişə təyinat zəncirini iki dəfə yoxlayın."
         }
       },

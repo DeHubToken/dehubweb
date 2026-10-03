@@ -1080,11 +1080,11 @@ export const cjy = {
     bridgeToBaseDesc: '将你的代币发送到这个地址，即可从BNB桥接到BASE，无手续费。',
     bridgeToBnb: '从 BASE 转换到 BNB 的桥梁',
     bridgeToBnbDesc: '将你的代币发送到这个地址，即可从 Base 桥接到 BNB。无手续费。',
-    automatedBridge: '自动化桥正在改进并即将发布。',
+    automatedBridge: '桥接付款目前由人工处理。',
     addressCopied: '地址已复制！',
     addressCopiedDesc: '桥接地址已复制到剪贴板。',
     copyFailed: '复制失败',
-    processingTimeDesc: '所有桥接请求在 1-5 个工作日内分配。',
+    processingTimeDesc: '团队会在目标链上发出代币，通常在 1-5 个工作日内。',
   },
   tokenSecurity: {
     title: '安全',

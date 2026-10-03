@@ -6925,11 +6925,12 @@
     "tokenNotConfigured": "I token DeHub non sono configurati su {{chain}}.",
     "notEnoughTokens": "Token insufficienti",
     "onChainBalanceTooLow": "Il tuo saldo di token DeHub on-chain su {{chain}} è troppo basso. Il saldo visualizzato potrebbe non essersi ancora sincronizzato.",
-    "sentDesc": "{{amount}} token inviati da {{from}} a {{to}}. Arriveranno a breve.",
+    "sentDesc": "{{amount}} token inviati da {{from}} a {{to}}. Il team invia i token sulla chain di destinazione, di solito entro 1-5 giorni lavorativi.",
     "subtitle": "Sposta i token DeHub tra le chain",
     "tokensOnBase": "Token su Base",
     "tokensOnBnb": "Token su BNB Chain",
-    "step3": "I tuoi token DeHub verranno consegnati sulla chain di destinazione a breve."
+    "step3": "Il team invia i token sulla chain di destinazione, di solito entro 1-5 giorni lavorativi.",
+    "statusReceived": "Ricevuto"
   },
   "builder": {
     "stakeForAllowance": "Metti in staking i token DeHub per aumentare la tua quota di creazione giornaliera",
@@ -7496,11 +7497,11 @@
           "4": "Inserisci il numero di token da trasferire.",
           "5": "Rivedi la commissione di bridge e il tempo di arrivo stimato.",
           "6": "Conferma la transazione di bridge.",
-          "7": "Attendi il completamento della transazione: il bridging potrebbe richiedere alcuni minuti."
+          "7": "Il team invia i token sulla chain di destinazione, di solito entro 1-5 giorni lavorativi."
         },
         "tips": {
           "1": "Le commissioni di bridge variano in base alla coppia di catene.",
-          "2": "Il bridging richiede in genere 1-5 minuti a seconda delle catene coinvolte.",
+          "2": "Per ora i pagamenti del bridge vengono effettuati a mano.",
           "3": "Controlla sempre la catena di destinazione prima di confermare."
         }
       },
