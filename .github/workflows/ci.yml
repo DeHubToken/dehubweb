@@ -183,6 +183,9 @@ jobs:
       - name: Apple private key formats import and sign
         run: node --experimental-strip-types --test supabase/functions/account-erasure/private-key.test.ts
 
+      - name: Empty transcription fallback
+        run: node --experimental-strip-types --test supabase/functions/_shared/transcription-fallback.test.ts
+
   boot-path:
     name: Boot path
     runs-on: ubuntu-latest
