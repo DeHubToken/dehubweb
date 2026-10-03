@@ -145,7 +145,7 @@ export function ArticleComposer(props: ArticleComposerProps) {
           )}
           {mintAwaitingWallet && (
             <div className="article-meta flex items-center justify-between text-xs">
-              <span>{t('articles.confirmWallet', 'Confirm in your wallet to publish')}</span>
+              <span>Confirming</span>
               <button type="button" onClick={onAbandonMint} className="underline">{t('common.cancel', 'Cancel')}</button>
             </div>
           )}
