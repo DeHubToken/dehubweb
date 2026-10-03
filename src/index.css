@@ -5191,7 +5191,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
   }
   /* Only the landing photo on phones shares the video's flush media start.
      Keep access warnings above the fold until they reveal actual media. */
-  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first][data-cinematic="image"]:has([data-image-card] > [data-image-media] > [data-media-full]) {
+  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first][data-cinematic="image"]:has([data-image-card] > [data-image-media] [data-media-full]) {
     padding-top: 0 !important;
     --landing-image-gap: 0px;
     display: flex;
@@ -5199,29 +5199,29 @@ html[data-theme="light"] [data-creator-page] .text-white {
   }
   /* A queued boost label belongs below this leading photo card, so it
      cannot create a strip above the picture. */
-  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first][data-cinematic="image"]:has([data-image-card] > [data-image-media] > [data-media-full]) > button {
+  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first][data-cinematic="image"]:has([data-image-card] > [data-image-media] [data-media-full]) > button {
     order: 2;
   }
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] > [data-media-full]) {
+  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
   }
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] > [data-media-full]) > [data-image-media] {
+  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) > [data-image-media] {
     grid-row: 1;
     grid-column: 1;
   }
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] > [data-media-full]) > [data-card-head="plain"] {
+  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) > [data-card-head="plain"] {
     grid-row: 2;
     grid-column: 1;
     padding-top: 0.625rem;
   }
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] > [data-media-full]) > [data-card-info] {
+  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) > [data-card-info] {
     grid-row: 3;
     grid-column: 1;
   }
 
   /* Keep existing photo gate/bounty badges clear of the floating capsule. */
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] > [data-media-full]) [data-image-media] :is(.absolute.top-2, .absolute.top-3) {
+  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) [data-image-media] :is(.absolute.top-2, .absolute.top-3) {
     top: calc(env(safe-area-inset-top, 0px) + 3.75rem + 0.5rem);
   }
 
@@ -5520,11 +5520,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
   opacity: 0.55;
 }
 
-/* The island capsule that stands in for the top bar while the system feed
-   scrolls down on phones (FeedIslandCapsule). Same dark glass as the
-   cinematic author chips, so it reads over bright photos. */
-/* The fixed capsule and the sheet behind it have separate glass surfaces. */
-html[data-theme="system"] [data-feed-island-surface],
+/* The island uses the shared bottom-nav glass in glass-surfaces.css.
+   Filter panels keep their denser backing for the longer text. */
 html[data-theme="system"] [data-feed-filter-panel] {
   background: rgb(10 10 12 / 0.45);
   backdrop-filter: blur(20px) saturate(160%);

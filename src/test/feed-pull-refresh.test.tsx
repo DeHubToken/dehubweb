@@ -3,16 +3,16 @@ import { createRoot, type Root } from 'react-dom/client';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 
 let node: HTMLDivElement, root: Root, hook: ReturnType<typeof usePullToRefresh>;
-let refresh: ReturnType<typeof vi.fn>;
+let refresh = vi.fn<() => void>();
 function Harness({ enabled = true, refreshing = false }: { enabled?: boolean; refreshing?: boolean }) {
-  hook = usePullToRefresh({ enabled, isRefreshing: refreshing, onRefresh: refresh });
+  hook = usePullToRefresh({ enabled, isRefreshing: refreshing, onRefresh: () => refresh() });
   return <div><button>Control</button><div data-panel><div data-content /></div></div>;
 }
 const touch = (x: number, y: number, target: Element = node) => ({ touches: [{ clientX: x, clientY: y }], target } as unknown as React.TouchEvent);
 beforeEach(() => {
   (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
   node = document.createElement('div'); document.body.append(node);
-  root = createRoot(node); refresh = vi.fn();
+  root = createRoot(node); refresh = vi.fn<() => void>();
   act(() => root.render(<Harness />));
 });
 afterEach(() => { act(() => root.unmount()); node.remove(); });
