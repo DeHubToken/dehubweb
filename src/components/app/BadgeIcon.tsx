@@ -155,7 +155,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
             height={16}
             loading="lazy"
             decoding="async"
-            className={`relative block w-full h-full rounded-none bg-transparent object-contain transition-[filter] ${active ? 'drop-shadow-[0_0_4px_rgba(255,255,255,0.8)]' : ''}`}
+            className="relative block w-full h-full rounded-none bg-transparent object-contain"
           />
         </span>
       </TooltipTrigger>
