@@ -10,7 +10,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 const TopUpDialog = lazy(() => import('./SubscriptionCreditsTopUpDialog'));
 
 /**
- * Subscription-token balance with a usage bar, in dollars, and a way to add
+ * Subscription-token balance with a usage bar and a way to add
  * more. Shown to every signed-in user: an empty balance is exactly when the
  * top-up button matters.
  */
@@ -25,6 +25,7 @@ function useCreditUsage() {
   const spent = total > 0 ? Math.min(total, data.totalSpentUsd ?? Math.max(0, total - data.usd)) : 0;
   return {
     left: data.usd,
+    tokens: data.tokens,
     spent,
     total,
     percentUsed: total > 0 ? Math.round((spent / total) * 100) : 0,
@@ -57,7 +58,10 @@ function UsageCard({ usage, onOpenWallet, onTopUp }: { usage: Usage; onOpenWalle
             <img src={dehubCoin} alt="" className="w-5 h-5 shrink-0" />
             <span className="text-xs text-zinc-400 truncate">{t('credits.subscriptionTokens')}</span>
           </div>
-          <span className="text-sm font-semibold text-white tabular-nums">{usdFormat(usage.left)}</span>
+          <div className="text-right tabular-nums">
+            <span className="text-sm font-semibold text-white">{usage.tokens.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+            <p className="text-[10px] text-zinc-500">≈ {usdFormat(usage.left)} USD</p>
+          </div>
         </div>
         <UsageBar percent={usage.percentUsed} className="mt-2.5" />
         <div className="mt-1.5 flex items-center justify-between gap-2 text-[11px] text-zinc-500 tabular-nums">
@@ -111,7 +115,10 @@ export function SubscriptionCreditsPill() {
         className="flex items-center gap-1.5 rounded-full bg-white/10 border border-white/10 pl-1 pr-2.5 py-1"
       >
         <img src={dehubCoin} alt="" className="w-[18px] h-[18px]" />
-        <span className="text-xs font-semibold text-white tabular-nums">{usdFormat(usage.left)}</span>
+        <span className="text-right tabular-nums">
+          <span className="block text-xs font-semibold text-white">{usage.tokens.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+          <span className="block text-[9px] text-zinc-400">≈ {usdFormat(usage.left)} USD</span>
+        </span>
       </button>
       {open && (
         <>

@@ -41,7 +41,7 @@ export function SubscriptionTokensRow() {
         </div>
         <div className="text-right shrink-0">
           <p className="text-sm font-medium text-white">{tokens}</p>
-          <p className="text-xs text-zinc-500">{usd}</p>
+          <p className="text-xs text-zinc-500">≈ {usd} USD</p>
         </div>
       </button>
 
