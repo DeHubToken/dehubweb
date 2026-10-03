@@ -6912,11 +6912,12 @@
     "tokenNotConfigured": "DeHub-tokener er ikke konfigurert på {{chain}}.",
     "notEnoughTokens": "Ikke nok tokens",
     "onChainBalanceTooLow": "Saldoen på DeHub-tokenet ditt på {{chain}} er for lav. Saldoen som vises er kanskje ikke synkronisert ennå.",
-    "sentDesc": "{{amount}} tokens sendt fra {{from}} til {{to}}. De kommer snart.",
+    "sentDesc": "{{amount}} tokens sendt fra {{from}} til {{to}}. Teamet sender tokenene ut på destinasjonskjeden, vanligvis innen 1-5 virkedager.",
     "subtitle": "Flytt DeHub-tokens mellom kjeder",
     "tokensOnBase": "Poletter på basen",
     "tokensOnBnb": "Tokener på BNB-kjeden",
-    "step3": "DeHub-tokenene dine vil snart bli levert på destinasjonskjeden."
+    "step3": "Teamet sender tokenene ut på destinasjonskjeden, vanligvis innen 1-5 virkedager.",
+    "statusReceived": "Mottatt"
   },
   "builder": {
     "stakeForAllowance": "Sett inn DeHub-tokens for å øke den daglige byggekvoten din",
@@ -7485,11 +7486,11 @@
           "4": "Skriv inn antall tokens som skal brobygges.",
           "5": "Se gjennom broavgiften og estimert ankomsttid.",
           "6": "Bekreft brotransaksjonen.",
-          "7": "Vent til transaksjonen er fullført — brobygging kan ta noen minutter."
+          "7": "Teamet sender tokenene ut på destinasjonskjeden, vanligvis innen 1-5 virkedager."
         },
         "tips": {
           "1": "Broavgifter varierer etter kjedepar.",
-          "2": "Brobygging tar vanligvis 1-5 minutter avhengig av kjedene som er involvert.",
+          "2": "Bro-utbetalinger gjøres foreløpig manuelt.",
           "3": "Dobbeltsjekk alltid destinasjonskjeden før du bekrefter."
         }
       },

@@ -6903,11 +6903,12 @@
     "tokenNotConfigured": "Alama za DeHub hazijawekwa kwenye {{chain}}.",
     "notEnoughTokens": "Alama hazitoshi",
     "onChainBalanceTooLow": "Salio lako la ishara ya DeHub kwenye {{chain}} liko chini sana. Salio lililoonyeshwa huenda halijasawazishwa bado.",
-    "sentDesc": "{{amount}} tokeni zimetumwa kutoka {{from}} kwenda {{to}}. Watawasili hivi karibuni.",
+    "sentDesc": "Tokeni {{amount}} zimetumwa kutoka {{from}} kwenda {{to}}. Timu hutuma tokeni kwenye mnyororo lengwa, kwa kawaida ndani ya siku 1-5 za kazi.",
     "subtitle": "Sogeza tokeni za DeHub kati ya minyororo",
     "tokensOnBase": "Tokeni kwenye Msingi",
     "tokensOnBnb": "Tokeni kwenye Mnyororo wa BNB",
-    "step3": "Alama zako za DeHub zitawasilishwa kwenye mlolongo wa mahali unakoenda hivi karibuni."
+    "step3": "Timu hutuma tokeni kwenye mnyororo lengwa, kwa kawaida ndani ya siku 1-5 za kazi.",
+    "statusReceived": "Imepokelewa"
   },
   "builder": {
     "stakeForAllowance": "Alama za Stake DeHub ili kuongeza posho yako ya kila siku ya ujenzi",
@@ -7473,11 +7474,11 @@
           "4": "Ingiza idadi ya tokeni za kuhamisha.",
           "5": "Kagua ada ya uhamishaji na muda uliokadiriwa wa kuwasili.",
           "6": "Thibitisha muamala wa uhamishaji.",
-          "7": "Subiri muamala ukamilike — uhamishaji unaweza kuchukua dakika chache."
+          "7": "Timu hutuma tokeni kwenye mnyororo lengwa, kwa kawaida ndani ya siku 1-5 za kazi."
         },
         "tips": {
           "1": "Ada za uhamishaji hutofautiana kulingana na jozi za minyororo.",
-          "2": "Uhamishaji kwa kawaida huchukua dakika 1-5 kulingana na minyororo inayohusika.",
+          "2": "Kwa sasa malipo ya daraja hufanywa kwa mkono.",
           "3": "Daima angalia mara mbili mnyororo lengwa kabla ya kuthibitisha."
         }
       },

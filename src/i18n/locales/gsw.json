@@ -6881,11 +6881,12 @@
     "tokenNotConfigured": "DeHub Token sind nöd uf {{chain}} igrichtet.",
     "notEnoughTokens": "Nöd gnueg Token",
     "onChainBalanceTooLow": "Dini on-chain DeHub Token Bilanz uf {{chain}} isch z'tief. D'anzeigt Bilanz isch villicht no nöd synchronisiert.",
-    "sentDesc": "{{amount}} Token vo {{from}} uf {{to}} gschickt. Si chöme bald a.",
+    "sentDesc": "{{amount}} Tokens vo {{from}} uf {{to}} gschickt. S'Team schickt d'Tokens uf de Ziil-Chain uus, meischtens innert 1-5 Wärchtig.",
     "subtitle": "DeHub Token zwüsche Chän verschiebe",
     "tokensOnBase": "Token uf Base",
     "tokensOnBnb": "Token uf BNB Chain",
-    "step3": "Dini DeHub Token werded bald uf de Ziel-Chän gliferet."
+    "step3": "S'Team schickt d'Tokens uf de Ziil-Chain uus, meischtens innert 1-5 Wärchtig.",
+    "statusReceived": "Iigange"
   },
   "builder": {
     "stakeForAllowance": "DeHub Token stäke, zum din tägliche Build-Allowance erhöhe",
@@ -7451,11 +7452,11 @@
           "4": "Gib d Aazal vo de Token ii, wo du wetsch bridge.",
           "5": "Überprüef d Bridge-Gebühr und d gschätzti Aakuunftszit.",
           "6": "Bestätig d Bridge-Transaktion.",
-          "7": "Wart, bis d Transaktion abgschlosse isch — s Bridging chan paar Minute dauere."
+          "7": "S'Team schickt d'Tokens uf de Ziil-Chain uus, meischtens innert 1-5 Wärchtig."
         },
         "tips": {
           "1": "Bridge-Gebühre variiere je nach Chänepaar.",
-          "2": "Bridging dauert normalerwiis 1-5 Minute, je nach beteiligte Chän.",
+          "2": "Bridge-Uuszaalige wärded vorläufig vo Hand gmacht.",
           "3": "Überprüef immer d Zielchän, bevor du bestätigsch."
         }
       },

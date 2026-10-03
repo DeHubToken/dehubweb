@@ -6921,11 +6921,12 @@
     "tokenNotConfigured": "„DeHub“ žetonai nėra nustatyti {{chain}}.",
     "notEnoughTokens": "Nepakanka žetonų",
     "onChainBalanceTooLow": "Jūsų „DeHub“ žetonų likutis grandinėje {{chain}} yra per mažas. Rodomas likutis gali dar nebūti sinchronizuotas.",
-    "sentDesc": "{{amount}} žetonų išsiųsta iš {{from}} į {{to}}. Jie netrukus pasieks.",
+    "sentDesc": "{{amount}} žetonų išsiųsta iš {{from}} į {{to}}. Komanda išsiunčia žetonus paskirties grandinėje, paprastai per 1-5 darbo dienas.",
     "subtitle": "Perkelkite „DeHub“ žetonus tarp grandinių",
     "tokensOnBase": "Žetonai „Base“",
     "tokensOnBnb": "Žetonai „BNB Chain“",
-    "step3": "Jūsų „DeHub“ žetonai netrukus bus pristatyti paskirties grandinėje."
+    "step3": "Komanda išsiunčia žetonus paskirties grandinėje, paprastai per 1-5 darbo dienas.",
+    "statusReceived": "Gauta"
   },
   "builder": {
     "stakeForAllowance": "Statykite „DeHub“ žetonus, kad padidintumėte savo kasdienį kūrimo limitą",
@@ -7492,11 +7493,11 @@
           "4": "Įveskite žetonų, kuriuos norite perkelti, skaičių.",
           "5": "Peržiūrėkite tilto mokestį ir numatomą atvykimo laiką.",
           "6": "Patvirtinkite tilto operaciją.",
-          "7": "Palaukite, kol operacija bus baigta – perkėlimas gali užtrukti kelias minutes."
+          "7": "Komanda išsiunčia žetonus paskirties grandinėje, paprastai per 1-5 darbo dienas."
         },
         "tips": {
           "1": "Tilto mokesčiai skiriasi priklausomai nuo grandžių poros.",
-          "2": "Perkėlimas paprastai trunka 1–5 minutes, priklausomai nuo dalyvaujančių grandžių.",
+          "2": "Kol kas tilto išmokos atliekamos rankiniu būdu.",
           "3": "Visada du kartus patikrinkite paskirties grandinę prieš patvirtindami."
         }
       },

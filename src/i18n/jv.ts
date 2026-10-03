@@ -939,10 +939,10 @@ export const jv = {
     bridgeToBaseDesc: 'Kanggo ngabrak BASE lan BNB, ngantiin token mo ke address ingkang gini. Gak dipungut biaya.',
     bridgeToBnbDesc: 'Kanggo ngantiin token ke BNB dari Base, coba kirimin ke alamat ini. Gak dipungut biaya.',
     processingTime: 'Waktu Proses',
-    processingTimeDesc: 'Kulon-kulon permintaan jembatan ditiriskan dalam 1-5 hari kerja.',
+    processingTimeDesc: 'Tim ngirim token ing rantai tujuan, biasane sajrone 1-5 dina kerja.',
     addressCopiedDesc: 'Alamat jembatan udah dikopi ke klipbord lu.',
     copyFailed: 'Gagal ngkopi.',
-    automatedBridge: 'Jembatan otomatis lagi dioprek & bakal dirilis mbesuk.',
+    automatedBridge: 'Saiki pambayaran bridge isih ditindakake kanthi manual.',
     addressCopied: 'Address copied!',
   },
   tokenSecurity: {
