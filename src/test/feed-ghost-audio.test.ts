@@ -91,3 +91,28 @@ describe('a second copy of a post cannot keep the first one playing out of sight
     expect(takeHandoffVideo('nope', a.token)).toBeNull();
   });
 });
+
+describe('only the video on screen gets the sound', () => {
+  it('a clip peeking in plays silently and takes the sound only when nothing else has it', async () => {
+    const { videoPlaybackManager: m } = await import('@/lib/video-playback-manager');
+    const muted: Record<string, boolean> = {};
+    let firstOnScreen = true;
+    m.register('first', () => {}, (v) => { muted.first = v; }, () => firstOnScreen);
+    m.register('peek', () => {}, (v) => { muted.peek = v; }, () => false);
+
+    // The peeking clip starts first: it must not take the sound.
+    expect(m.playMuted('peek')).toBe(false);
+    expect(m.play('first')).toBe(true);
+    expect(m.takeFreeAudio('peek')).toBe(false);
+
+    // The owner stops while the other clip is still off to the side: it is
+    // not unmuted behind the viewer's back.
+    firstOnScreen = false;
+    m.stop('first');
+    expect(muted.peek).toBeUndefined();
+    expect(m.takeFreeAudio('peek')).toBe(true);
+
+    m.unregister('first');
+    m.unregister('peek');
+  });
+});
