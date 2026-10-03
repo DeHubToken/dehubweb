@@ -6926,11 +6926,12 @@
     "tokenNotConfigured": "Tsy voalamina ny tapaka DeHub eo amin'ny {{chain}}.",
     "notEnoughTokens": "Tsy ampy ny tapaka",
     "onChainBalanceTooLow": "Ny tapaka DeHub an-tranon'ny onjao eo amin'ny {{chain}} dia ambany loatra. Mety tsy mbola nifanaraka tsara ny tapaka aseho.",
-    "sentDesc": "{{amount}} tapaka nalefa avy amin'ny {{from}} ho any amin'ny {{to}}. Ho tonga tsy ho ela izy ireo.",
+    "sentDesc": "Token {{amount}} nalefa avy amin'ny {{from}} ho any amin'ny {{to}}. Ny ekipa no mandefa ny token eo amin'ny rojo tanjona, matetika ao anatin'ny andro fiasana 1-5.",
     "subtitle": "Afindra ny tapaka DeHub eo anelanelan'ny onja",
     "tokensOnBase": "Tapaka eo amin'ny Base",
     "tokensOnBnb": "Tapaka eo amin'ny BNB Chain",
-    "step3": "Ho tonga tsy ho ela eo amin'ny onja kendrena ny tapaka DeHub anao."
+    "step3": "Ny ekipa no mandefa ny token eo amin'ny rojo tanjona, matetika ao anatin'ny andro fiasana 1-5.",
+    "statusReceived": "Voaray"
   },
   "builder": {
     "stakeForAllowance": "Apetraho ny tapaka DeHub mba hampitomboana ny fahazoan-dalana isan'andro",
@@ -7497,11 +7498,11 @@
           "4": "Ampidiro ny isan'ny tokenina hifindrana.",
           "5": "Jereo ny sarany fanaovana bridge sy ny fotoana antenaina hahatongavana.",
           "6": "Hamafiso ny fifindrana bridge.",
-          "7": "Miandry ny famitana ny fifindrana — mety haharitra minitra vitsivitsy ny fanaovana bridge."
+          "7": "Ny ekipa no mandefa ny token eo amin'ny rojo tanjona, matetika ao anatin'ny andro fiasana 1-5."
         },
         "tips": {
           "1": "Misy fiovaova ny sarany fanaovana bridge arakaraka ny mpivady rojo.",
-          "2": "Matetika maharitra 1-5 minitra ny fanaovana bridge arakaraka ny rojo voakasika.",
+          "2": "Amin'izao fotoana izao dia atao amin'ny tanana ny fandoavana amin'ny tetezana.",
           "3": "Hamafiso foana ny rojo kendrena alohan'ny hamafisetana."
         }
       },

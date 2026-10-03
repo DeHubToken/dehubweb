@@ -580,9 +580,6 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       ) : (
         <MediaControlIcon captions />
       )}
-      {enabled && (
-        <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-white" />
-      )}
     </button>
   );
 

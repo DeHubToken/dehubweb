@@ -6849,11 +6849,12 @@
     "tokenNotConfigured": "Edebeghị token DeHub na {{chain}}.",
     "notEnoughTokens": "Ezuola token",
     "onChainBalanceTooLow": "Ngwongwo token DeHub gị na-enweghị njikọ na {{chain}} dị ala. Ngwongwo egosiri nwere ike ọ bụghị ka emelitere.",
-    "sentDesc": "E zigara {{amount}} token site na {{from}} gaa na {{to}}. Ha ga-abịa n'oge na-adịghị anya.",
+    "sentDesc": "E zigara tokens {{amount}} site na {{from}} gaa na {{to}}. Ndị otu ahụ na-eziga tokens ahụ na chain ebe a na-aga, ọ na-abụkarị n'ime ụbọchị ọrụ 1-5.",
     "subtitle": "Bufe token DeHub n'etiti agbụ",
     "tokensOnBase": "Token na Base",
     "tokensOnBnb": "Token na BNB Chain",
-    "step3": "A ga-ebugara token DeHub gị na agbụ ebe a ga-aga n'oge na-adịghị anya."
+    "step3": "Ndị otu ahụ na-eziga tokens ahụ na chain ebe a na-aga, ọ na-abụkarị n'ime ụbọchị ọrụ 1-5.",
+    "statusReceived": "Natara"
   },
   "builder": {
     "stakeForAllowance": "Tinye token DeHub iji welie ikike iwulite kwa ụbọchị gị",
@@ -7417,11 +7418,11 @@
           "4": "Tinye ego ole ka ị ga-ebufe.",
           "5": "Lelee ụgwọ nnyefe na oge a ga-enweta ya.",
           "6": "Kwado azụmahịa nnyefe ahụ.",
-          "7": "Chere ka azụmahịa ahụ mechie — nnyefe nwere ike iwe nkeji ole na ole."
+          "7": "Ndị otu ahụ na-eziga tokens ahụ na chain ebe a na-aga, ọ na-abụkarị n'ime ụbọchị ọrụ 1-5."
         },
         "tips": {
           "1": "Ụgwọ nnyefe na-adịgasị iche dabere na agbụrụ abụọ ahụ.",
-          "2": "Nnyefe na-ewe nkeji 1-5 dabere na agbụrụ ndị metụtara ya.",
+          "2": "Ugbu a, a na-akwụ ụgwọ bridge site n'aka.",
           "3": "Na-enyocha agbụrụ njedebe mgbe niile tupu ị kwado ya."
         }
       },

@@ -6812,11 +6812,12 @@
     "tokenNotConfigured": "DeHub-tokens är inte inställda på {{chain}}.",
     "notEnoughTokens": "Inte tillräckligt med tokens",
     "onChainBalanceTooLow": "Ditt DeHub-token-saldo på kedjan på {{chain}} är för lågt. Det visade saldot kanske inte har synkroniserats än.",
-    "sentDesc": "{{amount}} tokens skickade från {{from}} till {{to}}. De kommer fram strax.",
+    "sentDesc": "{{amount}} tokens skickade från {{from}} till {{to}}. Teamet skickar ut tokens på målkedjan, vanligtvis inom 1-5 arbetsdagar.",
     "subtitle": "Flytta DeHub-tokens mellan kedjor",
     "tokensOnBase": "Tokens på Base",
     "tokensOnBnb": "Tokens på BNB Chain",
-    "step3": "Dina DeHub-tokens kommer att levereras på destinationskedjan strax."
+    "step3": "Teamet skickar ut tokens på målkedjan, vanligtvis inom 1-5 arbetsdagar.",
+    "statusReceived": "Mottaget"
   },
   "builder": {
     "stakeForAllowance": "Satsa DeHub-tokens för att öka din dagliga byggkvot",
@@ -7383,11 +7384,11 @@
           "4": "Ange antalet tokens som ska överbryggas.",
           "5": "Granska bryggavgiften och den beräknade ankomsttiden.",
           "6": "Bekräfta bryggtransaktionen.",
-          "7": "Vänta tills transaktionen är klar — bryggning kan ta några minuter."
+          "7": "Teamet skickar ut tokens på målkedjan, vanligtvis inom 1-5 arbetsdagar."
         },
         "tips": {
           "1": "Bryggavgifter varierar beroende på kedjepar.",
-          "2": "Bryggning tar vanligtvis 1-5 minuter beroende på de inblandade kedjorna.",
+          "2": "Bryggutbetalningar görs tills vidare manuellt.",
           "3": "Dubbelkolla alltid destinationskedjan innan du bekräftar."
         }
       },

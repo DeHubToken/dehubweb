@@ -728,6 +728,7 @@
     "errorUnknown": "❌ Algo salió mal: {{message}}. Inténtalo de nuevo.",
     "errorVideoGenFailed": "La generación de video falló",
     "errorVideoGenStart": "No se pudo iniciar la generación de video",
+    "videoGenPaymentKept": "Tus {{amount}} DHB no se han gastado. Siguen en tu cuenta y se usarán automáticamente en tu próxima generación que cueste hasta esa cantidad, así que al volver a intentarlo no pagarás dos veces.",
     "errorImageGenFailed": "No se pudo generar la imagen",
     "fallbackGrokNotConfigured": "Usando DeHub AI - Clave API de Grok no configurada",
     "paymentSuccessGenerating": "¡Pago exitoso! Generando tu video...",
@@ -6929,11 +6930,12 @@
     "tokenNotConfigured": "Los tokens de DeHub no están configurados en {{chain}}.",
     "notEnoughTokens": "Tokens insuficientes",
     "onChainBalanceTooLow": "Tu saldo de tokens de DeHub en la cadena en {{chain}} es demasiado bajo. El saldo mostrado puede que aún no se haya sincronizado.",
-    "sentDesc": "Se enviaron {{amount}} tokens de {{from}} a {{to}}. Llegarán en breve.",
+    "sentDesc": "Se enviaron {{amount}} tokens de {{from}} a {{to}}. El equipo envía los tokens en la cadena de destino, normalmente en 1-5 días hábiles.",
     "subtitle": "Mover tokens de DeHub entre cadenas",
     "tokensOnBase": "Tokens en Base",
     "tokensOnBnb": "Tokens en BNB Chain",
-    "step3": "Tus tokens de DeHub se entregarán en la cadena de destino en breve."
+    "step3": "El equipo envía los tokens en la cadena de destino, normalmente en 1-5 días hábiles.",
+    "statusReceived": "Recibido"
   },
   "builder": {
     "stakeForAllowance": "Haz staking de tokens de DeHub para aumentar tu asignación de construcción diaria",
@@ -7500,11 +7502,11 @@
           "4": "Introduce el número de tokens a transferir.",
           "5": "Revisa la tarifa de transferencia y el tiempo estimado de llegada.",
           "6": "Confirma la transacción de transferencia.",
-          "7": "Espera a que la transacción se complete; la transferencia puede tardar unos minutos."
+          "7": "El equipo envía los tokens en la cadena de destino, normalmente en 1-5 días hábiles."
         },
         "tips": {
           "1": "Las tarifas de transferencia varían según el par de cadenas.",
-          "2": "La transferencia suele tardar entre 1 y 5 minutos, dependiendo de las cadenas involucradas.",
+          "2": "Por ahora, los pagos del puente se hacen a mano.",
           "3": "Verifica siempre la cadena de destino antes de confirmar."
         }
       },

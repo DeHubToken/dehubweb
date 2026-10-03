@@ -6888,11 +6888,12 @@
     "tokenNotConfigured": "DeHub tokens ບໍ່ໄດ້ຕັ້ງຄ່າໃນ {{chain}}.",
     "notEnoughTokens": "ບໍ່ພຽງພໍ tokens",
     "onChainBalanceTooLow": "ຍອດ DeHub token ຂອງທ່ານໃນ on-chain ຢູ່ {{chain}} ຕ່ໍາເກີນໄປ. ຍອດສະແດງອາດຈະຍັງບໍ່ໄດ້ຊິງຄ໌.",
-    "sentDesc": "{{amount}} tokens ຖືກສົ່ງຈາກ {{from}} ໄປ {{to}}. ພວກມັນຈະມາຮອດໃນໄວໆນີ້.",
+    "sentDesc": "ສົ່ງ {{amount}} ໂທເຄັນຈາກ {{from}} ໄປ {{to}} ແລ້ວ. ທີມງານຈະສົ່ງໂທເຄັນອອກໃນ chain ປາຍທາງ, ໂດຍປົກກະຕິພາຍໃນ 1-5 ວັນເຮັດວຽກ.",
     "subtitle": "ຍ້າຍ DeHub tokens ລະຫວ່າງ chains",
     "tokensOnBase": "Tokens ໃນຖານ",
     "tokensOnBnb": "Tokens ໃນລະບົບຕ່ອງໂສ້ BnB",
-    "step3": "DeHub tokens ຂອງທ່ານຈະຖືກຈັດສົ່ງໃນ destination chain ໃນໄວໆນີ້."
+    "step3": "ທີມງານຈະສົ່ງໂທເຄັນອອກໃນ chain ປາຍທາງ, ໂດຍປົກກະຕິພາຍໃນ 1-5 ວັນເຮັດວຽກ.",
+    "statusReceived": "ໄດ້ຮັບແລ້ວ"
   },
   "builder": {
     "stakeForAllowance": "Stake DeHub tokens ເພື່ອເພີ່ມ build allowance ປະຈໍາວັນຂອງທ່ານ",
@@ -7459,11 +7460,11 @@
           "4": "ໃສ່ຈໍານວນ tokens ທີ່ຈະ bridge.",
           "5": "ກວດສອບຄ່າທໍານຽມ bridge ແລະເວລາທີ່ຄາດວ່າຈະມາຮອດ.",
           "6": "ຢືນຢັນການເຮັດທຸລະກໍາ bridge.",
-          "7": "ລໍຖ້າການເຮັດທຸລະກໍາໃຫ້ສໍາເລັດ — ການ bridge ອາດໃຊ້ເວລາສອງສາມນາທີ."
+          "7": "ທີມງານຈະສົ່ງໂທເຄັນອອກໃນ chain ປາຍທາງ, ໂດຍປົກກະຕິພາຍໃນ 1-5 ວັນເຮັດວຽກ."
         },
         "tips": {
           "1": "ຄ່າທໍານຽມ bridge ແຕກຕ່າງກັນໄປຕາມຄູ່ chain.",
-          "2": "ການ bridge ໂດຍທົ່ວໄປໃຊ້ເວລາ 1-5 ນາທີຂຶ້ນກັບ chains ທີ່ກ່ຽວຂ້ອງ.",
+          "2": "ດຽວນີ້ການຈ່າຍເງິນຂອງ bridge ແມ່ນເຮັດດ້ວຍມື.",
           "3": "ກວດສອບ chain ປາຍທາງສະເໝີກ່ອນຢືນຢັນ."
         }
       },

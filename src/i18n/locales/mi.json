@@ -6895,11 +6895,12 @@
     "tokenNotConfigured": "Kāore anō kia whirihorahia ngā tohu DeHub i runga i {{chain}}.",
     "notEnoughTokens": "Kore rawa ngā tohu",
     "onChainBalanceTooLow": "He iti rawa tō pauna tohu DeHub i runga i te mekameka i {{chain}}. Kāore pea i te tukutahi tonu te pauna kua whakaaturia.",
-    "sentDesc": "{{amount}} tohu i tukuna mai i {{from}} ki {{to}}. Ka tae mai kōrero.",
+    "sentDesc": "{{amount}} tohu kua tukuna mai i {{from}} ki {{to}}. Mā te rōpū e tuku ngā tohu ki te mekameka taunga, i te nuinga o te wā i roto i ngā rā mahi 1-5.",
     "subtitle": "Nekehia ngā tohu DeHub i waenga i ngā mekameka",
     "tokensOnBase": "Tohu i runga i te Base",
     "tokensOnBnb": "Tohu i runga i te BNB Chain",
-    "step3": "Ka tae mai kōrero ngā tohu DeHub kua tukuna ki te mekameka ūnga."
+    "step3": "Mā te rōpū e tuku ngā tohu ki te mekameka taunga, i te nuinga o te wā i roto i ngā rā mahi 1-5.",
+    "statusReceived": "Kua tae mai"
   },
   "builder": {
     "stakeForAllowance": "Tāwhiria ngā tohu DeHub hei whakanui ake i tō whakaaetanga hanga ia rā",
@@ -7464,11 +7465,11 @@
           "4": "Whakauruhia te maha o ngā tohu hei piriti.",
           "5": "Arotakehia te utu piriti me te wā taenga tatari.",
           "6": "Whakaūngia te tauwhitinga piriti.",
-          "7": "Tāwhai i te tauwhitinga kia oti — ka roa pea ngā meneti ki te piriti."
+          "7": "Mā te rōpū e tuku ngā tohu ki te mekameka taunga, i te nuinga o te wā i roto i ngā rā mahi 1-5."
         },
         "tips": {
           "1": "He rerekē ngā utu piriti mā te takirua mekameka.",
-          "2": "Ko te piriti ka roa te 1-5 meneti i runga i ngā mekameka e whai wāhi ana.",
+          "2": "I tēnei wā, ka utua ā-ringa ngā utu piriti.",
           "3": "Tirohia anō te mekameka ūnga i mua i te whakaūnga."
         }
       },

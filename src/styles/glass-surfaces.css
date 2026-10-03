@@ -109,8 +109,11 @@ html {
 }
 
 html[data-theme][data-theme]:is([data-theme='system'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
-  :is([data-feed-nav], [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]), [data-bottom-nav] > nav):not(#_):not(#_) {
+  :is([data-feed-nav], [data-feed-island-surface], [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]), [data-bottom-nav] > nav):not(#_):not(#_) {
   background: linear-gradient(rgb(255 255 255 / 0.1), rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base) !important;
+  /* Keep the standard property last: the production CSS optimiser otherwise
+     retains only the Safari prefix and removes blur in Chromium/Firefox. */
+  -webkit-backdrop-filter: var(--nav-glass-blur) !important;
   backdrop-filter: var(--nav-glass-blur) !important;
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16), inset 0 1.5px 0 rgb(255 255 255 / 0.3) !important;
 }

@@ -6809,11 +6809,12 @@
     "tokenNotConfigured": "Els tokens DeHub no estan configurats a {{chain}}.",
     "notEnoughTokens": "No hi ha prou tokens",
     "onChainBalanceTooLow": "El teu saldo de tokens DeHub a la cadena a {{chain}} és massa baix. El saldo mostrat pot no haver-se sincronitzat encara.",
-    "sentDesc": "S'han enviat {{amount}} tokens des de {{from}} a {{to}}. Arribaran aviat.",
+    "sentDesc": "S'han enviat {{amount}} tokens de {{from}} a {{to}}. L'equip envia els tokens a la cadena de destinació, normalment en 1-5 dies laborables.",
     "subtitle": "Mou tokens DeHub entre cadenes",
     "tokensOnBase": "Tokens a Base",
     "tokensOnBnb": "Tokens a BNB Chain",
-    "step3": "Els teus tokens DeHub s'enviaran a la cadena de destinació aviat."
+    "step3": "L'equip envia els tokens a la cadena de destinació, normalment en 1-5 dies laborables.",
+    "statusReceived": "Rebut"
   },
   "builder": {
     "stakeForAllowance": "Aposta tokens DeHub per augmentar la teva assignació diària de creació",
@@ -7380,11 +7381,11 @@
           "4": "Introdueix el nombre de tokens a transferir.",
           "5": "Revisa la tarifa de transferència i el temps estimat d'arribada.",
           "6": "Confirma la transacció de transferència.",
-          "7": "Espera que la transacció es completi; la transferència pot trigar uns minuts."
+          "7": "L'equip envia els tokens a la cadena de destinació, normalment en 1-5 dies laborables."
         },
         "tips": {
           "1": "Les tarifes de transferència varien segons el parell de cadenes.",
-          "2": "La transferència sol trigar entre 1 i 5 minuts, depenent de les cadenes implicades.",
+          "2": "De moment, els pagaments del pont es fan a mà.",
           "3": "Comprova sempre la cadena de destinació abans de confirmar."
         }
       },

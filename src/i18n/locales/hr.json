@@ -6814,11 +6814,12 @@
     "tokenNotConfigured": "DeHub tokeni nisu postavljeni na {{chain}}.",
     "notEnoughTokens": "Nedovoljno tokena",
     "onChainBalanceTooLow": "Vaš saldo DeHub tokena na blockchainu na {{chain}} je prenizak. Prikazani saldo se možda još nije sinkronizirao.",
-    "sentDesc": "{{amount}} tokena poslano s {{from}} na {{to}}. Stići će uskoro.",
+    "sentDesc": "{{amount}} tokena poslano s {{from}} na {{to}}. Tim šalje tokene na odredišnom lancu, obično u roku od 1-5 radnih dana.",
     "subtitle": "Premjestite DeHub tokene između lanaca",
     "tokensOnBase": "Tokeni na Base",
     "tokensOnBnb": "Tokeni na BNB Chain",
-    "step3": "Vaši DeHub tokeni će uskoro biti isporučeni na odredišni lanac."
+    "step3": "Tim šalje tokene na odredišnom lancu, obično u roku od 1-5 radnih dana.",
+    "statusReceived": "Primljeno"
   },
   "builder": {
     "stakeForAllowance": "Uložite DeHub tokene kako biste povećali svoje dnevno dopuštenje za izgradnju",
@@ -7385,11 +7386,11 @@
           "4": "Unesite broj tokena za premošćivanje.",
           "5": "Pregledajte naknadu za premošćivanje i procijenjeno vrijeme dolaska.",
           "6": "Potvrdite transakciju premošćivanja.",
-          "7": "Pričekajte da se transakcija dovrši — premošćivanje može potrajati nekoliko minuta."
+          "7": "Tim šalje tokene na odredišnom lancu, obično u roku od 1-5 radnih dana."
         },
         "tips": {
           "1": "Naknade za premošćivanje variraju ovisno o paru mreža.",
-          "2": "Premošćivanje obično traje 1-5 minuta, ovisno o uključenim mrežama.",
+          "2": "Isplate preko mosta zasad se rade ručno.",
           "3": "Uvijek dvaput provjerite odredišnu mrežu prije potvrde."
         }
       },

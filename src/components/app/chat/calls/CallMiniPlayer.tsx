@@ -11,16 +11,17 @@ import { useCall } from '@/contexts/CallContext';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePeerIdentity } from './CallChrome';
+import { CallDuration } from './CallDuration';
 
 export function CallMiniPlayer() {
   const {
     isCallActive,
     isConnecting,
-    isIncoming,
+    peerAddress,
+    mediaRevision,
     currentCall,
     isMuted,
     isCameraOff,
-    callDuration,
     isMinimized,
     toggleMute,
     endCall,
@@ -32,9 +33,6 @@ export function CallMiniPlayer() {
   const { t } = useTranslation();
   const miniVideoContainerRef = useRef<HTMLDivElement>(null);
 
-  const peerAddress = currentCall
-    ? (isIncoming ? currentCall.caller_address : currentCall.recipient_address)
-    : '';
   const peer = usePeerIdentity(peerAddress);
 
   // Play local video track into mini player container
@@ -55,7 +53,7 @@ export function CallMiniPlayer() {
     return () => {
       container.innerHTML = '';
     };
-  }, [isMinimized, localVideoTrack, currentCall?.call_type]);
+  }, [isMinimized, localVideoTrack, currentCall?.call_type, isCameraOff, isCallActive, mediaRevision]);
 
   const isVisible = isMinimized && (isCallActive || isConnecting) && currentCall;
 
@@ -65,9 +63,7 @@ export function CallMiniPlayer() {
   const isVideo = currentCall.call_type === 'video';
   const statusText = isConnecting
     ? t('calls.connecting')
-    : callDuration !== '00:00'
-      ? callDuration
-      : t('calls.connected');
+    : <CallDuration fallback={t('calls.connected')} />;
 
   if (isVideo) {
     return (

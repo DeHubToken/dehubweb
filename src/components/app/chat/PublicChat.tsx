@@ -5,13 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
 import { TranslatableText, SharedTranslationContext } from '../TranslatableText';
-import { ChatInput } from './ChatInput';
+import { ChatInput, type ChatInputSendArgs } from './ChatInput';
 import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 import { getMediaUrl, banLiveChatUser, unbanLiveChatUser, uploadChatImage, uploadLiveChatVoice, type LiveChatRoom } from '@/lib/api/dehub';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { validatePublicChatMedia } from '@/lib/public-chat-media';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -225,6 +226,19 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   const handleCancelReply = useCallback(() => {
     setReplyTo(null);
+  }, []);
+
+  // Runs before the composer lets go of anything, so a refused attachment
+  // leaves the text and the file in place with the reason on screen instead
+  // of failing after the upload and losing what was typed.
+  const canSendPublic = useCallback(({ type, mediaFile }: Pick<ChatInputSendArgs, 'type' | 'mediaFile'>): boolean => {
+    if (type !== 'media' || !mediaFile) return true;
+    const check = validatePublicChatMedia(mediaFile);
+    if (!check.ok) {
+      toast.error(check.error);
+      return false;
+    }
+    return true;
   }, []);
 
   const handleSendMessage = async (args: { content: string; type: string; gifUrl?: string; mediaFile?: File; duration?: number }) => {
@@ -520,6 +534,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
         )}
         <ChatInput
           onSendMessage={handleSendMessage}
+          canSend={canSendPublic}
+          allowDocuments={false}
           replyTo={replyTo}
           onCancelReply={handleCancelReply}
           draftKey={selectedRoomId ? `room:${selectedRoomId}` : null}

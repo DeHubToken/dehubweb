@@ -76,6 +76,7 @@ import {
   setAAProvider,
   clearAAProvider,
   getAAProvider,
+  WALLET_LOCK_CHANGED_EVENT,
 } from '@/lib/smart-wallet';
 import { fetchWallet, saveWallet, clearWalletCache, getCachedWallet } from '@/lib/wallet-core/store';
 import { hasBiometricUsableHere } from '@/lib/wallet-core/biometric-unlock';
@@ -1349,8 +1350,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (isAuthenticated && walletAddress?.toLowerCase() === wagmiAddress.toLowerCase()) {
             // The two agree, so nothing is settling any more.
             wagmiAuthSettleRef.current = null;
+            // The live wallet signs for this exact session, so the STORED tag
+            // has to say so too, not just React's copy. A stale 'web3auth' tag
+            // left under an external-wallet session makes useWalletLocked
+            // report "locked" and every signing surface (DAO contribute, tips)
+            // routes to the unlock/sign-in sheet instead of the wallet. It also
+            // keeps the wagmi runtime from mounting on the next boot, so the
+            // stale tag never healed until a full sign-out and sign-in.
+            if (readConnectionSource() !== 'wagmi') {
+              writeConnectionSource('wagmi');
+              window.dispatchEvent(new Event(WALLET_LOCK_CHANGED_EVENT));
+            }
             if (connectionSource !== 'wagmi') {
               setConnectionSource('wagmi');
+            }
+            // A wallet tapped on the sheet that turns out to be the session's
+            // own wallet has nothing left to sign: the session already exists.
+            // Returning silently here left the sheet up with the tapped button
+            // doing nothing (or spinning on "Signing you in" forever), since
+            // the auto-close only fires when the session address changes.
+            if (wagmiAuthIntentRef.current) {
+              setWagmiAuthIntent(false);
+              setIsConnecting(false);
+              finishWalletUnlock(true);
+              walletUnlockPromptActiveRef.current = false;
+              closeLoginModal();
             }
             return;
         }

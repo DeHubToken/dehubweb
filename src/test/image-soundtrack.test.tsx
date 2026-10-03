@@ -3,6 +3,8 @@ import { useRef } from 'react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useImageSoundtrack } from '@/hooks/use-image-soundtrack';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { handoffAudioFor } from '@/lib/audio-handoff';
+import { pauseOffDocumentMediaIn } from '@/lib/pause-media-in';
 
 let intersect: (entries: { isIntersecting: boolean }[]) => void;
 let rejectPlay: ((reason: Error) => void) | undefined;
@@ -10,14 +12,14 @@ let pending = false;
 
 function Player({ enabled = true, url = 'https://example.com/music.mp3' }) {
   const anchor = useRef<HTMLDivElement>(null);
-  const state = useImageSoundtrack(url, anchor, enabled);
+  const state = useImageSoundtrack(url, anchor, enabled, '42');
   return <div ref={anchor}>
     <button onClick={state.toggle}>{state.error ? 'retry' : state.loading ? 'loading' : state.playing ? 'pause' : 'play'}</button>
-    <audio ref={state.audioRef} />
   </div>;
 }
 
 beforeEach(() => {
+  vi.useFakeTimers();
   pending = false;
   rejectPlay = undefined;
   vi.stubGlobal('IntersectionObserver', class {
@@ -39,16 +41,17 @@ beforeEach(() => {
   });
 });
 
-afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); vi.runOnlyPendingTimers(); vi.useRealTimers(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+const audio = (url = 'https://example.com/music.mp3') => handoffAudioFor(`soundtrack:${url}`)!;
 
 it('loads only on tap, and never autoplays on entering the viewport', () => {
   const { container } = render(<Player />);
   act(() => intersect([{ isIntersecting: true }]));
-  expect(container.querySelector('audio')?.getAttribute('src')).toBeNull();
+  expect(audio().getAttribute('src')).toBeNull();
   expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled();
   fireEvent.click(screen.getByText('play'));
   expect(screen.getByText('pause')).toBeTruthy();
-  expect(container.querySelector('audio')?.src).toBe('https://example.com/music.mp3');
+  expect(audio().src).toBe('https://example.com/music.mp3');
 });
 
 it('pauses out of view and does not restart when returning', () => {
@@ -101,9 +104,27 @@ it('yields to another video claiming audio', () => {
 it('resets on a changed soundtrack and preserves position on normal pause', () => {
   const { container, rerender } = render(<Player />);
   fireEvent.click(screen.getByText('play'));
-  container.querySelector('audio')!.currentTime = 12;
+  audio().currentTime = 12;
   fireEvent.click(screen.getByText('pause'));
-  expect(container.querySelector('audio')!.currentTime).toBe(12);
+  expect(audio().currentTime).toBe(12);
   rerender(<Player url="https://example.com/other.mp3" />);
-  expect(container.querySelector('audio')?.getAttribute('src')).toBeNull();
+  expect(audio('https://example.com/other.mp3').getAttribute('src')).toBeNull();
+});
+
+it('hands the same playing soundtrack to the post and back without reloading', () => {
+  const view = render(<><Player /><span /></>);
+  fireEvent.click(screen.getByText('play'));
+  const track = audio();
+  track.currentTime = 12;
+  const loads = vi.mocked(HTMLMediaElement.prototype.load).mock.calls.length;
+  pauseOffDocumentMediaIn(view.container, '42');
+  expect(track.paused).toBe(false);
+  view.rerender(<><Player /><Player /></>);
+  expect(audio()).toBe(track);
+  expect(track.paused).toBe(false);
+  expect(track.currentTime).toBe(12);
+  view.rerender(<><Player /><span /></>);
+  expect(audio()).toBe(track);
+  expect(track.paused).toBe(false);
+  expect(HTMLMediaElement.prototype.load).toHaveBeenCalledTimes(loads);
 });

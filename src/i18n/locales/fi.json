@@ -6810,11 +6810,12 @@
     "tokenNotConfigured": "DeHub-tokeneita ei ole asetettu osoitteessa {{chain}}.",
     "notEnoughTokens": "Ei tarpeeksi tokeneita",
     "onChainBalanceTooLow": "DeHub-tokeniesi saldo lohkoketjussa osoitteessa {{chain}} on liian alhainen. Näytetty saldo ei ehkä ole vielä synkronoitunut.",
-    "sentDesc": "{{amount}} tokenia lähetetty osoitteesta {{from}} osoitteeseen {{to}}. Ne saapuvat pian.",
+    "sentDesc": "{{amount}} tokenia lähetetty ketjusta {{from}} ketjuun {{to}}. Tiimi lähettää tokenit kohdeketjussa, yleensä 1-5 arkipäivän kuluessa.",
     "subtitle": "Siirrä DeHub-tokeneita ketjujen välillä",
     "tokensOnBase": "Tokenit Base-verkossa",
     "tokensOnBnb": "Tokenit BNB Chain -verkossa",
-    "step3": "DeHub-tokenisi toimitetaan kohdeketjuun pian."
+    "step3": "Tiimi lähettää tokenit kohdeketjussa, yleensä 1-5 arkipäivän kuluessa.",
+    "statusReceived": "Vastaanotettu"
   },
   "builder": {
     "stakeForAllowance": "Stakaa DeHub-tokeneita kasvattaaksesi päivittäistä rakennuslupaa",
@@ -7381,11 +7382,11 @@
           "4": "Syötä sillattavien tokenien määrä.",
           "5": "Tarkista siltamaksu ja arvioitu saapumisaika.",
           "6": "Vahvista siltatransaktio.",
-          "7": "Odota, että transaktio valmistuu — siltauksessa voi kestää muutaman minuutin."
+          "7": "Tiimi lähettää tokenit kohdeketjussa, yleensä 1-5 arkipäivän kuluessa."
         },
         "tips": {
           "1": "Siltamaksut vaihtelevat ketjupareittain.",
-          "2": "Siltauksessa kestää tyypillisesti 1–5 minuuttia riippuen mukana olevista ketjuista.",
+          "2": "Sillan maksut tehdään toistaiseksi käsin.",
           "3": "Tarkista aina kohdeketju ennen vahvistamista."
         }
       },

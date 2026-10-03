@@ -6950,11 +6950,12 @@
     "tokenNotConfigured": "DeHub tokenlari {{chain}} da sozlanmagan.",
     "notEnoughTokens": "Tokenlar yetarli emas",
     "onChainBalanceTooLow": "{{chain}} dagi on-chain DeHub token balansingiz juda past. Ko'rsatilgan balans hali sinxronlanmagan bo'lishi mumkin.",
-    "sentDesc": "{{from}} dan {{to}} ga {{amount}} tokenlari yuborildi. Ular tez orada yetib keladi.",
+    "sentDesc": "{{amount}} token {{from}} dan {{to}} ga yuborildi. Jamoa tokenlarni manzil zanjirida yuboradi, odatda 1-5 ish kuni ichida.",
     "subtitle": "DeHub tokenlarini zanjirlar o'rtasida ko'chiring",
     "tokensOnBase": "Base dagi tokenlar",
     "tokensOnBnb": "BNB Chain dagi tokenlar",
-    "step3": "Sizning DeHub tokenlaringiz belgilangan zanjirda tez orada yetkazib beriladi."
+    "step3": "Jamoa tokenlarni manzil zanjirida yuboradi, odatda 1-5 ish kuni ichida.",
+    "statusReceived": "Qabul qilindi"
   },
   "builder": {
     "stakeForAllowance": "Kunlik yaratish imkoniyatingizni oshirish uchun DeHub tokenlarini stavka qiling",
@@ -7522,11 +7523,11 @@
           "4": "Ko'prik qilinadigan tokenlar sonini kiriting.",
           "5": "Ko'prik to'lovini va kutilayotgan kelish vaqtini ko'rib chiqing.",
           "6": "Ko'prik operatsiyasini tasdiqlang.",
-          "7": "Operatsiya tugaguniga qadar kuting — ko'prik qilish bir necha daqiqa vaqt olishi mumkin."
+          "7": "Jamoa tokenlarni manzil zanjirida yuboradi, odatda 1-5 ish kuni ichida."
         },
         "tips": {
           "1": "Ko'prik to'lovlari zanjir juftligiga qarab farq qiladi.",
-          "2": "Ko'prik qilish odatda ishtirok etayotgan zanjirlarga qarab 1-5 daqiqa davom etadi.",
+          "2": "Hozircha ko'prik to'lovlari qo'lda amalga oshiriladi.",
           "3": "Tasdiqlashdan oldin har doim maqsadli zanjirni ikki marta tekshiring."
         }
       },

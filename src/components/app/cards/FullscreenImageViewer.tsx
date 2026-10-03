@@ -32,6 +32,8 @@ import { ActionBar } from './ActionBar';
 import { PostUtilityButtons } from './PostUtilityButtons';
 import { useImageTranslation } from '@/hooks/use-image-translation';
 import { cdnImageSource } from '@/lib/media-url';
+import { HandoffImage } from './HandoffImage';
+import { rememberGalleryIndex } from '@/lib/media-presentation';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
@@ -139,7 +141,8 @@ export function FullscreenImageViewer({
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setCurrentIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
+    if (postId) rememberGalleryIndex(postId, emblaApi.selectedScrollSnap());
+  }, [emblaApi, postId]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -334,6 +337,7 @@ export function FullscreenImageViewer({
                 <FullscreenSlide
                   key={idx}
                   img={img}
+                  index={idx}
                   onClose={onClose}
                   postId={postId}
                   isActive={idx === currentIndex}
@@ -482,12 +486,14 @@ function touchDistance(a: React.Touch, b: React.Touch): number {
  */
 function FullscreenSlide({
   img,
+  index,
   onClose,
   postId,
   isActive,
   onZoomChange,
 }: {
   img: string;
+  index: number;
   onClose: () => void;
   postId?: string;
   isActive: boolean;
@@ -772,12 +778,13 @@ function FullscreenSlide({
       onMouseDown={handleMouseDown}
     >
       <TapReactionBurst postId={postId} />
-      <img
-        ref={imageRef}
+      <HandoffImage
+        mediaKey={`${postId ?? img}:${index}`}
+        priority={2}
+        imageRef={imageRef}
         src={fullResReady ? source : img}
-        alt=""
         className="max-w-full max-h-full object-contain select-none"
-        draggable={false}
+        loading="eager"
         style={{
           transform: `translate3d(${zoom.x}px, ${zoom.y}px, 0) scale(${zoom.scale})`,
           transition: gesturing ? 'none' : 'transform 180ms ease-out',
@@ -785,9 +792,6 @@ function FullscreenSlide({
         }}
         onClick={(e) => e.stopPropagation()}
         {...tapGestures}
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = '/placeholder.svg';
-        }}
       />
     </div>
   );

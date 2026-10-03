@@ -44,7 +44,7 @@ export const STAGE_LABELS: Record<ChainStage, string> = {
   idle: '',
   preparing: 'Preparing…',
   funding: 'Funding with your wallet…',
-  wallet: 'Confirm in your wallet…',
+  wallet: 'Confirming',
   confirming: 'Waiting for the transaction…',
   recording: 'Finishing up…',
   done: 'Done',

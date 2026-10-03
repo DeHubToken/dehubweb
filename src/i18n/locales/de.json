@@ -728,6 +728,7 @@
     "errorUnknown": "❌ Etwas ist schiefgelaufen: {{message}}. Bitte erneut versuchen.",
     "errorVideoGenFailed": "Videogenerierung fehlgeschlagen",
     "errorVideoGenStart": "Videogenerierung konnte nicht gestartet werden",
+    "videoGenPaymentKept": "Deine {{amount}} DHB wurden nicht ausgegeben. Sie bleiben auf deinem Konto und werden automatisch für deine nächste Generierung bis zu diesem Betrag verwendet – ein erneuter Versuch kostet dich nicht doppelt.",
     "errorImageGenFailed": "Bild konnte nicht generiert werden",
     "fallbackGrokNotConfigured": "Verwende DeHub AI — Grok-API-Schlüssel nicht konfiguriert",
     "paymentSuccessGenerating": "Zahlung erfolgreich! Dein Video wird generiert...",
@@ -6919,11 +6920,12 @@
     "tokenNotConfigured": "DeHub-Token sind auf {{chain}} nicht eingerichtet.",
     "notEnoughTokens": "Nicht genügend Token",
     "onChainBalanceTooLow": "Ihr DeHub-Token-Guthaben auf der Kette auf {{chain}} ist zu niedrig. Das angezeigte Guthaben wurde möglicherweise noch nicht synchronisiert.",
-    "sentDesc": "{{amount}} Token von {{from}} an {{to}} gesendet. Sie werden in Kürze eintreffen.",
+    "sentDesc": "{{amount}} Token von {{from}} an {{to}} gesendet. Das Team sendet die Token auf der Zielchain aus, meist innerhalb von 1-5 Werktagen.",
     "subtitle": "DeHub-Token zwischen Ketten verschieben",
     "tokensOnBase": "Token auf Base",
     "tokensOnBnb": "Token auf BNB Chain",
-    "step3": "Ihre DeHub-Token werden in Kürze auf der Zielkette zugestellt."
+    "step3": "Das Team sendet die Token auf der Zielchain aus, meist innerhalb von 1-5 Werktagen.",
+    "statusReceived": "Eingegangen"
   },
   "builder": {
     "stakeForAllowance": "Setzen Sie DeHub-Token ein, um Ihr tägliches Erstellungsguthaben zu erhöhen",
@@ -7490,11 +7492,11 @@
           "4": "Geben Sie die Anzahl der zu überbrückenden Token ein.",
           "5": "Überprüfen Sie die Brücken-Gebühr und die geschätzte Ankunftszeit.",
           "6": "Bestätigen Sie die Brücken-Transaktion.",
-          "7": "Warten Sie, bis die Transaktion abgeschlossen ist – das Bridging kann einige Minuten dauern."
+          "7": "Das Team sendet die Token auf der Zielchain aus, meist innerhalb von 1-5 Werktagen."
         },
         "tips": {
           "1": "Brücken-Gebühren variieren je nach Kettenpaar.",
-          "2": "Das Bridging dauert in der Regel 1-5 Minuten, abhängig von den beteiligten Ketten.",
+          "2": "Bridge-Auszahlungen erfolgen vorerst manuell.",
           "3": "Überprüfen Sie immer die Zielkette, bevor Sie bestätigen."
         }
       },

@@ -1,4 +1,5 @@
 import { getVideoPreferences, setMediaMuted } from './video-preferences';
+import { visualActivity } from './visual-activity';
 /**
  * Video Playback Manager
  * ======================
@@ -62,6 +63,10 @@ class VideoPlaybackManager {
    * Returns true if this video should play with audio (is the audio owner).
    */
   play(id: string): boolean {
+    if (visualActivity.isCallBusy()) {
+      this.registeredVideos.get(id)?.pause();
+      return false;
+    }
     this.activeVideos.add(id);
 
     // First active video becomes audio owner
@@ -108,6 +113,13 @@ class VideoPlaybackManager {
    */
   getCurrentlyPlayingId(): string | null {
     return this.audioOwnerId;
+  }
+
+  pauseAll(): void {
+    const videos = [...this.registeredVideos.values()];
+    this.activeVideos.clear();
+    this.audioOwnerId = null;
+    videos.forEach(video => { try { video.pause(); } catch {} });
   }
 
   /** Promote the next active video to audio owner and unmute it */

@@ -6816,11 +6816,12 @@
     "tokenNotConfigured": "Ba a saita token na DeHub a kan {{chain}} ba.",
     "notEnoughTokens": "Ba isassun token",
     "onChainBalanceTooLow": "Balan-balan token na DeHub na kan-chain ɗinka a kan {{chain}} yayi ƙasa sosai. Yana yiwuwa ba a sabunta balan-balan da aka nuna ba tukuna.",
-    "sentDesc": "An aika da token {{amount}} daga {{from}} zuwa {{to}}. Zasu iso nan da wani lokaci.",
+    "sentDesc": "An aika tokens {{amount}} daga {{from}} zuwa {{to}}. Ƙungiyar tana aika tokens ɗin a kan sarkar da za a kai, yawanci cikin kwanakin aiki 1-5.",
     "subtitle": "Canja wurin token na DeHub tsakanin sarƙoƙi",
     "tokensOnBase": "Token a kan Base",
     "tokensOnBnb": "Token a kan BNB Chain",
-    "step3": "Za a isar da token na DeHub ɗinka a kan sarƙoƙi na makoma nan da wani lokaci."
+    "step3": "Ƙungiyar tana aika tokens ɗin a kan sarkar da za a kai, yawanci cikin kwanakin aiki 1-5.",
+    "statusReceived": "An karɓa"
   },
   "builder": {
     "stakeForAllowance": "Saka token na DeHub don ƙara izinin ginawa na yau da kullun",
@@ -7387,11 +7388,11 @@
           "4": "Shigar da adadin kuɗin da za a yi garkuwa.",
           "5": "Duba kuɗin garkuwa da kuma lokacin da ake sa ran isowa.",
           "6": "Tabbatar da cinikin garkuwa.",
-          "7": "Yi jiran cinikin ya kammala — garkuwa na iya ɗaukar 'yan mintuna kaɗan."
+          "7": "Ƙungiyar tana aika tokens ɗin a kan sarkar da za a kai, yawanci cikin kwanakin aiki 1-5."
         },
         "tips": {
           "1": "Kuɗin garkuwa na bambanta ta hanyar sarkar ma'aurata.",
-          "2": "Garkuwa yawanci yana ɗaukar mintuna 1-5 dangane da sarkar da ke cikin su.",
+          "2": "A yanzu ana biyan kuɗin gada da hannu.",
           "3": "Koyaushe duba sarkar da za a nufa kafin tabbatarwa."
         }
       },

@@ -2,13 +2,15 @@
  * BadgeIcon — Reusable staking badge image with tooltip. A click opens the
  * badge showcase, flying the badge out of this spot.
  */
-import { useEffect, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBadgeVisual } from '@/hooks/use-badge-balance';
 import { type BadgeLock } from '@/lib/staking-badges';
 import { openBadgeShowcase, preloadBadgeShowcase } from '@/lib/badge-showcase';
+import { badgeHoverArt } from '@/lib/badge-hover-art';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 let idleWarmupScheduled = false;
 
@@ -68,6 +70,14 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // Profiles already hold a resolved asset URL. Recover its tier so the same
   // size and measured artwork inset still apply there as everywhere else.
   const visualName = name ?? badgeNameFromAssetUrl(url);
+  const art = badgeHoverArt(visualName);
+  const originalStill = visualName === 'Killer Whale';
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [failedAnimation, setFailedAnimation] = useState<string | null>(null);
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const active = hovered || focused;
+  const playing = active && !reducedMotion && art && failedAnimation !== art.animation;
   const { theme } = useAppTheme();
   const metallic = badgeAnimationStyle(theme) === 'metallic';
   const warmShowcase = () => { void preloadBadgeShowcase(metallic ? visualName : undefined).catch(() => {}); };
@@ -79,7 +89,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     if ('requestIdleCallback' in window) window.requestIdleCallback(warm, { timeout: 1800 });
     else setTimeout(warm, 800);
   }, [metallic, visualName]);
-  const optics = visualName ? BADGE_OPTICS[visualName] : undefined;
+  const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.bounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
   // CSS cap follows the actual adjacent font; use 0.72em on older engines.
@@ -102,6 +112,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   };
 
   if (!url) return null;
+  const poster = originalStill ? url : art?.poster ?? url;
 
   return (
     <Tooltip>
@@ -109,9 +120,24 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
         <span
           style={opticalStyle}
           className={`shrink-0 self-baseline align-baseline cursor-pointer ${className}`}
-          onPointerEnter={warmShowcase}
+          role="button"
+          tabIndex={0}
+          aria-label={visualName || 'Badge'}
+          data-badge-playing={playing ? 'true' : 'false'}
+          onPointerEnter={(e) => {
+            warmShowcase();
+            if (e.pointerType !== 'touch') setHovered(true);
+          }}
+          onPointerLeave={() => setHovered(false)}
           onTouchStart={warmShowcase}
-          onFocus={warmShowcase}
+          onFocus={() => { warmShowcase(); setFocused(true); }}
+          onBlur={() => setFocused(false)}
+          onKeyDown={(e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            e.stopPropagation();
+            e.preventDefault();
+            openBadgeShowcase(visualName ?? null, e.currentTarget);
+          }}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
@@ -119,15 +145,17 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
           }}
         >
           <img
+            key={playing ? art.animation : 'poster'}
             style={imageStyle}
             data-badge-icon
-            src={url}
+            src={playing ? art.animation : poster}
+            onError={() => { if (playing) setFailedAnimation(art.animation); }}
             alt={visualName || 'Badge'}
             width={16}
             height={16}
             loading="lazy"
             decoding="async"
-            className="relative block w-full h-full rounded-none bg-transparent object-contain hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.8)] transition-all"
+            className={`relative block w-full h-full rounded-none bg-transparent object-contain transition-[filter] ${active ? 'drop-shadow-[0_0_4px_rgba(255,255,255,0.8)]' : ''}`}
           />
         </span>
       </TooltipTrigger>
