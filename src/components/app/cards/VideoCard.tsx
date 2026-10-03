@@ -1,4 +1,5 @@
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
+import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { isVideoOutsideFeed } from '@/lib/video-background-playback';
 /**
  * Video Card Component
@@ -633,6 +634,7 @@ interface VideoCardProps {
 }
 
 export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, onOpenComments }: VideoCardProps) {
+  const playbackAllowed = useFeedPlaybackAllowed();
   const instanceId = useId();
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -858,6 +860,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Pause callback for the playback manager
   const pauseVideo = useCallback(() => {
+    if (videoRef.current && document.pictureInPictureElement === videoRef.current && !visualActivity.isCallBusy()) return;
     videoRef.current?.pause();
     isPlayingRef.current = false;
     setIsPlaying(false);
@@ -944,6 +947,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Register with playback manager and setup IntersectionObserver (stable — no isPlaying dep)
   useEffect(() => {
+    if (!playbackAllowed) pauseVideo();
     videoPlaybackManager.register(instanceId, pauseVideo, (muted: boolean) => {
       // Callback for manager to force mute/unmute this video
       if (videoRef.current) videoRef.current.muted = muted;
@@ -955,6 +959,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       (entries) => {
         entries.forEach((entry) => {
           isIntersectingRef.current = entry.isIntersecting;
+          if (videoRef.current && document.pictureInPictureElement === videoRef.current && !visualActivity.isCallBusy()) return;
+          if (!visualActivity.isFeedPlaybackAllowed()) { pauseVideo(); return; }
           // Backgrounding is not a scroll-away; PiP owns its own visible surface.
           if (isVideoOutsideFeed(videoRef.current)) return;
           if (!entry.isIntersecting && isPlayingRef.current) {
@@ -979,7 +985,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
-                if (!isIntersectingRef.current && !isVideoOutsideFeed(vid)) {
+                if (!visualActivity.isFeedPlaybackAllowed() || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
                   vid.pause();
                   videoPlaybackManager.stop(instanceId);
                   setIsLoading(false);
@@ -1006,7 +1012,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       videoPlaybackManager.unregister(instanceId);
       observer.disconnect();
     };
-  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.subscriberPlans, video.videoUrl, isVideoNotReady]);
+  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.subscriberPlans, video.videoUrl, isVideoNotReady, playbackAllowed, disableAutoplay]);
 
   // Show controls briefly after any user interaction, then auto-hide
     const showControlsBriefly = useCallback(() => {
@@ -1068,6 +1074,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, []);
 
   const handlePlayClick = useCallback(() => {
+    if (!visualActivity.isFeedPlaybackAllowed()) return;
     // Audio posts use AudioVisualizer which handles its own playback
     if (video.isAudio) {
       if (isContentGated) return;

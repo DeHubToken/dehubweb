@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { CallDuration } from './CallDuration';
 import { Phone, PhoneOff, Mic, MicOff, Volume2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useCall } from '@/contexts/CallContext';
@@ -15,9 +16,9 @@ const VoiceCallModal: React.FC = () => {
     isCallActive,
     isIncoming,
     currentCall,
+    peerAddress,
     isConnecting,
     isMuted,
-    callDuration,
     remoteAudioRef,
     endCall,
     acceptCall,
@@ -30,9 +31,6 @@ const VoiceCallModal: React.FC = () => {
   const { t } = useTranslation();
   const [audioNeedsInteraction, setAudioNeedsInteraction] = useState(false);
 
-  const peerAddress = currentCall
-    ? (isIncoming ? currentCall.caller_address : currentCall.recipient_address)
-    : '';
   const peer = usePeerIdentity(peerAddress);
 
   const handleUserInteraction = async () => {
@@ -56,9 +54,7 @@ const VoiceCallModal: React.FC = () => {
     ? t('calls.incoming')
     : isConnecting
       ? t('calls.connecting')
-      : callDuration !== '00:00'
-        ? callDuration
-        : t('calls.connected');
+      : <CallDuration fallback={t('calls.connected')} />;
 
   return (
     <CallSurface onMinimize={minimizeCall} minimizeLabel={t('calls.minimize')}>

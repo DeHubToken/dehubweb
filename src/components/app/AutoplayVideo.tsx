@@ -8,6 +8,7 @@
  */
 
 import { useRef, useEffect, useState, memo } from 'react';
+import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { cn } from '@/lib/utils';
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
 import { useResolvedThumbnail, DEFAULT_POSTER_WIDTH } from '@/lib/thumbnail-fallback';
@@ -91,7 +92,8 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   deferUntilInteraction = false,
 }: AutoplayVideoProps) {
   const interacted = useFirstInteraction();
-  const engaged = !deferUntilInteraction || interacted;
+  const playbackAllowed = useFeedPlaybackAllowed();
+  const engaged = playbackAllowed && (!deferUntilInteraction || interacted);
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
   // images/{id}.jpg — resolve to whichever exists so the poster isn't a 403.
   const poster = useResolvedThumbnail(posterProp, posterWidth);
@@ -158,17 +160,23 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     if (!video) return;
 
     if (isVisible && !disabled && groupAllowed && engaged) {
+      let cancelled = false;
       // Delay lets src settle after layout shifts (sidebar collapse etc.)
       const timer = setTimeout(async () => {
         try {
           await video.play();
+          if (cancelled || !visualActivity.isFeedPlaybackAllowed()) video.pause();
         } catch {
+          if (cancelled || !visualActivity.isFeedPlaybackAllowed()) return;
           // Autoplay blocked — ensure muted and retry
           video.muted = true;
-          try { await video.play(); } catch { /* wait for user interaction */ }
+          try {
+            await video.play();
+            if (cancelled || !visualActivity.isFeedPlaybackAllowed()) video.pause();
+          } catch { /* wait for user interaction */ }
         }
       }, 80);
-      return () => clearTimeout(timer);
+      return () => { cancelled = true; clearTimeout(timer); video.pause(); };
     } else {
       video.pause();
     }
