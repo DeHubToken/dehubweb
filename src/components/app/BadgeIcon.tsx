@@ -72,7 +72,6 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   const visualName = name ?? badgeNameFromAssetUrl(url);
   const art = badgeHoverArt(visualName);
   const originalStill = visualName === 'Killer Whale';
-  const poster = originalStill ? url : art?.poster ?? url;
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [failedAnimation, setFailedAnimation] = useState<string | null>(null);
@@ -113,6 +112,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   };
 
   if (!url) return null;
+  const poster = originalStill ? url : art?.poster ?? url;
 
   return (
     <Tooltip>
