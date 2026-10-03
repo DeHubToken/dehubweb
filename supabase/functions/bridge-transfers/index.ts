@@ -3,7 +3,9 @@
  * ==============================
  * Uses Alchemy's alchemy_getAssetTransfers API to fetch all ERC-20 DHB
  * Transfer events TO the bridge relay address on both Base and BNB Chain.
- * All historical transfers are marked as Complete.
+ * Every transfer is reported as Received: the deposit reached the relay
+ * address. Payouts on the other chain are sent by the team by hand and are
+ * not tracked here, so nothing in this list means the payout has been made.
  */
 
 const corsHeaders = {
@@ -148,7 +150,7 @@ async function fetchTransfersForChain(chain: typeof CHAINS[0]): Promise<Transfer
           explorerUrl: `${chain.explorer}/tx/${tx.hash}`,
           blockNumber: blockNum,
           timestamp,
-          status: 'Complete',
+          status: 'Received',
         });
       }
 

@@ -5877,11 +5877,12 @@
     "tokenNotConfigured": "توکنی DeHub لەسەر {{chain}} دانەندراون.",
     "notEnoughTokens": "توکنی بەس",
     "onChainBalanceTooLow": "بالانسی توکنی DeHubی ئۆن-چینی تۆ لەسەر {{chain}} زۆر کەمە. بالانسە نمایشکراوەکە لەوانەیە هێشتا نوێ نەبووبێتەوە.",
-    "sentDesc": "{{amount}} توکن ناردرا لە {{from}} بۆ {{to}}. زوو دەگەن.",
+    "sentDesc": "{{amount}} token ji {{from}} bo {{to}} hatin şandin. Tîm tokenan li ser zincîra armancê dişîne, bi gelemperî di nav 1-5 rojên kar de.",
     "subtitle": "دەب هوب توکنەکان لە نێوان زنجیرەکاندا بجوڵێنە",
     "tokensOnBase": "توکنەکان لەسەر بنەمای بنەمای",
     "tokensOnBnb": "توکنەکان لەسەر زنجیرەی BNB",
-    "step3": "دەب هوب توکنەکانت زوو لەسەر زنجیرەی مەبەست دەگەیەنرێت."
+    "step3": "Tîm tokenan li ser zincîra armancê dişîne, bi gelemperî di nav 1-5 rojên kar de.",
+    "statusReceived": "Hat wergirtin"
   },
   "builder": {
     "stakeForAllowance": "دەب هوب توکنەکان دابنێ بۆ زیادکردنی ڕێگەپێدانی دروستکردنی ڕۆژانەت",
@@ -6416,11 +6417,11 @@
           "4": "ژمارەی توکنەکان بۆ پردکردن داخڵ بکە.",
           "5": "باجی پردەکە و کاتی گەیشتنی پێشبینیکراو بە وردی ببینە.",
           "6": "پەیوەندی پردەکە پشتڕاست بکەرەوە.",
-          "7": "چاوەڕێ بکە تا تەواوبوونی پەیوەندییەکە - پردکردن لەوانەیە چەند خولەکێک بخایەنێت."
+          "7": "Tîm tokenan li ser zincîra armancê dişîne, bi gelemperî di nav 1-5 rojên kar de."
         },
         "tips": {
           "1": "باجەکانی پرد بەپێی جووتە زنجیرەکان جیاوازن.",
-          "2": "پردکردن بە شێوەیەکی گشتی ١-٥ خولەک دەخایەنێت بەپێی زنجیرە بەشداربووەکان.",
+          "2": "Niha dravdanên pirê bi destan têne kirin.",
           "3": "هەمیشە پێش پشتڕاستکردنەوە، زنجیرەی مەبەست بە وردی دوو جار بزانە."
         }
       },

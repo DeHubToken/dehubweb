@@ -728,6 +728,7 @@
     "errorUnknown": "❌ Algo deu errado: {{message}}. Tente novamente.",
     "errorVideoGenFailed": "Falha na geração do vídeo",
     "errorVideoGenStart": "Falha ao iniciar a geração do vídeo",
+    "videoGenPaymentKept": "Seus {{amount}} DHB não foram gastos. Eles continuam na sua conta e serão usados automaticamente na sua próxima geração que custe até esse valor, então tentar de novo não vai cobrar duas vezes.",
     "errorImageGenFailed": "Falha ao gerar a imagem",
     "fallbackGrokNotConfigured": "Usando DeHub AI - Chave API Grok não configurada",
     "paymentSuccessGenerating": "Pagamento realizado! Gerando seu vídeo...",
@@ -6930,11 +6931,12 @@
     "tokenNotConfigured": "Tokens DeHub não estão configurados em {{chain}}.",
     "notEnoughTokens": "Tokens insuficientes",
     "onChainBalanceTooLow": "Seu saldo de tokens DeHub na rede em {{chain}} está muito baixo. O saldo exibido pode não ter sido sincronizado ainda.",
-    "sentDesc": "{{amount}} tokens enviados de {{from}} para {{to}}. Eles chegarão em breve.",
+    "sentDesc": "{{amount}} tokens enviados de {{from}} para {{to}}. A equipe envia os tokens na rede de destino, geralmente em 1-5 dias úteis.",
     "subtitle": "Mover tokens DeHub entre redes",
     "tokensOnBase": "Tokens em Base",
     "tokensOnBnb": "Tokens na Rede BNB",
-    "step3": "Seus tokens DeHub serão entregues na rede de destino em breve."
+    "step3": "A equipe envia os tokens na rede de destino, geralmente em 1-5 dias úteis.",
+    "statusReceived": "Recebido"
   },
   "builder": {
     "stakeForAllowance": "Faça staking de tokens DeHub para aumentar sua permissão diária de criação",
@@ -7501,11 +7503,11 @@
           "4": "Digite o número de tokens para transferir.",
           "5": "Revise a taxa de transferência e o tempo estimado de chegada.",
           "6": "Confirme a transação de transferência.",
-          "7": "Aguarde a conclusão da transação — a transferência pode levar alguns minutos."
+          "7": "A equipe envia os tokens na rede de destino, geralmente em 1-5 dias úteis."
         },
         "tips": {
           "1": "As taxas de transferência variam por par de cadeias.",
-          "2": "A transferência geralmente leva de 1 a 5 minutos, dependendo das cadeias envolvidas.",
+          "2": "Por enquanto, os pagamentos da ponte são feitos manualmente.",
           "3": "Sempre verifique a cadeia de destino antes de confirmar."
         }
       },

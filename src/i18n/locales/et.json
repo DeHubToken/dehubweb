@@ -6889,11 +6889,12 @@
     "tokenNotConfigured": "DeHub žetoone pole {{chain}} peal seadistatud.",
     "notEnoughTokens": "Žetoone pole piisavalt",
     "onChainBalanceTooLow": "Teie võrguühenduslik DeHub žetoonide saldo {{chain}} peal on liiga madal. Kuvatud saldo ei pruugi veel sünkroonida.",
-    "sentDesc": "{{amount}} žetooni saadetud {{from}}-lt {{to}}-le. Need saabuvad peagi.",
+    "sentDesc": "{{amount}} tokenit saadeti ahelast {{from}} ahelasse {{to}}. Meeskond saadab tokenid sihtahelas välja, tavaliselt 1-5 tööpäeva jooksul.",
     "subtitle": "Liigutage DeHub žetoone ahelate vahel",
     "tokensOnBase": "Žetoonid Base'is",
     "tokensOnBnb": "Žetoonid BNB Chainis",
-    "step3": "Teie DeHub žetoonid toimetatakse sihtahelasse peagi."
+    "step3": "Meeskond saadab tokenid sihtahelas välja, tavaliselt 1-5 tööpäeva jooksul.",
+    "statusReceived": "Vastu võetud"
   },
   "builder": {
     "stakeForAllowance": "Panustage DeHub žetoone, et suurendada oma igapäevast ehitusluba",
@@ -7460,11 +7461,11 @@
           "4": "Sisesta ülekantavate märkide arv.",
           "5": "Vaata üle silla tasu ja eeldatav saabumisaeg.",
           "6": "Kinnita silla tehing.",
-          "7": "Oota tehingu lõpulejõudmist – ülekandmine võib võtta paar minutit."
+          "7": "Meeskond saadab tokenid sihtahelas välja, tavaliselt 1-5 tööpäeva jooksul."
         },
         "tips": {
           "1": "Silla tasud erinevad kettide paaride lõikes.",
-          "2": "Ülekandmine võtab tavaliselt 1–5 minutit, sõltuvalt kaasatud kettidest.",
+          "2": "Silla väljamakseid tehakse praegu käsitsi.",
           "3": "Kontrolli alati sihtketti enne kinnitamist."
         }
       },

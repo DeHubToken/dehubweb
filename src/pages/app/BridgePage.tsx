@@ -382,6 +382,7 @@ function shortenAddress(addr: string): string {
 const PAGE_SIZE = 10;
 
 function BridgeQueue() {
+  const { t: translate } = useTranslation();
   const { data: transfers, isLoading, error } = useBridgeTransfers();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
@@ -480,8 +481,10 @@ function BridgeQueue() {
               <div className="text-right flex-shrink-0">
                 <p className="text-xs font-semibold text-white">{t.amount} <DhbCoin /></p>
                 <div className="flex items-center justify-end gap-1.5 mt-0.5">
-                  <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    {t.status || 'Complete'}
+                  <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-white/5 text-white/60 border border-white/10">
+                    {/* The relay only sees the deposit arrive; the payout on the
+                        other chain is sent by hand and is not tracked here. */}
+                    {translate('bridge.statusReceived')}
                   </span>
                   <p className="text-[10px] text-white/25">{timeAgo(t.timestamp)}</p>
                 </div>

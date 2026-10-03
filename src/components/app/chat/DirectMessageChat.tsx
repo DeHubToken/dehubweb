@@ -80,7 +80,7 @@ import {
 import { ForwardMessageDialog } from './ForwardMessageDialog';
 import { DmVoiceCallButton } from '@/components/app/chat/calls/DmVoiceCallButton';
 import { DmVideoCallButton } from '@/components/app/chat/calls/DmVideoCallButton';
-import { useCall } from '@/contexts/CallContext';
+import { useCallActions } from '@/contexts/CallContext';
 import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 import { formatUnreadCount } from '@/lib/unread-count';
 import { isDmCallNotice } from '@/lib/dm-call-notice';
@@ -857,7 +857,7 @@ function useDmPin(conversationId: string, address: string | undefined, conversat
 export function DirectMessageChat({ conversation, onBack, initialComposerText, dock = false, headerActions }: DirectMessageChatProps) {
   const { user, walletAddress, openLoginModal } = useAuth();
   const { isBanned: accountBanned } = useBannedAccount();
-  const { setCallMessageHandler } = useCall();
+  const { setCallMessageHandler } = useCallActions();
   const queryClient = useQueryClient();
   const { t: tr } = useI18n();
   const scrollContainerRef = useRef<HTMLDivElement>(null);

@@ -6675,11 +6675,12 @@
     "tokenNotConfigured": "Token DeHub durung disetel ing {{chain}}.",
     "notEnoughTokens": "Token ora cukup",
     "onChainBalanceTooLow": "Saldo token DeHub on-chain ing {{chain}} banget sithik. Saldo sing ditampilake bisa uga durung disinkronake.",
-    "sentDesc": "{{amount}} token dikirim saka {{from}} menyang {{to}}. Bakal teka sanalika.",
+    "sentDesc": "{{amount}} token dikirim saka {{from}} menyang {{to}}. Tim ngirim token ing rantai tujuan, biasane sajrone 1-5 dina kerja.",
     "subtitle": "Mindhah token DeHub antarane rantai",
     "tokensOnBase": "Token ing Base",
     "tokensOnBnb": "Token ing BNB Chain",
-    "step3": "Token DeHub sampeyan bakal dikirim ing rantai tujuan sanalika."
+    "step3": "Tim ngirim token ing rantai tujuan, biasane sajrone 1-5 dina kerja.",
+    "statusReceived": "Ditampa"
   },
   "builder": {
     "stakeForAllowance": "Stake token DeHub kanggo nambah tunjangan mbangun saben dina",
@@ -7246,11 +7247,11 @@
           "4": "Lebokake jumlah token kanggo di-bridge.",
           "5": "Tinjau biaya bridge lan perkiraan wektu kedatangan.",
           "6": "Konfirmasi transaksi bridge.",
-          "7": "Enteni nganti transaksi rampung — bridging bisa njupuk sawetara menit."
+          "7": "Tim ngirim token ing rantai tujuan, biasane sajrone 1-5 dina kerja."
         },
         "tips": {
           "1": "Biaya bridge beda-beda gumantung saka pasangan rantai.",
-          "2": "Bridging biasane njupuk 1-5 menit gumantung saka rantai sing melu.",
+          "2": "Saiki pambayaran bridge isih ditindakake kanthi manual.",
           "3": "Tansah mriksa maneh rantai tujuan sadurunge konfirmasi."
         }
       },

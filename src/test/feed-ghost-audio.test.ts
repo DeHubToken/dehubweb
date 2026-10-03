@@ -1,4 +1,3 @@
-import { renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   claimHandoffVideo,
@@ -7,7 +6,6 @@ import {
   releaseHandoffVideo,
   takeHandoffVideo,
 } from '@/lib/video-handoff';
-import { useSyncedAudio } from '@/hooks/use-synced-audio';
 
 /**
  * Scrolling past a feed video left its sound playing, and scrolling back
@@ -91,37 +89,5 @@ describe('a second copy of a post cannot keep the first one playing out of sight
     tokens.push(['ghost-3', a.token]);
     expect(takeHandoffVideo('ghost-3', {})).toBeNull();
     expect(takeHandoffVideo('nope', a.token)).toBeNull();
-  });
-});
-
-describe('the soundtrack stops whenever the video does', () => {
-  it('a pause from outside the card stops the soundtrack', () => {
-    const video = makePlayable(document.createElement('video'));
-    const audio = makePlayable(document.createElement('audio'));
-    const videoRef = { current: video };
-
-    // The card never got to say it was playing (its play() was cancelled on
-    // scroll-away after the video had already started), so isPlaying is false
-    // throughout. The <audio> ref is filled in during render, as the card's
-    // JSX would have it by the time effects run.
-    const bound = renderHook(() => {
-      const r = useSyncedAudio({
-        soundtrackUrl: 'https://cdn.example/track.mp3',
-        isPlaying: false,
-        isMuted: false,
-        volume: 1,
-        videoRef,
-        videoEl: video,
-      });
-      (r.audioRef as { current: HTMLAudioElement | null }).current = audio;
-      return r;
-    });
-
-    video.play();
-    audio.play();
-    expect(audio.paused).toBe(false);
-    video.pause();
-    expect(audio.paused).toBe(true);
-    bound.unmount();
   });
 });

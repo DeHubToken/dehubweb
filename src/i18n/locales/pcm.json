@@ -5818,9 +5818,11 @@
     "tokenNotConfigured": "DeHub tokens no dey set up for {{chain}}.",
     "notEnoughTokens": "Na token dey low.",
     "onChainBalanceTooLow": "Yon on-chain DeHub token balance for {{chain}} be too low. Na display balance maybe still no finish sync yet.",
-    "sentDesc": "{{amount}} tokens send from {{from}} go dey reach {{to}} soon.",
+    "sentDesc": "{{amount}} tokens don comot from {{from}} go {{to}}. Di team go send di tokens for di destination chain, usually inside 1-5 working days.",
     "subtitle": "Move DeHub tokens between chains",
-    "tokensOnBase": "Tokens on Base"
+    "tokensOnBase": "Tokens on Base",
+    "step3": "Di team go send di tokens for di destination chain, usually inside 1-5 working days.",
+    "statusReceived": "E don land"
   },
   "builder": {
     "stakeForAllowance": "Stake DeHub token make your daily build allowance go up",
@@ -6229,11 +6231,11 @@
         "intro": "Waka your DeHub tokens for different blockchain wey support through cross-chain bridge.",
         "steps": {
           "2": "Wetin you mean by \"source chain\"?",
-          "7": "Wait for transaction complete — bridging go take minutes."
+          "7": "Di team go send di tokens for di destination chain, usually inside 1-5 working days."
         },
         "tips": {
           "1": "Bridge fees vary by chain pair.",
-          "2": "Bridging dey take 1-5 minutes depend on di chains wey dey involved.",
+          "2": "For now, na hand dem dey take do bridge payout.",
           "3": "Always check chain before confirm."
         }
       },

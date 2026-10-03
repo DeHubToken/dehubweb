@@ -10,8 +10,8 @@
 //
 // What is genuinely per-kind is the engine, and only the engine. A stage is
 // diarized by ElevenLabs Scribe because its speaker map is matched against the
-// room's own AI/soundboard timeline; everything else goes to Deepgram nova-3,
-// which is cheaper for batch and now diarizes too. Both write the same row.
+// room's own AI/soundboard timeline; everything else starts with Deepgram
+// nova-3 and falls back to Scribe when no words are recognized.
 import {
   admin,
   buildVtt,
@@ -29,6 +29,7 @@ import {
   TargetError,
 } from '../_shared/transcripts.ts';
 import { decideVisibility } from '../_shared/transcript-visibility.ts';
+import { hasCaptions, transcribeWithFallback } from '../_shared/transcription-fallback.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -154,8 +155,13 @@ function wordsToSegments(words: ScribeWord[]): Segment[] {
   let cur: Segment | null = null;
   for (const w of words) {
     if (w.type && w.type !== 'word' && w.type !== 'spacing') continue;
+    // Spacing has no speaker or reliable timestamp; attach it to the word.
+    if (w.type === 'spacing') {
+      if (cur) cur.text += w.text || '';
+      continue;
+    }
     const speaker = w.speaker_id || w.speaker || 'speaker_1';
-    if (!cur || cur.speaker !== speaker) {
+    if (!cur || cur.speaker !== speaker || w.end - cur.start > 6 || w.start - cur.end > 1) {
       if (cur) segs.push(cur);
       cur = { speaker, text: w.text || '', start: w.start ?? 0, end: w.end ?? 0 };
     } else {
@@ -259,7 +265,7 @@ async function runScribe(
 
 /* ──────────────────────────────── the job ───────────────────────────────── */
 
-async function runJob(target: Target, mediaUrl: string, timeline: TimelineWindow[]) {
+async function runJob(target: Target, mediaUrl: string, timeline: TimelineWindow[], retryEmpty = false) {
   const db = admin();
   try {
     let hostWallet: string | null = null;
@@ -274,12 +280,17 @@ async function runJob(target: Target, mediaUrl: string, timeline: TimelineWindow
 
     const result = target.kind === 'stage'
       ? await runScribe(mediaUrl, timeline, hostWallet)
-      : await runDeepgram(mediaUrl);
+      : retryEmpty
+      ? await runScribe(mediaUrl, [], null)
+      : await transcribeWithFallback(
+        () => runDeepgram(mediaUrl),
+        () => runScribe(mediaUrl, [], null),
+      );
 
     // Nothing said is its own outcome. Storing it as 'ready' is what left two
     // videos and one stage permanently showing captions that never speak:
     // every "already done" check passed and nothing could ever re-run them.
-    const isEmpty = result.segments.length === 0 || !result.fullText.trim();
+    const isEmpty = !hasCaptions(result);
 
     const { error: writeError } = await db.from('transcripts').update({
       status: isEmpty ? 'empty' : 'ready',
@@ -381,6 +392,8 @@ Deno.serve(async (req) => {
     if (existing) {
       const row = existing as any;
       if (row.status === 'ready' && !force) return json(row);
+      // Both engines have already listened. Repeating silence burns credits.
+      if (row.status === 'empty' && row.provider === 'elevenlabs' && !force) return json(row);
       if (row.status === 'processing' && !force && !isRetryable(row)) return json(row);
       if ((row.status === 'failed' || row.status === 'empty') && !force && row.attempts >= MAX_ATTEMPTS) {
         return json(row);
@@ -479,7 +492,7 @@ Deno.serve(async (req) => {
       error: null,
     });
 
-    const work = runJob(target, media.url, timeline);
+    const work = runJob(target, media.url, timeline, existing?.status === 'empty' && existing?.provider === 'deepgram');
     // @ts-ignore EdgeRuntime is provided by Supabase
     if (typeof EdgeRuntime !== 'undefined') EdgeRuntime.waitUntil(work);
     else await work;

@@ -55,6 +55,7 @@ import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-cop
 import { updateTokenVisibility, repostPost, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
 import { useFollow } from '@/hooks/use-follow';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
+import { warmPostPage } from '@/lib/preload-post-page';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { PollCard } from './PollCard';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
@@ -386,6 +387,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
     <div
       ref={viewRef}
       onClick={handleCardClick}
+      onPointerDownCapture={warmPostPage}
       className="overflow-visible relative cursor-pointer isolate"
     >
       <CardHeader

@@ -728,6 +728,7 @@
     "errorUnknown": "❌ Something went wrong: {{message}}. Please try again.",
     "errorVideoGenFailed": "Video generation failed",
     "errorVideoGenStart": "Failed to start video generation",
+    "videoGenPaymentKept": "Your {{amount}} DHB has not been spent. It stays on your account and is used automatically for your next generation that costs up to that amount, so trying again will not ask you to pay twice.",
     "errorImageGenFailed": "Failed to generate image",
     "fallbackGrokNotConfigured": "Using DeHub AI - Grok API key not configured",
     "paymentSuccessGenerating": "Payment successful! Generating your video...",
@@ -6928,11 +6929,12 @@
     "tokenNotConfigured": "DeHub tokens are not set up on {{chain}}.",
     "notEnoughTokens": "Not enough tokens",
     "onChainBalanceTooLow": "Your on-chain DeHub token balance on {{chain}} is too low. The displayed balance may not have synced yet.",
-    "sentDesc": "{{amount}} tokens sent from {{from}} to {{to}}. They will arrive shortly.",
+    "sentDesc": "{{amount}} tokens sent from {{from}} to {{to}}. The team sends the tokens out on the destination chain, usually within 1-5 business days.",
     "subtitle": "Move DeHub tokens between chains",
     "tokensOnBase": "Tokens on Base",
     "tokensOnBnb": "Tokens on BNB Chain",
-    "step3": "Your DeHub tokens will be delivered on the destination chain shortly."
+    "step3": "The team sends the tokens out on the destination chain, usually within 1-5 business days.",
+    "statusReceived": "Received"
   },
   "builder": {
     "stakeForAllowance": "Stake DeHub tokens to raise your daily build allowance",
@@ -7501,11 +7503,11 @@
           "4": "Enter the number of tokens to bridge.",
           "5": "Review the bridge fee and estimated arrival time.",
           "6": "Confirm the bridge transaction.",
-          "7": "Wait for the transaction to complete — bridging may take a few minutes."
+          "7": "The team sends the tokens out on the destination chain, usually within 1-5 business days."
         },
         "tips": {
           "1": "Bridge fees vary by chain pair.",
-          "2": "Bridging typically takes 1-5 minutes depending on the chains involved.",
+          "2": "Bridge payouts are made by hand for now.",
           "3": "Always double-check the destination chain before confirming."
         }
       },

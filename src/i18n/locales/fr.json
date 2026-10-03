@@ -728,6 +728,7 @@
     "errorUnknown": "❌ Quelque chose s'est mal passé : {{message}}. Veuillez réessayer.",
     "errorVideoGenFailed": "Échec de la génération vidéo",
     "errorVideoGenStart": "Impossible de démarrer la génération vidéo",
+    "videoGenPaymentKept": "Vos {{amount}} DHB n'ont pas été dépensés. Ils restent sur votre compte et serviront automatiquement à votre prochaine génération coûtant jusqu'à ce montant : réessayer ne vous fera pas payer deux fois.",
     "errorImageGenFailed": "Impossible de générer l'image",
     "fallbackGrokNotConfigured": "Utilisation de DeHub AI - Clé API Grok non configurée",
     "paymentSuccessGenerating": "Paiement réussi ! Génération de votre vidéo en cours...",
@@ -6928,11 +6929,12 @@
     "tokenNotConfigured": "Les tokens DeHub ne sont pas configurés sur {{chain}}.",
     "notEnoughTokens": "Tokens insuffisants",
     "onChainBalanceTooLow": "Votre solde de tokens DeHub sur la blockchain {{chain}} est trop bas. Le solde affiché n'a peut-être pas encore été synchronisé.",
-    "sentDesc": "{{amount}} tokens envoyés de {{from}} à {{to}}. Ils arriveront bientôt.",
+    "sentDesc": "{{amount}} tokens envoyés de {{from}} à {{to}}. L'équipe envoie les tokens sur la chaîne de destination, généralement sous 1 à 5 jours ouvrés.",
     "subtitle": "Déplacer des tokens DeHub entre les chaînes",
     "tokensOnBase": "Tokens sur Base",
     "tokensOnBnb": "Tokens sur BNB Chain",
-    "step3": "Vos tokens DeHub seront livrés sur la chaîne de destination sous peu."
+    "step3": "L'équipe envoie les tokens sur la chaîne de destination, généralement sous 1 à 5 jours ouvrés.",
+    "statusReceived": "Reçu"
   },
   "builder": {
     "stakeForAllowance": "Staker des tokens DeHub pour augmenter votre allocation de création quotidienne",
@@ -7499,11 +7501,11 @@
           "4": "Entrez le nombre de jetons à transférer.",
           "5": "Vérifiez les frais de transfert et le temps d'arrivée estimé.",
           "6": "Confirmez la transaction de transfert.",
-          "7": "Attendez que la transaction soit terminée — le transfert peut prendre quelques minutes."
+          "7": "L'équipe envoie les tokens sur la chaîne de destination, généralement sous 1 à 5 jours ouvrés."
         },
         "tips": {
           "1": "Les frais de transfert varient selon la paire de chaînes.",
-          "2": "Le transfert prend généralement 1 à 5 minutes selon les chaînes impliquées.",
+          "2": "Les paiements du pont sont effectués manuellement pour le moment.",
           "3": "Vérifiez toujours la chaîne de destination avant de confirmer."
         }
       },

@@ -73,6 +73,9 @@ import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { cacheImageForNavigation } from '@/lib/post-cache';
+import { HandoffImage } from './HandoffImage';
+import { galleryIndex, rememberGalleryIndex, subscribeGallery } from '@/lib/media-presentation';
+import { warmPostPage } from '@/lib/preload-post-page';
 import { FEED_IMAGE_MAX_HEIGHT } from '@/lib/feed-image-layout';
 import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
@@ -194,7 +197,7 @@ function ImageSlide({
   const [measurement, setMeasurement] = useState<{ img: string; ratio: number }>();
   const ratio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img);
   const slideRef = useRef<HTMLDivElement>(null);
-  const [retainBitmap, setRetainBitmap] = useState(aboveFold);
+  const [retainBitmap, setRetainBitmap] = useState(aboveFold || immersive);
   const horizontalBitmap = useHorizontalBitmap(img, !!ratio, viewportRef, slideRef);
   // Resolve the ratio during render so a replaced image never paints with the
   // previous image's dimensions or needs a second render just to reset them.
@@ -248,11 +251,12 @@ function ImageSlide({
           portrait image is just the image, hugged to the left, with no blurred
           side-fill. width/height attrs (from the cached ratio) reserve the box
           up front so there's no layout shift on load. */}
-      <img
+      <HandoffImage
+        mediaKey={`${postId ?? img}:${idx}`}
+        priority={immersive ? 1 : 0}
         src={retainBitmap && horizontalBitmap ? img : undefined}
         srcSet={retainBitmap && horizontalBitmap ? cdnImageSrcSet(img, FEED_IMAGE_WIDTHS) : undefined}
         sizes={FEED_IMAGE_SIZES}
-        alt=""
         width={ratio ? Math.round(ratio * 1000) : undefined}
         height={ratio ? 1000 : undefined}
         className={cn('block w-auto h-auto max-w-full object-contain', immersive ? 'rounded-none' : 'rounded-2xl')}
@@ -266,10 +270,7 @@ function ImageSlide({
           : { maxHeight: FEED_IMAGE_MAX_HEIGHT, width: ratio ? ratio * FEED_IMAGE_MAX_HEIGHT : undefined, aspectRatio: ratio }}
         loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
         fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
-        decoding="async"
-        draggable={false}
-        onLoad={(e) => {
-          const el = e.currentTarget;
+        onImageLoad={(el) => {
           if (el.naturalWidth > 0 && el.naturalHeight > 0) {
             const measured = el.naturalWidth / el.naturalHeight;
             cacheAspectRatio(img, measured);
@@ -277,9 +278,6 @@ function ImageSlide({
               ? previous
               : { img, ratio: measured });
           }
-        }}
-        onError={(e) => {
-          (e.target as HTMLImageElement).style.display = 'none';
         }}
       />
     </div>
@@ -306,7 +304,9 @@ function ImageCarousel({
   immersive?: boolean;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const galleryKey = postId ?? images.join('|');
+  const [currentIndex, setCurrentIndex] = useState(() => galleryIndex(galleryKey));
+  const selectedRef = useRef(currentIndex);
   const [activeHeight, setActiveHeight] = useState<number>();
   const [currentSlideFillsViewport, setCurrentSlideFillsViewport] = useState(false);
 
@@ -333,6 +333,8 @@ function ImageCarousel({
         : nearest;
     }, 0);
     setCurrentIndex(idx);
+    selectedRef.current = idx;
+    rememberGalleryIndex(galleryKey, idx);
     const height = slides[idx].querySelector("img")?.getBoundingClientRect().height;
     setActiveHeight(height && height > 0 ? height : undefined);
     // A narrower/tall image already reveals the next image, which is the best
@@ -340,7 +342,23 @@ function ImageCarousel({
     // where the rest of the gallery would otherwise be completely hidden.
     setCurrentSlideFillsViewport(slides[idx].offsetWidth >= viewport.clientWidth - 1);
     onIndexChange?.(idx);
-  }, [onIndexChange]);
+  }, [onIndexChange, galleryKey]);
+
+  useEffect(() => {
+    const restore = () => {
+      const viewport = scrollRef.current;
+      const index = Math.min(galleryIndex(galleryKey), images.length - 1);
+      if (index === selectedRef.current && viewport?.scrollLeft) return;
+      const slide = viewport?.children[index] as HTMLElement | undefined;
+      if (viewport && slide) {
+        selectedRef.current = index;
+        setCurrentIndex(index);
+        viewport.scrollLeft = slide.offsetLeft;
+      }
+    };
+    restore();
+    return subscribeGallery(galleryKey, restore);
+  }, [galleryKey, images.length]);
 
   useEffect(() => {
     const viewport = scrollRef.current;
@@ -684,7 +702,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const viewRef = useFeedViewTracking(post.id);
 
   const soundtrackEnabled = !matureGate.isGated && !isPPV && !isLocked && !isSubGated && !isW2E;
-  const soundtrack = useImageSoundtrack(post.soundtrackUrl, viewRef, soundtrackEnabled);
+  const soundtrack = useImageSoundtrack(post.soundtrackUrl, viewRef, soundtrackEnabled, post.id);
   const soundtrackControl = post.soundtrackUrl && soundtrackEnabled ? (
     <SoundtrackControl title={post.soundtrackTitle} creator={post.soundtrackCreator} {...soundtrack} />
   ) : null;
@@ -704,9 +722,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const { isLoading: isTranslating, error: translationError, result: translationResult, translateImage, clearResult } = useImageTranslation();
 
   // Get images array - use imageUrls if available, otherwise fall back to single image
-  const images = post.imageUrls && post.imageUrls.length > 0 
+  const images = useMemo(() => post.imageUrls && post.imageUrls.length > 0 
     ? post.imageUrls 
-    : [post.image];
+    : [post.image], [post.imageUrls, post.image]);
 
   const openPost = useCallback(() => {
     if (wasDrawerJustDismissed() || showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
@@ -971,14 +989,16 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   return (
     <div
       ref={viewRef}
+      data-image-card
       onClick={handleCardClick}
+      onPointerDownCapture={warmPostPage}
       className={isImmersive ? 'overflow-hidden isolate' : 'overflow-visible cursor-pointer isolate'}
     >
       {/* Header with AI and menu buttons. Immersive draws it under the image. */}
       {!isImmersive && headerRow}
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
-      <div className="relative">
+      <div data-image-media className="relative">
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has (PPV, holdings), rather than
             replacing it. */}
@@ -1148,9 +1168,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
         {soundtrackControl && !fullscreenOpen && (
           <div className="absolute bottom-2 left-2 z-10 max-w-[calc(100%-1rem)]">{soundtrackControl}</div>
-        )}
-        {post.soundtrackUrl && soundtrackEnabled && (
-          <audio ref={soundtrack.audioRef} loop preload="none" className="hidden" />
         )}
 
         {/* Content Type Badges - Bounty only (PPV/Lock are shown via centered overlay) */}
@@ -1618,3 +1635,4 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     </div>
   );
 });
+

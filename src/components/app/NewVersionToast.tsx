@@ -5,7 +5,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import i18n from '@/i18n';
 import { supabase } from '@/integrations/supabase/client';
 import { autoTranslateEnabled } from '@/lib/auto-translate-setting';
-import { startVersionWatch, takeStaleReload, type BuildVersion } from '@/lib/version-check';
+import { startVersionWatch, takeStaleReload, dismissVersionUpdate, type BuildVersion } from '@/lib/version-check';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { BUTTON_CLASSES } from '@/components/ui/toast-classes';
 
@@ -24,12 +24,11 @@ const NOTE_TRANSLATE_TIMEOUT_MS = 8_000;
  * translate-text function the feed uses (MyMemory, then Gemini, then fal).
  *
  * Awaited before the toast is raised rather than swapped in after: this fires
- * minutes into a session on a one-shot nobody is waiting for, so the round trip
+ * after deployment detection, so the round trip
  * costs nothing anyone can perceive, where a late swap would visibly re-type the
  * line under a reader already reading it.
  *
- * At most one call per session — the watch is one-shot and version-check's
- * sessionStorage guard blocks a re-notify — and translate-text keys a shared
+ * Once per detected deploy while mounted. translate-text keys a shared
  * table by (text, language), so the first reader to see a given deploy in a given
  * language pays for every reader after them. No client cache is worth its weight
  * against one call.
@@ -125,12 +124,14 @@ export function NewVersionToast() {
 
   useEffect(() => {
     let cancelled = false;
+    let requestId = 0;
     const stop = startVersionWatch((version) => {
+      const request = ++requestId;
       void (async () => {
         const note = version.note
           ? await translateNote(version.note, i18n.language)
           : i18n.t('toasts.refresh_to_pick_up_the_latest_changes');
-        if (!cancelled) setPending({ version, note });
+        if (!cancelled && request === requestId) setPending({ version, note });
       })();
     });
     return () => { cancelled = true; stop(); };
@@ -141,7 +142,10 @@ export function NewVersionToast() {
   // Keep the prepared update queued, including when a menu opens after it.
   useEffect(() => {
     if (!pending || overlayOpen) return;
-    const id = showUpdateToast(pending.version, pending.note, isMobile, () => setPending(null));
+    const id = showUpdateToast(pending.version, pending.note, isMobile, () => {
+      dismissVersionUpdate(pending.version.id);
+      setPending(null);
+    });
     return () => { toast.dismiss(id); };
   }, [pending, overlayOpen, isMobile]);
 

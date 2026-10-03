@@ -6212,11 +6212,12 @@
     "tokenNotConfigured": "DeHub token no fit set up wey {{chain}}.",
     "notEnoughTokens": "Na dey no go fit yu token, yu must go buy more.",
     "onChainBalanceTooLow": "Balance wey you dey fit for DeHub token on {{chain}} too low. Balance wey dey show maybe no finish sync yet.",
-    "sentDesc": "{{amount}} token dee send fae {{from}} tae {{to}}. Dem go come soon soon.",
+    "sentDesc": "{{amount}} tokens don go from {{from}} to {{to}}. Di team go send di tokens for di destination chain, plenti time inside 1-5 work day.",
     "subtitle": "Move DeHub tokens between chains",
     "tokensOnBase": "Tokens on Base",
     "tokensOnBnb": "Tɔkɛn ɔn BNB Chain",
-    "step3": "Youse DeHub token go come dey destination chain soon soon."
+    "step3": "Di team go send di tokens for di destination chain, plenti time inside 1-5 work day.",
+    "statusReceived": "E don reach"
   },
   "builder": {
     "stakeForAllowance": "Stake DeHub token for make ya daily build allowance go up",
@@ -6727,11 +6728,11 @@
           "3": "Chain 1: Cameroon",
           "4": "Na 5 token.",
           "6": "Kam konfirm bridge transaction.",
-          "7": "Wata fi wait tori transaction komplet — bridging go take few minit."
+          "7": "Di team go send di tokens for di destination chain, plenti time inside 1-5 work day."
         },
         "tips": {
           "1": "Bridge fees vary by chain pair.",
-          "2": "Bridging dey take 1-5 minute, depend on chain wey dey involved.",
+          "2": "For now, na hand dem di use for pay bridge money.",
           "3": "Biko, dey always check chain of destination before confirm."
         }
       },

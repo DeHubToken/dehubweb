@@ -6829,11 +6829,12 @@
     "tokenNotConfigured": "Lacagta DeHub lama samayn {{chain}}.",
     "notEnoughTokens": "Lacag ku filan ma haysid",
     "onChainBalanceTooLow": "Lacagta DeHub ee ku taal {{chain}} waa mid aad u yar. Lacagta la muujiyay weli lama cusboonaysiin karo.",
-    "sentDesc": "{{amount}} lacag oo laga soo diray {{from}} una socda {{to}}. Waxay iman doonaan dhawaan.",
+    "sentDesc": "{{amount}} token ayaa laga diray {{from}} loona diray {{to}}. Kooxdu waxay tokens-ka u dirtaa silsilada loo socdo, inta badan 1-5 maalmood oo shaqo gudahood.",
     "subtitle": "U wareeji lacagta DeHub-ka silsiladaha kala duwan",
     "tokensOnBase": "Lacagta ku taal Base",
     "tokensOnBnb": "Lacagta ku taal BNB Chain",
-    "step3": "Lacagta DeHub-kaaga waxa laguugu soo gudbin doonaa silsiladda aad u dirtay dhawaan."
+    "step3": "Kooxdu waxay tokens-ka u dirtaa silsilada loo socdo, inta badan 1-5 maalmood oo shaqo gudahood.",
+    "statusReceived": "La helay"
   },
   "builder": {
     "stakeForAllowance": "Lacagta DeHub ku keydi si aad u kordhiso ogolaanshahaaga dhismaha maalinlaha ah",
@@ -7400,11 +7401,11 @@
           "4": "Geli tirada calaamadaha la gudbinayo.",
           "5": "Dib u eeg khidmadda gudbinta iyo wakhtiga la filayo ee imaatinka.",
           "6": "Xaqiiji macaamilka gudbinta.",
-          "7": "Sug in macaamilka la dhammaystiro — gudbintu waxay qaadan kartaa dhowr daqiiqo."
+          "7": "Kooxdu waxay tokens-ka u dirtaa silsilada loo socdo, inta badan 1-5 maalmood oo shaqo gudahood."
         },
         "tips": {
           "1": "Khidmadaha gudbinta way kala duwan yihiin iyadoo ku xiran labada silsiladood.",
-          "2": "Gudbintu waxay caadiyan qaadataa 1-5 daqiiqo iyadoo ku xiran silsiladaha ku lug leh.",
+          "2": "Hadda lacag-bixinta buundada gacan ayaa lagu sameeyaa.",
           "3": "Had iyo jeer si fiican u hubi silsiladda meesha aad u socoto ka hor intaadan xaqiijin."
         }
       },
