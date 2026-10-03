@@ -702,7 +702,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const viewRef = useFeedViewTracking(post.id);
 
   const soundtrackEnabled = !matureGate.isGated && !isPPV && !isLocked && !isSubGated && !isW2E;
-  const soundtrack = useImageSoundtrack(post.soundtrackUrl, viewRef, soundtrackEnabled);
+  const soundtrack = useImageSoundtrack(post.soundtrackUrl, viewRef, soundtrackEnabled, post.id);
   const soundtrackControl = post.soundtrackUrl && soundtrackEnabled ? (
     <SoundtrackControl title={post.soundtrackTitle} creator={post.soundtrackCreator} {...soundtrack} />
   ) : null;

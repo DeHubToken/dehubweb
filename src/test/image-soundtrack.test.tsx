@@ -4,6 +4,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useImageSoundtrack } from '@/hooks/use-image-soundtrack';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { handoffAudioFor } from '@/lib/audio-handoff';
+import { pauseOffDocumentMediaIn } from '@/lib/pause-media-in';
 
 let intersect: (entries: { isIntersecting: boolean }[]) => void;
 let rejectPlay: ((reason: Error) => void) | undefined;
@@ -11,7 +12,7 @@ let pending = false;
 
 function Player({ enabled = true, url = 'https://example.com/music.mp3' }) {
   const anchor = useRef<HTMLDivElement>(null);
-  const state = useImageSoundtrack(url, anchor, enabled);
+  const state = useImageSoundtrack(url, anchor, enabled, '42');
   return <div ref={anchor}>
     <button onClick={state.toggle}>{state.error ? 'retry' : state.loading ? 'loading' : state.playing ? 'pause' : 'play'}</button>
   </div>;
@@ -116,6 +117,8 @@ it('hands the same playing soundtrack to the post and back without reloading', (
   const track = audio();
   track.currentTime = 12;
   const loads = vi.mocked(HTMLMediaElement.prototype.load).mock.calls.length;
+  pauseOffDocumentMediaIn(view.container, '42');
+  expect(track.paused).toBe(false);
   view.rerender(<><Player /><Player /></>);
   expect(audio()).toBe(track);
   expect(track.paused).toBe(false);

@@ -19,7 +19,7 @@ export function useSyncedAudio({ mediaKey, soundtrackUrl, isPlaying, isMuted, vo
   const [, refresh] = useState(0);
   useLayoutEffect(() => {
     if (!key || !soundtrackUrl || !surfaceActive) return;
-    token.current = claimHandoffAudio(key, () => videoRef.current);
+    token.current = claimHandoffAudio(key, () => videoRef.current, mediaKey);
     if (!getHandoffAudio(key, token.current)) {
       const el = new Audio();
       el.preload = 'none';
@@ -33,7 +33,7 @@ export function useSyncedAudio({ mediaKey, soundtrackUrl, isPlaying, isMuted, vo
       releaseHandoffAudio(key, token.current!);
       token.current = null;
     };
-  }, [key, soundtrackUrl, videoRef, surfaceActive]);
+  }, [key, soundtrackUrl, videoRef, surfaceActive, mediaKey]);
   const active = isHandoffAudioActive(key, token.current);
   useEffect(() => {
     const audio = getHandoffAudio(key, token.current)?.el;
