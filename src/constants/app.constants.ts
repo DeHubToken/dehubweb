@@ -58,6 +58,8 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Blocks, label: 'Apps', path: '/apps' },
   { icon: Users, label: 'Communities', path: '/app/communities' },
   { icon: Sparkles, label: 'Assistant', path: '/app/assistant' },
+  { icon: Film, themedIcon: 'videos', label: 'Editor', path: '/editor' },
+  { icon: Wand2, themedIcon: 'wand', label: 'Creator', path: '/creator' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: Mic, label: 'Stages', path: '/stages' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
