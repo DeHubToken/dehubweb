@@ -28,6 +28,9 @@ import { LoginBodySkeleton } from './LoginBodySkeleton';
 import { getWalletSetupIntent, setWalletSetupIntent, type WalletSetupIntent } from '@/lib/wallet-setup-intent';
 import type { LoginStep } from './steps';
 import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
+import { createLogger } from '@/lib/logger';
+
+const flowLog = createLogger('LoginFlow');
 
 // The wallet list carries RainbowKit — ~270 KB that has to be evaluated before
 // it can render, for a step most people never open. It loads when they do.
@@ -205,6 +208,11 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   // Set when a sign-in attempt found a passkey with no account behind it, so
   // the step can lead with "create one instead".
   const [passkeyUnknown, setPasskeyUnknown] = useState(false);
+  useEffect(() => {
+    if (open && (emailError || phoneError || passkeyError)) {
+      flowLog.trace?.('error-visible', { screen: step, surface: 'login-sheet' });
+    }
+  }, [open, step, emailError, phoneError, passkeyError]);
 
   // Clear what was typed once the sheet is shut. The step itself is reset by
   // the shell; this is the other half of the old handleClose, and doing it on
