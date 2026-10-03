@@ -19,7 +19,7 @@ const bounds: Record<string, [number, number, number, number]> = {
 
 export function badgeHoverArt(tier: string | null | undefined) {
   if (!tier || !bounds[tier]) return null;
-  const slug = tier.toLowerCase().replaceAll(' ', '-');
+  const slug = tier.toLowerCase().replace(/ /g, '-');
   const [left, top, right, bottom] = bounds[tier];
   return {
     poster: posters['../assets/badges/hover/' + slug + '.png'],
