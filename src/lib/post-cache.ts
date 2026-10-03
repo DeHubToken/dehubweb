@@ -38,13 +38,17 @@ function parseDurationToSeconds(duration: string): number {
  */
 function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
   const isLivePost = !!video.isLivePost;
+  const description = video.description || video.title;
+  const soundtrack = video.soundtrackUrl && !description.includes('[soundtrack:')
+    ? buildSoundtrackTag({ tokenId: video.soundtrackTokenId || video.id, title: video.soundtrackTitle || 'Sound', creator: video.soundtrackCreator || '', url: video.soundtrackUrl })
+    : '';
 
   return {
     tokenId: parseInt(video.id) || 0,
     postType: (isLivePost ? 'live' : video.isAudio ? 'feed-audio' : 'video') as any,
     title: video.title,
     name: video.title,
-    description: video.description || video.title,
+    description: soundtrack ? `${description}\n${soundtrack}` : description,
     imageUrl: video.thumbnail || undefined,
     videoUrl: isLivePost ? undefined : video.videoUrl,
     audioUrl: video.audioUrl,
