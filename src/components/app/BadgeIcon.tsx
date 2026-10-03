@@ -71,6 +71,8 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   // size and measured artwork inset still apply there as everywhere else.
   const visualName = name ?? badgeNameFromAssetUrl(url);
   const art = badgeHoverArt(visualName);
+  const originalStill = visualName === 'Killer Whale';
+  const poster = originalStill ? url : art?.poster ?? url;
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [failedAnimation, setFailedAnimation] = useState<string | null>(null);
@@ -88,7 +90,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     if ('requestIdleCallback' in window) window.requestIdleCallback(warm, { timeout: 1800 });
     else setTimeout(warm, 800);
   }, [metallic, visualName]);
-  const optics = art?.bounds ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
+  const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.bounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
   // CSS cap follows the actual adjacent font; use 0.72em on older engines.
@@ -146,7 +148,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
             key={playing ? art.animation : 'poster'}
             style={imageStyle}
             data-badge-icon
-            src={playing ? art.animation : art?.poster ?? url}
+            src={playing ? art.animation : poster}
             onError={() => { if (playing) setFailedAnimation(art.animation); }}
             alt={visualName || 'Badge'}
             width={16}
