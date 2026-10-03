@@ -5735,3 +5735,11 @@ html[data-theme="system"] [data-feed-filter-panel] {
   }
 }
 
+/* Inactive icons in the web nav bars (feed/page tab pills and the phone
+   header bell) ship as zinc-400, which reads as dark grey on the glass.
+   Lift them to the same near-white the canvas themes already use (#e4e4e7);
+   the active tab stays pure white with its glass indicator. Light, minimal,
+   osaka, war and jungle style these bars in their own sheets and keep them. */
+html:not([data-theme="light"], [data-theme="minimal"], [data-theme="osaka"], [data-theme="war"], [data-theme="jungle"]) :is([data-feed-nav], [data-mobile-header]) :is(button, a).text-zinc-400:not(:hover) {
+  color: rgb(228 228 231);
+}
