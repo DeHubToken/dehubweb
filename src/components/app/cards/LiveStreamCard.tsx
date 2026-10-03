@@ -6,6 +6,7 @@
  */
 
 import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
 import { AppState } from '@/components/app/AppState';
@@ -240,6 +241,10 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [dhbBalance, setDhbBalance] = useState<string | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const playbackAllowed = useFeedPlaybackAllowed();
+  useEffect(() => {
+    if (!playbackAllowed) videoRef.current?.pause();
+  }, [playbackAllowed]);
   // Full-bleed only. The chevron drops the chrome and leaves the picture;
   // it means nothing in the card, where the chrome IS the card.
   const [chromeHidden, setChromeHidden] = useState(false);
@@ -252,6 +257,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    * is not rendered at all rather than sitting there refusing taps.
    */
   const replayRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    if (!playbackAllowed) replayRef.current?.pause();
+  }, [playbackAllowed]);
   const [replayProgress, setReplayProgress] = useState<number | undefined>(undefined);
   const [replayPlaying, setReplayPlaying] = useState(false);
   const [replayBuffering, setReplayBuffering] = useState(false);
@@ -261,6 +269,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     setReplayProgress(undefined);
   }, [stream.replayUrl]);
   const toggleReplay = useCallback(() => {
+    if (!visualActivity.isFeedPlaybackAllowed()) return;
     const el = replayRef.current;
     if (!el) return;
     if (el.paused) void el.play().catch(() => {});
@@ -514,7 +523,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           return;
         }
         video.srcObject = session.stream;
-        if (playbackRequestedRef.current) {
+        if (playbackRequestedRef.current && visualActivity.isFeedPlaybackAllowed()) {
           await video.play().catch(() => setIsBuffering(false));
         }
         videoPlaybackManager.register(videoId, () => {
@@ -555,7 +564,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       currentUrl: currentUrl(),
     });
     const resumePlayback = () => {
-      if (!playbackRequestedRef.current) return;
+      if (!playbackRequestedRef.current || !visualActivity.isFeedPlaybackAllowed()) return;
       setIsBuffering(true);
       void video.play().catch(() => setIsBuffering(false));
     };
@@ -756,6 +765,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl, urlsToTry, streamEnded, transport]);
 
   const togglePlay = useCallback(() => {
+    if (!visualActivity.isFeedPlaybackAllowed()) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -1196,6 +1206,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 setReplayProgress(el.currentTime / el.duration);
               } : undefined}
               onPlay={(e) => {
+                if (!visualActivity.isFeedPlaybackAllowed()) { e.currentTarget.pause(); return; }
                 setReplayPlaying(true);
                 setReplayBuffering(e.currentTarget.readyState < 3);
               }}
@@ -1273,8 +1284,14 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               {...{"webkit-playsinline": ""}}
               muted={isMuted}
               poster={handoff?.poster || stream.thumbnail || undefined}
-              onPlay={() => { setIsPlaying(true); setIsBuffering(true); }}
-              onPlaying={() => { setIsPlaying(true); setIsBuffering(false); setError(null); }}
+              onPlay={(e) => {
+                if (!visualActivity.isFeedPlaybackAllowed()) { e.currentTarget.pause(); return; }
+                setIsPlaying(true); setIsBuffering(true);
+              }}
+              onPlaying={(e) => {
+                if (!visualActivity.isFeedPlaybackAllowed()) { e.currentTarget.pause(); return; }
+                setIsPlaying(true); setIsBuffering(false); setError(null);
+              }}
               onWaiting={() => setIsBuffering(true)}
               onPause={() => { setIsPlaying(false); setIsBuffering(false); }}
               onEnded={() => setStreamEnded(true)}
