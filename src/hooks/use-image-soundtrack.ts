@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { claimHandoffAudio, getHandoffAudio, isHandoffAudioActive, releaseHandoffAudio, setHandoffAudio, subscribeHandoffAudio } from '@/lib/audio-handoff';
 
 export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HTMLElement>, enabled: boolean) {
+  const surfaceActive = useContext(CachedPageActiveContext);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const key = url ? `soundtrack:${url}` : '';
   const token = useRef<object | null>(null);
@@ -16,16 +18,16 @@ export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HT
   const [error, setError] = useState(false);
 
   useLayoutEffect(() => {
-    if (!key) return;
+    if (!key || !surfaceActive) return;
     token.current = claimHandoffAudio(key, () => anchor.current);
-    if (!getHandoffAudio(key)) {
+    if (!getHandoffAudio(key, token.current)) {
       const el = new Audio();
       el.loop = true;
       el.preload = 'none';
       setHandoffAudio(key, token.current, { el, source: null, analyser: null });
     }
     const adopt = () => {
-      audioRef.current = isHandoffAudioActive(key, token.current) ? getHandoffAudio(key)?.el ?? null : null;
+      audioRef.current = getHandoffAudio(key, token.current)?.el ?? null;
       wanted.current = !!audioRef.current && !audioRef.current.paused;
       setPlaying(wanted.current);
       setLoading(false);
@@ -41,7 +43,7 @@ export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HT
       token.current = null;
       audioRef.current = null;
     };
-  }, [key, anchor]);
+  }, [key, anchor, surfaceActive]);
 
   const pause = useCallback(() => {
     if (!isHandoffAudioActive(key, token.current)) return;

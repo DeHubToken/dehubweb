@@ -1,4 +1,5 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { claimHandoffAudio, getHandoffAudio, isHandoffAudioActive, releaseHandoffAudio, setHandoffAudio, subscribeHandoffAudio } from '@/lib/audio-handoff';
 
 interface UseSyncedAudioOptions {
@@ -12,13 +13,14 @@ interface UseSyncedAudioOptions {
 
 /** The soundtrack travels with the video instead of rebuilding on navigation. */
 export function useSyncedAudio({ mediaKey, soundtrackUrl, isPlaying, isMuted, volume, videoRef }: UseSyncedAudioOptions) {
+  const surfaceActive = useContext(CachedPageActiveContext);
   const key = soundtrackUrl ? `synced:${mediaKey}:${soundtrackUrl}` : '';
   const token = useRef<object | null>(null);
   const [, refresh] = useState(0);
   useLayoutEffect(() => {
-    if (!key || !soundtrackUrl) return;
+    if (!key || !soundtrackUrl || !surfaceActive) return;
     token.current = claimHandoffAudio(key, () => videoRef.current);
-    if (!getHandoffAudio(key)) {
+    if (!getHandoffAudio(key, token.current)) {
       const el = new Audio();
       el.preload = 'none';
       el.src = soundtrackUrl;
@@ -31,10 +33,10 @@ export function useSyncedAudio({ mediaKey, soundtrackUrl, isPlaying, isMuted, vo
       releaseHandoffAudio(key, token.current!);
       token.current = null;
     };
-  }, [key, soundtrackUrl, videoRef]);
+  }, [key, soundtrackUrl, videoRef, surfaceActive]);
   const active = isHandoffAudioActive(key, token.current);
   useEffect(() => {
-    const audio = getHandoffAudio(key)?.el;
+    const audio = getHandoffAudio(key, token.current)?.el;
     const video = videoRef.current;
     if (!active || !audio || !video) return;
     audio.muted = isMuted;
@@ -48,7 +50,7 @@ export function useSyncedAudio({ mediaKey, soundtrackUrl, isPlaying, isMuted, vo
   }, [active, key, isPlaying, isMuted, volume, videoRef]);
   useEffect(() => {
     const video = videoRef.current;
-    const audio = getHandoffAudio(key)?.el;
+    const audio = getHandoffAudio(key, token.current)?.el;
     if (!active || !video || !audio) return;
     const owns = () => isHandoffAudioActive(key, token.current) && videoRef.current === video;
     const sync = () => {

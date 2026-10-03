@@ -176,6 +176,11 @@ export function getHandoffAudio(key: string, token: object | null): AudioHandoff
   return pool.get(key)?.graph ?? null;
 }
 
+/** Read existing playback state before a surface takes ownership. */
+export function handoffAudioFor(key: string): HTMLAudioElement | null {
+  return pool.get(key)?.graph?.el ?? null;
+}
+
 /** Put the graph this card built — or took back — into the pool. */
 export function setHandoffAudio(key: string, token: object | null, graph: AudioHandoffGraph | null): void {
   if (!isHandoffAudioActive(key, token)) return;
