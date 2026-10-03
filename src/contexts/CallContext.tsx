@@ -1,23 +1,48 @@
-import React, { createContext, useContext, type PropsWithChildren } from 'react';
-import { useCall as useCallImpl } from '@/hooks/use-call';
-import type { UseCallReturn } from '@/hooks/use-call';
+import React, { createContext, useContext, useEffect, useMemo, type PropsWithChildren } from 'react';
+import { useCall as useCallImpl, type UseCallReturn } from '@/hooks/use-call';
+import { visualActivity, trackVisualActivity } from '@/lib/visual-activity';
+import { acquireBackgroundPause } from '@/lib/background-gate';
+import { videoPlaybackManager } from '@/lib/video-playback-manager';
 
 const CallContext = createContext<UseCallReturn | null>(null);
+type CallActions = Pick<UseCallReturn, 'setCallMessageHandler'>;
+const CallActionsContext = createContext<CallActions | null>(null);
 
 export const CallProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const call = useCallImpl();
+  const actions = useMemo(() => ({ setCallMessageHandler: call.setCallMessageHandler }), [call.setCallMessageHandler]);
+  useEffect(() => {
+    const stopTracking = trackVisualActivity();
+    let release: (() => void) | null = null;
+    const sync = () => {
+      if (!visualActivity.isVisualActive()) { release ??= acquireBackgroundPause(); }
+      else { release?.(); release = null; }
+      if (!visualActivity.isFeedPlaybackAllowed()) videoPlaybackManager.pauseAll();
+    };
+    const unsubscribe = visualActivity.subscribe(sync);
+    sync();
+    return () => { unsubscribe(); stopTracking(); release?.(); };
+  }, []);
+  useEffect(() => {
+    const busy = !!call.currentCall;
+    visualActivity.setCall(busy, busy && !call.isMinimized);
+  }, [call.currentCall, call.isMinimized]);
   return (
-    <CallContext.Provider value={call}>
-      <audio ref={call.remoteAudioRef} autoPlay className="hidden" playsInline />
-      {children}
-    </CallContext.Provider>
+    <CallActionsContext.Provider value={actions}>
+      <CallContext.Provider value={call}>
+        <audio ref={call.remoteAudioRef} autoPlay className="hidden" playsInline />
+        {children}
+      </CallContext.Provider>
+    </CallActionsContext.Provider>
   );
 };
-
 export const useCall = (): UseCallReturn => {
-  const ctx = useContext(CallContext);
-  if (!ctx) {
-    throw new Error('useCall must be used within a CallProvider');
-  }
-  return ctx;
+  const context = useContext(CallContext);
+  if (!context) throw new Error('useCall must be used within a CallProvider');
+  return context;
+};
+export const useCallActions = (): CallActions => {
+  const context = useContext(CallActionsContext);
+  if (!context) throw new Error('useCallActions must be used within a CallProvider');
+  return context;
 };

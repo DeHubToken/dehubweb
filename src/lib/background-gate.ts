@@ -17,6 +17,7 @@
  */
 
 let paused = false;
+const pauseHolders = new Set<symbol>();
 const listeners = new Set<(paused: boolean) => void>();
 // Handle for a pending deferred resume (see scheduleBackgroundResume). Any
 // explicit setBackgroundPaused() cancels it, so re-opening docs before the
@@ -32,7 +33,20 @@ function cancelScheduledResume(): void {
 
 /** Current paused state (backgrounds should not render while true). */
 export function isBackgroundPaused(): boolean {
-  return paused;
+  return paused || pauseHolders.size > 0;
+}
+
+/** Independent holds cannot resume a scene still covered by another surface. */
+export function acquireBackgroundPause(): () => void {
+  const holder = Symbol('background-pause');
+  const previous = isBackgroundPaused();
+  pauseHolders.add(holder);
+  if (previous !== isBackgroundPaused()) listeners.forEach(fn => fn(isBackgroundPaused()));
+  return () => {
+    const before = isBackgroundPaused();
+    pauseHolders.delete(holder);
+    if (before !== isBackgroundPaused()) listeners.forEach(fn => fn(isBackgroundPaused()));
+  };
 }
 
 /** Pause or resume all subscribed backgrounds. Idempotent. */
@@ -43,7 +57,7 @@ export function setBackgroundPaused(next: boolean): void {
   paused = next;
   listeners.forEach((fn) => {
     try {
-      fn(paused);
+      fn(isBackgroundPaused());
     } catch {
       /* a single subscriber throwing must not break the others */
     }

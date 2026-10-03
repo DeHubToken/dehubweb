@@ -8,6 +8,7 @@
  */
 
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
+import { useFeedPlaybackAllowed } from '@/lib/visual-activity';
 import { ShortsPhotoPager } from './ShortsPhotoPager';
 import { createPortal } from 'react-dom';
 import { Play, Pause, Loader2 } from 'lucide-react';
@@ -72,7 +73,7 @@ interface VideoSlideProps {
 
 export const VideoSlide = memo(function VideoSlide({
   short,
-  isActive,
+  isActive: activeSlide,
   isMuted,
   playbackRate = 1,
   onTimeUpdate,
@@ -86,6 +87,8 @@ export const VideoSlide = memo(function VideoSlide({
   isFullscreen = false,
   progressLayer = null,
 }: VideoSlideProps) {
+  const playbackAllowed = useFeedPlaybackAllowed();
+  const isActive = activeSlide && playbackAllowed;
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   // Native media play requests may settle after React has already advanced the

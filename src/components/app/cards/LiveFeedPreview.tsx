@@ -28,6 +28,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useFeedPlaybackAllowed } from '@/lib/visual-activity';
 import { useLocation } from 'react-router-dom';
 import type Hls from 'hls.js';
 import { LiveEndedMedia } from './LiveEndedMedia';
@@ -87,7 +88,9 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
     if (el) el.muted = muted;
   });
   const hlsRef = useRef<Hls | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [intersecting, setVisible] = useState(false);
+  const playbackAllowed = useFeedPlaybackAllowed();
+  const visible = intersecting && playbackAllowed;
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
