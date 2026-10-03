@@ -6,6 +6,7 @@
  */
 
 import { supabase } from "@/integrations/supabase/client";
+import { advanceAuthTrace, readAuthTrace } from './auth-trace';
 
 export type LogLevel = 'error' | 'warn' | 'info' | 'debug';
 
@@ -127,13 +128,13 @@ function signedInWallet(): string | undefined {
 /**
  * Send a log entry to the backend (batched for error/warn, console-only for info/debug)
  */
-export async function logToBackend(data: LogData) {
+export async function logToBackend(data: LogData, persist = false) {
     // Always log to console
     const consoleMethod = data.level === 'error' ? 'error' : data.level === 'warn' ? 'warn' : 'log';
     console[consoleMethod](`[${data.component}] ${data.message}`, data.metadata || '');
 
     // Skip backend call for info/debug — console-only
-    if (data.level === 'info' || data.level === 'debug') return;
+    if (!persist && (data.level === 'info' || data.level === 'debug')) return;
 
     // Queue for batched flush.
     //
@@ -145,7 +146,7 @@ export async function logToBackend(data: LogData) {
     LOG_QUEUE.push({
         ...data,
         user_address: data.user_address ?? signedInWallet(),
-        metadata: { ...(data.metadata || {}), client_time: new Date().toISOString() },
+        metadata: { ...readAuthTrace(), ...(data.metadata || {}), client_time: new Date().toISOString() },
     });
     // The endpoint accepts only 50 rows. Flush a full batch before a burst
     // can grow past that cap and silently lose the remaining errors.
@@ -157,6 +158,11 @@ export async function logToBackend(data: LogData) {
  * Predefined logger for common components
  */
 export const createLogger = (component: string) => ({
+    trace: (stage: string, metadata?: Record<string, unknown>) => {
+        if (!readAuthTrace().auth_attempt_id) return;
+        advanceAuthTrace(stage);
+        return logToBackend({ level: 'info', component: 'AuthTrace', message: stage, metadata: { source: component, ...metadata } }, true);
+    },
     error: (message: string, metadata?: Record<string, any>, error?: any) =>
         logToBackend({
             level: 'error',
