@@ -1,7 +1,8 @@
 import { useMediaVolume, useMediaMuted, setVolume, setMediaMuted as setSelfMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import * as React from 'react';
-import { useRef, useEffect, useState, useCallback, useMemo, useId } from 'react';
+import { useRef, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo, useId } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useTranslation } from 'react-i18next';
 import {
   popOutAudioPost,
@@ -192,6 +193,7 @@ export function AudioVisualizer({
   handoffKey,
   onPlaybackAdopted,
 }: AudioVisualizerProps) {
+  const surfaceActive = useContext(CachedPageActiveContext);
   const { t } = useTranslation();
   /* ─── The corner player ──────────────────────────────────────────────
      While this post is popped out the track lives in lib/audio-post-playback
@@ -246,11 +248,12 @@ export function AudioVisualizer({
   handoffKeyRef.current = handoffKey;
   // Bumped whenever the player changes hands, so everything below re-reads it.
   const [claimVersion, setClaimVersion] = useState(0);
-  const isActiveClaim = !handoffKey || isHandoffAudioActive(handoffKey, claimRef.current);
+  const isActiveClaim = surfaceActive && (!handoffKey || isHandoffAudioActive(handoffKey, claimRef.current));
   const isActiveClaimRef = useRef(isActiveClaim);
   isActiveClaimRef.current = isActiveClaim;
   const onPlaybackAdoptedRef = useRef(onPlaybackAdopted);
   onPlaybackAdoptedRef.current = onPlaybackAdopted;
+  const adoptionPendingRef = useRef<boolean | null>(null);
 
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
@@ -374,7 +377,7 @@ export function AudioVisualizer({
    * hand-over's.
    */
   useEffect(() => {
-    if (!handoffKey) return;
+    if (!handoffKey || !surfaceActive) return;
     claimRef.current = claimHandoffAudio(handoffKey, () => canvasRef.current);
     const unsubscribe = subscribeHandoffAudio(handoffKey, () => setClaimVersion((v) => v + 1));
     setClaimVersion((v) => v + 1);
@@ -388,17 +391,20 @@ export function AudioVisualizer({
       isConnectedRef.current = false;
       if (token) releaseHandoffAudio(handoffKey, token);
     };
-  }, [handoffKey]);
+  }, [handoffKey, surfaceActive]);
 
   // Taking the player over: pick the chain up, and tell the card that owns
   // `isPlaying` what it actually walked into.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!handoffKey || !isActiveClaim || isPoppedOut) return;
     const graph = getHandoffAudio(handoffKey, claimRef.current);
     if (!graph) return;
     if (audioRef.current !== graph.el || sourceRef.current !== graph.source) adoptGraph(graph);
     const playing = !graph.el.paused;
-    if (playing !== isPlayingRef.current) onPlaybackAdoptedRef.current?.(playing);
+    if (playing !== isPlayingRef.current) {
+      adoptionPendingRef.current = playing;
+      onPlaybackAdoptedRef.current?.(playing);
+    }
     // Read once, at the moment the player changes hands.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [claimVersion, isActiveClaim, isPoppedOut, handoffKey]);
@@ -416,7 +422,9 @@ export function AudioVisualizer({
   useEffect(() => {
     const el = audioRef.current;
     if (!el) return;
-    const onTime = () => setCurrentTime(el.currentTime);
+    const onTime = () => {
+      if (isActiveClaimRef.current && decodeEnabled) setCurrentTime(el.currentTime);
+    };
     const onMeta = () => {
       if (Number.isFinite(el.duration) && el.duration > 0) {
         setDuration(el.duration);
@@ -439,6 +447,7 @@ export function AudioVisualizer({
     el.addEventListener('durationchange', onMeta);
     el.addEventListener('ended', onEnded);
     onMeta();
+    onTime();
     return () => {
       el.removeEventListener('timeupdate', onTime);
       el.removeEventListener('seeked', onTime);
@@ -446,7 +455,7 @@ export function AudioVisualizer({
       el.removeEventListener('durationchange', onMeta);
       el.removeEventListener('ended', onEnded);
     };
-  }, [audioElVersion]);
+  }, [audioElVersion, decodeEnabled]);
 
   useEffect(() => {
     setDuration((d) => (d > 0 ? d : durationHint));
@@ -637,7 +646,7 @@ export function AudioVisualizer({
   // frame, so changing style or dragging the hue slider mid-playback left a
   // second (then a third) rAF loop running against the same canvas.
   useEffect(() => {
-    if (!isPlaying) {
+    if (!isPlaying || !isActiveClaim || !decodeEnabled) {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
       return;
@@ -654,7 +663,7 @@ export function AudioVisualizer({
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
     };
-  }, [isPlaying]);
+  }, [isPlaying, isActiveClaim, decodeEnabled]);
 
   // Repaint the idle frame whenever anything it depends on changes. Without
   // this a style picked while paused left the *previous* style's last frame on
@@ -780,6 +789,10 @@ export function AudioVisualizer({
   // Separate effect for playback control — runs AFTER state update from parent
   useEffect(() => {
     if (!audioRef.current || isPoppedOut || !isActiveClaim) return;
+    if (adoptionPendingRef.current !== null) {
+      if (isPlaying !== adoptionPendingRef.current) return;
+      adoptionPendingRef.current = null;
+    }
 
     if (isPlaying) {
       audioRef.current.play().catch(console.error);

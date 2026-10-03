@@ -42,6 +42,7 @@ export interface AudioHandoffGraph {
 interface Claim {
   token: object;
   anchor: () => Node | null;
+  navigationKey?: string;
 }
 
 interface Entry {
@@ -82,6 +83,12 @@ function anchorOf(key: string): Node | null {
 const watchers = new Map<string, Set<() => void>>();
 
 function notify(key: string) {
+  const entry = pool.get(key);
+  if (entry?.graph) {
+    entry.unregister?.();
+    const navigationKey = entry.claims[entry.claims.length - 1]?.navigationKey ?? key;
+    entry.unregister = registerOffDocumentMedia(entry.graph.el, () => anchorOf(key), navigationKey);
+  }
   watchers.get(key)?.forEach((fn) => fn());
 }
 
@@ -132,7 +139,7 @@ function park(key: string) {
 }
 
 /** Ask to drive the track for `key`. Returns the token that releases the claim. */
-export function claimHandoffAudio(key: string, anchor: () => Node | null): object {
+export function claimHandoffAudio(key: string, anchor: () => Node | null, navigationKey?: string): object {
   let entry = pool.get(key);
   if (!entry) {
     entry = { graph: null, claims: [], unregister: null, parkTimer: null };
@@ -143,7 +150,7 @@ export function claimHandoffAudio(key: string, anchor: () => Node | null): objec
     entry.parkTimer = null;
   }
   const token = {};
-  entry.claims.push({ token, anchor });
+  entry.claims.push({ token, anchor, navigationKey });
   notify(key);
   return token;
 }
@@ -176,6 +183,11 @@ export function getHandoffAudio(key: string, token: object | null): AudioHandoff
   return pool.get(key)?.graph ?? null;
 }
 
+/** Read existing playback state before a surface takes ownership. */
+export function handoffAudioFor(key: string): HTMLAudioElement | null {
+  return pool.get(key)?.graph?.el ?? null;
+}
+
 /** Put the graph this card built — or took back — into the pool. */
 export function setHandoffAudio(key: string, token: object | null, graph: AudioHandoffGraph | null): void {
   if (!isHandoffAudioActive(key, token)) return;
@@ -184,7 +196,7 @@ export function setHandoffAudio(key: string, token: object | null, graph: AudioH
   entry.graph = graph;
   entry.unregister?.();
   entry.unregister = graph
-    ? registerOffDocumentMedia(graph.el, () => anchorOf(key), key)
+    ? registerOffDocumentMedia(graph.el, () => anchorOf(key), entry.claims[entry.claims.length - 1]?.navigationKey ?? key)
     : null;
 }
 
