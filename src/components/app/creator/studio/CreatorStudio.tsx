@@ -1082,7 +1082,6 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration }
     : mode === '3d' ? { kind: 'model3d', modelId: model3dModel, quality: 'standard' }
     : { kind: 'image', modelId: imageModel, quantity: batch });
-  const estimatedTime = mode === 'audio' ? activeAudioTask.typicalDuration : mode === '3d' ? activeModel3d?.typicalDuration : null;
   // Free starter images: the server claims one per job, this only decides
   // whether Generate skips the paywall and what the price line says.
   const freeImages = useFreeImages(walletAddress);
@@ -1557,7 +1556,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       onClick={() => void openPaywall()}
       aria-disabled={generateDisabled}
       aria-describedby={blockingIssue && !compact ? 'studio-blocking-reason' : undefined}
-      aria-label={`${t(staging ? 'creator.preparing' : 'creator.create')}, ${priceLabel}`}
+      aria-label={`${t(staging ? 'creator.preparing' : 'creator.create')}, est 2-5 mins, ${priceLabel}`}
       title={compact ? (blockingIssue ?? priceLabel) : undefined}
       data-creator-create
       className={cn(
@@ -1591,8 +1590,9 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       ) : (
         <>
           <span className="grid min-w-0 text-left leading-none">
-            <span className="font-exo text-[19px] font-black tracking-tight">
-              {t(staging ? 'creator.preparing' : 'creator.create')}
+            <span className="flex items-baseline gap-2 whitespace-nowrap">
+              <span className="font-exo text-[19px] font-black tracking-tight">{t(staging ? 'creator.preparing' : 'creator.create')}</span>
+              <span className="text-[11px] font-semibold opacity-75">est 2-5 mins</span>
             </span>
             <span aria-hidden className="mt-1.5 truncate text-[12px] font-semibold tabular-nums opacity-80 sm:text-[12.5px]">
               {priceLoading
@@ -2163,9 +2163,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                 </div>
               </div>
 
-              {/* The price itself is on the Create button. This line only reads
-                  it out when it changes, and adds how long the job usually takes. */}
-              <p aria-live="polite" className={cn('mt-2 px-1 text-[12px] text-white/65', !estimatedTime && 'sr-only')}>{estimatedTime ? t('creator.priceUsually', { time: estimatedTime }) : priceLabel}</p>
+              <p aria-live="polite" className="sr-only">{priceLabel}</p>
               {freeModelSuggestion && (
                 <button
                   type="button"
