@@ -3,7 +3,7 @@ import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { claimHandoffAudio, getHandoffAudio, isHandoffAudioActive, releaseHandoffAudio, setHandoffAudio, subscribeHandoffAudio } from '@/lib/audio-handoff';
 
-export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HTMLElement>, enabled: boolean) {
+export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HTMLElement>, enabled: boolean, postId?: string) {
   const surfaceActive = useContext(CachedPageActiveContext);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const key = url ? `soundtrack:${url}` : '';
@@ -19,7 +19,7 @@ export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HT
 
   useLayoutEffect(() => {
     if (!key || !surfaceActive) return;
-    token.current = claimHandoffAudio(key, () => anchor.current);
+    token.current = claimHandoffAudio(key, () => anchor.current, postId);
     if (!getHandoffAudio(key, token.current)) {
       const el = new Audio();
       el.loop = true;
@@ -43,7 +43,7 @@ export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HT
       token.current = null;
       audioRef.current = null;
     };
-  }, [key, anchor, surfaceActive]);
+  }, [key, anchor, surfaceActive, postId]);
 
   const pause = useCallback(() => {
     if (!isHandoffAudioActive(key, token.current)) return;
@@ -92,7 +92,7 @@ export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HT
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !url || !enabled) { pause(); return; }
+    if (!audio || !url || !enabled || !surfaceActive) { pause(); return; }
     const onPlaying = () => {
       if (!isHandoffAudioActive(key, token.current)) return;
       if (!wanted.current) { audio.pause(); return; }
@@ -140,7 +140,7 @@ export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HT
       observer.disconnect();
       videoPlaybackManager.unregister(owner);
     };
-  }, [url, enabled, anchor, owner, pause, key, audioRef.current]);
+  }, [url, enabled, anchor, owner, pause, key, surfaceActive, audioRef.current]);
 
   return { audioRef, playing, loading, error, toggle };
 }
