@@ -252,7 +252,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
               >
                 {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {stage === 'paying'
-                  ? t('upload.stageConfirming', 'Confirming')
+                  ? 'Confirming'
                   : stage === 'confirming'
                     ? t('accounts.transferringAccount')
                     : !isAuthenticated
