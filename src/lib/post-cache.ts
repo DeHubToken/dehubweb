@@ -13,6 +13,7 @@ import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import { getVoteCache } from '@/lib/vote-cache';
 import { parseFormattedCount } from '@/lib/feed-utils';
 import { liveSourceFromHlsUrl } from '@/lib/live-ingest';
+import { warmPostPage } from '@/lib/preload-post-page';
 
 /**
  * Parse a duration string (e.g., "1:23" or "1:02:34") back to seconds
@@ -208,6 +209,7 @@ function applyVoteCache(postId: string, nft: Partial<DeHubNFT>): Partial<DeHubNF
  * the feed doesn't carry (e.g. quotedPost) never arrive.
  */
 function seedPostCache(queryClient: QueryClient, id: string, nftData: Partial<DeHubNFT>): void {
+  warmPostPage();
   queryClient.setQueryData(['single-post', id], nftData);
   queryClient.invalidateQueries({ queryKey: ['single-post', id], exact: true, refetchType: 'none' });
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { MutableRefObject } from 'react';
 import {
   claimHandoffVideo,
@@ -33,6 +33,8 @@ export interface UseHandoffVideoOptions {
   onError?: () => void;
   onTimeUpdate?: () => void;
   onLoadedMetadata?: () => void;
+  onAdopt?: (el: HTMLVideoElement) => void;
+  onPlaybackChange?: (playing: boolean) => void;
 }
 
 export function useHandoffVideo({
@@ -48,14 +50,16 @@ export function useHandoffVideo({
   onError,
   onTimeUpdate,
   onLoadedMetadata,
+  onAdopt,
+  onPlaybackChange,
 }: UseHandoffVideoOptions) {
   const slotRef = useRef<HTMLDivElement | null>(null);
   const claimRef = useRef<{ key: string; token: object } | null>(null);
 
   // Read through a ref so the listeners below attach once per claim instead of
   // re-binding on every render that changes a callback identity.
-  const handlersRef = useRef({ onEnded, onError, onTimeUpdate, onLoadedMetadata });
-  handlersRef.current = { onEnded, onError, onTimeUpdate, onLoadedMetadata };
+  const handlersRef = useRef({ onEnded, onError, onTimeUpdate, onLoadedMetadata, onAdopt, onPlaybackChange });
+  handlersRef.current = { onEnded, onError, onTimeUpdate, onLoadedMetadata, onAdopt, onPlaybackChange };
 
   /**
    * Whether this card is the one currently showing the element. Callers need it
@@ -69,13 +73,19 @@ export function useHandoffVideo({
   // and this card re-applies its own attributes when it takes over.
   const [claimVersion, setClaimVersion] = useState(0);
   useEffect(
-    () => subscribeHandoffVideo(handoffKey, () => setClaimVersion((v) => v + 1)),
+    () => subscribeHandoffVideo(handoffKey, () => {
+      const active = isHandoffVideoActive(handoffKey, slotRef.current);
+      videoRef.current = active ? elRef.current : null;
+      if (active && elRef.current) handlersRef.current.onAdopt?.(elRef.current);
+      setClaimVersion((v) => v + 1);
+    }),
     [handoffKey],
   );
 
   /** Detaches the listeners bound to the element this card is currently holding. */
   const unbindRef = useRef<(() => void) | null>(null);
   const elRef = useRef<HTMLVideoElement | null>(null);
+  const syncedClaimRef = useRef<object | null>(null);
 
   const attachSlot = useCallback(
     (node: HTMLDivElement | null) => {
@@ -96,6 +106,7 @@ export function useHandoffVideo({
       // Set during the commit's ref phase, before this card's own effects and
       // before any sibling that reads the ref (the subtitle overlay) runs.
       videoRef.current = el;
+      handlersRef.current.onAdopt?.(el);
 
       // Every listener no-ops unless this card currently holds the element.
       // Both cards stay subscribed while the post is open over the feed, and
@@ -105,16 +116,21 @@ export function useHandoffVideo({
       const error = () => owned() && handlersRef.current.onError?.();
       const timeUpdate = () => owned() && handlersRef.current.onTimeUpdate?.();
       const loadedMetadata = () => owned() && handlersRef.current.onLoadedMetadata?.();
+      const playback = () => owned() && handlersRef.current.onPlaybackChange?.(!el.paused);
 
       el.addEventListener('ended', ended);
       el.addEventListener('error', error);
       el.addEventListener('timeupdate', timeUpdate);
       el.addEventListener('loadedmetadata', loadedMetadata);
+      el.addEventListener('play', playback);
+      el.addEventListener('pause', playback);
       unbindRef.current = () => {
         el.removeEventListener('ended', ended);
         el.removeEventListener('error', error);
         el.removeEventListener('timeupdate', timeUpdate);
         el.removeEventListener('loadedmetadata', loadedMetadata);
+        el.removeEventListener('play', playback);
+        el.removeEventListener('pause', playback);
       };
     },
     [handoffKey, videoRef],
@@ -138,7 +154,7 @@ export function useHandoffVideo({
   // Push this card's props onto the element it holds. Assignments are guarded on
   // change: re-assigning `src` restarts the download and throws away the buffer,
   // which is the whole thing this pool exists to avoid.
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = elRef.current;
     const active = !!el && isHandoffVideoActive(handoffKey, slotRef.current);
 
@@ -151,10 +167,13 @@ export function useHandoffVideo({
     videoRef.current = active ? el : null;
     setIsActive(active);
     if (!active || !el) return;
+    const firstSync = syncedClaimRef.current !== claimRef.current?.token;
+    syncedClaimRef.current = claimRef.current?.token ?? null;
 
     if (el.className !== className) el.className = className;
-    if (el.muted !== muted) el.muted = muted;
-    if (el.loop !== loop) el.loop = loop;
+    const adoptingLoaded = firstSync && !!el.getAttribute('src');
+    if (!adoptingLoaded && el.muted !== muted) el.muted = muted;
+    if (!adoptingLoaded && el.loop !== loop) el.loop = loop;
     if (el.preload !== preload) el.preload = preload;
     if (poster) {
       if (el.poster !== poster && el.getAttribute('poster') !== poster) el.poster = poster;
@@ -163,7 +182,7 @@ export function useHandoffVideo({
     }
     if (src) {
       if (el.getAttribute('src') !== src) el.src = src;
-    } else if (el.hasAttribute('src')) {
+    } else if (!firstSync && el.hasAttribute('src') && el.paused) {
       // The card has scrolled out of range and wants the media detached again.
       // Only reachable while this card holds the element, so a post page reading
       // the same clip can never have the source pulled out from under it — and
