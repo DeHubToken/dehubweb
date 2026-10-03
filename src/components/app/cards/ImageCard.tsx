@@ -1170,7 +1170,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           <div className="absolute bottom-2 left-2 z-10 max-w-[calc(100%-1rem)]">{soundtrackControl}</div>
         )}
         {post.soundtrackUrl && soundtrackEnabled && (
-          <audio ref={soundtrack.audioRef} loop preload="none" className="hidden" />
         )}
 
         {/* Content Type Badges - Bounty only (PPV/Lock are shown via centered overlay) */}

@@ -105,6 +105,7 @@ import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { warmPostPage } from '@/lib/preload-post-page';
 import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
+import { getHandoffAudio } from '@/lib/audio-handoff';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
@@ -776,7 +777,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const posterBlank = useBlankPoster(posterProbe);
 
   // Synced audio overlay — plays a soundtrack over the video
-  const { audioRef: syncedAudioRef, hasSoundtrack } = useSyncedAudio({
+  const { hasSoundtrack } = useSyncedAudio({
+    mediaKey: video.id,
     soundtrackUrl: video.soundtrackUrl,
     isPlaying,
     isMuted,
@@ -1471,7 +1473,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       setNearViewport(true);
       isPlayingRef.current = !el.paused;
       setIsPlaying(!el.paused);
-      setIsMuted(el.muted);
+      setIsMuted(video.soundtrackUrl ? getHandoffAudio(`synced:${video.id}:${video.soundtrackUrl}`)?.el.muted ?? el.muted : el.muted);
       setPlaybackRate(el.playbackRate);
       setIsLooping(el.loop);
       setCurrentTime(el.currentTime);
@@ -2139,14 +2141,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         )}
 
         {/* Hidden synced audio element for soundtrack overlay */}
-        {hasSoundtrack && video.soundtrackUrl && (
-          <audio
-            ref={syncedAudioRef}
-            src={video.soundtrackUrl}
-            preload="auto"
-            className="hidden"
-          />
-        )}
 
         {/* Soundtrack badge — like TikTok "♪ Song Name" */}
         {hasSoundtrack && video.soundtrackTitle && (
