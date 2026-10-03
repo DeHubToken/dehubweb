@@ -20,6 +20,8 @@ export interface UseCallReturn {
   minimizeCall: () => void; maximizeCall: () => void; callStartedAt: number | null;
   mediaRevision: number; peerAddress: string;
   localVideoRef: React.RefObject<HTMLDivElement>; remoteVideoRef: React.RefObject<HTMLDivElement>;
+  attachLocalVideo: (node: HTMLDivElement | null) => void;
+  attachRemoteVideo: (node: HTMLDivElement | null) => void;
   remoteAudioRef: React.RefObject<HTMLAudioElement>;
   startCall: (recipientAddress: string, callType?: 'audio' | 'video') => Promise<void>;
   endCall: () => void; acceptCall: () => void; rejectCall: () => void;
@@ -160,7 +162,10 @@ export const useCall = (): UseCallReturn => {
       });
       client.on('user-unpublished', (_user: any, type: 'audio' | 'video') => {
         if (!current()) return;
-        if (type === 'video') { ownedMedia.remoteVideo = null; setMediaRevision(revision => revision + 1); }
+        if (type === 'video') {
+          ownedMedia.remoteVideo?.stop();
+          ownedMedia.remoteVideo = null; setMediaRevision(revision => revision + 1);
+        }
       });
       client.on('user-left', () => { if (current()) void endCall(); });
       await client.join(data.appId, `dm-call-${call.id}`, data.token, data.uid ?? 0);
@@ -316,6 +321,17 @@ export const useCall = (): UseCallReturn => {
     try { if (media.video && localVideoRef.current) media.video.play(localVideoRef.current); } catch {}
     try { if (media.remoteVideo && remoteVideoRef.current) media.remoteVideo.play(remoteVideoRef.current); } catch {}
   }, [mediaRevision, isCallActive, isConnecting, isMinimized]);
+  // Portal surfaces can mount after the publication effect has already run.
+  const attachLocalVideo = useCallback((node: HTMLDivElement | null) => {
+    (localVideoRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+    const media = mediaRef.current;
+    if (node && media && !media.closed) { try { media.video?.play(node); } catch {} }
+  }, []);
+  const attachRemoteVideo = useCallback((node: HTMLDivElement | null) => {
+    (remoteVideoRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+    const media = mediaRef.current;
+    if (node && media && !media.closed) { try { media.remoteVideo?.play(node); } catch {} }
+  }, []);
 
   const toggleMute = useCallback(() => {
     const audio = mediaRef.current?.audio;
@@ -345,9 +361,9 @@ export const useCall = (): UseCallReturn => {
   return useMemo(() => ({
     isCallActive, isIncoming, currentCall, isConnecting, isMuted, isCameraOff, isUserOffline, callFailureReason,
     clearCallFailure, isMinimized, minimizeCall, maximizeCall, callStartedAt, mediaRevision, peerAddress, localVideoRef, remoteVideoRef,
-    remoteAudioRef, startCall, endCall, acceptCall, rejectCall: endCall, toggleMute, toggleCamera, switchCamera,
+    attachLocalVideo, attachRemoteVideo, remoteAudioRef, startCall, endCall, acceptCall, rejectCall: endCall, toggleMute, toggleCamera, switchCamera,
     localVideoTrack, debugCallState, checkForCalls, setCallMessageHandler,
   }), [isCallActive, isIncoming, currentCall, isConnecting, isMuted, isCameraOff, isUserOffline, callFailureReason,
     clearCallFailure, isMinimized, minimizeCall, maximizeCall, callStartedAt, mediaRevision, peerAddress, startCall, endCall, acceptCall,
-    toggleMute, toggleCamera, switchCamera, debugCallState, checkForCalls, setCallMessageHandler]);
+    attachLocalVideo, attachRemoteVideo, toggleMute, toggleCamera, switchCamera, debugCallState, checkForCalls, setCallMessageHandler]);
 };

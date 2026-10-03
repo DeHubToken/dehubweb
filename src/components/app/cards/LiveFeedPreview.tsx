@@ -28,7 +28,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useFeedPlaybackAllowed } from '@/lib/visual-activity';
+import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { useLocation } from 'react-router-dom';
 import type Hls from 'hls.js';
 import { LiveEndedMedia } from './LiveEndedMedia';
@@ -163,6 +163,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         }
         el.srcObject = session.stream;
         await el.play().catch(() => { if (!cancelled) setLoading(false); });
+        if (cancelled || !visualActivity.isFeedPlaybackAllowed()) el.pause();
       } catch {
         fallBack();
       }
@@ -223,7 +224,9 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         hls.loadSource(src);
         hls.attachMedia(el);
       }
-      el.play().catch(() => { if (!cancelled) setLoading(false); });
+      void el.play().then(() => {
+        if (cancelled || !visualActivity.isFeedPlaybackAllowed()) el.pause();
+      }).catch(() => { if (!cancelled) setLoading(false); });
     };
 
     void attach().catch(() => { if (!cancelled) setFailed(true); });
@@ -269,7 +272,10 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         autoPlay
         preload="none"
         poster={thumbnail}
-        onPlaying={() => { setPlaying(true); setPaused(false); setLoading(false); }}
+        onPlaying={(e) => {
+          if (!visualActivity.isFeedPlaybackAllowed()) { e.currentTarget.pause(); return; }
+          setPlaying(true); setPaused(false); setLoading(false);
+        }}
         onWaiting={() => setLoading(true)}
         onPause={() => { setPaused(true); setLoading(false); }}
       />

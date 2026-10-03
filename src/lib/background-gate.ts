@@ -19,6 +19,9 @@
 let paused = false;
 const pauseHolders = new Set<symbol>();
 const listeners = new Set<(paused: boolean) => void>();
+function notifyPaused(): void {
+  listeners.forEach(fn => { try { fn(isBackgroundPaused()); } catch {} });
+}
 // Handle for a pending deferred resume (see scheduleBackgroundResume). Any
 // explicit setBackgroundPaused() cancels it, so re-opening docs before the
 // resume fires can never leave the canvas running under the glass.
@@ -41,11 +44,11 @@ export function acquireBackgroundPause(): () => void {
   const holder = Symbol('background-pause');
   const previous = isBackgroundPaused();
   pauseHolders.add(holder);
-  if (previous !== isBackgroundPaused()) listeners.forEach(fn => fn(isBackgroundPaused()));
+  if (previous !== isBackgroundPaused()) notifyPaused();
   return () => {
     const before = isBackgroundPaused();
     pauseHolders.delete(holder);
-    if (before !== isBackgroundPaused()) listeners.forEach(fn => fn(isBackgroundPaused()));
+    if (before !== isBackgroundPaused()) notifyPaused();
   };
 }
 
