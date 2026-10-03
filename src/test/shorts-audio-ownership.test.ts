@@ -8,9 +8,9 @@ describe('Shorts video audio ownership', () => {
     'utf8',
   );
 
-  it('pauses an active slide during cleanup and rejects stale play events', () => {
-    expect(source).toMatch(/return \(\) => \{\s*clearTimeout\(timer\);[\s\S]*?video\.pause\(\);\s*\};/);
-    expect(source).toContain('if (!isActiveRef.current) videoRef.current?.pause();');
+  it('pauses ordinary slides during cleanup, preserves PiP, and rejects stale play events', () => {
+    expect(source).toMatch(/return \(\) => \{\s*clearTimeout\(timer\);[\s\S]*?releaseAfterPictureInPicture\(video, \(\) => video\.pause\(\)\);\s*\};/);
+    expect(source).toContain('if (!isActiveRef.current && !isVideoInPictureInPicture(videoRef.current)) videoRef.current?.pause();');
     expect(source).toContain('onPlay={handlePlay}');
   });
 });
