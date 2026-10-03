@@ -2140,8 +2140,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
 
-        {/* Hidden synced audio element for soundtrack overlay */}
-
         {/* Soundtrack badge — like TikTok "♪ Song Name" */}
         {hasSoundtrack && video.soundtrackTitle && (
           <div className="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-[16px] px-2 py-1 rounded-lg border border-white/10 max-w-[60%]">
