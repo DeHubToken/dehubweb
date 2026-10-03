@@ -6927,11 +6927,12 @@
     "tokenNotConfigured": "Amathokheni e-DeHub awasethiwe ku- {{chain}}.",
     "notEnoughTokens": "Awekho amathokheni anele",
     "onChainBalanceTooLow": "Ibhalansi yakho yethokheni ye-DeHub ku- {{chain}} iphansi kakhulu. Ibhalansi ebonisiwe kungenzeka ayikavumelaniswa okwamanje.",
-    "sentDesc": "{{amount}}amathokheni athunyelwe kusuka ku- {{from}} kuya ku-{{to}}. Bazofika maduzane.",
+    "sentDesc": "Amathokheni angu-{{amount}} athunyelwe kusuka ku-{{from}} kuya ku-{{to}}. Ithimba lithumela amathokheni ku-chain okuyiwa kuyo, ngokuvamile phakathi kwezinsuku zomsebenzi ezi-1-5.",
     "subtitle": "Hambisa amathokheni e-DeHub phakathi kwamaketanga",
     "tokensOnBase": "Amathokheni ku-Base",
     "tokensOnBnb": "Amathokheni KU-BNB CHAIN",
-    "step3": "Amathokheni akho e-DeHub azohanjiswa ochungechungeni lokuya maduzane."
+    "step3": "Ithimba lithumela amathokheni ku-chain okuyiwa kuyo, ngokuvamile phakathi kwezinsuku zomsebenzi ezi-1-5.",
+    "statusReceived": "Kutholakele"
   },
   "builder": {
     "stakeForAllowance": "Amathokheni e-Stake DeHub ukuze ukhuphule imali yakho yokwakha yansuku zonke",
@@ -7498,11 +7499,11 @@
           "4": "Faka inombolo yezimpawu ongazidlulisa.",
           "5": "Buyekeza imali yokudlulisa nesikhathi esilinganiselwe sokufika.",
           "6": "Qinisekisa ukuthengiselana kokudlulisa.",
-          "7": "Lindela ukuthi ukuthengiselana kuqede — ukudlulisa kungathatha imizuzu embalwa."
+          "7": "Ithimba lithumela amathokheni ku-chain okuyiwa kuyo, ngokuvamile phakathi kwezinsuku zomsebenzi ezi-1-5."
         },
         "tips": {
           "1": "Izimali zokudlulisa ziyahlukahluka ngombhangqwana weketango.",
-          "2": "Ukudlulisa kuvame ukuthatha imizuzu engu-1-5 kuye ngamaketango abandakanyekayo.",
+          "2": "Okwamanje, izinkokhelo zebhuloho zenziwa ngesandla.",
           "3": "Hlola njalo uchungechunge lapho uya khona ngaphambi kokuqinisekisa."
         }
       },

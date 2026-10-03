@@ -6834,7 +6834,9 @@
     "subtitle": "DeHub tokenlerini zynjyrlaryň arasyndan geçir",
     "tokensOnBase": "Ýolbaşçylyk maslahatynyň (Ýolbaşçylyk maslahatynyň)",
     "tokensOnBnb": "BNB zähmet zähmetiniň nusgasy",
-    "step3": "DeHub tokenleriňiz tizden ýola düşen zähmet zähmetinde ugradylar."
+    "step3": "Topar tokenleri maksat zynjyrynda iberýär, adatça 1-5 iş gününiň dowamynda.",
+    "statusReceived": "Kabul edildi",
+    "sentDesc": "{{amount}} token {{from}} zynjyryndan {{to}} zynjyryna iberildi. Topar tokenleri maksat zynjyrynda iberýär, adatça 1-5 iş gününiň dowamynda."
   },
   "builder": {
     "stakeForAllowance": "Gündelik gurluşyk tölegini artdyrmak üçin DeHub tokenlerini goýuň",
@@ -7399,11 +7401,11 @@
           "4": "Köprüje etjek tokenleriň mukdaryny giriziň.",
           "5": "Köprü tölegini we garaşylýan gelme wagtyny gözden geçiriň.",
           "6": "Köprü amala aşyryşyny tassyklaň.",
-          "7": "Amala aşyrylmagyny garaşyň — köprü birnäçe minut dowam edip biler."
+          "7": "Topar tokenleri maksat zynjyrynda iberýär, adatça 1-5 iş gününiň dowamynda."
         },
         "tips": {
           "1": "Köprü tölegleri zynjyrlaryň jübütine görä üýtgeýär.",
-          "2": "Köprü, gatnaşýan zynjyrlara baglylykda, adatça 1-5 minut dowam edýär.",
+          "2": "Häzirlikçe köpri tölegleri el bilen edilýär.",
           "3": "Tassyklamazdan ozal hemişe barmaly zynjyryny iki gezek barlaň."
         }
       },

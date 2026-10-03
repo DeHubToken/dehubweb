@@ -6935,11 +6935,12 @@
     "tokenNotConfigured": "DeHub tokens mana tiyanchu {{chain}}.",
     "notEnoughTokens": "Mana atiq tokens",
     "onChainBalanceTooLow": "Kikinpi DeHub token balance {{chain}} urqulla kachkan. Rikuchisqa balanceqa mana allinta hap'isqachu.",
-    "sentDesc": "{{amount}} tokens kachkan {{from}}manta {{to}}man. Chaykunaqa chaylla jamunqanku.",
+    "sentDesc": "{{amount}} tokenkuna {{from}}manta {{to}}man kachasqa. Equipoqa tokenkunata chayana chainpi kachan, sapa kutin 1-5 llamk'ana p'unchawkunapi.",
     "subtitle": "DeHub tokenskuna maymanpas chainman apay",
     "tokensOnBase": "Tokens Basepi",
     "tokensOnBnb": "Tokens BNB Chainpi",
-    "step3": "DeHub tokenskunaqa chaylla jamunqanku maymanpas chainman."
+    "step3": "Equipoqa tokenkunata chayana chainpi kachan, sapa kutin 1-5 llamk'ana p'unchawkunapi.",
+    "statusReceived": "Chaskisqa"
   },
   "builder": {
     "stakeForAllowance": "DeHub tokenskuna stakeyta atikanki urqu build allowance urqu punchawta",
@@ -7508,11 +7509,11 @@
           "4": "Tokenkuna apayta munayta yaykuy.",
           "5": "Bridge fee chaymanta p'anqaman chayamuyta yachay.",
           "6": "Bridge transaction-ta k'anchay.",
-          "7": "Transaction tukukuyta suyay — bridgingqa huk minutokuna atikun."
+          "7": "Equipoqa tokenkunata chayana chainpi kachan, sapa kutin 1-5 llamk'ana p'unchawkunapi."
         },
         "tips": {
           "1": "Bridge feesqa alepakunapi kaqta.",
-          "2": "Bridgingqa 1-5 minutokuna atikun alepakunapi kaqta.",
+          "2": "Kunanqa bridge pagokunaqa makiwanmi ruwakun.",
           "3": "Chayman apayta munayta k'anchay ñawpaqta alepata."
         }
       },

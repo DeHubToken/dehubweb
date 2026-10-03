@@ -749,9 +749,9 @@ export const ajp = {
   tokenBridge: {
     title: 'جسر',
     bridgeToBnbDesc: 'بغرض نقل من BNB ل Base بسندي توكناتك لحددي هدا العنوان. مش بتدفعش أي رسوم.',
-    processingTimeDesc: 'كل طلبات الجسر بتتوزع بين يوم عمل واحد لغاية خمسة أيام عمل.',
+    processingTimeDesc: 'الفريق بيبعت التوكنات على الشبكة الوجهة، عادةً خلال 1-5 أيام عمل.',
     copyFailed: 'فشل النسخ',
-    automatedBridge: 'الربط التلقائي في طور التحسين والإطلاق قريبا.',
+    automatedBridge: 'مدفوعات الجسر بتنعمل يدوياً هلق.',
   },
   tokenSecurity: {
     title: 'الأمان',

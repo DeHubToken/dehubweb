@@ -6913,11 +6913,12 @@
     "tokenNotConfigured": "Tokenat DeHub nuk janë konfiguruar në {{chain}}.",
     "notEnoughTokens": "Nuk ka mjaft tokena",
     "onChainBalanceTooLow": "Bilanci juaj i tokenave DeHub në zinxhir në {{chain}} është shumë i ulët. Bilanci i shfaqur mund të mos jetë sinkronizuar ende.",
-    "sentDesc": "{{amount}} tokena të dërguar nga {{from}} në {{to}}. Ato do të mbërrijnë së shpejti.",
+    "sentDesc": "{{amount}} token u dërguan nga {{from}} në {{to}}. Ekipi i dërgon tokenët në zinxhirin e destinacionit, zakonisht brenda 1-5 ditëve të punës.",
     "subtitle": "Lëvizni tokenat DeHub midis zinxhirëve",
     "tokensOnBase": "Tokenat në Base",
     "tokensOnBnb": "Tokenat në BNB Chain",
-    "step3": "Tokenat tuaja DeHub do të dorëzohen së shpejti në zinxhirin destinacion."
+    "step3": "Ekipi i dërgon tokenët në zinxhirin e destinacionit, zakonisht brenda 1-5 ditëve të punës.",
+    "statusReceived": "U mor"
   },
   "builder": {
     "stakeForAllowance": "Vendosni tokena DeHub për të rritur lejen tuaj ditore të ndërtimit",
@@ -7484,11 +7485,11 @@
           "4": "Hyni numrin e token-eve për të kaluar.",
           "5": "Rishikoni tarifën e kalimit dhe kohën e vlerësuar të mbërritjes.",
           "6": "Konfirmoni transaksionin e kalimit.",
-          "7": "Prisni që transaksioni të përfundojë — kalimi mund të marrë disa minuta."
+          "7": "Ekipi i dërgon tokenët në zinxhirin e destinacionit, zakonisht brenda 1-5 ditëve të punës."
         },
         "tips": {
           "1": "Tarifat e kalimit ndryshojnë sipas çiftit të zinxhirëve.",
-          "2": "Kalimi zakonisht zgjat 1-5 minuta në varësi të zinxhirëve të përfshirë.",
+          "2": "Për momentin, pagesat e urës bëhen me dorë.",
           "3": "Gjithmonë kontrolloni dy herë zinxhirin destinues para se të konfirmoni."
         }
       },

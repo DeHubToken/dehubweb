@@ -6712,11 +6712,12 @@
     "tokenNotConfigured": "DeHub ka tagamasiɲɛw tɛ sigi {{chain}} kan.",
     "notEnoughTokens": "O tɛ se ka kɛ",
     "onChainBalanceTooLow": "I ka DeHub ka jɔrɔkɔ min be sɔrɔ {{chain}} kan, o ka dɔgɔ kojugu. O la, a tun be se ka kɛ ko a tun be se ka kɛ cogo min na, a tun tɛ se k'o kɛ.",
-    "sentDesc": "{{amount}} tokens sent from {{from}} to {{to}}. A bena na yanni dɔɔni.",
+    "sentDesc": "Token {{amount}} cira ka bɔ {{from}} ka taa {{to}}. Jɛkulu bɛ tokenw ci sira laban kan, tuma caman na baarakɛlon 1-5 kɔnɔ.",
     "subtitle": "O kɔ, a ye dɔ fara a ka jɔrɔkɔw kan.",
     "tokensOnBase": "Fɛɛn minw be sɔrɔ o yɔrɔ la",
     "tokensOnBnb": "Bnb ka jɔrɔkɔ",
-    "step3": "I ka DeHub tagamasiyɛnw bena don i ka yɔrɔ la yanni dɔɔni."
+    "step3": "Jɛkulu bɛ tokenw ci sira laban kan, tuma caman na baarakɛlon 1-5 kɔnɔ.",
+    "statusReceived": "A sɔrɔla"
   },
   "builder": {
     "stakeForAllowance": "Stake DeHub ka tagamasiɲɛw ka caya i ka loon o loon lɔli nafa la",
@@ -7267,11 +7268,11 @@
           "4": "Ajiye token ni kɛnɛ kɛnɛ.",
           "5": "Ajiye bridge fee ni kɛnɛ kɛnɛ.",
           "6": "Ajiye bridge transaction.",
-          "7": "O la, a ka ɲi ka to ka kɔnɔni kɛ fɔɔ ka taga se a laban ma."
+          "7": "Jɛkulu bɛ tokenw ci sira laban kan, tuma caman na baarakɛlon 1-5 kɔnɔ."
         },
         "tips": {
           "1": "Bridge fees kɛnɛ kɛnɛ.",
-          "2": "Bridging kɛnɛ kɛnɛ.",
+          "2": "Sisan, pon sarali bɛ kɛ ni bolo ye.",
           "3": "Ajiye chain ni destination kɛnɛ kɛnɛ."
         }
       },

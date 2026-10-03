@@ -6811,11 +6811,12 @@
     "tokenNotConfigured": "A DeHub tokenek nincsenek beállítva a(z) {{chain}} oldalon.",
     "notEnoughTokens": "Nincs elég token",
     "onChainBalanceTooLow": "Az on-chain DeHub token egyenleged a(z) {{chain}} oldalon túl alacsony. A megjelenített egyenleg esetleg még nem szinkronizálódott.",
-    "sentDesc": "{{amount}} token érkezett a(z) {{from}} oldaltól a(z) {{to}} oldalra. Hamarosan megérkeznek.",
+    "sentDesc": "{{amount}} token elküldve: {{from}} → {{to}}. A csapat a célláncon küldi ki a tokeneket, általában 1-5 munkanapon belül.",
     "subtitle": "DeHub tokenek mozgatása láncok között",
     "tokensOnBase": "Tokenek a Base-en",
     "tokensOnBnb": "Tokenek a BNB Chain-en",
-    "step3": "A DeHub tokenjeid hamarosan megérkeznek a cél láncra."
+    "step3": "A csapat a célláncon küldi ki a tokeneket, általában 1-5 munkanapon belül.",
+    "statusReceived": "Beérkezett"
   },
   "builder": {
     "stakeForAllowance": "Stakel DeHub tokeneket a napi építési kereted növeléséhez",
@@ -7382,11 +7383,11 @@
           "4": "Add meg az áthidalni kívánt tokenek számát.",
           "5": "Tekintsd át az áthidalási díjat és a becsült érkezési időt.",
           "6": "Erősítsd meg az áthidalási tranzakciót.",
-          "7": "Várd meg, amíg a tranzakció befejeződik – az áthidalás néhány percet vehet igénybe."
+          "7": "A csapat a célláncon küldi ki a tokeneket, általában 1-5 munkanapon belül."
         },
         "tips": {
           "1": "Az áthidalási díjak láncpáronként változnak.",
-          "2": "Az áthidalás általában 1-5 percet vesz igénybe, a részt vevő láncoktól függően.",
+          "2": "A híd kifizetései egyelőre kézzel történnek.",
           "3": "Mindig ellenőrizd duplán a cél-láncot az erősítés előtt."
         }
       },

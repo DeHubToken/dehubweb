@@ -893,7 +893,8 @@ export const ayn = {
     bridgeToBase: 'جسر من BNB لBASE',
     bridgeToBaseDesc: 'إلّا ما تفرغوا لBASE من BNB، بجدّوا التوكينات لحدّ هذه العناوين. ما بيشتغلش أي رسوم.',
     bridgeToBnbDesc: 'لتحويل إلى BNB من Base ببساطة أرسل رموزك إلى هذا العنوان. ما فيش رسوم.',
-    processingTimeDesc: 'كل طلبات الجسر بتوزع بين يوم واحد و خمس أيام عمل.',
+    processingTimeDesc: 'الفريق يرسل التوكنات على الشبكة الوجهة، عادةً خلال 1-5 أيام عمل.',
+    automatedBridge: 'مدفوعات الجسر تتم يدوياً حالياً.',
     copyFailedDesc: 'أكتب العنوان يدويًا من فضلك.',
   },
   tokenSecurity: {
