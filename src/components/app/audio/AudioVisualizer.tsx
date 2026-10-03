@@ -1,7 +1,7 @@
 import { useMediaVolume, useMediaMuted, setVolume, setMediaMuted as setSelfMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import * as React from 'react';
-import { useRef, useEffect, useState, useCallback, useMemo, useId } from 'react';
+import { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   popOutAudioPost,
@@ -251,6 +251,7 @@ export function AudioVisualizer({
   isActiveClaimRef.current = isActiveClaim;
   const onPlaybackAdoptedRef = useRef(onPlaybackAdopted);
   onPlaybackAdoptedRef.current = onPlaybackAdopted;
+  const adoptionPendingRef = useRef<boolean | null>(null);
 
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
@@ -392,13 +393,16 @@ export function AudioVisualizer({
 
   // Taking the player over: pick the chain up, and tell the card that owns
   // `isPlaying` what it actually walked into.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!handoffKey || !isActiveClaim || isPoppedOut) return;
     const graph = getHandoffAudio(handoffKey, claimRef.current);
     if (!graph) return;
     if (audioRef.current !== graph.el || sourceRef.current !== graph.source) adoptGraph(graph);
     const playing = !graph.el.paused;
-    if (playing !== isPlayingRef.current) onPlaybackAdoptedRef.current?.(playing);
+    if (playing !== isPlayingRef.current) {
+      adoptionPendingRef.current = playing;
+      onPlaybackAdoptedRef.current?.(playing);
+    }
     // Read once, at the moment the player changes hands.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [claimVersion, isActiveClaim, isPoppedOut, handoffKey]);
@@ -416,7 +420,9 @@ export function AudioVisualizer({
   useEffect(() => {
     const el = audioRef.current;
     if (!el) return;
-    const onTime = () => setCurrentTime(el.currentTime);
+    const onTime = () => {
+      if (isActiveClaimRef.current && decodeEnabled) setCurrentTime(el.currentTime);
+    };
     const onMeta = () => {
       if (Number.isFinite(el.duration) && el.duration > 0) {
         setDuration(el.duration);
@@ -439,6 +445,7 @@ export function AudioVisualizer({
     el.addEventListener('durationchange', onMeta);
     el.addEventListener('ended', onEnded);
     onMeta();
+    onTime();
     return () => {
       el.removeEventListener('timeupdate', onTime);
       el.removeEventListener('seeked', onTime);
@@ -446,7 +453,7 @@ export function AudioVisualizer({
       el.removeEventListener('durationchange', onMeta);
       el.removeEventListener('ended', onEnded);
     };
-  }, [audioElVersion]);
+  }, [audioElVersion, decodeEnabled]);
 
   useEffect(() => {
     setDuration((d) => (d > 0 ? d : durationHint));
@@ -637,7 +644,7 @@ export function AudioVisualizer({
   // frame, so changing style or dragging the hue slider mid-playback left a
   // second (then a third) rAF loop running against the same canvas.
   useEffect(() => {
-    if (!isPlaying) {
+    if (!isPlaying || !isActiveClaim || !decodeEnabled) {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
       return;
@@ -654,7 +661,7 @@ export function AudioVisualizer({
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
     };
-  }, [isPlaying]);
+  }, [isPlaying, isActiveClaim, decodeEnabled]);
 
   // Repaint the idle frame whenever anything it depends on changes. Without
   // this a style picked while paused left the *previous* style's last frame on
@@ -780,6 +787,10 @@ export function AudioVisualizer({
   // Separate effect for playback control — runs AFTER state update from parent
   useEffect(() => {
     if (!audioRef.current || isPoppedOut || !isActiveClaim) return;
+    if (adoptionPendingRef.current !== null) {
+      if (isPlaying !== adoptionPendingRef.current) return;
+      adoptionPendingRef.current = null;
+    }
 
     if (isPlaying) {
       audioRef.current.play().catch(console.error);

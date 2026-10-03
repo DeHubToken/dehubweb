@@ -102,6 +102,7 @@ const AudioVisualizer = lazy(() =>
   import('../audio/AudioVisualizer').then((m) => ({ default: m.AudioVisualizer }))
 );
 import { cacheVideoForNavigation } from '@/lib/post-cache';
+import { warmPostPage } from '@/lib/preload-post-page';
 import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
@@ -889,7 +890,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // alone did not help, because a playing muted clip streams its whole file
   // regardless of preload. The poster is a separate eager <img>, so nothing the
   // visitor sees waits on this; the first scroll is what starts the clip.
-  const [nearViewport, setNearViewport] = useState(aboveFold);
+  const [nearViewport, setNearViewport] = useState(aboveFold || isImmersive);
   const bootSettled = useBootSettled();
   const interacted = useFirstInteraction();
   useEffect(() => {
@@ -966,7 +967,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           if (!entry.isIntersecting && isPlayingRef.current) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
-          } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || isSubscriberGated(video.subscriberPlans, false)) && !video.isAudio && video.videoUrl && !hasErrorRef.current && !isVideoNotReady) {
+          } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && videoRef.current?.dataset.userPaused !== 'true' && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || isSubscriberGated(video.subscriberPlans, false)) && !video.isAudio && video.videoUrl && !hasErrorRef.current && !isVideoNotReady) {
             const vid = videoRef.current;
             if (vid) {
               // Fast fling race: the media-attach state may not have
@@ -1099,6 +1100,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     }
     
     if (isPlaying) {
+      if (videoRef.current) videoRef.current.dataset.userPaused = 'true';
       videoRef.current?.pause();
       isPlayingRef.current = false;
       setIsPlaying(false);
@@ -1108,6 +1110,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       showControlsBriefly();
     } else {
       // Claim audio ownership for this video (user-initiated play)
+      if (videoRef.current) delete videoRef.current.dataset.userPaused;
       videoPlaybackManager.claimAudio(instanceId);
       const shouldMute = videoPlaybackManager.globalMuted;
       setIsMuted(shouldMute);
@@ -1226,6 +1229,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // vanish out from under the thing the pointer is already inside.
   // Phone-feed controls must not disappear after autoplay or a hide timer.
   const controlsVisible = bareControls || !isPlaying || showControls || subsMenuOpen || volumeOpen;
+  useEffect(() => {
+    if (controlsVisible && videoRef.current) setCurrentTime(videoRef.current.currentTime);
+  }, [controlsVisible]);
 
   // Revealing the controls has to be able to fill in the timeline. A card that
   // never autoplayed - every video on a profile, and anything in Lite mode -
@@ -1240,7 +1246,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (!vid) return;
     if (!vid.getAttribute('src')) vid.src = video.videoUrl;
     if (vid.preload === 'none') vid.preload = 'metadata';
-    try { vid.load(); } catch { /* noop */ }
+    if (vid.readyState === 0) {
+      try { vid.load(); } catch { /* noop */ }
+    }
   }, [controlsVisible, nearViewport, showControls, duration, video.isAudio, video.videoUrl]);
 
   // The saved volume only ever reached the element through an explicit
@@ -1400,7 +1408,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (videoRef.current) {
       const ct = videoRef.current.currentTime;
       const dur = videoRef.current.duration;
-      setCurrentTime(ct);
+      if (bareControls || showControls || !isPlayingRef.current) setCurrentTime(ct);
 
       // Track video view progress (fires view when threshold met)
       if (dur > 0) {
@@ -1417,7 +1425,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       // throwing — a live HLS source reports Infinity here.
       setMediaSessionPosition(instanceId, ct, dur, videoRef.current.playbackRate);
     }
-  }, [trackView, instanceId, maybeSkipSegment]);
+  }, [trackView, instanceId, maybeSkipSegment, bareControls, showControls]);
 
   const handleLoadedMetadata = useCallback(() => {
     if (videoRef.current) {
@@ -1458,6 +1466,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
     onLoadedMetadata: handleLoadedMetadata,
+    onAdopt: (el) => {
+      if (!el.getAttribute('src')) return;
+      setNearViewport(true);
+      isPlayingRef.current = !el.paused;
+      setIsPlaying(!el.paused);
+      setIsMuted(el.muted);
+      setPlaybackRate(el.playbackRate);
+      setIsLooping(el.loop);
+      setCurrentTime(el.currentTime);
+      if (Number.isFinite(el.duration) && el.duration > 0) setDuration(el.duration);
+      if (el.videoWidth && el.videoHeight) setIntrinsicAspect(el.videoWidth / el.videoHeight);
+      setIsLoading(el.readyState < 2 && !el.paused);
+    },
+    onPlaybackChange: (playing) => {
+      isPlayingRef.current = playing;
+      setIsPlaying(playing);
+    },
   });
 
   // Handing the element to the post page has to hand the audio over with it.
@@ -1713,6 +1738,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     <div
       data-video-card
       onClick={isImmersive ? undefined : handleCardClick}
+      onPointerDownCapture={isImmersive ? undefined : warmPostPage}
       className={isImmersive
         ? "overflow-hidden isolate"
         : "overflow-visible cursor-pointer isolate"
