@@ -728,6 +728,7 @@
     "errorUnknown": "❌ Bir şeyler ters gitti: {{message}}. Tekrar deneyin.",
     "errorVideoGenFailed": "Video oluşturma başarısız",
     "errorVideoGenStart": "Video oluşturma başlatılamadı",
+    "videoGenPaymentKept": "{{amount}} DHB harcanmadı. Hesabında kalıyor ve bu tutara kadar olan bir sonraki üretiminde otomatik olarak kullanılacak; tekrar denemek iki kez ödeme almaz.",
     "errorImageGenFailed": "Görsel oluşturulamadı",
     "fallbackGrokNotConfigured": "DeHub AI kullanılıyor - Grok API anahtarı yapılandırılmamış",
     "paymentSuccessGenerating": "Ödeme başarılı! Videonuz oluşturuluyor...",

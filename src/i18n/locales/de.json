@@ -728,6 +728,7 @@
     "errorUnknown": "❌ Etwas ist schiefgelaufen: {{message}}. Bitte erneut versuchen.",
     "errorVideoGenFailed": "Videogenerierung fehlgeschlagen",
     "errorVideoGenStart": "Videogenerierung konnte nicht gestartet werden",
+    "videoGenPaymentKept": "Deine {{amount}} DHB wurden nicht ausgegeben. Sie bleiben auf deinem Konto und werden automatisch für deine nächste Generierung bis zu diesem Betrag verwendet – ein erneuter Versuch kostet dich nicht doppelt.",
     "errorImageGenFailed": "Bild konnte nicht generiert werden",
     "fallbackGrokNotConfigured": "Verwende DeHub AI — Grok-API-Schlüssel nicht konfiguriert",
     "paymentSuccessGenerating": "Zahlung erfolgreich! Dein Video wird generiert...",

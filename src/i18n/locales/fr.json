@@ -728,6 +728,7 @@
     "errorUnknown": "❌ Quelque chose s'est mal passé : {{message}}. Veuillez réessayer.",
     "errorVideoGenFailed": "Échec de la génération vidéo",
     "errorVideoGenStart": "Impossible de démarrer la génération vidéo",
+    "videoGenPaymentKept": "Vos {{amount}} DHB n'ont pas été dépensés. Ils restent sur votre compte et serviront automatiquement à votre prochaine génération coûtant jusqu'à ce montant : réessayer ne vous fera pas payer deux fois.",
     "errorImageGenFailed": "Impossible de générer l'image",
     "fallbackGrokNotConfigured": "Utilisation de DeHub AI - Clé API Grok non configurée",
     "paymentSuccessGenerating": "Paiement réussi ! Génération de votre vidéo en cours...",

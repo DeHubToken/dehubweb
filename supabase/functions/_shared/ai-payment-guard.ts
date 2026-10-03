@@ -57,8 +57,13 @@ export type ChargeResult =
        * Put the price back on the receipt. Call this when the provider fails
        * after the draw, so the same transfer pays for the retry instead of
        * the user paying twice for one result. Idempotent on jobId.
+       *
+       * Resolves true when the price is back with the payer (or nothing was
+       * taken), false when the release failed and the job is left
+       * `refund_pending` for someone to settle by hand. The caller tells the
+       * user which, so a failed start never reads as money gone.
        */
-      refund: () => Promise<void>;
+      refund: () => Promise<boolean>;
     }
   | { ok: false; response: Response };
 
@@ -75,7 +80,7 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
       jobId: crypto.randomUUID(),
       // Nothing was taken, so there is nothing to give back. Kept as a no-op so
       // callers can refund unconditionally on failure without checking price.
-      refund: async () => {},
+      refund: async () => true,
     };
   }
 
@@ -121,7 +126,7 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
         response: jsonResponse({ error: 'Your free images are used up. Pay for this one to run it.', code: 'FREE_EXHAUSTED', priceDhb }, 402),
       };
     }
-    return { ok: true, wallet: guard.wallet, priceDhb: 0, jobId: freeJobId, refund: () => releaseFree(freeJobId) };
+    return { ok: true, wallet: guard.wallet, priceDhb: 0, jobId: freeJobId, refund: async () => { await releaseFree(freeJobId); return true; } };
   }
 
   if (!/^0x[a-f0-9]{64}$/.test(txHash)) {
@@ -230,8 +235,8 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
         p_dhb: priceDhb,
         p_job_id: jobId,
       });
+      const restored = !refundError || String(refundError.message || '').includes('REFUND_ALREADY_APPLIED');
       if (journalled) {
-        const restored = !refundError || String(refundError.message || '').includes('REFUND_ALREADY_APPLIED');
         await supabase.from('ai_generation_jobs').update({
           status: restored ? 'failed' : 'refund_pending',
           result: { status: 'failed', error: 'Generation could not be completed', paymentRestored: restored },
@@ -239,9 +244,10 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
         }).eq('id', jobId);
       }
       // A failed release must not mask the provider error that triggered it.
-      if (refundError && !String(refundError.message || '').includes('REFUND_ALREADY_APPLIED')) {
+      if (!restored) {
         console.error(`[ai-payment] release failed for job ${jobId}:`, refundError);
       }
+      return restored;
     },
   };
 }
@@ -314,6 +320,7 @@ async function chargeCredits(
         }).eq('id', jobId);
       }
       if (!restored) console.error(`[ai-payment] credits refund failed for job ${jobId}`);
+      return restored;
     },
   };
 }

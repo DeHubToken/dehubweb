@@ -921,6 +921,7 @@
     "errorUnknown": "❌ Er ging iets mis: {{message}}. Probeer het opnieuw.",
     "errorVideoGenFailed": "Videogeneratie mislukt",
     "errorVideoGenStart": "Kon videogeneratie niet starten",
+    "videoGenPaymentKept": "Je {{amount}} DHB is niet uitgegeven. Het blijft op je account en wordt automatisch gebruikt voor je volgende generatie tot dat bedrag, dus opnieuw proberen kost je niet twee keer.",
     "errorImageGenFailed": "Kon afbeelding niet genereren",
     "fallbackGrokNotConfigured": "DeHub AI gebruiken - Grok API-sleutel niet geconfigureerd",
     "paymentSuccessGenerating": "Betaling geslaagd! Je video wordt gegenereerd...",

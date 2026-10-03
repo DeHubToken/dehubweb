@@ -728,6 +728,7 @@
     "errorUnknown": "❌ Coś poszło nie tak: {{message}}. Spróbuj ponownie.",
     "errorVideoGenFailed": "Generowanie filmu nie powiodło się",
     "errorVideoGenStart": "Nie udało się rozpocząć generowania filmu",
+    "videoGenPaymentKept": "Twoje {{amount}} DHB nie zostało wydane. Pozostaje na Twoim koncie i zostanie automatycznie użyte przy następnym generowaniu kosztującym do tej kwoty, więc ponowna próba nie obciąży Cię dwa razy.",
     "errorImageGenFailed": "Nie udało się wygenerować obrazu",
     "fallbackGrokNotConfigured": "Używanie DeHub AI - klucz API Grok nie skonfigurowany",
     "paymentSuccessGenerating": "Płatność udana! Generowanie filmu...",

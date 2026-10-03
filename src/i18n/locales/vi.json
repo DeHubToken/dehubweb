@@ -742,6 +742,7 @@
     "errorUnknown": "❌ Có lỗi xảy ra: {{message}}. Vui lòng thử lại.",
     "errorVideoGenFailed": "Video generation failed",
     "errorVideoGenStart": "Không thể khởi động tạo video",
+    "videoGenPaymentKept": "{{amount}} DHB của bạn chưa bị trừ. Số này vẫn nằm trong tài khoản và sẽ tự động dùng cho lần tạo tiếp theo có giá tới mức đó, nên thử lại sẽ không bị tính tiền hai lần.",
     "errorImageGenFailed": "Không thể tạo hình ảnh",
     "fallbackGrokNotConfigured": "Sử dụng DeHub AI - Khóa API Grok chưa được cấu hình",
     "paymentSuccessGenerating": "Thanh toán thành công! Đang tạo video cho bạn...",

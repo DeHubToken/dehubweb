@@ -371,10 +371,12 @@ function buildReplicateInput(
   const { prompt, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution, seed } = opts;
 
   switch (model) {
+    // Replicate's Kling 2.6 and Gen-4 Turbo take duration as an enum of 5 or
+    // 10 and 422 anything else, so a 7s pick from a 5-10 slider never started.
     case 'kling-2.6-pro':
       return {
         prompt,
-        duration: parseInt(duration) || 5,
+        duration: snapDuration(parseInt(duration) || 5, [5, 10]),
         aspect_ratio: aspectRatio,
         generate_audio: true,
         ...(sourceImage && { start_image: sourceImage }),
@@ -388,7 +390,7 @@ function buildReplicateInput(
     case 'runway-gen4':
       return {
         prompt,
-        duration: parseInt(duration) || 10,
+        duration: snapDuration(parseInt(duration) || 10, [5, 10]),
         ratio: aspectRatio,
         ...(sourceImage && { image: sourceImage }),
       };
@@ -986,8 +988,24 @@ serve(async (req) => {
       if (!response.ok) await charged.refund();
       return await recordGeneration(charged, response);
     } catch (providerError) {
-      await charged.refund();
-      throw providerError;
+      // The provider refused the job before it started, so nothing was
+      // rendered and the price goes back on the payer's transfer. Say so in
+      // the response: the client used to show a bare "failed to start" and
+      // the user, rightly seeing the DHB leave their wallet, took it as lost.
+      // The restored amount is spent automatically by their next generation.
+      const paymentRestored = await charged.refund();
+      console.error('Error starting generate-video job:', providerError);
+      const errorMessage = providerError instanceof Error ? providerError.message : 'Unknown error';
+      return new Response(
+        JSON.stringify({
+          error: errorMessage,
+          status: 'failed',
+          code: 'START_FAILED',
+          paymentRestored,
+          restoredDhb: paymentRestored ? charged.priceDhb : 0,
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
     }
 
   } catch (error) {

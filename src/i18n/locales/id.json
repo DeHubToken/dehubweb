@@ -728,6 +728,7 @@
     "errorUnknown": "❌ Terjadi kesalahan: {{message}}. Silakan coba lagi.",
     "errorVideoGenFailed": "Video generation failed",
     "errorVideoGenStart": "Gagal memulai generasi video",
+    "videoGenPaymentKept": "{{amount}} DHB kamu belum terpakai. Saldo ini tetap di akunmu dan otomatis dipakai untuk generasi berikutnya yang biayanya hingga jumlah itu, jadi mencoba lagi tidak akan menagihmu dua kali.",
     "errorImageGenFailed": "Gagal menghasilkan gambar",
     "fallbackGrokNotConfigured": "Menggunakan DeHub AI - Kunci API Grok tidak dikonfigurasi",
     "paymentSuccessGenerating": "Pembayaran berhasil! Sedang menghasilkan video Anda...",

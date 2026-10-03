@@ -727,6 +727,7 @@
     "errorUnknown": "❌ 問題が発生しました: {{message}}。もう一度お試しください。",
     "errorVideoGenFailed": "動画生成に失敗しました",
     "errorVideoGenStart": "動画生成を開始できませんでした",
+    "videoGenPaymentKept": "{{amount}} DHB は使われていません。アカウントに残り、この金額までの次回の生成に自動で使われるため、再試行しても二重に支払うことはありません。",
     "errorImageGenFailed": "画像を生成できませんでした",
     "fallbackGrokNotConfigured": "DeHub AIを使用中 - Grok APIキーが設定されていません",
     "paymentSuccessGenerating": "支払い成功！動画を生成中...",
