@@ -8,6 +8,7 @@ const state = vi.hoisted(() => ({
   dismiss: vi.fn(),
   stop: vi.fn(),
   translate: vi.fn(),
+  dismissVersion: vi.fn(),
 }));
 vi.mock('sonner', () => ({ toast: { message: state.message, dismiss: state.dismiss } }));
 vi.mock('@/lib/overlay-open', () => ({ useAnyOverlayOpen: () => state.open }));
@@ -19,6 +20,7 @@ vi.mock('@/integrations/supabase/client', () => ({ supabase: { functions: { invo
 vi.mock('@/lib/version-check', () => ({
   startVersionWatch: (notify: typeof state.notify) => { state.notify = notify; return state.stop; },
   takeStaleReload: () => false,
+  dismissVersionUpdate: state.dismissVersion,
 }));
 import { NewVersionToast } from '@/components/app/NewVersionToast';
 
