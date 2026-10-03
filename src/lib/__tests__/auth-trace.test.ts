@@ -10,6 +10,22 @@ afterEach(() => {
   sessionStorage.clear();
 });
 
+it('joins method retries into one flow without reusing attempt identity', async () => {
+  const trace = await import('../auth-trace');
+  trace.beginAuthTrace('undecided');
+  const opened = trace.readAuthTrace();
+  trace.beginAuthTrace('email');
+  trace.advanceAuthTrace('identity-established', 'first-user');
+  const email = trace.readAuthTrace();
+  trace.beginAuthTrace('google');
+  expect(trace.readAuthTrace().auth_flow_id).toBe(opened.auth_flow_id);
+  expect(trace.readAuthTrace().auth_attempt_id).not.toBe(email.auth_attempt_id);
+  expect(trace.readAuthTrace().supabase_user_id).toBeUndefined();
+  trace.clearAuthTrace();
+  trace.beginAuthTrace('undecided');
+  expect(trace.readAuthTrace().auth_flow_id).not.toBe(opened.auth_flow_id);
+});
+
 it('keeps the attempt and identity across an OAuth document reload', async () => {
   let trace = await import('../auth-trace');
   trace.beginAuthTrace('google');

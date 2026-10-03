@@ -33,6 +33,10 @@ import { type LoginStep, resumingStep } from '@/components/app/login/steps';
 import { getWalletSetupIntent, setWalletSetupIntent } from '@/lib/wallet-setup-intent';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
+import { beginAuthTrace, readAuthTrace } from '@/lib/auth-trace';
+import { createLogger } from '@/lib/logger';
+
+const flowLog = createLogger('LoginFlow');
 
 const LoginModalBody = React.lazy(() =>
   import('@/components/app/login/LoginModalBody').then(m => ({ default: m.LoginModalBody })),
@@ -91,6 +95,14 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const [step, setStep] = useState<LoginStep>(
     () => resumingStep(walletPhase, isProcessingRedirect) ?? 'main',
   );
+  useEffect(() => {
+    if (!open) return;
+    if (!readAuthTrace().auth_attempt_id) beginAuthTrace('undecided');
+  }, [open]);
+  useEffect(() => {
+    if (!open) return;
+    flowLog.trace?.('screen-view', { screen: step, surface: 'login-sheet', intent: loginIntent });
+  }, [open, step, loginIntent]);
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' && window.innerWidth < 768,
   );
@@ -137,12 +149,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // behind this sheet to go back to, so it does not close. Log out is the
     // other way out, and it clears the flag itself.
     if (requiresUsername) return;
+    flowLog.trace?.('flow-dismissed', { screen: step, surface: 'login-sheet' });
     // Closing by hand abandons a "Migrate account" / "Import keys"
     // choice too; a completed login clears it itself.
     setWalletSetupIntent(null);
     setStep('main');
     onOpenChange(false);
-  }, [onOpenChange, requiresUsername]);
+  }, [onOpenChange, requiresUsername, step]);
 
   // The sheet can also be closed from underneath it — a completed login calls
   // closeLoginModal directly, and vaul never reports a close it did not drive.
