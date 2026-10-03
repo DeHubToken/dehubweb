@@ -1,5 +1,4 @@
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { NewVersionToast } from "@/components/app/NewVersionToast";
 import { NotificationsPromptToast } from "@/components/app/NotificationsPromptToast";
 import { PushBlockedToast } from "@/components/app/PushBlockedToast";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -37,11 +36,17 @@ import { DeHubPageLoader } from "@/components/app/DeHubLoader";
 import { ThemePreviewProvider, ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
+
 import { CONSOLIDATED_GUIDES } from "@/lib/blog-redirects.js";
 const DexPage = React.lazy(() => import("@/pages/app/DexPage"));
 const DexPoolPage = React.lazy(() => import("@/pages/app/DexPoolPage"));
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SurfaceTransition } from "@/components/transitions/SurfaceTransition";
+
+// Update notices can load after the app paints; their watcher starts on mount.
+const NewVersionToast = lazyWithRetry(() =>
+  import("@/components/app/NewVersionToast").then((module) => ({ default: module.NewVersionToast })),
+);
 
 // Wallet/Auth providers — lazy loaded to keep them out of the main bundle.
 // Wagmi + RainbowKit + Web3Auth total ~1.5 MB; deferring them reduces TBT significantly.
@@ -904,7 +909,7 @@ const App = () => (
           <SEOHead />
           <Sonner />
           {/* Watches /version.json for a newer deploy; renders nothing itself. */}
-          <NewVersionToast />
+          <Suspense fallback={null}><NewVersionToast /></Suspense>
           {/*
            * dehub.io has no separate landing page — `/` is the app home. The
            * old 3D "nebula" lander (Welcome To Our World hero + app-store

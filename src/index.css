@@ -5520,11 +5520,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
   opacity: 0.55;
 }
 
-/* The island capsule that stands in for the top bar while the system feed
-   scrolls down on phones (FeedIslandCapsule). Same dark glass as the
-   cinematic author chips, so it reads over bright photos. */
-/* The fixed capsule and the sheet behind it have separate glass surfaces. */
-html[data-theme="system"] [data-feed-island-surface],
+/* The island uses the shared bottom-nav glass in glass-surfaces.css.
+   Filter panels keep their denser backing for the longer text. */
 html[data-theme="system"] [data-feed-filter-panel] {
   background: rgb(10 10 12 / 0.45);
   backdrop-filter: blur(20px) saturate(160%);
@@ -5737,5 +5734,4 @@ html[data-theme="system"] [data-feed-filter-panel] {
     margin-top: calc(env(safe-area-inset-top, 0px) + 5.75rem);
   }
 }
-
 

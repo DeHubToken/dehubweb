@@ -5,7 +5,7 @@ import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 let node: HTMLDivElement, root: Root, hook: ReturnType<typeof usePullToRefresh>;
 let refresh: ReturnType<typeof vi.fn>;
 function Harness({ enabled = true, refreshing = false }: { enabled?: boolean; refreshing?: boolean }) {
-  hook = usePullToRefresh({ enabled, isRefreshing: refreshing, onRefresh: refresh });
+  hook = usePullToRefresh({ enabled, isRefreshing: refreshing, onRefresh: () => refresh() });
   return <div><button>Control</button><div data-panel><div data-content /></div></div>;
 }
 const touch = (x: number, y: number, target: Element = node) => ({ touches: [{ clientX: x, clientY: y }], target } as unknown as React.TouchEvent);

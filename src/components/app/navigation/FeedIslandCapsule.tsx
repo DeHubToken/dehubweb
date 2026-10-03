@@ -76,14 +76,14 @@ export function FeedIslandCapsule({
       ref={rootRef}
       data-feed-island
       aria-hidden={!show}
-      className={`lg:hidden fixed left-1/2 z-[120] w-max h-11 isolate overflow-visible rounded-[15px] transition-[opacity,transform] duration-300 ease-out ${show ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
+      className={`lg:hidden fixed left-1/2 z-[120] w-max h-11 isolate overflow-visible rounded-2xl transition-[opacity,transform] duration-300 ease-out ${show ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
       style={{ top: 'calc(env(safe-area-inset-top, 0px) + 0.375rem)' }}
     >
       {/* Centre crest: you (or a burger when signed out) left, the bell
           right, the mark dead centre. The mark opens the feed list under it.
           The pill hugs its contents and the two side columns share one
           width, so the mark sits in the true middle. */}
-      <div data-feed-island-surface className="relative z-10 grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-[15px] px-[10px] text-white">
+      <div data-feed-island-surface className="relative z-10 grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-2xl border border-white/10 px-[10px] text-white">
         <div className="flex min-w-[28px] items-center justify-start">
           <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label="Toggle menu" className="flex shrink-0 items-center justify-center">
             {avatar ?? <Menu className="w-6 h-6" />}
@@ -132,7 +132,7 @@ export function FeedIslandCapsule({
           exit={{ height: 0, opacity: 0, y: -8, pointerEvents: 'none' }}
           transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
           data-feed-island-surface
-          className="w-full overflow-hidden rounded-[15px] pt-11 text-white pointer-events-auto"
+          className="w-full overflow-hidden rounded-2xl pt-11 text-white pointer-events-auto"
         >
         <div className="p-1.5">
           {FEED_TABS.map(({ value, label, icon: Icon }) => (
