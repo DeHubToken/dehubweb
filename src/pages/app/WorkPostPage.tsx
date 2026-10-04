@@ -209,7 +209,7 @@ export default function WorkPostPage() {
               </div>
               <div className="text-xs text-white/50">{t('work.platformFeeNote')}</div>
               <div className="text-[11px] text-amber-200/80 mt-2">
-                {t('work.escrowSoonNote')}
+                {t('work.integrity.draftFunding')}
               </div>
             </div>
 
@@ -220,7 +220,7 @@ export default function WorkPostPage() {
                 disabled={createJob.isPending || total <= 0}
                 className="flex-1 px-4 py-3 rounded-2xl bg-white text-black font-semibold disabled:opacity-40"
               >
-                {createJob.isPending ? t('work.posting') : t('work.postJob')}
+                {createJob.isPending ? t('work.posting') : t('work.integrity.saveDraft')}
               </button>
             </div>
           </div>

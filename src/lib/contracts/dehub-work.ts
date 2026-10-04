@@ -1,6 +1,6 @@
 import { Interface,parseUnits,formatUnits } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
-import { writeContractAA,approveERC20,getERC20Allowance,getERC20Balance,getWalletAddress,switchChain } from './aa-utils';
+import { writeContractAA,approveERC20,getERC20Allowance,getERC20Balance,getWalletAddress,switchChain,rpcRequest } from './aa-utils';
 import { CHAIN_CONFIGS,BASE_CHAIN_ID } from './dhb-token';
 
 export const DEHUB_WORK_ABI=[
@@ -26,7 +26,10 @@ export function getCurrencyToken(currency:string) {
 }
 export async function writeWork(address:string,name:string,args:unknown[]) {
  await switchChain(BASE_CHAIN_ID);
- return writeContractAA(address,new Interface(DEHUB_WORK_ABI),name,args,{context:'bounty '+name,chainId:BASE_CHAIN_ID});
+ const iface=new Interface(DEHUB_WORK_ABI);
+ try {await rpcRequest('eth_call',[{to:address,from:await getWalletAddress(),data:iface.encodeFunctionData(name,args)},'latest'],BASE_CHAIN_ID);}
+ catch(error:any) {throw Object.assign(new Error(error.message || 'The escrow action is not available'),{code:'WORK_NOT_SENT'});}
+ return writeContractAA(address,iface,name,args,{context:'bounty '+name,chainId:BASE_CHAIN_ID});
 }
 export async function prepareWorkFunding(address:string,currency:string,price:string,maxUnits:number) {
  await switchChain(BASE_CHAIN_ID);

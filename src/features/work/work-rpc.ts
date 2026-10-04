@@ -28,6 +28,7 @@ export async function settleWorkPayment(wallet: string, submission: string, reco
   return runWorkPayment(submission, 8453, {
     rpc: (name, args) => workRpc(wallet, name, args),
     send: async (intent: WorkPaymentIntent) => {
+      if((await getWalletAddress()).toLowerCase()!==wallet.toLowerCase()) throw Object.assign(new Error('The signing wallet does not match your bounty account'),{code:'WORK_NOT_SENT'});
       const { data: job, error } = await supabase.from('work_jobs' as any).select('onchain_job_id,fund_tx_hash').eq('id', intent.job_id).single();
       if (error) throw error;
       if ((job as any).fund_tx_hash) {
