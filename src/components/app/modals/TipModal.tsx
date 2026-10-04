@@ -244,7 +244,7 @@ export function TipModal({
           )}
         </DrawerHeader>
         <div className="flex flex-col gap-4">
-          {open && walletAddress && resolvedTokenId && !commentId && !recipientPrivate && !privacyChecking && creatorAddress?.toLowerCase() !== walletAddress.toLowerCase() ? (
+          {open && walletAddress && resolvedTokenId && !commentId && !isTipping && !funding && !recipientPrivate && !privacyChecking && creatorAddress?.toLowerCase() !== walletAddress.toLowerCase() ? (
             <Suspense fallback={null}><CreatorSupportAd key={resolvedTokenId} postId={resolvedTokenId} walletAddress={walletAddress} /></Suspense>
           ) : null}
           {recipientPrivate ? (
