@@ -11,8 +11,8 @@
  *
  *  - `data-no-swipe` is the primary. HomePage's tab swipe checks
  *    `closest('[data-no-swipe]')` on *touchstart* and abandons the gesture for
- *    that touch entirely, so the page can never steal a drag that began inside
- *    a carousel.
+ *    sideways tab change, while vertical feed scrolling and pull-to-refresh
+ *    remain available inside the carousel.
  *  - stopPropagation below is the backstop. On its own it was not enough: it
  *    only engages once a touchmove has been seen crossing
  *    `deltaX > 10 && deltaX > deltaY`, so a fast flick — or one that arcs

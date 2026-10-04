@@ -42,6 +42,44 @@ it('preserves horizontal feed swipes', () => {
   pull(180, 30); act(() => hook.handlers.onTouchEnd());
   expect(refresh).not.toHaveBeenCalled(); expect(hook.pullDistance).toBe(0);
 });
+it('allows downward refresh from a carousel that owns horizontal swipes', () => {
+  const panel = node.querySelector('[data-panel]')!;
+  panel.setAttribute('data-no-swipe', '');
+  pull(0, 180, node.querySelector('[data-content]')!);
+  act(() => hook.handlers.onTouchEnd());
+  expect(refresh).toHaveBeenCalledTimes(1);
+});
+it('does not refresh from filter panels or media seek zones', () => {
+  const panel = node.querySelector('[data-panel]')!;
+  for (const attribute of ['data-feed-filter-panel', 'data-no-pull']) {
+    panel.setAttribute(attribute, '');
+    pull(0, 180, node.querySelector('[data-content]')!);
+    act(() => hook.handlers.onTouchEnd());
+    panel.removeAttribute(attribute);
+  }
+  expect(refresh).not.toHaveBeenCalled();
+});
+it('claims downward browser touch movement while leaving horizontal movement native', () => {
+  function BrowserHarness() {
+    const containerRef = React.useRef<HTMLDivElement>(null);
+    hook = usePullToRefresh({ enabled: true, isRefreshing: false, onRefresh: refresh, containerRef });
+    return <div ref={containerRef} data-browser-surface><div data-no-swipe><div data-content /></div></div>;
+  }
+  act(() => root.render(<BrowserHarness />));
+  const content = node.querySelector('[data-content]')!;
+  const move = (x: number, y: number) => {
+    const event = new Event('touchmove', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'touches', { value: [{ clientX: x, clientY: y }] });
+    act(() => content.dispatchEvent(event));
+    return event.defaultPrevented;
+  };
+  act(() => hook.handlers.onTouchStart(touch(0, 0, content)));
+  expect(move(0, 180)).toBe(true);
+  expect(move(180, 20)).toBe(false);
+  expect(hook.isPulling).toBe(false);
+  act(() => hook.handlers.onTouchEnd());
+  expect(refresh).not.toHaveBeenCalled();
+});
 it('leaves player controls and scrolled nested panels alone', () => {
   pull(0, 180, node.querySelector('button')!); act(() => hook.handlers.onTouchEnd());
   const panel = node.querySelector('[data-panel]')!; panel.scrollTop = 20;
