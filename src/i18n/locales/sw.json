@@ -4247,7 +4247,8 @@
     "bentoEditorTitle": "Ikamilishe kwenye Mhariri",
     "bentoEditorCopy": "Kata klipu, ongeza muziki na manukuu, kisha chapisha kwenye DeHub.",
     "bentoTopUpTitle": "Ongeza DHB",
-    "bentoTopUpCopy": "Nunua DHB kwa kadi au pochi yako."
+    "bentoTopUpCopy": "Nunua DHB kwa kadi au pochi yako.",
+    "exampleOutput": "Mfano wa matokeo"
   },
   "pricing": {
     "plansForEveryWorkflow": "Mipango kwa kila workflow",

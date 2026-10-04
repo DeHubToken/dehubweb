@@ -4156,7 +4156,8 @@
     "bentoEditorTitle": "ኣብ ኣርታዒ ወድኦ",
     "bentoEditorCopy": "ክሊፓት ቑረጽ፣ ሙዚቃን ጽሑፋትን ወስኽ፣ ድሕሪኡ ናብ DeHub ለጥፍ።",
     "bentoTopUpTitle": "DHB መልእ",
-    "bentoTopUpCopy": "ብካርድ ወይ ብዋሌትካ DHB ዓድግ።"
+    "bentoTopUpCopy": "ብካርድ ወይ ብዋሌትካ DHB ዓድግ።",
+    "exampleOutput": "ኣብነት ውፅኢት"
   },
   "pricing": {
     "plansForEveryWorkflow": "ንነፍሲ ወከፍ ናይ ስራሕ ፍሰት መደብ",

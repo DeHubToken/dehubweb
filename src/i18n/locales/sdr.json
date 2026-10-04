@@ -3977,7 +3977,8 @@
     "bentoEditorTitle": "ایڈیٹر میں پورا کرو",
     "bentoEditorCopy": "کلپ کاٹو، گانا آؤر کیپشن جوڑو، پھر DeHub میں پوسٹ کرو۔",
     "bentoTopUpTitle": "DHB ٹاپ اپ",
-    "bentoTopUpCopy": "کارڈ یا اپن والیٹ سے DHB کینو۔"
+    "bentoTopUpCopy": "کارڈ یا اپن والیٹ سے DHB کینو۔",
+    "exampleOutput": "उदाहरण आउटपुट"
   },
   "pricing": {
     "findTheRightFit": "از افراد تا تیم‌های سازمانی، یافتن مناسب‌ترین گزینه را بیابید",

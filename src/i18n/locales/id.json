@@ -4248,7 +4248,8 @@
     "bentoEditorTitle": "Selesaikan di Editor",
     "bentoEditorCopy": "Potong klip, tambahkan musik dan teks, lalu posting ke DeHub.",
     "bentoTopUpTitle": "Isi ulang DHB",
-    "bentoTopUpCopy": "Beli DHB dengan kartu atau dompet Anda."
+    "bentoTopUpCopy": "Beli DHB dengan kartu atau dompet Anda.",
+    "exampleOutput": "Contoh keluaran"
   },
   "pricing": {
     "plansForEveryWorkflow": "Paket untuk setiap alur kerja",

@@ -58,7 +58,7 @@ export interface GenerationJob {
   stage: string;
   /** Finished asset URL. */
   url?: string;
-  /** Poster frame for video results, when one is available. */
+  /** Provider-rendered 3D still or video poster, when available. */
   posterUrl?: string;
   cloudSaved?: boolean;
   saveError?: string;

@@ -4254,7 +4254,8 @@
     "bentoEditorTitle": "Vitao ao amin'ny Fanovana",
     "bentoEditorCopy": "Tapaho ny clip, ampio mozika sy dikan-teny, dia avoahy ao amin'ny DeHub.",
     "bentoTopUpTitle": "Ampio DHB",
-    "bentoTopUpCopy": "Mividiana DHB amin'ny karatra na ny kitaponao."
+    "bentoTopUpCopy": "Mividiana DHB amin'ny karatra na ny kitaponao.",
+    "exampleOutput": "Santionany vokatra"
   },
   "pricing": {
     "plansForEveryWorkflow": "Mikasa ny hikolokoloana amin'ny asa rehetra",

@@ -4258,7 +4258,8 @@
     "bentoEditorTitle": "ทำให้เสร็จในเอดิเตอร์",
     "bentoEditorCopy": "ตัดคลิป เพิ่มเพลงและคำบรรยาย แล้วโพสต์ไปที่ DeHub",
     "bentoTopUpTitle": "เติม DHB",
-    "bentoTopUpCopy": "ซื้อ DHB ด้วยบัตรหรือวอลเล็ตของคุณ"
+    "bentoTopUpCopy": "ซื้อ DHB ด้วยบัตรหรือวอลเล็ตของคุณ",
+    "exampleOutput": "ตัวอย่างเอาต์พุต"
   },
   "pricing": {
     "plansForEveryWorkflow": "แผนสำหรับทุกเวิร์กโฟลว์",

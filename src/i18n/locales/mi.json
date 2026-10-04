@@ -4225,7 +4225,8 @@
     "bentoEditorTitle": "Whakaotia i te Etita",
     "bentoEditorCopy": "Tapahia ngā topenga, tāpiria he puoro me ngā kupu hauraro, kātahi ka tuku ki DeHub.",
     "bentoTopUpTitle": "Utu atu DHB",
-    "bentoTopUpCopy": "Hokona he DHB mā te kāri, mā tō pūkoro moni rānei."
+    "bentoTopUpCopy": "Hokona he DHB mā te kāri, mā tō pūkoro moni rānei.",
+    "exampleOutput": "Tauira putanga"
   },
   "pricing": {
     "plansForEveryWorkflow": "Ngā mahere mō ia rere mahi",

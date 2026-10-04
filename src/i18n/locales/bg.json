@@ -4241,7 +4241,8 @@
     "bentoEditorTitle": "Завърши го в Редактора",
     "bentoEditorCopy": "Изрежи клипове, добави музика и надписи, после публикувай в DeHub.",
     "bentoTopUpTitle": "Зареди DHB",
-    "bentoTopUpCopy": "Купи DHB с карта или от портфейла си."
+    "bentoTopUpCopy": "Купи DHB с карта или от портфейла си.",
+    "exampleOutput": "Примерен изход"
   },
   "pricing": {
     "plansForEveryWorkflow": "Планове за всеки работен процес",

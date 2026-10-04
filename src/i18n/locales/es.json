@@ -4249,7 +4249,8 @@
     "bentoEditorTitle": "Termínalo en el Editor",
     "bentoEditorCopy": "Corta clips, añade música y subtítulos y publica en DeHub.",
     "bentoTopUpTitle": "Recargar DHB",
-    "bentoTopUpCopy": "Compra DHB con tarjeta o tu billetera."
+    "bentoTopUpCopy": "Compra DHB con tarjeta o tu billetera.",
+    "exampleOutput": "Ejemplo de salida"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planes para cada forma de trabajar",

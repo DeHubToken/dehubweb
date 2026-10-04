@@ -4253,7 +4253,8 @@
     "bentoEditorTitle": "በአርታዒው ውስጥ ያጠናቅቁት",
     "bentoEditorCopy": "ክሊፖችን ይቁረጡ፣ ሙዚቃና የጽሑፍ መግለጫ ያክሉ፣ ከዚያም በDeHub ላይ ይለጥፉ።",
     "bentoTopUpTitle": "DHB ይሙሉ",
-    "bentoTopUpCopy": "DHB በካርድ ወይም በዋሌትዎ ይግዙ።"
+    "bentoTopUpCopy": "DHB በካርድ ወይም በዋሌትዎ ይግዙ።",
+    "exampleOutput": "ምሳሌ ውፅዓት"
   },
   "pricing": {
     "plansForEveryWorkflow": "ለእያንዳንዱ የሥራ ፍሰት ዕቅዶች",

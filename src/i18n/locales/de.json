@@ -4245,7 +4245,8 @@
     "bentoEditorTitle": "Im Editor fertigstellen",
     "bentoEditorCopy": "Clips schneiden, Musik und Untertitel hinzufügen, dann auf DeHub posten.",
     "bentoTopUpTitle": "DHB aufladen",
-    "bentoTopUpCopy": "Kaufe DHB mit Karte oder deiner Wallet."
+    "bentoTopUpCopy": "Kaufe DHB mit Karte oder deiner Wallet.",
+    "exampleOutput": "Beispielausgabe"
   },
   "pricing": {
     "plansForEveryWorkflow": "Pläne für jeden Workflow",

@@ -3585,7 +3585,8 @@
     "bentoEditorTitle": "Di Edîtorê de biqedîne",
     "bentoEditorCopy": "Klîpan bibire, muzîk û binnivîs lê zêde bike, paşê li DeHub biweşîne.",
     "bentoTopUpTitle": "DHB bar bike",
-    "bentoTopUpCopy": "Bi kart an cizdanê xwe DHB bikire."
+    "bentoTopUpCopy": "Bi kart an cizdanê xwe DHB bikire.",
+    "exampleOutput": "نموونەی دەرچوون"
   },
   "pricing": {
     "plansForEveryWorkflow": "پلان بۆ هەموو ڕەوتێک",

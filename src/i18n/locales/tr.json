@@ -4249,7 +4249,8 @@
     "bentoEditorTitle": "Editörde tamamlayın",
     "bentoEditorCopy": "Klipleri kesin, müzik ve altyazı ekleyin, ardından DeHub'da paylaşın.",
     "bentoTopUpTitle": "DHB yükle",
-    "bentoTopUpCopy": "Kart veya cüzdanınızla DHB satın alın."
+    "bentoTopUpCopy": "Kart veya cüzdanınızla DHB satın alın.",
+    "exampleOutput": "Örnek çıktı"
   },
   "pricing": {
     "plansForEveryWorkflow": "Her iş akışına uygun planlar",

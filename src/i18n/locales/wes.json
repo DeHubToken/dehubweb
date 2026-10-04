@@ -3915,7 +3915,8 @@
     "bentoEditorTitle": "Finish am for Editor",
     "bentoEditorCopy": "Cut clips, add music and captions, then post am for DeHub.",
     "bentoTopUpTitle": "Top up DHB",
-    "bentoTopUpCopy": "Buy DHB wit card or yua wallet."
+    "bentoTopUpCopy": "Buy DHB wit card or yua wallet.",
+    "exampleOutput": "Example fo result"
   },
   "pricing": {
     "findTheRightFit": "From small people to big company team, find de right one fit for you",

@@ -4244,7 +4244,8 @@
     "bentoEditorTitle": "Finalizează în Editor",
     "bentoEditorCopy": "Taie clipuri, adaugă muzică și subtitrări, apoi postează pe DeHub.",
     "bentoTopUpTitle": "Alimentează DHB",
-    "bentoTopUpCopy": "Cumpără DHB cu cardul sau din portofel."
+    "bentoTopUpCopy": "Cumpără DHB cu cardul sau din portofel.",
+    "exampleOutput": "Exemplu de ieșire"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planuri pentru fiecare flux de lucru",

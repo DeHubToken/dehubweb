@@ -4249,7 +4249,8 @@
     "bentoEditorTitle": "Редакторда аяқтаңыз",
     "bentoEditorCopy": "Клиптерді кесіп, музыка мен субтитр қосып, DeHub-қа жариялаңыз.",
     "bentoTopUpTitle": "DHB толтыру",
-    "bentoTopUpCopy": "DHB-ны картамен немесе әмиянмен сатып алыңыз."
+    "bentoTopUpCopy": "DHB-ны картамен немесе әмиянмен сатып алыңыз.",
+    "exampleOutput": "Мысал шығысы"
   },
   "pricing": {
     "plansForEveryWorkflow": "Әрбір жұмыс процесіне арналған жоспарлар",

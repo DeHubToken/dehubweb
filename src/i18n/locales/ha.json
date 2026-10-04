@@ -4201,7 +4201,8 @@
     "bentoEditorTitle": "Kammala shi a Edita",
     "bentoEditorCopy": "Yanke bidiyo, ƙara kiɗa da rubutu, sannan ka wallafa a DeHub.",
     "bentoTopUpTitle": "Ƙara DHB",
-    "bentoTopUpCopy": "Sayi DHB da kati ko walat ɗinka."
+    "bentoTopUpCopy": "Sayi DHB da kati ko walat ɗinka.",
+    "exampleOutput": "Misalin fitarwa"
   },
   "pricing": {
     "plansForEveryWorkflow": "Shirye-shiryen kowane gudana na aiki",

@@ -4244,7 +4244,8 @@
     "bentoEditorTitle": "Завяршыце ў Рэдактары",
     "bentoEditorCopy": "Абрэжце кліпы, дадайце музыку і субцітры, а потым апублікуйце ў DeHub.",
     "bentoTopUpTitle": "Папоўніць DHB",
-    "bentoTopUpCopy": "Купіце DHB карткай або з кашалька."
+    "bentoTopUpCopy": "Купіце DHB карткай або з кашалька.",
+    "exampleOutput": "Выхад прыкладу"
   },
   "pricing": {
     "plansForEveryWorkflow": "Планы для кожнага рабочага працэса",

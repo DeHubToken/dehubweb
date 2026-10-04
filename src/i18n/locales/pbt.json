@@ -4142,7 +4142,8 @@
     "bentoEditorTitle": "په ایډیټر کې یې بشپړ کړئ",
     "bentoEditorCopy": "کلیپونه پرې کړئ، موسیقي او سرلیکونه ورزیات کړئ، بیا یې DeHub ته واستوئ.",
     "bentoTopUpTitle": "DHB چارج کړئ",
-    "bentoTopUpCopy": "د کارت یا خپل والټ په مرسته DHB واخلئ."
+    "bentoTopUpCopy": "د کارت یا خپل والټ په مرسته DHB واخلئ.",
+    "exampleOutput": "د تولید مثالونه"
   },
   "pricing": {
     "plansForEveryWorkflow": "د هر کاري جریان لپاره پلانونه",

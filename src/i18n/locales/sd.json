@@ -4202,7 +4202,8 @@
     "bentoEditorTitle": "ايڊيٽر ۾ مڪمل ڪريو",
     "bentoEditorCopy": "ڪلپس ڪٽيو، موسيقي ۽ ڪيپشن شامل ڪريو، پوءِ DeHub تي پوسٽ ڪريو.",
     "bentoTopUpTitle": "DHB ٽاپ اپ",
-    "bentoTopUpCopy": "ڪارڊ يا پنهنجي والٽ سان DHB خريد ڪريو."
+    "bentoTopUpCopy": "ڪارڊ يا پنهنجي والٽ سان DHB خريد ڪريو.",
+    "exampleOutput": "مثال جي اوٽ"
   },
   "pricing": {
     "plansForEveryWorkflow": "هر ڪم فلو لاءِ منصوبا",

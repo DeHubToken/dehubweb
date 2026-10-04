@@ -3837,7 +3837,8 @@
     "bentoEditorTitle": "ایڈیٹر اچ مکمل کرو",
     "bentoEditorCopy": "کلپاں کپو، موسیقی تے کیپشن شامل کرو، ول DeHub تے پوسٹ کرو۔",
     "bentoTopUpTitle": "DHB ٹاپ اپ",
-    "bentoTopUpCopy": "کارڈ یا اپݨے والٹ نال DHB خریدو۔"
+    "bentoTopUpCopy": "کارڈ یا اپݨے والٹ نال DHB خریدو۔",
+    "exampleOutput": "مثال نتیجہ"
   },
   "pricing": {
     "upToDiscount": "اُپ تا −{{pct}}%",

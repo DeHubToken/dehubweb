@@ -4215,7 +4215,8 @@
     "bentoEditorTitle": "ເຮັດໃຫ້ສຳເລັດໃນບັນນາທິການ",
     "bentoEditorCopy": "ຕັດຄລິບ, ເພີ່ມດົນຕີ ແລະ ຄຳບັນຍາຍ, ແລ້ວໂພສໄປ DeHub.",
     "bentoTopUpTitle": "ເຕີມ DHB",
-    "bentoTopUpCopy": "ຊື້ DHB ດ້ວຍບັດ ຫຼື ກະເປົາເງິນຂອງທ່ານ."
+    "bentoTopUpCopy": "ຊື້ DHB ດ້ວຍບັດ ຫຼື ກະເປົາເງິນຂອງທ່ານ.",
+    "exampleOutput": "ຜົນຜະລິດຕົວຢ່າງ"
   },
   "pricing": {
     "plansForEveryWorkflow": "ແຜນສຳລັບທຸກໆການເຮັດວຽກ",

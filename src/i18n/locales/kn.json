@@ -4232,7 +4232,8 @@
     "bentoEditorTitle": "ಸಂಪಾದಕದಲ್ಲಿ ಪೂರ್ಣಗೊಳಿಸಿ",
     "bentoEditorCopy": "ಕ್ಲಿಪ್‌ಗಳನ್ನು ಕತ್ತರಿಸಿ, ಸಂಗೀತ ಮತ್ತು ಶೀರ್ಷಿಕೆಗಳನ್ನು ಸೇರಿಸಿ, ನಂತರ DeHub ಗೆ ಪೋಸ್ಟ್ ಮಾಡಿ.",
     "bentoTopUpTitle": "DHB ಟಾಪ್ ಅಪ್",
-    "bentoTopUpCopy": "ಕಾರ್ಡ್ ಅಥವಾ ನಿಮ್ಮ ವಾಲೆಟ್ ಮೂಲಕ DHB ಖರೀದಿಸಿ."
+    "bentoTopUpCopy": "ಕಾರ್ಡ್ ಅಥವಾ ನಿಮ್ಮ ವಾಲೆಟ್ ಮೂಲಕ DHB ಖರೀದಿಸಿ.",
+    "exampleOutput": "ಉದಾಹರಣೆ ಔಟ್‌ಪುಟ್"
   },
   "pricing": {
     "plansForEveryWorkflow": "ಪ್ರತಿ ವರ್ಕ್‌ಫ್ಲೋಗೆ ಯೋಜನೆಗಳು",

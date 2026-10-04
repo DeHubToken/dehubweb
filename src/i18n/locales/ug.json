@@ -4195,7 +4195,8 @@
     "bentoEditorTitle": "تەھرىرلىگۈچتە تاماملاڭ",
     "bentoEditorCopy": "كلىپلارنى كېسىڭ، مۇزىكا ۋە خەت قوشۇڭ، ئاندىن DeHub قا يوللاڭ.",
     "bentoTopUpTitle": "DHB تولۇقلاش",
-    "bentoTopUpCopy": "كارتا ياكى ھەميانىڭىز بىلەن DHB سېتىۋېلىڭ."
+    "bentoTopUpCopy": "كارتا ياكى ھەميانىڭىز بىلەن DHB سېتىۋېلىڭ.",
+    "exampleOutput": "مىسال چىقىرىش"
   },
   "pricing": {
     "plansForEveryWorkflow": "ھەر بىر خىزمەت ئېقىمى ئۈچۈن پىلانلار",
