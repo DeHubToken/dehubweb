@@ -2619,6 +2619,7 @@
   },
   "work": {
     "integrity": {
+      "saveDraft": "Save and continue",
       "activateEscrow": "Activate deployed escrow",
       "checkFunding": "Check funding",
       "checkPayment": "Check payment",

@@ -366,6 +366,7 @@ export default function WorkJobDetailPage() {
         ))}
       </Section>
 
+      {job.fund_tx_hash && <p className="mt-4 text-xs text-white/60">{t('work.integrity.reviewWindow')}</p>}
       {/* Actions */}
       <div className="mt-6 flex flex-wrap gap-2">
         {isPoster && ['open','in_progress','expired'].includes(job.status) && (
@@ -379,13 +380,13 @@ export default function WorkJobDetailPage() {
               )) return;
               completeMutation.mutate(job.id);
             }}
-            disabled={completeMutation.isPending}
+            disabled={completeMutation.isPending || unpaid.length>0 || submissions.some(s=>s.approval_status==='pending') || (!!job.fund_tx_hash && !!job.deadline && Date.parse(job.deadline)>Date.now())}
             className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-40"
           >
             {t('work.markComplete')}
           </button>
         )}
-        {(isPoster || isAwarded) && job.status !== 'completed' && job.status !== 'disputed' && (
+        {(isPoster || isAwarded || submissions.some(s=>s.worker_address===me)) && ['open','in_progress','expired'].includes(job.status) && (
           <button onClick={() => setShowDispute(s => !s)} className="px-4 py-2 rounded-xl bg-red-500/20 text-red-200 text-sm inline-flex items-center gap-1">
             <AlertTriangle className="w-3.5 h-3.5" /> {t('work.openDispute')}
           </button>
@@ -554,6 +555,7 @@ function SubmissionCard({
       )}
       {isPoster && s.payout_state==='signing' && <button onClick={onRelease} className="mt-2 text-xs text-white/60">{t('work.integrity.releaseSignature')}</button>}
       {submittedPayment && <p className="mt-2 text-xs text-white/60">{t('work.integrity.paymentPending')}</p>}
+      {isPoster && job.status==='disputed' && awaiting && s.payout_state==='unpaid' && <button onClick={()=>setRejecting(true)} className="mt-2 text-xs text-red-300">{t('work.reject')}</button>}
       {isPoster && canPay && awaiting && (
         <button
           onClick={() => onPay(recoveryHash || undefined)}

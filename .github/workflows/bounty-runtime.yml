@@ -21,7 +21,7 @@ jobs:
           for (const name of ['CF_TOKEN','CF_ACCOUNT','RECEIPT_KEY']) if (!process.env[name]) throw new Error('Missing '+name);
           const response = await fetch('https://api.cloudflare.com/client/v4/accounts/'+process.env.CF_ACCOUNT+'/workers/scripts/dehub-migration/secrets', {
             method:'PUT', headers:{Authorization:'Bearer '+process.env.CF_TOKEN,'Content-Type':'application/json'},
-            body:JSON.stringify({name:'WORK_RECEIPT_SIGNING_KEY',type:'secret_text',text:process.env.RECEIPT_KEY})
+            body:JSON.stringify({name:'WORK_RECEIPT_SIGNING_KEY',type:'secret_text',text:process.env.RECEIPT_KEY.trim()})
           });
           const result=await response.json();
           if(!response.ok || !result.success) throw new Error('Worker secret configuration failed: '+response.status+' '+JSON.stringify(result.errors));

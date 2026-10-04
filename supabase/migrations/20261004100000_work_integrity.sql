@@ -232,9 +232,11 @@ BEGIN
   ELSIF p_action = 'reject' THEN
     SELECT * INTO STRICT s FROM public.work_submissions WHERE id = p_id;
     SELECT * INTO STRICT j FROM public.work_jobs WHERE id = s.job_id FOR UPDATE;
-    IF (j.status='disputed' AND NOT public.work_is_arbiter()) OR (j.poster_address <> who AND NOT (j.status='disputed' AND public.work_is_arbiter())) OR s.approval_status <> 'pending' OR j.status NOT IN ('open','in_progress','expired','disputed') THEN RAISE EXCEPTION 'Cannot reject this submission'; END IF;
+    IF (j.status='disputed' AND NOT public.work_is_arbiter()) OR (j.poster_address <> who AND NOT (j.status='disputed' AND public.work_is_arbiter()))
+      OR (s.approval_status <> 'pending' AND NOT (j.status='disputed' AND public.work_is_arbiter() AND s.approval_status='approved' AND s.payout_state='unpaid'))
+      OR j.status NOT IN ('open','in_progress','expired','disputed') THEN RAISE EXCEPTION 'Cannot reject this submission'; END IF;
     IF j.fund_tx_hash IS NOT NULL THEN PERFORM public.work_event(j.id,p_payload,p_signature,'ProofRejected',jsonb_build_object('proofHash',public.work_proof_hash(s.proof_url))); END IF;
-    UPDATE public.work_submissions SET approval_status = 'rejected', rejection_reason = nullif(btrim(p_note),'') WHERE id = s.id;
+    UPDATE public.work_submissions SET approval_status = 'rejected',approved_units=0,gross_amount=0,payout_amount=0,rejection_reason = nullif(btrim(p_note),'') WHERE id = s.id;
   ELSIF p_action = 'complete' THEN
     SELECT * INTO STRICT j FROM public.work_jobs WHERE id = p_id FOR UPDATE;
     IF j.poster_address <> who OR j.status NOT IN ('open','in_progress','expired') THEN RAISE EXCEPTION 'Cannot complete this bounty'; END IF;
@@ -323,7 +325,7 @@ GRANT SELECT ON public.work_proof_registrations TO anon, authenticated;
 REVOKE INSERT, UPDATE, DELETE ON public.work_proof_registrations FROM anon, authenticated;
 
 CREATE OR REPLACE FUNCTION public.work_proof_hash(p_url text) RETURNS text
-LANGUAGE sql IMMUTABLE SET search_path=public,extensions AS $$
+LANGUAGE sql IMMUTABLE SECURITY DEFINER SET search_path=public,extensions AS $$
  SELECT '0x' || encode(extensions.digest(convert_to(lower(btrim(p_url)),'UTF8'),'sha256'),'hex');
 $$;
 
@@ -360,7 +362,7 @@ LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE j public.work_jobs; fresh boolean;
 BEGIN
  SELECT * INTO STRICT j FROM public.work_jobs WHERE id=p_job FOR UPDATE;
- IF j.poster_address <> public.work_wallet() OR j.status <> 'draft' OR j.deadline IS NULL OR j.deadline <= now() THEN RAISE EXCEPTION 'Only a current draft can be funded'; END IF;
+ IF j.poster_address <> public.work_wallet() OR j.status <> 'draft' OR j.deadline IS NULL OR (j.funding_state='unfunded' AND j.deadline <= now()) THEN RAISE EXCEPTION 'Only a current draft can be funded'; END IF;
  IF NOT EXISTS(SELECT 1 FROM public.work_config WHERE id=1 AND escrow_address IS NOT NULL) THEN RAISE EXCEPTION 'Escrow setup is required before publishing. Your draft is saved.'; END IF;
  fresh := j.funding_state='unfunded';
  IF fresh THEN UPDATE public.work_jobs SET funding_state='signing' WHERE id=j.id; END IF;
@@ -504,7 +506,8 @@ BEGIN
   UPDATE public.work_jobs SET status='in_progress' WHERE id=j.id;
  END IF;
  UPDATE public.work_disputes SET status=CASE WHEN p_amount>0 THEN 'resolved_worker'::public.work_dispute_status ELSE 'resolved_poster'::public.work_dispute_status END,
-  resolved_by_address=public.work_wallet(),resolved_at=now(),worker_amount=p_amount,poster_refund=p_refund,resolution_note=p_note WHERE id=d.id;
+  resolved_by_address=public.work_wallet(),resolved_at=now(),worker_amount=p_amount,poster_refund=p_refund,resolution_note=p_note,
+  resolution_tx_hash=CASE WHEN j.fund_tx_hash IS NOT NULL THEN p_payload::jsonb->>'hash' ELSE NULL END WHERE id=d.id;
 END $$;
 
 -- Revoke the default PUBLIC execution grant on every new entry point explicitly.

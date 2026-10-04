@@ -1,5 +1,5 @@
 import { workRpc, settleWorkPayment } from '../work-rpc';
-import { workEscrow, workSubmission } from '../work-escrow';
+import { workEscrow, workSubmission, workJob } from '../work-escrow';
 import { getWorkConfig } from '@/lib/contracts/dehub-work';
 /**
  * /work — Jobs marketplace hooks
@@ -244,12 +244,13 @@ export function useUpdateJob() {
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
 
+      const current=await workJob(params.id);
       const patch: Record<string, unknown> = {
         title: params.title,
         description: params.description,
         platform: params.platform || null,
         target_url: params.target_url || null,
-        deadline: params.deadline || new Date(Date.now()+30*86400000).toISOString(),
+        deadline: current.fund_tx_hash || current.funding_state!=='unfunded' ? current.deadline : params.deadline || null,
       };
       if (params.budget) {
         patch.currency = params.budget.currency;
