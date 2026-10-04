@@ -6,7 +6,6 @@ import { PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageK
 import { useAuth } from '@/contexts/AuthContext';
 import { isWorkAdmin } from '@/constants/app.constants';
 import { useAdminDisputes, useAdminResolveDispute } from '@/features/work/hooks/use-work';
-import { WorkEscrowSetup } from '@/features/work/components/WorkEscrowSetup';
 import type { WorkCurrency, WorkJob } from '@/features/work/types';
 import { bountyPath } from '@/features/work/seo';
 import { WorkUser } from '@/features/work/components/WorkUser';
@@ -59,11 +58,10 @@ export default function WorkDisputesPage() {
     <div data-work-surface className="min-h-screen">
       <PageIsland className="max-w-4xl mx-auto" icon="governance" title={t('work.disputesTitle')} />
       <PageBody className="max-w-4xl mx-auto">
-      <WorkEscrowSetup />
       <p className="text-sm text-white/60">
         {escrowed
           ? t('work.disputesIntroEscrowed')
-          : t('work.disputesIntroLedger')}
+          : t('work.integrity.disputesReputation')}
       </p>
 
       {isLoading ? (

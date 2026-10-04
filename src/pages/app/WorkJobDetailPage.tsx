@@ -7,7 +7,7 @@ import {
   useWorkJob, useJobApplications, useJobSubmissions, useJobReviews,
   useApplyToJob, useAwardApplicant, useSubmitProof,
   useApproveSubmission, useRejectSubmission, usePaySubmission,
-  useLeaveReview, useOpenDispute, useMarkComplete, isJobEditable, useFundJob, useReleasePayment, useWorkConfig,
+  useLeaveReview, useOpenDispute, useMarkComplete, isJobEditable, usePublishJob, useReleasePayment,
 } from '@/features/work/hooks/use-work';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -69,16 +69,15 @@ export default function WorkJobDetailPage() {
   const reviewMutation = useLeaveReview();
   const disputeMutation = useOpenDispute();
   const completeMutation = useMarkComplete();
-  const fundMutation=useFundJob();
+  const publishMutation=usePublishJob();
   const releaseMutation=useReleasePayment();
-  const {data:config}=useWorkConfig();
-  const [fundingHash,setFundingHash]=useState('');
 
   const [coverLetter, setCoverLetter] = useState('');
   const [proofUrl, setProofUrl] = useState('');
   const [proofText, setProofText] = useState('');
   const [rating, setRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
+  const [reviewTarget,setReviewTarget]=useState('');
   const [disputeReason, setDisputeReason] = useState('');
   const [showDispute, setShowDispute] = useState(false);
 
@@ -95,10 +94,15 @@ export default function WorkJobDetailPage() {
   const canManage=(isPoster && job.status!=='disputed') || (job.status==='disputed' && isWorkAdmin(walletAddress));
   const isAwarded = me && job.awarded_worker_address && me === job.awarded_worker_address.toLowerCase();
   const myApp = applications.find(a => a.applicant_address.toLowerCase() === me);
-  const myReview = reviews.find(r => r.reviewer_address.toLowerCase() === me);
   const isCompleted = job.status === 'completed';
   const accepting = ['open','in_progress'].includes(job.status) && (!job.deadline || Date.parse(job.deadline) > Date.now()) && job.units_approved < job.max_units;
-  const canReview = isCompleted && (isPoster || submissions.some(s => s.worker_address.toLowerCase() === me && (s.approval_status === 'approved' || s.approval_status === 'paid')));
+  const deadlinePassed=!!job.deadline && Date.parse(job.deadline)<=Date.now();
+  const reviewWorkers=[...new Set(submissions.filter(s=>s.approval_status!=='pending' || isCompleted || deadlinePassed).map(s=>s.worker_address.toLowerCase()))];
+  if(job.awarded_worker_address && (isCompleted || deadlinePassed)) reviewWorkers.push(job.awarded_worker_address.toLowerCase());
+  const reviewTargets=(isPoster?[...new Set(reviewWorkers)]:reviewWorkers.includes(me || '')?[job.poster_address.toLowerCase()]:[])
+    .filter(address=>!reviews.some(r=>r.reviewer_address.toLowerCase()===me && r.reviewee_address.toLowerCase()===address));
+  const reviewee=reviewTargets.includes(reviewTarget)?reviewTarget:reviewTargets[0];
+  const canReview=!!me && job.status!=='draft' && !!reviewee;
 
   // Accepted work that has not been paid. This is the number the poster owes and
   // the reason the "Mark complete" button asks before closing a job over it.
@@ -178,15 +182,12 @@ export default function WorkJobDetailPage() {
         </div>
       </div>
 
-      <p className="mb-4 text-xs text-white/60">{t(job.fund_tx_hash?'work.integrity.escrowFunded':job.status==='draft'?'work.integrity.draftSaved':'work.integrity.legacyUnfunded')}</p>
+      <p className="mb-4 text-xs text-white/60">{t(job.fund_tx_hash?'work.integrity.escrowFunded':job.status==='draft'?'work.integrity.draftReady':'work.integrity.reputationNotice')}</p>
       {isPoster && job.status==='draft' && <div className="mb-4 rounded-xl border border-white/20 p-4 space-y-3">
-        <p className="text-sm text-white/80">{t('work.integrity.draftFunding')}</p>
-        {!config?.escrow_address && <p className="text-sm text-amber-200">{t('work.integrity.setupRequired')}</p>}
-        {job.funding_state!=='unfunded' && <input aria-label={t('work.integrity.recoverTx')} placeholder={t('work.integrity.hashPlaceholder')} value={fundingHash} onChange={e=>setFundingHash(e.target.value.trim())} className={inputCls} />}
-        <button disabled={fundMutation.isPending || !config?.escrow_address} onClick={()=>fundMutation.mutate({job_id:job.id,hash:fundingHash || undefined})} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-40">
-          {t(job.funding_state==='unfunded'?'work.integrity.fundPublish':'work.integrity.checkFunding')}
+        <p className="text-sm text-white/80">{t('work.integrity.reputationNotice')}</p>
+        <button disabled={publishMutation.isPending} onClick={()=>publishMutation.mutate(job.id)} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-40">
+          {t('work.integrity.publish')}
         </button>
-        {job.funding_state==='signing' && <button disabled={fundMutation.isPending} onClick={()=>{if(window.confirm(t('work.integrity.releaseConfirm'))) fundMutation.mutate({job_id:job.id,release:true});}} className="ml-3 text-xs text-white/70">{t('work.integrity.releaseSignature')}</button>}
       </div>}
 
       {/* What the poster still owes. Shown only to them, and only when there is
@@ -319,8 +320,12 @@ export default function WorkJobDetailPage() {
 
       {/* Reviews */}
       <Section title={t('work.reviews', { count: reviews.length })}>
-        {canReview && !myReview && (
+        {canReview && (
           <div className="mb-4 space-y-2">
+            <p className="text-xs text-white/60">{t('work.integrity.reviewHelp')}</p>
+            {isPoster && reviewTargets.length>1 && <select aria-label={t('work.integrity.reviewWorker')} value={reviewee} onChange={e=>setReviewTarget(e.target.value)} className={inputCls}>
+              {reviewTargets.map(address=><option key={address} value={address}>{address}</option>)}
+            </select>}
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map(n => (
                 <button key={n} onClick={() => setRating(n)}>
@@ -331,9 +336,6 @@ export default function WorkJobDetailPage() {
             <textarea value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} rows={2} placeholder={t('work.reviewPlaceholder')} className={inputCls} />
             <button
               onClick={() => {
-                const reviewee = isPoster
-                  ? submissions.find(s => s.approval_status === 'approved' || s.approval_status === 'paid')?.worker_address ?? job.awarded_worker_address
-                  : job.poster_address;
                 if (!reviewee) { toast.error(t('work.noCounterparty')); return; }
                 reviewMutation.mutate({
                   job_id: job.id,
@@ -343,7 +345,7 @@ export default function WorkJobDetailPage() {
                   comment: reviewComment.trim(),
                 }, { onSuccess: () => setReviewComment('') });
               }}
-              className="px-4 py-2 rounded-xl bg-white text-black font-semibold"
+              disabled={reviewMutation.isPending} className="px-4 py-2 rounded-xl bg-white text-black font-semibold disabled:opacity-40"
             >
               {t('work.postReview')}
             </button>

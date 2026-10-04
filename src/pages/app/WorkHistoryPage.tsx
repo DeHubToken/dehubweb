@@ -205,7 +205,7 @@ function PostedRow({ job }: { job: WorkJob }) {
       {job.fund_tx_hash ? (
         <div className="mt-2"><TxLink label={t('work.escrowTx')} txHash={job.fund_tx_hash} /></div>
       ) : (
-        <div className="mt-2 text-[11px] text-white/30">{t('work.notEscrowedOnChain')}</div>
+        <div className="mt-2 text-[11px] text-white/30">{t('work.integrity.payOnApproval')}</div>
       )}
     </div>
   );

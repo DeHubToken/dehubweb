@@ -3,8 +3,7 @@ import { workEscrow, workSubmission, workJob } from '../work-escrow';
 import { getWorkConfig } from '@/lib/contracts/dehub-work';
 /**
  * /work — Jobs marketplace hooks
- * Off-chain ledger + on-chain escrow via DeHubWork (best-effort; falls back
- * to off-chain when the contract address is the placeholder zero address).
+ * Reputation-backed bounties with signed actions and verified direct payments.
  */
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -200,7 +199,7 @@ export function useCreateJob() {
           deadline: params.deadline || new Date(Date.now()+30*86400000).toISOString(),
           onchain_job_id: null,
           fund_tx_hash: null,
-          status: 'draft',
+          status: 'open',
         } as any).select().single(),
         walletAddress
       );
@@ -211,7 +210,7 @@ export function useCreateJob() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
       qc.invalidateQueries({ queryKey: ['work-my-posted'] });
-      toast.success('Draft saved — fund escrow to publish');
+      toast.success('Bounty published');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to post job'),
   });
@@ -545,6 +544,7 @@ export function useUserReviews(address: string | undefined) {
       return (data || []) as unknown as WorkReview[];
     },
     enabled: !!address,
+    staleTime: 5 * 60_000,
   });
 }
 
@@ -638,7 +638,6 @@ export function useAdminResolveDispute() {
       const {data:subs,error}=await supabase.from(TBL_SUBS).select('*').eq('job_id',params.job_id).in('approval_status',['pending','approved']).order('created_at');
       if(error) throw error;
       const selected=(subs as any[])?.find(s=>s.worker_address===params.worker_address.toLowerCase());
-      if((subs as any[])?.some(s=>s.id!==selected?.id)) throw new Error('Review and settle other submissions before resolving');
       await workEscrow(walletAddress).resolve(params,selected?.proof_url);
     },
     onSuccess: () => {
@@ -669,6 +668,13 @@ export function useMarkComplete() {
 
 export function useWorkConfig() {
  return useQuery({queryKey:['work-config'],queryFn:getWorkConfig,staleTime:60000});
+}
+export function usePublishJob() {
+ const {walletAddress}=useAuth(); const qc=useQueryClient();
+ return useMutation({mutationFn:async(jobId:string)=>{
+  if(!walletAddress) throw new Error('Not authenticated');
+  await workRpc(walletAddress,'work_publish',{p_job:jobId});
+ },onSuccess:()=>{qc.invalidateQueries({queryKey:['work-job']});qc.invalidateQueries({queryKey:['work-my-posted']});qc.invalidateQueries({queryKey:['work-jobs-browse']});toast.success('Bounty published');},onError:(e:any)=>toast.error(e.message)});
 }
 export function useFundJob() {
  const {walletAddress}=useAuth(); const qc=useQueryClient();
