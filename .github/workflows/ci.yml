@@ -220,7 +220,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: DeHubToken/dehub-mobile
-          ref: a6ec12c62488f41371e9a69a625fef0869bfa12e
+          ref: 79ff599340f4f9ffde4ee44b69d8e0cc51864c61
           path: mobile-locales
           sparse-checkout: |
             i18n
