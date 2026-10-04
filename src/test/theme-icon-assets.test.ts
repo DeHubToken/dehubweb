@@ -13,7 +13,7 @@ const PROFILE_KEYS = [
   'fractions', 'pinned', 'search', 'messages', 'bookmarks',
 ];
 const PAGE_KEYS = [
-  'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
+  'wand', 'paint', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
   'email', 'accounts', 'usernames', 'tv', 'superpowers', 'dao', 'staking', 'bridge', 'buy',

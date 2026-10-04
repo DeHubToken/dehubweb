@@ -1,5 +1,5 @@
 {
-  "revision": 8,
+  "revision": 9,
   "themes": [
     "system",
     "minimal",
@@ -48,6 +48,7 @@
     "lock",
     "messages",
     "notifications",
+    "paint",
     "pinned",
     "posts",
     "precision-strike",

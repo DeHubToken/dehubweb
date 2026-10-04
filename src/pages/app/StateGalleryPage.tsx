@@ -144,7 +144,7 @@ const ICONS: ThemeIconKey[] = [
   'harpoon', 'home', 'images', 'live', 'lock', 'messages', 'notifications', 'pinned',
   'posts', 'precision-strike', 'profile', 'search', 'second-wind', 'settings', 'signal-flare', 'stages',
   'staking', 'stats', 'stores', 'subscriptions', 'superpowers', 'team-up', 'timeline-bomber', 'trend-jacker',
-  'trophy', 'tv', 'usernames', 'videos', 'wand',
+  'trophy', 'tv', 'usernames', 'videos', 'wand', 'paint',
 ];
 
 export default function StateGalleryPage() {
