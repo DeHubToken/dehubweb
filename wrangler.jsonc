@@ -7,14 +7,11 @@
   // stays on its dashboard-configured custom domain; this is additive.
   // dehub.net (+ all subdomains) = SEO domain-move redirects, served here
   // since the zone moved to Cloudflare (July 2026).
-  // staging.dehub.io = the pre-release mirror. Same assets as the apex; the
-  // worker's host guard stamps every response noindex so staging can never
-  // outrank production.
+  // staging.dehub.io is deployed separately with wrangler.staging.jsonc.
   // legacy.dehub.io = the pre-2026 app, retired. Needs a proxied placeholder
   // DNS record on the zone for this route to fire at all.
   "routes": [
     { "pattern": "www.dehub.io/*", "zone_name": "dehub.io" },
-    { "pattern": "staging.dehub.io/*", "zone_name": "dehub.io" },
     { "pattern": "legacy.dehub.io/*", "zone_name": "dehub.io" },
     { "pattern": "dehub.net/*", "zone_name": "dehub.net" },
     { "pattern": "*.dehub.net/*", "zone_name": "dehub.net" }
