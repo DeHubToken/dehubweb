@@ -120,6 +120,13 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
 
   return (
     <div className="space-y-6">
+      <label className="flex items-start gap-3 rounded-xl border border-foreground/10 p-4">
+        <Checkbox checked={value.creatorSupport === true} onCheckedChange={(checked) => patch({ creatorSupport: checked === true })} />
+        <span>
+          <span className="block font-medium">Creator support ads</span>
+          <span className="block text-sm text-muted-foreground">Let viewers support a creator by watching 30 seconds of your video. The creator receives the revenue share; the viewer pays nothing. Requires an approved video of at least 30 seconds.</span>
+        </span>
+      </label>
       {/* Live estimate */}
       <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4 flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center shrink-0">

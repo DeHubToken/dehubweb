@@ -1068,7 +1068,9 @@ export function AudioVisualizer({
             The style picker gives up width and scrolls before buttons clip. */}
         <div
           className="flex items-center gap-1 px-1.5 pointer-events-auto"
-          style={{ touchAction: 'pan-x' }}
+          // pan-y too: this bar spans the card, so a feed swipe that starts on
+          // it has to scroll the page. The style row still pans sideways.
+          style={{ touchAction: 'pan-x pan-y' }}
           onClick={stopBubble}
           onPointerDown={stopBubble}
         >
