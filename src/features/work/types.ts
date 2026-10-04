@@ -70,6 +70,11 @@ export interface WorkSubmission {
   last_polled_at: string | null;
   approval_status: WorkSubmissionStatus;
   payout_amount: number;
+  gross_amount: number;
+  approved_units: number;
+  payout_state: 'unpaid' | 'signing' | 'broadcast' | 'confirmed';
+  payout_chain_id: number | null;
+  view_evidence_url: string | null;
   payout_tx_hash: string | null;
   rejection_reason: string | null;
   created_at: string;
