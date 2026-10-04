@@ -13,6 +13,8 @@
 import { useTranslation } from 'react-i18next';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
+import { releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
+import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
 import { Play, Pause, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { usePiP } from '@/contexts/PiPContext';
@@ -63,7 +65,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   const [showVideo, setShowVideo] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isInPiP, setIsInPiP] = useState(false);
+  const isInPiP = usePictureInPicture(videoRef);
   const [playbackRate, setPlaybackRate] = useState(() => getVideoPreferences().playbackRate);
   const isMutedRef = useRef(isMuted);
   isMutedRef.current = isMuted;
@@ -145,9 +147,10 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   // Register with VideoPlaybackManager — full stop when another video plays
   useEffect(() => {
     disposedRef.current = false;
+    const video = videoRef.current;
     videoPlaybackManager.register(cardId, () => {
       fullStop();
-    });
+    }, undefined, undefined, () => videoRef.current);
 
     return () => {
       disposedRef.current = true;
@@ -158,10 +161,10 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       }
       videoPlaybackManager.unregister(cardId);
       isStoppingRef.current = true;
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-        hlsRef.current = null;
-      }
+      const hls = hlsRef.current;
+      hlsRef.current = null;
+      if (video) releaseAfterPictureInPicture(video, () => hls?.destroy());
+      else hls?.destroy();
     };
   }, [cardId, fullStop]);
   
@@ -331,12 +334,10 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     };
 
     const onEnterPiP = () => {
-      setIsInPiP(true);
       claimForPiP(muteHandler);
     };
 
     const onLeavePiP = () => {
-      setIsInPiP(false);
       releaseMediaSession(cardId);
     };
 
