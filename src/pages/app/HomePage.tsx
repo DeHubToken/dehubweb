@@ -89,7 +89,7 @@ const MemoW2EFeed     = memo(lazy(loadW2EFeed));
 
 /** Minimum swipe distance to trigger tab change */
 const SWIPE_THRESHOLD = 50;
-const PULL_THRESHOLD = 80;
+const PULL_THRESHOLD = 92;
 /** Minimum trackpad delta to trigger tab change */
 const TRACKPAD_THRESHOLD = 60;
 /** Lock duration after gesture trigger - covers trackpad inertia */
@@ -485,8 +485,8 @@ export default function HomePage() {
   });
 
   useEffect(() => {
-    setFeedRefresh({ refreshing: isRefreshing, progress: isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1) });
-  }, [isRefreshing, isHoldingAtThreshold, holdProgress, pullDistance]);
+    setFeedRefresh({ refreshing: isRefreshing, progress: isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1), distance: pullDistance, pulling: isPulling });
+  }, [isRefreshing, isHoldingAtThreshold, holdProgress, pullDistance, isPulling]);
   useEffect(() => () => setFeedRefresh({ refreshing: false, progress: 0 }), []);
 
   // --------------------------------------------------------------------------
@@ -1072,6 +1072,8 @@ export default function HomePage() {
         onMouseMove={pullHandlers.onMouseMove}
         onMouseUp={pullHandlers.onMouseUp}
         onMouseLeave={pullHandlers.onMouseLeave}
+        data-feed-pull-content
+        style={islandTopBar && isMobile ? { transform: `translate3d(0, ${pullDistance}px, 0)`, willChange: pullDistance > 0 ? 'transform' : undefined } : undefined}
       >
         {/* Pull-to-refresh indicator with hold progress */}
         {pullDistance > 0 && !(islandTopBar && isMobile) && (

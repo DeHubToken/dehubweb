@@ -1,5 +1,6 @@
 import { useFeedRefresh } from '@/lib/feed-refresh';
 import { ElectricLogo } from './ElectricLogo';
+import { FeedPillPullEffect } from './FeedPillPullEffect';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Bell, Check, Menu, SlidersHorizontal, LayoutGrid, Plus } from 'lucide-react';
@@ -119,6 +120,7 @@ export function FeedIslandCapsule({
           </button>
         </div>
       </div>
+      {!tabsOpen && <FeedPillPullEffect distance={refresh.distance ?? 0} pulling={refresh.pulling ?? false} refreshing={refresh.refreshing} />}
       <div className="absolute inset-x-0 top-0 z-0 overflow-visible pointer-events-none">
       <div ref={setFeedIslandPortal} className="w-full pointer-events-auto" hidden={tabsOpen} />
       <AnimatePresence>
