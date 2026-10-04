@@ -20,6 +20,7 @@ import { TrendingTopicsList } from './TrendingTopicsList';
 import { BadgedName } from '@/components/app/BadgedName';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useStage, useLiveSpaces } from '@/contexts/StageContext';
+import { useDiscoveryTab, type DiscoveryTab, type DiscoverySurface } from '@/hooks/use-discovery-tab';
 
 const COUNTRIES = [
   { code: 'global', flag: '🌍', name: 'Global' },
@@ -99,7 +100,7 @@ const COUNTRIES = [
   { code: 'eg', flag: '🇪🇬', name: 'Egypt' },
 ];
 
-type Tab = 'posts' | 'stages' | 'tickers';
+type Tab = DiscoveryTab;
 
 const TICKER_PERIODS: { value: TickerPeriod; label: string }[] = [
   { value: '1d', label: '1D' },
@@ -121,9 +122,10 @@ const slideTransition = { type: 'tween' as const, duration: 0.2, ease: [0.25, 0.
 
 interface WhatsHappeningProps {
   showCountrySelector?: boolean;
+  surface?: DiscoverySurface;
 }
 
-export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector = false }: WhatsHappeningProps) {
+export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector = false, surface = 'sidebar' }: WhatsHappeningProps) {
   // The RightSidebar instance is `hidden lg:block` — below 1024px it stays
   // mounted but is never visible, so its polls/rotation are pure waste there.
   // The Explore instance (showCountrySelector) is the one shown on mobile.
@@ -140,7 +142,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   const navigate = useNavigate();
   const { openModal: openStagesModal, joinSpace } = useStage();
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<Tab>('posts');
+  const [activeTab, setActiveTab] = useDiscoveryTab(surface);
   const [hasTabInteracted, setHasTabInteracted] = useState(false);
   const [tickerPeriod, setTickerPeriod] = useState<TickerPeriod>('all');
   const tickerDirRef = useRef(0);
@@ -185,7 +187,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   // ONLY while the tickers tab is actually visible. This sidebar is mounted
   // on every /app route, and unconditional refetchIntervals here meant five
   // ticker polls running forever in the background on every page.
-  const tickersActive = activeTab === 'tickers';
+  const tickersActive = activeTab === 'tickers' && isVisibleInstance;
   useQuery({ queryKey: ['trending-tickers', '1d' as TickerPeriod], queryFn: () => getTopTickers(10, '1d'), staleTime: 120_000, refetchInterval: 120_000, enabled: tickersActive, placeholderData: (p: any) => p });
   useQuery({ queryKey: ['trending-tickers', '1w' as TickerPeriod], queryFn: () => getTopTickers(10, '1w'), staleTime: 120_000, refetchInterval: 120_000, enabled: tickersActive, placeholderData: (p: any) => p });
   useQuery({ queryKey: ['trending-tickers', '1m' as TickerPeriod], queryFn: () => getTopTickers(10, '1m'), staleTime: 120_000, refetchInterval: 120_000, enabled: tickersActive, placeholderData: (p: any) => p });
@@ -229,7 +231,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   const handleMainTabChange = useCallback((tab: Tab) => {
     setHasTabInteracted(true);
     setActiveTab(tab);
-  }, []);
+  }, [setActiveTab]);
 
   const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Radio, tickers: Flame };
   // Icon-only tabs need a spoken name.
@@ -240,7 +242,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   const liveStages = useLiveSpaces().slice(0, 10);
 
   return (
-    <div data-side-panel className="bg-zinc-900 rounded-2xl overflow-hidden relative">
+    <div data-side-panel data-discovery-surface={surface} className="bg-zinc-900 rounded-2xl overflow-hidden relative">
       {/* Icon tab switcher — matches TabbedSidePanel style */}
       <div data-side-panel-tabs className="flex">
         {(['posts', 'stages', 'tickers'] as Tab[]).map(tab => {

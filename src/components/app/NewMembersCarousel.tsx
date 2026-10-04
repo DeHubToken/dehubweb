@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
+import { useFollowStatuses } from '@/hooks/use-follow-status';
 import { isWithinNewWindow, joinedAgoLabel, useNewMembers, type NewMember } from '@/hooks/use-new-members';
 
 interface NewMembersCarouselProps {
@@ -58,11 +59,14 @@ export function NewMembersCarousel({
     () => data?.pages.flatMap((page) => page.items) ?? [],
     [data],
   );
+  const relationships = useFollowStatuses(members.map(member => member.address));
 
   const isFollowed = useCallback(
-    (member: NewMember) => followOverrides.get(member.address.toLowerCase()) === true,
-    [followOverrides],
+    (member: NewMember) => followOverrides.get(member.address.toLowerCase()) ?? relationships[member.address.toLowerCase()]?.isFollowing ?? false,
+    [followOverrides, relationships],
   );
+  const isRequested = (member: NewMember) => followOverrides.get(member.address.toLowerCase()) === undefined && !!relationships[member.address.toLowerCase()]?.isFollowRequestPending;
+  const isUnresolved = (member: NewMember) => !!walletAddress && !relationships[member.address.toLowerCase()];
 
   // Endless sideways: pull the next page as the far end comes into reach, the
   // horizontal twin of the rail's scroll handler.
@@ -98,7 +102,7 @@ export function NewMembersCarousel({
       openLoginModal();
       return;
     }
-    if (isFollowed(member)) return;
+    if (isFollowed(member) || relationships[member.address.toLowerCase()]?.isFollowRequestPending || !relationships[member.address.toLowerCase()]) return;
 
     toggleFollowFor(queryClient, member.address, false, {
       name: member.displayName,
@@ -106,7 +110,7 @@ export function NewMembersCarousel({
         if (!info.handled) handleApiError(err, 'Failed to follow user');
       },
     });
-  }, [handleApiError, isAuthenticated, isFollowed, openLoginModal, queryClient]);
+  }, [handleApiError, isAuthenticated, isFollowed, openLoginModal, queryClient, relationships]);
 
   // No skeleton: the feed has already laid itself out around this slot, and a
   // placeholder that resolves to nothing costs a reflow mid-scroll.
@@ -170,14 +174,14 @@ export function NewMembersCarousel({
                 size="sm"
                 variant="outline"
                 onClick={(e) => handleFollow(e, member)}
-                disabled={isFollowed(member)}
+                disabled={isFollowed(member) || isRequested(member) || isUnresolved(member)}
                 className={`w-24 h-7 text-[10px] font-semibold rounded-lg border-zinc-700 bg-transparent flex items-center justify-center ${
                   isFollowed(member)
                     ? 'text-white/40 hover:bg-transparent cursor-default'
                     : 'text-white hover:bg-zinc-800'
                 }`}
               >
-                {isFollowed(member) ? 'Following' : 'Follow'}
+                {isRequested(member) ? 'Requested' : isFollowed(member) ? 'Following' : 'Follow'}
               </Button>
             </div>
           </div>

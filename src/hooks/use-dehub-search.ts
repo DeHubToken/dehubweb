@@ -187,7 +187,7 @@ export function useDeHubSearch({
   const shouldFetch = enabled && trimmedQuery.length >= minQueryLength;
 
   return useInfiniteQuery({
-    queryKey: ['dehub-search', trimmedQuery, type, postType],
+    queryKey: ['dehub-search', trimmedQuery, type, postType, address?.toLowerCase()],
     queryFn: async ({ pageParam = 0 }): Promise<SearchPageResult> => {
       const result = await universalSearch({
         q: trimmedQuery,

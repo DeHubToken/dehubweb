@@ -11,6 +11,7 @@ import { getAccountByUsername, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useDebouncedValue } from './use-debounced-value';
 import type { SearchCreator } from './use-dehub-search';
+import { useAuth } from '@/contexts/AuthContext';
 
 /**
  * Map DeHub user to SearchCreator format
@@ -20,12 +21,14 @@ export function mapUserToSearchCreator(user: DeHubUser): SearchCreator {
   const address = user.address || user.wallet_address || '';
   
   return {
-    id: user._id || user.id || address || '',
+    id: address || user._id || user.id || '',
     name: user.displayName || user.display_name || user.username || 'Unknown User',
     handle: user.username ? `@${user.username.replace('@', '')}` : '@unknown',
     avatar: buildAvatarUrl(address, rawAvatarUrl),
     verified: user.isVerified || user.is_verified || false,
     bio: user.bio,
+    isFollowing: user.isFollowing,
+    followsYou: user.followsYou,
   };
 }
 
@@ -47,6 +50,7 @@ export function useDeHubUserSearch({
   enabled = true,
   forceExactLookup = false,
 }: UseDeHubUserSearchOptions) {
+  const { walletAddress } = useAuth();
   // Debounce the query
   const debouncedQuery = useDebouncedValue(query, 300);
   
@@ -60,9 +64,9 @@ export function useDeHubUserSearch({
   );
 
   const result = useQuery({
-    queryKey: ['dehub-user-search', cleanUsername],
+    queryKey: ['dehub-user-search', cleanUsername, walletAddress?.toLowerCase()],
     queryFn: async () => {
-      const user = await getAccountByUsername(cleanUsername);
+      const user = await getAccountByUsername(cleanUsername, walletAddress || undefined);
       return mapUserToSearchCreator(user);
     },
     enabled: shouldFetch,
