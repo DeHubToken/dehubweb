@@ -104,8 +104,8 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.posterBounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
-  // CSS cap follows the adjacent font; older engines use Exo's cap metric.
-  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1cap' : '0.732em';
+  // Enlarge the artwork above the baseline by 10% using the adjacent font's cap height.
+  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.1cap' : '0.8052em';
   const opticalStyle: CSSProperties = {
     width: `calc(${(bounds.right - bounds.left) / artworkHeight} * ${cap})`,
     height: cap,
