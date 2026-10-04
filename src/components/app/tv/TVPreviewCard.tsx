@@ -88,7 +88,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
         setIsMuted(true);
         setIsPlaying(false);
       }
-    }, undefined, () => videoRef.current);
+    }, undefined, undefined, () => videoRef.current);
     return () => {
       videoPlaybackManager.unregister(cardId);
       const hls = hlsRef.current;
