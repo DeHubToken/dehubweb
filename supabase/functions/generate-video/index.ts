@@ -7,6 +7,8 @@ import { corsHeaders, rateLimitByIp } from "../_shared/auth.ts";
 import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
 import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
+import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
+import { buildCreatorFalVideoRequest } from '../_shared/creator-fal-input.ts';
 import {
   kieKey,
   kieUsableUrl,
@@ -56,6 +58,7 @@ const VIDEO_MODELS: Record<string, {
    */
   falOmitAudio?: boolean;
 }> = {
+  ...CREATOR_FAL_VIDEO_MODELS,
   'seedance-2.5': {
     id: 'bytedance/seedance-2.5',
     name: 'Seedance 2.5',
@@ -280,7 +283,7 @@ interface GenerateVideoRequest {
   duration?: '5s' | '10s' | string;
   aspectRatio?: '16:9' | '9:16' | '1:1';
   negativePrompt?: string;
-  resolution?: '480p' | '720p' | '1080p';
+  resolution?: string;
   referenceImageUrls?: string[];
   endFrameUrl?: string;
   audioUrls?: string[];
@@ -951,6 +954,17 @@ serve(async (req) => {
       );
     }
 
+    let validatedDuration: number | undefined;
+    if (CREATOR_FAL_VIDEO_MODELS[model]) {
+      try {
+        validatedDuration = buildCreatorFalVideoRequest(model, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed }).durationSeconds;
+      } catch (error) {
+        return new Response(JSON.stringify({ status: 'failed', error: (error as Error).message }), {
+          status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
     // Authenticate, price and debit. Charged after validation so a rejected
     // request never costs anything, and before the provider so a render cannot
     // be started for free.
@@ -960,7 +974,7 @@ serve(async (req) => {
       body,
       actionType: 'generate-video',
       rateLimit: { limit: 20, windowMs: 60 * 60 * 1000 },
-      durationSeconds: parseInt(String(duration), 10) || undefined,
+      durationSeconds: validatedDuration ?? (parseInt(String(duration), 10) || undefined),
     });
     if (!charged.ok) return charged.response;
 
@@ -1027,7 +1041,7 @@ async function handleFalGeneration(
   duration = '5s',
   aspectRatio = '16:9',
   negativePrompt?: string,
-  resolution?: '480p' | '720p' | '1080p',
+  resolution?: string,
   referenceImageUrls?: string[],
   endFrameUrl?: string,
   audioUrls?: string[],
@@ -1037,9 +1051,15 @@ async function handleFalGeneration(
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
 
+  const prepared = CREATOR_FAL_VIDEO_MODELS[modelConfig.id]
+    ? buildCreatorFalVideoRequest(modelConfig.id, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed })
+    : undefined;
+
   // Choose the right endpoint: reference-to-video if ref images, image-to-video if source image, else text-to-video
   let appId: string;
-  if (referenceImageUrls && referenceImageUrls.length > 0 && modelConfig.falReferenceModel) {
+  if (prepared) {
+    appId = prepared.appId;
+  } else if (referenceImageUrls && referenceImageUrls.length > 0 && modelConfig.falReferenceModel) {
     appId = modelConfig.falReferenceModel;
   } else if (sourceImage && modelConfig.falImageModel) {
     appId = modelConfig.falImageModel;
@@ -1053,7 +1073,7 @@ async function handleFalGeneration(
   // which silently billed a 30s Seedance 2.5 render as a 15s one.
   const parsedDuration = Math.min(Math.max(parseInt(duration) || 5, 3), 30);
 
-  const input = buildFalInput(modelConfig.falFamily ?? 'seedance', {
+  const input = prepared?.input ?? buildFalInput(modelConfig.falFamily ?? 'seedance', {
     prompt,
     sourceImage,
     duration: parsedDuration,
