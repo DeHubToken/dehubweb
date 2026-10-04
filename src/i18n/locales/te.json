@@ -4238,7 +4238,8 @@
     "bentoEditorTitle": "ఎడిటర్‌లో పూర్తి చేయండి",
     "bentoEditorCopy": "క్లిప్‌లను కట్ చేసి, సంగీతం మరియు క్యాప్షన్‌లు జోడించి, ఆపై DeHubలో పోస్ట్ చేయండి.",
     "bentoTopUpTitle": "DHB టాప్ అప్",
-    "bentoTopUpCopy": "కార్డ్ లేదా మీ వాలెట్‌తో DHB కొనండి."
+    "bentoTopUpCopy": "కార్డ్ లేదా మీ వాలెట్‌తో DHB కొనండి.",
+    "exampleOutput": "ఉదాహరణ అవుట్‌పుట్"
   },
   "pricing": {
     "plansForEveryWorkflow": "ప్రతి వర్క్‌ఫ్లో కోసం ప్లాన్‌లు",

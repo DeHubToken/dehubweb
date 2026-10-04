@@ -4072,7 +4072,8 @@
     "bentoEditorTitle": "এডিটরো শেষ করউক্কা",
     "bentoEditorCopy": "ক্লিপ কাটউক্কা, গান আর ক্যাপশন দেউক্কা, তারবাদে DeHub-এ পোস্ট করউক্কা।",
     "bentoTopUpTitle": "DHB টপ আপ",
-    "bentoTopUpCopy": "কার্ড বা আফনার ওয়ালেট দিয়া DHB কিনউক্কা।"
+    "bentoTopUpCopy": "কার্ড বা আফনার ওয়ালেট দিয়া DHB কিনউক্কা।",
+    "exampleOutput": "উদাহরণ আউটপুট"
   },
   "pricing": {
     "dhbPerMonth": "{{amount}} টোকেন/মাস, আপনার ওয়ালেটে পাঠানো হয়েছে",

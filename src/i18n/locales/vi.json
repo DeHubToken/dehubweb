@@ -4259,7 +4259,8 @@
     "bentoEditorTitle": "Hoàn thiện trong Trình chỉnh sửa",
     "bentoEditorCopy": "Cắt clip, thêm nhạc và phụ đề, rồi đăng lên DeHub.",
     "bentoTopUpTitle": "Nạp DHB",
-    "bentoTopUpCopy": "Mua DHB bằng thẻ hoặc ví của bạn."
+    "bentoTopUpCopy": "Mua DHB bằng thẻ hoặc ví của bạn.",
+    "exampleOutput": "Đầu ra ví dụ"
   },
   "pricing": {
     "plansForEveryWorkflow": "Kế hoạch cho mọi quy trình làm việc",

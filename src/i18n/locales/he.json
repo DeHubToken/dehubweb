@@ -4243,7 +4243,8 @@
     "bentoEditorTitle": "סיים בעורך",
     "bentoEditorCopy": "חתוך קליפים, הוסף מוזיקה וכתוביות ופרסם ב-DeHub.",
     "bentoTopUpTitle": "טעינת DHB",
-    "bentoTopUpCopy": "קנה DHB בכרטיס או בארנק שלך."
+    "bentoTopUpCopy": "קנה DHB בכרטיס או בארנק שלך.",
+    "exampleOutput": "פלט לדוגמה"
   },
   "pricing": {
     "plansForEveryWorkflow": "תוכניות לכל זרימת עבודה",

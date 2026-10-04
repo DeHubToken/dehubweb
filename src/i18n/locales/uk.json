@@ -4602,7 +4602,8 @@
     "bentoEditorTitle": "Завершіть у Редакторі",
     "bentoEditorCopy": "Обрізайте кліпи, додавайте музику й субтитри, а потім публікуйте в DeHub.",
     "bentoTopUpTitle": "Поповнити DHB",
-    "bentoTopUpCopy": "Купуйте DHB карткою або з гаманця."
+    "bentoTopUpCopy": "Купуйте DHB карткою або з гаманця.",
+    "exampleOutput": "Приклад виводу"
   },
   "pricing": {
     "plansForEveryWorkflow": "Плани для кожного робочого процесу",

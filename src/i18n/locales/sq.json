@@ -4244,7 +4244,8 @@
     "bentoEditorTitle": "Përfundojeni në Redaktor",
     "bentoEditorCopy": "Prisni klipe, shtoni muzikë dhe titra, pastaj publikoni në DeHub.",
     "bentoTopUpTitle": "Rimbushni DHB",
-    "bentoTopUpCopy": "Blini DHB me kartë ose me portofolin tuaj."
+    "bentoTopUpCopy": "Blini DHB me kartë ose me portofolin tuaj.",
+    "exampleOutput": "Dalja e shembullit"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planet për çdo rrjedhë pune",

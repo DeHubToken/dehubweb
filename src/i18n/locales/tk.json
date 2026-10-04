@@ -4184,7 +4184,8 @@
     "bentoEditorTitle": "Redaktorda tamamlaň",
     "bentoEditorCopy": "Klipleri kesiň, aýdym-saz we ýazgylar goşuň, soňra DeHub-da paýlaşyň.",
     "bentoTopUpTitle": "DHB doldur",
-    "bentoTopUpCopy": "DHB-ni kart ýa-da gapjygyňyz bilen satyn alyň."
+    "bentoTopUpCopy": "DHB-ni kart ýa-da gapjygyňyz bilen satyn alyň.",
+    "exampleOutput": "Mysal çykdajy"
   },
   "pricing": {
     "plansForEveryWorkflow": "Her bir iş akymy üçin planlar",

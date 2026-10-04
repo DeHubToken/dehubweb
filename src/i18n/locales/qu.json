@@ -4262,7 +4262,8 @@
     "bentoEditorTitle": "Editorpi tukuy",
     "bentoEditorCopy": "Clipkunata kuchuy, takita qillqakunatawan yapay, chaymanta DeHubman churay.",
     "bentoTopUpTitle": "DHB yapay",
-    "bentoTopUpCopy": "DHBta rantiy tarjetawan utaq billeteraykiwan."
+    "bentoTopUpCopy": "DHBta rantiy tarjetawan utaq billeteraykiwan.",
+    "exampleOutput": "Ejemplo salida"
   },
   "pricing": {
     "plansForEveryWorkflow": "Sapa llamkay puririypaq plankuna",

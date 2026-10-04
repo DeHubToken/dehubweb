@@ -4191,7 +4191,8 @@
     "bentoEditorTitle": "Gör klart i redigeraren",
     "bentoEditorCopy": "Klipp klipp, lägg till musik och undertexter och publicera sedan på DeHub.",
     "bentoTopUpTitle": "Fyll på DHB",
-    "bentoTopUpCopy": "Köp DHB med kort eller din plånbok."
+    "bentoTopUpCopy": "Köp DHB med kort eller din plånbok.",
+    "exampleOutput": "Exempelutmatning"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planer för varje arbetsflöde",

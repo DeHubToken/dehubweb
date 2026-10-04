@@ -4260,7 +4260,8 @@
     "bentoEditorTitle": "დაასრულეთ რედაქტორში",
     "bentoEditorCopy": "დაჭერით კლიპები, დაამატეთ მუსიკა და სუბტიტრები, შემდეგ გამოაქვეყნეთ DeHub-ზე.",
     "bentoTopUpTitle": "DHB-ის შევსება",
-    "bentoTopUpCopy": "იყიდეთ DHB ბარათით ან საფულით."
+    "bentoTopUpCopy": "იყიდეთ DHB ბარათით ან საფულით.",
+    "exampleOutput": "Გამოტანის მაგალითი"
   },
   "pricing": {
     "plansForEveryWorkflow": "გეგმები ყველა სამუშაო ნაკადისთვის",

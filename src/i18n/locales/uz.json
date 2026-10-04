@@ -4262,7 +4262,8 @@
     "bentoEditorTitle": "Muharrirda yakunlang",
     "bentoEditorCopy": "Kliplarni kesing, musiqa va subtitrlar qo‘shing, so‘ng DeHub’ga joylang.",
     "bentoTopUpTitle": "DHB to‘ldirish",
-    "bentoTopUpCopy": "DHB’ni karta yoki hamyoningiz orqali sotib oling."
+    "bentoTopUpCopy": "DHB’ni karta yoki hamyoningiz orqali sotib oling.",
+    "exampleOutput": "Misol chiqishi"
   },
   "pricing": {
     "plansForEveryWorkflow": "Har bir ish uchun rejalar",

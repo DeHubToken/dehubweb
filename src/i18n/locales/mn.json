@@ -4202,7 +4202,8 @@
     "bentoEditorTitle": "Засварлагч дээр дуусгах",
     "bentoEditorCopy": "Клип тайрч, хөгжим болон хадмал нэмээд DeHub-д нийтэл.",
     "bentoTopUpTitle": "DHB цэнэглэх",
-    "bentoTopUpCopy": "Карт эсвэл түрийвчээрээ DHB худалдаж аваарай."
+    "bentoTopUpCopy": "Карт эсвэл түрийвчээрээ DHB худалдаж аваарай.",
+    "exampleOutput": "Гаралт, жишээ"
   },
   "pricing": {
     "plansForEveryWorkflow": "Ажлын урсгал бүрээр төлөвлөх",

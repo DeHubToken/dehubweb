@@ -4191,7 +4191,8 @@
     "bentoEditorTitle": "Fejezd be a Szerkesztőben",
     "bentoEditorCopy": "Vágj klipeket, adj hozzá zenét és feliratot, majd posztold a DeHubra.",
     "bentoTopUpTitle": "DHB feltöltése",
-    "bentoTopUpCopy": "Vásárolj DHB-t kártyával vagy a tárcáddal."
+    "bentoTopUpCopy": "Vásárolj DHB-t kártyával vagy a tárcáddal.",
+    "exampleOutput": "Példa kimenet"
   },
   "pricing": {
     "plansForEveryWorkflow": "Csomagok minden munkafolyamathoz",

@@ -4296,7 +4296,8 @@
     "bentoEditorTitle": "Tapusin sa Editor",
     "bentoEditorCopy": "Mag-cut ng clips, magdagdag ng musika at caption, saka i-post sa DeHub.",
     "bentoTopUpTitle": "Mag-top up ng DHB",
-    "bentoTopUpCopy": "Bumili ng DHB gamit ang card o ang iyong wallet."
+    "bentoTopUpCopy": "Bumili ng DHB gamit ang card o ang iyong wallet.",
+    "exampleOutput": "Halimbawa ng output"
   },
   "pricing": {
     "plansForEveryWorkflow": "Mga plano para sa bawat workflow",

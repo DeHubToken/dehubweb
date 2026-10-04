@@ -4252,7 +4252,8 @@
     "bentoEditorTitle": "Ολοκληρώστε το στον Επεξεργαστή",
     "bentoEditorCopy": "Κόψτε κλιπ, προσθέστε μουσική και υπότιτλους και δημοσιεύστε στο DeHub.",
     "bentoTopUpTitle": "Φόρτιση DHB",
-    "bentoTopUpCopy": "Αγοράστε DHB με κάρτα ή το πορτοφόλι σας."
+    "bentoTopUpCopy": "Αγοράστε DHB με κάρτα ή το πορτοφόλι σας.",
+    "exampleOutput": "Παράδειγμα εξόδου"
   },
   "pricing": {
     "plansForEveryWorkflow": "Σχέδια για κάθε ροή εργασίας",

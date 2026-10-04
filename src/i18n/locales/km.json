@@ -4230,7 +4230,8 @@
     "bentoEditorTitle": "បញ្ចប់វានៅក្នុងកម្មវិធីនិពន្ធ",
     "bentoEditorCopy": "កាត់ឃ្លីប បន្ថែមតន្ត្រី និងចំណងជើងរង រួចបង្ហោះទៅ DeHub។",
     "bentoTopUpTitle": "បញ្ចូល DHB",
-    "bentoTopUpCopy": "ទិញ DHB ដោយកាត ឬកាបូបរបស់អ្នក។"
+    "bentoTopUpCopy": "ទិញ DHB ដោយកាត ឬកាបូបរបស់អ្នក។",
+    "exampleOutput": "ឧទាហរណ៍លទ្ធផល"
   },
   "pricing": {
     "plansForEveryWorkflow": "ផែនការសម្រាប់រាល់លំហូរការងារ",

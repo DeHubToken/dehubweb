@@ -4111,7 +4111,8 @@
     "bentoEditorTitle": "Rampungna ing Editor",
     "bentoEditorCopy": "Potong klip, tambahna musik lan teks, banjur kirim menyang DeHub.",
     "bentoTopUpTitle": "Isi DHB",
-    "bentoTopUpCopy": "Tuku DHB nganggo kertu utawa dompetmu."
+    "bentoTopUpCopy": "Tuku DHB nganggo kertu utawa dompetmu.",
+    "exampleOutput": "Conto output"
   },
   "pricing": {
     "plansForEveryWorkflow": "Rencana untuk setiap alur kerja",

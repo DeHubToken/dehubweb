@@ -3823,7 +3823,8 @@
     "bentoEditorTitle": "كمّلو في المحرّر",
     "bentoEditorCopy": "قص المقاطع، ضيف موسيقى وترجمة، وبعدين انشر في DeHub.",
     "bentoTopUpTitle": "اشحن DHB",
-    "bentoTopUpCopy": "اشتري DHB بكرت أو من محفظتك."
+    "bentoTopUpCopy": "اشتري DHB بكرت أو من محفظتك.",
+    "exampleOutput": "مثال على الإخراج"
   },
   "pricing": {
     "plansForEveryWorkflow": "خطط لكل عملية عمل",

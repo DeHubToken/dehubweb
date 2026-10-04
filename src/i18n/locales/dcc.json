@@ -3656,7 +3656,8 @@
     "bentoEditorTitle": "ایڈیٹر میں پورا کرو",
     "bentoEditorCopy": "کلپاں کاٹو، میوزک اور کیپشن ڈالو، پھر DeHub پو پوسٹ کرو۔",
     "bentoTopUpTitle": "DHB ٹاپ اپ کرو",
-    "bentoTopUpCopy": "کارڈ یا اپنے والٹ سے DHB خریدو۔"
+    "bentoTopUpCopy": "کارڈ یا اپنے والٹ سے DHB خریدو۔",
+    "exampleOutput": "مثال نتیجہ"
   },
   "pricing": {
     "plansForEveryWorkflow": "ہر ورکفلو کے لیے پلانز",

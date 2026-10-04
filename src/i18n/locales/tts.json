@@ -4045,7 +4045,8 @@
     "bentoEditorTitle": "เฮ็ดให้แล้วในตัวแก้ไข",
     "bentoEditorCopy": "ตัดคลิป ใส่เพลงกับคำบรรยาย แล้วโพสต์ไป DeHub",
     "bentoTopUpTitle": "เติม DHB",
-    "bentoTopUpCopy": "ซื้อ DHB ด้วยบัตรหรือวอลเล็ตของเจ้า"
+    "bentoTopUpCopy": "ซื้อ DHB ด้วยบัตรหรือวอลเล็ตของเจ้า",
+    "exampleOutput": "ตัวอย่างผลลัพธ์"
   },
   "pricing": {
     "annual": "ปีละครั้ง",

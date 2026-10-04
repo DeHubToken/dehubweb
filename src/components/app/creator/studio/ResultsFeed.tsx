@@ -276,6 +276,7 @@ function ResultCard({ job, onOpen }: { job: GenerationJob; onOpen: () => void })
       {job.kind === 'video' && job.url && (
         <video
           src={job.url}
+          poster={job.posterUrl}
           muted
           loop
           playsInline
