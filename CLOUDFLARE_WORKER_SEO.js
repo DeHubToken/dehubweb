@@ -1,3 +1,5 @@
+import { handleWorkReceipt } from './server/work-receipts.ts';
+
 /**
  * Cloudflare Worker for DeHub Dynamic SEO/SSR
  *
@@ -5331,6 +5333,9 @@ function ssrCachePut(ctx, key, resp) {
 }
 
 async function handleRequest(request, env, ctx) {
+  if (new URL(request.url).pathname === '/api/work/receipt') {
+    return handleWorkReceipt(request, env);
+  }
   request = canonicalOriginRequest(request);
   const url = new URL(request.url);
   const pathname = url.pathname;
