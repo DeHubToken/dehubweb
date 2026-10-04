@@ -4112,7 +4112,8 @@
     "bentoEditorTitle": "এডিটরত শেষ গরো",
     "bentoEditorCopy": "ক্লিপ কাডো, গান আর ক্যাপশন দো, তারপর DeHub-ত পোস্ট গরো।",
     "bentoTopUpTitle": "DHB টপ আপ গরো",
-    "bentoTopUpCopy": "কার্ড বা তোঁয়ার ওয়ালেট দি DHB কিনো।"
+    "bentoTopUpCopy": "কার্ড বা তোঁয়ার ওয়ালেট দি DHB কিনো।",
+    "exampleOutput": "উদাহরণ আউটপুট"
   },
   "pricing": {
     "upToDiscount": "ওপরে −{{pct}}%",

@@ -3938,7 +3938,8 @@
     "bentoEditorTitle": "到编辑器里完成",
     "bentoEditorCopy": "剪片段、加音乐和字幕，再发布到 DeHub。",
     "bentoTopUpTitle": "充值 DHB",
-    "bentoTopUpCopy": "用银行卡或钱包买 DHB。"
+    "bentoTopUpCopy": "用银行卡或钱包买 DHB。",
+    "exampleOutput": "示例输出"
   },
   "pricing": {
     "upToDiscount": "吾到 −{{pct}}% 都好",

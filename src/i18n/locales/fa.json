@@ -4259,7 +4259,8 @@
     "bentoEditorTitle": "در ویرایشگر کاملش کنید",
     "bentoEditorCopy": "کلیپ‌ها را برش دهید، موسیقی و زیرنویس اضافه کنید، سپس در DeHub منتشر کنید.",
     "bentoTopUpTitle": "شارژ DHB",
-    "bentoTopUpCopy": "با کارت یا کیف پول خود DHB بخرید."
+    "bentoTopUpCopy": "با کارت یا کیف پول خود DHB بخرید.",
+    "exampleOutput": "خروجی مثال"
   },
   "pricing": {
     "plansForEveryWorkflow": "طرح‌های برای هر گردش کار",

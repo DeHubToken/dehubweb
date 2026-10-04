@@ -2,7 +2,7 @@ import { handleCorsPreflight, jsonResponse, requireDeHubAuth, serviceClient, che
 
 const BUCKET = 'creator-assets';
 const ID = /^[a-zA-Z0-9_-]{6,80}$/;
-const FIELDS = ['id', 'kind', 'prompt', 'resolvedPrompt', 'model', 'modelName', 'presetId', 'aspect', 'exportFormat', 'createdAt', 'finishedAt', 'transcript', 'segments'];
+const FIELDS = ['id', 'kind', 'prompt', 'resolvedPrompt', 'model', 'modelName', 'presetId', 'aspect', 'exportFormat', 'createdAt', 'finishedAt', 'transcript', 'segments', 'posterUrl'];
 
 Deno.serve(async (req) => {
   const preflight = handleCorsPreflight(req);
@@ -43,8 +43,11 @@ Deno.serve(async (req) => {
     if (body.action === 'prepare') {
       const input = body.metadata ?? {};
       if (!['image','video','audio','model3d'].includes(input.kind)) return jsonResponse({ error: 'Invalid media type' }, 400);
-      for (const key of ['prompt','resolvedPrompt','model','modelName','aspect','transcript']) {
+      for (const key of ['prompt','resolvedPrompt','model','modelName','aspect','transcript','posterUrl']) {
         if (input[key] !== undefined && typeof input[key] !== 'string') return jsonResponse({ error: 'Invalid generation metadata' }, 400);
+      }
+      if (input.posterUrl !== undefined && (input.posterUrl.length > 4096 || !/^https:\/\//i.test(input.posterUrl))) {
+        return jsonResponse({ error: 'Invalid preview URL' }, 400);
       }
       const metadata = Object.fromEntries(FIELDS.filter((key) => input[key] !== undefined).map((key) => [key,input[key]]));
       if (JSON.stringify(metadata).length > 100000) return jsonResponse({ error: 'Generation metadata is too large' }, 413);

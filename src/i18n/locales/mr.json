@@ -4237,7 +4237,8 @@
     "bentoEditorTitle": "एडिटरमध्ये पूर्ण करा",
     "bentoEditorCopy": "क्लिप्स कट करा, संगीत आणि कॅप्शन जोडा, मग DeHub वर पोस्ट करा.",
     "bentoTopUpTitle": "DHB टॉप अप करा",
-    "bentoTopUpCopy": "कार्ड किंवा तुमच्या वॉलेटने DHB खरेदी करा."
+    "bentoTopUpCopy": "कार्ड किंवा तुमच्या वॉलेटने DHB खरेदी करा.",
+    "exampleOutput": "उदाहरण आऊटपुट"
   },
   "pricing": {
     "plansForEveryWorkflow": "प्रत्येक वर्कफ्लोसाठी योजना",

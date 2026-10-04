@@ -4245,7 +4245,8 @@
     "bentoEditorTitle": "Ավարտեք Խմբագրիչում",
     "bentoEditorCopy": "Կտրեք տեսահատվածներ, ավելացրեք երաժշտություն և ենթագրեր, ապա հրապարակեք DeHub-ում։",
     "bentoTopUpTitle": "Համալրել DHB",
-    "bentoTopUpCopy": "Գնեք DHB քարտով կամ ձեր դրամապանակով։"
+    "bentoTopUpCopy": "Գնեք DHB քարտով կամ ձեր դրամապանակով։",
+    "exampleOutput": "Ելքի օրինակ"
   },
   "pricing": {
     "plansForEveryWorkflow": "Պլաններ յուրաքանչյուր workflow-ի համար",

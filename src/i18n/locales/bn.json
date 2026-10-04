@@ -4243,7 +4243,8 @@
     "bentoEditorTitle": "এডিটরে শেষ করুন",
     "bentoEditorCopy": "ক্লিপ কাটুন, সংগীত ও ক্যাপশন যোগ করুন, তারপর DeHub-এ পোস্ট করুন।",
     "bentoTopUpTitle": "DHB টপ আপ করুন",
-    "bentoTopUpCopy": "কার্ড বা আপনার ওয়ালেট দিয়ে DHB কিনুন।"
+    "bentoTopUpCopy": "কার্ড বা আপনার ওয়ালেট দিয়ে DHB কিনুন।",
+    "exampleOutput": "উদাহরণ আউটপুট"
   },
   "pricing": {
     "plansForEveryWorkflow": "প্রতিটি ওয়ার্কফ্লোর জন্য পরিকল্পনা",

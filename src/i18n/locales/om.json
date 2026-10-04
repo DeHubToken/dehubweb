@@ -4208,7 +4208,8 @@
     "bentoEditorTitle": "Gulaalaa keessatti xumuri",
     "bentoEditorCopy": "Kiliippii muri, muuziqaa fi ibsa barreeffamaa dabali, sana booda DeHub irratti maxxansi.",
     "bentoTopUpTitle": "DHB guuti",
-    "bentoTopUpCopy": "Kaardii ykn waalleetii keetiin DHB bitadhu."
+    "bentoTopUpCopy": "Kaardii ykn waalleetii keetiin DHB bitadhu.",
+    "exampleOutput": "Fakkeenya bu’aa"
   },
   "pricing": {
     "plansForEveryWorkflow": "Karoora adeemsa hojii hundaaf",

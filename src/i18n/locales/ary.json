@@ -4238,7 +4238,8 @@
     "bentoEditorTitle": "كمّلو ف المحرّر",
     "bentoEditorCopy": "قطع المقاطع، زيد الموسيقى والترجمة، ومن بعد نشر ف DeHub.",
     "bentoTopUpTitle": "عمّر DHB",
-    "bentoTopUpCopy": "شري DHB بالكارط ولا من المحفظة ديالك."
+    "bentoTopUpCopy": "شري DHB بالكارط ولا من المحفظة ديالك.",
+    "exampleOutput": "مثال على المخرجات"
   },
   "pricing": {
     "plansForEveryWorkflow": "خطط لكل سير عمل",

@@ -12,7 +12,7 @@ async function call(wallet: string, body: Record<string, unknown>) {
 }
 
 export async function saveCloudGeneration(wallet: string, job: GenerationJob): Promise<void> {
-  const { url, sourceImage, posterUrl, ticket, ...metadata } = job;
+  const { url, sourceImage, ticket, ...metadata } = job;
   const prepared = await call(wallet, { action: 'prepare', id: job.id, metadata });
   if (prepared.saved) return;
   if (!url) throw new Error('No generated media to save');

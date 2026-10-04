@@ -4280,7 +4280,8 @@
     "bentoEditorTitle": "Voltooi dit in die Redigeerder",
     "bentoEditorCopy": "Sny snitte, voeg musiek en onderskrifte by, en plaas dan op DeHub.",
     "bentoTopUpTitle": "Laai DHB aan",
-    "bentoTopUpCopy": "Koop DHB met 'n kaart of jou beursie."
+    "bentoTopUpCopy": "Koop DHB met 'n kaart of jou beursie.",
+    "exampleOutput": "Voorbeeld uitset"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planne vir elke werkstroom",

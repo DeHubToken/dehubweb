@@ -4199,7 +4199,8 @@
     "bentoEditorTitle": "Дар Муҳаррир ба анҷом расонед",
     "bentoEditorCopy": "Клипҳоро буред, мусиқӣ ва зернавис илова кунед, баъд дар DeHub нашр кунед.",
     "bentoTopUpTitle": "Пур кардани DHB",
-    "bentoTopUpCopy": "DHB-ро бо корт ё ҳамёни худ харед."
+    "bentoTopUpCopy": "DHB-ро бо корт ё ҳамёни худ харед.",
+    "exampleOutput": "Намунаи хурӯҷ"
   },
   "pricing": {
     "plansForEveryWorkflow": "Нақшаҳо барои ҳар як ҷараёни корӣ",

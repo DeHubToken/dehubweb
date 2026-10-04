@@ -4242,7 +4242,8 @@
     "bentoEditorTitle": "エディターで仕上げる",
     "bentoEditorCopy": "クリップをカットし、音楽や字幕を追加してDeHubに投稿。",
     "bentoTopUpTitle": "DHBをチャージ",
-    "bentoTopUpCopy": "カードまたはウォレットでDHBを購入。"
+    "bentoTopUpCopy": "カードまたはウォレットでDHBを購入。",
+    "exampleOutput": "出力例"
   },
   "pricing": {
     "plansForEveryWorkflow": "すべてのワークフロー向けプラン",

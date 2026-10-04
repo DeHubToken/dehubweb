@@ -4242,7 +4242,8 @@
     "bentoEditorTitle": "ਐਡੀਟਰ ਵਿੱਚ ਪੂਰਾ ਕਰੋ",
     "bentoEditorCopy": "ਕਲਿੱਪ ਕੱਟੋ, ਸੰਗੀਤ ਅਤੇ ਕੈਪਸ਼ਨ ਜੋੜੋ, ਫਿਰ DeHub 'ਤੇ ਪੋਸਟ ਕਰੋ।",
     "bentoTopUpTitle": "DHB ਟੌਪ ਅੱਪ",
-    "bentoTopUpCopy": "ਕਾਰਡ ਜਾਂ ਆਪਣੇ ਵਾਲਿਟ ਨਾਲ DHB ਖਰੀਦੋ।"
+    "bentoTopUpCopy": "ਕਾਰਡ ਜਾਂ ਆਪਣੇ ਵਾਲਿਟ ਨਾਲ DHB ਖਰੀਦੋ।",
+    "exampleOutput": "ਉਦਾਹਰਨ ਆਉਟਪੁੱਟ"
   },
   "pricing": {
     "plansForEveryWorkflow": "ਸਾਰੀਆਂ ਵਰਕਫਲੋਜ਼ ਲਈ ਯੋਜਨਾਵਾਂ",

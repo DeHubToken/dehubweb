@@ -4178,7 +4178,8 @@
     "bentoEditorTitle": "एडिटर में पूरा करीं",
     "bentoEditorCopy": "क्लिप काटीं, संगीत आ कैप्शन जोड़ीं, फेर DeHub पर पोस्ट करीं।",
     "bentoTopUpTitle": "DHB टॉप अप करीं",
-    "bentoTopUpCopy": "कार्ड भा आपन वॉलेट से DHB खरीदीं।"
+    "bentoTopUpCopy": "कार्ड भा आपन वॉलेट से DHB खरीदीं।",
+    "exampleOutput": "उदाहरण आउटपुट"
   },
   "pricing": {
     "plansForEveryWorkflow": "किसी भी प्रक्रिया के लिए योजना",

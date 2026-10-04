@@ -4360,7 +4360,8 @@
     "bentoEditorTitle": "Dokončite v editore",
     "bentoEditorCopy": "Nastrihajte klipy, pridajte hudbu a titulky a potom zverejnite na DeHub.",
     "bentoTopUpTitle": "Dobiť DHB",
-    "bentoTopUpCopy": "Kúpte DHB kartou alebo z peňaženky."
+    "bentoTopUpCopy": "Kúpte DHB kartou alebo z peňaženky.",
+    "exampleOutput": "Príklad výstupu"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plány pre každý workflow",

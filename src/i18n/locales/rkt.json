@@ -3990,7 +3990,8 @@
     "bentoEditorTitle": "এডিটরোত শেষ করো",
     "bentoEditorCopy": "ক্লিপ কাটো, গান আর ক্যাপশন দেও, তারপর DeHub-ত পোস্ট করো।",
     "bentoTopUpTitle": "DHB টপ আপ",
-    "bentoTopUpCopy": "কার্ড বা তোমার ওয়ালেট দিয়া DHB কেনো।"
+    "bentoTopUpCopy": "কার্ড বা তোমার ওয়ালেট দিয়া DHB কেনো।",
+    "exampleOutput": "উদাহরণ আউটপুট"
   },
   "pricing": {
     "upToDiscount": "তো −{{pct}}% পৰ্য্যন্ত",

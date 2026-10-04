@@ -4496,7 +4496,8 @@
     "bentoEditorTitle": "Finish it in the Editor",
     "bentoEditorCopy": "Cut clips, add music and captions, then post to DeHub.",
     "bentoTopUpTitle": "Top up DHB",
-    "bentoTopUpCopy": "Buy DHB with a card or your wallet."
+    "bentoTopUpCopy": "Buy DHB with a card or your wallet.",
+    "exampleOutput": "Example output"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plans for every workflow",

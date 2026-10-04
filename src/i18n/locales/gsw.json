@@ -4235,7 +4235,8 @@
     "bentoEditorTitle": "Mach's im Editor fertig",
     "bentoEditorCopy": "Schnid Clips, füeg Musig und Untertitel dezue und poste's denn uf DeHub.",
     "bentoTopUpTitle": "DHB uflade",
-    "bentoTopUpCopy": "Chauf DHB mit ere Charte oder dim Wallet."
+    "bentoTopUpCopy": "Chauf DHB mit ere Charte oder dim Wallet.",
+    "exampleOutput": "Bispieloutput"
   },
   "pricing": {
     "plansForEveryWorkflow": "Pläne für jeden Workflow",

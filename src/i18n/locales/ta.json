@@ -4231,7 +4231,8 @@
     "bentoEditorTitle": "எடிட்டரில் முடிக்கவும்",
     "bentoEditorCopy": "கிளிப்புகளை வெட்டி, இசை மற்றும் தலைப்புகளைச் சேர்த்து, பின்னர் DeHub-இல் பதிவிடவும்.",
     "bentoTopUpTitle": "DHB நிரப்பு",
-    "bentoTopUpCopy": "கார்டு அல்லது உங்கள் வாலட் மூலம் DHB வாங்கவும்."
+    "bentoTopUpCopy": "கார்டு அல்லது உங்கள் வாலட் மூலம் DHB வாங்கவும்.",
+    "exampleOutput": "எடுத்துக்காட்டு வெளியீடு"
   },
   "pricing": {
     "plansForEveryWorkflow": "ஒவ்வொரு பணிப்பாய்விற்கும் திட்டங்கள்",

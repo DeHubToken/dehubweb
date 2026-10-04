@@ -4194,7 +4194,8 @@
     "bentoEditorTitle": "Dovrši u uređivaču",
     "bentoEditorCopy": "Izreži isječke, dodaj glazbu i titlove, pa objavi na DeHub.",
     "bentoTopUpTitle": "Nadoplati DHB",
-    "bentoTopUpCopy": "Kupi DHB karticom ili novčanikom."
+    "bentoTopUpCopy": "Kupi DHB karticom ili novčanikom.",
+    "exampleOutput": "Primjer izlaza"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planovi za svaki radni tok",

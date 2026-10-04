@@ -4232,7 +4232,8 @@
     "bentoEditorTitle": "Lõpeta see redaktoris",
     "bentoEditorCopy": "Lõika klippe, lisa muusikat ja subtiitreid ning postita DeHubi.",
     "bentoTopUpTitle": "Lae DHB-d juurde",
-    "bentoTopUpCopy": "Osta DHB-d kaardi või oma rahakotiga."
+    "bentoTopUpCopy": "Osta DHB-d kaardi või oma rahakotiga.",
+    "exampleOutput": "Näidisväljund"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plaanid igale töövoogule",

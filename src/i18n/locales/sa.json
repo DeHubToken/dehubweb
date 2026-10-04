@@ -4156,7 +4156,8 @@
     "bentoEditorTitle": "सम्पादके समापयतु",
     "bentoEditorCopy": "खण्डान् कर्तयतु, सङ्गीतं शीर्षकाणि च योजयतु, ततः DeHub-मध्ये प्रकाशयतु।",
     "bentoTopUpTitle": "DHB पूरयतु",
-    "bentoTopUpCopy": "कार्ड्-द्वारा स्वकोषेण वा DHB क्रीणातु।"
+    "bentoTopUpCopy": "कार्ड्-द्वारा स्वकोषेण वा DHB क्रीणातु।",
+    "exampleOutput": "उदाहरणः उत्पादन"
   },
   "pricing": {
     "plansForEveryWorkflow": "प्रत्येक कार्ययोजना",

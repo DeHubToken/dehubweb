@@ -4256,7 +4256,8 @@
     "bentoEditorTitle": "Kuqede kuMhleli",
     "bentoEditorCopy": "Sika iziqeshana, engeza umculo nemibhalo engezansi, bese uthumela ku-DeHub.",
     "bentoTopUpTitle": "Faka i-DHB",
-    "bentoTopUpCopy": "Thenga i-DHB ngekhadi noma ngesikhwama sakho."
+    "bentoTopUpCopy": "Thenga i-DHB ngekhadi noma ngesikhwama sakho.",
+    "exampleOutput": "Isibonelo sokukhishwa"
   },
   "pricing": {
     "plansForEveryWorkflow": "Izinhlelo zawo wonke umsebenzi",
