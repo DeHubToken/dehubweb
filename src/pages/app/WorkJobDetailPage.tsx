@@ -33,7 +33,7 @@ function payoutFor(job: WorkJob): number {
 
 /** `payout_tx_hash` is the only proof a payout happened — the status column alone never moved money. */
 function isPaid(s: WorkSubmission): boolean {
-  return !!s.payout_tx_hash || s.approval_status === 'paid';
+  return s.payout_state === 'confirmed' && !!s.payout_tx_hash;
 }
 
 function isAwaitingPayment(s: WorkSubmission): boolean {
@@ -91,6 +91,7 @@ export default function WorkJobDetailPage() {
   const myApp = applications.find(a => a.applicant_address.toLowerCase() === me);
   const myReview = reviews.find(r => r.reviewer_address.toLowerCase() === me);
   const isCompleted = job.status === 'completed';
+  const accepting = ['open','in_progress'].includes(job.status) && (!job.deadline || Date.parse(job.deadline) > Date.now()) && job.units_approved < job.max_units;
   const canReview = isCompleted && (isPoster || submissions.some(s => s.worker_address.toLowerCase() === me && (s.approval_status === 'approved' || s.approval_status === 'paid')));
 
   // Accepted work that has not been paid. This is the number the poster owes and
@@ -191,7 +192,7 @@ export default function WorkJobDetailPage() {
               <button onClick={() => applicationComments.refetch()} className="ml-2 underline">{t('common.tryAgain')}</button>
             </div>
           )}
-          {!isPoster && !myApp && !isAwarded && job.status === 'open' && (
+          {!isPoster && !myApp && !isAwarded && job.status === 'open' && accepting && (
             <div className="mb-4 space-y-2">
               <textarea
                 value={coverLetter}
@@ -240,7 +241,7 @@ export default function WorkJobDetailPage() {
       {/* Submissions / proof feed */}
       {(job.job_type !== 'contract' || isAwarded || isPoster) && (
         <Section title={t('work.submissions', { count: submissions.length })}>
-          {((job.job_type !== 'contract' && !isPoster) || isAwarded) && job.status !== 'completed' && job.status !== 'cancelled' && (
+          {((job.job_type !== 'contract' && !isPoster) || isAwarded) && accepting && (
             <div className="mb-4 space-y-2">
               <input value={proofUrl} onChange={(e) => setProofUrl(e.target.value)} placeholder={t('work.proofUrlPlaceholder')} className={inputCls} />
               <textarea value={proofText} onChange={(e) => setProofText(e.target.value)} rows={2} placeholder={t('work.notesPlaceholder')} className={inputCls} />
@@ -267,7 +268,7 @@ export default function WorkJobDetailPage() {
               job={job}
               isPoster={isPoster}
               isMine={s.worker_address.toLowerCase() === me}
-              onApprove={(pay) => approveMutation.mutate({
+              onApprove={(pay, views, evidence) => approveMutation.mutate({
                 submission_id: s.id,
                 job_id: job.id,
                 onchain_job_id: job.onchain_job_id,
@@ -276,8 +277,10 @@ export default function WorkJobDetailPage() {
                 payout_amount: payoutFor(job),
                 total_budget: job.total_budget,
                 pay,
+                views,
+                evidence_url: evidence,
               })}
-              onPay={() => payMutation.mutate({
+              onPay={(recoveryHash) => payMutation.mutate({
                 submission_id: s.id,
                 job_id: job.id,
                 onchain_job_id: job.onchain_job_id,
@@ -285,6 +288,7 @@ export default function WorkJobDetailPage() {
                 worker_address: s.worker_address,
                 payout_amount: Number(s.payout_amount) || payoutFor(job),
                 total_budget: job.total_budget,
+                recovery_hash: recoveryHash,
               })}
               onReject={(reason) => rejectMutation.mutate({ submission_id: s.id, job_id: job.id, reason })}
               budgetLeft={budgetLeft}
@@ -410,8 +414,8 @@ function SubmissionCard({
   job: WorkJob;
   isPoster: boolean;
   isMine: boolean;
-  onApprove: (pay: boolean) => void;
-  onPay: () => void;
+  onApprove: (pay: boolean, views?: number, evidence?: string) => void;
+  onPay: (recoveryHash?: string) => void;
   onReject: (reason: string) => void;
   busy: boolean;
   budgetLeft: number;
@@ -419,10 +423,18 @@ function SubmissionCard({
   const { t } = useTranslation();
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState('');
+  const [views, setViews] = useState('');
+  const [viewEvidence, setViewEvidence] = useState(s.proof_url);
+  const [recoveryHash, setRecoveryHash] = useState('');
 
   const paid = isPaid(s);
   const awaiting = isAwaitingPayment(s);
-  const due = Number(s.payout_amount) || payoutFor(job);
+  const clipping = job.job_type === 'clipping';
+  const verifiedViews = Number(views);
+  const clipUnits = Number.isSafeInteger(verifiedViews) && verifiedViews >= 1000 ? Math.floor(verifiedViews / 1000) : 0;
+  const validViews = !clipping || (clipUnits > 0 && /^https:\/\/\S+$/.test(viewEvidence));
+  const due = Number(s.payout_amount) || (clipping ? clipUnits * job.price_per_unit : payoutFor(job));
+  const submittedPayment = s.payout_state === 'signing' || s.payout_state === 'broadcast';
   // A rounding-sized shortfall is the token's own precision, not an overspend.
   const affordable = due - budgetLeft <= 1e-9;
 
@@ -465,20 +477,32 @@ function SubmissionCard({
         </p>
       )}
 
+      {s.view_count_cached > 0 && <p className="mt-2 text-xs text-white/60">{s.view_count_cached.toLocaleString()} verified views · {s.approved_units} × 1,000 views</p>}
+      {isPoster && clipping && s.approval_status === 'pending' && (
+        <div className="mt-3 space-y-2">
+          <label className="block text-xs text-white/60">Verified view count
+            <input type="number" min={1000} step={1} value={views} onChange={e => setViews(e.target.value)} className={inputCls} />
+          </label>
+          <label className="block text-xs text-white/60">View count source
+            <input type="url" value={viewEvidence} onChange={e => setViewEvidence(e.target.value)} className={inputCls} />
+          </label>
+          <p className="text-xs text-white/50">Check the count on the clip before approval. Each full 1,000 views earns one unit, up to the remaining budget.</p>
+        </div>
+      )}
       {/* Poster: accept + pay */}
       {isPoster && s.approval_status === 'pending' && !rejecting && (
         <div className="flex flex-wrap gap-2 mt-3">
           <button
-            onClick={() => onApprove(true)}
-            disabled={busy || !affordable}
+            onClick={() => onApprove(true, clipping ? verifiedViews : undefined, clipping ? viewEvidence : undefined)}
+            disabled={busy || !affordable || !validViews}
             title={affordable ? undefined : t('work.budgetExhausted')}
             className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
           >
             <Wallet className="w-3 h-3" /> {t('work.approveAndPay', { amount: amount(due, job.currency) })}
           </button>
           <button
-            onClick={() => onApprove(false)}
-            disabled={busy}
+            onClick={() => onApprove(false, clipping ? verifiedViews : undefined, clipping ? viewEvidence : undefined)}
+            disabled={busy || !validViews || !affordable}
             className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/70 text-xs font-medium inline-flex items-center gap-1 transition-colors disabled:opacity-40"
           >
             <Check className="w-3 h-3" /> {t('work.approveOnly')}
@@ -498,14 +522,20 @@ function SubmissionCard({
       )}
 
       {/* Poster: settle something already accepted. */}
+      {isPoster && s.payout_state === 'signing' && (
+        <label className="block mt-3 text-xs text-white/60">Recover a submitted transaction
+          <input value={recoveryHash} onChange={e => setRecoveryHash(e.target.value.trim())} placeholder="0x transaction hash" className={inputCls} />
+        </label>
+      )}
+      {submittedPayment && <p className="mt-2 text-xs text-white/60">Payment is awaiting confirmation. Check its status before sending another transfer.</p>}
       {isPoster && awaiting && (
         <button
-          onClick={onPay}
+          onClick={() => onPay(recoveryHash || undefined)}
           disabled={busy || !affordable}
           title={affordable ? undefined : t('work.budgetExhausted')}
           className="mt-3 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
         >
-          <Wallet className="w-3 h-3" /> {t('work.payAmount', { amount: amount(due, job.currency) })}
+          <Wallet className="w-3 h-3" /> {submittedPayment ? 'Check payment' : t('work.payAmount', { amount: amount(due, job.currency) })}
         </button>
       )}
 

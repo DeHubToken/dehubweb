@@ -1,3 +1,4 @@
+import { workRpc, settleWorkPayment } from '../work-rpc';
 /**
  * /work — Jobs marketplace hooks
  * Off-chain ledger + on-chain escrow via DeHubWork (best-effort; falls back
@@ -40,7 +41,7 @@ export function useBrowseJobs(filters?: {
   return useQuery({
     queryKey: ['work-jobs-browse', filters],
     queryFn: async () => {
-      let q = supabase.from(TBL_JOBS).select('*').in('status', ['open', 'in_progress']);
+      let q = supabase.from(TBL_JOBS).select('*').in('status', ['open', 'in_progress']).or('deadline.is.null,deadline.gt.' + new Date().toISOString());
       if (filters?.job_type && filters.job_type !== 'all') q = q.eq('job_type', filters.job_type);
       if (filters?.currency && filters.currency !== 'all') q = q.eq('currency', filters.currency);
       if (filters?.platform && filters.platform !== 'all') q = q.eq('platform', filters.platform);
@@ -382,25 +383,7 @@ export function useAwardApplicant() {
   return useMutation({
     mutationFn: async (params: { job_id: string; onchain_job_id?: number | null; application_id: string; worker_address: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-
-      if (isWorkContractDeployed() && params.onchain_job_id) {
-        const r = await awardApplicantOnChain(params.onchain_job_id, params.worker_address);
-        if (r) await r.wait(1);
-      }
-
-      const { error: e1 } = await withWalletHeader(
-        supabase.from(TBL_APPS).update({ status: 'awarded' } as any).eq('id', params.application_id),
-        walletAddress
-      );
-      if (e1) throw e1;
-      const { error: e2 } = await withWalletHeader(
-        supabase.from(TBL_JOBS).update({
-          awarded_worker_address: params.worker_address.toLowerCase(),
-          status: 'in_progress',
-        } as any).eq('id', params.job_id),
-        walletAddress
-      );
-      if (e2) throw e2;
+      await workRpc(walletAddress, 'work_action', { p_action: 'award', p_id: params.application_id });
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-apps', v.job_id] });
@@ -456,127 +439,6 @@ export function useSubmitProof() {
 }
 
 /**
- * Refuse to pay a submission twice.
- *
- * Re-read straight from the table rather than trusting the cached row the page
- * rendered from: the guard has to see a payout written by another tab, another
- * device, or this same poster's previous click that only looked like it failed.
- */
-async function assertUnpaid(submissionId: string) {
-  const { data } = await supabase
-    .from(TBL_SUBS)
-    .select('payout_tx_hash')
-    .eq('id', submissionId)
-    .maybeSingle();
-  const hash = (data as { payout_tx_hash?: string | null } | null)?.payout_tx_hash;
-  if (hash) throw new Error('This submission has already been paid.');
-}
-
-/**
- * Everything already released against a job, read from its submissions.
- *
- * The budget is what the poster agreed to spend, and each submission card used
- * to offer the whole of it: three submissions on one contract bounty meant
- * three full-budget Pay buttons and no arithmetic anywhere stopping the poster
- * from clicking all three. Paying checks the total first.
- */
-async function releasedSoFar(jobId: string): Promise<number> {
-  const { data } = await supabase
-    .from(TBL_SUBS)
-    .select('payout_amount, payout_tx_hash')
-    .eq('job_id', jobId);
-  return ((data || []) as { payout_amount?: number | null; payout_tx_hash?: string | null }[])
-    .filter(r => !!r.payout_tx_hash)
-    .reduce((sum, r) => sum + Number(r.payout_amount || 0), 0);
-}
-
-/** The budget a job has left. Payouts may not take it below zero. */
-export async function remainingBudget(job: Pick<WorkJob, 'id' | 'total_budget'>): Promise<number> {
-  return Math.max(0, Number(job.total_budget || 0) - (await releasedSoFar(job.id)));
-}
-
-async function assertWithinBudget(jobId: string, totalBudget: number, amount: number) {
-  const left = Math.max(0, Number(totalBudget || 0) - (await releasedSoFar(jobId)));
-  // A rounding-sized overshoot is the token's own precision, not an overspend.
-  if (amount - left > 1e-9) {
-    throw new Error(
-      left <= 0
-        ? 'This bounty’s budget is fully paid out.'
-        : `Only ${left.toLocaleString(undefined, { maximumFractionDigits: 4 })} left in this bounty’s budget.`
-    );
-  }
-}
-
-/**
- * Send one payout on-chain and hand back its hash the moment it is broadcast.
- *
- * Two routes, in preference order: release from escrow when the job was funded
- * through a deployed DeHubWork, otherwise a direct ERC-20 transfer from the
- * poster's wallet. Today only the second exists.
- *
- * It returns before confirmation on purpose. This used to await `wait(1)` and
- * only then report the hash, so an RPC that timed out threw away the hash of a
- * transfer that had already left the wallet: the row stayed "awaiting payment",
- * the Pay button stayed on screen, and the next click paid the worker a second
- * time. A hash exists as soon as the transaction is broadcast, and that is the
- * thing worth recording — the caller writes it first and confirms afterwards.
- */
-async function sendPayout(params: {
-  currency: WorkCurrency;
-  onchain_job_id?: number | null;
-  worker_address: string;
-  payout_amount: number;
-  units?: number;
-}): Promise<{ hash: string; confirm: () => Promise<void> }> {
-  const sent = (isWorkContractDeployed() && params.onchain_job_id
-    ? await approveSubmissionOnChain(params.onchain_job_id, params.worker_address, params.units ?? 1)
-    : null
-  ) ?? await payWorkerDirect({
-    currency: params.currency,
-    to: params.worker_address,
-    amount: params.payout_amount,
-  });
-
-  return {
-    hash: sent.hash,
-    confirm: async () => { await sent.wait(1); },
-  };
-}
-
-/**
- * Recompute a job's rollups from its submissions.
- *
- * Nothing in the database maintains `units_approved` or `released_amount` —
- * only `application_count` and `submission_count` have triggers — so both sat
- * at zero while the detail page printed "0/N slots" over genuinely approved
- * work. Summing the children rather than incrementing makes this self-healing:
- * a payout that races another, or a row fixed by hand, converges on the next
- * write instead of drifting further.
- */
-async function syncJobTotals(jobId: string, walletAddress: string) {
-  const { data } = await supabase
-    .from(TBL_SUBS)
-    .select('approval_status, payout_amount, payout_tx_hash')
-    .eq('job_id', jobId);
-  const rows = (data || []) as unknown as Pick<WorkSubmission, 'approval_status' | 'payout_amount' | 'payout_tx_hash'>[];
-
-  const unitsApproved = rows.filter(r => r.approval_status === 'approved' || r.approval_status === 'paid').length;
-  const released = rows
-    .filter(r => !!r.payout_tx_hash)
-    .reduce((sum, r) => sum + Number(r.payout_amount || 0), 0);
-
-  // Best-effort: a poster who just paid should not see an error because a
-  // derived counter failed to write. The money already moved.
-  await withWalletHeader(
-    supabase.from(TBL_JOBS).update({
-      units_approved: unitsApproved,
-      released_amount: released,
-    } as any).eq('id', jobId),
-    walletAddress
-  );
-}
-
-/**
  * Approve a submission, and — unless the poster explicitly opts out — pay it in
  * the same step.
  *
@@ -598,41 +460,26 @@ export function useApproveSubmission() {
       payout_amount: number;
       total_budget: number;
       units?: number;
+      views?: number;
+      evidence_url?: string;
       pay: boolean;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-
-      let txHash: string | null = null;
-      let confirm: (() => Promise<void>) | null = null;
-      if (params.pay) {
-        await assertUnpaid(params.submission_id);
-        await assertWithinBudget(params.job_id, params.total_budget, params.payout_amount);
-        const sent = await sendPayout(params);
-        txHash = sent.hash;
-        confirm = sent.confirm;
-      }
-
-      // The hash lands in the row before the wait, never after it. A payout
-      // that is broadcast but not yet mined is still money out of the wallet,
-      // and the row has to say so or the poster pays again.
-      const { error } = await withWalletHeader(
-        supabase.from(TBL_SUBS).update({
-          approval_status: txHash ? 'paid' : 'approved',
-          payout_amount: params.payout_amount,
-          payout_tx_hash: txHash,
-        } as any).eq('id', params.submission_id),
-        walletAddress
-      );
-      if (error) throw error;
-      await syncJobTotals(params.job_id, walletAddress);
-      if (confirm) await confirm().catch(() => {});
-      return { paid: !!txHash };
+      await workRpc(walletAddress, 'work_approve', {
+        p_submission: params.submission_id, p_views: params.views ?? null, p_evidence: params.evidence_url ?? null,
+      });
+      const state = params.pay ? await settleWorkPayment(walletAddress, params.submission_id) : null;
+      return { paid: state === 'confirmed', pending: state === 'pending' };
     },
     onSuccess: (result, v) => {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
       qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-my-submissions'] });
-      toast.success(result.paid ? 'Approved and paid' : 'Approved — not paid yet');
+      toast.success(result.paid ? 'Approved and paid' : result.pending ? 'Payment submitted — confirmation pending' : 'Approved — not paid yet');
+    },
+    onSettled: (_result, _error, variables) => {
+      qc.invalidateQueries({ queryKey: ['work-subs', variables.job_id] });
+      qc.invalidateQueries({ queryKey: ['work-job'] });
     },
     onError: (e: any) => toast.error(e.message || 'Failed to approve'),
   });
@@ -658,32 +505,24 @@ export function usePaySubmission() {
       currency: WorkCurrency;
       worker_address: string;
       payout_amount: number;
+      recovery_hash?: string;
       total_budget: number;
       units?: number;
+      views?: number;
+      evidence_url?: string;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      await assertUnpaid(params.submission_id);
-      await assertWithinBudget(params.job_id, params.total_budget, params.payout_amount);
-      const sent = await sendPayout(params);
-
-      const { error } = await withWalletHeader(
-        supabase.from(TBL_SUBS).update({
-          approval_status: 'paid',
-          payout_amount: params.payout_amount,
-          payout_tx_hash: sent.hash,
-        } as any).eq('id', params.submission_id),
-        walletAddress
-      );
-      if (error) throw error;
-      await syncJobTotals(params.job_id, walletAddress);
-      // Confirmation is for the receipt, not for whether the row is written.
-      await sent.confirm().catch(() => {});
+      return settleWorkPayment(walletAddress, params.submission_id, params.recovery_hash);
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
       qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-my-submissions'] });
-      toast.success('Payment sent');
+      toast.success('Payment checked — refresh the submission for its confirmed status');
+    },
+    onSettled: (_result, _error, variables) => {
+      qc.invalidateQueries({ queryKey: ['work-subs', variables.job_id] });
+      qc.invalidateQueries({ queryKey: ['work-job'] });
     },
     onError: (e: any) => toast.error(e.message || 'Payment failed'),
   });
@@ -696,14 +535,7 @@ export function useRejectSubmission() {
   return useMutation({
     mutationFn: async (params: { submission_id: string; job_id: string; reason: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      const { error } = await withWalletHeader(
-        supabase.from(TBL_SUBS).update({
-          approval_status: 'rejected',
-          rejection_reason: params.reason,
-        } as any).eq('id', params.submission_id),
-        walletAddress
-      );
-      if (error) throw error;
+      await workRpc(walletAddress, 'work_action', { p_action: 'reject', p_id: params.submission_id, p_note: params.reason });
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
@@ -774,27 +606,7 @@ export function useOpenDispute() {
   return useMutation({
     mutationFn: async (params: { job_id: string; onchain_job_id?: number | null; reason: string; evidence_url?: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-
-      if (isWorkContractDeployed() && params.onchain_job_id) {
-        const r = await openDisputeOnChain(params.onchain_job_id);
-        if (r) await r.wait(1);
-      }
-
-      const { error: e1 } = await withWalletHeader(
-        supabase.from(TBL_DISPUTES).insert({
-          job_id: params.job_id,
-          opened_by_address: walletAddress.toLowerCase(),
-          reason: params.reason,
-          evidence_url: params.evidence_url || null,
-        } as any),
-        walletAddress
-      );
-      if (e1) throw e1;
-      const { error: e2 } = await withWalletHeader(
-        supabase.from(TBL_JOBS).update({ status: 'disputed' } as any).eq('id', params.job_id),
-        walletAddress
-      );
-      if (e2) throw e2;
+      await workRpc(walletAddress, 'work_action', { p_action: 'dispute', p_id: params.job_id, p_note: params.reason });
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-job'] });
@@ -845,57 +657,11 @@ export function useAdminResolveDispute() {
       pay_worker?: boolean;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-
-      let txHash: string | null = null;
-      if (isWorkContractDeployed() && params.onchain_job_id) {
-        const r = await adminResolveOnChain({
-          jobId: params.onchain_job_id,
-          worker: params.worker_address,
-          currency: params.currency,
-          workerAmount: params.worker_amount,
-          posterRefund: params.poster_refund,
-        });
-        if (r) { const rec = await r.wait(1); txHash = rec.hash; }
-      } else if (params.pay_worker && params.worker_amount > 0) {
-        const r = await payWorkerDirect({
-          currency: params.currency,
-          to: params.worker_address,
-          amount: params.worker_amount,
-        });
-        const rec = await r.wait(1);
-        txHash = rec.hash;
-      }
-
-      const newStatus =
-        params.worker_amount > 0 && params.poster_refund > 0 ? 'resolved_split'
-        : params.worker_amount > 0 ? 'resolved_worker'
-        : 'resolved_poster';
-
-      // Column names verified against the live schema. Three of these were
-      // wrong since day one — `resolve_tx_hash`, `resolution_notes` and a
-      // `resolved_by_address` that did not exist at all — so every resolve
-      // attempt came back `42703 column does not exist` and bounty #2 has sat
-      // disputed since June. Every `work_*` table is reached through an `as any`
-      // cast, so tsc could never have caught it; check PostgREST, not the types.
-      const { error: e1 } = await withWalletHeader(
-        supabase.from(TBL_DISPUTES).update({
-          status: newStatus,
-          resolved_by_address: walletAddress.toLowerCase(),
-          resolved_at: new Date().toISOString(),
-          worker_amount: params.worker_amount,
-          poster_refund: params.poster_refund,
-          resolution_tx_hash: txHash,
-          resolution_note: params.resolution_notes || null,
-        } as any).eq('id', params.dispute_id),
-        walletAddress
-      );
-      if (e1) throw e1;
-
-      const { error: e2 } = await withWalletHeader(
-        supabase.from(TBL_JOBS).update({ status: 'completed' } as any).eq('id', params.job_id),
-        walletAddress
-      );
-      if (e2) throw e2;
+      if (params.pay_worker || params.poster_refund > 0) throw new Error('Resolve the decision here. The poster settles accepted work from the bounty.');
+      await workRpc(walletAddress, 'work_resolve_dispute', {
+        p_dispute: params.dispute_id, p_worker: params.worker_address,
+        p_amount: params.worker_amount, p_note: params.resolution_notes ?? '',
+      });
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
@@ -912,11 +678,7 @@ export function useMarkComplete() {
   return useMutation({
     mutationFn: async (jobId: string) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      const { error } = await withWalletHeader(
-        supabase.from(TBL_JOBS).update({ status: 'completed' } as any).eq('id', jobId),
-        walletAddress
-      );
-      if (error) throw error;
+      await workRpc(walletAddress, 'work_action', { p_action: 'complete', p_id: jobId });
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-job'] });
