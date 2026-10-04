@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Star, AlertTriangle, ExternalLink, Check, X, Pencil, Wallet, Clock } from 'lucide-react';
+import { ArrowLeft, Star, AlertTriangle, ExternalLink, Check, X, Pencil, Wallet, Clock, Reply } from 'lucide-react';
 import {
   useWorkJob, useJobApplications, useJobSubmissions, useJobReviews,
   useApplyToJob, useAwardApplicant, useSubmitProof,
@@ -209,6 +209,19 @@ export default function WorkJobDetailPage() {
                 <span className={`shrink-0 text-[11px] px-2 py-0.5 rounded-md ${a.status === 'awarded' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-white/10 text-white/60'}`}>{t(statusLabelKey(a.status))}</span>
               </div>
               <p className="text-sm text-white/70 whitespace-pre-wrap">{a.cover_letter}</p>
+              {isPoster && a.applicant_address.toLowerCase() !== me && (
+                <button
+                  onClick={() => navigate('/messages', {
+                    state: {
+                      openDmWith: a.applicant_address,
+                      draftBody: `${job.title}\n${bountyUrl(job)}\n\n`,
+                    },
+                  })}
+                  className="mt-2 mr-2 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs font-semibold inline-flex items-center gap-1.5 transition-colors"
+                >
+                  <Reply className="w-3.5 h-3.5" /> {t('messages.reply')}
+                </button>
+              )}
               {isPoster && a.status === 'pending' && job.status === 'open' && (
                 <button
                   onClick={() => awardMutation.mutate({ job_id: job.id, onchain_job_id: job.onchain_job_id, application_id: a.id, worker_address: a.applicant_address })}
