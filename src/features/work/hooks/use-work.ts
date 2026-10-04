@@ -643,6 +643,9 @@ export function useAdminResolveDispute() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
       toast.success('Dispute resolved');
+      qc.invalidateQueries({queryKey:['work-job']});
+      qc.invalidateQueries({queryKey:['work-subs']});
+      qc.invalidateQueries({queryKey:['work-jobs-browse']});
     },
     onError: (e: any) => toast.error(e.message || 'Failed to resolve'),
   });
