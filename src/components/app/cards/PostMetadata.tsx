@@ -106,7 +106,7 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
   if (!hasMetadata && !translateControl && !isAd) return null;
 
   return (
-    <div className={cn("flex items-center gap-2 text-zinc-500 text-xs flex-wrap", className)}>
+    <div data-post-metadata className={cn("flex items-center gap-2 text-zinc-500 text-xs flex-wrap", className)}>
       {isAd && (
         <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">
           AD
