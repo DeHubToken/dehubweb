@@ -7,11 +7,11 @@
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import glossaryIcon from '@/assets/glossary-icon.png';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
 import { badgeImage, badgeThresholds } from '@/lib/staking-badges';
@@ -70,7 +70,7 @@ function GlossaryCard({ icon, title, description }: GlossaryEntry) {
 
 function SectionBlock({ title, entries, id }: GlossarySection & { id?: string }) {
   return (
-    <div className="mb-6" id={id}>
+    <section data-kit-section className="bg-zinc-900 p-4" id={id}>
       <h2 className="text-base font-bold text-white mb-3 flex items-center gap-2">
         <div className="w-1 h-5 rounded-full bg-gradient-to-b from-white via-zinc-300 to-zinc-500" />
         {title}
@@ -80,7 +80,7 @@ function SectionBlock({ title, entries, id }: GlossarySection & { id?: string })
           <GlossaryCard key={i} {...entry} />
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -95,8 +95,6 @@ export default function GlossaryPage() {
 
   // Swallow the glossary sections at the sticky header bento's top edge under
   // the glass themes, exactly like the home feed cuts at its nav pill.
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
   useEffect(() => {
     if (location.hash) {
@@ -277,33 +275,25 @@ export default function GlossaryPage() {
     <div className="min-h-screen">
       <SEOHead title="Glossary — Icons, Features & Web3 Terms" description="Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more." url="https://dehub.io/app/glossary" jsonLd={{ '@context': 'https://schema.org', '@type': 'DefinedTermSet', name: 'DeHub Glossary', url: 'https://dehub.io/app/glossary', description: 'Complete guide to DeHub icons, features and Web3 terms.' }} />
       <h1 className="sr-only">DeHub Glossary — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      {/* Sticky nav pill */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
-          {/* Header */}
-          <div className="flex items-center gap-3">
-            <BrandIcon src={glossaryIcon} alt="Glossary" className="w-10 h-10 object-contain brightness-75" />
-            <div>
-              <h1 className="text-[1.1rem] sm:text-[1.32rem] font-bold text-white">{t('glossary.title', 'Glossary')}</h1>
-              <p className="text-xs text-zinc-500">{t('glossary.subtitle', 'Learn what every icon and feature means')}</p>
-            </div>
-          </div>
-
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search glossary..."
-              className="pl-9 bg-white/[0.04] border-white/[0.08] text-white placeholder:text-zinc-500 h-9 text-sm rounded-xl"
-            />
-          </div>
+      <PageIsland
+        icon={<BrandIcon src={glossaryIcon} alt="Glossary" className="w-8 h-8 object-contain brightness-75" />}
+        title={t('glossary.title', 'Glossary')}
+        subtitle={t('glossary.subtitle', 'Learn what every icon and feature means')}
+      >
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search glossary..."
+            className="pl-9 bg-white/[0.04] border-white/[0.08] text-white placeholder:text-zinc-500 h-9 text-sm rounded-xl"
+          />
         </div>
-      </div>
+      </PageIsland>
 
       {/* Sections */}
-      <div ref={contentRef} className="px-2 sm:px-3 pt-3 pb-6">
+      <PageBody>
         {filteredSections.length > 0 ? (
           filteredSections.map((section, i) => (
             <SectionBlock key={i} {...section} />
@@ -317,7 +307,7 @@ export default function GlossaryPage() {
             size="section"
           />
         )}
-      </div>
+      </PageBody>
     </div>
   );
 }

@@ -16,10 +16,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
-import { useTabIndicator } from '@/hooks/use-tab-indicator';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
+import { IslandAction, KitButton, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { Radio, Clock, Users, Plus, Loader2, CalendarDays, Share2, Bell, BellRing, Mic } from 'lucide-react';
 import { format, formatDistanceToNowStrict } from 'date-fns';
 import { dehubLinkFor } from '@/lib/dehub-links';
@@ -413,7 +410,6 @@ export default function StagesPage() {
     () => (isAStageHost ? [...STAGES_TABS, HOSTING_TAB] : STAGES_TABS),
     [isAStageHost],
   );
-  const tabValues = useMemo(() => tabs.map((t) => t.value), [tabs]);
 
   // Land on a tab that has something in it. Live wins when a room is running;
   // with nothing live, an announced stage is the next best thing to show, and
@@ -421,7 +417,6 @@ export default function StagesPage() {
   // page being empty. This defers to the visitor the moment they pick a tab
   // themselves — including onto an empty one, which is a legitimate choice.
   const tabChosen = useRef(false);
-  // Stable identity: useDragTabIndicator took setActiveTab directly before.
   const chooseTab = useCallback((tab: StagesTab) => {
     tabChosen.current = true;
     setActiveTab(tab);
@@ -437,10 +432,6 @@ export default function StagesPage() {
   useEffect(() => {
     if (activeTab === 'hosting' && !isAStageHost) setActiveTab('live');
   }, [activeTab, isAStageHost]);
-
-  const isDraggingRef = useRef(false);
-  const { layerRef: tabLayerRef, setRef: setTabRef, rect: tabRect, onScroll: onTabScroll } =
-    useTabIndicator(activeTab, undefined, isDraggingRef);
 
   const handleOpenLive = async (space: AudioSpace) => {
     if (currentSpace?.id === space.id) {
@@ -516,20 +507,17 @@ export default function StagesPage() {
   const renderUpcoming = () => {
     if (scheduledSpaces.length === 0) {
       return (
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+        <div data-page-bento data-kit-section className="bg-zinc-900 p-8 text-center">
           <BrandIcon src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
           <h2 className="text-white font-semibold">{t('stages.nothingScheduled')}</h2>
           <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">
             Announce a stage ahead of time and it shows up here — with a card
             people can share before you go live.
           </p>
-          <button
-            onClick={() => openModal('create')}
-            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white text-sm font-medium transition-colors"
-          >
+          <KitButton onClick={() => openModal('create')} className="mt-4 inline-flex items-center gap-2">
             <CalendarDays className="w-4 h-4" />
             {t('stages.scheduleAStage')}
-          </button>
+          </KitButton>
         </div>
       );
     }
@@ -564,20 +552,17 @@ export default function StagesPage() {
       // create CTA and then fall back to recorded stages, which are always
       // worth listening to.
       return (
-        <div className="space-y-3">
-          <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+        <>
+          <div data-page-bento data-kit-section className="bg-zinc-900 p-8 text-center">
             <BrandIcon src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
             <h2 className="text-white font-semibold">{t('stages.noLiveStages')}</h2>
             <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">
               Start a stage and go live with your audience, or listen back to a recorded one below.
             </p>
-            <button
-              onClick={() => openModal('create')}
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white text-sm font-medium transition-colors"
-            >
+            <KitButton onClick={() => openModal('create')} className="mt-4 inline-flex items-center gap-2">
               <Plus className="w-4 h-4" />
               {t('stages.startAStageButton')}
-            </button>
+            </KitButton>
           </div>
 
           {recentPastStages.length > 0 && (
@@ -598,7 +583,7 @@ export default function StagesPage() {
               </div>
             </div>
           )}
-        </div>
+        </>
       );
     }
 
@@ -713,29 +698,6 @@ export default function StagesPage() {
     );
   };
 
-  // Swallow the feed at the sticky nav bento's top edge under the glass themes,
-  // exactly like the home feed cuts at its nav pill.
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
-
-  // Drag-to-swipe for the tab indicator (after all hooks to avoid TDZ)
-  const tabPositions = useRef<Partial<Record<StagesTab, HTMLElement | null>>>({});
-  const {
-    isDragging,
-    indicatorRef,
-    handleDragStart,
-    handleDragMove,
-    handleDragEnd,
-  } = useDragTabIndicator({
-    tabRect,
-    tabLayerRef,
-    tabButtonPositions: tabPositions,
-    tabValues,
-    activeTab,
-    onTabChange: chooseTab,
-    isDraggingRef,
-  });
-
   return (
     <div className="min-h-screen" data-stages-page>
       <SEOHead
@@ -753,84 +715,38 @@ export default function StagesPage() {
       />
       <h1 className="sr-only">{t('stages.seoHeading')}</h1>
 
-      {/* Sticky glass header — branding + tab strip (the swallowing pill) */}
-      <div
-        data-feed-nav-outer
-        className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2"
-      >
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-2 sm:p-3 overflow-visible">
-          <div className="flex items-center justify-between px-1 pt-0.5 pb-2">
-            <h2 className="font-bold text-white flex items-center gap-2">
-              <BrandIcon src={stagesMicIcon} alt="" className="w-6 h-6 sm:w-7 sm:h-7 object-contain" />
-              Stages
-              {liveSpaces.length > 0 ? (
-                <span className="text-zinc-500 font-normal text-sm">{t('stages.liveCount', { count: liveSpaces.length })}</span>
-              ) : scheduledSpaces.length > 0 ? (
-                <span className="text-zinc-500 font-normal text-sm">
-                  {t('stages.upcomingCount', { count: scheduledSpaces.length })}
-                </span>
-              ) : null}
-            </h2>
-            <button
-              onClick={() => openModal('create')}
-              className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white transition-colors"
-              title={isAuthenticated ? t('stages.startAStage') : t('stages.logInToStart')}
-              aria-label={isAuthenticated ? t('stages.startAStage') : t('stages.logInToStart')}
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
+      <PageIsland
+        icon={<BrandIcon src={stagesMicIcon} alt="" className="h-8 w-8 object-contain" />}
+        title="Stages"
+        subtitle={
+          liveSpaces.length > 0
+            ? t('stages.liveCount', { count: liveSpaces.length })
+            : scheduledSpaces.length > 0
+              ? t('stages.upcomingCount', { count: scheduledSpaces.length })
+              : undefined
+        }
+        actions={
+          <IslandAction
+            label={isAuthenticated ? t('stages.startAStage') : t('stages.logInToStart')}
+            onClick={() => openModal('create')}
+          >
+            <Plus className="h-[18px] w-[18px]" />
+          </IslandAction>
+        }
+        tabs={
+          <PageTabs
+            value={activeTab}
+            onChange={chooseTab}
+            tabs={tabs.map((tab) => ({
+              id: tab.value,
+              label: t(tab.labelKey),
+              icon: <tab.icon className="h-4 w-4" />,
+            }))}
+          />
+        }
+      />
 
-          {/* Tab strip */}
-          <div ref={tabLayerRef} className="relative overflow-visible">
-            <GlassIndicator ref={indicatorRef} rect={tabRect} enableTransition={!isDragging} />
-            {tabRect.ready && (
-              <div
-                className="absolute z-30 cursor-grab active:cursor-grabbing"
-                style={{
-                  transform: `translate(${tabRect.x}px, ${tabRect.y}px)`,
-                  width: tabRect.width,
-                  height: tabRect.height,
-                }}
-                onPointerDown={handleDragStart}
-                onPointerMove={handleDragMove}
-                onPointerUp={handleDragEnd}
-                onPointerCancel={handleDragEnd}
-              />
-            )}
-            <div
-              className="relative z-20 flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide"
-              onScroll={onTabScroll}
-            >
-              {tabs.map((tab) => {
-                const isActive = activeTab === tab.value;
-                return (
-                  <button
-                    key={tab.value}
-                    ref={(el) => {
-                      setTabRef(tab.value)(el);
-                      tabPositions.current[tab.value] = el;
-                    }}
-                    onClick={() => chooseTab(tab.value)}
-                    className={cn(
-                      'relative z-40 flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
-                      isActive ? 'text-white' : 'text-zinc-400 hover:text-white',
-                    )}
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      <tab.icon className="w-4 h-4" />
-                      {t(tab.labelKey)}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div ref={contentRef} className="p-2 sm:p-3 pb-32">
+      <PageBody>
         {activeTab === 'live'
           ? renderLive()
           : activeTab === 'upcoming'
@@ -838,7 +754,7 @@ export default function StagesPage() {
             : activeTab === 'hosting'
               ? renderHosting()
               : <PastStagesList />}
-      </div>
+      </PageBody>
 
       {/* Share sheet — copy link / send in a DM / post to feed, same as posts */}
       <ShareEntityDrawer

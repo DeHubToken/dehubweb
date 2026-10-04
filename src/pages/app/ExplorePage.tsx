@@ -2,16 +2,13 @@ import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, memo, startTransition, type CSSProperties } from 'react';
 import { getDocumentScrollTop } from '@/lib/document-scroll';
-import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { SEOHead } from '@/components/SEOHead';
 import { HUB_ROUTE_META } from '@/lib/seo/route-meta';
 import { BadgedName } from '@/components/app/BadgedName';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { WhatsHappening } from '@/components/app/WhatsHappening';
 import { NewMembersBento } from '@/components/app/NewMembersBento';
-import { useTabIndicator } from '@/hooks/use-tab-indicator';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
+import { PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useTranslation } from 'react-i18next';
 import searchIcon from '@/assets/icons/search-icon.png';
@@ -260,9 +257,6 @@ export default function ExplorePage() {
   const location = useLocation();
   
   const [activeTab, setActiveTab] = useState('all');
-  const [enableExploreTransition, setEnableExploreTransition] = useState(false);
-  const exploreIsDraggingRef = useRef(false);
-  const { layerRef: exploreTabLayerRef, setRef: setExploreTabRef, rect: exploreTabRect } = useTabIndicator(activeTab, undefined, exploreIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [showFilters, setShowFilters] = useState(false);
   const [exploreCategoryId, setExploreCategoryId] = useState<string | null>(null);
@@ -741,24 +735,13 @@ export default function ExplorePage() {
     }
   }, [effectiveQuery, stockData, dexPairs]);
 
-  // Swallow the results/discover feed at the sticky search bento's top edge
-  // under the glass themes, exactly like the home feed cuts at its nav pill.
-  const exploreContentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(exploreContentRef, '[data-feed-nav-outer] > [data-page-bento]');
-
-  // Drag-to-swipe for explore tab indicator (after all hooks to avoid TDZ)
-  const exploreTabPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
-
-  const { isDragging: isExploreDragging, indicatorRef: exploreIndicatorRef, handleDragStart: handleExploreDragStart, handleDragMove: handleExploreDragMove, handleDragEnd: handleExploreDragEnd } = useDragTabIndicator({
-    tabRect: exploreTabRect,
-    tabLayerRef: exploreTabLayerRef,
-    tabButtonPositions: exploreTabPositions,
-    tabValues: EXPLORE_TABS.map(t => t.value),
-    activeTab,
-    onTabChange: setActiveTab,
-    isDraggingRef: exploreIsDraggingRef,
-    indicatorFixedHeightPx: 35,
-  });
+  // The search island stays pinned on screen when the mobile chrome slides
+  // away (see the "Mobile chrome" block in index.css). The kit island takes no
+  // data-nav-hide prop, so mark its outer element directly.
+  const islandHostRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    islandHostRef.current?.querySelector('[data-feed-nav-outer]')?.setAttribute('data-nav-hide', 'pin');
+  }, []);
 
   return (
     <div className="min-h-screen" data-explore-page>
@@ -772,9 +755,23 @@ export default function ExplorePage() {
           it to change the query. It still moves — up by the header's height,
           so it lands flush at the top rather than hanging in the gap the
           header left. See the "Mobile chrome" block in index.css. */}
-      <div data-feed-nav-outer data-nav-hide="pin" className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 space-y-2 sm:space-y-3">
-        {/* Search Input Bento */}
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
+      <div ref={islandHostRef} className="contents">
+        <PageIsland
+          icon="search"
+          title={t('nav.explore')}
+          tabs={
+            <PageTabs
+              value={activeTab}
+              onChange={setActiveTab}
+              tabs={EXPLORE_TABS.map((tab) => ({
+                id: tab.value,
+                label: <span className="sr-only">{t(`explore.${tab.value}`)}</span>,
+                icon: <tab.icon className="h-4 w-4" aria-hidden="true" />,
+              }))}
+              className="[&>button]:flex-1 [&>button]:justify-center"
+            />
+          }
+        >
           <div className="relative flex gap-2">
             <ExploreSearchInput
               value={searchQuery}
@@ -782,31 +779,23 @@ export default function ExplorePage() {
               placeholder={t('explorePage.searchPlaceholder')}
             />
             <button
+              type="button"
+              data-kit-square
+              data-active={showFilters || activeFilterCount > 0 ? 'true' : undefined}
               onClick={() => setShowFilters(!showFilters)}
               aria-label={t('explorePage.filters')}
               aria-expanded={showFilters}
-              className={cn(
-                'relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-colors',
-                showFilters || activeFilterCount > 0
-                  ? 'text-white'
-                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
-              )}
+              className="relative self-center"
             >
-              {(showFilters || activeFilterCount > 0) && (
-                <div className={cn(
-                  "absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
-                  isLightTheme
-                    ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
-                    : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                )} />
-              )}
-              <SlidersHorizontal className="relative z-10 w-5 h-5" />
+              <SlidersHorizontal className="h-[18px] w-[18px]" />
               {activeFilterCount > 0 && (
-                <span className="relative z-10 text-sm font-medium">{activeFilterCount}</span>
+                <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
+                  {activeFilterCount}
+                </span>
               )}
             </button>
           </div>
-          
+
           {/* Filter panel — the sliders button's payload. Collapsed by
               default; it lives inside the sticky bento so the rows stay
               reachable while the results scroll underneath. */}
@@ -827,65 +816,11 @@ export default function ExplorePage() {
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* Tabs - toggle bar (flush with search bar above; no horizontal
-              overhang so active indicator's drop shadow isn't clipped) */}
-          <div className="mt-3">
-            <div className="rounded-xl" style={{ overflow: 'visible' }}>
-              <div ref={exploreTabLayerRef} className="relative overflow-visible">
-                <GlassIndicator ref={exploreIndicatorRef} rect={exploreTabRect} borderRadius="0.75rem" layoutKey={`explore-nav-${activeTab}`} enableTransition={!isExploreDragging && enableExploreTransition} fixedHeightPx={35} />
-                {exploreTabRect.ready && (
-                  <div
-                    className="absolute z-30 cursor-grab active:cursor-grabbing"
-                    style={{
-                      transform: `translate(${exploreTabRect.x}px, ${exploreTabRect.y}px)`,
-                      width: exploreTabRect.width,
-                      height: exploreTabRect.height,
-                    }}
-                    onPointerDown={handleExploreDragStart}
-                    onPointerMove={handleExploreDragMove}
-                    onPointerUp={handleExploreDragEnd}
-                    onPointerCancel={handleExploreDragEnd}
-                  />
-                )}
-                <div className="relative z-20 flex w-full">
-                  {EXPLORE_TABS.map((tab) => (
-                    <button
-                      key={tab.value}
-                      ref={(el) => {
-                        setExploreTabRef(tab.value)(el);
-                        exploreTabPositions.current[tab.value] = el;
-                      }}
-                      onClick={() => {
-                        if (tab.value !== activeTab) {
-                          setEnableExploreTransition(true);
-                          setTimeout(() => setEnableExploreTransition(false), 450);
-                        }
-                        setActiveTab(tab.value);
-                      }}
-                      aria-label={t(`explore.${tab.value}`)}
-                      aria-pressed={activeTab === tab.value}
-                      className={cn(
-                        'relative z-40 flex-1 flex items-center justify-center px-2 py-2.5 rounded-xl transition-colors',
-                        activeTab === tab.value
-                          ? 'text-white'
-                          : 'text-zinc-400 hover:text-white'
-                      )}
-                    >
-                      <span className="relative z-10">
-                        <tab.icon className="w-4 h-4" />
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </PageIsland>
       </div>
 
       {/* Content */}
-      <div ref={exploreContentRef} className="px-2 sm:px-3 pb-2 sm:pb-3 pt-2 space-y-2">
+      <PageBody>
         <AnimatePresence mode="wait">
           {isSearching ? (
             <motion.div
@@ -1220,7 +1155,7 @@ export default function ExplorePage() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </PageBody>
     </div>
   );
 }

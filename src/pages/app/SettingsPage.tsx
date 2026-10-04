@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties }
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { cn } from '@/lib/utils';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { IslandAction, PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -295,12 +295,8 @@ export default function SettingsPage() {
   const settingsIsDraggingRef = useRef(false);
   const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect, onScroll: onSettingsTabScroll } = useTabIndicator(activeTab, undefined, settingsIsDraggingRef);
 
-  // Swallow the settings content at the sticky header bento's top edge under
-  // the glass themes, exactly like the bento feed pages (Notifications/Music).
-  const settingsContentRef = useRef<HTMLDivElement>(null);
   const { theme, setTheme } = useAppTheme();
   const { isAuthenticated, disconnect } = useAuth();
-  useFeedSwallowClip(settingsContentRef, '[data-feed-nav-outer] > [data-page-bento]', [isAuthenticated]);
 
   const { t } = useTranslation();
 
@@ -374,32 +370,21 @@ export default function SettingsPage() {
       <h1 className="sr-only">DeHub Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header + tab nav — anchored (sticky) so it stays pinned while the
           settings content scrolls under it and is swallowed at its top edge. */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
-      <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-4">
-            <ThemedIcon icon="settings" alt="Settings" className="w-10 h-10 object-contain" />
-            <div>
-              <h1 className="text-xl font-bold text-white">{t('settings.title')}</h1>
-              <p className="text-zinc-500 text-sm">{t('settings.manageAccount')}</p>
-            </div>
+      <PageIsland
+        icon="settings"
+        title={t('settings.title')}
+        subtitle={t('settings.manageAccount')}
+        actions={
+          <div className="hidden md:flex items-center">
+            <IslandAction label={t('settings.logOut')} onClick={() => void runLogout()} disabled={isLoggingOut}>
+              {isLoggingOut ? <ButtonLoader /> : <LogOut className="h-[18px] w-[18px]" />}
+            </IslandAction>
           </div>
-          <div className="hidden md:flex items-center gap-2">
-            <button
-              onClick={() => void runLogout()}
-              disabled={isLoggingOut}
-              aria-busy={isLoggingOut || undefined}
-              className="flex items-center justify-center gap-2 px-3 h-10 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white disabled:opacity-60"
-            >
-              {isLoggingOut ? <ButtonLoader /> : <LogOut className="w-4 h-4" />}
-              <span className="hidden sm:inline text-sm font-medium">{t('settings.logOut')}</span>
-            </button>
-          </div>
-        </div>
-
+        }
+      >
         {/* Search across settings — switches tab, scrolls to the match and
             flashes it. Index and jump live in src/lib/settings-search.ts. */}
-        <div className="relative mb-4">
+        <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             value={settingsSearch}
@@ -501,13 +486,12 @@ export default function SettingsPage() {
             })}
           </div>
         </div>
-      </div>
-      </div>
+      </PageIsland>
 
       {/* Content — scrolls under the anchored header and is swallowed at its
-          top edge (clip logic in useFeedSwallowClip). */}
-      <div ref={settingsContentRef} className="px-2 sm:px-3 pt-2 pb-2">
-      <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+          top edge (clip logic in PageBody). */}
+      <PageBody>
+      <div data-page-bento data-kit-section className="bg-zinc-900 p-4 sm:p-6">
         {activeTab === 'profile' && <ProfileSettings />}
         {activeTab === 'notifications' && <NotificationSettings />}
         {activeTab === 'privacy' && <PrivacySettings />}
@@ -520,7 +504,7 @@ export default function SettingsPage() {
         {activeTab === 'characters' && <div data-setting-anchor="characters"><CharactersLibrary /></div>}
         {activeTab === 'support' && <SupportSettings />}
       </div>
-      </div>
+      </PageBody>
     </div>
   );
 }

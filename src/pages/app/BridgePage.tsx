@@ -13,7 +13,6 @@ import { motion } from 'framer-motion';
 import { ArrowDownUp, RefreshCw, Loader2, ArrowRight, Search, ExternalLink, Copy } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
-import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
@@ -25,7 +24,7 @@ import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
 import { useTranslation } from 'react-i18next';
 import { AppState } from '@/components/app/AppState';
 import { SEOHead } from '@/components/SEOHead';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { IslandAction, PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 
 const BRIDGE_ADDRESS = '0x11D79aE9a0F8a8f9Fcf5BE71e403ed203EC2394d';
@@ -66,7 +65,6 @@ function StatCard({ label, value, subtitle, delay = 0, loading = false }: { labe
 
 export default function BridgePage() {
   const { t } = useTranslation();
-  const { isCollapsed } = useSidebarCollapse();
   const queryClient = useQueryClient();
   const { allTokens, isLoading: balancesLoading } = useAllChainsTokens();
 
@@ -196,32 +194,23 @@ export default function BridgePage() {
   };
 
   return (
-    <div className={cn("min-h-screen pb-24 px-3 sm:px-4 max-w-5xl mx-auto", isCollapsed && "pt-16 md:pt-0")}>
+    <div className="min-h-screen max-w-5xl mx-auto">
       <SEOHead title="Bridge — Transfer DHB Cross-Chain" description="Bridge your DHB tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking." url="https://dehub.io/app/bridge" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Token Bridge', url: 'https://dehub.io/app/bridge', applicationCategory: 'FinanceApplication', description: 'Bridge DHB tokens between Base and BNB Chain.', operatingSystem: 'Web' }} />
       <h1 className="sr-only">DeHub Bridge — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex items-center justify-between py-5 sm:py-6"
-      >
-        <div className="flex items-center gap-3">
-          <ThemedIcon icon="bridge" alt="" className="w-10 h-10 flex-shrink-0 object-contain" />
-          <div>
-            <h1 className="text-xl font-bold text-white">Bridge</h1>
-            <p className="text-xs text-white/40">{t('bridge.subtitle')}</p>
-          </div>
-        </div>
-        <button
-          onClick={handleRefresh}
-          className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors flex-shrink-0"
-        >
-          <RefreshCw className="w-4 h-4 text-white/60" />
-        </button>
-      </motion.div>
+      <PageIsland
+        icon="bridge"
+        title="Bridge"
+        subtitle={t('bridge.subtitle')}
+        actions={
+          <IslandAction label={t('dex.refresh')} onClick={handleRefresh}>
+            <RefreshCw className="h-[18px] w-[18px]" />
+          </IslandAction>
+        }
+      />
 
+      <PageBody>
       {/* Balance Stats */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
+      <div className="grid grid-cols-2 gap-3">
         <StatCard label="Base Balance" value={formatNumber(parseFloat(baseDHB?.formattedBalance ?? '0'), 2)} subtitle={t('bridge.tokensOnBase')} delay={0} loading={balancesLoading} />
         <StatCard label="BNB Chain Balance" value={formatNumber(parseFloat(bnbDHB?.formattedBalance ?? '0'), 2)} subtitle={t('bridge.tokensOnBnb')} delay={0.05} loading={balancesLoading} />
       </div>
@@ -231,7 +220,8 @@ export default function BridgePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5 mb-6"
+        data-kit-section
+        className="border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
       >
         {/* Direction display */}
         <div className="flex items-center justify-center gap-3 mb-6">
@@ -314,7 +304,8 @@ export default function BridgePage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
+        data-kit-section
+        className="border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
       >
         <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-3">How it works</h3>
         <div className="space-y-3">
@@ -335,6 +326,7 @@ export default function BridgePage() {
 
       {/* Bridge Queue */}
       <BridgeQueue />
+      </PageBody>
     </div>
   );
 }
@@ -413,7 +405,8 @@ function BridgeQueue() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.4 }}
-      className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5 mt-6"
+      data-kit-section
+      className="border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Bridges</h3>

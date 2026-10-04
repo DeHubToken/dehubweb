@@ -61,6 +61,7 @@ export function AuthGate({ description: _description }: { description?: string }
             disabled={isConnecting}
             variant="glass"
             data-primary-cta
+            data-kit-button="primary"
             className="rounded-xl font-semibold px-6 min-w-[120px]"
           >
 

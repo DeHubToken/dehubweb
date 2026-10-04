@@ -14,8 +14,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useRef } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { TranslatableText } from '@/components/app/TranslatableText';
@@ -90,12 +89,22 @@ export default function GovernanceProposalPage() {
 
   if (!proposal) {
     return (
-      <div className="min-h-screen px-4 pt-6 text-center">
-        <ThemedIcon icon="governance" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-80" />
-        <h2 className="text-white font-semibold text-lg mb-1">Proposal not found</h2>
-        <button onClick={() => navigate('/app/governance')} className="text-zinc-400 text-sm underline">
-          Back to Governance
-        </button>
+      <div className="min-h-screen max-w-2xl mx-auto">
+        <PageIsland
+          back
+          onBack={() => navigate('/app/governance')}
+          icon="governance"
+          title={t('governance.title', 'Governance')}
+        />
+        <PageEmpty
+          icon="governance"
+          title="Proposal not found"
+          action={
+            <KitButton variant="quiet" onClick={() => navigate('/app/governance')}>
+              Back to Governance
+            </KitButton>
+          }
+        />
       </div>
     );
   }
@@ -113,19 +122,18 @@ export default function GovernanceProposalPage() {
   const timeLeft = votingTimeLeft(proposal, t);
 
   return (
-    <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 max-w-2xl mx-auto">
+    <div className="min-h-screen max-w-2xl mx-auto">
       <SEOHead title={`${proposal.title} — DeHub Governance`} description={(proposal.description || 'DeHub governance proposal — vote and discuss.').slice(0, 155)} url={`https://dehub.io/app/governance/${proposalId}`} type="article" />
-      {/* Back button */}
-      <button
-        onClick={() => navigate('/app/governance')}
-        className="flex items-center gap-1.5 text-zinc-400 hover:text-white text-sm mb-3 transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        {t('governance.title', 'Governance')}
-      </button>
+      <PageIsland
+        back
+        onBack={() => navigate('/app/governance')}
+        icon="governance"
+        title={t('governance.title', 'Governance')}
+      />
 
+      <PageBody measure>
       {/* Proposal card */}
-      <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-4">
+      <div data-kit-section className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-4">
         <div className="flex items-start justify-between mb-3">
           <CardHeader
             username={displayName}
@@ -192,7 +200,7 @@ export default function GovernanceProposalPage() {
       </div>
 
       {/* Discussion — always visible: the place to ask before you vote */}
-      <div ref={discussionRef} className="mt-4 rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-4 scroll-mt-24">
+      <div ref={discussionRef} data-kit-section className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-4 scroll-mt-24">
         <h3 className="text-white text-sm font-semibold">{t('governance.discussion.title')}</h3>
         <p className="text-zinc-500 text-xs mb-2">{t('governance.discussion.intro')}</p>
         <ProposalDiscussion
@@ -201,6 +209,7 @@ export default function GovernanceProposalPage() {
           focusCommentId={focusedCommentId}
         />
       </div>
+      </PageBody>
     </div>
   );
 }

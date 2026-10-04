@@ -7,11 +7,11 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -127,11 +127,6 @@ export default function CareersPage() {
     }
   };
 
-  // Swallow the careers content at the sticky header bento's top edge under the
-  // glass themes, exactly like the home feed cuts at its nav pill.
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
-
   return (
     <div className="min-h-screen">
       {/* Canonical is /jobs — the route this page actually serves (and the one
@@ -139,30 +134,20 @@ export default function CareersPage() {
           sitemapped page onto a 404. */}
       <SEOHead title="Careers — Join the DeHub Team" description="Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social." url="https://dehub.io/jobs" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Careers at DeHub', url: 'https://dehub.io/jobs', description: 'Open positions at DeHub — building the future of decentralized media.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Careers — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      {/* Sticky nav pill */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
-          <div className="flex items-center gap-3">
-            <BrandIcon src={careersBriefcase} alt={t('careers.title')} className="w-10 h-10 object-contain" />
-            <div>
-              <h1 className="text-xl font-bold text-white">{t('careers.title')}</h1>
-              <p className="text-zinc-500 text-sm">{t('careers.subtitle')}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageIsland
+        icon={<BrandIcon src={careersBriefcase} alt={t('careers.title')} className="w-8 h-8 object-contain" />}
+        title={t('careers.title')}
+        subtitle={t('careers.subtitle')}
+      />
 
       {/* Content */}
-      <div ref={contentRef} className="px-2 sm:px-3 pt-3 pb-6">
-        <p className="text-zinc-300 text-sm leading-relaxed mb-4 px-1">
+      <PageBody>
+        <p className="text-zinc-300 text-sm leading-relaxed px-1">
           {t('careers.intro')}
         </p>
 
-        {/* Job Listings */}
-        <div className="space-y-4">
-
         {/* ─── BDM Role ─── */}
-        <div className="rounded-xl border border-white/[0.08] bg-black/40 backdrop-blur-[24px] p-3 overflow-hidden">
+        <div data-kit-section className="border border-white/[0.08] bg-black/40 backdrop-blur-[24px] p-3 overflow-hidden">
           <div className="p-3">
             <div className="flex items-start justify-between gap-4 mb-2">
               <div>
@@ -276,7 +261,7 @@ export default function CareersPage() {
         </div>
 
         {/* ─── Brand Ambassador Role ─── */}
-        <div className="rounded-xl border border-white/[0.08] bg-black/40 backdrop-blur-[24px] p-3">
+        <div data-kit-section className="border border-white/[0.08] bg-black/40 backdrop-blur-[24px] p-3">
           <div className="p-3">
             <div className="flex items-start justify-between gap-4 mb-2">
               <div>
@@ -333,10 +318,9 @@ export default function CareersPage() {
             </Button>
           </div>
         </div>
-      </div>
 
       {/* Footer */}
-      <div className="mt-8 text-center">
+      <div className="!mt-8 text-center">
         <p className="text-zinc-500 text-xs">
           {t('careers.footerText')}{' '}
           <a href="mailto:dev@dehub.io" className="text-zinc-300 underline underline-offset-2 hover:text-white transition-colors">
@@ -344,7 +328,7 @@ export default function CareersPage() {
           </a>
         </p>
       </div>
-      </div>
+      </PageBody>
     </div>
   );
 }
