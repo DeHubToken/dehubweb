@@ -40,7 +40,7 @@ html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-i
   paint-order: stroke fill;
 }
 
-/* Outline only the 3px line; the 14px seek target stays clear. */
+/* Outline only the 3px line; the 32px seek target stays clear. */
 [data-video-card] [data-video-controls] {
   transition: opacity 150ms ease;
 }
