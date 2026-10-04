@@ -214,6 +214,60 @@ export type Database = {
           },
         ]
       }
+      ad_creator_support_sessions: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          creative_id: string
+          creator_share_usd: number
+          creator_wallet: string
+          credited_at: string | null
+          expires_at: string
+          id: string
+          post_id: string
+          price_usd: number
+          progress_at: string
+          reported_seconds: number
+          viewer_tier: string
+          viewer_wallet: string
+          watched_seconds: number
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          creative_id: string
+          creator_share_usd: number
+          creator_wallet: string
+          credited_at?: string | null
+          expires_at: string
+          id: string
+          post_id: string
+          price_usd: number
+          progress_at?: string
+          reported_seconds?: number
+          viewer_tier: string
+          viewer_wallet: string
+          watched_seconds?: number
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          creative_id?: string
+          creator_share_usd?: number
+          creator_wallet?: string
+          credited_at?: string | null
+          expires_at?: string
+          id?: string
+          post_id?: string
+          price_usd?: number
+          progress_at?: string
+          reported_seconds?: number
+          viewer_tier?: string
+          viewer_wallet?: string
+          watched_seconds?: number
+        }
+        Relationships: []
+      }
       ad_daily_stats: {
         Row: {
           by_tier: Json
@@ -250,16 +304,19 @@ export type Database = {
       ad_earnings: {
         Row: {
           total_earned_usd: number
+          total_paid_usd: number
           updated_at: string
           wallet_address: string
         }
         Insert: {
           total_earned_usd?: number
+          total_paid_usd?: number
           updated_at?: string
           wallet_address: string
         }
         Update: {
           total_earned_usd?: number
+          total_paid_usd?: number
           updated_at?: string
           wallet_address?: string
         }
@@ -7428,6 +7485,10 @@ export type Database = {
           visitors: number
           visits: number
         }[]
+      }
+      ads_advance_creator_support: {
+        Args: { p_seconds: number; p_session: string; p_viewer: string }
+        Returns: Json
       }
       ads_estimate_audience: { Args: { p_targeting: Json }; Returns: Json }
       ads_topup_credit: {
