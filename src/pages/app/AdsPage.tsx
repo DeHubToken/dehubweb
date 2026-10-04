@@ -18,6 +18,7 @@ import { CampaignsTab } from '@/components/app/ads/CampaignsTab';
 import { BillingTab } from '@/components/app/ads/BillingTab';
 import { CampaignWizard } from '@/components/app/ads/CampaignWizard';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { useAdRevenue } from '@/hooks/use-ads';
 
 export default function AdsPage() {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ export default function AdsPage() {
   const [wizardOpen, setWizardOpen] = useState(false);
   const [focusCampaignId, setFocusCampaignId] = useState<string | null>(null);
   const { isAuthenticated } = useAuth();
+  const revenue = useAdRevenue();
 
   const contentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
@@ -97,6 +99,10 @@ export default function AdsPage() {
 
       {/* Content */}
       <div ref={contentRef} className="w-full max-w-4xl mx-auto px-2 sm:px-3 pt-3 pb-24 space-y-4">
+        {isAuthenticated && revenue.data !== undefined ? <div className="rounded-xl border border-foreground/10 p-4">
+          <p className="font-medium text-foreground">Your ad revenue · ${revenue.data.toFixed(4)}</p>
+          <p className="text-sm text-muted-foreground">Revenue from ads and creator support, awaiting DHB settlement.</p>
+        </div> : null}
         {!isAuthenticated ? (
           <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-10 text-center space-y-2">
             <Megaphone className="w-8 h-8 text-muted-foreground mx-auto" />

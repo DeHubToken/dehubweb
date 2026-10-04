@@ -69,6 +69,7 @@ export type CreativeStatus = 'pending' | 'approved' | 'rejected';
 export type AdBehavior = 'tippers' | 'ppv_buyers' | 'stakers' | 'streamers';
 
 export interface AdTargeting {
+  creatorSupport?: boolean;
   tiers?: string[];
   followerMin?: number;
   followerMax?: number;

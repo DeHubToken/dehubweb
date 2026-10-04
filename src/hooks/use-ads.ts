@@ -32,6 +32,19 @@ import type {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const adsDb = supabase as unknown as SupabaseClient<any, 'public', any>;
 
+export function useAdRevenue() {
+  const { walletAddress } = useAuth();
+  const wallet = walletAddress?.toLowerCase() ?? null;
+  return useQuery({
+    queryKey: ['ads', 'revenue', wallet], enabled: !!wallet, staleTime: 30000,
+    queryFn: async () => {
+      const { data, error } = await withWalletHeader(adsDb.from('ad_earnings').select('total_earned_usd,total_paid_usd').eq('wallet_address', wallet!).maybeSingle(), wallet);
+      if (error) throw error;
+      return Math.max(0, Number(data?.total_earned_usd ?? 0) - Number(data?.total_paid_usd ?? 0));
+    },
+  });
+}
+
 const keys = {
   account: (w: string | null) => ['ads', 'account', w] as const,
   campaigns: (w: string | null) => ['ads', 'campaigns', w] as const,
