@@ -1591,7 +1591,9 @@
     "passkeyNotLinked": "迭个指纹呒绑定账号。请创建新账号。",
     "passkeyAlreadyRegistered": "迭个指纹已经有账号了。请用登录。",
     "passkeyFailed": "指纹登录失败。请再试一次。",
-    "passkeyBackupHint": "侬个账号就存在迭台设备个密钥里。大部分手机会同步到侬个Google或Apple账号，侬还可以在设置里加一个密码备份。"
+    "passkeyBackupHint": "侬个账号就存在迭台设备个密钥里。大部分手机会同步到侬个Google或Apple账号，侬还可以在设置里加一个密码备份。",
+    "walletBlockedTitle": "迭只钱包是全新个",
+    "walletBlockedBody": "新钱包要有余额或者老早个交易再好开账户。用下头其中一种方式注册，再到设置里向连牢迭只钱包。"
   },
   "careers": {
     "title": "加入DeHub",

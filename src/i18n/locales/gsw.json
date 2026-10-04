@@ -1594,7 +1594,9 @@
     "passkeyNotLinked": "Keine Account isch scho mit dim Fingerabdruck verchnüpft. Aaläg stattdesse neui Account.",
     "passkeyAlreadyRegistered": "Der Fingerabdruck hät scho en Account. Nimm stattdesse \"Aamelde\".",
     "passkeyFailed": "Fingerabdruck-Aameldig fehlgschlage. Bitte probier's no mehrmal.",
-    "passkeyBackupHint": "Dini Account läbt i dem Gerät si Passkey. Bi de meischte Handys synchronisiert's sich mit dim Google oder Apple Account, und du chasch en Passwort-Backup i de Yyschtellige dezue tue."
+    "passkeyBackupHint": "Dini Account läbt i dem Gerät si Passkey. Bi de meischte Handys synchronisiert's sich mit dim Google oder Apple Account, und du chasch en Passwort-Backup i de Yyschtellige dezue tue.",
+    "walletBlockedTitle": "Die Wallet isch ganz neu",
+    "walletBlockedBody": "Neui Wallets bruuched es Guethabe oder e früeneri Transaktion, zum es Konto z eröffne. Registrier di mit eire vo de Optione une und verbind die Wallet nachher i de Iistellige."
   },
   "careers": {
     "title": "Stellene bi DeHub",

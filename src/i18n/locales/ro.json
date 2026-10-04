@@ -1594,7 +1594,9 @@
     "passkeyNotLinked": "Niciun cont nu este asociat cu acea amprentă încă. Creează un cont nou în schimb.",
     "passkeyAlreadyRegistered": "Acea amprentă are deja un cont. Folosește Autentificare în schimb.",
     "passkeyFailed": "Autentificarea cu amprentă a eșuat. Te rugăm să încerci din nou.",
-    "passkeyBackupHint": "Contul tău se află în cheia de acces a acestui dispozitiv. Pe majoritatea telefoanelor, aceasta se sincronizează cu contul tău Google sau Apple, iar tu poți adăuga o copie de rezervă a parolei în Setări."
+    "passkeyBackupHint": "Contul tău se află în cheia de acces a acestui dispozitiv. Pe majoritatea telefoanelor, aceasta se sincronizează cu contul tău Google sau Apple, iar tu poți adăuga o copie de rezervă a parolei în Setări.",
+    "walletBlockedTitle": "Acest portofel este nou-nouț",
+    "walletBlockedBody": "Portofelele noi au nevoie de un sold sau de o tranzacție anterioară pentru a deschide un cont. Înregistrează-te cu una dintre opțiunile de mai jos, apoi conectează acest portofel din Setări."
   },
   "careers": {
     "title": "Careers at DeHub",

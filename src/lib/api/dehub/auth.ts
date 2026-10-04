@@ -36,6 +36,13 @@ export class WalletSignupBlockedError extends Error {
   }
 }
 
+/**
+ * Window event the auth provider fires when a wallet sign-up is refused for
+ * having no on-chain history, so the login sheet can move to the other
+ * sign-up options instead of offering the same wallet again.
+ */
+export const WALLET_SIGNUP_BLOCKED_EVENT = 'dehub:wallet-signup-blocked';
+
 export interface Web3AuthMeta {
   typeOfLogin?: string;
   verifier?: string;

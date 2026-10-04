@@ -1589,7 +1589,9 @@
     "passkeyNotLinked": "Hələlik o barmaq izi ilə heç bir hesab əlaqələndirilməyib. Bunun əvəzinə yeni hesab yaradın.",
     "passkeyAlreadyRegistered": "Bu barmaq izi artıq bir hesaba malikdir. Bunun əvəzinə \"Daxil ol\" seçimi istifadə edin.",
     "passkeyFailed": "Barmaq izi ilə daxil olma uğursuz oldu. Zəhmət olmasa yenidən cəhd edin.",
-    "passkeyBackupHint": "Hesabınız bu cihazın parol açarında yaşayır. Əksər telefonlarda bu, Google və ya Apple hesabınızla sinxronlaşdırılır və Ayarlar bölməsində parol ehtiyat nüsxəsi əlavə edə bilərsiniz."
+    "passkeyBackupHint": "Hesabınız bu cihazın parol açarında yaşayır. Əksər telefonlarda bu, Google və ya Apple hesabınızla sinxronlaşdırılır və Ayarlar bölməsində parol ehtiyat nüsxəsi əlavə edə bilərsiniz.",
+    "walletBlockedTitle": "Bu pulqabı tamamilə yenidir",
+    "walletBlockedBody": "Yeni pulqabılara hesab açmaq üçün balans və ya əvvəlki əməliyyat lazımdır. Aşağıdakı seçimlərdən biri ilə qeydiyyatdan keçin, sonra bu pulqabını Ayarlardan qoşun."
   },
   "careers": {
     "title": "DeHub-da Karyera",

@@ -1574,7 +1574,9 @@
     "passkeyNotLinked": "尚无账号同该指纹关联。请创建新账号。",
     "passkeyAlreadyRegistered": "该指纹已有关联账号。请用登录。",
     "passkeyFailed": "指纹登录失败。请重试。",
-    "passkeyBackupHint": "汝个账号住汝个设备个密码匙里。大多数手机会同汝个Google抑或Apple账号同步，汝可以拉设置里加个密码备份。"
+    "passkeyBackupHint": "汝个账号住汝个设备个密码匙里。大多数手机会同汝个Google抑或Apple账号同步，汝可以拉设置里加个密码备份。",
+    "walletBlockedTitle": "者隻錢包是全新个",
+    "walletBlockedBody": "新錢包着有餘額或者以前个交易正會開賬戶。用下底其中一種方式註冊，再在設置底勢連者隻錢包。"
   },
   "careers": {
     "title": "DeHub 工作",

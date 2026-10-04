@@ -1682,7 +1682,9 @@
     "passkeyNotLinked": "K tomuto odtlačku prsta zatiaľ nie je pripojený žiadny účet. Namiesto toho vytvorte nový účet.",
     "passkeyAlreadyRegistered": "Tento odtlačok prsta už má účet. Namiesto toho použite prihlásenie.",
     "passkeyFailed": "Prihlásenie pomocou odtlačku prsta zlyhalo. Skúste to znova.",
-    "passkeyBackupHint": "Váš účet žije v kľúči zariadenia. Na väčšine telefónov sa synchronizuje s vaším účtom Google alebo Apple a v nastaveniach môžete pridať zálohu hesla."
+    "passkeyBackupHint": "Váš účet žije v kľúči zariadenia. Na väčšine telefónov sa synchronizuje s vaším účtom Google alebo Apple a v nastaveniach môžete pridať zálohu hesla.",
+    "walletBlockedTitle": "Táto peňaženka je úplne nová",
+    "walletBlockedBody": "Nové peňaženky potrebujú zostatok alebo predchádzajúcu transakciu, aby mohli otvoriť účet. Zaregistrujte sa jednou z možností nižšie a potom túto peňaženku pripojte v Nastaveniach."
   },
   "careers": {
     "title": "Kariéra",

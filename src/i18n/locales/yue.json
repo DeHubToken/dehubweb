@@ -1596,7 +1596,9 @@
     "passkeyNotLinked": "目前無帳戶連結到該指紋。請建立新帳戶。",
     "passkeyAlreadyRegistered": "該指紋已有帳戶。請改用登入。",
     "passkeyFailed": "指紋登入失敗。請再試一次。",
-    "passkeyBackupHint": "你嘅帳戶儲存在呢部裝置嘅密碼匙度。喺大部分手機上，佢會同你嘅 Google 或 Apple 帳戶同步，你仲可以喺設定度加入密碼備份。"
+    "passkeyBackupHint": "你嘅帳戶儲存在呢部裝置嘅密碼匙度。喺大部分手機上，佢會同你嘅 Google 或 Apple 帳戶同步，你仲可以喺設定度加入密碼備份。",
+    "walletBlockedTitle": "呢個錢包係全新嘅",
+    "walletBlockedBody": "新錢包要有餘額或者以前嘅交易先可以開戶口。用下面其中一個方法註冊，然後喺設定度連接呢個錢包。"
   },
   "careers": {
     "title": "加入DeHub",

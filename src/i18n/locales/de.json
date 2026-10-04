@@ -1597,7 +1597,9 @@
     "passkeyNotLinked": "Noch ist kein Konto mit diesem Fingerabdruck verknüpft. Erstelle stattdessen ein neues Konto.",
     "passkeyAlreadyRegistered": "Dieser Fingerabdruck hat bereits ein Konto. Verwende stattdessen Anmelden.",
     "passkeyFailed": "Fingerabdruck-Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
-    "passkeyBackupHint": "Dein Konto befindet sich im Passkey dieses Geräts. Auf den meisten Handys synchronisiert es sich mit deinem Google- oder Apple-Konto, und du kannst in den Einstellungen ein Passwort-Backup hinzufügen."
+    "passkeyBackupHint": "Dein Konto befindet sich im Passkey dieses Geräts. Auf den meisten Handys synchronisiert es sich mit deinem Google- oder Apple-Konto, und du kannst in den Einstellungen ein Passwort-Backup hinzufügen.",
+    "walletBlockedTitle": "Diese Wallet ist brandneu",
+    "walletBlockedBody": "Neue Wallets brauchen ein Guthaben oder eine frühere Transaktion, um ein Konto zu eröffnen. Registriere dich mit einer der Optionen unten und verbinde diese Wallet danach in den Einstellungen."
   },
   "careers": {
     "title": "Karriere bei DeHub",

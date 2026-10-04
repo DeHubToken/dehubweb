@@ -1613,7 +1613,9 @@
     "passkeyNotLinked": "Hozircha bu barmoq iziga hech qanday hisob bog'lanmagan. Buning o'rniga yangi hisob yarating.",
     "passkeyAlreadyRegistered": "Bu barmoq izida allaqachon hisob mavjud. Buning o'rniga \"Kirish\"dan foydalaning.",
     "passkeyFailed": "Barmoq izi bilan kirish amalga oshmadi. Iltimos, qayta urinib ko'ring.",
-    "passkeyBackupHint": "Sizning hisobingiz ushbu qurilmaning parol kalitida saqlanadi. Aksariyat telefonlarda u Google yoki Apple hisobingiz bilan sinxronlanadi va sozlamalarda zaxira parolni qo'shishingiz mumkin."
+    "passkeyBackupHint": "Sizning hisobingiz ushbu qurilmaning parol kalitida saqlanadi. Aksariyat telefonlarda u Google yoki Apple hisobingiz bilan sinxronlanadi va sozlamalarda zaxira parolni qo'shishingiz mumkin.",
+    "walletBlockedTitle": "Bu hamyon butunlay yangi",
+    "walletBlockedBody": "Yangi hamyonlarga hisob ochish uchun balans yoki oldingi tranzaksiya kerak. Quyidagi variantlardan biri bilan roʻyxatdan oʻting, soʻng bu hamyonni Sozlamalardan ulang."
   },
   "careers": {
     "title": "DeHub da karyera",

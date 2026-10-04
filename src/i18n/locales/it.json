@@ -1597,7 +1597,9 @@
     "passkeyNotLinked": "Nessun account è ancora collegato a quell'impronta digitale. Crea un nuovo account invece.",
     "passkeyAlreadyRegistered": "Quell'impronta digitale ha già un account. Usa Accedi invece.",
     "passkeyFailed": "Accesso con impronta digitale fallito. Riprova.",
-    "passkeyBackupHint": "Il tuo account risiede nella passkey di questo dispositivo. Sulla maggior parte dei telefoni si sincronizza con il tuo account Google o Apple, e puoi aggiungere un backup della password nelle Impostazioni."
+    "passkeyBackupHint": "Il tuo account risiede nella passkey di questo dispositivo. Sulla maggior parte dei telefoni si sincronizza con il tuo account Google o Apple, e puoi aggiungere un backup della password nelle Impostazioni.",
+    "walletBlockedTitle": "Questo wallet è nuovo di zecca",
+    "walletBlockedBody": "I wallet nuovi devono avere un saldo o una transazione passata per aprire un account. Registrati con una delle opzioni qui sotto, poi collega questo wallet dalle Impostazioni."
   },
   "careers": {
     "title": "Carriere su DeHub",

@@ -1601,7 +1601,9 @@
     "passkeyNotLinked": "Nenhuma conta está vinculada a essa impressão digital ainda. Crie uma nova conta em vez disso.",
     "passkeyAlreadyRegistered": "Essa impressão digital já tem uma conta. Use Entrar em vez disso.",
     "passkeyFailed": "Entrada com impressão digital falhou. Por favor, tente novamente.",
-    "passkeyBackupHint": "Sua conta vive na chave de acesso deste dispositivo. Na maioria dos telefones, ela sincroniza com sua conta Google ou Apple, e você pode adicionar um backup de senha nas Configurações."
+    "passkeyBackupHint": "Sua conta vive na chave de acesso deste dispositivo. Na maioria dos telefones, ela sincroniza com sua conta Google ou Apple, e você pode adicionar um backup de senha nas Configurações.",
+    "walletBlockedTitle": "Esta carteira é novinha em folha",
+    "walletBlockedBody": "Carteiras novas precisam de saldo ou de uma transação anterior para abrir uma conta. Cadastre-se com uma das opções abaixo e depois conecte esta carteira nas Configurações."
   },
   "careers": {
     "title": "Carreiras no DeHub",

@@ -1592,7 +1592,9 @@
     "passkeyNotLinked": "Még nincs fiók társítva ehhez az ujjlenyomathoz. Hozzon létre inkább új fiókot.",
     "passkeyAlreadyRegistered": "Ehhez az ujjlenyomathoz már tartozik fiók. Használja inkább a Bejelentkezés lehetőséget.",
     "passkeyFailed": "Az ujjlenyomatos bejelentkezés sikertelen volt. Kérjük, próbálja újra.",
-    "passkeyBackupHint": "A fiókod az eszköz jelszókulcsában él. A legtöbb telefonon szinkronizálódik a Google vagy Apple fiókoddal, és a Beállításokban hozzáadhatsz egy jelszavas biztonsági mentést."
+    "passkeyBackupHint": "A fiókod az eszköz jelszókulcsában él. A legtöbb telefonon szinkronizálódik a Google vagy Apple fiókoddal, és a Beállításokban hozzáadhatsz egy jelszavas biztonsági mentést.",
+    "walletBlockedTitle": "Ez a tárca vadonatúj",
+    "walletBlockedBody": "Az új tárcáknak egyenlegre vagy egy korábbi tranzakcióra van szükségük a fiók megnyitásához. Regisztrálj az alábbi lehetőségek egyikével, majd csatlakoztasd ezt a tárcát a Beállításokban."
   },
   "careers": {
     "title": "Karrier a DeHub-nál",

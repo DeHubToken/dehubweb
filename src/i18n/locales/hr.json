@@ -1592,7 +1592,9 @@
     "passkeyNotLinked": "Nijedan račun nije povezan s tim otiskom prsta. Stvori novi račun.",
     "passkeyAlreadyRegistered": "Taj otisak prsta već ima račun. Upotrijebi Prijava.",
     "passkeyFailed": "Prijava otiskom prsta nije uspjela. Pokušaj ponovno.",
-    "passkeyBackupHint": "Vaš račun živi u šifri ovog uređaja. Na većini telefona sinkronizira se s vašim Google ili Apple računom, a sigurnosnu kopiju lozinke možete dodati u Postavkama."
+    "passkeyBackupHint": "Vaš račun živi u šifri ovog uređaja. Na većini telefona sinkronizira se s vašim Google ili Apple računom, a sigurnosnu kopiju lozinke možete dodati u Postavkama.",
+    "walletBlockedTitle": "Ovaj novčanik je potpuno nov",
+    "walletBlockedBody": "Novi novčanici trebaju saldo ili prethodnu transakciju da bi otvorili račun. Registriraj se jednom od opcija ispod, a zatim poveži ovaj novčanik u Postavkama."
   },
   "careers": {
     "title": "Karijere u DeHubu",
