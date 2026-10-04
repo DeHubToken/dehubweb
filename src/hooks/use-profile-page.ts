@@ -515,6 +515,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     plans,
     isLoadingPlans,
     hasPlans,
+    hasPinnedPlans: plans.some((plan) => plan.isPinned && plan.isPublished && Number.isInteger(Number(plan.duration)) && (Number(plan.duration) === 999 || (Number(plan.duration) >= 0 && Number(plan.duration) <= 12))),
     isOwnPlans,
     isSubscribed,
     isLoadingSubscription,
