@@ -27,12 +27,36 @@ Deno.serve(async (req) => {
           if (signed.error) throw signed.error;
           url = signed.data.signedUrl;
         }
-        return { ...row.metadata, id: row.id, status: 'done', stage: '', url, cloudSaved: true };
+        let posterUrl = row.metadata?.posterUrl;
+        if (row.metadata?.posterPath === `${auth.wallet}/${row.id}/preview`) {
+          const poster = await db.storage.from(BUCKET).createSignedUrl(row.metadata.posterPath, 86400);
+          if (!poster.error) posterUrl = poster.data.signedUrl;
+        }
+        return { ...row.metadata, posterUrl, id: row.id, status: 'done', stage: '', url, cloudSaved: true };
       }));
       return jsonResponse({ jobs, nextOffset: jobs.length === 100 ? offset + 100 : null });
     }
     const id = String(body.id ?? '');
     if (!ID.test(id)) return jsonResponse({ error: 'Invalid generation id' }, 400);
+    if (body.action === 'prepare-preview' || body.action === 'complete-preview') {
+      const existing = await db.from('creator_assets').select('metadata').eq('wallet_address', auth.wallet).eq('id', id).eq('ready', true).maybeSingle();
+      if (existing.error) throw existing.error;
+      if (!existing.data) return jsonResponse({ error: 'Generation is not saved yet' }, 409);
+      const path = `${auth.wallet}/${id}/preview`;
+      if (body.action === 'prepare-preview') {
+        const upload = await db.storage.from(BUCKET).createSignedUploadUrl(path, { upsert: true });
+        if (upload.error) throw upload.error;
+        return jsonResponse({ path, token: upload.data.token });
+      }
+      const files = await db.storage.from(BUCKET).list(`${auth.wallet}/${id}`, { search: 'preview', limit: 1 });
+      if (files.error) throw files.error;
+      if (!files.data?.some((file) => file.name === 'preview')) return jsonResponse({ error: 'Preview upload has not finished' }, 409);
+      const updated = await db.from('creator_assets').update({ metadata: { ...existing.data.metadata, posterPath: path } }).eq('wallet_address', auth.wallet).eq('id', id);
+      if (updated.error) throw updated.error;
+      const poster = await db.storage.from(BUCKET).createSignedUrl(path, 86400);
+      if (poster.error) throw poster.error;
+      return jsonResponse({ posterUrl: poster.data.signedUrl });
+    }
     if (body.action === 'remove') {
       // Hide from the active library without destroying the stored file.
       const { error } = await db.from('creator_assets').update({ ready: false })
@@ -51,9 +75,10 @@ Deno.serve(async (req) => {
       }
       const metadata = Object.fromEntries(FIELDS.filter((key) => input[key] !== undefined).map((key) => [key,input[key]]));
       if (JSON.stringify(metadata).length > 100000) return jsonResponse({ error: 'Generation metadata is too large' }, 413);
-      const existing = await db.from('creator_assets').select('ready').eq('wallet_address', auth.wallet).eq('id',id).maybeSingle();
+      const existing = await db.from('creator_assets').select('ready,metadata').eq('wallet_address', auth.wallet).eq('id',id).maybeSingle();
       if (existing.error) throw existing.error;
       if (existing.data?.ready) {
+        if (existing.data.metadata?.posterPath === `${auth.wallet}/${id}/preview`) metadata.posterPath = existing.data.metadata.posterPath;
         const updated = await db.from('creator_assets').update({ metadata }).eq('wallet_address', auth.wallet).eq('id', id);
         if (updated.error) throw updated.error;
         return jsonResponse({ saved: true });

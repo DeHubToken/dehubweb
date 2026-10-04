@@ -31,6 +31,14 @@ export async function loadCloudGenerations(wallet: string): Promise<GenerationJo
   return data.jobs ?? [];
 }
 
+export async function saveGenerationPreview(wallet: string, id: string, preview: Blob): Promise<string> {
+  const prepared = await call(wallet, { action: 'prepare-preview', id });
+  const uploaded = await supabase.storage.from('creator-assets').uploadToSignedUrl(prepared.path, prepared.token, preview, { contentType: preview.type });
+  if (uploaded.error) throw uploaded.error;
+  const completed = await call(wallet, { action: 'complete-preview', id });
+  return completed.posterUrl;
+}
+
 export async function removeCloudGeneration(wallet: string, id: string): Promise<void> {
   await call(wallet, { action: 'remove', id });
 }

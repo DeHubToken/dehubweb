@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
 import { useCreatorFolderStore } from '@/store/creatorFolderStore';
 import { FolderBar, FolderPicker } from './LibraryFolders';
+import { MeshThumbnailQueue } from './MeshThumbnailQueue';
 import { sendJobToEditor } from '@/lib/creator/sendToEditor';
 import { useCloseOnSurfaceSwitch } from '@/hooks/use-surface-switch';
 
@@ -130,6 +131,7 @@ export function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: Resu
 
   return (
     <section className="w-full">
+      <MeshThumbnailQueue jobs={jobs} wallet={wallet} />
       <div className="mb-3 flex items-baseline justify-between gap-3 px-0.5">
         <h2 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/45">
           {t('creator.yourGenerations')}
