@@ -1,3 +1,4 @@
+import { isWorkAdmin } from '@/constants/app.constants';
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +7,7 @@ import {
   useWorkJob, useJobApplications, useJobSubmissions, useJobReviews,
   useApplyToJob, useAwardApplicant, useSubmitProof,
   useApproveSubmission, useRejectSubmission, usePaySubmission,
-  useLeaveReview, useOpenDispute, useMarkComplete, isJobEditable,
+  useLeaveReview, useOpenDispute, useMarkComplete, isJobEditable, usePublishJob, useReleasePayment,
 } from '@/features/work/hooks/use-work';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -33,7 +34,7 @@ function payoutFor(job: WorkJob): number {
 
 /** `payout_tx_hash` is the only proof a payout happened — the status column alone never moved money. */
 function isPaid(s: WorkSubmission): boolean {
-  return !!s.payout_tx_hash || s.approval_status === 'paid';
+  return s.payout_state === 'confirmed' && !!s.payout_tx_hash;
 }
 
 function isAwaitingPayment(s: WorkSubmission): boolean {
@@ -68,12 +69,15 @@ export default function WorkJobDetailPage() {
   const reviewMutation = useLeaveReview();
   const disputeMutation = useOpenDispute();
   const completeMutation = useMarkComplete();
+  const publishMutation=usePublishJob();
+  const releaseMutation=useReleasePayment();
 
   const [coverLetter, setCoverLetter] = useState('');
   const [proofUrl, setProofUrl] = useState('');
   const [proofText, setProofText] = useState('');
   const [rating, setRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
+  const [reviewTarget,setReviewTarget]=useState('');
   const [disputeReason, setDisputeReason] = useState('');
   const [showDispute, setShowDispute] = useState(false);
 
@@ -87,11 +91,18 @@ export default function WorkJobDetailPage() {
 
   const me = walletAddress?.toLowerCase();
   const isPoster = me === job.poster_address.toLowerCase();
+  const canManage=(isPoster && job.status!=='disputed') || (job.status==='disputed' && isWorkAdmin(walletAddress));
   const isAwarded = me && job.awarded_worker_address && me === job.awarded_worker_address.toLowerCase();
   const myApp = applications.find(a => a.applicant_address.toLowerCase() === me);
-  const myReview = reviews.find(r => r.reviewer_address.toLowerCase() === me);
   const isCompleted = job.status === 'completed';
-  const canReview = isCompleted && (isPoster || submissions.some(s => s.worker_address.toLowerCase() === me && (s.approval_status === 'approved' || s.approval_status === 'paid')));
+  const accepting = ['open','in_progress'].includes(job.status) && (!job.deadline || Date.parse(job.deadline) > Date.now()) && job.units_approved < job.max_units;
+  const deadlinePassed=!!job.deadline && Date.parse(job.deadline)<=Date.now();
+  const reviewWorkers=[...new Set(submissions.filter(s=>s.approval_status!=='pending' || isCompleted || deadlinePassed).map(s=>s.worker_address.toLowerCase()))];
+  if(job.awarded_worker_address && (isCompleted || deadlinePassed)) reviewWorkers.push(job.awarded_worker_address.toLowerCase());
+  const reviewTargets=(isPoster?[...new Set(reviewWorkers)]:reviewWorkers.includes(me || '')?[job.poster_address.toLowerCase()]:[])
+    .filter(address=>!reviews.some(r=>r.reviewer_address.toLowerCase()===me && r.reviewee_address.toLowerCase()===address));
+  const reviewee=reviewTargets.includes(reviewTarget)?reviewTarget:reviewTargets[0];
+  const canReview=!!me && job.status!=='draft' && !!reviewee;
 
   // Accepted work that has not been paid. This is the number the poster owes and
   // the reason the "Mark complete" button asks before closing a job over it.
@@ -106,7 +117,7 @@ export default function WorkJobDetailPage() {
     Number(job.total_budget || 0) -
       submissions
         .filter(s => !!s.payout_tx_hash)
-        .reduce((sum, s) => sum + Number(s.payout_amount || 0), 0),
+        .reduce((sum, s) => sum + Number(s.gross_amount || s.payout_amount || 0), 0),
   );
 
   const requireAuth = () => { if (!me) { openLoginModal(); return false; } return true; };
@@ -171,6 +182,14 @@ export default function WorkJobDetailPage() {
         </div>
       </div>
 
+      <p className="mb-4 text-xs text-white/60">{t(job.fund_tx_hash?'work.integrity.escrowFunded':job.status==='draft'?'work.integrity.draftReady':'work.integrity.reputationNotice')}</p>
+      {isPoster && job.status==='draft' && <div className="mb-4 rounded-xl border border-white/20 p-4 space-y-3">
+        <p className="text-sm text-white/80">{t('work.integrity.reputationNotice')}</p>
+        <button disabled={publishMutation.isPending} onClick={()=>publishMutation.mutate(job.id)} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-40">
+          {t('work.integrity.publish')}
+        </button>
+      </div>}
+
       {/* What the poster still owes. Shown only to them, and only when there is
           accepted work with no payout transaction behind it. */}
       {isPoster && unpaid.length > 0 && (
@@ -191,7 +210,7 @@ export default function WorkJobDetailPage() {
               <button onClick={() => applicationComments.refetch()} className="ml-2 underline">{t('common.tryAgain')}</button>
             </div>
           )}
-          {!isPoster && !myApp && !isAwarded && job.status === 'open' && (
+          {!isPoster && !myApp && !isAwarded && job.status === 'open' && accepting && (
             <div className="mb-4 space-y-2">
               <textarea
                 value={coverLetter}
@@ -238,9 +257,9 @@ export default function WorkJobDetailPage() {
       )}
 
       {/* Submissions / proof feed */}
-      {(job.job_type !== 'contract' || isAwarded || isPoster) && (
+      {(job.job_type !== 'contract' || isAwarded || canManage) && (
         <Section title={t('work.submissions', { count: submissions.length })}>
-          {((job.job_type !== 'contract' && !isPoster) || isAwarded) && job.status !== 'completed' && job.status !== 'cancelled' && (
+          {((job.job_type !== 'contract' && !isPoster) || isAwarded) && accepting && (
             <div className="mb-4 space-y-2">
               <input value={proofUrl} onChange={(e) => setProofUrl(e.target.value)} placeholder={t('work.proofUrlPlaceholder')} className={inputCls} />
               <textarea value={proofText} onChange={(e) => setProofText(e.target.value)} rows={2} placeholder={t('work.notesPlaceholder')} className={inputCls} />
@@ -265,9 +284,10 @@ export default function WorkJobDetailPage() {
               key={s.id}
               submission={s}
               job={job}
-              isPoster={isPoster}
+              isPoster={canManage}
+              canPay={isPoster || !!job.fund_tx_hash}
               isMine={s.worker_address.toLowerCase() === me}
-              onApprove={(pay) => approveMutation.mutate({
+              onApprove={(pay, views, evidence) => approveMutation.mutate({
                 submission_id: s.id,
                 job_id: job.id,
                 onchain_job_id: job.onchain_job_id,
@@ -276,8 +296,10 @@ export default function WorkJobDetailPage() {
                 payout_amount: payoutFor(job),
                 total_budget: job.total_budget,
                 pay,
+                views,
+                evidence_url: evidence,
               })}
-              onPay={() => payMutation.mutate({
+              onPay={(recoveryHash) => payMutation.mutate({
                 submission_id: s.id,
                 job_id: job.id,
                 onchain_job_id: job.onchain_job_id,
@@ -285,7 +307,9 @@ export default function WorkJobDetailPage() {
                 worker_address: s.worker_address,
                 payout_amount: Number(s.payout_amount) || payoutFor(job),
                 total_budget: job.total_budget,
+                recovery_hash: recoveryHash,
               })}
+              onRelease={()=>{if(window.confirm(t('work.integrity.releaseConfirm'))) releaseMutation.mutate(s.id);}}
               onReject={(reason) => rejectMutation.mutate({ submission_id: s.id, job_id: job.id, reason })}
               budgetLeft={budgetLeft}
               busy={approveMutation.isPending || payMutation.isPending || rejectMutation.isPending}
@@ -296,8 +320,12 @@ export default function WorkJobDetailPage() {
 
       {/* Reviews */}
       <Section title={t('work.reviews', { count: reviews.length })}>
-        {canReview && !myReview && (
+        {canReview && (
           <div className="mb-4 space-y-2">
+            <p className="text-xs text-white/60">{t('work.integrity.reviewHelp')}</p>
+            {isPoster && reviewTargets.length>1 && <select aria-label={t('work.integrity.reviewWorker')} value={reviewee} onChange={e=>setReviewTarget(e.target.value)} className={inputCls}>
+              {reviewTargets.map(address=><option key={address} value={address}>{address}</option>)}
+            </select>}
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map(n => (
                 <button key={n} onClick={() => setRating(n)}>
@@ -308,9 +336,6 @@ export default function WorkJobDetailPage() {
             <textarea value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} rows={2} placeholder={t('work.reviewPlaceholder')} className={inputCls} />
             <button
               onClick={() => {
-                const reviewee = isPoster
-                  ? submissions.find(s => s.approval_status === 'approved' || s.approval_status === 'paid')?.worker_address ?? job.awarded_worker_address
-                  : job.poster_address;
                 if (!reviewee) { toast.error(t('work.noCounterparty')); return; }
                 reviewMutation.mutate({
                   job_id: job.id,
@@ -320,7 +345,7 @@ export default function WorkJobDetailPage() {
                   comment: reviewComment.trim(),
                 }, { onSuccess: () => setReviewComment('') });
               }}
-              className="px-4 py-2 rounded-xl bg-white text-black font-semibold"
+              disabled={reviewMutation.isPending} className="px-4 py-2 rounded-xl bg-white text-black font-semibold disabled:opacity-40"
             >
               {t('work.postReview')}
             </button>
@@ -343,9 +368,10 @@ export default function WorkJobDetailPage() {
         ))}
       </Section>
 
+      {job.fund_tx_hash && <p className="mt-4 text-xs text-white/60">{t('work.integrity.reviewWindow')}</p>}
       {/* Actions */}
       <div className="mt-6 flex flex-wrap gap-2">
-        {isPoster && job.status === 'in_progress' && (
+        {isPoster && ['open','in_progress','expired'].includes(job.status) && (
           <button
             onClick={() => {
               // Closing a job over unpaid accepted work is how the current
@@ -356,13 +382,13 @@ export default function WorkJobDetailPage() {
               )) return;
               completeMutation.mutate(job.id);
             }}
-            disabled={completeMutation.isPending}
+            disabled={completeMutation.isPending || unpaid.length>0 || submissions.some(s=>s.approval_status==='pending') || (!!job.fund_tx_hash && !!job.deadline && Date.parse(job.deadline)>Date.now())}
             className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-40"
           >
             {t('work.markComplete')}
           </button>
         )}
-        {(isPoster || isAwarded) && job.status !== 'completed' && job.status !== 'disputed' && (
+        {(isPoster || isAwarded || submissions.some(s=>s.worker_address===me)) && ['open','in_progress','expired'].includes(job.status) && (
           <button onClick={() => setShowDispute(s => !s)} className="px-4 py-2 rounded-xl bg-red-500/20 text-red-200 text-sm inline-flex items-center gap-1">
             <AlertTriangle className="w-3.5 h-3.5" /> {t('work.openDispute')}
           </button>
@@ -400,9 +426,11 @@ function SubmissionCard({
   job,
   isPoster,
   isMine,
+  canPay,
   onApprove,
   onPay,
   onReject,
+  onRelease,
   busy,
   budgetLeft,
 }: {
@@ -410,21 +438,32 @@ function SubmissionCard({
   job: WorkJob;
   isPoster: boolean;
   isMine: boolean;
-  onApprove: (pay: boolean) => void;
-  onPay: () => void;
+  canPay:boolean;
+  onApprove: (pay: boolean, views?: number, evidence?: string) => void;
+  onPay: (recoveryHash?: string) => void;
   onReject: (reason: string) => void;
+  onRelease:()=>void;
   busy: boolean;
   budgetLeft: number;
 }) {
   const { t } = useTranslation();
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState('');
+  const [views, setViews] = useState('');
+  const [viewEvidence, setViewEvidence] = useState(s.proof_url);
+  const [recoveryHash, setRecoveryHash] = useState('');
 
   const paid = isPaid(s);
   const awaiting = isAwaitingPayment(s);
-  const due = Number(s.payout_amount) || payoutFor(job);
+  const clipping = job.job_type === 'clipping';
+  const verifiedViews = Number(views);
+  const clipUnits = Number.isSafeInteger(verifiedViews) && verifiedViews >= 1000 ? Math.floor(verifiedViews / 1000) : 0;
+  const validViews = !clipping || (clipUnits > 0 && /^https:\/\/\S+$/.test(viewEvidence));
+  const gross=Number(s.gross_amount) || (clipping ? clipUnits*job.price_per_unit:payoutFor(job));
+  const due=Number(s.payout_amount) || gross*(job.fund_tx_hash?0.95:1);
+  const submittedPayment = s.payout_state === 'signing' || s.payout_state === 'broadcast';
   // A rounding-sized shortfall is the token's own precision, not an overspend.
-  const affordable = due - budgetLeft <= 1e-9;
+  const affordable = gross - budgetLeft <= 1e-9;
 
   return (
     <div className="p-3 rounded-xl bg-white/5 border border-white/10 mb-2">
@@ -453,7 +492,7 @@ function SubmissionCard({
       {paid && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-2">
           <span className="text-[11px] text-emerald-300">{t('work.paidAmount', { amount: amount(Number(s.payout_amount), job.currency) })}</span>
-          {s.payout_tx_hash && <TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} />}
+          {s.payout_tx_hash && <TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} chain={s.payout_chain_id ?? 8453} />}
         </div>
       )}
 
@@ -465,20 +504,33 @@ function SubmissionCard({
         </p>
       )}
 
+      {s.view_count_cached > 0 && <p className="mt-2 text-xs text-white/60">{t('work.integrity.viewsAccepted',{count:s.view_count_cached,units:s.approved_units})}</p>}
+      {isPoster && clipping && s.approval_status === 'pending' && (
+        <div className="mt-3 space-y-2">
+          <label className="block text-xs text-white/60">{t('work.integrity.verifiedViews')}
+            <input type="number" min={1000} step={1} value={views} onChange={e => setViews(e.target.value)} className={inputCls} />
+          </label>
+          <label className="block text-xs text-white/60">{t('work.integrity.viewSource')}
+            <input type="url" value={viewEvidence} onChange={e => setViewEvidence(e.target.value)} className={inputCls} />
+          </label>
+          <p className="text-xs text-white/50">{t('work.integrity.clipVerify')}</p>
+        </div>
+      )}
+      {job.fund_tx_hash && <p className="mt-2 text-xs text-white/60">{t('work.integrity.feeNotice',{net:due,currency:job.currency,gross})}</p>}
       {/* Poster: accept + pay */}
       {isPoster && s.approval_status === 'pending' && !rejecting && (
         <div className="flex flex-wrap gap-2 mt-3">
           <button
-            onClick={() => onApprove(true)}
-            disabled={busy || !affordable}
+            hidden={!canPay} onClick={() => onApprove(true, clipping ? verifiedViews : undefined, clipping ? viewEvidence : undefined)}
+            disabled={busy || !affordable || !validViews}
             title={affordable ? undefined : t('work.budgetExhausted')}
             className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
           >
             <Wallet className="w-3 h-3" /> {t('work.approveAndPay', { amount: amount(due, job.currency) })}
           </button>
           <button
-            onClick={() => onApprove(false)}
-            disabled={busy}
+            onClick={() => onApprove(false, clipping ? verifiedViews : undefined, clipping ? viewEvidence : undefined)}
+            disabled={busy || !validViews || !affordable}
             className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/70 text-xs font-medium inline-flex items-center gap-1 transition-colors disabled:opacity-40"
           >
             <Check className="w-3 h-3" /> {t('work.approveOnly')}
@@ -498,14 +550,22 @@ function SubmissionCard({
       )}
 
       {/* Poster: settle something already accepted. */}
-      {isPoster && awaiting && (
+      {isPoster && s.payout_state === 'signing' && (
+        <label className="block mt-3 text-xs text-white/60">{t('work.integrity.recoverTx')}
+          <input value={recoveryHash} onChange={e => setRecoveryHash(e.target.value.trim())} placeholder={t('work.integrity.hashPlaceholder')} className={inputCls} />
+        </label>
+      )}
+      {isPoster && s.payout_state==='signing' && <button disabled={busy} onClick={onRelease} className="mt-2 text-xs text-white/60">{t('work.integrity.releaseSignature')}</button>}
+      {submittedPayment && <p className="mt-2 text-xs text-white/60">{t('work.integrity.paymentPending')}</p>}
+      {isPoster && job.status==='disputed' && awaiting && s.payout_state==='unpaid' && <button onClick={()=>setRejecting(true)} className="mt-2 text-xs text-red-300">{t('work.reject')}</button>}
+      {isPoster && canPay && awaiting && (
         <button
-          onClick={onPay}
+          onClick={() => onPay(recoveryHash || undefined)}
           disabled={busy || !affordable}
           title={affordable ? undefined : t('work.budgetExhausted')}
           className="mt-3 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
         >
-          <Wallet className="w-3 h-3" /> {t('work.payAmount', { amount: amount(due, job.currency) })}
+          <Wallet className="w-3 h-3" /> {submittedPayment ? t('work.integrity.checkPayment') : t('work.payAmount', { amount: amount(due, job.currency) })}
         </button>
       )}
 

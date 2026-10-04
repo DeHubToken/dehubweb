@@ -16,6 +16,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { profileAvatar, profileName, useWalletProfiles } from '@/hooks/use-wallet-profiles';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
+import { useUserReviews } from '../hooks/use-work';
 
 export function shortAddress(address: string): string {
   return address.length > 12 ? `${address.slice(0, 6)}…${address.slice(-4)}` : address;
@@ -41,6 +43,9 @@ export function WorkUser({
   className?: string;
 }) {
   const profiles = useWalletProfiles([address]);
+  const {t}=useTranslation();
+  const {data:reviews,isError}=useUserReviews(address);
+  const rating=reviews?.length ? (reviews.reduce((sum,r)=>sum+r.rating,0)/reviews.length).toFixed(1) : '';
   const profile = profiles[address];
   const name = profileName(profile, address);
   const avatarUrl = profileAvatar(profile, address);
@@ -73,6 +78,7 @@ export function WorkUser({
         {showAddress && (
           <span className="block truncate font-mono text-[10px] text-white/40">{shortAddress(address)}</span>
         )}
+        {!isError && reviews && <span className="block text-[10px] text-white/60">{t(reviews.length?'work.integrity.ratingSummary':'work.integrity.newReputation',{rating,count:reviews.length})}</span>}
       </div>
       {trailing}
     </div>

@@ -7,10 +7,10 @@ import type { WorkJobStatus } from '../types';
  * dispute resolution. Shared by the bounty detail page and the history list so
  * the two can't drift on either the explorer host or the truncation shape.
  */
-export function TxLink({ label, txHash }: { label: string; txHash: string }) {
+export function TxLink({ label, txHash, chain=8453 }: { label: string; txHash: string; chain?: number }) {
   return (
     <a
-      href={workExplorerTxUrl(txHash)}
+      href={workExplorerTxUrl(txHash,chain)}
       target="_blank"
       rel="noreferrer"
       className="inline-flex items-center gap-1 text-[11px] text-white/50 hover:text-white"

@@ -1,0 +1,44 @@
+name: Bounty integrity
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  escrow:
+    name: Bounty escrow contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --prefix /tmp/work-contract-deps --no-save solc@0.8.30 @openzeppelin/contracts@5.4.0 ethers@6.15.0 ganache@7.9.2
+      - run: node scripts/work-contract-test.mjs
+        env:
+          WORK_CONTRACT_DEPS: /tmp/work-contract-deps
+      - uses: actions/upload-artifact@v4
+        with:
+          name: work-escrow-artifact
+          path: work-contract-artifact/escrow-artifact.json
+  database:
+    name: Bounty database rules
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: test
+      PGDATABASE: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - run: psql -v ON_ERROR_STOP=1 -f supabase/tests/work-integrity-fixture.sql -f supabase/migrations/20261004100000_work_integrity.sql -f supabase/migrations/20261004120000_work_reputation.sql -f supabase/tests/work-integrity.sql -f supabase/tests/work-reputation.sql
