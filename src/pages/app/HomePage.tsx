@@ -51,7 +51,7 @@ import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
 // prefetch below, so a tap after that finds them in cache. Direct file
 // imports, not the barrel — the barrel would drag the other seven back in.
 import { HomeFeed } from '@/components/app/feeds/HomeFeed';
-import { FeedSkeleton } from '@/components/app/PageSkeletons';
+import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 
 const loadVideosFeed = () => import('@/components/app/feeds/VideosFeed').then(m => ({ default: m.VideosFeed }));
 const loadImagesFeed = () => import('@/components/app/feeds/ImagesFeed').then(m => ({ default: m.ImagesFeed }));
@@ -1135,7 +1135,7 @@ export default function HomePage() {
         {visitedTabs.has('videos') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'videos' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'videos'}>
-            <Suspense fallback={<FeedSkeleton />}>
+            <Suspense fallback={<FeedBodySkeleton />}>
               <MemoVideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
             </Suspense>
             </CachedPageActiveContext.Provider>
@@ -1144,7 +1144,7 @@ export default function HomePage() {
         {visitedTabs.has('images') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'images' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'images'}>
-            <Suspense fallback={<FeedSkeleton />}>
+            <Suspense fallback={<FeedBodySkeleton />}>
               <MemoImagesFeed
                 showCollage={showImagesCollage}
                 showFilters={showImagesFilters}
@@ -1160,7 +1160,7 @@ export default function HomePage() {
         {visitedTabs.has('shorts') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'shorts' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'shorts'}>
-            <Suspense fallback={<FeedSkeleton />}>
+            <Suspense fallback={<FeedBodySkeleton />}>
               <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
             </Suspense>
             </CachedPageActiveContext.Provider>
@@ -1169,7 +1169,7 @@ export default function HomePage() {
         {visitedTabs.has('live') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'live' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'live'}>
-            <Suspense fallback={<FeedSkeleton />}>
+            <Suspense fallback={<FeedBodySkeleton />}>
               <MemoLiveFeed key={refreshKey} isRefreshing={isRefreshing} showFilters={showLiveFilters} />
             </Suspense>
             </CachedPageActiveContext.Provider>
@@ -1178,7 +1178,7 @@ export default function HomePage() {
         {visitedTabs.has('music') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'music' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'music'}>
-            <Suspense fallback={<FeedSkeleton />}>
+            <Suspense fallback={<FeedBodySkeleton />}>
               <MemoMusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
             </Suspense>
             </CachedPageActiveContext.Provider>
@@ -1187,7 +1187,7 @@ export default function HomePage() {
         {visitedTabs.has('ppv') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'ppv' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'ppv'}>
-            <Suspense fallback={<FeedSkeleton />}>
+            <Suspense fallback={<FeedBodySkeleton />}>
               <MemoPPVFeed />
             </Suspense>
             </CachedPageActiveContext.Provider>
@@ -1196,7 +1196,7 @@ export default function HomePage() {
         {visitedTabs.has('w2e') && (
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'w2e' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'w2e'}>
-            <Suspense fallback={<FeedSkeleton />}>
+            <Suspense fallback={<FeedBodySkeleton />}>
               <MemoW2EFeed />
             </Suspense>
             </CachedPageActiveContext.Provider>
