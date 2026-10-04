@@ -37,6 +37,8 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   Home: 'nav.home',
   Messages: 'nav.messages',
   AI: 'nav.assistant',
+  Editor: 'creator.editor',
+  Creator: 'commandCentre.creator',
   Profile: 'nav.profile',
   Notifications: 'nav.notifications',
   Arcade: 'nav.arcade',
@@ -97,6 +99,8 @@ type MobileNavItem = {
 };
 
 const SCROLL_NAV_ITEMS = [
+  { icon: Wand2, themedIcon: 'videos', label: 'Editor', path: '/editor' },
+  { icon: Wand2, themedIcon: 'wand', label: 'Creator', path: '/creator' },
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: Gamepad2, label: 'Arcade', path: '/arcade' },
