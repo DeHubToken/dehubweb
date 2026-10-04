@@ -209,19 +209,25 @@ export async function getFollowList(
   return { items: items as FollowListItem[], pagination };
 }
 
-export async function isFollowing(targetAddress: string): Promise<boolean> {
-  const response = await apiCall<{ result: { isFollowing: boolean } } | { result: boolean } | boolean>("/api/is_following", {
+export interface FollowStatus {
+  isFollowing: boolean;
+  isFollowRequestPending: boolean;
+}
+
+export async function getFollowStatus(targetAddress: string): Promise<FollowStatus> {
+  const response = await apiCall<{ result: Partial<FollowStatus> | boolean } | Partial<FollowStatus> | boolean>("/api/is_following", {
     params: { target: targetAddress },
     requiresAuth: true,
   });
-  if (response && typeof response === 'object' && 'result' in response) {
-    const result = (response as any).result;
-    if (typeof result === 'object' && 'isFollowing' in result) {
-      return result.isFollowing;
-    }
-    return result;
-  }
-  return response as boolean;
+  const result = response && typeof response === 'object' && 'result' in response ? response.result : response;
+  return {
+    isFollowing: typeof result === 'boolean' ? result : !!result?.isFollowing,
+    isFollowRequestPending: typeof result === 'boolean' ? false : !!result?.isFollowRequestPending,
+  };
+}
+
+export async function isFollowing(targetAddress: string): Promise<boolean> {
+  return (await getFollowStatus(targetAddress)).isFollowing;
 }
 
 export async function voteOnPost(params: {

@@ -74,6 +74,7 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
 
 export async function universalSearch(params: UniversalSearchParams): Promise<UniversalSearchResponse> {
   const response = await apiCall<any>("/api/search", {
+    requiresAuth: !!getAuthToken(),
     params: {
       q: params.q,
       page: params.page,

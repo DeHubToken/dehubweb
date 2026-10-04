@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
+import { useFollowStatuses } from '@/hooks/use-follow-status';
 import { useNewMembers, type NewMember } from '@/hooks/use-new-members';
 
 interface NewMembersListProps {
@@ -50,11 +51,14 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
     () => data?.pages.flatMap((page) => page.items) ?? [],
     [data],
   );
+  const relationships = useFollowStatuses(members.map(member => member.address));
 
   const isFollowed = useCallback(
-    (member: NewMember) => followOverrides.get(member.address.toLowerCase()) === true,
-    [followOverrides],
+    (member: NewMember) => followOverrides.get(member.address.toLowerCase()) ?? relationships[member.address.toLowerCase()]?.isFollowing ?? false,
+    [followOverrides, relationships],
   );
+  const isRequested = (member: NewMember) => followOverrides.get(member.address.toLowerCase()) === undefined && !!relationships[member.address.toLowerCase()]?.isFollowRequestPending;
+  const isUnresolved = (member: NewMember) => !!walletAddress && !relationships[member.address.toLowerCase()];
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
@@ -95,7 +99,7 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
       openLoginModal();
       return;
     }
-    if (isFollowed(member)) return;
+    if (isFollowed(member) || relationships[member.address.toLowerCase()]?.isFollowRequestPending || !relationships[member.address.toLowerCase()]) return;
 
     toggleFollowFor(queryClient, member.address, false, {
       name: member.displayName,
@@ -103,7 +107,7 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
         if (!info.handled) handleApiError(err, 'Failed to follow user');
       },
     });
-  }, [handleApiError, isAuthenticated, isFollowed, openLoginModal, queryClient]);
+  }, [handleApiError, isAuthenticated, isFollowed, openLoginModal, queryClient, relationships]);
 
   if (isLoading) {
     return (
@@ -160,7 +164,7 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
             </div>
             <button
               onClick={(e) => handleFollow(e, member)}
-              disabled={isFollowed(member)}
+              disabled={isFollowed(member) || isRequested(member) || isUnresolved(member)}
               data-follow-btn
               className={`h-6 min-w-0 w-auto px-2.5 text-[11px] font-semibold rounded-lg flex items-center justify-center transition-all duration-150 flex-shrink-0 ${
                 isFollowed(member)
@@ -168,7 +172,7 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
                   : 'bg-gradient-to-br from-white/15 via-white/8 to-white/4 backdrop-blur-xl border border-white/20 text-white/70 hover:from-white/25 hover:via-white/15 hover:to-white/10 hover:border-white/40 hover:text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
               }`}
             >
-              {isFollowed(member) ? 'Following' : 'Follow'}
+              {isRequested(member) ? 'Requested' : isFollowed(member) ? 'Following' : 'Follow'}
             </button>
           </div>
         ))}
