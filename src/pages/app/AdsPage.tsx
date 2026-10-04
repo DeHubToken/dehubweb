@@ -16,6 +16,7 @@ import { CampaignsTab } from '@/components/app/ads/CampaignsTab';
 import { BillingTab } from '@/components/app/ads/BillingTab';
 import { CampaignWizard } from '@/components/app/ads/CampaignWizard';
 import { IslandAction, PageBody, PageEmpty, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
+import { useAdRevenue } from '@/hooks/use-ads';
 
 export default function AdsPage() {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ export default function AdsPage() {
   const [wizardOpen, setWizardOpen] = useState(false);
   const [focusCampaignId, setFocusCampaignId] = useState<string | null>(null);
   const { isAuthenticated } = useAuth();
+  const revenue = useAdRevenue();
 
   const openCampaign = (id: string) => {
     setFocusCampaignId(id);
@@ -62,6 +64,10 @@ export default function AdsPage() {
 
       {/* Content */}
       <PageBody className="max-w-4xl mx-auto">
+        {isAuthenticated && revenue.data !== undefined ? <div data-kit-section className="rounded-xl border border-foreground/10 p-4">
+          <p className="font-medium text-foreground">Your ad revenue · ${revenue.data.toFixed(4)}</p>
+          <p className="text-sm text-muted-foreground">Revenue from ads and creator support, awaiting DHB settlement.</p>
+        </div> : null}
         {!isAuthenticated ? (
           <PageEmpty
             icon="ads"
