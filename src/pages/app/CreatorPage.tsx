@@ -216,13 +216,6 @@ export default function CreatorPage() {
   const headerRef = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(60);
 
-  /**
-   * The composer is sticky for the whole page, so everything below it scrolls
-   * under it and gets swallowed at its top edge. The studio clips its own
-   * preset strip and results feed; this covers the rest of the page. Two
-   * containers rather than one because the studio renders its own tail — they
-   * share a cut element, so the line is continuous across both.
-   */
   const openEditor = useCallback(() => navigate('/editor'), [navigate]);
   useEffect(() => {
     const el = headerRef.current;
@@ -557,11 +550,7 @@ const CommunityGallery = memo(function CommunityGallery() {
   const [visibleCount, setVisibleCount] = useState(() => Math.ceil(getGalleryColumns() * 1.5));
   const [lightbox, setLightbox] = useState<GalleryItem | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const gridRef = useRef<HTMLDivElement | null>(null);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
-  const [windowHeight, setWindowHeight] = useState<number>(360);
 
   // Defer RPC until the section is close to viewport → keeps LCP fast.
   useEffect(() => {
@@ -592,40 +581,6 @@ const CommunityGallery = memo(function CommunityGallery() {
     return () => { cancelled = true; };
   }, [inView, loaded]);
 
-  // Infinite reveal inside the dedicated scroll window (not the page).
-  useEffect(() => {
-    if (!sentinelRef.current || !scrollRef.current) return;
-    const io = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        setVisibleCount((c) => Math.min(c + PAGE_SIZE, items.length));
-      }
-    }, { root: scrollRef.current, rootMargin: '400px' });
-    io.observe(sentinelRef.current);
-    return () => io.disconnect();
-  }, [items.length]);
-
-  // Compute the 1.5-row window height from the current tile size.
-  // Tiles are aspect-square, so row height = (gridWidth - (cols-1)*gap) / cols.
-  useEffect(() => {
-    const GAP = 8; // gap-2 = 0.5rem = 8px
-    const compute = () => {
-      const el = gridRef.current;
-      if (!el) return;
-      const cols = getGalleryColumns();
-      const width = el.clientWidth;
-      if (width <= 0) return;
-      const tile = (width - GAP * (cols - 1)) / cols;
-      // 1 full row + half of a second row + gap between them
-      const h = tile * 1.5 + GAP * 1;
-      setWindowHeight(Math.max(200, Math.round(h)));
-    };
-    compute();
-    const ro = new ResizeObserver(compute);
-    if (gridRef.current) ro.observe(gridRef.current);
-    window.addEventListener('resize', compute);
-    return () => { ro.disconnect(); window.removeEventListener('resize', compute); };
-  }, [inView, loaded]);
-
   useEffect(() => {
     if (!lightbox) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightbox(null); };
@@ -635,12 +590,6 @@ const CommunityGallery = memo(function CommunityGallery() {
   }, [lightbox]);
 
   const shown = items.slice(0, visibleCount);
-
-  // Fade mask: bottom edge fades out to hint at more content below.
-  const fadeMask = {
-    WebkitMaskImage: 'linear-gradient(to bottom, black 0, black calc(100% - 72px), transparent 100%)',
-    maskImage: 'linear-gradient(to bottom, black 0, black calc(100% - 72px), transparent 100%)',
-  } as React.CSSProperties;
 
   return (
     <section ref={sectionRef} className="px-3 pb-10 sm:px-4">
@@ -670,32 +619,27 @@ const CommunityGallery = memo(function CommunityGallery() {
           {t('creator.noCreationsYet')}
         </div>
       ) : (
-        <div className="relative">
-          <div
-            ref={scrollRef}
-            className="overflow-y-auto overflow-x-hidden scrollbar-hide"
-            style={{ height: windowHeight, ...fadeMask }}
-          >
-            <div
-              ref={gridRef}
-              className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 pb-16"
-            >
-              {shown.map((item) => (
-                <GalleryTile key={item.id} item={item} onOpen={setLightbox} />
-              ))}
-            </div>
-            {visibleCount < items.length && (
-              <div ref={sentinelRef} className="h-16" />
-            )}
+        <div>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            {shown.map((item) => (
+              <GalleryTile key={item.id} item={item} onOpen={setLightbox} />
+            ))}
           </div>
+          {visibleCount < items.length && (
+            <button
+              type="button"
+              onClick={() => setVisibleCount((count) => Math.min(count + PAGE_SIZE, items.length))}
+              className="mx-auto mt-4 block rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-white/75 hover:bg-white/10 hover:text-white"
+            >
+              {t('common.loadMore')}
+            </button>
+          )}
         </div>
       )}
 
 
 
-      {/* Portalled to <body>: the gallery sits inside the swallow-clip wrapper,
-          and a clip-path on an ancestor clips fixed-position descendants too,
-          which would carve this down to the composer's cut line. */}
+      {/* Keep the viewer above page containment and the sticky composer. */}
       {lightbox && createPortal(
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md"
