@@ -4244,7 +4244,8 @@
     "bentoEditorTitle": "편집기에서 완성하기",
     "bentoEditorCopy": "클립을 자르고 음악과 자막을 추가한 뒤 DeHub에 게시하세요.",
     "bentoTopUpTitle": "DHB 충전",
-    "bentoTopUpCopy": "카드나 지갑으로 DHB를 구매하세요."
+    "bentoTopUpCopy": "카드나 지갑으로 DHB를 구매하세요.",
+    "exampleOutput": "예제 출력"
   },
   "pricing": {
     "plansForEveryWorkflow": "모든 워크플로우를 위한 플랜",

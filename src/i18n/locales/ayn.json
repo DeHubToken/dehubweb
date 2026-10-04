@@ -3806,7 +3806,8 @@
     "bentoEditorTitle": "كمّله في المحرّر",
     "bentoEditorCopy": "قص المقاطع، وضيف موسيقى وترجمة، وبعدين انشر على DeHub.",
     "bentoTopUpTitle": "اشحن DHB",
-    "bentoTopUpCopy": "اشتري DHB ببطاقة أو من محفظتك."
+    "bentoTopUpCopy": "اشتري DHB ببطاقة أو من محفظتك.",
+    "exampleOutput": "مثال على النتيجة"
   },
   "pricing": {
     "findTheRightFit": "من شخص واحد لفرق الشركات، اكتشف ما يناسبك",

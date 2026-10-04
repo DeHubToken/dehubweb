@@ -4239,7 +4239,8 @@
     "bentoEditorTitle": "Редактордо бүтүрүңүз",
     "bentoEditorCopy": "Клиптерди кесип, музыка жана субтитр кошуп, DeHub'ка жарыялаңыз.",
     "bentoTopUpTitle": "DHB толуктоо",
-    "bentoTopUpCopy": "DHB'ны карта же капчыгыңыз менен сатып алыңыз."
+    "bentoTopUpCopy": "DHB'ны карта же капчыгыңыз менен сатып алыңыз.",
+    "exampleOutput": "Мисалдын чыгарылышы"
   },
   "pricing": {
     "plansForEveryWorkflow": "Ар бир жумуш агымы үчүн пландар",

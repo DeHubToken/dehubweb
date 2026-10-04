@@ -4119,7 +4119,8 @@
     "bentoEditorTitle": "A laban Labɛnna kɔnɔ",
     "bentoEditorCopy": "Videyo tigɛ, donkili ni sɛbɛnw fara a kan, o kɔfɛ a bila DeHub kan.",
     "bentoTopUpTitle": "DHB fara a kan",
-    "bentoTopUpCopy": "DHB san ni kariti ye walima i ka wari mara."
+    "bentoTopUpCopy": "DHB san ni kariti ye walima i ka wari mara.",
+    "exampleOutput": "O cogo la, a be se ka kɛ"
   },
   "pricing": {
     "plansForEveryWorkflow": "Ka baara kɛ ni baara bɛɛ ye",

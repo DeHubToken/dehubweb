@@ -4236,7 +4236,8 @@
     "bentoEditorTitle": "Gør det færdigt i editoren",
     "bentoEditorCopy": "Klip klip, tilføj musik og undertekster, og del derefter på DeHub.",
     "bentoTopUpTitle": "Fyld DHB op",
-    "bentoTopUpCopy": "Køb DHB med kort eller din wallet."
+    "bentoTopUpCopy": "Køb DHB med kort eller din wallet.",
+    "exampleOutput": "Eksempel på output"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planer for hvert arbejdsflow",

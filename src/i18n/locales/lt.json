@@ -4245,7 +4245,8 @@
     "bentoEditorTitle": "Užbaikite redaktoriuje",
     "bentoEditorCopy": "Karpykite klipus, pridėkite muzikos ir subtitrų, tada paskelbkite DeHub.",
     "bentoTopUpTitle": "Papildyti DHB",
-    "bentoTopUpCopy": "Pirkite DHB kortele arba piniginėje."
+    "bentoTopUpCopy": "Pirkite DHB kortele arba piniginėje.",
+    "exampleOutput": "Išvesties pavyzdys"
   },
   "pricing": {
     "plansForEveryWorkflow": "Planai kiekvienam darbo procesui",

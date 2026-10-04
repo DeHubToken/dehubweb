@@ -4234,7 +4234,8 @@
     "bentoEditorTitle": "كمّله في المحرّر",
     "bentoEditorCopy": "قص المقاطع، وضيف مزيكا وترجمة، وبعدين انشر على DeHub.",
     "bentoTopUpTitle": "اشحن DHB",
-    "bentoTopUpCopy": "اشتري DHB بكارت أو من محفظتك."
+    "bentoTopUpCopy": "اشتري DHB بكارت أو من محفظتك.",
+    "exampleOutput": "مثال على المخرجات"
   },
   "pricing": {
     "plansForEveryWorkflow": "خطط لكل سير عمل",

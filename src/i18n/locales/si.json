@@ -4198,7 +4198,8 @@
     "bentoEditorTitle": "සකසනයේ අවසන් කරන්න",
     "bentoEditorCopy": "ක්ලිප් කපන්න, සංගීතය සහ උපසිරැසි එක් කරන්න, ඉන්පසු DeHub වෙත පළ කරන්න.",
     "bentoTopUpTitle": "DHB පුරවන්න",
-    "bentoTopUpCopy": "කාඩ්පතකින් හෝ ඔබේ පසුම්බියෙන් DHB මිලදී ගන්න."
+    "bentoTopUpCopy": "කාඩ්පතකින් හෝ ඔබේ පසුම්බියෙන් DHB මිලදී ගන්න.",
+    "exampleOutput": "උදාහරණ ප් ‍ රතිදානය"
   },
   "pricing": {
     "plansForEveryWorkflow": "සෑම ප්‍රවාහයක් සඳහා සැලසුම්",

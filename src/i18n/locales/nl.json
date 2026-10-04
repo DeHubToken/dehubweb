@@ -4441,7 +4441,8 @@
     "bentoEditorTitle": "Maak het af in de Editor",
     "bentoEditorCopy": "Knip clips, voeg muziek en ondertitels toe en post daarna op DeHub.",
     "bentoTopUpTitle": "DHB opwaarderen",
-    "bentoTopUpCopy": "Koop DHB met een kaart of je wallet."
+    "bentoTopUpCopy": "Koop DHB met een kaart of je wallet.",
+    "exampleOutput": "Voorbeeldoutput"
   },
   "pricing": {
     "plansForEveryWorkflow": "Plannen voor elke workflow",

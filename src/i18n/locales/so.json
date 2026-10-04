@@ -4189,7 +4189,8 @@
     "bentoEditorTitle": "Ku dhammee Tafatiraha",
     "bentoEditorCopy": "Jar muuqaallada, ku dar muusig iyo qoraal, kadibna ku daabac DeHub.",
     "bentoTopUpTitle": "Ku shub DHB",
-    "bentoTopUpCopy": "Ku iibso DHB kaar ama boorsadaada."
+    "bentoTopUpCopy": "Ku iibso DHB kaar ama boorsadaada.",
+    "exampleOutput": "Tusaalaha wax soo saarka"
   },
   "pricing": {
     "plansForEveryWorkflow": "Qorshayaasha socodka shaqada kasta",

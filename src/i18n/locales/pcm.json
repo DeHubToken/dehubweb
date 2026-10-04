@@ -3680,7 +3680,8 @@
     "bentoEditorTitle": "Finish am for Editor",
     "bentoEditorCopy": "Cut clips, add music and captions, then post am for DeHub.",
     "bentoTopUpTitle": "Top up DHB",
-    "bentoTopUpCopy": "Buy DHB with card or your wallet."
+    "bentoTopUpCopy": "Buy DHB with card or your wallet.",
+    "exampleOutput": "Example of wetin you fit get"
   },
   "pricing": {
     "findTheRightFit": "From small people to big company team, find the right one for you",

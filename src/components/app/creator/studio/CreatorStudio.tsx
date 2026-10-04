@@ -105,6 +105,7 @@ import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-sw
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { CounterChip, SelectChip, ToggleChip, type ChipOption } from './StudioChip';
 import { PresetStrip } from './PresetStrip';
+import { GenerationExample } from './GenerationExample';
 import { ResultsFeed } from './ResultsFeed';
 import { VoiceDesignDrawer } from './VoiceDesignDrawer';
 import { StudioVoicePicker } from './StudioVoicePicker';
@@ -2183,6 +2184,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         />
 
         <div className="mt-5">
+          <GenerationExample kind={mode} />
           <PresetStrip
             kind={mode}
             activeId={presetId}

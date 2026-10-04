@@ -4240,7 +4240,8 @@
     "bentoEditorTitle": "喺編輯器完成佢",
     "bentoEditorCopy": "剪片段、加音樂同字幕，再發佈去 DeHub。",
     "bentoTopUpTitle": "增值 DHB",
-    "bentoTopUpCopy": "用卡或者你嘅錢包買 DHB。"
+    "bentoTopUpCopy": "用卡或者你嘅錢包買 DHB。",
+    "exampleOutput": "輸出例子"
   },
   "pricing": {
     "plansForEveryWorkflow": "每個工作流程嘅計劃",
