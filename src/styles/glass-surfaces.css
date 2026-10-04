@@ -131,6 +131,16 @@ html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_) {
   backdrop-filter: none !important;
 }
 
+/* Keep the capsule's fill and decorative layers inside its rounded rim.
+   Its controls stay unclipped so notification badges can extend outside. */
+html[data-theme][data-theme] [data-feed-island-surface]:not(#_):not(#_) {
+  background-clip: padding-box !important;
+}
+html[data-theme][data-theme] [data-feed-island-surface]:not(#_):not(#_)::before,
+html[data-theme][data-theme] [data-feed-island-surface]:not(#_):not(#_)::after {
+  border-radius: inherit;
+}
+
 /* Bentos: page bentos, side panels and post cards on every canvas theme. Only
    the fill colour changes (the theme colour mixed into a thinner smoke), so
    each theme's own texture layers, sheen, rings and radii stay as they are.
