@@ -13,8 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Bot, Plus, Copy, Trash2, Eye, EyeOff, ExternalLink, Link2, Wallet } from 'lucide-react';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
-import { PageHeader } from '@/components/app/PageHeader';
+import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { SEOHead } from '@/components/SEOHead';
 
 interface AIAgent {
@@ -226,24 +225,22 @@ export default function AgentsPage() {
 
   if (!walletAddress) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
-        <ThemedIcon icon="assistant" alt="" className="w-16 h-16 object-contain mb-4 opacity-70" />
-        <h2 className="text-xl font-semibold text-white mb-2">{t('agents.connectToManage')}</h2>
-        <p className="text-white/60">{t('agents.signInToCreate')}</p>
+      <div className="min-h-screen">
+        <PageIsland back icon="assistant" title={t('agents.title')} />
+        <PageBody>
+          <PageEmpty icon="assistant" title={t('agents.connectToManage')} body={t('agents.signInToCreate')} />
+        </PageBody>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="min-h-screen">
       <SEOHead title="AI Agents — Build & Manage Bots" description="Create and manage AI-powered agents on DeHub. Automate posting, engage with your audience, and integrate with the DeHub API." url="https://dehub.io/app/agents" jsonLd={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'DeHub AI Agents', url: 'https://dehub.io/app/agents', applicationCategory: 'DeveloperApplication', description: 'Create and manage AI-powered agents on DeHub.', operatingSystem: 'Web' }} />
       <h1 className="sr-only">DeHub AI Agents — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      <PageHeader
-        title={t('agents.title')}
-        icon={<ThemedIcon icon="assistant" alt="" className="w-9 h-9 object-contain" />}
-      />
-      
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+      <PageIsland back icon="assistant" title={t('agents.title')} />
+
+      <PageBody>
         {/* Header with docs link */}
         <div className="flex items-center justify-between">
           <div>
@@ -272,7 +269,7 @@ export default function AgentsPage() {
 
         {/* Create new agent */}
         {isCreating ? (
-          <Card className="bg-white/5 border-white/10">
+          <Card data-kit-section className="bg-white/5 border-white/10">
             <CardHeader>
               <CardTitle className="text-white">{t('agents.newAgent')}</CardTitle>
               <CardDescription>{t('agents.createDescription')}</CardDescription>
@@ -329,32 +326,27 @@ export default function AgentsPage() {
 
         {/* Agents list */}
         {isLoading ? (
-          <div className="space-y-4">
+          <>
             {[1, 2].map((i) => (
-              <div key={i} className="h-32 bg-white/5 rounded-xl animate-pulse" />
+              <div key={i} data-kit-section className="h-32 bg-white/5 animate-pulse" />
             ))}
-          </div>
+          </>
         ) : isError ? (
-          <div className="text-center py-12 text-white/40">
-            <ThemedIcon icon="assistant" alt="" className="w-14 h-14 object-contain mx-auto mb-3 opacity-60" />
-            <p className="mb-3">{t('agents.loadFailed', "Couldn't load agents")}</p>
-            <Button
-              variant="ghost"
-              onClick={() => refetch()}
-              className="bg-white/5 border border-white/10 hover:bg-white/10 text-white"
-            >
-              {t('common.retry', 'Retry')}
-            </Button>
-          </div>
+          <PageEmpty
+            icon="assistant"
+            title={t('agents.loadFailed', "Couldn't load agents")}
+            action={
+              <KitButton variant="quiet" onClick={() => refetch()}>
+                {t('common.retry', 'Retry')}
+              </KitButton>
+            }
+          />
         ) : agents?.length === 0 ? (
-          <div className="text-center py-12 text-white/40">
-            <ThemedIcon icon="assistant" alt="" className="w-14 h-14 object-contain mx-auto mb-3 opacity-60" />
-            <p>{t('agents.noAgents')}</p>
-          </div>
+          <PageEmpty icon="assistant" title={t('agents.noAgents')} />
         ) : (
-          <div className="space-y-4">
+          <>
             {listedAgents?.map((agent) => (
-              <Card key={agent.id} className="bg-white/5 border-white/10">
+              <Card key={agent.id} data-kit-section className="bg-white/5 border-white/10">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
@@ -514,9 +506,9 @@ export default function AgentsPage() {
                 </CardContent>
               </Card>
             ))}
-          </div>
+          </>
         )}
-      </div>
+      </PageBody>
     </div>
   );
 }

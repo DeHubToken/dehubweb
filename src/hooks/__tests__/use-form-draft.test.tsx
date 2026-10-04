@@ -95,6 +95,18 @@ describe('useFormDraft', () => {
     expect(readDraft(SCOPE)).toBe('');
   });
 
+  it('keeps a submitted draft cleared across the final render before navigation', async () => {
+    await mount();
+    act(() => setFields('sent', 'sent'));
+    act(() => controls.clear());
+    await mount();
+    expect(readDraft(SCOPE)).toBe('');
+
+    // A new edit on a form that stays mounted starts a new recoverable draft.
+    act(() => setFields('next bounty', 'new description'));
+    expect(JSON.parse(readDraft(SCOPE))).toEqual({ title: 'next bounty', body: 'new description' });
+  });
+
   it('emptying every field clears the draft instead of resurrecting it later', async () => {
     await mount();
     act(() => setFields('typed', 'typed'));

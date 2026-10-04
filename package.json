@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "NODE_OPTIONS=--max-old-space-size=8192 vite build && node scripts/check-entry-bundle.mjs",
+    "build": "node scripts/build-locale-packs.mjs && NODE_OPTIONS=--max-old-space-size=8192 vite build && node scripts/check-entry-bundle.mjs",
     "build:dev": "NODE_OPTIONS=--max-old-space-size=8192 vite build --mode development",
     "lint": "eslint .",
     "i18n:coverage": "node scripts/i18n-coverage.mjs",

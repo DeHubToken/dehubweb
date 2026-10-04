@@ -19,6 +19,8 @@
  */
 
 import type { AudioTask } from '@/constants/audio-models.constants';
+import { OPEN_STUDIO_PRESETS } from './openStudioPresets';
+import { EXPANDED_STUDIO_PRESETS } from './expandedStudioPresets';
 
 export type PresetKind = 'image' | 'video' | '3d' | 'audio';
 
@@ -61,6 +63,8 @@ export interface CreatorPreset {
 }
 
 export const IMAGE_PRESETS: CreatorPreset[] = [
+  ...OPEN_STUDIO_PRESETS.filter((preset) => preset.kind === 'image'),
+  ...EXPANDED_STUDIO_PRESETS.filter((preset) => preset.kind === 'image'),
   {
     id: 'studio-product',
     nameKey: 'creator.presetStudioProductName',
@@ -440,6 +444,8 @@ export const IMAGE_PRESETS: CreatorPreset[] = [
 ];
 
 export const VIDEO_PRESETS: CreatorPreset[] = [
+  ...OPEN_STUDIO_PRESETS.filter((preset) => preset.kind === 'video'),
+  ...EXPANDED_STUDIO_PRESETS.filter((preset) => preset.kind === 'video'),
   {
     id: 'crash-zoom',
     nameKey: 'creator.presetCrashZoomName',

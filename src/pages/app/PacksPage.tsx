@@ -28,6 +28,7 @@ import {
 import { PACK_KINDS, PACK_TIER_ORDER, packLimitsFor } from '@/lib/creator-packs/limits';
 import { PackCover } from '@/components/app/packs/PackPickerParts';
 import { PackLocked, packErrorMessage } from '@/components/app/packs/PackGate';
+import { KitButton, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 
 function usePopularPacks(kind: PackKind) {
   return useQuery({
@@ -72,7 +73,7 @@ function TierTable() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03]">
+    <div data-kit-section className="border border-white/[0.12] bg-white/[0.03]">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -152,7 +153,7 @@ export default function PacksPage() {
     t(k === 'emoji' ? 'creatorPacks.tab.emoji' : k === 'sticker' ? 'creatorPacks.tab.sticker' : 'creatorPacks.tab.gif');
 
   return (
-    <div className="min-h-screen px-3 pt-2 pb-6 max-w-2xl mx-auto flex flex-col gap-4">
+    <div className="min-h-screen">
       <SEOHead
         title={t('creatorPacks.seoTitle')}
         description={t('creatorPacks.seoDescription')}
@@ -165,16 +166,26 @@ export default function PacksPage() {
           url: 'https://dehub.io/packs',
         }}
       />
-      <header>
-        <h1 className="text-xl font-semibold text-white">{t('creatorPacks.title')}</h1>
-        <p className="text-sm text-zinc-400 mt-1">{t('creatorPacks.subtitle')}</p>
-      </header>
+      <PageIsland
+        className="max-w-2xl mx-auto"
+        title={t('creatorPacks.title')}
+        tabs={
+          <PageTabs
+            value={kind}
+            onChange={setKind}
+            tabs={PACK_KINDS.map((k) => ({ id: k, label: kindTab(k) }))}
+          />
+        }
+      />
+
+      <PageBody measure className="mx-auto">
+      <p className="text-sm text-zinc-400">{t('creatorPacks.subtitle')}</p>
 
       {isAuthenticated && status.data && (
         status.data.limits.packs === 0 ? (
-          <div className="rounded-xl border border-white/[0.12] bg-white/[0.03]"><PackLocked /></div>
+          <div data-kit-section className="border border-white/[0.12] bg-white/[0.03]"><PackLocked /></div>
         ) : (
-          <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] px-4 py-3 text-sm text-zinc-300">
+          <div data-kit-section className="border border-white/[0.12] bg-white/[0.03] px-4 py-3 text-sm text-zinc-300">
             {t('creatorPacks.yourTier', {
               tier: status.data.tier,
               packs: status.data.limits.packs,
@@ -187,29 +198,14 @@ export default function PacksPage() {
       )}
       <TierTable />
 
-      <div className="flex rounded-lg bg-white/5 p-1">
-        {PACK_KINDS.map((k) => (
-          <button
-            key={k}
-            type="button"
-            onClick={() => setKind(k)}
-            className={cn('flex-1 py-1.5 rounded-md text-sm', kind === k ? 'bg-white/15 text-white' : 'text-zinc-400')}
-          >
-            {kindTab(k)}
-          </button>
-        ))}
-      </div>
-
       {!isAuthenticated ? (
-        <button
-          type="button"
-          onClick={() => openLoginModal()}
-          className="h-10 rounded-lg bg-white text-black text-sm font-medium"
-        >
-          {t('creatorPacks.signInToCreate')}
-        </button>
+        <div data-kit-section>
+          <KitButton variant="primary" onClick={() => openLoginModal()} className="w-full">
+            {t('creatorPacks.signInToCreate')}
+          </KitButton>
+        </div>
       ) : (
-        <section className="flex flex-col gap-2">
+        <section data-kit-section className="flex flex-col gap-2">
           <h2 className="text-sm font-medium text-white">
             {t('creatorPacks.yourPacks')}
             {limits && limits.packs > 0 && <span className="text-zinc-500 font-normal"> · {mine.length}/{limits.packs}</span>}
@@ -255,7 +251,7 @@ export default function PacksPage() {
         </section>
       )}
 
-      <section className="flex flex-col gap-2">
+      <section data-kit-section className="flex flex-col gap-2">
         <h2 className="text-sm font-medium text-white">{t('creatorPacks.popular')}</h2>
         {popular.isLoading ? (
           <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
@@ -265,6 +261,7 @@ export default function PacksPage() {
           <p className="text-xs text-zinc-500">{t('creatorPacks.noneYet')}</p>
         )}
       </section>
+      </PageBody>
     </div>
   );
 }

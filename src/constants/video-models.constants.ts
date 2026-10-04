@@ -3,6 +3,8 @@
  * Premium models available via Replicate API and fal.ai
  */
 
+import { CREATOR_FAL_VIDEO_MODELS } from '../../supabase/functions/_shared/creator-fal-catalog';
+
 export interface VideoModel {
   id: string;
   name: string;
@@ -107,6 +109,7 @@ export const getVideoResolutions = (model: VideoModel | undefined): string[] =>
   model?.resolutions ?? ['480p', '720p', '1080p'];
 
 export const VIDEO_MODELS: Record<string, VideoModel> = {
+  ...CREATOR_FAL_VIDEO_MODELS,
   'seedance-2.5': {
     id: 'seedance-2.5',
     name: 'Seedance 2.5',

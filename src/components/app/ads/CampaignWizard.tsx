@@ -61,6 +61,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
   const [kind, setKind] = useState<CreativeKind>('image');
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const [mediaDuration, setMediaDuration] = useState<number | null>(null);
   const [uploading, setUploading] = useState<'media' | 'thumb' | null>(null);
   const [headline, setHeadline] = useState('');
   const [bodyText, setBodyText] = useState('');
@@ -142,6 +143,23 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
     if (kindOf === 'media' && kind === 'video' && !isVideo) setKind('image');
     setUploading(kindOf);
     try {
+      if (kindOf === 'media') {
+        setMediaDuration(null);
+        if (isVideo) {
+          const video = document.createElement('video');
+          const objectUrl = URL.createObjectURL(file);
+          try {
+            const duration = await new Promise<number>((resolve, reject) => {
+              const timer = window.setTimeout(() => reject(new Error('Could not read this video duration.')), 15000);
+              video.onloadedmetadata = () => { window.clearTimeout(timer); resolve(video.duration); };
+              video.onerror = () => { window.clearTimeout(timer); reject(new Error('Could not read this video.')); };
+              video.preload = 'metadata'; video.src = objectUrl;
+            });
+            if (!Number.isFinite(duration) || duration <= 0) throw new Error('This video has no valid duration.');
+            setMediaDuration(duration);
+          } finally { video.removeAttribute('src'); video.load(); URL.revokeObjectURL(objectUrl); }
+        }
+      }
       const url = await uploadAdMedia(walletAddress, file, file.type);
       if (kindOf === 'media') setMediaUrl(url);
       else setThumbnailUrl(url);
@@ -153,6 +171,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
   };
 
   const stepValid = (): boolean => {
+    if (step === 1 && targeting.creatorSupport && (kind !== 'video' || (mediaDuration ?? 0) < 30)) return false;
     if (step === 0) {
       if (!name.trim()) return false;
       if (!headline.trim()) return false;
@@ -168,6 +187,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
   const reset = () => {
     setStep(0); setName(''); setObjective('awareness'); setKind('image');
     setMediaUrl(null); setThumbnailUrl(null); setHeadline(''); setBodyText('');
+    setMediaDuration(null);
     setCtaLabel('Learn more'); setCtaUrl(''); setTargeting({});
     setDailyBudget(250); setTotalBudget(2500); setDurationDays(14); setFrequencyCap(4);
     setFundingCampaignId(null);
@@ -203,6 +223,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
       await createCreative.mutateAsync({
         campaign_id: campaign.id,
         kind,
+        duration_seconds: mediaDuration,
         media_url: kind === 'text' ? null : mediaUrl,
         thumbnail_url: thumbnailUrl,
         headline: headline.trim(),
@@ -399,6 +420,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
         {step === 1 && (
           <div className="py-2">
             <TargetingEditor value={targeting} onChange={setTargeting} />
+            {targeting.creatorSupport && (kind !== 'video' || (mediaDuration ?? 0) < 30) ? <p role="status" className="text-sm text-white/70">Creator support needs a video of at least 30 seconds. Return to Creative to choose one.</p> : null}
           </div>
         )}
 

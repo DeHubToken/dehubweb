@@ -11,6 +11,7 @@ import { type BadgeLock } from '@/lib/staking-badges';
 import { openBadgeShowcase, preloadBadgeShowcase } from '@/lib/badge-showcase';
 import { badgeHoverArt } from '@/lib/badge-hover-art';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { useInlineBadgeFont } from '@/hooks/use-inline-badge-font';
 
 let idleWarmupScheduled = false;
 
@@ -76,6 +77,7 @@ function badgeNameFromAssetUrl(url: string | null): string | undefined {
 }
 
 export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, className = 'w-[1em] h-[1em]' }: BadgeIconProps) {
+  const badgeRef = useInlineBadgeFont();
   const { url, name } = useBadgeVisual({ badgeBalance, username, lookupId, badgeLock, src });
   // Profiles already hold a resolved asset URL. Recover its tier so the same
   // size and measured artwork inset still apply there as everywhere else.
@@ -99,11 +101,11 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     if ('requestIdleCallback' in window) window.requestIdleCallback(warm, { timeout: 1800 });
     else setTimeout(warm, 800);
   }, [metallic, visualName]);
-  const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.bounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
+  const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.posterBounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
-  // CSS cap follows the actual adjacent font; use 0.72em on older engines.
-  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1cap' : '0.72em';
+  // Enlarge the artwork above the baseline by 10% using the adjacent font's cap height.
+  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.1cap' : '0.8052em';
   const opticalStyle: CSSProperties = {
     width: `calc(${(bounds.right - bounds.left) / artworkHeight} * ${cap})`,
     height: cap,
@@ -111,15 +113,22 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     display: 'inline-block',
     marginInlineStart: 0,
     overflow: 'visible',
+    verticalAlign: 'baseline',
+    lineHeight: 0,
   };
-  const imageStyle: CSSProperties = {
-    position: 'absolute',
-    maxWidth: 'none',
-    width: `calc(${128 / artworkHeight} * ${cap})`,
-    height: `calc(${128 / artworkHeight} * ${cap})`,
-    left: `calc(${-bounds.left / artworkHeight} * ${cap})`,
-    top: `calc(${-bounds.top / artworkHeight} * ${cap})`,
+  const imageStyleFor = (imageBounds: typeof bounds): CSSProperties => {
+    const height = imageBounds.bottom - imageBounds.top;
+    const centre = (bounds.right - bounds.left) / artworkHeight / 2;
+    return {
+      position: 'absolute',
+      maxWidth: 'none',
+      width: `calc(${128 / height} * ${cap})`,
+      height: `calc(${128 / height} * ${cap})`,
+      left: `calc(${centre - (imageBounds.left + imageBounds.right) / height / 2} * ${cap})`,
+      top: `calc(${-imageBounds.top / height} * ${cap})`,
+    };
   };
+  const imageStyle = imageStyleFor(bounds);
 
   if (!url) return null;
   const poster = originalStill ? url : art?.poster ?? url;
@@ -128,6 +137,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
     <Tooltip>
       <TooltipTrigger asChild>
         <span
+          ref={badgeRef}
           style={opticalStyle}
           className={`shrink-0 self-baseline align-baseline cursor-pointer ${className}`}
           role="button"
@@ -154,7 +164,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
             openBadgeShowcase(visualName ?? null, e.currentTarget);
           }}
         >
-          {playing && <BadgeAnimation key={art.animation} src={art.animation} style={imageStyle}
+          {playing && <BadgeAnimation key={art.animation} src={art.animation} style={imageStyleFor(art.bounds)}
             onError={() => setFailedAnimation(art.animation)} />}
           <img
             style={imageStyle}

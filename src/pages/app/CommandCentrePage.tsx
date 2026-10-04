@@ -3,7 +3,7 @@ import { OverviewTab } from '@/components/app/command-centre/OverviewTab';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { SEOHead } from '@/components/SEOHead';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 
 export default function CommandCentrePage() {
   const { t } = useTranslation();
@@ -14,15 +14,14 @@ export default function CommandCentrePage() {
   }
 
   return (
-    <div data-command-centre-page className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 min-h-screen">
+    <div data-command-centre-page className="min-h-screen">
       <SEOHead title="Command — Your Dashboard & Wallet" description="Your command centre on DeHub. Manage your wallet, track balances, and oversee your account in one dashboard." url="https://dehub.io/app/command-centre" />
       <h1 className="sr-only">DeHub Command — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      <div className="flex items-center gap-3 mb-4">
-        <ThemedIcon icon="command" alt="" className="w-10 h-10 shrink-0 object-contain" />
-        <h1 className="text-[1.1rem] sm:text-[1.32rem] font-bold text-white">{t('commandCentre.title')}</h1>
-      </div>
+      <PageIsland icon="command" title={t('commandCentre.title')} />
 
-      <OverviewTab />
+      <PageBody>
+        <OverviewTab />
+      </PageBody>
     </div>
   );
 }

@@ -8,6 +8,8 @@ import { DEHUB_LOGO_DATA_URI } from '../_shared/dehub-logo.ts';
 import { recordGeneration } from '../_shared/generation-jobs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 import { aiChat } from '../_shared/ai-chat.ts';
+import { CREATOR_FAL_IMAGE_MODELS } from '../_shared/creator-fal-catalog.ts';
+import { buildCreatorFalImageRequest } from '../_shared/creator-fal-input.ts';
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
 // which chargeForJob requires and the browser will not send unless the preflight
 // says they are allowed. A local copy silently drops them; see auth.ts.
@@ -76,6 +78,7 @@ interface FalImageModel {
 }
 
 const FAL_IMAGE_MODELS: Record<string, FalImageModel> = {
+  ...CREATOR_FAL_IMAGE_MODELS,
   'nano-banana-pro': {
     text: 'fal-ai/nano-banana-pro',
     edit: 'fal-ai/nano-banana-pro/edit',
@@ -301,7 +304,10 @@ async function generateWithFal(
     throw new Error(`${model} cannot edit an existing image. Pick another model.`);
   }
   const editing = !!sourceImage;
-  const appId = editing ? config.edit! : config.text;
+  const prepared = CREATOR_FAL_IMAGE_MODELS[model]
+    ? buildCreatorFalImageRequest(model, prompt, sourceImage, aspectRatio ?? (bannerFormat === 'landscape' ? '16:9' : bannerFormat === 'portrait' ? '9:16' : undefined))
+    : undefined;
+  const appId = prepared?.appId ?? (editing ? config.edit! : config.text);
 
   const input: Record<string, unknown> = {
     prompt,
@@ -327,7 +333,7 @@ async function generateWithFal(
   const res = await fetch(`https://fal.run/${appId}`, {
     method: 'POST',
     headers: { Authorization: `Key ${FAL_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(input),
+    body: JSON.stringify(prepared?.input ?? input),
   });
 
   if (!res.ok) {
@@ -999,6 +1005,16 @@ serve(async (req) => {
   // Peek at the payload to price the job. The clone leaves the original body
   // readable by the handler, so nothing below this point had to change.
   const peek = await req.clone().json().catch(() => ({})) as Partial<GenerateImageRequest>;
+
+  if (peek.model && CREATOR_FAL_IMAGE_MODELS[peek.model] && !isFreeTemplateRequest(peek)) {
+    try {
+      buildCreatorFalImageRequest(peek.model, peek.prompt ?? '', peek.sourceImage, peek.aspectRatio);
+    } catch (error) {
+      return new Response(JSON.stringify({ error: (error as Error).message }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+  }
 
   const charged = await chargeForJob(req, {
     kind: 'image',

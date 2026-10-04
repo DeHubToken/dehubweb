@@ -16,7 +16,7 @@ import { fetchJobQuote } from '@/hooks/use-ai-quote';
 import { payForJob } from '@/lib/ai-payment';
 import { hostDataUrl } from '@/lib/creator/generationEngine';
 import { IMAGE_MODELS } from '@/constants/image-models.constants';
-import { VIDEO_MODELS, snapVideoDuration } from '@/constants/video-models.constants';
+import { VIDEO_MODELS, snapVideoDuration, getVideoResolutions } from '@/constants/video-models.constants';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
 import { useCreatorFlowStore } from '@/store/creatorFlowStore';
 import { buildPipelineWaves, resolveInputs, resolveMentions } from './executor';
@@ -253,7 +253,10 @@ async function runVideoNode(node: FlowNode, txHash: string | undefined) {
   const { resolvedPrompt, orderedUrls } = resolveMentions(upstream.prompt ?? '', upstream.imageNodeLabels, upstream.imageUrls);
   const model = (node.data.model as string) || DEFAULT_VIDEO_MODEL;
   const cfg = VIDEO_MODELS[model];
-  const aspectRatio = (node.data.aspectRatio as string) || '16:9';
+  const aspects = cfg?.aspectRatios ?? ['16:9', '9:16', '1:1'];
+  const aspectRatio = aspects.includes(node.data.aspectRatio ?? '') ? node.data.aspectRatio! : aspects[0];
+  const resolutions = getVideoResolutions(cfg);
+  const resolution = resolutions.includes(node.data.resolution ?? '') ? node.data.resolution! : resolutions.includes('720p') ? '720p' : resolutions[0];
   const duration = cfg ? snapVideoDuration(cfg, (node.data.duration as number) || cfg.defaultDuration || 5) : (node.data.duration as number) || 5;
   const slot = pushGeneration(node.id, null);
   updateNodeData(node.id, { status: 'running', errorMsg: undefined, prompt: resolvedPrompt, pendingGenerate: false });
@@ -264,7 +267,7 @@ async function runVideoNode(node: FlowNode, txHash: string | undefined) {
       model,
       aspectRatio,
       duration,
-      resolution: cfg?.supportsResolution ? (node.data.resolution as '480p' | '720p' | '1080p' | undefined) : undefined,
+      resolution: cfg?.supportsResolution ? resolution : undefined,
       negativePrompt: (node.data.negativePrompt as string | undefined) || undefined,
       seed: node.data.seed as number | undefined,
       txHash,

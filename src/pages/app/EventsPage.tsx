@@ -1,15 +1,14 @@
 import { useTranslation } from 'react-i18next';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useEvents } from '@/hooks/use-events';
 import type { CommunityEvent } from '@/hooks/use-events';
 import { EventCard } from '@/components/app/events/EventCard';
 import { CreateEventDrawer } from '@/components/app/events/CreateEventDrawer';
 import { EventDetailDrawer } from '@/components/app/events/EventDetailDrawer';
 import { SEOHead } from '@/components/SEOHead';
-import { cn } from '@/lib/utils';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { IslandAction, KitButton, PageBody, PageEmpty, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 
 type Filter = 'upcoming' | 'past' | 'my';
 
@@ -39,11 +38,6 @@ export default function EventsPage() {
     setCreateOpen(true);
   };
 
-  // Swallow the events grid at the sticky header bento's top edge under the
-  // glass themes, exactly like the home feed cuts at its nav pill.
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
-
   return (
     <div className="min-h-screen">
       {/* noindex matches the edge: the worker classes /events as app chrome
@@ -57,42 +51,26 @@ export default function EventsPage() {
         noindex
       />
 
-      {/* Sticky nav pill */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-2xl mx-auto">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
-          <h1 className="text-xl font-bold text-white mb-3 flex items-center gap-3">
-            <ThemedIcon icon="events" alt="" className="w-10 h-10 shrink-0 object-contain" />
-            {t('events.title')}
-          </h1>
-
-          {/* Filter tabs + create */}
-          <div className="flex items-center border-b border-white/[0.08]">
-            {(['upcoming', 'past', 'my'] as Filter[]).map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={cn(
-                  'px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-[1px]',
-                  filter === f
-                    ? 'text-white border-white'
-                    : 'text-zinc-500 border-transparent hover:text-white'
-                )}
-              >
-                {t(FILTER_KEYS[f])}
-              </button>
-            ))}
-            <button
-              onClick={handleCreate}
-              className="ml-auto px-4 py-2.5 text-2xl font-medium text-zinc-500 hover:text-white transition-colors border-b-2 border-transparent -mb-[1px] leading-none"
-            >
-              +
-            </button>
-          </div>
-        </div>
-      </div>
+      <PageIsland
+        className="mx-auto max-w-2xl"
+        icon="events"
+        title={t('events.title')}
+        actions={
+          <IslandAction label={t('events.createEvent')} onClick={handleCreate}>
+            <Plus className="h-[18px] w-[18px]" />
+          </IslandAction>
+        }
+        tabs={
+          <PageTabs
+            value={filter}
+            onChange={setFilter}
+            tabs={(['upcoming', 'past', 'my'] as Filter[]).map((f) => ({ id: f, label: t(FILTER_KEYS[f]) }))}
+          />
+        }
+      />
 
       {/* Events grid */}
-      <div ref={contentRef} className="max-w-2xl mx-auto px-2 sm:px-3 pt-3 pb-6">
+      <PageBody measure className="mx-auto">
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
@@ -100,21 +78,16 @@ export default function EventsPage() {
             ))}
           </div>
         ) : isError ? (
-          <div className="text-center py-12">
-            <p className="text-zinc-500 text-sm mb-3">{t('events.loadFailed')}</p>
-            <button
-              onClick={() => refetch()}
-              className="px-4 py-2 text-sm font-medium text-white rounded-lg bg-white/[0.06] hover:bg-white/10 transition-colors"
-            >
-              {t('events.retry')}
-            </button>
-          </div>
+          <PageEmpty
+            title={t('events.loadFailed')}
+            action={<KitButton variant="quiet" onClick={() => refetch()}>{t('events.retry')}</KitButton>}
+          />
         ) : events.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-zinc-500 text-sm">
-              {t(filter === 'upcoming' ? 'events.noUpcoming' : filter === 'past' ? 'events.noPast' : 'events.noneCreated')}
-            </p>
-          </div>
+          <PageEmpty
+            icon="events"
+            title={t(filter === 'upcoming' ? 'events.noUpcoming' : filter === 'past' ? 'events.noPast' : 'events.noneCreated')}
+            action={<KitButton onClick={handleCreate}>{t('events.createEvent')}</KitButton>}
+          />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {events.map((event) => (
@@ -126,7 +99,7 @@ export default function EventsPage() {
             ))}
           </div>
         )}
-      </div>
+      </PageBody>
 
       <CreateEventDrawer open={createOpen} onOpenChange={setCreateOpen} />
       <EventDetailDrawer

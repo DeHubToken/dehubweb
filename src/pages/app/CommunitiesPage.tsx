@@ -5,12 +5,10 @@
  */
 
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
-import { cn } from '@/lib/utils';
+import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserCommunities, useDiscoverCommunities, useCommunityActivityScores } from '@/hooks/use-communities';
 import { CommunityCard } from '@/components/app/communities/CommunityCard';
@@ -124,11 +122,6 @@ export default function CommunitiesPage() {
   const waitingForWallet = isAuthenticated && !walletAddress;
   const isLoading = loadingUser || loadingAll || waitingForWallet;
 
-  // Swallow the communities list at the sticky header bento's top edge under
-  // the glass themes, exactly like the home feed cuts at its nav pill.
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
-
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -145,41 +138,36 @@ export default function CommunitiesPage() {
         }}
       />
 
-      {/* Sticky nav pill */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-2xl mx-auto">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
-          {/* Header */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <BrandIcon src={communitiesTitleIcon} alt="" className="w-9 h-9 shrink-0 object-contain" />
-              <h1 className="text-xl font-bold text-white truncate">{t('communities.title')}</h1>
-            </div>
-          </div>
-
-          {/* Tabs */}
-          {isAuthenticated && (activityGroups.length > 0 || totalUnread > 0) && (
-            <div className="flex gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/[0.06]">
-              <button
-                onClick={() => setTab('communities')}
-                className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-colors ${tab === 'communities' ? 'bg-white/[0.1] text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
-              >
-                {t('communities.title')}
-              </button>
-              <button
-                onClick={() => setTab('activity')}
-                className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-1.5 ${tab === 'activity' ? 'bg-white/[0.1] text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
-              >
-                {t('communities.activity', 'Activity')}
-                {totalUnread > 0 && (
-                  <span className="min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full leading-none">
-                    {totalUnread > 99 ? '99+' : totalUnread}
-                  </span>
-                )}
-              </button>
-            </div>
-          )}
-
-          <div className={`flex items-center gap-1.5 ${tab !== 'communities' ? 'hidden' : ''}`}>
+      <PageIsland
+        className="mx-auto max-w-2xl"
+        icon={<BrandIcon src={communitiesTitleIcon} alt="" className="h-8 w-8 object-contain" />}
+        title={t('communities.title')}
+        actions={
+          <IslandAction
+            label={t('communities.createCommunity')}
+            onClick={() => {
+              if (!isAuthenticated) { openLoginModal(); return; }
+              setCreateOpen(true);
+            }}
+          >
+            <Plus className="h-[18px] w-[18px]" />
+          </IslandAction>
+        }
+        tabs={
+          isAuthenticated && (activityGroups.length > 0 || totalUnread > 0) ? (
+            <PageTabs
+              value={tab}
+              onChange={setTab}
+              tabs={[
+                { id: 'communities', label: t('communities.title') },
+                { id: 'activity', label: t('communities.activity', 'Activity'), count: totalUnread > 0 ? totalUnread : undefined },
+              ]}
+            />
+          ) : undefined
+        }
+      >
+        {tab === 'communities' ? (
+          <div className="flex items-center gap-1.5">
             <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <input
@@ -190,50 +178,18 @@ export default function CommunitiesPage() {
                 className="w-full h-10 pl-10 pr-4 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 outline-none focus:border-white/20 text-sm"
               />
             </div>
-            <LiquidGlassBubble
-              shimmer
-              noBorder
-              onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}
-              className={cn(
-                "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
-                sortMode === 'new' ? "opacity-100" : "opacity-60 hover:opacity-90"
-              )}
-              style={{ width: '40px', height: '40px' }}
-            >
-              <span className="flex items-center justify-center w-full h-full text-base">💎</span>
-            </LiquidGlassBubble>
-            <LiquidGlassBubble
-              shimmer
-              noBorder
-              onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}
-              className={cn(
-                "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
-                sortMode === 'hot' ? "opacity-100" : "opacity-60 hover:opacity-90"
-              )}
-              style={{ width: '40px', height: '40px' }}
-            >
-              <span className="flex items-center justify-center w-full h-full text-base">🔥</span>
-            </LiquidGlassBubble>
-            <LiquidGlassBubble
-              shimmer
-              noBorder
-              onClick={() => {
-                if (!isAuthenticated) { openLoginModal(); return; }
-                setCreateOpen(true);
-              }}
-              className={cn(
-                "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl opacity-60 hover:opacity-90"
-              )}
-              style={{ width: '40px', height: '40px' }}
-            >
-              <Plus className="w-5 h-5 text-white" />
-            </LiquidGlassBubble>
+            <IslandAction label="New" active={sortMode === 'new'} onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}>
+              <span className="text-base leading-none">💎</span>
+            </IslandAction>
+            <IslandAction label="Hot" active={sortMode === 'hot'} onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}>
+              <span className="text-base leading-none">🔥</span>
+            </IslandAction>
           </div>
-        </div>
-      </div>
+        ) : null}
+      </PageIsland>
 
       {/* Content */}
-      <div ref={contentRef} className="max-w-2xl mx-auto px-2 sm:px-3 pt-3 pb-6">
+      <PageBody measure className="mx-auto">
       {tab === 'activity' ? (
         activityGroups.length > 0 ? (
           <div className="space-y-4">
@@ -299,7 +255,7 @@ export default function CommunitiesPage() {
           ) : null}
         </div>
       )}
-      </div>
+      </PageBody>
 
       <CreateCommunityModal open={createOpen} onOpenChange={setCreateOpen} />
     </div>

@@ -7,15 +7,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, MapPin, Share2 } from 'lucide-react';
+import { MapPin, Share2 } from 'lucide-react';
 import { useStoreById, useStoreListings, useStoreListing } from '@/hooks/use-stores';
 import { StoreListingCard } from '@/components/app/stores/StoreListingCard';
 import { ListingDetailDrawer } from '@/components/app/stores/ListingDetailDrawer';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { dehubLinkFor } from '@/lib/dehub-links';
-import { Button } from '@/components/ui/button';
 import { SEOHead } from '@/components/SEOHead';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { IslandAction, KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { storageImage, deviceWidth, isMdUp } from '@/lib/media-url';
 import { AppState } from '@/components/app/AppState';
 
@@ -67,8 +66,11 @@ export default function StoreDetailPage() {
   // failing -- not a deleted store.
   if (!store && storeFailed) {
     return (
-      <div className="p-4 py-12">
+      <div className="min-h-screen">
         <SEOHead title={`${t('common.somethingWentWrong')} — DeHub Stores`} description={t('common.somethingWentWrong')} noindex />
+        <PageIsland back backFallback="/app/stores" icon="stores" title={t('stores.title')} />
+        <PageBody>
+        <div className="py-12">
         <AppState
           kind="error"
           icon="stores"
@@ -76,41 +78,46 @@ export default function StoreDetailPage() {
           primaryAction={{ label: t('common.retry'), onClick: () => void refetchStore(), loading: storeFetching }}
           secondaryAction={{ label: t('common.goBack'), onClick: () => navigate(-1) }}
         />
+        </div>
+        </PageBody>
       </div>
     );
   }
 
   if (!store) {
     return (
-      <div className="p-4 text-center py-20">
+      <div className="min-h-screen">
         <SEOHead title={`${t('stores.storeNotFound')} — DeHub Stores`} description={t('stores.storeNotFound')} noindex />
-        <ThemedIcon icon="stores" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-75" />
-        <p className="text-muted-foreground">{t('stores.storeNotFound')}</p>
-        <Button variant="outline" onClick={() => navigate(-1)} className="mt-4">{t('common.goBack')}</Button>
+        <PageIsland back backFallback="/app/stores" icon="stores" title={t('stores.title')} />
+        <PageBody>
+          <PageEmpty
+            icon="stores"
+            title={t('stores.storeNotFound')}
+            action={<KitButton variant="quiet" onClick={() => navigate(-1)}>{t('common.goBack')}</KitButton>}
+          />
+        </PageBody>
       </div>
     );
   }
 
   return (
-    <div className="pb-20 p-2 sm:p-3 space-y-6">
+    <div className="min-h-screen">
       <SEOHead title={`${store.name} — DeHub Stores`} description={(store.description || `Shop ${store.name} on DeHub. Peer-to-peer commerce paid in DHB or USDC.`).slice(0, 155)} url={`https://dehub.io/app/stores/${store.id}`} />
+      <PageIsland
+        back
+        backFallback="/app/stores"
+        icon="stores"
+        title={store.name || t('stores.store')}
+        subtitle={t('stores.listingCount', { count: listings.length })}
+        actions={
+          <IslandAction label={t('stores.shareStore')} onClick={() => setShareOpen(true)}>
+            <Share2 className="h-[18px] w-[18px]" />
+          </IslandAction>
+        }
+      />
+
+      <PageBody>
       <section className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute top-3 left-3 z-10 bg-black/50 backdrop-blur-sm rounded-full p-2"
-          aria-label={t('stores.goBackLabel')}
-        >
-          <ArrowLeft className="w-4 h-4 text-white" />
-        </button>
-
-        <button
-          onClick={() => setShareOpen(true)}
-          className="absolute top-3 right-3 z-10 bg-black/50 backdrop-blur-sm rounded-full p-2"
-          aria-label={t('stores.shareStore')}
-        >
-          <Share2 className="w-4 h-4 text-white" />
-        </button>
-
         <div className="aspect-[3/1] w-full bg-zinc-900">
           {store.banner_url ? (
             <img src={storageImage(store.banner_url, deviceWidth(isMdUp() ? 600 : 430))} className="w-full h-full object-cover" alt="" fetchPriority="high" />
@@ -135,7 +142,7 @@ export default function StoreDetailPage() {
           </div>
 
           <div className="mt-3">
-            <h1 className="text-lg sm:text-xl font-bold text-primary-foreground">{store.name || t('stores.store')}</h1>
+            <h2 className="text-lg sm:text-xl font-bold text-primary-foreground">{store.name || t('stores.store')}</h2>
             <p className="text-xs text-muted-foreground">{t('stores.listingCount', { count: listings.length })}</p>
             {store.description && (
               <p className="mt-2 text-sm text-primary-foreground/80">{store.description}</p>
@@ -173,6 +180,8 @@ export default function StoreDetailPage() {
           </div>
         )}
       </div>
+
+      </PageBody>
 
       <ListingDetailDrawer
         listing={selectedListing}

@@ -10,11 +10,16 @@ import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCover';
 import { ArticleReader } from '@/components/app/article/ArticleReader';
 import { ArticleComposer } from '@/features/post/components/ArticleComposer';
 import { BADGE_ORDER, badgeImage } from '@/lib/staking-badges';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { BadgedName } from '@/components/app/BadgedName';
 import { preloadBadgeShowcase } from '@/lib/badge-showcase';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import type { ReactionCounts } from '@/lib/reactions';
 import { AuthContext, type AuthContextType } from '@/contexts/AuthContext';
+import { KitButton, PageEmpty, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
+import { FeedTabBarSkeleton } from '@/components/app/PageSkeletons';
+import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 
 // The gallery sits outside the wallet providers; a signed-out stub is all the
 // action row needs to render.
@@ -214,6 +219,23 @@ export default function StateGalleryPage() {
             </button>
             <button className="p-2" onClick={() => setBadge({ anchor: null, promote: true, first: true })}>First badge</button>
           </div>
+          <div data-inline-badge-gallery className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[12, 14, 16, 24].map(size => (
+              <div key={size} data-badge-font-size={size} className="space-y-3">
+                <p className="text-xs text-zinc-500">{size}px names</p>
+                {BADGE_ORDER.map(tier => (
+                  <span key={tier} data-badge-sample={tier} className="flex items-baseline gap-1" style={{ fontSize: size, lineHeight: 1.4 }}>
+                    <span className="font-semibold">H {tier}</span>
+                    <BadgeIcon src={badgeImage(tier)} />
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-4" data-badge-font-inheritance>
+            <BadgedName badgeBalance={50_000_000} className="text-xs font-semibold">H Compact name</BadgedName>
+            <BadgedName badgeBalance={50_000_000} className="text-2xl font-bold">H Profile name</BadgedName>
+          </div>
         </section>
         {badge && <Suspense fallback={null}>
           <BadgeShowcase tier={badge.first ? 'Crab' : BADGE_ORDER[badgeTier]} anchor={badge.anchor}
@@ -231,6 +253,18 @@ export default function StateGalleryPage() {
             ))}
           </div>
         </section>
+
+        <section data-home-loading-gallery className="mb-5">
+          <h2 className="mb-3 text-sm font-semibold">Home loading</h2>
+          <div className="max-w-2xl mx-auto">
+            <FeedTabBarSkeleton />
+            <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0">
+              <FeedCardSkeletonList count={3} columns={1} />
+            </div>
+          </div>
+        </section>
+
+        <PageKitGallery />
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">Theme controls</h2>
@@ -313,5 +347,34 @@ export default function StateGalleryPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+/** The shared page kit (components/app/page-kit) in the active theme. */
+function PageKitGallery() {
+  const [tab, setTab] = useState<'browse' | 'mine' | 'sell'>('browse');
+  return (
+    <section data-page-bento data-page-kit-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Page kit</h2>
+      <div className="space-y-3">
+        <PageTabs
+          value={tab}
+          onChange={setTab}
+          tabs={[
+            { id: 'browse', label: 'Browse', icon: 'search' },
+            { id: 'mine', label: 'Mine', icon: 'usernames' },
+            { id: 'sell', label: 'Sell', icon: 'stores' },
+          ]}
+        />
+        <PageSection eyebrow="Treasury balance" title="Section title">
+          <p className="text-sm text-zinc-400">Sections are rounded bentos on canvas themes and full width between hairlines on System phones.</p>
+        </PageSection>
+        <div className="flex gap-2">
+          <KitButton>Primary</KitButton>
+          <KitButton variant="quiet">Quiet</KitButton>
+        </div>
+        <PageEmpty icon="stores" title="No listings yet" body="Be the first to sell something." />
+      </div>
+    </section>
   );
 }

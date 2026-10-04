@@ -258,7 +258,7 @@ export const GLASS_STYLES = {
 // Wallet addresses (lowercased) that can resolve disputes via /work/disputes or /app/work/disputes.
 // Must match the `feeRecipient` / `owner` of the deployed DeHubWork contract.
 export const WORK_ADMIN_ARBITERS: string[] = [
-  // TODO: paste admin wallet address(es) here, lowercased
+  '0x9324840523a5d17dd12a2f11a9472e5a199c1937',
 ];
 
 export function isWorkAdmin(addr?: string | null): boolean {

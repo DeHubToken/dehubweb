@@ -1,15 +1,15 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Search, AlertTriangle, Plus } from 'lucide-react';
+import { Search, AlertTriangle, Plus } from 'lucide-react';
 import { useMyPostedJobs, useMyWorkSubmissions } from '@/features/work/hooks/use-work';
 import { bountyPath } from '@/features/work/seo';
 import { TxLink, statusBadgeClass, statusLabelKey } from '@/features/work/components/TxLink';
 import type { WorkJob, WorkJobStatus, WorkSubmission } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
-import { isWorkContractDeployed } from '@/lib/contracts/dehub-work';
+
 import { SEOHead } from '@/components/SEOHead';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { KitButton, PageBody, PageEmpty, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 
 type Tab = 'posted' | 'worked';
 
@@ -58,7 +58,7 @@ export default function WorkHistoryPage() {
   const isEmpty = tab === 'posted' ? filteredPosted.length === 0 : filteredSubmissions.length === 0;
 
   return (
-    <div data-work-surface className="max-w-3xl mx-auto px-4 py-6">
+    <div data-work-surface className="min-h-screen">
       {/* Authed, per-wallet page: never indexable, but it still needs its own
           head or it inherits the title and canonical of whatever route came
           before it — see src/lib/head-meta.ts. */}
@@ -69,48 +69,28 @@ export default function WorkHistoryPage() {
         noindex
       />
 
-      <button onClick={() => navigate('/work')} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4">
-        <ArrowLeft className="w-4 h-4" /> {t('work.back')}
-      </button>
-
-      <div className="flex items-center gap-3 mb-4">
-        <ThemedIcon icon="bounties" alt="" className="w-10 h-10 shrink-0 object-contain" />
-        <div className="min-w-0">
-          <h1 className="text-xl font-bold text-white">{t('work.myBounties')}</h1>
-          <p className="text-sm text-white/60">{t('work.historySubtitle')}</p>
-        </div>
-      </div>
-
-      {!walletAddress ? (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center">
-          <ThemedIcon icon="lock" alt="" className="w-12 h-12 object-contain mx-auto mb-2 opacity-70" />
-          <h2 className="text-base font-semibold text-white mb-1">{t('work.connectTitle')}</h2>
-          <p className="text-sm text-white/60 max-w-md mx-auto mb-4">{t('work.connectBody')}</p>
-          <button onClick={() => openLoginModal()} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold">{t('work.connectCta')}</button>
-        </div>
-      ) : (
-        <>
-          {/* Tabs */}
-          <div role="tablist" aria-label={t('work.historyTabsLabel')} className="flex items-center gap-2 mb-3">
-            {(['posted', 'worked'] as const).map((tabId) => (
-              <button
-                key={tabId}
-                role="tab"
-                aria-selected={tab === tabId}
-                onClick={() => switchTab(tabId)}
-                className={`px-4 py-2 rounded-xl text-sm transition-colors ${
-                  tab === tabId
-                    ? 'bg-white/15 text-white border border-white/20'
-                    : 'bg-white/5 text-white/60 border border-transparent hover:bg-white/10'
-                }`}
-              >
-                {tabId === 'posted' ? t('work.tabPosted') : t('work.tabWorked')}
-              </button>
-            ))}
-          </div>
-
-          {/* Filter bar */}
-          <div className="flex flex-wrap items-center gap-2 mb-4">
+      <PageIsland
+        back
+        onBack={() => navigate('/work')}
+        icon="bounties"
+        title={t('work.myBounties')}
+        subtitle={t('work.historySubtitle')}
+        tabs={
+          walletAddress ? (
+            <PageTabs
+              value={tab}
+              onChange={switchTab}
+              tabs={[
+                { id: 'posted', label: t('work.tabPosted') },
+                { id: 'worked', label: t('work.tabWorked') },
+              ]}
+            />
+          ) : undefined
+        }
+      >
+        {walletAddress ? (
+          /* Filter bar */
+          <div className="flex flex-wrap items-center gap-2">
             <div className="relative flex-1 min-w-[200px]">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
               <input
@@ -132,7 +112,19 @@ export default function WorkHistoryPage() {
               ))}
             </select>
           </div>
+        ) : null}
+      </PageIsland>
 
+      <PageBody className="max-w-3xl mx-auto">
+      {!walletAddress ? (
+        <PageEmpty
+          icon="lock"
+          title={t('work.connectTitle')}
+          body={t('work.connectBody')}
+          action={<KitButton variant="primary" onClick={() => openLoginModal()}>{t('work.connectCta')}</KitButton>}
+        />
+      ) : (
+        <>
           {isLoading ? (
             <div className="space-y-3">
               {Array.from({ length: 3 }).map((_, i) => (
@@ -142,13 +134,11 @@ export default function WorkHistoryPage() {
           ) : isError ? (
             /* Without this branch a failed query falls through to the empty
                state and tells a poster with 40 bounties they have none. */
-            <div className="text-center py-16">
-              <AlertTriangle className="w-8 h-8 text-white/40 mx-auto mb-3" />
-              <p className="text-sm text-white/60 mb-4">{t('work.loadFailed')}</p>
-              <button onClick={() => refetch()} className="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/15 transition-colors">
-                {t('work.tryAgain')}
-              </button>
-            </div>
+            <PageEmpty
+              icon={<AlertTriangle className="w-8 h-8 text-white/40" />}
+              title={t('work.loadFailed')}
+              action={<KitButton variant="quiet" onClick={() => refetch()}>{t('work.tryAgain')}</KitButton>}
+            />
           ) : isEmpty ? (
             <EmptyState tab={tab} hasFilters={hasFilters} onClear={() => { setStatus('all'); setSearch(''); }} />
           ) : tab === 'posted' ? (
@@ -162,6 +152,7 @@ export default function WorkHistoryPage() {
           )}
         </>
       )}
+      </PageBody>
     </div>
   );
 }
@@ -170,31 +161,31 @@ function EmptyState({ tab, hasFilters, onClear }: { tab: Tab; hasFilters: boolea
   const navigate = useNavigate();
   const { t } = useTranslation();
   return (
-    <div className="text-center py-16">
-      <ThemedIcon icon="bounties" alt="" className="w-12 h-12 object-contain mx-auto mb-3 opacity-60" />
-      <p className="text-white/60 mb-4">
-        {hasFilters
+    <PageEmpty
+      icon="bounties"
+      title={
+        hasFilters
           ? t('work.emptyFilteredHistory')
           : tab === 'posted'
             ? t('work.emptyPosted')
-            : t('work.emptyWorked')}
-      </p>
-      <div className="flex items-center justify-center gap-3">
-        {hasFilters ? (
-          <button onClick={onClear} className="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/15 transition-colors">
+            : t('work.emptyWorked')
+      }
+      action={
+        hasFilters ? (
+          <KitButton variant="quiet" onClick={onClear}>
             {t('work.clearFilters')}
-          </button>
+          </KitButton>
         ) : tab === 'posted' ? (
-          <button onClick={() => navigate('/work/post')} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold inline-flex items-center gap-1.5">
+          <KitButton variant="primary" onClick={() => navigate('/work/post')}>
             <Plus className="w-4 h-4" /> {t('work.postBounty')}
-          </button>
+          </KitButton>
         ) : (
-          <button onClick={() => navigate('/work')} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold">
+          <KitButton variant="primary" onClick={() => navigate('/work')}>
             {t('work.browseBounties')}
-          </button>
-        )}
-      </div>
-    </div>
+          </KitButton>
+        )
+      }
+    />
   );
 }
 
@@ -213,9 +204,9 @@ function PostedRow({ job }: { job: WorkJob }) {
           the "no tx" note would be the most-repeated line on the page. */}
       {job.fund_tx_hash ? (
         <div className="mt-2"><TxLink label={t('work.escrowTx')} txHash={job.fund_tx_hash} /></div>
-      ) : isWorkContractDeployed() ? (
-        <div className="mt-2 text-[11px] text-white/30">{t('work.notEscrowedOnChain')}</div>
-      ) : null}
+      ) : (
+        <div className="mt-2 text-[11px] text-white/30">{t('work.integrity.payOnApproval')}</div>
+      )}
     </div>
   );
 }
@@ -226,7 +217,7 @@ function SubmissionRow({ submission: s }: { submission: WorkSubmission & { job: 
   // Approved is not paid. Treating the two as one status is what let ~500k DHB
   // of accepted work show a green "paid" tick on this very page while no
   // transfer had happened — a payout is real only once it has a tx hash.
-  const paid = !!s.payout_tx_hash || s.approval_status === 'paid';
+  const paid = s.payout_state === 'confirmed' && !!s.payout_tx_hash;
   const awaitingPayment = s.approval_status === 'approved' && !s.payout_tx_hash;
   const due = Number(s.payout_amount) || 0;
 
@@ -255,7 +246,7 @@ function SubmissionRow({ submission: s }: { submission: WorkSubmission & { job: 
         {(paid || awaitingPayment) && due > 0 && job && ` · ${due.toLocaleString('en-US', { maximumFractionDigits: 4 })} ${job.currency}`}
       </div>
       {s.payout_tx_hash ? (
-        <div className="mt-2"><TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} /></div>
+        <div className="mt-2"><TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} chain={s.payout_chain_id ?? 8453} /></div>
       ) : awaitingPayment ? (
         <div className="mt-2 text-[11px] text-amber-200/70">
           {t('work.acceptedNotSent')}

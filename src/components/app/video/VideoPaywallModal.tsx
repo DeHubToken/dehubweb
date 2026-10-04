@@ -19,7 +19,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 export interface VideoGenerationOptions {
   duration?: number;
-  resolution?: '480p' | '720p' | '1080p';
+  resolution?: string;
   negativePrompt?: string;
   referenceImageUrls?: string[];
   endFrameUrl?: string;
@@ -43,7 +43,7 @@ interface VideoPaywallModalProps {
    * this modal's own defaults. Omit to keep the model defaults.
    */
   initialDuration?: number;
-  initialResolution?: '480p' | '720p' | '1080p';
+  initialResolution?: string;
 }
 
 /** Upload a file to Supabase storage and return its public URL */
@@ -75,7 +75,7 @@ export function VideoPaywallModal({
 
   // Basic Seedance 2.0 options
   const [duration, setDuration] = useState(initialDuration ?? model.defaultDuration ?? 5);
-  const [resolution, setResolution] = useState<'480p' | '720p' | '1080p'>(initialResolution ?? '720p');
+  const [resolution, setResolution] = useState<string>(initialResolution ?? '720p');
   const [negativePrompt, setNegativePrompt] = useState('');
 
   // Advanced Seedance 2.0 options
@@ -119,7 +119,8 @@ export function VideoPaywallModal({
     // touch the duration before it is priced and charged, and several models
     // only accept a closed set of lengths.
     setDuration(snapVideoDuration(model, seeded));
-    setResolution(initialResolution ?? '720p');
+    const resolutions = getVideoResolutions(model);
+    setResolution(initialResolution && resolutions.includes(initialResolution) ? initialResolution : resolutions.includes('720p') ? '720p' : resolutions[0]);
     setNegativePrompt('');
     // Release the preview URLs before dropping the items, otherwise every
     // model switch pins another set of image blobs for the page's lifetime.
@@ -481,7 +482,7 @@ export function VideoPaywallModal({
                       <button
                         key={res}
                         type="button"
-                        onClick={() => setResolution(res as '480p' | '720p' | '1080p')}
+                        onClick={() => setResolution(res as string)}
                         className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors ${
                           resolution === res
                             ? 'bg-purple-500/30 text-purple-300 border border-purple-500/40'

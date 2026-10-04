@@ -6,18 +6,17 @@
  * StoresPage shell (sticky data-page-bento nav + swallow clip + glass tabs).
  */
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Megaphone, LayoutDashboard, Rocket, Wallet, Plus } from 'lucide-react';
+import { LayoutDashboard, Rocket, Wallet, Plus } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAuth } from '@/contexts/AuthContext';
 import { AdsOverviewTab } from '@/components/app/ads/AdsOverviewTab';
 import { CampaignsTab } from '@/components/app/ads/CampaignsTab';
 import { BillingTab } from '@/components/app/ads/BillingTab';
 import { CampaignWizard } from '@/components/app/ads/CampaignWizard';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { IslandAction, PageBody, PageEmpty, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
+import { useAdRevenue } from '@/hooks/use-ads';
 
 export default function AdsPage() {
   const { t } = useTranslation();
@@ -25,9 +24,7 @@ export default function AdsPage() {
   const [wizardOpen, setWizardOpen] = useState(false);
   const [focusCampaignId, setFocusCampaignId] = useState<string | null>(null);
   const { isAuthenticated } = useAuth();
-
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  const revenue = useAdRevenue();
 
   const openCampaign = (id: string) => {
     setFocusCampaignId(id);
@@ -41,71 +38,47 @@ export default function AdsPage() {
         description="Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in DHB."
       />
 
-      {/* Sticky nav pill */}
-      <div
-        data-feed-nav-outer
-        className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-4xl mx-auto"
-      >
-        <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <ThemedIcon icon="ads" alt="" className="w-10 h-10 shrink-0 object-contain" />
-              <h1 className="text-xl font-bold text-white truncate">{t('ads.adsManager')}</h1>
-            </div>
-            {isAuthenticated && (
-              <LiquidGlassBubble2
-                label={t('ads.newCampaign')}
-                icon={<Plus className="w-4 h-4" />}
-                onClick={() => setWizardOpen(true)}
-                width="auto"
-                height="36px"
-              />
-            )}
-          </div>
-
-          <div className="flex items-center gap-2 overflow-x-auto">
-            <LiquidGlassBubble2
-              label={t('ads.tabOverview')}
-              icon={<LayoutDashboard className="w-4 h-4" />}
-              onClick={() => setTab('overview')}
-              width="auto"
-              height="38px"
-              active={tab === 'overview'}
-              className={tab === 'overview' ? undefined : 'opacity-60'}
-            />
-            <LiquidGlassBubble2
-              label={t('ads.tabCampaigns')}
-              icon={<Rocket className="w-4 h-4" />}
-              onClick={() => setTab('campaigns')}
-              width="auto"
-              height="38px"
-              active={tab === 'campaigns'}
-              className={tab === 'campaigns' ? undefined : 'opacity-60'}
-            />
-            <LiquidGlassBubble2
-              label={t('ads.tabBilling')}
-              icon={<Wallet className="w-4 h-4" />}
-              onClick={() => setTab('billing')}
-              width="auto"
-              height="38px"
-              active={tab === 'billing'}
-              className={tab === 'billing' ? undefined : 'opacity-60'}
-            />
-          </div>
-        </div>
-      </div>
+      <PageIsland
+        className="max-w-4xl mx-auto"
+        icon="ads"
+        title={t('ads.adsManager')}
+        actions={
+          isAuthenticated ? (
+            <IslandAction label={t('ads.newCampaign')} onClick={() => setWizardOpen(true)}>
+              <Plus className="h-[18px] w-[18px]" />
+            </IslandAction>
+          ) : undefined
+        }
+        tabs={
+          <PageTabs
+            value={tab}
+            onChange={setTab}
+            tabs={[
+              { id: 'overview', label: t('ads.tabOverview'), icon: <LayoutDashboard className="w-4 h-4" /> },
+              { id: 'campaigns', label: t('ads.tabCampaigns'), icon: <Rocket className="w-4 h-4" /> },
+              { id: 'billing', label: t('ads.tabBilling'), icon: <Wallet className="w-4 h-4" /> },
+            ]}
+          />
+        }
+      />
 
       {/* Content */}
-      <div ref={contentRef} className="w-full max-w-4xl mx-auto px-2 sm:px-3 pt-3 pb-24 space-y-4">
+      <PageBody className="max-w-4xl mx-auto">
+        {isAuthenticated && revenue.data !== undefined ? <div data-kit-section className="rounded-xl border border-foreground/10 p-4">
+          <p className="font-medium text-foreground">Your ad revenue · ${revenue.data.toFixed(4)}</p>
+          <p className="text-sm text-muted-foreground">Revenue from ads and creator support, awaiting DHB settlement.</p>
+        </div> : null}
         {!isAuthenticated ? (
-          <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-10 text-center space-y-2">
-            <Megaphone className="w-8 h-8 text-muted-foreground mx-auto" />
-            <h2 className="text-lg font-semibold text-foreground">{t('ads.advertiseOnDehub')}</h2>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              Target verified badge holders with POVR — proof-of-view-and-rank advertising.
-              Connect your wallet to create your first campaign.
-            </p>
-          </div>
+          <PageEmpty
+            icon="ads"
+            title={t('ads.advertiseOnDehub')}
+            body={
+              <>
+                Target verified badge holders with POVR — proof-of-view-and-rank advertising.
+                Connect your wallet to create your first campaign.
+              </>
+            }
+          />
         ) : tab === 'overview' ? (
           <AdsOverviewTab onOpenCampaign={openCampaign} onNewCampaign={() => setWizardOpen(true)} onGoBilling={() => setTab('billing')} />
         ) : tab === 'campaigns' ? (
@@ -117,7 +90,7 @@ export default function AdsPage() {
         ) : (
           <BillingTab />
         )}
-      </div>
+      </PageBody>
 
       <CampaignWizard open={wizardOpen} onOpenChange={setWizardOpen} onCreated={openCampaign} />
     </div>

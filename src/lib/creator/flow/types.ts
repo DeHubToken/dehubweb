@@ -35,7 +35,7 @@ export interface NodeData extends Record<string, unknown> {
   model?: string;
   aspectRatio?: string;
   duration?: number;
-  resolution?: '480p' | '720p' | '1080p';
+  resolution?: string;
   negativePrompt?: string;
   seed?: number;
 
