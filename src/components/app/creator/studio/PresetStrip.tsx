@@ -5,7 +5,7 @@
  * scaffold plus the model and aspect that make it work, so picking one and
  * typing a subject is the whole job.
  */
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -53,7 +53,7 @@ const GROUP_KEYS: Record<string, string> = {
   Voiceover: 'creator.presetGroupVoiceover',
 };
 
-export function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripProps) {
+export const PresetStrip = memo(function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripProps) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   useEffect(() => setQuery(''), [kind, audioTask]);
@@ -133,4 +133,4 @@ export function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripPr
       </div>
     </div>
   );
-}
+});
