@@ -428,7 +428,8 @@ LANGUAGE plpgsql SET search_path=public AS $$
 DECLARE j public.work_jobs;
 BEGIN
  IF current_user IN ('postgres','service_role','supabase_admin') THEN RETURN OLD; END IF;
- j:=public.work_lock_job(CASE WHEN TG_TABLE_NAME='work_jobs' THEN OLD.id ELSE OLD.job_id END);
+ IF TG_TABLE_NAME='work_jobs' THEN j:=public.work_lock_job(OLD.id);
+ ELSE j:=public.work_lock_job(OLD.job_id); END IF;
  IF j.fund_tx_hash IS NOT NULL OR j.funding_state <> 'unfunded' OR j.status='disputed' THEN RAISE EXCEPTION 'Funded or disputed evidence cannot be deleted'; END IF;
  RETURN OLD;
 END $$;

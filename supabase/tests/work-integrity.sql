@@ -116,6 +116,12 @@ DO $$ DECLARE j public.work_jobs; r jsonb; BEGIN
 END $$;
 INSERT INTO public.work_submissions(job_id,worker_address,proof_url) SELECT id,'0x2222222222222222222222222222222222222222','https://example.com/funded' FROM work_test_ids WHERE name='funded';
 SELECT pg_temp.work_expect_failure('DELETE FROM public.work_submissions WHERE job_id=(SELECT id FROM pg_temp.work_test_ids WHERE name=''funded'')','cannot be deleted');
+DO $$ DECLARE jid uuid; BEGIN
+ INSERT INTO public.work_jobs(poster_address,job_type,title,currency,price_per_unit,max_units,status,deadline)
+ VALUES('0x2222222222222222222222222222222222222222','shill','Disposable draft','USDC',1,1,'draft',now()+interval '1 day') RETURNING id INTO jid;
+ DELETE FROM public.work_jobs WHERE id=jid;
+ IF EXISTS(SELECT 1 FROM public.work_jobs WHERE id=jid) THEN RAISE EXCEPTION 'Unfunded draft deletion failed'; END IF;
+END $$;
 RESET ROLE;
 
 DO $$ BEGIN
