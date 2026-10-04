@@ -1,10 +1,6 @@
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
-import { motion } from 'framer-motion';
-import { useTabIndicator } from '@/hooks/use-tab-indicator';
-import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket, Trash2, FolderOpen } from 'lucide-react';
+import { Search, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket, Trash2, FolderOpen } from 'lucide-react';
 import { BookmarksEmptyContent } from '@/components/app/bookmarks/BookmarksEmptyContent';
 import { BookmarkFoldersPanel } from '@/components/app/bookmarks/BookmarkFoldersPanel';
 import { Input } from '@/components/ui/input';
@@ -19,7 +15,7 @@ import type { FeedItem } from '@/types/feed.types';
 import bookmark3dIcon from '@/assets/icons/bookmark-3d-icon.webp';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 
 const tabKeys = [
   { labelKey: 'bookmarks.all', value: 'all' as BookmarkType, icon: LayoutGrid },
@@ -73,8 +69,6 @@ export default function BookmarksPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<BookmarkType>('all');
   const clearHistory = useClearWatchHistory();
-  const bookmarksIsDraggingRef = useRef(false);
-  const { layerRef: bookmarksTabLayerRef, setRef: setBookmarksTabRef, rect: bookmarksTabRect, onScroll: onBookmarksTabScroll } = useTabIndicator(activeTab, undefined, bookmarksIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated } = useAuth();
   const { 
@@ -118,24 +112,6 @@ export default function BookmarksPage() {
     return () => observer.disconnect();
   }, [handleLoadMore]);
 
-  // Drag-to-swipe for bookmarks tab indicator
-  const bookmarksTabPositions = useRef<Partial<Record<BookmarkType, HTMLElement | null>>>({});
-
-  const { isDragging: isBookmarksDragging, indicatorRef: bookmarksIndicatorRef, handleDragStart: handleBookmarksDragStart, handleDragMove: handleBookmarksDragMove, handleDragEnd: handleBookmarksDragEnd } = useDragTabIndicator({
-    tabRect: bookmarksTabRect,
-    tabLayerRef: bookmarksTabLayerRef,
-    tabButtonPositions: bookmarksTabPositions,
-    tabValues: tabKeys.map(t => t.value) as BookmarkType[],
-    activeTab,
-    onTabChange: setActiveTab,
-    isDraggingRef: bookmarksIsDraggingRef,
-  });
-
-  // Swallow the bookmarks feed at the sticky nav bento's top edge under the
-  // glass themes, exactly like the home feed cuts at its nav pill.
-  const bookmarksContentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(bookmarksContentRef, '[data-feed-nav-outer] > [data-page-bento]', [isAuthenticated]);
-
   // Block access for unauthenticated users
   if (!isAuthenticated) {
     return (
@@ -147,45 +123,41 @@ export default function BookmarksPage() {
     <div className="min-h-screen">
       <SEOHead title="Bookmarks — Your Saved Content" description="Access your saved posts, liked content, watch history and pay-per-view purchases all in one place on DeHub. Never lose track of content you love." url="https://dehub.io/app/bookmarks" />
       <h1 className="sr-only">DeHub Bookmarks — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      {/* Sticky glass nav header — the feed below is swallowed at its top edge */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
-      <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-4">
-            <BrandIcon src={bookmark3dIcon} alt={t('nav.bookmarks')} className="w-[52px] h-[52px] object-contain" />
-            <div>
-              <h1 className="text-xl font-bold text-white">{t('bookmarks.title')}</h1>
-              <p className="text-zinc-500 text-sm">
-                {totalCount === 1 ? t('bookmarks.savedCount', { count: totalCount }) : t('bookmarks.savedCountPlural', { count: totalCount })}
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
+      <PageIsland
+        icon={<BrandIcon src={bookmark3dIcon} alt={t('nav.bookmarks')} className="h-8 w-8 object-contain" />}
+        title={t('bookmarks.title')}
+        subtitle={totalCount === 1 ? t('bookmarks.savedCount', { count: totalCount }) : t('bookmarks.savedCountPlural', { count: totalCount })}
+        actions={
+          <>
             {activeTab === 'history' && (
-              <button
+              <IslandAction
+                label="Clear history"
                 onClick={() => {
                   if (confirm('Clear all watch history?')) clearHistory.mutate();
                 }}
                 disabled={clearHistory.isPending}
-                className="p-2 rounded-lg bg-zinc-800 hover:bg-red-900/40 transition-colors"
-                title="Clear history"
               >
-                <Trash2 className={`w-4 h-4 text-zinc-400 ${clearHistory.isPending ? 'opacity-50' : ''}`} />
-              </button>
+                <Trash2 className={`h-[18px] w-[18px] ${clearHistory.isPending ? 'opacity-50' : ''}`} />
+              </IslandAction>
             )}
-            <button
-              onClick={() => refetch()}
-              className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition-colors"
-              title={t('bookmarks.refresh')}
-            >
-              <RefreshCw className={`w-4 h-4 text-zinc-400 ${isLoading ? 'animate-spin' : ''}`} />
-            </button>
-          </div>
-        </div>
-
+            <IslandAction label={t('bookmarks.refresh')} onClick={() => refetch()}>
+              <RefreshCw className={`h-[18px] w-[18px] ${isLoading ? 'animate-spin' : ''}`} />
+            </IslandAction>
+          </>
+        }
+        tabs={
+          <PageTabs
+            value={activeTab}
+            onChange={setActiveTab}
+            tabs={tabKeys.map((tab) => {
+              const Icon = tab.icon;
+              return { id: tab.value, label: t(tab.labelKey), icon: <Icon className="h-4 w-4" /> };
+            })}
+          />
+        }
+      >
         {/* Search */}
-        <div className="relative mb-4">
+        <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             placeholder={t('bookmarks.searchPlaceholder')}
@@ -194,62 +166,18 @@ export default function BookmarksPage() {
             className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
           />
         </div>
-
-        {/* Filter Tabs */}
-        <div ref={bookmarksTabLayerRef} className="relative overflow-x-clip overflow-y-visible">
-          <GlassIndicator ref={bookmarksIndicatorRef} rect={bookmarksTabRect} enableTransition={!isBookmarksDragging} />
-          {bookmarksTabRect.ready && (
-            <div
-              className="absolute z-30 cursor-grab active:cursor-grabbing"
-              style={{
-                transform: `translate(${bookmarksTabRect.x}px, ${bookmarksTabRect.y}px)`,
-                width: bookmarksTabRect.width,
-                height: bookmarksTabRect.height,
-              }}
-              onPointerDown={handleBookmarksDragStart}
-              onPointerMove={handleBookmarksDragMove}
-              onPointerUp={handleBookmarksDragEnd}
-              onPointerCancel={handleBookmarksDragEnd}
-            />
-          )}
-          <div className="relative z-20 flex gap-2 overflow-x-auto scrollbar-hide" onScroll={onBookmarksTabScroll}>
-            {tabKeys.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.value;
-              return (
-                <button
-                  key={tab.value}
-                  ref={(el) => {
-                    setBookmarksTabRef(tab.value)(el);
-                    bookmarksTabPositions.current[tab.value] = el;
-                  }}
-                  onClick={() => setActiveTab(tab.value)}
-                  className={`relative z-40 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
-                    isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Icon className="w-4 h-4" />
-                    {t(tab.labelKey)}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-      </div>
+      </PageIsland>
 
       {/* Content Area */}
-      <div ref={bookmarksContentRef} className="px-2 pb-2 sm:px-3 sm:pb-3">
+      <PageBody>
       {activeTab === 'folders' ? (
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
+        <div data-page-bento data-kit-section className="bg-zinc-900 p-3 sm:p-4">
           <BookmarkFoldersPanel />
         </div>
       ) : isLoading ? (
         <BookmarksSkeleton />
       ) : isError ? (
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
+        <div data-page-bento data-kit-section className="bg-zinc-900 p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
           <div className="text-center">
             <ThemedIcon icon="bookmarks" alt="" className="w-16 h-16 object-contain mx-auto mb-6 opacity-80" />
             <h2 className="text-xl font-bold text-white mb-3">{t('bookmarks.failedToLoad')}</h2>
@@ -265,11 +193,11 @@ export default function BookmarksPage() {
           </div>
         </div>
       ) : bookmarks.length === 0 ? (
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
+        <div data-page-bento data-kit-section className="bg-zinc-900 p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
           <BookmarksEmptyContent activeTab={activeTab} searchQuery={searchQuery} />
         </div>
       ) : (
-        <div className="space-y-4">
+        <div data-kit-flat-skip className="space-y-4">
           {bookmarks.map((item, index) => (
             // Below-fold cards skip layout/paint until scrolled near
             <div
@@ -295,7 +223,7 @@ export default function BookmarksPage() {
           )}
         </div>
       )}
-      </div>
+      </PageBody>
     </div>
   );
 }

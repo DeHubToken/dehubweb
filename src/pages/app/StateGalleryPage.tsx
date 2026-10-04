@@ -15,6 +15,7 @@ import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import type { ReactionCounts } from '@/lib/reactions';
 import { AuthContext, type AuthContextType } from '@/contexts/AuthContext';
+import { KitButton, PageEmpty, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
 
 // The gallery sits outside the wallet providers; a signed-out stub is all the
 // action row needs to render.
@@ -232,6 +233,8 @@ export default function StateGalleryPage() {
           </div>
         </section>
 
+        <PageKitGallery />
+
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">Theme controls</h2>
           <div className="flex flex-wrap items-center gap-3" data-theme-control-grid>
@@ -313,5 +316,34 @@ export default function StateGalleryPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+/** The shared page kit (components/app/page-kit) in the active theme. */
+function PageKitGallery() {
+  const [tab, setTab] = useState<'browse' | 'mine' | 'sell'>('browse');
+  return (
+    <section data-page-bento data-page-kit-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Page kit</h2>
+      <div className="space-y-3">
+        <PageTabs
+          value={tab}
+          onChange={setTab}
+          tabs={[
+            { id: 'browse', label: 'Browse', icon: 'search' },
+            { id: 'mine', label: 'Mine', icon: 'usernames' },
+            { id: 'sell', label: 'Sell', icon: 'stores' },
+          ]}
+        />
+        <PageSection eyebrow="Treasury balance" title="Section title">
+          <p className="text-sm text-zinc-400">Sections are rounded bentos on canvas themes and full width between hairlines on System phones.</p>
+        </PageSection>
+        <div className="flex gap-2">
+          <KitButton>Primary</KitButton>
+          <KitButton variant="quiet">Quiet</KitButton>
+        </div>
+        <PageEmpty icon="stores" title="No listings yet" body="Be the first to sell something." />
+      </div>
+    </section>
   );
 }

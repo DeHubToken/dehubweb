@@ -5,18 +5,15 @@
  * Mirrors the Feature Requests UI pattern but without categories.
  */
 
-import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import governanceShieldIcon from '@/assets/governance-shield.png';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTabIndicator } from '@/hooks/use-tab-indicator';
-import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
+import { IslandAction, KitButton, PageBody, PageEmpty, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, ShieldCheck, Info, Languages, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';
@@ -449,7 +446,7 @@ function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | und
   const [showTiers, setShowTiers] = useState(false);
 
   return (
-    <div className="bg-zinc-800/50 rounded-xl p-3 mb-3">
+    <div className="bg-zinc-800/50 rounded-xl p-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {badgeImageUrl && <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-5 h-5" />}
@@ -504,9 +501,6 @@ export default function GovernancePage() {
   const { isAuthenticated, openLoginModal, user } = useAuth();
   const [activeTab, setActiveTab] = useState<PageTab>('proposals');
   const [sort, setSort] = useState<GovernanceSort>('most_voted');
-  const govIsDraggingRef = useRef(false);
-  const { layerRef: tabLayerRef, setRef: setTabRef, rect: tabRect, onScroll: onTabScroll } = useTabIndicator(activeTab, undefined, govIsDraggingRef);
-  const { layerRef: sortLayerRef, setRef: setSortRef, rect: sortRect, onScroll: onSortScroll } = useTabIndicator(sort);
   const [searchInput, setSearchInput] = useState('');
   const search = useDebouncedValue(searchInput, 300);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -543,19 +537,6 @@ export default function GovernancePage() {
     [isAuthenticated, openLoginModal, voteMutation, selfWeight, selfBadge, t]
   );
 
-  // Drag-to-swipe for governance page tabs indicator
-  const govTabPositions = useRef<Partial<Record<PageTab, HTMLElement | null>>>({});
-
-  const { isDragging: isGovDragging, indicatorRef: govIndicatorRef, handleDragStart: handleGovDragStart, handleDragMove: handleGovDragMove, handleDragEnd: handleGovDragEnd } = useDragTabIndicator({
-    tabRect,
-    tabLayerRef,
-    tabButtonPositions: govTabPositions,
-    tabValues: ['proposals', 'passed', 'rejected'] as PageTab[],
-    activeTab,
-    onTabChange: setActiveTab,
-    isDraggingRef: govIsDraggingRef,
-  });
-
   const handleSubmitClick = () => {
     if (!isAuthenticated) {
       openLoginModal();
@@ -570,44 +551,38 @@ export default function GovernancePage() {
   const passedCount = passedProposals.length;
   const rejectedCount = rejectedProposals.length;
 
-  // Swallow the proposals list at the sticky header bento's top edge under the
-  // glass themes, exactly like the home feed cuts at its nav pill.
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
-
   return (
     <div className="min-h-screen">
       <SEOHead title="Governance — Vote on Community Proposals" description="Participate in decentralized governance on DeHub. Submit proposals, vote with your staking badge weight, and shape the platform's future." url="https://dehub.io/app/governance" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Governance', url: 'https://dehub.io/app/governance', description: 'Decentralized governance — submit and vote on proposals to shape DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Governance — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      {/* Sticky nav pill */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <BrandIcon src={governanceShieldIcon} alt="Governance" className="w-12 h-12 object-contain brightness-75" />
-            <div>
-              <h1 className="text-xl font-bold text-white">{t('governance.title')}</h1>
-              <p className="text-zinc-500 text-sm">{t('governance.proposalCount', { count: totalCount })}</p>
-            </div>
-          </div>
-          <Button
-            onClick={handleSubmitClick}
-            variant="glass"
-            className="rounded-xl font-semibold text-sm"
-            size="sm"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('governance.propose')}</span>
-          </Button>
-        </div>
-
+      <PageIsland
+        icon={<BrandIcon src={governanceShieldIcon} alt="Governance" className="h-8 w-8 object-contain brightness-75" />}
+        title={t('governance.title')}
+        subtitle={t('governance.proposalCount', { count: totalCount })}
+        actions={
+          <IslandAction label={t('governance.propose')} onClick={handleSubmitClick}>
+            <Plus className="h-[18px] w-[18px]" />
+          </IslandAction>
+        }
+        tabs={
+          <PageTabs
+            value={activeTab}
+            onChange={setActiveTab}
+            tabs={[
+              { id: 'proposals', label: t('governance.proposals') },
+              { id: 'passed', label: t('governance.passed'), icon: <CheckCircle2 className="h-3.5 w-3.5" />, count: passedCount > 0 ? passedCount : undefined },
+              { id: 'rejected', label: t('governance.rejected'), icon: <X className="h-3.5 w-3.5" />, count: rejectedCount > 0 ? rejectedCount : undefined },
+            ]}
+          />
+        }
+      >
         {/* Vote weight info */}
         {isAuthenticated && (
           <VoteWeightInfo badgeBalance={userBadgeBalance} username={username} />
         )}
 
         {/* Search */}
-        <div className="relative mb-3">
+        <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             placeholder={t('governance.searchProposals')}
@@ -617,105 +592,23 @@ export default function GovernancePage() {
           />
         </div>
 
-        {/* Page Tabs */}
-        <div ref={tabLayerRef} className="relative mb-3" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-          <GlassIndicator ref={govIndicatorRef} rect={tabRect} borderRadius="0.5rem" enableTransition={!isGovDragging} />
-          {tabRect.ready && (
-            <div
-              className="absolute z-30 cursor-grab active:cursor-grabbing"
-              style={{
-                transform: `translate(${tabRect.x}px, ${tabRect.y}px)`,
-                width: tabRect.width,
-                height: tabRect.height,
-              }}
-              onPointerDown={handleGovDragStart}
-              onPointerMove={handleGovDragMove}
-              onPointerUp={handleGovDragEnd}
-              onPointerCancel={handleGovDragEnd}
-            />
-          )}
-          <div className="relative z-20 flex gap-1" onScroll={onTabScroll}>
-            <button
-              type="button"
-              ref={(el) => { setTabRef('proposals')(el); govTabPositions.current['proposals'] = el; }}
-              onClick={() => setActiveTab('proposals')}
-              className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                activeTab === 'proposals' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              {t('governance.proposals')}
-            </button>
-            <button
-              type="button"
-              ref={(el) => { setTabRef('passed')(el); govTabPositions.current['passed'] = el; }}
-              onClick={() => setActiveTab('passed')}
-              className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-1.5 ${
-                activeTab === 'passed' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              {t('governance.passed')}
-              {passedCount > 0 && (
-                <span className="text-[10px] text-white font-semibold">{passedCount}</span>
-              )}
-            </button>
-            <button
-              type="button"
-              ref={(el) => { setTabRef('rejected')(el); govTabPositions.current['rejected'] = el; }}
-              onClick={() => setActiveTab('rejected')}
-              className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-1.5 ${
-                activeTab === 'rejected' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              <X className="w-3.5 h-3.5" />
-              {t('governance.rejected')}
-              {rejectedCount > 0 && (
-                <span className="text-[10px] text-white font-semibold">{rejectedCount}</span>
-              )}
-            </button>
-          </div>
-        </div>
-
         {/* Sort */}
-        <div ref={sortLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-          <GlassIndicator rect={sortRect} borderRadius="0.5rem" />
-          <div className="relative z-20 flex gap-1.5 overflow-x-auto scrollbar-invisible" onScroll={onSortScroll}>
-            {SORTS.map((s) => (
-              <button
-                key={s.id}
-                ref={setSortRef(s.id)}
-                type="button"
-                onClick={() => setSort(s.id)}
-                className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                  sort === s.id ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-                }`}
-              >
-                <span className="relative z-10">{s.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-        </div>
-      </div>
+        <PageTabs size="sm" value={sort} onChange={setSort} tabs={SORTS} />
+      </PageIsland>
 
       {/* Content */}
-      <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
+      <PageBody>
       {/* Proposals Tab */}
       {activeTab === 'proposals' && (
         <>
           {isLoading ? (
             <GovernanceSkeletons />
           ) : isError ? (
-            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
-              <h3 className="text-white font-semibold mb-1">{t('governance.loadFailed', "Couldn't load proposals")}</h3>
-              <Button
-                onClick={() => refetch()}
-                variant="glass"
-                className="rounded-xl font-semibold mt-3"
-              >
-                {t('common.retry', 'Retry')}
-              </Button>
-            </div>
+            <PageEmpty
+              icon="governance"
+              title={t('governance.loadFailed', "Couldn't load proposals")}
+              action={<KitButton onClick={() => refetch()}>{t('common.retry', 'Retry')}</KitButton>}
+            />
           ) : proposals.length > 0 ? (
             <div className="space-y-3">
               {proposals.map((proposal) => (
@@ -737,19 +630,17 @@ export default function GovernancePage() {
               )}
             </div>
           ) : (
-            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
-              <ThemedIcon icon="governance" alt="" className="w-16 h-16 object-contain mx-auto mb-4 opacity-65" />
-              <h3 className="text-white font-semibold mb-1">{t('governance.noProposalsYet')}</h3>
-              <p className="text-zinc-500 text-sm mb-4">{t('governance.beFirstToSubmit')}</p>
-              <Button
-                onClick={handleSubmitClick}
-                variant="glass"
-                className="rounded-xl font-semibold"
-              >
-                <Plus className="w-4 h-4" />
-                {t('governance.submitProposalBtn')}
-              </Button>
-            </div>
+            <PageEmpty
+              icon="governance"
+              title={t('governance.noProposalsYet')}
+              body={t('governance.beFirstToSubmit')}
+              action={
+                <KitButton onClick={handleSubmitClick}>
+                  <Plus className="w-4 h-4" />
+                  {t('governance.submitProposalBtn')}
+                </KitButton>
+              }
+            />
           )}
         </>
       )}
@@ -775,11 +666,7 @@ export default function GovernancePage() {
               ))}
             </div>
           ) : (
-            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
-              <ThemedIcon icon="governance" alt="" className="w-16 h-16 object-contain mx-auto mb-4 opacity-65" />
-              <h3 className="text-white font-semibold mb-1">{t('governance.noPassedYet')}</h3>
-              <p className="text-zinc-500 text-sm">{t('governance.passedAppearHere')}</p>
-            </div>
+            <PageEmpty icon="governance" title={t('governance.noPassedYet')} body={t('governance.passedAppearHere')} />
           )}
         </>
       )}
@@ -805,15 +692,11 @@ export default function GovernancePage() {
               ))}
             </div>
           ) : (
-            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
-              <ThemedIcon icon="governance" alt="" className="w-16 h-16 object-contain mx-auto mb-4 opacity-65" />
-              <h3 className="text-white font-semibold mb-1">{t('governance.noRejectedYet')}</h3>
-              <p className="text-zinc-500 text-sm">{t('governance.rejectedAppearHere')}</p>
-            </div>
+            <PageEmpty icon="governance" title={t('governance.noRejectedYet')} body={t('governance.rejectedAppearHere')} />
           )}
         </>
       )}
-      </div>
+      </PageBody>
 
       {/* Submit Drawer */}
       <SubmitProposalDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />

@@ -13,17 +13,16 @@
  * Cards use each game's approved branding when available, otherwise a capture.
  */
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Play, Swords } from 'lucide-react';
+import { Play, Swords, Upload } from 'lucide-react';
 import { useReducedMotion } from 'framer-motion';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { IslandAction, PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { SEOHead } from '@/components/SEOHead';
 import { ArcadeLeaderboard } from '@/components/app/arcade/ArcadeLeaderboard';
 import { ArcadeSubmissionForm } from '@/components/app/arcade/ArcadeSubmissionForm';
 import { useAuth } from '@/contexts/AuthContext';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { ARCADE_GAMES, type ArcadeGame } from '@/config/arcade-games';
 
 /** The games that are a competition, in registry order. */
@@ -115,11 +114,6 @@ export default function ArcadePage() {
   const wallet = walletAddress?.toLowerCase() ?? null;
   const [board, setBoard] = useState(RANKED_GAMES[0]?.slug ?? '');
 
-  // Swallow the grid at the sticky header bento's top edge under the glass
-  // themes, the same cut the home feed makes at its nav pill.
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
-
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -148,25 +142,22 @@ export default function ArcadePage() {
         }}
       />
 
-      <div
-        data-feed-nav-outer
-        className="sticky top-11 z-50 mx-auto max-w-4xl bg-black px-2 pb-0 pt-1 sm:px-3 sm:pt-1 lg:top-0 lg:pt-2"
+      <PageIsland
+        className="mx-auto max-w-4xl"
+        icon="arcade"
+        title={t('arcade.title')}
+        actions={
+          <IslandAction label="Submit a game" onClick={openSubmission}>
+            <Upload className="h-[18px] w-[18px]" />
+          </IslandAction>
+        }
       >
-        <div data-page-bento className="space-y-2 rounded-2xl bg-zinc-900 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <ThemedIcon icon="arcade" alt="" className="h-10 w-10 shrink-0 object-contain" />
-            <h1 className="text-xl font-bold text-white">{t('arcade.title')}</h1>
-          </div>
-          <p className="text-xs leading-relaxed text-zinc-400">
-            {t('arcade.intro')}
-          </p>
-          <button type="button" onClick={openSubmission} className="rounded-lg border border-white/15 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-white/10">
-            Submit a game
-          </button>
-        </div>
-      </div>
+        <p className="text-xs leading-relaxed text-zinc-400">
+          {t('arcade.intro')}
+        </p>
+      </PageIsland>
 
-      <div ref={contentRef} className="mx-auto max-w-4xl px-2 pb-24 pt-2 sm:px-3">
+      <PageBody className="mx-auto max-w-4xl">
         {/* Three to a row on desktop, and the equal-height cards put every Play
             button on the same baseline within a row. Deliberately not widened
             to four when the fourth game arrived: at this max-width that leaves
@@ -187,7 +178,7 @@ export default function ArcadePage() {
             down a street have no shared axis — so showing them side by side
             would invite a comparison that means nothing. */}
         {RANKED_GAMES.length > 0 ? (
-          <section data-feed-item className="mt-4 rounded-2xl bg-zinc-900/60 p-4 ring-1 ring-white/[0.06]">
+          <section data-feed-item data-kit-section className="bg-zinc-900/60 p-4 ring-1 ring-white/[0.06]">
             <div className="mb-3 flex flex-wrap gap-1.5">
               {RANKED_GAMES.map((game) => (
                 <button
@@ -210,7 +201,7 @@ export default function ArcadePage() {
             <ArcadeLeaderboard slug={board} wallet={wallet} limit={10} />
           </section>
         ) : null}
-      </div>
+      </PageBody>
       {submissionOpen && <ArcadeSubmissionForm onClose={closeSubmission} />}
     </div>
   );

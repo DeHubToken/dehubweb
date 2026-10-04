@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, CreditCard, Wallet, Loader2, Check, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package, Search, Send } from 'lucide-react';
+import { CreditCard, Wallet, Loader2, Check, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package, Search, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { ShimmerHoverEffect } from '@/components/ui/shimmer-hover-effect';
 import { AppState } from '@/components/app/AppState';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getDPayPrice,
@@ -401,26 +401,15 @@ export default function BuyCoinsPage() {
   }
 
   return (
-    <div className="min-h-screen p-3 sm:p-4">
+    <div className="min-h-screen">
       <SEOHead title="Buy — Purchase Crypto on DeHub" description="Buy DHB and other cryptocurrencies directly on DeHub with your credit card. Fast checkout, multiple chains supported." url="https://dehub.io/buy" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Buy Crypto on DeHub', url: 'https://dehub.io/buy', description: 'Purchase DHB and other cryptocurrencies with credit card on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Buy Crypto — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      <div className="max-w-lg mx-auto space-y-4">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate(-1)}
-            className="text-white hover:bg-zinc-800"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <ThemedIcon icon="buy" alt="" className="w-9 h-9 shrink-0 object-contain" />
-          <h1 className="text-xl font-bold text-white">{t('buyCoins.title')}</h1>
-        </div>
+      <PageIsland back onBack={() => navigate(-1)} icon="buy" title={t('buyCoins.title')} />
+
+      <PageBody className="max-w-lg mx-auto">
 
         {/* Amount Selection */}
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-4">
+        <div data-page-bento data-kit-section className="bg-zinc-900 p-4 space-y-4">
           <label className="text-sm text-zinc-400 block">{t('buyCoins.amountUsd')}</label>
           
           <div className="grid grid-cols-3 gap-2">
@@ -487,7 +476,7 @@ export default function BuyCoinsPage() {
         </div>
 
         {/* Price Summary */}
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
+        <div data-page-bento data-kit-section className="bg-zinc-900 p-4 space-y-3">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-400">{t('buyCoins.youReceive')}</span>
@@ -571,7 +560,7 @@ export default function BuyCoinsPage() {
         </div>
 
         {/* Payment Methods */}
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
+        <div data-page-bento data-kit-section className="bg-zinc-900 p-4 space-y-3">
           <label className="text-sm text-zinc-400 block">{t('buyCoins.paymentMethod')}</label>
           
           <button
@@ -632,7 +621,7 @@ export default function BuyCoinsPage() {
 
         {/* Purchase Status Overlay */}
         {purchaseStatus !== 'idle' && (
-          <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-6 text-center flex flex-col items-center justify-center min-h-[180px]">
+          <div data-kit-section className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-6 text-center flex flex-col items-center justify-center min-h-[180px]">
             {purchaseStatus === 'polling' && (
               <div className="flex flex-col items-center justify-center gap-3 animate-fade-in">
                 <Loader2 className="w-10 h-10 animate-spin text-white" />
@@ -711,7 +700,7 @@ export default function BuyCoinsPage() {
 
         {/* Platform Stats Banner */}
         {platformStats && (platformStats.totalVolume > 0 || platformStats.totalTransactions > 0) && (
-          <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 flex items-center justify-around border border-zinc-800">
+          <div data-page-bento data-kit-section className="bg-zinc-900 p-4 flex items-center justify-around border border-zinc-800">
             <div className="text-center">
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <TrendingUp className="w-4 h-4 text-emerald-400" />
@@ -736,7 +725,7 @@ export default function BuyCoinsPage() {
 
 
         {/* Purchase History */}
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
+        <div data-page-bento data-kit-section className="bg-zinc-900 p-4 border border-zinc-800">
           <h3 className="text-white font-semibold mb-3 text-center">Purchase History</h3>
           
           {/* Search */}
@@ -835,7 +824,7 @@ export default function BuyCoinsPage() {
         <p className="text-xs text-zinc-500 text-center px-4">
           {t('buyCoins.disclaimer')}
         </p>
-      </div>
+      </PageBody>
 
     </div>
   );

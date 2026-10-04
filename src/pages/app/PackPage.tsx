@@ -12,7 +12,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { ArrowLeft, Check, Link2, Loader2, Pencil, Plus, Trash2, Upload, X } from 'lucide-react';
+import { Check, Link2, Loader2, Pencil, Plus, Trash2, Upload, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
@@ -38,6 +38,7 @@ import {
 import { normaliseShortcode, parseEmojiSource, probeImage } from '@/lib/emoji/custom-emoji-import';
 import { PackCover } from '@/components/app/packs/PackPickerParts';
 import { packErrorMessage } from '@/components/app/packs/PackGate';
+import { IslandAction, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 
 const KIND_LABEL: Record<PackKind, string> = {
   emoji: 'creatorPacks.kind.emoji',
@@ -76,10 +77,17 @@ export default function PackPage() {
   if (isLoading) return <DeHubPageLoader />;
   if (!pack) {
     return (
-      <div className="min-h-screen px-3 pt-6 max-w-2xl mx-auto text-center">
+      <div className="min-h-screen">
         <SEOHead title={t('creatorPacks.notFound')} noindex />
-        <p className="text-sm text-zinc-400">{t('creatorPacks.notFound')}</p>
-        <Link to="/packs" className="inline-block mt-3 text-sm text-white underline">{t('creatorPacks.browse')}</Link>
+        <PageIsland className="max-w-2xl mx-auto" back onBack={() => navigate('/packs')} title={t('creatorPacks.title')} />
+        <PageBody measure className="mx-auto">
+          <PageEmpty
+            title={t('creatorPacks.notFound')}
+            action={
+              <Link to="/packs" data-kit-button="quiet">{t('creatorPacks.browse')}</Link>
+            }
+          />
+        </PageBody>
       </div>
     );
   }
@@ -181,7 +189,7 @@ export default function PackPage() {
     'h-9 px-2 rounded-md bg-white/5 border border-white/10 text-sm text-white placeholder:text-zinc-500 outline-none focus:border-white/30';
 
   return (
-    <div className="min-h-screen px-3 pt-2 pb-6 max-w-2xl mx-auto flex flex-col gap-4">
+    <div className="min-h-screen">
       <SEOHead
         title={`${pack.name} — ${kindLabel} — DeHub`}
         description={description}
@@ -198,65 +206,61 @@ export default function PackPage() {
           dateCreated: pack.created_at,
         }}
       />
-      <button
-        type="button"
-        onClick={() => navigate('/packs')}
-        className="flex items-center gap-1.5 text-zinc-400 hover:text-white text-sm w-fit"
+      <PageIsland
+        className="max-w-2xl mx-auto"
+        back
+        onBack={() => navigate('/packs')}
+        icon={
+          <span className="block h-8 w-8 rounded-md bg-white/5 overflow-hidden p-0.5">
+            <PackCover pack={pack} className="w-full h-full" />
+          </span>
+        }
+        title={pack.name}
+        subtitle={
+          <>
+            {kindLabel} · {t('creatorPacks.itemCount', { count: pack.item_count })} · {t('creatorPacks.saveCount', { count: pack.save_count })} · {t('creatorPacks.by', { owner: shortAddress(pack.owner) })}
+          </>
+        }
+        actions={
+          isOwner && editingName === null ? (
+            <IslandAction label={t('creatorPacks.rename')} onClick={() => setEditingName(pack.name)}>
+              <Pencil className="h-[18px] w-[18px]" />
+            </IslandAction>
+          ) : undefined
+        }
       >
-        <ArrowLeft className="w-4 h-4" />
-        {t('creatorPacks.title')}
-      </button>
+        {editingName !== null ? (
+          <div className="flex items-center gap-1">
+            <input
+              autoFocus
+              value={editingName}
+              onChange={(e) => setEditingName(e.target.value.slice(0, 64))}
+              className={cn(input, 'flex-1 min-w-0')}
+            />
+            <button
+              type="button"
+              aria-label={t('creatorPacks.save')}
+              disabled={busy || !editingName.trim()}
+              onClick={() =>
+                run(async () => {
+                  await renamePack(pack.id, editingName.trim());
+                  setEditingName(null);
+                  await refresh();
+                })
+              }
+              className="p-2 rounded-md hover:bg-white/10 text-white"
+            >
+              <Check className="w-4 h-4" />
+            </button>
+            <button type="button" aria-label={t('emojiPicker.back')} onClick={() => setEditingName(null)} className="p-2 rounded-md hover:bg-white/10 text-zinc-400">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        ) : null}
+      </PageIsland>
 
-      <div className="flex items-center gap-3 rounded-xl border border-white/[0.12] bg-white/[0.03] p-4">
-        <div className="w-16 h-16 rounded-lg bg-white/5 overflow-hidden flex-shrink-0 p-1">
-          <PackCover pack={pack} className="w-full h-full" />
-        </div>
-        <div className="min-w-0 flex-1">
-          {editingName !== null ? (
-            <div className="flex items-center gap-1">
-              <input
-                autoFocus
-                value={editingName}
-                onChange={(e) => setEditingName(e.target.value.slice(0, 64))}
-                className={cn(input, 'flex-1 min-w-0')}
-              />
-              <button
-                type="button"
-                aria-label={t('creatorPacks.save')}
-                disabled={busy || !editingName.trim()}
-                onClick={() =>
-                  run(async () => {
-                    await renamePack(pack.id, editingName.trim());
-                    setEditingName(null);
-                    await refresh();
-                  })
-                }
-                className="p-2 rounded-md hover:bg-white/10 text-white"
-              >
-                <Check className="w-4 h-4" />
-              </button>
-              <button type="button" aria-label={t('emojiPicker.back')} onClick={() => setEditingName(null)} className="p-2 rounded-md hover:bg-white/10 text-zinc-400">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <h1 className="text-lg font-semibold text-white truncate flex items-center gap-2">
-              {pack.name}
-              {isOwner && (
-                <button type="button" aria-label={t('creatorPacks.rename')} onClick={() => setEditingName(pack.name)} className="text-zinc-500 hover:text-white">
-                  <Pencil className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </h1>
-          )}
-          <p className="text-xs text-zinc-400">
-            {kindLabel} · {t('creatorPacks.itemCount', { count: pack.item_count })} · {t('creatorPacks.saveCount', { count: pack.save_count })}
-          </p>
-          <p className="text-[11px] text-zinc-500">{t('creatorPacks.by', { owner: shortAddress(pack.owner) })}</p>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
+      <PageBody measure className="mx-auto">
+      <div data-kit-section className="flex flex-wrap gap-2">
         {!isOwner && (
           <button
             type="button"
@@ -297,7 +301,7 @@ export default function PackPage() {
       </div>
 
       {isOwner && (
-        <div className="flex flex-col gap-2 rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+        <div data-kit-section className="flex flex-col gap-2 border border-white/[0.12] bg-white/[0.03] p-3">
           <p className="text-sm font-medium text-white">
             {t('creatorPacks.addItems')}
             {cap !== undefined && <span className="text-zinc-500 font-normal"> · {list.length}/{cap}</span>}
@@ -360,9 +364,9 @@ export default function PackPage() {
       )}
 
       {items.isLoading ? (
-        <Loader2 className="w-5 h-5 animate-spin text-zinc-500 mx-auto" />
+        <Loader2 className="block w-5 h-5 animate-spin text-zinc-500 mx-auto" />
       ) : list.length ? (
-        <div className={cn('grid gap-2', pack.kind === 'gif' ? 'grid-cols-2 sm:grid-cols-3' : 'grid-cols-4 sm:grid-cols-6')}>
+        <div data-kit-section className={cn('grid gap-2', pack.kind === 'gif' ? 'grid-cols-2 sm:grid-cols-3' : 'grid-cols-4 sm:grid-cols-6')}>
           {list.map((it) => (
             <div key={it.id} className="group relative flex flex-col items-center gap-1">
               <div className={cn('w-full rounded-lg bg-white/[0.04] overflow-hidden', pack.kind === 'gif' ? 'aspect-video' : 'aspect-square p-1.5')}>
@@ -397,8 +401,9 @@ export default function PackPage() {
           ))}
         </div>
       ) : (
-        <p className="text-xs text-zinc-500 text-center py-6">{t('creatorPacks.packEmpty')}</p>
+        <p data-kit-section className="text-xs text-zinc-500 text-center py-6">{t('creatorPacks.packEmpty')}</p>
       )}
+      </PageBody>
     </div>
   );
 }

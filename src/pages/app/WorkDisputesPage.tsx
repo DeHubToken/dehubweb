@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ExternalLink, Wallet } from 'lucide-react';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { useAuth } from '@/contexts/AuthContext';
 import { isWorkAdmin } from '@/constants/app.constants';
 import { useAdminDisputes, useAdminResolveDispute } from '@/features/work/hooks/use-work';
@@ -36,22 +36,30 @@ export default function WorkDisputesPage() {
 
   if (!isWorkAdmin(walletAddress)) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-12 text-center">
-        <ThemedIcon icon="governance" alt="" className="w-12 h-12 object-contain mx-auto mb-3 opacity-70" />
-        <h1 className="text-xl font-bold text-white mb-1">{t('work.adminsOnly')}</h1>
-        <p className="text-sm text-white/60">
-          {t('work.adminsOnlyBody')}{' '}
-          <code className="text-white/80">WORK_ADMIN_ARBITERS</code>{' '}
-          <code className="text-white/80">src/constants/app.constants.ts</code>
-        </p>
+      <div className="min-h-screen">
+        <PageIsland icon="governance" title={t('work.disputesTitle')} />
+        <PageBody className="max-w-3xl mx-auto">
+          <PageEmpty
+            icon="governance"
+            title={t('work.adminsOnly')}
+            body={
+              <>
+                {t('work.adminsOnlyBody')}{' '}
+                <code className="text-white/80">WORK_ADMIN_ARBITERS</code>{' '}
+                <code className="text-white/80">src/constants/app.constants.ts</code>
+              </>
+            }
+          />
+        </PageBody>
       </div>
     );
   }
 
   return (
-    <div data-work-surface className="max-w-4xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold text-white mb-1">{t('work.disputesTitle')}</h1>
-      <p className="text-sm text-white/60 mb-6">
+    <div data-work-surface className="min-h-screen">
+      <PageIsland className="max-w-4xl mx-auto" icon="governance" title={t('work.disputesTitle')} />
+      <PageBody className="max-w-4xl mx-auto">
+      <p className="text-sm text-white/60">
         {escrowed
           ? t('work.disputesIntroEscrowed')
           : t('work.disputesIntroLedger')}
@@ -71,7 +79,7 @@ export default function WorkDisputesPage() {
         const set = (patch: Partial<typeof v>) => setDraft({ ...draft, [k]: { ...v, ...patch } });
 
         return (
-          <div key={k} className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-5 mb-4">
+          <div key={k} data-kit-section className="bg-black/60 backdrop-blur-[24px] border border-white/10 p-5">
             <div className="flex items-start justify-between gap-3 mb-3">
               <div className="min-w-0">
                 <Link to={j ? bountyPath(j) : `/work/${d.job_id}`} className="text-lg font-semibold text-white hover:underline inline-flex items-center gap-1">
@@ -163,6 +171,7 @@ export default function WorkDisputesPage() {
           </div>
         );
       })}
+      </PageBody>
     </div>
   );
 }

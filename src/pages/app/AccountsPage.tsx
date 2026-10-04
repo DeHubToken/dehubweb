@@ -9,14 +9,12 @@
  * marketplace that looks like a different product for no reason is just noise.
  */
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import { PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { BrowseTab } from '@/components/app/accounts/BrowseTab';
 import { SellTab } from '@/components/app/accounts/SellTab';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 const JSON_LD = {
   '@context': 'https://schema.org',
@@ -31,11 +29,6 @@ export default function AccountsPage() {
   const { t } = useTranslation();
   const [tab, setTab] = useState<'browse' | 'sell'>('browse');
 
-  // Swallow the content at the sticky header bento's top edge under the glass
-  // themes, exactly like the home feed cuts at its nav pill.
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
-
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -46,45 +39,23 @@ export default function AccountsPage() {
         jsonLd={JSON_LD}
       />
 
-      {/* Sticky nav pill. Full width like Usernames: the listings are
-          full-width rows, so the page fills the middle column. */}
-      <div
-        data-feed-nav-outer
-        className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2"
-      >
-        <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
-          <div className="flex items-center gap-3">
-            <ThemedIcon icon="accounts" alt="" className="w-10 h-10 shrink-0 object-contain" />
-            <div className="min-w-0">
-              <h1 className="text-xl font-bold text-white">{t('accounts.title')}</h1>
-              <p className="text-[11px] text-zinc-500 truncate">{t('accounts.subtitle')}</p>
-            </div>
-          </div>
+      <PageIsland
+        icon="accounts"
+        title={t('accounts.title')}
+        subtitle={t('accounts.subtitle')}
+        tabs={
+          <PageTabs
+            value={tab}
+            onChange={setTab}
+            tabs={[
+              { id: 'browse', label: t('accounts.tabBrowse'), icon: 'search' },
+              { id: 'sell', label: t('accounts.tabSell'), icon: 'accounts' },
+            ]}
+          />
+        }
+      />
 
-          <div className="flex items-center gap-2">
-            <LiquidGlassBubble2
-              label={t('accounts.tabBrowse')}
-              icon={<ThemedIcon icon="search" alt="" className="w-4 h-4 object-contain" />}
-              onClick={() => setTab('browse')}
-              width="auto"
-              height="38px"
-              active={tab === 'browse'}
-              className={tab === 'browse' ? undefined : 'opacity-60'}
-            />
-            <LiquidGlassBubble2
-              label={t('accounts.tabSell')}
-              icon={<ThemedIcon icon="accounts" alt="" className="w-4 h-4 object-contain" />}
-              onClick={() => setTab('sell')}
-              width="auto"
-              height="38px"
-              active={tab === 'sell'}
-              className={tab === 'sell' ? undefined : 'opacity-60'}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div ref={contentRef} className="w-full px-2 sm:px-3 pt-3 pb-6 space-y-4">
+      <PageBody>
         {/* Browse fills the column; Sell is a form, and a text input stretched
             across a wide desktop column is unreadable, so it keeps a measure. */}
         {tab === 'browse' ? <BrowseTab /> : (
@@ -92,7 +63,7 @@ export default function AccountsPage() {
             <SellTab />
           </div>
         )}
-      </div>
+      </PageBody>
     </div>
   );
 }

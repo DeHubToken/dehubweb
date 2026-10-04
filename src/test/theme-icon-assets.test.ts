@@ -291,7 +291,8 @@ describe('theme icon assets', () => {
 
     for (const [file, icon] of Object.entries(identities)) {
       const source = readFileSync(resolve(__dirname, '../..', file), 'utf8');
-      expect(source, file).toContain(`<ThemedIcon icon="${icon}"`);
+      // Drawn directly or as the page kit island's identity icon.
+      expect(source, file).toMatch(new RegExp(`<(ThemedIcon|PageIsland)\\b[\\s\\S]{0,200}?\\bicon="${icon}"`));
     }
 
     for (const file of ['src/pages/app/StakingPage.tsx', 'src/pages/app/BridgePage.tsx']) {

@@ -5,13 +5,14 @@ import { useQuery } from '@tanstack/react-query';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, ChartNoAxesColumn, CreditCard, Wallet, Globe, ArrowDownUp, Info } from 'lucide-react';
+import { Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, ChartNoAxesColumn, CreditCard, Wallet, Globe, ArrowDownUp, Info } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { BackupReminderBanner } from '@/components/app/wallet/BackupReminderBanner';
 import { AuthGate } from '@/components/app/AuthGate';
+import { PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
@@ -303,23 +304,21 @@ export default function FullWalletPage() {
     // data-wallet-page scopes the light-mode remaps in index.css; the
     // portaled Send/Receive/Buy/Import dialogs and drawers carry the same
     // attribute (portals escape this subtree).
-    <div data-wallet-page className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 min-h-screen">
+    <div data-wallet-page className="min-h-screen">
       <SEOHead title="Wallet — Manage Your Crypto Assets" description="View balances, send and receive tokens, and manage your crypto assets across multiple chains on DeHub." url="https://dehub.io/app/wallet" />
       <h1 className="sr-only">DeHub Wallet — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      {/* Header - only show back button and title when navigated from command centre */}
-      {location.state?.from === 'command-centre' && (
-        <div className="flex items-center gap-3 mb-5">
-          <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white h-8 w-8" onClick={() => navigate('/app/command-centre')}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <h1 className="text-lg font-bold text-white">{t('wallet.title')}</h1>
-        </div>
-      )}
+      {/* Back square only when navigated from command centre */}
+      <PageIsland
+        title={t('wallet.title')}
+        back={location.state?.from === 'command-centre'}
+        onBack={() => navigate('/app/command-centre')}
+      />
 
+      <PageBody>
       <BackupReminderBanner />
 
       {/* Wallet balance bar */}
-      <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
+      <div data-page-bento data-kit-section className="bg-zinc-900 p-4 border border-zinc-800">
         <div className="flex items-center justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
@@ -397,7 +396,7 @@ export default function FullWalletPage() {
 
 
       {/* Action buttons — horizontally scrollable */}
-      <div className="flex gap-2 mb-4 pb-1">
+      <div className="flex gap-2 pb-1">
         <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setReceiveDialogOpen(true)}>
           <ArrowDownToLine className="w-5 h-5" />
           <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.receive')}</span>
@@ -428,7 +427,7 @@ export default function FullWalletPage() {
       </div>
 
       {/* Search */}
-      <div className="relative mb-4">
+      <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
         <Input
           placeholder={t('wallet.searchTokens')}
@@ -457,10 +456,11 @@ export default function FullWalletPage() {
       {/* Import Token button */}
       <button
         onClick={() => setImportDialogOpen(true)}
-        className="w-full mt-3 py-2 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-sm text-zinc-400 hover:text-zinc-200 transition-colors flex items-center justify-center"
+        className="w-full py-2 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-sm text-zinc-400 hover:text-zinc-200 transition-colors flex items-center justify-center"
       >
         <Plus className="w-4 h-4" />
       </button>
+      </PageBody>
 
       {/* Token Action Drawer - shows actions for grouped token */}
       <GroupedActionDrawer
