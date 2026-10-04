@@ -304,6 +304,7 @@ export function isJobEditable(job: WorkJob): boolean {
  * people who already committed work is the one edit that can't be undone.
  */
 export function isBudgetEditable(job: WorkJob): boolean {
+  if (job.funding_state && job.funding_state !== 'unfunded') return false;
   return (
     job.status === 'draft' ||
     (job.status === 'open' &&

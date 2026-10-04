@@ -186,7 +186,7 @@ export default function WorkJobDetailPage() {
         <button disabled={fundMutation.isPending || !config?.escrow_address} onClick={()=>fundMutation.mutate({job_id:job.id,hash:fundingHash || undefined})} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-40">
           {t(job.funding_state==='unfunded'?'work.integrity.fundPublish':'work.integrity.checkFunding')}
         </button>
-        {job.funding_state==='signing' && <button onClick={()=>{if(window.confirm(t('work.integrity.releaseConfirm'))) fundMutation.mutate({job_id:job.id,release:true});}} className="ml-3 text-xs text-white/70">{t('work.integrity.releaseSignature')}</button>}
+        {job.funding_state==='signing' && <button disabled={fundMutation.isPending} onClick={()=>{if(window.confirm(t('work.integrity.releaseConfirm'))) fundMutation.mutate({job_id:job.id,release:true});}} className="ml-3 text-xs text-white/70">{t('work.integrity.releaseSignature')}</button>}
       </div>}
 
       {/* What the poster still owes. Shown only to them, and only when there is
@@ -553,7 +553,7 @@ function SubmissionCard({
           <input value={recoveryHash} onChange={e => setRecoveryHash(e.target.value.trim())} placeholder={t('work.integrity.hashPlaceholder')} className={inputCls} />
         </label>
       )}
-      {isPoster && s.payout_state==='signing' && <button onClick={onRelease} className="mt-2 text-xs text-white/60">{t('work.integrity.releaseSignature')}</button>}
+      {isPoster && s.payout_state==='signing' && <button disabled={busy} onClick={onRelease} className="mt-2 text-xs text-white/60">{t('work.integrity.releaseSignature')}</button>}
       {submittedPayment && <p className="mt-2 text-xs text-white/60">{t('work.integrity.paymentPending')}</p>}
       {isPoster && job.status==='disputed' && awaiting && s.payout_state==='unpaid' && <button onClick={()=>setRejecting(true)} className="mt-2 text-xs text-red-300">{t('work.reject')}</button>}
       {isPoster && canPay && awaiting && (
