@@ -142,6 +142,13 @@ const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
   "maldoteth": "Megalodon",
   "mal": "Megalodon",
   "aaron": "Megalodon",
+  "ma255": "Ghost Lobster",
+  "dehubprime": "King Cobra",
+  "algiers": "King Cobra",
+  "angelbeattales": "Ghost Lobster",
+  "infinitebaffle": "King Cobra",
+  "angieluthien": "Octopus",
+  "beinsports": "Ghost Lobster",
 };
 
 // Import all badge images
@@ -418,7 +425,8 @@ export function ratchetBadgeLock(
 /**
  * Get badge name based on badge balance (holdings + staked)
  *
- * `username` checks the override table first. `context` supplies the ladder
+ * `username` supplies a granted floor; a higher earned badge still wins.
+ * `context` supplies the ladder
  * scale and the holder's lock; both default to "whatever is in force", so
  * existing two-argument callers keep working unchanged.
  */
@@ -429,15 +437,16 @@ export function getBadgeName(
 ): string | null {
   const name = username ?? context?.username;
 
-  // Check username overrides first
+  let granted: string | null = null;
   if (name) {
-    const clean = name.replace('@', '').toLowerCase();
-    const override = USERNAME_BADGE_OVERRIDES[clean];
-    if (override) return override;
+    const clean = name.replace('@', '').trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(USERNAME_BADGE_OVERRIDES, clean)) {
+      granted = USERNAME_BADGE_OVERRIDES[clean];
+    }
   }
 
   const amount = toAmount(badgeBalance);
-  if (amount === null) return null;
+  if (amount === null) return granted;
 
   const scale = context?.scale ?? activeScale;
   const earned = earnedTier(amount, scale);
@@ -447,7 +456,8 @@ export function getBadgeName(
   const lock = parseBadgeLock(context?.lock);
   const locked = lock && amount >= lock.requirement ? lock.tier : null;
 
-  return tierIndex(locked) > tierIndex(earned) ? locked : earned;
+  const highestEarned = tierIndex(locked) > tierIndex(earned) ? locked : earned;
+  return tierIndex(granted) > tierIndex(highestEarned) ? granted : highestEarned;
 }
 
 /**
