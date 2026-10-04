@@ -17,6 +17,9 @@ const output = JSON.parse(solc.compile(JSON.stringify({language:'Solidity',sourc
 const errors = (output.errors || []).filter(e=>e.severity === 'error');
 if (errors.length) throw new Error(errors.map(e=>e.formattedMessage).join('\n'));
 const compiled = output.contracts['DeHubWork.sol'].DeHubWork;
+const savedArtifact=JSON.parse(readFileSync('public/assets/work-escrow.json','utf8'));
+assert.equal(savedArtifact.sourceHash,keccak256(new TextEncoder().encode(source)),'deployment artifact must match the reviewed contract');
+assert.equal(savedArtifact.runtimeCodeHash,keccak256('0x'+compiled.evm.deployedBytecode.object));
 const provider = new BrowserProvider(ganache.provider({logging:{quiet:true},wallet:{deterministic:true},chain:{hardfork:'shanghai'}}));
 const [poster,worker,other,arbiter,treasury] = await Promise.all([0,1,2,3,4].map(i=>provider.getSigner(i)));
 const tokenCode = output.contracts['MockWorkToken.sol'].MockWorkToken;
@@ -24,6 +27,7 @@ const token = await new ContractFactory(tokenCode.abi,tokenCode.evm.bytecode.obj
 await token.waitForDeployment();
 const escrow = await new ContractFactory(compiled.abi,compiled.evm.bytecode.object,poster).deploy(await arbiter.getAddress(),await treasury.getAddress(),[await token.getAddress()]);
 await escrow.waitForDeployment();
+assert.equal(keccak256(await provider.getCode(await escrow.getAddress())),savedArtifact.runtimeCodeHash);
 await (await token.mint(await poster.getAddress(),1000n)).wait();
 await (await token.approve(await escrow.getAddress(),1000n)).wait();
 const deadline = Number((await provider.getBlock('latest')).timestamp) + 3600;

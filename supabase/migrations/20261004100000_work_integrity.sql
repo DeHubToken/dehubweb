@@ -114,7 +114,8 @@ BEGIN
        OR (NEW.job_type = 'contract' AND NEW.max_units <> 1) OR btrim(NEW.title) = '' THEN RAISE EXCEPTION 'Invalid bounty terms'; END IF;
     IF TG_OP = 'INSERT' THEN
       IF NEW.status <> 'draft' OR NEW.fund_tx_hash IS NOT NULL OR NEW.onchain_job_id IS NOT NULL OR NEW.funded_amount <> 0
-         OR NEW.units_approved <> 0 OR NEW.released_amount <> 0 OR NEW.awarded_worker_address IS NOT NULL THEN
+         OR NEW.units_approved <> 0 OR NEW.released_amount <> 0 OR NEW.awarded_worker_address IS NOT NULL
+         OR NEW.funding_state <> 'unfunded' OR NEW.pending_fund_tx_hash IS NOT NULL OR NEW.refunded_amount <> 0 THEN
         RAISE EXCEPTION 'Save a draft and verify escrow funding before publishing';
       END IF;
       IF NEW.deadline IS NOT NULL AND NEW.deadline <= now() THEN RAISE EXCEPTION 'Deadline must be in the future'; END IF;
@@ -129,6 +130,7 @@ BEGIN
           OR EXISTS (SELECT 1 FROM public.work_applications WHERE job_id = OLD.id)
           OR EXISTS (SELECT 1 FROM public.work_submissions WHERE job_id = OLD.id)) THEN RAISE EXCEPTION 'Bounty terms are locked'; END IF;
       IF NEW.deadline IS DISTINCT FROM OLD.deadline AND NEW.deadline IS NOT NULL AND NEW.deadline <= now() THEN RAISE EXCEPTION 'Deadline must be in the future'; END IF;
+      IF NEW.deadline IS DISTINCT FROM OLD.deadline AND (OLD.fund_tx_hash IS NOT NULL OR OLD.funding_state <> 'unfunded') THEN RAISE EXCEPTION 'The escrow deadline is locked'; END IF;
     END IF;
     NEW.total_budget := NEW.price_per_unit * NEW.max_units;
   ELSIF TG_TABLE_NAME = 'work_applications' THEN
