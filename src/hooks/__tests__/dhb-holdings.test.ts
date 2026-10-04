@@ -12,6 +12,13 @@ import { stakedFromBalanceData } from '@/hooks/use-dhb-holdings';
  * ladder and the leaderboard.
  */
 describe('stakedFromBalanceData', () => {
+  it('keeps settled pool withdrawals at zero while retaining a separate legacy stake', () => {
+    const settledPool = [{ chainId: 8453, staked: 0 }];
+    const settledPoolWithLegacy = [...settledPool, { chainId: 56, staked: 630000 }];
+    expect(stakedFromBalanceData(settledPool)).toBe(0);
+    expect(stakedFromBalanceData(settledPoolWithLegacy)).toBe(630000);
+  });
+
   it('accepts a corrected stake without retaining the previous inflated total', () => {
     // The opening-balance repair changes the source amount, including a
     // 200,000 DHB deposit missing from the app-only staking_records table.
