@@ -65,7 +65,7 @@ export default function CreatorSupportAd({ postId, walletAddress }: { postId: st
       <p className="text-sm text-white">Sponsored by {ad.advertiser} · {ad.headline}</p>
       <video src={ad.mediaUrl} autoPlay muted playsInline controls onTimeUpdate={e => void tick(e.currentTarget)} className="max-h-64 w-full rounded-lg" />
       <p className="text-xs text-white/70">{Math.floor(watched)} / 30 seconds verified · Creator share ${ad.creatorShareUsd.toFixed(4)}</p>
-      <Button variant="glass" onClick={() => { setAd(null); setMessage('Ad cancelled. No new support was credited.'); }}>Cancel ad</Button>
+      <Button variant="glass" onClick={() => { setAd(null); setMessage('Ad closed.'); }}>Cancel ad</Button>
     </div> : null}
     {message ? <p role="status" className="text-sm text-white/80">{message}</p> : null}
   </div>;
