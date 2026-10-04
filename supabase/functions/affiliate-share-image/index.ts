@@ -8,44 +8,14 @@ import QRCode from "https://esm.sh/qrcode@1.5.4";
 import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
 import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
 import { buildInviteSvg } from "./render.ts";
+import { badgeTier } from "../_shared/badge-weight.ts";
 import { BADGE_DATA_URIS } from "./badges.ts";
 
 // Staking badge tiers — mirror of src/lib/staking-badges.ts.
-const BADGE_LEVELS: { name: string; min: number }[] = [
-  { name: "Crab", min: 10000 },
-  { name: "Ghost Lobster", min: 25000 },
-  { name: "Piranha", min: 50000 },
-  { name: "Giant Tortoise", min: 100000 },
-  { name: "King Cobra", min: 250000 },
-  { name: "Octopus", min: 500000 },
-  { name: "Crocodile", min: 1000000 },
-  { name: "Dolphin", min: 2000000 },
-  { name: "Tiger Shark", min: 3000000 },
-  { name: "Great White Shark", min: 5000000 },
-  { name: "Killer Whale", min: 10000000 },
-  { name: "Blue Whale", min: 25000000 },
-  { name: "Megalodon", min: 50000000 },
-];
-const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
-  "maldoteth": "Megalodon",
-  "mal": "Megalodon",
-  "aaron": "Megalodon",
-};
 function resolveBadge(badgeBalance: number | null, username: string | null): { name: string; dataUri: string } | null {
-  if (username) {
-    const key = username.replace(/^@+/, "").toLowerCase();
-    const override = USERNAME_BADGE_OVERRIDES[key];
-    if (override && BADGE_DATA_URIS[override]) return { name: override, dataUri: BADGE_DATA_URIS[override] };
-  }
-  if (badgeBalance === null || !Number.isFinite(badgeBalance) || badgeBalance < 10000) return null;
-  let current: string | null = null;
-  for (const b of BADGE_LEVELS) {
-    if (badgeBalance >= b.min) current = b.name;
-    else break;
-  }
-  return current && BADGE_DATA_URIS[current] ? { name: current, dataUri: BADGE_DATA_URIS[current] } : null;
+  const tier = badgeTier(badgeBalance, username);
+  return tier && BADGE_DATA_URIS[tier] ? { name: tier, dataUri: BADGE_DATA_URIS[tier] } : null;
 }
-
 let resvgReady: Promise<void> | null = null;
 function ensureResvg(): Promise<void> {
   if (!resvgReady) {

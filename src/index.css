@@ -319,27 +319,24 @@ All colors MUST be HSL.
   body {
     @apply text-foreground;
     background-color: black;
-    /* This used to carry an `overflow-x: clip` line after the `hidden` one,
-       because `hidden` still permits PROGRAMMATIC horizontal scrolling and
-       focusing the chat composer once made the browser scroll-into-view
-       sideways. It never took effect — the unlayered
-       `html, body { overflow-x: hidden }` rule further down this file wins on
-       source order — and it has been removed rather than left looking live.
+    /* The page scrolls on the viewport, not inside <body>.
 
-       DO NOT simply reinstate it. `hidden` on one axis forces the other to
-       compute to `auto`, and that is the only reason `body` is this app's
-       scrolling element; `clip` does not, so switching back moves the
-       scroller to the viewport. Measured on the deployed build: with `clip`,
-       `body`'s computed `overflow-y` becomes `visible`,
-       `documentElement.scrollHeight` jumps from 812 to 11289 and
-       `window.scrollY` starts reporting real offsets — which would silently
-       invert every `document.body.scrollTop` call site in the app. Moving to
-       a viewport scroller may well be the right end state, but it is a
-       deliberate migration, not a one-line restore. See `lib/document-scroll`.
+       <html> carries no overflow, so body's `overflow-x: hidden` propagates to
+       the viewport (no sideways scrolling) and body itself stays an ordinary
+       block that grows with its content. It used to be the other way round:
+       `overflow-x: hidden` on <html> stopped the propagation, turning body
+       into a viewport-sized scroll container. Every overlay that toggles
+       `overflow` on body (Radix, vaul, the viewers) then rebuilt that
+       container's scroll layer, and Android Chrome, Samsung Internet and iOS
+       Safari intermittently left the finger moving and the page standing
+       still — the ScrollFreeze reports. The viewport's scroller cannot be torn
+       down that way, and it is the one browsers optimise for.
 
-       There is also nothing to fix right now: `body.scrollWidth` equals
-       `clientWidth` at both 375px and 1024px, and `body.scrollLeft = 150`
-       stays at 0, so no horizontal overflow exists to be scrolled into. */
+       Reads and writes go through `lib/document-scroll`, which covers both
+       shapes, and scroll listeners use capture, so neither cares which
+       element scrolls. */
+    height: auto;
+    min-height: 100%;
     overflow-x: hidden;
     overscroll-behavior-y: none;
     touch-action: manipulation;
@@ -513,10 +510,13 @@ All colors MUST be HSL.
 }
 }
 
-/* Prevent horizontal overflow on mobile */
+/* Prevent horizontal overflow on mobile. Body only: the same line on <html>
+   makes body the page's scroll container (see the body rule above). */
 html, body {
-  overflow-x: hidden;
   max-width: 100vw;
+}
+body {
+  overflow-x: hidden;
 }
 
 /* Prevent layout shift when modals/drawers open (scrollbar compensation) */
@@ -588,6 +588,13 @@ html {
    same delta, so the headline keeps its existing clearance from the art rather
    than gaining a gap on one side and losing it on the other. */
 .dehub-intro-hero { top: 74px; right: 30px; width: 96px; height: 96px; opacity: 0.8; }
+.dehub-intro-art { animation: dehub-intro-hover 3.8s ease-in-out infinite; transition: opacity 300ms ease-out; }
+@keyframes dehub-intro-hover { 0%, 100% { transform: translateY(8px); } 50% { transform: translateY(-8px); } }
+.dehub-intro-desc .dehub-intro-less { display: none; }
+.dehub-intro-desc[open] .dehub-intro-short,
+.dehub-intro-desc[open] .dehub-intro-more { display: none; }
+.dehub-intro-desc[open] .dehub-intro-less { display: inline; }
+@media (prefers-reduced-motion: reduce) { .dehub-intro-art { animation: none; transition: none; } }
 .dehub-intro-stage { padding-right: 114px; }
 .dehub-intro-head { font-size: 22px; }
 .dehub-intro-wide { display: none; }
@@ -5781,6 +5788,10 @@ html:not([data-theme="light"], [data-theme="minimal"], [data-theme="osaka"], [da
 .dh-sound-eq i:nth-child(4) { animation-delay: -0.11s !important; animation-duration: 0.25s !important; }
 @keyframes dh-sound-eq { from { transform: scaleY(0.2); } to { transform: scaleY(1); } }
 [data-sound-playing] img { animation: dh-sound-drift 16s ease-in-out infinite alternate; }
+/* The drift grows the photo, so it is clipped by its own box: a portrait photo
+   is narrower than the card, and clipping only at the card let it spill over. */
+[data-sound-playing] [data-image-slot] { overflow: hidden; border-radius: 1rem; }
+[data-sound-playing].rounded-none [data-image-slot] { border-radius: 0; }
 @keyframes dh-sound-drift {
   from { transform: scale(1); }
   to { transform: scale(1.08) translate(-1.5%, 1%); }

@@ -26,6 +26,7 @@ export interface SubscriptionPlanChain {
 }
 
 export interface SubscriptionPlan {
+  isPinned?: boolean;
   _id?: string;
   id?: string;
   address?: string;
@@ -253,7 +254,7 @@ export async function getPlans(creatorAddress?: string): Promise<SubscriptionPla
     // address matches nothing.
     params: creatorAddress ? { creator: creatorAddress.toLowerCase() } : {},
   });
-  return unwrap<SubscriptionPlan[]>(response, 'plans') || [];
+  return (unwrap<SubscriptionPlan[]>(response, 'plans') || []).sort((a, b) => Number(b.isPinned === true) - Number(a.isPinned === true));
 }
 
 export async function getMyPlans(creatorAddress: string): Promise<SubscriptionPlan[]> {
@@ -327,6 +328,7 @@ export async function createPlan(planData: {
 export async function updatePlan(
   planId: string,
   planData: Partial<{
+    isPinned: boolean;
     name: string;
     description: string;
     price: number;

@@ -14,6 +14,16 @@ import { useMediaQuery } from '@/hooks/use-media-query';
 
 let idleWarmupScheduled = false;
 
+function BadgeAnimation({ src, style, onError }: { src: string; style: CSSProperties; onError: () => void }) {
+  const [ready, setReady] = useState(false);
+  return <img src={src} style={{ ...style, opacity: ready ? 1 : 0, zIndex: 1 }}
+    className="peer object-contain" data-ready={ready} data-badge-animation alt="" aria-hidden
+    decoding="async" onError={onError} onLoad={(event) => {
+      const image = event.currentTarget;
+      void image.decode().then(() => setReady(true)).catch(onError);
+    }} />;
+}
+
 interface BadgeIconProps {
   /** Pass badgeBalance to resolve badge from balance */
   badgeBalance?: number | string | null;
@@ -144,18 +154,18 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
             openBadgeShowcase(visualName ?? null, e.currentTarget);
           }}
         >
+          {playing && <BadgeAnimation key={art.animation} src={art.animation} style={imageStyle}
+            onError={() => setFailedAnimation(art.animation)} />}
           <img
-            key={playing ? art.animation : 'poster'}
             style={imageStyle}
             data-badge-icon
-            src={playing ? art.animation : poster}
-            onError={() => { if (playing) setFailedAnimation(art.animation); }}
+            src={poster}
             alt={visualName || 'Badge'}
             width={16}
             height={16}
             loading="lazy"
             decoding="async"
-            className={`relative block w-full h-full rounded-none bg-transparent object-contain transition-[filter] ${active ? 'drop-shadow-[0_0_4px_rgba(255,255,255,0.8)]' : ''}`}
+            className="relative block w-full h-full rounded-none bg-transparent object-contain peer-data-[ready=true]:opacity-0"
           />
         </span>
       </TooltipTrigger>

@@ -9,9 +9,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAccount, useConnectors, useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
-import { Phone, Wallet, Loader2, Fingerprint, ArrowDownToLine, KeyRound, X } from 'lucide-react';
+import { Mail, Phone, Wallet, Loader2, Fingerprint, ArrowDownToLine, KeyRound, X } from 'lucide-react';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -28,6 +27,9 @@ import { LoginBodySkeleton } from './LoginBodySkeleton';
 import { getWalletSetupIntent, setWalletSetupIntent, type WalletSetupIntent } from '@/lib/wallet-setup-intent';
 import type { LoginStep } from './steps';
 import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
+import { createLogger } from '@/lib/logger';
+
+const flowLog = createLogger('LoginFlow');
 
 // The wallet list carries RainbowKit — ~270 KB that has to be evaluated before
 // it can render, for a step most people never open. It loads when they do.
@@ -205,6 +207,11 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   // Set when a sign-in attempt found a passkey with no account behind it, so
   // the step can lead with "create one instead".
   const [passkeyUnknown, setPasskeyUnknown] = useState(false);
+  useEffect(() => {
+    if (open && (emailError || phoneError || passkeyError)) {
+      flowLog.trace?.('error-visible', { screen: step, surface: 'login-sheet' });
+    }
+  }, [open, step, emailError, phoneError, passkeyError]);
 
   // Clear what was typed once the sheet is shut. The step itself is reset by
   // the shell; this is the other half of the old handleClose, and doing it on
@@ -561,7 +568,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
           disabled={isConnecting}
           className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
-          <ThemedIcon icon="email" alt="" className="w-5 h-5 object-contain" />
+          <Mail className="w-5 h-5" aria-hidden="true" />
           <span>{t('loginModal.continueEmail')}</span>
         </Button>
 
@@ -756,7 +763,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   const renderEmailWaitingStep = () => (
     <div className="space-y-5">
       <div className="mx-auto w-14 h-14 rounded-full bg-white/10 border border-white/10 flex items-center justify-center">
-        <ThemedIcon icon="email" alt="" className="w-8 h-8 object-contain" />
+        <Mail className="w-8 h-8" aria-hidden="true" />
       </div>
       <div className="space-y-2 text-center">
         <p className="text-white text-sm">
@@ -934,6 +941,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
             connectedAddress={isWagmiAlreadyConnected ? wagmiCurrentAddress ?? null : null}
             connectedWalletName={wagmiCurrentConnector?.name ?? null}
             connectedWalletId={connectedWalletId}
+            onContinueConnectedWallet={isWagmiAlreadyConnected && wagmiCurrentConnector ? () => handleWalletConnect((connectedWalletId ?? wagmiCurrentConnector.id) as WalletId, () => {}) : undefined}
             discoveredWallets={discoveredWallets}
             onUseDifferentWallet={handleUseDifferentWallet}
             onSwitchAccount={canSwitchAccount ? handleSwitchAccount : undefined}

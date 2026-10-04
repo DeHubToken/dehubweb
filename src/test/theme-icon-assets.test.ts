@@ -262,7 +262,6 @@ describe('theme icon assets', () => {
       'src/features/work/components/JobCard.tsx': /\bBriefcase\b/,
       'src/features/work/components/BountyLinkEmbed.tsx': /\bBriefcase\b/,
       'src/components/app/settings/EmailSignInSettings.tsx': /\bMail\b/,
-      'src/components/app/login/LoginModalBody.tsx': /\bMail\b/,
       'src/pages/app/AccountsPage.tsx': /\bUsers\b/,
       'src/pages/app/UsernamesPage.tsx': /\bAtSign\b/,
       'src/pages/app/SuperPowersPage.tsx': /\bRocket\b/,

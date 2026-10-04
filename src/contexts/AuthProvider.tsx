@@ -62,6 +62,7 @@ import { fetchTelegramLoginConfig, startTelegramLogin, takeStoredTelegramResult,
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { isMidSessionUnlock } from '@/lib/session-unlock';
 import { authenticateProfileSession, SupabaseSessionMissingError } from '@/lib/profile-login';
+import { advanceAuthTrace, beginAuthTrace, clearAuthTrace, readAuthTrace } from '@/lib/auth-trace';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
 import { clearPersistedQueryCache } from '@/lib/query-persist';
 import { supabase } from '@/integrations/supabase/client';
@@ -775,6 +776,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * while this new identity's wallet flow runs underneath in the modal.
    */
   const proceedToWalletPhase = useCallback(async (userId: string) => {
+    if (!readAuthTrace().auth_attempt_id) beginAuthTrace('resume');
+    advanceAuthTrace('identity-established', userId);
+    authLogger.trace?.('identity-established');
     // An ABSENT tag means "unknown", which must be treated as "not this user" —
     // not as "same user, carry on". dehub_supabase_uid is written in exactly one
     // place (signAndAuthenticateSmartWallet, below), so every external-wallet
@@ -848,18 +852,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (await completeLoginWithoutUnlock(userId, '')) return;
 
       const existing = await fetchWallet(userId);
+      authLogger.trace?.('wallet-resolution', { wallet_state: existing ? 'existing-unlinked' : 'new' });
       if (existing) {
-        throw new Error('Could not finish signing in to your profile. Please try again.');
+        // A sign-up that stopped between saving the wallet and registering the
+        // profile: the backup screen was left, the tab closed, or the register
+        // call timed out. The exchange above already sent this wallet's address
+        // and the server found no profile at it, so nothing exists to protect —
+        // the wallet's own signature is what finishes the sign-up. Refusing here
+        // sent these people back to the login options on every attempt.
+        authLogger.warn('Resuming an unfinished sign-up', { address: existing.ethAddress });
+        setWalletPhase('unlock');
+        openLoginModal();
+        return;
       }
       const { data: sessionData } = await supabase.auth.getSession();
       if (sessionData?.session?.user?.id !== userId) {
         throw new Error('Your sign-in session expired. Please sign in again.');
       }
       setWalletPhase('create');
+      authLogger.trace?.('wallet-setup-required');
     } catch (e) {
+      authLogger.trace?.('provision-error', { reason: e instanceof Error ? e.message : String(e) });
       // A failed profile login must not escalate to decrypting or signing.
+      // The identity session is still good, so retry the exchange in place
+      // rather than making the person go through Google or email again.
       setWalletPhase('none');
-      toast.error(e instanceof Error ? e.message : 'Could not sign in. Please try again.');
+      toast.error(e instanceof Error ? e.message : 'Could not sign in. Please try again.', {
+        action: {
+          label: i18n.t('common.tryAgain', 'Try again'),
+          onClick: () => { void proceedToWalletPhase(userId); },
+        },
+      });
     }
     openLoginModal();
     // completeLoginWithoutUnlock is recreated each render but closes only over
@@ -1927,9 +1950,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(normalizedUser);
 
     if (authResponse.result?.isNewAccount) {
+      authLogger.trace?.('profile-setup-required');
       setRequiresUsername(true);
       sessionStorage.setItem('dehub_is_new_account', 'true');
     } else {
+      authLogger.trace?.('signed-in');
+      clearAuthTrace();
       sessionStorage.removeItem('dehub_is_new_account');
     }
 
@@ -2019,9 +2045,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(normalizedUser);
 
     if (authResponse.result?.isNewAccount) {
+      authLogger.trace?.('profile-setup-required');
       setRequiresUsername(true);
       sessionStorage.setItem('dehub_is_new_account', 'true');
     } else {
+      authLogger.trace?.('signed-in');
+      clearAuthTrace();
       sessionStorage.removeItem('dehub_is_new_account');
     }
 
@@ -2443,6 +2472,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * web catching up to it rather than a new idea.
    */
   const completeSmartWalletLogin = async (privKeyHex: string) => {
+    authLogger.trace?.('wallet-signin-start');
     const toastId = 'auth-smart-wallet';
     setIsConnecting(true);
     try {
@@ -2504,6 +2534,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Social login via Supabase OAuth (full-page redirect).
    */
   const connectWithProvider = async (provider: SocialProvider) => {
+    beginAuthTrace(provider);
+    authLogger.trace?.('identity-start');
     const supaProvider = mapSocialProvider(provider);
     if (!supaProvider) {
       toast.error(`${provider} login is not available. Please use email or another provider.`);
@@ -2538,11 +2570,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Browser navigates away; flow resumes in onAuthStateChange after return.
     } catch (error: any) {
       console.error(`${provider} login error:`, error);
+      authLogger.trace?.('identity-error', { reason: error?.message, code: error?.code });
       toast.error(`Failed to connect with ${provider}. Please try again.`);
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+      localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
       setConnectionSource(previousSource);
       restoreConnectionSource(previousSource);
       setIsConnecting(false);
+      throw error;
     }
   };
 
@@ -2551,6 +2586,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * The login modal then shows the code-entry step and calls verifyEmailOtp.
    */
   const connectWithEmail = async (email: string) => {
+    beginAuthTrace('email');
+    authLogger.trace?.('identity-start');
     const previousSource = readConnectionSource();
 
     setIsConnecting(true);
@@ -2627,6 +2664,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.success('Magic link sent — check your email');
     } catch (error: any) {
       console.error('Email login error:', error);
+      authLogger.trace?.('identity-error', { reason: error?.message, code: error?.code });
       toast.error(error?.message || 'Failed to send magic link. Please try again.');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       setConnectionSource(previousSource);
@@ -2654,6 +2692,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * resolved and the modal advances to create/unlock.
    */
   const verifyEmailOtp = async (email: string, code: string) => {
+    authLogger.trace?.('otp-verify-start');
     setIsConnecting(true);
     // Claim the login before verifyOtp fires SIGNED_IN, so the auth-state
     // listener doesn't race us into a duplicate proceedToWalletPhase.
@@ -2677,6 +2716,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error: any) {
       console.error('OTP verification error:', error);
+      authLogger.trace?.('otp-verify-error', { reason: error?.message, code: error?.code });
       throw new Error(error?.message || 'Invalid code. Please try again.');
     } finally {
       supaLoginHandledRef.current = false;
@@ -2693,6 +2733,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * job directly (see their source for the full explanation).
    */
   const connectWithSMS = async (phone: string) => {
+    beginAuthTrace('phone');
+    authLogger.trace?.('identity-start');
     const previousSource = readConnectionSource();
 
     setIsConnecting(true);
@@ -2714,6 +2756,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.success('Verification code sent — check your phone');
     } catch (error: any) {
       console.error('Phone login error:', error);
+      authLogger.trace?.('identity-error', { reason: error?.message, code: error?.code });
       toast.error(error?.message || 'Failed to send verification code. Please try again.');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       setConnectionSource(previousSource);
@@ -2731,6 +2774,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * modal advances to create/unlock.
    */
   const verifyPhoneOtp = async (phone: string, code: string) => {
+    authLogger.trace?.('otp-verify-start');
     setIsConnecting(true);
     supaLoginHandledRef.current = true;
     try {
@@ -2758,6 +2802,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error: any) {
       console.error('Phone OTP verification error:', error);
+      authLogger.trace?.('otp-verify-error', { reason: error?.message, code: error?.code });
       throw new Error(error?.message || 'Invalid code. Please try again.');
     } finally {
       supaLoginHandledRef.current = false;
@@ -2773,6 +2818,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * same passkey without a second prompt.
    */
   const connectWithPasskey = async (mode: 'signin' | 'signup'): Promise<boolean> => {
+    beginAuthTrace(`passkey-${mode}`);
+    authLogger.trace?.('identity-start');
     const previousSource = readConnectionSource();
     setIsConnecting(true);
     supaLoginHandledRef.current = true;
@@ -2855,6 +2902,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * when the sheet should drop back to its idle state.
    */
   const connectWithTelegram = async (): Promise<boolean> => {
+    beginAuthTrace('telegram');
+    authLogger.trace?.('identity-start');
     const previousSource = readConnectionSource();
 
     setIsConnecting(true);
@@ -2935,6 +2984,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // External wallet connect (wagmi) — unchanged.
   const connectWithWallet = async (wallet: WalletProvider): Promise<boolean> => {
+    beginAuthTrace(`wallet-${wallet}`);
+    authLogger.trace?.('identity-start');
     // Tagged optimistically, before the connector has agreed to anything. This
     // is the path that stranded people: a signed-in smart-wallet user who
     // opened the modal, tapped MetaMask and dismissed its prompt had their

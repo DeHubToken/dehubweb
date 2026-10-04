@@ -47,6 +47,7 @@ import {
 import { useSearchHistory } from '@/hooks/use-search-history';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
 import { useFollow } from '@/hooks/use-follow';
+import { useFollowStatus } from '@/hooks/use-follow-status';
 
 // content-visibility for below-fold result cards — browser skips their
 // layout/paint until they approach the viewport (matches HomeFeed's pattern).
@@ -86,34 +87,15 @@ const UserResultCard = ({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [localFollowing, setLocalFollowing] = useState(user.isFollowing ?? false);
   // Shared optimistic override wins so this card agrees with every other surface
-  const { isFollowing: followOverride, toggleFollow } = useFollow(user.id);
+  const { isFollowing: followOverride, toggleFollow, isPending } = useFollow(user.id);
 
-  // Resolve follow status when not provided by search results (e.g. creators
-  // from video/ticker results). Cached query (was a raw per-card fetch that
-  // refired for every card instance on every search render).
-  const followStatusHandle = user.handle.replace('@', '');
-  const { data: resolvedFollowStatus } = useQuery({
-    queryKey: ['user-follow-status', followStatusHandle, walletAddress?.toLowerCase()],
-    queryFn: async () => {
-      const { getAccountByUsername } = await import('@/lib/api/dehub');
-      const info = await getAccountByUsername(followStatusHandle);
-      return !!info?.isFollowing;
-    },
-    enabled:
-      user.isFollowing === undefined &&
-      !!walletAddress &&
-      !!user.id &&
-      !!followStatusHandle &&
-      !followStatusHandle.startsWith('0x'),
-    staleTime: 5 * 60_000,
-    retry: false,
-  });
-  useEffect(() => {
-    if (resolvedFollowStatus) setLocalFollowing(true);
-  }, [resolvedFollowStatus]);
-  const isFollowing = followOverride ?? localFollowing;
+  // Search and public roster data are not authoritative for relationships.
+  // Share an authenticated wallet lookup with every Explore follow button.
+  const { data: resolvedFollowStatus } = useFollowStatus(user.id);
+  const isFollowing = followOverride ?? resolvedFollowStatus?.isFollowing ?? user.isFollowing ?? false;
+  const isRequested = followOverride === undefined && !!resolvedFollowStatus?.isFollowRequestPending;
+  const followDisabled = isFollowing || isRequested || isPending || !walletAddress || !resolvedFollowStatus;
   
   // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators
   const avatarUrl = user.avatar;
@@ -131,7 +113,7 @@ const UserResultCard = ({
       // Could show login modal here
       return;
     }
-    if (!user.id) return;
+    if (!user.id || followDisabled) return;
 
     // Optimistic: the button flips instantly; rollback + toast on failure.
     toggleFollow(isFollowing, { name: user.name });
@@ -174,14 +156,14 @@ const UserResultCard = ({
       {walletAddress?.toLowerCase() !== user.id?.toLowerCase() && (
         <button
           onClick={handleFollow}
-          disabled={isFollowing || !walletAddress}
+          disabled={followDisabled}
           className={`h-6 min-w-0 w-auto px-2.5 text-[11px] font-semibold rounded-lg flex items-center justify-center transition-all duration-150 flex-shrink-0 ml-2 ${
             isFollowing
               ? 'bg-white/10 text-white/40 cursor-default'
               : 'bg-gradient-to-br from-white/15 via-white/8 to-white/4 backdrop-blur-xl border border-white/20 text-white/70 hover:from-white/25 hover:via-white/15 hover:to-white/10 hover:border-white/40 hover:text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
           }`}
         >
-          {isFollowing ? (
+          {isRequested ? t('follow.requested') : isFollowing ? (
             'Following'
           ) : (
             user.followsYou ? t('explorePage.followBack', 'Follow Back') : t('explorePage.follow')
@@ -1143,7 +1125,7 @@ export default function ExplorePage() {
                   </div>
 
                   {/* Trending Bento — same component as sidebar */}
-                  <WhatsHappening showCountrySelector />
+                  <WhatsHappening showCountrySelector surface="explore" />
 
                   {/* New members, last on the page: it is the one bento here
                       whose contents change by the day, so it is worth scrolling

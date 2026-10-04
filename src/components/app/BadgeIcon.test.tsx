@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BadgeIcon } from './BadgeIcon';
 import { badgeHoverArt } from '@/lib/badge-hover-art';
@@ -30,6 +30,26 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('badge hover playback', () => {
+  it('keeps the poster until decoding completes and starts fresh on the next hover', async () => {
+    render(<BadgeIcon />);
+    const poster = screen.getByRole('img');
+    const badge = screen.getByRole('button');
+    fireEvent.pointerEnter(badge);
+    const animation = document.querySelector<HTMLImageElement>('[data-badge-animation]')!;
+    expect(screen.getByRole('img')).toBe(poster);
+    expect(animation.style.opacity).toBe('0');
+    let decoded!: () => void;
+    animation.decode = vi.fn(() => new Promise<void>((resolve) => { decoded = resolve; }));
+    fireEvent.load(animation);
+    expect(animation.style.opacity).toBe('0');
+    await act(async () => { decoded(); });
+    expect(animation.style.opacity).toBe('1');
+    fireEvent.pointerLeave(badge);
+    expect(document.querySelector('[data-badge-animation]')).toBeNull();
+    expect(screen.getByRole('img')).toBe(poster);
+    fireEvent.pointerEnter(badge);
+    expect(document.querySelector<HTMLImageElement>('[data-badge-animation]')!.style.opacity).toBe('0');
+  });
   it('keeps the original orca image and sizing while idle and restores it after hover', () => {
     badgeTier = 'Killer Whale';
     render(<BadgeIcon />);
@@ -39,43 +59,44 @@ describe('badge hover playback', () => {
     const style = screen.getByRole('img').getAttribute('style');
     expect(style).toContain(String(128 / 104));
     fireEvent.pointerEnter(badge);
-    expect(screen.getByRole('img').getAttribute('src')).toBe(badgeHoverArt(badgeTier)!.animation);
+    expect(document.querySelector('[data-badge-animation]')?.getAttribute('src')).toBe(badgeHoverArt(badgeTier)!.animation);
     expect(screen.getByRole('img').getAttribute('style')).toBe(style);
     fireEvent.pointerLeave(badge);
     expect(screen.getByRole('img').getAttribute('src')).toBe(original);
     fireEvent.pointerEnter(badge);
-    fireEvent.error(screen.getByRole('img'));
+    fireEvent.error(document.querySelector('[data-badge-animation]')!);
     expect(screen.getByRole('img').getAttribute('src')).toBe(original);
   });
 
-  it('loads a still while idle, plays with the glow on hover, and restores the same still on leave', () => {
+  it('keeps the same still mounted while loading hover playback without a glow', () => {
     render(<BadgeIcon badgeBalance={500000} />);
     const art = badgeHoverArt('Octopus')!;
     const badge = screen.getByRole('button', { name: 'Octopus' });
     expect(screen.getByRole('img').getAttribute('src')).toBe(art.poster);
     const style = screen.getByRole('img').getAttribute('style');
     fireEvent.pointerEnter(badge);
-    expect(screen.getByRole('img').getAttribute('src')).toBe(art.animation);
-    expect(screen.getByRole('img').className).toContain('drop-shadow');
+    expect(document.querySelector('[data-badge-animation]')?.getAttribute('src')).toBe(art.animation);
+    expect(screen.getByRole('img').className).not.toContain('drop-shadow');
     expect(screen.getByRole('img').getAttribute('style')).toBe(style);
     fireEvent.pointerLeave(badge);
     expect(screen.getByRole('img').getAttribute('src')).toBe(art.poster);
     expect(screen.getByRole('img').className).not.toContain('drop-shadow');
   });
 
-  it('keeps the glow and still image when reduced motion is enabled', () => {
+  it('keeps the still image without a glow when reduced motion is enabled', () => {
     reducedMotion = true;
     render(<BadgeIcon badgeBalance={500000} />);
     fireEvent.pointerEnter(screen.getByRole('button'));
     expect(screen.getByRole('img').getAttribute('src')).toBe(badgeHoverArt('Octopus')!.poster);
-    expect(screen.getByRole('img').className).toContain('drop-shadow');
+    expect(screen.getByRole('img').className).not.toContain('drop-shadow');
+    expect(document.querySelector('[data-badge-animation]')).toBeNull();
   });
 
   it('plays on keyboard focus, opens the existing showcase, and stops on blur', () => {
     render(<BadgeIcon badgeBalance={500000} />);
     const badge = screen.getByRole('button');
     fireEvent.focus(badge);
-    expect(screen.getByRole('img').getAttribute('src')).toBe(badgeHoverArt('Octopus')!.animation);
+    expect(document.querySelector('[data-badge-animation]')?.getAttribute('src')).toBe(badgeHoverArt('Octopus')!.animation);
     fireEvent.keyDown(badge, { key: 'Enter' });
     expect(openBadgeShowcase).toHaveBeenCalledWith('Octopus', badge);
     fireEvent.blur(badge);
@@ -85,7 +106,7 @@ describe('badge hover playback', () => {
   it('falls back to the still when the animation fails to load', () => {
     render(<BadgeIcon badgeBalance={500000} />);
     fireEvent.pointerEnter(screen.getByRole('button'));
-    fireEvent.error(screen.getByRole('img'));
+    fireEvent.error(document.querySelector('[data-badge-animation]')!);
     expect(screen.getByRole('img').getAttribute('src')).toBe(badgeHoverArt('Octopus')!.poster);
   });
 });

@@ -15,6 +15,7 @@ import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
 import { TotalReachPill } from '@/components/app/profile/TotalReachPill';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
 import { StreamerLevelCard } from '@/components/app/live/StreamerLevelCard';
+import { StreamerBadge } from '@/components/app/live/StreamerBadge';
 import { PinnedCommunities } from '@/components/app/communities/PinnedCommunities';
 import {
   AlertDialog,
@@ -294,13 +295,8 @@ export function ProfileHeader({
                       {t('profile.following')}
                     </Button>
                   )}
-                  {/* Subscribing is not downstream of following: a creator who
-                      has published a plan sells to anyone, so this renders on
-                      the strength of `hasPlans` alone. It jumps to the Subs tab
-                      AND scrolls the tabs pill up to it — the header is a
-                      screenful tall, so switching the tab silently reads as a
-                      dead button. */}
-                  {!isSubscribed && hasPlans && (
+                  {/* Followers can subscribe to the creator's pinned plans. */}
+                  {isFollowing && !isSubscribed && hasPlans && (
                     <Button
                       size="sm"
                       className="rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
@@ -386,6 +382,7 @@ export function ProfileHeader({
                     <span ref={badgeSlotRef} className="inline-flex align-baseline ml-1">
                       <BadgeIcon src={badgeUrl} className="w-[1em] h-[1em]" />
                     </span>
+                    <StreamerBadge address={profile.walletAddress} canSelect={!!isViewingOwnProfile} className="ml-1" />
                   </span>
                 </h2>
                 {/* A lent badge draws like any other badge everywhere else
