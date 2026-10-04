@@ -102,6 +102,8 @@ export interface DeHubUser {
     tokenAddress: string;
     walletBalance: number;
     staked: number;
+    /** Lifetime DHB contributions credited toward badges, separate from holdings. */
+    daoContributed?: number;
   }>;
   dmSettings?: {
     disables?: string[];
