@@ -277,6 +277,7 @@ export function useUpdatePlan() {
     }: {
       planId: string;
       data: Partial<{
+        isPinned: boolean;
         name: string;
         description: string;
         price: number;
@@ -284,7 +285,12 @@ export function useUpdatePlan() {
         benefits: string[];
         chains: { chainId: number; token: string; price: number; currency?: string; decimals?: number }[];
       }>;
-    }) => updatePlan(planId, data),
+    }) => updatePlan(planId, data).then((plan) => {
+      if (data.isPinned !== undefined && plan?.isPinned !== data.isPinned) {
+        throw new Error('Plan pin was not saved');
+      }
+      return plan;
+    }),
     onSuccess: (_result, variables) => {
       invalidate();
       // Changing the price or duration revokes the on-chain listing, because
