@@ -160,7 +160,7 @@ class VideoPlaybackManager {
       const video = this.registeredVideos.get(activeId);
       // Never unmute a clip nobody is looking at: it gets the sound when it
       // scrolls into view instead.
-      if (video && video.isProminent()) {
+      if (video && (video.isProminent() || isVideoInPictureInPicture(video.element?.() ?? null))) {
         this.audioOwnerId = activeId;
         if (!this._globalMuted) {
           video.mute(false);

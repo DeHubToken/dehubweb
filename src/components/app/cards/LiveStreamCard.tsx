@@ -540,7 +540,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           playbackRequestedRef.current = false;
           video.pause();
           setIsPlaying(false);
-        }, undefined, () => video);
+        }, undefined, undefined, () => video);
       } catch (e) {
         void failOver((e as Error)?.message || 'subscribe failed');
       }
@@ -635,7 +635,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         playbackRequestedRef.current = false;
         video.pause();
         setIsPlaying(false);
-      });
+      }, undefined, undefined, () => video);
       return () => {
         nativeTimeouts.forEach(clearTimeout);
         video.removeEventListener('error', onNativeError);
@@ -761,7 +761,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       playbackRequestedRef.current = false;
       video.pause();
       setIsPlaying(false);
-    }, undefined, () => video);
+    }, undefined, undefined, () => video);
 
     return () => {
       disposed = true;

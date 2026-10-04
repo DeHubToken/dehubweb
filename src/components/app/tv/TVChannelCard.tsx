@@ -150,7 +150,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     const video = videoRef.current;
     videoPlaybackManager.register(cardId, () => {
       fullStop();
-    }, undefined, () => videoRef.current);
+    }, undefined, undefined, () => videoRef.current);
 
     return () => {
       disposedRef.current = true;
