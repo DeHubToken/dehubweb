@@ -207,7 +207,7 @@ jobs:
         run: node scripts/boot-path-report.mjs
 
   speed-staging:
-    name: Deploy speed preview to staging
+    name: Build speed preview assets
     needs: [i18n, edge-cors, typecheck, tests, stage-remux, boot-path]
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'perf/staging-load-speed-20261004'
     runs-on: ubuntu-latest
@@ -236,11 +236,5 @@ jobs:
             staging-speed-report.json
             dist/version.json
           retention-days: 30
-      - name: Deploy only the staging Worker
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ID }}
-        run: |
-          export CLOUDFLARE_API_TOKEN=$(node -e "process.stdout.write(process.env.CLOUDFLARE_API_TOKEN.trim())")
-          export CLOUDFLARE_ACCOUNT_ID=$(node -e "const raw=process.env.CLOUDFLARE_ACCOUNT_ID || ''; const id=raw.match(/[a-f0-9]{32}/i)?.[0]; if(!id) throw new Error('No account ID in configured credential'); process.stdout.write(id)")
-          pnpm exec wrangler deploy --config wrangler.staging.jsonc
+      # The dehub-staging Worker deploys this branch through Cloudflare's
+      # existing Git integration, using wrangler.staging.jsonc.
