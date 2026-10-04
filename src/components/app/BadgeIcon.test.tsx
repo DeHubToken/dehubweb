@@ -48,7 +48,7 @@ describe('badge hover playback', () => {
     expect(screen.getByRole('img').getAttribute('src')).toBe(original);
   });
 
-  it('loads a still while idle, plays with the glow on hover, and restores the same still on leave', () => {
+  it('loads a still while idle, plays without glow on hover, and restores the same still on leave', () => {
     render(<BadgeIcon badgeBalance={500000} />);
     const art = badgeHoverArt('Octopus')!;
     const badge = screen.getByRole('button', { name: 'Octopus' });
@@ -56,19 +56,19 @@ describe('badge hover playback', () => {
     const style = screen.getByRole('img').getAttribute('style');
     fireEvent.pointerEnter(badge);
     expect(screen.getByRole('img').getAttribute('src')).toBe(art.animation);
-    expect(screen.getByRole('img').className).toContain('drop-shadow');
+    expect(screen.getByRole('img').className).not.toContain('drop-shadow');
     expect(screen.getByRole('img').getAttribute('style')).toBe(style);
     fireEvent.pointerLeave(badge);
     expect(screen.getByRole('img').getAttribute('src')).toBe(art.poster);
     expect(screen.getByRole('img').className).not.toContain('drop-shadow');
   });
 
-  it('keeps the glow and still image when reduced motion is enabled', () => {
+  it('keeps the still image without glow when reduced motion is enabled', () => {
     reducedMotion = true;
     render(<BadgeIcon badgeBalance={500000} />);
     fireEvent.pointerEnter(screen.getByRole('button'));
     expect(screen.getByRole('img').getAttribute('src')).toBe(badgeHoverArt('Octopus')!.poster);
-    expect(screen.getByRole('img').className).toContain('drop-shadow');
+    expect(screen.getByRole('img').className).not.toContain('drop-shadow');
   });
 
   it('plays on keyboard focus, opens the existing showcase, and stops on blur', () => {
