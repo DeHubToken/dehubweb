@@ -24,6 +24,8 @@
           var t = localStorage.getItem('dehub.theme') || 'system';
           if (t === 'christmas') t = 'winter'; // legacy name migration
           d.dataset.theme = t;
+          d.dataset.shortsEnabled = localStorage.getItem('shorts-enabled') === 'false' ? 'false' : 'true';
+          d.dataset.sidebarCollapsed = localStorage.getItem('sidebar-collapsed') === 'true' ? 'true' : 'false';
 
           // color-scheme is what the browser paints the CANVAS with — the
           // backdrop it shows for a document before that document's own styles
@@ -459,33 +461,89 @@
          saw were React's real sidebars arriving later, by which time this
          skeleton had already been cleared. That is the gap that read as the
          middle loading out of step with the sides. */
-      .bskel-rail, .bskel-rrail { display: none; flex: none; padding: 8px; }
-      .bskel-navrow { height: 40px; margin-bottom: 6px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
-      .bskel-panel { height: 150px; margin-bottom: 12px; border-radius: 16px; background: var(--bskel, rgba(255,255,255,.06)); }
+      .bskel-rail, .bskel-rrail { display: none; flex: none; }
+      .bskel-wash { background: var(--bskel, rgba(255,255,255,.07)); border-radius: 4px; }
+      .bskel-logo { height: 41px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+      .bskel-sidebar { height: calc(100dvh - 116px); padding: 10px; border-radius: 16px; background: var(--bskel-surface, #18181b); overflow: hidden; }
+      .bskel-navrow { height: 52px; display: flex; align-items: center; gap: 12px; }
+      .bskel-navrow::before { content: ''; width: 36px; height: 36px; border-radius: 10px; background: var(--bskel, rgba(255,255,255,.07)); }
+      .bskel-navrow::after { content: ''; width: 72px; height: 14px; border-radius: 4px; background: var(--bskel, rgba(255,255,255,.07)); }
+      .bskel-create { height: 46px; margin-top: 12px; border-radius: 16px; background: var(--bskel, rgba(255,255,255,.07)); }
+      .bskel-panel { height: 444px; margin-bottom: 16px; padding: 12px; border-radius: 16px; background: var(--bskel-surface, #18181b); }
+      .bskel-panel:last-child { height: 220px; }
+      .bskel-panel-tabs { display: flex; justify-content: space-around; margin: 0 0 24px; }
+      .bskel-panel-tabs > div { width: 20px; height: 20px; }
       .bskel-search { height: 36px; margin-bottom: 12px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
       .bskel-main { flex: 1 1 auto; min-width: 0; width: 100%; padding-top: 44px; }
       /* Bottom margins are one px over the tab bar's: measured on the live
          site, the app's welcome panel sits at y=92 (phone) / y=56 (desktop)
          and the prerendered one in this skeleton sat one px above both. */
       .bskel-tabs { height: 35px; margin: 4px 8px 9px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
+      .bskel-tabs { height: 35px; margin: 4px 8px 13px; border-radius: 12px; background: var(--bskel-surface, #18181b); display: flex; align-items: center; }
+      .bskel-tabs > div { flex: 1; display: flex; justify-content: center; }
+      .bskel-tabs > div:first-child { flex: none; width: 40px; }
+      .bskel-tabs span { width: 16px; height: 16px; }
+      html[data-shorts-enabled="false"] .bskel-shorts { display: none; }
+      .bskel-island { display: none; }
       .bskel-card { height: 300px; margin: 0 8px 12px; border-radius: 16px;
                     background: var(--bskel, rgba(255,255,255,.06));
                     border: 1px solid var(--bskel-b, rgba(255,255,255,.08)); }
       .bskel-post { height: 180px; margin: 0 8px 12px; border-radius: 16px; background: var(--bskel, rgba(255,255,255,.06)); }
+      .bskel-feed { padding: 0 8px; }
+      .bskel-feed-card { padding: 12px; margin-bottom: 12px; border: 1px solid var(--bskel-b, rgba(255,255,255,.12)); border-radius: 16px; background: var(--bskel-card, rgba(255,255,255,.03)); break-inside: avoid; }
+      .bskel-header { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px; }
+      .bskel-avatar { width: 36px; height: 36px; border-radius: 6px; flex: none; }
+      .bskel-identity { flex: 1; padding-top: 2px; }
+      .bskel-identity > div:first-child { width: 128px; max-width: 70%; height: 14px; margin-bottom: 6px; }
+      .bskel-identity > div:last-child { width: 80px; max-width: 50%; height: 12px; }
+      .bskel-menu { width: 20px; height: 20px; }
+      .bskel-media { aspect-ratio: 16/9; border-radius: 12px; margin-bottom: 12px; }
+      .bskel-media-image { aspect-ratio: 4/3; }
+      .bskel-caption > div { height: 12px; width: 85%; margin-bottom: 8px; }
+      .bskel-caption > div:last-child { width: 60%; }
+      .bskel-actions { display: flex; gap: 12px; margin-top: 12px; }
+      .bskel-actions > div { width: 32px; height: 32px; border-radius: 12px; }
+      .bskel-actions > div:last-child { width: 64px; margin-left: auto; }
       /* The welcome panel prerendered into the card slot at build (vite.config.ts
          prerenderHomeIntroPlugin). The boot script sets data-home-intro="off"
          when HomeIntro would not render: off "/", signed in, or dismissed. */
       html[data-home-intro="off"] [data-prerendered-intro] { display: none; }
+      html[data-home-intro="off"] [data-home-intro-slot] { display: none; }
+      @media (prefers-reduced-motion: no-preference) {
+        .bskel-wash { animation: bskel-pulse 2s ease-in-out infinite; }
+        @keyframes bskel-pulse { 50% { opacity: .5; } }
+      }
+      @media (max-width: 1023px) {
+        html[data-theme="system"] .bskel-main { padding-top: 0; }
+        html[data-theme="system"] .bskel-tabs { display: none; }
+        html[data-theme="system"] .bskel-island { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 6px); left: 50%; transform: translateX(-50%); width: 148px; height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; border: 1px solid rgba(255,255,255,.12); border-radius: 16px; background: rgba(16,16,18,.9); z-index: 120; }
+      }
+      @media (max-width: 639px) {
+        html[data-theme="system"] .bskel-feed-card { display: flex; flex-direction: column; margin: 0 -8px; padding: 22px 0; border: 0; border-bottom: 1px solid rgba(255,255,255,.12); border-radius: 0; background: transparent; }
+        html[data-theme="system"] .bskel-feed-card:first-child { padding-top: 0; }
+        html[data-theme="system"] .bskel-feed-card:first-child .bskel-media { order: -1; }
+        html[data-theme="system"] .bskel-feed-card:first-child .bskel-media { aspect-ratio: 9/16; }
+        html[data-theme="system"] .bskel-feed-card :is(.bskel-header,.bskel-caption,.bskel-actions) { margin-left: 16px; margin-right: 16px; }
+        html[data-theme="system"] .bskel-media { border-radius: 0; }
+      }
       @media (min-width: 640px) {
         .bskel-tabs { margin: 4px 12px 13px; }
         .bskel-card, .bskel-post { margin: 0 12px 12px; }
+        .bskel-card { margin: 0 12px 12px; }
+        .bskel-feed { padding: 0 12px; }
       }
       @media (min-width: 1024px) {
-        .bskel-rail { display: block; width: 231px; }
-        .bskel-rrail { display: block; width: 288px; }
+        .bskel-rail { display: block; width: 231px; padding: 8px 18px; }
+        .bskel-rrail { display: block; width: 288px; padding: 8px 16px; }
         .bskel-main { padding-top: 0; }
         .bskel-tabs { margin-top: 8px; }
         .bskel-card { height: 360px; }
+        html[data-sidebar-collapsed="true"] .bskel { max-width: none; }
+        html[data-sidebar-collapsed="true"] .bskel-rail { width: 60px; padding: 8px; }
+        html[data-sidebar-collapsed="true"] .bskel-navrow::after,
+        html[data-sidebar-collapsed="true"] .bskel-rrail,
+        html[data-sidebar-collapsed="true"] .bskel-tabs { display: none; }
+        html[data-sidebar-collapsed="true"] .bskel-feed { column-count: 3; column-gap: 12px; padding-top: 8px; }
       }
       @media (min-width: 1280px) { .bskel-rrail { width: 320px; } }
       @media (min-width: 1536px) { .bskel-rrail { width: 352px; } } /* 2xl:w-88 */
@@ -493,6 +551,9 @@
          already on <html> by this point — the script at the top of <head>
          sets it synchronously, before this stylesheet is even matched. */
       html[data-theme="light"] { --bskel: rgba(0,0,0,.07); --bskel-b: rgba(0,0,0,.10); }
+      html[data-theme="light"] { --bskel: rgba(0,0,0,.07); --bskel-b: rgba(0,0,0,.10); --bskel-surface: rgba(0,0,0,.02); --bskel-card: transparent; }
+      html[data-theme="minimal"] { --bskel: rgba(255,255,255,.04); --bskel-surface: transparent; --bskel-card: transparent; }
+      html:is([data-theme="minimal"],[data-theme="war"],[data-theme="hacker"]) .bskel * { border-radius: 0; }
     </style>
   
   
@@ -512,20 +573,43 @@
          below is what non-rendering fetchers get. -->
     <div id="root"><div class="bskel" aria-hidden="true">
       <div class="bskel-rail">
+        <div class="bskel-logo"><div class="bskel-wash" style="width:28px;height:28px"></div><div class="bskel-wash" style="width:135px;height:28px"></div></div>
+        <div class="bskel-sidebar" data-desktop-sidebar-bento>
         <div class="bskel-navrow"></div><div class="bskel-navrow"></div><div class="bskel-navrow"></div>
         <div class="bskel-navrow"></div><div class="bskel-navrow"></div><div class="bskel-navrow"></div>
         <div class="bskel-navrow"></div><div class="bskel-navrow"></div>
       </div>
       <div class="bskel-main">
         <div class="bskel-tabs"></div>
+        <div class="bskel-island"><div class="bskel-wash" style="width:28px;height:28px"></div><div class="bskel-wash" style="width:32px;height:28px"></div><div class="bskel-wash" style="width:20px;height:20px"></div></div>
+        <div class="bskel-tabs" data-feed-nav>
+          <div><span class="bskel-wash"></span></div><div><span class="bskel-wash"></span></div><div class="bskel-shorts"><span class="bskel-wash"></span></div><div><span class="bskel-wash"></span></div><div><span class="bskel-wash"></span></div><div><span class="bskel-wash"></span></div><div><span class="bskel-wash"></span></div>
+        </div>
         <div class="bskel-card" data-home-intro-slot></div>
-        <div class="bskel-post"></div>
-        <div class="bskel-post"></div>
+        <div class="bskel-feed">
+          <div class="bskel-feed-card" data-feed-item>
+            <div class="bskel-header"><div class="bskel-wash bskel-avatar"></div><div class="bskel-identity"><div class="bskel-wash"></div><div class="bskel-wash"></div></div><div class="bskel-wash bskel-menu"></div></div>
+            <div class="bskel-wash bskel-media"></div>
+            <div class="bskel-caption"><div class="bskel-wash"></div><div class="bskel-wash"></div></div>
+            <div class="bskel-actions"><div class="bskel-wash"></div><div class="bskel-wash"></div><div class="bskel-wash"></div><div class="bskel-wash"></div></div>
+          </div>
+          <div class="bskel-feed-card" data-feed-item>
+            <div class="bskel-header"><div class="bskel-wash bskel-avatar"></div><div class="bskel-identity"><div class="bskel-wash"></div><div class="bskel-wash"></div></div><div class="bskel-wash bskel-menu"></div></div>
+            <div class="bskel-wash bskel-media bskel-media-image"></div>
+            <div class="bskel-caption"><div class="bskel-wash"></div><div class="bskel-wash"></div></div>
+            <div class="bskel-actions"><div class="bskel-wash"></div><div class="bskel-wash"></div><div class="bskel-wash"></div><div class="bskel-wash"></div></div>
+          </div>
+          <div class="bskel-feed-card" data-feed-item>
+            <div class="bskel-header"><div class="bskel-wash bskel-avatar"></div><div class="bskel-identity"><div class="bskel-wash"></div><div class="bskel-wash"></div></div><div class="bskel-wash bskel-menu"></div></div>
+            <div class="bskel-caption"><div class="bskel-wash"></div><div class="bskel-wash"></div><div class="bskel-wash"></div></div>
+            <div class="bskel-actions"><div class="bskel-wash"></div><div class="bskel-wash"></div><div class="bskel-wash"></div><div class="bskel-wash"></div></div>
+          </div>
+        </div>
       </div>
       <div class="bskel-rrail">
         <div class="bskel-search"></div>
-        <div class="bskel-panel"></div>
-        <div class="bskel-panel"></div>
+        <div class="bskel-panel" data-side-panel><div class="bskel-panel-tabs"><div class="bskel-wash"></div><div class="bskel-wash"></div><div class="bskel-wash"></div></div><div class="bskel-navrow"></div><div class="bskel-navrow"></div><div class="bskel-navrow"></div><div class="bskel-navrow"></div><div class="bskel-navrow"></div></div>
+        <div class="bskel-panel" data-side-panel><div class="bskel-panel-tabs"><div class="bskel-wash"></div><div class="bskel-wash"></div><div class="bskel-wash"></div></div><div class="bskel-navrow"></div><div class="bskel-navrow"></div></div>
       </div>
     </div></div>
     <!-- No-JS fallback. The app is client-rendered, so anything that fetches
