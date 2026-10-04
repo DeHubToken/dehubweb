@@ -19,6 +19,16 @@ const YOUTUBE_RESERVED = new Set([
   'embed', 'results', 'feed', 'about', 'premium', 'gaming', 'music',
 ]);
 
+const SOCIAL_DOMAINS: Record<string, string[]> = {
+  twitterLink: ['x.com', 'twitter.com'],
+  instagramLink: ['instagram.com'],
+  tiktokLink: ['tiktok.com'],
+  youtubeLink: ['youtube.com', 'youtu.be'],
+  facebookLink: ['facebook.com'],
+  telegramLink: ['t.me', 'telegram.me'],
+  discordLink: ['discord.gg', 'discord.com'],
+};
+
 function splitUrl(raw: string): { host: string; path: string; rest: string } | null {
   const withScheme = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
   try {
@@ -39,7 +49,18 @@ function splitUrl(raw: string): { host: string; path: string; rest: string } | n
  * before — this must never turn a working link into a broken one.
  */
 export function normalizeSocialUrl(key: string, raw: string): string {
-  const value = raw.trim();
+  const value = raw.trim().replace(/^\/\//, '');
+  if (!value) return '#';
+  const domains = SOCIAL_DOMAINS[key];
+  const inputHost = value.replace(/^https?:\/\//i, '').split(/[/?#]/)[0].replace(/^www\./i, '').toLowerCase();
+  // A bare handle belongs to the selected platform, including handles with
+  // dots. Treating it as a hostname opens https://r2r_officiel instead.
+  if (domains && !/^https?:\/\//i.test(value) && !domains.includes(inputHost) && !value.includes('/')) {
+    const handle = value.replace(/^@+/, '').replace(/\s+/g, '');
+    if (!handle) return '#';
+    const prefix = key === 'youtubeLink' || key === 'tiktokLink' ? '@' : '';
+    return `https://${domains[0]}/${prefix}${encodeURIComponent(handle)}`;
+  }
   const withScheme = /^https?:\/\//i.test(value) ? value : `https://${value}`;
 
   const parts = splitUrl(value);
