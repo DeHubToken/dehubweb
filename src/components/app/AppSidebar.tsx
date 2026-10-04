@@ -81,9 +81,13 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   const [postLiveMode, setPostLiveMode] = useState<'video' | undefined>();
   // From the Live feed, the post button opens the composer on Livestream.
   const openPostModal = useCallback(() => {
+    if (/^\/(?:app\/)?(?:work|bounty)(?:\/|$)/.test(location.pathname)) {
+      navigate('/work/post');
+      return;
+    }
     setPostLiveMode(isOnLiveFeed(location.pathname) ? 'video' : undefined);
     setIsPostModalOpen(true);
-  }, [location.pathname]);
+  }, [location.pathname, navigate]);
   // Mount on first open, keep mounted afterwards (close animation).
   const [postModalMounted, setPostModalMounted] = useState(false);
   useEffect(() => {
