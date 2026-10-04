@@ -1013,7 +1013,6 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
   /** Guardrails that would otherwise only surface as a paid-for failure. */
   const blockingIssue = useMemo(() => {
-    if (!isAuthenticated) return t('creator.signInToGenerate');
     if (mode === 'image') {
       const model = IMAGE_MODELS[imageModel];
       if (model && reference && !imageModelSupportsEdit(model)) {
@@ -1054,7 +1053,6 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     }
     return null;
   }, [
-    isAuthenticated,
     mode,
     imageModel,
     videoModel,
@@ -1849,10 +1847,11 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                       }}
                       rows={audioTask === 'dialogue' && mode === 'audio' ? 4 : 2}
                       placeholder={placeholder}
-                      className="min-h-[3.25rem] w-full resize-y bg-transparent py-2 text-[15px] leading-relaxed text-white outline-none placeholder:text-white/35"
+                      className="min-h-[3.25rem] min-w-0 flex-1 resize-y bg-transparent py-2 text-[16px] leading-relaxed text-white outline-none placeholder:text-white/35 sm:text-[15px]"
                     />
                   </>
                 )}
+                {enhanceButton()}
               </div>
 
               {undoEnhance !== null && (
@@ -2111,30 +2110,16 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
                   {mode === 'video' && (
                     <>
-                      {/* Enum-duration models get a picker, not a stepper: their
-                          provider rejects the in-between values a stepper
-                          produces, and the creator has already been charged on
-                          this number. */}
-                      {activeVideoModel?.allowedDurations?.length ? (
-                        <SelectChip
-                          label={t('creator.duration')}
-                          value={String(duration)}
-                          options={activeVideoModel.allowedDurations.map((d) => ({
-                            value: String(d),
-                            label: `${d}s`,
-                          }))}
-                          onChange={(v) => setDuration(Number(v))}
-                        />
-                      ) : (
-                        <CounterChip
-                          label={t('creator.secondsUnit')}
-                          singular={t('creator.secondUnit')}
-                          value={duration}
-                          min={activeVideoModel?.minDuration ?? 5}
-                          max={activeVideoModel?.maxDuration ?? 10}
-                          onChange={setDuration}
-                        />
-                      )}
+                      <CounterChip
+                        label={t('creator.secondsUnit')}
+                        singular={t('creator.secondUnit')}
+                        value={duration}
+                        min={activeVideoModel?.minDuration ?? 5}
+                        max={activeVideoModel?.maxDuration ?? 10}
+                        editable
+                        allowedValues={activeVideoModel?.allowedDurations}
+                        onChange={setDuration}
+                      />
                       {activeVideoModel?.supportsResolution && (
                         <SelectChip
                           label={t('creator.resolution')}
@@ -2158,7 +2143,6 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
                 {/* Its own row on a phone, so Create and its price get the full width. */}
                 <div className="flex w-full items-end gap-2 sm:w-auto">
-                  {enhanceButton()}
                   {generateButton()}
                 </div>
               </div>
