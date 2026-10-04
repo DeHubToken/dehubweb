@@ -712,6 +712,7 @@ function SubmitFeatureDrawer({
                   type="button"
                   data-filter-chip
                   data-active={category === cat.id ? 'true' : undefined}
+                  aria-pressed={category === cat.id}
                   onClick={() => setCategory(cat.id as FeatureCategory)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
                     category === cat.id
@@ -719,6 +720,7 @@ function SubmitFeatureDrawer({
                       : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
                   }`}
                 >
+                  {category === cat.id && <span aria-hidden="true">✓ </span>}
                   {t(cat.labelKey)}
                 </button>
               ))}
