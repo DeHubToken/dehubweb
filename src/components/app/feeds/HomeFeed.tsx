@@ -2110,10 +2110,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                   <button
                     type="button"
                     onClick={showNewPosts}
-                    className="flex w-full items-center justify-center gap-1.5 px-2 py-2 text-xs font-semibold text-white hover:bg-white/10"
+                    className="group flex w-full items-center justify-center gap-1.5 px-2 py-2 text-xs font-semibold text-white"
                   >
                     <ArrowUp className="h-3.5 w-3.5 shrink-0" />
-                    <span>{t('feed.newPosts', { defaultValue: '{{count}} new posts', count: newPostCount })}{newPostsAtCap ? '+' : ''}</span>
+                    <span className="text-white/70 transition-colors group-hover:text-white group-focus-visible:text-white group-active:text-white">{t('feed.newPosts', { defaultValue: '{{count}} new posts', count: newPostCount })}{newPostsAtCap ? '+' : ''}</span>
                   </button>
                 </motion.div>
               )}
