@@ -32,7 +32,7 @@ describe('published studio presets', () => {
     expect(applyPreset(preset, 'a piano to a singer')).toBe('Whip pan from a piano to a singer, tungsten glow, heavy motion blur');
   });
 
-  it('ships labels and hints in both maintained preset locales', () => {
+  it('ships labels and hints in each locale included with the import', () => {
     for (const language of ['en', 'fr']) {
       const locale = JSON.parse(readFileSync(`src/i18n/locales/${language}.json`, 'utf8'));
       for (const preset of OPEN_STUDIO_PRESETS) {
