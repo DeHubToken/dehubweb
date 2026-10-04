@@ -237,6 +237,7 @@ function checkBodyState() {
 let dragStartY = 0;
 let dragStartX = 0;
 let dragStartScroll = 0;
+let dragStartViewportH = 0;
 let dragTarget: Element | null = null;
 let dragArmed = false;
 let touchActive = false;
@@ -298,6 +299,7 @@ function onTouchStart(e: TouchEvent) {
   dragStartY = e.touches[0].clientY;
   dragStartX = e.touches[0].clientX;
   dragStartScroll = getDocumentScrollTop();
+  dragStartViewportH = window.innerHeight;
   dragTarget = e.target instanceof Element ? e.target : null;
 }
 
@@ -341,10 +343,17 @@ function onTouchMove(e: TouchEvent) {
   const { clientX, clientY } = e.touches[0];
   const target = dragTarget;
   const startScroll = dragStartScroll;
+  const startViewportH = dragStartViewportH;
 
   window.clearTimeout(settleTimer);
   settleTimer = window.setTimeout(() => {
     if (getDocumentScrollTop() !== startScroll) return; // it scrolled, late — a stutter, not a freeze
+    // Android Chrome spends the first ~56px of a swipe hiding or showing its
+    // address bar before the page moves. Now that the page scrolls on the
+    // viewport the bar does collapse, so a short swipe can change the viewport
+    // height and leave scrollTop exactly where it was. That is the browser
+    // answering the swipe, not a dead page.
+    if (window.innerHeight !== startViewportH) return;
     if (overlayIsOpen()) return; // something opened under the finger and is holding the page on purpose
 
     const evidence = {
