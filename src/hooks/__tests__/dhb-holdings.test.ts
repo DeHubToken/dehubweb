@@ -12,6 +12,16 @@ import { stakedFromBalanceData } from '@/hooks/use-dhb-holdings';
  * ladder and the leaderboard.
  */
 describe('stakedFromBalanceData', () => {
+  it('accepts a corrected stake without retaining the previous inflated total', () => {
+    // The opening-balance repair changes the source amount, including a
+    // 200,000 DHB deposit missing from the app-only staking_records table.
+    const before = [{ chainId: 8453, staked: 14066532.10223761, walletBalance: 42346.016858816605 }];
+    const corrected = [{ chainId: 8453, staked: 7133266.051118805, walletBalance: 42346.016858816605 }];
+    expect(stakedFromBalanceData(before)).toBeCloseTo(14066532.10223761, 6);
+    expect(stakedFromBalanceData(corrected)).toBeCloseTo(7133266.051118805, 6);
+    expect(stakedFromBalanceData(corrected)).not.toBeCloseTo(14066532.10223761, 6);
+  });
+
   it('sums the staked rows across every chain', () => {
     // A real account: a legacy BNB contract position plus a Base pool stake,
     // no liquid DHB anywhere. The API reports 11,100,000 and so must we.
