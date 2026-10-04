@@ -6,6 +6,23 @@ on:
 permissions:
   contents: read
 jobs:
+  escrow:
+    name: Bounty escrow contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --prefix /tmp/work-contract-deps --no-save solc@0.8.30 @openzeppelin/contracts@5.4.0 ethers@6.15.0 ganache@7.9.2
+      - run: node scripts/work-contract-test.mjs
+        env:
+          WORK_CONTRACT_DEPS: /tmp/work-contract-deps
+      - uses: actions/upload-artifact@v4
+        with:
+          name: work-escrow-artifact
+          path: work-contract-artifact/escrow-artifact.json
   database:
     name: Bounty database rules
     runs-on: ubuntu-latest
