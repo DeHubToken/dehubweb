@@ -17,6 +17,8 @@
  * tested against a real DOM without standing up the router and ~30 lazy pages.
  */
 
+import { isVideoInPictureInPicture } from './picture-in-picture';
+
 /**
  * Players whose media element never enters the document, against a node that
  * does. An audio post plays through a bare `new Audio()` wired into the shared
@@ -64,7 +66,7 @@ function offDocumentIn(root: Node, spareKey?: string | null): HTMLMediaElement[]
 function pauseAll(els: readonly HTMLMediaElement[], spare?: HTMLMediaElement | null): HTMLMediaElement[] {
   const paused: HTMLMediaElement[] = [];
   els.forEach((el) => {
-    if (el === document.pictureInPictureElement) return;
+    if (isVideoInPictureInPicture(el)) return;
     if (el === spare) return;
     if (el.paused) return;
     paused.push(el);

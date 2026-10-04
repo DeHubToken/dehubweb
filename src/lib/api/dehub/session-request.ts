@@ -9,13 +9,17 @@ export async function requestSession(endpoint: '/api/web/auth' | '/api/web/auth/
   // The staging static host itself answers these POSTs with 405.
   const relay = 'https://dehub.io/_api';
   for (const [attempt, base] of [DEHUB_API_BASE, relay].entries()) {
+    log.trace?.('session-request-start', { endpoint, route: attempt ? 'relay' : 'direct' });
     const controller = new AbortController();
     let timedOut = false;
     const timer = setTimeout(() => { timedOut = true; controller.abort(); }, 20_000);
     try {
-      return await fetch(`${base}${endpoint}`, { ...init, signal: controller.signal });
+      const response = await fetch(`${base}${endpoint}`, { ...init, signal: controller.signal });
+      log.trace?.('session-request-result', { endpoint, route: attempt ? 'relay' : 'direct', status: response.status });
+      return response;
     } catch (error) {
       const transportFailed = timedOut || (error instanceof TypeError && /network|fetch|load failed/i.test(error.message));
+      log.trace?.('session-request-error', { endpoint, route: attempt ? 'relay' : 'direct', timed_out: timedOut });
       if (attempt === 0 && transportFailed) continue;
       log.error('login transport failed', { endpoint, route: attempt ? 'relay' : 'direct' }, error);
       if (timedOut) throw new RequestTimeoutError(`${base}${endpoint}`, 20_000);

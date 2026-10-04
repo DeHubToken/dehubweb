@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Clock, Loader2, Star, Users, Upload, Info } from 'lucide-react';
+import { Check, Clock, Loader2, Star, Users, Upload, Info, Pin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -14,7 +14,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { type SubscriptionPlan, planPrice, primaryPlanChain, isPlanPublished } from '@/lib/api/dehub';
-import { useBuyPlan, usePublishPlan } from '@/hooks/use-subscriptions';
+import { useBuyPlan, usePublishPlan, useUpdatePlan } from '@/hooks/use-subscriptions';
 import { formatDuration, normaliseDuration, BASE_CHAIN_ID } from '@/lib/contracts';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { DHB_PRELISTING_USD, dhbForUsd, formatDhbPayment } from '@/lib/subscription-pricing';
@@ -65,18 +65,18 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const publishMutation = usePublishPlan();
+  const pinMutation = useUpdatePlan();
 
   const price = planPrice(plan);
   const chainEntry = primaryPlanChain(plan);
   const chainId = (chainEntry?.chainId || BASE_CHAIN_ID) as ChainId;
   const currency = (chainEntry?.currency || plan.currency || 'DHB').toUpperCase();
-  const settlementCurrency = currency === 'USD' ? 'USDT' : currency;
   const isUsdPriced = currency === 'USDT' || currency === 'USDC' || currency === 'USD';
   const numericPrice = Number(price || 0);
   const dhbUsd = DHB_PRELISTING_USD;
   const dhbEstimate = isUsdPriced ? dhbForUsd(numericPrice, dhbUsd) : numericPrice;
   const formattedPrice = isUsdPriced
-    ? `${formatAmount(price, 2)} ${settlementCurrency}`
+    ? `${formatAmount(price, 2)} USD`
     : t('subscriptions.tokenAmount', { amount: formatAmount(price) });
   const published = isPlanPublished(plan);
   // 999 is what lifetime plans were stored as before the contract's 0–12 range
@@ -130,8 +130,8 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
       <div className="mb-4">
         <div className="flex items-baseline gap-2">
           <div className="flex items-center gap-1.5">
-            {!isUsdPriced && <img src={dehubCoin} alt="DHB" className="w-5 h-5" />}
-            <span className="text-2xl font-bold text-white">{formattedPrice}</span>
+            <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+            <span className="text-2xl font-bold text-white">{formatDhbPayment(dhbEstimate)}</span>
           </div>
           <span className="text-zinc-500">/</span>
           <div className="flex items-center gap-1 text-zinc-400">
@@ -139,12 +139,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
             <span className="text-sm">{formatDuration(plan.duration, t)}</span>
           </div>
         </div>
-        {isUsdPriced && (
-          <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-400">
-            <img src={dehubCoin} alt="" className="w-3.5 h-3.5" />
-            <span>{t('subscriptions.atPreListingRate', { amount: formatDhbPayment(dhbEstimate) })}</span>
-          </div>
-        )}
+        <p className="mt-1 text-xs text-zinc-400">≈ {total.toLocaleString(undefined, { style: 'currency', currency: 'USD' })} USD</p>
       </div>
 
       {/* Benefits */}
@@ -188,6 +183,17 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
       )}
 
       {/* Actions */}
+      {isOwner && (
+        <Button
+          variant="outline"
+          className="w-full mb-2 rounded-xl border-white/20 text-white hover:bg-white/10 gap-2"
+          disabled={pinMutation.isPending || (!plan.isPinned && (!published || !isBuyable))}
+          onClick={() => pinMutation.mutate({ planId: String(plan.id || plan._id), data: { isPinned: !plan.isPinned } })}
+        >
+          {pinMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Pin className="w-4 h-4" />}
+          {plan.isPinned ? t('postOptions.unpinPost') : t('postOptions.pinPost')}
+        </Button>
+      )}
       {isOwner ? (
         <div className="flex gap-2">
           {/* A plan the chain will never accept has one useful action, and it is

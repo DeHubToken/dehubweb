@@ -63,6 +63,7 @@ export function HomeIntro() {
   const [active, setActive] = useState(0);
   const [runId, setRunId] = useState(0);
   const paused = useRef(false);
+  const descriptionOpen = useRef(false);
 
   const show = !(isAuthenticated || dismissed);
 
@@ -70,7 +71,7 @@ export function HomeIntro() {
     if (!show) return;
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     const t = window.setInterval(() => {
-      if (paused.current) return;
+      if (paused.current || descriptionOpen.current) return;
       setActive((i) => (i + 1) % SLIDES.length);
       setRunId((r) => r + 1);
     }, SLIDE_MS);
@@ -101,6 +102,7 @@ export function HomeIntro() {
   }, []);
 
   const goTo = useCallback((i: number) => {
+    descriptionOpen.current = false;
     setActive(i);
     setRunId((r) => r + 1);
   }, []);
@@ -121,6 +123,7 @@ export function HomeIntro() {
       onWarmLogin={warmLoginSheet}
       onMouseEnter={pause}
       onMouseLeave={resume}
+      onDescriptionToggle={(expanded) => { descriptionOpen.current = expanded; }}
     />
   );
 }

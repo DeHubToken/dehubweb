@@ -38,6 +38,8 @@ import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { stashLiveSession } from '@/lib/live-handoff';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
+import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
+import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 
 interface LiveFeedPreviewProps {
   /** HLS ladder for the stream. First playable URL wins. */
@@ -75,8 +77,9 @@ let whepSessionsOpen = 0;
 
 export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true, controlsVisible = false, onToggleMute }: LiveFeedPreviewProps) {
   const { pathname } = useLocation();
-  const postOpen = /^\/app\/post\//.test(pathname);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const inPiP = usePictureInPicture(videoRef);
+  const postOpen = /^\/app\/post\//.test(pathname) && !inPiP;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
   const [paused, setPaused] = useState(true);
@@ -90,7 +93,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
   const hlsRef = useRef<Hls | null>(null);
   const [intersecting, setVisible] = useState(false);
   const playbackAllowed = useFeedPlaybackAllowed();
-  const visible = intersecting && playbackAllowed;
+  const visible = (intersecting && playbackAllowed) || (inPiP && !visualActivity.isCallBusy());
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -163,7 +166,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         }
         el.srcObject = session.stream;
         await el.play().catch(() => { if (!cancelled) setLoading(false); });
-        if (cancelled || !visualActivity.isFeedPlaybackAllowed()) el.pause();
+        if (cancelled || (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(el))) el.pause();
       } catch {
         fallBack();
       }
@@ -178,6 +181,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
       // Leaving for the post page while the picture is up: hand the running
       // session over instead of hanging up, so the post page carries on from
       // this frame rather than reconnecting from black.
+      releaseAfterPictureInPicture(el, () => {
       if (session && el.videoWidth && /^\/app\/post\//.test(window.location.pathname)) {
         stashLiveSession(source.playbackId, session, el);
       } else {
@@ -186,6 +190,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
       // A dead srcObject left attached stops HLS ever getting a picture onto
       // this element.
       if (el.srcObject) el.srcObject = null;
+      });
     };
   }, [transport, visible, postOpen, failed, source]);
 
@@ -225,7 +230,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         hls.attachMedia(el);
       }
       void el.play().then(() => {
-        if (cancelled || !visualActivity.isFeedPlaybackAllowed()) el.pause();
+        if (cancelled || (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(el))) el.pause();
       }).catch(() => { if (!cancelled) setLoading(false); });
     };
 
@@ -233,10 +238,13 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
 
     return () => {
       cancelled = true;
-      hlsRef.current?.destroy();
+      const hls = hlsRef.current;
       hlsRef.current = null;
-      el.removeAttribute('src');
-      el.load();
+      releaseAfterPictureInPicture(el, () => {
+        hls?.destroy();
+        el.removeAttribute('src');
+        el.load();
+      });
     };
   }, [transport, src, visible, postOpen, failed, selfHosted]);
 
@@ -273,7 +281,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         preload="none"
         poster={thumbnail}
         onPlaying={(e) => {
-          if (!visualActivity.isFeedPlaybackAllowed()) { e.currentTarget.pause(); return; }
+          if (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
           setPlaying(true); setPaused(false); setLoading(false);
         }}
         onWaiting={() => setLoading(true)}
