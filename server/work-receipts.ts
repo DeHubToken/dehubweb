@@ -9,8 +9,17 @@ const RPCS: Record<number, string[]> = {
   56: ['https://bsc-dataseed.binance.org', 'https://bsc-rpc.publicnode.com'],
 };
 const workInterface = new Interface([
-  'event JobCreated(uint256 indexed jobId,address indexed poster,address token,uint8 jobType,uint256 totalAmount)',
+  'event JobCreated(uint256 indexed jobId,address indexed poster,address token,uint8 jobType,uint256 totalAmount,uint256 pricePerUnit,uint256 maxUnits,uint256 deadline)',
+  'event Awarded(uint256 indexed jobId,address indexed worker)',
+  'event ProofRegistered(uint256 indexed jobId,address indexed worker,bytes32 proofHash)',
+  'event ProofRejected(uint256 indexed jobId,bytes32 proofHash)',
+  'event SubmissionApproved(uint256 indexed jobId,address indexed worker,uint256 amountToWorker,uint256 fee,bytes32 proofHash,bytes32 paymentId)',
+  'event Disputed(uint256 indexed jobId,address indexed openedBy)',
+  'event DisputeResolved(uint256 indexed jobId,address worker,uint256 workerAmount,uint256 posterRefund,bytes32 proofHash)',
+  'event JobClosed(uint256 indexed jobId,uint256 refund)',
   'function owner() view returns (address)',
+  'function feeRecipient() view returns (address)',
+  'function allowedToken(address) view returns (bool)',
 ]);
 
 type ReceiptLog = { address: string; topics: string[]; data: string };
@@ -79,20 +88,36 @@ export async function handleWorkReceipt(request: Request, env: { WORK_RECEIPT_SI
         const event = workInterface.parseLog(log);
         if (event?.name !== 'JobCreated') return [];
         return [{ escrow: log.address.toLowerCase(), jobId: event.args.jobId.toString(), poster: event.args.poster.toLowerCase(),
-          token: event.args.token.toLowerCase(), jobType: Number(event.args.jobType), amount: event.args.totalAmount.toString() }];
+          token: event.args.token.toLowerCase(), jobType: Number(event.args.jobType), amount: event.args.totalAmount.toString(),
+          pricePerUnit: event.args.pricePerUnit.toString(), maxUnits: event.args.maxUnits.toString(), deadline: event.args.deadline.toString() }];
       } catch { return []; }
     });
-    let deployment: { address: string; codeHash: string; owner: string } | undefined;
+    const events = receipt.logs.flatMap(log => {
+      try {
+        const event = workInterface.parseLog(log);
+        if (!event) return [];
+        return [{ name: event.name, escrow: log.address.toLowerCase(), ...Object.fromEntries(
+          event.fragment.inputs.map((field,index) => [field.name,String(event.args[index]).toLowerCase()])
+        ) }];
+      } catch { return []; }
+    });
+    let deployment: { address: string; codeHash: string; owner: string; feeRecipient: string; dhbAllowed: boolean; usdcAllowed: boolean } | undefined;
     if (input.escrow) {
       const code = await rpc(chain, 'eth_getCode', [input.escrow, 'latest'], fetcher) as string;
       const ownerData = await rpc(chain, 'eth_call', [{ to: input.escrow, data: workInterface.encodeFunctionData('owner') }, 'latest'], fetcher) as string;
       if (code === '0x') throw new Error('The escrow contract is not deployed');
-      deployment = { address: input.escrow.toLowerCase(), codeHash: keccak256(code), owner: workInterface.decodeFunctionResult('owner', ownerData)[0].toLowerCase() };
+      const read = async (name: string,args: unknown[] = []) => workInterface.decodeFunctionResult(name,
+        await rpc(chain,'eth_call',[{to:input.escrow,data:workInterface.encodeFunctionData(name,args)},'latest'],fetcher) as string)[0];
+      const [feeRecipient,dhbAllowed,usdcAllowed] = await Promise.all([
+        read('feeRecipient'),read('allowedToken',['0xd20ab1015f6a2de4a6fddebab270113f689c2f7c']),read('allowedToken',['0x833589fcd6edb6e08f4c7c32d4f71b54bda02913']),
+      ]);
+      deployment = { address: input.escrow.toLowerCase(), codeHash: keccak256(code), owner: workInterface.decodeFunctionResult('owner', ownerData)[0].toLowerCase(),
+        feeRecipient: feeRecipient.toLowerCase(),dhbAllowed,usdcAllowed };
     }
     const payload = JSON.stringify({ id: input.id, chain, hash: input.hash.toLowerCase(),
       status: receipt.status === '0x1' ? 'confirmed' : 'failed',
       minedAt: new Date(Number(BigInt(block.timestamp)) * 1000).toISOString(),
-      transfers: receiptTransfers(receipt.logs), createdJobs, ...(deployment ? { deployment } : {}),
+      transfers: receiptTransfers(receipt.logs), createdJobs, events, ...(deployment ? { deployment } : {}),
     });
     const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(env.WORK_RECEIPT_SIGNING_KEY),
       { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);

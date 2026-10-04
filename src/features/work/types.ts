@@ -31,6 +31,9 @@ export interface WorkJob {
   awarded_worker_address: string | null;
   status: WorkJobStatus;
   fund_tx_hash: string | null;
+  funding_state?: string;
+  pending_fund_tx_hash?: string | null;
+  refunded_amount?: number;
   boost_expires_at: string | null;
   view_count: number;
   application_count: number;

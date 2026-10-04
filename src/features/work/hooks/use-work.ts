@@ -1,4 +1,6 @@
 import { workRpc, settleWorkPayment } from '../work-rpc';
+import { workEscrow, workSubmission } from '../work-escrow';
+import { getWorkConfig } from '@/lib/contracts/dehub-work';
 /**
  * /work — Jobs marketplace hooks
  * Off-chain ledger + on-chain escrow via DeHubWork (best-effort; falls back
@@ -9,15 +11,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import {
-  createJobOnChain,
-  awardApplicantOnChain,
-  approveSubmissionOnChain,
-  openDisputeOnChain,
-  adminResolveOnChain,
-  payWorkerDirect,
-  isWorkContractDeployed,
-} from '@/lib/contracts/dehub-work';
 import type {
   WorkJob, WorkApplication, WorkSubmission, WorkReview,
   WorkJobType, WorkCurrency, WorkPlatform,
@@ -189,25 +182,6 @@ export function useCreateJob() {
       if (!walletAddress) throw new Error('Not authenticated');
       const total = params.price_per_unit * params.max_units;
 
-      // 1) On-chain escrow funding (if contract deployed)
-      let onchainJobId: number | null = null;
-      let fundTxHash: string | null = null;
-      if (isWorkContractDeployed()) {
-        const result = await createJobOnChain({
-          currency: params.currency,
-          jobType: params.job_type,
-          pricePerUnit: params.price_per_unit,
-          maxUnits: params.max_units,
-        });
-        if (result) {
-          const receipt = await result.wait(1);
-          fundTxHash = receipt.hash;
-          // onchain_job_id is reconciled later by the indexer edge function
-        }
-      }
-
-
-      // 2) Off-chain record
       const { data, error } = await withWalletHeader(
         supabase.from(TBL_JOBS).insert({
           poster_address: walletAddress.toLowerCase(),
@@ -222,11 +196,11 @@ export function useCreateJob() {
           price_per_unit: params.price_per_unit,
           max_units: params.max_units,
           total_budget: total,
-          funded_amount: fundTxHash ? total : 0,
-          deadline: params.deadline || null,
-          onchain_job_id: onchainJobId,
-          fund_tx_hash: fundTxHash,
-          status: 'open',
+          funded_amount: 0,
+          deadline: params.deadline || new Date(Date.now()+30*86400000).toISOString(),
+          onchain_job_id: null,
+          fund_tx_hash: null,
+          status: 'draft',
         } as any).select().single(),
         walletAddress
       );
@@ -237,7 +211,7 @@ export function useCreateJob() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
       qc.invalidateQueries({ queryKey: ['work-my-posted'] });
-      toast.success('Job posted!');
+      toast.success('Draft saved — fund escrow to publish');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to post job'),
   });
@@ -275,7 +249,7 @@ export function useUpdateJob() {
         description: params.description,
         platform: params.platform || null,
         target_url: params.target_url || null,
-        deadline: params.deadline || null,
+        deadline: params.deadline || new Date(Date.now()+30*86400000).toISOString(),
       };
       if (params.budget) {
         patch.currency = params.budget.currency;
@@ -383,7 +357,7 @@ export function useAwardApplicant() {
   return useMutation({
     mutationFn: async (params: { job_id: string; onchain_job_id?: number | null; application_id: string; worker_address: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      await workRpc(walletAddress, 'work_action', { p_action: 'award', p_id: params.application_id });
+      await workEscrow(walletAddress).action(params.job_id,'award',params.application_id,undefined,params.worker_address);
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-apps', v.job_id] });
@@ -416,6 +390,7 @@ export function useSubmitProof() {
   return useMutation({
     mutationFn: async (params: { job_id: string; proof_url: string; proof_text?: string; platform?: WorkPlatform }) => {
       if (!walletAddress) throw new Error('Not authenticated');
+      await workEscrow(walletAddress).register(params.job_id,params.proof_url);
       const { data, error } = await withWalletHeader(
         supabase.from(TBL_SUBS).insert({
           job_id: params.job_id,
@@ -535,7 +510,8 @@ export function useRejectSubmission() {
   return useMutation({
     mutationFn: async (params: { submission_id: string; job_id: string; reason: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      await workRpc(walletAddress, 'work_action', { p_action: 'reject', p_id: params.submission_id, p_note: params.reason });
+      const sub=await workSubmission(params.submission_id);
+      await workEscrow(walletAddress).action(params.job_id,'reject',params.submission_id,params.reason,undefined,sub.proof_url);
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
@@ -606,7 +582,7 @@ export function useOpenDispute() {
   return useMutation({
     mutationFn: async (params: { job_id: string; onchain_job_id?: number | null; reason: string; evidence_url?: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      await workRpc(walletAddress, 'work_action', { p_action: 'dispute', p_id: params.job_id, p_note: params.reason });
+      await workEscrow(walletAddress).action(params.job_id,'dispute',params.job_id,params.reason);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-job'] });
@@ -657,11 +633,11 @@ export function useAdminResolveDispute() {
       pay_worker?: boolean;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      if (params.pay_worker || params.poster_refund > 0) throw new Error('Resolve the decision here. The poster settles accepted work from the bounty.');
-      await workRpc(walletAddress, 'work_resolve_dispute', {
-        p_dispute: params.dispute_id, p_worker: params.worker_address,
-        p_amount: params.worker_amount, p_note: params.resolution_notes ?? '',
-      });
+      const {data:subs,error}=await supabase.from(TBL_SUBS).select('*').eq('job_id',params.job_id).in('approval_status',['pending','approved']).order('created_at');
+      if(error) throw error;
+      const selected=(subs as any[])?.find(s=>s.worker_address===params.worker_address.toLowerCase());
+      if((subs as any[])?.some(s=>s.id!==selected?.id)) throw new Error('Review and settle other submissions before resolving');
+      await workEscrow(walletAddress).resolve(params,selected?.proof_url);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
@@ -678,7 +654,7 @@ export function useMarkComplete() {
   return useMutation({
     mutationFn: async (jobId: string) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      await workRpc(walletAddress, 'work_action', { p_action: 'complete', p_id: jobId });
+      await workEscrow(walletAddress).action(jobId,'complete',jobId,undefined);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-job'] });
@@ -687,4 +663,31 @@ export function useMarkComplete() {
     },
     onError: (e: any) => toast.error(e.message || 'Failed'),
   });
+}
+
+export function useWorkConfig() {
+ return useQuery({queryKey:['work-config'],queryFn:getWorkConfig,staleTime:60000});
+}
+export function useFundJob() {
+ const {walletAddress}=useAuth(); const qc=useQueryClient();
+ return useMutation({mutationFn:async(params:{job_id:string;hash?:string;release?:boolean})=>{
+  if(!walletAddress) throw new Error('Not authenticated');
+  if(params.release) {
+   if(localStorage.getItem('work-funding:'+params.job_id)) throw new Error('A funding transaction is saved. Check it first.');
+   await workRpc(walletAddress,'work_record_funding',{p_job:params.job_id,p_cancel:true}); return 'released';
+  }
+  return workEscrow(walletAddress).fund(params.job_id,params.hash);
+ },onSettled:()=>{qc.invalidateQueries({queryKey:['work-job']});qc.invalidateQueries({queryKey:['work-my-posted']});qc.invalidateQueries({queryKey:['work-jobs-browse']});},
+ onSuccess:state=>toast.success(state==='confirmed'?'Bounty funded and published':state==='pending'?'Funding submitted — check confirmation':'Rejected signature released'),onError:(e:any)=>toast.error(e.message)});
+}
+export function useReleasePayment() {
+ const {walletAddress}=useAuth(); const qc=useQueryClient();
+ return useMutation({mutationFn:async(submission:string)=>{
+  if(!walletAddress) throw new Error('Not authenticated');
+  const {data,error}=await supabase.from('work_payment_intents' as any).select('id').eq('submission_id',submission).eq('state','signing').single();
+  if(error) throw error;
+  const id=(data as any).id;
+  if(localStorage.getItem('work-payment:'+id)) throw new Error('A payment transaction is saved. Check it first.');
+  await workRpc(walletAddress,'work_cancel_signature',{p_intent:id});
+ },onSettled:()=>qc.invalidateQueries({queryKey:['work-subs']}),onError:(e:any)=>toast.error(e.message)});
 }

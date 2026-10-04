@@ -7,7 +7,7 @@ import { bountyPath } from '@/features/work/seo';
 import { TxLink, statusBadgeClass, statusLabelKey } from '@/features/work/components/TxLink';
 import type { WorkJob, WorkJobStatus, WorkSubmission } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
-import { isWorkContractDeployed } from '@/lib/contracts/dehub-work';
+
 import { SEOHead } from '@/components/SEOHead';
 import { KitButton, PageBody, PageEmpty, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 
@@ -204,7 +204,7 @@ function PostedRow({ job }: { job: WorkJob }) {
           the "no tx" note would be the most-repeated line on the page. */}
       {job.fund_tx_hash ? (
         <div className="mt-2"><TxLink label={t('work.escrowTx')} txHash={job.fund_tx_hash} /></div>
-      ) : isWorkContractDeployed() ? (
+      ) : (
         <div className="mt-2 text-[11px] text-white/30">{t('work.notEscrowedOnChain')}</div>
       ) : null}
     </div>
@@ -217,7 +217,7 @@ function SubmissionRow({ submission: s }: { submission: WorkSubmission & { job: 
   // Approved is not paid. Treating the two as one status is what let ~500k DHB
   // of accepted work show a green "paid" tick on this very page while no
   // transfer had happened — a payout is real only once it has a tx hash.
-  const paid = !!s.payout_tx_hash || s.approval_status === 'paid';
+  const paid = s.payout_state === 'confirmed' && !!s.payout_tx_hash;
   const awaitingPayment = s.approval_status === 'approved' && !s.payout_tx_hash;
   const due = Number(s.payout_amount) || 0;
 
@@ -246,7 +246,7 @@ function SubmissionRow({ submission: s }: { submission: WorkSubmission & { job: 
         {(paid || awaitingPayment) && due > 0 && job && ` · ${due.toLocaleString('en-US', { maximumFractionDigits: 4 })} ${job.currency}`}
       </div>
       {s.payout_tx_hash ? (
-        <div className="mt-2"><TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} /></div>
+        <div className="mt-2"><TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} chain={s.payout_chain_id ?? 8453} /></div>
       ) : awaitingPayment ? (
         <div className="mt-2 text-[11px] text-amber-200/70">
           {t('work.acceptedNotSent')}
