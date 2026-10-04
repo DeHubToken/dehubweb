@@ -793,6 +793,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const scrubbingRef = useRef(false);
   const isHoveringRef = useRef(false);
   
   // View tracking - fires view after watching threshold
@@ -1111,6 +1112,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     const showControlsBriefly = useCallback(() => {
       setShowControls(true);
       if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+      if (scrubbingRef.current) return;
       controlsTimerRef.current = setTimeout(() => {
         setShowControls(false);
       }, CONTROLS_HIDE_MS);
@@ -1506,7 +1508,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (videoRef.current) {
       const ct = videoRef.current.currentTime;
       const dur = videoRef.current.duration;
-      if (controlsVisible) setCurrentTime(ct);
+      if (controlsVisible && !scrubbingRef.current) setCurrentTime(ct);
 
       // Track video view progress (fires view when threshold met)
       if (dur > 0) {
@@ -1633,6 +1635,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       videoRef.current.currentTime = time;
       setCurrentTime(time);
     }
+  }, []);
+
+  const finishScrubbing = useCallback(() => {
+    scrubbingRef.current = false;
+    hiddenScrubStart.current = null;
+    if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
   }, []);
 
   /**
@@ -2395,7 +2404,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             non-functional play button on top of the audio controls — the
             "hovering brings up a play/pause button" complaint. */}
         {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
+          <div data-video-controls data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-8" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
             <div className={cn("flex items-center gap-2", bareControls && "px-1.5")}>
               <button
@@ -2417,6 +2426,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 onTouchEnd={(event) => event.stopPropagation()}
                 onPointerDown={(event) => {
                   event.stopPropagation();
+                  scrubbingRef.current = true;
                   hiddenScrubStart.current = controlsVisible ? null : { x: event.clientX, y: event.clientY };
                   if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
                 }}
@@ -2433,12 +2443,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     setCurrentTime(time);
                   }
                 }}
-                onPointerUp={() => {
-                  controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
-                }}
-                onPointerCancel={() => {
-                  controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
-                }}
+                onPointerUp={finishScrubbing}
+                onPointerCancel={finishScrubbing}
+                onLostPointerCapture={finishScrubbing}
                 onClick={(e) => e.stopPropagation()}
                 disabled={duration <= 0}
                 aria-label="Video progress"
