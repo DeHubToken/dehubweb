@@ -18,6 +18,8 @@ import { ActionBar } from '@/components/app/cards/ActionBar';
 import type { ReactionCounts } from '@/lib/reactions';
 import { AuthContext, type AuthContextType } from '@/contexts/AuthContext';
 import { KitButton, PageEmpty, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
+import { FeedTabBarSkeleton } from '@/components/app/PageSkeletons';
+import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 
 // The gallery sits outside the wallet providers; a signed-out stub is all the
 // action row needs to render.
@@ -249,6 +251,16 @@ export default function StateGalleryPage() {
                 <span className="max-w-full truncate text-[10px] capitalize text-zinc-500">{icon}</span>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section data-home-loading-gallery className="mb-5">
+          <h2 className="mb-3 text-sm font-semibold">Home loading</h2>
+          <div className="max-w-2xl mx-auto">
+            <FeedTabBarSkeleton />
+            <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0">
+              <FeedCardSkeletonList count={3} columns={1} />
+            </div>
           </div>
         </section>
 

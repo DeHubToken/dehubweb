@@ -2160,7 +2160,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       {showFilterLoader ? (
         <FeedFilterLoader />
       ) : (isLoadingState || isAutoRetrying) ? (
-        <FeedCardSkeletonList count={6} />
+        <FeedCardSkeletonList count={6} columns={colCount} />
       ) : (
         <>
       {/* Friends on Stage notification */}
