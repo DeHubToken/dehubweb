@@ -5,7 +5,7 @@
  * scaffold plus the model and aspect that make it work, so picking one and
  * typing a subject is the whole job.
  */
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -55,11 +55,18 @@ const GROUP_KEYS: Record<string, string> = {
 
 export function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripProps) {
   const { t } = useTranslation();
+  const [query, setQuery] = useState('');
+  useEffect(() => setQuery(''), [kind, audioTask]);
   const presets = useMemo(() => {
     const all = presetsFor(kind);
     if (kind !== 'audio') return all;
     return all.filter((p) => p.audioTask === audioTask);
   }, [kind, audioTask]);
+  const search = query.trim().toLocaleLowerCase();
+  const visiblePresets = presets.filter((preset) => !search || [
+    t(preset.nameKey), t(preset.hintKey), t(GROUP_KEYS[preset.group] ?? preset.group),
+    preset.template, preset.sample,
+  ].join(' ').toLocaleLowerCase().includes(search));
 
   // Nothing to offer for this task. The heading alone, with a Clear button for
   // a preset that is no longer in the list, reads as broken.
@@ -80,8 +87,17 @@ export function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripPr
         )}
       </div>
 
+      <input
+        type="search"
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        aria-label={t('common.search')}
+        placeholder={t('common.search')}
+        className="mb-2 w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white placeholder:text-white/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/50"
+      />
+      {!visiblePresets.length && <p role="status" className="py-3 text-sm text-white/45">{t('explorePage.noResults')}</p>}
       <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {presets.map((preset) => {
+        {visiblePresets.map((preset) => {
           const active = preset.id === activeId;
           return (
             <button
