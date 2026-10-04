@@ -15,6 +15,7 @@ import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
 import { TotalReachPill } from '@/components/app/profile/TotalReachPill';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
 import { StreamerLevelCard } from '@/components/app/live/StreamerLevelCard';
+import { StreamerBadge } from '@/components/app/live/StreamerBadge';
 import { PinnedCommunities } from '@/components/app/communities/PinnedCommunities';
 import {
   AlertDialog,
@@ -386,6 +387,7 @@ export function ProfileHeader({
                     <span ref={badgeSlotRef} className="inline-flex align-baseline ml-1">
                       <BadgeIcon src={badgeUrl} className="w-[1em] h-[1em]" />
                     </span>
+                    <StreamerBadge address={profile.walletAddress} canSelect={!!isViewingOwnProfile} className="ml-1" />
                   </span>
                 </h2>
                 {/* A lent badge draws like any other badge everywhere else
