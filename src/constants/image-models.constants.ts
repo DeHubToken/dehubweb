@@ -2,6 +2,8 @@
  * Image Generation Models Configuration
  */
 
+import { CREATOR_FAL_IMAGE_MODELS } from '../../supabase/functions/_shared/creator-fal-catalog';
+
 export interface ImageModel {
   id: string;
   name: string;
@@ -60,6 +62,7 @@ export const getImageCostDhb = (model: ImageModel, dhbPriceUsd: number): number 
 };
 
 export const IMAGE_MODELS: Record<string, ImageModel> = {
+  ...CREATOR_FAL_IMAGE_MODELS,
   'gemini-2.5-flash': {
     id: 'gemini-2.5-flash',
     name: 'Gemini 2.5 Flash',

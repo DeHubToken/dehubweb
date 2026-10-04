@@ -290,6 +290,15 @@ export function resolveThumbReaction(
   return resolveLeadReaction(counts, myReaction);
 }
 
+/** The displayed total follows the polarity of the thumb's visible reaction. */
+export function resolveThumbCount(
+  likeCount: number,
+  dislikeCount: number,
+  thumbReaction: PostReaction | null | undefined,
+): number {
+  return thumbReaction && !isPositiveReaction(thumbReaction) ? dislikeCount : likeCount;
+}
+
 /**
  * What a plain tap on that lone thumbs-up casts.
  *

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
 import { useCreateJob } from '@/features/work/hooks/use-work';
 import { bountyPath } from '@/features/work/seo';
 import type { WorkJobType, WorkCurrency, WorkPlatform } from '@/features/work/types';
@@ -110,11 +110,14 @@ export default function WorkPostPage() {
               return (
                 <button
                   key={opt.id}
+                  type="button"
+                  aria-pressed={active}
                   onClick={() => setJobType(opt.id)}
-                  className={`w-full text-left p-4 rounded-xl border transition-colors ${
+                  className={`relative w-full text-left p-4 rounded-xl border transition-colors ${
                     active ? 'bg-white/10 border-white/30' : 'bg-white/5 border-white/10 hover:bg-white/8'
                   }`}
                 >
+                  {active && <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-[inherit] border-2 border-current" />}
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                       <ThemedIcon icon={opt.icon} alt="" className="w-8 h-8 object-contain" />
@@ -123,6 +126,9 @@ export default function WorkPostPage() {
                       <div className="font-semibold text-white">{t(opt.labelKey)}</div>
                       <div className="text-xs text-white/60">{t(opt.descKey)}</div>
                     </div>
+                    <span aria-hidden="true" className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-current">
+                      {active && <Check className="h-4 w-4" />}
+                    </span>
                   </div>
                 </button>
               );
@@ -198,12 +204,11 @@ export default function WorkPostPage() {
 
             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
               <div className="flex items-center justify-between text-sm text-white/70 mb-1">
-                <span>{t('work.totalToEscrow')}</span>
+                <span>{t('work.integrity.totalBudget')}</span>
                 <span className="text-white font-semibold tabular-nums">{total.toLocaleString(undefined, { maximumFractionDigits: 4 })} {currency}</span>
               </div>
-              <div className="text-xs text-white/50">{t('work.platformFeeNote')}</div>
               <div className="text-[11px] text-amber-200/80 mt-2">
-                {t('work.escrowSoonNote')}
+                {t('work.integrity.reputationNotice')}
               </div>
             </div>
 
@@ -214,7 +219,7 @@ export default function WorkPostPage() {
                 disabled={createJob.isPending || total <= 0}
                 className="flex-1 px-4 py-3 rounded-2xl bg-white text-black font-semibold disabled:opacity-40"
               >
-                {createJob.isPending ? t('work.posting') : t('work.postJob')}
+                {createJob.isPending ? t('work.posting') : t('work.postBounty')}
               </button>
             </div>
           </div>

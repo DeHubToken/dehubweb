@@ -1,10 +1,10 @@
 import { useSyncExternalStore } from 'react';
-export interface FeedRefreshState { refreshing: boolean; progress: number }
+export interface FeedRefreshState { refreshing: boolean; progress: number; distance?: number; pulling?: boolean }
 const idle: FeedRefreshState = { refreshing: false, progress: 0 };
 let state = idle;
 const listeners = new Set<() => void>();
 export function setFeedRefresh(next: FeedRefreshState) {
-  if (state.refreshing === next.refreshing && state.progress === next.progress) return;
+  if (state.refreshing === next.refreshing && state.progress === next.progress && state.distance === next.distance && state.pulling === next.pulling) return;
   state = next;
   listeners.forEach(fn => fn());
 }

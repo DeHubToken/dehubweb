@@ -28,6 +28,8 @@ import { getWalletSetupIntent, setWalletSetupIntent, type WalletSetupIntent } fr
 import type { LoginStep } from './steps';
 import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
 import { createLogger } from '@/lib/logger';
+import { toast } from 'sonner';
+import { WALLET_SIGNUP_BLOCKED_EVENT } from '@/lib/api/dehub/auth';
 
 const flowLog = createLogger('LoginFlow');
 
@@ -184,6 +186,10 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
     setWalletSetupIntent(intent);
     setSetupIntentState(intent);
   };
+  // Set when the server refused to open an account for the wallet just
+  // signed with because it has no on-chain history. Shown on the options list
+  // so the next tap is one of the ways in that work.
+  const [walletSignupBlocked, setWalletSignupBlocked] = useState(false);
   /**
    * Whether the Telegram row belongs on the sheet at all.
    *
@@ -449,6 +455,23 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
     } catch { /* already gone */ }
   };
 
+  // A brand-new wallet cannot open an account, and it will still be brand new
+  // on the next tap — so leave the wallet list for the options that can, with
+  // the reason on screen, and let go of the wallet so its Continue button is
+  // not sitting there to be tapped again.
+  useEffect(() => {
+    const onBlocked = () => {
+      toast.dismiss('wallet-signup-blocked');
+      setWalletSignupBlocked(true);
+      setStep('main');
+      void handleUseDifferentWallet();
+    };
+    window.addEventListener(WALLET_SIGNUP_BLOCKED_EVENT, onBlocked);
+    return () => window.removeEventListener(WALLET_SIGNUP_BLOCKED_EVENT, onBlocked);
+    // handleUseDifferentWallet only reads stable setters and the wagmi hooks.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setStep]);
+
   const handleWalletConnect = (wallet: WalletId, _connect: () => void) => {
     setActiveProvider(wallet);
     setWagmiAuthIntent(true, wallet);
@@ -542,6 +565,25 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
       {/* The chosen intent stays visible while they pick a sign-in method:
           any of the options below reaches the wallet step, which then opens
           straight on Migrate or Import instead of a new account. */}
+      {walletSignupBlocked && (
+        <div role="alert" className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
+          <Wallet className="w-4 h-4 mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0 space-y-1">
+            <p className="font-medium">{t('loginModal.walletBlockedTitle', 'This wallet is brand new')}</p>
+            <p className="text-white/70">
+              {t('loginModal.walletBlockedBody', 'New wallets need a balance or a past transaction to open an account. Sign up with one of the options below, then connect this wallet from Settings.')}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setWalletSignupBlocked(false)}
+            aria-label={t('common.close', 'Close')}
+            className="p-1 -m-1 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
       {setupIntent && (
         <div className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
           {setupIntent === 'migrate'

@@ -409,3 +409,6 @@ project_id = "aigxuutjaqsywioxjefr"
   # not a Supabase JWT. The function validates it against api.dehub.io itself.
   [functions.work-admin]
     verify_jwt = false
+  # Caller identity is verified against the DeHub API token.
+  [functions.ads-creator-support]
+    verify_jwt = false

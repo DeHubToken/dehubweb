@@ -18,10 +18,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { UserAvatar } from '@/components/app/UserAvatar';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { IslandAction, PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { DaoProposalExperience } from '@/components/app/dao/DaoProposals';
 import { useAuth } from '@/contexts/AuthContext';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { useDaoTreasury, useContributeToDao, useOwnDhbBalance } from '@/hooks/use-dao-treasury';
@@ -282,8 +281,6 @@ export default function DaoPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [proposalDrawerOpen, setProposalDrawerOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
   const self = walletAddress?.toLowerCase() ?? null;
   const ownRow = useMemo(
@@ -326,34 +323,25 @@ export default function DaoPage() {
       />
       <h1 className="sr-only">DeHub DAO Treasury — Decentralised, User Owned Social Media</h1>
 
-      {/* Sticky nav pill */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <ThemedIcon icon="dao" alt="" className="w-12 h-12 shrink-0 object-contain" />
-              <div className="min-w-0">
-                <h1 className="text-xl font-bold text-white">{t('dao.title')}</h1>
-                <p className="text-zinc-500 text-sm truncate">{t('dao.subtitle')}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <Button onClick={handleContribute} variant="glass" className="rounded-xl font-semibold text-sm" size="sm">
-                <HeartHandshake className="w-4 h-4" />
-                <span className="hidden sm:inline">{t('dao.contribute')}</span>
-              </Button>
-              <Button onClick={handlePropose} variant="glass" className="rounded-xl font-semibold text-sm" size="sm">
-                <FilePenLine className="w-4 h-4" />
-                <span className="hidden sm:inline">Propose</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageIsland
+        icon="dao"
+        title={t('dao.title')}
+        subtitle={t('dao.subtitle')}
+        actions={
+          <>
+            <IslandAction label={t('dao.contribute')} onClick={handleContribute}>
+              <HeartHandshake className="h-[18px] w-[18px]" />
+            </IslandAction>
+            <IslandAction label="Propose" onClick={handlePropose}>
+              <FilePenLine className="h-[18px] w-[18px]" />
+            </IslandAction>
+          </>
+        }
+      />
 
-      <div ref={contentRef} className="px-2 sm:px-3 pb-24 pt-3 space-y-3">
+      <PageBody>
         {/* Balance */}
-        <section className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+        <section data-kit-section className="bg-zinc-900 p-4 sm:p-6">
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="text-xs uppercase tracking-wide text-zinc-500">{t('dao.treasuryBalance')}</div>
@@ -394,7 +382,7 @@ export default function DaoPage() {
 
         {/* Your share */}
         {isAuthenticated && data && (
-          <section className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+          <section data-kit-section className="bg-zinc-900 p-4 sm:p-6">
             <div className="text-xs uppercase tracking-wide text-zinc-500 mb-2">{t('dao.yourPower')}</div>
             {ownRow ? (
               <div className="flex items-end justify-between gap-3">
@@ -418,13 +406,13 @@ export default function DaoPage() {
         )}
 
         {/* How power works */}
-        <section className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+        <section data-kit-section className="bg-zinc-900 p-4 sm:p-6">
           <h2 className="text-sm font-semibold text-white mb-1">{t('dao.howItWorksTitle')}</h2>
           <p className="text-sm text-zinc-400">{t('dao.howItWorksBody')}</p>
         </section>
 
         {/* Contributors */}
-        <section className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+        <section data-kit-section className="bg-zinc-900 p-4 sm:p-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-white">{t('dao.contributors')}</h2>
             {data && (
@@ -450,14 +438,14 @@ export default function DaoPage() {
 
         {/* Recent */}
         {data && data.recent.length > 0 && (
-          <section className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+          <section data-kit-section className="bg-zinc-900 p-4 sm:p-6">
             <h2 className="text-sm font-semibold text-white mb-3">{t('dao.recent')}</h2>
             <div className="space-y-1.5">
               {data.recent.map((item) => <RecentRow key={`${item.chainId}-${item.txHash}`} item={item} />)}
             </div>
           </section>
         )}
-      </div>
+      </PageBody>
 
       <ContributeDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
     </div>

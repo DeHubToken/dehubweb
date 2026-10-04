@@ -10,10 +10,10 @@ import { motion } from 'framer-motion';
 import { parseUnits } from 'ethers';
 import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, X, Copy, ChevronRight } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { IslandAction, PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { Link } from 'react-router-dom';
 import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, useIsStakeRouteActive, getUserDHBBalance, type UnstakeEvent } from '@/hooks/use-staking-data';
-import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
 import { supabase } from '@/integrations/supabase/client';
@@ -142,7 +142,6 @@ function StatCard({
 
 export default function StakingPage() {
   const { t } = useTranslation();
-  const { isCollapsed } = useSidebarCollapse();
   const { data: stats, isLoading: statsLoading, isError: statsError, refetch: refetchStats } = useStakingStats();
   const { data: unstakeQueue, isLoading: queueLoading, refetch: refetchQueue } = useUnstakeQueue();
   const { data: userData, refetch: refetchUser } = useUserStakingData();
@@ -629,33 +628,24 @@ export default function StakingPage() {
   const poolOnlyStake = Math.max(0, userStaked - userWithdrawable);
 
   return (
-    <div className={cn("min-h-screen pb-24 px-3 sm:px-4 max-w-5xl mx-auto", isCollapsed && "pt-16 md:pt-0")}>
+    <div className="min-h-screen max-w-5xl mx-auto">
       <SEOHead title="Stake DHB — Earn Rewards & Unlock Badges" description="Stake your DHB tokens on DeHub to earn staking rewards, unlock staking badges and gain governance voting weight, with rewards funded by platform fees." url="https://dehub.io/stake" image="https://dehub.io/og/stake.jpg" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DHB Staking', url: 'https://dehub.io/stake', description: 'Stake DHB tokens to earn staking rewards and unlock badges on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Staking — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex items-center justify-between py-5 sm:py-6"
-      >
-        <div className="flex items-center gap-3">
-          <ThemedIcon icon="staking" alt="" className="w-10 h-10 flex-shrink-0 object-contain" />
-          <div>
-            <h1 className="text-xl font-bold text-white">{t('staking.title')}</h1>
-            <p className="text-xs text-white/40">{t('staking.subtitle')}</p>
-          </div>
-        </div>
-        <button
-          onClick={handleRefresh}
-          className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors flex-shrink-0"
-        >
-          <RefreshCw className="w-4 h-4 text-white/60" />
-        </button>
-      </motion.div>
+      <PageIsland
+        icon="staking"
+        title={t('staking.title')}
+        subtitle={t('staking.subtitle')}
+        actions={
+          <IslandAction label={t('dex.refresh')} onClick={handleRefresh}>
+            <RefreshCw className="h-[18px] w-[18px]" />
+          </IslandAction>
+        }
+      />
 
+      <PageBody>
       {/* Stats error */}
       {statsError && !stats && (
-        <div className="flex items-center justify-center gap-2 mb-3 text-xs text-white/50">
+        <div className="flex items-center justify-center gap-2 text-xs text-white/50">
           <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
           <span>{t('staking.statsLoadFailed', "Couldn't load staking stats")}</span>
           <button onClick={() => refetchStats()} className="text-white underline hover:text-white/80 transition-colors">
@@ -665,7 +655,7 @@ export default function StakingPage() {
       )}
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <StatCard icon={Lock} label={t('staking.totalStaked')} value={statsLoading || (statsError && !stats) ? '—' : formatNumber(stats?.totalStaked ?? '0')} subtitle={statsLoading || (statsError && !stats) ? '' : `${((Number(stats?.totalStaked ?? 0) / DHB_TOTAL_SUPPLY) * 100).toFixed(2)}% ${t('staking.ofSupply')}`} accent="bg-white/20" delay={0} />
         <StatCard icon={DollarSign} label={t('staking.totalValueLocked')} value={statsLoading || (statsError && !stats) ? '—' : formatUSD(tvl)} subtitle={t('staking.pricePerToken', { price: dhbPrice.toFixed(6) })} accent="bg-white/20" delay={0.05} />
         <StatCard icon={TrendingUp} label={t('staking.estApy')} value={`${ESTIMATED_APY}%`} subtitle={t('staking.variableRate')} accent="bg-white/20" delay={0.1} />
@@ -673,14 +663,16 @@ export default function StakingPage() {
 
       {/* Badge ladder — the reason most people are on this page. Sits above the
           stake box so the number they are about to type has a target. */}
-      <BadgeProgress className="mb-6" />
+      <div data-kit-section>
+        <BadgeProgress />
+      </div>
 
       {/* Multi-chain notice */}
       {userData?.hasBothChains && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex items-start gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5 mb-4"
+          className="flex items-start gap-2.5 p-3 rounded-xl border border-white/10 bg-white/5"
         >
           <AlertTriangle className="w-4 h-4 text-white/60 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-white/60">
@@ -690,13 +682,14 @@ export default function StakingPage() {
       )}
 
       {/* Stake / Unstake Actions */}
-      <div className={cn("grid gap-4 mb-6", userStaked > 0 ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1")}>
+      <div data-kit-flat-skip className={cn("grid gap-0 sm:gap-4", userStaked > 0 ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1")}>
         {/* Stake */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
+          data-kit-section
+          className="border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
         >
           <div className="flex items-center gap-2 mb-4">
             <ArrowDownToLine className="w-4 h-4 text-white" />
@@ -774,7 +767,8 @@ export default function StakingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
+            data-kit-section
+            className="border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
           >
             <div className="flex items-center gap-2 mb-4">
               <ArrowUpFromLine className="w-4 h-4 text-white" />
@@ -842,7 +836,7 @@ export default function StakingPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-3"
         >
           <div
             className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 cursor-pointer hover:bg-white/[0.06] transition-colors relative"
@@ -886,7 +880,8 @@ export default function StakingPage() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden mb-6"
+          data-kit-section
+          className="border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
         >
           <div className="p-4 border-b border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -974,7 +969,8 @@ export default function StakingPage() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden mb-6"
+          data-kit-section
+          className="border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
         >
           <div className="p-4 border-b border-white/5 flex items-center justify-between">
             <div>
@@ -1033,7 +1029,8 @@ export default function StakingPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
+        data-kit-section
+        className="border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden"
       >
         <div className="p-5 border-b border-white/5">
           <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{t('staking.whyStake')}</h2>
@@ -1099,6 +1096,7 @@ export default function StakingPage() {
           </div>
         </div>
       </motion.div>
+      </PageBody>
     </div>
   );
 }

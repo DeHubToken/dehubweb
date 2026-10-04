@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS } from '../../../../supabase/functions/_shared/creator-fal-catalog';
 import alibabaLogo from '@/assets/ai-logos/alibaba.png';
 import blackForestLabsLogo from '@/assets/ai-logos/black-forest-labs.png';
 import bytedanceLogo from '@/assets/ai-logos/bytedance.png';
@@ -29,6 +30,8 @@ type ModelChip = {
 // Sora 2, Suno v5, Pika 2.2 — which made the page look broken the moment
 // someone went hunting for one of them.
 const MODELS: ModelChip[] = [
+  ...Object.values(CREATOR_FAL_IMAGE_MODELS).map(m => ({ name: m.name, vendor: m.vendor, kind: 'Image' as const })),
+  ...Object.values(CREATOR_FAL_VIDEO_MODELS).map(m => ({ name: m.name, vendor: m.vendor, kind: 'Video' as const })),
   { name: 'Nano Banana Pro', vendor: 'Google', kind: 'Image' },
   { name: 'Nano Banana 2', vendor: 'Google', kind: 'Image' },
   { name: 'Gemini 3 Pro', vendor: 'Google', kind: 'Image' },

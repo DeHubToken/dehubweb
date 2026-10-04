@@ -4,12 +4,11 @@
  * Displays top DHB token holders and tippers from the DeHub API.
  */
 
-import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { PageBody, PageEmpty, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { AppState } from '@/components/app/AppState';
 import { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw, TrendingUp, Share2 } from 'lucide-react';
@@ -354,11 +353,6 @@ export default function LeaderboardPage() {
   const listLoading = isAffiliates ? affiliateLoading : isLoading;
   const listError = isAffiliates ? affiliateError : error;
 
-  // Swallow the ranked list at the sticky header bento's top edge under the
-  // glass themes, exactly like the home feed cuts at its nav pill.
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
-
   const sortToggleLabel = sortDirection === 'desc' ? t('leaderboard.highestFirst') : t('leaderboard.lowestFirst');
 
   return (
@@ -370,43 +364,36 @@ export default function LeaderboardPage() {
         image="https://dehub.io/og/leaderboard.jpg"
         jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Leaderboard', url: 'https://dehub.io/app/leaderboard', description: 'Track top DHB holders, tippers and creators on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }}
       />
-      {/* Sticky nav pill */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden">
-            <BrandIcon src={trophyIcon} alt="" className="w-11 h-11 object-contain" />
-          </div>
-          <div>
-            <h1 className="sr-only">DeHub Leaderboard — Decentralised Social Media, Censorship Resistant &amp; Freedom of Speech</h1>
-            <p className="text-xl font-bold text-white" aria-hidden="true">{t('leaderboard.title')}</p>
-            <p className="text-zinc-500 text-sm">{t('leaderboard.subtitle')}</p>
-          </div>
-        </div>
-
-        {/* Category Tabs - Horizontally scrollable */}
-        <div className="relative mb-3">
-          <GlassFilterRow
-            items={[...categories.map((cat) => ({ key: cat.id, label: <span className="flex items-center gap-1.5"><cat.icon className="w-4 h-4" />{t(cat.labelKey)}</span> })), { key: 'assets' as any, label: <span className="flex items-center gap-1.5"><TrendingUp className="w-4 h-4" />Assets</span> }]}
-            activeKey={category}
-            onSelect={(key) => { if (key === 'assets') { navigate('/app/top-100'); return; } setCategory(key as CategoryType); setSortDirection('desc'); }}
-            borderRadius="0.75rem"
-            buttonClassName="px-3 py-2 rounded-xl text-sm"
+      <h1 className="sr-only">DeHub Leaderboard — Decentralised Social Media, Censorship Resistant &amp; Freedom of Speech</h1>
+      <PageIsland
+        icon={<BrandIcon src={trophyIcon} alt="" className="h-8 w-8 object-contain" />}
+        title={t('leaderboard.title')}
+        subtitle={t('leaderboard.subtitle')}
+        tabs={
+          <PageTabs<CategoryType | 'assets'>
+            value={category}
+            onChange={(key) => { if (key === 'assets') { navigate('/app/top-100'); return; } setCategory(key); setSortDirection('desc'); }}
+            tabs={[
+              ...categories.map((cat) => ({ id: cat.id, label: t(cat.labelKey), icon: <cat.icon className="h-4 w-4" /> })),
+              { id: 'assets' as const, label: 'Assets', icon: <TrendingUp className="h-4 w-4" /> },
+            ]}
           />
-        </div>
-
+        }
+      >
         {/* Time Period Tabs + Sort Toggle */}
-        <div className="flex items-center gap-2 mb-4">
-          <GlassFilterRow
-            items={timePeriods.map((p) => ({ key: p.id, label: t(p.labelKey) }))}
-            activeKey={timePeriod}
-            onSelect={(key) => { setTimePeriod(key as LeaderboardPeriod); setShimmerKey(k => k + 1); setSortDirection('desc'); }}
-            buttonClassName="text-sm"
+        <div className="flex items-center gap-2">
+          <PageTabs
+            size="sm"
+            className="min-w-0 flex-1"
+            value={timePeriod}
+            onChange={(key) => { setTimePeriod(key); setShimmerKey(k => k + 1); setSortDirection('desc'); }}
+            tabs={timePeriods.map((p) => ({ id: p.id, label: t(p.labelKey) }))}
           />
           <button
             type="button"
+            data-kit-square
             onClick={() => setSortDirection(d => d === 'desc' ? 'asc' : 'desc')}
-            className={cn('p-1.5 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white transition-colors shrink-0', FOCUS_RING)}
+            className={cn('shrink-0', FOCUS_RING)}
             title={sortToggleLabel}
             aria-label={sortToggleLabel}
             aria-pressed={sortDirection === 'asc'}
@@ -431,9 +418,10 @@ export default function LeaderboardPage() {
           {category === 'holdings' && (
             <button
               type="button"
+              data-kit-square
               onClick={handleRefreshMe}
               disabled={isRefreshing || refreshCooldown}
-              className={cn('flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0', FOCUS_RING)}
+              className={cn('h-10 w-10 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed', FOCUS_RING)}
               title={refreshCooldown ? t('leaderboard.cooldownActive') : t('leaderboard.refreshPosition')}
               aria-label={refreshCooldown ? t('leaderboard.cooldownActive') : t('leaderboard.refreshPosition')}
             >
@@ -441,12 +429,11 @@ export default function LeaderboardPage() {
             </button>
           )}
         </div>
-        </div>
-      </div>
+      </PageIsland>
 
       {/* Content */}
-      <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl overflow-hidden">
+      <PageBody>
+        <div data-page-bento data-kit-section className="bg-zinc-900 overflow-hidden">
         {/* Loading State */}
         {listLoading && (
           <DeHubPageLoader minHeight="40vh" />
@@ -454,9 +441,8 @@ export default function LeaderboardPage() {
 
         {/* Error State */}
         {listError && (
-          <div className="text-center py-20" role="alert">
-            <ThemedIcon icon="trophy" alt="" className="w-16 h-16 object-contain mx-auto mb-3 opacity-65" />
-            <p className="text-zinc-500">{t('leaderboard.failedToLoad')}</p>
+          <div role="alert">
+            <PageEmpty icon="trophy" title={t('leaderboard.failedToLoad')} />
           </div>
         )}
 
@@ -577,7 +563,7 @@ export default function LeaderboardPage() {
           </div>
         )}
       </div>
-      </div>
+      </PageBody>
 
       <AuthPrompt isOpen={isAuthOpen} onClose={closeAuth} />
     </div>

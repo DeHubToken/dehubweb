@@ -30,7 +30,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { cn } from '@/lib/utils';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
-import { PPVDrawerContent } from './PPVDrawerContent';
+import { PPVDrawerContent } from './LazyPPVDrawerContent';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
@@ -210,7 +210,7 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
       )}
 
       <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
-        <PPVDrawerContent
+        <PPVDrawerContent open={showPPVDrawer}
           tokenId={gate.tokenId}
           price={Number(gate.ppvPrice)}
           currency={gate.ppvCurrency || 'DHB'}

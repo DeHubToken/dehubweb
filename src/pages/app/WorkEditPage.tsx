@@ -233,7 +233,7 @@ export default function WorkEditPage() {
           )}
 
           <Field label={t('work.fieldDeadline')}>
-            <input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} className={inputCls} />
+            <input disabled={!!job.fund_tx_hash || job.funding_state!=="unfunded"} type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} className={inputCls} />
           </Field>
 
           <div className="flex gap-2 pt-1">

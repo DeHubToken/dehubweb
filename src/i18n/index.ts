@@ -1,3 +1,4 @@
+import manifest from './locale-manifest.json';
 /**
  * i18n Configuration
  * ==================
@@ -8,7 +9,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import en from './locales/en.json';
+import en from './core-en.json';
 import { humanizeTranslationKey } from './missing-key-fallback';
 import { fillMissingPluralForms } from './plural-fallback';
 
@@ -156,118 +157,6 @@ if (urlLang) {
 
 // Dynamic import map for lazy loading locale files
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const localeLoaders: Record<string, () => Promise<{ default: any }>> = {
-  es: () => import('./locales/es.json'),
-  fr: () => import('./locales/fr.json'),
-  bg: () => import('./locales/bg.json'),
-  cs: () => import('./locales/cs.json'),
-  da: () => import('./locales/da.json'),
-  dcc: () => import('./locales/dcc.json'),
-  dyu: () => import('./locales/dyu.json'),
-  de: () => import('./locales/de.json'),
-  hu: () => import('./locales/hu.json'),
-  pt: () => import('./locales/pt.json'),
-  zh: () => import('./locales/zh.json'),
-  cjy: () => import('./locales/cjy.json'),
-  mnp: () => import('./locales/mnp.json'),
-  ctg: () => import('./locales/ctg.json'),
-  hne: () => import('./locales/hne.json'),
-  ja: () => import('./locales/ja.json'),
-  jv: () => import('./locales/jv.json'),
-  ko: () => import('./locales/ko.json'),
-  ru: () => import('./locales/ru.json'),
-  sr: () => import('./locales/sr.json'),
-  ar: () => import('./locales/ar.json'),
-  acm: () => import('./locales/acm.json'),
-  acw: () => import('./locales/acw.json'),
-  aec: () => import('./locales/aec.json'),
-  hi: () => import('./locales/hi.json'),
-  tr: () => import('./locales/tr.json'),
-  ro: () => import('./locales/ro.json'),
-  bho: () => import('./locales/bho.json'),
-  be: () => import('./locales/be.json'),
-  bn: () => import('./locales/bn.json'),
-  id: () => import('./locales/id.json'),
-  vi: () => import('./locales/vi.json'),
-  ta: () => import('./locales/ta.json'),
-  te: () => import('./locales/te.json'),
-  th: () => import('./locales/th.json'),
-  tts: () => import('./locales/tts.json'),
-  it: () => import('./locales/it.json'),
-  nl: () => import('./locales/nl.json'),
-  pl: () => import('./locales/pl.json'),
-  uk: () => import('./locales/uk.json'),
-  ur: () => import('./locales/ur.json'),
-  uz: () => import('./locales/uz.json'),
-  sdr: () => import('./locales/sdr.json'),
-  syl: () => import('./locales/syl.json'),
-  tl: () => import('./locales/tl.json'),
-  mr: () => import('./locales/mr.json'),
-  mn: () => import('./locales/mn.json'),
-  mg: () => import('./locales/mg.json'),
-  yue: () => import('./locales/yue.json'),
-  wuu: () => import('./locales/wuu.json'),
-  ms: () => import('./locales/ms.json'),
-  pcm: () => import('./locales/pcm.json'),
-  wes: () => import('./locales/wes.json'),
-  ha: () => import('./locales/ha.json'),
-  he: () => import('./locales/he.json'),
-  hr: () => import('./locales/hr.json'),
-  yo: () => import('./locales/yo.json'),
-  ig: () => import('./locales/ig.json'),
-  arz: () => import('./locales/arz.json'),
-  ajp: () => import('./locales/ajp.json'),
-  ayn: () => import('./locales/ayn.json'),
-  apd: () => import('./locales/apd.json'),
-  ary: () => import('./locales/ary.json'),
-  fa: () => import('./locales/fa.json'),
-  pbt: () => import('./locales/pbt.json'),
-  rkt: () => import('./locales/rkt.json'),
-  pa: () => import('./locales/pa.json'),
-  af: () => import('./locales/af.json'),
-  az: () => import('./locales/az.json'),
-  gsw: () => import('./locales/gsw.json'),
-  el: () => import('./locales/el.json'),
-  ka: () => import('./locales/ka.json'),
-  km: () => import('./locales/km.json'),
-  kk: () => import('./locales/kk.json'),
-  kn: () => import('./locales/kn.json'),
-  ku: () => import('./locales/ku.json'),
-  lo: () => import('./locales/lo.json'),
-  mag: () => import('./locales/mag.json'),
-  qu: () => import('./locales/qu.json'),
-  am: () => import('./locales/am.json'),
-  sa: () => import('./locales/sa.json'),
-  my: () => import('./locales/my.json'),
-  ne: () => import('./locales/ne.json'),
-  om: () => import('./locales/om.json'),
-  si: () => import('./locales/si.json'),
-  so: () => import('./locales/so.json'),
-  sk: () => import('./locales/sk.json'),
-  skr: () => import('./locales/skr.json'),
-  sv: () => import('./locales/sv.json'),
-  sw: () => import('./locales/sw.json'),
-  no: () => import('./locales/no.json'),
-  fi: () => import('./locales/fi.json'),
-  zu: () => import('./locales/zu.json'),
-  ti: () => import('./locales/ti.json'),
-  ca: () => import('./locales/ca.json'),
-  lt: () => import('./locales/lt.json'),
-  et: () => import('./locales/et.json'),
-  lv: () => import('./locales/lv.json'),
-  mi: () => import('./locales/mi.json'),
-  gu: () => import('./locales/gu.json'),
-  ml: () => import('./locales/ml.json'),
-  or: () => import('./locales/or.json'),
-  sd: () => import('./locales/sd.json'),
-  sq: () => import('./locales/sq.json'),
-  ug: () => import('./locales/ug.json'),
-  tg: () => import('./locales/tg.json'),
-  tk: () => import('./locales/tk.json'),
-  hy: () => import('./locales/hy.json'),
-  ky: () => import('./locales/ky.json'),
-};
-
 // Languages written right-to-left. Keep in sync with SUPPORTED_LANGUAGES.
 export const RTL_LANGUAGES = new Set([
   'ar', 'acm', 'acw', 'aec', 'ajp', 'ayn', 'apd', 'ary', 'arz', // Arabic + dialects
@@ -278,64 +167,72 @@ export function applyDocumentDirection(lang: string): void {
   document.documentElement.dir = RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr';
 }
 
-// Locales whose full translation file has been merged. hasResourceBundle()
-// can't be used for this check: the staking/community/auth-toast bundles are
-// injected for many languages at startup, which would make every language
-// look "already loaded" and skip the real locale JSON on runtime switches.
-const fullyLoadedLocales = new Set<string>(['en']);
+const packOrigin = '';
+const readPackCache = async (key: string) => { try { return localStorage.getItem(`locale-pack:${key}`); } catch { return null; } };
+const writePackCache = async (key: string, value: string) => { try { localStorage.setItem(`locale-pack:${key}`, value); } catch {} };
 
-/**
- * Lazy-load a locale's translations. Returns true if loaded (or already loaded), false if failed.
- */
-export async function loadLanguage(lang: string): Promise<boolean> {
-  if (fullyLoadedLocales.has(lang)) return true;
-  const loader = localeLoaders[lang];
-  if (!loader) {
-    console.warn(`[i18n] No loader for locale "${lang}"`);
-    return false;
-  }
-  try {
-    const module = await loader();
-    i18n.addResourceBundle(lang, 'translation', module.default, true, true);
-    // Feature bundles (staking / community / auth-toast) live in separate
-    // all-language modules. Load them lazily and merge ONLY this language —
-    // they used to be imported statically and injected for every language at
-    // boot, putting ~5k lines of translations on the entry chunk's critical
-    // path. English needs none of this (en keys live in locales/en.json).
-    // Merged after the locale JSON so these keys take precedence, matching
-    // the old injection order.
+const loadedPacks = new Set<string>([`${manifest.version}:en:core`]);
+const retryAfter = new Map<string, number>();
+const pendingPacks = new Map<string, Promise<boolean>>();
+async function loadPack(lang: string, group: string): Promise<boolean> {
+  if (!manifest.languages.includes(lang)) return false;
+  const key = `${manifest.version}:${lang}:${group}`;
+  if (loadedPacks.has(key)) return true;
+  if ((retryAfter.get(key) || 0) > Date.now()) return false;
+  if (pendingPacks.has(key)) return pendingPacks.get(key)!;
+  const pending = (async () => {
     try {
-      const [staking, community, authToast] = await Promise.all([
-        import('./staking-translations'),
-        import('./community-translations'),
-        import('./auth-toast-translations'),
-      ]);
-      staking.injectStakingTranslations(i18n, lang);
-      community.injectCommunityTranslations(i18n, lang);
-      authToast.injectAuthToastTranslations(lang);
-    } catch (err) {
-      // Locale JSON loaded fine — missing feature bundles just fall back to en.
-      console.warn(`[i18n] Failed to load feature bundles for "${lang}"`, err);
-    }
-    // Every plural category this language actually uses, filled from the
-    // strings the locale already carries. Without it Arabic count=2/3/11,
-    // Polish 2/5/22 and every other >2-form language render English. Runs
-    // after the feature bundles so their plural keys are covered too.
-    fillMissingPluralForms(i18n, lang);
-    fullyLoadedLocales.add(lang);
-    return true;
-  } catch (err) {
-    console.warn(`[i18n] Failed to load locale "${lang}"`, err);
-    return false;
-  }
+      const cached = await readPackCache(key);
+      let data: Record<string, unknown>;
+      if (cached) data = JSON.parse(cached);
+      else {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
+        try {
+          const response = await fetch(`${packOrigin}/locale-packs/web/${manifest.version}/${lang}/${group}.json`, { signal: controller.signal });
+          if (!response.ok) throw new Error('Locale pack unavailable');
+          data = await response.json();
+        } finally { clearTimeout(timeout); }
+        if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
+        await writePackCache(key, JSON.stringify(data));
+      }
+      // Mark first: resource events rerender consumers synchronously.
+      loadedPacks.add(key);
+      i18n.addResourceBundle(lang, 'translation', data, true, true);
+      fillMissingPluralForms(i18n, lang);
+      return true;
+    } catch { retryAfter.set(key, Date.now() + 30_000); return false; }
+    finally { pendingPacks.delete(key); }
+  })();
+  pendingPacks.set(key, pending);
+  return pending;
 }
-
+const requestedGroups = new Set<string>(['core']);
+const groupForKey = (key: string) => (manifest.groups as Record<string, string>)[key.split('.')[0]];
+i18n.use({
+  type: 'postProcessor', name: 'featurePacks',
+  process(value: string, keys: string[]) {
+    const group = groupForKey(keys[0] || '');
+    if (group) {
+      requestedGroups.add(group);
+      void loadPack(i18n.language || 'en', group);
+      if (i18n.language !== 'en') void loadPack('en', group);
+    }
+    return value;
+  },
+});
+export async function loadLanguage(lang: string): Promise<boolean> {
+  const results = await Promise.all([...requestedGroups].map(group => loadPack(lang, group)));
+  return results.every(Boolean);
+}
 i18n.use(initReactI18next).init({
   resources: {
     en: { translation: en },
   },
   lng: 'en', // start with English, then switch after lazy load
   fallbackLng: 'en',
+  postProcess: ['featurePacks'],
+  react: { bindI18nStore: 'added' },
   parseMissingKeyHandler: humanizeTranslationKey,
   interpolation: { escapeValue: false },
 });

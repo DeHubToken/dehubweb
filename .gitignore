@@ -103,3 +103,5 @@ scripts/*
 !scripts/mojibake-check.mjs
 !scripts/build-badge-plates.mjs
 !scripts/build-emoji-data.mjs
+
+/public/locale-packs/

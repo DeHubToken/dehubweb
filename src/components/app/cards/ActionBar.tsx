@@ -30,6 +30,7 @@ import {
   reconcileReactionCounts,
   resolveLeadReaction,
   resolveThumbReaction,
+  resolveThumbCount,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -778,6 +779,7 @@ export function ActionBar({
   const leadReaction = reactionsEnabled
     ? resolveThumbReaction(localReactionCounts, myReaction)
     : resolveLeadReaction(localReactionCounts, myReaction);
+  const thumbCount = resolveThumbCount(localLikeCount, localDislikeCount, leadReaction);
   /** The viewer's own reaction, split by side. */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
@@ -1079,7 +1081,7 @@ export function ActionBar({
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
           )}
           {!compact && (
-            <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
+            <span className="text-xs text-zinc-400">{formatCount(thumbCount)}</span>
           )}
         </motion.button>
       </span>

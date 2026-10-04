@@ -39,7 +39,7 @@ import { ActionBar } from './ActionBar';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
-import { PPVDrawerContent } from './PPVDrawerContent';
+import { PPVDrawerContent } from './LazyPPVDrawerContent';
 import { useTranslation, LANGUAGE_NAMES, renderTextWithLinks, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChatLazy } from './PostAIChatLazy';
@@ -1469,7 +1469,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}
       {(isPPV || isComboLocked) && (
         <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
-          <PPVDrawerContent
+          <PPVDrawerContent open={showPPVDrawer}
             tokenId={post.id}
             price={Number(post.ppvPrice ?? 0)}
             currency={post.ppvCurrency || 'DHB'}

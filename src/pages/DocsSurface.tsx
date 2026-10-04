@@ -29,6 +29,7 @@ import { Suspense, lazy, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import "@/styles/docs-dark.css";
+import "@/styles/docs-light.css";
 import "@/styles/docs-glass.css";
 
 import { LanguageProvider } from "@/contexts/LanguageContext";

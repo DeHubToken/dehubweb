@@ -1,3 +1,4 @@
+import '@/styles/article.css';
 import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import type { Components } from 'react-markdown';
 import { articleHeadings, articleSlug } from '@/lib/article';

@@ -223,6 +223,13 @@ describe('scroll freeze watchdog', () => {
     expect(REPORTS[0].meta.recovered).toBe(false);
   });
 
+  it('ignores the 1-3px tail of a trackpad glide', () => {
+    scrollTop = 900;
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: -1 }));
+    settle();
+    expect(messages()).toEqual([]);
+  });
+
   it('does not mistake delayed wheel movement for a freeze', () => {
     window.dispatchEvent(new WheelEvent('wheel', { deltaY: 120 }));
     scrollTop = 120;

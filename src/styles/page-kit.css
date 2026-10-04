@@ -1,0 +1,182 @@
+/* Page kit (src/components/app/page-kit/PageKit.tsx)
+   ==================================================
+   One look for every app page, matching the home feed:
+   - a floating glass title island (the nav glass in glass-surfaces.css paints
+     it on every glass theme; this sheet only shapes it),
+   - squared 10px chips and buttons,
+   - sections that are rounded bentos on the canvas themes and run full width
+     between hairlines on System phones, like the feed's posts.
+   The two :not(#_) lift rules over the theme sheets' #app-root nets. */
+
+:root {
+  --kit-hairline: rgb(255 255 255 / 0.08);
+  --kit-chip-bg: rgb(255 255 255 / 0.06);
+  --kit-chip-ink: rgb(255 255 255 / 0.72);
+  --kit-chip-active-bg: #fff;
+  --kit-chip-active-ink: #0b0b0c;
+  --kit-square-bg: rgb(255 255 255 / 0.08);
+  --kit-primary-bg: #fff;
+  --kit-primary-ink: #0b0b0c;
+}
+
+/* Canvas themes: the active chip and the main button take the theme colour. */
+html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']) {
+  --kit-chip-bg: rgb(255 255 255 / 0.07);
+  --kit-chip-active-bg: var(--tint-accent);
+  --kit-chip-active-ink: #0b0b0c;
+  --kit-primary-bg: var(--tint-accent);
+  --kit-primary-ink: #0b0b0c;
+}
+html:is([data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='island']) {
+  --kit-chip-active-bg: linear-gradient(135deg, color-mix(in srgb, var(--tint-accent) 70%, #fff), var(--tint-accent));
+  --kit-chip-active-ink: #fff;
+  --kit-primary-bg: linear-gradient(135deg, color-mix(in srgb, var(--tint-accent) 70%, #fff), var(--tint-accent));
+  --kit-primary-ink: #fff;
+}
+html[data-theme='light'] {
+  --kit-hairline: rgb(0 0 0 / 0.08);
+  --kit-chip-bg: rgb(0 0 0 / 0.05);
+  --kit-chip-ink: rgb(0 0 0 / 0.62);
+  --kit-chip-active-bg: #111114;
+  --kit-chip-active-ink: #fff;
+  --kit-square-bg: rgb(0 0 0 / 0.05);
+  --kit-primary-bg: #111114;
+  --kit-primary-ink: #fff;
+}
+html[data-theme='minimal'] {
+  --kit-hairline: rgb(255 255 255 / 0.14);
+  --kit-chip-bg: transparent;
+  --kit-square-bg: transparent;
+}
+
+/* ── Island ─────────────────────────────────────────────────────────────── */
+[data-kit-island-outer] {
+  padding: 0.5rem 0.5rem 0;
+  background: transparent !important;
+}
+@media (min-width: 640px) {
+  [data-kit-island-outer] { padding: 0.5rem 0.75rem 0; }
+}
+html[data-theme] [data-kit-island-outer] > [data-kit-island]:not(#_):not(#_) {
+  border-radius: 15px;
+  border: 0;
+}
+/* Light and minimal draw a flat island, like their home tab strip. */
+html[data-theme='light'] [data-kit-island-outer] > [data-kit-island]:not(#_):not(#_) {
+  background: rgb(255 255 255 / 0.86) !important;
+  backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 8px 24px rgb(0 0 0 / 0.06) !important;
+}
+html[data-theme='minimal'] [data-kit-island-outer] > [data-kit-island]:not(#_):not(#_) {
+  background: #000 !important;
+  box-shadow: inset 0 0 0 1px var(--kit-hairline) !important;
+}
+
+/* ── Squares (back and island actions), chips, buttons ──────────────────── */
+[data-kit-square] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--kit-square-bg);
+  color: inherit;
+  transition: background-color 150ms, transform 150ms;
+}
+[data-kit-square]:hover { background: color-mix(in srgb, var(--kit-square-bg), rgb(255 255 255 / 0.08)); }
+[data-kit-square]:active { transform: scale(0.95); }
+[data-kit-square][data-active='true'] { background: var(--kit-chip-active-bg); color: var(--kit-chip-active-ink); }
+[data-kit-square]:disabled { opacity: 0.4; pointer-events: none; }
+html[data-theme='minimal'] [data-kit-square] { box-shadow: inset 0 0 0 1px var(--kit-hairline); }
+
+html[data-theme] [data-kit-chip]:not(#_):not(#_) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+  height: 2.125rem;
+  padding: 0 0.8rem;
+  border-radius: 10px;
+  border: 0;
+  background: var(--kit-chip-bg);
+  color: var(--kit-chip-ink);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: none;
+  transition: background-color 150ms, color 150ms;
+}
+html[data-theme] [data-kit-chip][data-size='sm']:not(#_):not(#_) { height: 1.875rem; padding: 0 0.65rem; font-size: 12px; }
+html[data-theme] [data-kit-chip][data-active='true']:not(#_):not(#_) {
+  background: var(--kit-chip-active-bg);
+  color: var(--kit-chip-active-ink);
+}
+html[data-theme] [data-kit-chip][data-active='true'] img { filter: none; }
+html[data-theme='minimal'] [data-kit-chip]:not([data-active='true']):not(#_):not(#_) { box-shadow: inset 0 0 0 1px var(--kit-hairline); }
+[data-kit-chip-count] { opacity: 0.6; font-variant-numeric: tabular-nums; }
+
+html[data-theme] [data-kit-button]:not(#_):not(#_) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 2.625rem;
+  padding: 0 1.1rem;
+  border-radius: 10px;
+  border: 0;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: none;
+  transition: transform 150ms, opacity 150ms;
+}
+html[data-theme] [data-kit-button='primary']:not(#_):not(#_) { background: var(--kit-primary-bg); color: var(--kit-primary-ink); }
+html[data-theme] [data-kit-button='quiet']:not(#_):not(#_) { background: var(--kit-chip-bg); color: inherit; box-shadow: inset 0 0 0 1px var(--kit-hairline); }
+html[data-theme] [data-kit-button]:active:not(#_):not(#_) { transform: scale(0.97); }
+html[data-theme] [data-kit-button]:disabled:not(#_):not(#_) { opacity: 0.45; pointer-events: none; }
+html[data-theme] [data-kit-button='primary'] :is(svg, .text-white) { color: inherit !important; }
+
+/* ── Body and sections ─────────────────────────────────────────────────── */
+[data-kit-body] { padding-left: 0.5rem; padding-right: 0.5rem; }
+@media (min-width: 640px) {
+  [data-kit-body] { padding-left: 0.75rem; padding-right: 0.75rem; }
+}
+[data-kit-body] > * + * { margin-top: 0.75rem; }
+[data-kit-section] { border-radius: 12px; }
+
+/* System, minimal and light on phones: the home feed's full-width look.
+   Sections lose their box and sit between full-width hairlines. */
+@media (max-width: 639px) {
+  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] > * + * { margin-top: 0; }
+  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] > :not([data-kit-section]):not([data-kit-flat-skip]) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_) {
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--kit-hairline) !important;
+    backdrop-filter: none !important;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem;
+  }
+  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_)::before,
+  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_)::after {
+    display: none !important;
+  }
+  /* Bentos nested in a section (stat tiles etc.) keep a soft tile. */
+  html[data-theme='system'] [data-kit-section] [data-page-bento]:not(#_):not(#_) {
+    background: rgb(255 255 255 / 0.04) !important;
+    border-radius: 10px !important;
+  }
+}

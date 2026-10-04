@@ -15,7 +15,7 @@
  * plainly what that does and does not prove. See ProvenancePanel below.
  */
 
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
@@ -43,8 +43,6 @@ import {
 } from 'lucide-react';
 
 import { SEOHead } from '@/components/SEOHead';
-import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import {
   useSiteStats,
   type SiteStats,
@@ -55,7 +53,7 @@ import {
 import { FeedbackSection } from '@/components/app/stats/FeedbackSection';
 import { USER_STATS_ENDPOINT, useUserStats } from '@/hooks/use-user-stats';
 import { cn } from '@/lib/utils';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 
 type Range = '24h' | '3d' | '7d' | '30d' | '1y' | 'all';
 
@@ -329,7 +327,7 @@ function ProvenancePanel({ stats }: { stats: SiteStats }) {
   };
 
   return (
-    <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800">
+    <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -680,7 +678,7 @@ function CommunitySection({ range }: { range: Range }) {
 
       {/* Members leads on its own row: it is the headline figure, and every
           tile under it counts some slice of it. */}
-      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 px-4 py-4">
+      <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 px-4 py-4">
         <div className="flex items-end justify-between gap-3 flex-wrap">
           <div>
             <div className="text-[11px] uppercase tracking-wide text-zinc-500">{membersLabel}</div>
@@ -730,7 +728,7 @@ function CommunitySection({ range }: { range: Range }) {
 
       {/* The growth curve. Same currentColor treatment as the traffic chart, so
           every theme restyles it without a per-theme branch. */}
-      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+      <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
         <div className="flex items-baseline justify-between mb-3">
           <span className="text-sm font-semibold text-white">
             {t('stats.community.chartMembers', 'Members over time')}
@@ -794,7 +792,7 @@ function CommunitySection({ range }: { range: Range }) {
       {/* Active people. This one genuinely starts on the day it was first
           recorded, because there is no query that recovers who was around on a
           day already gone. It lengthens by a point a day from here. */}
-      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+      <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
         <div className="flex items-baseline justify-between mb-3 gap-2">
           <span className="text-sm font-semibold text-white">
             {t('stats.community.chartActive', 'Active registered users')}
@@ -873,7 +871,7 @@ function CommunitySection({ range }: { range: Range }) {
 
       {/* What each of these is a count of, in the endpoint's own words — the
           same reason the traffic half publishes its query. */}
-      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+      <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
         <ul className="space-y-2 text-xs text-zinc-400 leading-relaxed">
           <li>
             <span className="text-zinc-300">{membersLabel}</span> — {provenance.note}
@@ -894,8 +892,6 @@ function CommunitySection({ range }: { range: Range }) {
 export default function StatsPage() {
   const { t } = useTranslation();
   const [range, setRange] = useState<Range>('30d');
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
   const { data, isLoading, isError, isFetching } = useSiteStats();
   const stats: SiteStats | null = data && data.ok ? data : null;
@@ -985,48 +981,36 @@ export default function StatsPage() {
       />
       <h1 className="sr-only">DeHub Live Site Statistics — Visitors, Page Views, Members and Active Users</h1>
 
-      {/* Sticky header — same shape as every other bento page, so the glass,
-          war-HUD and paper themes pick it up without page-specific rules. */}
-      <div
-        data-feed-nav-outer
-        className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2"
-      >
-        <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
-          <div className="flex items-center gap-3">
-            <ThemedIcon icon="stats" alt="" className="w-10 h-10 shrink-0 object-contain" />
-            <div className="min-w-0 flex-1">
-              <h1 className="text-[1.1rem] sm:text-[1.32rem] font-bold text-white">
-                {t('stats.title', 'Stats')}
-              </h1>
-              <p className="text-xs text-zinc-500 truncate">
-                {t('stats.subtitle', 'Real-time open source intel')}
-              </p>
+      <PageIsland
+        icon="stats"
+        title={t('stats.title', 'Stats')}
+        subtitle={t('stats.subtitle', 'Real-time open source intel')}
+        actions={
+          stats ? (
+            <div className="flex items-center gap-1.5 pr-1">
+              <span className="relative flex h-2 w-2">
+                <span
+                  className={cn(
+                    'absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75',
+                    isFetching && 'animate-ping',
+                  )}
+                />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              <span className="text-[11px] text-zinc-400">{t('stats.live', 'Live')}</span>
             </div>
-            {stats && (
-              <div className="flex items-center gap-1.5 shrink-0">
-                <span className="relative flex h-2 w-2">
-                  <span
-                    className={cn(
-                      'absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75',
-                      isFetching && 'animate-ping',
-                    )}
-                  />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                </span>
-                <span className="text-[11px] text-zinc-400">{t('stats.live', 'Live')}</span>
-              </div>
-            )}
-          </div>
-
-          <GlassFilterRow
-            items={RANGES.map((r) => ({ key: r.key, label: t(`stats.range.${r.key}`, r.label) }))}
-            activeKey={range}
-            onSelect={(key) => setRange(key as Range)}
+          ) : undefined
+        }
+        tabs={
+          <PageTabs
+            value={range}
+            onChange={setRange}
+            tabs={RANGES.map((r) => ({ id: r.key, label: t(`stats.range.${r.key}`, r.label) }))}
           />
-        </div>
-      </div>
+        }
+      />
 
-      <div ref={contentRef} className="px-2 sm:px-3 pt-3 pb-6 space-y-3">
+      <PageBody>
         {isLoading && (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -1034,7 +1018,7 @@ export default function StatsPage() {
         )}
 
         {!isLoading && (isError || unavailable) && (
-          <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 px-4 py-8 text-center">
+          <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 px-4 py-8 text-center">
             <Activity className="w-6 h-6 text-zinc-600 mx-auto mb-3" />
             <p className="text-sm text-white font-medium">
               {t('stats.unavailable.title', 'Stats are not available right now')}
@@ -1107,7 +1091,7 @@ export default function StatsPage() {
             {/* Traffic over time. Fill and stroke are currentColor, inherited
                 from the wrapper's text-white — which light and minimal remap to
                 ink, so the chart follows the theme with no per-theme branch. */}
-            <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+            <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
               <div className="flex items-baseline justify-between mb-3">
                 <span className="text-sm font-semibold text-white">
                   {view.hourly
@@ -1181,8 +1165,8 @@ export default function StatsPage() {
         {stats && view && (
           <>
             {/* Where people are, and what they browse with */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3">
-              <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+            <div data-kit-flat-skip className="grid grid-cols-1 lg:grid-cols-2 gap-0 sm:gap-3">
+              <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Globe className="w-4 h-4 text-zinc-400" />
                   <span className="text-sm font-semibold text-white">
@@ -1208,7 +1192,7 @@ export default function StatsPage() {
                 </div>
               </div>
 
-              <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+              <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Activity className="w-4 h-4 text-zinc-400" />
                   <span className="text-sm font-semibold text-white">
@@ -1233,7 +1217,7 @@ export default function StatsPage() {
             </div>
 
             {/* Edge health */}
-            <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+            <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
               <div className="flex items-center gap-2 mb-3">
                 <ShieldCheck className="w-4 h-4 text-zinc-400" />
                 <span className="text-sm font-semibold text-white">
@@ -1273,7 +1257,7 @@ export default function StatsPage() {
             {/* Reading the numbers honestly matters as much as publishing them:
                 "unique visitors" is an IP count, and the series only starts the
                 day dehub.io moved onto Cloudflare. Say both, in the open. */}
-            <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+            <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
               <div className="text-sm font-semibold text-white mb-2">
                 {t('stats.definitions.title', 'What the numbers mean')}
               </div>
@@ -1356,7 +1340,7 @@ export default function StatsPage() {
             </div>
           </>
         )}
-      </div>
+      </PageBody>
     </div>
   );
 }

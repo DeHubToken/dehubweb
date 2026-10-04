@@ -32,6 +32,7 @@ import {
   rotateWallet,
   WalletNotLinkedError,
   WalletSignupBlockedError,
+  WALLET_SIGNUP_BLOCKED_EVENT,
   getAccountInfo,
   getAuthToken,
   getRefreshToken,
@@ -86,9 +87,9 @@ import {
   DEFAULT_WALLET_UNLOCK_INTERVAL,
 } from '@/hooks/use-wallet-unlock-interval';
 import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
-import { deriveFromSecret, generateMnemonic12 } from '@/lib/wallet-core/derive';
-import { exportWalletBackup, type WalletBackup } from '@/lib/wallet-core/export';
-import { encryptString } from '@/lib/wallet-core/crypto';
+
+import type { WalletBackup } from '@/lib/wallet-core/export';
+
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { isUserRejection, isRequestAlreadyPending, isRequestTimeout, describeWalletError, WalletRequestTimeoutError } from '@/lib/wallet-errors';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
@@ -1929,7 +1930,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         hasSolanaProof: !!solanaProof,
         ...describeWalletError(authError),
       }, authError);
-      if (!reportWalletSignupBlocked(authError)) {
+      if (reportWalletSignupBlocked(authError)) {
+        // The sheet swaps back to the sign-up options with this explained in
+        // place. Left on the wallet list, its Continue button re-signed with
+        // the same empty wallet, which the server refuses every time: new
+        // users tapped it six times in a row and read it as a sign-up loop.
+        window.dispatchEvent(new CustomEvent(WALLET_SIGNUP_BLOCKED_EVENT, { detail: { address: authAddress } }));
+      } else {
         toast.error('Could not complete sign-in. Please try again.');
       }
       throw authError;
@@ -2275,7 +2282,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const exportPrivateKey = async (password: string): Promise<WalletBackup> => {
     if (!supabaseUserId) throw new Error('Not signed in');
-    return exportWalletBackup(supabaseUserId, walletAddress ?? '', password);
+    return (await import('@/lib/wallet-core/export')).exportWalletBackup(supabaseUserId, walletAddress ?? '', password);
   };
 
   /**
@@ -2286,7 +2293,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const exportPrivateKeyWithBiometrics = async (): Promise<WalletBackup> => {
     if (!supabaseUserId) throw new Error('Not signed in');
-    return exportWalletBackup(supabaseUserId, walletAddress ?? '');
+    return (await import('@/lib/wallet-core/export')).exportWalletBackup(supabaseUserId, walletAddress ?? '');
   };
 
   /**
@@ -2310,6 +2317,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const toastId = 'auth-switch-wallet';
     setIsConnecting(true);
     try {
+      const { deriveFromSecret } = await import('@/lib/wallet-core/derive');
       const derived = deriveFromSecret(secret);
       if (expectedProfileAddress) {
         const expected = expectedProfileAddress.toLowerCase();
@@ -2324,7 +2332,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           );
         }
       }
-      const encrypted = await encryptString(derived.secret, password);
+      const encrypted = await (await import('@/lib/wallet-core/crypto')).encryptString(derived.secret, password);
       await saveWallet(supabaseUserId, derived.ethAddress, encrypted);
       // Every biometric wrap still holds the PREVIOUS wallet's seed, so they
       // would now unlock the wrong wallet. Drop them all — the user re-enrols
@@ -2396,9 +2404,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // the log line.
       const previous = await fetchWallet(supabaseUserId).catch(() => null);
 
+      const { generateMnemonic12 } = await import('@/lib/wallet-core/derive');
       const secret = generateMnemonic12();
+      const { deriveFromSecret } = await import('@/lib/wallet-core/derive');
       const derived = deriveFromSecret(secret);
-      const encrypted = await encryptString(derived.secret, password);
+      const encrypted = await (await import('@/lib/wallet-core/crypto')).encryptString(derived.secret, password);
       await saveWallet(supabaseUserId, derived.ethAddress, encrypted);
 
       // The old wraps still hold the OLD seed, so they would now open a wallet

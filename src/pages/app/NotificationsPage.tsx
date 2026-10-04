@@ -1,13 +1,10 @@
 import { localizedNotificationContent } from "@/lib/notification-content";
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
-import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { memo, useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { isDhb } from '@/components/app/DhbAmount';
 import { motion, useReducedMotion } from 'framer-motion';
-import { useTabIndicator } from '@/hooks/use-tab-indicator';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
+import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
 import { AtSign, Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase, Award,
@@ -19,7 +16,6 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { NotificationSettleAction } from '@/components/app/fractions/NotificationSettleAction';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   useNotifications, 
   useUnreadNotificationCount, 
@@ -269,7 +265,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
-  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment', 'governance_reply'],
+  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment', 'governance_reply', 'work_application_reply'],
   reposts: ['repost', 'quote'],
   features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention'],
   communities: ['community_mention', 'community_here', 'community_join'],
@@ -352,6 +348,7 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     }
     case 'work_application':
     case 'work_submission':
+    case 'work_application_reply':
       return <Briefcase className="w-4 h-4 text-white/70" />;
     case 'stage_live':
     case 'stage_reminder':
@@ -725,6 +722,11 @@ function getNotificationContent(
   // ahead of the switch rather than as cases — same shape as the routing above.
   // Naming the bounty matters here in a way it doesn't for a like: a poster with
   // several open bounties can't act on "someone applied" alone.
+  if (typeStr === 'work_application_reply') {
+    const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
+    const sentence = tr('notifications.repliedComment', { name: actorName });
+    return jobTitle ? `${sentence} “${jobTitle}”` : sentence;
+  }
   if (typeStr === 'work_application' || typeStr === 'work_submission') {
     const verb = typeStr === 'work_application'
       ? 'applied to your bounty'
@@ -830,7 +832,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   }
   // Bounty applications/submissions store job_number, which is what the
   // canonical /bounty/<n> URL is keyed on — not the job uuid.
-  if ((notification.type as string) === 'work_application' || (notification.type as string) === 'work_submission') {
+  if (['work_application', 'work_submission', 'work_application_reply'].includes(notification.type as string)) {
     const jobNumber = customReferenceId(notification);
     return jobNumber ? `/bounty/${jobNumber}` : '/work/history';
   }
@@ -1592,37 +1594,23 @@ const NotificationItem = memo(function NotificationItem({
 export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boolean } = {}) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
-  const [notifTabTransition, setNotifTabTransition] = useState(false);
-  const isDraggingRef = useRef(false);
-  const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab, undefined, isDraggingRef);
   const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
   const reduceMotion = useReducedMotion();
 
-  // Swallow the notifications list at the sticky header bento's top edge under
-  // the glass themes, exactly like the home feed cuts at its nav pill.
-  const notifContentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(notifContentRef, '[data-feed-nav-outer] > [data-page-bento]', [isAuthenticated]);
-
-  // Drag-to-swipe state
-  const tabButtonPositions = useRef<Partial<Record<NotificationTypeFilter, HTMLElement | null>>>({});
-
-  const { isDragging, indicatorRef, handleDragStart, handleDragMove, handleDragEnd } = useDragTabIndicator({
-    tabRect: notifTabRect,
-    tabLayerRef: notifTabLayerRef,
-    tabButtonPositions,
-    tabValues: tabs.map(t => t.value) as NotificationTypeFilter[],
-    activeTab,
-    onTabChange: setActiveTab,
-    isDraggingRef,
-  });
+  // In the bell drawer the island must not hide on scroll; the kit island
+  // takes no data-nav-hide prop, so mark its outer element directly.
+  const islandHostRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const outer = islandHostRef.current?.querySelector('[data-feed-nav-outer]');
+    if (!outer) return;
+    if (inDrawer) outer.setAttribute('data-nav-hide', 'off');
+    else outer.removeAttribute('data-nav-hide');
+  }, [inDrawer, isAuthenticated]);
 
   const handleTabClick = useCallback((tab: NotificationTypeFilter) => {
-    if (isDragging) return;
-    setNotifTabTransition(true);
     setActiveTab(tab);
-    setTimeout(() => setNotifTabTransition(false), 450);
-  }, [isDragging]);
-  
+  }, []);
+
   // Followers drawer state (opened inline from aggregated follow notifications)
   const [followDrawerOpen, setFollowDrawerOpen] = useState(false);
   const [newFollowers, setNewFollowers] = useState<{ count?: number; usernames?: string[] }>({});
@@ -2049,43 +2037,44 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
       {!inDrawer && <SEOHead title="Notifications - Stay Updated" description="Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." url="https://dehub.io/app/notifications" />}
       <h1 className="sr-only">DeHub Notifications - Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
-      <div data-feed-nav-outer data-nav-hide={inDrawer ? "off" : undefined} className={`sticky ${inDrawer ? "top-0" : "top-11 lg:top-0"} bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2`}>
-        <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <ThemedIcon icon="notifications" alt={activeTabLabel} className="w-9 h-9 object-contain" />
-              <h1 className="font-bold text-white text-lg" aria-live="polite">{activeTabLabel}</h1>
+      <div ref={islandHostRef} className="contents">
+        <PageIsland
+          className={inDrawer ? 'top-0 lg:top-0' : undefined}
+          icon="notifications"
+          title={
+            <span className="inline-flex max-w-full items-center gap-2 align-middle">
+              <span className="truncate" aria-live="polite">{activeTabLabel}</span>
               {headerUnread > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-lg">
                   {headerUnread > 99 ? '99+' : headerUnread}
                 </span>
               )}
-            </div>
-            <div className="flex items-center gap-2">
+            </span>
+          }
+          actions={
+            <>
               {totalUnread > 0 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <IslandAction
+                  label={t('notifications.markAllRead')}
                   onClick={handleMarkAllAsRead}
                   disabled={markAllAsRead.isPending}
-                  className="text-zinc-400 hover:text-white"
                 >
                   {markAllAsRead.isPending ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="h-[18px] w-[18px] animate-spin" />
                   ) : (
-                    <Check className="w-4 h-4" />
+                    <Check className="h-[18px] w-[18px]" />
                   )}
-                    <span className="ml-1 hidden sm:inline">{t('notifications.markAllRead')}</span>
-                </Button>
+                </IslandAction>
               )}
               <Sheet>
                 <SheetTrigger asChild>
                   <button
                     type="button"
+                    data-kit-square
                     aria-label={t('notifications.settings')}
-                    className="p-2 rounded-xl hover:bg-zinc-800 transition-colors"
+                    title={t('notifications.settings')}
                   >
-                    <Settings className="w-5 h-5 text-zinc-400" />
+                    <Settings className="h-[18px] w-[18px]" />
                   </button>
                 </SheetTrigger>
                 <SheetContent
@@ -2261,88 +2250,30 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
                   </div>
                 </SheetContent>
               </Sheet>
-            </div>
-          </div>
-
-          {/* Tabs - merged into header bento */}
-          <div className="mt-3 -mx-2" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-            <div ref={notifTabLayerRef} className="relative overflow-visible">
-              <GlassIndicator ref={indicatorRef} rect={notifTabRect} enableTransition={!isDragging && notifTabTransition} />
-              {/* Drag handle overlay - sits on top of indicator for pointer capture */}
-              {notifTabRect.ready && (
-                <div
-                  className="absolute z-30 cursor-grab active:cursor-grabbing"
-                  style={{
-                    transform: `translate(${notifTabRect.x}px, ${notifTabRect.y}px)`,
-                    width: notifTabRect.width,
-                    height: notifTabRect.height,
-                  }}
-                  onPointerDown={handleDragStart}
-                  onPointerMove={handleDragMove}
-                  onPointerUp={handleDragEnd}
-                  onPointerCancel={handleDragEnd}
-                />
-              )}
-              <div 
-                className="relative z-20 flex gap-1 sm:gap-1.5 overflow-x-auto sm:overflow-x-visible overflow-y-visible scrollbar-hide whitespace-nowrap px-1 py-1"
-                style={{ touchAction: 'manipulation' }}
-                onScroll={onNotifTabScroll}
-              >
-                {orderedTabKeys.map((tabKey) => {
-                  const tab = tabs.find(({ value }) => value === tabKey)!;
-                  const count = getTabCount(tab.value);
-                  return (
-                    <Tooltip key={tab.value}>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          ref={(el) => {
-                            setNotifTabRef(tab.value)(el);
-                            tabButtonPositions.current[tab.value] = el;
-                          }}
-                          onClick={() => handleTabClick(tab.value)}
-                          aria-label={translateFilterLabel(tab.value)}
-                          aria-pressed={activeTab === tab.value}
-                          className={`relative z-40 flex-shrink-0 sm:flex-shrink sm:flex-1 w-[53px] h-[53px] sm:w-auto sm:h-auto sm:py-2.5 flex items-center justify-center rounded-xl transition-colors duration-200 ${
-                            activeTab === tab.value
-                              ? 'text-white'
-                              : 'text-zinc-400 hover:text-white'
-                          }`}
-                        >
-                          <span className="relative z-10" aria-hidden="true">
-                            <tab.icon className={tab.value === 'reposts' ? 'w-[26.5px] h-[26.5px]' : 'w-[22.5px] h-[22.5px]'} />
-                            {/* The selected tab badge sits on top of the glass
-                                indicator, so a flat white/20 wash read as a hole in
-                                the pill rather than a counter. Same liquid-glass
-                                recipe as GlassIndicator: tinted base, white gradient,
-                                hairline border, inset highlights. */}
-                            {count > 0 && (
-                              <span className={`absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full leading-none transition-colors duration-200 ${
-                                activeTab === tab.value
-                                  ? 'bg-zinc-900/60 bg-gradient-to-br from-white/25 via-white/15 to-white/10 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_6px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
-                                  : 'bg-red-500 text-white'
-                              }`}>
-                                {count > 99 ? '99+' : count}
-                              </span>
-                            )}
-                          </span>
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" sideOffset={8} className="hidden sm:block">
-                        {translateFilterLabel(tab.value)}
-                      </TooltipContent>
-                    </Tooltip>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
+            </>
+          }
+          tabs={
+            <PageTabs
+              value={activeTab}
+              onChange={handleTabClick}
+              tabs={orderedTabKeys.map((tabKey) => {
+                const tab = tabs.find(({ value }) => value === tabKey)!;
+                const count = getTabCount(tab.value);
+                return {
+                  id: tab.value,
+                  label: <span className="sr-only">{translateFilterLabel(tab.value)}</span>,
+                  icon: <tab.icon className={tab.value === 'reposts' ? 'h-[20px] w-[20px]' : 'h-[18px] w-[18px]'} aria-hidden="true" />,
+                  count: count > 0 ? count : undefined,
+                };
+              })}
+            />
+          }
+        />
       </div>
 
       {/* Notifications List */}
-      <div ref={notifContentRef} className="px-2 sm:px-3 pt-2 pb-2">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl overflow-hidden">
+      <PageBody>
+        <div data-page-bento data-kit-section className="bg-zinc-900 overflow-hidden">
           {isLoading ? (
             // Row skeletons that mirror the real list layout — a lone spinner
             // reads as "empty page" instead of "content on the way".
@@ -2402,7 +2333,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
             </div>
           )}
         </div>
-      </div>
+      </PageBody>
       {/* Followers drawer - opened inline from aggregated follow notifications */}
       {pageWalletAddress && (
         <FollowersListDrawer

@@ -9,21 +9,22 @@
  */
 
 import { cn } from '@/lib/utils';
+import { FeedCardSkeleton, FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 
 // ============================================================================
 // BASE SKELETON
 // ============================================================================
 
-interface SkeletonProps {
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-function Skeleton({ className }: SkeletonProps) {
+function Skeleton({ className, ...props }: SkeletonProps) {
   return (
-    <div 
+    <div {...props}
       className={cn(
-        "animate-pulse bg-white/[0.06] rounded-lg",
+        "home-skeleton-block rounded-lg",
         className
       )} 
     />
@@ -35,29 +36,7 @@ function Skeleton({ className }: SkeletonProps) {
 // ============================================================================
 
 export function VideoCardSkeleton() {
-  return (
-    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
-      {/* Header */}
-      <div className="pb-3 flex items-center gap-3">
-        <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />
-        <div className="flex-1 space-y-2">
-          <Skeleton className="h-4 w-28 rounded" />
-          <Skeleton className="h-3 w-16 rounded" />
-        </div>
-      </div>
-      {/* Thumbnail */}
-      <Skeleton className="w-full aspect-video rounded-lg" />
-      {/* Footer */}
-      <div className="pt-3 space-y-2">
-        <Skeleton className="h-4 w-3/4 rounded" />
-        <div className="flex gap-4">
-          <Skeleton className="h-8 w-16 rounded-xl" />
-          <Skeleton className="h-8 w-16 rounded-xl" />
-          <Skeleton className="h-8 w-16 rounded-xl" />
-        </div>
-      </div>
-    </div>
-  );
+  return <FeedCardSkeleton variant="video" />;
 }
 
 // ============================================================================
@@ -65,28 +44,7 @@ export function VideoCardSkeleton() {
 // ============================================================================
 
 export function ImageCardSkeleton() {
-  return (
-    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
-      {/* Header */}
-      <div className="pb-3 flex items-center gap-3">
-        <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />
-        <div className="flex-1 space-y-2">
-          <Skeleton className="h-4 w-28 rounded" />
-          <Skeleton className="h-3 w-16 rounded" />
-        </div>
-      </div>
-      {/* Image */}
-      <Skeleton className="w-full aspect-square rounded-lg" />
-      {/* Footer */}
-      <div className="pt-3 space-y-2">
-        <Skeleton className="h-4 w-2/3 rounded" />
-        <div className="flex gap-4">
-          <Skeleton className="h-8 w-16 rounded-xl" />
-          <Skeleton className="h-8 w-16 rounded-xl" />
-        </div>
-      </div>
-    </div>
-  );
+  return <FeedCardSkeleton variant="image" />;
 }
 
 // ============================================================================
@@ -94,30 +52,7 @@ export function ImageCardSkeleton() {
 // ============================================================================
 
 export function PostCardSkeleton() {
-  return (
-    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-3">
-        <Skeleton className="w-9 h-9 rounded-md flex-shrink-0" />
-        <div className="flex-1 space-y-2">
-          <Skeleton className="h-4 w-28 rounded" />
-          <Skeleton className="h-3 w-16 rounded" />
-        </div>
-      </div>
-      {/* Content lines */}
-      <div className="space-y-2 mb-3">
-        <Skeleton className="h-4 w-full rounded" />
-        <Skeleton className="h-4 w-5/6 rounded" />
-        <Skeleton className="h-4 w-2/3 rounded" />
-      </div>
-      {/* Actions */}
-      <div className="flex gap-4">
-        <Skeleton className="h-8 w-16 rounded-xl" />
-        <Skeleton className="h-8 w-16 rounded-xl" />
-        <Skeleton className="h-8 w-16 rounded-xl" />
-      </div>
-    </div>
-  );
+  return <FeedCardSkeleton variant="text" />;
 }
 
 // ============================================================================
@@ -249,29 +184,7 @@ export function CategoryPillsSkeleton() {
  * Home feed skeleton - matches 3-column masonry in collapsed mode
  */
 export function HomeFeedSkeleton() {
-  const { isCollapsed } = useSidebarCollapse();
-
-  if (isCollapsed) {
-    return (
-      <div style={{ columnCount: 3, columnGap: '0.75rem' }}>
-        {[VideoCardSkeleton, PostCardSkeleton, ImageCardSkeleton, VideoCardSkeleton, PostCardSkeleton, ImageCardSkeleton, PostCardSkeleton, VideoCardSkeleton, PostCardSkeleton].map((Card, i) => (
-          <div key={i} className="mb-3" style={{ breakInside: 'avoid' }}>
-            <Card />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-3">
-      <VideoCardSkeleton />
-      <PostCardSkeleton />
-      <ImageCardSkeleton />
-      <VideoCardSkeleton />
-      <PostCardSkeleton />
-    </div>
-  );
+  return <FeedCardSkeletonList />;
 }
 
 /**

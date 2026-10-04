@@ -205,3 +205,36 @@ jobs:
       # small modules arriving over a fortnight, which is what actually happens.
       - name: Boot path has not grown
         run: node scripts/boot-path-report.mjs
+
+  speed-staging:
+    name: Build speed preview assets
+    needs: [i18n, edge-cors, typecheck, tests, stage-remux, boot-path]
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'perf/staging-load-speed-20261004'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --no-frozen-lockfile
+      - name: Build staging assets
+        run: pnpm build
+      - name: Record initial asset sizes
+        run: node scripts/staging-speed-report.mjs > staging-speed-report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: staging-speed-assets
+          path: |
+            staging-speed-report.json
+            dist/version.json
+          retention-days: 30
+      # The dehub-staging Worker deploys this branch through Cloudflare's
+      # existing Git integration, using wrangler.staging.jsonc.

@@ -190,6 +190,8 @@ interface CounterChipProps {
   value: number;
   min: number;
   max: number;
+  editable?: boolean;
+  allowedValues?: number[];
   onChange: (value: number) => void;
   disabled?: boolean;
 }
@@ -200,11 +202,33 @@ export function CounterChip({
   value,
   min,
   max,
+  editable = false,
+  allowedValues,
   onChange,
   disabled,
 }: CounterChipProps) {
   const { t } = useTranslation();
-  const step = (delta: number) => onChange(Math.min(max, Math.max(min, value + delta)));
+  const [draft, setDraft] = useState(String(value));
+  useEffect(() => setDraft(String(value)), [value, min, max, allowedValues]);
+  const normalize = (next: number) => {
+    const clamped = Math.min(max, Math.max(min, Math.round(next)));
+    if (!allowedValues?.length) return clamped;
+    const eligible = allowedValues.filter((option) => option <= clamped);
+    return eligible.length ? Math.max(...eligible) : Math.min(...allowedValues);
+  };
+  const commit = () => {
+    const next = draft.trim() && Number.isFinite(Number(draft)) ? normalize(Number(draft)) : value;
+    setDraft(String(next));
+    onChange(next);
+  };
+  const step = (delta: number) => {
+    const options = allowedValues?.filter((option) => delta > 0 ? option > value : option < value);
+    const next = options?.length
+      ? delta > 0 ? Math.min(...options) : Math.max(...options)
+      : normalize(value + delta);
+    setDraft(String(next));
+    onChange(next);
+  };
   const unit = value === 1 ? (singular ?? label) : label;
 
   return (
@@ -226,7 +250,30 @@ export function CounterChip({
         <Minus className="h-3.5 w-3.5" />
       </button>
       <span className="min-w-[3.75rem] select-none text-center text-[13px] font-medium tabular-nums text-white/85">
-        {value}
+        {editable ? (
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            aria-label={label}
+            value={draft}
+            disabled={disabled}
+            onFocus={(e) => e.target.select()}
+            onChange={(e) => setDraft(e.target.value.replace(/\D/g, ''))}
+            onBlur={commit}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                e.currentTarget.blur();
+              }
+              if (e.key === 'Escape') {
+                setDraft(String(value));
+                e.preventDefault();
+              }
+            }}
+            className="w-9 rounded bg-transparent text-center text-[16px] tabular-nums text-white outline-none focus-visible:ring-1 focus-visible:ring-white/50 sm:text-[13px]"
+          />
+        ) : value}
         <span className="ml-1 text-[11px] text-white/40">{unit}</span>
       </span>
       <button

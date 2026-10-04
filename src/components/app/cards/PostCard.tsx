@@ -25,7 +25,7 @@ import { ActionBar } from './ActionBar';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
-import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCover';
+import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCoverLazy';
 // The full reader is only needed after opening an article, never for feed previews.
 const ArticleReader = lazy(() =>
   import('@/components/app/article/ArticleReader').then((m) => ({ default: m.ArticleReader }))
@@ -386,6 +386,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
   return (
     <div
       ref={viewRef}
+      data-post-card
       onClick={handleCardClick}
       onPointerDownCapture={warmPostPage}
       className="overflow-visible relative cursor-pointer isolate"

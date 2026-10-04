@@ -64,10 +64,19 @@ describe('a post action bar with reactions on', () => {
     const thumb = screen.getByRole('button', { name: 'Dislike — hold to change your reaction' });
     expect(thumb).toHaveAttribute('data-engaged', 'dislike');
     expect(thumb.querySelector('[data-engaged-glyph]')).not.toBeNull();
+    expect(thumb).toHaveTextContent('1');
     fireEvent.click(thumb);
     // Re-sending the held 👎 is the server's "remove it" — never a like.
     expect(voteOnPost).toHaveBeenCalledExactlyOnceWith({ tokenId: 102, voteType: 'against' });
     expect(thumb).not.toHaveAttribute('data-engaged');
+    expect(thumb).toHaveTextContent('3');
+  });
+
+  it('shows the first dislike even when the post has no likes', () => {
+    render(wrap(
+      <ActionBar postId="104" isDisliked myReaction="dislike" likeCount={0} dislikeCount={1} />,
+    ));
+    expect(screen.getByRole('button', { name: /Dislike/ })).toHaveTextContent('1');
   });
 
   it('still likes on a plain tap when nothing is held', () => {

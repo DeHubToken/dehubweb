@@ -18,6 +18,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
+import { FEED_TABS } from '@/constants/app.constants';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 
 const SK = "bg-white/[0.06]";
 const SK_LIGHT = "bg-black/10";
@@ -43,13 +46,16 @@ function ContentLoader({ minHeight = '46vh' }: { minHeight?: string }) {
  * Real source of truth: src/pages/app/HomePage.tsx (sticky top-11 lg:top-0).
  */
 export function FeedTabBarSkeleton() {
+  const { shortsEnabled } = useShortsEnabled();
+  const tabs = FEED_TABS.filter(tab => shortsEnabled || tab.value !== 'shorts');
   return (
-    <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
-      <div className="bg-zinc-900 rounded-xl">
-        <div className="flex">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5">
-              <Skeleton className={`w-4 h-4 rounded ${SK}`} />
+    <div data-home-skeleton-nav data-feed-nav-outer aria-hidden="true" className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-3 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <div data-feed-nav className="bg-zinc-900 rounded-xl">
+        <div className="flex h-[35px]">
+          <div className="flex items-center justify-center px-3"><div className="home-skeleton-block w-4 h-4 rounded" /></div>
+          {tabs.map(tab => (
+            <div key={tab.value} className="flex-1 flex items-center justify-center px-3 sm:px-4">
+              <div className="home-skeleton-block w-4 h-4 rounded" />
             </div>
           ))}
         </div>
@@ -67,8 +73,8 @@ export function FeedSkeleton() {
   return (
     <div className="min-w-0 flex-1">
       <FeedTabBarSkeleton />
-      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
-        <ContentLoader minHeight="60vh" />
+      <div data-feed-root className="home-skeleton-body p-2 sm:p-3 pt-0 sm:pt-0">
+        <FeedCardSkeletonList />
       </div>
     </div>
   );
@@ -79,13 +85,13 @@ export function FeedSkeleton() {
  * sticky tab bar above it is already mounted by HomePage.
  */
 export function FeedBodySkeleton() {
-  return <ContentLoader minHeight="60vh" />;
+  return <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0"><FeedCardSkeletonList /></div>;
 }
 
 /** Left desktop sidebar shell — mirrors real DesktopSidebar geometry exactly */
 function HomeLeftSidebarSkeleton() {
   return (
-    <aside className="hidden lg:flex sticky top-0 h-screen w-[231px] px-[18px] pb-2 -mt-[3px] flex-col items-stretch">
+    <aside className="hidden lg:flex sticky top-0 h-dvh w-[231px] shrink-0 px-[18px] pb-2 -mt-[3px] flex-col items-stretch">
       {/* Logo row — matches real DesktopSidebar */}
       <div className="flex items-center justify-between w-full mb-[15px]">
         <div className="flex items-center mt-[9px]">
@@ -96,7 +102,7 @@ function HomeLeftSidebarSkeleton() {
         </div>
       </div>
       {/* Nav bento — matches -mt-[8.5px] + lg:p-2.5 lg:space-y-[2px] from real */}
-      <div className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0">
+      <div data-desktop-sidebar-bento className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden">
         <div className="lg:p-2.5 lg:space-y-[2px] flex flex-col items-stretch h-full">
           {Array.from({ length: 10 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 px-2.5 py-2.5 w-full">
@@ -117,12 +123,12 @@ function HomeLeftSidebarSkeleton() {
 /** Right desktop sidebar shell — mirrors real RightSidebar geometry exactly */
 function HomeRightSidebarSkeleton() {
   return (
-    <aside className="hidden lg:block w-72 xl:w-80 2xl:w-88 h-screen sticky top-0 px-4 pt-[8px] pb-4">
+    <aside className="hidden lg:block w-72 xl:w-80 2xl:w-88 shrink-0 h-dvh sticky top-0 px-4 pt-[8px] pb-4">
       {/* Search — matches real h-[36px] rounded-xl */}
       <Skeleton className={`h-[36px] w-full rounded-xl ${SK}`} />
       {/* Tabbed side panel — matches real mt-[11px] then 400px panel */}
       <div className="mt-[11px] space-y-4">
-        <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+        <div data-side-panel className="bg-zinc-900 rounded-2xl overflow-hidden">
           {/* Icon tab row — real uses py-3 with w-5 h-5 icons */}
           <div className="flex">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -146,7 +152,7 @@ function HomeRightSidebarSkeleton() {
           </div>
         </div>
         {/* What's happening — real has -mt-[4.2px] */}
-        <div className="-mt-[4.2px] bg-zinc-900 rounded-2xl overflow-hidden">
+        <div data-side-panel className="-mt-[4.2px] bg-zinc-900 rounded-2xl overflow-hidden">
           <div className="flex">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex-1 py-3 flex items-center justify-center">
@@ -176,7 +182,12 @@ function HomeRightSidebarSkeleton() {
  */
 export function HomeShellSkeleton() {
   return (
-    <div className="flex w-full mx-auto" style={{ maxWidth: '80rem' }}>
+    <div data-home-shell-skeleton aria-hidden="true" className="flex w-full mx-auto pt-11 lg:pt-0" style={{ maxWidth: '80rem' }}>
+      <div className="home-skeleton-island">
+        <div className="home-skeleton-block w-7 h-7 rounded-lg" />
+        <div className="home-skeleton-block w-8 h-7 rounded" />
+        <div className="home-skeleton-block w-5 h-5 rounded" />
+      </div>
       <HomeLeftSidebarSkeleton />
       <FeedSkeleton />
       <HomeRightSidebarSkeleton />
