@@ -386,6 +386,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
   return (
     <div
       ref={viewRef}
+      data-post-card
       onClick={handleCardClick}
       onPointerDownCapture={warmPostPage}
       className="overflow-visible relative cursor-pointer isolate"
