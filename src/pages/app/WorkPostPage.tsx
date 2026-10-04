@@ -204,12 +204,11 @@ export default function WorkPostPage() {
 
             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
               <div className="flex items-center justify-between text-sm text-white/70 mb-1">
-                <span>{t('work.totalToEscrow')}</span>
+                <span>{t('work.integrity.totalBudget')}</span>
                 <span className="text-white font-semibold tabular-nums">{total.toLocaleString(undefined, { maximumFractionDigits: 4 })} {currency}</span>
               </div>
-              <div className="text-xs text-white/50">{t('work.platformFeeNote')}</div>
               <div className="text-[11px] text-amber-200/80 mt-2">
-                {t('work.integrity.draftFunding')}
+                {t('work.integrity.reputationNotice')}
               </div>
             </div>
 
@@ -220,7 +219,7 @@ export default function WorkPostPage() {
                 disabled={createJob.isPending || total <= 0}
                 className="flex-1 px-4 py-3 rounded-2xl bg-white text-black font-semibold disabled:opacity-40"
               >
-                {createJob.isPending ? t('work.posting') : t('work.integrity.saveDraft')}
+                {createJob.isPending ? t('work.posting') : t('work.postBounty')}
               </button>
             </div>
           </div>

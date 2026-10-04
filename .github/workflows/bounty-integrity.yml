@@ -41,4 +41,4 @@ jobs:
       PGDATABASE: postgres
     steps:
       - uses: actions/checkout@v4
-      - run: psql -v ON_ERROR_STOP=1 -f supabase/tests/work-integrity-fixture.sql -f supabase/migrations/20261004100000_work_integrity.sql -f supabase/tests/work-integrity.sql
+      - run: psql -v ON_ERROR_STOP=1 -f supabase/tests/work-integrity-fixture.sql -f supabase/migrations/20261004100000_work_integrity.sql -f supabase/migrations/20261004120000_work_reputation.sql -f supabase/tests/work-integrity.sql -f supabase/tests/work-reputation.sql
