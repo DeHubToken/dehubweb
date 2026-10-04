@@ -265,7 +265,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
-  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment', 'governance_reply'],
+  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment', 'governance_reply', 'work_application_reply'],
   reposts: ['repost', 'quote'],
   features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention'],
   communities: ['community_mention', 'community_here', 'community_join'],
@@ -348,6 +348,7 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     }
     case 'work_application':
     case 'work_submission':
+    case 'work_application_reply':
       return <Briefcase className="w-4 h-4 text-white/70" />;
     case 'stage_live':
     case 'stage_reminder':
@@ -721,6 +722,11 @@ function getNotificationContent(
   // ahead of the switch rather than as cases — same shape as the routing above.
   // Naming the bounty matters here in a way it doesn't for a like: a poster with
   // several open bounties can't act on "someone applied" alone.
+  if (typeStr === 'work_application_reply') {
+    const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
+    const sentence = tr('notifications.repliedComment', { name: actorName });
+    return jobTitle ? `${sentence} “${jobTitle}”` : sentence;
+  }
   if (typeStr === 'work_application' || typeStr === 'work_submission') {
     const verb = typeStr === 'work_application'
       ? 'applied to your bounty'
@@ -826,7 +832,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   }
   // Bounty applications/submissions store job_number, which is what the
   // canonical /bounty/<n> URL is keyed on — not the job uuid.
-  if ((notification.type as string) === 'work_application' || (notification.type as string) === 'work_submission') {
+  if (['work_application', 'work_submission', 'work_application_reply'].includes(notification.type as string)) {
     const jobNumber = customReferenceId(notification);
     return jobNumber ? `/bounty/${jobNumber}` : '/work/history';
   }

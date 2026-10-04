@@ -50,6 +50,15 @@ export interface WorkApplication {
   updated_at: string;
 }
 
+export interface WorkApplicationComment {
+  id: string;
+  job_id: string;
+  application_id: string;
+  author_address: string;
+  body: string;
+  created_at: string;
+}
+
 export interface WorkSubmission {
   id: string;
   job_id: string;
