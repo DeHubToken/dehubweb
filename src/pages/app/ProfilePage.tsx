@@ -49,6 +49,8 @@ import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 import { useCreateUsernameOffer } from '@/hooks/use-username-offers';
 import { useUsernameMarketConfig } from '@/hooks/use-username-market';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { PageHeader } from '@/components/app/PageHeader';
 
 /** Tabs served by the creator's own /api/feed content query. */
 const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos'];
@@ -188,6 +190,7 @@ export default function ProfilePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme } = useAppTheme();
   // UI-only state managed in orchestrator
   const [activeTab, setActiveTab] = useState<TabValue>('home');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
@@ -536,9 +539,9 @@ export default function ProfilePage() {
         </div>
       )}
       
-      <div className="p-2 sm:p-3 space-y-3">
+      <div className={cn('p-2 sm:p-3 space-y-3', theme === 'system' && 'max-sm:pt-0')}>
         {/* Back button */}
-        {location.key !== 'default' && (
+        {theme !== 'system' && location.key !== 'default' && (
           <div className="flex items-center gap-2 mb-2">
             <Button
               variant="ghost"
@@ -553,6 +556,8 @@ export default function ProfilePage() {
         )}
         
         {/* Profile Card Bento */}
+        <div className={cn('relative', theme === 'system' && 'max-sm:-mx-2')}>
+        {theme === 'system' && <PageHeader overlay />}
         <ProfileHeader
           profile={data.profile}
           apiProfile={data.apiProfile}
@@ -583,6 +588,7 @@ export default function ProfilePage() {
           isBlocked={data.isBlocked}
           isFetchingProfile={data.isFetchingProfile}
         />
+        </div>
 
         {/* Profile Tabs Bento — sticky wrapper mirrors the home feed nav pill
             (same top offset, background swallow, and mobile hide-on-scroll).
