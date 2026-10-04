@@ -1,7 +1,7 @@
 import { useMediaVolume, useMediaMuted, setVolume, setMediaMuted as setSelfMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import * as React from 'react';
-import { useRef, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo, useId } from 'react';
+import { useRef, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useTranslation } from 'react-i18next';
 import {
@@ -12,7 +12,6 @@ import {
   type AudioPostTrack,
 } from '@/lib/audio-post-playback';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
@@ -55,7 +54,6 @@ import {
 import {
   AudioListener,
   EXTRA_STYLES,
-  defaultStyleForTheme,
   drawExtra,
   isExtraStyle,
   makePalette,
@@ -259,20 +257,13 @@ export function AudioVisualizer({
   const isLightTheme = theme === 'light';
   const animationRef = useRef<number | null>(null);
   const isConnectedRef = useRef(false);
-  // framer-motion matches shared layout animations by layoutId across the whole
-  // tree, so one literal id had every audio card in the feed fighting over a
-  // single selection pill — picking a style on one card yanked the pill off
-  // another, and the picker read as broken. One id per instance.
-  const instanceId = useId();
-  // Nine styles do not fit a narrow card. Mask whichever edge is actually
+  // The presets do not fit a narrow card. Mask whichever edge is actually
   // hiding one — a painted gradient strip would have to guess the colour of
   // the artwork behind it, which is why they are banned repo-wide.
   const { ref: chipScrollRef, style: chipFadeStyle } = useScrollFadeMask<HTMLDivElement>();
 
-  // An untouched card plays its theme's own style; picking one sticks for
-  // this card until it unmounts.
-  const [pickedStyle, setStyle] = useState<AnyStyle | null>(null);
-  const style = pickedStyle ?? (defaultStyleForTheme(theme) as AnyStyle);
+  // Every card starts on Default; a pick sticks until it unmounts.
+  const [style, setStyle] = useState<AnyStyle>('static');
   const listenerRef = useRef<AudioListener | null>(null);
   const extraStateRef = useRef<Record<string, unknown>>({});
   const [hue, setHue] = useState(0);
@@ -683,17 +674,6 @@ export function AudioVisualizer({
     extraStateRef.current = {};
   }, [style]);
 
-  // With fifty-odd styles the theme's own default can sit far down the strip.
-  // Slide the strip (never the page) so the active chip is in view.
-  useEffect(() => {
-    const strip = chipScrollRef.current;
-    const chip = strip?.querySelector<HTMLElement>('[data-active]');
-    if (!strip || !chip) return;
-    const sr = strip.getBoundingClientRect(), cr = chip.getBoundingClientRect();
-    const left = cr.left - sr.left + strip.scrollLeft - (sr.width - cr.width) / 2;
-    strip.scrollLeft = Math.max(0, left);
-  }, [style, showStylePicker, chipScrollRef]);
-
   /* ─── Playback ────────────────────────────────────────────────────────── */
 
   // Play/pause runs synchronously off the user gesture: setupAudio + play()
@@ -1098,13 +1078,15 @@ export function AudioVisualizer({
           {showStylePicker && (
             <>
               {/* Style picker - scrolls when the card is too narrow for all
-                  nine, masked at whichever edge is actually hiding one so a
+                  presets, masked at whichever edge is actually hiding one so a
                   half-chip dissolves instead of being sliced. */}
               {showStylePicker && (
               <div
                 ref={chipScrollRef}
-                className="flex-1 min-w-0 overflow-x-auto scrollbar-none"
+                data-no-swipe
+                className="flex-1 min-w-0 overflow-x-auto overscroll-x-contain scrollbar-none"
                 style={chipFadeStyle}
+                onTouchStart={stopBubble}
               >
                 <div className="flex gap-1 w-max">
                   {STYLES.map((s) => (
@@ -1115,6 +1097,7 @@ export function AudioVisualizer({
                       data-audio-style
                       data-keep-round
                       data-active={style === s.value || undefined}
+                      aria-pressed={style === s.value}
                       onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
@@ -1124,17 +1107,15 @@ export function AudioVisualizer({
                       onTouchStart={stopBubble}
                       className={cn(
                         // Faint dark backing so labels stay readable over white-heavy themes.
-                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-full overflow-hidden whitespace-nowrap transition-colors text-white/75 hover:text-white bg-black/25 backdrop-blur-[12px]',
+                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-full overflow-hidden whitespace-nowrap transition-colors text-white/75 hover:text-white bg-black/25',
                         CONTROL_H,
                       )}
                     >
                       {style === s.value && (
-                        <motion.div
+                        <div
                           data-audio-style-active
                           data-keep-round
-                          layoutId={`audio-style-indicator-${instanceId}`}
                           className={cn('absolute inset-0 rounded-full', GLASS_PILL, glassShadow)}
-                          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                         />
                       )}
                       <span className={`relative z-10 ${style === s.value ? 'text-white' : ''}`}>{s.label}</span>
