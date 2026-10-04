@@ -1116,6 +1116,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       }, CONTROLS_HIDE_MS);
     }, []);
 
+  useEffect(() => {
+    if (isPlaying && !video.isAudio) showControlsBriefly();
+  }, [isPlaying, video.isAudio, showControlsBriefly]);
+
   // Cleanup controls timer on unmount
   useEffect(() => {
     return () => {
@@ -1322,8 +1326,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // A menu or slider open over the player counts as activity: the row must not
   // vanish out from under the thing the pointer is already inside.
-  // Phone-feed controls must not disappear after autoplay or a hide timer.
-  const controlsVisible = bareControls || !isPlaying || showControls || subsMenuOpen || volumeOpen;
+  const controlsVisible = !isPlaying || showControls || subsMenuOpen || volumeOpen;
   useEffect(() => {
     if (controlsVisible && videoRef.current) setCurrentTime(videoRef.current.currentTime);
   }, [controlsVisible]);
@@ -1503,7 +1506,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (videoRef.current) {
       const ct = videoRef.current.currentTime;
       const dur = videoRef.current.duration;
-      if (bareControls || showControls || !isPlayingRef.current) setCurrentTime(ct);
+      if (controlsVisible) setCurrentTime(ct);
 
       // Track video view progress (fires view when threshold met)
       if (dur > 0) {
@@ -1520,7 +1523,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       // throwing — a live HLS source reports Infinity here.
       setMediaSessionPosition(instanceId, ct, dur, videoRef.current.playbackRate);
     }
-  }, [trackView, instanceId, maybeSkipSegment, bareControls, showControls]);
+  }, [trackView, instanceId, maybeSkipSegment, controlsVisible]);
 
   const handleLoadedMetadata = useCallback(() => {
     if (videoRef.current) {
