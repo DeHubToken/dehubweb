@@ -20,6 +20,7 @@ import {
   Star,
   Users,
   Wand2,
+  Palette,
   Bell,
   BookOpen,
   Briefcase,
@@ -150,7 +151,7 @@ const GLYPHS: ReadonlyArray<readonly [string, LucideIcon]> = [
 export type ThemeIconKey =
   | 'home' | 'posts' | 'images' | 'videos' | 'subscriptions' | 'audio'
   | 'live' | 'fractions' | 'pinned' | 'search' | 'messages' | 'bookmarks'
-  | 'wand' | 'communities' | 'careers' | 'features' | 'glossary'
+  | 'wand' | 'paint' | 'communities' | 'careers' | 'features' | 'glossary'
   | 'governance' | 'trophy' | 'notifications' | 'settings' | 'stages'
   | 'assistant' | 'lock' | 'profile' | 'arcade' | 'stores' | 'bounties'
   | 'events' | 'stats' | 'ads' | 'command' | 'email' | 'accounts'
@@ -221,7 +222,7 @@ const FULL_RASTER_THEMES = new Set([
 const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'home', 'posts', 'images', 'videos', 'subscriptions', 'audio', 'live',
   'fractions', 'pinned', 'search', 'messages', 'bookmarks',
-  'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
+  'wand', 'paint', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
   'email', 'accounts', 'usernames', 'tv', 'superpowers', 'boost',
@@ -232,7 +233,7 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
 ]);
 
 /** Bump when a file is redrawn in place, or browsers and the app keep the old art. */
-export const THEME_ICON_REVISION = '8';
+export const THEME_ICON_REVISION = '9';
 
 const TRANSPARENT_PNG_KEYS = new Set<ThemeIconKey>([
   'boost', 'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
@@ -254,6 +255,7 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   messages: Mail,
   bookmarks: Bookmark,
   wand: Wand2,
+  paint: Palette,
   communities: Users,
   careers: Briefcase,
   features: Lightbulb,
