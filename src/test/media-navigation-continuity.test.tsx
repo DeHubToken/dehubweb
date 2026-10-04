@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { act, cleanup, render } from '@testing-library/react';
+import { act, cleanup, fireEvent, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
 import { HandoffImage } from '@/components/app/cards/HandoffImage';
@@ -78,5 +78,47 @@ describe('media navigation continuity', () => {
     for (let index = 0; index < 129; index++) rememberGalleryIndex(`gallery-${index}`, 1);
     expect(galleryIndex('gallery-test')).toBe(0);
     expect(galleryIndex('gallery-128')).toBe(1);
+  });
+
+  it('notifies a cached image once when its load callback updates the parent', () => {
+    vi.spyOn(HTMLImageElement.prototype, 'complete', 'get').mockReturnValue(true);
+    vi.spyOn(HTMLImageElement.prototype, 'naturalWidth', 'get').mockReturnValue(1200);
+    vi.spyOn(HTMLImageElement.prototype, 'naturalHeight', 'get').mockReturnValue(800);
+    const loaded = vi.fn();
+    function CachedPhoto() {
+      const [loads, setLoads] = useState(0);
+      return <><output>{loads}</output><HandoffImage mediaKey="cached-load-state" src="/cached.jpg" onImageLoad={() => {
+        loaded();
+        setLoads(value => value + 1);
+      }} /></>;
+    }
+    const view = render(<CachedPhoto />);
+    expect(view.container.querySelector('output')?.textContent).toBe('1');
+    view.rerender(<CachedPhoto />);
+    fireEvent.load(view.container.querySelector('img')!);
+    expect(loaded).toHaveBeenCalledTimes(1);
+  });
+
+  it('notifies new image owners and replacement bitmaps without repeating on handoff back', () => {
+    vi.spyOn(HTMLImageElement.prototype, 'complete', 'get').mockReturnValue(true);
+    vi.spyOn(HTMLImageElement.prototype, 'naturalWidth', 'get').mockReturnValue(1200);
+    const height = vi.spyOn(HTMLImageElement.prototype, 'naturalHeight', 'get').mockReturnValue(800);
+    const feedLoaded = vi.fn();
+    const detailLoaded = vi.fn();
+    const photo = (src: string, detail = false) => <HandoffImage mediaKey="cached-load-handoff" priority={detail ? 1 : 0} src={src} onImageLoad={detail ? detailLoaded : feedLoaded} />;
+    const view = render(<>{photo('/first.jpg')}<span /></>);
+    const image = view.container.querySelector('img')!;
+    view.rerender(<>{photo('/first.jpg')}{photo('/first.jpg', true)}</>);
+    expect(detailLoaded).toHaveBeenCalledOnce();
+    view.rerender(<>{photo('/first.jpg')}<span /></>);
+    expect(view.container.querySelector('img')).toBe(image);
+    expect(feedLoaded).toHaveBeenCalledOnce();
+    view.rerender(<>{photo('/second.jpg')}<span /></>);
+    expect(feedLoaded).toHaveBeenCalledTimes(2);
+    height.mockReturnValue(600);
+    fireEvent.load(image);
+    expect(feedLoaded).toHaveBeenCalledTimes(3);
+    fireEvent.load(image);
+    expect(feedLoaded).toHaveBeenCalledTimes(3);
   });
 });
