@@ -28,10 +28,10 @@ export async function writeWork(address:string,name:string,args:unknown[]) {
  await switchChain(BASE_CHAIN_ID);
  return writeContractAA(address,new Interface(DEHUB_WORK_ABI),name,args,{context:'bounty '+name,chainId:BASE_CHAIN_ID});
 }
-export async function prepareWorkFunding(address:string,currency:string,total:string) {
+export async function prepareWorkFunding(address:string,currency:string,price:string,maxUnits:number) {
  await switchChain(BASE_CHAIN_ID);
  const token=getCurrencyToken(currency);
- const amount=parseUnits(total,token.decimals);
+ const amount=parseUnits(price,token.decimals)*BigInt(maxUnits);
  const owner=await getWalletAddress();
  if(await getERC20Balance(token.address,owner,BASE_CHAIN_ID)<amount) throw new Error('Not enough '+currency+' to fund this bounty');
  if(await getERC20Allowance(token.address,owner,address)<amount) {

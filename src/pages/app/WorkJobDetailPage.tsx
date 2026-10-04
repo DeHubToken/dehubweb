@@ -92,7 +92,7 @@ export default function WorkJobDetailPage() {
 
   const me = walletAddress?.toLowerCase();
   const isPoster = me === job.poster_address.toLowerCase();
-  const canManage=isPoster || (job.status==='disputed' && isWorkAdmin(walletAddress));
+  const canManage=(isPoster && job.status!=='disputed') || (job.status==='disputed' && isWorkAdmin(walletAddress));
   const isAwarded = me && job.awarded_worker_address && me === job.awarded_worker_address.toLowerCase();
   const myApp = applications.find(a => a.applicant_address.toLowerCase() === me);
   const myReview = reviews.find(r => r.reviewer_address.toLowerCase() === me);
@@ -284,6 +284,7 @@ export default function WorkJobDetailPage() {
               submission={s}
               job={job}
               isPoster={canManage}
+              canPay={isPoster || !!job.fund_tx_hash}
               isMine={s.worker_address.toLowerCase() === me}
               onApprove={(pay, views, evidence) => approveMutation.mutate({
                 submission_id: s.id,
@@ -422,6 +423,7 @@ function SubmissionCard({
   job,
   isPoster,
   isMine,
+  canPay,
   onApprove,
   onPay,
   onReject,
@@ -433,6 +435,7 @@ function SubmissionCard({
   job: WorkJob;
   isPoster: boolean;
   isMine: boolean;
+  canPay:boolean;
   onApprove: (pay: boolean, views?: number, evidence?: string) => void;
   onPay: (recoveryHash?: string) => void;
   onReject: (reason: string) => void;
@@ -515,7 +518,7 @@ function SubmissionCard({
       {isPoster && s.approval_status === 'pending' && !rejecting && (
         <div className="flex flex-wrap gap-2 mt-3">
           <button
-            onClick={() => onApprove(true, clipping ? verifiedViews : undefined, clipping ? viewEvidence : undefined)}
+            hidden={!canPay} onClick={() => onApprove(true, clipping ? verifiedViews : undefined, clipping ? viewEvidence : undefined)}
             disabled={busy || !affordable || !validViews}
             title={affordable ? undefined : t('work.budgetExhausted')}
             className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
@@ -551,7 +554,7 @@ function SubmissionCard({
       )}
       {isPoster && s.payout_state==='signing' && <button onClick={onRelease} className="mt-2 text-xs text-white/60">{t('work.integrity.releaseSignature')}</button>}
       {submittedPayment && <p className="mt-2 text-xs text-white/60">{t('work.integrity.paymentPending')}</p>}
-      {isPoster && awaiting && (
+      {isPoster && canPay && awaiting && (
         <button
           onClick={() => onPay(recoveryHash || undefined)}
           disabled={busy || !affordable}
