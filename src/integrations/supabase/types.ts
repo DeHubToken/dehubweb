@@ -214,6 +214,60 @@ export type Database = {
           },
         ]
       }
+      ad_creator_support_sessions: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          creative_id: string
+          creator_share_usd: number
+          creator_wallet: string
+          credited_at: string | null
+          expires_at: string
+          id: string
+          post_id: string
+          price_usd: number
+          progress_at: string
+          reported_seconds: number
+          viewer_tier: string
+          viewer_wallet: string
+          watched_seconds: number
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          creative_id: string
+          creator_share_usd: number
+          creator_wallet: string
+          credited_at?: string | null
+          expires_at: string
+          id: string
+          post_id: string
+          price_usd: number
+          progress_at?: string
+          reported_seconds?: number
+          viewer_tier: string
+          viewer_wallet: string
+          watched_seconds?: number
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          creative_id?: string
+          creator_share_usd?: number
+          creator_wallet?: string
+          credited_at?: string | null
+          expires_at?: string
+          id?: string
+          post_id?: string
+          price_usd?: number
+          progress_at?: string
+          reported_seconds?: number
+          viewer_tier?: string
+          viewer_wallet?: string
+          watched_seconds?: number
+        }
+        Relationships: []
+      }
       ad_daily_stats: {
         Row: {
           by_tier: Json
@@ -250,16 +304,19 @@ export type Database = {
       ad_earnings: {
         Row: {
           total_earned_usd: number
+          total_paid_usd: number
           updated_at: string
           wallet_address: string
         }
         Insert: {
           total_earned_usd?: number
+          total_paid_usd?: number
           updated_at?: string
           wallet_address: string
         }
         Update: {
           total_earned_usd?: number
+          total_paid_usd?: number
           updated_at?: string
           wallet_address?: string
         }
@@ -6892,6 +6949,41 @@ export type Database = {
         }
         Relationships: []
       }
+      work_application_comments: {
+        Row: {
+          application_id: string
+          author_address: string
+          body: string
+          created_at: string
+          id: string
+          job_id: string
+        }
+        Insert: {
+          application_id: string
+          author_address: string
+          body: string
+          created_at?: string
+          id?: string
+          job_id: string
+        }
+        Update: {
+          application_id?: string
+          author_address?: string
+          body?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_application_comments_application_id_job_id_fkey"
+            columns: ["application_id", "job_id"]
+            isOneToOne: false
+            referencedRelation: "work_applications"
+            referencedColumns: ["id", "job_id"]
+          },
+        ]
+      }
       work_applications: {
         Row: {
           applicant_address: string
@@ -6932,6 +7024,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      work_config: {
+        Row: {
+          chain_id: number
+          deployment_tx_hash: string | null
+          escrow_address: string | null
+          expected_code_hash: string | null
+          fee_recipient: string
+          id: number
+          owner_address: string
+        }
+        Insert: {
+          chain_id?: number
+          deployment_tx_hash?: string | null
+          escrow_address?: string | null
+          expected_code_hash?: string | null
+          fee_recipient?: string
+          id: number
+          owner_address?: string
+        }
+        Update: {
+          chain_id?: number
+          deployment_tx_hash?: string | null
+          escrow_address?: string | null
+          expected_code_hash?: string | null
+          fee_recipient?: string
+          id?: number
+          owner_address?: string
+        }
+        Relationships: []
       }
       work_disputes: {
         Row: {
@@ -7007,14 +7129,17 @@ export type Database = {
           description: string
           fund_tx_hash: string | null
           funded_amount: number
+          funding_state: string
           id: string
           job_number: number
           job_type: Database["public"]["Enums"]["work_job_type"]
           max_units: number
           onchain_job_id: number | null
+          pending_fund_tx_hash: string | null
           platform: Database["public"]["Enums"]["work_platform"] | null
           poster_address: string
           price_per_unit: number
+          refunded_amount: number
           released_amount: number
           status: Database["public"]["Enums"]["work_job_status"]
           submission_count: number
@@ -7037,14 +7162,17 @@ export type Database = {
           description?: string
           fund_tx_hash?: string | null
           funded_amount?: number
+          funding_state?: string
           id?: string
           job_number?: number
           job_type: Database["public"]["Enums"]["work_job_type"]
           max_units?: number
           onchain_job_id?: number | null
+          pending_fund_tx_hash?: string | null
           platform?: Database["public"]["Enums"]["work_platform"] | null
           poster_address: string
           price_per_unit?: number
+          refunded_amount?: number
           released_amount?: number
           status?: Database["public"]["Enums"]["work_job_status"]
           submission_count?: number
@@ -7067,14 +7195,17 @@ export type Database = {
           description?: string
           fund_tx_hash?: string | null
           funded_amount?: number
+          funding_state?: string
           id?: string
           job_number?: number
           job_type?: Database["public"]["Enums"]["work_job_type"]
           max_units?: number
           onchain_job_id?: number | null
+          pending_fund_tx_hash?: string | null
           platform?: Database["public"]["Enums"]["work_platform"] | null
           poster_address?: string
           price_per_unit?: number
+          refunded_amount?: number
           released_amount?: number
           status?: Database["public"]["Enums"]["work_job_status"]
           submission_count?: number
@@ -7087,6 +7218,95 @@ export type Database = {
           view_count?: number
         }
         Relationships: []
+      }
+      work_payment_intents: {
+        Row: {
+          amount: number
+          chain_id: number
+          created_at: string
+          currency: Database["public"]["Enums"]["work_currency"]
+          gross_amount: number
+          id: string
+          job_id: string
+          payer_address: string
+          state: string
+          submission_id: string
+          tx_hash: string | null
+          worker_address: string
+        }
+        Insert: {
+          amount: number
+          chain_id: number
+          created_at?: string
+          currency: Database["public"]["Enums"]["work_currency"]
+          gross_amount: number
+          id?: string
+          job_id: string
+          payer_address: string
+          state?: string
+          submission_id: string
+          tx_hash?: string | null
+          worker_address: string
+        }
+        Update: {
+          amount?: number
+          chain_id?: number
+          created_at?: string
+          currency?: Database["public"]["Enums"]["work_currency"]
+          gross_amount?: number
+          id?: string
+          job_id?: string
+          payer_address?: string
+          state?: string
+          submission_id?: string
+          tx_hash?: string | null
+          worker_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_payment_intents_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "work_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_payment_intents_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "work_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_proof_registrations: {
+        Row: {
+          job_id: string
+          proof_hash: string
+          tx_hash: string
+          worker_address: string
+        }
+        Insert: {
+          job_id: string
+          proof_hash: string
+          tx_hash: string
+          worker_address: string
+        }
+        Update: {
+          job_id?: string
+          proof_hash?: string
+          tx_hash?: string
+          worker_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_proof_registrations_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "work_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       work_reviews: {
         Row: {
@@ -7132,11 +7352,15 @@ export type Database = {
       work_submissions: {
         Row: {
           approval_status: Database["public"]["Enums"]["work_submission_status"]
+          approved_units: number
           created_at: string
+          gross_amount: number
           id: string
           job_id: string
           last_polled_at: string | null
           payout_amount: number
+          payout_chain_id: number | null
+          payout_state: string
           payout_tx_hash: string | null
           platform: Database["public"]["Enums"]["work_platform"] | null
           proof_text: string | null
@@ -7144,15 +7368,20 @@ export type Database = {
           rejection_reason: string | null
           updated_at: string
           view_count_cached: number
+          view_evidence_url: string | null
           worker_address: string
         }
         Insert: {
           approval_status?: Database["public"]["Enums"]["work_submission_status"]
+          approved_units?: number
           created_at?: string
+          gross_amount?: number
           id?: string
           job_id: string
           last_polled_at?: string | null
           payout_amount?: number
+          payout_chain_id?: number | null
+          payout_state?: string
           payout_tx_hash?: string | null
           platform?: Database["public"]["Enums"]["work_platform"] | null
           proof_text?: string | null
@@ -7160,15 +7389,20 @@ export type Database = {
           rejection_reason?: string | null
           updated_at?: string
           view_count_cached?: number
+          view_evidence_url?: string | null
           worker_address: string
         }
         Update: {
           approval_status?: Database["public"]["Enums"]["work_submission_status"]
+          approved_units?: number
           created_at?: string
+          gross_amount?: number
           id?: string
           job_id?: string
           last_polled_at?: string | null
           payout_amount?: number
+          payout_chain_id?: number | null
+          payout_state?: string
           payout_tx_hash?: string | null
           platform?: Database["public"]["Enums"]["work_platform"] | null
           proof_text?: string | null
@@ -7176,6 +7410,7 @@ export type Database = {
           rejection_reason?: string | null
           updated_at?: string
           view_count_cached?: number
+          view_evidence_url?: string | null
           worker_address?: string
         }
         Relationships: [
@@ -7428,6 +7663,10 @@ export type Database = {
           visitors: number
           visits: number
         }[]
+      }
+      ads_advance_creator_support: {
+        Args: { p_seconds: number; p_session: string; p_viewer: string }
+        Returns: Json
       }
       ads_estimate_audience: { Args: { p_targeting: Json }; Returns: Json }
       ads_topup_credit: {
@@ -8032,6 +8271,162 @@ export type Database = {
         Args: { p_code_hash: string; p_phone: string; p_ttl_ms: number }
         Returns: undefined
       }
+      work_action: {
+        Args: {
+          p_action: string
+          p_id: string
+          p_note?: string
+          p_payload?: string
+          p_signature?: string
+        }
+        Returns: undefined
+      }
+      work_activate_escrow: {
+        Args: { p_payload: string; p_signature: string }
+        Returns: undefined
+      }
+      work_approve: {
+        Args: { p_evidence?: string; p_submission: string; p_views?: number }
+        Returns: {
+          approval_status: Database["public"]["Enums"]["work_submission_status"]
+          approved_units: number
+          created_at: string
+          gross_amount: number
+          id: string
+          job_id: string
+          last_polled_at: string | null
+          payout_amount: number
+          payout_chain_id: number | null
+          payout_state: string
+          payout_tx_hash: string | null
+          platform: Database["public"]["Enums"]["work_platform"] | null
+          proof_text: string | null
+          proof_url: string
+          rejection_reason: string | null
+          updated_at: string
+          view_count_cached: number
+          view_evidence_url: string | null
+          worker_address: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "work_submissions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      work_cancel_signature: { Args: { p_intent: string }; Returns: undefined }
+      work_claim_funding: { Args: { p_job: string }; Returns: Json }
+      work_claim_payment: {
+        Args: { p_chain?: number; p_submission: string }
+        Returns: Json
+      }
+      work_event: {
+        Args: {
+          p_job: string
+          p_match?: Json
+          p_name: string
+          p_payload: string
+          p_signature: string
+        }
+        Returns: Json
+      }
+      work_expire_jobs: { Args: never; Returns: undefined }
+      work_finalize_payment: {
+        Args: { p_intent: string; p_payload: string; p_signature: string }
+        Returns: string
+      }
+      work_is_arbiter: { Args: never; Returns: boolean }
+      work_lock_job: {
+        Args: { p_id: string }
+        Returns: {
+          application_count: number
+          awarded_worker_address: string | null
+          boost_expires_at: string | null
+          cover_image_url: string | null
+          created_at: string
+          currency: Database["public"]["Enums"]["work_currency"]
+          deadline: string | null
+          description: string
+          fund_tx_hash: string | null
+          funded_amount: number
+          funding_state: string
+          id: string
+          job_number: number
+          job_type: Database["public"]["Enums"]["work_job_type"]
+          max_units: number
+          onchain_job_id: number | null
+          pending_fund_tx_hash: string | null
+          platform: Database["public"]["Enums"]["work_platform"] | null
+          poster_address: string
+          price_per_unit: number
+          refunded_amount: number
+          released_amount: number
+          status: Database["public"]["Enums"]["work_job_status"]
+          submission_count: number
+          tags: string[] | null
+          target_url: string | null
+          title: string
+          total_budget: number
+          units_approved: number
+          updated_at: string
+          view_count: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "work_jobs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      work_proof_hash: { Args: { p_url: string }; Returns: string }
+      work_proof_registered: {
+        Args: { p_job: string; p_url: string }
+        Returns: boolean
+      }
+      work_publish: { Args: { p_job: string }; Returns: undefined }
+      work_publish_funded: {
+        Args: { p_job: string; p_payload: string; p_signature: string }
+        Returns: undefined
+      }
+      work_receipt: {
+        Args: { p_payload: string; p_signature: string }
+        Returns: Json
+      }
+      work_record_broadcast: {
+        Args: { p_hash: string; p_intent: string }
+        Returns: undefined
+      }
+      work_record_funding: {
+        Args: { p_cancel?: boolean; p_hash?: string; p_job: string }
+        Returns: undefined
+      }
+      work_record_proof: {
+        Args: {
+          p_job: string
+          p_payload: string
+          p_signature: string
+          p_url: string
+        }
+        Returns: undefined
+      }
+      work_resolve_dispute: {
+        Args: {
+          p_amount: number
+          p_dispute: string
+          p_note: string
+          p_payload?: string
+          p_refund?: number
+          p_signature?: string
+          p_worker: string
+        }
+        Returns: undefined
+      }
+      work_reviewable: {
+        Args: { p_job: string; p_worker: string }
+        Returns: boolean
+      }
+      work_wallet: { Args: never; Returns: string }
     }
     Enums: {
       work_app_status: "pending" | "awarded" | "rejected" | "withdrawn"
