@@ -1,7 +1,12 @@
 import { useCallback, useContext, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type MutableRefObject } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
-type Claim = { slot: HTMLSpanElement; priority: number; props: ImageProps };
+type Claim = {
+  slot: HTMLSpanElement;
+  priority: number;
+  props: ImageProps;
+  loaded?: { src: string; width: number; height: number };
+};
 type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout> };
 const images = new Map<string, Entry>();
 
@@ -52,7 +57,15 @@ function show(entry: Entry) {
   const loaded = () => {
     const rect = image.getBoundingClientRect();
     if (rect.height > 0 && claim.priority < 2) claim.slot.style.minHeight = `${rect.height}px`;
-    props.onImageLoad?.(image);
+    if (!props.onImageLoad) return;
+    const src = image.currentSrc || image.src;
+    const width = image.naturalWidth;
+    const height = image.naturalHeight;
+    if (claim.loaded?.src === src && claim.loaded.width === width && claim.loaded.height === height) return;
+    // Cached images are shown on every layout. Notify each owner once per bitmap
+    // before its callback can schedule another render.
+    claim.loaded = { src, width, height };
+    props.onImageLoad(image);
   };
   image.onload = loaded;
   if (image.complete && image.naturalWidth) loaded();
