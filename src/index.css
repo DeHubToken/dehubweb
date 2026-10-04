@@ -5233,7 +5233,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
   text-shadow: none;
 }
 /* The scrubber is a thin white line along the media's bottom edge, with no
-   bar behind it. The input stays 14px tall so it is easy to grab; only its
+   bar behind it. The input stays 32px tall so it is easy to grab; only its
    bottom 3px is painted. */
 [data-video-scrubber="line"] [data-scrubber-line] {
   position: absolute;
@@ -5241,7 +5241,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 14px !important;
+  height: 32px !important;
   margin: 0;
   border-radius: 0 !important;
   background-size: 100% 3px !important;
@@ -5249,14 +5249,14 @@ html[data-theme="light"] [data-creator-page] .text-white {
 }
 [data-video-scrubber="line"] [data-scrubber-line]::-webkit-slider-thumb {
   width: 10px !important;
-  height: 14px !important;
+  height: 32px !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
 [data-video-scrubber="line"] [data-scrubber-line]::-moz-range-thumb {
   width: 10px !important;
-  height: 14px !important;
+  height: 32px !important;
   border-radius: 0 !important;
   background: transparent !important;
 }
