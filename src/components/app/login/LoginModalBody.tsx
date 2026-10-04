@@ -934,6 +934,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
             connectedAddress={isWagmiAlreadyConnected ? wagmiCurrentAddress ?? null : null}
             connectedWalletName={wagmiCurrentConnector?.name ?? null}
             connectedWalletId={connectedWalletId}
+            onContinueConnectedWallet={isWagmiAlreadyConnected && wagmiCurrentConnector ? () => handleWalletConnect((connectedWalletId ?? wagmiCurrentConnector.id) as WalletId, () => {}) : undefined}
             discoveredWallets={discoveredWallets}
             onUseDifferentWallet={handleUseDifferentWallet}
             onSwitchAccount={canSwitchAccount ? handleSwitchAccount : undefined}

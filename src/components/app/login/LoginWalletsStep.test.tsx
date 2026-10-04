@@ -11,7 +11,24 @@ vi.mock('@rainbow-me/rainbowkit', () => ({
   darkTheme: () => ({}),
   WalletButton: { Custom: ({ children }: any) => children({ mounted: true, connect: vi.fn() }) },
 }));
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.clearAllMocks(); });
+
+it('offers an explicit Continue action for an already connected wallet', async () => {
+  const continueWallet = vi.fn();
+  const props = {
+    isConnecting: false, activeProvider: null,
+    connectedAddress: '0x1234567890123456789012345678901234567890',
+    connectedWalletName: 'Rabby', connectedWalletId: 'io.rabby',
+    discoveredWallets: [{ id: 'io.rabby', name: 'Rabby' }],
+    onContinueConnectedWallet: continueWallet,
+    onWalletConnect: vi.fn(), onWalletConnectConnect: vi.fn(),
+  };
+  const { rerender } = render(<LoginWalletsStep {...props} />);
+  fireEvent.click(await screen.findByRole('button', { name: 'Continue' }));
+  expect(continueWallet).toHaveBeenCalledTimes(1);
+  rerender(<LoginWalletsStep {...props} isConnecting />);
+  expect(screen.getByRole('button', { name: 'Loading...' })).toBeDisabled();
+});
 
 it('recovers a failed connector initialization without trapping the user on a spinner', async () => {
   mocks.ensure.mockImplementationOnce(() => { throw new Error('Temporary connector failure'); });

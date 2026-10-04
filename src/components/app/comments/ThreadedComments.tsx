@@ -21,6 +21,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Loader2, MessageSquare, Pencil, Send, ThumbsUp, Trash2, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -340,7 +341,13 @@ export function ThreadedComments<C extends ThreadedComment>({
   const [replyTo, setReplyTo] = useState<C | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [pendingDelete, setPendingDelete] = useState<C | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+    input.style.height = '0px';
+    input.style.height = `${Math.min(140, Math.max(32, input.scrollHeight))}px`;
+  }, [text]);
 
   const mention = useMention({
     inputRef,
@@ -489,8 +496,8 @@ export function ThreadedComments<C extends ThreadedComment>({
           {labels.signInToComment}
         </button>
       ) : (
-        <form onSubmit={handleSubmit} className="relative flex gap-2">
-          <Input
+        <form onSubmit={handleSubmit} className="relative flex items-end gap-2">
+          <Textarea
             ref={inputRef}
             value={text}
             onChange={(e) => {
@@ -516,7 +523,8 @@ export function ThreadedComments<C extends ThreadedComment>({
             }}
             placeholder={replyTo ? labels.writeReply : labels.addComment}
             maxLength={500}
-            className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
+            rows={1}
+            className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs min-h-8 max-h-[140px] resize-none py-2"
           />
           <UserMentionDropdown
             query={mention.query}

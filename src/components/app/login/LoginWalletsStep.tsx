@@ -68,6 +68,7 @@ interface LoginWalletsStepProps {
   discoveredWallets?: DiscoveredWallet[];
   onUseDifferentWallet?: () => void;
   onSwitchAccount?: () => void;
+  onContinueConnectedWallet?: () => void;
   onWalletConnect: (wallet: WalletId, connect: () => void) => void;
   onDiscoveredWalletConnect?: (connectorId: string) => void;
   onWalletConnectConnect: (connect: () => void) => void;
@@ -85,6 +86,7 @@ export function LoginWalletsStep({
   discoveredWallets = [],
   onUseDifferentWallet,
   onSwitchAccount,
+  onContinueConnectedWallet,
   onWalletConnect,
   onDiscoveredWalletConnect,
   onWalletConnectConnect,
@@ -136,6 +138,16 @@ export function LoginWalletsStep({
         {connectedWalletName ? `${connectedWalletName} · ` : ''}
         <span className="text-white/60">{shortenAddress(connectedAddress)}</span>
       </p>
+      {onContinueConnectedWallet && (
+        <Button
+          type="button"
+          onClick={onContinueConnectedWallet}
+          disabled={isConnecting}
+          className="w-full"
+        >
+          {isConnecting ? t('common.loading', 'Loading...') : t('common.continue', 'Continue')}
+        </Button>
+      )}
       <div className="flex items-center gap-4">
         {onSwitchAccount && (
           <button
