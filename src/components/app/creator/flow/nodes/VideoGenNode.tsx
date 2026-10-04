@@ -10,7 +10,7 @@ import { Camera, ChevronLeft, ChevronRight, Clapperboard, CopyPlus, Download, Lo
 import { useTranslation } from 'react-i18next';
 import type { NodeProps } from '@xyflow/react';
 import { toast } from 'sonner';
-import { VIDEO_MODEL_OPTIONS, VIDEO_MODELS, snapVideoDuration } from '@/constants/video-models.constants';
+import { VIDEO_MODEL_OPTIONS, VIDEO_MODELS, snapVideoDuration, getVideoResolutions } from '@/constants/video-models.constants';
 import { captureVideoFrame } from '@/lib/creator/flow/frames';
 import { DEFAULT_VIDEO_MODEL } from '@/lib/creator/flow/runner';
 import type { FlowNode, GenEntry, NodeData } from '@/lib/creator/flow/types';
@@ -36,7 +36,6 @@ import {
 import { useFlowActions } from '../FlowActionsContext';
 
 const ASPECTS = ['16:9', '9:16', '1:1', '4:3', '3:4'];
-const RESOLUTIONS: Array<'480p' | '720p' | '1080p'> = ['480p', '720p', '1080p'];
 
 type InHandle = 'prompt' | 'startFrame' | 'endFrame' | 'image' | 'referenceVideo';
 const IN_HANDLES: Array<{ id: InHandle; kind: 'prompt' | 'image' | 'video'; labelKey: string }> = [
@@ -69,9 +68,11 @@ export default function VideoGenNode({ id, data, selected }: NodeProps<FlowNode>
 
   const model = (data.model as string) || DEFAULT_VIDEO_MODEL;
   const cfg = VIDEO_MODELS[model];
-  const aspect = (data.aspectRatio as string) || '16:9';
+  const aspects = cfg?.aspectRatios ?? ASPECTS;
+  const aspect = aspects.includes(data.aspectRatio ?? '') ? data.aspectRatio! : aspects[0];
   const duration = cfg ? snapVideoDuration(cfg, (data.duration as number) || cfg.defaultDuration || 5) : (data.duration as number) || 5;
-  const resolution = (data.resolution as '480p' | '720p' | '1080p' | undefined) ?? '720p';
+  const resolutions = getVideoResolutions(cfg);
+  const resolution = resolutions.includes(data.resolution ?? '') ? data.resolution! : resolutions.includes('720p') ? '720p' : resolutions[0];
   const status = data.status ?? 'idle';
   const busy = status === 'running' || status === 'pending' || !!data.pipelineQueued;
 
@@ -154,7 +155,7 @@ export default function VideoGenNode({ id, data, selected }: NodeProps<FlowNode>
 
   const durationOptions: number[] = cfg?.allowedDurations?.length
     ? cfg.allowedDurations
-    : Array.from({ length: Math.max(1, (cfg?.maxDuration ?? 10) - (cfg?.minDuration ?? 1) + 1) }, (_, i) => (cfg?.minDuration ?? 1) + i).filter((d) => d <= 15);
+    : Array.from({ length: Math.max(1, (cfg?.maxDuration ?? 10) - (cfg?.minDuration ?? 1) + 1) }, (_, i) => (cfg?.minDuration ?? 1) + i);
 
   const warnings: string[] = [];
   if (!connected.prompt) warnings.push(t('creatorFlow.issueTextRequired'));
@@ -222,7 +223,7 @@ export default function VideoGenNode({ id, data, selected }: NodeProps<FlowNode>
             </div>
             <div className="relative">
               <Pill active={menu === 'ratio'} onClick={readOnly ? undefined : () => setMenu(menu === 'ratio' ? null : 'ratio')} title={t('creatorFlow.aspectRatio')}>{aspect}</Pill>
-              <PillMenu open={menu === 'ratio'} onClose={() => setMenu(null)} value={aspect} onSelect={(v) => updateNodeData(id, { aspectRatio: v })} options={ASPECTS.map((a) => ({ value: a, label: a }))} />
+              <PillMenu open={menu === 'ratio'} onClose={() => setMenu(null)} value={aspect} onSelect={(v) => updateNodeData(id, { aspectRatio: v })} options={aspects.map((a) => ({ value: a, label: a }))} />
             </div>
             <div className="relative">
               <Pill active={menu === 'duration'} onClick={readOnly ? undefined : () => setMenu(menu === 'duration' ? null : 'duration')} title={t('creatorFlow.duration')}>{duration}s</Pill>
@@ -231,7 +232,7 @@ export default function VideoGenNode({ id, data, selected }: NodeProps<FlowNode>
             {cfg?.supportsResolution && (
               <div className="relative">
                 <Pill active={menu === 'resolution'} onClick={readOnly ? undefined : () => setMenu(menu === 'resolution' ? null : 'resolution')} title={t('creatorFlow.resolution')}>{resolution}</Pill>
-                <PillMenu open={menu === 'resolution'} onClose={() => setMenu(null)} value={resolution} onSelect={(v) => updateNodeData(id, { resolution: v })} options={RESOLUTIONS.map((r) => ({ value: r, label: r }))} />
+                <PillMenu open={menu === 'resolution'} onClose={() => setMenu(null)} value={resolution} onSelect={(v) => updateNodeData(id, { resolution: v })} options={resolutions.map((r) => ({ value: r, label: r }))} />
               </div>
             )}
           </div>

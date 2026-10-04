@@ -16,6 +16,8 @@
  * gateway peg, which makes 1,000 DHB = $1 of generation.
  */
 
+import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS } from './creator-fal-catalog.ts';
+
 /** Sale price of one DHB, matching the fiat gateway peg. */
 export const DHB_USD_PEG = 0.001;
 
@@ -85,6 +87,7 @@ export type TextureQuality = 'none' | 'standard' | 'HD';
  * Seedream, 1K for Flux); the rest are still fal/gateway rates.
  */
 export const IMAGE_COST_USD: Record<string, number> = {
+  ...Object.fromEntries(Object.values(CREATOR_FAL_IMAGE_MODELS).map(m => [m.id, m.baseCostUsd])),
   'z-image-turbo': 0.006,
   'gemini-3.1-flash-image': 0.01,
   'gemini-2.5-flash': 0.02,
@@ -115,6 +118,7 @@ export const IMAGE_COST_USD: Record<string, number> = {
  * is gone and an 8-second render costs the same as a 4-second one.
  */
 export const VIDEO_COST_USD: Record<string, { base: number; perSecond?: number }> = {
+  ...Object.fromEntries(Object.values(CREATOR_FAL_VIDEO_MODELS).map(m => [m.id, { base: m.baseCostUsd, perSecond: m.perSecondCostUsd }])),
   'ltx-video': { base: 0.085 },
   'ltx-13b': { base: 0.1, perSecond: 0.02 },
   'luma-ray2-flash': { base: 0.2 },

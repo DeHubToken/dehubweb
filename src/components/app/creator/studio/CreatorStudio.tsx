@@ -110,7 +110,7 @@ import { VoiceDesignDrawer } from './VoiceDesignDrawer';
 import { StudioVoicePicker } from './StudioVoicePicker';
 
 type Mode = 'image' | 'video' | 'audio' | '3d';
-type Resolution = '480p' | '720p' | '1080p';
+type Resolution = string;
 type Reference = { url: string; label: string } | null;
 type ByMode<T> = Record<Mode, T>;
 
@@ -268,7 +268,7 @@ function readSnapshot(): StudioSnapshot {
           : DEFAULT_SNAPSHOT.batch,
       duration: typeof saved.duration === 'number' ? saved.duration : DEFAULT_SNAPSHOT.duration,
       resolution:
-        saved.resolution === '480p' || saved.resolution === '720p' || saved.resolution === '1080p'
+        typeof saved.resolution === 'string' && getVideoResolutions(VIDEO_MODELS[saved.videoModel as string]).includes(saved.resolution)
           ? saved.resolution
           : DEFAULT_SNAPSHOT.resolution,
       audioTask: isAudioTask(saved.audioTask) ? saved.audioTask : DEFAULT_SNAPSHOT.audioTask,
