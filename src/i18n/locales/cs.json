@@ -1592,7 +1592,9 @@
     "passkeyNotLinked": "K tomuto otisku prstu zatím není připojen žádný účet. Místo toho vytvořte nový účet.",
     "passkeyAlreadyRegistered": "Tento otisk prstu již má účet. Místo toho použijte přihlášení.",
     "passkeyFailed": "Přihlášení otiskem prstu selhalo. Zkuste to znovu.",
-    "passkeyBackupHint": "Váš účet je uložen v přístupovém klíči tohoto zařízení. Na většině telefonů se synchronizuje s vaším účtem Google nebo Apple a v Nastavení můžete přidat zálohu hesla."
+    "passkeyBackupHint": "Váš účet je uložen v přístupovém klíči tohoto zařízení. Na většině telefonů se synchronizuje s vaším účtem Google nebo Apple a v Nastavení můžete přidat zálohu hesla.",
+    "walletBlockedTitle": "Tato peněženka je úplně nová",
+    "walletBlockedBody": "Nové peněženky potřebují zůstatek nebo předchozí transakci, aby mohly otevřít účet. Zaregistrujte se jednou z možností níže a pak tuto peněženku připojte v Nastavení."
   },
   "careers": {
     "title": "Kariéra v DeHub",

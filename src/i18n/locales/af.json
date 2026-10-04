@@ -1626,7 +1626,9 @@
     "passkeyNotLinked": "Geen rekening is nog aan daardie vingerafdruk gekoppel nie. Skep eerder 'n nuwe rekening.",
     "passkeyAlreadyRegistered": "Daardie vingerafdruk het reeds 'n rekening. Gebruik Teken aan in plaas daarvan.",
     "passkeyFailed": "Vingerafdruk-aanmelding het misluk. Probeer asseblief weer.",
-    "passkeyBackupHint": "Jou rekening woon in hierdie toestel se passkey. Op die meeste fone sinkroniseer dit met jou Google- of Apple-rekening, en jy kan 'n wagwoordrugsteun in Instellings byvoeg."
+    "passkeyBackupHint": "Jou rekening woon in hierdie toestel se passkey. Op die meeste fone sinkroniseer dit met jou Google- of Apple-rekening, en jy kan 'n wagwoordrugsteun in Instellings byvoeg.",
+    "walletBlockedTitle": "Hierdie beursie is splinternuut",
+    "walletBlockedBody": "Nuwe beursies het 'n saldo of 'n vorige transaksie nodig om 'n rekening oop te maak. Teken aan met een van die opsies hieronder en koppel dan hierdie beursie in Instellings."
   },
   "careers": {
     "title": "Loopbane",

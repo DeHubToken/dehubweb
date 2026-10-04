@@ -1597,7 +1597,9 @@
     "passkeyNotLinked": "No account is linked to that fingerprint yet. Create a new account instead.",
     "passkeyAlreadyRegistered": "That fingerprint already has an account. Use Sign in instead.",
     "passkeyFailed": "Fingerprint sign-in failed. Please try again.",
-    "passkeyBackupHint": "Your account lives in this device's passkey. On most phones it syncs with your Google or Apple account, and you can add a password backup in Settings."
+    "passkeyBackupHint": "Your account lives in this device's passkey. On most phones it syncs with your Google or Apple account, and you can add a password backup in Settings.",
+    "walletBlockedTitle": "This wallet is brand new",
+    "walletBlockedBody": "New wallets need a balance or a past transaction to open an account. Sign up with one of the options below, then connect this wallet from Settings."
   },
   "careers": {
     "title": "Careers at DeHub",

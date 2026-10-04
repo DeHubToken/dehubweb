@@ -1595,7 +1595,9 @@
     "passkeyNotLinked": "Kāore anō kia honoa tētahi pūkete ki taua matimati. Hanga he pūkete hou hei utu.",
     "passkeyAlreadyRegistered": "Kua whai pūkete kē taua matimati. Whakamahia te Takiuru hei utu.",
     "passkeyFailed": "Kua rahua te takiuru mā te matimati. Tēnā ka whakamātau anō.",
-    "passkeyBackupHint": "Kei roto i te kīhōpuku o tēnei pūrere tō pūkete. I te nuinga o ngā waea, ka honoa tēnei ki tō pūkete Google, Apple rānei, ā, ka taea e koe te tāpiri i tētahi pūrua kupuhipa ki ngā Tautuhinga."
+    "passkeyBackupHint": "Kei roto i te kīhōpuku o tēnei pūrere tō pūkete. I te nuinga o ngā waea, ka honoa tēnei ki tō pūkete Google, Apple rānei, ā, ka taea e koe te tāpiri i tētahi pūrua kupuhipa ki ngā Tautuhinga.",
+    "walletBlockedTitle": "He hou katoa tēnei pūkoro",
+    "walletBlockedBody": "Me whai toenga, he tauwhitinga o mua rānei ngā pūkoro hou kia huaki pūkete. Haina mai mā tētahi o ngā kōwhiringa i raro, kātahi ka hono i tēnei pūkoro mai i ngā Tautuhinga."
   },
   "careers": {
     "title": "Mahi i DeHub",

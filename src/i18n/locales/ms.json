@@ -1859,7 +1859,9 @@
     "passkeyNotLinked": "Tiada akaun yang dipautkan dengan cap jari itu lagi. Cipta akaun baharu sebaliknya.",
     "passkeyAlreadyRegistered": "Cap jari itu sudah mempunyai akaun. Gunakan Log masuk sebaliknya.",
     "passkeyFailed": "Log masuk cap jari gagal. Sila cuba lagi.",
-    "passkeyBackupHint": "Akaun anda berada dalam kunci laluan peranti ini. Pada kebanyakan telefon, ia disegerakkan dengan akaun Google atau Apple anda, dan anda boleh menambah sandaran kata laluan dalam Tetapan."
+    "passkeyBackupHint": "Akaun anda berada dalam kunci laluan peranti ini. Pada kebanyakan telefon, ia disegerakkan dengan akaun Google atau Apple anda, dan anda boleh menambah sandaran kata laluan dalam Tetapan.",
+    "walletBlockedTitle": "Dompet ini baharu sepenuhnya",
+    "walletBlockedBody": "Dompet baharu memerlukan baki atau transaksi terdahulu untuk membuka akaun. Daftar dengan salah satu pilihan di bawah, kemudian sambungkan dompet ini dari Tetapan."
   },
   "careers": {
     "title": "Careers at DeHub",

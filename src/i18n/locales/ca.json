@@ -1592,7 +1592,9 @@
     "passkeyNotLinked": "Encara no hi ha cap compte vinculat a aquesta empremta digital. Crea un compte nou en el seu lloc.",
     "passkeyAlreadyRegistered": "Aquesta empremta digital ja té un compte. Utilitza Inicia sessió en el seu lloc.",
     "passkeyFailed": "La sessió amb empremta digital ha fallat. Torna a provar-ho.",
-    "passkeyBackupHint": "El teu compte resideix a la clau d'accés d'aquest dispositiu. A la majoria de telèfons es sincronitza amb el teu compte de Google o Apple, i pots afegir una còpia de seguretat de contrasenya a Configuració."
+    "passkeyBackupHint": "El teu compte resideix a la clau d'accés d'aquest dispositiu. A la majoria de telèfons es sincronitza amb el teu compte de Google o Apple, i pots afegir una còpia de seguretat de contrasenya a Configuració.",
+    "walletBlockedTitle": "Aquesta cartera és completament nova",
+    "walletBlockedBody": "Les carteres noves necessiten saldo o una transacció anterior per obrir un compte. Registra't amb una de les opcions de sota i després connecta aquesta cartera des de Configuració."
   },
   "careers": {
     "title": "Carreres a DeHub",

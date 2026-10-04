@@ -1590,7 +1590,9 @@
     "passkeyNotLinked": "Ọ dịghị akaụntụ ejikọrọ na mkpuaka ahụ ugbu a. Mepụta akaụntụ ọhụrụ kama.",
     "passkeyAlreadyRegistered": "Mkpuaka ahụ enweelarị akaụntụ. Jiri Banye kama.",
     "passkeyFailed": "Ọdịda ịbanye na mkpuaka. Biko nwaa ọzọ.",
-    "passkeyBackupHint": "Akaụntụ gị dị na paswọọdụ ngwaọrụ a. Na ọtụtụ ekwentị, ọ na-ejikọta ya na akaụntụ Google ma ọ bụ Apple gị, ị nwekwara ike itinye nkwado paswọọdụ na Ntọala."
+    "passkeyBackupHint": "Akaụntụ gị dị na paswọọdụ ngwaọrụ a. Na ọtụtụ ekwentị, ọ na-ejikọta ya na akaụntụ Google ma ọ bụ Apple gị, ị nwekwara ike itinye nkwado paswọọdụ na Ntọala.",
+    "walletBlockedTitle": "Obere akpa ego a bụ ọhụrụ kpamkpam",
+    "walletBlockedBody": "Obere akpa ego ọhụrụ chọrọ ego ma ọ bụ azụmahịa gara aga iji mepee akaụntụ. Debanye aha site na otu n'ime nhọrọ ndị dị n'okpuru, wee jikọọ obere akpa ego a site na Ntọala."
   },
   "careers": {
     "title": "Ọrụ na DeHub",

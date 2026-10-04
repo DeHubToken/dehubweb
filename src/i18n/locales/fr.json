@@ -1601,7 +1601,9 @@
     "passkeyNotLinked": "Aucun compte n'est encore associé à cette empreinte digitale. Créez un nouveau compte à la place.",
     "passkeyAlreadyRegistered": "Cette empreinte digitale a déjà un compte. Utilisez la connexion à la place.",
     "passkeyFailed": "La connexion par empreinte digitale a échoué. Veuillez réessayer.",
-    "passkeyBackupHint": "Votre compte réside dans la clé d'accès de cet appareil. Sur la plupart des téléphones, elle est synchronisée avec votre compte Google ou Apple, et vous pouvez ajouter une sauvegarde de mot de passe dans les Paramètres."
+    "passkeyBackupHint": "Votre compte réside dans la clé d'accès de cet appareil. Sur la plupart des téléphones, elle est synchronisée avec votre compte Google ou Apple, et vous pouvez ajouter une sauvegarde de mot de passe dans les Paramètres.",
+    "walletBlockedTitle": "Ce portefeuille est tout neuf",
+    "walletBlockedBody": "Les nouveaux portefeuilles doivent avoir un solde ou une transaction passée pour ouvrir un compte. Inscrivez-vous avec l'une des options ci-dessous, puis connectez ce portefeuille depuis les Paramètres."
   },
   "careers": {
     "title": "Carrières chez DeHub",

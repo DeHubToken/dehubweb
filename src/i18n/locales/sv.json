@@ -1599,7 +1599,9 @@
     "passkeyNotLinked": "Inget konto är kopplat till det fingeravtrycket ännu. Skapa ett nytt konto istället.",
     "passkeyAlreadyRegistered": "Det fingeravtrycket har redan ett konto. Använd Logga in istället.",
     "passkeyFailed": "Inloggning med fingeravtryck misslyckades. Försök igen.",
-    "passkeyBackupHint": "Ditt konto finns i den här enhetens lösenordsnyckel. På de flesta telefoner synkroniseras den med ditt Google- eller Apple-konto, och du kan lägga till en lösenordsbackup i Inställningar."
+    "passkeyBackupHint": "Ditt konto finns i den här enhetens lösenordsnyckel. På de flesta telefoner synkroniseras den med ditt Google- eller Apple-konto, och du kan lägga till en lösenordsbackup i Inställningar.",
+    "walletBlockedTitle": "Den här plånboken är helt ny",
+    "walletBlockedBody": "Nya plånböcker behöver ett saldo eller en tidigare transaktion för att öppna ett konto. Registrera dig med något av alternativen nedan och anslut sedan den här plånboken under Inställningar."
   },
   "careers": {
     "title": "Karriär på DeHub",

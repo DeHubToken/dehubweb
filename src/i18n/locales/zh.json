@@ -1600,7 +1600,9 @@
     "passkeyNotLinked": "该指纹尚未关联任何账户。请创建新账户。",
     "passkeyAlreadyRegistered": "该指纹已关联账户。请使用登录。",
     "passkeyFailed": "指纹登录失败。请重试。",
-    "passkeyBackupHint": "您的账户保存在此设备的密钥中。在大多数手机上，它会与您的 Google 或 Apple 账户同步，您可以在设置中添加密码备份。"
+    "passkeyBackupHint": "您的账户保存在此设备的密钥中。在大多数手机上，它会与您的 Google 或 Apple 账户同步，您可以在设置中添加密码备份。",
+    "walletBlockedTitle": "这个钱包是全新的",
+    "walletBlockedBody": "新钱包需要有余额或过往交易才能开设账户。请用下方任一方式注册，然后在设置中连接这个钱包。"
   },
   "careers": {
     "title": "DeHub 招聘",

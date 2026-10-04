@@ -1596,7 +1596,9 @@
     "passkeyNotLinked": "Asnjë llogari nuk është lidhur ende me atë gisht. Krijo një llogari të re në vend të kësaj.",
     "passkeyAlreadyRegistered": "Ai gisht tashmë ka një llogari. Përdorni Hyni në vend të kësaj.",
     "passkeyFailed": "Hyrja me gisht dështoi. Ju lutem provoni përsëri.",
-    "passkeyBackupHint": "Llogaria juaj jeton në çelësin e kalimit të këtij pajisje. Në shumicën e telefonave, ai sinkronizohet me llogarinë tuaj Google ose Apple, dhe ju mund të shtoni një kopje rezervë të fjalëkalimit në Cilësime."
+    "passkeyBackupHint": "Llogaria juaj jeton në çelësin e kalimit të këtij pajisje. Në shumicën e telefonave, ai sinkronizohet me llogarinë tuaj Google ose Apple, dhe ju mund të shtoni një kopje rezervë të fjalëkalimit në Cilësime.",
+    "walletBlockedTitle": "Ky portofol është krejt i ri",
+    "walletBlockedBody": "Portofolat e rinj kanë nevojë për bilanc ose një transaksion të mëparshëm për të hapur llogari. Regjistrohu me një nga opsionet më poshtë, pastaj lidhe këtë portofol nga Cilësimet."
   },
   "careers": {
     "title": "Karriera në DeHub",
