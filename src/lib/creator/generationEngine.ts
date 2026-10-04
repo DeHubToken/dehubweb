@@ -38,7 +38,7 @@ export interface VideoRequest {
   sourceImage?: string;
   duration?: number;
   aspectRatio?: string;
-  resolution?: '480p' | '720p' | '1080p';
+  resolution?: string;
   negativePrompt?: string;
   referenceImageUrls?: string[];
   endFrameUrl?: string;
