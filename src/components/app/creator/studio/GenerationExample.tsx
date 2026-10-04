@@ -8,12 +8,13 @@ import type { PresetKind } from '@/lib/creator/presets';
 const Model3dViewer = lazy(() => import('./Model3dViewer').then((module) => ({ default: module.Model3dViewer })));
 
 /** Published provider examples, labelled separately from presets and personal results. */
-export function GenerationExample({ kind }: { kind: PresetKind }) {
+export function GenerationExample({ kind, model }: { kind: PresetKind; model?: string }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [failed, setFailed] = useState(false);
-  useEffect(() => { setOpen(false); setFailed(false); }, [kind]);
-  const example = examples[kind];
+  useEffect(() => { setOpen(false); setFailed(false); }, [kind, model]);
+  const modelExamples: Record<string, { model: string; url: string; sourceUrl: string }> = examples.models;
+  const example = (kind === 'video' && model ? modelExamples[model] : undefined) ?? examples[kind];
   const label = `${t('creator.exampleOutput')} · ${example.model}`;
 
   return (
