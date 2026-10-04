@@ -23,8 +23,7 @@ import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
 import { AppLayout } from "./components/app/AppLayout";
-import { LoginModal, prefetchLoginModal } from "@/components/app/LoginModal";
-import { useFirstInteraction } from "@/hooks/use-boot-settled";
+import { LoginModal } from "@/components/app/LoginModal";
 import React, { Suspense, useEffect, useState, type ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
@@ -377,25 +376,6 @@ function AppContent() {
   // Session-wide, not page-wide: the bell count and the cached notifications
   // page both go stale while the reader is anywhere else in the app.
   useNotificationRealtime();
-
-  // Warm the sheet's contents so the skeleton inside it stays theoretical —
-  // but only once the visitor has touched the page, or after ten quiet
-  // seconds. The body chunk carries wagmi (WagmiScope), so warming it on a
-  // 1.5 s timer put wagmi back into every first visit's boot window right
-  // after the work of keeping it out of the entry bundle; a scroll or tap
-  // comes long before a sign-in tap in practice, and the sign-in buttons
-  // themselves warm it on hover / pointer-down (warmLoginSheet). The
-  // ten-second backstop keeps the cold-open case rare for someone who reads
-  // without touching anything.
-  const interacted = useFirstInteraction();
-  useEffect(() => {
-    if (interacted) {
-      prefetchLoginModal();
-      return;
-    }
-    const timer = window.setTimeout(() => prefetchLoginModal(), 10_000);
-    return () => window.clearTimeout(timer);
-  }, [interacted]);
 
   // The login flow is "active" from the modal opening until any
   // connect/redirect it started has finished, which is a little past the sheet

@@ -205,3 +205,49 @@ jobs:
       # small modules arriving over a fortnight, which is what actually happens.
       - name: Boot path has not grown
         run: node scripts/boot-path-report.mjs
+
+  speed-staging:
+    name: Deploy speed preview to staging
+    needs: [i18n, edge-cors, typecheck, tests, stage-remux, boot-path]
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'perf/staging-load-speed-20261004'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v4
+        with:
+          repository: DeHubToken/dehub-mobile
+          ref: MOBILE_SPEED_COMMIT
+          path: mobile-locales
+          sparse-checkout: |
+            i18n
+          sparse-checkout-cone-mode: true
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --no-frozen-lockfile
+      - name: Build versioned web and mobile language data
+        run: node scripts/build-locale-packs.mjs mobile-locales
+      - name: Build staging assets
+        run: pnpm build
+      - name: Record initial asset sizes
+        run: node scripts/staging-speed-report.mjs > staging-speed-report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: staging-speed-assets
+          path: |
+            staging-speed-report.json
+            dist/version.json
+          retention-days: 30
+      - name: Deploy only the staging Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ID }}
+        run: pnpm exec wrangler deploy --config wrangler.staging.jsonc
