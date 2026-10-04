@@ -35,6 +35,7 @@ import {
   reactionMeta,
   reconcileReactionCounts,
   resolveThumbReaction,
+  resolveThumbCount,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -793,6 +794,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
    * thumbs-down beside it), else the post's most-used positive one.
    */
   const leadReaction = resolveThumbReaction(localReactionCounts, myReaction);
+  const thumbCount = resolveThumbCount(localLikeCount, localDislikeCount, leadReaction);
 
   // Lock body scroll when viewer is open, and flag the fullscreen state so the
   // top nav bars (home tab bar z-[110], mobile header z-[60]) drop beneath the
@@ -1629,7 +1631,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                           isLiked ? "fill-white text-white" : "text-white"
                         )} />
                       )}
-                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(localLikeCount)}</span>
+                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(thumbCount)}</span>
                     </motion.button>
                   </span>
                 </div>
@@ -1859,7 +1861,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                           isLiked ? "fill-white text-white" : "text-white"
                         )} />
                       )}
-                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(localLikeCount)}</span>
+                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(thumbCount)}</span>
                     </motion.button>
                   </span>
                 </div>
