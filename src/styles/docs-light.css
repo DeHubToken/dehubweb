@@ -1,0 +1,252 @@
+/* ==========================================================================
+ * Docs light mode — match the app's light theme (paper + ink).
+ * ==========================================================================
+ * The docs site has its own light/dark system (next-themes, `.dark` class on
+ * <html>, storageKey dehub-docs-theme) built on shadcn tokens. In light mode
+ * we re-point the tokens at the app's paper/ink palette and neutralise the
+ * blue/purple decorative tints the pages hardcode, so every docs page reads
+ * as ink-on-paper like the app. Semantic colour pairs keep their colour:
+ * HTTP method / status chips (bg-*-100 + dark text) and light text on dark
+ * code blocks (bg-slate-900 + text-slate-300/400) are contrast-safe and
+ * meaningful. Dark mode (.dark) is untouched.
+ * ========================================================================== */
+/* ==========================================================================
+ * DeHub brand-blue docs tokens. Global defaults are the real brand blues (they
+ * back the app flowcharts, advertising accents and legacy blog markup that use
+ * text-royal-blue / bg-sky-blue / from-middle-blue etc.). Inside .docs-root they
+ * resolve to theme-appropriate reading tones: ink on paper, light on dark/glass.
+ * ========================================================================== */
+:root {
+  --docs-royal: 222 89% 45%;
+  --docs-middle: 210 88% 52%;
+  --docs-sky: 199 89% 58%;
+  --docs-ink: 0 0% 8%;
+  --docs-paper: 0 0% 100%;
+}
+html:not(.dark) .docs-root {
+  --docs-royal: 0 0% 13%;
+  --docs-middle: 0 0% 34%;
+  --docs-sky: 0 0% 46%;
+  --docs-ink: 0 0% 10%;
+  --docs-paper: 0 0% 100%;
+}
+html.dark .docs-root {
+  --docs-royal: 0 0% 92%;
+  --docs-middle: 0 0% 82%;
+  --docs-sky: 0 0% 82%;
+  --docs-ink: 0 0% 95%;
+  --docs-paper: 0 0% 100%;
+}
+
+html:not(.dark) .docs-root {
+  --background: 48 31% 96.7%;        /* paper #f9f8f4 */
+  --zinc-500: 113 113 122;           /* stock zinc-500: 4.9:1 on paper */
+  --foreground: 0 0% 10%;            /* ink #1a1a1a */
+  /* Three surfaces, three tones. The page is paper, a bento is white and
+     lifts off it, a panel nested inside a bento is a wash between the two.
+     These used to be one colour — card === background — so a card was a
+     hairline drawn around nothing and the only thing with any weight on the
+     page was the panel nested deepest inside it. */
+  --card: 0 0% 100%;                 /* bento #ffffff */
+  --card-foreground: 0 0% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+  --primary: 0 0% 10%;
+  --primary-foreground: 48 31% 96.7%;
+  --secondary: 44 30% 95%;           /* wash #f7f4ee */
+  --secondary-foreground: 0 0% 10%;
+  --muted: 44 30% 95%;
+  --muted-foreground: 0 0% 35%;      /* ink-muted #5a5a5a */
+  --accent: 44 30% 92%;              /* wash-deep — hover/active only */
+  --accent-foreground: 0 0% 10%;
+  --border: 40 12% 87%;              /* warm hairline; the old one was a */
+  --input: 40 12% 87%;               /* cool grey sat next to warm paper */
+  --ring: 0 0% 10%;
+
+  background-color: hsl(var(--background));
+  background-image: url('./assets/textures/paper-texture.png');
+  background-size: 256px 256px;
+}
+
+/* White alone is a weak edge against paper, so a bento also casts a soft
+   shadow. Header and sidebar share .bg-card but are chrome, not content —
+   they keep their hairline and stay flat. */
+html:not(.dark) .docs-root .bg-card {
+  box-shadow: 0 1px 2px rgba(40, 34, 20, 0.05), 0 8px 24px -12px rgba(40, 34, 20, 0.14);
+}
+html:not(.dark) .docs-root [data-docs-header],
+html:not(.dark) .docs-root [data-docs-sidebar] {
+  box-shadow: none;
+}
+
+/* Near-black text tints → ink */
+html:not(.dark) .docs-root .text-slate-900,
+html:not(.dark) .docs-root .text-slate-800,
+html:not(.dark) .docs-root .text-blue-900,
+html:not(.dark) .docs-root .text-purple-900,
+html:not(.dark) .docs-root .text-blue-800,
+html:not(.dark) .docs-root .text-purple-800,
+html:not(.dark) .docs-root .text-indigo-800 {
+  color: #1a1a1a;
+}
+
+/* Mid-tone emphasis tints → strong muted ink */
+html:not(.dark) .docs-root .text-slate-700,
+html:not(.dark) .docs-root .text-gray-700,
+html:not(.dark) .docs-root .text-blue-700,
+html:not(.dark) .docs-root .text-purple-700,
+html:not(.dark) .docs-root .text-indigo-700 {
+  color: #2e2e2e;
+}
+
+/* Secondary text tints → muted ink */
+html:not(.dark) .docs-root .text-slate-600,
+html:not(.dark) .docs-root .text-gray-600,
+html:not(.dark) .docs-root .text-slate-500,
+html:not(.dark) .docs-root .text-gray-500,
+html:not(.dark) .docs-root .text-blue-600,
+html:not(.dark) .docs-root .text-purple-600,
+html:not(.dark) .docs-root .text-blue-500 {
+  color: #5a5a5a;
+}
+
+/* Pastel info-box tints → paper-deep wash */
+html:not(.dark) .docs-root .bg-blue-50,
+html:not(.dark) .docs-root .bg-purple-50,
+html:not(.dark) .docs-root .bg-indigo-50,
+html:not(.dark) .docs-root .bg-slate-50,
+html:not(.dark) .docs-root .bg-gray-100 {
+  background-color: #f6f3ec;
+}
+
+/* Pastel gradient washes → flat paper-deep */
+html:not(.dark) .docs-root .from-blue-50,
+html:not(.dark) .docs-root .from-purple-50,
+html:not(.dark) .docs-root .from-indigo-50,
+html:not(.dark) .docs-root .from-green-50,
+html:not(.dark) .docs-root .from-pink-50,
+html:not(.dark) .docs-root .from-yellow-50,
+html:not(.dark) .docs-root .from-plain-white,
+html:not(.dark) .docs-root .to-blue-50,
+html:not(.dark) .docs-root .to-purple-50,
+html:not(.dark) .docs-root .to-indigo-50,
+html:not(.dark) .docs-root .to-gray-50 {
+  background-image: none;
+  background-color: #f6f3ec;
+}
+
+/* Hardcoded white cards → the card surface */
+html:not(.dark) .docs-root .bg-white {
+  background-color: hsl(var(--card));
+}
+
+/* Pastel borders → hairline */
+html:not(.dark) .docs-root .border-blue-200,
+html:not(.dark) .docs-root .border-blue-300,
+html:not(.dark) .docs-root .border-blue-400,
+html:not(.dark) .docs-root .border-purple-200,
+html:not(.dark) .docs-root .border-purple-400,
+html:not(.dark) .docs-root .border-indigo-200,
+html:not(.dark) .docs-root .border-slate-200,
+html:not(.dark) .docs-root .border-slate-100,
+html:not(.dark) .docs-root .border-gray-200 {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+ * Docs opt-outs from the app's `light` theme identity.
+ *
+ * Two app-wide rules key off html[data-theme="light"] and match bare utility
+ * classes, so they reach into the docs surface even though it has its own
+ * palette and geometry:
+ *
+ *   1. "Square everything off" (~L3311) strips every border-radius. That is
+ *      the app's look under light and minimal alike - each ships its own
+ *      copy of the rule - and docs is a reading surface built
+ *      out of rounded bentos, and squaring it made every card, chip and pill
+ *      read as a crude block. Dark docs stays rounded, so light docs did not
+ *      match its own dark counterpart either.
+ *   2. .bg-white → ink (~L2638) flips active pills so they stay legible on
+ *      paper. In docs .bg-white is a card, and it turned near-black.
+ *
+ * Both are !important, so these re-assert rather than override. Radii are
+ * spelled out per utility instead of :not(.docs-root *) on the source rule —
+ * a Level 4 :not() with a descendant, which older Safari drops entirely,
+ * taking the app's square look with it.
+ * ========================================================================== */
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-sm { border-radius: 0.125rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded { border-radius: 0.25rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-md { border-radius: 0.375rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-lg { border-radius: 0.5rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-r-lg {
+  border-top-right-radius: 0.5rem !important;
+  border-bottom-right-radius: 0.5rem !important;
+}
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-xl { border-radius: 0.75rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-2xl { border-radius: 1rem !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-full { border-radius: 9999px !important; }
+html:is([data-theme="light"], [data-theme="minimal"]) .docs-root .rounded-\[inherit\] { border-radius: inherit !important; }
+
+html[data-theme="light"] .docs-root .bg-white:not([data-keep-white]) {
+  background-color: hsl(var(--card)) !important;
+}
+
+/* Docs CTAs built from the app's liquid-glass recipe: a white gradient behind
+   a white label, which is a button on a dark canvas and a blank pill on paper.
+   On /docs/featured-in every "Read the article" rendered as an empty white
+   capsule - the label is #fff on a white card. The same recipe backs the
+   Advertising and Currency CTAs.
+
+   Docs has no dark media to sit on, so there is no case here where the glass
+   is correct: make them the docs primary button, ink fill and paper label. */
+html:not(.dark) .docs-root [class*="from-white/20"] {
+  background-image: none !important;
+  background-color: hsl(var(--primary)) !important;
+  border-color: transparent !important;
+}
+html:not(.dark) .docs-root [class*="from-white/20"],
+html:not(.dark) .docs-root [class*="from-white/20"] svg {
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+/* .docs-glass is a frosted panel that exists to sample an animated canvas.
+   On paper there is nothing behind it to sample, so the blur only mutes the
+   card - 60% white over a paper texture reads as a washed overlay box rather
+   than a surface, and /docs/dapps alone stacks 120 of them, every one a live
+   backdrop-filter layer. Collapse to the solid card the class already falls
+   back to under prefers-reduced-transparency, with the same shadow the other
+   docs bentos use. Canvas themes pin docs to .dark and keep their glass. */
+html:not(.dark) .docs-root .docs-glass {
+  background: hsl(var(--card));
+  backdrop-filter: none;
+  box-shadow: 0 1px 2px rgba(40, 34, 20, 0.05), 0 8px 24px -12px rgba(40, 34, 20, 0.14);
+}
+
+/* Dark docs off the canvas themes (system on dark, minimal) sit on opaque
+   black too, so the blur has nothing to sample there either. The canvas
+   themes keep theirs: docs-glass.css restates it with !important. */
+html.dark .docs-root .docs-glass {
+  backdrop-filter: none;
+}
+
+/* Typography plugin (prose-slate) → ink scale */
+/* Blog bylines carry text-royal-blue/50, which in docs light resolves to ink
+   at 50% - 3.2:1, under AA at text-xs. Lift the alpha, not the hue. */
+html:not(.dark) .docs-root .text-royal-blue\/50 {
+  color: hsl(var(--docs-royal) / 0.78);
+}
+
+html:not(.dark) .docs-root .prose {
+  --tw-prose-body: #2e2e2e;
+  --tw-prose-headings: #1a1a1a;
+  --tw-prose-links: #1a1a1a;
+  --tw-prose-bold: #1a1a1a;
+  --tw-prose-bullets: #5a5a5a;
+  --tw-prose-counters: #5a5a5a;
+  --tw-prose-captions: #5a5a5a;
+  --tw-prose-quotes: #2e2e2e;
+  --tw-prose-hr: rgba(0, 0, 0, 0.1);
+  --tw-prose-th-borders: rgba(0, 0, 0, 0.12);
+  --tw-prose-td-borders: rgba(0, 0, 0, 0.08);
+}
+
