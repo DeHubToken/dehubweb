@@ -567,7 +567,7 @@ export default function ProfilePage() {
           handleFollow={handleFollow}
           handleUnfollow={handleUnfollow}
           isSubscribed={data.isSubscribed}
-          hasPlans={data.hasPlans}
+          hasPlans={data.hasPinnedPlans}
           setFullscreenImage={setFullscreenImage}
           setActiveTab={setActiveTab}
           shareSheetOpen={shareSheetOpen}

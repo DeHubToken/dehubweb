@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Clock, Loader2, Star, Users, Upload, Info } from 'lucide-react';
+import { Check, Clock, Loader2, Star, Users, Upload, Info, Pin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -14,7 +14,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { type SubscriptionPlan, planPrice, primaryPlanChain, isPlanPublished } from '@/lib/api/dehub';
-import { useBuyPlan, usePublishPlan } from '@/hooks/use-subscriptions';
+import { useBuyPlan, usePublishPlan, useUpdatePlan } from '@/hooks/use-subscriptions';
 import { formatDuration, normaliseDuration, BASE_CHAIN_ID } from '@/lib/contracts';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { DHB_PRELISTING_USD, dhbForUsd, formatDhbPayment } from '@/lib/subscription-pricing';
@@ -65,6 +65,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const publishMutation = usePublishPlan();
+  const pinMutation = useUpdatePlan();
 
   const price = planPrice(plan);
   const chainEntry = primaryPlanChain(plan);
@@ -188,6 +189,17 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
       )}
 
       {/* Actions */}
+      {isOwner && (
+        <Button
+          variant="outline"
+          className="w-full mb-2 rounded-xl border-white/20 text-white hover:bg-white/10 gap-2"
+          disabled={pinMutation.isPending || (!plan.isPinned && (!published || !isBuyable))}
+          onClick={() => pinMutation.mutate({ planId: String(plan.id || plan._id), data: { isPinned: !plan.isPinned } })}
+        >
+          {pinMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Pin className="w-4 h-4" />}
+          {plan.isPinned ? t('subscriptions.unpinProfile', 'Unpin from profile') : t('subscriptions.pinProfile', 'Pin to profile')}
+        </Button>
+      )}
       {isOwner ? (
         <div className="flex gap-2">
           {/* A plan the chain will never accept has one useful action, and it is
