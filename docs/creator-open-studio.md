@@ -6,7 +6,15 @@ The catalog contains 12 image and 12 video recipes. With an empty subject, every
 
 `src/lib/creator/openStudioPresets.ts` and mobile’s `libs/openStudioPresets.ts` carry identical records. The image/video catalogs include every record; search matches translated names, hints, categories and prompt contents. English and French labels ship with this import. Mobile sends the selected preset’s aspect ratio and video negative prompt through its generation request.
 
+## Native studio parity
+
+The Android Creator entry points open the native studio for image, video, audio and 3D generation. Both clients use the same server payment and generation endpoints and the same 24 released starter presets. Mobile exposes model selection, reference images, aspect ratio, supported video duration and resolution, and mesh texture quality. Video quotes and requests use the same duration, and retry records retain the original settings. Queued video, audio and mesh jobs resume after reopening the app.
+
+The native video limits are taken from `src/constants/video-models.constants.ts`; mobile mesh metadata mirrors `src/constants/model3d-models.constants.ts`. When updating provider constraints, update both catalogs. `/creator?mode=image|video|audio|3d` opens the corresponding native studio through the app link.
+
 ## Full live preset catalog
+
+The DeHub Creator credential is configured on the backend as `HIGGSFIELD_API_KEY`. This release continues using DeHub’s existing generation providers. The full authenticated Higgsfield preset catalog and generation through that provider remain unverified; credentials must stay on the server.
 
 The linked repository publishes starter prompts and model mappings. Production Marketing Studio presets are fetched separately through the [documented catalog](https://open.higgsfield.ai/models/workflows/product-shots/api-reference):
 
