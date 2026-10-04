@@ -6,7 +6,7 @@ import { PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageK
 import { useAuth } from '@/contexts/AuthContext';
 import { isWorkAdmin } from '@/constants/app.constants';
 import { useAdminDisputes, useAdminResolveDispute } from '@/features/work/hooks/use-work';
-import { isWorkContractDeployed } from '@/lib/contracts/dehub-work';
+import { WorkEscrowSetup } from '@/features/work/components/WorkEscrowSetup';
 import type { WorkCurrency, WorkJob } from '@/features/work/types';
 import { bountyPath } from '@/features/work/seo';
 import { WorkUser } from '@/features/work/components/WorkUser';
@@ -32,7 +32,7 @@ export default function WorkDisputesPage() {
   // resolution is a written decision plus — if the arbiter chooses — a transfer
   // out of their own wallet. Saying so here stops the split fields reading as
   // if they move money on their own.
-  const escrowed = isWorkContractDeployed();
+  const escrowed = false;
 
   if (!isWorkAdmin(walletAddress)) {
     return (
@@ -59,6 +59,7 @@ export default function WorkDisputesPage() {
     <div data-work-surface className="min-h-screen">
       <PageIsland className="max-w-4xl mx-auto" icon="governance" title={t('work.disputesTitle')} />
       <PageBody className="max-w-4xl mx-auto">
+      <WorkEscrowSetup />
       <p className="text-sm text-white/60">
         {escrowed
           ? t('work.disputesIntroEscrowed')
@@ -71,11 +72,12 @@ export default function WorkDisputesPage() {
         <div className="text-white/60 text-sm">{t('work.noDisputes')}</div>
       ) : (disputes as DisputeRow[]).map(d => {
         const j = d.job;
+        const escrowed=!!j?.fund_tx_hash;
         const k = d.id;
         const v = draft[k] || { worker: 0, poster: 0, notes: '', workerAddr: j?.awarded_worker_address ?? '', pay: false };
         const remaining = j ? (Number(j.total_budget) - Number(j.released_amount || 0)) : 0;
         const total = (v.worker || 0) + (v.poster || 0);
-        const valid = j && total <= remaining + 1e-9 && v.workerAddr?.length === 42;
+        const valid = j && v.worker>=0 && v.poster>=0 && (escrowed?Math.abs(total-remaining)<1e-9:v.poster===0 && total<=remaining) && (v.worker===0 || /^0x[a-fA-F0-9]{40}$/.test(v.workerAddr));
         const set = (patch: Partial<typeof v>) => setDraft({ ...draft, [k]: { ...v, ...patch } });
 
         return (
@@ -122,29 +124,15 @@ export default function WorkDisputesPage() {
               <Field label={t('work.workerAmount', { currency: j?.currency || '' })}>
                 <input type="number" min={0} step="0.0001" value={v.worker} onChange={(e) => set({ worker: Number(e.target.value) })} className={inputCls} />
               </Field>
-              <Field label={t('work.posterRefund', { currency: j?.currency || '' })}>
+              {escrowed && <Field label={t('work.posterRefund', { currency: j?.currency || '' })}>
                 <input type="number" min={0} step="0.0001" value={v.poster} onChange={(e) => set({ poster: Number(e.target.value) })} className={inputCls} />
-              </Field>
+              </Field>}
               <Field label={t('work.notesOptional')}>
                 <input value={v.notes} onChange={(e) => set({ notes: e.target.value })} className={inputCls} />
               </Field>
             </div>
 
-            {!escrowed && v.worker > 0 && (
-              <label className="flex items-start gap-2 mt-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={v.pay}
-                  onChange={(e) => set({ pay: e.target.checked })}
-                  className="mt-0.5 accent-emerald-400"
-                />
-                <span className="text-xs text-white/70">
-                  {t('work.sendToWorker', { amount: v.worker.toLocaleString(undefined, { maximumFractionDigits: 4 }), currency: j?.currency })}
-                  <span className="text-white/40">{t('work.fromYourWalletNow')}</span>
-                </span>
-              </label>
-            )}
-
+            {!escrowed && <p className="mt-3 text-xs text-white/60">{t('work.integrity.decisionOnly')}</p>}
             <div className="flex items-center justify-between gap-3 mt-4">
               <div className="text-[11px] text-white/40">
                 {t('work.disputeTotal', { total: total.toLocaleString(undefined, { maximumFractionDigits: 4 }), remaining: remaining.toLocaleString(undefined, { maximumFractionDigits: 4 }), currency: j?.currency })}
@@ -160,12 +148,12 @@ export default function WorkDisputesPage() {
                   worker_amount: v.worker,
                   poster_refund: v.poster,
                   resolution_notes: v.notes,
-                  pay_worker: v.pay,
+                  pay_worker: false,
                 })}
                 className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-40 inline-flex items-center gap-1.5"
               >
-                {v.pay && !escrowed && <Wallet className="w-3.5 h-3.5" />}
-                {v.pay && !escrowed ? t('work.resolveAndPay') : t('work.resolve')}
+
+                {t('work.resolve')}
               </button>
             </div>
           </div>

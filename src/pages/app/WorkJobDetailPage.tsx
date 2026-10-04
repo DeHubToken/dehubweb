@@ -1,3 +1,4 @@
+import { isWorkAdmin } from '@/constants/app.constants';
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +7,7 @@ import {
   useWorkJob, useJobApplications, useJobSubmissions, useJobReviews,
   useApplyToJob, useAwardApplicant, useSubmitProof,
   useApproveSubmission, useRejectSubmission, usePaySubmission,
-  useLeaveReview, useOpenDispute, useMarkComplete, isJobEditable,
+  useLeaveReview, useOpenDispute, useMarkComplete, isJobEditable, useFundJob, useReleasePayment, useWorkConfig,
 } from '@/features/work/hooks/use-work';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -68,6 +69,10 @@ export default function WorkJobDetailPage() {
   const reviewMutation = useLeaveReview();
   const disputeMutation = useOpenDispute();
   const completeMutation = useMarkComplete();
+  const fundMutation=useFundJob();
+  const releaseMutation=useReleasePayment();
+  const {data:config}=useWorkConfig();
+  const [fundingHash,setFundingHash]=useState('');
 
   const [coverLetter, setCoverLetter] = useState('');
   const [proofUrl, setProofUrl] = useState('');
@@ -87,6 +92,7 @@ export default function WorkJobDetailPage() {
 
   const me = walletAddress?.toLowerCase();
   const isPoster = me === job.poster_address.toLowerCase();
+  const canManage=isPoster || (job.status==='disputed' && isWorkAdmin(walletAddress));
   const isAwarded = me && job.awarded_worker_address && me === job.awarded_worker_address.toLowerCase();
   const myApp = applications.find(a => a.applicant_address.toLowerCase() === me);
   const myReview = reviews.find(r => r.reviewer_address.toLowerCase() === me);
@@ -107,7 +113,7 @@ export default function WorkJobDetailPage() {
     Number(job.total_budget || 0) -
       submissions
         .filter(s => !!s.payout_tx_hash)
-        .reduce((sum, s) => sum + Number(s.payout_amount || 0), 0),
+        .reduce((sum, s) => sum + Number(s.gross_amount || s.payout_amount || 0), 0),
   );
 
   const requireAuth = () => { if (!me) { openLoginModal(); return false; } return true; };
@@ -171,6 +177,17 @@ export default function WorkJobDetailPage() {
           {job.fund_tx_hash && <TxLink label={t('work.escrowFunded')} txHash={job.fund_tx_hash} />}
         </div>
       </div>
+
+      <p className="mb-4 text-xs text-white/60">{t(job.fund_tx_hash?'work.integrity.escrowFunded':job.status==='draft'?'work.integrity.draftSaved':'work.integrity.legacyUnfunded')}</p>
+      {isPoster && job.status==='draft' && <div className="mb-4 rounded-xl border border-white/20 p-4 space-y-3">
+        <p className="text-sm text-white/80">{t('work.integrity.draftFunding')}</p>
+        {!config?.escrow_address && <p className="text-sm text-amber-200">{t('work.integrity.setupRequired')}</p>}
+        {job.funding_state!=='unfunded' && <input aria-label={t('work.integrity.recoverTx')} placeholder={t('work.integrity.hashPlaceholder')} value={fundingHash} onChange={e=>setFundingHash(e.target.value.trim())} className={inputCls} />}
+        <button disabled={fundMutation.isPending || !config?.escrow_address} onClick={()=>fundMutation.mutate({job_id:job.id,hash:fundingHash || undefined})} className="px-4 py-2 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-40">
+          {t(job.funding_state==='unfunded'?'work.integrity.fundPublish':'work.integrity.checkFunding')}
+        </button>
+        {job.funding_state==='signing' && <button onClick={()=>{if(window.confirm(t('work.integrity.releaseConfirm'))) fundMutation.mutate({job_id:job.id,release:true});}} className="ml-3 text-xs text-white/70">{t('work.integrity.releaseSignature')}</button>}
+      </div>}
 
       {/* What the poster still owes. Shown only to them, and only when there is
           accepted work with no payout transaction behind it. */}
@@ -239,7 +256,7 @@ export default function WorkJobDetailPage() {
       )}
 
       {/* Submissions / proof feed */}
-      {(job.job_type !== 'contract' || isAwarded || isPoster) && (
+      {(job.job_type !== 'contract' || isAwarded || canManage) && (
         <Section title={t('work.submissions', { count: submissions.length })}>
           {((job.job_type !== 'contract' && !isPoster) || isAwarded) && accepting && (
             <div className="mb-4 space-y-2">
@@ -266,7 +283,7 @@ export default function WorkJobDetailPage() {
               key={s.id}
               submission={s}
               job={job}
-              isPoster={isPoster}
+              isPoster={canManage}
               isMine={s.worker_address.toLowerCase() === me}
               onApprove={(pay, views, evidence) => approveMutation.mutate({
                 submission_id: s.id,
@@ -290,6 +307,7 @@ export default function WorkJobDetailPage() {
                 total_budget: job.total_budget,
                 recovery_hash: recoveryHash,
               })}
+              onRelease={()=>{if(window.confirm(t('work.integrity.releaseConfirm'))) releaseMutation.mutate(s.id);}}
               onReject={(reason) => rejectMutation.mutate({ submission_id: s.id, job_id: job.id, reason })}
               budgetLeft={budgetLeft}
               busy={approveMutation.isPending || payMutation.isPending || rejectMutation.isPending}
@@ -349,7 +367,7 @@ export default function WorkJobDetailPage() {
 
       {/* Actions */}
       <div className="mt-6 flex flex-wrap gap-2">
-        {isPoster && job.status === 'in_progress' && (
+        {isPoster && ['open','in_progress','expired'].includes(job.status) && (
           <button
             onClick={() => {
               // Closing a job over unpaid accepted work is how the current
@@ -407,6 +425,7 @@ function SubmissionCard({
   onApprove,
   onPay,
   onReject,
+  onRelease,
   busy,
   budgetLeft,
 }: {
@@ -417,6 +436,7 @@ function SubmissionCard({
   onApprove: (pay: boolean, views?: number, evidence?: string) => void;
   onPay: (recoveryHash?: string) => void;
   onReject: (reason: string) => void;
+  onRelease:()=>void;
   busy: boolean;
   budgetLeft: number;
 }) {
@@ -433,10 +453,11 @@ function SubmissionCard({
   const verifiedViews = Number(views);
   const clipUnits = Number.isSafeInteger(verifiedViews) && verifiedViews >= 1000 ? Math.floor(verifiedViews / 1000) : 0;
   const validViews = !clipping || (clipUnits > 0 && /^https:\/\/\S+$/.test(viewEvidence));
-  const due = Number(s.payout_amount) || (clipping ? clipUnits * job.price_per_unit : payoutFor(job));
+  const gross=Number(s.gross_amount) || (clipping ? clipUnits*job.price_per_unit:payoutFor(job));
+  const due=Number(s.payout_amount) || gross*(job.fund_tx_hash?0.95:1);
   const submittedPayment = s.payout_state === 'signing' || s.payout_state === 'broadcast';
   // A rounding-sized shortfall is the token's own precision, not an overspend.
-  const affordable = due - budgetLeft <= 1e-9;
+  const affordable = gross - budgetLeft <= 1e-9;
 
   return (
     <div className="p-3 rounded-xl bg-white/5 border border-white/10 mb-2">
@@ -465,7 +486,7 @@ function SubmissionCard({
       {paid && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-2">
           <span className="text-[11px] text-emerald-300">{t('work.paidAmount', { amount: amount(Number(s.payout_amount), job.currency) })}</span>
-          {s.payout_tx_hash && <TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} />}
+          {s.payout_tx_hash && <TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} chain={s.payout_chain_id ?? 8453} />}
         </div>
       )}
 
@@ -477,18 +498,19 @@ function SubmissionCard({
         </p>
       )}
 
-      {s.view_count_cached > 0 && <p className="mt-2 text-xs text-white/60">{s.view_count_cached.toLocaleString()} verified views · {s.approved_units} × 1,000 views</p>}
+      {s.view_count_cached > 0 && <p className="mt-2 text-xs text-white/60">{t('work.integrity.viewsAccepted',{count:s.view_count_cached,units:s.approved_units})}</p>}
       {isPoster && clipping && s.approval_status === 'pending' && (
         <div className="mt-3 space-y-2">
-          <label className="block text-xs text-white/60">Verified view count
+          <label className="block text-xs text-white/60">{t('work.integrity.verifiedViews')}
             <input type="number" min={1000} step={1} value={views} onChange={e => setViews(e.target.value)} className={inputCls} />
           </label>
-          <label className="block text-xs text-white/60">View count source
+          <label className="block text-xs text-white/60">{t('work.integrity.viewSource')}
             <input type="url" value={viewEvidence} onChange={e => setViewEvidence(e.target.value)} className={inputCls} />
           </label>
-          <p className="text-xs text-white/50">Check the count on the clip before approval. Each full 1,000 views earns one unit, up to the remaining budget.</p>
+          <p className="text-xs text-white/50">{t('work.integrity.clipVerify')}</p>
         </div>
       )}
+      {job.fund_tx_hash && <p className="mt-2 text-xs text-white/60">{t('work.integrity.feeNotice',{net:due,currency:job.currency,gross})}</p>}
       {/* Poster: accept + pay */}
       {isPoster && s.approval_status === 'pending' && !rejecting && (
         <div className="flex flex-wrap gap-2 mt-3">
@@ -523,11 +545,12 @@ function SubmissionCard({
 
       {/* Poster: settle something already accepted. */}
       {isPoster && s.payout_state === 'signing' && (
-        <label className="block mt-3 text-xs text-white/60">Recover a submitted transaction
-          <input value={recoveryHash} onChange={e => setRecoveryHash(e.target.value.trim())} placeholder="0x transaction hash" className={inputCls} />
+        <label className="block mt-3 text-xs text-white/60">{t('work.integrity.recoverTx')}
+          <input value={recoveryHash} onChange={e => setRecoveryHash(e.target.value.trim())} placeholder={t('work.integrity.hashPlaceholder')} className={inputCls} />
         </label>
       )}
-      {submittedPayment && <p className="mt-2 text-xs text-white/60">Payment is awaiting confirmation. Check its status before sending another transfer.</p>}
+      {isPoster && s.payout_state==='signing' && <button onClick={onRelease} className="mt-2 text-xs text-white/60">{t('work.integrity.releaseSignature')}</button>}
+      {submittedPayment && <p className="mt-2 text-xs text-white/60">{t('work.integrity.paymentPending')}</p>}
       {isPoster && awaiting && (
         <button
           onClick={() => onPay(recoveryHash || undefined)}
@@ -535,7 +558,7 @@ function SubmissionCard({
           title={affordable ? undefined : t('work.budgetExhausted')}
           className="mt-3 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-40"
         >
-          <Wallet className="w-3 h-3" /> {submittedPayment ? 'Check payment' : t('work.payAmount', { amount: amount(due, job.currency) })}
+          <Wallet className="w-3 h-3" /> {submittedPayment ? t('work.integrity.checkPayment') : t('work.payAmount', { amount: amount(due, job.currency) })}
         </button>
       )}
 

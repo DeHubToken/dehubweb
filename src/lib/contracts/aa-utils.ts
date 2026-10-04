@@ -452,11 +452,11 @@ export interface AAWriteResult {
 
 /**
  * Generic AA-aware contract write helper
- * 
+ *
  * For smart accounts (Web3Auth social login):
  * - Encodes calldata and sends via eth_sendTransaction through Web3Auth provider
  * - The AA provider handles bundler/paymaster internally
- * 
+ *
  * For EOA wallets (wagmi/external):
  * - Uses wagmi's sendTransaction to properly route through the wallet connector
  * - Gas estimation uses public RPC (no wallet needed for reads)
@@ -471,6 +471,7 @@ export async function writeContractAA(
     gasLimit?: string | number | bigint;
     context?: string;
     chainId?: number;
+    calldata?: Hex;
   }
 ): Promise<AAWriteResult> {
   await ensureSignerOnChain((options?.chainId ?? BASE_CHAIN_ID) as ChainId);
@@ -478,7 +479,7 @@ export async function writeContractAA(
   const context = options?.context || 'send transaction';
 
   // Encode the function call
-  const data = contractInterface.encodeFunctionData(functionName, args) as Hex;
+  const data = options?.calldata ?? contractInterface.encodeFunctionData(functionName, args) as Hex;
   // getActiveProvider above has already raised the unlock request if one was
   // needed, so this read must not raise a second one.
   const fromAddress = isWeb3Auth
