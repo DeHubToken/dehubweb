@@ -1796,27 +1796,6 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
               )}
 
               <div className="flex items-start gap-2">
-                {/* Sound effects, music and voice design have nothing to attach
-                    — offering a paperclip there is a control that can only
-                    produce an error. */}
-                {(mode !== 'audio' || activeAudioTask.needsMedia) && (
-                  <button
-                    type="button"
-                    onClick={() => fileRef.current?.click()}
-                    disabled={attaching}
-                    aria-label={
-                      t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')
-                    }
-                    className="mt-0.5 shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-2.5 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
-                  >
-                    {attaching ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Paperclip className="h-4 w-4" />
-                    )}
-                  </button>
-                )}
-
                 {activeAudioTask.promptRole === 'none' && mode === 'audio' ? (
                   // Nothing to type for these four: the upload IS the input, so
                   // the box is replaced by what to do rather than left empty
@@ -1873,6 +1852,26 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
               {/* Settings rail. The mode toggle sits outside the scrolling part
                   so it never slides out of reach on a narrow screen. */}
               <div className="mt-1.5 flex flex-wrap items-end gap-2">
+                {/* Sound effects, music and voice design have nothing to attach
+                    — offering a paperclip there is a control that can only
+                    produce an error. */}
+                {(mode !== 'audio' || activeAudioTask.needsMedia) && (
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current?.click()}
+                    disabled={attaching}
+                    aria-label={
+                      t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')
+                    }
+                    className="shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-2 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
+                  >
+                    {attaching ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Paperclip className="h-4 w-4" />
+                    )}
+                  </button>
+                )}
                 <ModeToggle mode={mode} onChange={switchMode} />
 
                 <div className="flex min-w-0 flex-1 items-end gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
