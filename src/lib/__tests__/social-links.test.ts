@@ -2,6 +2,21 @@ import { describe, it, expect } from 'vitest';
 import { normalizeSocialUrl } from '../social-links';
 
 describe('normalizeSocialUrl', () => {
+  it.each([
+    ['twitterLink', 'r2r_air', 'https://x.com/r2r_air'],
+    ['twitterLink', '@r2r_air', 'https://x.com/r2r_air'],
+    ['instagramLink', 'r2r_officiel', 'https://instagram.com/r2r_officiel'],
+    ['instagramLink', '@r2r.officiel', 'https://instagram.com/r2r.officiel'],
+    ['youtubeLink', '@dehub', 'https://youtube.com/@dehub'],
+    ['tiktokLink', 'dehub', 'https://tiktok.com/@dehub'],
+    ['telegramLink', 'dehub_dhb', 'https://t.me/dehub_dhb'],
+    ['discordLink', 'dehub', 'https://discord.gg/dehub'],
+    ['twitterLink', 'twitter.com/r2r_air', 'https://twitter.com/r2r_air'],
+    ['instagramLink', '//instagram.com/r2r_officiel', 'https://instagram.com/r2r_officiel'],
+  ])('opens %s handle %s on its platform', (key, value, expected) => {
+    expect(normalizeSocialUrl(key, value)).toBe(expected);
+  });
+
   it('rewrites a bare YouTube custom URL to the @handle form', () => {
     // youtube.com/lcs_game 404s; youtube.com/@lcs_game is the same channel.
     expect(normalizeSocialUrl('youtubeLink', 'youtube.com/lcs_game')).toBe(

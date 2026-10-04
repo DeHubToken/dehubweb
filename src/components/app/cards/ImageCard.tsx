@@ -78,6 +78,7 @@ import { galleryIndex, rememberGalleryIndex, subscribeGallery } from '@/lib/medi
 import { warmPostPage } from '@/lib/preload-post-page';
 import { FEED_IMAGE_MAX_HEIGHT } from '@/lib/feed-image-layout';
 import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
+import { downloadMedia, imageDownloadName } from '@/lib/download-media';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
@@ -755,6 +756,24 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     ? post.imageUrls 
     : [post.image], [post.imageUrls, post.image]);
 
+  const [isDownloading, setIsDownloading] = useState(false);
+  const handleDownloadImage = useCallback(async () => {
+    const source = images[activeImageIndex] || images[0];
+    if (!source || isDownloading) return;
+    setShowOptionsDrawer(false);
+    setIsDownloading(true);
+    const toastId = `image-download-${post.id}`;
+    toast.loading('Preparing download...', { id: toastId });
+    try {
+      await downloadMedia(source, imageDownloadName(source, post.id, activeImageIndex));
+      toast.success('Download started', { id: toastId });
+    } catch {
+      toast.error('Download failed. Please try again.', { id: toastId });
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [images, activeImageIndex, isDownloading, post.id]);
+
   const openPost = useCallback(() => {
     if (wasDrawerJustDismissed() || showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
     cacheImageForNavigation(queryClient, post);
@@ -918,7 +937,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 <Languages className="w-5 h-5" /> {t('postOptions.translateImage')}
               </button>
               {!isPPV && !isW2E && !isLocked && (
-                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <button onClick={handleDownloadImage} disabled={isDownloading} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-50">
                   <Download className="w-5 h-5" /> {t('postOptions.download')}
                 </button>
               )}
