@@ -86,7 +86,7 @@ async function readWalletDhb(address: string): Promise<number> {
   return Number(total) / 1e18;
 }
 
-/** The staked half of the badge sum. Only the API knows this one. */
+/** Stake and DAO credit retained after DHB leaves the wallet. */
 function stakedFromUser(user: DeHubUser | null | undefined): number {
   const rows = user?.balanceData;
   if (!Array.isArray(rows)) return 0;
@@ -97,7 +97,9 @@ function stakedFromUser(user: DeHubUser | null | undefined): number {
 
   return rows.reduce(
     (sum, row) =>
-      badgeTokens.has(String(row?.tokenAddress || '').toLowerCase()) ? sum + (row?.staked || 0) : sum,
+      badgeTokens.has(String(row?.tokenAddress || '').toLowerCase())
+        ? sum + (row?.staked || 0) + (row?.daoContributed || 0)
+        : sum,
     0,
   );
 }
