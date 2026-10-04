@@ -239,6 +239,8 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   Profile: ['my profile', 'my account', 'me', 'my posts', 'avatar', 'bio', 'followers', 'following'],
   Explore: ['search', 'discover', 'find', 'trending', 'hashtags', 'tags', 'people', 'users', 'topics'],
   Prompt: ['ai', 'generate', 'ai image', 'ai video', 'image generator', 'text to image', 'art', 'create with ai', 'credits'],
+  Editor: ['edit', 'video editor', 'trim', 'cut', 'timeline', 'captions', 'clips'],
+  Creator: ['create', 'creator studio', 'generate', 'image', 'video', 'audio', 'music'],
   // Nobody types "converter" looking for this — they type the platform
   // they're bringing content over from, or what they're trying to do with it.
   Converter: ['youtube', 'yt', 'yt-dlp', 'import youtube', 'import video', 'migrate', 'migrate all', 'download', 'convert', 'tiktok', 'instagram', 'reel', 'reels', 'twitter', 'x', 'facebook', 'twitch', 'clip', 'kick', 'rumble', 'vimeo', 'dailymotion', 'reddit', 'bluesky', 'odysee', 'streamable', 'loom', 'tumblr', 'pinterest', 'snapchat', 'vk', 'rutube', 'bilibili'],
