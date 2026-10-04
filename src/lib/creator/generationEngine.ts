@@ -23,6 +23,7 @@ export interface ImageRequest {
   model: string;
   /** Data URL or https URL of an image to edit / use as reference. */
   sourceImage?: string;
+  referenceImageUrls?: string[];
   /** Requested framing, e.g. '16:9'. Steered in the prompt by the edge function. */
   aspectRatio?: string;
   /** Hash of the DHB transfer that paid for this job. */
@@ -366,6 +367,14 @@ export async function hostDataUrl(dataUrl: string): Promise<string> {
   return data.publicUrl;
 }
 
+export async function hostCreatorFile(file: File): Promise<string> {
+  const ext = file.name.split('.').pop()?.replace(/[^a-z0-9]/gi, '') || 'bin';
+  const path = `creator-sources/${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage.from('ai-media-uploads').upload(path, file, { contentType: file.type, upsert: false });
+  if (error) throw new Error(error.message);
+  return supabase.storage.from('ai-media-uploads').getPublicUrl(path).data.publicUrl;
+}
+
 /** Text to image, or image plus instruction to edited image. Resolves to a URL. */
 export async function generateImage(
   req: ImageRequest,
@@ -389,6 +398,7 @@ export async function generateImage(
       prompt: req.prompt,
       model: req.model,
       ...(sourceImage ? { sourceImage } : {}),
+      ...(req.referenceImageUrls?.length ? { referenceImageUrls: req.referenceImageUrls } : {}),
       ...(req.aspectRatio ? { aspectRatio: req.aspectRatio } : {}),
       ...(req.txHash ? { txHash: req.txHash } : {}),
       ...(req.useFree && !req.txHash ? { useFree: true } : {}),

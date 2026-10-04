@@ -21,6 +21,7 @@
 import type { AudioTask } from '@/constants/audio-models.constants';
 import { OPEN_STUDIO_PRESETS } from './openStudioPresets';
 import { EXPANDED_STUDIO_PRESETS } from './expandedStudioPresets';
+import { REFERENCE_STUDIO_PRESETS } from './referenceStudioPresets';
 
 export type PresetKind = 'image' | 'video' | '3d' | 'audio';
 
@@ -63,6 +64,7 @@ export interface CreatorPreset {
 }
 
 export const IMAGE_PRESETS: CreatorPreset[] = [
+  ...REFERENCE_STUDIO_PRESETS.filter(preset => preset.kind === 'image'),
   ...OPEN_STUDIO_PRESETS.filter((preset) => preset.kind === 'image'),
   ...EXPANDED_STUDIO_PRESETS.filter((preset) => preset.kind === 'image'),
   {
@@ -444,6 +446,7 @@ export const IMAGE_PRESETS: CreatorPreset[] = [
 ];
 
 export const VIDEO_PRESETS: CreatorPreset[] = [
+  ...REFERENCE_STUDIO_PRESETS.filter(preset => preset.kind === 'video'),
   ...OPEN_STUDIO_PRESETS.filter((preset) => preset.kind === 'video'),
   ...EXPANDED_STUDIO_PRESETS.filter((preset) => preset.kind === 'video'),
   {

@@ -1,5 +1,5 @@
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
@@ -27,9 +27,7 @@ import {
   Workflow,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { MountOnVisible } from '@/components/util/MountOnVisible';
 import { CreatorBento, CreatorHeroWall, MediumDoors, loadCreatorGallery, thumbUrl, type GalleryItem } from '@/components/app/creator/CreatorStage';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 
 const accent = '#e5e7eb';
 const hot = '#ff2c91';
@@ -225,8 +223,7 @@ export default function CreatorPage() {
    * containers rather than one because the studio renders its own tail — they
    * share a cut element, so the line is continuous across both.
    */
-  const belowComposerRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(belowComposerRef, '[data-creator-composer]', [], { allThemes: true });
+  const openEditor = useCallback(() => navigate('/editor'), [navigate]);
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
@@ -254,6 +251,26 @@ export default function CreatorPage() {
     }
 
     navigate(`/app/assistant#preset=${action.preset}`);
+  };
+
+  const pickNavigation = (item: typeof navItems[number]) => {
+    setActiveNav(item);
+    if (item === 'Image' || item === 'Video' || item === 'Audio') {
+      setActiveCategory(item);
+      window.dispatchEvent(new CustomEvent('creator:mode', { detail: item.toLowerCase() }));
+    } else if (item === 'Explore') {
+      setActiveCategory('All');
+      document.querySelector('[data-creator-composer]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (item === 'Apps') navigate('/builder');
+    else if (item === 'Agents') navigate('/app/agents');
+    else if (item === 'Marketing') {
+      setActiveCategory('Image');
+      window.dispatchEvent(new CustomEvent('creator:preset', { detail: 'ad-headline' }));
+    }
+    else {
+      setActiveCategory('Studio');
+      document.querySelector('[data-creator-tools]')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -319,13 +336,8 @@ export default function CreatorPage() {
                   <button
                     key={item}
                     type="button"
-                    onClick={() => {
-                      setActiveNav(item);
-                      if (item !== 'Explore') {
-                        const match = categories.find(category => category === item);
-                        if (match) setActiveCategory(match);
-                      }
-                    }}
+                    onClick={() => pickNavigation(item)}
+                    aria-pressed={activeNav === item}
                     className={cn(
                       'relative shrink-0 inline-flex items-start gap-1 text-[14px] font-medium tracking-wide transition-colors',
                       activeNav === item ? '' : 'text-white/55 hover:text-white'
@@ -387,13 +399,13 @@ export default function CreatorPage() {
 
         {/* The hero's wall of community work sits behind the studio's headline and composer. */}
         <CreatorHeroWall />
-        <CreatorStudio onOpenEditor={() => navigate('/editor')} stickyTop={headerHeight} />
-        <div ref={belowComposerRef}>
+        <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} />
+        <div>
         <MediumDoors />
 
-        <MountOnVisible minHeight={520} rootMargin="800px">
+        <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 520px' }}>
           <CommunityGallery />
-        </MountOnVisible>
+        </div>
 
         <CreatorBento />
 
@@ -401,7 +413,7 @@ export default function CreatorPage() {
           <ModelMarquee />
         </section>
 
-        <MountOnVisible minHeight={320} rootMargin="800px">
+        <div data-creator-tools className="scroll-mt-28">
         <section className="px-3 pb-6 sm:px-4">
           <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
             <h2 className="font-exo text-[22px] font-black tracking-tight text-white sm:text-[28px]">{t('creator.moreTools')}</h2>
@@ -455,11 +467,11 @@ export default function CreatorPage() {
             })}
           </div>
         </section>
-        </MountOnVisible>
+        </div>
 
-        <MountOnVisible minHeight={600} rootMargin="800px">
+        <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
           <PricingSection />
-        </MountOnVisible>
+        </div>
 
         </div>
       </main>
@@ -479,24 +491,26 @@ function getGalleryColumns(): number {
   return 2;
 }
 
-function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryItem) => void }) {
+const GalleryTile = memo(function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryItem) => void }) {
   const { t } = useTranslation();
   const ref = useRef<HTMLButtonElement | null>(null);
   const [visible, setVisible] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const isVideo = !!item.video_url;
   const url = item.video_url || item.image_url || '';
 
   useEffect(() => {
-    if (!ref.current || visible) return;
+    if (!ref.current) return;
     const io = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         setVisible(true);
-        io.disconnect();
+      } else {
+        videoRef.current?.pause();
       }
     }, { rootMargin: '300px' });
     io.observe(ref.current);
     return () => io.disconnect();
-  }, [visible]);
+  }, []);
 
   return (
     <button
@@ -507,12 +521,14 @@ function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryI
     >
       {visible && (isVideo ? (
         <video
-          src={url}
+          ref={videoRef}
+          src={`${url}#t=0.1`}
           muted
           loop
-          autoPlay
+          onMouseEnter={event => void event.currentTarget.play().catch(() => {})}
+          onMouseLeave={event => event.currentTarget.pause()}
           playsInline
-          preload="none"
+          preload="metadata"
           className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
         />
       ) : (
@@ -531,9 +547,9 @@ function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryI
       )}
     </button>
   );
-}
+});
 
-function CommunityGallery() {
+const CommunityGallery = memo(function CommunityGallery() {
   const { t } = useTranslation();
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -717,5 +733,4 @@ function CommunityGallery() {
       )}
     </section>
   );
-}
-
+});
