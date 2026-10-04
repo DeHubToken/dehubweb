@@ -9,7 +9,7 @@
  * ```
  */
 
-import { useState, memo, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
+import { useState, memo, useCallback, useEffect, useRef, useMemo, lazy, Suspense, type ReactNode } from 'react';
 const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useImageSoundtrack } from '@/hooks/use-image-soundtrack';
@@ -295,6 +295,8 @@ function ImageCarousel({
   aboveFold = false,
   postId,
   immersive = false,
+  overlay,
+  soundPlaying = false,
 }: {
   images: string[];
   onImageClick: (index: number) => void;
@@ -302,6 +304,10 @@ function ImageCarousel({
   aboveFold?: boolean;
   postId?: string;
   immersive?: boolean;
+  /** Sits on the bottom edge of the photo, inside its clip. */
+  overlay?: ReactNode;
+  /** The photo's soundtrack is playing: the photo drifts slowly. */
+  soundPlaying?: boolean;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const galleryKey = postId ?? images.join('|');
@@ -399,7 +405,7 @@ function ImageCarousel({
   const hasMultiple = images.length > 1;
   
   return (
-    <div data-media-full className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
+    <div data-media-full data-sound-playing={soundPlaying || undefined} className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
       {/* Carousel container */}
       <div
         ref={scrollRef}
@@ -451,7 +457,7 @@ function ImageCarousel({
           )}
         </>
       )}
-      
+      {overlay && <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10">{overlay}</div>}
     </div>
   );
 }
@@ -1162,13 +1168,19 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           </>
         ) : (
           <SwipeableCarousel>
-            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} aboveFold={aboveFold} postId={post.id} immersive={isImmersive} />
+            <ImageCarousel
+              images={images}
+              onImageClick={handleImageClick}
+              onIndexChange={setActiveImageIndex}
+              aboveFold={aboveFold}
+              postId={post.id}
+              immersive={isImmersive}
+              overlay={fullscreenOpen ? undefined : soundtrackControl}
+              soundPlaying={soundtrack.playing && !fullscreenOpen}
+            />
           </SwipeableCarousel>
         )}
 
-        {soundtrackControl && !fullscreenOpen && (
-          <div className="absolute bottom-2 left-2 z-10 max-w-[calc(100%-1rem)]">{soundtrackControl}</div>
-        )}
 
         {/* Content Type Badges - Bounty only (PPV/Lock are shown via centered overlay) */}
         {hasBadges && (
@@ -1304,7 +1316,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       {/* Fullscreen Image Viewer */}
       <FullscreenImageViewerLazy
         images={images}
-        soundtrackControl={soundtrackControl}
+        soundtrackControl={soundtrackControl && (
+          <SoundtrackControl title={post.soundtrackTitle} creator={post.soundtrackCreator} {...soundtrack} layout="inline" />
+        )}
         initialIndex={fullscreenIndex}
         isOpen={fullscreenOpen}
         onClose={() => setFullscreenOpen(false)}
