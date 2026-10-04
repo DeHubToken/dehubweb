@@ -135,6 +135,18 @@ describe('scroll freeze watchdog', () => {
     expect(messages()).toEqual([]);
   });
 
+  it('says nothing when the swipe went into collapsing the browser toolbar', () => {
+    scrollTop = 900;
+    drag(120);
+    Object.defineProperty(window, 'innerHeight', { value: 1056, configurable: true });
+    try {
+      settle();
+      expect(messages()).toEqual([]);
+    } finally {
+      Object.defineProperty(window, 'innerHeight', { value: 1000, configurable: true });
+    }
+  });
+
   it('names the ancestor whose touch-action ruled the pan out', () => {
     scrollTop = 900;
     const blocker = document.createElement('div');
