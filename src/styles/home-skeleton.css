@@ -54,6 +54,7 @@ html[data-theme="minimal"] .home-skeleton-block { background: rgb(255 255 255 / 
   html[data-theme="system"] [data-home-skeleton-card] .home-skeleton-media { border-radius: 0; }
   html[data-theme="system"] [data-home-skeleton-card][data-skeleton-first] { padding-top: 0; }
   html[data-theme="system"] [data-home-skeleton-card][data-skeleton-first] .home-skeleton-media { order: -1; }
+  html[data-theme="system"] [data-home-skeleton-card="video"][data-skeleton-first] .home-skeleton-media { aspect-ratio: 9 / 16; }
   html[data-theme="system"] [data-home-shell-skeleton] [data-home-skeleton-card]:first-child { margin-top: 0; }
 }
 html[data-theme="light"] [data-home-skeleton-card] {
