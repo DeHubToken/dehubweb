@@ -10,6 +10,8 @@ import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCover';
 import { ArticleReader } from '@/components/app/article/ArticleReader';
 import { ArticleComposer } from '@/features/post/components/ArticleComposer';
 import { BADGE_ORDER, badgeImage } from '@/lib/staking-badges';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { BadgedName } from '@/components/app/BadgedName';
 import { preloadBadgeShowcase } from '@/lib/badge-showcase';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { ActionBar } from '@/components/app/cards/ActionBar';
@@ -214,6 +216,23 @@ export default function StateGalleryPage() {
               <img src={badgeImage(BADGE_ORDER[Math.max(0, badgeTier - 1)]) ?? ''} alt="" className="h-10 w-10" /> Promote badge
             </button>
             <button className="p-2" onClick={() => setBadge({ anchor: null, promote: true, first: true })}>First badge</button>
+          </div>
+          <div data-inline-badge-gallery className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[12, 14, 16, 24].map(size => (
+              <div key={size} data-badge-font-size={size} className="space-y-3">
+                <p className="text-xs text-zinc-500">{size}px names</p>
+                {BADGE_ORDER.map(tier => (
+                  <span key={tier} data-badge-sample={tier} className="flex items-baseline gap-1" style={{ fontSize: size, lineHeight: 1.4 }}>
+                    <span className="font-semibold">H {tier}</span>
+                    <BadgeIcon src={badgeImage(tier)} />
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-4" data-badge-font-inheritance>
+            <BadgedName badgeBalance={50_000_000} className="text-xs font-semibold">H Compact name</BadgedName>
+            <BadgedName badgeBalance={50_000_000} className="text-2xl font-bold">H Profile name</BadgedName>
           </div>
         </section>
         {badge && <Suspense fallback={null}>
