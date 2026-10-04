@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { ensureFreshToken, getAuthToken } from '@/lib/api/dehub/core';
 import { Button } from '@/components/ui/button';
-import { supportedWatchDelta } from '@/lib/ads/support-watch';
+import { shouldSendSupportProgress, supportedWatchDelta } from '@/lib/ads/support-watch';
 
 interface SupportAd { supportSessionId: string; mediaUrl: string; headline: string; advertiser: string; creatorShareUsd: number }
 
@@ -44,7 +44,7 @@ export default function CreatorSupportAd({ postId, walletAddress }: { postId: st
     p.media = video.currentTime; p.at = now;
     if (!ad || credited || video.paused || document.visibilityState !== 'visible') return;
     p.played = Math.min(60, p.played + supportedWatchDelta(delta, elapsed, !video.paused, document.visibilityState === 'visible'));
-    if (p.pending || p.played - p.sent < 4) return;
+    if (!shouldSendSupportProgress(p.played, p.sent, p.pending)) return;
     p.pending = true; p.sent = p.played;
     try {
       const data = await invoke('ads-creator-support', { sessionId: ad.supportSessionId, playedSeconds: p.played });
@@ -63,7 +63,7 @@ export default function CreatorSupportAd({ postId, walletAddress }: { postId: st
     <p className="text-xs text-white/60">Watch 30 seconds. The sponsor funds the creator's revenue share; you pay nothing.</p>
     {ad && !credited ? <div className="space-y-2">
       <p className="text-sm text-white">Sponsored by {ad.advertiser} · {ad.headline}</p>
-      <video src={ad.mediaUrl} autoPlay muted playsInline controls onTimeUpdate={e => void tick(e.currentTarget)} className="max-h-64 w-full rounded-lg" />
+      <video src={ad.mediaUrl} autoPlay loop muted playsInline controls onTimeUpdate={e => void tick(e.currentTarget)} className="max-h-64 w-full rounded-lg" />
       <p className="text-xs text-white/70">{Math.floor(watched)} / 30 seconds verified · Creator share ${ad.creatorShareUsd.toFixed(4)}</p>
       <Button variant="glass" onClick={() => { setAd(null); setMessage('Ad closed.'); }}>Cancel ad</Button>
     </div> : null}
