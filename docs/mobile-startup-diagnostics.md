@@ -52,3 +52,24 @@ paused and playing, on Home and Explore. Also check a Skia-enabled binary and
 the matching web style on `staging.dehub.io`. Keep the recovery OTA on the
 affected runtime so existing installs can receive it. Confirm its update ID
 on the affected phone before treating the blackout as resolved.
+
+## Feed errors after reopening
+
+`undefined is not a function` with `useIsWatchedVideo` at the top of the stack
+identifies watch history restored as a plain object. Mobile persists the query
+cache with JSON, which serializes a `Set` as `{}`; the next launch then calls
+`.has()` on that object. Reinstalling temporarily removes the bad cache, but
+the first successful history fetch saves it again.
+
+Both clients cache an array of token IDs and derive the `Set` in the query
+observer's `select`. Query-key version 2 bypasses the old malformed entries
+without clearing login, wallet data, preferences, or the rest of the feed
+cache. Web currently excludes watch history from its persistence whitelist;
+the shared data format also makes that hook safe to serialize.
+
+Regression checks fetch history, serialize and hydrate the query cache into a
+fresh client, then read watched markers without a second request. On an
+installed phone, verify the repaired update ID, open the feed, background and
+cold-launch it with app data preserved. Repeated feed-card errors are separate
+from `ProcessExit` rows: inspect their recorded exit time and importance before
+counting them as foreground crashes. Importance 400 is a background process.
