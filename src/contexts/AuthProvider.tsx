@@ -849,7 +849,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const existing = await fetchWallet(userId);
       if (existing) {
-        throw new Error('Could not finish signing in to your profile. Please try again.');
+        // A sign-up that stopped between saving the wallet and registering the
+        // profile: the backup screen was left, the tab closed, or the register
+        // call timed out. The exchange above already sent this wallet's address
+        // and the server found no profile at it, so nothing exists to protect —
+        // the wallet's own signature is what finishes the sign-up. Refusing here
+        // sent these people back to the login options on every attempt.
+        authLogger.warn('Resuming an unfinished sign-up', { address: existing.ethAddress });
+        setWalletPhase('unlock');
+        openLoginModal();
+        return;
       }
       const { data: sessionData } = await supabase.auth.getSession();
       if (sessionData?.session?.user?.id !== userId) {
@@ -858,8 +867,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setWalletPhase('create');
     } catch (e) {
       // A failed profile login must not escalate to decrypting or signing.
+      // The identity session is still good, so retry the exchange in place
+      // rather than making the person go through Google or email again.
       setWalletPhase('none');
-      toast.error(e instanceof Error ? e.message : 'Could not sign in. Please try again.');
+      toast.error(e instanceof Error ? e.message : 'Could not sign in. Please try again.', {
+        action: {
+          label: i18n.t('common.tryAgain', 'Try again'),
+          onClick: () => { void proceedToWalletPhase(userId); },
+        },
+      });
     }
     openLoginModal();
     // completeLoginWithoutUnlock is recreated each render but closes only over
