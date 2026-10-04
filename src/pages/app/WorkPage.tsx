@@ -13,7 +13,7 @@ import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 
 const TABS: Array<{ id: WorkJobType | 'all'; labelKey: string; icon: ThemeIconKey }> = [
   { id: 'all', labelKey: 'work.tabAll', icon: 'bounties' },
-  { id: 'shill', labelKey: 'work.tabSocial', icon: 'messages' },
+  { id: 'shill', labelKey: 'work.typeShillShort', icon: 'messages' },
   { id: 'clipping', labelKey: 'work.tabClipping', icon: 'videos' },
   { id: 'contract', labelKey: 'work.tabContracts', icon: 'command' },
 ];
