@@ -38,6 +38,10 @@ const HISTORY_PAGE_SIZE = 100;
 /** Stable identity so consumers do not re-render on every miss. */
 const EMPTY_SET: ReadonlySet<string> = new Set<string>();
 
+// Keep query data JSON-safe; derive the Set only for the hook's consumers.
+const selectWatchedIds = (ids: string[]): ReadonlySet<string> =>
+  Array.isArray(ids) ? new Set(ids) : EMPTY_SET;
+
 function readHideWatched(): boolean {
   try {
     return localStorage.getItem(HIDE_WATCHED_KEY) === 'true';
@@ -99,7 +103,7 @@ export function useWatchedVideoIds(enabled = true) {
   const { isAuthenticated, walletAddress } = useAuth();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['watched-video-ids', walletAddress?.toLowerCase() ?? null],
+    queryKey: ['watched-video-ids', walletAddress?.toLowerCase() ?? null, 2],
     queryFn: async () => {
       const ids = new Set<string>();
       for (let page = 0; page < HISTORY_PAGES; page++) {
@@ -110,8 +114,9 @@ export function useWatchedVideoIds(enabled = true) {
         });
         if (items.length < HISTORY_PAGE_SIZE) break;
       }
-      return ids;
+      return Array.from(ids);
     },
+    select: selectWatchedIds,
     enabled: enabled && isAuthenticated,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
