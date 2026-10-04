@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { saveCloudGeneration } from './cloudLibrary';
+import { saveCloudGeneration, saveGenerationPreview } from './cloudLibrary';
 import type { GenerationJob } from '@/store/generationStore';
 
 const { invoke, upload } = vi.hoisted(() => ({ invoke: vi.fn(), upload: vi.fn() }));
@@ -45,5 +45,16 @@ describe('saving a mesh with its preview', () => {
     expect(invoke.mock.calls[0][1].body.metadata.posterUrl).toBe(job.posterUrl);
     expect(fetchMedia).not.toHaveBeenCalled();
     expect(upload).not.toHaveBeenCalled();
+  });
+
+  it('stores a generated still separately and returns its private viewing URL', async () => {
+    invoke.mockResolvedValueOnce({ data: { path: 'account/mesh-result/preview', token: 'preview-token' } })
+      .mockResolvedValueOnce({ data: { posterUrl: 'https://storage.example/private-preview' } });
+    upload.mockResolvedValue({ error: null });
+    const preview = new Blob(['still'], { type: 'image/webp' });
+    expect(await saveGenerationPreview('account', job.id, preview)).toBe('https://storage.example/private-preview');
+    expect(invoke.mock.calls[0][1].body).toEqual({ action: 'prepare-preview', id: job.id });
+    expect(upload).toHaveBeenCalledWith('account/mesh-result/preview', 'preview-token', preview, { contentType: 'image/webp' });
+    expect(invoke.mock.calls[1][1].body).toEqual({ action: 'complete-preview', id: job.id });
   });
 });
