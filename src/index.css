@@ -588,6 +588,13 @@ html {
    same delta, so the headline keeps its existing clearance from the art rather
    than gaining a gap on one side and losing it on the other. */
 .dehub-intro-hero { top: 74px; right: 30px; width: 96px; height: 96px; opacity: 0.8; }
+.dehub-intro-art { animation: dehub-intro-hover 3.8s ease-in-out infinite; transition: opacity 300ms ease-out; }
+@keyframes dehub-intro-hover { 0%, 100% { transform: translateY(8px); } 50% { transform: translateY(-8px); } }
+.dehub-intro-desc .dehub-intro-less { display: none; }
+.dehub-intro-desc[open] .dehub-intro-short,
+.dehub-intro-desc[open] .dehub-intro-more { display: none; }
+.dehub-intro-desc[open] .dehub-intro-less { display: inline; }
+@media (prefers-reduced-motion: reduce) { .dehub-intro-art { animation: none; transition: none; } }
 .dehub-intro-stage { padding-right: 114px; }
 .dehub-intro-head { font-size: 22px; }
 .dehub-intro-wide { display: none; }

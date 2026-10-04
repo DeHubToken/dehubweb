@@ -300,9 +300,9 @@ const HOME_INTRO_LINKS = [
 // always mounted in the SPA (stacked and cross-faded, never conditionally
 // rendered), so all three belong here too.
 const HOME_INTRO_SLIDES = [
-  ['The Social Media We All Deserve', 'Instantly monetize, never get deplatformed, keep up to 99% of revenue and create free from censorship or platform manipulation.'],
-  ['The App For Everyone', 'No algorithms that favor one side of the argument. Everyone is amplified equally and fairly with open source code.'],
-  ['You Will Own Everything, And Be Happy', 'The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you.'],
+  ['Censorship resistant media for the next generation', 'Instantly monetize, never get deplatformed, keep up to 99% of revenue and create free from censorship or platform manipulation.'],
+  ['No bias or centralized authority', 'No algorithms that favor one side of the argument. Everyone is amplified equally and fairly with open source code.'],
+  ['You will own everything and be happy', 'The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you.'],
 ];
 
 // Outlets that have covered DeHub — mirrors PRESS in HomeIntro.tsx, where they

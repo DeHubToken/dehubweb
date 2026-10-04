@@ -34,24 +34,33 @@ export const SLIDE_MS = 5200;
  *  `sub` / `extra` are the `//snake_case` HUD row under the headline. */
 export const SLIDES = [
   {
-    title: 'The Social Media We',
-    subtitle: 'All Deserve',
+    title: 'Censorship resistant media',
+    subtitle: 'for the next generation',
+    artwork: 'globe',
+    imageHeight: 471,
+    preview: 'Instantly monetize, never get deplatformed',
     sub: 'never_deplatformed',
     extra: '99%_revenue',
     description:
       'Instantly monetize, never get deplatformed, keep up to 99% of revenue and create free from censorship or platform manipulation.',
   },
   {
-    title: 'The App',
-    subtitle: 'For Everyone',
+    title: 'No bias or',
+    subtitle: 'centralized authority',
+    artwork: 'thumb',
+    imageHeight: 482,
+    preview: 'No algorithms that favor one side of the argument',
     sub: 'open_source',
     extra: 'no_algorithm',
     description:
       'No algorithms that favor one side of the argument.\u00a0\nEveryone is amplified equally and fairly.',
   },
   {
-    title: 'You Will Own Everything,',
-    subtitle: 'And Be Happy',
+    title: 'You will own everything',
+    subtitle: 'and be happy',
+    artwork: 'coin',
+    imageHeight: 467,
+    preview: 'Your data, assets and audience are yours forever',
     sub: 'ownership_economy',
     extra: 'user_owned = true',
     description:
@@ -156,6 +165,7 @@ export interface HomeIntroPanelProps {
   onWarmLogin?: PointerEventHandler<HTMLButtonElement> & MouseEventHandler<HTMLButtonElement>;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  onDescriptionToggle?: (expanded: boolean) => void;
 }
 
 export function HomeIntroPanel({
@@ -167,6 +177,7 @@ export function HomeIntroPanel({
   onWarmLogin,
   onMouseEnter,
   onMouseLeave,
+  onDescriptionToggle,
 }: HomeIntroPanelProps) {
   return (
     <section
@@ -209,15 +220,17 @@ export function HomeIntroPanel({
           on top of it. */}
       <div aria-hidden="true" className="dehub-intro-hero pointer-events-none absolute">
         <div className="absolute inset-0" style={{ background: GLOW, borderRadius: '50%' }} />
+        {SLIDES.map((slide, index) => (
         <img
-          src="/brand-kit/icons/globe-480.webp"
+          key={slide.artwork}
+          src={`/brand-kit/icons/${slide.artwork}-480.webp`}
           /* The hero renders at 96–260 CSS px (see .dehub-intro-hero); a phone
              was pulling the 480 for a 112 px slot. */
-          srcSet="/brand-kit/icons/globe-240.webp 240w, /brand-kit/icons/globe-480.webp 480w"
+          srcSet={`/brand-kit/icons/${slide.artwork}-240.webp 240w, /brand-kit/icons/${slide.artwork}-480.webp 480w`}
           sizes="(max-width: 519px) 112px, (max-width: 759px) 180px, 260px"
           alt=""
           width={480}
-          height={471}
+          height={slide.imageHeight}
           /* NOT loading="lazy". This panel is the first thing on the signed-out
              home page, so the hero is always above the fold — lazy told the
              browser to defer the largest piece of the only card on screen, and
@@ -229,9 +242,10 @@ export function HomeIntroPanel({
              the client and by the prerender alike. */
           {...({ fetchpriority: 'high' } as Record<string, string>)}
           decoding="async"
-          className="absolute inset-0 h-full w-full object-contain"
-          style={{ filter: 'drop-shadow(0 34px 60px rgba(0,0,0,.85))' }}
+          className="dehub-intro-art absolute inset-0 h-full w-full object-contain"
+          style={{ opacity: index === active ? 1 : 0, filter: 'drop-shadow(0 34px 60px rgba(0,0,0,.85))' }}
         />
+        ))}
       </div>
       {/* Scrim over the hero so the left column stays readable, plus a bottom
           fade so the art never competes with the entity paragraph. Now at every
@@ -353,7 +367,18 @@ export function HomeIntroPanel({
                 <span className="text-sm font-light" style={{ color: 'rgba(255,255,255,.55)' }}>✕</span>
               </div>
 
-              <p className="dehub-intro-desc mt-3 max-w-lg text-sm leading-relaxed text-white/55">{s.description}</p>
+              <details
+                key={`${i}-${active}`}
+                className="dehub-intro-desc mt-3 max-w-lg text-sm leading-relaxed text-white/55"
+                onToggle={(event) => { if (i === active) onDescriptionToggle?.(event.currentTarget.open); }}
+              >
+                <summary tabIndex={i === active ? 0 : -1} className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <span className="dehub-intro-short">{s.preview} </span>
+                  <span className="dehub-intro-more" aria-label="Open full description">...</span>
+                  <span className="dehub-intro-less">Show less</span>
+                </summary>
+                <p className="mt-2">{s.description}</p>
+              </details>
             </div>
           ))}
         </div>
