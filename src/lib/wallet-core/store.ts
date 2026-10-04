@@ -6,7 +6,10 @@
 // cached in localStorage so returning users can unlock without a network
 // round-trip (the cache holds only ciphertext, never key material).
 import { supabase } from "@/integrations/supabase/client";
+import { createLogger } from '@/lib/logger';
 import type { EncryptedPayload } from "./crypto";
+
+const log = createLogger('WalletStore');
 
 export interface StoredWallet {
   ethAddress: string;
@@ -93,6 +96,7 @@ export async function saveWallet(
   payload: EncryptedPayload | null,
   recoveryPayload?: EncryptedPayload,
 ): Promise<void> {
+  log.trace?.('wallet-save-start');
   if (recoveryPayload) {
     const { error: recErr } = await db().from("user_wallet_recovery").upsert({
       user_id: userId,
@@ -118,7 +122,11 @@ export async function saveWallet(
         }
       : {}),
   });
-  if (insertErr) throw new Error(insertErr.message || "Failed to save wallet");
+  if (insertErr) {
+    log.trace?.('wallet-save-error', { reason: insertErr.message, code: insertErr.code });
+    throw new Error(insertErr.message || "Failed to save wallet");
+  }
+  log.trace?.('wallet-saved');
 
   // Mirror the server-side semantics in the cache: a null payload must not
   // erase a password wrap this browser already knows about for this address.
