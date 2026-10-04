@@ -5,7 +5,7 @@ const policy = JSON.parse(fs.readFileSync('scripts/locale-policy.json', 'utf8'))
 function build(root, prefix, client) {
   const source = path.join(root, prefix, 'locales');
   const files = fs.readdirSync(source).filter(f => f.endsWith('.json')).sort();
-  const hash = crypto.createHash('sha256');
+  const hash = crypto.createHash('sha256').update(fs.readFileSync('scripts/locale-policy.json', 'utf8').replace(/\r\n/g, '\n'));
   for (const name of files) { hash.update(name); hash.update(fs.readFileSync(path.join(source, name), 'utf8').replace(/\r\n/g, '\n')); }
   const manifest = JSON.parse(fs.readFileSync(path.join(root, prefix, 'locale-manifest.json'), 'utf8'));
   if (manifest.version !== hash.digest('hex').slice(0, 16)) throw new Error(`${client}: regenerate locale-manifest after translation changes`);
