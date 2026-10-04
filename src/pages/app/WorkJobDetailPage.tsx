@@ -15,6 +15,7 @@ import { bountyPath, bountyTitle, bountyDescription, bountyUrl, isBountyIndexabl
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import { TxLink, statusBadgeClass, statusLabelKey } from '@/features/work/components/TxLink';
 import { WorkUser } from '@/features/work/components/WorkUser';
+import { BountyShareButton } from '@/features/work/components/BountyShareButton';
 import type { WorkJob, WorkSubmission } from '@/features/work/types';
 
 const TYPE_ICON: Record<string, ThemeIconKey> = {
@@ -132,6 +133,8 @@ export default function WorkJobDetailPage() {
             {job.platform && <span className="px-2 py-0.5 rounded-md bg-white/5 text-white/60 uppercase">{job.platform}</span>}
             <span className={`px-2 py-0.5 rounded-md ${statusBadgeClass(job.status)}`}>{t(statusLabelKey(job.status))}</span>
           </div>
+          <div className="flex flex-wrap justify-end gap-2">
+          <BountyShareButton job={job} />
           {isPoster && isJobEditable(job) && (
             <button
               onClick={() => navigate(`${bountyPath(job)}/edit`)}
@@ -140,6 +143,7 @@ export default function WorkJobDetailPage() {
               <Pencil className="w-3 h-3" /> {t('work.edit')}
             </button>
           )}
+          </div>
         </div>
         <h1 className="text-2xl font-bold text-white mb-2">{job.title}</h1>
         <p className="text-sm text-white/70 whitespace-pre-wrap mb-4">{job.description}</p>
