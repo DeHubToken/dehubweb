@@ -1,0 +1,78 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>3D preview</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#18181b}canvas{display:block;width:100%;height:100%}</style></head><body>
+<script type="module">
+import * as THREE from 'https://esm.sh/three@0.180.0';
+import { GLTFLoader } from 'https://esm.sh/three@0.180.0/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'https://esm.sh/three@0.180.0/examples/jsm/loaders/DRACOLoader.js';
+import { RoomEnvironment } from 'https://esm.sh/three@0.180.0/examples/jsm/environments/RoomEnvironment.js';
+
+function reply(payload) {
+  const message = { type: 'creator-mesh-preview', ...payload };
+  if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify(message));
+  else parent.postMessage(message, location.origin);
+}
+let running = false;
+window.renderMesh = async ({ id, url }) => {
+  if (running || typeof id !== 'string' || typeof url !== 'string') return;
+  let renderer, environment, mesh, draco;
+  try {
+    if (new URL(url).protocol !== 'https:') throw new Error('Unsupported mesh URL');
+    running = true;
+    renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    renderer.setSize(256, 256);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    document.body.appendChild(renderer.domElement);
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color('#18181b');
+    const room = new RoomEnvironment();
+    const generator = new THREE.PMREMGenerator(renderer);
+    environment = generator.fromScene(room, 0.04);
+    room.dispose(); generator.dispose();
+    scene.environment = environment.texture;
+    const light = new THREE.DirectionalLight(0xffffff, 2);
+    light.position.set(3, 5, 4); scene.add(light);
+    draco = new DRACOLoader();
+    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+    const loader = new GLTFLoader().setDRACOLoader(draco);
+    mesh = (await loader.loadAsync(url)).scene;
+    const bounds = new THREE.Box3().setFromObject(mesh);
+    if (bounds.isEmpty()) throw new Error('Empty mesh');
+    const size = bounds.getSize(new THREE.Vector3());
+    mesh.position.sub(bounds.getCenter(new THREE.Vector3()));
+    scene.add(mesh);
+    const distance = Math.max(size.x, size.y, size.z) / (2 * Math.tan(Math.PI / 8)) * 1.6;
+    const camera = new THREE.PerspectiveCamera(45, 1, distance / 100, distance * 100);
+    camera.position.set(distance * 0.5, distance * 0.35, distance);
+    camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+    const dataUrl = renderer.domElement.toDataURL('image/webp', 0.82);
+    const still = new Image();
+    still.src = dataUrl;
+    still.style.cssText = 'width:100%;height:100%;object-fit:contain';
+    document.body.replaceChildren(still);
+    reply({ id, dataUrl });
+  } catch { reply({ id, error: true }); }
+  finally {
+    const textures = new Set();
+    mesh?.traverse((node) => {
+      node.geometry?.dispose();
+      const materials = Array.isArray(node.material) ? node.material : node.material ? [node.material] : [];
+      for (const material of materials) {
+        for (const value of Object.values(material)) if (value?.isTexture) textures.add(value);
+        material.dispose();
+      }
+    });
+    for (const texture of textures) texture.dispose();
+    draco?.dispose(); environment?.dispose(); renderer?.dispose(); renderer?.forceContextLoss();
+    running = false;
+  }
+};
+window.addEventListener('message', (event) => {
+  if (event.source === parent && event.origin === location.origin) void window.renderMesh(event.data);
+});
+reply({ ready: true });
+const requested = new URLSearchParams(location.search).get('url');
+if (requested) void window.renderMesh({ id: 'preview', url: requested });
+</script></body></html>
