@@ -2118,7 +2118,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         />
 
         <div className="mt-5">
-          <GenerationExample kind={mode} />
+          <GenerationExample kind={mode} model={mode === 'video' ? videoModel : undefined} />
           <PresetStrip
             kind={mode}
             activeId={presetId}
