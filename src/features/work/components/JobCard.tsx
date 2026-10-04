@@ -4,6 +4,7 @@ import { Eye, Users, Coins, Clock } from 'lucide-react';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import type { WorkJob, WorkJobType } from '../types';
 import { bountyPath } from '../seo';
+import { BountyShareButton } from './BountyShareButton';
 
 const TYPE_LABEL_KEY: Record<string, string> = {
   shill: 'work.typeShillShort',
@@ -21,10 +22,8 @@ export function JobCard({ job }: { job: WorkJob }) {
   const { t } = useTranslation();
   const isBoosted = job.boost_expires_at && new Date(job.boost_expires_at) > new Date();
   return (
-    <Link
-      to={bountyPath(job)}
-      className="block bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-5 hover:border-white/20 transition-colors"
-    >
+    <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-5 hover:border-white/20 transition-colors">
+    <Link to={bountyPath(job)} className="block">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2 text-xs">
           <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/80 inline-flex items-center gap-1">
@@ -61,5 +60,9 @@ export function JobCard({ job }: { job: WorkJob }) {
         )}
       </div>
     </Link>
+      <div className="flex justify-end mt-3">
+        <BountyShareButton job={job} />
+      </div>
+    </div>
   );
 }
