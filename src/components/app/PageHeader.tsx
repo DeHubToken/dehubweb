@@ -2,6 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import type { ReactNode } from 'react';
 
 interface PageHeaderProps {
@@ -19,6 +20,8 @@ interface PageHeaderProps {
   fallbackRoute?: string;
   /** Override the back action (e.g., to close a drawer with animation before navigating) */
   onBack?: () => void;
+  /** Float the controls over the page without reserving a title row. */
+  overlay?: boolean;
 }
 
 export function PageHeader({
@@ -31,10 +34,12 @@ export function PageHeader({
   icon,
   fallbackRoute = '/app',
   onBack,
+  overlay = false,
 }: PageHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { isCollapsed } = useSidebarCollapse();
+  const { theme } = useAppTheme();
 
   /**
    * Handle back navigation with fallback
@@ -53,6 +58,29 @@ export function PageHeader({
       navigate(fallbackRoute, { replace: true });
     }
   };
+
+  if (overlay || theme === 'system') {
+    return (
+      <div className={cn(
+        'z-40 flex items-center justify-between pointer-events-none',
+        overlay ? 'absolute top-2 left-2 right-2' : 'sticky top-0 px-3 py-2',
+        className,
+      )}>
+        {showBack ? (
+          <button
+            onClick={handleBack}
+            data-on-media={overlay ? '' : undefined}
+            className="pointer-events-auto h-9 w-9 rounded-xl bg-black/50 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="w-4 h-4 text-white" />
+          </button>
+        ) : <span />}
+        {(title || subtitle) && <span className="sr-only">{title} {subtitle}</span>}
+        {rightActions && <div className="pointer-events-auto flex items-center gap-2">{rightActions}</div>}
+      </div>
+    );
+  }
 
   return (
     <div className={cn(
