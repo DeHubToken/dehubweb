@@ -221,8 +221,8 @@ export async function getFollowStatus(targetAddress: string): Promise<FollowStat
   });
   const result = response && typeof response === 'object' && 'result' in response ? response.result : response;
   return {
-    isFollowing: typeof result === 'boolean' ? result : !!result?.isFollowing,
-    isFollowRequestPending: typeof result === 'boolean' ? false : !!result?.isFollowRequestPending,
+    isFollowing: typeof result === 'boolean' ? result : !!(result && 'isFollowing' in result && result.isFollowing),
+    isFollowRequestPending: typeof result === 'boolean' ? false : !!(result && 'isFollowRequestPending' in result && result.isFollowRequestPending),
   };
 }
 
