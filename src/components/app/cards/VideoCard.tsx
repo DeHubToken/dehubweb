@@ -1,6 +1,7 @@
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { isVideoOutsideFeed } from '@/lib/video-background-playback';
+import { isVideoInPictureInPicture } from '@/lib/picture-in-picture';
 /**
  * Video Card Component
  * ====================
@@ -907,7 +908,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Pause callback for the playback manager
   const pauseVideo = useCallback(() => {
-    if (videoRef.current && document.pictureInPictureElement === videoRef.current && !visualActivity.isCallBusy()) return;
+    if (isVideoInPictureInPicture(videoRef.current) && !visualActivity.isCallBusy()) return;
     videoRef.current?.pause();
     isPlayingRef.current = false;
     setIsPlaying(false);
@@ -1000,14 +1001,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       if (videoRef.current) videoRef.current.muted = muted;
       if (!muted) autoMutedRef.current = false;
       setIsMuted(muted);
-    }, () => isProminent(containerRef.current));
+    }, () => isProminent(containerRef.current), () => videoRef.current);
 
     // Auto-pause when scrolled out of view + auto-play when scrolled into view (if enabled)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           isIntersectingRef.current = entry.isIntersecting;
-          if (videoRef.current && document.pictureInPictureElement === videoRef.current && !visualActivity.isCallBusy()) return;
+          if (isVideoInPictureInPicture(videoRef.current) && !visualActivity.isCallBusy()) return;
           if (!visualActivity.isFeedPlaybackAllowed()) { pauseVideo(); return; }
           // Backgrounding is not a scroll-away; PiP owns its own visible surface.
           if (isVideoOutsideFeed(videoRef.current)) return;
@@ -1039,7 +1040,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
-                if (!visualActivity.isFeedPlaybackAllowed() || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
+                if ((!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(vid)) || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
                   vid.pause();
                   videoPlaybackManager.stop(instanceId);
                   setIsLoading(false);
