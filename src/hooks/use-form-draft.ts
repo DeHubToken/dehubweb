@@ -46,6 +46,8 @@ export function useFormDraft<T extends Record<string, unknown>>(
 ): FormDraftControls {
   const scope = formScope(key);
   const restoredRef = useRef(false);
+  const clearedSnapshotRef = useRef<string | null>(null);
+  const snapshot = JSON.stringify(values);
 
   // `apply` is almost always an inline arrow, so depending on it would re-run
   // the restore on every render. The mount pass is the only one that matters.
@@ -75,6 +77,10 @@ export function useFormDraft<T extends Record<string, unknown>>(
   // The store already coalesces its own writes onto idle, so serialising per
   // keystroke costs a JSON.stringify and no I/O.
   useEffect(() => {
+    // Submission state can render once more before navigation unmounts the
+    // form. Keep its submitted values cleared until the user edits a field.
+    if (clearedSnapshotRef.current === snapshot) return;
+    clearedSnapshotRef.current = null;
     const isEmpty = Object.values(values).every(
       (v) => v === '' || v === null || v === undefined ||
         (Array.isArray(v) && v.length === 0),
@@ -87,11 +93,14 @@ export function useFormDraft<T extends Record<string, unknown>>(
       clearDraft(scope);
       return;
     }
-    writeDraft(scope, JSON.stringify(values));
+    writeDraft(scope, snapshot);
   });
 
   // A form left by navigation may never see the store's idle callback fire.
   useEffect(() => flushDrafts, []);
 
-  return { clear: () => clearDraft(scope) };
+  return { clear: () => {
+    clearedSnapshotRef.current = snapshot;
+    clearDraft(scope);
+  } };
 }
