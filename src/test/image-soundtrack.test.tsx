@@ -10,11 +10,11 @@ let intersect: (entries: { isIntersecting: boolean }[]) => void;
 let rejectPlay: ((reason: Error) => void) | undefined;
 let pending = false;
 
-function Player({ enabled = true, url = 'https://example.com/music.mp3' }) {
+function Player({ enabled = true, url = 'https://example.com/music.mp3', id = '42', label = '' }) {
   const anchor = useRef<HTMLDivElement>(null);
-  const state = useImageSoundtrack(url, anchor, enabled, '42');
+  const state = useImageSoundtrack(url, anchor, enabled, id);
   return <div ref={anchor}>
-    <button onClick={state.toggle}>{state.error ? 'retry' : state.loading ? 'loading' : state.playing ? 'pause' : 'play'}</button>
+    <button onClick={state.toggle}>{label}{state.error ? 'retry' : state.loading ? 'loading' : state.playing ? 'pause' : 'play'}</button>
   </div>;
 }
 
@@ -42,7 +42,7 @@ beforeEach(() => {
 });
 
 afterEach(() => { cleanup(); vi.runOnlyPendingTimers(); vi.useRealTimers(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
-const audio = (url = 'https://example.com/music.mp3') => handoffAudioFor(`soundtrack:${url}`)!;
+const audio = (url = 'https://example.com/music.mp3') => handoffAudioFor(`soundtrack:42:${url}`)!;
 
 it('loads only on tap, and never autoplays on entering the viewport', () => {
   const { container } = render(<Player />);
@@ -127,4 +127,21 @@ it('hands the same playing soundtrack to the post and back without reloading', (
   expect(audio()).toBe(track);
   expect(track.paused).toBe(false);
   expect(HTMLMediaElement.prototype.load).toHaveBeenCalledTimes(loads);
+});
+
+it('plays any post in a feed where several posts use the same song', () => {
+  render(<><Player id="1" label="first " /><Player id="2" label="second " /></>);
+  fireEvent.click(screen.getByText('first play'));
+  expect(screen.getByText('first pause')).toBeTruthy();
+  expect(screen.getByText('second play')).toBeTruthy();
+});
+
+it('plays the copy the user taps when the same post is on the page twice', () => {
+  render(<><Player label="original " /><Player label="repost " /></>);
+  fireEvent.click(screen.getByText('original play'));
+  expect(screen.getByText('original pause')).toBeTruthy();
+  fireEvent.click(screen.getByText('original pause'));
+  fireEvent.click(screen.getByText('repost play'));
+  expect(screen.getByText('repost pause')).toBeTruthy();
+  expect(screen.getByText('original play')).toBeTruthy();
 });
