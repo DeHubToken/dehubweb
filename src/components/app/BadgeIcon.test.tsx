@@ -30,6 +30,19 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('badge hover playback', () => {
+  it('uses the adjacent name font when its wrapper has a different size', () => {
+    render(<span style={{ fontSize: 16 }}><span style={{ fontSize: 24 }}>H Profile</span><BadgeIcon /></span>);
+    expect(screen.getByRole('button').style.fontSize).toBe('24px');
+    expect(screen.getByRole('button').style.verticalAlign).toBe('baseline');
+  });
+
+  it('sizes the idle image from its own transparent bounds', () => {
+    badgeTier = 'Crab';
+    render(<BadgeIcon />);
+    expect(screen.getByRole('img').getAttribute('style')).toContain(String(128 / 96));
+    fireEvent.pointerEnter(screen.getByRole('button'));
+    expect(document.querySelector('[data-badge-animation]')?.getAttribute('style')).toContain(String(128 / 109));
+  });
   it('keeps the poster until decoding completes and starts fresh on the next hover', async () => {
     render(<BadgeIcon />);
     const poster = screen.getByRole('img');
