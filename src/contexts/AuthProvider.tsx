@@ -32,6 +32,7 @@ import {
   rotateWallet,
   WalletNotLinkedError,
   WalletSignupBlockedError,
+  WALLET_SIGNUP_BLOCKED_EVENT,
   getAccountInfo,
   getAuthToken,
   getRefreshToken,
@@ -1929,7 +1930,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         hasSolanaProof: !!solanaProof,
         ...describeWalletError(authError),
       }, authError);
-      if (!reportWalletSignupBlocked(authError)) {
+      if (reportWalletSignupBlocked(authError)) {
+        // The sheet swaps back to the sign-up options with this explained in
+        // place. Left on the wallet list, its Continue button re-signed with
+        // the same empty wallet, which the server refuses every time: new
+        // users tapped it six times in a row and read it as a sign-up loop.
+        window.dispatchEvent(new CustomEvent(WALLET_SIGNUP_BLOCKED_EVENT, { detail: { address: authAddress } }));
+      } else {
         toast.error('Could not complete sign-in. Please try again.');
       }
       throw authError;

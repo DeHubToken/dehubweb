@@ -1591,7 +1591,9 @@
     "passkeyNotLinked": "Kò sí ìwọ̀nyàwòrán tí a ti dá sí ìwọ̀nyàwòrán náà títí di ìsinsìnyí. Ṣẹ̀dá ìwọ̀nyàwòrán tuntun dípò rẹ̀.",
     "passkeyAlreadyRegistered": "Ìwọ̀nyàwòrán náà ti ní ìwọ̀nyàwòrán kan tẹ́lẹ̀. Lo wọlé dípò rẹ̀.",
     "passkeyFailed": "Ìwọ̀tẹ̀ wọlé kùnà. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i.",
-    "passkeyBackupHint": "Ìwọ̀nyàwòrán rẹ wà nínú àmì-ìfọwọ́ sí ẹrọ yìí. Ní ọ̀pọ̀lọpọ̀ fonùn, ó máa ń ṣàgbékalẹ̀ pẹ̀lú ìwọ̀nyàwòrán Google tàbí Apple rẹ, o sì lè fi àdáwọ́-òdì sílẹ̀ nínú Ìfàṣẹ́yìn."
+    "passkeyBackupHint": "Ìwọ̀nyàwòrán rẹ wà nínú àmì-ìfọwọ́ sí ẹrọ yìí. Ní ọ̀pọ̀lọpọ̀ fonùn, ó máa ń ṣàgbékalẹ̀ pẹ̀lú ìwọ̀nyàwòrán Google tàbí Apple rẹ, o sì lè fi àdáwọ́-òdì sílẹ̀ nínú Ìfàṣẹ́yìn.",
+    "walletBlockedTitle": "Àpamọ́wọ́ yìí jẹ́ tuntun pátápátá",
+    "walletBlockedBody": "Àwọn àpamọ́wọ́ tuntun nílò owó tàbí ìdúnàádúrà àtẹ̀yìnwá láti ṣí àkáǹtì. Forúkọsílẹ̀ pẹ̀lú ọ̀kan nínú àwọn àṣàyàn ìsàlẹ̀, lẹ́yìn náà so àpamọ́wọ́ yìí pọ̀ láti Ètò."
   },
   "careers": {
     "title": "Iṣẹ́ ní DeHub",

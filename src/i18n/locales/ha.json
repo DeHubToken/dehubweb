@@ -1596,7 +1596,9 @@
     "passkeyNotLinked": "Babu asusu da aka haɗa da wannan alamar yatsa tukuna. Ƙirƙiri sabon asusu a maimakon.",
     "passkeyAlreadyRegistered": "Wannan alamar yatsa tana da asusu a riga. Yi amfani da Shiga a maimakon.",
     "passkeyFailed": "Shiga da alamar yatsa ya kasa. Da fatan za a sake gwadawa.",
-    "passkeyBackupHint": "Asusunka yana zaune a cikin kalmar sirri ta wannan na'urar. A yawancin wayoyi yana haɗawa da asusun Google ko Apple ɗinka, kuma za ka iya ƙara madadin kalmar sirri a Saituna."
+    "passkeyBackupHint": "Asusunka yana zaune a cikin kalmar sirri ta wannan na'urar. A yawancin wayoyi yana haɗawa da asusun Google ko Apple ɗinka, kuma za ka iya ƙara madadin kalmar sirri a Saituna.",
+    "walletBlockedTitle": "Wannan walat sabuwa ce fil",
+    "walletBlockedBody": "Sababbin walat suna buƙatar ma'auni ko wata ma'amala ta baya don buɗe asusu. Yi rajista da ɗaya daga cikin zaɓuɓɓukan da ke ƙasa, sannan ka haɗa wannan walat daga Saituna."
   },
   "careers": {
     "title": "Ayyuka a DeHub",

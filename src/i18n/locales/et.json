@@ -1596,7 +1596,9 @@
     "passkeyNotLinked": "Selle sõrmejäljega pole veel ühtegi kontot seotud. Loo selle asemel uus konto.",
     "passkeyAlreadyRegistered": "See sõrmejälg on juba seotud kontoga. Kasuta selle asemel sisselogimist.",
     "passkeyFailed": "Sõrmejäljega sisselogimine ebaõnnestus. Palun proovi uuesti.",
-    "passkeyBackupHint": "Sinu konto asub selle seadme pääsukoodis. Enamikus telefonides sünkroonitakse see sinu Google'i või Apple'i kontoga ning saad seadetes lisada parooli varukoopia."
+    "passkeyBackupHint": "Sinu konto asub selle seadme pääsukoodis. Enamikus telefonides sünkroonitakse see sinu Google'i või Apple'i kontoga ning saad seadetes lisada parooli varukoopia.",
+    "walletBlockedTitle": "See rahakott on täiesti uus",
+    "walletBlockedBody": "Uutel rahakottidel peab konto avamiseks olema saldo või varasem tehing. Registreeru ühega allolevatest valikutest ja ühenda see rahakott seejärel seadetes."
   },
   "careers": {
     "title": "Karjäär DeHubis",

@@ -1595,7 +1595,9 @@
     "passkeyNotLinked": "Ma jirto xisaab ku xiran farahaas weli. Samee xisaab cusub halkii.",
     "passkeyAlreadyRegistered": "Farahaas horeyba waa u leeyahay xisaab. Isticmaal \"Ku soo gal\" halkii.",
     "passkeyFailed": "Gasho faraha oo fashilmay. Fadlan mar kale isku day.",
-    "passkeyBackupHint": "Xisaabtaada waxa ay ku nooshahay furaha sirta ah ee qalabkan. Inta badan taleefannada, waxa ay la jaanqaadi doontaa xisaabtaada Google ama Apple, waxaadna ku dari kartaa kayd xogeed oo ereyga sirta ah ah qaybta Settings."
+    "passkeyBackupHint": "Xisaabtaada waxa ay ku nooshahay furaha sirta ah ee qalabkan. Inta badan taleefannada, waxa ay la jaanqaadi doontaa xisaabtaada Google ama Apple, waxaadna ku dari kartaa kayd xogeed oo ereyga sirta ah ah qaybta Settings.",
+    "walletBlockedTitle": "Boorsadan waa mid cusub oo dhan",
+    "walletBlockedBody": "Boorsooyinka cusub waxay u baahan yihiin haraa ama macaamil hore si ay u furaan akoon. Isku diiwaangeli mid ka mid ah xulashooyinka hoose, kadibna ku xir boorsadan Dejinta."
   },
   "careers": {
     "title": "Shaqooyinka DeHub",

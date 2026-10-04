@@ -1594,7 +1594,9 @@
     "passkeyNotLinked": "Su tuo piršto antspaudu dar nesusijusi jokia paskyra. Vietoj to sukurkite naują paskyrą.",
     "passkeyAlreadyRegistered": "Tas piršto antspaudas jau turi paskyrą. Vietoj to naudokite „Prisijungti“.",
     "passkeyFailed": "Nepavyko prisijungti naudojant piršto antspaudą. Pabandykite dar kartą.",
-    "passkeyBackupHint": "Jūsų paskyra saugoma šio įrenginio slaptažodžio rakte. Daugumoje telefonų ji sinchronizuojama su jūsų „Google“ arba „Apple“ paskyra, o atsarginę slaptažodžio kopiją galite pridėti skiltyje „Nustatymai“."
+    "passkeyBackupHint": "Jūsų paskyra saugoma šio įrenginio slaptažodžio rakte. Daugumoje telefonų ji sinchronizuojama su jūsų „Google“ arba „Apple“ paskyra, o atsarginę slaptažodžio kopiją galite pridėti skiltyje „Nustatymai“.",
+    "walletBlockedTitle": "Ši piniginė visiškai nauja",
+    "walletBlockedBody": "Naujoms piniginėms paskyrai atidaryti reikia likučio arba ankstesnės operacijos. Užsiregistruokite vienu iš toliau pateiktų būdų, tada prijunkite šią piniginę nustatymuose."
   },
   "careers": {
     "title": "Karjera DeHub",

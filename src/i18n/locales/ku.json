@@ -1414,7 +1414,9 @@
     "walletInfoMobile": "MetaMask, Trust û Phantom dê serlêdana xwe rasterast vekin. Rabby dê WalletConnect bikar bîne.",
     "continuePasskey": "بەردەوامبە لەگەڵ پەنجەمۆر",
     "passkeyIntro": "پەنجەمۆر یان ڕوخسارت هەژمارەکەتە. هیچ شتێک نییە بیرت بێت، هیچ شتێک نییە بنووسیت.",
-    "passkeyBackupHint": "هەژمارەکەت لە پاسکی ئەم ئامێرەدا نیشتەجێیە. لە زۆربەی مۆبایلەکاندا، لەگەڵ هەژماری Google یان Apple یەکدەگرێتەوە، و دەتوانیت لە ڕێکخستنەکاندا پاڵپشتی وشەی نهێنی زیاد بکەیت."
+    "passkeyBackupHint": "هەژمارەکەت لە پاسکی ئەم ئامێرەدا نیشتەجێیە. لە زۆربەی مۆبایلەکاندا، لەگەڵ هەژماری Google یان Apple یەکدەگرێتەوە، و دەتوانیت لە ڕێکخستنەکاندا پاڵپشتی وشەی نهێنی زیاد بکەیت.",
+    "walletBlockedTitle": "Ev berîk bi tevahî nû ye",
+    "walletBlockedBody": "Berîkên nû ji bo vekirina hesabekê hewceyî balansek an danûstandinek berê ne. Bi yek ji vebijarkên li jêr tomar bibe, paşê vê berîkê ji Mîhengan girê bide."
   },
   "careers": {
     "title": "Karên li DeHub",

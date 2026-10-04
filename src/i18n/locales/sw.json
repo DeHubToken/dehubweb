@@ -1596,7 +1596,9 @@
     "passkeyNotLinked": "Hakuna akaunti iliyounganishwa na alama hiyo ya kidole bado. Tengeneza akaunti mpya badala yake.",
     "passkeyAlreadyRegistered": "Alama hiyo ya kidole tayari ina akaunti. Tumia kuingia badala yake.",
     "passkeyFailed": "Kuingia kwa alama ya kidole kumefeli. Tafadhali jaribu tena.",
-    "passkeyBackupHint": "Akaunti yako ipo kwenye nenosiri la kifaa hiki. Kwenye simu nyingi huunganishwa na akaunti yako ya Google au Apple, na unaweza kuongeza nakala rudufu ya nenosiri katika Mipangilio."
+    "passkeyBackupHint": "Akaunti yako ipo kwenye nenosiri la kifaa hiki. Kwenye simu nyingi huunganishwa na akaunti yako ya Google au Apple, na unaweza kuongeza nakala rudufu ya nenosiri katika Mipangilio.",
+    "walletBlockedTitle": "Pochi hii ni mpya kabisa",
+    "walletBlockedBody": "Pochi mpya zinahitaji salio au muamala wa awali ili kufungua akaunti. Jisajili kwa mojawapo ya chaguo zilizo hapa chini, kisha unganisha pochi hii kutoka Mipangilio."
   },
   "careers": {
     "title": "Kazi katika DeHub",

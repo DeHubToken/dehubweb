@@ -1599,7 +1599,9 @@
     "passkeyNotLinked": "해당 지문에 연결된 계정이 아직 없습니다. 대신 새 계정을 만드세요.",
     "passkeyAlreadyRegistered": "해당 지문에는 이미 계정이 있습니다. 대신 로그인을 사용하세요.",
     "passkeyFailed": "지문 로그인이 실패했습니다. 다시 시도하세요.",
-    "passkeyBackupHint": "계정은 이 기기의 비밀 키에 저장됩니다. 대부분의 휴대폰에서는 Google 또는 Apple 계정과 동기화되며, 설정에서 비밀번호 백업을 추가할 수 있습니다."
+    "passkeyBackupHint": "계정은 이 기기의 비밀 키에 저장됩니다. 대부분의 휴대폰에서는 Google 또는 Apple 계정과 동기화되며, 설정에서 비밀번호 백업을 추가할 수 있습니다.",
+    "walletBlockedTitle": "완전히 새 지갑이에요",
+    "walletBlockedBody": "새 지갑으로 계정을 만들려면 잔액이나 이전 거래 내역이 있어야 해요. 아래 방법 중 하나로 가입한 뒤 설정에서 이 지갑을 연결하세요."
   },
   "careers": {
     "title": "DeHub 채용",

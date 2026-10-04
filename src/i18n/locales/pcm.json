@@ -1444,7 +1444,9 @@
     "walletInfoMobile": "MetaMask, Trust & Phantom go open dia app direct. Rabby go use WalletConnect.",
     "passkeyIntro": "Youse fingerprint or face be youse account. No need to remember, no need to type.",
     "passkeyUnsupported": "Dis device no dey work for fingerprint or face sign-in. Try another way.",
-    "passkeyBackupHint": "Youse account dey inside dis device’s passkey. For most phone, it go sync wit youse Google or Apple account, and yu can add password backup inside Settings."
+    "passkeyBackupHint": "Youse account dey inside dis device’s passkey. For most phone, it go sync wit youse Google or Apple account, and yu can add password backup inside Settings.",
+    "walletBlockedTitle": "Dis wallet na brand new",
+    "walletBlockedBody": "New wallet need balance or one transaction wey e don do before to open account. Sign up with one of di options wey dey below, den connect dis wallet from Settings."
   },
   "careers": {
     "title": "Work for DeHub",

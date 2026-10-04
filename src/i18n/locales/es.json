@@ -1597,7 +1597,9 @@
     "passkeyNotLinked": "Aún no hay ninguna cuenta vinculada a esa huella dactilar. Crea una cuenta nueva en su lugar.",
     "passkeyAlreadyRegistered": "Esa huella dactilar ya tiene una cuenta. Usa Iniciar sesión en su lugar.",
     "passkeyFailed": "Fallo al iniciar sesión con huella dactilar. Inténtalo de nuevo.",
-    "passkeyBackupHint": "Tu cuenta reside en la clave de acceso de este dispositivo. En la mayoría de los teléfonos se sincroniza con tu cuenta de Google o Apple, y puedes añadir una copia de seguridad de contraseña en Configuración."
+    "passkeyBackupHint": "Tu cuenta reside en la clave de acceso de este dispositivo. En la mayoría de los teléfonos se sincroniza con tu cuenta de Google o Apple, y puedes añadir una copia de seguridad de contraseña en Configuración.",
+    "walletBlockedTitle": "Esta billetera es totalmente nueva",
+    "walletBlockedBody": "Las billeteras nuevas necesitan saldo o una transacción anterior para abrir una cuenta. Regístrate con una de las opciones de abajo y luego conecta esta billetera desde Ajustes."
   },
   "careers": {
     "title": "Carreras en DeHub",

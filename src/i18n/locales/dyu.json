@@ -1564,7 +1564,9 @@
     "passkeyUnsupported": "O baarakɛminan tɛ se ka don ni a bolokunnaden wala a ɲada ye. O la, i bena se ka dɔ wɛrɛ kɛ.",
     "passkeyNotLinked": "O la, a tun be se ka kɛ ko a tun ye mɔgɔ dɔ ye min tun ye mɔgɔ dɔ ye. Ka kɔn ka kunnafoni kura dɔ di, ka sɔrɔ ka kɔn ka kunnafoni kura dɔ di.",
     "passkeyAlreadyRegistered": "O la, a tun be se ka kɛ ko a tun ye mɔgɔ dɔ ye min tun ye mɔgɔ dɔ ye I ka siginiden bila a nɔɔ na.",
-    "passkeyFailed": "N'i b'a fɛ ka tugu a kɔ, n'i b'a fɛ ka tugu a kɔ, i ka taga a filɛ."
+    "passkeyFailed": "N'i b'a fɛ ka tugu a kɔ, n'i b'a fɛ ka tugu a kɔ, i ka taga a filɛ.",
+    "walletBlockedTitle": "Nin wallet ye kura ye pewu",
+    "walletBlockedBody": "Wallet kuraw mago bɛ wari walima falen kɔrɔ dɔ la walasa ka konti dayɛlɛ. I tɔgɔ sɛbɛn ni sugandili dɔ ye duguma, o kɔ ka nin wallet sɛmɛntiya Paramɛtiriw kɔnɔ."
   },
   "careers": {
     "title": "Kɔrɔbɔ",

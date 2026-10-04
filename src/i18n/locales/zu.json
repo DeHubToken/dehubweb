@@ -1595,7 +1595,9 @@
     "passkeyNotLinked": "Ayikho i-akhawunti exhunyiwe kuleyo minwe okwamanje. Dala i-akhawunti entsha esikhundleni salokho.",
     "passkeyAlreadyRegistered": "Leyo minwe isivele inayo i-akhawunti. Sebenzisa ukungena esikhundleni salokho.",
     "passkeyFailed": "Ukungena ngeminwe kuhlulekile. Sicela uzame futhi.",
-    "passkeyBackupHint": "I-akhawunti yakho ihlala ku-passkey yedivayisi yakho. Kumafoni amaningi ivumelaniswa ne-akhawunti yakho ye-Google noma ye-Apple, futhi ungangeza isipele sephasiwedi kuzilungiselelo."
+    "passkeyBackupHint": "I-akhawunti yakho ihlala ku-passkey yedivayisi yakho. Kumafoni amaningi ivumelaniswa ne-akhawunti yakho ye-Google noma ye-Apple, futhi ungangeza isipele sephasiwedi kuzilungiselelo.",
+    "walletBlockedTitle": "Lesi sikhwama sisha nya",
+    "walletBlockedBody": "Izikhwama ezintsha zidinga ibhalansi noma ukuthengiselana kwangaphambili ukuze zivule i-akhawunti. Bhalisa ngenye yezinketho ezingezansi, bese uxhuma lesi sikhwama kuZilungiselelo."
   },
   "careers": {
     "title": "Imisebenzi ku-DeHub",

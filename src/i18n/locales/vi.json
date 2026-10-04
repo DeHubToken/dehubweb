@@ -1610,7 +1610,9 @@
     "passkeyNotLinked": "Chưa có tài khoản nào được liên kết với vân tay đó. Vui lòng tạo tài khoản mới.",
     "passkeyAlreadyRegistered": "Vân tay đó đã có tài khoản. Vui lòng sử dụng Đăng nhập.",
     "passkeyFailed": "Đăng nhập bằng vân tay không thành công. Vui lòng thử lại.",
-    "passkeyBackupHint": "Tài khoản của bạn nằm trong khóa mật của thiết bị này. Trên hầu hết điện thoại, khóa mật này sẽ đồng bộ hóa với tài khoản Google hoặc Apple của bạn và bạn có thể thêm bản sao lưu mật khẩu trong Cài đặt."
+    "passkeyBackupHint": "Tài khoản của bạn nằm trong khóa mật của thiết bị này. Trên hầu hết điện thoại, khóa mật này sẽ đồng bộ hóa với tài khoản Google hoặc Apple của bạn và bạn có thể thêm bản sao lưu mật khẩu trong Cài đặt.",
+    "walletBlockedTitle": "Ví này hoàn toàn mới",
+    "walletBlockedBody": "Ví mới cần có số dư hoặc một giao dịch trước đó để mở tài khoản. Hãy đăng ký bằng một trong các tùy chọn bên dưới, sau đó kết nối ví này trong Cài đặt."
   },
   "careers": {
     "title": "Careers at DeHub",
