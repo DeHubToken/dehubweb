@@ -1,3 +1,4 @@
+import { cdnImageSrcSet } from '@/lib/media-url';
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { isVideoOutsideFeed } from '@/lib/video-background-playback';
@@ -58,7 +59,7 @@ import { ActionBar } from './ActionBar';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PollCard } from './PollCard';
 import { PostMetadata } from './PostMetadata';
-import { PPVDrawerContent } from './PPVDrawerContent';
+import { PPVDrawerContent } from './LazyPPVDrawerContent';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
@@ -513,7 +514,7 @@ function MobileCreatorInfo({
 
       {/* PPV Drawer */}
       <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
-        <PPVDrawerContent
+        <PPVDrawerContent open={showPPVDrawer}
           tokenId={tokenId || ''}
           price={Number(ppvPrice)}
           currency={ppvCurrency || 'DHB'}
@@ -1978,7 +1979,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           />
         ) : /* Combo PPV + Holdings Locked */ isComboLocked ? (
           <>
-            <img src={thumbnail} alt={video.title} className="w-full h-full object-cover rounded-lg" loading="lazy" />
+            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover rounded-lg" loading="lazy" />
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
@@ -2011,7 +2012,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </>
         ) : isPPVLocked ? (
           <>
-            <img src={thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
@@ -2040,7 +2041,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <>
             {/* Subscriber gate — subscribe to this creator. Not the holdings
                 gate below, which anyone can satisfy by buying tokens. */}
-            <img src={thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
             <div
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowSubDrawer(true); }}
@@ -2072,7 +2073,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </>
         ) : isHoldingsLocked ? (
           <>
-            <img src={thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
             <div
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
@@ -2098,7 +2099,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </>
         ) : isBountyLocked ? (
           <>
-            <img src={thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
@@ -2173,7 +2174,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                  produced, so a player here would just 404 forever. */
               <div className="absolute inset-0 overflow-hidden bg-black">
                 {thumbnail && (
-                  <img src={thumbnail} alt="" className="w-full h-full object-cover opacity-50" loading={aboveFold ? 'eager' : 'lazy'} />
+                  <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt="" className="w-full h-full object-cover opacity-50" loading={aboveFold ? 'eager' : 'lazy'} />
                 )}
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
                   <TranscodeRetry tokenId={video.id} isOwner={isOwnPost} />
@@ -2184,7 +2185,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                  once the job finishes, unlike the 'failed' branch above. */
               <div className="absolute inset-0 overflow-hidden bg-black">
                 {thumbnail && (
-                  <img src={thumbnail} alt="" className="w-full h-full object-cover opacity-50" loading={aboveFold ? 'eager' : 'lazy'} />
+                  <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt="" className="w-full h-full object-cover opacity-50" loading={aboveFold ? 'eager' : 'lazy'} />
                 )}
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
                   <Loader2 className="w-7 h-7 text-white animate-spin" />
@@ -2195,7 +2196,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </div>
             ) : video.videoUrl && !(video.isLivePost && video.isLiveNow) ? (
               hasError ? (
-                <img src={thumbnail} alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+                <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
               ) :
               /* The <video> is not rendered here — useHandoffVideo puts the
                  pooled element inside this slot, so it can move to the post page
@@ -2206,7 +2207,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <>
                 {thumbnail && (
                   <img
-                    src={thumbnail}
+                    src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
                     className="absolute inset-0 w-full h-full object-contain"
@@ -3046,7 +3047,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}
       {video.isPPV && video.ppvPrice && (
         <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
-          <PPVDrawerContent
+          <PPVDrawerContent open={showPPVDrawer}
             tokenId={video.id}
             price={Number(video.ppvPrice)}
             currency={video.ppvCurrency || 'DHB'}
