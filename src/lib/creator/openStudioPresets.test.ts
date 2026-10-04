@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { IMAGE_MODELS } from '@/constants/image-models.constants';
-import { VIDEO_MODELS, videoSupportsText } from '@/constants/video-models.constants';
+import { VIDEO_MODELS } from '@/constants/video-models.constants';
 import { ALL_PRESETS, applyPreset, getPreset, presetsFor } from './presets';
 import { OPEN_STUDIO_PRESETS } from './openStudioPresets';
 
@@ -18,7 +18,7 @@ describe('published studio presets', () => {
       if (preset.kind === 'image') expect(IMAGE_MODELS[preset.model!]).toBeDefined();
       else {
         expect(VIDEO_MODELS[preset.model!]).toBeDefined();
-        expect(videoSupportsText(VIDEO_MODELS[preset.model!])).toBe(true);
+        expect(VIDEO_MODELS[preset.model!].supports).toContain('text-to-video');
       }
       expect(preset.template.match(/\{subject\}/g)).toHaveLength(1);
       expect(applyPreset(preset, '  a red bicycle  ')).toContain('a red bicycle');
