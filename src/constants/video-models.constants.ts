@@ -57,6 +57,8 @@ export interface VideoModel {
   supportsAudioInput?: boolean;
   /** Whether the model supports video-to-video restyling */
   supportsVideoInput?: boolean;
+  requiresVideoInput?: boolean;
+  referenceMode?: 'edit' | 'motion';
   /** Whether the model supports seed for reproducibility */
   supportsSeed?: boolean;
   /** Short tips/help for using this model effectively */

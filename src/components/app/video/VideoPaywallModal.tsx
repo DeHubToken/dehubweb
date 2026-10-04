@@ -197,7 +197,7 @@ export function VideoPaywallModal({
   // so a wallet short of the price is sent to buy instead.
   const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
 
-  const hasAdvancedFeatures = model.supportsReferenceImages || model.supportsEndFrame || model.supportsAudioInput || model.supportsVideoInput || model.supportsSeed;
+  const hasAdvancedFeatures = !model.requiresVideoInput && (model.supportsReferenceImages || model.supportsEndFrame || model.supportsAudioInput || model.supportsVideoInput || model.supportsSeed);
 
   const formatDhb = (amount: number) => {
     if (amount >= 1000000) return `${(amount / 1000000).toFixed(2)}M`;
@@ -349,6 +349,7 @@ export function VideoPaywallModal({
             <div className="relative">
               <button
                 type="button"
+                disabled={model.requiresVideoInput}
                 onClick={() => setModelSelectorOpen(!modelSelectorOpen)}
                 className="w-full bg-zinc-800/50 hover:bg-zinc-800 transition-colors rounded-xl p-3 text-left"
               >
@@ -422,13 +423,13 @@ export function VideoPaywallModal({
             </div>
 
             {/* Duration Slider (for models with configurable duration) */}
-            {model.minDuration && model.maxDuration && (
+            {model.minDuration && model.maxDuration && !model.requiresVideoInput && (
               <div className="bg-zinc-800/50 rounded-xl p-3 space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-zinc-400">Duration</span>
                   <span className="text-white font-medium">
                     {duration}s
-                    {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">(${(model.perSecondCostUsd! * 2 * duration).toFixed(2)})</span>}
+                    {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">(${getVideoCostUsd(model, duration).toFixed(2)})</span>}
                   </span>
                 </div>
                 {model.allowedDurations?.length ? (
@@ -753,7 +754,7 @@ export function VideoPaywallModal({
                 <span className="text-zinc-400">Video Cost</span>
                 <span className="text-zinc-300">
                   ${costUsd.toFixed(2)}
-                  {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">({duration}s × ${(model.perSecondCostUsd! * 2).toFixed(2)}/s)</span>}
+                  {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">({duration}s × ${getVideoCostUsd(model, 1).toFixed(3)}/s)</span>}
                 </span>
               </div>
               <div className="flex items-center justify-between text-sm">

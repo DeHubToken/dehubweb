@@ -7,7 +7,7 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
  * result gives the actions that keep the work moving: animate a still, send it
  * to the timeline, run it again.
  */
-import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import {
@@ -97,7 +97,7 @@ interface ResultsFeedProps {
   onOpenEditor: () => void;
 }
 
-export function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: ResultsFeedProps) {
+export const ResultsFeed = memo(function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: ResultsFeedProps) {
   const { t } = useTranslation();
   const allJobs = useGenerationStore((s) => s.jobs);
   const selectedFolderId = useCreatorFolderStore((s) => s.selectedFolderId);
@@ -184,7 +184,7 @@ export function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: Resu
         <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {jobs.map((job) => (
             <li key={job.id}>
-              <ResultCard job={job} onOpen={() => focus(job.id)} />
+              <ResultCard job={job} onOpen={focus} />
             </li>
           ))}
         </ul>
@@ -202,9 +202,9 @@ export function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: Resu
       )}
     </section>
   );
-}
+});
 
-function ResultCard({ job, onOpen }: { job: GenerationJob; onOpen: () => void }) {
+const ResultCard = memo(function ResultCard({ job, onOpen }: { job: GenerationJob; onOpen: (id: string) => void }) {
   const { t } = useTranslation();
   const cancel = useGenerationStore((s) => s.cancel);
   const Icon = KIND_ICON[job.kind];
@@ -244,7 +244,7 @@ function ResultCard({ job, onOpen }: { job: GenerationJob; onOpen: () => void })
     return (
       <button
         type="button"
-        onClick={onOpen}
+        onClick={() => onOpen(job.id)}
         style={aspectStyle(job.aspect)}
         className="flex w-full flex-col items-center justify-center gap-1.5 rounded-xl border border-white/12 bg-white/[0.02] p-3 text-center transition hover:border-white/25 hover:bg-white/[0.05]"
       >
@@ -262,7 +262,7 @@ function ResultCard({ job, onOpen }: { job: GenerationJob; onOpen: () => void })
   return (
     <button
       type="button"
-      onClick={onOpen}
+      onClick={() => onOpen(job.id)}
       style={aspectStyle(job.aspect)}
       className="group relative w-full overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:border-white/30"
     >
@@ -342,7 +342,7 @@ function ResultCard({ job, onOpen }: { job: GenerationJob; onOpen: () => void })
       </span>
     </button>
   );
-}
+});
 
 interface ResultViewerProps {
   job: GenerationJob;

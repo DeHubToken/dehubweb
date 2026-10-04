@@ -16,12 +16,10 @@
  * survives a reload. Only large attachments are dropped from the cache — see
  * `persistableReference`.
  *
- * ── The composer follows you down the page ──────────────────────────────────
- * Once it would scroll under the page header it sticks there and shrinks to a
- * single line — text box, mode toggle, buttons. Clicking into it opens it back
- * up to full size; clicking away, or scrolling back to the top, closes it again.
+ * The composer keeps its shape while scrolling. Desktop uses CSS sticky;
+ * phones keep it in normal flow so references cannot cover the whole viewport.
  */
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import {
@@ -98,14 +96,16 @@ import {
   DEFAULT_VOICE_ID,
   enhancePrompt,
   hostDataUrl,
+  hostCreatorFile,
   type AudioRequest,
 } from '@/lib/creator/generationEngine';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-switch';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { CounterChip, SelectChip, ToggleChip, type ChipOption } from './StudioChip';
 import { PresetStrip } from './PresetStrip';
 import { GenerationExample } from './GenerationExample';
+import { ReferenceAssets, type CreatorReferenceAsset } from './ReferenceAssets';
+import { CREATOR_FAL_IMAGE_MODELS } from '../../../../../supabase/functions/_shared/creator-fal-catalog';
 import { ResultsFeed } from './ResultsFeed';
 import { VoiceDesignDrawer } from './VoiceDesignDrawer';
 import { StudioVoicePicker } from './StudioVoicePicker';
@@ -153,6 +153,7 @@ interface StudioSnapshot {
   prompts: ByMode<string>;
   presetIds: ByMode<string | null>;
   references: ByMode<Reference>;
+  extraReferences: ByMode<CreatorReferenceAsset[]>;
   imageModel: ImageModelKey;
   videoModel: VideoModelKey;
   model3dModel: Model3dModelKey;
@@ -184,6 +185,7 @@ const DEFAULT_SNAPSHOT: StudioSnapshot = {
   prompts: { image: '', video: '', audio: '', '3d': '' },
   presetIds: { image: null, video: null, audio: null, '3d': null },
   references: { image: null, video: null, audio: null, '3d': null },
+  extraReferences: { image: [], video: [], audio: [], '3d': [] },
   imageModel: 'gemini-3-pro-image',
   videoModel: 'seedance-2.5',
   model3dModel: 'tripo-2.5',
@@ -258,6 +260,7 @@ function readSnapshot(): StudioSnapshot {
       prompts: byMode(saved.prompts, DEFAULT_SNAPSHOT.prompts),
       presetIds: byMode(saved.presetIds, DEFAULT_SNAPSHOT.presetIds),
       references: byMode(saved.references, DEFAULT_SNAPSHOT.references),
+      extraReferences: byMode(saved.extraReferences, DEFAULT_SNAPSHOT.extraReferences),
       imageModel: pick(saved.imageModel, IMAGE_MODELS, DEFAULT_SNAPSHOT.imageModel),
       videoModel: pick(saved.videoModel, VIDEO_MODELS, DEFAULT_SNAPSHOT.videoModel),
       model3dModel: pick(saved.model3dModel, MODEL3D_MODELS, DEFAULT_SNAPSHOT.model3dModel),
@@ -314,12 +317,16 @@ function readSnapshot(): StudioSnapshot {
  * `billableUnits` treats an unknown length as one minute, which is the smallest
  * honest guess rather than a free pass.
  */
-function readMediaDuration(file: File): Promise<number | null> {
+function readMediaDuration(file: File | string): Promise<number | null> {
   return new Promise((resolve) => {
-    const url = URL.createObjectURL(file);
+    const url = typeof file === 'string' ? file : URL.createObjectURL(file);
     const el = document.createElement('video');
+    let settled = false;
+    let timer: ReturnType<typeof setTimeout>;
     const done = (value: number | null) => {
-      URL.revokeObjectURL(url);
+      if (settled) return;
+      settled = true; clearTimeout(timer); el.onloadedmetadata = null; el.onerror = null; el.removeAttribute('src'); el.load();
+      if (typeof file !== 'string') URL.revokeObjectURL(url);
       resolve(value);
     };
     el.preload = 'metadata';
@@ -331,7 +338,7 @@ function readMediaDuration(file: File): Promise<number | null> {
     el.src = url;
     // A file that never fires either event would leave Generate stuck behind a
     // promise that never settles.
-    setTimeout(() => done(null), 10_000);
+    timer = setTimeout(() => done(null), 10_000);
   });
 }
 
@@ -456,7 +463,7 @@ interface CreatorStudioProps {
   stickyTop?: number;
 }
 
-export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioProps) {
+export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioProps) {
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const checkingSession = useRef(false);
@@ -478,6 +485,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const [prompts, setPrompts] = useState<ByMode<string>>(restored.prompts);
   const [presetIds, setPresetIds] = useState<ByMode<string | null>>(restored.presetIds);
   const [references, setReferences] = useState<ByMode<Reference>>(restored.references);
+  const [extraReferences, setExtraReferences] = useState<ByMode<CreatorReferenceAsset[]>>(restored.extraReferences);
 
   const [imageModel, setImageModel] = useState<ImageModelKey>(restored.imageModel);
   const [videoModel, setVideoModel] = useState<VideoModelKey>(restored.videoModel);
@@ -520,6 +528,12 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const prompt = prompts[mode];
   const presetId = presetIds[mode];
   const reference = references[mode];
+  const currentAssets = useMemo<CreatorReferenceAsset[]>(() => [...(reference ? [{ ...reference, kind: 'image' as const }] : []), ...extraReferences[mode]], [reference, extraReferences, mode]);
+  const currentImages = currentAssets.filter(a => a.kind === 'image');
+  const currentClip = currentAssets.find(a => a.kind === 'video');
+  const assetDraftRef = useRef(currentAssets);
+  assetDraftRef.current = currentAssets;
+  const preparedAssetsRef = useRef<{ mode: Mode; assets: CreatorReferenceAsset[] } | null>(null);
 
   // The casts are for the computed `[m]` key: with a union-typed key TypeScript
   // widens the spread rather than keeping the three-slot record.
@@ -558,29 +572,9 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     '3d': null,
   });
 
-  /** Scrolled far enough that the composer is parked under the page header. */
-  const [stuck, setStuck] = useState(false);
-  /** The creator has clicked into the parked composer, so keep it open. */
-  const [pinnedOpen, setPinnedOpen] = useState(false);
-  const collapsed = stuck && !pinnedOpen;
-
   const fileRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-  const studioTailRef = useRef<HTMLElement>(null);
-
-  /**
-   * Swallow: the preset strip and results feed are cut off at the composer's
-   * top edge as they scroll under it, tracing its rounded corners and then
-   * running full width just below them — the same treatment the home feed gets
-   * from its nav pill. Without it the feed slides behind the glass and
-   * re-emerges in the gutters either side of the bar.
-   *
-   * `allThemes` because /creator is a standalone dark surface rather than one
-   * of the app's glass themes, so the hook's theme gate would never open.
-   */
-  useFeedSwallowClip(studioTailRef, '[data-creator-composer]', [], { allThemes: true });
 
   // Paywalls are Radix dialogs, portalled outside the host's hidden wrapper.
   useCloseOnSurfaceSwitch(
@@ -609,6 +603,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       mode,
       prompts,
       presetIds,
+      extraReferences: Object.fromEntries(Object.entries(extraReferences).map(([key, assets]) => [key, assets.filter(a => !a.file && a.url.startsWith('https:'))])) as ByMode<CreatorReferenceAsset[]>,
       references: {
         image: persistableReference(references.image),
         video: persistableReference(references.video),
@@ -640,17 +635,21 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       dubTargetLang,
       speechLang,
     };
+    const timer = window.setTimeout(() => {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
     } catch {
       // Over quota or storage disabled. The workspace still works for this
       // session; it just will not survive a reload.
     }
+    }, 300);
+    return () => window.clearTimeout(timer);
   }, [
     mode,
     prompts,
     presetIds,
     references,
+    extraReferences,
     imageModel,
     videoModel,
     model3dModel,
@@ -677,60 +676,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
   // ── Sticky composer ───────────────────────────────────────────────────────
 
-  // A one-pixel marker sits where the composer starts in normal flow. The
-  // negative top margin on the observer's root is the page header, so the
-  // switch fires at the moment the composer would slide underneath it.
-  useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setStuck(!entry.isIntersecting),
-      { rootMargin: `-${Math.round(stickyTop) + 4}px 0px 0px 0px`, threshold: 0 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [stickyTop]);
-
-  // Back at the top of the page the composer is full size anyway, so drop the
-  // pin — otherwise it would re-open on its own the next time you scroll down.
-  useEffect(() => {
-    if (!stuck) setPinnedOpen(false);
-  }, [stuck]);
-
-  const openComposer = useCallback(() => {
-    setPinnedOpen(true);
-    // The textarea does not exist until this render lands.
-    requestAnimationFrame(() => {
-      const el = textareaRef.current;
-      if (!el) return;
-      el.focus();
-      el.setSelectionRange(el.value.length, el.value.length);
-    });
-  }, []);
-
-  // Clicking away closes it again. Model and aspect pickers are Radix popovers
-  // portalled to document.body, so a plain "outside the composer" test would
-  // treat picking a model as clicking away and shut the composer mid-choice.
-  useEffect(() => {
-    if (!pinnedOpen) return;
-    const onPointerDown = (e: PointerEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-      if (composerRef.current?.contains(target)) return;
-      if (target.closest('[data-radix-popper-content-wrapper]')) return;
-      if (target.closest('[role="dialog"]')) return;
-      setPinnedOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setPinnedOpen(false);
-    };
-    document.addEventListener('pointerdown', onPointerDown, true);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('pointerdown', onPointerDown, true);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [pinnedOpen]);
+  const openComposer = useCallback(() => textareaRef.current?.focus(), []);
 
   // ── Model legality ────────────────────────────────────────────────────────
 
@@ -757,11 +703,12 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       // switching from a 5s model to Veo does not leave an unrenderable 5.
       setDuration((d) => snapVideoDuration(model, model.defaultDuration ?? d));
     }
+    if (model.requiresVideoInput && currentClip?.seconds) setDuration(Math.ceil(currentClip.seconds));
     setVideoAspect((a) => (allowedAspects.includes(a) ? a : allowedAspects[0]));
     // Charging for 1080p on a model that tops out at 720p is a refund waiting
     // to happen — the provider silently renders the lower one.
     setResolution((r) => (allowedResolutions.includes(r) ? r : (allowedResolutions[allowedResolutions.length - 1] as Resolution)));
-  }, [videoModel]);
+  }, [videoModel, currentClip?.seconds]);
 
   const aspect =
     mode === 'image'
@@ -775,7 +722,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
   /** Applying a preset also adopts the model and aspect it was tuned for. */
   const pickPreset = useCallback((next: CreatorPreset | null) => {
-    if (next?.requiresImage && !reference) {
+    if (next?.requiresImage && !reference && !VIDEO_MODELS[next.model ?? '']?.requiresVideoInput) {
       // Adopting its model anyway would swap in a different engine at a
       // different price than the tile advertised.
       toast.error(t('creator.presetNeedsImage', { name: t(next.nameKey) }));
@@ -869,7 +816,46 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     }
   }, []);
 
+  const addAsset = useCallback(async (asset: CreatorReferenceAsset) => {
+    const latest = assetDraftRef.current;
+    const images = latest.filter(a => a.kind === 'image');
+    if (latest.some(a => a.url === asset.url)) return;
+    if (asset.kind === 'video') {
+      if (mode !== 'video' || latest.some(a => a.kind === 'video')) { toast.error(t('creator.referenceOneClip')); return; }
+      const seconds = asset.seconds ?? await readMediaDuration(asset.file ?? asset.url);
+      if (seconds == null || seconds < 3 || seconds > 30) { if (asset.file) URL.revokeObjectURL(asset.url); toast.error(t('creator.referenceClipLength')); return; }
+      const nextModel = seconds > 15 ? 'kling-3-motion' : 'kling-o3-edit';
+      setVideoModel(nextModel);
+      setPresetFor('video', seconds > 15 ? 'reference-copy-motion' : 'reference-character-swap');
+      setDuration(Math.ceil(seconds));
+      assetDraftRef.current = [...latest, { ...asset, seconds }];
+      setExtraReferences(prev => ({ ...prev, video: [...prev.video, { ...asset, seconds }] }));
+      return;
+    }
+    if (mode === '3d') { setReference(asset); return; }
+    if (images.length >= 4) { toast.error(t('creator.referenceFourImages')); return; }
+    assetDraftRef.current = [...latest, asset];
+    if (!images.length) setReference(asset);
+    else setExtraReferences(prev => ({ ...prev, [mode]: [...prev[mode], asset] }));
+    if (mode === 'image' && images.length && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) setImageModel('flux-3-image');
+  }, [currentAssets, currentClip, currentImages.length, mode, reference, setReference, setPresetFor, imageModel, t]);
+  const removeAsset = useCallback((asset: CreatorReferenceAsset) => {
+    if (reference?.url === asset.url) {
+      const next = extraReferences[mode].find(a => a.kind === 'image');
+      setReference(next ?? null);
+      if (next) setExtraReferences(prev => ({ ...prev, [mode]: prev[mode].filter(a => a.url !== next.url) }));
+    } else setExtraReferences(prev => ({ ...prev, [mode]: prev[mode].filter(a => a.url !== asset.url) }));
+    if (asset.file) URL.revokeObjectURL(asset.url);
+  }, [reference, extraReferences, mode, setReference]);
+  const insertAssetMention = useCallback((tag: string) => { editPrompt(`${prompt}${prompt && !prompt.endsWith(' ') ? ' ' : ''}${tag} `); textareaRef.current?.focus(); }, [prompt, editPrompt]);
+
   const attachFile = useCallback(async (file: File) => {
+    if (mode === 'video' && /\.(mp4|mov)$/i.test(file.name)) {
+      if (file.size > 100 * 1024 * 1024) { toast.error(t('creator.fileTooLarge')); return; }
+      await addAsset({ url: URL.createObjectURL(file), label: file.name, kind: 'video', file });
+      return;
+    }
+
     if (!file.type.startsWith('image/')) {
       toast.error(t('creator.attachImageReference'));
       return;
@@ -884,17 +870,16 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     setAttaching(true);
     try {
       const url = await fileToDataUrl(file);
-      setReference({ url, label: file.name });
+      await addAsset({ url, label: file.name, kind: 'image' });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : t('creator.attachFailed'));
     } finally {
       setAttaching(false);
     }
-  }, [setReference]);
+  }, [addAsset, mode, t]);
 
   /** Bring the composer back into view and ready to type, wherever the page is. */
   const focusComposer = useCallback(() => {
-    setPinnedOpen(true);
     composerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     requestAnimationFrame(() => textareaRef.current?.focus());
   }, []);
@@ -911,14 +896,33 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         focusComposer();
       }
     };
+    const onWorkflow = (e: Event) => {
+      const workflow = (e as CustomEvent<string>).detail;
+      setMode('video'); setVideoModel(workflow === 'motion' ? 'kling-3-motion' : 'kling-o3-edit');
+      setPresetFor('video', workflow === 'motion' ? 'reference-copy-motion' : 'reference-character-swap');
+      focusComposer();
+    };
+    const onPreset = (e: Event) => {
+      const preset = getPreset((e as CustomEvent<string>).detail);
+      if (preset?.kind === 'image') {
+        setMode('image'); setPresetFor('image', preset.id);
+        if (preset.model) setImageModel(preset.model);
+        if (preset.aspect) setImageAspect(preset.aspect);
+        focusComposer();
+      }
+    };
+    window.addEventListener('creator:preset', onPreset);
+    window.addEventListener('creator:workflow', onWorkflow);
     window.addEventListener('creator:mode', onPick);
-    return () => window.removeEventListener('creator:mode', onPick);
-  }, [focusComposer]);
+    return () => { window.removeEventListener('creator:mode', onPick); window.removeEventListener('creator:workflow', onWorkflow); window.removeEventListener('creator:preset', onPreset); };
+  }, [focusComposer, setPresetFor]);
 
   // `/creator?mode=video` (the app's medium tiles link here) opens on that mode.
   useEffect(() => {
     const requested = new URLSearchParams(window.location.search).get('mode');
     if (requested === 'image' || requested === 'video' || requested === 'audio' || requested === '3d') setMode(requested);
+    const workflow = new URLSearchParams(window.location.search).get('workflow');
+    if (workflow === 'swap' || workflow === 'motion') { setMode('video'); setVideoModel(workflow === 'motion' ? 'kling-3-motion' : 'kling-o3-edit'); setPresetFor('video', workflow === 'motion' ? 'reference-copy-motion' : 'reference-character-swap'); }
   }, []);
 
   // Tell the page's medium tiles which one is live.
@@ -1016,6 +1020,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const blockingIssue = useMemo(() => {
     if (mode === 'image') {
       const model = IMAGE_MODELS[imageModel];
+      if (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) return t('creator.referenceMultiModel');
       if (model && reference && !imageModelSupportsEdit(model)) {
         return `${model.name} cannot edit an attached image. Remove it or pick another model.`;
       }
@@ -1023,6 +1028,10 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     if (mode === 'video') {
       const model = VIDEO_MODELS[videoModel];
       if (!model) return t('creator.pickVideoModel');
+      if (model.requiresVideoInput && !currentClip) return t('creator.referenceNeedsClip');
+      if (currentClip && !model.requiresVideoInput) return t('creator.referenceVideoModel');
+      if (currentImages.length > (model.maxReferenceImages ?? 1)) return t('creator.referenceTooMany');
+      if (model.requiresVideoInput && currentClip?.seconds && currentClip.seconds > (model.maxDuration ?? 15)) return t('creator.referenceClipLength');
       if (!model.supports.includes('image-to-video') && reference) {
         return `${model.name} cannot use a reference image. Remove it or pick another model.`;
       }
@@ -1059,6 +1068,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     videoModel,
     model3dModel,
     reference,
+    currentImages.length,
+    currentClip,
     activeAudioTask,
     audioFile,
     voiceId,
@@ -1261,6 +1272,21 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       toast.error(error instanceof Error ? error.message : 'Could not verify your session.', error instanceof AuthenticationError ? { action: { label: 'Sign in', onClick: () => openLoginModal() } } : undefined);
       return;
     } finally { checkingSession.current = false; }
+    if (mode === 'image' || mode === 'video') {
+      setStaging(true);
+      try {
+        const hosted = await Promise.all(currentAssets.map(async asset => {
+          const url = asset.file ? await hostCreatorFile(asset.file) : asset.url.startsWith('data:') ? await hostDataUrl(asset.url) : asset.url;
+          return { ...asset, file: undefined, url };
+        }));
+        currentAssets.forEach(asset => { if (asset.file) URL.revokeObjectURL(asset.url); });
+        const primary = hosted.find(a => a.kind === 'image');
+        preparedAssetsRef.current = { mode, assets: hosted };
+        setReference(primary ?? null);
+        setExtraReferences(prev => ({ ...prev, [mode]: hosted.filter(a => a !== primary) }));
+      } catch (error) { toast.error(error instanceof Error ? error.message : t('creator.referenceUploadFailed')); return; }
+      finally { setStaging(false); }
+    }
     if (mode === 'image') {
       if (freeImageEligible) runImageRef.current();
       else setImagePaywallOpen(true);
@@ -1316,6 +1342,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     activeAudioTask,
     runAudio,
     freeImageEligible,
+    currentAssets,
+    setReference,
   ]);
 
   /**
@@ -1323,6 +1351,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
    * Generate with no hash when the job runs on a free starter image.
    */
   const runImage = useCallback((txHash?: string) => {
+    const assets = preparedAssetsRef.current?.mode === 'image' ? preparedAssetsRef.current.assets : currentAssets;
+    const images = assets.filter(a => a.kind === 'image');
     setImagePaywallOpen(false);
     const meta = {
       prompt: prompt.trim() || preset?.sample || t('creator.untitled'),
@@ -1337,8 +1367,9 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           prompt: resolvedPrompt,
           model: imageModel,
           aspectRatio: imageAspect,
+          referenceImageUrls: images.length > 1 ? images.map(a => a.url) : undefined,
           ...(txHash ? { txHash } : { useFree: true }),
-          ...(reference ? { sourceImage: reference.url } : {}),
+          ...(images[0] ? { sourceImage: images[0].url } : {}),
         },
         meta,
       );
@@ -1346,7 +1377,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     // The claim lands when the request reaches the server; re-read after it.
     if (!txHash) window.setTimeout(() => void freeImages.refetch(), 4000);
     toast.success(batch > 1 ? t('creator.imagesQueued', { count: batch }) : t('creator.generationStarted'));
-  }, [prompt, preset, resolvedPrompt, imageModel, imageAspect, batch, reference, presetId, startImage, freeImages]);
+  }, [prompt, preset, resolvedPrompt, imageModel, imageAspect, batch, reference, extraReferences, presetId, startImage, freeImages]);
   runImageRef.current = runImage;
 
   const runVideo = useCallback(
@@ -1365,10 +1396,10 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
             ? (options?.resolution ?? resolution)
             : undefined,
           negativePrompt: options?.negativePrompt || preset?.negative,
-          referenceImageUrls: options?.referenceImageUrls,
+          referenceImageUrls: currentImages.length > 1 || activeVideoModel?.referenceMode === 'edit' ? currentImages.map(a => a.url) : options?.referenceImageUrls,
           endFrameUrl: options?.endFrameUrl,
           audioUrls: options?.audioUrls,
-          videoUrls: options?.videoUrls,
+          videoUrls: currentClip ? [currentClip.url] : options?.videoUrls,
           seed: options?.seed,
           txHash,
           ...(reference ? { sourceImage: reference.url } : {}),
@@ -1395,6 +1426,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       prompt,
       presetId,
       startVideo,
+      currentClip,
+      currentImages,
     ],
   );
 
@@ -1443,7 +1476,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
             label: m.name,
             detail: m.description,
             meta: `$${getImageCostUsd(m).toFixed(2)}`,
-            disabled: !canEdit && !!reference,
+            disabled: (!canEdit && !!reference) || (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[m.id]?.editUsesPlural),
             disabledReason: t('creator.cannotEditAttached'),
           };
         })
@@ -1474,7 +1507,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
             label: m.name,
             detail: m.description,
             meta: `$${getVideoCostUsd(m, m.defaultDuration ?? 5).toFixed(2)}`,
-            disabled: (needsImage && !reference) || (rejectsImage && !!reference),
+            disabled: (needsImage && !reference && !m.requiresVideoInput) || (rejectsImage && !!reference),
             disabledReason: t(needsImage ? 'creator.needsAttachedImage' : 'creator.cannotUseAttached'),
           };
         });
@@ -1619,7 +1652,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     <>
       {/* Token Stage hero: a centred headline over the page's wall of
           community work (drawn by CreatorPage behind this section). */}
-      <section className="relative px-3 pb-6 pt-10 text-center sm:px-4 sm:pt-16">
+      <section className="relative px-3 pb-4 pt-5 text-center sm:px-4 sm:pb-6 sm:pt-16">
         <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] py-1 pl-1 pr-3 text-[12.5px] font-semibold text-white/85 backdrop-blur-xl">
           <ThemedIcon icon="features" className="h-6 w-6 object-contain" />
           {t('creator.heroKicker', { model: currentModelName })}
@@ -1638,97 +1671,18 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         )}
       </section>
 
-      {/* Marks where the composer sits in normal flow — see the observer above. */}
-      <div ref={sentinelRef} aria-hidden className="h-px w-full" />
 
       {/* Horizontal padding only. Padding or a margin on the top edge would
           ride along when it parks, leaving a transparent strip between the
           header and the composer with the page scrolling through it. */}
-      <div className="sticky z-40 px-3 sm:px-4" style={{ top: stickyTop }}>
-        {/* Lag guard. The clip is written on the main thread; a hard fling
-            scrolls the compositor ahead of it, so for a frame a card's top edge
-            flashes in the shoulders either side of the pill. This strip is
-            anchored to the sticky wrapper, which never lags, and is painted the
-            page's own background — invisible at rest, and it swallows the
-            flash. Flat paint is only safe here because /creator's backdrop is a
-            known solid colour. On the canvas themes the page is see-through, so
-            index.css hides it there (it read as a black bar under the header). It sits BEHIND the pill so the glass and the rounded
-            cut are untouched. */}
-        <div
-          aria-hidden
-          data-creator-lag-guard
-          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-6 bg-[#090a0b]"
-        />
-
-        {/* The swallow clip's cut element: its top edge is the cut line and its
-            own corner radius is what the clip traces. Keep it the only surface
-            inside the sticky wrapper, and keep that wrapper transparent — a
-            background there would paint a box around the pill. */}
+      <div className="z-40 px-3 sm:sticky sm:px-4" style={{ top: stickyTop }}>
         <div
           ref={composerRef}
           data-creator-composer
-          className={cn(
-            // Centred and capped so it floats as one glass card under the hero.
-            'mx-auto max-w-[1040px] border backdrop-saturate-150 transition-[padding,background-color,box-shadow] duration-200',
-            collapsed
-              ? 'rounded-2xl border-white/15 bg-black/45 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-2xl'
-              : stuck
-                ? 'rounded-[24px] border-white/15 bg-black/45 p-3 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-2xl'
-                : 'rounded-[26px] border-white/15 bg-white/[0.06] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_18px_50px_-18px_rgba(0,0,0,0.6)] backdrop-blur-2xl',
-          )}
+          className="mx-auto max-w-[1040px] rounded-[26px] border border-white/15 bg-white/[0.06] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)] backdrop-blur-xl"
         >
-          {collapsed ? (
-            /* Parked under the header: one line, and clicking it opens back up. */
-            <div className="flex items-center gap-2">
-              <ModeToggle mode={mode} onChange={switchMode} compact />
+          <>
 
-              <input
-                type="text"
-                value={prompt}
-                onChange={(e) => editPrompt(e.target.value)}
-                onFocus={openComposer}
-                onPointerDown={openComposer}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-                    e.preventDefault();
-                    void openPaywall();
-                  }
-                }}
-                placeholder={placeholder}
-                aria-label={t('creator.promptLabel')}
-                className="min-w-0 flex-1 bg-transparent px-1 py-1.5 text-[14px] text-white outline-none placeholder:text-white/35"
-              />
-
-              {reference && (
-                <img
-                  src={reference.url}
-                  alt=""
-                  title={reference.label}
-                  className="hidden h-7 w-7 shrink-0 rounded-lg object-cover sm:block"
-                />
-              )}
-
-              {(mode !== 'audio' || activeAudioTask.needsMedia) && (
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  disabled={attaching}
-                  aria-label={t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')}
-                  className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/70 transition hover:bg-white/[0.10] hover:text-white disabled:opacity-40 sm:inline-flex"
-                >
-                  {attaching ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Paperclip className="h-4 w-4" />
-                  )}
-                </button>
-              )}
-
-              {enhanceButton(true)}
-              {generateButton(true)}
-            </div>
-          ) : (
-            <>
               {mode === 'image' && (
                 <div className="mb-3 flex flex-wrap gap-2" aria-label="Image quality presets">
                   {[
@@ -1766,33 +1720,13 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                 </div>
               )}
 
-              {mode !== 'audio' && reference && (
-                <div className="mb-2 flex items-center gap-2.5 rounded-xl border border-white/10 bg-black/40 p-2">
-                  <img
-                    src={reference.url}
-                    alt=""
-                    className="h-11 w-11 shrink-0 rounded-lg object-cover"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-[12px] font-medium text-white/85">{reference.label}</p>
-                    <p className="text-[11px] text-white/40">
-                      {mode === 'image'
-                        ? t('creator.usedAsEditReference')
-                        : mode === '3d'
-                          ? activeModel3d?.usesPromptWithImage
-                            ? t('creator.objectToReconstruct')
-                            : `Object to reconstruct — ${activeModel3d?.name ?? 'this model'} ignores the prompt`
-                          : t('creator.firstFrameToAnimate')}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setReference(null)}
-                    aria-label={t('creator.removeReferenceImage')}
-                    className="rounded-full p-1.5 text-white/50 transition hover:bg-white/10 hover:text-white"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
+              {mode !== 'audio' && <ReferenceAssets assets={currentAssets} onAdd={asset => void addAsset(asset)} onRemove={removeAsset} onMention={insertAssetMention} allowVideo={mode === 'video'} singleImage={mode === '3d'} />}
+              {mode === 'video' && (
+                <div className="mb-3 flex flex-wrap gap-2">
+                  {(['swap', 'motion'] as const).map(workflow => <button key={workflow} type="button"
+                    aria-pressed={videoModel === (workflow === 'swap' ? 'kling-o3-edit' : 'kling-3-motion')}
+                    onClick={() => { setVideoModel(workflow === 'swap' ? 'kling-o3-edit' : 'kling-3-motion'); setPresetId(workflow === 'swap' ? 'reference-character-swap' : 'reference-copy-motion'); }}
+                    className="rounded-lg border border-white/20 px-3 py-2 text-xs text-white/80">{t(workflow === 'swap' ? 'creator.characterSwap' : 'creator.copyMotion')}</button>)}
                 </div>
               )}
 
@@ -1875,7 +1809,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                 )}
                 <ModeToggle mode={mode} onChange={switchMode} />
 
-                <div className="flex min-w-0 flex-1 items-end gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex min-w-0 flex-1 flex-wrap items-end gap-2">
                   {/* Audio leads with the tool, not the engine: which of the
                       nine is running decides every other chip on the rail. */}
                   {mode === 'audio' && (
@@ -2110,7 +2044,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
                   {mode === 'video' && (
                     <>
-                      <CounterChip
+                      {activeVideoModel?.requiresVideoInput ? <span className="rounded-xl border border-white/15 px-3 py-2 text-xs text-white/65">{t('creator.referenceClipSeconds', { seconds: duration })}</span> : <CounterChip
                         label={t('creator.secondsUnit')}
                         singular={t('creator.secondUnit')}
                         value={duration}
@@ -2119,7 +2053,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                         editable
                         allowedValues={activeVideoModel?.allowedDurations}
                         onChange={setDuration}
-                      />
+                      />}
                       {activeVideoModel?.supportsResolution && (
                         <SelectChip
                           label={t('creator.resolution')}
@@ -2162,23 +2096,23 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                   {blockingIssue}
                 </p>
               )}
-            </>
-          )}
+          </>
         </div>
       </div>
 
-      <section ref={studioTailRef} className="px-3 pb-6 sm:px-4">
+      <section className="px-3 pb-6 sm:px-4">
         {/* One input for both channels. The accept list and the handler follow
             the mode, so the picker offers recordings on the audio tasks that
             take one and pictures everywhere else. */}
         <input
           ref={fileRef}
           type="file"
-          accept={mode === 'audio' ? (activeAudioTask.mediaAccept ?? 'audio/*') : 'image/*'}
+          multiple={mode === 'image' || mode === 'video'}
+          accept={mode === 'audio' ? (activeAudioTask.mediaAccept ?? 'audio/*') : mode === 'video' ? 'image/*,video/mp4,video/quicktime,.mp4,.mov' : 'image/*'}
           hidden
           onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) void (mode === 'audio' ? attachAudioFile(file) : attachFile(file));
+            const files = Array.from(e.target.files ?? []);
+            void (async () => { for (const file of files) await (mode === 'audio' ? attachAudioFile(file) : attachFile(file)); })();
             e.target.value = '';
           }}
         />
@@ -2273,7 +2207,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       </section>
     </>
   );
-}
+});
 
 /** Small entry point used by the marketing rows further down /creator. */
 export function StudioJumpButton({ onClick }: { onClick: () => void }) {
