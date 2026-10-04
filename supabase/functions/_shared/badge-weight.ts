@@ -40,6 +40,13 @@ const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
   maldoteth: "Megalodon",
   mal: "Megalodon",
   aaron: "Megalodon",
+  ma255: "Ghost Lobster",
+  dehubprime: "King Cobra",
+  algiers: "King Cobra",
+  angelbeattales: "Ghost Lobster",
+  infinitebaffle: "King Cobra",
+  angieluthien: "Octopus",
+  beinsports: "Ghost Lobster",
 };
 
 const BADGE_PRICE_ANCHOR = 0.001;
@@ -128,19 +135,22 @@ export function badgeTier(
   username?: string | null,
   opts: { scale?: number; lock?: unknown } = {},
 ): string | null {
+  let granted: string | null = null;
   if (username) {
-    const clean = username.replace("@", "").toLowerCase();
-    const override = USERNAME_BADGE_OVERRIDES[clean];
-    if (override) return override;
+    const clean = username.replace("@", "").trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(USERNAME_BADGE_OVERRIDES, clean)) {
+      granted = USERNAME_BADGE_OVERRIDES[clean];
+    }
   }
   const amount = typeof badgeBalance === "string" ? parseFloat(badgeBalance) : badgeBalance;
-  if (typeof amount !== "number" || !Number.isFinite(amount)) return null;
+  if (typeof amount !== "number" || !Number.isFinite(amount)) return granted;
 
   const scale = opts.scale ?? MAX_BADGE_SCALE;
   const earned = earnedTier(amount, scale);
   const lock = parseBadgeLock(opts.lock);
   const locked = lock && amount >= lock.requirement ? lock.tier : null;
-  return tierIndex(locked) > tierIndex(earned) ? locked : earned;
+  const highestEarned = tierIndex(locked) > tierIndex(earned) ? locked : earned;
+  return tierIndex(granted) > tierIndex(highestEarned) ? granted : highestEarned;
 }
 
 export interface ResolvedWeight {
