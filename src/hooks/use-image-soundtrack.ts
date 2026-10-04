@@ -1,12 +1,15 @@
 import { useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { claimHandoffAudio, getHandoffAudio, isHandoffAudioActive, releaseHandoffAudio, setHandoffAudio, subscribeHandoffAudio } from '@/lib/audio-handoff';
+import { claimHandoffAudio, getHandoffAudio, isHandoffAudioActive, raiseHandoffAudio, releaseHandoffAudio, setHandoffAudio, subscribeHandoffAudio } from '@/lib/audio-handoff';
 
 export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HTMLElement>, enabled: boolean, postId?: string) {
   const surfaceActive = useContext(CachedPageActiveContext);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const key = url ? `soundtrack:${url}` : '';
+  // Per post, not per song: library songs are shared by many posts, and one
+  // slot per song left every card but the last one in the feed with a play
+  // button that did nothing.
+  const key = url ? `soundtrack:${postId ?? ''}:${url}` : '';
   const token = useRef<object | null>(null);
   const [, refresh] = useState(0);
   const owner = useId();
@@ -58,7 +61,8 @@ export function useImageSoundtrack(url: string | undefined, anchor: RefObject<HT
   }, [owner, key]);
 
   const toggle = useCallback(() => {
-    if (!enabled || !url || !isHandoffAudioActive(key, token.current)) return;
+    if (!enabled || !url || !token.current) return;
+    if (!isHandoffAudioActive(key, token.current)) raiseHandoffAudio(key, token.current);
     let audio = audioRef.current;
     if (!audio) {
       audio = new Audio();

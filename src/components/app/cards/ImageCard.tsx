@@ -310,6 +310,10 @@ function ImageCarousel({
   soundPlaying?: boolean;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  /** Where the current photo sits inside the gallery, for the overlay. */
+  const [photoBox, setPhotoBox] = useState<{ left: number; width: number; bottom: number }>();
+  const hasOverlay = !!overlay;
   const galleryKey = postId ?? images.join('|');
   const [currentIndex, setCurrentIndex] = useState(() => galleryIndex(galleryKey));
   const selectedRef = useRef(currentIndex);
@@ -341,14 +345,26 @@ function ImageCarousel({
     setCurrentIndex(idx);
     selectedRef.current = idx;
     rememberGalleryIndex(galleryKey, idx);
-    const height = slides[idx].querySelector("img")?.getBoundingClientRect().height;
+    // The slot, not the img: the img is scaled while its soundtrack plays.
+    const photo = (slides[idx].querySelector('[data-image-slot]') ?? slides[idx].querySelector('img'))?.getBoundingClientRect();
+    const height = photo?.height;
     setActiveHeight(height && height > 0 ? height : undefined);
+    // A portrait photo is narrower than the card, and in a gallery a short one
+    // sits above the tallest one's bottom: the overlay follows the photo, not
+    // the card, or it hangs off the side of it and below it.
+    const gallery = hasOverlay ? rootRef.current?.getBoundingClientRect() : undefined;
+    const left = photo && gallery ? Math.round(Math.max(0, photo.left - gallery.left)) : 0;
+    const right = photo && gallery ? Math.round(Math.min(gallery.width, photo.right - gallery.left)) : 0;
+    const bottom = photo && gallery ? Math.round(Math.max(0, gallery.bottom - photo.bottom)) : 0;
+    setPhotoBox(previous => right - left <= 0 ? undefined
+      : previous?.left === left && previous.width === right - left && previous.bottom === bottom ? previous
+      : { left, width: right - left, bottom });
     // A narrower/tall image already reveals the next image, which is the best
     // possible scroll affordance. Keep the buttons for edge-to-edge slides,
     // where the rest of the gallery would otherwise be completely hidden.
     setCurrentSlideFillsViewport(slides[idx].offsetWidth >= viewport.clientWidth - 1);
     onIndexChange?.(idx);
-  }, [onIndexChange, galleryKey]);
+  }, [onIndexChange, galleryKey, hasOverlay]);
 
   useEffect(() => {
     const restore = () => {
@@ -405,7 +421,7 @@ function ImageCarousel({
   const hasMultiple = images.length > 1;
   
   return (
-    <div data-media-full data-sound-playing={soundPlaying || undefined} className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
+    <div ref={rootRef} data-media-full data-sound-playing={soundPlaying || undefined} className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
       {/* Carousel container */}
       <div
         ref={scrollRef}
@@ -457,7 +473,14 @@ function ImageCarousel({
           )}
         </>
       )}
-      {overlay && <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10">{overlay}</div>}
+      {overlay && (
+        <div
+          className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-10', !immersive && 'overflow-hidden rounded-b-2xl')}
+          style={photoBox && { left: photoBox.left, right: 'auto', width: photoBox.width, bottom: photoBox.bottom }}
+        >
+          {overlay}
+        </div>
+      )}
     </div>
   );
 }

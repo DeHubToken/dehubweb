@@ -5781,6 +5781,10 @@ html:not([data-theme="light"], [data-theme="minimal"], [data-theme="osaka"], [da
 .dh-sound-eq i:nth-child(4) { animation-delay: -0.11s !important; animation-duration: 0.25s !important; }
 @keyframes dh-sound-eq { from { transform: scaleY(0.2); } to { transform: scaleY(1); } }
 [data-sound-playing] img { animation: dh-sound-drift 16s ease-in-out infinite alternate; }
+/* The drift grows the photo, so it is clipped by its own box: a portrait photo
+   is narrower than the card, and clipping only at the card let it spill over. */
+[data-sound-playing] [data-image-slot] { overflow: hidden; border-radius: 1rem; }
+[data-sound-playing].rounded-none [data-image-slot] { border-radius: 0; }
 @keyframes dh-sound-drift {
   from { transform: scale(1); }
   to { transform: scale(1.08) translate(-1.5%, 1%); }
