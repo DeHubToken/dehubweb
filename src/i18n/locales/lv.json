@@ -1580,7 +1580,9 @@
     "passkeyNotLinked": "Ar šo pirkstu nospiedumu vēl nav saistīts neviens konts. Izveidojiet jaunu kontu.",
     "passkeyAlreadyRegistered": "Šim pirkstu nospiedumam jau ir konts. Izmantojiet pierakstīšanos.",
     "passkeyFailed": "Pirkstu nospieduma pierakstīšanās neizdevās. Lūdzu, mēģiniet vēlreiz.",
-    "passkeyBackupHint": "Jūsu konts atrodas šīs ierīces paroles atslēgā. Lielākajā daļā tālruņu tas sinhronizējas ar jūsu Google vai Apple kontu, un iestatījumos varat pievienot paroles dublējumu."
+    "passkeyBackupHint": "Jūsu konts atrodas šīs ierīces paroles atslēgā. Lielākajā daļā tālruņu tas sinhronizējas ar jūsu Google vai Apple kontu, un iestatījumos varat pievienot paroles dublējumu.",
+    "walletBlockedTitle": "Šis maks ir pavisam jauns",
+    "walletBlockedBody": "Jauniem makiem konta atvēršanai vajadzīgs atlikums vai iepriekšēja transakcija. Reģistrējies ar kādu no tālāk norādītajām iespējām un pēc tam pievieno šo maku Iestatījumos."
   },
   "careers": {
     "title": "Karjera DeHub",

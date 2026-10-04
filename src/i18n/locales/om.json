@@ -1606,7 +1606,9 @@
     "passkeyNotLinked": "Qubee quba sanaaf maallaqni hin walitti makamu. Kana asemitti maallaqa haarawa uumi.",
     "passkeyAlreadyRegistered": "Qubee quba sana irratti maallaqni jira. Kana asemitti Seenii jedhu fayyadami.",
     "passkeyFailed": "Qubee quba seenuun ni fiixate. Galatoomi.",
-    "passkeyBackupHint": "Maallaqni kee qubee quba meeshaa kana keessa jira. Bilisummaa kee irratti, isin Google ykn Apple maallaqa kee wajjin walitti makama, fi isin Settings keessatti deeggarsa jecha darbii tokko dabaluu dandeessu."
+    "passkeyBackupHint": "Maallaqni kee qubee quba meeshaa kana keessa jira. Bilisummaa kee irratti, isin Google ykn Apple maallaqa kee wajjin walitti makama, fi isin Settings keessatti deeggarsa jecha darbii tokko dabaluu dandeessu.",
+    "walletBlockedTitle": "Waaleetiin kun guutummaan haaraa dha",
+    "walletBlockedBody": "Waaleetiiwwan haaraan herrega banuuf haftee ykn daldala duraanii barbaadu. Filannoowwan armaan gadii keessaa tokkoon galmaa'aa, sana booda waaleetii kana Qindaa'ina irraa walqabsiisaa."
   },
   "careers": {
     "title": "Hojii DeHub-tti",

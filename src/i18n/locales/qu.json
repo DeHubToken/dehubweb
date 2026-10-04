@@ -1597,7 +1597,9 @@
     "passkeyNotLinked": "Mana imapas kañayqa manam chay sut'inchaywan hap'isqachu. Mushuq kañayta kamariy.",
     "passkeyAlreadyRegistered": "Chay sut'inchayqa hap'isqam kachkan huk kañayta. Yaykuyta llamk'achiy.",
     "passkeyFailed": "Sut'inchaywan yaykuyqa mana allinchu. K'umuyta prupakuy.",
-    "passkeyBackupHint": "Kañaykiqa kay llamk'anapi kañayninpi kachkan. Ashwan achka k'uychiykunapiqa Google utaq Apple kañaynikiwan hap'isqa kachkan, hinallataqmi Qillqana Wasipi huk qillqana yanapaqta yapayta atinki."
+    "passkeyBackupHint": "Kañaykiqa kay llamk'anapi kañayninpi kachkan. Ashwan achka k'uychiykunapiqa Google utaq Apple kañaynikiwan hap'isqa kachkan, hinallataqmi Qillqana Wasipi huk qillqana yanapaqta yapayta atinki.",
+    "walletBlockedTitle": "Kay qullqi wayaqaqa musuqmi",
+    "walletBlockedBody": "Musuq qullqi wayaqakunaqa qullqiyuq kanan otaq ñawpaq rantinakuyniyuq kanan tiyan cuentata kichanapaq. Uraypi kaq akllanakunamanta hukwan qillqakuy, chaymanta kay qullqi wayaqata Churanakunamanta tinkichiy."
   },
   "careers": {
     "title": "Llamkay DeHub-pi",

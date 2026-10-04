@@ -1600,7 +1600,9 @@
     "passkeyNotLinked": "Ingen konto er knyttet til det fingeraftryk endnu. Opret en ny konto i stedet.",
     "passkeyAlreadyRegistered": "Det fingeraftryk har allerede en konto. Brug Log ind i stedet.",
     "passkeyFailed": "Fingeraftrykslogin mislykkedes. Prøv igen.",
-    "passkeyBackupHint": "Din konto ligger i denne enheds adgangsnøgle. På de fleste telefoner synkroniseres den med din Google- eller Apple-konto, og du kan tilføje en adgangskode-backup i Indstillinger."
+    "passkeyBackupHint": "Din konto ligger i denne enheds adgangsnøgle. På de fleste telefoner synkroniseres den med din Google- eller Apple-konto, og du kan tilføje en adgangskode-backup i Indstillinger.",
+    "walletBlockedTitle": "Denne wallet er helt ny",
+    "walletBlockedBody": "Nye wallets skal have en saldo eller en tidligere transaktion for at åbne en konto. Tilmeld dig med en af mulighederne nedenfor, og forbind derefter denne wallet under Indstillinger."
   },
   "careers": {
     "title": "Karriere hos DeHub",

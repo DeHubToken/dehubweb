@@ -1646,7 +1646,9 @@
     "passkeyNotLinked": "Wala pang account na naka-link sa fingerprint na iyon. Gumawa na lang ng bagong account.",
     "passkeyAlreadyRegistered": "May account na ang fingerprint na iyon. Gamitin ang Mag-sign in sa halip.",
     "passkeyFailed": "Nabigo ang pag-sign in gamit ang fingerprint. Pakisubukang muli.",
-    "passkeyBackupHint": "Nakatira ang iyong account sa passkey ng device na ito. Sa karamihan ng mga telepono, nag-si-sync ito sa iyong Google o Apple account, at maaari kang magdagdag ng password backup sa Mga Setting."
+    "passkeyBackupHint": "Nakatira ang iyong account sa passkey ng device na ito. Sa karamihan ng mga telepono, nag-si-sync ito sa iyong Google o Apple account, at maaari kang magdagdag ng password backup sa Mga Setting.",
+    "walletBlockedTitle": "Bagong-bago ang wallet na ito",
+    "walletBlockedBody": "Kailangan ng bagong wallet ng balanse o naunang transaksyon para makapagbukas ng account. Mag-sign up gamit ang isa sa mga opsyon sa ibaba, pagkatapos ay ikonekta ang wallet na ito mula sa Settings."
   },
   "careers": {
     "title": "Careers at DeHub",

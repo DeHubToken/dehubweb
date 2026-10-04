@@ -1597,7 +1597,9 @@
     "passkeyNotLinked": "Henüz o parmak izine bağlı bir hesap yok. Bunun yerine yeni bir hesap oluşturun.",
     "passkeyAlreadyRegistered": "Bu parmak izi zaten bir hesaba sahip. Bunun yerine Oturum Aç'ı kullanın.",
     "passkeyFailed": "Parmak iziyle oturum açma başarısız oldu. Lütfen tekrar deneyin.",
-    "passkeyBackupHint": "Hesabınız bu cihazın parolası içinde yaşar. Çoğu telefonda Google veya Apple hesabınızla eşitlenir ve Ayarlar'da bir şifre yedeği ekleyebilirsiniz."
+    "passkeyBackupHint": "Hesabınız bu cihazın parolası içinde yaşar. Çoğu telefonda Google veya Apple hesabınızla eşitlenir ve Ayarlar'da bir şifre yedeği ekleyebilirsiniz.",
+    "walletBlockedTitle": "Bu cüzdan yepyeni",
+    "walletBlockedBody": "Yeni cüzdanların hesap açabilmesi için bakiyesi veya geçmiş bir işlemi olmalı. Aşağıdaki seçeneklerden biriyle kaydol, ardından bu cüzdanı Ayarlar'dan bağla."
   },
   "careers": {
     "title": "DeHub'da Kariyer",

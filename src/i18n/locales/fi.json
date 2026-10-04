@@ -1592,7 +1592,9 @@
     "passkeyNotLinked": "Tuohon sormenjälkeen ei ole vielä liitetty tiliä. Luo uusi tili sen sijaan.",
     "passkeyAlreadyRegistered": "Tuossa sormenjäljessä on jo tili. Käytä sen sijaan Kirjaudu sisään -toimintoa.",
     "passkeyFailed": "Sormenjäljellä kirjautuminen epäonnistui. Yritä uudelleen.",
-    "passkeyBackupHint": "Tilisi sijaitsee tämän laitteen salausavaimessa. Useimmissa puhelimissa se synkronoidaan Google- tai Apple-tilisi kanssa, ja voit lisätä salasanavarmuuskopion Asetuksista."
+    "passkeyBackupHint": "Tilisi sijaitsee tämän laitteen salausavaimessa. Useimmissa puhelimissa se synkronoidaan Google- tai Apple-tilisi kanssa, ja voit lisätä salasanavarmuuskopion Asetuksista.",
+    "walletBlockedTitle": "Tämä lompakko on upouusi",
+    "walletBlockedBody": "Uusilla lompakoilla on oltava saldo tai aiempi tapahtuma tilin avaamiseen. Rekisteröidy jollakin alla olevista tavoista ja yhdistä tämä lompakko sitten Asetuksista."
   },
   "careers": {
     "title": "Urat DeHubissa",
