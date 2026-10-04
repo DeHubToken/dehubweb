@@ -1,5 +1,6 @@
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
+import { IslandAction, PageIsland } from '@/components/app/page-kit/PageKit';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +9,6 @@ import { Search, Plus, MessageCircle, RefreshCw, Loader2, Trash2, Ban } from 'lu
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector, CreateGroupModal } from '@/components/app/chat';
 import { OnlineDot } from '@/components/app/chat/OnlineDot';
 
@@ -590,42 +590,34 @@ export default function MessagesPage() {
             here becomes a frosted rectangle. */}
         <div data-page-bento data-bento-flat className="w-full h-full flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <BrandIcon src={messagesBubbleIcon} alt="Messages" className="w-10 h-10 object-contain" />
-                <h1 className="text-xl font-bold text-white">{t('messages.title')}</h1>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => refetch()}
-                disabled={isRefetching}
-                className="text-zinc-400 hover:text-white"
-              >
-                <RefreshCw className={`w-4 h-4 ${isRefetching ? 'animate-spin' : ''}`} />
-              </Button>
-            </div>
+          <PageIsland
+            className="shrink-0"
+            icon={<BrandIcon src={messagesBubbleIcon} alt="Messages" className="h-8 w-8 object-contain" />}
+            title={t('messages.title')}
+            actions={
+              <>
+                <IslandAction label="Refresh" onClick={() => refetch()} disabled={isRefetching}>
+                  <RefreshCw className={`h-[18px] w-[18px] ${isRefetching ? 'animate-spin' : ''}`} />
+                </IslandAction>
+                <IslandAction label="Start new conversation" onClick={() => setShowNewConversation(true)}>
+                  <Plus className="h-[18px] w-[18px]" />
+                </IslandAction>
+              </>
+            }
+          >
             <div className="relative flex items-center">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <Input
                 placeholder={t('messages.searchConversations')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-12 bg-white/[0.06] border-0 text-white placeholder:text-zinc-500 rounded-lg"
+                className="pl-10 bg-white/[0.06] border-0 text-white placeholder:text-zinc-500 rounded-lg"
               />
-              <Button
-                size="icon"
-                onClick={() => setShowNewConversation(true)}
-                className="absolute right-1.5 w-7 h-7 rounded-lg bg-white/[0.10] hover:bg-white/[0.16] border-0"
-              >
-                <Plus className="w-4 h-4 text-white" />
-              </Button>
             </div>
-          </div>
+          </PageIsland>
 
           {/* Conversation List */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto pt-3">
             {/* Public Chat (pinned) */}
             <button
               onClick={() => setShowPublicChat(true)}

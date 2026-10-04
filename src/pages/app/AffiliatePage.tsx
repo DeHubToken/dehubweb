@@ -19,6 +19,7 @@ import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COM
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 import { buildReferralDeepLink, sanitizeDeepLinkPath } from "@/lib/affiliateDeepLink";
 import { Input } from "@/components/ui/input";
+import { PageBody } from "@/components/app/page-kit/PageKit";
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
 
@@ -168,7 +169,7 @@ export default function AffiliatePage() {
       {!wallet ? (
         <AuthGate description="You need a DeHub account to access the affiliate programme." />
       ) : (
-        <div className="mx-auto w-full max-w-5xl px-4 py-6 md:py-10 space-y-6">
+        <PageBody className="mx-auto max-w-5xl pt-6 md:pt-10">
           {/* Custom per-user share image */}
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-[0_18px_70px_rgba(255,255,255,0.08)] aspect-[1200/630]">
             {stats?.code ? (
@@ -271,7 +272,7 @@ export default function AffiliatePage() {
             loading={loading}
           />
 
-          <Card className="border-white/10 bg-white/[0.03] backdrop-blur">
+          <Card data-kit-section className="border-white/10 bg-white/[0.03] backdrop-blur">
             <CardContent className="p-5 md:p-6 space-y-5">
               <div>
                 <h2 className="text-lg font-semibold text-white">{t('affiliateLanding.title')}</h2>
@@ -358,7 +359,7 @@ export default function AffiliatePage() {
           </Card>
 
           {/* Share section */}
-          <Card className="border-white/10 bg-white/[0.03] backdrop-blur">
+          <Card data-kit-section className="border-white/10 bg-white/[0.03] backdrop-blur">
             <CardContent className="p-5 md:p-6 space-y-5">
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div>
@@ -412,7 +413,7 @@ export default function AffiliatePage() {
           </Card>
 
           {/* How it works */}
-          <Card className="border-white/10 bg-white/[0.03]">
+          <Card data-kit-section className="border-white/10 bg-white/[0.03]">
             <CardContent className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
               <Step n={1} title="Share your link" body="Drop your invite link into Discord, X, YouTube, your stream — anywhere." />
               <Step n={2} title="They join DeHub" body="Anyone who lands via your link is permanently attributed to you (first-touch wins, 90-day cookie)." />
@@ -434,7 +435,7 @@ export default function AffiliatePage() {
               ) : null}
             </p>
           )}
-        </div>
+        </PageBody>
       )}
     </>
   );
@@ -573,7 +574,7 @@ function AffiliatesList({
   const hydrating = list.length === 0 && (loading || activeCount > 0);
 
   return (
-    <Card className="border-white/10 bg-white/[0.03] backdrop-blur">
+    <Card data-kit-section className="border-white/10 bg-white/[0.03] backdrop-blur">
       <CardContent className="p-5 md:p-6 space-y-4">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div>

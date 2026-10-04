@@ -1,14 +1,13 @@
 import { useEffect, useRef, useCallback, useMemo, useState } from 'react';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useCmcTop100, type CmcCoin } from '@/hooks/use-cmc-top-100';
 import { useTopAssets, type TopAsset } from '@/hooks/use-top-assets';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 import { TickerLogo } from '@/components/app/TickerLogo';
 import { AppState } from '@/components/app/AppState';
-import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import appleLogoImg from '@/assets/logo-apple.png';
 import googleLogoImg from '@/assets/logo-google.png';
 import microsoftLogoImg from '@/assets/logo-microsoft.png';
@@ -229,36 +228,24 @@ export default function Top100CryptosPage() {
 
   const isLoading = cryptoLoading || assetsLoading;
 
-  // Swallow the asset table at the sticky header bento's top edge under the
-  // glass themes, exactly like the home feed cuts at its nav pill.
-  const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
-
   return (
     <div className="min-h-screen">
       <SEOHead title="Top Assets — Live Prices for Stocks, Commodities & Crypto" description="Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on DeHub." url="https://dehub.io/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top Assets', url: 'https://dehub.io/app/top-100', description: 'Live prices and market data for top stocks, commodities and cryptocurrencies.' }} />
       <h1 className="sr-only">DeHub Top Assets — Live Prices for Stocks, Commodities & Crypto</h1>
 
-      {/* Sticky nav pill */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-4 pt-1 pb-0 lg:pt-2 max-w-5xl mx-auto">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
-          <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white transition-colors">
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <ThemedIcon icon="stats" alt="" className="w-9 h-9 shrink-0 object-contain" />
-            <h2 className="text-xl font-bold text-white shrink-0">Top Assets</h2>
-            {!isLoading && allAssets.length > 0 && (
-              <span className="text-zinc-500 text-sm min-w-0 truncate">
-                Showing {visibleAssets.length.toLocaleString()} of {allAssets.length.toLocaleString()}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
+      <div className="max-w-5xl mx-auto">
+      <PageIsland
+        back
+        onBack={() => navigate(-1)}
+        icon="stats"
+        title="Top Assets"
+        subtitle={!isLoading && allAssets.length > 0
+          ? `Showing ${visibleAssets.length.toLocaleString()} of ${allAssets.length.toLocaleString()}`
+          : undefined}
+      />
 
       {/* Content */}
-      <div ref={contentRef} className="max-w-5xl mx-auto px-4 pt-3 pb-6">
+      <PageBody>
       {isLoading && (
         <div className="space-y-3">
           {Array.from({ length: 20 }).map((_, i) => (
@@ -279,7 +266,7 @@ export default function Top100CryptosPage() {
       )}
 
       {!isLoading && visibleAssets.length > 0 && (
-        <div data-page-bento className="rounded-lg border border-white/10 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div data-page-bento data-kit-section className="border border-white/10 overflow-x-auto">
           <table className="w-full min-w-[540px]">
             <thead>
               <tr className="border-b border-white/10 text-zinc-500 text-xs uppercase">
@@ -310,6 +297,7 @@ export default function Top100CryptosPage() {
       <div ref={sentinelRef} className="py-4 flex justify-center">
         {hasMore && <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />}
       </div>
+      </PageBody>
       </div>
     </div>
   );

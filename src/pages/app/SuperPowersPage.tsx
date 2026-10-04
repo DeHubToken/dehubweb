@@ -18,10 +18,11 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Loader2, Lock, Check, Clock, History, ChevronRight, Users, X, Zap } from 'lucide-react';
+import { Loader2, Lock, Check, Clock, History, ChevronRight, Users, X } from 'lucide-react';
 import { SuperPowerIcon } from '@/components/app/SuperPowerIcon';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
+import { PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { BadgeProgress } from '@/components/app/BadgeProgress';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -97,12 +98,10 @@ export default function SuperPowersPage() {
         }}
       />
 
-      <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
+      <PageIsland className="max-w-3xl mx-auto" icon="superpowers" title={t('superpowers.title')} />
+
+      <PageBody className="max-w-3xl mx-auto">
         <header className="flex flex-col gap-2">
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <Zap className="w-6 h-6" aria-hidden="true" />
-            {t('superpowers.title')}
-          </h1>
           <p className="text-sm text-zinc-400 max-w-prose">
             {t('superpowers.currentIntro', {
               defaultValue:
@@ -133,12 +132,12 @@ export default function SuperPowersPage() {
           // to go and stake because the API blipped is worse than saying
           // nothing — and the ladder below still renders from the public
           // endpoint, so the page is not empty.
-          <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
+          <section data-kit-section className="bg-white/5 p-5 flex flex-col gap-3">
             <p className="text-white text-sm">{t('superpowers.loadFailed')}</p>
           </section>
         ) : (
           // Team up is available without buying tokens or holding a badge.
-          <section className="rounded-2xl bg-white/5 p-5 flex flex-col gap-3">
+          <section data-kit-section className="bg-white/5 p-5 flex flex-col gap-3">
             <p className="text-[12px] text-zinc-400">{t('superpowers.teamUp.openToEveryone')}</p>
             <BadgeProgress variant="rail" />
             <Button variant="outline" className="self-start" onClick={() => setBuyOpen(true)}>{t('nav.buyDhb')}</Button>
@@ -146,7 +145,7 @@ export default function SuperPowersPage() {
         )}
 
         {/* ── The twelve powers ──────────────────────────────────────── */}
-        <section className="flex flex-col gap-3">
+        <section data-kit-section className="bg-zinc-900 p-4 flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">
             {t('superpowers.currentPowersHeading', { defaultValue: 'The twelve powers' })}
           </h2>
@@ -246,7 +245,7 @@ export default function SuperPowersPage() {
         </section>
 
         {/* ── The ladder ─────────────────────────────────────────────── */}
-        <section className="flex flex-col gap-3">
+        <section data-kit-section className="bg-zinc-900 p-4 flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">
             {t('superpowers.ladderHeading')}
           </h2>
@@ -298,7 +297,7 @@ export default function SuperPowersPage() {
           {/* The honest sentence, once, where the numbers are. */}
           <p className="text-[12px] text-zinc-500 max-w-prose">{t('superpowers.shareOfVoice')}</p>
         </section>
-      </div>
+      </PageBody>
 
       {/* Literal DrawerContent lives inside this component, so vaul's deferred
           Root still sees it — see the note in ui/drawer.tsx. */}
