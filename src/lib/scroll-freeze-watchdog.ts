@@ -53,6 +53,8 @@ const SLACK_PX = 80;
  * stutter is not.
  */
 const SETTLE_MS = 400;
+/** Smallest pixel wheel delta that is a request to scroll rather than a glide tail. */
+const MIN_WHEEL_PX = 4;
 
 const OPEN_OVERLAY_SELECTOR = [
   '[data-media-fullscreen="true"]',
@@ -379,6 +381,9 @@ function onTouchMove(e: TouchEvent) {
 /** Watch an actual wheel attempt, including events swallowed later in capture. */
 function onWheel(e: WheelEvent) {
   if (wheelTimer || e.ctrlKey || !e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+  // The last ticks of a trackpad glide carry 1-3px deltas that Chrome often
+  // rounds away without scrolling. A third of the wheel reports were these.
+  if (e.deltaMode === 0 && Math.abs(e.deltaY) < MIN_WHEEL_PX) return;
   if (Date.now() - lastDocumentScrollAt < SETTLE_MS) return;
   if (document.visibilityState !== 'visible' || reports >= MAX_REPORTS) return;
   if (overlayIsOpen() || !pageIsTallerThanViewport() || !couldHaveScrolled(-e.deltaY)) return;

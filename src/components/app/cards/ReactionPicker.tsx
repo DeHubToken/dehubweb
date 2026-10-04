@@ -467,10 +467,11 @@ export function ReactionPicker({
               draggedRef.current = true;
             }
           }}
-          /* `pan-x` so a drag along the tray scrolls it rather than being read
-             as the start of a page scroll, and `contain` so reaching the end of
-             the row does not hand the gesture on to the feed behind it. */
-          style={{ touchAction: 'pan-x', overscrollBehaviorX: 'contain' }}
+          /* A drag along the tray scrolls the row, and `contain` stops the end
+             of the row handing a sideways gesture to the feed behind it. A
+             vertical drag still scrolls the page (which closes the tray):
+             `pan-x` alone left a swipe that started here moving nothing. */
+          style={{ touchAction: 'pan-x pan-y', overscrollBehaviorX: 'contain' }}
           className={cn(
             'isolate flex items-center gap-0.5 px-1.5 py-1.5',
             'overflow-x-auto overflow-y-hidden scrollbar-hide',
