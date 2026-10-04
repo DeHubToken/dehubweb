@@ -105,6 +105,7 @@ import { CounterChip, SelectChip, ToggleChip, type ChipOption } from './StudioCh
 import { PresetStrip } from './PresetStrip';
 import { GenerationExample } from './GenerationExample';
 import { ReferenceAssets, type CreatorReferenceAsset } from './ReferenceAssets';
+import { remapAssetMentions } from '@/lib/creator/assetMentions';
 import { CREATOR_FAL_IMAGE_MODELS } from '../../../../../supabase/functions/_shared/creator-fal-catalog';
 import { ResultsFeed } from './ResultsFeed';
 import { VoiceDesignDrawer } from './VoiceDesignDrawer';
@@ -824,9 +825,10 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       if (mode !== 'video' || latest.some(a => a.kind === 'video')) { toast.error(t('creator.referenceOneClip')); return; }
       const seconds = asset.seconds ?? await readMediaDuration(asset.file ?? asset.url);
       if (seconds == null || seconds < 3 || seconds > 30) { if (asset.file) URL.revokeObjectURL(asset.url); toast.error(t('creator.referenceClipLength')); return; }
-      const nextModel = seconds > 15 ? 'kling-3-motion' : 'kling-o3-edit';
-      setVideoModel(nextModel);
-      setPresetFor('video', seconds > 15 ? 'reference-copy-motion' : 'reference-character-swap');
+      if (!VIDEO_MODELS[videoModel]?.requiresVideoInput) {
+        setVideoModel(seconds > 15 ? 'kling-3-motion' : 'kling-o3-edit');
+        setPresetFor('video', seconds > 15 ? 'reference-copy-motion' : 'reference-character-swap');
+      }
       setDuration(Math.ceil(seconds));
       assetDraftRef.current = [...latest, { ...asset, seconds }];
       setExtraReferences(prev => ({ ...prev, video: [...prev.video, { ...asset, seconds }] }));
@@ -838,15 +840,18 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     if (!images.length) setReference(asset);
     else setExtraReferences(prev => ({ ...prev, [mode]: [...prev[mode], asset] }));
     if (mode === 'image' && images.length && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) setImageModel('flux-3-image');
-  }, [currentAssets, currentClip, currentImages.length, mode, reference, setReference, setPresetFor, imageModel, t]);
+  }, [currentAssets, currentClip, currentImages.length, mode, reference, setReference, setPresetFor, imageModel, videoModel, t]);
   const removeAsset = useCallback((asset: CreatorReferenceAsset) => {
+    const remaining = currentAssets.filter(item => item.url !== asset.url);
+    editPrompt(remapAssetMentions(prompt, currentAssets.map(item => ({ key: item.url, kind: item.kind })), remaining.map(item => ({ key: item.url, kind: item.kind }))));
+    assetDraftRef.current = remaining;
     if (reference?.url === asset.url) {
       const next = extraReferences[mode].find(a => a.kind === 'image');
       setReference(next ?? null);
       if (next) setExtraReferences(prev => ({ ...prev, [mode]: prev[mode].filter(a => a.url !== next.url) }));
     } else setExtraReferences(prev => ({ ...prev, [mode]: prev[mode].filter(a => a.url !== asset.url) }));
     if (asset.file) URL.revokeObjectURL(asset.url);
-  }, [reference, extraReferences, mode, setReference]);
+  }, [reference, extraReferences, mode, setReference, currentAssets, prompt, editPrompt]);
   const insertAssetMention = useCallback((tag: string) => { editPrompt(`${prompt}${prompt && !prompt.endsWith(' ') ? ' ' : ''}${tag} `); textareaRef.current?.focus(); }, [prompt, editPrompt]);
 
   const attachFile = useCallback(async (file: File) => {
@@ -1849,9 +1854,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                       }}
                     />
                   )}
-                  {/* A mesh has no framing and neither does a sound, so the
-                      aspect chip is meaningless in both. */}
-                  {mode !== '3d' && mode !== 'audio' && (
+                  {/* Clip workflows retain the source clip's framing. */}
+                  {(mode === 'image' || (mode === 'video' && !activeVideoModel?.requiresVideoInput)) && (
                     <SelectChip
                       label={t('creator.aspectRatio')}
                       value={aspect}
