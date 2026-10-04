@@ -1534,7 +1534,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       title={t('creator.expandPrompt')}
       className={cn(
         'shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white/70 backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-40',
-        compact ? 'hidden h-8 w-8 sm:inline-flex' : 'inline-flex h-[64px] w-14 rounded-[20px]',
+        compact ? 'hidden h-8 w-8 sm:inline-flex' : 'inline-flex h-[34px] w-[34px]',
       )}
     >
       {enhancing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
@@ -1873,10 +1873,10 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
 
               {/* Settings rail. The mode toggle sits outside the scrolling part
                   so it never slides out of reach on a narrow screen. */}
-              <div className="mt-1.5 flex flex-wrap items-center gap-2">
+              <div className="mt-1.5 flex flex-wrap items-end gap-2">
                 <ModeToggle mode={mode} onChange={switchMode} />
 
-                <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex min-w-0 flex-1 items-end gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {/* Audio leads with the tool, not the engine: which of the
                       nine is running decides every other chip on the rail. */}
                   {mode === 'audio' && (
@@ -2157,7 +2157,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                 </div>
 
                 {/* Its own row on a phone, so Create and its price get the full width. */}
-                <div className="flex w-full items-center gap-2 sm:w-auto">
+                <div className="flex w-full items-end gap-2 sm:w-auto">
                   {enhanceButton()}
                   {generateButton()}
                 </div>
