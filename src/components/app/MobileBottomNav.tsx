@@ -99,6 +99,7 @@ type MobileNavItem = {
 };
 
 const SCROLL_NAV_ITEMS = [
+  { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: Wand2, themedIcon: 'videos', label: 'Editor', path: '/editor' },
   { icon: Wand2, themedIcon: 'wand', label: 'Creator', path: '/creator' },
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
@@ -114,7 +115,6 @@ const SCROLL_NAV_ITEMS = [
   { icon: Landmark, label: 'DAO', path: '/dao' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
-  { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: Lightbulb, label: 'Features', path: '/features' },
   { icon: Map, label: 'Guide', path: '/guide' },
   { icon: BarChart3, label: 'Stats', path: '/stats' },
