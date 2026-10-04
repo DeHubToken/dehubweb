@@ -86,6 +86,7 @@ export function impressionPriceUsd(tier: string): number {
 // ---------------------------------------------------------------------------
 
 export interface ServeTokenPayload {
+  creatorSupport?: boolean;
   sid: string; // serve id (uuid)
   cam: string; // campaign id
   cre: string; // creative id

@@ -23,6 +23,7 @@ Deno.serve(async (req) => {
     const event = body.event === 'click' ? 'click' : 'impression';
     const payload = body.token ? await verifyServeToken(body.token) : null;
     if (!payload) return jsonResponse({ error: 'invalid or expired token' }, 401);
+    if (payload.creatorSupport) return jsonResponse({ error: 'Creator support requires a completed watch session.' }, 400);
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
