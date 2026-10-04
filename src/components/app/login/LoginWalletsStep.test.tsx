@@ -24,10 +24,10 @@ it('offers an explicit Continue action for an already connected wallet', async (
     onWalletConnect: vi.fn(), onWalletConnectConnect: vi.fn(),
   };
   const { rerender } = render(<LoginWalletsStep {...props} />);
-  fireEvent.click(await screen.findByRole('button', { name: 'Continue', exact: true }));
+  fireEvent.click(await screen.findByRole('button', { name: 'Continue' }));
   expect(continueWallet).toHaveBeenCalledTimes(1);
   rerender(<LoginWalletsStep {...props} isConnecting />);
-  expect(screen.getByRole('button', { name: 'Loading...', exact: true })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Loading...' })).toBeDisabled();
 });
 
 it('recovers a failed connector initialization without trapping the user on a spinner', async () => {
