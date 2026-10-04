@@ -28,6 +28,21 @@ export function buildCreatorFalVideoRequest(modelId: string, o: CreatorFalVideoO
   const resolution = o.resolution ?? (m.resolutions.includes('720p') ? '720p' : m.resolutions[0]);
   if (m.supportsResolution && !m.resolutions.includes(resolution)) throw new Error(`Invalid resolution for ${m.name}`);
   if (!o.prompt?.trim()) throw new Error('Prompt is required');
+  if (m.requiresVideoInput) {
+    if (o.videoUrls?.length !== 1) throw new Error('Attach one MP4 or MOV reference clip');
+    const images = [...new Set([...(o.sourceImage ? [o.sourceImage] : []), ...(o.referenceImageUrls ?? [])])];
+    if (!images.length) throw new Error('Attach a character or reference image');
+    if (images.length > (m.maxReferenceImages ?? 1)) throw new Error(`Attach up to ${m.maxReferenceImages ?? 1} images`);
+    if (o.prompt.length > 2500) throw new Error('Use a prompt of up to 2500 characters');
+    if (o.endFrameUrl || o.audioUrls?.length || o.negativePrompt || o.seed !== undefined) throw new Error('This workflow takes reference images and one clip');
+    return {
+      appId: m.falImageModel,
+      input: m.referenceMode === 'motion'
+        ? { prompt: o.prompt, image_url: images[0], video_url: o.videoUrls[0], character_orientation: 'video', keep_original_sound: true }
+        : { prompt: o.prompt, image_urls: images, video_url: o.videoUrls[0], keep_audio: true },
+      durationSeconds: duration,
+    };
+  }
   if (o.endFrameUrl && (!m.supportsEndFrame || !o.sourceImage)) throw new Error('End frame requires a supported model and a start image');
   if (o.referenceImageUrls?.length || o.videoUrls?.length) throw new Error(`${m.name} does not accept reference images or clips in this mode`);
   if (o.audioUrls?.length && !m.supportsAudioInput) throw new Error(`${m.name} does not accept audio input`);
@@ -124,9 +139,12 @@ export function creatorFalImageSize(aspect = '1:1'): string {
   return 'square_hd';
 }
 
-export function buildCreatorFalImageRequest(modelId: string, prompt: string, sourceImage?: string, aspect?: string) {
+export function buildCreatorFalImageRequest(modelId: string, prompt: string, sourceImage?: string, aspect?: string, referenceImageUrls?: string[]) {
   const m = CREATOR_FAL_IMAGE_MODELS[modelId];
+  const images = [...new Set([...(sourceImage ? [sourceImage] : []), ...(referenceImageUrls ?? [])])];
+  sourceImage = images[0];
   if (!m || (sourceImage && !m.edit)) throw new Error('This model cannot edit an image');
+  if (images.length > 4 || (images.length > 1 && !m.editUsesPlural)) throw new Error('Choose a model supporting multiple image references (up to four)');
   if (!prompt.trim() || prompt.length > 4000) throw new Error('Use an image prompt of 1 to 4000 characters');
   const input: Record<string, unknown> = { prompt, ...(sourceImage ? m.editExtra ?? m.extra : m.extra) };
   if (!m.omitNumImages) input.num_images = 1;
@@ -134,6 +152,6 @@ export function buildCreatorFalImageRequest(modelId: string, prompt: string, sou
     const ratio = aspect ?? (sourceImage ? 'auto' : '1:1');
     input.aspect_ratio = m.aspectRatios && !m.aspectRatios.includes(ratio) ? (ratio === '21:9' ? '2.35:1' : '1:1') : ratio;
   } else input.image_size = creatorFalImageSize(aspect);
-  if (sourceImage) input[m.editUsesPlural ? 'image_urls' : 'image_url'] = m.editUsesPlural ? [sourceImage] : sourceImage;
+  if (sourceImage) input[m.editUsesPlural ? 'image_urls' : 'image_url'] = m.editUsesPlural ? images : sourceImage;
   return { appId: sourceImage ? m.edit! : m.text, input };
 }

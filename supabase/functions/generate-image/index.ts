@@ -27,6 +27,7 @@ interface ConversationMessage {
 interface GenerateImageRequest {
   prompt: string;
   sourceImage?: string;
+  referenceImageUrls?: string[];
   logoImage?: string; // Explicit brand-logo channel (Poster Studio). Triggers two-step: GPT scene → Gemini logo composite.
   headline?: string; // Explicit headline channel (Poster Studio tagline). Empty string = user chose no headline.
   conversationHistory?: ConversationMessage[];
@@ -53,7 +54,7 @@ interface GenerateImageRequest {
  * edit a supplied image, so those fall through to diffusion by design.
  */
 function isFreeTemplateRequest(body: Partial<GenerateImageRequest>): boolean {
-  return body.bannerRenderer === 'template' && !body.sourceImage;
+  return body.bannerRenderer === 'template' && !body.sourceImage && !body.referenceImageUrls?.length;
 }
 
 // ─── fal.ai image catalogue ──────────────────────────────────────────────────
@@ -293,6 +294,7 @@ async function generateWithFal(
   sourceImage?: string,
   bannerFormat?: string,
   aspectRatio?: string,
+  referenceImageUrls?: string[],
 ): Promise<string> {
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
@@ -305,7 +307,7 @@ async function generateWithFal(
   }
   const editing = !!sourceImage;
   const prepared = CREATOR_FAL_IMAGE_MODELS[model]
-    ? buildCreatorFalImageRequest(model, prompt, sourceImage, aspectRatio ?? (bannerFormat === 'landscape' ? '16:9' : bannerFormat === 'portrait' ? '9:16' : undefined))
+    ? buildCreatorFalImageRequest(model, prompt, sourceImage, aspectRatio ?? (bannerFormat === 'landscape' ? '16:9' : bannerFormat === 'portrait' ? '9:16' : undefined), referenceImageUrls)
     : undefined;
   const appId = prepared?.appId ?? (editing ? config.edit! : config.text);
 
@@ -368,7 +370,7 @@ const ASPECT_FRAMING: Record<string, string> = {
 
 const handleGenerateImage = async (req: Request): Promise<Response> => {
   try {
-    let { prompt, sourceImage, logoImage, headline: requestHeadline, conversationHistory = [], model = 'gemini-2.5-flash', bannerRenderer, bannerFormat, aspectRatio } = await req.json() as GenerateImageRequest;
+    let { prompt, sourceImage, referenceImageUrls, logoImage, headline: requestHeadline, conversationHistory = [], model = 'gemini-2.5-flash', bannerRenderer, bannerFormat, aspectRatio } = await req.json() as GenerateImageRequest;
 
     if (!prompt) {
       throw new Error('Prompt is required');
@@ -404,7 +406,7 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
     //    from GeneralAIChat), promote it to `logoImage` so the brand pipeline runs
     //    and composites correctly instead of being bypassed as a generic edit.
     const brandKeywordHit = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
-    if (brandKeywordHit && sourceImage && !logoImage) {
+    if (brandKeywordHit && sourceImage && !logoImage && !referenceImageUrls?.length) {
       logoImage = sourceImage;
       sourceImage = undefined;
       console.log('[dehub-poster] Promoted sourceImage → logoImage for brand pipeline');
@@ -417,7 +419,7 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
     // `freeTemplate` also enters here: the wrapper waived the charge on the
     // strength of the template running, so the template has to actually get its
     // turn even when nothing in the prompt reads as brand intent.
-    if (brandIntent || freeTemplate) {
+    if ((brandIntent || freeTemplate) && !referenceImageUrls?.length) {
 
 
       // ── Format detection: pick the right aspect ratio from the user's wording.
@@ -790,6 +792,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
         sourceImage,
         bannerFormat,
         aspectRatio,
+        referenceImageUrls,
       );
       return new Response(
         JSON.stringify({ imageUrl: falResult, text: '', success: true }),
@@ -1005,10 +1008,13 @@ serve(async (req) => {
   // Peek at the payload to price the job. The clone leaves the original body
   // readable by the handler, so nothing below this point had to change.
   const peek = await req.clone().json().catch(() => ({})) as Partial<GenerateImageRequest>;
+  if (peek.referenceImageUrls?.length && (!peek.model || !CREATOR_FAL_IMAGE_MODELS[peek.model]?.editUsesPlural)) {
+    return new Response(JSON.stringify({ error: 'Choose a model supporting multiple image references' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
 
   if (peek.model && CREATOR_FAL_IMAGE_MODELS[peek.model] && !isFreeTemplateRequest(peek)) {
     try {
-      buildCreatorFalImageRequest(peek.model, peek.prompt ?? '', peek.sourceImage, peek.aspectRatio);
+      buildCreatorFalImageRequest(peek.model, peek.prompt ?? '', peek.sourceImage, peek.aspectRatio, peek.referenceImageUrls);
     } catch (error) {
       return new Response(JSON.stringify({ error: (error as Error).message }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },

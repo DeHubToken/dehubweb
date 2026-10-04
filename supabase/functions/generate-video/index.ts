@@ -9,6 +9,8 @@ import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
 import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
 import { buildCreatorFalVideoRequest } from '../_shared/creator-fal-input.ts';
+import { referenceVideoDuration } from '../_shared/creator-reference-video.ts';
+import { requireDeHubAuth } from '../_shared/auth.ts';
 import {
   kieKey,
   kieUsableUrl,
@@ -958,6 +960,11 @@ serve(async (req) => {
     if (CREATOR_FAL_VIDEO_MODELS[model]) {
       try {
         validatedDuration = buildCreatorFalVideoRequest(model, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed }).durationSeconds;
+        if (CREATOR_FAL_VIDEO_MODELS[model].requiresVideoInput) {
+          const auth = await requireDeHubAuth(req);
+          if (!auth.ok) return auth.response;
+          validatedDuration = await referenceVideoDuration(videoUrls![0], CREATOR_FAL_VIDEO_MODELS[model].maxDuration, new URL(Deno.env.get('SUPABASE_URL')!).hostname);
+        }
       } catch (error) {
         return new Response(JSON.stringify({ status: 'failed', error: (error as Error).message }), {
           status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
