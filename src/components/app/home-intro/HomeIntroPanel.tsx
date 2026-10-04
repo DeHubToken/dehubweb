@@ -34,8 +34,8 @@ export const SLIDE_MS = 5200;
  *  `sub` / `extra` are the `//snake_case` HUD row under the headline. */
 export const SLIDES = [
   {
-    title: 'Censorship resistant media',
-    subtitle: 'for the next generation',
+    title: 'Censorship resistant media for the',
+    subtitle: 'next generation',
     artwork: 'globe',
     imageHeight: 471,
     preview: 'Instantly monetize, never get deplatformed',
