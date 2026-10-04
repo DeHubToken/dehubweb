@@ -1,4 +1,5 @@
 import React from 'react';
+import { CallDuration } from './CallDuration';
 import { Phone, PhoneOff, Mic, MicOff, Video, VideoOff, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useCall } from '@/contexts/CallContext';
@@ -18,11 +19,12 @@ const VideoCallModal: React.FC = () => {
     isCallActive,
     isIncoming,
     currentCall,
+    peerAddress,
     isConnecting,
     isMuted,
     isCameraOff,
-    localVideoRef,
-    remoteVideoRef,
+    attachLocalVideo,
+    attachRemoteVideo,
     endCall,
     acceptCall,
     rejectCall,
@@ -35,9 +37,6 @@ const VideoCallModal: React.FC = () => {
 
   const { t } = useTranslation();
 
-  const peerAddress = currentCall
-    ? (isIncoming ? currentCall.caller_address : currentCall.recipient_address)
-    : '';
   const peer = usePeerIdentity(peerAddress);
 
   if (!walletAddress) return null;
@@ -52,17 +51,15 @@ const VideoCallModal: React.FC = () => {
     ? t('calls.incoming')
     : isConnecting
       ? t('calls.connecting')
-      : t('calls.connected');
+      : <CallDuration fallback={t('calls.connected')} />;
 
   return (
     <CallSurface onMinimize={minimizeCall} minimizeLabel={t('calls.minimize')}>
       {/* Remote video fills the surface once the call is up; before that this is
           the ringing screen and shows who is on the other end. */}
       {isCallActive ? (
-        <video
-          ref={remoteVideoRef}
-          autoPlay
-          playsInline
+        <div
+          ref={attachRemoteVideo}
           className="absolute inset-0 h-full w-full object-cover"
         />
       ) : (
@@ -84,11 +81,8 @@ const VideoCallModal: React.FC = () => {
           !isCallActive && 'bottom-auto',
         )}
       >
-        <video
-          ref={localVideoRef}
-          autoPlay
-          playsInline
-          muted
+        <div
+            ref={attachLocalVideo}
           className={cn('h-full w-full object-cover', isCameraOff && 'hidden')}
         />
         {isCameraOff && (

@@ -1,4 +1,5 @@
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
+import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { isVideoOutsideFeed } from '@/lib/video-background-playback';
 /**
  * Video Card Component
@@ -11,13 +12,15 @@ import { isVideoOutsideFeed } from '@/lib/video-background-playback';
  * ```
  */
 
-import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense } from 'react';
+import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense, useContext } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
+import { handoffVideoHolder } from '@/lib/video-handoff';
 import { useBootSettled, useFirstInteraction } from '@/hooks/use-boot-settled';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { isBrainrotSwipe, isTouchPrimary, openBrainrotFeed } from '@/lib/brainrot-feed';
@@ -101,8 +104,10 @@ const AudioVisualizer = lazy(() =>
   import('../audio/AudioVisualizer').then((m) => ({ default: m.AudioVisualizer }))
 );
 import { cacheVideoForNavigation } from '@/lib/post-cache';
+import { warmPostPage } from '@/lib/preload-post-page';
 import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
+import { handoffAudioFor } from '@/lib/audio-handoff';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
@@ -173,6 +178,38 @@ const IMMERSIVE_MAX_MEDIA_HEIGHT = 'var(--post-media-max-h, 80dvh)';
 const CONTROLS_HIDE_MS = 2000;
 
 /** A tap that landed on a real control, which owns it rather than the player. */
+/**
+ * Whether the viewer can actually see `el`: not hidden by CSS or a skipped
+ * content-visibility subtree. IntersectionObserver ignores all of that, so a
+ * clip on a hidden page or panel counted as "on screen" and could autoplay.
+ */
+function isRendered(el: HTMLElement | null): boolean {
+  if (!el || !el.isConnected) return false;
+  const check = (el as HTMLElement & { checkVisibility?: (o?: object) => boolean }).checkVisibility;
+  return check ? check.call(el, { visibilityProperty: true, opacityProperty: true, contentVisibilityAuto: true }) : true;
+}
+
+/**
+ * Whether a clip is the thing on screen rather than one peeking in at an edge:
+ * nearly all of it in view, or (for one taller than the window) filling most
+ * of the window. Only such a clip may make sound by itself — a video sitting
+ * half below the fold under the first post must not be what you hear on load.
+ */
+function isProminent(el: HTMLElement | null): boolean {
+  if (!el || !isRendered(el)) return false;
+  const r = el.getBoundingClientRect();
+  if (r.height <= 0) return false;
+  const shown = Math.max(0, Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0));
+  return shown / r.height >= 0.9 || shown >= window.innerHeight * 0.6;
+}
+
+/** Whether any of `slot` is inside the viewport. */
+function slotOnScreen(slot: HTMLElement | null): boolean {
+  if (!slot || !slot.isConnected) return false;
+  const r = slot.getBoundingClientRect();
+  return r.width > 0 && r.height > 0 && r.bottom > 0 && r.right > 0 && r.top < window.innerHeight && r.left < window.innerWidth;
+}
+
 function isControlTarget(target: EventTarget | null) {
   return !!(target as HTMLElement | null)?.closest?.(
     'button, a, input, textarea, [role="button"], [data-video-controls]',
@@ -633,6 +670,7 @@ interface VideoCardProps {
 }
 
 export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, onOpenComments }: VideoCardProps) {
+  const playbackAllowed = useFeedPlaybackAllowed();
   const instanceId = useId();
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -667,6 +705,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Tracks the latest IntersectionObserver visibility so an async play() that
   // resolves after the card has scrolled away can bail instead of playing off-screen.
   const isIntersectingRef = useRef(false);
+  // Takes the shared <video> back from another card showing this same post.
+  // Filled in once useHandoffVideo has run, further down.
+  const takeVideoRef = useRef<() => HTMLVideoElement | null>(() => null);
+  // A card on a cached page that is not the one showing never autoplays.
+  const surfaceActive = useContext(CachedPageActiveContext);
+  const surfaceActiveRef = useRef(surfaceActive);
+  surfaceActiveRef.current = surfaceActive;
+  // Playing without sound only because it was not the clip on screen when it
+  // autoplayed — it gets the sound once it is, unless the viewer muted it.
+  const autoMutedRef = useRef(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -773,7 +821,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const posterBlank = useBlankPoster(posterProbe);
 
   // Synced audio overlay — plays a soundtrack over the video
-  const { audioRef: syncedAudioRef, hasSoundtrack } = useSyncedAudio({
+  const { hasSoundtrack } = useSyncedAudio({
+    mediaKey: video.id,
     soundtrackUrl: video.soundtrackUrl,
     isPlaying,
     isMuted,
@@ -858,6 +907,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Pause callback for the playback manager
   const pauseVideo = useCallback(() => {
+    if (videoRef.current && document.pictureInPictureElement === videoRef.current && !visualActivity.isCallBusy()) return;
     videoRef.current?.pause();
     isPlayingRef.current = false;
     setIsPlaying(false);
@@ -886,7 +936,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // alone did not help, because a playing muted clip streams its whole file
   // regardless of preload. The poster is a separate eager <img>, so nothing the
   // visitor sees waits on this; the first scroll is what starts the clip.
-  const [nearViewport, setNearViewport] = useState(aboveFold);
+  const [nearViewport, setNearViewport] = useState(aboveFold || isImmersive);
   const bootSettled = useBootSettled();
   const interacted = useFirstInteraction();
   useEffect(() => {
@@ -944,34 +994,44 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Register with playback manager and setup IntersectionObserver (stable — no isPlaying dep)
   useEffect(() => {
+    if (!playbackAllowed) pauseVideo();
     videoPlaybackManager.register(instanceId, pauseVideo, (muted: boolean) => {
       // Callback for manager to force mute/unmute this video
       if (videoRef.current) videoRef.current.muted = muted;
+      if (!muted) autoMutedRef.current = false;
       setIsMuted(muted);
-    });
+    }, () => isProminent(containerRef.current));
 
     // Auto-pause when scrolled out of view + auto-play when scrolled into view (if enabled)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           isIntersectingRef.current = entry.isIntersecting;
+          if (videoRef.current && document.pictureInPictureElement === videoRef.current && !visualActivity.isCallBusy()) return;
+          if (!visualActivity.isFeedPlaybackAllowed()) { pauseVideo(); return; }
           // Backgrounding is not a scroll-away; PiP owns its own visible surface.
           if (isVideoOutsideFeed(videoRef.current)) return;
           if (!entry.isIntersecting && isPlayingRef.current) {
             pauseVideo();
             videoPlaybackManager.stop(instanceId);
-          } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || isSubscriberGated(video.subscriberPlans, false)) && !video.isAudio && video.videoUrl && !hasErrorRef.current && !isVideoNotReady) {
-            const vid = videoRef.current;
+          } else if (entry.isIntersecting && surfaceActiveRef.current && isRendered(containerRef.current) && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && videoRef.current?.dataset.userPaused !== 'true' && !(video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || isSubscriberGated(video.subscriberPlans, false)) && !video.isAudio && video.videoUrl && !hasErrorRef.current && !isVideoNotReady) {
+            let vid = videoRef.current;
+            // Another copy of this post holds the element. Take it back unless
+            // that copy is on screen — the post page open over the feed.
+            if (!vid && !slotOnScreen(handoffVideoHolder(video.id))) vid = takeVideoRef.current();
             if (vid) {
               // Fast fling race: the media-attach state may not have
               // re-rendered yet — attach the src imperatively before play()
               // (React reconciles to the same value on the next render).
               if (!vid.getAttribute('src') && video.videoUrl) vid.src = video.videoUrl;
-              // Ask manager if this video should own audio
-              const ownsAudio = videoPlaybackManager.play(instanceId);
+              // Only the clip that is actually on screen may take the sound;
+              // one peeking in at the bottom of the window plays silently.
+              const prominent = isProminent(containerRef.current);
+              const ownsAudio = prominent ? videoPlaybackManager.play(instanceId) : videoPlaybackManager.playMuted(instanceId);
               // "Start autoplay muted" beats an earlier unmute: scrolling
               // onto a clip must never be what makes sound.
               const shouldMute = autoplayMutedRef.current || videoPlaybackManager.globalMuted || !ownsAudio;
+              autoMutedRef.current = shouldMute && !prominent && !autoplayMutedRef.current && !videoPlaybackManager.globalMuted;
               vid.muted = shouldMute;
               setIsMuted(shouldMute);
               setIsLoading(true);
@@ -979,7 +1039,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
-                if (!isIntersectingRef.current && !isVideoOutsideFeed(vid)) {
+                if (!visualActivity.isFeedPlaybackAllowed() || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
                   vid.pause();
                   videoPlaybackManager.stop(instanceId);
                   setIsLoading(false);
@@ -998,15 +1058,52 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       { threshold: 0.5 }
     );
 
+    // Hard stop once no pixel of the card is left on screen, whatever this
+    // card's own state says. The pause above trusts isPlayingRef, and the
+    // element can be playing without it: handed over from another card, or
+    // resumed by the page cache. A playing clip nobody can see is the
+    // "old video's audio keeps going" bug.
+    const offscreenObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) return;
+        const vid = videoRef.current;
+        if (vid && isVideoOutsideFeed(vid)) return;
+        if (vid && !vid.paused) {
+          pauseVideo();
+          videoPlaybackManager.stop(instanceId);
+        }
+      },
+      { threshold: 0 }
+    );
+
+    // A clip that autoplayed silently because it was only peeking in takes
+    // the sound once it is scrolled fully into view, if nothing else has it.
+    const prominenceObserver = new IntersectionObserver(
+      () => {
+        const vid = videoRef.current;
+        if (!autoMutedRef.current || !vid || vid.paused || !isProminent(containerRef.current)) return;
+        if (autoplayMutedRef.current || videoPlaybackManager.globalMuted) return;
+        if (!videoPlaybackManager.takeFreeAudio(instanceId)) return;
+        autoMutedRef.current = false;
+        vid.muted = false;
+        setIsMuted(false);
+      },
+      { threshold: [0.6, 0.9, 1] }
+    );
+
     if (containerRef.current) {
       observer.observe(containerRef.current);
+      offscreenObserver.observe(containerRef.current);
+      prominenceObserver.observe(containerRef.current);
     }
 
     return () => {
       videoPlaybackManager.unregister(instanceId);
       observer.disconnect();
+      offscreenObserver.disconnect();
+      prominenceObserver.disconnect();
     };
-  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.subscriberPlans, video.videoUrl, isVideoNotReady]);
+  }, [instanceId, pauseVideo, video.isPPV, video.isLocked, video.lockedPrice, video.subscriberPlans, video.videoUrl, isVideoNotReady, playbackAllowed, disableAutoplay]);
 
   // Show controls briefly after any user interaction, then auto-hide
     const showControlsBriefly = useCallback(() => {
@@ -1068,6 +1165,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, []);
 
   const handlePlayClick = useCallback(() => {
+    if (!visualActivity.isFeedPlaybackAllowed()) return;
     // Audio posts use AudioVisualizer which handles its own playback
     if (video.isAudio) {
       if (isContentGated) return;
@@ -1092,6 +1190,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     }
     
     if (isPlaying) {
+      if (videoRef.current) videoRef.current.dataset.userPaused = 'true';
       videoRef.current?.pause();
       isPlayingRef.current = false;
       setIsPlaying(false);
@@ -1100,7 +1199,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       videoPlaybackManager.stop(instanceId);
       showControlsBriefly();
     } else {
+      // A tap means this card: take the element back if another copy of
+      // the post is holding it.
+      if (!videoRef.current) takeVideoRef.current();
       // Claim audio ownership for this video (user-initiated play)
+      if (videoRef.current) delete videoRef.current.dataset.userPaused;
       videoPlaybackManager.claimAudio(instanceId);
       const shouldMute = videoPlaybackManager.globalMuted;
       setIsMuted(shouldMute);
@@ -1219,6 +1322,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // vanish out from under the thing the pointer is already inside.
   // Phone-feed controls must not disappear after autoplay or a hide timer.
   const controlsVisible = bareControls || !isPlaying || showControls || subsMenuOpen || volumeOpen;
+  useEffect(() => {
+    if (controlsVisible && videoRef.current) setCurrentTime(videoRef.current.currentTime);
+  }, [controlsVisible]);
 
   // Revealing the controls has to be able to fill in the timeline. A card that
   // never autoplayed - every video on a profile, and anything in Lite mode -
@@ -1233,7 +1339,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (!vid) return;
     if (!vid.getAttribute('src')) vid.src = video.videoUrl;
     if (vid.preload === 'none') vid.preload = 'metadata';
-    try { vid.load(); } catch { /* noop */ }
+    if (vid.readyState === 0) {
+      try { vid.load(); } catch { /* noop */ }
+    }
   }, [controlsVisible, nearViewport, showControls, duration, video.isAudio, video.videoUrl]);
 
   // The saved volume only ever reached the element through an explicit
@@ -1393,7 +1501,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (videoRef.current) {
       const ct = videoRef.current.currentTime;
       const dur = videoRef.current.duration;
-      setCurrentTime(ct);
+      if (bareControls || showControls || !isPlayingRef.current) setCurrentTime(ct);
 
       // Track video view progress (fires view when threshold met)
       if (dur > 0) {
@@ -1410,7 +1518,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       // throwing — a live HLS source reports Infinity here.
       setMediaSessionPosition(instanceId, ct, dur, videoRef.current.playbackRate);
     }
-  }, [trackView, instanceId, maybeSkipSegment]);
+  }, [trackView, instanceId, maybeSkipSegment, bareControls, showControls]);
 
   const handleLoadedMetadata = useCallback(() => {
     if (videoRef.current) {
@@ -1438,7 +1546,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
-  const { attachSlot: attachVideoSlot, isActive: ownsVideoElement } = useHandoffVideo({
+  const { attachSlot: attachVideoSlot, isActive: ownsVideoElement, takeOver: takeVideoElement } = useHandoffVideo({
     videoRef,
     handoffKey: video.id,
     src: mediaAttached ? video.videoUrl : undefined,
@@ -1451,6 +1559,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
     onLoadedMetadata: handleLoadedMetadata,
+    onAdopt: (el) => {
+      if (!el.getAttribute('src')) return;
+      setNearViewport(true);
+      isPlayingRef.current = !el.paused;
+      setIsPlaying(!el.paused);
+      setIsMuted(video.soundtrackUrl ? handoffAudioFor(`synced:${video.id}:${video.soundtrackUrl}`)?.muted ?? el.muted : el.muted);
+      setPlaybackRate(el.playbackRate);
+      setIsLooping(el.loop);
+      setCurrentTime(el.currentTime);
+      if (Number.isFinite(el.duration) && el.duration > 0) setDuration(el.duration);
+      if (el.videoWidth && el.videoHeight) setIntrinsicAspect(el.videoWidth / el.videoHeight);
+      setIsLoading(el.readyState < 2 && !el.paused);
+    },
+    onPlaybackChange: (playing) => {
+      isPlayingRef.current = playing;
+      setIsPlaying(playing);
+    },
   });
 
   // Handing the element to the post page has to hand the audio over with it.
@@ -1460,6 +1585,32 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   useEffect(() => {
     if (!ownsVideoElement) videoPlaybackManager.stop(instanceId);
   }, [ownsVideoElement, instanceId]);
+
+  takeVideoRef.current = takeVideoElement;
+
+  // Play state follows the element itself while this card holds it, and is
+  // off while it doesn't. The element changes hands and gets paused or resumed
+  // from outside this card (the page cache, another card taking it), and a
+  // stale "playing" here is what kept the scroll-away pause from firing.
+  useEffect(() => {
+    if (video.isAudio) return;
+    const el = ownsVideoElement ? videoRef.current : null;
+    const sync = () => {
+      const playing = !!el && !el.paused;
+      if (isPlayingRef.current === playing) return;
+      isPlayingRef.current = playing;
+      setIsPlaying(playing);
+    };
+    sync();
+    if (!el) return;
+    el.addEventListener('play', sync);
+    el.addEventListener('pause', sync);
+    return () => {
+      el.removeEventListener('play', sync);
+      el.removeEventListener('pause', sync);
+    };
+  }, [ownsVideoElement, video.isAudio]);
+
 
   // The <video> element is shared between cards, so it arrives carrying
   // whatever rate the last card left on it. Re-stamp this card's rate on every
@@ -1706,6 +1857,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     <div
       data-video-card
       onClick={isImmersive ? undefined : handleCardClick}
+      onPointerDownCapture={isImmersive ? undefined : warmPostPage}
       className={isImmersive
         ? "overflow-hidden isolate"
         : "overflow-visible cursor-pointer isolate"
@@ -2103,16 +2255,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <Play className="w-7 h-7 text-white fill-current ml-1" />
             </div>
           </div>
-        )}
-
-        {/* Hidden synced audio element for soundtrack overlay */}
-        {hasSoundtrack && video.soundtrackUrl && (
-          <audio
-            ref={syncedAudioRef}
-            src={video.soundtrackUrl}
-            preload="auto"
-            className="hidden"
-          />
         )}
 
         {/* Soundtrack badge — like TikTok "♪ Song Name" */}

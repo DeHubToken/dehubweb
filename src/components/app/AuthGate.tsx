@@ -1,14 +1,12 @@
 /**
  * Auth Gate Component
  * ===================
- * A unified auth gate UI that shows skeleton while loading auth state
- * or while the avatar image is loading, ensuring all content appears together.
+ * A unified auth gate UI that shows skeleton while loading auth state.
  * Opens the custom LoginModal instead of the default Web3Auth modal.
  * 
  * @module components/app/AuthGate
  */
 
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -17,10 +15,8 @@ import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';
 export function AuthGate({ description: _description }: { description?: string } = {}) {
   const { t } = useTranslation();
   const { openLoginModal, isLoading, isConnecting, needsSignature } = useAuth();
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  // Show skeleton while auth is loading OR while image hasn't loaded yet
-  const showSkeleton = isLoading || !imageLoaded;
+  // A missing or slow avatar must never block the sign-in controls.
+  const showSkeleton = isLoading;
 
   const handleLogin = () => {
     openLoginModal();
@@ -34,14 +30,6 @@ export function AuthGate({ description: _description }: { description?: string }
 
   return (
     <div data-auth-gate className="flex flex-col items-center justify-center min-h-[calc(100svh_-_64px_-_var(--app-top-bar))] lg:min-h-screen p-8 -mt-[30px] lg:-mt-[50px]">
-      {/* Hidden image to preload */}
-      <img 
-        src={assistantAvatar} 
-        alt="" 
-        className="hidden"
-        onLoad={() => setImageLoaded(true)}
-      />
-      
       {showSkeleton ? (
         <>
           <div className="w-20 h-20 mb-6 rounded-full bg-white/[0.06] animate-pulse" />

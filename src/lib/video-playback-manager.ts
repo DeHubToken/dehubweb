@@ -1,4 +1,5 @@
 import { getVideoPreferences, setMediaMuted } from './video-preferences';
+import { visualActivity } from './visual-activity';
 /**
  * Video Playback Manager
  * ======================
@@ -12,6 +13,8 @@ type VideoInstance = {
   pause: () => void;
   mute: (muted: boolean) => void;
   id: string;
+  /** Whether this video is the one on screen; only such a video is handed the sound. */
+  isProminent: () => boolean;
 };
 
 class VideoPlaybackManager {
@@ -43,8 +46,8 @@ class VideoPlaybackManager {
    * Register a video instance with the manager.
    * Now requires a mute callback so the manager can force-mute non-owners.
    */
-  register(id: string, pause: () => void, mute?: (muted: boolean) => void): void {
-    this.registeredVideos.set(id, { id, pause, mute: mute ?? (() => {}) });
+  register(id: string, pause: () => void, mute?: (muted: boolean) => void, isProminent?: () => boolean): void {
+    this.registeredVideos.set(id, { id, pause, mute: mute ?? (() => {}), isProminent: isProminent ?? (() => true) });
   }
 
   unregister(id: string): void {
@@ -62,6 +65,10 @@ class VideoPlaybackManager {
    * Returns true if this video should play with audio (is the audio owner).
    */
   play(id: string): boolean {
+    if (visualActivity.isCallBusy()) {
+      this.registeredVideos.get(id)?.pause();
+      return false;
+    }
     this.activeVideos.add(id);
 
     // First active video becomes audio owner
@@ -71,6 +78,30 @@ class VideoPlaybackManager {
     }
 
     return this.audioOwnerId === id; // only true if already the owner
+  }
+
+  /**
+   * A video started playing without asking for the sound — an autoplayed clip
+   * that is only peeking in at the edge of the window. Always returns false.
+   */
+  playMuted(id: string): boolean {
+    if (visualActivity.isCallBusy()) {
+      this.registeredVideos.get(id)?.pause();
+      return false;
+    }
+    this.activeVideos.add(id);
+    return false;
+  }
+
+  /**
+   * Hand the sound to `id` only if no other playing video holds it. Returns
+   * whether `id` now owns it.
+   */
+  takeFreeAudio(id: string): boolean {
+    if (!this.activeVideos.has(id)) return false;
+    if (this.audioOwnerId && this.audioOwnerId !== id && this.activeVideos.has(this.audioOwnerId)) return false;
+    this.audioOwnerId = id;
+    return true;
   }
 
   /**
@@ -110,11 +141,20 @@ class VideoPlaybackManager {
     return this.audioOwnerId;
   }
 
+  pauseAll(): void {
+    const videos = [...this.registeredVideos.values()];
+    this.activeVideos.clear();
+    this.audioOwnerId = null;
+    videos.forEach(video => { try { video.pause(); } catch {} });
+  }
+
   /** Promote the next active video to audio owner and unmute it */
   private promoteNextAudioOwner(): void {
     for (const activeId of this.activeVideos) {
       const video = this.registeredVideos.get(activeId);
-      if (video) {
+      // Never unmute a clip nobody is looking at: it gets the sound when it
+      // scrolls into view instead.
+      if (video && video.isProminent()) {
         this.audioOwnerId = activeId;
         if (!this._globalMuted) {
           video.mute(false);

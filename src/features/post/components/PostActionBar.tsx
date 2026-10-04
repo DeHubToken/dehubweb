@@ -271,7 +271,7 @@ export function PostActionBar({
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs text-white/60">
                 {mintAwaitingWallet
-                  ? 'Waiting for your wallet…'
+                  ? 'Confirming'
                   : (uploadProgress ?? 0) < 60
                     ? 'Uploading...'
                     : (uploadProgress ?? 0) < 100

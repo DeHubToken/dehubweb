@@ -107,7 +107,7 @@ export function CallIdentity({
   kindIcon: LucideIcon;
   kindLabel: string;
   name: string;
-  status: string;
+  status: React.ReactNode;
   avatarUrl: string | null;
 }) {
   return (

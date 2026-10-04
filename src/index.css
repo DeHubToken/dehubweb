@@ -5735,3 +5735,57 @@ html[data-theme="system"] [data-feed-filter-panel] {
   }
 }
 
+/* Inactive icons in the web nav bars (feed/page tab pills and the phone
+   header bell) ship as zinc-400, which reads as dark grey on the glass.
+   Lift them to the same near-white the canvas themes already use (#e4e4e7);
+   the active tab stays pure white with its glass indicator. Light, minimal,
+   osaka, war and jungle style these bars in their own sheets and keep them. */
+html:not([data-theme="light"], [data-theme="minimal"], [data-theme="osaka"], [data-theme="war"], [data-theme="jungle"]) :is([data-feed-nav], [data-mobile-header]) :is(button, a).text-zinc-400:not(:hover) {
+  color: rgb(228 228 231);
+}
+
+/* Photo soundtrack (SoundtrackControl): a liquid glass capsule at rest that
+   opens into a wave along the photo's bottom edge while the song plays. The
+   bars pulse on a steady 118 BPM beat; the photo drifts slowly under them. */
+.dh-sound-glass {
+  background: rgb(0 0 0 / 0.32);
+  border: 1px solid rgb(255 255 255 / 0.22);
+  backdrop-filter: blur(20px) saturate(1.6);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.22), inset 0 1px 0 rgb(255 255 255 / 0.18);
+}
+.dh-sound-glass:hover { background: rgb(0 0 0 / 0.42); }
+.dh-soundwave-bar {
+  flex: 1;
+  height: 100%;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.4);
+  transform: scaleY(0.15);
+  transition: background-color 0.3s, transform 0.4s;
+}
+.dh-soundwave-bar.is-played { background: rgb(255 255 255 / 0.95); }
+.is-playing > .dh-soundwave-bar { animation: dh-soundwave 0.508s ease-in-out infinite alternate; }
+@keyframes dh-soundwave {
+  from { transform: scaleY(calc(var(--h) * 0.35)); }
+  to { transform: scaleY(var(--h)); }
+}
+.dh-soundwave { animation: dh-soundwave-in 0.45s cubic-bezier(0.34, 1.3, 0.55, 1); }
+@keyframes dh-soundwave-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.dh-sound-eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; flex: none; }
+.dh-sound-eq i { width: 2.5px; height: 100%; border-radius: 2px; background: currentColor; transform-origin: bottom; transform: scaleY(0.3); }
+.dh-sound-eq.is-playing i { animation: dh-sound-eq 0.508s ease-in-out infinite alternate; }
+.dh-sound-eq i:nth-child(2) { animation-delay: -0.21s !important; animation-duration: 0.38s !important; }
+.dh-sound-eq i:nth-child(3) { animation-delay: -0.37s !important; animation-duration: 0.64s !important; }
+.dh-sound-eq i:nth-child(4) { animation-delay: -0.11s !important; animation-duration: 0.25s !important; }
+@keyframes dh-sound-eq { from { transform: scaleY(0.2); } to { transform: scaleY(1); } }
+[data-sound-playing] img { animation: dh-sound-drift 16s ease-in-out infinite alternate; }
+@keyframes dh-sound-drift {
+  from { transform: scale(1); }
+  to { transform: scale(1.08) translate(-1.5%, 1%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .is-playing > .dh-soundwave-bar, .dh-soundwave, .dh-sound-eq.is-playing i, [data-sound-playing] img { animation: none; }
+  .is-playing > .dh-soundwave-bar { transform: scaleY(var(--h)); }
+}
