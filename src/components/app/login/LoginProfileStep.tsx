@@ -34,6 +34,10 @@ import { ButtonLoader } from '@/components/app/DeHubLoader';
 import { usePendingAction } from '@/hooks/use-pending-action';
 import { isReservedUsername } from '@/lib/reserved-usernames';
 import { cn } from '@/lib/utils';
+import { createLogger } from '@/lib/logger';
+import { clearAuthTrace } from '@/lib/auth-trace';
+
+const signupLog = createLogger('LoginProfileStep');
 import i18n, { SUPPORTED_LANGUAGES, loadLanguage, applyDocumentDirection } from '@/i18n';
 import {
   LANGUAGE_STORAGE_KEY,
@@ -190,6 +194,7 @@ export function LoginProfileStep() {
   }, [prefs]);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    signupLog.trace?.('profile-save-start');
     e.preventDefault();
     setError(null);
 
@@ -264,6 +269,8 @@ export function LoginProfileStep() {
       // Drops the sheet's hold and closes it: the step is only mandatory while
       // there is no profile.
       setRequiresUsername(false);
+      signupLog.trace?.('signup-complete');
+      clearAuthTrace();
       closeLoginModal();
 
       // Navigate to home feed if not already there (avoid staying on settings
@@ -281,6 +288,7 @@ export function LoginProfileStep() {
       toast.success('Profile created successfully!');
     } catch (err) {
       console.error('Failed to update profile:', err);
+      signupLog.trace?.('profile-save-error', { reason: err instanceof Error ? err.message : String(err) });
       const errorMessage = err instanceof Error ? err.message : 'Failed to save profile';
 
       if (errorMessage.toLowerCase().includes('taken') || errorMessage.toLowerCase().includes('exists')) {
