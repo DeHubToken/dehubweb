@@ -28,9 +28,10 @@ import {
   signServeToken,
   tierForBalance,
 } from '../_shared/povr.ts';
-import { rateLimitByIp } from '../_shared/auth.ts';
+import { rateLimitByIp, requireDeHubAuth } from '../_shared/auth.ts';
 
 interface ServeRequest {
+  supportPostId?: string;
   viewerWallet?: string;
   anonId?: string;
   surface?: string;
@@ -40,6 +41,7 @@ interface ServeRequest {
 }
 
 interface Targeting {
+  creatorSupport?: boolean;
   tiers?: string[];
   followerMin?: number;
   followerMax?: number;
@@ -64,7 +66,27 @@ Deno.serve(async (req) => {
     const body = (await req.json().catch(() => ({}))) as ServeRequest;
     const surface = (body.surface || 'home').slice(0, 32);
     const count = Math.min(Math.max(body.count ?? 2, 1), 6);
-    const wallet = (body.viewerWallet || '').toLowerCase();
+    let wallet = (body.viewerWallet || '').toLowerCase();
+    let creator = '';
+    const support = body.supportPostId !== undefined;
+    if (support) {
+      const auth = await requireDeHubAuth(req);
+      if (!auth.ok) return auth.response;
+      wallet = auth.wallet;
+      if (!/^\d+$/.test(String(body.supportPostId))) return jsonResponse({ error: 'A valid post is required.' }, 400);
+      const postRes = await fetch(`https://api.dehub.io/api/nft_info/${body.supportPostId}`, {
+        headers: { Authorization: `Bearer ${auth.token}` }, signal: AbortSignal.timeout(12000),
+      });
+      if (!postRes.ok) return jsonResponse({ error: 'Could not verify this post.' }, 503);
+      const postBody = await postRes.json();
+      const post = postBody.result ?? postBody;
+      creator = String(post.minterAddress ?? (typeof post.minter === 'string' ? post.minter : post.minter?.address) ?? post.minterUser?.address ?? '').toLowerCase();
+      if (!/^0x[a-f0-9]{40}$/.test(creator) || creator === wallet) return jsonResponse({ error: 'Choose another creator to support.' }, 400);
+      const profileRes = await fetch(`https://api.dehub.io/api/account_info/${creator}`, { signal: AbortSignal.timeout(12000) });
+      if (!profileRes.ok) return jsonResponse({ error: 'Could not verify this creator.' }, 503);
+      const profileBody = await profileRes.json();
+      if ((profileBody.result ?? profileBody).hideBadgeAndBalance) return jsonResponse({ error: 'This creator has disabled tips.' }, 400);
+    }
     const viewerKey = wallet || `anon:${(body.anonId || 'unknown').slice(0, 64)}`;
     const reqCategories = (body.categories || []).map((c) => c.toLowerCase());
 
@@ -104,7 +126,8 @@ Deno.serve(async (req) => {
       !exclude.has(c.id) &&
       (!c.end_at || new Date(c.end_at) > new Date()) &&
       Number(c.spent_usd) < Number(c.total_budget_usd) &&
-      c.wallet_address !== wallet // never bill advertisers for their own views
+      c.wallet_address !== wallet &&
+      (!support || ((c.targeting as Targeting)?.creatorSupport === true && c.wallet_address !== creator))
     );
     if (candidates.length === 0) return jsonResponse({ ads: [] });
 
@@ -259,6 +282,7 @@ Deno.serve(async (req) => {
       .eq('status', 'approved');
     const creativesByCampaign = new Map<string, NonNullable<typeof creatives>>();
     for (const cr of creatives || []) {
+      if (support && (cr.kind !== 'video' || !cr.media_url || Number(cr.duration_seconds) < 30)) continue;
       const list = creativesByCampaign.get(cr.campaign_id) || [];
       list.push(cr);
       creativesByCampaign.set(cr.campaign_id, list);
@@ -311,13 +335,23 @@ Deno.serve(async (req) => {
         vk: viewerKey,
         vw: wallet,
         tier: viewerTier,
-        sur: surface,
+        sur: support ? 'creator-support' : surface,
+        ...(support ? { creatorSupport: true } : {}),
         p: price,
         sh: share,
         exp,
       });
       const account = accountByWallet.get(c.wallet_address);
+      if (support) {
+        const { error } = await supabase.from('ad_creator_support_sessions').insert({
+          id: serveId, viewer_wallet: wallet, creator_wallet: creator, post_id: body.supportPostId,
+          campaign_id: c.id, creative_id: creative.id, viewer_tier: viewerTier,
+          price_usd: price, creator_share_usd: share, expires_at: new Date(exp * 1000).toISOString(),
+        });
+        if (error) throw error;
+      }
       return {
+        ...(support ? { supportSessionId: serveId, creatorShareUsd: share } : {}),
         serveId,
         token,
         campaignId: c.id,

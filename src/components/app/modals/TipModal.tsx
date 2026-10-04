@@ -52,6 +52,7 @@ import type { TipFundingSource } from '@/lib/tip-funding';
 
 // Reads wallet balances (wallet stack), so it loads with the open drawer.
 const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
+const CreatorSupportAd = lazy(() => import('@/components/app/tips/CreatorSupportAd'));
 
 const QUICK_AMOUNTS = [500, 1000, 5000, 10000, 25000, 50000, 100000, 1000000];
 
@@ -243,6 +244,9 @@ export function TipModal({
           )}
         </DrawerHeader>
         <div className="flex flex-col gap-4">
+          {open && walletAddress && resolvedTokenId && !commentId && !recipientPrivate && !privacyChecking && creatorAddress?.toLowerCase() !== walletAddress.toLowerCase() ? (
+            <Suspense fallback={null}><CreatorSupportAd key={resolvedTokenId} postId={resolvedTokenId} walletAddress={walletAddress} /></Suspense>
+          ) : null}
           {recipientPrivate ? (
             <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
               {t(
