@@ -37,6 +37,7 @@ jobs:
       # into two or three junk characters. The JSON still parses and the diff
       # looks like ordinary copy, so nothing else here would catch it.
       - run: node scripts/mojibake-check.mjs
+      - run: node scripts/check-badge-resource-names.mjs
       # The sibling failure: valid UTF-8, wrong alphabet. The translator
       # answers `am` (Amharic) in Armenian, or splices `导入` into a Ge'ez
       # sentence. Placeholders survive and the coverage count goes UP, so the
