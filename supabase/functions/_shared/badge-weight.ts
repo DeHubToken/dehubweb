@@ -160,6 +160,10 @@ export interface ResolvedWeight {
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
+// The pure tier resolver is also imported by the web regression tests.
+// Declare only the server runtime API this module uses.
+declare const Deno: { env: { get(key: string): string | undefined } };
+
 /** The DHB price the ladder is scaled by. A failed lookup means scale 1. */
 async function ladderScale(): Promise<number> {
   try {
