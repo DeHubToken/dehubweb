@@ -1809,7 +1809,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                 )}
                 <ModeToggle mode={mode} onChange={switchMode} />
 
-                <div className="flex min-w-0 flex-1 flex-wrap items-end gap-2">
+                <div className="flex min-w-0 basis-full flex-wrap items-end gap-2 sm:flex-1 sm:basis-auto">
                   {/* Audio leads with the tool, not the engine: which of the
                       nine is running decides every other chip on the rail. */}
                   {mode === 'audio' && (
