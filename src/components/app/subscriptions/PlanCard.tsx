@@ -197,7 +197,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
           onClick={() => pinMutation.mutate({ planId: String(plan.id || plan._id), data: { isPinned: !plan.isPinned } })}
         >
           {pinMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Pin className="w-4 h-4" />}
-          {plan.isPinned ? t('subscriptions.unpinProfile', 'Unpin from profile') : t('subscriptions.pinProfile', 'Pin to profile')}
+          {plan.isPinned ? t('postOptions.unpinPost') : t('postOptions.pinPost')}
         </Button>
       )}
       {isOwner ? (
