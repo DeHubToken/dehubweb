@@ -30,7 +30,8 @@ import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { getDocumentScrollTop, scrollDocumentTo, scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { setImagesFeedScrollView, IMAGES_BACK_TO_COLLAGE_EVENT } from '@/lib/images-feed-mode';
 import { setTabSwitchTime } from '@/lib/gesture-state';
-import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
+import { getLiteMode } from '@/hooks/use-connection-quality';
+import { clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { SORT_OPTIONS } from '@/lib/feed-utils';
@@ -60,11 +61,14 @@ const loadMusicFeed  = () => import('@/components/app/feeds/MusicFeed').then(m =
 const loadPPVFeed    = () => import('@/components/app/feeds/PPVFeed').then(m => ({ default: m.PPVFeed }));
 const loadW2EFeed    = () => import('@/components/app/feeds/W2EFeed').then(m => ({ default: m.W2EFeed }));
 
-/** Warm every other tab's chunk once the home feed has had its head start. */
-function prefetchFeedChunks() {
-  for (const load of [loadVideosFeed, loadImagesFeed, loadShortsFeed, loadLiveFeed, loadMusicFeed, loadPPVFeed, loadW2EFeed]) {
-    load().catch(() => { /* a tab tap retries through React.lazy */ });
-  }
+const feedLoaders: Record<string, () => Promise<unknown>> = {
+  videos: loadVideosFeed, images: loadImagesFeed, shorts: loadShortsFeed,
+  live: loadLiveFeed, music: loadMusicFeed, ppv: loadPPVFeed, w2e: loadW2EFeed,
+};
+let warmingFeed: Promise<unknown> | undefined;
+function warmFeedOnIntent(tab: string, ready: boolean) {
+  if (!ready || getLiteMode() || document.visibilityState !== 'visible' || warmingFeed) return;
+  warmingFeed = feedLoaders[tab]?.().catch(() => {}).finally(() => { warmingFeed = undefined; });
 }
 
 // Memoized wrappers — prevent feed re-renders during drag tab switches.
@@ -456,22 +460,7 @@ export default function HomePage() {
     }, 800);
   }, [isRefreshing, queryClient]);
   
-  // Track when home feed has loaded for prefetching other tabs
-  const [isHomeFeedLoaded, setIsHomeFeedLoaded] = useState(false);
-  
-  // Prefetch all other feeds in background once home feed loads
-  useFeedPrefetch(isHomeFeedLoaded);
-  
-  // Delay other-tab prefetching so the home feed query gets network priority
-  // The home feed's own useUnifiedFeed fires on mount; give it 2s head start
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsHomeFeedLoaded(true);
-      // The other tabs' code, on the same schedule as their data.
-      prefetchFeedChunks();
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+
 
   // --------------------------------------------------------------------------
   // GLASS-NAV THEMES: SWALLOW CONTENT AT THE NAV PILL'S TOP EDGE
@@ -1035,6 +1024,8 @@ export default function HomePage() {
                       setHomeTabRef(tab.value)(el);
                       homeTabButtonPositions.current[tab.value] = el;
                     }}
+                    onPointerEnter={() => warmFeedOnIntent(tab.value, queryClient.getQueriesData({ queryKey: ['unified-feed'] }).some(([, data]) => !!data))}
+                    onPointerDown={() => warmFeedOnIntent(tab.value, queryClient.getQueriesData({ queryKey: ['unified-feed'] }).some(([, data]) => !!data))}
                     onClick={() => handleTabClick(tab.value)}
                     aria-label={tab.label}
                     aria-current={isActive ? 'page' : undefined}
