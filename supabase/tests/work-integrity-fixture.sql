@@ -55,3 +55,4 @@ CREATE POLICY fixture_subs_read ON public.work_submissions FOR SELECT USING (tru
 CREATE POLICY fixture_reviews_read ON public.work_reviews FOR SELECT USING (true);
 CREATE POLICY fixture_disputes_read ON public.work_disputes FOR SELECT USING (true);
 GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO anon,authenticated;
+GRANT SELECT,UPDATE ON public.work_jobs,public.work_submissions,public.work_disputes TO service_role;

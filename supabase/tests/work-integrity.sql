@@ -118,4 +118,9 @@ INSERT INTO public.work_submissions(job_id,worker_address,proof_url) SELECT id,'
 SELECT pg_temp.work_expect_failure('DELETE FROM public.work_submissions WHERE job_id=(SELECT id FROM pg_temp.work_test_ids WHERE name=''funded'')','cannot be deleted');
 RESET ROLE;
 
+DO $$ BEGIN
+ IF has_table_privilege('service_role','public.work_jobs','UPDATE') OR has_table_privilege('service_role','public.work_submissions','UPDATE') OR has_table_privilege('service_role','public.work_disputes','UPDATE') THEN
+  RAISE EXCEPTION 'Legacy admin writes can bypass verified settlement';
+ END IF;
+END $$;
 ROLLBACK;

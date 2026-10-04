@@ -71,6 +71,8 @@ ALTER TABLE public.work_payment_intents ENABLE ROW LEVEL SECURITY;
 CREATE POLICY work_payment_read ON public.work_payment_intents FOR SELECT USING (true);
 GRANT SELECT ON public.work_payment_intents TO anon, authenticated;
 REVOKE INSERT, UPDATE, DELETE ON public.work_payment_intents, public.work_config FROM anon, authenticated;
+-- Older admin endpoints cannot bypass receipt verification with direct service-role updates.
+REVOKE UPDATE ON public.work_jobs, public.work_submissions, public.work_disputes FROM service_role;
 
 -- Every write policy requires the signed session, regardless of the global legacy-wallet switch.
 DO $$ DECLARE policy record; BEGIN
