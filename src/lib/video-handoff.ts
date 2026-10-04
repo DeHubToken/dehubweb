@@ -181,6 +181,39 @@ export function releaseHandoffVideo(key: string, token: object) {
   notify(key);
 }
 
+/**
+ * Move the element for `key` into the slot behind `token`, on purpose.
+ *
+ * A post can be on screen twice outside the post page — a pinned or boosted
+ * copy, a later feed page repeating it, a cached page underneath — and the
+ * newest card to mount used to take the element from the one being watched.
+ * The clip then kept playing in a slot nobody could see, while the card the
+ * viewer scrolled back to showed only its poster. A card that wants to play
+ * takes the element back here. It arrives paused: whatever the previous holder
+ * was doing with it is that card's business, not a reason to make sound here.
+ */
+export function takeHandoffVideo(key: string, token: object): HTMLVideoElement | null {
+  const entry = pool.get(key);
+  if (!entry) return null;
+  const i = entry.claims.findIndex((c) => c.token === token);
+  if (i === -1) return null;
+  if (i !== entry.claims.length - 1) {
+    const [claim] = entry.claims.splice(i, 1);
+    entry.el.pause();
+    entry.claims.push(claim);
+    claim.slot.appendChild(entry.el);
+    notify(key);
+  }
+  return entry.el;
+}
+
+/** The slot currently showing the element for `key`, if any. */
+export function handoffVideoHolder(key: string): HTMLElement | null {
+  const entry = pool.get(key);
+  const top = entry?.claims[entry.claims.length - 1];
+  return top && entry!.el.parentNode === top.slot ? top.slot : null;
+}
+
 /** Is `slot` the claim currently holding the element for `key`? */
 export function isHandoffVideoActive(key: string, slot: HTMLElement | null): boolean {
   if (!slot) return false;
