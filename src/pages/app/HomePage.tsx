@@ -720,7 +720,8 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    // Skip entire gesture if touch originated inside a no-swipe zone (filter panel)
+    // Carousels own sideways swipes; a downward pull still belongs to the feed.
+    pullHandlers.onTouchStart(e);
     const target = e.target as HTMLElement;
     touchInsideNoSwipe.current = !!target.closest('[data-no-swipe]');
     if (touchInsideNoSwipe.current) return;
@@ -730,30 +731,23 @@ export default function HomePage() {
     touchEndX.current = null;
     touchEndY.current = null;
     touchGestureTriggered.current = false;
-    pullHandlers.onTouchStart(e);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    pullHandlers.onTouchMove(e);
     if (touchInsideNoSwipe.current) return;
 
     touchEndX.current = e.touches[0].clientX;
     touchEndY.current = e.touches[0].clientY;
-    pullHandlers.onTouchMove(e);
-    
-    // Prevent native browser pull-to-refresh when custom pull is active
-    if (pullDistance > 0) {
-      e.preventDefault();
-    }
   };
 
   const handleTouchEnd = () => {
+    pullHandlers.onTouchEnd();
     if (touchInsideNoSwipe.current) {
       touchInsideNoSwipe.current = false;
       return;
     }
 
-    pullHandlers.onTouchEnd();
-    
     // Already triggered this gesture? Reset and exit
     if (touchGestureTriggered.current) {
       touchStartX.current = null;

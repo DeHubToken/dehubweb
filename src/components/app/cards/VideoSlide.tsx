@@ -541,6 +541,7 @@ export const VideoSlide = memo(function VideoSlide({
       <div
         ref={progressBarRef}
         data-no-swipe
+        data-no-pull
         className="absolute bottom-0 left-0 right-0 z-20 cursor-pointer touch-none select-none"
         style={{ height: '15%' }}
       >
