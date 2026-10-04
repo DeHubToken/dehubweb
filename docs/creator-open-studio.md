@@ -23,3 +23,9 @@ The linked repository publishes starter prompts and model mappings. Production M
 Use server-side `Authorization: Key <complete copied API key>`. Consume every non-null cursor; the response contains `total`, `cursor` and `items`. Keep the returned preset IDs rather than inventing replacements or copying example UUIDs. Visibility changes in the CMS, so the generation picker must use the current catalog. Enhanced generation posts `preset_id`, `enhance_prompt: true` and a product image to `marketing-studio/image`. A second reference image supplies the optional model.
 
 Access to that authenticated catalog and Higgsfield generation has not been verified. The 24 studio recipes do not imply that the full proprietary preset catalog or preset enhancement logic is bundled here.
+
+## Expanded original recipes
+
+The shared image/video catalog adds 100 original DeHub recipes: 60 image looks and 40 video shots. These additions live in expandedStudioPresets.ts in each client and are separate from the 24 published Higgsfield starter recipes. The shared catalog now has 103 image and 79 video presets.
+
+The new image recipes default to Nano Banana 2 and the video shots to Kling 2.5 Turbo, with explicit aspect ratios. Six reference-animation shots require an attached image; the other 94 can start from a text subject or their sample. English and French names and hints match across both clients. Search covers labels, categories, shot directions and samples.
