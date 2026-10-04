@@ -6,6 +6,7 @@ import {
   detachHandoffAudio,
   getHandoffAudio,
   isHandoffAudioActive,
+  raiseHandoffAudio,
   releaseHandoffAudio,
   setHandoffAudio,
   subscribeHandoffAudio,
@@ -100,6 +101,21 @@ describe('lib/audio-handoff', () => {
     expect(seen).toHaveBeenCalledTimes(3);
     stop();
     releaseHandoffAudio('5682', feed);
+  });
+
+  it('gives the track to a buried copy the user taps, and back down after', () => {
+    const original = claimHandoffAudio('5682', () => feedCanvas);
+    const repost = claimHandoffAudio('5682', () => feedCanvas);
+    const el = fakeAudio();
+    setHandoffAudio('5682', repost, { el, source: null, analyser: null });
+
+    raiseHandoffAudio('5682', original);
+
+    expect(isHandoffAudioActive('5682', original)).toBe(true);
+    expect(getHandoffAudio('5682', original)?.el).toBe(el);
+    releaseHandoffAudio('5682', original);
+    expect(isHandoffAudioActive('5682', repost)).toBe(true);
+    releaseHandoffAudio('5682', repost);
   });
 
   it('lets only the holder install a graph', () => {

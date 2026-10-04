@@ -170,6 +170,21 @@ export function releaseHandoffAudio(key: string, token: object): void {
   notify(key);
 }
 
+/**
+ * Put `token`'s claim on top, for a tap on a card that is not currently
+ * driving the track. The same post can be on one page twice (a repost beside
+ * the original), and the copy underneath would otherwise ignore its own play
+ * button — the tap is the user saying which one they mean.
+ */
+export function raiseHandoffAudio(key: string, token: object): void {
+  const entry = pool.get(key);
+  if (!entry) return;
+  const i = entry.claims.findIndex((c) => c.token === token);
+  if (i === -1 || i === entry.claims.length - 1) return;
+  entry.claims.push(...entry.claims.splice(i, 1));
+  notify(key);
+}
+
 /** Is `token` the claim currently driving `key`? */
 export function isHandoffAudioActive(key: string, token: object | null): boolean {
   if (!token) return false;
