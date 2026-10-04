@@ -1,4 +1,4 @@
-﻿const posters = import.meta.glob<string>('../assets/badges/hover/*.png', { eager: true, import: 'default' });
+const posters = import.meta.glob<string>('../assets/badges/hover/*.png', { eager: true, import: 'default' });
 const animations = import.meta.glob<string>('../assets/badges/hover/*.webp', { eager: true, import: 'default' });
 
 const bounds: Record<string, [number, number, number, number]> = {
@@ -40,7 +40,7 @@ export function badgeHoverArt(tier: string | null | undefined) {
   const [left, top, right, bottom] = bounds[tier];
   return {
     poster: posters['../assets/badges/hover/' + slug + '.png'],
-    animation: animations['../assets/badges/hover/' + slug + '.webp'],
+    animation: animations['../assets/badges/hover/' + slug + '-animation.webp'],
     bounds: { left, top, right, bottom },
     posterBounds: { left: posterBounds[tier][0], top: posterBounds[tier][1], right: posterBounds[tier][2], bottom: posterBounds[tier][3] },
   };
