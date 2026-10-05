@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useId, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
@@ -20,6 +21,7 @@ import { AuthContext, type AuthContextType } from '@/contexts/AuthContext';
 import { KitButton, PageEmpty, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
 import { FeedTabBarSkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
+import { STREAMER_BADGE_IDS, badgeMaterial, streamerBadgeSvg } from '@/lib/streamer-badge-art';
 
 // The gallery sits outside the wallet providers; a signed-out stub is all the
 // action row needs to render.
@@ -204,6 +206,8 @@ export default function StateGalleryPage() {
           </div>
         </div>
 
+        <StreamerArtworkGallery />
+
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">Badge animations</h2>
           <div className="flex flex-wrap items-center gap-3">
@@ -347,6 +351,30 @@ export default function StateGalleryPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+function StreamerArtworkGallery() {
+  const { theme } = useAppTheme();
+  const { t } = useTranslation();
+  const instance = useId();
+  const material = badgeMaterial(theme);
+  return (
+    <section data-page-bento data-streamer-gallery className="mb-5 rounded-3xl border p-4" style={{ background: material.panel, color: material.text, borderColor: material.edge }}>
+      <h2 className="mb-3 text-sm font-semibold">{t('live.progress.cardsTitle')}</h2>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+        {STREAMER_BADGE_IDS.map(id => (
+          <div key={id} data-streamer-art={id} className="flex flex-col items-center gap-2 text-center">
+            <div aria-hidden className="h-24 w-24 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, theme, true, instance) }} />
+            <span className="text-xs font-medium">{t(`live.progress.card.${id}.name`)}</span>
+            <div className="flex items-center gap-3" aria-hidden>
+              <span className="h-4 w-4 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, theme, true, `${instance}-inline`, 'compact') }} />
+              <span className="h-8 w-8 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, theme, false, `${instance}-locked`) }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
