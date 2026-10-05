@@ -4876,6 +4876,13 @@ html[data-theme="light"] .art-rim {
 :root {
   --post-media-max-h: 80dvh;
 }
+
+/* Phone feed videos use a 3:4 frame, capped below the viewport height. The
+   attribute is removed on post pages and in fullscreen. Override cinematic
+   feed sizing too, which otherwise applies the taller post-page cap. */
+[data-mobile-feed-video]:not(#_) {
+  max-height: min(600px, 65svh) !important;
+}
 @media (max-width: 639px) {
   :root {
     --post-media-max-h: max(80dvh, calc(100vw * 16 / 9));
