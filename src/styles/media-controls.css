@@ -52,18 +52,20 @@ html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-i
   background-position: center calc(100% - 0.5px), center bottom !important;
 }
 
-/* Buttons own their bounds; the full-width seek target owns the space below
-   them and the gaps between them, without lifting the playback row. */
+/* The bottom 48px owns drags. Clip only empty button padding so taps below
+   the glyphs seek without changing the row or the glyph positions. */
 [data-video-scrubber="line"] [data-video-button-row] {
   pointer-events: none;
 }
-[data-video-scrubber="line"] [data-scrubber-line] {
+[data-video-scrubber="line"] :is([data-scrubber-line], [data-video-scrub-surface]) {
   pointer-events: auto;
 }
 [data-video-scrubber="line"] [data-video-button-row] :is(button, [role="button"]) {
   position: relative;
   z-index: 1;
   pointer-events: auto;
+  touch-action: pan-y !important;
+  clip-path: inset(0 0 6px);
 }
 [data-video-scrubber="line"][data-controls-hidden="true"] [data-video-button-row] :is(button, [role="button"]) {
   pointer-events: none;

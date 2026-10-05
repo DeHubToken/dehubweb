@@ -28,6 +28,7 @@ import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { isBrainrotSwipe, isTouchPrimary, openBrainrotFeed } from '@/lib/brainrot-feed';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { useVideoScrubZone } from '@/hooks/use-video-scrub-zone';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
 import { useSkipSegments } from '@/lib/skip-segments';
@@ -1648,6 +1649,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
   }, []);
 
+  const scrubZone = useVideoScrubZone({
+    enabled: bareControls && !isContentGated && duration > 0 && Number.isFinite(duration),
+    duration,
+    onStart: () => {
+      scrubbingRef.current = true;
+      setShowControls(true);
+      if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    },
+    onPreview: setCurrentTime,
+    onCommit: time => {
+      if (videoRef.current) videoRef.current.currentTime = time;
+      setCurrentTime(time);
+    },
+    onFinish: finishScrubbing,
+    onCancel: () => setCurrentTime(videoRef.current?.currentTime ?? 0),
+  });
+
   /**
    * Open the dedicated post page for this video, seeding the query cache so it
    * paints immediately. The shared <video> moves with it — see useHandoffVideo.
@@ -1964,6 +1982,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
         {...tapGestures}
+        {...scrubZone}
         onMouseEnter={() => {
           isHoveringRef.current = true;
           setShowControls(true);
@@ -2407,6 +2426,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
+            {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-12 touch-pan-y" />}
+
             <div data-video-button-row className={cn("flex items-center gap-2", bareControls && "px-1.5")}>
               <button
                 onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
@@ -2426,12 +2447,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 onTouchStart={(event) => event.stopPropagation()}
                 onTouchEnd={(event) => event.stopPropagation()}
                 onPointerDown={(event) => {
+                  if (bareControls) return;
                   event.stopPropagation();
                   scrubbingRef.current = true;
                   hiddenScrubStart.current = controlsVisible ? null : { x: event.clientX, y: event.clientY };
                   if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
                 }}
                 onPointerMove={(event) => {
+                  if (bareControls) return;
                   const start = hiddenScrubStart.current;
                   if (!start) return;
                   const dx = Math.abs(event.clientX - start.x);
@@ -2444,9 +2467,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     setCurrentTime(time);
                   }
                 }}
-                onPointerUp={finishScrubbing}
-                onPointerCancel={finishScrubbing}
-                onLostPointerCapture={finishScrubbing}
+                onPointerUp={bareControls ? undefined : finishScrubbing}
+                onPointerCancel={bareControls ? undefined : finishScrubbing}
+                onLostPointerCapture={bareControls ? undefined : finishScrubbing}
                 onClick={(e) => e.stopPropagation()}
                 disabled={duration <= 0}
                 aria-label="Video progress"
