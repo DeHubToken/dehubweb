@@ -12,6 +12,8 @@ import {
   type AudioPostTrack,
 } from '@/lib/audio-post-playback';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
+import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
+import { useVideoScrubZone } from '@/hooks/use-video-scrub-zone';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
@@ -146,7 +148,7 @@ const STYLES: { value: AnyStyle; label: string }[] = [
 ];
 
 /** One height for every control in the bottom row, so they line up. */
-const CONTROL_H = 'h-7';
+const CONTROL_H = 'h-8';
 /** The liquid-glass surface all three controls share. */
 const GLASS_PILL =
   'rounded-lg bg-gradient-to-br from-white/25 via-white/15 to-white/8 backdrop-blur-xl border border-white/30';
@@ -851,6 +853,17 @@ export function AudioVisualizer({
     setScrubRatio(null);
   }, []);
 
+  const bottomScrub = useVideoScrubZone({
+    enabled: duration > 0,
+    duration,
+    onStart: cancelScrub,
+    onPreview: time => setScrubRatio(time / duration),
+    onCommit: time => seekTo(time / duration),
+    onFinish: () => setScrubRatio(null),
+    onCancel: cancelScrub,
+    ignoreSelector: '[data-audio-style-picker]',
+  });
+
   const handleSeekKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
@@ -922,7 +935,7 @@ export function AudioVisualizer({
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
   return (
-    <div data-no-swipe data-video-controls data-audio-player className={`relative ${className}`}>
+    <div data-no-swipe data-video-controls data-audio-player className={`relative ${className}`} {...bottomScrub}>
       <canvas
         ref={canvasRef}
         width={canvasSize.w}
@@ -939,7 +952,7 @@ export function AudioVisualizer({
       <div
         data-audio-colour
         data-audio-fullscreen={isFullscreen || undefined}
-        className={cn('absolute top-2 z-20 pointer-events-none', showVolume ? 'right-[98px]' : 'right-2')}
+        className={cn('absolute top-2 z-20 pointer-events-none', showVolume ? 'right-[110px]' : 'right-2')}
       >
         {/* Colour slider matches the unframed volume slider. */}
         {showStylePicker && (
@@ -991,6 +1004,7 @@ export function AudioVisualizer({
                 <button
                   type="button"
                   data-on-media
+                  data-audio-bare
                   aria-label={isEffectivelyMuted ? 'Unmute' : 'Mute'}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -1002,9 +1016,9 @@ export function AudioVisualizer({
                     // or the icon flips and the track stays silent.
                     if (volume === 0) setVolume(0.8);
                   }}
-                  className="shrink-0 w-5 h-5 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+                  className="shrink-0 w-8 h-8 flex items-center justify-center text-white/80 hover:text-white transition-colors"
                 >
-                  {isEffectivelyMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                  <MediaControlIcon icon={isEffectivelyMuted ? VolumeX : Volume2} />
                 </button>
                 {/* The fill is Slider's own Range, not a div sized to the value:
                     Radix insets the thumb by half its width so it never overhangs the
@@ -1043,11 +1057,13 @@ export function AudioVisualizer({
           mouse anywhere near the card flashed a pause button, and the
           invisible-but-clickable box swallowed every press aimed at the
           waveform underneath it. */}
-      <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col pointer-events-none">
+      <div data-audio-controls className="absolute inset-x-0 bottom-0 z-20 pointer-events-none">
+        <div data-audio-scrub-surface className="absolute inset-x-0 bottom-0 h-12 touch-pan-y pointer-events-auto" />
         {/* Video-style play/countdown and tools above the edge scrubber.
             The style picker gives up width and scrolls before buttons clip. */}
         <div
-          className="flex items-center gap-1 px-1.5 pointer-events-auto"
+          data-audio-button-row
+          className="relative flex items-center gap-2 px-1.5 pb-1.5 pointer-events-none"
           // pan-y too: this bar spans the card, so a feed swipe that starts on
           // it has to scroll the page. The style row still pans sideways.
           style={{ touchAction: 'pan-x pan-y' }}
@@ -1057,22 +1073,19 @@ export function AudioVisualizer({
           <button
             type="button"
             data-on-media
+            data-audio-bare
             aria-label={isPlaying ? 'Pause' : 'Play'}
             onClick={(e) => { e.stopPropagation(); handlePlayPause(); }}
             className={cn(
-              'shrink-0 w-7 flex items-center justify-center transition-colors',
+              'pointer-events-auto shrink-0 w-8 flex items-center justify-center transition-colors',
               CONTROL_H,
               'text-white hover:opacity-80',
             )}
           >
-            {isPlaying ? (
-              <Pause className="w-3.5 h-3.5 text-white fill-white" />
-            ) : (
-              <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5" />
-            )}
+            <MediaControlIcon icon={isPlaying ? Pause : Play} />
           </button>
 
-          <span className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">
+          <span data-audio-bare className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">
             {formatTime(Math.max(0, Math.ceil(duration - displayTime)))}
           </span>
           {showStylePicker && (
@@ -1084,7 +1097,8 @@ export function AudioVisualizer({
               <div
                 ref={chipScrollRef}
                 data-no-swipe
-                className="flex-1 min-w-0 overflow-x-auto overscroll-x-contain scrollbar-none"
+                data-audio-style-picker
+                className="pointer-events-auto flex-1 min-w-0 overflow-x-auto overscroll-x-contain scrollbar-none"
                 style={chipFadeStyle}
                 onTouchStart={stopBubble}
               >
@@ -1130,20 +1144,21 @@ export function AudioVisualizer({
           <button
             type="button"
             data-on-media
+            data-audio-bare
             aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')}
             title={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')}
             aria-pressed={isPoppedOut}
             onClick={handlePopOut}
             onPointerDown={stopBubble}
             className={cn(
-              'pointer-events-auto shrink-0 w-7 flex items-center justify-center transition-colors',
+              'pointer-events-auto shrink-0 w-8 flex items-center justify-center transition-colors',
               CONTROL_H,
               isPoppedOut
                 ? 'opacity-100'
                 : 'opacity-80 hover:opacity-100',
             )}
           >
-            <PictureInPicture2 className="w-3.5 h-3.5 text-white" />
+            <MediaControlIcon icon={PictureInPicture2} />
           </button>
         )}
 
@@ -1151,20 +1166,17 @@ export function AudioVisualizer({
           <button
             type="button"
             data-on-media
+            data-audio-bare
             aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
             onClick={(e) => { e.stopPropagation(); onFullscreen(e); }}
             onPointerDown={stopBubble}
             className={cn(
-              'pointer-events-auto shrink-0 w-7 flex items-center justify-center transition-colors',
+              'pointer-events-auto shrink-0 w-8 flex items-center justify-center transition-colors',
               CONTROL_H,
               'text-white hover:opacity-80',
             )}
           >
-            {isFullscreen ? (
-              <Minimize className="w-3.5 h-3.5 text-white" />
-            ) : (
-              <Maximize className="w-3.5 h-3.5 text-white" />
-            )}
+            <MediaControlIcon icon={isFullscreen ? Minimize : Maximize} />
           </button>
         )}
         </div>
@@ -1176,17 +1188,13 @@ export function AudioVisualizer({
             aria-valuemax={Math.max(0, Math.round(duration))}
             aria-valuenow={Math.max(0, Math.round(displayTime))}
             aria-valuetext={`${formatTime(displayTime)} of ${formatTime(duration)}`}
-            className="relative w-full h-[14px] flex items-end cursor-pointer outline-none pointer-events-auto focus-visible:ring-2 focus-visible:ring-white"
-            style={{ touchAction: 'none' }}
-            onPointerDown={(e) => { e.stopPropagation(); beginScrub(e.currentTarget, e, true); }}
-            onPointerMove={(e) => moveScrub(e.currentTarget, e)}
-            onPointerUp={(e) => { e.stopPropagation(); endScrub(e.currentTarget, e); }}
-            onPointerCancel={cancelScrub}
+            className="absolute inset-x-0 bottom-0 h-[3px] cursor-pointer outline-none pointer-events-auto focus-visible:ring-2 focus-visible:ring-white"
+            style={{ touchAction: 'pan-y' }}
             onKeyDown={handleSeekKeyDown}
           >
-            <div className="absolute inset-x-0 bottom-0 h-[3px] bg-white/30" />
+            <div className="absolute inset-x-0 bottom-0 h-[3px] border-[0.5px] border-black/65 bg-white/30" />
             <div
-              className="absolute bottom-0 left-0 h-[3px] bg-white"
+              className="absolute bottom-[0.5px] left-[0.5px] h-[2px] bg-white"
               style={{ width: `${displayRatio * 100}%` }}
             />
           </div>
