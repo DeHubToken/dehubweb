@@ -1169,7 +1169,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   // The status is rendered. Discarding it was half the reason this failed
   // quietly: a locked vault set `locked`, nothing showed it, and the thread
   // went on sending in the clear.
-  const { status: encryptionStatus, retry: retryEncryption } = useDmEncryption();
+  const { status: encryptionStatus, retry: retryEncryption, needsWalletConnection: encryptionNeedsWalletConnection } = useDmEncryption();
 
   // Lets handleSaveEdit read current content without depending on `messages` —
   // that array changes on every incoming socket message, and putting it in a
@@ -2041,16 +2041,27 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
       {/* No key on this device. Says so, instead of quietly sending in the
           clear and rendering the other side's lines as unopenable. */}
-      {(encryptionStatus === 'locked' || encryptionStatus === 'error') && (
+      {(encryptionStatus === 'pending' || encryptionStatus === 'locked' || encryptionStatus === 'error') && (
         <div className="px-4 py-2 text-xs flex items-center gap-2 bg-white/5 text-zinc-300 border-b border-white/10">
           <Unlock className="w-3 h-3 flex-shrink-0 text-current" />
-          <span className="flex-1 truncate">{tr('messages.encryptionOff')}</span>
+          <span role="status" className="flex-1">
+            {encryptionStatus === 'pending'
+              ? tr('messages.encryptionTurningOn', { defaultValue: 'Waiting for your wallet to turn on encryption…' })
+              : encryptionNeedsWalletConnection
+                ? tr('messages.encryptionReconnect', { defaultValue: 'Reconnect your wallet to turn on encryption.' })
+                : encryptionStatus === 'error'
+                  ? tr('messages.encryptionSetupFailed', { defaultValue: 'Encryption setup failed. Please try again.' })
+                  : tr('messages.encryptionOff')}
+          </span>
           <button
             type="button"
+            disabled={encryptionStatus === 'pending'}
             onClick={() => { void retryEncryption(); }}
-            className="text-white font-medium hover:underline"
+            className="text-white font-medium hover:underline disabled:opacity-50 disabled:cursor-wait shrink-0"
           >
-            {tr('messages.encryptionTurnOn')}
+            {encryptionNeedsWalletConnection
+              ? tr('messages.encryptionReconnectWallet', { defaultValue: 'Reconnect wallet' })
+              : tr('messages.encryptionTurnOn')}
           </button>
         </div>
       )}
