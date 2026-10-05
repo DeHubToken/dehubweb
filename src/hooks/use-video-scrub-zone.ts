@@ -48,6 +48,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
       gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, button, dragging: false };
       // Disable the range's native seek; this gesture commits only on release.
       if (!button) {
+        event.currentTarget.setPointerCapture(event.pointerId);
         event.preventDefault();
         event.stopPropagation();
       }
