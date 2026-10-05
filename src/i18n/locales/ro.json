@@ -4293,6 +4293,7 @@
     "realDhbNeverExpires": "Tokeni reali DeHub în portofelul tău — nu expiră niciodată",
     "pooledNeverExpires": "Pus în comun în spațiul de lucru — nu expiră niciodată",
     "perMonthBilledAnnually": "pe lună, facturat anual",
+    "perSeatMonthly": "pe loc/lună",
     "perSeatBilledAnnually": "pe loc/lună, facturat anual",
     "savings": "Economisește ${{amount}} comparativ cu lunar",
     "seats_one": "{{count}} loc",

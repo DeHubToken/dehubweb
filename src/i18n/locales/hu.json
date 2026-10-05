@@ -4240,6 +4240,7 @@
     "realDhbNeverExpires": "Valódi DeHub tokenek a pénztárcádban — sosem járnak le",
     "pooledNeverExpires": "A munkaterületen keresztül összevonva — soha nem jár le",
     "perMonthBilledAnnually": "havonta, éves számlázással",
+    "perSeatMonthly": "felhasználónként/hó",
     "perSeatBilledAnnually": "csapatonként/hó, éves számlázással",
     "savings": "Spórolj {{amount}} összeget a havi díjhoz képest",
     "seats_one": "{{count}} hely",

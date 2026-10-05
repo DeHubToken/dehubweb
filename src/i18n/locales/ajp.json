@@ -3958,6 +3958,7 @@
     "realDhbSpendAnywhere": "توكنز DeHub حقيقية في محفظتك — أنفقها في أي مكان، لا تنتهي صلاحيتها أبداً",
     "realDhbNeverExpires": "توكنز DeHub حقيقية في محفظتك — لا تنتهي صلاحيتها أبداً",
     "perMonthBilledAnnually": "شهريًا، مدفوع سنويًا",
+    "perSeatMonthly": "للكرسي/الشهر",
     "perSeatBilledAnnually": "للكرسي/الشهر، مدفوع سنويًا",
     "savings": "حطّي ${{amount}} زيّد من ما بتحطّو كل شهر",
     "seats_one": "{{count}} كرسي",

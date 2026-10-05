@@ -4276,6 +4276,7 @@
     "referenceComposeHint": "Kuweka watumishi, vitu na mazingira kutoka picha nyingi katika mfumo moja"
   },
   "pricing": {
+    "perSeatMonthly": "kwa kila kiti/mwezi",
     "plansForEveryWorkflow": "Mipango kwa kila workflow",
     "findTheRightFit": "Kutoka kwa watu binafsi hadi timu za enterprise, tafuta inayofaa",
     "monthly": "Monthly",

@@ -4293,6 +4293,7 @@
     "realDhbNeverExpires": "지갑에 있는 실제 DeHub 토큰 — 만료되지 않습니다.",
     "pooledNeverExpires": "워크스페이스 전체에서 공유 - 절대 만료되지 않음",
     "perMonthBilledAnnually": "월별, 연간 청구",
+    "perSeatMonthly": "좌석당/월",
     "perSeatBilledAnnually": "좌석당/월, 연간 청구",
     "savings": "월간 요금 대비 ${{amount}} 절약",
     "seats_one": "{{count}} 좌석",

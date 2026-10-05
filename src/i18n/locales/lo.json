@@ -4264,6 +4264,7 @@
     "realDhbNeverExpires": "ໂຕເຄນ DeHub ຕົວຈິງໃນ wallet ຂອງທ່ານ — ບໍ່ມີວັນໝົດອາຍຸ",
     "pooledNeverExpires": "ລວມກັນທົ່ວ workspace — ບໍ່ມີວັນໝົດອາຍຸ",
     "perMonthBilledAnnually": "ຕໍ່ເດືອນ, ເກັບເງິນລາຍປີ",
+    "perSeatMonthly": "ຕໍ່ບ່ອນນັ່ງ/ເດືອນ",
     "perSeatBilledAnnually": "ຕໍ່ບ່ອນນັ່ງ/ເດືອນ, ເກັບເງິນລາຍປີ",
     "savings": "ປະຢັດ ${{amount}} ທຽບກັບລາຍເດືອນ",
     "seats_one": "{{count}} ບ່ອນນັ່ງ",

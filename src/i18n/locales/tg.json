@@ -4228,6 +4228,7 @@
     "referenceComposeHint": "Karakterlar, ob’ektlar va manzaralar bar resurslar kamida kamida yek ta kompozitsiya ro ta’kid konid"
   },
   "pricing": {
+    "perSeatMonthly": "дар як курсӣ/моҳ",
     "plansForEveryWorkflow": "Нақшаҳо барои ҳар як ҷараёни корӣ",
     "findTheRightFit": "Аз шахсони воқеӣ ба гурӯҳҳои корхона, мувофиқати мувофиқро пайдо кунед",
     "monthly": "Ҳар моҳ",

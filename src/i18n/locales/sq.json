@@ -4273,6 +4273,7 @@
     "referenceComposeHint": "Merrni karaktere, objekte dhe rregullime nga shumë imazhe në një kompozicion të vetëm."
   },
   "pricing": {
+    "perSeatMonthly": "për vend/muaj",
     "plansForEveryWorkflow": "Planet për çdo rrjedhë pune",
     "findTheRightFit": "Nga individët tek ekipet e ndërmarrjeve, gjeni përshtatjen e duhur",
     "monthly": "Mujore",

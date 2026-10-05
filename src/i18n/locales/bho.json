@@ -4227,6 +4227,7 @@
     "realDhbNeverExpires": "आपके वॉलेट में वास्तविक DeHub टोकन — वे कभी समाप्त नहीं होते",
     "pooledNeverExpires": "वर्कस्पेस मां पूल की गई — कभी ना मिटती",
     "perMonthBilledAnnually": "प्रति माह, वार्षिक बिलिंग",
+    "perSeatMonthly": "प्रति सीट/माह",
     "perSeatBilledAnnually": "प्रति सीट/माह, वार्षिक बिलिंग",
     "savings": "मासिक से {{amount}} डॉलर बचाइए",
     "seats_one": "{{count}} सीट",

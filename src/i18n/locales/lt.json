@@ -4294,6 +4294,7 @@
     "realDhbNeverExpires": "Tikri „DeHub“ žetonai jūsų piniginėje — jie niekada nesibaigia",
     "pooledNeverExpires": "Kaupiami visoje darbo erdvėje – niekada nesibaigia",
     "perMonthBilledAnnually": "per mėnesį, apmokestinant kasmet",
+    "perSeatMonthly": "už vietą/mėn.",
     "perSeatBilledAnnually": "už vietą/mėn., apmokestinant kasmet",
     "savings": "Sutaupykite {{amount}} USD, palyginti su mėnesiniu apmokėjimu",
     "seats_one": "{{count}} vieta",

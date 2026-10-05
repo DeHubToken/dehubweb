@@ -4298,6 +4298,7 @@
     "realDhbNeverExpires": "Әмияныңыздағы нақты DeHub токендері — олар ешқашан жарамсыз болмайды",
     "pooledNeverExpires": "Жұмыс кеңістігі бойынша бөлінген — ешқашан жарамсыз болмайды",
     "perMonthBilledAnnually": "айына, жылдық есептеумен",
+    "perSeatMonthly": "әр орынға/ай",
     "perSeatBilledAnnually": "орынға ай сайын, жылдық есептеумен",
     "savings": "Ай сайынғы төлеммен салыстырғанда ${{amount}} үнемдеңіз",
     "seats_one": "{{count}} орын",

@@ -4490,6 +4490,7 @@
     "realDhbNeverExpires": "Echte DeHub tokens in je wallet — ze verlopen nooit",
     "pooledNeverExpires": "Gedeeld in de werkruimte — vervalt nooit",
     "perMonthBilledAnnually": "per maand, jaarlijks gefactureerd",
+    "perSeatMonthly": "per seat/mnd",
     "perSeatBilledAnnually": "per seat/mnd, jaarlijks gefactureerd",
     "savings": "Bespaar ${{amount}} vergeleken met maandelijks",
     "seats_one": "{{count}} seat",

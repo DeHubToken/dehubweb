@@ -4249,6 +4249,7 @@
     "realDhbNeverExpires": "Sakamakon alamomin DeHub a walat ɗinka — ba sa ƙarewa",
     "pooledNeverExpires": "Tafasa a duk faɗin filin aiki — ba zai ƙare ba",
     "perMonthBilledAnnually": "kowane wata, billed kowace shekara",
+    "perSeatMonthly": "a kowace kujera/wata",
     "perSeatBilledAnnually": "a kowace wurin zama/mo, billed kowace shekara",
     "savings": "Ajiye ${{amount}} idan aka kwatanta da kowane wata",
     "seats_one": "{{count}} wurin zama",

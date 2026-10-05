@@ -4291,6 +4291,7 @@
     "referenceComposeHint": "Bir nechta tasvirlardan belgilar, obyektlar va muhitni bitta kompozitsiyaga olib keling."
   },
   "pricing": {
+    "perSeatMonthly": "har bir o‘rindiq/oy",
     "plansForEveryWorkflow": "Har bir ish uchun rejalar",
     "findTheRightFit": "Jismoniy shaxslardan tortib, korxona jamoalarigacha, o&#39;zingizga mosini toping",
     "monthly": "Oylik",

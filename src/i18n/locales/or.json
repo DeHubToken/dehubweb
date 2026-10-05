@@ -4230,6 +4230,7 @@
     "realDhbNeverExpires": "ଆପଣଙ୍କ ୱାଲେଟରେ ପ୍ରକୃତ DeHub ଟୋକେନ — ସେଗୁଡ଼ିକ କେବେବି ଶେଷ ହେବ ନାହିଁ",
     "pooledNeverExpires": "Workspace ରେ pooled — never expires",
     "perMonthBilledAnnually": "per month, billed annually",
+    "perSeatMonthly": "ପ୍ରତି ଆସନ/ମାସ",
     "perSeatBilledAnnually": "per seat/mo, billed annually",
     "savings": "Monthly ରେ {{amount}}$ save କରିବା",
     "seats_one": "{{count}} seat",

@@ -4329,6 +4329,7 @@
     "realDhbNeverExpires": "Regte DeHub tokens in jou beursie — dit verval nooit",
     "pooledNeverExpires": "Saamgepoold oor die werkruimte — verval nooit",
     "perMonthBilledAnnually": "per maand, jaarlikse fakturering",
+    "perSeatMonthly": "per sitplek/mnd",
     "perSeatBilledAnnually": "per sitplek/mnd, jaarlikse fakturering",
     "savings": "Bespaar ${{amount}} in vergelyking met maandeliks",
     "seats_one": "{{count}} sitplek",

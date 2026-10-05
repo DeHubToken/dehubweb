@@ -4273,6 +4273,7 @@
     "realDhbNeverExpires": "Ngā tohu DeHub tūturu kei roto i tō putea — kāore e pau",
     "pooledNeverExpires": "Te waahi mahi — kaore ano kia mutu",
     "perMonthBilledAnnually": "i ia marama, i ia tau",
+    "perSeatMonthly": "ia nohoanga/marama",
     "perSeatBilledAnnually": "ia nohoanga/mo, i ia tau",
     "savings": "Tiaki ${{amount}} whakaritea ki te marama",
     "seats_one": "{{count}} nohoanga",
