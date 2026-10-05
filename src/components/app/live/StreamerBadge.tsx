@@ -44,7 +44,7 @@ export function StreamerBadge({ address, canSelect = false, className }: Streame
     >
       <span style={{ position: 'absolute', width: `calc(${120 / height} * ${cap})`, height: `calc(${120 / height} * ${cap})`, left: `calc(${-bounds.left / height} * ${cap})`, top: `calc(${-bounds.top / height} * ${cap})` }}
         className="[&>svg]:w-full [&>svg]:h-full" aria-hidden
-        dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(equipped.id, theme, true, instance) }} />
+        dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(equipped.id, theme, true, instance, 'compact') }} />
     </button>
   );
 }
