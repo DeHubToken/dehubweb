@@ -51,3 +51,20 @@ html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-i
   background-size: calc(100% - 1px) 2px, 100% 3px !important;
   background-position: center calc(100% - 0.5px), center bottom !important;
 }
+
+/* Buttons own their bounds; the full-width seek target owns the space below
+   them and the gaps between them, without lifting the playback row. */
+[data-video-scrubber="line"] [data-video-button-row] {
+  pointer-events: none;
+}
+[data-video-scrubber="line"] [data-scrubber-line] {
+  pointer-events: auto;
+}
+[data-video-scrubber="line"] [data-video-button-row] :is(button, [role="button"]) {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+[data-video-scrubber="line"][data-controls-hidden="true"] [data-video-button-row] :is(button, [role="button"]) {
+  pointer-events: none;
+}
