@@ -63,7 +63,7 @@ export function SwipeableRow({ actions, children, className }: SwipeableRowProps
   const rootRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
-  const lastActionRef = useRef<HTMLButtonElement>(null);
+  const lastActionRef = useRef<HTMLButtonElement | null>(null);
   const offset = useRef(0);
   const gesture = useRef<Gesture | null>(null);
   const armed = useRef(false);
