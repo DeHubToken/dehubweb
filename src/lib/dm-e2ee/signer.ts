@@ -8,10 +8,12 @@
  *    `WalletLockedError` so the caller can wait for the unlock rather than
  *    treating it as a failure.
  */
-import { getAccount, signMessage } from '@wagmi/core';
+import { getAccount, reconnect, signMessage, watchAccount, type Connector } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { getEoaProvider, restoreWalletSession } from '@/lib/smart-wallet';
 import { resolveSigningAccount } from '@/lib/wallet-accounts';
+import { ensureWalletRuntime } from '@/lib/wallet-runtime';
+import { prepareWalletRelay, waitForWalletSignature } from '@/lib/wallet-relay';
 
 export class WalletLockedError extends Error {
   constructor() {
@@ -22,11 +24,67 @@ export class WalletLockedError extends Error {
 
 type ConnectionSource = 'web3auth' | 'wagmi' | null;
 
+export class WalletConnectionError extends Error {
+  constructor() {
+    super('Reconnect your wallet to turn on encryption.');
+    this.name = 'WalletConnectionError';
+  }
+}
+
+function isLiveConnector(connector: Connector | undefined): connector is Connector {
+  return typeof connector?.getProvider === 'function'
+    && typeof connector.getAccounts === 'function'
+    && typeof connector.getChainId === 'function';
+}
+
+async function waitForReconnection(): Promise<void> {
+  const pending = () => ['connecting', 'reconnecting'].includes(getAccount(wagmiConfig).status);
+  if (!pending()) return;
+  await new Promise<void>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      unwatch();
+      reject(new WalletConnectionError());
+    }, 15_000);
+    const finish = () => {
+      if (pending()) return;
+      clearTimeout(timer);
+      unwatch();
+      resolve();
+    };
+    const unwatch = watchAccount(wagmiConfig, { onChange: finish });
+    finish();
+  });
+}
+
+async function encryptionConnector(): Promise<Connector> {
+  const rememberedId = getAccount(wagmiConfig).connector?.id;
+  const { ensureWalletConnectors } = await import('@/lib/wagmi-wallets');
+  ensureWalletConnectors();
+  await ensureWalletRuntime();
+  await waitForReconnection();
+  let connector = getAccount(wagmiConfig).connector;
+  if (isLiveConnector(connector)) return connector;
+
+  // Persisted wagmi connectors contain metadata, not callable methods. Restore
+  // only the remembered wallet; an unrelated extension must not sign this key.
+  const registered = wagmiConfig.connectors.find(c => c.id === (connector?.id ?? rememberedId));
+  if (registered) {
+    await reconnect(wagmiConfig, { connectors: [registered] });
+    await waitForReconnection();
+    connector = getAccount(wagmiConfig).connector;
+    if (isLiveConnector(connector)) return connector;
+  }
+  throw new WalletConnectionError();
+}
+
 async function personalSign(provider: any, message: string, address: string): Promise<string> {
+  const encoded = `0x${Array.from(new TextEncoder().encode(message), byte => byte.toString(16).padStart(2, '0')).join('')}`;
+  await prepareWalletRelay(provider);
   try {
-    return (await provider.request({ method: 'personal_sign', params: [message, address] })) as string;
-  } catch {
-    return (await provider.request({ method: 'personal_sign', params: [address, message] })) as string;
+    return await waitForWalletSignature<string>(() => provider.request({ method: 'personal_sign', params: [encoded, address] }));
+  } catch (error: any) {
+    if (error?.code !== -32602 && !/invalid params|invalid parameters/i.test(error?.message ?? '')) throw error;
+    return await waitForWalletSignature<string>(() => provider.request({ method: 'personal_sign', params: [address, encoded] }));
   }
 }
 
@@ -40,8 +98,10 @@ export async function signEncryptionMessage(
     // wrote down when the connector attached: a switched MetaMask account makes
     // the remembered address one the extension refuses to sign for, and answers
     // -32602 with nothing the app can do about it (see wallet-accounts.ts).
-    const { address: signer } = await resolveSigningAccount(getAccount(wagmiConfig).connector, address);
-    return signMessage(wagmiConfig, { message, account: signer as `0x${string}` });
+    const connector = await encryptionConnector();
+    const { address: signer } = await resolveSigningAccount(connector, address);
+    await prepareWalletRelay(await connector.getProvider());
+    return waitForWalletSignature(() => signMessage(wagmiConfig, { connector, message, account: signer as `0x${string}` }));
   }
 
   let provider = getEoaProvider();
