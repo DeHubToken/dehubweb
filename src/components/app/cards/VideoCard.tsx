@@ -2008,8 +2008,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         ref={containerRef}
         tabIndex={0}
         data-no-navigate
-        data-media-full
         data-mobile-feed-video={cropFeedVideo || undefined}
+        data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
         /* Phone feeds fill the width and crop tall clips into a 3:4 frame.
            Desktop portrait clips cap at MAX_MEDIA_HEIGHT and narrow instead.
