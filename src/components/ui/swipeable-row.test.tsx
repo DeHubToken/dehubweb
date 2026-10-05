@@ -12,6 +12,7 @@ describe('swipe actions on transparent theme rows', () => {
     const panel = container.querySelector('[data-swipe-actions]')!;
     const action = panel.querySelector('button')!;
     const track = panel.parentElement!;
+    Object.defineProperty(container.firstElementChild, 'offsetWidth', { value: 390 });
     expect(panel.getAttribute('aria-hidden')).toBe('true');
     expect(action.disabled).toBe(true);
     expect(screen.queryByRole('button', { name: 'Block' })).toBeNull();
