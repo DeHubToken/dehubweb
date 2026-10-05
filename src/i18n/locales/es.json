@@ -4302,6 +4302,7 @@
     "realDhbNeverExpires": "Tokens reales de DeHub en tu billetera — nunca caducan",
     "pooledNeverExpires": "En un fondo común del espacio de trabajo: nunca caducan",
     "perMonthBilledAnnually": "al mes, facturado anualmente",
+    "perSeatMonthly": "por licencia y mes",
     "perSeatBilledAnnually": "por licencia y mes, facturado anualmente",
     "savings": "Ahorra {{amount}} $ frente al pago mensual",
     "seats_one": "{{count}} licencia",

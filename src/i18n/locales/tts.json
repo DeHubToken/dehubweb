@@ -4074,6 +4074,7 @@
     "referenceComposeHint": "นำตัวละคร, วัตถุ และสถานการณ์จากภาพหลายภาพมารวมเป็นภาพเดียว"
   },
   "pricing": {
+    "perSeatMonthly": "ต่อที่นั่ง/เดือน",
     "annual": "ปีละครั้ง",
     "upToDiscount": "แค่ −{{pct}}%",
     "percentOff": "{{pct}}% งานลดราคา",

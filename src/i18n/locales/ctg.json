@@ -4149,6 +4149,7 @@
     "realDhbNeverExpires": "আপনার ওয়ালেটে আসল ডিহাব টোকেন — এতা কুনুদিন শেষ অইব না",
     "pooledNeverExpires": "ওয়ার্কস্পেসে পুলড, নেভার এক্সপায়ার্স",
     "perMonthBilledAnnually": "প্রতি মাসে, বার্ষিক বিল করা",
+    "perSeatMonthly": "প্রতি সিট/মাসে",
     "perSeatBilledAnnually": "প্রতি সিট/মাসে, বার্ষিক বিল করা",
     "savings": "বার্ষিক বিলিং থেকে {{amount}} টাকা সেভ করুন",
     "seats_one": "{{count}} সিট",

@@ -3898,6 +3898,7 @@
     "referenceComposeHint": "将多张图像中的角色、物件和场景合并成一个构图"
   },
   "pricing": {
+    "perSeatMonthly": "每人/月",
     "plansForEveryWorkflow": "適合每種流程的計畫",
     "findTheRightFit": "從個人到企業團隊，找到適合的方案",
     "monthly": "每月",

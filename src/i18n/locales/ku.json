@@ -3634,6 +3634,7 @@
     "realDhbNeverExpires": "توکنی ڕاستەقینەی DeHub لە جانتاکەتدا — هەرگیز بەسەر ناچن",
     "pooledNeverExpires": "لە تەواوی شوێنی کاردا کۆکراوەتەوە - هەرگیز بەسەرناچێت",
     "perMonthBilledAnnually": "لە مانگێکدا، ساڵانە خەرج دەکرێت",
+    "perSeatMonthly": "لە کورسییەکدا/مانگێکدا",
     "perSeatBilledAnnually": "لە کورسییەکدا/مانگێکدا، ساڵانە خەرج دەکرێت",
     "savings": "پارە پاشەکەوت بکە ${{amount}} بە بەراورد بە مانگانە",
     "seats_one": "کورسی {{count}}",

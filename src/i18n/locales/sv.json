@@ -4220,6 +4220,7 @@
     "referenceComposeHint": "Förena karaktärer, objekt och miljöer från flera bilder till en sammansättning"
   },
   "pricing": {
+    "perSeatMonthly": "per plats/mån",
     "plansForEveryWorkflow": "Planer för varje arbetsflöde",
     "findTheRightFit": "Från individer till företagsteam, hitta rätt passform",
     "monthly": "Månadsvis",

@@ -4209,6 +4209,7 @@
     "realDhbNeverExpires": "आपके वॉलेट में वास्तविक डीहब टोकन — वे कभी समाप्त नहीं होते",
     "pooledNeverExpires": "काम के जगह म पूलिंग - कभी समाप्त नी होए",
     "perMonthBilledAnnually": "प्रति माह, वार्षिक बिलिंग",
+    "perSeatMonthly": "प्रति सीट/महीना",
     "perSeatBilledAnnually": "प्रति सीट/मो, प्रति वर्ष बिल्डिंग",
     "savings": "${{amount}} प्रति माह के तुलना मं सहेजव",
     "seats_one": "{{count}} सीट",

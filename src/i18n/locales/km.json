@@ -4279,6 +4279,7 @@
     "realDhbNeverExpires": "តូខឹន DeHub ពិតប្រាកដនៅក្នុងកាបូបរបស់អ្នក — វាមិនផុតកំណត់ឡើយ",
     "pooledNeverExpires": "ប្រមូលផ្តុំនៅក្នុងកន្លែងធ្វើការ — គ្មានថ្ងៃផុតកំណត់",
     "perMonthBilledAnnually": "ក្នុងមួយខែ បង់ប្រចាំឆ្នាំ",
+    "perSeatMonthly": "ក្នុងមួយកៅអី/ខែ",
     "perSeatBilledAnnually": "ក្នុងមួយកៅអី/ខែ បង់ប្រចាំឆ្នាំ",
     "savings": "សន្សំបាន ${{amount}} បើប្រៀបធៀបនឹងប្រចាំខែ",
     "seats_one": "{{count}} កៅអី",

@@ -4250,6 +4250,7 @@
     "realDhbNeverExpires": "توهان جي والٽ ۾ حقيقي DeHub ٽوڪن — اهي ڪڏهن به ختم نه ٿيندا",
     "pooledNeverExpires": "ڪم جي جڳهه ۾ تلاءَ — ڪڏهن به ختم نه ٿيندو آهي",
     "perMonthBilledAnnually": "هر مهيني، هر سال بل ڪيو ويندو آهي",
+    "perSeatMonthly": "في سيٽ/مهينو",
     "perSeatBilledAnnually": "في سيٽ/مهينو، هر سال بل ڪيو ويندو آهي",
     "savings": "بچايو ${{amount}} مهيني جي مقابلي ۾",
     "seats_one": "{{count}} نشست ڪر",

@@ -4294,6 +4294,7 @@
     "realDhbNeverExpires": "Իրական DeHub — ի նշանները ձեր դրամապանակում. դրանք երբեք չեն սպառվում",
     "pooledNeverExpires": "Թիմային տարածքում համատեղ — երբեք չի լրանում",
     "perMonthBilledAnnually": "ամսական, տարեկան հաշվեգրում",
+    "perSeatMonthly": "մեկ տեղի համար/ամիս",
     "perSeatBilledAnnually": "մեկ տեղի համար/ամիս, տարեկան հաշվեգրում",
     "savings": "Խնայեք ${{amount}} ամսական համեմատությամբ",
     "seats_one": "{{count}} տեղ",

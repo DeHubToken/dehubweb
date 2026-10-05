@@ -4278,6 +4278,7 @@
     "realDhbNeverExpires": "Reāli DeHub žetoni jūsu makā — tie nekad nezaudē derīgumu",
     "pooledNeverExpires": "Apvienoti visā darba vietā — nekad nezaudē derīgumu",
     "perMonthBilledAnnually": "mēnesī, rēķins katru gadu",
+    "perSeatMonthly": "par vietu/mēnesī",
     "perSeatBilledAnnually": "par vietu/mēnesī, rēķins katru gadu",
     "savings": "Ietaupiet ${{amount}} salīdzinājumā ar mēneša maksājumu",
     "seats_one": "{{count}} vieta",

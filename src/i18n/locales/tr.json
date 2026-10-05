@@ -4278,6 +4278,7 @@
     "referenceComposeHint": "Çoklu resimlerden karakterler, nesneler ve ayarları bir kompozisyonda bir araya getirin"
   },
   "pricing": {
+    "perSeatMonthly": "kullanıcı başına aylık",
     "plansForEveryWorkflow": "Her iş akışına uygun planlar",
     "findTheRightFit": "Bireysel kullanıcıdan kurumsal ekiplere, size uyanı bulun",
     "monthly": "Aylık",

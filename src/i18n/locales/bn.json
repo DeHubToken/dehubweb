@@ -4292,6 +4292,7 @@
     "realDhbNeverExpires": "আপনার ওয়ালেটে আসল DeHub টোকেন — এগুলো কখনো মেয়াদোত্তীর্ণ হবে না",
     "pooledNeverExpires": "কর্মক্ষেত্র জুড়ে পুল করা হয়েছে — কখনও মেয়াদ শেষ হয় না",
     "perMonthBilledAnnually": "প্রতি মাসে, বার্ষিক বিলিং",
+    "perSeatMonthly": "প্রতি আসন/মাস",
     "perSeatBilledAnnually": "প্রতি আসন/মাস, বার্ষিক বিলিং",
     "savings": "মাসিক তুলনায় {{amount}} সংরক্ষণ করুন",
     "seats_one": "{{count}} আসন",

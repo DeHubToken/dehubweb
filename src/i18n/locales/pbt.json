@@ -4190,6 +4190,7 @@
     "realDhbNeverExpires": "ستاسو په والټ کې ریښتیني DeHub ټوکنونه — دوی هیڅکله پای ته نه رسیږي",
     "pooledNeverExpires": "د کارګرځنې په اوږدو کې دېرېدونکي — نه منقضی کېږي",
     "perMonthBilledAnnually": "د هر میاشتې لپاره، د کال په توګه د بیلګو",
+    "perSeatMonthly": "د هر څوکۍ/میاشت",
     "perSeatBilledAnnually": "د هر ځای لپاره په میاشت کې، د کال په توګه د بیلګو",
     "savings": "د میاشتې په پرتله د {{amount}} ډالرو وړتیا لاس ته راوړئ",
     "seats_one": "{{count}} ځای",

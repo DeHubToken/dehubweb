@@ -4299,6 +4299,7 @@
     "realDhbNeverExpires": "رموز DeHub حقيقية في محفظتك — لا تنتهي صلاحيتها أبدًا",
     "pooledNeverExpires": "مجمَّع على مستوى مساحة العمل — لا ينتهي أبداً",
     "perMonthBilledAnnually": "شهرياً، بفوترة سنوية",
+    "perSeatMonthly": "لكل مقعد شهرياً",
     "perSeatBilledAnnually": "لكل مقعد شهرياً، بفوترة سنوية",
     "savings": "وفّر {{amount}} دولاراً مقارنةً بالدفع الشهري",
     "seats_one": "مقعد واحد",

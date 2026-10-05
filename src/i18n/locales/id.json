@@ -4297,6 +4297,7 @@
     "realDhbNeverExpires": "Token DeHub asli di dompet Anda — tidak pernah kedaluwarsa",
     "pooledNeverExpires": "Digabung untuk seluruh ruang kerja — tidak pernah kedaluwarsa",
     "perMonthBilledAnnually": "per bulan, ditagih tahunan",
+    "perSeatMonthly": "per kursi/bln",
     "perSeatBilledAnnually": "per kursi/bln, ditagih tahunan",
     "savings": "Hemat ${{amount}} dibanding bulanan",
     "seats_one": "{{count}} kursi",

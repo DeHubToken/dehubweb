@@ -4185,6 +4185,7 @@
     "referenceComposeHint": "ተለዋዋጭ ስም፣ ንግድ እና ተቀማጭ አብ ብዙ ምስል ይተክት።"
   },
   "pricing": {
+    "perSeatMonthly": "ንሓደ መቐመጢ/ወርሒ",
     "plansForEveryWorkflow": "ንነፍሲ ወከፍ ናይ ስራሕ ፍሰት መደብ",
     "monthly": "ወርሓዊ",
     "annual": "ዓመታዊ",

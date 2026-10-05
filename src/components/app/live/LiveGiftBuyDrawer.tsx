@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { NearIntentBuy } from '@/components/app/NearIntentBuy';
 import { createCheckoutSession, getDPayPrice, getDPaySessionStatus } from '@/lib/api/dpay';
-import { getStripe } from '@/lib/stripe';
+import { getStripe, isPaymentsConfigured } from '@/lib/stripe';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -74,6 +74,10 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
   }, [open, sessionId, delivered]);
 
   const buyWithCard = async () => {
+    if (!isPaymentsConfigured()) {
+      setError('Card payments are temporarily unavailable. Please try again later.');
+      return;
+    }
     if (!walletAddress || !Number.isFinite(Number(amountUsd)) || Number(amountUsd) < 0.5 || !Number.isFinite(estimatedDhb) || estimatedDhb <= 0) return;
     setBusy(true);
     setError('');

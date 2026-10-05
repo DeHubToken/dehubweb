@@ -3786,6 +3786,7 @@
     "realDhbNeverExpires": "توكنز DeHub حقيقية في محفظتك — لا تنتهي صلاحيتها أبداً",
     "pooledNeverExpires": "موزع عبر مساحة العمل — لا ينقضي أبدًا",
     "perMonthBilledAnnually": "شهرًا، مدفوع سنويًا",
+    "perSeatMonthly": "للكرسي/الشهر",
     "perSeatBilledAnnually": "للكرسي/الشهر، مدفوع سنويًا",
     "savings": "احفظ ${{amount}} مقارنةً بالمدفوع شهريًا",
     "seats_one": "{{count}} كرسي",

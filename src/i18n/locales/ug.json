@@ -4224,6 +4224,7 @@
     "referenceComposeHint": "Bir nechta rasimdan xarakterlar, narsalar va joylarni birga birlashtirish"
   },
   "pricing": {
+    "perSeatMonthly": "ھەر بىر ئورۇندۇق/ئايغا نىسبەتەن",
     "plansForEveryWorkflow": "ھەر بىر خىزمەت ئېقىمى ئۈچۈن پىلانلار",
     "findTheRightFit": "شەخسلەردىن ئىگىلىك تىكلەش گۇرۇپپىسىغا توغرا كېلىدىغاننى تېپىش",
     "monthly": "ئايلىق",

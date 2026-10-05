@@ -4239,6 +4239,7 @@
     "realDhbNeverExpires": "Skutečné tokeny DeHub ve vaší peněžence — nikdy nevyprší",
     "pooledNeverExpires": "Sdíleno v celém pracovním prostoru — nikdy nevyprší",
     "perMonthBilledAnnually": "za měsíc, účtováno ročně",
+    "perSeatMonthly": "za místo/měsíc",
     "perSeatBilledAnnually": "za místo/měsíc, účtováno ročně",
     "savings": "Ušetřete ${{amount}} ve srovnání s měsíčním",
     "seats_one": "{{count}} místo",

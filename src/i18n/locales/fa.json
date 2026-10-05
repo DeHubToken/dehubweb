@@ -4308,6 +4308,7 @@
     "realDhbNeverExpires": "توکن‌های واقعی DeHub در کیف پول شما — هرگز منقضی نمی‌شوند",
     "pooledNeverExpires": "در سراسر فضای کاری جمع‌شده — هرگز منقضی نمی‌شود",
     "perMonthBilledAnnually": "در ماه، صورت‌حساب سالانه",
+    "perSeatMonthly": "در هر صندلی/ماه",
     "perSeatBilledAnnually": "در هر صندلی/ماه، صورت‌حساب سالانه",
     "savings": "{{amount}} را در مقایسه با ماهانه صرفه‌جویی کنید",
     "seats_one": "{{count}} صندلی",

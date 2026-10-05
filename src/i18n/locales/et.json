@@ -4281,6 +4281,7 @@
     "realDhbNeverExpires": "Reaalsed DeHub märgid sinu rahakotis — need ei aegu kunagi",
     "pooledNeverExpires": "Jagatud kogu tööruumis — ei aegu kunagi",
     "perMonthBilledAnnually": "kuus, arveldatakse aastamaksetena",
+    "perSeatMonthly": "istme kohta/kuu",
     "perSeatBilledAnnually": "istme kohta/kuu, arveldatakse aastamaksetena",
     "savings": "Säästke ${{amount}} võrreldes igakuisega",
     "seats_one": "{{count}} iste",

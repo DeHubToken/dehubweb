@@ -4292,6 +4292,7 @@
     "realDhbNeverExpires": "אסימוני DeHub אמיתיים בארנק שלך — הם לעולם לא פג תוקף",
     "pooledNeverExpires": "מאוגד על פני מרחב העבודה — לעולם לא יפוג",
     "perMonthBilledAnnually": "לחודש, חיוב שנתי",
+    "perSeatMonthly": "לכל מושב/חודש",
     "perSeatBilledAnnually": "לכל מושב/חודש, חיוב שנתי",
     "savings": "חסוך ${{amount}} בהשוואה לחודשי",
     "seats_one": "{{count}} מושב",

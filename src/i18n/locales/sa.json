@@ -4205,6 +4205,7 @@
     "realDhbNeverExpires": "आपके वॉलेट में वास्तविक डीहब टोकन — वे कभी समाप्त नहीं होते",
     "pooledNeverExpires": "सर्वत्र नित्यः कार्यः सर्वत्र नित्यः ॥",
     "perMonthBilledAnnually": "प्रति वर्ष, प्रति वर्ष, प्रतिवर्ष",
+    "perSeatMonthly": "प्रतिआसनं प्रतिमासम्",
     "perSeatBilledAnnually": "प्रतिवर्ष/प्रति वर्ष/प्रति वर्ष",
     "savings": "सहेजें ${{amount}} प्रति माह",
     "ctaGet": "प्राप्त {{plan}}",

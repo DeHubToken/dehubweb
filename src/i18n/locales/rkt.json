@@ -4029,6 +4029,7 @@
     "dhbPerSeat": "{{amount}} টোকেন প্রতি আসনে/মাসে, আপনার ওয়ালেটে পাঠানো হয়।",
     "pooledNeverExpires": "ওয়ার্কস্পেসে পুল করা — কখনোই মেয়াদ শেষ হৈ না",
     "perMonthBilledAnnually": "প্রতি মাসে, বার্ষিক বিল করা",
+    "perSeatMonthly": "প্রতি আসন/মাস",
     "savings": "বার্ষিক বিলের তুলনাৰে ${{amount}} বাঁচাও",
     "seats_one": "{{count}} সিট",
     "seats_other": "{{count}} সিটস",

@@ -4227,6 +4227,7 @@
     "referenceInsert": "විමසුමට {{tag}} ඇතුළත් කරන්න"
   },
   "pricing": {
+    "perSeatMonthly": "එක් ආසනයකට/මාසයකට",
     "plansForEveryWorkflow": "සෑම ප්‍රවාහයක් සඳහා සැලසුම්",
     "findTheRightFit": "පුද්ගලයින් සිට එන්ටারপ්‍රයිස් කණ්ඩායම් දක්වා, නිවැරදි ගැලපීම සොයා ගන්න",
     "monthly": "මාසික",

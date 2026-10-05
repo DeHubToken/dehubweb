@@ -4101,6 +4101,7 @@
     "referenceComposeHint": "বহু ছবিৰ চরিত্র, বস্তু ও সেটিংস একটা কোম্পোজিশনে নিয়ে আসি"
   },
   "pricing": {
+    "perSeatMonthly": "প্রতি সিট/মাস",
     "dhbPerMonth": "{{amount}} টোকেন/মাস, আপনার ওয়ালেটে পাঠানো হয়েছে",
     "dhbPerSeat": "{{amount}} টোকেন প্রতি সিট/মাস, আপনার ওয়ালেটে পাঠানো হয়েছে",
     "equivalence": "= {{videos}} {{videoModel}} ভিডিওস্  ·  {{images}} {{imageModel}} ইমেজস্",

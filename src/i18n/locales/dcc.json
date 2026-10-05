@@ -3704,6 +3704,7 @@
     "realDhbNeverExpires": "آپ کے والٹ میں ریل ڈیہب ٹوکنز — وہ نکلتی نہیں",
     "pooledNeverExpires": "ورک اسپیس پر پولڈ — نکلتی نہیں",
     "perMonthBilledAnnually": "ماہانہ، سالانہ بل کیا جاتا ہے",
+    "perSeatMonthly": "پر سیٹ/ماہ",
     "perSeatBilledAnnually": "پر سیٹ/ماہ، سالانہ بل کیا جاتا ہے",
     "savings": "{{amount}} ڈالر سے بچائیں، مہینہ وار کے مقابلے",
     "seats_one": "{{count}} سیٹ",

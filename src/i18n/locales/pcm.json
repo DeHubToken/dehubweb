@@ -3719,6 +3719,7 @@
     "headlineTeam": "Agens wey dey small and teams wey dey small, dem fit create faster.",
     "equivalence": "= {{videos}} {{videoModel}} videos  ·  {{images}} {{imageModel}} images",
     "perMonthBilledAnnually": "per month, billed annually",
+    "perSeatMonthly": "for each seat/month",
     "perSeatBilledAnnually": "per seat/mo, billed annually",
     "seats_one": "{{count}} seat",
     "seats_other": "{{count}} seats",

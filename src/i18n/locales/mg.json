@@ -4302,6 +4302,7 @@
     "realDhbNeverExpires": "Tena token DeHub ao amin'ny poketrao — tsy ho lany daty mihitsy",
     "pooledNeverExpires": "Pooled manerana ny workspace â Tsy tapitra",
     "perMonthBilledAnnually": "eto, ny fe-potoana iray manontolo ary ny amin'ny isam-bolana farany.",
+    "perSeatMonthly": "isaky ny seza/volana",
     "perSeatBilledAnnually": "isaky ny seza/mo, omena isan-taona",
     "savings": "Vonjeo ${{amount}} raha oharina amin'ny isam-bolana",
     "seats_one": "{{count}} seo",

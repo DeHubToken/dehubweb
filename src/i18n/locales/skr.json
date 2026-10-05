@@ -3866,6 +3866,7 @@
     "referenceComposeHint": "چند تصاویر سے کاراکٹرز، اُبجیکٹس اور سِٹنگز کو ایک کمپوزیشن میں لاؤ"
   },
   "pricing": {
+    "perSeatMonthly": "فی سیٹ/مہینہ",
     "upToDiscount": "اُپ تا −{{pct}}%",
     "dhbPerMonth": "{{amount}} ٹوکن/ماہ، آپ دے والیٹ وچ بھیجے گئے",
     "dhbPerSeat": "{{amount}} ٹوکن فی سیٹ/ماہ، آپ دے والیٹ وچ بھیجے گئے",

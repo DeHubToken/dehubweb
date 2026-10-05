@@ -4241,6 +4241,7 @@
     "realDhbNeverExpires": "Ezigbo akara DeHub na akpa ego gị — ha agaghị agwụ",
     "pooledNeverExpires": "Akpọkọtara n 'ofe wọ́kspéèsì — anaghị agwụ agwụ",
     "perMonthBilledAnnually": "kwa ọnwa, ụgwọ kwa afọ",
+    "perSeatMonthly": "kwa oche/ọnwa",
     "perSeatBilledAnnually": "kwa oche/mo, ụgwọ kwa afọ",
     "savings": "Chekwaa ${{amount}} ma e jiri ya tụnyere ọnwa",
     "seats_one": "{{count}} oche",

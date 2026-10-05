@@ -3979,6 +3979,7 @@
     "realDhbNeverExpires": "您钱包里的真实 DeHub 代币 — 永不过期",
     "pooledNeverExpires": "共享於工作空間 — 永不過期",
     "perMonthBilledAnnually": "每月，按年計費",
+    "perSeatMonthly": "每席位/月",
     "savings": "比月付省{{amount}}",
     "seats_one": "{{count}} 位子",
     "seats_other": "{{count}} 位子",

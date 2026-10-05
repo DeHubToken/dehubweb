@@ -4290,6 +4290,7 @@
     "realDhbNeverExpires": "Истински DeHub токени в портфейла ви — те никога не изтичат",
     "pooledNeverExpires": "Обединено в работното пространство — никога не изтича",
     "perMonthBilledAnnually": "месечно, фактурирано годишно",
+    "perSeatMonthly": "на място/месец",
     "perSeatBilledAnnually": "на място/месец, фактурирано годишно",
     "savings": "Спестете ${{amount}} в сравнение с месечния план",
     "seats_one": "{{count}} място",

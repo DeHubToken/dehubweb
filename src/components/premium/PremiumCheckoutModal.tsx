@@ -4,7 +4,7 @@ import {
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
 import { supabase } from "@/integrations/supabase/client";
-import { getStripe, getStripeEnvironment } from "@/lib/stripe";
+import { getStripe, getStripeEnvironment, isPaymentsConfigured } from "@/lib/stripe";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { getPlayExternalToken } from "@/hooks/usePlanFromLink";
 import { aiPlanPolicyVersion } from "@/lib/ai-plan-offers";
@@ -70,9 +70,9 @@ export function PremiumCheckoutModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl bg-black/80 backdrop-blur-[24px] border border-white/10 p-0 overflow-hidden">
         <div className="max-h-[85vh] overflow-y-auto">
-          {error ? (
+          {error || !isPaymentsConfigured() ? (
             <div className="p-8 text-center text-sm text-red-300">
-              {error}
+              {error || "Subscriptions are temporarily unavailable. Please try again later."}
             </div>
           ) : open ? (
             <div className="bg-white">

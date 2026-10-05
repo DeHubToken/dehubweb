@@ -373,9 +373,11 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
 
       <div className="flex items-center gap-2">
         <h3 className="text-2xl font-black uppercase tracking-tight text-white">{plan.name}</h3>
-        <span className="rounded-md border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] font-bold text-white/80">
-          {t('pricing.percentOff', { pct: plan.discountPct })}
-        </span>
+        {billing === 'annual' && (
+          <span className="rounded-md border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] font-bold text-white/80">
+            {t('pricing.percentOff', { pct: plan.discountPct })}
+          </span>
+        )}
       </div>
 
       <p className="mt-2 text-sm text-white/60">{t(plan.headlineKey)}</p>
@@ -392,7 +394,7 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
         )}
         <span className="text-4xl font-black text-white">${price}</span>
       </div>
-      <div className="text-xs text-white/50">{t(billing === 'annual' ? plan.perLabelKey : 'premium.perMonth')}</div>
+      <div className="text-xs text-white/50">{t(billing === 'annual' ? plan.perLabelKey : plan.seats ? 'pricing.perSeatMonthly' : 'premium.perMonth')}</div>
       {billing === 'annual' && plan.savingsUsd !== undefined && (
         <div className="mt-1 text-xs text-white/60">{t('pricing.savings', { amount: plan.savingsUsd })}</div>
       )}

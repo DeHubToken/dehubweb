@@ -4269,6 +4269,7 @@
     "referenceComposeHint": "將多張圖片中的角色、物件及場景合併成一個構圖。"
   },
   "pricing": {
+    "perSeatMonthly": "每人/月",
     "plansForEveryWorkflow": "每個工作流程嘅計劃",
     "findTheRightFit": "由個人到企業團隊，搵啱自己嘅人",
     "monthly": "每月",

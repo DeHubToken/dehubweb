@@ -4284,6 +4284,7 @@
     "realDhbNeverExpires": "Echti DeHub-Token i diner Wallet — si verfalled nie",
     "pooledNeverExpires": "Gemeinsam genutzt im Arbeitsumfeld – nie abläuft",
     "perMonthBilledAnnually": "pro Monat, abgerechnet jährlich",
+    "perSeatMonthly": "pro Sitzplatz/Monat",
     "perSeatBilledAnnually": "pro Sitzplatz/Monat, abgerechnet jährlich",
     "savings": "Spar $${{amount}} im Vergleich zur Monatsabrechnung",
     "seats_one": "{{count}} Sitzplatz",

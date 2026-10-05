@@ -4250,6 +4250,7 @@
     "realDhbNeverExpires": "Таны түрийвчинд байгаа бодит DeHub токенууд — хэзээ ч хугацаа нь дуусахгүй",
     "pooledNeverExpires": "Ажлын талбарыг хөндлөн гулд хуваасан — хэзээ ч дуусахгүй",
     "perMonthBilledAnnually": "сар бүр төлбөр төлдөг",
+    "perSeatMonthly": "суудал бүр/сар",
     "perSeatBilledAnnually": "суудлын ногдох/сар тутамд/жил бүр төлбөр төлдөг",
     "savings": "${{amount}} сартай харьцуулахад хадгалах",
     "seats_one": "{{count}} суудал",

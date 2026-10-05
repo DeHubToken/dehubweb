@@ -4291,6 +4291,7 @@
     "realDhbNeverExpires": "ਤੁਹਾਡੇ ਵਾਲਿਟ ਵਿੱਚ ਅਸਲ DeHub ਟੋਕਨ — ਇਹ ਕਦੇ ਵੀ ਖਤਮ ਨਹੀਂ ਹੁੰਦੇ",
     "pooledNeverExpires": "ਵਰਕਸਪੇਸ ਵਿੱਚ ਪੂਲ ਕੀਤਾ ਗਿਆ — ਕਦੇ ਵੀ ਮਿਆਦ ਨਹੀਂ ਖਤਮ ਹੁੰਦੀ",
     "perMonthBilledAnnually": "ਮਹੀਨੇ ਵਿੱਚ, ਸਾਲਾਨਾ ਬਿਲ ਕੀਤਾ ਜਾਂਦਾ ਹੈ",
+    "perSeatMonthly": "ਸੀਟ/ਮਹੀਨਾ",
     "perSeatBilledAnnually": "ਸੀਟ/ਮਹੀਨਾ, ਸਾਲਾਨਾ ਬਿਲ ਕੀਤਾ ਜਾਂਦਾ ਹੈ",
     "savings": "ਮਹੀਨਾਵਾਰ ਬਿਲਿੰਗ ਨਾਲੋਂ ${{amount}} ਬਚਾਓ",
     "seats_one": "{{count}} ਸੀਟ",

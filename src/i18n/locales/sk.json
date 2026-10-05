@@ -4389,6 +4389,7 @@
     "referenceComposeHint": "Zísť postavy, predmety a nastavenia z viacerých obrázkov do jednej kompozície"
   },
   "pricing": {
+    "perSeatMonthly": "za miesto/mesiac",
     "plansForEveryWorkflow": "Plány pre každý workflow",
     "findTheRightFit": "Od jednotlivcov po týmy podnikov, nájdete správne riešenie",
     "monthly": "Mesiacne",

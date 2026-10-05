@@ -4209,6 +4209,7 @@
     "realDhbNeverExpires": "Pul kisənizdəki real DeHub jetonları — heç vaxt etibarsız olmur",
     "pooledNeverExpires": "Çalışma sahəsi üzrə birləşdirilmiş — heç vaxt sona çatmaz",
     "perMonthBilledAnnually": "ayda, illik ödənilir",
+    "perSeatMonthly": "hər oturacaq/ay",
     "perSeatBilledAnnually": "hər oturacaq/ay, illik ödənilir",
     "savings": "Aylıq ilə müqayisədə ${{amount}} qənaət edin",
     "seats_one": "{{count}} oturacaq",
