@@ -170,7 +170,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
                 the bottom of what is actually on screen. On iOS Safari that
                 pushed the top of the menu — the search field — off the top of
                 the screen, with no way to scroll it back into view. */}
-            <DrawerContent glass className="max-h-[85dvh]">
+            <DrawerContent glass className="max-h-[85dvh]" aria-describedby={undefined}>
               <DrawerTitle className="sr-only">{t('sidebar.searchMenu')}</DrawerTitle>
               {/* Column, not a scroller: the menu pins its profile + search to
                   the top and its account actions to the bottom, and scrolls
