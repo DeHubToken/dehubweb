@@ -21,6 +21,7 @@ import type { ContentRating } from '@/lib/api/dehub/types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
 import { memoizeFeedRow } from '@/lib/memoize-feed-row';
+import { isAnonymousFeedResponse } from '@/lib/feed-response-auth';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
@@ -171,6 +172,8 @@ export interface UnifiedFeedItem {
 
 export interface UnifiedFeedResponse {
   status: boolean;
+  signal?: boolean;
+  authenticated?: boolean;
   result: UnifiedFeedItem[];
   pagination: {
     page: number;
@@ -531,17 +534,14 @@ export function getFeedViewer(): string | null {
  * A response for a logged-in viewer carries at least one of these somewhere in
  * the page; a response where none appears was served anonymously.
  */
-const VIEWER_FIELDS = ['isLiked', 'isDisliked', 'isSaved', 'isReposted', 'isOwner', 'isUnlocked'] as const;
-
 function isAnonymousResponse(response: UnifiedFeedResponse): boolean {
-  const items = response?.result || [];
-  if (items.length === 0) return false;
-  return !items.some(item => VIEWER_FIELDS.some(field => field in (item as unknown as Record<string, unknown>)));
+  return isAnonymousFeedResponse(response as unknown as Parameters<typeof isAnonymousFeedResponse>[0]);
 }
 
 async function fetchUnifiedFeedFromAPI(
   params: UnifiedFeedParams = {},
   viewer: string | null = getFeedViewer(),
+  signal = false,
 ): Promise<UnifiedFeedResponse> {
   // Adopt the boot-time feed fetch from index.html (started at HTML-parse time,
   // ~1.5s before React mounts — LCP audit 7/14) for the first default page-1
@@ -553,7 +553,7 @@ async function fetchUnifiedFeedFromAPI(
       __DEHUB_FEED_VIEWER__?: string | null;
     };
     const boot = w.__DEHUB_FEED__;
-    if (boot && isBootDefaultFeedParams(params)) {
+    if (!signal && boot && isBootDefaultFeedParams(params)) {
       w.__DEHUB_FEED__ = null;
       // The boot script publishes the viewer its request was authenticated as.
       // Adopting another viewer's page (usually the anonymous one, when the
@@ -568,6 +568,7 @@ async function fetchUnifiedFeedFromAPI(
   }
 
   const url = new URL('/api/feed', DEHUB_API_BASE);
+  if (signal) url.searchParams.set('signal', 'true');
   
   if (params.page !== undefined) url.searchParams.set('page', String(params.page));
   if (params.limit !== undefined) url.searchParams.set('limit', String(params.limit));
@@ -897,7 +898,7 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
   const { data } = useQuery({
     queryKey: ['unified-feed-head', params, viewer],
     queryFn: () =>
-      fetchUnifiedFeedFromAPI({ ...params, page: 1, limit: NEW_POSTS_HEAD_SIZE }, viewer),
+      fetchUnifiedFeedFromAPI({ ...params, page: 1, limit: NEW_POSTS_HEAD_SIZE }, viewer, true),
     enabled: enabled && armed,
     refetchInterval: LIVE_ENGAGEMENT_POLL_MS,
     // A backgrounded tab shouldn't keep hitting the API to update a pill
