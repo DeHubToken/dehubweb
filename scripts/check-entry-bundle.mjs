@@ -129,9 +129,15 @@ eagerFiles.add(entryFile);
 // They are still measured below: not executing at boot doesn't make them free,
 // it just makes them bandwidth instead of main-thread time.
 const prefetchOnlyFiles = new Set();
+const preloadHrefs = new Set();
 for (const m of html.matchAll(/<link[^>]*rel="modulepreload"[^>]*>/g)) {
   const href = m[0].match(/href="\/(assets\/[^"]+\.js)"/);
   if (!href) continue;
+  if (preloadHrefs.has(href[1])) {
+    console.error(`[check-entry-bundle] Duplicate modulepreload: ${href[1]}`);
+    process.exit(1);
+  }
+  preloadHrefs.add(href[1]);
   if (m[0].includes('data-prefetch-only')) prefetchOnlyFiles.add(href[1]);
   else eagerFiles.add(href[1]);
 }
