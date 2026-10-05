@@ -4957,13 +4957,13 @@ html[data-theme="light"] [data-creator-page] .text-white {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
   }
-  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first]:has([data-video-card] [data-card-head]:not([data-card-head="plain"])) {
+  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first]:has(> [data-video-card] > [data-card-head]:not([data-card-head="plain"])) {
     padding-top: 0 !important;
   }
   /* No band above the feed: the first post starts at the top of the screen
      under the floating capsule. A video runs its picture up behind it and
      drops its author row below it; anything else starts below it. */
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first]:not(:has([data-video-card] [data-card-head]:not([data-card-head="plain"]))) {
+  html[data-theme="system"] [data-feed-root] [data-cinematic-first]:not(:has(> [data-video-card] > [data-card-head]:not([data-card-head="plain"]))) {
     padding-top: calc(env(safe-area-inset-top, 0px) + 3.75rem + var(--landing-image-gap, 0px)) !important;
   }
   /* Give only the landing image an extra 3px below the floating capsule. */
@@ -5429,6 +5429,15 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
 
 /* Centre the smaller video avatar against its two-line identity. */
 html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:not([data-card-head="plain"]) > :first-child { align-items: center; }
+
+/* The capsule floats over tablet feeds too, while their cards keep the
+   author above the content. Reserve its full height before the first card's
+   contents, including text posts and their quoted media. */
+@media (min-width: 640px) and (max-width: 1023px) {
+  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first] {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 3.75rem) !important;
+  }
+}
 
 /* Keep the landing video's identity below its picture; other videos retain
    their overlay with a soft, non-interactive contrast scrim. */
