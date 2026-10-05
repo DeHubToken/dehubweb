@@ -23,15 +23,18 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { loadIdentity, setupIdentity, syncPublishedKey } from '@/lib/dm-e2ee/keys';
-import { signEncryptionMessage, WalletLockedError } from '@/lib/dm-e2ee/signer';
+import { signEncryptionMessage, WalletConnectionError, WalletLockedError } from '@/lib/dm-e2ee/signer';
 import { isWalletUnlocked, WALLET_LOCK_CHANGED_EVENT } from '@/lib/smart-wallet';
+import { useWalletRuntime } from '@/lib/wallet-runtime';
 
 export type DmEncryptionStatus = 'idle' | 'pending' | 'ready' | 'locked' | 'error';
 
 export function useDmEncryption(enabled = true) {
-  const { isAuthenticated, walletAddress, connectionSource } = useAuth();
+  const { isAuthenticated, walletAddress, connectionSource, openLoginModal } = useAuth();
+  const { isConnected, connector } = useWalletRuntime();
   const isActivePage = useContext(CachedPageActiveContext);
   const [status, setStatus] = useState<DmEncryptionStatus>('idle');
+  const [needsWalletConnection, setNeedsWalletConnection] = useState(false);
   const attemptedFor = useRef<string | null>(null);
   const inFlight = useRef(false);
 
@@ -45,6 +48,7 @@ export function useDmEncryption(enabled = true) {
     inFlight.current = true;
     try {
       if (loadIdentity(walletAddress)) {
+        setNeedsWalletConnection(false);
         setStatus('ready');
         // Best effort: make sure peers see the key this device can open.
         syncPublishedKey().catch(() => {});
@@ -58,12 +62,15 @@ export function useDmEncryption(enabled = true) {
         return;
       }
       setStatus('pending');
+      setNeedsWalletConnection(false);
       await setupIdentity(walletAddress, (message) =>
         signEncryptionMessage(message, walletAddress, connectionSource),
       );
+      setNeedsWalletConnection(false);
       setStatus('ready');
     } catch (err) {
       const locked = err instanceof WalletLockedError;
+      setNeedsWalletConnection(err instanceof WalletConnectionError);
       setStatus(locked ? 'locked' : 'error');
       // A locked vault is an expected pause, already represented by the unlock
       // sheet. Keep genuine encryption failures visible without flooding the
@@ -74,11 +81,23 @@ export function useDmEncryption(enabled = true) {
     }
   }, [enabled, isAuthenticated, walletAddress, connectionSource]);
 
-  const retry = useCallback(() => run(true), [run]);
+  const retry = useCallback(() => {
+    if (needsWalletConnection) {
+      openLoginModal();
+      return;
+    }
+    return run(true);
+  }, [run, needsWalletConnection, openLoginModal]);
+
+  useEffect(() => {
+    if (!needsWalletConnection || !isActivePage || !isConnected || typeof connector?.getChainId !== 'function') return;
+    void run(true);
+  }, [needsWalletConnection, isActivePage, isConnected, connector, run]);
 
   useEffect(() => {
     if (!enabled || !isAuthenticated || !walletAddress) {
       setStatus('idle');
+      setNeedsWalletConnection(false);
       attemptedFor.current = null;
       return;
     }
@@ -104,5 +123,5 @@ export function useDmEncryption(enabled = true) {
     };
   }, [status, run, isActivePage]);
 
-  return { status, retry };
+  return { status, retry, needsWalletConnection };
 }
