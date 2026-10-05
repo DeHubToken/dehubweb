@@ -436,6 +436,12 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Shared icon modules otherwise create a separate request per icon.
+          // Keep the used Lucide exports together; tree shaking still drops
+          // unused icons before this chunk is emitted.
+          if (id.includes('/node_modules/lucide-react/')) {
+            return 'vendor-icons';
+          }
           // Three.js — only used by lazy theme backgrounds / landing hero.
           // Match ONLY the npm package: a broader '/three/' also catches
           // src/lib/three/*, whose shared imports (e.g. lib/theme-color.ts)
