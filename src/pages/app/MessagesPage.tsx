@@ -514,9 +514,9 @@ export default function MessagesPage() {
     const isVirtual = dmId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(dmId);
     if (isVirtual) return; // wait for real dmId
     pendingAutoSendRef.current = null;
-    void prepareOutgoing(selectedConversation.otherUser?.address, pending.body).then((wire) => {
-      emitSendMessage({ dmId, content: wire.content, type: 'msg' });
-    });
+    void prepareOutgoing(selectedConversation.otherUser?.address, pending.body)
+      .then(wire => emitSendMessage({ dmId, content: wire.content, type: 'msg' }))
+      .catch(() => { setComposerPrefill({ convId: dmId, text: pending.body }); });
   }, [selectedConversation]);
 
   // Drop a queued draft into the composer once the right chat is on screen.

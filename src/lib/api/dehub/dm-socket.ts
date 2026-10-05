@@ -13,6 +13,7 @@
 import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 import type { DmMessage, DmConversation, DmMsgType } from './dm';
+import { confirmDmSend } from '@/lib/dm-send-confirmation';
 
 // ─── Socket event payload types ───────────────────────────────────────────────
 
@@ -321,14 +322,24 @@ export function waitForDmSocket(timeoutMs = 8000): Promise<void> {
   });
 }
 
-/**
- * Fire-and-forget by design — the server echoes the created message back on
- * `sendMessage`, which is what confirms it. Callers must `await
- * waitForDmSocket()` first, or a send into a dead socket is silently destroyed
- * while the optimistic bubble goes on looking delivered.
- */
-export function emitSendMessage(payload: SendMessagePayload): void {
-  getDmSocket().emit('sendMessage', payload);
+// Server errors have no request id. Keep sends serial so each error belongs to
+// the one message awaiting confirmation, including sends from different docks.
+let sendQueue: Promise<unknown> = Promise.resolve();
+
+export function emitSendMessage(payload: SendMessagePayload): Promise<DmMessage> {
+  const send = sendQueue.then(async () => {
+    await waitForDmSocket();
+    const socket = getDmSocket();
+    return confirmDmSend<DmMessage>({
+      on: (event, handler) => {
+        socket.on(event, handler);
+        return () => { socket.off(event, handler); };
+      },
+      emit: () => { socket.emit('sendMessage', payload); },
+    }, payload);
+  });
+  sendQueue = send.catch(() => {});
+  return send;
 }
 
 /**

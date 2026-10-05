@@ -144,9 +144,9 @@ function DmDockPanel({ dm }: { dm: DockedDm }) {
     autoSendRef.current = undefined;
     if (perMessageFeeRequired(conversation)) { setPrefill(body); return; }
     const dmId = conversation.id;
-    void prepareOutgoing(conversation.otherUser?.address, body).then(wire => {
-      emitSendMessage({ dmId, content: wire.content, type: 'msg' });
-    });
+    void prepareOutgoing(conversation.otherUser?.address, body)
+      .then(wire => emitSendMessage({ dmId, content: wire.content, type: 'msg' }))
+      .catch(() => { setPrefill(body); });
   }, [conversation]);
 
   const handleResizeStart = useCallback((e: React.MouseEvent) => {
