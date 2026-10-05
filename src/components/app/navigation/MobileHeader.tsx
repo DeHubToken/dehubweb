@@ -5,7 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { Menu, Bell } from 'lucide-react';
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
+import { useTranslation } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -58,6 +59,7 @@ interface MobileHeaderProps {
 }
 
 export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderProps) {
+  const { t } = useTranslation();
   const { openPostModal } = useGlobalDropZone();
   const location = useLocation();
   const navigate = useNavigate();
@@ -169,6 +171,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
                 pushed the top of the menu — the search field — off the top of
                 the screen, with no way to scroll it back into view. */}
             <DrawerContent glass className="max-h-[85dvh]">
+              <DrawerTitle className="sr-only">{t('sidebar.searchMenu')}</DrawerTitle>
               {/* Column, not a scroller: the menu pins its profile + search to
                   the top and its account actions to the bottom, and scrolls
                   only the tiles between them — same as the app. */}
