@@ -5194,6 +5194,10 @@ html[data-theme="light"] [data-creator-page] .text-white {
     top: calc(env(safe-area-inset-top, 0px) + 4.25rem);
     bottom: auto;
   }
+  /* The author row already clears the capsule for square and wide videos. */
+  html[data-theme="system"] [data-cinematic-first] [data-video-card][data-video-header-above] [data-media-full] > .absolute.top-2 {
+    top: 0.5rem;
+  }
 
   /* Caption, then the meta row, under the media. */
   html[data-theme="system"] [data-cinematic] [data-card-info] {
