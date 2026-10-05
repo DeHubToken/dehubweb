@@ -149,6 +149,7 @@ const DubMenuItem = lazy(() =>
   import('@/components/app/video/DubMenuItem').then((m) => ({ default: m.DubMenuItem })),
 );
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
+import { requestVideoPlayback } from '@/lib/video-start';
 
 /**
  * How far a touch may travel and still count as a tap on the player. Matches the
@@ -1192,11 +1193,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     
     if (!video.videoUrl || isContentGated || isVideoNotReady) return;
 
-    if (hasError) {
-      toast.error('Playback failed. Report sent.');
-      return;
-    }
-    
     if (isPlaying) {
       if (videoRef.current) videoRef.current.dataset.userPaused = 'true';
       videoRef.current?.pause();
@@ -1226,16 +1222,24 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       // re-render hasn't landed yet (tap can beat the render).
       const vidEl = videoRef.current;
       if (vidEl && !vidEl.getAttribute('src') && video.videoUrl) vidEl.src = video.videoUrl;
-      videoRef.current?.play().then(() => {
+      setHasError(false);
+      if (!vidEl) { setIsLoading(false); return; }
+      requestVideoPlayback(vidEl).then(() => {
+        if (videoRef.current !== vidEl || vidEl.dataset.userPaused === 'true' ||
+          (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(vidEl))) {
+          if (videoRef.current === vidEl) { vidEl.pause(); setIsLoading(false); }
+          return;
+        }
         isPlayingRef.current = true;
         setIsPlaying(true);
         setIsLoading(false);
         setShowPlayIndicator('play');
         setTimeout(() => setShowPlayIndicator(null), 500);
         showControlsBriefly();
-      }).catch(() => {
+      }).catch((error) => {
+        if (videoRef.current !== vidEl) return;
         setIsLoading(false);
-        setHasError(true);
+        if (error?.name !== 'AbortError') setHasError(true);
         videoPlaybackManager.stop(instanceId);
       });
     }
@@ -2207,9 +2211,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 </div>
               </div>
             ) : video.videoUrl && !(video.isLivePost && video.isLiveNow) ? (
-              hasError ? (
-                <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
-              ) :
               /* The <video> is not rendered here — useHandoffVideo puts the
                  pooled element inside this slot, so it can move to the post page
                  without being torn down and recreated. The poster sits behind it
@@ -2227,7 +2228,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
                 )}
-                <div ref={attachVideoSlot} className="absolute inset-0 w-full h-full" />
+                <div ref={attachVideoSlot} className={cn("absolute inset-0 w-full h-full", hasError && "invisible")} />
               </>
             ) : video.isLivePost && video.isLiveNow ? (
               /* On air: play the stream right here. The feed used to show only
