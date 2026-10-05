@@ -421,7 +421,7 @@ export function NewConversationModal({
         });
         if (conversation.id) {
           const wire = await prepareOutgoing(userAddress, firstMessage);
-          emitSendMessage({ dmId: conversation.id, content: wire.content, type: 'msg' });
+          await emitSendMessage({ dmId: conversation.id, content: wire.content, type: 'msg' });
         }
         onConversationCreated(conversation);
         onOpenChange(false);
@@ -438,7 +438,7 @@ export function NewConversationModal({
       // Fee-paid first message goes through the socket immediately (fee tx already settled)
       if (firstMessage && conversation.id && feeTxHash) {
         const wire = await prepareOutgoing(userAddress, firstMessage);
-        emitSendMessage({
+        await emitSendMessage({
           dmId: conversation.id,
           content: wire.content,
           type: 'msg',
