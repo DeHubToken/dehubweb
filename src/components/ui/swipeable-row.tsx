@@ -255,10 +255,12 @@ export function SwipeableRow({ actions, children, className }: SwipeableRowProps
         {actions.map((action, i) => (
           <button
             key={action.key}
-            ref={i === actions.length - 1 ? lastActionRef : undefined}
+            ref={(button) => {
+              if (i === actions.length - 1) lastActionRef.current = button;
+              if (button) button.disabled = offset.current === 0;
+            }}
             type="button"
             aria-label={action.label}
-            disabled
             onClick={() => {
               if (action.destructive) {
                 dismissThen(action.onSelect);
