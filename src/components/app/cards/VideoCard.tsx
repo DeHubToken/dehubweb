@@ -2404,9 +2404,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             non-functional play button on top of the audio controls — the
             "hovering brings up a play/pause button" complaint. */}
         {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-8" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
+          <div data-video-controls data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
-            <div className={cn("flex items-center gap-2", bareControls && "px-1.5")}>
+            <div data-video-button-row className={cn("flex items-center gap-2", bareControls && "px-1.5")}>
               <button
                 onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
                 aria-label={isPlaying ? 'Pause' : 'Play'}
