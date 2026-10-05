@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { getPlayExternalToken } from "@/hooks/usePlanFromLink";
+import { aiPlanPolicyVersion } from "@/lib/ai-plan-offers";
 
 export interface PremiumCheckoutModalProps {
   open: boolean;
@@ -46,6 +47,7 @@ export function PremiumCheckoutModal({
           customerEmail,
           returnUrl,
           environment: getStripeEnvironment(),
+          aiPlanPolicy: aiPlanPolicyVersion(priceId),
           // Set only when the Android app linked a US user here through Google
           // Play's external content links flow; the server reports the
           // resulting transactions to Google against it.

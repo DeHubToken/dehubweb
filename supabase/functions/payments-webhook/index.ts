@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { type StripeEnv, verifyWebhook } from "../_shared/stripe.ts";
-import { planGrantDhb } from "../_shared/ai-plans.ts";
+import { type StripeEnv, createStripeClient, verifyWebhook } from "../_shared/stripe.ts";
+import { AI_PLANS, invoicePlanMetadata, planGrantDhb } from "../_shared/ai-plans.ts";
 import { reportInvoiceToPlay, reportRefundToPlay } from "./play-report.ts";
 
 let _supabase: ReturnType<typeof createClient> | null = null;
@@ -205,22 +205,36 @@ async function deliverPlanTokens(args: {
  */
 async function handleInvoicePaid(invoice: any, env: StripeEnv) {
   const line = invoice.lines?.data?.[0];
-  const priceId = resolvePriceId(line);
+  let metadata = invoicePlanMetadata(invoice);
+  const subscription = invoice.subscription || invoice.parent?.subscription_details?.subscription;
+  const subscriptionId = typeof subscription === "string" ? subscription : subscription?.id;
+  if (subscriptionId && !metadata.priceId) {
+    const stored = await createStripeClient(env).subscriptions.retrieve(subscriptionId);
+    metadata = { ...stored.metadata, ...metadata };
+  }
+  let priceId = resolvePriceId(line);
+  // Current invoices carry a price ID rather than an expanded Price object.
+  const stripePriceId = line?.pricing?.price_details?.price ||
+    (typeof line?.price === "string" ? line.price : line?.price?.id);
+  if ((!priceId || !AI_PLANS[priceId]) && typeof stripePriceId === "string") {
+    const price = await createStripeClient(env).prices.retrieve(stripePriceId);
+    priceId = price.lookup_key || price.metadata?.lovable_external_id || price.id;
+  }
+  priceId ||= metadata.priceId;
   const seats = Number(line?.quantity ?? 1);
-  const grantDhb = planGrantDhb(priceId, seats);
+  // A seat-change proration is not a second billing period's allowance.
+  if (metadata.ai_plan_policy && !["subscription_create", "subscription_cycle"].includes(invoice.billing_reason)) {
+    return;
+  }
+  const grantDhb = planGrantDhb(priceId, seats, metadata.ai_plan_policy);
 
   if (!grantDhb) {
     console.log("No AI allowance for price:", priceId);
     return;
   }
 
-  const subscriptionId = typeof invoice.subscription === "string"
-    ? invoice.subscription
-    : invoice.subscription?.id;
-
   let wallet: string | undefined =
-    invoice.subscription_details?.metadata?.walletAddress ||
-    invoice.metadata?.walletAddress;
+    metadata.walletAddress;
 
   // Renewal invoices often carry no metadata, so fall back to the row the
   // subscription handlers already wrote.
