@@ -4551,6 +4551,7 @@
     "realDhbNeverExpires": "Vrais tokens DeHub dans votre portefeuille — ils n'expirent jamais",
     "pooledNeverExpires": "Mis en commun dans l'espace de travail — n'expire jamais",
     "perMonthBilledAnnually": "par mois, facturé annuellement",
+    "perSeatMonthly": "par siège/mois",
     "perSeatBilledAnnually": "par siège/mois, facturé annuellement",
     "savings": "Économisez {{amount}} par rapport à la facturation mensuelle",
     "seats_one": "{{count}} siège",

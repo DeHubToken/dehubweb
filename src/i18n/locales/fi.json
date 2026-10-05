@@ -4239,6 +4239,7 @@
     "realDhbNeverExpires": "Oikeita DeHub-tokeneita lompakossasi — ne eivät koskaan vanhene",
     "pooledNeverExpires": "Jaettu koko työtilan kesken — ei koskaan vanhene",
     "perMonthBilledAnnually": "kuukaudessa, laskutetaan vuosittain",
+    "perSeatMonthly": "per paikka/kk",
     "perSeatBilledAnnually": "per paikka/kk, laskutetaan vuosittain",
     "savings": "Säästä ${{amount}} verrattuna kuukausittaiseen",
     "seats_one": "{{count}} paikka",

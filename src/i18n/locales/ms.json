@@ -4557,6 +4557,7 @@
     "realDhbNeverExpires": "Token DeHub sebenar dalam dompet anda — ia tidak pernah luput",
     "pooledNeverExpires": "Dikumpulkan di seluruh ruang kerja — tidak pernah tamat tempoh",
     "perMonthBilledAnnually": "setiap bulan, dibilkan setiap tahun",
+    "perSeatMonthly": "setiap tempat duduk/bln",
     "perSeatBilledAnnually": "setiap tempat duduk/bln, dibilkan setiap tahun",
     "savings": "Jimat ${{amount}} berbanding bulanan",
     "seats_one": "{{count}} tempat duduk",

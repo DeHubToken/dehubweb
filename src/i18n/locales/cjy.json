@@ -4256,6 +4256,7 @@
     "realDhbNeverExpires": "您钱包中的真实 DeHub 代币 — 永不过期",
     "pooledNeverExpires": "共享于工作空间——永不过期",
     "perMonthBilledAnnually": "每月每席位，按年计费",
+    "perSeatMonthly": "每席位/月",
     "perSeatBilledAnnually": "每席位/月，按年计费",
     "savings": "按年计费可节省{{amount}}美元",
     "seats_one": "{{count}} 个席位",

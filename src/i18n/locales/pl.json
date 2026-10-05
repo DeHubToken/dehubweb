@@ -4297,6 +4297,7 @@
     "realDhbNeverExpires": "Prawdziwe tokeny DeHub w Twoim portfelu — nigdy nie wygasają",
     "pooledNeverExpires": "Połączone w całym obszarze roboczym — nigdy nie wygasają",
     "perMonthBilledAnnually": "miesięcznie, rozliczane rocznie",
+    "perSeatMonthly": "na stanowisko/mies.",
     "perSeatBilledAnnually": "na stanowisko/mies., rozliczane rocznie",
     "savings": "Zaoszczędź ${{amount}} w porównaniu z planem miesięcznym",
     "seats_one": "{{count}} stanowisko",

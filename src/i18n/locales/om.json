@@ -4256,6 +4256,7 @@
     "realDhbNeverExpires": "Mallattoowwan DeHub dhugaa boorsaa keessan keessa jiran — gonkumaa yeroon isaanii hin darbu",
     "pooledNeverExpires": "Iddoo hojii hunda keessatti walitti qabame — gonkumaa yeroon isaa hin darbu",
     "perMonthBilledAnnually": "ji’atti, waggaa waggaan kaffaltiin kan kaffalamu ta’a",
+    "perSeatMonthly": "teessoo tokkoof/ji’a",
     "perSeatBilledAnnually": "teessoo/ji’a tokkoof, waggaa waggaan kaffaltiin kan kaffalamu",
     "savings": "Ji&#39;a ji&#39;aan wal bira qabamee yoo ilaalamu ${{amount}} qusadhaa",
     "seats_one": "{{count}} teessoo",

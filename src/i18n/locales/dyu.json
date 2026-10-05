@@ -4166,6 +4166,7 @@
     "realDhbNeverExpires": "DeHub ka tagamasiɲɛw be i ka wari la — u tɛ ban abada",
     "pooledNeverExpires": "Ka baara kɛ ni mɔgɔ ye, o kɔrɔ ko ka baara kɛ ni mɔgɔ ye.",
     "perMonthBilledAnnually": "san o san, a be kɛ saan o saan",
+    "perSeatMonthly": "sigiyɔrɔ kelen o kelen, kalo o kalo",
     "perSeatBilledAnnually": "saan o saan, u be wari min sara, o be kɛ saan o saan.",
     "savings": "Save ${{amount}} ka kɛɲɛ ni kalo o kalo ye",
     "seats_one": "{{count}} Seat",

@@ -4311,6 +4311,7 @@
     "realDhbNeverExpires": "Sami DeHub tokenkuna qanpa waqaychana wasiyupi — mana pakaykuqchu",
     "pooledNeverExpires": "Llamkana pampapi huñusqa — mana hayk&#39;aqpas tukukunchu",
     "perMonthBilledAnnually": "sapa killa, sapa wata facturasqa",
+    "perSeatMonthly": "sapa tiyana/sapa killa",
     "perSeatBilledAnnually": "sapa tiyana/mo, sapa wata facturasqa",
     "savings": "Killawan tupachisqa ${{amount}} qullqita waqaychay",
     "seats_one": "{{count}} tiyana",

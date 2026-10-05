@@ -4280,6 +4280,7 @@
     "referenceComposeHint": "将多个图片中的角色、物体和场景合成到一个画面中。"
   },
   "pricing": {
+    "perSeatMonthly": "每席位每月",
     "plansForEveryWorkflow": "适配每种工作流的方案",
     "findTheRightFit": "从个人到企业团队，都能找到合适的方案",
     "monthly": "按月",

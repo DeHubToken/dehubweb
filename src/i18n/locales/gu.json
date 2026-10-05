@@ -4280,6 +4280,7 @@
     "realDhbNeverExpires": "તમારા વોલેટમાં વાસ્તવિક DeHub ટોકન્સ — તે ક્યારેય સમાપ્ત થતા નથી",
     "pooledNeverExpires": "કાર્યસ્થળમાં પૂલ કરેલું — ક્યારેય સમાપ્ત થતું નથી",
     "perMonthBilledAnnually": "દર મહિને, વાર્ષિક બિલ",
+    "perSeatMonthly": "સીટ/મહિના દીઠ",
     "perSeatBilledAnnually": "સીટ/મહિના દીઠ, વાર્ષિક બિલ",
     "savings": "માસિકની તુલનામાં ${{amount}} સાચવો",
     "seats_one": "{{count}} સીટ",

@@ -4288,6 +4288,7 @@
     "realDhbNeverExpires": "Капчыгыңыздагы чыныгы DeHub токендери — алар эч качан жараксыз болушпайт",
     "pooledNeverExpires": "Жумуш мейкиндиги боюнча топтолгон — эч качан жараксыз болбойт",
     "perMonthBilledAnnually": "айына, жыл сайын эсептелет",
+    "perSeatMonthly": "орун/айына",
     "perSeatBilledAnnually": "орун/айына, жыл сайын эсептелет",
     "savings": "Ай сайын төлөөгө салыштырмалуу ${{amount}} үнөмдөңүз",
     "seats_one": "{{count}} орун",
