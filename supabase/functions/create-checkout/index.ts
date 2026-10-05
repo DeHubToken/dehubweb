@@ -1,4 +1,5 @@
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
+import { AI_PLANS, AI_PLAN_POLICY_VERSION, aiPlanPriceMatches } from "../_shared/ai-plans.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -163,15 +164,17 @@ Deno.serve(async (req) => {
     }
     const stripePrice = prices.data[0];
 
-    // AI plan grants (ai-plans.ts) are sized in USD at the DHB peg. A Stripe
-    // price in any other currency silently over- or under-delivers against
-    // that grant with nothing surfacing the mismatch, so log it loudly rather
-    // than let it stay invisible.
-    if (stripePrice.currency !== "usd") {
-      console.error(
-        `create-checkout: price ${priceId} is denominated in ${stripePrice.currency}, expected usd`,
-      );
+    if (!aiPlanPriceMatches(priceId, stripePrice) ||
+      (AI_PLANS[priceId] && body.aiPlanPolicy !== AI_PLAN_POLICY_VERSION)) {
+      console.error(`create-checkout: price contract mismatch for ${priceId}`);
+      return new Response(JSON.stringify({ error: "This plan is temporarily unavailable. Please try again later." }), {
+        status: 409,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
+
+    const planMeta = AI_PLANS[priceId]
+      ? { ai_plan_policy: AI_PLAN_POLICY_VERSION } : {};
 
     const customerId = await resolveOrCreateCustomer(stripe, {
       email: customerEmail,
@@ -190,9 +193,9 @@ Deno.serve(async (req) => {
       ui_mode: "embedded_page",
       return_url: returnUrl,
       customer: customerId,
-      metadata: { userId, walletAddress: userId, priceId, ...playMeta },
+      metadata: { userId, walletAddress: userId, priceId, ...planMeta, ...playMeta },
       subscription_data: {
-        metadata: { userId, walletAddress: userId, priceId, ...playMeta },
+        metadata: { userId, walletAddress: userId, priceId, ...planMeta, ...playMeta },
       },
     });
 

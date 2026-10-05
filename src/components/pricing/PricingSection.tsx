@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { PremiumCheckoutModal } from '@/components/premium/PremiumCheckoutModal';
 import { toast } from 'sonner';
 import { usePlanFromLink } from '@/hooks/usePlanFromLink';
+import { aiPlanBreakdownVars, getAiPlanOffer, type AiPlanTier } from '@/lib/ai-plan-offers';
 
 type Billing = 'monthly' | 'annual';
 
@@ -28,7 +29,7 @@ interface Line {
 }
 
 interface Plan {
-  id: string;
+  id: AiPlanTier;
   /** Product tier name. Not translated — it is what the plan is called. */
   name: string;
   discountPct: number;
@@ -74,8 +75,8 @@ const plans: Plan[] = [
     discountPct: 21,
     headlineKey: 'pricing.headlineCreator',
     breakdown: [
-      { key: 'pricing.dhbPerMonth', vars: { amount: '23,000' } },
-      { key: 'pricing.equivalence', vars: { videos: 54, videoModel: 'Veo 3.1 Fast', images: 212, imageModel: 'Nano Banana Pro' } },
+      { key: 'pricing.dhbPerMonth' },
+      { key: 'pricing.equivalence' },
       { key: 'pricing.realDhbSpendAnywhere' },
     ],
     monthly: 19,
@@ -103,8 +104,8 @@ const plans: Plan[] = [
     taglineKey: 'pricing.bestValue',
     headlineKey: 'pricing.headlineUltra',
     breakdown: [
-      { key: 'pricing.dhbPerMonth', vars: { amount: '130,000' } },
-      { key: 'pricing.equivalence', vars: { videos: 78, videoModel: 'Veo 3.1', images: '1,203', imageModel: 'Nano Banana Pro' } },
+      { key: 'pricing.dhbPerMonth' },
+      { key: 'pricing.equivalence' },
       { key: 'pricing.realDhbNeverExpires' },
     ],
     monthly: 129,
@@ -144,8 +145,8 @@ const plans: Plan[] = [
     discountPct: 18,
     headlineKey: 'pricing.headlineTeam',
     breakdown: [
-      { key: 'pricing.dhbPerSeat', vars: { amount: '88,000' } },
-      { key: 'pricing.equivalence', vars: { videos: 53, videoModel: 'Veo 3.1', images: 814, imageModel: 'Nano Banana Pro' } },
+      { key: 'pricing.dhbPerSeat' },
+      { key: 'pricing.equivalence' },
       { key: 'pricing.pooledNeverExpires' },
     ],
     monthly: 79,
@@ -196,8 +197,8 @@ const plans: Plan[] = [
     discountPct: 30,
     headlineKey: 'pricing.headlineScale',
     breakdown: [
-      { key: 'pricing.dhbPerSeat', vars: { amount: '210,000' } },
-      { key: 'pricing.equivalence', vars: { videos: 126, videoModel: 'Veo 3.1', images: '1,944', imageModel: 'Nano Banana Pro' } },
+      { key: 'pricing.dhbPerSeat' },
+      { key: 'pricing.equivalence' },
       { key: 'pricing.pooledNeverExpires' },
     ],
     monthly: 215,
@@ -348,7 +349,7 @@ function BillingToggle({
 
 function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; onSelect: (priceId: string) => void }) {
   const { t } = useTranslation();
-  const price = billing === 'annual' ? plan.annual : plan.monthly;
+  const price = getAiPlanOffer(plan.id, billing).displayPriceUsd;
   const strike = billing === 'annual' ? plan.monthly : null;
   const priceId = billing === 'annual' ? plan.annualPriceId : plan.monthlyPriceId;
 
@@ -381,7 +382,7 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
 
       <div className="mt-5 space-y-1 text-xs text-white/70">
         {plan.breakdown.map((line) => (
-          <div key={line.key + JSON.stringify(line.vars ?? {})}>{t(line.key, line.vars)}</div>
+          <div key={line.key}>{t(line.key, aiPlanBreakdownVars(line.key, plan.id, billing, line.vars))}</div>
         ))}
       </div>
 
@@ -391,8 +392,8 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
         )}
         <span className="text-4xl font-black text-white">${price}</span>
       </div>
-      <div className="text-xs text-white/50">{t(plan.perLabelKey)}</div>
-      {plan.savingsUsd !== undefined && (
+      <div className="text-xs text-white/50">{t(billing === 'annual' ? plan.perLabelKey : 'premium.perMonth')}</div>
+      {billing === 'annual' && plan.savingsUsd !== undefined && (
         <div className="mt-1 text-xs text-white/60">{t('pricing.savings', { amount: plan.savingsUsd })}</div>
       )}
       {plan.seats !== undefined && (
