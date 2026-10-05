@@ -62,7 +62,8 @@ interface Gesture {
 export function SwipeableRow({ actions, children, className }: SwipeableRowProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const lastActionRef = useRef<HTMLButtonElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const lastActionRef = useRef<HTMLButtonElement | null>(null);
   const offset = useRef(0);
   const gesture = useRef<Gesture | null>(null);
   const armed = useRef(false);
@@ -78,6 +79,11 @@ export function SwipeableRow({ actions, children, className }: SwipeableRowProps
     if (track) {
       track.style.transition = animate ? `transform ${SNAP_MS}ms ${EASE}` : 'none';
       track.style.transform = `translate3d(${-px}px, 0, 0)`;
+    }
+    const panel = actionsRef.current;
+    if (panel) {
+      panel.setAttribute('aria-hidden', String(px === 0));
+      panel.querySelectorAll('button').forEach((button) => { button.disabled = px === 0; });
     }
     const lastBtn = lastActionRef.current;
     if (lastBtn && stretches) {
@@ -104,6 +110,8 @@ export function SwipeableRow({ actions, children, className }: SwipeableRowProps
       if (closeOpenRow === close) closeOpenRow = null;
     };
   }, [close]);
+
+  useEffect(() => { paint(offset.current, false); }, [actions, paint]);
 
   /**
    * Slide the row the rest of the way out, fold its height to nothing, then
@@ -243,10 +251,14 @@ export function SwipeableRow({ actions, children, className }: SwipeableRowProps
         >
           {children}
         </div>
+        <div ref={actionsRef} data-swipe-actions aria-hidden="true" className="flex shrink-0">
         {actions.map((action, i) => (
           <button
             key={action.key}
-            ref={i === actions.length - 1 ? lastActionRef : undefined}
+            ref={(button) => {
+              if (i === actions.length - 1) lastActionRef.current = button;
+              if (button) button.disabled = offset.current === 0;
+            }}
             type="button"
             aria-label={action.label}
             onClick={() => {
@@ -268,6 +280,7 @@ export function SwipeableRow({ actions, children, className }: SwipeableRowProps
             <span className="px-1 truncate">{action.label}</span>
           </button>
         ))}
+        </div>
       </div>
     </div>
   );
