@@ -1486,7 +1486,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           const targetPeer = peerAddressForConversation(queryClient, targetConversationId, walletAddress);
           const wire = await prepareOutgoing(targetPeer, forwardMessageTarget.content);
           await waitForDmSocket();
-          emitSendMessage({
+          await emitSendMessage({
             dmId: targetConversationId,
             content: wire.content,
             type: 'msg',

@@ -342,10 +342,13 @@ export function useMessages(conversationId: string | null) {
       if (!conversationId) return { items: [], totalCount: 0, hasMore: false };
       const result = await getMessages(conversationId, pageParam, 30);
       result.items = await decryptThread(queryClient, conversationId, walletAddressRef.current, result.items);
-      // Preserve isRead:true from local cache — server may lag behind readReceipt socket events.
-      // Same pattern as mobile dm.store: "Preserve local isRead:true — server may not persist read status"
+      // A refresh can race an in-flight send. Keep its bubble until the send
+      // mutation receives the persisted server message or reports a failure.
       if (pageParam === 0) {
         const existing = queryClient.getQueryData<any>(messagesKeys.messages(conversationId));
+        const pending = (existing?.pages?.[0]?.items ?? [])
+          .filter((m: DmMessage) => m._id.startsWith('temp-'));
+        result.items = [...pending, ...result.items];
         const existingReadIds = new Set<string>(
           (existing?.pages?.[0]?.items ?? [])
             .filter((m: DmMessage) => m.isRead)
@@ -899,48 +902,23 @@ export function useSendMessage(conversationId: string) {
         voiceDuration,
         forwardedFrom,
       };
-      emitSendMessage(payload);
-
-      // Return an optimistic message with the resolved conversation ID
-      const tempMessage: DmMessage = {
-        _id: `temp-${Date.now()}`,
+      const sent = await emitSendMessage(payload);
+      return {
+        ...sent,
         conversation: resolvedId,
-        sender: {
-          _id: user?._id || walletAddress || '',
-          username: user?.username || '',
-          address: walletAddress || '',
-          displayName: user?.displayName || user?.display_name || '',
-          avatarImageUrl: user?.avatarImageUrl || '',
-        },
         content,
         encrypted: wire.encrypted,
-        msgType,
-        mediaUrls: gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
-        voiceDuration: null,
-        isRead: false,
-        isEdited: false,
-        editedAt: null,
-        isForwarded: !!forwardedFrom,
-        replyTo: replyPreview ?? null,
-        paymentStatus: null,
-        paymentTxHash: null,
-        tipAmount: null,
-        tipSymbol: null,
-        isDeleted: false,
         author: 'me',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        isRead: false,
+        replyTo: sent.replyTo?.sender ? sent.replyTo : (replyPreview ?? sent.replyTo),
       };
-      return tempMessage;
     },
 
     onMutate: async ({ content, msgType, gifUrl, mediaFile, voiceDuration, replyPreview }) => {
       await queryClient.cancelQueries({ queryKey: messagesKeys.messages(conversationId) });
-      const previousMessages = queryClient.getQueryData(messagesKeys.messages(conversationId));
-
       // Optimistic: prepend temp message
       const optimisticMessage: DmMessage = {
-        _id: `temp-${Date.now()}`,
+        _id: `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
         conversation: conversationId,
         sender: {
           _id: user?._id || '',
@@ -987,31 +965,33 @@ export function useSendMessage(conversationId: string) {
         return { ...old, pages: newPages };
       });
 
-      return { previousMessages };
+      return { optimisticId: optimisticMessage._id };
     },
 
     onError: (_err, _vars, context) => {
-      if (context?.previousMessages) {
-        queryClient.setQueryData(messagesKeys.messages(conversationId), context.previousMessages);
-      }
+      // Remove only this failed send; preserve incoming messages and other sends.
+      queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => old?.pages ? {
+        ...old,
+        pages: old.pages.map((page: any) => ({
+          ...page, items: page.items.filter((m: DmMessage) => m._id !== context?.optimisticId),
+        })),
+      } : old);
     },
 
-    onSettled: (_data, _err, variables) => {
-      // Don't immediately invalidate messages — the optimistic message is already visible.
-      // The socket event (onDmSendMessage) will trigger a refetch when the server confirms.
-      // Immediate invalidation causes the optimistic message to vanish briefly because
-      // the server hasn't processed the fire-and-forget socket emit yet.
-
-      // For media/voice, delay refetch to allow CDN processing
-      if (variables?.mediaFile && (variables?.msgType === 'media' || variables?.msgType === 'voice')) {
-        setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
-        }, 3000);
-      } else {
-        // For text/gif messages, delay the refetch so the server has time to persist
-        setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
-        }, 2000);
+    onSuccess: (sent, _variables, context) => {
+      const replacePending = (old: any) => {
+        const pages = old?.pages ?? [{ items: [], totalCount: 0, hasMore: false }];
+        const cleaned = pages.map((page: any) => ({
+          ...page,
+          items: page.items.filter((m: DmMessage) => m._id !== context?.optimisticId && m._id !== sent._id),
+        }));
+        cleaned[0] = { ...cleaned[0], items: [sent, ...cleaned[0].items] };
+        return { ...old, pageParams: old?.pageParams ?? [0], pages: cleaned };
+      };
+      queryClient.setQueryData(messagesKeys.messages(conversationId), replacePending);
+      const resolvedId = typeof sent.conversation === 'string' ? sent.conversation : conversationId;
+      if (resolvedId !== conversationId) {
+        queryClient.setQueryData(messagesKeys.messages(resolvedId), replacePending);
       }
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },

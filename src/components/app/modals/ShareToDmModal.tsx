@@ -138,7 +138,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
     setRowStatus(s => ({ ...s, [key]: 'sending' }));
     try {
       const wire = await prepareOutgoing(conv.otherUser?.address, buildContent());
-      emitSendMessage({ dmId: conv.id, content: wire.content, type: 'msg' });
+      await emitSendMessage({ dmId: conv.id, content: wire.content, type: 'msg' });
       setRowStatus(s => ({ ...s, [key]: 'sent' }));
       toast.success(`${sentLabel} sent to ${conv.otherUser?.displayName || conv.otherUser?.username || 'chat'}`);
     } catch (err) {
@@ -170,7 +170,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
       const conv = await emitCreateAndStart(userId);
       if (!conv?._id) throw new Error('Could not open conversation');
       const wire = await prepareOutgoing(user.address, buildContent());
-      emitSendMessage({ dmId: conv._id, content: wire.content, type: 'msg' });
+      await emitSendMessage({ dmId: conv._id, content: wire.content, type: 'msg' });
       setRowStatus(s => ({ ...s, [key]: 'sent' }));
       toast.success(`${sentLabel} sent to ${user.displayName || user.username || 'user'}`);
     } catch (err) {
