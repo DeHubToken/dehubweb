@@ -232,6 +232,18 @@ function preloadWalletChunkPlugin() {
           // way, so a silent return of the 266 KB is visible in the build log.
           console.warn('[preload-wallet-chunk] no RainbowKit UI chunk matched — check whether the connect-modal UI is being prefetched again');
         }
+        // Shared dependencies already have Vite's normal-priority preload.
+        // The entry gets its preload from startEntryAfterFirstPaintPlugin.
+        // Keep those hints and add only the wallet graph's missing files.
+        const alreadyRequested = new Set<string>();
+        for (const tag of html.matchAll(/<(?:link|script)\b[^>]*>/g)) {
+          if (!/\brel="modulepreload"|\btype="module"/.test(tag[0])) continue;
+          const asset = tag[0].match(/\b(?:href|src)="\/([^"]+)"/);
+          if (asset) alreadyRequested.add(asset[1]);
+        }
+        const duplicates = [...seen].filter(f => alreadyRequested.has(f));
+        for (const f of duplicates) seen.delete(f);
+
         // data-prefetch-only: tells scripts/check-entry-bundle.mjs these are
         // fetch-ahead hints, NOT eagerly-executed modules — the wallet code
         // still only runs when the React.lazy boundary resolves.
@@ -240,6 +252,7 @@ function preloadWalletChunkPlugin() {
           .join('\n    ');
         console.log(
           `[preload-wallet-chunk] injected ${seen.size} modulepreload links` +
+            `, kept ${duplicates.length} existing startup hints` +
             (skipped.length ? `, skipped ${skipped.length} RainbowKit UI chunk(s): ${skipped.join(', ')}` : ''),
         );
         return html.replace('</head>', `  ${links}\n  </head>`);
