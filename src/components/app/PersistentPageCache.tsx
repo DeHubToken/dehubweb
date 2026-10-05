@@ -15,7 +15,6 @@ import { BUY_PATHS } from '@/lib/buy-route';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
-import { preloadPriorityPages } from '@/lib/preload-priority-pages';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import HomePage from '@/pages/app/HomePage';
@@ -276,10 +275,8 @@ export function PersistentPageCache({
   // Track which pages have been visited (mount on first visit, keep forever)
   const [mountedPages, setMountedPages] = useState<Set<string>>(() => new Set());
 
-  // Background-preload priority page chunks after initial render
-  useEffect(() => {
-    preloadPriorityPages();
-  }, []);
+  // Navigation warms destination chunks on hover, touch or focus. Avoid
+  // timed imports here so unopened pages do not compete with the first feed.
 
   // Find which cached page matches current path
   const activeCachedPage = CACHED_PAGES.find(p => matchesPath(p, pathname));
