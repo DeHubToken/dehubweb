@@ -9,6 +9,7 @@ type ScrubArgs = {
   onCommit: (time: number) => void;
   onFinish: () => void;
   onCancel: () => void;
+  ignoreSelector?: string;
 };
 
 /** The bottom 48px shares taps with buttons, but owns horizontal drags. */
@@ -44,6 +45,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
         return;
       }
       if (!inZone(event.currentTarget, event.clientY)) return;
+      if (args.ignoreSelector && (event.target as Element).closest(args.ignoreSelector)) return;
       const button = !!(event.target as Element).closest('button, [role="button"]');
       gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, button, dragging: false };
       // Disable the range's native seek; this gesture commits only on release.
@@ -86,7 +88,8 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
     onLostPointerCaptureCapture() { if (gesture.current?.dragging) cancel(); },
     onTouchStartCapture(event) {
       const touch = event.touches[0];
-      bottomTouch.current = !!touch && inZone(event.currentTarget, touch.clientY);
+      bottomTouch.current = !!touch && inZone(event.currentTarget, touch.clientY)
+        && !(args.ignoreSelector && (event.target as Element).closest(args.ignoreSelector));
       if (bottomTouch.current) event.stopPropagation();
     },
     onTouchEndCapture(event) {

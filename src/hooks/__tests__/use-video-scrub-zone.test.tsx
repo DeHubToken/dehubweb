@@ -6,10 +6,11 @@ function setup() {
   const onCommit = vi.fn(), onPreview = vi.fn(), onStart = vi.fn(), onFinish = vi.fn(), onCancel = vi.fn();
   const buttonPress = vi.fn(), openPost = vi.fn();
   function Fixture() {
-    const handlers = useVideoScrubZone({ enabled: true, duration: 100, onCommit, onPreview, onStart, onFinish, onCancel });
+    const handlers = useVideoScrubZone({ enabled: true, duration: 100, onCommit, onPreview, onStart, onFinish, onCancel, ignoreSelector: '[data-audio-style-picker]' });
     return <div onClick={openPost}><div data-testid="media" {...handlers}>
       <button onClick={event => { event.stopPropagation(); buttonPress(); }}>Play</button>
       <div data-testid="strip" />
+      <div data-audio-style-picker><button>Preset</button></div>
     </div></div>;
   }
   const view = render(<Fixture />);
@@ -25,6 +26,15 @@ function setup() {
 }
 
 describe('video scrub priority', () => {
+  it('leaves audio preset scrolling outside the transport scrub gesture', () => {
+    const s = setup(), preset = s.getByRole('button', { name: 'Preset' });
+    s.pointer(preset, 'pointerdown', 20);
+    s.pointer(preset, 'pointermove', 150);
+    s.pointer(preset, 'pointerup', 150);
+    expect(s.onStart).not.toHaveBeenCalled();
+    expect(s.onPreview).not.toHaveBeenCalled();
+    expect(s.onCommit).not.toHaveBeenCalled();
+  });
   it('takes a horizontal drag that starts over Play and consumes its release click', () => {
     const s = setup(), button = s.getByRole('button', { name: 'Play' });
     s.pointer(button, 'pointerdown', 20);

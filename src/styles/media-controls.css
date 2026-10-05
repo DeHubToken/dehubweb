@@ -13,6 +13,7 @@ html[data-theme][data-theme] [data-audio-player] :is([data-audio-style], [data-a
 /* Match the APK's bare white glyphs, including a dark outline on bright frames. */
 html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inline-tools]) button,
 html[data-theme] body [data-video-card] button[data-video-bare],
+html[data-theme] body [data-audio-player] button[data-audio-bare],
 html[data-theme] body [data-video-caption-control] {
   color: #fff !important;
   background: transparent !important;
@@ -22,7 +23,8 @@ html[data-theme] body [data-video-caption-control] {
   -webkit-backdrop-filter: none !important;
   filter: none !important;
 }
-html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inline-tools], [data-video-bare], [data-video-caption-control]) svg {
+html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inline-tools], [data-video-bare], [data-video-caption-control]) svg,
+html[data-theme] body [data-audio-player] [data-audio-bare] svg {
   color: #fff !important;
   width: 18px;
   height: 18px;
@@ -30,7 +32,8 @@ html[data-theme] body [data-video-card] :is([data-video-topbar], [data-video-inl
   filter: none !important;
   box-shadow: none !important;
 }
-html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-inline-tools] button) {
+html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-inline-tools] button),
+html[data-theme] body [data-audio-player] span[data-audio-bare] {
   filter: none !important;
   color: #fff !important;
   font-size: 12px;
@@ -38,6 +41,11 @@ html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-i
   text-shadow: none !important;
   -webkit-text-stroke: 1px rgb(0 0 0 / 0.8);
   paint-order: stroke fill;
+}
+
+[data-audio-button-row] button[data-audio-bare] {
+  touch-action: pan-y !important;
+  clip-path: inset(0 0 6px);
 }
 
 /* Outline only the 3px line; the 32px seek target stays clear. */
