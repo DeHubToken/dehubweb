@@ -671,9 +671,11 @@ interface VideoCardProps {
   hideActions?: boolean;
   /** First few feed items — skip lazy loading so LCP thumbnail loads immediately */
   aboveFold?: boolean;
+  /** Square and wide landing videos keep their identity above the player. */
+  firstFeedPost?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, onOpenComments }: VideoCardProps) {
+export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
   const playbackAllowed = useFeedPlaybackAllowed();
   const instanceId = useId();
   const { t } = useI18n();
@@ -1555,6 +1557,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     isImmersive ? THIN_MIN_RATIO : undefined,
   );
   const mediaAspect = video.isAudio ? DEFAULT_ASPECT : measuredAspect;
+  const headerAboveMedia = firstFeedPost && !video.isAudio && !video.isLivePost && mediaAspect >= 1;
 
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
@@ -1892,6 +1895,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   return (
     <div
       data-video-card
+      data-video-header-above={headerAboveMedia ? '' : undefined}
       onClick={isImmersive ? undefined : handleCardClick}
       onPointerDownCapture={isImmersive ? undefined : warmPostPage}
       className={isImmersive
@@ -1901,7 +1905,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     >
       {/* Header with AI and menu buttons - hidden in immersive mode and carousel (hideActions) mode */}
       {!isImmersive && !hideActions && (
-        <div data-card-head className="flex items-start justify-between">
+        <div data-card-head={headerAboveMedia ? 'plain' : undefined} className="flex items-start justify-between">
           <CardHeader
             username={video.channel}
             handle={video.creatorUsername}
