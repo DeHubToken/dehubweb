@@ -1,0 +1,51 @@
+name: Deploy staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: Commit or branch to deploy to staging.dehub.io
+        default: main
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: staging-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '9'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --no-frozen-lockfile
+      - name: Build staging assets
+        run: pnpm build
+      - name: Deploy staging worker and assets
+        run: pnpm exec wrangler deploy --config wrangler.staging.jsonc
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ID }}
+      - name: Verify staging serves this commit
+        run: |
+          EXPECTED="$(git rev-parse HEAD)"
+          curl --fail --silent --show-error "https://staging.dehub.io/version.json?commit=$EXPECTED" --output /tmp/staging-version.json
+          EXPECTED="$EXPECTED" node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const version = JSON.parse(fs.readFileSync('/tmp/staging-version.json', 'utf8'));
+          if (version.id !== process.env.EXPECTED.slice(0, 8)) throw new Error('Staging serves a different commit: ' + JSON.stringify(version));
+          console.log('Staging serves ' + process.env.EXPECTED);
+          JS
