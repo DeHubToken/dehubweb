@@ -66,6 +66,7 @@ export const GlassIndicator = forwardRef<HTMLDivElement, GlassIndicatorProps>(
     <div
       ref={ref}
       data-glass-indicator
+      data-theme-control-surface
       data-feed-nav-indicator={variant === 'nav' ? '' : undefined}
       className={cn(
         GLASS_CLASSES,

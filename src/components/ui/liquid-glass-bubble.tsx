@@ -42,6 +42,7 @@ const LiquidGlassBubble = React.forwardRef<HTMLDivElement, LiquidGlassBubbleProp
       <div ref={ref} className={cn("relative group", className)} {...props}>
         {/* Main liquid glass bubble */}
         <div 
+          data-theme-control-surface
           className={cn(
             "relative px-4 py-2.5 overflow-hidden",
             tailClasses[tail],
