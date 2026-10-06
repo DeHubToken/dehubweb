@@ -191,7 +191,7 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
       [BigInt(params.tokenId), amountWei, params.to, NATIVE_TOKEN_ADDRESS],
       { context: 'send tip', chainId, value: amountWei },
     );
-    return { hash: nativeResult.hash, confirmed: nativeResult.wait(1).then(r => r.hash) };
+    return { hash: nativeResult.hash, confirmed: nativeResult.wait(1).then(confirmedTipHash) };
   }
 
   // Parallelize balance + allowance checks (skip balance if UI already verified)
@@ -231,7 +231,8 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
     console.log('[StreamController] Approving for sendTip... allowance:', allowance.toString(), '< needed:', amountWei.toString());
     const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
     const approval = await approveERC20(tokenAddress, chainConfig.streamController, maxApproval, chainId);
-    await approval.wait(1);
+    const receipt = await approval.wait(1);
+    if (receipt.status !== 1) throw new Error('Token approval reverted. No tip was sent.');
   }
   approvedChains.add(chainKey);
   persistApprovalCache();
@@ -260,8 +261,15 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
   // Return hash immediately; confirmation runs in background
   return {
     hash: result.hash,
-    confirmed: result.wait(1).then(r => r.hash),
+    confirmed: result.wait(1).then(confirmedTipHash),
   };
+}
+
+function confirmedTipHash(receipt: { status: number; hash: string }): string {
+  if (receipt.status !== 1) {
+    throw Object.assign(new Error('Tip transaction reverted. No tip was sent.'), { code: 'TRANSACTION_REVERTED' });
+  }
+  return receipt.hash;
 }
 
 export interface SendPPVParams {

@@ -1,4 +1,5 @@
-import { Interface, JsonRpcProvider, formatUnits } from 'ethers';
+import { FetchRequest, Interface, JsonRpcProvider, formatUnits } from 'ethers';
+import { receiptRpcUrls } from '@/lib/transaction-receipt';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { DHB_TOKEN, getChainConfig } from '@/lib/contracts/dhb-token';
 
@@ -47,7 +48,21 @@ export async function readConfirmedTipDetails(
   chainId: ChainId,
 ): Promise<ConfirmedTipDetails> {
   const chainConfig = getChainConfig(chainId);
-  const provider = new JsonRpcProvider(chainConfig.rpcUrl);
+  let lastError: unknown;
+  for (const url of receiptRpcUrls(chainId, chainConfig.rpcUrl)) {
+    const request = new FetchRequest(url);
+    request.timeout = 8000;
+    const provider = new JsonRpcProvider(request, chainId, { staticNetwork: true });
+    try {
+      return await readTipFromProvider(provider, txHash, chainId);
+    } catch (error) { lastError = error; }
+    finally { provider.destroy(); }
+  }
+  throw lastError ?? new Error('Tip transaction lookup is unavailable');
+}
+
+async function readTipFromProvider(provider: JsonRpcProvider, txHash: string, chainId: ChainId): Promise<ConfirmedTipDetails> {
+  const chainConfig = getChainConfig(chainId);
   const tx = await provider.getTransaction(txHash);
 
   if (!tx) {
