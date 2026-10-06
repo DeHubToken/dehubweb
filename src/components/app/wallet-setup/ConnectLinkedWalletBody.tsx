@@ -13,7 +13,6 @@
  */
 import { useEffect, useState } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { LoginWalletsStep, type WalletId } from '../login/LoginWalletsStep';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
@@ -80,12 +79,7 @@ function ConnectLinkedWalletBodyInner({ expectedAddress, onConnected }: ConnectL
       writeConnectionSource('wagmi');
       setActiveProvider(null);
       setError(null);
-      // Connecting does NOT resume whatever was interrupted: the modal just
-      // closes (onConnected is setOpen(false)), and the surface that threw was
-      // deliberately told to stay quiet. This toast is therefore the only
-      // feedback the user gets, and the old wording read as confirmation that
-      // the payment they had just authorised had gone through.
-      toast.success(t('wallet.linkedConnected'));
+      // The pending action continues after this verified connection.
       onConnected();
       return;
     }
