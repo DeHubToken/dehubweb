@@ -1,3 +1,8 @@
+/* Standalone fallback pages share the canvas page veil used by app routes. */
+html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']) [data-theme-page-surface] {
+  background-color: rgb(var(--glass-tint) / var(--glass-regular));
+}
+
 /* Baseline themes share one polished control finish across component and
    handwritten actions. Canvas themes use their existing material recipes. */
 html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) {
