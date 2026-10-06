@@ -31,7 +31,7 @@ export default function BuilderPreviewPage() {
   }, [id]);
 
   return (
-    <div className="fixed inset-0 bg-[#000]">
+    <div data-theme-page-surface={srcDoc ? undefined : true} className="fixed inset-0 z-[1] bg-background text-foreground">
       <SEOHead title="Built with DeHub Builder" description="An app built on DeHub Builder." noindex />
       {srcDoc ? (
         <iframe
