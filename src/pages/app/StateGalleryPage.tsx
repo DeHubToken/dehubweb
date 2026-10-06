@@ -285,6 +285,8 @@ export default function StateGalleryPage() {
             <button className="rounded-xl bg-zinc-800 px-4 py-2 text-white" onClick={press}>Neutral zinc</button>
             <button className="rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/30 px-4 py-2 text-white" onClick={press}>Neutral gradient</button>
             <LiquidGlassBubble2 label="Bubble action" onClick={press} />
+            <LiquidGlassBubble2 label="Active bubble" active onClick={press} />
+            <LiquidGlassBubble2 label="Disabled bubble" disabled onClick={press} />
             <button className="rounded-xl bg-red-600 px-4 py-2 text-white" onClick={press}>Semantic red</button>
             <button className="rounded-xl px-4 py-2 hover:bg-white/10" onClick={press}>Bare action</button>
           </div>
