@@ -1490,11 +1490,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
   const toggleLoop = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsLooping(prev => {
-      vpSetIsLooping(!prev);
-      return !prev;
-    });
-  }, []);
+    const nextLoop = !(videoRef.current?.loop ?? isLooping);
+    if (videoRef.current) videoRef.current.loop = nextLoop;
+    setIsLooping(nextLoop);
+    vpSetIsLooping(nextLoop);
+    showControlsBriefly();
+  }, [isLooping, showControlsBriefly]);
 
   // Listen for preference changes from other players. Resolved per creator,
   // not read straight off the event: a rate someone set on another channel
@@ -2589,7 +2590,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   aria-label={isLooping ? 'Disable loop' : 'Enable loop'}
                   aria-pressed={isLooping}
                 >
-                  <MediaControlIcon icon={Repeat} />
+                  <MediaControlIcon icon={Repeat} active={isLooping} />
                 </button>
               </TooltipTrigger>
               <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
