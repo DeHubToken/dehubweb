@@ -1461,7 +1461,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   const visibleOptimisticPosts = optimisticPosts.filter(op => !getDeletedPostIds().has(op.id));
 
-  const renderFeedItem = (item: FeedItemType, index: number, section: 'optimistic' | 'pinned' | 'feed' = 'feed') => {
+  const renderFeedItem = (item: FeedItemType, index: number, section: 'optimistic' | 'pinned' | 'feed' = 'feed', beforeShorts = false) => {
     const firstFeedPost = isFirstVisibleFeedCard(section, index, visibleOptimisticPosts.length, !!pinnedItem);
     const card = (() => {
       switch (item.type) {
@@ -1497,6 +1497,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       <div
         key={key}
         data-feed-item
+        data-feed-before-shorts={beforeShorts ? '' : undefined}
         data-cinematic={item.type}
         data-cinematic-first={firstFeedPost ? '' : undefined}
         className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3"
@@ -1815,7 +1816,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     };
 
     items.forEach((item, index) => {
-      currentCards.push(renderFeedItem(item, index));
+      const beforeShorts = !isKidsMode && shorts.length > 0 && !shortsInserted && (
+        (index + 1) % SHORTS_INSERT_INTERVAL === 0 ||
+        (index === items.length - 1 && items.length < SHORTS_INSERT_INTERVAL)
+      );
+      currentCards.push(renderFeedItem(item, index, 'feed', beforeShorts));
 
       if ((index + 1) === 3 && !whoToFollowInserted) {
         addFullWidth(<div key={`who-to-follow-${index}`}><MobileWhoToFollowCarousel /></div>);
