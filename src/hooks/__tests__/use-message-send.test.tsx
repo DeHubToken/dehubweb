@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({ send: vi.fn(), getMessages: vi.fn() }));
 vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({
@@ -13,6 +13,7 @@ vi.mock('@/lib/api/dehub/dm-socket', () => ({
   emitSendMessage: mocks.send,
   waitForDmSocket: async () => {},
   onDmSendMessage: () => () => {},
+  onDmReconnect: () => () => {},
   onEditMessage: () => () => {},
   onDmDeleteMessage: () => () => {},
   onDmReactionUpdated: () => () => {},
@@ -26,7 +27,7 @@ vi.mock('@/lib/dm-e2ee/keys', () => ({
   onIdentityChange: () => () => {},
 }));
 
-import { messagesKeys, useMessages, useSendMessage } from '@/hooks/use-messages';
+import { isConversationOpen, messagesKeys, registerOpenConversation, useMessages, useSendMessage } from '@/hooks/use-messages';
 
 const stored = { _id: 'old', conversation: 'c1', content: 'old reply', author: 'other', isRead: true };
 const saved = { _id: 'saved', conversation: 'c1', content: 'new reply', msgType: 'msg', author: 'me' };
@@ -46,6 +47,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.getMessages.mockResolvedValue({ items: [stored], totalCount: 1, hasMore: false });
 });
+afterEach(() => { vi.useRealTimers(); });
 
 describe('reply persistence through refresh and failure', () => {
   it('keeps the pending reply across a refresh and replaces it with the persisted id', async () => {
@@ -79,4 +81,41 @@ describe('reply persistence through refresh and failure', () => {
     hook.unmount();
     client.clear();
   });
+});
+
+it('polls one head page after deep history is loaded and preserves displaced rows', async () => {
+  vi.useFakeTimers();
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const rows = Array.from({ length: 60 }, (_, i) => ({
+    ...stored, _id: `m-${i}`, createdAt: new Date(100_000 - i * 1000).toISOString(),
+  }));
+  client.setQueryData(messagesKeys.messages('c1'), {
+    pages: [
+      { items: rows.slice(0, 30), hasMore: true, totalCount: 60 },
+      { items: rows.slice(30), hasMore: true, totalCount: 60 },
+    ], pageParams: [0, 1],
+  });
+  const newest = { ...stored, _id: 'new', createdAt: new Date(101_000).toISOString() };
+  mocks.getMessages.mockResolvedValue({ items: [newest, ...rows.slice(0, 29)], hasMore: true, totalCount: 61 });
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
+  const hook = renderHook(() => useMessages('c1'), { wrapper });
+  await act(async () => { await vi.advanceTimersByTimeAsync(15_001); });
+  expect(mocks.getMessages).toHaveBeenCalledTimes(1);
+  expect(mocks.getMessages).toHaveBeenCalledWith('c1', 0, 30);
+  expect(hook.result.current.messages).toHaveLength(61);
+  expect(hook.result.current.messages.some(m => m._id === 'm-59')).toBe(true);
+  hook.unmount();
+  client.clear();
+});
+
+it('keeps a thread open until every rendered copy releases it', () => {
+  const closeFirst = registerOpenConversation('shared-thread');
+  const closeSecond = registerOpenConversation('shared-thread');
+  closeFirst();
+  closeFirst();
+  expect(isConversationOpen('shared-thread')).toBe(true);
+  closeSecond();
+  expect(isConversationOpen('shared-thread')).toBe(false);
 });
