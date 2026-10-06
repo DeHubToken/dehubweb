@@ -50,6 +50,10 @@ const STEPS = [
 export default function BuilderPage() {
   const { t } = useTranslation();
   const { theme } = useAppTheme();
+  const isLight = theme === 'light';
+  const ink = isLight ? 'text-[#1a1a1a]' : 'text-[#fff]';
+  const dim = isLight ? 'text-[#5a5a5a]' : TEXT_DIM;
+  const stroke = isLight ? 'border-[rgba(0,0,0,0.12)]' : STROKE;
   const navigate = useNavigate();
   const { isAuthenticated, openLoginModal } = useAuth() as {
     isAuthenticated: boolean;
@@ -95,7 +99,7 @@ export default function BuilderPage() {
         <header className="flex items-center justify-between p-4 sm:p-5">
           <div className="flex items-center gap-2.5">
             <img src={dehubIcon} alt="" className="w-7 h-7 object-contain" />
-            <span className="text-[22px] font-extrabold tracking-tight text-[#fff]">Builder</span>
+            <span className={cn('text-[22px] font-extrabold tracking-tight', ink)}>Builder</span>
           </div>
           <Button
             type="button"
@@ -110,10 +114,10 @@ export default function BuilderPage() {
         </header>
 
         <main className="flex-1 w-full max-w-xl mx-auto px-4 sm:px-5 pt-6 sm:pt-12 pb-16">
-          <h1 className="text-center text-[34px] sm:text-[44px] font-extrabold tracking-tight text-[#fff] leading-[1.08]">
+          <h1 className={cn('text-center text-[34px] sm:text-[44px] font-extrabold tracking-tight leading-[1.08]', ink)}>
             {t('builder.landerTitle')}
           </h1>
-          <p className={cn('text-center text-[16px] sm:text-[17px] leading-relaxed mt-4 max-w-md mx-auto', 'text-[#c9c9ce]')}>
+          <p className={cn('text-center text-[16px] sm:text-[17px] leading-relaxed mt-4 max-w-md mx-auto', isLight ? dim : 'text-[#c9c9ce]')}>
             {t('builder.landerSubtitle')}
           </p>
 
@@ -122,7 +126,7 @@ export default function BuilderPage() {
               e.preventDefault();
               send();
             }}
-            className={cn('mt-8 rounded-[28px] border backdrop-blur-xl p-4 bg-[rgba(20,20,22,0.88)]', STROKE)}
+            className={cn('mt-8 rounded-[28px] border backdrop-blur-xl p-4', stroke, isLight ? 'bg-[rgba(255,255,255,0.88)]' : 'bg-[rgba(20,20,22,0.88)]')}
           >
             <textarea
               ref={inputRef}
@@ -137,7 +141,7 @@ export default function BuilderPage() {
               rows={2}
               maxLength={2000}
               placeholder={t('builder.promptPlaceholder')}
-              className="w-full bg-transparent resize-none outline-none text-[17px] min-h-[56px] text-[#fff] placeholder:text-[#7a7a80]"
+              className={cn('w-full bg-transparent resize-none outline-none text-[17px] min-h-[56px] placeholder:text-[#7a7a80]', ink)}
             />
             <div className="flex items-center justify-end mt-2">
               <Button
@@ -167,7 +171,7 @@ export default function BuilderPage() {
                 className={cn(
                   'rounded-full border px-3.5 py-2 text-[14px] text-[#e8e8ea] transition-colors',
                   'bg-[rgba(10,10,12,0.45)] hover:bg-[rgba(30,30,34,0.6)] backdrop-blur-md',
-                  STROKE,
+                  stroke,
                 )}
               >
                 {t(key)}
@@ -179,16 +183,16 @@ export default function BuilderPage() {
             {STEPS.map(({ icon: Icon, title, body }, i) => (
               <li
                 key={title}
-                className={cn('rounded-2xl border p-4 bg-[rgba(10,10,12,0.55)] backdrop-blur-md', STROKE)}
+                className={cn('rounded-2xl border p-4 backdrop-blur-md', stroke, isLight ? 'bg-[rgba(255,255,255,0.7)]' : 'bg-[rgba(10,10,12,0.55)]')}
               >
-                <div className="flex items-center gap-2 text-[#fff]">
-                  <span className="w-7 h-7 rounded-lg bg-[rgba(255,255,255,0.08)] flex items-center justify-center">
+                <div className={cn('flex items-center gap-2', ink)}>
+                  <span className={cn('w-7 h-7 rounded-lg flex items-center justify-center', isLight ? 'bg-[rgba(0,0,0,0.08)]' : 'bg-[rgba(255,255,255,0.08)]')}>
                     <Icon className="w-4 h-4" />
                   </span>
-                  <span className={cn('text-[13px] tabular-nums', TEXT_DIM)}>{i + 1}</span>
+                  <span className={cn('text-[13px] tabular-nums', dim)}>{i + 1}</span>
                 </div>
-                <p className="mt-3 text-[15px] font-semibold text-[#fff] leading-snug">{t(title)}</p>
-                <p className={cn('mt-1 text-[14px] leading-relaxed', TEXT_DIM)}>{t(body)}</p>
+                <p className={cn('mt-3 text-[15px] font-semibold leading-snug', ink)}>{t(title)}</p>
+                <p className={cn('mt-1 text-[14px] leading-relaxed', dim)}>{t(body)}</p>
               </li>
             ))}
           </ol>
@@ -200,7 +204,7 @@ export default function BuilderPage() {
             className={cn(
               'mx-auto mt-8 flex items-center gap-2 rounded-full border px-4 py-2.5 text-[14px] font-medium text-[#e8e8ea] transition-colors',
               'bg-[rgba(10,10,12,0.45)] hover:bg-[rgba(30,30,34,0.6)] backdrop-blur-md',
-              STROKE,
+              stroke,
             )}
           >
             <MessageCircle className="w-4 h-4" />
@@ -209,7 +213,7 @@ export default function BuilderPage() {
 
           <button
             onClick={() => navigate('/stake')}
-            className={cn('block mx-auto mt-4 text-[13px] underline-offset-4 hover:underline', TEXT_DIM)}
+            className={cn('block mx-auto mt-4 text-[13px] underline-offset-4 hover:underline', dim)}
           >
             {t('builder.stakeForAllowance')}
           </button>
