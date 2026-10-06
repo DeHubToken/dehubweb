@@ -881,6 +881,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                 <div
                   key={video.id}
                   data-feed-item
+                  data-feed-before-shorts={index === SHORTS_INSERT_AFTER - 1 && shorts.length > 0 ? '' : undefined}
                   data-cinematic="video"
                   data-cinematic-first={index === 0 ? '' : undefined}
                   className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3"

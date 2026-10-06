@@ -87,7 +87,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
 
   return (
     <>
-      <div>
+      <div data-shorts-carousel>
 
 
         {/* Horizontal scroll */}

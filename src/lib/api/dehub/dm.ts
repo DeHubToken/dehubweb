@@ -532,7 +532,7 @@ export async function getMessages(
 
   try {
     const response = await apiCall<any>(`/api/dm/messages/${conversationId}`, {
-      params: { page, limit },
+      params: { skip: Math.max(0, Math.round(page * limit)), limit },
       requiresAuth: true,
     });
     let rawItems: any[] = [];

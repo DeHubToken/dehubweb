@@ -33,6 +33,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AlertTriangle, Gamepad2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBootProgress } from '@/lib/game-boot-progress';
 import { useGameExitRequest } from '@/lib/game-exit-request';
@@ -71,15 +72,15 @@ const PostModal = React.lazy(() =>
 
 function NotInTheArcade({ slug }: { slug: string | undefined }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-black px-6 text-center">
+    <div data-theme-page-surface className="relative z-[1] flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center text-foreground">
       <SEOHead title="Arcade | DeHub" noindex />
       <Gamepad2 className="h-8 w-8 text-zinc-600" />
       <p className="text-sm text-zinc-400">
         There is no game called <span className="font-mono text-zinc-200">{slug}</span> in the arcade.
       </p>
-      <Link to="/arcade" className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-black">
-        See what is here
-      </Link>
+      <Button asChild size="sm" className="rounded-full text-xs">
+        <Link to="/arcade">See what is here</Link>
+      </Button>
     </div>
   );
 }
