@@ -4291,7 +4291,6 @@
     "referenceComposeHint": "Bir nechta tasvirlardan belgilar, obyektlar va muhitni bitta kompozitsiyaga olib keling."
   },
   "pricing": {
-    "perSeatMonthly": "har bir o‘rindiq/oy",
     "plansForEveryWorkflow": "Har bir ish uchun rejalar",
     "findTheRightFit": "Jismoniy shaxslardan tortib, korxona jamoalarigacha, o&#39;zingizga mosini toping",
     "monthly": "Oylik",
@@ -4313,6 +4312,7 @@
     "pooledNeverExpires": "Ish maydoni bo&#39;ylab birlashtirilgan — hech qachon muddati tugamaydi",
     "perMonthBilledAnnually": "oyiga, yillik hisob-kitob qilinadi",
     "perSeatBilledAnnually": "Har bir o&#39;rindiq/oyiga, yillik hisob-kitob qilinadi",
+    "perSeatMonthly": "har bir o‘rindiq/oy",
     "savings": "Oylik bilan solishtirganda ${{amount}} tejang",
     "seats_one": "{{count}} o&#39;rindiq",
     "seats_other": "{{count}} o&#39;rindiqlar",
@@ -8057,6 +8057,32 @@
     "shareFacebook": "Facebook'da ulashish",
     "shareTelegram": "Telegram'da ulashish",
     "copyLink": "Havolani nusxalash"
+  },
+  "postStage": {
+    "back": "Ortga qaytish",
+    "askAI": "Ushbu post haqida AI dan so&#39;rang",
+    "followers": "{{value}} izdoshlari",
+    "repostAndShare": "Qayta joylashtiring va ulashing",
+    "repost": "Qayta joylashtirish",
+    "undoRepost": "Qayta joylashtirishni bekor qilish",
+    "repostHint": "Darhol, izdoshlaringizga",
+    "undoRepostHint": "Uni profilingizdan olib tashlang",
+    "quote": "Iqtibos",
+    "quoteHint": "O&#39;z so&#39;zlaringizni qo&#39;shing",
+    "shareTo": "Ulashish",
+    "copyLink": "Havolani nusxalash",
+    "more": "Ko&#39;proq",
+    "viewQuotes": "Iqtiboslarni ko&#39;rish",
+    "viewReposts": "Repostlarni ko&#39;rish",
+    "save": "Saqlash",
+    "saved": "Saqlandi",
+    "comments": "Izohlar",
+    "quotes": "Iqtiboslar",
+    "reposts": "Qayta joylashtirilganlar",
+    "backToComments": "Izohlarga qaytish",
+    "backToMedia": "Xabarga qaytish",
+    "like": "Yoqdi",
+    "unlike": "Yoqtirishni olib tashlash"
   },
   "spaces": {
     "title": "Boʻlimlar",

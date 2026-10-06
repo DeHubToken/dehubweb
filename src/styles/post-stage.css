@@ -1,0 +1,404 @@
+/* ==========================================================================
+   Post page "Stage" — phone web (<640px) only.
+   ==========================================================================
+   Everything the phone post page draws for itself (PostStagePhone and the
+   stage pieces of the cards) takes its colour from the tokens below, set per
+   theme. The components carry data attributes, never `bg-white` / `bg-black`
+   / `text-white` classes, so the theme nets that key on those classes (the
+   baseline control finish, the canvas themes' slab nets, the light theme's
+   `.text-white` remap) cannot reach them.
+
+   Floating surfaces are liquid glass, never solid: a theme tint over a strong
+   blur. Write only `backdrop-filter` here; the build adds the -webkit- form
+   (writing both makes the minifier keep only the prefixed one).
+
+   Tokens:
+     --stage-ink      text            --stage-muted   secondary text
+     --stage-solid    base surface    --stage-glass   tile / glass fill
+     --stage-border   hairlines       --stage-chip    chips, engaged tiles
+     --stage-field    input wells     --stage-accent  Follow, progress, likes
+     --stage-on-accent  text on the accent
+     --stage-avatar   avatar placeholder fill
+   ========================================================================== */
+
+:root,
+html[data-theme='system'],
+html[data-theme='cosmic'] {
+  --stage-ink: #f4f4f5;
+  --stage-muted: #9a9aa2;
+  --stage-solid: #1b1b1e;
+  --stage-glass: rgb(255 255 255 / 0.1);
+  --stage-border: rgb(255 255 255 / 0.12);
+  --stage-chip: rgb(255 255 255 / 0.14);
+  --stage-field: rgb(255 255 255 / 0.08);
+  --stage-accent: #fff;
+  --stage-on-accent: #000;
+  --stage-avatar: #3a3a40;
+}
+html[data-theme='cosmic'] {
+  --stage-solid: #15151c;
+  --stage-border: rgb(255 255 255 / 0.14);
+  --stage-avatar: #3c3c48;
+}
+html[data-theme='minimal'] {
+  --stage-ink: #fff;
+  --stage-muted: #8a8a8a;
+  --stage-solid: #000;
+  --stage-glass: #0c0c0c;
+  --stage-border: #2c2c2c;
+  --stage-chip: #1c1c1c;
+  --stage-field: #111;
+  --stage-accent: #fff;
+  --stage-on-accent: #000;
+  --stage-avatar: #2a2a2a;
+}
+html[data-theme='light'] {
+  --stage-ink: #1b1b1d;
+  --stage-muted: #6c6a66;
+  --stage-solid: #fff;
+  --stage-glass: rgb(255 255 255 / 0.72);
+  --stage-border: rgb(0 0 0 / 0.1);
+  --stage-chip: rgb(0 0 0 / 0.07);
+  --stage-field: rgb(0 0 0 / 0.05);
+  --stage-accent: #1b1b1d;
+  --stage-on-accent: #fff;
+  --stage-avatar: #c9c4bb;
+}
+html[data-theme='hazy'] {
+  --stage-ink: #f5efff;
+  --stage-muted: #bfaedc;
+  --stage-solid: #241038;
+  --stage-glass: rgb(40 14 70 / 0.42);
+  --stage-border: rgb(220 190 255 / 0.2);
+  --stage-chip: rgb(210 170 255 / 0.18);
+  --stage-field: rgb(255 255 255 / 0.08);
+  --stage-accent: #c78bff;
+  --stage-on-accent: #1a0630;
+  --stage-avatar: #4b2a70;
+}
+html[data-theme='swarms'] {
+  --stage-ink: #eaf7ff;
+  --stage-muted: #97b8cc;
+  --stage-solid: #0c2233;
+  --stage-glass: rgb(10 40 64 / 0.45);
+  --stage-border: rgb(140 210 255 / 0.2);
+  --stage-chip: rgb(120 200 255 / 0.16);
+  --stage-field: rgb(255 255 255 / 0.07);
+  --stage-accent: #4cc3ff;
+  --stage-on-accent: #021320;
+  --stage-avatar: #1e4a66;
+}
+html[data-theme='lavalamp'] {
+  --stage-ink: #fff4ec;
+  --stage-muted: #e3b8a2;
+  --stage-solid: #3a140a;
+  --stage-glass: rgb(60 16 6 / 0.42);
+  --stage-border: rgb(255 200 170 / 0.22);
+  --stage-chip: rgb(255 190 150 / 0.18);
+  --stage-field: rgb(255 255 255 / 0.08);
+  --stage-accent: #ffb069;
+  --stage-on-accent: #2a0a05;
+  --stage-avatar: #6a2a18;
+}
+html[data-theme='winter'] {
+  --stage-ink: #10263a;
+  --stage-muted: #4f6a82;
+  --stage-solid: #eef6fc;
+  --stage-glass: rgb(255 255 255 / 0.55);
+  --stage-border: rgb(20 60 100 / 0.14);
+  --stage-chip: rgb(20 70 120 / 0.1);
+  --stage-field: rgb(255 255 255 / 0.55);
+  --stage-accent: #1f5f94;
+  --stage-on-accent: #fff;
+  --stage-avatar: #7fa3c2;
+}
+html[data-theme='war'] {
+  --stage-ink: #e9e3c8;
+  --stage-muted: #a39d7e;
+  --stage-solid: #23261a;
+  --stage-glass: rgb(30 33 20 / 0.55);
+  --stage-border: rgb(214 190 110 / 0.3);
+  --stage-chip: rgb(224 180 74 / 0.16);
+  --stage-field: rgb(255 255 255 / 0.06);
+  --stage-accent: #e0b44a;
+  --stage-on-accent: #15170f;
+  --stage-avatar: #4a4d33;
+}
+html[data-theme='osaka'] {
+  --stage-ink: #f4f0ff;
+  --stage-muted: #b5a8d8;
+  --stage-solid: #1c0f3a;
+  --stage-glass: rgb(24 10 54 / 0.5);
+  --stage-border: rgb(255 90 200 / 0.3);
+  --stage-chip: rgb(255 79 184 / 0.18);
+  --stage-field: rgb(255 255 255 / 0.07);
+  --stage-accent: #ff4fb8;
+  --stage-on-accent: #fff;
+  --stage-avatar: #3d2170;
+}
+html[data-theme='jungle'] {
+  --stage-ink: #eefbe9;
+  --stage-muted: #a3c3a0;
+  --stage-solid: #11301a;
+  --stage-glass: rgb(12 40 20 / 0.5);
+  --stage-border: rgb(160 230 140 / 0.2);
+  --stage-chip: rgb(150 230 120 / 0.16);
+  --stage-field: rgb(255 255 255 / 0.07);
+  --stage-accent: #8fe36a;
+  --stage-on-accent: #06140b;
+  --stage-avatar: #2c5a33;
+}
+html[data-theme='island'] {
+  --stage-ink: #fff8f0;
+  --stage-muted: #dcc8d0;
+  --stage-solid: #1a3050;
+  --stage-glass: rgb(20 30 60 / 0.38);
+  --stage-border: rgb(255 230 210 / 0.22);
+  --stage-chip: rgb(255 220 190 / 0.18);
+  --stage-field: rgb(255 255 255 / 0.1);
+  --stage-accent: #ffc48a;
+  --stage-on-accent: #241230;
+  --stage-avatar: #4a3a6a;
+}
+html[data-theme='hacker'] {
+  --stage-ink: #7dff9a;
+  --stage-muted: #3fae5a;
+  --stage-solid: #001a06;
+  --stage-glass: rgb(0 30 8 / 0.6);
+  --stage-border: rgb(0 255 100 / 0.3);
+  --stage-chip: rgb(0 255 100 / 0.14);
+  --stage-field: rgb(0 255 100 / 0.06);
+  --stage-accent: #39ff6a;
+  --stage-on-accent: #001a06;
+  --stage-avatar: #0b3a18;
+}
+html[data-theme='horror'] {
+  --stage-ink: #f3e6e6;
+  --stage-muted: #b08a8a;
+  --stage-solid: #220606;
+  --stage-glass: rgb(40 0 0 / 0.5);
+  --stage-border: rgb(220 40 40 / 0.28);
+  --stage-chip: rgb(224 48 46 / 0.18);
+  --stage-field: rgb(255 255 255 / 0.06);
+  --stage-accent: #e0302e;
+  --stage-on-accent: #fff;
+  --stage-avatar: #4a1414;
+}
+
+/* The post owns the screen: no logo bar, no feed pill, no bottom nav (the
+   docked composer takes the bottom nav's place). */
+@media (max-width: 639px) {
+  body.post-stage-mode :is([data-mobile-header], [data-feed-nav], [data-feed-nav-outer], [data-home-tabs], [data-bottom-nav]) {
+    display: none !important;
+  }
+  body.post-stage-mode main {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+/* --- Text ------------------------------------------------------------- */
+html [data-stage-ink]:not(#_) {
+  color: var(--stage-ink);
+}
+html [data-stage-muted]:not(#_) {
+  color: var(--stage-muted);
+}
+html [data-post-stage] [data-stage-more]:not(#_) {
+  color: var(--stage-ink);
+}
+
+/* --- Glass squares on the media ---------------------------------------- */
+html [data-stage-glass-square]:not(#_):not(#_) {
+  display: flex;
+  height: 38px;
+  width: 38px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: #fff;
+  background: rgb(0 0 0 / 0.34);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.18);
+  backdrop-filter: blur(14px) saturate(1.4);
+}
+html [data-stage-glass-square]:not(#_):not(#_) svg {
+  color: #fff;
+}
+/* No media under a text post: the same squares in the page's material. */
+html [data-stage-media-chrome='inline'] [data-stage-glass-square]:not(#_):not(#_) {
+  color: var(--stage-ink);
+  background: var(--stage-glass);
+  border-color: var(--stage-border);
+  box-shadow: none;
+}
+html [data-stage-media-chrome='inline'] [data-stage-glass-square]:not(#_):not(#_) svg {
+  color: var(--stage-ink);
+}
+
+/* --- Creator row -------------------------------------------------------- */
+html [data-stage-avatar-fallback]:not(#_) {
+  background: var(--stage-avatar);
+  color: #fff;
+}
+html [data-stage-follow]:not(#_):not(#_) {
+  background: var(--stage-accent);
+  color: var(--stage-on-accent);
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+html [data-stage-follow='following']:not(#_):not(#_) {
+  background: var(--stage-chip);
+  color: var(--stage-ink);
+  border-color: var(--stage-border);
+}
+
+/* --- Chips (sort, search, PPV / gate badges) --------------------------- */
+html [data-stage-chip]:not(#_):not(#_) {
+  background: var(--stage-chip);
+  color: var(--stage-ink);
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+html [data-stage-chip][data-active='true']:not(#_):not(#_) {
+  border-color: var(--stage-border);
+  color: var(--stage-accent);
+}
+html [data-stage-chip]:not(#_):not(#_) svg {
+  color: currentColor;
+}
+
+/* --- The five-tile bar -------------------------------------------------- */
+html [data-stage-tile]:not(#_):not(#_) {
+  color: var(--stage-ink);
+  background: var(--stage-glass);
+  border: 1px solid var(--stage-border);
+  box-shadow: none;
+  backdrop-filter: blur(22px) saturate(1.4);
+}
+html [data-stage-tile] > span:not([data-engaged-glyph]):not(#_) {
+  color: var(--stage-ink);
+}
+html [data-stage-tile][data-engaged]:not(#_):not(#_) {
+  background: var(--stage-chip);
+}
+html [data-stage-tile][data-engaged]:not(#_):not(#_) > svg {
+  color: var(--stage-accent);
+}
+html[data-theme='minimal'] [data-stage-tile]:not(#_):not(#_) {
+  backdrop-filter: none;
+}
+
+/* --- Docked composer ------------------------------------------------------
+   Liquid glass, not solid: ~80% of the theme surface over a 28px blur, with a
+   soft blurred band above it so comment text scrolling underneath never reads
+   through the edge. */
+html [data-stage-composer]:not(#_):not(#_) {
+  background: color-mix(in srgb, var(--stage-solid) 80%, transparent);
+  backdrop-filter: blur(28px) saturate(1.5);
+  border-top: 1px solid var(--stage-border);
+  box-shadow: 0 -6px 24px rgb(0 0 0 / 0.25);
+  /* It also carries the page pin, which lifts it over the bottom nav; that
+     nav is hidden here, so it sits on the screen edge. */
+  bottom: 0;
+  transition: none;
+}
+html [data-stage-composer-fade]:not(#_) {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 100%;
+  height: 40px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 0, color-mix(in srgb, var(--stage-solid) 60%, transparent) 70%);
+  backdrop-filter: blur(14px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 60%);
+}
+html [data-stage-composer] [data-comment-field]:not(#_):not(#_) {
+  background: var(--stage-field);
+  border-color: var(--stage-border);
+}
+html [data-stage-composer] [data-comment-field] textarea:not(#_):not(#_) {
+  color: var(--stage-ink);
+}
+
+/* --- Mini player --------------------------------------------------------- */
+html [data-stage-mini-strip]:not(#_):not(#_) {
+  color: var(--stage-ink);
+  background: color-mix(in srgb, var(--stage-solid) 78%, transparent);
+  border: 1px solid var(--stage-border);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+  backdrop-filter: blur(24px) saturate(1.5);
+}
+html [data-stage-mini-btn]:not(#_):not(#_) {
+  color: var(--stage-ink);
+  background: var(--stage-chip);
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+html [data-stage-mini-btn]:not(#_):not(#_) svg {
+  color: currentColor;
+}
+html [data-stage-mini-btn][data-engaged]:not(#_):not(#_) {
+  color: var(--stage-accent);
+}
+html [data-stage-mini-thumb]:not(#_) {
+  background: var(--stage-avatar);
+  color: #fff;
+}
+html [data-stage-mini-track]:not(#_) {
+  background: rgb(255 255 255 / 0.28);
+}
+html [data-stage-mini-progress]:not(#_) {
+  background: var(--stage-accent);
+}
+
+/* --- "Repost & share" sheet ---------------------------------------------- */
+html [data-stage-sheet] :is([data-stage-sheet-tile], [data-stage-sheet-list]):not(#_):not(#_) {
+  color: var(--stage-ink);
+  background: var(--stage-glass);
+  border: 1px solid var(--stage-border);
+  box-shadow: none;
+}
+html [data-stage-sheet] [data-stage-sheet-tile] svg:not(#_),
+html [data-stage-sheet] [data-stage-sheet-list] svg:not([data-stage-muted]):not(#_) {
+  color: var(--stage-ink);
+}
+html [data-stage-sheet] [data-stage-sheet-list] > button + button:not(#_) {
+  border-top: 1px solid var(--stage-border);
+}
+html [data-stage-sheet] [data-stage-share-target]:not(#_):not(#_) {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+html [data-stage-sheet] [data-stage-share-icon]:not(#_) {
+  color: var(--stage-ink);
+  background: var(--stage-chip);
+}
+html [data-stage-face]:not(#_) {
+  background: var(--stage-avatar);
+  color: #fff;
+  box-shadow: 0 0 0 2px var(--stage-solid);
+}
+
+/* --- System: full immersive, no bento boxes -------------------------------
+   System drops boxed cards entirely. The five tiles become bare icons on the
+   page with hairlines above and below the bar, and the sheet's tiles and lists
+   lose their boxes too (rows keep their hairline dividers). */
+html[data-theme='system'] [data-stage-bar]:not(#_):not(#_) {
+  border-block: 1px solid var(--stage-border);
+  padding-block: 2px;
+}
+html[data-theme='system'] [data-stage-tile]:not(#_):not(#_):not(#_) {
+  background: transparent;
+  border-color: transparent;
+  backdrop-filter: none;
+}
+html[data-theme='system'] [data-stage-sheet] :is([data-stage-sheet-tile], [data-stage-sheet-list]):not(#_):not(#_):not(#_) {
+  background: transparent;
+  border-color: transparent;
+}
+html[data-theme='system'] [data-stage-sheet] [data-stage-sheet-list]:not(#_):not(#_):not(#_) {
+  border-block: 1px solid var(--stage-border);
+  border-radius: 0;
+}

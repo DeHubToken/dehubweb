@@ -8289,5 +8289,31 @@
     "shareFacebook": "Share on Facebook",
     "shareTelegram": "Share on Telegram",
     "copyLink": "Copy link"
+  },
+  "postStage": {
+    "back": "Go back",
+    "askAI": "Ask AI about this post",
+    "followers": "{{value}} followers",
+    "repostAndShare": "Repost & share",
+    "repost": "Repost",
+    "undoRepost": "Undo repost",
+    "repostHint": "Instantly, to your followers",
+    "undoRepostHint": "Take it off your profile",
+    "quote": "Quote",
+    "quoteHint": "Add your own words",
+    "shareTo": "Share to",
+    "copyLink": "Copy link",
+    "more": "More",
+    "viewQuotes": "View quotes",
+    "viewReposts": "View reposts",
+    "save": "Save",
+    "saved": "Saved",
+    "comments": "Comments",
+    "quotes": "Quotes",
+    "reposts": "Reposts",
+    "backToComments": "Back to comments",
+    "backToMedia": "Back to the post",
+    "like": "Like",
+    "unlike": "Remove like"
   }
 }
