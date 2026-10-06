@@ -1609,7 +1609,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   );
   const mediaAspect = video.isAudio ? DEFAULT_ASPECT : measuredAspect;
   const headerAboveMedia = firstFeedPost && !video.isAudio && !video.isLivePost && mediaAspect >= 1;
-  const cropFeedVideo = isPhone && !isImmersive && !isFullscreen && !video.isAudio;
+  const cropFeedVideo = !isImmersive && !isFullscreen && !video.isAudio;
 
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
@@ -2009,11 +2009,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         ref={containerRef}
         tabIndex={0}
         data-no-navigate
-        data-mobile-feed-video={cropFeedVideo || undefined}
+        data-feed-video-frame={cropFeedVideo || undefined}
         data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
-        /* Phone feeds fill the width and crop tall clips into a 3:4 frame.
-           Desktop portrait clips cap at MAX_MEDIA_HEIGHT and narrow instead.
+        /* Feed videos fill the column and crop only past 75% of the viewport.
            On the post page (immersive) it's centred in the column instead, and
            grows until it fills either the column width or most of the screen
            height, whichever it hits first — never cropped, never stretched. */
@@ -2028,9 +2027,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 }
               : cropFeedVideo
                 ? {
-                    aspectRatio: Math.max(mediaAspect, 3 / 4),
+                    aspectRatio: mediaAspect,
                     width: '100%',
-                    maxHeight: 'min(600px, 65svh)',
+                    maxHeight: '75svh',
                   }
                 : {
                   aspectRatio: mediaAspect,
