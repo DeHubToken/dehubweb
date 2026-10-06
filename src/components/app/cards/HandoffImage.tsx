@@ -40,7 +40,9 @@ function show(entry: Entry) {
     }
     claim.slot.appendChild(image);
   }
-  const props = claim.props;
+  // Never strip a bitmap while another live claim still wants it shown.
+  const fallback = entry.claims.find(c => c.props.src);
+  const props = !claim.props.src && fallback ? { ...claim.props, src: fallback.props.src, srcSet: fallback.props.srcSet, sizes: fallback.props.sizes } : claim.props;
   image.className = props.className ?? '';
   image.style.cssText = '';
   for (const [property, value] of Object.entries(props.style ?? {})) {
@@ -68,6 +70,17 @@ function show(entry: Entry) {
     props.onImageLoad(image);
   };
   image.onload = loaded;
+  image.onerror = () => {
+    const failed = image.getAttribute('src');
+    if (!failed || image.dataset.retried === failed) return;
+    setTimeout(() => {
+      if (image.getAttribute('src') !== failed) return;
+      const retry = `${failed}${failed.includes('?') ? '&' : '?'}_r=${Date.now()}`;
+      image.dataset.retried = retry;
+      image.removeAttribute('srcset');
+      image.setAttribute('src', retry);
+    }, 1000);
+  };
   if (image.complete && image.naturalWidth) loaded();
 }
 

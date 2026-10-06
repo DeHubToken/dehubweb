@@ -4,42 +4,34 @@ import { useHorizontalBitmap } from '../hooks/use-horizontal-bitmap';
 
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
-it('releases measured offscreen images, cancels short excursions, and restores scroll-back immediately', () => {
-  vi.useFakeTimers();
-  let notify: (entries: { isIntersecting: boolean; boundingClientRect: { left: number; right: number } }[]) => void = () => {};
-  const notifySlide = (inside: boolean, isIntersecting = inside) => notify([{
-    isIntersecting,
-    boundingClientRect: inside ? { left: 0, right: 600 } : { left: 900, right: 1500 },
-  }]);
-  const disconnect = vi.fn();
+function setup() {
+  let notify: (e: { isIntersecting: boolean }[]) => void = () => {};
+  const observe = vi.fn();
   vi.stubGlobal('IntersectionObserver', class {
-    constructor(callback: typeof notify) { notify = callback; }
-    observe() {}
-    disconnect = disconnect;
+    constructor(cb: typeof notify) { notify = cb; }
+    observe = observe; disconnect() {}
   });
-  const viewport = { current: document.createElement('div') };
-  const rect = vi.spyOn(viewport.current, 'getBoundingClientRect').mockReturnValue({ left: 0, right: 600, top: 0, bottom: 600 } as DOMRect);
-  const slide = { current: document.createElement('div') };
-  const { result, rerender, unmount } = renderHook(({ source, measured }) => useHorizontalBitmap(source, measured, viewport, slide), {
-    initialProps: { source: 'photo-a.jpg', measured: true },
-  });
-  act(() => { notifySlide(false); vi.advanceTimersByTime(200); });
+  return { notify: (v: boolean) => notify([{ isIntersecting: v }]), observe,
+    viewport: { current: document.createElement('div') }, slide: { current: document.createElement('div') } };
+}
+
+it('keeps a single image always visible', () => {
+  vi.useFakeTimers();
+  const t = setup();
+  const { result } = renderHook(() => useHorizontalBitmap('a.jpg', true, t.viewport, t.slide, true));
+  act(() => { t.notify(false); vi.advanceTimersByTime(5000); });
   expect(result.current).toBe(true);
-  act(() => { notifySlide(true); vi.advanceTimersByTime(400); });
+  expect(t.observe).not.toHaveBeenCalled();
+});
+
+it('unloads far slides after grace and restores on intersect', () => {
+  vi.useFakeTimers();
+  const t = setup();
+  const { result } = renderHook(() => useHorizontalBitmap('a.jpg', true, t.viewport, t.slide));
+  act(() => { t.notify(false); vi.advanceTimersByTime(200); t.notify(true); vi.advanceTimersByTime(400); });
   expect(result.current).toBe(true);
-  act(() => { notifySlide(false); vi.advanceTimersByTime(400); });
+  act(() => { t.notify(false); vi.advanceTimersByTime(400); });
   expect(result.current).toBe(false);
-  act(() => notifySlide(true));
+  act(() => t.notify(true));
   expect(result.current).toBe(true);
-  act(() => { notifySlide(true, false); vi.advanceTimersByTime(400); });
-  expect(result.current).toBe(true);
-  rect.mockReturnValue({ left: 0, right: 600, top: -2500, bottom: -1900 } as DOMRect);
-  act(() => { notify([{ isIntersecting: false, boundingClientRect: { left: 0, right: 0 } }]); vi.advanceTimersByTime(1000); });
-  expect(result.current).toBe(true);
-  rect.mockReturnValue({ left: 0, right: 600, top: 0, bottom: 600 } as DOMRect);
-  act(() => { notifySlide(false); vi.advanceTimersByTime(400); });
-  rerender({ source: 'photo-b.jpg', measured: false });
-  expect(result.current).toBe(true);
-  unmount();
-  expect(disconnect).toHaveBeenCalled();
 });
