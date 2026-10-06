@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
+import { PenSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
@@ -151,6 +152,7 @@ const ICONS: ThemeIconKey[] = [
 ];
 
 export default function StateGalleryPage() {
+  const { t } = useTranslation();
   const { theme, setTheme } = useAppTheme();
   const [params, setParams] = useSearchParams();
   const requestedTheme = params.get('theme');
@@ -284,6 +286,12 @@ export default function StateGalleryPage() {
             <button className="rounded-xl bg-white px-4 py-2 text-black" onClick={press}>Neutral white</button>
             <button className="rounded-xl bg-zinc-800 px-4 py-2 text-white" onClick={press}>Neutral zinc</button>
             <button className="rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/30 px-4 py-2 text-white" onClick={press}>Neutral gradient</button>
+            <button data-primary-cta data-nav-create className="rounded-2xl bg-zinc-900/90 border border-white/30 px-4 py-3" onClick={press}>
+              <div className="flex items-center justify-center gap-2 font-semibold text-white">
+                <PenSquare className="h-[18px] w-[18px]" />
+                <span>{t('nav.create')}</span>
+              </div>
+            </button>
             <LiquidGlassBubble2 label="Bubble action" onClick={press} />
             <LiquidGlassBubble2 label="Active bubble" active onClick={press} />
             <LiquidGlassBubble2 label="Disabled bubble" disabled onClick={press} />

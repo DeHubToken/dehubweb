@@ -782,6 +782,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                untagged, it read as a second anonymous slab welded under the nav
                bento, at nearly the same width and the same fill. */
             data-primary-cta
+            data-nav-create
             className={cn(
               "cursor-pointer box-border rounded-2xl bg-zinc-900/90 hover:bg-zinc-800/90 transition-colors overflow-hidden shadow-none flex items-center justify-center",
               isMinimal ? "border border-zinc-700" : "border border-white/30",
