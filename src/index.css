@@ -3870,6 +3870,30 @@ html[data-theme="light"] [data-feed-root] [data-feed-item]:last-child::after {
   display: none;
 }
 
+/* The shorts rail reaches the feed edges and provides its own separation. */
+@media (max-width: 1023px) {
+  [data-feed-root] [data-shorts-carousel] {
+    margin-inline: -0.75rem;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  html:is([data-theme="minimal"], [data-theme="light"]) [data-feed-root] [data-feed-before-shorts] {
+    border-bottom: 0 !important;
+  }
+  html:is([data-theme="minimal"], [data-theme="light"]) [data-feed-root] [data-feed-before-shorts]::after {
+    display: none;
+  }
+}
+@media (max-width: 639px) {
+  [data-feed-root] [data-shorts-carousel] {
+    margin-inline: -0.5rem;
+  }
+  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic][data-feed-before-shorts] {
+    border-bottom: 0 !important;
+  }
+}
+
 /* Full-width top nav tabs on mobile/tablet. */
 @media (max-width: 1023px) {
   html[data-theme="light"] [data-home-tabs] {
