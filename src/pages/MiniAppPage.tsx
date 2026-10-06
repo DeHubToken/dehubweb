@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { AlertTriangle, BadgeCheck, Loader2, ShieldAlert, Wrench, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMiniAppHost, type PaymentResult } from '@/lib/miniapp/host-bridge';
 import { payDhb } from '@/lib/dhb-payment';
@@ -357,13 +358,13 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
 function Unavailable({ message }: { message: string }) {
   const { t } = useTranslation();
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-black px-6 text-center">
+    <div data-theme-page-surface className="relative z-[1] flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center text-foreground">
       <SEOHead title={`${t('miniApps.store.title')} | DeHub`} noindex />
       <AlertTriangle className="h-8 w-8 text-zinc-600" />
       <p className="max-w-sm text-sm text-zinc-400">{message}</p>
-      <Link to="/apps" className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-black">
-        {t('miniApps.host.backToStore')}
-      </Link>
+      <Button asChild size="sm" className="rounded-full text-xs">
+        <Link to="/apps">{t('miniApps.host.backToStore')}</Link>
+      </Button>
     </div>
   );
 }
@@ -411,7 +412,7 @@ export default function MiniAppPage() {
 
   if (listing === undefined) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
+      <div data-theme-page-surface className="relative z-[1] flex min-h-screen items-center justify-center bg-background text-foreground">
         <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
       </div>
     );
