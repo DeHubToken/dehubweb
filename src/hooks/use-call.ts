@@ -31,6 +31,7 @@ export interface UseCallReturn {
   setCallMessageHandler: (handler: ((content: string) => void) | null) => void;
 }
 type CallMedia = { client: any; audio: any; video: any; remoteVideo: any; remoteAudio: any; closed: boolean };
+const callChecksVisible = () => document.visibilityState !== 'hidden';
 
 export const useCall = (): UseCallReturn => {
   const [isCallActive, setIsCallActive] = useState(false);
@@ -269,7 +270,7 @@ export const useCall = (): UseCallReturn => {
     } finally { if (generationRef.current === generation) joiningRef.current = false; }
   }, [clearTimers, publishCall, joinAgoraChannel, endCall, markEnded]);
   const checkForCalls = useCallback(async (recover = false): Promise<void> => {
-    if (!userAddress || currentCallRef.current || document.visibilityState === 'hidden') return;
+    if (!userAddress || currentCallRef.current || !callChecksVisible()) return;
     const generation = generationRef.current;
     const pending = ringCheckRef.current;
     if (pending?.wallet === userAddress && pending.generation === generation) {
@@ -281,7 +282,7 @@ export const useCall = (): UseCallReturn => {
     ringCheckRef.current = request;
     try {
       const call = await simpleCallCheck(userAddress);
-      if (!call || generationRef.current !== generation || currentCallRef.current || document.visibilityState === 'hidden') return;
+      if (!call || generationRef.current !== generation || currentCallRef.current || !callChecksVisible()) return;
       const age = Date.now() - new Date(call.created_at).getTime();
       if (!Number.isFinite(age) || age > 45_000) return;
       ++generationRef.current;
