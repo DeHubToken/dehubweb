@@ -1201,6 +1201,13 @@
     "loadingBoard": "Laddar topplistan…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Token-listning kommer snart!",
+    "body": "$DHB handlas inte än. Få ett mejl så fort den listas.",
+    "notifyMe": "Meddela mig",
+    "privacy": "Vi använder det bara för att meddela dig när $DHB listas.",
+    "joined": "Du står på listan. Vi mejlar {{email}} så fort $DHB listas."
+  },
   "explorePage": {
     "searchPlaceholder": "Sök personer, inlägg eller innehåll...",
     "filters": "Filter",

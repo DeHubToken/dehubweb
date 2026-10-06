@@ -1173,6 +1173,13 @@
     "loadingBoard": "Ɲɛmɔgɔya sɛbɛn bɛ ka don…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Tokɛn bɛna sɔrɔ sɔɔni!",
+    "body": "$DHB ma san ni feere daminɛ fɔlɔ. I bɛna email sɔrɔ a bɔli waati la.",
+    "notifyMe": "N kibaro",
+    "privacy": "An bɛna nin kɛ dɔrɔn ka i kibaro $DHB bɔli la.",
+    "joined": "I bɛ lisi kɔnɔ. An bɛna email ci {{email}} ma $DHB bɔli waati la."
+  },
   "explorePage": {
     "searchPlaceholder": "Dɔ, kɔrɔbɔw, fɔlɔw fɛɛrɛ...",
     "filters": "Kɔrɔbɔ",

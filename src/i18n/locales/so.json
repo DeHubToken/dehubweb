@@ -1201,6 +1201,13 @@
     "loadingBoard": "Liiska hogaamiyayaasha waa la soo dejinayaa…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Liiska token-ka dhawaan!",
+    "body": "$DHB weli lagama ganacsado. Hel iimayl isla marka la liis-gareeyo.",
+    "notifyMe": "I ogeysii",
+    "privacy": "Waxaan u isticmaali doonnaa oo keliya inaan kuu sheegno marka $DHB la liis-gareeyo.",
+    "joined": "Waxaad ku jirtaa liiska. Waxaan iimayl u diri doonnaa {{email}} isla marka $DHB la liis-gareeyo."
+  },
   "explorePage": {
     "searchPlaceholder": "Raadi dadka, qoraallada, ama nuxurka...",
     "filters": "Shaandheeyayaasha",

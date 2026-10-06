@@ -1201,6 +1201,13 @@
     "loadingBoard": "리더보드 불러오는 중…",
     "amountTokens": "{{amount}} 토큰"
   },
+  "dhbListing": {
+    "title": "토큰 상장이 곧 시작됩니다!",
+    "body": "$DHB는 아직 거래되지 않습니다. 상장되는 즉시 이메일로 알려드릴게요.",
+    "notifyMe": "알림 받기",
+    "privacy": "$DHB 상장 소식을 알려드리는 데에만 사용합니다.",
+    "joined": "명단에 등록되었습니다. $DHB가 상장되면 바로 {{email}}(으)로 이메일을 보내드릴게요."
+  },
   "explorePage": {
     "searchPlaceholder": "사람, 게시물, 콘텐츠 검색...",
     "filters": "필터",

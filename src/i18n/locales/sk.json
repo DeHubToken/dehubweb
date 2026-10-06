@@ -1263,6 +1263,13 @@
     "mostFollowed": "Najviac sledovaní",
     "mostLiked": "Najviac obľúbení"
   },
+  "dhbListing": {
+    "title": "Listing tokenu už čoskoro!",
+    "body": "$DHB sa zatiaľ neobchoduje. Dostaňte e-mail hneď, ako bude listovaný.",
+    "notifyMe": "Upozorniť ma",
+    "privacy": "Použijeme to len na to, aby sme vám dali vedieť, keď bude $DHB listovaný.",
+    "joined": "Ste na zozname. Hneď ako bude $DHB listovaný, napíšeme na {{email}}."
+  },
   "explorePage": {
     "searchPlaceholder": "Hľadať ľudí, príspevky alebo obsah...",
     "filters": "Filtre",

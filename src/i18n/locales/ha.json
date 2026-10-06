@@ -1201,6 +1201,13 @@
     "loadingBoard": "Ana ɗora jadawalin matsayi…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Za a jera token nan ba da jimawa ba!",
+    "body": "Ba a fara cinikin $DHB ba tukuna. Sami imel da zarar an jera shi.",
+    "notifyMe": "Sanar da ni",
+    "privacy": "Za mu yi amfani da wannan ne kawai don sanar da kai lokacin da aka jera $DHB.",
+    "joined": "Kana cikin jerin. Za mu aika imel zuwa {{email}} da zarar an jera $DHB."
+  },
   "explorePage": {
     "searchPlaceholder": "Nemo mutane, rubutu ko abun ciki...",
     "filters": "Tacewa",

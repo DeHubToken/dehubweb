@@ -1190,6 +1190,13 @@
     "loadingBoard": "Reýting ýüklenýär…",
     "amountTokens": "{{amount}} token"
   },
+  "dhbListing": {
+    "title": "Token listingi ýakynda!",
+    "body": "$DHB entek söwda edilmeýär. Listinge çykan badyna e-poçta alyň.",
+    "notifyMe": "Maňa habar ber",
+    "privacy": "Muny diňe $DHB listinge çykanda size habar bermek üçin ulanarys.",
+    "joined": "Siz sanawda. $DHB listinge çykan badyna {{email}} salgysyna hat ibereris."
+  },
   "explorePage": {
     "searchPlaceholder": "Adam, ýazgy ýa-da mazmun gözle...",
     "filters": "Süzgüçler",

@@ -1173,6 +1173,13 @@
     "provisional": "ግዝያዊ",
     "loadingBoard": "ሰሌዳ ደረጃ ይጽዓን ኣሎ…"
   },
+  "dhbListing": {
+    "title": "ቶከን ብቐረባ ክምዝገብ እዩ!",
+    "body": "$DHB ገና ኣይተሸጠን። ምስ ተመዝገበ ብቕጽበት ኢመይል ተቐበል።",
+    "notifyMe": "ኣፍልጠኒ",
+    "privacy": "እዚ $DHB ምስ ተመዝገበ ንምሕባርካ ጥራይ ኢና ንጥቀመሉ።",
+    "joined": "ኣብ ዝርዝር ኣለኻ። $DHB ምስ ተመዝገበ ብቕጽበት ናብ {{email}} ኢመይል ክንሰድድ ኢና።"
+  },
   "explorePage": {
     "searchPlaceholder": "ሰባት፣ ጽሑፋት፣ ወይ ትሕዝቶ ድለ...",
     "filters": "ፊልተራት",

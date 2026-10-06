@@ -1464,6 +1464,13 @@
     "loadingBoard": "Memuatkan papan pendahulu…",
     "amountTokens": "{{amount}} token"
   },
+  "dhbListing": {
+    "title": "Penyenaraian token akan datang!",
+    "body": "$DHB belum didagangkan. Dapatkan e-mel sebaik sahaja ia disenaraikan.",
+    "notifyMe": "Maklumkan saya",
+    "privacy": "Kami hanya akan menggunakannya untuk memaklumkan anda apabila $DHB disenaraikan.",
+    "joined": "Anda dalam senarai. Kami akan menghantar e-mel ke {{email}} sebaik sahaja $DHB disenaraikan."
+  },
   "explorePage": {
     "searchPlaceholder": "Cari orang, siaran, atau kandungan...",
     "filters": "Filters",

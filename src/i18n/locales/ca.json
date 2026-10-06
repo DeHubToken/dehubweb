@@ -1197,6 +1197,13 @@
     "loadingBoard": "Carregant la classificació…",
     "amountTokens": "{{amount}} fitxes"
   },
+  "dhbListing": {
+    "title": "El token es llistarà aviat!",
+    "body": "$DHB encara no cotitza. Rep un correu electrònic tan bon punt es llisti.",
+    "notifyMe": "Avisa'm",
+    "privacy": "Només ho farem servir per avisar-te quan $DHB es llisti.",
+    "joined": "Ja ets a la llista. Enviarem un correu a {{email}} tan bon punt $DHB es llisti."
+  },
   "explorePage": {
     "searchPlaceholder": "Cercar persones, publicacions o contingut...",
     "filters": "Filtres",

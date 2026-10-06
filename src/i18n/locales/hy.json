@@ -1201,6 +1201,13 @@
     "loadingBoard": "Վարկանիշային աղյուսակը բեռնվում է…",
     "amountTokens": "{{amount}} թոքեն"
   },
+  "dhbListing": {
+    "title": "Թոքենի ցուցակումը շուտով!",
+    "body": "$DHB-ով դեռ առևտուր չի արվում։ Ստացեք նամակ, հենց այն ցուցակվի։",
+    "notifyMe": "Տեղեկացրեք ինձ",
+    "privacy": "Սա կօգտագործենք միայն $DHB-ի ցուցակման մասին ձեզ տեղեկացնելու համար։",
+    "joined": "Դուք ցուցակում եք։ Հենց $DHB-ն ցուցակվի, կգրենք {{email}} հասցեին։"
+  },
   "explorePage": {
     "searchPlaceholder": "Voronel mardkanits, groumerits kam bovalandakoutyunits...",
     "filters": "Zangvoshner",

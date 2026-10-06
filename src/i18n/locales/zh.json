@@ -1201,6 +1201,13 @@
     "loadingBoard": "正在加载排行榜…",
     "amountTokens": "{{amount}} 代币"
   },
+  "dhbListing": {
+    "title": "代币即将上线！",
+    "body": "$DHB 尚未开始交易。一上线即可收到邮件通知。",
+    "notifyMe": "通知我",
+    "privacy": "我们仅会用它在 $DHB 上线时通知你。",
+    "joined": "你已加入名单。$DHB 一上线，我们就会发送邮件至 {{email}}。"
+  },
   "explorePage": {
     "searchPlaceholder": "搜索人物、帖子或内容...",
     "filters": "筛选",

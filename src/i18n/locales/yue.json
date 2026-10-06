@@ -1201,6 +1201,13 @@
     "loadingBoard": "載入緊排行榜…",
     "amountTokens": "{{amount}} 代幣"
   },
+  "dhbListing": {
+    "title": "代幣即將上市！",
+    "body": "$DHB 仲未開始交易。一上市就會收到電郵。",
+    "notifyMe": "通知我",
+    "privacy": "我哋只會用嚟喺 $DHB 上市時通知你。",
+    "joined": "你已經喺名單上。$DHB 一上市我哋就會電郵去 {{email}}。"
+  },
   "explorePage": {
     "searchPlaceholder": "搜尋用戶、帖文或內容...",
     "filters": "篩選",

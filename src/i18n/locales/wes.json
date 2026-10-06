@@ -1134,6 +1134,13 @@
     "loadingBoard": "Leaderboard di load…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Token listing di come soon!",
+    "body": "$DHB never start for trade. Get email di time wey e list.",
+    "notifyMe": "Tell me",
+    "privacy": "We go use am only for tell you when $DHB list.",
+    "joined": "You don dey for di list. We go send email for {{email}} di time wey $DHB list."
+  },
   "explorePage": {
     "searchPlaceholder": "Search for people, posts, or content...",
     "filters": "Filters",
