@@ -31,6 +31,7 @@ export interface UseCallReturn {
   setCallMessageHandler: (handler: ((content: string) => void) | null) => void;
 }
 type CallMedia = { client: any; audio: any; video: any; remoteVideo: any; remoteAudio: any; closed: boolean };
+const callChecksVisible = () => document.visibilityState !== 'hidden';
 
 export const useCall = (): UseCallReturn => {
   const [isCallActive, setIsCallActive] = useState(false);
@@ -47,6 +48,7 @@ export const useCall = (): UseCallReturn => {
   const currentCallRef = useRef<CallSession | null>(null);
   const startedAtRef = useRef<number | null>(null);
   const generationRef = useRef(0);
+  const ringCheckRef = useRef<{ wallet: string; generation: number; recover: boolean } | null>(null);
   const joiningRef = useRef(false);
   const mediaRef = useRef<CallMedia | null>(null);
   const localVideoTrack = useRef<any>(null);
@@ -267,20 +269,35 @@ export const useCall = (): UseCallReturn => {
       if (generationRef.current === generation) { setCallFailureReason('technical_error'); await endCall(); }
     } finally { if (generationRef.current === generation) joiningRef.current = false; }
   }, [clearTimers, publishCall, joinAgoraChannel, endCall, markEnded]);
-  const checkForCalls = useCallback(async () => {
-    if (!userAddress || currentCallRef.current) return;
+  const checkForCalls = useCallback(async (recover = false): Promise<void> => {
+    if (!userAddress || currentCallRef.current || !callChecksVisible()) return;
     const generation = generationRef.current;
-    const call = await simpleCallCheck(userAddress);
-    if (!call || generationRef.current !== generation || currentCallRef.current) return;
-    const age = Date.now() - new Date(call.created_at).getTime();
-    if (!Number.isFinite(age) || age > 45_000) return;
-    ++generationRef.current;
-    publishCall(call as CallSession); setIsMinimized(false); setIsIncoming(true);
-    visualActivity.setCall(true, true);
-    const ringGeneration = generationRef.current;
-    callTimeoutRef.current = setTimeout(() => {
-      if (generationRef.current === ringGeneration && !joiningRef.current) void endCall();
-    }, Math.max(0, 45_000 - age));
+    const pending = ringCheckRef.current;
+    if (pending?.wallet === userAddress && pending.generation === generation) {
+      // A ring may have been inserted after the running query took its snapshot.
+      pending.recover ||= recover;
+      return;
+    }
+    const request = { wallet: userAddress, generation, recover: false };
+    ringCheckRef.current = request;
+    try {
+      const call = await simpleCallCheck(userAddress);
+      if (!call || generationRef.current !== generation || currentCallRef.current || !callChecksVisible()) return;
+      const age = Date.now() - new Date(call.created_at).getTime();
+      if (!Number.isFinite(age) || age > 45_000) return;
+      ++generationRef.current;
+      publishCall(call as CallSession); setIsMinimized(false); setIsIncoming(true);
+      visualActivity.setCall(true, true);
+      const ringGeneration = generationRef.current;
+      callTimeoutRef.current = setTimeout(() => {
+        if (generationRef.current === ringGeneration && !joiningRef.current) void endCall();
+      }, Math.max(0, 45_000 - age));
+    } finally {
+      if (ringCheckRef.current === request) {
+        ringCheckRef.current = null;
+        if (request.recover && generationRef.current === generation) void checkRef.current();
+      }
+    }
   }, [userAddress, publishCall, endCall]);
   const checkRef = useRef(checkForCalls);
   checkRef.current = checkForCalls;
@@ -289,13 +306,20 @@ export const useCall = (): UseCallReturn => {
     const channel = supabase.channel(`call:${userAddress.toLowerCase()}`, { config: { private: true } })
       .on('broadcast', { event: 'call' }, (message: { payload?: Pick<CallSession, 'id' | 'status'> }) => {
         const ping = message.payload;
-        if (ping?.status === 'ringing') void checkRef.current();
+        if (ping?.status === 'ringing') void checkRef.current(true);
         else if (ping?.status === 'ended' && currentCallRef.current?.id === ping.id) void endCall();
       }).subscribe(status => { if (status === 'SUBSCRIBED') void checkRef.current(); });
     const poll = () => { if (document.visibilityState !== 'hidden') void checkRef.current(); };
     const interval = setInterval(poll, 15_000);
+    document.addEventListener('visibilitychange', poll);
+    window.addEventListener('online', poll);
     poll();
-    return () => { clearInterval(interval); void supabase.removeChannel(channel); };
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', poll);
+      window.removeEventListener('online', poll);
+      void supabase.removeChannel(channel);
+    };
   }, [userAddress, endCall]);
   useEffect(() => {
     publishCall(null);

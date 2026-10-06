@@ -2,14 +2,13 @@
 import { supabase } from '@/integrations/supabase/client';
 
 export const simpleCallCheck = async (userAddress: string) => {
-  console.log('🔍 Simple call check for user:', userAddress);
   
   try {
     // Check for any ringing calls for this user. Stored addresses are
     // lower-case and the wallet can arrive checksummed, so lower it here.
     const { data: calls, error } = await supabase
       .from('call_sessions')
-      .select('*')
+      .select('id,caller_address,recipient_address,status,call_type,created_at')
       .eq('recipient_address', userAddress.toLowerCase())
       .eq('status', 'ringing')
       .order('created_at', { ascending: false })
@@ -20,13 +19,10 @@ export const simpleCallCheck = async (userAddress: string) => {
       return null;
     }
     
-    console.log('📞 Database query result:', calls);
     
     if (calls && calls.length > 0) {
-      console.log('✅ Found call:', calls[0]);
       return calls[0];
     } else {
-      console.log('📞 No calls found');
       return null;
     }
   } catch (error) {
