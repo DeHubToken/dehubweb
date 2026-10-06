@@ -20,7 +20,7 @@ html[data-theme='light'] {
   --control-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,0.12);
 }
 html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
-  :is(#app-root, [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
   :is(
     [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
     :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'])
@@ -32,7 +32,7 @@ html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
   backdrop-filter: blur(12px);
 }
 html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
-  :is(#app-root, [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
   :is(
     [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
     :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'])
