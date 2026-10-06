@@ -179,7 +179,9 @@ function ImageSlide({
   onImageClick,
   viewportRef,
   immersive = false,
+  pinned = false,
 }: {
+  pinned?: boolean;
   img: string;
   idx: number;
   aboveFold: boolean;
@@ -202,7 +204,7 @@ function ImageSlide({
   const ratio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img);
   const slideRef = useRef<HTMLDivElement>(null);
   const [retainBitmap, setRetainBitmap] = useState(aboveFold || immersive);
-  const horizontalBitmap = useHorizontalBitmap(img, !!ratio, viewportRef, slideRef);
+  const horizontalBitmap = useHorizontalBitmap(img, !!ratio, viewportRef, slideRef, pinned);
   // Resolve the ratio during render so a replaced image never paints with the
   // previous image's dimensions or needs a second render just to reset them.
 
@@ -449,6 +451,7 @@ function ImageCarousel({
               onImageClick={onImageClick}
               viewportRef={scrollRef}
               immersive={immersive}
+              pinned={images.length <= 1 || Math.abs(idx - currentIndex) <= 1}
             />
           </div>
         ))}
