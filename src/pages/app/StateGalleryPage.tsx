@@ -152,6 +152,7 @@ const ICONS: ThemeIconKey[] = [
 ];
 
 export default function StateGalleryPage() {
+  const { t } = useTranslation();
   const { theme, setTheme } = useAppTheme();
   const [params, setParams] = useSearchParams();
   const requestedTheme = params.get('theme');
