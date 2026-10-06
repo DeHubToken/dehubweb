@@ -1,4 +1,6 @@
 import { useTranslation } from 'react-i18next';
+import { useContext } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useIsOnline } from '@/lib/online-presence';
 
 /**
@@ -9,7 +11,8 @@ import { useIsOnline } from '@/lib/online-presence';
  */
 export function OnlineDot({ address, className = '' }: { address?: string | null; className?: string }) {
   const { t } = useTranslation();
-  const isOnline = useIsOnline(address);
+  const active = useContext(CachedPageActiveContext);
+  const isOnline = useIsOnline(address, active);
   if (!isOnline) return null;
   const label = t('messages.online');
   return (

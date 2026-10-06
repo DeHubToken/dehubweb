@@ -3,11 +3,10 @@
  * session — see lib/online-presence. Its own lazy chunk so the channel and
  * the profile query it reads stay off the boot path.
  *
- * Joins while signed in so the dots can be read, and tracks this account only
- * while the switch is on — turning it off untracks immediately rather than
- * waiting for the tab to close.
+ * Joins in the foreground when opted in or when a visible dot needs a reader.
+ * Turning the switch off stops publishing; hidden cached pages add no demand.
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { leaseChannel } from '@/lib/realtime-channel-lease';
@@ -16,6 +15,7 @@ import {
   getShowOnline,
   onlineFromChannel,
   publishOnline,
+  usePresenceReaders,
 } from '@/lib/online-presence';
 
 export default function OnlinePresenceHost() {
@@ -23,9 +23,17 @@ export default function OnlinePresenceHost() {
   const me = isAuthenticated && walletAddress ? walletAddress.toLowerCase() : null;
   const { data: profile } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!me });
   const showOnline = getShowOnline(profile?.customs);
+  const hasReaders = usePresenceReaders();
+  const [visible, setVisible] = useState(() => document.visibilityState === 'visible');
+  useEffect(() => {
+    const update = () => setVisible(document.visibilityState === 'visible');
+    document.addEventListener('visibilitychange', update);
+    return () => document.removeEventListener('visibilitychange', update);
+  }, []);
+  const needed = showOnline || hasReaders;
 
   useEffect(() => {
-    if (!me) return;
+    if (!me || !visible || !needed) return;
     const lease = leaseChannel(ONLINE_PRESENCE_TOPIC, {
       config: { presence: { key: me } },
       listen: [{ type: 'presence', filter: { event: 'sync' }, handler: (_p, chan) => publishOnline(onlineFromChannel(chan)) }],
@@ -38,7 +46,7 @@ export default function OnlinePresenceHost() {
       lease.release();
       publishOnline(new Set());
     };
-  }, [me, showOnline]);
+  }, [me, showOnline, visible, needed]);
 
   return null;
 }

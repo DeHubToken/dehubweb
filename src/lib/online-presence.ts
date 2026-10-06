@@ -3,7 +3,7 @@
  * ========================================
  * Off by default. A person who turns it on is tracked on one shared Supabase
  * Realtime presence channel for as long as they have the app open anywhere;
- * everyone else only reads that channel. Nobody who left the switch off ever
+ * everyone else reads it only while a visible dot needs it. Nobody who left the switch off ever
  * appears on it, so the green dot on Messages is consent, not surveillance.
  *
  * Presence rather than a `last_seen` column: the socket already knows when a
@@ -22,7 +22,7 @@
  * @module lib/online-presence
  */
 
-import { useSyncExternalStore } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export const SHOW_ONLINE_CUSTOMS_KEY = 'showOnline';
@@ -48,6 +48,30 @@ export function mergeShowOnline(
 
 let online: ReadonlySet<string> = new Set();
 const listeners = new Set<() => void>();
+let readers = 0;
+const demandListeners = new Set<() => void>();
+
+function subscribeDemand(listener: () => void) {
+  demandListeners.add(listener);
+  return () => { demandListeners.delete(listener); };
+}
+
+/** Visible dots need a reader; hidden cached pages do not. */
+export function registerPresenceReader(): () => void {
+  readers += 1;
+  if (readers === 1) for (const listener of [...demandListeners]) listener();
+  let released = false;
+  return () => {
+    if (released) return;
+    released = true;
+    readers -= 1;
+    if (readers === 0) for (const listener of [...demandListeners]) listener();
+  };
+}
+
+export function usePresenceReaders(): boolean {
+  return useSyncExternalStore(subscribeDemand, () => readers > 0, () => false);
+}
 
 export function publishOnline(next: ReadonlySet<string>) {
   online = next;
@@ -66,11 +90,15 @@ function subscribeOnline(onChange: () => void) {
 }
 
 /** True while `address` has the switch on and the app open somewhere. */
-export function useIsOnline(address: string | null | undefined): boolean {
+export function useIsOnline(address: string | null | undefined, enabled = true): boolean {
   const key = address?.toLowerCase() ?? '';
+  useEffect(() => {
+    if (!key || !enabled) return;
+    return registerPresenceReader();
+  }, [key, enabled]);
   return useSyncExternalStore(
     subscribeOnline,
-    () => !!key && online.has(key),
+    () => enabled && !!key && online.has(key),
     () => false,
   );
 }
