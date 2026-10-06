@@ -134,7 +134,7 @@ export function SidebarNavItem({
   };
 
   const showAvatar = avatarUrl !== undefined;
-  const navIcon = (className: string) => item.themedIcon ? (
+  const navIcon = (className: string) => !isDesktop && item.themedIcon ? (
     <ThemedIcon icon={item.themedIcon} alt="" className={cn(className, 'object-contain')} />
   ) : (
     <item.icon className={className} />
