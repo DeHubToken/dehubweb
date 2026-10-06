@@ -74,6 +74,9 @@ import {
   wasDrawerJustDismissed,
 } from '@/components/ui/drawer';
 import type { TextPost } from '@/types/feed.types';
+import { usePostStage } from '@/components/app/post-stage/post-stage-context';
+import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
+import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 
 /**
  * Lazy, and only mounted while open.
@@ -221,6 +224,8 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
   };
 
   const postTokenId = parseInt(post.id, 10) || undefined;
+  // The phone post page ("Stage"). Null in every feed.
+  const stage = usePostStage();
 
   // Follow state for the post author — shared override wins over the lazy check
   const [isFollowingAuthor, setIsFollowingAuthor] = useState<boolean | null>(null);
@@ -391,6 +396,29 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       onPointerDownCapture={warmPostPage}
       className="overflow-visible relative cursor-pointer isolate"
     >
+      {stage ? (
+        /* Phone post page: no media to float on, so back / Ask AI / options
+           sit in a row of their own above the creator row. */
+        <>
+          <StageMediaChrome
+            placement="inline"
+            onBack={stage.onBack}
+            onAskAI={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+            onMenu={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
+            onBoost={isOwnPost && postTokenId ? () => setShowBoostModal(true) : undefined}
+          />
+          <div className="mb-3">
+            <StageCreatorRow
+              name={post.author.name}
+              avatar={post.author.avatarSeed}
+              handle={post.author.handle}
+              creatorId={post.author.id}
+              badgeBalance={post.author.badgeBalance}
+              verified={post.author.verified}
+            />
+          </div>
+        </>
+      ) : (
       <CardHeader
         username={post.author.name}
         handle={post.author.handle}
@@ -401,9 +429,12 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         creatorUsername={post.author.handle}
         badgeBalance={post.author.badgeBalance}
       />
+      )}
 
-      {/* AI Button and Options Drawer - positioned in header area */}
-      <div className="absolute top-0 right-0 z-10 flex items-start gap-2">
+      {/* AI Button and Options Drawer - positioned in header area. On the
+          phone post page the buttons are in the Stage row above; the sheet
+          stays mounted here for them. */}
+      <div className={stage ? 'hidden' : 'absolute top-0 right-0 z-10 flex items-start gap-2'}>
         {isOwnPost && (
           <button
             onClick={() => setShowBoostModal(true)}
@@ -775,6 +806,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
             tokenId={parseInt(post.id, 10) || undefined}
             isOwnPost={!!isOwnPost}
+            stage={stage}
             utilityDesktopAnchor
             className="p-0"
             onComment={() => {

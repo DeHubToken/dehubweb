@@ -151,6 +151,9 @@ const DubMenuItem = lazy(() =>
 );
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
 import { requestVideoPlayback } from '@/lib/video-start';
+import { usePostStage } from '@/components/app/post-stage/post-stage-context';
+import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
+import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 
 /**
  * How far a touch may travel and still count as a tap on the player. Matches the
@@ -265,6 +268,11 @@ interface MobileCreatorInfoProps {
   lockedChainId?: number;
   chainId?: number;
   onUnlocked?: () => void;
+  /**
+   * Phone post page: the Stage creator row (followers + Follow). Ask AI and
+   * the menu are on the media there, so they are not drawn here.
+   */
+  stage?: boolean;
 }
 
 function MobileCreatorInfo({
@@ -293,6 +301,7 @@ function MobileCreatorInfo({
   lockedChainId,
   chainId,
   onUnlocked,
+  stage = false,
 }: MobileCreatorInfoProps) {
   const navigate = useNavigate();
   const { t } = useI18n();
@@ -329,8 +338,41 @@ function MobileCreatorInfo({
 
   if (!channel) return null;
 
+  const stageBadge = 'flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[10px]';
+
   return (
     <>
+      {stage ? (
+        <div className="mb-3">
+          <StageCreatorRow
+            name={channel}
+            avatar={channelAvatar}
+            handle={creatorUsername}
+            creatorId={creatorId}
+            badgeBalance={badgeBalance}
+            verified={verified}
+            trailing={hasBadges ? (
+              <>
+                {isPPV && ppvPrice && (
+                  <button type="button" data-stage-chip className={stageBadge} aria-label={t('drawers.ppvTitle', 'Pay per view')} onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}>
+                    <Ticket className="h-4 w-4" />
+                  </button>
+                )}
+                {isW2E && (
+                  <button type="button" data-stage-chip className={stageBadge} aria-label={t('drawers.bountyTitle')} onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}>
+                    <Gift className="h-4 w-4" />
+                  </button>
+                )}
+                {isLocked && (
+                  <button type="button" data-stage-chip className={stageBadge} aria-label={t('drawers.gatedTitle')} onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}>
+                    <Lock className="h-4 w-4" />
+                  </button>
+                )}
+              </>
+            ) : null}
+          />
+        </div>
+      ) : (
       <div className="flex items-center justify-between mb-3">
         <button
           onClick={handleProfileClick}
@@ -447,6 +489,7 @@ function MobileCreatorInfo({
           </div>
         </div>
       </div>
+      )}
 
       {/* Bounty Drawer */}
       <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
@@ -575,9 +618,13 @@ function MobileCreatorInfo({
 interface ExpandableDescriptionProps {
   description: string;
   isImmersive: boolean;
+  /** Lines shown before "more" (immersive only). The phone post page uses fewer. */
+  clampLines?: 2 | 3 | 4;
 }
 
-function ExpandableDescription({ description: rawDescription, isImmersive }: ExpandableDescriptionProps) {
+const CLAMP_CLASS = { 2: 'line-clamp-2', 3: 'line-clamp-3', 4: 'line-clamp-4' } as const;
+
+function ExpandableDescription({ description: rawDescription, isImmersive, clampLines = 4 }: ExpandableDescriptionProps) {
   // Normalize line breaks: unify \r\n → \n, then cap consecutive blank lines to max 1 (i.e. max 2 newlines)
   const normalized = rawDescription.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
   // DeHub links render as cards below, so the URLs come out of the copy
@@ -625,7 +672,7 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
     <div className="mb-2">
       <div
         ref={containerRef}
-        className={isExpanded ? '' : 'line-clamp-4'}
+        className={isExpanded ? '' : CLAMP_CLASS[clampLines]}
       >
         {description ? (
           <TranslatableText publicContent
@@ -642,9 +689,10 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
       {needsExpansion && !isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}
-          className="text-zinc-300 text-sm font-medium mt-1 hover:text-white transition-colors"
+          data-stage-more={clampLines < 4 || undefined}
+          className={clampLines < 4 ? 'mt-0.5 text-sm font-bold' : 'text-zinc-300 text-sm font-medium mt-1 hover:text-white transition-colors'}
         >
-          See more
+          {clampLines < 4 ? 'more' : 'See more'}
         </button>
       )}
       {isExpanded && (
@@ -779,6 +827,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // fullscreen buttons fold into one tools button beside AI and the options
   // menu, and drop down from there. The post page has the room and keeps the row.
   const isPhone = useIsMobile();
+  // The phone post page ("Stage"). Null in every feed.
+  const stage = usePostStage();
   // Video posts use the same bare glyph controls at every viewport size,
   // mute in the top corner, and playback actions beside fullscreen on the
   // bottom row with play and remaining time.
@@ -1877,8 +1927,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // same slot for image posts, has always rounded there.
   const mediaRadius = isFullscreen
     ? 'rounded-none'
-    : isImmersive
-      ? 'rounded-none lg:rounded-2xl'
+    : stage
+      ? 'rounded-none'
+      : isImmersive ? 'rounded-none lg:rounded-2xl'
       : 'rounded-2xl';
 
   // The immersive wrapper used to ship `bg-black lg:bg-transparent`. Every
@@ -1896,15 +1947,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     <div
       data-video-card
       data-video-header-above={headerAboveMedia ? '' : undefined}
-      onClick={isImmersive ? undefined : handleCardClick}
-      onPointerDownCapture={isImmersive ? undefined : warmPostPage}
-      className={isImmersive
+      onClick={isImmersive || stage ? undefined : handleCardClick}
+      onPointerDownCapture={isImmersive || stage ? undefined : warmPostPage}
+      className={isImmersive || stage
         ? "overflow-hidden isolate"
         : "overflow-visible cursor-pointer isolate"
       }
     >
       {/* Header with AI and menu buttons - hidden in immersive mode and carousel (hideActions) mode */}
-      {!isImmersive && !hideActions && (
+      {!isImmersive && !hideActions && !stage && (
         <div data-card-head={headerAboveMedia ? 'plain' : ''} className="flex items-start justify-between">
           <CardHeader
             username={video.channel}
@@ -2305,7 +2356,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
         
-        {video.isW2E && (
+        {stage && !isFullscreen && (
+          <StageMediaChrome
+            onBack={stage.onBack}
+            onAskAI={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+            onMenu={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
+            onBoost={isOwnPost ? () => setShowBoostModal(true) : undefined}
+          />
+        )}
+
+        {video.isW2E && !stage && (
           <button
             type="button"
             aria-label={t('drawers.bountyTitle')}
@@ -2359,7 +2419,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             that already carries its own transport. */}
 
         {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-video-topbar="bare" className={cn("absolute top-3 right-2 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
+          <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 flex items-center z-10", stage && !isFullscreen ? "top-[58px]" : "top-3", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
                 mixer. The wrapper keeps the pointer inside while the cursor
@@ -2657,7 +2717,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           padding, so keeping px-3 there indented the title and action bar 12px
           further than the video above them — the one place this layout didn't
           line up with the home feed card. Drop it back to the bento's gutter. */}
-      <div data-card-info className={`pt-3${isImmersive ? ' px-3 lg:px-0' : ''}`}>
+      <div data-card-info className={`pt-3${isImmersive || stage ? ' px-3 lg:px-0' : ''}`}>
         {/* System theme phone feed only (index.css): the options button sits
             here, top right of the caption, instead of on the media. */}
         {!isImmersive && !hideActions && (
@@ -2673,9 +2733,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
         {/* Creator info with action buttons - mobile/tablet immersive view only (hidden on desktop where SinglePostPage renders DesktopCreatorInfo) */}
-        {isImmersive && (
+        {(isImmersive || stage) && (
           <div className="lg:hidden">
           <MobileCreatorInfo
+            stage={!!stage}
             channel={video.channel}
             channelAvatar={video.channelAvatar}
             creatorUsername={video.creatorUsername}
@@ -2736,12 +2797,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     translated this text and hands the result down. Left on, this
                     asked the edge function to translate the translation. */}
                 {shownTitle && (
-                  <TranslatableText publicContent text={shownTitle} className="text-white text-[14px] mb-1" as="h3" hideControls auto={false} />
+                  <TranslatableText publicContent text={shownTitle} className={stage ? "text-white text-[15px] font-bold mb-0.5" : "text-white text-[14px] mb-1"} as="h3" hideControls auto={false} />
                 )}
                 {shownDesc && (
                   <ExpandableDescription
                     description={shownDesc}
-                    isImmersive={isImmersive}
+                    isImmersive={isImmersive || !!stage}
+                    clampLines={stage ? (shownTitle ? 2 : 3) : 4}
                   />
                 )}
               </>
@@ -2781,6 +2843,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
               tokenId={parseInt(video.id, 10) || undefined}
               isOwnPost={!!isOwnPost}
+              stage={stage}
               utilityDesktopAnchor
               className="p-0"
               isLiked={video.isLiked}
