@@ -4224,7 +4224,6 @@
     "referenceComposeHint": "Bir nechta rasimdan xarakterlar, narsalar va joylarni birga birlashtirish"
   },
   "pricing": {
-    "perSeatMonthly": "ھەر بىر ئورۇندۇق/ئايغا نىسبەتەن",
     "plansForEveryWorkflow": "ھەر بىر خىزمەت ئېقىمى ئۈچۈن پىلانلار",
     "findTheRightFit": "شەخسلەردىن ئىگىلىك تىكلەش گۇرۇپپىسىغا توغرا كېلىدىغاننى تېپىش",
     "monthly": "ئايلىق",
@@ -4245,6 +4244,7 @@
     "pooledNeverExpires": "ئىش ئورنىنى ئايلىنىپ چىقتى — ئاخىرلاشمايدۇ",
     "perMonthBilledAnnually": "ئايلىق، يىللىق ھېسابات",
     "perSeatBilledAnnually": "ھەر بىر ئورۇندۇق/ئايغا نىسبەتەن، يىللىق ھېسابات",
+    "perSeatMonthly": "ھەر بىر ئورۇندۇق/ئايغا نىسبەتەن",
     "savings": "ئايلىققا سېلىشتۇرغاندا ${{amount}} ساقلاڭ",
     "seats_one": "{{count}} SEAT",
     "seats_other": "{{count}} SEATS",
@@ -7945,5 +7945,31 @@
     "shareFacebook": "Facebook تا ھەمبەھىرلەش",
     "shareTelegram": "Telegram دا ھەمبەھىرلەش",
     "copyLink": "ئۇلانمىنى كۆچۈرۈش"
+  },
+  "postStage": {
+    "back": "كەينىگە قايتىش",
+    "askAI": "بۇ يازمىنى باشقىلاردىن سوراڭ",
+    "followers": "{{value}} ئەگەشكۈچىلەر",
+    "repostAndShare": "قايتىدىن يوللاش ۋە ھەمبەھىرلەش پروگراممىسى",
+    "repost": "قايتىدىن يوللاش",
+    "undoRepost": "قايتىدىن يوللاشنى بىكار قىلىش",
+    "repostHint": "(ئى مۇھەممەد!) سەن ئۇلارنىڭ ئارىسىدىكى مەلۇم كىشىلەر بىلەن (مۇشرىكلارغا ياردەم بەرمەسلىك",
+    "undoRepostHint": "ئۇنى پروفىللىڭىزدىن چىقىرىۋېتىڭ",
+    "quote": "Quote",
+    "quoteHint": "ئۆز سۆزلىرىڭىزنى قوشۇڭ",
+    "shareTo": "ھەمبەھىرلەش",
+    "copyLink": "ئۇلىنىشنى كۆچۈر",
+    "more": "تېخىمۇ كۆپ",
+    "viewQuotes": "نەقىلنى كۆرۈش",
+    "viewReposts": "رېپوستلارنى كۆرۈش",
+    "save": "ساقلىۋېلىڭ",
+    "saved": "Save",
+    "comments": "Comments",
+    "quotes": "Quotes",
+    "reposts": "Reposts",
+    "backToComments": "ئىنكاسلارغا قايتىش",
+    "backToMedia": "يازمىغا قايتىش",
+    "like": "LIKE",
+    "unlike": "LIKE نى چىقىرىۋېتىش"
   }
 }

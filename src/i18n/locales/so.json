@@ -4218,7 +4218,6 @@
     "referenceComposeHint": "**Characters**, **objects** iyo **settings**ka oo **multiple images**ka awooday **composition**ka ku sheegay."
   },
   "pricing": {
-    "perSeatMonthly": "kursigii/mo",
     "plansForEveryWorkflow": "Qorshayaasha socodka shaqada kasta",
     "findTheRightFit": "Laga soo bilaabo shaqsiyaadka ilaa kooxaha ganacsiga, raadi ku habboonaanta saxda ah",
     "monthly": "Bil kasta",
@@ -4238,6 +4237,7 @@
     "pooledNeverExpires": "Meelaha shaqada oo dhan — waligood ma dhammaanayaan",
     "perMonthBilledAnnually": "bisha Ramadaan Oo La Shaaciyay In Ay Sanad Kasta Bixin Doonto Lacagta",
     "perSeatBilledAnnually": "kursigii/mo, biil sanadle ah",
+    "perSeatMonthly": "kursigii/mo",
     "savings": "Keydso ${{amount}} marka la barbardhigo bil kasta",
     "seats_one": "{{count}} kursiga",
     "seats_other": "{{count}} kuraasta",
@@ -7932,5 +7932,31 @@
     "shareFacebook": "Ku wadaag Facebook",
     "shareTelegram": "Ku wadaag Telegram",
     "copyLink": "Koobi linkiga"
+  },
+  "postStage": {
+    "back": "Dib u noqo",
+    "askAI": "Weydii AI ku saabsan qoraalkan",
+    "followers": "{{value}} kuwa raacsan",
+    "repostAndShare": "Dib u soo celi & wadaag",
+    "repost": "Dib u soo celinta",
+    "undoRepost": "Undo repost",
+    "repostHint": "Si dhakhso ah, si aad u raacdo",
+    "undoRepostHint": "Ka saar astaantaada",
+    "quote": "Quote",
+    "quoteHint": "Ku dar erayadaada",
+    "shareTo": "La wadaag",
+    "copyLink": "LINK Nuqul",
+    "more": "Dheeraad ah",
+    "viewQuotes": "Eeg xigashooyin",
+    "viewReposts": "Eeg dib u soo celinta",
+    "save": "Keydso",
+    "saved": "La badbaadiyay",
+    "comments": "Faallooyinka",
+    "quotes": "Quotes",
+    "reposts": "Dib u soo celinta",
+    "backToComments": "Dib ugu noqo faallooyinka",
+    "backToMedia": "Ku noqo boostada",
+    "like": "Sida",
+    "unlike": "Ka saar sida"
   }
 }

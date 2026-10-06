@@ -4285,7 +4285,6 @@
     "referenceComposeHint": "Lethelela abalingiswa, izinto kanye nezilalelo evela ezithombeni eziningi zibe yisakhiwo esisodwa."
   },
   "pricing": {
-    "perSeatMonthly": "isihlalo ngasinye/ngenyanga",
     "plansForEveryWorkflow": "Izinhlelo zawo wonke umsebenzi",
     "findTheRightFit": "Ukusuka kubantu ngabanye kuya emaqenjini ebhizinisi, thola okufanelekile",
     "monthly": "Ngenyanga",
@@ -4306,6 +4305,7 @@
     "pooledNeverExpires": "Iphoyintiwe yonkana nendawo yokusebenzela — ayiphelelwa isikhathi",
     "perMonthBilledAnnually": "ngenyanga, kukhokhiswa minyaka yonke",
     "perSeatBilledAnnually": "isihlalo ngasinye, sikhokhiswa minyaka yonke",
+    "perSeatMonthly": "isihlalo ngasinye/ngenyanga",
     "savings": "Yonga ${{amount}} uma kuqhathaniswa nenyanga",
     "seats_other": "{{count}} izihlalo",
     "ctaGet": "Thola {{plan}}",
@@ -8032,5 +8032,31 @@
     "shareFacebook": "Yabelana ku-Facebook",
     "shareTelegram": "Yabelana ku-Telegram",
     "copyLink": "Kopisha isixhumanisi"
+  },
+  "postStage": {
+    "back": "Buyela emuva",
+    "askAI": "Buza i-AI ngale phosti",
+    "followers": "{{value}} abalandeli",
+    "repostAndShare": "Phinda uthumele futhi wabelane",
+    "repost": "Ukuphinda uphoste",
+    "undoRepost": "Hlehlisa ukuphosta kabusha",
+    "repostHint": "Ngokushesha, kubalandeli bakho",
+    "undoRepostHint": "Yisuse kuphrofayili yakho",
+    "quote": "Ikhotheshini",
+    "quoteHint": "Faka amagama akho",
+    "shareTo": "Yabelana ku",
+    "copyLink": "Kopisha ilinki",
+    "more": "Okwengeziwe",
+    "viewQuotes": "Buka izingcaphuno",
+    "viewReposts": "Buka amaphosti futhi",
+    "save": "Gcina",
+    "saved": "Okugciniwe",
+    "comments": "Ukuphawula",
+    "quotes": "Izingcaphuno",
+    "reposts": "Amaphosti kabusha",
+    "backToComments": "Buyela ekuphawuleni",
+    "backToMedia": "Buyela emuva ephostini",
+    "like": "Thanda",
+    "unlike": "Susa okufana"
   }
 }

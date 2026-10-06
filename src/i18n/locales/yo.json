@@ -4202,7 +4202,6 @@
     "referenceComposeHint": "Mu awọn ohun elo, awọn ohun elo ati awọn ọna lati aworan pupọ sinu iṣelọpọ kan."
   },
   "pricing": {
-    "perSeatMonthly": "fún ìjókòó/oṣù",
     "plansForEveryWorkflow": "Àwọn ìtòlẹ́sẹẹsẹ fún gbogbo iṣẹ́",
     "findTheRightFit": "Lati awọn ẹni-kọọkan si awọn ẹgbẹ ile-iṣẹ, wa ibaramu ti o tọ",
     "monthly": "Oṣooṣu",
@@ -4223,6 +4222,7 @@
     "pooledNeverExpires": "Pooled jákèjádò ààyè iṣẹ́ — kò parí láéláé",
     "perMonthBilledAnnually": "ní oṣù kan, a máa ń san owó lọ́dọọdún",
     "perSeatBilledAnnually": "fún ìjókòó/mo, wọ́n máa ń san owó lọ́dọọdún",
+    "perSeatMonthly": "fún ìjókòó/oṣù",
     "savings": "Fi ${{amount}} pamọ́ ní ìfiwéra pẹ̀lú oṣù",
     "seats_one": "{{count}} ijoko",
     "seats_other": "{{count}} ijoko",
@@ -7913,5 +7913,31 @@
     "shareFacebook": "Pín lórí Facebook",
     "shareTelegram": "Pín lórí Telegram",
     "copyLink": "Dàkọ ìjápọ̀"
+  },
+  "postStage": {
+    "back": "Pada sẹ́yìn",
+    "askAI": "Beere AI nípa ìfìkún yìí",
+    "followers": "{{value}} followers",
+    "repostAndShare": "Tun ṣe àtúnkò & pín",
+    "repost": "Tun ṣe àtúnkò",
+    "undoRepost": "Ṣe àtúnkò padà",
+    "repostHint": "Ní kánkán, sí àwọn ọmọlẹ́yìn rẹ",
+    "undoRepostHint": "Yọ kúrò ní àkọọlẹ rẹ",
+    "quote": "Ọ̀rọ̀ àpẹẹrẹ",
+    "quoteHint": "Ṣàfikún ọ̀rọ̀ tirẹ",
+    "shareTo": "Pín sí",
+    "copyLink": "Da àkóónú lẹ́ẹ̀kan",
+    "more": "Sí i",
+    "viewQuotes": "Wo ọ̀rọ̀ àpẹẹrẹ",
+    "viewReposts": "Wo àtúnkò",
+    "save": "Fipamọ́",
+    "saved": "Ti fipamọ́",
+    "comments": "Àwọn àlàyé",
+    "quotes": "Ọ̀rọ̀ àpẹẹrẹ",
+    "reposts": "Àtúnkò",
+    "backToComments": "Pada sí àlàyé",
+    "backToMedia": "Pada sí ìfìkún",
+    "like": "Fẹ́ràn",
+    "unlike": "Yọfẹ́ràn"
   }
 }

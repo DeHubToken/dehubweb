@@ -4074,7 +4074,6 @@
     "referenceComposeHint": "นำตัวละคร, วัตถุ และสถานการณ์จากภาพหลายภาพมารวมเป็นภาพเดียว"
   },
   "pricing": {
-    "perSeatMonthly": "ต่อที่นั่ง/เดือน",
     "annual": "ปีละครั้ง",
     "upToDiscount": "แค่ −{{pct}}%",
     "percentOff": "{{pct}}% งานลดราคา",
@@ -4086,6 +4085,7 @@
     "equivalence": "= {{videos}} {{videoModel}} วิดีโอ  ·  {{images}} {{imageModel}} รูปภาพ",
     "realDhbSpendAnywhere": "โทเคน DeHub จริงในกระเป๋าของคุณ — ใช้ได้ทุกที่ ไม่หมดอายุ",
     "realDhbNeverExpires": "โทเคน DeHub จริงในกระเป๋าของคุณ — ไม่หมดอายุ",
+    "perSeatMonthly": "ต่อที่นั่ง/เดือน",
     "seats_one": "{{count}} ที่นั่ง",
     "seats_other": "{{count}} แถว",
     "ctaGet": "รับ {{plan}}",
@@ -7538,5 +7538,31 @@
     "shareFacebook": "แบ่งปันใน Facebook",
     "shareTelegram": "แบ่งปันใน Telegram",
     "copyLink": "คัดลอกลิงก์"
+  },
+  "postStage": {
+    "back": "ย้อนกลับ",
+    "askAI": "ถาม AI เกี่ยวกับโพสต์นี้",
+    "followers": "{{value}} ผู้ติดตาม",
+    "repostAndShare": "รีโพสต์ & แชร์",
+    "repost": "รีโพสต์",
+    "undoRepost": "ยกเลิกรีโพสต์",
+    "repostHint": "ทันที, ให้ผู้ติดตามของคุณเห็น",
+    "undoRepostHint": "ลบออกจากโปรไฟล์ของคุณ",
+    "quote": "อ้างอิง",
+    "quoteHint": "เพิ่มคำของคุณเอง",
+    "shareTo": "แชร์ไปยัง",
+    "copyLink": "คัดลอกลิงก์",
+    "more": "เพิ่มเติม",
+    "viewQuotes": "ดูอ้างอิง",
+    "viewReposts": "ดูรีโพสต์",
+    "save": "บันทึก",
+    "saved": "บันทึกแล้ว",
+    "comments": "ความคิดเห็น",
+    "quotes": "อ้างอิง",
+    "reposts": "รีโพสต์",
+    "backToComments": "กลับไปที่ความคิดเห็น",
+    "backToMedia": "กลับไปที่โพสต์",
+    "like": "ไลค์",
+    "unlike": "ลบไลค์"
   }
 }

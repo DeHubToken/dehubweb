@@ -4278,7 +4278,6 @@
     "referenceComposeHint": "Çoklu resimlerden karakterler, nesneler ve ayarları bir kompozisyonda bir araya getirin"
   },
   "pricing": {
-    "perSeatMonthly": "kullanıcı başına aylık",
     "plansForEveryWorkflow": "Her iş akışına uygun planlar",
     "findTheRightFit": "Bireysel kullanıcıdan kurumsal ekiplere, size uyanı bulun",
     "monthly": "Aylık",
@@ -4300,6 +4299,7 @@
     "pooledNeverExpires": "Çalışma alanı genelinde ortak havuzda — hiç sona ermez",
     "perMonthBilledAnnually": "aylık, yıllık faturalandırılır",
     "perSeatBilledAnnually": "kullanıcı başına aylık, yıllık faturalandırılır",
+    "perSeatMonthly": "kullanıcı başına aylık",
     "savings": "Aylık ödemeye göre {{amount}} $ tasarruf",
     "seats_one": "{{count}} kullanıcı",
     "seats_other": "{{count}} kullanıcı",
@@ -8034,5 +8034,31 @@
     "shareFacebook": "Facebook'ta paylaş",
     "shareTelegram": "Telegram'da paylaş",
     "copyLink": "Bağlantıyı kopyala"
+  },
+  "postStage": {
+    "back": "Geri dön",
+    "askAI": "Yapay zekaya bu gönderiyi sorun",
+    "followers": "{{value}} takipçi",
+    "repostAndShare": "Yeniden yayınla ve paylaş",
+    "repost": "Repost",
+    "undoRepost": "Yeniden göndermeyi geri al",
+    "repostHint": "Anında takipçilerinize",
+    "undoRepostHint": "Profilinizden kaldırın",
+    "quote": "Alıntı",
+    "quoteHint": "Kendi kelimelerinizi ekleyin",
+    "shareTo": "Şurada paylaş:",
+    "copyLink": "Bağlantıyı kopyala",
+    "more": "Daha fazla",
+    "viewQuotes": "Teklifleri görüntüle",
+    "viewReposts": "Yeniden yayınları görüntüle",
+    "save": "Kaydet",
+    "saved": "Kaydedildi",
+    "comments": "Yorumlar",
+    "quotes": "Alıntılar",
+    "reposts": "Repostlar",
+    "backToComments": "Yorumlara geri dön",
+    "backToMedia": "Gönderiye geri dön",
+    "like": "Beğen",
+    "unlike": "Beğenileri kaldır"
   }
 }

@@ -4228,7 +4228,6 @@
     "referenceComposeHint": "Karakterlar, ob’ektlar va manzaralar bar resurslar kamida kamida yek ta kompozitsiya ro ta’kid konid"
   },
   "pricing": {
-    "perSeatMonthly": "дар як курсӣ/моҳ",
     "plansForEveryWorkflow": "Нақшаҳо барои ҳар як ҷараёни корӣ",
     "findTheRightFit": "Аз шахсони воқеӣ ба гурӯҳҳои корхона, мувофиқати мувофиқро пайдо кунед",
     "monthly": "Ҳар моҳ",
@@ -4249,6 +4248,7 @@
     "pooledNeverExpires": "Pooled over the workpace — ҳеҷ гоҳ ба охир мерасад",
     "perMonthBilledAnnually": "дар як моҳ, солона ҳисоб карда мешавад",
     "perSeatBilledAnnually": "дар як курсӣ/моҳ, солона ҳисоб карда мешавад",
+    "perSeatMonthly": "дар як курсӣ/моҳ",
     "savings": "Нигоҳ доштани ${{amount}} нисбат ба ҳармоҳа",
     "seats_one": "{{count}} SEAT",
     "seats_other": "{{count}} SEATS",
@@ -7959,5 +7959,31 @@
     "shareFacebook": "Мубодила дар Facebook",
     "shareTelegram": "Мубодила дар Telegram",
     "copyLink": "Нусхабардории пайванд"
+  },
+  "postStage": {
+    "back": "Бозгашт",
+    "askAI": "Дар бораи ин пост аз AI пурсед",
+    "followers": "{{value}} info: whatsthis",
+    "repostAndShare": "Pag-post at ibahagi",
+    "repost": "Аз нав фиристодан",
+    "undoRepost": "& Аз нав фиристодан",
+    "repostHint": "Фавран, ба пайравони худ",
+    "undoRepostHint": "Ito mula sa iyong profile",
+    "quote": "Иқтибос",
+    "quoteHint": "Magdagdag ng iyong sariling mga",
+    "shareTo": "Ibahagi sa",
+    "copyLink": "Нусха бардоштани истинод",
+    "more": "Бештар",
+    "viewQuotes": "Tingnan ang mga quote",
+    "viewReposts": "Tingnan ang mga reposto",
+    "save": "Захира кардан",
+    "saved": "Захирашуда",
+    "comments": "Шарҳҳо",
+    "quotes": "Иқтибосҳо",
+    "reposts": "Mga Pagpapalabas",
+    "backToComments": "Bumalik sa komento",
+    "backToMedia": "Bumalik sa post",
+    "like": "Мисли",
+    "unlike": "Удалить включа"
   }
 }

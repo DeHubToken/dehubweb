@@ -3719,8 +3719,8 @@
     "headlineTeam": "Agens wey dey small and teams wey dey small, dem fit create faster.",
     "equivalence": "= {{videos}} {{videoModel}} videos  ·  {{images}} {{imageModel}} images",
     "perMonthBilledAnnually": "per month, billed annually",
-    "perSeatMonthly": "for each seat/month",
     "perSeatBilledAnnually": "per seat/mo, billed annually",
+    "perSeatMonthly": "for each seat/month",
     "seats_one": "{{count}} seat",
     "seats_other": "{{count}} seats",
     "ctaGet": "Get {{plan}}",
@@ -6694,5 +6694,27 @@
     "shareFacebook": "Share am for Facebook",
     "shareTelegram": "Share am for Telegram",
     "copyLink": "Copy Link"
+  },
+  "postStage": {
+    "back": "Go back",
+    "followers": "{{value}} followers",
+    "repostAndShare": "Repost & share",
+    "repost": "Repost",
+    "undoRepost": "Undo repost",
+    "undoRepostHint": "Comot am for your profile",
+    "quote": "Quote",
+    "shareTo": "Share to",
+    "copyLink": "Copy link",
+    "more": "More",
+    "viewQuotes": "View quotes",
+    "viewReposts": "View reposts",
+    "save": "Save",
+    "saved": "Saved",
+    "comments": "Comments",
+    "quotes": "Quotes",
+    "reposts": "Reposts",
+    "backToComments": "Back to comments",
+    "like": "Like",
+    "unlike": "Remove like"
   }
 }

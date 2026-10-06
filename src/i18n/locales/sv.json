@@ -4220,7 +4220,6 @@
     "referenceComposeHint": "Förena karaktärer, objekt och miljöer från flera bilder till en sammansättning"
   },
   "pricing": {
-    "perSeatMonthly": "per plats/mån",
     "plansForEveryWorkflow": "Planer för varje arbetsflöde",
     "findTheRightFit": "Från individer till företagsteam, hitta rätt passform",
     "monthly": "Månadsvis",
@@ -4242,6 +4241,7 @@
     "pooledNeverExpires": "Samlad över arbetsytan — förfaller aldrig",
     "perMonthBilledAnnually": "per månad, faktureras årligen",
     "perSeatBilledAnnually": "per plats/mån, faktureras årligen",
+    "perSeatMonthly": "per plats/mån",
     "savings": "Spara ${{amount}} jämfört med månadsvis",
     "seats_one": "{{count}} plats",
     "seats_other": "{{count}} platser",
@@ -7918,5 +7918,31 @@
     "shareFacebook": "Dela på Facebook",
     "shareTelegram": "Dela på Telegram",
     "copyLink": "Kopiera länk"
+  },
+  "postStage": {
+    "back": "Gå tillbaka",
+    "askAI": "Fråga AI om det här inlägget",
+    "followers": "{{value}} följare",
+    "repostAndShare": "Publicera och dela igen",
+    "repost": "Publicera på nytt",
+    "undoRepost": "Ångra ompostering",
+    "repostHint": "Omedelbart, till dina följare",
+    "undoRepostHint": "Ta bort den från din profil",
+    "quote": "Offert",
+    "quoteHint": "Lägg till dina egna ord",
+    "shareTo": "Dela till",
+    "copyLink": "Kopiera länk",
+    "more": "Mer",
+    "viewQuotes": "Visa offerter",
+    "viewReposts": "Visa återinlägg",
+    "save": "Spara",
+    "saved": "Sparad",
+    "comments": "Kommentarer",
+    "quotes": "Offert",
+    "reposts": "Återinlägg",
+    "backToComments": "Tillbaka till kommentarer",
+    "backToMedia": "Tillbaka till inlägget",
+    "like": "Gilla",
+    "unlike": "Ta bort gilla"
   }
 }
