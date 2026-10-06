@@ -94,6 +94,9 @@ import {
   wasDrawerJustDismissed,
 } from '@/components/ui/drawer';
 import type { ImagePost } from '@/types/feed.types';
+import { usePostStage } from '@/components/app/post-stage/post-stage-context';
+import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
+import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
 function useIsTabletOrMobile() {
@@ -498,8 +501,11 @@ function FeedDescription({
   isTranslated,
   translatedText,
   onOpen,
+  stage = false,
 }: { 
   onOpen?: () => void;
+  /** Phone post page: a shorter clamp (about three lines) with "more". */
+  stage?: boolean;
   postId: string;
   disabled?: boolean;
   title?: string; 
@@ -521,7 +527,7 @@ function FeedDescription({
       onOpen?.();
     },
   });
-  const MAX_LENGTH = 150;
+  const MAX_LENGTH = stage ? (title ? 90 : 140) : 150;
   
   // Parse translated text back into title/description.
   //
@@ -591,7 +597,7 @@ function FeedDescription({
     <div className="relative space-y-1" data-card-caption={(linkFreeTitle || shownDescription) && dehubLinks.length === 0 && assetRefs.length === 0 && !/https?:\/\//.test(linkSource ?? '') ? '' : undefined} data-no-navigate {...tapGestures} onClick={(event) => event.stopPropagation()}>
       {!disabled && <TapReactionBurst postId={postId} />}
       {linkFreeTitle && (
-        <h3 className="text-white text-[14px] leading-tight">
+        <h3 className={stage ? "text-white text-[15px] font-bold leading-tight" : "text-white text-[14px] leading-tight"}>
           {renderTextWithLinks(linkFreeTitle)}
         </h3>
       )}
@@ -599,8 +605,13 @@ function FeedDescription({
         <div>
           <p className="text-zinc-300 text-[14px] leading-relaxed">
             {renderTextWithLinks(shownDescription)}
+            {stage && hasLongDescription && !expanded && (
+              <button type="button" data-stage-more onClick={() => setExpanded(true)} className="ml-1 font-bold">
+                more
+              </button>
+            )}
           </p>
-          {hasLongDescription && (
+          {hasLongDescription && !(stage && !expanded) && (
             <button
               onClick={() => setExpanded(!expanded)}
               className="text-zinc-500 text-xs flex items-center gap-0.5 mt-1 hover:text-zinc-400 transition-colors"
@@ -650,6 +661,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const isPhone = useIsMobile();
+  // The phone post page ("Stage"). Null in every feed.
+  const stage = usePostStage();
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showPollCreator, setShowPollCreator] = useState(false);
@@ -860,7 +873,17 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   }, [openPost, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   const headerRow = (
-    <div data-card-head="plain" className="flex items-end justify-between" style={{ paddingBottom: 0 }}>
+    <div data-card-head={stage ? undefined : 'plain'} className={stage ? 'contents' : 'flex items-end justify-between'} style={{ paddingBottom: 0 }}>
+      {stage ? (
+        <StageCreatorRow
+          name={post.username}
+          avatar={post.avatar}
+          handle={post.creatorUsername}
+          creatorId={post.creatorId}
+          badgeBalance={post.creatorBadgeBalance}
+          verified={post.verified}
+        />
+      ) : (
       <CardHeader
         username={post.username}
         handle={post.creatorUsername}
@@ -871,7 +894,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         creatorUsername={post.creatorUsername}
         badgeBalance={post.creatorBadgeBalance}
       />
-      <div className="flex items-center gap-1 pb-2">
+      )}
+      {/* On the phone post page these live on the picture (StageMediaChrome);
+          the sheet below stays mounted for them. */}
+      <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-2'}>
         {isOwnPost && (
           <button
             onClick={() => setShowBoostModal(true)}
@@ -1047,6 +1073,14 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
       <div data-image-media className="relative">
+        {stage && (
+          <StageMediaChrome
+            onBack={stage.onBack}
+            onAskAI={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+            onMenu={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
+            onBoost={isOwnPost && postTokenId ? () => setShowBoostModal(true) : undefined}
+          />
+        )}
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has (PPV, holdings), rather than
             replacing it. */}
@@ -1227,7 +1261,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         {/* Content Type Badges - Bounty only (PPV/Lock are shown via centered overlay) */}
         {hasBadges && (
           /* Immersive: the post page's back button owns the top-left corner. */
-          <div className={cn('absolute top-2 z-10 flex items-center gap-1.5', isImmersive ? 'left-12' : 'left-2')}>
+          <div className={cn('absolute z-10 flex items-center gap-1.5', stage ? 'top-[58px] left-2.5' : isImmersive ? 'top-2 left-12' : 'top-2 left-2')}>
             {/* Bounty Badge */}
             {isW2E && (
               <button 
@@ -1259,6 +1293,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           description={post.description}
           isTranslated={isTranslated}
           translatedText={translatedText}
+          stage={!!stage}
         />
 
         {/* Quoted post embed (Twitter-style) */}
@@ -1290,6 +1325,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
           tokenId={parseInt(post.id, 10) || undefined}
           isOwnPost={!!isOwnPost}
+          stage={stage}
           utilityDesktopAnchor
           className="p-0"
           // While fullscreen is open its own action bar owns double-tap-to-like;

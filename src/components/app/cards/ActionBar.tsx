@@ -73,6 +73,9 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
+import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
+import { RepostShareSheet } from '@/components/app/post-stage/RepostShareSheet';
+import { StageSaveTile } from '@/components/app/post-stage/StageSaveTile';
 
 interface ActionBarProps {
   /** Post ID for info navigation and voting */
@@ -213,6 +216,13 @@ interface ActionBarProps {
    * and other non-card consumers.
    */
   utilityDesktopAnchor?: boolean;
+  /**
+   * The phone post page ("Stage"): one row of five equal tiles — like (with
+   * its hold/hover reaction tray), comments, repost, tip, save — and the
+   * repost tile opens the "Repost & share" sheet instead of the share sheet.
+   * No share, thumbs-down or info button. Feed cards never pass this.
+   */
+  stage?: PostStageValue | null;
 }
 
 /**
@@ -301,6 +311,10 @@ const THUMB_BUTTON_CLASS =
  * row with — same 46px height, same radius, same glass. Bare icons beside a
  * filled input read as three loose glyphs rather than as controls.
  */
+/** One tile of the phone post page's bar. Colours come from post-stage.css. */
+const STAGE_TILE_CLASS =
+  'flex h-[54px] w-full min-w-0 flex-col items-center justify-center gap-1 rounded-xl text-[11.5px] font-semibold leading-none select-none touch-pan-y transition-transform active:scale-[0.97]';
+
 const COMPACT_BUTTON_CLASS =
   // `mx-0 px-0` is not decoration: the thumb carries `px-2 -mx-2` from
   // THUMB_BUTTON_CLASS, which widens its tap target by eating 8px of the
@@ -349,6 +363,7 @@ export function ActionBar({
   compact = false,
   hideUtility = false,
   utilityDesktopAnchor = false,
+  stage = null,
 }: ActionBarProps) {
   // What one reaction from this viewer counts for. A badge multiplies the
   // reaction they already have; it never buys them a second one, so this only
@@ -1097,16 +1112,34 @@ export function ActionBar({
    */
   const overlays = (
     <>
-      <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
-        <DrawerContent scrollable column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()} onPointerDown={(e: React.PointerEvent) => e.stopPropagation()}>
-          <DrawerHeader className="relative">
-            <DrawerTitle className="text-white/90 font-semibold">Share</DrawerTitle>
-          </DrawerHeader>
-          <div className="flex flex-col gap-1 mt-2 relative">
-            <ShareOptions />
-          </div>
-        </DrawerContent>
-      </Drawer>
+      {stage ? (
+        <RepostShareSheet
+          open={sheetOpen}
+          onOpenChange={setSheetOpen}
+          tokenId={postId}
+          isReposted={isReposted}
+          onRepost={handleRepost}
+          onUndoRepost={handleUndoRepost}
+          onQuote={handleQuote}
+          shareUrl={shareUrlForPost()}
+          onCopyLink={handleCopyLink}
+          quoteCount={stage.quoteCount}
+          repostCount={Math.max(0, stage.repostCount + repostDelta)}
+          onViewQuotes={() => { setSheetOpen(false); stage.openQuotes(); }}
+          onViewReposts={() => { setSheetOpen(false); stage.openReposts(); }}
+        />
+      ) : (
+        <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
+          <DrawerContent scrollable column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()} onPointerDown={(e: React.PointerEvent) => e.stopPropagation()}>
+            <DrawerHeader className="relative">
+              <DrawerTitle className="text-white/90 font-semibold">Share</DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-1 mt-2 relative">
+              <ShareOptions />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
 
       {canSendInDm && dmShareOpen && (
         <Suspense fallback={null}>
@@ -1125,6 +1158,123 @@ export function ActionBar({
       )}
     </>
   );
+
+  if (stage) {
+    return (
+      /* Five equal tiles, icon over count or label. The like tile keeps the
+         whole thumb: hold (or hover) for the tray with 👎 last in it, the
+         per-reaction glyph, the vote cache. Order is fixed — left-handed
+         mode does not mirror a row of equal tiles. */
+      <div data-stage-bar className={cn('grid grid-cols-5 gap-1.5', className)}>
+        <span className={cn('relative flex min-w-0', isVoting && 'opacity-60')} {...likeTray.areaProps}>
+          <ReactionPicker
+            open={likeTray.open}
+            current={myReaction}
+            counts={localReactionCounts}
+            onSelect={(reaction) => { likeTray.close(); handleReaction(reaction); }}
+            onClose={likeTray.close}
+            align="left"
+            onShowInfo={
+              canViewReactionInfo
+                ? () => {
+                    likeTray.close();
+                    setReactionInfoOpen(true);
+                  }
+                : undefined
+            }
+          />
+          <motion.button
+            type="button"
+            data-stage-tile
+            data-stage-action="like"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (likeTray.consumePress()) return;
+              handleVote(true);
+            }}
+            {...likeTray.buttonProps}
+            data-engaged={
+              isLiked
+                ? (myReaction && myReaction !== 'like' ? 'reaction' : 'like')
+                : reactionsEnabled && isDisliked
+                  ? 'dislike'
+                  : undefined
+            }
+            className={STAGE_TILE_CLASS}
+            aria-label={
+              myPositiveReaction || (reactionsEnabled && myNegativeReaction)
+                ? `${reactionMeta((myPositiveReaction ?? myNegativeReaction)!).label} — hold to change your reaction`
+                : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`
+            }
+            aria-haspopup={reactionsEnabled ? 'menu' : undefined}
+            aria-expanded={reactionsEnabled ? likeTray.open : undefined}
+            disabled={isVoting && !onLiveReaction}
+            animate={justVoted === 'like' || (reactionsEnabled && justVoted === 'dislike') ? { scale: [1, 1.12, 1] } : {}}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+          >
+            {leadReaction ? (
+              <span data-engaged-glyph className="flex h-5 w-5 items-center justify-center text-[1.1rem] leading-none" aria-hidden="true">
+                <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
+              </span>
+            ) : (
+              <ThumbsUp className={cn('h-5 w-5', isLiked && 'fill-current')} />
+            )}
+            <span className="tabular-nums">{formatCount(localLikeCount)}</span>
+          </motion.button>
+        </span>
+
+        <button
+          type="button"
+          data-stage-tile
+          data-stage-action="comments"
+          onClick={(e) => { e.stopPropagation(); stage.openComments(); }}
+          className={STAGE_TILE_CLASS}
+          aria-label={`Comments (${commentCount})`}
+        >
+          <MessageSquare className="h-5 w-5" />
+          <span className="tabular-nums">{formatCount(commentCount)}</span>
+        </button>
+
+        <button
+          type="button"
+          data-stage-tile
+          data-stage-action="repost"
+          data-engaged={isReposted ? 'repost' : undefined}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (isOptimistic) {
+              toast.message('Post processing, click ⓘ for more info', { icon: <Info className="w-4 h-4" /> });
+              return;
+            }
+            setSheetOpen(true);
+          }}
+          className={STAGE_TILE_CLASS}
+          aria-label={`Repost (${displayRepostCount})`}
+          aria-haspopup="dialog"
+        >
+          <Repeat2 className="h-5 w-5" strokeWidth={isReposted ? 2.75 : 2} />
+          <span className="tabular-nums">{formatCount(displayRepostCount)}</span>
+        </button>
+
+        <button
+          type="button"
+          data-stage-tile
+          data-stage-action="tip"
+          disabled={!onTip}
+          onClick={(e) => { e.stopPropagation(); onTip?.(); }}
+          className={cn(STAGE_TILE_CLASS, !onTip && 'opacity-50')}
+          aria-label="Tips"
+        >
+          <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} className="h-5 w-5" plainClassName="" />
+          <span>Tip</span>
+        </button>
+
+        <StageSaveTile postId={postId} tokenId={tokenId} className={STAGE_TILE_CLASS} />
+
+        {overlays}
+      </div>
+    );
+  }
 
   if (compact) {
     return (

@@ -25,6 +25,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { cn } from '@/lib/utils';
+import { createPortal } from 'react-dom';
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 import { useFocusComment } from '@/lib/focus-comment';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -152,6 +153,17 @@ interface CommentsSectionProps {
    * index.css for the pin offsets.
    */
   page?: boolean;
+  /**
+   * The phone post page ("Stage"), on top of `page`: no tab strip. A plain
+   * "Comments N" header with sort (and search) replaces it; quotes and
+   * reposts are reached from the repost sheet and shown here with a way
+   * back. The composer docks to the bottom of the screen as liquid glass.
+   */
+  stage?: boolean;
+  /** The post's comment total, for the stage header. */
+  stageCount?: number;
+  /** Tells the host which list the stage is showing, so it can reopen one. */
+  onStageTabChange?: (tab: 'replies' | 'quotes' | 'reposts' | 'search') => void;
 }
 
 /**
@@ -893,7 +905,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false }: CommentsSectionProps) {
+export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
   // it, so there is nothing to show them here.
@@ -963,6 +975,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
    */
   const focusCommentId = useFocusComment(tokenId);
   const { t } = useI18n();
+  // On the phone post page the composer docks to the screen. It is portalled
+  // to <body> because canvas themes put filters/transforms on the page frame,
+  // which would turn `position: fixed` into "fixed to that frame".
+  const dockComposer = (el: React.ReactElement) =>
+    stage && typeof document !== 'undefined' ? createPortal(el, document.body) : el;
   /** Cleared by "Show all comments", and by arriving with nothing to focus. */
   const [showAllThreads, setShowAllThreads] = useState(!focusCommentId);
   useEffect(() => {
@@ -2374,6 +2391,60 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     >
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
+      {stage ? (
+        /* Stage header: the count, sort and search. Quotes and reposts open
+           from the repost sheet and get a back arrow to the comments. */
+        <div data-stage-comments-head className="flex items-center justify-between gap-2 pb-1 pt-3">
+          {activeTab === 'quotes' || activeTab === 'reposts' ? (
+            <button
+              type="button"
+              onClick={() => { setActiveTab('replies'); onStageTabChange?.('replies'); }}
+              className="flex min-w-0 items-center gap-1.5 text-left"
+              aria-label={t('postStage.backToComments', 'Back to comments')}
+            >
+              <ChevronLeft className="h-5 w-5 shrink-0" />
+              <span data-stage-ink className="text-[17px] font-bold">
+                {activeTab === 'quotes' ? t('postStage.quotes', 'Quotes') : t('postStage.reposts', 'Reposts')}
+              </span>
+            </button>
+          ) : (
+            <h2 data-stage-ink className="text-[17px] font-bold">
+              {t('postStage.comments', 'Comments')}
+              {typeof stageCount === 'number' && (
+                <span data-stage-muted className="ml-1.5 font-semibold tabular-nums">{stageCount}</span>
+              )}
+            </h2>
+          )}
+          {activeTab !== 'quotes' && activeTab !== 'reposts' && (
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                data-stage-chip
+                data-active={activeTab === 'search' ? 'true' : undefined}
+                onClick={() => {
+                  const next = activeTab === 'search' ? 'replies' : 'search';
+                  setActiveTab(next);
+                  onStageTabChange?.(next);
+                }}
+                aria-label={t('comments.tabSearch')}
+                className="flex h-8 w-8 items-center justify-center rounded-lg"
+              >
+                <Search className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                data-stage-chip
+                onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
+                aria-label={t(sortOption.sortedBy)}
+                className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold"
+              >
+                <ArrowUpDown className="h-3.5 w-3.5" />
+                {t(sortOption.short)}
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
       <div
         data-comment-tabs
         data-comment-tabs-pin={page || undefined}
@@ -2488,6 +2559,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
         {/* Duplicate post action buttons removed — already shown in ActionBar above */}
       </div>
+      )}
 
       {/* Search Input - always rendered but hidden when not on search tab to maintain consistent height */}
       <div className={`mb-3 ${activeTab === 'search' ? 'visible' : 'invisible h-0 mb-0 overflow-hidden'}`}>
@@ -2731,12 +2803,18 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
               </span>
             </div>
           </div>
-        ) : (
+        ) : dockComposer(
         <div
           data-comment-composer
           data-comment-composer-pin={page || undefined}
+          data-stage-composer={stage || undefined}
           className={cn(
-            page
+            stage
+              // Docked to the bottom of the screen for the whole page, over a
+              // soft blurred fade (post-stage.css) so comments never read
+              // through it. The bottom nav is hidden on this page.
+              ? "fixed inset-x-0 bottom-0 z-[45] px-3 pt-2 pb-[max(0.625rem,env(safe-area-inset-bottom))]"
+              : page
               // The app's reply bar: full width, pinned to the bottom of the
               // screen while the thread is in view, released at its end.
               ? "sticky bottom-0 z-20 -mx-2 sm:-mx-3 px-2 sm:px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
@@ -2744,6 +2822,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             !page && (isMobile ? "pt-2 pb-1" : "pt-3")
           )}
         >
+          {stage && <div data-stage-composer-fade aria-hidden="true" />}
           {/* Common Ground: say up front that the first reply goes through the
               steps, so the sheet is not a surprise when Post is tapped. */}
           {commonGround && !isOwnThread && (

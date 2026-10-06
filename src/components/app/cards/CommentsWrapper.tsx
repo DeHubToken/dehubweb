@@ -57,6 +57,10 @@ interface CommentsWrapperProps {
    * the page with a phone drawer.
    */
   forceInline?: boolean;
+  /** Phone post page ("Stage") — see CommentsSection `stage`. Inline only. */
+  stage?: boolean;
+  stageCount?: number;
+  onStageTabChange?: (tab: 'replies' | 'quotes' | 'reposts' | 'search') => void;
 }
 
 function useIsTabletOrMobile() {
@@ -282,7 +286,7 @@ function DiscardGuard({ onKeepWriting, onDiscard }: { onKeepWriting: () => void;
   );
 }
 
-export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, forKids = false, postAuthorAddress, forceInline = false }: CommentsWrapperProps) {
+export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, forKids = false, postAuthorAddress, forceInline = false, stage = false, stageCount, onStageTabChange }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const isPhone = useIsPhone();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile && immersive);
@@ -461,7 +465,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
   // CommentsSection lose their sticky containing block.
   if (forceInline) {
     return open ? (
-      <div data-comments-wrapper data-no-navigate className="mt-3" onClick={(e) => e.stopPropagation()}>
+      <div data-comments-wrapper data-no-navigate className={stage ? undefined : 'mt-3'} onClick={(e) => e.stopPropagation()}>
         <Suspense fallback={null}>
           <CommentsSection
             key={tokenId}
@@ -472,6 +476,9 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
             forKids={forKids}
             postAuthorAddress={postAuthorAddress}
             page
+            stage={stage}
+            stageCount={stageCount}
+            onStageTabChange={onStageTabChange}
           />
         </Suspense>
       </div>
