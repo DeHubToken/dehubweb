@@ -176,6 +176,8 @@ function ImageSlide({
   onImageClick,
   viewportRef,
   immersive = false,
+  total,
+  activeIndex,
 }: {
   img: string;
   idx: number;
@@ -184,6 +186,8 @@ function ImageSlide({
   onImageClick: (index: number) => void;
   viewportRef: React.RefObject<HTMLDivElement>;
   immersive?: boolean;
+  total?: number;
+  activeIndex?: number;
 }) {
   // Upgraded from the click-only double-tap to the shared ladder, so a photo
   // gets the same triple-tap ❤️ and hold-for-the-tray as every other surface.
@@ -199,7 +203,7 @@ function ImageSlide({
   const ratio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img);
   const slideRef = useRef<HTMLDivElement>(null);
   const [retainBitmap, setRetainBitmap] = useState(aboveFold || immersive);
-  const horizontalBitmap = useHorizontalBitmap(img, !!ratio, viewportRef, slideRef);
+  const horizontalBitmap = useHorizontalBitmap(img, !!ratio, viewportRef, slideRef, { total, index: idx, activeIndex });
   // Resolve the ratio during render so a replaced image never paints with the
   // previous image's dimensions or needs a second render just to reset them.
 
@@ -446,6 +450,8 @@ function ImageCarousel({
               onImageClick={onImageClick}
               viewportRef={scrollRef}
               immersive={immersive}
+              total={images.length}
+              activeIndex={currentIndex}
             />
           </div>
         ))}
