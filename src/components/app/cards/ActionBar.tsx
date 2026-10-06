@@ -36,7 +36,7 @@ import {
 } from '@/lib/reactions';
 import { ReactionEmoji } from './ReactionEmoji';
 import { ReactionPicker } from './ReactionPicker';
-import { maybeShowReactionTip, markReactionTipSeen } from '@/lib/reaction-tip';
+import { maybeShowReactionTip } from '@/lib/reaction-tip';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEngagementWeight } from '@/hooks/use-engagement-weight';
 import { useLeftHanded } from '@/hooks/use-left-handed';
@@ -699,11 +699,11 @@ export function ActionBar({
     // tray, and the thumb wears it while it is yours. A tap then takes it back
     // rather than casting a like over it — see reactionForThumbTap.
     if (vote && reactionsEnabledRef.current) {
-      if (!isLiked && !isDisliked && isAuthenticated) maybeShowReactionTip();
+      if (!isLiked && !isDisliked && isAuthenticated) void maybeShowReactionTip(walletAddress);
       return handleReaction(reactionForThumbTap(myReaction, localReactionCounts));
     }
     return handleReaction(reactionForTap(vote, myReaction, localReactionCounts));
-  }, [handleReaction, myReaction, localReactionCounts, isLiked, isDisliked, isAuthenticated]);
+  }, [handleReaction, myReaction, localReactionCounts, isLiked, isDisliked, isAuthenticated, walletAddress]);
 
   // Listen for double-tap-to-like events dispatched by photo thumbnails / fullscreen viewer.
   // Instagram-style: double-tap always likes (never unlikes) and only for this post's ID.
@@ -755,8 +755,6 @@ export function ActionBar({
   // (governance, feature requests), and it never opens a tray of its own.
   const likeTray = useReactionTray(reactionsEnabled);
   reactionsEnabledRef.current = reactionsEnabled;
-  // Opening the tray means they already know it is there.
-  useEffect(() => { if (likeTray.open) markReactionTipSeen(); }, [likeTray.open]);
 
   const viewerTipped = useViewerTippedPost(tokenId != null ? String(tokenId) : postId, walletAddress);
   // Bumps each time this viewer tips this post, replaying the gem's swirl.
