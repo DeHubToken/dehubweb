@@ -679,7 +679,7 @@ export default function ArcadeChessOnlinePage() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div data-glass-page data-theme-page-surface className="relative z-[1] min-h-screen bg-black">
       <SEOHead
         title="Play online | King's Gambit | DeHub Arcade"
         description="Challenge another player to cinematic 3D chess. Open a challenge or accept one from the lobby."
