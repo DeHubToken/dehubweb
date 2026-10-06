@@ -1214,6 +1214,13 @@
     "loadingBoard": "Sadarkaan fe'amaa jira…",
     "amountTokens": "{{amount}} mallattoolee"
   },
+  "dhbListing": {
+    "title": "Galmeen tookanii dhiyootti!",
+    "body": "$DHB ammallee hin daldalamu. Akkuma galmaa'eetti imeelii argadhu.",
+    "notifyMe": "Na beeksisi",
+    "privacy": "Kana kan itti fayyadamnu yeroo $DHB galmaa'u si beeksisuuf qofa.",
+    "joined": "Tarree keessa jirta. Akkuma $DHB galmaa'eetti {{email}} irratti imeelii ergina."
+  },
   "explorePage": {
     "searchPlaceholder": "Namoota, barreeffamoota yookaan qabiyyee barbaadi...",
     "filters": "Calaltuu",

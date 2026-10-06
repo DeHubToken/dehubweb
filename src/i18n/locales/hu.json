@@ -1196,6 +1196,13 @@
     "loadingBoard": "Ranglista betöltése…",
     "amountTokens": "{{amount}} token"
   },
+  "dhbListing": {
+    "title": "Hamarosan jön a token tőzsdei bevezetése!",
+    "body": "A $DHB-vel még nem lehet kereskedni. Kapj e-mailt, amint bevezetik.",
+    "notifyMe": "Értesíts",
+    "privacy": "Csak arra használjuk, hogy szóljunk, amikor a $DHB-t bevezetik.",
+    "joined": "Rajta vagy a listán. Írunk a(z) {{email}} címre, amint a $DHB-t bevezetik."
+  },
   "explorePage": {
     "searchPlaceholder": "Emberek, bejegyzések vagy tartalom keresése...",
     "filters": "Szűrők",

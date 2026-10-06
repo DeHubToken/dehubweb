@@ -1197,6 +1197,13 @@
     "loadingBoard": "Učitavanje ljestvice…",
     "amountTokens": "{{amount}} tokena"
   },
+  "dhbListing": {
+    "title": "Uvrštavanje tokena uskoro!",
+    "body": "$DHB se još ne trguje. Primite e-poruku čim bude uvršten.",
+    "notifyMe": "Obavijesti me",
+    "privacy": "Koristit ćemo ovo samo da vas obavijestimo kada $DHB bude uvršten.",
+    "joined": "Na popisu ste. Poslat ćemo e-poruku na {{email}} čim $DHB bude uvršten."
+  },
   "explorePage": {
     "searchPlaceholder": "Pretraži ljude, objave ili sadržaj...",
     "filters": "Filteri",

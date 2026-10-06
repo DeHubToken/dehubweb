@@ -1201,6 +1201,13 @@
     "loadingBoard": "Laster toppliste…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Token-notering kommer snart!",
+    "body": "$DHB handles ikke ennå. Få en e-post så snart den blir notert.",
+    "notifyMe": "Varsle meg",
+    "privacy": "Vi bruker dette kun til å si fra når $DHB blir notert.",
+    "joined": "Du står på listen. Vi sender e-post til {{email}} så snart $DHB blir notert."
+  },
   "explorePage": {
     "searchPlaceholder": "Søk etter folk, innlegg eller innhold...",
     "filters": "Filtre",

@@ -49,9 +49,9 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
       rememberJoinedEmail(address);
       setJoinedEmail(address.trim().toLowerCase());
       setStep('joined');
-      toast.success(t('dhbListing.joinedToast', "You're on the list! We'll email you when $DHB lists."));
+      toast.success(t('dhbListing.joined', "You're on the list. We'll email {{email}} the moment $DHB lists.", { email: address.trim().toLowerCase() }));
     } catch {
-      toast.error(t('dhbListing.error', "Couldn't sign you up. Please try again."));
+      toast.error(t('careers.applicationFailed', 'Failed to submit. Please try again.'));
     } finally {
       setBusy(false);
     }
@@ -71,7 +71,7 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!isValidListingEmail(email)) {
-      toast.error(t('dhbListing.invalidEmail', 'Enter a valid email address.'));
+      toast.error(t('loginModal.invalidEmail', 'Please enter a valid email address'));
       return;
     }
     void submit(email);
@@ -89,7 +89,7 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
             <span className="text-white font-semibold">$DHB</span>
             <span className="text-zinc-400 text-sm">Dehub</span>
             <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-              {t('dhbListing.badge', 'Coming soon')}
+              {t('hero.comingSoon', 'Coming Soon')}
             </span>
           </div>
           <h3 className="text-lg sm:text-xl font-bold text-white mt-0.5">
@@ -102,9 +102,7 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
         <div className="mt-4 flex items-start gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25 px-3 py-2.5">
           <Check className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
           <p className="text-sm text-zinc-200 break-words min-w-0">
-            {joinedEmail
-              ? t('dhbListing.joinedWithEmail', "You're on the list. We'll email {{email}} the moment $DHB lists.", { email: joinedEmail })
-              : t('dhbListing.joined', "You're on the list. We'll email you the moment $DHB lists.")}
+            {t('dhbListing.joined', "You're on the list. We'll email {{email}} the moment $DHB lists.", { email: joinedEmail ?? '' })}
           </p>
         </div>
       ) : (
@@ -123,8 +121,8 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={t('dhbListing.emailPlaceholder', 'you@example.com')}
-                aria-label={t('dhbListing.emailLabel', 'Email address')}
+                placeholder={t('loginModal.emailPlaceholder', 'Enter your email')}
+                aria-label={t('loginModal.emailPlaceholder', 'Enter your email')}
                 className="flex-1 bg-zinc-900 border-zinc-700 text-white"
               />
               <Button type="submit" disabled={busy} className="gap-2">

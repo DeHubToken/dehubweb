@@ -1186,6 +1186,13 @@
     "loadingBoard": "بنحمّل لوحة الترتيب…",
     "amountTokens": "{{amount}} توكنز"
   },
+  "dhbListing": {
+    "title": "إدراج العملة قريب!",
+    "body": "$DHB لسه ما بتداول. حيجيك إيميل أول ما ينزل.",
+    "notifyMe": "بلّغني",
+    "privacy": "حنستخدمه بس عشان نبلغك لمن $DHB ينزل.",
+    "joined": "إنت في القائمة. حنرسل إيميل لـ {{email}} أول ما $DHB ينزل."
+  },
   "explorePage": {
     "searchPlaceholder": "ابحث عن ناس، منشورات أو محتوى...",
     "filters": "الفلاتر",

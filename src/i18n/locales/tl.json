@@ -1251,6 +1251,13 @@
       "volume": "Volume"
     }
   },
+  "dhbListing": {
+    "title": "Malapit nang ma-list ang token!",
+    "body": "Hindi pa naka-trade ang $DHB. Makatanggap ng email sa sandaling ma-list ito.",
+    "notifyMe": "Abisuhan ako",
+    "privacy": "Gagamitin lang namin ito para ipaalam sa iyo kapag na-list na ang $DHB.",
+    "joined": "Nasa listahan ka na. Mag-e-email kami sa {{email}} sa sandaling ma-list ang $DHB."
+  },
   "explorePage": {
     "searchPlaceholder": "Maghanap ng mga tao, post, o nilalaman...",
     "filters": "Filters",

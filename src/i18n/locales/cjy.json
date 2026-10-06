@@ -1198,6 +1198,13 @@
     "loadingBoard": "排行榜加载着…",
     "amountTokens": "{{amount}} 代币"
   },
+  "dhbListing": {
+    "title": "代币快要上线了！",
+    "body": "$DHB还没开始交易。一上线就给你发邮件。",
+    "notifyMe": "通知我",
+    "privacy": "这个只用来通知你$DHB上线。",
+    "joined": "你已经在名单上了。$DHB一上线我们就给{{email}}发邮件。"
+  },
   "explorePage": {
     "searchPlaceholder": "搜索人、帖子或内容...",
     "filters": "筛选",

@@ -1200,6 +1200,13 @@
     "loadingBoard": "排行榜加载中…",
     "amountTokens": "{{amount}} 代币"
   },
+  "dhbListing": {
+    "title": "代币就要上线了！",
+    "body": "$DHB还呒没开始交易。一上线就发邮件拨侬。",
+    "notifyMe": "通知我",
+    "privacy": "阿拉只用伊来通知侬$DHB上线。",
+    "joined": "侬已经勒名单里了。$DHB一上线阿拉就发邮件到{{email}}。"
+  },
   "explorePage": {
     "searchPlaceholder": "搜索用户、帖子或内容...",
     "filters": "筛选",

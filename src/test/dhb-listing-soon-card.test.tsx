@@ -57,7 +57,7 @@ describe('DhbListingSoonCard', () => {
     render(<DhbListingSoonCard />);
     fireEvent.click(screen.getByRole('button', { name: /notify me/i }));
 
-    const input = await screen.findByLabelText('Email address');
+    const input = await screen.findByLabelText('Enter your email');
     expect(listing.joinDhbListingWaitlist).not.toHaveBeenCalled();
 
     fireEvent.change(input, { target: { value: 'new@fan.io' } });

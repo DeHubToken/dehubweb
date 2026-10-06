@@ -1223,6 +1223,13 @@
     "loadingBoard": "Mampiditra ny lisitry ny tsara indrindra…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Ho avy tsy ho ela ny fisoratana ny token!",
+    "body": "Tsy mbola amidy ny $DHB. Mahazoa mailaka raha vao voasoratra izy.",
+    "notifyMe": "Ampahafantaro ahy",
+    "privacy": "Hampiasainay ihany ity hampahafantarana anao rehefa voasoratra ny $DHB.",
+    "joined": "Ao amin'ny lisitra ianao. Handefa mailaka any amin'ny {{email}} izahay raha vao voasoratra ny $DHB."
+  },
   "explorePage": {
     "searchPlaceholder": "Hikaroka olona, lahatsoratra na atiny...",
     "filters": "Sivana",

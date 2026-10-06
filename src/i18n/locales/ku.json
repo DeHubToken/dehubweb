@@ -1033,6 +1033,13 @@
     "loadingBoard": "Pêşengtî tê barkirin…",
     "amountTokens": "{{amount}} توکن"
   },
+  "dhbListing": {
+    "title": "Lîstekirina tokenê nêzîk e!",
+    "body": "$DHB hîn nayê bazirganîkirin. Gava ku lîste bibe e-nameyekê bistîne.",
+    "notifyMe": "Min agahdar bike",
+    "privacy": "Em ê vê tenê bikar bînin da ku gava $DHB lîste bibe te agahdar bikin.",
+    "joined": "Tu di lîsteyê de yî. Gava ku $DHB lîste bibe em ê e-nameyekê ji {{email}} re bişînin."
+  },
   "explorePage": {
     "searchPlaceholder": "Li kes, şandin, an naverokê bigerin...",
     "filters": "Fîlter",

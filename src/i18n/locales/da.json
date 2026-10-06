@@ -1201,6 +1201,13 @@
     "loadingBoard": "Indlæser rangliste…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Token-listing kommer snart!",
+    "body": "$DHB handles ikke endnu. Få en e-mail, så snart den bliver listet.",
+    "notifyMe": "Giv mig besked",
+    "privacy": "Vi bruger det kun til at give dig besked, når $DHB bliver listet.",
+    "joined": "Du er på listen. Vi sender en e-mail til {{email}}, så snart $DHB bliver listet."
+  },
   "explorePage": {
     "searchPlaceholder": "Søg personer, opslag eller indhold...",
     "filters": "Filtre",

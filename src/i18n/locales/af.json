@@ -1225,6 +1225,13 @@
       "year": "Jaar"
     }
   },
+  "dhbListing": {
+    "title": "Token-notering kom binnekort!",
+    "body": "$DHB verhandel nog nie. Kry 'n e-pos sodra dit genoteer word.",
+    "notifyMe": "Laat my weet",
+    "privacy": "Ons sal dit net gebruik om jou te laat weet wanneer $DHB genoteer word.",
+    "joined": "Jy is op die lys. Ons sal {{email}} e-pos sodra $DHB genoteer word."
+  },
   "explorePage": {
     "searchPlaceholder": "Soek na mense, poste of inhoud...",
     "filters": "Filters",

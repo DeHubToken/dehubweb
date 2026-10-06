@@ -1202,6 +1202,13 @@
     "loadingBoard": "Ñawpaqkuna churasqa chaskikuchkan…",
     "amountTokens": "{{amount}} fichas nisqakuna"
   },
+  "dhbListing": {
+    "title": "Token qillqakuyqa qayllapiña!",
+    "body": "$DHB manaraq rantinakunchu. Qillqakusqan pachallapi email chaskiy.",
+    "notifyMe": "Willaway",
+    "privacy": "Kayta $DHB qillqakuptin willanaykipaqlla llamk'achisaqku.",
+    "joined": "Listapiñam kanki. $DHB qillqakusqan pachallapi {{email}} nisqaman email apachisaqku."
+  },
   "explorePage": {
     "searchPlaceholder": "Runata, churasqata icha willakuyta maskay...",
     "filters": "Chiqinchakuna",

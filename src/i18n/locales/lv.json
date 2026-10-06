@@ -1185,6 +1185,13 @@
     "loadingBoard": "Ielādē līderu tabulu…",
     "amountTokens": "{{amount}} žetoni"
   },
+  "dhbListing": {
+    "title": "Tokena listings drīzumā!",
+    "body": "$DHB vēl netiek tirgots. Saņem e-pastu, tiklīdz tas tiks iekļauts biržā.",
+    "notifyMe": "Paziņot man",
+    "privacy": "Mēs to izmantosim tikai, lai paziņotu, kad $DHB tiks iekļauts biržā.",
+    "joined": "Tu esi sarakstā. Tiklīdz $DHB tiks iekļauts biržā, mēs rakstīsim uz {{email}}."
+  },
   "explorePage": {
     "searchPlaceholder": "Meklēt cilvēkus, ierakstus vai saturu...",
     "filters": "Filtri",

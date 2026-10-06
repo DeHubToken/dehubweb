@@ -1202,6 +1202,13 @@
     "loadingBoard": "Sıralama yükleniyor…",
     "amountTokens": "{{amount}} jeton"
   },
+  "dhbListing": {
+    "title": "Token listelemesi yakında!",
+    "body": "$DHB henüz işlem görmüyor. Listelendiği anda e-posta al.",
+    "notifyMe": "Bana haber ver",
+    "privacy": "Bunu yalnızca $DHB listelendiğinde sana haber vermek için kullanacağız.",
+    "joined": "Listedesin. $DHB listelendiği anda {{email}} adresine e-posta göndereceğiz."
+  },
   "explorePage": {
     "searchPlaceholder": "Kişi, gönderi veya içerik ara...",
     "filters": "Filtreler",

@@ -1216,6 +1216,13 @@
     "loadingBoard": "Đang tải bảng xếp hạng…",
     "amountTokens": "{{amount}} token"
   },
+  "dhbListing": {
+    "title": "Token sắp được niêm yết!",
+    "body": "$DHB chưa được giao dịch. Nhận email ngay khi được niêm yết.",
+    "notifyMe": "Thông báo cho tôi",
+    "privacy": "Chúng tôi chỉ dùng thông tin này để báo cho bạn khi $DHB được niêm yết.",
+    "joined": "Bạn đã có tên trong danh sách. Chúng tôi sẽ gửi email đến {{email}} ngay khi $DHB được niêm yết."
+  },
   "explorePage": {
     "searchPlaceholder": "Tìm kiếm người dùng, bài đăng hoặc nội dung...",
     "filters": "Filters",

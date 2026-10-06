@@ -1195,6 +1195,13 @@
     "loadingBoard": "Lider lövhəsi yüklənir…",
     "amountTokens": "{{amount}} token"
   },
+  "dhbListing": {
+    "title": "Token listinqi tezliklə!",
+    "body": "$DHB hələ ticarətdə deyil. Listinqə çıxan kimi e-poçt alın.",
+    "notifyMe": "Mənə xəbər ver",
+    "privacy": "Bunu yalnız $DHB listinqə çıxanda sizə xəbər vermək üçün istifadə edəcəyik.",
+    "joined": "Siyahıdasınız. $DHB listinqə çıxan kimi {{email}} ünvanına e-poçt göndərəcəyik."
+  },
   "explorePage": {
     "searchPlaceholder": "İnsanlar, paylaşımlar və ya məzmun axtar...",
     "filters": "Filtrlər",
