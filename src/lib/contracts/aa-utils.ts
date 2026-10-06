@@ -192,7 +192,9 @@ export async function getActiveProvider(
   }
   await waitForExternalWalletConnection();
   let account = getAccount(wagmiConfig);
-  if ((!account.address || !account.isConnected) && hasDeHubSession()) {
+  const expectedAddress = localStorage.getItem('dehub_wallet');
+  if (hasDeHubSession() && (!account.address || !account.isConnected
+    || account.address.toLowerCase() !== expectedAddress?.toLowerCase())) {
     await waitForSessionWalletConnect();
     account = getAccount(wagmiConfig);
   }
@@ -611,11 +613,20 @@ export async function writeContractAA(
         });
         const receipt = await waitForSubmittedReceipt(
           txHash,
-          () => isWeb3Auth
-            ? receiptClient.waitForTransactionReceipt({ hash: txHash as Hex, confirmations, timeout: 60_000 })
-            : waitForTransactionReceipt(wagmiConfig, {
-              hash: txHash as Hex, confirmations, timeout: 60_000, chainId: chainId as any,
-            }),
+          async () => {
+            let cancelled = false;
+            const parameters = {
+              hash: txHash as Hex, confirmations, timeout: 60_000,
+              onReplaced: ({ reason }: { reason: string }) => { cancelled = reason === 'cancelled'; },
+            };
+            const found = isWeb3Auth
+              ? await receiptClient.waitForTransactionReceipt(parameters)
+              : await waitForTransactionReceipt(wagmiConfig, { ...parameters, chainId: chainId as any });
+            if (cancelled) throw Object.assign(new Error('Transaction cancelled in your wallet.'), {
+              code: 'TRANSACTION_REPLACED', cancelled: true,
+            });
+            return found;
+          },
           clients.map(client => async () => {
             const found = await client.getTransactionReceipt({ hash: txHash as Hex });
             if (confirmations > 1 && await client.getBlockNumber() < found.blockNumber + BigInt(confirmations - 1)) return null;
