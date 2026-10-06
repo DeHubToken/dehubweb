@@ -831,7 +831,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const stage = usePostStage();
   // Video posts use the same bare glyph controls at every viewport size,
   // mute in the top corner, and playback actions beside fullscreen on the
-  // bottom row with play and remaining time.
+  // bottom row with remaining time. Phones toggle playback on the video surface.
   const bareControls = !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
   /** Hovering the mute button drops a volume slider under it. */
   const [volumeOpen, setVolumeOpen] = useState(false);
@@ -2501,14 +2501,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-12 touch-pan-y" />}
 
             <div data-video-button-row className={cn("flex items-center gap-2", bareControls && (mediaAspect >= 1 ? "px-2" : "px-1.5"))}>
-              <button
+              {!isPhone && <button
                 onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
                 aria-label={isPlaying ? 'Pause' : 'Play'}
                 data-video-bare={bareControls ? '' : undefined}
                 className={cn("flex items-center justify-center shrink-0", bareControls ? "h-8 w-8" : "h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10")}
               >
                 {isPlaying ? <MediaControlIcon icon={Pause} /> : <MediaControlIcon icon={Play} />}
-              </button>
+              </button>}
               <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
               <input
                 type="range"
