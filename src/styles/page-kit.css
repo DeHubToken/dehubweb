@@ -174,9 +174,4 @@ html[data-theme] [data-kit-button='primary'] :is(svg, .text-white) { color: inhe
   html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_)::after {
     display: none !important;
   }
-  /* Bentos nested in a section (stat tiles etc.) keep a soft tile. */
-  html[data-theme='system'] [data-kit-section] [data-page-bento]:not(#_):not(#_) {
-    background: rgb(255 255 255 / 0.04) !important;
-    border-radius: 10px !important;
-  }
 }
