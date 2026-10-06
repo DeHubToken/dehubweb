@@ -112,7 +112,7 @@ export function ProfileFilterPanel({ filters, onChange, onReset, showPostType, d
                 setCategorySearch('');
               }}
               borderRadius="0.75rem"
-              buttonClassName="px-3 py-2 rounded-xl text-sm"
+              buttonClassName="px-3 py-2 rounded-xl text-sm text-white"
             />
             {filteredCategories.length === 0 && !!categorySearch.trim() && (
               <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
@@ -130,7 +130,7 @@ export function ProfileFilterPanel({ filters, onChange, onReset, showPostType, d
             activeKey={filters.date}
             onSelect={(key) => onChange({ ...filters, date: key as DateFilterValue })}
             borderRadius="0.75rem"
-            buttonClassName="px-3 py-2 rounded-xl text-sm"
+            buttonClassName="px-3 py-2 rounded-xl text-sm text-white"
           />
         </div>
       </div>
@@ -145,7 +145,7 @@ export function ProfileFilterPanel({ filters, onChange, onReset, showPostType, d
               activeKey={filters.postType}
               onSelect={(key) => onChange({ ...filters, postType: key as PostTypeFilterValue })}
               borderRadius="0.75rem"
-              buttonClassName="px-3 py-2 rounded-xl text-sm"
+              buttonClassName="px-3 py-2 rounded-xl text-sm text-white"
             />
           </div>
         </div>
@@ -163,7 +163,7 @@ export function ProfileFilterPanel({ filters, onChange, onReset, showPostType, d
               onChange({ ...filters, [field]: !filters[field] });
             }}
             borderRadius="0.75rem"
-            buttonClassName="px-3 py-2 rounded-xl text-sm"
+            buttonClassName="px-3 py-2 rounded-xl text-sm text-white"
           />
         </div>
       </div>
@@ -173,7 +173,7 @@ export function ProfileFilterPanel({ filters, onChange, onReset, showPostType, d
       <button
         type="button"
         onClick={() => { setCategorySearch(''); onReset(); }}
-        className="absolute z-50 bottom-0 right-0 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+        className="absolute z-50 bottom-0 right-0 p-1.5 rounded-lg text-white hover:bg-zinc-800 transition-colors"
         aria-label={t('filters.resetFilters')}
       >
         <RefreshCw className="w-3.5 h-3.5" />
