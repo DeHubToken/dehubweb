@@ -7,7 +7,7 @@ type Claim = {
   props: ImageProps;
   loaded?: { src: string; width: number; height: number };
 };
-type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout> };
+type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout>; lastSrc?: string; lastSrcSet?: string; retried?: boolean };
 const images = new Map<string, Entry>();
 
 interface ImageProps extends Pick<HTMLAttributes<HTMLSpanElement>, 'onClick' | 'onPointerDown' | 'onPointerMove' | 'onPointerUp' | 'onPointerCancel'> {
@@ -50,7 +50,31 @@ function show(entry: Entry) {
   if (props.imageRef) props.imageRef.current = image;
   image.loading = props.loading ?? 'lazy';
   image.setAttribute('fetchpriority', props.fetchPriority ?? 'auto');
-  for (const [attribute, value] of Object.entries({ src: props.src, srcset: props.srcSet, sizes: props.sizes, width: props.width, height: props.height })) {
+  let src = props.src;
+  let srcSet = props.srcSet;
+  if (src) {
+    if (src !== entry.lastSrc) entry.retried = false;
+    entry.lastSrc = src;
+    entry.lastSrcSet = srcSet;
+  } else if (entry.lastSrc) {
+    // Safety net: never leave an on-screen slot blank. Re-apply the last known
+    // source when the slot is visible; far-offscreen slots may still release.
+    const rect = claim.slot.getBoundingClientRect();
+    const onScreen = rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
+    if (onScreen) { src = entry.lastSrc; srcSet = entry.lastSrcSet; }
+  }
+  if (!image.onerror) image.onerror = () => {
+    if (entry.retried || !entry.lastSrc) return;
+    entry.retried = true;
+    const failed = entry.lastSrc;
+    setTimeout(() => {
+      if (entry.lastSrc !== failed || !image.getAttribute('src')) return;
+      const bust = `${failed}${failed.includes('?') ? '&' : '?'}r=${Date.now()}`;
+      image.removeAttribute('srcset');
+      image.setAttribute('src', bust);
+    }, 1000);
+  };
+  for (const [attribute, value] of Object.entries({ src, srcset: srcSet, sizes: props.sizes, width: props.width, height: props.height })) {
     if (value == null) image.removeAttribute(attribute);
     else if (image.getAttribute(attribute) !== String(value)) image.setAttribute(attribute, String(value));
   }
@@ -86,7 +110,7 @@ export function HandoffImage(props: ImageProps) {
       else {
         previous.entry.image.remove();
         previous.entry.timer = setTimeout(() => {
-          if (previous.entry.claims.length) return;
+          if (previous.entry.claims.length || images.get(props.mediaKey) !== previous.entry) return;
           images.delete(props.mediaKey);
           previous.entry.image.removeAttribute('src');
           previous.entry.image.removeAttribute('srcset');

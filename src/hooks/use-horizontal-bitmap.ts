@@ -1,24 +1,32 @@
 import { useEffect, useState, type RefObject } from 'react';
 
-/** Release measured gallery images outside the carousel without losing geometry. */
-export function useHorizontalBitmap(source: string, measured: boolean, viewportRef: RefObject<HTMLDivElement>, slideRef: RefObject<HTMLDivElement>) {
+/**
+ * Release measured gallery images outside the carousel without losing geometry.
+ * Relies on the observer's own intersection state (rootMargin gives a 32px
+ * buffer) so snapshot vs. live rect mismatches during scroll can't hide a
+ * visible slide. Single-image carousels and the active slide ±1 never unload.
+ */
+export function useHorizontalBitmap(
+  source: string,
+  measured: boolean,
+  viewportRef: RefObject<HTMLDivElement>,
+  slideRef: RefObject<HTMLDivElement>,
+  options: { total?: number; index?: number; activeIndex?: number } = {},
+) {
+  const { total, index, activeIndex } = options;
+  const pinned = total === 1 || (index != null && activeIndex != null && Math.abs(index - activeIndex) <= 1);
   const [retained, setRetained] = useState(true);
   useEffect(() => {
     setRetained(true);
+    if (pinned) return;
     const root = viewportRef.current;
     const node = slideRef.current;
     if (!root || !node || !measured || typeof IntersectionObserver === 'undefined') return;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const observer = new IntersectionObserver(([entry]) => {
       if (timer) clearTimeout(timer);
-      const viewport = root.getBoundingClientRect();
-      // Skipped offscreen feed rows can report empty descendant rectangles.
-      // Keep the last horizontal selection; vertical retention owns its grace.
-      if (viewport.bottom <= 0 || viewport.top >= window.innerHeight) return;
-      const slide = entry.boundingClientRect;
-      // Vertical retention owns the feed's scroll-back buffer and grace period.
-      const horizontallyVisible = slide.right > viewport.left - 32 && slide.left < viewport.right + 32;
-      if (horizontallyVisible) setRetained(true);
+      timer = undefined;
+      if (entry.isIntersecting) setRetained(true);
       else timer = setTimeout(() => setRetained(false), 400);
     }, { root, rootMargin: '0px 32px' });
     observer.observe(node);
@@ -26,6 +34,6 @@ export function useHorizontalBitmap(source: string, measured: boolean, viewportR
       observer.disconnect();
       if (timer) clearTimeout(timer);
     };
-  }, [source, measured, viewportRef, slideRef]);
-  return retained;
+  }, [source, measured, pinned, viewportRef, slideRef]);
+  return pinned || retained;
 }
