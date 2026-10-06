@@ -1654,9 +1654,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return columns;
   };
 
-  const renderMasonryGrid = (nodes: ReactNode[], feedItems?: FeedItemType[], padEnd = false) => {
+  const renderMasonryGrid = (nodes: ReactNode[], feedItems?: FeedItemType[], padEnd = false, beforeShorts = false, afterShorts = false) => {
     if (colCount <= 1) {
-      return <div className="space-y-3">{nodes}</div>;
+      return <div className="space-y-3" data-feed-before-shorts={beforeShorts ? '' : undefined} data-feed-after-shorts={afterShorts ? '' : undefined}>{nodes}</div>;
     }
     // Measured masonry: items are packed shortest-column-first by their real
     // rendered heights, so bottoms stay as even as the content allows. Any
@@ -1677,6 +1677,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         estimates={nodes.map((_, i) => estimatePx(feedItems?.[i]))}
         colCount={colCount}
         padEnd={padEnd}
+        beforeShorts={beforeShorts}
+        afterShorts={afterShorts}
       />
     );
   };
@@ -1754,7 +1756,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           {shouldSplitForShorts && beforeShorts.length > 0 && renderMasonryGrid(
             beforeShorts.map((item, i) => renderFeedItem(item, i)),
             beforeShorts,
-            shorts.length > 0
+            shorts.length > 0,
+            true
           )}
           {shouldSplitForShorts && shorts.length > 0 && (
             <div className={cn('my-3', isCollapsed && 'mt-5')}>
@@ -1772,7 +1775,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                     {renderMasonryGrid(
                       seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
                       seg.items,
-                      hasInsertAfter
+                      hasInsertAfter,
+                      showShortsHere,
+                      shouldSplitForShorts && segIdx === 0
                     )}
                   </div>
                 )}
@@ -1791,7 +1796,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     }
 
     // --- SINGLE COLUMN: keep full-width inserts inline as before ---
-    type Segment = { type: 'cards'; items: ReactNode[] } | { type: 'fullwidth'; node: ReactNode };
+    type Segment = { type: 'cards'; items: ReactNode[] } | { type: 'fullwidth'; node: ReactNode; shorts: boolean };
     const segments: Segment[] = [];
     let currentCards: ReactNode[] = [];
     let shortsInserted = false;
@@ -1812,10 +1817,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     // the call sites: a rail added later gets the same answer without anybody
     // remembering to ask. Kids Mode drops them all — see the note by
     // `isKidsMode` above.
-    const addFullWidth = (node: ReactNode) => {
+    const addFullWidth = (node: ReactNode, shorts = false) => {
       if (isKidsMode) return;
       flushCards();
-      segments.push({ type: 'fullwidth', node });
+      segments.push({ type: 'fullwidth', node, shorts });
     };
 
     items.forEach((item, index) => {
@@ -1831,7 +1836,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
 
       if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
-        addFullWidth(<div key={`shorts-carousel-${index}`}><ShortsReel shorts={shorts} /></div>);
+        addFullWidth(<div key={`shorts-carousel-${index}`}><ShortsReel shorts={shorts} /></div>, true);
         shortsInserted = true;
       }
 
@@ -1873,7 +1878,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     });
 
     if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
-      currentCards.push(<div key="shorts-carousel-end"><ShortsReel shorts={shorts} /></div>);
+      addFullWidth(<div key="shorts-carousel-end"><ShortsReel shorts={shorts} /></div>, true);
     }
 
     flushCards();
@@ -1884,9 +1889,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           if (seg.type === 'fullwidth') {
             return <div key={`fw-${i}`} className="mb-3">{seg.node}</div>;
           }
+          const next = segments[i + 1];
+          const previous = segments[i - 1];
           return (
             <div key={`cols-${i}`} className="mb-3">
-              {renderMasonryGrid(seg.items)}
+              {renderMasonryGrid(seg.items, undefined, false,
+                next?.type === 'fullwidth' && next.shorts,
+                previous?.type === 'fullwidth' && previous.shorts,
+              )}
             </div>
           );
         })}

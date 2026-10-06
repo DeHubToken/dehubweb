@@ -3871,26 +3871,19 @@ html[data-theme="light"] [data-feed-root] [data-feed-item]:last-child::after {
 }
 
 /* The shorts rail reaches the feed edges and provides its own separation. */
+[data-feed-root] [data-shorts-carousel] {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
 @media (max-width: 1023px) {
   [data-feed-root] [data-shorts-carousel] {
     margin-inline: -0.75rem;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-  }
-  html:is([data-theme="minimal"], [data-theme="light"]) [data-feed-root] [data-feed-before-shorts] {
-    border-bottom: 0 !important;
-  }
-  html:is([data-theme="minimal"], [data-theme="light"]) [data-feed-root] [data-feed-before-shorts]::after {
-    display: none;
   }
 }
 @media (max-width: 639px) {
   [data-feed-root] [data-shorts-carousel] {
     margin-inline: -0.5rem;
-  }
-  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic][data-feed-before-shorts] {
-    border-bottom: 0 !important;
   }
 }
 
@@ -5575,4 +5568,20 @@ html:not([data-theme="light"], [data-theme="minimal"], [data-theme="osaka"], [da
 @media (prefers-reduced-motion: reduce) {
   .is-playing > .dh-soundwave-bar, .dh-soundwave, .dh-sound-eq.is-playing i, [data-sound-playing] img { animation: none; }
   .is-playing > .dh-soundwave-bar { transform: scaleY(var(--h)); }
+}
+
+/* Clear both edges next to shorts, including the outer rows of desktop grids. */
+html:is([data-theme="minimal"], [data-theme="light"]) [data-feed-root] :is([data-feed-item][data-feed-before-shorts], [data-feed-before-shorts] > [data-feed-item]:last-child) {
+  border-bottom: 0 !important;
+}
+html:is([data-theme="minimal"], [data-theme="light"]) [data-feed-root] :is([data-feed-item][data-feed-before-shorts], [data-feed-before-shorts] > [data-feed-item]:last-child)::after {
+  display: none !important;
+}
+html:is([data-theme="minimal"], [data-theme="light"]) [data-feed-root] :is([data-feed-item][data-feed-after-shorts], [data-feed-after-shorts] > [data-feed-item]:first-child) {
+  border-top: 0 !important;
+}
+@media (max-width: 639px) {
+  html[data-theme="system"] [data-feed-root] :is([data-feed-item][data-feed-before-shorts], [data-feed-before-shorts] > [data-feed-item]:last-child)[data-cinematic] {
+    border-bottom: 0 !important;
+  }
 }

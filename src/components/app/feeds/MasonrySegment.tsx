@@ -27,6 +27,8 @@ interface MasonrySegmentProps {
   colCount: number;
   gap?: number;
   padEnd?: boolean;
+  beforeShorts?: boolean;
+  afterShorts?: boolean;
 }
 
 export const MasonrySegment = ({
@@ -35,6 +37,8 @@ export const MasonrySegment = ({
   colCount,
   gap = 12,
   padEnd = false,
+  beforeShorts = false,
+  afterShorts = false,
 }: MasonrySegmentProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
@@ -169,6 +173,8 @@ export const MasonrySegment = ({
       {items.map((node, i) => (
         <div
           key={i}
+          data-feed-before-shorts={beforeShorts && !layout.pos.some((p) => p.x === layout.pos[i].x && p.y > layout.pos[i].y) ? '' : undefined}
+          data-feed-after-shorts={afterShorts && layout.pos[i].y === 0 ? '' : undefined}
           ref={(el) => {
             itemRefs.current[i] = el;
           }}
