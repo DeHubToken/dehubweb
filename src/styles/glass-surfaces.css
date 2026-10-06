@@ -163,6 +163,8 @@ html {
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
   html[data-theme][data-theme]:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']) {
     --tint-mix: color-mix(in srgb, var(--tint-accent) 28%, rgb(var(--glass-tint, 9 9 11)));
+    --theme-control-fill: color-mix(in srgb, var(--tint-mix) calc(var(--tint-bento) * 100%), transparent);
+    --theme-control-raised: color-mix(in srgb, var(--tint-mix) calc(var(--tint-bento-raised) * 100%), transparent);
   }
   html[data-theme][data-theme]:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
     :is([data-side-panel], [data-page-bento]:not([data-bento-flat]):not([data-feed-nav-outer] > *):not(:has([data-page-bento]))):not(#_):not(#_) {
