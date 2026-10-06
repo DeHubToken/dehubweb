@@ -20,7 +20,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { LogOut, Loader2 } from 'lucide-react';
-import { WALLET_CONNECT_REQUIRED_EVENT } from '@/lib/wallet-reconnect';
+import { WALLET_CONNECT_REQUIRED_EVENT, finishSessionWalletConnect } from '@/lib/wallet-reconnect';
 
 const ConnectLinkedWalletBody = React.lazy(() =>
   import('./ConnectLinkedWalletBody').then((m) => ({ default: m.ConnectLinkedWalletBody })),
@@ -34,14 +34,20 @@ export function ConnectLinkedWalletModal() {
   useEffect(() => {
     const handler = () => setOpen(true);
     window.addEventListener(WALLET_CONNECT_REQUIRED_EVENT, handler);
-    return () => window.removeEventListener(WALLET_CONNECT_REQUIRED_EVENT, handler);
+    return () => {
+      window.removeEventListener(WALLET_CONNECT_REQUIRED_EVENT, handler);
+      finishSessionWalletConnect(false);
+    };
   }, []);
 
   // The session this sheet reconnects can end underneath it (sign-out from
   // another tab, a revoked token) — at which point connecting a wallet would
   // be a login, which is the login sheet's job.
   useEffect(() => {
-    if (!isAuthenticated) setOpen(false);
+    if (!isAuthenticated) {
+      finishSessionWalletConnect(false);
+      setOpen(false);
+    }
   }, [isAuthenticated]);
 
   const handleLogout = async () => {
@@ -71,7 +77,10 @@ export function ConnectLinkedWalletModal() {
   })();
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={next => {
+      if (!next) finishSessionWalletConnect(false);
+      setOpen(next);
+    }}>
       <DialogContent
         // Raised with a tip, gift or checkout drawer already open (z-[100]); at
         // the dialog default of z-50 it opened behind it. Same layer as LoginModal.
@@ -90,7 +99,10 @@ export function ConnectLinkedWalletModal() {
           <React.Suspense
             fallback={<DeHubPageLoader size={56} minHeight="180px" className="[&_span]:text-white/50" />}
           >
-            <ConnectLinkedWalletBody expectedAddress={walletAddress} onConnected={() => setOpen(false)} />
+            <ConnectLinkedWalletBody expectedAddress={walletAddress} onConnected={() => {
+              finishSessionWalletConnect(true);
+              setOpen(false);
+            }} />
           </React.Suspense>
         )}
 

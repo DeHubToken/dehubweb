@@ -18,7 +18,38 @@
  * AppContent) answers it with a connect-and-verify sheet.
  */
 
+import { WalletActionCancelledError } from './wallet-unlock-flow';
+
 export const WALLET_CONNECT_REQUIRED_EVENT = 'dehub:wallet-connect-required';
+
+const waiters = new Set<(completed: boolean) => void>();
+
+export function finishSessionWalletConnect(completed: boolean): void {
+  for (const finish of [...waiters]) finish(completed);
+}
+
+/** Continue the original action only after the sheet verifies the session's wallet. */
+export function waitForSessionWalletConnect(): Promise<void> {
+  const address = localStorage.getItem('dehub_wallet')?.toLowerCase();
+  const uid = localStorage.getItem('dehub_supabase_uid');
+  const route = window.location.pathname + window.location.search;
+  return new Promise((resolve, reject) => {
+    const sameContext = () => address === localStorage.getItem('dehub_wallet')?.toLowerCase()
+      && uid === localStorage.getItem('dehub_supabase_uid')
+      && route === window.location.pathname + window.location.search;
+    const finish = (completed: boolean) => {
+      waiters.delete(finish);
+      clearInterval(contextCheck);
+      clearTimeout(timeout);
+      if (completed && sameContext()) resolve();
+      else reject(new WalletActionCancelledError());
+    };
+    const contextCheck = setInterval(() => { if (!sameContext()) finish(false); }, 250);
+    const timeout = setTimeout(() => finish(false), 5 * 60_000);
+    waiters.add(finish);
+    requestSessionWalletConnect();
+  });
+}
 
 /** Ask the app to open the connect-your-wallet sheet for the live session. */
 export function requestSessionWalletConnect(): void {

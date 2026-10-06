@@ -15,7 +15,8 @@ import { getAccount, watchAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { isSmartWalletSession } from '@/lib/connection-source';
-import { requestSessionWalletConnect } from '@/lib/wallet-reconnect';
+import { requestSessionWalletConnect, waitForSessionWalletConnect } from '@/lib/wallet-reconnect';
+import { receiptRpcUrls, waitForSubmittedReceipt } from '@/lib/transaction-receipt';
 import { prepareWalletRelay } from '@/lib/wallet-relay';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, initChainRpcUrls } from './dhb-token';
@@ -152,14 +153,14 @@ async function waitForExternalWalletConnection(): Promise<void> {
   const address = localStorage.getItem('dehub_wallet');
   await new Promise<void>((resolve, reject) => {
     let unwatch = () => {};
-    const finish = (timedOut = false) => {
+    const finish = () => {
       clearTimeout(timer);
       unwatch();
-      if (timedOut || address !== localStorage.getItem('dehub_wallet')) {
+      if (address !== localStorage.getItem('dehub_wallet')) {
         reject(requestUnlockForSigning());
       } else resolve();
     };
-    const timer = setTimeout(() => finish(true), 15_000);
+    const timer = setTimeout(() => finish(), 15_000);
     unwatch = watchAccount(wagmiConfig, {
       onChange: () => { if (!pending()) finish(); },
     });
@@ -190,8 +191,16 @@ export async function getActiveProvider(
     return { provider, isWeb3Auth: true };
   }
   await waitForExternalWalletConnection();
-  const account = getAccount(wagmiConfig);
+  let account = getAccount(wagmiConfig);
+  if ((!account.address || !account.isConnected) && hasDeHubSession()) {
+    await waitForSessionWalletConnect();
+    account = getAccount(wagmiConfig);
+  }
   if (account.address && account.isConnected) {
+    const sessionAddress = localStorage.getItem('dehub_wallet');
+    if (sessionAddress && account.address.toLowerCase() !== sessionAddress.toLowerCase()) {
+      throw new Error('Connect the wallet linked to this account to continue.');
+    }
     return { provider: null, isWeb3Auth: false };
   }
   throw requestUnlockForSigning();
@@ -354,6 +363,8 @@ function tryDecodeHexReason(str: string): string {
  * Parse transaction error into user-friendly message
  */
 export function parseTxError(error: unknown, context: string = 'transaction'): string {
+  if ((error as any)?.code === 'TRANSACTION_CONFIRMATION_PENDING') return (error as Error).message;
+  if ((error as any)?.code === 'WALLET_ACTION_CANCELLED') return (error as Error).message;
   // Extract message from nested error objects (viem/ethers/provider errors)
   let errorStr = '';
   if (error instanceof Error) {
@@ -592,45 +603,26 @@ export async function writeContractAA(
     return {
       hash: txHash,
       wait: async (confirmations = 1) => {
-        if (!isWeb3Auth) {
-          // For external wallets, use wagmi's waitForTransactionReceipt
-          try {
-            const receipt = await waitForTransactionReceipt(wagmiConfig, {
-              hash: txHash as `0x${string}`,
-              confirmations,
-              chainId: (options?.chainId ?? BASE_CHAIN_ID) as any,
-            });
-            return {
-              status: receipt.status === 'success' ? 1 : 0,
-              hash: receipt.transactionHash,
-            };
-          } catch (receiptError) {
-            console.error('[AA] waitForTransactionReceipt failed:', receiptError);
-            throw new Error('Transaction not confirmed within timeout');
-          }
-        }
-
-        // The AA EIP-1193 fallback forwards receipt reads to the owner provider.
-        // That provider can have a stale/denied RPC even after the bundler mined
-        // the operation. Use independent chain RPCs with failover; public endpoints
-        // can reject older receipts even while their latest-state reads work.
-        try {
-          const chainId = options?.chainId ?? BASE_CHAIN_ID;
-          const urls = chainId === BASE_CHAIN_ID
-            ? ['https://mainnet.base.org', 'https://base-rpc.publicnode.com']
-            : chainId === 56
-              ? ['https://bsc-dataseed.binance.org', 'https://bsc-rpc.publicnode.com']
-              : [getRpcUrl(chainId)];
-          const receiptClient = createPublicClient({
-            transport: fallback(urls.map(url => http(url, { timeout: 10000, retryCount: 0 })), { retryCount: 0 }),
-          });
-          const receipt = await receiptClient.waitForTransactionReceipt({
-            hash: txHash as Hex, confirmations, timeout: 60000,
-          });
-          return { status: receipt.status === 'success' ? 1 : 0, hash: receipt.transactionHash };
-        } catch {
-          throw new Error('Transaction submitted (' + txHash + ') but confirmation is unavailable. Check its status before retrying.');
-        }
+        const chainId = options?.chainId ?? BASE_CHAIN_ID;
+        const transports = receiptRpcUrls(chainId, getRpcUrl(chainId)).map(url => http(url, { timeout: 8000, retryCount: 0 }));
+        const clients = transports.map(transport => createPublicClient({ transport }));
+        const receiptClient = createPublicClient({
+          transport: fallback(transports, { retryCount: 0 }),
+        });
+        const receipt = await waitForSubmittedReceipt(
+          txHash,
+          () => isWeb3Auth
+            ? receiptClient.waitForTransactionReceipt({ hash: txHash as Hex, confirmations, timeout: 60_000 })
+            : waitForTransactionReceipt(wagmiConfig, {
+              hash: txHash as Hex, confirmations, timeout: 60_000, chainId: chainId as any,
+            }),
+          clients.map(client => async () => {
+            const found = await client.getTransactionReceipt({ hash: txHash as Hex });
+            if (confirmations > 1 && await client.getBlockNumber() < found.blockNumber + BigInt(confirmations - 1)) return null;
+            return found;
+          }),
+        );
+        return { status: receipt.status === 'success' ? 1 : 0, hash: receipt.transactionHash };
       },
     };
   } catch (sendError) {
