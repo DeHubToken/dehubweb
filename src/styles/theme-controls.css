@@ -74,3 +74,10 @@ html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data
   [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::after {
   background-image: none !important;
 }
+
+/* Bubble actions keep the theme's label colour when their white active
+   material is replaced by the shared tinted surface. */
+html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  [data-theme-control-label]:not([data-on-media] *):not([data-keep-dark] *) {
+  color: var(--glass-control-text, #fff) !important;
+}

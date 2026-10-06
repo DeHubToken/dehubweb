@@ -67,7 +67,7 @@ const LiquidGlassBubble2 = React.forwardRef<HTMLDivElement, LiquidGlassBubble2Pr
         style={{ width, height }}
         aria-label={label}
       >
-        <span className={cn(
+        <span data-theme-control-label className={cn(
           // whitespace-nowrap: the button has a fixed width, so a label that
           // does not fit wraps to a second line and blows out of the shell
           // rather than being clipped. "Log in / Sign up" did exactly that.
