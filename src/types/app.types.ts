@@ -3,6 +3,7 @@ import type { ThemeIconKey } from '@/components/app/war/WarHudIcon';
 
 export interface NavItem {
   icon: LucideIcon;
+  /** Phone menu artwork; the desktop sidebar keeps the original glyph. */
   themedIcon?: ThemeIconKey;
   label: string;
   path: string;
