@@ -173,6 +173,7 @@ export interface UnifiedFeedItem {
 export interface UnifiedFeedResponse {
   status: boolean;
   signal?: boolean;
+  visibleResult?: UnifiedFeedItem[];
   authenticated?: boolean;
   result: UnifiedFeedItem[];
   pagination: {
@@ -542,6 +543,7 @@ async function fetchUnifiedFeedFromAPI(
   params: UnifiedFeedParams = {},
   viewer: string | null = getFeedViewer(),
   signal = false,
+  visibleTokenIds: readonly number[] = [],
 ): Promise<UnifiedFeedResponse> {
   // Adopt the boot-time feed fetch from index.html (started at HTML-parse time,
   // ~1.5s before React mounts — LCP audit 7/14) for the first default page-1
@@ -569,6 +571,8 @@ async function fetchUnifiedFeedFromAPI(
 
   const url = new URL('/api/feed', DEHUB_API_BASE);
   if (signal) url.searchParams.set('signal', 'true');
+  const visible = [...new Set(visibleTokenIds)].filter(id => Number.isSafeInteger(id) && id > 0).slice(0, 20);
+  if (signal && visible.length) url.searchParams.set('visibleTokenIds', visible.join(','));
   
   if (params.page !== undefined) url.searchParams.set('page', String(params.page));
   if (params.limit !== undefined) url.searchParams.set('limit', String(params.limit));
@@ -862,6 +866,8 @@ interface UseNewPostsSignalOptions extends Omit<UnifiedFeedParams, 'page'> {
   chronological?: boolean;
   /** `createdAt` of the newest post currently rendered. */
   newestCreatedAt?: string;
+  /** Read the viewport at poll time; scrolling does not create more requests. */
+  getVisibleTokenIds?: () => readonly number[];
 }
 
 /**
@@ -880,7 +886,7 @@ interface UseNewPostsSignalOptions extends Omit<UnifiedFeedParams, 'page'> {
  * aren't stable enough to test identity across two fetches.
  */
 export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
-  const { enabled = true, chronological = true, newestCreatedAt, ...params } = options;
+  const { enabled = true, chronological = true, newestCreatedAt, getVisibleTokenIds, ...params } = options;
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
   const viewer = walletAddress?.toLowerCase() || null;
@@ -898,7 +904,7 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
   const { data } = useQuery({
     queryKey: ['unified-feed-head', params, viewer],
     queryFn: () =>
-      fetchUnifiedFeedFromAPI({ ...params, page: 1, limit: NEW_POSTS_HEAD_SIZE }, viewer, true),
+      fetchUnifiedFeedFromAPI({ ...params, page: 1, limit: NEW_POSTS_HEAD_SIZE }, viewer, true, getVisibleTokenIds?.()),
     enabled: enabled && armed,
     refetchInterval: LIVE_ENGAGEMENT_POLL_MS,
     // A backgrounded tab shouldn't keep hitting the API to update a pill
@@ -916,7 +922,7 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
   useEffect(() => {
     // UnifiedFeedItem declares its counts; RawFeedRow is the untyped object the
     // cache actually holds. Neither is a subtype of the other, hence the hop.
-    const rows = data?.result as unknown as RawFeedRow[] | undefined;
+    const rows = data ? [...data.result, ...(data.visibleResult ?? [])] as unknown as RawFeedRow[] : undefined;
     if (rows?.length) mergeLiveCounts(queryClient, rows);
   }, [data, queryClient]);
 

@@ -1,4 +1,5 @@
 import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
+import { visibleFeedTokenIds } from '@/lib/feed-visible-counts';
 import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-photos';
 /**
  * Home Feed Component
@@ -937,6 +938,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     enabled: isHomeActive && railsEnabled,
     chronological: !useInterleavedFeed && deferredSort.value === 'latest',
     newestCreatedAt: newestRenderedCreatedAt,
+    getVisibleTokenIds: visibleFeedTokenIds,
   });
 
   const showNewPosts = useCallback(() => {
@@ -1497,6 +1499,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       <div
         key={key}
         data-feed-item
+        data-feed-token-id={item.type === 'ad' ? undefined : (item.data as any)?.id}
         data-feed-before-shorts={beforeShorts ? '' : undefined}
         data-cinematic={item.type}
         data-cinematic-first={firstFeedPost ? '' : undefined}
