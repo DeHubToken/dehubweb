@@ -11,11 +11,12 @@ import { Interface, parseUnits, formatUnits } from 'ethers';
 import i18n from 'i18next';
 import { createPublicClient, fallback, http } from 'viem';
 import { setupAAProviderForChain, setupAAProvider, getOrInitWeb3Auth } from '@/lib/web3auth';
-import { getAccount } from '@wagmi/core';
+import { getAccount, watchAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { requestSessionWalletConnect } from '@/lib/wallet-reconnect';
+import { prepareWalletRelay } from '@/lib/wallet-relay';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, initChainRpcUrls } from './dhb-token';
 import { createLogger } from '@/lib/logger';
@@ -140,6 +141,32 @@ export function isWalletLockedError(error: unknown): boolean {
   return message.toLowerCase().includes('wallet is locked');
 }
 
+/** A persisted address is not a signing connection until reconnect completes. */
+async function waitForExternalWalletConnection(): Promise<void> {
+  const pending = () => {
+    const { status } = getAccount(wagmiConfig);
+    return status === 'connecting' || status === 'reconnecting';
+  };
+  if (!pending()) return;
+
+  const address = localStorage.getItem('dehub_wallet');
+  await new Promise<void>((resolve, reject) => {
+    let unwatch = () => {};
+    const finish = (timedOut = false) => {
+      clearTimeout(timer);
+      unwatch();
+      if (timedOut || address !== localStorage.getItem('dehub_wallet')) {
+        reject(requestUnlockForSigning());
+      } else resolve();
+    };
+    const timer = setTimeout(() => finish(true), 15_000);
+    unwatch = watchAccount(wagmiConfig, {
+      onChange: () => { if (!pending()) finish(); },
+    });
+    if (!pending()) finish();
+  });
+}
+
 /**
  * Get the active EIP-1193 provider - Web3Auth (social login) or wagmi (wallet).
  * For external wallets, provider is null -- callers use wagmi actions or public RPC instead.
@@ -162,8 +189,9 @@ export async function getActiveProvider(
     if (Number(BigInt(actualChain)) !== chainId) throw new Error(`NO_SIGNER_ON_CHAIN:${chainId}`);
     return { provider, isWeb3Auth: true };
   }
+  await waitForExternalWalletConnection();
   const account = getAccount(wagmiConfig);
-  if (account.address && (account.isConnected || account.status === 'reconnecting')) {
+  if (account.address && account.isConnected) {
     return { provider: null, isWeb3Auth: false };
   }
   throw requestUnlockForSigning();
@@ -202,9 +230,14 @@ export async function switchChain(chainId: ChainId): Promise<void> {
   if (isWeb3Auth) return;
   await initChainRpcUrls();
   const account = getAccount(wagmiConfig);
-  if (account.chainId === chainId) return;
-  await wagmiSwitchChain(wagmiConfig, { chainId: chainId as any });
-  if (getAccount(wagmiConfig).chainId !== chainId) {
+  const connector = account.connector;
+  if (!connector) throw requestUnlockForSigning();
+  // The wallet's chain is authoritative; its change event can lag behind the
+  // switch response and leave wagmi's cached account on the previous network.
+  if (await connector.getChainId() === chainId) return;
+  await prepareWalletRelay(await connector.getProvider());
+  await wagmiSwitchChain(wagmiConfig, { chainId: chainId as any, connector });
+  if (await connector.getChainId() !== chainId) {
     throw new Error('The wallet did not change networks. Reconnect it and try again.');
   }
 }
@@ -539,7 +572,12 @@ export async function writeContractAA(
     } else {
       // External wallet via wagmi -- use wagmi's sendTransaction
       // which properly routes through the wallet connector for signing
+      const connector = getAccount(wagmiConfig).connector;
+      if (!connector) throw requestUnlockForSigning();
+      await prepareWalletRelay(await connector.getProvider());
       txHash = await sendTransaction(wagmiConfig, {
+        connector,
+        account: fromAddress as Hex,
         to: contractAddress as `0x${string}`,
         data: data as `0x${string}`,
         gas: gasLimitBigInt,

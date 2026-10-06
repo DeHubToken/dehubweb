@@ -6,6 +6,9 @@ const mocks = vi.hoisted(() => ({
   unlock: vi.fn(async () => {}),
   base: vi.fn(), chain: vi.fn(),
   account: { address: '0x1111111111111111111111111111111111111111', isConnected: true, chainId: 56 },
+  status: 'connected',
+  connector: { getChainId: vi.fn(), getProvider: vi.fn() },
+  watch: vi.fn(),
   switch: vi.fn(), send: vi.fn(), receipt: vi.fn(),
 }));
 vi.mock('viem', async (importOriginal) => ({
@@ -21,7 +24,8 @@ vi.mock('@/lib/web3auth', () => ({
 }));
 vi.mock('@/lib/wagmi', () => ({ wagmiConfig: {} }));
 vi.mock('@wagmi/core', () => ({
-  getAccount: () => mocks.account, switchChain: mocks.switch,
+  getAccount: () => ({ ...mocks.account, status: mocks.status, connector: mocks.connector }),
+  watchAccount: mocks.watch, switchChain: mocks.switch,
   sendTransaction: mocks.send, waitForTransactionReceipt: vi.fn(),
 }));
 vi.mock('./dhb-token', () => ({
@@ -44,8 +48,14 @@ const provider = (chain: number) => ({ request: vi.fn(async ({ method }: { metho
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.unstubAllGlobals();
   mocks.smart = true;
+  mocks.status = 'connected';
+  mocks.account.isConnected = true;
   mocks.account.chainId = 56;
+  mocks.connector.getChainId.mockResolvedValue(56);
+  mocks.connector.getProvider.mockResolvedValue({});
+  mocks.watch.mockReturnValue(vi.fn());
   mocks.unlock.mockResolvedValue(undefined);
   mocks.base.mockResolvedValue(provider(8453));
   mocks.chain.mockResolvedValue(provider(56));
@@ -173,6 +183,67 @@ describe('chain-aware wallet actions', () => {
     const rejection = new Error('User rejected network change');
     mocks.switch.mockRejectedValueOnce(rejection);
     await expect(writeContractAA(recipient, abi, 'transfer', [recipient, 12n])).rejects.toBe(rejection);
+    expect(mocks.send).not.toHaveBeenCalled();
+  });
+
+  it('waits for a restored external connection instead of using its persisted address', async () => {
+    mocks.smart = false;
+    mocks.status = 'reconnecting';
+    mocks.account.isConnected = false;
+    const unwatch = vi.fn();
+    let changed!: () => void;
+    mocks.watch.mockImplementation((_config, { onChange }) => { changed = onChange; return unwatch; });
+    let ready = false;
+    const pending = getActiveProvider(56).then(result => { ready = true; return result; });
+    await Promise.resolve();
+    expect(ready).toBe(false);
+    mocks.status = 'connected';
+    mocks.account.isConnected = true;
+    changed();
+    await expect(pending).resolves.toEqual({ provider: null, isWeb3Auth: false });
+    expect(unwatch).toHaveBeenCalledTimes(1);
+    expect(mocks.send).not.toHaveBeenCalled();
+  });
+
+  it('accepts a completed network switch while the cached account still has the old chain', async () => {
+    mocks.smart = false;
+    mocks.connector.getChainId.mockResolvedValueOnce(56).mockResolvedValueOnce(8453);
+    await expect(switchChain(8453)).resolves.toBeUndefined();
+    expect(mocks.account.chainId).toBe(56);
+    expect(mocks.switch).toHaveBeenCalledWith({}, { chainId: 8453, connector: mocks.connector });
+  });
+
+  it('rejects a wallet that remains on the wrong network', async () => {
+    mocks.smart = false;
+    await expect(switchChain(8453)).rejects.toThrow('The wallet did not change networks');
+    expect(mocks.send).not.toHaveBeenCalled();
+  });
+
+  it('restores the transaction relay before sending once through the same connector', async () => {
+    mocks.smart = false;
+    vi.stubGlobal('fetch', vi.fn(async () => ({ json: async () => ({ result: '0x5208' }) })));
+    let reopen!: () => void;
+    const relay = { connected: false, restartTransport: vi.fn(() => new Promise<void>(resolve => {
+      reopen = () => { relay.connected = true; resolve(); };
+    })) };
+    mocks.connector.getProvider.mockResolvedValue({ signer: { client: { core: { relayer: relay } } } });
+    mocks.send.mockResolvedValueOnce('0xhash');
+    const action = writeContractAA(recipient, abi, 'transfer', [recipient, 12n], { chainId: 56 });
+    await vi.waitFor(() => expect(relay.restartTransport).toHaveBeenCalledTimes(1));
+    expect(mocks.send).not.toHaveBeenCalled();
+    reopen();
+    await expect(action).resolves.toMatchObject({ hash: '0xhash' });
+    expect(mocks.send).toHaveBeenCalledTimes(1);
+    expect(mocks.send).toHaveBeenCalledWith({}, expect.objectContaining({ connector: mocks.connector, chainId: 56 }));
+  });
+
+  it('does not send when the relay cannot reopen', async () => {
+    mocks.smart = false;
+    vi.stubGlobal('fetch', vi.fn(async () => ({ json: async () => ({ result: '0x5208' }) })));
+    mocks.connector.getProvider.mockResolvedValue({ client: { core: { relayer: {
+      restartTransport: vi.fn().mockRejectedValue(new Error('Offline')),
+    } } } });
+    await expect(writeContractAA(recipient, abi, 'transfer', [recipient, 12n], { chainId: 56 })).rejects.toThrow('Offline');
     expect(mocks.send).not.toHaveBeenCalled();
   });
 
