@@ -5,8 +5,9 @@ const mocks = vi.hoisted(() => ({
   insert: vi.fn(), token: vi.fn(), update: vi.fn(), check: vi.fn(),
   join: vi.fn(), leave: vi.fn(), publish: vi.fn(), subscribe: vi.fn(), remove: vi.fn(),
   microphone: vi.fn(), camera: vi.fn(), handlers: {} as Record<string, (...args: any[]) => any>,
+  callPing: vi.fn(), callSubscription: vi.fn(), wallet: 'alice',
 }));
-vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ walletAddress: 'alice' }) }));
+vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ walletAddress: mocks.wallet }) }));
 vi.mock('@/lib/api/dehub/core', () => ({ apiCall: () => Promise.resolve(), getAuthToken: () => null }));
 vi.mock('@/utils/simple-call-check', () => ({ simpleCallCheck: mocks.check, debugAllCalls: vi.fn() }));
 vi.mock('sonner', () => ({ toast: { error: vi.fn() } }));
@@ -17,7 +18,10 @@ vi.mock('@/integrations/supabase/client', () => ({ supabase: {
     update: (data: unknown) => ({ eq: (field: string, id: string) => mocks.update(data, field, id) }),
     select: () => ({ eq: () => ({ single: () => Promise.resolve({ data: { status: 'connected' } }) }) }),
   }),
-  channel: () => { const channel = { on: () => channel, subscribe: () => channel }; return channel; },
+  channel: () => { const channel = {
+    on: (_type: string, _filter: unknown, handler: (...args: any[]) => any) => { mocks.callPing.mockImplementation(handler); return channel; },
+    subscribe: (handler: (...args: any[]) => any) => { mocks.callSubscription.mockImplementation(handler); return channel; },
+  }; return channel; },
   removeChannel: vi.fn(),
 } }));
 vi.mock('agora-rtc-sdk-ng', () => ({ default: {
@@ -38,6 +42,7 @@ function deferred<T>() { let resolve!: (value: T) => void; const promise = new P
 
 beforeEach(() => {
   vi.useFakeTimers(); vi.clearAllMocks(); mocks.handlers = {};
+  mocks.wallet = 'alice';
   mocks.insert.mockResolvedValue({ data: session, error: null });
   mocks.token.mockResolvedValue({ data: { appId: 'app', token: 'token', uid: 1 }, error: null });
   mocks.update.mockResolvedValue({ error: null }); mocks.check.mockResolvedValue(null);
@@ -45,7 +50,45 @@ beforeEach(() => {
   mocks.publish.mockResolvedValue(undefined); mocks.subscribe.mockResolvedValue(undefined);
   mocks.microphone.mockResolvedValue(track()); mocks.camera.mockResolvedValue(track());
 });
-afterEach(() => { cleanup(); visualActivity.setCall(false, false); vi.clearAllTimers(); vi.useRealTimers(); });
+afterEach(() => { cleanup(); visualActivity.setCall(false, false); vi.clearAllTimers(); vi.useRealTimers(); vi.restoreAllMocks(); });
+
+describe('incoming call query recovery', () => {
+  it('shares concurrent startup, subscription and fallback checks, then recovers a ring arriving during the query', async () => {
+    const initial = deferred<null>();
+    mocks.check.mockReturnValueOnce(initial.promise).mockResolvedValueOnce({
+      ...session, caller_address: 'bob', recipient_address: 'alice', created_at: new Date().toISOString(),
+    });
+    const { result } = renderHook(useCall);
+    act(() => { mocks.callSubscription('SUBSCRIBED'); vi.advanceTimersByTime(15_000); });
+    expect(mocks.check).toHaveBeenCalledTimes(1);
+    act(() => { mocks.callPing({ payload: { id: 'call-1', status: 'ringing' } }); });
+    await act(async () => { initial.resolve(null); for (let i = 0; i < 5; i++) await Promise.resolve(); });
+    expect(mocks.check).toHaveBeenCalledTimes(2);
+    expect(result.current.isIncoming).toBe(true);
+  });
+
+  it('skips hidden checks and recovers once on visibility and network recovery', async () => {
+    const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden');
+    renderHook(useCall);
+    act(() => { mocks.callSubscription('SUBSCRIBED'); mocks.callPing({ payload: { status: 'ringing' } }); vi.advanceTimersByTime(30_000); });
+    expect(mocks.check).not.toHaveBeenCalled();
+    visibility.mockReturnValue('visible');
+    await act(async () => { document.dispatchEvent(new Event('visibilitychange')); window.dispatchEvent(new Event('online')); });
+    expect(mocks.check).toHaveBeenCalledTimes(1);
+  });
+
+  it('discards a previous wallet response without blocking the current wallet query', async () => {
+    const alice = deferred<typeof session | null>(); const bob = deferred<typeof session | null>();
+    mocks.check.mockReturnValueOnce(alice.promise).mockReturnValueOnce(bob.promise);
+    const { result, rerender } = renderHook(useCall);
+    mocks.wallet = 'bob'; rerender();
+    expect(mocks.check).toHaveBeenCalledTimes(2);
+    await act(async () => { alice.resolve({ ...session, recipient_address: 'alice', created_at: new Date().toISOString() }); });
+    expect(result.current.currentCall).toBeNull();
+    await act(async () => { bob.resolve({ ...session, recipient_address: 'bob', created_at: new Date().toISOString() }); });
+    expect(result.current.isIncoming).toBe(true);
+  });
+});
 
 describe('call media lifecycle', () => {
   it('ends a session created after the user hangs up, without starting media', async () => {
