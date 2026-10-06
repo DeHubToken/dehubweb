@@ -22,6 +22,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
+import { useAuth } from '@/contexts/AuthContext';
+import { markReactionTipSeen } from '@/lib/reaction-tip';
 
 /** How long a press has to last before it counts as "open the tray". */
 const HOLD_MS = 400;
@@ -74,6 +76,10 @@ export function useReactionTray(
 ): ReactionTray {
   const { hover = true } = options;
   const [open, setOpen] = useState(false);
+  const { walletAddress } = useAuth();
+  useEffect(() => {
+    if (open) markReactionTipSeen(walletAddress);
+  }, [open, walletAddress]);
   const isTouchDevice = useIsTouchDevice();
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
