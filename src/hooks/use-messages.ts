@@ -5,7 +5,7 @@
  * Uses Socket.io /dm namespace for real-time events.
  */
 
-import { useEffect, useRef, useReducer, useCallback } from 'react';
+import { useEffect, useRef, useReducer, useCallback, useSyncExternalStore } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -43,6 +43,7 @@ import {
   waitForDmSocket,
   emitReadReceipt,
   onDmSendMessage,
+  onDmReconnect,
   onEditMessage,
   onDmDeleteMessage,
   onReValidateMessage,
@@ -56,6 +57,7 @@ import {
 import type { QueryClient } from '@tanstack/react-query';
 import { isEncryptedContent } from '@/lib/dm-e2ee/crypto';
 import { decryptFromPeer, decryptMessageInPlace, loadIdentity, onIdentityChange, prepareOutgoing } from '@/lib/dm-e2ee/keys';
+import { messageHistoryItems, mergeMessageHead, needsMessageHistoryRecovery, nextMessagePage, type MessageHistory } from '@/lib/dm-head';
 
 /**
  * Blob URL for an optimistic message with auto-revoke. The optimistic entry is
@@ -102,11 +104,16 @@ function persistReadConversation(conversationId: string): void {
 // Tracks which conversations are currently rendered/open so we can force
 // their unreadCount to 0 — prevents the badge from re-appearing after a
 // socket-triggered refetch races ahead of the server's markAsRead processing.
-const openConversationIds = new Set<string>();
+const openConversationIds = new Map<string, number>();
 const openConversationListeners = new Set<() => void>();
 
 function notifyOpenConversationsChanged() {
   openConversationListeners.forEach(fn => { try { fn(); } catch { /* noop */ } });
+}
+
+function subscribeOpenConversations(listener: () => void) {
+  openConversationListeners.add(listener);
+  return () => { openConversationListeners.delete(listener); };
 }
 
 export function isConversationOpen(conversationId: string | null | undefined): boolean {
@@ -115,10 +122,15 @@ export function isConversationOpen(conversationId: string | null | undefined): b
 
 export function registerOpenConversation(conversationId: string | null | undefined): () => void {
   if (!conversationId) return () => {};
-  openConversationIds.add(conversationId);
+  openConversationIds.set(conversationId, (openConversationIds.get(conversationId) ?? 0) + 1);
   notifyOpenConversationsChanged();
+  let released = false;
   return () => {
-    openConversationIds.delete(conversationId);
+    if (released) return;
+    released = true;
+    const remaining = (openConversationIds.get(conversationId) ?? 1) - 1;
+    if (remaining > 0) openConversationIds.set(conversationId, remaining);
+    else openConversationIds.delete(conversationId);
     notifyOpenConversationsChanged();
   };
 }
@@ -132,6 +144,7 @@ export const messagesKeys = {
   conversations: () => [...MESSAGES_BASE_KEY, 'conversations'] as const,
   conversation: (id: string) => [...MESSAGES_BASE_KEY, 'conversation', id] as const,
   messages: (conversationId: string) => [...MESSAGES_BASE_KEY, 'thread', conversationId] as const,
+  head: (conversationId: string) => [...MESSAGES_BASE_KEY, 'head', conversationId] as const,
   userSearch: (query: string) => [...MESSAGES_BASE_KEY, 'userSearch', query] as const,
 };
 
@@ -336,6 +349,11 @@ export function useMessages(conversationId: string | null) {
   // restarts it (and the stale query refetches immediately).
   const { pathname } = useLocation();
   const isMessagesRouteActive = pathname === '/app/messages';
+  const dockOpen = useSyncExternalStore(
+    subscribeOpenConversations,
+    () => isConversationOpen(conversationId),
+    () => false,
+  );
   const query = useInfiniteQuery({
     queryKey: messagesKeys.messages(conversationId || ''),
     queryFn: async ({ pageParam = 0 }) => {
@@ -362,34 +380,58 @@ export function useMessages(conversationId: string | null) {
       }
       return result;
     },
-    getNextPageParam: (lastPage, allPages) => lastPage.hasMore ? allPages.length : undefined,
+    getNextPageParam: (_lastPage, allPages) => nextMessagePage(allPages),
     initialPageParam: 0,
     enabled: isAuthenticated && !!conversationId,
     staleTime: 10 * 1000,
-    // Poll for new messages — backend doesn't reliably push socket events to
-    // recipient. Route-gated (see isMessagesRouteActive above). Each tick
-    // refetches EVERY loaded page (TanStack behavior), so once the user has
-    // scrolled deep into history the poll cost scales with page count — back
-    // off to 30s then. (maxPages would be wrong here: this query only pages
-    // forward, so v5 would evict the NEWEST page — where incoming messages
-    // land — when trimming.)
-    refetchInterval: (q) => {
-      // Off the route the thread can still be on screen: the DM dock floats a
-      // conversation over whatever page the reader is on. Poll for a thread
-      // that is actually rendered, wherever it is rendered.
-      if (!isMessagesRouteActive && !isConversationOpen(conversationId)) return false;
-      const pageCount = q.state.data?.pages?.length ?? 0;
-      return pageCount > 4 ? 30_000 : 15_000;
+    // Routine recovery belongs to the bounded head query below. Explicit
+    // retries and encryption-identity changes can still refresh the history.
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const headEnabled = isAuthenticated && !!conversationId && !isVirtual
+    && !!query.data && (isMessagesRouteActive || dockOpen);
+  useQuery({
+    queryKey: messagesKeys.head(conversationId || ''),
+    queryFn: async () => {
+      const key = messagesKeys.messages(conversationId!);
+      const before = queryClient.getQueryData<MessageHistory>(key);
+      // A manual retry/history load already owns recovery; don't race it.
+      if (queryClient.getQueryState(key)?.fetchStatus === 'fetching') return before?.pages[0] ?? null;
+      const startedAt = Date.now();
+      const head = await getMessages(conversationId!, 0, 30);
+      head.items = await decryptThread(queryClient, conversationId!, walletAddressRef.current, head.items);
+      const current = queryClient.getQueryData<MessageHistory>(key);
+      if (current && needsMessageHistoryRecovery(current, head)) {
+        // More than a head arrived while offline. Restore ordinary pagination
+        // rather than showing a gap between the fresh head and old history.
+        await queryClient.refetchQueries({ queryKey: key, exact: true });
+      } else if (current) {
+        queryClient.setQueryData<MessageHistory>(key, old => old ? mergeMessageHead(old, head, startedAt) : old);
+      }
+      return head;
     },
-    // Nobody reads a thread in a hidden tab; the interval picks up again when
-    // the tab is back.
+    initialData: () => queryClient.getQueryData<MessageHistory>(messagesKeys.messages(conversationId || ''))?.pages[0],
+    initialDataUpdatedAt: query.dataUpdatedAt,
+    enabled: headEnabled,
+    staleTime: 15_000,
+    refetchInterval: headEnabled ? 15_000 : false,
     refetchIntervalInBackground: false,
   });
 
+  useEffect(() => {
+    if (!headEnabled) return;
+    return onDmReconnect(() => {
+      if (document.visibilityState !== 'visible') return;
+      // A disconnected transport can also miss edits/deletions in history.
+      void queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId!), exact: true });
+    });
+  }, [headEnabled, conversationId, queryClient]);
+
   // Flatten pages → single array, oldest first for chat display
-  const messages: DmMessage[] = query.data?.pages
-    .flatMap(page => page.items)
-    .reverse() || [];
+  const messages: DmMessage[] = messageHistoryItems(query.data?.pages ?? []).reverse();
 
   // Once the encryption identity comes online (first signature on this
   // device), lines fetched before it are sitting in the cache as

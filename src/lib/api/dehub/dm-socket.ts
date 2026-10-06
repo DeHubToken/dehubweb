@@ -458,6 +458,11 @@ export function onDmSendMessage(cb: (msg: DmMessage) => void): () => void {
   return addPersistentListener('sendMessage', cb as AnyFn);
 }
 
+/** Fires for the DM transport, including reconnection after a missed event. */
+export function onDmReconnect(cb: () => void): () => void {
+  return addPersistentListener('connect', cb as AnyFn);
+}
+
 export function onEditMessage(cb: (data: EditedMessage) => void): () => void {
   return addPersistentListener('editMessage', cb as AnyFn);
 }

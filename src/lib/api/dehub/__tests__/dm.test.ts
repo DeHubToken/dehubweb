@@ -112,6 +112,15 @@ describe('getMessages', () => {
     expect(result.hasMore).toBe(true);
     expect(result.totalCount).toBe(50);
   });
+
+  it('sends the skip offset read by the API when loading older messages', async () => {
+    mockFetch({ messages: [] });
+    const { getMessages } = await import('@/lib/api/dehub/dm');
+    await getMessages('conv-1', 2, 30);
+    const url = new URL(fetchUrl());
+    expect(url.searchParams.get('skip')).toBe('60');
+    expect(url.searchParams.has('page')).toBe(false);
+  });
 });
 
 // ── sendMessage (now uses socket, tested via use-messages hook) ──
