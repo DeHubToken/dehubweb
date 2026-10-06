@@ -2426,7 +2426,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             that already carries its own transport. */}
 
         {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 flex items-center z-10", stage && !isFullscreen ? "top-[58px]" : "top-3", bareControls ? "gap-1" : "gap-2")}>
+          <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 flex items-center z-10", stage && !isFullscreen ? "top-[58px]" : "top-1.5", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
                 mixer. The wrapper keeps the pointer inside while the cursor
@@ -2499,7 +2499,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
             {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-12 touch-pan-y" />}
 
-            <div data-video-button-row className={cn("flex items-center gap-2", bareControls && "px-1.5")}>
+            <div data-video-button-row className={cn("flex items-center gap-2", bareControls && (mediaAspect >= 1 ? "px-2" : "px-1.5"))}>
               <button
                 onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
                 aria-label={isPlaying ? 'Pause' : 'Play'}
@@ -2626,7 +2626,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     data-video-bare
                     onClick={handleFullscreen}
                     aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
-                    className="-mr-1 flex h-8 w-8 shrink-0 items-center justify-center text-white"
+                    className={cn("flex h-8 w-8 shrink-0 items-center justify-center text-white", mediaAspect < 1 && "-mr-1")}
                   >
                     {isFullscreen ? <MediaControlIcon icon={Minimize} /> : <MediaControlIcon icon={Maximize} />}
                   </button>
