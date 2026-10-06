@@ -22,7 +22,7 @@ export interface LiquidGlassBubble2Props {
   height?: string;
   /** Additional className */
   className?: string;
-  /** Active / selected state — white bg, black text */
+  /** Active / selected state uses the theme's raised material. */
   active?: boolean;
   /** Enable hover shimmer (default: true) */
   shimmer?: boolean;
@@ -66,6 +66,7 @@ const LiquidGlassBubble2 = React.forwardRef<HTMLDivElement, LiquidGlassBubble2Pr
         )}
         style={{ width, height }}
         aria-label={label}
+        data-theme-control-active={active || undefined}
       >
         <span data-theme-control-label className={cn(
           // whitespace-nowrap: the button has a fixed width, so a label that
