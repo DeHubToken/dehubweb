@@ -71,7 +71,7 @@ const PostModal = React.lazy(() =>
 
 function NotInTheArcade({ slug }: { slug: string | undefined }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-black px-6 text-center">
+    <div data-theme-page-surface className="relative z-[1] flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center text-foreground">
       <SEOHead title="Arcade | DeHub" noindex />
       <Gamepad2 className="h-8 w-8 text-zinc-600" />
       <p className="text-sm text-zinc-400">
