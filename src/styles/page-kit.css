@@ -19,19 +19,18 @@
   --kit-primary-ink: #0b0b0c;
 }
 
-/* Canvas themes: the active chip and the main button take the theme colour. */
+/* Active chips carry the accent; buttons share the surrounding panel material. */
 html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']) {
   --kit-chip-bg: rgb(255 255 255 / 0.07);
   --kit-chip-active-bg: var(--tint-accent);
   --kit-chip-active-ink: #0b0b0c;
-  --kit-primary-bg: var(--tint-accent);
-  --kit-primary-ink: #0b0b0c;
+  --kit-primary-bg: var(--glass-highlight), var(--theme-control-fill, rgb(var(--glass-tint) / var(--glass-regular)));
+  --kit-primary-ink: var(--theme-control-foreground, #fff);
+  --kit-square-bg: var(--theme-control-fill, rgb(var(--glass-tint) / var(--glass-regular)));
 }
 html:is([data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='island']) {
   --kit-chip-active-bg: linear-gradient(135deg, color-mix(in srgb, var(--tint-accent) 70%, #fff), var(--tint-accent));
   --kit-chip-active-ink: #fff;
-  --kit-primary-bg: linear-gradient(135deg, color-mix(in srgb, var(--tint-accent) 70%, #fff), var(--tint-accent));
-  --kit-primary-ink: #fff;
 }
 html[data-theme='light'] {
   --kit-hairline: rgb(0 0 0 / 0.08);
@@ -137,6 +136,15 @@ html[data-theme] [data-kit-button='quiet']:not(#_):not(#_) { background: var(--k
 html[data-theme] [data-kit-button]:active:not(#_):not(#_) { transform: scale(0.97); }
 html[data-theme] [data-kit-button]:disabled:not(#_):not(#_) { opacity: 0.45; pointer-events: none; }
 html[data-theme] [data-kit-button='primary'] :is(svg, .text-white) { color: inherit !important; }
+html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  :is([data-kit-button], [data-kit-square]):not(#_):not(#_) {
+  box-shadow: var(--glass-edge-flat) !important;
+}
+html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  [data-kit-button='quiet']:not(#_):not(#_) {
+  background: var(--kit-primary-bg);
+  color: var(--kit-primary-ink);
+}
 
 /* ── Body and sections ─────────────────────────────────────────────────── */
 [data-kit-body] { padding-left: 0.5rem; padding-right: 0.5rem; }

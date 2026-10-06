@@ -5,6 +5,7 @@ import { AppState } from '@/components/app/AppState';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { SeedPhraseBackup } from '@/components/app/wallet-setup/SeedPhraseBackup';
 import { BackupReminderCard } from '@/components/app/wallet/BackupReminderBanner';
 import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCover';
@@ -282,6 +283,8 @@ export default function StateGalleryPage() {
             <Button disabled>Disabled</Button>
             <button className="rounded-xl bg-white px-4 py-2 text-black" onClick={press}>Neutral white</button>
             <button className="rounded-xl bg-zinc-800 px-4 py-2 text-white" onClick={press}>Neutral zinc</button>
+            <button className="rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/30 px-4 py-2 text-white" onClick={press}>Neutral gradient</button>
+            <LiquidGlassBubble2 label="Bubble action" onClick={press} />
             <button className="rounded-xl bg-red-600 px-4 py-2 text-white" onClick={press}>Semantic red</button>
             <button className="rounded-xl px-4 py-2 hover:bg-white/10" onClick={press}>Bare action</button>
           </div>
