@@ -1252,7 +1252,11 @@ export function ActionBar({
           aria-label={`Repost (${displayRepostCount})`}
           aria-haspopup="dialog"
         >
-          <Repeat2 className="h-5 w-5" strokeWidth={isReposted ? 2.75 : 2} />
+          {/* Same share glyph and sizing as the feed's share button. The fixed
+              20px box keeps the count's baseline level with the other tiles. */}
+          <span className="flex h-5 w-5 items-center justify-center">
+            <Share2 className={isReposted ? 'h-[1.5213rem] w-[1.5213rem] shrink-0' : 'h-[1.3965rem] w-[1.3965rem] shrink-0'} strokeWidth={isReposted ? 2.915 : 2} />
+          </span>
           <span className="tabular-nums">{formatCount(displayRepostCount)}</span>
         </button>
 
