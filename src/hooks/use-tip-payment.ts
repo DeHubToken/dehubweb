@@ -21,6 +21,7 @@ import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ChainId } from '@/components/app/ChainSelector';
+import i18n from 'i18next';
 
 export const MIN_TIP_DHB = 1;
 export const MAX_TIP_DHB = Infinity;
@@ -146,8 +147,7 @@ export function useTipPayment({
           signerAddress: walletAddress,
         });
 
-        // Optimistic: show success immediately after tx submitted
-        toast.success(dhbText(`DHB ${amount.toLocaleString()} tip sent!`), { id: 'tip-payment' });
+        toast.loading(i18n.t('toasts.confirming_transaction'), { id: 'tip-payment' });
         onSubmitted?.(tipResult.hash, amount);
         onSuccess?.();
 
@@ -177,13 +177,25 @@ export function useTipPayment({
             }
 
             // DB saved — reconcile UI
+            toast.success(dhbText(`DHB ${amount.toLocaleString()} tip sent!`), { id: 'tip-payment' });
             onConfirmed?.();
           } catch (err) {
             console.error('[Tip] Background confirmation failed:', err);
+            if ((err as any)?.code === 'TRANSACTION_REVERTED') {
+              toast.error(i18n.t('toasts.transaction_reverted'), { id: 'tip-payment' });
+            } else {
+              toast.warning(i18n.t('staking.pendingSubmitted', { amount: amount.toLocaleString() }), {
+                id: 'tip-payment', description: tipResult.hash, duration: 10000,
+              });
+            }
           }
         })();
       } catch (error: unknown) {
         console.error('[Tip] Payment failed:', error);
+        if ((error as any)?.code === 'WALLET_ACTION_CANCELLED') {
+          toast.dismiss('tip-payment');
+          return;
+        }
         // Module is cached after the import above; the fallback only fires if
         // the chunk itself failed to load.
         const aa = await import('@/lib/contracts/aa-utils').catch(() => null);
@@ -193,7 +205,9 @@ export function useTipPayment({
         // abandon a tip that was one tap from going through.
         if (!aa || !aa.isWalletLockedError(error)) {
           const message = aa ? aa.parseTxError(error as Error) : '';
-          toast.error(message || 'Tip failed', { id: 'tip-payment' });
+          if ((error as any)?.code === 'TRANSACTION_CONFIRMATION_PENDING') {
+            toast.warning(message, { id: 'tip-payment', duration: 10000 });
+          } else toast.error(message || 'Tip failed', { id: 'tip-payment' });
         } else {
           // The wallet unlock flow owns the next toast. Remove this pending
           // state so its prompt never lands on top of a stale "Sending tip".

@@ -19,7 +19,7 @@
  */
 
 import { emitPostTipped, commentTipKey } from '@/lib/tip-events';
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
@@ -85,7 +85,7 @@ export function TipModal({
   const { walletAddress } = useAuth();
   const [amount, setAmount] = useState('');
   const [balances, setBalances] = useState<Record<number, number> | null>(null);
-  const [lastTipAmount, setLastTipAmount] = useState(0);
+  const lastTipAmount = useRef(0);
   const [recipientPrivate, setRecipientPrivate] = useState(false);
   const [privacyChecking, setPrivacyChecking] = useState(false);
   const resolvedTokenId = tokenId || context;
@@ -94,6 +94,8 @@ export function TipModal({
   // Base first, so the tip itself always leaves from Base.
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const [funding, setFunding] = useState(false);
+  const sendInFlight = useRef(false);
+  const [preparing, setPreparing] = useState(false);
 
   const parsedAmount = parseAbbreviatedAmount(amount);
   const isValidAmount = !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB;
@@ -112,9 +114,9 @@ export function TipModal({
     onSuccess: () => {
       // Comment tips pay the comment's author, not the post — the post's
       // counter must not move for them.
-      if (!commentId && resolvedTokenId && lastTipAmount > 0) {
+      if (!commentId && resolvedTokenId && lastTipAmount.current > 0) {
         queryClient.cancelQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
-        queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number | undefined) => (old || 0) + lastTipAmount);
+        queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number | undefined) => (old || 0) + lastTipAmount.current);
         queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId], refetchType: 'none' });
       }
       if (commentId) emitPostTipped(commentTipKey(commentId));
@@ -187,27 +189,34 @@ export function TipModal({
     : null;
 
   const handleSendTip = async () => {
-    if (!isValidAmount) return;
+    if (!isValidAmount || sendInFlight.current) return;
     if (!creatorAddress) return;
+    sendInFlight.current = true;
+    setPreparing(true);
     try {
-      const profile = await getAccountInfo(creatorAddress);
-      if (profile?.hideBadgeAndBalance) {
-        setRecipientPrivate(true);
-        toast.error('This account has disabled tips while private balance mode is on.');
+      try {
+        const profile = await getAccountInfo(creatorAddress);
+        if (profile?.hideBadgeAndBalance) {
+          setRecipientPrivate(true);
+          toast.error('This account has disabled tips while private balance mode is on.');
+          return;
+        }
+      } catch {
+        toast.error('Could not verify the recipient privacy setting. No tip was sent.');
         return;
       }
-    } catch {
-      toast.error('Could not verify the recipient privacy setting. No tip was sent.');
-      return;
+      if (payWith) {
+        if (!walletAddress) return;
+        setFunding(true);
+        const ready = await fundTipFromSource(payWith, parsedAmount, walletAddress, t).finally(() => setFunding(false));
+        if (!ready) return;
+      }
+      lastTipAmount.current = parsedAmount;
+      await tip(parsedAmount);
+    } finally {
+      sendInFlight.current = false;
+      setPreparing(false);
     }
-    if (payWith) {
-      if (!walletAddress) return;
-      setFunding(true);
-      const ready = await fundTipFromSource(payWith, parsedAmount, walletAddress, t).finally(() => setFunding(false));
-      if (!ready) return;
-    }
-    setLastTipAmount(parsedAmount);
-    tip(parsedAmount);
   };
 
   const handleQuickAmount = (val: number) => setAmount(String(val));
@@ -320,8 +329,8 @@ export function TipModal({
             <Button
               variant="glass"
               className="flex-1"
-              onClick={isTipping || funding ? undefined : () => onOpenChange(false)}
-              disabled={isTipping || funding}
+              onClick={isTipping || funding || preparing ? undefined : () => onOpenChange(false)}
+              disabled={isTipping || funding || preparing}
             >
               {t('common.close', 'Close')}
             </Button>
@@ -329,9 +338,9 @@ export function TipModal({
               variant="glass"
               className="flex-1"
               onClick={handleSendTip}
-              disabled={isTipping || funding || privacyChecking || recipientPrivate || !isValidAmount}
+              disabled={isTipping || funding || preparing || privacyChecking || recipientPrivate || !isValidAmount}
             >
-              {isTipping || funding ? (
+              {isTipping || funding || preparing ? (
                 <>
                   <ButtonLoader className="mr-2" />
                   {t('tip.sending', 'Sending...')}
