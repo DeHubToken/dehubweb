@@ -1136,7 +1136,7 @@ export default function HomePage() {
           </div>
         )}
         {visitedTabs.has('images') && (
-          <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'images' ? 'block' : 'none' }}>
+          <div className={isCollapsed && !(islandTopBar && isMobile) ? 'pt-2' : undefined} style={{ display: deferredTab === 'images' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'images'}>
             <Suspense fallback={<FeedBodySkeleton />}>
               <MemoImagesFeed
@@ -1152,7 +1152,7 @@ export default function HomePage() {
           </div>
         )}
         {visitedTabs.has('shorts') && (
-          <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'shorts' ? 'block' : 'none' }}>
+          <div className={isCollapsed && !(islandTopBar && isMobile) ? 'pt-2' : undefined} style={{ display: deferredTab === 'shorts' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'shorts'}>
             <Suspense fallback={<FeedBodySkeleton />}>
               <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />

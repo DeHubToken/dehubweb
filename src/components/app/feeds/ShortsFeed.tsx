@@ -522,7 +522,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   if ((isLoading || isAutoRetrying) && !showFilters) {
     return (
-      <div className="p-1 sm:p-2">
+      <div className="px-1 pb-1 sm:px-2 sm:pb-2">
         <ShortsFeedSkeleton />
       </div>
     );
@@ -530,7 +530,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   return (
     <>
-      <div data-feed-root className="p-1 sm:p-2">
+      <div data-feed-root className="px-1 pb-1 sm:px-2 sm:pb-2">
         {/* Filters */}
         <AnimatePresence mode="wait">
           {showFilters && (
@@ -582,6 +582,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
               {shorts.map((short, index) => (
                 <div
                   key={short.id}
+                  data-media-tile
                   onClick={() => handleShortClick(index)}
                   className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
                 >
@@ -590,7 +591,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                     <AutoplayVideo
                       src={short.videoUrl}
                       poster={short.thumbnail}
-                      className="w-full h-full object-cover rounded-lg"
+                      className="w-full h-full object-cover"
                       threshold={0.7}
                       rootMargin="200px"
                     />

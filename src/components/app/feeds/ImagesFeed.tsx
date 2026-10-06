@@ -201,10 +201,10 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
   return (
-    <div className="p-1 sm:p-2">
+    <div className="px-1 pb-1 sm:px-2 sm:pb-2">
       <div 
         className={cn(
-          "grid gap-0.5 sm:gap-1 overflow-hidden rounded-t-2xl",
+          "grid gap-0.5 sm:gap-1",
           isCollapsed ? "grid-cols-4" : "grid-cols-3"
         )}
         style={{ gridAutoFlow: 'dense' }}
@@ -216,9 +216,10 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
           return (
             <div
               key={post.id}
+              data-media-tile
               onClick={() => onImageClick(post.id)}
               className={cn(
-                'relative aspect-square bg-zinc-800 overflow-hidden group cursor-pointer',
+                'relative aspect-square bg-zinc-800 rounded-xl overflow-hidden group cursor-pointer',
                 isLargeTile && 'col-span-2 row-span-2'
               )}
             >
@@ -226,7 +227,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
                 src={post.image}
                 alt=""
                 className={cn(
-                  "w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105",
+                  "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
                   post.isPPV && "blur-lg"
                 )}
               />
