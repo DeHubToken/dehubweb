@@ -4325,7 +4325,6 @@
     "referenceComposeHint": "Dalhin ang mga karakter, bagay at setting mula sa maraming larawan sa isang komposisyon."
   },
   "pricing": {
-    "perSeatMonthly": "bawat seat/buwan",
     "plansForEveryWorkflow": "Mga plano para sa bawat workflow",
     "findTheRightFit": "Mula sa mga indibidwal hanggang sa enterprise teams, hanapin ang tamang fit",
     "monthly": "Buwanan",
@@ -4347,6 +4346,7 @@
     "pooledNeverExpires": "Pinagsama sa buong workspace — hindi kailanman nag-expire",
     "perMonthBilledAnnually": "bawat buwan, binilang taun-taon",
     "perSeatBilledAnnually": "bawat seat/buwan, binilang taun-taon",
+    "perSeatMonthly": "bawat seat/buwan",
     "savings": "Makatipid ng ${{amount}} kumpara sa buwanan",
     "seats_one": "{{count}} seat",
     "seats_other": "{{count}} seats",
@@ -8156,6 +8156,32 @@
     "shareFacebook": "Ibahagi sa Facebook",
     "shareTelegram": "Ibahagi sa Telegram",
     "copyLink": "Kopyahin ang link"
+  },
+  "postStage": {
+    "back": "Bumalik",
+    "askAI": "Tanungin ang AI tungkol sa post na ito",
+    "followers": "{{value}} mga tagasunod",
+    "repostAndShare": "I - repost at ibahagi",
+    "repost": "I - repost",
+    "undoRepost": "I - undo ang pag - post muli",
+    "repostHint": "Agad, sa iyong mga tagasunod",
+    "undoRepostHint": "Alisin ito sa iyong profile",
+    "quote": "Quote",
+    "quoteHint": "Magdagdag ng sarili mong mga salita",
+    "shareTo": "Ibahagi kay",
+    "copyLink": "Kopyahin ang link",
+    "more": "Higit pa",
+    "viewQuotes": "Tingnan ang mga quote",
+    "viewReposts": "Tingnan ang mga repost",
+    "save": "I - save",
+    "saved": "Na - save",
+    "comments": "Mga Komento",
+    "quotes": "Mga Quote",
+    "reposts": "Mga Repost",
+    "backToComments": "Bumalik sa mga komento",
+    "backToMedia": "Bumalik sa post",
+    "like": "I - like",
+    "unlike": "Alisin ang like"
   },
   "walletSelector": {
     "title": "Piliin ang Wallet",

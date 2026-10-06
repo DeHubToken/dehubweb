@@ -4287,7 +4287,6 @@
     "referenceComposeHint": "นำตัวละคร วัตถุ และฉากจากหลายภาพมารวมเป็นหนึ่งองค์ประกอบเดียว"
   },
   "pricing": {
-    "perSeatMonthly": "ต่อที่นั่ง/เดือน",
     "plansForEveryWorkflow": "แผนสำหรับทุกเวิร์กโฟลว์",
     "findTheRightFit": "จากบุคคลไปจนถึงทีมองค์กร ค้นหาตัวเลือกที่เหมาะสม",
     "monthly": "เดือนละ",
@@ -4309,6 +4308,7 @@
     "pooledNeverExpires": "แบ่งปันร่วมกันในพื้นที่งาน — ไม่หมดอายุ",
     "perMonthBilledAnnually": "ต่อเดือน, คิดเป็นปี",
     "perSeatBilledAnnually": "ต่อที่นั่ง/เดือน, คิดเป็นปี",
+    "perSeatMonthly": "ต่อที่นั่ง/เดือน",
     "savings": "ประหยัด ${{amount}} เมื่อเทียบกับการชำระเดือนละ",
     "seats_one": "{{count}} ที่นั่ง",
     "seats_other": "{{count}} ที่นั่ง",
@@ -8043,6 +8043,32 @@
     "shareFacebook": "แชร์บน Facebook",
     "shareTelegram": "แชร์บน Telegram",
     "copyLink": "คัดลอกลิงก์"
+  },
+  "postStage": {
+    "back": "ย้อนกลับ",
+    "askAI": "ถาม AI เกี่ยวกับโพสต์นี้",
+    "followers": "ผู้ติดตาม {{value}} คน",
+    "repostAndShare": "รีโพสต์และแชร์",
+    "repost": "รีโพสต์",
+    "undoRepost": "เลิกทำการโพสต์ซ้ำ",
+    "repostHint": "ถึงผู้ติดตามของคุณทันที",
+    "undoRepostHint": "ถอดออกจากโพรไฟล์ของคุณ",
+    "quote": "ใบเสนอราคา",
+    "quoteHint": "เพิ่มคำพูดของคุณเอง",
+    "shareTo": "แชร์ไปยัง",
+    "copyLink": "คัดลอกลิงค์",
+    "more": "เพิ่มเติม",
+    "viewQuotes": "ดูใบเสนอราคา",
+    "viewReposts": "ดูรีโพสต์",
+    "save": "บันทึก",
+    "saved": "บันทึกแล้ว",
+    "comments": "ความคิดเห็น",
+    "quotes": "ใบเสนอราคา",
+    "reposts": "รีโพสต์",
+    "backToComments": "กลับไปที่ความคิดเห็น",
+    "backToMedia": "กลับไปที่โพสต์",
+    "like": "ชอบ",
+    "unlike": "ลบสิ่งที่ชอบออก"
   },
   "footer": {
     "copyright": "ลิขสิทธิ์ © 2024 บริษัทของคุณ"

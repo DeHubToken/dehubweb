@@ -4006,7 +4006,6 @@
     "referenceComposeHint": "شخصیت‌ها، اشیاء و محیط‌های موجود در چند تصویر را در یک ترکیب قرار دهید"
   },
   "pricing": {
-    "perSeatMonthly": "प्रति सीट/महीना",
     "findTheRightFit": "از افراد تا تیم‌های سازمانی، یافتن مناسب‌ترین گزینه را بیابید",
     "monthly": "मासिक",
     "upToDiscount": "up to −{{pct}}%",
@@ -4017,6 +4016,7 @@
     "realDhbSpendAnywhere": "आपके वॉलेट में वास्तविक DeHub टोकन — कहीं भी खर्च करें, वे कभी समाप्त नहीं होते",
     "realDhbNeverExpires": "आपके वॉलेट में वास्तविक DeHub टोकन — वे कभी समाप्त नहीं होते",
     "perSeatBilledAnnually": "پایین تر از هر صندلی/ماه، به صورت سالانه فاکتور داده می‌شود",
+    "perSeatMonthly": "प्रति सीट/महीना",
     "seats_one": "{{count}} کُرسِی",
     "seats_other": "{{count}} صندلی‌ها",
     "ctaGet": "Le {{plan}}",
@@ -7502,6 +7502,32 @@
     "shareFacebook": "Facebook پر شیئر کرو",
     "shareTelegram": "Telegram پر شیئر کرو",
     "copyLink": "لنک کاپی کرو"
+  },
+  "postStage": {
+    "back": "पाछा जाउ",
+    "askAI": "ए पोस्ट के बारे में AI से पूछ",
+    "followers": "{{value}} followers",
+    "repostAndShare": "रिपोस्ट आ शेयर",
+    "repost": "रिपोस्ट",
+    "undoRepost": "रिपोस्ट उल्टा कर",
+    "repostHint": "तुरंत, तोर फॉलोअर्स ला",
+    "undoRepostHint": "इहां से प्रोफ़ाइल से हटाउ",
+    "quote": "कोट",
+    "quoteHint": "अपन शब्द जोड़",
+    "shareTo": "एला शेयर कर",
+    "copyLink": "लिंक कॉपी कर",
+    "more": "अधिक",
+    "viewQuotes": "कोट देख",
+    "viewReposts": "रिपोस्ट देख",
+    "save": "सेव कर",
+    "saved": "सेव हो गेल",
+    "comments": "कमेन्ट",
+    "quotes": "कोट",
+    "reposts": "रिपोस्ट",
+    "backToComments": "कमेन्ट पर पाछा जाउ",
+    "backToMedia": "पोस्ट पर पाछा जाउ",
+    "like": "लाईक",
+    "unlike": "लाईक हटाउ"
   },
   "post": {
     "like": "پسند",

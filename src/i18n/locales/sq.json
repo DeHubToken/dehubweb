@@ -4273,7 +4273,6 @@
     "referenceComposeHint": "Merrni karaktere, objekte dhe rregullime nga shumë imazhe në një kompozicion të vetëm."
   },
   "pricing": {
-    "perSeatMonthly": "për vend/muaj",
     "plansForEveryWorkflow": "Planet për çdo rrjedhë pune",
     "findTheRightFit": "Nga individët tek ekipet e ndërmarrjeve, gjeni përshtatjen e duhur",
     "monthly": "Mujore",
@@ -4294,6 +4293,7 @@
     "pooledNeverExpires": "I grumbulluar përgjatë hapësirës së punës — nuk skadon kurrë",
     "perMonthBilledAnnually": "në muaj, faturuar çdo vit",
     "perSeatBilledAnnually": "për vend/muaj, faturuar çdo vit",
+    "perSeatMonthly": "për vend/muaj",
     "savings": "Ruaj ${{amount}} në krahasim me muajin",
     "seats_other": "{{count}} vende",
     "ctaGet": "Merr {{plan}}",
@@ -8019,5 +8019,31 @@
     "shareFacebook": "Shpërndaj në Facebook",
     "shareTelegram": "Shpërndaj në Telegram",
     "copyLink": "Kopjo lidhjen"
+  },
+  "postStage": {
+    "back": "Kthehu prapa",
+    "askAI": "Pyet UA për këtë postim",
+    "followers": "{{value}} ndjekësit",
+    "repostAndShare": "Riposto dhe shpërndaj",
+    "repost": "Riposto",
+    "undoRepost": "Zhbëj ripostimin",
+    "repostHint": "Në çast, për ndjekësit e tu",
+    "undoRepostHint": "Hiqe nga profili yt",
+    "quote": "Citim",
+    "quoteHint": "Shto fjalët e tua",
+    "shareTo": "Ndaj me",
+    "copyLink": "Kopjo linkun",
+    "more": "Më shumë",
+    "viewQuotes": "Shfaq citimet",
+    "viewReposts": "Shfaq ripostimet",
+    "save": "Ruaj",
+    "saved": "Të ruajtura",
+    "comments": "Komente",
+    "quotes": "Kuotat",
+    "reposts": "Ripostime",
+    "backToComments": "Kthehu te komentet",
+    "backToMedia": "Kthehu te postimi",
+    "like": "Më pëlqen",
+    "unlike": "Hiq pëlqimin"
   }
 }

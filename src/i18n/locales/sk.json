@@ -4389,7 +4389,6 @@
     "referenceComposeHint": "Zísť postavy, predmety a nastavenia z viacerých obrázkov do jednej kompozície"
   },
   "pricing": {
-    "perSeatMonthly": "za miesto/mesiac",
     "plansForEveryWorkflow": "Plány pre každý workflow",
     "findTheRightFit": "Od jednotlivcov po týmy podnikov, nájdete správne riešenie",
     "monthly": "Mesiacne",
@@ -4411,6 +4410,7 @@
     "pooledNeverExpires": "Sdelené po pracovnom prostranstve — nikdy nevyprší",
     "perMonthBilledAnnually": "za mesiac, fakturované ročne",
     "perSeatBilledAnnually": "za miesto/mesiac, fakturované ročne",
+    "perSeatMonthly": "za miesto/mesiac",
     "savings": "Ušetrite ${{amount}} oproti mesiačnej faktúre",
     "seats_one": "{{count}} miesto",
     "seats_other": "{{count}} miesta",
@@ -8148,6 +8148,32 @@
     "shareFacebook": "Zdieľať na Facebooku",
     "shareTelegram": "Zdieľať na Telegrame",
     "copyLink": "Kopírovať odkaz"
+  },
+  "postStage": {
+    "back": "Späť",
+    "askAI": "Opýtajte sa AI na tento príspevok",
+    "followers": "{{value}} sledujúcich",
+    "repostAndShare": "Znovu uverejniť a zdieľať",
+    "repost": "Repost",
+    "undoRepost": "Vrátiť späť opätovný príspevok",
+    "repostHint": "Okamžite svojim sledovateľom",
+    "undoRepostHint": "Odstráňte ho zo svojho profilu",
+    "quote": "Cenová ponuka",
+    "quoteHint": "Pridajte svoje vlastné slová",
+    "shareTo": "Zdieľať s",
+    "copyLink": "Kopírovať odkaz",
+    "more": "Viac",
+    "viewQuotes": "Zobraziť cenové ponuky",
+    "viewReposts": "Zobraziť opätovné príspevky",
+    "save": "Uložiť",
+    "saved": "Uložené",
+    "comments": "Komentáre",
+    "quotes": "Cenové ponuky",
+    "reposts": "Reposts",
+    "backToComments": "Späť na komentáre",
+    "backToMedia": "Späť na príspevok",
+    "like": "Páči sa mi to",
+    "unlike": "Odstrániť Páči sa mi to"
   },
   "post": {
     "like": "Páči sa mi",

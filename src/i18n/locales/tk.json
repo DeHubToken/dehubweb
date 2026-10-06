@@ -4213,7 +4213,6 @@
     "referenceComposeHint": "Bir neçe resimden karakterler, obýektler ýä sahne ýoklamalarýný bir kompozitsiyaga birleþtirýn."
   },
   "pricing": {
-    "perSeatMonthly": "her orun/aý",
     "plansForEveryWorkflow": "Her bir iş akymy üçin planlar",
     "findTheRightFit": "Adamlardan iş toparlaryna çenli, dogry ýerleri tap",
     "monthly": "Aýlyk",
@@ -4234,6 +4233,7 @@
     "pooledNeverExpires": "Bu iş ýerinde — asla gutarmaz",
     "perMonthBilledAnnually": "aýlyk töleginden sagatlyk hasabat kalkulatory",
     "perSeatBilledAnnually": "per sit/mo, ýyllyk hasabat",
+    "perSeatMonthly": "her orun/aý",
     "savings": "Aýlyk bilen deňeşdirilende $ {{amount}} sakla",
     "seats_one": "{{count}} SEAT",
     "seats_other": "{{count}} oturgyçlar",
@@ -6904,12 +6904,12 @@
     "onlyHave": "Sizde diňe {{amount}} tokens bar {{chain}}.",
     "tokenNotConfigured": "DeHub tokenleri {{chain}}-da goýulmaýar.",
     "notEnoughTokens": "Ýeterli tokens ýok",
+    "sentDesc": "{{amount}} token {{from}} zynjyryndan {{to}} zynjyryna iberildi. Topar tokenleri maksat zynjyrynda iberýär, adatça 1-5 iş gününiň dowamynda.",
     "subtitle": "DeHub tokenlerini zynjyrlaryň arasyndan geçir",
     "tokensOnBase": "Ýolbaşçylyk maslahatynyň (Ýolbaşçylyk maslahatynyň)",
     "tokensOnBnb": "BNB zähmet zähmetiniň nusgasy",
     "step3": "Topar tokenleri maksat zynjyrynda iberýär, adatça 1-5 iş gününiň dowamynda.",
-    "statusReceived": "Kabul edildi",
-    "sentDesc": "{{amount}} token {{from}} zynjyryndan {{to}} zynjyryna iberildi. Topar tokenleri maksat zynjyrynda iberýär, adatça 1-5 iş gününiň dowamynda."
+    "statusReceived": "Kabul edildi"
   },
   "builder": {
     "stakeForAllowance": "Gündelik gurluşyk tölegini artdyrmak üçin DeHub tokenlerini goýuň",
@@ -7935,5 +7935,31 @@
     "shareFacebook": "Facebook-da paýlaş",
     "shareTelegram": "Telegram-da paýlaş",
     "copyLink": "Baglanyşygy göçür"
+  },
+  "postStage": {
+    "back": "Git-de, gaýdyp gel",
+    "askAI": "Bu makala barada sorap görüň",
+    "followers": "{{value}} Followers",
+    "repostAndShare": "Saýla we paýla",
+    "repost": "Gaýtalaň",
+    "undoRepost": "Poşta gaýd et",
+    "repostHint": "Seniň yzyňa eýerenlere",
+    "undoRepostHint": "Profilini ýitir",
+    "quote": "Çykyş",
+    "quoteHint": "Öz sözleriňi aýt",
+    "shareTo": "Paýlaşmak",
+    "copyLink": "Baglaýyşy nusgala",
+    "more": "Mundan artyk",
+    "viewQuotes": "Çykyşlary gör",
+    "viewReposts": "Ýapyşyşmalary gör",
+    "save": "Gaýd Et",
+    "saved": "Saýla",
+    "comments": "Komentarlar",
+    "quotes": "Çykyşlar",
+    "reposts": "Poştalar",
+    "backToComments": "Komentaryň yzyna dolanmak",
+    "backToMedia": "Posta dolanmak",
+    "like": "Hoşgeldin",
+    "unlike": "Gaýdyny aýyr"
   }
 }

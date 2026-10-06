@@ -4288,7 +4288,6 @@
     "referenceComposeHint": "Gộp các nhân vật, đối tượng và cảnh từ nhiều hình ảnh thành một tác phẩm."
   },
   "pricing": {
-    "perSeatMonthly": "mỗi ghế/tháng",
     "plansForEveryWorkflow": "Kế hoạch cho mọi quy trình làm việc",
     "findTheRightFit": "Từ cá nhân đến các đội enterprise, tìm sự phù hợp",
     "monthly": "Monthly",
@@ -4310,6 +4309,7 @@
     "pooledNeverExpires": "Được gộp chung trong không gian làm việc — không bao giờ hết hạn",
     "perMonthBilledAnnually": "mỗi tháng, tính phí hàng năm",
     "perSeatBilledAnnually": "mỗi ghế/tháng, tính phí hàng năm",
+    "perSeatMonthly": "mỗi ghế/tháng",
     "savings": "Tiết kiệm ${{amount}} so với hàng tháng",
     "seats_one": "{{count}} ghế",
     "seats_other": "{{count}} ghế",
@@ -8116,5 +8116,31 @@
     "shareFacebook": "Chia sẻ lên Facebook",
     "shareTelegram": "Chia sẻ lên Telegram",
     "copyLink": "Sao chép liên kết"
+  },
+  "postStage": {
+    "back": "Quay lại",
+    "askAI": "Hỏi AI về bài đăng này",
+    "followers": "{{value}} người theo dõi",
+    "repostAndShare": "Đăng lại & chia sẻ",
+    "repost": "Đăng lại",
+    "undoRepost": "Hoàn tác đăng lại",
+    "repostHint": "Ngay lập tức, gửi đến những người theo dõi của bạn",
+    "undoRepostHint": "Lấy nó ra khỏi hồ sơ của bạn",
+    "quote": "Trích dẫn",
+    "quoteHint": "Thêm từ của riêng bạn",
+    "shareTo": "Chia sẻ lên",
+    "copyLink": "Sao chép liên kết",
+    "more": "Thêm",
+    "viewQuotes": "Xem báo giá",
+    "viewReposts": "Xem các bài đăng lại",
+    "save": "Lưu",
+    "saved": "Đã lưu",
+    "comments": "Bình luận",
+    "quotes": "Báo giá",
+    "reposts": "Đăng lại",
+    "backToComments": "Quay lại bình luận",
+    "backToMedia": "Quay lại bài đăng",
+    "like": "Thích",
+    "unlike": "Xóa lượt thích"
   }
 }

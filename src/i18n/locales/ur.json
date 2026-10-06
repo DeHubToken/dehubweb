@@ -4274,7 +4274,6 @@
     "referenceComposeHint": "متعدد تصاویر سے کردار، اشیاء اور سیٹنگز کو ایک ترکیب میں لائیں۔"
   },
   "pricing": {
-    "perSeatMonthly": "فی نشست/ماہ",
     "plansForEveryWorkflow": "ہر ورک فلو کے لیے منصوبے",
     "findTheRightFit": "افراد سے لے کر انٹرپرائز ٹیموں تک، صحیح فٹ تلاش کریں",
     "monthly": "ماہانہ",
@@ -4296,6 +4295,7 @@
     "pooledNeverExpires": "پورے ورک اسپیس میں جمع — کبھی ختم نہیں ہوتا",
     "perMonthBilledAnnually": "فی ماہ، سالانہ بل کیا گیا",
     "perSeatBilledAnnually": "فی نشست/ماہ، سالانہ بل کیا گیا",
+    "perSeatMonthly": "فی نشست/ماہ",
     "savings": "ماہانہ کے مقابلے میں ${{amount}} بچائیں",
     "seats_one": "{{count}} نشست",
     "seats_other": "{{count}} سیٹس",
@@ -8027,5 +8027,31 @@
     "shareFacebook": "Facebook پر شیئر کریں",
     "shareTelegram": "Telegram پر شیئر کریں",
     "copyLink": "لنک کاپی کریں"
+  },
+  "postStage": {
+    "back": "واپس جائیں",
+    "askAI": "AI سے اس پوسٹ کے بارے میں پوچھیں",
+    "followers": "{{value}} فالوورز",
+    "repostAndShare": "دوبارہ پوسٹ کریں اور شیئر کریں",
+    "repost": "دوبارہ پوسٹ کریں",
+    "undoRepost": "دوبارہ پوسٹ کرنا کالعدم کریں",
+    "repostHint": "فوری طور پر، اپنے پیروکاروں کو",
+    "undoRepostHint": "اسے اپنی پروفائل سے ہٹا دیں",
+    "quote": "اقتباس",
+    "quoteHint": "اپنے الفاظ شامل کریں",
+    "shareTo": "پر شیئر کریں",
+    "copyLink": "لنک کاپی کریں",
+    "more": "مزید",
+    "viewQuotes": "اقتباسات دیکھیں",
+    "viewReposts": "دوبارہ پوسٹس دیکھیں",
+    "save": "محفوظ کریں",
+    "saved": "محفوظ کردہ",
+    "comments": "تبصرے",
+    "quotes": "اقتباسات",
+    "reposts": "دوبارہ پوسٹیں",
+    "backToComments": "تبصروں پر واپس جائیں",
+    "backToMedia": "پوسٹ پر واپس جائیں",
+    "like": "پسند کریں",
+    "unlike": "اس طرح ہٹائیں"
   }
 }

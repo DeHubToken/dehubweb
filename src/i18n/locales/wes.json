@@ -3944,7 +3944,6 @@
     "referenceComposeHint": "Bring characters, objects and settings from multiple images into one composition."
   },
   "pricing": {
-    "perSeatMonthly": "for each seat/month",
     "findTheRightFit": "From small people to big company team, find de right one fit for you",
     "monthly": "Monthly",
     "annual": "Annual",
@@ -3958,6 +3957,7 @@
     "pooledNeverExpires": "Pooled for all wey wey work — no expire at all",
     "perMonthBilledAnnually": "per month, billed annually",
     "perSeatBilledAnnually": "per seat/mo, billed annually",
+    "perSeatMonthly": "for each seat/month",
     "seats_one": "{{count}} seat",
     "seats_other": "{{count}} seats",
     "ctaGet": "Get {{plan}}",
@@ -7219,5 +7219,28 @@
     "shareFacebook": "Share for Facebook",
     "shareTelegram": "Share for Telegram",
     "copyLink": "Kopi link"
+  },
+  "postStage": {
+    "back": "Go back",
+    "followers": "{{value}} followers",
+    "repostAndShare": "Repost & share",
+    "repost": "Repost",
+    "undoRepost": "Undo repost",
+    "repostHint": "Sharp sharp, for your followers",
+    "undoRepostHint": "Remove am for your profile",
+    "quote": "Quote",
+    "shareTo": "Share to",
+    "copyLink": "Copy link",
+    "more": "More",
+    "viewQuotes": "View quotes",
+    "viewReposts": "View reposts",
+    "save": "Save",
+    "saved": "Saved",
+    "comments": "Comments",
+    "quotes": "Quotes",
+    "reposts": "Reposts",
+    "backToComments": "Back to comments",
+    "like": "Like",
+    "unlike": "Remove like"
   }
 }

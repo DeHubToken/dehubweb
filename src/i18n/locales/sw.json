@@ -4276,7 +4276,6 @@
     "referenceComposeHint": "Kuweka watumishi, vitu na mazingira kutoka picha nyingi katika mfumo moja"
   },
   "pricing": {
-    "perSeatMonthly": "kwa kila kiti/mwezi",
     "plansForEveryWorkflow": "Mipango kwa kila workflow",
     "findTheRightFit": "Kutoka kwa watu binafsi hadi timu za enterprise, tafuta inayofaa",
     "monthly": "Monthly",
@@ -4298,6 +4297,7 @@
     "pooledNeverExpires": "Iliyokusanywa katika workspace — haiwezi kamwe kuishia",
     "perMonthBilledAnnually": "kwa kila mwezi, kulipwa kila mwaka",
     "perSeatBilledAnnually": "kwa kila kiti/mwezi, kulipwa kila mwaka",
+    "perSeatMonthly": "kwa kila kiti/mwezi",
     "savings": "Okoa ${{amount}} ikilinganishwa na kila mwezi",
     "seats_one": "{{count}} kiti",
     "seats_other": "{{count}} viti",
@@ -8008,5 +8008,31 @@
     "shareFacebook": "Shiriki kwenye Facebook",
     "shareTelegram": "Shiriki kwenye Telegram",
     "copyLink": "Nakili kiungo"
+  },
+  "postStage": {
+    "back": "Rudi nyuma",
+    "askAI": "Uliza AI kuhusu chapisho hili",
+    "followers": "{{value}} wafuasi",
+    "repostAndShare": "Chapisha tena na ushiriki",
+    "repost": "Chapisha tena",
+    "undoRepost": "Tangua chapisho tena",
+    "repostHint": "Papo hapo, kwa wafuasi wako",
+    "undoRepostHint": "Ondoa kwenye wasifu wako",
+    "quote": "Nukuu",
+    "quoteHint": "Weka maneno yako mwenyewe",
+    "shareTo": "Shiriki kwa",
+    "copyLink": "Nakili kiunganishi",
+    "more": "Zaidi",
+    "viewQuotes": "Angalia nukuu",
+    "viewReposts": "Angalia machapisho tena",
+    "save": "Hifadhi",
+    "saved": "Imehifadhiwa",
+    "comments": "Maoni",
+    "quotes": "Nukuu",
+    "reposts": "Chapisho tena",
+    "backToComments": "Rudi kwenye maoni",
+    "backToMedia": "Rudi kwenye chapisho",
+    "like": "Penda",
+    "unlike": "Ondoa kama"
   }
 }

@@ -3866,7 +3866,6 @@
     "referenceComposeHint": "چند تصاویر سے کاراکٹرز، اُبجیکٹس اور سِٹنگز کو ایک کمپوزیشن میں لاؤ"
   },
   "pricing": {
-    "perSeatMonthly": "فی سیٹ/مہینہ",
     "upToDiscount": "اُپ تا −{{pct}}%",
     "dhbPerMonth": "{{amount}} ٹوکن/ماہ، آپ دے والیٹ وچ بھیجے گئے",
     "dhbPerSeat": "{{amount}} ٹوکن فی سیٹ/ماہ، آپ دے والیٹ وچ بھیجے گئے",
@@ -3874,6 +3873,7 @@
     "realDhbSpendAnywhere": "آپ دے والیٹ وچ اصلی DeHub ٹوکن — کِتھے وی خرچ کرو، اوہ کدی وی ختم نئیں ہوندے",
     "realDhbNeverExpires": "آپ دے والیٹ وچ اصلی DeHub ٹوکن — اوہ کدی وی ختم نئیں ہوندے",
     "perSeatBilledAnnually": "پیر چوڑے/ماہ، سالانہ بیلنگ",
+    "perSeatMonthly": "فی سیٹ/مہینہ",
     "seats_one": "{{count}} سیٹ",
     "seats_other": "{{count}} سیٹیں",
     "ctaGet": "گٹ {{plan}}",
@@ -7143,5 +7143,31 @@
     "shareFacebook": "Facebook تے شیئر کرو",
     "shareTelegram": "Telegram تے شیئر کرو",
     "copyLink": "لنک نقل کرو"
+  },
+  "postStage": {
+    "back": "واپس آؤ",
+    "askAI": "ایہ پوسٹ بارے AI توں پچھو",
+    "followers": "{{value}} فالوورز",
+    "repostAndShare": "ریپوسٹ تے شیئر",
+    "repost": "ریپوسٹ",
+    "undoRepost": "ریپوسٹ واپس لاؤ",
+    "repostHint": "فوراً، اپنے فالوورز کول",
+    "undoRepostHint": "اپنے پروفائل توں ہٹا دیو",
+    "quote": "کوٹ",
+    "quoteHint": "اپنے الفاظ شامل کرو",
+    "shareTo": "شیئر کرو",
+    "copyLink": "لنک کاپی کرو",
+    "more": "ہور",
+    "viewQuotes": "کوٹس دیکھو",
+    "viewReposts": "ریپوسٹس دیکھو",
+    "save": "محفوظ کرو",
+    "saved": "محفوظ ہو چکے",
+    "comments": "کمنٹس",
+    "quotes": "کوٹس",
+    "reposts": "ریپوسٹس",
+    "backToComments": "کمنٹس ول واپس جاؤ",
+    "backToMedia": "پوسٹ ول واپس جاؤ",
+    "like": "لائک",
+    "unlike": "لائک ہٹاؤ"
   }
 }
