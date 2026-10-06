@@ -11,8 +11,8 @@
  * /builder/preview/:id stays (BuilderPreviewPage): that is where the links the
  * bot sends land.
  *
- * Always dark by design, so every color is an arbitrary-value class the
- * light-theme remap never touches.
+ * The System theme owns the builder bloom. Canvas themes use their page
+ * background, with dark cards keeping the composer and instructions readable.
  */
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +23,8 @@ import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubIcon from '@/assets/dehub-logo-compact.png';
 import { ASSISTANT_ADDRESS, ASSISTANT_USERNAME } from '@/lib/assistant';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { Button } from '@/components/ui/button';
 
 const TEXT_DIM = 'text-[#949499]';
 const STROKE = 'border-[rgba(255,255,255,0.09)]';
@@ -47,6 +49,7 @@ const STEPS = [
 
 export default function BuilderPage() {
   const { t } = useTranslation();
+  const { theme } = useAppTheme();
   const navigate = useNavigate();
   const { isAuthenticated, openLoginModal } = useAuth() as {
     isAuthenticated: boolean;
@@ -80,7 +83,7 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="relative z-[1] min-h-[100dvh] bg-[#000]" data-builder-surface>
+    <div className="relative z-[1] min-h-[100dvh] bg-[#000]" data-builder-surface data-glass-page data-theme-page-surface>
       <SEOHead
         title="Builder — Build Apps with AI on DeHub"
         description="Tell @assistant what you want in your DeHub messages. It builds the app, hosts it and sends you a link anyone can open."
@@ -88,19 +91,22 @@ export default function BuilderPage() {
         image="https://dehub.io/og/builder.jpg"
       />
 
-      <div className="min-h-[100dvh] flex flex-col" style={BLOOM_BG}>
+      <div className="min-h-[100dvh] flex flex-col" data-builder-backdrop style={theme === 'system' ? BLOOM_BG : undefined}>
         <header className="flex items-center justify-between p-4 sm:p-5">
           <div className="flex items-center gap-2.5">
             <img src={dehubIcon} alt="" className="w-7 h-7 object-contain" />
             <span className="text-[22px] font-extrabold tracking-tight text-[#fff]">Builder</span>
           </div>
-          <button
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
             onClick={() => navigate('/app')}
             aria-label={t('common.close')}
             className="w-11 h-11 rounded-xl flex items-center justify-center bg-[rgba(255,255,255,0.08)] text-[#fff] hover:bg-[rgba(255,255,255,0.14)] transition-colors"
           >
             <X className="w-5 h-5" />
-          </button>
+          </Button>
         </header>
 
         <main className="flex-1 w-full max-w-xl mx-auto px-4 sm:px-5 pt-6 sm:pt-12 pb-16">
@@ -134,23 +140,25 @@ export default function BuilderPage() {
               className="w-full bg-transparent resize-none outline-none text-[17px] min-h-[56px] text-[#fff] placeholder:text-[#7a7a80]"
             />
             <div className="flex items-center justify-end mt-2">
-              <button
+              <Button
                 type="submit"
                 disabled={!prompt.trim()}
                 className={cn(
-                  'flex items-center gap-2 h-11 pl-4 pr-3 rounded-xl bg-[#fff] text-[#000] text-[15px] font-semibold transition-all active:scale-95',
+                  'flex items-center gap-2 h-11 pl-4 pr-3 rounded-xl text-[15px] font-semibold transition-all active:scale-95',
                   !prompt.trim() && 'opacity-35',
                 )}
               >
                 {t('builder.sendToAssistant')}
                 <ArrowUp className="w-5 h-5" strokeWidth={2.5} />
-              </button>
+              </Button>
             </div>
           </form>
 
           <div className="mt-3 flex flex-wrap justify-center gap-2">
             {EXAMPLE_KEYS.map((key) => (
-              <button
+              <Button
+                type="button"
+                variant="secondary"
                 key={key}
                 onClick={() => {
                   setPrompt(t(key));
@@ -163,7 +171,7 @@ export default function BuilderPage() {
                 )}
               >
                 {t(key)}
-              </button>
+              </Button>
             ))}
           </div>
 
@@ -185,7 +193,9 @@ export default function BuilderPage() {
             ))}
           </ol>
 
-          <button
+          <Button
+            type="button"
+            variant="secondary"
             onClick={() => openChat()}
             className={cn(
               'mx-auto mt-8 flex items-center gap-2 rounded-full border px-4 py-2.5 text-[14px] font-medium text-[#e8e8ea] transition-colors',
@@ -195,7 +205,7 @@ export default function BuilderPage() {
           >
             <MessageCircle className="w-4 h-4" />
             {t('builder.buildInChat')}
-          </button>
+          </Button>
 
           <button
             onClick={() => navigate('/stake')}
