@@ -46,6 +46,28 @@ html[data-theme='minimal'] {
   --control-edge: rgba(255,255,255,0.22);
   --control-shadow: none;
 }
+
+/* Navigation Create uses paper and ink on Light, including its nested label.
+   The older dark-CTA rule otherwise leaves the label white on this pale fill. */
+html[data-theme='light'] [data-nav-create] {
+  background: var(--control-sheen), var(--control-fill) !important;
+  border: 1px solid var(--control-edge) !important;
+  box-shadow: var(--control-shadow) !important;
+}
+html[data-theme='light'] [data-nav-create],
+html[data-theme='light'] [data-nav-create] :is(div, span, svg) {
+  color: var(--control-ink) !important;
+}
+html[data-theme='light'] [data-nav-create] svg {
+  stroke: var(--control-ink) !important;
+}
+html[data-theme='light'] [data-nav-create] > [aria-hidden='true'] {
+  display: none;
+}
+html[data-theme='light'] [data-nav-create] .animate-spin {
+  border-color: var(--control-edge) !important;
+  border-top-color: var(--control-ink) !important;
+}
 html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
   :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
   :is(

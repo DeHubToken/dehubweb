@@ -325,7 +325,7 @@ export function MobileBottomNav() {
               aria-label="Create post"
               className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-white"
             >
-                <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-transform duration-300 active:scale-95">
+                <div data-nav-create className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-transform duration-300 active:scale-95">
                   <div
                     aria-hidden="true"
                     className="pointer-events-none absolute inset-0 rounded-xl border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_2px_8px_rgba(0,0,0,0.3)]"
