@@ -4,42 +4,50 @@ import { useHorizontalBitmap } from '../hooks/use-horizontal-bitmap';
 
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
-it('releases measured offscreen images, cancels short excursions, and restores scroll-back immediately', () => {
-  vi.useFakeTimers();
-  let notify: (entries: { isIntersecting: boolean; boundingClientRect: { left: number; right: number } }[]) => void = () => {};
-  const notifySlide = (inside: boolean, isIntersecting = inside) => notify([{
-    isIntersecting,
-    boundingClientRect: inside ? { left: 0, right: 600 } : { left: 900, right: 1500 },
-  }]);
+function stubObserver() {
+  const ref: { notify: (entries: { isIntersecting: boolean }[]) => void } = { notify: () => {} };
   const disconnect = vi.fn();
   vi.stubGlobal('IntersectionObserver', class {
-    constructor(callback: typeof notify) { notify = callback; }
+    constructor(callback: typeof ref.notify) { ref.notify = callback; }
     observe() {}
     disconnect = disconnect;
   });
-  const viewport = { current: document.createElement('div') };
-  const rect = vi.spyOn(viewport.current, 'getBoundingClientRect').mockReturnValue({ left: 0, right: 600, top: 0, bottom: 600 } as DOMRect);
-  const slide = { current: document.createElement('div') };
-  const { result, rerender, unmount } = renderHook(({ source, measured }) => useHorizontalBitmap(source, measured, viewport, slide), {
-    initialProps: { source: 'photo-a.jpg', measured: true },
-  });
-  act(() => { notifySlide(false); vi.advanceTimersByTime(200); });
+  return { ref, disconnect };
+}
+
+const refs = () => ({ viewport: { current: document.createElement('div') }, slide: { current: document.createElement('div') } });
+
+it('releases offscreen slides after a grace period and restores them on intersection', () => {
+  vi.useFakeTimers();
+  const { ref, disconnect } = stubObserver();
+  const { viewport, slide } = refs();
+  const { result, unmount } = renderHook(() => useHorizontalBitmap('a.jpg', true, viewport, slide, { total: 5, index: 4, activeIndex: 0 }));
+  act(() => { ref.notify([{ isIntersecting: false }]); vi.advanceTimersByTime(200); });
   expect(result.current).toBe(true);
-  act(() => { notifySlide(true); vi.advanceTimersByTime(400); });
+  act(() => { ref.notify([{ isIntersecting: true }]); vi.advanceTimersByTime(400); });
   expect(result.current).toBe(true);
-  act(() => { notifySlide(false); vi.advanceTimersByTime(400); });
+  act(() => { ref.notify([{ isIntersecting: false }]); vi.advanceTimersByTime(400); });
   expect(result.current).toBe(false);
-  act(() => notifySlide(true));
-  expect(result.current).toBe(true);
-  act(() => { notifySlide(true, false); vi.advanceTimersByTime(400); });
-  expect(result.current).toBe(true);
-  rect.mockReturnValue({ left: 0, right: 600, top: -2500, bottom: -1900 } as DOMRect);
-  act(() => { notify([{ isIntersecting: false, boundingClientRect: { left: 0, right: 0 } }]); vi.advanceTimersByTime(1000); });
-  expect(result.current).toBe(true);
-  rect.mockReturnValue({ left: 0, right: 600, top: 0, bottom: 600 } as DOMRect);
-  act(() => { notifySlide(false); vi.advanceTimersByTime(400); });
-  rerender({ source: 'photo-b.jpg', measured: false });
+  act(() => ref.notify([{ isIntersecting: true }]));
   expect(result.current).toBe(true);
   unmount();
   expect(disconnect).toHaveBeenCalled();
+});
+
+it('always keeps a single-image carousel visible', () => {
+  vi.useFakeTimers();
+  const { ref } = stubObserver();
+  const { viewport, slide } = refs();
+  const { result } = renderHook(() => useHorizontalBitmap('a.jpg', true, viewport, slide, { total: 1, index: 0, activeIndex: 0 }));
+  act(() => { ref.notify([{ isIntersecting: false }]); vi.advanceTimersByTime(5000); });
+  expect(result.current).toBe(true);
+});
+
+it('keeps the active slide and its neighbours visible', () => {
+  vi.useFakeTimers();
+  const { ref } = stubObserver();
+  const { viewport, slide } = refs();
+  const { result } = renderHook(() => useHorizontalBitmap('a.jpg', true, viewport, slide, { total: 4, index: 2, activeIndex: 1 }));
+  act(() => { ref.notify([{ isIntersecting: false }]); vi.advanceTimersByTime(5000); });
+  expect(result.current).toBe(true);
 });
