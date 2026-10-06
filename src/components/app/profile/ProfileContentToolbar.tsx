@@ -158,7 +158,7 @@ export function ProfileContentToolbar({
               type="button"
               onClick={closeSearch}
               aria-label={search ? t('common.clear', 'Clear') : t('common.close', 'Close')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-700 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-lg text-white hover:bg-zinc-700 transition-colors"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -177,14 +177,14 @@ export function ProfileContentToolbar({
               onSelect={onSortChange}
               className="-mx-2 min-w-0"
               borderRadius="0.75rem"
-              buttonClassName="h-9 px-3 py-0 rounded-xl text-xs"
+              buttonClassName="h-9 px-3 py-0 rounded-xl text-xs text-white"
               leadingContent={(
                 <>
                   <button
                     type="button"
                     onClick={() => setIsSearchOpen(true)}
                     aria-label={t('profile.searchThisChannel', 'Search this channel')}
-                    className="flex-shrink-0 flex items-center justify-center h-9 w-9 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors"
+                    className="flex-shrink-0 flex items-center justify-center h-9 w-9 rounded-xl bg-zinc-800 border border-zinc-700 text-white hover:bg-zinc-700 transition-colors"
                   >
                     <Search className="w-4 h-4" />
                   </button>
@@ -194,10 +194,10 @@ export function ProfileContentToolbar({
                     aria-expanded={filtersOpen}
                     aria-label={t('explorePage.filters', 'Filters')}
                     className={cn(
-                      'relative flex-shrink-0 flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl transition-colors',
+                      'relative flex-shrink-0 flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl text-white transition-colors',
                       filtersOpen || activeFilterCount > 0
                         ? 'text-white'
-                        : 'bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700',
+                        : 'bg-zinc-800 border border-zinc-700 hover:bg-zinc-700',
                     )}
                   >
                     {(filtersOpen || activeFilterCount > 0) && (
@@ -312,7 +312,7 @@ export function ProfileContentToolbar({
           <button
             type="button"
             onClick={onFiltersReset}
-            className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
+            className="px-2 py-1 rounded-lg text-[10px] text-white transition-colors"
           >
             {t('explorePage.clearAll', 'Clear all')}
           </button>
