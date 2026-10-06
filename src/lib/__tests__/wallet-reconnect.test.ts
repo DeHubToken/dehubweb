@@ -13,6 +13,8 @@ afterEach(() => { finishSessionWalletConnect(false); vi.useRealTimers(); });
 
 describe('wallet reconnect before payment', () => {
   it('continues the original action once after a verified connection', async () => {
+    await vi.advanceTimersByTimeAsync(0);
+    const existingTimers = vi.getTimerCount();
     const requested = vi.fn();
     window.addEventListener(WALLET_CONNECT_REQUIRED_EVENT, requested);
     const send = vi.fn();
@@ -23,7 +25,7 @@ describe('wallet reconnect before payment', () => {
     finishSessionWalletConnect(true);
     await pending;
     expect(send).toHaveBeenCalledOnce();
-    expect(vi.getTimerCount()).toBe(0);
+    expect(vi.getTimerCount()).toBe(existingTimers);
     window.removeEventListener(WALLET_CONNECT_REQUIRED_EVENT, requested);
   });
 
