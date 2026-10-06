@@ -23,6 +23,16 @@ const dimension = (value: unknown, fallback = 'unknown'): string =>
     ? value.replace(/[^a-zA-Z0-9@_./:-]/g, '_').slice(0, 100) : fallback;
 
 export function completionUsage(payload: unknown): Usage {
+  const native = (payload as { usageMetadata?: Record<string, unknown> } | null)?.usageMetadata;
+  if (native) {
+    const candidates = counter(native.candidatesTokenCount);
+    const thoughts = counter(native.thoughtsTokenCount);
+    // Native Gemini reports candidates and thoughts separately. Output includes
+    // both; cached input and reasoning remain subsets, never extra totals.
+    const output = candidates == null ? null : counter(candidates + (thoughts ?? 0));
+    return { input: counter(native.promptTokenCount), output,
+      cached: counter(native.cachedContentTokenCount), reasoning: thoughts };
+  }
   const usage = (payload as { usage?: Record<string, any> } | null)?.usage;
   return {
     input: counter(usage?.prompt_tokens ?? usage?.input_tokens),
@@ -46,7 +56,8 @@ export function createUsageMeter(feature: string | undefined, requestedModel: un
       provider: dimension(attempt.provider),
       route: attempt.route,
       requested_model: dimension(requestedModel),
-      served_model: dimension((payload as { model?: unknown } | null)?.model, dimension(attempt.model)),
+      served_model: dimension((payload as { model?: unknown; modelVersion?: unknown } | null)?.model
+        ?? (payload as { modelVersion?: unknown } | null)?.modelVersion, dimension(attempt.model)),
       outcome: dimension(attempt.outcome),
       fallback_reason: dimension(attempt.fallback, 'none'),
       http_status: attempt.status,
