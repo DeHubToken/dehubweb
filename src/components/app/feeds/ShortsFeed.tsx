@@ -607,10 +607,10 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                   {/* Bottom Info */}
-                  <div className="absolute bottom-2 left-2 right-2">
-                    <div className="flex min-w-0 items-end gap-2">
+                  <div className="absolute bottom-[6px] left-2 right-2">
+                    <div className="flex min-w-0 items-end gap-1">
                       {/* Creator Avatar */}
-                      <div className="w-7 h-7 rounded-md bg-zinc-700 flex-shrink-0 overflow-hidden">
+                      <div className="w-6 h-6 rounded-[5px] bg-zinc-700 flex-shrink-0 overflow-hidden">
                         {short.avatar ? (
                           <img 
                             src={short.avatar} 
@@ -626,23 +626,23 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                           {short.username?.[0]?.toUpperCase()}
                         </span>
                       </div>
-                      <div className="min-w-0 flex-1">
+                      <div className="flex min-h-6 min-w-0 flex-1 flex-col justify-between gap-1">
                         <div className="flex min-w-0 items-center gap-1">
-                          <span className="min-w-0 truncate font-semibold text-white text-sm">@{(short as any).handle || short.creatorUsername || short.username}</span>
+                          <span className="min-w-0 break-words font-medium text-white text-[10px] leading-[11px] tracking-[-0.1px]">@{(short as any).handle || short.creatorUsername || short.username}</span>
                           {short.verified && (
-                            <svg className="w-4 h-4 shrink-0 text-white self-end" fill="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-[9px] h-[9px] shrink-0 text-white self-end" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                             </svg>
                           )}
                         </div>
-                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-white text-xs">
-                          <span className="inline-flex items-center gap-1" aria-label={`${short.likes} likes`}>
-                            <ThumbsUp className="w-3 h-3 shrink-0" aria-hidden="true" />
-                            <span>{short.likes}</span>
-                          </span>
-                          <span className="inline-flex items-center gap-1">
-                            <Eye className="w-3 h-3 shrink-0" />
+                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-white/90 text-[9px] leading-[10px]">
+                          <span className="inline-flex items-center gap-0.5" aria-label={`${short.views || '0'} views`}>
+                            <Eye className="w-[9px] h-[9px] shrink-0" strokeWidth={1.6} aria-hidden="true" />
                             <span>{short.views || '0'}</span>
+                          </span>
+                          <span className="inline-flex items-center gap-0.5" aria-label={`${short.likes} likes`}>
+                            <ThumbsUp className="w-[9px] h-[9px] shrink-0" strokeWidth={1.6} aria-hidden="true" />
+                            <span>{short.likes}</span>
                           </span>
                         </div>
                       </div>
