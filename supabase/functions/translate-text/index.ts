@@ -27,7 +27,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { rateLimitByIp } from "../_shared/auth.ts";
 import { languageNameFor } from "../_shared/language-names.ts";
 import { translationChunks } from "./chunks.ts";
-import { tryFree, lastFreeFailure } from "../_shared/free-models.ts";
+import { tryFree } from "../_shared/free-models.ts";
+import { createTranslationUsage, type TranslationUsage } from './usage.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -557,6 +558,7 @@ async function translateWithFreeModels(
   text: string,
   targetLanguageName: string,
   publicContent: boolean,
+  usage: TranslationUsage,
 ): Promise<{ result: TranslateResponse; provider: string } | null> {
   const res = await tryFree({
     messages: [
@@ -565,7 +567,7 @@ async function translateWithFreeModels(
     ],
     temperature: 0.1,
     max_tokens: 4000,
-  }, { label: 'translate-text', publicContent }).catch(() => null);
+  }, { label: 'translate-text', publicContent, meter: usage.meter }).catch(() => null);
   if (!res) return null;
 
   try {
@@ -725,13 +727,14 @@ let geminiQuotaUntil = 0;
  */
 async function translateWithGemini(
   text: string,
-  targetLanguageName: string
+  targetLanguageName: string,
+  usage: TranslationUsage,
 ): Promise<TranslateResponse | null> {
   const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-  if (!GEMINI_API_KEY) return null;
+  if (!GEMINI_API_KEY) { usage.skip('google', 'key_unset'); return null; }
   // Over quota: skip straight to the next tier rather than paying a round trip
   // per post to hear the same 429.
-  if (Date.now() < geminiQuotaUntil) return null;
+  if (Date.now() < geminiQuotaUntil) { usage.skip('google', 'quota_backoff'); return null; }
 
   const body = JSON.stringify({
     systemInstruction: {
@@ -748,6 +751,7 @@ async function translateWithGemini(
 
   for (let i = geminiModelIndex; i < GEMINI_MODELS.length; i++) {
     const model = GEMINI_MODELS[i];
+    const record = usage.start('google', model, 'direct');
 
     try {
       console.log(`Attempting translation with Gemini (direct), model ${model}`);
@@ -768,6 +772,8 @@ async function translateWithGemini(
       // says nothing about the model id, and walking the whole list on those
       // would turn one rejected request into three.
       if (response.status === 404) {
+        record(response.status, 'http_error');
+        await response.body?.cancel().catch(() => {});
         console.log(`Gemini model ${model} unavailable (404), trying next`);
         continue;
       }
@@ -775,8 +781,9 @@ async function translateWithGemini(
       if (!response.ok) {
         if (response.status === 429) geminiQuotaUntil = Date.now() + 5 * 60 * 1000;
         if (response.status === 402) geminiQuotaUntil = Date.now() + 60 * 60 * 1000;
-        const errorText = await response.text();
-        console.log(`Gemini returned status: ${response.status}, error: ${errorText}`);
+        record(response.status, 'http_error');
+        await response.body?.cancel().catch(() => {});
+        console.log(`Gemini returned status: ${response.status}`);
         return null;
       }
 
@@ -787,22 +794,26 @@ async function translateWithGemini(
         .trim();
 
       if (!translatedText) {
+        record(response.status, 'unusable_output', data);
         console.log(`Gemini returned empty response (model ${model})`);
         return null;
       }
 
       if (looksLikeRefusal(translatedText)) {
+        record(response.status, 'unusable_output', data);
         console.log(`Gemini answered with a refusal, not a translation (model ${model})`);
         return null;
       }
 
       if (looksLikeLoop(text, translatedText)) {
+        record(response.status, 'unusable_output', data);
         console.log(`Gemini looped instead of translating (model ${model})`);
         return null;
       }
 
       // Skip the dead ids on subsequent calls in this isolate.
       geminiModelIndex = i;
+      record(response.status, 'accepted', data);
       console.log(`Translation successful from Gemini (direct), model ${model}`);
 
       return {
@@ -813,6 +824,7 @@ async function translateWithGemini(
         },
       };
     } catch (error) {
+      record(0, 'transport_error');
       console.log('Gemini failed:', error instanceof Error ? error.message : 'Unknown error');
       return null;
     }
@@ -849,11 +861,13 @@ let falParkedUntil = 0;
  */
 async function translateWithFal(
   text: string,
-  targetLanguageName: string
+  targetLanguageName: string,
+  usage: TranslationUsage,
 ): Promise<TranslateResponse | null> {
   const FAL_KEY = Deno.env.get('FAL_KEY');
-  if (!FAL_KEY) return null;
-  if (Date.now() < falParkedUntil) return null;
+  if (!FAL_KEY) { usage.skip('fal', 'key_unset'); return null; }
+  if (Date.now() < falParkedUntil) { usage.skip('fal', 'quota_backoff'); return null; }
+  const record = usage.start('fal', 'anthropic/claude-haiku-4.5', 'direct');
 
   try {
     console.log('Attempting translation with fal (openrouter/router)');
@@ -878,8 +892,9 @@ async function translateWithFal(
     if (!response.ok) {
       if ([401, 402, 403].includes(response.status)) falParkedUntil = Date.now() + 60 * 60 * 1000;
       if (response.status === 429) falParkedUntil = Date.now() + 5 * 60 * 1000;
-      const errorText = await response.text();
-      console.log(`fal returned status: ${response.status}, error: ${errorText}`);
+      record(response.status, 'http_error');
+      await response.body?.cancel().catch(() => {});
+      console.log(`fal returned status: ${response.status}`);
       return null;
     }
 
@@ -887,21 +902,25 @@ async function translateWithFal(
     const translatedText = typeof data.output === 'string' ? data.output.trim() : '';
 
     if (!translatedText) {
+      record(response.status, 'unusable_output', data);
       console.log('fal returned empty response');
       return null;
     }
 
     if (looksLikeRefusal(translatedText)) {
+      record(response.status, 'unusable_output', data);
       console.log('fal answered with a refusal, not a translation');
       return null;
     }
 
     if (looksLikeLoop(text, translatedText)) {
+      record(response.status, 'unusable_output', data);
       console.log('fal looped instead of translating');
       return null;
     }
 
     console.log('Translation successful from fal');
+    record(response.status, 'accepted', data);
 
     return {
       translatedText,
@@ -911,6 +930,7 @@ async function translateWithFal(
       },
     };
   } catch (error) {
+    record(0, 'transport_error');
     console.log('fal failed:', error instanceof Error ? error.message : 'Unknown error');
     return null;
   }
@@ -921,8 +941,10 @@ async function translateWithFal(
  */
 async function translateWithAI(
   text: string,
-  targetLanguageName: string
+  targetLanguageName: string,
+  usage: TranslationUsage,
 ): Promise<TranslateResponse | null> {
+  const record = usage.start('lovable', 'google/gemini-2.5-flash-lite', 'gateway');
   try {
     console.log('Attempting translation with Lovable AI');
 
@@ -950,8 +972,9 @@ async function translateWithAI(
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.log(`Lovable AI returned status: ${response.status}, error: ${errorText}`);
+      record(response.status, 'http_error');
+      await response.body?.cancel().catch(() => {});
+      console.log(`Lovable AI returned status: ${response.status}`);
       return null;
     }
 
@@ -959,21 +982,25 @@ async function translateWithAI(
     const translatedText = data.choices?.[0]?.message?.content?.trim();
 
     if (!translatedText) {
+      record(response.status, 'unusable_output', data);
       console.log('Lovable AI returned empty response');
       return null;
     }
 
     if (looksLikeRefusal(translatedText)) {
+      record(response.status, 'unusable_output', data);
       console.log('Lovable AI answered with a refusal, not a translation');
       return null;
     }
 
     if (looksLikeLoop(text, translatedText)) {
+      record(response.status, 'unusable_output', data);
       console.log('Gateway looped instead of translating');
       return null;
     }
 
     console.log('Translation successful from Lovable AI');
+    record(response.status, 'accepted', data);
     
     return {
       translatedText,
@@ -983,6 +1010,7 @@ async function translateWithAI(
       },
     };
   } catch (error) {
+    record(0, 'transport_error');
     console.log('Lovable AI failed:', error instanceof Error ? error.message : 'Unknown error');
     return null;
   }
@@ -994,6 +1022,7 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let usage: TranslationUsage | undefined;
   try {
     const { text, targetLang, sourceLang: suppliedSource, public: isPublicRequest, purpose }: TranslateRequest = await req.json();
     const isPublicText = isPublicRequest === true;
@@ -1049,7 +1078,7 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Translating to ${targetLang}: "${text.substring(0, 50)}..."`);
+    console.log(`Translating to ${targetLang}`);
 
     // L1: in-isolate map
     const cacheKey = getCacheKey(text, targetLang);
@@ -1192,7 +1221,8 @@ serve(async (req) => {
 
     // Free model tiers before the paid budget is touched: a translation they
     // answer costs nothing and must not use up one of the day's paid slots.
-    const free = await translateWithFreeModels(text, targetLanguageName, isPublicText);
+    usage = createTranslationUsage();
+    const free = await translateWithFreeModels(text, targetLanguageName, isPublicText, usage);
     const rawFree = free?.result ?? null;
     result = keepVerbatimIfRewrite(text, targetLang, rawFree);
     if (result) {
@@ -1220,12 +1250,13 @@ serve(async (req) => {
         { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
+    usage.skip('free', isPublicText ? 'unavailable' : 'private_unavailable');
 
     // Paid fallbacks, cheapest first: Flash-Lite direct is roughly a tenth of
     // Haiku on fal, and the gateway is a metered reseller. Reorder by moving
     // these blocks; each returns null rather than throwing, so a dead tier —
     // a Gemini key over quota, say — falls through to the next.
-    const rawGemini = await translateWithGemini(text, targetLanguageName);
+    const rawGemini = await translateWithGemini(text, targetLanguageName, usage);
     result = keepVerbatimIfRewrite(text, targetLang, rawGemini);
     if (result) {
       rememberInIsolate(cacheKey, result);
@@ -1241,7 +1272,7 @@ serve(async (req) => {
       );
     }
 
-    const rawFal = await translateWithFal(text, targetLanguageName);
+    const rawFal = await translateWithFal(text, targetLanguageName, usage);
     result = keepVerbatimIfRewrite(text, targetLang, rawFal);
     if (result) {
       rememberInIsolate(cacheKey, result);
@@ -1257,7 +1288,8 @@ serve(async (req) => {
       );
     }
 
-    const rawAI = await translateWithAI(text, targetLanguageName);
+    const gatewayReason = usage.fallback;
+    const rawAI = await translateWithAI(text, targetLanguageName, usage);
     result = keepVerbatimIfRewrite(text, targetLang, rawAI);
     if (result) {
       rememberInIsolate(cacheKey, result);
@@ -1267,7 +1299,7 @@ serve(async (req) => {
         result,
         // Public or private: private text cannot use the large free tier.
         // Why the free tiers did not answer, readable straight from the table.
-        `${result === rawAI ? 'lovable-gateway' : 'lovable-gateway-verbatim'}${isPublicText ? '' : ':private'}${lastFreeFailure ? ` [${lastFreeFailure}]` : ''}`,
+        `${result === rawAI ? 'lovable-gateway' : 'lovable-gateway-verbatim'}${isPublicText ? '' : ':private'} [${gatewayReason}]`,
       );
       return new Response(
         JSON.stringify(result),
@@ -1288,5 +1320,5 @@ serve(async (req) => {
       JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-  }
+  } finally { usage?.flush(); }
 });
