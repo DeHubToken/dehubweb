@@ -19,6 +19,7 @@ html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data
 /* Shared and handwritten controls use the same finish within each theme. */
 html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) {
   --control-fill: rgba(255,255,255,0.12);
+  --control-raised: rgba(255,255,255,0.24);
   --control-sheen: linear-gradient(160deg, rgba(255,255,255,0.20), rgba(255,255,255,0.05));
   --control-edge: rgba(255,255,255,0.30);
   --control-ink: #fff;
@@ -26,6 +27,7 @@ html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) {
 }
 html[data-theme='light'] {
   --control-fill: #f3f3f3;
+  --control-raised: #e4e4e7;
   --control-sheen: linear-gradient(160deg, #fff, #e4e4e7);
   --control-edge: rgba(0,0,0,0.20);
   --control-ink: #1a1a1a;
@@ -33,6 +35,7 @@ html[data-theme='light'] {
 }
 html[data-theme='minimal'] {
   --control-fill: #000;
+  --control-raised: #171717;
   --control-sheen: none;
   --control-edge: rgba(255,255,255,0.22);
   --control-shadow: none;
@@ -41,7 +44,7 @@ html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
   :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
   :is(
     [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
-    :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'])
+    :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'], [class^='from-white/'], [class*=' from-white/'])
   ):not([data-keep-dark]):not([data-keep-white]):not([data-on-media]):not([data-video-bare]):not([data-video-topbar] *):not([data-video-inline-tools] *):not([data-audio-player] *):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty) {
   background: var(--control-sheen), var(--control-fill) !important;
   border: 1px solid var(--control-edge) !important;
@@ -53,7 +56,7 @@ html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
   :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
   :is(
     [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
-    :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'])
+    :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'], [class^='from-white/'], [class*=' from-white/'])
   ):not([data-keep-dark]):not([data-keep-white]):not([data-on-media]):not([data-video-bare]):not([data-video-topbar] *):not([data-video-inline-tools] *):not([data-audio-player] *):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty)
   :is(.text-black, .text-white, .text-zinc-900, .text-zinc-800, .text-zinc-700, svg) {
   color: var(--control-ink) !important;
@@ -61,16 +64,88 @@ html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
 
 /* These shared layers also sit inside icon actions, bubbles and tab controls;
    their old white gradient bypassed the button material rules. */
-html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
+  [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *):not([data-keep-white]):not([data-keep-white] *) {
+  background: var(--control-sheen), var(--control-fill) !important;
+  border: 1px solid var(--control-edge) !important;
+  box-shadow: var(--control-shadow) !important;
+  color: var(--control-ink) !important;
+  backdrop-filter: blur(12px);
+}
+html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
+  [data-theme-control-active] > [data-theme-control-surface]:not([data-on-media] *):not([data-keep-dark] *):not([data-keep-white] *) {
+  background: var(--control-sheen), var(--control-raised) !important;
+}
+html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *) {
   background: var(--glass-highlight), var(--theme-control-fill, rgb(var(--glass-tint) / var(--glass-regular))) !important;
   border-color: transparent !important;
   box-shadow: var(--glass-edge-flat) !important;
   backdrop-filter: var(--glass-blur) !important;
 }
-html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::before,
-html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::after {
   background-image: none !important;
+}
+html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  [data-theme-control-active] > [data-theme-control-surface]:not([data-on-media] *):not([data-keep-dark] *) {
+  background: var(--glass-highlight), var(--theme-control-raised) !important;
+}
+
+/* Bubble actions keep the theme's label colour when their white active
+   material is replaced by the shared tinted surface. */
+html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light'])
+  [data-theme-control-label]:not([data-on-media] *):not([data-keep-dark] *):not([data-keep-white] *) {
+  color: var(--control-ink) !important;
+}
+html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  [data-theme-control-label]:not([data-on-media] *):not([data-keep-dark] *) {
+  color: var(--theme-control-foreground, #fff) !important;
+}
+
+/* Bespoke themes keep their own grain, corners and edge recipes on ordinary
+   controls as well as panels. Explicit CTA, follow and filter roles retain
+   their accent treatments. */
+html[data-theme='war'] {
+  --theme-control-foreground: rgb(var(--war-sand) / 0.94);
+  --theme-control-radius: 0;
+}
+html[data-theme='osaka'] {
+  --theme-control-foreground: rgb(var(--osaka-mist));
+  --theme-control-radius: var(--osaka-r-chip);
+}
+html[data-theme='jungle'] {
+  --theme-control-foreground: rgb(var(--jungle-bone));
+  --theme-control-radius: var(--jungle-r-chip);
+}
+html:is([data-theme='war'], [data-theme='osaka'], [data-theme='jungle'])
+  :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(
+    [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
+    :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'], [class^='from-white/'], [class*=' from-white/']),
+    [data-theme-control-surface]
+  ):not([data-primary-cta]):not([data-follow-btn]):not([data-filter-chip]):not([data-comment-send]):not([data-keep-white]):not([data-keep-white] *):not([data-keep-dark]):not([data-keep-dark] *):not([data-on-media]):not([data-on-media] *):not([data-video-bare]):not([data-video-topbar] *):not([data-video-inline-tools] *):not([data-audio-player] *):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty) {
+  background: var(--glass-highlight), var(--theme-control-fill, rgb(var(--glass-tint) / var(--glass-regular))) !important;
+  border-color: transparent !important;
+  border-radius: var(--theme-control-radius) !important;
+  box-shadow: var(--glass-edge-flat) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  color: var(--theme-control-foreground) !important;
+}
+html:is([data-theme='war'], [data-theme='osaka'], [data-theme='jungle'])
+  :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  [data-theme-control-active] > [data-theme-control-surface]:not([data-on-media] *):not([data-keep-dark] *) {
+  background: var(--glass-highlight), var(--theme-control-raised) !important;
+}
+html:is([data-theme='war'], [data-theme='osaka'], [data-theme='jungle'])
+  :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(
+    [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
+    :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'], [class^='from-white/'], [class*=' from-white/']),
+    [data-theme-control-surface]
+  ):not([data-primary-cta]):not([data-follow-btn]):not([data-filter-chip]):not([data-comment-send]):not([data-keep-white]):not([data-keep-white] *):not([data-keep-dark]):not([data-keep-dark] *):not([data-on-media]):not([data-on-media] *):not([data-video-bare]):not([data-video-topbar] *):not([data-video-inline-tools] *):not([data-audio-player] *):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty)
+  :is(span, svg) {
+  color: var(--theme-control-foreground) !important;
 }
