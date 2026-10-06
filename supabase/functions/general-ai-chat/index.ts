@@ -4,6 +4,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 import { rateLimitByIp, resolveDeHubAddress } from "../_shared/auth.ts";
 import { aiChat } from "../_shared/ai-chat.ts";
 import { agentConfigured, postCompletion, runAgentLoop, type AgentSurface } from "../_shared/assistant-agent.ts";
+import { meteredCompletionFetch } from "../_shared/ai-usage.ts";
 import { streamAgentLoop, teeStreamText } from "../_shared/assistant-agent-stream.ts";
 import { DEHUB_PLATFORM_KNOWLEDGE } from "../_shared/dehub-platform-knowledge.ts";
 
@@ -735,7 +736,7 @@ async function callVeniceFallback(
   const timeoutId = setTimeout(() => controller.abort(), 45000);
   try {
     console.log(`[Venice Fallback] Trying model=${veniceModel} stream=${streamRequested}`);
-    const response = await fetch('https://api.venice.ai/api/v1/chat/completions', {
+    const response = await meteredCompletionFetch('https://api.venice.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${veniceApiKey}`,
@@ -750,7 +751,7 @@ async function callVeniceFallback(
         venice_parameters: { include_venice_system_prompt: false },
       }),
       signal: controller.signal,
-    });
+    }, { feature: 'general_chat', model: veniceModel, provider: 'venice', stream: streamRequested, fallback: 'primary_failed' });
     clearTimeout(timeoutId);
     if (!response.ok) {
       const errorText = await response.text();
@@ -1660,7 +1661,7 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
         ...(streamRequested ? { stream: true } : {}),
       };
       response = useGrokApi
-        ? await fetch(apiEndpoint, {
+        ? await meteredCompletionFetch(apiEndpoint, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${apiKey}`,
@@ -1668,7 +1669,7 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
             },
             body: JSON.stringify(requestBody),
             signal: controller.signal,
-          })
+          }, { feature: 'general_chat', model: modelName, provider: 'xai', stream: streamRequested })
         : await postCompletion(requestBody, apiKey, controller.signal);
     } catch (fetchError) {
       clearTimeout(timeoutId);

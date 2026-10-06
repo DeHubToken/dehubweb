@@ -11,6 +11,8 @@
 // next one answers; when they are all parked the caller falls through to the
 // paid tiers exactly as before.
 
+import type { UsageMeter } from './ai-usage.ts';
+
 interface FreeProvider {
   name: string;
   url: () => string | null;
@@ -162,6 +164,8 @@ export interface FreeOptions {
   expectToolCall?: string;
   label?: string;
   signal?: AbortSignal;
+  /** Internal server accounting shared with the paid fallback routes. */
+  meter?: UsageMeter;
 }
 
 function answered(text: string, expectToolCall?: string): boolean {
@@ -198,6 +202,10 @@ export async function tryFree(
     if (p.textOnly && usesTools(body)) continue;
     if (Date.now() < (parkedUntil.get(p.name) ?? 0)) continue;
 
+    const started = Date.now();
+    const attempt = (status: number, outcome: string) => ({
+      provider: p.name, route: 'free' as const, model: p.model, status, outcome, elapsedMs: Date.now() - started,
+    });
     try {
       const res = await fetch(url, {
         method: 'POST',
@@ -206,37 +214,51 @@ export async function tryFree(
         signal: opts.signal,
       });
 
-      if (!res.ok) lastFreeFailure = `${p.name} ${res.status}`;
+      if (!res.ok) {
+        lastFreeFailure = `${p.name} ${res.status}`;
+        opts.meter?.record(attempt(res.status, 'http_error'));
+      }
       if (res.status === 429) {
         park(p.name, retryAfterMs(res, 15_000));
         console.log(`${tag} ${p.name} rate limited, parked`);
+        await res.body?.cancel().catch(() => {});
         continue;
       }
       if (res.status === 401 || res.status === 403) {
         park(p.name, 60 * 60 * 1000);
         console.log(`${tag} ${p.name} rejected the key (${res.status}), parked for an hour`);
+        await res.body?.cancel().catch(() => {});
         continue;
       }
       if (!res.ok) {
-        console.log(`${tag} ${p.name} ${res.status}: ${(await res.text()).slice(0, 200)}`);
+        console.log(`${tag} ${p.name} failed (${res.status})`);
+        await res.body?.cancel().catch(() => {});
         continue;
       }
 
-      if (body.stream === true) return res;
+      if (body.stream === true) return opts.meter ? opts.meter.stream(res, attempt(res.status, 'accepted')) : res;
 
       const text = await res.text();
+      let payload: unknown;
+      try { payload = JSON.parse(text); } catch { /* Invalid output is counted below. */ }
       if (!answered(text, opts.expectToolCall)) {
+        opts.meter?.record(attempt(res.status, 'unusable_output'), payload);
         console.log(`${tag} ${p.name} answered without usable output, trying next`);
         continue;
       }
       console.log(`${tag} answered by ${p.name}`);
+      const accepted = attempt(res.status, 'accepted');
+      opts.meter?.record(accepted, payload);
+      const headers = opts.meter?.headersFor(res, accepted) ?? new Headers({ 'Content-Type': 'application/json' });
+      headers.set('x-free-provider', p.name);
       return new Response(text, {
         status: 200,
-        headers: { 'Content-Type': 'application/json', 'x-free-provider': p.name },
+        headers,
       });
     } catch (e) {
+      opts.meter?.record(attempt(0, opts.signal?.aborted ? 'aborted' : 'transport_error'));
       if (opts.signal?.aborted) throw e;
-      console.log(`${tag} ${p.name} threw: ${e instanceof Error ? e.message : 'unknown'}`);
+      console.log(`${tag} ${p.name} transport failed`);
     }
   }
   return null;

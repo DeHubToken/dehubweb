@@ -17,6 +17,7 @@
  */
 
 import { aiChat } from './ai-chat.ts';
+import { meteredCompletionFetch } from './ai-usage.ts';
 
 const DEHUB_API_BASE = (Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io').replace(/\/$/, '');
 const SERVICE_SECRET = Deno.env.get('ASSISTANT_SERVICE_SECRET') || '';
@@ -27,11 +28,9 @@ export const DEFAULT_MODEL = 'google/gemini-2.5-flash';
 
 /**
  * One model round. The default tier goes Google-direct through aiChat like
- * every other text feature, so the bulk of assistant traffic stops paying the
- * gateway's markup out of the deploy credit pool; aiChat still falls back to
- * the gateway if Google refuses. Pro and GPT stay on the gateway: the direct
- * key does not serve them, and aiChat's ladder would quietly answer a Pro
- * question — godmode, a requests-board reply — with Flash-Lite.
+ * every other text feature. Pro uses the exact requested model directly when
+ * available, then the same model through the gateway. Other unsupported models
+ * keep the existing gateway route. Shared rounds record provider usage.
  */
 export function postCompletion(
   body: Record<string, unknown>,
@@ -40,12 +39,8 @@ export function postCompletion(
 ): Promise<Response> {
   // Assistant conversations may use the training free tier (owner's call);
   // DMs, suggested replies and the coach stay private.
-  if (body.model === DEFAULT_MODEL) return aiChat(body, { signal, label: 'assistant', publicContent: true });
-  return fetch(GATEWAY_URL, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${lovableApiKey}`, 'Content-Type': 'application/json' },
-    signal,
-    body: JSON.stringify(body),
+  return aiChat(body, {
+    signal, label: 'assistant', publicContent: body.model === DEFAULT_MODEL, gatewayKey: lovableApiKey,
   });
 }
 
@@ -220,7 +215,7 @@ export async function executeDeHubTool(
 export async function executeWebSearch(query: string, perplexityKey?: string): Promise<unknown> {
   if (!perplexityKey) return { error: 'Web search is unavailable right now.' };
 
-  const res = await fetch('https://api.perplexity.ai/chat/completions', {
+  const res = await meteredCompletionFetch('https://api.perplexity.ai/chat/completions', {
     method: 'POST',
     headers: { Authorization: `Bearer ${perplexityKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -230,7 +225,7 @@ export async function executeWebSearch(query: string, perplexityKey?: string): P
         { role: 'user', content: query },
       ],
     }),
-  });
+  }, { feature: 'assistant_search', model: 'sonar', provider: 'perplexity' });
   if (!res.ok) return { error: `Web search failed: ${res.status}` };
 
   const data = await res.json();

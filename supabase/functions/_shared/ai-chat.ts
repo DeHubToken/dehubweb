@@ -15,6 +15,7 @@
 // answering 200 the day the gateway started returning 402.
 
 import { tryFree } from './free-models.ts';
+import { createUsageMeter, type UsageMeter } from './ai-usage.ts';
 
 const GATEWAY_URL = 'https://ai.gateway.lovable.dev/v1/chat/completions';
 
@@ -55,7 +56,7 @@ const KNOWN_GOOD = [
 const DIRECT_MODELS: Record<string, string[]> = {
   'google/gemini-2.5-flash': ['gemini-2.5-flash', ...KNOWN_GOOD],
   'google/gemini-2.5-flash-lite': ['gemini-2.5-flash-lite', ...KNOWN_GOOD],
-  'google/gemini-2.5-pro': ['gemini-2.5-pro', ...KNOWN_GOOD],
+  'google/gemini-2.5-pro': ['gemini-2.5-pro'],
   'google/gemini-3-flash-preview': ['gemini-3-flash-preview', ...KNOWN_GOOD],
   // KNOWN_GOOD's own head, asked for by name. Direct-only: the gateway has no
   // such id, so there is nothing to fall back to beyond the ladder.
@@ -92,6 +93,8 @@ export interface AiChatOptions {
   skipGateway?: boolean;
   /** Never ask a free tier. For calls whose output moves money. */
   noFree?: boolean;
+  /** Preserve a caller's existing gateway credential when routing shared rounds. */
+  gatewayKey?: string;
 }
 
 /** Rebuilds a JSON response after the body has been read for inspection. */
@@ -116,18 +119,23 @@ function hasToolCall(text: string, name: string): boolean {
 async function tryDirect(
   body: Record<string, unknown>,
   opts: AiChatOptions,
-): Promise<Response | null> {
+  meter: UsageMeter,
+): Promise<{ response?: Response; reason: string }> {
   const key = Deno.env.get('GEMINI_API_KEY');
-  if (!key) return null;
-  if (Date.now() < directQuotaUntil) return null;
+  if (!key) return { reason: 'direct_key_unset' };
+  if (Date.now() < directQuotaUntil) return { reason: 'direct_quota_backoff' };
 
   const requested = typeof body.model === 'string' ? body.model : '';
-  const candidates = (DIRECT_MODELS[requested] ?? []).filter((m) => !deadDirectModels.has(m));
-  if (candidates.length === 0) return null;
+  const candidates = [...new Set(DIRECT_MODELS[requested] ?? [])].filter((m) => !deadDirectModels.has(m));
+  if (candidates.length === 0) return { reason: DIRECT_MODELS[requested] ? 'direct_models_unavailable' : 'direct_model_unsupported' };
 
   const tag = opts.label ? `[${opts.label}]` : '[ai-chat]';
 
   for (const model of candidates) {
+    const started = Date.now();
+    const attempt = (status: number, outcome: string) => ({
+      provider: 'google', route: 'direct' as const, model, status, outcome, elapsedMs: Date.now() - started,
+    });
     try {
       const res = await fetch(GOOGLE_URL, {
         method: 'POST',
@@ -135,7 +143,7 @@ async function tryDirect(
           Authorization: `Bearer ${key}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...body, model }),
+        body: JSON.stringify({ ...body, model, ...(body.stream === true ? { stream_options: { include_usage: true } } : {}) }),
         signal: opts.signal,
       });
 
@@ -144,83 +152,116 @@ async function tryDirect(
       // 429 or 5xx says nothing about the id, and walking the whole ladder on
       // those would turn one rejected request into four.
       if (res.status === 404) {
+        meter.record(attempt(res.status, 'http_error'));
         deadDirectModels.add(model);
         console.log(`${tag} gemini ${model} unavailable (404), trying next`);
+        await res.body?.cancel().catch(() => {});
         continue;
       }
 
       if (!res.ok) {
+        meter.record(attempt(res.status, 'http_error'));
         // 402 is a key with no paid quota at all; it will not recover in minutes.
         if (res.status === 429) directQuotaUntil = Date.now() + QUOTA_BACKOFF_MS;
         if (res.status === 402) directQuotaUntil = Date.now() + 60 * 60 * 1000;
         console.log(`${tag} gemini direct ${res.status} on ${model}, falling back to gateway`);
-        return null;
+        await res.body?.cancel().catch(() => {});
+        return { reason: `direct_http_${res.status}` };
       }
 
       // A stream cannot be inspected without consuming it, and the caller
       // wants the pipe, not the payload.
-      if (body.stream === true) return res;
+      if (body.stream === true) return { response: meter.stream(res, attempt(res.status, 'accepted')), reason: 'none' };
 
       const text = await res.text();
+      let payload: unknown;
+      try { payload = JSON.parse(text); } catch { /* Missing usage remains explicit. */ }
 
       if (opts.expectToolCall && !hasToolCall(text, opts.expectToolCall)) {
+        meter.record(attempt(res.status, 'unusable_output'), payload);
         console.log(`${tag} gemini ${model} answered without ${opts.expectToolCall}, trying next`);
         continue;
       }
 
       console.log(`${tag} answered by gemini direct (${model})`);
-      return jsonResponse(text, res.status);
+      const accepted = attempt(res.status, 'accepted');
+      meter.record(accepted, payload);
+      return { response: new Response(text, { status: res.status, headers: meter.headersFor(res, accepted) }), reason: 'none' };
     } catch (e) {
+      meter.record(attempt(0, opts.signal?.aborted ? 'aborted' : 'transport_error'));
       // The caller gave up; asking the gateway now would answer nobody.
       if (opts.signal?.aborted) throw e;
-      console.log(`${tag} gemini direct threw: ${e instanceof Error ? e.message : 'unknown'}`);
-      return null;
+      console.log(`${tag} gemini direct transport failed`);
+      return { reason: 'direct_transport_error' };
     }
   }
 
   console.log(`${tag} no direct model served this request, falling back to gateway`);
-  return null;
+  return { reason: 'direct_no_usable_model' };
 }
 
 /**
  * POSTs an OpenAI-shaped chat completion, Google-direct where possible and via
  * the Lovable gateway otherwise.
  *
- * Returns the upstream `Response` untouched, so callers keep their own status
- * handling — including the 402 that means the gateway's credits are gone.
+ * Preserves upstream bodies and status handling, including gateway 402s.
+ * Provider headers and daily usage counters make the billing route visible.
  */
 export async function aiChat(
   body: Record<string, unknown>,
   opts: AiChatOptions = {},
 ): Promise<Response> {
-  // Free tiers first for the cheap jobs. Pro is asked for by name and is never
-  // quietly answered by a smaller free model.
-  if (!opts.noFree && typeof body.model === 'string' && FREE_ELIGIBLE.has(body.model)) {
-    const free = await tryFree(body, opts);
-    if (free) return free;
+  const meter = createUsageMeter(opts.label, body.model);
+  try {
+    // Free tiers first for the cheap jobs. Pro is asked for by name and is never
+    // quietly answered by a smaller free model.
+    if (!opts.noFree && typeof body.model === 'string' && FREE_ELIGIBLE.has(body.model)) {
+      const free = await tryFree(body, { ...opts, meter });
+      if (free) return free;
+    }
+
+    const direct = await tryDirect(body, opts, meter);
+    if (direct.response) return direct.response;
+
+    if (opts.skipGateway) {
+      return jsonResponse(JSON.stringify({ error: { message: 'Gateway skipped by caller' } }), 503);
+    }
+
+    const gatewayKey = opts.gatewayKey ?? Deno.env.get('LOVABLE_API_KEY');
+    if (!gatewayKey) {
+      // Nothing is configured at all. Mimic the gateway's own shape so callers
+      // that branch on status keep working.
+      return jsonResponse(JSON.stringify({ error: { message: 'No AI provider configured' } }), 500);
+    }
+
+    const started = Date.now();
+    const gatewayAttempt = (status: number, outcome: string) => ({
+      provider: 'lovable', route: 'gateway' as const, model: typeof body.model === 'string' ? body.model : 'unknown',
+      status, outcome, fallback: direct.reason, elapsedMs: Date.now() - started,
+    });
+    let response: Response;
+    try {
+      response = await fetch(GATEWAY_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${gatewayKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+        signal: opts.signal,
+      });
+    } catch (error) {
+      meter.record(gatewayAttempt(0, opts.signal?.aborted ? 'aborted' : 'transport_error'));
+      throw error;
+    }
+    if (body.stream === true && response.ok) return meter.stream(response, gatewayAttempt(response.status, 'accepted'));
+    const text = await response.text();
+    let payload: unknown;
+    try { payload = JSON.parse(text); } catch { /* Preserve the upstream body even if it is not JSON. */ }
+    const attempt = gatewayAttempt(response.status, response.ok ? 'accepted' : 'http_error');
+    meter.record(attempt, payload);
+    return new Response(text, { status: response.status, headers: meter.headersFor(response, attempt) });
+  } finally {
+    if (!meter.streaming) meter.flush();
   }
-
-  const direct = await tryDirect(body, opts);
-  if (direct) return direct;
-
-  if (opts.skipGateway) {
-    return jsonResponse(JSON.stringify({ error: { message: 'Gateway skipped by caller' } }), 503);
-  }
-
-  const gatewayKey = Deno.env.get('LOVABLE_API_KEY');
-  if (!gatewayKey) {
-    // Nothing is configured at all. Mimic the gateway's own shape so callers
-    // that branch on status keep working.
-    return jsonResponse(JSON.stringify({ error: { message: 'No AI provider configured' } }), 500);
-  }
-
-  return await fetch(GATEWAY_URL, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${gatewayKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-    signal: opts.signal,
-  });
 }
