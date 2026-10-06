@@ -1395,6 +1395,13 @@
     "loadingBoard": "Ranglijst laden…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Token-notering komt eraan!",
+    "body": "$DHB wordt nog niet verhandeld. Ontvang een e-mail zodra het genoteerd wordt.",
+    "notifyMe": "Breng me op de hoogte",
+    "privacy": "We gebruiken dit alleen om je te laten weten wanneer $DHB genoteerd wordt.",
+    "joined": "Je staat op de lijst. We mailen {{email}} zodra $DHB genoteerd wordt."
+  },
   "explorePage": {
     "searchPlaceholder": "Zoek mensen, berichten of inhoud...",
     "filters": "Filters",

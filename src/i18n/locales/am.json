@@ -1199,6 +1199,13 @@
     "loadingBoard": "የደረጃ ሰሌዳ እየተጫነ ነው…",
     "amountTokens": "{{amount}} ቶከኖች"
   },
+  "dhbListing": {
+    "title": "ቶክን በቅርቡ ይዘረዘራል!",
+    "body": "$DHB ገና መገበያየት አልጀመረም። ሲዘረዘር ወዲያውኑ ኢሜይል ያግኙ።",
+    "notifyMe": "አሳውቁኝ",
+    "privacy": "ይህንን $DHB ሲዘረዘር ለማሳወቅ ብቻ እንጠቀምበታለን።",
+    "joined": "በዝርዝሩ ውስጥ ነዎት። $DHB እንደተዘረዘረ ወደ {{email}} ኢሜይል እንልካለን።"
+  },
   "explorePage": {
     "searchPlaceholder": "ሰዎች፣ ልጥፎች ወይም ይዘት ፈልግ...",
     "filters": "ማጣሪያዎች",

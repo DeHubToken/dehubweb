@@ -1202,6 +1202,13 @@
     "loadingBoard": "Memuat papan peringkat…",
     "amountTokens": "{{amount}} token"
   },
+  "dhbListing": {
+    "title": "Listing token segera hadir!",
+    "body": "$DHB belum diperdagangkan. Dapatkan email begitu terdaftar.",
+    "notifyMe": "Beri tahu saya",
+    "privacy": "Kami hanya akan menggunakannya untuk memberi tahu Anda saat $DHB terdaftar.",
+    "joined": "Anda sudah masuk daftar. Kami akan mengirim email ke {{email}} begitu $DHB terdaftar."
+  },
   "explorePage": {
     "searchPlaceholder": "Cari orang, postingan, atau konten...",
     "filters": "Filter",

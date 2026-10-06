@@ -1201,6 +1201,13 @@
     "loadingBoard": "Kulayishwa ibhodi labaholi…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Ukufakwa kwethokheni ohlwini kuyeza maduze!",
+    "body": "I-$DHB ayikahwebi okwamanje. Thola i-imeyili ngokushesha uma isifakiwe ohlwini.",
+    "notifyMe": "Ngazise",
+    "privacy": "Sizoyisebenzisa kuphela ukukwazisa uma i-$DHB isifakiwe ohlwini.",
+    "joined": "Usohlwini. Sizothumela i-imeyili ku-{{email}} ngokushesha uma i-$DHB isifakiwe ohlwini."
+  },
   "explorePage": {
     "searchPlaceholder": "Sesha abantu, okuthunyelwe noma okuqukethwe...",
     "filters": "Izihluzi",

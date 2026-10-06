@@ -1202,6 +1202,13 @@
     "loadingBoard": "Ładowanie rankingu…",
     "amountTokens": "{{amount}} tokenów"
   },
+  "dhbListing": {
+    "title": "Notowanie tokena już wkrótce!",
+    "body": "$DHB nie jest jeszcze w obrocie. Otrzymaj e-mail, gdy tylko zostanie notowany.",
+    "notifyMe": "Powiadom mnie",
+    "privacy": "Użyjemy tego tylko, by powiadomić Cię o notowaniu $DHB.",
+    "joined": "Jesteś na liście. Napiszemy na {{email}}, gdy tylko $DHB zostanie notowany."
+  },
   "explorePage": {
     "searchPlaceholder": "Szukaj ludzi, postów lub treści...",
     "filters": "Filtry",

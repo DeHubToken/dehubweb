@@ -1201,6 +1201,13 @@
     "loadingBoard": "Edetabeli laadimine…",
     "amountTokens": "{{amount}} žetooni"
   },
+  "dhbListing": {
+    "title": "Tokeni noteerimine tuleb peagi!",
+    "body": "$DHB-ga veel ei kaubelda. Saa e-kiri kohe, kui see noteeritakse.",
+    "notifyMe": "Teavita mind",
+    "privacy": "Kasutame seda ainult selleks, et anda teada, kui $DHB noteeritakse.",
+    "joined": "Oled nimekirjas. Saadame kirja aadressile {{email}} kohe, kui $DHB noteeritakse."
+  },
   "explorePage": {
     "searchPlaceholder": "Otsi inimesi, postitusi või sisu...",
     "filters": "Filtrid",

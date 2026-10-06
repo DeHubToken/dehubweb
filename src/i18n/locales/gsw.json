@@ -1200,6 +1200,13 @@
     "loadingBoard": "Ranglischte wird glade…",
     "amountTokens": "{{amount}} Tokens"
   },
+  "dhbListing": {
+    "title": "Token-Listing chunnt bald!",
+    "body": "$DHB wird no nöd ghandlet. Überchum e E-Mail, sobald es glistet isch.",
+    "notifyMe": "Säg mer Bscheid",
+    "privacy": "Mir bruuched das nur, zum dir Bscheid gäh, wenn $DHB glistet wird.",
+    "joined": "Du bisch uf de Lischte. Mir schriibed a {{email}}, sobald $DHB glistet isch."
+  },
   "explorePage": {
     "searchPlaceholder": "Such nach Lüt, Biträg oder Inhalt...",
     "filters": "Filter",

@@ -1218,6 +1218,13 @@
     "loadingBoard": "Reyting yuklanmoqda…",
     "amountTokens": "{{amount}} token"
   },
+  "dhbListing": {
+    "title": "Token listingi tez kunda!",
+    "body": "$DHB hali savdoga chiqmagan. Listingga chiqishi bilan email oling.",
+    "notifyMe": "Menga xabar bering",
+    "privacy": "Bundan faqat $DHB listingga chiqqanda sizga xabar berish uchun foydalanamiz.",
+    "joined": "Siz roʻyxatdasiz. $DHB listingga chiqishi bilan {{email}} manziliga xat yuboramiz."
+  },
   "explorePage": {
     "searchPlaceholder": "Odamlar, postlar yoki kontent qidirish...",
     "filters": "Filtrlar",

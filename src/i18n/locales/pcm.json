@@ -1088,6 +1088,13 @@
     "loadingBoard": "Leaderboard dey load…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Token listing dey come soon!",
+    "body": "$DHB never start trading. Get email di moment wey e list.",
+    "notifyMe": "Make una tell me",
+    "privacy": "We go only use am tell you when $DHB list.",
+    "joined": "You don dey di list. We go email {{email}} di moment wey $DHB list."
+  },
   "explorePage": {
     "searchPlaceholder": "Find people, post or content...",
     "filters": "Filters",

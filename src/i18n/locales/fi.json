@@ -1197,6 +1197,13 @@
     "loadingBoard": "Ladataan tulostaulukkoa…",
     "amountTokens": "{{amount}} tokenia"
   },
+  "dhbListing": {
+    "title": "Tokenin listaus tulossa pian!",
+    "body": "$DHB:llä ei vielä käydä kauppaa. Saat sähköpostin heti, kun se listataan.",
+    "notifyMe": "Ilmoita minulle",
+    "privacy": "Käytämme tätä vain kertoaksemme, kun $DHB listataan.",
+    "joined": "Olet listalla. Lähetämme viestin osoitteeseen {{email}} heti, kun $DHB listataan."
+  },
   "explorePage": {
     "searchPlaceholder": "Etsi ihmisiä, julkaisuja tai sisältöä...",
     "filters": "Suodattimet",

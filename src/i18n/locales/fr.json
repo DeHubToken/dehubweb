@@ -1202,6 +1202,13 @@
     "loadingBoard": "Chargement du classement…",
     "amountTokens": "{{amount}} jetons"
   },
+  "dhbListing": {
+    "title": "Cotation du token bientôt !",
+    "body": "$DHB n'est pas encore échangé. Recevez un e-mail dès sa cotation.",
+    "notifyMe": "Me prévenir",
+    "privacy": "Nous l'utiliserons uniquement pour vous prévenir de la cotation de $DHB.",
+    "joined": "Vous êtes sur la liste. Nous écrirons à {{email}} dès que $DHB sera coté."
+  },
   "explorePage": {
     "searchPlaceholder": "Rechercher des personnes, publications ou contenus...",
     "filters": "Filtres",
