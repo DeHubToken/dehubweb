@@ -1608,6 +1608,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   );
   const mediaAspect = video.isAudio ? DEFAULT_ASPECT : measuredAspect;
   const headerAboveMedia = firstFeedPost && !video.isAudio && !video.isLivePost && mediaAspect >= 1;
+  const cropFeedVideo = isPhone && !isImmersive && !isFullscreen && !video.isAudio;
 
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
@@ -1619,7 +1620,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: 'w-full h-full object-contain',
+    className: `w-full h-full ${cropFeedVideo ? 'object-cover' : 'object-contain'}`,
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -2007,11 +2008,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         ref={containerRef}
         tabIndex={0}
         data-no-navigate
+        data-mobile-feed-video={cropFeedVideo || undefined}
         data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
-        /* Fills the card width when the clip is wide enough; a portrait clip
-           caps at MAX_MEDIA_HEIGHT tall and shrinks its own width instead, so
-           it sits hugged to the left like a portrait photo does in the feed.
+        /* Phone feeds fill the width and crop tall clips into a 3:4 frame.
+           Desktop portrait clips cap at MAX_MEDIA_HEIGHT and narrow instead.
            On the post page (immersive) it's centred in the column instead, and
            grows until it fills either the column width or most of the screen
            height, whichever it hits first — never cropped, never stretched. */
@@ -2024,7 +2025,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   width: `min(100%, calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
                   maxHeight: IMMERSIVE_MAX_MEDIA_HEIGHT,
                 }
-              : {
+              : cropFeedVideo
+                ? {
+                    aspectRatio: Math.max(mediaAspect, 3 / 4),
+                    width: '100%',
+                    maxHeight: 'min(600px, 65svh)',
+                  }
+                : {
                   aspectRatio: mediaAspect,
                   width: `min(100%, ${Math.round(MAX_MEDIA_HEIGHT * mediaAspect)}px)`,
                   // Backstop for the minimal theme, which forces media to full
@@ -2297,7 +2304,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-contain"
+                    className={`absolute inset-0 w-full h-full ${cropFeedVideo ? 'object-cover' : 'object-contain'}`}
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
