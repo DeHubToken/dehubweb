@@ -894,6 +894,69 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_provider_usage_daily: {
+        Row: {
+          attempts: number
+          cached_tokens: number
+          day: string
+          elapsed_ms: number
+          fallback_reason: string
+          feature: string
+          http_status: number
+          input_tokens: number
+          outcome: string
+          output_tokens: number
+          provider: string
+          reasoning_tokens: number
+          requested_model: string
+          route: string
+          served_model: string
+          updated_at: string
+          usage_missing: number
+          usage_reports: number
+        }
+        Insert: {
+          attempts?: number
+          cached_tokens?: number
+          day: string
+          elapsed_ms?: number
+          fallback_reason: string
+          feature: string
+          http_status: number
+          input_tokens?: number
+          outcome: string
+          output_tokens?: number
+          provider: string
+          reasoning_tokens?: number
+          requested_model: string
+          route: string
+          served_model: string
+          updated_at?: string
+          usage_missing?: number
+          usage_reports?: number
+        }
+        Update: {
+          attempts?: number
+          cached_tokens?: number
+          day?: string
+          elapsed_ms?: number
+          fallback_reason?: string
+          feature?: string
+          http_status?: number
+          input_tokens?: number
+          outcome?: string
+          output_tokens?: number
+          provider?: string
+          reasoning_tokens?: number
+          requested_model?: string
+          route?: string
+          served_model?: string
+          updated_at?: string
+          usage_missing?: number
+          usage_reports?: number
+        }
+        Relationships: []
+      }
       ai_user_memories: {
         Row: {
           content: string
@@ -8136,6 +8199,7 @@ export type Database = {
             }
             Returns: undefined
           }
+      record_ai_provider_usage: { Args: { p_rows: Json }; Returns: undefined }
       record_anonymous_views: {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
         Returns: number
