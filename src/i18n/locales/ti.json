@@ -4185,7 +4185,6 @@
     "referenceComposeHint": "ተለዋዋጭ ስም፣ ንግድ እና ተቀማጭ አብ ብዙ ምስል ይተክት።"
   },
   "pricing": {
-    "perSeatMonthly": "ንሓደ መቐመጢ/ወርሒ",
     "plansForEveryWorkflow": "ንነፍሲ ወከፍ ናይ ስራሕ ፍሰት መደብ",
     "monthly": "ወርሓዊ",
     "annual": "ዓመታዊ",
@@ -4204,6 +4203,7 @@
     "pooledNeverExpires": "ኣብ ዙርያ ቦታ ስራሕ — ፈጺሙ ኣይጠፍእን",
     "perMonthBilledAnnually": "ኣብ ነፍሲ ወከፍ ወርሒ ፡ ኣብ ነፍሲ ወከፍ ዓመት ፡",
     "perSeatBilledAnnually": "ኣብ ነፍሲ ወከፍ መቐመጢ/መቐመጢ ፡ ዓመታዊ ክፍሊት",
+    "perSeatMonthly": "ንሓደ መቐመጢ/ወርሒ",
     "savings": "${{amount}} ኣብ ወርሒ ኣብ ግምት ብምእታው",
     "seats_one": "{{count}} መቀመጫ",
     "seats_other": "{{count}} መቀመጫታት",
@@ -6861,12 +6861,12 @@
     "tokenNotConfigured": "DeHub ምልክታት ኣብ {{chain}}ኣይተቐመጠን ።",
     "notEnoughTokens": "እኹል ምልክታት የለን ።",
     "onChainBalanceTooLow": "ናይ DeHub ኣብ {{chain}} ናይ ምልክት ሚዛንካ ኣዝዩ ትሑት እዩ ። እቲ ዝተገልጸ ሚዛን ገና ዘይተመሳሰል ክኸውን ይኽእል እዩ ።",
+    "sentDesc": "{{amount}} ቶከናት ካብ {{from}} ናብ {{to}} ተሰዲዱ። ጉጅለ ነቶም ቶከናት ኣብ መዕለቢ ሰንሰለት ይሰዶም፣ መብዛሕትኡ ግዜ ኣብ ውሽጢ 1-5 ናይ ስራሕ መዓልትታት።",
     "subtitle": "ኣብ መንጎ ሰንሰለታት ዘሎ ምልክታት DeHub ይንቀሳቐስ",
     "tokensOnBase": "ኣብ መሰረታ ዘሎ ምልክታት",
     "tokensOnBnb": "ናይ BNB ሰንሰለት ምልክታት",
     "step3": "ጉጅለ ነቶም ቶከናት ኣብ መዕለቢ ሰንሰለት ይሰዶም፣ መብዛሕትኡ ግዜ ኣብ ውሽጢ 1-5 ናይ ስራሕ መዓልትታት።",
-    "statusReceived": "ተቐቢሉ",
-    "sentDesc": "{{amount}} ቶከናት ካብ {{from}} ናብ {{to}} ተሰዲዱ። ጉጅለ ነቶም ቶከናት ኣብ መዕለቢ ሰንሰለት ይሰዶም፣ መብዛሕትኡ ግዜ ኣብ ውሽጢ 1-5 ናይ ስራሕ መዓልትታት።"
+    "statusReceived": "ተቐቢሉ"
   },
   "builder": {
     "stakeForAllowance": "ናይ DeHub ምልክታት ዕለታዊ ናይ ህንጸት ድጎማኻ ንምዕባይ",
@@ -7879,5 +7879,31 @@
     "shareFacebook": "ኣብ Facebook ኣካፍል",
     "shareTelegram": "ኣብ Telegram ኣካፍል",
     "copyLink": "ሊንክ ቅዳሕ"
+  },
+  "postStage": {
+    "back": "ንድሕሪት ተመሊስካ",
+    "askAI": "ብዛዕባ እዚ ጽሑፍ እዚ ሕተቶ",
+    "followers": "{{value}} ተኸታተልቲ",
+    "repostAndShare": "ምዝርጋሕን ምዝርጋሕን",
+    "repost": "ዳግመ-ምግቢ",
+    "undoRepost": "ኣድልዎ ምሕባር",
+    "repostHint": "ሽዑ ንሽዑ ፡ ንሰዓብትኻ",
+    "undoRepostHint": "ካብ መገለጺኻ ኣውጽእ",
+    "quote": "ጥቕሲ",
+    "quoteHint": "ቃላትካ ኣክሎ",
+    "shareTo": "ተኻፈል",
+    "copyLink": "ሊንክ ቅዳሕ",
+    "more": "ዝያዳ",
+    "viewQuotes": "ጥቕስታት ርአ",
+    "viewReposts": "ዳግመ-ግምገማታት ርኣዮ",
+    "save": "ኣድሕን",
+    "saved": "ኣድሒኑ",
+    "comments": "ርእይቶታት",
+    "quotes": "ጥቕስታት",
+    "reposts": "ምትዕርራይ",
+    "backToComments": "ናብ ርእይቶታት ተመለስ",
+    "backToMedia": "ናብ'ቲ ልኡኽ ተመለስ",
+    "like": "ከም",
+    "unlike": "ከም"
   }
 }

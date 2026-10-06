@@ -4276,7 +4276,6 @@
     "referenceComposeHint": "Унеси ликове, објекте и поднесе из више слика у једну композицију."
   },
   "pricing": {
-    "perSeatMonthly": "по месту/месец",
     "plansForEveryWorkflow": "Планови за сваки радни процес",
     "findTheRightFit": "Од појединаца до тимова предузећа, пронађите одговарајућег",
     "monthly": "Месечно",
@@ -4298,6 +4297,7 @@
     "pooledNeverExpires": "Пошаљено преко радног простора — никада не истече",
     "perMonthBilledAnnually": "по мјесеци, фактурирано годишње",
     "perSeatBilledAnnually": "по мјесеци по мјеста, фактурирано годишње",
+    "perSeatMonthly": "по месту/месец",
     "savings": "Штеђите ${{amount}} у односу на мјесечну фактурацију",
     "seats_one": "{{count}} мјесто",
     "seats_other": "{{count}} мјеста",
@@ -8032,5 +8032,31 @@
     "shareFacebook": "Подели на Facebook-у",
     "shareTelegram": "Подели на Telegram-у",
     "copyLink": "Копирај линк"
+  },
+  "postStage": {
+    "back": "Назад",
+    "askAI": "Питајте вештачку интелигенцију о овој објави",
+    "followers": "Пратиоци: {{value}}",
+    "repostAndShare": "Поново објави и подели",
+    "repost": "Поново објави",
+    "undoRepost": "Опозови поновно објављивање",
+    "repostHint": "Одмах, својим пратиоцима",
+    "undoRepostHint": "Уклоните га са профила",
+    "quote": "Понуда",
+    "quoteHint": "Додајте сопствене речи",
+    "shareTo": "Поделите са",
+    "copyLink": "Копирај линк",
+    "more": "Више",
+    "viewQuotes": "Погледајте цитате",
+    "viewReposts": "Погледајте поновне објаве",
+    "save": "Сачувај",
+    "saved": "Сачувано",
+    "comments": "Коментари",
+    "quotes": "Понуде",
+    "reposts": "Објаве",
+    "backToComments": "Назад на коментаре",
+    "backToMedia": "Назад на објаву",
+    "like": "Свиђа ми се",
+    "unlike": "Уклони као"
   }
 }

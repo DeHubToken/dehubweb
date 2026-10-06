@@ -3898,7 +3898,6 @@
     "referenceComposeHint": "将多张图像中的角色、物件和场景合并成一个构图"
   },
   "pricing": {
-    "perSeatMonthly": "每人/月",
     "plansForEveryWorkflow": "適合每種流程的計畫",
     "findTheRightFit": "從個人到企業團隊，找到適合的方案",
     "monthly": "每月",
@@ -3920,6 +3919,7 @@
     "pooledNeverExpires": "共享於工作空間 — 永不過期",
     "perMonthBilledAnnually": "每月，按年計費",
     "perSeatBilledAnnually": "每人/月，按年計費",
+    "perSeatMonthly": "每人/月",
     "savings": "比按月計費省 {{amount}} 元",
     "seats_one": "{{count}} 個座位",
     "seats_other": "{{count}} 個座位",
@@ -7373,5 +7373,31 @@
     "shareFacebook": "分享到 Facebook",
     "shareTelegram": "分享到 Telegram",
     "copyLink": "复制链接"
+  },
+  "postStage": {
+    "back": "回去",
+    "askAI": "问 AI 关于这篇帖子",
+    "followers": "{{value}} 关注者",
+    "repostAndShare": "转发 & 分享",
+    "repost": "转发",
+    "undoRepost": "撤销转发",
+    "repostHint": "立刻，给你个关注者",
+    "undoRepostHint": "把它从你个人页上拿掉",
+    "quote": "引用",
+    "quoteHint": "加上你自己的话",
+    "shareTo": "分享至",
+    "copyLink": "复制链接",
+    "more": "更多",
+    "viewQuotes": "查看引用",
+    "viewReposts": "查看转发",
+    "save": "保存",
+    "saved": "已保存",
+    "comments": "评论",
+    "quotes": "引用",
+    "reposts": "转发",
+    "backToComments": "返回评论",
+    "backToMedia": "返回帖子",
+    "like": "点赞",
+    "unlike": "取消点赞"
   }
 }

@@ -4294,8 +4294,8 @@
     "realDhbNeverExpires": "Իրական DeHub — ի նշանները ձեր դրամապանակում. դրանք երբեք չեն սպառվում",
     "pooledNeverExpires": "Թիմային տարածքում համատեղ — երբեք չի լրանում",
     "perMonthBilledAnnually": "ամսական, տարեկան հաշվեգրում",
-    "perSeatMonthly": "մեկ տեղի համար/ամիս",
     "perSeatBilledAnnually": "մեկ տեղի համար/ամիս, տարեկան հաշվեգրում",
+    "perSeatMonthly": "մեկ տեղի համար/ամիս",
     "savings": "Խնայեք ${{amount}} ամսական համեմատությամբ",
     "seats_one": "{{count}} տեղ",
     "seats_other": "{{count}} տեղեր",
@@ -6993,12 +6993,12 @@
     "tokenNotConfigured": "DeHub նշանները չեն տեղադրվում {{chain}}- ում:",
     "notEnoughTokens": "Բավարար տոկեններ չկան",
     "onChainBalanceTooLow": "{{chain}}- ում ձեր շղթայական DeHub նշանների հաշվեկշիռը չափազանց ցածր է ։ Ցուցադրված հաշվեկշիռը, հնարավոր է, դեռ չի համաժամացվել:",
+    "sentDesc": "{{amount}} թոքեն ուղարկվեց {{from}}-ից {{to}}։ Թիմը թոքեններն ուղարկում է նպատակային շղթայում, սովորաբար 1-5 աշխատանքային օրվա ընթացքում։",
     "subtitle": "Move DeHub tokens between chains",
     "tokensOnBase": "Tokens on Base",
     "tokensOnBnb": "Տոկեններ BNB Chain-ում",
     "step3": "Թիմը թոքեններն ուղարկում է նպատակային շղթայում, սովորաբար 1-5 աշխատանքային օրվա ընթացքում։",
-    "statusReceived": "Ստացված է",
-    "sentDesc": "{{amount}} թոքեն ուղարկվեց {{from}}-ից {{to}}։ Թիմը թոքեններն ուղարկում է նպատակային շղթայում, սովորաբար 1-5 աշխատանքային օրվա ընթացքում։"
+    "statusReceived": "Ստացված է"
   },
   "builder": {
     "stakeForAllowance": "Ցցի DeHub նշաններ ՝ շինարարության ամենօրյա նպաստը բարձրացնելու համար",
@@ -8026,5 +8026,31 @@
     "shareFacebook": "Կիսվել Facebook-ում",
     "shareTelegram": "Կիսվել Telegram-ում",
     "copyLink": "Պատճենել հղումը"
+  },
+  "postStage": {
+    "back": "Հետ գնալ",
+    "askAI": "Հարցրեք AI - ին այս գրառման մասին",
+    "followers": "{{value}} հետևորդներ",
+    "repostAndShare": "Կրկնել և տարածել",
+    "repost": "Կրկնել",
+    "undoRepost": "Հետարկել վերահրապարակումը",
+    "repostHint": "Ակնթարթորեն ՝ ձեր հետևորդներին",
+    "undoRepostHint": "Հանեք այն ձեր պրոֆիլից",
+    "quote": "Գնառաջարկ",
+    "quoteHint": "Ավելացրեք ձեր սեփական բառերը",
+    "shareTo": "Կիսվել",
+    "copyLink": "Պատճենել հղումը",
+    "more": "Ավելին",
+    "viewQuotes": "Դիտել գնառաջարկները",
+    "viewReposts": "Դիտել վերահրապարակումները",
+    "save": "Պահել",
+    "saved": "Պահված",
+    "comments": "Մեկնաբանություններ",
+    "quotes": "Գնառաջարկներ",
+    "reposts": "Ռեպոստեր",
+    "backToComments": "Վերադառնալ մեկնաբանություններին",
+    "backToMedia": "Վերադառնալ գրառմանը",
+    "like": "Հավանել",
+    "unlike": "Հեռացնել նմանը"
   }
 }

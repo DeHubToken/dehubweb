@@ -77,6 +77,10 @@ import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.ty
 import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
 import { FocusCommentProvider } from '@/lib/focus-comment';
 import { canonicalUrl } from '@/lib/seo/route-meta';
+import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
+import { StageRelated } from '@/components/app/post-stage/StageRelated';
+import { PostStagePhone } from '@/components/app/post-stage/PostStagePhone';
+import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
 
 /*
  * Only a live post ever renders this, and a live post is a small minority of
@@ -786,6 +790,10 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  // Phones (<640px) get the "Stage" layout (PostStagePhone). Tablets and
+  // desktop keep the layouts below exactly as they were.
+  const isStagePhone = usePostStagePhone();
+
   // Scrolling content root. Used for the swallow clip on the standalone route,
   // where the page itself scrolls; in overlay mode AppLayout's fixed layer is
   // the scroller and clips itself.
@@ -1120,6 +1128,44 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
     }
   };
 
+  /*
+   * Phone "Stage". Comments are always open there, the bar's comments tile
+   * scrolls to them and puts the cursor in the docked composer, and the repost
+   * sheet's "View quotes / View reposts" rows switch the same section to the
+   * existing quotes and reposters lists.
+   */
+  const useStage = isStagePhone && !!post && post.status !== 'pending' && contentType !== 'live';
+  const revealStageComments = useCallback((focusComposer: boolean) => {
+    // Twice: once now, and once the section has re-rendered with its new tab.
+    const run = () => {
+      document.querySelector('[data-stage-comments]')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (focusComposer) {
+        document.querySelector<HTMLTextAreaElement>('[data-stage-composer] textarea')?.focus({ preventScroll: true });
+      }
+    };
+    requestAnimationFrame(run);
+  }, []);
+  const stageValue = useMemo<PostStageValue>(() => ({
+    onBack: goBack,
+    openComments: () => {
+      setShowPageComments(true);
+      setPageCommentsInitialTab('replies');
+      revealStageComments(true);
+    },
+    openQuotes: () => {
+      setShowPageComments(true);
+      setPageCommentsInitialTab('quotes');
+      revealStageComments(false);
+    },
+    openReposts: () => {
+      setShowPageComments(true);
+      setPageCommentsInitialTab('reposts');
+      revealStageComments(false);
+    },
+    quoteCount: Number(post?.quotes ?? 0) || 0,
+    repostCount: Number(post?.totalReposts || post?.reposts || 0) || 0,
+  }), [goBack, revealStageComments, post?.quotes, post?.totalReposts, post?.reposts]);
+
   const pageComments = post && id ? (
     <CommentsWrapper
       open={showPageComments}
@@ -1132,6 +1178,64 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
       forceInline
     />
   ) : null;
+
+  const renderStage = () => {
+    if (!post || !id) return null;
+    const isText = isTextPost;
+    let kind: 'video' | 'audio' | 'image' | 'text' = 'text';
+    let title = post.title || post.name || '';
+    let subtitle = '';
+    let thumbnail: string | undefined;
+    if (contentType === 'video') {
+      const v = toVideoItem(post);
+      kind = isAudioPost ? 'audio' : 'video';
+      subtitle = [v.channel, v.uploadedAgo].filter(Boolean).join(' · ');
+      thumbnail = v.thumbnail;
+    } else if (contentType === 'image') {
+      const ip = toImagePost(post);
+      kind = 'image';
+      title = ip.title || ip.description || '';
+      subtitle = [ip.username, ip.timeAgo].filter(Boolean).join(' · ');
+      thumbnail = ip.imageUrls?.[0] || ip.image;
+    } else {
+      const tp = toTextPost(post);
+      title = tp.title || tp.content.split('\n')[0] || '';
+      subtitle = [tp.author.name, formatTimeAgo(tp.createdAt || undefined)].filter(Boolean).join(' · ');
+      thumbnail = tp.author.avatarSeed;
+    }
+    const commentCount = Number(post.commentCount ?? post.comment_count ?? 0) || 0;
+    return (
+      <div data-glass-page ref={inOverlay ? undefined : postRootRef} className="flex flex-col">
+        <PostStagePhone
+          value={stageValue}
+          kind={kind}
+          title={title}
+          subtitle={subtitle}
+          thumbnail={thumbnail}
+          padded={isText}
+          related={showRelated ? <StageRelated kind={kind} postId={id} /> : null}
+          comments={
+            <CommentsWrapper
+              open
+              onOpenChange={() => {}}
+              tokenId={String(id)}
+              initialTab={pageCommentsInitialTab}
+              commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+              forKids={!!(post as { forKids?: boolean }).forKids}
+              postAuthorAddress={isText ? post.minter : undefined}
+              forceInline
+              stage
+              stageCount={commentCount}
+              onStageTabChange={setPageCommentsInitialTab}
+            />
+          }
+        >
+          {renderContent()}
+          {contentType === 'image' && parseInt(id, 10) > 0 && <div className="px-3"><PollCard tokenId={parseInt(id, 10)} /></div>}
+        </PostStagePhone>
+      </div>
+    );
+  };
 
   // Immersive layout for videos - uses fixed positioning to overlay the header area on mobile/tablet
   // Desktop gets standard layout with PageHeader
@@ -1167,7 +1271,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
             top nav pill. This used to be a vaul bottom sheet, which brought a
             portal, a transform animation, a body pointer-events fight and a
             second scroll container that everything else had to be re-wired to. */}
-        {isMobileView ? (
+        {useStage ? renderStage() : isMobileView ? (
           <div data-post-page data-glass-page ref={inOverlay ? undefined : postRootRef} className={cn('flex flex-col bg-black', videoChromeClearance)}>
             <div className="relative">
               {/* Back sits on the video, YouTube-style. The mobile header and the
@@ -1347,7 +1451,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   const isLivePost = contentType === 'live';
 
   const renderPostContent = () => (
-    isImmersiveImage ? (
+    useStage ? (
+      renderStage()
+    ) : isImmersiveImage ? (
       /* Same shape as the phone video post: media at the very top, edge to
          edge, its own back button on it, comments and related under it. */
       <div className={cn('flex flex-col', videoChromeClearance)}>
@@ -1440,6 +1546,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           scrolling content (not an outer margin) so the post scrolls up UNDER the
           sticky nav pill and is swallowed at its rounded top edge on the glass
           themes, exactly like the home feed. */}
+      {useStage ? (
+        renderPostContent()
+      ) : (
       <div
         ref={inOverlay ? undefined : postRootRef}
         data-post-page
@@ -1448,6 +1557,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
       >
         {renderPostContent()}
       </div>
+      )}
     </>
   );
 }
