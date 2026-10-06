@@ -1202,6 +1202,13 @@
     "loadingBoard": "Caricamento classifica…",
     "amountTokens": "{{amount}} token"
   },
+  "dhbListing": {
+    "title": "Il listing del token arriva presto!",
+    "body": "$DHB non è ancora negoziabile. Ricevi un'email appena viene listato.",
+    "notifyMe": "Avvisami",
+    "privacy": "Lo useremo solo per avvisarti quando $DHB verrà listato.",
+    "joined": "Sei nella lista. Scriveremo a {{email}} appena $DHB verrà listato."
+  },
   "explorePage": {
     "searchPlaceholder": "Cerca persone, post o contenuti...",
     "filters": "Filtri",

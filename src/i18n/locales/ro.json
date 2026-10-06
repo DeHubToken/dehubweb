@@ -1201,6 +1201,13 @@
     "loadingBoard": "Se încarcă clasamentul…",
     "amountTokens": "{{amount}} tokenuri"
   },
+  "dhbListing": {
+    "title": "Listarea tokenului în curând!",
+    "body": "$DHB nu se tranzacționează încă. Primește un e-mail imediat ce este listat.",
+    "notifyMe": "Anunță-mă",
+    "privacy": "Vom folosi asta doar ca să te anunțăm când $DHB este listat.",
+    "joined": "Ești pe listă. Vom scrie la {{email}} imediat ce $DHB este listat."
+  },
   "explorePage": {
     "searchPlaceholder": "Caută oameni, postări sau conținut...",
     "filters": "Filters",

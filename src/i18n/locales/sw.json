@@ -1202,6 +1202,13 @@
     "loadingBoard": "Inapakia ubao wa viongozi…",
     "amountTokens": "{{amount}} tokeni"
   },
+  "dhbListing": {
+    "title": "Uorodheshaji wa tokeni unakuja hivi karibuni!",
+    "body": "$DHB bado haiuzwi. Pata barua pepe mara tu itakapoorodheshwa.",
+    "notifyMe": "Nijulishe",
+    "privacy": "Tutatumia hii tu kukujulisha $DHB itakapoorodheshwa.",
+    "joined": "Uko kwenye orodha. Tutatuma barua pepe kwa {{email}} mara tu $DHB itakapoorodheshwa."
+  },
   "explorePage": {
     "searchPlaceholder": "Tafuta watu, machapisho au maudhui...",
     "filters": "Vichujio",

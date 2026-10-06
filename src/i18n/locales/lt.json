@@ -1199,6 +1199,13 @@
     "loadingBoard": "Įkeliama lyderių lentelė…",
     "amountTokens": "{{amount}} žetonų"
   },
+  "dhbListing": {
+    "title": "Žetono listingas jau netrukus!",
+    "body": "$DHB dar neprekiaujama. Gaukite el. laišką, kai tik jis bus įtrauktas į biržą.",
+    "notifyMe": "Pranešti man",
+    "privacy": "Naudosime tai tik pranešti, kai $DHB bus įtrauktas į biržą.",
+    "joined": "Esate sąraše. Kai tik $DHB bus įtrauktas į biržą, parašysime adresu {{email}}."
+  },
   "explorePage": {
     "searchPlaceholder": "Ieškoti žmonių, įrašų ar turinio...",
     "filters": "Filtrai",

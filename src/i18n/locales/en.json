@@ -1202,6 +1202,13 @@
     "loadingBoard": "Loading leaderboard…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Token listing soon!",
+    "body": "$DHB isn't trading yet. Get an email the moment it lists.",
+    "notifyMe": "Notify me",
+    "privacy": "We'll only use this to tell you when $DHB lists.",
+    "joined": "You're on the list. We'll email {{email}} the moment $DHB lists."
+  },
   "explorePage": {
     "searchPlaceholder": "Search for people, posts, or content...",
     "filters": "Filters",

@@ -1200,6 +1200,13 @@
     "loadingBoard": "E uta ana i te rārangi rangatira…",
     "amountTokens": "{{amount}} tohu"
   },
+  "dhbListing": {
+    "title": "Ka rārangi te tohu ā tōna wā tata!",
+    "body": "Kāore anō kia hokohokona a $DHB. Whiwhi īmēra ina rārangitia.",
+    "notifyMe": "Whakamōhio mai",
+    "privacy": "Ka whakamahia tēnei hei whakamōhio noa i a koe ina rārangitia a $DHB.",
+    "joined": "Kei te rārangi koe. Ka īmēra mātou ki {{email}} ina rārangitia a $DHB."
+  },
   "explorePage": {
     "searchPlaceholder": "Rapu tāngata, pānui, ihirangi rānei...",
     "filters": "Tātari",

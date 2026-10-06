@@ -1200,6 +1200,13 @@
     "loadingBoard": "ランキングを読み込み中…",
     "amountTokens": "{{amount}} トークン"
   },
+  "dhbListing": {
+    "title": "トークン上場はもうすぐ！",
+    "body": "$DHBはまだ取引されていません。上場したらすぐにメールでお知らせします。",
+    "notifyMe": "通知を受け取る",
+    "privacy": "$DHBの上場をお知らせする目的にのみ使用します。",
+    "joined": "リストに登録されました。$DHBが上場したらすぐに{{email}}へメールします。"
+  },
   "explorePage": {
     "searchPlaceholder": "人、投稿、コンテンツを検索...",
     "filters": "フィルター",

@@ -1202,6 +1202,13 @@
     "loadingBoard": "Rangliste wird geladen…",
     "amountTokens": "{{amount}} Tokens"
   },
+  "dhbListing": {
+    "title": "Token-Listing kommt bald!",
+    "body": "$DHB wird noch nicht gehandelt. Erhalte eine E-Mail, sobald es gelistet wird.",
+    "notifyMe": "Benachrichtige mich",
+    "privacy": "Wir nutzen das nur, um dir Bescheid zu geben, wenn $DHB gelistet wird.",
+    "joined": "Du stehst auf der Liste. Wir schreiben an {{email}}, sobald $DHB gelistet wird."
+  },
   "explorePage": {
     "searchPlaceholder": "Personen, Beiträge oder Inhalte suchen...",
     "filters": "Filter",

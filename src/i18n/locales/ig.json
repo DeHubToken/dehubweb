@@ -1197,6 +1197,13 @@
     "loadingBoard": "Na-ebudata ndepụta ọkwa…",
     "amountTokens": "{{amount}} tokens"
   },
+  "dhbListing": {
+    "title": "Ndepụta token na-abịa n'oge na-adịghị anya!",
+    "body": "Amalitebeghị ịzụ ahịa $DHB. Nweta email ozugbo e depụtara ya.",
+    "notifyMe": "Gwa m",
+    "privacy": "Anyị ga-eji ya naanị gwa gị mgbe e depụtara $DHB.",
+    "joined": "Ị nọ na ndepụta. Anyị ga-eziga email na {{email}} ozugbo e depụtara $DHB."
+  },
   "explorePage": {
     "searchPlaceholder": "Chọọ ndị mmadụ, ozi ma ọ bụ ọdịnaya...",
     "filters": "Nzacha",

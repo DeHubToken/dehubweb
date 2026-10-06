@@ -69,6 +69,8 @@ import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
 import { useStockQuote } from '@/hooks/use-stock-quote';
 import { StockPriceCard } from '@/components/app/StockPriceCard';
 import { CashtagResultSwitcher } from '@/components/app/CashtagResultSwitcher';
+import { DhbListingSoonCard } from '@/components/app/DhbListingSoonCard';
+import { isDhbListingQuery } from '@/lib/market/dhb-listing';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { scrollDocumentTo } from '@/lib/document-scroll';
@@ -518,6 +520,10 @@ export default function ExplorePage() {
     forceExactLookup: true, // Always try exact lookup to surface @username matches first
   });
 
+  // $DHB is not trading yet: its search shows the listing-soon card rather
+  // than a pinned price or "no results".
+  const isDhbQuery = isSearching && (isDhbListingQuery(effectiveQuery) || isDhbListingQuery(baseEffectiveQuery));
+
   // Check if this is a brand-related search term
   const isBrandQuery = BRAND_QUERIES.includes(effectiveQuery.trim().toLowerCase());
 
@@ -851,7 +857,9 @@ export default function ExplorePage() {
                 )}
 
                 {/* Stock / Crypto Cashtag Result Switcher */}
-                {(stockData?.found || dexPairs.length > 0) && (
+                {isDhbQuery ? (
+                  <DhbListingSoonCard source="explore" />
+                ) : (stockData?.found || dexPairs.length > 0) && (
                   <CashtagResultSwitcher
                     stockData={stockData ?? null}
                     dexPairs={dexPairs}
@@ -958,7 +966,7 @@ export default function ExplorePage() {
                 )}
 
                 {/* No Results */}
-                {showNoResults && (
+                {showNoResults && !isDhbQuery && (
                   <div className="text-center py-8">
                     <p className="text-zinc-400">{t('explorePage.noResultsFor', { query: searchQuery })}</p>
                     <p className="text-zinc-500 text-sm mt-1">{t('explorePage.tryDifferent')}</p>

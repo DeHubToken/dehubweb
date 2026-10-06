@@ -1196,6 +1196,13 @@
     "loadingBoard": "Načítání žebříčku…",
     "amountTokens": "{{amount}} tokenů"
   },
+  "dhbListing": {
+    "title": "Listing tokenu již brzy!",
+    "body": "$DHB se zatím neobchoduje. Dostaňte e-mail ve chvíli, kdy bude listován.",
+    "notifyMe": "Upozornit mě",
+    "privacy": "Použijeme to jen k tomu, abychom vám dali vědět, až bude $DHB listován.",
+    "joined": "Jste na seznamu. Jakmile bude $DHB listován, pošleme e-mail na {{email}}."
+  },
   "explorePage": {
     "searchPlaceholder": "Hledat lidi, příspěvky nebo obsah...",
     "filters": "Filtry",
