@@ -4,8 +4,8 @@
    frosted glass on the web, desktop and phone alike. What sits behind them is
    blurred hard enough that it cannot compete with their text, and the tint has
    a floor so a white photo or a light post under a toast still leaves its copy
-   readable. (The Android app paints these solid instead, since it cannot blur;
-   that lives in the app, not here.)
+   readable. Native navigation uses the same thin tint, sheen and rim over
+   targeted frost on Android 12 and newer, with a solid older-device fallback.
 
    Only the colour layer and the blur are set. Each theme's grain, gradient and
    edge light are background-image layers and stay as they were.
@@ -110,12 +110,12 @@ html {
 
 html[data-theme][data-theme]:is([data-theme='system'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   :is([data-feed-nav], [data-feed-island-surface], [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]), [data-bottom-nav] > nav):not(#_):not(#_) {
-  background: linear-gradient(rgb(255 255 255 / 0.1), rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base) !important;
+  background: linear-gradient(rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.025) 45%, rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base) !important;
   /* Keep the standard property last: the production CSS optimiser otherwise
      retains only the Safari prefix and removes blur in Chromium/Firefox. */
   -webkit-backdrop-filter: var(--nav-glass-blur) !important;
   backdrop-filter: var(--nav-glass-blur) !important;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16), inset 0 1.5px 0 rgb(255 255 255 / 0.3) !important;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22), inset 0 1.5px 0 rgb(255 255 255 / 0.4) !important;
 }
 html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_)::before,
 html[data-theme][data-theme='war'] [data-bottom-nav] > nav:not(#_):not(#_)::before,
