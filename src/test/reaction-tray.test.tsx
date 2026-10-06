@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { useReactionTray, type ReactionTray } from '@/hooks/use-reaction-tray';
 
+vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ walletAddress: '0xviewer' }) }));
+vi.mock('@/lib/reaction-tip', () => ({ markReactionTipSeen: vi.fn() }));
+
 /**
  * Two trays on one row, and the rule that only one of them is ever up. Posts
  * and comments now carry a single tray (👎 sits at the end of the thumbs-up's),
