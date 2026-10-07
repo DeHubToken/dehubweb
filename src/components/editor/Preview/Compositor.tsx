@@ -235,8 +235,8 @@ export function Compositor() {
       );
 
       // Sync video/audio media.
-      const activeVideos = leaseMedia(renderOps.flatMap(op => op.clip.kind === "video" ? [op.clip] : []), videoPool.current, extraVideos.current, cloneMedia, releaseMedia);
-      const activeAudio = leaseMedia(active.flatMap(clip => clip.kind === "audio" ? [clip] : []), audioPool.current, extraAudio.current, cloneMedia, releaseMedia);
+      const activeVideos = leaseMedia<HTMLVideoElement>(renderOps.flatMap(op => op.clip.kind === "video" ? [op.clip] : []), videoPool.current, extraVideos.current, cloneMedia, releaseMedia);
+      const activeAudio = leaseMedia<HTMLAudioElement>(active.flatMap(clip => clip.kind === "audio" ? [clip] : []), audioPool.current, extraAudio.current, cloneMedia, releaseMedia);
       sources.videosByClip = activeVideos;
 
       // Video sync uses render-ops so incoming pre-roll clips also seek to the right frame.
