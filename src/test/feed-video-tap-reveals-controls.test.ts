@@ -53,24 +53,20 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
     expect(VIDEO_CARD).toMatch(/data-no-navigate[\s\S]{0,200}?data-media-full/);
   });
 
-  it('renders the whole transport bar before any metadata has loaded', () => {
-    // Lite mode preloads nothing and suppresses autoplay, so `duration` sits at
-    // 0 until something calls play(). Gating the whole transport bar on it left
-    // the only control that can start the clip unrenderable — and now that a tap
-    // no longer escapes to the post page, that is a dead end rather than a
-    // detour. Gating just the scrubber on it was no better: a profile card
-    // that never autoplayed had no timeline at all. The bar is drawn whole and
-    // the slider is disabled until the length is known.
-    // Audio and on-air posts have their own player and transport. Recorded
-    // video still exposes its play button before metadata arrives.
-    // Keep the bar mounted while visually hidden so the invisible seek target
-    // remains available; visibility must not gate metadata-free playback.
+  it('keeps centered playback and the timeline available before metadata loads', () => {
+    // Lite mode has no duration until Play is pressed. The centered button
+    // must still start playback, and the timeline must stay mounted with its
+    // slider disabled until metadata arrives.
     const bar = VIDEO_CARD.match(
       /\{!video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls[^\n]*?"absolute bottom-0([\s\S]*?)\n {8}\)\}/
     );
     expect(bar, 'transport bar must remain mounted before metadata and while controls are hidden').not.toBeNull();
     expect(VIDEO_CARD).toContain('data-controls-hidden={!controlsVisible');
-    expect(bar![1]).toContain('handlePlayClick()');
+    const center = VIDEO_CARD.match(/\{!isLoading && video\.videoUrl[^\n]*?&& \(([\s\S]*?)\n {8}\)\}/);
+    expect(center, 'centered playback must not wait for metadata').not.toBeNull();
+    expect(center![1]).toContain('data-video-center');
+    expect(center![1]).toContain('handlePlayClick()');
+    expect(center![0]).not.toContain('duration');
     // Nothing inside the bar waits on the clip's length any more: a profile
     // card that never autoplayed used to render no timeline at all.
     expect(bar![1]).not.toContain('{duration > 0 &&');
