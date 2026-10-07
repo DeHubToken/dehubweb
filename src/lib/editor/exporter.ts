@@ -9,6 +9,7 @@ import type { MediaClip, ProjectSnapshot } from "./types";
 import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
 import { drawClip } from "./render";
+import { timelineDuration } from "./pages";
 import logoUrl from "@/assets/dehub-logo-white.png";
 import { BRAND_OUTRO_DURATION, drawBrandOutro, outroSoundSample, outroUsername } from "./brandOutro";
 
@@ -249,7 +250,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const width = Math.max(2, Math.round(settings.width * scale) & ~1);
   const height = Math.max(2, Math.round(settings.height * scale) & ~1);
 
-  const fullDuration = clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
+  const fullDuration = timelineDuration(settings, clips);
   const contentDuration = cutEndAt !== undefined && cutEndAt > 0 ? Math.min(cutEndAt, fullDuration) : fullDuration;
   if (contentDuration <= 0) throw new Error("Nothing to export — the timeline is empty.");
   const duration = contentDuration + BRAND_OUTRO_DURATION;
@@ -478,7 +479,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   const { settings, clips, tracks } = snapshot;
   const width = Math.max(2, Math.round(settings.width * scale));
   const height = Math.max(2, Math.round(settings.height * scale));
-  const fullDuration = clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
+  const fullDuration = timelineDuration(settings, clips);
   // The playhead can sit exactly on the end of the timeline, where nothing is active.
   const t = Math.max(0, Math.min(opts.time, fullDuration - 1 / Math.max(1, settings.fps)));
 

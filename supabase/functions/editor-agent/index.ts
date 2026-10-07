@@ -1,3 +1,4 @@
+import { parseAnswer } from "./answer.ts";
 // Editor agent — turns a plain-language request ("make this a square Instagram
 // post with a bold title and a warm filter") into a short list of edit
 // operations that the browser applies to the design.
@@ -71,6 +72,7 @@ Operations (only use fields you need):
 - apply_brand: restyle the whole design with the brand kit (fonts and colours). add_logo: put the brand logo in the top-right corner.
 - add_page: duplicate (true to copy the current page's layers). Appends a page and moves to it; every add_* after it lands on that page. Use for carousels, slides, multi-part posts: build page 1, add_page, build page 2, and so on.
 - goto_page: index (0-based). New layers then land on that page.
+- delete_page: index (0-based). Remove that scene and close the timeline gap; locked layers are protected.
 
 Rules:
 - The scene's capabilities list is the operations supported by this client. Use only those operations when supplied. If stockKinds is supplied, add_stock must use one of those kinds. Older mobile clients without stockKinds support photos only. Use only listed library ids for add_media; never invent an id or promise an unsupported operation.
@@ -96,7 +98,7 @@ Example: selected video v1 has duration 10. User: "break up the video into 10 1 
 
 const OP_NAMES = [
   "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "keyframes", "timing",
-  "audio", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "apply_brand", "add_logo", "use_template", "captions", "remove_background", "generate", "select",
+  "audio", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "delete_page", "apply_brand", "add_logo", "use_template", "captions", "remove_background", "generate", "select",
   "split", "segment", "trim", "remove_range", "sequence", "close_gaps", "repeat", "speed", "extract_audio", "transition", "batch",
 ];
 
@@ -184,23 +186,3 @@ Deno.serve(async (req) => {
   const reply = typeof parsed.reply === "string" ? parsed.reply.slice(0, 600) : "";
   return json({ reply, ops });
 });
-
-/** Pull {reply, ops} out of a model answer, tolerating code fences and stray prose. */
-function parseAnswer(raw: unknown): { reply?: unknown; ops?: unknown } | null {
-  if (typeof raw !== "string" || !raw.trim()) return null;
-  const text = raw.replace(/^s*```(?:json)?s*/i, "").replace(/s*```s*$/, "");
-  const tryParse = (t: string) => {
-    try {
-      const v = JSON.parse(t);
-      if (Array.isArray(v)) return { reply: "", ops: v };
-      return v && typeof v === "object" ? v : null;
-    } catch {
-      return null;
-    }
-  };
-  const direct = tryParse(text);
-  if (direct) return direct;
-  const a = text.indexOf("{");
-  const b = text.lastIndexOf("}");
-  return a >= 0 && b > a ? tryParse(text.slice(a, b + 1)) : null;
-}
