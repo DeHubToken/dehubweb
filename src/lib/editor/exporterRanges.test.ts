@@ -5,6 +5,7 @@ import type { ProjectSnapshot } from "./types";
 const calls = vi.hoisted(() => ({ draw: vi.fn(), outro: vi.fn(), frame: vi.fn(), close: vi.fn() }));
 vi.mock("./render", () => ({ drawClip: calls.draw }));
 vi.mock("./brandOutro", async () => ({ ...await vi.importActual<typeof import("./brandOutro")>("./brandOutro"), drawBrandOutro: calls.outro }));
+vi.mock("./brandOutroArtwork", () => ({ loadBrandOutroArtwork: async () => ({ logo: {}, background: {}, globe: {}, star: {} }) }));
 vi.mock("./gif", async () => ({ ...await vi.importActual<typeof import("./gif")>("./gif"), gifWorkerSession: () => ({
   ready: Promise.resolve(), frame: calls.frame, finish: async () => new ArrayBuffer(6), close: calls.close,
 }) }));
