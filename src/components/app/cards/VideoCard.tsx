@@ -2499,17 +2499,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
 
-        {/* Transport bar at bottom. Gated on showControls alone, not on
-            duration: in Lite mode preload is 'none' and autoplay is off, so
-            duration stays 0 until something calls play() — gating the whole bar
-            on it left the one control that can start the clip unreachable from
-            the feed, where a tap now reveals controls instead of opening the
-            post. The scrubber is inert until metadata arrives, and revealing the
-            controls now goes and fetches it.
-            Audio posts are excluded: this bar is driven by the <video> element,
-            so over a visualizer it painted a black gradient and a second,
-            non-functional play button on top of the audio controls — the
-            "hovering brings up a play/pause button" complaint. */}
+        {/* Keep the timeline mounted before metadata arrives. Lite mode starts
+            from the centered Play button; seeking enables once the length is
+            known. Audio posts and live streams own their transport. */}
         {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
