@@ -42,7 +42,7 @@ function windowDays(range: Range): number | null {
 const MONTHLY_AFTER_DAYS = 62;
 
 const REVENUE_GROUPS = ['buys', 'fees'] as const;
-const COST_GROUPS = ['compute', 'ai_tools', 'infrastructure'] as const;
+const COST_GROUPS = ['compute', 'ai_tools', 'infrastructure', 'payments'] as const;
 
 // ---------------------------------------------------------------------------
 // Formatting
@@ -391,6 +391,7 @@ export function FinanceSection({ range }: { range: Range }) {
     compute: t('stats.money.group.compute', 'AI compute'),
     ai_tools: t('stats.money.group.aiTools', 'AI tools'),
     infrastructure: t('stats.money.group.infrastructure', 'Infrastructure'),
+    payments: t('stats.money.group.payments', 'Payment fees'),
   };
 
   return (
