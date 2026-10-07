@@ -103,7 +103,7 @@ export async function removeLayerBackground(
   const projectId = s.projectId;
   if (clip.kind === "video") {
     videoMattePlan(clip, media.width ?? 1, media.height ?? 1, media.duration ?? clip.sourceDuration ?? 0, s.settings.fps);
-    const result = await processVideoMatte(media.url, clip, s.settings.fps, p => opts.onProgress?.(p.stage === "download" ? { stage: "download", loaded: p.fraction * 100, total: 100 } : p), opts.signal);
+    const result = await processVideoMatte(media.url, clip, s.settings.fps, p => opts.onProgress?.(p.stage === "download" ? { stage: "download", loaded: p.fraction * 100, total: 100 } : p.stage === "frames" ? { stage: "frames", completed: p.completed, total: p.total } : { stage: "fallback" }), opts.signal);
     const now = useEditorStore.getState();
     const current = now.clips.find(c => c.id === clip.id);
     if (opts.signal?.aborted || now.projectId !== projectId || current?.kind !== "video" || current.locked || current.mediaId !== clip.mediaId || current.trimIn !== clip.trimIn || current.duration !== clip.duration || (current.speed ?? 1) !== (clip.speed ?? 1)) return false;
