@@ -2414,7 +2414,21 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <VideoGlitchLoader poster={thumbnail} />
         )}
         
-        {/* Center flash indicator removed — play/pause now in progress bar */}
+        {!isLoading && video.videoUrl && !video.isAudio && !isVideoNotReady && !(video.isLivePost && video.isLiveNow) && (
+          <button
+            data-video-controls data-video-bare data-video-center
+            data-controls-hidden={isPlaying && !controlsVisible ? 'true' : undefined}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+            onPointerDown={(event) => event.stopPropagation()}
+            onPointerUp={(event) => event.stopPropagation()}
+            onTouchStart={(event) => event.stopPropagation()}
+            onTouchEnd={(event) => event.stopPropagation()}
+            onClick={(event) => { event.stopPropagation(); showControlsBriefly(); handlePlayClick(); }}
+            className="absolute left-1/2 top-1/2 z-20 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-transparent text-white"
+          >
+            <MediaControlIcon icon={isPlaying ? Pause : Play} size={32} />
+          </button>
+        )}
 
         {/* Draws the 👍 / ❤️ for the tap ladder above. Inert and self-contained;
             it listens for this post's own events rather than taking state. */}
@@ -2502,14 +2516,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-12 touch-pan-y" />}
 
             <div data-video-button-row className={cn("flex items-center gap-2", bareControls && (mediaAspect >= 1 ? "px-2" : "px-1.5"))}>
-              <button
-                onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
-                aria-label={isPlaying ? 'Pause' : 'Play'}
-                data-video-bare={bareControls ? '' : undefined}
-                className={cn("flex items-center justify-center shrink-0", bareControls ? "h-8 w-8" : "h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10")}
-              >
-                {isPlaying ? <MediaControlIcon icon={Pause} /> : <MediaControlIcon icon={Play} />}
-              </button>
               <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
               <input
                 type="range"
