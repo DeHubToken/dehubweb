@@ -9,6 +9,8 @@ import type { MediaClip, ProjectSnapshot } from "./types";
 import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
 import { drawClip } from "./render";
+import logoUrl from "@/assets/dehub-logo-white.png";
+import { BRAND_OUTRO_DURATION, drawBrandOutro, outroSoundSample, outroUsername } from "./brandOutro";
 
 
 export type ExportFormat = "mp4" | "webm";
@@ -25,6 +27,8 @@ export interface ExportOptions {
   audioBitrate?: number;
   /** If set, export only from 0 up to this time (seconds) instead of the full timeline. */
   cutEndAt?: number;
+  /** Creator identity for the automatic branded ending. */
+  username?: string | null;
   /** Progress 0..1. */
   onProgress?: (p: number, label: string) => void;
   signal?: AbortSignal;
@@ -147,11 +151,13 @@ async function loadSources(media: MediaItem[], withAudio = true) {
 
 /** Seek a video element to a specific time and wait for the frame to be ready. */
 function seekVideo(v: HTMLVideoElement, t: number): Promise<void> {
-  return new Promise((resolve) => {
-    const target = Math.max(0, Math.min(v.duration || t, t));
-    const handler = () => { v.removeEventListener("seeked", handler); resolve(); };
+  return new Promise((resolve, reject) => {
+    const target = Math.max(0, Math.min(Number.isFinite(v.duration) ? v.duration - 0.001 : t, t));
+    if (Math.abs(v.currentTime - target) < 0.0005 && v.readyState >= 2) { resolve(); return; }
+    const timer = setTimeout(() => { v.removeEventListener("seeked", handler); reject(new Error("Video frame did not load")); }, 5000);
+    const handler = () => { clearTimeout(timer); v.removeEventListener("seeked", handler); resolve(); };
     v.addEventListener("seeked", handler);
-    try { v.currentTime = target; } catch { resolve(); }
+    try { v.currentTime = target; } catch (error) { clearTimeout(timer); v.removeEventListener("seeked", handler); reject(error); }
   });
 }
 
@@ -160,12 +166,13 @@ async function renderAudioMix(
   snapshot: ProjectSnapshot,
   audioBuffers: Map<string, AudioBuffer>,
   duration: number,
+  contentDuration: number,
 ): Promise<AudioBuffer | null> {
   const audioClips = snapshot.clips.filter((c) => {
     if (c.kind !== "audio" && c.kind !== "video") return false;
     return audioBuffers.has((c as MediaClip).mediaId);
   }) as MediaClip[];
-  if (!audioClips.length || duration <= 0) return null;
+  if (duration <= 0) return null;
 
   const sampleRate = 48000;
   const frames = Math.ceil(duration * sampleRate);
@@ -173,7 +180,7 @@ async function renderAudioMix(
 
   for (const c of audioClips) {
     const track = snapshot.tracks.find((t) => t.id === c.trackId);
-    if (track?.muted || track?.hidden) continue;
+    if (track?.muted || track?.hidden || c.hidden || c.start >= contentDuration) continue;
     const buf = audioBuffers.get(c.mediaId);
     if (!buf) continue;
     const src = ctx.createBufferSource();
@@ -188,7 +195,7 @@ async function renderAudioMix(
     const offset = c.trimIn;
     // Source consumed = timeline duration × speed. Clamp so we don't read past the buffer.
     const sourceAvailable = Math.max(0, buf.duration - offset);
-    const sourceConsumed = Math.min(c.duration * speed, sourceAvailable);
+    const sourceConsumed = Math.min(c.duration * speed, sourceAvailable, (contentDuration - c.start) * speed);
     const dur = sourceConsumed / speed;
     if (dur <= 0) continue;
     // Envelope: 0 → vol (fadeIn) → vol → 0 (fadeOut)
@@ -201,6 +208,15 @@ async function renderAudioMix(
     src.connect(gain).connect(ctx.destination);
     src.start(when, offset, sourceConsumed);
   }
+  const sound = ctx.createBuffer(2, Math.ceil(BRAND_OUTRO_DURATION * sampleRate), sampleRate);
+  for (let channel = 0; channel < 2; channel++) {
+    const data = sound.getChannelData(channel);
+    for (let i = 0; i < data.length; i++) data[i] = outroSoundSample(i / sampleRate);
+  }
+  const ending = ctx.createBufferSource();
+  ending.buffer = sound;
+  ending.connect(ctx.destination);
+  ending.start(contentDuration);
   return await ctx.startRendering();
 }
 
@@ -234,17 +250,25 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const height = Math.max(2, Math.round(settings.height * scale) & ~1);
 
   const fullDuration = clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
-  const duration = cutEndAt !== undefined && cutEndAt > 0 ? Math.min(cutEndAt, fullDuration) : fullDuration;
-  if (duration <= 0) throw new Error("Nothing to export — the timeline is empty.");
+  const contentDuration = cutEndAt !== undefined && cutEndAt > 0 ? Math.min(cutEndAt, fullDuration) : fullDuration;
+  if (contentDuration <= 0) throw new Error("Nothing to export — the timeline is empty.");
+  const duration = contentDuration + BRAND_OUTRO_DURATION;
+  const username = outroUsername(opts.username);
 
   const totalFrames = Math.ceil(duration * fps);
   onProgress?.(0, "Loading media…");
   const { videos, images, audioBuffers } = await loadSources(media);
+  const logo = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("Could not load the export logo"));
+    image.src = logoUrl;
+  });
   checkAbort(signal);
 
   // Pre-mix audio in parallel with video setup.
   onProgress?.(0.02, "Mixing audio…");
-  const audioBufferPromise = renderAudioMix(snapshot, audioBuffers, duration);
+  const audioBufferPromise = renderAudioMix(snapshot, audioBuffers, duration, contentDuration);
 
   const canvas = new OffscreenCanvas(width, height);
   const ctx = canvas.getContext("2d");
@@ -328,7 +352,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
     ctx.fillRect(0, 0, width, height);
 
     // Compute render ops (handles outgoing + incoming-preroll transitions).
-    const ops = computeRenderOps(clips, isVisualTrack, t, width).sort(
+    const ops = (t < contentDuration ? computeRenderOps(clips, isVisualTrack, t, width) : []).sort(
       (a, b) => trackZ(a.clip.trackId) - trackZ(b.clip.trackId),
     );
 
@@ -356,6 +380,8 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
       drawClip(ctx, width, height, op.clip, t, { videos, images });
       ctx.restore();
     }
+
+    if (t >= contentDuration) drawBrandOutro(ctx, width, height, t - contentDuration, username, logo);
 
     const frame = new VideoFrame(canvas, { timestamp: Math.round((f / fps) * 1_000_000) });
     const keyFrame = f % Math.max(1, Math.round(fps * 2)) === 0;

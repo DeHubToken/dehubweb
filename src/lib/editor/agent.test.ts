@@ -30,6 +30,16 @@ describe("editor agent", () => {
     expect(report).toMatchObject({ applied: 0, failed: 2 });
   });
 
+  it("segments video, addresses new segments, and undoes the whole request", async () => {
+    useEditorStore.setState({ tracks: [{ id: "v", kind: "video", name: "Video", muted: false, hidden: false }], clips: [{ id: "v1", trackId: "v", kind: "video", mediaId: "m1", start: 0, duration: 10, trimIn: 3, sourceDuration: 20 }] });
+    const report = await applyOps([{ op: "segment", id: "v1", count: 10, duration: 1 }, { op: "audio", id: "new:0", volume: 0 }]);
+    expect(report).toMatchObject({ applied: 2, failed: 0 });
+    expect(useEditorStore.getState().clips).toHaveLength(10);
+    expect(useEditorStore.getState().clips[1]).toMatchObject({ trimIn: 4, audio: { volume: 0 } });
+    useEditorStore.getState().undo();
+    expect(useEditorStore.getState().clips).toEqual([expect.objectContaining({ id: "v1", duration: 10, trimIn: 3 })]);
+  });
+
   it("describes the scene compactly", async () => {
     await applyOps([{ op: "add_text", text: "Hi" }]);
     const scene = describeScene();

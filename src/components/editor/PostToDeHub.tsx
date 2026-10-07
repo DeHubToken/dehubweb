@@ -30,7 +30,7 @@ function filesToFileList(files: File[]): FileList {
 }
 
 export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
-  const auth = useAuth() as { isAuthenticated: boolean; openLoginModal: () => void; walletAddress: string | null };
+  const auth = useAuth();
   const isAuthenticated = !!auth?.isAuthenticated;
   const openLoginModal = auth?.openLoginModal;
   const walletAddress = auth?.walletAddress ?? null;
@@ -93,6 +93,7 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
         format: "mp4",
         scale: 1,
         videoBitrate: 8_000_000,
+        username: auth.user?.username,
         onProgress: (p, l) => { setProgress(Math.round(p * 100)); setLabel(l); },
         signal: ctl.signal,
       });
