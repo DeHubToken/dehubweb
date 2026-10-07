@@ -14,6 +14,7 @@ export function sceneJson(value: unknown, maxChars = 16000): string {
   });
   const scene: Record<string, unknown> = {
     capabilities: Array.isArray(source.capabilities) ? source.capabilities.filter(x => typeof x === "string" && x.length < 40).slice(0, 80) : undefined,
+    stockKinds: Array.isArray(source.stockKinds) ? source.stockKinds.filter(x => x === "photo" || x === "video" || x === "audio") : undefined,
     page: source.page, playhead: source.playhead, selected: [...selection],
     tracks: Array.isArray(source.tracks) ? source.tracks.slice(0, 100) : undefined,
     pages: Array.isArray(source.pages) ? source.pages.slice(0, 100) : undefined,

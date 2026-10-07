@@ -27,6 +27,7 @@ import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { nanoid } from "nanoid";
 import { applyTimelineOp, expandBatch, TIMELINE_OPS } from "./timelineAgent";
 import { preciseCommand } from "./preciseCommands";
+import { stockSearchPlan } from "./stockSearchPlan";
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || "https://aigxuutjaqsywioxjefr.supabase.co"}/functions/v1/editor-agent`;
 const ANON_KEY =
@@ -87,7 +88,8 @@ export function describeScene() {
     playhead: round(s.currentTime, 2),
     selected: s.selectedClipIds,
     layers,
-    library: s.media.slice(0, 30).map((m) => ({ id: m.id, kind: m.kind, name: m.name })),
+    library: s.media.slice(0, 30).map((m) => ({ id: m.id, kind: m.kind, name: m.name, duration: m.duration })),
+    stockKinds: ["photo", "video", "audio"],
   };
 }
 
@@ -565,8 +567,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
           ? op.orientation : "all") as FreeAssetOrientation;
         // Loosen the search step by step rather than give up: shape filter off,
         // then just the first two words of the query.
-        const short = query.split(/s+/).slice(0, 2).join(" ");
-        const attempts: [string, FreeAssetOrientation][] = [[query, orientation], [query, "all"], [short, "all"]];
+        const attempts = stockSearchPlan(query, orientation);
         let asset: Awaited<ReturnType<typeof searchFreeAssets>>["items"][number] | undefined;
         for (const [q, o] of attempts) {
           try {
