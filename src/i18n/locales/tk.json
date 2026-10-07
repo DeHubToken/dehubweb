@@ -6756,6 +6756,12 @@
         "easeInOutBack": "Yza giriş we çykyş",
         "hold": "Sakla"
       }
+    },
+    "beats": {
+      "markers": "Ritm bellikleri",
+      "sync": "Kesimleri sazlaşdyr",
+      "none": "Ygtybarly ritm tapylmady.",
+      "unchanged": "Kesimleri deňleşdirip bolmady."
     }
   },
   "jungleMood": {

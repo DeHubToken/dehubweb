@@ -6854,6 +6854,12 @@
         "easeInOutBack": "Geri tepme giriş ve çıkış",
         "hold": "Sabit tut"
       }
+    },
+    "beats": {
+      "markers": "Ritim işaretleri",
+      "sync": "Kesimleri eşitle",
+      "none": "Güvenilir ritim bulunamadı.",
+      "unchanged": "Kesimler hizalanamadı."
     }
   },
   "jungleMood": {

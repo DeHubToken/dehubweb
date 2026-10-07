@@ -6819,6 +6819,12 @@
         "easeInOutBack": "Hoki tomo me te puta",
         "hold": "Pupuri"
       }
+    },
+    "beats": {
+      "markers": "Ngā tohu manawataki",
+      "sync": "Whakaritea ngā tapahi",
+      "none": "Kāore he manawataki pono i kitea.",
+      "unchanged": "Kāore i taea te whakatika ngā tapahi."
     }
   },
   "jungleMood": {

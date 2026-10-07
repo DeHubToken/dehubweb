@@ -6639,6 +6639,12 @@
         "easeInOutBack": "Segin donni ni bɔli",
         "hold": "Minɛ"
       }
+    },
+    "beats": {
+      "markers": "Fɔli taamasiɲɛw",
+      "sync": "Klipuw bɛnkɛ",
+      "none": "Fɔli dafalen ma sɔrɔ.",
+      "unchanged": "Klipuw ma se ka bɛnkɛ."
     }
   },
   "jungleMood": {

@@ -6836,6 +6836,12 @@
         "easeInOutBack": "Tilbake inn og ut",
         "hold": "Hold"
       }
+    },
+    "beats": {
+      "markers": "Rytmemarkører",
+      "sync": "Synkroniser klipp",
+      "none": "Ingen pålitelig rytme funnet.",
+      "unchanged": "Klippene kunne ikke justeres."
     }
   },
   "jungleMood": {

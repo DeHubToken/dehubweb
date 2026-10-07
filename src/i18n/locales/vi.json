@@ -6861,6 +6861,12 @@
         "easeInOutBack": "Bật lại vào và ra",
         "hold": "Giữ"
       }
+    },
+    "beats": {
+      "markers": "Dấu nhịp",
+      "sync": "Đồng bộ các đoạn cắt",
+      "none": "Không tìm thấy nhịp đáng tin cậy.",
+      "unchanged": "Không thể căn chỉnh các đoạn cắt."
     }
   },
   "jungleMood": {
