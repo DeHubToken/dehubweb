@@ -556,7 +556,7 @@ function SubmissionCard({
         </label>
       )}
       {isPoster && s.payout_state==='signing' && <button disabled={busy} onClick={onRelease} className="mt-2 text-xs text-white/60">{t('work.integrity.releaseSignature')}</button>}
-      {submittedPayment && <p className="mt-2 text-xs text-white/60">{t('work.integrity.paymentPending')}</p>}
+      {s.payout_state === 'broadcast' && <p className="mt-2 text-xs text-white/60">{t('work.integrity.paymentPending')}</p>}
       {isPoster && job.status==='disputed' && awaiting && s.payout_state==='unpaid' && <button onClick={()=>setRejecting(true)} className="mt-2 text-xs text-red-300">{t('work.reject')}</button>}
       {isPoster && canPay && awaiting && (
         <button

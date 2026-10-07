@@ -2,6 +2,7 @@ import { Interface,parseUnits,formatUnits } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
 import { writeContractAA,approveERC20,getERC20Allowance,getERC20Balance,getWalletAddress,switchChain,rpcRequest } from './aa-utils';
 import { CHAIN_CONFIGS,BASE_CHAIN_ID } from './dhb-token';
+import { prepareWorkPayment } from '@/features/work/payment-flow';
 
 export const DEHUB_WORK_ABI=[
  'function createJob(address,uint8,uint256,uint256,uint256) returns (uint256)',
@@ -25,10 +26,11 @@ export function getCurrencyToken(currency:string) {
  return currency==='USDC'?{address:'0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',decimals:6}:{address:CHAIN_CONFIGS[BASE_CHAIN_ID].dhbToken,decimals:18};
 }
 export async function writeWork(address:string,name:string,args:unknown[]) {
- await switchChain(BASE_CHAIN_ID);
  const iface=new Interface(DEHUB_WORK_ABI);
- try {await rpcRequest('eth_call',[{to:address,from:await getWalletAddress(),data:iface.encodeFunctionData(name,args)},'latest'],BASE_CHAIN_ID);}
- catch(error:any) {throw Object.assign(new Error(error.message || 'The escrow action is not available'),{code:'WORK_NOT_SENT'});}
+ await prepareWorkPayment(async () => {
+  await switchChain(BASE_CHAIN_ID);
+  await rpcRequest('eth_call',[{to:address,from:await getWalletAddress(),data:iface.encodeFunctionData(name,args)},'latest'],BASE_CHAIN_ID);
+ });
  return writeContractAA(address,iface,name,args,{context:'bounty '+name,chainId:BASE_CHAIN_ID});
 }
 export async function prepareWorkFunding(address:string,currency:string,price:string,maxUnits:number) {
@@ -44,12 +46,15 @@ export async function prepareWorkFunding(address:string,currency:string,price:st
  }
 }
 export async function payWorkerDirect(params:{currency:string;to:string;amount:number|string}) {
- await switchChain(BASE_CHAIN_ID);
- const token=getCurrencyToken(params.currency);
- const amount=parseUnits(String(params.amount),token.decimals);
- const from=await getWalletAddress();
- if(from.toLowerCase()===params.to.toLowerCase()) throw new Error('Cannot pay your own wallet');
- const balance=await getERC20Balance(token.address,from,BASE_CHAIN_ID);
- if(balance<amount) throw new Error(`Not enough ${params.currency}: balance ${formatUnits(balance,token.decimals)}`);
+ const {token,amount}=await prepareWorkPayment(async () => {
+  await switchChain(BASE_CHAIN_ID);
+  const token=getCurrencyToken(params.currency);
+  const amount=parseUnits(String(params.amount),token.decimals);
+  const from=await getWalletAddress();
+  if(from.toLowerCase()===params.to.toLowerCase()) throw new Error('Cannot pay your own wallet');
+  const balance=await getERC20Balance(token.address,from,BASE_CHAIN_ID);
+  if(balance<amount) throw new Error(`Not enough ${params.currency}: balance ${formatUnits(balance,token.decimals)}`);
+  return {token,amount};
+ });
  return writeContractAA(token.address,new Interface(['function transfer(address,uint256) returns (bool)']),'transfer',[params.to,amount],{context:'bounty payout',chainId:BASE_CHAIN_ID});
 }
