@@ -1,0 +1,10 @@
+a/
+.dl/
+icons.js
+frames_*/
+log_*.txt
+render_*.log
+events.json
+music*.wav
+*.mp4
+tmpst/
