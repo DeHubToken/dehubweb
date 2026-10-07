@@ -29,4 +29,3 @@ export const dubLevelGain = (value: number) => level(value, 0) ** 2;
 export const dubVoiceVolume = (master: number) => level(master, 0) * dubLevelGain(current.voice);
 
 export { applyVideoVolume, setDubMixActive } from './dub-volume';
-

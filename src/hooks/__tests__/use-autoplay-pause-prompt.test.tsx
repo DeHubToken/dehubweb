@@ -32,8 +32,9 @@ it('ignores undone pauses, shows one toast, and applies its switch to the real p
   expect(toast.message).toHaveBeenCalledTimes(1);
   expect(Number(localStorage.getItem(AUTOPLAY_PROMPT_STORAGE_KEY))).toBeGreaterThan(0);
   const options = vi.mocked(toast.message).mock.calls[0][1]!;
-  await act(async () => { render(<>{options.description}</>); });
-  fireEvent.click(screen.getByRole('switch', { name: 'settings.autoPlay' }));
+  vi.useRealTimers();
+  render(<>{options.description}</>);
+  fireEvent.click(await screen.findByRole('switch', { name: 'settings.autoPlay' }));
   expect(prefs.setAutoplayEnabled).toHaveBeenCalledWith(false);
   expect(toast.dismiss).toHaveBeenCalledWith('autoplay-pause-prompt');
 });
