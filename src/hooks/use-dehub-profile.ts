@@ -10,6 +10,7 @@ import { useQuery, useInfiniteQuery, useQueryClient, keepPreviousData } from '@t
 import { mergeLiveCounts } from '@/lib/live-counts';
 import { useMemo, useEffect } from 'react';
 import i18n from 'i18next';
+import { parseBadgeLock, type BadgeLock } from '@/lib/staking-badges';
 import { getAccountInfo, getAccountByUsername, getAuthToken, getNFTInfo, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl, deviceWidth } from '@/lib/media-url';
 import { mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem } from './use-unified-feed';
@@ -68,6 +69,8 @@ export interface ProfileData {
   customs?: Record<string, unknown>;
   /** On-chain badge balance from API */
   badgeBalance?: number;
+  /** The earned tier and balance requirement retained across ladder changes. */
+  badgeLock?: BadgeLock | null;
   /** DM settings from API */
   dmSettings?: {
     disables?: string[];
@@ -150,6 +153,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     followingsList,
     customs: Object.keys(mergedCustoms).length > 0 ? mergedCustoms : undefined,
     badgeBalance: user.badgeBalance || (user.balanceData?.reduce((sum, b) => sum + (b.walletBalance || 0) + (b.staked || 0), 0)) || 0,
+    badgeLock: parseBadgeLock(user.badgeLock),
     dmSettings: user.dmSettings,
   };
 }
