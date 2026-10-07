@@ -24,6 +24,8 @@ import { useBrandStore, hasBrand } from "@/store/editorBrandStore";
 import { applyBrand, addBrandLogo } from "./brand";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
+import { nanoid } from "nanoid";
+import { applyTimelineOp, expandBatch, TIMELINE_OPS } from "./timelineAgent";
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || "https://aigxuutjaqsywioxjefr.supabase.co"}/functions/v1/editor-agent`;
 const ANON_KEY =
@@ -69,6 +71,8 @@ export function describeScene() {
       }
     : undefined;
   return {
+    capabilities: [...TIMELINE_OPS, "batch", "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "keyframes", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "apply_brand", "add_logo", "use_template", "captions", "remove_background", "generate", "select"],
+    tracks: s.tracks.map(({ id, kind, muted, hidden }) => ({ id, kind, muted, hidden })),
     brand,
     pages: pages.length > 1 ? pages.map((p) => ({ index: p.index, start: round(p.start, 2), end: round(p.end, 2) })) : undefined,
     currentPage: pages.length > 1 ? pageAt(pages, s.currentTime).index : undefined,
@@ -90,6 +94,7 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
   const tr = getTransform(c);
   const base: Record<string, unknown> = {
     id: c.id,
+    trackId: c.trackId,
     kind: c.kind,
     start: round(c.start, 2),
     duration: round(c.duration, 2),
@@ -123,6 +128,11 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
   }
   const m = c as MediaClip;
   const out: Record<string, unknown> = { ...base, name: media.find((x) => x.id === m.mediaId)?.name };
+  out.trimIn = round(m.trimIn);
+  out.sourceDuration = m.sourceDuration;
+  out.mediaId = m.mediaId;
+  if (m.audio) out.audio = m.audio;
+  if (m.transitionOut) out.transitionOut = m.transitionOut;
   if (c.kind !== "audio") {
     out.scale = round(tr.scale, 2);
     if (m.fit === "cover") out.fit = "cover";
@@ -346,13 +356,17 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
 
   await store().runAsOneStep(async () => {
     for (const op of ops) {
-      try {
-        const ok = await applyOne(op);
-        if (ok) report.applied++;
-        else report.failed++;
-      } catch (e) {
-        console.warn("[editor-agent] op failed", op, e);
-        report.failed++;
+      const expanded = op.op === "batch" ? expandBatch(op) : [op];
+      if (!expanded) { report.failed++; continue; }
+      for (const edit of expanded) {
+        try {
+          const ok = await applyOne(edit);
+          if (ok) report.applied++;
+          else report.failed++;
+        } catch (e) {
+          console.warn("[editor-agent] op failed", edit, e);
+          report.failed++;
+        }
       }
     }
   });
@@ -360,6 +374,21 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
 
   async function applyOne(op: AgentOp): Promise<boolean> {
     const s = store();
+    if (TIMELINE_OPS.includes(op.op)) {
+      // Older responses put playback rate in audio; keep that contract working.
+      if (op.op === "audio" && op.speed !== undefined) {
+        const changed = await applyOne({ op: "speed", id: op.id, speed: op.speed });
+        if (!changed) return false;
+        if (op.volume === undefined && op.fadeIn === undefined && op.fadeOut === undefined) return true;
+      }
+      const next = applyTimelineOp(store(), { ...op, id: resolve(op.id), ids: Array.isArray(op.ids) ? op.ids.map(resolve) : op.ids }, () => nanoid(10));
+      if (!next) return false;
+      created.push(...next.created);
+      useEditorStore.setState({ clips: next.clips, tracks: next.tracks,
+        selectedClipIds: store().selectedClipIds.filter((id) => next.clips.some((c) => c.id === id)),
+      });
+      return true;
+    }
     switch (op.op) {
       case "set_canvas": {
         const patch: Record<string, unknown> = {};
@@ -481,29 +510,6 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         }
         if (!touched) return false;
         s.patchClip(clip.id, { keyframes: Object.keys(next).length ? next : undefined });
-        return true;
-      }
-      case "timing": {
-        const clip = find(op.id);
-        if (!clip) return false;
-        const start = num(op.start);
-        const duration = num(op.duration);
-        if (start !== undefined) s.moveClip(clip.id, { start: Math.max(0, start) });
-        if (duration !== undefined) {
-          const cur = store().clips.find((c) => c.id === clip.id);
-          if (cur) s.trimClip(clip.id, "out", clamp(duration, 0.1, 3600) - cur.duration);
-        }
-        return true;
-      }
-      case "audio": {
-        const clip = find(op.id);
-        if (!clip || (clip.kind !== "video" && clip.kind !== "audio")) return false;
-        const patch: Partial<MediaClip> = {};
-        const vol = num(op.volume);
-        if (vol !== undefined) patch.audio = { ...clip.audio, volume: clamp(vol, 0, 2) };
-        const speed = num(op.speed);
-        if (speed !== undefined) patch.speed = clamp(speed, 0.25, 4);
-        s.patchClip(clip.id, patch);
         return true;
       }
       case "order": {
