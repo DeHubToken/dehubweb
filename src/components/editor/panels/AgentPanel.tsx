@@ -14,7 +14,12 @@ import { useEditorStore } from '@/store/editorStore';
 import { useEditorUiStore } from '@/store/editorUiStore';
 import { useEditorAgentStore, type AgentChatEntry } from '@/store/editorAgentStore';
 import { useEditorQuota } from '@/hooks/use-editor-quota';
-import { applyOps, askAgent, type AgentMessage } from '@/lib/editor/agent';
+import { applyOps, askAgent, askSceneAgent, type AgentMessage } from '@/lib/editor/agent';
+import { highlightChatRequest, type HighlightChatResult } from '@/lib/editor/highlightChat';
+import { useHighlightChat } from '@/lib/editor/useHighlightChat';
+import { transcribeClipWords } from '@/lib/editor/captions';
+import { createHighlightEdit } from '@/lib/editor/applyHighlights';
+import { shotTime } from '@/lib/editor/shots';
 
 let entrySeq = 0;
 const nextId = () => `a${Date.now().toString(36)}${(entrySeq++).toString(36)}`;
@@ -32,6 +37,36 @@ export function AgentPanel() {
   const [draft, setDraft] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
+  const previewEnd = useRef<number | null>(null);
+  const [highlightState, highlights] = useHighlightChat({
+    current: () => useEditorStore.getState().toSnapshot(),
+    plan: askSceneAgent,
+    transcribe: async (clip, progress, signal) => {
+      const media = useEditorStore.getState().media.find(m => m.id === clip.mediaId);
+      if (!media) throw new Error('media unavailable');
+      useEditorStore.getState().setIsPlaying(false);
+      return transcribeClipWords(clip, media.url, p => progress(p.stage === 'download' ? 'download' : 'transcribe', p.stage === 'download' ? p.loaded / Math.max(1, p.total) : p.done / Math.max(1, p.total)), signal);
+    },
+    create: (original, clipId, ranges, signal) => createHighlightEdit(original, clipId, ranges, t('editor.highlights.projectTitle', { title: original.title }), signal),
+  });
+  const sourceChanged = useEditorStore(s => highlightState.clipId !== null && !highlights.matchesSource(s.toSnapshot()));
+  const working = busy || highlightState.busy;
+  const recordHighlights = useCallback((result: HighlightChatResult) => {
+    if (result.status === 'cancelled') return;
+    const errors = { selectVideo: 'editor.highlights.chatSelectVideo', changed: 'editor.highlights.changed', limit: 'editor.highlights.chatLimit', captionsMissing: 'editor.highlights.chatCaptionsMissing', failed: 'editor.highlights.reviewFailed' };
+    const content = result.status === 'error' ? t(errors[result.error]) : result.status === 'created' ? t('editor.highlights.created') : result.status === 'reviewed' ? t('editor.highlights.reviewResult', result) : result.count ? t('editor.highlights.chatFound', result) : t('editor.highlights.none');
+    push({ id: nextId(), role: 'assistant', content, error: result.status === 'error' });
+  }, [push, t]);
+  const closeHighlights = () => { previewEnd.current = null; useEditorStore.getState().setIsPlaying(false); highlights.reset(); };
+  useEffect(() => {
+    const unsubscribe = useEditorStore.subscribe(state => {
+      if (previewEnd.current !== null && state.currentTime >= previewEnd.current) {
+        const end = previewEnd.current; previewEnd.current = null;
+        state.setIsPlaying(false); state.setCurrentTime(end);
+      }
+    });
+    return () => { unsubscribe(); if (previewEnd.current !== null) useEditorStore.getState().setIsPlaying(false); previewEnd.current = null; };
+  }, []);
 
   const suggestions = [
     t('editor.agent.suggestPoster'),
@@ -39,6 +74,7 @@ export function AgentPanel() {
     t('editor.agent.suggestFilter'),
     t('editor.agent.suggestStory'),
     t('editor.agent.suggestBackground'),
+    t('editor.highlights.chatSuggest'),
   ];
 
   useEffect(() => {
@@ -55,9 +91,16 @@ export function AgentPanel() {
 
   const send = useCallback(async (text: string) => {
     const prompt = text.trim();
-    if (!prompt || busy) return;
+    if (!prompt || busy || highlights.state.busy) return;
     setDraft('');
     push({ id: nextId(), role: 'user', content: prompt });
+    const request = highlightChatRequest(prompt);
+    if (request || highlights.reviewing) {
+      previewEnd.current = null; useEditorStore.getState().setIsPlaying(false);
+      recordHighlights(request ? await highlights.start(request, useEditorStore.getState().selectedClipIds) : await highlights.review(prompt));
+      inputRef.current?.focus();
+      return;
+    }
     setBusy(true);
     try {
       const history: AgentMessage[] = [
@@ -86,7 +129,7 @@ export function AgentPanel() {
       setBusy(false);
       inputRef.current?.focus();
     }
-  }, [busy, push, setBusy, quota.walletAddress, t]);
+  }, [busy, highlightState.busy, highlights, recordHighlights, push, setBusy, quota.walletAddress, t]);
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -123,7 +166,24 @@ export function AgentPanel() {
           />
         ))}
 
-        {busy && (
+        {highlightState.clipId && <section aria-label={t('editor.highlights.reviewTitle')} className="space-y-2 rounded-xl border border-white/15 p-2.5">
+          <p className="text-xs font-medium text-white">{t('editor.highlights.reviewTitle')}</p>
+          <p className="text-[11px] text-white/60">{t('editor.highlights.chatHint')}</p>
+          {sourceChanged && <p className="text-[11px] text-white/70">{t('editor.highlights.changed')}</p>}
+          {highlightState.progress && <p role="status" className="text-[11px] text-white/60">{t(highlightState.progress.stage === 'download' ? 'editor.captions.downloading' : highlightState.progress.stage === 'transcribe' ? 'editor.captions.working' : highlightState.progress.stage === 'create' ? 'common.loading' : 'editor.highlights.ranking', { percent: Math.round(highlightState.progress.fraction * 100) })}</p>}
+          {highlightState.ranges?.map((range, i) => <div key={`${range.start}-${range.end}`} className="space-y-1 border-t border-white/10 pt-2">
+            <label className="flex items-center gap-2 text-[11px] text-white"><input type="checkbox" aria-label={`${i + 1}: ${shotTime(range.start)}–${shotTime(range.end)}`} checked={highlightState.chosen.includes(i)} disabled={working || sourceChanged} onChange={() => highlights.toggle(i)} />{i + 1}. {shotTime(range.start)}–{shotTime(range.end)}</label>
+            <p className="line-clamp-3 text-[11px] text-white/60">{range.text}</p>
+            <button type="button" disabled={working || sourceChanged} className="text-[11px] text-white/70 disabled:opacity-40" onClick={() => { const preview = highlights.preview(i); if (!preview) return; const s = useEditorStore.getState(); previewEnd.current = preview.end; s.setCurrentTime(preview.start); s.setIsPlaying(true); }}>{t('editor.shots.preview')}</button>
+          </div>)}
+          <div className="flex flex-wrap gap-2">
+            {highlightState.undo && <button type="button" disabled={working || sourceChanged} onClick={() => highlights.undo()} className="rounded border border-white/15 px-2 py-1 text-[11px] text-white/70 disabled:opacity-40">{t('editor.highlights.undoSelection')}</button>}
+            {!!highlightState.ranges?.length && <button type="button" disabled={working || sourceChanged || !highlightState.chosen.length} onClick={() => { previewEnd.current = null; useEditorStore.getState().setIsPlaying(false); void highlights.create().then(recordHighlights); }} className="rounded bg-white px-2 py-1 text-[11px] text-black disabled:opacity-40">{t('editor.highlights.create')} ({highlightState.chosen.length})</button>}
+            <button type="button" onClick={closeHighlights} className="rounded border border-white/15 px-2 py-1 text-[11px] text-white/70">{t(highlightState.busy ? 'common.cancel' : 'editor.highlights.chatExit')}</button>
+          </div>
+        </section>}
+
+        {working && (
           <div className="flex items-center gap-2 px-1 text-[11px] text-white/50">
             <Loader2 className="h-3.5 w-3.5 animate-spin" /> {t('editor.agent.working')}
           </div>
@@ -146,23 +206,24 @@ export function AgentPanel() {
               }
             }}
             rows={2}
-            placeholder={t('editor.agent.placeholder')}
-            aria-label={t('editor.agent.placeholder')}
+            placeholder={t(highlights.reviewing ? 'editor.highlights.reviewPlaceholder' : 'editor.agent.placeholder')}
+            aria-label={t(highlights.reviewing ? 'editor.highlights.reviewPlaceholder' : 'editor.agent.placeholder')}
+            maxLength={highlights.reviewing ? 800 : undefined}
             className="max-h-40 min-h-[2.5rem] flex-1 resize-none bg-transparent px-1.5 py-1 text-[12px] text-white placeholder:text-white/35 focus:outline-none"
           />
           <button
             type="submit"
-            disabled={busy || !draft.trim()}
+            disabled={working || !draft.trim()}
             aria-label={t('editor.agent.send')}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-black transition disabled:opacity-30"
           >
-            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowUp className="h-4 w-4" />}
+            {working ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowUp className="h-4 w-4" />}
           </button>
         </div>
         <div className="mt-1 flex items-center justify-between px-1 text-[10px] text-white/35">
           <span>{t('editor.agent.hint')}</span>
           {entries.length > 0 && (
-            <button type="button" onClick={clear} className="flex items-center gap-1 hover:text-white/70">
+            <button type="button" onClick={() => { closeHighlights(); clear(); }} className="flex items-center gap-1 hover:text-white/70">
               <Trash2 className="h-3 w-3" /> {t('editor.agent.clear')}
             </button>
           )}

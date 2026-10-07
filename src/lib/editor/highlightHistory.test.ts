@@ -29,4 +29,14 @@ describe("highlight project persistence and history", () => {
     expect(useEditorStore.getState().clips[0].duration).toBe(20);
     expect(saveProject).toHaveBeenCalledTimes(1);
   });
+  it("keeps the current project when creation is cancelled while saving either design", async () => {
+    for (const cancelOn of [1, 2]) {
+      vi.clearAllMocks();
+      const original = useEditorStore.getState().toSnapshot(), controller = new AbortController(); let calls = 0;
+      vi.mocked(saveProject).mockImplementation(async () => { calls++; if (calls === cancelOn) controller.abort(); });
+      expect(await createHighlightEdit(original, "v", [{ start: 2, end: 6, text: "Moment.", score: 0.9 }], "Highlights", controller.signal)).toBe(false);
+      expect(useEditorStore.getState().projectId).toBe(original.id); expect(useEditorStore.getState().clips).toBe(original.clips);
+      expect(setLastProjectId).not.toHaveBeenCalled(); expect(calls).toBe(cancelOn);
+    }
+  });
 });
