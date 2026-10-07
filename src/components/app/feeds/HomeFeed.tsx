@@ -92,7 +92,7 @@ import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
 import { NewMembersCarousel } from '@/components/app/NewMembersCarousel';
 import { LeaderboardCarousel } from '@/components/app/feeds/LeaderboardCarousel';
 import { FriendsOnStageBar } from '@/components/app/feeds/FriendsOnStageBar';
-import { PromptFlowModal } from '@/components/app/feeds/PromptFlowModal';
+import { PromptFlowModalLazy as PromptFlowModal } from '@/components/app/feeds/PromptFlowModalLazy';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
 import type { ServedAd } from '@/lib/ads/povr';
