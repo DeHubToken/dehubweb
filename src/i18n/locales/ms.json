@@ -7089,6 +7089,13 @@
         "hold": "Tahan"
       }
     },
+    "shots": {
+      "detect": "Kesan perubahan adegan",
+      "split": "Pisahkan pada potongan terpilih",
+      "none": "Tiada perubahan adegan ditemui.",
+      "hint": "Semak potongan dahulu · ≤10 minit",
+      "preview": "Pratonton"
+    },
     "beats": {
       "markers": "Penanda rentak",
       "sync": "Segerakkan potongan",

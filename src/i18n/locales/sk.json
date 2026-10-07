@@ -6967,6 +6967,13 @@
         "hold": "Podržať"
       }
     },
+    "shots": {
+      "detect": "Nájsť zmeny scén",
+      "split": "Rozdeliť vo vybraných strihoch",
+      "none": "Nenašli sa zmeny scén.",
+      "hint": "Najprv skontrolujte strihy · ≤10 min",
+      "preview": "Náhľad"
+    },
     "beats": {
       "markers": "Značky rytmu",
       "sync": "Synchronizovať strihy",

@@ -6820,6 +6820,13 @@
         "hold": "Pupuri"
       }
     },
+    "shots": {
+      "detect": "Kimihia ngā huringa whakaaturanga",
+      "split": "Wehea ki ngā tapahi kua tīpakohia",
+      "none": "Kāore he huringa whakaaturanga i kitea.",
+      "hint": "Arotakea ngā tapahi i te tuatahi · ≤10 min",
+      "preview": "Arokite"
+    },
     "beats": {
       "markers": "Ngā tohu manawataki",
       "sync": "Whakaritea ngā tapahi",

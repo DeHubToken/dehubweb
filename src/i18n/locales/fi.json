@@ -6735,6 +6735,13 @@
         "hold": "Pidä"
       }
     },
+    "shots": {
+      "detect": "Tunnista kohtauksen vaihdot",
+      "split": "Jaa valituista leikkauskohdista",
+      "none": "Kohtauksen vaihtoja ei löytynyt.",
+      "hint": "Tarkista leikkaukset ensin · ≤10 min",
+      "preview": "Esikatselu"
+    },
     "beats": {
       "markers": "Rytmimerkit",
       "sync": "Synkronoi leikkaukset",

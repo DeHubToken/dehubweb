@@ -6754,6 +6754,13 @@
         "hold": "Hay"
       }
     },
+    "shots": {
+      "detect": "Ogow isbeddellada muuqaalka",
+      "split": "U qaybi goynta la doortay",
+      "none": "Isbeddel muuqaal lama helin.",
+      "hint": "Marka hore eeg goynta · ≤10 daqiiqo",
+      "preview": "Hordhac"
+    },
     "beats": {
       "markers": "Calaamadaha garaaca",
       "sync": "Isku waafaji goynta",
