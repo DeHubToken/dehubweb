@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
 import { useJobQuote, formatDhb, useFreeImages } from '@/hooks/use-ai-quote';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -562,6 +563,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   const [videoPaywallOpen, setVideoPaywallOpen] = useState(false);
   const [model3dPaywallOpen, setModel3dPaywallOpen] = useState(false);
   const [attaching, setAttaching] = useState(false);
+  const [attachmentMenuOpen, setAttachmentMenuOpen] = useState(false);
+  const [referenceLibraryOpen, setReferenceLibraryOpen] = useState(false);
   /** Hosting a 3D reference in storage, before the paywall opens. */
   const [staging, setStaging] = useState(false);
   const [enhancing, setEnhancing] = useState(false);
@@ -585,6 +588,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       setModel3dPaywallOpen(false);
       setAudioPaywallOpen(false);
       setVoiceDesignOpen(false);
+      setAttachmentMenuOpen(false);
+      setReferenceLibraryOpen(false);
     }, []),
   );
   const surfaceEpoch = useSurfaceEpoch();
@@ -760,6 +765,10 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
    * preset and attachment, so all three can be in progress at once.
    */
   const switchMode = useCallback((next: Mode) => setMode(next), []);
+  useEffect(() => {
+    setAttachmentMenuOpen(false);
+    setReferenceLibraryOpen(false);
+  }, [mode]);
 
   const enhance = useCallback(async () => {
     const current = prompt.trim();
@@ -1688,17 +1697,6 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         >
           <>
 
-              {mode === 'image' && (
-                <div className="mb-3 flex flex-wrap gap-2" aria-label="Image quality presets">
-                  {[
-                    ['Fast', 'gemini-3.1-flash-image'], ['Balanced', 'nano-banana-2'], ['Best', 'gemini-3-pro-image'],
-                  ].map(([label, model]) => (
-                    <button type="button" key={model} aria-pressed={imageModel === model} onClick={() => setImageModel(model)} title={IMAGE_MODELS[model].name} className={cn('rounded-lg border px-3 py-1.5 text-xs', imageModel === model ? 'border-white/40 bg-white/15 text-white' : 'border-white/15 text-white/60')}>
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              )}
               {mode === 'audio' && audioFile && (
                 <div className="mb-2 flex items-center gap-2.5 rounded-xl border border-white/10 bg-black/40 p-2">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/[0.08]">
@@ -1725,7 +1723,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                 </div>
               )}
 
-              {mode !== 'audio' && <ReferenceAssets assets={currentAssets} onAdd={asset => void addAsset(asset)} onRemove={removeAsset} onMention={insertAssetMention} allowVideo={mode === 'video'} singleImage={mode === '3d'} />}
+              {mode !== 'audio' && <ReferenceAssets assets={currentAssets} onAdd={asset => void addAsset(asset)} onRemove={removeAsset} onMention={insertAssetMention} allowVideo={mode === 'video'} singleImage={mode === '3d'} libraryOpen={referenceLibraryOpen} onLibraryOpenChange={setReferenceLibraryOpen} />}
               {mode === 'video' && (
                 <div className="mb-3 flex flex-wrap gap-2">
                   {(['swap', 'motion'] as const).map(workflow => <button key={workflow} type="button"
@@ -1796,21 +1794,28 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     — offering a paperclip there is a control that can only
                     produce an error. */}
                 {(mode !== 'audio' || activeAudioTask.needsMedia) && (
-                  <button
-                    type="button"
-                    onClick={() => fileRef.current?.click()}
-                    disabled={attaching}
-                    aria-label={
-                      t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')
-                    }
-                    className="shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-2 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
-                  >
-                    {attaching ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Paperclip className="h-4 w-4" />
-                    )}
-                  </button>
+                  <DropdownMenu open={attachmentMenuOpen} onOpenChange={setAttachmentMenuOpen}>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        disabled={attaching}
+                        aria-label={
+                          t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')
+                        }
+                        className="shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-2 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
+                      >
+                        {attaching ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Paperclip className="h-4 w-4" />
+                        )}
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      {mode !== 'audio' && <DropdownMenuItem onSelect={() => setReferenceLibraryOpen(true)}>{t('creator.referenceLibrary')}</DropdownMenuItem>}
+                      <DropdownMenuItem onSelect={() => fileRef.current?.click()}>{t('creator.referenceUpload')}</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )}
                 <ModeToggle mode={mode} onChange={switchMode} />
 
