@@ -519,7 +519,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           type="button"
           onClick={() => { setPhase('lost-device'); setError(null); setPassword(''); setNewConfirm(''); setReplacementAcknowledged(false); }}
           disabled={busy || loggingOut}
-          className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
+          className="w-full rounded-xl border border-white/20 px-4 py-3 text-center text-sm text-white/90 hover:bg-white/5 transition-colors disabled:opacity-50"
         >
           Can't unlock? Create a new wallet
         </button>
