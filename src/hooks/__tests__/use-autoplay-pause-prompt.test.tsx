@@ -10,7 +10,7 @@ vi.mock('@/i18n', () => ({ default: { t: (key: string) => key } }));
 vi.mock('sonner', () => ({ toast: { message: vi.fn(), dismiss: vi.fn() } }));
 afterEach(() => { vi.useRealTimers(); localStorage.clear(); });
 
-it('ignores undone pauses, shows one toast, and applies its switch to the real preference setter', () => {
+it('ignores undone pauses, shows one toast, and applies its switch to the real preference setter', async () => {
   vi.useFakeTimers();
   localStorage.clear();
   const { result, rerender, unmount } = renderHook(
@@ -32,7 +32,7 @@ it('ignores undone pauses, shows one toast, and applies its switch to the real p
   expect(toast.message).toHaveBeenCalledTimes(1);
   expect(Number(localStorage.getItem(AUTOPLAY_PROMPT_STORAGE_KEY))).toBeGreaterThan(0);
   const options = vi.mocked(toast.message).mock.calls[0][1]!;
-  render(<>{options.description}</>);
+  await act(async () => { render(<>{options.description}</>); });
   fireEvent.click(screen.getByRole('switch', { name: 'settings.autoPlay' }));
   expect(prefs.setAutoplayEnabled).toHaveBeenCalledWith(false);
   expect(toast.dismiss).toHaveBeenCalledWith('autoplay-pause-prompt');

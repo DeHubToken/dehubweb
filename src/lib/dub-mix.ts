@@ -28,15 +28,5 @@ export const useDubMix = () => useSyncExternalStore(subscribe, getDubMix, () => 
 export const dubLevelGain = (value: number) => level(value, 0) ** 2;
 export const dubVoiceVolume = (master: number) => level(master, 0) * dubLevelGain(current.voice);
 
-type VolumePlayer = { volume: number };
-const mixedPlayers = new WeakSet<VolumePlayer>();
-export function setDubMixActive(player: VolumePlayer, active: boolean): void {
-  if (active) mixedPlayers.add(player);
-  else mixedPlayers.delete(player);
-}
-/** Every player control uses the same output path while a dub owns the mix. */
-export function applyVideoVolume(player: VolumePlayer, master: number): void {
-  const target = level(master, 0) * (mixedPlayers.has(player) ? dubLevelGain(current.original) : 1);
-  if (target === 0 ? player.volume !== 0 : Math.abs(player.volume - target) > 0.000001) player.volume = target;
-}
+export { applyVideoVolume, setDubMixActive } from './dub-volume';
 

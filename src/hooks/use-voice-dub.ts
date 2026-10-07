@@ -8,7 +8,7 @@ import { useEffect, useRef } from 'react';
 import type { TranscriptSegment } from '@/hooks/use-transcript';
 import { synth } from '@/hooks/dub-preference';
 import { getMediaVolume, useMediaVolume } from '@/lib/video-preferences';
-import { applyVideoVolume, dubVoiceVolume, setDubMixActive, useDubMix } from '@/lib/dub-mix';
+import { applyVideoVolume, dubLevelGain, dubVoiceVolume, getDubMix, setDubMixActive, useDubMix } from '@/lib/dub-mix';
 
 /** Characters per second a voice reads comfortably at rate 1. */
 const NATURAL_CPS = 14;
@@ -58,7 +58,7 @@ export function useVoiceDub(
     let restartTimer: ReturnType<typeof setTimeout> | null = null;
     let speechVolume = dubVoiceVolume(getMediaVolume());
     const syncVolume = () => {
-      setDubMixActive(v, !failed);
+      setDubMixActive(v, !failed, dubLevelGain(getDubMix().original));
       applyVideoVolume(v, getMediaVolume());
     };
 
@@ -175,7 +175,7 @@ export function useVoiceDub(
       v.removeEventListener('volumechange', onVolume);
       stop();
       if (reconcileRef.current === reconcile) reconcileRef.current = null;
-      setDubMixActive(v, false);
+      setDubMixActive(v, false, 1);
       applyVideoVolume(v, getMediaVolume());
       if (owners.get(v) === me) owners.delete(v);
     };

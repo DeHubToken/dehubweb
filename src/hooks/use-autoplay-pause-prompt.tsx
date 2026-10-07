@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { useAutoplay } from '@/contexts/AutoplayContext';
-import { Switch } from '@/components/ui/switch';
 import i18n from '@/i18n';
 import {
   AUTOPLAY_PAUSE_CONFIRM_MS,
@@ -11,6 +10,7 @@ import {
 
 const tracker = createAutoplayPauseTracker();
 const TOAST_ID = 'autoplay-pause-prompt';
+const Switch = lazy(() => import('@/components/ui/switch').then(m => ({ default: m.Switch })));
 
 export function useAutoplayPausePrompt(videoId: string) {
   const { autoplayEnabled, setAutoplayEnabled } = useAutoplay();
@@ -54,14 +54,14 @@ export function useAutoplayPausePrompt(videoId: string) {
         description: (
           <label className="flex items-center justify-between gap-6 pt-2">
             <span>{i18n.t('settings.autoPlay')}</span>
-            <Switch
+            <Suspense fallback={<span className="h-6 w-11" />}><Switch
               checked
               aria-label={i18n.t('settings.autoPlay')}
               onCheckedChange={(enabled) => {
                 setAutoplayEnabled(enabled);
                 toast.dismiss(TOAST_ID);
               }}
-            />
+            /></Suspense>
           </label>
         ),
       });
