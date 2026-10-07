@@ -17,11 +17,19 @@ export function useAutoplayPausePrompt(videoId: string) {
   const enabledRef = useRef(autoplayEnabled);
   enabledRef.current = autoplayEnabled;
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingPause = useRef<(() => void) | null>(null);
   const cancelPause = useCallback(() => {
     if (timer.current !== null) clearTimeout(timer.current);
     timer.current = null;
+    pendingPause.current = null;
   }, []);
-  useEffect(() => cancelPause, [videoId, cancelPause]);
+  useEffect(() => () => {
+    // Scrolling can remove the card before the gesture window ends. A pause
+    // that was not reversed still counts when its player leaves the feed.
+    const confirm = pendingPause.current;
+    cancelPause();
+    confirm?.();
+  }, [videoId, cancelPause]);
   useEffect(() => {
     if (!autoplayEnabled) {
       cancelPause();
@@ -32,8 +40,7 @@ export function useAutoplayPausePrompt(videoId: string) {
   const recordPause = useCallback(() => {
     cancelPause();
     if (!enabledRef.current) return;
-    timer.current = setTimeout(() => {
-      timer.current = null;
+    pendingPause.current = () => {
       if (!enabledRef.current) return;
       const now = Date.now();
       let lastPromptAt = 0;
@@ -58,6 +65,11 @@ export function useAutoplayPausePrompt(videoId: string) {
           </label>
         ),
       });
+    };
+    timer.current = setTimeout(() => {
+      const confirm = pendingPause.current;
+      cancelPause();
+      confirm?.();
     }, AUTOPLAY_PAUSE_CONFIRM_MS);
   }, [videoId, setAutoplayEnabled, cancelPause]);
 
