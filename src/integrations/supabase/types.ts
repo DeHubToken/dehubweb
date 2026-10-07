@@ -5888,6 +5888,42 @@ export type Database = {
         }
         Relationships: []
       }
+      token_listing_waitlist: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          source: string | null
+          supabase_user_id: string | null
+          token: string
+          updated_at: string
+          username: string | null
+          wallet_address: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          source?: string | null
+          supabase_user_id?: string | null
+          token: string
+          updated_at?: string
+          username?: string | null
+          wallet_address?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string | null
+          supabase_user_id?: string | null
+          token?: string
+          updated_at?: string
+          username?: string | null
+          wallet_address?: string | null
+        }
+        Relationships: []
+      }
       transcript_correction_votes: {
         Row: {
           address: string
@@ -6477,6 +6513,7 @@ export type Database = {
         Row: {
           created_at: string
           preferences: Json
+          reaction_tip_seen: boolean
           shorts_enabled: boolean
           updated_at: string
           wallet_address: string
@@ -6484,6 +6521,7 @@ export type Database = {
         Insert: {
           created_at?: string
           preferences?: Json
+          reaction_tip_seen?: boolean
           shorts_enabled?: boolean
           updated_at?: string
           wallet_address: string
@@ -6491,6 +6529,7 @@ export type Database = {
         Update: {
           created_at?: string
           preferences?: Json
+          reaction_tip_seen?: boolean
           shorts_enabled?: boolean
           updated_at?: string
           wallet_address?: string
@@ -7838,6 +7877,7 @@ export type Database = {
         }[]
       }
       claim_paid_translation: { Args: { p_cap: number }; Returns: boolean }
+      claim_reaction_tip: { Args: never; Returns: boolean }
       claim_xl_cashback_slot: {
         Args: { p_subscription_id: string; p_xl_price_id: string }
         Returns: boolean
@@ -8162,6 +8202,16 @@ export type Database = {
           expires_at: string
           token: string
         }[]
+      }
+      join_token_listing_waitlist: {
+        Args: {
+          p_email: string
+          p_source?: string
+          p_token: string
+          p_username?: string
+          p_wallet_address?: string
+        }
+        Returns: Json
       }
       leaderboard_rank: {
         Args: { p_address: string; p_sort?: string }
