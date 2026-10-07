@@ -3747,6 +3747,10 @@
     "sellYourFractions": "Sell your fractions ({{held}} held)"
   },
   "creator": {
+    "editorAssetMissing": "That generation has no media to import yet.",
+    "editorAssetUnsupported": "3D models cannot go on the timeline. Download the model instead.",
+    "editorImportFailed": "Could not import that result into the editor.",
+    "editorImportedToLibrary": "Your design changed during the import. The result is saved in your media library.",
     "presetExtraGlassCausticsName": "Glass caustics",
     "presetExtraGlassCausticsHint": "Sunlight bends through clear glass",
     "presetExtraRainyProductName": "Rainy product",
