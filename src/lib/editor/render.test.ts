@@ -17,7 +17,7 @@ it("composites the source-clock mask with the same crop as the original before g
   const image = { naturalWidth: matte.atlasWidth, naturalHeight: matte.atlasHeight } as HTMLImageElement;
   const calls: { mode: string; args: unknown[] }[] = [];
   const maskContext = { globalCompositeOperation: "", setTransform() {}, drawImage(...args: unknown[]) { calls.push({ mode: this.globalCompositeOperation, args }); } };
-  const get = vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(maskContext as unknown as CanvasRenderingContext2D);
+  const get = vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(maskContext as never);
   const draw = vi.fn();
   const target = { globalAlpha: 1, save() {}, restore() {}, translate() {}, rotate() {}, scale() {}, drawImage: draw } as unknown as CanvasRenderingContext2D;
   try {
