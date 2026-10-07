@@ -1,9 +1,20 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useEditorStore } from "@/store/editorStore";
-import { applyOps, describeScene } from "./agent";
+import { applyOps, askAgent, describeScene } from "./agent";
 
 describe("editor agent", () => {
   beforeEach(() => useEditorStore.getState().newProject());
+
+  it("performs the exact ten one-second cut request without a network planner", async () => {
+    useEditorStore.setState({ tracks: [{ id: "v", kind: "video", name: "Video", hidden: false, muted: false }], clips: [{ id: "v1", trackId: "v", kind: "video", mediaId: "m", start: 0, trimIn: 0, duration: 10 }] });
+    const fetch = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("offline"));
+    try {
+      const result = await askAgent([{ role: "user", content: "break up the video into 10 1 second clips" }]);
+      expect(fetch).not.toHaveBeenCalled();
+      expect(await applyOps(result.ops)).toMatchObject({ applied: 1, failed: 0 });
+      expect(useEditorStore.getState().clips.map(c => c.trimIn)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    } finally { fetch.mockRestore(); }
+  });
 
   it("applies a multi-step request as one undo step", async () => {
     const report = await applyOps([
