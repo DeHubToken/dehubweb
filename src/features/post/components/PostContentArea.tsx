@@ -621,6 +621,7 @@ export function PostContentArea({
             <TooltipTrigger asChild>
               <motion.button
                 onClick={() => setShowSchedule(true)}
+                aria-label={scheduledDate ? 'Edit schedule' : liveMode === 'townhall' ? 'Schedule stage' : liveMode === 'video' ? 'Schedule livestream' : 'Schedule post'}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
@@ -634,7 +635,7 @@ export function PostContentArea({
               </motion.button>
             </TooltipTrigger>
             <TooltipContent>
-              {scheduledDate ? 'Edit schedule' : 'Schedule post'}
+              {scheduledDate ? 'Edit schedule' : liveMode === 'townhall' ? 'Schedule stage' : liveMode === 'video' ? 'Schedule livestream' : 'Schedule post'}
             </TooltipContent>
           </Tooltip>
 
@@ -788,6 +789,17 @@ export function PostContentArea({
           />
         </div>
 
+        {isLive && (
+          <div className="mt-3 flex flex-wrap gap-2" aria-label="Broadcast timing">
+            <button type="button" aria-pressed={!scheduledDate} onClick={() => onSchedule(null)} className={cn('rounded-xl border px-3 py-2 text-xs', !scheduledDate ? 'border-white/40 bg-white/15 text-white' : 'border-white/15 text-white/60')}>
+              Go live now
+            </button>
+            <button type="button" aria-pressed={!!scheduledDate} onClick={() => setShowSchedule(true)} className={cn('flex items-center gap-2 rounded-xl border px-3 py-2 text-xs', scheduledDate ? 'border-amber-500/40 bg-amber-500/20 text-amber-400' : 'border-white/15 text-white/60')}>
+              <Calendar className="h-4 w-4" />
+              {liveMode === 'townhall' ? 'Schedule stage' : 'Schedule livestream'}
+            </button>
+          </div>
+        )}
         {/* Link previews follow the same full-width column as the editor. */}
         <div>
           <LinkPreviews 
@@ -809,7 +821,7 @@ export function PostContentArea({
               >
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 <span className="text-red-400 text-sm font-medium">
-                  {liveMode === 'video' ? 'Live Video' : 'Stages'} stream will be created
+                  {scheduledDate ? `${liveMode === 'video' ? 'Livestream' : 'Stage'} will be scheduled` : `${liveMode === 'video' ? 'Live Video' : 'Stages'} stream will be created`}
                 </span>
               </motion.div>
             )}
@@ -862,6 +874,8 @@ export function PostContentArea({
         onClose={() => setShowSchedule(false)}
         scheduledDate={scheduledDate}
         onSchedule={onSchedule}
+        title={liveMode === 'townhall' ? 'Schedule stage' : liveMode === 'video' ? 'Schedule livestream' : 'Schedule Post'}
+        minimumMinutes={liveMode === 'video' ? 30 : 0}
       />
 
       {/* Drafts Sheet */}
