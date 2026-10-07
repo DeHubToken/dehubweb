@@ -6633,6 +6633,15 @@
       "thisPage": "Samo ova stranica",
       "exporting": "Renderiranje stranice {{current}} od {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizirajte glasnoću",
+      "denoise": "Smanjite buku",
+      "voice": "Poboljšajte glas",
+      "working": "Obrada zvuka... {{percent}}%",
+      "done": "Dodan je obrađeni zvuk. Poništava se vraćanje izvornika.",
+      "failed": "Obrada ovog zvuka nije uspjela. Original je nepromijenjen.",
+      "hint": "Obradite isječke do 10 minuta. Smanjenje buke najbolje funkcionira uz stalnu pozadinsku buku."
+    },
     "captions": {
       "action": "Automatski titlovi",
       "working": "Slušam… {{percent}} %",

@@ -6740,6 +6740,15 @@
       "thisPage": "Tik šis puslapis",
       "exporting": "Generuojamas puslapis {{current}} iš {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizuoti garsumą",
+      "denoise": "Sumažinkite triukšmą",
+      "voice": "Pagerinti balso kokybę",
+      "working": "Apdorojamas garsas... {{percent}}%",
+      "done": "Apdorotas garsas pridėtas. Anuliuoti atkuria originalą.",
+      "failed": "Nepavyko apdoroti šio garso. Originalas nesikeičia.",
+      "hint": "Apdorokite klipus iki 10 minučių. Triukšmo mažinimas geriausiai veikia esant pastoviam foniniam triukšmui."
+    },
     "captions": {
       "action": "Automatiniai subtitrai",
       "working": "Klausomasi… {{percent}} %",

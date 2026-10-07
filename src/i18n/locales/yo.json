@@ -6635,6 +6635,15 @@
       "thisPage": "Ojú-ìwé yìí nìkan",
       "exporting": "Ń ṣe ojú-ìwé {{current}} nínú {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Ṣe deede iwọn didun",
+      "denoise": "Dinku ariwo",
+      "voice": "Mú ohùn sunwọ̀n sí i",
+      "working": "Sise ohun... {{percent}}%",
+      "done": "Oríṣìíríṣìí ohun tí a fi kún un. Undo mú oríṣìíríṣìí padà.",
+      "failed": "N kò lè ṣe àgbékalẹ̀ ìró yìí. Àkọ́kọ́ náà kò yí padà.",
+      "hint": "Àwọn àmúyẹ fun gbígbọ́ orin ko le ṣiṣẹ lori ẹ̀rọ rẹ Àkọlé fídíò Ìdènà ariwo máa ń ṣiṣẹ́ dáradára pẹ̀lú ariwo àtẹ̀yìnwá tí ó dúró ṣánṣán."
+    },
     "captions": {
       "action": "Àkọlé aládàáṣe",
       "working": "Ń gbọ́… {{percent}}%",

@@ -6749,6 +6749,15 @@
       "thisPage": "Yalnızca bu sayfa",
       "exporting": "Sayfa {{current}} / {{total}} işleniyor…"
     },
+    "audioTools": {
+      "normalize": "Sesi normalleştir",
+      "denoise": "Gürültüyü azaltın",
+      "voice": "Sesi geliştir",
+      "working": "Ses işleniyor... {{percent}}%",
+      "done": "İşlenmiş ses eklendi. Geri al orijinali geri yükler.",
+      "failed": "Bu ses işlenemedi. Orijinali değişmemiştir.",
+      "hint": "Klipleri 10 dakikaya kadar işleyin. Gürültü azaltma, sabit arka plan gürültüsü ile en iyi sonucu verir."
+    },
     "captions": {
       "action": "Otomatik altyazı",
       "working": "Dinleniyor… %{{percent}}",

@@ -6668,6 +6668,15 @@
       "thisPage": "Naanị peeji a",
       "exporting": "Na-akwado peeji {{current}} n'ime {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Hazie ụda",
+      "denoise": "Belata mkpọtụ",
+      "voice": "Enhance olu",
+      "working": "Hazie ụda... {{percent}}%",
+      "done": "Ụda esichara agbakwunyere. Wepụtagharịa nke mbụ.",
+      "failed": "Agaghị emenwu ụda a. Nke mbụ anaghị agbanwe agbanwe.",
+      "hint": "Usoro mkpachị ruo 10 nkeji. Mbelata mkpọtụ na-arụ ọrụ kacha mma na mkpọtụ ndabere siri ike."
+    },
     "captions": {
       "action": "Ndepụta okwu akpaka",
       "working": "Na-ege ntị… {{percent}}%",
