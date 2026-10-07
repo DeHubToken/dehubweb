@@ -10,7 +10,7 @@
 import { useRef, useEffect, useState, memo } from 'react';
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { cn } from '@/lib/utils';
-import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
+import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoaderLazy';
 import { useResolvedThumbnail, DEFAULT_POSTER_WIDTH } from '@/lib/thumbnail-fallback';
 import { useFirstInteraction } from '@/hooks/use-boot-settled';
 
