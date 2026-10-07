@@ -6736,6 +6736,13 @@
         "hold": "Podržet"
       }
     },
+    "shots": {
+      "detect": "Najít změny scén",
+      "split": "Rozdělit ve vybraných střizích",
+      "none": "Nebyly nalezeny změny scén.",
+      "hint": "Nejprve zkontrolujte střihy · ≤10 min",
+      "preview": "Náhled"
+    },
     "beats": {
       "markers": "Značky rytmu",
       "sync": "Synchronizovat střihy",

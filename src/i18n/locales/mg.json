@@ -6851,6 +6851,13 @@
         "hold": "Tazony"
       }
     },
+    "shots": {
+      "detect": "Fantaro ny fiovan'ny seho",
+      "split": "Zarao amin'ny fanapahana voafidy",
+      "none": "Tsy nisy fiovan'ny seho hita.",
+      "hint": "Jereo aloha ny fanapahana · ≤10 min",
+      "preview": "Topimaso"
+    },
     "beats": {
       "markers": "Marika gadona",
       "sync": "Ampifanaraho ny tapa-dahatsary",

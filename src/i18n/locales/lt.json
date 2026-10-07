@@ -6846,6 +6846,13 @@
         "hold": "Išlaikyti"
       }
     },
+    "shots": {
+      "detect": "Aptikti scenų pasikeitimus",
+      "split": "Padalyti ties pasirinktais pjūviais",
+      "none": "Scenų pasikeitimų nerasta.",
+      "hint": "Pirmiausia peržiūrėkite pjūvius · ≤10 min",
+      "preview": "Peržiūra"
+    },
     "beats": {
       "markers": "Ritmo žymekliai",
       "sync": "Sinchronizuoti kirpimus",

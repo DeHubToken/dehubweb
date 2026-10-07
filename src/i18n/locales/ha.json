@@ -6741,6 +6741,13 @@
         "hold": "Riƙe"
       }
     },
+    "shots": {
+      "detect": "Gano sauyin fage",
+      "split": "Raba a yankunan da aka zaɓa",
+      "none": "Ba a sami sauyin fage ba.",
+      "hint": "Duba yankuna da farko · ≤10 min",
+      "preview": "Dubawa"
+    },
     "beats": {
       "markers": "Alamomin kari",
       "sync": "Daidaita yanke",

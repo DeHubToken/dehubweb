@@ -6736,6 +6736,13 @@
         "hold": "Tartás"
       }
     },
+    "shots": {
+      "detect": "Jelenetváltások felismerése",
+      "split": "Felosztás a kijelölt vágásoknál",
+      "none": "Nem található jelenetváltás.",
+      "hint": "Először nézze át a vágásokat · ≤10 perc",
+      "preview": "Előnézet"
+    },
     "beats": {
       "markers": "Ütemjelölők",
       "sync": "Vágások szinkronizálása",
