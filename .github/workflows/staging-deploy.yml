@@ -7,6 +7,10 @@ on:
         description: Commit or branch to deploy to staging.dehub.io
         default: main
         required: true
+      validate_only:
+        description: Validate existing Cloudflare credentials without building or deploying
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -22,24 +26,37 @@ jobs:
     environment: staging
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Cloudflare staging credentials
+        run: node scripts/cloudflare-credentials.mjs
+        env:
+          CLOUDFLARE_APITOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
+          CLOUDFLARE_ID: ${{ secrets.CLOUDFLARE_ID }}
+      - uses: actions/checkout@v4
+        if: ${{ !inputs.validate_only }}
         with:
           ref: ${{ inputs.revision }}
       - uses: pnpm/action-setup@v4
+        if: ${{ !inputs.validate_only }}
         with:
           version: '9'
       - uses: actions/setup-node@v4
+        if: ${{ !inputs.validate_only }}
         with:
           node-version: '22'
           cache: pnpm
       - run: pnpm install --no-frozen-lockfile
+        if: ${{ !inputs.validate_only }}
       - name: Build staging assets
+        if: ${{ !inputs.validate_only }}
         run: pnpm build
       - name: Deploy staging worker and assets
+        if: ${{ !inputs.validate_only }}
         run: pnpm exec wrangler deploy --config wrangler.staging.jsonc
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ID }}
       - name: Verify staging serves this commit
+        if: ${{ !inputs.validate_only }}
         run: |
           EXPECTED="$(git rev-parse HEAD)"
           curl --fail --silent --show-error "https://staging.dehub.io/version.json?commit=$EXPECTED" --output /tmp/staging-version.json
