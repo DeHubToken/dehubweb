@@ -1,3 +1,5 @@
+import { useVideoDownload } from "@/hooks/use-video-download";
+import { useAuth } from "@/contexts/AuthContext";
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Results feed and viewer.
@@ -362,6 +364,8 @@ function ResultViewer({
   onOpenEditor,
 }: ResultViewerProps) {
   const { t } = useTranslation();
+  const downloadVideo = useVideoDownload();
+  const { user } = useAuth();
   const remove = useGenerationStore((s) => s.remove);
   const retry = useGenerationStore((s) => s.retry);
   const [sending, setSending] = useState(false);
@@ -441,6 +445,10 @@ function ResultViewer({
       return;
     }
     if (!job.url) return;
+    if (job.kind === "video") {
+      await downloadVideo({ url: job.url, title: "dehub-video-" + job.id, username: user?.username });
+      return;
+    }
     const filename = `dehub-${job.kind}-${job.id}.${extensionFor(job)}`;
     let href = job.url;
     let objectUrl: string | null = null;
@@ -462,7 +470,7 @@ function ResultViewer({
     a.click();
     a.remove();
     if (objectUrl) setTimeout(() => URL.revokeObjectURL(objectUrl!), 30_000);
-  }, [job]);
+  }, [job, downloadVideo, user?.username]);
 
   const failed = job.status === 'failed' || job.status === 'cancelled';
 
