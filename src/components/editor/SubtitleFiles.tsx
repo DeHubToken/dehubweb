@@ -50,7 +50,7 @@ export function SubtitleFiles() {
       if (file) void importFile(file);
     }} />
     <Button size="sm" variant="ghost" disabled={busy} onClick={() => input.current?.click()} className="h-7 w-full border border-white/10 text-[11px]">
-      {t(busy ? "common.loading" : "common.select")} SRT / VTT
+      {t(busy ? "common.loading" : "editor.design.importMedia")} SRT / VTT
     </Button>
     <div className="grid grid-cols-2 gap-1">
       {SUBTITLE_FORMATS.map(format => <Button key={format} size="sm" variant="ghost" disabled={!captions.length || busy} onClick={() => download(format)} className="h-7 border border-white/10 text-[11px]">
