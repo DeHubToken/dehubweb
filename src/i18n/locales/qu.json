@@ -6754,6 +6754,15 @@
       "thisPage": "Kay rapillata",
       "exporting": "Rapi {{current}} / {{total}} ruwakuchkan…"
     },
+    "audioTools": {
+      "normalize": "Volumen nisqa normalizay",
+      "denoise": "sonido chinkachiy",
+      "voice": "Kunkata kallpachay",
+      "working": "T&#39;uqyayta llamk&#39;achispa... {{percent}}%",
+      "done": "Procesado sonido yapasqa. Undo nisqa ñawpaq kaqta kutichin.",
+      "failed": "Mana kay t&#39;uqyayta procesayta atirqanchu. Originalqa manan cambiasqachu.",
+      "hint": "10 minutokama clips nisqakunata ruway. Rumi pisiyachiyqa aswan allintam llamkan mana kuyukuq qipa qapariywan."
+    },
     "captions": {
       "action": "Kikinmanta subtítulos",
       "working": "Uyarichkan… {{percent}}%",

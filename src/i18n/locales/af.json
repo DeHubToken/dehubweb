@@ -6806,6 +6806,15 @@
       "thisPage": "Slegs hierdie bladsy",
       "exporting": "Lewer bladsy {{current}} van {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normaliseer volume",
+      "denoise": "Verminder geraas",
+      "voice": "Verbeter stem",
+      "working": "Verwerking klank... {{percent}}%",
+      "done": "Verwerkte klank bygevoeg. Ontdoen herstel die oorspronklike.",
+      "failed": "Ek kon nie die geluid verwerk nie. Die oorspronklike is onveranderd.",
+      "hint": "Verwerk snitte tot 10 minute. Geraasvermindering werk die beste met bestendige agtergrond geraas."
+    },
     "captions": {
       "action": "Outo-onderskrifte",
       "working": "Luister tans… {{percent}}%",

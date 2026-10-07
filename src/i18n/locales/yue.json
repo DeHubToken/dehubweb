@@ -6738,6 +6738,15 @@
       "thisPage": "淨係呢頁",
       "exporting": "處理緊第 {{current}} 頁，共 {{total}} 頁…"
     },
+    "audioTools": {
+      "normalize": "正規化音量",
+      "denoise": "減少噪音",
+      "voice": "增強聲音",
+      "working": "處理聲 … … {{percent}} %",
+      "done": "加咗處理過嘅聲音。復原會還原原始版本。",
+      "failed": "無法處理此聲音。原始的未有更改。",
+      "hint": "處理片段最多10分鐘。降噪效果最好係穩定嘅背景噪音。"
+    },
     "captions": {
       "action": "自動字幕",
       "working": "聽緊… {{percent}}%",

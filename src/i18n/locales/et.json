@@ -6708,6 +6708,15 @@
       "thisPage": "Ainult see leht",
       "exporting": "Renderdan lehte {{current}}/{{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normaliseeri helitugevus",
+      "denoise": "Vähenda müra",
+      "voice": "Hääle võimendamine",
+      "working": "Heli töötlemine... {{percent}}%",
+      "done": "Töödeldud heli on lisatud. Tagasivõtmine taastab originaali.",
+      "failed": "Seda heli ei saanud töödelda. Originaali ei muudeta.",
+      "hint": "Protsessi klippe kuni 10 minutit. Müra vähendamine toimib kõige paremini püsiva taustamüra korral."
+    },
     "captions": {
       "action": "Automaatsubtiitrid",
       "working": "Kuulan… {{percent}}%",

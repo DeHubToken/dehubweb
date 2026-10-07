@@ -6753,6 +6753,15 @@
       "thisPage": "Solo esta página",
       "exporting": "Renderizando página {{current}} de {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizar volumen",
+      "denoise": "Reduce el ruido",
+      "voice": "Mejora la voz",
+      "working": "Procesando sonido... {{percent}}%",
+      "done": "Sonido procesado añadido. Deshacer restaura el original.",
+      "failed": "No se ha podido procesar este sonido. El original no ha cambiado.",
+      "hint": "Procesar clips de hasta 10 minutos. La reducción de ruido funciona mejor con un ruido de fondo constante."
+    },
     "captions": {
       "action": "Subtítulos automáticos",
       "working": "Escuchando… {{percent}}%",

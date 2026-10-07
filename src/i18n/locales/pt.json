@@ -6750,6 +6750,15 @@
       "thisPage": "Apenas esta página",
       "exporting": "Renderizando página {{current}} de {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizar volume",
+      "denoise": "Reduza o ruído",
+      "voice": "Melhorar a voz",
+      "working": "A processar som... {{percent}}%",
+      "done": "Som processado adicionado. Desfazer restaura o original.",
+      "failed": "Não foi possível processar este som. O original permanece inalterado.",
+      "hint": "Processar clipes de até 10 minutos. A redução de ruído funciona melhor com ruído de fundo constante."
+    },
     "captions": {
       "action": "Legendas automáticas",
       "working": "Ouvindo… {{percent}}%",
