@@ -6402,6 +6402,8 @@
       "toggleLoop": "Такрориро фаъол/хомӯш кунед"
     },
     "export": {
+      "gifHint": "Ҳалқаи аниматсия бе садо. То 60 сония, 640 пиксел ва 15 fps. Ang iyong logo ay naglalaman ng pagtatapos.",
+      "gifTooLong": "Trim ang timeline sa 60 segundo o mas madaling, o piliin ang MP4 o WebM.",
       "title": "Боргирӣ",
       "stillDescription": "Чаҳорчӯби ҷориро ҳамчун тасвир захира кунед.",
       "videoDescription": "Ҷадвали вақти худро ба файли видео рендеринг кунед.",

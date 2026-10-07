@@ -6429,6 +6429,8 @@
       "toggleLoop": "Schlaufe wächsle"
     },
     "export": {
+      "gifHint": "Looping-Animation ohni Ton. Bis zu 60 Sekunde, 640 Pixel und 15 fps. Inkludiert dis Logo am Ändi.",
+      "gifTooLong": "Schniide d'Timeline uf höchstens 60 Sekunde zrugg, oder wähl MP4 oder WebM.",
       "title": "Abelade",
       "stillDescription": "Aktuells Bild als Bild speichere.",
       "videoDescription": "Dini Zytliene als Videodatei rendere.",

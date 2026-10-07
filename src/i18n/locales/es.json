@@ -6482,6 +6482,8 @@
       "toggleLoop": "Alternar bucle"
     },
     "export": {
+      "gifHint": "Animación en bucle sin sonido. Hasta 60 segundos, 640 píxeles y 15 fps. Incluye la terminación de tu logotipo.",
+      "gifTooLong": "Recorte la línea de tiempo a 60 segundos o menos, o elija MP4 o WebM.",
       "title": "Descargar",
       "stillDescription": "Guarda el fotograma actual como imagen.",
       "videoDescription": "Renderiza tu línea de tiempo a un archivo de vídeo.",

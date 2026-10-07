@@ -6468,6 +6468,8 @@
       "toggleLoop": "루프 토글"
     },
     "export": {
+      "gifHint": "소리 없이 애니메이션을 반복합니다. 최대 60초, 640픽셀 및 15fps. 로고 엔딩이 포함되어 있습니다.",
+      "gifTooLong": "타임라인을 60초 이하로 트리밍하거나 MP4 또는 WebM을 선택합니다.",
       "title": "다운로드",
       "stillDescription": "현재 프레임을 이미지로 저장합니다.",
       "videoDescription": "타임라인을 비디오 파일로 렌더링합니다.",

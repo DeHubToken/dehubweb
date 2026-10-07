@@ -6471,6 +6471,8 @@
       "toggleLoop": "Comută bucla"
     },
     "export": {
+      "gifHint": "Animație în buclă fără sunet. Până la 60 de secunde, 640 pixeli și 15 fps. Include sigla care se termină.",
+      "gifTooLong": "Decupați cronologia la 60 de secunde sau mai puțin sau alegeți MP4 sau WebM.",
       "title": "Descărcare",
       "stillDescription": "Salvează cadrul curent ca imagine.",
       "videoDescription": "Randare cronologie într-un fișier video.",

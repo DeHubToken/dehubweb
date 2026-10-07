@@ -6437,6 +6437,8 @@
       "toggleLoop": "Korda esitamist"
     },
     "export": {
+      "gifHint": "Looping animatsioon ilma helita. Kuni 60 sekundit, 640 pikslit ja 15 kaadrit sekundis. Sisaldab sinu logo lõppu.",
+      "gifTooLong": "Kärpige ajajoon kuni 60 sekundini või valige MP4 või WebM.",
       "title": "Laadi alla",
       "stillDescription": "Salvesta praegune kaader pildina.",
       "videoDescription": "Renderda oma ajajoon videofailiks.",

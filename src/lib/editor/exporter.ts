@@ -12,9 +12,11 @@ import { drawClip } from "./render";
 import { timelineDuration } from "./pages";
 import logoUrl from "@/assets/dehub-logo-white.png";
 import { BRAND_OUTRO_DURATION, drawBrandOutro, outroSoundSample, outroUsername } from "./brandOutro";
+import { GIF_CONTENT_LIMIT, gifPlan, gifFrameDelay, gifWorkerSession } from "./gif";
+import { GIF_WORKER } from "./gifRuntime";
 
 
-export type ExportFormat = "mp4" | "webm";
+export type ExportFormat = "mp4" | "webm" | "gif";
 
 export interface ExportOptions {
   snapshot: ProjectSnapshot;
@@ -95,35 +97,41 @@ function checkAbort(signal?: AbortSignal) {
 }
 
 /** Pre-load all source media into seekable HTMLVideoElement / Image / AudioBuffer. */
-async function loadSources(media: MediaItem[], withAudio = true) {
+async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortSignal) {
   const videos = new Map<string, HTMLVideoElement>();
   const images = new Map<string, HTMLImageElement>();
   const audioBuffers = new Map<string, AudioBuffer>();
 
-  const audioCtx = new (window.OfflineAudioContext
-    ? AudioContext
-    : AudioContext)();
+  const audioCtx = withAudio ? new AudioContext() : null;
 
   const tasks: Promise<void>[] = [];
+  const cancelLoads = new Set<() => void>();
+  const abort = () => cancelLoads.forEach(cancel => cancel());
+  signal?.addEventListener("abort", abort, { once: true });
 
   for (const m of media) {
     if (m.kind === "video") {
       tasks.push(new Promise<void>((resolve, reject) => {
         const v = document.createElement("video");
-        v.src = m.url;
         v.crossOrigin = "anonymous";
         v.muted = true;
         v.playsInline = true;
         v.preload = "auto";
-        v.onloadeddata = () => resolve();
-        v.onerror = () => reject(new Error(`Failed to load ${m.name}`));
+        const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); v.onloadeddata = null; v.onerror = null; error ? reject(error) : resolve(); };
+        const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
+        const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
+        cancelLoads.add(cancel);
+        v.onloadeddata = () => finish();
+        v.onerror = () => finish(new Error(`Failed to load ${m.name}`));
+        v.src = m.url;
+        if (signal?.aborted) cancel();
         videos.set(m.id, v);
       }));
       // Also decode audio track for mixdown (not needed for stills).
       if (withAudio) tasks.push((async () => {
         try {
           const buf = await (await fetch(m.url)).arrayBuffer();
-          const audio = await audioCtx.decodeAudioData(buf.slice(0));
+          const audio = await audioCtx!.decodeAudioData(buf.slice(0));
           audioBuffers.set(m.id, audio);
         } catch { /* video without audio — fine */ }
       })());
@@ -131,22 +139,28 @@ async function loadSources(media: MediaItem[], withAudio = true) {
       tasks.push(new Promise<void>((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = "anonymous";
-        img.onload = () => resolve();
-        img.onerror = () => reject(new Error(`Failed to load ${m.name}`));
+        const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); img.onload = null; img.onerror = null; error ? reject(error) : resolve(); };
+        const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
+        const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
+        cancelLoads.add(cancel);
+        img.onload = () => finish();
+        img.onerror = () => finish(new Error(`Failed to load ${m.name}`));
         img.src = m.url;
         images.set(m.id, img);
+        if (signal?.aborted) cancel();
       }));
     } else if (m.kind === "audio" && withAudio) {
       tasks.push((async () => {
         const buf = await (await fetch(m.url)).arrayBuffer();
-        const audio = await audioCtx.decodeAudioData(buf.slice(0));
+        const audio = await audioCtx!.decodeAudioData(buf.slice(0));
         audioBuffers.set(m.id, audio);
       })());
     }
   }
 
-  await Promise.all(tasks);
-  await audioCtx.close().catch(() => undefined);
+  try { await Promise.all(tasks); }
+  catch (error) { abort(); videos.forEach(v => { v.removeAttribute("src"); v.load(); }); images.forEach(img => { img.src = ""; }); throw error; }
+  finally { signal?.removeEventListener("abort", abort); await audioCtx?.close().catch(() => undefined); }
   return { videos, images, audioBuffers };
 }
 
@@ -240,6 +254,7 @@ function audioBufferSliceToInterleaved(
 }
 
 export async function exportProject(opts: ExportOptions): Promise<ExportResult> {
+  if (opts.format === "gif") return exportGif(opts);
   if (!isExportSupported()) {
     throw new Error("Your browser doesn't support video export. Use a Chromium-based browser (Chrome, Edge, Brave, Arc).");
   }
@@ -453,6 +468,67 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const filename = `${safeTitle}.${format}`;
   onProgress?.(1, "Done");
   return { blob, filename };
+}
+
+/** GIF uses the timeline renderer without a video/audio codec dependency. */
+async function exportGif(opts: ExportOptions): Promise<ExportResult> {
+  const { snapshot, signal, onProgress } = opts;
+  const { settings, clips, tracks } = snapshot;
+  const fullDuration = timelineDuration(settings, clips);
+  const contentDuration = opts.cutEndAt != null && opts.cutEndAt > 0 ? Math.min(opts.cutEndAt, fullDuration) : fullDuration;
+  if (contentDuration > GIF_CONTENT_LIMIT) throw new Error("GIF exports support up to 60 seconds of timeline content");
+  const plan = gifPlan(settings.width, settings.height, opts.scale, contentDuration + BRAND_OUTRO_DURATION, settings.fps);
+  if (contentDuration <= 0) throw new Error("Nothing to export");
+  checkAbort(signal);
+  const visual = (id: string) => { const tr = tracks.find(t => t.id === id); return !!tr && !tr.hidden && tr.kind !== "audio"; };
+  const ids = new Set(clips.filter(c => !c.hidden && visual(c.trackId) && c.kind !== "audio" && "mediaId" in c).map(c => (c as MediaClip).mediaId));
+  onProgress?.(0, "Loading media…");
+  const { videos, images } = await loadSources(opts.media.filter(m => ids.has(m.id)), false, signal);
+  let session: ReturnType<typeof gifWorkerSession> | undefined;
+  const abort = () => session?.close();
+  try {
+    const logo = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const image = new Image(); image.onload = () => resolve(image); image.onerror = () => reject(new Error("Could not load the export logo")); image.src = logoUrl;
+    });
+    if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 3000))]);
+    checkAbort(signal);
+    const canvas = document.createElement("canvas"); canvas.width = plan.width; canvas.height = plan.height;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) throw new Error("Could not acquire canvas context");
+    session = gifWorkerSession(plan.width, plan.height, GIF_WORKER);
+    signal?.addEventListener("abort", abort, { once: true });
+    await session.ready;
+    const username = outroUsername(opts.username);
+    for (let f = 0; f < plan.frames; f++) {
+      checkAbort(signal);
+      const time = f / plan.fps;
+      ctx.clearRect(0, 0, plan.width, plan.height);
+      ctx.fillStyle = settings.background; ctx.fillRect(0, 0, plan.width, plan.height);
+      const ops = (time < contentDuration ? computeRenderOps(clips, visual, time, plan.width) : []).sort((a, b) => tracks.findIndex(t => t.id === a.clip.trackId) - tracks.findIndex(t => t.id === b.clip.trackId));
+      for (const op of ops) {
+        if (op.clip.kind === "video") {
+          const video = videos.get(op.clip.mediaId);
+          if (video) await seekVideo(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1));
+        }
+        ctx.save();
+        if (op.translateX) ctx.translate(op.translateX, 0);
+        if (op.clipRect) { ctx.beginPath(); ctx.rect(op.clipRect.x, 0, op.clipRect.w, plan.height); ctx.clip(); }
+        ctx.globalAlpha = op.alpha;
+        drawClip(ctx, plan.width, plan.height, op.clip, time, { videos, images }); ctx.restore();
+      }
+      if (time >= contentDuration) drawBrandOutro(ctx, plan.width, plan.height, time - contentDuration, username, logo);
+      await session.frame(ctx.getImageData(0, 0, plan.width, plan.height).data, gifFrameDelay(f, plan));
+      onProgress?.(0.03 + 0.94 * (f + 1) / plan.frames, `Encoding frame ${f + 1} / ${plan.frames}`);
+    }
+    const buffer = await session.finish(); checkAbort(signal);
+    const filename = `${(snapshot.title || "video").replace(/[^\w-]+/g, "_")}.gif`;
+    onProgress?.(1, "Done");
+    return { blob: new Blob([buffer], { type: "image/gif" }), filename };
+  } catch (error) { checkAbort(signal); throw error; }
+  finally {
+    signal?.removeEventListener("abort", abort); session?.close();
+    videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); });
+  }
 }
 
 export type StillFormat = "png" | "jpg";

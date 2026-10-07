@@ -6467,6 +6467,8 @@
       "toggleLoop": "切換循環"
     },
     "export": {
+      "gifHint": "冇聲嘅循環動畫。長達 60 秒、 640 像素同 15 fps 。包括你嘅標誌結尾。",
+      "gifTooLong": "將時間線剪到 60 秒或以下，或選擇 MP4 或 WebM。",
       "title": "下載",
       "stillDescription": "將目前影格儲存為圖片。",
       "videoDescription": "將您的時間軸渲染成影片檔案。",

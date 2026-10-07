@@ -6474,6 +6474,8 @@
       "toggleLoop": "Alefa/ajanony ny famerenana"
     },
     "export": {
+      "gifHint": "Looping sarimiaina tsy misy feo. Hatramin'ny 60 segondra, ny 640 pixel ary ny 15 fps. [Izao va no tanànanao miravoravo?]",
+      "gifTooLong": "Karakarao ny timeline amin'ny 60 segondra na latsaka, na misafidy MP4 na WebM.",
       "title": "Sintona",
       "stillDescription": "Tehirizo ny sary ankehitriny ho sary.",
       "videoDescription": "Ovay ho rakitra video ny tsipika fotoana.",

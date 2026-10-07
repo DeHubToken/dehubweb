@@ -6430,6 +6430,8 @@
       "toggleLoop": "Przełącz zapętlanie"
     },
     "export": {
+      "gifHint": "Animacja zapętlania bez dźwięku. Do 60 sekund, 640 pikseli i 15 fps. Zawiera końcówkę Twojego logo.",
+      "gifTooLong": "Przytnij oś czasu do 60 sekund lub mniej albo wybierz MP4 lub WebM.",
       "title": "Pobierz",
       "stillDescription": "Zapisz bieżącą klatkę jako obraz.",
       "videoDescription": "Renderuj oś czasu do pliku wideo.",

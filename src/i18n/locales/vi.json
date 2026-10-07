@@ -6485,6 +6485,8 @@
       "toggleLoop": "Chuyển đổi lặp lại"
     },
     "export": {
+      "gifHint": "Lặp lại hoạt ảnh mà không có âm thanh. Lên đến 60 giây, 640 pixel và 15 khung hình/giây. Bao gồm phần cuối logo của bạn.",
+      "gifTooLong": "Cắt dòng thời gian thành 60 giây hoặc ít hơn, hoặc chọn MP4 hoặc WebM.",
       "title": "Tải xuống",
       "stillDescription": "Lưu khung hình hiện tại dưới dạng hình ảnh.",
       "videoDescription": "Kết xuất dòng thời gian của bạn thành tệp video.",
