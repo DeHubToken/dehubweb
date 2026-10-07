@@ -152,7 +152,7 @@ export function HandoffImage(props: ImageProps) {
     show(held.current.entry);
   });
   return <span ref={attach} data-image-slot onClick={props.onClick} onPointerDown={props.onPointerDown} onPointerMove={props.onPointerMove} onPointerUp={props.onPointerUp} onPointerCancel={props.onPointerCancel}
-    style={{ position: 'relative', display: 'flex', maxWidth: '100%', minHeight: failed ? 160 : undefined, maxHeight: props.priority === 2 ? '100%' : undefined, width: props.style?.width, aspectRatio: props.style?.aspectRatio, backgroundColor: 'rgba(128,128,128,0.06)' }}>
+    style={{ position: 'relative', display: 'flex', maxWidth: '100%', minWidth: failed ? 160 : undefined, minHeight: failed ? 160 : undefined, maxHeight: props.priority === 2 ? '100%' : undefined, width: props.style?.width, aspectRatio: props.style?.aspectRatio, backgroundColor: 'rgba(128,128,128,0.06)' }}>
     {failed && <button type="button" className="absolute left-1/2 top-1/2 z-10 min-h-11 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/70 px-5 text-white"
       onPointerDown={event => event.stopPropagation()} onPointerUp={event => event.stopPropagation()}
       onClick={event => {

@@ -74,7 +74,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
-import { RepostShareSheet } from '@/components/app/post-stage/RepostShareSheet';
+const RepostShareSheet = lazy(() => import('@/components/app/post-stage/RepostShareSheet').then(m => ({ default: m.RepostShareSheet })));
 import { StageSaveTile } from '@/components/app/post-stage/StageSaveTile';
 
 interface ActionBarProps {
@@ -424,6 +424,8 @@ export function ActionBar({
   const cachedVote = postId ? getVoteCache(postId) : null;
 
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [shareSheetMounted, setShareSheetMounted] = useState(false);
+  useEffect(() => { if (sheetOpen) setShareSheetMounted(true); }, [sheetOpen]);
   const [isLiked, setIsLiked] = useState(cachedVote ? cachedVote.isLiked : initialIsLiked);
   const [isDisliked, setIsDisliked] = useState(cachedVote ? cachedVote.isDisliked : initialIsDisliked);
   const [localLikeCount, setLocalLikeCount] = useState(cachedVote ? cachedVote.likeCount : (likeCount ?? 0));
@@ -1111,7 +1113,7 @@ export function ActionBar({
   const overlays = (
     <>
       {stage ? (
-        <RepostShareSheet
+        (sheetOpen || shareSheetMounted) && <Suspense fallback={null}><RepostShareSheet
           open={sheetOpen}
           onOpenChange={setSheetOpen}
           tokenId={postId}
@@ -1125,7 +1127,7 @@ export function ActionBar({
           repostCount={Math.max(0, stage.repostCount + repostDelta)}
           onViewQuotes={() => { setSheetOpen(false); stage.openQuotes(); }}
           onViewReposts={() => { setSheetOpen(false); stage.openReposts(); }}
-        />
+        /></Suspense>
       ) : (
         <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
           <DrawerContent scrollable column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()} onPointerDown={(e: React.PointerEvent) => e.stopPropagation()}>
