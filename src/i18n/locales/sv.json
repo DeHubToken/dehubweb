@@ -6631,6 +6631,15 @@
       "thisPage": "Endast denna sida",
       "exporting": "Renderar sida {{current}} av {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalisera volym",
+      "denoise": "Minska brus",
+      "voice": "Förbättra röst",
+      "working": "Bearbetar ljud... {{percent}}%",
+      "done": "Bearbetat ljud tillagt. Ångra återställer originalet.",
+      "failed": "Kunde inte bearbeta detta ljud. Originalet är oförändrat.",
+      "hint": "Bearbeta klipp upp till 10 minuter. Brusreducering fungerar bäst med jämn bakgrundsbrus."
+    },
     "captions": {
       "action": "Automatiska undertexter",
       "working": "Lyssnar… {{percent}} %",

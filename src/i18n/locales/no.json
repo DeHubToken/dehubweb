@@ -6731,6 +6731,15 @@
       "thisPage": "Bare denne siden",
       "exporting": "Gjengir side {{current}} av {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normaliser volum",
+      "denoise": "Reduser støy",
+      "voice": "Forbedre stemme",
+      "working": "Behandler lyd... {{percent}}%",
+      "done": "Behandlet lyd lagt til. Angre gjenoppretter originalen.",
+      "failed": "Kunne ikke behandle denne lyden. Originalen er uendret.",
+      "hint": "Behandle klipp opptil 10 minutter. Støyreduksjon fungerer best med jevn bakgrunnsstøy."
+    },
     "captions": {
       "action": "Automatisk teksting",
       "working": "Lytter… {{percent}} %",

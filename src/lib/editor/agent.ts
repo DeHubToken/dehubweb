@@ -28,6 +28,8 @@ import { nanoid } from "nanoid";
 import { applyTimelineOp, expandBatch, TIMELINE_OPS } from "./timelineAgent";
 import { preciseCommand } from "./preciseCommands";
 import { stockSearchPlan } from "./stockSearchPlan";
+import { applyAudioTool } from "./applyAudioTool";
+import { AUDIO_TOOL_MODES, audioToolCommand, type AudioToolMode } from "./audioTools";
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || "https://aigxuutjaqsywioxjefr.supabase.co"}/functions/v1/editor-agent`;
 const ANON_KEY =
@@ -73,7 +75,7 @@ export function describeScene() {
       }
     : undefined;
   return {
-    capabilities: [...TIMELINE_OPS, "batch", "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "keyframes", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "delete_page", "apply_brand", "add_logo", "use_template", "captions", "remove_background", "generate", "select"],
+    capabilities: [...TIMELINE_OPS, "batch", "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "keyframes", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "delete_page", "apply_brand", "add_logo", "use_template", "captions", "process_audio", "remove_background", "generate", "select"],
     tracks: s.tracks.map(({ id, kind, muted, hidden }) => ({ id, kind, muted, hidden })),
     brand,
     pages: pages.length > 1 ? pages.map((p) => ({ index: p.index, start: round(p.start, 2), end: round(p.end, 2) })) : undefined,
@@ -151,7 +153,7 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
 export async function askAgent(messages: AgentMessage[], signal?: AbortSignal): Promise<AgentResult> {
   const scene = describeScene();
   const last = messages[messages.length - 1];
-  const direct = last?.role === "user" ? preciseCommand(last.content, scene) : null;
+  const direct = last?.role === "user" ? preciseCommand(last.content, scene) ?? audioToolCommand(last.content, scene) : null;
   if (direct) return { reply: "", ops: [direct] };
   const res = await fetch(FN_URL, {
     method: "POST",
@@ -635,6 +637,11 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         const clip = find(op.id) ?? store().clips.find((c) => c.kind === "video" || c.kind === "audio");
         if (!clip || clip.locked || (clip.kind !== "video" && clip.kind !== "audio")) return false;
         return await useCaptionsStore.getState().run(clip.id, op.style === "boxed" || op.style === "bold" ? op.style : "classic");
+      }
+      case "process_audio": {
+        const clip = find(op.id);
+        if (!clip || !AUDIO_TOOL_MODES.includes(op.mode as AudioToolMode)) return false;
+        return applyAudioTool(clip.id, op.mode as AudioToolMode, ctx);
       }
       case "remove_background": {
         const clip = find(op.id);

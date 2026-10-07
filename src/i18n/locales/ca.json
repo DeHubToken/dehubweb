@@ -6628,6 +6628,15 @@
       "thisPage": "Només aquesta pàgina",
       "exporting": "Renderitzant la pàgina {{current}} de {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalitza el volum",
+      "denoise": "Redueix el soroll",
+      "voice": "Millora la veu",
+      "working": "S'està processant el so... {{percent}}%",
+      "done": "S'ha afegit el so processat. Desfés restaura l'original.",
+      "failed": "No s'ha pogut processar aquest so. L'original no canvia.",
+      "hint": "Processa clips de fins a 10 minuts. La reducció de soroll funciona millor amb soroll de fons constant."
+    },
     "captions": {
       "action": "Subtítols automàtics",
       "working": "Escoltant… {{percent}}%",

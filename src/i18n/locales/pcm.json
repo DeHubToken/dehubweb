@@ -5662,6 +5662,15 @@
       "thisPage": "Na only dis page",
       "exporting": "E dey render page {{current}} of {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalize volume",
+      "denoise": "Reduce noise",
+      "voice": "Enhance voice",
+      "working": "Processing sound... {{percent}}%",
+      "done": "Dem add processed sound. Undo go bring back the original.",
+      "failed": "I no fit process dis sound. Di original no change.",
+      "hint": "Process clips wey no pass 10 minutes. Noise reduction dey work better when background noise dey steady."
+    },
     "captions": {
       "action": "Auto captions",
       "working": "E dey listen… {{percent}}%",

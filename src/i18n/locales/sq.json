@@ -6732,6 +6732,15 @@
       "thisPage": "Vetëm këtë faqe",
       "exporting": "Po përpunohet faqja {{current}} nga {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizo volumin",
+      "denoise": "Redukto zhurmën",
+      "voice": "Përmirëso zërin",
+      "working": "Duke përpunuar tingullin... {{percent}}%",
+      "done": "Tingulli i përpunuar u shtua. Zhbëjeni origjinalin.",
+      "failed": "Nuk mund ta përpunoja këtë tingull. Origjinali është i pandryshuar.",
+      "hint": "Procesoni klipet deri në 10 minuta. Reduktimi i zhurmës funksionon më mirë me zhurmë të qëndrueshme në sfond."
+    },
     "captions": {
       "action": "Titra automatike",
       "working": "Duke dëgjuar… {{percent}}%",

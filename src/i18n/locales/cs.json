@@ -6630,6 +6630,15 @@
       "thisPage": "Pouze tato stránka",
       "exporting": "Vykreslování stránky {{current}} z {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizovat hlasitost",
+      "denoise": "Snižte hluk",
+      "voice": "Vylepšete hlas",
+      "working": "Zpracování zvuku... {{percent}}%",
+      "done": "Byl přidán zpracovaný zvuk. Zpět obnoví originál.",
+      "failed": "Tento zvuk se nepodařilo zpracovat. Originál zůstává nezměněn.",
+      "hint": "Zpracování klipů až 10 minut. Redukce šumu funguje nejlépe při stálém šumu na pozadí."
+    },
     "captions": {
       "action": "Automatické titulky",
       "working": "Poslouchám… {{percent}} %",

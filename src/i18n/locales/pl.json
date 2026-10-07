@@ -6701,6 +6701,15 @@
       "thisPage": "Tylko ta strona",
       "exporting": "Renderowanie strony {{current}} z {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizuj objętość",
+      "denoise": "Redukcja hałasu",
+      "voice": "Wzmocnij głos",
+      "working": "Przetwarzanie dźwięku... {{percent}}%",
+      "done": "Dodano przetworzony dźwięk. Cofnij przywraca oryginał.",
+      "failed": "Nie można przetworzyć tego dźwięku. Oryginał bez zmian.",
+      "hint": "Zaciski procesowe do 10 minut. Redukcja szumów działa najlepiej przy stałym szumie tła."
+    },
     "captions": {
       "action": "Napisy automatyczne",
       "working": "Słucham… {{percent}}%",
