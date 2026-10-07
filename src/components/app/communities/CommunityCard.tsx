@@ -87,7 +87,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
           <span className="text-white font-medium text-sm truncate">{community.name}</span>
           {community.is_private && <Lock className="w-3 h-3 text-zinc-500 flex-shrink-0" />}
         </div>
-        <p className="text-xs truncate text-zinc-400">{descWithoutLinks || t('communities.noDescription')}</p>
+        <p className="text-xs truncate text-white">{descWithoutLinks || t('communities.noDescription')}</p>
         {links.length > 0 && (
           <div className="flex items-center gap-2 mt-0.5">
             {links.slice(0, 3).map((url, i) => (
@@ -106,7 +106,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
           </div>
         )}
         <div className="flex items-center gap-3 mt-0.5">
-          <span className="text-zinc-600 text-xs">{community.member_count.toLocaleString()} {t('communities.members')}</span>
+          <span className="text-white text-xs">{community.member_count.toLocaleString()} {t('communities.members')}</span>
           {isMember && (
             isOwner ? (
               <span className="flex items-center gap-1 text-xs text-amber-400/80">
