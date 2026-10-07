@@ -28,6 +28,7 @@ export function buildCreatorFalVideoRequest(modelId: string, o: CreatorFalVideoO
   const resolution = o.resolution ?? (m.resolutions.includes('720p') ? '720p' : m.resolutions[0]);
   if (m.supportsResolution && !m.resolutions.includes(resolution)) throw new Error(`Invalid resolution for ${m.name}`);
   if (!o.prompt?.trim()) throw new Error('Prompt is required');
+  if (m.maxPromptLength && o.prompt.length > m.maxPromptLength) throw new Error(`Use a prompt of up to ${m.maxPromptLength} characters for ${m.name}`);
   if (m.requiresVideoInput) {
     if (o.videoUrls?.length !== 1) throw new Error('Attach one MP4 or MOV reference clip');
     const images = [...new Set([...(o.sourceImage ? [o.sourceImage] : []), ...(o.referenceImageUrls ?? [])])];
@@ -53,6 +54,19 @@ export function buildCreatorFalVideoRequest(modelId: string, o: CreatorFalVideoO
   let appId = o.sourceImage ? m.falImageModel : m.falTextModel;
   const input: Record<string, unknown> = { prompt: o.prompt, duration };
   switch (m.family) {
+    case 'klingturbo':
+      input.duration = String(duration);
+      if (o.sourceImage) input.image_url = o.sourceImage;
+      else input.aspect_ratio = aspect;
+      break;
+    case 'viduq3':
+      input.resolution = resolution;
+      input.audio = true;
+      if (o.sourceImage) input.image_url = o.sourceImage;
+      else input.aspect_ratio = aspect;
+      if (o.endFrameUrl) input.end_image_url = o.endFrameUrl;
+      if (o.seed !== undefined) input.seed = o.seed;
+      break;
     case 'flux3':
       input.aspect_ratio = aspect;
       input.generate_audio = true;
@@ -139,19 +153,35 @@ export function creatorFalImageSize(aspect = '1:1'): string {
   return 'square_hd';
 }
 
+/** Keep metered images below 1 MP and preserve the advertised framing. */
+export function creatorFalImageDimensions(aspect = '1:1'): { width: number; height: number } {
+  const sizes: Record<string, [number, number]> = {
+    '1:1': [992, 992], '4:5': [864, 1080], '16:9': [1280, 720],
+    '9:16': [720, 1280], '3:2': [1200, 800], '2:3': [800, 1200],
+    '21:9': [1512, 648], '4:3': [1152, 864], '3:4': [864, 1152],
+  };
+  const size = sizes[aspect];
+  if (!size) throw new Error('Unsupported image aspect ratio');
+  return { width: size[0], height: size[1] };
+}
+
 export function buildCreatorFalImageRequest(modelId: string, prompt: string, sourceImage?: string, aspect?: string, referenceImageUrls?: string[]) {
   const m = CREATOR_FAL_IMAGE_MODELS[modelId];
   const images = [...new Set([...(sourceImage ? [sourceImage] : []), ...(referenceImageUrls ?? [])])];
   sourceImage = images[0];
   if (!m || (sourceImage && !m.edit)) throw new Error('This model cannot edit an image');
-  if (images.length > 4 || (images.length > 1 && !m.editUsesPlural)) throw new Error('Choose a model supporting multiple image references (up to four)');
-  if (!prompt.trim() || prompt.length > 4000) throw new Error('Use an image prompt of 1 to 4000 characters');
+  if (images.length > (m.maxReferenceImages ?? 4) || (images.length > 1 && !m.editUsesPlural)) throw new Error(`Choose a model supporting these references (up to ${m.maxReferenceImages ?? 4})`);
+  const limit = m.maxPromptLength ?? 4000;
+  if (!prompt.trim() || prompt.length > limit) throw new Error(`Use an image prompt of 1 to ${limit} characters`);
   const input: Record<string, unknown> = { prompt, ...(sourceImage ? m.editExtra ?? m.extra : m.extra) };
   if (!m.omitNumImages) input.num_images = 1;
   if (m.sizing === 'aspect_ratio') {
     const ratio = aspect ?? (sourceImage ? 'auto' : '1:1');
-    input.aspect_ratio = m.aspectRatios && !m.aspectRatios.includes(ratio) ? (ratio === '21:9' ? '2.35:1' : '1:1') : ratio;
-  } else input.image_size = creatorFalImageSize(aspect);
-  if (sourceImage) input[m.editUsesPlural ? 'image_urls' : 'image_url'] = m.editUsesPlural ? images : sourceImage;
+    // Preserve the existing cinemascope alias, but never silently turn a portrait into a square.
+    const normalized = ratio === '21:9' && m.aspectRatios?.includes('2.35:1') ? '2.35:1' : ratio;
+    if (m.aspectRatios && !m.aspectRatios.includes(normalized)) throw new Error(`Invalid aspect ratio for ${m.name}`);
+    input.aspect_ratio = normalized;
+  } else input.image_size = m.exactImageSize ? creatorFalImageDimensions(aspect) : creatorFalImageSize(aspect);
+  if (sourceImage) input[m.editImageField ?? (m.editUsesPlural ? 'image_urls' : 'image_url')] = m.editUsesPlural ? images : sourceImage;
   return { appId: sourceImage ? m.edit! : m.text, input };
 }

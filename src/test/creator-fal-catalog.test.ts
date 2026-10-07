@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS } from '../../supabase/functions/_shared/creator-fal-catalog';
-import { buildCreatorFalImageRequest, buildCreatorFalVideoRequest } from '../../supabase/functions/_shared/creator-fal-input';
+import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS, creatorFalImageAspects } from '../../supabase/functions/_shared/creator-fal-catalog';
+import { buildCreatorFalImageRequest, buildCreatorFalVideoRequest, creatorFalImageDimensions } from '../../supabase/functions/_shared/creator-fal-input';
 import { quotePriceDhb } from '../../supabase/functions/_shared/ai-pricing';
 import fixture from './fixtures/creator-fal-schema.json';
 
 type Schema = Record<string, any>;
-/** The public input contracts, captured on 4 October 2026, independently of our builders. */
+/** Public input contracts captured on 4 and 7 October 2026, independently of our builders. */
 function validate(value: unknown, schema: Schema, definitions: Record<string, Schema>): boolean {
   if (schema.$ref) return validate(value, definitions[schema.$ref.split('/').pop()!], definitions);
   if (schema.anyOf && !schema.anyOf.some((s: Schema) => validate(value, s, definitions))) return false;
@@ -84,12 +84,27 @@ describe('creator fal video requests', () => {
 describe('creator fal image requests', () => {
   for (const model of Object.values(CREATOR_FAL_IMAGE_MODELS)) {
     it(`${model.name} sends only documented fields`, () => {
-      for (const aspect of ['1:1', '16:9', '9:16', '4:5', '21:9']) {
+      for (const aspect of creatorFalImageAspects(model.id)) {
         assertContract(buildCreatorFalImageRequest(model.id, 'A ceramic teapot on a wooden table.', undefined, aspect));
         if (model.supportsEdit) assertContract(buildCreatorFalImageRequest(model.id, 'Make the teapot blue.', 'https://example.com/teapot.jpg', aspect));
       }
       if (!model.supportsEdit) expect(() => buildCreatorFalImageRequest(model.id, 'Make it blue.', 'https://example.com/teapot.jpg')).toThrow();
+      if (model.editUsesPlural) assertContract(buildCreatorFalImageRequest(model.id, 'Combine the subjects.', undefined, '1:1',
+        ['https://example.com/a.jpg', 'https://example.com/b.jpg', 'https://example.com/c.jpg', 'https://example.com/d.jpg'].slice(0, model.maxReferenceImages ?? 4)));
       expect(quotePriceDhb('image', model.id)).toBeGreaterThan(0);
     });
   }
+
+  it('preserves framing without crossing the one-megapixel billing boundary', () => {
+    for (const aspect of ['1:1', '4:5', '16:9', '9:16', '3:2', '2:3', '21:9']) {
+      const { width, height } = creatorFalImageDimensions(aspect);
+      const [w, h] = aspect.split(':').map(Number);
+      expect(width / height).toBeCloseTo(w / h, 6);
+      expect(width * height).toBeLessThanOrEqual(1_000_000);
+    }
+    expect(() => buildCreatorFalImageRequest('nucleus-image', 'A scene', undefined, '21:9')).toThrow();
+    expect(() => buildCreatorFalImageRequest('qwen-image-max', 'a'.repeat(801))).toThrow();
+    expect(() => buildCreatorFalVideoRequest('vidu-q3', { prompt: 'a'.repeat(2001) })).toThrow();
+    expect(() => buildCreatorFalVideoRequest('kling-3-turbo-pro', { prompt: 'a'.repeat(3073) })).toThrow();
+  });
 });
