@@ -23,6 +23,7 @@ const CreatePlanModal = lazy(() =>
     default: module.CreatePlanModal,
   })),
 );
+const ScheduledLivestreams = lazy(() => import('./components/ScheduledLivestreams'));
 
 interface PostModalProps {
   isOpen: boolean;
@@ -220,6 +221,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         />
       ) : (
       <>
+      {isOpen && state.liveMode === 'video' && <Suspense fallback={null}><ScheduledLivestreams onStart={setLiveStream} /></Suspense>}
       <PostContentArea
         text={state.text}
         maxChars={postTextLimit(computed.postQuota)}

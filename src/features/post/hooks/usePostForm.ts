@@ -1364,6 +1364,15 @@ export function usePostForm(
   const handlePost = useCallback(async (extra?: { soundtrackTag?: string; articleBody?: string; articleImage?: File; socialImage?: File }) => {
     if (isPosting) return;
 
+    if (scheduledDate && (!Number.isFinite(scheduledDate.getTime()) || scheduledDate.getTime() <= Date.now())) {
+      toast.error('Pick a time in the future.');
+      return;
+    }
+    if (liveMode === 'video' && scheduledDate && scheduledDate.getTime() < Date.now() + 30 * 60 * 1000) {
+      toast.error('Schedule the livestream at least 30 minutes from now.');
+      return;
+    }
+
     // Validate required fields
     if (!text.trim() && media.length === 0 && !liveMode && !pollIsValid) {
       toast.error('Add some content first');
@@ -1417,15 +1426,20 @@ export function usePostForm(
         // Imported on use, never statically: the composer is measured against
         // the entry bundle, and a static edge into the stage stack puts Agora
         // and the whole room on the boot path.
-        const { createStageNow, openStageModal } = await import('@/contexts/StageContext');
-        const space = await createStageNow(stageTitle, stageDescription || undefined, coverImageUrl);
+        const { createStageNow, scheduleStage, openStageModal } = await import('@/contexts/StageContext');
+        const space = scheduledDate
+          ? await scheduleStage({ title: stageTitle, description: stageDescription || undefined, coverImageUrl, scheduledAt: scheduledDate.toISOString() })
+          : await createStageNow(stageTitle, stageDescription || undefined, coverImageUrl);
         if (!space) return;
 
         resetForm();
         onClose();
-        // Straight into the room, already on air — same shape as the video
-        // console opening over the composer.
-        openStageModal('live');
+        if (scheduledDate) {
+          toast.success('Stage scheduled');
+          navigate('/stages');
+        } else {
+          openStageModal('live');
+        }
       } finally {
         setIsPosting(false);
       }
@@ -1823,6 +1837,7 @@ export function usePostForm(
         chainId,
         submittedTitle,
         submittedDescription,
+        scheduledDate?.toISOString() || '',
         extra?.articleBody || '',
         extra?.articleImage ? `${extra.articleImage.name}:${extra.articleImage.size}:${extra.articleImage.lastModified}` : '',
         extra?.socialImage ? `${extra.socialImage.name}:${extra.socialImage.size}:${extra.socialImage.lastModified}` : '',
@@ -1865,7 +1880,8 @@ export function usePostForm(
           thumbnail,
           minterAddress,
           mintOptOut: !mintingThisPost,
-          scheduledAt: scheduledDate ? scheduledDate.toISOString() : undefined,
+          scheduledAt: !liveMode && scheduledDate ? scheduledDate.toISOString() : undefined,
+          scheduledFor: liveMode === 'video' && scheduledDate ? scheduledDate.toISOString() : undefined,
           idempotencyKey: postAttemptRef.current.key,
           contentRating: isMature ? 'mature' : undefined,
           // Only ever sent as true — absent is what "not kids content" means, so
@@ -2237,6 +2253,15 @@ export function usePostForm(
           action: { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
           duration: 12000,
         });
+      }
+
+      if (liveMode === 'video' && scheduledDate) {
+        if (!mintResponse.stream?._id) throw new Error('Stream entity missing from mint response');
+        toast.success(`Livestream scheduled for ${scheduledDate.toLocaleString()}`, { id: 'mint-progress' });
+        resetForm();
+        onClose();
+        navigate('/app');
+        return;
       }
 
       // Create optimistic post using the real token ID so it matches the API feed item
