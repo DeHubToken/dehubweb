@@ -1,3 +1,4 @@
+import { reviewHighlights } from "@/lib/editor/highlightReview";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -17,6 +18,9 @@ export function HighlightTools({ clip }: { clip: MediaClip }) {
   const [seconds, setSeconds] = useState(30), [focus, setFocus] = useState("");
   const [useCaptions, setUseCaptions] = useState(false), [progress, setProgress] = useState<string | null>(null);
   const [ranges, setRanges] = useState<HighlightRange[] | null>(null), [chosen, setChosen] = useState<number[]>([]), [applying, setApplying] = useState(false);
+  const [reviewDraft, setReviewDraft] = useState(""), [reviewEntries, setReviewEntries] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
+  const [reviewUndo, setReviewUndo] = useState<number[] | null>(null);
+  useEffect(() => { setReviewDraft(""); setReviewEntries([]); setReviewUndo(null); }, [ranges]);
   const hasCaptions = useEditorStore(s => highlightCaptionWords(s.toSnapshot(), clip).length > 0);
   useEffect(() => { setRanges(null); setChosen([]); source.current = null; return () => controller.current?.abort(); }, [clip, seconds, focus, useCaptions]);
   useEffect(() => {
@@ -48,6 +52,27 @@ export function HighlightTools({ clip }: { clip: MediaClip }) {
       if (!abort.signal.aborted) { console.warn("[editor] highlights failed", error); toast.error(t(error instanceof Error && error.message === "highlight_limit" ? "editor.highlights.limit" : "common.somethingWentWrong")); }
     } finally { if (controller.current === abort) { controller.current = null; setProgress(null); } }
   };
+  const review = async () => {
+    const prompt = reviewDraft.trim(), original = source.current;
+    if (!prompt || !original || !ranges?.length || controller.current || applying) return;
+    if (!sameHighlightSource(original, useEditorStore.getState().toSnapshot())) { toast.error(t("editor.highlights.changed")); return; }
+    const abort = new AbortController(); controller.current = abort;
+    const previous = [...chosen]; setReviewDraft(""); setProgress(t("editor.highlights.ranking"));
+    setReviewEntries(old => [...old, { role: "user" as const, content: prompt }].slice(-8));
+    previewEnd.current = null; useEditorStore.getState().setIsPlaying(false);
+    try {
+      const selection = await reviewHighlights(ranges, chosen, prompt, askSceneAgent, abort.signal);
+      if (!abort.signal.aborted && sameHighlightSource(original, useEditorStore.getState().toSnapshot())) {
+        setReviewUndo(previous); setChosen(selection);
+        setReviewEntries(old => [...old, { role: "assistant" as const, content: t("editor.highlights.reviewResult", { count: selection.length, total: ranges.length }) }].slice(-8));
+      } else if (!abort.signal.aborted) toast.error(t("editor.highlights.changed"));
+    } catch (error) {
+      if (!abort.signal.aborted) {
+        console.warn("[editor] highlight review failed", error);
+        setReviewEntries(old => [...old, { role: "assistant" as const, content: t("editor.highlights.reviewFailed") }].slice(-8));
+      }
+    } finally { if (controller.current === abort) { controller.current = null; setProgress(null); } }
+  };
   const apply = async () => {
     if (!source.current || !ranges || applying) return;
     setApplying(true);
@@ -68,9 +93,14 @@ export function HighlightTools({ clip }: { clip: MediaClip }) {
     {progress !== null && <div className="flex items-center justify-between gap-2"><span className="text-xs text-white/70">{progress}</span><Button size="sm" variant="ghost" onClick={() => controller.current?.abort()}>{t("common.cancel")}</Button></div>}
     {ranges && !ranges.length && <p className="text-xs text-white/70">{t("editor.highlights.none")}</p>}
     {!!ranges?.length && <><div className="max-h-64 space-y-2 overflow-auto">{ranges.map((range, i) => <div key={`${range.start}-${range.end}`} className="rounded border border-white/10 p-2">
-      <label className="flex items-center gap-2 text-xs"><input type="checkbox" aria-label={`${shotTime(range.start)}–${shotTime(range.end)}`} checked={chosen.includes(i)} onChange={event => setChosen(old => event.target.checked ? [...old, i] : old.filter(value => value !== i))} />{shotTime(range.start)}–{shotTime(range.end)}</label>
+      <label className="flex items-center gap-2 text-xs"><input type="checkbox" aria-label={`${i + 1}: ${shotTime(range.start)}–${shotTime(range.end)}`} disabled={progress !== null || applying} checked={chosen.includes(i)} onChange={event => setChosen(old => event.target.checked ? [...old, i] : old.filter(value => value !== i))} />{i + 1}. {shotTime(range.start)}–{shotTime(range.end)}</label>
       <p className="mt-1 line-clamp-3 text-[11px] text-white/60">{range.text}</p>
-      <Button size="sm" variant="ghost" className="h-6 text-[11px]" onClick={() => { const s = useEditorStore.getState(); previewEnd.current = null; s.setCurrentTime(clip.start + range.start); previewEnd.current = clip.start + range.end; s.setIsPlaying(true); }}>{t("editor.shots.preview")}</Button>
-    </div>)}</div><Button size="sm" className="w-full" disabled={!chosen.length || applying} onClick={() => void apply()}>{t("editor.highlights.create")} ({chosen.length})</Button></>}
+      <Button size="sm" variant="ghost" className="h-6 text-[11px]" disabled={progress !== null || applying} onClick={() => { const s = useEditorStore.getState(); previewEnd.current = null; s.setCurrentTime(clip.start + range.start); previewEnd.current = clip.start + range.end; s.setIsPlaying(true); }}>{t("editor.shots.preview")}</Button>
+    </div>)}</div><div className="space-y-2 border-t border-white/10 pt-2">
+      <p className="text-[11px] font-medium">{t("editor.highlights.reviewTitle")}</p>
+      <div role="log" aria-live="polite" className="max-h-40 space-y-1 overflow-auto">{reviewEntries.map((entry, i) => <p key={i} className={`rounded px-2 py-1 text-[11px] ${entry.role === "user" ? "bg-white/10 text-white" : "text-white/70"}`}>{entry.content}</p>)}</div>
+      <textarea rows={2} maxLength={800} className="w-full rounded border border-white/15 bg-transparent px-2 py-1 text-xs" aria-label={t("editor.highlights.reviewPlaceholder")} placeholder={t("editor.highlights.reviewPlaceholder")} value={reviewDraft} disabled={progress !== null || applying} onChange={event => setReviewDraft(event.target.value)} onKeyDown={event => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); void review(); } }} />
+      <div className="flex gap-1"><Button size="sm" variant="ghost" disabled={!reviewDraft.trim() || progress !== null || applying} onClick={() => void review()}>{t("editor.agent.send")}</Button>{reviewUndo && <Button size="sm" variant="ghost" disabled={progress !== null || applying} onClick={() => { setChosen(reviewUndo); setReviewUndo(null); }}>{t("editor.highlights.undoSelection")}</Button>}</div>
+    </div><Button size="sm" className="w-full" disabled={!chosen.length || applying || progress !== null} onClick={() => void apply()}>{t("editor.highlights.create")} ({chosen.length})</Button></>}
   </div>;
 }
