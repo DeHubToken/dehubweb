@@ -12,27 +12,34 @@ interface BgRemovalState {
   clipId: string | null;
   progress: BgRemovalProgress | null;
   run: (clipId: string, wallet?: string | null) => Promise<boolean>;
+  cancel: () => void;
 }
+
+let backgroundController: AbortController | null = null;
 
 export const useBgRemovalStore = create<BgRemovalState>((set, get) => ({
   clipId: null,
   progress: null,
+  cancel: () => backgroundController?.abort(),
   run: async (clipId, wallet) => {
     if (get().clipId) return false;
+    const controller = new AbortController(); backgroundController = controller;
     set({ clipId, progress: null });
     try {
       const ok = await removeLayerBackground(clipId, {
-        wallet,
+        wallet, signal: controller.signal,
         onProgress: (progress) => set({ progress }),
       });
       if (ok) toast.success(i18n.t('editor.bgRemove.done'));
-      else toast.error(i18n.t('editor.bgRemove.failed'));
+      else if (!controller.signal.aborted) toast.error(i18n.t('editor.bgRemove.failed'));
       return ok;
     } catch (e) {
+      if (controller.signal.aborted) return false;
       console.error('[editor] background removal failed', e);
-      toast.error(i18n.t('editor.bgRemove.failed'));
+      toast.error(e instanceof Error ? e.message : i18n.t('editor.bgRemove.failed'));
       return false;
     } finally {
+      backgroundController = null;
       set({ clipId: null, progress: null });
     }
   },

@@ -36,6 +36,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
   const bgClipId = useBgRemovalStore((s) => s.clipId);
   const bgProgress = useBgRemovalStore((s) => s.progress);
   const runBgRemoval = useBgRemovalStore((s) => s.run);
+  const cancelBgRemoval = useBgRemovalStore((s) => s.cancel);
   const quota = useEditorQuota();
   // Keyed layers show and edit their values at the playhead; static ones skip the per-frame re-render.
   const recording = useEditorUiStore((s) => s.recordMotion);
@@ -201,7 +202,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
         </>
       )}
 
-      {mediaClip?.kind === "image" && (
+      {mediaClip && !mediaClip.videoMatte && (
         <button
           type="button"
           disabled={!!bgClipId}
@@ -212,10 +213,15 @@ export function LayerSection({ clip }: { clip: Clip }) {
           {bgClipId === clip.id
             ? bgProgress?.stage === "download"
               ? t("editor.bgRemove.downloading", { percent: Math.round((bgProgress.loaded / Math.max(1, bgProgress.total)) * 100) })
-              : t("editor.bgRemove.working")
+              : bgProgress?.stage === "frames"
+                ? t("editor.videoMatte.frames", { completed: bgProgress.completed, total: bgProgress.total })
+                : t("editor.bgRemove.working")
             : t("editor.bgRemove.action")}
         </button>
       )}
+      {mediaClip?.kind === "video" && !bgClipId && !mediaClip.videoMatte && <p className="text-[10px] leading-snug text-white/40">{t("editor.videoMatte.hint", { seconds: Math.round(600 / settings.fps) })}</p>}
+      {mediaClip?.kind === "video" && bgClipId === clip.id && <button type="button" onClick={cancelBgRemoval} className="text-xs text-white/70">{t("editor.videoMatte.cancel")}</button>}
+      {mediaClip?.videoMatte && <button type="button" onClick={() => patchClip(clip.id, { videoMatte: null })} className="h-8 w-full rounded-md border border-white/20 text-xs text-white">{t("editor.videoMatte.restore")}</button>}
       {mediaClip?.kind === "image" && !bgClipId && (
         <p className="-mt-2 text-[10px] leading-snug text-white/40">{t("editor.bgRemove.hint")}</p>
       )}

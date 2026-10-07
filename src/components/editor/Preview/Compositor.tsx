@@ -139,9 +139,10 @@ export function Compositor() {
     const vPool = videoPool.current;
     const aPool = audioPool.current;
     const iPool = imagePool.current;
-    const liveIds = new Set(media.map((m) => m.id));
+    const decoded = media.filter(m => !m.name.startsWith(".dehub-video-matte-") || clips.some(c => c.kind === "video" && c.videoMatte?.mediaId === m.id));
+    const liveIds = new Set(decoded.map((m) => m.id));
 
-    for (const m of media) {
+    for (const m of decoded) {
       if (m.kind === "video" && !vPool.has(m.id)) {
         const v = document.createElement("video");
         // Don't set crossOrigin on blob: URLs — it can prevent decoding in
@@ -169,7 +170,7 @@ export function Compositor() {
     // GC dropped media.
     for (const id of Array.from(vPool.keys())) if (!liveIds.has(id)) { vPool.get(id)?.pause(); vPool.delete(id); }
     for (const id of Array.from(aPool.keys())) if (!liveIds.has(id)) { aPool.get(id)?.pause(); aPool.delete(id); }
-    for (const id of Array.from(iPool.keys())) if (!liveIds.has(id)) iPool.delete(id);
+    for (const id of Array.from(iPool.keys())) if (!liveIds.has(id)) { const image = iPool.get(id); if (image) image.src = ""; iPool.delete(id); }
   }, [media, clips]);
 
   // ── Playback clock ──
@@ -318,7 +319,7 @@ export function Compositor() {
               ctx.clip();
             }
             ctx.globalAlpha = op.alpha;
-            drawClip(ctx, W, H, op.clip, time, sources);
+            drawClip(ctx, W, H, op.clip, time, sources, op.localTimeOverride);
             ctx.restore();
           }
 
@@ -1168,7 +1169,7 @@ function CanvasContextMenu({
           <ContextMenuSeparator className="bg-white/10" />
         </>
       )}
-      {mediaClip?.kind === "image" && (
+      {mediaClip && !mediaClip.videoMatte && (
         <ContextMenuItem disabled={bgBusy} onSelect={() => void runBgRemoval(clip.id, quota.walletAddress)}>
           <Scissors className="mr-2 h-3.5 w-3.5" /> {t("editor.bgRemove.action")}
         </ContextMenuItem>

@@ -12,6 +12,7 @@
  */
 import type { Clip, ClipTransform, KeyframeProp, MediaClip, ShapeClip, TextClip } from "./types";
 import { computeClipAnimation } from "./animationPresets";
+import { videoMatteFrame } from "./videoMatte";
 import { measuredTextLayout } from "./textLayout";
 import { KEY_EPSILON, isAnimated, keyframeProps, resolveClipAt, setKey, staticValue } from "./keyframes";
 
@@ -235,7 +236,7 @@ export function roundRectPath(ctx: Ctx2D, x: number, y: number, w: number, h: nu
  * Draw one clip at timeline time `t`. The caller owns transition effects
  * (translate / clip rect / alpha) and wraps this in save/restore.
  */
-export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: number, src: RenderSources) {
+export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: number, src: RenderSources, sourceTime?: number) {
   if (!isVisualClip(keyed) || keyed.hidden) return;
   // Keyframed placement is baked in first; everything below sees a plain clip.
   const clip = resolveClipAt(keyed, t);
@@ -265,7 +266,7 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: numbe
 
   if (clip.kind === "text") drawText(ctx, clip, box, W, H);
   else if (clip.kind === "shape") drawShape(ctx, clip, box, H);
-  else drawMedia(ctx, clip as MediaClip, box, H, src);
+  else drawMedia(ctx, clip as MediaClip, box, H, src, sourceTime ?? ((clip as MediaClip).trimIn + (t - clip.start) * ((clip as MediaClip).speed ?? 1)));
 
   ctx.restore();
 }
@@ -334,7 +335,9 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
   return { el: cvs as CanvasImageSource, w: cw, h: ch };
 }
 
-function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: RenderSources) {
+let matteCanvas: HTMLCanvasElement | null = null;
+
+function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: RenderSources, sourceTime: number) {
   const m = mediaSource(clip, src);
   if (!m) return;
   const c = cropOf(clip);
@@ -343,6 +346,22 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
   let sy = m.h * c.top;
   let sw = m.w * (1 - c.left - c.right);
   let sh = m.h * (1 - c.top - c.bottom);
+  if (clip.kind === "video" && clip.videoMatte) {
+    const frame = videoMatteFrame(clip, sourceTime), image = src.images.get(clip.videoMatte.mediaId);
+    if (!frame || !image?.naturalWidth || image.naturalWidth !== clip.videoMatte.atlasWidth || image.naturalHeight !== clip.videoMatte.atlasHeight) return;
+    matteCanvas ??= document.createElement("canvas");
+    const scale = Math.min(1, 1920 / Math.max(sw, sh));
+    const width = Math.max(1, Math.round(sw * scale)), height = Math.max(1, Math.round(sh * scale));
+    if (matteCanvas.width !== width) matteCanvas.width = width;
+    if (matteCanvas.height !== height) matteCanvas.height = height;
+    const g = matteCanvas.getContext("2d"); if (!g) return;
+    g.setTransform(1, 0, 0, 1, 0, 0); g.filter = "none"; g.globalAlpha = 1; g.globalCompositeOperation = "copy";
+    g.drawImage(el, sx, sy, sw, sh, 0, 0, width, height);
+    g.globalCompositeOperation = "destination-in";
+    g.drawImage(image, frame.x + frame.width * c.left, frame.y + frame.height * c.top, frame.width * (1 - c.left - c.right), frame.height * (1 - c.top - c.bottom), 0, 0, width, height);
+    g.globalCompositeOperation = "source-over";
+    el = matteCanvas; sx = 0; sy = 0; sw = width; sh = height;
+  }
   if (needsGrade(clip.effects)) {
     const graded = grade(el, sx, sy, sw, sh, Math.abs(box.w), Math.abs(box.h), clip.effects!);
     if (graded) {

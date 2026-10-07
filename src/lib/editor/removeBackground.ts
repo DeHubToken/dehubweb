@@ -8,10 +8,14 @@
  */
 import { useEditorStore } from "@/store/editorStore";
 import { importOneFile } from "./importFiles";
+import { processVideoMatte } from "./processVideoMatte";
+import { VIDEO_MATTE_ASSET_PREFIX, videoMattePlan } from "./videoMatte";
 
 export type BgRemovalProgress =
   | { stage: "download"; loaded: number; total: number }
-  | { stage: "running" };
+  | { stage: "running" }
+  | { stage: "frames"; completed: number; total: number }
+  | { stage: "fallback" };
 
 type Mode = "hd" | "lite";
 
@@ -88,14 +92,29 @@ export async function cutOutImage(blob: Blob, onProgress?: (p: BgRemovalProgress
  */
 export async function removeLayerBackground(
   clipId: string,
-  opts: { wallet?: string | null; onProgress?: (p: BgRemovalProgress) => void } = {},
+  opts: { wallet?: string | null; onProgress?: (p: BgRemovalProgress) => void; signal?: AbortSignal } = {},
 ): Promise<boolean> {
   const s = useEditorStore.getState();
   const clip = s.clips.find((c) => c.id === clipId);
-  if (!clip || clip.kind !== "image") return false;
+  if (!clip || clip.locked || (clip.kind !== "image" && clip.kind !== "video")) return false;
   const media = s.media.find((m) => m.id === clip.mediaId);
   if (!media) return false;
 
+  const projectId = s.projectId;
+  if (clip.kind === "video") {
+    videoMattePlan(clip, media.width ?? 1, media.height ?? 1, media.duration ?? clip.sourceDuration ?? 0, s.settings.fps);
+    const result = await processVideoMatte(media.url, clip, s.settings.fps, p => opts.onProgress?.(p.stage === "download" ? { stage: "download", loaded: p.fraction * 100, total: 100 } : p.stage === "frames" ? { stage: "frames", completed: p.completed, total: p.total } : { stage: "fallback" }), opts.signal);
+    const now = useEditorStore.getState();
+    const current = now.clips.find(c => c.id === clip.id);
+    if (opts.signal?.aborted || now.projectId !== projectId || current?.kind !== "video" || current.locked || current.mediaId !== clip.mediaId || current.trimIn !== clip.trimIn || current.duration !== clip.duration || (current.speed ?? 1) !== (clip.speed ?? 1)) return false;
+    const png = await (await fetch(result.dataUrl)).blob();
+    const id = await importOneFile(new File([png], `${VIDEO_MATTE_ASSET_PREFIX}${crypto.randomUUID()}.png`, { type: "image/png" }), { wallet: opts.wallet });
+    const latest = useEditorStore.getState();
+    const target = latest.clips.find(c => c.id === clip.id);
+    if (!id || opts.signal?.aborted || latest.projectId !== projectId || target?.kind !== "video" || target.locked || target.mediaId !== clip.mediaId || target.trimIn !== clip.trimIn || target.duration !== clip.duration || (target.speed ?? 1) !== (clip.speed ?? 1)) return false;
+    latest.patchClip(clip.id, { videoMatte: { ...result.plan, mediaId: id } });
+    return true;
+  }
   const source = await (await fetch(media.url)).blob();
   const png = await cutOutImage(source, opts.onProgress);
   const base = media.name.replace(/\.[a-z0-9]+$/i, "");

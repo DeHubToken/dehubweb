@@ -28,7 +28,7 @@ function kindIcon(k: MediaItem["kind"]) {
 
 export function MediaPanel() {
   const { t } = useTranslation();
-  const media = useEditorStore((s) => s.media);
+  const media = useEditorStore((s) => s.media).filter(m => !m.name.startsWith(".dehub-video-matte-"));
   const removeMediaFromStore = useEditorStore((s) => s.removeMedia);
   const addClipFromMedia = useEditorStore((s) => s.addClipFromMedia);
 
