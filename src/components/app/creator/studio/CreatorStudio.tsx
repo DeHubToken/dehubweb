@@ -107,7 +107,7 @@ import { PresetStrip } from './PresetStrip';
 import { GenerationExample } from './GenerationExample';
 import { ReferenceAssets, type CreatorReferenceAsset } from './ReferenceAssets';
 import { remapAssetMentions } from '@/lib/creator/assetMentions';
-import { CREATOR_FAL_IMAGE_MODELS } from '../../../../../supabase/functions/_shared/creator-fal-catalog';
+import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS, creatorFalImageAspects } from '../../../../../supabase/functions/_shared/creator-fal-catalog';
 import { ResultsFeed } from './ResultsFeed';
 import { VoiceDesignDrawer } from './VoiceDesignDrawer';
 import { StudioVoicePicker } from './StudioVoicePicker';
@@ -117,7 +117,6 @@ type Resolution = string;
 type Reference = { url: string; label: string } | null;
 type ByMode<T> = Record<Mode, T>;
 
-const IMAGE_ASPECTS = ['1:1', '4:5', '16:9', '9:16', '3:2', '2:3', '21:9'] as const;
 const MAX_IMAGE_BATCH = 4;
 const MAX_REFERENCE_BYTES = 20 * 1024 * 1024;
 
@@ -686,6 +685,11 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
   // ── Model legality ────────────────────────────────────────────────────────
 
+  useEffect(() => {
+    const allowed = creatorFalImageAspects(imageModel);
+    setImageAspect((value) => allowed.includes(value) ? value : allowed[0]);
+  }, [imageModel, imageAspect]);
+
   /**
    * Keep duration, aspect and resolution legal whenever the video model changes.
    *
@@ -1032,8 +1036,14 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
   /** Guardrails that would otherwise only surface as a paid-for failure. */
   const blockingIssue = useMemo(() => {
+    const promptLimit = mode === 'image' ? CREATOR_FAL_IMAGE_MODELS[imageModel]?.maxPromptLength ?? 4000
+      : mode === 'video' ? CREATOR_FAL_VIDEO_MODELS[videoModel]?.maxPromptLength : undefined;
+    if (promptLimit && resolvedPrompt.length > promptLimit) {
+      return `${t('nav.prompt')}: ${resolvedPrompt.length.toLocaleString()} / ${promptLimit.toLocaleString()}`;
+    }
     if (mode === 'image') {
       const model = IMAGE_MODELS[imageModel];
+      if (currentImages.length > (CREATOR_FAL_IMAGE_MODELS[imageModel]?.maxReferenceImages ?? 4)) return t('creator.referenceTooMany');
       if (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) return t('creator.referenceMultiModel');
       if (model && reference && !imageModelSupportsEdit(model)) {
         return `${model.name} cannot edit an attached image. Remove it or pick another model.`;
@@ -1489,8 +1499,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
             value: m.id,
             label: m.name,
             detail: m.description,
-            meta: `$${getImageCostUsd(m).toFixed(2)}`,
-            disabled: (!canEdit && !!reference) || (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[m.id]?.editUsesPlural),
+            meta: `$${getImageCostUsd(m).toFixed(getImageCostUsd(m) < 0.01 ? 3 : 2)}`,
+            disabled: (!canEdit && !!reference) || (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[m.id]?.editUsesPlural) || currentImages.length > (CREATOR_FAL_IMAGE_MODELS[m.id]?.maxReferenceImages ?? 4),
             disabledReason: t('creator.cannotEditAttached'),
           };
         })
@@ -1540,7 +1550,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     label: l.label,
   }));
 
-  const aspectOptions: ChipOption<string>[] = (mode === 'image' ? [...IMAGE_ASPECTS] : videoAspects).map(
+  const aspectOptions: ChipOption<string>[] = (mode === 'image' ? creatorFalImageAspects(imageModel) : videoAspects).map(
     (a) => ({ value: a, label: a }),
   );
 
