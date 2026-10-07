@@ -68,6 +68,7 @@ export function AgentPanel() {
       const { reply, ops } = await askAgent(history);
       const report = ops.length ? await applyOps(ops, { wallet: quota.walletAddress }) : undefined;
       let content = reply || (ops.length ? t('editor.agent.done') : t('editor.agent.nothingToDo'));
+      if (!ops.length) content = t('editor.agent.nothingToDo');
       if (report?.failed) content = `${report.applied ? t('editor.agent.done') + ' ' : ''}${t('editor.agent.failed')}`;
       if (report?.missingStock.length) {
         content += ` ${t('editor.agent.noStock', { query: report.missingStock.join(', ') })}`;

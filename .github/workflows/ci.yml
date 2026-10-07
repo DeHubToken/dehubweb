@@ -187,6 +187,9 @@ jobs:
       - name: Empty transcription fallback
         run: node --experimental-strip-types --test supabase/functions/_shared/transcription-fallback.test.ts
 
+      - name: Complete editor scene descriptions
+        run: node --experimental-strip-types --test supabase/functions/editor-agent/scene.test.ts
+
   boot-path:
     name: Boot path
     runs-on: ubuntu-latest
