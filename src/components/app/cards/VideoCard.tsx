@@ -101,6 +101,7 @@ import { getVideoPreferences, useMediaVolume, getPlaybackRateFor, setPlaybackRat
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
+import { useAutoplayPausePrompt } from '@/hooks/use-autoplay-pause-prompt';
 import { useConnectionQuality } from '@/hooks/use-connection-quality';
 /** Lazy: nine canvas painters and a decoder, ~50 KB, for a minority post type
  *  — none of it belongs in the bytes parsed before first paint. */
@@ -790,6 +791,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(video.id);
   const trackLinkCopy = useTrackPostLinkCopy();
   const { autoplayEnabled, autoplayMuted } = useAutoplay();
+  const { recordPause, cancelPause } = useAutoplayPausePrompt(video.id);
+  const autoStartedRef = useRef(false);
   // Slow-network / Data-Saver mode: suppress autoplay and video preloading so a
   // metered connection isn't spent fetching 50MB clips the user hasn't asked for.
   const { liteMode } = useConnectionQuality();
@@ -957,6 +960,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Keep refs in sync for autoplay-related values
   const autoplayEnabledRef = useRef(autoplayEnabled);
   autoplayEnabledRef.current = autoplayEnabled;
+  useEffect(() => {
+    if (autoplayEnabled || !autoStartedRef.current) return;
+    pauseVideo();
+    videoPlaybackManager.stop(instanceId);
+  }, [autoplayEnabled, pauseVideo, instanceId]);
   const autoplayMutedRef = useRef(autoplayMuted);
   autoplayMutedRef.current = autoplayMuted;
   const liteModeRef = useRef(liteMode);
@@ -1076,11 +1084,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               vid.muted = shouldMute;
               setIsMuted(shouldMute);
               setIsLoading(true);
+              autoStartedRef.current = true;
               vid.play().then(() => {
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
-                if (((!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) && !isVideoInPictureInPicture(vid)) || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
+                if ((!autoplayEnabledRef.current && autoStartedRef.current) || vid.dataset.userPaused === 'true' || ((!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) && !isVideoInPictureInPicture(vid)) || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
                   vid.pause();
                   videoPlaybackManager.stop(instanceId);
                   setIsLoading(false);
@@ -1251,6 +1260,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (!video.videoUrl || isContentGated || isVideoNotReady) return;
 
     if (isPlaying) {
+      if (autoStartedRef.current && !isImmersive) recordPause();
       if (videoRef.current) videoRef.current.dataset.userPaused = 'true';
       videoRef.current?.pause();
       isPlayingRef.current = false;
@@ -1260,6 +1270,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       videoPlaybackManager.stop(instanceId);
       showControlsBriefly();
     } else {
+      cancelPause();
+      autoStartedRef.current = false;
       // A tap means this card: take the element back if another copy of
       // the post is holding it.
       if (!videoRef.current) takeVideoRef.current();
@@ -1300,7 +1312,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         videoPlaybackManager.stop(instanceId);
       });
     }
-  }, [isPlaying, video.videoUrl, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated, isVideoNotReady]);
+  }, [isPlaying, video.videoUrl, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated, isVideoNotReady, isImmersive, recordPause, cancelPause]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
