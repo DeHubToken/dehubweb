@@ -4,14 +4,12 @@
  * the lazily loaded VoiceDubEngine, so it costs nothing until a dub plays.
  * The switch and voice picking are in dub-preference.ts.
  */
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { TranscriptSegment } from '@/hooks/use-transcript';
 import { synth } from '@/hooks/dub-preference';
+import { getMediaVolume, useMediaVolume } from '@/lib/video-preferences';
+import { applyVideoVolume, dubLevelGain, dubVoiceVolume, getDubMix, setDubMixActive, useDubMix } from '@/lib/dub-mix';
 
-/** Keep music and ambience quiet for the entire dub, including speech gaps. */
-const ORIGINAL_VOLUME = 0.06;
-/** Boost speech from the viewer's level, independently of the quiet original. */
-const DUB_VOLUME_BOOST = 1.5;
 /** Characters per second a voice reads comfortably at rate 1. */
 const NATURAL_CPS = 14;
 const MAX_RATE = 1.3;
@@ -41,6 +39,9 @@ export function useVoiceDub(
   voice: SpeechSynthesisVoice | null,
   onFailed?: () => void,
 ) {
+  const master = useMediaVolume();
+  const mix = useDubMix();
+  const reconcileRef = useRef<(() => void) | null>(null);
   useEffect(() => {
     const v = videoRef.current;
     const s = synth();
@@ -52,14 +53,18 @@ export function useVoiceDub(
     let spoken = -1;
     let failed = false;
     let utterance: SpeechSynthesisUtterance | null = null;
-    let userVolume = v.volume;
-    let expectedVolume = userVolume;
+    let spokenChar = 0;
+    let resumeWord = { index: -1, offset: 0 };
+    let restartTimer: ReturnType<typeof setTimeout> | null = null;
+    let speechVolume = dubVoiceVolume(getMediaVolume());
     const syncVolume = () => {
-      expectedVolume = failed ? userVolume : userVolume * ORIGINAL_VOLUME;
-      if (Math.abs(v.volume - expectedVolume) >= 0.001) v.volume = expectedVolume;
+      setDubMixActive(v, !failed, dubLevelGain(getDubMix().original));
+      applyVideoVolume(v, getMediaVolume());
     };
 
     const stop = () => {
+      if (restartTimer !== null) clearTimeout(restartTimer);
+      restartTimer = null;
       spoken = -1;
       utterance = null;
       if (speaker === me) { s.cancel(); speaker = null; }
@@ -80,25 +85,27 @@ export function useVoiceDub(
       onFailed?.();
     };
 
-    const speak = (i: number) => {
+    const speak = (i: number, charOffset = 0) => {
       const seg = segments[i];
       if (seg.end - v.currentTime < 0.8) return;
       utterance = null;
       spoken = i;
+      spokenChar = charOffset;
       s.cancel();
       speaker = me;
       if (!seg.text.trim()) return;
-      const u = new SpeechSynthesisUtterance(seg.text);
+      const u = new SpeechSynthesisUtterance(seg.text.slice(charOffset));
       utterance = u;
       u.voice = voice;
       u.lang = voice.lang;
       const duration = Math.max(0.5, seg.end - v.currentTime);
-      const needed = seg.text.length / duration / NATURAL_CPS;
+      const needed = u.text.length / duration / NATURAL_CPS;
       u.rate = Math.min(MAX_RATE, Math.max(1, needed * (v.playbackRate || 1)));
-      u.volume = Math.min(1, userVolume * DUB_VOLUME_BOOST);
+      u.volume = dubVoiceVolume(getMediaVolume());
+      u.onboundary = (event) => { if (utterance === u) spokenChar = charOffset + event.charIndex; };
       u.onstart = () => {
         if (utterance !== u) return;
-        if (v.paused || v.muted || userVolume === 0) { stop(); return; }
+        if (v.paused || v.muted || dubVoiceVolume(getMediaVolume()) === 0) { stop(); return; }
       };
       const finish = () => {
         if (utterance !== u) return;
@@ -117,18 +124,36 @@ export function useVoiceDub(
     };
 
     const tick = () => {
-      if (failed || v.paused || v.muted || v.seeking || userVolume === 0) return;
+      if (failed || restartTimer !== null || v.paused || v.muted || v.seeking || dubVoiceVolume(getMediaVolume()) === 0) return;
       const i = indexAt(v.currentTime);
       if (i < 0 && utterance) { stop(); return; }
       if (i >= 0 && i !== spoken) speak(i);
     };
 
     const onVolume = () => {
-      if (Math.abs(v.volume - expectedVolume) >= 0.001) userVolume = v.volume;
       syncVolume();
-      if (v.muted || userVolume === 0) stop();
-      else if (utterance) utterance.volume = Math.min(1, userVolume * DUB_VOLUME_BOOST);
+      if (v.muted || getMediaVolume() === 0) stop();
     };
+
+    const reconcile = () => {
+      syncVolume();
+      const next = dubVoiceVolume(getMediaVolume());
+      if (next === speechVolume) return;
+      const previous = speechVolume;
+      speechVolume = next;
+      if (utterance) resumeWord = { index: spoken, offset: spokenChar };
+      else if (restartTimer === null && previous > 0 && next > 0) return;
+      stop();
+      if (!next || failed || v.paused || v.muted) return;
+      // Speech engines read volume when an utterance starts. Resume at the
+      // current word after a drag settles so the live voice actually changes.
+      restartTimer = setTimeout(() => {
+        restartTimer = null;
+        const i = indexAt(v.currentTime);
+        if (i >= 0 && !v.paused && !v.muted && !v.seeking) speak(i, i === resumeWord.index ? resumeWord.offset : 0);
+      }, 120);
+    };
+    reconcileRef.current = reconcile;
 
     v.addEventListener('pause', stop);
     v.addEventListener('seeking', stop);
@@ -149,11 +174,14 @@ export function useVoiceDub(
       v.removeEventListener('seeked', tick);
       v.removeEventListener('volumechange', onVolume);
       stop();
-      v.volume = userVolume;
+      if (reconcileRef.current === reconcile) reconcileRef.current = null;
+      setDubMixActive(v, false, 1);
+      applyVideoVolume(v, getMediaVolume());
       if (owners.get(v) === me) owners.delete(v);
     };
     // onFailed is a notification, not an input: a new callback identity must
     // not restart the engine mid-line.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoRef, segments, voice]);
+  useEffect(() => { reconcileRef.current?.(); }, [master, mix.voice, mix.original]);
 }
