@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { videoMattePlan } from "./videoMatte";
 import { clipBoxForSize, drawClip, placementPatch, pointInBox } from "./render";
 import type { MediaClip, TextClip } from "./types";
 
@@ -8,6 +9,29 @@ const image = (patch: Partial<MediaClip> = {}): MediaClip => ({
 
 // Geometry for media never touches the context, so a stub is enough.
 const ctx = {} as CanvasRenderingContext2D;
+
+it("composites the source-clock mask with the same crop as the original before grading", () => {
+  const video = { videoWidth: 640, videoHeight: 360 } as HTMLVideoElement;
+  const base: MediaClip = { id: "video", mediaId: "source", trackId: "v", kind: "video", start: 5, trimIn: 2, duration: 2, speed: 2, crop: { left: 0.25, right: 0, top: 0, bottom: 0 } };
+  const matte = { ...videoMattePlan(base, 640, 360, 10, 30), mediaId: "mask" };
+  const image = { naturalWidth: matte.atlasWidth, naturalHeight: matte.atlasHeight } as HTMLImageElement;
+  const calls: { mode: string; args: unknown[] }[] = [];
+  const maskContext = { globalCompositeOperation: "", setTransform() {}, drawImage(...args: unknown[]) { calls.push({ mode: this.globalCompositeOperation, args }); } };
+  const get = vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(maskContext as unknown as CanvasRenderingContext2D);
+  const draw = vi.fn();
+  const target = { globalAlpha: 1, save() {}, restore() {}, translate() {}, rotate() {}, scale() {}, drawImage: draw } as unknown as CanvasRenderingContext2D;
+  try {
+    drawClip(target, 640, 360, { ...base, videoMatte: matte }, 5.5, { videos: new Map([["source", video]]), images: new Map([["mask", image]]) });
+    expect(calls[0].mode).toBe("copy"); expect(calls[0].args.slice(1, 5)).toEqual([160, 0, 480, 360]);
+    expect(calls[1].mode).toBe("destination-in");
+    const index = 30, x = (index % matte.columns) * matte.width, y = Math.floor(index / matte.columns) * matte.height;
+    expect(calls[1].args.slice(1, 5)).toEqual([x + matte.width * 0.25, y, matte.width * 0.75, matte.height]);
+    expect(draw).toHaveBeenCalledOnce();
+    draw.mockClear();
+    drawClip(target, 640, 360, { ...base, videoMatte: matte }, 5.5, { videos: new Map([["source", video]]), images: new Map() });
+    expect(draw).not.toHaveBeenCalled();
+  } finally { get.mockRestore(); }
+});
 
 describe("clipBoxForSize", () => {
   it("fits a landscape photo inside a square page by default", () => {

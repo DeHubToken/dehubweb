@@ -1,3 +1,4 @@
+import { assertVideoMattes } from "./videoMatte";
 /**
  * Video export pipeline using WebCodecs + mp4-muxer / webm-muxer.
  * Renders each timeline frame to an OffscreenCanvas, encodes video via VideoEncoder,
@@ -267,11 +268,14 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const totalFrames = Math.ceil(duration * fps);
   onProgress?.(0, "Loading media…");
   const used = new Set(clips.filter(c => !c.hidden && !tracks.find(tr => tr.id === c.trackId)?.hidden && "mediaId" in c).map(c => (c as MediaClip).mediaId));
+  for (const c of clips) if (c.kind === "video" && c.videoMatte) used.add(c.videoMatte.mediaId);
+  assertVideoMattes(clips.filter(c => !c.hidden && !tracks.find(tr => tr.id === c.trackId)?.hidden), (id, width, height) => media.some(m => m.id === id && m.width === width && m.height === height));
   const { videos, images, audioBuffers } = await loadSources(media.filter(m => used.has(m.id)), true, signal);
   let videoEncoder: VideoEncoder | undefined;
   let audioEncoder: AudioEncoder | undefined;
   let encoderFailure: Error | undefined;
   try {
+  assertVideoMattes(clips.filter(c => !c.hidden && !tracks.find(tr => tr.id === c.trackId)?.hidden), (id, width, height) => images.get(id)?.naturalWidth === width && images.get(id)?.naturalHeight === height);
   const artwork = await loadBrandOutroArtwork();
   const logo = artwork.logo;
   checkAbort(signal);
@@ -387,7 +391,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         ctx.clip();
       }
       ctx.globalAlpha = op.alpha;
-      drawClip(ctx, width, height, op.clip, t, { videos, images });
+      drawClip(ctx, width, height, op.clip, t, { videos, images }, op.localTimeOverride);
       ctx.restore();
     }
 
@@ -489,10 +493,13 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
   const visual = (id: string) => { const tr = tracks.find(t => t.id === id); return !!tr && !tr.hidden && tr.kind !== "audio"; };
   const ids = new Set(clips.filter(c => !c.hidden && visual(c.trackId) && c.kind !== "audio" && "mediaId" in c).map(c => (c as MediaClip).mediaId));
   onProgress?.(0, "Loading media…");
+  for (const c of clips) if (c.kind === "video" && c.videoMatte) ids.add(c.videoMatte.mediaId);
+  assertVideoMattes(clips.filter(c => !c.hidden && visual(c.trackId)), (id, width, height) => opts.media.some(m => m.id === id && m.width === width && m.height === height));
   const { videos, images } = await loadSources(opts.media.filter(m => ids.has(m.id)), false, signal);
   let session: ReturnType<typeof gifWorkerSession> | undefined;
   const abort = () => session?.close();
   try {
+    assertVideoMattes(clips.filter(c => !c.hidden && visual(c.trackId)), (id, width, height) => images.get(id)?.naturalWidth === width && images.get(id)?.naturalHeight === height);
     const artwork = await loadBrandOutroArtwork();
     const logo = artwork.logo;
     if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 3000))]);
@@ -520,7 +527,7 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
         if (op.translateX) ctx.translate(op.translateX, 0);
         if (op.clipRect) { ctx.beginPath(); ctx.rect(op.clipRect.x, 0, op.clipRect.w, plan.height); ctx.clip(); }
         ctx.globalAlpha = op.alpha;
-        drawClip(ctx, plan.width, plan.height, op.clip, time, { videos, images }); ctx.restore();
+        drawClip(ctx, plan.width, plan.height, op.clip, time, { videos, images }, op.localTimeOverride); ctx.restore();
       }
       if (localTime >= contentDuration) drawBrandOutro(ctx, plan.width, plan.height, localTime - contentDuration, username, logo, artwork);
       await session.frame(ctx.getImageData(0, 0, plan.width, plan.height).data, gifFrameDelay(f, plan));
@@ -575,8 +582,11 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   );
 
   const used = new Set(ops.map((op) => (op.clip.kind === "text" ? "" : (op.clip as MediaClip).mediaId)));
+  for (const op of ops) if (op.clip.kind === "video" && op.clip.videoMatte) used.add(op.clip.videoMatte.mediaId);
+  assertVideoMattes(ops.map(op => op.clip), (id, width, height) => media.some(m => m.id === id && m.width === width && m.height === height));
   const { videos, images } = await loadSources(media.filter((m) => used.has(m.id)), false);
 
+  assertVideoMattes(ops.map(op => op.clip), (id, w, h) => images.get(id)?.naturalWidth === w && images.get(id)?.naturalHeight === h);
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -598,7 +608,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
       ctx.clip();
     }
     ctx.globalAlpha = op.alpha;
-    drawClip(ctx, width, height, op.clip, t, { videos, images });
+    drawClip(ctx, width, height, op.clip, t, { videos, images }, op.localTimeOverride);
     ctx.restore();
   }
 
