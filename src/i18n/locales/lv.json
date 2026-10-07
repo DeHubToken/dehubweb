@@ -6826,6 +6826,12 @@
         "easeInOutBack": "Atsitiens sākumā un beigās",
         "hold": "Turēt"
       }
+    },
+    "beats": {
+      "markers": "Ritma marķieri",
+      "sync": "Sinhronizēt griezumus",
+      "none": "Uzticams ritms nav atrasts.",
+      "unchanged": "Griezumus nevarēja izlīdzināt."
     }
   },
   "jungleMood": {

@@ -6845,6 +6845,12 @@
         "easeInOutBack": "Atatranka pradžioje ir pabaigoje",
         "hold": "Išlaikyti"
       }
+    },
+    "beats": {
+      "markers": "Ritmo žymekliai",
+      "sync": "Sinchronizuoti kirpimus",
+      "none": "Patikimas ritmas nerastas.",
+      "unchanged": "Kirpimų nepavyko sulygiuoti."
     }
   },
   "jungleMood": {

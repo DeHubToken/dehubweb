@@ -6753,6 +6753,12 @@
         "easeInOutBack": "Dib gelid iyo bixid",
         "hold": "Hay"
       }
+    },
+    "beats": {
+      "markers": "Calaamadaha garaaca",
+      "sync": "Isku waafaji goynta",
+      "none": "Garaac lagu kalsoon yahay lama helin.",
+      "unchanged": "Goynta lama waafajin karin."
     }
   },
   "jungleMood": {

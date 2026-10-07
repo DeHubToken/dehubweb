@@ -6735,6 +6735,12 @@
         "easeInOutBack": "Visszalendülő kezdés és befejezés",
         "hold": "Tartás"
       }
+    },
+    "beats": {
+      "markers": "Ütemjelölők",
+      "sync": "Vágások szinkronizálása",
+      "none": "Nem található megbízható ütem.",
+      "unchanged": "A vágásokat nem sikerült igazítani."
     }
   },
   "jungleMood": {

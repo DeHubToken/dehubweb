@@ -6738,6 +6738,12 @@
         "easeInOutBack": "Povratni ulaz i izlaz",
         "hold": "Zadrži"
       }
+    },
+    "beats": {
+      "markers": "Oznake ritma",
+      "sync": "Sinkroniziraj rezove",
+      "none": "Nije pronađen pouzdan ritam.",
+      "unchanged": "Rezove nije bilo moguće poravnati."
     }
   },
   "jungleMood": {

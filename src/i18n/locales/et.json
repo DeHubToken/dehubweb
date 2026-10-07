@@ -6813,6 +6813,12 @@
         "easeInOutBack": "Tagasi algus ja lõpp",
         "hold": "Hoia"
       }
+    },
+    "beats": {
+      "markers": "Rütmimärgid",
+      "sync": "Sünkrooni lõiked",
+      "none": "Usaldusväärset rütmi ei leitud.",
+      "unchanged": "Lõike ei saanud joondada."
     }
   },
   "jungleMood": {

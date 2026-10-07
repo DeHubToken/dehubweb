@@ -5819,6 +5819,12 @@
         "easeInOutBack": "گەڕانەوە لە هاتن و چوون",
         "hold": "ڕاگرتن"
       }
+    },
+    "beats": {
+      "markers": "Nîşanên rîtmê",
+      "sync": "Birînan hevdem bike",
+      "none": "Rîtmeke pêbawer nehat dîtin.",
+      "unchanged": "Birîn nehatin lihevkirin."
     }
   },
   "jungleMood": {

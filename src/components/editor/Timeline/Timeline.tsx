@@ -33,6 +33,8 @@ import {
   maxTransitionFor,
 } from "@/lib/editor/transitions";
 
+import { clipBeatTimes, timelineBeatTimes } from "@/lib/editor/beats";
+
 const TRACK_HEIGHT = 56;
 const HEADER_WIDTH = 120;
 const RULER_HEIGHT = 28;
@@ -129,22 +131,25 @@ export function Timeline() {
   }, []);
 
 
+  const beatMarkers = useMemo(() => timelineBeatTimes(clips, tracks), [clips, tracks]);
+
   // ── Snap helpers ──
   const snapTargets = useMemo(() => {
-    const set = new Set<number>([0, currentTime]);
+    const set = new Set<number>([0, currentTime, ...beatMarkers]);
     for (const c of clips) {
       set.add(c.start);
       set.add(c.start + c.duration);
     }
     return Array.from(set).sort((a, b) => a - b);
-  }, [clips, currentTime]);
+  }, [clips, currentTime, beatMarkers]);
 
   const maybeSnap = useCallback(
     (timeSec: number, ignoreIds: Set<string>): number => {
       const tolSec = SNAP_PX / zoom;
       let best = timeSec;
       let bestDist = tolSec;
-      for (const t of snapTargets) {
+      const targets = ignoreIds.size ? [...new Set([0, currentTime, ...clips.filter(c => !ignoreIds.has(c.id)).flatMap(c => [c.start, c.start+c.duration, ...(!tracks.find(tr => tr.id === c.trackId)?.muted && !tracks.find(tr => tr.id === c.trackId)?.hidden ? clipBeatTimes(c) : [])])])] : snapTargets;
+      for (const t of targets) {
         const d = Math.abs(t - timeSec);
         if (d < bestDist) {
           best = t;
@@ -152,10 +157,9 @@ export function Timeline() {
         }
       }
       // Also snap to other clips' edges (handled above as we include them).
-      void ignoreIds;
       return best;
     },
-    [snapTargets, zoom],
+    [snapTargets, zoom, currentTime, clips, tracks],
   );
 
   // ── Playhead scrub ──
@@ -345,6 +349,7 @@ export function Timeline() {
               className="relative cursor-ew-resize touch-none select-none border-b border-white/10 bg-black/80"
               style={{ width: contentWidth, height: RULER_HEIGHT }}
             >
+              {beatMarkers.map(beat => <div key={beat} aria-hidden="true" className="pointer-events-none absolute bottom-0 h-2 w-px bg-amber-300" style={{ left: beat * zoom }} />)}
               {ticks.out.map((t) => (
                 <div key={t} className="absolute top-0 h-full" style={{ left: t * zoom }}>
                   <div className="h-2 w-px bg-white/20" />

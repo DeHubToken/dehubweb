@@ -6966,6 +6966,12 @@
         "easeInOutBack": "Spätný nábeh aj dobeh",
         "hold": "Podržať"
       }
+    },
+    "beats": {
+      "markers": "Značky rytmu",
+      "sync": "Synchronizovať strihy",
+      "none": "Nenašiel sa spoľahlivý rytmus.",
+      "unchanged": "Strihy sa nepodarilo zarovnať."
     }
   },
   "jungleMood": {

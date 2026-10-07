@@ -6695,6 +6695,12 @@
         "easeInOutBack": "Geri giriş və çıxış",
         "hold": "Saxla"
       }
+    },
+    "beats": {
+      "markers": "Ritm işarələri",
+      "sync": "Kəsikləri sinxronlaşdır",
+      "none": "Etibarlı ritm tapılmadı.",
+      "unchanged": "Kəsikləri uyğunlaşdırmaq mümkün olmadı."
     }
   },
   "jungleMood": {

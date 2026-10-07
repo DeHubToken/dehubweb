@@ -6798,6 +6798,12 @@
         "easeInOutBack": "Deebii seensaa fi ba’iinsa",
         "hold": "Qabi"
       }
+    },
+    "beats": {
+      "markers": "Mallattoolee rukuttaa",
+      "sync": "Kutaa walsimsiisi",
+      "none": "Rukutaan amanamaan hin argamne.",
+      "unchanged": "Kutaan walsimuun hin danda'amne."
     }
   },
   "jungleMood": {
