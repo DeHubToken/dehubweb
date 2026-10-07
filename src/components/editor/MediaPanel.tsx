@@ -11,6 +11,7 @@ import { useEditorQuota } from "@/hooks/use-editor-quota";
 import { formatBytes } from "@/lib/editor/quota";
 import { deleteEditorAsset } from "@/lib/editor/cloudMedia";
 import { AppState } from "@/components/app/AppState";
+import { RecordingPanel } from "@/components/editor/RecordingPanel";
 
 function formatDuration(s?: number | null) {
   if (!s || !Number.isFinite(s)) return "—";
@@ -128,6 +129,8 @@ export function MediaPanel() {
         <input ref={inputRef} type="file" accept="video/*,audio/*,image/*" multiple hidden
           onChange={(e) => { if (e.target.files) void importFiles(e.target.files); e.target.value = ""; }} />
       </div>
+
+      <RecordingPanel />
 
       {/* Storage quota bar */}
       {quota.isAuthenticated ? (

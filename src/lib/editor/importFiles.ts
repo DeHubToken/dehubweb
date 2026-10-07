@@ -28,6 +28,8 @@ function makeId(): string {
 }
 
 export interface ImportContext {
+  /** Measured recorder duration when a streamed container has no duration metadata. */
+  duration?: number;
   /** Signed-in wallet address; if omitted, only IndexedDB is used (no cloud). */
   wallet?: string | null;
   /** Optional badge balance to enforce a quota before importing. */
@@ -85,6 +87,7 @@ export async function importOneFile(file: File, ctx: ImportContext = {}): Promis
       thumbnail = r.thumbnail; width = r.width; height = r.height;
     }
 
+    if (kind !== "image" && Number.isFinite(ctx.duration) && (ctx.duration ?? 0) > 0) duration = ctx.duration;
     const row: StoredMedia = {
       id, name: file.name, kind,
       mimeType: file.type || "application/octet-stream",
