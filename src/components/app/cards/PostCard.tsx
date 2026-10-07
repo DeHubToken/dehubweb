@@ -396,6 +396,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       onPointerDownCapture={warmPostPage}
       className="overflow-visible relative cursor-pointer isolate"
     >
+      <div className={stage ? 'contents' : 'flex items-start min-w-0'}>
       {stage ? (
         /* Phone post page: no media to float on, so back / Ask AI / options
            sit in a row of their own above the creator row. */
@@ -431,10 +432,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       />
       )}
 
-      {/* AI Button and Options Drawer - positioned in header area. On the
+      {/* Header controls share the row's width with the creator. On the
           phone post page the buttons are in the Stage row above; the sheet
           stays mounted here for them. */}
-      <div className={stage ? 'hidden' : 'absolute top-0 right-0 z-10 flex items-start gap-2'}>
+      <div className={stage ? 'hidden' : 'z-10 flex shrink-0 items-start gap-2'}>
         {isOwnPost && (
           <button
             onClick={() => setShowBoostModal(true)}
@@ -621,6 +622,8 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             — the same call the options menu already makes, and a control no
             other card carried. Removed rather than duplicated; muting lives in
             the ⋯ menu on all three cards. */}
+      </div>
+
       </div>
 
       {/* Content.
