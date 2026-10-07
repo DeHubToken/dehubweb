@@ -10,7 +10,7 @@ import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
 import { drawClip } from "./render";
 import { timelineDuration } from "./pages";
-import logoUrl from "@/assets/dehub-logo-white.png";
+import { loadBrandOutroArtwork } from "./brandOutroArtwork";
 import { BRAND_OUTRO_DURATION, drawBrandOutro, outroSoundSample, outroUsername } from "./brandOutro";
 import { GIF_CONTENT_LIMIT, gifPlan, gifFrameDelay, gifWorkerSession } from "./gif";
 import { GIF_WORKER } from "./gifRuntime";
@@ -271,12 +271,8 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   let audioEncoder: AudioEncoder | undefined;
   let encoderFailure: Error | undefined;
   try {
-  const logo = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("Could not load the export logo"));
-    image.src = logoUrl;
-  });
+  const artwork = await loadBrandOutroArtwork();
+  const logo = artwork.logo;
   checkAbort(signal);
 
   // Pre-mix audio in parallel with video setup.
@@ -394,7 +390,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
       ctx.restore();
     }
 
-    if (localTime >= contentDuration) drawBrandOutro(ctx, width, height, localTime - contentDuration, username, logo);
+    if (localTime >= contentDuration) drawBrandOutro(ctx, width, height, localTime - contentDuration, username, logo, artwork);
 
     const frame = new VideoFrame(canvas, { timestamp: Math.round((f / fps) * 1_000_000) });
     const keyFrame = f % Math.max(1, Math.round(fps * 2)) === 0;
@@ -496,9 +492,8 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
   let session: ReturnType<typeof gifWorkerSession> | undefined;
   const abort = () => session?.close();
   try {
-    const logo = await new Promise<HTMLImageElement>((resolve, reject) => {
-      const image = new Image(); image.onload = () => resolve(image); image.onerror = () => reject(new Error("Could not load the export logo")); image.src = logoUrl;
-    });
+    const artwork = await loadBrandOutroArtwork();
+    const logo = artwork.logo;
     if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 3000))]);
     checkAbort(signal);
     const canvas = document.createElement("canvas"); canvas.width = plan.width; canvas.height = plan.height;
@@ -526,7 +521,7 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
         ctx.globalAlpha = op.alpha;
         drawClip(ctx, plan.width, plan.height, op.clip, time, { videos, images }); ctx.restore();
       }
-      if (localTime >= contentDuration) drawBrandOutro(ctx, plan.width, plan.height, localTime - contentDuration, username, logo);
+      if (localTime >= contentDuration) drawBrandOutro(ctx, plan.width, plan.height, localTime - contentDuration, username, logo, artwork);
       await session.frame(ctx.getImageData(0, 0, plan.width, plan.height).data, gifFrameDelay(f, plan));
       onProgress?.(0.03 + 0.94 * (f + 1) / plan.frames, `Encoding frame ${f + 1} / ${plan.frames}`);
     }
