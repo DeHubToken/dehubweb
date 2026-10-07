@@ -6461,6 +6461,8 @@
       "toggleLoop": "Ndërro ciklin"
     },
     "export": {
+      "gifHint": "Lakimi i animacionit pa zë. Deri në 60 sekonda, 640 piksele dhe 15 fps. Përfshin fundin e logos.",
+      "gifTooLong": "Cuti kohëzgjatjen në 60 sekonda ose më pak, ose zgjidh MP4 ose WebM.",
       "title": "Shkarko",
       "stillDescription": "Ruaje kornizën aktuale si imazh.",
       "videoDescription": "Rendëro linjën tënde kohore në një skedar video.",

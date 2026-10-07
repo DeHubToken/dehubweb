@@ -5391,6 +5391,7 @@
       "toggleLoop": "Toggle loop"
     },
     "export": {
+      "gifHint": "Looping animation wey no get sound. Reach up to 60 seconds, 640 pixels and 15 fps. E include your logo for di end.",
       "title": "Download",
       "stillDescription": "Save di frame wey dey now as picture.",
       "videoDescription": "Turn your timeline to video file.",
@@ -5419,7 +5420,8 @@
       "failed": "Download failed",
       "cancelled": "Download cancelled",
       "preparing": "Preparing…",
-      "rendering": "Rendering…"
+      "rendering": "Rendering…",
+      "gifTooLong": "Cut di timeline make e no pass 60 seconds, or choose MP4 or WebM."
     },
     "inspector": {
       "selectHint": "Pick one layer for di canvas or one clip for di timeline.",

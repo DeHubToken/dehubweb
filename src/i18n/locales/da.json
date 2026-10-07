@@ -6386,6 +6386,8 @@
       "toggleLoop": "Skift loop"
     },
     "export": {
+      "gifHint": "Loopende animation uden lyd. Op til 60 sekunder, 640 pixels og 15 fps. Inkluderer dit logos afslutning.",
+      "gifTooLong": "Trim tidslinjen til 60 sekunder eller mindre, eller vælg MP4 eller WebM.",
       "title": "Download",
       "stillDescription": "Gem det aktuelle frame som et billede.",
       "videoDescription": "Render din tidslinje til en videofil.",

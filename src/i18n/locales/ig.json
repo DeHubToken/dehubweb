@@ -6397,6 +6397,8 @@
       "toggleLoop": "Gbanwee mmegharị"
     },
     "export": {
+      "gifHint": "Looping animation na-enweghị ụda. Ruo 60 sekọnd, 640 pikselụ na 15 fps. Gụnyere gị logo agwụcha.",
+      "gifTooLong": "Wepụ usoro iheomume ka 60 sekọnd ma ọ bụ obere, ma ọ bụ họrọ MP4 ma ọ bụ WebM.",
       "title": "Budata",
       "stillDescription": "Chekwa etiti ugbu a dị ka onyonyo.",
       "videoDescription": "Mepee usoro oge gị ka ọ bụrụ faịlụ vidiyo.",

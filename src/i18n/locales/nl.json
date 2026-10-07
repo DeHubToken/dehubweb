@@ -6626,6 +6626,8 @@
       "toggleLoop": "Herhalen aan/uit"
     },
     "export": {
+      "gifHint": "Lusanimatie zonder geluid. Tot 60 seconden, 640 pixels en 15 fps. Inclusief het einde van je logo.",
+      "gifTooLong": "Trim de tijdlijn tot 60 seconden of minder, of kies MP4 of WebM.",
       "title": "Downloaden",
       "stillDescription": "Sla het huidige frame op als afbeelding.",
       "videoDescription": "Render je tijdlijn naar een videobestand.",

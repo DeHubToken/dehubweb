@@ -6450,6 +6450,8 @@
       "toggleLoop": "Pārslēgt cilpu"
     },
     "export": {
+      "gifHint": "Cikliska animācija bez skaņas. Līdz 60 sekundēm, 640 pikseļi un 15 kadri/s. Ietver jūsu logotipa beigas.",
+      "gifTooLong": "Apgrieziet laika skalu līdz 60 sekundēm vai mazāk vai izvēlieties MP4 vai WebM.",
       "title": "Lejupielādēt",
       "stillDescription": "Saglabājiet pašreizējo kadru kā attēlu.",
       "videoDescription": "Renderējiet savu laika joslu video failā.",
