@@ -11,7 +11,7 @@ html:not([data-theme='light'])
     .text-muted-foreground,
     [class~='text-white/30'], [class~='text-white/40'], [class~='text-white/50'],
     [class~='text-white/60'], [class~='text-white/70']
-  ):not(:where(.docs-root *, [data-keep-white], [data-keep-white] *)):not(#_):not(#_) {
+  ):not(:where(.docs-root *, [data-keep-white], [data-keep-white] *, [class*='hover:text-']:hover)):not(#_):not(#_) {
   color: #fff !important;
 }
 
