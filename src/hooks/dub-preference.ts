@@ -17,6 +17,7 @@
  *   video keeps owning play/pause/mute/seek; the engine only follows.
  */
 import { useEffect, useState, useSyncExternalStore } from 'react';
+import { autoTranslateEnabled, subscribeAutoTranslate } from '@/lib/auto-translate-setting';
 
 const LS_ON = 'video-dubs:on';
 const LS_LANG = 'video-dubs:lang';
@@ -26,15 +27,17 @@ const LS_LANG = 'video-dubs:lang';
 
 interface DubPreference {
   on: boolean;
+  automatic: boolean;
   /** Language chosen from the post menu. Null means "follow the captions". */
   lang: string | null;
 }
 
 function readPreference(): DubPreference {
   try {
-    return { on: localStorage.getItem(LS_ON) === '1', lang: localStorage.getItem(LS_LANG) || null };
+    const saved = localStorage.getItem(LS_ON);
+    return { on: saved !== '0', automatic: saved === null, lang: localStorage.getItem(LS_LANG) || null };
   } catch {
-    return { on: false, lang: null };
+    return { on: true, automatic: true, lang: null };
   }
 }
 
@@ -42,7 +45,7 @@ let preference: DubPreference = readPreference();
 const listeners = new Set<() => void>();
 
 export function setDubPreference(on: boolean, lang: string | null = null) {
-  preference = { on, lang };
+  preference = { on, lang, automatic: false };
   try {
     localStorage.setItem(LS_ON, on ? '1' : '0');
     if (lang) localStorage.setItem(LS_LANG, lang);
@@ -53,12 +56,36 @@ export function setDubPreference(on: boolean, lang: string | null = null) {
 
 function subscribe(l: () => void) {
   listeners.add(l);
-  return () => { listeners.delete(l); };
+  const unsubscribeAuto = subscribeAutoTranslate(l);
+  return () => { listeners.delete(l); unsubscribeAuto(); };
+}
+
+export function getDubPreference(): DubPreference {
+  const on = preference.automatic ? autoTranslateEnabled() : preference.on;
+  if (on !== preference.on) preference = { ...preference, on };
+  return preference;
 }
 
 export function useDubPreference() {
-  const pref = useSyncExternalStore(subscribe, () => preference, () => preference);
+  const pref = useSyncExternalStore(subscribe, getDubPreference, getDubPreference);
+  useEffect(() => { if (pref.on) armSpeech(); }, [pref.on]);
   return { ...pref, setDub: setDubPreference };
+}
+
+let primingArmed = false;
+let primed = false;
+function armSpeech() {
+  if (primed || primingArmed || typeof document === 'undefined') return;
+  primingArmed = true;
+  const prime = () => {
+    primeSpeech();
+    primed = true;
+    primingArmed = false;
+    document.removeEventListener('pointerdown', prime, true);
+    document.removeEventListener('keydown', prime, true);
+  };
+  document.addEventListener('pointerdown', prime, true);
+  document.addEventListener('keydown', prime, true);
 }
 
 /* ──────────────────────────────── voices ────────────────────────────────── */
