@@ -1,3 +1,4 @@
+import { videoMatteCommand } from "./videoMatte";
 /**
  * Editor agent — client half.
  * ===========================
@@ -158,7 +159,7 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
 export async function askAgent(messages: AgentMessage[], signal?: AbortSignal): Promise<AgentResult> {
   const scene = describeScene();
   const last = messages[messages.length - 1];
-  const direct = last?.role === "user" ? preciseCommand(last.content, scene) ?? audioToolCommand(last.content, scene) ?? beatCommand(last.content, scene) ?? shotCommand(last.content, scene) : null;
+  const direct = last?.role === "user" ? preciseCommand(last.content, scene) ?? audioToolCommand(last.content, scene) ?? beatCommand(last.content, scene) ?? shotCommand(last.content, scene) ?? videoMatteCommand(last.content, scene) : null;
   if (direct) return { reply: "", ops: [direct] };
   return askSceneAgent(messages, scene, signal);
 }
@@ -667,7 +668,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       }
       case "remove_background": {
         const clip = find(op.id);
-        if (!clip || clip.kind !== "image") return false;
+        if (!clip || (clip.kind !== "image" && clip.kind !== "video")) return false;
         return await useBgRemovalStore.getState().run(clip.id, ctx.wallet);
       }
       case "generate": {

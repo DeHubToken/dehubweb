@@ -7133,6 +7133,12 @@
       "changed": "The source project changed. Find highlights again.",
       "limit": "Use up to 10 minutes of source speech. A very long unbroken transcript must be split first.",
       "projectTitle": "{{title}} — Highlights"
+    },
+    "videoMatte": {
+      "frames": "Removing background · {{completed}} / {{total}} frames",
+      "hint": "Runs on this device. Trim to {{seconds}} source seconds or less first; the first run downloads the model.",
+      "restore": "Restore background",
+      "cancel": "Cancel"
     }
   },
   "jungleMood": {
