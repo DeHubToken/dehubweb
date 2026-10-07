@@ -3,6 +3,9 @@ import type { DeHubUser } from './types';
 
 export interface LiveStream {
   streamId: string;
+  tokenId?: number | string;
+  playbackId?: string;
+  provider?: string;
   address: string;
   title: string;
   description?: string;
@@ -167,7 +170,12 @@ export async function getUserLiveStreams(address: string): Promise<{ result: Liv
 }
 
 export async function getUserScheduledStreams(address: string): Promise<{ result: LiveStream[] }> {
-  return apiCall<{ result: LiveStream[] }>(`/api/live/user/${address}/scheduled`);
+  const res = await apiCall<Array<LiveStream & { _id?: string; scheduledFor?: string }> | { result: Array<LiveStream & { _id?: string; scheduledFor?: string }> }>(
+    `/api/live/user/${encodeURIComponent(address)}/scheduled`,
+    { params: { futureOnly: false }, requiresAuth: true },
+  );
+  const rows = Array.isArray(res) ? res : res?.result || [];
+  return { result: rows.map(row => ({ ...row, streamId: row._id || row.streamId, scheduledAt: row.scheduledFor || row.scheduledAt })) };
 }
 
 export async function getLiveStream(streamId: string): Promise<{ result: LiveStream }> {
