@@ -6460,6 +6460,8 @@
       "toggleLoop": "Veksle løkke"
     },
     "export": {
+      "gifHint": "Looping animasjon uten lyd. Opptil 60 sekunder, 640 piksler og 15 fps. Inkluderer din logoavslutning.",
+      "gifTooLong": "Trim tidslinjen til 60 sekunder eller mindre, eller velg MP4 eller WebM.",
       "title": "Last ned",
       "stillDescription": "Lagre gjeldende videobilde som et bilde.",
       "videoDescription": "Gjengi tidslinjen din til en videofil.",

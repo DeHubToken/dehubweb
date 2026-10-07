@@ -6223,6 +6223,8 @@
       "toggleLoop": "Ganti puteran"
     },
     "export": {
+      "gifHint": "Animasi looping tanpa swara. nganti 60 detik, 640 piksel lan 15 fps. Kalebu logo panjenengan ing pungkasan.",
+      "gifTooLong": "Potong timeline nganti 60 detik utawa kurang, utawa pilih MP4 utawa WebM.",
       "title": "Undhuh",
       "stillDescription": "Simpen pigura saiki minangka gambar.",
       "videoDescription": "Render garis wektu menyang file video.",

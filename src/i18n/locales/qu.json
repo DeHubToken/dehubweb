@@ -6483,6 +6483,8 @@
       "toggleLoop": "Kutipayta tikray"
     },
     "export": {
+      "gifHint": "Mana t’uqyayniyuq animación de bucle. 60 segundoskama, 640 pixelkama, 15 fpskama. Incluyen logotipo tukukuyniyki.",
+      "gifTooLong": "Tiempo chiruta 60 segundos utaq pisiman kuchuy, utaq MP4 utaq WebM akllay.",
       "title": "Uraykachiy",
       "stillDescription": "Kunan kaq marcota siq'i hina waqaychay.",
       "videoDescription": "Tiempo lineaykita video archivoman ruway.",

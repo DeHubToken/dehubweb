@@ -6358,6 +6358,8 @@
       "toggleLoop": "Silmukka päälle/pois"
     },
     "export": {
+      "gifHint": "Looping-animaatio ilman ääntä. Jopa 60 sekuntia, 640 pikseliä ja 15 kuvaa sekunnissa. Sisältää logosi lopun.",
+      "gifTooLong": "Leikkaa aikajana enintään 60 sekuntiin tai valitse MP4 tai WebM.",
       "title": "Lataa",
       "stillDescription": "Tallenna nykyinen kehys kuvana.",
       "videoDescription": "Renderöi aikajanasi videotiedostoksi.",

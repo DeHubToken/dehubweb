@@ -6478,6 +6478,8 @@
       "toggleLoop": "Döngüyü aç/kapat"
     },
     "export": {
+      "gifHint": "Ses olmadan döngüsel animasyon. 60 saniyeye kadar, 640 piksel ve 15 fps. Logonuzun sonunu içerir.",
+      "gifTooLong": "Zaman çizelgesini 60 saniye veya daha az olacak şekilde kısaltın veya MP4 veya WebM'yi seçin.",
       "title": "İndir",
       "stillDescription": "Geçerli kareyi resim olarak kaydet.",
       "videoDescription": "Zaman çizelgenizi video dosyası olarak işleyin.",

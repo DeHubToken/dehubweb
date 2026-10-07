@@ -6498,6 +6498,8 @@
       "toggleLoop": "Takrorlashni yoqish/o'chirish"
     },
     "export": {
+      "gifHint": "Sado yo'q aylantiruvchi animatsiya. 60 soniyagacha, 640 piksel va 15 fps. Logotingizni yakuniy qismida o'z ichiga oladi.",
+      "gifTooLong": "Vaqt jadvalini 60 soniya yoki undan kamroq vaqtga qisqartiring yoki MP4 yoki WebM ni tanlang.",
       "title": "Yuklab olish",
       "stillDescription": "Joriy kadrni tasvir sifatida saqlash.",
       "videoDescription": "Vaqt jadvalingizni video faylga chiqarish.",

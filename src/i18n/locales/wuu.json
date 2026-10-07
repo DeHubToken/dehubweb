@@ -5858,6 +5858,8 @@
       "toggleLoop": "切换循环"
     },
     "export": {
+      "gifHint": "无声循环动画。最长60秒，640像素，15帧每秒。包括你的logo结尾。",
+      "gifTooLong": "把时间线剪到60秒以下，或者选MP4或WebM。",
       "title": "下载",
       "stillDescription": "将当前帧保存为图像。",
       "videoDescription": "将您的时间轴渲染成视频文件。",

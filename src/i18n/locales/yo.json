@@ -6364,6 +6364,8 @@
       "toggleLoop": "Tan/pa àtúnṣeré"
     },
     "export": {
+      "gifHint": "Ṣíṣe àfarahàn láìní ohùn. Ó tó àáyá 60, pikselé 640 àti fps 15. Ó fi òpin sí àmì ẹ̀rí rẹ kún un.",
+      "gifTooLong": "Ge akoko si iṣẹju-aaya 60 tabi kere si, tabi yan MP4 tabi WebM.",
       "title": "Gbà sílẹ̀",
       "stillDescription": "Fi fírémù lọ́wọ́lọ́wọ́ pamọ́ gẹ́gẹ́ bí àwòrán.",
       "videoDescription": "Ṣe àgbékalẹ̀ àkókò-ìlà rẹ sí fídíò faili.",

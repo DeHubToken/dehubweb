@@ -6360,6 +6360,8 @@
       "toggleLoop": "Växla loop"
     },
     "export": {
+      "gifHint": "Loopande animering utan ljud. Upp till 60 sekunder, 640 pixlar och 15 fps. Inkluderar din logotyp som slutar.",
+      "gifTooLong": "Trimma tidslinjen till 60 sekunder eller mindre, eller välj MP4 eller WebM.",
       "title": "Ladda ner",
       "stillDescription": "Spara den aktuella bildrutan som en bild.",
       "videoDescription": "Rendera din tidslinje till en videofil.",

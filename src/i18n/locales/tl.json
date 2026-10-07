@@ -6518,6 +6518,8 @@
       "toggleLoop": "I-toggle ang loop"
     },
     "export": {
+      "gifHint": "Pag-ikot na animasyon nang walang tunog. Hanggang 60 segundo, 640 pixel at 15 fps. Kasama ang pagtatapos ng iyong logo.",
+      "gifTooLong": "Putulin ang timeline sa 60 segundo o mas mababa, o pumili ng MP4 o WebM.",
       "title": "I-download",
       "stillDescription": "I-save ang kasalukuyang frame bilang isang imahe.",
       "videoDescription": "I-render ang iyong timeline sa isang video file.",

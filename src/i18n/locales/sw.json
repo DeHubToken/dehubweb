@@ -6451,6 +6451,8 @@
       "toggleLoop": "Washa/zima kitanzi"
     },
     "export": {
+      "gifHint": "Uhuishaji wa kitanzi bila sauti. Hadi sekunde 60, pikseli 640 na fps 15. Inajumuisha nembo yako inayoisha.",
+      "gifTooLong": "Punguza ratiba hadi sekunde 60 au chini, au uchague MP4 au WebM.",
       "title": "Pakua",
       "stillDescription": "Hifadhi fremu ya sasa kama picha.",
       "videoDescription": "Tengeneza kalenda yako ya matukio kuwa faili ya video.",

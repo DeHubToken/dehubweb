@@ -6422,6 +6422,8 @@
       "toggleLoop": "Irra deddeebii bani/cufi"
     },
     "export": {
+      "gifHint": "Animeeshinii sagalee malee loop gochuu. Hanga sekondii 60, piikselii 640 fi fps 15. Xumura asxaa keessanii of keessaa qaba.",
+      "gifTooLong": "Sarara yeroo gara sekondii 60 fi isaa gadiitti muraa, ykn MP4 ykn WebM filadhu.",
       "title": "Buusi",
       "stillDescription": "Fireemii amma jiru akka suuraatti olkaa'i.",
       "videoDescription": "Sarara yeroo kee gara faayilii viidiyootti jijjiiri.",

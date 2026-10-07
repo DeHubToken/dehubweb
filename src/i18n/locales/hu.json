@@ -6359,6 +6359,8 @@
       "toggleLoop": "Hurok váltása"
     },
     "export": {
+      "gifHint": "Az animáció hurkolása hang nélkül. Akár 60 másodpercig, 640 képpontig és 15 képkocka/másodpercig. Tartalmazza a logód végét.",
+      "gifTooLong": "Vágja le az idővonalat legfeljebb 60 másodpercre, vagy válassza az MP4 vagy a WebM lehetőséget.",
       "title": "Letöltés",
       "stillDescription": "Mentse az aktuális képkockát képként.",
       "videoDescription": "Renderelje az idővonalat videofájlba.",

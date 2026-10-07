@@ -6475,6 +6475,8 @@
       "toggleLoop": "Guqula ukujikeleza"
     },
     "export": {
+      "gifHint": "I-looping animation ngaphandle komsindo. Kuze kube yimizuzwana engu-60, amaphikseli angu-640 nama-fps angu-15. Kuhlanganisa ukuphela kwe-logo yakho.",
+      "gifTooLong": "Nciphisa umugqa wesikhathi ube yimizuzwana engu-60 noma ngaphansi, noma ukhethe i-MP4 noma i-WebM.",
       "title": "Landa",
       "stillDescription": "Londoloza uhlaka lwamanje njengesithombe.",
       "videoDescription": "Guqula umugqa wakho wesikhathi ube yifayela levidiyo.",

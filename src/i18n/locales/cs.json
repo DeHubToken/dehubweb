@@ -6359,6 +6359,8 @@
       "toggleLoop": "Přepnout smyčku"
     },
     "export": {
+      "gifHint": "Smyčková animace bez zvuku. Až 60 sekund, 640 pixelů a 15 snímků za sekundu. Zahrnuje zakončení vašeho loga.",
+      "gifTooLong": "Ořízněte časovou osu na 60 sekund nebo méně, nebo vyberte MP4 nebo WebM.",
       "title": "Stáhnout",
       "stillDescription": "Uložit aktuální snímek jako obrázek.",
       "videoDescription": "Vykreslit časovou osu do video souboru.",
