@@ -6153,6 +6153,13 @@
         "hold": "Hold"
       }
     },
+    "shots": {
+      "detect": "Find scene changes",
+      "split": "Split for cuts wey you choose",
+      "none": "No scene changes dey.",
+      "hint": "Check cuts first · ≤10 min",
+      "preview": "Preview"
+    },
     "beats": {
       "markers": "Beat mark dem",
       "sync": "Make cut dem match",

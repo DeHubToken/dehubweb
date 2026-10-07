@@ -6850,6 +6850,13 @@
         "hold": "Mantieni"
       }
     },
+    "shots": {
+      "detect": "Rileva cambi di scena",
+      "split": "Dividi ai tagli selezionati",
+      "none": "Nessun cambio di scena trovato.",
+      "hint": "Controlla prima i tagli · ≤10 min",
+      "preview": "Anteprima"
+    },
     "beats": {
       "markers": "Marcatori del ritmo",
       "sync": "Sincronizza i tagli",

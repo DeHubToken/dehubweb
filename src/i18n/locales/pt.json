@@ -6856,6 +6856,13 @@
         "hold": "Manter"
       }
     },
+    "shots": {
+      "detect": "Detectar mudanças de cena",
+      "split": "Dividir nos cortes selecionados",
+      "none": "Nenhuma mudança de cena encontrada.",
+      "hint": "Revise os cortes primeiro · ≤10 min",
+      "preview": "Prévia"
+    },
     "beats": {
       "markers": "Marcadores de ritmo",
       "sync": "Sincronizar cortes",

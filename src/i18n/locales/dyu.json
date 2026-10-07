@@ -6640,6 +6640,13 @@
         "hold": "Minɛ"
       }
     },
+    "shots": {
+      "detect": "Sɛnɛ yɛlɛmaw ɲini",
+      "split": "Tilɛ ka taamasiɲɛw sugandilen kɛ",
+      "none": "Sɛnɛ yɛlɛma ma sɔrɔ.",
+      "hint": "Taamasiɲɛw lajɛ fɔlɔ · ≤10 min",
+      "preview": "Lajɛ"
+    },
     "beats": {
       "markers": "Fɔli taamasiɲɛw",
       "sync": "Klipuw bɛnkɛ",

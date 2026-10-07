@@ -6837,6 +6837,13 @@
         "hold": "Hold"
       }
     },
+    "shots": {
+      "detect": "Finn sceneskift",
+      "split": "Del ved valgte klipp",
+      "none": "Ingen sceneskift funnet.",
+      "hint": "Se gjennom klipp først · ≤10 min",
+      "preview": "Forhåndsvisning"
+    },
     "beats": {
       "markers": "Rytmemarkører",
       "sync": "Synkroniser klipp",
