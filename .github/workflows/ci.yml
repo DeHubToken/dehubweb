@@ -15,6 +15,35 @@ env:
   PNPM_VERSION: '9'
 
 jobs:
+  wallet-storage:
+    name: Wallet archive storage
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: wallet-test
+          POSTGRES_DB: wallet_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: wallet-test
+      PGDATABASE: wallet_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate replacement, retries and archive isolation
+        run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/wallet-replacement-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20260721120000_user_wallets.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20260728120000_wallet_passkeys.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261007170000_wallet_replacement_archive.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/wallet-replacement.sql
+
   # A key added to en.json and nowhere else renders in English for every other
   # language: fallbackLng swallows it, so nothing throws and nobody notices.
   # orphan-baseline.json is the backlog being worked through — a key outside it

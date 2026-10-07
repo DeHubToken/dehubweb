@@ -81,6 +81,7 @@ import {
   WALLET_LOCK_CHANGED_EVENT,
 } from '@/lib/smart-wallet';
 import { fetchWallet, saveWallet, clearWalletCache, getCachedWallet } from '@/lib/wallet-core/store';
+import { replaceStoredWallet, getPendingWalletReplacement, completeWalletReplacement } from '@/lib/wallet-core/replacement';
 import { hasBiometricUsableHere } from '@/lib/wallet-core/biometric-unlock';
 import {
   WALLET_UNLOCK_INTERVAL_KEY,
@@ -380,6 +381,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // account across instead of registering as a new signup. Null the rest of the
   // time, which is every ordinary login.
   const driftedLinkRef = useRef<string | null>(null);
+  const pendingReplacementRef = useRef<{ userId: string; oldAddress: string; secret: string } | null>(null);
+  const requiredWalletRotationRef = useRef(false);
   // Hydrated from storage rather than left null until some login flow happens
   // to run. This is the identity that OWNS the wallet row, and it is needed on
   // an ordinary page load where no login is in progress: BiometricUnlockSettings
@@ -2214,7 +2217,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { data } = await supabase.auth.getSession();
       const accessToken = data?.session?.access_token;
-      if (!accessToken) return;
+      if (!accessToken) {
+        if (requiredWalletRotationRef.current) throw new Error('Sign in again to finish replacing your wallet');
+        return;
+      }
       await rotateWallet(address, signature, timestamp, chainId, accessToken);
       authLogger.warn('Moved account onto the wallet this browser holds', {
         from: linked,
@@ -2230,6 +2236,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         reason: e instanceof Error ? e.message : String(e),
         expected: e instanceof WalletNotLinkedError,
       });
+      // An intentional renewal must keep the existing profile. A failed
+      // rotation remains retryable with the same newly encrypted wallet.
+      if (requiredWalletRotationRef.current && !(e instanceof WalletNotLinkedError)) throw e;
     }
   };
 
@@ -2240,6 +2249,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const eoaProvider = await restoreWalletSession();
     if (!eoaProvider) throw new Error('Wallet is locked. Please unlock it first.');
+    const ownerAddress = await addressFromProvider(eoaProvider);
+    const pending = supabaseUserId ? await getPendingWalletReplacement(supabaseUserId, ownerAddress) : null;
+    requiredWalletRotationRef.current = !!pending;
+    if (pending) driftedLinkRef.current = pending.oldAddress;
 
     let aaProvider: any = null;
     try {
@@ -2250,11 +2263,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const signingProvider = aaProvider ?? eoaProvider;
+    if (requiredWalletRotationRef.current && !aaProvider) {
+      throw new Error('Could not connect the new smart wallet. Try again to finish renewal.');
+    }
     const flow = aaProvider ? 'SMART-SA' : 'SMART-EOA';
     const { address, signature } = await signWithProvider(signingProvider, displayedDate, flow);
 
     // Address guard: prevent silent account switch during session refresh
-    if (walletAddress && walletAddress.toLowerCase() !== address.toLowerCase()) {
+    if (!requiredWalletRotationRef.current && walletAddress && walletAddress.toLowerCase() !== address.toLowerCase()) {
       throw new Error('Wallet address changed during session refresh. Please sign in again.');
     }
 
@@ -2265,6 +2281,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const authResponse = await authenticateWallet(address, signature, timestamp, BASE_CHAIN_ID, meta, supabaseToken);
 
     applyAuthenticatedSession(authResponse, address, supabaseUserId, flow);
+    if (pending) await completeWalletReplacement(ownerAddress);
+    requiredWalletRotationRef.current = false;
 
     toast.success(
       authResponse.result?.isNewAccount
@@ -2391,36 +2409,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * the account from the Supabase token, never from what we send — so the old
    * EOA from user_wallets is both sufficient and the honest thing to record.
    *
-   * What survives: username, posts, DMs, notifications, followers, bookmarks.
-   * What does not: anything on-chain at the old address, which no longer has a
-   * key. Callers MUST say so before getting here.
+   * The profile follows the replacement. On-chain balances stay at the old
+   * address, and old message ciphertext still needs its original decryption
+   * keys. The old encrypted wallet records are archived, never discarded.
    */
   const replaceLostWallet = async (password: string) => {
     if (!supabaseUserId) throw new Error('Not signed in');
     const toastId = 'auth-replace-wallet';
     setIsConnecting(true);
     try {
-      // Read the outgoing address before it is overwritten, for the guard and
-      // the log line.
-      const previous = await fetchWallet(supabaseUserId).catch(() => null);
-
-      const { generateMnemonic12 } = await import('@/lib/wallet-core/derive');
-      const secret = generateMnemonic12();
-      const { deriveFromSecret } = await import('@/lib/wallet-core/derive');
-      const derived = deriveFromSecret(secret);
-      const encrypted = await (await import('@/lib/wallet-core/crypto')).encryptString(derived.secret, password);
-      await saveWallet(supabaseUserId, derived.ethAddress, encrypted);
-
-      // The old wraps still hold the OLD seed, so they would now open a wallet
-      // this account no longer uses. Best-effort, exactly as in
-      // switchActiveWallet: the write above already succeeded, and biometric
-      // unlock refuses any wrap whose address disagrees with the wallet row.
-      try {
-        await deleteAllPasskeyWraps(supabaseUserId);
-      } catch (e) {
-        console.warn('[Auth] Could not clear biometric wraps after wallet replacement:', e);
+      const { generateMnemonic12, deriveFromSecret } = await import('@/lib/wallet-core/derive');
+      let pending = pendingReplacementRef.current;
+      if (!pending || pending.userId !== supabaseUserId) {
+        const previous = await fetchWallet(supabaseUserId);
+        if (!previous) throw new Error('No existing wallet to replace. Sign in again.');
+        pending = { userId: supabaseUserId, oldAddress: previous.ethAddress, secret: generateMnemonic12() };
+        // Set before the network write: a dropped response must not mint
+        // another wallet when the user presses retry.
+        pendingReplacementRef.current = pending;
       }
-      clearWalletCache();
+      const derived = deriveFromSecret(pending.secret);
+      const encrypted = await (await import('@/lib/wallet-core/crypto')).encryptString(derived.secret, password);
+      await replaceStoredWallet(supabaseUserId, pending.oldAddress, derived.ethAddress, encrypted);
       clearPasskeyCache();
       lockWallet();
 
@@ -2428,19 +2438,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // guard in signAndAuthenticateSmartWallet does not block this
       // INTENTIONAL replacement.
       //
-      // Armed even when the old row is missing, which is the case that looks
-      // like it needs nothing and is in fact the most dangerous: if the
-      // identity is still linked to an account somewhere, signing in unarmed
-      // would make the new link EXCLUSIVE and unset that account's, orphaning
-      // it behind a new empty one. The fallback only has to differ from the
-      // address being signed with — that is the SAFE, never the owner EOA
-      // used here — so the rotate always gets its chance, and answers
-      // WALLET_NOT_LINKED harmlessly when there really is nothing to move.
-      driftedLinkRef.current = previous?.ethAddress ?? derived.ethAddress;
+      // Rotation must precede authentication, which otherwise makes the new
+      // identity link exclusive and can orphan the original account.
+      driftedLinkRef.current = pending.oldAddress;
       setWalletAddress(null);
 
       await activateWalletKey(derived.ethPrivateKey);
       await signAndAuthenticateSmartWallet(toastId);
+      pendingReplacementRef.current = null;
       setWalletPhase('none');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
@@ -3095,6 +3100,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logoutFromServer().catch(() => {});
     // Belongs to the identity signing out — the next one must not inherit it.
     driftedLinkRef.current = null;
+    pendingReplacementRef.current = null;
+    requiredWalletRotationRef.current = false;
 
     // Read the identity off storage before any of it is cleared below, so an
     // explicit sign-out can drop that account from this device's profile list.
