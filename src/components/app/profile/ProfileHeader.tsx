@@ -178,7 +178,7 @@ export function ProfileHeader({
   const cdnFallbackUrl = buildAvatarCdnFallbackUrl(profile.walletAddress || '', profile.avatarUrl);
 
   return (
-    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
+    <div data-profile-header className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
       {/* Cover Photo */}
       {isFetchingProfile && !profile.coverUrl ? (
         <Skeleton className="aspect-[3/1] w-full bg-white/[0.06] rounded-none" />

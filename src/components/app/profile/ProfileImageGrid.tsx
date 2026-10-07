@@ -24,6 +24,7 @@ export const ProfileImageGrid = memo(function ProfileImageGrid({ images }: Profi
     <>
       {/* Collage grid — matches public ImagesFeed CollageView */}
       <div
+        data-profile-image-grid
         className="grid grid-cols-3 gap-0.5 sm:gap-1 overflow-hidden rounded-xl"
         style={{ gridAutoFlow: 'dense' }}
       >

@@ -85,7 +85,7 @@ function StableHeightContainer({ activeTab, children }: { activeTab: string; chi
   }, [activeTab]);
 
   return (
-    <div ref={ref} style={{ minHeight: minH > 0 ? `${minH}px` : undefined }}>
+    <div ref={ref} data-feed-root style={{ minHeight: minH > 0 ? `${minH}px` : undefined }}>
       {children}
     </div>
   );
@@ -671,7 +671,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Tab Content - all panels rendered, inactive hidden via CSS */}
-        <div ref={profileContentRef}>
+        <div ref={profileContentRef} data-profile-content>
         {/* Sort + search, on the four tabs actually backed by this creator's
             content. The other tabs (plans, live, fractions, pinned) come from
             their own endpoints and the toolbar would do nothing there. */}

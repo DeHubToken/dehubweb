@@ -289,7 +289,7 @@ export function ProfileTabContent({
         ) : (
           <div className="space-y-3">
             {PROFILE_IMAGES.map((image) => (
-              <div key={image.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+              <div key={image.id} data-feed-item data-cinematic="image" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
                 <ImageCard post={image} />
               </div>
             ))}
@@ -308,6 +308,8 @@ export function ProfileTabContent({
             {ALL_PROFILE_VIDEOS.map((video, index) => (
               <div
                 key={video.id}
+                data-feed-item
+                data-cinematic="video"
                 className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
                 style={offscreenCardStyle('video', index)}
               >
@@ -344,7 +346,7 @@ export function ProfileTabContent({
         ) : (
           <div className="space-y-3">
             {PROFILE_LIVE.map((stream, index) => (
-              <div key={stream.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={offscreenCardStyle('video', index)}>
+              <div key={stream.id} data-feed-item data-cinematic="video" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={offscreenCardStyle('video', index)}>
                 <VideoCard video={stream} aboveFold={index < 3} />
               </div>
             ))}
@@ -421,7 +423,7 @@ function HomeTabPanel({
           ? <ImageCard key={op.id} post={op.data as ImagePost} />
           : <VideoCard key={op.id} video={op.data as VideoItem} />;
         return (
-          <div key={op.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+          <div key={op.id} data-feed-item data-cinematic={op.type} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
             {card}
           </div>
         );
@@ -436,6 +438,8 @@ function HomeTabPanel({
         return (
           <div
             key={item.data.id}
+            data-feed-item
+            data-cinematic={item.type}
             className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
             style={offscreenCardStyle(item.type, index)}
           >
@@ -545,7 +549,7 @@ function PostsTabPanel({
         const cvStyle = offscreenCardStyle('post', index);
         if (item.type === 'post') {
           return (
-            <div key={item.data.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={cvStyle}>
+            <div key={item.data.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={cvStyle}>
               <PostCard post={item.data as TextPost} />
             </div>
           );
@@ -931,7 +935,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
   const rawTimestamp = post.createdAt || post.created_at;
 
   return (
-    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+    <div data-feed-item data-cinematic={postType === 'video' || postType === 'audio' || postType === 'feed-audio' ? 'video' : postType === 'image' || postType === 'feed-images' ? 'image' : 'post'} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
       {(postType === 'video' || postType === 'audio' || postType === 'feed-audio') ? (
         <VideoCard video={{
           id: String(post.tokenId), type: 'video', contentRating: post.contentRating,
@@ -1198,6 +1202,7 @@ function CommentCard({ comment, parentPost, parentPostFailed, isOwnComment, onCl
   return (
     <div
       onClick={onClick}
+      data-profile-reply
       className="w-full text-left rounded-xl border border-white/[0.08] bg-transparent hover:bg-white/[0.03] transition-colors cursor-pointer overflow-hidden relative p-3"
     >
       {/* The post — the top of every thread. */}
