@@ -21,6 +21,7 @@ import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useTotalUnreadCount } from '@/hooks/use-messages';
+import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 // Derived from public/brand/mark-black.png, which stays full-resolution because
 // the docs Brand Assets page serves it as a download. The rail renders the mark
@@ -69,6 +70,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
   const dmUnread = useTotalUnreadCount();
+  const messagesUnread = dmUnread + usePublicChatUnreadCount();
 
   // Desktop sidebar active item overlay indicator refs/state
   const sidePanelRef = useRef<HTMLDivElement>(null);
@@ -644,7 +646,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 onClick={isStagesItem ? () => openStageModal() : isProfileItem ? handleProfileClick : undefined}
                 avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
                 avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
-                notificationCount={isNotificationsItem ? totalNotifUnread : isMessagesItem ? dmUnread : undefined}
+                notificationCount={isNotificationsItem ? totalNotifUnread : isMessagesItem ? messagesUnread : undefined}
                 layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
                 registerActiveRef={isActive ? setActiveItemEl : undefined}
               />
