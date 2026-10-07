@@ -8,8 +8,9 @@ import { useEffect } from 'react';
 import type { TranscriptSegment } from '@/hooks/use-transcript';
 import { synth } from '@/hooks/dub-preference';
 
-/** Boost the dub above the viewer's level without changing the original track. */
-const DUB_VOLUME_BOOST = 1.5;
+/** Keep the original steadily lower for the whole dub, including speech gaps. */
+const ORIGINAL_VOLUME = 0.8;
+const DUB_VOLUME_BOOST = 1.1;
 /** Characters per second a voice reads comfortably at rate 1. */
 const NATURAL_CPS = 14;
 const MAX_RATE = 1.3;
@@ -31,7 +32,7 @@ const owners = new WeakMap<HTMLVideoElement, object>();
  * still running when the next begins is cut off rather than queued, so the
  * voice can never drift behind the picture. `onFailed` fires when the
  * browser refuses to speak (iOS Safari without a prior gesture, a dead voice),
- * while the original audio keeps playing at the viewer's level.
+ * after restoring the original audio to the viewer's level.
  */
 export function useVoiceDub(
   videoRef: React.RefObject<HTMLVideoElement>,
@@ -50,6 +51,13 @@ export function useVoiceDub(
     let spoken = -1;
     let failed = false;
     let utterance: SpeechSynthesisUtterance | null = null;
+    let userVolume = v.volume;
+    let expectedVolume = userVolume;
+    const setVolume = (volume: number) => {
+      expectedVolume = volume;
+      if (Math.abs(v.volume - volume) >= 0.001) v.volume = volume;
+    };
+    const syncVolume = () => setVolume(userVolume * (failed ? 1 : ORIGINAL_VOLUME));
 
     const stop = () => {
       spoken = -1;
@@ -68,6 +76,7 @@ export function useVoiceDub(
       if (failed) return;
       failed = true;
       stop();
+      syncVolume();
       onFailed?.();
     };
 
@@ -86,10 +95,10 @@ export function useVoiceDub(
       const duration = Math.max(0.5, seg.end - v.currentTime);
       const needed = seg.text.length / duration / NATURAL_CPS;
       u.rate = Math.min(MAX_RATE, Math.max(1, needed * (v.playbackRate || 1)));
-      u.volume = Math.min(1, v.volume * DUB_VOLUME_BOOST);
+      u.volume = Math.min(1, userVolume * DUB_VOLUME_BOOST);
       u.onstart = () => {
         if (utterance !== u) return;
-        if (v.paused || v.muted || v.volume === 0) { stop(); return; }
+        if (v.paused || v.muted || userVolume === 0) { stop(); return; }
       };
       const finish = () => {
         if (utterance !== u) return;
@@ -108,15 +117,17 @@ export function useVoiceDub(
     };
 
     const tick = () => {
-      if (failed || v.paused || v.muted || v.seeking || v.volume === 0) return;
+      if (failed || v.paused || v.muted || v.seeking || userVolume === 0) return;
       const i = indexAt(v.currentTime);
       if (i < 0 && utterance) { stop(); return; }
       if (i >= 0 && i !== spoken) speak(i);
     };
 
     const onVolume = () => {
-      if (v.muted || v.volume === 0) stop();
-      else if (utterance) utterance.volume = Math.min(1, v.volume * DUB_VOLUME_BOOST);
+      if (Math.abs(v.volume - expectedVolume) >= 0.001) userVolume = v.volume;
+      syncVolume();
+      if (v.muted || userVolume === 0) stop();
+      else if (utterance) utterance.volume = Math.min(1, userVolume * DUB_VOLUME_BOOST);
     };
 
     v.addEventListener('pause', stop);
@@ -125,6 +136,7 @@ export function useVoiceDub(
     v.addEventListener('play', tick);
     v.addEventListener('seeked', tick);
     v.addEventListener('volumechange', onVolume);
+    syncVolume();
     const timer = window.setInterval(tick, 100);
     tick();
 
@@ -138,6 +150,7 @@ export function useVoiceDub(
       v.removeEventListener('volumechange', onVolume);
       stop();
       if (owners.get(v) === me) owners.delete(v);
+      setVolume(userVolume);
     };
     // onFailed is a notification, not an input: a new callback identity must
     // not restart the engine mid-line.
