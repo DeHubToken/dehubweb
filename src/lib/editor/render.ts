@@ -18,6 +18,7 @@ export type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
 
 export interface RenderSources {
   videos: Map<string, HTMLVideoElement>;
+  videosByClip?: Map<string, HTMLVideoElement>;
   images: Map<string, HTMLImageElement>;
 }
 
@@ -93,7 +94,7 @@ export function isVisualClip(clip: Clip): boolean {
 
 function mediaSource(clip: MediaClip, src: RenderSources): { el: CanvasImageSource; w: number; h: number } | null {
   if (clip.kind === "video") {
-    const v = src.videos.get(clip.mediaId);
+    const v = src.videosByClip?.get(clip.id) ?? src.videos.get(clip.mediaId);
     return v && v.videoWidth ? { el: v, w: v.videoWidth, h: v.videoHeight } : null;
   }
   if (clip.kind === "image") {
