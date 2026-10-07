@@ -8,18 +8,15 @@
  * No upload, no server cost.
  */
 import { useEditorStore } from "@/store/editorStore";
-import type { MediaClip, TextClip } from "./types";
-import { fontFamilyCss, loadGoogleFont } from "./googleFonts";
+import type { MediaClip } from "./types";
+import { nanoid } from "nanoid";
+import { captionLayers, type CaptionWord, type CaptionStyle } from "./captionLayout";
+export { groupWords } from "./captionLayout";
+import { loadGoogleFont } from "./googleFonts";
 
 const RATE = 16000;
 /** Longest clip we transcribe in one go; roughly 15 minutes of CPU on a laptop. */
 const MAX_SECONDS = 10 * 60;
-
-export interface CaptionWord {
-  text: string;
-  start: number;
-  end: number;
-}
 
 export type CaptionProgress =
   | { stage: "download"; loaded: number; total: number }
@@ -78,34 +75,7 @@ async function clipAudio(url: string, trimIn: number, sourceSeconds: number): Pr
   return rendered.getChannelData(0).slice();
 }
 
-/**
- * Split words into caption lines: short enough to read at a glance, broken at
- * sentence ends and pauses.
- */
-export function groupWords(words: CaptionWord[], maxWords = 5, maxSeconds = 2.6): CaptionWord[] {
-  const lines: CaptionWord[] = [];
-  let cur: CaptionWord[] = [];
-  const flush = () => {
-    if (!cur.length) return;
-    lines.push({ text: cur.map((w) => w.text).join(" "), start: cur[0].start, end: cur[cur.length - 1].end });
-    cur = [];
-  };
-  for (const w of words) {
-    const prev = cur[cur.length - 1];
-    const pause = prev ? w.start - prev.end > 0.6 : false;
-    if (cur.length && (cur.length >= maxWords || w.end - cur[0].start > maxSeconds || pause)) flush();
-    cur.push(w);
-    if (/[.!?…]$/.test(w.text)) flush();
-  }
-  flush();
-  return lines;
-}
-
-/**
- * Transcribe a video or audio layer and add its captions as text layers.
- * Returns the number of caption lines added.
- */
-export async function addAutoCaptions(clipId: string, onProgress?: (p: CaptionProgress) => void): Promise<number> {
+export async function addAutoCaptions(clipId: string, onProgress?: (p: CaptionProgress) => void, style: CaptionStyle = "classic"): Promise<number> {
   const s = useEditorStore.getState();
   const clip = s.clips.find((c) => c.id === clipId);
   if (!clip || (clip.kind !== "video" && clip.kind !== "audio")) return 0;
@@ -116,38 +86,14 @@ export async function addAutoCaptions(clipId: string, onProgress?: (p: CaptionPr
 
   const audio = await clipAudio(media.url, mc.trimIn, mc.duration * speed);
   const words = await transcribe(audio, onProgress);
-  const lines = groupWords(words);
-  if (!lines.length) return 0;
-
+  const result = captionLayers(mc, words, () => nanoid(), style);
+  if (!result.clips.length) return 0;
   loadGoogleFont("Montserrat", [800]);
-  const font = fontFamilyCss("Montserrat");
   const store = useEditorStore.getState();
+  // The clip may have changed while transcription was running.
+  if (store.clips.find((c) => c.id === clipId) !== clip) return 0;
   await store.runAsOneStep(() => {
-    let trackId: string | undefined;
-    lines.forEach((line, i) => {
-      // Source seconds → timeline seconds. A little hang time after each
-      // line, but never into the next one: an overlap would push it later on
-      // the shared track and the captions would drift out of sync.
-      const start = mc.start + line.start / speed;
-      const next = lines[i + 1] ? mc.start + lines[i + 1].start / speed : Infinity;
-      const end = Math.min(mc.start + mc.duration, mc.start + line.end / speed + 0.15, next);
-      if (end <= start) return;
-      const id = useEditorStore.getState().addTextClip(trackId, start, trackId ? undefined : { layer: true });
-      const added = useEditorStore.getState().clips.find((c) => c.id === id) as TextClip | undefined;
-      trackId ??= added?.trackId;
-      useEditorStore.getState().patchClip(id, {
-        text: line.text,
-        duration: Math.max(0.3, end - start),
-        fontFamily: font,
-        fontSize: 64,
-        fontWeight: 800,
-        color: "#ffffff",
-        stroke: { color: "#000000", width: 8 },
-        x: 0.5,
-        y: 0.84,
-        align: "centre",
-      });
-    });
+    useEditorStore.setState((state) => ({ tracks: [...state.tracks, result.track], clips: [...state.clips, ...result.clips] }));
   });
-  return lines.length;
+  return result.clips.length;
 }

@@ -6,21 +6,22 @@ import { create } from 'zustand';
 import { toast } from 'sonner';
 import i18n from '@/i18n';
 import { addAutoCaptions, type CaptionProgress } from '@/lib/editor/captions';
+import type { CaptionStyle } from '@/lib/editor/captionLayout';
 
 interface CaptionsState {
   clipId: string | null;
   progress: CaptionProgress | null;
-  run: (clipId: string) => Promise<boolean>;
+  run: (clipId: string, style?: CaptionStyle) => Promise<boolean>;
 }
 
 export const useCaptionsStore = create<CaptionsState>((set, get) => ({
   clipId: null,
   progress: null,
-  run: async (clipId) => {
+  run: async (clipId, style) => {
     if (get().clipId) return false;
     set({ clipId, progress: null });
     try {
-      const count = await addAutoCaptions(clipId, (progress) => set({ progress }));
+      const count = await addAutoCaptions(clipId, (progress) => set({ progress }), style);
       if (count > 0) toast.success(i18n.t('editor.captions.done', { count }));
       else toast.message(i18n.t('editor.captions.noSpeech'));
       return count > 0;
