@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clipBoxForSize, placementPatch, pointInBox } from "./render";
+import { clipBoxForSize, drawClip, placementPatch, pointInBox } from "./render";
 import type { MediaClip, TextClip } from "./types";
 
 const image = (patch: Partial<MediaClip> = {}): MediaClip => ({
@@ -69,4 +69,25 @@ describe("freehand path", () => {
       transform: { x: 0.5, y: 0.5, scale: 1, rotation: 0 } } as const;
     expect(clipBoxForSize(ctx, path, 1000, 1000, null)).toMatchObject({ w: 200, h: 100 });
   });
+});
+
+it("draws the same fitted paragraph measured by selection geometry", () => {
+  const drawn: string[] = [];
+  const context = {
+    font: "", globalAlpha: 1,
+    save() {}, restore() {}, translate() {}, rotate() {}, scale() {},
+    measureText(line: string) { return { width: Array.from(line).length * Number(/([\d.]+)px/.exec(this.font)?.[1] ?? 0) * 0.56 }; },
+    fillText(line: string) { drawn.push(line); },
+  } as unknown as CanvasRenderingContext2D;
+  const clip: TextClip = { id: "caption", trackId: "t", kind: "text", trimIn: 0, start: 0, duration: 4,
+    text: "Keep one copy on a separate drive so a mistake cannot destroy your originals.",
+    fontFamily: "sans-serif", fontSize: 64, fontWeight: 800, color: "#fff", align: "centre", x: 0.5, y: 0.84, maxWidth: 0.9, maxHeight: 0.28 };
+  const box = clipBoxForSize(context, clip, 360, 640, null)!;
+  drawClip(context, 360, 640, clip, 1, { videos: new Map(), images: new Map() });
+  expect(drawn.length).toBeGreaterThan(1);
+  expect(drawn.join(" ")).toBe(clip.text);
+  expect(box.w).toBeLessThanOrEqual(324.02);
+  expect(box.h).toBeLessThanOrEqual(179.22);
+  expect(box.cx - box.w / 2).toBeGreaterThan(0);
+  expect(box.cy + box.h / 2).toBeLessThan(640);
 });
