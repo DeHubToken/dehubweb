@@ -4,13 +4,9 @@
  * Whether the platform chat is allowed to interrupt you while you are in
  * another tab, and how often it may do so at most.
  *
- * Off by default, and that is deliberate rather than cautious: public chat is
- * the one room on DeHub anybody can post in, so it is the one feed whose
- * volume nobody controls. A reader opting in is opting into a stranger's
- * typing speed, which is why the rate limit ships with the switch instead of
- * being a follow-up — see lib/notification-digest for what the limit spends
- * (cards, not messages) and why running out delays a notification rather than
- * dropping what it would have said.
+ * On by default while the room is quiet, with a saved opt-out taking priority.
+ * The rate limit counts cards rather than messages, so busy stretches arrive
+ * together instead of filling the notification tray.
  *
  * The ceiling is 69 an hour. Past roughly one a minute a notification stream
  * is not information any more, it is a denial of service the reader opted into
@@ -29,6 +25,9 @@ import { useSyncExternalStore } from 'react';
 const ENABLED_KEY = 'dehub_public_chat_alerts';
 const RATE_KEY = 'dehub_public_chat_alerts_per_hour';
 const CHANGE_EVENT = 'dehub:public-chat-alerts-changed';
+
+/** New readers hear from the room unless they turn its alerts off. */
+export const PUBLIC_CHAT_DEFAULT_ENABLED = true;
 
 /** Highest number of cards an hour a reader may ask public chat for. */
 export const PUBLIC_CHAT_MAX_PER_HOUR = 69;
@@ -51,9 +50,10 @@ export const PUBLIC_CHAT_RATE_PREF_KEY = 'publicChatAlertsPerHour';
 
 export function readPublicChatAlerts(): boolean {
   try {
-    return localStorage.getItem(ENABLED_KEY) === 'true';
+    const raw = localStorage.getItem(ENABLED_KEY);
+    return raw === null ? PUBLIC_CHAT_DEFAULT_ENABLED : raw === 'true';
   } catch {
-    return false;
+    return PUBLIC_CHAT_DEFAULT_ENABLED;
   }
 }
 
@@ -110,7 +110,7 @@ function subscribe(onChange: () => void) {
 }
 
 export function usePublicChatAlertsEnabled(): boolean {
-  return useSyncExternalStore(subscribe, readPublicChatAlerts, () => false);
+  return useSyncExternalStore(subscribe, readPublicChatAlerts, () => PUBLIC_CHAT_DEFAULT_ENABLED);
 }
 
 export function usePublicChatAlertsPerHour(): number {

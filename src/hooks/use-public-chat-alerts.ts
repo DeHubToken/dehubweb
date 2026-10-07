@@ -5,7 +5,7 @@
  * Public chat is the one room on DeHub that anybody can post in, and until now
  * it was the one feed that could never reach you: no unread badge, no
  * notification, nothing. If you were not looking at the panel it may as well
- * have been off. This is the opt-in that fixes that, and the two rules that
+ * have been off. These alerts are on by default, with two rules that
  * keep it survivable.
  *
  * **One card, not one per message.** Messages are buffered while the tab is in
@@ -82,12 +82,12 @@ const NOTIFICATION_TAG = 'dehub-public-chat';
 const PUBLIC_CHAT_ROUTE = '/app/messages';
 
 /**
- * The chat stack is loaded only once the reader has opted in.
+ * The chat stack is loaded only while chat and browser alerts are enabled.
  *
  * This hook mounts with the app shell, so a static import would put the
  * socket.io client and the whole livechat module on the boot path for
- * everybody — 50 KB parsed before first paint, for a feature that is off by
- * default. Anyone who has it on is a click away from opening the chat panel,
+ * everybody — 50 KB parsed before first paint, even with alerts disabled.
+ * Anyone who has it on is a click away from opening the chat panel,
  * which loads the same modules anyway.
  */
 async function loadChatStack() {
