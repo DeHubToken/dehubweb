@@ -9,17 +9,14 @@ import { useAuth } from '@/contexts/AuthContext';
 type TabType = 'leaderboard' | 'follow' | 'newMembers' | 'chat';
 
 // Persist tab state across remounts so layout changes don't reset it
-let persistedTab: TabType = 'leaderboard';
+let persistedTab: TabType = 'chat';
 
 export const TabbedSidePanel = memo(function TabbedSidePanel() {
   const { isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>(persistedTab);
   const leaderboardRef = useRef<SidebarLeaderboardHandle>(null);
-  // Mount the chat panel only after its tab is first opened: SidebarChat opens a
-  // socket.io connection + fetches rooms/messages on mount, which used to fire at
-  // boot for a CSS-hidden panel and starve the feed request (LCP audit 7/14).
-  // (A duplicate useLiveChatRooms/Presence pair lived here too, feeding an unused
-  // onlineCount — removed for the same reason.)
+  // Chat opens on the first desktop visit. After switching panels, keep it
+  // mounted for this session so its messages and scroll position survive.
   const [chatOpened, setChatOpened] = useState(persistedTab === 'chat');
   // Same reasoning as chat: the other panels are CSS-hidden rather than
   // unmounted, so anything mounted here queries at boot whether or not it is on
