@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertVideoMattes, validVideoMatte, videoMatteFrame, videoMattePlan } from "./videoMatte";
+import { videoMatteCommand, assertVideoMattes, validVideoMatte, videoMatteFrame, videoMattePlan } from "./videoMatte";
 import { VIDEO_MATTE_CORE, VIDEO_MATTE_RUNTIME, VIDEO_MATTE_WORKER } from "./videoMatteRuntime";
 import type { MediaClip } from "./types";
 const clip = (patch: Partial<MediaClip> = {}): MediaClip => ({ id: "v", trackId: "t", kind: "video", mediaId: "source", start: 7, trimIn: 4, duration: 2, speed: 2, ...patch });
@@ -39,4 +39,14 @@ describe("source-timed video masks", () => {
     expect(()=>new Function(VIDEO_MATTE_RUNTIME)).not.toThrow();expect(()=>new Function(VIDEO_MATTE_WORKER)).not.toThrow();
     expect(VIDEO_MATTE_WORKER).toContain('studioludens/birefnet-lite-512');expect(VIDEO_MATTE_WORKER).not.toContain('modnet');
   });
+});
+
+it("handles exact video cut-out requests without choosing ambiguous or locked layers", () => {
+  const scene={selected:["v"],layers:[{id:"v",kind:"video"},{id:"image",kind:"image"}]};
+  for(const prompt of ["remove the background", "Please remove background from this video.", "remove the video background"])
+    expect(videoMatteCommand(prompt,scene)).toEqual({op:"remove_background",id:"v"});
+  expect(videoMatteCommand("remove background",{...scene,selected:[]})).toBeNull();
+  expect(videoMatteCommand("remove background from the video",{...scene,selected:[]})).toEqual({op:"remove_background",id:"v"});
+  expect(videoMatteCommand("remove background and add captions",scene)).toBeNull();
+  expect(videoMatteCommand("remove background",{selected:["v"],layers:[{id:"v",kind:"video",locked:true}]})).toBeNull();
 });
