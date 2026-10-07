@@ -242,10 +242,12 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     selfBadge.isSelf(apiProfile?.walletAddress)
       ? preferLiveBalance(apiProfile?.badgeBalance, selfBadge.balance)
       : apiProfile?.badgeBalance;
-  const badgeUrl = getBadgeUrl(badgeBalance, apiProfile?.handle || routeUsername);
+  const badgeUsername = apiProfile?.handle || routeUsername;
+  const badgeContext = { lock: apiProfile?.badgeLock ?? (isViewingOwnProfile ? selfBadge.lock : null) };
+  const badgeUrl = getBadgeUrl(badgeBalance, badgeUsername, badgeContext);
   // The tier by name, for the ascension ceremony: it compares tiers, not URLs,
   // and the balance is what it prints under the threshold.
-  const badgeTier = getBadgeName(badgeBalance, apiProfile?.handle || routeUsername);
+  const badgeTier = getBadgeName(badgeBalance, badgeUsername, badgeContext);
 
   // Content separation
   const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS, PROFILE_LIVE, ALL_CONTENT } = useMemo(() => {
