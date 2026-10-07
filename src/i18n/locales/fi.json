@@ -6734,6 +6734,12 @@
         "easeInOutBack": "Jousto alku ja loppu",
         "hold": "Pidä"
       }
+    },
+    "beats": {
+      "markers": "Rytmimerkit",
+      "sync": "Synkronoi leikkaukset",
+      "none": "Luotettavaa rytmiä ei löytynyt.",
+      "unchanged": "Leikkauksia ei voitu kohdistaa."
     }
   },
   "jungleMood": {

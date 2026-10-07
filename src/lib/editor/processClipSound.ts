@@ -2,13 +2,17 @@ import type { MediaClip } from "./types";
 import { AUDIO_TOOLS_WORKER } from "./audioToolsRuntime";
 import { AUDIO_TOOL_MODES, audioToolRange, type AudioToolMode, type AudioToolResult } from "./audioTools";
 
+import type { BeatAnalysis } from "./beats";
+
 /** Own the worker so cancellation releases work as well as the pending promise. */
-export function processClipSound(blob: Blob, clip: MediaClip, mode: AudioToolMode, signal?: AbortSignal, onProgress?: (fraction: number) => void): Promise<AudioToolResult> {
+export function processClipSound(blob: Blob, clip: MediaClip, mode: "beats", signal?: AbortSignal, onProgress?: (fraction: number) => void): Promise<BeatAnalysis>;
+export function processClipSound(blob: Blob, clip: MediaClip, mode: AudioToolMode, signal?: AbortSignal, onProgress?: (fraction: number) => void): Promise<AudioToolResult>;
+export function processClipSound(blob: Blob, clip: MediaClip, mode: AudioToolMode | "beats", signal?: AbortSignal, onProgress?: (fraction: number) => void): Promise<AudioToolResult | BeatAnalysis> {
   return new Promise((resolve, reject) => {
     let worker: Worker | null = null;
     let context: AudioContext | null = null;
     let finished = false;
-    const finish = (error?: Error, result?: AudioToolResult) => {
+    const finish = (error?: Error, result?: AudioToolResult | BeatAnalysis) => {
       if (finished) return; finished = true;
       clearTimeout(timer); signal?.removeEventListener("abort", cancel);
       worker?.terminate(); void context?.close().catch(() => {});
@@ -20,7 +24,7 @@ export function processClipSound(blob: Blob, clip: MediaClip, mode: AudioToolMod
     if (signal?.aborted) { cancel(); return; }
     void (async () => {
       try {
-        if (!AUDIO_TOOL_MODES.includes(mode) || clip.duration > 600 || clip.locked) throw new Error("audio range");
+        if ((mode !== "beats" && !AUDIO_TOOL_MODES.includes(mode)) || clip.duration > 600 || clip.locked) throw new Error("audio range");
         context = new AudioContext();
         const decoded = await context.decodeAudioData(await blob.arrayBuffer());
         if (finished) return;
@@ -38,6 +42,7 @@ export function processClipSound(blob: Blob, clip: MediaClip, mode: AudioToolMod
         worker.onmessage = event => {
           const data = event.data;
           if (data.type === "progress") onProgress?.(Math.max(0, Math.min(1, data.fraction)));
+          else if (data.type === "beats") finish(undefined, data as BeatAnalysis);
           else if (data.type === "done") finish(undefined, data as AudioToolResult);
           else if (data.type === "error") finish(new Error(data.message));
         };

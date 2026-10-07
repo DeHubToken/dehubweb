@@ -6911,6 +6911,12 @@
         "easeInOutBack": "Terug in en uit",
         "hold": "Hou"
       }
+    },
+    "beats": {
+      "markers": "Maatslagmerkers",
+      "sync": "Sinkroniseer snitte",
+      "none": "Geen betroubare maatslae gevind nie.",
+      "unchanged": "Geen snitte kon belyn word nie."
     }
   },
   "jungleMood": {

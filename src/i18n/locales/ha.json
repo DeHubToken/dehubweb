@@ -6740,6 +6740,12 @@
         "easeInOutBack": "Komawa shiga da fita",
         "hold": "Riƙe"
       }
+    },
+    "beats": {
+      "markers": "Alamomin kari",
+      "sync": "Daidaita yanke",
+      "none": "Ba a sami ingantaccen kari ba.",
+      "unchanged": "Ba a iya daidaita yanke ba."
     }
   },
   "jungleMood": {

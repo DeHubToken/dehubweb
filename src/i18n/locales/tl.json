@@ -6894,6 +6894,12 @@
         "easeInOutBack": "Balik na pasok at labas",
         "hold": "Hawakan"
       }
+    },
+    "beats": {
+      "markers": "Mga marka ng kumpas",
+      "sync": "Isabay ang mga putol",
+      "none": "Walang maaasahang kumpas na nakita.",
+      "unchanged": "Hindi maitugma ang mga putol."
     }
   },
   "jungleMood": {

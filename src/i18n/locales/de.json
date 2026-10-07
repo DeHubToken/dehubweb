@@ -6848,6 +6848,12 @@
         "easeInOutBack": "Zurück ein und aus",
         "hold": "Halten"
       }
+    },
+    "beats": {
+      "markers": "Taktmarkierungen",
+      "sync": "Schnitte synchronisieren",
+      "none": "Kein zuverlässiger Takt gefunden.",
+      "unchanged": "Die Schnitte konnten nicht ausgerichtet werden."
     }
   },
   "jungleMood": {

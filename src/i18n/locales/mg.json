@@ -6850,6 +6850,12 @@
         "easeInOutBack": "Miverina miditra sy mivoaka",
         "hold": "Tazony"
       }
+    },
+    "beats": {
+      "markers": "Marika gadona",
+      "sync": "Ampifanaraho ny tapa-dahatsary",
+      "none": "Tsy nahitana gadona azo antoka.",
+      "unchanged": "Tsy azo nampifanarahana ny tapa-dahatsary."
     }
   },
   "jungleMood": {

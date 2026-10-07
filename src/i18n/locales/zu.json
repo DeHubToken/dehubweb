@@ -6851,6 +6851,12 @@
         "easeInOutBack": "Ukubuya ingena iphuma",
         "hold": "Bamba"
       }
+    },
+    "beats": {
+      "markers": "Izimpawu zesigqi",
+      "sync": "Vumelanisa ukusika",
+      "none": "Asikho isigqi esithembekile esitholakele.",
+      "unchanged": "Ukusika akukwazanga ukuvumelaniswa."
     }
   },
   "jungleMood": {

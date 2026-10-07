@@ -7088,6 +7088,12 @@
         "easeInOutBack": "Lantun masuk dan keluar",
         "hold": "Tahan"
       }
+    },
+    "beats": {
+      "markers": "Penanda rentak",
+      "sync": "Segerakkan potongan",
+      "none": "Tiada rentak yang boleh dipercayai ditemui.",
+      "unchanged": "Potongan tidak dapat dijajarkan."
     }
   },
   "jungleMood": {

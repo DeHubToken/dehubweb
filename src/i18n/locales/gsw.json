@@ -6805,6 +6805,12 @@
         "easeInOutBack": "Zrugg ii und uus",
         "hold": "Halte"
       }
+    },
+    "beats": {
+      "markers": "Taktmarkierungen",
+      "sync": "Schnitte synchronisieren",
+      "none": "Kein zuverlässiger Takt gefunden.",
+      "unchanged": "Die Schnitte konnten nicht ausgerichtet werden."
     }
   },
   "jungleMood": {

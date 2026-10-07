@@ -6837,6 +6837,12 @@
         "easeInOutBack": "Hyrje dhe dalje me kthim",
         "hold": "Mbaj"
       }
+    },
+    "beats": {
+      "markers": "Shënuesit e ritmit",
+      "sync": "Sinkronizo prerjet",
+      "none": "Nuk u gjet ritëm i besueshëm.",
+      "unchanged": "Prerjet nuk mund të rreshtoheshin."
     }
   },
   "jungleMood": {
