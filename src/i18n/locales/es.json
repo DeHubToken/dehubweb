@@ -8067,5 +8067,16 @@
     "backToMedia": "Volver a la publicación",
     "like": "Me gusta",
     "unlike": "Eliminar como"
+  },
+  "walletBackup": {
+    "backedUpOn": "Copia guardada el {{date}}",
+    "phraseUnavailable": "La frase de recuperación no está disponible con este inicio de sesión. Usa tu acceso o dispositivo original para buscarla. Aún puedes guardar tu clave privada.",
+    "phraseMismatch": "Esta copia de seguridad pertenece a otra cartera. Usa tu inicio de sesión original para acceder a la copia correcta.",
+    "backupDescription": "Guarda tu frase de recuperación o clave privada para poder restaurar tu cartera.",
+    "phraseOtherDevice": "Abre DeHub en el dispositivo donde protegiste esta cartera para ver su frase de recuperación. También puedes guardar tu clave privada aquí.",
+    "tabPrivateKey": "Clave privada",
+    "phraseLoadFailed": "No se pudo cargar tu frase de recuperación. Reinténtalo o abre DeHub en tu dispositivo original.",
+    "noPhrase": "Esta cartera se guardó con una clave privada, por lo que DeHub no tiene una frase de recuperación que mostrar. Guarda esta clave para restaurar la misma cartera.",
+    "keyWarning": "Cualquiera que tenga esta clave puede controlar tu cartera. Guárdala en un lugar seguro y nunca la compartas."
   }
 }
