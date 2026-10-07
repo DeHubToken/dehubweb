@@ -112,13 +112,14 @@ it('accepts horizontal flicks but leaves vertical gestures to the post pager', (
   fireEvent.pointerUp(pager, { clientX: 180, clientY: 108 });
   expect(screen.getByText('1 / 2')).toBeTruthy();
 });
-it('retains the same playing soundtrack and position across photos, then pauses on leaving the post', () => {
+it('retains the same playing soundtrack and position across photos, then pauses on leaving the post', async () => {
   vi.useFakeTimers();
   const play = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue();
   const pause = vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
   const short = { id: '5421', type: 'short' as const, username: 'artist', verified: false, likes: '0',
     ...shortsPhotoMedia(post)! };
   const { container, rerender } = renderSlide(<VideoSlide short={short} isActive isMuted={false} />);
+  await act(async () => { await import('@/components/app/cards/ShortsPhotoPager'); });
   act(() => { vi.advanceTimersByTime(60); });
   const player = container.querySelector('video')!;
   player.currentTime = 12;
