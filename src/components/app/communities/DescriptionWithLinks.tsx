@@ -28,7 +28,7 @@ export function DescriptionWithLinks({ text }: { text: string }) {
   return (
     <div className="space-y-1.5">
       {descWithoutLinks && (
-        <p className="text-zinc-400 text-sm whitespace-pre-wrap">{descWithoutLinks}</p>
+        <p className="text-white text-sm whitespace-pre-wrap">{descWithoutLinks}</p>
       )}
       {links.slice(0, 3).map((url, i) => (
         <a
