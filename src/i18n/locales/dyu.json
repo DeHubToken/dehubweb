@@ -6263,7 +6263,15 @@
       "toggleLoop": "Seginni daminɛ/a lajɔ"
     },
     "export": {
+      "scope": "Téléchargement dan",
+      "downloadTimeline": "Timeline bɛɛ",
+      "downloadSelection": "Videyo klip sugandilenw ({{count}})",
+      "downloadClips": "Videyo klip bɛɛ ({{count}})",
+      "rangeHint": "A bɛ sɛbɛnni ni kan mara videyo tigɛlen kelen kelen na. DeHub laban sekɔnti 2.2 bɛ fara filen kelen kelen kan. Filen caaman bɛ telecharger ɲɔgɔn fɛ ZIP kɔnɔ.",
+      "exportingClips": "Klip {{current}} bɛ export kɛ {{total}} la",
+      "archiveTooLarge": "Téléchargement ka bon ni 512 MiB ye. Klip dɔgɔman export kɛ walima résolution dɔgɔman sugandi.",
       "gifHint": "O kɔ, u ye mankan bila u la. O be se ka kɛ sekɔnti 60 ye, pixel 640 ani fps 15 ye. A laban, a ye tagamasiɲɛ dɔ yira.",
+      "gifTooLong": "Waati sira tigɛ fɔ a ka to sekɔnti 60 walima o duguma, walima MP4 walima WebM sugandi.",
       "title": "Jigi",
       "stillDescription": "Sisan ja in mara i n'a fɔ ja.",
       "videoDescription": "I ka waati sira kɛ ka kɛ videyo ye.",
@@ -6292,8 +6300,7 @@
       "failed": "Jigili ma se ka kɛ",
       "cancelled": "Jigili dabilala",
       "preparing": "A labɛnni…",
-      "rendering": "Videyo dilanni…",
-      "gifTooLong": "Waati sira tigɛ fɔ a ka to sekɔnti 60 walima o duguma, walima MP4 walima WebM sugandi."
+      "rendering": "Videyo dilanni…"
     },
     "inspector": {
       "selectHint": "Layɛri dɔ sugandi kanvasi kan walima klipu dɔ waati sira kan.",
