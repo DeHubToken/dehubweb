@@ -4,14 +4,15 @@ import { saveProject, setLastProjectId } from "./projectStore";
 import { highlightProject, sameHighlightSource, type HighlightRange } from "./highlights";
 import type { ProjectSnapshot } from "./types";
 
-export async function createHighlightEdit(original: ProjectSnapshot, clipId: string, ranges: HighlightRange[], title: string): Promise<boolean> {
+export async function createHighlightEdit(original: ProjectSnapshot, clipId: string, ranges: HighlightRange[], title: string, signal?: AbortSignal): Promise<boolean> {
   const current = () => useEditorStore.getState().toSnapshot();
-  if (!sameHighlightSource(original, current())) return false;
+  const matches = () => !signal?.aborted && sameHighlightSource(original, current());
+  if (!matches()) return false;
   const next = highlightProject(original, clipId, ranges, { id: nanoid(10), title }, () => nanoid(10));
   await saveProject(original);
-  if (!sameHighlightSource(original, current())) return false;
+  if (!matches()) return false;
   await saveProject(next);
-  if (!sameHighlightSource(original, current())) return false;
+  if (!matches()) return false;
   // The original keeps its own durable identity. The copy begins with its
   // original contents so one Undo can restore everything within that copy.
   useEditorStore.getState().loadSnapshot({ ...original, id: next.id, title: next.title });
