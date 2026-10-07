@@ -1,3 +1,4 @@
+import { useVideoDownload } from "@/hooks/use-video-download";
 import { cdnImageSrcSet } from '@/lib/media-url';
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
@@ -930,25 +931,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     setShowQuoteModal(true);
   }, [walletAddress, openLoginModal]);
 
-  const handleDownloadVideo = useCallback(async () => {
-    if (!video.videoUrl) return;
-    toast.loading('Preparing download...', { id: 'video-download' });
-    try {
-      const response = await fetch(video.videoUrl);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${video.title || video.id || 'video'}.mp4`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      toast.success('Download started', { id: 'video-download' });
-    } catch {
-      toast.error('Download failed', { id: 'video-download' });
-    }
-  }, [video.videoUrl, video.title, video.id]);
 
   const videoAsNFT = {
     tokenId: parseInt(video.id, 10) || 0,
@@ -1207,6 +1189,25 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Folded into isContentGated so the warning gets the behaviour a locked post
   // already has: no autoplay, no controls, no poster fallback painted over it.
   const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated;
+  const downloadVideo = useVideoDownload();
+  const handleDownloadVideo = useCallback(async () => {
+    if (isContentGated || !video.videoUrl) return;
+    setShowOptionsDrawer(false);
+    if (!video.isAudio) {
+      await downloadVideo({ url: video.videoUrl, title: video.title || String(video.id), username: video.creatorUsername });
+      return;
+    }
+    try {
+      const response = await fetch(video.videoUrl);
+      if (!response.ok) throw new Error("Audio download failed");
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = (video.title || String(video.id)) + (blob.type.includes("mpeg") ? ".mp3" : blob.type.includes("wav") ? ".wav" : blob.type.includes("ogg") ? ".ogg" : ".m4a"); a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+    } catch { toast.error(t("editor.export.failed")); }
+  }, [isContentGated, video.videoUrl, video.isAudio, video.title, video.id, video.creatorUsername, downloadVideo, t]);
+
 
 
   // The corner player took an audio post's track, or gave it back with this

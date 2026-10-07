@@ -5,6 +5,7 @@
  *
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
+import { stampEnding } from "./endingFile";
 import type { MediaClip, ProjectSnapshot } from "./types";
 import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
@@ -461,7 +462,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   muxer.finalize();
 
   const mime = format === "mp4" ? "video/mp4" : "video/webm";
-  const blob = new Blob([muxer.target.buffer], { type: mime });
+  const blob = stampEnding(new Blob([muxer.target.buffer], { type: mime }), contentDuration, format === "mp4" ? "mp4" : "webm");
   const safeTitle = (snapshot.title || "video").replace(/[^\w-]+/g, "_");
   const filename = `${safeTitle}.${format}`;
   onProgress?.(1, "Done");
