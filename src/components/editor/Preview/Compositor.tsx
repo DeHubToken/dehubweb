@@ -37,6 +37,7 @@ import { importFiles } from "@/lib/editor/importFiles";
 import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 import { PagesStrip } from "./PagesStrip";
+import { audioGainAt } from "@/lib/editor/audioEnvelope";
 
 const MEDIA_DRAG_MIME = "application/x-dehub-media";
 /** Snap distance in screen pixels. */
@@ -132,7 +133,7 @@ export function Compositor() {
         try { v.load(); } catch { /* noop */ }
         vPool.set(m.id, v);
       }
-      if (m.kind === "audio" && !aPool.has(m.id)) {
+      if ((m.kind === "audio" || clips.some((c) => c.kind === "audio" && c.mediaId === m.id)) && !aPool.has(m.id)) {
         const a = new Audio(m.url);
         a.preload = "auto";
         aPool.set(m.id, a);
@@ -148,7 +149,7 @@ export function Compositor() {
     for (const id of Array.from(vPool.keys())) if (!liveIds.has(id)) { vPool.get(id)?.pause(); vPool.delete(id); }
     for (const id of Array.from(aPool.keys())) if (!liveIds.has(id)) { aPool.get(id)?.pause(); aPool.delete(id); }
     for (const id of Array.from(iPool.keys())) if (!liveIds.has(id)) iPool.delete(id);
-  }, [media]);
+  }, [media, clips]);
 
   // ── Playback clock ──
   const playStartedRef = useRef<{ wall: number; time: number } | null>(null);
@@ -221,6 +222,9 @@ export function Compositor() {
         const v = videoPool.current.get(mc.mediaId);
         if (!v) continue;
         activeVideoMediaIds.add(mc.mediaId);
+        const track = state.tracks.find((tr) => tr.id === mc.trackId);
+        v.muted = !!track?.muted || !!track?.hidden || !!mc.hidden || !state.isPlaying;
+        v.volume = Math.min(1, audioGainAt(mc, time));
         const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
         const localT =
           op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (time - mc.start) * speed;
@@ -244,8 +248,8 @@ export function Compositor() {
         const track = state.tracks.find((tr) => tr.id === mc.trackId);
         if (!a) continue;
         activeAudioMediaIds.add(mc.mediaId);
-        a.muted = !!track?.muted;
-        a.volume = Math.max(0, Math.min(1, mc.audio?.volume ?? 1));
+        a.muted = !!track?.muted || !!track?.hidden || !!mc.hidden;
+        a.volume = Math.min(1, audioGainAt(mc, time));
         if (state.isPlaying) {
           if (a.playbackRate !== speed) a.playbackRate = speed;
           if (Math.abs(a.currentTime - localT) > 0.25) a.currentTime = localT;
