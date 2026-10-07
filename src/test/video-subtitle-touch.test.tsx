@@ -100,7 +100,7 @@ describe('subtitle menu on phones', () => {
     expect(localStorage.getItem('video-subs:enabled')).toBe('0');
   });
 
-  it('does not fetch a transcript or dub a muted card', () => {
+  it('does not fetch a transcript or translation for a muted card', () => {
     fixture.dub = true;
     fixture.appLang = 'es';
     fixture.sourceLang = 'en';
@@ -110,6 +110,21 @@ describe('subtitle menu on phones', () => {
     render(<VideoSubtitleOverlay tokenId={123} videoRef={{ current: video }} />);
     expect(fixture.lookup).not.toHaveBeenCalledWith(123, true);
     expect(fixture.dubLookup).not.toHaveBeenCalledWith('transcript', 'es', true);
-    expect(fixture.engine).not.toHaveBeenCalled();
+  });
+
+  it('keeps dubbing available when the original track is silent or playback pauses', async () => {
+    fixture.dub = true;
+    fixture.appLang = 'es';
+    fixture.sourceLang = 'en';
+    const video = document.createElement('video');
+    Object.defineProperty(video, 'paused', { value: false, writable: true });
+    video.volume = 0;
+    const available = vi.fn();
+    render(<VideoSubtitleOverlay tokenId={123} videoRef={{ current: video }} onDubAvailableChange={available} />);
+    await waitFor(() => expect(available).toHaveBeenLastCalledWith(true));
+    expect(fixture.dubLookup).toHaveBeenCalledWith('transcript', 'es', true);
+    Object.defineProperty(video, 'paused', { value: true });
+    fireEvent.pause(video);
+    expect(available).toHaveBeenLastCalledWith(true);
   });
 });
