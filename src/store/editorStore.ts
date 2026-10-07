@@ -743,7 +743,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       past,
       future: [],
       clips: s.clips.map((c) =>
-        c.id === id && c.kind !== "text" ? ({ ...c, ...patch } as MediaClip) : c,
+        c.id === id && c.kind !== "text" ? patchedClip(c, patch) : c,
       ),
     });
   },
@@ -818,14 +818,19 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   },
 
   patchClipLive: (id, patch) =>
-    set((s) => ({ clips: s.clips.map((c) => (c.id === id ? ({ ...c, ...patch } as Clip) : c)) })),
+    set((s) => ({ clips: s.clips.map((c) => (c.id === id ? patchedClip(c, patch) : c)) })),
 
   patchClip: (id, patch) => {
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
-    set({ past, future: [], clips: s.clips.map((c) => (c.id === id ? ({ ...c, ...patch } as Clip) : c)) });
+    set({ past, future: [], clips: s.clips.map((c) => (c.id === id ? patchedClip(c, patch) : c)) });
   },
 }));
+
+/** Replacing footage restores its background; masks belong to the old source. */
+function patchedClip(c: Clip, patch: ClipPatch): Clip {
+  return { ...c, ...(c.kind === "video" && "mediaId" in patch && patch.mediaId !== undefined && patch.mediaId !== c.mediaId ? { videoMatte: null } : {}), ...patch } as Clip;
+}
 
 /** Build a MediaItem (with object URLs) from a StoredMedia row. */
 export function toMediaItem(row: StoredMedia): MediaItem {

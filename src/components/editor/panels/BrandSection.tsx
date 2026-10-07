@@ -19,7 +19,7 @@ export function BrandSection() {
   const addColor = useBrandStore((s) => s.addColor);
   const removeColor = useBrandStore((s) => s.removeColor);
   const media = useEditorStore((s) => s.media);
-  const images = media.filter((m) => m.kind === 'image');
+  const images = media.filter((m) => m.kind === 'image' && !m.name.startsWith('.dehub-video-matte-'));
   const logo = images.find((m) => m.id === kit.logoMediaId);
 
   return (

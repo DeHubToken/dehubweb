@@ -667,7 +667,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       }
       case "remove_background": {
         const clip = find(op.id);
-        if (!clip || clip.kind !== "image") return false;
+        if (!clip || (clip.kind !== "image" && clip.kind !== "video")) return false;
         return await useBgRemovalStore.getState().run(clip.id, ctx.wallet);
       }
       case "generate": {

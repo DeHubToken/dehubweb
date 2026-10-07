@@ -7133,6 +7133,12 @@
       "changed": "Le projet source a changé. Relancez la recherche.",
       "limit": "Utilisez au maximum 10 minutes de parole source. Une très longue transcription sans pause doit être divisée au préalable.",
       "projectTitle": "{{title}} — Moments forts"
+    },
+    "videoMatte": {
+      "frames": "Suppression du fond · {{completed}} / {{total}} images",
+      "hint": "Traitement sur cet appareil. Limitez d’abord la source à {{seconds}} secondes ; le modèle se télécharge au premier usage.",
+      "restore": "Rétablir le fond",
+      "cancel": "Annuler"
     }
   },
   "jungleMood": {
