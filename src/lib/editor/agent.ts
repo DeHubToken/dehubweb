@@ -374,6 +374,8 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
 
   async function applyOne(op: AgentOp): Promise<boolean> {
     const s = store();
+    const target = find(op.id);
+    if (target?.locked && op.op !== "select" && !(op.op === "update" && op.locked === false)) return false;
     if (TIMELINE_OPS.includes(op.op)) {
       // Older responses put playback rate in audio; keep that contract working.
       if (op.op === "audio" && op.speed !== undefined) {
