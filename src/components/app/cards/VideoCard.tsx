@@ -725,6 +725,8 @@ interface VideoCardProps {
 
 export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
   const playbackAllowed = useFeedPlaybackAllowed();
+  const playbackAllowedRef = useRef(playbackAllowed);
+  playbackAllowedRef.current = playbackAllowed;
   const instanceId = useId();
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -1065,7 +1067,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         entries.forEach((entry) => {
           isIntersectingRef.current = entry.isIntersecting;
           if (isVideoInPictureInPicture(videoRef.current) && !visualActivity.isCallBusy()) return;
-          if (!visualActivity.isFeedPlaybackAllowed()) { pauseVideo(); return; }
+          if (!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) { pauseVideo(); return; }
           // Backgrounding is not a scroll-away; PiP owns its own visible surface.
           if (isVideoOutsideFeed(videoRef.current)) return;
           if (!entry.isIntersecting && isPlayingRef.current) {
@@ -1096,7 +1098,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
-                if ((!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(vid)) || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
+                if (((!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) && !isVideoInPictureInPicture(vid)) || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
                   vid.pause();
                   videoPlaybackManager.stop(instanceId);
                   setIsLoading(false);
@@ -1227,7 +1229,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, []);
 
   const handlePlayClick = useCallback(() => {
-    if (!visualActivity.isFeedPlaybackAllowed()) return;
+    if (!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) return;
     // Audio posts use AudioVisualizer which handles its own playback
     if (video.isAudio) {
       if (isContentGated) return;
@@ -1279,7 +1281,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       if (!vidEl) { setIsLoading(false); return; }
       requestVideoPlayback(vidEl).then(() => {
         if (videoRef.current !== vidEl || vidEl.dataset.userPaused === 'true' ||
-          (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(vidEl))) {
+          ((!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) && !isVideoInPictureInPicture(vidEl))) {
           if (videoRef.current === vidEl) { vidEl.pause(); setIsLoading(false); }
           return;
         }
