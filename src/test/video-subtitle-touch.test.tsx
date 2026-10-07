@@ -52,7 +52,7 @@ describe('subtitle menu on phones', () => {
     const button = setup();
     fireEvent.click(button);
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Off', exact: true }));
+    fireEvent.click(screen.getByRole('button', { name: 'Off' }));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(localStorage.getItem('video-subs:enabled')).toBe('1');
   });
