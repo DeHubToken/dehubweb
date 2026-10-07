@@ -1,0 +1,34 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>DeHub Editor launch film</title>
+<style>
+@font-face{font-family:'Exo';src:url(a/exo-500.ttf) format('truetype');font-weight:500}
+@font-face{font-family:'Exo';src:url(a/exo-700.ttf) format('truetype');font-weight:700}
+@font-face{font-family:'DMono';src:url(a/mono.ttf) format('truetype')}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#000;overflow:hidden}
+#stage{position:relative;overflow:hidden;background:#000;color:#fff;font-family:'Exo','Noto Color Emoji',sans-serif;font-weight:500;-webkit-font-smoothing:antialiased}
+.ab{position:absolute;left:0;top:0;transform-origin:0 0}
+.ac{position:absolute;left:0;top:0;transform-origin:50% 50%}
+.fill{position:absolute;inset:0}
+.mono{font-family:'DMono',monospace;text-transform:uppercase;letter-spacing:.2em}
+svg.i{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;display:block}
+.chrome{background:linear-gradient(180deg,#ffffff 0%,#f1f1f1 30%,#9a9a9a 49%,#5e5e5e 51%,#e9e9e9 66%,#bdbdbd 84%,#ffffff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nowrap{white-space:nowrap}
+/* editor replica */
+.ed{position:absolute;left:0;top:0;width:1920px;height:1080px;background:#000;color:#fff;font-size:14px;overflow:hidden}
+.ed .btn{position:absolute;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;color:rgba(255,255,255,.92)}
+.ed .ghost{position:absolute;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.85);font-size:15px}
+.ed .rail{position:absolute;width:58px;height:54px;left:7px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:10px;color:rgba(255,255,255,.6)}
+.ed .clip{position:absolute;top:6px;height:44px;border-radius:6px;border:1px solid;overflow:hidden;font-size:11px;color:#fff}
+.ed .clip .lbl{position:absolute;left:8px;top:0;bottom:0;display:flex;align-items:center;white-space:nowrap;font-weight:500;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.ed .vclip{background:rgba(14,165,233,.30);border-color:rgba(125,211,252,.35)}
+.ed .aclip{background:rgba(16,185,129,.30);border-color:rgba(110,231,183,.35)}
+.ed .tclip{background:rgba(245,158,11,.30);border-color:rgba(252,211,77,.35)}
+.ed .trow{position:absolute;left:392px;width:1528px;height:56px;overflow:visible}
+.ed .bub{position:absolute;max-width:270px;border-radius:12px;padding:8px 11px;font-size:12.5px;line-height:1.5}
+.pill{position:absolute;display:flex;align-items:center;gap:14px;padding:15px 26px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:rgba(10,10,10,.72);font-size:20px;white-space:nowrap}
+</style></head>
+<body><div id="stage"></div>
+<script src="icons.js"></script>
+<script src="film.js"></script>
+</body></html>
