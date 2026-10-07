@@ -6599,6 +6599,12 @@
         "easeInOutBack": "Mbalik mlebu lan metu",
         "hold": "Tahan"
       }
+    },
+    "beats": {
+      "markers": "Tandha ketukan",
+      "sync": "Selarasake potongan",
+      "none": "Ora ana ketukan sing dipercaya.",
+      "unchanged": "Potongan ora bisa diselarasake."
     }
   },
   "jungleMood": {

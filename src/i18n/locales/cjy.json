@@ -6771,6 +6771,12 @@
         "easeInOutBack": "回弹缓入缓出",
         "hold": "定格"
       }
+    },
+    "beats": {
+      "markers": "节拍标记",
+      "sync": "同步剪辑",
+      "none": "未找到可靠的节拍。",
+      "unchanged": "无法对齐剪辑。"
     }
   },
   "jungleMood": {

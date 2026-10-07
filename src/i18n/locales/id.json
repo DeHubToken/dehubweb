@@ -6853,6 +6853,12 @@
         "easeInOutBack": "Pantul masuk dan keluar",
         "hold": "Tahan"
       }
+    },
+    "beats": {
+      "markers": "Penanda ketukan",
+      "sync": "Sinkronkan potongan",
+      "none": "Ketukan yang andal tidak ditemukan.",
+      "unchanged": "Potongan tidak dapat disejajarkan."
     }
   },
   "jungleMood": {

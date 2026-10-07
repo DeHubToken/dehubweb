@@ -6773,6 +6773,12 @@
         "easeInOutBack": "Laghachi ịbanye na ịpụ",
         "hold": "Jide"
       }
+    },
+    "beats": {
+      "markers": "Akara ụda",
+      "sync": "Mee ka mbepụ kwekọọ",
+      "none": "Achọtaghị ụda a pụrụ ịtụkwasị obi.",
+      "unchanged": "Enweghị ike ime ka mbepụ kwekọọ."
     }
   },
   "jungleMood": {

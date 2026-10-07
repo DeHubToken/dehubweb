@@ -6858,6 +6858,12 @@
         "easeInOutBack": "Rebote al entrar y salir",
         "hold": "Mantener"
       }
+    },
+    "beats": {
+      "markers": "Marcadores de ritmo",
+      "sync": "Sincronizar cortes",
+      "none": "No se encontró un ritmo fiable.",
+      "unchanged": "No se pudieron alinear los cortes."
     }
   },
   "jungleMood": {

@@ -6827,6 +6827,12 @@
         "easeInOutBack": "Rudi kuingia na kutoka",
         "hold": "Shikilia"
       }
+    },
+    "beats": {
+      "markers": "Alama za mdundo",
+      "sync": "Sawazisha mikato",
+      "none": "Hakuna mdundo wa kuaminika uliopatikana.",
+      "unchanged": "Mikato haikuweza kulinganishwa."
     }
   },
   "jungleMood": {

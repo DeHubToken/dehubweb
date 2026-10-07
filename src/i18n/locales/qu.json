@@ -6859,6 +6859,12 @@
         "easeInOutBack": "Kutiy yaykuy lluqsiy",
         "hold": "Hap’iy"
       }
+    },
+    "beats": {
+      "markers": "Ritmu unancha",
+      "sync": "Kuchuykunata tupachiy",
+      "none": "Mana allin ritmu tarisqachu.",
+      "unchanged": "Kuchuykuna mana tupachisqachu."
     }
   },
   "jungleMood": {

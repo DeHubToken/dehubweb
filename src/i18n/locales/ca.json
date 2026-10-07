@@ -6733,6 +6733,12 @@
         "easeInOutBack": "Rebot d’entrada i sortida",
         "hold": "Mantén"
       }
+    },
+    "beats": {
+      "markers": "Marcadors de ritme",
+      "sync": "Sincronitza els talls",
+      "none": "No s'ha trobat un ritme fiable.",
+      "unchanged": "No s'han pogut alinear els talls."
     }
   },
   "jungleMood": {

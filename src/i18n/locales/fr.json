@@ -7105,6 +7105,12 @@
         "easeInOutBack": "Recul entrée et sortie",
         "hold": "Maintien"
       }
+    },
+    "beats": {
+      "markers": "Repères de rythme",
+      "sync": "Synchroniser les coupes",
+      "none": "Aucun rythme fiable trouvé.",
+      "unchanged": "Les coupes n'ont pas pu être alignées."
     }
   },
   "jungleMood": {

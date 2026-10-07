@@ -7002,6 +7002,12 @@
         "easeInOutBack": "Terugveer in en uit",
         "hold": "Vasthouden"
       }
+    },
+    "beats": {
+      "markers": "Beatmarkeringen",
+      "sync": "Cuts synchroniseren",
+      "none": "Geen betrouwbare beat gevonden.",
+      "unchanged": "De cuts konden niet worden uitgelijnd."
     }
   },
   "jungleMood": {

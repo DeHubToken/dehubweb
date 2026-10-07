@@ -5764,6 +5764,12 @@
         "easeInOutBack": "Back for start and end",
         "hold": "Hold am"
       }
+    },
+    "beats": {
+      "markers": "Beat marks",
+      "sync": "Make cuts match",
+      "none": "We no find beat we fit trust.",
+      "unchanged": "We no fit make cuts match."
     }
   },
   "jungleMood": {
