@@ -6912,6 +6912,13 @@
         "hold": "Hou"
       }
     },
+    "shots": {
+      "detect": "Bespeur toneelveranderings",
+      "split": "Verdeel gekose snitte",
+      "none": "Geen toneelveranderings gevind nie.",
+      "hint": "Hersien snitte eers · ≤10 min",
+      "preview": "Voorskou"
+    },
     "beats": {
       "markers": "Maatslagmerkers",
       "sync": "Sinkroniseer snitte",

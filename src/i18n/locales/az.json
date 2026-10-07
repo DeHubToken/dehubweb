@@ -6696,6 +6696,13 @@
         "hold": "Saxla"
       }
     },
+    "shots": {
+      "detect": "Səhnə dəyişikliklərini tap",
+      "split": "Seçilmiş kəsiklərdə böl",
+      "none": "Səhnə dəyişikliyi tapılmadı.",
+      "hint": "Əvvəl kəsikləri nəzərdən keçir · ≤10 dəq",
+      "preview": "Önizləmə"
+    },
     "beats": {
       "markers": "Ritm işarələri",
       "sync": "Kəsikləri sinxronlaşdır",

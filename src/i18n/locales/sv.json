@@ -6737,6 +6737,13 @@
         "hold": "Håll"
       }
     },
+    "shots": {
+      "detect": "Hitta scenbyten",
+      "split": "Dela vid valda klipp",
+      "none": "Inga scenbyten hittades.",
+      "hint": "Granska klippen först · ≤10 min",
+      "preview": "Förhandsvisning"
+    },
     "beats": {
       "markers": "Rytmmarkörer",
       "sync": "Synkronisera klipp",
