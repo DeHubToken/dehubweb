@@ -403,7 +403,7 @@ export default function BuyCoinsPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Buy — Purchase Tokens on DeHub" description="Buy tokens directly on DeHub with your credit card. Fast checkout, multiple chains supported." url="https://dehub.io/buy" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Buy Tokens on DeHub', url: 'https://dehub.io/buy', description: 'Purchase tokens with credit card on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <SEOHead title="Buy — Purchase Tokens on DeHub" description="Buy tokens directly on DeHub with your credit card. Fast checkout, multiple chains supported, and tokens delivered to your wallet." url="https://dehub.io/buy" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Buy Tokens on DeHub', url: 'https://dehub.io/buy', description: 'Purchase tokens with credit card on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Buy Tokens — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <PageIsland back onBack={() => navigate(-1)} icon="buy" title={t('buyCoins.title')} />
 
