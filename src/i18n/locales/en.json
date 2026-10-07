@@ -2495,6 +2495,43 @@
       "wallTitle": "What people say",
       "wallNote": "published with permission",
       "anonymous": "A DeHub member"
+    },
+    "money": {
+      "revenue": "Revenue",
+      "costs": "Costs",
+      "net": "Net",
+      "today": "today so far, UTC",
+      "since": "since {{date}}",
+      "group": {
+        "buys": "In-app buys",
+        "fees": "Fees",
+        "compute": "AI compute",
+        "aiTools": "AI tools",
+        "infrastructure": "Infrastructure"
+      },
+      "title": "Revenue & costs",
+      "revenueHint": "{{buys}} buys · {{fees}} fees",
+      "loss": "Net loss",
+      "profit": "Net profit",
+      "netHint": "revenue minus costs",
+      "covered": "Costs covered",
+      "coveredHint": "of costs paid by revenue",
+      "chartMonthly": "Revenue and costs per day, monthly average",
+      "chartDaily": "Revenue and costs per day",
+      "inTitle": "Where the money comes from",
+      "inEmpty": "No revenue in this window yet",
+      "inQuiet": "Tracked, nothing yet in this window:",
+      "outTitle": "Where it goes",
+      "outEmpty": "No costs in this window yet",
+      "outQuiet": "Tracked, nothing yet in this window:",
+      "definitionsTitle": "What is counted",
+      "conversionTerm": "Prices",
+      "dhbMarket": "DHB was ${{price}} at this read.",
+      "dhbPeg": "No market price was available at this read, so DHB is at the peg.",
+      "unavailable": "{{sources}} could not be reached, so they are left out of every total above rather than guessed.",
+      "definitionsSubtitle": "Every line, where it is read from, and what is left out",
+      "tooltipMonth": "{{month}} · {{days}} days",
+      "tooltipPerDay": "{{revenue}} / {{costs}} a day"
     }
   },
   "superpowers": {
