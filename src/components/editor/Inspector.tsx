@@ -45,6 +45,7 @@ export function Inspector() {
   const clips = useEditorStore((s) => s.clips);
   const updateTextClip = useEditorStore((s) => s.updateTextClip);
   const updateMediaClip = useEditorStore((s) => s.updateMediaClip);
+  const setClipSpeed = useEditorStore((s) => s.setClipSpeed);
   const captionsClipId = useCaptionsStore((s) => s.clipId);
   const captionsProgress = useCaptionsStore((s) => s.progress);
   const runCaptions = useCaptionsStore((s) => s.run);
@@ -259,11 +260,11 @@ export function Inspector() {
             <p className="text-[10px] uppercase tracking-wide text-white/40">Speed</p>
             <EffectSlider label={`${(mediaClip.speed ?? 1).toFixed(2)}×`}
               value={mediaClip.speed ?? 1} min={0.25} max={4} step={0.05}
-              onChange={(v) => updateMediaClip(mediaClip.id, { speed: Math.max(0.25, Math.min(4, v)) })} />
+              onChange={(v) => setClipSpeed(mediaClip.id, Math.max(0.25, Math.min(4, v)))} />
             <div className="grid grid-cols-4 gap-1">
               {[0.5, 1, 1.5, 2].map((s) => (
                 <Button key={s} size="sm" variant="ghost"
-                  onClick={() => updateMediaClip(mediaClip.id, { speed: s })}
+                  onClick={() => setClipSpeed(mediaClip.id, s)}
                   className="h-6 rounded-md border border-white/10 text-[10px] text-white/70 hover:bg-white/5 hover:text-white">
                   {s}×
                 </Button>
@@ -299,10 +300,10 @@ export function Inspector() {
               onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, volume: v } })} />
             <EffectSlider label={`Fade in ${(hasAudio.audio?.fadeIn ?? 0).toFixed(2)}s`}
               value={hasAudio.audio?.fadeIn ?? 0} min={0} max={Math.max(0.1, hasAudio.duration)} step={0.05}
-              onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, fadeIn: v } })} />
+              onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, fadeIn: v, envelope: undefined } })} />
             <EffectSlider label={`Fade out ${(hasAudio.audio?.fadeOut ?? 0).toFixed(2)}s`}
               value={hasAudio.audio?.fadeOut ?? 0} min={0} max={Math.max(0.1, hasAudio.duration)} step={0.05}
-              onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, fadeOut: v } })} />
+              onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, fadeOut: v, envelope: undefined } })} />
             <AudioTools key={hasAudio.id} clip={hasAudio} />
           </div>
         )}
