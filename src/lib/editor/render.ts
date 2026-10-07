@@ -12,6 +12,7 @@
  */
 import type { Clip, ClipTransform, KeyframeProp, MediaClip, ShapeClip, TextClip } from "./types";
 import { computeClipAnimation } from "./animationPresets";
+import { measuredTextLayout } from "./textLayout";
 import { KEY_EPSILON, isAnimated, keyframeProps, resolveClipAt, setKey, staticValue } from "./keyframes";
 
 export type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
@@ -118,36 +119,19 @@ function fontFor(text: TextClip, size: number): string {
   return `${text.italic ? "italic " : ""}${text.fontWeight} ${size}px ${text.fontFamily}`;
 }
 
-function textLines(text: TextClip): string[] {
-  const raw = text.uppercase ? text.text.toUpperCase() : text.text;
-  return raw.split(/\n/);
-}
-
 function setLetterSpacing(ctx: Ctx2D, px: number) {
-  // Chromium and Firefox support ctx.letterSpacing; older engines ignore it.
   (ctx as unknown as { letterSpacing?: string }).letterSpacing = `${px}px`;
 }
 
-interface TextLayout {
-  size: number;
-  lh: number;
-  lines: string[];
-  widths: number[];
-  maxW: number;
-  pad: number;
-}
-
-function layoutText(ctx: Ctx2D, text: TextClip, H: number): TextLayout {
-  const size = (text.fontSize / 1080) * H;
-  const lh = size * (text.lineHeight ?? 1.2);
+function layoutText(ctx: Ctx2D, text: TextClip, W: number, H: number) {
   ctx.save();
-  ctx.font = fontFor(text, size);
-  setLetterSpacing(ctx, ((text.letterSpacing ?? 0) / 1080) * H);
-  const lines = textLines(text);
-  const widths = lines.map((ln) => ctx.measureText(ln).width);
+  const result = measuredTextLayout(text, W, H, (line, size, spacing) => {
+    ctx.font = fontFor(text, size);
+    setLetterSpacing(ctx, spacing);
+    return ctx.measureText(line).width;
+  });
   ctx.restore();
-  const pad = text.background ? (text.background.padding / 1080) * H : size * 0.2;
-  return { size, lh, lines, widths, maxW: Math.max(...widths, 1), pad };
+  return result;
 }
 
 /** Where a clip sits, in canvas pixels. Null while its media has not decoded yet. */
@@ -162,7 +146,7 @@ export function clipBoxForSize(
 ): ClipBox | null {
   const tr = getTransform(clip);
   if (clip.kind === "text") {
-    const l = layoutText(ctx, clip, H);
+    const l = layoutText(ctx, clip, W, H);
     const w = l.maxW + l.pad * 2;
     const h = l.lines.length * l.lh + l.pad * 2;
     const ax = clip.x * W;
@@ -279,7 +263,7 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: numbe
   ctx.filter = cssFilterFor(clip, anim.blurPx);
   if (clip.blend && clip.blend !== "normal") ctx.globalCompositeOperation = clip.blend;
 
-  if (clip.kind === "text") drawText(ctx, clip, box, H);
+  if (clip.kind === "text") drawText(ctx, clip, box, W, H);
   else if (clip.kind === "shape") drawShape(ctx, clip, box, H);
   else drawMedia(ctx, clip as MediaClip, box, H, src);
 
@@ -492,10 +476,10 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
   clearShadow(ctx);
 }
 
-function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, H: number) {
-  const l = layoutText(ctx, text, H);
+function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number) {
+  const l = layoutText(ctx, text, W, H);
   ctx.font = fontFor(text, l.size);
-  setLetterSpacing(ctx, ((text.letterSpacing ?? 0) / 1080) * H);
+  setLetterSpacing(ctx, l.spacing);
   ctx.textBaseline = "middle";
   ctx.textAlign = text.align === "centre" ? "center" : text.align;
   // Local frame: origin is the box centre.
@@ -517,7 +501,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, H: number) {
   }
 
   if (text.stroke && text.stroke.width > 0) {
-    ctx.lineWidth = (text.stroke.width / 1080) * H;
+    ctx.lineWidth = (text.stroke.width / 1080) * H * l.scale;
     ctx.strokeStyle = text.stroke.color;
     ctx.lineJoin = "round";
     l.lines.forEach((ln, i) => ctx.strokeText(ln, ax, startY + i * l.lh));
