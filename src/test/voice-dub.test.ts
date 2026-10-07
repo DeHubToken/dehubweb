@@ -27,29 +27,30 @@ describe('voice dub playback', () => {
   });
   afterEach(() => { cleanup(); vi.useRealTimers(); vi.unstubAllGlobals(); });
 
-  it('keeps the original until speech starts, lowers it to 6%, and restores it after the line', () => {
+  it('overlays louder speech without changing the original volume', () => {
     const { video, line } = setup();
     expect(video.volume).toBe(0.8);
-    expect(line().volume).toBe(0.8);
+    expect(line().volume).toBe(1);
     act(() => line().onstart?.({} as SpeechSynthesisEvent));
-    expect(video.volume).toBeCloseTo(0.048);
+    expect(video.volume).toBe(0.8);
     act(() => line().onend?.({} as SpeechSynthesisEvent));
     expect(video.volume).toBe(0.8);
     act(() => vi.advanceTimersByTime(200));
     expect(speech.speak).toHaveBeenCalledTimes(1);
   });
 
-  it('restores the latest slider volume after pausing', () => {
+  it('preserves slider changes during speech and after pausing', () => {
     const { video, line } = setup();
     act(() => line().onstart?.({} as SpeechSynthesisEvent));
     act(() => { video.volume = 0.5; video.dispatchEvent(new Event('volumechange')); });
-    expect(video.volume).toBeCloseTo(0.03);
+    expect(video.volume).toBe(0.5);
+    expect(line().volume).toBe(0.75);
     act(() => { Object.defineProperty(video, 'paused', { value: true }); video.dispatchEvent(new Event('pause')); });
     expect(video.volume).toBe(0.5);
     expect(speech.cancel).toHaveBeenCalled();
   });
 
-  it('restores the original on a speech failure and stops retrying the failed voice', () => {
+  it('keeps the original on a speech failure and stops retrying the failed voice', () => {
     const { video, line } = setup();
     act(() => line().onstart?.({} as SpeechSynthesisEvent));
     act(() => line().onerror?.({ error: 'not-allowed' } as SpeechSynthesisErrorEvent));
@@ -65,8 +66,33 @@ describe('voice dub playback', () => {
     act(() => { video.currentTime = 4.1; vi.advanceTimersByTime(100); });
     act(() => line().onstart?.({} as SpeechSynthesisEvent));
     act(() => first.onend?.({} as SpeechSynthesisEvent));
-    expect(video.volume).toBeCloseTo(0.048);
+    expect(video.volume).toBe(0.8);
     unmount();
     expect(video.volume).toBe(0.8);
+  });
+
+  it('uses the latest viewer volume for the next dub line', () => {
+    const { video, line } = setup();
+    act(() => { video.volume = 0.4; video.dispatchEvent(new Event('volumechange')); });
+    act(() => { video.currentTime = 4.1; vi.advanceTimersByTime(100); });
+    expect(line().volume).toBeCloseTo(0.6);
+    act(() => line().onstart?.({} as SpeechSynthesisEvent));
+    expect(video.volume).toBe(0.4);
+  });
+
+  it.each(['mute', 'zero volume'])('stops the dub when the viewer selects %s', (control) => {
+    const { video, line } = setup();
+    act(() => line().onstart?.({} as SpeechSynthesisEvent));
+    speech.cancel.mockClear();
+    act(() => {
+      if (control === 'mute') video.muted = true;
+      else video.volume = 0;
+      video.dispatchEvent(new Event('volumechange'));
+      video.currentTime = 4.1;
+      vi.advanceTimersByTime(100);
+    });
+    expect(speech.cancel).toHaveBeenCalledTimes(1);
+    expect(speech.speak).toHaveBeenCalledTimes(1);
+    expect(video.volume).toBe(control === 'mute' ? 0.8 : 0);
   });
 });
