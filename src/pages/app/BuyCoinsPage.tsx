@@ -339,6 +339,7 @@ export default function BuyCoinsPage() {
 
 
   const symbol = selectedToken?.symbol || 'DHB';
+  const displaySymbol = symbol === 'DHB' ? t('buyCoins.tokensUnit') : symbol;
   const priceData = chainPriceData || generalPriceData;
   const effectiveAmount = customAmount ? Number(customAmount) : selectedAmount;
   const rawPrice = priceData?.price || 0;
@@ -402,8 +403,8 @@ export default function BuyCoinsPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Buy — Purchase Crypto on DeHub" description="Buy DHB and other cryptocurrencies directly on DeHub with your credit card. Fast checkout, multiple chains supported." url="https://dehub.io/buy" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Buy Crypto on DeHub', url: 'https://dehub.io/buy', description: 'Purchase DHB and other cryptocurrencies with credit card on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">DeHub Buy Crypto — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title="Buy — Purchase Tokens on DeHub" description="Buy tokens directly on DeHub with your credit card. Fast checkout, multiple chains supported, and tokens delivered to your wallet." url="https://dehub.io/buy" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Buy Tokens on DeHub', url: 'https://dehub.io/buy', description: 'Purchase tokens with credit card on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <h1 className="sr-only">DeHub Buy Tokens — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <PageIsland back onBack={() => navigate(-1)} icon="buy" title={t('buyCoins.title')} />
 
       <PageBody className="max-w-lg mx-auto">
@@ -470,7 +471,7 @@ export default function BuyCoinsPage() {
             Math.floor(estimatedTokens) > availableSupply && (
             <p className="text-red-400 text-sm flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
-              {t('buyCoins.supplyWarning', { supply: availableSupply!.toLocaleString(), symbol: selectedToken?.symbol || 'DHB' })}
+              {t('buyCoins.supplyWarning', { supply: availableSupply!.toLocaleString(), symbol: displaySymbol })}
             </p>
           )}
         </div>
@@ -485,7 +486,7 @@ export default function BuyCoinsPage() {
                   <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
                 ) : (
                   <>
-                    <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+                    <img src={dehubCoin} alt={t('buyCoins.tokensUnit')} className="w-5 h-5" />
                     <span className="text-white font-semibold text-lg">
                       {estimatedTokens.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </span>
@@ -495,7 +496,7 @@ export default function BuyCoinsPage() {
             </div>
             {tokenPrice > 0 && (
               <p className="text-xs text-zinc-500 mt-1 text-right">
-                1 {selectedToken?.symbol && selectedToken.symbol !== 'DHB' ? selectedToken.symbol : <DhbCoin />} ≈ ${tokenPrice.toFixed(5)}
+                1 {selectedToken?.symbol && selectedToken.symbol !== 'DHB' ? selectedToken.symbol : <DhbCoin label={t('buyCoins.tokensUnit')} />} ≈ ${tokenPrice.toFixed(5)}
                 {priceData?.change24h != null && (
                   <span className={priceData.change24h >= 0 ? 'text-emerald-400 ml-2' : 'text-red-400 ml-2'}>
                     {priceData.change24h >= 0 ? '+' : ''}{priceData.change24h.toFixed(2)}%
@@ -526,7 +527,7 @@ export default function BuyCoinsPage() {
                 })}
               </span>
               <span className="text-emerald-400 font-semibold">
-                +{bonusTokens.toLocaleString(undefined, { maximumFractionDigits: 0 })} <DhbCoin />
+                +{bonusTokens.toLocaleString(undefined, { maximumFractionDigits: 0 })} <DhbCoin label={t('buyCoins.tokensUnit')} />
               </span>
             </div>
           )}
@@ -539,7 +540,7 @@ export default function BuyCoinsPage() {
                   Available to buy now
                 </span>
                 <div className="flex items-center gap-2">
-                  <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+                  <img src={dehubCoin} alt={t('buyCoins.tokensUnit')} className="w-5 h-5" />
                   <span className="text-white font-semibold">
                     {Math.floor(availableSupply).toLocaleString()}
                   </span>
@@ -614,7 +615,7 @@ export default function BuyCoinsPage() {
             ) : (
               <Wallet className="w-5 h-5 mr-2" />
             )}
-            {isPending ? t('buyCoins.processing') : t('buyCoins.buy', { symbol: selectedToken?.symbol || 'DHB' })}
+            {isPending ? t('buyCoins.processing') : t('buyCoins.buy', { symbol: displaySymbol })}
             <ShimmerHoverEffect />
           </Button>
         </div>}
@@ -778,7 +779,7 @@ export default function BuyCoinsPage() {
                     <div className="min-w-0 flex-1">
                       <div className="text-sm text-zinc-300">
                         {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : tx.status === 'expired' ? '⌛' : '⏳'}{' '}
-                        ${tx.amount} — {tx.approxTokensToReceive ? <>~{Number(tx.approxTokensToReceive).toLocaleString()} <DhbCoin /></> : `${tx.tokenSymbol}`}
+                        ${tx.amount} — {tx.approxTokensToReceive ? <>~{Number(tx.approxTokensToReceive).toLocaleString()} <DhbCoin label={t('buyCoins.tokensUnit')} /></> : tx.tokenSymbol === 'DHB' ? t('buyCoins.tokensUnit') : tx.tokenSymbol}
                         {tx.status === 'failed' && (tx as any).failureReason && (
                           <span className="text-xs text-red-400/70 ml-1 capitalize whitespace-nowrap">({(tx as any).failureReason})</span>
                         )}
