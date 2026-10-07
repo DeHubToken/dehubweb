@@ -3,7 +3,7 @@ import { validShotAnalysis, type ShotAnalysis } from "./shots";
 import type { MediaClip } from "./types";
 
 export function shotScanDocument(key: string): string {
-  return `<!doctype html><script>${SHOT_RUNTIME}\nvar abort; window.addEventListener('message', async function(event) { if(event.source !== parent) return; var m = event.data; if(m.type === 'cancel') { if(abort) abort.abort(); return; } if(m.type !== 'scan' || abort) return; abort = new AbortController(); try { var result = await scanVideoShots(m.src, m.clip, abort.signal, function(fraction) { parent.postMessage({key:m.key,type:'progress',fraction:fraction},'*'); }); parent.postMessage({key:m.key,type:'done',result:result},'*'); } catch(error) { parent.postMessage({key:m.key,type:'error',error:String(error.message||error)},'*'); } }); parent.postMessage({type:'ready',key:${JSON.stringify(key)}},'*');<\/script>`;
+  return `<!doctype html><script>${SHOT_RUNTIME}\nvar abort; window.addEventListener('message', async function(event) { if(event.source !== parent) return; var m = event.data; if(m.type === 'cancel') { if(abort) abort.abort(); return; } if(m.type !== 'scan' || abort) return; abort = new AbortController(); try { var result = await scanVideoShots(m.src, m.clip, abort.signal, function(fraction) { parent.postMessage({key:m.key,type:'progress',fraction:fraction},'*'); }); parent.postMessage({key:m.key,type:'done',result:result},'*'); } catch(error) { parent.postMessage({key:m.key,type:'error',error:String(error.message||error)},'*'); } }); parent.postMessage({type:'ready',key:${JSON.stringify(key)}},'*');</script>`;
 }
 
 /** A separate decoder lets analysis seek without disturbing timeline playback. */

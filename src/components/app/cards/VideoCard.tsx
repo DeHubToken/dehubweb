@@ -1194,6 +1194,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (isContentGated || !video.videoUrl) return;
     setShowOptionsDrawer(false);
     if (!video.isAudio) {
+      videoRef.current?.pause();
       await downloadVideo({ url: video.videoUrl, title: video.title || String(video.id), username: video.creatorUsername });
       return;
     }
