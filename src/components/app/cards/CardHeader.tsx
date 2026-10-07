@@ -164,20 +164,20 @@ export function CardHeader({
         onClick={handleProfileClick}
         onMouseDown={handleProfileMouseDown}
         disabled={!isClickable}
-        className={`flex flex-col min-w-0 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+        className={`flex flex-1 flex-col min-w-0 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
       >
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span className="inline-flex items-baseline gap-1 shrink min-w-0 text-base leading-5">
-            <span className="font-semibold text-white truncate max-w-[160px] sm:max-w-none leading-5">{username}</span>
+        <div className="flex items-center gap-1.5 min-w-0 w-full">
+          <span className="inline-flex items-baseline gap-1 shrink min-w-0 max-w-full text-base leading-5">
+            <span className="font-semibold text-white truncate min-w-0 leading-5">{username}</span>
             <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} badgeLock={badgeLock} className="w-[1em] h-[1em]" />
             <NewMemberChip address={creatorId} className="shrink-0 ml-0.5" />
           </span>
           {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 self-end" />}
         </div>
         {(formattedHandle || timestamp) && (
-          <div className="flex items-center gap-1 min-w-0">
+          <div className="flex items-center gap-1 min-w-0 w-full">
             {formattedHandle && (
-              <span className="text-zinc-500 text-sm truncate max-w-[160px] sm:max-w-none leading-4">{formattedHandle}</span>
+              <span className="text-zinc-500 text-sm truncate min-w-0 leading-4">{formattedHandle}</span>
             )}
             {timestamp && (
               <>
