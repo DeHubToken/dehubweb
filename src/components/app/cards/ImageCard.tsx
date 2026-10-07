@@ -142,13 +142,11 @@ interface ImageCardProps {
  * dimensions, so this is how repeat mounts reserve the right height
  * before the image loads (CLS fix). Session-scoped, bounded by feed size.
  */
-const imageAspectRatioCache = new Map<string, number>();
-const MAX_RATIO_CACHE = 1000; // numbers are tiny; cap only guards multi-hour sessions
+import { createMediaAspectCache } from '@/lib/media-aspect-cache';
+const imageAspectRatioCache = createMediaAspectCache(
+  () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
+);
 function cacheAspectRatio(url: string, ratio: number) {
-  if (imageAspectRatioCache.size >= MAX_RATIO_CACHE) {
-    const oldest = imageAspectRatioCache.keys().next().value;
-    if (oldest !== undefined) imageAspectRatioCache.delete(oldest);
-  }
   imageAspectRatioCache.set(url, ratio);
 }
 
