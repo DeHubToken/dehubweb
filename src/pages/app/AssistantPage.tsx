@@ -2459,7 +2459,7 @@ export default function AssistantPage() {
                             {/* Download button */}
                             <button
                               onClick={() => { if (message.videoUrl) void downloadVideo({ url: message.videoUrl, title: "dehub-video", username: user?.username }); }}
-                              aria-label={t("common.download")}
+                              aria-label={t("postOptions.download")}
                               className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
