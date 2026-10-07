@@ -12,7 +12,7 @@ describe('scheduled stream discovery', () => {
     vi.mocked(apiCall).mockResolvedValue(envelope ? { result: rows } : rows);
     const result = await getUserScheduledStreams('0xabc');
     expect(result.result[0]).toMatchObject({ streamId: 'room-1', tokenId: 42, scheduledAt: rows[0].scheduledFor });
-    expect(apiCall).toHaveBeenCalledWith('/api/live/user/0xabc/scheduled', { params: { futureOnly: false }, requiresAuth: true });
+    expect(apiCall).toHaveBeenCalledWith('/api/live/user/0xabc/scheduled', { params: { futureOnly: 'false' }, requiresAuth: true });
   });
 
   it('retains overdue scheduled streams so their host can still start them', async () => {

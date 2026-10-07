@@ -172,7 +172,7 @@ export async function getUserLiveStreams(address: string): Promise<{ result: Liv
 export async function getUserScheduledStreams(address: string): Promise<{ result: LiveStream[] }> {
   const res = await apiCall<Array<LiveStream & { _id?: string; scheduledFor?: string }> | { result: Array<LiveStream & { _id?: string; scheduledFor?: string }> }>(
     `/api/live/user/${encodeURIComponent(address)}/scheduled`,
-    { params: { futureOnly: false }, requiresAuth: true },
+    { params: { futureOnly: 'false' }, requiresAuth: true },
   );
   const rows = Array.isArray(res) ? res : res?.result || [];
   return { result: rows.map(row => ({ ...row, streamId: row._id || row.streamId, scheduledAt: row.scheduledFor || row.scheduledAt })) };
