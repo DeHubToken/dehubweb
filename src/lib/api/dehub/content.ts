@@ -51,6 +51,8 @@ export interface MintPostParams {
    * then skip the chain step. A past date is ignored and the post goes out now.
    */
   scheduledAt?: string;
+  /** Intended broadcast start; live streams remain available before airing. */
+  scheduledFor?: string;
   /**
    * Makes this call safe to repeat. Send the same key for every attempt at ONE
    * post and a different one per post: re-sending a key that already published
@@ -200,6 +202,9 @@ export async function mintPost(
 
   if (params.scheduledAt) {
     formData.append('scheduledAt', params.scheduledAt);
+  }
+  if (params.scheduledFor) {
+    formData.append('scheduledFor', params.scheduledFor);
   }
 
   // Only sent when it is 'mature': the server treats an absent rating as safe

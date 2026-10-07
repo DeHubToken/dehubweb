@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Paperclip, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2, MonitorPlay } from 'lucide-react';
+import { Paperclip, Calendar, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2, MonitorPlay } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -584,10 +584,11 @@ export function PostActionBar({
           // again — the composer already has them, and the mint provisions the
           // stream, so going live is just posting a live post.
           onClick={onPost}
+          aria-label={isScheduled ? 'Schedule' : isLive ? 'Go Live' : 'Post'}
           disabled={(!canPost && !isLive) || isPosting}
           className={cn(
             "rounded-xl px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
-            isLive 
+            isLive && !isScheduled
               ? "bg-red-500 text-white hover:bg-red-600" 
               : isScheduled
                 ? "bg-amber-500 text-black hover:bg-amber-400"
@@ -599,9 +600,9 @@ export function PostActionBar({
           ) : (
             <>
               <span className="hidden sm:inline">
-                {isLive ? 'Go Live' : isScheduled ? 'Schedule' : 'Post'}
+                {isScheduled ? 'Schedule' : isLive ? 'Go Live' : 'Post'}
               </span>
-              {isLive ? <Radio className="w-4 h-4 sm:hidden" /> : <Send className="w-4 h-4 sm:hidden" />}
+              {isScheduled ? <Calendar className="w-4 h-4 sm:hidden" /> : isLive ? <Radio className="w-4 h-4 sm:hidden" /> : <Send className="w-4 h-4 sm:hidden" />}
             </>
           )}
         </Button>

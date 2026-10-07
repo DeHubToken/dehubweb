@@ -10,6 +10,8 @@ interface ScheduleSheetProps {
   onClose: () => void;
   scheduledDate: Date | null;
   onSchedule: (date: Date | null) => void;
+  title?: string;
+  minimumMinutes?: number;
 }
 
 // Convert 24h to 12h format
@@ -211,7 +213,7 @@ function WheelTimePicker({
 }
 
 
-export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: ScheduleSheetProps) {
+export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, title = 'Schedule Post', minimumMinutes = 0 }: ScheduleSheetProps) {
   const today = startOfToday();
   const [currentMonth, setCurrentMonth] = useState(scheduledDate || today);
   const [selectedDate, setSelectedDate] = useState<Date | null>(scheduledDate);
@@ -224,6 +226,21 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
   const [selectedMinute, setSelectedMinute] = useState(
     scheduledDate ? Math.floor(scheduledDate.getMinutes() / 5) * 5 : 0
   );
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const when = scheduledDate ?? new Date(Date.now() + 60 * 60 * 1000);
+    setCurrentMonth(when);
+    setSelectedDate(scheduledDate);
+    const { hour12, period } = to12Hour(when.getHours());
+    setSelectedHour12(hour12);
+    setSelectedPeriod(period);
+    setSelectedMinute(Math.floor(when.getMinutes() / 5) * 5);
+  }, [isOpen, scheduledDate]);
+
+  const selectedAt = selectedDate ? new Date(selectedDate) : null;
+  selectedAt?.setHours(to24Hour(selectedHour12, selectedPeriod), selectedMinute, 0, 0);
+  const validTime = !!selectedAt && selectedAt.getTime() > Date.now() + minimumMinutes * 60 * 1000;
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
@@ -242,6 +259,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
   };
 
   const handleConfirm = () => {
+    if (!validTime) return;
     if (selectedDate) {
       const date = new Date(selectedDate);
       const hour24 = to24Hour(selectedHour12, selectedPeriod);
@@ -279,14 +297,14 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
               <X className="w-5 h-5 text-zinc-400" />
             </button>
             <DrawerTitle className="text-white font-semibold absolute left-1/2 -translate-x-1/2">
-              Schedule Post
+              {title}
             </DrawerTitle>
             <button
               onClick={handleConfirm}
-              disabled={!selectedDate}
+              disabled={!validTime}
               className={cn(
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all",
-                selectedDate
+                validTime
                   ? "bg-white/10 text-white border border-white/20 hover:bg-white/20"
                   : "bg-white/5 text-zinc-500 border border-white/10 cursor-not-allowed"
               )}
@@ -298,6 +316,8 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
         </DrawerHeader>
 
         <div className="relative pt-3 space-y-2 sm:space-y-2">
+          {minimumMinutes > 0 && <p className="text-center text-xs text-white/60">Choose a time at least {minimumMinutes} minutes from now.</p>}
+          {selectedDate && !validTime && <p role="alert" className="text-center text-xs text-amber-400">Choose a future time{minimumMinutes > 0 ? ` at least ${minimumMinutes} minutes from now` : ''}.</p>}
           {/* Calendar Header */}
           <div className="flex items-center justify-between px-2">
             <button
