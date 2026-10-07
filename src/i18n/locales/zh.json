@@ -6480,6 +6480,8 @@
       "toggleLoop": "切换循环"
     },
     "export": {
+      "gifHint": "循环动画，无声。最长60秒，640像素，15帧每秒。包含你的标志结尾。",
+      "gifTooLong": "将时间轴剪辑至 60 秒或更短，或选择 MP4 或 WebM。",
       "title": "下载",
       "stillDescription": "将当前帧保存为图像。",
       "videoDescription": "将时间轴渲染为视频文件。",

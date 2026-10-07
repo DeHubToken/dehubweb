@@ -6729,6 +6729,8 @@
       "toggleLoop": "Activer/désactiver la boucle"
     },
     "export": {
+      "gifHint": "Animation en boucle sans son. Jusqu'à 60 secondes, 640 pixels et 15 ips. Inclut la fin de votre logo.",
+      "gifTooLong": "Coupez la chronologie à 60 secondes ou moins, ou choisissez MP4 ou WebM.",
       "title": "Télécharger",
       "stillDescription": "Enregistrer l'image actuelle sous forme d'image.",
       "videoDescription": "Rendre votre chronologie en fichier vidéo.",

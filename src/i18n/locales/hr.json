@@ -6362,6 +6362,8 @@
       "toggleLoop": "Prebaci petlju"
     },
     "export": {
+      "gifHint": "Petlja animacija bez zvuka. Do 60 sekundi, 640 piksela i 15 fps. Uključuje završetak s vašim logom.",
+      "gifTooLong": "Skratite vremensku crtu na 60 sekundi ili manje ili odaberite MP4 ili WebM.",
       "title": "Preuzmi",
       "stillDescription": "Spremi trenutni kadar kao sliku.",
       "videoDescription": "Renderiraj svoju vremensku crtu u video datoteku.",

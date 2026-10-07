@@ -6319,6 +6319,8 @@
       "toggleLoop": "Dövrü keçid et"
     },
     "export": {
+      "gifHint": "Səssiz animasiya. 60 saniyəyə qədər, 640 piksel və 15 fps. Loqo sonluğunuzu ehtiva edir.",
+      "gifTooLong": "Vaxt cədvəlini 60 saniyəyə və ya daha az müddətə düzəldin və ya MP4 və ya WebM seçin.",
       "title": "Endir",
       "stillDescription": "Cari kadrı şəkil kimi saxlayın.",
       "videoDescription": "Vaxt xəttinizi video faylına çevirin.",
