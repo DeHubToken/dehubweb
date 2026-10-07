@@ -1499,7 +1499,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
             value: m.id,
             label: m.name,
             detail: m.description,
-            meta: `$${getImageCostUsd(m).toFixed(getImageCostUsd(m) < 0.01 ? 3 : 2)}`,
+            meta: `$${(Math.ceil(getImageCostUsd(m) / 0.001) * 0.001).toFixed(3)}`,
             disabled: (!canEdit && !!reference) || (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[m.id]?.editUsesPlural) || currentImages.length > (CREATOR_FAL_IMAGE_MODELS[m.id]?.maxReferenceImages ?? 4),
             disabledReason: t('creator.cannotEditAttached'),
           };
