@@ -3,7 +3,11 @@ import { pathToFileURL } from 'node:url';
 
 export function normalizeCredentials(tokenValue = '', accountValue = '') {
   const unwrap = value => value.trim().replace(/^(["'])(.*)\1$/s, '$2').trim();
-  const token = unwrap(unwrap(tokenValue).replace(/^Bearer\s+/i, ''));
+  const unwrapped = unwrap(unwrap(tokenValue).replace(/^Bearer\s+/i, ''));
+  const compact = unwrapped.replace(/\s+/g, '');
+  // Cloudflare tokens copied with line wrapping still represent the same credential.
+  // Only remove internal whitespace when the result has the 40-character token shape.
+  const token = /^[A-Za-z0-9_-]{40}$/.test(compact) ? compact : unwrapped;
   const account = unwrap(accountValue);
   if (!/^[A-Za-z0-9_-]+$/.test(token)) {
     const format = !token ? 'empty' : /\bcurl\b/i.test(token) ? 'curl command'

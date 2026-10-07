@@ -16,3 +16,8 @@ test('rejects missing, embedded whitespace and command text without disclosing s
   }
   assert.throws(() => normalizeCredentials(token, 'wrong-account'), /CLOUDFLARE_ID/);
 });
+test('recovers line-wrapped tokens only when the compact token has the expected shape', () => {
+  const wrapped = 'Abcdefghij0123456789\n_Klmnopqrs9876543210';
+  assert.equal(normalizeCredentials(wrapped, account).token, wrapped.replace(/\s/g, ''));
+  assert.throws(() => normalizeCredentials('two ordinary words', account), /CLOUDFLARE_APITOKEN/);
+});
