@@ -93,10 +93,11 @@ interface MobileMenuGridProps {
   searching?: boolean;
   currentPath: string;
   notificationCount: number;
+  messageCount?: number;
   onNavigate: () => void;
 }
 
-export function MobileMenuGrid({ items, currentPath, notificationCount, onNavigate }: MobileMenuGridProps) {
+export function MobileMenuGrid({ items, currentPath, notificationCount, messageCount, onNavigate }: MobileMenuGridProps) {
   const { t } = useTranslation();
   const onHome = isHomePath(currentPath);
 
@@ -114,7 +115,7 @@ export function MobileMenuGrid({ items, currentPath, notificationCount, onNaviga
         iconKey={item.themedIcon ?? NAV_ICON_KEYS[item.label]}
         glyph={item.icon}
         active={active}
-        badge={item.path === '/app/notifications' ? notificationCount : undefined}
+        badge={item.path === '/app/notifications' ? notificationCount : item.path === '/app/messages' ? messageCount : undefined}
       />
     );
 

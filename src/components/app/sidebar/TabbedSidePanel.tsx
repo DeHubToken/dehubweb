@@ -5,6 +5,7 @@ import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLead
 import { SidebarChat } from './SidebarChat';
 import { SidebarNewMembers } from './SidebarNewMembers';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 
 type TabType = 'leaderboard' | 'follow' | 'newMembers' | 'chat';
 
@@ -13,6 +14,7 @@ let persistedTab: TabType = 'chat';
 
 export const TabbedSidePanel = memo(function TabbedSidePanel() {
   const { isAuthenticated } = useAuth();
+  const publicUnread = usePublicChatUnreadCount();
   const [activeTab, setActiveTab] = useState<TabType>(persistedTab);
   const leaderboardRef = useRef<SidebarLeaderboardHandle>(null);
   // Chat opens on the first desktop visit. After switching panels, keep it
@@ -72,6 +74,11 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
                 <div className="tab-hover-bg absolute inset-0 bg-gradient-to-b from-zinc-800/40 to-transparent opacity-0 transition-opacity" />
               )}
               <Icon className="w-4 h-4 relative z-10" />
+              {tab.id === 'chat' && publicUnread > 0 && (
+                <span data-public-chat-unread className="absolute top-1 right-2 z-20 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center leading-none">
+                  {publicUnread > 99 ? '99+' : publicUnread}
+                </span>
+              )}
               {/* Hover label — drops below the icon row, so the panel's
                   overflow-hidden never clips it. */}
               <span

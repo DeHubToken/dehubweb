@@ -22,6 +22,7 @@ import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 import { openStageModal } from '@/contexts/StageContext';
 import { useTotalUnreadCount } from '@/hooks/use-messages';
+import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useTranslation } from 'react-i18next';
@@ -148,6 +149,7 @@ export function MobileBottomNav() {
   );
 
   const dmUnread = useTotalUnreadCount();
+  const messagesUnread = dmUnread + usePublicChatUnreadCount();
   // Same badge sources as DesktopSidebar — keep the two navs in sync
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
@@ -309,9 +311,9 @@ export function MobileBottomNav() {
                           )}
                         />
                       )}
-                      {item.label === 'Messages' && dmUnread > 0 && (
+                      {item.label === 'Messages' && messagesUnread > 0 && (
                         <span className="absolute top-1.5 right-1 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
-                          {dmUnread > 99 ? '99+' : dmUnread}
+                          {messagesUnread > 99 ? '99+' : messagesUnread}
                         </span>
                       )}
                   </NavLink>
