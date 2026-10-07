@@ -240,7 +240,7 @@ export async function rotateWallet(
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({} as Record<string, unknown>));
     const code = errorData.code as string | undefined;
-    if (code === 'WALLET_NOT_LINKED' || code === 'WALLET_LINK_AMBIGUOUS') {
+    if (code === 'WALLET_NOT_LINKED') {
       throw new WalletNotLinkedError((errorData.message as string) || undefined);
     }
     throw new Error(

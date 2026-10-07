@@ -75,9 +75,12 @@ describe('rotateWallet', () => {
     await expect(rotate()).rejects.toBeInstanceOf(WalletNotLinkedError);
   });
 
-  it('raises WalletNotLinkedError for an ambiguous link', async () => {
+  it('does not allow an ambiguous profile link to fall through to signup', async () => {
     mockFetch({ code: 'WALLET_LINK_AMBIGUOUS', message: 'Linked to more than one account.' }, 409);
-    await expect(rotate()).rejects.toBeInstanceOf(WalletNotLinkedError);
+    const error = await rotate().catch((e) => e);
+    expect(error).toBeInstanceOf(Error);
+    expect(error).not.toBeInstanceOf(WalletNotLinkedError);
+    expect(error.message).toMatch(/more than one account/);
   });
 
   it('keeps other refusals distinct — the destination already has an account', async () => {
