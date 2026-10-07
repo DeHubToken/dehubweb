@@ -1,4 +1,5 @@
-import { useSyncExternalStore } from 'react';
+import { useContext, useSyncExternalStore } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
 export function createVisualActivity() {
   let foreground = true;
@@ -37,8 +38,11 @@ export function createVisualActivity() {
 }
 
 export const visualActivity = createVisualActivity();
-export const useFeedPlaybackAllowed = () =>
-  useSyncExternalStore(visualActivity.subscribe, visualActivity.isFeedPlaybackAllowed, () => true);
+export const useFeedPlaybackAllowed = () => {
+  const surfaceActive = useContext(CachedPageActiveContext);
+  const appActive = useSyncExternalStore(visualActivity.subscribe, visualActivity.isFeedPlaybackAllowed, () => true);
+  return surfaceActive && appActive;
+};
 export const useCallInProgress = () =>
   useSyncExternalStore(visualActivity.subscribe, visualActivity.isCallBusy, () => false);
 
