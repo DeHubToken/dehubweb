@@ -6746,6 +6746,15 @@
       "thisPage": "Leli khasi kuphela",
       "exporting": "Kulungiswa ikhasi {{current}} kwangu-{{total}}…"
     },
+    "audioTools": {
+      "normalize": "Yenza ivolumu ibe evamile",
+      "denoise": "Nciphisa umsindo",
+      "voice": "Thuthukisa izwi",
+      "working": "Iphrosesa umsindo... {{percent}}%",
+      "done": "Umsindo ophrosesiwe ufakiwe. Lungisa okokuqala.",
+      "failed": "Ayikwazanga ukuphrosesa lo msindo. Okwasekuqaleni akushintshiwe.",
+      "hint": "Phrosesa iziqeshana ezifika emizuzwini engu-10. Ukunciphisa umsindo kusebenza kangcono kunomsindo wesizinda ozinzile."
+    },
     "captions": {
       "action": "Imibhalo engezansi ezenzakalelayo",
       "working": "Kuyalalelwa… {{percent}}%",

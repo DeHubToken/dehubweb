@@ -6635,6 +6635,15 @@
       "thisPage": "Wannan shafin kawai",
       "exporting": "Ana shirya shafi {{current}} cikin {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalize girma",
+      "denoise": "Rage hayaniya",
+      "voice": "Inganta murya",
+      "working": "Sautin sarrafawa... {{percent}}%",
+      "done": "Sautin da aka sarrafa ya kara. Undo ya dawo da asali.",
+      "failed": "Ba zan iya aiwatar da wannan sauti ba. Asali ba shi da canji.",
+      "hint": "Shirya shirye-shiryen bidiyo har zuwa minti 10. Sauti rage aiki mafi kyau tare da m baya amo."
+    },
     "captions": {
       "action": "Rubutun ƙasa na atomatik",
       "working": "Ana saurare… {{percent}}%",

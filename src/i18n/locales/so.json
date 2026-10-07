@@ -6648,6 +6648,15 @@
       "thisPage": "Boggan oo kaliya",
       "exporting": "Waxaa la diyaarinayaa bogga {{current}} ee {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Caadi mugga",
+      "denoise": "Hoos u dhig buuqa",
+      "voice": "Kordhinta codka",
+      "working": "Codkii geeddi-socodka... {{percent}}%",
+      "done": "Cod laga baaraandegay ayaa lagu daray. Undo waxay soo celisaa asalka.",
+      "failed": "Ma shaqeyn karo codkan. Asalka asalka ah waa mid aan la beddelin.",
+      "hint": "Fiidiyowyada geeddi-socodka ilaa 10 daqiiqo. Hoos u dhaca dhawaaqa wuxuu si fiican ula shaqeeyaa dhawaaqa asalka ah ee joogtada ah."
+    },
     "captions": {
       "action": "Qoraal toos ah",
       "working": "Waa la dhageysanayaa… {{percent}}%",

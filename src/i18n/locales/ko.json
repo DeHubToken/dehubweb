@@ -6739,6 +6739,15 @@
       "thisPage": "이 페이지만",
       "exporting": "{{total}}페이지 중 {{current}}페이지 렌더링 중…"
     },
+    "audioTools": {
+      "normalize": "음량 정상화",
+      "denoise": "소음 감소",
+      "voice": "목소리 개선",
+      "working": "소리 처리 중... {{percent}} %",
+      "done": "처리된 사운드가 추가되었습니다. 실행 취소하면 원본이 복원됩니다.",
+      "failed": "이 소리를 처리할 수 없습니다. 원본은 변경되지 않습니다.",
+      "hint": "최대 10분까지 클립을 처리합니다. 소음 감소는 안정적인 배경 소음과 가장 잘 작동합니다."
+    },
     "captions": {
       "action": "자동 자막",
       "working": "듣는 중… {{percent}}%",

@@ -7000,6 +7000,15 @@
       "thisPage": "Cette page uniquement",
       "exporting": "Rendu de la page {{current}} sur {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normaliser le volume",
+      "denoise": "Réduire le bruit",
+      "voice": "Améliorer la voix",
+      "working": "Traitement du son... {{percent}}%",
+      "done": "Son traité ajouté. L'annulation restaure l'original.",
+      "failed": "Impossible de traiter ce son. L'original est inchangé.",
+      "hint": "Traitez les clips jusqu'à 10 minutes. La réduction du bruit fonctionne mieux avec un bruit de fond constant."
+    },
     "captions": {
       "action": "Sous-titres auto",
       "working": "Écoute… {{percent}} %",

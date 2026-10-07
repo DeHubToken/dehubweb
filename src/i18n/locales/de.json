@@ -6743,6 +6743,15 @@
       "thisPage": "Nur diese Seite",
       "exporting": "Seite {{current}} von {{total}} wird gerendert…"
     },
+    "audioTools": {
+      "normalize": "Lautstärke normalisieren",
+      "denoise": "Geräuschreduzierung",
+      "voice": "Stimme verbessern",
+      "working": "Ton wird verarbeitet... {{percent}}%",
+      "done": "Verarbeiteter Ton hinzugefügt. Rückgängig stellt das Original wieder her.",
+      "failed": "Dieses Geräusch konnte nicht verarbeitet werden. Das Original ist unverändert.",
+      "hint": "Bearbeiten Sie Clips bis zu 10 Minuten. Die Rauschunterdrückung funktioniert am besten bei stetigen Hintergrundgeräuschen."
+    },
     "captions": {
       "action": "Automatische Untertitel",
       "working": "Hört zu… {{percent}} %",

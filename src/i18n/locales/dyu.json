@@ -6534,6 +6534,15 @@
       "thisPage": "Ɲɛ in dɔrɔn",
       "exporting": "Ɲɛ {{current}} {{total}} la bɛ labɛn…"
     },
+    "audioTools": {
+      "normalize": "Fanga min be mɔgɔ la, o ye ka mɔgɔ lafili",
+      "denoise": "Ka mankan nɔgɔya",
+      "voice": "Ka dɔ fara a ka fɔta kan",
+      "done": "O kɔ, a ye dɔ fara a ka fɔta kan.",
+      "failed": "O mankan nin tɛ se ka yɛlɛma. Nka, a daminɛ na, a tun tɛ yɛlɛma.",
+      "hint": "Aw ye a to a ka maga aw la miniti 10 ɲɔgɔn. Ni mankan be bɔ yɔrɔ min na, a ka fisa a ka bɔ yɔrɔ min na.",
+      "working": "Kan bɛ labɛn... {{percent}}%"
+    },
     "captions": {
       "action": "Sɛbɛnni yɛrɛma",
       "working": "Lamɛnni bɛ taa… {{percent}}%",
