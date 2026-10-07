@@ -54,11 +54,11 @@ export function DhbAmount({ amount, currency, iconClassName, className }: DhbAmo
  * amount is already laid out by the surrounding markup and only the ticker
  * word needs replacing.
  */
-export function DhbCoin({ className }: { className?: string }) {
+export function DhbCoin({ className, label = 'DHB' }: { className?: string; label?: string }) {
   return (
     <img
       src={dehubCoin}
-      alt="DHB"
+      alt={label}
       className={cn('inline-block h-[1.15em] w-[1.15em] shrink-0 align-[-0.2em]', className)}
       loading="lazy"
     />
