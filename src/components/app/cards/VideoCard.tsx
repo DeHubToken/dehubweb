@@ -33,6 +33,7 @@ import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useVideoScrubZone } from '@/hooks/use-video-scrub-zone';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
+import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
 import { useSkipSegments } from '@/lib/skip-segments';
 import { useVideoSegments, segmentAt } from '@/hooks/use-video-segments';
 import { SEGMENT_LABELS } from '@/lib/api/video-segments';
@@ -857,6 +858,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // restart the clip (lib/video-handoff).
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const transcodingStatus = useVideoProcessingStatus(video.id, video.transcodingStatus, surfaceActive && playbackAllowed, containerRef);
   const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const scrubbingRef = useRef(false);
   const isHoveringRef = useRef(false);
@@ -1045,7 +1047,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Transcode still running or dead — videoUrl is the optimistic CDN guess
   // written at upload time, and the file doesn't exist yet (or ever) until
   // this clears. Autoplay/tap-to-play must not attempt it.
-  const isVideoNotReady = video.transcodingStatus === 'pending' || video.transcodingStatus === 'on' || video.transcodingStatus === 'failed';
+  const isVideoNotReady = transcodingStatus === 'pending' || transcodingStatus === 'on' || transcodingStatus === 'failed';
 
   // Register with playback manager and setup IntersectionObserver (stable — no isPlaying dep)
   useEffect(() => {
@@ -1636,7 +1638,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const { attachSlot: attachVideoSlot, isActive: ownsVideoElement, takeOver: takeVideoElement } = useHandoffVideo({
     videoRef,
     handoffKey: video.id,
-    src: mediaAttached ? video.videoUrl : undefined,
+    src: mediaAttached && !isVideoNotReady ? video.videoUrl : undefined,
     poster: thumbnail || undefined,
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
@@ -2300,7 +2302,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   </Suspense>
                 </div>
               </div>
-            ) : video.transcodingStatus === 'failed' ? (
+            ) : transcodingStatus === 'failed' ? (
               /* Transcode job failed server-side — videoUrl was written
                  optimistically at upload time and the file was never actually
                  produced, so a player here would just 404 forever. */
@@ -2312,7 +2314,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   <TranscodeRetry tokenId={video.id} isOwner={isOwnPost} />
                 </div>
               </div>
-            ) : (video.transcodingStatus === 'pending' || video.transcodingStatus === 'on') ? (
+            ) : (transcodingStatus === 'pending' || transcodingStatus === 'on') ? (
               /* Still transcoding — same optimistic videoUrl, but recoverable
                  once the job finishes, unlike the 'failed' branch above. */
               <div className="absolute inset-0 overflow-hidden bg-black">

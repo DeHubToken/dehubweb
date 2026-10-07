@@ -16,6 +16,8 @@ import { AlertTriangle, Loader2, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { retryTranscode } from '@/lib/api/dehub/content';
+import { useQueryClient } from '@tanstack/react-query';
+import { markVideoProcessing } from '@/hooks/use-video-processing-status';
 
 interface TranscodeRetryProps {
   tokenId: number | string;
@@ -25,14 +27,15 @@ interface TranscodeRetryProps {
 
 export function TranscodeRetry({ tokenId, isOwner }: TranscodeRetryProps) {
   const { t } = useTranslation();
+  const processingClient = useQueryClient();
   const [state, setState] = useState<'idle' | 'sending' | 'queued'>('idle');
 
   const handleRetry = async () => {
     setState('sending');
     try {
       await retryTranscode(tokenId);
-      // The post itself will move to 'pending' on the next feed read; until
-      // then this stands in for it, so the button cannot be pressed twice.
+      markVideoProcessing(processingClient, tokenId);
+      // The shared status query follows this accepted retry through completion.
       setState('queued');
       toast.success(t('videoPlayer.retryQueued'));
     } catch (error: any) {

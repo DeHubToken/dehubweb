@@ -25,6 +25,7 @@ import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useTranslation } from 'react-i18next';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { TranscodeRetry } from '@/components/app/cards/TranscodeRetry';
+import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
 
 interface VideoSlideProps {
   short: ShortVideo;
@@ -97,6 +98,7 @@ export const VideoSlide = memo(function VideoSlide({
   const videoRef = useRef<HTMLVideoElement>(null);
   const inPiP = usePictureInPicture(videoRef);
   const isActive = (activeSlide && playbackAllowed) || (inPiP && !visualActivity.isCallBusy());
+  const transcodingStatus = useVideoProcessingStatus(short.id, short.transcodingStatus, isActive);
   // Native media play requests may settle after React has already advanced the
   // carousel. Keep the latest ownership state available to those callbacks so
   // a slide that has left the active position can never restart itself.
@@ -202,7 +204,7 @@ export const VideoSlide = memo(function VideoSlide({
     } else {
       video.pause();
     }
-  }, [isActive]);
+  }, [isActive, transcodingStatus]);
 
   const handlePlay = useCallback(() => {
     // Safari can complete an older play() request after pause(). Treat React's
@@ -436,7 +438,7 @@ export const VideoSlide = memo(function VideoSlide({
           the gesture up, because one gesture cannot mean two things. */}
       <div className="absolute inset-0 z-[2]" {...tapGestures}>
         {short.imageUrls?.length ? <ShortsPhotoPager images={short.imageUrls} /> : null}
-        {short.transcodingStatus === 'failed' ? (
+        {transcodingStatus === 'failed' ? (
           /* Transcode job failed server-side — videoUrl was written
              optimistically at upload time and the file was never actually
              produced, so a player here would just sit on a dead src. */
@@ -451,7 +453,7 @@ export const VideoSlide = memo(function VideoSlide({
               <TranscodeRetry tokenId={short.id} isOwner={false} />
             </div>
           </div>
-        ) : short.transcodingStatus === 'pending' || short.transcodingStatus === 'on' ? (
+        ) : transcodingStatus === 'pending' || transcodingStatus === 'on' ? (
           /* Still transcoding — same optimistic videoUrl, but recoverable
              once the job finishes, unlike the 'failed' branch above. */
           <div className="relative w-full h-full bg-zinc-900">
