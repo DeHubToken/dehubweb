@@ -16,6 +16,12 @@
 // defaulted per session so the choice survives a reload, and read at call time
 // rather than cached in a module constant so a change applies without a refresh.
 const AUTO_TRANSLATE_KEY = 'dehub-auto-translate';
+const listeners = new Set<() => void>();
+
+export function subscribeAutoTranslate(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => { listeners.delete(listener); };
+}
 
 export function autoTranslateEnabled(): boolean {
   try {
@@ -31,4 +37,5 @@ export function setAutoTranslateEnabled(enabled: boolean): void {
   } catch {
     // Storage disabled; the setting just will not persist.
   }
+  listeners.forEach((listener) => listener());
 }

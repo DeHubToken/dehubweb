@@ -1,22 +1,29 @@
-import { fireEvent, render, screen, cleanup } from '@testing-library/react';
+import { fireEvent, render, screen, cleanup, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { VideoSubtitleOverlay } from '@/components/app/video/VideoSubtitleOverlay';
 
-const fixture = vi.hoisted(() => ({ phone: true, corrections: new Map(), request: vi.fn() }));
+const fixture = vi.hoisted(() => ({ phone: true, dub: false, appLang: 'en', sourceLang: '', corrections: new Map(), request: vi.fn(), lookup: vi.fn(), dubLookup: vi.fn(), engine: vi.fn() }));
 vi.mock('@/hooks/use-touch-device', () => ({ useIsTouchDevice: () => fixture.phone }));
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key, i18n: { language: fixture.appLang } }) }));
 vi.mock('@/hooks/use-video-transcript', () => ({
-  useVideoTranscript: () => ({ status: 'ready', transcript: null, inFlight: false, start: { mutate: fixture.request } }),
-  useTranslatedSegments: () => ({ segments: null, status: 'ready', request: fixture.request }),
+  useVideoTranscript: (id: number, enabled: boolean) => {
+    fixture.lookup(id, enabled);
+    return { status: 'ready', transcript: fixture.sourceLang ? { id: 'transcript', source_lang: fixture.sourceLang, segments: [] } : null, inFlight: false, start: { mutate: fixture.request } };
+  },
+  useTranslatedSegments: (id: string, lang: string, enabled: boolean) => {
+    fixture.dubLookup(id, lang, enabled);
+    return { segments: null, status: 'ready', request: fixture.request };
+  },
 }));
 vi.mock('@/hooks/use-transcript-corrections', () => ({
   useTranscriptCorrections: () => ({ accepted: fixture.corrections }),
   applyCorrections: (segments: unknown) => segments,
 }));
 vi.mock('@/hooks/dub-preference', () => ({
-  useDubPreference: () => ({ on: false, lang: null, setDub: fixture.request }),
-  useSpeechVoices: () => [], pickVoice: () => null, primeSpeech: vi.fn(),
+  useDubPreference: () => ({ on: fixture.dub, lang: null, setDub: fixture.request }),
+  useSpeechVoices: () => [], pickVoice: (_voices: unknown, lang: string | null) => lang ? { lang } : null, primeSpeech: vi.fn(),
 }));
+vi.mock('@/components/app/video/VoiceDubEngine', () => ({ default: () => { fixture.engine(); return null; } }));
 vi.mock('@/lib/wallet-unlock-flow', () => ({ useWalletUnlockPrompt: () => false }));
 vi.mock('@/lib/scroll-freeze-watchdog', () => ({ settleAfterOverlayClose: vi.fn() }));
 vi.mock('@/lib/overlay-open', () => ({ OverlayOpenTracker: () => null }));
@@ -30,8 +37,14 @@ const finger = { identifier: 1, clientX: 30, clientY: 30 };
 describe('subtitle menu on phones', () => {
   beforeEach(() => {
     fixture.phone = true;
+    fixture.dub = false;
+    fixture.appLang = 'en';
+    fixture.sourceLang = '';
     localStorage.clear();
     fixture.request.mockClear();
+    fixture.lookup.mockClear();
+    fixture.dubLookup.mockClear();
+    fixture.engine.mockClear();
   });
   afterEach(cleanup);
 
@@ -73,5 +86,30 @@ describe('subtitle menu on phones', () => {
     fixture.phone = false;
     fireEvent.click(setup());
     expect(localStorage.getItem('video-subs:enabled')).toBe('1');
+  });
+
+  it('automatically dubs audible foreign-language video into the app language without enabling captions', async () => {
+    fixture.dub = true;
+    fixture.appLang = 'es';
+    fixture.sourceLang = 'en';
+    const video = document.createElement('video');
+    Object.defineProperty(video, 'paused', { value: false });
+    render(<VideoSubtitleOverlay tokenId={123} videoRef={{ current: video }} />);
+    await waitFor(() => expect(fixture.engine).toHaveBeenCalled());
+    expect(fixture.dubLookup).toHaveBeenCalledWith('transcript', 'es', true);
+    expect(localStorage.getItem('video-subs:enabled')).toBe('0');
+  });
+
+  it('does not fetch a transcript or dub a muted card', () => {
+    fixture.dub = true;
+    fixture.appLang = 'es';
+    fixture.sourceLang = 'en';
+    const video = document.createElement('video');
+    Object.defineProperty(video, 'paused', { value: false });
+    video.muted = true;
+    render(<VideoSubtitleOverlay tokenId={123} videoRef={{ current: video }} />);
+    expect(fixture.lookup).not.toHaveBeenCalledWith(123, true);
+    expect(fixture.dubLookup).not.toHaveBeenCalledWith('transcript', 'es', true);
+    expect(fixture.engine).not.toHaveBeenCalled();
   });
 });
