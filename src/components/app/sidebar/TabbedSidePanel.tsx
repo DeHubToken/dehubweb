@@ -5,21 +5,20 @@ import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLead
 import { SidebarChat } from './SidebarChat';
 import { SidebarNewMembers } from './SidebarNewMembers';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 
 type TabType = 'leaderboard' | 'follow' | 'newMembers' | 'chat';
 
 // Persist tab state across remounts so layout changes don't reset it
-let persistedTab: TabType = 'leaderboard';
+let persistedTab: TabType = 'chat';
 
 export const TabbedSidePanel = memo(function TabbedSidePanel() {
   const { isAuthenticated } = useAuth();
+  const publicUnread = usePublicChatUnreadCount();
   const [activeTab, setActiveTab] = useState<TabType>(persistedTab);
   const leaderboardRef = useRef<SidebarLeaderboardHandle>(null);
-  // Mount the chat panel only after its tab is first opened: SidebarChat opens a
-  // socket.io connection + fetches rooms/messages on mount, which used to fire at
-  // boot for a CSS-hidden panel and starve the feed request (LCP audit 7/14).
-  // (A duplicate useLiveChatRooms/Presence pair lived here too, feeding an unused
-  // onlineCount — removed for the same reason.)
+  // Chat opens on the first desktop visit. After switching panels, keep it
+  // mounted for this session so its messages and scroll position survive.
   const [chatOpened, setChatOpened] = useState(persistedTab === 'chat');
   // Same reasoning as chat: the other panels are CSS-hidden rather than
   // unmounted, so anything mounted here queries at boot whether or not it is on
@@ -75,6 +74,11 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
                 <div className="tab-hover-bg absolute inset-0 bg-gradient-to-b from-zinc-800/40 to-transparent opacity-0 transition-opacity" />
               )}
               <Icon className="w-4 h-4 relative z-10" />
+              {tab.id === 'chat' && publicUnread > 0 && (
+                <span data-public-chat-unread className="absolute top-1 right-2 z-20 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center leading-none">
+                  {publicUnread > 99 ? '99+' : publicUnread}
+                </span>
+              )}
               {/* Hover label — drops below the icon row, so the panel's
                   overflow-hidden never clips it. */}
               <span

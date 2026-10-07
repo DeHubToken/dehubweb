@@ -5,7 +5,7 @@
  * Public chat is the one room on DeHub that anybody can post in, and until now
  * it was the one feed that could never reach you: no unread badge, no
  * notification, nothing. If you were not looking at the panel it may as well
- * have been off. This is the opt-in that fixes that, and the two rules that
+ * have been off. These alerts are on by default, with two rules that
  * keep it survivable.
  *
  * **One card, not one per message.** Messages are buffered while the tab is in
@@ -42,6 +42,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { recordPublicChatUnread } from '@/hooks/use-public-chat-unread';
 import {
   getStoredEnabled,
   useBrowserNotifications,
@@ -82,23 +83,21 @@ const NOTIFICATION_TAG = 'dehub-public-chat';
 const PUBLIC_CHAT_ROUTE = '/app/messages';
 
 /**
- * The chat stack is loaded only once the reader has opted in.
+ * Load the chat stack after authentication to track unread messages and alerts.
  *
  * This hook mounts with the app shell, so a static import would put the
  * socket.io client and the whole livechat module on the boot path for
- * everybody — 50 KB parsed before first paint, for a feature that is off by
- * default. Anyone who has it on is a click away from opening the chat panel,
- * which loads the same modules anyway.
+ * everybody. Keep it deferred until the app has a signed-in account.
  */
 async function loadChatStack() {
-  const [{ getLiveChatRooms }, socket, { socketMsgToLocal }, { isAssistantAddress }] =
+  const [{ getLiveChatRooms, getLiveChatMessages }, socket, { socketMsgToLocal }, { isAssistantAddress }] =
     await Promise.all([
       import('@/lib/api/dehub/livechat'),
       import('@/lib/api/dehub/socket'),
       import('@/hooks/use-livechat'),
       import('@/lib/assistant'),
     ]);
-  return { getLiveChatRooms, socket, socketMsgToLocal, isAssistantAddress };
+  return { getLiveChatRooms, getLiveChatMessages, socket, socketMsgToLocal, isAssistantAddress };
 }
 
 /** True when a card raised right now would actually be displayed. */
@@ -116,10 +115,7 @@ export function usePublicChatAlerts() {
   const { isAuthenticated, walletAddress, user } = useAuth();
   const alertsOn = usePublicChatAlertsEnabled();
   const perHour = usePublicChatAlertsPerHour();
-  // The master browser-notifications switch. Public chat rides the same
-  // permission and the same delivery path, so with it off there is nothing to
-  // subscribe for — don't hold a socket open to buffer messages nobody can be
-  // told about.
+  // Alert preferences control delivery; unread tracking stays on independently.
   const browserNotificationsOn = useStoredEnabled();
   const { showNotification } = useBrowserNotifications();
 
@@ -244,10 +240,11 @@ export function usePublicChatAlerts() {
   }, [alertsOn, discard]);
 
   useEffect(() => {
-    if (!alertsOn || !browserNotificationsOn || !isAuthenticated) return;
+    if (!isAuthenticated || !walletAddress) return;
 
     let cancelled = false;
     let unsubscribe: (() => void) | null = null;
+    let unsubscribeJoined: (() => void) | null = null;
     let leave: (() => void) | null = null;
 
     const me = walletAddress?.toLowerCase() || '';
@@ -269,16 +266,24 @@ export function usePublicChatAlerts() {
       if (!roomId || cancelled) return;
 
       const { socket, socketMsgToLocal, isAssistantAddress } = chat;
-      socket.joinRoom(roomId);
-      leave = () => socket.leaveRoom(roomId!);
-
-      unsubscribe = socket.onLiveChatMessage(roomId, (raw) => {
-        // Buffer only what the reader cannot already see. A visible tab is a
-        // reader who is either in the room or one click from it.
-        if (!document.hidden) return;
-
+      const track = (raw: unknown) => {
         const msg = socketMsgToLocal(raw, roomId!);
-        if (!msg) return;
+        if (!msg) return null;
+        const added = recordPublicChatUnread(me, {
+          id: msg.id,
+          createdAt: msg.created_at,
+          sender: msg.sender_address || '',
+          excluded: isAssistantAddress(msg.sender_address || '') || msg.message_type === 'system',
+        });
+        return added ? msg : null;
+      };
+      // Reconnect history and the first REST window fill gaps while the app was closed.
+      unsubscribeJoined = socket.onRoomJoined(roomId, (data) => {
+        if (!cancelled) data.messages?.forEach(track);
+      });
+      unsubscribe = socket.onLiveChatMessage(roomId, (raw) => {
+        const msg = track(raw);
+        if (!msg || !alertsOn || !browserNotificationsOn || !document.hidden) return;
 
         const from = msg.sender_address?.toLowerCase() || '';
         if (from && from === me) return;
@@ -319,11 +324,17 @@ export function usePublicChatAlerts() {
           timerRef.current = setTimeout(() => flushRef.current(), FLUSH_DELAY_MS);
         }
       });
+      socket.joinRoom(roomId);
+      leave = () => socket.leaveRoom(roomId!);
+      void chat.getLiveChatMessages(roomId, { limit: 100 }).then((messages) => {
+        if (!cancelled) messages.forEach(track);
+      }).catch(() => { /* socket history can still catch up */ });
     })();
 
     return () => {
       cancelled = true;
       unsubscribe?.();
+      unsubscribeJoined?.();
       leave?.();
       discard();
     };
