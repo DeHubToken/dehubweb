@@ -54,4 +54,29 @@ describe('browser media recovery', () => {
     expect(video.load).not.toHaveBeenCalled();
     detach();
   });
+
+  it('pauses a late browser start after the user canceled it', async () => {
+    const { video, detach } = setup();
+    let finish!: () => void;
+    video.play = vi.fn(() => new Promise<void>(resolve => { finish = resolve; }));
+    await requestVideoPlayback(video);
+    cancelVideoPlayback(video);
+    finish();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(video.pause).toHaveBeenCalledTimes(1);
+    detach();
+  });
+
+  it('does not let an old play promise pause a new owner', async () => {
+    const { video, detach } = setup();
+    let finish!: () => void;
+    video.play = vi.fn(() => new Promise<void>(resolve => { finish = resolve; }));
+    await requestVideoPlayback(video);
+    detach();
+    const detachNext = attachPlaybackRecovery(video, { allowed: () => true, changed: vi.fn(), postId: '42', component: 'Post' });
+    finish();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(video.pause).not.toHaveBeenCalled();
+    detachNext();
+  });
 });

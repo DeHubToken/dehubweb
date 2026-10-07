@@ -21,7 +21,12 @@ export function attachPlaybackRecovery(video: HTMLVideoElement, options: {
         // the new resource is seekable. Live streams stay at their live edge.
         if (position > 0 && Number.isFinite(duration) && position < duration) video.currentTime = position;
       }
-      if (allowed()) await video.play();
+      if (allowed()) {
+        await video.play();
+        // A late browser play promise must honor pause/scroll-away, while an
+        // old owner must never pause the new owner's adopted element.
+        if (!allowed() && recoveries.get(video) === recovery) video.pause();
+      }
     },
     pause: () => video.pause(),
     report: (event, detail) => {
