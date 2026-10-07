@@ -38,6 +38,21 @@ import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 import { PagesStrip } from "./PagesStrip";
 import { audioGainAt } from "@/lib/editor/audioEnvelope";
+import { leaseMedia } from "@/lib/editor/mediaLeases";
+
+function cloneMedia<T extends HTMLMediaElement>(source: T): T {
+  const copy = source.cloneNode(false) as T;
+  copy.muted = true;
+  copy.preload = "auto";
+  copy.src = source.src;
+  copy.load();
+  return copy;
+}
+function releaseMedia(source: HTMLMediaElement) {
+  source.pause();
+  source.removeAttribute("src");
+  source.load();
+}
 
 const MEDIA_DRAG_MIME = "application/x-dehub-media";
 /** Snap distance in screen pixels. */
@@ -110,8 +125,14 @@ export function Compositor() {
   // ── Element pools ──
   const videoPool = useRef<Map<string, HTMLVideoElement>>(new Map());
   const audioPool = useRef<Map<string, HTMLAudioElement>>(new Map());
+  const extraVideos = useRef<Map<string, HTMLVideoElement>>(new Map());
+  const extraAudio = useRef<Map<string, HTMLAudioElement>>(new Map());
   const imagePool = useRef<Map<string, HTMLImageElement>>(new Map());
-  const sources = useMemo(() => ({ videos: videoPool.current, images: imagePool.current }), []);
+  const sources = useMemo(() => ({ videos: videoPool.current, images: imagePool.current, videosByClip: new Map<string, HTMLVideoElement>() }), []);
+  useEffect(() => () => {
+    extraVideos.current.forEach(releaseMedia);
+    extraAudio.current.forEach(releaseMedia);
+  }, []);
 
   // Provision elements when media changes.
   useEffect(() => {
@@ -161,6 +182,8 @@ export function Compositor() {
       // Pause any media playing.
       for (const v of videoPool.current.values()) v.pause();
       for (const a of audioPool.current.values()) a.pause();
+      for (const v of extraVideos.current.values()) v.pause();
+      for (const a of extraAudio.current.values()) a.pause();
     }
   }, [isPlaying]);
 
@@ -212,16 +235,16 @@ export function Compositor() {
       );
 
       // Sync video/audio media.
-      const activeVideoMediaIds = new Set<string>();
-      const activeAudioMediaIds = new Set<string>();
+      const activeVideos = leaseMedia<HTMLVideoElement>(renderOps.flatMap(op => op.clip.kind === "video" ? [op.clip] : []), videoPool.current, extraVideos.current, cloneMedia, releaseMedia);
+      const activeAudio = leaseMedia<HTMLAudioElement>(active.flatMap(clip => clip.kind === "audio" ? [clip] : []), audioPool.current, extraAudio.current, cloneMedia, releaseMedia);
+      sources.videosByClip = activeVideos;
 
       // Video sync uses render-ops so incoming pre-roll clips also seek to the right frame.
       for (const op of renderOps) {
         if (op.clip.kind !== "video") continue;
         const mc = op.clip as MediaClip;
-        const v = videoPool.current.get(mc.mediaId);
+        const v = activeVideos.get(mc.id);
         if (!v) continue;
-        activeVideoMediaIds.add(mc.mediaId);
         const track = state.tracks.find((tr) => tr.id === mc.trackId);
         v.muted = !!track?.muted || !!track?.hidden || !!mc.hidden || !state.isPlaying;
         v.volume = Math.min(1, audioGainAt(mc, time));
@@ -244,10 +267,9 @@ export function Compositor() {
         const mc = c as MediaClip;
         const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
         const localT = mc.trimIn + (time - mc.start) * speed;
-        const a = audioPool.current.get(mc.mediaId);
+        const a = activeAudio.get(mc.id);
         const track = state.tracks.find((tr) => tr.id === mc.trackId);
         if (!a) continue;
-        activeAudioMediaIds.add(mc.mediaId);
         a.muted = !!track?.muted || !!track?.hidden || !!mc.hidden;
         a.volume = Math.min(1, audioGainAt(mc, time));
         if (state.isPlaying) {
@@ -261,11 +283,13 @@ export function Compositor() {
       }
 
       // Pause inactive videos/audios.
-      for (const [id, v] of videoPool.current) {
-        if (!activeVideoMediaIds.has(id) && !v.paused) v.pause();
+      const playingVideos = new Set(activeVideos.values());
+      const playingAudio = new Set(activeAudio.values());
+      for (const v of videoPool.current.values()) {
+        if (!playingVideos.has(v) && !v.paused) v.pause();
       }
-      for (const [id, a] of audioPool.current) {
-        if (!activeAudioMediaIds.has(id) && !a.paused) a.pause();
+      for (const a of audioPool.current.values()) {
+        if (!playingAudio.has(a) && !a.paused) a.pause();
       }
 
       // Draw to canvas.
