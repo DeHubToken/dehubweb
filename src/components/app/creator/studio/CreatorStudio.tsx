@@ -1764,7 +1764,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                       }}
                       rows={audioTask === 'dialogue' && mode === 'audio' ? 4 : 2}
                       placeholder={placeholder}
-                      className="min-h-[3.25rem] min-w-0 flex-1 resize-y bg-transparent py-2 text-[16px] leading-relaxed text-white outline-none placeholder:text-white/35 sm:text-[15px]"
+                      className="min-h-[3.25rem] min-w-0 flex-1 resize-y bg-transparent py-1 text-[16px] leading-relaxed text-white outline-none placeholder:text-white/35 sm:text-[15px]"
                     />
                   </>
                 )}
