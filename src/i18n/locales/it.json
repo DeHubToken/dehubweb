@@ -8064,5 +8064,16 @@
     "backToMedia": "Torna al post",
     "like": "Mi piace",
     "unlike": "Rimuovi come"
+  },
+  "walletBackup": {
+    "backedUpOn": "Backup salvato il {{date}}",
+    "phraseUnavailable": "La frase di recupero non è disponibile con questo accesso. Usa l'accesso o il dispositivo originale per cercarla. Puoi comunque salvare la chiave privata.",
+    "phraseMismatch": "Questo backup appartiene a un altro portafoglio. Usa il tuo accesso originale per vedere il backup corretto.",
+    "backupDescription": "Salva la frase di recupero o la chiave privata per poter ripristinare il tuo portafoglio.",
+    "phraseOtherDevice": "Apri DeHub sul dispositivo dove hai protetto questo portafoglio per vedere la frase di recupero. Puoi anche salvare la chiave privata qui.",
+    "tabPrivateKey": "Chiave privata",
+    "phraseLoadFailed": "Impossibile caricare la frase di recupero. Riprova o apri DeHub sul dispositivo originale.",
+    "noPhrase": "Questo portafoglio è stato salvato con una chiave privata, quindi DeHub non ha una frase di recupero da mostrare. Salva questa chiave per ripristinare lo stesso portafoglio.",
+    "keyWarning": "Chiunque possieda questa chiave può controllare il tuo portafoglio. Conservala al sicuro e non condividerla mai."
   }
 }

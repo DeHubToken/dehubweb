@@ -72,4 +72,10 @@ describe('private key export', () => {
     vi.mocked(decryptString).mockResolvedValue('0xabc');
     await expect(exportWalletBackup('user', 'active-safe', 'password')).resolves.toEqual({ privateKey: 'test-key', ethAddress: 'owner', phrase: null });
   });
+  it('also preserves the phrase when exported through biometrics', async () => {
+    const phrase = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+    vi.mocked(unlockWithBiometrics).mockResolvedValueOnce(phrase);
+    await expect(exportWalletBackup('user', 'active-safe')).resolves.toMatchObject({ phrase });
+    expect(assertWalletAddress).toHaveBeenCalledWith('owner', 'active-safe');
+  });
 });
