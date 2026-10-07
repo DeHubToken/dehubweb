@@ -71,7 +71,7 @@ import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLink
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useI18n } from 'react-i18next';
-import { TranscodeRetry } from './TranscodeRetry';
+const TranscodeRetry = lazy(() => import('./TranscodeRetry').then(m => ({ default: m.TranscodeRetry })));
 import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
@@ -156,7 +156,7 @@ const DubVolumeControl = lazy(() =>
 const DubMenuItem = lazy(() =>
   import('@/components/app/video/DubMenuItem').then((m) => ({ default: m.DubMenuItem })),
 );
-import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
+import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoaderLazy';
 import { cancelVideoPlayback, requestVideoPlayback } from '@/lib/video-start';
 import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
@@ -2311,7 +2311,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt="" className="w-full h-full object-cover opacity-50" loading={aboveFold ? 'eager' : 'lazy'} />
                 )}
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
-                  <TranscodeRetry tokenId={video.id} isOwner={isOwnPost} />
+                  <Suspense fallback={<span className="text-white/80 text-xs">{t('videoPlayer.processingFailed')}</span>}>
+                    <TranscodeRetry tokenId={video.id} isOwner={isOwnPost} />
+                  </Suspense>
                 </div>
               </div>
             ) : (transcodingStatus === 'pending' || transcodingStatus === 'on') ? (

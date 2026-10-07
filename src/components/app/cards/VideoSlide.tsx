@@ -7,14 +7,14 @@
  * @module components/app/cards/VideoSlide
  */
 
-import { useRef, useEffect, useState, useCallback, memo } from 'react';
+import { useRef, useEffect, useState, useCallback, memo, lazy, Suspense } from 'react';
 import { useFeedPlaybackAllowed } from '@/lib/visual-activity';
 import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { requestVideoPlayback } from '@/lib/video-start';
 import { visualActivity } from '@/lib/visual-activity';
 import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
-import { ShortsPhotoPager } from './ShortsPhotoPager';
+const ShortsPhotoPager = lazy(() => import('./ShortsPhotoPager').then(m => ({ default: m.ShortsPhotoPager })));
 import { createPortal } from 'react-dom';
 import { Play, Pause, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -24,7 +24,7 @@ import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useTranslation } from 'react-i18next';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
-import { TranscodeRetry } from '@/components/app/cards/TranscodeRetry';
+const TranscodeRetry = lazy(() => import('./TranscodeRetry').then(m => ({ default: m.TranscodeRetry })));
 import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
 
 interface VideoSlideProps {
@@ -437,7 +437,11 @@ export const VideoSlide = memo(function VideoSlide({
           for centre-double-tap fullscreen; fullscreen kept its button and gave
           the gesture up, because one gesture cannot mean two things. */}
       <div className="absolute inset-0 z-[2]" {...tapGestures}>
-        {short.imageUrls?.length ? <ShortsPhotoPager images={short.imageUrls} /> : null}
+        {short.imageUrls?.length ? (
+          <Suspense fallback={<img src={short.imageUrls[0]} alt="" className="w-full h-full object-contain" />}>
+            <ShortsPhotoPager images={short.imageUrls} />
+          </Suspense>
+        ) : null}
         {transcodingStatus === 'failed' ? (
           /* Transcode job failed server-side — videoUrl was written
              optimistically at upload time and the file was never actually
@@ -450,7 +454,9 @@ export const VideoSlide = memo(function VideoSlide({
               {/* Retry is offered on the post itself, not here: a slide in the
                   carousel carries no ownership, and the creator reaching their
                   own broken short does so through their profile. */}
-              <TranscodeRetry tokenId={short.id} isOwner={false} />
+              <Suspense fallback={<span className="text-white/80 text-xs">{t('videoPlayer.processingFailed')}</span>}>
+                <TranscodeRetry tokenId={short.id} isOwner={false} />
+              </Suspense>
             </div>
           </div>
         ) : transcodingStatus === 'pending' || transcodingStatus === 'on' ? (
