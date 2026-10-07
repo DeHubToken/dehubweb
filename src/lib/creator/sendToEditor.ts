@@ -10,26 +10,8 @@ import { assetToFile } from '@/lib/creator/generationEngine';
 import { importOneFile } from '@/lib/editor/importFiles';
 import { useEditorStore } from '@/store/editorStore';
 import type { GenerationJob } from '@/store/generationStore';
-
-const EXTENSIONS: Record<GenerationJob['kind'], { ext: string; mime: string }> = {
-  image: { ext: 'png', mime: 'image/png' },
-  video: { ext: 'mp4', mime: 'video/mp4' },
-  audio: { ext: 'mp3', mime: 'audio/mpeg' },
-  // Present so the record stays exhaustive. Meshes are rejected below — the
-  // timeline holds clips, and a GLB is not one.
-  model3d: { ext: 'glb', mime: 'model/gltf-binary' },
-};
-
-/** Turn a prompt into a short, filesystem-safe name. */
-function nameFor(job: GenerationJob): string {
-  const base = (job.prompt || job.resolvedPrompt || job.kind)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 40);
-  const { ext } = EXTENSIONS[job.kind];
-  return `${base || job.kind}-${job.id}.${ext}`;
-}
+import i18n from '@/i18n';
+import { assertGeneratedMediaUrl, generatedMediaFormat, generatedMediaName } from './generatedMedia';
 
 export interface SendToEditorOptions {
   wallet?: string | null;
@@ -46,32 +28,45 @@ export async function sendJobToEditor(
   options: SendToEditorOptions = {},
 ): Promise<string | null> {
   if (!job.url) {
-    toast.error('That generation has no asset to send yet.');
+    toast.error(i18n.t('creator.editorAssetMissing'));
     return null;
   }
 
   // The editor timeline has no 3D track. Importing a GLB would land an
   // undecodable file in the media library and fail at playback rather than here.
   if (job.kind === 'model3d') {
-    toast.error('3D models cannot go on the timeline. Download the mesh instead.');
+    toast.error(i18n.t('creator.editorAssetUnsupported'));
     return null;
   }
 
-  const { mime } = EXTENSIONS[job.kind];
-
+  const target = useEditorStore.getState();
+  const projectId = target.projectId;
+  const at = target.currentTime;
   try {
-    const file = await assetToFile(job.url, nameFor(job), mime);
+    assertGeneratedMediaUrl(job.url);
+    const expected = generatedMediaFormat(job.kind, job.url);
+    const title = `${job.prompt || job.resolvedPrompt || job.kind}-${job.id}`;
+    const download = await assetToFile(job.url, generatedMediaName(job.kind, title, expected.ext), expected.mime);
+    if (!download.size) throw new Error(i18n.t('creator.editorImportFailed'));
+    const actual = generatedMediaFormat(job.kind, job.url, download.type);
+    const file = new File([download], generatedMediaName(job.kind, title, actual.ext), { type: actual.mime });
     const mediaId = await importOneFile(file, { wallet: options.wallet ?? null });
     if (!mediaId) return null;
 
     if (options.addToTimeline !== false) {
-      useEditorStore.getState().addClipFromMedia(mediaId);
+      const current = useEditorStore.getState();
+      if (current.projectId !== projectId) {
+        window.dispatchEvent(new CustomEvent('editor:storage-usage-changed'));
+        toast.info(i18n.t('creator.editorImportedToLibrary'));
+        return null;
+      }
+      if (!current.addClipFromMedia(mediaId, undefined, at)) return null;
     }
     window.dispatchEvent(new CustomEvent('editor:storage-usage-changed'));
     return mediaId;
   } catch (e) {
     console.error('[creator] send to editor failed', e);
-    toast.error(e instanceof Error ? e.message : 'Could not send that to the editor.');
+    toast.error(i18n.t('creator.editorImportFailed'));
     return null;
   }
 }
