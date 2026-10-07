@@ -1,0 +1,50 @@
+import { appendFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
+
+export function normalizeCredentials(tokenValue = '', accountValue = '') {
+  const unwrap = value => value.trim().replace(/^(["'])(.*)\1$/s, '$2').trim();
+  const unwrapped = unwrap(unwrap(tokenValue).replace(/^Bearer\s+/i, ''));
+  const compact = unwrapped.replace(/\s+/g, '');
+  // Cloudflare tokens copied with line wrapping still represent the same credential.
+  // Only remove internal whitespace when the result has the 40-character token shape.
+  const token = /^[A-Za-z0-9_-]{40}$/.test(compact) ? compact : unwrapped;
+  const account = unwrap(accountValue);
+  if (!/^[A-Za-z0-9_-]+$/.test(token)) {
+    const format = !token ? 'empty' : /\bcurl\b/i.test(token) ? 'curl command'
+      : /Authorization\s*:/i.test(token) ? 'Authorization header'
+      : /CLOUDFLARE_\w+\s*=/.test(token) ? 'environment assignment'
+      : /\s/.test(token) ? 'internal whitespace' : 'invalid characters';
+    throw new Error(`CLOUDFLARE_APITOKEN has an invalid stored format (${format}). Save only the API token.`);
+  }
+  if (!/^[a-f0-9]{32}$/i.test(account)) {
+    throw new Error('CLOUDFLARE_ID must contain the 32-character account ID.');
+  }
+  return { token, account };
+}
+
+async function main() {
+  const { token, account } = normalizeCredentials(process.env.CLOUDFLARE_APITOKEN, process.env.CLOUDFLARE_ID);
+  // Mask the normalized value before persisting it for Wrangler. Never log credentials.
+  console.log(`::add-mask::${token}`);
+  console.log(`::add-mask::${account}`);
+  const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${account}/workers/services/dehub-staging`, {
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(15_000),
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    const codes = (data.errors ?? []).map(error => Number(error.code)).filter(Number.isFinite).join(', ');
+    throw new Error(`Cloudflare staging access failed (HTTP ${response.status}; codes ${codes || 'none'}). Check the repository Cloudflare token and account ID.`);
+  }
+  appendFileSync(process.env.GITHUB_ENV, `CLOUDFLARE_API_TOKEN=${token}\nCLOUDFLARE_ACCOUNT_ID=${account}\n`);
+  console.log('Cloudflare credentials can access dehub-staging.');
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch(error => {
+    // Network errors can contain request details; expose only our fixed diagnostic messages.
+    console.error(error.message.startsWith('CLOUDFLARE_') || error.message.startsWith('Cloudflare staging access failed')
+      ? error.message : 'Cloudflare credential preflight failed before deployment.');
+    process.exitCode = 1;
+  });
+}
