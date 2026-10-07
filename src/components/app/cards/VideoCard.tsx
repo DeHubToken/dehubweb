@@ -1,5 +1,7 @@
 import { useVideoDownload } from "@/hooks/use-video-download";
 import { cdnImageSrcSet } from '@/lib/media-url';
+import { applyVideoVolume } from '@/lib/dub-mix';
+import { DubVolumeControl } from '@/components/app/video/DubVolumeControl';
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { isVideoOutsideFeed } from '@/lib/video-background-playback';
@@ -840,7 +842,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // mute in the top corner, and playback actions beside fullscreen on the
   // bottom row with play and remaining time.
   const bareControls = !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
-  /** Hovering the mute button drops a volume slider under it. */
+  const [dubAvailable, setDubAvailable] = useState(false);
   const [volumeOpen, setVolumeOpen] = useState(false);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
@@ -1385,7 +1387,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const setVolumeTo = useCallback((next: number) => {
     const newVolume = Math.max(0, Math.min(1, next));
     vpSetVolume(newVolume);
-    if (videoRef.current) videoRef.current.volume = newVolume;
+    if (videoRef.current) applyVideoVolume(videoRef.current, newVolume);
     const shouldMute = newVolume === 0;
     if (shouldMute !== isMuted) {
       setIsMuted(shouldMute);
@@ -1431,7 +1433,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // adjustment, so a viewer who had turned a video down got full volume back on
   // the next one. Apply it whenever this card owns the shared <video>.
   useEffect(() => {
-    if (videoRef.current) videoRef.current.volume = volume;
+    if (videoRef.current) applyVideoVolume(videoRef.current, volume);
   }, [volume, isPlaying, mediaAttached]);
 
   const seekBy = useCallback((seconds: number) => {
@@ -2092,7 +2094,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           isHoveringRef.current = false;
           if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
           setShowControls(false);
-          setVolumeOpen(false);
+          if (!dubAvailable) setVolumeOpen(false);
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
@@ -2431,6 +2433,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               buttonClassName={ccSlot ? undefined : 'absolute top-2 right-2 z-20'}
               buttonVisible={controlsVisible}
               onMenuOpenChange={setSubsMenuOpen}
+              onDubAvailableChange={setDubAvailable}
             />
           </Suspense>
         )}
@@ -2476,7 +2479,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 turning a loud clip down should not mean reaching for the system
                 mixer. The wrapper keeps the pointer inside while the cursor
                 travels from the button to the slider. */}
-            <div
+            {dubAvailable ? (
+              <DubVolumeControl open={volumeOpen} onOpenChange={setVolumeOpen} muted={isMuted || volume === 0}
+                onToggleMute={(event) => { if (volume === 0) setVolumeTo(0.8); else toggleMute(event); }}
+                onUnmute={() => { if (isMuted || volume === 0) setVolumeTo(volume || 0.8); }} />
+            ) : <div
               className="relative"
               onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
               onPointerLeave={() => setVolumeOpen(false)}
@@ -2523,7 +2530,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   </div>
                 </div>
               )}
-            </div>
+            </div>}
 
           </div>
         )}
