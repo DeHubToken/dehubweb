@@ -404,7 +404,7 @@ export default function BuyCoinsPage() {
   return (
     <div className="min-h-screen">
       <SEOHead title="Buy — Purchase Tokens on DeHub" description="Buy tokens directly on DeHub with your credit card. Fast checkout, multiple chains supported." url="https://dehub.io/buy" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Buy Tokens on DeHub', url: 'https://dehub.io/buy', description: 'Purchase tokens with credit card on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">DeHub Buy Crypto — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <h1 className="sr-only">DeHub Buy Tokens — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <PageIsland back onBack={() => navigate(-1)} icon="buy" title={t('buyCoins.title')} />
 
       <PageBody className="max-w-lg mx-auto">
@@ -496,7 +496,7 @@ export default function BuyCoinsPage() {
             </div>
             {tokenPrice > 0 && (
               <p className="text-xs text-zinc-500 mt-1 text-right">
-                1 {selectedToken?.symbol && selectedToken.symbol !== 'DHB' ? selectedToken.symbol : <DhbCoin />} ≈ ${tokenPrice.toFixed(5)}
+                1 {selectedToken?.symbol && selectedToken.symbol !== 'DHB' ? selectedToken.symbol : <DhbCoin label={t('buyCoins.tokensUnit')} />} ≈ ${tokenPrice.toFixed(5)}
                 {priceData?.change24h != null && (
                   <span className={priceData.change24h >= 0 ? 'text-emerald-400 ml-2' : 'text-red-400 ml-2'}>
                     {priceData.change24h >= 0 ? '+' : ''}{priceData.change24h.toFixed(2)}%
@@ -527,7 +527,7 @@ export default function BuyCoinsPage() {
                 })}
               </span>
               <span className="text-emerald-400 font-semibold">
-                +{bonusTokens.toLocaleString(undefined, { maximumFractionDigits: 0 })} <DhbCoin />
+                +{bonusTokens.toLocaleString(undefined, { maximumFractionDigits: 0 })} <DhbCoin label={t('buyCoins.tokensUnit')} />
               </span>
             </div>
           )}
@@ -779,7 +779,7 @@ export default function BuyCoinsPage() {
                     <div className="min-w-0 flex-1">
                       <div className="text-sm text-zinc-300">
                         {tx.status === 'completed' ? '✅' : tx.status === 'failed' ? '❌' : tx.status === 'expired' ? '⌛' : '⏳'}{' '}
-                        ${tx.amount} — {tx.approxTokensToReceive ? <>~{Number(tx.approxTokensToReceive).toLocaleString()} <DhbCoin /></> : tx.tokenSymbol === 'DHB' ? t('buyCoins.tokensUnit') : tx.tokenSymbol}
+                        ${tx.amount} — {tx.approxTokensToReceive ? <>~{Number(tx.approxTokensToReceive).toLocaleString()} <DhbCoin label={t('buyCoins.tokensUnit')} /></> : tx.tokenSymbol === 'DHB' ? t('buyCoins.tokensUnit') : tx.tokenSymbol}
                         {tx.status === 'failed' && (tx as any).failureReason && (
                           <span className="text-xs text-red-400/70 ml-1 capitalize whitespace-nowrap">({(tx as any).failureReason})</span>
                         )}
