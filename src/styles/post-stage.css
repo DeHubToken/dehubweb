@@ -294,6 +294,7 @@ html[data-theme='minimal'] [data-stage-tile]:not(#_):not(#_) {
    soft blurred band above it so comment text scrolling underneath never reads
    through the edge. */
 html [data-stage-composer]:not(#_):not(#_) {
+  isolation: isolate;
   background: color-mix(in srgb, var(--stage-solid) 80%, transparent);
   backdrop-filter: blur(28px) saturate(1.5);
   border-top: 1px solid var(--stage-border);
@@ -305,6 +306,7 @@ html [data-stage-composer]:not(#_):not(#_) {
 }
 html [data-stage-composer-fade]:not(#_) {
   position: absolute;
+  z-index: -1;
   inset-inline: 0;
   bottom: 100%;
   height: 48px;
@@ -323,6 +325,11 @@ html [data-stage-composer] [data-comment-field]:not(#_):not(#_) {
 }
 html [data-stage-composer] [data-comment-field] textarea:not(#_):not(#_) {
   color: var(--stage-ink);
+  caret-color: var(--stage-ink);
+}
+html [data-stage-composer] [data-comment-field] textarea::placeholder {
+  color: var(--stage-muted);
+  opacity: 1;
 }
 
 /* --- Mini player --------------------------------------------------------- */
