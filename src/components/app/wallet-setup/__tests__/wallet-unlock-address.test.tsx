@@ -47,6 +47,11 @@ vi.mock('@/lib/wallet-core/clipboard', () => ({ copyThenClear: vi.fn() }));
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.stubGlobal('ResizeObserver', class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  });
   mocks.expected = mocks.safe;
   mocks.biometric = false;
   mocks.unknown = false;
@@ -72,7 +77,7 @@ it('does not offer replacement when the existing wallet could not be loaded', as
   await screen.findByText(/We couldn’t check how your wallet is protected/);
   expect(screen.queryByRole('button', { name: "Can't unlock? Create a new wallet" })).toBeNull();
 });
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 async function unlock(biometric: boolean) {
   mocks.biometric = biometric;
