@@ -26,6 +26,7 @@ import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { nanoid } from "nanoid";
 import { applyTimelineOp, expandBatch, TIMELINE_OPS } from "./timelineAgent";
+import { preciseCommand } from "./preciseCommands";
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || "https://aigxuutjaqsywioxjefr.supabase.co"}/functions/v1/editor-agent`;
 const ANON_KEY =
@@ -146,6 +147,10 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
 
 /** Ask the agent. Throws with a user-safe code on failure ("rate_limited" | "unavailable"). */
 export async function askAgent(messages: AgentMessage[], signal?: AbortSignal): Promise<AgentResult> {
+  const scene = describeScene();
+  const last = messages[messages.length - 1];
+  const direct = last?.role === "user" ? preciseCommand(last.content, scene) : null;
+  if (direct) return { reply: "", ops: [direct] };
   const res = await fetch(FN_URL, {
     method: "POST",
     headers: {
@@ -153,7 +158,7 @@ export async function askAgent(messages: AgentMessage[], signal?: AbortSignal): 
       apikey: ANON_KEY,
       Authorization: `Bearer ${ANON_KEY}`,
     },
-    body: JSON.stringify({ messages, scene: describeScene() }),
+    body: JSON.stringify({ messages, scene }),
     signal,
   });
   const data = await res.json().catch(() => null);
@@ -620,8 +625,8 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       }
       case "captions": {
         const clip = find(op.id) ?? store().clips.find((c) => c.kind === "video" || c.kind === "audio");
-        if (!clip || (clip.kind !== "video" && clip.kind !== "audio")) return false;
-        return await useCaptionsStore.getState().run(clip.id);
+        if (!clip || clip.locked || (clip.kind !== "video" && clip.kind !== "audio")) return false;
+        return await useCaptionsStore.getState().run(clip.id, op.style === "boxed" || op.style === "bold" ? op.style : "classic");
       }
       case "remove_background": {
         const clip = find(op.id);
