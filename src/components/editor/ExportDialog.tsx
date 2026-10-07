@@ -17,6 +17,8 @@ import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, exportStill, isExportSupported, type ExportFormat, type StillFormat } from "@/lib/editor/exporter";
 import { getPages, pageAt } from "@/lib/editor/pages";
 import { zipFiles } from "@/lib/editor/zip";
+import { useAuth } from "@/contexts/AuthContext";
+import { BRAND_OUTRO_DURATION } from "@/lib/editor/brandOutro";
 
 interface Props {
   open: boolean;
@@ -37,6 +39,7 @@ const isStill = (f: Format): f is StillFormat => f === "png" || f === "jpg";
 
 export function ExportDialog({ open, onOpenChange }: Props) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const toSnapshot = useEditorStore((s) => s.toSnapshot);
   const media = useEditorStore((s) => s.media);
   const clips = useEditorStore((s) => s.clips);
@@ -146,6 +149,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         scale,
         videoBitrate: QUALITY_PRESETS[qualityKey],
         cutEndAt,
+        username: user?.username,
         onProgress: (p, l) => { setProgress(Math.round(p * 100)); setLabel(l); },
         signal: ctl.signal,
       });
@@ -248,7 +252,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 <div>{t("editor.export.frameAt", { time: Math.min(currentTime, duration).toFixed(2) })}</div>
               ) : (
                 <>
-                  <div>{t("editor.export.duration", { value: duration.toFixed(2) })}</div>
+                  <div>{t("editor.export.duration", { value: (duration + BRAND_OUTRO_DURATION).toFixed(2) })}</div>
                   <div>{t("editor.export.cutPreview", { value: Math.min(currentTime, duration).toFixed(2) })}</div>
                 </>
               )}
