@@ -1,7 +1,6 @@
 import { useVideoDownload } from "@/hooks/use-video-download";
 import { cdnImageSrcSet } from '@/lib/media-url';
-import { applyVideoVolume } from '@/lib/dub-mix';
-import { DubVolumeControl } from '@/components/app/video/DubVolumeControl';
+import { applyVideoVolume } from '@/lib/dub-volume';
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { isVideoOutsideFeed } from '@/lib/video-background-playback';
@@ -148,6 +147,9 @@ import type { VideoItem } from '@/types/feed.types';
 // arrives just after rather than riding the entry chunk.
 const VideoSubtitleOverlay = lazy(() =>
   import('@/components/app/video/VideoSubtitleOverlay').then((m) => ({ default: m.VideoSubtitleOverlay })),
+);
+const DubVolumeControl = lazy(() =>
+  import('@/components/app/video/DubVolumeControl').then((m) => ({ default: m.DubVolumeControl })),
 );
 // Only shown inside the options sheet; not worth a place on the boot path.
 const DubMenuItem = lazy(() =>
@@ -2480,9 +2482,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 mixer. The wrapper keeps the pointer inside while the cursor
                 travels from the button to the slider. */}
             {dubAvailable ? (
+              <Suspense fallback={<span className="h-8 w-8" />}>
               <DubVolumeControl open={volumeOpen} onOpenChange={setVolumeOpen} muted={isMuted || volume === 0}
                 onToggleMute={(event) => { if (volume === 0) setVolumeTo(0.8); else toggleMute(event); }}
                 onUnmute={() => { if (isMuted || volume === 0) setVolumeTo(volume || 0.8); }} />
+              </Suspense>
             ) : <div
               className="relative"
               onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
