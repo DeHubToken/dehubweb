@@ -295,7 +295,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
             )}
           </div>
         )}
-        <p className="text-zinc-500 text-sm">{community.member_count.toLocaleString()} {t('communities.members')}</p>
+        <p className="text-white text-sm">{community.member_count.toLocaleString()} {t('communities.members')}</p>
       </div>
 
       {/* Ticker */}
