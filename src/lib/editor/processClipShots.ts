@@ -11,12 +11,11 @@ export function processClipShots(blob: Blob, clip: MediaClip, signal?: AbortSign
   return new Promise((resolve, reject) => {
     const frame = document.createElement("iframe"); frame.hidden = true; frame.setAttribute("aria-hidden", "true");
     const source = URL.createObjectURL(blob), controllerKey = crypto.randomUUID();
-    const documentUrl = URL.createObjectURL(new Blob([shotScanDocument(controllerKey)], { type: "text/html" }));
     let finished = false;
     const finish = (error?: Error, result?: ShotAnalysis) => {
       if (finished) return; finished = true;
       clearTimeout(timer); clearTimeout(startupTimer); signal?.removeEventListener("abort", cancel); window.removeEventListener("message", message);
-      frame.contentWindow?.postMessage({ type: "cancel" }, "*"); frame.remove(); URL.revokeObjectURL(source); URL.revokeObjectURL(documentUrl);
+      frame.contentWindow?.postMessage({ type: "cancel" }, "*"); frame.remove(); URL.revokeObjectURL(source);
       if (error) reject(error); else if (result) resolve(result);
     };
     const cancel = () => finish(new DOMException("Cancelled", "AbortError"));
@@ -32,6 +31,6 @@ export function processClipShots(blob: Blob, clip: MediaClip, signal?: AbortSign
     };
     window.addEventListener("message", message); signal?.addEventListener("abort", cancel, { once: true });
     if (signal?.aborted) { cancel(); return; }
-    frame.src = documentUrl; document.body.appendChild(frame);
+    frame.srcdoc = shotScanDocument(controllerKey); document.body.appendChild(frame);
   });
 }

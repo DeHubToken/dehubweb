@@ -20,7 +20,7 @@ export function ShotTools({ clip }: { clip: MediaClip }) {
     try {
       const result = await detectClipShots(clip.id, abort.signal, setProgress);
       if (!abort.signal.aborted) { setTimes(result.analysis.times); setChosen(result.analysis.times); }
-    } catch { if (!abort.signal.aborted) toast.error(t("common.somethingWentWrong")); }
+    } catch (error) { if (!abort.signal.aborted) { console.warn("[editor] scene analysis failed", error); toast.error(t("common.somethingWentWrong")); } }
     finally { if (controller.current === abort) { controller.current = null; setProgress(null); } }
   };
   return <div className="space-y-2 pt-2">
