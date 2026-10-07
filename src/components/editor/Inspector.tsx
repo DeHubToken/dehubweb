@@ -22,6 +22,7 @@ import { MultiSelectSection } from "@/components/editor/inspector/MultiSelectSec
 import { MotionSection } from "@/components/editor/inspector/MotionSection";
 import { autoEnhanceEffects } from "@/lib/editor/autoEnhance";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
+import { SubtitleFiles } from "@/components/editor/SubtitleFiles";
 import { Captions, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -163,6 +164,8 @@ export function Inspector() {
           </Field>
         </div>
       </section>
+
+      <SubtitleFiles />
 
       <section className="space-y-2 p-3">
         <h3 className="text-[11px] font-semibold uppercase tracking-wide text-white/50">{t("editor.inspector.selection")}</h3>
