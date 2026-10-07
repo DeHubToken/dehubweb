@@ -10,14 +10,14 @@ describe("feed export integration", () => {
   let tail: Uint8Array;
   let duration: number;
   let loaded: boolean;
-  const revoke = vi.fn(), pause = vi.fn(), remove = vi.fn();
+  const create = vi.fn(), revoke = vi.fn(), pause = vi.fn(), remove = vi.fn();
   beforeEach(() => {
     tail = new Uint8Array(); duration = 5; loaded = true;
     mocks.render.mockReset().mockResolvedValue({ blob: new Blob(), filename: "creator.mp4" });
     mocks.supported.mockReset().mockReturnValue(true);
     mocks.legacy.mockReset().mockResolvedValue(null);
     mocks.artwork.mockReset().mockResolvedValue({ logo: {} });
-    revoke.mockReset(); pause.mockReset(); remove.mockReset();
+    create.mockReset().mockReturnValue("blob:source"); revoke.mockReset(); pause.mockReset(); remove.mockReset();
     const video = {
       onloadeddata: null as (() => void) | null, onerror: null,
       get duration() { return duration; }, videoWidth: 1080, videoHeight: 1920,
@@ -25,7 +25,7 @@ describe("feed export integration", () => {
       set src(_url: string) { if (loaded) queueMicrotask(() => video.onloadeddata?.()); },
     };
     vi.stubGlobal("document", { createElement: () => video });
-    vi.stubGlobal("URL", { createObjectURL: () => "blob:source", revokeObjectURL: revoke });
+    vi.stubGlobal("URL", { createObjectURL: create, revokeObjectURL: revoke });
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, blob: async () => ({
       size: 500, type: "video/mp4", slice: () => ({ arrayBuffer: async () => tail.buffer }),
     }) }));
@@ -55,7 +55,7 @@ describe("feed export integration", () => {
     loaded = false;
     const controller = new AbortController();
     const pending = renderVideoDownload({ url: "https://cdn/video.mp4" }, controller.signal);
-    await vi.waitFor(() => expect(document.createElement("video")).toBeDefined());
+    await vi.waitFor(() => expect(create).toHaveBeenCalled());
     controller.abort();
     await expect(pending).rejects.toMatchObject({ name: "AbortError" });
     expect(mocks.render).not.toHaveBeenCalled(); expect(revoke).toHaveBeenCalledWith("blob:source");
