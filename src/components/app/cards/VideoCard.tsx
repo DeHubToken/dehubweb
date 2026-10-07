@@ -152,7 +152,8 @@ const DubMenuItem = lazy(() =>
   import('@/components/app/video/DubMenuItem').then((m) => ({ default: m.DubMenuItem })),
 );
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
-import { requestVideoPlayback } from '@/lib/video-start';
+import { cancelVideoPlayback, requestVideoPlayback } from '@/lib/video-start';
+import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
@@ -952,6 +953,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Pause callback for the playback manager
   const pauseVideo = useCallback(() => {
     if (isVideoInPictureInPicture(videoRef.current) && !visualActivity.isCallBusy()) return;
+    cancelVideoPlayback(videoRef.current);
     videoRef.current?.pause();
     isPlayingRef.current = false;
     setIsPlaying(false);
@@ -1085,7 +1087,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               setIsMuted(shouldMute);
               setIsLoading(true);
               autoStartedRef.current = true;
-              vid.play().then(() => {
+              requestVideoPlayback(vid).then(() => {
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
@@ -1262,6 +1264,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (isPlaying) {
       if (autoStartedRef.current && !isImmersive) recordPause();
       if (videoRef.current) videoRef.current.dataset.userPaused = 'true';
+      cancelVideoPlayback(videoRef.current);
       videoRef.current?.pause();
       isPlayingRef.current = false;
       setIsPlaying(false);
@@ -1484,7 +1487,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     // Ads always loop — never stop
     if ((video.isAd || isLooping) && videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
+      requestVideoPlayback(videoRef.current).catch(() => {});
       return;
     }
     isPlayingRef.current = false;
@@ -1529,10 +1532,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, [video.creatorId]);
 
   const handleVideoError = useCallback(() => {
-    console.error('Video error:', video.videoUrl, videoRef.current?.error?.message || 'Unknown error');
-    setIsLoading(false);
-    setHasError(true);
-    setIsPlaying(false);
+    // The recovery controller owns terminal errors and the retry budget.
   }, [video.videoUrl]);
 
   // ── Sponsor / intro skipping ──────────────────────────────────────────────
@@ -1670,6 +1670,21 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, [ownsVideoElement, instanceId]);
 
   takeVideoRef.current = takeVideoElement;
+  const playbackPhase = usePlaybackRecovery(videoRef, video.videoUrl, ownsVideoElement, {
+    component: 'VideoCard', postId: video.id,
+    allowed: () => !!videoRef.current && videoRef.current.dataset.userPaused !== 'true' &&
+      !visualActivity.isCallBusy() && ((playbackAllowedRef.current && surfaceActiveRef.current &&
+        (isIntersectingRef.current || isVideoOutsideFeed(videoRef.current)) && isRendered(containerRef.current)) || isVideoInPictureInPicture(videoRef.current)),
+  });
+  useEffect(() => {
+    setHasError(playbackPhase === 'failed');
+    setIsLoading(playbackPhase === 'loading' || playbackPhase === 'retrying');
+    if (playbackPhase === 'failed' || playbackPhase === 'blocked') {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+      videoPlaybackManager.stop(instanceId);
+    }
+  }, [playbackPhase, instanceId]);
 
   // Play state follows the element itself while this card holds it, and is
   // off while it doesn't. The element changes hands and gets paused or resumed
@@ -2432,7 +2447,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <button
             data-video-controls data-video-bare data-video-center
             data-controls-hidden={isPlaying && !controlsVisible ? 'true' : undefined}
-            aria-label={isPlaying ? 'Pause' : 'Play'}
+            aria-label={hasError ? t('common.retry') : isPlaying ? 'Pause' : 'Play'}
             onPointerDown={(event) => event.stopPropagation()}
             onPointerUp={(event) => event.stopPropagation()}
             onTouchStart={(event) => event.stopPropagation()}
@@ -2440,7 +2455,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             onClick={(event) => { event.stopPropagation(); showControlsBriefly(); handlePlayClick(); }}
             className="absolute left-1/2 top-1/2 z-20 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-transparent text-white"
           >
-            <MediaControlIcon icon={isPlaying ? Pause : Play} size={32} />
+            {hasError ? <span className="rounded-full bg-black/70 px-4 py-2 text-sm">{t('common.retry')}</span> : <MediaControlIcon icon={isPlaying ? Pause : Play} size={32} />}
           </button>
         )}
 
