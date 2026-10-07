@@ -8,6 +8,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { SeedPhraseBackup } from '@/components/app/wallet-setup/SeedPhraseBackup';
+import { PrivateKeyBackup } from '@/components/app/wallet-setup/PrivateKeyBackup';
 import { BackupReminderCard } from '@/components/app/wallet/BackupReminderBanner';
 import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCover';
 import { ArticleReader } from '@/components/app/article/ArticleReader';
@@ -312,6 +313,9 @@ export default function StateGalleryPage() {
             </div>
             <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
               <SeedPhraseBackup phrase={SAMPLE_PHRASE} variant="signup" initialStage="check" onFinished={press} />
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+              <PrivateKeyBackup privateKey={`0x${'01'.repeat(32)}`} hasPhrase={false} onFinished={press} />
             </div>
           </div>
           <div className="mt-5 max-w-xl">

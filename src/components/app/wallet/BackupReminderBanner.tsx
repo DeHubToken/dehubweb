@@ -54,7 +54,7 @@ export function BackupReminderCard({ onBackUp, onLater }: { onBackUp: () => void
         <div>
           <p className="text-white font-medium text-sm">{t('walletBackup.reminderTitle', 'Back up your wallet')}</p>
           <p className="text-zinc-400 text-sm">
-            {t('walletBackup.reminderBody', '12 words that bring it back if you lose your phone or password.')}
+            {t('walletBackup.backupDescription', 'Save your recovery phrase or private key so you can restore your wallet.')}
           </p>
         </div>
         <div className="flex gap-2">

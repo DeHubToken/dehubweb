@@ -10,7 +10,8 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Loader2, AlertTriangle, Copy, KeyRound, Repeat, ArrowDownToLine, Fingerprint } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Loader2, AlertTriangle, KeyRound, Repeat, ArrowDownToLine, Fingerprint } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -19,7 +20,6 @@ import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { deriveFromSecret } from '@/lib/wallet-core/derive';
 import { assessPassword, MIN_PASSWORD_LENGTH } from '@/lib/wallet-core/passwordStrength';
-import { copyThenClear } from '@/lib/wallet-core/clipboard';
 import { PasswordStrengthMeter } from '@/components/app/wallet-setup/PasswordStrengthMeter';
 import { checkLegacyAccount, type LegacyAccountMatch } from '@/lib/wallet-core/legacy-detect';
 import {
@@ -32,6 +32,7 @@ import { PasskeyCancelledError } from '@/lib/wallet-core/biometric-unlock';
 import { SettingsRow } from '@/components/app/settings/SettingsRow';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { SeedPhraseBackup } from '@/components/app/wallet-setup/SeedPhraseBackup';
+import { PrivateKeyBackup } from '@/components/app/wallet-setup/PrivateKeyBackup';
 import { getBackupStatus, markBackedUp } from '@/lib/wallet-core/backup-status';
 import type { WalletBackup } from '@/lib/wallet-core/export';
 
@@ -79,8 +80,6 @@ function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean;
     try {
       const result = await fn();
       setBackup(result);
-      // A wallet with no words is backed up the moment its key is shown.
-      if (!result.phrase) void recordBackup(result);
     } catch (err) {
       if (err instanceof PasskeyCancelledError) return;
       setError(err instanceof Error ? err.message : 'Failed to export key');
@@ -115,28 +114,11 @@ function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean;
               </button>
             </>
           ) : revealedKey ? (
-            <>
-              <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-white">
-                <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
-                <p>Anyone with this key owns your funds. Save it somewhere safe and never share it.</p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white break-all select-all">
-                {revealedKey}
-              </div>
-              <Button
-                variant="outline"
-                onClick={async () => { await copyThenClear(revealedKey); toast.success('Copied — clipboard clears in 30s'); }}
-                className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl border-white/10"
-              >
-                <Copy className="w-4 h-4 mr-2" /> Copy private key
-              </Button>
-              <Button
-                onClick={() => { if (backup?.phrase) void recordBackup(backup); close(false); }}
-                className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
-              >
-                Done
-              </Button>
-            </>
+            <PrivateKeyBackup
+              privateKey={revealedKey}
+              hasPhrase={!!backup?.phrase}
+              onFinished={() => { if (backup) void recordBackup(backup); close(false); }}
+            />
           ) : (
             <>
               <p className="text-white/60 text-sm flex items-center gap-2">
@@ -503,6 +485,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
 // ── Settings entry points ───────────────────────────────────────────────────
 
 export function WalletRecoveryTools() {
+  const { t } = useTranslation();
   const { supabaseUserId } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [exportOpen, setExportOpen] = useState(false);
@@ -549,8 +532,8 @@ export function WalletRecoveryTools() {
         </span>}
         description={<>
           {backedUpAt
-            ? `Backed up ${new Date(backedUpAt).toLocaleDateString()}. See your 12 words or private key any time`
-            : 'See your 12 backup words or private key'}
+            ? `${t('walletBackup.backedUpOn', { date: new Date(backedUpAt).toLocaleDateString() })}. ${t('walletBackup.backupDescription')}`
+            : t('walletBackup.backupDescription')}
           {hasMultipleOldAccounts ? ' — required to keep access if you switch accounts below' : ''}
         </>}
         action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => setExportOpen(true)}>
