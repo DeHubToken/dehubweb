@@ -30,7 +30,7 @@ import {
   type TranscriptSegment,
 } from '@/hooks/use-video-transcript';
 import { applyCorrections, useTranscriptCorrections } from '@/hooks/use-transcript-corrections';
-import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
+import { SUBTITLE_LANGUAGES } from '@/lib/subtitle-languages';
 import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useDubPreference, useSpeechVoices, pickVoice, primeSpeech } from '@/hooks/dub-preference';
@@ -90,6 +90,7 @@ function readSize(): SizeKey {
 }
 
 export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true, buttonPortalTarget, onMenuOpenChange }: Props) {
+  const { i18n } = useTranslation();
   const numericId = useMemo(() => {
     const n = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId ?? 0;
     return Number.isFinite(n) && n > 0 ? Number(n) : 0;
@@ -105,11 +106,28 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const [open, setOpen] = useState(false);
   const [currentText, setCurrentText] = useState('');
 
+  // Automatic dubbing only looks up the video the viewer is listening to.
+  const [audible, setAudible] = useState(false);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const update = () => setAudible(!v.paused && !v.muted && v.volume > 0);
+    update();
+    v.addEventListener('play', update);
+    v.addEventListener('pause', update);
+    v.addEventListener('volumechange', update);
+    return () => {
+      v.removeEventListener('play', update);
+      v.removeEventListener('pause', update);
+      v.removeEventListener('volumechange', update);
+    };
+  }, [videoRef]);
+
   useEffect(() => { onMenuOpenChange?.(open); }, [open, onMenuOpenChange]);
 
   // Only fetch transcript once user has shown intent (open popover, enabled
   // subs, or asked for dubbed audio — a dub is keyed on the transcript too).
-  const wantTranscript = enabled || open || dubOn;
+  const wantTranscript = enabled || open || (dubOn && audible);
 
   const { transcript, status: rowStatus, inFlight, canRetry, start, isLoading: transcriptLoading } =
     useVideoTranscript(numericId || null, !!numericId && wantTranscript);
@@ -164,8 +182,11 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     return sourceLang ? base === sourceLang : base === 'en';
   };
   const dubLang =
-    dubPick ? (sameAsSource(dubPick) ? null : dubPick)
-    : normalizedLang === 'original' ? null : normalizedLang;
+    !sourceLang ? null
+    : dubPick ? (sameAsSource(dubPick) ? null : dubPick)
+    : normalizedLang !== 'original' ? normalizedLang
+    : sourceLang && !sameAsSource(i18n?.resolvedLanguage || i18n?.language || 'en')
+      ? (i18n?.resolvedLanguage || i18n?.language || 'en') : null;
   const dubVoice = useMemo(() => pickVoice(voices, dubLang), [voices, dubLang]);
 
   // With captions on Original there is no language to dub into yet, so the
@@ -175,30 +196,11 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   // doing nothing, with no hint, is how this looked broken.
   const autoDubLang = useMemo(() => {
     if (normalizedLang !== 'original') return null;
-    const guess = detectLocaleLang();
+    const guess = i18n?.resolvedLanguage || i18n?.language || 'en';
     if (guess === 'original' || sameAsSource(guess)) return null;
     return pickVoice(voices, guess) ? guess : null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedLang, sourceLang, voices]);
-
-  // The switch is global, but only a video someone is actually listening to
-  // gets a dub. Without this every card in the feed fetched — and, for a new
-  // language, paid to translate — its transcript the moment Dub was on.
-  const [audible, setAudible] = useState(false);
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    const update = () => setAudible(!v.paused && !v.muted);
-    update();
-    v.addEventListener('play', update);
-    v.addEventListener('pause', update);
-    v.addEventListener('volumechange', update);
-    return () => {
-      v.removeEventListener('play', update);
-      v.removeEventListener('pause', update);
-      v.removeEventListener('volumechange', update);
-    };
-  }, [videoRef]);
+  }, [normalizedLang, sourceLang, voices, i18n?.resolvedLanguage, i18n?.language]);
 
   // The browser refused to speak (iOS Safari without a gesture, a dead voice).
   const [dubFailed, setDubFailed] = useState(false);
@@ -221,7 +223,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     if (dubTranslationStatus === 'ready' || dubTranslationStatus === 'processing') return;
     // Status is empty until the stored translation has been looked up; asking
     // before then calls translate-transcript for rows that already exist.
-    if (dubLookupPending) return;
+    if (dubLookupPending || dubTranslationStatus === 'failed') return;
     const token = `${transcript.id}:${dubLang}`;
     if (askedDubRef.current === token) return;
     askedDubRef.current = token;
