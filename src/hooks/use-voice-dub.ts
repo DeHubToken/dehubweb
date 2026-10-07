@@ -9,7 +9,7 @@ import type { TranscriptSegment } from '@/hooks/use-transcript';
 import { synth } from '@/hooks/dub-preference';
 
 /** Original audio sits under the voice at this volume while a dub plays. */
-const DUCK_VOLUME = 0.15;
+const DUCK_VOLUME = 0.06;
 /** Characters per second a voice reads comfortably at rate 1. */
 const NATURAL_CPS = 14;
 const MAX_RATE = 1.3;
@@ -49,22 +49,26 @@ export function useVoiceDub(
     owners.set(v, me);
     let spoken = -1;
     let failed = false;
+    let utterance: SpeechSynthesisUtterance | null = null;
+    let ducked = false;
 
     // The viewer's level. The element holds a fraction of it while dubbing,
     // and a change we did not make is the viewer moving the slider.
     let userVolume = v.volume;
-    let settingVolume = false;
+    let expectedVolume = userVolume;
     const setVolume = (x: number) => {
+      expectedVolume = x;
       if (Math.abs(v.volume - x) < 0.001) return;
-      settingVolume = true;
       v.volume = x;
     };
-    const duck = () => setVolume(userVolume * DUCK_VOLUME);
-    duck();
+    const syncVolume = () => setVolume(ducked ? userVolume * DUCK_VOLUME : userVolume);
 
     const stop = () => {
       spoken = -1;
-      if (speaker === me) s.cancel();
+      utterance = null;
+      if (speaker === me) { s.cancel(); speaker = null; }
+      ducked = false;
+      syncVolume();
     };
 
     const indexAt = (t: number) => {
@@ -84,43 +88,60 @@ export function useVoiceDub(
 
     const speak = (i: number) => {
       const seg = segments[i];
+      if (seg.end - v.currentTime < 0.8) return;
+      utterance = null;
       spoken = i;
       s.cancel();
       speaker = me;
       if (!seg.text.trim()) return;
       const u = new SpeechSynthesisUtterance(seg.text);
+      utterance = u;
       u.voice = voice;
       u.lang = voice.lang;
-      const duration = Math.max(0.5, seg.end - seg.start);
+      const duration = Math.max(0.5, seg.end - v.currentTime);
       const needed = seg.text.length / duration / NATURAL_CPS;
-      u.rate = Math.min(MAX_RATE, Math.max(1, needed)) * (v.playbackRate || 1);
+      u.rate = Math.min(MAX_RATE, Math.max(1, needed * (v.playbackRate || 1)));
       u.volume = userVolume;
+      u.onstart = () => {
+        if (utterance !== u) return;
+        if (v.paused || v.muted || userVolume === 0) { stop(); return; }
+        ducked = true;
+        syncVolume();
+      };
+      const finish = () => {
+        if (utterance !== u) return;
+        utterance = null;
+        if (speaker === me) speaker = null;
+        ducked = false;
+        syncVolume();
+      };
+      u.onend = finish;
       // Cutting a line off for the next one reports 'interrupted'/'canceled';
       // anything else means this browser will not speak for us.
       u.onerror = (e) => {
+        if (utterance !== u) return;
         if (e.error !== 'interrupted' && e.error !== 'canceled') fail();
+        else finish();
       };
-      s.speak(u);
+      try { s.speak(u); } catch { fail(); }
     };
 
     const tick = () => {
-      if (failed || v.paused || v.muted || v.seeking) return;
+      if (failed || v.paused || v.muted || v.seeking || userVolume === 0) return;
       const i = indexAt(v.currentTime);
+      if (i < 0 && utterance) { stop(); return; }
       if (i >= 0 && i !== spoken) speak(i);
     };
 
     const onVolume = () => {
-      if (v.muted) stop();
-      if (settingVolume) {
-        settingVolume = false;
-        return;
-      }
-      userVolume = v.volume;
-      if (!failed) duck();
+      if (Math.abs(v.volume - expectedVolume) >= 0.001) userVolume = v.volume;
+      if (v.muted || userVolume === 0) stop();
+      else if (!failed) syncVolume();
     };
 
     v.addEventListener('pause', stop);
     v.addEventListener('seeking', stop);
+    v.addEventListener('ended', stop);
     v.addEventListener('play', tick);
     v.addEventListener('seeked', tick);
     v.addEventListener('volumechange', onVolume);
@@ -131,13 +152,11 @@ export function useVoiceDub(
       window.clearInterval(timer);
       v.removeEventListener('pause', stop);
       v.removeEventListener('seeking', stop);
+      v.removeEventListener('ended', stop);
       v.removeEventListener('play', tick);
       v.removeEventListener('seeked', tick);
       v.removeEventListener('volumechange', onVolume);
-      if (speaker === me) {
-        s.cancel();
-        speaker = null;
-      }
+      stop();
       if (owners.get(v) === me) owners.delete(v);
       setVolume(userVolume);
     };
