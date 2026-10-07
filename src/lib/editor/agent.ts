@@ -73,7 +73,7 @@ export function describeScene() {
       }
     : undefined;
   return {
-    capabilities: [...TIMELINE_OPS, "batch", "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "keyframes", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "apply_brand", "add_logo", "use_template", "captions", "remove_background", "generate", "select"],
+    capabilities: [...TIMELINE_OPS, "batch", "set_canvas", "add_text", "add_shape", "update", "place", "effects", "crop", "style", "animate", "keyframes", "order", "duplicate", "delete", "add_media", "add_stock", "add_page", "goto_page", "delete_page", "apply_brand", "add_logo", "use_template", "captions", "remove_background", "generate", "select"],
     tracks: s.tracks.map(({ id, kind, muted, hidden }) => ({ id, kind, muted, hidden })),
     brand,
     pages: pages.length > 1 ? pages.map((p) => ({ index: p.index, start: round(p.start, 2), end: round(p.end, 2) })) : undefined,
@@ -609,6 +609,12 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         if (!page) return false;
         s.setCurrentTime(page.start);
         return true;
+      }
+      case "delete_page": {
+        const index = num(op.index);
+        if (index === undefined || !Number.isInteger(index)) return false;
+        s.deletePage(index);
+        return store().settings !== s.settings;
       }
       case "use_template": {
         // Loaded lazily: templates import this module, so a static import would be circular.

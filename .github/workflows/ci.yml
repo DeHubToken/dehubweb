@@ -188,7 +188,7 @@ jobs:
         run: node --experimental-strip-types --test supabase/functions/_shared/transcription-fallback.test.ts
 
       - name: Complete editor scene descriptions
-        run: node --experimental-strip-types --test supabase/functions/editor-agent/scene.test.ts
+        run: node --experimental-strip-types --test supabase/functions/editor-agent/scene.test.ts supabase/functions/editor-agent/answer.test.ts
 
   boot-path:
     name: Boot path

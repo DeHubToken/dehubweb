@@ -6,7 +6,7 @@
 import { create } from "zustand";
 import { nanoid } from "nanoid";
 import type { MediaMeta, StoredMedia } from "@/lib/editor/mediaStore";
-import { getPages, pageAt } from "@/lib/editor/pages";
+import { appendPage, getPages, pageAt, removePage, timelineDuration } from "@/lib/editor/pages";
 import { shiftKeys } from "@/lib/editor/keyframes";
 import {
   DEFAULT_SETTINGS,
@@ -770,50 +770,30 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
   addPage: (opts) => {
     const s = get();
-    const pages = getPages(s.settings, s.clips);
-    const last = pages[pages.length - 1];
-    const current = pageAt(pages, s.currentTime);
-    const start = last.end;
-    let clips = s.clips;
-    let selected: string[] = [];
-    if (opts?.duplicate) {
-      const shift = start - current.start;
-      const copies = s.clips
-        .filter((c) => c.start >= current.start && c.start < current.end)
-        .map((c) => ({ ...c, id: nanoid(10), start: c.start + shift, duration: Math.min(c.duration, current.end - c.start) }) as Clip);
-      clips = [...s.clips, ...copies];
-      selected = [];
-    }
+    const page = appendPage(s.settings, s.clips, s.currentTime, !!opts?.duplicate, () => nanoid(10));
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({
       past,
       future: [],
-      clips,
-      settings: { ...s.settings, pages: [...pages.map((p) => p.start), start] },
-      currentTime: start,
-      selectedClipIds: selected,
+      clips: page.clips,
+      settings: page.settings,
+      currentTime: page.start,
+      selectedClipIds: [],
       isPlaying: false,
     });
   },
 
   deletePage: (index) => {
     const s = get();
-    const pages = getPages(s.settings, s.clips);
-    if (pages.length < 2) return;
-    const page = pages[index];
+    const page = removePage(s.settings, s.clips, index, () => nanoid(10));
     if (!page) return;
-    const len = page.end - page.start;
-    const clips = s.clips
-      .filter((c) => !(c.start >= page.start && c.start < page.end))
-      .map((c) => (c.start >= page.end ? ({ ...c, start: c.start - len } as Clip) : c));
-    const starts = pages.filter((p) => p.index !== index).map((p) => (p.start >= page.end ? p.start - len : p.start));
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({
       past,
       future: [],
-      clips,
-      settings: { ...s.settings, pages: starts.length > 1 ? starts : undefined },
-      currentTime: Math.max(0, (starts[Math.max(0, index - 1)] ?? 0)),
+      clips: page.clips,
+      settings: page.settings,
+      currentTime: page.start,
       selectedClipIds: [],
     });
   },
@@ -860,10 +840,5 @@ export function toMediaItem(row: StoredMedia): MediaItem {
 
 /** Total timeline duration = max(clip end). */
 export function selectTimelineDuration(state: EditorState): number {
-  let max = 0;
-  for (const c of state.clips) {
-    const end = c.start + c.duration;
-    if (end > max) max = end;
-  }
-  return max;
+  return timelineDuration(state.settings, state.clips);
 }
