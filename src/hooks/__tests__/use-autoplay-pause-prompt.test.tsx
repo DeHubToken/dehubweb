@@ -27,7 +27,8 @@ it('ignores undone pauses, shows one toast, and applies its switch to the real p
   expect(toast.message).not.toHaveBeenCalled();
   rerender({ id: 'c' });
   act(() => result.current.recordPause());
-  act(() => vi.advanceTimersByTime(AUTOPLAY_PAUSE_CONFIRM_MS));
+  // A quick scroll removes the paused player before the confirmation timer.
+  unmount();
   expect(toast.message).toHaveBeenCalledTimes(1);
   expect(Number(localStorage.getItem(AUTOPLAY_PROMPT_STORAGE_KEY))).toBeGreaterThan(0);
   const options = vi.mocked(toast.message).mock.calls[0][1]!;
@@ -35,5 +36,4 @@ it('ignores undone pauses, shows one toast, and applies its switch to the real p
   fireEvent.click(screen.getByRole('switch', { name: 'settings.autoPlay' }));
   expect(prefs.setAutoplayEnabled).toHaveBeenCalledWith(false);
   expect(toast.dismiss).toHaveBeenCalledWith('autoplay-pause-prompt');
-  unmount();
 });
