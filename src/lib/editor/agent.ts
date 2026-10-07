@@ -624,6 +624,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         const { default: i18n } = await import("@/i18n");
         const all = store().clips.map((c) => c.id);
         if (all.length) store().rippleDelete(all);
+        store().updateSettings({ pages: undefined });
         store().setCurrentTime(0);
         // Nested ops run inside this request's undo step; their new layers
         // are not addressable as new:N from the outer list.
