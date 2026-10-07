@@ -24,6 +24,7 @@ import { autoEnhanceEffects } from "@/lib/editor/autoEnhance";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { SubtitleFiles } from "@/components/editor/SubtitleFiles";
 import { ShotTools } from "@/components/editor/ShotTools";
+import { HighlightTools } from "@/components/editor/HighlightTools";
 import { AudioTools } from "@/components/editor/AudioTools";
 import { Captions, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -272,6 +273,7 @@ export function Inspector() {
         )}
 
         {mediaClip?.kind === "video" && <ShotTools key={mediaClip.id} clip={mediaClip} />}
+        {mediaClip?.kind === "video" && <HighlightTools key={`highlights-${mediaClip.id}`} clip={mediaClip} />}
 
         {hasAudio && (
           <div className="space-y-1.5 pt-2">

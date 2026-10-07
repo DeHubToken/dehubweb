@@ -160,6 +160,11 @@ export async function askAgent(messages: AgentMessage[], signal?: AbortSignal): 
   const last = messages[messages.length - 1];
   const direct = last?.role === "user" ? preciseCommand(last.content, scene) ?? audioToolCommand(last.content, scene) ?? beatCommand(last.content, scene) ?? shotCommand(last.content, scene) : null;
   if (direct) return { reply: "", ops: [direct] };
+  return askSceneAgent(messages, scene, signal);
+}
+
+/** Use the configured text planner with an explicitly bounded scene. */
+export async function askSceneAgent(messages: AgentMessage[], scene: unknown, signal?: AbortSignal): Promise<AgentResult> {
   const res = await fetch(FN_URL, {
     method: "POST",
     headers: {
