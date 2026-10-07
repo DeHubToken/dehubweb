@@ -6357,6 +6357,15 @@
       "toggleLoop": "Commuta el bucle"
     },
     "export": {
+      "scope": "Interval de descàrregues",
+      "downloadTimeline": "Cronologia sencera",
+      "downloadSelection": "Clips de vídeo seleccionats ({{count}})",
+      "downloadClips": "Cada videoclip ({{count}})",
+      "rangeHint": "Manté els subtítols i el so per a cada tall. Cada fitxer afegeix una terminació DeHub de 2,2 segons. Múltiples fitxers es descarreguen junts com un CODI POSTAL.",
+      "exportingClips": "S'està exportant el clip {{current}} de {{total}}",
+      "archiveTooLarge": "La descàrrega supera els 512 MiB. Exporta menys clips o tria una resolució més baixa.",
+      "gifHint": "Animació en bucle sense so. Fins a 60 segons, 640 píxels i 15 fps. Inclou l'acabat del logotip.",
+      "gifTooLong": "Retalla la línia de temps a 60 segons o menys, o tria MP4 o WebM.",
       "title": "Descarregar",
       "stillDescription": "Desa el fotograma actual com a imatge.",
       "videoDescription": "Renderitza la teva línia de temps a un fitxer de vídeo.",
@@ -6628,6 +6637,15 @@
       "thisPage": "Només aquesta pàgina",
       "exporting": "Renderitzant la pàgina {{current}} de {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalitza el volum",
+      "denoise": "Redueix el soroll",
+      "voice": "Millora la veu",
+      "working": "S'està processant el so... {{percent}}%",
+      "done": "S'ha afegit el so processat. Desfés restaura l'original.",
+      "failed": "No s'ha pogut processar aquest so. L'original no canvia.",
+      "hint": "Processa clips de fins a 10 minuts. La reducció de soroll funciona millor amb soroll de fons constant."
+    },
     "captions": {
       "action": "Subtítols automàtics",
       "working": "Escoltant… {{percent}}%",
@@ -6715,6 +6733,19 @@
         "easeInOutBack": "Rebot d’entrada i sortida",
         "hold": "Mantén"
       }
+    },
+    "shots": {
+      "detect": "Detecta canvis d'escena",
+      "split": "Divideix als talls seleccionats",
+      "none": "No s'han trobat canvis d'escena.",
+      "hint": "Revisa els talls primer · ≤10 min",
+      "preview": "Previsualitza"
+    },
+    "beats": {
+      "markers": "Marcadors de ritme",
+      "sync": "Sincronitza els talls",
+      "none": "No s'ha trobat un ritme fiable.",
+      "unchanged": "No s'han pogut alinear els talls."
     }
   },
   "jungleMood": {

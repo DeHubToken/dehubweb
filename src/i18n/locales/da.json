@@ -6386,6 +6386,15 @@
       "toggleLoop": "Skift loop"
     },
     "export": {
+      "scope": "Download interval",
+      "downloadTimeline": "Hele tidslinjen",
+      "downloadSelection": "Udvalgte videoklip ({{count}})",
+      "downloadClips": "Hvert videoklip ({{count}})",
+      "rangeHint": "Holder billedtekster og lyd for hvert klip. Hver fil tilføjer en DeHub-ende på 2,2 sekunder. Flere filer downloades sammen som en ZIP.",
+      "exportingClips": "Eksporterer klip {{current}} af {{total}}",
+      "archiveTooLarge": "Download overstiger 512 MiB. Eksporter færre klip, eller vælg en lavere opløsning.",
+      "gifHint": "Loopende animation uden lyd. Op til 60 sekunder, 640 pixels og 15 fps. Inkluderer dit logos afslutning.",
+      "gifTooLong": "Trim tidslinjen til 60 sekunder eller mindre, eller vælg MP4 eller WebM.",
       "title": "Download",
       "stillDescription": "Gem det aktuelle frame som et billede.",
       "videoDescription": "Render din tidslinje til en videofil.",
@@ -6657,6 +6666,15 @@
       "thisPage": "Kun denne side",
       "exporting": "Gengiver side {{current}} af {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normaliser lydstyrken",
+      "denoise": "Reducer støj",
+      "voice": "Forbedr stemmen",
+      "working": "Behandler lyd... {{percent}} %",
+      "done": "Behandlet lyd tilføjet. Fortryd gendanner originalen.",
+      "failed": "Kunne ikke behandle denne lyd. Originalen er uændret.",
+      "hint": "Behandl klip i op til 10 minutter. Støjreduktion fungerer bedst med konstant baggrundsstøj."
+    },
     "captions": {
       "action": "Automatiske undertekster",
       "working": "Lytter… {{percent}} %",
@@ -6744,6 +6762,19 @@
         "easeInOutBack": "Tilbage ind og ud",
         "hold": "Hold"
       }
+    },
+    "shots": {
+      "detect": "Find sceneskift",
+      "split": "Opdel ved valgte klip",
+      "none": "Ingen sceneskift fundet.",
+      "hint": "Gennemgå klip først · ≤10 min",
+      "preview": "Forhåndsvisning"
+    },
+    "beats": {
+      "markers": "Rytmemarkører",
+      "sync": "Synkroniser klip",
+      "none": "Ingen pålidelig rytme fundet.",
+      "unchanged": "Klippene kunne ikke tilpasses."
     }
   },
   "jungleMood": {

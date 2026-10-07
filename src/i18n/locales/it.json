@@ -6473,6 +6473,15 @@
       "toggleLoop": "Attiva/disattiva loop"
     },
     "export": {
+      "scope": "Intervallo di download",
+      "downloadTimeline": "Intera sequenza temporale",
+      "downloadSelection": "Video selezionati ({{count}})",
+      "downloadClips": "Ogni clip video ({{count}})",
+      "rangeHint": "Mantiene didascalie e suoni per ogni taglio. Ogni file aggiunge un finale DeHub di 2,2 secondi. Più file vengono scaricati insieme come ZIP.",
+      "exportingClips": "Esportazione clip {{current}} di {{total}}",
+      "archiveTooLarge": "Il download supera i 512 MiB. Esporta meno clip o scegli una risoluzione inferiore.",
+      "gifHint": "Animazione in loop senza suono. Fino a 60 secondi, 640 pixel e 15 fps. Include il finale del logo.",
+      "gifTooLong": "Ritaglia la timeline a 60 secondi o meno, oppure scegli MP4 o WebM.",
       "title": "Scarica",
       "stillDescription": "Salva il fotogramma corrente come immagine.",
       "videoDescription": "Renderizza la tua timeline in un file video.",
@@ -6744,6 +6753,15 @@
       "thisPage": "Solo questa pagina",
       "exporting": "Rendering pagina {{current}} di {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizza il volume",
+      "denoise": "Ridurre il rumore",
+      "voice": "Migliora la voce",
+      "working": "Elaborazione suono in corso... {{percent}}%",
+      "done": "Aggiunto suono elaborato. Annulla ripristina l'originale.",
+      "failed": "Impossibile elaborare questo suono. L'originale rimane invariato.",
+      "hint": "Elabora clip fino a 10 minuti. La riduzione del rumore funziona meglio con un rumore di fondo costante."
+    },
     "captions": {
       "action": "Sottotitoli automatici",
       "working": "In ascolto… {{percent}}%",
@@ -6831,6 +6849,19 @@
         "easeInOutBack": "Ritorno in entrata e uscita",
         "hold": "Mantieni"
       }
+    },
+    "shots": {
+      "detect": "Rileva cambi di scena",
+      "split": "Dividi ai tagli selezionati",
+      "none": "Nessun cambio di scena trovato.",
+      "hint": "Controlla prima i tagli · ≤10 min",
+      "preview": "Anteprima"
+    },
+    "beats": {
+      "markers": "Marcatori del ritmo",
+      "sync": "Sincronizza i tagli",
+      "none": "Nessun ritmo affidabile trovato.",
+      "unchanged": "Non è stato possibile allineare i tagli."
     }
   },
   "jungleMood": {

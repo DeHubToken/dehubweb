@@ -5777,6 +5777,15 @@
       "toggleLoop": "Toggle loop"
     },
     "export": {
+      "scope": "Di part for download",
+      "downloadTimeline": "Di whole timeline",
+      "downloadSelection": "Video clip dem wey you select ({{count}})",
+      "downloadClips": "All video clip dem ({{count}})",
+      "rangeHint": "E keep caption dem and sound for each cut. Each file get 2.2-second DeHub ending. Plenty file dem go download together inside one ZIP.",
+      "exportingClips": "E di export clip {{current}} out of {{total}}",
+      "archiveTooLarge": "Di download pass 512 MiB. Export fewer clip dem or choose lower resolution.",
+      "gifHint": "Looping animation wey no get sound. E fit reach 60 seconds, 640 pixels and 15 fps. E include your logo for di end.",
+      "gifTooLong": "Cut yua timeline make e no pass 60 seconds, or choose MP4 or WebM.",
       "title": "Download",
       "stillDescription": "Save dis frame as picture.",
       "videoDescription": "Turn yua timeline into video file.",
@@ -6048,6 +6057,15 @@
       "thisPage": "Na dis page only",
       "exporting": "Di make page {{current}} for {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Make volume normal",
+      "denoise": "Cut noise",
+      "voice": "Make voice better",
+      "working": "Processing sound... {{percent}}%",
+      "done": "Processed sound don add. Undo go bring back the original.",
+      "failed": "Dem no fit process dis sound. The original no change.",
+      "hint": "Process clips reach 10 minutes. Noise reduction work best wit steady background noise."
+    },
     "captions": {
       "action": "Auto captions",
       "working": "Di listen… {{percent}}%",
@@ -6134,6 +6152,19 @@
         "easeInOutBack": "Back in and out",
         "hold": "Hold"
       }
+    },
+    "shots": {
+      "detect": "Find scene changes",
+      "split": "Split for cuts wey you choose",
+      "none": "No scene changes dey.",
+      "hint": "Check cuts first · ≤10 min",
+      "preview": "Preview"
+    },
+    "beats": {
+      "markers": "Beat mark dem",
+      "sync": "Make cut dem match",
+      "none": "We no see beat we fit trust.",
+      "unchanged": "We no fit make cut dem match."
     }
   },
   "jungleMood": {

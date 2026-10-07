@@ -6483,6 +6483,15 @@
       "toggleLoop": "Kutipayta tikray"
     },
     "export": {
+      "scope": "Rango de descarga",
+      "downloadTimeline": "Tukuy pacha chiru",
+      "downloadSelection": "Akllasqa video clips ({{count}})",
+      "downloadClips": "Sapa video clip ({{count}})",
+      "rangeHint": "Kachkanku captionskuna hina kallpanakuypas sapa cutiypi. Sapa archivon 2.2-segundo DeHub phutiyninta yapan. Marma archivokuna juntaman descarganakun ZIP hina.",
+      "exportingClips": "{{total}} nisqamanta {{current}} nisqa clipta hawaman apachispa.",
+      "archiveTooLarge": "Chay uraykachiyqa 512 MiB nisqamanta aswan hatunmi. Aswan pisi k&#39;itikunata hawaman apachiy icha aswan pisi qhawayta akllay.",
+      "gifHint": "Mana t’uqyayniyuq animación de bucle. 60 segundoskama, 640 pixelkama, 15 fpskama. Incluyen logotipo tukukuyniyki.",
+      "gifTooLong": "Tiempo chiruta 60 segundos utaq pisiman kuchuy, utaq MP4 utaq WebM akllay.",
       "title": "Uraykachiy",
       "stillDescription": "Kunan kaq marcota siq'i hina waqaychay.",
       "videoDescription": "Tiempo lineaykita video archivoman ruway.",
@@ -6754,6 +6763,15 @@
       "thisPage": "Kay rapillata",
       "exporting": "Rapi {{current}} / {{total}} ruwakuchkan…"
     },
+    "audioTools": {
+      "normalize": "Volumen nisqa normalizay",
+      "denoise": "sonido chinkachiy",
+      "voice": "Kunkata kallpachay",
+      "working": "T&#39;uqyayta llamk&#39;achispa... {{percent}}%",
+      "done": "Procesado sonido yapasqa. Undo nisqa ñawpaq kaqta kutichin.",
+      "failed": "Mana kay t&#39;uqyayta procesayta atirqanchu. Originalqa manan cambiasqachu.",
+      "hint": "10 minutokama clips nisqakunata ruway. Rumi pisiyachiyqa aswan allintam llamkan mana kuyukuq qipa qapariywan."
+    },
     "captions": {
       "action": "Kikinmanta subtítulos",
       "working": "Uyarichkan… {{percent}}%",
@@ -6841,6 +6859,19 @@
         "easeInOutBack": "Kutiy yaykuy lluqsiy",
         "hold": "Hap’iy"
       }
+    },
+    "shots": {
+      "detect": "Rikch'ay tikraykunata maskay",
+      "split": "Akllasqa kuchuykunapi rakiy",
+      "none": "Mana rikch'ay tikraykuna tarisqachu.",
+      "hint": "Ñawpaqta kuchuykunata qhaway · ≤10 min",
+      "preview": "Ñawpaq qhaway"
+    },
+    "beats": {
+      "markers": "Ritmu unancha",
+      "sync": "Kuchuykunata tupachiy",
+      "none": "Mana allin ritmu tarisqachu.",
+      "unchanged": "Kuchuykuna mana tupachisqachu."
     }
   },
   "jungleMood": {

@@ -6377,6 +6377,15 @@
       "toggleLoop": "Beddel wareegga"
     },
     "export": {
+      "scope": "Soo dejisan kala duwan",
+      "downloadTimeline": "Jadwalka waqtiga oo dhan",
+      "downloadSelection": "Muuqaallada fiidiyowga ee la xushay ({{count}})",
+      "downloadClips": "Clip kasta oo fiidiyoow ah ({{count}})",
+      "rangeHint": "Kaydso kabaha iyo dhawaaqa goynta kasta. Fayl kasta wuxuu ku darayaa 2.2 ilbiriqsi DeHub dhammaadka. Faylal badan ayaa si wadajir ah u soo dejisan sida ZIP.",
+      "exportingClips": "Dhoofinta clip {{current}} ee {{total}}",
+      "archiveTooLarge": "Soo dejinta ayaa ka badan 512 MiB. Dhoofinta clips yar ama dooro xal hoose.",
+      "gifHint": "Soo saarista animation aan cod lahayn. Ilaa 60 ilbiriqsi, 640 pixels iyo 15 fps. Waxaa ku jira astaantaada dhammaadka.",
+      "gifTooLong": "Trim jadwalka jadwalka ilaa 60 ilbiriqsi ama ka yar, ama dooro MP4 ama WebM.",
       "title": "Soo dejiso",
       "stillDescription": "Kaydi fareemka hadda sawir ahaan.",
       "videoDescription": "U soo saar jadwalkaaga fayl muuqaal ah.",
@@ -6648,6 +6657,15 @@
       "thisPage": "Boggan oo kaliya",
       "exporting": "Waxaa la diyaarinayaa bogga {{current}} ee {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Caadi mugga",
+      "denoise": "Hoos u dhig buuqa",
+      "voice": "Kordhinta codka",
+      "working": "Codkii geeddi-socodka... {{percent}}%",
+      "done": "Cod laga baaraandegay ayaa lagu daray. Undo waxay soo celisaa asalka.",
+      "failed": "Ma shaqeyn karo codkan. Asalka asalka ah waa mid aan la beddelin.",
+      "hint": "Fiidiyowyada geeddi-socodka ilaa 10 daqiiqo. Hoos u dhaca dhawaaqa wuxuu si fiican ula shaqeeyaa dhawaaqa asalka ah ee joogtada ah."
+    },
     "captions": {
       "action": "Qoraal toos ah",
       "working": "Waa la dhageysanayaa… {{percent}}%",
@@ -6735,6 +6753,19 @@
         "easeInOutBack": "Dib gelid iyo bixid",
         "hold": "Hay"
       }
+    },
+    "shots": {
+      "detect": "Ogow isbeddellada muuqaalka",
+      "split": "U qaybi goynta la doortay",
+      "none": "Isbeddel muuqaal lama helin.",
+      "hint": "Marka hore eeg goynta · ≤10 daqiiqo",
+      "preview": "Hordhac"
+    },
+    "beats": {
+      "markers": "Calaamadaha garaaca",
+      "sync": "Isku waafaji goynta",
+      "none": "Garaac lagu kalsoon yahay lama helin.",
+      "unchanged": "Goynta lama waafajin karin."
     }
   },
   "jungleMood": {

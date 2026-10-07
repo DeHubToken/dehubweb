@@ -38,55 +38,57 @@ Reference set: [Canva video editor](https://www.canva.com/video-editor/), [video
 | Voiceover recording | This release | This release | Record into a separate sound layer at the playhead. |
 | Camera recording | This release | This release | Record and import within the editor using existing capture capabilities. |
 | Screen recording | This release | OS recorder import | Browser capture; native needs supported OS recording integration. |
-| Volume normalization | Gap | Gap | Measure the audible source range and apply bounded gain. |
-| Voice enhancement / noise reduction | Gap | Gap | Apply and preview actual audio processing. |
-| Automatic beat synchronization | Gap | Gap | Detect beats from sound and align cuts to detected timestamps. |
+| Volume normalization | This release | This release | Process the trimmed, speed-adjusted clip as WAV; target -16 dB RMS, cap amplification at 6x and normalized peaks at 0.95. Clips up to ten minutes. |
+| Voice enhancement / noise reduction | This release | This release | Sample the noise spectrum and reduce it with overlap-add filtering. Voice mode adds a 90 Hz high-pass filter, compression and normalization. Original media, fades and timing remain editable. |
+| Automatic beat synchronization | This release | This release | Detect rhythmic onsets from up to ten minutes of trimmed, speed-adjusted music. Source-timed markers support manual snapping; sync aligns internal cuts in visible contiguous groups. Video speed changes within 0.25–4× to retain every source range. Captions, locked layers, gaps and group edges stay put. Sparse or irregular sound can return no reliable beats. |
 | Automatic highlights | Gap | Gap | Reviewable source ranges with measurable selection criteria. |
-| Automatic shot detection | Gap | Gap | Detect visual boundaries and offer editable cuts. |
+| Automatic shot detection | This release | This release | Scan up to ten minutes of trimmed video locally. Preview and deselect detected hard scene changes before splitting. Refine sample intervals to about 16 ms; retain source offsets, speed and motion in editable clips. Flashes, gradual fades and same-colour camera movement are rejected; visually similar scene changes may be missed. |
 | Video subject/background removal | Gap | Gap | Process video frames with a consistent mask in preview and export. |
 | Image background removal | Implemented | Implemented | Keep transparency and original media. |
 | Generated media | Implemented | Separate creator flow | Open the existing creation flow for review; retain billing consent. |
 | Project save and reopen | Implemented | Implemented | Browser storage and phone storage; media survives reopening. |
 | Shared projects / live collaboration | Gap | Gap | Cloud project revisions, access rules and conflict handling. |
 | Video exports | MP4 / WebM | MP4 / WebM fallback | Export active layers, timing and audio correctly. |
-| GIF exports | Gap | Gap | Animated export with suitable size, frame rate and transparent handling. |
-| Separate clip downloads | Gap | Gap | Export requested ranges as individual named files. |
+| GIF exports | This release | This release | Looping GIF with shared timeline rendering, source offsets, transparency and the logo ending. Up to 60 seconds of content, longest edge 640 pixels, 15 fps and a 100 MiB output ceiling. GIF has no sound; MP4/WebM retains the original ending sound. |
+| Separate clip downloads | This release | This release | Export the selected video cuts or every visible video cut at its original global range, with matching captions, soundtrack, source offsets and a 2.2-second branded ending per file. One file saves directly; multiple files save together in a ZIP. Archives are bounded to 512 MiB and can be cancelled. |
 | Still exports | PNG / JPG | PNG / JPG | Render the selected frame without a video ending. |
 | Direct DeHub posting | Implemented | Implemented | Post the edited result with correct media metadata. |
-| Branded video ending | Implemented | Implemented | 2.2-second logo animation, creator @username and original sound; silent sources included. |
+| Branded video ending | Implemented | Implemented | 2.2-second logo animation, creator dehub.io/username credit and original sound; silent sources included. |
 | Reliable numeric requests | Implemented | Implemented | Exact cuts run locally; complex requests retain the existing planning route. |
 | Honest operation results | This release | This release | Empty or failed operations cannot display a success confirmation. |
 
-## Download ending concepts
+## Download ending
 
-All concepts end with the existing DeHub wordmark and the creator's @username. Sound is original and synthesized locally. The shipped default is Signal pulse.
+Downloads use one simple black-and-white ending. A small official icon deforms through a spin in the centre, settles into its original proportions, then reveals `dehub.io/username` underneath. The icon and credit stay together in the middle of portrait, square and landscape output. Signed-out exports show `dehub.io`.
 
-1. **Signal pulse:** wordmark reveals horizontally, a teal line pulses, two clear notes resolve.
-2. **Glass badge:** a translucent creator badge turns toward the viewer, with a soft glass tap.
-3. **Orbit:** small points circle the logo and settle under the handle, with an airy sweep.
-4. **Neon trace:** a thin light draws the mark, followed by the handle and a bright electronic ping.
-5. **Cinema stamp:** the mark lands as a clean closing credit, with a warm low impact.
-6. **Particle gather:** scattered particles form the logo while the handle fades in, with a rising shimmer.
-7. **Wave reveal:** a sound wave passes across the mark and becomes an underline, with a short bass note.
-8. **Creator card:** the username slides into a compact signature card, with a crisp click and chime.
-9. **Glitch lock:** two brief offsets snap into the clean mark and handle, with a restrained digital snap.
-10. **Spotlight:** a moving pool of light reveals the logo and creator credit, with a soft cinematic swell.
+The ending lasts 2.2 seconds. MP4/WebM retains an original short sweep and resolving chime; GIF uses the same animation without sound. The official icon and Exo font are embedded for offline native exports.
 
 ## Release evidence
 
 - Timeline commands and default ending: web PR 2292 and mobile PR 1671, merged after cloud checks passed.
-- Web staging serves commit `29f3a5e970dd6b98d4dce1f21f8ec13f016c3fe5`.
 - A silent ten-second fixture exported from staging as a 12.20-second H.264 MP4 with stereo AAC sound. The closing frame contains the wordmark and signed-out `dehub.io` fallback. Creator-handle formatting and rendering are covered in both suites.
-- The first live cut request exposed an empty backend operation list despite a success reply. Local numeric handling and truthful empty-result reporting address this in the next release. Do not mark this live test passed until the actual timeline contains ten clips.
+- Exact numeric requests run locally and empty backend results are reported without a success confirmation.
 - Mobile publication and physical-device export verification remain separate from passing unit tests.
 
-- Stock media release: native photo/video/audio browser and imports with source credits; deduplicated search fallback on both clients. Cloud checks and native device verification pending.
+- Stock media: web PR 2296 and mobile PR 1676 merged with cloud checks passing. Native photo/video/audio imports retain source credits; repeated sources have independent decoders during overlaps. Physical-device verification remains pending.
 
 - Numeric cuts verified on staging commit 1ecabeada: the exact ten one-second clip request produced ten timeline clips; one Undo restored the original and Redo restored ten. Project saved. Proof: editor-ten-clips-staging.jpg.
-- Scene release adds matching source-aware duplication/deletion, explicit scene navigation on mobile, complete timeline duration, and fenced operation-array parsing. Cloud checks and publication pending.
+- Scene release: web PR 2298 and mobile PR 1677 merged with cloud checks passing. Matching source-aware duplication/deletion, scene navigation, complete timeline duration, and fenced operation-array parsing are implemented.
 
-- Precise numeric cuts: staging commit 1ecabead showed ten separate one-second clips, with one-step undo and redo verified.
-- Scene editing: web PR 2298; boundary cuts preserve source offsets, speed, motion and blank scene duration.
-- Subtitle files: import SRT/VTT as editable captions; save only visible caption tracks in either format with millisecond timestamps. Android uses the folder picker; iOS uses Save to Files.
+- Subtitle files: web PR 2300 and mobile PR 1679 merged with cloud checks passing. Import SRT/VTT as editable captions; save visible caption tracks in either format with millisecond timestamps. Android uses the folder picker; iOS uses Save to Files.
+- Subtitle files verified on staging commit 2f025cde: two imported cues rendered at their timestamps, SRT and WebVTT downloads retained 2.125–3.250 and 5.000–5.750 second ranges and multiline text, and one Undo/Redo removed/restored both cues.
 
-- Recording: microphone and camera use existing browser/device capture APIs, save recordings to the media library and add a separate track at the playhead. Web also captures a chosen screen/window with available system sound. Capture stops on cancellation or leaving the panel; voiceovers are bounded to ten minutes.
+- Recording: web PR 2302 and mobile PR 1681 merged with cloud checks passing. Microphone and camera save recordings to the media library on a separate track at the playhead. Web also captures a chosen screen/window with available system sound. Capture stops on cancellation or leaving the panel; voiceovers are bounded to ten minutes. Live capture verification remains pending.
+- Audio tools: shared worker processing creates a PCM WAV used in both preview and export. Video cleanup extracts its soundtrack and mutes the original sound; audio clips are replaced in place. Each change is one undo step. Exact cleanup requests run locally; compound requests require the updated editor-agent deployment. Web PR 2303 and mobile PR 1682 merged after cloud checks passed. The editor-agent handler was deployed from synced commit 8163d22e. Staging normalization created a WAV asset with one Undo/Redo; the downloaded 12.20-second H.264/AAC MP4 measured -16.0 dB RMS across the processed sound range and retained the ending chime. Mobile OTA run 37654241892 published the audio release after its configuration preflight passed. Physical-device verification remains pending.
+
+- GIF downloads: a shared worker emits GIF89a with per-frame delays, transparent disposal and an infinite-loop extension. Frame encoding is acknowledged before the next frame is rendered. Cloud tests independently decode the bytes, palette, transparency, timing and dictionary resets. Web downloads a GIF; Android saves to a chosen folder in bounded chunks and iOS opens Save to Files. Web PR 2307 and mobile PR 1686 merged after cloud checks passed. The staging GIF decoded as 183 frames at 640×360, with an infinite loop and a 12.20-second duration including the DeHub ending. Mobile OTA run 37656246129 published the GIF release after its configuration preflight passed. Physical-device verification remains pending.
+
+- Clip downloads: range/audio math and the archive writer are shared across web and mobile. Cloud tests cover ten distinct one-second ranges, source trims and playback speed, original caption times, partial fade envelopes, UTF-8 names, independent ZIP directory/CRC parsing, bounded reads, cancellation and partial-file cleanup. Web PR 2309 and mobile PR 1687 merged after cloud checks passed. Staging downloaded ten independently readable 640×360 H.264/AAC files, each 3.2 seconds (one second of content plus the ending). ZIP CRC and directory checks passed; sampled pictures matched the expected source positions 0.25 through 9.25 seconds. Native publication remains pending.
+
+- Icon profile credits: web PR 2310 and mobile PR 1688 merged after cloud checks passed. Both renderers use the official mark cropped to its visible proportions and `dehub.io/username` credits. The web release appeared on staging. Mobile publication run 37661758610 was dispatched; downloaded-file and physical-device verification remain pending.
+
+- Centred ending: the shared renderer uses a small white icon, an elastic spin and a masked profile-credit reveal on black. Tests cover centred safe placement across aspect ratios, deformation before settling, reveal order, sound bounds and identical native-runtime output. Web PR 2313 and mobile PR 1691 merged after cloud checks passed. Staging loaded web commit 6ec6c989 and exported the new ending in a 12.2-second H.264/AAC file; the ending sound measured a -21.35 dB peak. The signed-out credit is `dehub.io`. Native publication run 37664006053 completed its configuration preflight and published the ending bundle. Signed-in and physical-device verification remain pending.
+
+- Beat synchronization: web PR 2315 and mobile PR 1693 merged after cloud checks passed. Staging on web commit 58a14d15 detected all 20 onsets in a 120 BPM fixture. Nine internal cuts aligned to 0.75 through 8.75 seconds while the 0 and 10 second outer edges stayed fixed. The first clip played at 1.33x to preserve its source range. Undo restored the original cuts; Redo restored the synchronized boundaries. Native publication run 37669325724 was dispatched from exact merge 54326bffe; publication and physical-device verification remain separate.
+
+- Shot detection: both clients use the same bounded sampler and visual-change detector. Suggested cuts are reviewable before applying one source-aware split. Exact requests such as `split this video by scenes` run locally. Cloud checks, staging video evidence and native publication remain pending.

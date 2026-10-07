@@ -6397,6 +6397,15 @@
       "toggleLoop": "Gbanwee mmegharị"
     },
     "export": {
+      "scope": "Download nso",
+      "downloadTimeline": "Usoroiheomume niile",
+      "downloadSelection": "Vidio ndị a họọrọ ({{count}})",
+      "downloadClips": "Onye ọ bụla video clip ({{count}})",
+      "rangeHint": "Na-edebe nkọwa na ụda maka ịkpụ ọ bụla. Onye ọ bụla faịlụ tinye a 2.2-abụọ DeHub agwụcha. Ọtụtụ faịlụ budata ọnụ dị ka a ZIP.",
+      "exportingClips": "Mbupụ clip {{current}} nke {{total}}",
+      "archiveTooLarge": "Ọnụ ọgụgụ kasị elu bụ 512 MB. Export ole na ole mkpachị ma ọ bụ họrọ a ala mkpebi.",
+      "gifHint": "Looping animation na-enweghị ụda. Ruo 60 sekọnd, 640 pikselụ na 15 fps. Gụnyere gị logo agwụcha.",
+      "gifTooLong": "Wepụ usoro iheomume ka 60 sekọnd ma ọ bụ obere, ma ọ bụ họrọ MP4 ma ọ bụ WebM.",
       "title": "Budata",
       "stillDescription": "Chekwa etiti ugbu a dị ka onyonyo.",
       "videoDescription": "Mepee usoro oge gị ka ọ bụrụ faịlụ vidiyo.",
@@ -6668,6 +6677,15 @@
       "thisPage": "Naanị peeji a",
       "exporting": "Na-akwado peeji {{current}} n'ime {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Hazie ụda",
+      "denoise": "Belata mkpọtụ",
+      "voice": "Enhance olu",
+      "working": "Hazie ụda... {{percent}}%",
+      "done": "Ụda esichara agbakwunyere. Wepụtagharịa nke mbụ.",
+      "failed": "Agaghị emenwu ụda a. Nke mbụ anaghị agbanwe agbanwe.",
+      "hint": "Usoro mkpachị ruo 10 nkeji. Mbelata mkpọtụ na-arụ ọrụ kacha mma na mkpọtụ ndabere siri ike."
+    },
     "captions": {
       "action": "Ndepụta okwu akpaka",
       "working": "Na-ege ntị… {{percent}}%",
@@ -6755,6 +6773,19 @@
         "easeInOutBack": "Laghachi ịbanye na ịpụ",
         "hold": "Jide"
       }
+    },
+    "shots": {
+      "detect": "Chọpụta mgbanwe ihe nkiri",
+      "split": "Kewaa na mbepụ ahọpụtara",
+      "none": "Achọtaghị mgbanwe ihe nkiri.",
+      "hint": "Lelee mbepụ mbụ · ≤10 min",
+      "preview": "Nlele"
+    },
+    "beats": {
+      "markers": "Akara ụda",
+      "sync": "Mee ka mbepụ kwekọọ",
+      "none": "Achọtaghị ụda a pụrụ ịtụkwasị obi.",
+      "unchanged": "Enweghị ike ime ka mbepụ kwekọọ."
     }
   },
   "jungleMood": {

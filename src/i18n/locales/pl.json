@@ -6430,6 +6430,15 @@
       "toggleLoop": "Przełącz zapętlanie"
     },
     "export": {
+      "scope": "Zakres pobierania",
+      "downloadTimeline": "Cała oś czasu",
+      "downloadSelection": "Wybrane klipy wideo ({{count}})",
+      "downloadClips": "Każdy klip wideo ({{count}})",
+      "rangeHint": "Zachowuje podpisy i dźwięk dla każdego cięcia. Każdy plik dodaje 2,2-sekundowe zakończenie DeHub. Wiele plików pobiera się razem jako ZIP.",
+      "exportingClips": "Eksportowanie klipu {{current}} z {{total}}",
+      "archiveTooLarge": "Pobieranie przekracza 512 MiB. Eksportuj mniej klipów lub wybierz niższą rozdzielczość.",
+      "gifHint": "Animacja zapętlania bez dźwięku. Do 60 sekund, 640 pikseli i 15 fps. Zawiera końcówkę Twojego logo.",
+      "gifTooLong": "Przytnij oś czasu do 60 sekund lub mniej albo wybierz MP4 lub WebM.",
       "title": "Pobierz",
       "stillDescription": "Zapisz bieżącą klatkę jako obraz.",
       "videoDescription": "Renderuj oś czasu do pliku wideo.",
@@ -6701,6 +6710,15 @@
       "thisPage": "Tylko ta strona",
       "exporting": "Renderowanie strony {{current}} z {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizuj objętość",
+      "denoise": "Redukcja hałasu",
+      "voice": "Wzmocnij głos",
+      "working": "Przetwarzanie dźwięku... {{percent}}%",
+      "done": "Dodano przetworzony dźwięk. Cofnij przywraca oryginał.",
+      "failed": "Nie można przetworzyć tego dźwięku. Oryginał bez zmian.",
+      "hint": "Zaciski procesowe do 10 minut. Redukcja szumów działa najlepiej przy stałym szumie tła."
+    },
     "captions": {
       "action": "Napisy automatyczne",
       "working": "Słucham… {{percent}}%",
@@ -6788,6 +6806,19 @@
         "easeInOutBack": "Odbicie na wejściu i wyjściu",
         "hold": "Wstrzymaj"
       }
+    },
+    "shots": {
+      "detect": "Wykryj zmiany scen",
+      "split": "Podziel w wybranych cięciach",
+      "none": "Nie znaleziono zmian scen.",
+      "hint": "Najpierw sprawdź cięcia · ≤10 min",
+      "preview": "Podgląd"
+    },
+    "beats": {
+      "markers": "Znaczniki rytmu",
+      "sync": "Synchronizuj cięcia",
+      "none": "Nie znaleziono wiarygodnego rytmu.",
+      "unchanged": "Nie udało się wyrównać cięć."
     }
   },
   "jungleMood": {

@@ -725,6 +725,8 @@ interface VideoCardProps {
 
 export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
   const playbackAllowed = useFeedPlaybackAllowed();
+  const playbackAllowedRef = useRef(playbackAllowed);
+  playbackAllowedRef.current = playbackAllowed;
   const instanceId = useId();
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -1065,7 +1067,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         entries.forEach((entry) => {
           isIntersectingRef.current = entry.isIntersecting;
           if (isVideoInPictureInPicture(videoRef.current) && !visualActivity.isCallBusy()) return;
-          if (!visualActivity.isFeedPlaybackAllowed()) { pauseVideo(); return; }
+          if (!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) { pauseVideo(); return; }
           // Backgrounding is not a scroll-away; PiP owns its own visible surface.
           if (isVideoOutsideFeed(videoRef.current)) return;
           if (!entry.isIntersecting && isPlayingRef.current) {
@@ -1096,7 +1098,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
-                if ((!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(vid)) || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
+                if (((!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) && !isVideoInPictureInPicture(vid)) || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
                   vid.pause();
                   videoPlaybackManager.stop(instanceId);
                   setIsLoading(false);
@@ -1227,7 +1229,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, []);
 
   const handlePlayClick = useCallback(() => {
-    if (!visualActivity.isFeedPlaybackAllowed()) return;
+    if (!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) return;
     // Audio posts use AudioVisualizer which handles its own playback
     if (video.isAudio) {
       if (isContentGated) return;
@@ -1279,7 +1281,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       if (!vidEl) { setIsLoading(false); return; }
       requestVideoPlayback(vidEl).then(() => {
         if (videoRef.current !== vidEl || vidEl.dataset.userPaused === 'true' ||
-          (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(vidEl))) {
+          ((!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) && !isVideoInPictureInPicture(vidEl))) {
           if (videoRef.current === vidEl) { vidEl.pause(); setIsLoading(false); }
           return;
         }
@@ -2412,7 +2414,21 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <VideoGlitchLoader poster={thumbnail} />
         )}
         
-        {/* Center flash indicator removed — play/pause now in progress bar */}
+        {!isLoading && video.videoUrl && !video.isAudio && !isVideoNotReady && !(video.isLivePost && video.isLiveNow) && (
+          <button
+            data-video-controls data-video-bare data-video-center
+            data-controls-hidden={isPlaying && !controlsVisible ? 'true' : undefined}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+            onPointerDown={(event) => event.stopPropagation()}
+            onPointerUp={(event) => event.stopPropagation()}
+            onTouchStart={(event) => event.stopPropagation()}
+            onTouchEnd={(event) => event.stopPropagation()}
+            onClick={(event) => { event.stopPropagation(); showControlsBriefly(); handlePlayClick(); }}
+            className="absolute left-1/2 top-1/2 z-20 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-transparent text-white"
+          >
+            <MediaControlIcon icon={isPlaying ? Pause : Play} size={32} />
+          </button>
+        )}
 
         {/* Draws the 👍 / ❤️ for the tap ladder above. Inert and self-contained;
             it listens for this post's own events rather than taking state. */}
@@ -2483,31 +2499,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
 
-        {/* Transport bar at bottom. Gated on showControls alone, not on
-            duration: in Lite mode preload is 'none' and autoplay is off, so
-            duration stays 0 until something calls play() — gating the whole bar
-            on it left the one control that can start the clip unreachable from
-            the feed, where a tap now reveals controls instead of opening the
-            post. The scrubber is inert until metadata arrives, and revealing the
-            controls now goes and fetches it.
-            Audio posts are excluded: this bar is driven by the <video> element,
-            so over a visualizer it painted a black gradient and a second,
-            non-functional play button on top of the audio controls — the
-            "hovering brings up a play/pause button" complaint. */}
+        {/* Keep the timeline mounted before metadata arrives. Lite mode starts
+            from the centered Play button; seeking enables once the length is
+            known. Audio posts and live streams own their transport. */}
         {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
             {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-12 touch-pan-y" />}
 
             <div data-video-button-row className={cn("flex items-center gap-2", bareControls && (mediaAspect >= 1 ? "px-2" : "px-1.5"))}>
-              <button
-                onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
-                aria-label={isPlaying ? 'Pause' : 'Play'}
-                data-video-bare={bareControls ? '' : undefined}
-                className={cn("flex items-center justify-center shrink-0", bareControls ? "h-8 w-8" : "h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10")}
-              >
-                {isPlaying ? <MediaControlIcon icon={Pause} /> : <MediaControlIcon icon={Play} />}
-              </button>
               <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
               <input
                 type="range"

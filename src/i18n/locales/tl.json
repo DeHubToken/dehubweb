@@ -6518,6 +6518,15 @@
       "toggleLoop": "I-toggle ang loop"
     },
     "export": {
+      "scope": "I - download ang range",
+      "downloadTimeline": "Buong timeline",
+      "downloadSelection": "Mga napiling video clip ({{count}})",
+      "downloadClips": "Bawat video clip ({{count}})",
+      "rangeHint": "Pinapanatili ang mga caption at tunog para sa bawat hiwa. Ang bawat file ay nagdaragdag ng 2.2 - segundong pagtatapos ng DeHub. Maramihang mga file i - download nang sama - sama bilang isang ZIP.",
+      "exportingClips": "Nag - e - export ng clip {{current}} ng {{total}}",
+      "archiveTooLarge": "Ang pag - download ay lumampas sa 512 MiB. Mag - export ng mas kaunting mga clip o pumili ng mas mababang resolusyon.",
+      "gifHint": "Pag-ikot na animasyon nang walang tunog. Hanggang 60 segundo, 640 pixel at 15 fps. Kasama ang pagtatapos ng iyong logo.",
+      "gifTooLong": "Putulin ang timeline sa 60 segundo o mas mababa, o pumili ng MP4 o WebM.",
       "title": "I-download",
       "stillDescription": "I-save ang kasalukuyang frame bilang isang imahe.",
       "videoDescription": "I-render ang iyong timeline sa isang video file.",
@@ -6789,6 +6798,15 @@
       "thisPage": "Ang pahinang ito lang",
       "exporting": "Nire-render ang pahina {{current}} ng {{total}}…"
     },
+    "audioTools": {
+      "normalize": "I-normalisa ang volume",
+      "denoise": "Bawasan ang ingay",
+      "voice": "Pahusayin ang boses",
+      "working": "Processing sound... {{percent}}%",
+      "done": "Nagdagdag ng naprosesong tunog. Ibabalik ng undo ang orihinal.",
+      "failed": "Hindi maproseso ang tunog na ito. Ang orihinal ay hindi nagbago.",
+      "hint": "Magproseso ng mga clip hanggang 10 minuto. Ang pagbabawas ng ingay ay pinakamahusay na gumagana sa matatag na ingay sa background."
+    },
     "captions": {
       "action": "Auto captions",
       "working": "Nakikinig… {{percent}}%",
@@ -6876,6 +6894,19 @@
         "easeInOutBack": "Balik na pasok at labas",
         "hold": "Hawakan"
       }
+    },
+    "shots": {
+      "detect": "Tukuyin ang pagbabago ng eksena",
+      "split": "Hatiin sa mga napiling putol",
+      "none": "Walang nahanap na pagbabago ng eksena.",
+      "hint": "Suriin muna ang mga putol · ≤10 minuto",
+      "preview": "Preview"
+    },
+    "beats": {
+      "markers": "Mga marka ng kumpas",
+      "sync": "Isabay ang mga putol",
+      "none": "Walang maaasahang kumpas na nakita.",
+      "unchanged": "Hindi maitugma ang mga putol."
     }
   },
   "jungleMood": {

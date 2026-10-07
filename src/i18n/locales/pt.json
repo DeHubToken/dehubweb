@@ -6479,6 +6479,15 @@
       "toggleLoop": "Alternar loop"
     },
     "export": {
+      "scope": "Intervalo de transferências",
+      "downloadTimeline": "Linha do tempo inteira",
+      "downloadSelection": "Videoclipes selecionados ({{count}})",
+      "downloadClips": "Cada videoclipe ({{count}})",
+      "rangeHint": "Mantém legendas e som para cada corte. Cada arquivo adiciona um final DeHub de 2,2 segundos. Vários arquivos são baixados juntos como um ZIP.",
+      "exportingClips": "A exportar clipe {{current}} de {{total}}",
+      "archiveTooLarge": "O download excede 512 MiB. Exporte menos clipes ou escolha uma resolução mais baixa.",
+      "gifHint": "Animação em loop sem som. Até 60 segundos, 640 pixels e 15 fps. Inclui o final do seu logotipo.",
+      "gifTooLong": "Corte a linha do tempo para 60 segundos ou menos, ou escolha MP4 ou WebM.",
       "title": "Baixar",
       "stillDescription": "Salve o quadro atual como uma imagem.",
       "videoDescription": "Renderize sua linha do tempo em um arquivo de vídeo.",
@@ -6750,6 +6759,15 @@
       "thisPage": "Apenas esta página",
       "exporting": "Renderizando página {{current}} de {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizar volume",
+      "denoise": "Reduza o ruído",
+      "voice": "Melhorar a voz",
+      "working": "A processar som... {{percent}}%",
+      "done": "Som processado adicionado. Desfazer restaura o original.",
+      "failed": "Não foi possível processar este som. O original permanece inalterado.",
+      "hint": "Processar clipes de até 10 minutos. A redução de ruído funciona melhor com ruído de fundo constante."
+    },
     "captions": {
       "action": "Legendas automáticas",
       "working": "Ouvindo… {{percent}}%",
@@ -6837,6 +6855,19 @@
         "easeInOutBack": "Recuo na entrada e saída",
         "hold": "Manter"
       }
+    },
+    "shots": {
+      "detect": "Detectar mudanças de cena",
+      "split": "Dividir nos cortes selecionados",
+      "none": "Nenhuma mudança de cena encontrada.",
+      "hint": "Revise os cortes primeiro · ≤10 min",
+      "preview": "Prévia"
+    },
+    "beats": {
+      "markers": "Marcadores de ritmo",
+      "sync": "Sincronizar cortes",
+      "none": "Nenhum ritmo confiável encontrado.",
+      "unchanged": "Não foi possível alinhar os cortes."
     }
   },
   "jungleMood": {

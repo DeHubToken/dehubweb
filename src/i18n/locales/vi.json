@@ -6485,6 +6485,15 @@
       "toggleLoop": "Chuyển đổi lặp lại"
     },
     "export": {
+      "scope": "Phạm vi tải xuống",
+      "downloadTimeline": "Toàn bộ dòng thời gian",
+      "downloadSelection": "Các video clip đã chọn ({{count}})",
+      "downloadClips": "Mỗi video clip ({{count}})",
+      "rangeHint": "Giữ phụ đề và âm thanh cho mỗi lần cắt. Mỗi tệp thêm một kết thúc DeHub 2,2 giây. Nhiều tệp tải xuống cùng nhau dưới dạng ZIP.",
+      "exportingClips": "Xuất clip {{current}} trong số {{total}}",
+      "archiveTooLarge": "Tải xuống vượt quá 512 MiB. Xuất ít clip hơn hoặc chọn độ phân giải thấp hơn.",
+      "gifHint": "Lặp lại hoạt ảnh mà không có âm thanh. Lên đến 60 giây, 640 pixel và 15 khung hình/giây. Bao gồm phần cuối logo của bạn.",
+      "gifTooLong": "Cắt dòng thời gian thành 60 giây hoặc ít hơn, hoặc chọn MP4 hoặc WebM.",
       "title": "Tải xuống",
       "stillDescription": "Lưu khung hình hiện tại dưới dạng hình ảnh.",
       "videoDescription": "Kết xuất dòng thời gian của bạn thành tệp video.",
@@ -6756,6 +6765,15 @@
       "thisPage": "Chỉ trang này",
       "exporting": "Đang kết xuất trang {{current}}/{{total}}…"
     },
+    "audioTools": {
+      "normalize": "Chuẩn hóa âm lượng",
+      "denoise": "Giảm tiếng ồn",
+      "voice": "Tăng cường giọng nói",
+      "working": "Đang xử lý âm thanh... {{percent}}%",
+      "done": "Đã thêm âm thanh đã xử lý. Hoàn tác khôi phục bản gốc.",
+      "failed": "Không thể xử lý âm thanh này. Bản gốc không thay đổi.",
+      "hint": "Các clip quy trình tối đa 10 phút. Giảm tiếng ồn hoạt động tốt nhất với tiếng ồn nền ổn định."
+    },
     "captions": {
       "action": "Phụ đề tự động",
       "working": "Đang nghe… {{percent}}%",
@@ -6843,6 +6861,19 @@
         "easeInOutBack": "Bật lại vào và ra",
         "hold": "Giữ"
       }
+    },
+    "shots": {
+      "detect": "Phát hiện chuyển cảnh",
+      "split": "Chia tại điểm cắt đã chọn",
+      "none": "Không tìm thấy chuyển cảnh.",
+      "hint": "Xem lại điểm cắt trước · ≤10 phút",
+      "preview": "Xem trước"
+    },
+    "beats": {
+      "markers": "Dấu nhịp",
+      "sync": "Đồng bộ các đoạn cắt",
+      "none": "Không tìm thấy nhịp đáng tin cậy.",
+      "unchanged": "Không thể căn chỉnh các đoạn cắt."
     }
   },
   "jungleMood": {

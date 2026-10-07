@@ -5391,6 +5391,15 @@
       "toggleLoop": "Toggle loop"
     },
     "export": {
+      "scope": "Di part wey you wan download",
+      "downloadTimeline": "Di whole timeline",
+      "downloadSelection": "Video clips wey you select ({{count}})",
+      "downloadClips": "Every video clip ({{count}})",
+      "rangeHint": "E keep caption and sound for each cut. E add 2.2-second DeHub ending to each file. Plenty files go download together inside one ZIP.",
+      "exportingClips": "Dey export clip {{current}} out of {{total}}",
+      "archiveTooLarge": "Di download pass 512 MiB. Export fewer clips or choose lower resolution.",
+      "gifHint": "Looping animation wey no get sound. Reach up to 60 seconds, 640 pixels and 15 fps. E include your logo for di end.",
+      "gifTooLong": "Cut di timeline make e no pass 60 seconds, or choose MP4 or WebM.",
       "title": "Download",
       "stillDescription": "Save di frame wey dey now as picture.",
       "videoDescription": "Turn your timeline to video file.",
@@ -5662,6 +5671,15 @@
       "thisPage": "Na only dis page",
       "exporting": "E dey render page {{current}} of {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalize volume",
+      "denoise": "Reduce noise",
+      "voice": "Enhance voice",
+      "working": "Processing sound... {{percent}}%",
+      "done": "Dem add processed sound. Undo go bring back the original.",
+      "failed": "I no fit process dis sound. Di original no change.",
+      "hint": "Process clips wey no pass 10 minutes. Noise reduction dey work better when background noise dey steady."
+    },
     "captions": {
       "action": "Auto captions",
       "working": "E dey listen… {{percent}}%",
@@ -5746,6 +5764,19 @@
         "easeInOutBack": "Back for start and end",
         "hold": "Hold am"
       }
+    },
+    "shots": {
+      "detect": "Find scene changes",
+      "split": "Split for cuts wey you choose",
+      "none": "No scene changes dey.",
+      "hint": "Check cuts first · ≤10 min",
+      "preview": "Preview"
+    },
+    "beats": {
+      "markers": "Beat marks",
+      "sync": "Make cuts match",
+      "none": "We no find beat we fit trust.",
+      "unchanged": "We no fit make cuts match."
     }
   },
   "jungleMood": {

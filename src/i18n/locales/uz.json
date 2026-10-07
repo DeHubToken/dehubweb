@@ -6498,6 +6498,15 @@
       "toggleLoop": "Takrorlashni yoqish/o'chirish"
     },
     "export": {
+      "scope": "Yuklab olish diapazoni",
+      "downloadTimeline": "Butun vaqt jadvali",
+      "downloadSelection": "Tanlangan videokliplar ({{count}})",
+      "downloadClips": "Har bir video klip ({{count}})",
+      "rangeHint": "Har bir kesmada subtitrlar va ovozni saqlaydi. Har bir fayl 2,2 soniyalik DeHub yakunini qo‘shadi. Bir nechta fayllar birga ZIP sifatida yuklab olinadi.",
+      "exportingClips": "{{total}} dan {{current}} klip eksport qilinmoqda",
+      "archiveTooLarge": "Yuklab olish hajmi 512 MiB dan oshadi. Kamroq kliplarni eksport qiling yoki pastroq piksellar sonini tanlang.",
+      "gifHint": "Sado yo'q aylantiruvchi animatsiya. 60 soniyagacha, 640 piksel va 15 fps. Logotingizni yakuniy qismida o'z ichiga oladi.",
+      "gifTooLong": "Vaqt jadvalini 60 soniya yoki undan kamroq vaqtga qisqartiring yoki MP4 yoki WebM ni tanlang.",
       "title": "Yuklab olish",
       "stillDescription": "Joriy kadrni tasvir sifatida saqlash.",
       "videoDescription": "Vaqt jadvalingizni video faylga chiqarish.",
@@ -6769,6 +6778,15 @@
       "thisPage": "Faqat shu sahifa",
       "exporting": "{{current}}/{{total}} sahifa tayyorlanmoqda…"
     },
+    "audioTools": {
+      "normalize": "Ovoz balandligini normallashtirish",
+      "denoise": "Shovqinni kamaytiring",
+      "voice": "Ovozni yaxshilash",
+      "working": "Ovoz qayta ishlanmoqda... {{percent}}%",
+      "done": "Qayta ishlangan ovoz qo&#39;shildi. Bekor qilish asl tovushni tiklaydi.",
+      "failed": "Bu tovushni qayta ishlab bo&#39;lmadi. Asl nusxasi o&#39;zgartirilmagan.",
+      "hint": "Kliplarni 10 daqiqagacha qayta ishlang. Shovqinni kamaytirish barqaror fon shovqini bilan eng yaxshi ishlaydi."
+    },
     "captions": {
       "action": "Avtomatik subtitrlar",
       "working": "Tinglanmoqda… {{percent}}%",
@@ -6856,6 +6874,19 @@
         "easeInOutBack": "Qaytish kirish va chiqish",
         "hold": "Ushlab turish"
       }
+    },
+    "shots": {
+      "detect": "Sahna o‘zgarishlarini aniqlash",
+      "split": "Tanlangan kesimlarda bo‘lish",
+      "none": "Sahna o‘zgarishi topilmadi.",
+      "hint": "Avval kesimlarni tekshiring · ≤10 daq",
+      "preview": "Oldindan ko‘rish"
+    },
+    "beats": {
+      "markers": "Ritm belgilari",
+      "sync": "Kesimlarni sinxronlash",
+      "none": "Ishonchli ritm topilmadi.",
+      "unchanged": "Kesimlarni tekislab bo‘lmadi."
     }
   },
   "jungleMood": {

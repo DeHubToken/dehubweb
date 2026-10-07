@@ -6712,6 +6712,15 @@
       "toggleLoop": "Togol gelung"
     },
     "export": {
+      "scope": "Julat muat turun",
+      "downloadTimeline": "Seluruh garis masa",
+      "downloadSelection": "Klip video yang dipilih ({{count}})",
+      "downloadClips": "Setiap klip video ({{count}})",
+      "rangeHint": "Menyimpan kapsyen dan bunyi untuk setiap potongan. Setiap fail menambah pengakhiran DeHub 2.2 saat. Beberapa fail dimuat turun bersama sebagai ZIP.",
+      "exportingClips": "Mengeksport klip {{current}} daripada {{total}}",
+      "archiveTooLarge": "Muat turun melebihi 512 MiB. Eksport kurang klip atau pilih resolusi yang lebih rendah.",
+      "gifHint": "Animasi gelung tanpa bunyi. Sehingga 60 saat, 640 piksel dan 15 fps. Termasuk pengakhiran logo anda.",
+      "gifTooLong": "Potong garis masa kepada 60 saat atau kurang, atau pilih MP4 atau WebM.",
       "title": "Muat turun",
       "stillDescription": "Simpan bingkai semasa sebagai imej.",
       "videoDescription": "Render garis masa anda kepada fail video.",
@@ -6983,6 +6992,15 @@
       "thisPage": "Halaman ini sahaja",
       "exporting": "Memaparkan halaman {{current}} daripada {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalkan isipadu",
+      "denoise": "Kurangkan bunyi bising",
+      "voice": "Tingkatkan suara",
+      "working": "Memproses bunyi... {{percent}}%",
+      "done": "Bunyi yang diproses ditambah. Buat asal memulihkan yang asal.",
+      "failed": "Tidak dapat memproses bunyi ini. Asal tidak berubah.",
+      "hint": "Proses klip sehingga 10 minit. Pengurangan bunyi berfungsi paling baik dengan bunyi latar belakang yang mantap."
+    },
     "captions": {
       "action": "Kapsyen automatik",
       "working": "Mendengar… {{percent}}%",
@@ -7070,6 +7088,19 @@
         "easeInOutBack": "Lantun masuk dan keluar",
         "hold": "Tahan"
       }
+    },
+    "shots": {
+      "detect": "Kesan perubahan adegan",
+      "split": "Pisahkan pada potongan terpilih",
+      "none": "Tiada perubahan adegan ditemui.",
+      "hint": "Semak potongan dahulu · ≤10 minit",
+      "preview": "Pratonton"
+    },
+    "beats": {
+      "markers": "Penanda rentak",
+      "sync": "Segerakkan potongan",
+      "none": "Tiada rentak yang boleh dipercayai ditemui.",
+      "unchanged": "Potongan tidak dapat dijajarkan."
     }
   },
   "jungleMood": {

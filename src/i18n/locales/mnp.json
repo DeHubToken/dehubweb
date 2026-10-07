@@ -5804,6 +5804,15 @@
       "toggleLoop": "切换循环"
     },
     "export": {
+      "scope": "下载范围",
+      "downloadTimeline": "整个时间线",
+      "downloadSelection": "选定的视频剪辑（{{count}}）",
+      "downloadClips": "每个视频剪辑（{{count}}）",
+      "rangeHint": "保留每段的字幕和音频。每个文件会额外添加 2.2 秒的 DeHub 结尾。多个文件会一起打包成 ZIP 下载。",
+      "exportingClips": "导出第 {{current}} 个剪辑（共 {{total}} 个）",
+      "archiveTooLarge": "下载文件超过 512 MiB。请导出更少的剪辑或选择更低的分辨率。",
+      "gifHint": "循环动画，无声。最长60秒，640像素，15帧每秒。包含你的标志结尾。",
+      "gifTooLong": "把时间线裁剪到60秒以内，或选择MP4或WebM。",
       "title": "下载",
       "stillDescription": "将当前帧保存为图片。",
       "videoDescription": "将时间线渲染为视频文件。",
@@ -6075,6 +6084,15 @@
       "thisPage": "就许一页",
       "exporting": "正在渲染第 {{current}} 页，共 {{total}} 页…"
     },
+    "audioTools": {
+      "normalize": "标准化音量",
+      "denoise": "降低噪音",
+      "voice": "增强人声",
+      "working": "正在处理声音... {{percent}}%",
+      "done": "已添加处理后的声音。撤销将恢复原始音频。",
+      "failed": "无法处理此声音。原始音频保持不变。",
+      "hint": "处理时长最长可达10分钟。噪音消除在背景噪音稳定时效果最佳。"
+    },
     "captions": {
       "action": "自动字幕",
       "working": "正在听… {{percent}}%",
@@ -6160,6 +6178,19 @@
         "easeInOutBack": "回弹缓入缓出",
         "hold": "定格"
       }
+    },
+    "shots": {
+      "detect": "检测场景变化",
+      "split": "在所选切点分割",
+      "none": "未找到场景变化。",
+      "hint": "先检查切点 · ≤10分钟",
+      "preview": "预览"
+    },
+    "beats": {
+      "markers": "节拍标记",
+      "sync": "同步剪辑",
+      "none": "未找到可靠的节拍。",
+      "unchanged": "无法对齐剪辑。"
     }
   },
   "jungleMood": {

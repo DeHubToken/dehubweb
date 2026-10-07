@@ -6482,6 +6482,15 @@
       "toggleLoop": "Alternar bucle"
     },
     "export": {
+      "scope": "Rango de descargas",
+      "downloadTimeline": "Línea de tiempo completa",
+      "downloadSelection": "Clips de vídeo seleccionados ({{count}})",
+      "downloadClips": "Cada videoclip ({{count}})",
+      "rangeHint": "Mantiene los subtítulos y el sonido para cada corte. Cada archivo añade una terminación DeHub de 2,2 segundos. Varios archivos se descargan juntos como un CÓDIGO POSTAL.",
+      "exportingClips": "Exportando clip {{current}} de {{total}}",
+      "archiveTooLarge": "La descarga supera los 512 MB. Exporta menos clips o elige una resolución más baja.",
+      "gifHint": "Animación en bucle sin sonido. Hasta 60 segundos, 640 píxeles y 15 fps. Incluye la terminación de tu logotipo.",
+      "gifTooLong": "Recorte la línea de tiempo a 60 segundos o menos, o elija MP4 o WebM.",
       "title": "Descargar",
       "stillDescription": "Guarda el fotograma actual como imagen.",
       "videoDescription": "Renderiza tu línea de tiempo a un archivo de vídeo.",
@@ -6753,6 +6762,15 @@
       "thisPage": "Solo esta página",
       "exporting": "Renderizando página {{current}} de {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizar volumen",
+      "denoise": "Reduce el ruido",
+      "voice": "Mejora la voz",
+      "working": "Procesando sonido... {{percent}}%",
+      "done": "Sonido procesado añadido. Deshacer restaura el original.",
+      "failed": "No se ha podido procesar este sonido. El original no ha cambiado.",
+      "hint": "Procesar clips de hasta 10 minutos. La reducción de ruido funciona mejor con un ruido de fondo constante."
+    },
     "captions": {
       "action": "Subtítulos automáticos",
       "working": "Escuchando… {{percent}}%",
@@ -6840,6 +6858,19 @@
         "easeInOutBack": "Rebote al entrar y salir",
         "hold": "Mantener"
       }
+    },
+    "shots": {
+      "detect": "Detectar cambios de escena",
+      "split": "Dividir en los cortes elegidos",
+      "none": "No se encontraron cambios de escena.",
+      "hint": "Revisa los cortes primero · ≤10 min",
+      "preview": "Vista previa"
+    },
+    "beats": {
+      "markers": "Marcadores de ritmo",
+      "sync": "Sincronizar cortes",
+      "none": "No se encontró un ritmo fiable.",
+      "unchanged": "No se pudieron alinear los cortes."
     }
   },
   "jungleMood": {

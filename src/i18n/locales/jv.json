@@ -6223,6 +6223,15 @@
       "toggleLoop": "Ganti puteran"
     },
     "export": {
+      "scope": "Unduh rentang",
+      "downloadTimeline": "Seluruh garis wektu",
+      "downloadSelection": "Klip video sing dipilih ({{count}})",
+      "downloadClips": "Saben klip video ({{count}})",
+      "rangeHint": "Njaga caption lan swara kanggo saben potongan. Saben file nambah pungkasan DeHub 2,2 detik. Akeh file diunduh bebarengan minangka ZIP.",
+      "exportingClips": "Ngekspor klip {{current}} saka {{total}}",
+      "archiveTooLarge": "Unduhan ngluwihi 512 MiB. Ekspor luwih sithik klip utawa pilih resolusi sing luwih murah.",
+      "gifHint": "Animasi looping tanpa swara. nganti 60 detik, 640 piksel lan 15 fps. Kalebu logo panjenengan ing pungkasan.",
+      "gifTooLong": "Potong timeline nganti 60 detik utawa kurang, utawa pilih MP4 utawa WebM.",
       "title": "Undhuh",
       "stillDescription": "Simpen pigura saiki minangka gambar.",
       "videoDescription": "Render garis wektu menyang file video.",
@@ -6494,6 +6503,15 @@
       "thisPage": "Mung kaca iki",
       "exporting": "Nggawe kaca {{current}} saka {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalake volume",
+      "denoise": "Kurangi gangguan",
+      "voice": "Tingkatake swara",
+      "working": "Ngolah swara... {{percent}}%",
+      "done": "Swara sing wis diproses ditambahake. Undo bakal mbalekake sing asli.",
+      "failed": "Ora bisa ngolah swara iki. Asline tetep ora owah.",
+      "hint": "Proses klip nganti 10 menit. Pengurangan gangguan paling apik yen latar mburi tetep."
+    },
     "captions": {
       "action": "Teks otomatis",
       "working": "Lagi ngrungokake… {{percent}}%",
@@ -6581,6 +6599,19 @@
         "easeInOutBack": "Mbalik mlebu lan metu",
         "hold": "Tahan"
       }
+    },
+    "shots": {
+      "detect": "Goleki owah-owahan adegan",
+      "split": "Pisah ing potongan sing dipilih",
+      "none": "Ora ana owah-owahan adegan.",
+      "hint": "Priksa potongan dhisik · ≤10 menit",
+      "preview": "Pratinjau"
+    },
+    "beats": {
+      "markers": "Tandha ketukan",
+      "sync": "Selarasake potongan",
+      "none": "Ora ana ketukan sing dipercaya.",
+      "unchanged": "Potongan ora bisa diselarasake."
     }
   },
   "jungleMood": {

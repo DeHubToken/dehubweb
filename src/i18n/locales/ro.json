@@ -6471,6 +6471,15 @@
       "toggleLoop": "Comută bucla"
     },
     "export": {
+      "scope": "Gama de descărcare",
+      "downloadTimeline": "Întregul calendar",
+      "downloadSelection": "Videoclipuri selectate ({{count}})",
+      "downloadClips": "Fiecare videoclip ({{count}})",
+      "rangeHint": "Păstrează subtitrările și sunetul pentru fiecare tăietură. Fiecare fișier adaugă un DeHub de 2,2 secunde. Mai multe fișiere se descarcă împreună ca ZIP.",
+      "exportingClips": "Se exportă clipul {{current}} din {{total}}",
+      "archiveTooLarge": "Descărcarea depășește 512 MiB. Exportă mai puține clipuri sau alege o rezoluție mai mică.",
+      "gifHint": "Animație în buclă fără sunet. Până la 60 de secunde, 640 pixeli și 15 fps. Include sigla care se termină.",
+      "gifTooLong": "Decupați cronologia la 60 de secunde sau mai puțin sau alegeți MP4 sau WebM.",
       "title": "Descărcare",
       "stillDescription": "Salvează cadrul curent ca imagine.",
       "videoDescription": "Randare cronologie într-un fișier video.",
@@ -6742,6 +6751,15 @@
       "thisPage": "Doar această pagină",
       "exporting": "Se randează pagina {{current}} din {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizați volumul",
+      "denoise": "Reduceți zgomotul",
+      "voice": "Îmbunătățește vocea",
+      "working": "Sunet de procesare... {{percent}}%",
+      "done": "Sunetul procesat a fost adăugat. Anularea restaurează originalul.",
+      "failed": "Nu s-a putut procesa acest sunet. Originalul este neschimbat.",
+      "hint": "Clipuri de proces de până la 10 minute. Reducerea zgomotului funcționează cel mai bine cu zgomot de fond constant."
+    },
     "captions": {
       "action": "Subtitrări automate",
       "working": "Se ascultă… {{percent}}%",
@@ -6829,6 +6847,19 @@
         "easeInOutBack": "Recul la intrare și ieșire",
         "hold": "Menține"
       }
+    },
+    "shots": {
+      "detect": "Detectează schimbări de scenă",
+      "split": "Împarte la tăieturile selectate",
+      "none": "Nu s-au găsit schimbări de scenă.",
+      "hint": "Verifică întâi tăieturile · ≤10 min",
+      "preview": "Previzualizare"
+    },
+    "beats": {
+      "markers": "Marcaje de ritm",
+      "sync": "Sincronizează tăieturile",
+      "none": "Nu s-a găsit un ritm sigur.",
+      "unchanged": "Tăieturile nu au putut fi aliniate."
     }
   },
   "jungleMood": {

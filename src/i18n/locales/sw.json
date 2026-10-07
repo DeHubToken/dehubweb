@@ -6451,6 +6451,15 @@
       "toggleLoop": "Washa/zima kitanzi"
     },
     "export": {
+      "scope": "Pakua masafa",
+      "downloadTimeline": "Ratiba nzima ya wakati",
+      "downloadSelection": "Klipu za video zilizochaguliwa ({{count}})",
+      "downloadClips": "Kila klipu ya video ({{count}})",
+      "rangeHint": "Hudumisha maelezo mafupi na sauti kwa kila kata. Kila faili huongeza mwisho wa DeHub wa sekunde 2.2. Faili nyingi zinapakuliwa pamoja kama ZIP.",
+      "exportingClips": "Kuhamisha klipu {{current}} ya {{total}}",
+      "archiveTooLarge": "Upakuaji unazidi MiB 512. Hamisha klipu chache au uchague azimio la chini.",
+      "gifHint": "Uhuishaji wa kitanzi bila sauti. Hadi sekunde 60, pikseli 640 na fps 15. Inajumuisha nembo yako inayoisha.",
+      "gifTooLong": "Punguza ratiba hadi sekunde 60 au chini, au uchague MP4 au WebM.",
       "title": "Pakua",
       "stillDescription": "Hifadhi fremu ya sasa kama picha.",
       "videoDescription": "Tengeneza kalenda yako ya matukio kuwa faili ya video.",
@@ -6722,6 +6731,15 @@
       "thisPage": "Ukurasa huu pekee",
       "exporting": "Inatayarisha ukurasa {{current}} kati ya {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Sawaisha sauti",
+      "denoise": "Punguza keusi",
+      "voice": "Boresha sauti",
+      "working": "Inashughulikia sauti... {{percent}}%",
+      "done": "Sauti iliyoshughulikiwa imeongezwa. Kutengua kunarejesha asili.",
+      "failed": "Haikuweza kushughulikia sauti hii. Asili haijabadilika.",
+      "hint": "Shughulikia vipande hadi dakika 10. Upunguzaji wa keusi hufanya kazi vizuri zaidi na keusi ya mandharinyuma isiyobadilika."
+    },
     "captions": {
       "action": "Manukuu ya kiotomatiki",
       "working": "Inasikiliza… {{percent}}%",
@@ -6809,6 +6827,19 @@
         "easeInOutBack": "Rudi kuingia na kutoka",
         "hold": "Shikilia"
       }
+    },
+    "shots": {
+      "detect": "Tambua mabadiliko ya mandhari",
+      "split": "Gawanya kwenye mikato iliyochaguliwa",
+      "none": "Hakuna mabadiliko ya mandhari yaliyopatikana.",
+      "hint": "Kagua mikato kwanza · ≤dakika 10",
+      "preview": "Hakiki"
+    },
+    "beats": {
+      "markers": "Alama za mdundo",
+      "sync": "Sawazisha mikato",
+      "none": "Hakuna mdundo wa kuaminika uliopatikana.",
+      "unchanged": "Mikato haikuweza kulinganishwa."
     }
   },
   "jungleMood": {

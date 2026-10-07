@@ -6461,6 +6461,15 @@
       "toggleLoop": "Ndërro ciklin"
     },
     "export": {
+      "scope": "Gama e shkarkimeve",
+      "downloadTimeline": "I gjithë afati kohor",
+      "downloadSelection": "Videoklipe të zgjedhura ({{count}})",
+      "downloadClips": "Çdo videoklip ({{count}})",
+      "rangeHint": "Mban diçiturat dhe tingujt për çdo prerje. Çdo skedar shton një përfundim DeHub prej 2.2 sekondash. Shkarko skedarë të shumëfishtë së bashku si një ZIP.",
+      "exportingClips": "Eksportimi i klipit {{current}} i {{total}}",
+      "archiveTooLarge": "Shkarkimi tejkalon 512 MiB. Eksporto më pak klipe ose zgjidh një rezolucion më të ulët.",
+      "gifHint": "Lakimi i animacionit pa zë. Deri në 60 sekonda, 640 piksele dhe 15 fps. Përfshin fundin e logos.",
+      "gifTooLong": "Cuti kohëzgjatjen në 60 sekonda ose më pak, ose zgjidh MP4 ose WebM.",
       "title": "Shkarko",
       "stillDescription": "Ruaje kornizën aktuale si imazh.",
       "videoDescription": "Rendëro linjën tënde kohore në një skedar video.",
@@ -6732,6 +6741,15 @@
       "thisPage": "Vetëm këtë faqe",
       "exporting": "Po përpunohet faqja {{current}} nga {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizo volumin",
+      "denoise": "Redukto zhurmën",
+      "voice": "Përmirëso zërin",
+      "working": "Duke përpunuar tingullin... {{percent}}%",
+      "done": "Tingulli i përpunuar u shtua. Zhbëjeni origjinalin.",
+      "failed": "Nuk mund ta përpunoja këtë tingull. Origjinali është i pandryshuar.",
+      "hint": "Procesoni klipet deri në 10 minuta. Reduktimi i zhurmës funksionon më mirë me zhurmë të qëndrueshme në sfond."
+    },
     "captions": {
       "action": "Titra automatike",
       "working": "Duke dëgjuar… {{percent}}%",
@@ -6819,6 +6837,19 @@
         "easeInOutBack": "Hyrje dhe dalje me kthim",
         "hold": "Mbaj"
       }
+    },
+    "shots": {
+      "detect": "Zbulo ndryshimet e skenës",
+      "split": "Ndaj te prerjet e zgjedhura",
+      "none": "Nuk u gjetën ndryshime skene.",
+      "hint": "Kontrollo fillimisht prerjet · ≤10 min",
+      "preview": "Parapamje"
+    },
+    "beats": {
+      "markers": "Shënuesit e ritmit",
+      "sync": "Sinkronizo prerjet",
+      "none": "Nuk u gjet ritëm i besueshëm.",
+      "unchanged": "Prerjet nuk mund të rreshtoheshin."
     }
   },
   "jungleMood": {

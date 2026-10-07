@@ -6422,6 +6422,15 @@
       "toggleLoop": "Irra deddeebii bani/cufi"
     },
     "export": {
+      "scope": "Buufadhu daangaa",
+      "downloadTimeline": "Guutuu yeroo",
+      "downloadSelection": "Kiliippiiwwan viidiyoo filataman ({{count}})",
+      "downloadClips": "Kiliippii viidiyoo hunda ({{count}})",
+      "rangeHint": "Tokkoon tokkoon muraadhaaf mata duree fi sagalee ni qabata. Tokkoon tokkoon faayilii xumura DeHub sekondii 2.2 dabalata. Faayiloonni hedduun akka ZIP tti walitti buufa.",
+      "exportingClips": "Kiliippii {{current}} kan {{total}} erguu",
+      "archiveTooLarge": "Buufanni isaa 512 MiB ol ta&#39;a. Kiliippiiwwan xiqqaa ergi ykn furmaata gadi aanaa filadhu.",
+      "gifHint": "Animeeshinii sagalee malee loop gochuu. Hanga sekondii 60, piikselii 640 fi fps 15. Xumura asxaa keessanii of keessaa qaba.",
+      "gifTooLong": "Sarara yeroo gara sekondii 60 fi isaa gadiitti muraa, ykn MP4 ykn WebM filadhu.",
       "title": "Buusi",
       "stillDescription": "Fireemii amma jiru akka suuraatti olkaa'i.",
       "videoDescription": "Sarara yeroo kee gara faayilii viidiyootti jijjiiri.",
@@ -6693,6 +6702,15 @@
       "thisPage": "Fuula kana qofa",
       "exporting": "Fuula {{current}} kan {{total}} keessaa qopheessaa jira…"
     },
+    "audioTools": {
+      "normalize": "Sagalee idilee normalize gochuu",
+      "denoise": "Sagalee hir&#39;isuu",
+      "voice": "Sagalee guddisuu",
+      "working": "Sagalee hojjechaa... {{percent}}%",
+      "done": "Sagaleen adeemsifame dabalameera. Undo&#39;n isa jalqabaa deebisa.",
+      "failed": "Sagalee kana adeemsisuu hin dandeenye. Orijinaalli hin jijjiiramne.",
+      "hint": "Kiliippii hanga daqiiqaa 10tti adeemsi. Sagalee hir&#39;isuun sagalee duubaa dhaabbataa ta&#39;een akka gaariitti hojjeta."
+    },
     "captions": {
       "action": "Barreeffama ofumaan",
       "working": "Dhaggeeffachaa jira… {{percent}}%",
@@ -6780,6 +6798,19 @@
         "easeInOutBack": "Deebii seensaa fi ba’iinsa",
         "hold": "Qabi"
       }
+    },
+    "shots": {
+      "detect": "Jijjiirama mul'ataa barbaadi",
+      "split": "Bakka murame filatametti qoodi",
+      "none": "Jijjiiramni mul'ataa hin argamne.",
+      "hint": "Dura bakka murame ilaali · ≤10 daqiiqaa",
+      "preview": "Dursee ilaali"
+    },
+    "beats": {
+      "markers": "Mallattoolee rukuttaa",
+      "sync": "Kutaa walsimsiisi",
+      "none": "Rukutaan amanamaan hin argamne.",
+      "unchanged": "Kutaan walsimuun hin danda'amne."
     }
   },
   "jungleMood": {

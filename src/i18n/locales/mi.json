@@ -6443,6 +6443,15 @@
       "toggleLoop": "Hurihuri i te hokinga anō"
     },
     "export": {
+      "scope": "Tikiake whānuitanga",
+      "downloadTimeline": "He raupapa wā katoa",
+      "downloadSelection": "Ngā ataata i tīpakohia ({{count}})",
+      "downloadClips": "Ko nga ataata katoa ({{count}})",
+      "rangeHint": "Kia mau ki nga upoko me nga tangi mo ia tapahi. Ka tāpirihia e ia kōnae he mutunga o te 2.2 hēkona DeHub. Tikiake ngā kōnae maha rite te ZIP.",
+      "exportingClips": "Kupu kaweake {{current}} {{total}}",
+      "archiveTooLarge": "Ko te tikiake neke atu i te 512 MiB. Te kaweake i te iti ake o ngā kōpae, te whiriwhiri rānei i tētahi whakataunga iti ake.",
+      "gifHint": "Whakaahua aunoa me te kore oro. Tae atu ki te 60 hēkona, 640 pixel me te 15 fps. Kei roto i to tohu mutunga.",
+      "gifTooLong": "Tīpakohia te raupapa wā ki te 60 hēkona iti iho ranei, ranei whiriwhiri MP4 WebM ranei.",
       "title": "Tikiake",
       "stillDescription": "Tiaki i te anga o nāianei hei pikitia.",
       "videoDescription": "Whakawhiti i tō rārangi wā ki tētahi konae ataata.",
@@ -6714,6 +6723,15 @@
       "thisPage": "Tēnei whārangi anake",
       "exporting": "E whakaputa ana i te whārangi {{current}} o {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Te rōrahi ritenga",
+      "denoise": "Te whakaiti i te haruru",
+      "voice": "Whakapai ake i te reo",
+      "working": "Te tukatuka o te oro... {{percent}}%",
+      "done": "I tāpirihia te tangi tukatuka. Ka whakahoutia e Undo te taketake.",
+      "failed": "Kaore e taea e au te whakatika i tenei tangi. Ko te taketake e kore e huri.",
+      "hint": "Ka tae atu ki te 10 meneti te roa o te tukanga. Ko te whakaiti i te tangi e pai ana ki te haruru o muri."
+    },
     "captions": {
       "action": "Tapanga aunoa",
       "working": "E whakarongo ana… {{percent}}%",
@@ -6801,6 +6819,19 @@
         "easeInOutBack": "Hoki tomo me te puta",
         "hold": "Pupuri"
       }
+    },
+    "shots": {
+      "detect": "Kimihia ngā huringa whakaaturanga",
+      "split": "Wehea ki ngā tapahi kua tīpakohia",
+      "none": "Kāore he huringa whakaaturanga i kitea.",
+      "hint": "Arotakea ngā tapahi i te tuatahi · ≤10 min",
+      "preview": "Arokite"
+    },
+    "beats": {
+      "markers": "Ngā tohu manawataki",
+      "sync": "Whakaritea ngā tapahi",
+      "none": "Kāore he manawataki pono i kitea.",
+      "unchanged": "Kāore i taea te whakatika ngā tapahi."
     }
   },
   "jungleMood": {

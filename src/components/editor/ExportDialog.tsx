@@ -19,6 +19,10 @@ import { getPages, pageAt } from "@/lib/editor/pages";
 import { zipFiles } from "@/lib/editor/zip";
 import { useAuth } from "@/contexts/AuthContext";
 import { BRAND_OUTRO_DURATION } from "@/lib/editor/brandOutro";
+import { GIF_CONTENT_LIMIT, gifPlan } from "@/lib/editor/gif";
+import { clipExportRanges, type ExportScope } from "@/lib/editor/exportRanges";
+import { ZIP_DOWNLOAD_LIMIT } from "@/lib/editor/zipArchive";
+import { zipDownloadFiles } from "@/lib/editor/zipDownloadFiles";
 
 interface Props {
   open: boolean;
@@ -46,11 +50,18 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const duration = useEditorStore(selectTimelineDuration);
   const currentTime = useEditorStore((s) => s.currentTime);
   const settings = useEditorStore((s) => s.settings);
+  const selectedClipIds = useEditorStore((s) => s.selectedClipIds);
+  const tracks = useEditorStore((s) => s.tracks);
 
   const [format, setFormat] = useState<Format>("mp4");
   const [scaleKey, setScaleKey] = useState("1");
   const [qualityKey, setQualityKey] = useState<Quality>("high");
   const [allPages, setAllPages] = useState(true);
+  const [scope, setScope] = useState<ExportScope>("timeline");
+  const rangeSnapshot = { ...toSnapshot(), clips, tracks };
+  const allRanges = clipExportRanges(rangeSnapshot);
+  const selectedRanges = clipExportRanges(rangeSnapshot, selectedClipIds);
+  const ranges = scope === "selection" ? selectedRanges : allRanges;
   const pages = getPages(settings, clips);
   const multiPage = pages.length > 1;
 
@@ -61,9 +72,12 @@ export function ExportDialog({ open, onOpenChange }: Props) {
 
   const videoSupported = isExportSupported();
   const still = isStill(format);
+  const gif = format === "gif";
   const scale = parseFloat(scaleKey);
-  const outW = Math.round(settings.width * scale);
-  const outH = Math.round(settings.height * scale);
+  const gifOutput = gifPlan(settings.width, settings.height, scale, BRAND_OUTRO_DURATION, settings.fps);
+  const outW = gif ? gifOutput.width : Math.round(settings.width * scale);
+  const outH = gif ? gifOutput.height : Math.round(settings.height * scale);
+  const motionSupported = gif || videoSupported;
 
   // Each time the dialog opens, suggest the format that fits the project.
   useEffect(() => {
@@ -71,6 +85,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     const hasMotion = clips.some((c) => c.kind === "video" || c.kind === "audio");
     setFormat(hasMotion ? "mp4" : "png");
     setScaleKey("1");
+    setScope("timeline");
     // Only on open; changing clips while the dialog is up should not reset a choice.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -136,24 +151,50 @@ export function ExportDialog({ open, onOpenChange }: Props) {
       toast.error(t("editor.export.empty"));
       return;
     }
+    const snapshot = toSnapshot();
+    const batch = scope === "timeline" ? null : clipExportRanges(snapshot, scope === "selection" ? selectedClipIds : undefined);
+    if (batch && !batch.length) { toast.error(t("editor.export.empty")); return; }
+    if (gif && (batch ? batch.some(r => r.end - r.start > GIF_CONTENT_LIMIT) : exportDuration > GIF_CONTENT_LIMIT)) { toast.error(t("editor.export.gifTooLong")); return; }
     setBusy(true);
     setProgress(0);
     setLabel(t("editor.export.preparing"));
     const ctl = new AbortController();
     abortRef.current = ctl;
     try {
-      const { blob, filename } = await exportProject({
-        snapshot: toSnapshot(),
+      const baseOptions = {
+        snapshot,
         media,
         format: format as ExportFormat,
         scale,
         videoBitrate: QUALITY_PRESETS[qualityKey],
         cutEndAt,
         username: user?.username,
-        onProgress: (p, l) => { setProgress(Math.round(p * 100)); setLabel(l); },
         signal: ctl.signal,
-      });
-      download(blob, filename);
+      };
+      if (batch) {
+        const files: { name: string; blob: Blob }[] = [];
+        let size = 0;
+        for (const [index, range] of batch.entries()) {
+          const result = await exportProject({ ...baseOptions, range, cutEndAt: undefined,
+            onProgress: p => {
+              setProgress(Math.round(((index + p) / batch.length) * 95));
+              setLabel(t("editor.export.exportingClips", { current: index + 1, total: batch.length }));
+            },
+          });
+          size += result.blob.size;
+          if (size > ZIP_DOWNLOAD_LIMIT) throw new Error(t("editor.export.archiveTooLarge"));
+          files.push({ name: `${range.name}.${format}`, blob: result.blob });
+        }
+        const blob = files.length === 1 ? files[0].blob : await zipDownloadFiles(files, ctl.signal);
+        if (ctl.signal.aborted) throw new DOMException("Export cancelled", "AbortError");
+        const filename = files.length === 1 ? files[0].name : `${(snapshot.title || "video").replace(/[^\w-]+/g, "_")}-clips.zip`;
+        download(blob, filename);
+      } else {
+        const { blob, filename } = await exportProject({ ...baseOptions,
+          onProgress: (p, l) => { setProgress(Math.round(p * 100)); setLabel(l); },
+        });
+        download(blob, filename);
+      }
       onOpenChange(false);
     } catch (e) {
       if ((e as Error).name === "AbortError") {
@@ -175,7 +216,8 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     ultra: t("editor.export.quality_ultra"),
   };
   const scales = still ? ["0.5", "1", "2"] : ["1", "0.75", "0.5"];
-  const canDownload = duration > 0 && (still || videoSupported);
+  const gifTooLong = gif && (scope === "timeline" ? duration > GIF_CONTENT_LIMIT : ranges.some(r => r.end - r.start > GIF_CONTENT_LIMIT));
+  const canDownload = duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!busy) onOpenChange(v); }}>
@@ -183,11 +225,11 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         <DialogHeader>
           <DialogTitle>{t("editor.export.title")}</DialogTitle>
           <DialogDescription className="text-white/60">
-            {still ? t("editor.export.stillDescription") : t("editor.export.videoDescription")}
+            {gif ? t("editor.export.gifHint") : still ? t("editor.export.stillDescription") : t("editor.export.videoDescription")}
           </DialogDescription>
         </DialogHeader>
 
-        {!still && !videoSupported && (
+        {!still && !motionSupported && (
           <p className="rounded-md border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-200">
             {t("editor.export.unsupported")}
           </p>
@@ -203,9 +245,22 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                   <SelectItem value="jpg">{t("editor.export.jpg")}</SelectItem>
                   <SelectItem value="mp4">{t("editor.export.mp4")}</SelectItem>
                   <SelectItem value="webm">{t("editor.export.webm")}</SelectItem>
+                  <SelectItem value="gif">{t("emojiPicker.tabGif")}</SelectItem>
                 </SelectContent>
               </Select>
             </Row>
+            {!still && allRanges.length > 0 && (
+              <Row label={t("editor.export.scope")}>
+                <Select value={scope} onValueChange={v => setScope(v as ExportScope)}>
+                  <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
+                  <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
+                    <SelectItem value="timeline">{t("editor.export.downloadTimeline")}</SelectItem>
+                    <SelectItem value="selection" disabled={!selectedRanges.length}>{t("editor.export.downloadSelection", { count: selectedRanges.length })}</SelectItem>
+                    <SelectItem value="clips">{t("editor.export.downloadClips", { count: allRanges.length })}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </Row>
+            )}
             <Row label={t("editor.export.resolution")}>
               <Select value={scaleKey} onValueChange={setScaleKey}>
                 <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
@@ -214,7 +269,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                     const s = parseFloat(k);
                     return (
                       <SelectItem key={k} value={k}>
-                        {Math.round(s * 100)}% — {Math.round(settings.width * s)}×{Math.round(settings.height * s)}
+                        {Math.round(s * 100)}% — {gif ? gifPlan(settings.width, settings.height, s, BRAND_OUTRO_DURATION, settings.fps).width : Math.round(settings.width * s)}×{gif ? gifPlan(settings.width, settings.height, s, BRAND_OUTRO_DURATION, settings.fps).height : Math.round(settings.height * s)}
                       </SelectItem>
                     );
                   })}
@@ -232,7 +287,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 </Select>
               </Row>
             )}
-            {!still && (
+            {!still && !gif && (
               <Row label={t("editor.export.quality")}>
                 <Select value={qualityKey} onValueChange={(v) => setQualityKey(v as Quality)}>
                   <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
@@ -252,15 +307,18 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 <div>{t("editor.export.frameAt", { time: Math.min(currentTime, duration).toFixed(2) })}</div>
               ) : (
                 <>
-                  <div>{t("editor.export.duration", { value: (duration + BRAND_OUTRO_DURATION).toFixed(2) })}</div>
-                  <div>{t("editor.export.cutPreview", { value: Math.min(currentTime, duration).toFixed(2) })}</div>
+                  {scope === "timeline" ? <>
+                    <div>{t("editor.export.duration", { value: (duration + BRAND_OUTRO_DURATION).toFixed(2) })}</div>
+                    <div>{t("editor.export.cutPreview", { value: Math.min(currentTime, duration).toFixed(2) })}</div>
+                  </> : <div>{t("editor.export.rangeHint")}</div>}
                 </>
               )}
               <div>
                 {still
                   ? t("editor.export.outputStill", { width: outW, height: outH })
-                  : t("editor.export.outputVideo", { width: outW, height: outH, fps: settings.fps })}
+                  : t("editor.export.outputVideo", { width: outW, height: outH, fps: gif ? gifOutput.fps : settings.fps })}
               </div>
+              {gifTooLong && <div>{t("editor.export.gifTooLong")}</div>}
             </div>
           </div>
         )}
@@ -289,9 +347,9 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 className="rounded-lg text-white/80 hover:bg-white/10 hover:text-white">
                 {t("editor.export.cancel")}
               </Button>
-              {!still && (
+              {!still && scope === "timeline" && (
                 <Button variant="ghost" onClick={() => handleVideo(currentTime)}
-                  disabled={!videoSupported || duration <= 0 || currentTime <= 0}
+                  disabled={!motionSupported || duration <= 0 || currentTime <= 0 || (gif && Math.min(currentTime, duration) > GIF_CONTENT_LIMIT)}
                   className="rounded-lg text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40">
                   <Scissors className="mr-1 h-4 w-4" /> {t("editor.export.cut")}
                 </Button>

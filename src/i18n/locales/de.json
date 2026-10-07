@@ -6472,6 +6472,15 @@
       "toggleLoop": "Schleife umschalten"
     },
     "export": {
+      "scope": "Download-Bereich",
+      "downloadTimeline": "Gesamte Zeitleiste",
+      "downloadSelection": "Ausgewählte Videoclips ({{count}})",
+      "downloadClips": "Jeder Videoclip ({{count}})",
+      "rangeHint": "Hält Bildunterschriften und Ton für jeden Schnitt. Jede Datei fügt ein 2,2 Sekunden langes DeHub-Ende hinzu. Mehrere Dateien werden zusammen als ZIP heruntergeladen.",
+      "exportingClips": "Clip {{current}} von {{total}} wird exportiert",
+      "archiveTooLarge": "Der Download überschreitet 512 MiB. Exportieren Sie weniger Clips oder wählen Sie eine niedrigere Auflösung.",
+      "gifHint": "Schleifenanimation ohne Ton. Bis zu 60 Sekunden, 640 Pixel und 15 fps. Enthält Ihr Logo-Ende.",
+      "gifTooLong": "Schneiden Sie die Zeitleiste auf 60 Sekunden oder weniger zu, oder wählen Sie MP4 oder WebM.",
       "title": "Herunterladen",
       "stillDescription": "Speichern Sie den aktuellen Frame als Bild.",
       "videoDescription": "Rendern Sie Ihre Zeitleiste in eine Videodatei.",
@@ -6743,6 +6752,15 @@
       "thisPage": "Nur diese Seite",
       "exporting": "Seite {{current}} von {{total}} wird gerendert…"
     },
+    "audioTools": {
+      "normalize": "Lautstärke normalisieren",
+      "denoise": "Geräuschreduzierung",
+      "voice": "Stimme verbessern",
+      "working": "Ton wird verarbeitet... {{percent}}%",
+      "done": "Verarbeiteter Ton hinzugefügt. Rückgängig stellt das Original wieder her.",
+      "failed": "Dieses Geräusch konnte nicht verarbeitet werden. Das Original ist unverändert.",
+      "hint": "Bearbeiten Sie Clips bis zu 10 Minuten. Die Rauschunterdrückung funktioniert am besten bei stetigen Hintergrundgeräuschen."
+    },
     "captions": {
       "action": "Automatische Untertitel",
       "working": "Hört zu… {{percent}} %",
@@ -6830,6 +6848,19 @@
         "easeInOutBack": "Zurück ein und aus",
         "hold": "Halten"
       }
+    },
+    "shots": {
+      "detect": "Szenenwechsel erkennen",
+      "split": "An ausgewählten Schnitten teilen",
+      "none": "Keine Szenenwechsel gefunden.",
+      "hint": "Schnitte zuerst prüfen · ≤10 Min.",
+      "preview": "Vorschau"
+    },
+    "beats": {
+      "markers": "Taktmarkierungen",
+      "sync": "Schnitte synchronisieren",
+      "none": "Kein zuverlässiger Takt gefunden.",
+      "unchanged": "Die Schnitte konnten nicht ausgerichtet werden."
     }
   },
   "jungleMood": {

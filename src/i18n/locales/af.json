@@ -6535,6 +6535,15 @@
       "toggleLoop": "Wissel lus"
     },
     "export": {
+      "scope": "Laai reeks af",
+      "downloadTimeline": "Hele tydlyn",
+      "downloadSelection": "Geselekteerde video-knipsels ({{count}})",
+      "downloadClips": "Elke video clip ({{count}})",
+      "rangeHint": "Hou onderskrifte en klank vir elke snit. Elke lêer voeg 'n 2.2 sekonde DeHub einde. Veelvuldige lêers aflaai saam as 'n ZIP.",
+      "exportingClips": "Voer clip uit {{current}} van {{total}}",
+      "archiveTooLarge": "Die poskode is meer as 512 MB. Voer minder snitte uit of kies 'n laer resolusie.",
+      "gifHint": "Loop animasie sonder klank. Tot 60 sekondes, 640 pixels en 15 fps. Sluit jou logo einde.",
+      "gifTooLong": "Sny die tydlyn na 60 sekondes of minder, of kies MP4 of WebM.",
       "title": "Laai af",
       "stillDescription": "Stoor die huidige raam as 'n beeld.",
       "videoDescription": "Berei jou tydlyn voor na 'n videolêer.",
@@ -6806,6 +6815,15 @@
       "thisPage": "Slegs hierdie bladsy",
       "exporting": "Lewer bladsy {{current}} van {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normaliseer volume",
+      "denoise": "Verminder geraas",
+      "voice": "Verbeter stem",
+      "working": "Verwerking klank... {{percent}}%",
+      "done": "Verwerkte klank bygevoeg. Ontdoen herstel die oorspronklike.",
+      "failed": "Ek kon nie die geluid verwerk nie. Die oorspronklike is onveranderd.",
+      "hint": "Verwerk snitte tot 10 minute. Geraasvermindering werk die beste met bestendige agtergrond geraas."
+    },
     "captions": {
       "action": "Outo-onderskrifte",
       "working": "Luister tans… {{percent}}%",
@@ -6893,6 +6911,19 @@
         "easeInOutBack": "Terug in en uit",
         "hold": "Hou"
       }
+    },
+    "shots": {
+      "detect": "Bespeur toneelveranderings",
+      "split": "Verdeel gekose snitte",
+      "none": "Geen toneelveranderings gevind nie.",
+      "hint": "Hersien snitte eers · ≤10 min",
+      "preview": "Voorskou"
+    },
+    "beats": {
+      "markers": "Maatslagmerkers",
+      "sync": "Sinkroniseer snitte",
+      "none": "Geen betroubare maatslae gevind nie.",
+      "unchanged": "Geen snitte kon belyn word nie."
     }
   },
   "jungleMood": {

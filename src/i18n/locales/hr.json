@@ -6362,6 +6362,15 @@
       "toggleLoop": "Prebaci petlju"
     },
     "export": {
+      "scope": "Preuzmi raspon",
+      "downloadTimeline": "Cijeli vremenski okvir",
+      "downloadSelection": "Odabrani video isječci ({{count}})",
+      "downloadClips": "Svaki video isječak ({{count}})",
+      "rangeHint": "Zadržava titlove i zvuk za svaki rez. Svaka datoteka dodaje 2,2 sekunde DeHub završetka. Više datoteka se preuzima zajedno kao ZIP.",
+      "exportingClips": "Izvoz isječka {{current}} od {{total}}",
+      "archiveTooLarge": "Preuzimanje premašuje 512 MiB. Izvezite manje isječaka ili odaberite nižu rezoluciju.",
+      "gifHint": "Petlja animacija bez zvuka. Do 60 sekundi, 640 piksela i 15 fps. Uključuje završetak s vašim logom.",
+      "gifTooLong": "Skratite vremensku crtu na 60 sekundi ili manje ili odaberite MP4 ili WebM.",
       "title": "Preuzmi",
       "stillDescription": "Spremi trenutni kadar kao sliku.",
       "videoDescription": "Renderiraj svoju vremensku crtu u video datoteku.",
@@ -6633,6 +6642,15 @@
       "thisPage": "Samo ova stranica",
       "exporting": "Renderiranje stranice {{current}} od {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalizirajte glasnoću",
+      "denoise": "Smanjite buku",
+      "voice": "Poboljšajte glas",
+      "working": "Obrada zvuka... {{percent}}%",
+      "done": "Dodan je obrađeni zvuk. Poništava se vraćanje izvornika.",
+      "failed": "Obrada ovog zvuka nije uspjela. Original je nepromijenjen.",
+      "hint": "Obradite isječke do 10 minuta. Smanjenje buke najbolje funkcionira uz stalnu pozadinsku buku."
+    },
     "captions": {
       "action": "Automatski titlovi",
       "working": "Slušam… {{percent}} %",
@@ -6720,6 +6738,19 @@
         "easeInOutBack": "Povratni ulaz i izlaz",
         "hold": "Zadrži"
       }
+    },
+    "shots": {
+      "detect": "Otkrij promjene scena",
+      "split": "Podijeli na odabranim rezovima",
+      "none": "Nisu pronađene promjene scena.",
+      "hint": "Prvo pregledaj rezove · ≤10 min",
+      "preview": "Pregled"
+    },
+    "beats": {
+      "markers": "Oznake ritma",
+      "sync": "Sinkroniziraj rezove",
+      "none": "Nije pronađen pouzdan ritam.",
+      "unchanged": "Rezove nije bilo moguće poravnati."
     }
   },
   "jungleMood": {

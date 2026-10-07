@@ -10,11 +10,14 @@ import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
 import { drawClip } from "./render";
 import { timelineDuration } from "./pages";
-import logoUrl from "@/assets/dehub-logo-white.png";
+import { loadBrandOutroArtwork } from "./brandOutroArtwork";
 import { BRAND_OUTRO_DURATION, drawBrandOutro, outroSoundSample, outroUsername } from "./brandOutro";
+import { GIF_CONTENT_LIMIT, gifPlan, gifFrameDelay, gifWorkerSession } from "./gif";
+import { GIF_WORKER } from "./gifRuntime";
+import { exportTimeRange, exportAudioSegment, type ExportRange } from "./exportRanges";
 
 
-export type ExportFormat = "mp4" | "webm";
+export type ExportFormat = "mp4" | "webm" | "gif";
 
 export interface ExportOptions {
   snapshot: ProjectSnapshot;
@@ -28,6 +31,8 @@ export interface ExportOptions {
   audioBitrate?: number;
   /** If set, export only from 0 up to this time (seconds) instead of the full timeline. */
   cutEndAt?: number;
+  /** Global timeline bounds; output timestamps start at zero. */
+  range?: ExportRange;
   /** Creator identity for the automatic branded ending. */
   username?: string | null;
   /** Progress 0..1. */
@@ -95,35 +100,41 @@ function checkAbort(signal?: AbortSignal) {
 }
 
 /** Pre-load all source media into seekable HTMLVideoElement / Image / AudioBuffer. */
-async function loadSources(media: MediaItem[], withAudio = true) {
+async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortSignal) {
   const videos = new Map<string, HTMLVideoElement>();
   const images = new Map<string, HTMLImageElement>();
   const audioBuffers = new Map<string, AudioBuffer>();
 
-  const audioCtx = new (window.OfflineAudioContext
-    ? AudioContext
-    : AudioContext)();
+  const audioCtx = withAudio ? new AudioContext() : null;
 
   const tasks: Promise<void>[] = [];
+  const cancelLoads = new Set<() => void>();
+  const abort = () => cancelLoads.forEach(cancel => cancel());
+  signal?.addEventListener("abort", abort, { once: true });
 
   for (const m of media) {
     if (m.kind === "video") {
       tasks.push(new Promise<void>((resolve, reject) => {
         const v = document.createElement("video");
-        v.src = m.url;
         v.crossOrigin = "anonymous";
         v.muted = true;
         v.playsInline = true;
         v.preload = "auto";
-        v.onloadeddata = () => resolve();
-        v.onerror = () => reject(new Error(`Failed to load ${m.name}`));
+        const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); v.onloadeddata = null; v.onerror = null; error ? reject(error) : resolve(); };
+        const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
+        const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
+        cancelLoads.add(cancel);
+        v.onloadeddata = () => finish();
+        v.onerror = () => finish(new Error(`Failed to load ${m.name}`));
+        v.src = m.url;
+        if (signal?.aborted) cancel();
         videos.set(m.id, v);
       }));
       // Also decode audio track for mixdown (not needed for stills).
       if (withAudio) tasks.push((async () => {
         try {
-          const buf = await (await fetch(m.url)).arrayBuffer();
-          const audio = await audioCtx.decodeAudioData(buf.slice(0));
+          const buf = await (await fetch(m.url, { signal })).arrayBuffer();
+          const audio = await audioCtx!.decodeAudioData(buf.slice(0));
           audioBuffers.set(m.id, audio);
         } catch { /* video without audio — fine */ }
       })());
@@ -131,22 +142,28 @@ async function loadSources(media: MediaItem[], withAudio = true) {
       tasks.push(new Promise<void>((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = "anonymous";
-        img.onload = () => resolve();
-        img.onerror = () => reject(new Error(`Failed to load ${m.name}`));
+        const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); img.onload = null; img.onerror = null; error ? reject(error) : resolve(); };
+        const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
+        const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
+        cancelLoads.add(cancel);
+        img.onload = () => finish();
+        img.onerror = () => finish(new Error(`Failed to load ${m.name}`));
         img.src = m.url;
         images.set(m.id, img);
+        if (signal?.aborted) cancel();
       }));
     } else if (m.kind === "audio" && withAudio) {
       tasks.push((async () => {
-        const buf = await (await fetch(m.url)).arrayBuffer();
-        const audio = await audioCtx.decodeAudioData(buf.slice(0));
+        const buf = await (await fetch(m.url, { signal })).arrayBuffer();
+        const audio = await audioCtx!.decodeAudioData(buf.slice(0));
         audioBuffers.set(m.id, audio);
       })());
     }
   }
 
-  await Promise.all(tasks);
-  await audioCtx.close().catch(() => undefined);
+  try { await Promise.all(tasks); }
+  catch (error) { abort(); videos.forEach(v => { v.removeAttribute("src"); v.load(); }); images.forEach(img => { img.src = ""; }); throw error; }
+  finally { signal?.removeEventListener("abort", abort); await audioCtx?.close().catch(() => undefined); }
   return { videos, images, audioBuffers };
 }
 
@@ -167,7 +184,7 @@ async function renderAudioMix(
   snapshot: ProjectSnapshot,
   audioBuffers: Map<string, AudioBuffer>,
   duration: number,
-  contentDuration: number,
+  range: ExportRange,
 ): Promise<AudioBuffer | null> {
   const audioClips = snapshot.clips.filter((c) => {
     if (c.kind !== "audio" && c.kind !== "video") return false;
@@ -181,33 +198,21 @@ async function renderAudioMix(
 
   for (const c of audioClips) {
     const track = snapshot.tracks.find((t) => t.id === c.trackId);
-    if (track?.muted || track?.hidden || c.hidden || c.start >= contentDuration) continue;
+    if (track?.muted || track?.hidden || c.hidden) continue;
     const buf = audioBuffers.get(c.mediaId);
     if (!buf) continue;
+    const segment = exportAudioSegment(c, buf.duration, range);
+    if (!segment) continue;
     const src = ctx.createBufferSource();
     src.buffer = buf;
-    const speed = c.speed && c.speed > 0 ? c.speed : 1;
-    if (speed !== 1) src.playbackRate.value = speed;
+    src.playbackRate.value = segment.speed;
     const gain = ctx.createGain();
-    const vol = c.audio?.volume ?? 1;
-    const fIn = Math.max(0, Math.min(c.duration, c.audio?.fadeIn ?? 0));
-    const fOut = Math.max(0, Math.min(c.duration - fIn, c.audio?.fadeOut ?? 0));
-    const when = c.start;
-    const offset = c.trimIn;
-    // Source consumed = timeline duration × speed. Clamp so we don't read past the buffer.
-    const sourceAvailable = Math.max(0, buf.duration - offset);
-    const sourceConsumed = Math.min(c.duration * speed, sourceAvailable, (contentDuration - c.start) * speed);
-    const dur = sourceConsumed / speed;
-    if (dur <= 0) continue;
-    // Envelope: 0 → vol (fadeIn) → vol → 0 (fadeOut)
-    gain.gain.setValueAtTime(fIn > 0 ? 0 : vol, when);
-    if (fIn > 0) gain.gain.linearRampToValueAtTime(vol, when + fIn);
-    if (fOut > 0) {
-      gain.gain.setValueAtTime(vol, when + Math.max(fIn, dur - fOut));
-      gain.gain.linearRampToValueAtTime(0, when + dur);
-    }
+    segment.envelope.forEach((key, i) => {
+      if (i === 0) gain.gain.setValueAtTime(key.gain, key.time);
+      else gain.gain.linearRampToValueAtTime(key.gain, key.time);
+    });
     src.connect(gain).connect(ctx.destination);
-    src.start(when, offset, sourceConsumed);
+    src.start(segment.when, segment.offset, segment.sourceSeconds);
   }
   const sound = ctx.createBuffer(2, Math.ceil(BRAND_OUTRO_DURATION * sampleRate), sampleRate);
   for (let channel = 0; channel < 2; channel++) {
@@ -217,7 +222,7 @@ async function renderAudioMix(
   const ending = ctx.createBufferSource();
   ending.buffer = sound;
   ending.connect(ctx.destination);
-  ending.start(contentDuration);
+  ending.start(range.end - range.start);
   return await ctx.startRendering();
 }
 
@@ -240,6 +245,7 @@ function audioBufferSliceToInterleaved(
 }
 
 export async function exportProject(opts: ExportOptions): Promise<ExportResult> {
+  if (opts.format === "gif") return exportGif(opts);
   if (!isExportSupported()) {
     throw new Error("Your browser doesn't support video export. Use a Chromium-based browser (Chrome, Edge, Brave, Arc).");
   }
@@ -251,25 +257,27 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const height = Math.max(2, Math.round(settings.height * scale) & ~1);
 
   const fullDuration = timelineDuration(settings, clips);
-  const contentDuration = cutEndAt !== undefined && cutEndAt > 0 ? Math.min(cutEndAt, fullDuration) : fullDuration;
+  const range = exportTimeRange(fullDuration, opts.range ?? (cutEndAt != null && cutEndAt > 0 ? { start: 0, end: Math.min(cutEndAt, fullDuration) } : undefined));
+  const contentDuration = range.duration;
   if (contentDuration <= 0) throw new Error("Nothing to export — the timeline is empty.");
   const duration = contentDuration + BRAND_OUTRO_DURATION;
   const username = outroUsername(opts.username);
 
   const totalFrames = Math.ceil(duration * fps);
   onProgress?.(0, "Loading media…");
-  const { videos, images, audioBuffers } = await loadSources(media);
-  const logo = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("Could not load the export logo"));
-    image.src = logoUrl;
-  });
+  const used = new Set(clips.filter(c => !c.hidden && !tracks.find(tr => tr.id === c.trackId)?.hidden && "mediaId" in c).map(c => (c as MediaClip).mediaId));
+  const { videos, images, audioBuffers } = await loadSources(media.filter(m => used.has(m.id)), true, signal);
+  let videoEncoder: VideoEncoder | undefined;
+  let audioEncoder: AudioEncoder | undefined;
+  let encoderFailure: Error | undefined;
+  try {
+  const artwork = await loadBrandOutroArtwork();
+  const logo = artwork.logo;
   checkAbort(signal);
 
   // Pre-mix audio in parallel with video setup.
   onProgress?.(0.02, "Mixing audio…");
-  const audioBufferPromise = renderAudioMix(snapshot, audioBuffers, duration, contentDuration);
+  const audioBufferPromise = renderAudioMix(snapshot, audioBuffers, duration, range);
 
   const canvas = new OffscreenCanvas(width, height);
   const ctx = canvas.getContext("2d");
@@ -326,9 +334,9 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   }
 
   // ── Video encoder ──
-  const videoEncoder = new VideoEncoder({
+  videoEncoder = new VideoEncoder({
     output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
-    error: (e) => { throw e; },
+    error: (e) => { encoderFailure = e; },
   });
   videoEncoder.configure({
     codec: videoCodec,
@@ -346,14 +354,16 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   // ── Render every frame ──
   for (let f = 0; f < totalFrames; f++) {
     checkAbort(signal);
-    const t = f / fps;
+    if (encoderFailure) throw encoderFailure;
+    const localTime = f / fps;
+    const t = range.start + localTime;
 
     // Draw background.
     ctx.fillStyle = settings.background;
     ctx.fillRect(0, 0, width, height);
 
     // Compute render ops (handles outgoing + incoming-preroll transitions).
-    const ops = (t < contentDuration ? computeRenderOps(clips, isVisualTrack, t, width) : []).sort(
+    const ops = (localTime < contentDuration ? computeRenderOps(clips, isVisualTrack, t, width) : []).sort(
       (a, b) => trackZ(a.clip.trackId) - trackZ(b.clip.trackId),
     );
 
@@ -380,7 +390,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
       ctx.restore();
     }
 
-    if (t >= contentDuration) drawBrandOutro(ctx, width, height, t - contentDuration, username, logo);
+    if (localTime >= contentDuration) drawBrandOutro(ctx, width, height, localTime - contentDuration, username, logo, artwork);
 
     const frame = new VideoFrame(canvas, { timestamp: Math.round((f / fps) * 1_000_000) });
     const keyFrame = f % Math.max(1, Math.round(fps * 2)) === 0;
@@ -398,6 +408,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   }
 
   await videoEncoder.flush();
+  if (encoderFailure) throw encoderFailure;
   videoEncoder.close();
 
   // ── Audio encoding ──
@@ -405,9 +416,9 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
     onProgress?.(0.92, "Encoding audio…");
     const sampleRate = mixed.sampleRate;
     const channels = Math.min(2, mixed.numberOfChannels);
-    const audioEncoder = new AudioEncoder({
+    audioEncoder = new AudioEncoder({
       output: (chunk, meta) => muxer.addAudioChunk!(chunk, meta),
-      error: (e) => { throw e; },
+      error: (e) => { encoderFailure = e; },
     });
     audioEncoder.configure({
       codec: audioCodec,
@@ -420,6 +431,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
     const totalFr = mixed.length;
     for (let i = 0; i < totalFr; i += CHUNK) {
       checkAbort(signal);
+      if (encoderFailure) throw encoderFailure;
       const count = Math.min(CHUNK, totalFr - i);
       // Build a 2-channel buffer regardless of source channel count.
       const stereoBuf = new AudioBuffer({ length: count, numberOfChannels: 2, sampleRate });
@@ -441,6 +453,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
       ad.close();
     }
     await audioEncoder.flush();
+    if (encoderFailure) throw encoderFailure;
     audioEncoder.close();
   }
 
@@ -453,6 +466,74 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const filename = `${safeTitle}.${format}`;
   onProgress?.(1, "Done");
   return { blob, filename };
+  } finally {
+    if (videoEncoder && videoEncoder.state !== "closed") videoEncoder.close();
+    if (audioEncoder && audioEncoder.state !== "closed") audioEncoder.close();
+    videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); });
+    images.forEach(img => { img.src = ""; });
+  }
+}
+
+/** GIF uses the timeline renderer without a video/audio codec dependency. */
+async function exportGif(opts: ExportOptions): Promise<ExportResult> {
+  const { snapshot, signal, onProgress } = opts;
+  const { settings, clips, tracks } = snapshot;
+  const fullDuration = timelineDuration(settings, clips);
+  const range = exportTimeRange(fullDuration, opts.range ?? (opts.cutEndAt != null && opts.cutEndAt > 0 ? { start: 0, end: Math.min(opts.cutEndAt, fullDuration) } : undefined));
+  const contentDuration = range.duration;
+  if (contentDuration > GIF_CONTENT_LIMIT) throw new Error("GIF exports support up to 60 seconds of timeline content");
+  const plan = gifPlan(settings.width, settings.height, opts.scale, contentDuration + BRAND_OUTRO_DURATION, settings.fps);
+  if (contentDuration <= 0) throw new Error("Nothing to export");
+  checkAbort(signal);
+  const visual = (id: string) => { const tr = tracks.find(t => t.id === id); return !!tr && !tr.hidden && tr.kind !== "audio"; };
+  const ids = new Set(clips.filter(c => !c.hidden && visual(c.trackId) && c.kind !== "audio" && "mediaId" in c).map(c => (c as MediaClip).mediaId));
+  onProgress?.(0, "Loading media…");
+  const { videos, images } = await loadSources(opts.media.filter(m => ids.has(m.id)), false, signal);
+  let session: ReturnType<typeof gifWorkerSession> | undefined;
+  const abort = () => session?.close();
+  try {
+    const artwork = await loadBrandOutroArtwork();
+    const logo = artwork.logo;
+    if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 3000))]);
+    checkAbort(signal);
+    const canvas = document.createElement("canvas"); canvas.width = plan.width; canvas.height = plan.height;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) throw new Error("Could not acquire canvas context");
+    session = gifWorkerSession(plan.width, plan.height, GIF_WORKER);
+    signal?.addEventListener("abort", abort, { once: true });
+    await session.ready;
+    const username = outroUsername(opts.username);
+    for (let f = 0; f < plan.frames; f++) {
+      checkAbort(signal);
+      const localTime = f / plan.fps;
+      const time = range.start + localTime;
+      ctx.clearRect(0, 0, plan.width, plan.height);
+      ctx.fillStyle = settings.background; ctx.fillRect(0, 0, plan.width, plan.height);
+      const ops = (localTime < contentDuration ? computeRenderOps(clips, visual, time, plan.width) : []).sort((a, b) => tracks.findIndex(t => t.id === a.clip.trackId) - tracks.findIndex(t => t.id === b.clip.trackId));
+      for (const op of ops) {
+        if (op.clip.kind === "video") {
+          const video = videos.get(op.clip.mediaId);
+          if (video) await seekVideo(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1));
+        }
+        ctx.save();
+        if (op.translateX) ctx.translate(op.translateX, 0);
+        if (op.clipRect) { ctx.beginPath(); ctx.rect(op.clipRect.x, 0, op.clipRect.w, plan.height); ctx.clip(); }
+        ctx.globalAlpha = op.alpha;
+        drawClip(ctx, plan.width, plan.height, op.clip, time, { videos, images }); ctx.restore();
+      }
+      if (localTime >= contentDuration) drawBrandOutro(ctx, plan.width, plan.height, localTime - contentDuration, username, logo, artwork);
+      await session.frame(ctx.getImageData(0, 0, plan.width, plan.height).data, gifFrameDelay(f, plan));
+      onProgress?.(0.03 + 0.94 * (f + 1) / plan.frames, `Encoding frame ${f + 1} / ${plan.frames}`);
+    }
+    const buffer = await session.finish(); checkAbort(signal);
+    const filename = `${(snapshot.title || "video").replace(/[^\w-]+/g, "_")}.gif`;
+    onProgress?.(1, "Done");
+    return { blob: new Blob([buffer], { type: "image/gif" }), filename };
+  } catch (error) { checkAbort(signal); throw error; }
+  finally {
+    signal?.removeEventListener("abort", abort); session?.close();
+    videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); });
+  }
 }
 
 export type StillFormat = "png" | "jpg";

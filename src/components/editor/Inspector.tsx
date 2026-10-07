@@ -23,6 +23,8 @@ import { MotionSection } from "@/components/editor/inspector/MotionSection";
 import { autoEnhanceEffects } from "@/lib/editor/autoEnhance";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { SubtitleFiles } from "@/components/editor/SubtitleFiles";
+import { ShotTools } from "@/components/editor/ShotTools";
+import { AudioTools } from "@/components/editor/AudioTools";
 import { Captions, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -269,6 +271,8 @@ export function Inspector() {
           </div>
         )}
 
+        {mediaClip?.kind === "video" && <ShotTools key={mediaClip.id} clip={mediaClip} />}
+
         {hasAudio && (
           <div className="space-y-1.5 pt-2">
             <Button size="sm" variant="ghost" disabled={!!captionsClipId}
@@ -297,6 +301,7 @@ export function Inspector() {
             <EffectSlider label={`Fade out ${(hasAudio.audio?.fadeOut ?? 0).toFixed(2)}s`}
               value={hasAudio.audio?.fadeOut ?? 0} min={0} max={Math.max(0.1, hasAudio.duration)} step={0.05}
               onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, fadeOut: v } })} />
+            <AudioTools key={hasAudio.id} clip={hasAudio} />
           </div>
         )}
 

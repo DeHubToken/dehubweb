@@ -6360,6 +6360,15 @@
       "toggleLoop": "Växla loop"
     },
     "export": {
+      "scope": "Nedladdningsintervall",
+      "downloadTimeline": "Hela tidslinjen",
+      "downloadSelection": "Valda videoklipp ({{count}})",
+      "downloadClips": "Varje videoklipp ({{count}})",
+      "rangeHint": "Håller bildtexter och ljud för varje snitt. Varje fil lägger till en 2,2-sekunders DeHub-ändelse. Flera filer laddas ner tillsammans som en ZIP.",
+      "exportingClips": "Exporterar klipp {{current}} av {{total}}",
+      "archiveTooLarge": "Nedladdningen överstiger 512 MiB. Exportera färre klipp eller välj en lägre upplösning.",
+      "gifHint": "Loopande animering utan ljud. Upp till 60 sekunder, 640 pixlar och 15 fps. Inkluderar din logotyp som slutar.",
+      "gifTooLong": "Trimma tidslinjen till 60 sekunder eller mindre, eller välj MP4 eller WebM.",
       "title": "Ladda ner",
       "stillDescription": "Spara den aktuella bildrutan som en bild.",
       "videoDescription": "Rendera din tidslinje till en videofil.",
@@ -6631,6 +6640,15 @@
       "thisPage": "Endast denna sida",
       "exporting": "Renderar sida {{current}} av {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalisera volym",
+      "denoise": "Minska brus",
+      "voice": "Förbättra röst",
+      "working": "Bearbetar ljud... {{percent}}%",
+      "done": "Bearbetat ljud tillagt. Ångra återställer originalet.",
+      "failed": "Kunde inte bearbeta detta ljud. Originalet är oförändrat.",
+      "hint": "Bearbeta klipp upp till 10 minuter. Brusreducering fungerar bäst med jämn bakgrundsbrus."
+    },
     "captions": {
       "action": "Automatiska undertexter",
       "working": "Lyssnar… {{percent}} %",
@@ -6718,6 +6736,19 @@
         "easeInOutBack": "Studs in och ut",
         "hold": "Håll"
       }
+    },
+    "shots": {
+      "detect": "Hitta scenbyten",
+      "split": "Dela vid valda klipp",
+      "none": "Inga scenbyten hittades.",
+      "hint": "Granska klippen först · ≤10 min",
+      "preview": "Förhandsvisning"
+    },
+    "beats": {
+      "markers": "Rytmmarkörer",
+      "sync": "Synkronisera klipp",
+      "none": "Ingen tillförlitlig rytm hittades.",
+      "unchanged": "Klippen kunde inte justeras."
     }
   },
   "jungleMood": {

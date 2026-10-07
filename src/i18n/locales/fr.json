@@ -6729,6 +6729,15 @@
       "toggleLoop": "Activer/désactiver la boucle"
     },
     "export": {
+      "scope": "Gamme de téléchargement",
+      "downloadTimeline": "Chronologie complète",
+      "downloadSelection": "Clips vidéo sélectionnés ({{count}})",
+      "downloadClips": "Chaque clip vidéo ({{count}})",
+      "rangeHint": "Conserve les légendes et le son pour chaque coupe. Chaque fichier ajoute une fin DeHub de 2,2 secondes. Plusieurs fichiers sont téléchargés ensemble sous forme de ZIP.",
+      "exportingClips": "Exportation du clip {{current}} de {{total}}",
+      "archiveTooLarge": "Le téléchargement dépasse 512 MiB. Exportez moins de clips ou choisissez une résolution inférieure.",
+      "gifHint": "Animation en boucle sans son. Jusqu'à 60 secondes, 640 pixels et 15 ips. Inclut la fin de votre logo.",
+      "gifTooLong": "Coupez la chronologie à 60 secondes ou moins, ou choisissez MP4 ou WebM.",
       "title": "Télécharger",
       "stillDescription": "Enregistrer l'image actuelle sous forme d'image.",
       "videoDescription": "Rendre votre chronologie en fichier vidéo.",
@@ -7000,6 +7009,15 @@
       "thisPage": "Cette page uniquement",
       "exporting": "Rendu de la page {{current}} sur {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normaliser le volume",
+      "denoise": "Réduire le bruit",
+      "voice": "Améliorer la voix",
+      "working": "Traitement du son... {{percent}}%",
+      "done": "Son traité ajouté. L'annulation restaure l'original.",
+      "failed": "Impossible de traiter ce son. L'original est inchangé.",
+      "hint": "Traitez les clips jusqu'à 10 minutes. La réduction du bruit fonctionne mieux avec un bruit de fond constant."
+    },
     "captions": {
       "action": "Sous-titres auto",
       "working": "Écoute… {{percent}} %",
@@ -7087,6 +7105,19 @@
         "easeInOutBack": "Recul entrée et sortie",
         "hold": "Maintien"
       }
+    },
+    "shots": {
+      "detect": "Détecter les changements de scène",
+      "split": "Diviser aux coupes choisies",
+      "none": "Aucun changement de scène trouvé.",
+      "hint": "Vérifiez d'abord les coupes · ≤10 min",
+      "preview": "Aperçu"
+    },
+    "beats": {
+      "markers": "Repères de rythme",
+      "sync": "Synchroniser les coupes",
+      "none": "Aucun rythme fiable trouvé.",
+      "unchanged": "Les coupes n'ont pas pu être alignées."
     }
   },
   "jungleMood": {

@@ -6480,6 +6480,15 @@
       "toggleLoop": "切换循环"
     },
     "export": {
+      "scope": "下载范围",
+      "downloadTimeline": "整个时间轴",
+      "downloadSelection": "所选视频剪辑({{count}})",
+      "downloadClips": "每个视频剪辑({{count}})",
+      "rangeHint": "保留每个剪切的字幕和声音。 每个文件添加一个2.2秒的DeHub结尾。 多个文件作为ZIP文件一起下载。",
+      "exportingClips": "正在导出剪辑{{current}}/{{total}}",
+      "archiveTooLarge": "下载量超过512 MiB。 导出较少的剪辑或选择较低的分辨率。",
+      "gifHint": "循环动画，无声。最长60秒，640像素，15帧每秒。包含你的标志结尾。",
+      "gifTooLong": "将时间轴剪辑至 60 秒或更短，或选择 MP4 或 WebM。",
       "title": "下载",
       "stillDescription": "将当前帧保存为图像。",
       "videoDescription": "将时间轴渲染为视频文件。",
@@ -6751,6 +6760,15 @@
       "thisPage": "仅此页面",
       "exporting": "正在渲染第 {{current}} 页，共 {{total}} 页…"
     },
+    "audioTools": {
+      "normalize": "标准化音量",
+      "denoise": "降低噪音",
+      "voice": "增强语音",
+      "working": "正在处理声音... {{percent}} %",
+      "done": "已添加处理的声音。撤消还原始声音。",
+      "failed": "无法处理此声音。 原件不变。",
+      "hint": "处理剪辑长达10分钟。 降噪效果最好，背景噪音稳定。"
+    },
     "captions": {
       "action": "自动字幕",
       "working": "正在识别… {{percent}}%",
@@ -6838,6 +6856,19 @@
         "easeInOutBack": "回弹缓入缓出",
         "hold": "定格"
       }
+    },
+    "shots": {
+      "detect": "检测场景变化",
+      "split": "在所选切点分割",
+      "none": "未找到场景变化。",
+      "hint": "先检查切点 · ≤10分钟",
+      "preview": "预览"
+    },
+    "beats": {
+      "markers": "节拍标记",
+      "sync": "同步剪辑",
+      "none": "未找到可靠的节拍。",
+      "unchanged": "无法对齐剪辑。"
     }
   },
   "jungleMood": {

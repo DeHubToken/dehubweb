@@ -4924,6 +4924,47 @@ html[data-theme="light"] [data-creator-page] .text-white {
    Desktop, tablets and every other theme are untouched.
    ========================================================================== */
 @media (max-width: 639px) {
+  /* Profile phone layouts share Home's full-width feed and text insets. */
+  html[data-theme="system"] [data-profile-header] {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  html[data-theme="system"] [data-profile-skeleton] {
+    padding-top: 0;
+  }
+
+  html[data-theme="system"] [data-profile-skeleton] > [data-profile-header] {
+    margin-inline: -0.5rem;
+  }
+
+  /* Expand the swallow mask with the media, retaining the toolbar's inset. */
+  html[data-theme="system"] [data-profile-content] {
+    margin-inline: -0.5rem;
+    padding-inline: 0.5rem;
+  }
+
+  html[data-theme="system"] [data-profile-image-grid] {
+    margin-inline: -0.5rem;
+    border-radius: 0;
+  }
+
+  html[data-theme="system"] [data-profile-image-grid] img {
+    border-radius: 0;
+  }
+
+  html[data-theme="system"] [data-feed-root] [data-profile-reply] {
+    width: auto;
+    margin-inline: -0.5rem;
+    border: 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 0;
+    padding: 1.375rem 0.875rem;
+  }
+
   html[data-theme="system"] [data-feed-root] [data-cinematic] {
     margin-left: -0.5rem !important;
     margin-right: -0.5rem !important;

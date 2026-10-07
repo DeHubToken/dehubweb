@@ -5446,6 +5446,15 @@
       "toggleLoop": "لووپ چالاک/ناچالاک بکە"
     },
     "export": {
+      "scope": "مەودای داگرتن",
+      "downloadTimeline": "تەواوی هێڵی کات",
+      "downloadSelection": "کلیپە ڤیدیۆییە هەڵبژێردراوەکان ({{count}})",
+      "downloadClips": "هەموو کلیپە ڤیدیۆییەکان ({{count}})",
+      "rangeHint": "کەپشن و دەنگی هەر بڕینێک دەپارێزێت. هەر فایلێک کۆتاییەکی DeHub بە ماوەی 2.2 چرکە زیاد دەکات. چەند فایلێک پێکەوە وەک ZIP دادەگیرێن.",
+      "exportingClips": "هەناردەکردنی کلیپی {{current}} لە کۆی {{total}}",
+      "archiveTooLarge": "داگرتنەکە لە 512 MiB زیاترە. کلیپی کەمتر هەناردە بکە یان وردییەکی کەمتر هەڵبژێرە.",
+      "gifHint": "ئەنیمەیشنێکی دووبارەبووەوە بەبێ دەنگ. تا 60 چرکە، 640 پیکسڵ و 15 فریم لە چرکەیەکدا. کۆتاییەکە بە لۆگۆکەت دەگرێتەوە.",
+      "gifTooLong": "هێڵی کاتەکە بۆ 60 چرکە یان کەمتر ببڕە، یان MP4 یان WebM هەڵبژێرە.",
       "title": "داگرتن",
       "stillDescription": "چوارچێوەی ئێستا وەک وێنەیەک هەڵبگرە.",
       "videoDescription": "هێڵی کاتەکەت بۆ فایلێکی ڤیدیۆیی ڕێندەر بکە.",
@@ -5717,6 +5726,15 @@
       "thisPage": "تەنها ئەم پەڕەیە",
       "exporting": "ئامادەکردنی پەڕەی {{current}} لە {{total}}…"
     },
+    "audioTools": {
+      "normalize": "ئاستی دەنگ هاوسەنگ بکە",
+      "denoise": "ژاوەژاو کەم بکە",
+      "voice": "دەنگی قسەکردن باشتر بکە",
+      "working": "دەنگ پرۆسێس دەکرێت... {{percent}}%",
+      "done": "دەنگی پرۆسێسکراو زیاد کرا. پاشگەزبوونەوە دەنگی ڕەسەن دەگەڕێنێتەوە.",
+      "failed": "نەتوانرا ئەم دەنگە پرۆسێس بکرێت. دەنگی ڕەسەن نەگۆڕاوە.",
+      "hint": "کلیپەکان تا 10 خولەک پرۆسێس بکە. کەمکردنەوەی ژاوەژاو لەگەڵ ژاوەژاوی نەگۆڕی پاشبنەما باشتر کار دەکات."
+    },
     "captions": {
       "action": "ژێرنووسی خۆکار",
       "working": "گوێ دەگرێت… {{percent}}%",
@@ -5801,6 +5819,19 @@
         "easeInOutBack": "گەڕانەوە لە هاتن و چوون",
         "hold": "ڕاگرتن"
       }
+    },
+    "shots": {
+      "detect": "Guhertinên dîmenê bibîne",
+      "split": "Li birînên hilbijartî parçe bike",
+      "none": "Guhertina dîmenê nehat dîtin.",
+      "hint": "Pêşî birînan binirxîne · ≤10 xulek",
+      "preview": "Pêşdîtin"
+    },
+    "beats": {
+      "markers": "Nîşanên rîtmê",
+      "sync": "Birînan hevdem bike",
+      "none": "Rîtmeke pêbawer nehat dîtin.",
+      "unchanged": "Birîn nehatin lihevkirin."
     }
   },
   "jungleMood": {

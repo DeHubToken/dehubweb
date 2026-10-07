@@ -6380,6 +6380,15 @@
       "toggleLoop": "Aýlawy aç/ýap"
     },
     "export": {
+      "scope": "Çykyş aralygy",
+      "downloadTimeline": "Bütin wagt haty",
+      "downloadSelection": "Saýlanan video klipler ({{count}})",
+      "downloadClips": "Her bir video ({{count}})",
+      "rangeHint": "Her kes üçin baştutanlary we sesleri saklaň. Her bir faýl 2.2 saniyelik DeHub soňuny goşýar. Köp faýllar bir zip hökmünde bir ýere alnyp barylýar.",
+      "exportingClips": "{{current}} of {{total}}",
+      "archiveTooLarge": "Çykyş 512 MB-den artdy. Kiçi klipleri eksport ediň ýa-da kiçijik çözünürligi saýlaň.",
+      "gifHint": "Sesiz tekrarlanan animasiýa. 60 sekunt çenli, 640 piksel we 15 fps. Logotýpiňiziň soňuny öz içine alýar.",
+      "gifTooLong": "60 saniýede ýa-da ondan az wagtda wagt sarp ediň ýa-da MP4 ýa-da WebM saýlaň.",
       "title": "Ýüklemek",
       "stillDescription": "Häzirki kadr suraty hökmünde saklaň.",
       "videoDescription": "Wagt çyzgyňyzy wideofile öwüriň.",
@@ -6651,6 +6660,15 @@
       "thisPage": "Diňe şu sahypa",
       "exporting": "Sahypa {{current}} / {{total}} taýýarlanýar…"
     },
+    "audioTools": {
+      "normalize": "Saýlamalary normallaşdyr",
+      "denoise": "Sesleri azaltmak",
+      "voice": "Sesi gowulandyrmak",
+      "working": "Ses işleme... {{percent}}%",
+      "done": "Gaýtam, aslyny gaýtaryp ber.",
+      "failed": "Men bu sesleri eşitmedim. Asl nusga üýtgän däldir.",
+      "hint": "Gotdibz 10 Ses azaldylmagy berk arkaýyn gürültü bilen iň gowy işleşýär."
+    },
     "captions": {
       "action": "Awtomatik subtitrler",
       "working": "Diňleýär… {{percent}}%",
@@ -6738,6 +6756,19 @@
         "easeInOutBack": "Yza giriş we çykyş",
         "hold": "Sakla"
       }
+    },
+    "shots": {
+      "detect": "Sahna üýtgeşmelerini tap",
+      "split": "Saýlanan kesiklerde böl",
+      "none": "Sahna üýtgeşmesi tapylmady.",
+      "hint": "Ilki kesikleri gözden geçiriň · ≤10 min",
+      "preview": "Öňünden gör"
+    },
+    "beats": {
+      "markers": "Ritm bellikleri",
+      "sync": "Kesimleri sazlaşdyr",
+      "none": "Ygtybarly ritm tapylmady.",
+      "unchanged": "Kesimleri deňleşdirip bolmady."
     }
   },
   "jungleMood": {

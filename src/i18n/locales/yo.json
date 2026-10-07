@@ -6364,6 +6364,15 @@
       "toggleLoop": "Tan/pa àtúnṣeré"
     },
     "export": {
+      "scope": "Ṣe igbasilẹ ibiti",
+      "downloadTimeline": "Gbogbo akoko",
+      "downloadSelection": "Awọn gige fidio ti a yan ({{count}})",
+      "downloadClips": "Gbogbo gige fidio ({{count}})",
+      "rangeHint": "Ṣe idaduro akọle ati ohun fun gige kọọkan. Gbogbo faili kun 2.2-aaya DeHub ipari. Ọpọlọpọ awọn faili ti wa ni igbasilẹ papọ gẹgẹbi ZIP.",
+      "exportingClips": "Ṣiṣejade gige {{current}} ti {{total}}",
+      "archiveTooLarge": "Igbasilẹ naa kọja 512 MiB. Ṣe igbasilẹ awọn gige diẹ sii tabi yan ipinnu kekere.",
+      "gifHint": "Ṣíṣe àfarahàn láìní ohùn. Ó tó àáyá 60, pikselé 640 àti fps 15. Ó fi òpin sí àmì ẹ̀rí rẹ kún un.",
+      "gifTooLong": "Ge akoko si iṣẹju-aaya 60 tabi kere si, tabi yan MP4 tabi WebM.",
       "title": "Gbà sílẹ̀",
       "stillDescription": "Fi fírémù lọ́wọ́lọ́wọ́ pamọ́ gẹ́gẹ́ bí àwòrán.",
       "videoDescription": "Ṣe àgbékalẹ̀ àkókò-ìlà rẹ sí fídíò faili.",
@@ -6635,6 +6644,15 @@
       "thisPage": "Ojú-ìwé yìí nìkan",
       "exporting": "Ń ṣe ojú-ìwé {{current}} nínú {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Ṣe deede iwọn didun",
+      "denoise": "Dinku ariwo",
+      "voice": "Mú ohùn sunwọ̀n sí i",
+      "working": "Sise ohun... {{percent}}%",
+      "done": "Oríṣìíríṣìí ohun tí a fi kún un. Undo mú oríṣìíríṣìí padà.",
+      "failed": "N kò lè ṣe àgbékalẹ̀ ìró yìí. Àkọ́kọ́ náà kò yí padà.",
+      "hint": "Àwọn àmúyẹ fun gbígbọ́ orin ko le ṣiṣẹ lori ẹ̀rọ rẹ Àkọlé fídíò Ìdènà ariwo máa ń ṣiṣẹ́ dáradára pẹ̀lú ariwo àtẹ̀yìnwá tí ó dúró ṣánṣán."
+    },
     "captions": {
       "action": "Àkọlé aládàáṣe",
       "working": "Ń gbọ́… {{percent}}%",
@@ -6722,6 +6740,19 @@
         "easeInOutBack": "Padà wọlé àti jáde",
         "hold": "Dì mú"
       }
+    },
+    "shots": {
+      "detect": "Wá ìyípadà ìṣẹ̀lẹ̀",
+      "split": "Pín ní àwọn ibi tí a yàn",
+      "none": "Kò sí ìyípadà ìṣẹ̀lẹ̀ tí a rí.",
+      "hint": "Ṣàyẹ̀wò ibi gígé kọ́kọ́ · ≤10 min",
+      "preview": "Àwòkọ́ṣe"
+    },
+    "beats": {
+      "markers": "Àmì ìlù",
+      "sync": "Mú àwọn gígé bá ara mu",
+      "none": "A kò rí ìlù tí a lè gbẹ́kẹ̀ lé.",
+      "unchanged": "A kò lè mú àwọn gígé bá ara mu."
     }
   },
   "jungleMood": {

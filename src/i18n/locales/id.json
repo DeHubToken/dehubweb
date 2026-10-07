@@ -6477,6 +6477,15 @@
       "toggleLoop": "Alihkan perulangan"
     },
     "export": {
+      "scope": "Rentang unduhan",
+      "downloadTimeline": "Seluruh linimasa",
+      "downloadSelection": "Klip video yang dipilih ({{count}})",
+      "downloadClips": "Setiap klip video ({{count}})",
+      "rangeHint": "Menyimpan keterangan dan suara untuk setiap potongan. Setiap file menambahkan akhiran DeHub 2,2 detik. Beberapa file diunduh bersama sebagai ZIP.",
+      "exportingClips": "Mengekspor klip {{current}} dari {{total}}",
+      "archiveTooLarge": "Unduhan melebihi 512 MiB. Ekspor lebih sedikit klip atau pilih resolusi yang lebih rendah.",
+      "gifHint": "Animasi berulang tanpa suara. Hingga 60 detik, 640 piksel, dan 15 fps. Termasuk akhiran logo Anda.",
+      "gifTooLong": "Potong garis waktu hingga 60 detik atau kurang, atau pilih MP4 atau WebM.",
       "title": "Unduh",
       "stillDescription": "Simpan bingkai saat ini sebagai gambar.",
       "videoDescription": "Render linimasa Anda ke file video.",
@@ -6748,6 +6757,15 @@
       "thisPage": "Hanya halaman ini",
       "exporting": "Merender halaman {{current}} dari {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalisasi volume",
+      "denoise": "Mengurangi kebisingan",
+      "voice": "Tingkatkan suara",
+      "working": "Memproses suara... {{percent}}%",
+      "done": "Suara yang diproses ditambahkan. Batal mengembalikan yang asli.",
+      "failed": "Tidak dapat memproses suara ini. Asli tidak berubah.",
+      "hint": "Proses klip hingga 10 menit. Pengurangan kebisingan bekerja paling baik dengan kebisingan latar belakang yang stabil."
+    },
     "captions": {
       "action": "Teks otomatis",
       "working": "Mendengarkan… {{percent}}%",
@@ -6835,6 +6853,19 @@
         "easeInOutBack": "Pantul masuk dan keluar",
         "hold": "Tahan"
       }
+    },
+    "shots": {
+      "detect": "Deteksi perubahan adegan",
+      "split": "Pisahkan pada potongan terpilih",
+      "none": "Tidak ditemukan perubahan adegan.",
+      "hint": "Tinjau potongan dahulu · ≤10 menit",
+      "preview": "Pratinjau"
+    },
+    "beats": {
+      "markers": "Penanda ketukan",
+      "sync": "Sinkronkan potongan",
+      "none": "Ketukan yang andal tidak ditemukan.",
+      "unchanged": "Potongan tidak dapat disejajarkan."
     }
   },
   "jungleMood": {

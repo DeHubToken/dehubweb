@@ -6626,6 +6626,15 @@
       "toggleLoop": "Herhalen aan/uit"
     },
     "export": {
+      "scope": "Downloadbereik",
+      "downloadTimeline": "Hele tijdlijn",
+      "downloadSelection": "Geselecteerde videoclips ({{count}})",
+      "downloadClips": "Elke videoclip ({{count}})",
+      "rangeHint": "Behoudt bijschriften en geluid voor elke snede. Elk bestand voegt een DeHub-einde van 2,2 seconden toe. Meerdere bestanden samen downloaden als een ZIP.",
+      "exportingClips": "Clip exporteren {{current}} van {{total}}",
+      "archiveTooLarge": "De download overschrijdt 512 MiB. Exporteer minder clips of kies een lagere resolutie.",
+      "gifHint": "Lusanimatie zonder geluid. Tot 60 seconden, 640 pixels en 15 fps. Inclusief het einde van je logo.",
+      "gifTooLong": "Trim de tijdlijn tot 60 seconden of minder, of kies MP4 of WebM.",
       "title": "Downloaden",
       "stillDescription": "Sla het huidige frame op als afbeelding.",
       "videoDescription": "Render je tijdlijn naar een videobestand.",
@@ -6897,6 +6906,15 @@
       "thisPage": "Alleen deze pagina",
       "exporting": "Pagina {{current}} van {{total}} renderen…"
     },
+    "audioTools": {
+      "normalize": "Volume normaliseren",
+      "denoise": "Geluid verminderen",
+      "voice": "Stem verbeteren",
+      "working": "Geluid verwerken... {{percent}}%",
+      "done": "Verwerkt geluid toegevoegd. Ongedaan maken herstelt het origineel.",
+      "failed": "Kon dit geluid niet verwerken. Het origineel is ongewijzigd.",
+      "hint": "Verwerk clips tot 10 minuten. Ruisonderdrukking werkt het beste bij constante achtergrondgeluiden."
+    },
     "captions": {
       "action": "Automatische ondertiteling",
       "working": "Luisteren… {{percent}}%",
@@ -6984,6 +7002,19 @@
         "easeInOutBack": "Terugveer in en uit",
         "hold": "Vasthouden"
       }
+    },
+    "shots": {
+      "detect": "Scènewisselingen detecteren",
+      "split": "Splits bij gekozen knippunten",
+      "none": "Geen scènewisselingen gevonden.",
+      "hint": "Controleer eerst de knippunten · ≤10 min",
+      "preview": "Voorbeeld"
+    },
+    "beats": {
+      "markers": "Beatmarkeringen",
+      "sync": "Cuts synchroniseren",
+      "none": "Geen betrouwbare beat gevonden.",
+      "unchanged": "De cuts konden niet worden uitgelijnd."
     }
   },
   "jungleMood": {

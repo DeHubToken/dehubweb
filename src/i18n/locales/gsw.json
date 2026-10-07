@@ -6429,6 +6429,15 @@
       "toggleLoop": "Schlaufe wächsle"
     },
     "export": {
+      "scope": "Download‑Bereich",
+      "downloadTimeline": "Ganzä Zytlini",
+      "downloadSelection": "Usgwählte Video‑Clips ({{count}})",
+      "downloadClips": "Alli Video‑Clips ({{count}})",
+      "rangeHint": "Behält Untertitel und Ton für jedä Schnitt. Jede Datei fügt e 2,2‑Sekunde DeHub‑Endi hinzu. Mehreri Dateiä werde zäme als ZIP glade.",
+      "exportingClips": "Exportiere Clip {{current}} vo {{total}}",
+      "archiveTooLarge": "Dr Download überschritt 512 MiB. Exportier weniger Clips oder wähl e nidrigeri Uflösig.",
+      "gifHint": "Looping-Animation ohni Ton. Bis zu 60 Sekunde, 640 Pixel und 15 fps. Inkludiert dis Logo am Ändi.",
+      "gifTooLong": "Schniide d'Timeline uf höchstens 60 Sekunde zrugg, oder wähl MP4 oder WebM.",
       "title": "Abelade",
       "stillDescription": "Aktuells Bild als Bild speichere.",
       "videoDescription": "Dini Zytliene als Videodatei rendere.",
@@ -6700,6 +6709,15 @@
       "thisPage": "Nur die Siite",
       "exporting": "Siite {{current}} vo {{total}} wird grenderet…"
     },
+    "audioTools": {
+      "normalize": "Volum normalisiere",
+      "denoise": "Ruusig reduziere",
+      "voice": "Stimm verstärke",
+      "working": "Ton wird verarbeitet... {{percent}}%",
+      "done": "Verarbeitete Ton hinzugefügt. Rückgängig stellt das Original wieder her.",
+      "failed": "Ton konnt nöd verarbeitet werde. S'Original bleibt unverändert.",
+      "hint": "Verarbeite Clips bis zu 10 Minute. Ruusigreduzierung funktioniert am beschte bi konstanter Hintergrundruusig."
+    },
     "captions": {
       "action": "Automatischi Untertitel",
       "working": "Lost zue… {{percent}} %",
@@ -6787,6 +6805,19 @@
         "easeInOutBack": "Zrugg ii und uus",
         "hold": "Halte"
       }
+    },
+    "shots": {
+      "detect": "Szenenwechsel erkennen",
+      "split": "An ausgewählten Schnitten teilen",
+      "none": "Keine Szenenwechsel gefunden.",
+      "hint": "Schnitte zuerst prüfen · ≤10 Min.",
+      "preview": "Vorschau"
+    },
+    "beats": {
+      "markers": "Taktmarkierungen",
+      "sync": "Schnitte synchronisieren",
+      "none": "Kein zuverlässiger Takt gefunden.",
+      "unchanged": "Die Schnitte konnten nicht ausgerichtet werden."
     }
   },
   "jungleMood": {

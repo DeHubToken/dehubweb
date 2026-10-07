@@ -6364,6 +6364,15 @@
       "toggleLoop": "Canza tsarin maimaitawa"
     },
     "export": {
+      "scope": "Download kewayon",
+      "downloadTimeline": "Dukan Layin Lokaci",
+      "downloadSelection": "Shirye-shiryen bidiyo da aka zaɓa ({{count}})",
+      "downloadClips": "Kowane bidiyon bidiyo ({{count}})",
+      "rangeHint": "Kiyaye captions da sauti ga kowane yanke. Kowane fayil yana ƙara 2.2 seconds DeHub ƙarewa. Fayilolin da yawa suna saukewa tare azaman ZIP.",
+      "exportingClips": "Fitarwa clip {{current}} na {{total}}",
+      "archiveTooLarge": "Saukewa ya wuce 512 MiB. Fitarwa ƙananan shirye-shiryen bidiyo ko zaɓi ƙananan ƙuduri.",
+      "gifHint": "Madauki animation ba tare da sauti ba. Har zuwa 60 seconds, 640 pixels da 15 fps. Ya haɗa da ƙarshen tambarinku.",
+      "gifTooLong": "Trim da lokaci line zuwa 60 seconds ko žasa, ko zabi MP4 ko WebM.",
       "title": "Zazzagewa",
       "stillDescription": "Ajiye firam na yanzu a matsayin hoto.",
       "videoDescription": "Mayar da jadawalin lokacinka zuwa fayil ɗin bidiyo.",
@@ -6635,6 +6644,15 @@
       "thisPage": "Wannan shafin kawai",
       "exporting": "Ana shirya shafi {{current}} cikin {{total}}…"
     },
+    "audioTools": {
+      "normalize": "Normalize girma",
+      "denoise": "Rage hayaniya",
+      "voice": "Inganta murya",
+      "working": "Sautin sarrafawa... {{percent}}%",
+      "done": "Sautin da aka sarrafa ya kara. Undo ya dawo da asali.",
+      "failed": "Ba zan iya aiwatar da wannan sauti ba. Asali ba shi da canji.",
+      "hint": "Shirya shirye-shiryen bidiyo har zuwa minti 10. Sauti rage aiki mafi kyau tare da m baya amo."
+    },
     "captions": {
       "action": "Rubutun ƙasa na atomatik",
       "working": "Ana saurare… {{percent}}%",
@@ -6722,6 +6740,19 @@
         "easeInOutBack": "Komawa shiga da fita",
         "hold": "Riƙe"
       }
+    },
+    "shots": {
+      "detect": "Gano sauyin fage",
+      "split": "Raba a yankunan da aka zaɓa",
+      "none": "Ba a sami sauyin fage ba.",
+      "hint": "Duba yankuna da farko · ≤10 min",
+      "preview": "Dubawa"
+    },
+    "beats": {
+      "markers": "Alamomin kari",
+      "sync": "Daidaita yanke",
+      "none": "Ba a sami ingantaccen kari ba.",
+      "unchanged": "Ba a iya daidaita yanke ba."
     }
   },
   "jungleMood": {
