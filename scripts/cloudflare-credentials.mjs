@@ -6,7 +6,11 @@ export function normalizeCredentials(tokenValue = '', accountValue = '') {
   const token = unwrap(unwrap(tokenValue).replace(/^Bearer\s+/i, ''));
   const account = unwrap(accountValue);
   if (!/^[A-Za-z0-9_-]+$/.test(token)) {
-    throw new Error('CLOUDFLARE_APITOKEN must contain only the API token, without a command or internal whitespace.');
+    const format = !token ? 'empty' : /\bcurl\b/i.test(token) ? 'curl command'
+      : /Authorization\s*:/i.test(token) ? 'Authorization header'
+      : /CLOUDFLARE_\w+\s*=/.test(token) ? 'environment assignment'
+      : /\s/.test(token) ? 'internal whitespace' : 'invalid characters';
+    throw new Error(`CLOUDFLARE_APITOKEN has an invalid stored format (${format}). Save only the API token.`);
   }
   if (!/^[a-f0-9]{32}$/i.test(account)) {
     throw new Error('CLOUDFLARE_ID must contain the 32-character account ID.');
