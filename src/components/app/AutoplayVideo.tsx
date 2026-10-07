@@ -217,7 +217,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
         ref={videoRef}
         src={shouldLoad ? src : undefined}
         poster={poster}
-        className="w-full h-full object-cover rounded-lg"
+        className="dehub-inline-video w-full h-full object-cover rounded-lg"
         loop
         muted
         playsInline
