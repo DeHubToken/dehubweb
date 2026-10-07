@@ -6,7 +6,9 @@ import { AppSidebar } from '@/components/app/AppSidebar';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { NAV_LABEL_KEYS } from '@/components/app/navigation/SidebarNavItem';
 
-const { openStage, disconnect } = vi.hoisted(() => ({ openStage: vi.fn(), disconnect: vi.fn() }));
+const { openStage, disconnect, counts } = vi.hoisted(() => ({
+  openStage: vi.fn(), disconnect: vi.fn(), counts: { dm: 0, publicChat: 0 },
+}));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isAuthenticated: true, disconnect }) }));
 vi.mock('@/contexts/StageContext', () => ({ openStageModal: openStage }));
@@ -14,6 +16,8 @@ vi.mock('@/contexts/ThemeContext', () => ({ useAppTheme: () => ({ theme: 'dark' 
 vi.mock('@/hooks/use-self-badge-balance', () => ({ useSelfBadge: () => ({ balance: 0 }) }));
 vi.mock('@/hooks/use-notifications', () => ({ useUnreadNotificationCount: () => ({ data: undefined }) }));
 vi.mock('@/hooks/use-custom-notifications', () => ({ useCustomUnreadCount: () => ({ data: undefined }) }));
+vi.mock('@/hooks/use-messages', () => ({ useTotalUnreadCount: () => counts.dm }));
+vi.mock('@/hooks/use-public-chat-unread', () => ({ usePublicChatUnreadCount: () => counts.publicChat }));
 vi.mock('@/hooks/use-is-desktop', () => ({ useIsDesktopViewport: () => false }));
 vi.mock('@/hooks/use-search-history', () => ({ useSearchHistory: () => ({ addToHistory: vi.fn() }) }));
 vi.mock('@/lib/route-preload', () => ({ preloadRoute: vi.fn() }));
@@ -36,10 +40,22 @@ function Harness() {
   return <><output data-testid="path">{location.pathname}</output><AppSidebar isOpen={open} onOpenChange={setOpen} /></>;
 }
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  counts.dm = 0;
+  counts.publicChat = 0;
+});
 const mount = () => render(<MemoryRouter initialEntries={['/app']}><Harness /></MemoryRouter>);
 
 describe('mobile menu dismissal', () => {
+  it('shows the combined direct and public chat unread count on Messages', () => {
+    counts.dm = 2;
+    counts.publicChat = 3;
+    mount();
+    const messages = screen.getByText('nav.messages').closest('a');
+    expect(messages?.querySelector('[data-menu-badge]')?.textContent).toBe('5');
+  });
+
   it.each(NAV_ITEMS.filter(item => !item.external && !item.action && item.label !== 'Home').map(item => [NAV_LABEL_KEYS[item.label] || item.label, item.path]))('opens %s and closes the menu', (label, path) => {
     mount();
     fireEvent.click(screen.getByText(label));
