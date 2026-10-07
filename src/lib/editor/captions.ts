@@ -24,11 +24,15 @@ export type CaptionProgress =
 
 let worker: Worker | null = null;
 let seq = 0;
+let busy = false;
 
-function transcribe(audio: Float32Array, onProgress?: (p: CaptionProgress) => void): Promise<CaptionWord[]> {
+function transcribe(audio: Float32Array, onProgress?: (p: CaptionProgress) => void, signal?: AbortSignal): Promise<CaptionWord[]> {
+  if (signal?.aborted) return Promise.reject(new Error("cancelled"));
+  if (busy) return Promise.reject(new Error("captions busy"));
   worker ??= new Worker("/editor/captions-worker.js", { type: "module" });
   const w = worker;
   const id = ++seq;
+  busy = true;
   return new Promise((resolve, reject) => {
     const onMessage = (e: MessageEvent) => {
       const d = e.data ?? {};
@@ -45,9 +49,18 @@ function transcribe(audio: Float32Array, onProgress?: (p: CaptionProgress) => vo
       reject(new Error(e.message || "captions worker failed"));
     };
     const cleanup = () => {
+      busy = false;
+      clearTimeout(timer);
+      signal?.removeEventListener("abort", cancel);
       w.removeEventListener("message", onMessage);
       w.removeEventListener("error", onError);
     };
+    const cancel = () => {
+      cleanup(); w.terminate(); if (worker === w) worker = null;
+      reject(new Error("cancelled"));
+    };
+    const timer = setTimeout(cancel, 30 * 60 * 1000);
+    signal?.addEventListener("abort", cancel, { once: true });
     w.addEventListener("message", onMessage);
     w.addEventListener("error", onError);
     w.postMessage({ id, audio }, [audio.buffer]);
@@ -55,8 +68,12 @@ function transcribe(audio: Float32Array, onProgress?: (p: CaptionProgress) => vo
 }
 
 /** The clip's audible section, as 16 kHz mono, in source time. */
-async function clipAudio(url: string, trimIn: number, sourceSeconds: number): Promise<Float32Array> {
-  const bytes = await (await fetch(url)).arrayBuffer();
+async function clipAudio(url: string, trimIn: number, sourceSeconds: number, signal?: AbortSignal): Promise<Float32Array> {
+  if (signal?.aborted) throw new Error("cancelled");
+  if (!(sourceSeconds > 0) || sourceSeconds > MAX_SECONDS) throw new Error("highlight_limit");
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw new Error("media unavailable");
+  const bytes = await response.arrayBuffer();
   const ac = new AudioContext();
   let decoded: AudioBuffer;
   try {
@@ -64,6 +81,8 @@ async function clipAudio(url: string, trimIn: number, sourceSeconds: number): Pr
   } finally {
     void ac.close();
   }
+  if (signal?.aborted) throw new Error("cancelled");
+  if (trimIn < 0 || decoded.duration - trimIn < 0.05) throw new Error("empty audio");
   const secs = Math.max(0.1, Math.min(sourceSeconds, decoded.duration - trimIn, MAX_SECONDS));
   const off = new OfflineAudioContext(1, Math.ceil(secs * RATE), RATE);
   const node = off.createBufferSource();
@@ -71,8 +90,16 @@ async function clipAudio(url: string, trimIn: number, sourceSeconds: number): Pr
   node.connect(off.destination);
   node.start(0, trimIn, secs);
   const rendered = await off.startRendering();
+  if (signal?.aborted) throw new Error("cancelled");
   // A copy we own: it is transferred to the worker, and an AudioBuffer's channel cannot be.
   return rendered.getChannelData(0).slice();
+}
+
+export async function transcribeClipWords(clip: MediaClip, url: string, onProgress?: (p: CaptionProgress) => void, signal?: AbortSignal): Promise<CaptionWord[]> {
+  const speed = clip.speed ?? 1;
+  if (!Number.isFinite(speed) || speed <= 0) throw new Error("highlight_limit");
+  const audio = await clipAudio(url, clip.trimIn, clip.duration * speed, signal);
+  return transcribe(audio, onProgress, signal);
 }
 
 export async function addAutoCaptions(clipId: string, onProgress?: (p: CaptionProgress) => void, style: CaptionStyle = "classic"): Promise<number> {
@@ -82,10 +109,7 @@ export async function addAutoCaptions(clipId: string, onProgress?: (p: CaptionPr
   const mc = clip as MediaClip;
   const media = s.media.find((m) => m.id === mc.mediaId);
   if (!media) return 0;
-  const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
-
-  const audio = await clipAudio(media.url, mc.trimIn, mc.duration * speed);
-  const words = await transcribe(audio, onProgress);
+  const words = await transcribeClipWords(mc, media.url, onProgress);
   const result = captionLayers(mc, words, () => nanoid(), style);
   if (!result.clips.length) return 0;
   loadGoogleFont("Montserrat", [800]);
