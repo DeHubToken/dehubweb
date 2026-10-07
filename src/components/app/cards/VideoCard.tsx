@@ -1621,7 +1621,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: `w-full h-full ${cropFeedVideo ? 'object-cover' : 'object-contain'}`,
+    className: `dehub-inline-video w-full h-full ${cropFeedVideo ? 'object-cover' : 'object-contain'}`,
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
