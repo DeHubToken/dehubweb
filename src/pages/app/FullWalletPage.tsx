@@ -395,45 +395,47 @@ export default function FullWalletPage() {
       </div>
 
 
-      {/* Action buttons — horizontally scrollable */}
-      <div className="flex gap-2 pb-1">
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setReceiveDialogOpen(true)}>
+      <div className="!mt-0 space-y-4 pt-4">
+      {/* Wallet controls share one inset, with space between each section. */}
+      <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+        <Button variant="glass" className="flex-col h-auto px-2 py-3 gap-1.5 rounded-xl min-w-0" onClick={() => setReceiveDialogOpen(true)}>
           <ArrowDownToLine className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.receive')}</span>
+          <span className="max-w-full truncate text-xs">{t('wallet.receive')}</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => {
+        <Button variant="glass" className="flex-col h-auto px-2 py-3 gap-1.5 rounded-xl min-w-0" onClick={() => {
           if (allWithBalance.length > 0) handleSend(allWithBalance[0]);
           else toast.info(t('wallet.noTokensToSend'));
         }}>
           <Send className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.send')}</span>
+          <span className="max-w-full truncate text-xs">{t('wallet.send')}</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => navigate('/app/buy')}>
+        <Button variant="glass" className="flex-col h-auto px-2 py-3 gap-1.5 rounded-xl min-w-0" onClick={() => navigate('/app/buy')}>
           <ShoppingCart className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.buy')}</span>
+          <span className="max-w-full truncate text-xs">{t('wallet.buy')}</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => navigate('/app/stake')}>
+        <Button variant="glass" className="flex-col h-auto px-2 py-3 gap-1.5 rounded-xl min-w-0" onClick={() => navigate('/app/stake')}>
           <Lock className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.stake')}</span>
+          <span className="max-w-full truncate text-xs">{t('wallet.stake')}</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => navigate('/app/bridge')}>
+        <Button variant="glass" className="flex-col h-auto px-2 py-3 gap-1.5 rounded-xl min-w-0" onClick={() => navigate('/app/bridge')}>
           <ArrowDownUp className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap hidden lg:inline">Bridge</span>
+          <span className="max-w-full truncate text-xs">Bridge</span>
         </Button>
-        <Button variant="glass" className="flex-col h-auto py-3 gap-1.5 rounded-xl flex-1 min-w-0" onClick={() => setTradeOpen(true)}>
+        <Button variant="glass" className="flex-col h-auto px-2 py-3 gap-1.5 rounded-xl min-w-0" onClick={() => setTradeOpen(true)}>
           <ChartNoAxesColumn className="w-5 h-5" />
-          <span className="text-xs whitespace-nowrap hidden lg:inline">{t('wallet.trade')}</span>
+          <span className="max-w-full truncate text-xs">{t('wallet.trade')}</span>
         </Button>
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+        <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
         <Input
+          aria-label={t('wallet.searchTokens')}
           placeholder={t('wallet.searchTokens')}
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          className="pl-9 bg-zinc-900 border-zinc-800 text-white rounded-xl h-10"
+          className="pl-10 bg-zinc-900 border-zinc-800 text-white rounded-xl h-11"
         />
       </div>
 
@@ -455,11 +457,13 @@ export default function FullWalletPage() {
 
       {/* Import Token button */}
       <button
+        aria-label={t('wallet.importCustomToken')}
         onClick={() => setImportDialogOpen(true)}
-        className="w-full py-2 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-sm text-zinc-400 hover:text-zinc-200 transition-colors flex items-center justify-center"
+        className="w-full h-11 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-sm text-zinc-400 hover:text-zinc-200 transition-colors flex items-center justify-center"
       >
         <Plus className="w-4 h-4" />
       </button>
+      </div>
       </PageBody>
 
       {/* Token Action Drawer - shows actions for grouped token */}
