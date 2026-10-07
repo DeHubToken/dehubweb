@@ -511,6 +511,11 @@ export function openStageModal(view: 'browse' | 'create' | 'live' = 'browse') {
 }
 
 let stageCreator: ((title: string, description?: string, coverImageUrl?: string | null) => Promise<AudioSpace | null>) | null = null;
+let stageScheduler: ((input: ScheduleSpaceInput) => Promise<AudioSpace | null>) | null = null;
+
+export function scheduleStage(input: ScheduleSpaceInput): Promise<AudioSpace | null> {
+  return stageScheduler ? stageScheduler(input) : Promise.resolve(null);
+}
 
 /**
  * Open a stage from outside the stage tree.
@@ -1335,6 +1340,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
     },
     [walletAddress, user, refreshScheduledSpaces, signed],
   );
+
+  useEffect(() => {
+    stageScheduler = scheduleSpace;
+    return () => { stageScheduler = null; };
+  }, [scheduleSpace]);
 
   /** Take a stage that was scheduled earlier live now. Host only. */
   const startScheduledSpace = useCallback(
