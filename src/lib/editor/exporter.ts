@@ -1,3 +1,4 @@
+import { waitForVideoFrame } from "./videoFrame";
 import { assertVideoMattes } from "./videoMatte";
 /**
  * Video export pipeline using WebCodecs + mp4-muxer / webm-muxer.
@@ -167,18 +168,6 @@ async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortS
   catch (error) { abort(); videos.forEach(v => { v.removeAttribute("src"); v.load(); }); images.forEach(img => { img.src = ""; }); throw error; }
   finally { signal?.removeEventListener("abort", abort); await audioCtx?.close().catch(() => undefined); }
   return { videos, images, audioBuffers };
-}
-
-/** Seek a video element to a specific time and wait for the frame to be ready. */
-function seekVideo(v: HTMLVideoElement, t: number): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const target = Math.max(0, Math.min(Number.isFinite(v.duration) ? v.duration - 0.001 : t, t));
-    if (Math.abs(v.currentTime - target) < 0.0005 && v.readyState >= 2) { resolve(); return; }
-    const timer = setTimeout(() => { v.removeEventListener("seeked", handler); reject(new Error("Video frame did not load")); }, 5000);
-    const handler = () => { clearTimeout(timer); v.removeEventListener("seeked", handler); resolve(); };
-    v.addEventListener("seeked", handler);
-    try { v.currentTime = target; } catch (error) { clearTimeout(timer); v.removeEventListener("seeked", handler); reject(error); }
-  });
 }
 
 /** Render the audio mixdown to a stereo AudioBuffer at 48 kHz. */
@@ -379,7 +368,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         if (v) {
           const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
           const localT = op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed;
-          await seekVideo(v, localT);
+          await waitForVideoFrame(v, localT, { signal });
         }
       }
       // Draw before seeking another cut that may share this decoder.
@@ -521,7 +510,7 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
       for (const op of ops) {
         if (op.clip.kind === "video") {
           const video = videos.get(op.clip.mediaId);
-          if (video) await seekVideo(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1));
+          if (video) await waitForVideoFrame(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1), { signal });
         }
         ctx.save();
         if (op.translateX) ctx.translate(op.translateX, 0);
@@ -598,7 +587,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
     if (op.clip.kind === "video") {
       const mc = op.clip;
       const v = videos.get(mc.mediaId);
-      if (v) await seekVideo(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * (mc.speed || 1));
+      if (v) await waitForVideoFrame(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * (mc.speed || 1));
     }
     ctx.save();
     if (op.translateX) ctx.translate(op.translateX, 0);
