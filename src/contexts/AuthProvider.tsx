@@ -2449,7 +2449,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setWalletPhase('none');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
-      finishWalletUnlock(true);
+      // The action that requested the old signature belongs to the old
+      // wallet. Let the user start it again after renewal completes.
+      finishWalletUnlock(false);
       closeLoginModal();
       toast.success('New wallet ready — your account came with it', { id: toastId });
     } catch (err: any) {
