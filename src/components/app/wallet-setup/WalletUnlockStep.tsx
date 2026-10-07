@@ -81,6 +81,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
    */
   const midSession = isAuthenticated && loginIntent !== 'add-profile';
   const [phase, setPhase] = useState<Phase>('unlock');
+  const [replacementAcknowledged, setReplacementAcknowledged] = useState(false);
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -358,6 +359,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
    * standing in.
    */
   const handleReplaceLostWallet = async () => {
+    if (!replacementAcknowledged) return;
     setError(null);
     if (password !== newConfirm) { setError("Passwords don't match"); return; }
     setBusy(true);
@@ -512,19 +514,14 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           Forgot password? Use recovery code
         </button>
       )}
-      {/* Offered wherever biometrics are part of the answer, including the
-          screen that CAN show a biometrics button: this device having a
-          fingerprint reader says nothing about whether the enrolled credential
-          is still on it, so the person whose handset is gone lands there too
-          and needs a way out that is not "log out". */}
-      {wraps.length > 0 && (
+      {wallet && !stateUnknown && !noWalletOnServer && (
         <button
           type="button"
-          onClick={() => { setPhase('lost-device'); setError(null); setPassword(''); setNewConfirm(''); }}
+          onClick={() => { setPhase('lost-device'); setError(null); setPassword(''); setNewConfirm(''); setReplacementAcknowledged(false); }}
           disabled={busy || loggingOut}
           className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
         >
-          Lost the device you set this up on?
+          Can't unlock? Create a new wallet
         </button>
       )}
       {onLogout && (
@@ -587,16 +584,18 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         <div className="space-y-2 text-center">
           <p className="text-white text-sm font-medium">Start a new wallet on this device</p>
           <p className="text-white/50 text-xs leading-relaxed">
-            Your account comes with it — same username, posts, messages and followers. Only the wallet
-            itself is replaced.
+            Keep your username, profile, posts and followers with a new wallet.
+            Your old encrypted wallet records are kept in an archive.
           </p>
         </div>
         <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
           <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-          <p>Any DeHub tokens in your old wallet can be recovered but other assets will be lost.</p>
+          <p>No funds will be moved. All tokens, NFTs and other balances stay at the old address.
+            Moving them later requires the old wallet's password, recovery phrase, private key or original device.
+            Old encrypted messages may also need that key.</p>
         </div>
         <form
-          onSubmit={(e) => { e.preventDefault(); if (password && newConfirm && !busy) handleReplaceLostWallet(); }}
+          onSubmit={(e) => { e.preventDefault(); if (password && newConfirm && replacementAcknowledged && !busy) handleReplaceLostWallet(); }}
           className="space-y-4"
         >
           <div className="space-y-2">
@@ -618,9 +617,13 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
             className={inputClass}
           />
           {error && <p className="text-sm text-red-400">{error}</p>}
+          <label className="flex items-start gap-2 text-xs text-white/70">
+            <Checkbox checked={replacementAcknowledged} onCheckedChange={(value) => setReplacementAcknowledged(value === true)} disabled={busy} />
+            I understand my old funds stay in the old wallet.
+          </label>
           <Button
             type="submit"
-            disabled={busy || !password || !newConfirm}
+            disabled={busy || !password || !newConfirm || !replacementAcknowledged}
             className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
           >
             {busy
