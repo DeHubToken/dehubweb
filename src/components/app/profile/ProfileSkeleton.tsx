@@ -7,9 +7,9 @@ import { Skeleton } from '@/components/ui/skeleton';
  */
 export function ProfileSkeleton() {
   return (
-    <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
+    <div data-profile-skeleton className="p-2 sm:p-3 space-y-2 sm:space-y-3">
       {/* Profile Card skeleton */}
-      <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden">
+      <div data-profile-header className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden">
         {/* Cover photo placeholder */}
         <Skeleton className="aspect-[3/1] w-full bg-white/[0.06] rounded-none" />
 
@@ -50,9 +50,9 @@ export function ProfileSkeleton() {
       </div>
 
       {/* Content skeleton - 3 post placeholders */}
-      <div className="space-y-3">
+      <div data-feed-root className="space-y-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 space-y-3">
+          <div key={i} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 space-y-3">
             <div className="flex items-center gap-3">
               <Skeleton className="w-10 h-10 rounded-lg bg-white/[0.06]" />
               <div className="space-y-1.5 flex-1">
