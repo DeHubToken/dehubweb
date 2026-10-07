@@ -7,7 +7,8 @@ import { MediaControlIcon } from './MediaControlIcon';
  * Mount inside the video's positioned container, pass the videoRef and a
  * numeric tokenId. The overlay no-ops when tokenId is missing.
  *
- * - CC button toggles subtitles on/off (persisted in localStorage).
+ * - On phones, the CC button opens settings after the finger is released.
+ *   Desktop clicks toggle subtitles on/off (persisted in localStorage).
  * - Dropdown lets the user pick any language; a language nobody has asked for
  *   yet is translated once and cached in `transcript_translations`, so every
  *   viewer after the first reads a row.
@@ -540,6 +541,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
   } = props;
   const isTouch = useIsTouchDevice();
   const { t } = useTranslation();
+  const touchOrigin = useRef<{ x: number; y: number } | null>(null);
 
   const dubHintText =
     dubHint === 'unavailable' ? t('dub.unavailable') : dubHint === 'preparing' ? t('dub.preparing') : null;
@@ -552,11 +554,40 @@ function SubtitleMenu(props: SubtitleMenuProps) {
   const triggerButton = (
     <button
       type="button"
-      onClick={(e) => handleToggle(e)}
+      onClick={(e) => {
+        if (!isTouch) { handleToggle(e); return; }
+        e.stopPropagation();
+        setOpen(true);
+      }}
+      onTouchStart={(e) => {
+        e.stopPropagation();
+        const touch = e.touches[0];
+        touchOrigin.current = e.touches.length === 1 ? { x: touch.clientX, y: touch.clientY } : null;
+      }}
+      onTouchMove={(e) => {
+        e.stopPropagation();
+        const start = touchOrigin.current;
+        const touch = e.touches[0];
+        if (!touch || e.touches.length !== 1 || (start && Math.hypot(touch.clientX - start.x, touch.clientY - start.y) > 14)) {
+          touchOrigin.current = null;
+        }
+      }}
+      onTouchCancel={() => { touchOrigin.current = null; }}
+      onTouchEnd={(e) => {
+        e.stopPropagation();
+        const start = touchOrigin.current;
+        touchOrigin.current = null;
+        const touch = e.changedTouches[0];
+        if (!isTouch || !start || !touch || Math.hypot(touch.clientX - start.x, touch.clientY - start.y) > 14) return;
+        // Open after release: a sheet opened by contextmenu while the finger
+        // is down can receive that same gesture as an outside dismissal.
+        e.preventDefault();
+        setOpen(true);
+      }}
       onContextMenu={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        setOpen(true);
+        if (!isTouch) setOpen(true);
       }}
       data-video-caption-control
       data-on-media
