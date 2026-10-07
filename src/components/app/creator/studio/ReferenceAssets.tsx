@@ -27,7 +27,7 @@ export const ReferenceAssets = memo(function ReferenceAssets({ assets, onAdd, on
   const jobs = useGenerationStore(s => s.jobs);
   const library = jobs.filter(j => j.status === 'done' && j.url && (j.kind === 'image' || (allowVideo && j.kind === 'video')));
   let imageNumber = 0;
-  return <div className="mb-2">
+  return <div className={assets.length > 0 ? 'mb-2' : undefined}>
     <div className="flex flex-wrap gap-2">
       {assets.map(asset => {
         const tag = asset.kind === 'video' ? '@Video1' : `@Image${++imageNumber}`;
