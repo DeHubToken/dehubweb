@@ -356,19 +356,17 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
       (a, b) => trackZ(a.clip.trackId) - trackZ(b.clip.trackId),
     );
 
-    // Seek every video op (including incoming pre-roll) to its local time.
     for (const op of ops) {
-      if (op.clip.kind !== "video") continue;
-      const mc = op.clip as MediaClip;
-      const v = videos.get(mc.mediaId);
-      if (!v) continue;
-      const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
-      const localT =
-        op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed;
-      await seekVideo(v, localT);
-    }
-
-    for (const op of ops) {
+      if (op.clip.kind === "video") {
+        const mc = op.clip;
+        const v = videos.get(mc.mediaId);
+        if (v) {
+          const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
+          const localT = op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed;
+          await seekVideo(v, localT);
+        }
+      }
+      // Draw before seeking another cut that may share this decoder.
       ctx.save();
       if (op.translateX) ctx.translate(op.translateX, 0);
       if (op.clipRect) {
@@ -496,15 +494,6 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   const used = new Set(ops.map((op) => (op.clip.kind === "text" ? "" : (op.clip as MediaClip).mediaId)));
   const { videos, images } = await loadSources(media.filter((m) => used.has(m.id)), false);
 
-  for (const op of ops) {
-    if (op.clip.kind !== "video") continue;
-    const mc = op.clip as MediaClip;
-    const v = videos.get(mc.mediaId);
-    if (!v) continue;
-    const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
-    await seekVideo(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed);
-  }
-
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -513,6 +502,11 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   ctx.fillStyle = settings.background;
   ctx.fillRect(0, 0, width, height);
   for (const op of ops) {
+    if (op.clip.kind === "video") {
+      const mc = op.clip;
+      const v = videos.get(mc.mediaId);
+      if (v) await seekVideo(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * (mc.speed || 1));
+    }
     ctx.save();
     if (op.translateX) ctx.translate(op.translateX, 0);
     if (op.clipRect) {
