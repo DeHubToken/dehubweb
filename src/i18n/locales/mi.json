@@ -6431,6 +6431,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Ngā wā ataata whakahirahira",
+      "visualPrivacy": "Tukuna ngā tāpare kua tīpakohia hei tātari ā-ataata."
+    },
     "review": {
       "title": "Arotake kaupapa",
       "shared": "I tiritiria ki a koe",

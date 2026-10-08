@@ -6307,6 +6307,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizual məqamlar",
+      "visualPrivacy": "Vizual təhlil üçün seçilmiş kadrları göndərin."
+    },
     "review": {
       "title": "Layihə baxışı",
       "shared": "Sizinlə paylaşılanlar",

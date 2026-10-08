@@ -6439,6 +6439,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Matukio bora ya picha",
+      "visualPrivacy": "Tuma fremu zilizochaguliwa kwa uchambuzi wa picha."
+    },
     "review": {
       "title": "Ukaguzi wa mradi",
       "shared": "Umeshirikiwa",

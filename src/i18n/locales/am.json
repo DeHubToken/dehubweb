@@ -6442,6 +6442,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "የምስል ድምቀቶች",
+      "visualPrivacy": "የተመረጡ ፍሬሞችን ለምስል ትንተና ላክ።"
+    },
     "review": {
       "title": "የፕሮጀክት ግምገማ",
       "shared": "ለእርስዎ የተጋሩ",

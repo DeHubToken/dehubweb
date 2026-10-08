@@ -6410,6 +6410,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Yeroowwan mul'ataa addaa",
+      "visualPrivacy": "Fureemota filataman xiinxala mul'ataaf ergi."
+    },
     "review": {
       "title": "Sakatta'iinsa pirojektii",
       "shared": "Si waliin qoodame",

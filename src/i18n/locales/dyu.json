@@ -6251,6 +6251,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Filimu jaa yɔrɔbaaw",
+      "visualPrivacy": "Filimu jaa sugandilenw ci ka u sɛgɛsɛgɛ."
+    },
     "review": {
       "title": "Porozɛ lajɛ",
       "shared": "I fɛ tila",

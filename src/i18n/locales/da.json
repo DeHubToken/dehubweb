@@ -6374,6 +6374,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuelle højdepunkter",
+      "visualPrivacy": "Send udvalgte billeder til visuel analyse."
+    },
     "review": {
       "title": "Projektgennemgang",
       "shared": "Delt med dig",
