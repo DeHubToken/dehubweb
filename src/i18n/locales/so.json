@@ -6365,6 +6365,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Daqiiqadaha muuqaalka ugu fiican",
+      "visualPrivacy": "Dir xargaha la doortay si muuqaalka loo falanqeeyo."
+    },
     "review": {
       "title": "Dib u eegista mashruuca",
       "shared": "Lala wadaagay adiga",

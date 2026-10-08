@@ -6467,6 +6467,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Görsel önemli anlar",
+      "visualPrivacy": "Görsel analiz için seçilen kareleri gönderin."
+    },
     "review": {
       "title": "Proje incelemesi",
       "shared": "Sizinle paylaşılan",

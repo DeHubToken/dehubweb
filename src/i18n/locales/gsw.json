@@ -6417,6 +6417,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuelli Höchepünkt",
+      "visualPrivacy": "Usgewählti Einzelbilder für d visuelli Analyse schicke."
+    },
     "review": {
       "title": "Projektprüefig",
       "shared": "Mit dir teilt",

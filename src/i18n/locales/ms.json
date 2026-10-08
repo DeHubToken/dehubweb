@@ -6700,6 +6700,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Sorotan visual",
+      "visualPrivacy": "Hantar bingkai terpilih untuk analisis visual."
+    },
     "review": {
       "title": "Semakan projek",
       "shared": "Dikongsi dengan anda",

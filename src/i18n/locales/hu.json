@@ -6347,6 +6347,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizuális csúcspontok",
+      "visualPrivacy": "Kiválasztott képkockák küldése vizuális elemzéshez."
+    },
     "review": {
       "title": "Projekt áttekintése",
       "shared": "Veled megosztva",

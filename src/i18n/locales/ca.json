@@ -6345,6 +6345,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Moments visuals destacats",
+      "visualPrivacy": "Envia fotogrames seleccionats per a l'anàlisi visual."
+    },
     "review": {
       "title": "Revisió del projecte",
       "shared": "Compartit amb tu",

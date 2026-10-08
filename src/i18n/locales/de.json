@@ -6461,6 +6461,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuelle Höhepunkte",
+      "visualPrivacy": "Ausgewählte Einzelbilder zur visuellen Analyse senden."
+    },
     "review": {
       "title": "Projektprüfung",
       "shared": "Mit dir geteilt",

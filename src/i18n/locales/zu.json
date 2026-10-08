@@ -6463,6 +6463,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Izikhathi ezigqamile ezibonwayo",
+      "visualPrivacy": "Thumela amafreyimu akhethiwe ukuze kuhlaziywe izithombe."
+    },
     "review": {
       "title": "Ukubuyekezwa kwephrojekthi",
       "shared": "Kwabelwane nawe",

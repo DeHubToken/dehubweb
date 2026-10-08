@@ -6615,6 +6615,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuele hoogtepunten",
+      "visualPrivacy": "Geselecteerde frames voor visuele analyse versturen."
+    },
     "review": {
       "title": "Projectbeoordeling",
       "shared": "Met jou gedeeld",

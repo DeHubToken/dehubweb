@@ -6385,6 +6385,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Oge ọhụụ pụtara ìhè",
+      "visualPrivacy": "Ziga frem ahọpụtara maka nyocha ọhụụ."
+    },
     "review": {
       "title": "Nyocha ọrụ",
       "shared": "Ekekọrịtara gị",
