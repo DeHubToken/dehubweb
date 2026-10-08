@@ -7539,7 +7539,6 @@
         }
       },
       "settings": {
-    "postingChain": "Chuỗi khối đăng bài",
         "title": "Cài đặt",
         "intro": "Tùy chỉnh trải nghiệm DeHub của bạn với các tùy chọn ngôn ngữ, quyền riêng tư và hiển thị.",
         "steps": {

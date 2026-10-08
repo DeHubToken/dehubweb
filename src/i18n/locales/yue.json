@@ -7450,7 +7450,6 @@
         }
       },
       "settings": {
-    "postingChain": "發帖區塊鏈",
         "title": "設定",
         "intro": "透過語言、隱私和顯示偏好設定來客製化您的 DeHub 體驗。",
         "steps": {

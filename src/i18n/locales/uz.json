@@ -7480,7 +7480,6 @@
         }
       },
       "settings": {
-    "postingChain": "Postlar blokcheyni",
         "title": "Sozlamalar",
         "intro": "Til, maxfiylik va displey sozlamalari yordamida DeHub tajribangizni sozlang.",
         "steps": {

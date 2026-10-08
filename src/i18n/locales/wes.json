@@ -6705,7 +6705,6 @@
         }
       },
       "settings": {
-    "postingChain": "Blockchain wey you go use post",
         "title": "Settings",
         "intro": "Yook customize yor DeHub experience wit language, privacy, na display preference.",
         "steps": {
