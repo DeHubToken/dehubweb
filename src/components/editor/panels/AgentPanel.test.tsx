@@ -71,6 +71,25 @@ describe('reviewing generation drafts from editor chat', () => {
     expect(useEditorStore.getState().clips).toEqual([]);
   });
 
+  it('assembles a file-only request in named order with its named music and no planner call', async () => {
+    useEditorStore.setState({ media: imported() }); const original = useEditorStore.getState().toSnapshot();
+    render(<AgentPanel />); const field = screen.getByRole('textbox', { name: 'editor.agent.placeholder' });
+    fireEvent.change(field, { target: { value: 'Create a 10 second video from "Imported footage.mp4" then "Imported photo.png" with "Imported music.wav"' } });
+    fireEvent.keyDown(field, { key: 'Enter', code: 'Enter' });
+    expect(screen.getByRole('checkbox', { name: 'Imported footage.mp4' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Imported photo.png' })).toBeChecked();
+    expect(screen.getByText('1. Imported footage.mp4')).toBeInTheDocument();
+    expect(screen.getByText('2. Imported photo.png')).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: 'editor.video.sound' })).toHaveValue('@assembly-library:import-music');
+    expect(askAgent).not.toHaveBeenCalled(); expect(useEditorStore.getState().clips).toBe(original.clips);
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'nav.create' })));
+    const copy = useEditorStore.getState().toSnapshot();
+    expect(copy.id).not.toBe(original.id);
+    expect(copy.clips.filter(c => c.kind !== 'audio').map(c => [c.kind, c.start, c.duration])).toEqual([['video', 0, 5], ['image', 5, 5]]);
+    expect(copy.clips.filter(c => c.kind === 'audio').map(c => c.duration)).toEqual([3, 3, 3, 1]);
+    expect(vi.mocked(saveProject).mock.calls.map(args => args[0].id)).toEqual([original.id, copy.id]);
+  });
+
   it('blocks a selected imported file removed before Create without saving or changing the source', async () => {
     useEditorStore.setState({ media: imported() }); const original = useEditorStore.getState().toSnapshot();
     render(<AgentPanel />); const field = screen.getByRole('textbox', { name: 'editor.agent.placeholder' });
