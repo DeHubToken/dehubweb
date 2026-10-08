@@ -7460,7 +7460,6 @@
         }
       },
       "settings": {
-    "postingChain": "Gönderi blokzinciri",
         "title": "Ayarlar",
         "intro": "Dil, gizlilik ve ekran tercihlerinizle DeHub deneyiminizi özelleştirin.",
         "steps": {

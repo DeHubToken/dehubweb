@@ -7431,7 +7431,6 @@
         }
       },
       "settings": {
-    "postingChain": "Ierakstu blokķēde",
         "title": "Iestatījumi",
         "intro": "Pielāgojiet savu DeHub pieredzi ar valodas, privātuma un displeja preferencēm.",
         "steps": {
