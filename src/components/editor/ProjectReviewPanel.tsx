@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { MessageSquare, RefreshCw, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { useCloudProjects } from "@/lib/editor/useCloudProjects";
-import { projectReviewTime, type ProjectReviewComment, type ProjectReviewRole } from "@/lib/editor/cloudProjectReview";
+import { projectReviewIsErased, projectReviewTime, type ProjectReviewComment, type ProjectReviewRole } from "@/lib/editor/cloudProjectReview";
 
 export function ProjectReviewPanel({ cloud, wallet, onOpenCopy }: { cloud: ReturnType<typeof useCloudProjects>; wallet: string; onOpenCopy(revision?: number, seconds?: number): void }) {
+  const {t}=useTranslation();
   const [body,setBody]=useState(""), [time,setTime]=useState("0"), [assignee,setAssignee]=useState("");
   const [recipient,setRecipient]=useState(""), [role,setRole]=useState<ProjectReviewRole>("commenter"), [reply,setReply]=useState<ProjectReviewComment|null>(null);
   const review=cloud.review;
@@ -31,10 +33,10 @@ export function ProjectReviewPanel({ cloud, wallet, onOpenCopy }: { cloud: Retur
     <h4 className="flex items-center gap-2 text-sm"><MessageSquare className="h-4 w-4" />Comments</h4>
     {!roots.length && <p className="text-sm text-white/50">No feedback yet.</p>}
     {roots.map(comment=><div key={comment.id} className={`space-y-2 rounded-lg border border-white/10 p-3 ${comment.resolved ? "opacity-60" : ""}`}>
-      <div className="flex items-center justify-between gap-2"><button className="text-xs underline underline-offset-4" disabled={pending} onClick={()=>onOpenCopy(comment.revision,comment.atSeconds)} aria-label={`Open version ${comment.revision} at ${projectReviewTime(comment.atSeconds)}`}>v{comment.revision} · {projectReviewTime(comment.atSeconds)}</button><span className="text-xs text-white/50" title={comment.authorWallet}>{short(comment.authorWallet)}{comment.resolved ? " · Resolved" : ""}</span></div>
-      <p className="whitespace-pre-wrap break-words text-sm">{comment.body}</p>
+      <div className="flex items-center justify-between gap-2"><button className="text-xs underline underline-offset-4" disabled={pending} onClick={()=>onOpenCopy(comment.revision,comment.atSeconds)} aria-label={`Open version ${comment.revision} at ${projectReviewTime(comment.atSeconds)}`}>v{comment.revision} · {projectReviewTime(comment.atSeconds)}</button><span className="text-xs text-white/50" title={projectReviewIsErased(comment) ? undefined : comment.authorWallet}>{projectReviewIsErased(comment) ? t("stats.feedback.anonymous") : short(comment.authorWallet)}{comment.resolved ? " · Resolved" : ""}</span></div>
+      <p className="whitespace-pre-wrap break-words text-sm">{projectReviewIsErased(comment) ? t("profile.replyThread.commentUnavailable") : comment.body}</p>
       {comment.assigneeWallet && <p className="text-xs text-white/50" title={comment.assigneeWallet}>Assigned to {short(comment.assigneeWallet)}</p>}
-      {cloud.comments.filter(child=>child.parentId===comment.id).map(child=><div key={child.id} className="border-l border-white/20 pl-3"><p className="text-xs text-white/50" title={child.authorWallet}>{short(child.authorWallet)}</p><p className="whitespace-pre-wrap break-words text-sm">{child.body}</p></div>)}
+      {cloud.comments.filter(child=>child.parentId===comment.id).map(child=><div key={child.id} className="border-l border-white/20 pl-3"><p className="text-xs text-white/50" title={projectReviewIsErased(child) ? undefined : child.authorWallet}>{projectReviewIsErased(child) ? t("stats.feedback.anonymous") : short(child.authorWallet)}</p><p className="whitespace-pre-wrap break-words text-sm">{projectReviewIsErased(child) ? t("profile.replyThread.commentUnavailable") : child.body}</p></div>)}
       {canComment && <div className="flex gap-2"><Button size="sm" variant="ghost" disabled={pending} onClick={()=>setReply(comment)}>Reply</Button>{(owner || comment.authorWallet===wallet || comment.assigneeWallet===wallet) && <Button size="sm" variant="ghost" disabled={pending} onClick={()=>{void cloud.resolveReviewComment(comment);}}>{comment.resolved ? "Reopen" : "Resolve"}</Button>}</div>}
     </div>)}
     {canComment && <div className="space-y-2 rounded-lg border border-white/10 p-3">
