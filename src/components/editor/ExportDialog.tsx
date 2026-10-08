@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, exportStill, isExportSupported, type ExportFormat, type StillFormat } from "@/lib/editor/exporter";
 import { getPages, pageAt } from "@/lib/editor/pages";
+import { exportFilename } from "@/lib/editor/exportName";
 import { zipFiles } from "@/lib/editor/zip";
 import { useAuth } from "@/contexts/AuthContext";
 import { BRAND_OUTRO_DURATION } from "@/lib/editor/brandOutro";
@@ -125,12 +126,11 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         for (const p of pages) {
           setProgress(Math.round((p.index / pages.length) * 100));
           setLabel(t("editor.pages.exporting", { current: p.index + 1, total: pages.length }));
-          const { blob, filename } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time: p.start });
-          files.push({ name: filename.replace(/.(png|jpg)$/, `-${String(p.index + 1).padStart(2, "0")}.$1`), blob });
+          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time: p.start });
+          files.push({ name: exportFilename(snapshot.title, format, `-${String(p.index + 1).padStart(2, "0")}`, "design"), blob });
         }
         const zip = await zipFiles(files);
-        const safeTitle = (snapshot.title || "design").replace(/[^w-]+/g, "_");
-        download(zip, `${safeTitle}.zip`);
+        download(zip, exportFilename(snapshot.title, "zip", "", "design"));
       } else {
         const time = multiPage ? pageAt(pages, currentTime).start : currentTime;
         const { blob, filename } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time });
@@ -183,11 +183,11 @@ export function ExportDialog({ open, onOpenChange }: Props) {
           });
           size += result.blob.size;
           if (size > ZIP_DOWNLOAD_LIMIT) throw new Error(t("editor.export.archiveTooLarge"));
-          files.push({ name: `${range.name}.${format}`, blob: result.blob });
+          files.push({ name: exportFilename(range.name, format), blob: result.blob });
         }
         const blob = files.length === 1 ? files[0].blob : await zipDownloadFiles(files, ctl.signal);
         if (ctl.signal.aborted) throw new DOMException("Export cancelled", "AbortError");
-        const filename = files.length === 1 ? files[0].name : `${(snapshot.title || "video").replace(/[^\w-]+/g, "_")}-clips.zip`;
+        const filename = files.length === 1 ? files[0].name : exportFilename(snapshot.title, "zip", "-clips");
         download(blob, filename);
       } else {
         const { blob, filename } = await exportProject({ ...baseOptions,
