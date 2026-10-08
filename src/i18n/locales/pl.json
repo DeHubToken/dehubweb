@@ -6419,6 +6419,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Zawijaj wiersze",
+      "width": "Szerokość tekstu",
+      "shrink": "Zmniejsz tekst, aby się zmieścił",
+      "height": "Wysokość tekstu",
+      "captions": "Dopasuj ścieżkę napisów"
+    },
     "canvas": {
       "dropMedia": "Upuść, aby dodać do swojego projektu",
       "dropText": "Upuść, aby dodać tekst",

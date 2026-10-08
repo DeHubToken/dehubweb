@@ -6615,6 +6615,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Regels afbreken",
+      "width": "Tekstbreedte",
+      "shrink": "Tekst verkleinen tot deze past",
+      "height": "Teksthoogte",
+      "captions": "Ondertitelspoor passend maken"
+    },
     "canvas": {
       "dropMedia": "Loslaten om toe te voegen aan je ontwerp",
       "dropText": "Loslaten om tekst toe te voegen",

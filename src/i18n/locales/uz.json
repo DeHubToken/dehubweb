@@ -6486,6 +6486,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Satrlarni o‘rash",
+      "width": "Matn kengligi",
+      "shrink": "Matnni sig‘ishi uchun kichraytirish",
+      "height": "Matn balandligi",
+      "captions": "Subtitr yo‘lini moslashtirish"
+    },
     "canvas": {
       "dropMedia": "Dizayningizga qo'shish uchun tashlang",
       "dropText": "Matn qo'shish uchun tashlang",

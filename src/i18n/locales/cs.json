@@ -6347,6 +6347,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Zalamovat řádky",
+      "width": "Šířka textu",
+      "shrink": "Zmenšit text, aby se vešel",
+      "height": "Výška textu",
+      "captions": "Přizpůsobit stopu titulků"
+    },
     "canvas": {
       "dropMedia": "Přetáhněte pro přidání do svého návrhu",
       "dropText": "Přetáhněte pro přidání textu",

@@ -6722,6 +6722,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Retour à la ligne",
+      "width": "Largeur du texte",
+      "shrink": "Réduire le texte pour l’ajuster",
+      "height": "Hauteur du texte",
+      "captions": "Ajuster la piste de sous-titres"
+    },
     "canvas": {
       "dropMedia": "Glisser pour ajouter à votre design",
       "dropText": "Glisser pour ajouter du texte",

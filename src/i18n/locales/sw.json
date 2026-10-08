@@ -6439,6 +6439,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Vunja mistari",
+      "width": "Upana wa maandishi",
+      "shrink": "Punguza maandishi yatoshee",
+      "height": "Urefu wa maandishi",
+      "captions": "Rekebisha wimbo wa manukuu"
+    },
     "canvas": {
       "dropMedia": "Dondosha ili kuongeza kwenye muundo wako",
       "dropText": "Dondosha ili kuongeza maandishi",

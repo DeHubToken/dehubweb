@@ -6347,6 +6347,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Sortörés",
+      "width": "Szöveg szélessége",
+      "shrink": "Szöveg kicsinyítése a kerethez",
+      "height": "Szöveg magassága",
+      "captions": "Feliratsáv igazítása"
+    },
     "canvas": {
       "dropMedia": "Engedd el, hogy hozzáadd a tervedhez",
       "dropText": "Engedd el a szöveg hozzáadásához",

@@ -6449,6 +6449,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Mbështill rreshtat",
+      "width": "Gjerësia e tekstit",
+      "shrink": "Zvogëlo tekstin që të përshtatet",
+      "height": "Lartësia e tekstit",
+      "captions": "Përshtat pistën e titrave"
+    },
     "canvas": {
       "dropMedia": "Lësho për ta shtuar në dizajnin tënd",
       "dropText": "Lësho për të shtuar tekst",

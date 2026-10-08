@@ -6722,6 +6722,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Wrap lines",
+      "width": "Text width",
+      "shrink": "Shrink text to fit",
+      "height": "Text height",
+      "captions": "Fit caption track"
+    },
     "canvas": {
       "dropMedia": "Drop to add to your design",
       "dropText": "Drop to add text",

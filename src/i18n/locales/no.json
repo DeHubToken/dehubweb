@@ -6448,6 +6448,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Bryt linjer",
+      "width": "Tekstbredde",
+      "shrink": "Forminsk teksten så den passer",
+      "height": "Teksthøyde",
+      "captions": "Tilpass undertekstspor"
+    },
     "canvas": {
       "dropMedia": "Slipp for å legge til i designet ditt",
       "dropText": "Slipp for å legge til tekst",

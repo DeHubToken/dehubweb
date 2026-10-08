@@ -6251,6 +6251,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Sɛbɛnni tɔgɔw tilan",
+      "width": "Sɛbɛnni bonya",
+      "shrink": "Sɛbɛnni dɔgɔya ka a bɛn",
+      "height": "Sɛbɛnni janya",
+      "captions": "Sɛbɛnni sira bɛn"
+    },
     "canvas": {
       "dropMedia": "A bila yan ka a fara i ka desɛn kan",
       "dropText": "A bila yan ka sɛbɛn fara a kan",

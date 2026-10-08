@@ -6700,6 +6700,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Balut baris",
+      "width": "Lebar teks",
+      "shrink": "Kecilkan teks agar muat",
+      "height": "Tinggi teks",
+      "captions": "Laraskan trek sari kata"
+    },
     "canvas": {
       "dropMedia": "Seret untuk menambah pada reka bentuk anda",
       "dropText": "Seret untuk menambah teks",

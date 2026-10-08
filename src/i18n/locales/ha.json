@@ -6352,6 +6352,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Karya layuka",
+      "width": "Faɗin rubutu",
+      "shrink": "Rage rubutu ya dace",
+      "height": "Tsayin rubutu",
+      "captions": "Daidaita waƙar ƙaramin rubutu"
+    },
     "canvas": {
       "dropMedia": "Saki don ƙarawa ga zanenka",
       "dropText": "Saki don ƙara rubutu",
