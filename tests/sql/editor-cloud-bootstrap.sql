@@ -13,6 +13,7 @@ CREATE TABLE storage.buckets(id text PRIMARY KEY,name text NOT NULL,public boole
 CREATE TABLE storage.objects(id uuid DEFAULT gen_random_uuid() PRIMARY KEY,bucket_id text REFERENCES storage.buckets(id),name text NOT NULL,metadata jsonb DEFAULT '{}',UNIQUE(bucket_id,name));
 ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 GRANT USAGE ON SCHEMA public,storage TO anon,authenticated,service_role;
+GRANT USAGE ON SCHEMA extensions TO anon,authenticated;
 GRANT SELECT,INSERT,UPDATE,DELETE ON storage.objects TO anon,authenticated;
 GRANT SELECT ON storage.buckets TO anon,authenticated;
 GRANT ALL ON storage.objects,storage.buckets TO service_role;
