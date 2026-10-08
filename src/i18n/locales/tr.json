@@ -6468,6 +6468,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Görsel önemli anlar",
+      "visualPrivacy": "Görsel analiz için seçilen kareleri gönderin."
+    },
+    "review": {
+      "title": "Proje incelemesi",
+      "shared": "Sizinle paylaşılan",
+      "time": "Zaman (s)",
+      "assign": "Cüzdan ata"
+    },
+    "textFit": {
+      "wrap": "Satırları kaydır",
+      "width": "Metin genişliği",
+      "shrink": "Metni sığacak kadar küçült",
+      "height": "Metin yüksekliği",
+      "captions": "Altyazı izini sığdır"
+    },
     "canvas": {
       "dropMedia": "Tasarımınıza eklemek için bırakın",
       "dropText": "Metin eklemek için bırakın",

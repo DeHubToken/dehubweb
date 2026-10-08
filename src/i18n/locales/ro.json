@@ -6460,6 +6460,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Momente vizuale importante",
+      "visualPrivacy": "Trimite cadrele selectate pentru analiză vizuală."
+    },
+    "review": {
+      "title": "Revizuirea proiectului",
+      "shared": "Partajat cu tine",
+      "time": "Timp (s)",
+      "assign": "Atribuie portofel"
+    },
+    "textFit": {
+      "wrap": "Încadrează rândurile",
+      "width": "Lățimea textului",
+      "shrink": "Micșorează textul ca să încapă",
+      "height": "Înălțimea textului",
+      "captions": "Potrivește pista de subtitrări"
+    },
     "canvas": {
       "dropMedia": "Pune pentru a adăuga la designul tău",
       "dropText": "Pune pentru a adăuga text",

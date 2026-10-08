@@ -6369,6 +6369,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Wizual möhüm pursatlar",
+      "visualPrivacy": "Wizual seljerme üçin saýlanan kadrlary iberiň."
+    },
+    "review": {
+      "title": "Taslama syny",
+      "shared": "Siziň bilen paýlaşylan",
+      "time": "Wagt (s)",
+      "assign": "Gapjyk belle"
+    },
+    "textFit": {
+      "wrap": "Setirleri böl",
+      "width": "Tekstiň ini",
+      "shrink": "Teksti sygjak ýaly kiçelt",
+      "height": "Tekstiň beýikligi",
+      "captions": "Subtitr ýoluny sazla"
+    },
     "canvas": {
       "dropMedia": "Dizýaňyza goşmak üçin taşlaň",
       "dropText": "Tekst goşmak üçin taşlaň",

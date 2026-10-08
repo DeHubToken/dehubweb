@@ -6723,6 +6723,19 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Project review",
+      "shared": "Shared with you",
+      "time": "Time (s)",
+      "assign": "Assign wallet"
+    },
+    "textFit": {
+      "wrap": "Wrap lines",
+      "width": "Text width",
+      "shrink": "Shrink text to fit",
+      "height": "Text height",
+      "captions": "Fit caption track"
+    },
     "canvas": {
       "dropMedia": "Drop to add to your design",
       "dropText": "Drop to add text",
@@ -7127,6 +7140,8 @@
       "unchanged": "No cuts could be aligned."
     },
     "highlights": {
+      "visual": "Visual highlights",
+      "visualPrivacy": "Send sampled frames for visual analysis.",
       "chatSuggest": "Find the best moments in this video",
       "chatFound": "Found {{count}} moments. Preview them, refine the selection, then create a separate edit.",
       "chatHint": "Reviewing highlights. Type what to keep or remove, or return to editing.",

@@ -6439,6 +6439,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizuāli spilgtākie mirkļi",
+      "visualPrivacy": "Nosūtīt atlasītos kadrus vizuālai analīzei."
+    },
+    "review": {
+      "title": "Projekta pārskatīšana",
+      "shared": "Kopīgots ar jums",
+      "time": "Laiks (s)",
+      "assign": "Piešķirt maku"
+    },
+    "textFit": {
+      "wrap": "Aplauzt rindas",
+      "width": "Teksta platums",
+      "shrink": "Samazināt tekstu, lai tas ietilptu",
+      "height": "Teksta augstums",
+      "captions": "Pielāgot subtitru celiņu"
+    },
     "canvas": {
       "dropMedia": "Nomet, lai pievienotu savam dizainam",
       "dropText": "Nomet, lai pievienotu tekstu",

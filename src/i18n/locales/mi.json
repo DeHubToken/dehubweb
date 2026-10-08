@@ -6432,6 +6432,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Ngā wā ataata whakahirahira",
+      "visualPrivacy": "Tukuna ngā tāpare kua tīpakohia hei tātari ā-ataata."
+    },
+    "review": {
+      "title": "Arotake kaupapa",
+      "shared": "I tiritiria ki a koe",
+      "time": "Wā (s)",
+      "assign": "Tautapa pūkoro"
+    },
+    "textFit": {
+      "wrap": "Whati ngā rārangi",
+      "width": "Whānui kuputuhi",
+      "shrink": "Whakaitia te kuputuhi kia uru",
+      "height": "Teitei kuputuhi",
+      "captions": "Whakaurua te ara kupu hauraro"
+    },
     "canvas": {
       "dropMedia": "Tukua hei tāpiri ki tō hoahoa",
       "dropText": "Tukua hei tāpiri kuputuhi",

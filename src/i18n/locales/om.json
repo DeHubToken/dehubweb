@@ -6411,6 +6411,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Yeroowwan mul'ataa addaa",
+      "visualPrivacy": "Fureemota filataman xiinxala mul'ataaf ergi."
+    },
+    "review": {
+      "title": "Sakatta'iinsa pirojektii",
+      "shared": "Si waliin qoodame",
+      "time": "Yeroo (s)",
+      "assign": "Waletii ramadi"
+    },
+    "textFit": {
+      "wrap": "Sarara cabsuu",
+      "width": "Bal'ina barruu",
+      "shrink": "Barruu akka seenuuf xiqqeessi",
+      "height": "Olka'iinsa barruu",
+      "captions": "Daandii barruu jalaa sirreessi"
+    },
     "canvas": {
       "dropMedia": "Dizaayinii keetti dabaluuf gadi dhiisi",
       "dropText": "Gadi dhiisi jecha dabaluuf",

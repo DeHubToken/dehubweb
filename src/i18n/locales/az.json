@@ -6308,6 +6308,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizual məqamlar",
+      "visualPrivacy": "Vizual təhlil üçün seçilmiş kadrları göndərin."
+    },
+    "review": {
+      "title": "Layihə baxışı",
+      "shared": "Sizinlə paylaşılanlar",
+      "time": "Vaxt (s)",
+      "assign": "Pul kisəsi təyin et"
+    },
+    "textFit": {
+      "wrap": "Sətirləri bük",
+      "width": "Mətn eni",
+      "shrink": "Mətni sığacaq qədər kiçilt",
+      "height": "Mətn hündürlüyü",
+      "captions": "Altyazı yolunu uyğunlaşdır"
+    },
     "canvas": {
       "dropMedia": "Dizaynınıza əlavə etmək üçün buraxın",
       "dropText": "Mətn əlavə etmək üçün buraxın",

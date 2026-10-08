@@ -1620,6 +1620,24 @@ export type Database = {
           },
         ]
       }
+      chirp_speech_usage: {
+        Row: {
+          characters: number
+          month: string
+          updated_at: string
+        }
+        Insert: {
+          characters?: number
+          month: string
+          updated_at?: string
+        }
+        Update: {
+          characters?: number
+          month?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       client_error_logs: {
         Row: {
           component: string | null
@@ -2946,6 +2964,202 @@ export type Database = {
           updated_at?: string
           wallet_address?: string
           width?: number | null
+        }
+        Relationships: []
+      }
+      editor_cloud_comments: {
+        Row: {
+          assignee_wallet: string | null
+          at_seconds: number
+          author_wallet: string
+          body: string
+          clip_id: string | null
+          created_at: string
+          id: string
+          owner_wallet: string
+          parent_id: string | null
+          project_id: string
+          resolved: boolean
+          revision: number
+          state_version: number
+          updated_at: string
+        }
+        Insert: {
+          assignee_wallet?: string | null
+          at_seconds: number
+          author_wallet: string
+          body: string
+          clip_id?: string | null
+          created_at?: string
+          id: string
+          owner_wallet: string
+          parent_id?: string | null
+          project_id: string
+          resolved?: boolean
+          revision: number
+          state_version?: number
+          updated_at?: string
+        }
+        Update: {
+          assignee_wallet?: string | null
+          at_seconds?: number
+          author_wallet?: string
+          body?: string
+          clip_id?: string | null
+          created_at?: string
+          id?: string
+          owner_wallet?: string
+          parent_id?: string | null
+          project_id?: string
+          resolved?: boolean
+          revision?: number
+          state_version?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_comments_owner_wallet_project_id_parent_id_fkey"
+            columns: ["owner_wallet", "project_id", "parent_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_comments"
+            referencedColumns: ["owner_wallet", "project_id", "id"]
+          },
+          {
+            foreignKeyName: "editor_cloud_comments_owner_wallet_project_id_revision_fkey"
+            columns: ["owner_wallet", "project_id", "revision"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_revisions"
+            referencedColumns: ["wallet_address", "project_id", "revision"]
+          },
+        ]
+      }
+      editor_cloud_members: {
+        Row: {
+          accepted: boolean
+          member_wallet: string
+          owner_wallet: string
+          project_id: string
+          revoked: boolean
+          role: string
+          state_version: number
+          updated_at: string
+        }
+        Insert: {
+          accepted?: boolean
+          member_wallet: string
+          owner_wallet: string
+          project_id: string
+          revoked?: boolean
+          role: string
+          state_version?: number
+          updated_at?: string
+        }
+        Update: {
+          accepted?: boolean
+          member_wallet?: string
+          owner_wallet?: string
+          project_id?: string
+          revoked?: boolean
+          role?: string
+          state_version?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_members_owner_wallet_project_id_fkey"
+            columns: ["owner_wallet", "project_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
+      }
+      editor_cloud_projects: {
+        Row: {
+          created_at: string
+          id: string
+          revision: number
+          state_version: number
+          title: string
+          trashed_at: string | null
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          revision?: number
+          state_version?: number
+          title: string
+          trashed_at?: string | null
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          revision?: number
+          state_version?: number
+          title?: string
+          trashed_at?: string | null
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      editor_cloud_revisions: {
+        Row: {
+          created_at: string
+          document: Json
+          project_id: string
+          request_id: string
+          revision: number
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          document: Json
+          project_id: string
+          request_id: string
+          revision: number
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          document?: Json
+          project_id?: string
+          request_id?: string
+          revision?: number
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_revisions_wallet_address_project_id_fkey"
+            columns: ["wallet_address", "project_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
+      }
+      editor_cloud_uploads: {
+        Row: {
+          expires_at: string
+          path: string
+          size_bytes: number
+          wallet_address: string
+        }
+        Insert: {
+          expires_at?: string
+          path: string
+          size_bytes: number
+          wallet_address: string
+        }
+        Update: {
+          expires_at?: string
+          path?: string
+          size_bytes?: number
+          wallet_address?: string
         }
         Relationships: []
       }
@@ -6855,6 +7069,7 @@ export type Database = {
           runpod_endpoint_id: string | null
           secret: string
           updated_at: string
+          worker_url: string | null
         }
         Insert: {
           id: number
@@ -6862,6 +7077,7 @@ export type Database = {
           runpod_endpoint_id?: string | null
           secret: string
           updated_at?: string
+          worker_url?: string | null
         }
         Update: {
           id?: number
@@ -6869,6 +7085,7 @@ export type Database = {
           runpod_endpoint_id?: string | null
           secret?: string
           updated_at?: string
+          worker_url?: string | null
         }
         Relationships: []
       }
@@ -8142,6 +8359,118 @@ export type Database = {
         Args: { p_max_discovered?: number }
         Returns: Json
       }
+      editor_cloud_history: { Args: { p_id: string }; Returns: Json }
+      editor_cloud_list: { Args: never; Returns: Json }
+      editor_cloud_list_trash: { Args: never; Returns: Json }
+      editor_cloud_load: {
+        Args: { p_id: string; p_revision?: number }
+        Returns: Json
+      }
+      editor_cloud_prepare_media: {
+        Args: { p_extension: string; p_id: string; p_size: number }
+        Returns: Json
+      }
+      editor_cloud_restore: {
+        Args: {
+          p_expected_revision: number
+          p_id: string
+          p_request_id: string
+          p_revision: number
+        }
+        Returns: Json
+      }
+      editor_cloud_review_accept: {
+        Args: { p_expected_state: number; p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_review_allowed: {
+        Args: { p_id: string; p_owner: string; p_write?: boolean }
+        Returns: boolean
+      }
+      editor_cloud_review_comment: {
+        Args: {
+          p_assignee?: string
+          p_body: string
+          p_clip_id?: string
+          p_comment_id: string
+          p_id: string
+          p_owner: string
+          p_parent_id?: string
+          p_revision: number
+          p_time: number
+        }
+        Returns: Json
+      }
+      editor_cloud_review_comment_json: {
+        Args: {
+          p: Database["public"]["Tables"]["editor_cloud_comments"]["Row"]
+        }
+        Returns: Json
+      }
+      editor_cloud_review_comments: {
+        Args: { p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_review_inbox: { Args: never; Returns: Json }
+      editor_cloud_review_leave: {
+        Args: { p_expected_state: number; p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_review_load: {
+        Args: { p_id: string; p_owner: string; p_revision?: number }
+        Returns: Json
+      }
+      editor_cloud_review_media_allowed: {
+        Args: { p_path: string }
+        Returns: boolean
+      }
+      editor_cloud_review_member_json: {
+        Args: { p: Database["public"]["Tables"]["editor_cloud_members"]["Row"] }
+        Returns: Json
+      }
+      editor_cloud_review_members: { Args: { p_id: string }; Returns: Json }
+      editor_cloud_review_resolve: {
+        Args: {
+          p_comment_id: string
+          p_expected_state: number
+          p_id: string
+          p_owner: string
+          p_resolved: boolean
+        }
+        Returns: Json
+      }
+      editor_cloud_review_share: {
+        Args: {
+          p_expected_state: number
+          p_id: string
+          p_member: string
+          p_role: string
+        }
+        Returns: Json
+      }
+      editor_cloud_save: {
+        Args: {
+          p_document: Json
+          p_expected_revision: number
+          p_id: string
+          p_request_id: string
+        }
+        Returns: Json
+      }
+      editor_cloud_set_trash: {
+        Args: {
+          p_expected_revision: number
+          p_expected_state: number
+          p_id: string
+          p_trashed: boolean
+        }
+        Returns: Json
+      }
+      editor_cloud_validate: {
+        Args: { p_document: Json; p_project_id: string; p_wallet: string }
+        Returns: undefined
+      }
+      editor_cloud_wallet: { Args: never; Returns: string }
       end_inactive_stages: { Args: never; Returns: number }
       erase_account_app_data: {
         Args: { p_user_id?: string; p_wallet: string }
@@ -8318,6 +8647,10 @@ export type Database = {
           p_salt: string
         }
         Returns: Json
+      }
+      reserve_chirp_characters: {
+        Args: { p_characters: number }
+        Returns: boolean
       }
       reserve_fraction_listing: {
         Args: { p_listing_id: string; p_quantity: number }

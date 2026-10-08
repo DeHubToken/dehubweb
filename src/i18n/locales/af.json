@@ -6524,6 +6524,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuele hoogtepunte",
+      "visualPrivacy": "Stuur gekose rame vir visuele ontleding."
+    },
+    "review": {
+      "title": "Projekhersiening",
+      "shared": "Met jou gedeel",
+      "time": "Tyd (s)",
+      "assign": "Wys beursie toe"
+    },
+    "textFit": {
+      "wrap": "Reëls omvou",
+      "width": "Tekswydte",
+      "shrink": "Verklein teks om te pas",
+      "height": "Tekshoogte",
+      "captions": "Pas onderskrifbaan"
+    },
     "canvas": {
       "dropMedia": "Laat val om by jou ontwerp te voeg",
       "dropText": "Laat val om teks by te voeg",

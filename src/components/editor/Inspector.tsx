@@ -26,6 +26,8 @@ import { SubtitleFiles } from "@/components/editor/SubtitleFiles";
 import { ShotTools } from "@/components/editor/ShotTools";
 import { HighlightTools } from "@/components/editor/HighlightTools";
 import { AudioTools } from "@/components/editor/AudioTools";
+import { TextFitControls } from "@/components/editor/TextFitControls";
+import { fitCaptionTrack } from "@/lib/editor/textFit";
 import { Captions, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -43,6 +45,7 @@ export function Inspector() {
   const updateSettings = useEditorStore((s) => s.updateSettings);
   const selectedClipIds = useEditorStore((s) => s.selectedClipIds);
   const clips = useEditorStore((s) => s.clips);
+  const tracks = useEditorStore((s) => s.tracks);
   const updateTextClip = useEditorStore((s) => s.updateTextClip);
   const updateMediaClip = useEditorStore((s) => s.updateMediaClip);
   const setClipSpeed = useEditorStore((s) => s.setClipSpeed);
@@ -369,8 +372,9 @@ export function Inspector() {
                 ))}
               </select>
             </Field>
-
-
+            <TextFitControls clip={text} onChange={patch => updateTextClip(text.id, patch)}
+              onFitCaptions={tracks.some(track => track.id === text.trackId && track.role === "captions") ? () => useEditorStore.getState().fitCaptionTrack(text.trackId) : undefined}
+              captionsFitted={fitCaptionTrack({ tracks, clips }, text.trackId).clips === clips} />
             <div className="mt-2 rounded-md border border-white/10 bg-white/[0.02] p-2">
               <label className="flex items-center justify-between text-[11px] text-white/70">
                 <span className="font-medium">Background pill</span>
