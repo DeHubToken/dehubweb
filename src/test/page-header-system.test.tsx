@@ -19,8 +19,12 @@ beforeEach(() => {
   mocks.navigate.mockReset();
   mocks.key = 'feed-entry';
   mocks.theme = 'system';
+  window.history.replaceState({ idx: 1 }, '');
 });
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  window.history.replaceState(null, '');
+});
 
 describe('System page navigation', () => {
   it('uses a back control without the old title bar and preserves page actions', () => {
@@ -35,9 +39,27 @@ describe('System page navigation', () => {
 
   it('returns directly opened profiles to the feed', () => {
     mocks.key = 'default';
+    window.history.replaceState({ idx: 0 }, '');
     render(<PageHeader overlay />);
     fireEvent.click(screen.getByRole('button', { name: 'Go back' }));
     expect(mocks.navigate).toHaveBeenCalledWith('/app', { replace: true });
+  });
+
+  it.each(['system', 'minimal', 'osaka'])('leaves a canonicalized direct profile in %s', (theme) => {
+    mocks.theme = theme;
+    // A canonical URL replacement has a new key, but no previous router entry.
+    mocks.key = 'canonical-profile';
+    window.history.replaceState({ idx: 0, key: mocks.key }, '');
+    render(<PageHeader overlay />);
+    fireEvent.click(screen.getByRole('button', { name: 'Go back' }));
+    expect(mocks.navigate).toHaveBeenCalledWith('/app', { replace: true });
+  });
+
+  it('falls back when history does not contain a router index', () => {
+    window.history.replaceState({}, '');
+    render(<PageHeader overlay fallbackRoute="/app/explore" />);
+    fireEvent.click(screen.getByRole('button', { name: 'Go back' }));
+    expect(mocks.navigate).toHaveBeenCalledWith('/app/explore', { replace: true });
   });
 
   it('uses the supplied close action when a surface owns its navigation', () => {

@@ -1,5 +1,5 @@
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -37,14 +37,13 @@ export function PageHeader({
   overlay = false,
 }: PageHeaderProps) {
   const navigate = useNavigate();
-  const location = useLocation();
   const { isCollapsed } = useSidebarCollapse();
   const { theme } = useAppTheme();
 
   /**
    * Handle back navigation with fallback
    * - If onBack is provided, use it (e.g. to close a drawer with animation)
-   * - If history exists (location.key !== 'default'), use navigate(-1)
+   * - If the router has a previous entry, use navigate(-1)
    * - Otherwise, navigate to fallback route (handles direct URL access)
    */
   const handleBack = () => {
@@ -52,7 +51,9 @@ export function PageHeader({
       onBack();
       return;
     }
-    if (location.key && location.key !== 'default') {
+    // Replacing a direct wallet URL with its username creates a location key
+    // without adding a previous page. Only a positive router index can go back.
+    if (typeof window.history.state?.idx === 'number' && window.history.state.idx > 0) {
       navigate(-1);
     } else {
       navigate(fallbackRoute, { replace: true });
