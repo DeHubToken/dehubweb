@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Stream Checkout Drawer
  * ======================
@@ -109,7 +110,7 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
               {quote ? (
                 <>
                   <div className="flex items-center gap-1.5 text-xl font-bold text-white">
-                    <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-5 h-5" />
                     {quote.dhbAmount.toLocaleString()}
                   </div>
                   <p className="text-xs text-zinc-500">

@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -951,7 +952,7 @@ export function PostAccessToggles({
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-white/70">{t('drawers.price')} ({tempPpvCurrency})</label>
+              <label className="text-sm text-white/70">{t('drawers.price')} ({tokenLabel(tempPpvCurrency)})</label>
               <input
                 type="number"
                 value={tempPpvAmount}

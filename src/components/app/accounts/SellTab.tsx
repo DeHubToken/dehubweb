@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Sell Tab
  * ========
@@ -220,7 +221,7 @@ function SaleRow({ sale, kind }: { sale: AccountSale; kind: 'sold' | 'bought' })
           </p>
         </div>
         <p className="text-sm font-semibold text-white flex items-center gap-1.5 shrink-0">
-          <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+          <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
           {sale.paidDhb.toLocaleString()}
         </p>
       </div>

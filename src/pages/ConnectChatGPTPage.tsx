@@ -47,7 +47,7 @@ const faqs: { q: string; a: string; aKey?: string }[] = [
   },
   {
     q: "Do I need a DeHub account?",
-    a: "No account is required to read public content through the connector. A DeHub account is only needed if you want to post, tip or hold DHB.",
+    a: "No account is required to read public content through the connector. A DeHub account is only needed if you want to post, tip or hold tokens.",
     aKey: "connect.chatgptFaqAccount",
   },
   {

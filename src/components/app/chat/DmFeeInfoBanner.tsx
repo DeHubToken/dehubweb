@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * DmFeeInfoBanner
  * ================
@@ -62,12 +63,12 @@ export function DmFeeInfoBanner({
         <div className="px-3 py-2 rounded-xl bg-zinc-900/60 border border-white/5">
           {balanceLoading ? (
             <div className="flex items-center gap-2">
-              <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+              <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
               <span className="text-xs text-zinc-500">Loading balance...</span>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+              <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
               <span className="text-xs text-zinc-400">Your balance:</span>
               {totalBalance !== null ? (
                 <span className={`text-xs font-medium ${hasSufficientBalance ? 'text-white' : 'text-zinc-400'}`}>
@@ -95,7 +96,7 @@ export function DmFeeInfoBanner({
         </div>
 
         <div className="relative">
-          <img src={dehubCoin} alt="DHB" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10" />
+          <img src={dehubCoin} alt={tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10" />
           <Input
             type="number"
             min={fee}

@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Helpers for rendering DHB amounts with the gold coin icon in toast messages.
  * Usage: toast.success(dhbToast`Tip of ${amount} sent!`)
@@ -16,7 +17,7 @@ export const buyTokensLabel = (
 export const DhbInline = ({ amount }: { amount: string | number }) => (
   <span className="inline-flex items-center gap-1">
     <span>{typeof amount === 'number' ? amount.toLocaleString() : amount}</span>
-    <img src={dehubCoin} alt="DHB" className="inline-block w-4 h-4 -mt-px" />
+    <img src={dehubCoin} alt={tokenLabel()} className="inline-block w-4 h-4 -mt-px" />
   </span>
 );
 
@@ -31,7 +32,7 @@ export const dhbText = (text: string): React.ReactNode => {
     <span className="inline-flex items-center gap-0 flex-wrap">
       {parts.map((part, i) =>
         part === 'DHB' ? (
-          <img key={i} src={dehubCoin} alt="DHB" className="inline-block w-4 h-4 mx-0.5 -mt-px" />
+          <img key={i} src={dehubCoin} alt={tokenLabel()} className="inline-block w-4 h-4 mx-0.5 -mt-px" />
         ) : (
           <span key={i}>{part}</span>
         )

@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatUnits } from 'ethers';
@@ -146,10 +147,10 @@ export function AddPoolDialog({ open, onOpenChange, onCreated }: { open: boolean
           <div><b>{check.token.name}</b><small>{check.token.symbol} · {POOL_CHAIN_INFO[chain].name}{check.token.priceUsd ? ` · $${check.token.priceUsd.toPrecision(4)}` : ''}</small><small>{t('dex.pools.imageHint')}</small></div>
         </div>
         <div className="dex-fee">
-          <img src={dhbCoinImage} alt="DHB" width={30} height={30} />
+          <img src={dhbCoinImage} alt={tokenLabel()} width={30} height={30} />
           <div><b>${POOL_FEE_USD}</b><small>{feeDhb ? t('dex.pools.feeDhb', { amount: formatSize(feeDhb) }) : t('dex.pools.priceUnavailable')}</small></div>
           {!paid && <label className="dex-fee-pay">{t('dex.payWith')}<select value={selected} onChange={(e) => setPayWith(e.target.value as FeeAssetSymbol)} aria-label={t('dex.payWith')}>
-            {balances.map((b) => <option key={b.asset.symbol} value={b.asset.symbol}>{b.asset.symbol} · ${b.usd.toLocaleString('en-US', { maximumFractionDigits: 2 })}</option>)}
+            {balances.map((b) => <option key={b.asset.symbol} value={b.asset.symbol}>{tokenLabel(b.asset.symbol)} · ${b.usd.toLocaleString('en-US', { maximumFractionDigits: 2 })}</option>)}
           </select></label>}
         </div>
         {!paid && selected !== 'DHB' && <p className="dex-help">{t('dex.pools.swapNote', { symbol: selected })}</p>}

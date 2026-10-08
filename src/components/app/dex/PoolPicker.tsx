@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +9,7 @@ import dhbCoinImage from '@/assets/dehub-coin.png';
 import { AddPoolDialog } from './AddPoolDialog';
 
 export function PoolAvatar({ pool, size = 38 }: { pool: Pick<DexPool, 'image_url' | 'symbol'> | null; size?: number }) {
-  if (!pool) return <img src={dhbCoinImage} alt="DHB" width={size} height={size} />;
+  if (!pool) return <img src={dhbCoinImage} alt={tokenLabel()} width={size} height={size} />;
   return pool.image_url
     ? <img src={pool.image_url} alt={pool.symbol} width={size} height={size} className="dex-pool-avatar" />
     : <span className="dex-pool-avatar dex-pool-initials" style={{ width: size, height: size }}>{pool.symbol.slice(0, 2).toUpperCase()}</span>;
@@ -45,14 +46,14 @@ export function PoolPicker({ current }: { current: DexPool | null }) {
   return <div className="dex-pair" ref={root}>
     <PoolAvatar pool={current} />
     <button type="button" className="dex-pair-button" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
-      <h1 className="dex-pair-name">{current ? current.symbol : 'DHB'} <span className="dex-muted">/</span> USD</h1>
+      <h1 className="dex-pair-name">{current ? current.symbol : tokenLabel()} <span className="dex-muted">/</span> USD</h1>
       <ChevronDown size={16} className={open ? 'dex-chevron-open' : ''} />
     </button>
     {open && <div className="dex-pool-menu" role="listbox" aria-label={t('dex.pools.title')}>
       <label className="dex-pool-search"><Search size={13} /><input autoFocus placeholder={t('dex.pools.search')} aria-label={t('dex.pools.search')} value={query} onChange={(e) => setQuery(e.target.value)} /></label>
       <div className="dex-pool-list">
-        {(!query || 'dhb dehub'.includes(query.trim().toLowerCase())) && <button type="button" role="option" aria-selected={!current} className="dex-pool-item" onClick={() => go('/dex')}>
-          <PoolAvatar pool={null} size={26} /><span><b>DHB / USD</b><small>DeHub · Base</small></span>
+        {(!query || `dhb dehub tokens ${tokenLabel()}`.toLowerCase().includes(query.trim().toLowerCase())) && <button type="button" role="option" aria-selected={!current} className="dex-pool-item" onClick={() => go('/dex')}>
+          <PoolAvatar pool={null} size={26} /><span><b>{tokenLabel()} / USD</b><small>DeHub · Base</small></span>
         </button>}
         {filtered.map((pool) => <button type="button" role="option" key={pool.id} aria-selected={current?.id === pool.id} className="dex-pool-item" onClick={() => go(poolPath(pool))}>
           <PoolAvatar pool={pool} size={26} /><span><b>{pool.symbol} / USD</b><small>{pool.name} · {POOL_CHAIN_INFO[pool.chain].name}</small></span>

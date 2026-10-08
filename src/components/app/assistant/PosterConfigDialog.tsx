@@ -104,12 +104,12 @@ const FEATURE_GROUPS: { group: string; items: { value: string; label: string; bl
   {
     group: 'Token & DeFi',
     items: [
-      { value: 'dhb-staking', label: '💎 DHB Staking (Base)', blurb: 'Stake DHB, earn rewards' },
+      { value: 'dhb-staking', label: '💎 Token Staking (Base)', blurb: 'Stake tokens, earn rewards' },
       { value: 'lp-farming', label: '🌾 LP Farming', blurb: 'Provide liquidity, earn yield' },
       { value: 'token-bridge', label: '🌉 Token Bridge', blurb: 'BNB ↔ Base cross-chain' },
       { value: 'governance', label: '🗳️ Governance', blurb: 'On-chain proposals & voting' },
-      { value: 'token-utility', label: '🪙 DHB Utility', blurb: 'Fees, boosts, gating, tipping' },
-      { value: 'fiat-onramp', label: '💳 Fiat On-Ramp', blurb: 'Card → USDC → DHB' },
+      { value: 'token-utility', label: '🪙 Token Utility', blurb: 'Fees, boosts, gating, tipping' },
+      { value: 'fiat-onramp', label: '💳 Fiat On-Ramp', blurb: 'Card → USDC → tokens' },
       { value: 'fiat-offramp', label: '💵 Fiat Off-Ramp', blurb: 'Token-to-cash conversion' },
       { value: 'uniswap-swap', label: '🔄 In-App Swap', blurb: 'Uniswap V3, one click' },
       { value: 'wallet', label: '👛 Cross-Chain Wallet', blurb: 'BNB + Base aggregated' },
@@ -118,7 +118,7 @@ const FEATURE_GROUPS: { group: string; items: { value: string; label: string; bl
   {
     group: 'Marketplace & Commerce',
     items: [
-      { value: 'stores', label: '🛍️ DeHub Stores', blurb: 'P2P commerce on Base DHB' },
+      { value: 'stores', label: '🛍️ DeHub Stores', blurb: 'P2P commerce in tokens on Base' },
       { value: 'fractions', label: '🧩 Fractions', blurb: 'Fractional NFT marketplace' },
       { value: 'work', label: '🧑‍💻 DeHub Bounties', blurb: 'Escrow bounties: social, clips, contracts' },
       { value: 'tipping', label: '💸 Tipping', blurb: 'Reward creators on any post' },

@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Store Listing Card
  * ===================
@@ -62,7 +63,7 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
         <p className="text-xs text-zinc-400 truncate">{storeName}</p>
         <p className="text-sm font-semibold text-white flex items-center gap-1">
           {dhbPrice > 0 ? (
-            <><img src={dehubCoin} alt="DHB" className="w-4 h-4" />{Math.ceil(priceDhb).toLocaleString()}</>
+            <><img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />{Math.ceil(priceDhb).toLocaleString()}</>
           ) : (
             `$${priceUsd.toLocaleString()}`
           )}

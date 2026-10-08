@@ -3,7 +3,7 @@
  * =============
  * What the ads top-up turns into when the advertiser's wallet is short of DHB.
  *
- * The old behaviour was a toast — "Insufficient DHB. Need 43,809 DHB (Base: 0,
+ * The old behaviour was a toast — "Insufficient tokens. Need 43,809 DHB (Base: 0,
  * BNB: 0)" — fired at somebody who had already decided to spend money, on a
  * modal that then just sat there. Nothing on the page sold them DHB, so the
  * only way forward was to leave the ads portal, find /app/buy, work out how

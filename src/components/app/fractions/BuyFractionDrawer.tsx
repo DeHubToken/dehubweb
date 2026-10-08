@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Buy Fraction Drawer
  * ===================
@@ -165,7 +166,7 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
                   <Loader2 className="w-4 h-4 animate-spin text-white/40" />
                 ) : (
                   <>
-                    <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                     {displayTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                   </>
                 )}

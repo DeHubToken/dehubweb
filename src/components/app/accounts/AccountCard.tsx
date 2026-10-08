@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Account Row
  * ===========
@@ -94,7 +95,7 @@ export const AccountCard = memo(function AccountCard({ listing, onClick, isOwn }
           digits rather than on the end of each name. */}
       <div className="shrink-0 text-right">
         <p className="text-base sm:text-lg font-semibold text-white flex items-center justify-end gap-1.5 whitespace-nowrap">
-          <img src={dehubCoin} alt="DHB" className="w-4 h-4 sm:w-5 sm:h-5" />
+          <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4 sm:w-5 sm:h-5" />
           {listing.priceDhb.toLocaleString()}
         </p>
         <p className="text-[11px] text-zinc-500 whitespace-nowrap">

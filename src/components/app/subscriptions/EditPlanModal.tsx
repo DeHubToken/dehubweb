@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { Plus, X, Loader2, Star, Clock, FileText, Gift } from 'lucide-react';
@@ -207,7 +208,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
                 className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 pr-40"
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-xs text-zinc-400 pointer-events-none">
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                 <span>{price ? formatDhbPayment(dhbEstimate) : null}</span>
               </div>
             </div>

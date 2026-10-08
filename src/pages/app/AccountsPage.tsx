@@ -21,7 +21,7 @@ const JSON_LD = {
   '@type': 'WebPage',
   name: 'DeHub Account Marketplace',
   description:
-    'Buy and sell established DeHub accounts with DHB. Browse accounts by followers, uploads and age, or list your own — payment goes wallet-to-wallet.',
+    'Buy and sell established DeHub accounts with tokens. Browse accounts by followers, uploads and age, or list your own — payment goes wallet-to-wallet.',
   url: 'https://dehub.io/accounts',
 };
 

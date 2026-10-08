@@ -558,7 +558,7 @@
     "stagePay": "E dey pay DeHub Pay with {{symbol}}…",
     "payViaDpay": "Peyi deHub pay, token dey come a bout 30 seconds.",
     "payViaBridgeDpay": "Move wey go Base, pay wey go DeHub Pay, token dey come afo about one minute",
-    "dmSent": "You don send {{amount}} DHB give {{name}}!"
+    "dmSent": "You don send {{amount}} tokens give {{name}}!"
   },
   "postOptions": {
     "options": "Option dem",
@@ -1136,10 +1136,10 @@
   },
   "dhbListing": {
     "title": "Token listing di come soon!",
-    "body": "$DHB never start for trade. Get email di time wey e list.",
+    "body": "tokens never start for trade. Get email di time wey e list.",
     "notifyMe": "Tell me",
-    "privacy": "We go use am only for tell you when $DHB list.",
-    "joined": "You don dey for di list. We go send email for {{email}} di time wey $DHB list."
+    "privacy": "We go use am only for tell you when tokens list.",
+    "joined": "You don dey for di list. We go send email for {{email}} di time wey tokens list."
   },
   "explorePage": {
     "searchPlaceholder": "Search for people, posts, or content...",
@@ -1391,7 +1391,7 @@
     "otherTokens": "Oda tokens",
     "otherTokensDesc": "Yus yua kad fo bai ETH o USDC fo Base",
     "shareToFeed": "Share to my feed",
-    "sharePostTemplate": "Just add {{amount}} $DHB to stack yu on DeHub. Build wit community. #DeHub #DHB",
+    "sharePostTemplate": "Just add {{amount}} tokens to stack yu on DeHub. Build wit community. #DeHub",
     "success": {
       "title": "Purchase Complete!",
       "subtitle": "Token deliver to wallet yu.",
@@ -3363,7 +3363,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "Buy and sell fraction dem for DeHub post dem. Post weh dem don mint na 1000 on-chain fraction — get your own piece for video, track or picture and trade am for DHB.",
+    "seoDescription": "Buy and sell fraction dem for DeHub post dem. Post weh dem don mint na 1000 on-chain fraction — get your own piece for video, track or picture and trade am for tokens.",
     "title": "Fraction dem",
     "perUpload": "1000 per upload",
     "tabBrowse": "Browse",
@@ -4080,7 +4080,7 @@
     "noneYet": "No skill wey yet."
   },
   "usernames": {
-    "seoDescription": "Bai en sell DeHub name wey peop fi use weh DHB. Search fo short, numeric en original name wey fit sell, or post your own — transfer go happen on-chain de time payment clear.",
+    "seoDescription": "Bai en sell DeHub name wey peop fi use weh tokens. Search fo short, numeric en original name wey fit sell, or post your own — transfer go happen on-chain de time payment clear.",
     "title": "Username dem",
     "tabBrowse": "Browse",
     "tabSell": "Sell",
@@ -4191,7 +4191,7 @@
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",
-    "seoDescription": "Bai en sell estabilish DeHub akount fo DHB. Browse akount fo follower, upload, en age — hanl, post, follower en badge entitlement a go transfer, en payment go straight fo seller.",
+    "seoDescription": "Bai en sell estabilish DeHub akount fo tokens. Browse akount fo follower, upload, en age — hanl, post, follower en badge entitlement a go transfer, en payment go straight fo seller.",
     "title": "Account dem",
     "subtitle": "Whole account for sale, price for DeHub token",
     "tabBrowse": "Browse",
@@ -5589,7 +5589,7 @@
   },
   "docs": {
     "seoTitle": "DeHub Documentation — Guides, Token, dApps & FAQ",
-    "seoDescription": "Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more."
+    "seoDescription": "Official DeHub documentation: platform overview, dApps, tokens token economics, staking, games, roadmap, FAQ and more."
   },
   "dex": {
     "venue": "Network",
@@ -5597,7 +5597,7 @@
     "bookPrice": "{{chain}} book price · USD",
     "change24": "24h change",
     "totalLiquidity": "Total liquidity · USD",
-    "listedDhb": "Listed DHB · {{chain}}",
+    "listedDhb": "Listed tokens · {{chain}}",
     "listedUsd": "Listed USD · {{chain}}",
     "refreshMarket": "Refresh market",
     "refresh": "Refresh",
@@ -5622,20 +5622,20 @@
     "orderBook": "Order book",
     "priceGrouping": "Price grouping",
     "priceUsd": "Price (USD)",
-    "sizeDhb": "Size (DHB)",
-    "totalDhb": "Total (DHB)",
+    "sizeDhb": "Size (tokens)",
+    "totalDhb": "Total (tokens)",
     "noBids": "No bids yet",
     "useBuyPrice": "Use {{price}} as buy price",
     "useSellPrice": "Use {{price}} as sell price",
     "spread": "Spread · USD",
-    "buyTotal": "Buy {{amount}} DHB",
-    "sellTotal": "Sell {{amount}} DHB",
+    "buyTotal": "Buy {{amount}} tokens",
+    "sellTotal": "Sell {{amount}} tokens",
     "placeOrder": "Place an order",
     "lpFee": "0% LP fee",
     "lpFeeLabel": "LP fee",
     "lpFeeValue": "{{fee}}% LP fee",
-    "buy": "Buy DHB",
-    "sell": "Sell DHB",
+    "buy": "Buy tokens",
+    "sell": "Sell tokens",
     "maxBuy": "Maximum buy price",
     "minSell": "Minimum sell price",
     "spend": "Spend",
@@ -5654,7 +5654,7 @@
     "useMarket": "Use market price",
     "balanceError": "Balance no fit. Try again before you place order.",
     "reviewDeposit": "Dezoo {{amount}}{{token}} fo {{chain}}.",
-    "reviewRange": "Range: {{min}} – {{max}} USD per DHB.",
+    "reviewRange": "Range: {{min}} – {{max}} USD per tokens.",
     "initializes": "Na dem sey, wey wey create and initialize \"zero percent\" pool for wey.",
     "pendingNote": "Yas transaction na go submit. Na go continue confirm or register listing no more deposit.",
     "viewTransaction": "View transaction",
@@ -7026,7 +7026,7 @@
     "topUpTitle": "Top up an save moni",
     "discount": "{{percent}}% off",
     "noDiscount": "Full price",
-    "total": "Ol tugeda na ${{usd}}, yu go pay fo DHB",
+    "total": "Ol tugeda na ${{usd}}, yu go pay fo tokens",
     "buy": "Buy credits",
     "buying": "Wi di wait fo di payment…",
     "bought": "Added {{count}} post credits",
@@ -7056,7 +7056,7 @@
     "skippedToast": "Wi lef {{platforms}}: dis post no get di foto o video weh dem want.",
     "uploadFailed": "Wi no fit upload yu media fo cross-posting.",
     "creditRules": "Ebri post di cost credits fo ebri platform: {{x}} fo X, {{farcaster}} fo Farcaster an {{other}} fo ebri oda platform. Scheduled post dem di use credits di taim weh yu schedule dem.",
-    "payAsYouGoCredits": "Credits don finish? Wi go buy di wan dem weh e remain fo DHB at ${{price}} each wen yu post.",
+    "payAsYouGoCredits": "Credits don finish? Wi go buy di wan dem weh e remain fo tokens at ${{price}} each wen yu post.",
     "topUpCredits": "{{count}} credits",
     "perCredit": "${{price}} per credit",
     "pendingApproval": "Wi di wait mek yu approve dehub fo di Farcaster app",
@@ -7068,7 +7068,7 @@
   "dm": {
     "planRestricted": "Dis pipul need subscription before e fit get message.",
     "planTypeNotAllowed": "Dis creator yi plan no allow dis kain message.",
-    "planMinTip": "Tip for dis creator must be at least {{amount}} DHB."
+    "planMinTip": "Tip for dis creator must be at least {{amount}} tokens."
   },
   "credits": {
     "earningsWorth": "E worth {{amount}}",
@@ -7175,7 +7175,7 @@
       "notifyTitle": "Send notifications",
       "notifyBody": "User wey add your app, you can send dem notification from your server wey use your notify key. No need for per-user token wey you go store.",
       "rankBody": "Efere night, ebi app a list get score: 55% from user wey go back (people wey open a dem dis wee a wee before), 35% from user wey come wee wee, plus 10% boost fi dem fi fi 14 day a dem. Only account DeHub wey sign-in count, so bot a page reload no get nafa.",
-      "rewardsBody": "Chere month, {{pool}} DHB go share by apps by same score, calculate wek wek. For qualify, app need owner wallet confirm and at least 3 users return. Reward dey pay by DeHub to owner wallet.",
+      "rewardsBody": "Chere month, {{pool}} tokens go share by apps by same score, calculate wek wek. For qualify, app need owner wallet confirm and at least 3 users return. Reward dey pay by DeHub to owner wallet.",
       "rewardsWeek": "Week of {{date}}",
       "rewardPaid": "Paid",
       "rewardPending": "Pending",
@@ -7201,9 +7201,9 @@
     },
     "pay": {
       "title": "Pay {{name}}?",
-      "body": "DHB go straight go wallet wey app dey, {{wallet}}. Payment no go reverse.",
-      "confirm": "Pay {{amount}} DHB",
-      "sent": "Paiti {{amount}} DHB fo {{name}}."
+      "body": "tokens go straight go wallet wey app dey, {{wallet}}. Payment no go reverse.",
+      "confirm": "Pay {{amount}} tokens",
+      "sent": "Paiti {{amount}} tokens fo {{name}}."
     },
     "add": {
       "title": "Add {{name}}?",

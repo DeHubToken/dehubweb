@@ -63,7 +63,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
   // Build options list
   const options: ResultOption[] = [];
 
-  // Stock / commodity option — skip for DHB so we never surface a stock result for Dehub
+  // Stock / commodity option — skip for tokens so we never surface a stock result for Dehub
   if (stockData?.found && !isDhb) {
     const isCommodity = stockData.instrumentType === 'FUTURE' || stockData.symbol?.includes('=F');
     options.push({

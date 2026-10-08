@@ -629,7 +629,7 @@ export default function StakingPage() {
 
   return (
     <div className="min-h-screen max-w-5xl mx-auto">
-      <SEOHead title="Stake DHB — Earn Rewards & Unlock Badges" description="Stake your DHB tokens on DeHub to earn staking rewards, unlock staking badges and gain governance voting weight, with rewards funded by platform fees." url="https://dehub.io/stake" image="https://dehub.io/og/stake.jpg" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DHB Staking', url: 'https://dehub.io/stake', description: 'Stake DHB tokens to earn staking rewards and unlock badges on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <SEOHead title="Stake tokens — Earn Rewards & Unlock Badges" description="Stake your DeHub tokens on DeHub to earn staking rewards, unlock staking badges and gain governance voting weight, with rewards funded by platform fees." url="https://dehub.io/stake" image="https://dehub.io/og/stake.jpg" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Token Staking', url: 'https://dehub.io/stake', description: 'Stake DeHub tokens to earn staking rewards and unlock badges on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Staking — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <PageIsland
         icon="staking"

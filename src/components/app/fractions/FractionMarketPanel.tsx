@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Fraction Market Panel
  * =====================
@@ -268,7 +269,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-white font-bold flex items-center gap-1 justify-end">
-                            <img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5" />
+                            <img src={dehubCoin} alt={tokenLabel()} className="w-3.5 h-3.5" />
                             {(offer.quantity * offer.price_per_fraction).toLocaleString(undefined, {
                               maximumFractionDigits: 2,
                             })}
