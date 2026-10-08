@@ -39,7 +39,7 @@ SELECT editor_cloud_save('11111111-1111-4111-8111-111111111111',current_setting(
 -- A timed-out response may be retried, but cannot add another version.
 SELECT editor_cloud_save('11111111-1111-4111-8111-111111111111',current_setting('cloud.test_document')::jsonb,0,'00000000-0000-4000-8000-000000000001');
 DO $$ BEGIN IF jsonb_array_length(editor_cloud_history('11111111-1111-4111-8111-111111111111'))<>1 THEN RAISE EXCEPTION 'Retry created a version'; END IF; END $$;
-SELECT cloud_test_error($q$SELECT editor_cloud_save('11111111-1111-4111-8111-111111111111',jsonb_set(current_setting('cloud.test_document')::jsonb,'{snapshot,title}','"Changed"'),0,'00000000-0000-4000-8000-000000000002')$q$,'40001');
+SELECT cloud_test_error($q$SELECT editor_cloud_save('11111111-1111-4111-8111-111111111111',jsonb_set(current_setting('cloud.test_document')::jsonb,'{snapshot,title}','"Changed"'),0,'00000000-0000-4000-8000-000000000002')$q$,'PT409');
 SELECT cloud_test_error($q$SELECT editor_cloud_save('11111111-1111-4111-8111-111111111111',jsonb_set(current_setting('cloud.test_document')::jsonb,'{snapshot,title}','"Changed"'),1,'00000000-0000-4000-8000-000000000001')$q$,'P0001');
 SELECT editor_cloud_save('11111111-1111-4111-8111-111111111111',jsonb_set(current_setting('cloud.test_document')::jsonb,'{snapshot,title}','"Second edit"'),1,'00000000-0000-4000-8000-000000000002');
 SELECT editor_cloud_restore('11111111-1111-4111-8111-111111111111',1,2,'00000000-0000-4000-8000-000000000003');
