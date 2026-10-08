@@ -457,7 +457,10 @@ export function useSyncedPreference<T>(
   defaultValue: T,
   options?: { resetOnLogout?: boolean },
 ) {
-  const ctx = useContext(UserPreferencesContext);
+  const context = useContext(UserPreferencesContext);
+  // Review builds keep appearance experiments on this browser, so selecting
+  // a not-yet-published theme cannot change the account's production look.
+  const ctx = import.meta.env.VITE_HOME_UI_REVIEW === 'true' ? null : context;
   const applyRef = useRef(apply);
   applyRef.current = apply;
   const currentRef = useRef<T>(currentValue);
