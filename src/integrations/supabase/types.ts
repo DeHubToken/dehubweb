@@ -2967,6 +2967,113 @@ export type Database = {
         }
         Relationships: []
       }
+      editor_cloud_comments: {
+        Row: {
+          assignee_wallet: string | null
+          at_seconds: number
+          author_wallet: string
+          body: string
+          clip_id: string | null
+          created_at: string
+          id: string
+          owner_wallet: string
+          parent_id: string | null
+          project_id: string
+          resolved: boolean
+          revision: number
+          state_version: number
+          updated_at: string
+        }
+        Insert: {
+          assignee_wallet?: string | null
+          at_seconds: number
+          author_wallet: string
+          body: string
+          clip_id?: string | null
+          created_at?: string
+          id: string
+          owner_wallet: string
+          parent_id?: string | null
+          project_id: string
+          resolved?: boolean
+          revision: number
+          state_version?: number
+          updated_at?: string
+        }
+        Update: {
+          assignee_wallet?: string | null
+          at_seconds?: number
+          author_wallet?: string
+          body?: string
+          clip_id?: string | null
+          created_at?: string
+          id?: string
+          owner_wallet?: string
+          parent_id?: string | null
+          project_id?: string
+          resolved?: boolean
+          revision?: number
+          state_version?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_comments_owner_wallet_project_id_parent_id_fkey"
+            columns: ["owner_wallet", "project_id", "parent_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_comments"
+            referencedColumns: ["owner_wallet", "project_id", "id"]
+          },
+          {
+            foreignKeyName: "editor_cloud_comments_owner_wallet_project_id_revision_fkey"
+            columns: ["owner_wallet", "project_id", "revision"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_revisions"
+            referencedColumns: ["wallet_address", "project_id", "revision"]
+          },
+        ]
+      }
+      editor_cloud_members: {
+        Row: {
+          accepted: boolean
+          member_wallet: string
+          owner_wallet: string
+          project_id: string
+          revoked: boolean
+          role: string
+          state_version: number
+          updated_at: string
+        }
+        Insert: {
+          accepted?: boolean
+          member_wallet: string
+          owner_wallet: string
+          project_id: string
+          revoked?: boolean
+          role: string
+          state_version?: number
+          updated_at?: string
+        }
+        Update: {
+          accepted?: boolean
+          member_wallet?: string
+          owner_wallet?: string
+          project_id?: string
+          revoked?: boolean
+          role?: string
+          state_version?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_members_owner_wallet_project_id_fkey"
+            columns: ["owner_wallet", "project_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
+      }
       editor_cloud_projects: {
         Row: {
           created_at: string
@@ -8269,6 +8376,75 @@ export type Database = {
           p_id: string
           p_request_id: string
           p_revision: number
+        }
+        Returns: Json
+      }
+      editor_cloud_review_accept: {
+        Args: { p_expected_state: number; p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_review_allowed: {
+        Args: { p_id: string; p_owner: string; p_write?: boolean }
+        Returns: boolean
+      }
+      editor_cloud_review_comment: {
+        Args: {
+          p_assignee?: string
+          p_body: string
+          p_clip_id?: string
+          p_comment_id: string
+          p_id: string
+          p_owner: string
+          p_parent_id?: string
+          p_revision: number
+          p_time: number
+        }
+        Returns: Json
+      }
+      editor_cloud_review_comment_json: {
+        Args: {
+          p: Database["public"]["Tables"]["editor_cloud_comments"]["Row"]
+        }
+        Returns: Json
+      }
+      editor_cloud_review_comments: {
+        Args: { p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_review_inbox: { Args: never; Returns: Json }
+      editor_cloud_review_leave: {
+        Args: { p_expected_state: number; p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_review_load: {
+        Args: { p_id: string; p_owner: string; p_revision?: number }
+        Returns: Json
+      }
+      editor_cloud_review_media_allowed: {
+        Args: { p_path: string }
+        Returns: boolean
+      }
+      editor_cloud_review_member_json: {
+        Args: { p: Database["public"]["Tables"]["editor_cloud_members"]["Row"] }
+        Returns: Json
+      }
+      editor_cloud_review_members: { Args: { p_id: string }; Returns: Json }
+      editor_cloud_review_resolve: {
+        Args: {
+          p_comment_id: string
+          p_expected_state: number
+          p_id: string
+          p_owner: string
+          p_resolved: boolean
+        }
+        Returns: Json
+      }
+      editor_cloud_review_share: {
+        Args: {
+          p_expected_state: number
+          p_id: string
+          p_member: string
+          p_role: string
         }
         Returns: Json
       }
