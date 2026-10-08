@@ -79,7 +79,7 @@ export default function FlowPaywall({ plan, open, onOpenChange, onConfirm }: Pro
                 <span className="text-zinc-500"> · {item.modelName}</span>
               </span>
               <span className="flex shrink-0 items-center gap-1 text-white">
-                {formatDhb(item.priceDhb)} <DhbCoin />
+                {formatDhb(item.priceDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} />
               </span>
             </li>
           ))}
@@ -94,7 +94,7 @@ export default function FlowPaywall({ plan, open, onOpenChange, onConfirm }: Pro
           <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3">
             <span className="text-[13px] text-zinc-300">{t('creatorFlow.total')}</span>
             <span className="flex items-center gap-1.5 text-[15px] font-semibold">
-              {formatDhb(total)} <DhbCoin />
+              {formatDhb(total)} <DhbCoin label={t('buyCoins.tokensUnit')} />
             </span>
           </div>
         )}
