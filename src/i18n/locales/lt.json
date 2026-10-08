@@ -6457,6 +6457,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Projekto peržiūra",
+      "shared": "Bendrinama su jumis",
+      "time": "Laikas (s)",
+      "assign": "Priskirti piniginę"
+    },
     "textFit": {
       "wrap": "Laužyti eilutes",
       "width": "Teksto plotis",

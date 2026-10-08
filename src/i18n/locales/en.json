@@ -6722,6 +6722,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Project review",
+      "shared": "Shared with you",
+      "time": "Time (s)",
+      "assign": "Assign wallet"
+    },
     "textFit": {
       "wrap": "Wrap lines",
       "width": "Text width",

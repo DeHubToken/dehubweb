@@ -5765,6 +5765,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Check project",
+      "shared": "Dem share am with you",
+      "time": "Time (s)",
+      "assign": "Choose wallet"
+    },
     "textFit": {
       "wrap": "Break di lines",
       "width": "Text width",

@@ -6425,6 +6425,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Projekti ülevaatus",
+      "shared": "Sinuga jagatud",
+      "time": "Aeg (s)",
+      "assign": "Määra rahakott"
+    },
     "textFit": {
       "wrap": "Murra ridu",
       "width": "Teksti laius",

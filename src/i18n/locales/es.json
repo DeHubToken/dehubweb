@@ -6471,6 +6471,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Revisión del proyecto",
+      "shared": "Compartido contigo",
+      "time": "Tiempo (s)",
+      "assign": "Asignar cartera"
+    },
     "textFit": {
       "wrap": "Ajustar líneas",
       "width": "Ancho del texto",

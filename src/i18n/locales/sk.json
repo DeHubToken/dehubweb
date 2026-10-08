@@ -6578,6 +6578,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Kontrola projektu",
+      "shared": "Zdieľané s vami",
+      "time": "Čas (s)",
+      "assign": "Priradiť peňaženku"
+    },
     "textFit": {
       "wrap": "Zalamovať riadky",
       "width": "Šírka textu",

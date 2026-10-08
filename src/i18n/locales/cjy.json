@@ -6383,6 +6383,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "项目审阅",
+      "shared": "与你共享",
+      "time": "时间 (s)",
+      "assign": "分配钱包"
+    },
     "textFit": {
       "wrap": "自动换行",
       "width": "文字宽度",
