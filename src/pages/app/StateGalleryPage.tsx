@@ -25,6 +25,27 @@ import { KitButton, PageEmpty, PageSection, PageTabs } from '@/components/app/pa
 import { FeedTabBarSkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { STREAMER_BADGE_IDS, badgeMaterial, streamerBadgeSvg } from '@/lib/streamer-badge-art';
+import { LinkPreviews } from '@/features/post/components/LinkPreviews';
+import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
+import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
+
+function PredictionGallery() {
+  const [text, setText] = useState('https://polymarket.com/event/will-the-us-confirm-that-aliens-exist-before-2027');
+  return (
+    <section data-prediction-gallery className="mb-5 space-y-4 rounded-2xl border border-white/10 bg-background/80 p-4">
+      <h2 className="text-lg font-semibold">Prediction sharing</h2>
+      <label className="block text-sm">
+        Market link
+        <textarea value={text} onChange={event => setText(event.target.value)} className="mt-2 min-h-20 w-full rounded-lg border border-white/20 bg-transparent p-3" />
+      </label>
+      <div className="grid items-start gap-5 lg:grid-cols-3">
+        <div><h3>Draft</h3><LinkPreviews text={text} /></div>
+        <div><h3>Feed</h3><FeedLinkPreviews text={text} /></div>
+        <div><h3>Conversation</h3><ChatLinkPreviews content={text} /></div>
+      </div>
+    </section>
+  );
+}
 
 // The gallery sits outside the wallet providers; a signed-out stub is all the
 // action row needs to render.
@@ -209,6 +230,8 @@ export default function StateGalleryPage() {
             ))}
           </div>
         </div>
+
+        {params.get('predictions') === '1' && <PredictionGallery />}
 
         <StreamerArtworkGallery />
 
