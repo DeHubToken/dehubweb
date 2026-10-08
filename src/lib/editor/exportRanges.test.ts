@@ -37,3 +37,10 @@ describe("individual clip downloads", () => {
     expect(exportAudioSegment({ ...clip, audio: { volume: 0 } }, 12, { start: 7, end: 8 })?.envelope.every(k => k.gain === 0)).toBe(true);
   });
 });
+
+it("keeps Unicode titles and distinct clip indices in archive names", () => {
+  const ranges = clipExportRanges({ ...project, title: "🎬東京".repeat(100) });
+  expect(new Set(ranges.map(range => range.name)).size).toBe(10);
+  expect(ranges[9].name).toMatch(/-clip-010$/);
+  expect(ranges.every(range => range.name.startsWith("🎬東京"))).toBe(true);
+});
